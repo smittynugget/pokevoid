@@ -1,0 +1,11 @@
+{
+  "hatchAndSwap": "Schiudi e Scambia",
+  "tooltip": "Controlla i Pokémon schiusi e scambiane 1 con un altro (se lo desideri). Il primo Pokémon non può essere scambiato.\nI leggendari possono essere scambiati solo con leggendari/mega/dyna",
+  "legendaryDisabled": "Serve Leggendario/Mega/Dyna nella Squadra",
+  "onlyOnePokemon": "Impossibile Scambiare: Solo Un Membro nella Squadra",
+  "swapWithParty": "Scambia con membro della squadra",
+  "selectLegendaryPartyMember": "Scambia con un leggendario/mega/dyna",
+  "selectPartyMember": "Scambia con un membro della squadra",
+  "confirmSwapMessage": "Scambiare {{hatchedPokemon}} con {{partyPokemon}}?",
+  "skipAnimationsPrompt": "Saltare tutte le animazioni di schiusa delle uova?"
+} 

@@ -1,0 +1,42 @@
+{
+  "titles": {
+    "newPokemon": "Nouveau Pokémon !",
+    "newFusion": "Nouvelle Fusion !",
+    "newItem": "Nouvel Objet !",
+    "newGameOverItem": "Récompense de Fin de Partie !",
+    "newRibbonItem": "Récompense de Ruban !",
+    "moneyObtained": "Argent Obtenu !",
+    "newShopUnlock": "Déblocage de Boutique !",
+    "newUnlock": "Nouveau Déblocage !",
+    "newSmittyForm": "Nouvelle Forme de SMITTY !",
+    "newForm": "Nouvelle Boutique Débloquée !",
+    "rivalLost": "RIVAL PERDU...",
+    "modeChange": "CHANGEMENT DE MODE !",
+    "rewardObtained": "Récompense Obtenue !",
+    "voidOvertaken": "LE NÉANT A PRIS LE DESSUS !",
+    "newShopItem": "Nouvel Objet de Boutique",
+    "manyMoreNuggets": "Et Plein d'Autres Pépites Juteuses !"
+  },
+  "gameModes": {
+    "nuzlocke": {
+      "description": "Nuzlocke: Les Pokémon K.O. sont\nretirés de votre équipe..."
+    },
+    "draft": {
+      "description": "Rogue: Choisissez 2 Pokémon\naléatoires pour commencer..."
+    },
+    "nuzlight": {
+      "description": "Nuzlight: Aucun objet de\nrécupération disponible..."
+    },
+    "nightmare": {
+      "description": "Nuzmare: Nuzlight + Nuzlocke"
+    },
+    "default": {
+      "description": "Le mode de jeu a été modifié !"
+    }
+  },
+  "ui": {
+    "rivalVoid": "{{name}} s'est évanoui dans le néant...",
+    "error": "Erreur lors du chargement de la récompense",
+    "new": "NOUVEAU"
+  }
+} 

@@ -1,0 +1,11 @@
+{
+  "hatchAndSwap": "Éclore et Échanger",
+  "tooltip": "Vérifiez les Pokémon éclos et échangez-en 1 pour un autre (si vous le souhaitez). Le premier Pokémon ne peut pas être échangé.\nLes légendaires ne peuvent être échangés qu'avec des légendaires/méga/dynamax",
+  "legendaryDisabled": "Besoin Légendaire/Méga/Dyna dans l'Équipe",
+  "onlyOnePokemon": "Échange Impossible : Un Seul Membre dans l'Équipe",
+  "swapWithParty": "Échanger avec membre de l'équipe",
+  "selectLegendaryPartyMember": "Échanger avec un légendaire/méga/dyna",
+  "selectPartyMember": "Échanger avec un membre de l'équipe",
+  "confirmSwapMessage": "Échanger {{hatchedPokemon}} avec {{partyPokemon}} ?",
+  "skipAnimationsPrompt": "Ignorer toutes les animations d'éclosion d'œufs ?"
+} 

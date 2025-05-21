@@ -1,0 +1,82 @@
+{
+  "title": "Crear una Evolución Glitch Personalizada",
+  "mods": "Mods",
+  "testMods": "Probar tus Mods",
+  "uploadMods": "Subir Mods",
+  "createGlitchEvolution": "Crear Evolución Glitch",
+  "removeMods": "Eliminar Mods",
+  "shareAndTakeMods": "Compartir y Obtener Mods",
+  "noModsToRemove": "No hay mods para eliminar.",
+  "errorLoadingMods": "Error al cargar mods. Por favor, inténtalo de nuevo.",
+  "modRemoved": "{{name}} eliminado correctamente.",
+  "errorRemovingMod": "Error al eliminar mod. Por favor, inténtalo de nuevo.",
+  "uploadSuccess": "Se han subido {{count}} mod(s) correctamente:",
+  "uploadFailed": "Error al subir {{count}} mod(s):",
+  "reloadRequired": "El juego se reiniciará para aplicar los cambios.",
+  "fields": {
+    "species": "Especie",
+    "formName": "Nombre de la Forma (Inglés)*",
+    "formLanguages": "Nombre de la Forma (Idiomas Adicionales)",
+    "primaryType": "Tipo Primario",
+    "secondaryType": "Tipo Secundario",
+    "ability1": "Habilidad 1",
+    "ability2": "Habilidad 2",
+    "hiddenAbility": "Habilidad Oculta",
+    "stat1": "Estadística 1 a Mejorar",
+    "stat2": "Estadística 2 a Mejorar",
+    "stat3": "Estadística 3 a Mejorar",
+    "distributionType": "Tipo de Distribución de Mejora de Estadísticas",
+    "frontSprite": "Sprite Frontal del Pokémon (150-200px)",
+    "backSprite": "Sprite Trasero del Pokémon (150-200px)",
+    "rivalTrainer": "Rival",
+    "orRivalTrainer": "o Rival"
+  },
+  "distributionTypes": {
+    "even": "Uniforme (+33% cada Estadística)",
+    "twoPriority": "Doble Prioridad (Estadística 1 +40% | Estadística 2 +40% | Estadística 3 +20%)",
+    "scaling": "Escalonado (Estadística 1 +45% | Estadística 2 +35% | Estadística 3 +20%)",
+    "topPriority": "Prioridad Máxima (Estadística 1 +40% | Estadística 2 +30% | Estadística 3 +30%)"
+  },
+  "buttons": {
+    "saveAndAdd": "Guardar y Recargar",
+    "cancel": "Cancelar"
+  },
+  "validation": {
+    "requiredField": "Este campo es obligatorio",
+    "invalidImage": "Formato o tamaño de imagen inválido",
+    "imageSize": "La imagen debe ser de 150-200px"
+  },
+  "statusMessages": {
+    "creatingMod": "Creando mod...",
+    "success": "¡Mod de forma glitch creado y guardado correctamente!",
+    "downloadReady": "Tu mod está listo para descargar",
+    "error": "Error al crear mod: {{message}}",
+    "storageError": "Mod creado pero no guardado en almacenamiento. Todavía puedes descargarlo."
+  },
+  "sections": {
+    "basicInformation": "Información Básica",
+    "typesAbilities": "Tipos y Habilidades",
+    "stats": "Estadísticas",
+    "sprites": "Sprites",
+    "rivalTrainer": "Rivales que Recompensan Esta Forma"
+  },
+  "imageUpload": {
+    "uploadButton": "Subir Imagen",
+    "noFileSelected": "Ningún archivo seleccionado",
+    "invalidSize": "Tamaño de imagen inválido (debe ser de 150-200px)"
+  },
+  "dropdowns": {
+    "selectOptional": "- Seleccionar (Opcional) -"
+  },
+  "languages": {
+    "es": "Español",
+    "fr": "Francés",
+    "de": "Alemán",
+    "ja": "Japonés",
+    "ko": "Coreano",
+    "pt-BR": "Portugués (Brasil)",
+    "it": "Italiano",
+    "zh-TW": "Chino (Tradicional)",
+    "zh-CN": "Chino (Simplificado)"
+  }
+} 

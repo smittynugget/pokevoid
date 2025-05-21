@@ -1,0 +1,450 @@
+{
+  "DUSCLOPS_NIGHTMARE_QUEST": {
+    "name": "Pesadelo de Dusclops",
+    "task": "Derrote 2 Pokémon do Allister consecutivamente com Dusclops durante as ondas 100, 200, 300, 400 ou 500 no modo Pesadelo"
+  },
+  "TAUROS_ELECTRIC_HIT_QUEST": {
+    "name": "Golpe Elétrico de Tauros",
+    "task": "Faça Tauros ser atingido por 30 movimentos do tipo Elétrico"
+  },
+  "KECLEON_COLOR_CHANGE_QUEST": {
+    "name": "Mudança de Cor de Kecleon",
+    "task": "Ative a habilidade Mudança de Cor de Kecleon 50 vezes"
+  },
+  "GLISCOR_DARK_MOVE_KNOCKOUT_QUEST": {
+    "name": "Nocaute com Movimento Sombrio de Gliscor",
+    "task": "Derrote 100 Pokémon com Gliscor usando movimentos do tipo Sombrio"
+  },
+  "MAROWAK_CUBONE_FAINT_QUEST": {
+    "name": "Desmaio de Marowak com Cubone",
+    "task": "Faça Marowak desmaiar enquanto Cubone está no seu time"
+  },
+  "NOIVERN_DRAGON_MOVE_KNOCKOUT_QUEST": {
+    "name": "Nocaute com Movimento Dragão de Noivern",
+    "task": "Derrote 100 Pokémon com Noivern usando movimentos do tipo Dragão"
+  },
+  "FERALIGATR_DRAGON_DEFEAT_QUEST": {
+    "name": "Derrota de Dragão por Feraligatr",
+    "task": "Derrote 50 Pokémon do tipo Dragão com Feraligatr"
+  },
+  "CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST": {
+    "name": "Nocaute com Movimento Terrestre de Charizard",
+    "task": "Derrote 100 Pokémon com Charizard usando movimentos do tipo Terrestre"
+  },
+  "VENUSAUR_PSYCHIC_MOVE_USE_QUEST": {
+    "name": "Uso de Movimento Psíquico de Venusaur",
+    "task": "Use movimentos do tipo Psíquico 200 vezes com Venusaur"
+  },
+  "BLASTOISE_FAIRY_DEFEAT_QUEST": {
+    "name": "Derrota de Fada por Blastoise",
+    "task": "Derrote 50 Pokémon do tipo Fada com Blastoise"
+  },
+  "NIDOKING_DEFEAT_QUEST": {
+    "name": "Derrota de Nidoking",
+    "task": "Derrote 10 Nidoking com seu Nidoking"
+  },
+  "GENGAR_SPECIAL_WAVE_QUEST": {
+    "name": "Onda Especial de Gengar",
+    "task": "Complete 30 ondas consecutivas com Gengar na primeira posição sem conhecer movimentos Fantasma/Venenoso, e com pelo menos 1 movimento Elétrico"
+  },
+  "WEEZING_FIRE_MOVE_KNOCKOUT_QUEST": {
+    "name": "Nocaute com Movimento de Fogo de Weezing",
+    "task": "Derrote 100 Pokémon com Weezing usando movimentos do tipo Fogo"
+  },
+  "HITMONLEE_NORMAL_WAVE_QUEST": {
+    "name": "Onda Normal de Hitmonlee",
+    "task": "Complete 30 ondas consecutivas com Hitmonlee sendo seu primeiro pokémon, tendo apenas movimentos Normais, e tendo apenas membros do time do tipo Normal"
+  },
+  "HITMONCHAN_STAT_INCREASE_QUEST": {
+    "name": "Aumento de Status de Hitmonchan",
+    "task": "Use movimentos que aumentam status 50 vezes com Hitmonchan"
+  },
+  "HITMON_DUO_WIN_QUEST": {
+    "name": "Vitória da Dupla Hitmon",
+    "task": "Vença uma run com Hitmonlee e Hitmonchan no seu time"
+  },
+  "KANGASKHAN_GHOST_MOVE_QUEST": {
+    "name": "Movimento Fantasma de Kangaskhan",
+    "task": "Use movimentos do tipo Fantasma 50 vezes com Kangaskhan"
+  },
+  "SCYTHER_TRIO_WIN_QUEST": {
+    "name": "Vitória do Trio com Scyther",
+    "task": "Complete as últimas 50 ondas com apenas 3 Pokémon incluindo Scyther"
+  },
+  "GRENINJA_TRIO_WIN_QUEST": {
+    "name": "Vitória do Trio com Greninja",
+    "task": "Complete as últimas 50 ondas com apenas 3 Pokémon incluindo Greninja"
+  },
+  "SIMISAGE_TRIO_WIN_QUEST": {
+    "name": "Vitória do Trio com Simisage",
+    "task": "Complete as últimas 50 ondas com apenas 3 Pokémon incluindo Simisage"
+  },
+  "ELEMENTAL_MONKEY_WIN_QUEST": {
+    "name": "Vitória do Macaco Elemental",
+    "task": "Vença com pelo menos um dos seguintes pokémon: [Simipour, Simisear, Simisage] conhecendo exatamente 4 movimentos dos seguintes tipos: [Voador, Fogo, Água e Terrestre]"
+  },
+  "ELECTIVIREMAGMORTAR_WIN_QUEST": {
+    "name": "Vitória de Electivire & Magmortar",
+    "task": "Vença uma run com Electivire e Magmortar no seu time"
+  },
+  "GYARADOS_GROUND_SWITCH_QUEST": {
+    "name": "Troca Terrestre de Gyarados",
+    "task": "Faça 20 movimentos do tipo Terrestre serem usados contra seu Gyarados"
+  },
+  "LAPRAS_FIRE_MOVE_QUEST": {
+    "name": "Movimento de Fogo de Lapras",
+    "task": "Use movimentos do tipo Fogo 50 vezes com Lapras"
+  },
+  "PORYGON_Z_ANALYTIC_USE_QUEST": {
+    "name": "Uso de Analítico de Porygon-Z",
+    "task": "Ative a habilidade Analítico de Porygon-Z 50 vezes"
+  },
+  "MEOWTH_JESTER_QUEST": {
+    "name": "Vitória do Trio com Meowth",
+    "task": "Complete as últimas 50 ondas com apenas 3 Pokémon incluindo Meowth"
+  },
+  "DRAGONITE_LANCE_DEFEAT_QUEST": {
+    "name": "Derrota de Lance por Dragonite",
+    "task": "Derrote 3 Pokémon de Lance consecutivamente usando Dragonite"
+  },
+  "SUDOWOODO_WOOD_HAMMER_QUEST": {
+    "name": "Martelo de Madeira de Sudowoodo",
+    "task": "Use Martelo de Madeira 100 vezes com Sudowoodo"
+  },
+  "AMBIPOM_GIGA_IMPACT_QUEST": {
+    "name": "Giga Impacto de Ambipom",
+    "task": "Use Giga Impacto 10 vezes com Ambipom em uma run"
+  },
+  "MILTANK_STEEL_MOVE_KNOCKOUT_QUEST": {
+    "name": "Nocaute com Movimento de Aço de Miltank",
+    "task": "Derrote 50 Pokémon com Miltank usando movimentos do tipo Aço"
+  },
+  "SLAKING_RIVAL_DEFEAT_QUEST": {
+    "name": "Derrota de Rival por Slaking",
+    "task": "Derrote 3 Pokémon de rival usando Slaking sem trocar"
+  },
+  "SOLROCK_LUNATONE_WIN_QUEST": {
+    "name": "Vitória de Solrock e Lunatone",
+    "task": "Vença uma run com Solrock e Lunatone no seu time"
+  },
+  "REGIGIGAS_REGI_DEFEAT_QUEST": {
+    "name": "Derrota de Regi por Regigigas",
+    "task": "Derrote 5 Pokémon Regi usando Regigigas"
+  },
+  "PIKACHU_RED_BLUE_WIN_QUEST": {
+    "name": "Vitória de Pikachu contra Red e Blue",
+    "task": "Vença contra Red e Blue com Pikachu no seu time"
+  },
+  "SNORLAX_GRASS_KNOCKOUT_QUEST": {
+    "name": "Nocaute com Grama de Snorlax",
+    "task": "Derrote 20 Pokémon com Snorlax usando movimentos do tipo Grama"
+  },
+  "CLOYSTER_PRESENT_QUEST": {
+    "name": "Presente de Cloyster",
+    "task": "Use Presente 50 vezes com Cloyster no modo Nuzlocke"
+  },
+  "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
+    "name": "Derrota de Nosepass por Nuzleaf",
+    "task": "Derrote 20 Nosepass ou Probopass com Nuzleaf"
+  },
+  "CHANDELURE_REST_QUEST": {
+    "name": "Descanso de Chandelure",
+    "task": "Use Descanso 10 vezes com Chandelure em uma run"
+  },
+  "SMEARGLE_DEFEAT_QUEST": {
+    "name": "Derrota de Smeargle",
+    "task": "Derrote 100 Pokémon com Smeargle"
+  },
+  "MIMIKYU_CHARIZARD_KNOCKOUT_QUEST": {
+    "name": "Nocaute de Charizard por Mimikyu",
+    "task": "Derrote 3 Charizards com Mimikyu"
+  },
+  "MIMIKYU_GRENINJA_KNOCKOUT_QUEST": {
+    "name": "Nocaute de Greninja por Mimikyu",
+    "task": "Derrote 3 Greninjas com Mimikyu"
+  },
+  "MIMIKYU_RAICHU_KNOCKOUT_QUEST": {
+    "name": "Nocaute de Raichu por Mimikyu",
+    "task": "Derrote 3 Raichus com Mimikyu"
+  },
+  "MIMIKYU_MEWTWO_KNOCKOUT_QUEST": {
+    "name": "Nocaute de Mewtwo por Mimikyu",
+    "task": "Derrote 2 Mewtwos com Mimikyu"
+  },
+  "MIMIKYU_REGIROCK_KNOCKOUT_QUEST": {
+    "name": "Nocaute de Regirock por Mimikyu",
+    "task": "Derrote 2 Regirocks com Mimikyu"
+  },
+  "EISCUE_ROCK_KNOCKOUT_QUEST": {
+    "name": "Nocaute de Pedra por Eiscue",
+    "task": "Derrote 50 Pokémon do tipo Pedra com Eiscue"
+  },
+  "ZANGOOSE_SEVIPER_KNOCKOUT_QUEST": {
+    "name": "Nocaute de Seviper por Zangoose",
+    "task": "Derrote 10 Seviper com Zangoose"
+  },
+  "SEVIPER_ZANGOOSE_KNOCKOUT_QUEST": {
+    "name": "Nocaute de Zangoose por Seviper",
+    "task": "Derrote 10 Zangoose com Seviper"
+  },
+  "TRUBBISH_POISON_DEFEAT_QUEST": {
+    "name": "Derrota de Venenoso por Trubbish",
+    "task": "Derrote 50 Pokémon do tipo Venenoso com Trubbish"
+  },
+  "HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST": {
+    "name": "Derrota de Rival e Campeão por Hawlucha",
+    "task": "Derrote 6 Pokémon de Rivais ou Campeões usando Hawlucha"
+  },
+  "DITTO_DRAGONITE_TRANSFORM_QUEST": {
+    "name": "Transformação em Dragonite por Ditto",
+    "task": "Transforme-se em Dragonite 5 vezes com Ditto"
+  },
+  "DITTO_CHARIZARD_TRANSFORM_QUEST": {
+    "name": "Transformação em Charizard por Ditto",
+    "task": "Transforme-se em Charizard 5 vezes com Ditto"
+  },
+  "DITTO_PIKACHU_TRANSFORM_QUEST": {
+    "name": "Transformação em Pikachu por Ditto",
+    "task": "Transforme-se em Pikachu 5 vezes com Ditto"
+  },
+  "DITTO_MACHAMP_TRANSFORM_QUEST": {
+    "name": "Transformação em Machamp por Ditto",
+    "task": "Transforme-se em Machamp 5 vezes com Ditto"
+  },
+  "DITTO_MEWTWO_TRANSFORM_QUEST": {
+    "name": "Transformação em Mewtwo por Ditto",
+    "task": "Transforme-se em Mewtwo 5 vezes com Ditto"
+  },
+  "FERALIGATOR_ROCK_MOVE_KNOCKOUT_QUEST": {
+    "name": "Nocaute com Movimento de Pedra de Feraligatr",
+    "task": "Derrote 50 Pokémon com Feraligatr usando movimentos do tipo Pedra"
+  },
+  "WOBBUFFET_RIVAL_DEFEAT_QUEST": {
+    "name": "Derrota de Rival por Wobbuffet",
+    "task": "Derrote 3 Pokémon de rival usando Wobbuffet"
+  },
+  "MAGIKARP_DEFEAT_QUEST": {
+    "name": "Derrota de Magikarp",
+    "task": "Derrote 50 Pokémon com Magikarp"
+  },
+  "KLINKLANG_GEAR_MOVE_QUEST": {
+    "name": "Engrenagem do Klinklang",
+    "task": "Use Shift Gear e/ou Gear Up 100 vezes com Klinklang"
+  },
+  "SPINDA_CONFUSION_RECOVERY_QUEST": {
+    "name": "Recuperação da Confusão do Spinda",
+    "task": "Recupere-se da confusão 10 vezes com Spinda"
+  },
+  "NINETALES_STORED_POWER_KNOCKOUT_QUEST": {
+    "name": "Nocaute com Stored Power do Ninetales",
+    "task": "Derrote 50 Pokémon com Ninetales usando Stored Power"
+  },
+  "SHUCKLE_DEFEAT_QUEST": {
+    "name": "Derrotas do Shuckle",
+    "task": "Derrote 30 Pokémon com Shuckle"
+  },
+  "TANGELA_RIVAL_DEFEAT_QUEST": {
+    "name": "Derrotas de Rivais do Tangela",
+    "task": "Derrote 3 Pokémon rivais usando Tangela"
+  },
+  "CLAYDOL_POISON_QUEST": {
+    "name": "Movimentos Venenosos do Claydol",
+    "task": "Use movimentos do tipo Venenoso 200 vezes com Claydol"
+  },
+  "TAUROS_DARK_WAVE_QUEST": {
+    "name": "Onda Sombria do Tauros",
+    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Tauros com pelo menos 1 movimento do tipo Sombrio e 1 do tipo Fantasma (não pode ter movimentos do tipo Normal) no Modo Pesadelo"
+  },
+  "DITTO_SPECIAL_WIN_QUEST": {
+    "name": "Vitória Especial do Ditto",
+    "task": "Sobreviva às últimas 50 ondas com uma equipe de exatamente 3 Pokémon incluindo Ditto"
+  },
+  "MAROWAK_ZOMBIE_KNOCKOUT_QUEST": {
+    "name": "Nocaute Zumbi do Marowak",
+    "task": "Derrote 100 Pokémon com Marowak usando Ominous Wind, Rage Fist, Grudge, Hex ou Last Respects"
+  },
+  "GRENINJA_YOKAI_WAVE_QUEST": {
+    "name": "Onda Yokai do Greninja",
+    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Greninja com pelo menos 1 movimento do tipo Fantasma e 1 do tipo Sombrio (não pode ter movimentos do tipo Água) no Modo Pesadelo"
+  },
+  "LICKITUNG_HYPER_WAVE_QUEST": {
+    "name": "Onda Hiper do Lickitung",
+    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Lickitung com pelo menos 1 movimento do tipo Venenoso e 1 do tipo Sombrio (não pode ter movimentos do tipo Normal) no Modo Pesadelo"
+  },
+  "CHARMANDER_NIGHTMARE_WIN_QUEST": {
+    "name": "Vitória Pesadelo do Charmander",
+    "task": "Vença uma partida no Modo Pesadelo com um Determizard (Charmander Forma Glitch) no seu grupo"
+  },
+  "GASTLY_NIGHTMARE_WAVE_QUEST": {
+    "name": "Onda Pesadelo do Gastly",
+    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Gastly em um grupo de 3 ou menos Pokémon, no Modo Pesadelo"
+  },
+  "PIKACHU_PLUS_ULTRA_QUEST": {
+    "name": "Plus Ultra do Pikachu",
+    "task": "Vença uma partida no Modo Pesadelo com Pikachu no seu grupo"
+  },
+  "CHARIZARD_HELLFLAME_QUEST": {
+    "name": "Chama Infernal do Charizard",
+    "task": "Use Blast Burn 100 vezes com Charizard no Modo Pesadelo"
+  },
+  "EEVEE_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Eevee",
+    "task": "Derrote 2 Pokémon do Blue consecutivamente com Eevee durante as ondas 100, 200, 300, 400 ou 500, no Modo Pesadelo"
+  },
+  "SNORLAX_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Snorlax",
+    "task": "Derrote 2 Pokémon do Red consecutivamente com Snorlax durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "MEWTWO_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Mewtwo",
+    "task": "Derrote 3 Pokémon do Giovanni consecutivamente com Mewtwo durante as ondas 400 ou 500 no Modo Pesadelo"
+  },
+  "TYRANITAR_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Tyranitar",
+    "task": "Derrote 2 Pokémon do Maxie consecutivamente com Tyranitar durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "OCTILLERY_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Octillery",
+    "task": "Derrote 2 Pokémon do Wallace consecutivamente com Octillery durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "REGIROCK_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Regirock",
+    "task": "Derrote 2 Pokémon do Steven consecutivamente com Regirock durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "EEVEE_GHOST_QUEST": {
+    "name": "Eevee Fantasma",
+    "task": "Derrote 100 Pokémon do Blue com Eevee usando tipo Fantasma"
+  },
+  "EEVEE_STEEL_QUEST": {
+    "name": "Eevee Aço",
+    "task": "Derrote 100 Pokémon do Blue com Eevee usando tipo Aço"
+  },
+  "EEVEE_GROUND_QUEST": {
+    "name": "Eevee Terra",
+    "task": "Derrote 100 Pokémon do Blue com Eevee usando tipo Terra"
+  },
+  "MAGICAL_PIKACHU_QUEST": {
+    "name": "Pikachu Mágico",
+    "task": "Vença 3 partidas com Pikachu conhecendo pelo menos 2 movimentos do tipo Fada"
+  },
+  "CHARMANDER_UNDERTALE_QUEST": {
+    "name": "Undertale do Charmander",
+    "task": "Sobreviva às últimas 50 ondas com uma equipe de 3 ou menos Pokémon incluindo Charmander"
+  },
+  "SQUIRTLE_TORMENT_QUEST": {
+    "name": "Tormento do Squirtle",
+    "task": "Faça Squirtle testemunhar Blastoise desmaiar 5 vezes no seu grupo"
+  },
+  "BULBASAUR_TERROR_QUEST": {
+    "name": "Terror do Bulbasaur",
+    "task": "Sobreviva a 50 ondas consecutivas com exatamente 2 Pokémon no seu grupo, incluindo Bulbasaur"
+  },
+  "SHIFTRY_TENGU_QUEST": {
+    "name": "Tengu do Shiftry",
+    "task": "Sobreviva às últimas 30 ondas apenas com Shiftry no seu grupo"
+  },
+  "HYPNO_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Hypno",
+    "task": "Derrote 2 Pokémon consecutivos com Hypno durante as ondas da Sabrina (100, 200, 300, 400 ou 500) no Modo Pesadelo"
+  },
+  "MAMOSWINE_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Mamoswine",
+    "task": "Derrote 50 Pokémon rivais com Mamoswine durante as ondas 50-100, 150-200, 250-300, 350-400 ou 450-500 no Modo Pesadelo"
+  },
+  "MORPEKO_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Morpeko",
+    "task": "Derrote 2 Pokémon consecutivos com Morpeko durante as ondas da Lusamine (100, 200 ou 300) no Modo Pesadelo"
+  },
+  "CLEFABLE_GENGAR_QUEST": {
+    "name": "Clefable e Gengar",
+    "task": "Sobreviva às últimas 40 ondas apenas com Gengar e Clefable no seu grupo. Gengar deve ter um movimento do tipo Fada, e Clefable deve ter um movimento do tipo Fantasma"
+  },
+  "REVAROOM_EXTRA_QUEST": {
+    "name": "Extra do Revaroom",
+    "task": "Vença uma partida com exatamente 4 Pokémon: Revaroom, Varoom, Klink e Klang"
+  },
+  "GOLEM_FIRE_QUEST": {
+    "name": "Golem de Fogo",
+    "task": "Faça seu Golem ser atingido por movimentos do tipo Fogo 500 vezes"
+  },
+  "DEINO_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Deino",
+    "task": "Derrote 2 Pokémon do Ghetsis consecutivamente com Deino durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "GOLURK_DREAD_QUEST": {
+    "name": "Pavor do Golurk",
+    "task": "Faça 100 dos seus Pokémon (exceto Golurk) desmaiarem enquanto tem Golurk no seu grupo no Modo Pesadelo"
+  },
+  "HARIYAMA_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Hariyama",
+    "task": "Derrote 2 Pokémon do Lysandre consecutivamente com Hariyama durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "SHARPEDO_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Sharpedo",
+    "task": "Derrote 3 Pokémon do Archie consecutivamente com Sharpedo durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "FARIGIRAF_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Farigiraf",
+    "task": "Derrote 2 Pokémon do Cyrus consecutivamente com Farigiraf durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "KINGDRA_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Kingdra",
+    "task": "Derrote 2 Pokémon da Misty consecutivamente com Kingdra durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "EXCADRILL_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Excadrill",
+    "task": "Derrote 3 Pokémon do Brock consecutivamente com Excadrill durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "LANTURN_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Lanturn",
+    "task": "Derrote 3 Pokémon do Brock consecutivamente com Lanturn durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "PIKACHU_ROBO_NIGHTMARE_QUEST": {
+    "name": "Pesadelo Robô do Pikachu",
+    "task": "Derrote 3 Pokémon do Lt. Surge consecutivamente com Pikachu durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "DODRIO_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Dodrio",
+    "task": "Derrote 3 Pokémon do Larry consecutivamente com Dodrio durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "SUNFLORA_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Sunflora",
+    "task": "Derrote 3 Pokémon do Rose consecutivamente com Sunflora durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "LUCARIO_NIGHTMARE_QUEST": {
+    "name": "Pesadelo do Lucario",
+    "task": "Derrote 3 Pokémon da Cynthia consecutivamente com Lucario durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "Força Normal!",
+    "task": "Derrote 500 Pokémon usando Pokémon do tipo Normal em várias partidas"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Magikarp",
+    "task": "Derrote 500 Pokémon com Magikarp"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Ditto",
+    "task": "Derrote 500 Pokémon com Ditto"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Wobbuffet",
+    "task": "Derrote 500 Pokémon com Wobbuffet"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Smeargle",
+    "task": "Derrote 500 Pokémon com Smeargle"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Unown",
+    "task": "Derrote 500 Pokémon com Unown"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Tyrogue",
+    "task": "Derrote 500 Pokémon com Tyrogue"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Metapod",
+    "task": "Derrote 500 Pokémon com Metapod"
+  }
+}

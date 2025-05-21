@@ -1,0 +1,182 @@
+{
+    "rewardTitle": "레벨 업 {{count}}!",
+    "level": "레벨",
+    "description": {
+      "power": {
+        "increaseSlight": "위력을 {{powerValue}} 약간 증가시킵니다.",
+        "increaseModerate": "위력을 {{powerValue}} 적당히 증가시킵니다.",
+        "increaseSignificantWeak": "위력을 {{powerValue}} 크게 증가시킵니다(약한 기술용).",
+        "increaseVsAccuracyLow": "위력을 {{powerValue}} 증가시키지만 명중률을 {{accuracyValue}} 감소시킵니다.",
+        "increaseVsAccuracyHigh": "위력을 {{powerValue}} 크게 증가시키지만 명중률을 {{accuracyValue}} 감소시킵니다.",
+        "increaseVsPriority": "위력을 {{powerValue}} 증가시키지만 우선도를 {{priorityValue}}로 설정합니다.",
+        "increaseVsRecoil": "위력을 {{powerValue}} 증가시키지만 {{recoilPercent}}%의 반동 데미지를 추가합니다.",
+        "increaseVsSelfStatDrop": "위력을 {{powerValue}} 증가시키지만 사용 후 자신의 {{statName1}}과 {{statName2}}를 {{stages}}단계 감소시킵니다."
+      },
+      "accuracy": {
+        "increasePercentage": "명중률을 {{value}}% 증가시킵니다.",
+        "perfectAccuracy": "명중률을 100%로 만들지만 위력을 {{powerValue}} 감소시킵니다.",
+        "perfectAccuracyNoPenalty": "명중률을 100%로 만듭니다.",
+        "increaseVsPowerLow": "명중률을 {{accuracyValue}}% 증가시키지만 위력을 {{powerValue}} 감소시킵니다.",
+        "increaseVsPowerHigh": "명중률을 {{accuracyValue}}% 크게 증가시키지만 위력을 {{powerValue}} 감소시킵니다.",
+        "increaseVsPp": "명중률을 {{accuracyValue}}% 증가시키지만 최대 PP를 감소시킵니다.",
+        "setAccuracy": "명중률을 {{value}}%로 설정합니다."
+      },
+      "effectChance": {
+        "increaseToValue": "부가 효과 확률을 {{value}}%로 증가시킵니다.",
+        "guaranteeVsPower": "부가 효과를 보장하지만 위력을 {{powerValue}} 감소시킵니다.",
+        "guaranteeVsAccuracy": "부가 효과를 보장하지만 명중률을 {{accuracyValue}}% 감소시킵니다(상태이상 기술).",
+        "guaranteeVsPp": "부가 효과를 보장하지만 최대 PP를 감소시킵니다."
+      },
+      "status": {
+        "addChance": "{{statusName}}를 부여할 {{chance}}% 확률을 추가합니다.",
+        "addChanceVsPower": "{{statusName}}를 부여할 {{chance}}% 확률을 추가하지만 위력을 {{powerValue}} 감소시킵니다.",
+        "addLeechSeed": "씨뿌리기 효과를 추가합니다(풀 타입이 아닌 대상에게) 하지만 위력을 {{powerValue}} 감소시킵니다.",
+        "changeEffect": "부가 효과를 {{statusName}}을 부여할 {{chance}}% 확률로 변경합니다.",
+        "addSecondEffect": "{{statusName1}} 또는 {{statusName2}}를 부여할 {{chance}}% 확률이지만 위력을 {{powerValue}} 감소시킵니다.",
+        "addStatusViaStatusMove": "{{statusName}}를 부여합니다(명중률이 {{accuracyValue}}%로 변경됩니다)."
+      },
+      "flinch": {
+        "addChance": "대상을 풀죽게 만들 {{chance}}% 확률을 추가합니다.",
+        "addChanceLow": "대상을 풀죽게 만들 {{chance}}% 확률을 추가합니다.",
+        "addChanceHighVsPower": "대상을 풀죽게 만들 {{chance}}% 확률을 추가하지만 위력을 {{powerValue}} 감소시킵니다.",
+        "addChancePriorityVsPower": "대상을 풀죽게 만들 {{chance}}% 확률을 추가합니다(선제 기술) 하지만 위력을 {{powerValue}} 감소시킵니다.",
+        "increaseChance": "풀죽음 확률을 {{chance}}%로 증가시킵니다.",
+        "increaseChanceVsPower": "풀죽음 확률을 {{chance}}%로 증가시키지만 위력을 {{powerValue}} 감소시킵니다."
+      },
+      "stat": {
+        "addRaiseSelfSingle": "자신의 {{statName}}을(를) {{stages}}단계 증가시킵니다. 확률을 {{chance}}%로 변경합니다.",
+        "addRaiseSelfMultiple": "자신의 {{statName1}}과(와) {{statName2}}를 {{stages}}단계 증가시킵니다.",
+        "increaseRaiseSelf": "자기 강화 효과를 증가시켜 {{statName}}을(를) {{stages}}단계 증가시킵니다.",
+        "addAnotherRaiseSelf": "{{existingStats}} 이외에도 자신의 {{newStatName}}을(를) {{stages}}단계 증가시킵니다.",
+        "addLowerTargetSingle": "대상의 {{statName}}을(를) {{stages}}단계 감소시킵니다. 명중률이 {{accuracy}}%가 됩니다. 위력이 {{powerValue}} 감소합니다.",
+        "addLowerTargetHarshChance": "대상의 {{statName}}을(를) 크게 {{stages}}단계 감소시킬 {{chance}}% 확률이지만 위력을 {{powerValue}} 감소시킵니다.",
+        "addLowerTargetHarsh": "대상의 {{statName}}을(를) 크게 {{stages}}단계 감소시킵니다(명중률이 {{accuracy}}%로 변경됩니다).",
+        "addLowerTargetMultiple": "대상의 {{statName1}}과(와) {{statName2}}를 {{stages}}단계 감소시킵니다(명중률이 {{accuracy}}%로 변경됩니다).",
+        "increaseLowerTarget": "대상 능력치 감소 효과를 증가시켜 {{statName}}을(를) {{stages}}단계 감소시킵니다. 명중률이 {{accuracy}}%가 됩니다. 위력이 {{powerValue}} 감소합니다.",
+        "increaseLowerTargetChance": "대상의 능력치를 감소시킬 확률을 {{chance}}%로 증가시킵니다.",
+        "guaranteeLowerTarget": "대상의 능력치를 감소시키는 효과를 보장합니다. 위력이 {{powerValue}} 감소합니다. 명중률이 {{accuracyValue}} 감소합니다.",
+        "addAnotherLowerTarget": "{{existingStats}} 이외에도 대상의 {{newStatName}}을(를) {{stages}}단계 감소시킵니다. 위력이 {{powerValue}} 감소합니다.",
+        "addLowerTargetChance": "대상의 {{statName}}을(를) {{stages}}단계 감소시킬 {{chance}}% 확률이지만 위력을 {{powerValue}} 감소시킵니다."
+      },
+      "type": {
+        "changePowerBoost": "타입을 {{typeName}}으로 변경하고 위력을 {{powerValue}} 증가시킵니다.",
+        "changeAccuracyBoost": "타입을 {{typeName}}으로 변경하고 명중률을 {{accuracyValue}}% 증가시킵니다.",
+        "changeAddStatus": "타입을 {{typeName}}으로 변경하고 {{statusName}}을(를) 부여할 {{chance}}% 확률을 추가하지만 위력을 {{powerValue}} 감소시킵니다.",
+        "changeAddHighCrit": "타입을 {{typeName}}으로 변경하고 급소 확률을 높입니다.",
+        "addTypeEffectiveness": "자신의 타입과 함께 {{typeName}} 타입의 상성에 기반한 데미지를 줍니다. 위력을 {{powerValue}} 증가시킵니다.",
+        "superEffectiveVsType": "{{targetTypeName}} 타입 포켓몬에게 항상 효과가 굉장함 데미지를 줍니다.",
+        "becomeTypeless": "타입 없음(항상 일반 데미지)이 되고 위력을 {{powerValue}} 증가시킵니다.",
+        "matchUserType": "기술의 타입이 항상 사용자의 주 타입과 일치합니다.",
+        "weatherBall": "기술의 타입이 날씨에 따라 변합니다(웨더볼처럼).",
+        "terrainPulse": "기술의 타입이 필드에 따라 변합니다(테라버스트처럼).",
+        "hiddenPower": "기술의 타입이 사용자의 특성에 따라 변합니다(숨은파워처럼)."
+      },
+      "multiHit": {
+        "add2to5": "2-5회 타격하며 위력은 {{powerValue}}가 됩니다. 효과 확률은 타격당 {{chance}}%로 설정됩니다. 확률과 위력은 강화할 수 없습니다.",
+        "addExact": "정확히 {{hits}}회 타격하며 위력은 {{powerValue}}가 됩니다. 효과 확률은 타격당 {{chance}}%로 설정됩니다. 확률과 위력은 강화할 수 없습니다.",
+        "addCheckAll": "정확히 {{hits}}회 타격하며 타격당 명중 판정을 하고 위력은 {{powerValue}}, 명중률: {{accuracyReduction}}%가 됩니다. 효과 확률은 타격당 {{chance}}%로 설정됩니다. 확률과 위력은 강화할 수 없습니다.",
+        "changeToExact": "{{hits}}회 타격하며 위력은 {{powerValue}}가 됩니다. 효과 확률은 타격당 {{chance}}%로 설정됩니다. 확률과 위력은 강화할 수 없습니다.",
+        "changeToRange": "{{range}}회 타격하며 위력은 {{powerValue}}가 됩니다. 효과 확률은 타격당 {{chance}}%로 설정됩니다. 확률과 위력은 강화할 수 없습니다.",
+        "enableCheckAll": "모든 타격에 대한 명중 판정을 활성화하고(연속 공격) 위력은 {{powerValue}} 및 명중률: {{accuracyValue}}%가 됩니다. 확률과 위력은 강화할 수 없습니다.",
+        "disableCheckAll": "모든 타격에 대한 명중 판정을 비활성화하고 위력은 {{powerValue}} 및 명중률: {{accuracyValue}}%가 됩니다. 확률과 위력은 강화할 수 없습니다."
+      },
+      "heal": {
+        "addHitHeal": " 입힌 데미지의 {{percent}}%만큼 회복합니다.",
+        "addHitHealVsPower": " 입힌 데미지의 {{percent}}%만큼 회복하지만 위력을 {{powerValue}} 감소시킵니다.",
+        "increaseHitHealVsPower": "흡수 효과를 강화하여 입힌 데미지의 {{percent}}%만큼 회복하지만 위력을 {{powerValue}} 감소시킵니다.",
+        "addSelfHeal": "사용자가 최대 HP의 {{percent}}%를 회복합니다.",
+        "addPlantHeal": "그래스필드가 활성화된 경우 HP를 회복합니다.",
+        "addSandHeal": "모래바람이 활성화된 경우 HP를 회복합니다.",
+        "increaseSelfHeal": "자가 회복량을 최대 HP의 {{percent}}%로 증가시킵니다."
+      },
+      "recoil": {
+        "addVsPower": "{{percent}}%의 반동 데미지를 추가하지만 위력을 {{powerValue}} 증가시킵니다.",
+        "addVsPowerAccuracy": "{{percent}}%의 반동 데미지를 추가하지만 위력을 {{powerValue}} 증가시키고 명중률을 {{accuracyValue}}% 감소시킵니다.",
+        "increaseVsPower": "반동 데미지를 {{percent}}%로 증가시키지만 위력을 {{powerValue}} 증가시킵니다.",
+        "decreaseVsPower": "반동 데미지를 {{percent}}%로 감소시키지만 위력을 {{powerValue}} 감소시킵니다.",
+        "removeVsPower": "반동 데미지를 제거하지만 위력을 {{powerValue}} 감소시킵니다."
+      },
+      "sacrificial": {
+        "addFull": "사용 후 자신이 기절하지만 위력이 {{power}}가 됩니다.",
+        "addHalf": "사용 후 자신의 최대 HP의 50%를 잃지만 위력이 {{power}}가 됩니다.",
+        "addOnHit": "기술이 맞으면 자신이 기절하지만 위력이 {{power}}가 됩니다."
+      },
+      "crit": {
+        "addHighCritVsPower": "급소 확률을 높이지만 위력을 {{powerValue}} 감소시킵니다(고위력 기술용).",
+        "addHighCrit": "급소 확률을 높입니다.",
+        "addHighCritAndPower": "급소 확률을 높이고 위력을 {{powerValue}} 증가시킵니다.",
+        "upgradeToCritOnlyVsPower": "항상 급소에 맞도록 업그레이드하지만 위력을 {{powerValue}} 감소시킵니다.",
+        "upgradeToCritOnlyVsAccuracy": "항상 급소에 맞도록 업그레이드하지만 명중률을 {{accuracyValue}}% 감소시킵니다."
+      },
+      "flags": {
+        "ignoreProtect": "이제 기술이 방어/판별을 뚫을 수 있지만 위력을 {{powerValue}} 감소시킵니다.",
+        "ignoreAbilities": "이제 기술이 대상의 특성을 무시하고 위력을 {{powerValue}} 증가시킵니다.",
+        "soundBased": "기술이 소리 기반(리베로를 통해 타격)이 되고 위력을 {{powerValue}} 증가시킵니다.",
+        "punchingMove": "기술이 펀치 기술(아이언피스트로 강화)이 되고 위력을 {{powerValue}} 증가시킵니다.",
+        "slicingMove": "기술이 베기 기술(날카로움으로 강화)이 되고 위력을 {{powerValue}} 증가시킵니다.",
+        "pulseMove": "기술이 파동 기술(메가런처로 강화)이 되고 위력을 {{powerValue}} 증가시킵니다.",
+        "bitingMove": "기술이 물기 기술(억센턱으로 강화)이 되고 위력을 {{powerValue}} 증가시킵니다.",
+        "windMove": "기술이 바람 기술(윈드라이더/파워의 영향을 받음)이 되고 위력을 {{powerValue}} 증가시킵니다.",
+        "disableContact": "기술이 더 이상 접촉하지 않고 위력을 {{powerValue}} 증가시킵니다.",
+        "enableContact": "이제 기술이 접촉하고 위력을 {{powerValue}} 증가시킵니다.",
+        "ignoreStatChanges": "이제 기술이 대상의 방어 능력치 변화와 회피율을 무시하고 위력을 {{powerValue}} 증가시킵니다.",
+        "removeScreens": "이제 기술이 리플렉터/빛의장막/오로라베일을 제거하고 위력을 {{powerValue}} 증가시킵니다.",
+        "thawTarget": "이제 기술이 얼어있는 대상을 녹이고 위력을 {{powerValue}} 증가시킵니다."
+      },
+      "priority": {
+        "increase": "우선도를 {{value}}로 증가시키지만 위력을 {{powerValue}} 감소시킵니다.",
+        "decrease": "우선도를 {{value}}로 감소시키지만 위력을 {{powerValue}} 증가시킵니다.",
+        "conditionalTerrain": "{{terrain}} 필드가 활성화된 경우 우선도를 {{value}}로 증가시키고 위력을 {{powerValue}} 증가시킵니다.",
+        "conditionalFirstTurn": "첫 턴이 아니면 실패하고, 우선도를 {{value}}로 증가시키고 위력을 {{powerValue}} 증가시킵니다.",
+        "conditionalTargetMoved": "대상이 이미 이번 턴에 행동했으면 우선도를 {{value}}로 증가시키고 위력을 {{powerValue}} 증가시킵니다."
+      },
+      "category": {
+        "changeToSpecial": "분류를 특수로 변경합니다.",
+        "changeToSpecialVsDef": "분류를 특수로 변경하지만 대상의 방어로 데미지를 계산합니다.",
+        "changeToPhysical": "분류를 물리로 변경합니다.",
+        "changeToPhysicalVsSpDef": "분류를 물리로 변경하지만 대상의 특수방어로 데미지를 계산합니다.",
+        "changeStatusToDamage": "분류를 {{category}}로 변경하고 위력을 {{power}}로 설정합니다."
+      },
+      "misc": {
+        "addTrap": "대상을 {{trapName}}으로 여러 턴 동안 가두지만 위력을 {{powerValue}} 감소시킵니다.",
+        "addForceSwitch": "대상을 강제로 교체시키지만 위력을 {{powerValue}} 감소시킵니다.",
+        "addGrounding": "공중에 있는 대상을 지상에 내립니다(비행 타입 면역을 제거합니다).",
+        "fixedDamageLevel": "사용자의 레벨과 동일한 데미지를 입히도록 데미지 계산을 변경합니다(기본 위력을 대체합니다).",
+        "fixedDamageValue": "고정 {{value}} HP 데미지를 입히도록 데미지 계산을 변경합니다.",
+        "fixedDamageTargetHalfHp": "대상의 현재 HP의 절반에 해당하는 데미지를 입히도록 데미지 계산을 변경합니다(기본 위력을 대체합니다).",
+        "addSurviveDamage": "대상이 항상 최소 1 HP로 남도록 합니다(신비의베기처럼) 그리고 위력을 {{powerValue}} 증가시킵니다.",
+        "addWeightPowerTarget": "대상의 무게에 따라 위력이 증가합니다(로킥처럼).",
+        "addWeightPowerCompare": "사용자가 대상보다 무거울수록 위력이 증가합니다(헤비봄버처럼).",
+        "addSpeedPowerSlower": "사용자가 대상보다 느릴수록 위력이 증가합니다(자이로볼처럼).",
+        "addSpeedPowerFaster": "사용자가 대상보다 빠를수록 위력이 증가합니다(일렉트릭볼처럼).",
+        "addHpPowerHighHp": "사용자의 현재 HP가 높을수록 위력이 증가합니다(최대 위력: {{maxPower}}).",
+        "addHpPowerLowHp": "사용자의 현재 HP가 낮을수록 위력이 증가합니다(죽음의무도처럼).",
+        "addSwitchOut": "사용 후 자신이 교체되지만 위력을 {{powerValue}} 감소시킵니다(볼트체인지처럼).",
+        "addChargeTurn": "공격 전에 충전 턴을 추가하지만 위력을 {{powerValue}} 증가시킵니다.",
+        "addChargeTurnWithBoost": "충전 턴을 추가하고(사용자의 {{statName}}을(를) {{stages}}단계 증가시킴) 위력을 {{powerValue}} 증가시킵니다.",
+        "addStealItemChance": "{{chance}}% 확률로 대상의 지닌 도구를 훔칩니다.",
+        "addStealItemGuaranteed": "대상의 지닌 도구를 훔치지만 위력을 {{powerValue}} 감소시킵니다.",
+        "addRemoveItem": "대상의 지닌 도구를 제거하고 위력을 {{powerValue}} 증가시킵니다.",
+        "powerBoostWeather": "{{weather}}가 활성화된 경우 위력이 2배가 됩니다.",
+        "powerBoostTerrain": "{{terrain}} 필드가 활성화되고 대상이 지상에 있는 경우 위력이 2배가 됩니다.",
+        "powerBoostConsecutive": "연속으로 성공할 때마다 위력이 2배가 됩니다(최대 4배).",
+        "powerBoostTurnDamaged": "사용자가 이번 턴에 대상에게 데미지를 입었을 경우 위력이 2배가 됩니다."
+      },
+      "statusSpecific": {
+        "increaseFieldDuration": "이 기술로 설정된 필드 효과(반사장벽, 순풍 등)의 지속 시간을 {{turns}} 턴으로 증가시킵니다.",
+        "increaseVolatileDuration": "이 기술로 적용된 일시적 상태(혼란, 도발 등)의 지속 시간을 증가시킵니다.",
+        "ignoreProtect": "이제 기술이 방어/판별을 사용하는 대상에게 영향을 줄 수 있습니다.",
+        "addSelfHeal": "사용자가 최대 HP의 {{percent}}%를 회복합니다.",
+        "addSelfBoost": "사용자의 {{statName}}을(를) {{stages}}단계 증가시킵니다.",
+        "addArenaTrap": "상대 필드 쪽에 {{trapName}} 트랩을 설치합니다.",
+        "setWeather": "날씨를 {{weather}}(으)로 변경합니다.",
+        "setTerrain": "필드를 {{terrain}}(으)로 변경합니다.",
+        "clearWeather": "현재 날씨를 제거합니다.",
+        "clearTerrain": "현재 필드를 제거합니다."
+      }
+    },
+  "moveTriggers": {
+      "loweredItsHead": "{{pokemonName}}(이)가\n머리를 숙였다!",
+      "tookInSunlight": "{{pokemonName}}(이)가\n햇빛을 흡수했다!"
+  }
+} 

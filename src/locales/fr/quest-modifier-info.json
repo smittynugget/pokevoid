@@ -1,0 +1,450 @@
+{
+  "DUSCLOPS_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Dusclops",
+    "task": "Vaincre 2 Pokémon d'Allister consécutivement avec Dusclops pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+  },
+  "TAUROS_ELECTRIC_HIT_QUEST": {
+    "name": "Tauros sous Tension",
+    "task": "Faire subir à Tauros 30 attaques de type Électrik"
+  },
+  "KECLEON_COLOR_CHANGE_QUEST": {
+    "name": "Changement de Couleur de Kecleon",
+    "task": "Activer la capacité Changement de Couleur de Kecleon 50 fois"
+  },
+  "GLISCOR_DARK_MOVE_KNOCKOUT_QUEST": {
+    "name": "K.O. Ténèbres de Gliscor",
+    "task": "Vaincre 100 Pokémon avec Gliscor en utilisant des attaques de type Ténèbres"
+  },
+  "MAROWAK_CUBONE_FAINT_QUEST": {
+    "name": "K.O. de Marowak et Osselait",
+    "task": "Faire tomber K.O. Marowak pendant qu'Osselait est dans votre équipe"
+  },
+  "NOIVERN_DRAGON_MOVE_KNOCKOUT_QUEST": {
+    "name": "K.O. Dragon de Bruyverne",
+    "task": "Vaincre 100 Pokémon avec Bruyverne en utilisant des attaques de type Dragon"
+  },
+  "FERALIGATR_DRAGON_DEFEAT_QUEST": {
+    "name": "Aligatueur contre Dragons",
+    "task": "Vaincre 50 Pokémon de type Dragon avec Aligatueur"
+  },
+  "CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST": {
+    "name": "K.O. Sol de Dracaufeu",
+    "task": "Vaincre 100 Pokémon avec Dracaufeu en utilisant des attaques de type Sol"
+  },
+  "VENUSAUR_PSYCHIC_MOVE_USE_QUEST": {
+    "name": "Attaques Psy de Florizarre",
+    "task": "Utiliser des attaques de type Psy 200 fois avec Florizarre"
+  },
+  "BLASTOISE_FAIRY_DEFEAT_QUEST": {
+    "name": "Tortank contre Fées",
+    "task": "Vaincre 50 Pokémon de type Fée avec Tortank"
+  },
+  "NIDOKING_DEFEAT_QUEST": {
+    "name": "Duel de Nidoking",
+    "task": "Vaincre 10 Nidoking avec votre Nidoking"
+  },
+  "GENGAR_SPECIAL_WAVE_QUEST": {
+    "name": "Vagues Spéciales de Ectoplasma",
+    "task": "Compléter 30 vagues consécutives avec Ectoplasma en première position ne connaissant aucune attaque Spectre/Poison, et au moins 1 attaque Électrik"
+  },
+  "WEEZING_FIRE_MOVE_KNOCKOUT_QUEST": {
+    "name": "K.O. Feu de Smogogo",
+    "task": "Vaincre 100 Pokémon avec Smogogo en utilisant des attaques de type Feu"
+  },
+  "HITMONLEE_NORMAL_WAVE_QUEST": {
+    "name": "Vagues Normales de Kicklee",
+    "task": "Compléter 30 vagues consécutives avec Kicklee en première position, n'ayant que des attaques Normales, et n'ayant que des Pokémon de type Normal dans l'équipe"
+  },
+  "HITMONCHAN_STAT_INCREASE_QUEST": {
+    "name": "Boost de Stats de Tygnon",
+    "task": "Utiliser des attaques augmentant les statistiques 50 fois avec Tygnon"
+  },
+  "HITMON_DUO_WIN_QUEST": {
+    "name": "Victoire du Duo Hitmon",
+    "task": "Gagner une partie avec Kicklee et Tygnon dans votre équipe"
+  },
+  "KANGASKHAN_GHOST_MOVE_QUEST": {
+    "name": "Attaques Spectre de Kangourex",
+    "task": "Utiliser des attaques de type Spectre 50 fois avec Kangourex"
+  },
+  "SCYTHER_TRIO_WIN_QUEST": {
+    "name": "Victoire en Trio de Insécateur",
+    "task": "Compléter les 50 dernières vagues avec seulement 3 Pokémon dont Insécateur"
+  },
+  "GRENINJA_TRIO_WIN_QUEST": {
+    "name": "Victoire en Trio de Amphinobi",
+    "task": "Compléter les 50 dernières vagues avec seulement 3 Pokémon dont Amphinobi"
+  },
+  "SIMISAGE_TRIO_WIN_QUEST": {
+    "name": "Victoire en Trio de Feuiloutan",
+    "task": "Compléter les 50 dernières vagues avec seulement 3 Pokémon dont Feuiloutan"
+  },
+  "ELEMENTAL_MONKEY_WIN_QUEST": {
+    "name": "Victoire des Singes Élémentaires",
+    "task": "Gagner avec au moins un des Pokémon suivants : [Flotoutan, Flamoutan, Feuiloutan] connaissant exactement 4 attaques des types suivants : [Vol, Feu, Eau et Sol]"
+  },
+  "ELECTIVIREMAGMORTAR_WIN_QUEST": {
+    "name": "Victoire Élekable & Maganon",
+    "task": "Gagner une partie avec Élekable et Maganon dans votre équipe"
+  },
+  "GYARADOS_GROUND_SWITCH_QUEST": {
+    "name": "Léviator face au Sol",
+    "task": "Faire subir 20 attaques de type Sol à votre Léviator"
+  },
+  "LAPRAS_FIRE_MOVE_QUEST": {
+    "name": "Attaques Feu de Lokhlass",
+    "task": "Utiliser des attaques de type Feu 50 fois avec Lokhlass"
+  },
+  "PORYGON_Z_ANALYTIC_USE_QUEST": {
+    "name": "Analyste de Porygon-Z",
+    "task": "Activer la capacité Analyste de Porygon-Z 50 fois"
+  },
+  "MEOWTH_JESTER_QUEST": {
+    "name": "Victoire en Trio de Miaouss",
+    "task": "Compléter les 50 dernières vagues avec seulement 3 Pokémon dont Miaouss"
+  },
+  "DRAGONITE_LANCE_DEFEAT_QUEST": {
+    "name": "Dracolosse contre Peter",
+    "task": "Vaincre 3 Pokémon de Peter consécutivement avec Dracolosse"
+  },
+  "SUDOWOODO_WOOD_HAMMER_QUEST": {
+    "name": "Martobois de Simularbre",
+    "task": "Utiliser Martobois 100 fois avec Simularbre"
+  },
+  "AMBIPOM_GIGA_IMPACT_QUEST": {
+    "name": "Giga Impact de Capidextre",
+    "task": "Utiliser Giga Impact 10 fois avec Capidextre en une partie"
+  },
+  "MILTANK_STEEL_MOVE_KNOCKOUT_QUEST": {
+    "name": "K.O. Acier d'Écrémeuh",
+    "task": "Vaincre 50 Pokémon avec Écrémeuh en utilisant des attaques de type Acier"
+  },
+  "SLAKING_RIVAL_DEFEAT_QUEST": {
+    "name": "Monaflémit contre Rival",
+    "task": "Vaincre 3 Pokémon du rival avec Monaflémit sans le changer"
+  },
+  "SOLROCK_LUNATONE_WIN_QUEST": {
+    "name": "Victoire Solaroc et Séléroc",
+    "task": "Gagner une partie avec Solaroc et Séléroc dans votre équipe"
+  },
+  "REGIGIGAS_REGI_DEFEAT_QUEST": {
+    "name": "Regigigas contre Regis",
+    "task": "Vaincre 5 Pokémon Regi avec Regigigas"
+  },
+  "PIKACHU_RED_BLUE_WIN_QUEST": {
+    "name": "Pikachu contre Red et Blue",
+    "task": "Gagner contre Red et Blue avec Pikachu dans votre équipe"
+  },
+  "SNORLAX_GRASS_KNOCKOUT_QUEST": {
+    "name": "K.O. Plante de Ronflex",
+    "task": "Vaincre 20 Pokémon avec Ronflex en utilisant des attaques de type Plante"
+  },
+  "CLOYSTER_PRESENT_QUEST": {
+    "name": "Cadeau de Crustabri",
+    "task": "Utiliser Cadeau 50 fois avec Crustabri en mode Nuzlocke"
+  },
+  "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
+    "name": "Pifeuil contre Tarinor",
+    "task": "Vaincre 20 Tarinor ou Tarinorme avec Pifeuil"
+  },
+  "CHANDELURE_REST_QUEST": {
+    "name": "Repos de Lugulabre",
+    "task": "Utiliser Repos 10 fois avec Lugulabre en une partie"
+  },
+  "SMEARGLE_DEFEAT_QUEST": {
+    "name": "Victoires de Queulorior",
+    "task": "Vaincre 100 Pokémon avec Queulorior"
+  },
+  "MIMIKYU_CHARIZARD_KNOCKOUT_QUEST": {
+    "name": "Mimiqui contre Dracaufeu",
+    "task": "Vaincre 3 Dracaufeu avec Mimiqui"
+  },
+  "MIMIKYU_GRENINJA_KNOCKOUT_QUEST": {
+    "name": "Mimiqui contre Amphinobi",
+    "task": "Vaincre 3 Amphinobi avec Mimiqui"
+  },
+  "MIMIKYU_RAICHU_KNOCKOUT_QUEST": {
+    "name": "Mimiqui contre Raichu",
+    "task": "Vaincre 3 Raichu avec Mimiqui"
+  },
+  "MIMIKYU_MEWTWO_KNOCKOUT_QUEST": {
+    "name": "Mimiqui contre Mewtwo",
+    "task": "Vaincre 2 Mewtwo avec Mimiqui"
+  },
+  "MIMIKYU_REGIROCK_KNOCKOUT_QUEST": {
+    "name": "Mimiqui contre Regirock",
+    "task": "Vaincre 2 Regirock avec Mimiqui"
+  },
+  "EISCUE_ROCK_KNOCKOUT_QUEST": {
+    "name": "Bekaglaçon contre Roche",
+    "task": "Vaincre 50 Pokémon de type Roche avec Bekaglaçon"
+  },
+  "ZANGOOSE_SEVIPER_KNOCKOUT_QUEST": {
+    "name": "Mangriff contre Séviper",
+    "task": "Vaincre 10 Séviper avec Mangriff"
+  },
+  "SEVIPER_ZANGOOSE_KNOCKOUT_QUEST": {
+    "name": "Séviper contre Mangriff",
+    "task": "Vaincre 10 Mangriff avec Séviper"
+  },
+  "TRUBBISH_POISON_DEFEAT_QUEST": {
+    "name": "Poubébé contre Poison",
+    "task": "Vaincre 50 Pokémon de type Poison avec Poubébé"
+  },
+  "HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST": {
+    "name": "Brutalibré contre Rivaux et Champions",
+    "task": "Vaincre 6 Pokémon de Rivaux ou Champions avec Brutalibré"
+  },
+  "DITTO_DRAGONITE_TRANSFORM_QUEST": {
+    "name": "Métamorph en Dracolosse",
+    "task": "Se transformer en Dracolosse 5 fois avec Métamorph"
+  },
+  "DITTO_CHARIZARD_TRANSFORM_QUEST": {
+    "name": "Métamorph en Dracaufeu",
+    "task": "Se transformer en Dracaufeu 5 fois avec Métamorph"
+  },
+  "DITTO_PIKACHU_TRANSFORM_QUEST": {
+    "name": "Métamorph en Pikachu",
+    "task": "Se transformer en Pikachu 5 fois avec Métamorph"
+  },
+  "DITTO_MACHAMP_TRANSFORM_QUEST": {
+    "name": "Métamorph en Mackogneur",
+    "task": "Se transformer en Mackogneur 5 fois avec Métamorph"
+  },
+  "DITTO_MEWTWO_TRANSFORM_QUEST": {
+    "name": "Métamorph en Mewtwo",
+    "task": "Se transformer en Mewtwo 5 fois avec Métamorph"
+  },
+  "FERALIGATOR_ROCK_MOVE_KNOCKOUT_QUEST": {
+    "name": "K.O. Roche d'Aligatueur",
+    "task": "Vaincre 50 Pokémon avec Aligatueur en utilisant des attaques de type Roche"
+  },
+  "WOBBUFFET_RIVAL_DEFEAT_QUEST": {
+    "name": "Qulbutoké contre Rival",
+    "task": "Vaincre 3 Pokémon du rival avec Qulbutoké"
+  },
+  "MAGIKARP_DEFEAT_QUEST": {
+    "name": "Victoires de Magicarpe",
+    "task": "Vaincre 50 Pokémon avec Magicarpe"
+  },
+  "KLINKLANG_GEAR_MOVE_QUEST": {
+    "name": "Engrenages de Cliticlic",
+    "task": "Utiliser Engrenage et/ou Engrenage Plus 100 fois avec Cliticlic"
+  },
+  "SPINDA_CONFUSION_RECOVERY_QUEST": {
+    "name": "Récupération de Spinda",
+    "task": "Récupérer de la confusion 10 fois avec Spinda"
+  },
+  "NINETALES_STORED_POWER_KNOCKOUT_QUEST": {
+    "name": "Force Ajoutée de Feunard",
+    "task": "Vaincre 50 Pokémon avec Feunard en utilisant Force Ajoutée"
+  },
+  "SHUCKLE_DEFEAT_QUEST": {
+    "name": "Victoires de Caratroc",
+    "task": "Vaincre 30 Pokémon avec Caratroc"
+  },
+  "TANGELA_RIVAL_DEFEAT_QUEST": {
+    "name": "Saquedeneu contre Rival",
+    "task": "Vaincre 3 Pokémon du rival avec Saquedeneu"
+  },
+  "CLAYDOL_POISON_QUEST": {
+    "name": "Attaques Poison de Symbios",
+    "task": "Utiliser des attaques de type Poison 200 fois avec Symbios"
+  },
+  "TAUROS_DARK_WAVE_QUEST": {
+    "name": "Vagues Ténèbres de Tauros",
+    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Tauros avec au moins 1 attaque Ténèbres et 1 attaque Spectre (il ne peut pas avoir d'attaques de type Normal) en mode Cauchemar"
+  },
+  "DITTO_SPECIAL_WIN_QUEST": {
+    "name": "Victoire Spéciale de Métamorph",
+    "task": "Survivre aux 50 dernières vagues avec une équipe de exactement 3 Pokémon incluant Métamorph"
+  },
+  "MAROWAK_ZOMBIE_KNOCKOUT_QUEST": {
+    "name": "K.O. Zombie d'Ossatueur",
+    "task": "Vaincre 100 Pokémon avec Ossatueur en utilisant Vent Maléfique, Poing Fureur, Rancune, Malédiction ou Dernier Recours"
+  },
+  "GRENINJA_YOKAI_WAVE_QUEST": {
+    "name": "Vagues Yokai d'Amphinobi",
+    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Amphinobi avec au moins 1 attaque Spectre et 1 attaque Ténèbres (il ne peut pas avoir d'attaques de type Eau) en mode Cauchemar"
+  },
+  "LICKITUNG_HYPER_WAVE_QUEST": {
+    "name": "Vagues Hyper d'Excelangue",
+    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Excelangue avec au moins 1 attaque Poison et 1 attaque Ténèbres (il ne peut pas avoir d'attaques de type Normal) en mode Cauchemar"
+  },
+  "CHARMANDER_NIGHTMARE_WIN_QUEST": {
+    "name": "Victoire Cauchemar de Salamèche",
+    "task": "Gagner une partie en mode Cauchemar avec un Determizard (Salamèche Forme Glitch) dans votre équipe"
+  },
+  "GASTLY_NIGHTMARE_WAVE_QUEST": {
+    "name": "Vagues Cauchemar de Fantominus",
+    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Fantominus dans une équipe de 3 Pokémon ou moins, en mode Cauchemar bien sûr"
+  },
+  "PIKACHU_PLUS_ULTRA_QUEST": {
+    "name": "Plus Ultra de Pikachu",
+    "task": "Gagner une partie en mode Cauchemar avec Pikachu dans votre équipe"
+  },
+  "CHARIZARD_HELLFLAME_QUEST": {
+    "name": "Flamme Infernale de Dracaufeu",
+    "task": "Utiliser Rafale Feu 100 fois avec Dracaufeu en mode Cauchemar"
+  },
+  "EEVEE_NIGHTMARE_QUEST": {
+    "name": "Cauchemar d'Évoli",
+    "task": "Vaincre 2 Pokémon de Blue consécutivement avec Évoli pendant les vagues 100, 200, 300, 400 ou 500, en mode Cauchemar"
+  },
+  "SNORLAX_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Ronflex",
+    "task": "Vaincre 2 Pokémon de Red consécutivement avec Ronflex pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+  },
+  "MEWTWO_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Mewtwo",
+    "task": "Vaincre 3 Pokémon de Giovanni consécutivement avec Mewtwo pendant les vagues 400 ou 500 en mode Cauchemar"
+  },
+  "TYRANITAR_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Tyranocif",
+    "task": "Vaincre 2 Pokémon de Maxie consécutivement avec Tyranocif pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+  },
+  "OCTILLERY_NIGHTMARE_QUEST": {
+    "name": "Cauchemar d'Octillery",
+    "task": "Vaincre 2 Pokémon de Marc consécutivement avec Octillery pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+  },
+  "REGIROCK_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Regirock",
+    "task": "Vaincre 2 Pokémon de Pierre consécutivement avec Regirock pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+  },
+  "EEVEE_GHOST_QUEST": {
+    "name": "Évoli Spectre",
+    "task": "Vaincre 100 Pokémon de Blue avec Évoli en utilisant le type Spectre"
+  },
+  "EEVEE_STEEL_QUEST": {
+    "name": "Évoli Acier",
+    "task": "Vaincre 100 Pokémon de Blue avec Évoli en utilisant le type Acier"
+  },
+  "EEVEE_GROUND_QUEST": {
+    "name": "Évoli Sol",
+    "task": "Vaincre 100 Pokémon de Blue avec Évoli en utilisant le type Sol"
+  },
+  "MAGICAL_PIKACHU_QUEST": {
+    "name": "Pikachu Magique",
+    "task": "Gagner 3 parties avec Pikachu connaissant au moins 2 attaques de type Fée"
+  },
+  "CHARMANDER_UNDERTALE_QUEST": {
+    "name": "Undertale de Salamèche",
+    "task": "Survivre aux 50 dernières vagues avec une équipe de 3 Pokémon ou moins incluant Salamèche"
+  },
+  "SQUIRTLE_TORMENT_QUEST": {
+    "name": "Tourment de Carapuce",
+    "task": "Faire assister Carapuce à 5 K.O. de Tortank dans votre équipe"
+  },
+  "BULBASAUR_TERROR_QUEST": {
+    "name": "Terreur de Bulbizarre",
+    "task": "Survivre à 50 vagues consécutives avec exactement 2 Pokémon dans votre équipe, incluant Bulbizarre"
+  },
+  "SHIFTRY_TENGU_QUEST": {
+    "name": "Tengu de Tengalice",
+    "task": "Survivre aux 30 dernières vagues avec uniquement Tengalice dans votre équipe"
+  },
+  "HYPNO_NIGHTMARE_QUEST": {
+    "name": "Cauchemar d'Hypnomade",
+    "task": "Vaincre 2 Pokémon consécutifs avec Hypnomade pendant les vagues de Morgane (100, 200, 300, 400 ou 500) en mode Cauchemar"
+  },
+  "MAMOSWINE_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Mammochon",
+    "task": "Vaincre 50 Pokémon de rival avec Mammochon pendant les vagues 50-100, 150-200, 250-300, 350-400 ou 450-500 en mode Cauchemar"
+  },
+  "MORPEKO_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Morpeko",
+    "task": "Vaincre 2 Pokémon consécutifs avec Morpeko pendant les vagues de Lusamine (100, 200 ou 300) en mode Cauchemar"
+  },
+  "CLEFABLE_GENGAR_QUEST": {
+    "name": "Mélodelfe et Ectoplasma",
+    "task": "Survivre aux 40 dernières vagues avec uniquement Ectoplasma et Mélodelfe dans votre équipe. Ectoplasma doit avoir une attaque fée, et Mélodelfe doit avoir une attaque spectre"
+  },
+  "REVAROOM_EXTRA_QUEST": {
+    "name": "Extra de Revaroom",
+    "task": "Gagner une partie avec exactement 4 Pokémon : Revaroom, Varoom, Tic et Clic"
+  },
+  "GOLEM_FIRE_QUEST": {
+    "name": "Golem de Feu",
+    "task": "Faire subir 500 attaques de type Feu à votre Golem"
+  },
+  "DEINO_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Solochi",
+    "task": "Vaincre 2 Pokémon de Ghetis consécutivement avec Solochi pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+  },
+  "GOLURK_DREAD_QUEST": {
+    "name": "Terreur de Golemastoc",
+    "task": "Faire tomber K.O. 100 de vos Pokémon (autres que Golemastoc) en ayant Golemastoc dans votre équipe en mode Cauchemar"
+  },
+  "HARIYAMA_NIGHTMARE_QUEST": {
+    "name": "Cauchemar d'Hariyama",
+    "task": "Vaincre 2 Pokémon de Lysandre consécutivement avec Hariyama pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+  },
+  "SHARPEDO_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Sharpedo",
+    "task": "Vaincre 3 Pokémon d'Arthur consécutivement avec Sharpedo pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+  },
+  "FARIGIRAF_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Farigiraf",
+    "task": "Vaincre 2 Pokémon de Cyrus consécutivement avec Farigiraf pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+  },
+  "KINGDRA_NIGHTMARE_QUEST": {
+    "name": "Cauchemar d'Hyporoi",
+    "task": "Vaincre 2 Pokémon d'Ondine consécutivement avec Hyporoi pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+  },
+  "EXCADRILL_NIGHTMARE_QUEST": {
+    "name": "Cauchemar d'Excavarenne",
+    "task": "Vaincre 3 Pokémon de Pierre consécutivement avec Excavarenne pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+  },
+  "LANTURN_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Lanturn",
+    "task": "Vaincre 3 Pokémon de Pierre consécutivement avec Lanturn pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+  },
+  "PIKACHU_ROBO_NIGHTMARE_QUEST": {
+    "name": "Cauchemar Robo de Pikachu",
+    "task": "Vaincre 3 Pokémon du Major Bob consécutivement avec Pikachu pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+  },
+  "DODRIO_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Dodrio",
+    "task": "Vaincre 3 Pokémon de Larry consécutivement avec Dodrio pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+  },
+  "SUNFLORA_NIGHTMARE_QUEST": {
+    "name": "Cauchemar d'Héliatronc",
+    "task": "Vaincre 3 Pokémon de Rose consécutivement avec Héliatronc pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+  },
+  "LUCARIO_NIGHTMARE_QUEST": {
+    "name": "Cauchemar de Lucario",
+    "task": "Vaincre 3 Pokémon de Cynthia consécutivement avec Lucario pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "Force Normale !",
+    "task": "Vaincre 500 Pokémon en utilisant des Pokémon de type Normal sur plusieurs parties"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Magicarpe",
+    "task": "Vaincre 500 Pokémon avec Magicarpe"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Métamorph",
+    "task": "Vaincre 500 Pokémon avec Métamorph"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Qulbutoké",
+    "task": "Vaincre 500 Pokémon avec Qulbutoké"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Queulorior",
+    "task": "Vaincre 500 Pokémon avec Queulorior"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Zarbi",
+    "task": "Vaincre 500 Pokémon avec Zarbi"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Debugant",
+    "task": "Vaincre 500 Pokémon avec Debugant"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Chrysacier",
+    "task": "Vaincre 500 Pokémon avec Chrysacier"
+  }
+}

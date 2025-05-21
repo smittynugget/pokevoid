@@ -1,0 +1,331 @@
+{
+  "intro": "Bienvenue dans PokéVoid, un fangame axé sur les combats Pokémon avec des éléments roguelite !\n$Ce jeu n'est pas monétisé et nous ne prétendons pas à la propriété de Pokémon, ni des éléments sous copyright\n$utilisés.\n$Ce jeu est toujours en développement, mais entièrement jouable.\n$Tout signalement de bugs passe par le serveur Discord.\n$Si le jeu est lent, vérifiez que l'Accélération Matérielle est activée dans les paramètres du navigateur.",
+  "titles": {
+    "essentials": "Bases Essentielles",
+    "gameModes": "Modes de Jeu",
+    "specialPokemon": "Pokémon Spéciaux",
+    "progression": "Progression du Jeu",
+    "permanentFeatures": "Fonctionnalités Permanentes",
+    "glitchSystem": "Système de Glitch",
+    "battleMechanics": "Mécaniques de Combat",
+    "formChanges": "Changements de Forme",
+    "communityFeatures": "Fonctionnalités Communautaires"
+  },
+  "accessMenu": {
+    "title": "Accéder au Menu",
+    "text": "Pour accéder au menu, appuyez sur M ou Échap pendant que vous attendez une action. Le menu contient les paramètres et diverses fonctionnalités."
+  },
+  "menu": "Vous pouvez accéder aux paramètres depuis ce menu.\n$Vous pouvez entre autres y changer la vitesse du jeu ou le style de fenêtre.\n$Il y a également toute une variété d'autres fonctionnalités,\n$jetez-y un œil !",
+  "starterSelect": "Choisissez vos starters depuis cet écran avec Z ou Espace.\nIls formeront votre équipe de départ.\n$Chacun possède une valeur. Votre équipe peut avoir jusqu'à\n6 membres, tant que vous ne dépassez pas un cout de 10.\n$Vous pouvez aussi choisir le sexe, le talent et la forme en\nfonction des variants déjà capturés ou éclos.\n$Les IVs d'un starter sont les meilleurs de tous ceux de son\nespèce déjà obtenus. Essayez donc d'en obtenir plusieurs !",
+  "pokerus": "Chaque jour, 3 starters tirés aléatoirement ont un contour\n$violet. Si un starter que vous possédez l'a, essayez de\n$l'ajouter à votre équipe. Vérifiez bien son résumé !",
+  "statChange": "Les changements de stats restent à travers les combats tant que le Pokémon n'est pas rappelé.\n$Vos Pokémon sont rappelés avant un combat de Dresseur et avant d'entrer dans un nouveau biome.\n$Vous pouvez voir en combat les changements de stats d'un Pokémon en maintenant C ou Maj.\n$Vous pouvez également voir les capacités de l'adversaire en maintenant V.\n$Seules les capacités que le Pokémon a utilisées dans ce combat sont consultables.",
+  "selectItem": "Après chaque combat, vous avez le choix entre 3 objets\ntirés au sort. Vous ne pouvez en prendre qu'un.\n$Cela peut être des objets consommables, des objets à\nfaire tenir, ou des objets passifs aux effets permanents.\n$La plupart des effets des objets non-consommables se cumuleront de diverses manières.\n$Certains objets apparaitront s'ils peuvent être utilisés, comme les objets d'évolution.\n$Vous pouvez aussi transférer des objets tenus entre Pokémon en utilisant l'option de transfert.\n$L'option de transfert apparait en bas à droite dès que vous avez obtenu un objet à faire tenir.\n$Vous pouvez acheter des consommables avec de l'argent.\nPlus vous progressez, plus le choix sera varié.\n$Choisir un des objets gratuits déclenchera le prochain combat, donc faites bien tous vos achats avant.",
+  "eggGacha": "Sur cet écran, vous pouvez échanger vos coupons contre\ndes œufs de Pokémon.\n$Les œufs doivent éclore et se rapprochent de l'éclosion\naprès chaque combat. Les œufs plus rares prennent plus\nde temps à éclore.\n$Les Pokémon éclos ne sont pas ajoutés à votre équipe,\nmais à vos starters.\n$Les Pokémon éclos ont généralement de meilleures IV\nque les Pokémon sauvages.\n$Certains Pokémon ne peuvent être obtenus que par des œufs.\n$Il y a 3 machines différentes avec différents bonus,\nalors choisissez celle qui vous convient le mieux!",
+  "pokerogue": {
+    "title": "Rendre à PokéRogue le Crédit qu'il Mérite",
+    "text": { 
+      "1":"Sans la conception brillante de PokéRogue, PokéVoid n'existerait pas aujourd'hui ! Leur cadre extensible m'a permis d'expérimenter, de CASSER, et de faire de PokéVoid ce qu'il est aujourd'hui !",
+      "2":"Là où PokéRogue se dresse comme un phare éclatant de ce que devrait être un roguelike Pokémon...",
+      "3":"PokéVoid tente de s'aventurer dans les ombres, apportant une touche de magnifique chaos et de corruption à leur formule quasi parfaite.",
+      "4":"Vous aimez les runs quotidiens, les événements, les modes défi ? Les modes Endless ou Splice ? Visitez pokerogue.net et jouez à l'original !"
+    }
+  },
+  "intrashop": {
+    "title": "L'Inventaire de la Boutique Change à Chaque Achat !",
+    "text": { 
+      "1":"À chaque achat, l'inventaire de la boutique change ! Utilisez cela à votre avantage et assurez-vous d'obtenir d'abord ce dont vous avez besoin !",
+      "2":"Gardez un œil sur les objets GRATUITS, ils apparaissent aléatoirement dans l'inventaire de la boutique !"
+    }
+  },
+  "runDetails": {
+    "title": "Raccourci pour Voir les Runs Actuelles",
+    "text": { 
+      "1":"Appuyez sur R pour voir immédiatement les détails de la run actuelle (lorsque vous êtes dans l'écran de combat / récompenses / titre)"
+    }
+  },
+  "glitchRivals": {
+    "title": "Rivaux Corrompus",
+    "text": { 
+      "1":"Les Rivaux que vous avez vaincus font écho depuis le néant, ces êtres ne sont pas ce qu'ils semblent être.",
+      "2":"Entités corrompues par le néant, leur vraie forme vous attend dans le vide. Sauvez-les."
+    }
+  },
+  "legendary": {
+    "title": "Rendez n'importe quel Pokémon Légendaire",
+    "text": { 
+      "1":"PokéVoid vous permet de rendre N'IMPORTE QUEL Pokémon légendaire !",
+      "2":"En utilisant des Objets Glitch, vous pouvez donner à vos Pokémon de nouvelles capacités, types, attaques, statistiques et plus encore !",
+      "3":"Le Néant vous attend, Dresseur. Embrassez le pouvoir interdit pour le vaincre !"
+    }
+  },
+  "rivals": {
+    "title": "Rivaux Aléatoires",
+    "text": { 
+      "1":"Chaque partie présente un rival aléatoire avec une équipe thématique et un Pokémon signature !",
+      "2":"Battez-les pour débloquer des Quêtes Glitch et de NOUVELLES formes de Pokémon !"
+    }
+  },
+  "eggs": {
+    "title": "Éclosion des Œufs",
+    "text": { 
+      "1":"Faire éclore des œufs est un moyen puissant de renforcer votre équipe ! Contrairement aux captures sauvages, les Pokémon éclos rejoignent votre réserve de départ avec des IV supérieures !",
+      "2":"Les œufs sont également le seul moyen d'obtenir certaines espèces rares de Pokémon ! Ce qui les rend essentiels pour compléter votre collection !",
+      "3":"Pour utiliser des Coupons d'Œufs, appuyez simplement sur ESC ou M pour ouvrir le menu et sélectionnez Gacha d'Œufs !"
+    }
+  },
+  "stats": {
+    "title": "Vérifier vos Statistiques",
+    "text": "Pour voir vos statistiques de jeu, accédez au menu et sélectionnez 'Statistiques'. Cela vous montrera vos combats totaux, victoires, argent et autres stats !"
+  },
+  "runHistory": {
+    "title": "Historique des Parties",
+    "text": { 
+      "1":"Consultez les informations sur vos équipes précédentes ! Accédez via le menu et sélectionnez 'Historique des Parties'.",
+      "2":"Cela vous montrera vos précédentes parties, y compris votre équipe, objets, résultats et plus encore !"
+    }
+  },
+  "rivalQuests": {
+    "title": "Quêtes Glitch",
+    "text": "Battez les rivaux pour débloquer des Quêtes Glitch ! Achetez-les dans le PermaMagasin et complétez-les pour débloquer définitivement de puissantes Formes Glitch pour des Pokémon spécifiques !"
+  },
+  "smitom": {
+    "title": "Smitom",
+    "text": { 
+      "1":"Rencontrez Smitom, un Motisma spécial en forme Smitty ! C'est un guide et un mystère...",
+      "2":"Interagissez avec lui lorsqu'un point d'exclamation apparaît ou sauvegardez votre partie pour des récompenses potentielles."
+    }
+  },
+  "newForms": {
+    "title": "Formes Glitch et Smitty",
+    "text": { 
+      "1":"Débloquez plus de 150 nouvelles évolutions Glitch et Smitty !",
+      "2":"Les formes Glitch sont débloquées via les Quêtes de Rivaux, le déblocage des formes Smitty est un mystère..."
+    }
+  },
+  "bugs": {
+    "title": "Signaler des Bugs !",
+    "text": { 
+      "1":"PokéVoid est en Bêta ! Si vous trouvez un bug, veuillez le signaler sur le Discord.",
+      "2":"Incluez une capture d'écran de votre console (control+i sous chrome) et votre fichier de sauvegarde si possible. Vos retours aident à améliorer le jeu !"
+    }
+  },
+  "nuzlight": {
+    "title": "Mode Nuzlight",
+    "text": "Une version allégée du Nuzlocke sans perte permanente de Pokémon. Pas d'objets de soin disponibles dans les magasins ! Les Pokémon évanouis reviendront après avoir atteint des paliers de 10 vagues."
+  },
+  "nuzlocke": {
+    "title": "Mode Nuzlocke",
+    "text": "Les règles traditionnelles du défi Nuzlocke s'appliquent. Les Pokémon évanouis sont définitivement retirés de votre équipe."
+  },
+  "journey": {
+    "title": "Mode Voyage",
+    "text": { 
+      "1":"Constituez votre équipe pour affronter Le Néant. Utilisez n'importe quel Pokémon que vous avez capturé ou fait éclore, y compris les fusions !",
+      "2":"Les Pokémon fusionnés nécessitent de l'∞OR pour être utilisés. Les PermaObjets peuvent réduire les coûts et augmenter votre limite de départ."
+    }
+  },
+  "unlockJourney": {
+    "title": "Débloquez le Mode Voyage en Capturant des Pokémon",
+    "text": {
+      "1":"Le Mode Voyage devient disponible après avoir capturé 15 Pokémon, et vous permet de sélectionner votre équipe initiale parmi vos Pokémon collectionnés !",
+      "2":"Après avoir capturé votre premier Pokémon, rendez-vous à la BOUTIQUE et obtenez la Quête de Capture Initiale pour officiellement commencer la Quête de Déblocage du Voyage !"
+    }
+  },
+  "rogueMode": {
+    "title": "Mode Rogue",
+    "text": "Choisissez 2 pokémon aléatoires pour commencer votre partie ! Utilisez votre ∞OR pour changer vos options ! Chaque partie est unique !"
+  },
+  "bosses": {
+    "title": "Boss Multi-Formes",
+    "text": "Méfiez-vous des puissants boss multi-formes ! Ils changent de forme et récupèrent tous leurs PV à basse santé, réinitialisant les changements de statistiques. Battez-les pour des récompenses précieuses !"
+  },
+  "abilities": {
+    "title": "Nouvelles Capacités",
+    "text": { 
+      "1":"Maîtrisez plus de 400 nouvelles capacités issues de plus de 150 transformations de Pokémon Glitch et Smitty !",
+      "2":"Les nouveaux modes de jeu élargissent les capacités obtenues à partir d'objets, y compris de puissantes capacités Glitch qui peuvent redéfinir les combats."
+    }
+  },
+  "passiveAbilities": {
+    "title": "Objet de Capacité Passive",
+    "text": { 
+      "1":"Accorde à votre pokémon une capacité passive, offrant une capacité supplémentaire !",
+      "2":"Elles ne se cumulent pas, donc si vous en obtenez une seconde, elle REMPLACERA la première !"
+    }
+  },
+  "glitchItems": {
+    "title": "Fragments et Objets Glitch",
+    "text": { 
+      "1":"Collectez des Fragments Glitch pour obtenir des Objets Glitch qui altèrent la réalité ! Il faut 2+ fragments pour les Objets Glitch, 5+ pour les objets de Changement de Forme Glitch.",
+      "2":"Les objets incluent CT-Universelles, Changeurs de Capacité, Changeurs de Type, Échangeurs de Stats et plus encore !"
+    }
+  },
+  "fusionPokemon": {
+    "title": "Fusions Capturables",
+    "text": { 
+      "1":"Tous les Pokémon Fusion sont capturables et ajoutés définitivement à votre collection !",
+      "2":"Trouvez-les avec une chance de base de 1/14 (améliorable avec des ∞OBJETS). Les utiliser coûte de l'∞OR."
+    }
+  },
+  "trainerPokemon": {
+    "title": "Capturer les Pokémon des Dresseurs",
+    "text": { 
+      "1":"La plupart des dresseurs vendront leurs Pokémon pendant le combat (sauf les Rivaux !). Les Pokémon capturés sont ajoutés définitivement à votre collection !",
+      "2":"Le coût dépend de la vague mais peut être réduit avec des ∞OBJETS."
+    }
+  },
+  "partyAbility": {
+    "title": "Capacités d'Équipe",
+    "text": { 
+      "1":"Obtenables via le Magasin, ces capacités coûteuses s'appliquent à TOUS les Pokémon de votre équipe actuelle pendant une partie !",
+      "2":"Utilisez des effets puissants pour toute l'équipe : Boost Vitesse ou Expert pour tout le monde !"
+    }
+  },
+  "permaMoney": {
+    "title": "PermaArgent (∞OR)",
+    "text": { 
+      "1":"Gagnez de l'∞OR persistant entre les parties ! Utilisez-le pour acheter des ∞OBJETS, relancer les départs en Rogue, ou payer la Taxe de Fusion.",
+      "2":"Obtenez-le grâce aux primes, récompenses, sauvegardes ou interactions avec Smitom."
+    }
+  },
+  "saving": {
+    "title": "Sauvegarde Locale et Backup",
+    "text": { 
+      "1":"Si vos données sont perdues, elles sont PERDUES À JAMAIS ! Utilisez l'icône de disquette (en haut à droite) pour EXPORTER votre fichier de sauvegarde souvent !",
+      "2":"Cela récompense avec de l'∞OR et protège contre la perte de données."
+    }
+  },
+  "bounties": {
+    "title": "Système de Primes",
+    "text": { 
+      "1":"Entrez des codes à 6 lettres dans la console pour activer des Primes.",
+      "2":"Les Primes sont des QUÊTES qui vous permettent de gagner de l'∞OR/∞OBJETS et sont complètement réutilisables après achèvement !"
+    }
+  },
+  "dailyBounty": {
+    "title": "Prime Quotidienne !",
+    "text": "Une nouvelle prime quotidienne est disponible ! Complétez-la pour gagner de l'∞OR/∞OBJETS. Le code est déjà dans la console, activez-le simplement !"
+  },
+  "discord": {
+    "title": "Discord et Support",
+    "text": "Rejoignez le Discord Smittyverse pour les discussions, signalements de bugs et la communauté ! Trouvez des codes de prime et connectez-vous avec d'autres joueurs."
+  },
+  "smittyForms": {
+    "title": "Formes Smitty",
+    "text": { 
+      "1":"Créez des transformations de Pokémon uniques en utilisant des combinaisons spécifiques de QUATRE objets Smitty !",
+      "2":"Certaines nécessitent un Pokémon de base spécifique (ex., Motisma -> Smitom)",
+      "3": "D'autres sont Universelles, donc n'importe quel Pokémon de base peut être utilisé ! (ex., Chenipan -> Picklisk). Tous gagnent une capacité passive aléatoire."
+    }
+  },
+  "smittyFormUnlocked": {
+    "title": "Forme Smitty Débloquée !",
+    "text": { 
+      "1":"Vous avez débloqué une nouvelle forme Smitty ! Chaque forme smitty est différente !",
+      "2":"Mais TOUTES nécessitent une combinaison unique de 4 objets Smitty !",
+      "3": "La combinaison est identifiée via la console, trouvez le code de la forme SMITTY et entrez-le pour voir la recette interdite !"
+    }
+  },
+  "smittyItems": {
+    "title": "PermaObjets (∞OBJETS)",
+    "text": { 
+      "1":"Utilisez de l'∞OR pour acheter des améliorations permanentes (∞OBJETS) avec différents types de durée : Basée sur l'utilisation (quantité réduite après utilisation) ou Basée sur les vagues (quantité réduite après la vague 50).",
+      "2":"Ces améliorations peuvent augmenter les taux de shiny/fusion/capture, réduire les coûts et fournir d'autres avantages permanents !"
+    }
+  },
+  "abilitySwitcher": {
+    "title": "Glitch : Changeur de Capacité",
+    "text": "Échangez la capacité actuelle d'un Pokémon avec l'une de ses autres capacités ! Nécessite 2 Fragments Glitch."
+  },
+  "typeSwitcher": {
+    "title": "Glitch : Changeurs de Type", 
+    "text": "Changez les types primaire ET secondaire d'un Pokémon. Nécessite 2 Fragments Glitch."
+  },
+  "primarySwitcher": {
+    "title": "Glitch : Changeur de Type Primaire",
+    "text": "Changez le type primaire d'un Pokémon. Nécessite 2 Fragments Glitch."
+  },
+  "secondarySwitcher": {
+    "title": "Glitch : Changeur de Type Secondaire", 
+    "text": "Changez le type secondaire d'un Pokémon. Nécessite 2 Fragments Glitch."
+  },
+  "releaseItems": {
+    "title": "Glitch : Boosters de Libération",
+    "text": { 
+      "1":"Libérez un Pokémon pour donner son typage, ses attaques, ses capacités ou un boost de statistiques à un autre.",
+      "2":"Alternativement, dépensez 5 'Types Collectés' d'un Pokémon au lieu de le libérer."
+    }
+  },
+  "anyTMs": {
+    "title": "Glitch : CT-Universelles",
+    "text": "Ces CT peuvent enseigner leur attaque à N'IMPORTE QUEL Pokémon, ignorant les règles normales de compatibilité. Nécessite 2 Fragments Glitch."
+  },
+  "anyAbilities": {
+    "title": "Glitch : Objet de Capacité",
+    "text": "Changez la capacité actuelle d'un Pokémon pour une autre capacité ! Nécessite 2 Fragments Glitch."
+  },
+  "statSwitchers": {
+    "title": "Glitch : Échangeurs de Stats",
+    "text": "Échangez deux des statistiques de base d'un Pokémon (ex., Attaque et Défense). Nécessite 2 Fragments Glitch."
+  },
+  "newQuests": {
+    "title": "Nouvelle Quête Débloquée !",
+    "text": "Vous avez débloqué une nouvelle quête ! Elle apparaîtra ALÉATOIREMENT (mais souvent) dans le PermaMagasin / Magasin sur l'écran titre ! Si elle n'y est pas, relancez pour la trouver !"
+  },
+  "modeUnlocks": {
+    "title": "Débloquages de Modes de Jeu",
+    "text": "Quand un mode de jeu est débloqué, il débloque également une tonne de nouveaux objets et capacités ! Essayez de tous les débloquer !"
+  },
+  "firstVictory": {
+    "title": "Ce N'Est Pas Fini !",
+    "text": "Votre voyage ne fait que commencer ! Débloquez les nouveaux modes de jeu pour plonger plus profondément dans l'abîme et percer les mystères du néant !"
+  },
+  "theVoidUnlocked": {
+    "title": "Le Néant Débloqué !",
+    "text": "Le Néant où tout a commencé. La source de toute corruption. Le vrai visage du néant vous attend..."
+  },
+  "theVoidOvertaken": {
+    "title": "Vous Avez Dominé Le Néant !",
+    "text": "Vous êtes devenu trop puissant pour que le néant puisse vous contenir ! Pourtant la corruption persiste, ne la laissez pas se propager, vous êtes le seul à pouvoir la garder sous contrôle !"
+  },
+  "megaDynamax": {
+    "title": "Formes Méga et Dynamax",
+    "text": { 
+      "1":"Pour Méga-Évoluer ou Dynamaxer un Pokémon, vous devez d'abord avoir le Méga-Bracelet ou le Bracelet Dynamax !",
+      "2":"Une fois que vous avez l'un de ces objets et le pokémon approprié, un objet de changement de forme apparaîtra aléatoirement comme récompense !",
+      "3":"Après une méga-évolution ou un dynamax, le Méga-Bracelet ou le Bracelet Dynamax se brisera !"
+    }
+  },
+  "moveUpgrades": {
+    "title": "Améliorations de Capacités",
+    "text": { 
+      "1":"Vous pouvez maintenant améliorer les capacités ! Chaque fois que vous utilisez une capacité, elle gagne un point d'EXP !",
+      "2":"Une fois que la capacité a suffisamment d'EXP, elle monte de niveau, vous offrant des options d'amélioration !",
+      "3": "L'amélioration durera pendant toute la partie et changera la capacité pour tous, y compris votre équipe et même vos adversaires !"
+    }
+  },
+  "eggSwap": {
+    "title": "Éclosion et Échange d'Œufs",
+    "text": { 
+      "1":"Vérifiez votre Pokémon nouvellement éclos et, si vous le souhaitez, échangez-le contre un des membres de votre équipe !",
+      "2":"Les seules restrictions sont que votre premier Pokémon ne peut pas être échangé, et les légendaires ne peuvent être échangés qu'avec d'autres légendaires, Méga ou Pokémon Dynamax !",
+      "3":"Bonnes Éclosions !"
+    }
+  },
+  "firstMoveUpgrade": {
+    "title": { 
+      "1":"Informations Importantes sur les Améliorations de Capacités !", 
+      "2": "Combinaisons Qui Cassent le Jeu",
+      "5":"Améliorations et Chance d'Effet des Capacités", 
+      "6":"La Dernière Amélioration a la Priorité"
+    },
+    "text": { 
+      "1":"Choisissez une amélioration, et pour toute la partie, cette capacité sera améliorée pour tout le monde, y compris votre équipe et même vos ennemis !",
+      "2": "Puisque vous pouvez améliorer presque n'importe quelle capacité, certaines combinaisons ne fonctionneront pas ou casseront le jeu. Malheureusement, avec l'ampleur de cette mise à jour, cela est inévitable.",
+      "3": "Si cela se produit, veuillez rafraîchir et choisir une combinaison d'améliorations différente.",
+      "4": "Si vous trouvez une combinaison qui ne fonctionne pas, rejoignez Discord et ajoutez-la à la liste des combinaisons cassées !",
+      "5":"Veuillez noter que les capacités ne peuvent avoir QU'UNE SEULE chance d'effet (par exemple, 10% de chance de paralyser), donc les améliorations SOIT modifient directement la chance d'effet, SOIT utilisent la valeur de chance précédente !",
+      "6":"Enfin, les améliorations peuvent se remplacer mutuellement, la dernière amélioration a la priorité !"
+    }
+  }
+}

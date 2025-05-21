@@ -1,0 +1,82 @@
+{
+  "title": "커스텀 글리치 진화 만들기",
+  "mods": "모드",
+  "testMods": "모드 테스트하기",
+  "uploadMods": "모드 업로드",
+  "createGlitchEvolution": "글리치 진화 만들기",
+  "removeMods": "모드 제거",
+  "shareAndTakeMods": "모드 공유 및 가져오기",
+  "noModsToRemove": "제거할 모드가 없습니다.",
+  "errorLoadingMods": "모드 로딩 중 오류가 발생했습니다. 다시 시도해 주세요.",
+  "modRemoved": "{{name}}이(가) 성공적으로 제거되었습니다.",
+  "errorRemovingMod": "모드 제거 중 오류가 발생했습니다. 다시 시도해 주세요.",
+  "uploadSuccess": "{{count}}개 모드가 성공적으로 업로드되었습니다:",
+  "uploadFailed": "{{count}}개 모드 업로드에 실패했습니다:",
+  "reloadRequired": "변경 사항을 적용하기 위해 게임이 다시 로드됩니다.",
+  "fields": {
+    "species": "종족",
+    "formName": "폼 이름 (영어)*",
+    "formLanguages": "폼 이름 (추가 언어)",
+    "primaryType": "주 타입",
+    "secondaryType": "부 타입",
+    "ability1": "특성 1",
+    "ability2": "특성 2",
+    "hiddenAbility": "숨겨진 특성",
+    "stat1": "강화할 스탯 1",
+    "stat2": "강화할 스탯 2",
+    "stat3": "강화할 스탯 3",
+    "distributionType": "스탯 강화 분배 유형",
+    "frontSprite": "포켓몬 정면 스프라이트 (150-200px)",
+    "backSprite": "포켓몬 후면 스프라이트 (150-200px)",
+    "rivalTrainer": "라이벌",
+    "orRivalTrainer": "또는 라이벌"
+  },
+  "distributionTypes": {
+    "even": "균등 (각 스탯 +33%)",
+    "twoPriority": "이중 우선순위 (스탯 1 +40% | 스탯 2 +40% | 스탯 3 +20%)",
+    "scaling": "계단식 (스탯 1 +45% | 스탯 2 +35% | 스탯 3 +20%)",
+    "topPriority": "최우선 (스탯 1 +40% | 스탯 2 +30% | 스탯 3 +30%)"
+  },
+  "buttons": {
+    "saveAndAdd": "저장 및 다시 로드",
+    "cancel": "취소"
+  },
+  "validation": {
+    "requiredField": "이 필드는 필수입니다",
+    "invalidImage": "유효하지 않은 이미지 형식 또는 크기",
+    "imageSize": "이미지는 150-200px이어야 합니다"
+  },
+  "statusMessages": {
+    "creatingMod": "모드 생성 중...",
+    "success": "글리치 폼 모드가 성공적으로 생성되고 저장되었습니다!",
+    "downloadReady": "모드를 다운로드할 준비가 되었습니다",
+    "error": "모드 생성 오류: {{message}}",
+    "storageError": "모드가 생성되었지만 저장소에 저장되지 않았습니다. 여전히 다운로드할 수 있습니다."
+  },
+  "sections": {
+    "basicInformation": "기본 정보",
+    "typesAbilities": "타입 및 특성",
+    "stats": "스탯",
+    "sprites": "스프라이트",
+    "rivalTrainer": "이 폼을 보상으로 주는 라이벌"
+  },
+  "imageUpload": {
+    "uploadButton": "이미지 업로드",
+    "noFileSelected": "선택된 파일 없음",
+    "invalidSize": "유효하지 않은 이미지 크기 (150-200px이어야 함)"
+  },
+  "dropdowns": {
+    "selectOptional": "- 선택 (선택 사항) -"
+  },
+  "languages": {
+    "es": "스페인어",
+    "fr": "프랑스어",
+    "de": "독일어",
+    "ja": "일본어",
+    "ko": "한국어",
+    "pt-BR": "포르투갈어 (브라질)",
+    "it": "이탈리아어",
+    "zh-TW": "중국어 (번체)",
+    "zh-CN": "중국어 (간체)"
+  }
+} 

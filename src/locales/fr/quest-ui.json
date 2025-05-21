@@ -1,0 +1,120 @@
+{
+  "console": {
+    "activeBounties": "Primes Actives :",
+    "rivalBounties": "Primes de Rival",
+    "smittyBounties": "Primes de Smitty",
+    "questBounties": "Primes de Quête",
+    "bountiesCount": "{{title}} ({{current}}/{{max}})",
+    "activeQuests": "Quêtes Actives :",
+    "questsCount": "({{current}}/{{max}})",
+    "submit": "Valider",
+    "cancel": "Annuler",
+    "invalidConsoleCode": "Code console invalide",
+    "consoleCodeAlreadyUsed": "Code console déjà utilisé",
+    "consoleCodeAccepted": "Code console accepté",
+    "toggleInfo": "à ouvrir sur les écrans TITRE ou COMBAT !",
+    "shopAndConsoleShortcut": "à ouvrir sur les écrans TITRE ou COMBAT !"
+  },
+  "bounty": {
+    "common": {
+      "status": {
+        "active": "ACTIVE",
+        "inactive": "INACTIVE"
+      },
+      "baseReward": "Distribution de Récompense de Base"
+    },
+    "modalTitle": "Prime",
+    "status": {
+      "complete": "TERMINÉ",
+      "activeStage": "ÉTAPE {{stage}} ACTIVE",
+      "active": "ACTIVE"
+    },
+    "sections": {
+      "rewards": {
+        "title": "Récompenses :",
+        "unknown": "???"
+      },
+      "task": {
+        "title": "Tâche :",
+        "singleRun": "Tâche UNIQUE :",
+        "multiRun": "Tâche MULTIPLE :",
+        "locked": "{{target}} doit d'abord être Débloqué"
+      }
+    },
+    "error": "Erreur lors du chargement de la Prime",
+    "buttons": {
+      "swap": "Échanger la Prime",
+      "activate": "Activer la Prime",
+      "back": "Retour",
+      "cancel": "Annuler"
+    },
+    "rival": {
+      "modalTitle": "Prime de Dresseur Rival",
+      "invalidTrainer": "Dresseur Invalide",
+      "task": "Vaincre {{trainerName}} - Étape {{stage}}",
+      "progress": {
+        "title": "Progression de l'Étape :",
+        "count": "{{current}} / {{max}}"
+      },
+      "rewards": {
+        "stage1": "90% ∞OR | 8% ∞OBJET | 2% Les deux",
+        "stage2": "75% ∞OR | 15% ∞OBJET | 10% Les deux",
+        "stage3": "60% ∞OR | 25% ∞OBJET | 15% Les deux",
+        "stage4": "40% ∞OR | 40% ∞OBJET | 20% Les deux",
+        "stage5": "25% ∞OR | 45% ∞OBJET | 30% Les deux"
+      }
+    },
+    "quest": {
+      "modalTitle": "Prime de Quête",
+      "invalidTask": "Tâche de Quête Invalide",
+      "replacement": {
+        "title": "Sélectionner la Prime à Remplacer",
+        "cancel": "Annuler"
+      },
+      "rewards": {
+        "default": "50% ∞OR | 35% ∞OBJET | 15% Les deux"
+      },
+      "activeQuest": {
+        "modalTitle": "Quête !",
+        "buttons": {
+          "swap": "Échanger la Quête",
+          "activate": "Activer la Quête"
+        },
+        "rewards": {
+          "unlockForm": "Débloquer la Nouvelle Forme de {{pokemonName}} !"
+        },
+        "progress": {
+          "title": "Progression de l'Étape :",
+          "count": "{{current}} / {{max}}"
+        }
+      }
+    },
+    "smitty": {
+      "modalTitle": "Prime Pokémon Smitty",
+      "rewards": {
+        "withSpecies": "70% ∞OR | 20% ∞OBJET | 10% Les deux",
+        "withoutSpecies": "40% ∞OR | 40% ∞OBJET | 20% Les deux"
+      },
+      "task": {
+        "evolveAny": "Faire Évoluer N'IMPORTE QUEL Pokémon en {{formName}}",
+        "evolveSpecific": "Faire Évoluer {{basePokemon}} en {{formName}}"
+      },
+      "items": {
+        "title": "Objets Requis :"
+      },
+      "common": {
+        "any": "N'IMPORTE LEQUEL"
+      }
+    }
+  },
+  "modeRewards": {
+    "classicModeRewardFusion": "Utiliser des Pokémon Fusionnés !?",
+    "commonModeRewardAbilities": "Plus de 60 Talents pour les Objets de Changement de Talent",
+    "nuzlightModeRewardTypeSwitch": "Changer Type Principal / Secondaire",
+    "nuzlightModeRewardUpdatedInventory": "Inventaire Mis à Jour !",
+    "nuzlightModeRewardMoveRelease": "Oublier une Capacité",
+    "nuzlockeModeRewardRank2": "RANG 2",
+    "accessShopInBattle": "Accéder à la ∞BOUTIQUE en COMBAT !",
+    "accessQuestsInBattle": "Accéder aux QUÊTES en COMBAT !"
+  }
+} 

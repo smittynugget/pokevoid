@@ -1,0 +1,14 @@
+{
+  "importSaveData": "Import Save Data",
+  "importModData": "Import Mod Data",
+  "cancel": "Cancel",
+  "selectFile": "Select File",
+  "selectJsonModFiles": "Select JSON mod file(s) to import",
+  "selectPrsvSaveFile": "Select a .prsv save file to import",
+  "importFailed": "Import failed. Please try again.",
+  "uploadSuccess": "Successfully imported {{count}} mod(s):",
+  "uploadSuccess_plural": "Successfully imported {{count}} mods:",
+  "uploadFailed": "Failed to import {{count}} mod:",
+  "uploadFailed_plural": "Failed to import {{count}} mods:",
+  "reloadRequired": "The game will reload to apply changes."
+} 

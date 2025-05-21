@@ -1,0 +1,257 @@
+{
+  "tartauros": {
+    "name": "타르타우로스"
+  },
+  "zamowak": {
+    "name": "좀보웩"
+  },
+  "greyokai": {
+    "name": "그레이요카이"
+  },
+  "jormunza": {
+    "name": "요르문자"
+  },
+  "licthulhu": {
+    "name": "릭툴루"
+  },
+  "plasmist": {
+    "name": "플라즈미스트"
+  },
+  "plustra": {
+    "name": "플러스라"
+  },
+  "hellchar": {
+    "name": "헬차르"
+  },
+  "feareon": {
+    "name": "피어리온"
+  },
+  "omninom": {
+    "name": "옴니놈"
+  },
+  "necromew": {
+    "name": "네크로뮤"
+  },
+  "diablotar": {
+    "name": "디아블로타르"
+  },
+  "smitom": {
+    "name": "스미톰"
+  },
+  "genomander": {
+    "name": "지노맨더"
+  },
+  "tormentle": {
+    "name": "토멘틀"
+  },
+  "terrorbulb": {
+    "name": "테러벌브"
+  },
+  "dankitar": {
+    "name": "댕키타르"
+  },
+  "gastmoji": {
+    "name": "개스트모지"
+  },
+  "noxabis": {
+    "name": "녹사비스"
+  },
+  "floravora": {
+    "name": "플로라보라"
+  },
+  "chimerdrio": {
+    "name": "키메르드리오"
+  },
+  "clefangar": {
+    "name": "클레팡가르"
+  },
+  "terroragon": {
+    "name": "테러드래곤"
+  },
+  "godread": {
+    "name": "갓드레드"
+  },
+  "duschmare": {
+    "name": "더스크메어"
+  },
+  "abyssuma": {
+    "name": "어비수마"
+  },
+  "omnitto": {
+    "name": "옴니또"
+  },
+  "umbraffe": {
+    "name": "움브라프"
+  },
+  "tartadra": {
+    "name": "타르타드라"
+  },
+  "tengale": {
+    "name": "텐게일"
+  },
+  "hyplagus": {
+    "name": "히플라구스"
+  },
+  "demonoth": {
+    "name": "데모노스"
+  },
+  "despeko": {
+    "name": "데스페코"
+  },
+  "zoomer": {
+    "name": "주머"
+  },
+  "voidash": {
+    "name": "보이드대시"
+  },
+  "wahcky": {
+    "name": "와키"
+  },
+  "wahzebub": {
+    "name": "와제붑"
+  },
+  "fineferno": {
+    "name": "파인페르노"
+  },
+  "sorbred": {
+    "name": "소브레드"
+  },
+  "corpanzee": {
+    "name": "코프침팬지"
+  },
+  "plankling": {
+    "name": "플랭클링"
+  },
+  "timbrick": {
+    "name": "팀브릭"
+  },
+  "plankult": {
+    "name": "플랭컬트"
+  },
+  "sorbobo": {
+    "name": "소브레드 고스트"
+  },
+  "hamtaro": {
+    "name": "햄타로"
+  },
+  "elmold": {
+    "name": "엘몰드"
+  },
+  "funghomp": {
+    "name": "펑곰프"
+  },
+  "riddicus": {
+    "name": "리디쿠스"
+  },
+  "boxecutive": {
+    "name": "박세큐티브"
+  },
+  "patnius": {
+    "name": "팻니어스"
+  },
+  "tentacrim": {
+    "name": "텐타크림"
+  },
+  "undeadtunasmit": {
+    "name": "언데드튜나스밋"
+  },
+  "scarablanc": {
+    "name": "스캐러블랑"
+  },
+  "batmare": {
+    "name": "배트메어"
+  },
+  "smitward": {
+    "name": "스미트워드"
+  },
+  "niteknite": {
+    "name": "나이트나이트"
+  },
+  "dignitier": {
+    "name": "디그나이티어"
+  },
+  "cephaloom": {
+    "name": "세팔룸"
+  },
+  "smitshade": {
+    "name": "스미트셰이드"
+  },
+  "smitspect": {
+    "name": "스미트스펙터"
+  },
+  "smitwraith": {
+    "name": "스미트레이스"
+  },
+  "smiternal": {
+    "name": "스미터널"
+  },
+  "smittyfish": {
+    "name": "스미티피시"
+  },
+  "smittellect": {
+    "name": "스미텔렉트"
+  },
+  "gallux": {
+    "name": "갈룩스"
+  },
+  "hostmitty": {
+    "name": "호스트미티"
+  },
+  "smittynarie": {
+    "name": "스미티네어"
+  },
+  "batboxbaba": {
+    "name": "배트박스바바"
+  },
+  "batboxbeyond": {
+    "name": "배트박스비욘드"
+  },
+  "victainer": {
+    "name": "빅테이너"
+  },
+  "kakopier": {
+    "name": "카코피어"
+  },
+  "karasu-me": {
+    "name": "카라스메"
+  },
+  "bullktopus": {
+    "name": "불크토퍼스"
+  },
+  "gumugumu": {
+    "name": "고무고무"
+  },
+  "santoryu": {
+    "name": "산토류"
+  },
+  "roostace": {
+    "name": "루스테이스"
+  },
+  "bogace": {
+    "name": "보그에이스"
+  },
+  "milliant": {
+    "name": "밀리언트"
+  },
+  "churry": {
+    "name": "츄리"
+  },
+  "gazorpsmitfield": {
+    "name": "가조프스밋필드"
+  },
+  "hologrick": {
+    "name": "홀로그릭"
+  },
+  "seekling": {
+    "name": "시클링"
+  },
+  "picklisk": {
+    "name": "피클리스크"
+  },
+  "bravehound": {
+    "name": "브레이브하운드"
+  },
+  "missingno": {
+    "name": "미싱노"
+  }
+}

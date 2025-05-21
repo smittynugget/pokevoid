@@ -1,0 +1,120 @@
+{
+  "console": {
+    "activeBounties": "활성 현상금:",
+    "rivalBounties": "라이벌 현상금",
+    "smittyBounties": "스미티 현상금",
+    "questBounties": "퀘스트 현상금",
+    "bountiesCount": "{{title}} ({{current}}/{{max}})",
+    "activeQuests": "진행 중인 퀘스트:",
+    "questsCount": "({{current}}/{{max}})",
+    "submit": "제출",
+    "cancel": "취소",
+    "invalidConsoleCode": "잘못된 콘솔 코드",
+    "consoleCodeAlreadyUsed": "이미 사용된 콘솔 코드",
+    "consoleCodeAccepted": "콘솔 코드 승인됨",
+    "toggleInfo": "타이틀 또는 배틀 화면에서 열어주세요!",
+    "shopAndConsoleShortcut": "타이틀 또는 배틀 화면에서 열어주세요!"
+  },
+  "bounty": {
+    "common": {
+      "status": {
+        "active": "활성",
+        "inactive": "비활성"
+      },
+      "baseReward": "기본 보상 분배"
+    },
+    "modalTitle": "현상금",
+    "status": {
+      "complete": "완료",
+      "activeStage": "{{stage}}단계 진행 중",
+      "active": "진행 중"
+    },
+    "sections": {
+      "rewards": {
+        "title": "보상:",
+        "unknown": "???"
+      },
+      "task": {
+        "title": "과제:",
+        "singleRun": "단일 실행 과제:",
+        "multiRun": "다중 실행 과제:",
+        "locked": "{{target}}을(를) 먼저 해금해야 함"
+      }
+    },
+    "error": "현상금 로딩 오류",
+    "buttons": {
+      "swap": "현상금 교체",
+      "activate": "현상금 활성화",
+      "back": "뒤로",
+      "cancel": "취소"
+    },
+    "rival": {
+      "modalTitle": "라이벌 트레이너 현상금",
+      "invalidTrainer": "잘못된 트레이너",
+      "task": "{{trainerName}} 격파 - {{stage}}단계",
+      "progress": {
+        "title": "단계 진행도:",
+        "count": "{{current}} / {{max}}"
+      },
+      "rewards": {
+        "stage1": "90% ∞골드 | 8% ∞아이템 | 2% 둘 다",
+        "stage2": "75% ∞골드 | 15% ∞아이템 | 10% 둘 다",
+        "stage3": "60% ∞골드 | 25% ∞아이템 | 15% 둘 다",
+        "stage4": "40% ∞골드 | 40% ∞아이템 | 20% 둘 다",
+        "stage5": "25% ∞골드 | 45% ∞아이템 | 30% 둘 다"
+      }
+    },
+    "quest": {
+      "modalTitle": "퀘스트 현상금",
+      "invalidTask": "잘못된 퀘스트 과제",
+      "replacement": {
+        "title": "교체할 현상금 선택",
+        "cancel": "취소"
+      },
+      "rewards": {
+        "default": "50% ∞골드 | 35% ∞아이템 | 15% 둘 다"
+      },
+      "activeQuest": {
+        "modalTitle": "퀘스트!",
+        "buttons": {
+          "swap": "퀘스트 교체",
+          "activate": "퀘스트 활성화"
+        },
+        "rewards": {
+          "unlockForm": "{{pokemonName}}의 새로운 형태 해금!"
+        },
+        "progress": {
+          "title": "단계 진행도:",
+          "count": "{{current}} / {{max}}"
+        }
+      }
+    },
+    "smitty": {
+      "modalTitle": "포켓몬 스미티 현상금",
+      "rewards": {
+        "withSpecies": "70% ∞골드 | 20% ∞아이템 | 10% 둘 다",
+        "withoutSpecies": "40% ∞골드 | 40% ∞아이템 | 20% 둘 다"
+      },
+      "task": {
+        "evolveAny": "아무 포켓몬을 {{formName}}(으)로 진화",
+        "evolveSpecific": "{{basePokemon}}을(를) {{formName}}(으)로 진화"
+      },
+      "items": {
+        "title": "필요 아이템:"
+      },
+      "common": {
+        "any": "아무거나"
+      }
+    }
+  },
+  "modeRewards": {
+    "classicModeRewardFusion": "퓨전포켓몬을 사용할까요!?",
+    "commonModeRewardAbilities": "특성 변경 아이템용 특성 60개 이상 추가",
+    "nuzlightModeRewardTypeSwitch": "주요/보조 타입 전환",
+    "nuzlightModeRewardUpdatedInventory": "인벤토리 업데이트!",
+    "nuzlightModeRewardMoveRelease": "기술 잊기",
+    "nuzlockeModeRewardRank2": "랭크 2",
+    "accessShopInBattle": "배틀 중에 ∞상점 접속!",
+    "accessQuestsInBattle": "배틀 중에 퀘스트 접속!"
+  }
+} 

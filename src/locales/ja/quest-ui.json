@@ -1,0 +1,120 @@
+{
+  "console": {
+    "activeBounties": "進行中の討伐：",
+    "rivalBounties": "ライバル討伐",
+    "smittyBounties": "スミッティ討伐",
+    "questBounties": "クエスト討伐",
+    "bountiesCount": "{{title}}（{{current}}/{{max}}）",
+    "activeQuests": "進行中のクエスト：",
+    "questsCount": "（{{current}}/{{max}}）",
+    "submit": "決定",
+    "cancel": "キャンセル",
+    "invalidConsoleCode": "無効なコンソールコード",
+    "consoleCodeAlreadyUsed": "既に使用済みのコード",
+    "consoleCodeAccepted": "コードが承認されました",
+    "toggleInfo": "タイトルがめん または バトルがめんで ひらいてください！",
+    "shopAndConsoleShortcut": "タイトルがめん または バトルがめんで ひらいてください！"
+  },
+  "bounty": {
+    "common": {
+      "status": {
+        "active": "進行中",
+        "inactive": "未開始"
+      },
+      "baseReward": "基本報酬配分"
+    },
+    "modalTitle": "討伐",
+    "status": {
+      "complete": "完了",
+      "activeStage": "ステージ{{stage}}進行中",
+      "active": "進行中"
+    },
+    "sections": {
+      "rewards": {
+        "title": "報酬：",
+        "unknown": "???"
+      },
+      "task": {
+        "title": "課題：",
+        "singleRun": "単発課題：",
+        "multiRun": "連続課題：",
+        "locked": "{{target}}を先にアンロックする必要があります"
+      }
+    },
+    "error": "討伐データの読み込みエラー",
+    "buttons": {
+      "swap": "討伐を交換",
+      "activate": "討伐を開始",
+      "back": "戻る",
+      "cancel": "キャンセル"
+    },
+    "rival": {
+      "modalTitle": "ライバルトレーナー討伐",
+      "invalidTrainer": "無効なトレーナー",
+      "task": "{{trainerName}}を倒す - ステージ{{stage}}",
+      "progress": {
+        "title": "進行状況：",
+        "count": "{{current}} / {{max}}"
+      },
+      "rewards": {
+        "stage1": "90% ∞ゴールド | 8% ∞アイテム | 2% 両方",
+        "stage2": "75% ∞ゴールド | 15% ∞アイテム | 10% 両方",
+        "stage3": "60% ∞ゴールド | 25% ∞アイテム | 15% 両方",
+        "stage4": "40% ∞ゴールド | 40% ∞アイテム | 20% 両方",
+        "stage5": "25% ∞ゴールド | 45% ∞アイテム | 30% 両方"
+      }
+    },
+    "quest": {
+      "modalTitle": "クエスト討伐",
+      "invalidTask": "無効なクエスト課題",
+      "replacement": {
+        "title": "交換する討伐を選択",
+        "cancel": "キャンセル"
+      },
+      "rewards": {
+        "default": "50% ∞ゴールド | 35% ∞アイテム | 15% 両方"
+      },
+      "activeQuest": {
+        "modalTitle": "クエスト！",
+        "buttons": {
+          "swap": "クエストを交換",
+          "activate": "クエストを開始"
+        },
+        "rewards": {
+          "unlockForm": "{{pokemonName}}の新しいフォームをアンロック！"
+        },
+        "progress": {
+          "title": "進行状況：",
+          "count": "{{current}} / {{max}}"
+        }
+      }
+    },
+    "smitty": {
+      "modalTitle": "ポケモンスミッティ討伐",
+      "rewards": {
+        "withSpecies": "70% ∞ゴールド | 20% ∞アイテム | 10% 両方",
+        "withoutSpecies": "40% ∞ゴールド | 40% ∞アイテム | 20% 両方"
+      },
+      "task": {
+        "evolveAny": "任意のポケモンを{{formName}}に進化させる",
+        "evolveSpecific": "{{basePokemon}}を{{formName}}に進化させる"
+      },
+      "items": {
+        "title": "必要なアイテム："
+      },
+      "common": {
+        "any": "任意"
+      }
+    }
+  },
+  "modeRewards": {
+    "classicModeRewardFusion": "フュージョンポケモンを つかう！？",
+    "commonModeRewardAbilities": "とくせいチェンジアイテムの とくせいが60こいじょう ついか",
+    "nuzlightModeRewardTypeSwitch": "メインタイプ / サブタイプ きりかえ",
+    "nuzlightModeRewardUpdatedInventory": "インベントリが更新されました！",
+    "nuzlightModeRewardMoveRelease": "わざを わすれる",
+    "nuzlockeModeRewardRank2": "ランク 2",
+    "accessShopInBattle": "バトルちゅうに ∞ショップに アクセス！",
+    "accessQuestsInBattle": "バトルちゅうに クエストに アクセス！"
+  }
+} 

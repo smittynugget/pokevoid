@@ -1,0 +1,13 @@
+{
+  "voidex": "Voidex",
+  "enemyPrefix": "敌方",
+  "partyPrefix": "队伍",
+  "evolutionPrefix": "进化",
+  "allOtherPokemon": "所有其他宝可梦",
+  "pokemonDataNotFound": "未找到宝可梦数据。",
+  "errorLoadingSprite": "加载精灵图失败。",
+  "abilities": "特性",
+  "learnableMoves": "可学会的招式",
+  "eggMoves": "蛋招式",
+  "loading": "加载中..."
+} 

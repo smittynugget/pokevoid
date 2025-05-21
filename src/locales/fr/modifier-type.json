@@ -1,0 +1,996 @@
+{
+  "ModifierType": {
+    "AddPokeballModifierType": {
+      "name": "{{pokeballName}} x{{modifierCount}}",
+      "description": "Recevez {{modifierCount}} {{pokeballName}}·s. (Inventaire : {{pokeballAmount}})\nTaux de capture : {{catchRate}}"
+    },
+    "AddVoucherModifierType": {
+      "name": "{{voucherTypeName}} x{{modifierCount}}",
+      "description": "Recevez {{modifierCount}} {{voucherTypeName}}."
+    },
+    "PokemonHeldItemModifierType": {
+      "extra": {
+        "inoperable": "{{pokemonName}} ne peut pas\nporter cet objet !",
+        "tooMany": "{{pokemonName}} porte trop\nd'exemplaires de cet objet !"
+      }
+    },
+    "PokemonHpRestoreModifierType": {
+      "description": "Restaure {{restorePoints}} PV ou {{restorePercent}}% des PV totaux d'un Pokémon, en fonction duquel des deux est le plus élevé.",
+      "extra": {
+        "fully": "Restaure tous les PV d'un Pokémon.",
+        "fullyWithStatus": "Restaure tous les PV d'un Pokémon et soigne tous ses problèmes de statut."
+      }
+    },
+    "PokemonReviveModifierType": {
+      "description": "Ranime un Pokémon et restaure {{restorePercent}}% de ses PV."
+    },
+    "PokemonStatusHealModifierType": {
+      "description": "Soigne tous les problèmes de statut d'un Pokémon."
+    },
+    "PokemonPpRestoreModifierType": {
+      "description": "Restaure {{restorePoints}} PP à une capacité d'un Pokémon.",
+      "extra": {
+        "fully": "Restaure tous les PP à une capacité d'un Pokémon."
+      }
+    },
+    "PokemonAllMovePpRestoreModifierType": {
+      "description": "Restaure {{restorePoints}} PP à toutes les capacités d'un Pokémon.",
+      "extra": {
+        "fully": "Restaure tous les PP à toutes les capacités d'un Pokémon."
+      }
+    },
+    "PokemonPpUpModifierType": {
+      "description": "Augmente le max de PP de {{upPoints}} à une capacité d'un Pokémon pour chaque 5 PP max (max : 3)."
+    },
+    "PokemonNatureChangeModifierType": {
+      "name": "Aromate {{natureName}}",
+      "description": "Donne la nature {{natureName}} à un Pokémon et la débloque pour le starter lui étant lié."
+    },
+    "DoubleBattleChanceBoosterModifierType": {
+      "description": "Double les chances de tomber sur un combat double pendant {{battleCount}} combats."
+    },
+    "TempBattleStatBoosterModifierType": {
+      "description": "Augmente d'un cran {{tempBattleStatName}} pour toute l'équipe pendant 5 combats."
+    },
+    "AttackTypeBoosterModifierType": {
+      "description": "Augmente de 20% la puissance des capacités de type {{moveType}} d'un Pokémon."
+    },
+    "PokemonLevelIncrementModifierType": {
+      "description": "Fait monter un Pokémon de {{levels}} niveau·x."
+    },
+    "AllPokemonLevelIncrementModifierType": {
+      "description": "Fait monter toute l'équipe de {{levels}} niveau·x."
+    },
+    "PokemonBaseStatBoosterModifierType": {
+      "description": "Augmente de 10% {{statName}} de base de son porteur. Plus les IV sont hauts, plus il peut en porter."
+    },
+    "AllPokemonFullHpRestoreModifierType": {
+      "description": "Restaure tous les PV de toute l'équipe."
+    },
+    "AllPokemonFullReviveModifierType": {
+      "description": "Ranime et restaure tous les PV de tous les Pokémon K.O. ."
+    },
+    "MoneyRewardModifierType": {
+      "description": "Octroie une {{moneyMultiplier}} somme d'argent.\n({{moneyAmount}} ₽)",
+      "extra": {
+        "small": "petite",
+        "moderate": "moyenne",
+        "large": "grande"
+      }
+    },
+    "ExpBoosterModifierType": {
+      "description": "Augmente de {{boostPercent}}% le gain de Points d'Exp."
+    },
+    "PokemonExpBoosterModifierType": {
+      "description": "Augmente de {{boostPercent}}% le gain de Points d'Exp du porteur."
+    },
+    "PokemonFriendshipBoosterModifierType": {
+      "description": "Augmente le gain d'amitié de 50% par victoire."
+    },
+    "PokemonMoveAccuracyBoosterModifierType": {
+      "description": "Augmente de {{accuracyAmount}} la précision des capacités (maximum 100)."
+    },
+    "PokemonMultiHitModifierType": {
+      "description": "Frappe une fois de plus en échange d'une baisse de puissance de respectivement 60/75/82,5% par cumul."
+    },
+    "TmModifierType": {
+      "name": "CT{{moveId}} - {{moveName}}",
+      "description": "Apprend la capacité {{moveName}} à un Pokémon."
+    },
+    "TmModifierTypeWithInfo": {
+      "name": "CT{{moveId}} - {{moveName}}",
+      "description": "Apprend la capacité {{moveName}} à un Pokémon.\n(Maintenez C ou Maj pour plus d'infos)"
+    },
+    "EvolutionItemModifierType": {
+      "description": "Permet à certains Pokémon d'évoluer."
+    },
+    "FormChangeItemModifierType": {
+      "description": "Permet à certains Pokémon de changer de forme."
+    },
+    "FusePokemonModifierType": {
+      "description": "Fusionne deux Pokémon (transfère le talent, sépare les stats de base et les types, partage les capacités)."
+    },
+    "TerastallizeModifierType": {
+      "name": "Téra-Éclat {{teraType}}",
+      "description": "{{teraType}} Téracristallise son porteur pendant 10 combats."
+    },
+    "ContactHeldItemTransferChanceModifierType": {
+      "description": "{{chancePercent}}% de chances de voler un objet de l'adversaire en l'attaquant."
+    },
+    "TurnHeldItemTransferModifierType": {
+      "description": "À chaque tour, son porteur obtient un objet de son adversaire."
+    },
+    "EnemyAttackStatusEffectChanceModifierType": {
+      "description": "Ajoute {{chancePercent}}% de chances d'infliger le statut {{statusEffect}} avec des capacités offensives."
+    },
+    "EnemyEndureChanceModifierType": {
+      "description": "Ajoute {{chancePercent}}% de chances d'encaisser un coup."
+    },
+    "RARE_CANDY": {
+      "name": "Super Bonbon"
+    },
+    "RARER_CANDY": {
+      "name": "Hyper Bonbon"
+    },
+    "MEGA_BRACELET": {
+      "name": "Méga-Bracelet",
+      "description": "Débloque les Méga-Gemmes dans la boutique."
+    },
+    "DYNAMAX_BAND": {
+      "name": "Poignet Dynamax",
+      "description": "Débloque le Dynamax."
+    },
+    "TERA_ORB": {
+      "name": "Orbe Téracristal",
+      "description": "Débloque les Téra-Éclats dans la boutique."
+    },
+    "MAP": {
+      "name": "Carte",
+      "description": "Vous permet de choisir votre destination à un croisement."
+    },
+    "POTION": {
+      "name": "Potion"
+    },
+    "SUPER_POTION": {
+      "name": "Super Potion"
+    },
+    "HYPER_POTION": {
+      "name": "Hyper Potion"
+    },
+    "MAX_POTION": {
+      "name": "Potion Max"
+    },
+    "FULL_RESTORE": {
+      "name": "Guérison"
+    },
+    "REVIVE": {
+      "name": "Rappel"
+    },
+    "MAX_REVIVE": {
+      "name": "Rappel Max"
+    },
+    "FULL_HEAL": {
+      "name": "Total Soin"
+    },
+    "SACRED_ASH": {
+      "name": "Cendre Sacrée"
+    },
+    "REVIVER_SEED": {
+      "name": "Résugraine",
+      "description": "Ranime et restaure la moitié des PV de son porteur s'il est mis K.O. par une capacité directe."
+    },
+    "WHITE_HERB": {
+      "name": "Herbe Blanche",
+      "description": "Restaure toute stat ayant subi une baisse en combat."
+    },
+    "ETHER": {
+      "name": "Huile"
+    },
+    "MAX_ETHER": {
+      "name": "Huile Max"
+    },
+    "ELIXIR": {
+      "name": "Élixir"
+    },
+    "MAX_ELIXIR": {
+      "name": "Élixir Max"
+    },
+    "PP_UP": {
+      "name": "PP Plus"
+    },
+    "PP_MAX": {
+      "name": "PP Max"
+    },
+    "LURE": {
+      "name": "Parfum"
+    },
+    "SUPER_LURE": {
+      "name": "Super Parfum"
+    },
+    "MAX_LURE": {
+      "name": "Parfum Max"
+    },
+    "MEMORY_MUSHROOM": {
+      "name": "Champi Mémoriel",
+      "description": "Remémore une capacité à un Pokémon."
+    },
+    "EXP_SHARE": {
+      "name": "Multi Exp",
+      "description": "Tous les non-participants reçoivent 20% des Points d'Exp d'un participant."
+    },
+    "EXP_BALANCE": {
+      "name": "Équilibr'Exp",
+      "description": "Équilibre les Points d'Exp à l'avantage des membres de l'équipe aux plus bas niveaux."
+    },
+    "OVAL_CHARM": {
+      "name": "Charme Ovale",
+      "description": "Quand plusieurs Pokémon sont en combat, chacun gagne 10% supplémentaires du total d'Exp."
+    },
+    "EXP_CHARM": {
+      "name": "Charme Exp"
+    },
+    "SUPER_EXP_CHARM": {
+      "name": "Super Charme Exp"
+    },
+    "GOLDEN_EXP_CHARM": {
+      "name": "Charme Exp Doré"
+    },
+    "LUCKY_EGG": {
+      "name": "Œuf Chance"
+    },
+    "GOLDEN_EGG": {
+      "name": "Œuf d'Or"
+    },
+    "SOOTHE_BELL": {
+      "name": "Grelot Zen"
+    },
+    "SCOPE_LENS": {
+      "name": "Lentilscope",
+      "description": "Une lentille qui augmente d'un cran le taux de critiques du porteur."
+    },
+    "LEEK": {
+      "name": "Poireau",
+      "description": "À faire tenir à Canarticho ou Palarticho. Un poireau très long et solide qui augmente de 2 crans le taux de critiques."
+    },
+    "EVIOLITE": {
+      "name": "Évoluroc",
+      "description": "Augmente de 50% la Défense et Déf. Spé. si le porteur peut évoluer, 25% aux fusions dont une moitié le peut encore."
+    },
+    "SOUL_DEW": {
+      "name": "Rosée Âme",
+      "description": "Augmente de 10% l'influence de la nature d'un Pokémon sur ses statistiques. Effet cumulatif."
+    },
+    "NUGGET": {
+      "name": "Pépite"
+    },
+    "BIG_NUGGET": {
+      "name": "Maxi Pépite"
+    },
+    "RELIC_GOLD": {
+      "name": "Vieux Ducat"
+    },
+    "AMULET_COIN": {
+      "name": "Pièce Rune",
+      "description": "Augmente de 20% les gains d'argent."
+    },
+    "GOLDEN_PUNCH": {
+      "name": "Poing Doré",
+      "description": "La moitié des dégâts infligés sont convertis en argent."
+    },
+    "COIN_CASE": {
+      "name": "Boite Jetons",
+      "description": "Tous les 10 combats, recevez 10% de votre argent en intérêts."
+    },
+    "LOCK_CAPSULE": {
+      "name": "Poké Écrin",
+      "description": "Permet de conserver la rareté des objets si vous relancez les objets proposés."
+    },
+    "GRIP_CLAW": {
+      "name": "Accro Griffe"
+    },
+    "WIDE_LENS": {
+      "name": "Loupe"
+    },
+    "MULTI_LENS": {
+      "name": "Lentille Multi"
+    },
+    "HEALING_CHARM": {
+      "name": "Charme Soin",
+      "description": "Augmente de 10% l'efficacité des capacités et objets de soin de PV (hors Rappels)."
+    },
+    "CANDY_JAR": {
+      "name": "Bonbonnière",
+      "description": "Augmente de 1 le nombre de niveaux gagnés à l'utilisation d'un Super Bonbon ou d'un Hyper Bonbon."
+    },
+    "BERRY_POUCH": {
+      "name": "Sac à Baies",
+      "description": "Ajoute 15% de chances qu'une Baie utilisée ne soit pas consommée."
+    },
+    "FOCUS_BAND": {
+      "name": "Bandeau",
+      "description": "Ajoute 10% de chances de survivre avec 1 PV si les dégâts reçus pouvaient mettre K.O. ."
+    },
+    "QUICK_CLAW": {
+      "name": "Vive Griffe",
+      "description": "Ajoute 10% de chances d'agir en premier, indépendamment de la Vitesse (après la priorité)."
+    },
+    "KINGS_ROCK": {
+      "name": "Roche Royale",
+      "description": "Ajoute 10% de chances qu'une capacité offensive apeure l'adversaire."
+    },
+    "LEFTOVERS": {
+      "name": "Restes",
+      "description": "Soigne à chaque tour 1/16 des PV max d'un Pokémon."
+    },
+    "SHELL_BELL": {
+      "name": "Grelot Coque",
+      "description": "Soigne son porteur avec 1/8 des dégâts qu'il inflige à un Pokémon."
+    },
+    "TOXIC_ORB": {
+      "name": "Orbe Toxique",
+      "description": "Empoisonne gravement son porteur à la fin du tour s'il n'a pas déjà de problème de statut."
+    },
+    "FLAME_ORB": {
+      "name": "Orbe Flamme",
+      "description": "Brule son porteur à la fin du tour s'il n'a pas déjà de problème de statut."
+    },
+    "BATON": {
+      "name": "Bâton",
+      "description": "Permet de transmettre les effets en cas de changement de Pokémon. Ignore les pièges."
+    },
+    "SHINY_CHARM": {
+      "name": "Charme Chroma",
+      "description": "Augmente énormément les chances de rencontrer un Pokémon sauvage chromatique."
+    },
+    "ABILITY_CHARM": {
+      "name": "Charme Talent",
+      "description": "Augmente énormément les chances de rencontrer un Pokémon sauvage avec un talent caché."
+    },
+    "IV_SCANNER": {
+      "name": "Scanner d'IV",
+      "description": "Révèle la qualité de deux IV d'un Pokémon sauvage par scanner possédé. Les meilleurs IV sont révélés en priorité."
+    },
+    "DNA_SPLICERS": {
+      "name": "Pointeau ADN"
+    },
+    "MINI_BLACK_HOLE": {
+      "name": "Mini Trou Noir"
+    },
+    "GOLDEN_POKEBALL": {
+      "name": "Poké Ball Dorée",
+      "description": "Ajoute un choix d'objet à la fin de chaque combat"
+    },
+    "ENEMY_DAMAGE_BOOSTER": {
+      "name": "Jeton Dégâts",
+      "description": "Augmente les dégâts de 5%."
+    },
+    "ENEMY_DAMAGE_REDUCTION": {
+      "name": "Jeton Protection",
+      "description": "Diminue les dégâts reçus de 2,5%."
+    },
+    "ENEMY_HEAL": {
+      "name": "Jeton Soin",
+      "description": "Soigne 2% des PV max à chaque tour."
+    },
+    "ENEMY_ATTACK_POISON_CHANCE": {
+      "name": "Jeton Poison"
+    },
+    "ENEMY_ATTACK_PARALYZE_CHANCE": {
+      "name": "Jeton Paralysie"
+    },
+    "ENEMY_ATTACK_BURN_CHANCE": {
+      "name": "Jeton Brulure"
+    },
+    "ENEMY_STATUS_EFFECT_HEAL_CHANCE": {
+      "name": "Jeton Total Soin",
+      "description": "Ajoute 2,5% de chances à chaque tour de se soigner d'un problème de statut."
+    },
+    "ENEMY_ENDURE_CHANCE": {
+      "name": "Jeton Ténacité"
+    },
+    "ENEMY_FUSED_CHANCE": {
+      "name": "Jeton Fusion",
+      "description": "Ajoute 1% de chances qu'un Pokémon sauvage soit une fusion."
+    },
+    "AnyTmModifierType": {
+      "name": "CX {{moveName}}",
+      "description": "Apprend {{moveName}} à un Pokémon."
+    },
+    "AnyTmModifierTypeWithInfo": {
+      "name": "++XM{{moveId}} - {{moveName}}++",
+      "description": "Apprend la capacité {{moveName}} à N'IMPORTE QUEL Pokémon\n(Maintenez C ou Maj pour plus d'infos)."
+    },
+    "TypeSwitcherModifierType": {
+      "name": "Changeur de Type : {{type1}} / {{type2}}",
+      "description": "Change les types d'un Pokémon en {{type1}} et {{type2}}."
+    },
+    "PrimaryTypeSwitcherModifierType": {
+      "name": "Changeur de Type Primaire : {{type1}}",
+      "description": "Change le type primaire d'un Pokémon en {{type1}}."
+    },
+    "SecondaryTypeSwitcherModifierType": {
+      "name": "Changeur de Type Secondaire : {{type2}}",
+      "description": "Change le type secondaire d'un Pokémon en {{type2}}."
+    },
+    "AbilitySwitcherModifierType": {
+      "name": "Changeur de Talent",
+      "description": "Échange le talent actuel du Pokémon avec l'un de ses autres talents."
+    },
+    "RandomStatSwitcherModifierType": {
+      "name": "{{stat1}} X {{stat2}}",
+      "description": "Échange les statistiques {{stat1}} et {{stat2}} du Pokémon. COÛTE 1x Fragment de Bug"
+    },
+    "GlitchPieceModifierType": {
+      "name": "Fragment de Bug",
+      "description": "Une mystérieuse pièce de bug. \nDonne accès à des objets bug très puissants."
+    },
+    "FormChangeItemModifierSmittyItem": {
+      "description": "INTERDIT : Donner à un Pokémon une \ncombinaison spécifique de 4 objets SMITTY..."
+    },
+    "PermaModifierType": {
+      "PERMA_PARTY_ABILITY": {
+        "name": "Capacité d'Équipe SMITTY",
+        "description": "Donner {{abilityName}} à TOUS les Pokémon de l'Équipe"
+      },
+      "PERMA_NEW_NORMAL": {
+        "name": "Nouveau Type Normal",
+        "description": "Rend le type Normal super efficace contre les types Fée et Électrik, et faible contre Combat, Insecte et Psy."
+      },
+      "PERMA_REROLL_COST_1": {
+        "name": "Coût de Relance Plus",
+        "description": "Réduit le coût de relance à 50 !"
+      },
+      "PERMA_REROLL_COST_2": {
+        "name": "Coût de Relance EX",
+        "description": "Réduit le coût de relance à 25 !"
+      },
+      "PERMA_REROLL_COST_3": {
+        "name": "Coût de Relance SMITTY",
+        "description": "Réduit le coût de relance à 10 !"
+      },
+      "PERMA_SHOW_REWARDS_1": {
+        "name": "Récompenses Aléatoires Plus",
+        "description": "Augmente les chances d'obtenir des récompenses aléatoires."
+      },
+      "PERMA_SHOW_REWARDS_2": {
+        "name": "Plus de Récompenses Aléatoires EX",
+        "description": "Augmente grandement les chances d'obtenir des récompenses aléatoires."
+      },
+      "PERMA_SHOW_REWARDS_3": {
+        "name": "Récompenses Aléatoires SMITTY",
+        "description": "Augmente considérablement les chances d'obtenir des récompenses aléatoires."
+      },
+      "PERMA_FUSION_INCREASE_1": {
+        "name": "Rencontres Fusion Plus",
+        "description": "Augmente le taux de rencontre des Pokémon fusionnés."
+      },
+      "PERMA_FUSION_INCREASE_2": {
+        "name": "Plus de Rencontres Fusion EX",
+        "description": "Augmente grandement le taux de rencontre des Pokémon fusionnés."
+      },
+      "PERMA_FUSION_INCREASE_3": {
+        "name": "Rencontres Fusion SMITTY",
+        "description": "Augmente considérablement le taux de rencontre des Pokémon fusionnés."
+      },
+      "PERMA_CATCH_RATE_1": {
+        "name": "Taux de Capture Plus",
+        "description": "25% de meilleur taux de capture pour tous les Pokémon."
+      },
+      "PERMA_CATCH_RATE_2": {
+        "name": "Taux de Capture EX",
+        "description": "50% de meilleur taux de capture pour tous les Pokémon."
+      },
+      "PERMA_CATCH_RATE_3": {
+        "name": "Taux de Capture SMITTY",
+        "description": "75% de meilleur taux de capture pour tous les Pokémon."
+      },
+      "PERMA_TRAINER_SNATCH_COST_1": {
+        "name": "Réduction Prix PokéAchat Plus",
+        "description": "10% de réduction sur l'achat de Pokémon aux dresseurs."
+      },
+      "PERMA_TRAINER_SNATCH_COST_2": {
+        "name": "Réduction Prix PokéAchat EX",
+        "description": "20% de réduction sur l'achat de Pokémon aux dresseurs."
+      },
+      "PERMA_TRAINER_SNATCH_COST_3": {
+        "name": "Réduction Prix PokéAchat SMITTY",
+        "description": "30% de réduction sur l'achat de Pokémon aux dresseurs."
+      },
+      "PERMA_MORE_REVIVE_1": {
+        "name": "Réanimations Aléatoires Plus",
+        "description": "1/15 chance de réanimer aléatoirement un de vos Pokémon lors d'un K.O. !"
+      },
+      "PERMA_MORE_REVIVE_2": {
+        "name": "Réanimations Aléatoires EX",
+        "description": "1/13 chance de réanimer aléatoirement un de vos Pokémon lors d'un K.O. !"
+      },
+      "PERMA_MORE_REVIVE_3": {
+        "name": "Réanimations Aléatoires SMITTY",
+        "description": "1/10 chance de réanimer aléatoirement un de vos Pokémon lors d'un K.O. !"
+      },
+      "PERMA_FREE_REROLL": {
+        "name": "Relances Gratuites SMITTY !",
+        "description": "Obtenez des relances gratuites !"
+      },
+      "PERMA_BETTER_LUCK_2": {
+        "name": "Chance EX",
+        "description": "Les récompenses ont plus de chances d'être meilleures."
+      },
+      "PERMA_BETTER_LUCK_3": {
+        "name": "Chance SMITTY",
+        "description": "Les récompenses ont considérablement plus de chances d'être meilleures."
+      },
+      "PERMA_MORE_REWARD_CHOICE_1": {
+        "name": "Choix de Récompenses Plus",
+        "description": "Augmente le nombre de choix de récompenses de 1."
+      },
+      "PERMA_MORE_REWARD_CHOICE_2": {
+        "name": "Choix de Récompenses EX",
+        "description": "Augmente le nombre de choix de récompenses de 2."
+      },
+      "PERMA_MORE_REWARD_CHOICE_3": {
+        "name": "Choix de Récompenses SMITTY",
+        "description": "Augmente le nombre de choix de récompenses de 3."
+      },
+      "PERMA_POST_BATTLE_MONEY_1": {
+        "name": "Argent Après Combat Plus",
+        "description": "20% d'argent en plus après chaque combat."
+      },
+      "PERMA_POST_BATTLE_MONEY_2": {
+        "name": "Argent Après Combat EX",
+        "description": "40% d'argent en plus après chaque combat."
+      },
+      "PERMA_POST_BATTLE_MONEY_3": {
+        "name": "Argent Après Combat SMITTY",
+        "description": "60% d'argent en plus après chaque combat."
+      },
+      "PERMA_START_BALL_1": {
+        "name": "Balls de Départ Plus",
+        "description": "Commencez la partie avec 5 Hyper Balls."
+      },
+      "PERMA_START_BALL_2": {
+        "name": "Balls de Départ EX",
+        "description": "Commencez la partie avec 5 Balls Rogue !"
+      },
+      "PERMA_START_BALL_3": {
+        "name": "Balls de Départ SMITTY",
+        "description": "Commencez la partie avec 1 Master Ball !"
+      },
+      "PERMA_START_MONEY_1": {
+        "name": "Argent de Départ Plus",
+        "description": "Commencez la partie avec 1500 d'argent."
+      },
+      "PERMA_START_MONEY_2": {
+        "name": "Argent de Départ EX",
+        "description": "Commencez la partie avec 2000 d'argent."
+      },
+      "PERMA_START_MONEY_3": {
+        "name": "Argent de Départ SMITTY",
+        "description": "Commencez la partie avec 3000 d'argent."
+      },
+      "PERMA_START_GLITCH_PIECES_1": {
+        "name": "Fragments de Bug Plus",
+        "description": "Commencez chaque partie avec 2 Fragments de Bug."
+      },
+      "PERMA_START_GLITCH_PIECES_2": {
+        "name": "Fragments de Bug EX",
+        "description": "Commencez chaque partie avec 3 Fragments de Bug."
+      },
+      "PERMA_START_GLITCH_PIECES_3": {
+        "name": "Fragments de Bug SMITTY",
+        "description": "Commencez chaque partie avec 4 Fragments de Bug."
+      },
+      "PERMA_METRONOME_LEVELUP": {
+        "name": "Métronome 777",
+        "description": "Tous les 7 niveaux, vos Pokémon essaient d'apprendre l'attaque Métronome."
+      },
+      "PERMA_NEW_ROUND_TERA": {
+        "name": "Téra Nouveau Tour SMITTY",
+        "description": "Donne un Téra aléatoire à un Pokémon de votre équipe tous les 10 tours !"
+      },
+      "PERMA_RUN_ANYTHING_2": {
+        "name": "Fuite Universelle EX",
+        "description": "Permet de fuir la plupart des combats."
+      },
+      "PERMA_SHINY_1": {
+        "name": "Chance de Chromatique Plus",
+        "description": "Augmente significativement la chance de rencontrer des Pokémon chromatiques."
+      },
+      "PERMA_SHINY_2": {
+        "name": "Chance de Chromatique EX",
+        "description": "Augmente drastiquement la chance de rencontrer des Pokémon chromatiques."
+      },
+      "PERMA_SHINY_3": {
+        "name": "Chance de Chromatique SMITTY",
+        "description": "Augmente massivement la chance de rencontrer des Pokémon chromatiques."
+      },
+      "PERMA_CHEAPER_FUSIONS_1": {
+        "name": "Fusions Moins Chères Plus",
+        "description": "Réduit le coût d'utilisation des Pokémon fusionnés de 25%"
+      },
+      "PERMA_CHEAPER_FUSIONS_2": {
+        "name": "Fusions Moins Chères EX",
+        "description": "Réduit le coût d'utilisation des Pokémon fusionnés de 50%"
+      },
+      "PERMA_CHEAPER_FUSIONS_3": {
+        "name": "Fusions Moins Chères SMITTY",
+        "description": "Réduit le coût d'utilisation des Pokémon fusionnés de 75%"
+      },
+      "PERMA_STARTER_POINT_LIMIT_INC_1": {
+        "name": "Points de Départ Plus",
+        "description": "Augmente la limite de points de départ pour les Pokémon de départ de 2."
+      },
+      "PERMA_STARTER_POINT_LIMIT_INC_2": {
+        "name": "Points de Départ EX",
+        "description": "Augmente la limite de points de départ pour les Pokémon de départ de 4."
+      },
+      "PERMA_STARTER_POINT_LIMIT_INC_3": {
+        "name": "Points de Départ SMITTY",
+        "description": "Augmente la limite de points de départ pour les Pokémon de départ de 6."
+      },
+      "PERMA_LONGER_TERA_1": {
+        "name": "Durée Téra Plus",
+        "description": "Augmente la durée de la Téracristallisation à 20 vagues."
+      },
+      "PERMA_LONGER_TERA_2": {
+        "name": "Durée Téra EX",
+        "description": "Augmente la durée de la Téracristallisation à 30 vagues."
+      },
+      "PERMA_LONGER_TERA_3": {
+        "name": "Durée Téra SMITTY",
+        "description": "Augmente la durée de la Téracristallisation à 40 vagues."
+      },
+      "PERMA_LONGER_STAT_BOOSTS_1": {
+        "name": "Bonus de Stats Temporaires Plus",
+        "description": "Augmente la durée des bonus de stats temporaires de combat à 4."
+      },
+      "PERMA_LONGER_STAT_BOOSTS_2": {
+        "name": "Bonus de Stats Temporaires EX",
+        "description": "Augmente la durée des bonus de stats temporaires de combat à 5."
+      },
+      "PERMA_LONGER_STAT_BOOSTS_3": {
+        "name": "Bonus de Stats Temporaires SMITTY",
+        "description": "Augmente la durée des bonus de stats temporaires de combat à 6."
+      },
+      "PERMA_MORE_GLITCH_PIECES_1": {
+        "name": "Fragments de Bug Plus",
+        "description": "Obtenez 3-4 Fragments de Bug lorsqu'un Fragment de Bug est ramassé."
+      },
+      "PERMA_MORE_GLITCH_PIECES_2": {
+        "name": "Fragments de Bug EX",
+        "description": "Obtenez 4 Fragments de Bug lorsqu'un Fragment de Bug est ramassé."
+      },
+      "PERMA_MORE_GLITCH_PIECES_3": {
+        "name": "Fragments de Bug SMITTY",
+        "description": "Obtenez 4-5 Fragments de Bug lorsqu'un Fragment de Bug est ramassé."
+      },
+      "PERMA_GLITCH_PIECE_MAX_PLUS_1": {
+        "name": "Maximum de Fragments de Bug Plus",
+        "description": "Augmente de 1 le nombre maximum de Fragments de Bug que vous pouvez porter."
+      },
+      "PERMA_GLITCH_PIECE_MAX_PLUS_2": {
+        "name": "Maximum de Fragments de Bug EX",
+        "description": "Augmente de 2 le nombre maximum de Fragments de Bug que vous pouvez porter."
+      },
+      "PERMA_GLITCH_PIECE_MAX_PLUS_3": {
+        "name": "Maximum de Fragments de Bug SMITTY",
+        "description": "Augmente de 3 le nombre maximum de Fragments de Bug que vous pouvez porter."
+      },
+      "PERMA_TRANSFER_TERA": {
+        "name": "Transfert Téra Plus",
+        "description": "Permet de transférer le Type Téra d'un Pokémon à un autre."
+      }
+    },
+    "CollectedTypeModifierType": {
+      "name": "Type Collecté : {{type}}",
+      "description": "Utilisez 5 de N'IMPORTE QUEL MÉLANGE DE TYPE au lieu de relâcher un Pokémon pour les Objets de Relâchement."
+    },
+    "SacrificeModifierType": {
+      "description": "Relâchez un Pokémon pour augmenter {{stat}} d'un autre Pokémon de 15%."
+    },
+    "StatSacrificeModifierTypeGenerator": {
+      "name": "Relâcher {{stat}}"
+    },
+    "StatSacrificeModifierType": {
+      "name": "Relâchement de Statistique : {{stat}}",
+      "description": "Relâchez un Pokémon pour augmenter {{stat}} d'un autre Pokémon de 15%."
+    },
+    "TypeSacrificeModifierType": {
+      "name": "Relâchement de Type",
+      "description": "Relâchez un Pokémon pour qu'un autre hérite de ses types."
+    },
+    "MoveSacrificeModifierType": {
+      "name": "Relâchement de Capacités",
+      "description": "Relâchez un Pokémon pour qu'un autre hérite de ses capacités."
+    },
+    "AbilitySacrificeModifierType": {
+      "name": "Relâchement de Capacité",
+      "description": "Relâchez un Pokémon pour qu'un autre adopte sa capacité."
+    },
+    "PassiveAbilitySacrificeModifierType": {
+      "name": "Relâchement de Capacité Passive",
+      "description": "Relâchez un Pokémon pour attribuer sa capacité passive comme capacité PRIMAIRE à un autre."
+    },
+    "AnyPassiveAbilityModifierType": {
+      "name": "PASSIF {{abilityName}}",
+      "description": "Donner la Passive {{abilityName}} à N'IMPORTE QUEL Pokémon\n(Maintenir C ou Shift pour plus d'infos)."
+    },
+    "AnyAbilityModifierType": {
+      "name": "{{abilityName}}",
+      "description": "Donner {{abilityName}} à N'IMPORTE QUEL Pokémon\n(Maintenir C ou Shift pour plus d'infos)."
+    },
+    "glitchPieceCost": {
+      "text": "[[COÛTE 1x Fragment de Bug]]"
+    },
+    "SacrificeToggleModifierType": {
+      "name": "Activer l'Objet de Libération",
+      "description": "Activer/Désactiver les Objets de Libération"
+    }
+  },
+  "SpeciesBoosterItem": {
+    "LIGHT_BALL": {
+      "name": "Balle Lumière",
+      "description": "À faire tenir à Pikachu. Un orbe énigmatique qui double son Attaque et son Atq. Spé. ."
+    },
+    "THICK_CLUB": {
+      "name": "Masse Os",
+      "description": "À faire tenir à Osselait ou Ossatueur. Un os dur qui double leur Attaque."
+    },
+    "METAL_POWDER": {
+      "name": "Poudre Métal",
+      "description": "À faire tenir à Métamorph. Cette poudre étrange, très fine mais résistante, double sa Défense."
+    },
+    "QUICK_POWDER": {
+      "name": "Poudre Vite",
+      "description": "À faire tenir à Métamorph. Cette poudre étrange, très fine mais résistante, double sa Vitesse."
+    }
+  },
+  "TempBattleStatBoosterItem": {
+    "x_attack": "Attaque +",
+    "x_defense": "Défense +",
+    "x_sp_atk": "Atq. Spé. +",
+    "x_sp_def": "Déf. Spé. +",
+    "x_speed": "Vitesse +",
+    "x_accuracy": "Précision +",
+    "dire_hit": "Muscle +"
+  },
+  "TempBattleStatBoosterStatName": {
+    "ATK": "l'Attaque",
+    "DEF": "la Défense",
+    "SPATK": "l'Atq. Spé.",
+    "SPDEF": "la Déf. Spé.",
+    "SPD": "la Vitesse",
+    "ACC": "la précision",
+    "CRIT": "le taux de critique",
+    "EVA": "l'esquive",
+    "DEFAULT": "???"
+  },
+  "AttackTypeBoosterItem": {
+    "silk_scarf": "Mouchoir Soie",
+    "black_belt": "Ceinture Noire",
+    "sharp_beak": "Bec Pointu",
+    "poison_barb": "Pic Venin",
+    "soft_sand": "Sable Doux",
+    "hard_stone": "Pierre Dure",
+    "silver_powder": "Poudre Argentée",
+    "spell_tag": "Rune Sort",
+    "metal_coat": "Peau Métal",
+    "charcoal": "Charbon",
+    "mystic_water": "Eau Mystique",
+    "miracle_seed": "Graine Miracle",
+    "magnet": "Aimant",
+    "twisted_spoon": "Cuillère Tordue",
+    "never_melt_ice": "Glace Éternelle",
+    "dragon_fang": "Croc Dragon",
+    "black_glasses": "Lunettes Noires",
+    "fairy_feather": "Plume Enchantée"
+  },
+  "BaseStatBoosterItem": {
+    "hp_up": "PV Plus",
+    "protein": "Protéine",
+    "iron": "Fer",
+    "calcium": "Calcium",
+    "zinc": "Zinc",
+    "carbos": "Carbone"
+  },
+  "EvolutionItem": {
+    "NONE": "Aucun",
+    "LINKING_CORD": "Fil de Liaison",
+    "SUN_STONE": "Pierre Soleil",
+    "MOON_STONE": "Pierre Lune",
+    "LEAF_STONE": "Pierre Plante",
+    "FIRE_STONE": "Pierre Feu",
+    "WATER_STONE": "Pierre Eau",
+    "THUNDER_STONE": "Pierre Foudre",
+    "ICE_STONE": "Pierre Glace",
+    "DUSK_STONE": "Pierre Nuit",
+    "DAWN_STONE": "Pierre Aube",
+    "SHINY_STONE": "Pierre Éclat",
+    "CRACKED_POT": "Théière Fêlée",
+    "SWEET_APPLE": "Pomme Sucrée",
+    "TART_APPLE": "Pomme Acidulée",
+    "STRAWBERRY_SWEET": "Fraise en Sucre",
+    "UNREMARKABLE_TEACUP": "Bol Médiocre",
+    "CHIPPED_POT": "Théière Ébréchée",
+    "BLACK_AUGURITE": "Obsidienne",
+    "GALARICA_CUFF": "Bracelet Galanoa",
+    "GALARICA_WREATH": "Couronne Galanoa",
+    "PEAT_BLOCK": "Bloc de Tourbe",
+    "AUSPICIOUS_ARMOR": "Armure de la Fortune",
+    "MALICIOUS_ARMOR": "Armure de la Rancune",
+    "MASTERPIECE_TEACUP": "Bol Exceptionnel",
+    "METAL_ALLOY": "Métal Composite",
+    "SCROLL_OF_DARKNESS": "Rouleau des Ténèbres",
+    "SCROLL_OF_WATERS": "Rouleau de l'Eau",
+    "SYRUPY_APPLE": "Pomme Nectar"
+  },
+  "FormChangeItem": {
+    "NONE": "Aucun",
+    "ABOMASITE": "Blizzarite",
+    "ABSOLITE": "Absolite",
+    "AERODACTYLITE": "Ptéraïte",
+    "AGGRONITE": "Galekingite",
+    "ALAKAZITE": "Alakazamite",
+    "ALTARIANITE": "Altarite",
+    "AMPHAROSITE": "Pharampite",
+    "AUDINITE": "Nanméouïte",
+    "BANETTITE": "Branettite",
+    "BEEDRILLITE": "Dardargnite",
+    "BLASTOISINITE": "Tortankite",
+    "BLAZIKENITE": "Braségalite",
+    "CAMERUPTITE": "Caméruptite",
+    "CHARIZARDITE_X": "Dracaufite X",
+    "CHARIZARDITE_Y": "Dracaufite Y",
+    "DIANCITE": "Diancite",
+    "GALLADITE": "Gallamite",
+    "GARCHOMPITE": "Carchacrokite",
+    "GARDEVOIRITE": "Gardevoirite",
+    "GENGARITE": "Ectoplasmite",
+    "GLALITITE": "Oniglalite",
+    "GYARADOSITE": "Léviatorite",
+    "HERACRONITE": "Scarhinoïte",
+    "HOUNDOOMINITE": "Démolossite",
+    "KANGASKHANITE": "Kangourexite",
+    "LATIASITE": "Latiasite",
+    "LATIOSITE": "Latiosite",
+    "LOPUNNITE": "Lockpinite",
+    "LUCARIONITE": "Lucarite",
+    "MANECTITE": "Élecsprintite",
+    "MAWILITE": "Mysdibulite",
+    "MEDICHAMITE": "Charminite",
+    "METAGROSSITE": "Métalossite",
+    "MEWTWONITE_X": "Mewtwoïte X",
+    "MEWTWONITE_Y": "Mewtwoïte Y",
+    "PIDGEOTITE": "Roucarnagite",
+    "PINSIRITE": "Scarabruite",
+    "RAYQUAZITE": "Rayquazite",
+    "SABLENITE": "Ténéfixite",
+    "SALAMENCITE": "Drattakite",
+    "SCEPTILITE": "Jungkite",
+    "SCIZORITE": "Cizayoxite",
+    "SHARPEDONITE": "Sharpedite",
+    "SLOWBRONITE": "Flagadossite",
+    "STEELIXITE": "Steelixite",
+    "SWAMPERTITE": "Laggronite",
+    "TYRANITARITE": "Tyranocivite",
+    "VENUSAURITE": "Florizarrite",
+    "BLUE_ORB": "Gemme Bleue",
+    "RED_ORB": "Gemme Rouge",
+    "SHARP_METEORITE": "Méteorite Aiguisée",
+    "HARD_METEORITE": "Méteorite Solide",
+    "SMOOTH_METEORITE": "Méteorite Lisse",
+    "ADAMANT_CRYSTAL": "Globe Adamant",
+    "LUSTROUS_GLOBE": "Globe Perlé",
+    "GRISEOUS_CORE": "Globe Platiné",
+    "REVEAL_GLASS": "Miroir Sacré",
+    "GRACIDEA": "Gracidée",
+    "MAX_MUSHROOMS": "Maxi Champis",
+    "DARK_STONE": "Galet Noir",
+    "LIGHT_STONE": "Galet Blanc",
+    "PRISON_BOTTLE": "Vase Scellé",
+    "N_LUNARIZER": "Necroluna",
+    "N_SOLARIZER": "Necrosol",
+    "RUSTED_SWORD": "Épée Rouillée",
+    "RUSTED_SHIELD": "Bouclier Rouillé",
+    "ICY_REINS_OF_UNITY": "Rênes de l'Unité du Froid",
+    "SHADOW_REINS_OF_UNITY": "Rênes de l'Unité d'Effroi",
+    "WELLSPRING_MASK": "Masque du Puits",
+    "HEARTHFLAME_MASK": "Masque du Fourneau",
+    "CORNERSTONE_MASK": "Masque de la Pierre",
+    "SHOCK_DRIVE": "Module Choc",
+    "BURN_DRIVE": "Module Pyro",
+    "CHILL_DRIVE": "Module Cryo",
+    "DOUSE_DRIVE": "Module Aqua",
+    "ULTRANECROZIUM_Z": "Ultranécrozélite",
+    "FIST_PLATE": "Plaque Poing",
+    "SKY_PLATE": "Plaque Ciel",
+    "TOXIC_PLATE": "Plaque Toxicité",
+    "EARTH_PLATE": "Plaque Terre",
+    "STONE_PLATE": "Plaque Roc",
+    "INSECT_PLATE": "Plaque Insecte",
+    "SPOOKY_PLATE": "Plaque Fantôme",
+    "IRON_PLATE": "Plaque Fer",
+    "FLAME_PLATE": "Plaque Flamme",
+    "SPLASH_PLATE": "Plaque Hydro",
+    "MEADOW_PLATE": "Plaque Herbe",
+    "ZAP_PLATE": "Plaque Volt",
+    "MIND_PLATE": "Plaque Esprit",
+    "ICICLE_PLATE": "Plaque Glace",
+    "DRACO_PLATE": "Plaque Draco",
+    "DREAD_PLATE": "Plaque Ombre",
+    "PIXIE_PLATE": "Plaque Pixie",
+    "BLANK_PLATE": "Plaque Renouveau",
+    "LEGEND_PLATE": "Plaque Légende",
+    "FIGHTING_MEMORY": "ROM Combat",
+    "FLYING_MEMORY": "ROM Vol",
+    "POISON_MEMORY": "ROM Poison",
+    "GROUND_MEMORY": "ROM Sol",
+    "ROCK_MEMORY": "ROM Roche",
+    "BUG_MEMORY": "ROM Insecte",
+    "GHOST_MEMORY": "ROM Spectre",
+    "STEEL_MEMORY": "ROM Acier",
+    "FIRE_MEMORY": "ROM Feu",
+    "WATER_MEMORY": "ROM Eau",
+    "GRASS_MEMORY": "ROM Plante",
+    "ELECTRIC_MEMORY": "ROM Électrik",
+    "PSYCHIC_MEMORY": "ROM Psy",
+    "ICE_MEMORY": "ROM Glace",
+    "DRAGON_MEMORY": "ROM Dragon",
+    "DARK_MEMORY": "ROM Ténèbres",
+    "FAIRY_MEMORY": "ROM Fée",
+    "BLANK_MEMORY": "ROM Vierge",
+    "SMITTY_AURA": "Aura de Smitty",
+    "SMITTY_BRAIN": "Cerveau de Smitty",
+    "SMITTY_CHAIN": "Chaîne de Smitty",
+    "SMITTY_CHAOS": "Chaos de Smitty",
+    "SMITTY_CIRCUIT": "Circuit de Smitty",
+    "SMITTY_CORE": "Noyau de Smitty",
+    "SMITTY_CRYSTAL": "Cristal de Smitty",
+    "SMITTY_CUBE": "Cube de Smitty",
+    "SMITTY_DARK": "Ténèbres de Smitty",
+    "SMITTY_DREAMS": "Rêves de Smitty",
+    "SMITTY_ENERGY": "Énergie de Smitty",
+    "SMITTY_ERROR": "Erreur de Smitty",
+    "SMITTY_ESSENCE": "Essence de Smitty",
+    "SMITTY_FEAR": "Peur de Smitty",
+    "SMITTY_FIBER": "Fibre de Smitty",
+    "SMITTY_FIRE": "Feu de Smitty",
+    "SMITTY_FLUX": "Flux de Smitty",
+    "SMITTY_FUEL": "Carburant de Smitty",
+    "SMITTY_GLITCH": "Bug de Smitty",
+    "SMITTY_HEART": "Cœur de Smitty",
+    "SMITTY_HUMOR": "Humeur de Smitty",
+    "SMITTY_JUICE": "Jus de Smitty",
+    "SMITTY_LIQUID": "Liquide de Smitty",
+    "SMITTY_MASK": "Masque de Smitty",
+    "SMITTY_METAL": "Métal de Smitty",
+    "SMITTY_MIST": "Brume de Smitty",
+    "SMITTY_NEBULA": "Nébuleuse de Smitty",
+    "SMITTY_ORB": "Orbe de Smitty",
+    "SMITTY_PLASMA": "Plasma de Smitty",
+    "SMITTY_POISON": "Poison de Smitty",
+    "SMITTY_PRISM": "Prisme de Smitty",
+    "SMITTY_PULSE": "Impulsion de Smitty",
+    "SMITTY_RELIC": "Relique de Smitty",
+    "SMITTY_SHADOW": "Ombre de Smitty",
+    "SMITTY_SHARD": "Éclat de Smitty",
+    "SMITTY_SLIME": "Slime de Smitty",
+    "SMITTY_SOUL": "Âme de Smitty",
+    "SMITTY_SPIRIT": "Esprit de Smitty",
+    "SMITTY_SURGE": "Surtension de Smitty",
+    "SMITTY_TOUCH": "Toucher de Smitty",
+    "SMITTY_VOICE": "Voix de Smitty",
+    "SMITTY_VOID": "Néant de Smitty",
+    "GLITCHI_GLITCHI_FRUIT": "Fruit Glitchi Glitchi",
+    "GLITCH_COMMAND_SEAL": "Sceau de Commande de Bug",
+    "GLITCH_MOD_SOUL": "Âme Mod de Bug",
+    "GLITCH_SHOUT": "Cri de Bug",
+    "GLITCH_MASTER_PARTS": "Pièces Maîtresses de Bug"
+  },
+  "common": {
+    "waves": "vagues",
+    "uses": "utilisations",
+    "glitchPieceCost": "*COÛTE 2x Fragment de Bug",
+    "moreInfo": "(Maintenez C / Maj pour infos)"
+  }
+}

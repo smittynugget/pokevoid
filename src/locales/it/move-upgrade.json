@@ -1,0 +1,182 @@
+{
+    "rewardTitle": "LEVEL UP {{count}}!",
+    "level": "Livello",
+    "description": {
+      "power": {
+        "increaseSlight": "Aumenta leggermente la Potenza di {{powerValue}}.",
+        "increaseModerate": "Aumenta moderatamente la Potenza di {{powerValue}}.",
+        "increaseSignificantWeak": "Aumenta significativamente la Potenza (per mosse più deboli) di {{powerValue}}.",
+        "increaseVsAccuracyLow": "Aumenta la Potenza di {{powerValue}} ma diminuisce la Precisione di {{accuracyValue}}.",
+        "increaseVsAccuracyHigh": "Aumenta notevolmente la Potenza di {{powerValue}} ma diminuisce la Precisione di {{accuracyValue}}.",
+        "increaseVsPriority": "Aumenta la Potenza di {{powerValue}} ma imposta la Priorità a {{priorityValue}}.",
+        "increvesPower": "Aumenta la Potenza di {{powerValue}} ma aggiunge {{recoilPercent}}% di danno da Contraccolpo.",
+        "increaseVsSelfStatDrop": "Aumenta la Potenza di {{powerValue}} ma abbassa {{statName1}} e {{statName2}} dell'utilizzatore di {{stages}} livello/i dopo l'uso."
+      },
+      "accuracy": {
+        "increasePercentage": "Aumenta la Precisione di {{value}}%.",
+        "perfectAccuracy": "Rende la Precisione 100%, ma diminuisce la Potenza di {{powerValue}}.",
+        "perfectAccuracyNoPenalty": "Rende la Precisione 100%.",
+        "increaseVsPowerLow": "Aumenta la Precisione di {{accuracyValue}}% ma diminuisce la Potenza di {{powerValue}}.",
+        "increaseVsPowerHigh": "Aumenta notevolmente la Precisione di {{accuracyValue}}% ma diminuisce la Potenza di {{powerValue}}.",
+        "increaseVsPp": "Aumenta la Precisione di {{accuracyValue}}% ma diminuisce i PP massimi.",
+        "setAccuracy": "Imposta la Precisione a {{value}}%."
+      },
+      "effectChance": {
+        "increaseToValue": "Aumenta la probabilità di effetto secondario a {{value}}%.",
+        "guaranteeVsPower": "Garantisce l'effetto secondario, ma diminuisce la Potenza di {{powerValue}}.",
+        "guaranteeVsAccuracy": "Garantisce l'effetto secondario, ma diminuisce la Precisione di {{accuracyValue}}% (mosse di Stato).",
+        "guaranteeVsPp": "Garantisce l'effetto secondario, ma diminuisce i PP massimi."
+      },
+      "status": {
+        "addChance": "Aggiunge una probabilità del {{chance}}% di infliggere {{statusName}}.",
+        "addChanceVsPower": "Aggiunge una probabilità del {{chance}}% di infliggere {{statusName}}, ma diminuisce la Potenza di {{powerValue}}.",
+        "addLeechSeed": "Aggiunge l'effetto Parassiseme (contro tipi non Erba), ma diminuisce la Potenza di {{powerValue}}.",
+        "changeEffect": "Cambia l'effetto secondario in una probabilità del {{chance}}% di infliggere {{statusName}}.",
+        "addSecondEffect": "{{chance}}% di probabilità di infliggere {{statusName1}} O {{statusName2}}, ma diminuisce la Potenza di {{powerValue}}.",
+        "addStatusViaStatusMove": "Infligge {{statusName}} (Cambia la Precisione a {{accuracyValue}}%)."
+      },
+      "flinch": {
+        "addChance": "Aggiunge una probabilità del {{chance}}% di far tentennare il bersaglio.",
+        "addChanceLow": "Aggiunge una probabilità del {{chance}}% di far tentennare il bersaglio.",
+        "addChanceHighVsPower": "Aggiunge una probabilità del {{chance}}% di far tentennare il bersaglio, ma diminuisce la Potenza di {{powerValue}}.",
+        "addChancePriorityVsPower": "Aggiunge una probabilità del {{chance}}% di far tentennare il bersaglio (mosse Priorità), ma diminuisce la Potenza di {{powerValue}}.",
+        "increaseChance": "Aumenta la probabilità di far tentennare a {{chance}}%.",
+        "increaseChanceVsPower": "Aumenta la probabilità di far tentennare a {{chance}}%, ma diminuisce la Potenza di {{powerValue}}."
+      },
+      "stat": {
+        "addRaiseSelfSingle": "Aumenta {{statName}} dell'utilizzatore di {{stages}} livello/i. Cambia la probabilità a {{chance}}%.",
+        "addRaiseSelfMultiple": "Aumenta {{statName1}} e {{statName2}} dell'utilizzatore di {{stages}} livello/i.",
+        "increaseRaiseSelf": "Aumenta l'effetto di auto-potenziamento per incrementare {{statName}} di {{stages}} livello/i.",
+        "addAnotherRaiseSelf": "Aumenta {{newStatName}} dell'utilizzatore di {{stages}} livello/i in aggiunta a {{existingStats}}.",
+        "addLowerTargetSingle": "Abbassa {{statName}} del bersaglio di {{stages}} livello/i. La Precisione diventa {{accuracy}}%. La Potenza diminuisce di {{powerValue}}.",
+        "addLowerTargetHarshChance": "{{chance}}% di probabilità di abbassare drasticamente {{statName}} del bersaglio di {{stages}} livelli, ma diminuisce la Potenza di {{powerValue}}.",
+        "addLowerTargetHarsh": "Abbassa drasticamente {{statName}} del bersaglio di {{stages}} livello/i (Cambia la Precisione a {{accuracy}}%).",
+        "addLowerTargetMultiple": "Abbassa {{statName1}} e {{statName2}} del bersaglio di {{stages}} livello/i (Cambia la Precisione a {{accuracy}}%).",
+        "increaseLowerTarget": "Aumenta la riduzione delle statistiche del bersaglio per abbassare {{statName}} di {{stages}} livello/i. La Precisione diventa {{accuracy}}%. La Potenza diminuisce di {{powerValue}}.",
+        "increaseLowerTargetChance": "Aumenta la probabilità di abbassare le statistiche del bersaglio a {{chance}}%.",
+        "guaranteeLowerTarget": "Garantisce l'effetto di abbassare le statistiche del bersaglio. La Potenza diminuisce di {{powerValue}}. La Precisione diminuisce di {{accuracyValue}}.",
+        "addAnotherLowerTarget": "Abbassa {{newStatName}} del bersaglio di {{stages}} livello/i in aggiunta a {{existingStats}}. La Potenza diminuisce di {{powerValue}}.",
+        "addLowerTargetChance": "{{chance}}% di probabilità di abbassare {{statName}} del bersaglio di {{stages}} livello/i, ma diminuisce la Potenza di {{powerValue}}."
+      },
+      "type": {
+        "changePowerBoost": "Cambia il Tipo in {{typeName}} e aumenta la Potenza di {{powerValue}}.",
+        "changeAccuracyBoost": "Cambia il Tipo in {{typeName}} e aumenta la Precisione di {{accuracyValue}}%.",
+        "changeAddStatus": "Cambia il Tipo in {{typeName}} e aggiunge una probabilità del {{chance}}% di infliggere {{statusName}}, ma diminuisce la Potenza di {{powerValue}}.",
+        "changeAddHighCrit": "Cambia il Tipo in {{typeName}} e aggiunge un'alta probabilità di colpo critico.",
+        "addTypeEffectiveness": "Infligge danni basati sull'efficacia del tipo {{typeName}} in aggiunta al proprio tipo. Aumenta la Potenza di {{powerValue}}.",
+        "superEffectiveVsType": "Infligge sempre danni Super Efficaci contro Pokémon di tipo {{targetTypeName}}.",
+        "becomeTypeless": "Diventa Senza Tipo (sempre danni neutrali) e aumenta la Potenza di {{powerValue}}.",
+        "matchUserType": "Il tipo della mossa corrisponde sempre al tipo primario dell'utilizzatore.",
+        "weatherBall": "Il tipo della mossa cambia in base al meteo (come Palla Clima).",
+        "terrainPulse": "Il tipo della mossa cambia in base al terreno (come Energisfera).",
+        "hiddenPower": "Il tipo della mossa cambia in base alle caratteristiche dell'utilizzatore (come Colpo Segreto)."
+      },
+      "multiHit": {
+        "add2to5": "Colpisce 2-5 volte, la Potenza diventa {{powerValue}}. Probabilità di Effetto impostata a {{chance}}% per colpo. Probabilità e Potenza non possono essere aumentate.",
+        "addExact": "Colpisce esattamente {{hits}} volte, la Potenza diventa {{powerValue}}. Probabilità di Effetto impostata a {{chance}}% per colpo. Probabilità e Potenza non possono essere aumentate.",
+        "addCheckAll": "Colpisce esattamente {{hits}} volte, precisione per colpo, la Potenza diventa {{powerValue}}, Precisione: {{accuracyReduction}}%. Probabilità di Effetto impostata a {{chance}}% per colpo. Probabilità e Potenza non possono essere aumentate.",
+        "changeToExact": "Colpisce {{hits}} volte e la Potenza diventa {{powerValue}}. Probabilità di Effetto impostata a {{chance}}% per colpo. Probabilità e Potenza non possono essere aumentate.",
+        "changeToRange": "Colpisce {{range}} volte, la Potenza diventa {{powerValue}}. Probabilità di Effetto impostata a {{chance}}% per colpo. Probabilità e Potenza non possono essere aumentate.",
+        "enableCheckAll": "Abilita il controllo della precisione per ogni colpo (multi-colpo), la Potenza diventa {{powerValue}} e Precisione: {{accuracyValue}}%. Probabilità e Potenza non possono essere aumentate.",
+        "disableCheckAll": "Disabilita il controllo della precisione per ogni colpo, la Potenza diventa {{powerValue}} e Precisione: {{accuracyValue}}%. Probabilità e Potenza non possono essere aumentate."
+      },
+      "heal": {
+        "addHitHeal": " Cura del {{percent}}% dei danni inflitti.",
+        "addHitHealVsPower": " Cura del {{percent}}% dei danni inflitti, ma diminuisce la Potenza di {{powerValue}}.",
+        "increaseHitHealVsPower": "Aumenta l'effetto di assorbimento per curare del {{percent}}% dei danni inflitti, ma diminuisce la Potenza di {{powerValue}}.",
+        "addSelfHeal": "L'utilizzatore recupera il {{percent}}% dei suoi PS massimi.",
+        "addPlantHeal": "L'utilizzatore recupera PS se il Campo Erboso è attivo.",
+        "addSandHeal": "L'utilizzatore recupera PS se la Tempesta di Sabbia è attiva.",
+        "increaseSelfHeal": "Aumenta la quantità di auto-guarigione al {{percent}}% dei PS massimi."
+      },
+      "recoil": {
+        "addVsPower": "Aggiunge {{percent}}% di danno da Contraccolpo, ma aumenta la Potenza di {{powerValue}}.",
+        "addVsPowerAccuracy": "Aggiunge {{percent}}% di danno da Contraccolpo, ma aumenta la Potenza di {{powerValue}} e diminuisce la Precisione di {{accuracyValue}}%.",
+        "increaseVsPower": "Aumenta il danno da Contraccolpo a {{percent}}%, ma aumenta la Potenza di {{powerValue}}.",
+        "decreaseVsPower": "Diminuisce il danno da Contraccolpo a {{percent}}%, ma diminuisce la Potenza di {{powerValue}}.",
+        "removeVsPower": "Rimuove il danno da Contraccolpo, ma diminuisce la Potenza di {{powerValue}}."
+      },
+      "sacrificial": {
+        "addFull": "L'utilizzatore va KO dopo l'uso, ma la Potenza diventa {{power}}.",
+        "addHalf": "L'utilizzatore perde il 50% dei PS massimi dopo l'uso, ma la Potenza diventa {{power}}.",
+        "addOnHit": "L'utilizzatore va KO se la mossa colpisce, ma la Potenza diventa {{power}}."
+      },
+      "crit": {
+        "addHighCritVsPower": "Aggiunge un'alta probabilità di colpo critico, ma diminuisce la Potenza di {{powerValue}} (per mosse ad alta potenza).",
+        "addHighCrit": "Aggiunge un'alta probabilità di colpo critico.",
+        "addHighCritAndPower": "Aggiunge un'alta probabilità di colpo critico e aumenta la Potenza di {{powerValue}}.",
+        "upgradeToCritOnlyVsPower": "Migliora a colpo critico garantito, ma diminuisce la Potenza di {{powerValue}}.",
+        "upgradeToCritOnlyVsAccuracy": "Migliora a colpo critico garantito, ma diminuisce la Precisione di {{accuracyValue}}%."
+      },
+      "flags": {
+        "ignoreProtect": "La mossa ora può colpire attraverso Protezione/Individua, ma diminuisce la Potenza di {{powerValue}}.",
+        "ignoreAbilities": "La mossa ora ignora le Abilità del bersaglio e aumenta la Potenza di {{powerValue}}.",
+        "soundBased": "La mossa diventa basata sul Suono (colpisce attraverso Sostituto) e aumenta la Potenza di {{powerValue}}.",
+        "punchingMove": "La mossa diventa una mossa di Pugno (potenziata da Ferropugno) e aumenta la Potenza di {{powerValue}}.",
+        "slicingMove": "La mossa diventa una mossa di Taglio (potenziata da Affilatura) e aumenta la Potenza di {{powerValue}}.",
+        "pulseMove": "La mossa diventa una mossa di Impulso (potenziata da Megalancio) e aumenta la Potenza di {{powerValue}}.",
+        "bitingMove": "La mossa diventa una mossa di Morso (potenziata da Ferromascella) e aumenta la Potenza di {{powerValue}}.",
+        "windMove": "La mossa diventa una mossa di Vento (influenzata da Ventoleste/Potere) e aumenta la Potenza di {{powerValue}}.",
+        "disableContact": "La mossa non fa più contatto e aumenta la Potenza di {{powerValue}}.",
+        "enableContact": "La mossa ora fa contatto e aumenta la Potenza di {{powerValue}}.",
+        "ignoreStatChanges": "La mossa ora ignora i cambiamenti delle statistiche difensive e l'evasione del bersaglio e aumenta la Potenza di {{powerValue}}.",
+        "removeScreens": "La mossa ora rimuove Riflesso/Schermoluce/Velaurora e aumenta la Potenza di {{powerValue}}.",
+        "thawTarget": "La mossa ora scongela un bersaglio congelato e aumenta la Potenza di {{powerValue}}."
+      },
+      "priority": {
+        "increase": "Aumenta la Priorità a {{value}}, ma diminuisce la Potenza di {{powerValue}}.",
+        "decrease": "Diminuisce la Priorità a {{value}}, ma aumenta la Potenza di {{powerValue}}.",
+        "conditionalTerrain": "Aumenta la Priorità a {{value}} se il Terreno {{terrain}} è attivo e aumenta la Potenza di {{powerValue}}.",
+        "conditionalFirstTurn": "Fallisce se non è il primo turno, Aumenta la Priorità a {{value}} e aumenta la Potenza di {{powerValue}}.",
+        "conditionalTargetMoved": "Aumenta la Priorità a {{value}} se il bersaglio ha già mosso in questo turno e aumenta la Potenza di {{powerValue}}."
+      },
+      "category": {
+        "changeToSpecial": "Cambia la Categoria in Speciale.",
+        "changeToSpecialVsDef": "Cambia la Categoria in Speciale, ma calcola i danni usando la Difesa del bersaglio.",
+        "changeToPhysical": "Cambia la Categoria in Fisico.",
+        "changeToPhysicalVsSpDef": "Cambia la Categoria in Fisico, ma calcola i danni usando la Difesa Speciale del bersaglio.",
+        "changeStatusToDamage": "Cambia la Categoria in {{category}} e imposta la Potenza a {{power}}."
+      },
+      "misc": {
+        "addTrap": "Intrappola il bersaglio con {{trapName}} per diversi turni, ma diminuisce la Potenza di {{powerValue}}.",
+        "addForceSwitch": "Costringe il bersaglio a essere sostituito, ma diminuisce la Potenza di {{powerValue}}.",
+        "addGrounding": "Fa atterrare bersagli in volo (rimuove l'immunità di tipo Volante).",
+        "fixedDamageLevel": "Cambia il calcolo dei danni per infliggere danni pari al livello dell'utilizzatore (sostituisce la potenza base).",
+        "fixedDamageValue": "Cambia il calcolo dei danni per infliggere {{value}} PS di danno fisso.",
+        "fixedDamageTargetHalfHp": "Cambia il calcolo dei danni per infliggere danni pari alla metà dei PS attuali del bersaglio (sostituisce la potenza base).",
+        "addSurviveDamage": "Lascia sempre il bersaglio con almeno 1 PS (come Falsofinale) e aumenta la Potenza di {{powerValue}}.",
+        "addWeightPowerTarget": "La Potenza aumenta in base al peso del bersaglio (come Calciosalto).",
+        "addWeightPowerCompare": "La Potenza aumenta quanto più pesante è l'utilizzatore rispetto al bersaglio (come Pesobomba).",
+        "addSpeedPowerSlower": "La Potenza aumenta quanto più lento è l'utilizzatore rispetto al bersaglio (come Girotiro).",
+        "addSpeedPowerFaster": "La Potenza aumenta quanto più veloce è l'utilizzatore rispetto al bersaglio (come Energisfera).",
+        "addHpPowerHighHp": "La Potenza aumenta quanto più alti sono i PS attuali dell'utilizzatore (Potenza Max: {{maxPower}}).",
+        "addHpPowerLowHp": "La Potenza aumenta quanto più bassi sono i PS attuali dell'utilizzatore (come Inversione).",
+        "addSwitchOut": "L'utilizzatore si sostituisce dopo l'uso, ma diminuisce la Potenza di {{powerValue}} (come Girosvolta).",
+        "addChargeTurn": "Aggiunge un turno di carica prima di attaccare, ma aumenta la Potenza di {{powerValue}}.",
+        "addChargeTurnWithBoost": "Aggiunge un turno di carica (aumenta {{statName}} dell'utilizzatore di {{stages}} livello/i) e aumenta la Potenza di {{powerValue}}.",
+        "addStealItemChance": "{{chance}}% di probabilità di rubare lo strumento tenuto dal bersaglio.",
+        "addStealItemGuaranteed": "Ruba lo strumento tenuto dal bersaglio, ma diminuisce la Potenza di {{powerValue}}.",
+        "addRemoveItem": "Rimuove lo strumento tenuto dal bersaglio e aumenta la Potenza di {{powerValue}}.",
+        "powerBoostWeather": "La Potenza raddoppia se {{weather}} è attivo.",
+        "powerBoostTerrain": "La Potenza raddoppia se il Terreno {{terrain}} è attivo e il bersaglio è a terra.",
+        "powerBoostConsecutive": "La Potenza raddoppia con ogni uso consecutivo riuscito (max 4x).",
+        "powerBoostTurnDamaged": "La Potenza raddoppia se l'utilizzatore è stato danneggiato dal bersaglio in questo turno."
+      },
+      "statusSpecific": {
+        "increaseFieldDuration": "Aumenta la durata degli effetti di campo (Schermi, Vento Favorevole, ecc.) impostati da questa mossa a {{turns}} turni.",
+        "increaseVolatileDuration": "Aumenta la durata degli stati volatili (Confusione, Provocazione, ecc.) applicati da questa mossa.",
+        "ignoreProtect": "La mossa ora può influenzare bersagli che usano Protezione/Individua.",
+        "addSelfHeal": "L'utilizzatore recupera il {{percent}}% dei suoi PS massimi.",
+        "addSelfBoost": "Aumenta {{statName}} dell'utilizzatore di {{stages}} livello/i.",
+        "addArenaTrap": "Imposta la trappola {{trapName}} sul lato avversario del campo.",
+        "setWeather": "Cambia il meteo in {{weather}}.",
+        "setTerrain": "Cambia il terreno in {{terrain}}.",
+        "clearWeather": "Rimuove il meteo attuale.",
+        "clearTerrain": "Rimuove il terreno attuale."
+      }
+    },
+  "moveTriggers": {
+      "loweredItsHead": "{{pokemonName}}\nha abbassato la testa!",
+      "tookInSunlight": "{{pokemonName}}\nha assorbito luce solare!"
+  }
+} 

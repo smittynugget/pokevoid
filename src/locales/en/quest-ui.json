@@ -1,0 +1,120 @@
+{
+  "console": {
+    "activeBounties": "Active Bounties:",
+    "rivalBounties": "Rival Bounties",
+    "smittyBounties": "Smitty Bounties",
+    "questBounties": "Quest Bounties",
+    "bountiesCount": "{{title}} ({{current}}/{{max}})",
+    "activeQuests": "Active Quests:",
+    "questsCount": "({{current}}/{{max}})",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "invalidConsoleCode": "Invalid console code",
+    "consoleCodeAlreadyUsed": "Console code already used",
+    "consoleCodeAccepted": "Console code accepted",
+    "toggleInfo": "to open on TITLE or BATTLE screens!",
+    "shopAndConsoleShortcut": "to open on TITLE or BATTLE screens!"
+  },
+  "modeRewards": {
+    "classicModeRewardFusion": "Use Fusion Pokemon You Caught!?",
+    "commonModeRewardAbilities": "60+ More Abilities for Ability Change Items",
+    "nuzlightModeRewardTypeSwitch": "Primary / Secondary Type Switch",
+    "nuzlightModeRewardUpdatedInventory": "Updated Inventory!",
+    "nuzlightModeRewardMoveRelease": "Move Release",
+    "nuzlockeModeRewardRank2": "RANK 2",
+    "accessShopInBattle": "Access ∞SHOP in BATTLE!",
+    "accessQuestsInBattle": "Access QUESTS in BATTLE!"
+  },
+  "bounty": {
+    "common": {
+      "status": {
+        "active": "ACTIVE",
+        "inactive": "INACTIVE"
+      },
+      "baseReward": "Base Reward Distribution"
+    },
+    "modalTitle": "Bounty",
+    "status": {
+      "complete": "COMPLETE",
+      "activeStage": "ACTIVE STAGE {{stage}}",
+      "active": "ACTIVE"
+    },
+    "sections": {
+      "rewards": {
+        "title": "Rewards:",
+        "unknown": "???"
+      },
+      "task": {
+        "title": "Task:",
+        "singleRun": "SINGLE-RUN Task:",
+        "multiRun": "MULTI-RUN Task:",
+        "locked": "{{target}} must first be Unlocked"
+      }
+    },
+    "error": "Error loading Bounty",
+    "buttons": {
+      "swap": "Swap Bounty",
+      "activate": "Activate Bounty",
+      "back": "Back",
+      "cancel": "Cancel"
+    },
+    "rival": {
+      "modalTitle": "Rival Trainer Bounty",
+      "invalidTrainer": "Invalid Trainer",
+      "task": "Defeat {{trainerName}} - Stage {{stage}}",
+      "progress": {
+        "title": "Stage Progress:",
+        "count": "{{current}} / {{max}}"
+      },
+      "rewards": {
+        "stage1": "90% ∞GOLD | 8% ∞ITEM | 2% Both",
+        "stage2": "75% ∞GOLD | 15% ∞ITEM | 10% Both",
+        "stage3": "60% ∞GOLD | 25% ∞ITEM | 15% Both",
+        "stage4": "40% ∞GOLD | 40% ∞ITEM | 20% Both",
+        "stage5": "25% ∞GOLD | 45% ∞ITEM | 30% Both"
+      }
+    },
+    "quest": {
+      "modalTitle": "Quest Bounty",
+      "invalidTask": "Invalid Quest Task",
+      "replacement": {
+        "title": "Select Bounty to Replace",
+        "cancel": "Cancel"
+      },
+      "rewards": {
+        "default": "50% ∞GOLD | 35% ∞ITEM | 15% Both"
+      },
+      "activeQuest": {
+        "modalTitle": "Quest!",
+        "buttons": {
+          "swap": "Swap Quest",
+          "activate": "Activate Quest"
+        },
+        "rewards": {
+          "unlockForm": "Unlock {{pokemonName}}'s New Form!"
+        },
+        "progress": {
+          "title": "Stage Progress:",
+          "count": "{{current}} / {{max}}"
+        }
+      }
+    },
+    "smitty": {
+      "modalTitle": "Pokemon Smitty Bounty",
+      "rewards": {
+        "withSpecies": "70% ∞GOLD | 20% ∞ITEM | 10% Both",
+        "withoutSpecies": "40% ∞GOLD | 40% ∞ITEM | 20% Both"
+      },
+      "task": {
+        "evolveAny": "Evolve ANY Pokemon Into {{formName}}",
+        "evolveSpecific": "Evolve {{basePokemon}} Into {{formName}}"
+      },
+      "items": {
+        "title": "Required Items:"
+      },
+      "common": {
+        "any": "ANY"
+      }
+    }
+  }
+} 

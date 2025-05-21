@@ -1,0 +1,2694 @@
+{
+  "stench": {
+    "name": "Tanfo",
+    "description": "Quando il Pokémon attacca il bersaglio, può farlo tentennare grazie al cattivo odore che emana."
+  },
+  "drizzle": {
+    "name": "Piovischio",
+    "description": "Quando il Pokémon entra in campo, attira la pioggia."
+  },
+  "speedBoost": {
+    "name": "Acceleratore",
+    "description": "La Velocità aumenta a ogni turno."
+  },
+  "battleArmor": {
+    "name": "Lottascudo",
+    "description": "Il Pokémon è protetto da una dura corazza che gli evita di subire brutti colpi."
+  },
+  "sturdy": {
+    "name": "Vigore",
+    "description": "Evita che il Pokémon vada KO in un sol colpo se ha tutti i PS, e lo rende immune alle mosse che causano KO immediato."
+  },
+  "damp": {
+    "name": "Umidità",
+    "description": "Aumenta l'umidità circostante, impedendo l'uso di Autodistruzione e di altre mosse esplosive."
+  },
+  "limber": {
+    "name": "Scioltezza",
+    "description": "Il corpo flessibile del Pokémon gli impedisce di subire gli effetti della paralisi."
+  },
+  "sandVeil": {
+    "name": "Sabbiavelo",
+    "description": "L'elusione aumenta durante le tempeste di sabbia."
+  },
+  "static": {
+    "name": "Statico",
+    "description": "Il Pokémon si ricopre di elettricità statica e può causare paralisi a chi è entrato in contatto con lui."
+  },
+  "voltAbsorb": {
+    "name": "Assorbivolt",
+    "description": "Se il Pokémon viene colpito da una mossa di tipo Elettro, recupera PS anziché subire danni."
+  },
+  "waterAbsorb": {
+    "name": "Assorbacqua",
+    "description": "Se il Pokémon viene colpito da una mossa di tipo Acqua, recupera PS anziché subire danni."
+  },
+  "oblivious": {
+    "name": "Indifferenza",
+    "description": "L'imperturbabilità del Pokémon lo protegge da infatuazioni, provocazioni e dall'effetto di Prepotenza."
+  },
+  "cloudNine": {
+    "name": "Antimeteo",
+    "description": "Neutralizza gli effetti di tutte le condizioni atmosferiche."
+  },
+  "compoundEyes": {
+    "name": "Insettocchi",
+    "description": "La precisione del Pokémon aumenta grazie ai suoi occhi composti."
+  },
+  "insomnia": {
+    "name": "Insonnia",
+    "description": "Il Pokémon soffre d'insonnia e non può addormentarsi."
+  },
+  "colorChange": {
+    "name": "Cambiacolore",
+    "description": "Il Pokémon acquisisce il tipo della mossa subita."
+  },
+  "immunity": {
+    "name": "Immunità",
+    "description": "L'immunità naturale del Pokémon gli impedisce di essere avvelenato."
+  },
+  "flashFire": {
+    "name": "Fuocardore",
+    "description": "Se il Pokémon subisce una mossa di tipo Fuoco, ne sfrutta il calore per potenziare le proprie mosse di tipo Fuoco."
+  },
+  "shieldDust": {
+    "name": "Polvoscudo",
+    "description": "Il Pokémon è protetto da uno strato di scaglie che annulla gli effetti aggiuntivi delle mosse subite."
+  },
+  "ownTempo": {
+    "name": "Mente Locale",
+    "description": "Il Pokémon affronta la vita al proprio ritmo e per questo non può essere confuso o subire l'effetto di Prepotenza."
+  },
+  "suctionCups": {
+    "name": "Ventose",
+    "description": "Il Pokémon resiste a strumenti e mosse che causano la sostituzione appiccicandosi al terreno con le ventose."
+  },
+  "intimidate": {
+    "name": "Prepotenza",
+    "description": "Quando il Pokémon entra in campo, la sua prepotenza crea soggezione, riducendo l'Attacco degli avversari intimiditi."
+  },
+  "shadowTag": {
+    "name": "Pedinombra",
+    "description": "Il Pokémon impedisce la fuga o la sostituzione degli avversari di cui calpesta l'ombra."
+  },
+  "roughSkin": {
+    "name": "Cartavetro",
+    "description": "Quando il Pokémon subisce un attacco, grazie alla sua pelle ruvida infligge a sua volta danni al Pokémon con cui è entrato in contatto."
+  },
+  "wonderGuard": {
+    "name": "Magidifesa",
+    "description": "Un potere misterioso protegge il Pokémon e lo rende vulnerabile solo alle mosse superefficaci."
+  },
+  "levitate": {
+    "name": "Levitazione",
+    "description": "La capacità di levitare conferisce al Pokémon immunità agli attacchi di tipo Terra."
+  },
+  "effectSpore": {
+    "name": "Spargispora",
+    "description": "Può causare avvelenamento, paralisi o sonno a chi attacca il Pokémon entrando in contatto con lui."
+  },
+  "synchronize": {
+    "name": "Sincronismo",
+    "description": "Se un Pokémon con questa abilità viene avvelenato, paralizzato o scottato, contagia con lo stesso problema di stato chi lo ha causato."
+  },
+  "clearBody": {
+    "name": "Corpochiaro",
+    "description": "Impedisce la diminuzione delle statistiche causata da abilità o mosse di altri Pokémon."
+  },
+  "naturalCure": {
+    "name": "Alternacura",
+    "description": "Quando il Pokémon lascia il campo, guarisce dai problemi di stato."
+  },
+  "lightningRod": {
+    "name": "Parafulmine",
+    "description": "Il Pokémon attira e neutralizza le mosse di tipo Elettro, facendo aumentare il suo Attacco Speciale."
+  },
+  "sereneGrace": {
+    "name": "Leggiadro",
+    "description": "Rende più probabili gli effetti aggiuntivi delle mosse."
+  },
+  "swiftSwim": {
+    "name": "Nuotovelox",
+    "description": "Se piove, la Velocità aumenta."
+  },
+  "chlorophyll": {
+    "name": "Clorofilla",
+    "description": "Se la luce del sole è intensa, la Velocità aumenta."
+  },
+  "illuminate": {
+    "name": "Risplendi",
+    "description": "Illuminando l'ambiente circostante, impedisce che la precisione del pokémon sia diminuita."
+  },
+  "trace": {
+    "name": "Traccia",
+    "description": "Quando il Pokémon entra in campo, copia l'abilità di un avversario."
+  },
+  "hugePower": {
+    "name": "Macroforza",
+    "description": "Raddoppia la potenza degli attacchi fisici del Pokémon."
+  },
+  "poisonPoint": {
+    "name": "Velenopunto",
+    "description": "Può avvelenare chi entra in contatto con il Pokémon."
+  },
+  "innerFocus": {
+    "name": "Forza Interiore",
+    "description": "La capacità di concentrazione del Pokémon evita che tentenni per gli attacchi subiti e lo protegge dall'effetto di Prepotenza."
+  },
+  "magmaArmor": {
+    "name": "Magmascudo",
+    "description": "Il magma riveste il corpo del Pokémon impedendogli di venire congelato."
+  },
+  "waterVeil": {
+    "name": "Idrovelo",
+    "description": "Un velo d'acqua riveste il corpo del Pokémon impedendogli di venire scottato."
+  },
+  "magnetPull": {
+    "name": "Magnetismo",
+    "description": "La carica magnetica attrae i Pokémon di tipo Acciaio impedendogli la fuga o la sostituzione."
+  },
+  "soundproof": {
+    "name": "Antisuono",
+    "description": "Il Pokémon è dotato di una sorta di isolamento acustico che lo rende immune alle mosse basate sul suono."
+  },
+  "rainDish": {
+    "name": "Copripioggia",
+    "description": "Il Pokémon recupera PS quando piove."
+  },
+  "sandStream": {
+    "name": "Sabbiafiume",
+    "description": "Quando il Pokémon entra in campo, scatena una tempesta di sabbia."
+  },
+  "pressure": {
+    "name": "Pressione",
+    "description": "Il Pokémon mette pressione agli avversari, facendogli consumare più PP."
+  },
+  "thickFat": {
+    "name": "Grassospesso",
+    "description": "Il Pokémon è protetto da uno spesso strato di grasso che dimezza il danno causato da mosse di tipo Fuoco e Ghiaccio."
+  },
+  "earlyBird": {
+    "name": "Sveglialampo",
+    "description": "Anche se il Pokémon si addormenta, può risvegliarsi due volte più velocemente."
+  },
+  "flameBody": {
+    "name": "Corpodifuoco",
+    "description": "Può scottare chi entra in contatto con il Pokémon."
+  },
+  "runAway": {
+    "name": "Fugafacile",
+    "description": "Garantisce la fuga dai Pokémon selvatici."
+  },
+  "keenEye": {
+    "name": "Sguardofermo",
+    "description": "La vista acuta del Pokémon impedisce che la sua precisione diminuisca."
+  },
+  "hyperCutter": {
+    "name": "Ipertaglio",
+    "description": "Le possenti chele o tenaglie di cui è dotato il Pokémon fanno sì che il suo Attacco non possa essere diminuito da altri."
+  },
+  "pickup": {
+    "name": "Raccolta",
+    "description": "Il Pokémon può raccogliere strumenti usati da altri durante la lotta. Potrebbe raccogliere strumenti anche fuori dalla lotta."
+  },
+  "truant": {
+    "name": "Pigrone",
+    "description": "Quando il Pokémon usa una mossa, nel turno successivo si riposerà."
+  },
+  "hustle": {
+    "name": "Tuttafretta",
+    "description": "L'Attacco aumenta, ma la precisione diminuisce."
+  },
+  "cuteCharm": {
+    "name": "Incantevole",
+    "description": "Può causare infatuazione a chi entra in contatto con il Pokémon."
+  },
+  "plus": {
+    "name": "Più",
+    "description": "L'Attacco Speciale aumenta se ci sono alleati con l'abilità Meno o Più."
+  },
+  "minus": {
+    "name": "Meno",
+    "description": "L'Attacco Speciale aumenta se ci sono alleati con l'abilità Meno o Più."
+  },
+  "forecast": {
+    "name": "Previsioni",
+    "description": "Cambia il tipo del Pokémon in Acqua, Fuoco o Ghiaccio in base alle condizioni atmosferiche."
+  },
+  "stickyHold": {
+    "name": "Antifurto",
+    "description": "Gli strumenti restano appiccicati al corpo adesivo del Pokémon e non possono essere rubati."
+  },
+  "shedSkin": {
+    "name": "Muta",
+    "description": "Il Pokémon può guarire dai problemi di stato facendo la muta completa della pelle."
+  },
+  "guts": {
+    "name": "Dentistretti",
+    "description": "Se il Pokémon è affetto da un problema di stato, tira fuori la grinta e aumenta il proprio Attacco."
+  },
+  "marvelScale": {
+    "name": "Pelledura",
+    "description": "Se il Pokémon è affetto da un problema di stato, le squame sulla sua pelle si induriscono aumentando la sua Difesa."
+  },
+  "liquidOoze": {
+    "name": "Melma",
+    "description": "La melma del Pokémon infligge danni a chi la assorbe, facendogli perdere PS a causa del fortissimo tanfo."
+  },
+  "overgrow": {
+    "name": "Erbaiuto",
+    "description": "Quando al Pokémon rimangono pochi PS, la potenza delle sue mosse di tipo Erba aumenta."
+  },
+  "blaze": {
+    "name": "Aiutofuoco",
+    "description": "Quando al Pokémon rimangono pochi PS, la potenza delle sue mosse di tipo Fuoco aumenta."
+  },
+  "torrent": {
+    "name": "Acquaiuto",
+    "description": "Quando al Pokémon rimangono pochi PS, la potenza delle sue mosse di tipo Acqua aumenta."
+  },
+  "swarm": {
+    "name": "Aiutinsetto",
+    "description": "Quando al Pokémon rimangono pochi PS, la potenza delle sue mosse di tipo Coleottero aumenta."
+  },
+  "rockHead": {
+    "name": "Testadura",
+    "description": "Anche se il Pokémon usa delle mosse che causano un contraccolpo, non perde PS."
+  },
+  "drought": {
+    "name": "Siccità",
+    "description": "Quando il Pokémon entra in campo, la luce solare diventa intensa."
+  },
+  "arenaTrap": {
+    "name": "Trappoarena",
+    "description": "Impedisce la fuga agli avversari."
+  },
+  "vitalSpirit": {
+    "name": "Spiritovivo",
+    "description": "Il Pokémon è talmente vivace che non può addormentarsi."
+  },
+  "whiteSmoke": {
+    "name": "Fumochiaro",
+    "description": "Il Pokémon è protetto da un fumo chiaro che impedisce ai nemici di diminuire le sue statistiche."
+  },
+  "purePower": {
+    "name": "Forzapura",
+    "description": "L'Attacco del Pokémon raddoppia grazie alla sua padronanza delle tecniche yoga."
+  },
+  "shellArmor": {
+    "name": "Guscioscudo",
+    "description": "Il Pokémon è protetto da un guscio robusto che gli evita di subire brutti colpi."
+  },
+  "airLock": {
+    "name": "Riparo",
+    "description": "Neutralizza gli effetti di tutte le condizioni atmosferiche."
+  },
+  "tangledFeet": {
+    "name": "Intricopiedi",
+    "description": "Se il Pokémon è confuso, la sua elusione aumenta."
+  },
+  "motorDrive": {
+    "name": "Elettrorapid",
+    "description": "Se il Pokémon viene colpito da una mossa di tipo Elettro, la neutralizza e sfrutta la carica elettrica per aumentare la propria Velocità."
+  },
+  "rivalry": {
+    "name": "Antagonismo",
+    "description": "Rende più forti contro nemici dello stesso sesso, ma più deboli contro nemici di sesso opposto."
+  },
+  "steadfast": {
+    "name": "Cuordeciso",
+    "description": "Se il Pokémon tentenna, il suo animo indomito si risveglia e la sua Velocità aumenta."
+  },
+  "snowCloak": {
+    "name": "Mantelneve",
+    "description": "Se grandina, l'elusione aumenta."
+  },
+  "gluttony": {
+    "name": "Voracità",
+    "description": "Il Pokémon non attende di aver perso molti PS per mangiare certe bacche, ma lo fa non appena i suoi PS scendono a metà o meno."
+  },
+  "angerPoint": {
+    "name": "Grancollera",
+    "description": "Se il Pokémon subisce un brutto colpo, monta su tutte le furie e il suo Attacco aumenta al massimo."
+  },
+  "unburden": {
+    "name": "Agiltecnica",
+    "description": "Se il Pokémon usa o perde uno strumento, la sua Velocità aumenta."
+  },
+  "heatproof": {
+    "name": "Antifuoco",
+    "description": "Il corpo termoresistente del Pokémon dimezza i danni che subisce dalle mosse di tipo Fuoco."
+  },
+  "simple": {
+    "name": "Disinvoltura",
+    "description": "Raddoppia le modifiche alle statistiche."
+  },
+  "drySkin": {
+    "name": "Pellearsa",
+    "description": "Il Pokémon recupera PS se piove o se subisce mosse di tipo Acqua, ma perde PS con la luce solare intensa. Subisce più danni da mosse di tipo Fuoco."
+  },
+  "download": {
+    "name": "Download",
+    "description": "Il Pokémon analizza Difesa e Difesa Speciale del nemico e, a seconda di qual è più bassa, aumenta il proprio Attacco o Attacco Speciale."
+  },
+  "ironFist": {
+    "name": "Ferropugno",
+    "description": "Potenzia le mosse che utilizzano pugni."
+  },
+  "poisonHeal": {
+    "name": "Velencura",
+    "description": "Se il Pokémon è avvelenato, recupera PS anziché perderli."
+  },
+  "adaptability": {
+    "name": "Adattabilità",
+    "description": "Potenzia di molto le mosse dello stesso tipo del Pokémon."
+  },
+  "skillLink": {
+    "name": "Abillegame",
+    "description": "Le mosse multicolpo mandano a segno sempre il massimo dei colpi possibili."
+  },
+  "hydration": {
+    "name": "Idratazione",
+    "description": "Se piove, il Pokémon guarisce dai problemi di stato."
+  },
+  "solarPower": {
+    "name": "Solarpotere",
+    "description": "Se la luce del sole è intensa, l'Attacco Speciale aumenta, ma il Pokémon perde PS a ogni turno."
+  },
+  "quickFeet": {
+    "name": "Piedisvelti",
+    "description": "Se il Pokémon è affetto da un problema di stato, la Velocità aumenta."
+  },
+  "normalize": {
+    "name": "Normalità",
+    "description": "Tutte le mosse del Pokémon diventano di tipo Normale e la loro potenza aumenta un po'."
+  },
+  "sniper": {
+    "name": "Cecchino",
+    "description": "Aumenta ulteriormente i danni inflitti dai brutti colpi."
+  },
+  "magicGuard": {
+    "name": "Magicscudo",
+    "description": "Il Pokémon subisce danni solo dagli attacchi."
+  },
+  "noGuard": {
+    "name": "Nullodifesa",
+    "description": "Il Pokémon e chiunque lo attacchi abbassano la guardia e le loro mosse vanno sempre a segno."
+  },
+  "stall": {
+    "name": "Rallentatore",
+    "description": "Il Pokémon agisce sempre per ultimo."
+  },
+  "technician": {
+    "name": "Tecnico",
+    "description": "Potenzia le mosse più deboli del Pokémon."
+  },
+  "leafGuard": {
+    "name": "Fogliamanto",
+    "description": "Se la luce del sole è intensa, evita i problemi di stato."
+  },
+  "klutz": {
+    "name": "Impaccio",
+    "description": "Il Pokémon non può usare lo strumento che ha con sé."
+  },
+  "moldBreaker": {
+    "name": "Rompiforma",
+    "description": "Quando il Pokémon attacca, ignora l'abilità del bersaglio se questa ha effetto sulle mosse."
+  },
+  "superLuck": {
+    "name": "Supersorte",
+    "description": "L'incredibile fortuna del Pokémon aumenta la sua probabilità di infliggere brutti colpi."
+  },
+  "aftermath": {
+    "name": "Scoppio",
+    "description": "Chi manda KO questo Pokémon con un attacco diretto subisce dei danni."
+  },
+  "anticipation": {
+    "name": "Presagio",
+    "description": "Rivela se il nemico ha mosse pericolose."
+  },
+  "forewarn": {
+    "name": "Premonizione",
+    "description": "Quando il Pokémon entra in campo, rivela una delle mosse del nemico."
+  },
+  "unaware": {
+    "name": "Imprudenza",
+    "description": "Quando il Pokémon attacca, ignora le modifiche alle statistiche del nemico."
+  },
+  "tintedLens": {
+    "name": "Lentifumé",
+    "description": "Permette alle mosse non molto efficaci di infliggere danni normalmente."
+  },
+  "filter": {
+    "name": "Filtro",
+    "description": "Riduce i danni subiti dalle mosse superefficaci."
+  },
+  "slowStart": {
+    "name": "Lentoinizio",
+    "description": "Dimezza per cinque turni l'Attacco e la Velocità."
+  },
+  "scrappy": {
+    "name": "Nervisaldi",
+    "description": "Permette di colpire Pokémon di tipo Spettro con mosse di tipo Normale e Lotta."
+  },
+  "stormDrain": {
+    "name": "Acquascolo",
+    "description": "Il Pokémon attira e neutralizza le mosse di tipo Acqua e fa aumentare il proprio Attacco Speciale."
+  },
+  "iceBody": {
+    "name": "Corpogelo",
+    "description": "Se grandina, il Pokémon recupera PS."
+  },
+  "solidRock": {
+    "name": "Solidroccia",
+    "description": "Riduce i danni subiti dalle mosse superefficaci."
+  },
+  "snowWarning": {
+    "name": "Scendineve",
+    "description": "Quando il Pokémon entra in campo, causa l'inizio di una nevicata."
+  },
+  "honeyGather": {
+    "name": "Mielincetta",
+    "description": "Il Pokémon raccoglie del miele dopo ogni battaglia. Esso viene poi venduto."
+  },
+  "frisk": {
+    "name": "Indagine",
+    "description": "Quando entra in battaglia, il Pokémon può controllare il Potere di un Pokémon avversario."
+  },
+  "reckless": {
+    "name": "Temerarietà",
+    "description": "Potenzia le mosse che causano contraccolpo."
+  },
+  "multitype": {
+    "name": "Multitipo",
+    "description": "Cambia il tipo del Pokémon a seconda della lastra o del Cristallo Z che ha con sé."
+  },
+  "flowerGift": {
+    "name": "Regalfiore",
+    "description": "Se la luce del sole è intensa, aumenta l'Attacco e la Difesa Speciale del Pokémon e dei suoi alleati."
+  },
+  "badDreams": {
+    "name": "Sogniamari",
+    "description": "Infligge danni ai nemici addormentati."
+  },
+  "pickpocket": {
+    "name": "Arraffalesto",
+    "description": "Se il Pokémon viene colpito da un attacco diretto, ruba lo strumento di chi lo ha attaccato."
+  },
+  "sheerForce": {
+    "name": "Forzabruta",
+    "description": "Aumenta la potenza delle mosse, ma ne annulla gli effetti aggiuntivi."
+  },
+  "contrary": {
+    "name": "Inversione",
+    "description": "Le modifiche alle statistiche hanno effetto inverso: le statistiche aumentano quando dovrebbero diminuire e viceversa."
+  },
+  "unnerve": {
+    "name": "Agitazione",
+    "description": "Il nemico viene intimidito e non può mangiare bacche."
+  },
+  "defiant": {
+    "name": "Agonismo",
+    "description": "L'Attacco aumenta di molto quando le statistiche diminuiscono a causa di un nemico."
+  },
+  "defeatist": {
+    "name": "Sconforto",
+    "description": "Quando i PS scendono a metà o meno, il Pokémon si scoraggia e l'Attacco e l'Attacco Speciale vengono dimezzati."
+  },
+  "cursedBody": {
+    "name": "Corpofunesto",
+    "description": "Può bloccare la mossa subita dal Pokémon."
+  },
+  "healer": {
+    "name": "Curacuore",
+    "description": "A volte cura i problemi di stato degli alleati."
+  },
+  "friendGuard": {
+    "name": "Amicoscudo",
+    "description": "I danni inflitti agli alleati del Pokémon vengono ridotti."
+  },
+  "weakArmor": {
+    "name": "Sottilguscio",
+    "description": "Se il Pokémon subisce danni da mosse fisiche, la Difesa diminuisce e la Velocità aumenta di molto."
+  },
+  "heavyMetal": {
+    "name": "Metalpesante",
+    "description": "Raddoppia il peso del Pokémon."
+  },
+  "lightMetal": {
+    "name": "Metalleggero",
+    "description": "Dimezza il peso del Pokémon."
+  },
+  "multiscale": {
+    "name": "Multisquame",
+    "description": "Se i PS sono al massimo, riduce il danno subito."
+  },
+  "toxicBoost": {
+    "name": "Velenimpeto",
+    "description": "Se il Pokémon è avvelenato, la potenza delle sue mosse fisiche aumenta."
+  },
+  "flareBoost": {
+    "name": "Bruciaimpeto",
+    "description": "Se il Pokémon è scottato, la potenza delle sue mosse speciali aumenta."
+  },
+  "harvest": {
+    "name": "Coglibacche",
+    "description": "Può ricreare una bacca utilizzata."
+  },
+  "telepathy": {
+    "name": "Telepatia",
+    "description": "Il Pokémon prevede ed evita gli attacchi degli alleati."
+  },
+  "moody": {
+    "name": "Altalena",
+    "description": "A ogni turno, aumenta di molto una statistica e ne riduce un'altra."
+  },
+  "overcoat": {
+    "name": "Copricapo",
+    "description": "Rende immuni ai danni da grandine e tempesta di sabbia, alle mosse Spora, Cottonspora, Sonnifero, Paralizzante e alle mosse “polvere”."
+  },
+  "poisonTouch": {
+    "name": "Velentocco",
+    "description": "Il Pokémon può avvelenare il nemico al solo contatto."
+  },
+  "regenerator": {
+    "name": "Rigenergia",
+    "description": "Il Pokémon recupera un po' di PS quando lascia il campo."
+  },
+  "bigPecks": {
+    "name": "Pettinfuori",
+    "description": "Evita che la Difesa diminuisca."
+  },
+  "sandRush": {
+    "name": "Remasabbia",
+    "description": "Se c'è una tempesta di sabbia, la Velocità aumenta."
+  },
+  "wonderSkin": {
+    "name": "Splendicute",
+    "description": "Il Pokémon resiste più facilmente alle mosse di stato."
+  },
+  "analytic": {
+    "name": "Ponderazione",
+    "description": "Se il Pokémon agisce per ultimo, la potenza della mossa aumenta."
+  },
+  "illusion": {
+    "name": "Illusione",
+    "description": "Il Pokémon entra in campo con le sembianze dell'ultimo Pokémon della squadra."
+  },
+  "imposter": {
+    "name": "Sosia",
+    "description": "Il Pokémon si trasforma nel nemico che ha davanti."
+  },
+  "infiltrator": {
+    "name": "Intrapasso",
+    "description": "Il Pokémon attacca evitando le barriere e il sostituto del nemico."
+  },
+  "mummy": {
+    "name": "Mummia",
+    "description": "Al contatto con il Pokémon, l'abilità del nemico diventa Mummia."
+  },
+  "moxie": {
+    "name": "Arroganza",
+    "description": "Quando manda un nemico KO, il Pokémon si fa sicuro di sé e aumenta il proprio Attacco."
+  },
+  "justified": {
+    "name": "Giustizia",
+    "description": "Quando il Pokémon viene colpito da una mossa di tipo Buio, il suo forte senso di giustizia fa sì che l'Attacco aumenti."
+  },
+  "rattled": {
+    "name": "Paura",
+    "description": "Le mosse di tipo Buio, Spettro e Coleottero spaventano il Pokémon aumentandone la Velocità."
+  },
+  "magicBounce": {
+    "name": "Magispecchio",
+    "description": "Il Pokémon respinge al mittente le mosse di stato senza subirne gli effetti."
+  },
+  "sapSipper": {
+    "name": "Mangiaerba",
+    "description": "Se il Pokémon viene colpito da una mossa di tipo Erba, la neutralizza e aumenta il proprio Attacco."
+  },
+  "prankster": {
+    "name": "Burla",
+    "description": "Le mosse di stato del Pokémon acquistano priorità alta."
+  },
+  "sandForce": {
+    "name": "Silicoforza",
+    "description": "Potenzia le mosse di tipo Roccia, Terra e Acciaio durante le tempeste di sabbia."
+  },
+  "ironBarbs": {
+    "name": "Spineferrate",
+    "description": "Se il Pokémon viene colpito da un attacco diretto, infligge danni a sua volta con le sue spine di ferro."
+  },
+  "zenMode": {
+    "name": "Stato Zen",
+    "description": "Cambia la forma del Pokémon se i PS scendono a metà o meno."
+  },
+  "victoryStar": {
+    "name": "Vittorstella",
+    "description": "Aumenta la precisione di tutta la squadra."
+  },
+  "turboblaze": {
+    "name": "Piroturbina",
+    "description": "Quando il Pokémon attacca, ignora l'abilità del bersaglio se questa ha effetto sulle mosse."
+  },
+  "teravolt": {
+    "name": "Teravolt",
+    "description": "Quando il Pokémon attacca, ignora l'abilità del bersaglio se questa ha effetto sulle mosse."
+  },
+  "aromaVeil": {
+    "name": "Aromavelo",
+    "description": "Protegge tutta la squadra da effetti che ne limitano la libertà di scelta delle mosse."
+  },
+  "flowerVeil": {
+    "name": "Fiorvelo",
+    "description": "Rende gli alleati di tipo Erba immuni alla diminuzione delle statistiche e ai problemi di stato."
+  },
+  "cheekPouch": {
+    "name": "Guancegonfie",
+    "description": "Quando il Pokémon mangia una bacca, recupera anche dei PS."
+  },
+  "protean": {
+    "name": "Mutatipo",
+    "description": "Cambia il tipo del Pokémon in quello della mossa che usa."
+  },
+  "furCoat": {
+    "name": "Foltopelo",
+    "description": "Dimezza il danno subito dalle mosse fisiche."
+  },
+  "magician": {
+    "name": "Prestigiatore",
+    "description": "Quando chi la usa colpisce un Pokémon con una mossa, gli ruba lo strumento."
+  },
+  "bulletproof": {
+    "name": "Antiproiettile",
+    "description": "Protegge da alcune mosse a base di proiettili e bombe."
+  },
+  "competitive": {
+    "name": "Tenacia",
+    "description": "L'Attacco Speciale aumenta di molto quando le statistiche diminuiscono a causa di un nemico."
+  },
+  "strongJaw": {
+    "name": "Ferromascella",
+    "description": "La robusta mascella del Pokémon permette morsi molto potenti."
+  },
+  "refrigerate": {
+    "name": "Pellegelo",
+    "description": "Le mosse di tipo Normale diventano di tipo Ghiaccio e la loro potenza aumenta un po'."
+  },
+  "sweetVeil": {
+    "name": "Dolcevelo",
+    "description": "Rende il Pokémon e i suoi alleati immuni al sonno."
+  },
+  "stanceChange": {
+    "name": "Accendilotta",
+    "description": "Assume la Forma Spada se usa una mossa d'attacco e la Forma Scudo se usa Scudo Reale."
+  },
+  "galeWings": {
+    "name": "Aliraffica",
+    "description": "Se il Pokémon ha tutti i PS, le sue mosse di tipo Volante acquistano priorità alta."
+  },
+  "megaLauncher": {
+    "name": "Megalancio",
+    "description": "Potenzia le mosse \"pulsar\", Forzasfera e Ondasana."
+  },
+  "grassPelt": {
+    "name": "Peloderba",
+    "description": "In presenza di un Campo Erboso, la Difesa aumenta."
+  },
+  "symbiosis": {
+    "name": "Simbiosi",
+    "description": "Se un alleato usa uno strumento, il Pokémon gli passa il proprio."
+  },
+  "toughClaws": {
+    "name": "Unghiedure",
+    "description": "Potenzia le mosse che causano un contatto fisico."
+  },
+  "pixilate": {
+    "name": "Pellefolletto",
+    "description": "Le mosse di tipo Normale diventano di tipo Folletto e la loro potenza aumenta un po'."
+  },
+  "gooey": {
+    "name": "Viscosità",
+    "description": "Se il Pokémon viene colpito da un attacco diretto, la Velocità di chi l'ha colpito diminuisce."
+  },
+  "aerilate": {
+    "name": "Pellecielo",
+    "description": "Le mosse di tipo Normale diventano di tipo Volante e la loro potenza aumenta un po'."
+  },
+  "parentalBond": {
+    "name": "Amorefiliale",
+    "description": "Il Pokémon e il suo piccolo attaccano insieme."
+  },
+  "darkAura": {
+    "name": "Auratetra",
+    "description": "Potenzia le mosse di tipo Buio di tutti i Pokémon."
+  },
+  "fairyAura": {
+    "name": "Aurafolletto",
+    "description": "Potenzia le mosse di tipo Folletto di tutti i Pokémon."
+  },
+  "auraBreak": {
+    "name": "Frangiaura",
+    "description": "Inverte gli effetti di tutte le aure riducendone la potenza."
+  },
+  "primordialSea": {
+    "name": "Mare Primordiale",
+    "description": "Crea un clima che rende inefficaci gli attacchi di tipo Fuoco."
+  },
+  "desolateLand": {
+    "name": "Terra Estrema",
+    "description": "Crea un clima che rende inefficaci gli attacchi di tipo Acqua."
+  },
+  "deltaStream": {
+    "name": "Flusso Delta",
+    "description": "Crea un clima che annulla i punti deboli del tipo Volante."
+  },
+  "stamina": {
+    "name": "Sopportazione",
+    "description": "Se il Pokémon subisce un attacco, la sua Difesa aumenta."
+  },
+  "wimpOut": {
+    "name": "Fuggifuggi",
+    "description": "Se i PS scendono a metà o meno, il Pokémon si fa prendere dalla paura e abbandona la lotta in tutta fretta."
+  },
+  "emergencyExit": {
+    "name": "Passoindietro",
+    "description": "Se i PS scendono a metà o meno, il Pokémon abbandona la lotta per sfuggire al pericolo."
+  },
+  "waterCompaction": {
+    "name": "Idrorinforzo",
+    "description": "Se il Pokémon subisce una mossa di tipo Acqua, la sua Difesa aumenta di molto."
+  },
+  "merciless": {
+    "name": "Spietatezza",
+    "description": "Gli attacchi sferrati su un bersaglio avvelenato producono sempre brutti colpi."
+  },
+  "shieldsDown": {
+    "name": "Scudosoglia",
+    "description": "Se i PS scendono a metà o meno, il guscio si rompe e il Pokémon si prepara all'offensiva."
+  },
+  "stakeout": {
+    "name": "Sorveglianza",
+    "description": "Raddoppia i danni inflitti a un bersaglio che è appena entrato in campo per sostituire un altro Pokémon."
+  },
+  "waterBubble": {
+    "name": "Bolladacqua",
+    "description": "Riduce i danni subiti dalle mosse di tipo Fuoco e rende immuni alle scottature."
+  },
+  "steelworker": {
+    "name": "Tempracciaio",
+    "description": "Aumenta la potenza delle mosse di tipo Acciaio."
+  },
+  "berserk": {
+    "name": "Furore",
+    "description": "Se i PS scendono a metà o meno a causa di un attacco, l'Attacco Speciale aumenta."
+  },
+  "slushRush": {
+    "name": "Spalaneve",
+    "description": "Se grandina, la Velocità aumenta."
+  },
+  "longReach": {
+    "name": "Distacco",
+    "description": "Il Pokémon è in grado di usare tutte le sue mosse senza entrare in contatto diretto con il bersaglio."
+  },
+  "liquidVoice": {
+    "name": "Idrovoce",
+    "description": "Le mosse del Pokémon basate sul suono diventano di tipo Acqua."
+  },
+  "triage": {
+    "name": "Primacura",
+    "description": "Le mosse che ripristinano direttamente i PS del Pokémon acquistano priorità alta."
+  },
+  "galvanize": {
+    "name": "Pellelettro",
+    "description": "Le mosse di tipo Normale diventano di tipo Elettro e la loro potenza aumenta un po'."
+  },
+  "surgeSurfer": {
+    "name": "Codasurf",
+    "description": "In presenza di un Campo Elettrico, la Velocità raddoppia."
+  },
+  "schooling": {
+    "name": "Banco",
+    "description": "Quando ha molti PS, il Pokémon forma un banco con i propri simili e si rafforza. Quando ne ha pochi, il banco si disperde."
+  },
+  "disguise": {
+    "name": "Fantasmanto",
+    "description": "Il panno che ricopre il Pokémon lo protegge da un singolo attacco."
+  },
+  "battleBond": {
+    "name": "Morfosintonia",
+    "description": "Se il Pokémon manda KO un nemico, il legame con l'Allenatore si rafforza, attivando la trasformazione in Greninja Forma Ash. Acqualame si potenzia."
+  },
+  "powerConstruct": {
+    "name": "Sciamefusione",
+    "description": "Se i PS del Pokémon scendono a metà o meno, le cellule si raggruppano e gli permettono di assumere la Forma Perfetta."
+  },
+  "corrosion": {
+    "name": "Corrosione",
+    "description": "Il Pokémon è in grado di avvelenare il bersaglio anche se questo è di tipo Acciaio o Veleno."
+  },
+  "comatose": {
+    "name": "Sonno Assoluto",
+    "description": "Il Pokémon si trova in un costante stato di dormiveglia che gli impedisce di svegliarsi. Può attaccare anche da addormentato."
+  },
+  "queenlyMajesty": {
+    "name": "Regalità",
+    "description": "L'aura di regalità del Pokémon impedisce al nemico di attaccarlo con mosse che hanno priorità alta."
+  },
+  "innardsOut": {
+    "name": "Espellinterno",
+    "description": "Se il Pokémon viene mandato KO da un attacco, infligge a chi lo ha sferrato tanti danni quanti erano i suoi PS prima di ricevere il colpo."
+  },
+  "dancer": {
+    "name": "Sincrodanza",
+    "description": "Permette al Pokémon di copiare immediatamente qualsiasi mossa basata sulla danza usata da un altro Pokémon in campo."
+  },
+  "battery": {
+    "name": "Batteria",
+    "description": "Aumenta la potenza delle mosse speciali degli alleati."
+  },
+  "fluffy": {
+    "name": "Morbidone",
+    "description": "Dimezza il danno causato dagli attacchi diretti di un nemico, ma raddoppia quello subito dalle mosse di tipo Fuoco."
+  },
+  "dazzling": {
+    "name": "Corposgargiante",
+    "description": "Il Pokémon sbalordisce il nemico e non gli permette di attaccarlo con mosse che hanno priorità alta."
+  },
+  "soulHeart": {
+    "name": "Cuoreanima",
+    "description": "Aumenta l'Attacco Speciale ogni volta che un Pokémon va KO."
+  },
+  "tanglingHair": {
+    "name": "Boccolidoro",
+    "description": "Se il Pokémon viene colpito da un attacco diretto, la Velocità di chi l'ha colpito diminuisce."
+  },
+  "receiver": {
+    "name": "Ricezione",
+    "description": "Il Pokémon acquisisce l'abilità di un alleato andato KO."
+  },
+  "powerOfAlchemy": {
+    "name": "Forza Chimica",
+    "description": "Il Pokémon trasforma la propria abilità in quella di un alleato andato KO."
+  },
+  "beastBoost": {
+    "name": "Ultraboost",
+    "description": "Quando il Pokémon manda KO un altro Pokémon, aumenta la propria statistica di punta."
+  },
+  "rksSystem": {
+    "name": "Sistema Primevo",
+    "description": "Il tipo del Pokémon cambia in base alla ROM installata."
+  },
+  "electricSurge": {
+    "name": "Elettrogenesi",
+    "description": "Quando il Pokémon entra in campo, lo trasforma in un Campo Elettrico."
+  },
+  "psychicSurge": {
+    "name": "Psicogenesi",
+    "description": "Quando il Pokémon entra in campo, lo trasforma in un Campo Psichico."
+  },
+  "mistySurge": {
+    "name": "Nebbiogenesi",
+    "description": "Quando il Pokémon entra in campo, lo trasforma in un Campo Nebbioso."
+  },
+  "grassySurge": {
+    "name": "Erbogenesi",
+    "description": "Quando il Pokémon entra in campo, lo trasforma in un Campo Erboso."
+  },
+  "fullMetalBody": {
+    "name": "Metalprotezione",
+    "description": "Impedisce la diminuzione delle statistiche causata da abilità o mosse di altri Pokémon."
+  },
+  "shadowShield": {
+    "name": "Spettroguardia",
+    "description": "Se i PS sono al massimo, riduce il danno subito."
+  },
+  "prismArmor": {
+    "name": "Scudoprisma",
+    "description": "Riduce i danni subiti dalle mosse superefficaci."
+  },
+  "neuroforce": {
+    "name": "Cerebroforza",
+    "description": "Potenzia le mosse superefficaci."
+  },
+  "intrepidSword": {
+    "name": "Spada Indomita",
+    "description": "Quando il Pokémon entra in campo, il suo Attacco aumenta."
+  },
+  "dauntlessShield": {
+    "name": "Scudo Saldo",
+    "description": "Quando il Pokémon entra in campo, la sua Difesa aumenta."
+  },
+  "libero": {
+    "name": "Libero",
+    "description": "Cambia il tipo del Pokémon in quello della mossa che usa."
+  },
+  "ballFetch": {
+    "name": "Raccattapalle",
+    "description": "Se il Pokémon non ha uno strumento con sé, raccoglie la Poké Ball del primo tentativo di cattura fallito."
+  },
+  "cottonDown": {
+    "name": "Lanugine",
+    "description": "Se il Pokémon subisce un attacco, sparge della lanugine che diminuisce la Velocità di tutti i Pokémon in campo tranne la sua."
+  },
+  "propellerTail": {
+    "name": "Elicopinna",
+    "description": "Permette di ignorare gli effetti di mosse e abilità che attirano altre mosse."
+  },
+  "mirrorArmor": {
+    "name": "Blindospecchio",
+    "description": "Rimanda al mittente le diminuzioni alle statistiche subite."
+  },
+  "gulpMissile": {
+    "name": "Inghiottimissile",
+    "description": "Quando usa Surf o Sub, il Pokémon cattura una preda. Se subisce dei danni, la sputa fuori per attaccare."
+  },
+  "stalwart": {
+    "name": "Volontà di Ferro",
+    "description": "Permette di ignorare gli effetti di mosse e abilità che attirano altre mosse."
+  },
+  "steamEngine": {
+    "name": "Vapormacchina",
+    "description": "Se il Pokémon viene colpito da una mossa di tipo Acqua o Fuoco, la sua Velocità aumenta moltissimo."
+  },
+  "punkRock": {
+    "name": "Punk Rock",
+    "description": "Aumenta la potenza delle mosse basate sul suono. Inoltre, dimezza i danni subiti dal Pokémon se viene colpito da tali mosse."
+  },
+  "sandSpit": {
+    "name": "Sputasabbia",
+    "description": "Quando il Pokémon viene colpito da un attacco, scatena una tempesta di sabbia."
+  },
+  "iceScales": {
+    "name": "Geloscaglie",
+    "description": "Scaglie di ghiaccio proteggono il Pokémon dalle mosse speciali, dimezzandone i danni subiti."
+  },
+  "ripen": {
+    "name": "Maturazione",
+    "description": "Fa maturare le bacche raddoppiandone gli effetti."
+  },
+  "iceFace": {
+    "name": "Gelofaccia",
+    "description": "Grazie al ghiaccio sulla testa, il Pokémon può incassare i danni causati da mosse fisiche, ma cambia forma. Torna al suo stato originale quando grandina."
+  },
+  "powerSpot": {
+    "name": "Fonte Energetica",
+    "description": "Potenzia le mosse di chi si trova nelle immediate vicinanze."
+  },
+  "mimicry": {
+    "name": "Mimetismo",
+    "description": "Il tipo del Pokémon cambia a seconda dello stato del campo."
+  },
+  "screenCleaner": {
+    "name": "Annullabarriere",
+    "description": "Quando il Pokémon entra in campo, annulla l'effetto di Schermoluce, Riflesso e Velaurora sia per i nemici che per gli alleati."
+  },
+  "steelySpirit": {
+    "name": "Spiritoferreo",
+    "description": "Potenzia gli attacchi di tipo Acciaio degli alleati."
+  },
+  "perishBody": {
+    "name": "Ultimotocco",
+    "description": "Se il Pokémon viene colpito da un attacco diretto, dopo tre turni va KO assieme a chi lo ha attaccato. Se uno dei due viene sostituito, non va KO."
+  },
+  "wanderingSpirit": {
+    "name": "Anima Errante",
+    "description": "Se il Pokémon subisce un attacco diretto, scambia la sua abilità con quella di chi lo ha colpito."
+  },
+  "gorillaTactics": {
+    "name": "Vigorilla",
+    "description": "Aumenta l'Attacco ma costringe il Pokémon a usare solo la prima mossa selezionata."
+  },
+  "neutralizingGas": {
+    "name": "Gas Reagente",
+    "description": "Se in campo c'è un Pokémon con Gas Reagente, gli effetti delle abilità di tutti gli altri Pokémon vengono annullati o non si attivano."
+  },
+  "pastelVeil": {
+    "name": "Pastelvelo",
+    "description": "Protegge il Pokémon e gli alleati dai problemi di stato causati dal veleno."
+  },
+  "hungerSwitch": {
+    "name": "Pancialterna",
+    "description": "Alla fine di ogni turno cambia forma, alternando tra Motivo Panciapiena e Motivo Panciavuota."
+  },
+  "quickDraw": {
+    "name": "Pugni Invisibili",
+    "description": "Quando il Pokémon utilizza un attacco diretto, gli effetti di mosse protettive vengono ignorati."
+  },
+  "unseenFist": {
+    "name": "Colpolesto",
+    "description": "A volte permette al Pokémon di agire per primo."
+  },
+  "curiousMedicine": {
+    "name": "Stranofarmaco",
+    "description": "Quando il Pokémon entra in campo, sparge un farmaco dalla conchiglia che annulla le modifiche alle statistiche degli alleati."
+  },
+  "transistor": {
+    "name": "Transistor",
+    "description": "Potenzia le mosse di tipo Elettro."
+  },
+  "dragonsMaw": {
+    "name": "Dragomascelle",
+    "description": "Potenzia le mosse di tipo Drago."
+  },
+  "chillingNeigh": {
+    "name": "Nitrito Bianco",
+    "description": "Quando manda KO il nemico, emette un nitrito agghiacciante, aumentando il proprio Attacco."
+  },
+  "grimNeigh": {
+    "name": "Nitrito Nero",
+    "description": "Quando manda KO il nemico, emette un nitrito spettrale, aumentando il proprio Attacco Speciale."
+  },
+  "asOneGlastrier": {
+    "name": "Sintonia Equina",
+    "description": "Il Pokémon ha una doppia abilità: Agitazione di Calyrex e Nitrito Bianco di Glastrier"
+  },
+  "asOneSpectrier": {
+    "name": "Sintonia Equina",
+    "description": "Il Pokémon ha una doppia abilità: Agitazione di Calyrex e Nitrito Nero di Spectrier."
+  },
+  "lingeringAroma": {
+    "name": "Odore Tenace",
+    "description": "L'abilità di chi entra in contatto con il Pokémon diventa Odore Tenace."
+  },
+  "seedSower": {
+    "name": "Spargisemi",
+    "description": "Se il Pokémon subisce un attacco, il terreno entra nello stato di Campo Erboso."
+  },
+  "thermalExchange": {
+    "name": "Termoscambio",
+    "description": "Impedisce al Pokémon di venire scottato e aumenta il suo Attacco se subisce una mossa di tipo Fuoco."
+  },
+  "angerShell": {
+    "name": "Iraguscio",
+    "description": "Se un attacco subìto porta i PS a metà o meno, la rabbia del Pokémon ne riduce la Difesa e la Difesa Speciale ma ne aumenta l'Attacco, l'Attacco Speciale e la Velocità."
+  },
+  "purifyingSalt": {
+    "name": "Sale Purificante",
+    "description": "Protegge il Pokémon dai problemi di stato e dimezza il danno causato dalle mosse di tipo Spettro."
+  },
+  "wellBakedBody": {
+    "name": "Bentostato",
+    "description": "Se il Pokémon viene colpito da una mossa di tipo Fuoco, la neutralizza e aumenta di molto la propria Difesa."
+  },
+  "windRider": {
+    "name": "Vento Propizio",
+    "description": "L'Attacco aumenta se vengono usate mosse come Ventoincoda o se il Pokémon è colpito da una mossa basata sul vento, che viene inoltre neutralizzata."
+  },
+  "guardDog": {
+    "name": "Cane da Guardia",
+    "description": "Il Pokémon resiste a strumenti e mosse che causano la sostituzione. Se subisce l'effetto di Prepotenza, il suo Attacco aumenta."
+  },
+  "rockyPayload": {
+    "name": "Portamassi",
+    "description": "Aumenta la potenza delle mosse di tipo Roccia."
+  },
+  "windPower": {
+    "name": "Energia Eolica",
+    "description": "Se il Pokémon è esposto a una mossa basata sul vento, si carica di elettricità."
+  },
+  "zeroToHero": {
+    "name": "Supercambio",
+    "description": "Se il Pokémon lascia il campo, assume la Forma Possente."
+  },
+  "commander": {
+    "name": "Torre di Comando",
+    "description": "Quando il Pokémon entra in campo ed è presente un Dondozo alleato, si ficca nella bocca di quest'ultimo e da lì impartisce ordini."
+  },
+  "electromorphosis": {
+    "name": "Convertivolt",
+    "description": "Se il Pokémon subisce danni, si carica di elettricità."
+  },
+  "protosynthesis": {
+    "name": "Paleoattivazione",
+    "description": "Quando il Pokémon ha con sé una Capsula energetica o la luce solare è intensa, la sua statistica più alta aumenta."
+  },
+  "quarkDrive": {
+    "name": "Carica Quark",
+    "description": "Quando il Pokémon ha con sé una Capsula energetica o è in presenza di un Campo Elettrico, la sua statistica più alta aumenta."
+  },
+  "goodAsGold": {
+    "name": "Corpo Aureo",
+    "description": "Grazie al robusto e inossidabile corpo d'oro, il Pokémon è immune alle mosse di stato sferrate da altri."
+  },
+  "vesselOfRuin": {
+    "name": "Vaso Nefasto",
+    "description": "L'Attacco Speciale degli altri Pokémon viene indebolito dal potere del vaso che richiama le disgrazie."
+  },
+  "swordOfRuin": {
+    "name": "Spada Nefasta",
+    "description": "La Difesa degli altri Pokémon viene indebolita dal potere della spada che richiama le disgrazie."
+  },
+  "tabletsOfRuin": {
+    "name": "Amuleto Nefasto",
+    "description": "L'Attacco degli altri Pokémon viene indebolito dal potere delle tavolette che richiamano le disgrazie."
+  },
+  "beadsOfRuin": {
+    "name": "Monile Nefasto",
+    "description": "La Difesa Speciale degli altri Pokémon viene indebolita dal potere dei gioielli che richiamano le disgrazie."
+  },
+  "orichalcumPulse": {
+    "name": "Ritmo d'Oricalco",
+    "description": "Quando il Pokémon entra in campo, la luce solare diventa intensa. Con la luce solare intensa l'Attacco del Pokémon aumenta grazie al battito dell'antichità."
+  },
+  "hadronEngine": {
+    "name": "Motore Adronico",
+    "description": "Quando il Pokémon entra in campo, il terreno entra nello stato di Campo Elettrico. In presenza di Campo Elettrico l'Attacco Speciale aumenta grazie al motore del futuro."
+  },
+  "opportunist": {
+    "name": "Scrocco",
+    "description": "Quando la statistica di un avversario viene aumentata, il Pokémon se ne approfitta e aumenta anche la propria."
+  },
+  "cudChew": {
+    "name": "Ruminante",
+    "description": "Se il Pokémon mangia una bacca, alla fine del turno successivo questa risale dal suo stomaco per essere mangiata una seconda volta."
+  },
+  "sharpness": {
+    "name": "Affilama",
+    "description": "Aumenta la potenza delle mosse che tagliano il bersaglio."
+  },
+  "supremeOverlord": {
+    "name": "Generale Supremo",
+    "description": "Quando il Pokémon entra in campo, il suo Attacco e il suo Attacco Speciale aumentano un po' per ciascuno dei suoi compagni di squadra andati KO."
+  },
+  "costar": {
+    "name": "Coprotagonismo",
+    "description": "Quando il Pokémon entra in campo, copia le modifiche alle statistiche dell'alleato."
+  },
+  "toxicDebris": {
+    "name": "Mantossina",
+    "description": "Se il Pokémon subisce danni da mosse fisiche, piazza ai piedi degli avversari una trappola di punte velenose."
+  },
+  "armorTail": {
+    "name": "Codarmatura",
+    "description": "La misteriosa coda che avvolge la testa del Pokémon impedisce agli avversari di usare mosse che hanno priorità alta contro di lui o i suoi alleati."
+  },
+  "earthEater": {
+    "name": "Mangiaterra",
+    "description": "Se il Pokémon viene colpito da una mossa di tipo Terra, recupera PS anziché subire danni."
+  },
+  "myceliumMight": {
+    "name": "Micoforza",
+    "description": "Quando usa mosse di stato, il Pokémon agisce più lentamente, ma ignora l'abilità del bersaglio se questa ha effetto su tali mosse."
+  },
+  "mindsEye": {
+    "name": "Occhio Interiore",
+    "description": "Permette di colpire bersagli di tipo Spettro con mosse di tipo Normale e Lotta, di ignorare modifiche alla loro elusione e di non veder ridotta la propria precisione."
+  },
+  "supersweetSyrup": {
+    "name": "Sciroppo Sublime",
+    "description": "La prima volta che il Pokémon entra in campo, spande un odore dolciastro che diminuisce l'elusione degli avversari."
+  },
+  "hospitality": {
+    "name": "Ospitalità",
+    "description": "Quando un Pokémon con questa abilità entra in campo ricopre di attenzioni l'alleato, restituendogli un po' dei suoi PS."
+  },
+  "toxicChain": {
+    "name": "Catena Tossica",
+    "description": "Quando il Pokémon colpisce il bersaglio con una mossa, può iperavvelenarlo grazie al potere della catena intrisa di tossine."
+  },
+  "embodyAspectTeal": {
+    "name": "Albergamemorie",
+    "description": "Il Pokémon riporta alla mente vecchi ricordi, facendo risplendere la Maschera Focolare e aumentando il proprio Velocità."
+  },
+  "embodyAspectWellspring": {
+    "name": "Albergamemorie",
+    "description": "Il Pokémon riporta alla mente vecchi ricordi, facendo risplendere la Maschera Fondamenta e aumentando la propria Difesa Speciale."
+  },
+  "embodyAspectHearthflame": {
+    "name": "Albergamemorie",
+    "description": "Il Pokémon riporta alla mente vecchi ricordi, facendo risplendere la Maschera Fondamenta e aumentando la propria Attacco."
+  },
+  "embodyAspectCornerstone": {
+    "name": "Albergamemorie",
+    "description": "Il Pokémon riporta alla mente vecchi ricordi, facendo risplendere la Maschera Fondamenta e aumentando la propria Difesa."
+  },
+  "teraShift": {
+    "name": "Teramorfosi",
+    "description": "Quando il Pokémon entra in campo, assorbe l'energia circostante e assume la Forma Teracristal."
+  },
+  "teraShell": {
+    "name": "Teraguscio",
+    "description": "Grazie al suo guscio che racchiude il potere di tutti i tipi, se il Pokémon ha tutti i PS, le mosse che subisce non saranno molto efficaci."
+  },
+  "teraformZero": {
+    "name": "Zeroformazione",
+    "description": "Quando assume la Forma Astrale, Terapagos azzera tutti gli effetti delle condizioni atmosferiche e lo stato del terreno di lotta grazie al suo potere occulto."
+  },
+  "poisonPuppeteer": {
+    "name": "\tMalia Tossica",
+    "description": "I Pokémon avvelenati dalle mosse di Pecharunt entreranno anche in stato di confusione."
+  },
+  "unleashed": {
+    "name": "Scatenato",
+    "description": "Aumenta la potenza di tutte le mosse quando i PS sono bassi."
+  },
+  "hellFlame": {
+    "name": "Fiamma Infernale",
+    "description": "Aumenta la potenza delle mosse di tipo Fuoco del 50%."
+  },
+  "psychoLeaf": {
+    "name": "Foglia Psichica",
+    "description": "Trasforma le mosse di tipo Erba in tipo Psico e aumenta la loro potenza del 20%."
+  },
+  "groundFlame": {
+    "name": "Fiamma Terrestre",
+    "description": "Trasforma le mosse di tipo Fuoco in tipo Terra e aumenta la loro potenza del 20%."
+  },
+  "magicalWater": {
+    "name": "Acqua Magica",
+    "description": "Trasforma le mosse di tipo Acqua in tipo Folletto e aumenta la loro potenza del 20%."
+  },
+  "nuclearEnergy": {
+    "name": "Energia Nucleare",
+    "description": "Trasforma le mosse di tipo Veleno in tipo Elettro e aumenta la loro potenza del 20%."
+  },
+  "poisonKing": {
+    "name": "Re del Veleno",
+    "description": "Aumenta la potenza delle mosse di tipo Veleno del 60%."
+  },
+  "solidKong": {
+    "name": "Kong Solido",
+    "description": "Riduce il danno delle mosse superefficaci del 50%."
+  },
+  "screepy": {
+    "name": "Urlante",
+    "description": "Le mosse di tipo Spettro possono colpire i tipi Normale. Potenzia le mosse di tipo Spettro del 30%. Immune a Intimidazione."
+  },
+  "godFist": {
+    "name": "Pugno Divino",
+    "description": "Aumenta la potenza delle mosse da pugno del 50%."
+  },
+  "parentalHaunting": {
+    "name": "Infestazione Genitoriale",
+    "description": "Trasforma le mosse non di tipo Normale in tipo Spettro e aumenta la loro potenza del 20%."
+  },
+  "nightmarate": {
+    "name": "Incuborato",
+    "description": "Trasforma le mosse di tipo Normale in tipo Primario e aumenta la loro potenza del 20%."
+  },
+  "terrify": {
+    "name": "Terrificare",
+    "description": "Riduce l'Attacco e l'Attacco Speciale dell'avversario di un livello quando entra in battaglia."
+  },
+  "thunderAndFire": {
+    "name": "Tuono e Fuoco",
+    "description": "Le mosse di tipo Fuoco ed Elettro condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "electafireAbsorb": {
+    "name": "Assorbimento Elettrofuoco",
+    "description": "Recupera PS quando colpito da mosse di tipo Fuoco o Elettro invece di subire danni."
+  },
+  "dirtThick": {
+    "name": "Spessore Terroso",
+    "description": "Dimezza i danni dalle mosse di tipo Acqua e Terra."
+  },
+  "arcticBlaze": {
+    "name": "Fiamma Artica",
+    "description": "Trasforma le mosse di tipo Ghiaccio in tipo Fuoco e viceversa, aumentando la loro potenza del 35% quando i PS sono sotto il 65%."
+  },
+  "steamify": {
+    "name": "Vaporizzazione",
+    "description": "Trasforma le mosse di tipo Acqua in tipo Fuoco e aumenta la loro potenza del 20%."
+  },
+  "prehistoricHunt": {
+    "name": "Caccia Preistorica",
+    "description": "30% di possibilità di cambiare il tempo in Pioggia ogni turno. Raddoppia la Velocità sotto Pioggia, Sole Intenso, Grandine, Neve o Pioggia Intensa."
+  },
+  "popUp": {
+    "name": "Emergere",
+    "description": "Riduce la Difesa di un livello e aumenta la Velocità di un livello quando entra in battaglia."
+  },
+  "earthSpeeder": {
+    "name": "Velocista Terrestre",
+    "description": "Aumenta la Velocità di un livello quando colpito da una mossa di tipo Terra."
+  },
+  "knockout": {
+    "name": "Knockout",
+    "description": "35% di possibilità di infliggere un colpo critico quando i PS sono sotto il 50%."
+  },
+  "finalRound": {
+    "name": "Round Finale",
+    "description": "Aumenta la potenza delle mosse di tipo Lotta quando i PS sono bassi."
+  },
+  "kickPunch": {
+    "name": "Calci e Pugni",
+    "description": "Aumenta la potenza delle mosse di calcio e pugno del 30%."
+  },
+  "stabNormal": {
+    "name": "Colpo Normale",
+    "description": "Aumenta la potenza delle mosse di tipo Normale del 30%."
+  },
+  "adaptiveAi": {
+    "name": "IA Adattiva",
+    "description": "Aumenta le statistiche di 1 o 2 livelli a seconda della statistica più alta dell'avversario. Aumenta Difesa se la statistica più alta dell'avversario è Attacco, Difesa Speciale se è Attacco Speciale, Attacco Speciale se è Difesa Speciale, o Velocità di 2 livelli se è Velocità."
+  },
+  "electric": {
+    "name": "Elettrico",
+    "description": "Potenzia le mosse di tipo Elettro del 50%, subisce danni doppi dall'Acqua e trasforma le mosse di tipo Normale in tipo Elettro con potenza del 20%."
+  },
+  "existence": {
+    "name": "Esistenza",
+    "description": "Aumenta tutte le mosse del 20%, neutralizza le mosse superefficaci e neutralizza le mosse che sarebbero superefficaci contro il bersaglio."
+  },
+  "allConsuming": {
+    "name": "Tutto Divorante",
+    "description": "Recupera 1/8 dei PS massimi e infligge 1/8 dei PS massimi come danno all'avversario quando colpito da una mossa da contatto."
+  },
+  "corrupt": {
+    "name": "Corruzione",
+    "description": "Ha il 70% di possibilità di avvelenare gravemente il bersaglio dopo l'attacco."
+  },
+  "dragonKing": {
+    "name": "Re dei Draghi",
+    "description": "Aumenta la potenza delle mosse di tipo Drago del 60%."
+  },
+  "sandCorruption": {
+    "name": "Corruzione Sabbiosa",
+    "description": "Danneggia l'attaccante di 1/8 dei suoi PS massimi e riduce la sua Velocità di un livello se colpito da una mossa da contatto."
+  },
+  "organicTwist": {
+    "name": "Torsione Organica",
+    "description": "Le mosse di tipo Erba e Roccia condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "healthySoak": {
+    "name": "Bagno Salutare",
+    "description": "Aumenta la Velocità e l'Attacco di un livello quando colpito da una mossa di tipo Acqua."
+  },
+  "inkBlindness": {
+    "name": "Cecità d'Inchiostro",
+    "description": "Ha il 35% di possibilità di confondere il bersaglio dopo l'attacco."
+  },
+  "inkFry": {
+    "name": "Frittura d'Inchiostro",
+    "description": "Riduce la Velocità e la Difesa Speciale del bersaglio di un livello dopo aver usato una mossa di tipo Acqua."
+  },
+  "mooTime": {
+    "name": "Tempo del Muu",
+    "description": "Aumenta la Difesa e la Velocità del 50% quando i PS sono sotto il 50%."
+  },
+  "fuelExchange": {
+    "name": "Scambio Carburante",
+    "description": "Aumenta la Velocità di un livello quando colpito da una mossa di tipo Elettro. Recupera 1/4 dei PS massimi quando colpito da una mossa di tipo Erba. Aumenta la Difesa di un livello quando colpito da una mossa di tipo Buio. Aumenta l'Attacco di un livello quando colpito da una mossa di tipo Folletto. Aumenta la Difesa Speciale di un livello quando colpito da una mossa di tipo Psico. Aumenta l'Attacco Speciale di un livello quando colpito da una mossa di tipo Ghiaccio."
+  },
+  "sunAndMoon": {
+    "name": "Sole e Luna",
+    "description": "Aumenta la potenza delle mosse di tipo Fuoco e Roccia del 20%."
+  },
+  "nightAndDay": {
+    "name": "Notte e Giorno",
+    "description": "Ha il 40% di possibilità di scottare al contatto quando i PS sono sopra il 50%, o il 35% di possibilità di addormentare al contatto quando i PS sono sotto il 50%."
+  },
+  "twoHalves": {
+    "name": "Due Metà",
+    "description": "Sopravvive a un colpo che lo metterebbe KO e poi riduce drasticamente la Velocità del nemico, recuperando il 50% dei PS."
+  },
+  "alienRock": {
+    "name": "Roccia Aliena",
+    "description": "Le mosse di tipo Psico e Roccia condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "robot": {
+    "name": "Robot",
+    "description": "Aumenta TUTTE le statistiche di 1 livello quando entra in battaglia. Riduce una statistica casuale di 1 livello alla fine di ogni turno."
+  },
+  "golemPlus": {
+    "name": "Golem Plus",
+    "description": "Aumenta la potenza delle mosse di tipo Roccia del 30% e aumenta la Difesa del 30%."
+  },
+  "nightmareFuel": {
+    "name": "Carburante da Incubo",
+    "description": "Trasforma le mosse di tipo Normale in tipo Primario e aumenta la loro potenza del 20%."
+  },
+  "smittyxtvVirus": {
+    "name": "Virus SmittyNugget",
+    "description": "Aumenta la statistica più alta di 1 livello dopo aver sconfitto un avversario. 50% di possibilità di ridurre una statistica casuale del bersaglio di 1 livello dopo aver attaccato."
+  },
+  "staticCharge": {
+    "name": "Carica Statica",
+    "description": "Applica lo stato Caricato all'attaccante al contatto. 30% di possibilità di paralizzare al contatto."
+  },
+  "darkStampede": {
+    "name": "Stampede Oscuro",
+    "description": "Aumenta una statistica casuale di un livello dopo aver usato una mossa di tipo Buio."
+  },
+  "colorChangeDefense": {
+    "name": "Difesa Camaleonte",
+    "description": "Cambia il tipo dell'utilizzatore per corrispondere al tipo della mossa che l'ha colpito. Se l'utilizzatore non è già dello stesso tipo, recupera anche 1/8 dei suoi PS massimi."
+  },
+  "colorChangeSteal": {
+    "name": "Cambiacolore Ladro",
+    "description": "Cambia il tipo dell'utilizzatore per corrispondere al tipo di mossa da cui è stato colpito. Ruba lo strumento del bersaglio se l'utilizzatore condivide un tipo con il bersaglio."
+  },
+  "hauntingEcho": {
+    "name": "Eco Infestante",
+    "description": "30% di possibilità di paralizzare il bersaglio e infliggere 1/16 dei suoi PS massimi come danno quando usa una mossa di tipo Spettro."
+  },
+  "maternalShade": {
+    "name": "Ombra Materna",
+    "description": "Ha il 50% di possibilità di ridurre a un quarto il danno degli attacchi in arrivo."
+  },
+  "spiritualBond": {
+    "name": "Legame Spirituale",
+    "description": "Infligge il 50% del danno all'attaccante"
+  },
+  "gravePower": {
+    "name": "Potere Tombale",
+    "description": "Aumenta la potenza delle mosse del 150% quando i PS sono sotto il 40%. 30% di possibilità di avvelenare gravemente il bersaglio."
+  },
+  "undead": {
+    "name": "Non Morto",
+    "description": "Ha il 70% di possibilità di sopravvivere a un colpo che lo metterebbe KO."
+  },
+  "scaleArmor": {
+    "name": "Armatura Squamosa",
+    "description": "Riduce il danno dalle mosse di tipo Acqua, Elettro, Fuoco ed Erba del 25%."
+  },
+  "pixelatedTongue": {
+    "name": "Lingua Pixellata",
+    "description": "30% di possibilità di infliggere una condizione di stato casuale e ridurre una statistica casuale del bersaglio di un livello."
+  },
+  "staticTaste": {
+    "name": "Gusto Statico",
+    "description": "Aumenta la potenza delle mosse del 50% contro bersagli paralizzati. 35% di possibilità di paralizzare il bersaglio."
+  },
+  "rockyHorrorShow": {
+    "name": "Rocky Horror Show",
+    "description": "Impedisce all'avversario di ritirarsi. Aumenta due statistiche casuali di un livello quando entra in battaglia."
+  },
+  "hauntingBroadcast": {
+    "name": "Trasmissione Infestante",
+    "description": "Maledice tutti i Pokémon avversari quando l'utilizzatore va KO."
+  },
+  "ectoplasmicTouch": {
+    "name": "Tocco Ectoplasmico",
+    "description": "Danneggia l'attaccante di 1/12 dei suoi PS massimi quando colpito da una mossa da contatto. Danneggia anche il bersaglio di 1/12 dei suoi PS massimi quando usa una mossa da contatto."
+  },
+  "toxicCombustion": {
+    "name": "Combustione Tossica",
+    "description": "Infligge 1/8 dei PS massimi dell'attaccante come danno se è gravemente avvelenato. 30% di possibilità di avvelenare gravemente il bersaglio."
+  },
+  "flamingEmission": {
+    "name": "Emissione Fiammeggiante",
+    "description": "Le mosse di tipo Fuoco e Veleno condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "burningDisease": {
+    "name": "Malattia Ardente",
+    "description": "Infligge 1/8 dei PS massimi dell'attaccante come danno se è scottato. 30% di possibilità di scottare il bersaglio."
+  },
+  "steadyStance": {
+    "name": "Postura Stabile",
+    "description": "Aumenta l'Attacco, la Difesa, l'Attacco Speciale e la Difesa Speciale dell'utilizzatore del 20%."
+  },
+  "balancedKick": {
+    "name": "Calcio Bilanciato",
+    "description": "Le mosse di calcio non mancano mai e la loro potenza è aumentata del 20%."
+  },
+  "phantomPouch": {
+    "name": "Sacca Fantasma",
+    "description": "30% di possibilità di recuperare 1/8 dei PS massimi dopo essere stato colpito o aver attaccato. Aumenta gli oggetti ottenuti dopo la battaglia."
+  },
+  "hauntingScythe": {
+    "name": "Falce Spettrale",
+    "description": "Cambia i suoi attacchi in SPECIALI o FISICI in base alla statistica di difesa più debole dell'avversario."
+  },
+  "soulCollector": {
+    "name": "Collettore di Anime",
+    "description": "Potenzia le mosse che corrispondono ai tipi raccolti. Raccoglie il tipo dei Pokémon messi KO. Perde i tipi raccolti quando va KO."
+  },
+  "shadowSync": {
+    "name": "Sincronizzazione Ombra",
+    "description": "Aumenta le statistiche più alte dell'utilizzatore di 1 quando le statistiche dell'avversario cambiano. Aumenta la potenza di tutte le mosse del 20%."
+  },
+  "frightfulCute": {
+    "name": "Spaventosamente Carino",
+    "description": "Ha il 33% di possibilità di aumentare la potenza delle mosse del 50% o dimezzare il danno ricevuto dagli attacchi."
+  },
+  "ghostify": {
+    "name": "Spettralizzazione",
+    "description": "Trasforma le mosse di tipo Normale in tipo Spettro e aumenta la loro potenza del 40%."
+  },
+  "foreverPartner": {
+    "name": "Compagno Eterno",
+    "description": "Aumenta la potenza di tutte le mosse del 30%. Ha il 40% di possibilità di sopravvivere a un colpo che lo metterebbe KO."
+  },
+  "newAdaption": {
+    "name": "Nuovo Adattamento",
+    "description": "Dimezza i danni dalle mosse di tipo Fuoco e Terra. Raddoppia la potenza delle mosse di tipo Acciaio contro i Pokémon di tipo Fuoco, Veleno e Acqua."
+  },
+  "steelStealer": {
+    "name": "Ladro d'Acciaio",
+    "description": "Aumenta l'Attacco di un livello quando colpito da una mossa di tipo Acciaio."
+  },
+  "teraForce": {
+    "name": "Forza Tera",
+    "description": "Le mosse di tipo Terra possono colpire i tipo Volante. Aumenta le mosse di tipo Terra del 30%. Immune a Intimidazione."
+  },
+  "mudiate": {
+    "name": "Fangosità",
+    "description": "Trasforma le mosse di tipo Normale in tipo Terra e aumenta la loro potenza del 20% e dà loro il 20% di possibilità di abbassare la precisione dell'avversario."
+  },
+  "gottaGoFast": {
+    "name": "Devo Andare Veloce",
+    "description": "Raddoppia la potenza se si muove per primo. Subisce danni doppi se si muove per secondo."
+  },
+  "imBlue": {
+    "name": "Sono Blu",
+    "description": "Potenzia le mosse di tipo Acqua. Resiste alle mosse di tipo Fuoco, Acqua e Acciaio. Aumenta la potenza del 50% contro i Pokémon di tipo Fuoco, Terra e Roccia."
+  },
+  "notShadow": {
+    "name": "Non Ombra",
+    "description": "Immune alle mosse di tipo Buio, Acciaio e Spettro. Aumenta Attacco, Difesa o Velocità rispettivamente quando viene colpito da una mossa di tipo Buio, Acciaio o Spettro."
+  },
+  "animified": {
+    "name": "Animificato",
+    "description": "Resiste alle mosse di tipo Normale e Lotta. Debole alle mosse di tipo Veleno. Le mosse di tipo Normale diventano di tipo Folletto e sono potenziate del 20%. 30% di possibilità di sopravvivere a un colpo che lo metterebbe KO."
+  },
+  "longForgotten": {
+    "name": "Lungo Dimenticato",
+    "description": "Riduce la Difesa e la Difesa Speciale di un livello quando entra in battaglia."
+  },
+  "waaaa": {
+    "name": "Waaaa",
+    "description": "Ha il 25% di possibilità di infliggere un colpo critico. 10% di possibilità di avvelenare gravemente il bersaglio."
+  },
+  "tooLate": {
+    "name": "Troppo Tardi",
+    "description": "Le mosse vanno sempre per ultime. 35% di possibilità di confondere, far addormentare, infestare o maledire il bersaglio."
+  },
+  "memoriesOfTennis": {
+    "name": "Ricordi del Tennis",
+    "description": "Aumenta la potenza delle mosse legate a palle, sfere, orbi, cerchi, rimbalzi e al colore giallo del 50%. 30% di possibilità di far tentennare il bersaglio quando si usano queste mosse."
+  },
+  "fireRafRaf": {
+    "name": "Fuoco Raf Raf",
+    "description": "Aumenta le mosse di tipo Fuoco del 50%. Subisce danni doppi dall'Acqua. Le mosse di tipo Normale diventano di tipo Fuoco e sono potenziate del 20%."
+  },
+  "positivity": {
+    "name": "Positività",
+    "description": "Aumenta le mosse di tipo Elettro del 20%. Ha il 30% di possibilità di sopravvivere a un colpo che lo metterebbe KO. 33% di possibilità di dimezzare i danni dagli attacchi."
+  },
+  "unfazed": {
+    "name": "Imperturbabile",
+    "description": "Dimezza i danni dalle mosse superefficaci."
+  },
+  "nightmareSauce": {
+    "name": "Salsa Incubo",
+    "description": "50% di probabilità di dare al bersaglio l'abilità Comatoso. 30% di probabilità di dare al bersaglio lo stato Incubo, se ha l'abilità Comatoso."
+  },
+  "hashSlingingSlasher": {
+    "name": "Tagliatore di Hash",
+    "description": "Raddoppia la potenza delle mosse da taglio."
+  },
+  "lifeAdvice": {
+    "name": "Consiglio di Vita",
+    "description": "Aumenta una statistica casuale di un livello quando entra in battaglia. 40% di possibilità di recuperare 1/8 dei PS massimi quando colpito da un attacco."
+  },
+  "woodCutter": {
+    "name": "Taglialegna",
+    "description": "Aumenta la potenza delle mosse del 150% contro i Pokémon di tipo Erba. Aumenta l'Attacco e la Velocità di un livello dopo aver messo KO un Pokémon di tipo Erba."
+  },
+  "axe": {
+    "name": "Ascia",
+    "description": "Aumenta la potenza delle mosse da taglio del 50%. Aumenta le mosse di tipo Acciaio del 30%."
+  },
+  "rubberMan": {
+    "name": "Uomo di Gomma",
+    "description": "Dimezza i danni dalle mosse Fisiche e di tipo Acciaio. Reindirizza le mosse di tipo Elettro su questo Pokémon e aumenta l'Attacco di un livello. Subisce danni doppi dalle mosse di tipo Acqua. Aumenta le mosse di tipo Normale, Lotta e Volante del 50%."
+  },
+  "conquerorHaki": {
+    "name": "Haki del Conquistatore",
+    "description": "20% di possibilità di raddoppiare la potenza della mossa. 10% di possibilità di addormentare o paralizzare il bersaglio al contatto."
+  },
+  "stretchy": {
+    "name": "Elastico",
+    "description": "50% di possibilità di AVVOLGERE il bersaglio, impedendogli di cambiare e infliggendogli danni ogni turno."
+  },
+  "demonSwordsman": {
+    "name": "Spadaccino Demoniaco",
+    "description": "Potenzia le mosse da taglio del 50%. Le mosse di tipo Acciaio, Spettro e Buio condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "cursedBlades": {
+    "name": "Lame Maledette",
+    "description": "Aumenta la potenza delle mosse da taglio del 50%. 20% di possibilità di maledire il bersaglio."
+  },
+  "strawhat": {
+    "name": "Cappello di Paglia",
+    "description": "Ha il 15% di possibilità di sopravvivere a un colpo che lo metterebbe KO. Aumenta la potenza delle mosse in base al numero di alleati andati KO (fino al 100% di aumento)."
+  },
+  "fairyFear": {
+    "name": "Paura Fatata",
+    "description": "Aumenta le mosse di tipo Folletto del 20%. 10% di possibilità di far tentennare il bersaglio."
+  },
+  "shadowCharm": {
+    "name": "Fascino Ombroso",
+    "description": "Riduce l'Attacco di un livello quando entra in battaglia. Impedisce all'avversario di ritirarsi."
+  },
+  "yinYang": {
+    "name": "Yin Yang",
+    "description": "Le mosse di tipo Spettro e Folletto condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "stubbornStance": {
+    "name": "Postura Testarda",
+    "description": "Ha il 70% di possibilità di sopravvivere a un colpo che lo metterebbe KO."
+  },
+  "miseryTouch": {
+    "name": "Tocco della Miseria",
+    "description": "Cambia una statistica casuale del bersaglio di un livello dopo l'attacco."
+  },
+  "justAJerk": {
+    "name": "Solo un Idiota",
+    "description": "Riduce la Difesa di un livello quando entra in battaglia. Aumenta le mosse di tipo Buio del 20%."
+  },
+  "bugabugabuga": {
+    "name": "Bugabugabuga",
+    "description": "Riduce tutte le statistiche di un livello quando entra in battaglia. Impedisce all'avversario di ritirarsi. Subisce il 20% di danni in più dagli attacchi."
+  },
+  "justAMaskedJerk": {
+    "name": "Solo un Idiota Mascherato",
+    "description": "Riduce la Difesa e una statistica casuale di un livello quando entra in battaglia. Aumenta la potenza di tutte le mosse del 20%."
+  },
+  "flameSpirit": {
+    "name": "Spirito di Fiamma",
+    "description": "10% di possibilità di bruciare il bersaglio. Invece di subire danni dalle mosse di tipo Fuoco, aumenta due statistiche casuali di 1 livello."
+  },
+  "soulBurn": {
+    "name": "Bruciatura dell'Anima",
+    "description": "30% di possibilità di scottare il bersaglio. Infligge 1/8 dei PS massimi dell'attaccante come danno se è scottato."
+  },
+  "falseSafety": {
+    "name": "Falsa Sicurezza",
+    "description": "Riduce la Difesa Speciale di un livello quando entra in battaglia. 10% di possibilità di scottare, addormentare o paralizzare gli attaccanti al contatto."
+  },
+  "forestFury": {
+    "name": "Furia della Foresta",
+    "description": "Aumenta la potenza delle mosse di tipo Erba del 150% quando i PS sono sotto il 50%."
+  },
+  "vineFist": {
+    "name": "Pugno di Liane",
+    "description": "Aumenta la potenza delle mosse da pugno del 30%. 30% di possibilità di seminare o legare il bersaglio quando si usano mosse da pugno."
+  },
+  "theAvatar": {
+    "name": "L'Avatar",
+    "description": "Aumenta le mosse di tipo Fuoco, Acqua, Volante e Terra del 20%."
+  },
+  "enlightened": {
+    "name": "Illuminato",
+    "description": "Aumenta le mosse di tipo Psico del 20%. Le mosse che sarebbero poco efficaci diventano neutre."
+  },
+  "happyLittleAccidents": {
+    "name": "Piccoli Incidenti Felici",
+    "description": "Aumenta le mosse con potenza 65 o superiore del 50%. Aumenta le mosse con potenza 60 o inferiore del 75%."
+  },
+  "originalAsmr": {
+    "name": "ASMR Originale",
+    "description": "20% di possibilità di addormentare il bersaglio. Riduce i danni subiti del 20%. Aumenta le mosse sonore del 30%. Dimezza i danni dalle mosse sonore."
+  },
+  "afropower": {
+    "name": "Potere Afro",
+    "description": "30% di possibilità di triplicare la potenza della mossa."
+  },
+  "insectInfusion": {
+    "name": "Infusione Insetto",
+    "description": "50% di possibilità di infestare il bersaglio per 5 turni."
+  },
+  "sentientAnt": {
+    "name": "Formica Senziente",
+    "description": "Aumenta le statistiche di 1 o 2 livelli a seconda della statistica più alta dell'avversario. Aumenta Difesa se la statistica più alta dell'avversario è Attacco, Difesa Speciale se è Attacco Speciale, Attacco Speciale se è Difesa Speciale, o Velocità di 2 livelli se è Velocità."
+  },
+  "antRegen": {
+    "name": "Rigenerazione Formica",
+    "description": "Recupera PS alla fine di ogni turno."
+  },
+  "v8Engine": {
+    "name": "Motore V8",
+    "description": "Aumenta la Velocità di un livello alla fine di ogni turno."
+  },
+  "selfDriving": {
+    "name": "Auto Guidante",
+    "description": "Trasforma le mosse di tipo Normale in tipo Psico e aumenta la loro potenza del 50%."
+  },
+  "limitedEdition": {
+    "name": "Edizione Limitata",
+    "description": "Aumenta due statistiche casuali di un livello quando entra in battaglia. 33% di possibilità di aumentare la potenza della mossa del 20%."
+  },
+  "fieryDisguise": {
+    "name": "Travestimento Ardente",
+    "description": "Il Pokémon è protetto dai danni quando entra in battaglia o quando i suoi PS sono al massimo. Questa protezione viene rimossa dopo che il Pokémon subisce danni. Le mosse di tipo Fuoco ricaricano questa abilità."
+  },
+  "playfulBlaze": {
+    "name": "Fiamma Giocosa",
+    "description": "Potenzia le mosse di tipo Fuoco quando i PS sono bassi. 30% di possibilità di aumentare l'Attacco di un livello dopo aver usato una mossa di tipo Fuoco. 10% di possibilità di scottare il bersaglio quando si usa una mossa di tipo Folletto."
+  },
+  "aquaDisguise": {
+    "name": "Travestimento Acquatico",
+    "description": "Il Pokémon è protetto dai danni quando entra in battaglia o quando i suoi PS sono al massimo. Questa protezione viene rimossa dopo che il Pokémon subisce danni. Le mosse di tipo Acqua ricaricano questa abilità."
+  },
+  "phantomTorrent": {
+    "name": "Torrente Fantasma",
+    "description": "Potenzia le mosse di tipo Acqua quando i PS sono bassi. 30% di possibilità di aumentare l'Attacco Speciale di un livello dopo aver usato una mossa di tipo Acqua. 10% di possibilità di intrappolare il bersaglio in un mulinello quando si usa una mossa di tipo Folletto."
+  },
+  "sillyPressure": {
+    "name": "Pressione Sciocca",
+    "description": "Aumenta il costo in PP delle mosse che prendono di mira il Pokémon. 30% di possibilità di aumentare l'Attacco di un livello dopo aver usato una mossa di tipo Psico. 10% di possibilità di ripetere il bersaglio quando si usa una mossa di tipo Folletto."
+  },
+  "telekineticDisguise": {
+    "name": "Travestimento Telecinetico",
+    "description": "Il Pokémon è protetto dai danni quando entra in battaglia o quando i suoi PS sono al massimo. Questa protezione viene rimossa dopo che il Pokémon subisce danni. Le mosse di tipo Psico ricaricano questa abilità."
+  },
+  "electricDisguise": {
+    "name": "Travestimento Elettrico",
+    "description": "Il Pokémon è protetto dai danni quando entra in battaglia o quando i suoi PS sono al massimo. Questa protezione viene rimossa dopo che il Pokémon subisce danni. Le mosse di tipo Elettro ricaricano questa abilità."
+  },
+  "lovelyStatic": {
+    "name": "Statico Amorevole",
+    "description": "30% di possibilità di paralizzare l'attaccante al contatto. 30% di possibilità di aumentare l'Attacco Speciale di un livello dopo aver usato una mossa di tipo Elettro. 20% di possibilità di infatuare il bersaglio quando si usa una mossa di tipo Folletto se sono di sesso opposto."
+  },
+  "ancientDisguise": {
+    "name": "Travestimento Antico",
+    "description": "Il Pokémon è protetto dai danni quando entra in battaglia o quando i suoi PS sono al massimo. Questa protezione viene rimossa dopo che il Pokémon subisce danni. Le mosse di tipo Roccia ricaricano questa abilità."
+  },
+  "madeToLast": {
+    "name": "Fatto per Durare",
+    "description": "Ha il 40% di possibilità di sopravvivere a un colpo che lo metterebbe KO. 30% di possibilità di aumentare la Velocità di un livello dopo aver usato una mossa di tipo Roccia. 10% di possibilità di intrappolare il bersaglio quando si usa una mossa di tipo Folletto."
+  },
+  "multiPiece": {
+    "name": "Multi Pezzo",
+    "description": "Sopravvive a un colpo che lo metterebbe KO e poi riduce drasticamente la sua Velocità. Recupera PS dopo essere stato colpito."
+  },
+  "alienType": {
+    "name": "Tipo Alieno",
+    "description": "Aumenta le mosse di tipo Ghiaccio, Elettro ed Erba del 20%."
+  },
+  "waterPowered": {
+    "name": "Alimentato ad Acqua",
+    "description": "Trasforma le mosse non di tipo Psico e non di tipo Terra in tipo Acqua e aumenta la loro potenza del 20%. Invece di subire danni dalle mosse di tipo Acqua, aumenta una statistica casuale di 1 livello."
+  },
+  "madeOfIce": {
+    "name": "Fatto di Ghiaccio",
+    "description": "30% di possibilità di congelare gli attaccanti al contatto. Aumenta le mosse di tipo Ghiaccio del 30%."
+  },
+  "shredded": {
+    "name": "Scolpito",
+    "description": "33% di possibilità di raddoppiare la potenza della mossa. Trasforma le mosse di tipo Acqua e Normale in tipo Lotta e aumenta la loro potenza del 20%."
+  },
+  "sculptedIce": {
+    "name": "Ghiaccio Scolpito",
+    "description": "Aumenta una statistica casuale tra Velocità, Difesa e Attacco di un livello alla fine di ogni turno."
+  },
+  "quaker": {
+    "name": "Terremotatore",
+    "description": "Le mosse di tipo Terra possono colpire i tipo Volante. Aumenta le mosse con 'sisma' o 'magnitudo' nel nome del 50%."
+  },
+  "rockFortress": {
+    "name": "Fortezza Rocciosa",
+    "description": "Riduce i danni dalle mosse superefficaci del 50%."
+  },
+  "rockControl": {
+    "name": "Controllo Roccia",
+    "description": "Piazza Levitoroccia quando colpito da una mossa Fisica. Aumenta le mosse di tipo Roccia del 30%."
+  },
+  "unstoppablePoison": {
+    "name": "Veleno Inarrestabile",
+    "description": "Le mosse di tipo Veleno possono colpire i tipo Acciaio. Aumenta le mosse di tipo Veleno del 20%. 30% di possibilità di avvelenare gravemente il bersaglio."
+  },
+  "swiftClaws": {
+    "name": "Artigli Veloci",
+    "description": "Aumenta le mosse da contatto del 30%. 30% di possibilità di aumentare Precisione, Attacco o Velocità di un livello quando si usa una mossa da contatto."
+  },
+  "tripleThreat": {
+    "name": "Tripla Minaccia",
+    "description": "10% di possibilità di infliggere un colpo critico. 10% di possibilità di far tentennare il bersaglio. 10% di possibilità di congelare, paralizzare o scottare al contatto."
+  },
+  "dragonWrath": {
+    "name": "Ira del Drago",
+    "description": "50% di possibilità di infliggere 1/6 dei PS massimi dell'attaccante come danno quando colpito da una mossa da contatto."
+  },
+  "hydraResilience": {
+    "name": "Resilienza dell'Idra",
+    "description": "Sopravvive a un colpo che lo metterebbe KO quando è a PS pieni. Blocca le mosse da KO istantaneo. Ha il 25% di possibilità di sopravvivere a un colpo che lo metterebbe KO."
+  },
+  "toxicOverload": {
+    "name": "Sovraccarico Tossico",
+    "description": "15% di possibilità di avvelenare gravemente il bersaglio. Aumenta la potenza delle mosse del 75% contro bersagli avvelenati o gravemente avvelenati."
+  },
+  "recycleEnergy": {
+    "name": "Energia Riciclata",
+    "description": "50% di possibilità di recuperare 1/8 dei PS massimi dopo essere stato colpito o aver attaccato."
+  },
+  "neetProduced": {
+    "name": "Prodotto NEET",
+    "description": "Subisce danni doppi dalle mosse di tipo Acqua e Normale. Aumenta gli oggetti ottenuti dopo la battaglia. Raddoppia la potenza contro i Pokémon di tipo Normale, Folletto e Lotta."
+  },
+  "ancientAutomaton": {
+    "name": "Automa Antico",
+    "description": "Aumenta una statistica casuale tra Velocità, Difesa e Attacco di un livello alla fine di ogni turno."
+  },
+  "shadowOfColossus": {
+    "name": "Ombra del Colosso",
+    "description": "Ha il 10% di possibilità di sopravvivere a un colpo che lo metterebbe KO. Aumenta le mosse di tipo Spettro del 30%. Riduce i danni subiti del 15%."
+  },
+  "trueFear": {
+    "name": "Vera Paura",
+    "description": "Riduce una statistica casuale dell'avversario di un livello alla fine di ogni turno."
+  },
+  "sumoMaster": {
+    "name": "Maestro di Sumo",
+    "description": "Aumenta le mosse di tipo Lotta del 30%. Trasforma le mosse di tipo Normale in tipo Terra e aumenta la loro potenza del 30%."
+  },
+  "steadfastBulk": {
+    "name": "Massa Risoluta",
+    "description": "30% di possibilità di tentennare quando attaccato. Quando tentenna aumenta la Velocità di due livelli e l'Attacco e la Difesa di un livello."
+  },
+  "bigGuts": {
+    "name": "Grande Coraggio",
+    "description": "L'Attacco è raddoppiato quando il Pokémon ha una condizione di stato. Ignora la riduzione dell'Attacco causata dalla scottatura."
+  },
+  "luchadorsSpirit": {
+    "name": "Spirito del Luchador",
+    "description": "Trasforma le mosse di tipo Normale in tipo Volante e aumenta la loro potenza del 20%. Aumenta la statistica più alta di un livello dopo aver messo KO un avversario."
+  },
+  "maskedMight": {
+    "name": "Potenza Mascherata",
+    "description": "Raddoppia l'Attacco e l'Attacco Speciale quando i PS sono sopra il 50%."
+  },
+  "nachoLibre": {
+    "name": "Nacho Libre",
+    "description": "Aumenta le mosse di tipo Lotta del 60%."
+  },
+  "pseudoScale": {
+    "name": "Pseudo Squama",
+    "description": "Dimezza i danni subiti quando i PS sono al massimo. Danneggia l'attaccante di 1/8 dei suoi PS massimi quando colpito da una mossa da contatto."
+  },
+  "dracoForm": {
+    "name": "Forma Drago",
+    "description": "Potenzia le mosse di tipo Drago del 20%. Le mosse di tipo Drago e Normale condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "dittoType": {
+    "name": "Tipo Ditto",
+    "description": "Cambia il tipo dell'utilizzatore per resistere al tipo di mossa da cui è stato colpito. Recupera 1/8 dei PS massimi se il tipo cambia."
+  },
+  "morphingBlaze": {
+    "name": "Fiamma Mutante",
+    "description": "Potenzia le mosse di tipo Fuoco quando i PS sono bassi. Trasforma le mosse di tipo Fuoco in tipo Elettro contro i tipo Acqua e in tipo Acqua contro i tipo Terra quando i PS sono sotto il 50%."
+  },
+  "flameForm": {
+    "name": "Forma Fiamma",
+    "description": "Potenzia le mosse di tipo Fuoco del 20%. Le mosse di tipo Fuoco e Normale condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "ultimateAdaptation": {
+    "name": "Adattamento Supremo",
+    "description": "Aumenta la potenza di tutte le mosse del 20%. Le mosse superefficaci diventano neutre contro questo Pokémon."
+  },
+  "pseudoPerfection": {
+    "name": "Pseudo Perfezione",
+    "description": "10% di possibilità per ciascuno: colpo critico, dimezzare i danni subiti, raddoppiare la potenza della mossa, recuperare 1/8 dei PS massimi dopo essere stato colpito o aver attaccato."
+  },
+  "dnaChange": {
+    "name": "Cambio DNA",
+    "description": "50% di possibilità di cambiare tipo e recuperare 1/8 dei PS massimi quando usa una mossa."
+  },
+  "realisticStatic": {
+    "name": "Statico Realistico",
+    "description": "50% di possibilità di paralizzare l'attaccante al contatto. Riduce una statistica casuale dell'attaccante di un livello al contatto. Danneggia l'attaccante di 1/8 dei suoi PS massimi quando colpito da una mossa da contatto."
+  },
+  "mascotForm": {
+    "name": "Forma Mascotte",
+    "description": "Potenzia le mosse di tipo Elettro del 20%. Le mosse di tipo Elettro e Normale condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "copyGuard": {
+    "name": "Guardia Copia",
+    "description": "Le mosse usate da questo Pokémon non possono mancare. Riduce i danni dalle mosse superefficaci del 25%."
+  },
+  "muscleForm": {
+    "name": "Forma Muscolare",
+    "description": "Potenzia le mosse di tipo Lotta del 20%. Le mosse di tipo Lotta e Normale condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "unrealPressure": {
+    "name": "Pressione Irreale",
+    "description": "Aumenta il costo in PP delle mosse che prendono di mira il Pokémon di 2. Riduce una statistica casuale e la Precisione dell'avversario di un livello quando entra in battaglia."
+  },
+  "psychoForm": {
+    "name": "Forma Psico",
+    "description": "Potenzia le mosse di tipo Psico del 20%. Le mosse di tipo Psico e Normale condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "clubClobber": {
+    "name": "Clava Devastante",
+    "description": "Aumenta le mosse di tipo Roccia del 20%. Aumenta la potenza delle mosse da contatto del 40%."
+  },
+  "yabaDabaDoo": {
+    "name": "Yaba Daba Doo",
+    "description": "Aumenta tutte le statistiche di un livello quando entra in battaglia. Riduce una statistica casuale di un livello alla fine di ogni turno."
+  },
+  "meteorProof": {
+    "name": "Anti Meteora",
+    "description": "Riduce i danni dalle mosse di tipo Acqua, Roccia, Fuoco e Ghiaccio del 25%."
+  },
+  "sharkShred": {
+    "name": "Squarcio Squalo",
+    "description": "Danneggia il bersaglio di 1/8 dei suoi PS massimi quando usa una mossa da contatto. Recupera 1/8 dei PS massimi quando usa una mossa da contatto."
+  },
+  "attackBoost": {
+    "name": "Aumento Attacco",
+    "description": "Aumenta l'Attacco di un livello alla fine di ogni turno."
+  },
+  "reversedPsychology": {
+    "name": "Psicologia Inversa",
+    "description": "Inverte i cambiamenti di statistica. Inverte l'efficacia dei tipi delle mosse."
+  },
+  "tailCommand": {
+    "name": "Comando Coda",
+    "description": "Aumenta la potenza delle mosse legate alla coda del 75%."
+  },
+  "abyssalAqua": {
+    "name": "Acqua Abissale",
+    "description": "Le mosse di tipo Acqua, Spettro e Buio condividono i loro vantaggi di tipo contro gli stessi tipi! 30% di possibilità di intrappolare il bersaglio in un vortice."
+  },
+  "omniscale": {
+    "name": "Omniscaglia",
+    "description": "30% di possibilità di dimezzare i danni subiti dagli attacchi. 30% di possibilità di aumentare una statistica casuale di un livello quando colpito da un attacco."
+  },
+  "bounceBack": {
+    "name": "Rimbalzo",
+    "description": "30% di possibilità di sopravvivere a un colpo che lo metterebbe KO e infliggere 1/8 dei PS massimi dell'attaccante come danno."
+  },
+  "counterCoat": {
+    "name": "Mantello Contrattacco",
+    "description": "Danneggia l'attaccante di 1/6 dei suoi PS massimi quando colpito da una mossa da contatto. Riduce i danni subiti del 15%."
+  },
+  "shinyScale": {
+    "name": "Squama Lucente",
+    "description": "10% di possibilità di evitare completamente i danni dagli attacchi."
+  },
+  "goldenLuck": {
+    "name": "Fortuna Dorata",
+    "description": "30% di possibilità di infliggere un colpo critico."
+  },
+  "oneInAMillion": {
+    "name": "Uno su un Milione",
+    "description": "5% di possibilità di quintuplicare la potenza della mossa."
+  },
+  "apexPredator": {
+    "name": "Predatore Alfa",
+    "description": "Riduce la Difesa di un livello quando entra in battaglia. Aumenta la statistica più alta di un livello dopo aver messo KO un avversario."
+  },
+  "terrorTunnel": {
+    "name": "Tunnel del Terrore",
+    "description": "Raddoppia la potenza di Fossa."
+  },
+  "looseThreads": {
+    "name": "Fili Sciolti",
+    "description": "30% di possibilità di intrappolare il bersaglio. Quintuplica la potenza delle mosse vincolanti."
+  },
+  "streetSmart": {
+    "name": "Astuzia di Strada",
+    "description": "Aumenta le mosse di tipo Acciaio, Buio, Normale e Lotta del 20%."
+  },
+  "boosheFurCoat": {
+    "name": "Pelliccia Booshe",
+    "description": "Dimezza i danni dalle mosse Fisiche. 40% di possibilità di ridurre i danni dalle mosse Speciali del 25%."
+  },
+  "champion": {
+    "name": "Campione",
+    "description": "Aumenta tutte le statistiche di 1 livello dopo aver sconfitto un avversario. Si avvelena gravemente dopo aver usato una mossa."
+  },
+  "snakeScale": {
+    "name": "Squama Serpente",
+    "description": "50% di possibilità di ridurre i danni subiti del 25%. 30% di possibilità di avvelenare gravemente gli attaccanti al contatto."
+  },
+  "deathClaws": {
+    "name": "Artigli Mortali",
+    "description": "Aumenta la potenza delle mosse da contatto del 50%. Le mosse che sarebbero poco efficaci diventano neutre."
+  },
+  "industrialPower": {
+    "name": "Potenza Industriale",
+    "description": "Aumenta le mosse di tipo Elettro, Acciaio e Veleno del 30%."
+  },
+  "cogOverload": {
+    "name": "Sovraccarico Ingranaggi",
+    "description": "Aumenta la potenza delle mosse legate agli ingranaggi e alla rotazione del 50%."
+  },
+  "multiGear": {
+    "name": "Multi Ingranaggio",
+    "description": "Aumenta la Velocità e una statistica casuale di un livello quando usa Cambiomarcia."
+  },
+  "sugarRush": {
+    "name": "Frenesia di Zucchero",
+    "description": "Le mosse vanno per prime quando i PS sono sopra il 50%. Aumenta la potenza delle mosse del 20% quando i PS sono sopra il 50%."
+  },
+  "livingDelicacy": {
+    "name": "Delizia Vivente",
+    "description": "Aumenta due statistiche casuali di un livello quando entra in battaglia. 33% di possibilità di aumentare la potenza della mossa del 50%. 30% di possibilità di recuperare 1/8 dei PS massimi quando colpito da un attacco."
+  },
+  "abandoned": {
+    "name": "Abbandonato",
+    "description": "Aumenta l'Attacco e la Velocità di un livello dopo essere stato colpito da un attacco."
+  },
+  "lazyMight": {
+    "name": "Potenza Pigra",
+    "description": "Aumenta la potenza di tutte le mosse quando i PS sono bassi."
+  },
+  "lasagna": {
+    "name": "Lasagna",
+    "description": "Recupera 1/2 dei PS massimi quando i PS scendono sotto il 50%. Si attiva solo una volta per battaglia."
+  },
+  "alienCat": {
+    "name": "Gatto Alieno",
+    "description": "Aumenta le mosse di tipo Psico del 20%. Infatua i Pokémon felini del sesso opposto. Immune alle mosse di tipo Terra."
+  },
+  "phaser": {
+    "name": "Fasatore",
+    "description": "Annulla i danni dalle mosse da contatto."
+  },
+  "virtualTacos": {
+    "name": "Tacos Virtuali",
+    "description": "Recupera 1/8 dei PS massimi alla fine di ogni turno."
+  },
+  "heyLookAtMe": {
+    "name": "Ehi Guardami",
+    "description": "Riduce due statistiche casuali di un livello e aumenta una statistica casuale di un livello quando entra in battaglia."
+  },
+  "limitedTime": {
+    "name": "Tempo Limitato",
+    "description": "Si avvelena gravemente quando entra in battaglia. 30% di possibilità di triplicare la potenza della mossa. Aumenta una statistica casuale di un livello dopo aver messo KO un avversario."
+  },
+  "boxBorn": {
+    "name": "Nato nella Scatola",
+    "description": "Riduce la potenza delle mosse legate a palle, sfere e orbi del 75%. Aumenta le mosse di tipo Acciaio del 20%."
+  },
+  "imAPickle": {
+    "name": "Sono un Cetriolo",
+    "description": "Recupera PS quando colpito da mosse di tipo Acqua. Aumenta la Velocità di un livello quando colpito da mosse di tipo Erba. Aumenta l'Attacco di un livello quando colpito da mosse di tipo Acciaio. 10% di possibilità di far tentennare il bersaglio."
+  },
+  "resourceful": {
+    "name": "Ingegnoso",
+    "description": "30% di possibilità di rubare lo strumento del bersaglio e aumentare l'Attacco di un livello. 30% di possibilità di ottenere uno strumento dopo la battaglia."
+  },
+  "deadlyBrine": {
+    "name": "Salamoia Mortale",
+    "description": "Trasforma le mosse di tipo Normale in tipo Acqua. Potenzia le mosse di tipo Acqua del 30%. Le mosse di tipo Acqua e Veleno condividono i loro vantaggi di tipo contro gli stessi tipi! 10% di possibilità di avvelenare gravemente il bersaglio."
+  },
+  "thicc": {
+    "name": "Thicc",
+    "description": "30% di possibilità di ridurre i danni subiti del 25%."
+  },
+  "enforcer": {
+    "name": "Esecutore",
+    "description": "Le mosse di tipo Buio e Acciaio condividono i loro vantaggi di tipo contro gli stessi tipi! Aumenta Attacco di 1 livello dopo aver sconfitto un avversario."
+  },
+  "spookySense": {
+    "name": "Senso Spettrale",
+    "description": "Riduce i danni dalle mosse di tipo Spettro e Buio del 25%. Aumenta l'Attacco e la Velocità di un livello se l'avversario ha una mossa superefficace."
+  },
+  "unyieldingCourage": {
+    "name": "Coraggio Inflessibile",
+    "description": "Sopravvive a un colpo che lo metterebbe KO quando è a PS pieni. Blocca le mosse da KO istantaneo. Ha il 25% di possibilità di sopravvivere a un colpo che lo metterebbe KO."
+  },
+  "lovePower": {
+    "name": "Potere dell'Amore",
+    "description": "50% di possibilità di raddoppiare la potenza della mossa. 30% di possibilità di infatuare il bersaglio se è del sesso opposto."
+  },
+  "spiritWinds": {
+    "name": "Venti Spirituali",
+    "description": "Le mosse di tipo Spettro ed Erba condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Buio e Normale in tipo Spettro e aumenta la loro potenza del 20%."
+  },
+  "leafDancer": {
+    "name": "Danzatore di Foglie",
+    "description": "Aumenta una statistica casuale di un livello dopo aver usato una mossa di tipo Buio. Aumenta una statistica casuale di un livello quando colpito da una mossa di tipo Erba."
+  },
+  "slayerSensei": {
+    "name": "Maestro Cacciatore",
+    "description": "Triplica la potenza delle mosse contro i Pokémon di tipo Spettro e Buio. Aumenta una statistica casuale di un livello dopo aver messo KO un avversario."
+  },
+  "balanced": {
+    "name": "Equilibrato",
+    "description": "Immune alla confusione. Le mosse usate da questo Pokémon non possono mancare. 50% di possibilità di dimezzare i danni dagli attacchi."
+  },
+  "enhancedFocus": {
+    "name": "Concentrazione Potenziata",
+    "description": "25% di possibilità di infliggere un colpo critico."
+  },
+  "luckySeven": {
+    "name": "Sette Fortunato",
+    "description": "70% di possibilità di potenziare le mosse con potenza base 70 del 70%. 70% di possibilità di aumentare una statistica casuale di un livello dopo l'attacco."
+  },
+  "lastLaugh": {
+    "name": "Ultima Risata",
+    "description": "Infligge 1/4 dei PS massimi dell'attaccante come danno quando va KO."
+  },
+  "foxWisdom": {
+    "name": "Saggezza della Volpe",
+    "description": "Trasforma le mosse di tipo Normale in tipo Psico. Potenzia le mosse di tipo Psico del 30%. Le mosse di tipo Fuoco e Psico condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "eternalYouth": {
+    "name": "Giovinezza Eterna",
+    "description": "Aumenta le mosse di tipo Folletto del 30%. Trasforma le mosse di tipo Normale in tipo Folletto. Ha il 10% di possibilità di sopravvivere a un colpo che lo metterebbe KO."
+  },
+  "flamingChakra": {
+    "name": "Chakra Fiammeggiante",
+    "description": "Trasforma le mosse non di tipo Psico in tipo Fuoco. Aumenta le mosse di tipo Fuoco del 50%. 10% di possibilità di scottare il bersaglio."
+  },
+  "adaptabugility": {
+    "name": "Adattabilità Coleottero",
+    "description": "Triplica la potenza delle mosse di tipo Coleottero."
+  },
+  "shellRepair": {
+    "name": "Ripara Guscio",
+    "description": "Recupera 1/4 dei PS massimi quando usa Polverizza. Aumenta la Difesa e la Difesa Speciale di un livello quando usa Polverizza. Si attiva solo una volta per battaglia."
+  },
+  "squeezer": {
+    "name": "Stritolatore",
+    "description": "Quintuplica la potenza di Avvolgibotta. 30% di possibilità di intrappolare il bersaglio."
+  },
+  "greenSpaghettiMonster": {
+    "name": "Mostro di Spaghetti Verdi",
+    "description": "15% di possibilità di intrappolare il bersaglio quando usa una mossa di tipo Erba. Aumenta le mosse di tipo Erba del 20%. 10% di possibilità di ridurre la Velocità del bersaglio di un livello quando usa una mossa di tipo Erba."
+  },
+  "leechVines": {
+    "name": "Liane Sanguisughe",
+    "description": "Raddoppia la potenza di Frustata. 30% di possibilità di seminare o legare il bersaglio quando usa Frustata."
+  },
+  "regeneratorPlus": {
+    "name": "Rigeneratore Plus",
+    "description": "Recupera il 45% dei PS massimi quando viene richiamato."
+  },
+  "plaguePsyche": {
+    "name": "Psiche della Peste",
+    "description": "Le mosse di tipo Veleno e Psico condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Veleno. 10% di possibilità di confondere o avvelenare il bersaglio."
+  },
+  "toxicTrance": {
+    "name": "Trance Tossica",
+    "description": "30% di possibilità di avvelenare gravemente il bersaglio. 30% di possibilità di addormentare il bersaglio. Aumenta la potenza delle mosse del 50% quando l'utilizzatore ha una condizione di stato."
+  },
+  "permafrostArmor": {
+    "name": "Armatura Permafrost",
+    "description": "Dimezza i danni dalle mosse di tipo Fuoco, Ghiaccio e Roccia."
+  },
+  "glacialPace": {
+    "name": "Passo Glaciale",
+    "description": "Riduce la Velocità di due livelli quando entra in battaglia. Aumenta le mosse di tipo Ghiaccio del 20%."
+  },
+  "iceKing": {
+    "name": "Re del Ghiaccio",
+    "description": "Aumenta le mosse di tipo Ghiaccio del 50%. Trasforma le mosse di tipo Normale in tipo Ghiaccio e aumenta la loro potenza del 20%. 5% di possibilità di congelare il bersaglio."
+  },
+  "despair": {
+    "name": "Disperazione",
+    "description": "Riduce una statistica casuale dell'avversario di un livello e aumenta una statistica casuale dell'utilizzatore di un livello alla fine di ogni turno."
+  },
+  "ohayogosumasu": {
+    "name": "Ohayogosumasu",
+    "description": "Riduce l'Attacco, la Difesa, l'Attacco Speciale, la Difesa Speciale e la Velocità di un livello quando entra in battaglia."
+  },
+  "abilityTextHere": {
+    "name": "Testo Abilità Qui",
+    "description": "Dà questa abilità all'avversario quando entra in battaglia. Aumenta due statistiche casuali di un livello quando entra in battaglia."
+  },
+  "exceptionCaught": {
+    "name": "Eccezione Catturata",
+    "description": "Sopravvive a un colpo che lo metterebbe KO e poi riduce drasticamente la sua Velocità. Recupera PS dopo essere stato colpito."
+  },
+  "fourOFour": {
+    "name": "Quattro Zero Quattro",
+    "description": "10% di possibilità di evitare completamente i danni dagli attacchi."
+  },
+  "shadowSlayer": {
+    "name": "Cacciatore d'Ombre",
+    "description": "30% di possibilità di scottare, avvelenare, paralizzare o avvelenare gravemente il bersaglio quando usa una mossa di tipo Spettro o Acciaio."
+  },
+  "nightmareEmerald": {
+    "name": "Smeraldo Incubo",
+    "description": "Potenzia le mosse di tipo Roccia e Buio del 30%. 50% di probabilità di dare al bersaglio l'abilità Comatoso o lo stato Incubo."
+  },
+  "imaginary": {
+    "name": "Immaginario",
+    "description": "Trasforma le mosse di tipo Normale in tipo Folletto e aumenta la loro potenza del 20%. 30% di possibilità di dimezzare i danni dalle mosse Fisiche."
+  },
+  "splinterSkin": {
+    "name": "Pelle Scheggiata",
+    "description": "Danneggia l'attaccante di 1/12 dei suoi PS massimi quando colpito da una mossa da contatto. Danneggia anche il bersaglio di 1/12 dei suoi PS massimi quando usa una mossa da contatto."
+  },
+  "jujutsuSorcerer": {
+    "name": "Stregone Jujutsu",
+    "description": "Aumenta la potenza delle mosse del 150% quando l'utilizzatore o il bersaglio ha una condizione di stato. 20% di possibilità di curare la propria condizione di stato o quella del bersaglio. 30% di possibilità di infliggere una condizione di stato casuale. Ignora la riduzione dell'Attacco causata dalla scottatura. 50% di possibilità di infliggere una condizione di stato casuale a se stesso se non ne ha già una."
+  },
+  "toxicKing": {
+    "name": "Re Tossico",
+    "description": "Avvelena sempre gravemente il bersaglio."
+  },
+  "swampKing": {
+    "name": "Re della Palude",
+    "description": "30% di possibilità di avvelenare il bersaglio. Trasforma le mosse di tipo Normale in tipo Acqua e aumenta la loro potenza del 20%. Le mosse di tipo Acqua e Veleno condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "rageSoul": {
+    "name": "Anima Rabbiosa",
+    "description": "Aumenta la potenza delle mosse in base al numero di alleati andati KO (fino al 150% di aumento)."
+  },
+  "darkSide": {
+    "name": "Lato Oscuro",
+    "description": "Raddoppia la potenza delle mosse di tipo Buio."
+  },
+  "puppetMaster": {
+    "name": "Burattinaio",
+    "description": "Triplica la potenza delle mosse contro Mimikyu e Shuppet. 20% di possibilità di maledire o legare i Pokémon di tipo Normale e Lotta. 10% di possibilità di dimezzare i danni subiti dagli attacchi."
+  },
+  "blackAndRed": {
+    "name": "Nero e Rosso",
+    "description": "Le mosse di tipo Buio e Fuoco condividono i loro vantaggi di tipo contro gli stessi tipi! 15% di possibilità di bruciare il bersaglio. Trasforma le mosse di tipo Normale in tipo Buio e aumenta la loro potenza del 20%."
+  },
+  "zombieExperience": {
+    "name": "Esperienza Zombie",
+    "description": "Raddoppia la potenza delle mosse contro i Pokémon di tipo Buio, Spettro e Terra. Aumenta tutte le statistiche di un livello dopo aver messo KO un Pokémon di tipo Buio, Spettro o Terra."
+  },
+  "lastHope": {
+    "name": "Ultima Speranza",
+    "description": "Aumenta la potenza di tutte le mosse quando i PS sono bassi."
+  },
+  "ugly": {
+    "name": "Brutto",
+    "description": "Riduce una statistica casuale di un livello quando entra in battaglia e alla fine di ogni turno. 10% di possibilità di far tentennare il bersaglio."
+  },
+  "blandCardboardEater": {
+    "name": "Mangiatore di Cartone Insipido",
+    "description": "Triplica la potenza delle mosse contro SmittyXTV. Aumenta l'Attacco di un livello quando colpito da una mossa di tipo Erba. Recupera 1/8 dei PS massimi quando usa una mossa di tipo Erba."
+  },
+  "boring": {
+    "name": "Noioso",
+    "description": "Riduce una statistica casuale di un livello quando entra in battaglia e alla fine di ogni turno. Aumenta le mosse di tipo Normale del 30%."
+  },
+  "moldyTouch": {
+    "name": "Tocco Ammuffito",
+    "description": "10% di possibilità di infestare o avvelenare gravemente il bersaglio al contatto. Aumenta le mosse di tipo Veleno del 20%. Subisce danni doppi da Rompiforma."
+  },
+  "eternalGiggle": {
+    "name": "Risatina Eterna",
+    "description": "Subisce danni doppi da Rompiforma. Confonde e fa tentennare tutti i Pokémon avversari quando l'utilizzatore va KO."
+  },
+  "redMenace": {
+    "name": "Minaccia Rossa",
+    "description": "5% di possibilità di maledire il bersaglio o 10% di possibilità di scottare il bersaglio al contatto. Aumenta le mosse di tipo Fuoco del 20%. Aumenta la Velocità di un livello quando colpito da una mossa di tipo Fuoco. Subisce danni doppi da Rompiforma."
+  },
+  "ghostlyMold": {
+    "name": "Muffa Spettrale",
+    "description": "10% di probabilità di avvelenare gravemente il bersaglio al contatto. Le mosse di tipo Spettro e Veleno condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Spettro e aumenta la loro potenza del 20%. Subisce danni doppi da Rompiforma."
+  },
+  "pacFungus": {
+    "name": "Fungo Pac",
+    "description": "30% di possibilità di infestare il bersaglio al contatto. Aumenta la Velocità e l'Attacco di un livello se il bersaglio è infestato. Subisce danni doppi da Rompiforma."
+  },
+  "secretSauce": {
+    "name": "Salsa Segreta",
+    "description": "10% di possibilità di paralizzare, scottare, avvelenare o avvelenare gravemente il bersaglio. 10% di possibilità di infliggere danni pari a 1/8 dei PS massimi del bersaglio. 10% di possibilità di applicare varie condizioni di stato o effetti."
+  },
+  "mcpuzzle": {
+    "name": "McPuzzle",
+    "description": "20% di possibilità di confondere il bersaglio. 10% di possibilità di far tentennare il bersaglio. 20% di possibilità di aumentare la potenza della mossa del 150%. Aumenta una statistica casuale di un livello dopo aver messo KO un avversario."
+  },
+  "mayITakeYourOrder": {
+    "name": "Posso Prendere l'Ordinazione",
+    "description": "Le mosse usate da questo Pokémon vanno per prime."
+  },
+  "stealthShipping": {
+    "name": "Spedizione Furtiva",
+    "description": "50% di possibilità di piazzare Punte, 20% di possibilità per Levitoroccia, 20% di possibilità per Punte Tossiche, o 10% di possibilità per Ragnatela quando colpito da una mossa da contatto."
+  },
+  "cardboardEmpire": {
+    "name": "Impero di Cartone",
+    "description": "Aumenta due statistiche casuali di un livello dopo aver messo KO un avversario. Recupera 1/8 dei PS massimi dopo aver messo KO un avversario."
+  },
+  "aWinner": {
+    "name": "Un Vincitore",
+    "description": "Aumenta una statistica casuale di un livello dopo aver messo KO un avversario."
+  },
+  "smugAura": {
+    "name": "Aura Presuntuosa",
+    "description": "Trasforma le mosse di tipo Normale in tipo Veleno e aumenta la loro potenza del 20%. Le mosse di tipo Psico e Veleno condividono i loro vantaggi di tipo contro gli stessi tipi! 10% di possibilità di avvelenare il bersaglio."
+  },
+  "deepThoughts": {
+    "name": "Pensieri Profondi",
+    "description": "30% di possibilità di confondere il bersaglio dopo aver usato una mossa."
+  },
+  "intellyLectAlly": {
+    "name": "Intellettualmente Alleato",
+    "description": "Aumenta l'Attacco Speciale di un livello alla fine di ogni turno."
+  },
+  "insomniaInk": {
+    "name": "Inchiostro dell'Insonnia",
+    "description": "50% di possibilità di dare al bersaglio l'abilità Comatoso o lo stato Incubo."
+  },
+  "nightmareClarinet": {
+    "name": "Clarinetto dell'Incubo",
+    "description": "Trasforma tutte le mosse in mosse sonore e aumenta la loro potenza del 20%. Aumenta le mosse sonore del 50%. 10% di possibilità di maledire il bersaglio."
+  },
+  "jellyfishFever": {
+    "name": "Febbre da Medusa",
+    "description": "Trasforma le mosse di tipo Normale in tipo Fuoco e aumenta la loro potenza del 20%. 10% di possibilità di avvelenare gravemente il bersaglio quando si usa una mossa Speciale. 10% di possibilità di bruciare il bersaglio quando si usa una mossa Fisica. Le mosse di tipo Fuoco e Veleno condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "deepSeaVirus": {
+    "name": "Virus degli Abissi",
+    "description": "Infligge 1/8 dei PS massimi dell'attaccante come danno se è gravemente avvelenato. 30% di possibilità di avvelenare gravemente il bersaglio."
+  },
+  "bubblingBrains": {
+    "name": "Cervelli Gorgoglianti",
+    "description": "Aumenta le mosse di tipo Acqua del 50%. Recupera 1/8 dei PS massimi quando usa una mossa da contatto."
+  },
+  "cloakOfShadows": {
+    "name": "Mantello delle Ombre",
+    "description": "Aumenta le mosse di tipo Spettro del 20%. Trasforma le mosse di tipo Normale in tipo Spettro e aumenta la loro potenza del 20%. Riduce i danni dalle mosse superefficaci del 25%."
+  },
+  "acidWater": {
+    "name": "Acqua Acida",
+    "description": "Le mosse di tipo Veleno e Acqua condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Veleno e aumenta la loro potenza del 20%. Raddoppia la potenza contro i Pokémon di tipo Normale, Acciaio e Lotta quando si usano mosse di tipo Acqua o Veleno."
+  },
+  "eightBitBlaze": {
+    "name": "Fiamma a 8 Bit",
+    "description": "Potenzia le mosse di tipo Fuoco quando i PS sono bassi. 10% di possibilità di intrappolare il bersaglio in un vortice infuocato. Trasforma le mosse di tipo Normale in tipo Fuoco e aumenta la loro potenza del 20%. 10% di possibilità di scottare il bersaglio."
+  },
+  "charredMemory": {
+    "name": "Memoria Carbonizzata",
+    "description": "Riduce la Difesa Speciale del bersaglio di 1 livello dopo aver usato una mossa di tipo Fuoco. Le mosse di tipo Fuoco e Psico condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Psico e aumenta la loro potenza del 20%."
+  },
+  "blackAndWhite": {
+    "name": "Bianco e Nero",
+    "description": "Annulla i danni dalle mosse che non sono di tipo Normale o Buio."
+  },
+  "eightBitTerror": {
+    "name": "Terrore a 8 Bit",
+    "description": "Aumenta le mosse legate agli incubi del 20%. 10% di possibilità di maledire o far tentennare il bersaglio. 10% di possibilità di infliggere danni pari a 1/8 dei PS massimi del bersaglio."
+  },
+  "corruptionBlaze": {
+    "name": "Fiamma della Corruzione",
+    "description": "Potenzia le mosse di tipo Fuoco quando i PS sono bassi. Le mosse di tipo Buio e Fuoco condividono i loro vantaggi di tipo contro gli stessi tipi! 30% di possibilità di disattivare l'ultima mossa usata dal bersaglio."
+  },
+  "oaksMistake": {
+    "name": "Errore di Oak",
+    "description": "Abbassa una statistica casuale di 1 livello quando entra in battaglia. 10% di possibilità di seminare o intrappolare il bersaglio in un mulinello. 10% di possibilità di bruciare il bersaglio. 30% di possibilità di recuperare 1/8 dei PS massimi dopo aver attaccato."
+  },
+  "shellShock": {
+    "name": "Shock da Guscio",
+    "description": "Le mosse di tipo Acqua ed Elettro condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Elettro e aumenta la loro potenza del 20%. 10% di possibilità di far tentennare il bersaglio quando si usa una mossa di tipo Acqua o Normale. 10% di possibilità di paralizzare il bersaglio quando si usa una mossa di tipo Acqua o Normale."
+  },
+  "darkSeed": {
+    "name": "Seme Oscuro",
+    "description": "Le mosse di tipo Erba e Buio condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Buio e aumenta la loro potenza del 20%. 10% di possibilità di far tentennare il bersaglio o di seminarlo quando si usa una mossa di tipo Erba o Normale."
+  },
+  "cursedShell": {
+    "name": "Guscio Maledetto",
+    "description": "10% di possibilità di maledire il bersaglio. Riduce i danni dalle mosse Fisiche del 25%."
+  },
+  "gothamsNightmare": {
+    "name": "Incubo di Gotham",
+    "description": "Impedisce all'avversario di cambiare. 20% di possibilità di infliggere un colpo critico."
+  },
+  "doomGadgets": {
+    "name": "Gadget del Destino",
+    "description": "Cambia le mosse di tipo Normale in tipo Acciaio e aumenta la loro potenza del 20%. Aumenta le mosse di tipo Acciaio del 20%. 10% di possibilità di paralizzare, bruciare, avvelenare o avvelenare gravemente il bersaglio."
+  },
+  "memeArmor": {
+    "name": "Armatura Meme",
+    "description": "50% di possibilità di dimezzare i danni dagli attacchi. Aumenta una statistica casuale di 1 livello e abbassa una statistica casuale di 1 livello dopo essere stato colpito da un attacco."
+  },
+  "memeified": {
+    "name": "Memificato",
+    "description": "Ha il 10% di possibilità di sopravvivere a un colpo che lo metterebbe KO. 20% di possibilità di raddoppiare la potenza delle mosse Speciali."
+  },
+  "hungryTroll": {
+    "name": "Troll Affamato",
+    "description": "50% di possibilità di recuperare 1/8 dei PS massimi dopo aver attaccato. 50% di possibilità di aumentare una statistica casuale di 1 livello dopo aver attaccato."
+  },
+  "monotoneMood": {
+    "name": "Umore Monotono",
+    "description": "Cambia tutte le mosse in tipo Normale. Aumenta le mosse di tipo Normale del 20%. Le mosse di tipo Normale possono colpire i tipi Spettro. 10% di possibilità di far addormentare il bersaglio."
+  },
+  "boredomAura": {
+    "name": "Aura della Noia",
+    "description": "Abbassa una statistica casuale dell'avversario di 2 livelli alla fine di ogni turno."
+  },
+  "squidlyStep": {
+    "name": "Passo Calamaro",
+    "description": "Aumenta le mosse basate sul suono e i calci del 30%. Aumenta la Velocità di 1 livello quando viene colpito da una mossa di tipo Terra o Acqua."
+  },
+  "nightmareInk": {
+    "name": "Inchiostro dell'Incubo",
+    "description": "90% di possibilità di dare al bersaglio l'abilità Comatose o lo stato Incubo."
+  },
+  "abyssalMelody": {
+    "name": "Melodia Abissale",
+    "description": "Cambia tutte le mosse in mosse basate sul suono e aumenta la loro potenza del 20%. Aumenta le mosse basate sul suono del 50%. 10% di possibilità di maledire il bersaglio."
+  },
+  "charmingMist": {
+    "name": "Nebbia Affascinante",
+    "description": "Le mosse di tipo Spettro e Folletto condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Folletto e aumenta la loro potenza del 20%. 20% di possibilità di infatuare il bersaglio quando si usa una mossa di tipo Folletto o Spettro se sono di sesso opposto."
+  },
+  "ectoplasmicCharm": {
+    "name": "Fascino Ectoplasmico",
+    "description": "20% di possibilità di infatuare il bersaglio quando si usa una mossa di tipo Spettro se sono di sesso opposto. 50% di possibilità di infliggere danni pari a 1/8 dei PS massimi del bersaglio."
+  },
+  "superHungry": {
+    "name": "Super Affamato",
+    "description": "50% di possibilità di recuperare 1/8 dei PS massimi dopo aver attaccato. 50% di possibilità di aumentare una statistica casuale di 1 livello dopo aver attaccato."
+  },
+  "foolsGold": {
+    "name": "Oro degli Stolti",
+    "description": "Immune alle mosse di stato di altri Pokémon. Le mosse di tipo Buio e Acciaio condividono i loro vantaggi di tipo contro gli stessi tipi!"
+  },
+  "showAndTell": {
+    "name": "Mostra e Racconta",
+    "description": "Raddoppia la potenza della mossa se è diversa dall'ultima mossa usata."
+  },
+  "knightsShovel": {
+    "name": "Pala del Cavaliere",
+    "description": "Raddoppia la potenza delle mosse di tipo Terra e Acciaio se l'utilizzatore condivide una debolezza con il bersaglio. Immune alle mosse di tipo Terra."
+  },
+  "heroicLeap": {
+    "name": "Salto Eroico",
+    "description": "Immune alle mosse di tipo Terra. Aumenta l'Attacco di 1 livello quando entra in battaglia. Cambia le mosse di tipo Normale in tipo Volante e aumenta la loro potenza del 20%."
+  },
+  "digChampion": {
+    "name": "Campione dello Scavo",
+    "description": "Raddoppia la potenza di Fossa."
+  },
+  "eightBitHunger": {
+    "name": "Fame a 8 Bit",
+    "description": "50% di possibilità di recuperare 1/8 dei PS massimi dopo aver attaccato. 10% di possibilità di far tentennare il bersaglio."
+  },
+  "rockSolidMeme": {
+    "name": "Meme Solido come la Roccia",
+    "description": "Le mosse di tipo Normale e Roccia condividono i loro vantaggi di tipo contro gli stessi tipi! Riduce i danni delle mosse super efficaci del 25%."
+  },
+  "rockRoll": {
+    "name": "Rotola Roccia",
+    "description": "Aumenta le mosse di tipo Roccia del 20%. Aumenta le mosse con 'rotola' o 'gira' nel nome del 75%. 20% di possibilità di far tentennare il bersaglio quando si usa una mossa con 'rotola' o 'gira' nel suo nome."
+  },
+  "staticShock": {
+    "name": "Shock Statico",
+    "description": "30% di possibilità di paralizzare il bersaglio. Aumenta la potenza delle mosse del 50% contro bersagli paralizzati."
+  },
+  "horrorShow": {
+    "name": "Spettacolo dell'Orrore",
+    "description": "Impedisce all'avversario di cambiare. Aumenta la statistica più alta di 1 livello dopo aver messo KO un avversario."
+  },
+  "sunbather": {
+    "name": "Bagnante Solare",
+    "description": "Le mosse di tipo Fuoco e Acqua condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Acqua e aumenta la loro potenza del 20%. Recupera 1/8 dei PS massimi alla fine di ogni turno durante il sole intenso. 30% di possibilità di cambiare il clima in sole intenso alla fine di ogni turno."
+  },
+  "seedEater": {
+    "name": "Mangiatore di Semi",
+    "description": "Recupera PS quando viene colpito da mosse di tipo Erba invece di subire danni. Raddoppia la potenza delle mosse contro i Pokémon di tipo Erba. Recupera 1/8 dei PS massimi quando attacca un Pokémon di tipo Erba. Recupera 1/2 dei PS massimi quando viene colpito da mosse basate sui semi."
+  },
+  "vacaySoul": {
+    "name": "Anima in Vacanza",
+    "description": "Triplica la potenza di tutte le mosse. Il Pokémon può attaccare solo ogni due turni."
+  },
+  "screenSwim": {
+    "name": "Nuoto su Schermo",
+    "description": "Le mosse di tipo Acciaio e Acqua condividono i loro vantaggi di tipo contro gli stessi tipi! Recupera 1/8 dei PS massimi alla fine di ogni turno durante la pioggia. 10% di possibilità di far tentennare il bersaglio. 30% di possibilità di cambiare il clima in pioggia alla fine di ogni turno."
+  },
+  "darkWaters": {
+    "name": "Acque Oscure",
+    "description": "Le mosse di tipo Buio e Acqua condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Buio e aumenta la loro potenza del 20%. 10% di possibilità di intrappolare il bersaglio in un vortice quando si usa una mossa di tipo Acqua o Buio. 10% di possibilità di infliggere danni pari a 1/8 dei PS massimi del bersaglio quando si usa una mossa di tipo Acqua o Buio."
+  },
+  "experimentError": {
+    "name": "Errore Sperimentale",
+    "description": "Abbassa una statistica casuale di 1 livello quando entra in battaglia. 10% di possibilità di seminare o intrappolare il bersaglio in un mulinello. 10% di possibilità di bruciare il bersaglio. 30% di possibilità di recuperare 1/8 dei PS massimi dopo aver attaccato."
+  },
+  "roundingError": {
+    "name": "Errore di Arrotondamento",
+    "description": "Dimezza i danni dalle mosse con potenza divisibile per 5 ma non per 10. Aumenta le mosse con potenza non divisibile per 10 o divisibile per 5 del 50%."
+  },
+  "idealForm": {
+    "name": "Forma Ideale",
+    "description": "10% di possibilità per ciascuno: colpo critico, dimezzare i danni subiti, raddoppiare la potenza della mossa, recuperare 1/8 dei PS massimi dopo essere stato colpito o aver attaccato."
+  },
+  "eliteStatic": {
+    "name": "Statico d'Elite",
+    "description": "50% di possibilità di paralizzare l'attaccante al contatto. Abbassa una statistica casuale dell'attaccante di 1 livello al contatto. Danneggia l'attaccante di 1/8 dei suoi PS massimi quando viene colpito da una mossa da contatto."
+  },
+  "cockadoodleYes": {
+    "name": "Chicchirichì Sì",
+    "description": "Aumenta una statistica casuale di 1 livello quando entra in battaglia. Aumenta la statistica più alta di 1 livello dopo aver messo KO un avversario. Aumenta la potenza delle mosse da contatto del 30%."
+  },
+  "carnivore": {
+    "name": "Carnivoro",
+    "description": "Recupera 1/8 dei PS massimi quando attacca certi tipi di Pokémon. Aumenta Attacco e Velocità di 1 livello dopo aver messo KO un avversario."
+  },
+  "nightShow": {
+    "name": "Spettacolo Notturno",
+    "description": "Abbassa una statistica casuale dell'avversario di 2 livelli alla fine di ogni turno."
+  },
+  "nightmareHost": {
+    "name": "Ospite dell'Incubo",
+    "description": "50% di possibilità che le mosse vadano per prime. 10% di possibilità di paralizzare, avvelenare o bruciare il bersaglio."
+  },
+  "pressurePlay": {
+    "name": "Gioco di Pressione",
+    "description": "Aumenta il costo in PP delle mosse che prendono di mira il Pokémon di 2. Abbassa l'Attacco di 1 livello quando entra in battaglia."
+  },
+  "aBCOrD": {
+    "name": "A, B, C o D",
+    "description": "10% di possibilità di aumentare Attacco di 1 livello. 10% di possibilità di bruciare il bersaglio. 10% di possibilità di confondere il bersaglio. 10% di possibilità di rendere il bersaglio assonnato."
+  },
+  "midnightCookies": {
+    "name": "Biscotti di Mezzanotte",
+    "description": "30% di possibilità di recuperare 1/8 dei PS massimi alla fine di ogni turno. 30% di possibilità di aumentare una statistica casuale di 1 livello alla fine di ogni turno."
+  },
+  "horribleCardboard": {
+    "name": "Cartone Orribile",
+    "description": "Cambia tutte le mosse in tipo Normale e aumenta la loro potenza del 20%. Le mosse di tipo Normale possono colpire i tipi Spettro. 30% di possibilità di infliggere danni pari a 1/8 dei PS massimi del bersaglio."
+  },
+  "theElderShadows": {
+    "name": "Le Ombre Antiche",
+    "description": "Le mosse di tipo Spettro e Buio condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Buio e aumenta la loro potenza del 20%. 30% di possibilità di infliggere danni pari a 1/16 dei PS massimi del bersaglio alla fine di ogni turno. 30% di possibilità di raddoppiare la potenza della mossa. Aumenta una statistica casuale di 1 livello dopo aver sconfitto un avversario."
+  },
+  "horribleGhostCardboard": {
+    "name": "Cartone Spettrale Orribile",
+    "description": "Cambia le mosse di tipo Normale in tipo Spettro e aumenta la loro potenza del 20%. Le mosse di tipo Spettro possono colpire i tipi Normale. 30% di possibilità di infliggere danni pari a 1/8 dei PS massimi del bersaglio."
+  },
+  "midnightCookiesOfDeath": {
+    "name": "Biscotti di Mezzanotte della Morte",
+    "description": "30% di possibilità di infliggere danni pari a 1/8 dei PS massimi del bersaglio alla fine di ogni turno. 30% di possibilità di aumentare una statistica casuale di 1 livello alla fine di ogni turno."
+  },
+  "infomercialFame": {
+    "name": "Fama da Televendita",
+    "description": "Aumenta tutte le statistiche di 1 livello quando entra in battaglia. 30% di possibilità di infliggere danni pari a 1/8 dei PS massimi del bersaglio alla fine di ogni turno."
+  },
+  "winnersGrin": {
+    "name": "Ghigno del Vincitore",
+    "description": "Aumenta la statistica più alta di 1 livello dopo aver messo KO un avversario. Aumenta una statistica casuale di 1 livello dopo aver messo KO un avversario."
+  },
+  "fancyCardboard": {
+    "name": "Cartone Elegante",
+    "description": "Cambia le mosse di tipo Normale in tipo Normale e aumenta la loro potenza del 20%. Le mosse di tipo Normale possono colpire i tipi Spettro. Aumenta le mosse con 60 o meno di potenza del 50%."
+  },
+  "unjustified": {
+    "name": "Ingiustificato",
+    "description": "Le mosse di tipo Normale e Lotta condividono i loro vantaggi di tipo contro gli stessi tipi! Dimezza i danni dalle mosse di tipo Folletto. Aumenta Attacco di 1 livello quando viene colpito da una mossa di tipo Folletto."
+  },
+  "abyssalStance": {
+    "name": "Postura Abissale",
+    "description": "30% di possibilità di aumentare una statistica casuale di 1 livello dopo essere stato colpito da un attacco. 30% di possibilità di infliggere danni pari a 1/8 dei PS massimi del bersaglio dopo essere stato colpito da un attacco. 10% di possibilità di abbassare una statistica casuale dell'utilizzatore di 1 livello dopo aver attaccato. Cambia le mosse di tipo Normale in tipo Buio e aumenta la loro potenza del 20%."
+  },
+  "leafyLure": {
+    "name": "Richiamo Fogliare",
+    "description": "50% di possibilità di dimezzare i danni dalle mosse superefficaci. 50% di possibilità di infliggere danni pari a 1/4 dei PS massimi dell'attaccante quando viene colpito da una mossa superefficace. 50% di possibilità di recuperare 1/6 dei PS massimi quando viene colpito da una mossa superefficace."
+  },
+  "voraciousVegetation": {
+    "name": "Vegetazione Vorace",
+    "description": "Recupera 1/8 dei PS massimi quando attacca certi tipi di Pokémon. Aumenta Attacco e Velocità di 1 livello dopo aver messo KO un avversario."
+  },
+  "solarPowerPlus": {
+    "name": "Energia Solare Plus",
+    "description": "Raddoppia l'Attacco Speciale. 30% di possibilità di cambiare il tempo in luce solare intensa alla fine di ogni turno."
+  },
+  "treasureGuard": {
+    "name": "Guardia del Tesoro",
+    "description": "Riduce casualmente i danni subiti del 25-50%. 30% di possibilità di recuperare 1/8 dei PS massimi dopo essere stato colpito da un attacco."
+  },
+  "goldenSkillLink": {
+    "name": "Abilità Concatenate Dorate",
+    "description": "Massimizza il numero di volte che le mosse a colpi multipli colpiscono. 5% di possibilità di aumentare una statistica casuale di 1 livello dopo aver attaccato."
+  },
+  "treasureProducer": {
+    "name": "Produttore di Tesori",
+    "description": "50% di possibilità di rubare lo strumento tenuto dal bersaglio. Aumenta gli oggetti ottenuti dopo la battaglia. Le mosse vanno sempre per ultime."
+  },
+  "multiMind": {
+    "name": "Multi-Mente",
+    "description": "Le mosse di tipo Fuoco e Psico condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Psico e aumenta la loro potenza del 20%. 10% di possibilità di infliggere danni pari a 1/8 dei PS massimi del bersaglio."
+  },
+  "wakaFlockaFlame": {
+    "name": "Fiamma Waka Flocka",
+    "description": "Trasforma le mosse di tipo Normale in tipo Fuoco e aumenta la loro potenza del 20%. Le mosse di tipo Volante e Fuoco condividono i loro vantaggi di tipo contro gli stessi tipi! 10% di possibilità di bruciare il bersaglio. Immune alle mosse di tipo Fuoco e recupera PS quando viene colpito da mosse di tipo Fuoco invece di subire danni."
+  },
+  "eerieLight": {
+    "name": "Luce Inquietante",
+    "description": "Le mosse di tipo Elettro e Buio condividono i loro vantaggi di tipo contro gli stessi tipi! Trasforma le mosse di tipo Normale in tipo Buio e aumenta la loro potenza del 20%. Trasforma le mosse di tipo Acqua in tipo Buio e aumenta la loro potenza del 20%. 10% di possibilità di confondere il bersaglio. 10% di possibilità di paralizzare il bersaglio."
+  },
+  "abyssalLure": {
+    "name": "Richiamo Abissale",
+    "description": "50% di possibilità di dimezzare i danni dalle mosse superefficaci. 50% di possibilità di infliggere danni pari a 1/4 dei PS massimi dell'attaccante quando viene colpito da una mossa superefficace. 50% di possibilità di recuperare 1/6 dei PS massimi quando viene colpito da una mossa superefficace."
+  },
+  "nemoEater": {
+    "name": "Mangiatore di Nemo",
+    "description": "Raddoppia la potenza delle mosse contro i Pokémon di tipo Acqua. Recupera 1/8 dei PS massimi dopo aver messo KO un Pokémon di tipo Acqua. Aumenta la statistica più alta di 1 livello dopo aver messo KO un Pokémon di tipo Acqua."
+  },
+  "woodenLie": {
+    "name": "Bugia di Legno",
+    "description": "Raddoppia la potenza delle mosse contro certi tipi di Pokémon. Riduce i danni dalle mosse superefficaci del 25%."
+  },
+  "imARealBoy": {
+    "name": "Sono un Vero Bambino",
+    "description": "Cambia le mosse di tipo Normale in tipo Normale e aumenta la loro potenza del 20%. Cambia le mosse non di tipo Folletto e non di tipo Erba in tipo Normale e aumenta la loro potenza del 30%. Abbassa l'Attacco e una statistica casuale di 1 livello quando entra in battaglia."
+  },
+  "lierLyer": {
+    "name": "Bugiardo Bugiardo",
+    "description": "Trasforma le mosse di tipo Normale in tipo Buio e aumenta la loro potenza del 20%. Le mosse di tipo Folletto e Buio condividono i loro vantaggi di tipo contro gli stessi tipi! Ha una probabilità del 10% di sopravvivere a un colpo che lo metterebbe KO."
+  },
+  "copycatNinja": {
+    "name": "Ninja Imitatore",
+    "description": "Cambia il tipo dell'utilizzatore per corrispondere al tipo della mossa che l'ha colpito. Se l'utilizzatore non è già dello stesso tipo, recupera anche 1/8 dei suoi PS massimi."
+  },
+  "hokage": {
+    "name": "Hokage",
+    "description": "Aumenta le mosse di tipo Fuoco, Acqua, Volante e Terra del 20%."
+  },
+  "sharinganActivated": {
+    "name": "Sharingan Attivato",
+    "description": "Cambia il tipo dell'utilizzatore per corrispondere al suo attacco."
+  },
+  "crowClone": {
+    "name": "Clone di Corvo",
+    "description": "Trasforma le mosse di tipo Normale in tipo Volante e aumenta la loro potenza del 20%. Le mosse di tipo Buio, Fuoco e Volante condividono i loro vantaggi di tipo contro gli stessi tipi! 30% di possibilità di dimezzare i danni degli attacchi. 30% di possibilità di recuperare 1/8 dei PS massimi dopo essere stato colpito da un attacco."
+  },
+  "sharinganMastery": {
+    "name": "Maestria dello Sharingan",
+    "description": "15% di possibilità di infliggere danni pari a 1/8 dei PS massimi del bersaglio. 5% di possibilità di ridurre a un quarto i danni subiti dagli attacchi. 15% di possibilità di aumentare una statistica casuale di 1 livello dopo aver attaccato."
+  },
+  "foreheadTap": {
+    "name": "Colpetto sulla Fronte",
+    "description": "Aumenta le mosse con 60 o meno di potenza del 50%. 10% di possibilità di far tentennare il bersaglio quando si usano mosse con 60 o meno di potenza. 10% di possibilità di paralizzare il bersaglio quando si usano mosse con 60 o meno di potenza."
+  },
+  "eightTails": {
+    "name": "Otto Code",
+    "description": "Le mosse multi-colpo colpiscono 4-8 volte."
+  },
+  "rappingRampage": {
+    "name": "Furia Rap",
+    "description": "Cambia tutte le mosse in mosse basate sul suono e aumenta la loro potenza del 20%. Aumenta le mosse basate sul suono del 50%. 10% di possibilità di far tentennare il bersaglio."
+  },
+  "beastMode": {
+    "name": "Modalità Bestia",
+    "description": "Raddoppia la potenza delle mosse quando i PS sono sotto il 40%."
+  },
+  "nightmareSand": {
+    "name": "Sabbia dell'Incubo",
+    "description": "Infligge danni pari a 1/8 dei PS massimi del bersaglio alla fine di ogni turno durante una tempesta di sabbia. 30% di possibilità di abbassare una statistica casuale del bersaglio di 1 livello alla fine di ogni turno durante una tempesta di sabbia. 30% di possibilità di cambiare il tempo in tempesta di sabbia alla fine di ogni turno."
+  },
+  "soulEater": {
+    "name": "Mangiatore di Anime",
+    "description": "Recupera PS quando usa una mossa che corrisponde a un tipo raccolto. Raccoglie il tipo dei Pokémon messi KO. Perde i tipi raccolti quando sviene."
+  },
+  "soulDrain": {
+    "name": "Risucchio dell'Anima",
+    "description": "10% di possibilità di raccogliere il tipo della mossa usata. Abbassa due statistiche casuali del bersaglio di 2 livelli se il tipo della mossa corrisponde a un tipo raccolto. Perde i tipi raccolti quando sviene."
+  }
+}

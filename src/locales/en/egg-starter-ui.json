@@ -1,0 +1,11 @@
+{
+  "hatchAndSwap": "Hatch & Swap",
+  "tooltip": "Check hatched Pokémon and swap 1 for another (if you want). First Pokémon can't be swapped.\nLegendaries can only be swapped with legendaries/megas/dynas",
+  "legendaryDisabled": "Need Legendary/Mega/Dyna in Party",
+  "onlyOnePokemon": "Can't Swap: Only One Party Member",
+  "swapWithParty": "Swap with party member",
+  "selectLegendaryPartyMember": "Swap with a legendary/mega/dyna",
+  "selectPartyMember": "Swap with a party member",
+  "confirmSwapMessage": "Swap {{hatchedPokemon}} with {{partyPokemon}}?",
+  "skipAnimationsPrompt": "Skip all egg hatching animations?"
+} 

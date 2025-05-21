@@ -1,0 +1,24 @@
+{
+  "surviveDamageApply": "{{pokemonNameWithAffix}}依靠\n其{{typeName}}撐住了！",
+  "turnHealApply": "{{pokemonNameWithAffix}}使用\n其{{typeName}}恢復了少許HP！",
+  "hitHealApply": "{{pokemonNameWithAffix}}使用\n其{{typeName}}恢復了少許HP！",
+  "pokemonInstantReviveApply": "{{pokemonNameWithAffix}}被\n其{{typeName}}復活了！",
+  "pokemonResetNegativeStatStageApply": "{{pokemonNameWithAffix}}的能力降低狀態\n被其{{typeName}}恢復了！",
+  "moneyInterestApply": "你從{{typeName}}獲得了\n₽{{moneyAmount}}的利息！",
+  "turnHeldItemTransferApply": "{{pokemonNameWithAffix}}的{{itemName}}\n被{{pokemonName}}的{{typeName}}吸收了！",
+  "contactHeldItemTransferApply": "{{pokemonNameWithAffix}}的{{itemName}}\n被{{pokemonName}}的{{typeName}}搶走了！",
+  "enemyTurnHealApply": "{{pokemonNameWithAffix}}\n恢復了一些HP！",
+  "bypassSpeedChanceApply": "{{pokemonName}}因為其{{itemName}}而能夠更快行動！",
+  "permaRunQuest": {
+    "stage": "階段 ",
+    "collectRewards": "領取獎勵",
+    "stageProgress": "階段進度：{{current}}/{{total}}",
+    "questComplete": "任務完成！",
+    "stageComplete": "階段完成！",
+    "rewardTypes": {
+      "permaMoney": "∞金幣",
+      "permaModifier": "∞道具",
+      "permaMoneyAndModifier": "∞金幣 & ∞道具"
+    }
+  }
+} 

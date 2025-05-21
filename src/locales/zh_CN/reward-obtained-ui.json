@@ -1,0 +1,42 @@
+{
+  "titles": {
+    "newPokemon": "获得新宝可梦！",
+    "newFusion": "获得新融合！",
+    "newItem": "获得新道具！",
+    "newGameOverItem": "游戏结束奖励！",
+    "newRibbonItem": "奖章奖励！",
+    "moneyObtained": "获得金钱！",
+    "newShopUnlock": "商店解锁项!",
+    "newUnlock": "新解锁！",
+    "newSmittyForm": "新的斯米提形态！",
+    "newForm": "获得新形态！",
+    "rivalLost": "对手失败...",
+    "modeChange": "模式变更！",
+    "rewardObtained": "获得奖励！",
+    "voidOvertaken": "虚空已被征服！",
+    "newShopItem": "商店新物品",
+    "manyMoreNuggets": "还有更多闪闪发光的金块！"
+  },
+  "gameModes": {
+    "nuzlocke": {
+      "description": "纳兹洛克: 濒死的宝可梦会\n从队伍中移除..."
+    },
+    "draft": {
+      "description": "盗贼: 随机选择2只宝可梦开始..."
+    },
+    "nuzlight": {
+      "description": "纳兹莱特: 无法使用恢复道具..."
+    },
+    "nightmare": {
+      "description": "纳兹噩梦: 纳兹莱特 + 纳兹洛克"
+    },
+    "default": {
+      "description": "游戏模式已更改！"
+    }
+  },
+  "ui": {
+    "rivalVoid": "{{name}}消失在虚空中...",
+    "error": "加载奖励时出错",
+    "new": "新"
+  }
+} 

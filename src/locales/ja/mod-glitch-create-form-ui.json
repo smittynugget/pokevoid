@@ -1,0 +1,82 @@
+{
+  "title": "カスタムグリッチ進化を作成",
+  "mods": "MOD",
+  "testMods": "MODをテスト",
+  "uploadMods": "MODをアップロード",
+  "createGlitchEvolution": "グリッチ進化を作成",
+  "removeMods": "MODを削除",
+  "shareAndTakeMods": "MODを共有・取得",
+  "noModsToRemove": "削除するMODがありません。",
+  "errorLoadingMods": "MODの読み込み中にエラーが発生しました。もう一度お試しください。",
+  "modRemoved": "{{name}}を正常に削除しました。",
+  "errorRemovingMod": "MODの削除中にエラーが発生しました。もう一度お試しください。",
+  "uploadSuccess": "{{count}}個のMODが正常にアップロードされました：",
+  "uploadFailed": "{{count}}個のMODのアップロードに失敗しました：",
+  "reloadRequired": "変更を適用するためにゲームが再読み込みされます。",
+  "fields": {
+    "species": "種族",
+    "formName": "フォーム名（英語）*",
+    "formLanguages": "フォーム名（他の言語）",
+    "primaryType": "メインタイプ",
+    "secondaryType": "サブタイプ",
+    "ability1": "特性1",
+    "ability2": "特性2",
+    "hiddenAbility": "隠れ特性",
+    "stat1": "強化するステータス1",
+    "stat2": "強化するステータス2",
+    "stat3": "強化するステータス3",
+    "distributionType": "ステータス強化の分配タイプ",
+    "frontSprite": "ポケモン前面スプライト（150-200px）",
+    "backSprite": "ポケモン背面スプライト（150-200px）",
+    "rivalTrainer": "ライバル",
+    "orRivalTrainer": "またはライバル"
+  },
+  "distributionTypes": {
+    "even": "均等（各ステータス+33%）",
+    "twoPriority": "二重優先（ステータス1 +40% | ステータス2 +40% | ステータス3 +20%）",
+    "scaling": "段階的（ステータス1 +45% | ステータス2 +35% | ステータス3 +20%）",
+    "topPriority": "最優先（ステータス1 +40% | ステータス2 +30% | ステータス3 +30%）"
+  },
+  "buttons": {
+    "saveAndAdd": "保存して再読み込み",
+    "cancel": "キャンセル"
+  },
+  "validation": {
+    "requiredField": "この項目は必須です",
+    "invalidImage": "無効な画像形式またはサイズです",
+    "imageSize": "画像は150-200pxにしてください"
+  },
+  "statusMessages": {
+    "creatingMod": "MOD作成中...",
+    "success": "グリッチフォームMODが正常に作成・保存されました！",
+    "downloadReady": "MODのダウンロード準備ができました",
+    "error": "MOD作成エラー：{{message}}",
+    "storageError": "MODは作成されましたが、ストレージに保存されていません。それでもダウンロードできます。"
+  },
+  "sections": {
+    "basicInformation": "基本情報",
+    "typesAbilities": "タイプと特性",
+    "stats": "ステータス",
+    "sprites": "スプライト",
+    "rivalTrainer": "このフォームを報酬とするライバル"
+  },
+  "imageUpload": {
+    "uploadButton": "画像をアップロード",
+    "noFileSelected": "ファイルが選択されていません",
+    "invalidSize": "無効な画像サイズです（150-200pxにしてください）"
+  },
+  "dropdowns": {
+    "selectOptional": "- 選択（任意） -"
+  },
+  "languages": {
+    "es": "スペイン語",
+    "fr": "フランス語",
+    "de": "ドイツ語",
+    "ja": "日本語",
+    "ko": "韓国語",
+    "pt-BR": "ポルトガル語（ブラジル）",
+    "it": "イタリア語",
+    "zh-TW": "中国語（繁体字）",
+    "zh-CN": "中国語（簡体字）"
+  }
+} 

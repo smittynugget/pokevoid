@@ -1,0 +1,331 @@
+{
+  "intro": "Willkommen bei PokéVoid! Dies ist ein kampforientiertes Pokémon-Fangame mit Roguelite-Elementen.\n$Dieses Spiel ist nicht monetarisiert.\n$Wir erheben keinen Eigentumsanspruch an Pokémon oder\nverwendeten, urheberrechtlich geschützten Inhalten.\n$Das Spiel befindet sich noch in der Entwicklung, ist aber voll spielbar.\n$Für Fehlerberichte nutze bitte den PokéVoid Discord-Server.\n$Sollte das Spiel langsam laufen, überprüfe, ob in deinem Browser \"Hardwarebeschleunigung\" aktiviert ist.",
+  "accessMenu": {
+    "title": "Menüzugriff",
+    "text": "Um auf das Menü zuzugreifen, drücke M oder Escape während du auf eine Eingabe wartest. Das Menü enthält Einstellungen und verschiedene Funktionen."
+  },
+  "menu": "In diesem Menü hast du Zugriff auf die Einstellungen.\n$Dort kannst du u. A. die Spielgeschwin-\ndigkeit und das Fensterdesign ändern.\n$Das Menü verbirgt noch andere Funktionen - probier' sie gerne aus!",
+  "starterSelect": "In diesem Bildschirm kannst du mit Z oder Leertaste deine\nStarter auswählen.\n$Sie begleiten dich am Anfang deines Abenteuers.\n$Jeder Starter hat einen Preis. Dein Team kann bis zu sechs\nMitglieder haben, solange der Gesamtpreis max. 10 beträgt.\n$Du kannst Geschlecht, Fähigkeit und Form beliebig auswählen,\nsobald du sie mindestens einmal gefangen hast.\n$Die DVs ergeben sich aus den Höchstwerten aller Pokémon,\ndie du bereits gefangen hast. \n$Es lohnt sich also, das selbe Pokémon mehrmals zu fangen!",
+  "pokerus": "Jeden Tag haben drei zufällige Pokémon einen lila Rahmen.\n$Wenn du eins von ihnen besitzt,\n$nimm es doch mal mit und sieh dir seinen Bericht an!",
+  "statChange": "Statuswertveränderungen halten solange an, wie dein Pokémon auf dem Feld bleibt.\n$Pokémon werden am Anfang eines Trainerkampfes oder bei einem Arealwechsel automatisch zurückgerufen.\n$Nutze C oder Shift, um aktuelle Statuswertveränderungen anzuzeigen.",
+  "selectItem": "Nach jedem Kampf kannst du aus 3 zufälligen Items exakt eines auswählen.\n$Es gibt u. A. Heilitems, tragbare Items und Basis-Items, die dir einen permanenten Vorteil verschaffen.\n$Die meisten tragbaren und permanenten Items werden stärker, wenn du sie mehrfach sammelst.\n$Manche Items, wie Entwicklungssteine, tauchen nur auf, wenn du sie auch nutzen kannst.\n$Mithilfe der \"Transfer\"-Option kannst du Items zwischen deinen Pokémon verschieben.\n$Sie erscheint rechts unten, sobald du einem deiner Pokémon dein Item zum Tragen gegeben hast.\n$Du kannst Heilitems auch gegen Geld erwerben. Je weiter du kommst, desto mehr stehen dir zur Auswahl.\n$Erledige deine Einkäufe als erstes, denn sobald du dein zufälliges Item auswählst, beginnt der nächste Kampf.",
+  "eggGacha": "Hier kannst du deine Gutscheine gegen Pokémon-Eier\ntauschen.\n$Eier schlüpfen, nachdem du eine gewisse Anzahl Kämpfe\nabsolviert hast. Je seltener das Ei, desto länger dauert es.\n$Geschlüpfte Pokémon werden nicht deinem Team hinzugefügt,\nsondern deinen verfügbaren Startern.\n$In der Regel haben sie bessere DVs als in der Wildnis\ngefangene Pokémon.\n$Es gibt sogar Pokémon, die du nur aus Eiern erhalten kannst.\n$Es gibt drei Gacha-Maschinen mit je unterschiedlichen Boni,\nalso such' dir die aus, die dir am besten gefällt!",
+  "titles": {
+    "essentials": "Grundlegende Konzepte",
+    "gameModes": "Spielmodi",
+    "specialPokemon": "Spezielle Pokémon",
+    "progression": "Spielfortschritt",
+    "permanentFeatures": "Dauerhafte Funktionen",
+    "glitchSystem": "Glitch-System",
+    "battleMechanics": "Kampfmechaniken",
+    "formChanges": "Formwechsel",
+    "communityFeatures": "Community-Funktionen"
+  },
+  "pokerogue": {
+      "title": "PokéRogue die Anerkennung geben, die es verdient",
+      "text": { 
+        "1":"Ohne das brillante Design von PokéRogue würde es PokéVoid heute nicht geben! Ihr erweiterbares Framework ließ mich experimentieren, BRECHEN und PokéVoid zu dem machen, was es heute ist!",
+        "2":"Während PokéRogue als leuchtendes Vorbild dafür steht, was ein Pokémon-Roguelike sein sollte...",
+        "3":"Versucht PokéVoid, in die Schatten vorzudringen und ihrer nahezu perfekten Formel einen Hauch wunderschönen Chaos und Korruption zu verleihen.",
+        "4":"Wenn du tägliche Durchläufe, Events, Herausforderungsmodi liebst? Endless- oder Splice-Modi? Besuche pokerogue.net und spiele das Original!"
+      }
+    },
+    "intrashop": {
+      "title": "Shop-Inventar ändert sich bei jedem Kauf!",
+      "text": { 
+        "1":"Mit jedem Kauf ändert sich das Shop-Inventar! Nutze dies zu deinem Vorteil und stelle sicher, dass du zuerst bekommst, was du brauchst!",
+        "2":"Halte Ausschau nach KOSTENLOSEN Gegenständen, sie erscheinen zufällig im Shop-Inventar!"
+      }
+    },
+    "runDetails": {
+      "title": "Abkürzung zum Anzeigen aktueller Durchläufe",
+      "text": { 
+        "1":"Drücke R, um die Details des aktuellen Durchlaufs sofort anzuzeigen (wenn du im Kampf-/Belohnungs-/Titelbildschirm bist)"
+      }
+    },
+  "glitchRivals": {
+      "title": "Korrumpierte Rivalen",
+      "text": { 
+        "1":"Vergangene Rivalen, die du besiegt hast, hallen aus der Leere wider. Diese Wesen sind nicht, was sie zu sein scheinen.",
+        "2":"Durch die Leere verdorbene Wesen, ihre wahre Gestalt wartet in der Leere auf dich. Rette sie."
+      }
+    },
+  "legendary": {
+      "title": "Mache jedes Pokémon legendär",
+      "text": { 
+        "1":"PokéVoid ermöglicht es dir, JEDES Pokémon legendär zu machen!",
+        "2":"Mit Glitch-Items kannst du Pokémon neue Fähigkeiten, Typen, Attacken, Statuswerte und mehr verleihen!",
+        "3":"Die Leere erwartet dich, Trainer. Umarme die verbotene Macht, um sie zu überwinden!"
+      }
+    },
+    "rivals": {
+      "title": "Zufällige Rivalen",
+      "text": { 
+        "1":"Jeder Durchlauf bietet einen zufälligen Rivalen mit einem thematischen Team und Signatur-Pokémon!",
+        "2":"Besiege sie, um Glitch-Quests für NEUE Pokémon-Formen freizuschalten!"
+      }
+    },
+    "eggs": {
+      "title": "Eier ausbrüten",
+      "text": { 
+        "1":"Eier auszubrüten ist eine mächtige Methode, um dein Team zu stärken! Anders als Wildfänge werden geschlüpfte Pokémon mit überlegenen DVs deinem Starter-Pool hinzugefügt!",
+        "2":"Eier sind auch der einzige Weg, bestimmte seltene Pokémon-Arten zu erhalten! Das macht sie unverzichtbar für deine Sammlung!",
+        "3":"Um Ei-Gutscheine zu verwenden, drücke einfach ESC oder M, um das Menü zu öffnen und wähle Ei-Gacha!"
+      }
+    },
+    "stats": {
+      "title": "Statistiken prüfen",
+      "text": "Um deine Spielstatistiken zu sehen, öffne das Menü und wähle 'Statistiken'. Dies zeigt dir deine Gesamtkämpfe, Siege, Geld und weitere Statistiken!"
+    },
+    "runHistory": {
+      "title": "Durchlaufsverlauf",
+      "text": { 
+        "1":"Sieh dir Informationen über deine früheren Teams an! Greife über das Menü darauf zu und wähle 'Durchlaufsverlauf'.",
+        "2":"Dies zeigt dir deine früheren Durchläufe, einschließlich deines Teams, Items, Ergebnisse und mehr!"
+      }
+    },
+    "rivalQuests": {
+      "title": "Glitch-Quests",
+      "text": "Besiege Rivalen, um Glitch-Quests freizuschalten! Kaufe sie im PermaShop und schließe sie ab, um dauerhaft mächtige Glitch-Formen für bestimmte Pokémon freizuschalten!"
+    },
+    "smitom": {
+      "title": "Smitom",
+      "text": { 
+        "1":"Lerne Smitom kennen, ein besonderes Rotom in Smitty-Form! Es ist ein Führer und ein Rätsel...",
+        "2":"Interagiere mit ihm, wenn ein Ausrufezeichen erscheint, oder speichere dein Spiel für potenzielle Belohnungen."
+      }
+    },
+    "newForms": {
+      "title": "Glitch- & Smitty-Formen",
+      "text": { 
+        "1":"Schalte über 150 neue Glitch- und Smitty-Entwicklungen frei!",
+        "2":"Glitch-Formen werden durch Rivalen-Quests freigeschaltet, das Freischalten von Smitty-Formen ist ein Mysterium..."
+      }
+    },
+    "bugs": {
+      "title": "Fehler melden!",
+      "text": { 
+        "1":"PokéVoid ist in der Beta! Wenn du einen Fehler findest, melde ihn bitte im Discord.",
+        "2":"Füge einen Screenshot deiner Konsole bei (Strg+i in Chrome) und wenn möglich deine Speicherdatei. Dein Feedback hilft, das Spiel zu verbessern!"
+      }
+    },
+    "nuzlight": {
+      "title": "Nuzlight-Modus",
+      "text": "Eine leichtere Version von Nuzlocke ohne permanenten Pokémon-Verlust. Keine Heilgegenstände in Shops verfügbar! Besiegte Pokémon werden nach Erreichen von 10er-Wellen-Meilensteinen wiederbelebt."
+    },
+    "nuzlocke": {
+      "title": "Nuzlocke-Modus",
+      "text": "Traditionelle Nuzlocke-Herausforderungsregeln gelten. Besiegte Pokémon werden dauerhaft aus deinem Team entfernt."
+    },
+    "journey": {
+      "title": "Reise-Modus",
+      "text": { 
+        "1":"Stelle dein Team zusammen, um die Leere zu bekämpfen. Nutze jedes Pokémon, das du gefangen oder geschlüpft hast, einschließlich Fusionen!",
+        "2":"Fusions-Pokémon benötigen ∞GOLD zur Nutzung. PermaItems können Kosten senken und dein Starterlimit erhöhen."
+        }
+    },
+    "unlockJourney": {
+      "title": "Reise-Modus durch Pokémon-Fang freischalten",
+      "text": {
+        "1":"Der Reise-Modus wird nach dem Fangen von 15 Pokémon verfügbar und lässt dich dein Startteam aus deinen gesammelten Pokémon auswählen!",
+        "2":"Nachdem du dein erstes Pokémon gefangen hast, gehe zum SHOP und hole dir die Starter-Fang-Quest, um offiziell die Reise-Freischaltungs-Quest zu beginnen!"
+      }
+    },
+    "rogueMode": {
+      "title": "Rogue-Modus",
+      "text": "Wähle 2 zufällige Pokémon, um deinen Durchlauf zu starten! Nutze dein ∞GOLD, um deine Optionen neu zu würfeln! Jeder Durchlauf ist einzigartig!"
+    },
+    "bosses": {
+      "title": "Multi-Form-Bosse",
+      "text": "Hüte dich vor mächtigen Multi-Form-Bossen! Sie wechseln bei niedrigen LP die Form und heilen sich vollständig, wobei Statusänderungen zurückgesetzt werden. Besiege sie für wertvolle Belohnungen!"
+    },
+    "abilities": {
+      "title": "Neue Fähigkeiten",
+      "text": { 
+        "1":"Beherrsche über 400 neue Fähigkeiten aus mehr als 150 Glitch- und Smitty-Pokémon-Transformationen!",
+        "2":"Neue Spielmodi erweitern die durch Items erhältlichen Fähigkeiten, einschließlich mächtiger Glitch-Fähigkeiten, die Kämpfe neu definieren können."
+      }
+    },
+    "passiveAbilities": {
+      "title": "Passive Fähigkeits-Items",
+      "text": { 
+        "1":"Verleiht deinem Pokémon eine passive Fähigkeit und bietet eine zusätzliche Fähigkeit!",
+        "2":"Diese stapeln sich nicht, wenn du also eine zweite erhältst, WIRD sie die erste ersetzen!"
+      }
+    },
+    "glitchItems": {
+      "title": "Glitch-Stücke & Items",
+      "text": { 
+        "1":"Sammle Glitch-Stücke, um realitätsverändernde Glitch-Items zu erhalten! Du benötigst 2+ Stücke für Glitch-Items, 5+ für Glitch-Formwechsel-Items.",
+        "2":"Items umfassen JedeTMs, Fähigkeitswechsler, Typwechsler, Statuswert-Tauscher und mehr!"
+      }
+    },
+    "fusionPokemon": {
+      "title": "Fangbare Fusionen",
+      "text": { 
+        "1":"Alle Fusions-Pokémon sind fangbar und werden dauerhaft deiner Sammlung hinzugefügt!",
+        "2":"Finde sie mit einer Grundchance von 1/14 (verbesserbar mit ∞ITEMS). Ihre Verwendung kostet ∞GOLD."
+      }
+    },
+    "trainerPokemon": {
+      "title": "Trainer-Pokémon schnappen",
+      "text": { 
+        "1":"Die meisten Trainer verkaufen ihre Pokémon während des Kampfes (außer Rivalen!). Gefangene Pokémon werden dauerhaft deiner Sammlung hinzugefügt!",
+        "2":"Die Kosten hängen von der Welle ab, können aber mit ∞ITEMS reduziert werden."
+      }
+    },
+    "partyAbility": {
+      "title": "Team-Fähigkeiten",
+      "text": { 
+        "1":"Im Shop erhältlich, diese teuren Fähigkeiten gelten für ALLE Pokémon in deinem aktuellen Team während eines Durchlaufs!",
+        "2":"Nutze mächtige teamweite Effekte: Temposchub oder Techniker für alle!"
+      }
+    },
+    "permaMoney": {
+      "title": "PermaGeld (∞GOLD)",
+      "text": { 
+        "1":"Verdiene dauerhaftes ∞GOLD zwischen Durchläufen! Nutze es, um ∞ITEMS zu kaufen, Rogue-Starter neu zu würfeln oder die Fusionssteuer zu bezahlen.",
+        "2":"Erhalte es durch Kopfgelder, Belohnungen, Speichern oder Interaktionen mit Smitom."
+      }
+    },
+    "saving": {
+      "title": "Lokales Speichern & Backup",
+      "text": { 
+        "1":"Wenn deine Daten verloren gehen, sind sie FÜR IMMER VERLOREN! Nutze das Diskettensymbol (oben rechts), um deine Speicherdatei regelmäßig zu EXPORTIEREN!",
+        "2":"Dies belohnt dich mit ∞GOLD und schützt vor Datenverlust."
+      }
+    },
+    "bounties": {
+      "title": "Kopfgeldsystem",
+      "text": { 
+        "1":"Gib 6-Buchstaben-Codes in der Konsole ein, um Kopfgelder zu aktivieren.",
+        "2":"Kopfgelder sind QUESTS, die dir ermöglichen, ∞GOLD/∞ITEMS zu verdienen, und sind nach Abschluss komplett wiederverwendbar!"
+      }
+    },
+    "dailyBounty": {
+      "title": "Tägliches Kopfgeld!",
+      "text": "Ein neues tägliches Kopfgeld ist verfügbar! Schließe es ab, um ∞GOLD/∞ITEMS zu verdienen. Der Code ist bereits in der Konsole, aktiviere ihn einfach!"
+    },
+    "discord": {
+      "title": "Discord & Support",
+      "text": "Tritt dem Smittyverse Discord bei für Diskussionen, Fehlerberichte und Community! Finde Kopfgeldcodes und verbinde dich mit anderen Spielern."
+    },
+    "smittyForms": {
+      "title": "Smitty-Formen",
+      "text": { 
+        "1":"Erstelle einzigartige Pokémon-Transformationen mit spezifischen Kombinationen aus VIER Smitty-Items!",
+        "2":"Einige erfordern ein spezifisches Basis-Pokémon (z.B. Rotom -> Smitom)",
+        "3": "Andere sind universell, sodass jedes Basis-Pokémon verwendet werden kann! (z.B. Raupy -> Picklisk). Alle erhalten eine zufällige passive Fähigkeit."
+      }
+    },
+    "smittyFormUnlocked": {
+      "title": "Smitty-Form freigeschaltet!",
+      "text": { 
+        "1":"Du hast eine neue Smitty-Form freigeschaltet! Jede Smitty-Form ist anders!",
+        "2":"Aber ALLE benötigen eine einzigartige Kombination aus 4 Smitty-Items!",
+        "3": "Die Kombination wird über die Konsole identifiziert. Finde den Code der SMITTY-Form und gib ihn ein, um das verbotene Rezept zu sehen!"
+      }
+    },
+    "smittyItems": {
+      "title": "PermaItems (∞ITEMS)",
+      "text": { 
+        "1":"Nutze ∞GOLD, um dauerhafte Verbesserungen (∞ITEMS) mit verschiedenen Dauern zu kaufen: Nutzungsbasiert (Menge reduziert nach Nutzung) oder Wellenbasiert (Menge reduziert nach Welle 50).",
+        "2":"Diese Verbesserungen können Shiny/Fusions/Fang-Raten erhöhen, Kosten senken und andere dauerhafte Vorteile bieten!"
+      }
+    },
+    "abilitySwitcher": {
+      "title": "Glitch: Fähigkeitswechsler",
+      "text": "Tausche die aktuelle Fähigkeit eines Pokémon mit einer seiner anderen Fähigkeiten! Benötigt 2 Glitch-Stücke."
+    },
+    "typeSwitcher": {
+      "title": "Glitch: Typwechsler", 
+      "text": "Ändere den Primär- UND Sekundärtyp eines Pokémon. Benötigt 2 Glitch-Stücke."
+    },
+    "primarySwitcher": {
+      "title": "Glitch: Primärtypwechsler",
+      "text": "Ändere den Primärtyp eines Pokémon. Benötigt 2 Glitch-Stücke."
+    },
+    "secondarySwitcher": {
+      "title": "Glitch: Sekundärtypwechsler", 
+      "text": "Ändere den Sekundärtyp eines Pokémon. Benötigt 2 Glitch-Stücke."
+    },
+    "releaseItems": {
+      "title": "Glitch: Freilassungs-Powerups",
+      "text": { 
+        "1":"Lasse ein Pokémon frei, um seine Typen, Attacken, Fähigkeiten oder einen Statuswert-Boost an ein anderes zu übertragen.",
+        "2":"Alternativ gib 5 'Gesammelte Typen' eines Pokémon aus, anstatt es freizulassen."
+      }
+    },
+    "anyTMs": {
+      "title": "Glitch: JedeTMs",
+      "text": "Diese TMs können ihre Attacke JEDEM Pokémon beibringen, unabhängig von normalen Kompatibilitätsregeln. Benötigt 2 Glitch-Stücke."
+    },
+    "anyAbilities": {
+      "title": "Glitch: Fähigkeits-Item",
+      "text": "Ändere die aktuelle Fähigkeit eines Pokémon zu einer anderen Fähigkeit! Benötigt 2 Glitch-Stücke."
+    },
+    "statSwitchers": {
+      "title": "Glitch: Statuswert-Tauscher",
+      "text": "Tausche zwei der Basiswerte eines Pokémon (z.B. Angriff und Verteidigung). Benötigt 2 Glitch-Stücke."
+    },
+    "newQuests": {
+      "title": "Neue Quest freigeschaltet!",
+      "text": "Du hast eine neue Quest freigeschaltet! Sie erscheint ZUFÄLLIG (aber häufig) im PermaShop / Shop auf dem Titelbildschirm. Wenn sie nicht da ist, rolle neu um sie zu finden!"
+    },
+    "modeUnlocks": {
+      "title": "Spielmodus-Freischaltungen",
+      "text": "Wenn ein Spielmodus freigeschaltet wird, werden auch viele neue Items und Fähigkeiten freigeschaltet! Versuche, alle freizuschalten!"
+    },
+    "firstVictory": {
+      "title": "Es ist nicht vorbei!",
+      "text": "Deine Reise beginnt gerade erst! Schalte die neuen Spielmodi frei, um tiefer in den Abgrund zu tauchen und die Geheimnisse der Leere zu entschlüsseln!"
+    },
+    "theVoidUnlocked": {
+      "title": "Die Leere freigeschaltet!",
+      "text": "Die Leere, wo alles begann. Die Quelle aller Korruption. Das wahre Gesicht der Leere erwartet dich..."
+    },
+    "theVoidOvertaken": {
+      "title": "Du hast die Leere überwunden!",
+      "text": "Du bist zu mächtig geworden, als dass die Leere dich noch halten könnte! Doch die Korruption besteht weiter, lass sie sich nicht ausbreiten, du bist der Einzige, der sie unter Kontrolle halten kann!"
+    },
+    "megaDynamax": {
+      "title": "Mega- & Dynamax-Formen",
+      "text": { 
+        "1":"Um ein Pokémon Mega zu entwickeln oder zu dynamaxieren, musst du zuerst das Mega-Armband oder das Dynamax-Band besitzen!",
+        "2":"Sobald du eines dieser Items hast und das passende Pokémon besitzt, erscheint zufällig ein Formwechsel-Item als Belohnung!",
+        "3":"Nach einer Mega-Entwicklung oder Dynamaxierung zerbricht das Mega-Armband oder Dynamax-Band!"
+      }
+    },
+    "moveUpgrades": {
+      "title": "Attacken-Verbesserungen",
+      "text": { 
+        "1":"Du kannst jetzt Attacken verbessern! Jedes Mal, wenn du eine Attacke einsetzt, erhält sie einen EP-Punkt!",
+        "2":"Sobald die Attacke genug EP hat, steigt sie eine Stufe auf und bietet dir eine Auswahl an Verbesserungen!",
+        "3": "Die Verbesserung hält für den gesamten Durchlauf an und verändert die Attacke für alle, einschließlich deines Teams und sogar deiner Gegner!"
+      }
+    },
+    "firstMoveUpgrade": {
+      "title": { 
+        "1":"Wichtige Informationen zu Attacken-Verbesserungen!", 
+        "2": "Spielunterbrechende Kombinationen",
+        "5":"Verbesserungen und Effektchancen", 
+        "6":"Die neueste Verbesserung hat Vorrang"
+      },
+      "text": { 
+        "1":"Wähle eine Verbesserung, und für den gesamten Durchlauf wird diese Attacke für alle verbessert, einschließlich deines Teams und sogar deiner Gegner!",
+        "2": "Da du fast jede Attacke verbessern kannst, werden einige Kombinationen nicht funktionieren oder das Spiel unterbrechen. Leider ist dies bei der Größe dieses Updates unvermeidbar.",
+        "3": "Falls dies passiert, aktualisiere bitte und wähle eine andere Verbesserungskombination.",
+        "4": "Wenn du eine Kombination findest, die nicht funktioniert, tritt bitte dem Discord bei und füge sie zur Liste der fehlerhaften Kombinationen hinzu!",
+        "5":"Bitte beachte, dass Attacken nur EINE Effektchance haben können (z.B. 10% Chance zu paralysieren), daher ändern Verbesserungen ENTWEDER direkt die Effektchance ODER verwenden den vorherigen Chancenwert!",
+        "6":"Schließlich können Verbesserungen sich gegenseitig überschreiben, wobei die neueste Verbesserung Vorrang hat!"
+      }
+    },
+    "eggSwap": {
+      "title": "Ei-Schlüpfen & Tauschen",
+      "text": { 
+        "1":"Überprüfe dein geschlüpftes Pokémon und tausche es, falls gewünscht, gegen eines deiner Teammitglieder aus!",
+        "2":"Die einzigen Einschränkungen sind, dass dein erstes Pokémon nicht getauscht werden kann und legendäre Pokémon nur gegen andere legendäre, Mega- oder Dynamax-Pokémon getauscht werden können!",
+        "3":"Fröhliches Schlüpfen!"
+      }
+    }
+}

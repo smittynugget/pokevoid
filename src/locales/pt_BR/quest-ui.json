@@ -1,0 +1,120 @@
+{
+  "console": {
+    "activeBounties": "Recompensas Ativas:",
+    "rivalBounties": "Recompensas de Rival",
+    "smittyBounties": "Recompensas do Smitty",
+    "questBounties": "Recompensas de Missão",
+    "bountiesCount": "{{title}} ({{current}}/{{max}})",
+    "activeQuests": "Missões Ativas:",
+    "questsCount": "({{current}}/{{max}})",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "invalidConsoleCode": "Código de console inválido",
+    "consoleCodeAlreadyUsed": "Código de console já utilizado",
+    "consoleCodeAccepted": "Código de console aceito",
+    "toggleInfo": "para abrir nas telas de TÍTULO ou BATALHA!",
+    "shopAndConsoleShortcut": "para abrir nas telas de TÍTULO ou BATALHA!"
+  },
+  "bounty": {
+    "common": {
+      "status": {
+        "active": "ATIVA",
+        "inactive": "INATIVA"
+      },
+      "baseReward": "Distribuição da Recompensa Base"
+    },
+    "modalTitle": "Recompensa",
+    "status": {
+      "complete": "CONCLUÍDA",
+      "activeStage": "FASE {{stage}} ATIVA",
+      "active": "ATIVA"
+    },
+    "sections": {
+      "rewards": {
+        "title": "Recompensas:",
+        "unknown": "???"
+      },
+      "task": {
+        "title": "Tarefa:",
+        "singleRun": "Tarefa ÚNICA:",
+        "multiRun": "Tarefa MÚLTIPLA:",
+        "locked": "{{target}} precisa ser Desbloqueado primeiro"
+      }
+    },
+    "error": "Erro ao carregar Recompensa",
+    "buttons": {
+      "swap": "Trocar Recompensa",
+      "activate": "Ativar Recompensa",
+      "back": "Voltar",
+      "cancel": "Cancelar"
+    },
+    "rival": {
+      "modalTitle": "Recompensa de Treinador Rival",
+      "invalidTrainer": "Treinador Inválido",
+      "task": "Derrote {{trainerName}} - Fase {{stage}}",
+      "progress": {
+        "title": "Progresso da Fase:",
+        "count": "{{current}} / {{max}}"
+      },
+      "rewards": {
+        "stage1": "90% ∞OURO | 8% ∞ITEM | 2% Ambos",
+        "stage2": "75% ∞OURO | 15% ∞ITEM | 10% Ambos",
+        "stage3": "60% ∞OURO | 25% ∞ITEM | 15% Ambos",
+        "stage4": "40% ∞OURO | 40% ∞ITEM | 20% Ambos",
+        "stage5": "25% ∞OURO | 45% ∞ITEM | 30% Ambos"
+      }
+    },
+    "quest": {
+      "modalTitle": "Recompensa de Missão",
+      "invalidTask": "Tarefa de Missão Inválida",
+      "replacement": {
+        "title": "Selecione a Recompensa para Substituir",
+        "cancel": "Cancelar"
+      },
+      "rewards": {
+        "default": "50% ∞OURO | 35% ∞ITEM | 15% Ambos"
+      },
+      "activeQuest": {
+        "modalTitle": "Missão!",
+        "buttons": {
+          "swap": "Trocar Missão",
+          "activate": "Ativar Missão"
+        },
+        "rewards": {
+          "unlockForm": "Desbloqueie a Nova Forma de {{pokemonName}}!"
+        },
+        "progress": {
+          "title": "Progresso da Fase:",
+          "count": "{{current}} / {{max}}"
+        }
+      }
+    },
+    "smitty": {
+      "modalTitle": "Recompensa Pokémon do Smitty",
+      "rewards": {
+        "withSpecies": "70% ∞OURO | 20% ∞ITEM | 10% Ambos",
+        "withoutSpecies": "40% ∞OURO | 40% ∞ITEM | 20% Ambos"
+      },
+      "task": {
+        "evolveAny": "Evolua QUALQUER Pokémon Para {{formName}}",
+        "evolveSpecific": "Evolua {{basePokemon}} Para {{formName}}"
+      },
+      "items": {
+        "title": "Itens Necessários:"
+      },
+      "common": {
+        "any": "QUALQUER"
+      }
+    }
+  },
+  "modeRewards": {
+    "classicModeRewardFusion": "Usar Pokémon Fusionado!?",
+    "commonModeRewardAbilities": "Mais de 60 Habilidades para Itens de Mudança de Habilidade",
+    "nuzlightModeRewardTypeSwitch": "Trocar Tipo Primário / Secundário",
+    "nuzlightModeRewardUpdatedInventory": "Inventário Atualizado!",
+    "nuzlightModeRewardMoveRelease": "Esquecer Movimento",
+    "nuzlockeModeRewardRank2": "RANK 2",
+    "accessShopInBattle": "Acesse a ∞LOJA em BATALHA!",
+    "accessQuestsInBattle": "Acesse MISSÕES em BATALHA!"
+  }
+} 

@@ -1,0 +1,257 @@
+{
+  "tartauros": {
+    "name": "Tartauros"
+  },
+  "zamowak": {
+    "name": "Zamowak"
+  },
+  "greyokai": {
+    "name": "Greyokai"
+  },
+  "jormunza": {
+    "name": "Jormunza"
+  },
+  "licthulhu": {
+    "name": "Licthulhu"
+  },
+  "plasmist": {
+    "name": "Plasmist"
+  },
+  "plustra": {
+    "name": "Plustra"
+  },
+  "hellchar": {
+    "name": "Hellchar"
+  },
+  "feareon": {
+    "name": "Feareon"
+  },
+  "omninom": {
+    "name": "Omninom"
+  },
+  "necromew": {
+    "name": "Necromew"
+  },
+  "diablotar": {
+    "name": "Diablotar"
+  },
+  "smitom": {
+    "name": "Smitom"
+  },
+  "genomander": {
+    "name": "Genomander"
+  },
+  "tormentle": {
+    "name": "Tormentle"
+  },
+  "terrorbulb": {
+    "name": "Terrorbulb"
+  },
+  "dankitar": {
+    "name": "Dankitar"
+  },
+  "gastmoji": {
+    "name": "Gastmoji"
+  },
+  "noxabis": {
+    "name": "Noxabis"
+  },
+  "floravora": {
+    "name": "Floravora"
+  },
+  "chimerdrio": {
+    "name": "Chimerdrio"
+  },
+  "clefangar": {
+    "name": "Clefangar"
+  },
+  "terroragon": {
+    "name": "Terroragon"
+  },
+  "godread": {
+    "name": "Godread"
+  },
+  "duschmare": {
+    "name": "Duschmare"
+  },
+  "abyssuma": {
+    "name": "Abyssuma"
+  },
+  "omnitto": {
+    "name": "Omnitto"
+  },
+  "umbraffe": {
+    "name": "Umbraffe"
+  },
+  "tartadra": {
+    "name": "Tartadra"
+  },
+  "tengale": {
+    "name": "Tengale"
+  },
+  "hyplagus": {
+    "name": "Hyplagus"
+  },
+  "demonoth": {
+    "name": "Demonoth"
+  },
+  "despeko": {
+    "name": "Despeko"
+  },
+  "zoomer": {
+    "name": "Zoomer"
+  },
+  "voidash": {
+    "name": "Voidash"
+  },
+  "wahcky": {
+    "name": "Wahcky"
+  },
+  "wahzebub": {
+    "name": "Wahzebub"
+  },
+  "fineferno": {
+    "name": "Fineferno"
+  },
+  "sorbred": {
+    "name": "Sorbred"
+  },
+  "corpanzee": {
+    "name": "Corpanzee"
+  },
+  "plankling": {
+    "name": "Plankling"
+  },
+  "timbrick": {
+    "name": "Timbrick"
+  },
+  "plankult": {
+    "name": "Plankult"
+  },
+  "sorbobo": {
+    "name": "Sorbred Ghost"
+  },
+  "hamtaro": {
+    "name": "Hamtaro"
+  },
+  "elmold": {
+    "name": "Elmold"
+  },
+  "funghomp": {
+    "name": "Funghomp"
+  },
+  "riddicus": {
+    "name": "Riddicus"
+  },
+  "boxecutive": {
+    "name": "Boxecutive"
+  },
+  "patnius": {
+    "name": "Patnius"
+  },
+  "tentacrim": {
+    "name": "Tentacrim"
+  },
+  "undeadtunasmit": {
+    "name": "Undeadtunasmit"
+  },
+  "scarablanc": {
+    "name": "Scarablanc"
+  },
+  "batmare": {
+    "name": "Batmare"
+  },
+  "smitward": {
+    "name": "Smitward"
+  },
+  "niteknite": {
+    "name": "Niteknite"
+  },
+  "dignitier": {
+    "name": "Dignitier"
+  },
+  "cephaloom": {
+    "name": "Cephaloom"
+  },
+  "smitshade": {
+    "name": "Smitshade"
+  },
+  "smitspect": {
+    "name": "Smitspect"
+  },
+  "smitwraith": {
+    "name": "Smitwraith"
+  },
+  "smiternal": {
+    "name": "Smiternal"
+  },
+  "smittyfish": {
+    "name": "Smittyfish"
+  },
+  "smittellect": {
+    "name": "Smittellect"
+  },
+  "gallux": {
+    "name": "Gallux"
+  },
+  "hostmitty": {
+    "name": "Hostmitty"
+  },
+  "smittynarie": {
+    "name": "Smittynarie"
+  },
+  "batboxbaba": {
+    "name": "Batboxbaba"
+  },
+  "batboxbeyond": {
+    "name": "Batboxbeyond"
+  },
+  "victainer": {
+    "name": "Victainer"
+  },
+  "kakopier": {
+    "name": "Kakopier"
+  },
+  "karasu-me": {
+    "name": "Karasu-me"
+  },
+  "bullktopus": {
+    "name": "Bullktopus"
+  },
+  "gumugumu": {
+    "name": "Gumugumu"
+  },
+  "santoryu": {
+    "name": "Santoryu"
+  },
+  "roostace": {
+    "name": "Roostace"
+  },
+  "bogace": {
+    "name": "Bogace"
+  },
+  "milliant": {
+    "name": "Milliant"
+  },
+  "churry": {
+    "name": "Churry"
+  },
+  "gazorpsmitfield": {
+    "name": "Gazorpsmitfield"
+  },
+  "hologrick": {
+    "name": "Hologrick"
+  },
+  "seekling": {
+    "name": "Seekling"
+  },
+  "picklisk": {
+    "name": "Picklisk"
+  },
+  "bravehound": {
+    "name": "Bravehound"
+  },
+  "missingno": {
+    "name": "MissingNo"
+  }
+} 

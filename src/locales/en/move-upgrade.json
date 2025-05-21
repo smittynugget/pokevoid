@@ -1,0 +1,182 @@
+{
+    "rewardTitle": "LEVEL UP {{count}}!",
+    "level": "Level",
+    "description": {
+      "power": {
+        "increaseSlight": "Slightly increase Power by {{powerValue}}.",
+        "increaseModerate": "Moderately increase Power by {{powerValue}}.",
+        "increaseSignificantWeak": "Significantly increase Power (for weaker moves) by {{powerValue}}.",
+        "increaseVsAccuracyLow": "Increase Power by {{powerValue}} but decrease Accuracy by {{accuracyValue}}.",
+        "increaseVsAccuracyHigh": "Greatly increase Power by {{powerValue}} but decrease Accuracy by {{accuracyValue}}.",
+        "increaseVsPriority": "Increase Power by {{powerValue}} but set Priority to {{priorityValue}}.",
+        "increaseVsRecoil": "Increase Power by {{powerValue}} but add {{recoilPercent}}% Recoil damage.",
+        "increaseVsSelfStatDrop": "Increase Power by {{powerValue}} but lower user's {{statName1}} and {{statName2}} by {{stages}} stage(s) after use."
+      },
+      "accuracy": {
+        "increasePercentage": "Increase Accuracy by {{value}}%.",
+        "perfectAccuracy": "Make 100% Accuracy, but decrease Power by {{powerValue}}.",
+        "perfectAccuracyNoPenalty": "Make 100% Accuracy.",
+        "increaseVsPowerLow": "Increase Accuracy by {{accuracyValue}}% but decrease Power by {{powerValue}}.",
+        "increaseVsPowerHigh": "Greatly increase Accuracy by {{accuracyValue}}% but decrease Power by {{powerValue}}.",
+        "increaseVsPp": "Increase Accuracy by {{accuracyValue}}% but decrease Max PP.",
+        "setAccuracy": "Set Accuracy to {{value}}%."
+      },
+      "effectChance": {
+        "increaseToValue": "Increase secondary effect chance to {{value}}%.",
+        "guaranteeVsPower": "Guarantee secondary effect, but decrease Power by {{powerValue}}.",
+        "guaranteeVsAccuracy": "Guarantee secondary effect, but decrease Accuracy by {{accuracyValue}}% (Status moves).",
+        "guaranteeVsPp": "Guarantee secondary effect, but decrease Max PP."
+      },
+      "status": {
+        "addChance": "Add a {{chance}}% chance to inflict {{statusName}}.",
+        "addChanceVsPower": "Add a {{chance}}% chance to inflict {{statusName}}, but decrease Power by {{powerValue}}.",
+        "addLeechSeed": "Add Leech Seed effect (vs non-Grass types), but decrease Power by {{powerValue}}.",
+        "changeEffect": "Change secondary effect to a {{chance}}% chance to inflict {{statusName}}.",
+        "addSecondEffect": "{{chance}}% chance to inflict {{statusName1}} OR {{statusName2}}, but decrease Power by {{powerValue}}.",
+        "addStatusViaStatusMove": "Inflict {{statusName}} (Changes Accuracy to {{accuracyValue}}%)."
+      },
+      "flinch": {
+        "addChance": "Add a {{chance}}% chance to make the target flinch.",
+        "addChanceLow": "Add a {{chance}}% chance to make the target flinch.",
+        "addChanceHighVsPower": "Add a {{chance}}% chance to make the target flinch, but decrease Power by {{powerValue}}.",
+        "addChancePriorityVsPower": "Add a {{chance}}% chance to make the target flinch (Priority moves), but decrease Power by {{powerValue}}.",
+        "increaseChance": "Increase flinch chance to {{chance}}%.",
+        "increaseChanceVsPower": "Increase flinch chance to {{chance}}%, but decrease Power by {{powerValue}}."
+      },
+      "stat": {
+        "addRaiseSelfSingle": "Raise user's {{statName}} by {{stages}} stage(s). Change chance to {{chance}}%.",
+        "addRaiseSelfMultiple": "Raise user's {{statName1}} and {{statName2}} by {{stages}} stage(s).",
+        "increaseRaiseSelf": "Increase self-boost effect to raise {{statName}} by {{stages}} stage(s).",
+        "addAnotherRaiseSelf": "Raise user's {{newStatName}} by {{stages}} stage(s) in addition to {{existingStats}}.",
+        "addLowerTargetSingle": "Lower target's {{statName}} by {{stages}} stage(s). Accuracy becomes {{accuracy}}%. Power decreases by {{powerValue}}.",
+        "addLowerTargetHarshChance": "{{chance}}% chance to harshly lower target's {{statName}} by {{stages}} stages, but decrease Power by {{powerValue}}.",
+        "addLowerTargetHarsh": "Harshly lower target's {{statName}} by {{stages}} stage(s) (Changes Accuracy to {{accuracy}}%).",
+        "addLowerTargetMultiple": "Lower target's {{statName1}} and {{statName2}} by {{stages}} stage(s) (Changes Accuracy to {{accuracy}}%).",
+        "increaseLowerTarget": "Increase target stat drop to lower {{statName}} by {{stages}} stage(s). Accuracy becomes {{accuracy}}%. Power decreases by {{powerValue}}.",
+        "increaseLowerTargetChance": "Increase chance to lower target's stats to {{chance}}%.",
+        "guaranteeLowerTarget": "Guarantee the effect of lowering the target's stats. Power decreases by {{powerValue}}. Accuracy decreases by {{accuracyValue}}.",
+        "addAnotherLowerTarget": "Lower target's {{newStatName}} by {{stages}} stage(s) in addition to {{existingStats}}. Power decreases by {{powerValue}}.",
+        "addLowerTargetChance": "{{chance}}% chance to lower target's {{statName}} by {{stages}} stage(s), but decrease Power by {{powerValue}}."
+      },
+      "type": {
+        "changePowerBoost": "Change Type to {{typeName}} and increase Power by {{powerValue}}.",
+        "changeAccuracyBoost": "Change Type to {{typeName}} and increase Accuracy by {{accuracyValue}}%.",
+        "changeAddStatus": "Change Type to {{typeName}} and add a {{chance}}% chance to inflict {{statusName}}, but decrease Power by {{powerValue}}.",
+        "changeAddHighCrit": "Change Type to {{typeName}} and add a high critical hit ratio.",
+        "addTypeEffectiveness": "Deal damage based on {{typeName}} type effectiveness in addition to its own type. Increase Power by {{powerValue}}.",
+        "superEffectiveVsType": "Always deal Super Effective damage against {{targetTypeName}} type Pokémon.",
+        "becomeTypeless": "Become Typeless (always neutral damage) and increase Power by {{powerValue}}.",
+        "matchUserType": "Move's type always matches the user's primary type.",
+        "weatherBall": "Move's type changes based on the weather (like Weather Ball).",
+        "terrainPulse": "Move's type changes based on the terrain (like Terrain Pulse).",
+        "hiddenPower": "Move's type changes based on the user's characteristics (like Hidden Power)."
+      },
+      "multiHit": {
+        "add2to5": "Hit 2-5 times, Power becomes {{powerValue}}. Effect Chance set to {{chance}}% per hit. Chance & Power can't be boosted.",
+        "addExact": "Hit exactly {{hits}} times, Power becomes {{powerValue}}. Effect Chance set to {{chance}}% per hit. Chance & Power can't be boosted.",
+        "addCheckAll": "Hit exactly {{hits}} times, accuracy per hit, Power becomes {{powerValue}}, Accuracy: {{accuracyReduction}}%. Effect Chance set to {{chance}}% per hit. Chance & Power can't be boosted.",
+        "changeToExact": "Hit {{hits}} and Power becomes {{powerValue}}. Effect Chance set to {{chance}}% per hit. Chance & Power can't be boosted.",
+        "changeToRange": "Hit {{range}} times, Power becomes {{powerValue}}. Effect Chance set to {{chance}}% per hit. Chance & Power can't be boosted.",
+        "enableCheckAll": "Enable accuracy check for every hit (multi-hit), Power becomes {{powerValue}} & Accuracy: {{accuracyValue}}%. Chance & Power can't be boosted.",
+        "disableCheckAll": "Disable accuracy check for every hit, Power becomes {{powerValue}} & Accuracy: {{accuracyValue}}%. Chance & Power can't be boosted."
+      },
+      "heal": {
+        "addHitHeal": " Heal for {{percent}}% of damage dealt.",
+        "addHitHealVsPower": " Heal for {{percent}}% of damage dealt, but decrease Power by {{powerValue}}.",
+        "increaseHitHealVsPower": "Increase drain effect to heal for {{percent}}% of damage dealt, but decrease Power by {{powerValue}}.",
+        "addSelfHeal": "User recovers {{percent}}% of their max HP.",
+        "addPlantHeal": "User recovers HP if Grassy Terrain is active.",
+        "addSandHeal": "User recovers HP if Sandstorm is active.",
+        "increaseSelfHeal": "Increase self-healing amount to {{percent}}% of max HP."
+      },
+      "recoil": {
+        "addVsPower": "Add {{percent}}% Recoil damage, but increase Power by {{powerValue}}.",
+        "addVsPowerAccuracy": "Add {{percent}}% Recoil damage, but increase Power by {{powerValue}} and decrease Accuracy by {{accuracyValue}}%.",
+        "increaseVsPower": "Increase Recoil damage to {{percent}}%, but increase Power by {{powerValue}}.",
+        "decreaseVsPower": "Decrease Recoil damage to {{percent}}%, but decrease Power by {{powerValue}}.",
+        "removeVsPower": "Remove Recoil damage, but decrease Power by {{powerValue}}."
+      },
+      "sacrificial": {
+        "addFull": "User faints after use, but Power becomes {{power}}.",
+        "addHalf": "User loses 50% max HP after use, but Power becomes {{power}}.",
+        "addOnHit": "User faints if the move hits, but Power becomes {{power}}."
+      },
+      "crit": {
+        "addHighCritVsPower": "Add high critical hit ratio, but decrease Power by {{powerValue}} (for high power moves).",
+        "addHighCrit": "Add high critical hit ratio.",
+        "addHighCritAndPower": "Add high critical hit ratio and increase Power by {{powerValue}}.",
+        "upgradeToCritOnlyVsPower": "Upgrade to always critical hit, but decrease Power by {{powerValue}}.",
+        "upgradeToCritOnlyVsAccuracy": "Upgrade to always critical hit, but decrease Accuracy by {{accuracyValue}}%."
+      },
+      "flags": {
+        "ignoreProtect": "Move can now hit through Protect/Detect, but decrease Power by {{powerValue}}.",
+        "ignoreAbilities": "Move now ignores target's Abilities, and increase Power by {{powerValue}}.",
+        "soundBased": "Move becomes Sound-based (hits through Substitute) and increase Power by {{powerValue}}.",
+        "punchingMove": "Move becomes a Punching move (boosted by Iron Fist) and increase Power by {{powerValue}}.",
+        "slicingMove": "Move becomes a Slicing move (boosted by Sharpness) and increase Power by {{powerValue}}.",
+        "pulseMove": "Move becomes a Pulse move (boosted by Mega Launcher) and increase Power by {{powerValue}}.",
+        "bitingMove": "Move becomes a Biting move (boosted by Strong Jaw) and increase Power by {{powerValue}}.",
+        "windMove": "Move becomes a Wind move (affected by Wind Rider/Power) and increase Power by {{powerValue}}.",
+        "disableContact": "Move no longer makes contact, and increase Power by {{powerValue}}.",
+        "enableContact": "Move now makes contact, and increase Power by {{powerValue}}.",
+        "ignoreStatChanges": "Move now ignores target's defensive stat changes and evasion, and increase Power by {{powerValue}}.",
+        "removeScreens": "Move now removes Reflect/Light Screen/Aurora Veil, and increase Power by {{powerValue}}.",
+        "thawTarget": "Move now thaws a frozen target, and increase Power by {{powerValue}}."
+      },
+      "priority": {
+        "increase": "Increase Priority to {{value}}, but decrease Power by {{powerValue}}.",
+        "decrease": "Decrease Priority to {{value}}, but increase Power by {{powerValue}}.",
+        "conditionalTerrain": "Increase Priority to {{value}} if {{terrain}} Terrain is active, and increase Power by {{powerValue}}.",
+        "conditionalFirstTurn": "Fails if not first turn, Increase Priority to {{value}}, and increase Power by {{powerValue}}.",
+        "conditionalTargetMoved": "Increase Priority to {{value}} if the target has already moved this turn, and increase Power by {{powerValue}}."
+      },
+      "category": {
+        "changeToSpecial": "Change Category to Special.",
+        "changeToSpecialVsDef": "Change Category to Special, but calculate damage using target's Defense.",
+        "changeToPhysical": "Change Category to Physical.",
+        "changeToPhysicalVsSpDef": "Change Category to Physical, but calculate damage using target's Special Defense.",
+        "changeStatusToDamage": "Change Category to {{category}} and set Power to {{power}}."
+      },
+      "misc": {
+        "addTrap": "Traps the target with {{trapName}} for several turns, but decrease Power by {{powerValue}}.",
+        "addForceSwitch": "Forces the target to switch out, but decrease Power by {{powerValue}}.",
+        "addGrounding": "Grounds airborne targets (removes Flying type immunity).",
+        "fixedDamageLevel": "Change damage calculation to deal damage equal to the user's level (replaces base power).",
+        "fixedDamageValue": "Change damage calculation to deal fixed {{value}} HP damage.",
+        "fixedDamageTargetHalfHp": "Change damage calculation to deal damage equal to half the target's current HP (replaces base power).",
+        "addSurviveDamage": "Always leaves the target with at least 1 HP (like False Swipe), and increase Power by {{powerValue}}.",
+        "addWeightPowerTarget": "Power increases based on the target's weight (like Low Kick).",
+        "addWeightPowerCompare": "Power increases the heavier the user is compared to the target (like Heavy Slam).",
+        "addSpeedPowerSlower": "Power increases the slower the user is compared to the target (like Gyro Ball).",
+        "addSpeedPowerFaster": "Power increases the faster the user is compared to the target (like Electro Ball).",
+        "addHpPowerHighHp": "Power increases the higher the user's current HP (Max Power: {{maxPower}}).",
+        "addHpPowerLowHp": "Power increases the lower the user's current HP (like Reversal).",
+        "addSwitchOut": "User switches out after use, but decrease Power by {{powerValue}} (like U-Turn).",
+        "addChargeTurn": "Add a charge turn before attacking, but increase Power by {{powerValue}}.",
+        "addChargeTurnWithBoost": "Add a charge turn (raises user's {{statName}} by {{stages}} stage(s)), and increase Power by {{powerValue}}.",
+        "addStealItemChance": "{{chance}}% chance to steal the target's held item.",
+        "addStealItemGuaranteed": "Steals the target's held item, but decrease Power by {{powerValue}}.",
+        "addRemoveItem": "Removes the target's held item, and increase Power by {{powerValue}}.",
+        "powerBoostWeather": "Power doubles if {{weather}} is active.",
+        "powerBoostTerrain": "Power doubles if {{terrain}} Terrain is active and the target is grounded.",
+        "powerBoostConsecutive": "Power doubles with each consecutive successful use (max 4x).",
+        "powerBoostTurnDamaged": "Power doubles if the user was damaged by the target this turn."
+      },
+      "statusSpecific": {
+        "increaseFieldDuration": "Increase duration of field effects (Screens, Tailwind, etc.) set by this move to {{turns}} turns.",
+        "increaseVolatileDuration": "Increase duration of volatile statuses (Confusion, Taunt, etc.) applied by this move.",
+        "ignoreProtect": "Move can now affect targets using Protect/Detect.",
+        "addSelfHeal": "User recovers {{percent}}% of their max HP.",
+        "addSelfBoost": "Raise user's {{statName}} by {{stages}} stage(s).",
+        "addArenaTrap": "Sets {{trapName}} trap on the opponent's side of the field.",
+        "setWeather": "Changes the weather to {{weather}}.",
+        "setTerrain": "Changes the terrain to {{terrain}}.",
+        "clearWeather": "Clears the current weather.",
+        "clearTerrain": "Clears the current terrain."
+      }
+    },
+  "moveTriggers": {
+      "loweredItsHead": "{{pokemonName}}\nlowered its head!",
+      "tookInSunlight": "{{pokemonName}}\ntook in sunlight!"
+  }
+}

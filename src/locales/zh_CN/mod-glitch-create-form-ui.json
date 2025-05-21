@@ -1,0 +1,82 @@
+{
+  "title": "创建自定义故障进化",
+  "mods": "模组",
+  "testMods": "测试你的模组",
+  "uploadMods": "上传模组",
+  "createGlitchEvolution": "创建故障进化",
+  "removeMods": "删除模组",
+  "shareAndTakeMods": "分享和获取模组",
+  "noModsToRemove": "没有可删除的模组。",
+  "errorLoadingMods": "加载模组出错。请重试。",
+  "modRemoved": "{{name}} 成功删除。",
+  "errorRemovingMod": "删除模组出错。请重试。",
+  "uploadSuccess": "成功上传 {{count}} 个模组：",
+  "uploadFailed": "上传 {{count}} 个模组失败：",
+  "reloadRequired": "游戏将重新加载以应用更改。",
+  "fields": {
+    "species": "物种",
+    "formName": "形态名称 (英文)*",
+    "formLanguages": "形态名称 (其他语言)",
+    "primaryType": "主要属性",
+    "secondaryType": "次要属性",
+    "ability1": "特性 1",
+    "ability2": "特性 2",
+    "hiddenAbility": "隐藏特性",
+    "stat1": "提升的能力值 1",
+    "stat2": "提升的能力值 2",
+    "stat3": "提升的能力值 3",
+    "distributionType": "能力值提升分配类型",
+    "frontSprite": "宝可梦正面精灵图 (150-200像素)",
+    "backSprite": "宝可梦背面精灵图 (150-200像素)",
+    "rivalTrainer": "对手",
+    "orRivalTrainer": "或对手"
+  },
+  "distributionTypes": {
+    "even": "均衡 (每个能力值 +33%)",
+    "twoPriority": "双重优先 (能力值1 +40% | 能力值2 +40% | 能力值3 +20%)",
+    "scaling": "缩放 (能力值1 +45% | 能力值2 +35% | 能力值3 +20%)",
+    "topPriority": "顶级优先 (能力值1 +40% | 能力值2 +30% | 能力值3 +30%)"
+  },
+  "buttons": {
+    "saveAndAdd": "保存并重新加载",
+    "cancel": "取消"
+  },
+  "validation": {
+    "requiredField": "此字段为必填项",
+    "invalidImage": "无效的图像格式或大小",
+    "imageSize": "图像应为150-200像素"
+  },
+  "statusMessages": {
+    "creatingMod": "正在创建模组...",
+    "success": "故障形态模组创建并保存成功！",
+    "downloadReady": "您的模组已准备好下载",
+    "error": "创建模组出错：{{message}}",
+    "storageError": "模组已创建但未保存到存储中。您仍然可以下载它。"
+  },
+  "sections": {
+    "basicInformation": "基本信息",
+    "typesAbilities": "属性和特性",
+    "stats": "能力值",
+    "sprites": "精灵图",
+    "rivalTrainer": "奖励此形态的对手"
+  },
+  "imageUpload": {
+    "uploadButton": "上传图像",
+    "noFileSelected": "未选择文件",
+    "invalidSize": "无效的图像大小 (必须为150-200像素)"
+  },
+  "dropdowns": {
+    "selectOptional": "- 选择 (可选) -"
+  },
+  "languages": {
+    "es": "西班牙语",
+    "fr": "法语",
+    "de": "德语",
+    "ja": "日语",
+    "ko": "韩语",
+    "pt-BR": "葡萄牙语 (巴西)",
+    "it": "意大利语",
+    "zh-TW": "繁体中文",
+    "zh-CN": "简体中文"
+  }
+} 

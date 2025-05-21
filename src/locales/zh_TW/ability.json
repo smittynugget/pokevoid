@@ -1,0 +1,2694 @@
+{
+  "stench": {
+    "name": "惡臭",
+    "description": "發出臭氣，在攻擊的時候，\n有時會使對手畏縮。"
+  },
+  "drizzle": {
+    "name": "降雨",
+    "description": "出場時，會將天氣變為下雨\n。"
+  },
+  "speedBoost": {
+    "name": "加速",
+    "description": "每一回合速度會變快。"
+  },
+  "battleArmor": {
+    "name": "戰鬥盔甲",
+    "description": "被堅硬的甲殼守護著，不會\n被對手的攻擊擊中要害。"
+  },
+  "sturdy": {
+    "name": "結實",
+    "description": "在ＨＰ全滿時受到招式攻擊\n不會被一擊打倒。一擊必殺\n的招式也沒有效果。"
+  },
+  "damp": {
+    "name": "濕氣",
+    "description": "透過把周圍都弄溼，使誰都\n無法使用自爆等爆炸類的招\n式。"
+  },
+  "limber": {
+    "name": "柔軟",
+    "description": "因為身體柔軟，不會變為麻\n痹狀態。"
+  },
+  "sandVeil": {
+    "name": "沙隱",
+    "description": "在沙暴中閃避率會提高。"
+  },
+  "static": {
+    "name": "靜電",
+    "description": "身上帶有靜電，有時會令接\n觸到的對手麻痹。"
+  },
+  "voltAbsorb": {
+    "name": "蓄電",
+    "description": "受到電屬性的招式攻擊時，\n不會受到傷害，而是會回復。"
+  },
+  "waterAbsorb": {
+    "name": "儲水",
+    "description": "受到水屬性的招式攻擊時，\n不會受到傷害，而是會回復。"
+  },
+  "oblivious": {
+    "name": "遲鈍",
+    "description": "感覺遲鈍，不會陷入著迷和\n被挑釁狀態。面對威嚇也不\n會動搖。"
+  },
+  "cloudNine": {
+    "name": "無關天氣",
+    "description": "任何天氣的影響都會消失。"
+  },
+  "compoundEyes": {
+    "name": "複眼",
+    "description": "因為擁有複眼，會提高招式\n的命中率。"
+  },
+  "insomnia": {
+    "name": "不眠",
+    "description": "因為有著睡不著的體質，所\n以不會陷入睡眠狀態。"
+  },
+  "colorChange": {
+    "name": "變色",
+    "description": "自己的屬性會變為擊中自己\n的對手招式的屬性。"
+  },
+  "immunity": {
+    "name": "免疫",
+    "description": "因為體內擁有免疫能力，不\n會變為中毒狀態。"
+  },
+  "flashFire": {
+    "name": "引火",
+    "description": "受到火屬性的招式攻擊時，\n吸收火焰，自己使出的火屬\n性招式會變強。"
+  },
+  "shieldDust": {
+    "name": "鱗粉",
+    "description": "被鱗粉守護著，不會受到招\n式的追加效果影響。"
+  },
+  "ownTempo": {
+    "name": "我行我素",
+    "description": "因為我行我素，不會陷入混\n亂狀態。面對威嚇也不會動\n搖。"
+  },
+  "suctionCups": {
+    "name": "吸盤",
+    "description": "用吸盤將自己牢牢吸附在地\n面上，讓替換寶可夢的招式\n和道具失效。"
+  },
+  "intimidate": {
+    "name": "威嚇",
+    "description": "出場時威嚇對手，使其退縮\n，從而降低對手的攻擊。"
+  },
+  "shadowTag": {
+    "name": "踩影",
+    "description": "踩住對手的影子使其無法逃\n走或替換。"
+  },
+  "roughSkin": {
+    "name": "粗糙皮膚",
+    "description": "受到攻擊時，用粗糙的皮膚\n弄傷接觸到自己的對手。"
+  },
+  "wonderGuard": {
+    "name": "神奇守護",
+    "description": "不可思議的力量，只有效果\n絕佳的招式才能擊中。"
+  },
+  "levitate": {
+    "name": "飄浮",
+    "description": "從地面浮起，從而不會受到\n地面屬性招式的攻擊。"
+  },
+  "effectSpore": {
+    "name": "孢子",
+    "description": "受到攻擊時，有時會把接觸\n到自己的對手變為中毒、麻\n痹或睡眠狀態。"
+  },
+  "synchronize": {
+    "name": "同步",
+    "description": "將自己的中毒、麻痹或灼傷\n狀態傳染給對手。"
+  },
+  "clearBody": {
+    "name": "恆淨之軀",
+    "description": "不會因對手的招式或特性而\n被降低能力。"
+  },
+  "naturalCure": {
+    "name": "自然回復",
+    "description": "異常狀態會在離場後治癒。"
+  },
+  "lightningRod": {
+    "name": "避雷針",
+    "description": "將電屬性的招式吸引到自己\n身上，不但不會受到傷害，\n反而會提高特攻。"
+  },
+  "sereneGrace": {
+    "name": "天恩",
+    "description": "受到上天保佑，容易出現招式的追加效果。"
+  },
+  "swiftSwim": {
+    "name": "悠遊自如",
+    "description": "天氣為下雨時，速度會提高。"
+  },
+  "chlorophyll": {
+    "name": "葉綠素",
+    "description": "天氣為晴朗時，速度會提高。"
+  },
+  "illuminate": {
+    "name": "發光",
+    "description": "透過讓周圍變亮，命中率不\n會被降低。"
+  },
+  "trace": {
+    "name": "複製",
+    "description": "出場時，複製對手的特性，\n變為與之相同的特性。"
+  },
+  "hugePower": {
+    "name": "大力士",
+    "description": "物理攻擊的威力會變為２倍\n。"
+  },
+  "poisonPoint": {
+    "name": "毒刺",
+    "description": "有時會讓接觸到自己的對手\n變為中毒狀態。"
+  },
+  "innerFocus": {
+    "name": "精神力",
+    "description": "靠著經過鍛鍊的精神，不會\n因對手的攻擊而畏縮。面對\n威嚇也不會動搖。"
+  },
+  "magmaArmor": {
+    "name": "熔岩鎧甲",
+    "description": "將熾熱的熔岩覆蓋在身上，\n不會陷入冰凍狀態。"
+  },
+  "waterVeil": {
+    "name": "水幕",
+    "description": "將水幕裹在身上，不會陷入\n灼傷狀態。"
+  },
+  "magnetPull": {
+    "name": "磁力",
+    "description": "用磁力吸住鋼屬性的寶可夢\n，使其無法逃走。"
+  },
+  "soundproof": {
+    "name": "隔音",
+    "description": "透過遮蔽聲音，不受到聲音\n招式的影響。"
+  },
+  "rainDish": {
+    "name": "雨盤",
+    "description": "天氣為下雨時，會緩緩回復\nＨＰ。"
+  },
+  "sandStream": {
+    "name": "揚沙",
+    "description": "出場時，會把天氣變為沙暴。"
+  },
+  "pressure": {
+    "name": "壓迫感",
+    "description": "給予對手壓迫感，大量減少\n其使用招式的ＰＰ。"
+  },
+  "thickFat": {
+    "name": "厚脂肪",
+    "description": "被厚厚的脂肪保護著，能夠\n讓火屬性和冰屬性招式的傷\n害減半。"
+  },
+  "earlyBird": {
+    "name": "早起",
+    "description": "即使陷入睡眠狀態，也能以\n２倍的速度提早醒來。"
+  },
+  "flameBody": {
+    "name": "火焰之軀",
+    "description": "有時會讓接觸到自己的對手\n變為灼傷狀態。"
+  },
+  "runAway": {
+    "name": "逃跑",
+    "description": "一定能從野生寶可夢那裡逃\n走。"
+  },
+  "keenEye": {
+    "name": "銳利目光",
+    "description": "靠著銳利的目光，命中率不\n會被降低。"
+  },
+  "hyperCutter": {
+    "name": "怪力鉗",
+    "description": "因為擁有以力量自豪的鉗子，\n不會被對手降低攻擊。"
+  },
+  "pickup": {
+    "name": "撿拾",
+    "description": "有時會撿來對手用過的道具，\n冒險過程中也會撿到。"
+  },
+  "truant": {
+    "name": "懶惰",
+    "description": "如果使出招式，下一回合就\n需要休息。"
+  },
+  "hustle": {
+    "name": "活力",
+    "description": "自己的攻擊雖會變高，但命\n中率會降低。"
+  },
+  "cuteCharm": {
+    "name": "迷人之軀",
+    "description": "有時會讓接觸到自己的對手陷\n入著迷狀態。"
+  },
+  "plus": {
+    "name": "正電",
+    "description": "場上的夥伴之中，如果有正\n電或負電特性的寶可夢，自\n己的特攻會提高。"
+  },
+  "minus": {
+    "name": "負電",
+    "description": "場上的夥伴之中，如果有正\n電或負電特性的寶可夢，自\n己的特攻會提高。"
+  },
+  "forecast": {
+    "name": "陰晴不定",
+    "description": "在天氣的影響下，會變成水\n屬性、火屬性或冰屬性之中\n的一種。"
+  },
+  "stickyHold": {
+    "name": "黏著",
+    "description": "道具會黏在具有黏性的身體\n上，不會被對手奪走。"
+  },
+  "shedSkin": {
+    "name": "蛻皮",
+    "description": "透過蛻去身上的皮，有時會\n治癒異常狀態。"
+  },
+  "guts": {
+    "name": "毅力",
+    "description": "陷入異常狀態時，會拿出毅\n力，攻擊會提高。"
+  },
+  "marvelScale": {
+    "name": "神奇鱗片",
+    "description": "陷入異常狀態時，神奇鱗片\n會發生反應，防禦會提高。"
+  },
+  "liquidOoze": {
+    "name": "污泥漿",
+    "description": "吸收了污泥漿的對手會因為\n強烈的惡臭而使得ＨＰ減少。"
+  },
+  "overgrow": {
+    "name": "茂盛",
+    "description": "ＨＰ減少的時候，草屬性的\n招式威力會提高。"
+  },
+  "blaze": {
+    "name": "猛火",
+    "description": "ＨＰ減少的時候，火屬性的\n招式威力會提高。"
+  },
+  "torrent": {
+    "name": "激流",
+    "description": "ＨＰ減少的時候，水屬性的\n招式威力會提高。"
+  },
+  "swarm": {
+    "name": "蟲之預感",
+    "description": "ＨＰ減少的時候，蟲屬性的\n招式威力會提高。"
+  },
+  "rockHead": {
+    "name": "堅硬腦袋",
+    "description": "即使使出會受反作用力傷害\n的招式，ＨＰ也不會減少。"
+  },
+  "drought": {
+    "name": "日照",
+    "description": "出場時，會將天氣變為晴朗。"
+  },
+  "arenaTrap": {
+    "name": "沙穴",
+    "description": "在戰鬥中讓對手無法逃走。"
+  },
+  "vitalSpirit": {
+    "name": "幹勁",
+    "description": "透過激發出幹勁，不會變為\n睡眠狀態。"
+  },
+  "whiteSmoke": {
+    "name": "白色煙霧",
+    "description": "被白色煙霧保護著，不會被\n對手降低能力。"
+  },
+  "purePower": {
+    "name": "瑜伽之力",
+    "description": "因瑜伽的力量，物理攻擊的\n威力會變為２倍。"
+  },
+  "shellArmor": {
+    "name": "硬殼盔甲",
+    "description": "被堅硬的殼保護著，對手的\n攻擊不會擊中要害。"
+  },
+  "airLock": {
+    "name": "氣閘",
+    "description": "所有天氣的影響都會消失。"
+  },
+  "tangledFeet": {
+    "name": "蹣跚",
+    "description": "陷入混亂狀態時，閃避率會\n提高。"
+  },
+  "motorDrive": {
+    "name": "電氣引擎",
+    "description": "受到電屬性的招式攻擊時，\n不但不會受到傷害，反而速\n度會提高。"
+  },
+  "rivalry": {
+    "name": "鬥爭心",
+    "description": "面對性別相同的對手，會燃\n起鬥爭心，變得更強。面對\n性別不同的對手時則會變弱。"
+  },
+  "steadfast": {
+    "name": "不屈之心",
+    "description": "每次畏縮時，不屈之心就會\n燃起，速度也會提高。"
+  },
+  "snowCloak": {
+    "name": "雪隱",
+    "description": "天氣為下雪時，閃避率會提\n高。"
+  },
+  "gluttony": {
+    "name": "貪吃鬼",
+    "description": "原本ＨＰ變得很少時才會吃\n樹果，在ＨＰ還有一半時就\n會把它吃掉。"
+  },
+  "angerPoint": {
+    "name": "憤怒穴位",
+    "description": "要害被擊中時會大發雷霆。\n攻擊力會提高到最大。"
+  },
+  "unburden": {
+    "name": "輕裝",
+    "description": "失去所持有的道具時，速度\n會提高。"
+  },
+  "heatproof": {
+    "name": "耐熱",
+    "description": "靠著耐熱的體質，讓火屬性\n的招式傷害減半。"
+  },
+  "simple": {
+    "name": "單純",
+    "description": "能力變化會變為平時的２倍。"
+  },
+  "drySkin": {
+    "name": "乾燥皮膚",
+    "description": "下雨天氣時和受到水屬性的\n招式時，ＨＰ會回復。晴朗\n天氣時和受到火屬性的招式\n時，ＨＰ會減少。"
+  },
+  "download": {
+    "name": "下載",
+    "description": "比較對手的防禦和特防，根\n據較低的那項能力相應地提\n高自己的攻擊或特攻。"
+  },
+  "ironFist": {
+    "name": "鐵拳",
+    "description": "使用到拳頭的招式威力會\n提高。"
+  },
+  "poisonHeal": {
+    "name": "毒療",
+    "description": "陷入中毒狀態時，ＨＰ不會\n減少，反而會漸漸增加。"
+  },
+  "adaptability": {
+    "name": "適應力",
+    "description": "與自身同屬性的招式威力會\n提高。"
+  },
+  "skillLink": {
+    "name": "連續攻擊",
+    "description": "使用連續招式時，每回都能\n以最多次數進行攻擊。"
+  },
+  "hydration": {
+    "name": "濕潤之軀",
+    "description": "天氣為下雨時，會治癒異常\n狀態。"
+  },
+  "solarPower": {
+    "name": "太陽之力",
+    "description": "天氣為晴朗時特攻會提高，\n但每回合ＨＰ會減少。"
+  },
+  "quickFeet": {
+    "name": "飛毛腿",
+    "description": "陷入異常狀態時，速度會提\n高。"
+  },
+  "normalize": {
+    "name": "一般皮膚",
+    "description": "無論是什麼屬性的招式，全\n部都會變為一般屬性。威力\n會少量提高。"
+  },
+  "sniper": {
+    "name": "狙擊手",
+    "description": "擊中要害時，威力會進一步\n提高。"
+  },
+  "magicGuard": {
+    "name": "魔法防守",
+    "description": "不會受到攻擊以外的傷害。"
+  },
+  "noGuard": {
+    "name": "無防守",
+    "description": "由於無防守戰術，雙方使出\n的招式都必定會擊中。"
+  },
+  "stall": {
+    "name": "慢出",
+    "description": "使出招式的順序必定會變為\n最後。"
+  },
+  "technician": {
+    "name": "技術高手",
+    "description": "可讓威力低的招式提高威力\n來進行攻擊。"
+  },
+  "leafGuard": {
+    "name": "葉子防守",
+    "description": "天氣為晴朗時，不會陷入異\n常狀態。"
+  },
+  "klutz": {
+    "name": "笨拙",
+    "description": "無法使用持有的道具。"
+  },
+  "moldBreaker": {
+    "name": "破格",
+    "description": "可不受特性影響，向對手使\n出招式。"
+  },
+  "superLuck": {
+    "name": "超幸運",
+    "description": "因為非常幸運，容易擊中對\n手的要害。"
+  },
+  "aftermath": {
+    "name": "引爆",
+    "description": "瀕死時，會對接觸到自己的\n對手造成傷害。"
+  },
+  "anticipation": {
+    "name": "危險預知",
+    "description": "察覺對手持有的危險招式。"
+  },
+  "forewarn": {
+    "name": "預知夢",
+    "description": "出場時，預見１個對手持有\n的招式。"
+  },
+  "unaware": {
+    "name": "純樸",
+    "description": "可無視對手能力的變化，進\n行攻擊。"
+  },
+  "tintedLens": {
+    "name": "有色眼鏡",
+    "description": "可將效果不好的招式以正常\n的威力使出。"
+  },
+  "filter": {
+    "name": "過濾",
+    "description": "受到效果絕佳的攻擊時，可\n減弱其威力。"
+  },
+  "slowStart": {
+    "name": "慢啓動",
+    "description": "在５回合內，攻擊和速度會\n減半。"
+  },
+  "scrappy": {
+    "name": "膽量",
+    "description": "一般屬性和格鬥屬性的招式\n可擊中幽靈屬性的寶可夢。\n面對威嚇也不會動搖。"
+  },
+  "stormDrain": {
+    "name": "引水",
+    "description": "將水屬性的招式引到自己身\n上，不但不會受到傷害，反\n而會提高特攻。"
+  },
+  "iceBody": {
+    "name": "冰凍之軀",
+    "description": "天氣為下雪時，會漸漸回復\nＨＰ。"
+  },
+  "solidRock": {
+    "name": "堅硬岩石",
+    "description": "受到效果絕佳的攻擊時，可\n減弱其威力。"
+  },
+  "snowWarning": {
+    "name": "降雪",
+    "description": "出場時，會將天氣變為下雪。"
+  },
+  "honeyGather": {
+    "name": "採蜜",
+    "description": "The Pokémon gathers Honey after a battle. The Honey is then sold for money."
+  },
+  "frisk": {
+    "name": "察覺",
+    "description": "出場時，可以察覺對手的特\n性。"
+  },
+  "reckless": {
+    "name": "捨身",
+    "description": "會讓自己因反作用力而受傷\n的招式威力會提高。"
+  },
+  "multitype": {
+    "name": "多屬性",
+    "description": "自己的屬性會依持有的石板\n而改變。"
+  },
+  "flowerGift": {
+    "name": "花之禮",
+    "description": "天氣為晴朗時，自己和同伴\n的攻擊和特防能力會提高。"
+  },
+  "badDreams": {
+    "name": "夢魘",
+    "description": "給予陷入睡眠狀態的對手傷\n害。"
+  },
+  "pickpocket": {
+    "name": "順手牽羊",
+    "description": "盜取接觸到自己的對手的道\n具。"
+  },
+  "sheerForce": {
+    "name": "強行",
+    "description": "招式會失去追加效果，但可\n以用更高的威力使出招式。"
+  },
+  "contrary": {
+    "name": "唱反調",
+    "description": "能力的變化會逆轉，原本提\n高時會降低，原本降低時會\n提高。"
+  },
+  "unnerve": {
+    "name": "緊張感",
+    "description": "讓對手感到緊張，無法吃樹\n果。"
+  },
+  "defiant": {
+    "name": "不服輸",
+    "description": "被對手降低能力時，攻擊會\n大幅提高。"
+  },
+  "defeatist": {
+    "name": "軟弱",
+    "description": "ＨＰ降到一半以下時，會變\n得軟弱而使得攻擊和特攻減\n半。"
+  },
+  "cursedBody": {
+    "name": "詛咒之軀",
+    "description": "受到攻擊時，有時會把對手\n的招式變為定身法狀態。"
+  },
+  "healer": {
+    "name": "治癒之心",
+    "description": "有時會治癒同伴的異常狀態。"
+  },
+  "friendGuard": {
+    "name": "友情防守",
+    "description": "可以減少我方受到的傷害。"
+  },
+  "weakArmor": {
+    "name": "碎裂鎧甲",
+    "description": "因物理招式受到傷害時，防\n禦會降低，速度會大幅提高。"
+  },
+  "heavyMetal": {
+    "name": "重金屬",
+    "description": "自己的重量會變為２倍。"
+  },
+  "lightMetal": {
+    "name": "輕金屬",
+    "description": "自己的重量會減半。"
+  },
+  "multiscale": {
+    "name": "多重鱗片",
+    "description": "ＨＰ全滿時，受到的傷害會\n變少。"
+  },
+  "toxicBoost": {
+    "name": "中毒激升",
+    "description": "陷入中毒狀態時，物理招式\n的威力會提高。"
+  },
+  "flareBoost": {
+    "name": "受熱激升",
+    "description": "陷入灼傷狀態時，特殊招式\n的威力會提高。"
+  },
+  "harvest": {
+    "name": "收穫",
+    "description": "可多次採收已被使用過的樹果。"
+  },
+  "telepathy": {
+    "name": "心靈感應",
+    "description": "讀取我方的攻擊，並閃避其\n招式傷害。"
+  },
+  "moody": {
+    "name": "心情不定",
+    "description": "每一回合，能力中的某項會\n大幅提高，而某項會降低。"
+  },
+  "overcoat": {
+    "name": "防塵",
+    "description": "不會受到沙暴的傷害。也不\n會受到粉末類和孢子類招式\n的影響。"
+  },
+  "poisonTouch": {
+    "name": "毒手",
+    "description": "有時僅是接觸就能讓對手中\n毒。"
+  },
+  "regenerator": {
+    "name": "再生力",
+    "description": "退回同行隊伍後，ＨＰ會少\n量回復。"
+  },
+  "bigPecks": {
+    "name": "健壯胸肌",
+    "description": "不會受到降低防禦的效果影\n響。"
+  },
+  "sandRush": {
+    "name": "撥沙",
+    "description": "天氣為沙暴時，速度會提高。"
+  },
+  "wonderSkin": {
+    "name": "奇蹟皮膚",
+    "description": "不易受到變化類招式攻擊的\n身體。"
+  },
+  "analytic": {
+    "name": "分析",
+    "description": "如果在最後使出招式，招式\n的威力就會變強。"
+  },
+  "illusion": {
+    "name": "幻覺",
+    "description": "假扮成同行隊伍中的最後一\n隻寶可夢出場，迷惑對手。"
+  },
+  "imposter": {
+    "name": "變身者",
+    "description": "變身為當前面對的寶可夢。"
+  },
+  "infiltrator": {
+    "name": "穿透",
+    "description": "可穿透對手的屏障或替身進\n行攻擊。"
+  },
+  "mummy": {
+    "name": "木乃伊",
+    "description": "被對手接觸到後，會將對手\n變為木乃伊。"
+  },
+  "moxie": {
+    "name": "自信過度",
+    "description": "如果打倒對手，會充滿自信\n並提高攻擊。"
+  },
+  "justified": {
+    "name": "正義之心",
+    "description": "受到惡屬性的招式攻擊時，\n因為正義感，攻擊會提高。"
+  },
+  "rattled": {
+    "name": "膽怯",
+    "description": "受到惡屬性、幽靈屬性和蟲\n屬性的招式攻擊，或受到威\n嚇時，會因膽怯而使得速度\n提高。"
+  },
+  "magicBounce": {
+    "name": "魔法鏡",
+    "description": "可不受到由對手使出的變化\n類招式所影響，並將其反彈。"
+  },
+  "sapSipper": {
+    "name": "食草",
+    "description": "受到草屬性的招式攻擊時，\n不但不會受到傷害，反而攻\n擊會提高。"
+  },
+  "prankster": {
+    "name": "惡作劇之心",
+    "description": "可以搶先使出變化類招式。"
+  },
+  "sandForce": {
+    "name": "沙之力",
+    "description": "天氣為沙暴時，岩石屬性、\n地面屬性和鋼屬性招式的威\n力會提高。"
+  },
+  "ironBarbs": {
+    "name": "鐵刺",
+    "description": "用鐵刺給予接觸到自己的對\n手傷害。"
+  },
+  "zenMode": {
+    "name": "達摩模式",
+    "description": "ＨＰ變為一半以下時，樣子\n會改變。"
+  },
+  "victoryStar": {
+    "name": "勝利之星",
+    "description": "自己和同伴的命中率會提高。"
+  },
+  "turboblaze": {
+    "name": "渦輪火焰",
+    "description": "可以不受對手特性的干擾，\n向對手使出招式。"
+  },
+  "teravolt": {
+    "name": "兆級電壓",
+    "description": "可以不受對手特性的干擾，\n向對手使出招式。"
+  },
+  "aromaVeil": {
+    "name": "芳香幕",
+    "description": "可防住向自己和同伴發出的\n心靈攻擊。"
+  },
+  "flowerVeil": {
+    "name": "花幕",
+    "description": "我方的草屬性寶可夢能力不\n會降低。也不會陷入異常狀\n態。"
+  },
+  "cheekPouch": {
+    "name": "頰囊",
+    "description": "無論是哪種樹果，吃下去後\nＨＰ都會回復。"
+  },
+  "protean": {
+    "name": "變幻自如",
+    "description": "每次出場戰鬥時，變為與自\n己使出的招式相同的屬性１\n次。"
+  },
+  "furCoat": {
+    "name": "毛皮大衣",
+    "description": "對手的物理招式造成的傷害\n會減半。"
+  },
+  "magician": {
+    "name": "魔術師",
+    "description": "奪走被自己的招式擊中的對\n手的道具。"
+  },
+  "bulletproof": {
+    "name": "防彈",
+    "description": "可防住對手的球和彈類的招\n式。"
+  },
+  "competitive": {
+    "name": "好勝",
+    "description": "被對手降低能力時，特攻會\n大幅提高。"
+  },
+  "strongJaw": {
+    "name": "強壯之顎",
+    "description": "顎部強壯，會提高啃咬類招\n式的威力。"
+  },
+  "refrigerate": {
+    "name": "冰凍皮膚",
+    "description": "一般屬性的招式會變為冰屬\n性。威力會少量提高。"
+  },
+  "sweetVeil": {
+    "name": "甜幕",
+    "description": "自己和我方的寶可夢不會陷\n入睡眠狀態。"
+  },
+  "stanceChange": {
+    "name": "戰鬥切換",
+    "description": "若使出攻擊招式，會變為刀\n劍形態，若使出招式「王者\n盾牌」，會變為盾牌形態。"
+  },
+  "galeWings": {
+    "name": "疾風之翼",
+    "description": "ＨＰ全滿時，可以搶先在對\n手之前使出飛行屬性的招式。"
+  },
+  "megaLauncher": {
+    "name": "超級發射器",
+    "description": "波動和波導類招式的威力會\n提高。"
+  },
+  "grassPelt": {
+    "name": "草之毛皮",
+    "description": "在青草場地時，防禦會提高。"
+  },
+  "symbiosis": {
+    "name": "共生",
+    "description": "同伴使用道具時，會把自己\n持有的道具傳遞給同伴。"
+  },
+  "toughClaws": {
+    "name": "硬爪",
+    "description": "接觸到對手的招式威力會提\n高。"
+  },
+  "pixilate": {
+    "name": "妖精皮膚",
+    "description": "一般屬性的招式會變為妖精\n屬性。威力會少量提高。"
+  },
+  "gooey": {
+    "name": "黏滑",
+    "description": "對手用攻擊接觸到自己時，\n降低此對手的速度。"
+  },
+  "aerilate": {
+    "name": "飛行皮膚",
+    "description": "一般屬性的招式會變為飛行\n屬性。威力會少量提高。"
+  },
+  "parentalBond": {
+    "name": "親子愛",
+    "description": "親子倆可合計攻擊２次。"
+  },
+  "darkAura": {
+    "name": "暗黑氣場",
+    "description": "全體的惡屬性招式變強。"
+  },
+  "fairyAura": {
+    "name": "妖精氣場",
+    "description": "全體的妖精屬性招式變強。"
+  },
+  "auraBreak": {
+    "name": "氣場破壞",
+    "description": "讓氣場的效果逆轉，並降低\n威力。"
+  },
+  "primordialSea": {
+    "name": "始源之海",
+    "description": "變為讓火屬性攻擊失效的天\n氣。"
+  },
+  "desolateLand": {
+    "name": "終結之地",
+    "description": "變為讓水屬性攻擊失效的天\n氣。"
+  },
+  "deltaStream": {
+    "name": "德爾塔氣流",
+    "description": "變為令飛行屬性的弱點消失\n的天氣。"
+  },
+  "stamina": {
+    "name": "持久力",
+    "description": "受到攻擊時，防禦會提高。"
+  },
+  "wimpOut": {
+    "name": "躍躍欲逃",
+    "description": "ＨＰ變為一半時，會慌慌張\n張逃走，退回同行隊伍中。"
+  },
+  "emergencyExit": {
+    "name": "危險迴避",
+    "description": "ＨＰ減到一半時，為了避開\n危險，會退回到同行隊伍中。"
+  },
+  "waterCompaction": {
+    "name": "遇水凝固",
+    "description": "受到水屬性的招式攻擊時，\n防禦會大幅提高。"
+  },
+  "merciless": {
+    "name": "不仁不義",
+    "description": "攻擊中毒狀態的對手時，\n必定會擊中要害。"
+  },
+  "shieldsDown": {
+    "name": "界限盾殼",
+    "description": "ＨＰ變為一半時，殼會壞掉，\n變得更有攻擊性。"
+  },
+  "stakeout": {
+    "name": "蹲守",
+    "description": "可以向替換出場的對手以２\n倍的傷害進行攻擊。"
+  },
+  "waterBubble": {
+    "name": "水泡",
+    "description": "降低自己受到的火屬性招式\n的威力，不會灼傷。"
+  },
+  "steelworker": {
+    "name": "鋼能力者",
+    "description": "鋼屬性的招式威力會提高。"
+  },
+  "berserk": {
+    "name": "怒火沖天",
+    "description": "ＨＰ因對手的攻擊降到一半\n時，特攻會提高。"
+  },
+  "slushRush": {
+    "name": "撥雪",
+    "description": "天氣為下雪時，速度會提高。"
+  },
+  "longReach": {
+    "name": "遠隔",
+    "description": "可以不接觸對手就使出所有\n的招式。"
+  },
+  "liquidVoice": {
+    "name": "溼潤之聲",
+    "description": "所有的聲音招式都變為水屬\n性。"
+  },
+  "triage": {
+    "name": "先行治療",
+    "description": "可以搶先使出回復招式。"
+  },
+  "galvanize": {
+    "name": "電氣皮膚",
+    "description": "一般屬性的招式會變為電屬\n性。威力會少量提高。"
+  },
+  "surgeSurfer": {
+    "name": "衝浪之尾",
+    "description": "電氣場地時，速度會變為２\n倍。"
+  },
+  "schooling": {
+    "name": "魚羣",
+    "description": "ＨＰ多的時候會聚起來變強。\nＨＰ剩餘量變少時，群體\n會分崩離析。"
+  },
+  "disguise": {
+    "name": "畫皮",
+    "description": "用畫皮覆蓋住身體，可防住\n１次攻擊。"
+  },
+  "battleBond": {
+    "name": "牽絆變身",
+    "description": "打倒對手時，與訓練家的牽\n絆會加深，自己的攻擊、特\n攻和速度會提高。"
+  },
+  "powerConstruct": {
+    "name": "群聚變形",
+    "description": "ＨＰ變為一半時，細胞們會\n趕來支援，變為完全體形態。"
+  },
+  "corrosion": {
+    "name": "腐蝕",
+    "description": "就算對方是鋼屬性或毒屬性\n寶可夢，也可讓對方陷入中\n毒狀態。"
+  },
+  "comatose": {
+    "name": "絕對睡眠",
+    "description": "總是半夢半醒的狀態，絕對\n不會醒來。可在睡著的狀況\n下進行攻擊。"
+  },
+  "queenlyMajesty": {
+    "name": "女王的威嚴",
+    "description": "向對手施加威懾力，使其無\n法對我方使出先制招式。"
+  },
+  "innardsOut": {
+    "name": "飛出的內在物",
+    "description": "被對手打倒的時候，會給予\n對手相當於ＨＰ剩餘量的傷\n害。"
+  },
+  "dancer": {
+    "name": "舞者",
+    "description": "當有誰使出跳舞招式時，自\n己也能接著使出跳舞招式。"
+  },
+  "battery": {
+    "name": "蓄電池",
+    "description": "會提高我方的特殊招式的威\n力。"
+  },
+  "fluffy": {
+    "name": "毛茸茸",
+    "description": "會將對手所給予的接觸類招\n式的傷害減半，但火屬性招\n式的傷害會變為２倍。"
+  },
+  "dazzling": {
+    "name": "鮮豔之軀",
+    "description": "讓對手嚇一跳，使其無法對\n我方使出先制招式。"
+  },
+  "soulHeart": {
+    "name": "魂心",
+    "description": "每當場上有寶可夢陷入瀕死\n狀態時，特攻就會提高。"
+  },
+  "tanglingHair": {
+    "name": "捲髮",
+    "description": "對手用攻擊接觸到自己時，\n降低此對手的速度。"
+  },
+  "receiver": {
+    "name": "接球手",
+    "description": "繼承被打倒的同伴的特性，\n變為相同的特性。"
+  },
+  "powerOfAlchemy": {
+    "name": "化學之力",
+    "description": "繼承被打倒的同伴的特性，\n變為相同的特性。"
+  },
+  "beastBoost": {
+    "name": "異獸提升",
+    "description": "打倒對手的時候，會提高自\n己最高的那項能力。"
+  },
+  "rksSystem": {
+    "name": "ＡＲ系統",
+    "description": "根據持有的記憶碟，自己的\n屬性會改變。"
+  },
+  "electricSurge": {
+    "name": "電氣製造者",
+    "description": "出場時，會布下電氣場地。"
+  },
+  "psychicSurge": {
+    "name": "精神製造者",
+    "description": "出場時，會布下精神場地。"
+  },
+  "mistySurge": {
+    "name": "薄霧製造者",
+    "description": "出場時，會布下薄霧場地。"
+  },
+  "grassySurge": {
+    "name": "青草製造者",
+    "description": "出場時，會布下青草場地。"
+  },
+  "fullMetalBody": {
+    "name": "金屬防護",
+    "description": "不會因對手的招式或特性而\n被降低能力。"
+  },
+  "shadowShield": {
+    "name": "幻影防守",
+    "description": "ＨＰ全滿時，受到的傷害會\n變少。"
+  },
+  "prismArmor": {
+    "name": "棱鏡裝甲",
+    "description": "受到效果絕佳的攻擊時，可\n減弱其威力。"
+  },
+  "neuroforce": {
+    "name": "腦核之力",
+    "description": "可進一步提升效果絕佳招式\n的威力。"
+  },
+  "intrepidSword": {
+    "name": "不撓之劍",
+    "description": "在戰鬥中首次出場時，攻擊\n會提高。"
+  },
+  "dauntlessShield": {
+    "name": "不屈之盾",
+    "description": "在戰鬥中首次出場時，防禦\n會提高。"
+  },
+  "libero": {
+    "name": "自由者",
+    "description": "每次出場戰鬥時，變為與自\n己使出的招式相同的屬性１\n次。"
+  },
+  "ballFetch": {
+    "name": "撿球",
+    "description": "當寶可夢沒有攜帶道具時，\n會撿回第１個投出後捕捉失\n敗的精靈球。"
+  },
+  "cottonDown": {
+    "name": "棉絮",
+    "description": "受到攻擊時會撒下棉絮，降\n低除自己以外的所有寶可夢\n的速度。"
+  },
+  "propellerTail": {
+    "name": "螺旋尾鰭",
+    "description": "能無視具有吸引對手招式效\n果的特性或招式的影響。"
+  },
+  "mirrorArmor": {
+    "name": "鏡甲",
+    "description": "只反彈自己受到的能力降低\n效果。"
+  },
+  "gulpMissile": {
+    "name": "一口導彈",
+    "description": "衝浪或潛水時會叼來獵物。\n當受到傷害時，會吐出獵物\n攻擊對手。"
+  },
+  "stalwart": {
+    "name": "堅毅",
+    "description": "能無視具有吸引對手招式效\n果的特性或招式的影響。"
+  },
+  "steamEngine": {
+    "name": "蒸汽機",
+    "description": "受到水屬性或火屬性招式攻\n擊時，速度會極大幅提高。"
+  },
+  "punkRock": {
+    "name": "龐克搖滾",
+    "description": "聲音招式的威力會提高。受\n到聲音招式的傷害會減半。"
+  },
+  "sandSpit": {
+    "name": "吐沙",
+    "description": "受到攻擊時，會刮起沙暴。"
+  },
+  "iceScales": {
+    "name": "冰鱗粉",
+    "description": "得到冰鱗粉的守護，受到的\n特殊攻擊傷害會減半。"
+  },
+  "ripen": {
+    "name": "熟成",
+    "description": "讓樹果成熟，使效果變為２\n倍。"
+  },
+  "iceFace": {
+    "name": "結凍頭",
+    "description": "頭部的冰會代替自己承受物\n理攻擊，但是樣子會改變。\n下雪時，冰會恢復原狀。"
+  },
+  "powerSpot": {
+    "name": "能量點",
+    "description": "只要站在旁邊，招式的威力\n就會提高。"
+  },
+  "mimicry": {
+    "name": "擬態",
+    "description": "寶可夢的屬性會根據場地的\n狀態而改變。"
+  },
+  "screenCleaner": {
+    "name": "除障",
+    "description": "出場時，敵方和我方的光牆\n、反射壁和極光幕的效果會\n消失。"
+  },
+  "steelySpirit": {
+    "name": "鋼之意志",
+    "description": "我方的鋼屬性攻擊威力會提\n高。"
+  },
+  "perishBody": {
+    "name": "滅亡之軀",
+    "description": "在受到接觸類招式攻擊時，\n３個回合後雙方都會陷入瀕\n死。替換寶可夢後效果就\n會消失。"
+  },
+  "wanderingSpirit": {
+    "name": "遊魂",
+    "description": "與使用接觸類招式攻擊自己\n的寶可夢互換特性。"
+  },
+  "gorillaTactics": {
+    "name": "一猩一意",
+    "description": "攻擊雖然會提高，但只能使\n出最初選擇的招式。"
+  },
+  "neutralizingGas": {
+    "name": "化學變化氣體",
+    "description": "當場上有特性是化學變化氣\n體的寶可夢時，所有寶可夢\n的特性效果都會消失或無\n法發動。"
+  },
+  "pastelVeil": {
+    "name": "粉彩護幕",
+    "description": "自己和我方同伴都不會陷入\n中毒的異常狀態。"
+  },
+  "hungerSwitch": {
+    "name": "飽了又餓",
+    "description": "在每個回合結束時，會在滿\n腹花紋和空腹花紋之間交替\n改變樣子。"
+  },
+  "quickDraw": {
+    "name": "速擊",
+    "description": "有時能比對手先一步行動。"
+  },
+  "unseenFist": {
+    "name": "無形拳",
+    "description": "只要是接觸到對手的招式，\n就可以無視對手的防守效果\n進行攻擊。"
+  },
+  "curiousMedicine": {
+    "name": "怪藥",
+    "description": "出場時，會從貝殼撒藥，將\n我方的能力變化復原。"
+  },
+  "transistor": {
+    "name": "電晶體",
+    "description": "電屬性的招式威力會提高。"
+  },
+  "dragonsMaw": {
+    "name": "龍顎",
+    "description": "龍屬性的招式威力會提高。"
+  },
+  "chillingNeigh": {
+    "name": "蒼白嘶鳴",
+    "description": "打倒對手時會用冰冷的聲音\n嘶鳴並提高攻擊。"
+  },
+  "grimNeigh": {
+    "name": "漆黑嘶鳴",
+    "description": "打倒對手時會用恐怖的聲音\n嘶鳴並提高特攻。"
+  },
+  "asOneGlastrier": {
+    "name": "人馬一體",
+    "description": "兼備蕾冠王的緊張感和雪暴\n馬的蒼白嘶鳴這２種特性。"
+  },
+  "asOneSpectrier": {
+    "name": "人馬一體",
+    "description": "兼備蕾冠王的緊張感和靈幽\n馬的漆黑嘶鳴這２種特性。"
+  },
+  "lingeringAroma": {
+    "name": "甩不掉的氣味",
+    "description": "被對手接觸到時，甩不掉的\n氣味會沾染給對手。"
+  },
+  "seedSower": {
+    "name": "掉出種子",
+    "description": "受到攻擊時，會將腳下變成\n青草場地。"
+  },
+  "thermalExchange": {
+    "name": "熱交換",
+    "description": "受到火屬性的招式攻擊時，\n攻擊會提高，不會陷入灼傷\n狀態。"
+  },
+  "angerShell": {
+    "name": "憤怒甲殼",
+    "description": "ＨＰ因對手的攻擊降到一半\n時，會因憤怒而降低防禦和\n特防，但攻擊、特攻和速度\n會提高。"
+  },
+  "purifyingSalt": {
+    "name": "潔淨之鹽",
+    "description": "因潔淨的鹽而不會陷入異常\n狀態。能夠讓幽靈屬性招式\n的傷害減半。"
+  },
+  "wellBakedBody": {
+    "name": "焦香之軀",
+    "description": "受到火屬性的招式攻擊時，\n不但不會受到傷害，反而防\n禦會大幅提高"
+  },
+  "windRider": {
+    "name": "乘風",
+    "description": "吹起順風或受到風的招式攻\n擊時，不但不會受到傷害，\n反而攻擊會提高。"
+  },
+  "guardDog": {
+    "name": "看門犬",
+    "description": "受到威嚇時，攻擊會提高。\n會讓替換寶可夢的招式和道\n具失效。"
+  },
+  "rockyPayload": {
+    "name": "搬巖",
+    "description": "岩石屬性的招式威力會提高。"
+  },
+  "windPower": {
+    "name": "風力發電",
+    "description": "受到風的招式攻擊時，會變\n成充電狀態。"
+  },
+  "zeroToHero": {
+    "name": "全能變身",
+    "description": "離場後會變為全能形態。"
+  },
+  "commander": {
+    "name": "發號施令",
+    "description": "出場時，若我方有吃吼霸，\n便會進入吃吼霸的口中，從\n那裡發號施令。"
+  },
+  "electromorphosis": {
+    "name": "電力轉換",
+    "description": "受到傷害時，會變成充電狀\n態。"
+  },
+  "protosynthesis": {
+    "name": "古代活性",
+    "description": "攜帶著驅勁能量或天氣為晴\n朗時，數值最高的能力會提\n高。"
+  },
+  "quarkDrive": {
+    "name": "夸克充能",
+    "description": "攜帶著驅勁能量或在電氣場\n地上時，數值最高的能力會\n提高。"
+  },
+  "goodAsGold": {
+    "name": "黃金之軀",
+    "description": "既不氧化又堅韌的黃金之軀\n不會受到對手的變化類招式\n攻擊。"
+  },
+  "vesselOfRuin": {
+    "name": "災禍之鼎",
+    "description": "在喚來災厄之鼎的力量下，\n除自己以外的特攻會變弱。"
+  },
+  "swordOfRuin": {
+    "name": "災禍之劍",
+    "description": "在喚來災厄之劍的力量下，\n除自己以外的防禦會變弱。"
+  },
+  "tabletsOfRuin": {
+    "name": "災禍之簡",
+    "description": "在喚來災厄之木簡的力量下\n，除自己以外的攻擊會變弱。"
+  },
+  "beadsOfRuin": {
+    "name": "災禍之玉",
+    "description": "在喚來災厄之木簡的力量下\n，除自己以外的特防會變弱。"
+  },
+  "orichalcumPulse": {
+    "name": "緋紅脈動",
+    "description": "出場時，會將天氣變為晴朗\n。日照很強時，會因為古代\n的脈動而使攻擊升高。"
+  },
+  "hadronEngine": {
+    "name": "強子引擎",
+    "description": "出場時，會布下電氣場地。\n在電氣場地時，會因為未來\n的機關而使特攻升高。"
+  },
+  "opportunist": {
+    "name": "跟風",
+    "description": "對手的能力提高時，自己也\n會跟著提高能力。"
+  },
+  "cudChew": {
+    "name": "反芻",
+    "description": "食用樹果後，會在下一回合\n結束時從胃裡取出，以１次\n為限再次食用。"
+  },
+  "sharpness": {
+    "name": "鋒銳",
+    "description": "切斬對手的招式威力會提高。"
+  },
+  "supremeOverlord": {
+    "name": "大將",
+    "description": "出場時，先前每有１隻同伴\n被打倒，攻擊和特攻就會提\n高少許。"
+  },
+  "costar": {
+    "name": "同台共演",
+    "description": "出場時，會複製同伴的能力\n變化。"
+  },
+  "toxicDebris": {
+    "name": "毒滿地",
+    "description": "因物理招式受到傷害時，會\n在對手腳下散布毒菱。"
+  },
+  "armorTail": {
+    "name": "尾甲",
+    "description": "包覆著頭部的神秘尾巴使對\n手無法對我方使出先制招式。"
+  },
+  "earthEater": {
+    "name": "食土",
+    "description": "受到地面屬性的招式攻擊時\n，不會受到傷害，而是會回\n復。"
+  },
+  "myceliumMight": {
+    "name": "菌絲之力",
+    "description": "使出變化類招式時，行動一\n定會變緩慢，但不會受到對\n手特性的干擾。"
+  },
+  "mindsEye": {
+    "name": "心眼",
+    "description": "一般屬性和格鬥屬性的招式\n可以擊中幽靈屬性的寶可夢。\n無視對手的閃避率的變化，\n且命中率不會被降低。"
+  },
+  "supersweetSyrup": {
+    "name": "甘露之蜜",
+    "description": "在對戰中首次出場時，會四\n處散播甜膩的蜜香，降低對\n手的閃避率。"
+  },
+  "hospitality": {
+    "name": "款待",
+    "description": "出場時款待同伴，使其回復\n少量ＨＰ。"
+  },
+  "toxicChain": {
+    "name": "毒鎖鏈",
+    "description": "靠著含有毒素的鎖鏈的力量\n，有時會讓被招式擊中的對\n手陷入劇毒狀態。"
+  },
+  "embodyAspectTeal": {
+    "name": "面影輝映",
+    "description": "將回憶映於心中，使碧草面\n具發出光輝，提高自己的速\n度。"
+  },
+  "embodyAspectWellspring": {
+    "name": "面影輝映",
+    "description": "將回憶映於心中，使水井面\n具發出光輝，提高自己的特\n防。"
+  },
+  "embodyAspectHearthflame": {
+    "name": "面影輝映",
+    "description": "將回憶映於心中，使火灶面\n具發出光輝，提高自己的攻\n擊。"
+  },
+  "embodyAspectCornerstone": {
+    "name": "面影輝映",
+    "description": "將回憶映於心中，使礎石面\n具發出光輝，提高自己的防\n御。"
+  },
+  "teraShift": {
+    "name": "太晶變形",
+    "description": "出場時，會吸收周圍的能量\n，變為太晶形態。"
+  },
+  "teraShell": {
+    "name": "太晶甲殼",
+    "description": "蘊藏著所有屬性力量的甲殼\n會將自身ＨＰ全滿時受到的\n傷害全都變為效果不好。"
+  },
+  "teraformZero": {
+    "name": "歸零化境",
+    "description": "太樂巴戈斯變為星晶形態時\n，蘊藏其身的力量會將天氣\n和場地的影響全部歸零。"
+  },
+  "poisonPuppeteer": {
+    "name": "毒傀儡",
+    "description": "因為桃歹郎的招式而陷入中\n毒狀態的對手同時也會陷入\n混亂狀態。"
+  },
+  "unleashed": {
+    "name": "爆發",
+    "description": "生命值低時提升所有招式的威力。"
+  },
+  "hellFlame": {
+    "name": "地獄之焰",
+    "description": "提升火屬性招式威力50%。"
+  },
+  "psychoLeaf": {
+    "name": "超能葉",
+    "description": "將草屬性招式轉換為超能力屬性，並提升威力20%。"
+  },
+  "groundFlame": {
+    "name": "大地之焰",
+    "description": "將火屬性招式轉換為地面屬性，並提升威力20%。"
+  },
+  "magicalWater": {
+    "name": "魔法之水",
+    "description": "將水屬性招式轉換為妖精屬性，並提升威力20%。"
+  },
+  "nuclearEnergy": {
+    "name": "核能",
+    "description": "將毒屬性招式轉換為電屬性，並提升威力20%。"
+  },
+  "poisonKing": {
+    "name": "毒王",
+    "description": "提升毒屬性招式威力60%。"
+  },
+  "solidKong": {
+    "name": "堅固金剛",
+    "description": "減少50%效果絕佳的招式傷害。"
+  },
+  "screepy": {
+    "name": "尖叫鬼",
+    "description": "幽靈系招式可以擊中一般系寶可夢。幽靈系招式威力提升30%。免疫威嚇特性。"
+  },
+  "godFist": {
+    "name": "神之拳",
+    "description": "提升拳擊類招式威力50%。"
+  },
+  "parentalHaunting": {
+    "name": "親緣纏繞",
+    "description": "將非一般屬性招式轉換為幽靈屬性，並提升威力20%。"
+  },
+  "nightmarate": {
+    "name": "惡夢化",
+    "description": "將一般屬性的招式變為主要屬性並提升威力20%。"
+  },
+  "terrify": {
+    "name": "恐嚇",
+    "description": "進入戰鬥時降低對手的攻擊和特攻各一級。"
+  },
+  "thunderAndFire": {
+    "name": "雷與火",
+    "description": "火系和電系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "electafireAbsorb": {
+    "name": "雷火吸收",
+    "description": "受到火屬性或電屬性招式攻擊時回復生命值，而不是受到傷害。"
+  },
+  "dirtThick": {
+    "name": "厚土",
+    "description": "減半來自水屬性和地面屬性的傷害。"
+  },
+  "arcticBlaze": {
+    "name": "極地烈焰",
+    "description": "將冰系招式變為火系招式，反之亦然，當HP低於65%時，招式威力提升35%。"
+  },
+  "steamify": {
+    "name": "蒸汽化",
+    "description": "將水屬性招式轉換為火屬性，並提升威力20%。"
+  },
+  "prehistoricHunt": {
+    "name": "史前獵手",
+    "description": "每回合有30%機率使天氣變為下雨。在下雨、大晴天、冰雹、下雪或大雨天氣下速度翻倍。"
+  },
+  "popUp": {
+    "name": "彈出",
+    "description": "進入戰鬥時防禦降低一級，速度提升一級。"
+  },
+  "earthSpeeder": {
+    "name": "大地疾行",
+    "description": "受到地面屬性招式攻擊時速度提升一級。"
+  },
+  "knockout": {
+    "name": "擊倒",
+    "description": "生命值低於50%時有35%機率造成要害攻擊。"
+  },
+  "finalRound": {
+    "name": "最終回合",
+    "description": "生命值低時提升格鬥屬性招式威力。"
+  },
+  "kickPunch": {
+    "name": "踢拳",
+    "description": "提升踢擊和拳擊類招式威力30%。"
+  },
+  "stabNormal": {
+    "name": "一般強化",
+    "description": "提升一般屬性招式威力30%。"
+  },
+  "adaptiveAi": {
+    "name": "自適應AI",
+    "description": "根據對手最高的能力值，提升自身能力1或2級。如果對手最高能力值是攻擊，則提升防禦；如果是特攻，則提升特防；如果是特防，則提升特攻；如果是速度，則提升速度2級。"
+  },
+  "electric": {
+    "name": "電氣",
+    "description": "提升電系招式威力50%，受到水系招式傷害加倍，並將一般系招式變為電系招式，威力提升20%。"
+  },
+  "existence": {
+    "name": "存在",
+    "description": "提升所有招式威力20%，中和效果絕佳的招式，並中和對目標效果絕佳的招式。"
+  },
+  "allConsuming": {
+    "name": "全面吞噬",
+    "description": "受到接觸類招式攻擊時回復最大生命值的1/8，並對對手造成最大生命值1/8的傷害。"
+  },
+  "corrupt": {
+    "name": "腐化",
+    "description": "攻擊後有70%機率使目標陷入劇毒狀態。"
+  },
+  "dragonKing": {
+    "name": "龍王",
+    "description": "提升龍屬性招式威力60%。"
+  },
+  "sandCorruption": {
+    "name": "沙暴腐蝕",
+    "description": "受到接觸類招式攻擊時對攻擊者造成最大生命值1/8的傷害，並降低其速度一級。"
+  },
+  "organicTwist": {
+    "name": "有機扭曲",
+    "description": "草系和岩石系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "healthySoak": {
+    "name": "健康浸潤",
+    "description": "受到水屬性招式攻擊時提升速度和攻擊各一級。"
+  },
+  "inkBlindness": {
+    "name": "墨水致盲",
+    "description": "攻擊後有35%機率使目標混亂。"
+  },
+  "inkFry": {
+    "name": "墨水炸裂",
+    "description": "使用水屬性招式後降低目標的速度和特防各一級。"
+  },
+  "mooTime": {
+    "name": "哞哞時刻",
+    "description": "生命值低於50%時提升防禦和速度50%。"
+  },
+  "fuelExchange": {
+    "name": "能量交換",
+    "description": "受到電屬性招式攻擊時提升速度一級。受到草屬性招式攻擊時回復最大生命值的1/4。受到惡屬性招式攻擊時提升防禦一級。受到妖精屬性招式攻擊時提升攻擊一級。受到超能力屬性招式攻擊時提升特防一級。受到冰屬性招式攻擊時提升特攻一級。"
+  },
+  "sunAndMoon": {
+    "name": "日月",
+    "description": "提升火屬性和岩石屬性招式威力20%。"
+  },
+  "nightAndDay": {
+    "name": "晝夜",
+    "description": "生命值高於50%時有40%機率在接觸時造成灼傷，生命值低於50%時有35%機率在接觸時造成睡眠。"
+  },
+  "twoHalves": {
+    "name": "二分",
+    "description": "在遭受致命一擊時存活，大幅降低對手速度，並回復50%生命值。"
+  },
+  "alienRock": {
+    "name": "外星岩石",
+    "description": "超能力系和岩石系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "robot": {
+    "name": "機器人",
+    "description": "進入戰鬥時提升所有能力值1級。每回合結束時隨機降低1個能力值1級。"
+  },
+  "golemPlus": {
+    "name": "石像強化",
+    "description": "提升岩石屬性招式威力30%並提升防禦30%。"
+  },
+  "nightmareFuel": {
+    "name": "噩夢燃料",
+    "description": "將一般系招式變為主要屬性，並提升威力20%。"
+  },
+  "smittyxtvVirus": {
+    "name": "SmittyNugget病毒",
+    "description": "擊倒對手後提升最高能力值1級。攻擊後有50%機率使目標隨機能力值降低1級。"
+  },
+  "staticCharge": {
+    "name": "靜電充能",
+    "description": "接觸時給予攻擊者充能狀態。接觸時有30%機率造成麻痺。"
+  },
+  "darkStampede": {
+    "name": "暗黑奔騰",
+    "description": "使用惡屬性招式後隨機提升一個能力值一級。"
+  },
+  "colorChangeDefense": {
+    "name": "變色防禦",
+    "description": "改變使用者的屬性以匹配它被擊中的招式屬性。如果使用者原本不是相同屬性，還會恢復最大HP的1/8。"
+  },
+  "colorChangeSteal": {
+    "name": "變色偷竊",
+    "description": "改變使用者的屬性以匹配受到攻擊的招式屬性。當使用者與目標共享屬性時偷取目標的攜帶道具。"
+  },
+  "hauntingEcho": {
+    "name": "纏繞迴響",
+    "description": "使用幽靈屬性招式時有30%機率使目標麻痺並造成最大生命值1/16的傷害。"
+  },
+  "maternalShade": {
+    "name": "母性庇護",
+    "description": "有50%機率將受到的傷害減少至四分之一。"
+  },
+  "spiritualBond": {
+    "name": "靈魂羈絆",
+    "description": "對攻擊者造成50%的反傷。"
+  },
+  "gravePower": {
+    "name": "墓地之力",
+    "description": "生命值低於40%時提升招式威力150%。有30%機率使目標陷入劇毒狀態。"
+  },
+  "undead": {
+    "name": "不死",
+    "description": "有70%機率在遭受致命一擊時存活。"
+  },
+  "scaleArmor": {
+    "name": "鱗甲",
+    "description": "減少25%來自水、電、火和草屬性招式的傷害。"
+  },
+  "pixelatedTongue": {
+    "name": "像素之舌",
+    "description": "有30%機率使目標陷入隨機狀態異常並降低隨機一個能力值一級。"
+  },
+  "staticTaste": {
+    "name": "靜電味覺",
+    "description": "對麻痺的目標招式威力提升50%。有35%機率使目標麻痺。"
+  },
+  "rockyHorrorShow": {
+    "name": "岩石恐怖秀",
+    "description": "防止對手換出。進入戰鬥時隨機提升兩個能力值一級。"
+  },
+  "hauntingBroadcast": {
+    "name": "幽靈廣播",
+    "description": "使用者失去戰鬥能力時詛咒所有對手寶可夢。"
+  },
+  "ectoplasmicTouch": {
+    "name": "靈質觸碰",
+    "description": "受到接觸類招式攻擊時對攻擊者造成最大生命值1/12的傷害。使用接觸類招式時對目標造成最大生命值1/12的傷害。"
+  },
+  "toxicCombustion": {
+    "name": "劇毒燃燒",
+    "description": "如果攻擊者處於劇毒狀態，造成其最大生命值1/8的傷害。有30%機率使目標陷入劇毒狀態。"
+  },
+  "flamingEmission": {
+    "name": "火焰排放",
+    "description": "火系和毒系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "burningDisease": {
+    "name": "燃燒疾病",
+    "description": "如果攻擊者處於灼傷狀態，造成其最大生命值1/8的傷害。有30%機率使目標灼傷。"
+  },
+  "steadyStance": {
+    "name": "穩固姿態",
+    "description": "提升使用者的攻擊、防禦、特攻和特防各20%。"
+  },
+  "balancedKick": {
+    "name": "平衡踢擊",
+    "description": "踢擊類招式必定命中且威力提升20%。"
+  },
+  "phantomPouch": {
+    "name": "幽靈袋",
+    "description": "受到攻擊或攻擊後有30%機率回復最大生命值的1/8。戰鬥後增加道具掉落率。"
+  },
+  "hauntingScythe": {
+    "name": "幽靈鐮刀",
+    "description": "根據對手較弱的防禦能力值，將攻擊改為特殊或物理攻擊。"
+  },
+  "soulCollector": {
+    "name": "靈魂收集者",
+    "description": "提升與收集屬性相符的招式威力。收集被擊倒的寶可夢的屬性。失去戰鬥能力時失去收集的屬性。"
+  },
+  "shadowSync": {
+    "name": "影子同步",
+    "description": "當對手能力值變化時，提升使用者最高能力值1級。所有招式威力提升20%。"
+  },
+  "frightfulCute": {
+    "name": "可怕可愛",
+    "description": "有33%機率提升招式威力50%或減半受到的攻擊傷害。"
+  },
+  "ghostify": {
+    "name": "幽靈化",
+    "description": "將一般屬性招式轉換為幽靈屬性並提升威力40%。"
+  },
+  "foreverPartner": {
+    "name": "永恆夥伴",
+    "description": "提升所有招式威力30%。有40%機率在遭受致命一擊時存活。"
+  },
+  "newAdaption": {
+    "name": "新適應",
+    "description": "減半來自火屬性和地面屬性的傷害。對火、毒和水屬性寶可夢使用鋼屬性招式時威力翻倍。"
+  },
+  "steelStealer": {
+    "name": "鋼鐵竊取",
+    "description": "受到鋼屬性招式攻擊時提升攻擊一級。"
+  },
+  "teraForce": {
+    "name": "太晶之力",
+    "description": "地面屬性招式可以命中飛行屬性。提升地面屬性招式威力30%。免疫威嚇特性。"
+  },
+  "mudiate": {
+    "name": "泥土化",
+    "description": "將一般屬性招式轉換為地面屬性並提升威力20%，且有20%機率降低對手命中率。"
+  },
+  "gottaGoFast": {
+    "name": "極速狂奔",
+    "description": "先手時招式威力翻倍。後手時受到的傷害翻倍。"
+  },
+  "imBlue": {
+    "name": "我是藍色",
+    "description": "提升水屬性招式威力。抵抗火、水和鋼屬性招式。對火、地面和岩石屬性寶可夢時招式威力提升50%。"
+  },
+  "notShadow": {
+    "name": "非影子",
+    "description": "免疫惡系、鋼系和幽靈系招式。分別在被惡系、鋼系或幽靈系招式擊中時提升攻擊、防禦或速度。"
+  },
+  "animified": {
+    "name": "動畫化",
+    "description": "抵抗一般和格鬥屬性招式。弱點是毒屬性招式。一般屬性招式變為妖精屬性且威力提升20%。有30%機率在遭受致命一擊時存活。"
+  },
+  "longForgotten": {
+    "name": "長久遺忘",
+    "description": "進入戰鬥時降低防禦和特防各一級。"
+  },
+  "waaaa": {
+    "name": "哇啊啊啊",
+    "description": "有25%機率造成要害攻擊。有10%機率使目標陷入劇毒狀態。"
+  },
+  "tooLate": {
+    "name": "太遲了",
+    "description": "招式必定後手。有35%機率使目標混亂、昏昏欲睡、寄生或詛咒。"
+  },
+  "memoriesOfTennis": {
+    "name": "網球回憶",
+    "description": "提升球、球體、寶珠、圓形、彈跳和黃色相關招式威力50%。使用這些招式時有30%機率使目標畏縮。"
+  },
+  "fireRafRaf": {
+    "name": "火焰拉夫拉夫",
+    "description": "提升火屬性招式威力50%。受到水屬性傷害加倍。一般屬性招式變為火屬性且威力提升20%。"
+  },
+  "positivity": {
+    "name": "正能量",
+    "description": "提升電屬性招式威力20%。有30%機率在遭受致命一擊時存活。有33%機率減半受到的攻擊傷害。"
+  },
+  "unfazed": {
+    "name": "無懼",
+    "description": "減半效果絕佳的招式傷害。"
+  },
+  "nightmareSauce": {
+    "name": "惡夢醬汁",
+    "description": "有50%的機率給予目標昏睡特性。如果目標擁有昏睡特性，則有30%的機率給予目標惡夢狀態。"
+  },
+  "hashSlingingSlasher": {
+    "name": "劈砍大師",
+    "description": "劈砍類招式威力翻倍。"
+  },
+  "lifeAdvice": {
+    "name": "人生建議",
+    "description": "進入戰鬥時隨機提升一個能力值一級。受到攻擊時有40%機率回復最大生命值的1/8。"
+  },
+  "woodCutter": {
+    "name": "伐木工",
+    "description": "對草屬性寶可夢招式威力提升150%。擊倒草屬性寶可夢後提升攻擊和速度各一級。"
+  },
+  "axe": {
+    "name": "斧頭",
+    "description": "提升劈砍類招式威力50%。提升鋼屬性招式威力30%。"
+  },
+  "rubberMan": {
+    "name": "橡膠人",
+    "description": "減半物理和鋼屬性招式傷害。引導電屬性招式攻擊自己並提升攻擊一級。受到水屬性傷害加倍。提升一般、格鬥和飛行屬性招式威力50%。"
+  },
+  "conquerorHaki": {
+    "name": "霸王色霸氣",
+    "description": "有20%機率使招式威力翻倍。接觸時有10%機率使目標陷入睡眠或麻痺狀態。"
+  },
+  "stretchy": {
+    "name": "伸縮",
+    "description": "50%機率使目標被纏繞，防止其換出並每回合造成傷害。"
+  },
+  "demonSwordsman": {
+    "name": "惡魔劍士",
+    "description": "提升斬擊類招式威力50%。鋼系、幽靈系和惡系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "cursedBlades": {
+    "name": "詛咒之刃",
+    "description": "提升劈砍類招式威力50%。有20%機率詛咒目標。"
+  },
+  "strawhat": {
+    "name": "草帽",
+    "description": "有15%機率在遭受致命一擊時存活。根據已失去戰鬥能力的隊友數量提升招式威力（最多提升100%）。"
+  },
+  "fairyFear": {
+    "name": "妖精恐懼",
+    "description": "提升妖精屬性招式威力20%。有10%機率使目標畏縮。"
+  },
+  "shadowCharm": {
+    "name": "暗影魅力",
+    "description": "進入戰鬥時降低攻擊一級。防止對手換出。"
+  },
+  "yinYang": {
+    "name": "陰陽",
+    "description": "幽靈系和妖精系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "stubbornStance": {
+    "name": "頑固姿態",
+    "description": "有70%機率在遭受致命一擊時存活。"
+  },
+  "miseryTouch": {
+    "name": "悲慘之觸",
+    "description": "攻擊後隨機改變目標的一個能力值一級。"
+  },
+  "justAJerk": {
+    "name": "就是個混蛋",
+    "description": "進入戰鬥時降低防禦一級。提升惡屬性招式威力20%。"
+  },
+  "bugabugabuga": {
+    "name": "蟲蟲蟲蟲",
+    "description": "進入戰鬥時降低所有能力值一級。防止對手換出。受到的攻擊傷害提升20%。"
+  },
+  "justAMaskedJerk": {
+    "name": "蒙面混蛋",
+    "description": "進入戰鬥時降低防禦和一個隨機能力值一級。提升所有招式威力20%。"
+  },
+  "flameSpirit": {
+    "name": "火焰精靈",
+    "description": "10%機率使目標燃燒。不受火系招式傷害，反而提升兩個隨機能力值1級。"
+  },
+  "soulBurn": {
+    "name": "靈魂燃燒",
+    "description": "有30%機率使目標灼傷。如果攻擊者處於灼傷狀態，造成其最大生命值1/8的傷害。"
+  },
+  "falseSafety": {
+    "name": "虛假安全",
+    "description": "進入戰鬥時降低特防一級。接觸時有10%機率使攻擊者灼傷、睡眠或麻痺。"
+  },
+  "forestFury": {
+    "name": "森林之怒",
+    "description": "生命值低於50%時提升草屬性招式威力150%。"
+  },
+  "vineFist": {
+    "name": "藤蔓之拳",
+    "description": "提升拳擊類招式威力30%。使用拳擊類招式時有30%機率使目標寄生或束縛。"
+  },
+  "theAvatar": {
+    "name": "降世神通",
+    "description": "提升火、水、飛行和地面屬性招式威力20%。"
+  },
+  "enlightened": {
+    "name": "開悟",
+    "description": "提升超能力屬性招式威力20%。效果不好的招式變為一般效果。"
+  },
+  "happyLittleAccidents": {
+    "name": "快樂小意外",
+    "description": "提升威力65以上的招式威力50%。提升威力60以下的招式威力75%。"
+  },
+  "originalAsmr": {
+    "name": "原創ASMR",
+    "description": "有20%機率使目標睡眠。減少受到的傷害20%。提升聲音類招式威力30%。減半來自聲音類招式的傷害。"
+  },
+  "afropower": {
+    "name": "爆炸頭之力",
+    "description": "有30%機率使招式威力變為三倍。"
+  },
+  "insectInfusion": {
+    "name": "蟲蟲注入",
+    "description": "有50%機率使目標陷入寄生狀態持續5回合。"
+  },
+  "sentientAnt": {
+    "name": "有感知的螞蟻",
+    "description": "根據對手最高的能力值，提升自身能力1或2級。如果對手最高能力值是攻擊，則提升防禦；如果是特攻，則提升特防；如果是特防，則提升特攻；如果是速度，則提升速度2級。"
+  },
+  "antRegen": {
+    "name": "蟻族再生",
+    "description": "每回合結束時回復生命值。"
+  },
+  "v8Engine": {
+    "name": "V8引擎",
+    "description": "每回合結束時提升速度一級。"
+  },
+  "selfDriving": {
+    "name": "自動駕駛",
+    "description": "將一般屬性招式轉換為超能力屬性並提升威力50%。"
+  },
+  "limitedEdition": {
+    "name": "限量版",
+    "description": "進入戰鬥時隨機提升兩個能力值一級。有33%機率提升招式威力20%。"
+  },
+  "fieryDisguise": {
+    "name": "火焰偽裝",
+    "description": "當寶可夢進入戰鬥或生命值全滿時受到保護免疫傷害。受到傷害後此保護效果消失。火屬性招式可以充能此特性。"
+  },
+  "playfulBlaze": {
+    "name": "頑皮烈焰",
+    "description": "生命值低時提升火屬性招式威力。使用火屬性招式後有30%機率提升攻擊一級。使用妖精屬性招式時有10%機率使目標灼傷。"
+  },
+  "aquaDisguise": {
+    "name": "水之偽裝",
+    "description": "當寶可夢進入戰鬥或生命值全滿時受到保護免疫傷害。受到傷害後此保護效果消失。水屬性招式可以充能此特性。"
+  },
+  "phantomTorrent": {
+    "name": "幻影激流",
+    "description": "生命值低時提升水屬性招式威力。使用水屬性招式後有30%機率提升特攻一級。使用妖精屬性招式時有10%機率使目標陷入漩渦。"
+  },
+  "sillyPressure": {
+    "name": "滑稽壓迫",
+    "description": "增加以此寶可夢為目標的招式PP消耗。使用超能力屬性招式後有30%機率提升攻擊一級。使用妖精屬性招式時有10%機率使目標連續使用。"
+  },
+  "telekineticDisguise": {
+    "name": "念力偽裝",
+    "description": "當寶可夢進入戰鬥或生命值全滿時受到保護免疫傷害。受到傷害後此保護效果消失。超能力屬性招式可以充能此特性。"
+  },
+  "electricDisguise": {
+    "name": "電氣偽裝",
+    "description": "當寶可夢進入戰鬥或生命值全滿時受到保護免疫傷害。受到傷害後此保護效果消失。電屬性招式可以充能此特性。"
+  },
+  "lovelyStatic": {
+    "name": "可愛靜電",
+    "description": "接觸時有30%機率使攻擊者麻痺。使用電屬性招式後有30%機率提升特攻一級。使用妖精屬性招式時，如果目標是異性有20%機率使其著迷。"
+  },
+  "ancientDisguise": {
+    "name": "遠古偽裝",
+    "description": "當寶可夢進入戰鬥或生命值全滿時受到保護免疫傷害。受到傷害後此保護效果消失。岩石屬性招式可以充能此特性。"
+  },
+  "madeToLast": {
+    "name": "持久耐用",
+    "description": "有40%機率在遭受致命一擊時存活。使用岩石屬性招式後有30%機率提升速度一級。使用妖精屬性招式時有10%機率束縛目標。"
+  },
+  "multiPiece": {
+    "name": "多重碎片",
+    "description": "在遭受致命一擊時存活，然後大幅降低速度。受到攻擊後回復生命值。"
+  },
+  "alienType": {
+    "name": "外星類型",
+    "description": "提升冰、電和草屬性招式威力20%。"
+  },
+  "waterPowered": {
+    "name": "水力驅動",
+    "description": "將非超能力系和非地面系招式變為水系招式，並提升威力20%。不受水系招式傷害，反而提升隨機能力值1級。"
+  },
+  "madeOfIce": {
+    "name": "冰之軀",
+    "description": "接觸時有30%機率使攻擊者冰凍。提升冰屬性招式威力30%。"
+  },
+  "shredded": {
+    "name": "撕裂",
+    "description": "有33%機率使招式威力翻倍。將水和一般屬性招式轉換為格鬥屬性並提升威力20%。"
+  },
+  "sculptedIce": {
+    "name": "冰之雕塑",
+    "description": "每回合結束時隨機提升速度、防禦或攻擊一級。"
+  },
+  "quaker": {
+    "name": "震動者",
+    "description": "地面屬性招式可以命中飛行屬性。提升名字中含有「地震」或「震級」的招式威力50%。"
+  },
+  "rockFortress": {
+    "name": "岩石堡壘",
+    "description": "減少50%效果絕佳的招式傷害。"
+  },
+  "rockControl": {
+    "name": "岩石掌控",
+    "description": "受到物理招式攻擊時設置隱形岩。提升岩石屬性招式威力30%。"
+  },
+  "unstoppablePoison": {
+    "name": "無法阻擋的毒",
+    "description": "毒屬性招式可以命中鋼屬性。提升毒屬性招式威力20%。有30%機率使目標陷入劇毒狀態。"
+  },
+  "swiftClaws": {
+    "name": "迅捷利爪",
+    "description": "提升接觸類招式威力30%。使用接觸類招式時有30%機率提升命中率、攻擊或速度一級。"
+  },
+  "tripleThreat": {
+    "name": "三重威脅",
+    "description": "有10%機率造成要害攻擊。有10%機率使目標畏縮。接觸時有10%機率使目標冰凍、麻痺或灼傷。"
+  },
+  "dragonWrath": {
+    "name": "龍之憤怒",
+    "description": "受到接觸類招式攻擊時有50%機率對攻擊者造成其最大生命值1/6的傷害。"
+  },
+  "hydraResilience": {
+    "name": "九頭蛇韌性",
+    "description": "生命值全滿時在遭受致命一擊時存活。免疫一擊必殺招式。有25%機率在遭受致命一擊時存活。"
+  },
+  "toxicOverload": {
+    "name": "劇毒過載",
+    "description": "有15%機率使目標陷入劇毒狀態。對中毒或劇毒狀態的目標招式威力提升75%。"
+  },
+  "recycleEnergy": {
+    "name": "能量回收",
+    "description": "受到攻擊或攻擊後有50%機率回復最大生命值的1/8。"
+  },
+  "neetProduced": {
+    "name": "宅宅製造",
+    "description": "受到水和一般屬性傷害加倍。戰鬥後增加道具掉落率。對一般、妖精和格鬥屬性寶可夢招式威力翻倍。"
+  },
+  "ancientAutomaton": {
+    "name": "遠古機械",
+    "description": "每回合結束時隨機提升速度、防禦或攻擊一級。"
+  },
+  "shadowOfColossus": {
+    "name": "巨神之影",
+    "description": "有10%機率在遭受致命一擊時存活。提升幽靈屬性招式威力30%。減少受到的傷害15%。"
+  },
+  "trueFear": {
+    "name": "真實恐懼",
+    "description": "每回合結束時隨機降低對手一個能力值一級。"
+  },
+  "sumoMaster": {
+    "name": "相撲大師",
+    "description": "提升格鬥屬性招式威力30%。將一般屬性招式轉換為地面屬性並提升威力30%。"
+  },
+  "steadfastBulk": {
+    "name": "堅定壯碩",
+    "description": "受到攻擊時有30%機率畏縮。畏縮時提升速度兩級，攻擊和防禦各一級。"
+  },
+  "bigGuts": {
+    "name": "大膽氣魄",
+    "description": "當寶可夢處於異常狀態時攻擊翻倍。無視灼傷造成的攻擊降低。"
+  },
+  "luchadorsSpirit": {
+    "name": "摔角手之魂",
+    "description": "將一般屬性招式轉換為飛行屬性並提升威力20%。擊倒對手後提升最高能力值一級。"
+  },
+  "maskedMight": {
+    "name": "蒙面之力",
+    "description": "生命值高於50%時攻擊和特攻翻倍。"
+  },
+  "nachoLibre": {
+    "name": "自由摔角手",
+    "description": "提升格鬥屬性招式威力60%。"
+  },
+  "pseudoScale": {
+    "name": "偽鱗",
+    "description": "生命值全滿時減半受到的傷害。受到接觸類招式攻擊時對攻擊者造成最大生命值1/8的傷害。"
+  },
+  "dracoForm": {
+    "name": "龍形態",
+    "description": "提升龍系招式威力20%。龍系和一般系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "dittoType": {
+    "name": "百變怪類型",
+    "description": "改變使用者的屬性以抵抗受到攻擊的招式屬性。屬性改變時回復最大生命值的1/8。"
+  },
+  "morphingBlaze": {
+    "name": "變形烈焰",
+    "description": "生命值低時提升火屬性招式威力。生命值低於50%時，對水屬性時火屬性招式變為電屬性，對地面屬性時變為水屬性。"
+  },
+  "flameForm": {
+    "name": "火焰形態",
+    "description": "提升火系招式威力20%。火系和一般系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "ultimateAdaptation": {
+    "name": "究極適應",
+    "description": "提升所有招式威力20%。效果絕佳的招式對此寶可夢變為一般效果。"
+  },
+  "pseudoPerfection": {
+    "name": "偽完美",
+    "description": "各有10%機率：造成要害攻擊、減半受到的傷害、招式威力翻倍、受到攻擊或攻擊後回復最大生命值的1/8。"
+  },
+  "dnaChange": {
+    "name": "DNA改變",
+    "description": "使用招式時有50%機率改變屬性並回復最大生命值的1/8。"
+  },
+  "realisticStatic": {
+    "name": "真實靜電",
+    "description": "接觸時有50%機率使攻擊者麻痺。接觸時隨機降低攻擊者一個能力值一級。受到接觸類招式攻擊時對攻擊者造成最大生命值1/8的傷害。"
+  },
+  "mascotForm": {
+    "name": "吉祥物形態",
+    "description": "提升電系招式威力20%。電系和一般系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "copyGuard": {
+    "name": "複製防衛",
+    "description": "此寶可夢使用的招式必定命中。減少25%效果絕佳的招式傷害。"
+  },
+  "muscleForm": {
+    "name": "肌肉形態",
+    "description": "提升格鬥系招式威力20%。格鬥系和一般系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "unrealPressure": {
+    "name": "虛幻壓迫",
+    "description": "增加2點以此寶可夢為目標的招式PP消耗。進入戰鬥時降低對手一個隨機能力值和命中率一級。"
+  },
+  "psychoForm": {
+    "name": "超能形態",
+    "description": "提升超能力系招式威力20%。超能力系和一般系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "clubClobber": {
+    "name": "棍棒重擊",
+    "description": "提升岩石屬性招式威力20%。提升接觸類招式威力40%。"
+  },
+  "yabaDabaDoo": {
+    "name": "呀吧呀吧嘟",
+    "description": "進入戰鬥時提升所有能力值一級。每回合結束時隨機降低一個能力值一級。"
+  },
+  "meteorProof": {
+    "name": "隕石防護",
+    "description": "減少25%來自水、岩石、火和冰屬性招式的傷害。"
+  },
+  "sharkShred": {
+    "name": "鯊魚撕裂",
+    "description": "使用接觸類招式時對目標造成最大生命值1/8的傷害。使用接觸類招式時回復最大生命值的1/8。"
+  },
+  "attackBoost": {
+    "name": "攻擊提升",
+    "description": "每回合結束時提升攻擊一級。"
+  },
+  "reversedPsychology": {
+    "name": "反向心理",
+    "description": "反轉能力值變化。反轉招式的屬性相剋效果。"
+  },
+  "tailCommand": {
+    "name": "尾巴指揮",
+    "description": "提升尾巴相關招式威力75%。"
+  },
+  "abyssalAqua": {
+    "name": "深淵水域",
+    "description": "水系、幽靈系和惡系招式對相同的屬性共享屬性相剋關係！30%機率使目標陷入漩渦。"
+  },
+  "omniscale": {
+    "name": "全能鱗片",
+    "description": "有30%機率減半受到的攻擊傷害。受到攻擊時有30%機率隨機提升一個能力值一級。"
+  },
+  "bounceBack": {
+    "name": "反彈",
+    "description": "有30%機率在遭受致命一擊時存活並對攻擊者造成最大生命值1/8的傷害。"
+  },
+  "counterCoat": {
+    "name": "反擊外衣",
+    "description": "受到接觸類招式攻擊時對攻擊者造成最大生命值1/6的傷害。減少受到的傷害15%。"
+  },
+  "shinyScale": {
+    "name": "閃亮鱗片",
+    "description": "有10%機率完全迴避攻擊傷害。"
+  },
+  "goldenLuck": {
+    "name": "黃金幸運",
+    "description": "有30%機率造成要害攻擊。"
+  },
+  "oneInAMillion": {
+    "name": "百萬分之一",
+    "description": "有5%機率使招式威力變為五倍。"
+  },
+  "apexPredator": {
+    "name": "頂級掠食者",
+    "description": "進入戰鬥時降低防禦一級。擊倒對手後提升最高能力值一級。"
+  },
+  "terrorTunnel": {
+    "name": "恐怖地道",
+    "description": "挖洞招式威力翻倍。"
+  },
+  "looseThreads": {
+    "name": "鬆散線條",
+    "description": "有30%機率束縛目標。束縛類招式威力變為五倍。"
+  },
+  "streetSmart": {
+    "name": "街頭智慧",
+    "description": "提升鋼、惡、一般和格鬥屬性招式威力20%。"
+  },
+  "boosheFurCoat": {
+    "name": "布什毛皮",
+    "description": "減半來自物理招式的傷害。有40%機率減少25%來自特殊招式的傷害。"
+  },
+  "champion": {
+    "name": "冠軍",
+    "description": "擊倒對手後提升所有能力值1級。使用招式後使自身陷入劇毒狀態。"
+  },
+  "snakeScale": {
+    "name": "蛇鱗",
+    "description": "有50%機率減少25%受到的傷害。接觸時有30%機率使攻擊者陷入劇毒狀態。"
+  },
+  "deathClaws": {
+    "name": "死亡利爪",
+    "description": "提升接觸類招式威力50%。效果不好的招式變為一般效果。"
+  },
+  "industrialPower": {
+    "name": "工業力量",
+    "description": "提升電、鋼和毒屬性招式威力30%。"
+  },
+  "cogOverload": {
+    "name": "齒輪過載",
+    "description": "提升齒輪和旋轉相關招式威力50%。"
+  },
+  "multiGear": {
+    "name": "多重齒輪",
+    "description": "使用換檔招式時提升速度和一個隨機能力值一級。"
+  },
+  "sugarRush": {
+    "name": "糖分衝擊",
+    "description": "生命值高於50%時招式必定先手。生命值高於50%時提升招式威力20%。"
+  },
+  "livingDelicacy": {
+    "name": "活力美味",
+    "description": "進入戰鬥時隨機提升兩個能力值一級。有33%機率提升招式威力50%。受到攻擊時有30%機率回復最大生命值的1/8。"
+  },
+  "abandoned": {
+    "name": "被遺棄",
+    "description": "受到攻擊後提升攻擊和速度各一級。"
+  },
+  "lazyMight": {
+    "name": "懶惰之力",
+    "description": "生命值低時提升所有招式威力。"
+  },
+  "lasagna": {
+    "name": "千層麵",
+    "description": "生命值低於50%時回復最大生命值的1/2。每場戰鬥只能發動一次。"
+  },
+  "alienCat": {
+    "name": "外星貓",
+    "description": "提升超能力屬性招式威力20%。使異性的貓型寶可夢著迷。免疫地面屬性招式。"
+  },
+  "phaser": {
+    "name": "相位器",
+    "description": "免疫接觸類招式的傷害。"
+  },
+  "virtualTacos": {
+    "name": "虛擬玉米餅",
+    "description": "每回合結束時回復最大生命值的1/8。"
+  },
+  "heyLookAtMe": {
+    "name": "嘿看我這裡",
+    "description": "進入戰鬥時隨機降低兩個能力值一級並提升一個隨機能力值一級。"
+  },
+  "limitedTime": {
+    "name": "限時特賣",
+    "description": "進入戰鬥時陷入劇毒狀態。有30%機率使招式威力變為三倍。擊倒對手後隨機提升一個能力值一級。"
+  },
+  "boxBorn": {
+    "name": "箱子出生",
+    "description": "降低75%球、球體和寶珠相關招式的威力。提升鋼屬性招式威力20%。"
+  },
+  "imAPickle": {
+    "name": "我是泡菜",
+    "description": "受到水屬性招式攻擊時回復生命值。受到草屬性招式攻擊時提升速度一級。受到鋼屬性招式攻擊時提升攻擊一級。有10%機率使目標畏縮。"
+  },
+  "resourceful": {
+    "name": "資源豐富",
+    "description": "有30%機率偷取目標的攜帶道具並提升攻擊一級。戰鬥後有30%機率獲得道具。"
+  },
+  "deadlyBrine": {
+    "name": "致命鹽水",
+    "description": "將一般系招式變為水系招式。提升水系招式威力30%。水系和毒系招式對相同的屬性共享屬性相剋關係！10%機率使目標陷入劇毒狀態。"
+  },
+  "thicc": {
+    "name": "厚實",
+    "description": "有30%機率減少25%受到的傷害。"
+  },
+  "enforcer": {
+    "name": "執行者",
+    "description": "惡系和鋼系招式對相同的屬性共享屬性相剋關係！擊倒對手後提升攻擊1級。"
+  },
+  "spookySense": {
+    "name": "幽靈感應",
+    "description": "減少25%來自幽靈和惡屬性招式的傷害。如果對手有效果絕佳的招式，提升攻擊和速度各一級。"
+  },
+  "unyieldingCourage": {
+    "name": "不屈勇氣",
+    "description": "生命值全滿時在遭受致命一擊時存活。免疫一擊必殺招式。有25%機率在遭受致命一擊時存活。"
+  },
+  "lovePower": {
+    "name": "愛之力量",
+    "description": "有50%機率使招式威力翻倍。如果目標是異性有30%機率使其著迷。"
+  },
+  "spiritWinds": {
+    "name": "靈風",
+    "description": "幽靈系和草系招式對相同的屬性共享屬性相剋關係！將惡系和一般系招式變為幽靈系招式，並提升威力20%。"
+  },
+  "leafDancer": {
+    "name": "葉之舞者",
+    "description": "使用惡屬性招式後隨機提升一個能力值一級。受到草屬性招式攻擊時隨機提升一個能力值一級。"
+  },
+  "slayerSensei": {
+    "name": "殺手導師",
+    "description": "對幽靈和惡屬性寶可夢招式威力變為三倍。擊倒對手後隨機提升一個能力值一級。"
+  },
+  "balanced": {
+    "name": "平衡",
+    "description": "免疫混亂。此寶可夢使用的招式必定命中。有50%機率減半受到的攻擊傷害。"
+  },
+  "enhancedFocus": {
+    "name": "強化專注",
+    "description": "有25%機率造成要害攻擊。"
+  },
+  "luckySeven": {
+    "name": "幸運七號",
+    "description": "有70%機率提升基礎威力70的招式威力70%。攻擊後有70%機率隨機提升一個能力值一級。"
+  },
+  "lastLaugh": {
+    "name": "最後一笑",
+    "description": "失去戰鬥能力時對攻擊者造成其最大生命值1/4的傷害。"
+  },
+  "foxWisdom": {
+    "name": "狐狸智慧",
+    "description": "將一般系招式變為超能力系招式。提升超能力系招式威力30%。火系和超能力系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "eternalYouth": {
+    "name": "永恆青春",
+    "description": "提升妖精屬性招式威力30%。將一般屬性招式轉換為妖精屬性。有10%機率在遭受致命一擊時存活。"
+  },
+  "flamingChakra": {
+    "name": "燃燒查克拉",
+    "description": "將非超能力屬性招式轉換為火屬性。提升火屬性招式威力50%。有10%機率使目標灼傷。"
+  },
+  "adaptabugility": {
+    "name": "蟲之適應",
+    "description": "蟲屬性招式威力變為三倍。"
+  },
+  "shellRepair": {
+    "name": "殼之修復",
+    "description": "使用破殼招式時回復最大生命值的1/4。使用破殼招式時提升防禦和特防各一級。每場戰鬥只能發動一次。"
+  },
+  "squeezer": {
+    "name": "擠壓者",
+    "description": "纏繞招式威力變為五倍。有30%機率束縛目標。"
+  },
+  "greenSpaghettiMonster": {
+    "name": "綠色義大利麵怪獸",
+    "description": "使用草屬性招式時有15%機率束縛目標。提升草屬性招式威力20%。使用草屬性招式時有10%機率降低目標速度一級。"
+  },
+  "leechVines": {
+    "name": "吸取藤蔓",
+    "description": "藤鞭招式威力翻倍。使用藤鞭招式時有30%機率使目標寄生或束縛。"
+  },
+  "regeneratorPlus": {
+    "name": "再生力強化",
+    "description": "換出時回復最大生命值的45%。"
+  },
+  "plaguePsyche": {
+    "name": "瘟疫心靈",
+    "description": "毒系和超能力系招式對相同的屬性共享屬性相剋關係！將一般系招式變為毒系招式。10%機率使目標混亂或中毒。"
+  },
+  "toxicTrance": {
+    "name": "劇毒恍惚",
+    "description": "有30%機率使目標陷入劇毒狀態。有30%機率使目標睡眠。當使用者處於異常狀態時提升招式威力50%。"
+  },
+  "permafrostArmor": {
+    "name": "永凍護甲",
+    "description": "減半來自火、冰和岩石屬性招式的傷害。"
+  },
+  "glacialPace": {
+    "name": "冰河步調",
+    "description": "進入戰鬥時降低速度兩級。提升冰屬性招式威力20%。"
+  },
+  "iceKing": {
+    "name": "冰之王",
+    "description": "提升冰屬性招式威力50%。將一般屬性招式轉換為冰屬性並提升威力20%。有5%機率使目標冰凍。"
+  },
+  "despair": {
+    "name": "絕望",
+    "description": "每回合結束時隨機降低對手一個能力值一級並隨機提升自身一個能力值一級。"
+  },
+  "ohayogosumasu": {
+    "name": "早安你好",
+    "description": "進入戰鬥時降低攻擊、防禦、特攻、特防和速度各一級。"
+  },
+  "abilityTextHere": {
+    "name": "特性文字在此",
+    "description": "進入戰鬥時給予對手此特性。進入戰鬥時隨機提升兩個能力值一級。"
+  },
+  "exceptionCaught": {
+    "name": "異常捕獲",
+    "description": "在遭受致命一擊時存活，然後大幅降低速度。受到攻擊後回復生命值。"
+  },
+  "fourOFour": {
+    "name": "四零四",
+    "description": "有10%機率完全迴避攻擊傷害。"
+  },
+  "shadowSlayer": {
+    "name": "暗影殺手",
+    "description": "使用幽靈或鋼屬性招式時有30%機率使目標灼傷、中毒、麻痺或陷入劇毒狀態。"
+  },
+  "nightmareEmerald": {
+    "name": "惡夢翡翠",
+    "description": "提升岩石和惡屬性招式的威力30%。有50%的機率給予目標昏睡特性或惡夢狀態。"
+  },
+  "imaginary": {
+    "name": "虛幻",
+    "description": "將一般屬性招式轉換為妖精屬性並提升威力20%。有30%機率減半來自物理招式的傷害。"
+  },
+  "splinterSkin": {
+    "name": "碎片皮膚",
+    "description": "受到接觸類招式攻擊時對攻擊者造成最大生命值1/12的傷害。使用接觸類招式時對目標造成最大生命值1/12的傷害。"
+  },
+  "jujutsuSorcerer": {
+    "name": "咒術師",
+    "description": "當使用者或目標處於異常狀態時提升招式威力150%。有20%機率治癒自身或目標的異常狀態。有30%機率造成隨機異常狀態。無視灼傷造成的攻擊降低。如果未處於異常狀態，有50%機率使自身陷入隨機異常狀態。"
+  },
+  "toxicKing": {
+    "name": "劇毒之王",
+    "description": "必定使目標陷入劇毒狀態。"
+  },
+  "swampKing": {
+    "name": "沼澤之王",
+    "description": "30%機率使目標中毒。將一般系招式變為水系招式，並提升威力20%。水系和毒系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "rageSoul": {
+    "name": "憤怒之魂",
+    "description": "根據已失去戰鬥能力的隊友數量提升招式威力（最多提升150%）。"
+  },
+  "darkSide": {
+    "name": "黑暗面",
+    "description": "惡屬性招式威力翻倍。"
+  },
+  "puppetMaster": {
+    "name": "傀儡大師",
+    "description": "對謎擬Q和皮皮玩偶招式威力變為三倍。有20%機率詛咒或束縛一般和格鬥屬性寶可夢。有10%機率減半受到的攻擊傷害。"
+  },
+  "blackAndRed": {
+    "name": "黑與紅",
+    "description": "惡系和火系招式對相同的屬性共享屬性相剋關係！15%機率使目標燃燒。將一般系招式變為惡系招式，並提升威力20%。"
+  },
+  "zombieExperience": {
+    "name": "殭屍經驗",
+    "description": "對惡、幽靈和地面屬性寶可夢招式威力翻倍。擊倒惡、幽靈或地面屬性寶可夢後提升所有能力值一級。"
+  },
+  "lastHope": {
+    "name": "最後希望",
+    "description": "生命值低時提升所有招式威力。"
+  },
+  "ugly": {
+    "name": "醜陋",
+    "description": "進入戰鬥時和每回合結束時隨機降低一個能力值一級。有10%機率使目標畏縮。"
+  },
+  "blandCardboardEater": {
+    "name": "無味紙板食客",
+    "description": "對SmittyXTV招式威力變為三倍。受到草屬性招式攻擊時提升攻擊一級。使用草屬性招式時回復最大生命值的1/8。"
+  },
+  "boring": {
+    "name": "無聊",
+    "description": "進入戰鬥時和每回合結束時隨機降低一個能力值一級。提升一般屬性招式威力30%。"
+  },
+  "moldyTouch": {
+    "name": "發霉之觸",
+    "description": "接觸時有10%機率使目標寄生或陷入劇毒狀態。提升毒屬性招式威力20%。受到破格特性的傷害加倍。"
+  },
+  "eternalGiggle": {
+    "name": "永恆咯咯笑",
+    "description": "受到破格特性的傷害加倍。使用者失去戰鬥能力時使所有對手混亂和畏縮。"
+  },
+  "redMenace": {
+    "name": "紅色威脅",
+    "description": "接觸時有5%機率詛咒目標或10%機率使目標灼傷。提升火屬性招式威力20%。受到火屬性招式攻擊時提升速度一級。受到破格特性的傷害加倍。"
+  },
+  "ghostlyMold": {
+    "name": "幽靈黴菌",
+    "description": "接觸時有10%的機率使目標陷入劇毒狀態。幽靈和毒屬性招式對相同屬性共享屬性相剋關係！將一般屬性招式變為幽靈屬性並提升威力20%。受到破格招式時傷害翻倍。"
+  },
+  "pacFungus": {
+    "name": "吃豆人真菌",
+    "description": "接觸時有30%機率使目標寄生。如果目標處於寄生狀態則提升速度和攻擊各一級。受到破格特性的傷害加倍。"
+  },
+  "secretSauce": {
+    "name": "秘密醬料",
+    "description": "有10%機率使目標麻痺、灼傷、中毒或陷入劇毒狀態。有10%機率造成目標最大生命值1/8的傷害。有10%機率施加各種狀態或效果。"
+  },
+  "mcpuzzle": {
+    "name": "麥當勞拼圖",
+    "description": "有20%機率使目標混亂。有10%機率使目標畏縮。有20%機率提升招式威力150%。擊倒對手後隨機提升一個能力值一級。"
+  },
+  "mayITakeYourOrder": {
+    "name": "我能為您點餐嗎",
+    "description": "此寶可夢使用的招式必定先手。"
+  },
+  "stealthShipping": {
+    "name": "隱匿運輸",
+    "description": "受到接觸類招式攻擊時有50%機率設置撒菱，20%機率設置隱形岩，20%機率設置毒菱，或10%機率設置黏網。"
+  },
+  "cardboardEmpire": {
+    "name": "紙板帝國",
+    "description": "擊倒對手後隨機提升兩個能力值一級。擊倒對手後回復最大生命值的1/8。"
+  },
+  "aWinner": {
+    "name": "贏家",
+    "description": "擊倒對手後隨機提升一個能力值一級。"
+  },
+  "smugAura": {
+    "name": "自傲氣場",
+    "description": "將一般系招式變為毒系招式，並提升威力20%。超能力系和毒系招式對相同的屬性共享屬性相剋關係！10%機率使目標中毒。"
+  },
+  "deepThoughts": {
+    "name": "深層思考",
+    "description": "使用招式後有30%機率使目標混亂。"
+  },
+  "intellyLectAlly": {
+    "name": "智慧夥伴",
+    "description": "每回合結束時提升特攻一級。"
+  },
+  "insomniaInk": {
+    "name": "失眠墨水",
+    "description": "有50%機率給予目標昏睡特性或夢魘狀態。"
+  },
+  "nightmareClarinet": {
+    "name": "夢魘單簧管",
+    "description": "將所有招式轉換為聲音類並提升威力20%。提升聲音類招式威力50%。有10%機率詛咒目標。"
+  },
+  "jellyfishFever": {
+    "name": "水母熱",
+    "description": "將一般系招式變為火系招式，並提升威力20%。使用特殊招式時有10%機率使目標陷入劇毒狀態。使用物理招式時有10%機率使目標燃燒。火系和毒系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "deepSeaVirus": {
+    "name": "深海病毒",
+    "description": "如果攻擊者處於劇毒狀態，造成其最大生命值1/8的傷害。有30%機率使目標陷入劇毒狀態。"
+  },
+  "bubblingBrains": {
+    "name": "冒泡大腦",
+    "description": "提升水屬性招式威力50%。使用接觸類招式時回復最大生命值的1/8。"
+  },
+  "cloakOfShadows": {
+    "name": "暗影斗篷",
+    "description": "提升幽靈屬性招式威力20%。將一般屬性招式轉換為幽靈屬性並提升威力20%。減少25%效果絕佳的招式傷害。"
+  },
+  "acidWater": {
+    "name": "酸性水",
+    "description": "毒系和水系招式對相同的屬性共享屬性相剋關係！將一般系招式變為毒系招式，並提升威力20%。對一般系、鋼系和格鬥系寶可夢使用水系或毒系招式時，威力加倍。"
+  },
+  "eightBitBlaze": {
+    "name": "八位元烈焰",
+    "description": "生命值低時提升火屬性招式威力。有10%機率使目標陷入火焰漩渦。將一般屬性招式轉換為火屬性並提升威力20%。有10%機率使目標灼傷。"
+  },
+  "charredMemory": {
+    "name": "燒焦記憶",
+    "description": "使用火系招式後降低目標特防1級。火系和超能力系招式對相同的屬性共享屬性相剋關係！將一般系招式變為超能力系招式，並提升威力20%。"
+  },
+  "blackAndWhite": {
+    "name": "黑與白",
+    "description": "免疫非一般屬性和非惡屬性招式的傷害。"
+  },
+  "eightBitTerror": {
+    "name": "八位元恐懼",
+    "description": "提升夢魘相關招式威力20%。有10%機率詛咒目標或使目標畏縮。有10%機率造成目標最大生命值1/8的傷害。"
+  },
+  "corruptionBlaze": {
+    "name": "腐化烈焰",
+    "description": "HP低時提升火系招式威力。惡系和火系招式對相同的屬性共享屬性相剋關係！30%機率使目標最後使用的招式無法使用。"
+  },
+  "oaksMistake": {
+    "name": "大木的錯誤",
+    "description": "進入戰鬥時隨機降低一個能力值一級。有10%機率使目標寄生或陷入漩渦。有10%機率使目標灼傷。攻擊後有30%機率回復最大生命值的1/8。"
+  },
+  "shellShock": {
+    "name": "殼體震撼",
+    "description": "水系和電系招式對相同的屬性共享屬性相剋關係！將一般系招式變為電系招式，並提升威力20%。使用水系或一般系招式時有10%機率使目標畏縮。使用水系或一般系招式時有10%機率使目標麻痺。"
+  },
+  "darkSeed": {
+    "name": "黑暗種子",
+    "description": "草系和惡系招式對相同的屬性共享屬性相剋關係！將一般系招式變為惡系招式，並提升威力20%。使用草系或一般系招式時有10%機率使目標畏縮或種下種子。"
+  },
+  "cursedShell": {
+    "name": "詛咒之殼",
+    "description": "有10%機率詛咒目標。減少25%來自物理招式的傷害。"
+  },
+  "gothamsNightmare": {
+    "name": "高譚市夢魘",
+    "description": "防止對手換出。有20%機率造成要害攻擊。"
+  },
+  "doomGadgets": {
+    "name": "末日裝置",
+    "description": "將一般屬性招式轉換為鋼屬性並提升威力20%。提升鋼屬性招式威力20%。有10%機率使目標麻痺、灼傷、中毒或陷入劇毒狀態。"
+  },
+  "memeArmor": {
+    "name": "迷因護甲",
+    "description": "有50%機率減半受到的攻擊傷害。受到攻擊後隨機提升一個能力值一級並隨機降低一個能力值一級。"
+  },
+  "memeified": {
+    "name": "迷因化",
+    "description": "有10%機率在遭受致命一擊時存活。有20%機率使特殊招式威力翻倍。"
+  },
+  "hungryTroll": {
+    "name": "飢餓巨魔",
+    "description": "攻擊後有50%機率回復最大生命值的1/8。攻擊後有50%機率隨機提升一個能力值一級。"
+  },
+  "monotoneMood": {
+    "name": "單調心情",
+    "description": "將所有招式轉換為一般屬性。提升一般屬性招式威力20%。一般屬性招式可以命中幽靈屬性。有10%機率使目標昏昏欲睡。"
+  },
+  "boredomAura": {
+    "name": "無聊光環",
+    "description": "每回合結束時隨機降低對手一個能力值兩級。"
+  },
+  "squidlyStep": {
+    "name": "魷魚步伐",
+    "description": "提升聲音類和踢擊類招式威力30%。受到地面或水屬性招式攻擊時提升速度一級。"
+  },
+  "nightmareInk": {
+    "name": "夢魘墨水",
+    "description": "有90%機率給予目標昏睡特性或夢魘狀態。"
+  },
+  "abyssalMelody": {
+    "name": "深淵旋律",
+    "description": "將所有招式轉換為聲音類並提升威力20%。提升聲音類招式威力50%。有10%機率詛咒目標。"
+  },
+  "charmingMist": {
+    "name": "迷人薄霧",
+    "description": "幽靈系和妖精系招式對相同的屬性共享屬性相剋關係！將一般系招式變為妖精系招式，並提升威力20%。使用妖精系或幽靈系招式時，如果目標是異性，有20%機率使其著迷。"
+  },
+  "ectoplasmicCharm": {
+    "name": "靈質魅力",
+    "description": "使用幽靈屬性招式時，如果目標是異性有20%機率使其著迷。有50%機率造成目標最大生命值1/8的傷害。"
+  },
+  "superHungry": {
+    "name": "超級飢餓",
+    "description": "攻擊後有50%機率回復最大生命值的1/8。攻擊後有50%機率隨機提升一個能力值一級。"
+  },
+  "foolsGold": {
+    "name": "愚人金",
+    "description": "免疫其他寶可夢的變化招式。惡系和鋼系招式對相同的屬性共享屬性相剋關係！"
+  },
+  "showAndTell": {
+    "name": "展示與講述",
+    "description": "如果使用的招式與上一個使用的招式不同，招式威力翻倍。"
+  },
+  "knightsShovel": {
+    "name": "騎士之鏟",
+    "description": "當使用者與目標共享弱點時，地面和鋼屬性招式威力翻倍。免疫地面屬性招式。"
+  },
+  "heroicLeap": {
+    "name": "英雄躍起",
+    "description": "免疫地面屬性招式。進入戰鬥時提升攻擊一級。將一般屬性招式轉換為飛行屬性並提升威力20%。"
+  },
+  "digChampion": {
+    "name": "挖掘冠軍",
+    "description": "挖洞招式威力翻倍。"
+  },
+  "eightBitHunger": {
+    "name": "八位元飢餓",
+    "description": "攻擊後有50%機率回復最大生命值的1/8。有10%機率使目標畏縮。"
+  },
+  "rockSolidMeme": {
+    "name": "堅如磐石的迷因",
+    "description": "一般系和岩石系招式對相同的屬性共享屬性相剋關係！減少25%來自效果絕佳招式的傷害。"
+  },
+  "rockRoll": {
+    "name": "岩石滾動",
+    "description": "提升岩石屬性招式威力20%。提升名字中含有「滾動」或「旋轉」的招式威力75%。使用名字中含有「滾動」或「旋轉」的招式時有20%機率使目標畏縮。"
+  },
+  "staticShock": {
+    "name": "靜電衝擊",
+    "description": "有30%機率使目標麻痺。對麻痺的目標招式威力提升50%。"
+  },
+  "horrorShow": {
+    "name": "恐怖表演",
+    "description": "防止對手換出。擊倒對手後提升最高能力值一級。"
+  },
+  "sunbather": {
+    "name": "日光浴",
+    "description": "火系和水系招式對相同的屬性共享屬性相剋關係！將一般系招式變為水系招式，並提升威力20%。在大晴天天氣下每回合恢復最大HP的1/8。每回合結束時有30%機率將天氣變為大晴天。"
+  },
+  "seedEater": {
+    "name": "種子食客",
+    "description": "受到草屬性招式攻擊時回復生命值而不是受到傷害。對草屬性寶可夢招式威力翻倍。攻擊草屬性寶可夢時回復最大生命值的1/8。受到種子類招式攻擊時回復最大生命值的1/2。"
+  },
+  "vacaySoul": {
+    "name": "度假之魂",
+    "description": "所有招式威力變為三倍。每隔一回合才能攻擊。"
+  },
+  "screenSwim": {
+    "name": "螢幕游泳",
+    "description": "鋼系和水系招式對相同的屬性共享屬性相剋關係！在下雨天氣下每回合恢復最大HP的1/8。10%機率使目標畏縮。每回合結束時有30%機率將天氣變為下雨。"
+  },
+  "darkWaters": {
+    "name": "黑暗水域",
+    "description": "惡系和水系招式對相同的屬性共享屬性相剋關係！將一般系招式變為惡系招式，並提升威力20%。使用水系或惡系招式時有10%機率使目標陷入漩渦。使用水系或惡系招式時有10%機率造成相當於目標最大HP的1/8的傷害。"
+  },
+  "experimentError": {
+    "name": "實驗錯誤",
+    "description": "進入戰鬥時隨機降低一個能力值一級。有10%機率使目標寄生或陷入漩渦。有10%機率使目標灼傷。攻擊後有30%機率回復最大生命值的1/8。"
+  },
+  "roundingError": {
+    "name": "四捨五入錯誤",
+    "description": "減半來自威力能被5整除但不能被10整除的招式傷害。提升威力不能被10整除或能被5整除的招式威力50%。"
+  },
+  "idealForm": {
+    "name": "理想形態",
+    "description": "各有10%機率：造成要害攻擊、減半受到的傷害、招式威力翻倍、受到攻擊或攻擊後回復最大生命值的1/8。"
+  },
+  "eliteStatic": {
+    "name": "精英靜電",
+    "description": "接觸時有50%機率使攻擊者麻痺。接觸時隨機降低攻擊者一個能力值一級。受到接觸類招式攻擊時對攻擊者造成最大生命值1/8的傷害。"
+  },
+  "cockadoodleYes": {
+    "name": "雞啼讚同",
+    "description": "進入戰鬥時隨機提升一個能力值一級。擊倒對手後提升最高能力值一級。提升接觸類招式威力30%。"
+  },
+  "carnivore": {
+    "name": "肉食性",
+    "description": "攻擊特定屬性的寶可夢時回復最大生命值的1/8。擊倒對手後提升攻擊和速度各一級。"
+  },
+  "nightShow": {
+    "name": "夜晚表演",
+    "description": "每回合結束時隨機降低對手一個能力值兩級。"
+  },
+  "nightmareHost": {
+    "name": "夢魘宿主",
+    "description": "招式有50%機率先手。有10%機率使目標麻痺、中毒或灼傷。"
+  },
+  "pressurePlay": {
+    "name": "壓力遊戲",
+    "description": "增加2點以此寶可夢為目標的招式PP消耗。進入戰鬥時降低攻擊一級。"
+  },
+  "aBCOrD": {
+    "name": "A、B、C或D",
+    "description": "10%機率提升攻擊1級。10%機率使目標燃燒。10%機率使目標混亂。10%機率使目標昏昏欲睡。"
+  },
+  "midnightCookies": {
+    "name": "午夜餅乾",
+    "description": "每回合結束時有30%機率回復最大生命值的1/8。每回合結束時有30%機率隨機提升一個能力值一級。"
+  },
+  "horribleCardboard": {
+    "name": "可怕紙板",
+    "description": "將所有招式轉換為一般屬性並提升威力20%。一般屬性招式可以命中幽靈屬性。有30%機率造成目標最大生命值1/8的傷害。"
+  },
+  "theElderShadows": {
+    "name": "遠古陰影",
+    "description": "幽靈系和惡系招式對相同的屬性共享屬性相剋關係！將一般系招式變為惡系招式，並提升威力20%。30%機率在每回合結束時造成相當於目標最大HP的1/16的傷害。30%機率使招式威力加倍。擊倒對手後提升隨機能力值1級。"
+  },
+  "horribleGhostCardboard": {
+    "name": "可怕幽靈紙板",
+    "description": "將一般屬性招式轉換為幽靈屬性並提升威力20%。幽靈屬性招式可以命中一般屬性。有30%機率造成目標最大生命值1/8的傷害。"
+  },
+  "midnightCookiesOfDeath": {
+    "name": "死亡午夜餅乾",
+    "description": "每回合結束時有30%機率造成目標最大生命值1/8的傷害。每回合結束時有30%機率隨機提升一個能力值一級。"
+  },
+  "infomercialFame": {
+    "name": "電視購物名聲",
+    "description": "進入戰鬥時提升所有能力值一級。每回合結束時有30%機率造成目標最大生命值1/8的傷害。"
+  },
+  "winnersGrin": {
+    "name": "勝者微笑",
+    "description": "擊倒對手後提升最高能力值一級。擊倒對手後隨機提升一個能力值一級。"
+  },
+  "fancyCardboard": {
+    "name": "fancy紙板",
+    "description": "將一般屬性招式轉換為一般屬性並提升威力20%。一般屬性招式可以命中幽靈屬性。提升威力60以下的招式威力50%。"
+  },
+  "unjustified": {
+    "name": "不合理",
+    "description": "一般系和格鬥系招式對相同的屬性共享屬性相剋關係！減半來自妖精系招式的傷害。被妖精系招式擊中時提升攻擊1級。"
+  },
+  "abyssalStance": {
+    "name": "深淵姿態",
+    "description": "受到攻擊後有30%機率隨機提升一個能力值一級。受到攻擊後有30%機率造成目標最大生命值1/8的傷害。攻擊後有10%機率隨機降低自身一個能力值一級。將一般屬性招式轉換為惡屬性並提升威力20%。"
+  },
+  "leafyLure": {
+    "name": "葉子誘餌",
+    "description": "有50%機率減半效果絕佳的招式傷害。受到效果絕佳的招式攻擊時有50%機率對攻擊者造成其最大生命值1/4的傷害。受到效果絕佳的招式攻擊時有50%機率回復最大生命值的1/6。"
+  },
+  "voraciousVegetation": {
+    "name": "貪婪植物",
+    "description": "攻擊特定屬性的寶可夢時回復最大生命值的1/8。擊倒對手後提升攻擊和速度各一級。"
+  },
+  "solarPowerPlus": {
+    "name": "太陽之力強化",
+    "description": "特攻翻倍。每回合結束時有30%機率使天氣變為大晴天。"
+  },
+  "treasureGuard": {
+    "name": "寶藏守衛",
+    "description": "隨機減少25-50%受到的傷害。受到攻擊後有30%機率回復最大生命值的1/8。"
+  },
+  "goldenSkillLink": {
+    "name": "黃金連擊",
+    "description": "最大化連續攻擊招式的攻擊次數。攻擊後有5%機率提升隨機能力值1級。"
+  },
+  "treasureProducer": {
+    "name": "寶藏製造者",
+    "description": "有50%機率偷取目標的攜帶道具。戰鬥後增加道具掉落率。招式必定後手。"
+  },
+  "multiMind": {
+    "name": "多重心靈",
+    "description": "火系和超能力系招式對相同的屬性共享屬性相剋關係！將一般系招式變為超能力系招式，並提升威力20%。10%機率造成相當於目標最大HP的1/8的傷害。"
+  },
+  "wakaFlockaFlame": {
+    "name": "Waka Flocka火焰",
+    "description": "將一般系招式變為火系招式，並提升威力20%。飛行系和火系招式對相同的屬性共享屬性相剋關係！10%機率使目標燃燒。免疫火系招式，被火系招式擊中時不受傷害反而恢復HP。"
+  },
+  "eerieLight": {
+    "name": "詭異之光",
+    "description": "電系和惡系招式對相同的屬性共享屬性相剋關係！將一般系招式變為惡系招式，並提升威力20%。將水系招式變為惡系招式，並提升威力20%。10%機率使目標混亂。10%機率使目標麻痺。"
+  },
+  "abyssalLure": {
+    "name": "深淵誘餌",
+    "description": "有50%機率減半效果絕佳的招式傷害。受到效果絕佳的招式攻擊時有50%機率對攻擊者造成其最大生命值1/4的傷害。受到效果絕佳的招式攻擊時有50%機率回復最大生命值的1/6。"
+  },
+  "nemoEater": {
+    "name": "尼莫食客",
+    "description": "對水屬性寶可夢招式威力翻倍。擊倒水屬性寶可夢後回復最大生命值的1/8。擊倒水屬性寶可夢後提升最高能力值一級。"
+  },
+  "woodenLie": {
+    "name": "木頭謊言",
+    "description": "對特定屬性的寶可夢招式威力翻倍。減少25%效果絕佳的招式傷害。"
+  },
+  "imARealBoy": {
+    "name": "我是真正的男孩",
+    "description": "將一般屬性招式轉換為一般屬性並提升威力20%。將非妖精和非草屬性招式轉換為一般屬性並提升威力30%。進入戰鬥時降低攻擊和一個隨機能力值一級。"
+  },
+  "lierLyer": {
+    "name": "說謊者",
+    "description": "將一般系招式變為惡系招式，並提升威力20%。妖精系和惡系招式對相同的屬性共享屬性相剋關係！有10%機率在受到致命一擊時存活。"
+  },
+  "copycatNinja": {
+    "name": "模仿忍者",
+    "description": "改變使用者的屬性以匹配它被擊中的招式屬性。如果使用者原本不是相同屬性，還會恢復最大HP的1/8。"
+  },
+  "hokage": {
+    "name": "火影",
+    "description": "提升火、水、飛行和地面屬性招式威力20%。"
+  },
+  "sharinganActivated": {
+    "name": "寫輪眼啟動",
+    "description": "改變使用者的屬性以匹配其攻擊。"
+  },
+  "crowClone": {
+    "name": "烏鴉分身",
+    "description": "將一般系招式變為飛行系招式，並提升威力20%。惡系、火系和飛行系招式對相同的屬性共享屬性相剋關係！30%機率使受到的攻擊傷害減半。30%機率在被攻擊擊中後恢復最大HP的1/8。"
+  },
+  "sharinganMastery": {
+    "name": "寫輪眼精通",
+    "description": "有15%機率造成目標最大生命值1/8的傷害。有5%機率將受到的攻擊傷害減少至四分之一。攻擊後有15%機率隨機提升一個能力值一級。"
+  },
+  "foreheadTap": {
+    "name": "額頭輕點",
+    "description": "提升威力60以下的招式威力50%。使用威力60以下的招式時有10%機率使目標畏縮。使用威力60以下的招式時有10%機率使目標麻痺。"
+  },
+  "eightTails": {
+    "name": "八尾",
+    "description": "連續攻擊招式打出4-8次。"
+  },
+  "rappingRampage": {
+    "name": "說唱暴走",
+    "description": "將所有招式轉換為聲音類並提升威力20%。提升聲音類招式威力50%。有10%機率使目標畏縮。"
+  },
+  "beastMode": {
+    "name": "野獸模式",
+    "description": "生命值低於40%時招式威力翻倍。"
+  },
+  "nightmareSand": {
+    "name": "夢魘沙暴",
+    "description": "沙暴天氣時每回合結束時造成目標最大生命值1/8的傷害。沙暴天氣時每回合結束時有30%機率隨機降低目標一個能力值一級。每回合結束時有30%機率使天氣變為沙暴。"
+  },
+  "soulEater": {
+    "name": "靈魂食客",
+    "description": "使用與收集屬性相符的招式時回復生命值。收集被擊倒的寶可夢的屬性。失去戰鬥能力時失去收集的屬性。"
+  },
+  "soulDrain": {
+    "name": "靈魂吸取",
+    "description": "有10%機率收集使用的招式屬性。如果招式屬性與收集的屬性相符，隨機降低目標兩個能力值兩級。失去戰鬥能力時失去收集的屬性。"
+  }
+}

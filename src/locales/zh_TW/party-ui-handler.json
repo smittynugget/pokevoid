@@ -1,0 +1,12 @@
+{
+  "SEND_OUT": "上場",
+  "SUMMARY": "概要",
+  "CANCEL": "取消",
+  "RELEASE": "放生",
+  "APPLY": "應用",
+  "TEACH": "教授",
+  "TRANSFER": "交換",
+  "TRADE": "以₽{{value}}交易",
+  "selectPokeToPowerUp": "選擇要強化的寶可夢。",
+  "selectPokeToRelease": "選擇要釋放的寶可夢。"
+}

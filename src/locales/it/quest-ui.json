@@ -1,0 +1,120 @@
+{
+  "console": {
+    "activeBounties": "Taglie Attive:",
+    "rivalBounties": "Taglie Rivali",
+    "smittyBounties": "Taglie Smitty",
+    "questBounties": "Taglie Missione",
+    "bountiesCount": "{{title}} ({{current}}/{{max}})",
+    "activeQuests": "Missioni Attive:",
+    "questsCount": "({{current}}/{{max}})",
+    "submit": "Conferma",
+    "cancel": "Annulla",
+    "invalidConsoleCode": "Codice console non valido",
+    "consoleCodeAlreadyUsed": "Codice console già utilizzato",
+    "consoleCodeAccepted": "Codice console accettato",
+    "toggleInfo": "da aprire nelle schermate TITOLO o LOTTA!",
+    "shopAndConsoleShortcut": "da aprire nelle schermate TITOLO o LOTTA!"
+  },
+  "bounty": {
+    "common": {
+      "status": {
+        "active": "ATTIVA",
+        "inactive": "INATTIVA"
+      },
+      "baseReward": "Distribuzione Ricompensa Base"
+    },
+    "modalTitle": "Taglia",
+    "status": {
+      "complete": "COMPLETATA",
+      "activeStage": "FASE {{stage}} ATTIVA",
+      "active": "ATTIVA"
+    },
+    "sections": {
+      "rewards": {
+        "title": "Ricompense:",
+        "unknown": "???"
+      },
+      "task": {
+        "title": "Compito:",
+        "singleRun": "Compito SINGOLO:",
+        "multiRun": "Compito MULTIPLO:",
+        "locked": "{{target}} deve prima essere Sbloccato"
+      }
+    },
+    "error": "Errore nel caricamento della Taglia",
+    "buttons": {
+      "swap": "Cambia Taglia",
+      "activate": "Attiva Taglia",
+      "back": "Indietro",
+      "cancel": "Annulla"
+    },
+    "rival": {
+      "modalTitle": "Taglia Allenatore Rivale",
+      "invalidTrainer": "Allenatore non valido",
+      "task": "Sconfiggi {{trainerName}} - Fase {{stage}}",
+      "progress": {
+        "title": "Progresso Fase:",
+        "count": "{{current}} / {{max}}"
+      },
+      "rewards": {
+        "stage1": "90% ∞ORO | 8% ∞OGGETTO | 2% Entrambi",
+        "stage2": "75% ∞ORO | 15% ∞OGGETTO | 10% Entrambi",
+        "stage3": "60% ∞ORO | 25% ∞OGGETTO | 15% Entrambi",
+        "stage4": "40% ∞ORO | 40% ∞OGGETTO | 20% Entrambi",
+        "stage5": "25% ∞ORO | 45% ∞OGGETTO | 30% Entrambi"
+      }
+    },
+    "quest": {
+      "modalTitle": "Taglia Missione",
+      "invalidTask": "Compito Missione non valido",
+      "replacement": {
+        "title": "Seleziona Taglia da Sostituire",
+        "cancel": "Annulla"
+      },
+      "rewards": {
+        "default": "50% ∞ORO | 35% ∞OGGETTO | 15% Entrambi"
+      },
+      "activeQuest": {
+        "modalTitle": "Missione!",
+        "buttons": {
+          "swap": "Cambia Missione",
+          "activate": "Attiva Missione"
+        },
+        "rewards": {
+          "unlockForm": "Sblocca la Nuova Forma di {{pokemonName}}!"
+        },
+        "progress": {
+          "title": "Progresso Fase:",
+          "count": "{{current}} / {{max}}"
+        }
+      }
+    },
+    "smitty": {
+      "modalTitle": "Taglia Pokémon Smitty",
+      "rewards": {
+        "withSpecies": "70% ∞ORO | 20% ∞OGGETTO | 10% Entrambi",
+        "withoutSpecies": "40% ∞ORO | 40% ∞OGGETTO | 20% Entrambi"
+      },
+      "task": {
+        "evolveAny": "Fai Evolvere UN QUALSIASI Pokémon in {{formName}}",
+        "evolveSpecific": "Fai Evolvere {{basePokemon}} in {{formName}}"
+      },
+      "items": {
+        "title": "Strumenti Richiesti:"
+      },
+      "common": {
+        "any": "QUALSIASI"
+      }
+    }
+  },
+  "modeRewards": {
+    "classicModeRewardFusion": "Usare Pokémon Fusione!?",
+    "commonModeRewardAbilities": "Più di 60 Abilità per Strumenti Cambio Abilità",
+    "nuzlightModeRewardTypeSwitch": "Cambia Tipo Primario / Secondario",
+    "nuzlightModeRewardUpdatedInventory": "Inventario Aggiornato!",
+    "nuzlightModeRewardMoveRelease": "Dimentica Mossa",
+    "nuzlockeModeRewardRank2": "GRADO 2",
+    "accessShopInBattle": "Accedi al ∞NEGOZIO in LOTTA!",
+    "accessQuestsInBattle": "Accedi alle MISSIONI in LOTTA!"
+  }
+} 

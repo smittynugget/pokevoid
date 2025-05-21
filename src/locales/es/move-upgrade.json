@@ -1,0 +1,182 @@
+{
+    "rewardTitle": "¡SUBIR DE NIVEL {{count}}!",
+    "level": "Nivel",
+    "description": {
+      "power": {
+        "increaseSlight": "Aumentar ligeramente la Potencia en {{powerValue}}.",
+        "increaseModerate": "Aumentar moderadamente la Potencia en {{powerValue}}.",
+        "increaseSignificantWeak": "Aumentar significativamente la Potencia (para movimientos más débiles) en {{powerValue}}.",
+        "increaseVsAccuracyLow": "Aumentar la Potencia en {{powerValue}} pero disminuir la Precisión en {{accuracyValue}}.",
+        "increaseVsAccuracyHigh": "Aumentar enormemente la Potencia en {{powerValue}} pero disminuir la Precisión en {{accuracyValue}}.",
+        "increaseVsPriority": "Aumentar la Potencia en {{powerValue}} pero establecer la Prioridad en {{priorityValue}}.",
+        "increaseVsRecoil": "Aumentar la Potencia en {{powerValue}} pero añadir un {{recoilPercent}}% de daño de Retroceso.",
+        "increaseVsSelfStatDrop": "Aumentar la Potencia en {{powerValue}} pero bajar {{statName1}} y {{statName2}} del usuario en {{stages}} nivel(es) después de usar."
+      },
+      "accuracy": {
+        "increasePercentage": "Aumentar la Precisión en un {{value}}%.",
+        "perfectAccuracy": "Hacer 100% de Precisión, pero disminuir la Potencia en {{powerValue}}.",
+        "perfectAccuracyNoPenalty": "Hacer 100% de Precisión.",
+        "increaseVsPowerLow": "Aumentar la Precisión en un {{accuracyValue}}% pero disminuir la Potencia en {{powerValue}}.",
+        "increaseVsPowerHigh": "Aumentar enormemente la Precisión en un {{accuracyValue}}% pero disminuir la Potencia en {{powerValue}}.",
+        "increaseVsPp": "Aumentar la Precisión en un {{accuracyValue}}% pero disminuir los PP máximos.",
+        "setAccuracy": "Establecer la Precisión en {{value}}%."
+      },
+      "effectChance": {
+        "increaseToValue": "Aumentar la probabilidad de efecto secundario a {{value}}%.",
+        "guaranteeVsPower": "Garantizar el efecto secundario, pero disminuir la Potencia en {{powerValue}}.",
+        "guaranteeVsAccuracy": "Garantizar el efecto secundario, pero disminuir la Precisión en {{accuracyValue}}% (movimientos de Estado).",
+        "guaranteeVsPp": "Garantizar el efecto secundario, pero disminuir los PP máximos."
+      },
+      "status": {
+        "addChance": "Añadir una probabilidad del {{chance}}% de causar {{statusName}}.",
+        "addChanceVsPower": "Añadir una probabilidad del {{chance}}% de causar {{statusName}}, pero disminuir la Potencia en {{powerValue}}.",
+        "addLeechSeed": "Añadir efecto de Drenadoras (contra tipos no Planta), pero disminuir la Potencia en {{powerValue}}.",
+        "changeEffect": "Cambiar el efecto secundario a una probabilidad del {{chance}}% de causar {{statusName}}.",
+        "addSecondEffect": "{{chance}}% de probabilidad de causar {{statusName1}} O {{statusName2}}, pero disminuir la Potencia en {{powerValue}}.",
+        "addStatusViaStatusMove": "Causar {{statusName}} (Cambia la Precisión a {{accuracyValue}}%)."
+      },
+      "flinch": {
+        "addChance": "Añadir una probabilidad del {{chance}}% de hacer que el objetivo se estremezca.",
+        "addChanceLow": "Añadir una probabilidad del {{chance}}% de hacer que el objetivo se estremezca.",
+        "addChanceHighVsPower": "Añadir una probabilidad del {{chance}}% de hacer que el objetivo se estremezca, pero disminuir la Potencia en {{powerValue}}.",
+        "addChancePriorityVsPower": "Añadir una probabilidad del {{chance}}% de hacer que el objetivo se estremezca (movimientos de Prioridad), pero disminuir la Potencia en {{powerValue}}.",
+        "increaseChance": "Aumentar la probabilidad de estremecimiento a {{chance}}%.",
+        "increaseChanceVsPower": "Aumentar la probabilidad de estremecimiento a {{chance}}%, pero disminuir la Potencia en {{powerValue}}."
+      },
+      "stat": {
+        "addRaiseSelfSingle": "Aumentar {{statName}} del usuario en {{stages}} nivel(es). Cambiar la probabilidad a {{chance}}%.",
+        "addRaiseSelfMultiple": "Aumentar {{statName1}} y {{statName2}} del usuario en {{stages}} nivel(es).",
+        "increaseRaiseSelf": "Aumentar el efecto de autoincremento para subir {{statName}} en {{stages}} nivel(es).",
+        "addAnotherRaiseSelf": "Aumentar {{newStatName}} del usuario en {{stages}} nivel(es) además de {{existingStats}}.",
+        "addLowerTargetSingle": "Disminuir {{statName}} del objetivo en {{stages}} nivel(es). La Precisión se convierte en {{accuracy}}%. La Potencia disminuye en {{powerValue}}.",
+        "addLowerTargetHarshChance": "{{chance}}% de probabilidad de disminuir drásticamente {{statName}} del objetivo en {{stages}} niveles, pero disminuir la Potencia en {{powerValue}}.",
+        "addLowerTargetHarsh": "Disminuir drásticamente {{statName}} del objetivo en {{stages}} nivel(es) (Cambia la Precisión a {{accuracy}}%).",
+        "addLowerTargetMultiple": "Disminuir {{statName1}} y {{statName2}} del objetivo en {{stages}} nivel(es) (Cambia la Precisión a {{accuracy}}%).",
+        "increaseLowerTarget": "Aumentar la disminución de estadísticas del objetivo para bajar {{statName}} en {{stages}} nivel(es). La Precisión se convierte en {{accuracy}}%. La Potencia disminuye en {{powerValue}}.",
+        "increaseLowerTargetChance": "Aumentar la probabilidad de disminuir las estadísticas del objetivo a {{chance}}%.",
+        "guaranteeLowerTarget": "Garantizar el efecto de disminuir las estadísticas del objetivo. La Potencia disminuye en {{powerValue}}. La Precisión disminuye en {{accuracyValue}}.",
+        "addAnotherLowerTarget": "Disminuir {{newStatName}} del objetivo en {{stages}} nivel(es) además de {{existingStats}}. La Potencia disminuye en {{powerValue}}.",
+        "addLowerTargetChance": "{{chance}}% de probabilidad de disminuir {{statName}} del objetivo en {{stages}} nivel(es), pero disminuir la Potencia en {{powerValue}}."
+      },
+      "type": {
+        "changePowerBoost": "Cambiar el Tipo a {{typeName}} y aumentar la Potencia en {{powerValue}}.",
+        "changeAccuracyBoost": "Cambiar el Tipo a {{typeName}} y aumentar la Precisión en {{accuracyValue}}%.",
+        "changeAddStatus": "Cambiar el Tipo a {{typeName}} y añadir una probabilidad del {{chance}}% de causar {{statusName}}, pero disminuir la Potencia en {{powerValue}}.",
+        "changeAddHighCrit": "Cambiar el Tipo a {{typeName}} y añadir un alto índice de golpe crítico.",
+        "addTypeEffectiveness": "Causar daño basado en la efectividad del tipo {{typeName}} además de su propio tipo. Aumentar la Potencia en {{powerValue}}.",
+        "superEffectiveVsType": "Siempre causar daño Súper Efectivo contra Pokémon de tipo {{targetTypeName}}.",
+        "becomeTypeless": "Volver Sin Tipo (siempre daño neutral) y aumentar la Potencia en {{powerValue}}.",
+        "matchUserType": "El tipo del movimiento siempre coincide con el tipo primario del usuario.",
+        "weatherBall": "El tipo del movimiento cambia según el clima (como Meteorobola).",
+        "terrainPulse": "El tipo del movimiento cambia según el terreno (como Pulso Primavera).",
+        "hiddenPower": "El tipo del movimiento cambia según las características del usuario (como Poder Oculto)."
+      },
+      "multiHit": {
+        "add2to5": "Golpea 2-5 veces, la Potencia se convierte en {{powerValue}}. La Probabilidad de Efecto se establece en {{chance}}% por golpe. La Probabilidad y Potencia no pueden aumentarse.",
+        "addExact": "Golpea exactamente {{hits}} veces, la Potencia se convierte en {{powerValue}}. La Probabilidad de Efecto se establece en {{chance}}% por golpe. La Probabilidad y Potencia no pueden aumentarse.",
+        "addCheckAll": "Golpea exactamente {{hits}} veces, precisión por golpe, la Potencia se convierte en {{powerValue}}, Precisión: {{accuracyReduction}}%. La Probabilidad de Efecto se establece en {{chance}}% por golpe. La Probabilidad y Potencia no pueden aumentarse.",
+        "changeToExact": "Golpea {{hits}} veces y la Potencia se convierte en {{powerValue}}. La Probabilidad de Efecto se establece en {{chance}}% por golpe. La Probabilidad y Potencia no pueden aumentarse.",
+        "changeToRange": "Golpea {{range}} veces, la Potencia se convierte en {{powerValue}}. La Probabilidad de Efecto se establece en {{chance}}% por golpe. La Probabilidad y Potencia no pueden aumentarse.",
+        "enableCheckAll": "Habilitar la comprobación de precisión para cada golpe (multimpacto), la Potencia se convierte en {{powerValue}} y la Precisión: {{accuracyValue}}%. La Probabilidad y Potencia no pueden aumentarse.",
+        "disableCheckAll": "Deshabilitar la comprobación de precisión para cada golpe, la Potencia se convierte en {{powerValue}} y la Precisión: {{accuracyValue}}%. La Probabilidad y Potencia no pueden aumentarse."
+      },
+      "heal": {
+        "addHitHeal": " Curar por el {{percent}}% del daño causado.",
+        "addHitHealVsPower": " Curar por el {{percent}}% del daño causado, pero disminuir la Potencia en {{powerValue}}.",
+        "increaseHitHealVsPower": "Aumentar el efecto de drenaje para curar por el {{percent}}% del daño causado, pero disminuir la Potencia en {{powerValue}}.",
+        "addSelfHeal": "El usuario recupera el {{percent}}% de sus PS máximos.",
+        "addPlantHeal": "El usuario recupera PS si el Campo de Hierba está activo.",
+        "addSandHeal": "El usuario recupera PS si la Tormenta de Arena está activa.",
+        "increaseSelfHeal": "Aumentar la cantidad de autocuración al {{percent}}% de los PS máximos."
+      },
+      "recoil": {
+        "addVsPower": "Añadir un {{percent}}% de daño de Retroceso, pero aumentar la Potencia en {{powerValue}}.",
+        "addVsPowerAccuracy": "Añadir un {{percent}}% de daño de Retroceso, pero aumentar la Potencia en {{powerValue}} y disminuir la Precisión en {{accuracyValue}}%.",
+        "increaseVsPower": "Aumentar el daño de Retroceso a {{percent}}%, pero aumentar la Potencia en {{powerValue}}.",
+        "decreaseVsPower": "Disminuir el daño de Retroceso a {{percent}}%, pero disminuir la Potencia en {{powerValue}}.",
+        "removeVsPower": "Eliminar el daño de Retroceso, pero disminuir la Potencia en {{powerValue}}."
+      },
+      "sacrificial": {
+        "addFull": "El usuario se debilita después de usar, pero la Potencia se convierte en {{power}}.",
+        "addHalf": "El usuario pierde el 50% de PS máximos después de usar, pero la Potencia se convierte en {{power}}.",
+        "addOnHit": "El usuario se debilita si el movimiento acierta, pero la Potencia se convierte en {{power}}."
+      },
+      "crit": {
+        "addHighCritVsPower": "Añadir un alto índice de golpe crítico, pero disminuir la Potencia en {{powerValue}} (para movimientos de alta potencia).",
+        "addHighCrit": "Añadir un alto índice de golpe crítico.",
+        "addHighCritAndPower": "Añadir un alto índice de golpe crítico y aumentar la Potencia en {{powerValue}}.",
+        "upgradeToCritOnlyVsPower": "Mejorar a siempre golpe crítico, pero disminuir la Potencia en {{powerValue}}.",
+        "upgradeToCritOnlyVsAccuracy": "Mejorar a siempre golpe crítico, pero disminuir la Precisión en {{accuracyValue}}%."
+      },
+      "flags": {
+        "ignoreProtect": "El movimiento ahora puede golpear a través de Protección/Detección, pero disminuir la Potencia en {{powerValue}}.",
+        "ignoreAbilities": "El movimiento ahora ignora las Habilidades del objetivo y aumenta la Potencia en {{powerValue}}.",
+        "soundBased": "El movimiento se vuelve basado en Sonido (golpea a través de Sustituto) y aumenta la Potencia en {{powerValue}}.",
+        "punchingMove": "El movimiento se vuelve un movimiento de Puño (potenciado por Puño Férreo) y aumenta la Potencia en {{powerValue}}.",
+        "slicingMove": "El movimiento se vuelve un movimiento de Corte (potenciado por Filo) y aumenta la Potencia en {{powerValue}}.",
+        "pulseMove": "El movimiento se vuelve un movimiento de Pulso (potenciado por Mega Lanzador) y aumenta la Potencia en {{powerValue}}.",
+        "bitingMove": "El movimiento se vuelve un movimiento de Mordisco (potenciado por Mandíbula Fuerte) y aumenta la Potencia en {{powerValue}}.",
+        "windMove": "El movimiento se vuelve un movimiento de Viento (afectado por Jinete del Viento/Poder) y aumenta la Potencia en {{powerValue}}.",
+        "disableContact": "El movimiento ya no hace contacto y aumenta la Potencia en {{powerValue}}.",
+        "enableContact": "El movimiento ahora hace contacto y aumenta la Potencia en {{powerValue}}.",
+        "ignoreStatChanges": "El movimiento ahora ignora los cambios de estadísticas defensivas y evasión del objetivo y aumenta la Potencia en {{powerValue}}.",
+        "removeScreens": "El movimiento ahora elimina Reflejo/Pantalla de Luz/Velo Aurora y aumenta la Potencia en {{powerValue}}.",
+        "thawTarget": "El movimiento ahora descongela a un objetivo congelado y aumenta la Potencia en {{powerValue}}."
+      },
+      "priority": {
+        "increase": "Aumentar la Prioridad a {{value}}, pero disminuir la Potencia en {{powerValue}}.",
+        "decrease": "Disminuir la Prioridad a {{value}}, pero aumentar la Potencia en {{powerValue}}.",
+        "conditionalTerrain": "Aumentar la Prioridad a {{value}} si el Terreno {{terrain}} está activo y aumentar la Potencia en {{powerValue}}.",
+        "conditionalFirstTurn": "Falla si no es el primer turno, Aumentar la Prioridad a {{value}} y aumentar la Potencia en {{powerValue}}.",
+        "conditionalTargetMoved": "Aumentar la Prioridad a {{value}} si el objetivo ya se ha movido este turno y aumentar la Potencia en {{powerValue}}."
+      },
+      "category": {
+        "changeToSpecial": "Cambiar la Categoría a Especial.",
+        "changeToSpecialVsDef": "Cambiar la Categoría a Especial, pero calcular el daño usando la Defensa del objetivo.",
+        "changeToPhysical": "Cambiar la Categoría a Físico.",
+        "changeToPhysicalVsSpDef": "Cambiar la Categoría a Físico, pero calcular el daño usando la Defensa Especial del objetivo.",
+        "changeStatusToDamage": "Cambiar la Categoría a {{category}} y establecer la Potencia en {{power}}."
+      },
+      "misc": {
+        "addTrap": "Atrapa al objetivo con {{trapName}} durante varios turnos, pero disminuir la Potencia en {{powerValue}}.",
+        "addForceSwitch": "Fuerza al objetivo a cambiarse, pero disminuir la Potencia en {{powerValue}}.",
+        "addGrounding": "Aterriza a objetivos en el aire (elimina la inmunidad de tipo Volador).",
+        "fixedDamageLevel": "Cambiar el cálculo de daño para infligir daño igual al nivel del usuario (reemplaza la potencia base).",
+        "fixedDamageValue": "Cambiar el cálculo de daño para infligir {{value}} PS de daño fijo.",
+        "fixedDamageTargetHalfHp": "Cambiar el cálculo de daño para infligir daño igual a la mitad de los PS actuales del objetivo (reemplaza la potencia base).",
+        "addSurviveDamage": "Siempre deja al objetivo con al menos 1 PS (como Falsotortazo) y aumenta la Potencia en {{powerValue}}.",
+        "addWeightPowerTarget": "La Potencia aumenta según el peso del objetivo (como Patada Baja).",
+        "addWeightPowerCompare": "La Potencia aumenta cuanto más pesado es el usuario en comparación con el objetivo (como Cuerpo Pesado).",
+        "addSpeedPowerSlower": "La Potencia aumenta cuanto más lento es el usuario en comparación con el objetivo (como Giro Bola).",
+        "addSpeedPowerFaster": "La Potencia aumenta cuanto más rápido es el usuario en comparación con el objetivo (como Electrobola).",
+        "addHpPowerHighHp": "La Potencia aumenta cuanto más altos son los PS actuales del usuario (Potencia Máxima: {{maxPower}}).",
+        "addHpPowerLowHp": "La Potencia aumenta cuanto más bajos son los PS actuales del usuario (como Inversión).",
+        "addSwitchOut": "El usuario se cambia después de usar, pero disminuir la Potencia en {{powerValue}} (como Voltiocambio).",
+        "addChargeTurn": "Añadir un turno de carga antes de atacar, pero aumentar la Potencia en {{powerValue}}.",
+        "addChargeTurnWithBoost": "Añadir un turno de carga (aumenta {{statName}} del usuario en {{stages}} nivel(es)) y aumentar la Potencia en {{powerValue}}.",
+        "addStealItemChance": "{{chance}}% de probabilidad de robar el objeto que lleva el objetivo.",
+        "addStealItemGuaranteed": "Roba el objeto que lleva el objetivo, pero disminuir la Potencia en {{powerValue}}.",
+        "addRemoveItem": "Elimina el objeto que lleva el objetivo y aumenta la Potencia en {{powerValue}}.",
+        "powerBoostWeather": "La Potencia se duplica si {{weather}} está activo.",
+        "powerBoostTerrain": "La Potencia se duplica si el Terreno {{terrain}} está activo y el objetivo está en el suelo.",
+        "powerBoostConsecutive": "La Potencia se duplica con cada uso consecutivo exitoso (máximo 4x).",
+        "powerBoostTurnDamaged": "La Potencia se duplica si el usuario fue dañado por el objetivo este turno."
+      },
+      "statusSpecific": {
+        "increaseFieldDuration": "Aumentar la duración de los efectos de campo (Pantallas, Viento Afín, etc.) establecidos por este movimiento a {{turns}} turnos.",
+        "increaseVolatileDuration": "Aumentar la duración de los estados volátiles (Confusión, Mofa, etc.) aplicados por este movimiento.",
+        "ignoreProtect": "El movimiento ahora puede afectar a objetivos usando Protección/Detección.",
+        "addSelfHeal": "El usuario recupera el {{percent}}% de sus PS máximos.",
+        "addSelfBoost": "Aumentar {{statName}} del usuario en {{stages}} nivel(es).",
+        "addArenaTrap": "Establece la trampa {{trapName}} en el lado del oponente del campo.",
+        "setWeather": "Cambia el clima a {{weather}}.",
+        "setTerrain": "Cambia el terreno a {{terrain}}.",
+        "clearWeather": "Despeja el clima actual.",
+        "clearTerrain": "Despeja el terreno actual."
+      }
+    },
+  "moveTriggers": {
+      "loweredItsHead": "¡{{pokemonName}}\nbajó la cabeza!",
+      "tookInSunlight": "¡{{pokemonName}}\nabsorbió luz solar!"
+  }
+} 

@@ -1,0 +1,13 @@
+{
+  "voidex": "Voidex",
+  "enemyPrefix": "적",
+  "partyPrefix": "파티",
+  "evolutionPrefix": "진화",
+  "allOtherPokemon": "다른 모든 포켓몬",
+  "pokemonDataNotFound": "포켓몬 데이터를 찾을 수 없습니다.",
+  "errorLoadingSprite": "스프라이트 로딩 오류.",
+  "abilities": "특성",
+  "learnableMoves": "배울 수 있는 기술",
+  "eggMoves": "알 기술",
+  "loading": "로딩 중..."
+} 

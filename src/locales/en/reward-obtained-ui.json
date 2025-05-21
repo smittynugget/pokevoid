@@ -1,0 +1,42 @@
+{
+  "titles": {
+    "newPokemon": "New Pokemon!",
+    "newFusion": "New Fusion!",
+    "newItem": "New Item!",
+    "newGameOverItem": "Game Over Reward!",
+    "newRibbonItem": "Ribbon Reward!",
+    "moneyObtained": "Money Obtained!",
+    "newShopUnlock": "New Shop Unlock!",
+    "newUnlock": "New Unlock!",
+    "newForm": "New Form!",
+    "newSmittyForm": "New SMITTY Form!",
+    "rivalLost": "RIVAL LOST...",
+    "modeChange": "MODE CHANGE!",
+    "rewardObtained": "Reward Obtained!",
+    "voidOvertaken": "THE VOID OVERTAKEN!",
+    "newShopItem": "New Shop Item",
+    "manyMoreNuggets": "And Many More Juicy Nuggets!"
+  },
+  "gameModes": {
+    "nuzlocke": {
+      "description": "Nuzlocke: Fainted pokemon are removed from your party..."
+    },
+    "draft": {
+      "description": "Rogue: Select 2 random pokemon..."
+    },
+    "nuzlight": {
+      "description": "Nuzlight: No recovery items..."
+    },
+    "nightmare": {
+      "description": "Nuzmare: Nuzlight + Nuzlocke"
+    },
+    "default": {
+      "description": "Mode changed!"
+    }
+  },
+  "ui": {
+    "rivalVoid": "{{name}} faded into the void...",
+    "error": "Error loading reward",
+    "new": "NEW"
+  }
+} 

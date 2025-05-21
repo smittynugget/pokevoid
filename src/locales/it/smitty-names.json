@@ -1,0 +1,257 @@
+{
+  "tartauros": {
+    "name": "Tartauros"
+  },
+  "zamowak": {
+    "name": "Zombowak"
+  },
+  "greyokai": {
+    "name": "Yokaigrigio"
+  },
+  "jormunza": {
+    "name": "Jormunza"
+  },
+  "licthulhu": {
+    "name": "Licthulhu"
+  },
+  "plasmist": {
+    "name": "Plasmisto"
+  },
+  "plustra": {
+    "name": "Plustra"
+  },
+  "hellchar": {
+    "name": "Inferchar"
+  },
+  "feareon": {
+    "name": "Timoreon"
+  },
+  "omninom": {
+    "name": "Onnivoro"
+  },
+  "necromew": {
+    "name": "Necromew"
+  },
+  "diablotar": {
+    "name": "Diablotar"
+  },
+  "smitom": {
+    "name": "Smitom"
+  },
+  "genomander": {
+    "name": "Geniomander"
+  },
+  "tormentle": {
+    "name": "Tormentle"
+  },
+  "terrorbulb": {
+    "name": "Terrorbulbo"
+  },
+  "dankitar": {
+    "name": "Memitar"
+  },
+  "gastmoji": {
+    "name": "Gastmoji"
+  },
+  "noxabis": {
+    "name": "Oscuranubi"
+  },
+  "floravora": {
+    "name": "Floravora"
+  },
+  "chimerdrio": {
+    "name": "Chimerdrio"
+  },
+  "clefangar": {
+    "name": "Clefangar"
+  },
+  "terroragon": {
+    "name": "Terroragon"
+  },
+  "godread": {
+    "name": "Diodread"
+  },
+  "duschmare": {
+    "name": "Dusmare"
+  },
+  "abyssuma": {
+    "name": "Abissumo"
+  },
+  "omnitto": {
+    "name": "Omnitto"
+  },
+  "umbraffe": {
+    "name": "Ombraffe"
+  },
+  "tartadra": {
+    "name": "Tartadra"
+  },
+  "tengale": {
+    "name": "Tengale"
+  },
+  "hyplagus": {
+    "name": "Ipnopeste"
+  },
+  "demonoth": {
+    "name": "Demonoth"
+  },
+  "despeko": {
+    "name": "Disperpeko"
+  },
+  "zoomer": {
+    "name": "Velocor"
+  },
+  "voidash": {
+    "name": "Vuodash"
+  },
+  "wahcky": {
+    "name": "Wahcky"
+  },
+  "wahzebub": {
+    "name": "Wahzebub"
+  },
+  "fineferno": {
+    "name": "Benferno"
+  },
+  "sorbred": {
+    "name": "Assorpan"
+  },
+  "corpanzee": {
+    "name": "Scimpriario"
+  },
+  "plankling": {
+    "name": "Assicella"
+  },
+  "timbrick": {
+    "name": "Legnaccio"
+  },
+  "plankult": {
+    "name": "Asseculto"
+  },
+  "sorbobo": {
+    "name": "Assorbfantasma"
+  },
+  "hamtaro": {
+    "name": "Hamtaro"
+  },
+  "elmold": {
+    "name": "Elmold"
+  },
+  "funghomp": {
+    "name": "Fungompe"
+  },
+  "riddicus": {
+    "name": "Enigmaticus"
+  },
+  "boxecutive": {
+    "name": "Scatolivo"
+  },
+  "patnius": {
+    "name": "Patnius"
+  },
+  "tentacrim": {
+    "name": "Tentacrimine"
+  },
+  "undeadtunasmit": {
+    "name": "Tonsmorte"
+  },
+  "scarablanc": {
+    "name": "Scarabianco"
+  },
+  "batmare": {
+    "name": "Pipistrello"
+  },
+  "smitward": {
+    "name": "Smitward"
+  },
+  "niteknite": {
+    "name": "Cavaliere"
+  },
+  "dignitier": {
+    "name": "Cavatore"
+  },
+  "cephaloom": {
+    "name": "Cefalugubre"
+  },
+  "smitshade": {
+    "name": "Smitombra"
+  },
+  "smitspect": {
+    "name": "Smitespectro"
+  },
+  "smitwraith": {
+    "name": "Smitfantasma"
+  },
+  "smiternal": {
+    "name": "Smiterno"
+  },
+  "smittyfish": {
+    "name": "Smitpesce"
+  },
+  "smittellect": {
+    "name": "Smintelletto"
+  },
+  "gallux": {
+    "name": "Gallux"
+  },
+  "hostmitty": {
+    "name": "Anfitrismit"
+  },
+  "smittynarie": {
+    "name": "Smilionario"
+  },
+  "batboxbaba": {
+    "name": "Pipiscassonna"
+  },
+  "batboxbeyond": {
+    "name": "Pipiscassoltre"
+  },
+  "victainer": {
+    "name": "Vittoritenitore"
+  },
+  "kakopier": {
+    "name": "Kakopier"
+  },
+  "karasu-me": {
+    "name": "Karasu-occhio"
+  },
+  "bullktopus": {
+    "name": "Toropiova"
+  },
+  "gumugumu": {
+    "name": "Gomugomu"
+  },
+  "santoryu": {
+    "name": "Santoryu"
+  },
+  "roostace": {
+    "name": "Gallostace"
+  },
+  "bogace": {
+    "name": "Fantasmostace"
+  },
+  "milliant": {
+    "name": "Milformica"
+  },
+  "churry": {
+    "name": "Churrifragola"
+  },
+  "gazorpsmitfield": {
+    "name": "Gazorpsmitfield"
+  },
+  "hologrick": {
+    "name": "Hologrick"
+  },
+  "seekling": {
+    "name": "Cercaling"
+  },
+  "picklisk": {
+    "name": "Cetrliock"
+  },
+  "bravehound": {
+    "name": "Coragcane"
+  },
+  "missingno": {
+    "name": "Mancanum"
+  }
+}

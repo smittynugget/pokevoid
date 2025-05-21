@@ -1,0 +1,257 @@
+{
+  "tartauros": {
+    "name": "Tartauros"
+  },
+  "zamowak": {
+    "name": "Zombowak"
+  },
+  "greyokai": {
+    "name": "Grauyokai"
+  },
+  "jormunza": {
+    "name": "Jormunza"
+  },
+  "licthulhu": {
+    "name": "Licthulhu"
+  },
+  "plasmist": {
+    "name": "Plasmist"
+  },
+  "plustra": {
+    "name": "Plustra"
+  },
+  "hellchar": {
+    "name": "Höllchar"
+  },
+  "feareon": {
+    "name": "Angstleon"
+  },
+  "omninom": {
+    "name": "Omninom"
+  },
+  "necromew": {
+    "name": "Necromew"
+  },
+  "diablotar": {
+    "name": "Diablotar"
+  },
+  "smitom": {
+    "name": "Smitom"
+  },
+  "genomander": {
+    "name": "Genimander"
+  },
+  "tormentle": {
+    "name": "Qualtle"
+  },
+  "terrorbulb": {
+    "name": "Terrorknoll"
+  },
+  "dankitar": {
+    "name": "Memetar"
+  },
+  "gastmoji": {
+    "name": "Gastmoji"
+  },
+  "noxabis": {
+    "name": "Noxanubis"
+  },
+  "floravora": {
+    "name": "Floravora"
+  },
+  "chimerdrio": {
+    "name": "Chimärdrio"
+  },
+  "clefangar": {
+    "name": "Clefangar"
+  },
+  "terroragon": {
+    "name": "Terroragon"
+  },
+  "godread": {
+    "name": "Gottdread"
+  },
+  "duschmare": {
+    "name": "Albtraum"
+  },
+  "abyssuma": {
+    "name": "Abyssuma"
+  },
+  "omnitto": {
+    "name": "Omnitto"
+  },
+  "umbraffe": {
+    "name": "Scharaffe"
+  },
+  "tartadra": {
+    "name": "Tartadra"
+  },
+  "tengale": {
+    "name": "Tengale"
+  },
+  "hyplagus": {
+    "name": "Hypest"
+  },
+  "demonoth": {
+    "name": "Dämonoth"
+  },
+  "despeko": {
+    "name": "Verzweifeko"
+  },
+  "zoomer": {
+    "name": "Flitzer"
+  },
+  "voidash": {
+    "name": "Leerendash"
+  },
+  "wahcky": {
+    "name": "Wahcky"
+  },
+  "wahzebub": {
+    "name": "Wahzebub"
+  },
+  "fineferno": {
+    "name": "Gutferno"
+  },
+  "sorbred": {
+    "name": "Absorbrot"
+  },
+  "corpanzee": {
+    "name": "Konzernaffe"
+  },
+  "plankling": {
+    "name": "Brettling"
+  },
+  "timbrick": {
+    "name": "Holzmichl"
+  },
+  "plankult": {
+    "name": "Brettkult"
+  },
+  "sorbobo": {
+    "name": "Absorbgeist"
+  },
+  "hamtaro": {
+    "name": "Hamtaro"
+  },
+  "elmold": {
+    "name": "Elmold"
+  },
+  "funghomp": {
+    "name": "Pilzomp"
+  },
+  "riddicus": {
+    "name": "Rätselus"
+  },
+  "boxecutive": {
+    "name": "Kartonchef"
+  },
+  "patnius": {
+    "name": "Patnius"
+  },
+  "tentacrim": {
+    "name": "Tentakrim"
+  },
+  "undeadtunasmit": {
+    "name": "Untoterthunsmit"
+  },
+  "scarablanc": {
+    "name": "Skarablank"
+  },
+  "batmare": {
+    "name": "Fledermausmahr"
+  },
+  "smitward": {
+    "name": "Smitward"
+  },
+  "niteknite": {
+    "name": "Nachtritter"
+  },
+  "dignitier": {
+    "name": "Grabritter"
+  },
+  "cephaloom": {
+    "name": "Cephaloom"
+  },
+  "smitshade": {
+    "name": "Smitschatten"
+  },
+  "smitspect": {
+    "name": "Smitspekt"
+  },
+  "smitwraith": {
+    "name": "Smitgeist"
+  },
+  "smiternal": {
+    "name": "Smiteon"
+  },
+  "smittyfish": {
+    "name": "Smitfisch"
+  },
+  "smittellect": {
+    "name": "Smittelect"
+  },
+  "gallux": {
+    "name": "Gallux"
+  },
+  "hostmitty": {
+    "name": "Gastgebsmit"
+  },
+  "smittynarie": {
+    "name": "Smitlionär"
+  },
+  "batboxbaba": {
+    "name": "Fledermauskistoma"
+  },
+  "batboxbeyond": {
+    "name": "Fledermauskistort"
+  },
+  "victainer": {
+    "name": "Siegsbehälter"
+  },
+  "kakopier": {
+    "name": "Kakopier"
+  },
+  "karasu-me": {
+    "name": "Karasu-Auge"
+  },
+  "bullktopus": {
+    "name": "Stierkrake"
+  },
+  "gumugumu": {
+    "name": "Gumgum"
+  },
+  "santoryu": {
+    "name": "Santoryu"
+  },
+  "roostace": {
+    "name": "Gallustace"
+  },
+  "bogace": {
+    "name": "Spukace"
+  },
+  "milliant": {
+    "name": "Millimse"
+  },
+  "churry": {
+    "name": "Churberry"
+  },
+  "gazorpsmitfield": {
+    "name": "Gazorpsmitfield"
+  },
+  "hologrick": {
+    "name": "Hologrick"
+  },
+  "seekling": {
+    "name": "Suchling"
+  },
+  "picklisk": {
+    "name": "Gurkick"
+  },
+  "bravehound": {
+    "name": "Mutherz"
+  },
+  "missingno": {
+    "name": "Fehlnum"
+  }
+}

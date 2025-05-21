@@ -1,0 +1,24 @@
+{
+  "surviveDamageApply": "{{pokemonNameWithAffix}} a tenu bon\ngrâce à son {{typeName}} !",
+  "turnHealApply": "{{pokemonNameWithAffix}} a récupéré un peu de PV grâce\nà son {{typeName}} !",
+  "hitHealApply": "{{pokemonNameWithAffix}} a récupéré un peu de PV grâce\nà son {{typeName}} !",
+  "pokemonInstantReviveApply": "{{pokemonNameWithAffix}} a été réanimé\npar son {{typeName}} !",
+  "pokemonResetNegativeStatStageApply": "Les stats réduites de {{pokemonNameWithAffix}} ont été restaurées\npar son {{typeName}} !",
+  "moneyInterestApply": "Vous avez reçu des intérêts de ₽{{moneyAmount}}\ndu {{typeName}} !",
+  "turnHeldItemTransferApply": "Le {{itemName}} de {{pokemonNameWithAffix}} a été absorbé\npar le {{typeName}} de {{pokemonName}} !",
+  "contactHeldItemTransferApply": "Le {{itemName}} de {{pokemonNameWithAffix}} a été volé\npar le {{typeName}} de {{pokemonName}} !",
+  "enemyTurnHealApply": "{{pokemonNameWithAffix}}\na récupéré des PV !",
+  "bypassSpeedChanceApply": "{{pokemonName}} peut agir plus rapidement que la normale, grâce à son {{itemName}} !",
+  "permaRunQuest": {
+    "stage": "Étape ",
+    "collectRewards": "Récupérer les Récompenses",
+    "stageProgress": "Progression de l'étape : {{current}}/{{total}}",
+    "questComplete": "Quête Terminée !",
+    "stageComplete": "Étape Terminée !",
+    "rewardTypes": {
+      "permaMoney": "∞OR",
+      "permaModifier": "∞OBJET",
+      "permaMoneyAndModifier": "∞OR & ∞OBJET"
+    }
+  }
+} 

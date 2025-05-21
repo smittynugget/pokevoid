@@ -1,0 +1,24 @@
+{
+  "surviveDamageApply": "{{pokemonNameWithAffix}} hielt durch\nmit seinem {{typeName}}!",
+  "turnHealApply": "{{pokemonNameWithAffix}} regenerierte etwas KP durch\nsein {{typeName}}!",
+  "hitHealApply": "{{pokemonNameWithAffix}} regenerierte etwas KP durch\nsein {{typeName}}!",
+  "pokemonInstantReviveApply": "{{pokemonNameWithAffix}} wurde wiederbelebt\ndurch sein {{typeName}}!",
+  "pokemonResetNegativeStatStageApply": "{{pokemonNameWithAffix}}s gesenkte Statuswerte wurden\ndurch sein {{typeName}} wiederhergestellt!",
+  "moneyInterestApply": "Du erhältst Zinsen von ₽{{moneyAmount}}\ndurch das {{typeName}}!",
+  "turnHeldItemTransferApply": "{{pokemonNameWithAffix}}s {{itemName}} wurde\nvon {{pokemonName}}s {{typeName}} absorbiert!",
+  "contactHeldItemTransferApply": "{{pokemonNameWithAffix}}s {{itemName}} wurde\nvon {{pokemonName}}s {{typeName}} gestohlen!",
+  "enemyTurnHealApply": "{{pokemonNameWithAffix}}\nregenerierte einige KP!",
+  "bypassSpeedChanceApply": "{{pokemonName}} kann dank seines {{itemName}} schneller agieren!",
+  "permaRunQuest": {
+    "stage": "Phase ",
+    "collectRewards": "Belohnungen einsammeln",
+    "stageProgress": "Phasen-Fortschritt: {{current}}/{{total}}",
+    "questComplete": "Quest abgeschlossen!",
+    "stageComplete": "Phase abgeschlossen!",
+    "rewardTypes": {
+      "permaMoney": "∞GOLD",
+      "permaModifier": "∞GEGENSTAND",
+      "permaMoneyAndModifier": "∞GOLD & ∞GEGENSTAND"
+    }
+  }
+} 

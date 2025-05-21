@@ -1,0 +1,16 @@
+{
+  "mode": "Modalità",
+  "classic": "Viaggio",
+  "endless": "Infinita",
+  "endlessSpliced": "Infinita (Fusa)",
+  "dailyRun": "Sfida Giornaliera",
+  "unknown": "Sconosciuta",
+  "challenge": "Sfida",
+  "nuzlocke": "Nuzlocke",
+  "draft": "Rogue",
+  "nuzlight": "Nuzlight",
+  "nightmare": "Il Vuoto",
+  "nuzlightDraft": "Nuzlight Rogue",
+  "nuzlockeDraft": "Nuzlocke Rogue",
+  "notClassic": "*Quando non in modalità Viaggio"
+} 

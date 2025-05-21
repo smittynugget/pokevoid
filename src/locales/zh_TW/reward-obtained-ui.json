@@ -1,0 +1,42 @@
+{
+  "titles": {
+    "newPokemon": "新寶可夢！",
+    "newFusion": "新融合！",
+    "newItem": "新道具！",
+    "newGameOverItem": "遊戲結束獎勵！",
+    "newRibbonItem": "緞帶獎勵！",
+    "moneyObtained": "獲得金錢！",
+    "newShopUnlock": "商店解鎖項!",
+    "newUnlock": "新解鎖！",
+    "newSmittyForm": "新的斯米提形態！",
+    "newForm": "新形態！",
+    "rivalLost": "對手失敗了...",
+    "modeChange": "模式變更！",
+    "rewardObtained": "獲得獎勵！",
+    "voidOvertaken": "虛空已被征服！",
+    "newShopItem": "商店新物品",
+    "manyMoreNuggets": "還有更多閃亮亮的金塊！"
+  },
+  "gameModes": {
+    "nuzlocke": {
+      "description": "納茲洛克: 瀕死的寶可夢會\n從隊伍中移除..."
+    },
+    "draft": {
+      "description": "盜賊: 隨機選擇2隻寶可夢開始..."
+    },
+    "nuzlight": {
+      "description": "納茲萊特: 無法使用恢復道具..."
+    },
+    "nightmare": {
+      "description": "納茲地獄: 納茲萊特 + 納茲洛克"
+    },
+    "default": {
+      "description": "遊戲模式已更改！"
+    }
+  },
+  "ui": {
+    "rivalVoid": "{{name}}消失在虛空中...",
+    "error": "載入獎勵時出錯",
+    "new": "新"
+  }
+} 

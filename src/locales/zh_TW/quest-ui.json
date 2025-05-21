@@ -1,0 +1,120 @@
+{
+  "console": {
+    "activeBounties": "進行中的懸賞：",
+    "rivalBounties": "對手懸賞",
+    "smittyBounties": "幽打懸賞",
+    "questBounties": "任務懸賞",
+    "bountiesCount": "{{title}} ({{current}}/{{max}})",
+    "activeQuests": "進行中的任務：",
+    "questsCount": "({{current}}/{{max}})",
+    "submit": "提交",
+    "cancel": "取消",
+    "invalidConsoleCode": "無效的控制台代碼",
+    "consoleCodeAlreadyUsed": "控制台代碼已使用",
+    "consoleCodeAccepted": "控制台代碼已接受",
+    "toggleInfo": "請在標題或戰鬥畫面開啟！",
+    "shopAndConsoleShortcut": "請在標題或戰鬥畫面開啟！"
+  },
+  "bounty": {
+    "common": {
+      "status": {
+        "active": "進行中",
+        "inactive": "未啟動"
+      },
+      "baseReward": "基礎獎勵分配"
+    },
+    "modalTitle": "懸賞",
+    "status": {
+      "complete": "已完成",
+      "activeStage": "第{{stage}}階段進行中",
+      "active": "進行中"
+    },
+    "sections": {
+      "rewards": {
+        "title": "獎勵：",
+        "unknown": "???"
+      },
+      "task": {
+        "title": "任務：",
+        "singleRun": "單次任務：",
+        "multiRun": "多次任務：",
+        "locked": "必須先解鎖{{target}}"
+      }
+    },
+    "error": "載入懸賞時出錯",
+    "buttons": {
+      "swap": "更換懸賞",
+      "activate": "啟動懸賞",
+      "back": "返回",
+      "cancel": "取消"
+    },
+    "rival": {
+      "modalTitle": "對手訓練家懸賞",
+      "invalidTrainer": "無效的訓練家",
+      "task": "擊敗{{trainerName}} - 第{{stage}}階段",
+      "progress": {
+        "title": "階段進度：",
+        "count": "{{current}} / {{max}}"
+      },
+      "rewards": {
+        "stage1": "90% ∞金幣 | 8% ∞道具 | 2% 兩者",
+        "stage2": "75% ∞金幣 | 15% ∞道具 | 10% 兩者",
+        "stage3": "60% ∞金幣 | 25% ∞道具 | 15% 兩者",
+        "stage4": "40% ∞金幣 | 40% ∞道具 | 20% 兩者",
+        "stage5": "25% ∞金幣 | 45% ∞道具 | 30% 兩者"
+      }
+    },
+    "quest": {
+      "modalTitle": "任務懸賞",
+      "invalidTask": "無效的任務",
+      "replacement": {
+        "title": "選擇要替換的懸賞",
+        "cancel": "取消"
+      },
+      "rewards": {
+        "default": "50% ∞金幣 | 35% ∞道具 | 15% 兩者"
+      },
+      "activeQuest": {
+        "modalTitle": "任務！",
+        "buttons": {
+          "swap": "更換任務",
+          "activate": "啟動任務"
+        },
+        "rewards": {
+          "unlockForm": "解鎖{{pokemonName}}的新形態！"
+        },
+        "progress": {
+          "title": "階段進度：",
+          "count": "{{current}} / {{max}}"
+        }
+      }
+    },
+    "smitty": {
+      "modalTitle": "寶可夢幽打懸賞",
+      "rewards": {
+        "withSpecies": "70% ∞金幣 | 20% ∞道具 | 10% 兩者",
+        "withoutSpecies": "40% ∞金幣 | 40% ∞道具 | 20% 兩者"
+      },
+      "task": {
+        "evolveAny": "將任意寶可夢進化為{{formName}}",
+        "evolveSpecific": "將{{basePokemon}}進化為{{formName}}"
+      },
+      "items": {
+        "title": "所需道具："
+      },
+      "common": {
+        "any": "任意"
+      }
+    }
+  },
+  "modeRewards": {
+    "classicModeRewardFusion": "使用融合寶可夢！？",
+    "commonModeRewardAbilities": "特性變化道具新增60多個特性",
+    "nuzlightModeRewardTypeSwitch": "主要/次要屬性切換",
+    "nuzlightModeRewardUpdatedInventory": "物品欄已更新！",
+    "nuzlightModeRewardMoveRelease": "遺忘招式",
+    "nuzlockeModeRewardRank2": "等級 2",
+    "accessShopInBattle": "在戰鬥中訪問∞商店！",
+    "accessQuestsInBattle": "在戰鬥中訪問任務！"
+  }
+}

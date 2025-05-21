@@ -1,0 +1,82 @@
+{
+  "title": "Erstelle eine Benutzerdefinierte Glitch-Evolution",
+  "mods": "Mods",
+  "testMods": "Teste Deine Mods",
+  "uploadMods": "Mods Hochladen",
+  "createGlitchEvolution": "Glitch-Evolution Erstellen",
+  "removeMods": "Mods Entfernen",
+  "shareAndTakeMods": "Mods Teilen & Nehmen",
+  "noModsToRemove": "Keine Mods zum Entfernen.",
+  "errorLoadingMods": "Fehler beim Laden der Mods. Bitte versuche es erneut.",
+  "modRemoved": "{{name}} erfolgreich entfernt.",
+  "errorRemovingMod": "Fehler beim Entfernen des Mods. Bitte versuche es erneut.",
+  "uploadSuccess": "{{count}} Mod(s) erfolgreich hochgeladen:",
+  "uploadFailed": "{{count}} Mod(s) konnten nicht hochgeladen werden:",
+  "reloadRequired": "Spiel wird neu geladen, um Änderungen anzuwenden.",
+  "fields": {
+    "species": "Spezies",
+    "formName": "Formname (Englisch)*",
+    "formLanguages": "Formname (Zusätzliche Sprachen)",
+    "primaryType": "Primärer Typ",
+    "secondaryType": "Sekundärer Typ",
+    "ability1": "Fähigkeit 1",
+    "ability2": "Fähigkeit 2",
+    "hiddenAbility": "Versteckte Fähigkeit",
+    "stat1": "Statuswert 1 zum Steigern",
+    "stat2": "Statuswert 2 zum Steigern",
+    "stat3": "Statuswert 3 zum Steigern",
+    "distributionType": "Art der Statuswert-Verteilung",
+    "frontSprite": "Pokémon Vorderansicht (150-200px)",
+    "backSprite": "Pokémon Rückansicht (150-200px)",
+    "rivalTrainer": "Rivale",
+    "orRivalTrainer": "oder Rivale"
+  },
+  "distributionTypes": {
+    "even": "Gleichmäßig (+33% pro Statuswert)",
+    "twoPriority": "Doppelte Priorität (Statuswert 1 +40% | Statuswert 2 +40% | Statuswert 3 +20%)",
+    "scaling": "Skaliert (Statuswert 1 +45% | Statuswert 2 +35% | Statuswert 3 +20%)",
+    "topPriority": "Höchste Priorität (Statuswert 1 +40% | Statuswert 2 +30% | Statuswert 3 +30%)"
+  },
+  "buttons": {
+    "saveAndAdd": "Speichern & Neu Laden",
+    "cancel": "Abbrechen"
+  },
+  "validation": {
+    "requiredField": "Dieses Feld ist erforderlich",
+    "invalidImage": "Ungültiges Bildformat oder -größe",
+    "imageSize": "Bild sollte 150-200px groß sein"
+  },
+  "statusMessages": {
+    "creatingMod": "Mod wird erstellt...",
+    "success": "Glitch-Form-Mod erfolgreich erstellt und gespeichert!",
+    "downloadReady": "Dein Mod ist bereit zum Herunterladen",
+    "error": "Fehler beim Erstellen des Mods: {{message}}",
+    "storageError": "Mod erstellt, aber nicht im Speicher gespeichert. Du kannst es trotzdem herunterladen."
+  },
+  "sections": {
+    "basicInformation": "Grundinformationen",
+    "typesAbilities": "Typen und Fähigkeiten",
+    "stats": "Statuswerte",
+    "sprites": "Sprites",
+    "rivalTrainer": "Rivalen, Die Diese Form Belohnen"
+  },
+  "imageUpload": {
+    "uploadButton": "Bild Hochladen",
+    "noFileSelected": "Keine Datei ausgewählt",
+    "invalidSize": "Ungültige Bildgröße (muss 150-200px sein)"
+  },
+  "dropdowns": {
+    "selectOptional": "- Auswählen (Optional) -"
+  },
+  "languages": {
+    "es": "Spanisch",
+    "fr": "Französisch",
+    "de": "Deutsch",
+    "ja": "Japanisch",
+    "ko": "Koreanisch",
+    "pt-BR": "Portugiesisch (Brasilien)",
+    "it": "Italienisch",
+    "zh-TW": "Chinesisch (Traditionell)",
+    "zh-CN": "Chinesisch (Vereinfacht)"
+  }
+} 

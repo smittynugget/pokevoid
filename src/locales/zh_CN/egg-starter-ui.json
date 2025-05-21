@@ -1,0 +1,11 @@
+{
+  "hatchAndSwap": "孵化与更换",
+  "tooltip": "查看已孵化的宝可梦，并可选择替换其中一只（如果需要）。第一只宝可梦不能被替换。\n传说宝可梦只能与传说/超级/极巨化宝可梦互换",
+  "legendaryDisabled": "需要队伍中有传说/超进化/极巨化宝可梦",
+  "onlyOnePokemon": "无法更换：队伍中只有一名成员",
+  "swapWithParty": "与队伍成员交换",
+  "selectLegendaryPartyMember": "与传说/超进化/极巨化宝可梦交换",
+  "selectPartyMember": "与队伍成员交换",
+  "confirmSwapMessage": "将{{hatchedPokemon}}与{{partyPokemon}}交换？",
+  "skipAnimationsPrompt": "跳过所有蛋孵化动画？"
+} 

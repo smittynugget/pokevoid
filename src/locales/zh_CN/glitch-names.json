@@ -1,0 +1,239 @@
+{
+  "noxious": {
+    "name": "毒秽"
+  },
+  "voltaurus": {
+    "name": "电奔牛"
+  },
+  "kingleon": {
+    "name": "王隐龙"
+  },
+  "glicula": {
+    "name": "血魔蝠"
+  },
+  "mamawak": {
+    "name": "母魂骨"
+  },
+  "infernus": {
+    "name": "狱炎龙"
+  },
+  "fangdrake": {
+    "name": "獠牙龙"
+  },
+  "gigilick": {
+    "name": "巨舌舔"
+  },
+  "cybeex": {
+    "name": "赛博岩"
+  },
+  "charisand": {
+    "name": "魅沙龙"
+  },
+  "mentasaur": {
+    "name": "念力螈"
+  },
+  "enchantoise": {
+    "name": "魔冰龟"
+  },
+  "nidorath": {
+    "name": "尼多怒"
+  },
+  "generagar": {
+    "name": "电灵耿"
+  },
+  "fuming": {
+    "name": "烟毒怪"
+  },
+  "hitmonnorm": {
+    "name": "击拳常"
+  },
+  "onehitchan": {
+    "name": "一击拳"
+  },
+  "chanmonlee": {
+    "name": "拳斗李"
+  },
+  "kangasgone": {
+    "name": "袋兽逝"
+  },
+  "thanator": {
+    "name": "死镰者"
+  },
+  "magnovire": {
+    "name": "磁电兽"
+  },
+  "dunerados": {
+    "name": "沙暴鲤"
+  },
+  "lavaras": {
+    "name": "熔岩乘"
+  },
+  "porygonω": {
+    "name": "多边兽Ω"
+  },
+  "dragonking": {
+    "name": "龙皇"
+  },
+  "sudolem": {
+    "name": "伪树岩"
+  },
+  "yonipom": {
+    "name": "远古猴"
+  },
+  "alnowning": {
+    "name": "全知符"
+  },
+  "krakken": {
+    "name": "深海怪"
+  },
+  "metalker": {
+    "name": "钢牛兽"
+  },
+  "slothunter": {
+    "name": "懒猎者"
+  },
+  "solunolith": {
+    "name": "日月岩"
+  },
+  "regimeteor": {
+    "name": "陨星岩"
+  },
+  "omnigigas": {
+    "name": "全能巨"
+  },
+  "wispeeon": {
+    "name": "幽灵伊"
+  },
+  "cybeon": {
+    "name": "赛博伊"
+  },
+  "teraeon": {
+    "name": "大地伊"
+  },
+  "pikura": {
+    "name": "皮卡暗"
+  },
+  "frogotten": {
+    "name": "遗忘蛙"
+  },
+  "determizard": {
+    "name": "决意龙"
+  },
+  "melonax": {
+    "name": "甜瓜螈"
+  },
+  "rokachubo": {
+    "name": "岩电丘"
+  },
+  "treashelter": {
+    "name": "宝藏守"
+  },
+  "grimjaw": {
+    "name": "怖颚兽"
+  },
+  "fibark": {
+    "name": "纤维皮"
+  },
+  "bonfyrite": {
+    "name": "篝火灵"
+  },
+  "silvaback": {
+    "name": "森归者"
+  },
+  "simizen": {
+    "name": "禅猿"
+  },
+  "paletto": {
+    "name": "彩绘兽"
+  },
+  "extavaroom": {
+    "name": "超速擎"
+  },
+  "mimizado": {
+    "name": "拟态者"
+  },
+  "ninjukyu": {
+    "name": "忍伪装"
+  },
+  "mewmewni": {
+    "name": "梦梦幻"
+  },
+  "ririkyu": {
+    "name": "莉莉伪"
+  },
+  "regirokuy": {
+    "name": "岩柱怪"
+  },
+  "ectonaut": {
+    "name": "幽灵探"
+  },
+  "dr.eiscicle": {
+    "name": "冰博士"
+  },
+  "moltem": {
+    "name": "熔火兽"
+  },
+  "zandux": {
+    "name": "斗冠猫"
+  },
+  "nucleash": {
+    "name": "核灰怪"
+  },
+  "plumaestro": {
+    "name": "羽大师"
+  },
+  "dragomime": {
+    "name": "龙偶师"
+  },
+  "chamelezard": {
+    "name": "变色火龙"
+  },
+  "pikatto": {
+    "name": "皮卡托"
+  },
+  "machitto": {
+    "name": "豪力托"
+  },
+  "mewtate": {
+    "name": "超梦变"
+  },
+  "yabbagatr": {
+    "name": "原始鳄"
+  },
+  "savagark": {
+    "name": "狂暴鲨"
+  },
+  "wonstrous": {
+    "name": "怪奇谜"
+  },
+  "imperiuno": {
+    "name": "帝王鲤"
+  },
+  "molestrosity": {
+    "name": "鼹怪"
+  },
+  "swaggart": {
+    "name": "傲艺鼬"
+  },
+  "viperex": {
+    "name": "毒咒蛇"
+  },
+  "cognarok": {
+    "name": "齿轮末"
+  },
+  "harmonda": {
+    "name": "谐旋熊"
+  },
+  "felester": {
+    "name": "戏猫师"
+  },
+  "tamamo": {
+    "name": "玉狐仙"
+  },
+  "tentuckle": {
+    "name": "触手甲"
+  },
+  "tanguish": {
+    "name": "缠苦藤"
+  }
+}

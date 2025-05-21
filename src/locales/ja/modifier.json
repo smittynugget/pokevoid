@@ -1,0 +1,24 @@
+{
+  "surviveDamageApply": "{{pokemonNameWithAffix}}は{{typeName}}のおかげで\n持ちこたえた！",
+  "turnHealApply": "{{pokemonNameWithAffix}}は{{typeName}}のおかげで\n少しHPを回復した！",
+  "hitHealApply": "{{pokemonNameWithAffix}}は{{typeName}}のおかげで\n少しHPを回復した！",
+  "pokemonInstantReviveApply": "{{pokemonNameWithAffix}}は{{typeName}}のおかげで\n復活した！",
+  "pokemonResetNegativeStatStageApply": "{{pokemonNameWithAffix}}は{{typeName}}のおかげで\n下がっていた能力が元に戻った！",
+  "moneyInterestApply": "{{typeName}}から利子として\n₽{{moneyAmount}}を受け取った！",
+  "turnHeldItemTransferApply": "{{pokemonNameWithAffix}}の{{itemName}}は\n{{pokemonName}}の{{typeName}}に吸収された！",
+  "contactHeldItemTransferApply": "{{pokemonNameWithAffix}}の{{itemName}}は\n{{pokemonName}}の{{typeName}}に奪われた！",
+  "enemyTurnHealApply": "{{pokemonNameWithAffix}}は\nHPを回復した！",
+  "bypassSpeedChanceApply": "{{pokemonName}}は{{itemName}}のおかげで\n素早く行動できるようになった！",
+  "permaRunQuest": {
+    "stage": "ステージ",
+    "collectRewards": "報酬を受け取る",
+    "stageProgress": "進行状況：{{current}}/{{total}}",
+    "questComplete": "クエスト完了！",
+    "stageComplete": "ステージクリア！",
+    "rewardTypes": {
+      "permaMoney": "∞ゴールド",
+      "permaModifier": "∞アイテム",
+      "permaMoneyAndModifier": "∞ゴールド & ∞アイテム"
+    }
+  }
+} 

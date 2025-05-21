@@ -1,0 +1,82 @@
+{
+  "title": "Créer une Évolution Glitch Personnalisée",
+  "mods": "Mods",
+  "testMods": "Tester Vos Mods",
+  "uploadMods": "Télécharger Mods",
+  "createGlitchEvolution": "Créer Évolution Glitch",
+  "removeMods": "Supprimer Mods",
+  "shareAndTakeMods": "Partager et Obtenir des Mods",
+  "noModsToRemove": "Aucun mod à supprimer.",
+  "errorLoadingMods": "Erreur lors du chargement des mods. Veuillez réessayer.",
+  "modRemoved": "{{name}} supprimé avec succès.",
+  "errorRemovingMod": "Erreur lors de la suppression du mod. Veuillez réessayer.",
+  "uploadSuccess": "{{count}} mod(s) téléchargé(s) avec succès :",
+  "uploadFailed": "Échec du téléchargement de {{count}} mod(s) :",
+  "reloadRequired": "Le jeu va se recharger pour appliquer les changements.",
+  "fields": {
+    "species": "Espèce",
+    "formName": "Nom de Forme (Anglais)*",
+    "formLanguages": "Nom de Forme (Langues Supplémentaires)",
+    "primaryType": "Type Primaire",
+    "secondaryType": "Type Secondaire",
+    "ability1": "Talent 1",
+    "ability2": "Talent 2",
+    "hiddenAbility": "Talent Caché",
+    "stat1": "Stat 1 à Améliorer",
+    "stat2": "Stat 2 à Améliorer",
+    "stat3": "Stat 3 à Améliorer",
+    "distributionType": "Type de Distribution d'Amélioration de Stats",
+    "frontSprite": "Sprite Avant du Pokémon (150-200px)",
+    "backSprite": "Sprite Arrière du Pokémon (150-200px)",
+    "rivalTrainer": "Rival",
+    "orRivalTrainer": "ou Rival"
+  },
+  "distributionTypes": {
+    "even": "Équilibré (+33% chaque Stat)",
+    "twoPriority": "Double Priorité (Stat 1 +40% | Stat 2 +40% | Stat 3 +20%)",
+    "scaling": "Échelonné (Stat 1 +45% | Stat 2 +35% | Stat 3 +20%)",
+    "topPriority": "Priorité Maximale (Stat 1 +40% | Stat 2 +30% | Stat 3 +30%)"
+  },
+  "buttons": {
+    "saveAndAdd": "Sauvegarder et Recharger",
+    "cancel": "Annuler"
+  },
+  "validation": {
+    "requiredField": "Ce champ est obligatoire",
+    "invalidImage": "Format ou taille d'image invalide",
+    "imageSize": "L'image doit être de 150-200px"
+  },
+  "statusMessages": {
+    "creatingMod": "Création du mod...",
+    "success": "Mod de forme glitch créé et sauvegardé avec succès !",
+    "downloadReady": "Votre mod est prêt à être téléchargé",
+    "error": "Erreur lors de la création du mod : {{message}}",
+    "storageError": "Mod créé mais non sauvegardé dans le stockage. Vous pouvez toujours le télécharger."
+  },
+  "sections": {
+    "basicInformation": "Informations de Base",
+    "typesAbilities": "Types et Talents",
+    "stats": "Statistiques",
+    "sprites": "Sprites",
+    "rivalTrainer": "Rivaux Qui Récompensent Cette Forme"
+  },
+  "imageUpload": {
+    "uploadButton": "Télécharger Image",
+    "noFileSelected": "Aucun fichier sélectionné",
+    "invalidSize": "Taille d'image invalide (doit être de 150-200px)"
+  },
+  "dropdowns": {
+    "selectOptional": "- Sélectionner (Optionnel) -"
+  },
+  "languages": {
+    "es": "Espagnol",
+    "fr": "Français",
+    "de": "Allemand",
+    "ja": "Japonais",
+    "ko": "Coréen",
+    "pt-BR": "Portugais (Brésil)",
+    "it": "Italien",
+    "zh-TW": "Chinois (Traditionnel)",
+    "zh-CN": "Chinois (Simplifié)"
+  }
+} 

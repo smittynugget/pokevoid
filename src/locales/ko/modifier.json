@@ -1,0 +1,24 @@
+{
+  "surviveDamageApply": "{{pokemonNameWithAffix}}이(가) {{typeName}}(으)로\n버텨냈다!",
+  "turnHealApply": "{{pokemonNameWithAffix}}이(가) {{typeName}}(으)로\n체력을 조금 회복했다!",
+  "hitHealApply": "{{pokemonNameWithAffix}}이(가) {{typeName}}(으)로\n체력을 조금 회복했다!",
+  "pokemonInstantReviveApply": "{{pokemonNameWithAffix}}이(가) {{typeName}}(으)로\n부활했다!",
+  "pokemonResetNegativeStatStageApply": "{{pokemonNameWithAffix}}의 낮아진 능력치가\n{{typeName}}(으)로 회복되었다!",
+  "moneyInterestApply": "{{typeName}}에서 이자 ₽{{moneyAmount}}을(를)\n받았다!",
+  "turnHeldItemTransferApply": "{{pokemonNameWithAffix}}의 {{itemName}}이(가)\n{{pokemonName}}의 {{typeName}}에 흡수되었다!",
+  "contactHeldItemTransferApply": "{{pokemonNameWithAffix}}의 {{itemName}}이(가)\n{{pokemonName}}의 {{typeName}}에 빼앗겼다!",
+  "enemyTurnHealApply": "{{pokemonNameWithAffix}}이(가)\n체력을 회복했다!",
+  "bypassSpeedChanceApply": "{{pokemonName}}이(가) {{itemName}}의 효과로 더 빠르게 행동할 수 있다!",
+  "permaRunQuest": {
+    "stage": "스테이지 ",
+    "collectRewards": "보상 수집",
+    "stageProgress": "스테이지 진행도: {{current}}/{{total}}",
+    "questComplete": "퀘스트 완료!",
+    "stageComplete": "스테이지 완료!",
+    "rewardTypes": {
+      "permaMoney": "∞골드",
+      "permaModifier": "∞아이템",
+      "permaMoneyAndModifier": "∞골드 & ∞아이템"
+    }
+  }
+} 

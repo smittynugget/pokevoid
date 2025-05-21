@@ -1,0 +1,13 @@
+{
+  "voidex": "Voidex",
+  "enemyPrefix": "敵方",
+  "partyPrefix": "隊伍",
+  "evolutionPrefix": "進化",
+  "allOtherPokemon": "所有其他寶可夢",
+  "pokemonDataNotFound": "未找到寶可夢資料。",
+  "errorLoadingSprite": "載入精靈圖失敗。",
+  "abilities": "特性",
+  "learnableMoves": "可學會的招式",
+  "eggMoves": "蛋招式",
+  "loading": "載入中..."
+} 

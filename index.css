@@ -1,0 +1,442 @@
+:root {
+  --color-base: hsl(0, 0%, 55%);
+  --color-light: hsl(0, 0%, 90%);
+  --color-dark: hsl(0, 0%, 10%);
+  --controls-size: 10vh;
+  --text-shadow-size: 0.65vh;
+}
+
+@media (orientation: landscape) {
+  :root {
+    --controls-size: 20vh;
+    --text-shadow-size: 1.3vh;
+  }
+}
+
+html {
+  touch-action: none;
+}
+
+body {
+  margin: 0;
+  background: #121212;
+}
+
+@media (max-width: 720px) {
+  body {
+    background: #470055;
+  }
+}
+
+canvas {
+  margin: 0 !Important;
+}
+
+#app {
+  display: flex;
+  justify-content: center;
+}
+
+#app > div:first-child {
+  transform-origin: top !important;
+}
+
+#touchControls:not(.visible) {
+  display: none;
+}
+
+#dpad, #apad {
+  position: fixed;
+  bottom: 1rem;
+  z-index: 3;
+}
+
+@media (orientation: portrait) {
+  #dpad, #apad {
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+}
+
+#dpad {
+  left: 1rem;
+}
+
+#apad {
+  right: 1rem;
+}
+
+#dpad svg {
+  width: calc(2 * var(--controls-size));
+  height: calc(2 * var(--controls-size));
+  fill: var(--color-base);
+}
+
+#dpad svg rect {
+  opacity: 0.6;
+}
+
+#apad > * {
+  width: var(--controls-size);
+  height: var(--controls-size);
+}
+
+#apad .apadBtn {
+  width: var(--controls-size);
+  height: var(--controls-size);
+  background-color: var(--color-base);
+  border-radius: 50%;
+}
+
+@media (orientation: landscape) {
+  #dpad svg {
+    fill: rgba(255, 255, 255, 0.3);
+  }
+  #apad .apadBtn {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+#apad .apadLabel {
+  font-family: 'emerald';
+  font-size: var(--controls-size);
+  text-shadow: var(--color-dark) var(--text-shadow-size) var(--text-shadow-size);
+  color: var(--color-light);
+  user-select: none;
+}
+
+#apad .apadLabelSmall {
+  font-size: calc(var(--controls-size) / 3);
+  text-shadow: var(--color-dark) calc(var(--text-shadow-size) / 3) calc(var(--text-shadow-size) / 3);
+}
+
+#apad #apadLabelAction, #apad #apadLabelCancel {
+  margin-left: calc(var(--controls-size) / 3);
+  line-height: 0.9;
+}
+
+#apad > :nth-child(2) {
+  position: relative;
+  right: var(--controls-size);
+}
+
+#apad .apadRectBtn {
+  position: relative;
+  text-align: center;
+  padding-right: 10%;
+  border-radius: 10%;
+  bottom: calc(var(--controls-size) * 0.05);
+  width: calc(var(--controls-size) * 0.6);
+  height: calc(var(--controls-size) * 0.3);
+}
+
+#apad .apadSqBtn {
+  border-radius: 10%;
+  width: calc(var(--controls-size) * 0.3);
+  height: calc(var(--controls-size) * 0.3);
+}
+
+#apad .apadBtnContainer {
+  position: relative;
+  display: flex;
+}
+
+#apad .apadRectBtnContainer {
+  flex-wrap: wrap;
+  margin-top: calc(var(--controls-size) * -0.8);
+  left: calc(var(--controls-size) * 0.175);
+  height: calc(var(--controls-size) * 0.8);
+}
+
+#apad .apadSqBtnContainer {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: calc(var(--controls-size) * -0.8);
+  top: calc(var(--controls-size) * -0.9);
+  width: calc(var(--controls-size) * 0.8);
+  height: calc(var(--controls-size) * 0.8);
+  height: calc(var(--controls-size) * 0.8);
+}
+
+#apad .apadRectBtnContainer > #apadMenu {
+  align-self: flex-end;
+}
+
+#apad .apadRectBtnContainer > .apadSqBtn:not(:first-child) {
+  margin-left: 10%;
+}
+
+#touchControls:not([data-ui-mode='STARTER_SELECT']) #apad .apadRectBtnContainer > .apadSqBtn, #touchControls:not([data-ui-mode='STARTER_SELECT']) #apad .apadSqBtnContainer {
+  display: none;
+}
+
+#touchControls:not([data-ui-mode='COMMAND']):not([data-ui-mode='MODIFIER_SELECT']):not([data-ui-mode='SHOP_SELECT']):not([data-ui-mode='FIGHT']):not([data-ui-mode='BALL']):not([data-ui-mode='TARGET_SELECT']) #apad #apadStats {
+  display: none;
+}
+
+#apad .apadRectBtnContainer + .apadSqBtnContainer {
+  top: calc(var(--controls-size) * -1.9);
+  left: calc(var(--controls-size) * -0.9);
+}
+
+#apad .apadNewBtnContainer {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 0rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 3;
+  /* width: auto; */
+  max-width: calc(var(--controls-size) * 1.5);
+  justify-content: center;
+  align-items: center;
+  height: auto;
+}
+
+@media (orientation: landscape) {
+  #apad .apadNewBtnContainer {
+        position: fixed;
+    bottom: initial;
+    top: calc(var(--controls-size)* 2.95);
+    left: 50%;
+    translate: -50%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: auto;
+  }
+}
+
+@media (orientation: portrait) {
+  #apad .apadNewBtnContainer {
+    bottom: initial;
+    top: calc(var(--controls-size) * 4.75);
+    right: 1rem;
+  }
+}
+
+#apad .apadNewBtnContainer .apadBtn {
+  margin: 0 calc(var(--controls-size) * 0.01);
+}
+
+#apad .apadBtnContainer .apadLabel {
+  margin-left: calc(var(--controls-size) / 12);
+  line-height: 0.8;
+}
+
+#dpad path:not(.active), #apad .apadBtn:not(.active) {
+  opacity: 0.6;
+}
+
+#layout:fullscreen #dpad, #layout:fullscreen #apad {
+  bottom: 6rem;
+}
+
+input:-internal-autofill-selected {
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+#apad #apadShop {
+  display: none;
+}
+#touchControls[data-shop-unlocked='true'] #apad #apadShop,
+#touchControls[data-shop-unlocked='true'] #apad #apadShop {
+  display: block;
+}
+
+#apad #apadConsole {
+  display: none;
+}
+#touchControls[data-console-unlocked='true'] #apad #apadConsole,
+#touchControls[data-console-unlocked='true'] #apad #apadConsole {
+  display: block;
+}
+
+#touchControls[data-ui-mode='TITLE'] #apad #apadConsole, #touchControls[data-ui-mode='TITLE'] #apad #apadShop {
+  display: none;
+} 
+
+#apad #apadSave, #apad #apadSmitom, #apad #apadEggGacha, #apad #apadVoidex {
+  display: none;
+}
+ #apad #apadSave {
+  display: block;
+}
+
+#touchControls[data-ui-mode='TITLE'] #apad #apadSmitom {
+  display: block;
+}
+
+#touchControls[data-ui-mode='TITLE'] #apad #apadEggGacha, #touchControls[data-ui-mode='COMMAND'] #apad #apadEggGacha, #touchControls[data-ui-mode='MODIFIER_SELECT'] #apad #apadEggGacha, #touchControls[data-ui-mode='TITLE'] #apad #apadVoidex, #touchControls[data-ui-mode='COMMAND'] #apad #apadVoidex, #touchControls[data-ui-mode='MODIFIER_SELECT'] #apad #apadVoidex {
+  display: block;
+}
+
+#apad .apadRectBtnContainer > .apadSqBtn:not(:first-child) {
+  margin-left: 10%;
+}
+
+#apadShop, #apadConsole, #apadSave, #apadSmitom, #apadEggGacha, #apadVoidex {
+  background-color: rgba(0, 0, 0, 0.8);
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
+  border-radius: 8px;
+  /* padding: 0.6rem 1.2rem !important; */
+  font-weight: bold;
+  transition: all 0.2s ease;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#apadShop .apadLabel, #apadConsole .apadLabel, #apadSave .apadLabel, #apadSmitom .apadLabel, #apadEggGacha .apadLabel, #apadVoidex .apadLabel {
+  width: 100%;
+  text-align: center;
+  margin-left: 0 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.5px;
+  font-size: calc(var(--controls-size) / 4) !important;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  #apadShop, #apadConsole, #apadSave, #apadSmitom, #apadEggGacha, #apadVoidex {
+    padding: 0.05rem 0rem !important;;
+  }
+  
+  #apadShop .apadLabel, #apadConsole .apadLabel, #apadSave .apadLabel, #apadSmitom .apadLabel, #apadEggGacha .apadLabel, #apadVoidex .apadLabel {
+    font-size: calc(var(--controls-size) / 4.5) !important;
+  }
+}
+
+@media (orientation: landscape) and (min-width: 776px) {
+  #apad .apadNewBtnContainer {
+    top: initial;
+    bottom: 1rem;
+  }
+
+  #apadShop, #apadConsole, #apadSave, #apadSmitom, #apadEggGacha, #apadVoidex {
+    padding-right: 0 !important;
+  }
+}
+
+@media (orientation: landscape) {
+  #apadShop, #apadConsole, #apadSave, #apadSmitom, #apadEggGacha, #apadVoidex {
+    width: calc(var(--controls-size)* 0.45) !important;
+    height: calc(var(--controls-size)* 0.2) !important;
+  }
+  
+  #apadShop .apadLabel, #apadConsole .apadLabel, #apadSave .apadLabel, #apadSmitom .apadLabel, #apadEggGacha .apadLabel, #apadVoidex .apadLabel {
+    font-size: calc(var(--controls-size) / 5.5) !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 585px) {
+  #apad .apadNewBtnContainer {
+    position: fixed;
+    top: calc(var(--controls-size) * 1.5);
+    left: 1rem;
+    right: initial;
+    bottom: initial;
+    translate: initial;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    max-width: calc(var(--controls-size) * 1.5);
+    width: auto;
+    height: auto;
+  }
+  
+  #apadShop, #apadConsole, #apadSave, #apadSmitom, #apadEggGacha, #apadVoidex {
+    width: calc(var(--controls-size) * 0.4) !important;
+    height: calc(var(--controls-size) * 0.17) !important;
+  }
+  
+  #apadShop .apadLabel, #apadConsole .apadLabel, #apadSave .apadLabel, #apadSmitom .apadLabel, #apadEggGacha .apadLabel, #apadVoidex .apadLabel {
+    font-size: calc(var(--controls-size) / 6) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #apadShop, #apadConsole, #apadSave, #apadSmitom, #apadEggGacha, #apadVoidex {
+    padding: 0.05rem 0rem !important;;
+  }
+  
+  #apadShop .apadLabel, #apadConsole .apadLabel, #apadSave .apadLabel, #apadSmitom .apadLabel, #apadEggGacha .apadLabel, #apadVoidex .apadLabel {
+    font-size: calc(var(--controls-size) / 5) !important;
+  }
+}
+
+#apadShop:active, #apadConsole:active, #apadSave:active, #apadSmitom:active, #apadEggGacha:active, #apadVoidex:active {
+  background-color: rgba(60, 60, 60, 0.9);
+  transform: scale(0.95);
+}
+
+#apadShop {
+  background-color: rgba(0, 100, 0, 0.8);
+  order: 1;
+}
+
+#apadConsole {
+  background-color: rgba(100, 0, 100, 0.8);
+  order: 2;
+}
+
+#apadSmitom {
+  background-color: rgba(100, 50, 0, 0.8);
+  order: 3;
+}
+
+#apadSave {
+  background-color: rgba(0, 0, 100, 0.8);
+  order: 4;
+}
+
+#apadEggGacha {
+  background-color: rgba(100, 0, 0, 0.8);
+  order: 5;
+}
+
+#apadVoidex {
+  background-color: rgba(0, 100, 100, 0.8);
+  order: 6;
+}
+
+#apadSave[data-active-state="true"], #apadSmitom[data-active-state="true"], #apadShop[data-active-state="true"] {
+  background-color: rgba(255, 215, 0, 0.8) !important;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+#apadSave[data-active-state="true"] .apadLabel, #apadSmitom[data-active-state="true"] .apadLabel, #apadShop[data-active-state="true"] .apadLabel {
+  color: white;
+}
+
+#touchControls[data-ui-mode^="SETTINGS"] #apadCycleShiny,
+#touchControls[data-ui-mode^="SETTINGS"] #apadCycleForm {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#touchControls[data-ui-mode^="SETTINGS"] #apadCycleShiny .apadLabel,
+#touchControls[data-ui-mode^="SETTINGS"] #apadCycleForm .apadLabel {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#touchControls[data-ui-mode^="SETTINGS"] #apadShop,
+#touchControls[data-ui-mode^="SETTINGS"] #apadConsole,
+#touchControls[data-ui-mode^="SETTINGS"] #apadSave,
+#touchControls[data-ui-mode="^SETTINGS"] #apadSmitom {
+  display: none !important;
+} 

@@ -1,0 +1,450 @@
+{
+  "DUSCLOPS_NIGHTMARE_QUEST": {
+    "name": "Dusclops Nightmare",
+    "task": "Defeat 2 of Allister's Pokemon consecutively with Dusclops during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+  },
+  "TAUROS_ELECTRIC_HIT_QUEST": {
+    "name": "Tauros Electric Hit",
+    "task": "Have Tauros get hit by 30 Electric-type moves"
+  },
+  "KECLEON_COLOR_CHANGE_QUEST": {
+    "name": "Kecleon Color Change",
+    "task": "Activate Kecleon's Color Change ability 50 times"
+  },
+  "GLISCOR_DARK_MOVE_KNOCKOUT_QUEST": {
+    "name": "Gliscor Dark Move Knockout",
+    "task": "Defeat 100 Pokemon with Gliscor using Dark-type moves"
+  },
+  "MAROWAK_CUBONE_FAINT_QUEST": {
+    "name": "Marowak Cubone Faint",
+    "task": "Have Marowak faint while Cubone is in your party"
+  },
+  "NOIVERN_DRAGON_MOVE_KNOCKOUT_QUEST": {
+    "name": "Noivern Dragon Move Knockout",
+    "task": "Defeat 100 Pokemon with Noivern using Dragon-type moves"
+  },
+  "FERALIGATR_DRAGON_DEFEAT_QUEST": {
+    "name": "Feraligatr Dragon Defeat",
+    "task": "Defeat 50 Dragon-type Pokemon with Feraligatr"
+  },
+  "CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST": {
+    "name": "Charizard Ground Move Knockout",
+    "task": "Defeat 100 Pokemon with Charizard using Ground-type moves"
+  },
+  "VENUSAUR_PSYCHIC_MOVE_USE_QUEST": {
+    "name": "Venusaur Psychic Move Use",
+    "task": "Use Psychic-type moves 200 times with Venusaur"
+  },
+  "BLASTOISE_FAIRY_DEFEAT_QUEST": {
+    "name": "Blastoise Fairy Defeat",
+    "task": "Defeat 50 Fairy-type Pokemon with Blastoise"
+  },
+  "NIDOKING_DEFEAT_QUEST": {
+    "name": "Nidoking Defeat",
+    "task": "Defeat 10 Nidoking with your Nidoking"
+  },
+  "GENGAR_SPECIAL_WAVE_QUEST": {
+    "name": "Gengar Special Wave",
+    "task": "Complete 30 consecutive waves with Gengar in first slot knowing no Ghost/Poison moves, and at least 1 Electric move"
+  },
+  "WEEZING_FIRE_MOVE_KNOCKOUT_QUEST": {
+    "name": "Weezing Fire Move Knockout",
+    "task": "Defeat 100 Pokemon with Weezing using Fire-type moves"
+  },
+  "HITMONLEE_NORMAL_WAVE_QUEST": {
+    "name": "Hitmonlee Normal Wave",
+    "task": "Complete 30 consecutive waves with Hitmonlee being your first pokemon, having only Normal moves, and having only Normal-type party members"
+  },
+  "HITMONCHAN_STAT_INCREASE_QUEST": {
+    "name": "Hitmonchan Stat Increase",
+    "task": "Use stat-boosting moves 50 times with Hitmonchan"
+  },
+  "HITMON_DUO_WIN_QUEST": {
+    "name": "Hitmon Duo Win",
+    "task": "Win a run with both Hitmonlee and Hitmonchan in your party"
+  },
+  "KANGASKHAN_GHOST_MOVE_QUEST": {
+    "name": "Kangaskhan Ghost Move",
+    "task": "Use Ghost-type moves 50 times with Kangaskhan"
+  },
+  "SCYTHER_TRIO_WIN_QUEST": {
+    "name": "Scyther Trio Win",
+    "task": "Complete final 50 waves with only 3 Pokemon including Scyther"
+  },
+  "GRENINJA_TRIO_WIN_QUEST": {
+    "name": "Greninja Trio Win",
+    "task": "Complete final 50 waves with only 3 Pokemon including Greninja"
+  },
+  "SIMISAGE_TRIO_WIN_QUEST": {
+    "name": "Simisage Trio Win",
+    "task": "Complete final 50 waves with only 3 Pokemon including Simisage"
+  },
+  "ELEMENTAL_MONKEY_WIN_QUEST": {
+    "name": "Elemental Monkey Win",
+    "task": "Win with at least one of the following pokemon: [Simipour, Simisear, Simisage] knowing exactly 4 moves of the following types: [Flying, Fire, Water, and Ground]"
+  },
+  "ELECTIVIREMAGMORTAR_WIN_QUEST": {
+    "name": "Electivire & Magmortar Win",
+    "task": "Win a run with both Electivire and Magmortar in your party"
+  },
+  "GYARADOS_GROUND_SWITCH_QUEST": {
+    "name": "Gyarados Ground Switch",
+    "task": "Have 20 Ground-type moves used against your Gyarados"
+  },
+  "LAPRAS_FIRE_MOVE_QUEST": {
+    "name": "Lapras Fire Move",
+    "task": "Use Fire-type moves 50 times with Lapras"
+  },
+  "PORYGON_Z_ANALYTIC_USE_QUEST": {
+    "name": "Porygon-Z Analytic Use",
+    "task": "Activate Porygon-Z's Analytic ability 50 times"
+  },
+  "MEOWTH_JESTER_QUEST": {
+    "name": "Meowth Trio Win",
+    "task": "Complete the final 50 waves with only 3 Pokemon including Meowth"
+  },
+  "DRAGONITE_LANCE_DEFEAT_QUEST": {
+    "name": "Dragonite Lance Defeat",
+    "task": "Defeat 3 of Lance's Pokemon consecutively using Dragonite"
+  },
+  "SUDOWOODO_WOOD_HAMMER_QUEST": {
+    "name": "Sudowoodo Wood Hammer",
+    "task": "Use Wood Hammer 100 times with Sudowoodo"
+  },
+  "AMBIPOM_GIGA_IMPACT_QUEST": {
+    "name": "Ambipom Giga Impact",
+    "task": "Use Giga Impact 10 times with Ambipom in one run"
+  },
+  "MILTANK_STEEL_MOVE_KNOCKOUT_QUEST": {
+    "name": "Miltank Steel Move Knockout",
+    "task": "Defeat 50 Pokemon with Miltank using Steel-type moves"
+  },
+  "SLAKING_RIVAL_DEFEAT_QUEST": {
+    "name": "Slaking Rival Defeat",
+    "task": "Defeat 3 rival Pokemon using Slaking without switching out"
+  },
+  "SOLROCK_LUNATONE_WIN_QUEST": {
+    "name": "Solrock Lunatone Win",
+    "task": "Win a run with both Solrock and Lunatone in your party"
+  },
+  "REGIGIGAS_REGI_DEFEAT_QUEST": {
+    "name": "Regigigas Regi Defeat",
+    "task": "Defeat 5 Regi Pokemon using Regigigas"
+  },
+  "PIKACHU_RED_BLUE_WIN_QUEST": {
+    "name": "Pikachu Red Blue Win",
+    "task": "Win against both Red and Blue with Pikachu in your party"
+  },
+  "SNORLAX_GRASS_KNOCKOUT_QUEST": {
+    "name": "Snorlax Grass Knockout",
+    "task": "Defeat 20 Pokemon with Snorlax using Grass-type moves"
+  },
+  "CLOYSTER_PRESENT_QUEST": {
+    "name": "Cloyster Present",
+    "task": "Use Present 50 times with Cloyster in Nuzlocke mode"
+  },
+  "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
+    "name": "Nuzleaf Nosepass Defeat",
+    "task": "Defeat 20 Nosepass or Probopass with Nuzleaf"
+  },
+  "CHANDELURE_REST_QUEST": {
+    "name": "Chandelure Rest",
+    "task": "Use Rest 10 times with Chandelure in one run"
+  },
+  "SMEARGLE_DEFEAT_QUEST": {
+    "name": "Smeargle Defeat",
+    "task": "Defeat 100 Pokemon with Smeargle"
+  },
+  "MIMIKYU_CHARIZARD_KNOCKOUT_QUEST": {
+    "name": "Mimikyu Charizard Knockout",
+    "task": "Defeat 3 Charizards with Mimikyu"
+  },
+  "MIMIKYU_GRENINJA_KNOCKOUT_QUEST": {
+    "name": "Mimikyu Greninja Knockout",
+    "task": "Defeat 3 Greninjas with Mimikyu"
+  },
+  "MIMIKYU_RAICHU_KNOCKOUT_QUEST": {
+    "name": "Mimikyu Raichu Knockout",
+    "task": "Defeat 3 Raichus with Mimikyu"
+  },
+  "MIMIKYU_MEWTWO_KNOCKOUT_QUEST": {
+    "name": "Mimikyu Mewtwo Knockout",
+    "task": "Defeat 2 Mewtwos with Mimikyu"
+  },
+  "MIMIKYU_REGIROCK_KNOCKOUT_QUEST": {
+    "name": "Mimikyu Regirock Knockout",
+    "task": "Defeat 2 Regirocks with Mimikyu"
+  },
+  "EISCUE_ROCK_KNOCKOUT_QUEST": {
+    "name": "Eiscue Rock Knockout",
+    "task": "Defeat 50 Rock-type Pokemon with Eiscue"
+  },
+  "ZANGOOSE_SEVIPER_KNOCKOUT_QUEST": {
+    "name": "Zangoose Seviper Knockout",
+    "task": "Defeat 10 Seviper with Zangoose"
+  },
+  "SEVIPER_ZANGOOSE_KNOCKOUT_QUEST": {
+    "name": "Seviper Zangoose Knockout",
+    "task": "Defeat 10 Zangoose with Seviper"
+  },
+  "TRUBBISH_POISON_DEFEAT_QUEST": {
+    "name": "Trubbish Poison Defeat",
+    "task": "Defeat 50 Poison-type Pokemon with Trubbish"
+  },
+  "HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST": {
+    "name": "Hawlucha Rival Champion Defeat",
+    "task": "Defeat 6 Pokemon from Rivals or Champions using Hawlucha"
+  },
+  "DITTO_DRAGONITE_TRANSFORM_QUEST": {
+    "name": "Ditto Dragonite Transform",
+    "task": "Transform into Dragonite 5 times with Ditto"
+  },
+  "DITTO_CHARIZARD_TRANSFORM_QUEST": {
+    "name": "Ditto Charizard Transform",
+    "task": "Transform into Charizard 5 times with Ditto"
+  },
+  "DITTO_PIKACHU_TRANSFORM_QUEST": {
+    "name": "Ditto Pikachu Transform",
+    "task": "Transform into Pikachu 5 times with Ditto"
+  },
+  "DITTO_MACHAMP_TRANSFORM_QUEST": {
+    "name": "Ditto Machamp Transform",
+    "task": "Transform into Machamp 5 times with Ditto"
+  },
+  "DITTO_MEWTWO_TRANSFORM_QUEST": {
+    "name": "Ditto Mewtwo Transform",
+    "task": "Transform into Mewtwo 5 times with Ditto"
+  },
+  "FERALIGATOR_ROCK_MOVE_KNOCKOUT_QUEST": {
+    "name": "Feraligatr Rock Move Knockout",
+    "task": "Defeat 50 Pokemon with Feraligatr using Rock-type moves"
+  },
+  "WOBBUFFET_RIVAL_DEFEAT_QUEST": {
+    "name": "Wobbuffet Rival Defeat",
+    "task": "Defeat 3 rival Pokemon using Wobbuffet"
+  },
+  "MAGIKARP_DEFEAT_QUEST": {
+    "name": "Magikarp Defeat",
+    "task": "Defeat 50 Pokemon with Magikarp"
+  },
+  "KLINKLANG_GEAR_MOVE_QUEST": {
+    "name": "Klinklang Gear Move",
+    "task": "Use Shift Gear and/or Gear Up 100 times with Klinklang"
+  },
+  "SPINDA_CONFUSION_RECOVERY_QUEST": {
+    "name": "Spinda Confusion Recovery",
+    "task": "Recover from confusion 10 times with Spinda"
+  },
+  "NINETALES_STORED_POWER_KNOCKOUT_QUEST": {
+    "name": "Ninetales Stored Power Knockout",
+    "task": "Defeat 50 Pokemon with Ninetales using Stored Power"
+  },
+  "SHUCKLE_DEFEAT_QUEST": {
+    "name": "Shuckle Defeat",
+    "task": "Defeat 30 Pokemon with Shuckle"
+  },
+  "TANGELA_RIVAL_DEFEAT_QUEST": {
+    "name": "Tangela Rival Defeat",
+    "task": "Defeat 3 rival Pokemon using Tangela"
+  },
+  "CLAYDOL_POISON_QUEST": {
+    "name": "Claydol Poison Move Use",
+    "task": "Use Poison-type moves 200 times with Claydol"
+  },
+  "TAUROS_DARK_WAVE_QUEST": {
+    "name": "Tauros Dark Wave",
+    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Tauros with at least 1 Dark and 1 Ghost-type move (it can't have any Normal-type moves) in Nightmare Mode"
+  },
+  "DITTO_SPECIAL_WIN_QUEST": {
+    "name": "Ditto Special Win",
+    "task": "Survive the final 50 waves with a team of exactly 3 Pokemon including Ditto"
+  },
+  "MAROWAK_ZOMBIE_KNOCKOUT_QUEST": {
+    "name": "Marowak Zombie Knockout",
+    "task": "Defeat 100 Pokemon with Marowak using Ominous Wind, Rage Fist, Grudge, Hex, or Last Respects"
+  },
+  "GRENINJA_YOKAI_WAVE_QUEST": {
+    "name": "Greninja Yokai Wave",
+    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Greninja with at least 1 Ghost and 1 Dark-type move (it can't have any Water-type moves) in Nightmare Mode"
+  },
+  "LICKITUNG_HYPER_WAVE_QUEST": {
+    "name": "Lickitung Hyper Wave",
+    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Lickitung with at least 1 Poison and 1 Dark-type move (it can't have any Normal-type moves) in Nightmare Mode"
+  },
+  "CHARMANDER_NIGHTMARE_WIN_QUEST": {
+    "name": "Charmander Nightmare Win",
+    "task": "Win a Nightmare run with a Determizard (Glitch Form Charmander) in your party"
+  },
+  "GASTLY_NIGHTMARE_WAVE_QUEST": {
+    "name": "Gastly Nightmare Wave",
+    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Gastly in a party of 3 or fewer Pokemon, in Nightmare mode of course"
+  },
+  "PIKACHU_PLUS_ULTRA_QUEST": {
+    "name": "Pikachu Plus Ultra",
+    "task": "Win a Nightmare run with Pikachu in your party"
+  },
+  "CHARIZARD_HELLFLAME_QUEST": {
+    "name": "Charizard Hellflame",
+    "task": "Use Blast Burn 100 times with Charizard in Nightmare mode"
+  },
+  "EEVEE_NIGHTMARE_QUEST": {
+    "name": "Eevee Nightmare",
+    "task": "Defeat 2 of Blue's Pokemon consecutively with Eevee during waves 100, 200, 300, 400, or 500, in Nightmare mode"
+  },
+  "SNORLAX_NIGHTMARE_QUEST": {
+    "name": "Snorlax Nightmare",
+    "task": "Defeat 2 of Red's Pokemon consecutively with Snorlax during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+  },
+  "MEWTWO_NIGHTMARE_QUEST": {
+    "name": "Mewtwo Nightmare",
+    "task": "Defeat 3 of Giovanni's Pokemon consecutively with Mewtwo during waves 400 or 500 in Nightmare mode"
+  },
+  "TYRANITAR_NIGHTMARE_QUEST": {
+    "name": "Tyranitar Nightmare",
+    "task": "Defeat 2 of Maxie's Pokemon consecutively with Tyranitar during waves 300, 400, or 500 in Nightmare mode"
+  },
+  "OCTILLERY_NIGHTMARE_QUEST": {
+    "name": "Octillery Nightmare",
+    "task": "Defeat 2 of Wallace's Pokemon consecutively with Octillery during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+  },
+  "REGIROCK_NIGHTMARE_QUEST": {
+    "name": "Regirock Nightmare",
+    "task": "Defeat 2 of Steven's Pokemon consecutively with Regirock during waves 300, 400, or 500 in Nightmare mode"
+  },
+  "EEVEE_GHOST_QUEST": {
+    "name": "Eevee Ghost",
+    "task": "Defeat 100 of Blue's Pokemon with Eevee using Ghost-type"
+  },
+  "EEVEE_STEEL_QUEST": {
+    "name": "Eevee Steel",
+    "task": "Defeat 100 of Blue's Pokemon with Eevee using Steel-type"
+  },
+  "EEVEE_GROUND_QUEST": {
+    "name": "Eevee Ground",
+    "task": "Defeat 100 of Blue's Pokemon with Eevee using Ground-type"
+  },
+  "MAGICAL_PIKACHU_QUEST": {
+    "name": "Magical Pikachu",
+    "task": "Win 3 runs with Pikachu knowing at least 2 Fairy-type moves"
+  },
+  "CHARMANDER_UNDERTALE_QUEST": {
+    "name": "Charmander Undertale",
+    "task": "Survive the final 50 waves with a team of 3 or fewer Pokemon including Charmander"
+  },
+  "SQUIRTLE_TORMENT_QUEST": {
+    "name": "Squirtle Torment",
+    "task": "Have Squirtle witness Blastoise faint 5 times in your party"
+  },
+  "BULBASAUR_TERROR_QUEST": {
+    "name": "Bulbasaur Terror",
+    "task": "Survive 50 consecutive waves with exactly 2 Pokemon in your party, including Bulbasaur"
+  },
+  "SHIFTRY_TENGU_QUEST": {
+    "name": "Shiftry Tengu",
+    "task": "Survive the final 30 waves with only Shiftry in your party"
+  },
+  "HYPNO_NIGHTMARE_QUEST": {
+    "name": "Hypno Nightmare",
+    "task": "Defeat 2 consecutive Pokemon with Hypno during Sabrina's waves (100, 200, 300, 400, or 500) in Nightmare mode"
+  },
+  "MAMOSWINE_NIGHTMARE_QUEST": {
+    "name": "Mamoswine Nightmare",
+    "task": "Defeat 50 rival Pokemon with Mamoswine during waves 50-100, 150-200, 250-300, 350-400, or 450-500 in Nightmare mode"
+  },
+  "MORPEKO_NIGHTMARE_QUEST": {
+    "name": "Morpeko Nightmare",
+    "task": "Defeat 2 consecutive Pokemon with Morpeko during Lusamine's waves (100, 200, or 300) in Nightmare mode"
+  },
+  "CLEFABLE_GENGAR_QUEST": {
+    "name": "Clefable Gengar",
+    "task": "Survive the last 40 waves with only Gengar and Clefable in your party. Gengar must have a fairy move, and Clefable must have a ghost move"
+  },
+  "REVAROOM_EXTRA_QUEST": {
+    "name": "Revaroom Extra",
+    "task": "Win a run with exactly 4 Pokemon: Revaroom, Varoom, Klink, and Klang"
+  },
+  "GOLEM_FIRE_QUEST": {
+    "name": "Golem Fire",
+    "task": "Have your Golem hit with Fire-type moves 500 times"
+  },
+  "DEINO_NIGHTMARE_QUEST": {
+    "name": "Deino Nightmare",
+    "task": "Defeat 2 of Ghetsis's Pokemon consecutively with Deino during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+  },
+  "GOLURK_DREAD_QUEST": {
+    "name": "Golurk Dread",
+    "task": "Have 100 of your Pokemon (aside from Golurk) faint while having Golurk in your party in Nightmare mode"
+  },
+  "HARIYAMA_NIGHTMARE_QUEST": {
+    "name": "Hariyama Nightmare",
+    "task": "Defeat 2 Lysandre's Pokemon consecutively with Hariyama during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+  },
+  "SHARPEDO_NIGHTMARE_QUEST": {
+    "name": "Sharpedo Nightmare",
+    "task": "Defeat 3 Archie's Pokemon consecutively with Sharpedo during waves 300, 400, or 500 in Nightmare mode"
+  },
+  "FARIGIRAF_NIGHTMARE_QUEST": {
+    "name": "Farigiraf Nightmare",
+    "task": "Defeat 2 of Cyrus's Pokemon consecutively with Farigiraf during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+  },
+  "KINGDRA_NIGHTMARE_QUEST": {
+    "name": "Kingdra Nightmare",
+    "task": "Defeat 2 of Misty's Pokemon consecutively with Kingdra during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+  },
+  "EXCADRILL_NIGHTMARE_QUEST": {
+    "name": "Excadrill Nightmare",
+    "task": "Defeat 3 of Brock's Pokemon consecutively with Excadrill during waves 300, 400, or 500 in Nightmare mode"
+  },
+  "LANTURN_NIGHTMARE_QUEST": {
+    "name": "Lanturn Nightmare",
+    "task": "Defeat 3 of Brock's Pokemon consecutively with LANTURN during waves 300, 400, or 500 in Nightmare mode"
+  },
+  "PIKACHU_ROBO_NIGHTMARE_QUEST": {
+    "name": "Pikachu Robo Nightmare",
+    "task": "Defeat 3 of Lt. Surge's Pokemon consecutively with PIKACHU during waves 300, 400, or 500 in Nightmare mode"
+  },
+  "DODRIO_NIGHTMARE_QUEST": {
+    "name": "Dodrio Nightmare",
+    "task": "Defeat 3 of Larry's Pokemon consecutively with DODRIO during waves 300, 400, or 500 in Nightmare mode"
+  },
+  "SUNFLORA_NIGHTMARE_QUEST": {
+    "name": "Sunflora Nightmare",
+    "task": "Defeat 3 of Rose's Pokemon consecutively with SUNFLORA during waves 300, 400, or 500 in Nightmare mode"
+  },
+  "LUCARIO_NIGHTMARE_QUEST": {
+    "name": "Lucario Nightmare",
+    "task": "Defeat 3 of Cynthia's Pokemon consecutively with LUCARIO during waves 300, 400, or 500 in Nightmare mode"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "Normal Strength!",
+    "task": "Defeat 500 Pokemon using Normal-type Pokemon across multiple runs"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "Magikarp New Moves",
+    "task": "Defeat 500 Pokemon with Magikarp"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "Ditto New Moves",
+    "task": "Defeat 500 Pokemon with Ditto"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "Wobbuffet New Moves",
+    "task": "Defeat 500 Pokemon with Wobbuffet"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "Smeargle New Moves",
+    "task": "Defeat 500 Pokemon with Smeargle"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "Unown New Moves",
+    "task": "Defeat 500 Pokemon with Unown"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "Tyrogue New Moves",
+    "task": "Defeat 500 Pokemon with Tyrogue"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "Metapod New Moves",
+    "task": "Defeat 500 Pokemon with Metapod"
+  }
+} 

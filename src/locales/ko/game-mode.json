@@ -1,0 +1,16 @@
+{
+  "mode": "모드",
+  "classic": "여정",
+  "endless": "무한",
+  "endlessSpliced": "무한 (스플라이스)",
+  "dailyRun": "일일 도전",
+  "unknown": "알 수 없음",
+  "challenge": "챌린지",
+  "nuzlocke": "너즈록",
+  "draft": "로그라이크",
+  "nuzlight": "너즈라이트",
+  "nightmare": "공허",
+  "nuzlightDraft": "너즈라이트 로그라이크",
+  "nuzlockeDraft": "너즈록 로그라이크",
+  "notClassic": "*여정 모드가 아닐 때"
+} 

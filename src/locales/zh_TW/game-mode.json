@@ -1,0 +1,16 @@
+{
+  "mode": "模式",
+  "classic": "旅程",
+  "endless": "無盡",
+  "endlessSpliced": "無盡（拼接）",
+  "dailyRun": "每日挑戰",
+  "unknown": "未知",
+  "challenge": "挑戰",
+  "nuzlocke": "納茲洛克",
+  "draft": "盜賊",
+  "nuzlight": "納茲萊特",
+  "nightmare": "虛空",
+  "nuzlightDraft": "納茲萊特盜賊",
+  "nuzlockeDraft": "納茲洛克盜賊",
+  "notClassic": "*非旅程模式時"
+} 

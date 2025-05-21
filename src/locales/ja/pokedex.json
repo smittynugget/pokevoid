@@ -1,0 +1,13 @@
+{
+  "voidex": "Voidex",
+  "enemyPrefix": "敵",
+  "partyPrefix": "パーティー",
+  "evolutionPrefix": "進化",
+  "allOtherPokemon": "その他のポケモン",
+  "pokemonDataNotFound": "ポケモンデータが見つかりません。",
+  "errorLoadingSprite": "スプライトの読み込みエラー。",
+  "abilities": "特性",
+  "learnableMoves": "覚える技",
+  "eggMoves": "タマゴ技",
+  "loading": "ロード中..."
+} 

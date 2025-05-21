@@ -1,0 +1,239 @@
+{
+  "noxious": {
+    "name": "ノクシャス"
+  },
+  "voltaurus": {
+    "name": "ボルタウロス"
+  },
+  "kingleon": {
+    "name": "キングレオン"
+  },
+  "glicula": {
+    "name": "グリキュラ"
+  },
+  "mamawak": {
+    "name": "ママワック"
+  },
+  "infernus": {
+    "name": "インフェルヌス"
+  },
+  "fangdrake": {
+    "name": "ファングドレイク"
+  },
+  "gigilick": {
+    "name": "ギガリック"
+  },
+  "cybeex": {
+    "name": "サイベックス"
+  },
+  "charisand": {
+    "name": "チャリサンド"
+  },
+  "mentasaur": {
+    "name": "メンタサウルス"
+  },
+  "enchantoise": {
+    "name": "エンチャントイズ"
+  },
+  "nidorath": {
+    "name": "ニドラス"
+  },
+  "generagar": {
+    "name": "ジェネラガー"
+  },
+  "fuming": {
+    "name": "フューミング"
+  },
+  "hitmonnorm": {
+    "name": "ヒトモンノーム"
+  },
+  "onehitchan": {
+    "name": "ワンヒッチャン"
+  },
+  "chanmonlee": {
+    "name": "チャンモンリー"
+  },
+  "kangasgone": {
+    "name": "カンガスゴーン"
+  },
+  "thanator": {
+    "name": "サナトール"
+  },
+  "magnovire": {
+    "name": "マグノヴァイア"
+  },
+  "dunerados": {
+    "name": "デューナラドス"
+  },
+  "lavaras": {
+    "name": "ラバラス"
+  },
+  "porygonω": {
+    "name": "ポリゴンΩ"
+  },
+  "dragonking": {
+    "name": "ドラゴンキング"
+  },
+  "sudolem": {
+    "name": "スドウーレム"
+  },
+  "yonipom": {
+    "name": "ヨニポム"
+  },
+  "alnowning": {
+    "name": "オールノーイング"
+  },
+  "krakken": {
+    "name": "クラッケン"
+  },
+  "metalker": {
+    "name": "メタルカー"
+  },
+  "slothunter": {
+    "name": "スロースハンター"
+  },
+  "solunolith": {
+    "name": "ソルナリス"
+  },
+  "regimeteor": {
+    "name": "レジメテオール"
+  },
+  "omnigigas": {
+    "name": "オムニギガス"
+  },
+  "wispeeon": {
+    "name": "ウィスピーオン"
+  },
+  "cybeon": {
+    "name": "サイビーオン"
+  },
+  "teraeon": {
+    "name": "テラエオン"
+  },
+  "pikura": {
+    "name": "ピクラ"
+  },
+  "frogotten": {
+    "name": "フロガッテン"
+  },
+  "determizard": {
+    "name": "デターミザード"
+  },
+  "melonax": {
+    "name": "メロナックス"
+  },
+  "rokachubo": {
+    "name": "ロカチューボ"
+  },
+  "treashelter": {
+    "name": "トレシェルター"
+  },
+  "grimjaw": {
+    "name": "グリムジョー"
+  },
+  "fibark": {
+    "name": "ファイバーク"
+  },
+  "bonfyrite": {
+    "name": "ボンファイト"
+  },
+  "silvaback": {
+    "name": "シルババック"
+  },
+  "simizen": {
+    "name": "シミゼン"
+  },
+  "paletto": {
+    "name": "パレット"
+  },
+  "extavaroom": {
+    "name": "エクスタバルーム"
+  },
+  "mimizado": {
+    "name": "ミミザード"
+  },
+  "ninjukyu": {
+    "name": "ニンジュッキュ"
+  },
+  "mewmewni": {
+    "name": "ミューミューニ"
+  },
+  "ririkyu": {
+    "name": "リリッキュ"
+  },
+  "regirokuy": {
+    "name": "レジロックイ"
+  },
+  "ectonaut": {
+    "name": "エクトナウト"
+  },
+  "dr.eiscicle": {
+    "name": "ドクターアイスシクル"
+  },
+  "moltem": {
+    "name": "モルテム"
+  },
+  "zandux": {
+    "name": "ザンダックス"
+  },
+  "nucleash": {
+    "name": "ヌクレアッシュ"
+  },
+  "plumaestro": {
+    "name": "プルマエストロ"
+  },
+  "dragomime": {
+    "name": "ドラゴミメ"
+  },
+  "chamelezard": {
+    "name": "カメレザード"
+  },
+  "pikatto": {
+    "name": "ピカット"
+  },
+  "machitto": {
+    "name": "マチット"
+  },
+  "mewtate": {
+    "name": "ミューテート"
+  },
+  "yabbagatr": {
+    "name": "ヤバガトル"
+  },
+  "savagark": {
+    "name": "サベダーク"
+  },
+  "wonstrous": {
+    "name": "ワンストラス"
+  },
+  "imperiuno": {
+    "name": "インペリューノ"
+  },
+  "molestrosity": {
+    "name": "モールストロシティ"
+  },
+  "swaggart": {
+    "name": "スワッガート"
+  },
+  "viperex": {
+    "name": "バイパレックス"
+  },
+  "cognarok": {
+    "name": "コグナロク"
+  },
+  "harmonda": {
+    "name": "ハルモンダ"
+  },
+  "felester": {
+    "name": "フェリスター"
+  },
+  "tamamo": {
+    "name": "タマモ"
+  },
+  "tentuckle": {
+    "name": "テンタクル"
+  },
+  "tanguish": {
+    "name": "タングイッシュ"
+  }
+}

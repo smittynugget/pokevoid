@@ -1,0 +1,2694 @@
+{
+  "stench": {
+    "name": "Puanteur",
+    "description": "Le Pokémon émet une odeur si nauséabonde qu’il peut effrayer sa cible en l’attaquant."
+  },
+  "drizzle": {
+    "name": "Crachin",
+    "description": "Le Pokémon invoque la pluie quand il entre au combat."
+  },
+  "speedBoost": {
+    "name": "Turbo",
+    "description": "La Vitesse du Pokémon augmente à chaque tour."
+  },
+  "battleArmor": {
+    "name": "Armurbaston",
+    "description": "Le Pokémon est protégé des coups critiques par une solide carapace."
+  },
+  "sturdy": {
+    "name": "Fermeté",
+    "description": "Le Pokémon encaisse toujours au moins une attaque s’il a tous ses PV. Il est également immunisé contre les capacités pouvant mettre K.O. en un coup."
+  },
+  "damp": {
+    "name": "Moiteur",
+    "description": "Le Pokémon augmente l’humidité de l’air, ce qui empêche tous les Pokémon d’utiliser des capacités explosives telles que Destruction."
+  },
+  "limber": {
+    "name": "Échauffement",
+    "description": "Le Pokémon s’est suffisamment échauffé, ce qui l’immunise contre la paralysie."
+  },
+  "sandVeil": {
+    "name": "Voile Sable",
+    "description": "Augmente l’Esquive du Pokémon lors des tempêtes de sable."
+  },
+  "static": {
+    "name": "Statik",
+    "description": "Le Pokémon charge son corps en électricité statique, et tout contact avec lui peut paralyser."
+  },
+  "voltAbsorb": {
+    "name": "Absorbe-Volt",
+    "description": "Si le Pokémon est touché par une capacité Électrik, il ne subit aucun dégât et regagne des PV à la place."
+  },
+  "waterAbsorb": {
+    "name": "Absorbe-Eau",
+    "description": "Si le Pokémon est touché par une capacité Eau, il ne subit aucun dégât et regagne des PV à la place."
+  },
+  "oblivious": {
+    "name": "Benêt",
+    "description": "Le Pokémon est un grand benêt, ce qui l’immunise contre l’attraction, la provocation ou l’intimidation."
+  },
+  "cloudNine": {
+    "name": "Ciel Gris",
+    "description": "Annule tous les effets liés à la météo."
+  },
+  "compoundEyes": {
+    "name": "Œil Composé",
+    "description": "Les yeux à facettes du Pokémon augmentent la Précision de ses capacités."
+  },
+  "insomnia": {
+    "name": "Insomnia",
+    "description": "Le Pokémon est incapable de dormir."
+  },
+  "colorChange": {
+    "name": "Homochromie",
+    "description": "Lorsque le Pokémon est touché par une capacité, il prend le type de celle-ci."
+  },
+  "immunity": {
+    "name": "Vaccin",
+    "description": "Le Pokémon est naturellement immunisé contre toute forme de poison."
+  },
+  "flashFire": {
+    "name": "Torche",
+    "description": "Lorsque le Pokémon est touché par une capacité de type Feu, il absorbe la chaleur pour renforcer ses propres capacités Feu."
+  },
+  "shieldDust": {
+    "name": "Écran Poudre",
+    "description": "Le Pokémon dispose d’un écran naturel qui le protège des effets additionnels des attaques ennemies."
+  },
+  "ownTempo": {
+    "name": "Tempo Perso",
+    "description": "Le Pokémon vit sa vie à son propre rythme, ce qui l’immunise contre la confusion et l’intimidation."
+  },
+  "suctionCups": {
+    "name": "Ventouse",
+    "description": "Le Pokémon est solidement fixé au sol par des ventouses, ce qui le protège des capacités ou objets qui font changer de Pokémon."
+  },
+  "intimidate": {
+    "name": "Intimidation",
+    "description": "Le Pokémon rugit lorsqu’il arrive au combat, ce qui intimide l’ennemi et baisse son Attaque."
+  },
+  "shadowTag": {
+    "name": "Marque Ombre",
+    "description": "Empêche les Pokémon ennemis de quitter le terrain."
+  },
+  "roughSkin": {
+    "name": "Peau Dure",
+    "description": "Blesse l’attaquant lorsque le Pokémon subit une attaque directe."
+  },
+  "wonderGuard": {
+    "name": "Garde Mystik",
+    "description": "Une puissance mystérieuse protège le Pokémon contre toutes les capacités, sauf celles qui sont super efficaces."
+  },
+  "levitate": {
+    "name": "Lévitation",
+    "description": "Le Pokémon flotte, ce qui l’immunise contre les capacités de type Sol."
+  },
+  "effectSpore": {
+    "name": "Pose Spore",
+    "description": "Peut paralyser, empoisonner ou endormir l’attaquant lorsque le Pokémon subit une attaque directe."
+  },
+  "synchronize": {
+    "name": "Synchro",
+    "description": "Quand le Pokémon est brulé, paralysé ou empoisonné par un autre Pokémon, il partage ce statut avec celui-ci."
+  },
+  "clearBody": {
+    "name": "Corps Sain",
+    "description": "Empêche les stats du Pokémon de baisser à cause du talent ou d’une capacité de l’adversaire."
+  },
+  "naturalCure": {
+    "name": "Médic Nature",
+    "description": "Le Pokémon soigne ses altérations de statut en quittant le combat."
+  },
+  "lightningRod": {
+    "name": "Paratonnerre",
+    "description": "Le Pokémon détourne sur lui les capacités de type Électrik et les neutralise, tout en augmentant son Attaque Spéciale."
+  },
+  "sereneGrace": {
+    "name": "Sérénité",
+    "description": "Augmente les chances d’infliger des effets additionnels."
+  },
+  "swiftSwim": {
+    "name": "Glissade",
+    "description": "Augmente la Vitesse du Pokémon s’il pleut."
+  },
+  "chlorophyll": {
+    "name": "Chlorophylle",
+    "description": "Augmente la Vitesse du Pokémon s’il y a du soleil."
+  },
+  "illuminate": {
+    "name": "Lumiattirance",
+    "description": "Le Pokémon illumine les alentours, facilitant les rencontres avec les Pokémon sauvages et empêche sa Précision de baisser."
+  },
+  "trace": {
+    "name": "Calque",
+    "description": "Lorsque le Pokémon entre au combat, il calque le talent d’un ennemi pour remplacer le sien."
+  },
+  "hugePower": {
+    "name": "Coloforce",
+    "description": "Double la puissance des attaques physiques."
+  },
+  "poisonPoint": {
+    "name": "Point Poison",
+    "description": "Peut empoisonner l’attaquant lorsque le Pokémon subit une attaque directe."
+  },
+  "innerFocus": {
+    "name": "Attention",
+    "description": "Le Pokémon a un mental à toute épreuve qui empêche les attaques ennemies de lui faire peur. Il est aussi immunisé contre le talent Intimidation."
+  },
+  "magmaArmor": {
+    "name": "Armumagma",
+    "description": "Le magma qui recouvre le corps du Pokémon le protège contre le gel."
+  },
+  "waterVeil": {
+    "name": "Ignifu-Voile",
+    "description": "Le voile qui recouvre le Pokémon le protège des brulures."
+  },
+  "magnetPull": {
+    "name": "Magnépiège",
+    "description": "Attire les Pokémon Acier grâce à un champ magnétique, ce qui les empêche de quitter le terrain."
+  },
+  "soundproof": {
+    "name": "Anti-Bruit",
+    "description": "Protège le Pokémon de toutes les capacités sonores."
+  },
+  "rainDish": {
+    "name": "Cuvette",
+    "description": "Le Pokémon récupère progressivement des PV lorsqu’il pleut."
+  },
+  "sandStream": {
+    "name": "Sable Volant",
+    "description": "Le Pokémon invoque une tempête de sable quand il entre au combat."
+  },
+  "pressure": {
+    "name": "Pression",
+    "description": "Met la pression à l’adversaire pour le forcer à dépenser plus de PP."
+  },
+  "thickFat": {
+    "name": "Isograisse",
+    "description": "Le Pokémon est protégé par une épaisse couche de graisse qui diminue de moitié les dégâts qu’il subit des capacités de types Feu et Glace."
+  },
+  "earlyBird": {
+    "name": "Matinal",
+    "description": "Le Pokémon se réveille deux fois plus rapidement que les autres."
+  },
+  "flameBody": {
+    "name": "Corps Ardent",
+    "description": "Peut bruler l’attaquant lorsque le Pokémon subit une attaque directe."
+  },
+  "runAway": {
+    "name": "Fuite",
+    "description": "Permet de fuir n’importe quel Pokémon sauvage."
+  },
+  "keenEye": {
+    "name": "Regard Vif",
+    "description": "Les yeux perçants du Pokémon empêchent sa Précision de baisser."
+  },
+  "hyperCutter": {
+    "name": "Hyper Cutter",
+    "description": "Le Pokémon est armé de puissantes pinces qui font sa fierté et empêchent son Attaque d’être baissée par l’adversaire."
+  },
+  "pickup": {
+    "name": "Ramassage",
+    "description": "Permet parfois au Pokémon de ramasser les objets que d’autres Pokémon ont utilisés. Il lui arrive aussi d’en trouver hors des combats."
+  },
+  "truant": {
+    "name": "Absentéisme",
+    "description": "Lorsque le Pokémon utilise une capacité, il passe le tour suivant à paresser."
+  },
+  "hustle": {
+    "name": "Agitation",
+    "description": "Améliore l’Attaque du Pokémon, mais diminue la Précision."
+  },
+  "cuteCharm": {
+    "name": "Joli Sourire",
+    "description": "Peut séduire l’attaquant lorsque le Pokémon subit une attaque directe."
+  },
+  "plus": {
+    "name": "Plus",
+    "description": "L’Attaque Spéciale du Pokémon augmente si un Pokémon allié a le talent Moins ou Plus."
+  },
+  "minus": {
+    "name": "Moins",
+    "description": "L’Attaque Spéciale du Pokémon augmente si un Pokémon allié a le talent Moins ou Plus."
+  },
+  "forecast": {
+    "name": "Météo",
+    "description": "Le Pokémon prend le type Eau, Feu ou Glace en fonction de la météo."
+  },
+  "stickyHold": {
+    "name": "Glu",
+    "description": "Les objets sont collés au corps gluant du Pokémon, ce qui empêche ses adversaires de les dérober."
+  },
+  "shedSkin": {
+    "name": "Mue",
+    "description": "Le Pokémon soigne parfois ses altérations de statut en muant."
+  },
+  "guts": {
+    "name": "Cran",
+    "description": "Augmente l’Attaque du Pokémon s’il est affecté par une altération de statut."
+  },
+  "marvelScale": {
+    "name": "Écaille Spéciale",
+    "description": "Les écailles mystérieuses du Pokémon réagissent aux altérations de statut en augmentant sa Défense."
+  },
+  "liquidOoze": {
+    "name": "Suintement",
+    "description": "Le Pokémon suinte un liquide toxique nauséabond qui blesse tous ceux qui tentent de voler ses PV."
+  },
+  "overgrow": {
+    "name": "Engrais",
+    "description": "Augmente la puissance des capacités de type Plante du Pokémon quand il a perdu une certaine quantité de PV."
+  },
+  "blaze": {
+    "name": "Brasier",
+    "description": "Augmente la puissance des capacités de type Feu du Pokémon quand il a perdu une certaine quantité de PV."
+  },
+  "torrent": {
+    "name": "Torrent",
+    "description": "Augmente la puissance des capacités de type Eau du Pokémon quand il a perdu une certaine quantité de PV."
+  },
+  "swarm": {
+    "name": "Essaim",
+    "description": "Augmente la puissance des capacités de type Insecte du Pokémon quand il a perdu une certaine quantité de PV."
+  },
+  "rockHead": {
+    "name": "Tête de Roc",
+    "description": "Le Pokémon peut utiliser des capacités occasionnant un contrecoup sans perdre de PV."
+  },
+  "drought": {
+    "name": "Sécheresse",
+    "description": "Le Pokémon invoque le soleil quand il entre au combat."
+  },
+  "arenaTrap": {
+    "name": "Piège Sable",
+    "description": "Empêche l’adversaire de quitter le terrain."
+  },
+  "vitalSpirit": {
+    "name": "Esprit Vital",
+    "description": "Empêche le Pokémon de s’endormir."
+  },
+  "whiteSmoke": {
+    "name": "Écran Fumée",
+    "description": "Un écran de fumée empêche l’adversaire de baisser les stats du Pokémon."
+  },
+  "purePower": {
+    "name": "Force Pure",
+    "description": "Le Pokémon utilise sa maitrise du yoga pour doubler la puissance de ses attaques physiques."
+  },
+  "shellArmor": {
+    "name": "Coque Armure",
+    "description": "Le Pokémon est protégé des coups critiques par sa carapace."
+  },
+  "airLock": {
+    "name": "Air Lock",
+    "description": "Annule tous les effets de la météo."
+  },
+  "tangledFeet": {
+    "name": "Pieds Confus",
+    "description": "Augmente l’Esquive du Pokémon s’il est confus."
+  },
+  "motorDrive": {
+    "name": "Motorisé",
+    "description": "Si le Pokémon est touché par une capacité de type Électrik, il ne subit aucun dégât et sa Vitesse augmente."
+  },
+  "rivalry": {
+    "name": "Rivalité",
+    "description": "Le Pokémon déteste la concurrence et inflige plus de dégâts si sa cible est du même sexe. Par contre, il en inflige moins si sa cible est du sexe opposé."
+  },
+  "steadfast": {
+    "name": "Impassible",
+    "description": "Augmente la Vitesse du Pokémon quand il a peur."
+  },
+  "snowCloak": {
+    "name": "Rideau Neige",
+    "description": "Augmente l’Esquive du Pokémon quand il neige."
+  },
+  "gluttony": {
+    "name": "Gloutonnerie",
+    "description": "Si le Pokémon tient une Baie à manger en cas de PV bas, il la mange dès qu’il a perdu la moitié de ses PV."
+  },
+  "angerPoint": {
+    "name": "Colérique",
+    "description": "Si le Pokémon subit un coup critique, il entre dans une colère noire qui augmente son Attaque au maximum."
+  },
+  "unburden": {
+    "name": "Délestage",
+    "description": "Augmente la Vitesse du Pokémon s’il perd ou utilise l’objet qu’il tenait au début du combat."
+  },
+  "heatproof": {
+    "name": "Ignifugé",
+    "description": "Diminue de moitié les dégâts infligés au Pokémon par les capacités de type Feu."
+  },
+  "simple": {
+    "name": "Simple",
+    "description": "Les changements de stats sont deux fois plus importants pour le Pokémon."
+  },
+  "drySkin": {
+    "name": "Peau Sèche",
+    "description": "Quand le soleil brille, le Pokémon perd des PV et subit plus de dégâts des capacités Feu, mais il regagne des PV lorsqu’il pleut ou s’il est touché par une capacité Eau."
+  },
+  "download": {
+    "name": "Télécharge",
+    "description": "Le Pokémon compare la Défense et la Défense Spéciale de l’adversaire et, en fonction de la stat la plus basse, il augmente sa propre Attaque ou Attaque Spéciale."
+  },
+  "ironFist": {
+    "name": "Poing de Fer",
+    "description": "Augmente la puissance des capacités coups de poing."
+  },
+  "poisonHeal": {
+    "name": "Soin Poison",
+    "description": "Quand le Pokémon est empoisonné, il regagne des PV au lieu d’en perdre."
+  },
+  "adaptability": {
+    "name": "Adaptabilité",
+    "description": "Quand le Pokémon utilise une capacité du même type que lui, le bonus de puissance qu’elle reçoit est encore plus important que normalement."
+  },
+  "skillLink": {
+    "name": "Multi-Coups",
+    "description": "Les capacités pouvant frapper plusieurs fois frappent toujours le nombre maximal de coups."
+  },
+  "hydration": {
+    "name": "Hydratation",
+    "description": "Soigne les altérations de statut du Pokémon quand il pleut."
+  },
+  "solarPower": {
+    "name": "Force Soleil",
+    "description": "Quand le soleil brille, l’Attaque Spéciale du Pokémon augmente mais il perd des PV à chaque tour."
+  },
+  "quickFeet": {
+    "name": "Pied Véloce",
+    "description": "Augmente la Vitesse du Pokémon en cas d’altération de statut."
+  },
+  "normalize": {
+    "name": "Normalise",
+    "description": "Toutes les capacités du Pokémon deviennent de type Normal, quel que soit leur type original. Leur puissance augmente légèrement."
+  },
+  "sniper": {
+    "name": "Sniper",
+    "description": "Lorsque le Pokémon porte un coup critique, les dégâts infligés augmentent encore plus que d’habitude."
+  },
+  "magicGuard": {
+    "name": "Garde Magik",
+    "description": "Seules les attaques peuvent blesser le Pokémon."
+  },
+  "noGuard": {
+    "name": "Annule Garde",
+    "description": "Les capacités du Pokémon touchent leur cible à coup sûr, mais les capacités adverses le touchent aussi à coup sûr."
+  },
+  "stall": {
+    "name": "Frein",
+    "description": "Le Pokémon utilise toujours sa capacité en dernier."
+  },
+  "technician": {
+    "name": "Technicien",
+    "description": "Augmente la puissance des capacités les plus faibles."
+  },
+  "leafGuard": {
+    "name": "Feuille Garde",
+    "description": "Protège le Pokémon contre les altérations de statut quand le soleil brille."
+  },
+  "klutz": {
+    "name": "Maladresse",
+    "description": "Le Pokémon ne peut utiliser aucun objet tenu."
+  },
+  "moldBreaker": {
+    "name": "Brise Moule",
+    "description": "Le Pokémon ignore les talents adverses qui auraient un effet sur ses capacités."
+  },
+  "superLuck": {
+    "name": "Chanceux",
+    "description": "Le Pokémon est tellement chanceux qu’il inflige plus fréquemment des coups critiques."
+  },
+  "aftermath": {
+    "name": "Boom Final",
+    "description": "Si le Pokémon est mis K.O. par une attaque directe, il inflige des dégâts à l’attaquant avant de s’évanouir."
+  },
+  "anticipation": {
+    "name": "Anticipation",
+    "description": "Le Pokémon devine si l’adversaire connait une capacité dangereuse pour lui."
+  },
+  "forewarn": {
+    "name": "Prédiction",
+    "description": "Révèle l’une des capacités de l’adversaire quand le combat commence."
+  },
+  "unaware": {
+    "name": "Inconscient",
+    "description": "Le Pokémon ignore les changements de stats des autres Pokémon, qu’il attaque ou soit attaqué."
+  },
+  "tintedLens": {
+    "name": "Lentiteintée",
+    "description": "Permet à une capacité qui n’est pas très efficace d’infliger des dégâts comme si elle était efficace normalement."
+  },
+  "filter": {
+    "name": "Filtre",
+    "description": "Diminue la puissance des attaques super efficaces subies."
+  },
+  "slowStart": {
+    "name": "Début Calme",
+    "description": "Divise la Vitesse et l’Attaque du Pokémon par deux pendant les cinq premiers tours du combat."
+  },
+  "scrappy": {
+    "name": "Querelleur",
+    "description": "Permet aux capacités de type Normal ou Combat du Pokémon de toucher les Pokémon de type Spectre. Immunise aussi contre le talent Intimidation."
+  },
+  "stormDrain": {
+    "name": "Lavabo",
+    "description": "Le Pokémon détourne sur lui les capacités de type Eau et les neutralise, tout en augmentant son Attaque Spéciale."
+  },
+  "iceBody": {
+    "name": "Corps Gel",
+    "description": "Régénère peu à peu les PV du Pokémon quand il neige."
+  },
+  "solidRock": {
+    "name": "Solide Roc",
+    "description": "Diminue la puissance des attaques super efficaces subies."
+  },
+  "snowWarning": {
+    "name": "Alerte Neige",
+    "description": "Le Pokémon invoque la neige quand il entre au combat."
+  },
+  "honeyGather": {
+    "name": "Cherche Miel",
+    "description": "Le Pokémon trouve du Miel après un combat et est directement revendu contre de l’argent."
+  },
+  "frisk": {
+    "name": "Fouille",
+    "description": "Lorsqu’il entre en combat, le Pokémon peut vérifier la capacité d’un Pokémon adverse."
+  },
+  "reckless": {
+    "name": "Téméraire",
+    "description": "Augmente la puissance des capacités occasionnant un contrecoup."
+  },
+  "multitype": {
+    "name": "Multi-Type",
+    "description": "Modifie le type du Pokémon en fonction de la plaque qu’il tient."
+  },
+  "flowerGift": {
+    "name": "Don Floral",
+    "description": "Augmente l’Attaque et la Défense Spéciale du Pokémon et de ses alliés lorsque le soleil brille."
+  },
+  "badDreams": {
+    "name": "Mauvais Rêve",
+    "description": "Inflige des dégâts aux ennemis endormis."
+  },
+  "pickpocket": {
+    "name": "Pickpocket",
+    "description": "Vole l’objet que tient l’attaquant quand le Pokémon subit une attaque directe."
+  },
+  "sheerForce": {
+    "name": "Sans Limite",
+    "description": "Les capacités ayant un effet additionnel le perdent, mais leur puissance augmente."
+  },
+  "contrary": {
+    "name": "Contestation",
+    "description": "Inverse les changements de stats : les augmentations de stats se transforment en baisses, et vice-versa."
+  },
+  "unnerve": {
+    "name": "Tension",
+    "description": "Fait stresser l’adversaire, ce qui l’empêche de manger des Baies."
+  },
+  "defiant": {
+    "name": "Acharné",
+    "description": "Augmente beaucoup l’Attaque du Pokémon quand ses stats sont baissées par l’adversaire."
+  },
+  "defeatist": {
+    "name": "Défaitiste",
+    "description": "Le Pokémon devient défaitiste quand ses PV tombent à la moitié, et son Attaque et son Attaque Spéciale sont divisées par deux."
+  },
+  "cursedBody": {
+    "name": "Corps Maudit",
+    "description": "Quand le Pokémon est touché par une capacité adverse, il inflige parfois Entrave sur celle-ci."
+  },
+  "healer": {
+    "name": "Cœur Soin",
+    "description": "Soigne parfois une altération de statut d’un allié proche."
+  },
+  "friendGuard": {
+    "name": "Garde-Ami",
+    "description": "Diminue les dégâts subis par les alliés."
+  },
+  "weakArmor": {
+    "name": "Armurouillée",
+    "description": "Quand le Pokémon est touché par une capacité physique, sa Défense baisse mais sa Vitesse augmente beaucoup."
+  },
+  "heavyMetal": {
+    "name": "Heavy Metal",
+    "description": "Double le poids du Pokémon."
+  },
+  "lightMetal": {
+    "name": "Light Metal",
+    "description": "Divise par deux le poids du Pokémon."
+  },
+  "multiscale": {
+    "name": "Multiécaille",
+    "description": "Le Pokémon subit moins de dégâts quand ses PV sont au maximum."
+  },
+  "toxicBoost": {
+    "name": "Rage Poison",
+    "description": "Augmente la puissance des capacités physiques quand le Pokémon est empoisonné."
+  },
+  "flareBoost": {
+    "name": "Rage Brûlure",
+    "description": "Augmente la puissance des capacités spéciales quand le Pokémon est brulé."
+  },
+  "harvest": {
+    "name": "Récolte",
+    "description": "Permet de réutiliser une même Baie plusieurs fois."
+  },
+  "telepathy": {
+    "name": "Télépathe",
+    "description": "Le Pokémon anticipe et évite les attaques de ses alliés."
+  },
+  "moody": {
+    "name": "Lunatique",
+    "description": "Augmente beaucoup une stat du Pokémon et en baisse une autre au hasard à chaque tour."
+  },
+  "overcoat": {
+    "name": "Envelocape",
+    "description": "Protège des dégâts occasionnés par les tempêtes de sable, ainsi que des effets des capacités qui libèrent de la poudre et des spores."
+  },
+  "poisonTouch": {
+    "name": "Toxitouche",
+    "description": "Peut empoisonner l’ennemi par simple contact."
+  },
+  "regenerator": {
+    "name": "Régé-Force",
+    "description": "Restaure un peu de PV si le Pokémon est retiré du combat."
+  },
+  "bigPecks": {
+    "name": "Cœur de Coq",
+    "description": "Protège des effets qui baissent la Défense."
+  },
+  "sandRush": {
+    "name": "Baigne Sable",
+    "description": "Augmente la Vitesse lors des tempêtes de sable."
+  },
+  "wonderSkin": {
+    "name": "Peau Miracle",
+    "description": "Le Pokémon résiste mieux aux capacités de statut."
+  },
+  "analytic": {
+    "name": "Analyste",
+    "description": "Augmente la puissance des capacités du Pokémon s’il attaque en dernier."
+  },
+  "illusion": {
+    "name": "Illusion",
+    "description": "Le Pokémon prend l’apparence du dernier membre de l’équipe pour tromper l’adversaire."
+  },
+  "imposter": {
+    "name": "Imposteur",
+    "description": "Le Pokémon prend l’apparence du Pokémon adverse."
+  },
+  "infiltrator": {
+    "name": "Infiltration",
+    "description": "Traverse les barrières et les clones adverses pour attaquer directement."
+  },
+  "mummy": {
+    "name": "Momie",
+    "description": "Lorsque le Pokémon subit une attaque directe, le talent de l’attaquant est remplacé par Momie."
+  },
+  "moxie": {
+    "name": "Impudence",
+    "description": "Quand le Pokémon met un ennemi K.O., sa confiance en lui ne connait plus de limite et son Attaque augmente."
+  },
+  "justified": {
+    "name": "Cœur Noble",
+    "description": "Réveille la noblesse du Pokémon lorsqu’il subit une attaque de type Ténèbres, ce qui augmente son Attaque."
+  },
+  "rattled": {
+    "name": "Phobique",
+    "description": "Si le Pokémon est touché par le talent Intimidation ou une attaque de type Ténèbres, Spectre ou Insecte, sa phobie se révèle et sa Vitesse augmente."
+  },
+  "magicBounce": {
+    "name": "Miroir Magik",
+    "description": "Annule les effets des capacités de statut subies par le Pokémon et les retourne à l’envoyeur."
+  },
+  "sapSipper": {
+    "name": "Herbivore",
+    "description": "Annule les attaques de type Plante subies par le Pokémon et augmente son Attaque."
+  },
+  "prankster": {
+    "name": "Farceur",
+    "description": "Rend les capacités de statut du Pokémon prioritaires."
+  },
+  "sandForce": {
+    "name": "Force Sable",
+    "description": "Augmente la puissance des capacités de types Roche, Sol et Acier en cas de tempête de sable."
+  },
+  "ironBarbs": {
+    "name": "Épine de Fer",
+    "description": "Inflige des dégâts à l’attaquant lorsque le Pokémon subit une attaque directe."
+  },
+  "zenMode": {
+    "name": "Mode Transe",
+    "description": "Le Pokémon change de forme quand il lui reste moins de la moitié de ses PV."
+  },
+  "victoryStar": {
+    "name": "Victorieux",
+    "description": "Augmente la Précision du Pokémon et de ses alliés."
+  },
+  "turboblaze": {
+    "name": "Turbo Brasier",
+    "description": "Le Pokémon ignore les talents adverses qui auraient un effet sur ses capacités."
+  },
+  "teravolt": {
+    "name": "Téra-Voltage",
+    "description": "Le Pokémon ignore les talents adverses qui auraient un effet sur ses capacités."
+  },
+  "aromaVeil": {
+    "name": "Aroma-Voile",
+    "description": "Protège le Pokémon et ses alliés des effets limitant le libre arbitre."
+  },
+  "flowerVeil": {
+    "name": "Flora-Voile",
+    "description": "Empêche les alliés de type Plante de subir des baisses de stats et des altérations de statut."
+  },
+  "cheekPouch": {
+    "name": "Bajoues",
+    "description": "Le Pokémon récupère des PV lorsqu’il consomme n’importe quelle Baie en plus de bénéficier de ses effets habituels."
+  },
+  "protean": {
+    "name": "Protéen",
+    "description": "Le Pokémon prend le type de la capacité qu’il utilise. Ce talent ne peut se déclencher qu’une fois par entrée au combat du Pokémon."
+  },
+  "furCoat": {
+    "name": "Toison Épaisse",
+    "description": "Divise par deux les dégâts des capacités physiques subies par le Pokémon."
+  },
+  "magician": {
+    "name": "Magicien",
+    "description": "Les capacités volent aussi l’objet tenu par la cible."
+  },
+  "bulletproof": {
+    "name": "Pare-Balles",
+    "description": "Protège de certaines capacités lançant des projectiles comme des bombes et des balles."
+  },
+  "competitive": {
+    "name": "Battant",
+    "description": "Augmente beaucoup l’Attaque Spéciale du Pokémon quand ses stats ont été baissées par l’adversaire."
+  },
+  "strongJaw": {
+    "name": "Prognathe",
+    "description": "Le Pokémon a une mâchoire robuste qui augmente la puissance de ses capacités de morsure."
+  },
+  "refrigerate": {
+    "name": "Peau Gelée",
+    "description": "Les capacités de type Normal deviennent de type Glace. Leur puissance augmente légèrement."
+  },
+  "sweetVeil": {
+    "name": "Gluco-Voile",
+    "description": "Le Pokémon et ses alliés ne peuvent pas s’endormir."
+  },
+  "stanceChange": {
+    "name": "Déclic Tactique",
+    "description": "Le Pokémon prend la Forme Assaut lorsqu’il utilise une capacité offensive, et la Forme Parade lorsqu’il utilise Bouclier Royal."
+  },
+  "galeWings": {
+    "name": "Ailes Bourrasque",
+    "description": "Quand les PV du Pokémon sont au maximum, ses capacités de type Vol sont prioritaires."
+  },
+  "megaLauncher": {
+    "name": "Méga Blaster",
+    "description": "Augmente la puissance des capacités qui projettent une aura."
+  },
+  "grassPelt": {
+    "name": "Toison Herbue",
+    "description": "Augmente la Défense du Pokémon si un champ herbu est actif."
+  },
+  "symbiosis": {
+    "name": "Symbiose",
+    "description": "Quand les alliés utilisent l’objet qu’ils tiennent, le Pokémon leur donne l’objet qu’il tient en remplacement."
+  },
+  "toughClaws": {
+    "name": "Griffe Dure",
+    "description": "Augmente la puissance des attaques directes du Pokémon."
+  },
+  "pixilate": {
+    "name": "Peau Féérique",
+    "description": "Les capacités de type Normal deviennent de type Fée. Leur puissance augmente légèrement."
+  },
+  "gooey": {
+    "name": "Poisseux",
+    "description": "Baisse la Vitesse de l’attaquant lorsque le Pokémon subit une attaque directe."
+  },
+  "aerilate": {
+    "name": "Peau Céleste",
+    "description": "Les capacités de type Normal deviennent de type Vol. Leur puissance augmente légèrement."
+  },
+  "parentalBond": {
+    "name": "Amour Filial",
+    "description": "La mère et son petit unissent leurs forces pour attaquer deux fois d’affilée."
+  },
+  "darkAura": {
+    "name": "Aura Ténébreuse",
+    "description": "Augmente la puissance des capacités de type Ténèbres de tous les Pokémon."
+  },
+  "fairyAura": {
+    "name": "Aura Féérique",
+    "description": "Augmente la puissance des capacités de type Fée de tous les Pokémon."
+  },
+  "auraBreak": {
+    "name": "Aura Inversée",
+    "description": "Inverse l’effet des talents « Aura » afin que ceux-ci baissent la puissance des capacités affectées au lieu de l’augmenter."
+  },
+  "primordialSea": {
+    "name": "Mer Primaire",
+    "description": "Altère les conditions météo pour neutraliser les attaques de type Feu."
+  },
+  "desolateLand": {
+    "name": "Terre Finale",
+    "description": "Altère les conditions météo pour neutraliser les attaques de type Eau."
+  },
+  "deltaStream": {
+    "name": "Souffle Delta",
+    "description": "Altère les conditions météo pour annuler les faiblesses du type Vol."
+  },
+  "stamina": {
+    "name": "Endurance",
+    "description": "Augmente la Défense du Pokémon lorsqu’il subit une attaque."
+  },
+  "wimpOut": {
+    "name": "Escampette",
+    "description": "Le Pokémon perd confiance quand ses PV tombent à la moitié et s’enfuit dans sa Poké Ball."
+  },
+  "emergencyExit": {
+    "name": "Repli Tactique",
+    "description": "Le Pokémon évite les situations inutilement dangereuses. Quand ses PV tombent à la moitié, il se réfugie dans sa Poké Ball."
+  },
+  "waterCompaction": {
+    "name": "Sable Humide",
+    "description": "Augmente beaucoup la Défense du Pokémon quand il subit une capacité de type Eau."
+  },
+  "merciless": {
+    "name": "Cruauté",
+    "description": "Lorsque le Pokémon attaque un adversaire empoisonné, le coup est forcément critique."
+  },
+  "shieldsDown": {
+    "name": "Bouclier-Carcan",
+    "description": "Lorsque le Pokémon perd la moitié de ses PV, son enveloppe se brise et il adopte une posture offensive."
+  },
+  "stakeout": {
+    "name": "Filature",
+    "description": "Lorsque le Pokémon attaque une cible qui vient d’entrer sur le terrain en remplacement d’un autre Pokémon, les dégâts infligés sont doublés."
+  },
+  "waterBubble": {
+    "name": "Aquabulle",
+    "description": "Réduit la puissance des capacités de type Feu subies par le Pokémon. Il est également immunisé contre les brulures."
+  },
+  "steelworker": {
+    "name": "Expert Acier",
+    "description": "Augmente la puissance des attaques de type Acier."
+  },
+  "berserk": {
+    "name": "Folle Furie",
+    "description": "Augmente l’Attaque Spéciale du Pokémon lorsque ses PV tombent à la moitié à cause d’une attaque de l’adversaire."
+  },
+  "slushRush": {
+    "name": "Chasse-Neige",
+    "description": "Augmente la Vitesse du Pokémon quand il neige."
+  },
+  "longReach": {
+    "name": "Longue Portée",
+    "description": "Le Pokémon est capable d’utiliser toutes ses capacités sans entrer en contact direct avec sa cible."
+  },
+  "liquidVoice": {
+    "name": "Hydrata-Son",
+    "description": "Toutes les attaques sonores du Pokémon prennent le type Eau."
+  },
+  "triage": {
+    "name": "Prioguérison",
+    "description": "Rend les capacités de soin prioritaires."
+  },
+  "galvanize": {
+    "name": "Peau Électrique",
+    "description": "Les capacités de type Normal deviennent de type Électrik. Leur puissance augmente légèrement."
+  },
+  "surgeSurfer": {
+    "name": "Surf Caudal",
+    "description": "La Vitesse du Pokémon est doublée sur un champ électrifié."
+  },
+  "schooling": {
+    "name": "Banc",
+    "description": "Le Pokémon se rassemble avec ses congénères quand ses PV sont élevés. Quand il ne lui reste plus beaucoup de PV, le banc se disperse."
+  },
+  "disguise": {
+    "name": "Fantômasque",
+    "description": "Le déguisement qui recouvre le corps du Pokémon est capable de le protéger d’une attaque."
+  },
+  "battleBond": {
+    "name": "Synergie",
+    "description": "En battant un ennemi, ce Pokémon renforce ses liens avec son Dresseur, ce qui augmente son Attaque, son Attaque Spéciale et sa Vitesse."
+  },
+  "powerConstruct": {
+    "name": "Rassemblement",
+    "description": "Lorsque le Pokémon perd la moitié de ses PV, ses Cellules se rassemblent pour l’encourager, ce qui lui permet de prendre sa Forme Parfaite."
+  },
+  "corrosion": {
+    "name": "Corrosion",
+    "description": "Permet d’empoisonner les Pokémon de type Acier ou Poison."
+  },
+  "comatose": {
+    "name": "Hypersommeil",
+    "description": "Le Pokémon rêve en permanence et ne se réveille jamais. Il est capable d’attaquer normalement tout en dormant."
+  },
+  "queenlyMajesty": {
+    "name": "Prestance Royale",
+    "description": "L’adversaire est impressionné par la majesté du Pokémon et ne peut pas le viser avec une capacité prioritaire."
+  },
+  "innardsOut": {
+    "name": "Expuls’Organes",
+    "description": "Le Pokémon inflige à l’adversaire l’ayant mis K.O. des dégâts égaux au nombre de PV qu’il lui restait avant le coup de grâce."
+  },
+  "dancer": {
+    "name": "Danseuse",
+    "description": "Si n’importe quel Pokémon utilise une capacité dansante, le Pokémon utilise immédiatement cette danse lui aussi."
+  },
+  "battery": {
+    "name": "Batterie",
+    "description": "Augmente la puissance des capacités spéciales des alliés."
+  },
+  "fluffy": {
+    "name": "Boule de Poils",
+    "description": "Divise par deux les dégâts des attaques directes subies par le Pokémon, mais double les dégâts des capacités de type Feu."
+  },
+  "dazzling": {
+    "name": "Corps Coloré",
+    "description": "L’adversaire est abasourdi par le Pokémon et ne peut pas le viser avec une capacité prioritaire."
+  },
+  "soulHeart": {
+    "name": "Animacœur",
+    "description": "Augmente l’Attaque Spéciale du Pokémon lorsqu’un autre Pokémon est mis K.O."
+  },
+  "tanglingHair": {
+    "name": "Mèche Rebelle",
+    "description": "Baisse la Vitesse de l’attaquant lorsque le Pokémon subit une attaque directe."
+  },
+  "receiver": {
+    "name": "Receveur",
+    "description": "Le Pokémon reçoit le talent d’un allié mis K.O."
+  },
+  "powerOfAlchemy": {
+    "name": "Osmose",
+    "description": "Le Pokémon acquiert le talent d’un allié mis K.O."
+  },
+  "beastBoost": {
+    "name": "Boost Chimère",
+    "description": "Augmente la stat la plus élevée du Pokémon quand il met K.O. un autre Pokémon."
+  },
+  "rksSystem": {
+    "name": "Système Alpha",
+    "description": "Change le type du Pokémon en fonction de la ROM équipée."
+  },
+  "electricSurge": {
+    "name": "Créa-Élec",
+    "description": "Le Pokémon crée un champ électrifié au moment où il entre au combat."
+  },
+  "psychicSurge": {
+    "name": "Créa-Psy",
+    "description": "Le Pokémon crée un champ psychique au moment où il entre au combat."
+  },
+  "mistySurge": {
+    "name": "Créa-Brume",
+    "description": "Le Pokémon crée un champ brumeux au moment où il entre au combat."
+  },
+  "grassySurge": {
+    "name": "Créa-Herbe",
+    "description": "Le Pokémon crée un champ herbu au moment où il entre au combat."
+  },
+  "fullMetalBody": {
+    "name": "Métallo-Garde",
+    "description": "Empêche les stats du Pokémon de baisser à cause du talent ou d’une capacité de l’adversaire."
+  },
+  "shadowShield": {
+    "name": "Spectro-Bouclier",
+    "description": "Le Pokémon subit moins de dégâts quand ses PV sont au maximum."
+  },
+  "prismArmor": {
+    "name": "Prisme-Armure",
+    "description": "Diminue la puissance des attaques super efficaces subies."
+  },
+  "neuroforce": {
+    "name": "Cérébro-Force",
+    "description": "Augmente encore plus la puissance des attaques super efficaces."
+  },
+  "intrepidSword": {
+    "name": "Lame Indomptable",
+    "description": "Augmente l’Attaque du Pokémon la première fois qu’il entre au combat."
+  },
+  "dauntlessShield": {
+    "name": "Égide Inflexible",
+    "description": "Augmente la Défense du Pokémon la première fois qu’il entre au combat."
+  },
+  "libero": {
+    "name": "Libéro",
+    "description": "Le Pokémon prend le type de la capacité qu’il utilise. Ce talent ne peut se déclencher qu’une fois par entrée au combat du Pokémon."
+  },
+  "ballFetch": {
+    "name": "Ramasse Ball",
+    "description": "Si le Pokémon ne tient aucun objet, il ramassera la Poké Ball lors du premier lancer raté du combat."
+  },
+  "cottonDown": {
+    "name": "Effilochage",
+    "description": "Quand le Pokémon est touché par une attaque, il dissémine des aigrettes qui diminuent la Vitesse de tout le monde, sauf la sienne."
+  },
+  "propellerTail": {
+    "name": "Propulseur",
+    "description": "Permet d’ignorer l’effet des capacités ou des talents qui attirent les capacités."
+  },
+  "mirrorArmor": {
+    "name": "Armure Miroir",
+    "description": "Le Pokémon renvoie les effets réducteurs de stats qu’il reçoit."
+  },
+  "gulpMissile": {
+    "name": "Dégobage",
+    "description": "Quand le Pokémon utilise Surf ou Plongée, il revient avec une proie. Lorsqu’il subit des dégâts par la suite, il attaque en recrachant sa proie."
+  },
+  "stalwart": {
+    "name": "Nerfs d’Acier",
+    "description": "Permet d’ignorer l’effet des capacités ou des talents qui attirent les capacités."
+  },
+  "steamEngine": {
+    "name": "Turbine",
+    "description": "Lorsque le Pokémon est touché par des capacités de type Eau ou Feu, sa Vitesse augmente énormément."
+  },
+  "punkRock": {
+    "name": "Punk Rock",
+    "description": "Augmente la puissance des capacités basées sur le son. Le Pokémon ne subit que la moitié des dégâts quand il est touché par ce genre de capacités."
+  },
+  "sandSpit": {
+    "name": "Expul’Sable",
+    "description": "Le Pokémon déclenche une tempête de sable quand il subit une attaque."
+  },
+  "iceScales": {
+    "name": "Écailles Glacées",
+    "description": "Le Pokémon est protégé par des écailles de glace. Les dégâts qu’il subit par des capacités spéciales sont divisés par deux."
+  },
+  "ripen": {
+    "name": "Mûrissement",
+    "description": "Le Pokémon fait murir la Baie qu’il tient et double ainsi son effet."
+  },
+  "iceFace": {
+    "name": "Tête de Gel",
+    "description": "Le glaçon sur sa tête encaisse les attaques physiques à la place du Pokémon, mais sa destruction modifie son apparence. Le glaçon se reforme quand il neige."
+  },
+  "powerSpot": {
+    "name": "Cercle d’Énergie",
+    "description": "Augmente la puissance des capacités des Pokémon qui se trouvent à proximité."
+  },
+  "mimicry": {
+    "name": "Mimétisme",
+    "description": "Le Pokémon adopte le même type que le terrain lorsqu’un champ est actif."
+  },
+  "screenCleaner": {
+    "name": "Brise-Barrière",
+    "description": "Quand le Pokémon entre au combat, les effets de Mur Lumière, Protection et Voile Aurore disparaissent pour les alliés comme pour les adversaires."
+  },
+  "steelySpirit": {
+    "name": "Boost Acier",
+    "description": "Augmente la puissance des attaques de type Acier du Pokémon et de ses alliés."
+  },
+  "perishBody": {
+    "name": "Corps Condamné",
+    "description": "Lorsque le Pokémon est directement touché par une capacité, l’assaillant et lui tomberont K.O. dans trois tours, à moins qu’ils ne soient remplacés entre temps."
+  },
+  "wanderingSpirit": {
+    "name": "Âme Vagabonde",
+    "description": "Lorsque le Pokémon est directement touché par une capacité, il échange son talent avec celui de l’assaillant."
+  },
+  "gorillaTactics": {
+    "name": "Entêtement",
+    "description": "Augmente l’Attaque, mais empêche d’utiliser toute autre capacité que celle utilisée en premier par le Pokémon."
+  },
+  "neutralizingGas": {
+    "name": "Gaz Inhibiteur",
+    "description": "Si un Pokémon avec Gaz Inhibiteur est sur le terrain, les effets des talents de tous les autres Pokémon ne s’activent pas ou sont neutralisés."
+  },
+  "pastelVeil": {
+    "name": "Voile Pastel",
+    "description": "Protège le Pokémon et ses alliés contre toutes les altérations de statut liées à l’empoisonnement."
+  },
+  "hungerSwitch": {
+    "name": "Déclic Fringale",
+    "description": "À la fin de chaque tour, le Pokémon alterne entre ses formes Mode Rassasié et Mode Affamé."
+  },
+  "quickDraw": {
+    "name": "Tir Vif",
+    "description": "Permet parfois au Pokémon d’agir en premier."
+  },
+  "unseenFist": {
+    "name": "Poing Invisible",
+    "description": "Si le Pokémon utilise une attaque directe, celle-ci pourra toucher la cible même si elle se protège."
+  },
+  "curiousMedicine": {
+    "name": "Breuvage Suspect",
+    "description": "Quand il entre au combat, le Pokémon répand une substance qui annule les changements de stats de ses alliés."
+  },
+  "transistor": {
+    "name": "Transistor",
+    "description": "Augmente la puissance des capacités de type Électrik."
+  },
+  "dragonsMaw": {
+    "name": "Dent de Dragon",
+    "description": "Augmente la puissance des capacités de type Dragon."
+  },
+  "chillingNeigh": {
+    "name": "Blanche Ruade",
+    "description": "Quand le Pokémon met un ennemi K.O., il émet un hennissement glaçant, ce qui augmente son Attaque."
+  },
+  "grimNeigh": {
+    "name": "Sombre Ruade",
+    "description": "Quand le Pokémon met un ennemi K.O., il émet un hennissement terrifiant qui augmente son Attaque Spéciale."
+  },
+  "asOneGlastrier": {
+    "name": "Osmose Équine",
+    "description": "Les talents Tension de Sylveroy et Blanche Ruade de Blizzeval sont cumulés."
+  },
+  "asOneSpectrier": {
+    "name": "Osmose Équine",
+    "description": "Les talents Tension de Sylveroy et Sombre Ruade de Spectreval sont cumulés."
+  },
+  "lingeringAroma": {
+    "name": "Odeur Tenace",
+    "description": "Lorsque le Pokémon subit une attaque directe, le talent de l’attaquant est remplacé par Odeur Tenace."
+  },
+  "seedSower": {
+    "name": "Semencier",
+    "description": "Le Pokémon crée un champ herbu quand il subit une attaque."
+  },
+  "thermalExchange": {
+    "name": "Thermodynamique",
+    "description": "Lorsque le Pokémon est touché par une capacité de type Feu, il ne subit aucun dégât et son Attaque augmente."
+  },
+  "angerShell": {
+    "name": "Courroupace",
+    "description": "Le Pokémon enrage s’il a moins de la moitié de ses PV après avoir subi une attaque. Sa Déf. et sa Déf. Spé. baissent, et son Atq., son Atq. Spé. et sa Vit. augmentent."
+  },
+  "purifyingSalt": {
+    "name": "Sel Purificateur",
+    "description": "Le sel pur immunise le Pokémon contre les altérations de statut, et diminue de moitié les dégâts des capacités de type Spectre."
+  },
+  "wellBakedBody": {
+    "name": "Bien Cuit",
+    "description": "Si le Pokémon est touché par une capacité de type Feu, il ne subit aucun dégât et sa Défense augmente beaucoup."
+  },
+  "windRider": {
+    "name": "Aéroporté",
+    "description": "L’Attaque du Pokémon augmente si un vent arrière souffle ou s’il est touché par une capacité faisant appel au vent. Dans ce dernier cas, il ne subit aucun dégât."
+  },
+  "guardDog": {
+    "name": "Chien de Garde",
+    "description": "L’Attaque du Pokémon augmente s’il subit l’effet du talent Intimidation. Les capacités ou objets qui font changer de Pokémon n’ont aucun effet sur lui."
+  },
+  "rockyPayload": {
+    "name": "Porte-Roche",
+    "description": "Augmente la puissance des capacités de type Roche."
+  },
+  "windPower": {
+    "name": "Turbine Éolienne",
+    "description": "Si le Pokémon est touché par une capacité faisant appel au vent, il se charge en électricité."
+  },
+  "zeroToHero": {
+    "name": "Supermutation",
+    "description": "Le Pokémon prend sa Forme Super en quittant le combat."
+  },
+  "commander": {
+    "name": "Commandant",
+    "description": "Si un Oyacata allié est sur le terrain quand ce Pokémon rejoint le combat, ce dernier entre dans sa bouche et devient son commandant."
+  },
+  "electromorphosis": {
+    "name": "Grecharge",
+    "description": "Si le Pokémon subit des dégâts, il se charge en électricité."
+  },
+  "protosynthesis": {
+    "name": "Paléosynthèse",
+    "description": "Quand le soleil brille ou que le Pokémon tient une capsule d’Énergie Booster, sa stat la plus élevée augmente."
+  },
+  "quarkDrive": {
+    "name": "Charge Quantique",
+    "description": "Quand un champ électrifié est actif ou que le Pokémon tient une capsule d’Énergie Booster, sa stat la plus élevée augmente."
+  },
+  "goodAsGold": {
+    "name": "Corps en Or",
+    "description": "Le corps en or pur et robuste du Pokémon l’immunise contre les capacités de statut des autres Pokémon."
+  },
+  "vesselOfRuin": {
+    "name": "Urne du Fléau",
+    "description": "Le pouvoir de l’urne qui appelle le fléau affaiblit l’Attaque Spéciale de tous les autres Pokémon."
+  },
+  "swordOfRuin": {
+    "name": "Épée du Fléau",
+    "description": "Le pouvoir de l’épée qui appelle le fléau affaiblit la Défense de tous les autres Pokémon."
+  },
+  "tabletsOfRuin": {
+    "name": "Bois du Fléau",
+    "description": "Le pouvoir du bois qui appelle le fléau affaiblit l’Attaque de tous les autres Pokémon."
+  },
+  "beadsOfRuin": {
+    "name": "Perles du Fléau",
+    "description": "Le pouvoir des perles qui appellent le fléau affaiblit la Défense Spéciale de tous les autres Pokémon."
+  },
+  "orichalcumPulse": {
+    "name": "Pouls Orichalque",
+    "description": "Le Pokémon invoque le soleil quand il rejoint le combat. Quand les rayons du soleil sont intenses, une pulsation primitive augmente son Attaque."
+  },
+  "hadronEngine": {
+    "name": "Moteur à Hadrons",
+    "description": "Le Pokémon crée un champ électrifié quand il rejoint le combat. Une machine du futur fait monter son Attaque Spéciale si un champ électrifié est actif."
+  },
+  "opportunist": {
+    "name": "Opportuniste",
+    "description": "Quand les stats de l’ennemi augmentent, le Pokémon en profite pour augmenter ses stats de la même manière."
+  },
+  "cudChew": {
+    "name": "Ruminant",
+    "description": "Quand le Pokémon mange une Baie, il la régurgite à la fin du tour suivant et la mange une nouvelle fois."
+  },
+  "sharpness": {
+    "name": "Incisif",
+    "description": "Augmente la puissance des capacités tranchantes."
+  },
+  "supremeOverlord": {
+    "name": "Général Suprême",
+    "description": "Quand le Pokémon entre sur le terrain, son Attaque et son Attaque Spéciale augmentent légèrement pour chaque allié mis K.O. auparavant."
+  },
+  "costar": {
+    "name": "Collab",
+    "description": "Quand le Pokémon entre sur le terrain, il copie les changements de stats de son allié."
+  },
+  "toxicDebris": {
+    "name": "Dépôt Toxique",
+    "description": "Quand le Pokémon est touché par une capacité physique, il répand des pics toxiques dans le camp adverse."
+  },
+  "armorTail": {
+    "name": "Armure Caudale",
+    "description": "L’étrange queue qui recouvre la tête du Pokémon empêche ce dernier d’être visé par une capacité prioritaire."
+  },
+  "earthEater": {
+    "name": "Absorbe-Terre",
+    "description": "Si le Pokémon est touché par une capacité de type Sol, il regagne des PV au lieu de subir des dégâts."
+  },
+  "myceliumMight": {
+    "name": "Force Fongique",
+    "description": "Le Pokémon agit toujours plus lentement quand il utilise une capacité de statut, mais il ignore les talents adverses."
+  },
+  "mindsEye": {
+    "name": "Œil Révélateur",
+    "description": "Le Pokémon ignore les changements d’Esquive des cibles et peut toucher les Pokémon Spectre avec des capacités Normal ou Combat. Sa Précision ne peut pas baisser."
+  },
+  "supersweetSyrup": {
+    "name": "Nectar Mielleux",
+    "description": "La première fois que le Pokémon entre au combat, une odeur de nectar sucré se répand sur le terrain, ce qui baisse l’Esquive de l’adversaire."
+  },
+  "hospitality": {
+    "name": "Aux Petits Soins",
+    "description": "Quand il rejoint le combat, ce Pokémon est aux petits soins avec son allié et restaure quelques PV."
+  },
+  "toxicChain": {
+    "name": "Chaîne Toxique",
+    "description": "Grâce aux pouvoirs de sa chaine imprégnée de toxines, le Pokémon peut empoisonner gravement sa cible en la touchant avec une capacité."
+  },
+  "embodyAspectTeal": {
+    "name": "Force Mémorielle",
+    "description": "Le Pokémon fait briller le Masque Turquoise en puisant dans ses souvenirs, ce qui augmente sa Vitesse."
+  },
+  "embodyAspectWellspring": {
+    "name": "Force Mémorielle",
+    "description": "Le Pokémon fait briller le Masque du Puits en puisant dans ses souvenirs, ce qui augmente sa Défense Spéciale."
+  },
+  "embodyAspectHearthflame": {
+    "name": "Force Mémorielle",
+    "description": "Le Pokémon fait briller le Masque du Fourneau en puisant dans ses souvenirs, ce qui augmente son Attaque."
+  },
+  "embodyAspectCornerstone": {
+    "name": "Force Mémorielle",
+    "description": "Le Pokémon fait briller le Masque de la Pierre en puisant dans ses souvenirs, ce qui augmente sa Défense."
+  },
+  "teraShift": {
+    "name": "Téramorphose",
+    "description": "Quand le Pokémon rejoint le combat, il absorbe l’énergie alentour et prend sa Forme Téracristal."
+  },
+  "teraShell": {
+    "name": "Téra-Carapace",
+    "description": "Grâce à sa carapace qui renferme l’énergie de tous les types, les capacités subies par ce Pokémon quand ses PV sont au maximum ne sont pas très efficaces."
+  },
+  "teraformZero": {
+    "name": "Téraformation 0",
+    "description": "Lorsque Terapagos prend sa Forme Stellaire, il utilise son pouvoir enfoui pour annuler les effets de la météo et des champs actifs."
+  },
+  "poisonPuppeteer": {
+    "name": "Emprise Toxique",
+    "description": "Lorsque Pêchaminus empoisonne un Pokémon grâce à l’une de ses capacités, ce dernier devient également confus."
+  },
+  "unleashed": {
+    "name": "Déchaîné",
+    "description": "Augmente la puissance de toutes les capacités lorsque les PV sont bas."
+  },
+  "hellFlame": {
+    "name": "Flamme Infernale",
+    "description": "Augmente la puissance des capacités de type Feu de 50%."
+  },
+  "psychoLeaf": {
+    "name": "Feuille Psychique",
+    "description": "Change les capacités de type Plante en type Psy et augmente leur puissance de 20%."
+  },
+  "groundFlame": {
+    "name": "Flamme Terrestre",
+    "description": "Change les capacités de type Feu en type Sol et augmente leur puissance de 20%."
+  },
+  "magicalWater": {
+    "name": "Eau Féerique",
+    "description": "Change les capacités de type Eau en type Fée et augmente leur puissance de 20%."
+  },
+  "nuclearEnergy": {
+    "name": "Énergie Nucléaire",
+    "description": "Change les capacités de type Poison en type Électrik et augmente leur puissance de 20%."
+  },
+  "poisonKing": {
+    "name": "Roi du Poison",
+    "description": "Augmente la puissance des capacités de type Poison de 60%."
+  },
+  "solidKong": {
+    "name": "Kong Solide",
+    "description": "Réduit les dégâts des coups super efficaces de 50%."
+  },
+  "screepy": {
+    "name": "Criardeur",
+    "description": "Les attaques de type Spectre peuvent toucher les types Normal. Augmente les attaques de type Spectre de 30%. Immunisé contre Intimidation."
+  },
+  "godFist": {
+    "name": "Poing Divin",
+    "description": "Augmente la puissance des coups de poing de 50%."
+  },
+  "parentalHaunting": {
+    "name": "Hantise Parentale",
+    "description": "Change les capacités non-Normal en type Spectre et augmente leur puissance de 20%."
+  },
+  "nightmarate": {
+    "name": "Cauchemardement",
+    "description": "Change les attaques de type Normal en type Primaire et augmente leur puissance de 20%."
+  },
+  "terrify": {
+    "name": "Terrifier",
+    "description": "Baisse l'Attaque et l'Attaque Spéciale de l'adversaire d'un niveau en entrant au combat."
+  },
+  "thunderAndFire": {
+    "name": "Tonnerre et Feu",
+    "description": "Les attaques de type Feu et Électrik partagent leurs avantages de type contre les mêmes types !"
+  },
+  "electafireAbsorb": {
+    "name": "Absorption Électrofeu",
+    "description": "Restaure des PV au lieu de subir des dégâts lorsqu'il est touché par des capacités de type Feu ou Électrik."
+  },
+  "dirtThick": {
+    "name": "Terre Épaisse",
+    "description": "Réduit de moitié les dégâts des capacités de type Eau et Sol."
+  },
+  "arcticBlaze": {
+    "name": "Brasier Arctique",
+    "description": "Transforme les attaques de type Glace en type Feu et vice versa, augmentant leur puissance de 35% lorsque les PV sont inférieurs à 65%."
+  },
+  "steamify": {
+    "name": "Vaporisation",
+    "description": "Change les capacités de type Eau en type Feu et augmente leur puissance de 20%."
+  },
+  "prehistoricHunt": {
+    "name": "Chasse Préhistorique",
+    "description": "30% de chances de changer la météo en Pluie à chaque tour. Double la Vitesse sous la Pluie, le Soleil intense, la Grêle, la Neige ou la Forte Pluie."
+  },
+  "popUp": {
+    "name": "Surgissement",
+    "description": "Baisse la Défense d'un niveau et augmente la Vitesse d'un niveau en entrant au combat."
+  },
+  "earthSpeeder": {
+    "name": "Vélocité Terrestre",
+    "description": "Augmente la Vitesse d'un niveau lorsqu'il est touché par une capacité de type Sol."
+  },
+  "knockout": {
+    "name": "K.O.",
+    "description": "35% de chances d'infliger un coup critique lorsque les PV sont inférieurs à 50%."
+  },
+  "finalRound": {
+    "name": "Round Final",
+    "description": "Augmente la puissance des capacités de type Combat lorsque les PV sont bas."
+  },
+  "kickPunch": {
+    "name": "Pied-Poing",
+    "description": "Augmente la puissance des coups de pied et de poing de 30%."
+  },
+  "stabNormal": {
+    "name": "Bonus Normal",
+    "description": "Augmente la puissance des capacités de type Normal de 30%."
+  },
+  "adaptiveAi": {
+    "name": "IA Adaptative",
+    "description": "Augmente les statistiques de 1 ou 2 niveaux en fonction de la statistique la plus élevée de l'adversaire. Augmente la Défense si la statistique la plus élevée de l'adversaire est l'Attaque, la Défense Spéciale si c'est l'Attaque Spéciale, l'Attaque Spéciale si c'est la Défense Spéciale, ou la Vitesse de 2 niveaux si c'est la Vitesse."
+  },
+  "electric": {
+    "name": "Électrique",
+    "description": "Augmente les attaques de type Électrik de 50%, subit des dégâts doubles de l'Eau, et transforme les attaques de type Normal en type Électrik avec 20% de puissance."
+  },
+  "existence": {
+    "name": "Existence",
+    "description": "Augmente toutes les capacités de 20%, neutralise les coups super efficaces et neutralise les coups qui seraient super efficaces contre la cible."
+  },
+  "allConsuming": {
+    "name": "Tout Dévorant",
+    "description": "Restaure 1/8 des PV max et inflige 1/8 des PV max comme dégâts à l'adversaire lorsqu'il est touché par une capacité de contact."
+  },
+  "corrupt": {
+    "name": "Corruption",
+    "description": "70% de chances d'empoisonner gravement la cible après une attaque."
+  },
+  "dragonKing": {
+    "name": "Roi Dragon",
+    "description": "Augmente la puissance des capacités de type Dragon de 60%."
+  },
+  "sandCorruption": {
+    "name": "Corruption Sableuse",
+    "description": "Inflige des dégâts à l'attaquant équivalents à 1/8 de ses PV max et baisse sa Vitesse d'un niveau s'il est touché par une capacité de contact."
+  },
+  "organicTwist": {
+    "name": "Torsion Organique",
+    "description": "Les attaques de type Plante et Roche partagent leurs avantages de type contre les mêmes types !"
+  },
+  "healthySoak": {
+    "name": "Trempage Sain",
+    "description": "Augmente la Vitesse et l'Attaque d'un niveau lorsqu'il est touché par une capacité de type Eau."
+  },
+  "inkBlindness": {
+    "name": "Encre Aveuglante",
+    "description": "35% de chances de rendre confuse la cible après une attaque."
+  },
+  "inkFry": {
+    "name": "Encre Brûlante",
+    "description": "Baisse la Vitesse et la Défense Spéciale de la cible d'un niveau après avoir utilisé une capacité de type Eau."
+  },
+  "mooTime": {
+    "name": "Temps Bovin",
+    "description": "Augmente la Défense et la Vitesse de 50% lorsque les PV sont inférieurs à 50%."
+  },
+  "fuelExchange": {
+    "name": "Échange d'Énergie",
+    "description": "Augmente la Vitesse d'un niveau si touché par une capacité Électrik. Restaure 1/4 des PV max si touché par une capacité Plante. Augmente la Défense d'un niveau si touché par une capacité Ténèbres. Augmente l'Attaque d'un niveau si touché par une capacité Fée. Augmente la Défense Spéciale d'un niveau si touché par une capacité Psy. Augmente l'Attaque Spéciale d'un niveau si touché par une capacité Glace."
+  },
+  "sunAndMoon": {
+    "name": "Soleil et Lune",
+    "description": "Augmente la puissance des capacités de type Feu et Roche de 20%."
+  },
+  "nightAndDay": {
+    "name": "Nuit et Jour",
+    "description": "40% de chances de brûler au contact lorsque les PV sont supérieurs à 50%, ou 35% de chances d'endormir au contact lorsque les PV sont inférieurs à 50%."
+  },
+  "twoHalves": {
+    "name": "Deux Moitiés",
+    "description": "Survit à un coup qui l'aurait mis K.O., puis baisse fortement la Vitesse de l'adversaire et restaure 50% de ses PV."
+  },
+  "alienRock": {
+    "name": "Roche Alien",
+    "description": "Les attaques de type Psy et Roche partagent leurs avantages de type contre les mêmes types !"
+  },
+  "robot": {
+    "name": "Robot",
+    "description": "Augmente TOUTES les statistiques de 1 niveau en entrant au combat. Diminue une statistique aléatoire de 1 niveau à la fin de chaque tour."
+  },
+  "golemPlus": {
+    "name": "Golem Plus",
+    "description": "Augmente la puissance des capacités de type Roche de 30% et augmente la Défense de 30%."
+  },
+  "nightmareFuel": {
+    "name": "Carburant de Cauchemar",
+    "description": "Transforme les attaques de type Normal en type Primaire et augmente leur puissance de 20%."
+  },
+  "smittyxtvVirus": {
+    "name": "Virus SmittyNugget",
+    "description": "Augmente la statistique la plus élevée de 1 niveau après avoir mis K.O. un adversaire. 50% de chance de diminuer une statistique aléatoire de la cible de 1 niveau après avoir attaqué."
+  },
+  "staticCharge": {
+    "name": "Charge Statique",
+    "description": "Applique le statut Chargé à l'attaquant au contact. 30% de chances de paralyser au contact."
+  },
+  "darkStampede": {
+    "name": "Ruée Ténébreuse",
+    "description": "Augmente une statistique aléatoire d'un niveau après avoir utilisé une capacité de type Ténèbres."
+  },
+  "colorChangeDefense": {
+    "name": "Défense Caméléon",
+    "description": "Change le type de l'utilisateur pour correspondre au type de l'attaque qu'il a subie. Si l'utilisateur n'est pas déjà du même type, il récupère également 1/8 de ses PV max."
+  },
+  "colorChangeSteal": {
+    "name": "Vol Caméléon",
+    "description": "Change le type de l'utilisateur pour correspondre au type de la capacité reçue. Vole l'objet tenu par la cible si l'utilisateur partage un type avec elle."
+  },
+  "hauntingEcho": {
+    "name": "Écho Hanté",
+    "description": "30% de chances de paralyser la cible et d'infliger 1/16 de ses PV max en dégâts lors de l'utilisation d'une capacité de type Spectre."
+  },
+  "maternalShade": {
+    "name": "Ombre Maternelle",
+    "description": "50% de chances de réduire les dégâts des attaques entrantes au quart."
+  },
+  "spiritualBond": {
+    "name": "Lien Spirituel",
+    "description": "Inflige 50% des dégâts reçus à l'attaquant"
+  },
+  "gravePower": {
+    "name": "Pouvoir Tombeau",
+    "description": "Augmente la puissance des capacités de 150% lorsque les PV sont inférieurs à 40%. 30% de chances d'empoisonner gravement la cible."
+  },
+  "undead": {
+    "name": "Mort-Vivant",
+    "description": "70% de chances de survivre à un coup qui l'aurait mis K.O."
+  },
+  "scaleArmor": {
+    "name": "Armure d'Écailles",
+    "description": "Réduit les dégâts des capacités de type Eau, Électrik, Feu et Plante de 25%."
+  },
+  "pixelatedTongue": {
+    "name": "Langue Pixélisée",
+    "description": "30% de chances d'infliger un statut aléatoire et de baisser une statistique aléatoire de la cible d'un niveau."
+  },
+  "staticTaste": {
+    "name": "Goût Statique",
+    "description": "Augmente la puissance des capacités de 50% contre les cibles paralysées. 35% de chances de paralyser la cible."
+  },
+  "rockyHorrorShow": {
+    "name": "Show d'Horreur Rocheux",
+    "description": "Empêche l'adversaire de changer de Pokémon. Augmente deux statistiques aléatoires d'un niveau en entrant au combat."
+  },
+  "hauntingBroadcast": {
+    "name": "Diffusion Hantée",
+    "description": "Maudit tous les Pokémon adverses lorsque l'utilisateur est mis K.O."
+  },
+  "ectoplasmicTouch": {
+    "name": "Toucher Ectoplasmique",
+    "description": "Inflige des dégâts à l'attaquant équivalents à 1/12 de ses PV max lorsqu'il est touché par une capacité de contact. Inflige également des dégâts à la cible équivalents à 1/12 de ses PV max lors de l'utilisation d'une capacité de contact."
+  },
+  "toxicCombustion": {
+    "name": "Combustion Toxique",
+    "description": "Inflige des dégâts équivalents à 1/8 des PV max de l'attaquant s'il est gravement empoisonné. 30% de chances d'empoisonner gravement la cible."
+  },
+  "flamingEmission": {
+    "name": "Émission Flamboyante",
+    "description": "Les attaques de type Feu et Poison partagent leurs avantages de type contre les mêmes types !"
+  },
+  "burningDisease": {
+    "name": "Maladie Brûlante",
+    "description": "Inflige des dégâts équivalents à 1/8 des PV max de l'attaquant s'il est brûlé. 30% de chances de brûler la cible."
+  },
+  "steadyStance": {
+    "name": "Posture Stable",
+    "description": "Augmente l'Attaque, la Défense, l'Attaque Spéciale et la Défense Spéciale de l'utilisateur de 20%."
+  },
+  "balancedKick": {
+    "name": "Coup de Pied Équilibré",
+    "description": "Les capacités de coup de pied ne ratent jamais et leur puissance est augmentée de 20%."
+  },
+  "phantomPouch": {
+    "name": "Poche Fantôme",
+    "description": "30% de chances de restaurer 1/8 des PV max après avoir été touché ou après avoir attaqué. Augmente les objets obtenus après le combat."
+  },
+  "hauntingScythe": {
+    "name": "Faux Hantée",
+    "description": "Change ses attaques en SPÉCIALES ou PHYSIQUES selon la statistique de défense la plus faible de l'adversaire."
+  },
+  "soulCollector": {
+    "name": "Collecteur d'Âmes",
+    "description": "Augmente les capacités qui correspondent aux types collectés. Collecte le type des Pokémon mis K.O. Perd les types collectés en étant mis K.O."
+  },
+  "shadowSync": {
+    "name": "Synchronisation Ombragée",
+    "description": "Augmente les statistiques les plus élevées de l'utilisateur de 1 lorsque les statistiques de l'adversaire changent. Augmente la puissance de toutes les attaques de 20%."
+  },
+  "frightfulCute": {
+    "name": "Mignon Effrayant",
+    "description": "33% de chances d'augmenter la puissance des capacités de 50% ou de réduire de moitié les dégâts reçus des attaques."
+  },
+  "ghostify": {
+    "name": "Spectralisation",
+    "description": "Change les capacités de type Normal en type Spectre et augmente leur puissance de 40%."
+  },
+  "foreverPartner": {
+    "name": "Partenaire Éternel",
+    "description": "Augmente la puissance de toutes les capacités de 30%. 40% de chances de survivre à un coup qui l'aurait mis K.O."
+  },
+  "newAdaption": {
+    "name": "Nouvelle Adaptation",
+    "description": "Réduit de moitié les dégâts des capacités de type Feu et Sol. Double la puissance des capacités de type Acier contre les Pokémon de type Feu, Poison et Eau."
+  },
+  "steelStealer": {
+    "name": "Voleur d'Acier",
+    "description": "Augmente l'Attaque d'un niveau lorsqu'il est touché par une capacité de type Acier."
+  },
+  "teraForce": {
+    "name": "Force Téra",
+    "description": "Les capacités de type Sol peuvent toucher les types Vol. Augmente les capacités de type Sol de 30%. Immunisé contre Intimidation."
+  },
+  "mudiate": {
+    "name": "Bouification",
+    "description": "Change les capacités de type Normal en type Sol et augmente leur puissance de 20% et leur donne 20% de chances de baisser la précision de l'adversaire."
+  },
+  "gottaGoFast": {
+    "name": "Vitesse Maximale",
+    "description": "Double la puissance si agit en premier. Subit le double de dégâts si agit en second."
+  },
+  "imBlue": {
+    "name": "Je Suis Bleu",
+    "description": "Augmente les capacités de type Eau. Résiste aux capacités de type Feu, Eau et Acier. Augmente la puissance de 50% contre les Pokémon de type Feu, Sol et Roche."
+  },
+  "notShadow": {
+    "name": "Pas Ombre",
+    "description": "Immunisé contre les attaques de type Ténèbres, Acier et Spectre. Augmente l'Attaque, la Défense ou la Vitesse respectivement lorsqu'il est touché par une attaque de type Ténèbres, Acier ou Spectre."
+  },
+  "animified": {
+    "name": "Animifié",
+    "description": "Résiste aux capacités de type Normal et Combat. Faible contre les capacités de type Poison. Les capacités de type Normal deviennent de type Fée et sont augmentées de 20%. 30% de chances de survivre à un coup qui l'aurait mis K.O."
+  },
+  "longForgotten": {
+    "name": "Longtemps Oublié",
+    "description": "Baisse la Défense et la Défense Spéciale d'un niveau en entrant au combat."
+  },
+  "waaaa": {
+    "name": "Waaaa",
+    "description": "25% de chances d'infliger un coup critique. 10% de chances d'empoisonner gravement la cible."
+  },
+  "tooLate": {
+    "name": "Trop Tard",
+    "description": "Les capacités agissent toujours en dernier. 35% de chances de rendre confus, somnolent, d'infester ou de maudire la cible."
+  },
+  "memoriesOfTennis": {
+    "name": "Souvenirs de Tennis",
+    "description": "Augmente la puissance des capacités liées aux balles, sphères, orbes, cercles, rebonds et au jaune de 50%. 30% de chances de faire peur à la cible en utilisant ces capacités."
+  },
+  "fireRafRaf": {
+    "name": "Feu Raf Raf",
+    "description": "Augmente les capacités de type Feu de 50%. Subit le double de dégâts de l'Eau. Les capacités de type Normal deviennent de type Feu et sont augmentées de 20%."
+  },
+  "positivity": {
+    "name": "Positivité",
+    "description": "Augmente les capacités de type Électrik de 20%. 30% de chances de survivre à un coup qui l'aurait mis K.O. 33% de chances de réduire de moitié les dégâts des attaques."
+  },
+  "unfazed": {
+    "name": "Imperturbable",
+    "description": "Réduit de moitié les dégâts des coups super efficaces."
+  },
+  "nightmareSauce": {
+    "name": "Sauce Cauchemar",
+    "description": "50% de chance de donner au cible la capacité Comateux. 30% de chance de donner au cible le statut Cauchemar, s'il a la capacité Comateux."
+  },
+  "hashSlingingSlasher": {
+    "name": "Trancheur de Hash",
+    "description": "Double la puissance des capacités tranchantes."
+  },
+  "lifeAdvice": {
+    "name": "Conseil de Vie",
+    "description": "Augmente une statistique aléatoire d'un niveau en entrant au combat. 40% de chances de restaurer 1/8 des PV max lorsqu'il est touché par une attaque."
+  },
+  "woodCutter": {
+    "name": "Bûcheron",
+    "description": "Augmente la puissance des capacités de 150% contre les Pokémon de type Plante. Augmente l'Attaque et la Vitesse d'un niveau après avoir mis K.O. un Pokémon de type Plante."
+  },
+  "axe": {
+    "name": "Hache",
+    "description": "Augmente la puissance des capacités tranchantes de 50%. Augmente les capacités de type Acier de 30%."
+  },
+  "rubberMan": {
+    "name": "Homme Élastique",
+    "description": "Réduit de moitié les dégâts des capacités Physiques et de type Acier. Redirige les capacités de type Électrik vers ce Pokémon et augmente l'Attaque d'un niveau. Subit le double de dégâts des capacités de type Eau. Augmente les capacités de type Normal, Combat et Vol de 50%."
+  },
+  "conquerorHaki": {
+    "name": "Haki du Conquérant",
+    "description": "20% de chances de doubler la puissance des capacités. 10% de chances d'endormir ou de paralyser la cible au contact."
+  },
+  "stretchy": {
+    "name": "Élastique",
+    "description": "50% de chance de LIGOTER la cible, l'empêchant de changer et lui infligeant des dégâts à chaque tour."
+  },
+  "demonSwordsman": {
+    "name": "Épéiste Démoniaque",
+    "description": "Augmente la puissance des attaques tranchantes de 50%. Les attaques de type Acier, Spectre et Ténèbres partagent leurs avantages de type contre les mêmes types !"
+  },
+  "cursedBlades": {
+    "name": "Lames Maudites",
+    "description": "Augmente la puissance des capacités tranchantes de 50%. 20% de chances de maudire la cible."
+  },
+  "strawhat": {
+    "name": "Chapeau de Paille",
+    "description": "15% de chances de survivre à un coup qui l'aurait mis K.O. Augmente la puissance des capacités en fonction du nombre d'alliés mis K.O. (jusqu'à 100% d'augmentation)."
+  },
+  "fairyFear": {
+    "name": "Peur Féerique",
+    "description": "Augmente les capacités de type Fée de 20%. 10% de chances de faire peur à la cible."
+  },
+  "shadowCharm": {
+    "name": "Charme de l'Ombre",
+    "description": "Baisse l'Attaque d'un niveau en entrant au combat. Empêche l'adversaire de changer de Pokémon."
+  },
+  "yinYang": {
+    "name": "Yin Yang",
+    "description": "Les attaques de type Spectre et Fée partagent leurs avantages de type contre les mêmes types !"
+  },
+  "stubbornStance": {
+    "name": "Posture Têtue",
+    "description": "70% de chances de survivre à un coup qui l'aurait mis K.O."
+  },
+  "miseryTouch": {
+    "name": "Toucher de Misère",
+    "description": "Change une statistique aléatoire de la cible d'un niveau après avoir attaqué."
+  },
+  "justAJerk": {
+    "name": "Juste un Crétin",
+    "description": "Baisse la Défense d'un niveau en entrant au combat. Augmente les capacités de type Ténèbres de 20%."
+  },
+  "bugabugabuga": {
+    "name": "Bugabugabuga",
+    "description": "Baisse toutes les statistiques d'un niveau en entrant au combat. Empêche l'adversaire de changer de Pokémon. Subit 20% de dégâts supplémentaires des attaques."
+  },
+  "justAMaskedJerk": {
+    "name": "Juste un Crétin Masqué",
+    "description": "Baisse la Défense et une statistique aléatoire d'un niveau en entrant au combat. Augmente la puissance de toutes les capacités de 20%."
+  },
+  "flameSpirit": {
+    "name": "Esprit de Flamme",
+    "description": "10% de chance de brûler la cible. Au lieu de subir des dégâts des attaques de type Feu, augmente deux statistiques aléatoires de 1 niveau."
+  },
+  "soulBurn": {
+    "name": "Brûlure d'Âme",
+    "description": "30% de chances de brûler la cible. Inflige des dégâts équivalents à 1/8 des PV max de l'attaquant s'il est brûlé."
+  },
+  "falseSafety": {
+    "name": "Fausse Sécurité",
+    "description": "Baisse la Défense Spéciale d'un niveau en entrant au combat. 10% de chances de brûler, d'endormir ou de paralyser les attaquants au contact."
+  },
+  "forestFury": {
+    "name": "Fureur Forestière",
+    "description": "Augmente la puissance des capacités de type Plante de 150% lorsque les PV sont inférieurs à 50%."
+  },
+  "vineFist": {
+    "name": "Poing Liane",
+    "description": "Augmente la puissance des coups de poing de 30%. 30% de chances de parasiter ou de lier la cible en utilisant des coups de poing."
+  },
+  "theAvatar": {
+    "name": "L'Avatar",
+    "description": "Augmente les capacités de type Feu, Eau, Vol et Sol de 20%."
+  },
+  "enlightened": {
+    "name": "Illuminé",
+    "description": "Augmente les capacités de type Psy de 20%. Les capacités qui seraient peu efficaces deviennent neutres."
+  },
+  "happyLittleAccidents": {
+    "name": "Heureux Petits Accidents",
+    "description": "Augmente les capacités de 65 ou plus de puissance de 50%. Augmente les capacités de 60 ou moins de puissance de 75%."
+  },
+  "originalAsmr": {
+    "name": "ASMR Original",
+    "description": "20% de chances d'endormir la cible. Réduit les dégâts reçus de 20%. Augmente les capacités sonores de 30%. Réduit de moitié les dégâts des capacités sonores."
+  },
+  "afropower": {
+    "name": "Puissance Afro",
+    "description": "30% de chances de tripler la puissance des capacités."
+  },
+  "insectInfusion": {
+    "name": "Infusion d'Insecte",
+    "description": "50% de chances d'infester la cible pendant 5 tours."
+  },
+  "sentientAnt": {
+    "name": "Fourmi Consciente",
+    "description": "Augmente les statistiques de 1 ou 2 niveaux en fonction de la statistique la plus élevée de l'adversaire. Augmente la Défense si la statistique la plus élevée de l'adversaire est l'Attaque, la Défense Spéciale si c'est l'Attaque Spéciale, l'Attaque Spéciale si c'est la Défense Spéciale, ou la Vitesse de 2 niveaux si c'est la Vitesse."
+  },
+  "antRegen": {
+    "name": "Régén Fourmi",
+    "description": "Restaure des PV à la fin de chaque tour."
+  },
+  "v8Engine": {
+    "name": "Moteur V8",
+    "description": "Augmente la Vitesse d'un niveau à la fin de chaque tour."
+  },
+  "selfDriving": {
+    "name": "Auto-Pilotage",
+    "description": "Change les capacités de type Normal en type Psy et augmente leur puissance de 50%."
+  },
+  "limitedEdition": {
+    "name": "Édition Limitée",
+    "description": "Augmente deux statistiques aléatoires d'un niveau en entrant au combat. 33% de chances d'augmenter la puissance des capacités de 20%."
+  },
+  "fieryDisguise": {
+    "name": "Déguisement Ardent",
+    "description": "Le Pokémon est protégé des dégâts lorsqu'il entre au combat ou lorsque ses PV sont au maximum. Cette protection est supprimée après que le Pokémon subit des dégâts. Les capacités de type Feu rechargent cette capacité."
+  },
+  "playfulBlaze": {
+    "name": "Brasier Joueur",
+    "description": "Augmente les capacités de type Feu lorsque les PV sont bas. 30% de chances d'augmenter l'Attaque d'un niveau après avoir utilisé une capacité de type Feu. 10% de chances de brûler la cible en utilisant une capacité de type Fée."
+  },
+  "aquaDisguise": {
+    "name": "Déguisement Aquatique",
+    "description": "Le Pokémon est protégé des dégâts lorsqu'il entre au combat ou lorsque ses PV sont au maximum. Cette protection est supprimée après que le Pokémon subit des dégâts. Les capacités de type Eau rechargent cette capacité."
+  },
+  "phantomTorrent": {
+    "name": "Torrent Fantôme",
+    "description": "Augmente les capacités de type Eau lorsque les PV sont bas. 30% de chances d'augmenter l'Attaque Spéciale d'un niveau après avoir utilisé une capacité de type Eau. 10% de chances de piéger la cible dans un tourbillon en utilisant une capacité de type Fée."
+  },
+  "sillyPressure": {
+    "name": "Pression Loufoque",
+    "description": "Augmente le coût en PP des capacités ciblant le Pokémon. 30% de chances d'augmenter l'Attaque d'un niveau après avoir utilisé une capacité de type Psy. 10% de chances de forcer la cible à répéter sa dernière action en utilisant une capacité de type Fée."
+  },
+  "telekineticDisguise": {
+    "name": "Déguisement Télékinétique",
+    "description": "Le Pokémon est protégé des dégâts lorsqu'il entre au combat ou lorsque ses PV sont au maximum. Cette protection est supprimée après que le Pokémon subit des dégâts. Les capacités de type Psy rechargent cette capacité."
+  },
+  "electricDisguise": {
+    "name": "Déguisement Électrique",
+    "description": "Le Pokémon est protégé des dégâts lorsqu'il entre au combat ou lorsque ses PV sont au maximum. Cette protection est supprimée après que le Pokémon subit des dégâts. Les capacités de type Électrik rechargent cette capacité."
+  },
+  "lovelyStatic": {
+    "name": "Statik Charmant",
+    "description": "30% de chances de paralyser l'attaquant au contact. 30% de chances d'augmenter l'Attaque Spéciale d'un niveau après avoir utilisé une capacité de type Électrik. 20% de chances de rendre amoureux la cible en utilisant une capacité de type Fée si elle est du genre opposé."
+  },
+  "ancientDisguise": {
+    "name": "Déguisement Ancien",
+    "description": "Le Pokémon est protégé des dégâts lorsqu'il entre au combat ou lorsque ses PV sont au maximum. Cette protection est supprimée après que le Pokémon subit des dégâts. Les capacités de type Roche rechargent cette capacité."
+  },
+  "madeToLast": {
+    "name": "Fait pour Durer",
+    "description": "40% de chances de survivre à un coup qui l'aurait mis K.O. 30% de chances d'augmenter la Vitesse d'un niveau après avoir utilisé une capacité de type Roche. 10% de chances de piéger la cible en utilisant une capacité de type Fée."
+  },
+  "multiPiece": {
+    "name": "Multi-Pièces",
+    "description": "Survit à un coup qui l'aurait mis K.O. puis baisse fortement sa Vitesse. Restaure des PV après avoir été touché."
+  },
+  "alienType": {
+    "name": "Type Alien",
+    "description": "Augmente les capacités de type Glace, Électrik et Plante de 20%."
+  },
+  "waterPowered": {
+    "name": "Alimenté par l'Eau",
+    "description": "Transforme les attaques non-Psy et non-Sol en type Eau et augmente leur puissance de 20%. Au lieu de subir des dégâts des attaques de type Eau, augmente une statistique aléatoire de 1 niveau."
+  },
+  "madeOfIce": {
+    "name": "Fait de Glace",
+    "description": "30% de chances de geler les attaquants au contact. Augmente les capacités de type Glace de 30%."
+  },
+  "shredded": {
+    "name": "Déchiqueté",
+    "description": "33% de chances de doubler la puissance des capacités. Change les capacités de type Eau et Normal en type Combat et augmente leur puissance de 20%."
+  },
+  "sculptedIce": {
+    "name": "Glace Sculptée",
+    "description": "Augmente une statistique aléatoire parmi Vitesse, Défense et Attaque d'un niveau à la fin de chaque tour."
+  },
+  "quaker": {
+    "name": "Séisme",
+    "description": "Les capacités de type Sol peuvent toucher les types Vol. Augmente les capacités contenant 'séisme' ou 'magnitude' dans leur nom de 50%."
+  },
+  "rockFortress": {
+    "name": "Forteresse Rocheuse",
+    "description": "Réduit les dégâts des coups super efficaces de 50%."
+  },
+  "rockControl": {
+    "name": "Contrôle Rocheux",
+    "description": "Met en place Piège de Roc lorsqu'il est touché par une capacité Physique. Augmente les capacités de type Roche de 30%."
+  },
+  "unstoppablePoison": {
+    "name": "Poison Imparable",
+    "description": "Les capacités de type Poison peuvent toucher les types Acier. Augmente les capacités de type Poison de 20%. 30% de chances d'empoisonner gravement la cible."
+  },
+  "swiftClaws": {
+    "name": "Griffes Rapides",
+    "description": "Augmente les capacités de contact de 30%. 30% de chances d'augmenter la Précision, l'Attaque ou la Vitesse d'un niveau en utilisant une capacité de contact."
+  },
+  "tripleThreat": {
+    "name": "Triple Menace",
+    "description": "10% de chances d'infliger un coup critique. 10% de chances de faire peur à la cible. 10% de chances de geler, paralyser ou brûler au contact."
+  },
+  "dragonWrath": {
+    "name": "Courroux Dragon",
+    "description": "50% de chances d'infliger des dégâts équivalents à 1/6 des PV max de l'attaquant lorsqu'il est touché par une capacité de contact."
+  },
+  "hydraResilience": {
+    "name": "Résilience Hydre",
+    "description": "Survit à un coup qui l'aurait mis K.O. lorsque ses PV sont au maximum. Bloque les capacités de K.O. en un coup. 25% de chances de survivre à un coup qui l'aurait mis K.O."
+  },
+  "toxicOverload": {
+    "name": "Surcharge Toxique",
+    "description": "15% de chances d'empoisonner gravement la cible. Augmente la puissance des capacités de 75% contre les cibles empoisonnées ou gravement empoisonnées."
+  },
+  "recycleEnergy": {
+    "name": "Énergie Recyclée",
+    "description": "50% de chances de restaurer 1/8 des PV max après avoir été touché ou après avoir attaqué."
+  },
+  "neetProduced": {
+    "name": "Produit NEET",
+    "description": "Subit le double de dégâts des capacités de type Eau et Normal. Augmente les objets obtenus après le combat. Double la puissance contre les Pokémon de type Normal, Fée et Combat."
+  },
+  "ancientAutomaton": {
+    "name": "Automate Ancien",
+    "description": "Augmente une statistique aléatoire parmi Vitesse, Défense et Attaque d'un niveau à la fin de chaque tour."
+  },
+  "shadowOfColossus": {
+    "name": "Ombre du Colosse",
+    "description": "10% de chances de survivre à un coup qui l'aurait mis K.O. Augmente les capacités de type Spectre de 30%. Réduit les dégâts reçus de 15%."
+  },
+  "trueFear": {
+    "name": "Vraie Peur",
+    "description": "Baisse une statistique aléatoire de l'adversaire d'un niveau à la fin de chaque tour."
+  },
+  "sumoMaster": {
+    "name": "Maître Sumo",
+    "description": "Augmente les capacités de type Combat de 30%. Change les capacités de type Normal en type Sol et augmente leur puissance de 30%."
+  },
+  "steadfastBulk": {
+    "name": "Masse Inébranlable",
+    "description": "30% de chances d'être apeuré lorsqu'il est attaqué. Lorsqu'il est apeuré, augmente la Vitesse de deux niveaux et l'Attaque et la Défense d'un niveau."
+  },
+  "bigGuts": {
+    "name": "Gros Cran",
+    "description": "L'Attaque est doublée lorsque le Pokémon a un statut. Ignore la baisse d'Attaque due aux brûlures."
+  },
+  "luchadorsSpirit": {
+    "name": "Esprit du Luchador",
+    "description": "Change les capacités de type Normal en type Vol et augmente leur puissance de 20%. Augmente la statistique la plus élevée d'un niveau après avoir mis K.O. un adversaire."
+  },
+  "maskedMight": {
+    "name": "Puissance Masquée",
+    "description": "Double l'Attaque et l'Attaque Spéciale lorsque les PV sont supérieurs à 50%."
+  },
+  "nachoLibre": {
+    "name": "Nacho Libre",
+    "description": "Augmente les capacités de type Combat de 60%."
+  },
+  "pseudoScale": {
+    "name": "Pseudo-Écaille",
+    "description": "Réduit de moitié les dégâts reçus lorsque les PV sont au maximum. Inflige des dégâts à l'attaquant équivalents à 1/8 de ses PV max lorsqu'il est touché par une capacité de contact."
+  },
+  "dracoForm": {
+    "name": "Forme Draco",
+    "description": "Augmente les attaques de type Dragon de 20%. Les attaques de type Dragon et Normal partagent leurs avantages de type contre les mêmes types !"
+  },
+  "dittoType": {
+    "name": "Type Métamorph",
+    "description": "Change le type de l'utilisateur pour résister au type de la capacité reçue. Restaure 1/8 des PV max si le type change."
+  },
+  "morphingBlaze": {
+    "name": "Brasier Morphing",
+    "description": "Augmente les capacités de type Feu lorsque les PV sont bas. Change les capacités de type Feu en type Électrik contre les types Eau et en type Eau contre les types Sol lorsque les PV sont inférieurs à 50%."
+  },
+  "flameForm": {
+    "name": "Forme Flamme",
+    "description": "Augmente les attaques de type Feu de 20%. Les attaques de type Feu et Normal partagent leurs avantages de type contre les mêmes types !"
+  },
+  "ultimateAdaptation": {
+    "name": "Adaptation Ultime",
+    "description": "Augmente la puissance de toutes les capacités de 20%. Les coups super efficaces deviennent neutres contre ce Pokémon."
+  },
+  "pseudoPerfection": {
+    "name": "Pseudo-Perfection",
+    "description": "10% de chances pour chacun : coup critique, réduire de moitié les dégâts reçus, doubler la puissance des capacités, restaurer 1/8 des PV max après avoir été touché ou après avoir attaqué."
+  },
+  "dnaChange": {
+    "name": "Changement ADN",
+    "description": "50% de chances de changer de type et de restaurer 1/8 des PV max en utilisant une capacité."
+  },
+  "realisticStatic": {
+    "name": "Statik Réaliste",
+    "description": "50% de chances de paralyser l'attaquant au contact. Baisse une statistique aléatoire de l'attaquant d'un niveau au contact. Inflige des dégâts à l'attaquant équivalents à 1/8 de ses PV max lorsqu'il est touché par une capacité de contact."
+  },
+  "mascotForm": {
+    "name": "Forme Mascotte",
+    "description": "Augmente les attaques de type Électrik de 20%. Les attaques de type Électrik et Normal partagent leurs avantages de type contre les mêmes types !"
+  },
+  "copyGuard": {
+    "name": "Protection Copie",
+    "description": "Les capacités utilisées par ce Pokémon ne peuvent pas rater. Réduit les dégâts des coups super efficaces de 25%."
+  },
+  "muscleForm": {
+    "name": "Forme Musclée",
+    "description": "Augmente les attaques de type Combat de 20%. Les attaques de type Combat et Normal partagent leurs avantages de type contre les mêmes types !"
+  },
+  "unrealPressure": {
+    "name": "Pression Irréelle",
+    "description": "Augmente le coût en PP des capacités ciblant le Pokémon de 2. Baisse une statistique aléatoire et la Précision de l'adversaire d'un niveau en entrant au combat."
+  },
+  "psychoForm": {
+    "name": "Forme Psycho",
+    "description": "Augmente les attaques de type Psy de 20%. Les attaques de type Psy et Normal partagent leurs avantages de type contre les mêmes types !"
+  },
+  "clubClobber": {
+    "name": "Massue Fracassante",
+    "description": "Augmente les capacités de type Roche de 20%. Augmente la puissance des capacités de contact de 40%."
+  },
+  "yabaDabaDoo": {
+    "name": "Yaba Daba Doo",
+    "description": "Augmente toutes les statistiques d'un niveau en entrant au combat. Baisse une statistique aléatoire d'un niveau à la fin de chaque tour."
+  },
+  "meteorProof": {
+    "name": "Anti-Météorite",
+    "description": "Réduit les dégâts des capacités de type Eau, Roche, Feu et Glace de 25%."
+  },
+  "sharkShred": {
+    "name": "Déchiquetage Requin",
+    "description": "Inflige des dégâts à la cible équivalents à 1/8 de ses PV max en utilisant une capacité de contact. Restaure 1/8 des PV max en utilisant une capacité de contact."
+  },
+  "attackBoost": {
+    "name": "Boost d'Attaque",
+    "description": "Augmente l'Attaque d'un niveau à la fin de chaque tour."
+  },
+  "reversedPsychology": {
+    "name": "Psychologie Inversée",
+    "description": "Inverse les changements de statistiques. Inverse l'efficacité des types des capacités."
+  },
+  "tailCommand": {
+    "name": "Commande Queue",
+    "description": "Augmente la puissance des capacités liées à la queue de 75%."
+  },
+  "abyssalAqua": {
+    "name": "Aqua Abyssal",
+    "description": "Les attaques de type Eau, Spectre et Ténèbres partagent leurs avantages de type contre les mêmes types ! 30% de chance de piéger la cible dans un tourbillon."
+  },
+  "omniscale": {
+    "name": "Omni-Écaille",
+    "description": "30% de chances de réduire de moitié les dégâts reçus des attaques. 30% de chances d'augmenter une statistique aléatoire d'un niveau lorsqu'il est touché par une attaque."
+  },
+  "bounceBack": {
+    "name": "Rebond",
+    "description": "30% de chances de survivre à un coup qui l'aurait mis K.O. et d'infliger des dégâts équivalents à 1/8 des PV max de l'attaquant."
+  },
+  "counterCoat": {
+    "name": "Manteau Riposte",
+    "description": "Inflige des dégâts à l'attaquant équivalents à 1/6 de ses PV max lorsqu'il est touché par une capacité de contact. Réduit les dégâts reçus de 15%."
+  },
+  "shinyScale": {
+    "name": "Écaille Brillante",
+    "description": "10% de chances d'éviter complètement les dégâts des attaques."
+  },
+  "goldenLuck": {
+    "name": "Chance Dorée",
+    "description": "30% de chances d'infliger un coup critique."
+  },
+  "oneInAMillion": {
+    "name": "Un sur un Million",
+    "description": "5% de chances de quintupler la puissance des capacités."
+  },
+  "apexPredator": {
+    "name": "Prédateur Alpha",
+    "description": "Baisse la Défense d'un niveau en entrant au combat. Augmente la statistique la plus élevée d'un niveau après avoir mis K.O. un adversaire."
+  },
+  "terrorTunnel": {
+    "name": "Tunnel de Terreur",
+    "description": "Double la puissance de Tunnel."
+  },
+  "looseThreads": {
+    "name": "Fils Lâches",
+    "description": "30% de chances de piéger la cible. Quintuple la puissance des capacités de ligotage."
+  },
+  "streetSmart": {
+    "name": "Débrouillard",
+    "description": "Augmente les capacités de type Acier, Ténèbres, Normal et Combat de 20%."
+  },
+  "boosheFurCoat": {
+    "name": "Manteau de Fourrure Booshe",
+    "description": "Réduit de moitié les dégâts des capacités Physiques. 40% de chances de réduire les dégâts des capacités Spéciales de 25%."
+  },
+  "champion": {
+    "name": "Champion",
+    "description": "Augmente toutes les statistiques de 1 niveau après avoir mis K.O. un adversaire. S'empoisonne gravement après avoir utilisé une attaque."
+  },
+  "snakeScale": {
+    "name": "Écaille de Serpent",
+    "description": "50% de chances de réduire les dégâts reçus de 25%. 30% de chances d'empoisonner gravement les attaquants au contact."
+  },
+  "deathClaws": {
+    "name": "Griffes Mortelles",
+    "description": "Augmente la puissance des capacités de contact de 50%. Les capacités qui seraient peu efficaces deviennent neutres."
+  },
+  "industrialPower": {
+    "name": "Puissance Industrielle",
+    "description": "Augmente les capacités de type Électrik, Acier et Poison de 30%."
+  },
+  "cogOverload": {
+    "name": "Surcharge d'Engrenages",
+    "description": "Augmente la puissance des capacités liées aux engrenages et aux rotations de 50%."
+  },
+  "multiGear": {
+    "name": "Multi-Engrenages",
+    "description": "Augmente la Vitesse et une statistique aléatoire d'un niveau en utilisant Chgt Vitesse."
+  },
+  "sugarRush": {
+    "name": "Rush Sucré",
+    "description": "Les capacités agissent en premier lorsque les PV sont supérieurs à 50%. Augmente la puissance des capacités de 20% lorsque les PV sont supérieurs à 50%."
+  },
+  "livingDelicacy": {
+    "name": "Délicatesse Vivante",
+    "description": "Augmente deux statistiques aléatoires d'un niveau en entrant au combat. 33% de chances d'augmenter la puissance des capacités de 50%. 30% de chances de restaurer 1/8 des PV max lorsqu'il est touché par une attaque."
+  },
+  "abandoned": {
+    "name": "Abandonné",
+    "description": "Augmente l'Attaque et la Vitesse d'un niveau après avoir été touché par une attaque."
+  },
+  "lazyMight": {
+    "name": "Puissance Paresseuse",
+    "description": "Augmente la puissance de toutes les capacités lorsque les PV sont bas."
+  },
+  "lasagna": {
+    "name": "Lasagne",
+    "description": "Restaure 1/2 des PV max lorsque les PV tombent en dessous de 50%. Ne s'active qu'une fois par combat."
+  },
+  "alienCat": {
+    "name": "Chat Alien",
+    "description": "Augmente les capacités de type Psy de 20%. Rend amoureux les Pokémon félins du genre opposé. Immunisé contre les capacités de type Sol."
+  },
+  "phaser": {
+    "name": "Phaseur",
+    "description": "Annule les dégâts des capacités de contact."
+  },
+  "virtualTacos": {
+    "name": "Tacos Virtuels",
+    "description": "Restaure 1/8 des PV max à la fin de chaque tour."
+  },
+  "heyLookAtMe": {
+    "name": "Hé Regarde-Moi",
+    "description": "Baisse deux statistiques aléatoires d'un niveau et augmente une statistique aléatoire d'un niveau en entrant au combat."
+  },
+  "limitedTime": {
+    "name": "Temps Limité",
+    "description": "S'empoisonne gravement en entrant au combat. 30% de chances de tripler la puissance des capacités. Augmente une statistique aléatoire d'un niveau après avoir mis K.O. un adversaire."
+  },
+  "boxBorn": {
+    "name": "Né en Boîte",
+    "description": "Réduit la puissance des capacités liées aux balles, sphères et orbes de 75%. Augmente les capacités de type Acier de 20%."
+  },
+  "imAPickle": {
+    "name": "Je Suis un Cornichon",
+    "description": "Restaure des PV lorsqu'il est touché par des capacités de type Eau. Augmente la Vitesse d'un niveau lorsqu'il est touché par des capacités de type Plante. Augmente l'Attaque d'un niveau lorsqu'il est touché par des capacités de type Acier. 10% de chances de faire peur à la cible."
+  },
+  "resourceful": {
+    "name": "Débrouillard",
+    "description": "30% de chances de voler l'objet tenu par la cible et d'augmenter l'Attaque d'un niveau. 30% de chances d'obtenir un objet après le combat."
+  },
+  "deadlyBrine": {
+    "name": "Saumure Mortelle",
+    "description": "Transforme les attaques de type Normal en type Eau. Augmente les attaques de type Eau de 30%. Les attaques de type Eau et Poison partagent leurs avantages de type contre les mêmes types ! 10% de chance d'empoisonner gravement la cible."
+  },
+  "thicc": {
+    "name": "Épais",
+    "description": "30% de chances de réduire les dégâts reçus de 25%."
+  },
+  "enforcer": {
+    "name": "Exécuteur",
+    "description": "Les attaques de type Ténèbres et Acier partagent leurs avantages de type contre les mêmes types ! Augmente l'Attaque de 1 niveau après avoir mis K.O. un adversaire."
+  },
+  "spookySense": {
+    "name": "Sens Effrayant",
+    "description": "Réduit les dégâts des capacités de type Spectre et Ténèbres de 25%. Augmente l'Attaque et la Vitesse d'un niveau si l'adversaire a une capacité super efficace."
+  },
+  "unyieldingCourage": {
+    "name": "Courage Inébranlable",
+    "description": "Survit à un coup qui l'aurait mis K.O. lorsque ses PV sont au maximum. Bloque les capacités de K.O. en un coup. 25% de chances de survivre à un coup qui l'aurait mis K.O."
+  },
+  "lovePower": {
+    "name": "Pouvoir de l'Amour",
+    "description": "50% de chances de doubler la puissance des capacités. 30% de chances de rendre amoureux la cible si elle est du genre opposé."
+  },
+  "spiritWinds": {
+    "name": "Vents Spirituels",
+    "description": "Les attaques de type Spectre et Plante partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Ténèbres et Normal en type Spectre et augmente leur puissance de 20%."
+  },
+  "leafDancer": {
+    "name": "Danseur Feuillu",
+    "description": "Augmente une statistique aléatoire d'un niveau après avoir utilisé une capacité de type Ténèbres. Augmente une statistique aléatoire d'un niveau lorsqu'il est touché par une capacité de type Plante."
+  },
+  "slayerSensei": {
+    "name": "Sensei Chasseur",
+    "description": "Triple la puissance des capacités contre les Pokémon de type Spectre et Ténèbres. Augmente une statistique aléatoire d'un niveau après avoir mis K.O. un adversaire."
+  },
+  "balanced": {
+    "name": "Équilibré",
+    "description": "Immunisé contre la confusion. Les capacités utilisées par ce Pokémon ne peuvent pas rater. 50% de chances de réduire de moitié les dégâts des attaques."
+  },
+  "enhancedFocus": {
+    "name": "Focus Amélioré",
+    "description": "25% de chances d'infliger un coup critique."
+  },
+  "luckySeven": {
+    "name": "Sept Chanceux",
+    "description": "70% de chances d'augmenter les capacités de puissance de base 70 de 70%. 70% de chances d'augmenter une statistique aléatoire d'un niveau après avoir attaqué."
+  },
+  "lastLaugh": {
+    "name": "Dernier Rire",
+    "description": "Inflige des dégâts équivalents à 1/4 des PV max de l'attaquant en étant mis K.O."
+  },
+  "foxWisdom": {
+    "name": "Sagesse du Renard",
+    "description": "Transforme les attaques de type Normal en type Psy. Augmente les attaques de type Psy de 30%. Les attaques de type Feu et Psy partagent leurs avantages de type contre les mêmes types !"
+  },
+  "eternalYouth": {
+    "name": "Jeunesse Éternelle",
+    "description": "Augmente les capacités de type Fée de 30%. Change les capacités de type Normal en type Fée. 10% de chances de survivre à un coup qui l'aurait mis K.O."
+  },
+  "flamingChakra": {
+    "name": "Chakra Flamboyant",
+    "description": "Change les capacités non-Psy en type Feu. Augmente les capacités de type Feu de 50%. 10% de chances de brûler la cible."
+  },
+  "adaptabugility": {
+    "name": "Adaptinsectabilité",
+    "description": "Triple la puissance des capacités de type Insecte."
+  },
+  "shellRepair": {
+    "name": "Réparation Coquille",
+    "description": "Restaure 1/4 des PV max en utilisant Casse-Coque. Augmente la Défense et la Défense Spéciale d'un niveau en utilisant Casse-Coque. Ne s'active qu'une fois par combat."
+  },
+  "squeezer": {
+    "name": "Compresseur",
+    "description": "Quintuple la puissance de Ligotage. 30% de chances de piéger la cible."
+  },
+  "greenSpaghettiMonster": {
+    "name": "Monstre Spaghetti Vert",
+    "description": "15% de chances de piéger la cible en utilisant une capacité de type Plante. Augmente les capacités de type Plante de 20%. 10% de chances de baisser la Vitesse de la cible d'un niveau en utilisant une capacité de type Plante."
+  },
+  "leechVines": {
+    "name": "Lianes Vampiriques",
+    "description": "Double la puissance de Fouet Lianes. 30% de chances de parasiter ou de lier la cible en utilisant Fouet Lianes."
+  },
+  "regeneratorPlus": {
+    "name": "Régé-Force Plus",
+    "description": "Restaure 45% des PV max en changeant de Pokémon."
+  },
+  "plaguePsyche": {
+    "name": "Psyché de Peste",
+    "description": "Les attaques de type Poison et Psy partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Normal en type Poison. 10% de chance de confondre ou d'empoisonner la cible."
+  },
+  "toxicTrance": {
+    "name": "Transe Toxique",
+    "description": "30% de chances d'empoisonner gravement la cible. 30% de chances d'endormir la cible. Augmente la puissance des capacités de 50% lorsque l'utilisateur a un statut."
+  },
+  "permafrostArmor": {
+    "name": "Armure Pergélisol",
+    "description": "Réduit de moitié les dégâts des capacités de type Feu, Glace et Roche."
+  },
+  "glacialPace": {
+    "name": "Rythme Glacial",
+    "description": "Baisse la Vitesse de deux niveaux en entrant au combat. Augmente les capacités de type Glace de 20%."
+  },
+  "iceKing": {
+    "name": "Roi des Glaces",
+    "description": "Augmente les capacités de type Glace de 50%. Change les capacités de type Normal en type Glace et augmente leur puissance de 20%. 5% de chances de geler la cible."
+  },
+  "despair": {
+    "name": "Désespoir",
+    "description": "Baisse une statistique aléatoire de l'adversaire d'un niveau et augmente une statistique aléatoire de l'utilisateur d'un niveau à la fin de chaque tour."
+  },
+  "ohayogosumasu": {
+    "name": "Ohayogosumasu",
+    "description": "Baisse l'Attaque, la Défense, l'Attaque Spéciale, la Défense Spéciale et la Vitesse d'un niveau en entrant au combat."
+  },
+  "abilityTextHere": {
+    "name": "Texte de Capacité Ici",
+    "description": "Donne cette capacité à l'adversaire en entrant au combat. Augmente deux statistiques aléatoires d'un niveau en entrant au combat."
+  },
+  "exceptionCaught": {
+    "name": "Exception Attrapée",
+    "description": "Survit à un coup qui l'aurait mis K.O. puis baisse fortement sa Vitesse. Restaure des PV après avoir été touché."
+  },
+  "fourOFour": {
+    "name": "Quatre Zéro Quatre",
+    "description": "10% de chances d'éviter complètement les dégâts des attaques."
+  },
+  "shadowSlayer": {
+    "name": "Pourfendeur d'Ombres",
+    "description": "30% de chances de brûler, empoisonner, paralyser ou empoisonner gravement la cible en utilisant une capacité de type Spectre ou Acier."
+  },
+  "nightmareEmerald": {
+    "name": "Émeraude Cauchemar",
+    "description": "Augmente les attaques de type Roche et Ténèbres de 30%. 50% de chance de donner au cible la capacité Comateux ou le statut Cauchemar."
+  },
+  "imaginary": {
+    "name": "Imaginaire",
+    "description": "Change les capacités de type Normal en type Fée et augmente leur puissance de 20%. 30% de chances de réduire de moitié les dégâts des capacités Physiques."
+  },
+  "splinterSkin": {
+    "name": "Peau d'Échardes",
+    "description": "Inflige des dégâts à l'attaquant équivalents à 1/12 de ses PV max lorsqu'il est touché par une capacité de contact. Inflige également des dégâts à la cible équivalents à 1/12 de ses PV max en utilisant une capacité de contact."
+  },
+  "jujutsuSorcerer": {
+    "name": "Sorcier Jujutsu",
+    "description": "Augmente la puissance des capacités de 150% lorsque l'utilisateur ou la cible a un statut. 20% de chances de guérir son propre statut ou celui de la cible. 30% de chances d'infliger un statut aléatoire. Ignore la baisse d'Attaque due aux brûlures. 50% de chances de s'infliger un statut aléatoire si aucun statut n'est déjà présent."
+  },
+  "toxicKing": {
+    "name": "Roi Toxique",
+    "description": "Empoisonne toujours gravement la cible."
+  },
+  "swampKing": {
+    "name": "Roi des Marais",
+    "description": "30% de chance d'empoisonner la cible. Transforme les attaques de type Normal en type Eau et augmente leur puissance de 20%. Les attaques de type Eau et Poison partagent leurs avantages de type contre les mêmes types !"
+  },
+  "rageSoul": {
+    "name": "Âme Enragée",
+    "description": "Augmente la puissance des capacités en fonction du nombre d'alliés mis K.O. (jusqu'à 150% d'augmentation)."
+  },
+  "darkSide": {
+    "name": "Côté Obscur",
+    "description": "Double la puissance des capacités de type Ténèbres."
+  },
+  "puppetMaster": {
+    "name": "Maître des Marionnettes",
+    "description": "Triple la puissance des capacités contre Mimiqui et Polichombr. 20% de chances de maudire ou de lier les Pokémon de type Normal et Combat. 10% de chances de réduire de moitié les dégâts reçus des attaques."
+  },
+  "blackAndRed": {
+    "name": "Noir et Rouge",
+    "description": "Les attaques de type Ténèbres et Feu partagent leurs avantages de type contre les mêmes types ! 15% de chance de brûler la cible. Transforme les attaques de type Normal en type Ténèbres et augmente leur puissance de 20%."
+  },
+  "zombieExperience": {
+    "name": "Expérience Zombie",
+    "description": "Double la puissance des capacités contre les Pokémon de type Ténèbres, Spectre et Sol. Augmente toutes les statistiques d'un niveau après avoir mis K.O. un Pokémon de type Ténèbres, Spectre ou Sol."
+  },
+  "lastHope": {
+    "name": "Dernier Espoir",
+    "description": "Augmente la puissance de toutes les capacités lorsque les PV sont bas."
+  },
+  "ugly": {
+    "name": "Laid",
+    "description": "Baisse une statistique aléatoire d'un niveau en entrant au combat et à la fin de chaque tour. 10% de chances de faire peur à la cible."
+  },
+  "blandCardboardEater": {
+    "name": "Mangeur de Carton Fade",
+    "description": "Triple la puissance des capacités contre SmittyXTV. Augmente l'Attaque d'un niveau lorsqu'il est touché par une capacité de type Plante. Restaure 1/8 des PV max en utilisant une capacité de type Plante."
+  },
+  "boring": {
+    "name": "Ennuyeux",
+    "description": "Baisse une statistique aléatoire d'un niveau en entrant au combat et à la fin de chaque tour. Augmente les capacités de type Normal de 30%."
+  },
+  "moldyTouch": {
+    "name": "Toucher Moisi",
+    "description": "10% de chances d'infester ou d'empoisonner gravement la cible au contact. Augmente les capacités de type Poison de 20%. Subit le double de dégâts de Brise-Moule."
+  },
+  "eternalGiggle": {
+    "name": "Ricanement Éternel",
+    "description": "Subit le double de dégâts de Brise-Moule. Rend confus et fait peur à tous les Pokémon adverses lorsque l'utilisateur est mis K.O."
+  },
+  "redMenace": {
+    "name": "Menace Rouge",
+    "description": "5% de chances de maudire la cible ou 10% de chances de brûler la cible au contact. Augmente les capacités de type Feu de 20%. Augmente la Vitesse d'un niveau lorsqu'il est touché par une capacité de type Feu. Subit le double de dégâts de Brise-Moule."
+  },
+  "ghostlyMold": {
+    "name": "Moisissure Fantomatique",
+    "description": "10% de chance d'empoisonner gravement la cible au contact. Les attaques de type Spectre et Poison partagent leurs avantages de type contre les mêmes types ! Change les attaques de type Normal en type Spectre et augmente leur puissance de 20%. Subit des dégâts doublés de Brise-Moule."
+  },
+  "pacFungus": {
+    "name": "Champignon Pac",
+    "description": "30% de chances d'infester la cible au contact. Augmente la Vitesse et l'Attaque d'un niveau si la cible est infestée. Subit le double de dégâts de Brise-Moule."
+  },
+  "secretSauce": {
+    "name": "Sauce Secrète",
+    "description": "10% de chances de paralyser, brûler, empoisonner ou empoisonner gravement la cible. 10% de chances d'infliger des dégâts équivalents à 1/8 des PV max de la cible. 10% de chances d'appliquer divers statuts ou effets."
+  },
+  "mcpuzzle": {
+    "name": "McPuzzle",
+    "description": "20% de chances de rendre confuse la cible. 10% de chances de faire peur à la cible. 20% de chances d'augmenter la puissance des capacités de 150%. Augmente une statistique aléatoire d'un niveau après avoir mis K.O. un adversaire."
+  },
+  "mayITakeYourOrder": {
+    "name": "Puis-je Prendre Votre Commande",
+    "description": "Les capacités utilisées par ce Pokémon agissent en premier."
+  },
+  "stealthShipping": {
+    "name": "Livraison Furtive",
+    "description": "50% de chances de poser des Picots, 20% de chances pour Piège de Roc, 20% de chances pour Pics Toxik, ou 10% de chances pour Toile Gluante lorsqu'il est touché par une capacité de contact."
+  },
+  "cardboardEmpire": {
+    "name": "Empire de Carton",
+    "description": "Augmente deux statistiques aléatoires d'un niveau après avoir mis K.O. un adversaire. Restaure 1/8 des PV max après avoir mis K.O. un adversaire."
+  },
+  "aWinner": {
+    "name": "Un Gagnant",
+    "description": "Augmente une statistique aléatoire d'un niveau après avoir mis K.O. un adversaire."
+  },
+  "smugAura": {
+    "name": "Aura Suffisante",
+    "description": "Transforme les attaques de type Normal en type Poison et augmente leur puissance de 20%. Les attaques de type Psy et Poison partagent leurs avantages de type contre les mêmes types ! 10% de chance d'empoisonner la cible."
+  },
+  "deepThoughts": {
+    "name": "Pensées Profondes",
+    "description": "30% de chance de confondre la cible après avoir utilisé une attaque."
+  },
+  "intellyLectAlly": {
+    "name": "Allié Intellectuel",
+    "description": "Augmente l'Attaque Spéciale d'un niveau à la fin de chaque tour."
+  },
+  "insomniaInk": {
+    "name": "Encre d'Insomnie",
+    "description": "50% de chances de donner à la cible la capacité Comateux ou le statut Cauchemar."
+  },
+  "nightmareClarinet": {
+    "name": "Clarinette Cauchemar",
+    "description": "Change toutes les capacités en capacités sonores et augmente leur puissance de 20%. Augmente les capacités sonores de 50%. 10% de chances de maudire la cible."
+  },
+  "jellyfishFever": {
+    "name": "Fièvre de Méduse",
+    "description": "Transforme les attaques de type Normal en type Feu et augmente leur puissance de 20%. 10% de chance d'empoisonner gravement la cible lors de l'utilisation d'une attaque Spéciale. 10% de chance de brûler la cible lors de l'utilisation d'une attaque Physique. Les attaques de type Feu et Poison partagent leurs avantages de type contre les mêmes types !"
+  },
+  "deepSeaVirus": {
+    "name": "Virus des Abysses",
+    "description": "Inflige des dégâts équivalents à 1/8 des PV max de l'attaquant s'il est gravement empoisonné. 30% de chances d'empoisonner gravement la cible."
+  },
+  "bubblingBrains": {
+    "name": "Cerveau Bouillonnant",
+    "description": "Augmente les capacités de type Eau de 50%. Restaure 1/8 des PV max en utilisant une capacité de contact."
+  },
+  "cloakOfShadows": {
+    "name": "Cape des Ombres",
+    "description": "Augmente les capacités de type Spectre de 20%. Change les capacités de type Normal en type Spectre et augmente leur puissance de 20%. Réduit les dégâts des coups super efficaces de 25%."
+  },
+  "acidWater": {
+    "name": "Eau Acide",
+    "description": "Les attaques de type Poison et Eau partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Normal en type Poison et augmente leur puissance de 20%. Double la puissance contre les Pokémon de type Normal, Acier et Combat lors de l'utilisation d'attaques de type Eau ou Poison."
+  },
+  "eightBitBlaze": {
+    "name": "Brasier 8-Bits",
+    "description": "Augmente les capacités de type Feu lorsque les PV sont bas. 10% de chances de piéger la cible dans un vortex enflammé. Change les capacités de type Normal en type Feu et augmente leur puissance de 20%. 10% de chances de brûler la cible."
+  },
+  "charredMemory": {
+    "name": "Mémoire Carbonisée",
+    "description": "Diminue la Défense Spéciale de la cible de 1 niveau après avoir utilisé une attaque de type Feu. Les attaques de type Feu et Psy partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Normal en type Psy et augmente leur puissance de 20%."
+  },
+  "blackAndWhite": {
+    "name": "Noir et Blanc",
+    "description": "Annule les dégâts des capacités qui ne sont pas de type Normal ou Ténèbres."
+  },
+  "eightBitTerror": {
+    "name": "Terreur 8-Bits",
+    "description": "Augmente les capacités liées aux cauchemars de 20%. 10% de chances de maudire ou de faire peur à la cible. 10% de chances d'infliger des dégâts équivalents à 1/8 des PV max de la cible."
+  },
+  "corruptionBlaze": {
+    "name": "Brasier de Corruption",
+    "description": "Augmente les attaques de type Feu lorsque les PV sont bas. Les attaques de type Ténèbres et Feu partagent leurs avantages de type contre les mêmes types ! 30% de chance de désactiver la dernière attaque utilisée par la cible."
+  },
+  "oaksMistake": {
+    "name": "Erreur de Chen",
+    "description": "Baisse une statistique aléatoire d'un niveau en entrant au combat. 10% de chances de parasiter ou de piéger la cible dans un tourbillon. 10% de chances de brûler la cible. 30% de chances de restaurer 1/8 des PV max après avoir attaqué."
+  },
+  "shellShock": {
+    "name": "Choc d'Écaille",
+    "description": "Les attaques de type Eau et Électrik partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Normal en type Électrik et augmente leur puissance de 20%. 10% de chance de faire reculer la cible lors de l'utilisation d'une attaque de type Eau ou Normal. 10% de chance de paralyser la cible lors de l'utilisation d'une attaque de type Eau ou Normal."
+  },
+  "darkSeed": {
+    "name": "Graine Sombre",
+    "description": "Les attaques de type Plante et Ténèbres partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Normal en type Ténèbres et augmente leur puissance de 20%. 10% de chance de faire reculer la cible ou de la parasiter lors de l'utilisation d'une attaque de type Plante ou Normal."
+  },
+  "cursedShell": {
+    "name": "Coquille Maudite",
+    "description": "10% de chances de maudire la cible. Réduit les dégâts des capacités Physiques de 25%."
+  },
+  "gothamsNightmare": {
+    "name": "Cauchemar de Gotham",
+    "description": "Empêche l'adversaire de changer de Pokémon. 20% de chances d'infliger un coup critique."
+  },
+  "doomGadgets": {
+    "name": "Gadgets du Destin",
+    "description": "Change les capacités de type Normal en type Acier et augmente leur puissance de 20%. Augmente les capacités de type Acier de 20%. 10% de chances de paralyser, brûler, empoisonner ou empoisonner gravement la cible."
+  },
+  "memeArmor": {
+    "name": "Armure Mème",
+    "description": "50% de chances de réduire de moitié les dégâts des attaques. Augmente une statistique aléatoire d'un niveau et baisse une statistique aléatoire d'un niveau après avoir été touché par une attaque."
+  },
+  "memeified": {
+    "name": "Mèmifié",
+    "description": "10% de chances de survivre à un coup qui l'aurait mis K.O. 20% de chances de doubler la puissance des capacités Spéciales."
+  },
+  "hungryTroll": {
+    "name": "Troll Affamé",
+    "description": "50% de chances de restaurer 1/8 des PV max après avoir attaqué. 50% de chances d'augmenter une statistique aléatoire d'un niveau après avoir attaqué."
+  },
+  "monotoneMood": {
+    "name": "Humeur Monotone",
+    "description": "Change toutes les capacités en type Normal. Augmente les capacités de type Normal de 20%. Les capacités de type Normal peuvent toucher les types Spectre. 10% de chances de rendre la cible somnolente."
+  },
+  "boredomAura": {
+    "name": "Aura d'Ennui",
+    "description": "Baisse une statistique aléatoire de l'adversaire de deux niveaux à la fin de chaque tour."
+  },
+  "squidlyStep": {
+    "name": "Pas Calamarien",
+    "description": "Augmente les capacités sonores et les coups de pied de 30%. Augmente la Vitesse d'un niveau lorsqu'il est touché par une capacité de type Sol ou Eau."
+  },
+  "nightmareInk": {
+    "name": "Encre Cauchemar",
+    "description": "90% de chances de donner à la cible la capacité Comateux ou le statut Cauchemar."
+  },
+  "abyssalMelody": {
+    "name": "Mélodie Abyssale",
+    "description": "Change toutes les capacités en capacités sonores et augmente leur puissance de 20%. Augmente les capacités sonores de 50%. 10% de chances de maudire la cible."
+  },
+  "charmingMist": {
+    "name": "Brume Charmante",
+    "description": "Les attaques de type Spectre et Fée partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Normal en type Fée et augmente leur puissance de 20%. 20% de chance d'attirer la cible lors de l'utilisation d'une attaque de type Fée ou Spectre si elle est du sexe opposé."
+  },
+  "ectoplasmicCharm": {
+    "name": "Charme Ectoplasmique",
+    "description": "20% de chances de rendre amoureux la cible en utilisant une capacité de type Spectre si elle est du genre opposé. 50% de chances d'infliger des dégâts équivalents à 1/8 des PV max de la cible."
+  },
+  "superHungry": {
+    "name": "Super Affamé",
+    "description": "50% de chances de restaurer 1/8 des PV max après avoir attaqué. 50% de chances d'augmenter une statistique aléatoire d'un niveau après avoir attaqué."
+  },
+  "foolsGold": {
+    "name": "Or des Fous",
+    "description": "Immunisé contre les attaques de statut des autres Pokémon. Les attaques de type Ténèbres et Acier partagent leurs avantages de type contre les mêmes types !"
+  },
+  "showAndTell": {
+    "name": "Montre et Raconte",
+    "description": "Double la puissance des capacités si la capacité utilisée est différente de la dernière capacité utilisée."
+  },
+  "knightsShovel": {
+    "name": "Pelle du Chevalier",
+    "description": "Double la puissance des capacités de type Sol et Acier si l'utilisateur partage une faiblesse avec la cible. Immunisé contre les capacités de type Sol."
+  },
+  "heroicLeap": {
+    "name": "Bond Héroïque",
+    "description": "Immunisé contre les capacités de type Sol. Augmente l'Attaque d'un niveau en entrant au combat. Change les capacités de type Normal en type Vol et augmente leur puissance de 20%."
+  },
+  "digChampion": {
+    "name": "Champion du Tunnel",
+    "description": "Double la puissance de Tunnel."
+  },
+  "eightBitHunger": {
+    "name": "Faim 8-Bits",
+    "description": "50% de chances de restaurer 1/8 des PV max après avoir attaqué. 10% de chances de faire peur à la cible."
+  },
+  "rockSolidMeme": {
+    "name": "Mème Solide comme Roc",
+    "description": "Les attaques de type Normal et Roche partagent leurs avantages de type contre les mêmes types ! Réduit les dégâts des attaques super efficaces de 25%."
+  },
+  "rockRoll": {
+    "name": "Rock'n'Roll",
+    "description": "Augmente les capacités de type Roche de 20%. Augmente les capacités contenant 'roulade' ou 'rotation' dans leur nom de 75%. 20% de chances de faire peur à la cible en utilisant une capacité contenant 'roulade' ou 'rotation' dans son nom."
+  },
+  "staticShock": {
+    "name": "Choc Statique",
+    "description": "30% de chances de paralyser la cible. Augmente la puissance des capacités de 50% contre les cibles paralysées."
+  },
+  "horrorShow": {
+    "name": "Show d'Horreur",
+    "description": "Empêche l'adversaire de changer de Pokémon. Augmente la statistique la plus élevée d'un niveau après avoir mis K.O. un adversaire."
+  },
+  "sunbather": {
+    "name": "Bain de Soleil",
+    "description": "Les attaques de type Feu et Eau partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Normal en type Eau et augmente leur puissance de 20%. Restaure 1/8 des PV max à la fin de chaque tour sous un soleil intense. 30% de chance de changer la météo en soleil intense à la fin de chaque tour."
+  },
+  "seedEater": {
+    "name": "Mangeur de Graines",
+    "description": "Restaure des PV au lieu de subir des dégâts lorsqu'il est touché par des capacités de type Plante. Double la puissance des capacités contre les Pokémon de type Plante. Restaure 1/8 des PV max en attaquant un Pokémon de type Plante. Restaure 1/2 des PV max lorsqu'il est touché par des capacités basées sur les graines."
+  },
+  "vacaySoul": {
+    "name": "Âme en Vacances",
+    "description": "Triple la puissance de toutes les capacités. Le Pokémon ne peut attaquer qu'un tour sur deux."
+  },
+  "screenSwim": {
+    "name": "Nage d'Écran",
+    "description": "Les attaques de type Acier et Eau partagent leurs avantages de type contre les mêmes types ! Restaure 1/8 des PV max à la fin de chaque tour sous la pluie. 10% de chance de faire reculer la cible. 30% de chance de changer la météo en pluie à la fin de chaque tour."
+  },
+  "darkWaters": {
+    "name": "Eaux Sombres",
+    "description": "Les attaques de type Ténèbres et Eau partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Normal en type Ténèbres et augmente leur puissance de 20%. 10% de chance de piéger la cible dans un tourbillon lors de l'utilisation d'une attaque de type Eau ou Ténèbres. 10% de chance d'infliger des dégâts égaux à 1/8 des PV max de la cible lors de l'utilisation d'une attaque de type Eau ou Ténèbres."
+  },
+  "experimentError": {
+    "name": "Erreur d'Expérience",
+    "description": "Baisse une statistique aléatoire d'un niveau en entrant au combat. 10% de chances de parasiter ou de piéger la cible dans un tourbillon. 10% de chances de brûler la cible. 30% de chances de restaurer 1/8 des PV max après avoir attaqué."
+  },
+  "roundingError": {
+    "name": "Erreur d'Arrondi",
+    "description": "Réduit de moitié les dégâts des capacités dont la puissance est divisible par 5 mais pas par 10. Augmente de 50% les capacités dont la puissance n'est pas divisible par 10 ou est divisible par 5."
+  },
+  "idealForm": {
+    "name": "Forme Idéale",
+    "description": "10% de chances pour chacun : coup critique, réduire de moitié les dégâts reçus, doubler la puissance des capacités, restaurer 1/8 des PV max après avoir été touché ou après avoir attaqué."
+  },
+  "eliteStatic": {
+    "name": "Statik Élite",
+    "description": "50% de chances de paralyser l'attaquant au contact. Baisse une statistique aléatoire de l'attaquant d'un niveau au contact. Inflige des dégâts à l'attaquant équivalents à 1/8 de ses PV max lorsqu'il est touché par une capacité de contact."
+  },
+  "cockadoodleYes": {
+    "name": "Cocorico Oui",
+    "description": "Augmente une statistique aléatoire d'un niveau en entrant au combat. Augmente la statistique la plus élevée d'un niveau après avoir mis K.O. un adversaire. Augmente la puissance des capacités de contact de 30%."
+  },
+  "carnivore": {
+    "name": "Carnivore",
+    "description": "Restaure 1/8 des PV max en attaquant certains types de Pokémon. Augmente l'Attaque et la Vitesse d'un niveau après avoir mis K.O. un adversaire."
+  },
+  "nightShow": {
+    "name": "Show Nocturne",
+    "description": "Baisse une statistique aléatoire de l'adversaire de deux niveaux à la fin de chaque tour."
+  },
+  "nightmareHost": {
+    "name": "Hôte des Cauchemars",
+    "description": "50% de chances que les capacités agissent en premier. 10% de chances de paralyser, empoisonner ou brûler la cible."
+  },
+  "pressurePlay": {
+    "name": "Jeu de Pression",
+    "description": "Augmente le coût en PP des capacités ciblant le Pokémon de 2. Baisse l'Attaque d'un niveau en entrant au combat."
+  },
+  "aBCOrD": {
+    "name": "A, B, C ou D",
+    "description": "10% de chance d'augmenter l'Attaque de 1 niveau. 10% de chance de brûler la cible. 10% de chance de confondre la cible. 10% de chance de rendre la cible somnolente."
+  },
+  "midnightCookies": {
+    "name": "Cookies de Minuit",
+    "description": "30% de chances de restaurer 1/8 des PV max à la fin de chaque tour. 30% de chances d'augmenter une statistique aléatoire d'un niveau à la fin de chaque tour."
+  },
+  "horribleCardboard": {
+    "name": "Carton Horrible",
+    "description": "Change toutes les capacités en type Normal et augmente leur puissance de 20%. Les capacités de type Normal peuvent toucher les types Spectre. 30% de chances d'infliger des dégâts équivalents à 1/8 des PV max de la cible."
+  },
+  "theElderShadows": {
+    "name": "Les Ombres Anciennes",
+    "description": "Les attaques de type Spectre et Ténèbres partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Normal en type Ténèbres et augmente leur puissance de 20%. 30% de chance d'infliger des dégâts égaux à 1/16 des PV max de la cible à la fin de chaque tour. 30% de chance de doubler la puissance de l'attaque. Augmente une statistique aléatoire de 1 niveau après avoir mis K.O. un adversaire."
+  },
+  "horribleGhostCardboard": {
+    "name": "Carton Spectre Horrible",
+    "description": "Change les capacités de type Normal en type Spectre et augmente leur puissance de 20%. Les capacités de type Spectre peuvent toucher les types Normal. 30% de chances d'infliger des dégâts équivalents à 1/8 des PV max de la cible."
+  },
+  "midnightCookiesOfDeath": {
+    "name": "Cookies de Minuit Mortels",
+    "description": "30% de chances d'infliger des dégâts équivalents à 1/8 des PV max de la cible à la fin de chaque tour. 30% de chances d'augmenter une statistique aléatoire d'un niveau à la fin de chaque tour."
+  },
+  "infomercialFame": {
+    "name": "Célébrité Téléachat",
+    "description": "Augmente toutes les statistiques d'un niveau en entrant au combat. 30% de chances d'infliger des dégâts équivalents à 1/8 des PV max de la cible à la fin de chaque tour."
+  },
+  "winnersGrin": {
+    "name": "Sourire du Vainqueur",
+    "description": "Augmente la statistique la plus élevée d'un niveau après avoir mis K.O. un adversaire. Augmente une statistique aléatoire d'un niveau après avoir mis K.O. un adversaire."
+  },
+  "fancyCardboard": {
+    "name": "Carton Chic",
+    "description": "Change les capacités de type Normal en type Normal et augmente leur puissance de 20%. Les capacités de type Normal peuvent toucher les types Spectre. Augmente les capacités de 60 ou moins de puissance de 50%."
+  },
+  "unjustified": {
+    "name": "Injustifié",
+    "description": "Les attaques de type Normal et Combat partagent leurs avantages de type contre les mêmes types ! Réduit de moitié les dégâts des attaques de type Fée. Augmente l'Attaque de 1 niveau lorsqu'il est touché par une attaque de type Fée."
+  },
+  "abyssalStance": {
+    "name": "Posture Abyssale",
+    "description": "30% de chances d'augmenter une statistique aléatoire d'un niveau après avoir été touché par une attaque. 30% de chances d'infliger des dégâts équivalents à 1/8 des PV max de la cible après avoir été touché par une attaque. 10% de chances de baisser une statistique aléatoire de l'utilisateur d'un niveau après avoir attaqué. Change les capacités de type Normal en type Ténèbres et augmente leur puissance de 20%."
+  },
+  "leafyLure": {
+    "name": "Leurre Feuillu",
+    "description": "50% de chances de réduire de moitié les dégâts des coups super efficaces. 50% de chances d'infliger des dégâts équivalents à 1/4 des PV max de l'attaquant lorsqu'il est touché par un coup super efficace. 50% de chances de restaurer 1/6 des PV max lorsqu'il est touché par un coup super efficace."
+  },
+  "voraciousVegetation": {
+    "name": "Végétation Vorace",
+    "description": "Restaure 1/8 des PV max en attaquant certains types de Pokémon. Augmente l'Attaque et la Vitesse d'un niveau après avoir mis K.O. un adversaire."
+  },
+  "solarPowerPlus": {
+    "name": "Force Solaire Plus",
+    "description": "Double l'Attaque Spéciale. 30% de chances de changer la météo en soleil intense à la fin de chaque tour."
+  },
+  "treasureGuard": {
+    "name": "Garde Trésor",
+    "description": "Réduit aléatoirement les dégâts reçus de 25-50%. 30% de chances de restaurer 1/8 des PV max après avoir été touché par une attaque."
+  },
+  "goldenSkillLink": {
+    "name": "Lien Compétence Doré",
+    "description": "Maximise le nombre de fois que les attaques à coups multiples touchent. 5% de chance d'augmenter une statistique aléatoire de 1 niveau après avoir attaqué."
+  },
+  "treasureProducer": {
+    "name": "Producteur de Trésors",
+    "description": "50% de chances de voler l'objet tenu par la cible. Augmente les objets obtenus après le combat. Les capacités agissent toujours en dernier."
+  },
+  "multiMind": {
+    "name": "Multi-Esprit",
+    "description": "Les attaques de type Feu et Psy partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Normal en type Psy et augmente leur puissance de 20%. 10% de chance d'infliger des dégâts égaux à 1/8 des PV max de la cible."
+  },
+  "wakaFlockaFlame": {
+    "name": "Flamme Waka Flocka",
+    "description": "Transforme les attaques de type Normal en type Feu et augmente leur puissance de 20%. Les attaques de type Vol et Feu partagent leurs avantages de type contre les mêmes types ! 10% de chance de brûler la cible. Immunisé contre les attaques de type Feu et restaure des PV lorsqu'il est touché par des attaques de type Feu au lieu de subir des dégâts."
+  },
+  "eerieLight": {
+    "name": "Lumière Étrange",
+    "description": "Les attaques de type Électrik et Ténèbres partagent leurs avantages de type contre les mêmes types ! Transforme les attaques de type Normal en type Ténèbres et augmente leur puissance de 20%. Transforme les attaques de type Eau en type Ténèbres et augmente leur puissance de 20%. 10% de chance de confondre la cible. 10% de chance de paralyser la cible."
+  },
+  "abyssalLure": {
+    "name": "Leurre Abyssal",
+    "description": "50% de chances de réduire de moitié les dégâts des coups super efficaces. 50% de chances d'infliger des dégâts équivalents à 1/4 des PV max de l'attaquant lorsqu'il est touché par un coup super efficace. 50% de chances de restaurer 1/6 des PV max lorsqu'il est touché par un coup super efficace."
+  },
+  "nemoEater": {
+    "name": "Mangeur de Némo",
+    "description": "Double la puissance des capacités contre les Pokémon de type Eau. Restaure 1/8 des PV max après avoir mis K.O. un Pokémon de type Eau. Augmente la statistique la plus élevée d'un niveau après avoir mis K.O. un Pokémon de type Eau."
+  },
+  "woodenLie": {
+    "name": "Mensonge de Bois",
+    "description": "Double la puissance des capacités contre certains types de Pokémon. Réduit les dégâts des coups super efficaces de 25%."
+  },
+  "imARealBoy": {
+    "name": "Je Suis un Vrai Garçon",
+    "description": "Change les capacités de type Normal en type Normal et augmente leur puissance de 20%. Change les capacités non-Fée et non-Plante en type Normal et augmente leur puissance de 30%. Baisse l'Attaque et une statistique aléatoire d'un niveau en entrant au combat."
+  },
+  "lierLyer": {
+    "name": "Menteur Menteur",
+    "description": "Transforme les attaques de type Normal en type Ténèbres et augmente leur puissance de 20%. Les attaques de type Fée et Ténèbres partagent leurs avantages de type contre les mêmes types ! A 10% de chance de survivre à un coup qui le mettrait K.O."
+  },
+  "copycatNinja": {
+    "name": "Ninja Copie-Chat",
+    "description": "Change le type de l'utilisateur pour correspondre au type de l'attaque qu'il a subie. Si l'utilisateur n'est pas déjà du même type, il récupère également 1/8 de ses PV max."
+  },
+  "hokage": {
+    "name": "Hokage",
+    "description": "Augmente les capacités de type Feu, Eau, Vol et Sol de 20%."
+  },
+  "sharinganActivated": {
+    "name": "Sharingan Activé",
+    "description": "Change le type de l'utilisateur pour correspondre à son attaque."
+  },
+  "crowClone": {
+    "name": "Clone de Corbeau",
+    "description": "Transforme les attaques de type Normal en type Vol et augmente leur puissance de 20%. Les attaques de type Ténèbres, Feu et Vol partagent leurs avantages de type contre les mêmes types ! 30% de chance de réduire de moitié les dégâts des attaques. 30% de chance de restaurer 1/8 des PV max après avoir été touché par une attaque."
+  },
+  "sharinganMastery": {
+    "name": "Maîtrise du Sharingan",
+    "description": "15% de chances d'infliger des dégâts équivalents à 1/8 des PV max de la cible. 5% de chances de réduire au quart les dégâts reçus des attaques. 15% de chances d'augmenter une statistique aléatoire d'un niveau après avoir attaqué."
+  },
+  "foreheadTap": {
+    "name": "Pichenette Frontale",
+    "description": "Augmente les capacités de 60 ou moins de puissance de 50%. 10% de chances de faire peur à la cible en utilisant des capacités de 60 ou moins de puissance. 10% de chances de paralyser la cible en utilisant des capacités de 60 ou moins de puissance."
+  },
+  "eightTails": {
+    "name": "Huit Queues",
+    "description": "Les capacités à coups multiples frappent 4-8 fois."
+  },
+  "rappingRampage": {
+    "name": "Déchaînement Rap",
+    "description": "Change toutes les capacités en capacités sonores et augmente leur puissance de 20%. Augmente les capacités sonores de 50%. 10% de chances de faire peur à la cible."
+  },
+  "beastMode": {
+    "name": "Mode Bête",
+    "description": "Double la puissance des capacités lorsque les PV sont inférieurs à 40%."
+  },
+  "nightmareSand": {
+    "name": "Sable Cauchemar",
+    "description": "Inflige des dégâts équivalents à 1/8 des PV max de la cible à la fin de chaque tour pendant une tempête de sable. 30% de chances de baisser une statistique aléatoire de la cible d'un niveau à la fin de chaque tour pendant une tempête de sable. 30% de chances de changer la météo en tempête de sable à la fin de chaque tour."
+  },
+  "soulEater": {
+    "name": "Mangeur d'Âmes",
+    "description": "Restaure des PV en utilisant une capacité qui correspond à un type collecté. Collecte le type des Pokémon mis K.O. Perd les types collectés en étant mis K.O."
+  },
+  "soulDrain": {
+    "name": "Drain d'Âme",
+    "description": "10% de chances de collecter le type de la capacité utilisée. Baisse deux statistiques aléatoires de la cible de deux niveaux si le type de la capacité correspond à un type collecté. Perd les types collectés en étant mis K.O."
+  }
+}

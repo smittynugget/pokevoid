@@ -1,0 +1,239 @@
+{
+  "noxious": {
+    "name": "녹시어스"
+  },
+  "voltaurus": {
+    "name": "볼타우로스"
+  },
+  "kingleon": {
+    "name": "킹레온"
+  },
+  "glicula": {
+    "name": "글리큘라"
+  },
+  "mamawak": {
+    "name": "마마왁"
+  },
+  "infernus": {
+    "name": "인페르누스"
+  },
+  "fangdrake": {
+    "name": "팽드레이크"
+  },
+  "gigilick": {
+    "name": "기가릭"
+  },
+  "cybeex": {
+    "name": "사이벡스"
+  },
+  "charisand": {
+    "name": "카리샌드"
+  },
+  "mentasaur": {
+    "name": "멘타사우루스"
+  },
+  "enchantoise": {
+    "name": "인챈토이즈"
+  },
+  "nidorath": {
+    "name": "니도라스"
+  },
+  "generagar": {
+    "name": "제네라가"
+  },
+  "fuming": {
+    "name": "퓨밍"
+  },
+  "hitmonnorm": {
+    "name": "힛몬놈"
+  },
+  "onehitchan": {
+    "name": "원힛찬"
+  },
+  "chanmonlee": {
+    "name": "찬몬리"
+  },
+  "kangasgone": {
+    "name": "캥가스곤"
+  },
+  "thanator": {
+    "name": "타나토르"
+  },
+  "magnovire": {
+    "name": "마그노바이어"
+  },
+  "dunerados": {
+    "name": "듀나라두스"
+  },
+  "lavaras": {
+    "name": "라바라스"
+  },
+  "porygonω": {
+    "name": "폴리곤Ω"
+  },
+  "dragonking": {
+    "name": "드래곤킹"
+  },
+  "sudolem": {
+    "name": "슈도우렘"
+  },
+  "yonipom": {
+    "name": "요니폼"
+  },
+  "alnowning": {
+    "name": "올노잉"
+  },
+  "krakken": {
+    "name": "크라켄"
+  },
+  "metalker": {
+    "name": "메탈커"
+  },
+  "slothunter": {
+    "name": "슬로스헌터"
+  },
+  "solunolith": {
+    "name": "솔루나리스"
+  },
+  "regimeteor": {
+    "name": "레지메테오"
+  },
+  "omnigigas": {
+    "name": "옴니기가스"
+  },
+  "wispeeon": {
+    "name": "위스피온"
+  },
+  "cybeon": {
+    "name": "사이비온"
+  },
+  "teraeon": {
+    "name": "테라에온"
+  },
+  "pikura": {
+    "name": "피쿠라"
+  },
+  "frogotten": {
+    "name": "프로가튼"
+  },
+  "determizard": {
+    "name": "디터미자드"
+  },
+  "melonax": {
+    "name": "멜로나스"
+  },
+  "rokachubo": {
+    "name": "로카츄보"
+  },
+  "treashelter": {
+    "name": "트레셸터"
+  },
+  "grimjaw": {
+    "name": "그람죠"
+  },
+  "fibark": {
+    "name": "파이버크"
+  },
+  "bonfyrite": {
+    "name": "본파이라이트"
+  },
+  "silvaback": {
+    "name": "실바백"
+  },
+  "simizen": {
+    "name": "시미젠"
+  },
+  "paletto": {
+    "name": "팔레토"
+  },
+  "extavaroom": {
+    "name": "엑스타바룸"
+  },
+  "mimizado": {
+    "name": "미미자도"
+  },
+  "ninjukyu": {
+    "name": "닌주큐"
+  },
+  "mewmewni": {
+    "name": "뮤뮤니"
+  },
+  "ririkyu": {
+    "name": "리리큐"
+  },
+  "regirokuy": {
+    "name": "레지록쿠이"
+  },
+  "ectonaut": {
+    "name": "엑토나우트"
+  },
+  "dr.eiscicle": {
+    "name": "닥터아이스시클"
+  },
+  "moltem": {
+    "name": "몰템"
+  },
+  "zandux": {
+    "name": "잔두스"
+  },
+  "nucleash": {
+    "name": "뉴클레아슈"
+  },
+  "plumaestro": {
+    "name": "플루마에스트로"
+  },
+  "dragomime": {
+    "name": "드라고마임"
+  },
+  "chamelezard": {
+    "name": "카멜레자드"
+  },
+  "pikatto": {
+    "name": "피카토"
+  },
+  "machitto": {
+    "name": "마치토"
+  },
+  "mewtate": {
+    "name": "뮤테이트"
+  },
+  "yabbagatr": {
+    "name": "야바가르"
+  },
+  "savagark": {
+    "name": "새비작"
+  },
+  "wonstrous": {
+    "name": "원스트러스"
+  },
+  "imperiuno": {
+    "name": "임페리우노"
+  },
+  "molestrosity": {
+    "name": "몰레스트로시티"
+  },
+  "swaggart": {
+    "name": "스왜가트"
+  },
+  "viperex": {
+    "name": "바이퍼렉스"
+  },
+  "cognarok": {
+    "name": "코그나로크"
+  },
+  "harmonda": {
+    "name": "하르몬다"
+  },
+  "felester": {
+    "name": "펠리스터"
+  },
+  "tamamo": {
+    "name": "타마모"
+  },
+  "tentuckle": {
+    "name": "텐타클"
+  },
+  "tanguish": {
+    "name": "탱귀시"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "mode": "Modo",
+  "classic": "Viaje",
+  "endless": "Sin Fin",
+  "endlessSpliced": "Sin Fin (Fusionado)",
+  "dailyRun": "Desafío Diario",
+  "unknown": "Desconocido",
+  "challenge": "Desafío",
+  "nuzlocke": "Nuzlocke",
+  "draft": "Pícaro",
+  "nuzlight": "Nuzlight",
+  "nightmare": "El Vacío",
+  "nuzlightDraft": "Nuzlight Pícaro",
+  "nuzlockeDraft": "Nuzlocke Pícaro",
+  "notClassic": "*Cuando no esté en modo Viaje"
+} 

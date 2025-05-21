@@ -1,0 +1,11 @@
+{
+  "hatchAndSwap": "孵化と交換",
+  "tooltip": "孵化したポケモンを確認し、希望があれば1体を別のポケモンと交換できます。最初のポケモンは交換できません。\n伝説のポケモンは伝説/メガ/ダイナマックスとのみ交換可能です",
+  "legendaryDisabled": "パーティに伝説/メガ/ダイナが必要",
+  "onlyOnePokemon": "交換不可：パーティメンバーが1体のみ",
+  "swapWithParty": "パーティメンバーと交換",
+  "selectLegendaryPartyMember": "伝説/メガ/ダイナと交換",
+  "selectPartyMember": "パーティメンバーと交換",
+  "confirmSwapMessage": "{{hatchedPokemon}}を{{partyPokemon}}と交換しますか？",
+  "skipAnimationsPrompt": "すべての卵の孵化アニメーションをスキップしますか？"
+} 

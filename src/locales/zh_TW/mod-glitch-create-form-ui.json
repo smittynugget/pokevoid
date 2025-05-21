@@ -1,0 +1,82 @@
+{
+  "title": "創建自定義故障進化",
+  "mods": "模組",
+  "testMods": "測試您的模組",
+  "uploadMods": "上傳模組",
+  "createGlitchEvolution": "創建故障進化",
+  "removeMods": "移除模組",
+  "shareAndTakeMods": "分享和獲取模組",
+  "noModsToRemove": "沒有可移除的模組。",
+  "errorLoadingMods": "載入模組時出錯。請重試。",
+  "modRemoved": "{{name}} 已成功移除。",
+  "errorRemovingMod": "移除模組時出錯。請重試。",
+  "uploadSuccess": "成功上傳 {{count}} 個模組：",
+  "uploadFailed": "上傳 {{count}} 個模組失敗：",
+  "reloadRequired": "遊戲將重新載入以應用更改。",
+  "fields": {
+    "species": "物種",
+    "formName": "形態名稱（英文）*",
+    "formLanguages": "形態名稱（其他語言）",
+    "primaryType": "主要屬性",
+    "secondaryType": "次要屬性",
+    "ability1": "特性 1",
+    "ability2": "特性 2",
+    "hiddenAbility": "隱藏特性",
+    "stat1": "提升的能力值 1",
+    "stat2": "提升的能力值 2",
+    "stat3": "提升的能力值 3",
+    "distributionType": "能力值提升分配類型",
+    "frontSprite": "寶可夢正面精靈圖（150-200像素）",
+    "backSprite": "寶可夢背面精靈圖（150-200像素）",
+    "rivalTrainer": "對手",
+    "orRivalTrainer": "或對手"
+  },
+  "distributionTypes": {
+    "even": "平均（每項能力值 +33%）",
+    "twoPriority": "雙重優先（能力值 1 +40% | 能力值 2 +40% | 能力值 3 +20%）",
+    "scaling": "縮放（能力值 1 +45% | 能力值 2 +35% | 能力值 3 +20%）",
+    "topPriority": "首要優先（能力值 1 +40% | 能力值 2 +30% | 能力值 3 +30%）"
+  },
+  "buttons": {
+    "saveAndAdd": "儲存並重新載入",
+    "cancel": "取消"
+  },
+  "validation": {
+    "requiredField": "此欄位為必填項",
+    "invalidImage": "無效的圖片格式或大小",
+    "imageSize": "圖片應為 150-200 像素"
+  },
+  "statusMessages": {
+    "creatingMod": "正在創建模組...",
+    "success": "故障形態模組創建並保存成功！",
+    "downloadReady": "您的模組已準備好下載",
+    "error": "創建模組時出錯：{{message}}",
+    "storageError": "模組已創建但未保存到存儲中。您仍然可以下載它。"
+  },
+  "sections": {
+    "basicInformation": "基本信息",
+    "typesAbilities": "屬性和特性",
+    "stats": "能力值",
+    "sprites": "精靈圖",
+    "rivalTrainer": "獎勵此形態的對手"
+  },
+  "imageUpload": {
+    "uploadButton": "上傳圖片",
+    "noFileSelected": "未選擇文件",
+    "invalidSize": "無效的圖片大小（必須為 150-200 像素）"
+  },
+  "dropdowns": {
+    "selectOptional": "- 選擇（可選）-"
+  },
+  "languages": {
+    "es": "西班牙語",
+    "fr": "法語",
+    "de": "德語",
+    "ja": "日語",
+    "ko": "韓語",
+    "pt-BR": "葡萄牙語（巴西）",
+    "it": "意大利語",
+    "zh-TW": "繁體中文",
+    "zh-CN": "簡體中文"
+  }
+} 

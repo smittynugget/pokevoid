@@ -1,0 +1,2694 @@
+{
+  "stench": {
+    "name": "Duftnote",
+    "description": "Lässt das Ziel beim Angriff eventuell durch Gestank zurückschrecken."
+  },
+  "drizzle": {
+    "name": "Niesel",
+    "description": "Ruft bei Kampfantritt Regen herbei."
+  },
+  "speedBoost": {
+    "name": "Temposchub",
+    "description": "Erhöht in jeder Runde die Initiative."
+  },
+  "battleArmor": {
+    "name": "Kampfpanzer",
+    "description": "Wehrt gegnerische Volltreffer mit einem harten Panzer ab."
+  },
+  "sturdy": {
+    "name": "Robustheit",
+    "description": "Bietet Schutz gegen K.O.-Attacken. Bei vollen KP übersteht das Pokémon auch K.O.-Treffer."
+  },
+  "damp": {
+    "name": "Feuchtigkeit",
+    "description": "Befeuchtet die Umgebung und verhindert so den Einsatz von Attacken wie Finale, die Explosionen auslösen."
+  },
+  "limber": {
+    "name": "Flexibilität",
+    "description": "Der flexible Körper des Pokémon schützt es vor Paralyse."
+  },
+  "sandVeil": {
+    "name": "Sandschleier",
+    "description": "Erhöht in Sandstürmen den Ausweichwert."
+  },
+  "static": {
+    "name": "Statik",
+    "description": "Kann bei Berührung durch statisch aufgeladenen Körper paralysieren."
+  },
+  "voltAbsorb": {
+    "name": "Voltabsorber",
+    "description": "Treffer durch Elektro-Attacken verursachen keinen Schaden, sondern regenerieren stattdessen KP."
+  },
+  "waterAbsorb": {
+    "name": "H2OAbsorber",
+    "description": "Treffer durch Wasser-Attacken verursachen keinen Schaden, sondern regenerieren stattdessen KP."
+  },
+  "oblivious": {
+    "name": "Dösigkeit",
+    "description": "Das Pokémon ist so apathisch, dass es nicht betört oder provoziert werden kann."
+  },
+  "cloudNine": {
+    "name": "Wolke Sieben",
+    "description": "Hebt alle Wetter-Effekte auf."
+  },
+  "compoundEyes": {
+    "name": "Facettenauge",
+    "description": "Erhöht die Genauigkeit von Attacken."
+  },
+  "insomnia": {
+    "name": "Insomnia",
+    "description": "Verhindert Einschlafen."
+  },
+  "colorChange": {
+    "name": "Farbwechsel",
+    "description": "Ändert seinen Typ zu dem der Attacke des Angreifers."
+  },
+  "immunity": {
+    "name": "Immunität",
+    "description": "Das starke Immunsystem des Pokémon verhindert Vergiftungen."
+  },
+  "flashFire": {
+    "name": "Feuerfänger",
+    "description": "Verstärkt Feuer-Attacken, wenn es von Feuer-Attacken getroffen wird."
+  },
+  "shieldDust": {
+    "name": "Puderabwehr",
+    "description": "Blockiert durch Puder die Zusatzeffekte gegnerischer Angriffe."
+  },
+  "ownTempo": {
+    "name": "Tempomacher",
+    "description": "Das Pokémon lässt sich nicht aus der Ruhe bringen und verhindert so Verwirrung."
+  },
+  "suctionCups": {
+    "name": "Saugnapf",
+    "description": "Blockt Attacken und Items, die Pokémon austauschen, indem es sich mit einem Saugnapf am Boden verankert."
+  },
+  "intimidate": {
+    "name": "Bedroher",
+    "description": "Senkt den Angriff der Gegner, indem es sie gleich zu Kampfantritt bedroht und einschüchtert."
+  },
+  "shadowTag": {
+    "name": "Wegsperre",
+    "description": "Hindert Gegner an der Flucht beziehungsweise am Auswechseln, indem es ihnen den Weg versperrt."
+  },
+  "roughSkin": {
+    "name": "Rauhaut",
+    "description": "Angreifer werden durch die raue Haut des Pokémon bei direkten Attacken verletzt."
+  },
+  "wonderGuard": {
+    "name": "Wunderwache",
+    "description": "Wundersame Kräfte bewirken, dass nur sehr effektive Treffer bei ihm Schaden anrichten."
+  },
+  "levitate": {
+    "name": "Schwebe",
+    "description": "Verleiht volle Immunität gegen alle Boden-Attacken durch Schwebezustand."
+  },
+  "effectSpore": {
+    "name": "Sporenwirt",
+    "description": "Wird dieses Pokémon durch eine direkte Attacke angegriffen, kann das beim Gegner Paralyse, Vergiftung oder Schlaf auslösen."
+  },
+  "synchronize": {
+    "name": "Synchro",
+    "description": "Erleidet das Pokémon Verbrennungen, Vergiftungen oder Paralyse, ereilt das jeweilige Statusproblem auch den Verursacher."
+  },
+  "clearBody": {
+    "name": "Neutraltorso",
+    "description": "Verhindert das Senken der Statuswerte durch Attacken und Fähigkeiten von Angreifern."
+  },
+  "naturalCure": {
+    "name": "Innere Kraft",
+    "description": "Wird das Pokémon ausgewechselt, werden seine Statusprobleme geheilt."
+  },
+  "lightningRod": {
+    "name": "Blitzfänger",
+    "description": "Zieht Elektro-Attacken an. Statt durch diese Schaden zu nehmen, erhöht es den eigenen Spezial-Angriff."
+  },
+  "sereneGrace": {
+    "name": "Edelmut",
+    "description": "Erhöht die Wahrscheinlichkeit, dass Zusatzeffekte von Attacken auftreten."
+  },
+  "swiftSwim": {
+    "name": "Wassertempo",
+    "description": "Erhöht bei Regen die Initiative."
+  },
+  "chlorophyll": {
+    "name": "Chlorophyll",
+    "description": "Erhöht bei Sonnenschein die Initiative."
+  },
+  "illuminate": {
+    "name": "Erleuchtung",
+    "description": "Erhellt die Umgebung und erhöht dadurch die Wahrscheinlichkeit, wilden Pokémon zu begegnen."
+  },
+  "trace": {
+    "name": "Erfassen",
+    "description": "Kopiert bei Kampfantritt die Fähigkeit eines Gegners."
+  },
+  "hugePower": {
+    "name": "Kraftkoloss",
+    "description": "Verdoppelt die Stärke von physischen Attacken."
+  },
+  "poisonPoint": {
+    "name": "Giftdorn",
+    "description": "Vergiftet den Angreifer bei Berührung eventuell."
+  },
+  "innerFocus": {
+    "name": "Konzentrator",
+    "description": "Verhindert durch erhöhte Konzentrationsfähigkeit Zurückschrecken."
+  },
+  "magmaArmor": {
+    "name": "Magmapanzer",
+    "description": "Dank eines Panzers aus Magma kann dieses Pokémon nicht eingefroren werden."
+  },
+  "waterVeil": {
+    "name": "Aquahülle",
+    "description": "Verhindert durch eine Hülle aus Wasser Verbrennungen."
+  },
+  "magnetPull": {
+    "name": "Magnetfalle",
+    "description": "Hindert Stahl-Pokémon durch Magnetismus an der Flucht."
+  },
+  "soundproof": {
+    "name": "Lärmschutz",
+    "description": "Bietet durch Schalldämmung volle Immunität gegen alle Lärm-Attacken."
+  },
+  "rainDish": {
+    "name": "Regengenuss",
+    "description": "Regeneriert bei Regen nach und nach KP."
+  },
+  "sandStream": {
+    "name": "Sandsturm",
+    "description": "Erzeugt bei Kampfantritt Sandstürme."
+  },
+  "pressure": {
+    "name": "Erzwinger",
+    "description": "Zwingt Gegner dazu, beim Einsatz von Attacken mehr AP zu verbrauchen."
+  },
+  "thickFat": {
+    "name": "Speckschicht",
+    "description": "Das Pokémon wird von einer dicken Fettschicht geschützt, was den durch Feuer- und Eis-Attacken erlittenen Schaden halbiert."
+  },
+  "earlyBird": {
+    "name": "Frühwecker",
+    "description": "Wenn es eingeschlafen ist, kann es doppelt so schnell wieder aufwachen wie andere Pokémon."
+  },
+  "flameBody": {
+    "name": "Flammkörper",
+    "description": "Fügt dem Angreifer bei Berührung eventuell Verbrennungen zu."
+  },
+  "runAway": {
+    "name": "Angsthase",
+    "description": "Die Flucht vor wilden Pokémon gelingt immer."
+  },
+  "keenEye": {
+    "name": "Adlerauge",
+    "description": "Sein scharfer Blick hindert Angreifer daran, seine Genauigkeit zu senken."
+  },
+  "hyperCutter": {
+    "name": "Scherenmacht",
+    "description": "Hindert Angreifer durch mächtige Scheren daran, den Angriffs-Wert zu senken."
+  },
+  "pickup": {
+    "name": "Mitnahme",
+    "description": "Hebt gelegentlich von Gegnern benutzte Items auf. Dies geschieht nicht nur während Kämpfen, sondern auch unterwegs."
+  },
+  "truant": {
+    "name": "Schnarchnase",
+    "description": "Das Pokémon muss nach Einsatz einer Attacke eine Runde lang aussetzen."
+  },
+  "hustle": {
+    "name": "Übereifer",
+    "description": "Erhöht den Angriffs-Wert, aber senkt die Genauigkeit."
+  },
+  "cuteCharm": {
+    "name": "Charmebolzen",
+    "description": "Wird dieses Pokémon durch eine direkte Attacke angegriffen, verliebt sich der Gegner eventuell in es."
+  },
+  "plus": {
+    "name": "Plus",
+    "description": "Erhöht den Spezial-Angriff, wenn das Pokémon einen Mitstreiter mit der Fähigkeit Plus oder Minus hat."
+  },
+  "minus": {
+    "name": "Minus",
+    "description": "Erhöht den Spezial-Angriff, wenn das Pokémon einen Mitstreiter mit der Fähigkeit Plus oder Minus hat."
+  },
+  "forecast": {
+    "name": "Prognose",
+    "description": "Nimmt je nach Wetter entweder den Typ Wasser, Feuer oder Eis an."
+  },
+  "stickyHold": {
+    "name": "Klebekörper",
+    "description": "Trägt es ein Item, bleibt dieses an seinem klebrigen Körper haften, wodurch Item-Diebstahl verhindert wird."
+  },
+  "shedSkin": {
+    "name": "Expidermis",
+    "description": "Das Pokémon befreit sich eventuell von Statusproblemen, indem es seine Haut abstreift."
+  },
+  "guts": {
+    "name": "Adrenalin",
+    "description": "Bei Statusproblemen setzt es Adrenalin frei und erhöht so seinen Angriffs-Wert."
+  },
+  "marvelScale": {
+    "name": "Notschutz",
+    "description": "Bei Statusproblemen schützt es sich mit mysteriösen Schuppen und erhöht so seine Verteidigung."
+  },
+  "liquidOoze": {
+    "name": "Kloakensoße",
+    "description": "Angreifer, die durch Saug-Attacken Kloakensoße in sich aufgenommen haben, nehmen durch deren widerwärtigen Gestank Schaden."
+  },
+  "overgrow": {
+    "name": "Notdünger",
+    "description": "Erhöht die Stärke von Pflanzen-Attacken, wenn die KP auf einen gewissen Wert fallen."
+  },
+  "blaze": {
+    "name": "Großbrand",
+    "description": "Erhöht die Stärke von Feuer-Attacken, wenn die KP auf einen gewissen Wert fallen."
+  },
+  "torrent": {
+    "name": "Sturzbach",
+    "description": "Erhöht die Stärke von Wasser-Attacken, wenn die KP auf einen gewissen Wert fallen."
+  },
+  "swarm": {
+    "name": "Hexaplaga",
+    "description": "Erhöht die Stärke von Käfer-Attacken, wenn die KP auf einen gewissen Wert fallen."
+  },
+  "rockHead": {
+    "name": "Steinhaupt",
+    "description": "Verhindert Schaden, der durch Rückstoß entstehen würde."
+  },
+  "drought": {
+    "name": "Dürre",
+    "description": "Erzeugt bei Kampfantritt gleißendes Sonnenlicht."
+  },
+  "arenaTrap": {
+    "name": "Ausweglos",
+    "description": "Hindert Gegner im Kampf an der Flucht."
+  },
+  "vitalSpirit": {
+    "name": "Munterkeit",
+    "description": "Das Pokémon ist so munter, dass es nicht einschlafen kann."
+  },
+  "whiteSmoke": {
+    "name": "Pulverrauch",
+    "description": "Indem es sich mit pulvrigem Rauch umhüllt, hindert es Angreifer daran, seine Statuswerte zu senken."
+  },
+  "purePower": {
+    "name": "Mentalkraft",
+    "description": "Verdoppelt mit reiner Willenskraft die Stärke seiner physischen Attacken."
+  },
+  "shellArmor": {
+    "name": "Panzerhaut",
+    "description": "Wehrt gegnerische Volltreffer mit einem harten Panzer ab."
+  },
+  "airLock": {
+    "name": "Klimaschutz",
+    "description": "Hebt alle Wetter-Effekte auf."
+  },
+  "tangledFeet": {
+    "name": "Fußangel",
+    "description": "Erhöht den Ausweichwert, wenn das Pokémon verwirrt ist."
+  },
+  "motorDrive": {
+    "name": "Starthilfe",
+    "description": "Treffer durch Elektro-Attacken verursachen keinen Schaden, sondern geben dem Pokémon eine Starthilfe und erhöhen so seine Initiative."
+  },
+  "rivalry": {
+    "name": "Rivalität",
+    "description": "Greift es einen Rivalen desselben Geschlechts an, wird es stärker. Greift es ein Ziel des anderen Geschlechts an, wird es schwächer."
+  },
+  "steadfast": {
+    "name": "Felsenfest",
+    "description": "Sein eiserner Wille erhöht die Initiative, wann immer das Pokémon zurückschreckt."
+  },
+  "snowCloak": {
+    "name": "Schneemantel",
+    "description": "Erhöht bei Hagel den Ausweichwert."
+  },
+  "gluttony": {
+    "name": "Völlerei",
+    "description": "Setzt bestimmte Beeren nicht erst in einer Notlage ein, sondern bereits dann, wenn seine KP auf die Hälfte des Maximalwerts fallen."
+  },
+  "angerPoint": {
+    "name": "Kurzschluss",
+    "description": "Wird nach Einstecken eines Volltreffers wütend und maximiert dabei seinen Angriffs-Wert."
+  },
+  "unburden": {
+    "name": "Entlastung",
+    "description": "Wenn das von ihm getragene Item verwendet wird oder verloren geht, erhöht dies seine Initiative."
+  },
+  "heatproof": {
+    "name": "Hitzeschutz",
+    "description": "Sein Hitze abweisender Körper halbiert den durch Feuer-Attacken erlittenen Schaden."
+  },
+  "simple": {
+    "name": "Wankelmut",
+    "description": "Verdoppelt die Wirkung eigener Statusveränderungen."
+  },
+  "drySkin": {
+    "name": "Trockenheit",
+    "description": "Bei Sonnenschein verliert das Pokémon KP und der Schaden durch Feuer-Attacken steigt. Bei Regen und Treffern durch Wasser-Attacken regeneriert es KP."
+  },
+  "download": {
+    "name": "Download",
+    "description": "Ist die Spezial-Verteidigung des Gegners höher als seine Verteidigung, wird der eigene Spezial-Angriff erhöht. Ist die Verteidigung höher, steigt der Angriff."
+  },
+  "ironFist": {
+    "name": "Eisenfaust",
+    "description": "Erhöht die Stärke von Hieb-, Punch-, Faust- und Schlag-Attacken."
+  },
+  "poisonHeal": {
+    "name": "Aufheber",
+    "description": "Das Pokémon erleidet keinen Schaden durch Vergiftung, sondern regeneriert KP."
+  },
+  "adaptability": {
+    "name": "Anpassung",
+    "description": "Erhöht die Stärke von Attacken, die dem Typ des Pokémon entsprechen."
+  },
+  "skillLink": {
+    "name": "Wertelink",
+    "description": "Landet mit Serien-Attacken immer die maximale Anzahl an Treffern."
+  },
+  "hydration": {
+    "name": "Hydration",
+    "description": "Heilt bei Regen Statusprobleme."
+  },
+  "solarPower": {
+    "name": "Solarkraft",
+    "description": "Führt bei Sonnenschein in jeder Runde zu KP-Verlusten, erhöht aber den Spezial-Angriff."
+  },
+  "quickFeet": {
+    "name": "Rasanz",
+    "description": "Erhöht bei Statusproblemen die Initiative."
+  },
+  "normalize": {
+    "name": "Regulierung",
+    "description": "Alle Attacken des Pokémon nehmen den Typ Normal an und ihre Stärke erhöht sich ein wenig."
+  },
+  "sniper": {
+    "name": "Superschütze",
+    "description": "Erhöht bei Volltreffern die Stärke der Attacke noch weiter."
+  },
+  "magicGuard": {
+    "name": "Magieschild",
+    "description": "Das Pokémon nimmt nur durch Offensiv-Attacken Schaden."
+  },
+  "noGuard": {
+    "name": "Schildlos",
+    "description": "Alle Attacken des oder auf das Pokémon gelingen aufgrund seiner deckungslosen Kampftaktik."
+  },
+  "stall": {
+    "name": "Zeitspiel",
+    "description": "Handelt auch mit Initiative-Vorteil stets als Letztes."
+  },
+  "technician": {
+    "name": "Techniker",
+    "description": "Erhöht die Stärke von schwächeren Attacken."
+  },
+  "leafGuard": {
+    "name": "Floraschild",
+    "description": "Verhindert bei Sonnenschein Statusprobleme."
+  },
+  "klutz": {
+    "name": "Tollpatsch",
+    "description": "Das Pokémon kann keine getragenen Items verwenden."
+  },
+  "moldBreaker": {
+    "name": "Überbrückung",
+    "description": "Attacken können ungeachtet der Fähigkeiten des Zieles verwendet werden."
+  },
+  "superLuck": {
+    "name": "Glückspilz",
+    "description": "Großes Glück erhöht die Wahrscheinlichkeit, einen Volltreffer zu landen."
+  },
+  "aftermath": {
+    "name": "Finalschlag",
+    "description": "Wird das Pokémon durch eine direkte Attacke besiegt, fügt es dem Angreifer Schaden zu."
+  },
+  "anticipation": {
+    "name": "Vorahnung",
+    "description": "Kann gefährliche gegnerische Attacken erahnen."
+  },
+  "forewarn": {
+    "name": "Vorwarnung",
+    "description": "Gibt bei Kampfantritt Auskunft über eine Attacke aus dem gegnerischen Repertoire."
+  },
+  "unaware": {
+    "name": "Unkenntnis",
+    "description": "Greift das Pokémon an, ignoriert es sämtliche Statusveränderungen des Zieles."
+  },
+  "tintedLens": {
+    "name": "Aufwertung",
+    "description": "Bewirkt, dass nicht sehr effektive Attacken dem Ziel trotz des Typennachteils normalen Schaden zufügen."
+  },
+  "filter": {
+    "name": "Filter",
+    "description": "Reduziert die Stärke von sehr effektiven Attacken und verringert damit den Schaden, den das Pokémon durch sie erleidet."
+  },
+  "slowStart": {
+    "name": "Saumselig",
+    "description": "Halbiert fünf Runden lang den Angriffs-Wert und die Initiative des Pokémon."
+  },
+  "scrappy": {
+    "name": "Rauflust",
+    "description": "Bewirkt, dass Normal- und Kampf-Attacken auch Pokémon vom Typ Geist treffen können."
+  },
+  "stormDrain": {
+    "name": "Sturmsog",
+    "description": "Zieht Wasser-Attacken an. Statt durch diese Schaden zu nehmen, erhöht es den eigenen Spezial-Angriff."
+  },
+  "iceBody": {
+    "name": "Eishaut",
+    "description": "Regeneriert bei Hagel nach und nach KP."
+  },
+  "solidRock": {
+    "name": "Felskern",
+    "description": "Reduziert die Stärke von sehr effektiven Attacken und verringert damit den Schaden, den das Pokémon durch sie erleidet."
+  },
+  "snowWarning": {
+    "name": "Hagelalarm",
+    "description": "Löst bei Kampfantritt Hagel aus."
+  },
+  "honeyGather": {
+    "name": "Honigmaul",
+    "description": "Sammelt nach dem Kampf Honig. Dieser wird dann für Geld verkauft."
+  },
+  "frisk": {
+    "name": "Schnüffler",
+    "description": "Kann bei Kampfantritt Auskunft über die Fähigkeit vom Gegner geben."
+  },
+  "reckless": {
+    "name": "Achtlos",
+    "description": "Erhöht die Stärke von Attacken mit Rückstoßschaden."
+  },
+  "multitype": {
+    "name": "Variabilität",
+    "description": "Das Pokémon passt seinen Typ dem der getragenen Tafel bzw. des getragenen Z-Kristalls an."
+  },
+  "flowerGift": {
+    "name": "Pflanzengabe",
+    "description": "Erhöht bei Sonnenschein den Angriff und die Spezial-Verteidigung aller Team-Pokémon."
+  },
+  "badDreams": {
+    "name": "Alptraum",
+    "description": "Fügt schlafenden Gegnern Schaden zu."
+  },
+  "pickpocket": {
+    "name": "Langfinger",
+    "description": "Stiehlt das Item des Angreifers bei Berührung."
+  },
+  "sheerForce": {
+    "name": "Rohe Gewalt",
+    "description": "Erhöht die Stärke von Attacken, aber hebt dafür ihre Zusatzeffekte auf."
+  },
+  "contrary": {
+    "name": "Umkehrung",
+    "description": "Statusveränderungen werden umgekehrt: Statuswerte, die eigentlich erhöht werden sollten, sinken und umgekehrt."
+  },
+  "unnerve": {
+    "name": "Anspannung",
+    "description": "Erzeugt bei Gegnern Stress und hindert sie so daran, Beeren zu konsumieren."
+  },
+  "defiant": {
+    "name": "Siegeswille",
+    "description": "Erhöht den Angriff stark, wenn ein Statuswert gesenkt wurde."
+  },
+  "defeatist": {
+    "name": "Schwächling",
+    "description": "Fallen seine KP auf die Hälfte des Maximalwerts oder weniger, bekommt es Angst. Dadurch wird die Stärke seines Angriffs und Spezial-Angriffs halbiert."
+  },
+  "cursedBody": {
+    "name": "Tastfluch",
+    "description": "Blockiert eventuell die Attacke, mit welcher der Angreifer es getroffen hat."
+  },
+  "healer": {
+    "name": "Heilherz",
+    "description": "Befreit Mitstreiter gelegentlich von Statusproblemen."
+  },
+  "friendGuard": {
+    "name": "Freundeshut",
+    "description": "Kann den Schaden, den Mitstreiter erleiden, verringern."
+  },
+  "weakArmor": {
+    "name": "Bruchrüstung",
+    "description": "Senkt bei erlittenem Treffer durch eine physische Attacke die Verteidigung des Pokémon, aber erhöht dafür seine Initiative stark."
+  },
+  "heavyMetal": {
+    "name": "Schwermetall",
+    "description": "Verdoppelt das eigene Gewicht."
+  },
+  "lightMetal": {
+    "name": "Leichtmetall",
+    "description": "Halbiert das eigene Gewicht."
+  },
+  "multiscale": {
+    "name": "Multischuppe",
+    "description": "Verringert den erlittenen Schaden bei vollen KP."
+  },
+  "toxicBoost": {
+    "name": "Giftwahn",
+    "description": "Erhöht bei Vergiftungen die Stärke von physischen Attacken."
+  },
+  "flareBoost": {
+    "name": "Hitzewahn",
+    "description": "Erhöht bei Verbrennungen die Stärke von Spezial-Attacken."
+  },
+  "harvest": {
+    "name": "Reiche Ernte",
+    "description": "Dieselbe Beere kann mehrmals verwendet werden."
+  },
+  "telepathy": {
+    "name": "Telepathie",
+    "description": "Erkennt und pariert Attacken von Mitstreitern."
+  },
+  "moody": {
+    "name": "Gefühlswippe",
+    "description": "Erhöht in jeder Runde aufs Neue einen Statuswert stark und senkt einen anderen."
+  },
+  "overcoat": {
+    "name": "Partikelschutz",
+    "description": "Nimmt weder durch Wetterlagen wie Sandsturm oder Hagel noch durch Pulver oder Puder Schaden."
+  },
+  "poisonTouch": {
+    "name": "Giftgriff",
+    "description": "Kann das Ziel durch bloßes Berühren vergiften."
+  },
+  "regenerator": {
+    "name": "Belebekraft",
+    "description": "Wird das Pokémon ausgewechselt, regeneriert es eine kleine Menge an KP."
+  },
+  "bigPecks": {
+    "name": "Brustbieter",
+    "description": "Hindert Angreifer daran, die Verteidigung des Pokémon zu senken."
+  },
+  "sandRush": {
+    "name": "Sandscharrer",
+    "description": "Erhöht in Sandstürmen die Initiative."
+  },
+  "wonderSkin": {
+    "name": "Wunderhaut",
+    "description": "Wehrt mit robustem Körper viele Status-Attacken ab."
+  },
+  "analytic": {
+    "name": "Analyse",
+    "description": "Greift das Pokémon zuletzt an, erhöht sich die Stärke der Attacke, die es einsetzt."
+  },
+  "illusion": {
+    "name": "Trugbild",
+    "description": "Führt den Gegner hinters Licht, indem es bei Kampfantritt die Gestalt des Pokémon an der letzten Stelle im Team annimmt."
+  },
+  "imposter": {
+    "name": "Doppelgänger",
+    "description": "Kämpft als Kopie seines Gegenübers."
+  },
+  "infiltrator": {
+    "name": "Schwebedurch",
+    "description": "Überwindet gegnerische Schilde sowie Delegatoren und greift an."
+  },
+  "mummy": {
+    "name": "Mumie",
+    "description": "Überträgt bei Berührung die Fähigkeit Mumie auf den Angreifer."
+  },
+  "moxie": {
+    "name": "Hochmut",
+    "description": "Besiegt es ein Pokémon, steigt sein Selbstvertrauen und somit auch sein Angriff."
+  },
+  "justified": {
+    "name": "Redlichkeit",
+    "description": "Wird es von einer Unlicht-Attacke getroffen, meldet sich sein Sinn für Gerechtigkeit zu Wort und sein Angriff steigt."
+  },
+  "rattled": {
+    "name": "Hasenfuß",
+    "description": "Wird es von einer Unlicht-, Geister- oder Käfer-Attacke getroffen, bekommt es Angst und seine Initiative steigt."
+  },
+  "magicBounce": {
+    "name": "Magiespiegel",
+    "description": "Lenkt Status-Attacken auf den Angreifer um, ohne selbst von ihnen getroffen zu werden."
+  },
+  "sapSipper": {
+    "name": "Vegetarier",
+    "description": "Wird es von einer Pflanzen-Attacke getroffen, erleidet es keinerlei Schaden und sein Angriff steigt."
+  },
+  "prankster": {
+    "name": "Strolch",
+    "description": "Ermöglicht einen Erstschlag mit Status-Attacken."
+  },
+  "sandForce": {
+    "name": "Sandgewalt",
+    "description": "Erhöht in Sandstürmen die Stärke von Gesteins-, Boden- und Stahl-Attacken."
+  },
+  "ironBarbs": {
+    "name": "Eisenstachel",
+    "description": "Fügt dem Angreifer bei Berührung mit eisernen Stacheln Schaden zu."
+  },
+  "zenMode": {
+    "name": "TranceModus",
+    "description": "Fallen seine KP auf die Hälfte des Maximalwerts oder weniger, wechselt es seine Gestalt."
+  },
+  "victoryStar": {
+    "name": "Triumphstern",
+    "description": "Erhöht die Genauigkeit aller Team-Pokémon."
+  },
+  "turboblaze": {
+    "name": "Turbobrand",
+    "description": "Attacken können ungeachtet der Fähigkeit des Zieles eingesetzt werden."
+  },
+  "teravolt": {
+    "name": "Teravolt",
+    "description": "Attacken können ungeachtet der Fähigkeit des Zieles eingesetzt werden."
+  },
+  "aromaVeil": {
+    "name": "Dufthülle",
+    "description": "Kann alle Team-Pokémon vor mentalen Angriffen schützen."
+  },
+  "flowerVeil": {
+    "name": "Blütenhülle",
+    "description": "Schützt Mitstreiter vom Typ Pflanze vor dem Senken ihrer Statuswerte sowie vor Statusproblemen."
+  },
+  "cheekPouch": {
+    "name": "Backentaschen",
+    "description": "Regeneriert beim Konsum von Beeren ungeachtet der Beerensorte KP."
+  },
+  "protean": {
+    "name": "Wandlungskunst",
+    "description": "Das Pokémon nimmt bei Einsatz einer Attacke deren Typ an."
+  },
+  "furCoat": {
+    "name": "Fellkleid",
+    "description": "Halbiert den Schaden, den das Pokémon durch physische Attacken erleidet."
+  },
+  "magician": {
+    "name": "Zauberer",
+    "description": "Trifft das Pokémon ein Ziel mit einer Attacke, kann es ihm dabei sein Item stehlen."
+  },
+  "bulletproof": {
+    "name": "Kugelsicher",
+    "description": "Kann das Pokémon vor geworfenen kugelförmigen Objekten, wie zum Beispiel Bomben, schützen."
+  },
+  "competitive": {
+    "name": "Unbeugsamkeit",
+    "description": "Erhöht den Spezial-Angriff stark, wenn ein Statuswert gesenkt wurde."
+  },
+  "strongJaw": {
+    "name": "Titankiefer",
+    "description": "Der kräftige Kiefer des Pokémon erhöht die Stärke von Biss-Attacken."
+  },
+  "refrigerate": {
+    "name": "Frostschicht",
+    "description": "Attacken vom Typ Normal nehmen den Typ Eis an und ihre Stärke erhöht sich ein wenig."
+  },
+  "sweetVeil": {
+    "name": "Zuckerhülle",
+    "description": "Alle Team-Pokémon können nicht einschlafen."
+  },
+  "stanceChange": {
+    "name": "Taktikwechsel",
+    "description": "Setzt das Pokémon eine Offensiv-Attacke ein, nimmt es die Klingenform an. Setzt es danach die Attacke Königsschild ein, nimmt es die Schildform an."
+  },
+  "galeWings": {
+    "name": "Orkanschwingen",
+    "description": "Kann bei vollen KP einen Erstschlag mit Flug-Attacken ermöglichen."
+  },
+  "megaLauncher": {
+    "name": "Megawumme",
+    "description": "Erhöht die Stärke einiger Wellen-, Aura- und Puls-Attacken."
+  },
+  "grassPelt": {
+    "name": "Pflanzenpelz",
+    "description": "Erhöht die Verteidigung, wenn Grasfeld aktiv ist."
+  },
+  "symbiosis": {
+    "name": "Nutznießer",
+    "description": "Gibt Mitstreitern, die ihr Item aufgebraucht haben, sein eigenes Item."
+  },
+  "toughClaws": {
+    "name": "Krallenwucht",
+    "description": "Erhöht die Stärke von direkten Attacken."
+  },
+  "pixilate": {
+    "name": "Feenschicht",
+    "description": "Attacken vom Typ Normal nehmen den Typ Fee an und ihre Stärke erhöht sich ein wenig."
+  },
+  "gooey": {
+    "name": "Viskosität",
+    "description": "Senkt bei Berührung im Zuge eines Angriffs die Initiative des Angreifers."
+  },
+  "aerilate": {
+    "name": "Zenithaut",
+    "description": "Attacken vom Typ Normal nehmen den Typ Flug an und ihre Stärke erhöht sich ein wenig."
+  },
+  "parentalBond": {
+    "name": "Familienbande",
+    "description": "Zwei Generationen setzen jeweils ein Mal zum Angriff an."
+  },
+  "darkAura": {
+    "name": "Dunkelaura",
+    "description": "Erhöht die Stärke aller Attacken des Typs Unlicht."
+  },
+  "fairyAura": {
+    "name": "Feenaura",
+    "description": "Erhöht die Stärke aller Attacken des Typs Fee."
+  },
+  "auraBreak": {
+    "name": "AuraUmkehr",
+    "description": "Kehrt die Wirkung von Auren um und senkt so die Stärke bestimmter Attacken, anstatt sie zu erhöhen."
+  },
+  "primordialSea": {
+    "name": "Urmeer",
+    "description": "Ändert das Wetter, um Feuer-Attacken wirkungslos zu machen."
+  },
+  "desolateLand": {
+    "name": "Endland",
+    "description": "Ändert das Wetter, um Wasser-Attacken wirkungslos zu machen."
+  },
+  "deltaStream": {
+    "name": "DeltaWind",
+    "description": "Ändert das Wetter, um die Schwächen des Typs Flug zu beseitigen."
+  },
+  "stamina": {
+    "name": "Zähigkeit",
+    "description": "Wird es von einer Attacke getroffen, steigt seine Verteidigung."
+  },
+  "wimpOut": {
+    "name": "Reißaus",
+    "description": "Fallen seine KP auf die Hälfte des Maximalwerts oder weniger, zieht es sich ängstlich zurück."
+  },
+  "emergencyExit": {
+    "name": "Rückzug",
+    "description": "Fallen seine KP auf die Hälfte des Maximalwerts oder weniger, bringt es sich in Sicherheit."
+  },
+  "waterCompaction": {
+    "name": "Verklumpen",
+    "description": "Wird es von einer Wasser-Attacke getroffen, steigt seine Verteidigung stark."
+  },
+  "merciless": {
+    "name": "Quälerei",
+    "description": "Sorgt bei Angriffen auf vergiftete Ziele für Volltreffergarantie."
+  },
+  "shieldsDown": {
+    "name": "Limitschild",
+    "description": "Fallen seine KP auf die Hälfte des Maximalwerts oder weniger, zerbricht die Panzerung des Pokémon und es wird aggressiver."
+  },
+  "stakeout": {
+    "name": "Beschattung",
+    "description": "Bewirkt bei Angriffen auf neu eingewechselte Ziele doppelten Schaden."
+  },
+  "waterBubble": {
+    "name": "Wasserblase",
+    "description": "Feuer-Attacken fügen dem Pokémon weniger Schaden zu. Verhindert Verbrennungen."
+  },
+  "steelworker": {
+    "name": "Stahlprofi",
+    "description": "Erhöht die Stärke von Stahl-Attacken."
+  },
+  "berserk": {
+    "name": "Wutausbruch",
+    "description": "Fallen seine KP nach einem Angriff auf die Hälfte des Maximalwerts oder weniger, steigt sein Spezial-Angriff."
+  },
+  "slushRush": {
+    "name": "Schneescharrer",
+    "description": "Erhöht bei Hagel die Initiative."
+  },
+  "longReach": {
+    "name": "Langstrecke",
+    "description": "Ermöglicht dem Pokémon den Einsatz aller seiner Attacken, ohne das Ziel dabei direkt zu berühren."
+  },
+  "liquidVoice": {
+    "name": "Plätscherstimme",
+    "description": "Bewirkt, dass alle Lärm-Attacken des Pokémon den Typ Wasser annehmen."
+  },
+  "triage": {
+    "name": "Heilwandel",
+    "description": "Ermöglicht einen Erstschlag mit Attacken, welche die KP des Anwenders direkt regenerieren."
+  },
+  "galvanize": {
+    "name": "Elektrohaut",
+    "description": "Attacken vom Typ Normal nehmen den Typ Elektro an und ihre Stärke erhöht sich ein wenig."
+  },
+  "surgeSurfer": {
+    "name": "SurfSchweif",
+    "description": "Verdoppelt die Initiative, wenn zuvor ein Elektrofeld erzeugt wurde."
+  },
+  "schooling": {
+    "name": "Fischschwarm",
+    "description": "Verfügt es über einen hohen KP-Wert, wird es zu einem Schwarm und gewinnt an Stärke. Ist der KP-Wert niedrig, löst sich der Schwarm wieder auf."
+  },
+  "disguise": {
+    "name": "Kostümspuk",
+    "description": "Kann ein Mal pro Kampf mit seinem gruseligen Kostüm einen Angriff abwehren."
+  },
+  "battleBond": {
+    "name": "Freundschaftsakt",
+    "description": "Besiegt es ein Ziel, vertieft dies die Freundschaft zu seinem Trainer, wodurch es die Ash-Form annimmt und sein Wasser-Shuriken stärker wird."
+  },
+  "powerConstruct": {
+    "name": "Scharwandel",
+    "description": "Fallen seine KP auf die Hälfte des Maximalwerts oder weniger, eilen ihm weitere Zellen zu Hilfe und es nimmt die Optimumform an."
+  },
+  "corrosion": {
+    "name": "Korrosion",
+    "description": "Kann selbst Pokémon vom Typ Stahl oder Gift vergiften."
+  },
+  "comatose": {
+    "name": "Dauerschlaf",
+    "description": "Das Pokémon befindet sich ununterbrochen im Halbschlaf und wacht nie vollständig auf. Es kann jedoch im Schlaf angreifen."
+  },
+  "queenlyMajesty": {
+    "name": "Majestät",
+    "description": "Schüchtert Gegner ein und hindert sie so daran, Erstschlag-Attacken gegen es einzusetzen."
+  },
+  "innardsOut": {
+    "name": "Magenkrempler",
+    "description": "Wird es durch eine Attacke besiegt, fügt es dem Angreifer Schaden in Höhe des KP-Werts zu, den es besaß, bevor es kampfunfähig wurde."
+  },
+  "dancer": {
+    "name": "Tänzer",
+    "description": "Kann direkt im Anschluss an die Tanz-Attacke eines anderen Pokémon ebenfalls eine solche einsetzen."
+  },
+  "battery": {
+    "name": "Batterie",
+    "description": "Erhöht die Stärke der Spezial-Attacken seiner Mitstreiter."
+  },
+  "fluffy": {
+    "name": "Flauschigkeit",
+    "description": "Halbiert den Schaden, den es durch direkte Attacken nimmt, aber verdoppelt dafür den durch Feuer-Attacken erlittenen Schaden."
+  },
+  "dazzling": {
+    "name": "Buntkörper",
+    "description": "Überrascht Gegner und hindert sie so daran, Erstschlag-Attacken gegen es einzusetzen."
+  },
+  "soulHeart": {
+    "name": "Seelenherz",
+    "description": "Erhöht jedes Mal, wenn ein Pokémon besiegt wird, den eigenen Spezial-Angriff."
+  },
+  "tanglingHair": {
+    "name": "Lockenkopf",
+    "description": "Senkt bei Berührung im Zuge eines Angriffs die Initiative des Angreifers."
+  },
+  "receiver": {
+    "name": "Receiver",
+    "description": "Wird einer seiner Mitstreiter besiegt, erhält es dessen Fähigkeit."
+  },
+  "powerOfAlchemy": {
+    "name": "Chemiekraft",
+    "description": "Wechselt seine Fähigkeit zu der eines kampfunfähig gewordenen Mitstreiters."
+  },
+  "beastBoost": {
+    "name": "Bestien-Boost",
+    "description": "Erhöht in jeder Runde, in der es ein anderes Pokémon besiegt, seinen höchsten Statuswert."
+  },
+  "rksSystem": {
+    "name": "Alpha-System",
+    "description": "Das Pokémon passt seinen Typ der getragenen Disc an."
+  },
+  "electricSurge": {
+    "name": "Elektro-Erzeuger",
+    "description": "Erzeugt bei Kampfantritt ein Elektrofeld."
+  },
+  "psychicSurge": {
+    "name": "Psycho-Erzeuger",
+    "description": "Erzeugt bei Kampfantritt ein Psychofeld."
+  },
+  "mistySurge": {
+    "name": "Nebel-Erzeuger",
+    "description": "Erzeugt bei Kampfantritt ein Nebelfeld."
+  },
+  "grassySurge": {
+    "name": "Gras-Erzeuger",
+    "description": "Erzeugt bei Kampfantritt ein Grasfeld."
+  },
+  "fullMetalBody": {
+    "name": "Metallprotektor",
+    "description": "Verhindert das Senken der Statuswerte durch Attacken und Fähigkeiten von Angreifern."
+  },
+  "shadowShield": {
+    "name": "Phantomschutz",
+    "description": "Verringert den erlittenen Schaden bei vollen KP."
+  },
+  "prismArmor": {
+    "name": "Prismarüstung",
+    "description": "Reduziert die Stärke von sehr effektiven Attacken und verringert damit den Schaden, den das Pokémon durch sie erleidet."
+  },
+  "neuroforce": {
+    "name": "Zerebralmacht",
+    "description": "Erhöht die Stärke von sehr effektiven Attacken."
+  },
+  "intrepidSword": {
+    "name": "Kühnes Schwert",
+    "description": "Erhöht bei Kampfantritt den Angriff."
+  },
+  "dauntlessShield": {
+    "name": "Wackerer Schild",
+    "description": "Erhöht bei Kampfantritt die Verteidigung."
+  },
+  "libero": {
+    "name": "Libero",
+    "description": "Das Pokémon nimmt bei Einsatz einer Attacke deren Typ an."
+  },
+  "ballFetch": {
+    "name": "Apport",
+    "description": "Trägt das Pokémon kein Item bei sich, hebt es den Ball aus dem ersten gescheiterten Fangversuch des Kampfes wieder auf."
+  },
+  "cottonDown": {
+    "name": "Wollflaum",
+    "description": "Wird es von einem Angriff getroffen, verstreut es Teile seines Wollflaums, wodurch die Initiative aller anderen Pokémon sinkt."
+  },
+  "propellerTail": {
+    "name": "Schraubflosse",
+    "description": "Ignoriert die Effekte von Fähigkeiten und Attacken anderer Pokémon, die Attacken auf sich lenken."
+  },
+  "mirrorArmor": {
+    "name": "Spiegelrüstung",
+    "description": "Lenkt ausschließlich Effekte, welche die Statuswerte des Pokémon senken würden, auf den Angreifer um."
+  },
+  "gulpMissile": {
+    "name": "Würggeschoss",
+    "description": "Wenn das Pokémon Surfer oder Taucher einsetzt, fängt es sich dabei Beute. Erleidet es anschließend Schaden, greift es an, indem es die Beute wieder ausspuckt."
+  },
+  "stalwart": {
+    "name": "Stahlrückgrat",
+    "description": "Ignoriert die Effekte von Fähigkeiten und Attacken anderer Pokémon, die Attacken auf sich lenken."
+  },
+  "steamEngine": {
+    "name": "Dampfantrieb",
+    "description": "Wird es von einer Wasser- oder Feuer-Attacke getroffen, steigt seine Initiative drastisch."
+  },
+  "punkRock": {
+    "name": "Punk Rock",
+    "description": "Erhöht die Stärke von eigenen Lärm-Attacken und halbiert den Schaden, den das Pokémon selbst durch Lärm-Attacken erleidet."
+  },
+  "sandSpit": {
+    "name": "Sandspeier",
+    "description": "Löst einen Sandsturm aus, wenn das Pokémon von einer Attacke erfasst wird."
+  },
+  "iceScales": {
+    "name": "Eisflügelstaub",
+    "description": "Halbiert mithilfe von schützendem Eisflügelstaub den Schaden, den das Pokémon durch Spezial-Attacken erleidet."
+  },
+  "ripen": {
+    "name": "Heranreifen",
+    "description": "Verdoppelt den Effekt von Beeren, indem es sie heranreifen lässt."
+  },
+  "iceFace": {
+    "name": "Tiefkühlkopf",
+    "description": "Der Eisblock um seinen Kopf blockt eine physische Attacke ab. Dies bewirkt jedoch einen Formwechsel. Durch Hagel wird der Eisblock wiederhergestellt."
+  },
+  "powerSpot": {
+    "name": "Kraftquelle",
+    "description": "Erhöht bei direkt benachbarten Pokémon die Stärke von Attacken."
+  },
+  "mimicry": {
+    "name": "Mimese",
+    "description": "Der Typ des Pokémon ändert sich in Abhängigkeit vom Zustand des Feldes."
+  },
+  "screenCleaner": {
+    "name": "Hemmungslos",
+    "description": "Hebt bei Kampfantritt die Wirkung von Lichtschild, Reflektor und Auroraschleier auf Mitstreiter- und Gegnerseite auf."
+  },
+  "steelySpirit": {
+    "name": "Stählerner Wille",
+    "description": "Erhöht die Stärke von Stahl-Attacken auf Mitstreiterseite."
+  },
+  "perishBody": {
+    "name": "Unheilskörper",
+    "description": "Erleidet es einen Treffer von einer direkten Attacke, wird es zusammen mit dem Angreifer nach drei Runden besiegt. Rettung ist durch Austausch möglich."
+  },
+  "wanderingSpirit": {
+    "name": "Rastlose Seele",
+    "description": "Wird das Pokémon von einer direkten Attacke getroffen, tauscht es seine Fähigkeit mit der des Angreifers."
+  },
+  "gorillaTactics": {
+    "name": "Affenfokus",
+    "description": "Erhöht den Angriff, aber nur die zuerst gewählte Attacke kann eingesetzt werden."
+  },
+  "neutralizingGas": {
+    "name": "Reaktionsgas",
+    "description": "Solange ein Pokémon mit der Fähigkeit Reaktionsgas am Kampf beteiligt ist, werden die Fähigkeiten aller anderen Pokémon unterdrückt oder aufgehoben."
+  },
+  "pastelVeil": {
+    "name": "Pastellhülle",
+    "description": "Schützt das Pokémon und seine Mitstreiter vor Vergiftung."
+  },
+  "hungerSwitch": {
+    "name": "Heißhunger",
+    "description": "Das Pokémon ändert zum Ende jeder Runde seine Form und wechselt somit zwischen dem Pappsatt- und dem Kohldampfmuster."
+  },
+  "quickDraw": {
+    "name": "Schnellschuss",
+    "description": "Ermöglicht dem Pokémon gelegentlich den Erstschlag."
+  },
+  "unseenFist": {
+    "name": "Verborgene Faust",
+    "description": "Wenn das Pokémon eine direkte Attacke einsetzt, trifft diese auch dann, wenn sich das Ziel selbst schützt."
+  },
+  "curiousMedicine": {
+    "name": "Kuriose Arznei",
+    "description": "Das Pokémon versprüht bei Kampfantritt Arznei aus seiner Muschel, die alle Statusveränderungen auf der Mitstreiterseite aufhebt."
+  },
+  "transistor": {
+    "name": "Transistor",
+    "description": "Erhöht die Stärke von Elektro-Attacken."
+  },
+  "dragonsMaw": {
+    "name": "Drachenkiefer",
+    "description": "Erhöht die Stärke von Drachen-Attacken."
+  },
+  "chillingNeigh": {
+    "name": "Helles Wiehern",
+    "description": "Besiegt es ein Pokémon, stößt es ein frostiges Wiehern aus und erhöht damit seinen Angriff."
+  },
+  "grimNeigh": {
+    "name": "Dunkles Wiehern",
+    "description": "Besiegt es ein Pokémon, stößt es ein furchteinflößendes Wiehern aus und erhöht damit seinen Spezial-Angriff."
+  },
+  "asOneGlastrier": {
+    "name": "Reitgespann",
+    "description": "Das Pokémon verfügt sowohl über Coronospas Fähigkeit Anspannung als auch über Polaross’ Fähigkeit Helles Wiehern."
+  },
+  "asOneSpectrier": {
+    "name": "Reitgespann",
+    "description": "Das Pokémon verfügt sowohl über Coronospas Fähigkeit Anspannung als auch über Phantoross’ Fähigkeit Dunkles Wiehern."
+  },
+  "lingeringAroma": {
+    "name": "Duftschwade",
+    "description": "Das Pokémon überträgt bei Berührung die Fähigkeit Duftschwade auf den Angreifer."
+  },
+  "seedSower": {
+    "name": "Streusaat",
+    "description": "Wird das Pokémon von einem Angriff getroffen, erzeugt es ein Grasfeld."
+  },
+  "thermalExchange": {
+    "name": "Thermowandel",
+    "description": "Wird das Pokémon von einer Feuer-Attacke getroffen, steigt sein Angriff. Außerdem kann es keine Verbrennung erleiden."
+  },
+  "angerShell": {
+    "name": "Wutpanzer",
+    "description": "Fallen die KP des Pokémon durch einen Angriff auf die Hälfte des Maximalwerts oder weniger, sinken Vert. und Sp.-Vert., aber Ang., Sp.-Ang. und Initiative steigen."
+  },
+  "purifyingSalt": {
+    "name": "Läutersalz",
+    "description": "Das Pokémon kann dank seines läuternden Salzes keine Statusprobleme erleiden und der durch Geist-Attacken erlittene Schaden wird halbiert."
+  },
+  "wellBakedBody": {
+    "name": "Knusperkruste",
+    "description": "Wird das Pokémon von einer Feuer-Attacke getroffen, erleidet es keinen Schaden. Stattdessen steigt seine Verteidigung stark."
+  },
+  "windRider": {
+    "name": "Windreiter",
+    "description": "Wirkt Rückenwind oder wird das Pokémon von einer Wind-Attacke getroffen, steigt sein Angriff. Außerdem erleidet es keinen Schaden durch Wind-Attacken."
+  },
+  "guardDog": {
+    "name": "Wachhund",
+    "description": "Wird das Pokémon bedroht, steigt sein Angriff. Attacken und Items, durch die Pokémon ausgetauscht werden, haben keine Wirkung auf es."
+  },
+  "rockyPayload": {
+    "name": "Steinträger",
+    "description": "Die Stärke von Gesteins-Attacken des Pokémon steigt."
+  },
+  "windPower": {
+    "name": "Windkraft",
+    "description": "Wird das Pokémon von einer Wind-Attacke getroffen, lädt es sich auf. Dadurch steigt die Stärke seiner nächsten Elektro-Attacke."
+  },
+  "zeroToHero": {
+    "name": "Superwechsel",
+    "description": "Wird das Pokémon ausgewechselt, nimmt es die Heldenform an."
+  },
+  "commander": {
+    "name": "Kommandant",
+    "description": "Befindet sich ein Heerashai auf der Mitstreiterseite, springt das Pokémon bei Kampfantritt in dessen Maul und gibt von dort aus Befehle."
+  },
+  "electromorphosis": {
+    "name": "Dynamo",
+    "description": "Wenn das Pokémon Schaden erleidet, lädt es sich auf. Dadurch steigt die Stärke seiner nächsten Elektro-Attacke."
+  },
+  "protosynthesis": {
+    "name": "Paläosynthese",
+    "description": "Bei Sonnenschein oder wenn das Pokémon eine Energiekapsel trägt, steigt sein höchster Statuswert."
+  },
+  "quarkDrive": {
+    "name": "Quantenantrieb",
+    "description": "Im Elektrofeld oder wenn das Pokémon eine Energiekapsel trägt, steigt sein höchster Statuswert."
+  },
+  "goodAsGold": {
+    "name": "Goldkörper",
+    "description": "Dank seines robusten Körpers aus reinem, rostfreiem Gold kann das Pokémon nicht von Status-Attacken getroffen werden."
+  },
+  "vesselOfRuin": {
+    "name": "Unheilsgefäß",
+    "description": "Mit der Macht seines Unheil bringenden Gefäßes schwächt das Pokémon den Spezial-Angriff aller anderen Pokémon."
+  },
+  "swordOfRuin": {
+    "name": "Unheilsschwert",
+    "description": "Mit der Macht seines Unheil bringenden Schwertes schwächt das Pokémon die Verteidigung aller anderen Pokémon."
+  },
+  "tabletsOfRuin": {
+    "name": "Unheilstafeln",
+    "description": "Mit der Macht seiner Unheil bringenden Holztafeln schwächt das Pokémon den Angriff aller anderen Pokémon."
+  },
+  "beadsOfRuin": {
+    "name": "Unheilsjuwelen",
+    "description": "Mit der Macht seiner Unheil bringenden Juwelen schwächt das Pokémon die Spezial-Verteidigung aller anderen Pokémon."
+  },
+  "orichalcumPulse": {
+    "name": "Orichalkum-Puls",
+    "description": "Das Pokémon erzeugt bei Kampfantritt Sonnenschein. Bei Sonnenschein verstärkt ein urzeitlicher Puls seinen Angriff."
+  },
+  "hadronEngine": {
+    "name": "Hadronen-Motor",
+    "description": "Das Pokémon erzeugt bei Kampfantritt ein Elektrofeld. Wenn ein Elektrofeld aktiv ist, verstärkt ein futuristischer Motor seinen Spezial-Angriff."
+  },
+  "opportunist": {
+    "name": "Profiteur",
+    "description": "Wenn ein Statuswert eines Gegners steigt, profitiert das Pokémon ebenfalls davon und der gleiche Statuswert steigt auch bei ihm."
+  },
+  "cudChew": {
+    "name": "Wiederkäuer",
+    "description": "Wenn ein Pokémon eine Beere isst, stößt es diese am Ende der nächsten Runde wieder aus seinem Magen auf und verspeist diese erneut."
+  },
+  "sharpness": {
+    "name": "Scharfkantig",
+    "description": "Die Stärke von Schnitt-Attacken des Pokémon steigt."
+  },
+  "supremeOverlord": {
+    "name": "Feldherr",
+    "description": "Bei Kampfantritt steigen der Angriff und Spezial-Angriff des Pokémon ein bisschen für jedes bis dahin besiegte Team-Mitglied."
+  },
+  "costar": {
+    "name": "Synchronauftritt",
+    "description": "Das Pokémon kopiert bei Kampfantritt die Statusveränderungen eines Mitstreiters."
+  },
+  "toxicDebris": {
+    "name": "Giftbelag",
+    "description": "Erleidet das Pokémon Schaden durch eine physische Attacke, verstreut es giftige Stacheln auf der gegnerischen Seite."
+  },
+  "armorTail": {
+    "name": "Schweifrüstung",
+    "description": "Der rätselhafte Schweif, der den Kopf des Pokémon umhüllt, hindert Gegner daran, Erstschlag-Attacken gegen die Mitstreiterseite einzusetzen."
+  },
+  "earthEater": {
+    "name": "Bodenschmaus",
+    "description": "Wird das Pokémon von einer Boden-Attacke getroffen, erleidet es keinen Schaden, sondern regeneriert stattdessen KP."
+  },
+  "myceliumMight": {
+    "name": "Myzelienkraft",
+    "description": "Beim Einsatz von Status-Attacken handelt das Pokémon stets langsamer, aber dafür kann es sie ungeachtet der Fähigkeit des Zieles einsetzen."
+  },
+  "mindsEye": {
+    "name": "Geistiges Auge",
+    "description": "Die Genauigkeit des Pokémon kann nicht gesenkt werden. Es ignoriert Änderungen am Ausweichwert des Zieles und trifft mit Normal- und Kampf-Attacken Geister-Pokémon."
+  },
+  "supersweetSyrup": {
+    "name": "Süßer Nektar",
+    "description": "Beim ersten Kampfantritt verbreitet das Pokémon den Duft süßen Nektars und senkt so den Ausweichwert seiner Gegner."
+  },
+  "hospitality": {
+    "name": "Gastlichkeit",
+    "description": "Bei Kampfantritt zeigt das Pokémon seine Gastlichkeit, indem es die KP seines Mitstreiters ein wenig auffüllt."
+  },
+  "toxicChain": {
+    "name": "Giftkette",
+    "description": "Durch die toxischen Stoffe in seiner Kette werden Ziele, die das Pokémon mit einer Attacke trifft, gelegentlich schwer vergiftet."
+  },
+  "embodyAspectTeal": {
+    "name": "Erinnerungskraft",
+    "description": "Die Erinnerungen, die das Pokémon in sich trägt, lassen die Türkisgrüne Maske aufleuchten und erhöhen seine Initiative."
+  },
+  "embodyAspectWellspring": {
+    "name": "Erinnerungskraft",
+    "description": "Die Erinnerungen, die das Pokémon in sich trägt, lassen die Brunnenmaske aufleuchten und erhöhen seine Spezial-Verteidigung."
+  },
+  "embodyAspectHearthflame": {
+    "name": "Erinnerungskraft",
+    "description": "Die Erinnerungen, die das Pokémon in sich trägt, lassen die Ofenmaske aufleuchten und erhöhen seinen Angriff."
+  },
+  "embodyAspectCornerstone": {
+    "name": "Erinnerungskraft",
+    "description": "Die Erinnerungen, die das Pokémon in sich trägt, lassen die Fundamentmaske aufleuchten und erhöhen seine Verteidigung."
+  },
+  "teraShift": {
+    "name": "Tera-Wandel",
+    "description": "Bei Kampfantritt absorbiert das Pokémon Energie in seiner Umgebung und nimmt die Terakristall-Form an."
+  },
+  "teraShell": {
+    "name": "Tera-Panzer",
+    "description": "Der Panzer des Pokémon birgt die Kraft aller Typen in sich. Alle Schaden verursachenden Attacken, die es bei vollen KP treffen, sind nicht sehr effektiv."
+  },
+  "teraformZero": {
+    "name": "Teraforming Null",
+    "description": "Wenn Terapagos die Stellarform annimmt, eliminiert es dank seiner verborgenen Kräfte sämtliche Wettereffekte und Felder."
+  },
+  "poisonPuppeteer": {
+    "name": "Giftpuppenspiel",
+    "description": "Wenn Infamomo ein Ziel mit einer Attacke vergiftet, so wird dieses auch verwirrt."
+  },
+  "unleashed": {
+    "name": "Entfesselt",
+    "description": "Erhöht die Kraft aller Attacken bei niedrigen KP."
+  },
+  "hellFlame": {
+    "name": "Höllenfeuer",
+    "description": "Erhöht die Kraft von Feuer-Attacken um 50%."
+  },
+  "psychoLeaf": {
+    "name": "Psychoblatt",
+    "description": "Verwandelt Pflanzen-Attacken in Psycho-Attacken und erhöht ihre Kraft um 20%."
+  },
+  "groundFlame": {
+    "name": "Erdfeuer",
+    "description": "Verwandelt Feuer-Attacken in Boden-Attacken und erhöht ihre Kraft um 20%."
+  },
+  "magicalWater": {
+    "name": "Magisches Wasser",
+    "description": "Verwandelt Wasser-Attacken in Fee-Attacken und erhöht ihre Kraft um 20%."
+  },
+  "nuclearEnergy": {
+    "name": "Nuklearenergie",
+    "description": "Verwandelt Gift-Attacken in Elektro-Attacken und erhöht ihre Kraft um 20%."
+  },
+  "poisonKing": {
+    "name": "Giftkönig",
+    "description": "Erhöht die Kraft von Gift-Attacken um 60%."
+  },
+  "solidKong": {
+    "name": "Felsenkong",
+    "description": "Reduziert den Schaden von sehr effektiven Attacken um 50%."
+  },
+  "screepy": {
+    "name": "Schreipuk",
+    "description": "Geist-Attacken können Normal-Typen treffen. Verstärkt Geist-Attacken um 30%. Immun gegen Einschüchterung."
+  },
+  "godFist": {
+    "name": "Götterfaust",
+    "description": "Erhöht die Kraft von Schlag-Attacken um 50%."
+  },
+  "parentalHaunting": {
+    "name": "Elternspuk",
+    "description": "Verwandelt Nicht-Normal-Attacken in Geister-Attacken und erhöht ihre Kraft um 20%."
+  },
+  "nightmarate": {
+    "name": "Albtraumrate",
+    "description": "Ändert Normal-Attacken in den Primärtyp und erhöht ihre Stärke um 20%."
+  },
+  "terrify": {
+    "name": "Erschrecken",
+    "description": "Senkt den Angriff und Spezial-Angriff des Gegners um eine Stufe beim Betreten des Kampfes."
+  },
+  "thunderAndFire": {
+    "name": "Donner und Feuer",
+    "description": "Feuer- und Elektro-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "electafireAbsorb": {
+    "name": "Elektrofeuer-Absorption",
+    "description": "Heilt KP anstatt Schaden zu nehmen, wenn von Feuer- oder Elektro-Attacken getroffen."
+  },
+  "dirtThick": {
+    "name": "Erdpanzer",
+    "description": "Halbiert den Schaden von Wasser- und Boden-Attacken."
+  },
+  "arcticBlaze": {
+    "name": "Arktische Flamme",
+    "description": "Verwandelt Eis-Attacken in Feuer-Attacken und umgekehrt, verstärkt ihre Kraft um 35%, wenn die KP unter 65% liegen."
+  },
+  "steamify": {
+    "name": "Verdampfen",
+    "description": "Verwandelt Wasser-Attacken in Feuer-Attacken und erhöht ihre Kraft um 20%."
+  },
+  "prehistoricHunt": {
+    "name": "Prähistorische Jagd",
+    "description": "30% Chance pro Runde auf Regen. Verdoppelt Initiative bei Regen, starkem Sonnenschein, Hagel, Schnee oder Starkregen."
+  },
+  "popUp": {
+    "name": "Aufspringen",
+    "description": "Senkt Verteidigung um eine Stufe und erhöht Initiative um eine Stufe beim Betreten des Kampfes."
+  },
+  "earthSpeeder": {
+    "name": "Erdbeschleuniger",
+    "description": "Erhöht Initiative um eine Stufe, wenn von einer Boden-Attacke getroffen."
+  },
+  "knockout": {
+    "name": "K.O.",
+    "description": "35% Chance auf einen kritischen Treffer, wenn KP unter 50% sind."
+  },
+  "finalRound": {
+    "name": "Finale Runde",
+    "description": "Erhöht die Kraft von Kampf-Attacken bei niedrigen KP."
+  },
+  "kickPunch": {
+    "name": "Tritt-Schlag",
+    "description": "Erhöht die Kraft von Tritt- und Schlag-Attacken um 30%."
+  },
+  "stabNormal": {
+    "name": "Normal-Verstärkung",
+    "description": "Erhöht die Kraft von Normal-Attacken um 30%."
+  },
+  "adaptiveAi": {
+    "name": "Adaptive KI",
+    "description": "Erhöht Statuswerte um 1 oder 2 Stufen, abhängig vom höchsten Statuswert des Gegners. Erhöht Verteidigung, wenn der höchste Statuswert des Gegners Angriff ist, Spezial-Verteidigung, wenn es Spezial-Angriff ist, Spezial-Angriff, wenn es Spezial-Verteidigung ist, oder Initiative um 2 Stufen, wenn es Initiative ist."
+  },
+  "electric": {
+    "name": "Elektrisch",
+    "description": "Verstärkt Elektro-Attacken um 50%, erleidet doppelten Schaden durch Wasser und verwandelt Normal-Attacken in Elektro-Attacken mit 20% mehr Kraft."
+  },
+  "existence": {
+    "name": "Existenz",
+    "description": "Erhöht alle Attacken um 20%, neutralisiert sehr effektive Attacken und neutralisiert Attacken, die gegen das Ziel sehr effektiv wären."
+  },
+  "allConsuming": {
+    "name": "Allverschlingend",
+    "description": "Stellt 1/8 der maximalen KP wieder her und fügt dem Gegner 1/8 seiner maximalen KP als Schaden zu, wenn von einer Kontakt-Attacke getroffen."
+  },
+  "corrupt": {
+    "name": "Korrumpieren",
+    "description": "70% Chance, das Ziel nach einem Angriff schwer zu vergiften."
+  },
+  "dragonKing": {
+    "name": "Drachenkönig",
+    "description": "Erhöht die Kraft von Drachen-Attacken um 60%."
+  },
+  "sandCorruption": {
+    "name": "Sandkorruption",
+    "description": "Fügt dem Angreifer 1/8 seiner maximalen KP als Schaden zu und senkt seine Initiative um eine Stufe, wenn von einer Kontakt-Attacke getroffen."
+  },
+  "organicTwist": {
+    "name": "Organische Wendung",
+    "description": "Pflanzen- und Gesteins-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "healthySoak": {
+    "name": "Gesunde Dusche",
+    "description": "Erhöht Initiative und Angriff um eine Stufe, wenn von einer Wasser-Attacke getroffen."
+  },
+  "inkBlindness": {
+    "name": "Tintenblindheit",
+    "description": "35% Chance, das Ziel nach einem Angriff zu verwirren."
+  },
+  "inkFry": {
+    "name": "Tintenbraten",
+    "description": "Senkt Initiative und Spezial-Verteidigung des Ziels um eine Stufe nach Verwendung einer Wasser-Attacke."
+  },
+  "mooTime": {
+    "name": "Muhzeit",
+    "description": "Erhöht Verteidigung und Initiative um 50%, wenn KP unter 50% sind."
+  },
+  "fuelExchange": {
+    "name": "Energieaustausch",
+    "description": "Erhöht Initiative um eine Stufe bei Elektro-Attacken. Stellt 1/4 der maximalen KP bei Pflanzen-Attacken wieder her. Erhöht Verteidigung um eine Stufe bei Unlicht-Attacken. Erhöht Angriff um eine Stufe bei Fee-Attacken. Erhöht Spezial-Verteidigung um eine Stufe bei Psycho-Attacken. Erhöht Spezial-Angriff um eine Stufe bei Eis-Attacken."
+  },
+  "sunAndMoon": {
+    "name": "Sonne und Mond",
+    "description": "Erhöht die Kraft von Feuer- und Gestein-Attacken um 20%."
+  },
+  "nightAndDay": {
+    "name": "Nacht und Tag",
+    "description": "40% Chance, bei Kontakt zu verbrennen, wenn KP über 50% sind, oder 35% Chance, bei Kontakt einzuschläfern, wenn KP unter 50% sind."
+  },
+  "twoHalves": {
+    "name": "Zwei Hälften",
+    "description": "Überlebt einen K.O.-Treffer, senkt dann stark die Initiative des Gegners und stellt 50% KP wieder her."
+  },
+  "alienRock": {
+    "name": "Alien-Gestein",
+    "description": "Psycho- und Gesteins-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "robot": {
+    "name": "Roboter",
+    "description": "Erhöht ALLE Statuswerte um 1 Stufe beim Betreten des Kampfes. Senkt einen zufälligen Statuswert um 1 Stufe am Ende jeder Runde."
+  },
+  "golemPlus": {
+    "name": "Golem Plus",
+    "description": "Erhöht die Kraft von Gestein-Attacken um 30% und erhöht Verteidigung um 30%."
+  },
+  "nightmareFuel": {
+    "name": "Albtraum-Treibstoff",
+    "description": "Verwandelt Normal-Attacken in Primär-Typ und verstärkt ihre Kraft um 20%."
+  },
+  "smittyxtvVirus": {
+    "name": "SmittyNugget-Virus",
+    "description": "Erhöht den höchsten Statuswert um 1 Stufe nach dem Besiegen eines Gegners. 50% Chance, einen zufälligen Statuswert des Ziels um 1 Stufe zu senken nach einem Angriff."
+  },
+  "staticCharge": {
+    "name": "Statische Ladung",
+    "description": "Versetzt den Angreifer bei Kontakt in den Status 'Aufgeladen'. 30% Chance auf Paralyse bei Kontakt."
+  },
+  "darkStampede": {
+    "name": "Dunkle Stampede",
+    "description": "Erhöht einen zufälligen Statuswert um eine Stufe nach Verwendung einer Unlicht-Attacke."
+  },
+  "colorChangeDefense": {
+    "name": "Farbwechselverteidigung",
+    "description": "Ändert den Typ des Anwenders, um dem Typ der Attacke zu entsprechen, von der er getroffen wurde. Wenn der Anwender nicht bereits denselben Typ hat, heilt er außerdem 1/8 seiner maximalen KP."
+  },
+  "colorChangeSteal": {
+    "name": "Farbwechsel-Diebstahl",
+    "description": "Ändert den Typ des Anwenders zum Typ der erhaltenen Attacke. Stiehlt das getragene Item des Ziels, wenn der Anwender einen Typ mit dem Ziel teilt."
+  },
+  "hauntingEcho": {
+    "name": "Geisterecho",
+    "description": "30% Chance, das Ziel zu paralysieren und 1/16 seiner maximalen KP als Schaden zuzufügen bei Verwendung einer Geister-Attacke."
+  },
+  "maternalShade": {
+    "name": "Mütterlicher Schatten",
+    "description": "50% Chance, den Schaden eingehender Attacken zu vierteln."
+  },
+  "spiritualBond": {
+    "name": "Spirituelle Bindung",
+    "description": "Fügt dem Angreifer 50% des erlittenen Schadens zu."
+  },
+  "gravePower": {
+    "name": "Grabeskraft",
+    "description": "Erhöht Attackenkraft um 150%, wenn KP unter 40% sind. 30% Chance, das Ziel schwer zu vergiften."
+  },
+  "undead": {
+    "name": "Untot",
+    "description": "70% Chance, einen K.O.-Treffer zu überleben."
+  },
+  "scaleArmor": {
+    "name": "Schuppenpanzer",
+    "description": "Reduziert den Schaden von Wasser-, Elektro-, Feuer- und Pflanzen-Attacken um 25%."
+  },
+  "pixelatedTongue": {
+    "name": "Pixelzunge",
+    "description": "30% Chance, einen zufälligen Statuseffekt zu verursachen und einen zufälligen Statuswert des Ziels um eine Stufe zu senken."
+  },
+  "staticTaste": {
+    "name": "Statischer Geschmack",
+    "description": "Erhöht die Kraft von Attacken um 50% gegen paralysierte Ziele. 35% Chance, das Ziel zu paralysieren."
+  },
+  "rockyHorrorShow": {
+    "name": "Rocky Horror Show",
+    "description": "Verhindert den Austausch des Gegners. Erhöht zwei zufällige Statuswerte um eine Stufe beim Betreten des Kampfes."
+  },
+  "hauntingBroadcast": {
+    "name": "Geistersendung",
+    "description": "Verflucht alle gegnerischen Pokémon, wenn der Anwender besiegt wird."
+  },
+  "ectoplasmicTouch": {
+    "name": "Ektoplasma-Berührung",
+    "description": "Fügt dem Angreifer 1/12 seiner maximalen KP als Schaden zu, wenn von einer Kontakt-Attacke getroffen. Fügt auch dem Ziel 1/12 seiner maximalen KP als Schaden zu bei Verwendung einer Kontakt-Attacke."
+  },
+  "toxicCombustion": {
+    "name": "Toxische Verbrennung",
+    "description": "Fügt dem Angreifer 1/8 seiner maximalen KP als Schaden zu, wenn er schwer vergiftet ist. 30% Chance, das Ziel schwer zu vergiften."
+  },
+  "flamingEmission": {
+    "name": "Flammende Emission",
+    "description": "Feuer- und Gift-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "burningDisease": {
+    "name": "Brennende Krankheit",
+    "description": "Fügt dem Angreifer 1/8 seiner maximalen KP als Schaden zu, wenn er verbrannt ist. 30% Chance, das Ziel zu verbrennen."
+  },
+  "steadyStance": {
+    "name": "Stabile Haltung",
+    "description": "Erhöht den Angriff, die Verteidigung, den Spezial-Angriff und die Spezial-Verteidigung des Anwenders um 20%."
+  },
+  "balancedKick": {
+    "name": "Balancierter Tritt",
+    "description": "Tritt-Attacken verfehlen nie und ihre Kraft wird um 20% erhöht."
+  },
+  "phantomPouch": {
+    "name": "Phantombeutel",
+    "description": "30% Chance, 1/8 der maximalen KP wiederherzustellen nach einem Treffer oder Angriff. Erhöht Item-Drops nach dem Kampf."
+  },
+  "hauntingScythe": {
+    "name": "Geistersense",
+    "description": "Ändert seine Angriffe zu SPEZIAL oder PHYSISCH basierend auf dem schwächeren Verteidigungswert des Gegners."
+  },
+  "soulCollector": {
+    "name": "Seelensammler",
+    "description": "Verstärkt Attacken, die mit gesammelten Typen übereinstimmen. Sammelt den Typ besiegter Pokémon. Verliert gesammelte Typen beim Besiegt-Werden."
+  },
+  "shadowSync": {
+    "name": "Schatten-Synchronisation",
+    "description": "Erhöht die höchsten Statuswerte des Anwenders um 1, wenn sich die Statuswerte des Gegners ändern. Verstärkt die Kraft aller Attacken um 20%."
+  },
+  "frightfulCute": {
+    "name": "Furchterregend Niedlich",
+    "description": "33% Chance, die Attackenkraft um 50% zu erhöhen oder den erlittenen Schaden zu halbieren."
+  },
+  "ghostify": {
+    "name": "Vergeistern",
+    "description": "Verwandelt Normal-Attacken in Geister-Attacken und erhöht ihre Kraft um 40%."
+  },
+  "foreverPartner": {
+    "name": "Ewiger Partner",
+    "description": "Erhöht die Kraft aller Attacken um 30%. 40% Chance, einen K.O.-Treffer zu überleben."
+  },
+  "newAdaption": {
+    "name": "Neue Anpassung",
+    "description": "Halbiert Schaden von Feuer- und Boden-Attacken. Verdoppelt die Kraft von Stahl-Attacken gegen Feuer-, Gift- und Wasser-Pokémon."
+  },
+  "steelStealer": {
+    "name": "Stahldieb",
+    "description": "Erhöht Angriff um eine Stufe, wenn von einer Stahl-Attacke getroffen."
+  },
+  "teraForce": {
+    "name": "Tera-Kraft",
+    "description": "Boden-Attacken können Flug-Pokémon treffen. Erhöht Boden-Attacken um 30%. Immun gegen Einschüchterung."
+  },
+  "mudiate": {
+    "name": "Verschlammen",
+    "description": "Verwandelt Normal-Attacken in Boden-Attacken, erhöht ihre Kraft um 20% und gibt ihnen 20% Chance, die Genauigkeit des Gegners zu senken."
+  },
+  "gottaGoFast": {
+    "name": "Muss Schnell Sein",
+    "description": "Verdoppelt Kraft bei erster Aktion. Erleidet doppelten Schaden bei zweiter Aktion."
+  },
+  "imBlue": {
+    "name": "Ich Bin Blau",
+    "description": "Verstärkt Wasser-Attacken. Resistent gegen Feuer-, Wasser- und Stahl-Attacken. Erhöht Kraft um 50% gegen Feuer-, Boden- und Gestein-Pokémon."
+  },
+  "notShadow": {
+    "name": "Nicht-Schatten",
+    "description": "Immun gegen Unlicht-, Stahl- und Geist-Attacken. Erhöht Angriff, Verteidigung oder Initiative, wenn es von einer Unlicht-, Stahl- oder Geist-Attacke getroffen wird."
+  },
+  "animified": {
+    "name": "Animiert",
+    "description": "Resistent gegen Normal- und Kampf-Attacken. Schwach gegen Gift-Attacken. Normal-Attacken werden zu Fee-Attacken und werden um 20% verstärkt. 30% Chance, einen K.O.-Treffer zu überleben."
+  },
+  "longForgotten": {
+    "name": "Lang Vergessen",
+    "description": "Senkt Verteidigung und Spezial-Verteidigung um eine Stufe beim Betreten des Kampfes."
+  },
+  "waaaa": {
+    "name": "Waaaa",
+    "description": "25% Chance auf einen kritischen Treffer. 10% Chance, das Ziel schwer zu vergiften."
+  },
+  "tooLate": {
+    "name": "Zu Spät",
+    "description": "Attacken werden immer zuletzt ausgeführt. 35% Chance, das Ziel zu verwirren, schläfrig zu machen, zu befallen oder zu verfluchen."
+  },
+  "memoriesOfTennis": {
+    "name": "Tennis-Erinnerungen",
+    "description": "Erhöht die Kraft von Ball-, Kugel-, Sphären-, Kreis-, Sprung- und gelb-bezogenen Attacken um 50%. 30% Chance, das Ziel bei diesen Attacken zurückschrecken zu lassen."
+  },
+  "fireRafRaf": {
+    "name": "Feuer Raf Raf",
+    "description": "Erhöht Feuer-Attacken um 50%. Erleidet doppelten Schaden durch Wasser. Normal-Attacken werden zu Feuer-Attacken und werden um 20% verstärkt."
+  },
+  "positivity": {
+    "name": "Positivität",
+    "description": "Erhöht Elektro-Attacken um 20%. 30% Chance, einen K.O.-Treffer zu überleben. 33% Chance, Schaden von Attacken zu halbieren."
+  },
+  "unfazed": {
+    "name": "Unbeeindruckt",
+    "description": "Halbiert Schaden von sehr effektiven Attacken."
+  },
+  "nightmareSauce": {
+    "name": "Albtraumsoße",
+    "description": "50% Chance, dem Ziel die Fähigkeit Komatöse zu geben. 30% Chance, dem Ziel den Status Albtraum zu geben, wenn es die Fähigkeit Komatöse hat."
+  },
+  "hashSlingingSlasher": {
+    "name": "Hackender Schlitzer",
+    "description": "Verdoppelt die Kraft von Schnitt-Attacken."
+  },
+  "lifeAdvice": {
+    "name": "Lebensrat",
+    "description": "Erhöht einen zufälligen Statuswert um eine Stufe beim Betreten des Kampfes. 40% Chance, 1/8 der maximalen KP wiederherzustellen, wenn von einer Attacke getroffen."
+  },
+  "woodCutter": {
+    "name": "Holzfäller",
+    "description": "Erhöht Attackenkraft um 150% gegen Pflanzen-Pokémon. Erhöht Angriff und Initiative um eine Stufe nach dem Besiegen eines Pflanzen-Pokémon."
+  },
+  "axe": {
+    "name": "Axt",
+    "description": "Erhöht die Kraft von Schnitt-Attacken um 50%. Erhöht Stahl-Attacken um 30%."
+  },
+  "rubberMan": {
+    "name": "Gummimann",
+    "description": "Halbiert Schaden von Physischen und Stahl-Attacken. Leitet Elektro-Attacken auf dieses Pokémon um und erhöht Angriff um eine Stufe. Erleidet doppelten Schaden durch Wasser-Attacken. Erhöht Normal-, Kampf- und Flug-Attacken um 50%."
+  },
+  "conquerorHaki": {
+    "name": "Eroberer-Haki",
+    "description": "20% Chance, Attackenkraft zu verdoppeln. 10% Chance, das Ziel bei Kontakt einzuschläfern oder zu paralysieren."
+  },
+  "stretchy": {
+    "name": "Dehnbar",
+    "description": "50% Chance, das Ziel zu UMKLAMMERN, wodurch es nicht ausgewechselt werden kann und in jeder Runde Schaden erleidet."
+  },
+  "demonSwordsman": {
+    "name": "Dämonischer Schwertkämpfer",
+    "description": "Verstärkt die Kraft von Schnitt-Attacken um 50%. Stahl-, Geist- und Unlicht-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "cursedBlades": {
+    "name": "Verfluchte Klingen",
+    "description": "Erhöht die Kraft von Schnitt-Attacken um 50%. 20% Chance, das Ziel zu verfluchen."
+  },
+  "strawhat": {
+    "name": "Strohhut",
+    "description": "15% Chance, einen K.O.-Treffer zu überleben. Erhöht Attackenkraft basierend auf der Anzahl besiegter Verbündeter (bis zu 100% Verstärkung)."
+  },
+  "fairyFear": {
+    "name": "Feenfurcht",
+    "description": "Erhöht Fee-Attacken um 20%. 10% Chance, das Ziel zurückschrecken zu lassen."
+  },
+  "shadowCharm": {
+    "name": "Schattenzauber",
+    "description": "Senkt Angriff um eine Stufe beim Betreten des Kampfes. Verhindert den Austausch des Gegners."
+  },
+  "yinYang": {
+    "name": "Yin Yang",
+    "description": "Geist- und Fee-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "stubbornStance": {
+    "name": "Störrische Haltung",
+    "description": "70% Chance, einen K.O.-Treffer zu überleben."
+  },
+  "miseryTouch": {
+    "name": "Elendberührung",
+    "description": "Ändert einen zufälligen Statuswert des Ziels um eine Stufe nach einem Angriff."
+  },
+  "justAJerk": {
+    "name": "Nur Ein Idiot",
+    "description": "Senkt Verteidigung um eine Stufe beim Betreten des Kampfes. Erhöht Unlicht-Attacken um 20%."
+  },
+  "bugabugabuga": {
+    "name": "Bugabugabuga",
+    "description": "Senkt alle Statuswerte um eine Stufe beim Betreten des Kampfes. Verhindert den Austausch des Gegners. Erleidet 20% mehr Schaden durch Attacken."
+  },
+  "justAMaskedJerk": {
+    "name": "Nur Ein Maskierter Idiot",
+    "description": "Senkt Verteidigung und einen zufälligen Statuswert um eine Stufe beim Betreten des Kampfes. Erhöht die Kraft aller Attacken um 20%."
+  },
+  "flameSpirit": {
+    "name": "Flammengeist",
+    "description": "10% Chance, das Ziel zu verbrennen. Anstatt Schaden durch Feuer-Attacken zu erleiden, werden zwei zufällige Statuswerte um 1 Stufe erhöht."
+  },
+  "soulBurn": {
+    "name": "Seelenbrand",
+    "description": "30% Chance, das Ziel zu verbrennen. Fügt dem Angreifer 1/8 seiner maximalen KP als Schaden zu, wenn er verbrannt ist."
+  },
+  "falseSafety": {
+    "name": "Falsche Sicherheit",
+    "description": "Senkt Spezial-Verteidigung um eine Stufe beim Betreten des Kampfes. 10% Chance, Angreifer bei Kontakt zu verbrennen, einzuschläfern oder zu paralysieren."
+  },
+  "forestFury": {
+    "name": "Waldeswut",
+    "description": "Erhöht die Kraft von Pflanzen-Attacken um 150%, wenn KP unter 50% sind."
+  },
+  "vineFist": {
+    "name": "Rankenfaust",
+    "description": "Erhöht die Kraft von Schlag-Attacken um 30%. 30% Chance, das Ziel mit Egelsamen zu belegen oder zu fesseln bei Verwendung von Schlag-Attacken."
+  },
+  "theAvatar": {
+    "name": "Der Avatar",
+    "description": "Erhöht Feuer-, Wasser-, Flug- und Boden-Attacken um 20%."
+  },
+  "enlightened": {
+    "name": "Erleuchtet",
+    "description": "Erhöht Psycho-Attacken um 20%. Attacken, die nicht sehr effektiv wären, werden neutral."
+  },
+  "happyLittleAccidents": {
+    "name": "Glückliche kleine Unfälle",
+    "description": "Verstärkt Attacken mit 65-85 Kraft um 50%. Verstärkt Attacken mit 60 oder weniger Kraft um 75%."
+  },
+  "originalAsmr": {
+    "name": "Original ASMR",
+    "description": "20% Chance, das Ziel in Schlaf zu versetzen. Reduziert erlittenen Schaden um 20%. Verstärkt schallbasierte Attacken um 30%. Halbiert Schaden durch schallbasierte Attacken."
+  },
+  "afropower": {
+    "name": "Afrokraft",
+    "description": "30% Chance, die Attackenkraft zu verdreifachen."
+  },
+  "insectInfusion": {
+    "name": "Insekteninfusion",
+    "description": "50% Chance, das Ziel für 5 Runden zu befallen."
+  },
+  "sentientAnt": {
+    "name": "Bewusste Ameise",
+    "description": "Erhöht Statuswerte um 1 oder 2 Stufen, abhängig vom höchsten Statuswert des Gegners. Erhöht Verteidigung, wenn der höchste Statuswert des Gegners Angriff ist, Spezial-Verteidigung, wenn es Spezial-Angriff ist, Spezial-Angriff, wenn es Spezial-Verteidigung ist, oder Initiative um 2 Stufen, wenn es Initiative ist."
+  },
+  "antRegen": {
+    "name": "Ameisenregeneration",
+    "description": "Stellt am Ende jeder Runde KP wieder her."
+  },
+  "v8Engine": {
+    "name": "V8-Motor",
+    "description": "Erhöht Initiative am Ende jeder Runde um 1 Stufe."
+  },
+  "selfDriving": {
+    "name": "Selbstfahrend",
+    "description": "Verwandelt Normal-Attacken in Psycho-Attacken und verstärkt ihre Kraft um 50%."
+  },
+  "limitedEdition": {
+    "name": "Limitierte Auflage",
+    "description": "Erhöht zwei zufällige Statuswerte um 1 Stufe beim Betreten des Kampfes. 33% Chance, die Attackenkraft um 20% zu verstärken."
+  },
+  "fieryDisguise": {
+    "name": "Feurige Tarnung",
+    "description": "Das Pokémon ist vor Schaden geschützt, wenn es einen Kampf betritt oder wenn seine KP voll sind. Dieser Schutz wird entfernt, nachdem das Pokémon Schaden erleidet. Feuer-Attacken laden diese Fähigkeit auf."
+  },
+  "playfulBlaze": {
+    "name": "Verspielte Flamme",
+    "description": "Verstärkt Feuer-Attacken, wenn die KP niedrig sind. 30% Chance, Angriff um 1 Stufe zu erhöhen nach Einsatz einer Feuer-Attacke. 10% Chance, das Ziel zu verbrennen beim Einsatz einer Fee-Attacke."
+  },
+  "aquaDisguise": {
+    "name": "Wasser-Tarnung",
+    "description": "Das Pokémon ist vor Schaden geschützt, wenn es einen Kampf betritt oder wenn seine KP voll sind. Dieser Schutz wird entfernt, nachdem das Pokémon Schaden erleidet. Wasser-Attacken laden diese Fähigkeit auf."
+  },
+  "phantomTorrent": {
+    "name": "Phantomflut",
+    "description": "Verstärkt Wasser-Attacken, wenn die KP niedrig sind. 30% Chance, Spezial-Angriff um 1 Stufe zu erhöhen nach Einsatz einer Wasser-Attacke. 10% Chance, das Ziel in einem Wasserstrudel zu fangen beim Einsatz einer Fee-Attacke."
+  },
+  "sillyPressure": {
+    "name": "Alberner Druck",
+    "description": "Erhöht den AP-Verbrauch von Attacken, die auf das Pokémon zielen. 30% Chance, Angriff um 1 Stufe zu erhöhen nach Einsatz einer Psycho-Attacke. 10% Chance, das Ziel zu zugabezwingen beim Einsatz einer Fee-Attacke."
+  },
+  "telekineticDisguise": {
+    "name": "Telekinetische Tarnung",
+    "description": "Das Pokémon ist vor Schaden geschützt, wenn es einen Kampf betritt oder wenn seine KP voll sind. Dieser Schutz wird entfernt, nachdem das Pokémon Schaden erleidet. Psycho-Attacken laden diese Fähigkeit auf."
+  },
+  "electricDisguise": {
+    "name": "Elektro-Tarnung",
+    "description": "Das Pokémon ist vor Schaden geschützt, wenn es einen Kampf betritt oder wenn seine KP voll sind. Dieser Schutz wird entfernt, nachdem das Pokémon Schaden erleidet. Elektro-Attacken laden diese Fähigkeit auf."
+  },
+  "lovelyStatic": {
+    "name": "Lieblicher Statikdruck",
+    "description": "30% Chance, den Angreifer bei Berührung zu paralysieren. 30% Chance, Spezial-Angriff um 1 Stufe zu erhöhen nach Einsatz einer Elektro-Attacke. 20% Chance, das Ziel zu bezaubern beim Einsatz einer Fee-Attacke, wenn es das andere Geschlecht hat."
+  },
+  "ancientDisguise": {
+    "name": "Uralte Tarnung",
+    "description": "Das Pokémon ist vor Schaden geschützt, wenn es einen Kampf betritt oder wenn seine KP voll sind. Dieser Schutz wird entfernt, nachdem das Pokémon Schaden erleidet. Gesteins-Attacken laden diese Fähigkeit auf."
+  },
+  "madeToLast": {
+    "name": "Langlebig",
+    "description": "Hat eine 40% Chance, einen Treffer zu überleben, der es kampfunfähig machen würde. 30% Chance, Initiative um 1 Stufe zu erhöhen nach Einsatz einer Gesteins-Attacke. 10% Chance, das Ziel zu fesseln beim Einsatz einer Fee-Attacke."
+  },
+  "multiPiece": {
+    "name": "Mehrteilig",
+    "description": "Überlebt einen Treffer, der es kampfunfähig machen würde, und senkt dann stark seine Initiative. Heilt KP nach einem Treffer."
+  },
+  "alienType": {
+    "name": "Alien-Typ",
+    "description": "Verstärkt Eis-, Elektro- und Pflanzen-Attacken um 20%."
+  },
+  "waterPowered": {
+    "name": "Wasserangetrieben",
+    "description": "Verwandelt Nicht-Psycho- und Nicht-Boden-Attacken in Wasser-Attacken und verstärkt ihre Kraft um 20%. Anstatt Schaden durch Wasser-Attacken zu erleiden, erhöht es einen zufälligen Statuswert um 1 Stufe."
+  },
+  "madeOfIce": {
+    "name": "Aus Eis gemacht",
+    "description": "30% Chance, Angreifer bei Berührung einzufrieren. Verstärkt Eis-Attacken um 30%."
+  },
+  "shredded": {
+    "name": "Durchtrainiert",
+    "description": "33% Chance, die Attackenkraft zu verdoppeln. Verwandelt Wasser- und Normal-Attacken in Kampf-Attacken und verstärkt ihre Kraft um 20%."
+  },
+  "sculptedIce": {
+    "name": "Gemeißeltes Eis",
+    "description": "Erhöht einen zufälligen Statuswert unter Initiative, Verteidigung und Angriff am Ende jeder Runde um 1 Stufe."
+  },
+  "quaker": {
+    "name": "Erschütterer",
+    "description": "Boden-Attacken können Flug-Typen treffen. Verstärkt Attacken mit 'beben' oder 'magnitude' im Namen um 50%."
+  },
+  "rockFortress": {
+    "name": "Felsfestung",
+    "description": "Reduziert Schaden durch sehr effektive Attacken um 50%."
+  },
+  "rockControl": {
+    "name": "Gesteins-Kontrolle",
+    "description": "Setzt Tarnsteine ein, wenn es von einer physischen Attacke getroffen wird. Verstärkt Gesteins-Attacken um 30%."
+  },
+  "unstoppablePoison": {
+    "name": "Unaufhaltsames Gift",
+    "description": "Gift-Attacken können Stahl-Typen treffen. Verstärkt Gift-Attacken um 20%. 30% Chance, das Ziel schwer zu vergiften."
+  },
+  "swiftClaws": {
+    "name": "Flinke Klauen",
+    "description": "Verstärkt Kontakt-Attacken um 30%. 30% Chance, Genauigkeit, Angriff oder Initiative um 1 Stufe zu erhöhen beim Einsatz einer Kontakt-Attacke."
+  },
+  "tripleThreat": {
+    "name": "Dreifache Bedrohung",
+    "description": "10% Chance auf einen kritischen Treffer. 10% Chance, das Ziel zurückschrecken zu lassen. 10% Chance, bei Berührung einzufrieren, zu paralysieren oder zu verbrennen."
+  },
+  "dragonWrath": {
+    "name": "Drachenzorn",
+    "description": "50% Chance, 1/6 der maximalen KP des Angreifers als Schaden zu verursachen, wenn es von einer Kontakt-Attacke getroffen wird."
+  },
+  "hydraResilience": {
+    "name": "Hydra-Widerstandsfähigkeit",
+    "description": "Überlebt einen Treffer, der es kampfunfähig machen würde, wenn es volle KP hat. Blockiert Sofort-KO-Attacken. Hat eine 25% Chance, einen Treffer zu überleben, der es kampfunfähig machen würde."
+  },
+  "toxicOverload": {
+    "name": "Toxische Überladung",
+    "description": "15% Chance, das Ziel schwer zu vergiften. Verstärkt die Attackenkraft um 75% gegen vergiftete oder schwer vergiftete Ziele."
+  },
+  "recycleEnergy": {
+    "name": "Energie-Recycling",
+    "description": "50% Chance, 1/8 der maximalen KP wiederherzustellen, nachdem es getroffen wurde oder angegriffen hat."
+  },
+  "neetProduced": {
+    "name": "NEET-Produktion",
+    "description": "Erleidet doppelten Schaden durch Wasser- und Normal-Attacken. Erhöht Item-Drops nach dem Kampf. Verdoppelt die Kraft gegen Normal-, Fee- und Kampf-Pokémon."
+  },
+  "ancientAutomaton": {
+    "name": "Uralter Automat",
+    "description": "Erhöht einen zufälligen Statuswert unter Initiative, Verteidigung und Angriff am Ende jeder Runde um 1 Stufe."
+  },
+  "shadowOfColossus": {
+    "name": "Schatten des Kolosses",
+    "description": "Hat eine 10% Chance, einen Treffer zu überleben, der es kampfunfähig machen würde. Verstärkt Geist-Attacken um 30%. Reduziert erlittenen Schaden um 15%."
+  },
+  "trueFear": {
+    "name": "Wahre Furcht",
+    "description": "Senkt einen zufälligen Statuswert des Gegners am Ende jeder Runde um 1 Stufe."
+  },
+  "sumoMaster": {
+    "name": "Sumo-Meister",
+    "description": "Verstärkt Kampf-Attacken um 30%. Verwandelt Normal-Attacken in Boden-Attacken und verstärkt ihre Kraft um 30%."
+  },
+  "steadfastBulk": {
+    "name": "Standhafter Koloss",
+    "description": "30% Chance, bei einem Angriff zurückzuschrecken. Bei Zurückschrecken erhöht sich Initiative um 2 Stufen und Angriff und Verteidigung um 1 Stufe."
+  },
+  "bigGuts": {
+    "name": "Große Beharrlichkeit",
+    "description": "Angriff wird verdoppelt, wenn das Pokémon einen Statuseffekt hat. Ignoriert Angriffssenkung durch Verbrennung."
+  },
+  "luchadorsSpirit": {
+    "name": "Luchador-Geist",
+    "description": "Verwandelt Normal-Attacken in Flug-Attacken und verstärkt ihre Kraft um 20%. Erhöht den höchsten Statuswert um 1 Stufe, nachdem es einen Gegner besiegt hat."
+  },
+  "maskedMight": {
+    "name": "Maskierte Macht",
+    "description": "Verdoppelt Angriff und Spezial-Angriff, wenn die KP über 50% liegen."
+  },
+  "nachoLibre": {
+    "name": "Nacho Libre",
+    "description": "Verstärkt Kampf-Attacken um 60%."
+  },
+  "pseudoScale": {
+    "name": "Pseudo-Schuppe",
+    "description": "Halbiert erlittenen Schaden, wenn die KP voll sind. Fügt dem Angreifer 1/8 seiner maximalen KP als Schaden zu, wenn es von einer Kontakt-Attacke getroffen wird."
+  },
+  "dracoForm": {
+    "name": "Draco-Form",
+    "description": "Verstärkt Drachen-Attacken um 20%. Drachen- und Normal-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "dittoType": {
+    "name": "Ditto-Typ",
+    "description": "Ändert den Typ des Anwenders, um gegen den Typ der Attacke zu resistieren, von der es getroffen wurde. Stellt 1/8 der maximalen KP wieder her, wenn sich der Typ ändert."
+  },
+  "morphingBlaze": {
+    "name": "Verwandelnde Flamme",
+    "description": "Verstärkt Feuer-Attacken, wenn die KP niedrig sind. Verwandelt Feuer-Attacken in Elektro-Attacken gegen Wasser-Typen und in Wasser-Attacken gegen Boden-Typen, wenn die KP unter 50% liegen."
+  },
+  "flameForm": {
+    "name": "Flammen-Form",
+    "description": "Verstärkt Feuer-Attacken um 20%. Feuer- und Normal-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "ultimateAdaptation": {
+    "name": "Ultimative Anpassung",
+    "description": "Verstärkt die Kraft aller Attacken um 20%. Sehr effektive Attacken werden gegen dieses Pokémon neutral."
+  },
+  "pseudoPerfection": {
+    "name": "Pseudo-Perfektion",
+    "description": "10% Chance für jedes: kritischer Treffer, halbierten erlittenen Schaden, verdoppelte Attackenkraft, Wiederherstellung von 1/8 der maximalen KP nach einem Treffer oder Angriff."
+  },
+  "dnaChange": {
+    "name": "DNA-Veränderung",
+    "description": "50% Chance, den Typ zu ändern und 1/8 der maximalen KP wiederherzustellen, wenn eine Attacke eingesetzt wird."
+  },
+  "realisticStatic": {
+    "name": "Realistischer Statikdruck",
+    "description": "50% Chance, den Angreifer bei Berührung zu paralysieren. Senkt einen zufälligen Statuswert des Angreifers bei Berührung um 1 Stufe. Fügt dem Angreifer 1/8 seiner maximalen KP als Schaden zu, wenn es von einer Kontakt-Attacke getroffen wird."
+  },
+  "mascotForm": {
+    "name": "Maskottchen-Form",
+    "description": "Verstärkt Elektro-Attacken um 20%. Elektro- und Normal-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "copyGuard": {
+    "name": "Kopierschutz",
+    "description": "Attacken dieses Pokémon können nicht daneben gehen. Reduziert Schaden durch sehr effektive Attacken um 25%."
+  },
+  "muscleForm": {
+    "name": "Muskel-Form",
+    "description": "Verstärkt Kampf-Attacken um 20%. Kampf- und Normal-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "unrealPressure": {
+    "name": "Unwirklicher Druck",
+    "description": "Erhöht den AP-Verbrauch von Attacken, die das Pokémon zum Ziel haben, um 2. Senkt einen zufälligen Statuswert und die Genauigkeit des Gegners um eine Stufe beim Betreten des Kampfes."
+  },
+  "psychoForm": {
+    "name": "Psycho-Form",
+    "description": "Verstärkt Psycho-Attacken um 20%. Psycho- und Normal-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "clubClobber": {
+    "name": "Keulen-Klopper",
+    "description": "Erhöht Gestein-Attacken um 20%. Erhöht die Kraft von Kontakt-Attacken um 40%."
+  },
+  "yabaDabaDoo": {
+    "name": "Yaba Daba Doo",
+    "description": "Erhöht alle Statuswerte um eine Stufe beim Betreten des Kampfes. Senkt einen zufälligen Statuswert um eine Stufe am Ende jeder Runde."
+  },
+  "meteorProof": {
+    "name": "Meteorfest",
+    "description": "Reduziert den Schaden von Wasser-, Gestein-, Feuer- und Eis-Attacken um 25%."
+  },
+  "sharkShred": {
+    "name": "Haizerfetzer",
+    "description": "Fügt dem Ziel 1/8 seiner maximalen KP als Schaden zu bei Verwendung einer Kontakt-Attacke. Stellt 1/8 der maximalen KP wieder her bei Verwendung einer Kontakt-Attacke."
+  },
+  "attackBoost": {
+    "name": "Angriffs-Boost",
+    "description": "Erhöht Angriff um eine Stufe am Ende jeder Runde."
+  },
+  "reversedPsychology": {
+    "name": "Umgekehrte Psychologie",
+    "description": "Kehrt Statuswertänderungen um. Kehrt Typ-Effektivität von Attacken um."
+  },
+  "tailCommand": {
+    "name": "Schwanzkommando",
+    "description": "Erhöht die Kraft von schwanzbezogenen Attacken um 75%."
+  },
+  "abyssalAqua": {
+    "name": "Abgründiges Aqua",
+    "description": "Wasser-, Geist- und Unlicht-Attacken teilen ihre Typvorteile gegen die gleichen Typen! 30% Chance, das Ziel in einem Wasserstrudel zu fangen."
+  },
+  "omniscale": {
+    "name": "Omnischuppe",
+    "description": "30% Chance, erlittenen Schaden zu halbieren. 30% Chance, einen zufälligen Statuswert um eine Stufe zu erhöhen, wenn von einer Attacke getroffen."
+  },
+  "bounceBack": {
+    "name": "Zurückprallen",
+    "description": "30% Chance, einen K.O.-Treffer zu überleben und dem Angreifer 1/8 seiner maximalen KP als Schaden zuzufügen."
+  },
+  "counterCoat": {
+    "name": "Konter-Mantel",
+    "description": "Fügt dem Angreifer 1/6 seiner maximalen KP als Schaden zu, wenn von einer Kontakt-Attacke getroffen. Reduziert erlittenen Schaden um 15%."
+  },
+  "shinyScale": {
+    "name": "Glanzschuppe",
+    "description": "10% Chance, Schaden von Attacken vollständig zu vermeiden."
+  },
+  "goldenLuck": {
+    "name": "Goldenes Glück",
+    "description": "30% Chance auf einen kritischen Treffer."
+  },
+  "oneInAMillion": {
+    "name": "Einer unter Millionen",
+    "description": "5% Chance, Attackenkraft zu verfünffachen."
+  },
+  "apexPredator": {
+    "name": "Apex-Raubtier",
+    "description": "Senkt Verteidigung um eine Stufe beim Betreten des Kampfes. Erhöht den höchsten Statuswert um eine Stufe nach dem Besiegen eines Gegners."
+  },
+  "terrorTunnel": {
+    "name": "Terror-Tunnel",
+    "description": "Verdoppelt die Kraft von Schaufler."
+  },
+  "looseThreads": {
+    "name": "Lose Fäden",
+    "description": "30% Chance, das Ziel einzusperren. Verfünffacht die Kraft von Klammerattacken."
+  },
+  "streetSmart": {
+    "name": "Straßenschlau",
+    "description": "Erhöht Stahl-, Unlicht-, Normal- und Kampf-Attacken um 20%."
+  },
+  "boosheFurCoat": {
+    "name": "Booshe-Fellmantel",
+    "description": "Halbiert Schaden von Physischen Attacken. 40% Chance, Schaden von Spezial-Attacken um 25% zu reduzieren."
+  },
+  "champion": {
+    "name": "Champion",
+    "description": "Erhöht alle Statuswerte um 1 Stufe nach dem Besiegen eines Gegners. Vergiftet sich selbst schwer nach dem Einsatz einer Attacke."
+  },
+  "snakeScale": {
+    "name": "Schlangenschuppe",
+    "description": "50% Chance, erlittenen Schaden um 25% zu reduzieren. 30% Chance, Angreifer bei Kontakt schwer zu vergiften."
+  },
+  "deathClaws": {
+    "name": "Todesklauen",
+    "description": "Erhöht die Kraft von Kontakt-Attacken um 50%. Attacken, die nicht sehr effektiv wären, werden neutral."
+  },
+  "industrialPower": {
+    "name": "Industriekraft",
+    "description": "Erhöht Elektro-, Stahl- und Gift-Attacken um 30%."
+  },
+  "cogOverload": {
+    "name": "Zahnrad-Überlastung",
+    "description": "Erhöht die Kraft von zahnrad- und rotationsbezogenen Attacken um 50%."
+  },
+  "multiGear": {
+    "name": "Multi-Zahnrad",
+    "description": "Erhöht Initiative und einen zufälligen Statuswert um eine Stufe bei Verwendung von Gangwechsel."
+  },
+  "sugarRush": {
+    "name": "Zuckerrausch",
+    "description": "Attacken werden zuerst ausgeführt, wenn KP über 50% sind. Erhöht Attackenkraft um 20%, wenn KP über 50% sind."
+  },
+  "livingDelicacy": {
+    "name": "Lebende Delikatesse",
+    "description": "Erhöht zwei zufällige Statuswerte um eine Stufe beim Betreten des Kampfes. 33% Chance, Attackenkraft um 50% zu erhöhen. 30% Chance, 1/8 der maximalen KP wiederherzustellen, wenn von einer Attacke getroffen."
+  },
+  "abandoned": {
+    "name": "Verlassen",
+    "description": "Erhöht Angriff und Initiative um eine Stufe nach einem Treffer."
+  },
+  "lazyMight": {
+    "name": "Faule Macht",
+    "description": "Erhöht die Kraft aller Attacken bei niedrigen KP."
+  },
+  "lasagna": {
+    "name": "Lasagne",
+    "description": "Stellt 1/2 der maximalen KP wieder her, wenn KP unter 50% fallen. Wird nur einmal pro Kampf aktiviert."
+  },
+  "alienCat": {
+    "name": "Alien-Katze",
+    "description": "Erhöht Psycho-Attacken um 20%. Verliebt katzenartige Pokémon des anderen Geschlechts. Immun gegen Boden-Attacken."
+  },
+  "phaser": {
+    "name": "Phaser",
+    "description": "Negiert Schaden von Kontakt-Attacken."
+  },
+  "virtualTacos": {
+    "name": "Virtuelle Tacos",
+    "description": "Stellt 1/8 der maximalen KP am Ende jeder Runde wieder her."
+  },
+  "heyLookAtMe": {
+    "name": "Hey Schau Mich An",
+    "description": "Senkt zwei zufällige Statuswerte um eine Stufe und erhöht einen zufälligen Statuswert um eine Stufe beim Betreten des Kampfes."
+  },
+  "limitedTime": {
+    "name": "Begrenzte Zeit",
+    "description": "Vergiftet sich selbst schwer beim Betreten des Kampfes. 30% Chance, Attackenkraft zu verdreifachen. Erhöht einen zufälligen Statuswert um eine Stufe nach dem Besiegen eines Gegners."
+  },
+  "boxBorn": {
+    "name": "Box-Geboren",
+    "description": "Reduziert die Kraft von ball-, kugel- und sphärenbezogenen Attacken um 75%. Erhöht Stahl-Attacken um 20%."
+  },
+  "imAPickle": {
+    "name": "Ich Bin Eine Gurke",
+    "description": "Heilt KP bei Wasser-Attacken. Erhöht Initiative um eine Stufe bei Pflanzen-Attacken. Erhöht Angriff um eine Stufe bei Stahl-Attacken. 10% Chance, das Ziel zurückschrecken zu lassen."
+  },
+  "resourceful": {
+    "name": "Einfallsreich",
+    "description": "30% Chance, das getragene Item des Ziels zu stehlen und Angriff um eine Stufe zu erhöhen. 30% Chance, nach dem Kampf ein Item zu erhalten."
+  },
+  "deadlyBrine": {
+    "name": "Tödliche Salzlake",
+    "description": "Verwandelt Normal-Attacken in Wasser-Attacken. Verstärkt Wasser-Attacken um 30%. Wasser- und Gift-Attacken teilen ihre Typvorteile gegen die gleichen Typen! 10% Chance, das Ziel schwer zu vergiften."
+  },
+  "thicc": {
+    "name": "Thicc",
+    "description": "30% Chance, erlittenen Schaden um 25% zu reduzieren."
+  },
+  "enforcer": {
+    "name": "Vollstrecker",
+    "description": "Unlicht- und Stahl-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Erhöht Angriff um 1 Stufe nach dem Besiegen eines Gegners."
+  },
+  "spookySense": {
+    "name": "Gruselgespür",
+    "description": "Reduziert Schaden von Geister- und Unlicht-Attacken um 25%. Erhöht Angriff und Initiative um eine Stufe, wenn der Gegner eine sehr effektive Attacke hat."
+  },
+  "unyieldingCourage": {
+    "name": "Unnachgiebiger Mut",
+    "description": "Überlebt einen K.O.-Treffer bei vollen KP. Blockiert Sofort-K.O.-Attacken. 25% Chance, einen K.O.-Treffer zu überleben."
+  },
+  "lovePower": {
+    "name": "Liebeskraft",
+    "description": "50% Chance, Attackenkraft zu verdoppeln. 30% Chance, das Ziel zu verlieben, wenn es das andere Geschlecht hat."
+  },
+  "spiritWinds": {
+    "name": "Geisterwinde",
+    "description": "Geist- und Pflanzen-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Unlicht- und Normal-Attacken in Geist-Attacken und verstärkt ihre Kraft um 20%."
+  },
+  "leafDancer": {
+    "name": "Blatttänzer",
+    "description": "Erhöht einen zufälligen Statuswert um eine Stufe nach Verwendung einer Unlicht-Attacke. Erhöht einen zufälligen Statuswert um eine Stufe, wenn von einer Pflanzen-Attacke getroffen."
+  },
+  "slayerSensei": {
+    "name": "Jäger-Sensei",
+    "description": "Verdreifacht Attackenkraft gegen Geister- und Unlicht-Pokémon. Erhöht einen zufälligen Statuswert um eine Stufe nach dem Besiegen eines Gegners."
+  },
+  "balanced": {
+    "name": "Ausgeglichen",
+    "description": "Immun gegen Verwirrung. Attacken dieses Pokémon können nicht verfehlen. 50% Chance, Schaden von Attacken zu halbieren."
+  },
+  "enhancedFocus": {
+    "name": "Verstärkter Fokus",
+    "description": "25% Chance auf einen kritischen Treffer."
+  },
+  "luckySeven": {
+    "name": "Glückliche Sieben",
+    "description": "70% Chance, Attacken mit 70 Basis-Kraft um 70% zu erhöhen. 70% Chance, einen zufälligen Statuswert um eine Stufe nach einem Angriff zu erhöhen."
+  },
+  "lastLaugh": {
+    "name": "Letztes Lachen",
+    "description": "Fügt dem Angreifer 1/4 seiner maximalen KP als Schaden zu, wenn es besiegt wird."
+  },
+  "foxWisdom": {
+    "name": "Fuchsweisheit",
+    "description": "Verwandelt Normal-Attacken in Psycho-Attacken. Verstärkt Psycho-Attacken um 30%. Feuer- und Psycho-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "eternalYouth": {
+    "name": "Ewige Jugend",
+    "description": "Erhöht Fee-Attacken um 30%. Verwandelt Normal-Attacken in Fee-Attacken. 10% Chance, einen K.O.-Treffer zu überleben."
+  },
+  "flamingChakra": {
+    "name": "Flammendes Chakra",
+    "description": "Verwandelt Nicht-Psycho-Attacken in Feuer-Attacken. Erhöht Feuer-Attacken um 50%. 10% Chance, das Ziel zu verbrennen."
+  },
+  "adaptabugility": {
+    "name": "Adaptakäfigkeit",
+    "description": "Verdreifacht die Kraft von Käfer-Attacken."
+  },
+  "shellRepair": {
+    "name": "Panzerreparatur",
+    "description": "Stellt 1/4 der maximalen KP bei Verwendung von Panzerschutz wieder her. Erhöht Verteidigung und Spezial-Verteidigung um eine Stufe bei Verwendung von Panzerschutz. Wird nur einmal pro Kampf aktiviert."
+  },
+  "squeezer": {
+    "name": "Quetscher",
+    "description": "Verfünffacht die Kraft von Wickel. 30% Chance, das Ziel einzusperren."
+  },
+  "greenSpaghettiMonster": {
+    "name": "Grünes Spaghetti-Monster",
+    "description": "15% Chance, das Ziel bei Verwendung einer Pflanzen-Attacke einzusperren. Erhöht Pflanzen-Attacken um 20%. 10% Chance, die Initiative des Ziels um eine Stufe bei Verwendung einer Pflanzen-Attacke zu senken."
+  },
+  "leechVines": {
+    "name": "Schlingranken",
+    "description": "Verdoppelt die Kraft von Rankenhieb. 30% Chance, das Ziel mit Egelsamen zu belegen oder zu fesseln bei Verwendung von Rankenhieb."
+  },
+  "regeneratorPlus": {
+    "name": "Regenerator Plus",
+    "description": "Stellt 45% der maximalen KP beim Austausch wieder her."
+  },
+  "plaguePsyche": {
+    "name": "Pest-Psyche",
+    "description": "Gift- und Psycho-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Normal-Attacken in Gift-Attacken. 10% Chance, das Ziel zu verwirren oder zu vergiften."
+  },
+  "toxicTrance": {
+    "name": "Toxische Trance",
+    "description": "30% Chance, das Ziel schwer zu vergiften. 30% Chance, das Ziel einzuschläfern. Erhöht Attackenkraft um 50%, wenn der Anwender einen Statuseffekt hat."
+  },
+  "permafrostArmor": {
+    "name": "Permafrost-Rüstung",
+    "description": "Halbiert Schaden von Feuer-, Eis- und Gestein-Attacken."
+  },
+  "glacialPace": {
+    "name": "Gletschertempo",
+    "description": "Senkt Initiative um zwei Stufen beim Betreten des Kampfes. Erhöht Eis-Attacken um 20%."
+  },
+  "iceKing": {
+    "name": "Eiskönig",
+    "description": "Erhöht Eis-Attacken um 50%. Verwandelt Normal-Attacken in Eis-Attacken und erhöht ihre Kraft um 20%. 5% Chance, das Ziel einzufrieren."
+  },
+  "despair": {
+    "name": "Verzweiflung",
+    "description": "Senkt einen zufälligen Statuswert des Gegners um eine Stufe und erhöht einen zufälligen Statuswert des Anwenders um eine Stufe am Ende jeder Runde."
+  },
+  "ohayogosumasu": {
+    "name": "Ohayogosumasu",
+    "description": "Senkt Angriff, Verteidigung, Spezial-Angriff, Spezial-Verteidigung und Initiative um eine Stufe beim Betreten des Kampfes."
+  },
+  "abilityTextHere": {
+    "name": "Fähigkeitstext Hier",
+    "description": "Gibt dem Gegner diese Fähigkeit beim Betreten des Kampfes. Erhöht zwei zufällige Statuswerte um eine Stufe beim Betreten des Kampfes."
+  },
+  "exceptionCaught": {
+    "name": "Ausnahme Gefangen",
+    "description": "Überlebt einen K.O.-Treffer und senkt dann stark seine Initiative. Heilt KP nach einem Treffer."
+  },
+  "fourOFour": {
+    "name": "Vier Null Vier",
+    "description": "10% Chance, Schaden von Attacken vollständig zu vermeiden."
+  },
+  "shadowSlayer": {
+    "name": "Schattenbezwinger",
+    "description": "30% Chance, das Ziel zu verbrennen, zu vergiften, zu paralysieren oder schwer zu vergiften bei Verwendung einer Geister- oder Stahl-Attacke."
+  },
+  "nightmareEmerald": {
+    "name": "Albtraumsmaragd",
+    "description": "Verstärkt Gesteins- und Unlicht-Attacken um 30%. 50% Chance, dem Ziel die Fähigkeit Komatöse oder den Status Albtraum zu geben."
+  },
+  "imaginary": {
+    "name": "Imaginär",
+    "description": "Verwandelt Normal-Attacken in Fee-Attacken und erhöht ihre Kraft um 20%. 30% Chance, Schaden von Physischen Attacken zu halbieren."
+  },
+  "splinterSkin": {
+    "name": "Splitternde Haut",
+    "description": "Fügt dem Angreifer 1/12 seiner maximalen KP als Schaden zu, wenn von einer Kontakt-Attacke getroffen. Fügt auch dem Ziel 1/12 seiner maximalen KP als Schaden zu bei Verwendung einer Kontakt-Attacke."
+  },
+  "jujutsuSorcerer": {
+    "name": "Jujutsu-Zauberer",
+    "description": "Erhöht Attackenkraft um 150%, wenn der Anwender oder das Ziel einen Statuseffekt hat. 20% Chance, eigenen oder Statuseffekt des Ziels zu heilen. 30% Chance, einen zufälligen Statuseffekt zu verursachen. Ignoriert Angriffssenkung durch Verbrennung. 50% Chance, sich selbst einen zufälligen Statuseffekt zuzufügen, wenn noch keiner vorhanden ist."
+  },
+  "toxicKing": {
+    "name": "Giftkönig",
+    "description": "Vergiftet das Ziel immer schwer."
+  },
+  "swampKing": {
+    "name": "Sumpfkönig",
+    "description": "30% Chance, das Ziel zu vergiften. Verwandelt Normal-Attacken in Wasser-Attacken und verstärkt ihre Kraft um 20%. Wasser- und Gift-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "rageSoul": {
+    "name": "Wutseele",
+    "description": "Erhöht Attackenkraft basierend auf der Anzahl besiegter Verbündeter (bis zu 150% Verstärkung)."
+  },
+  "darkSide": {
+    "name": "Dunkle Seite",
+    "description": "Verdoppelt die Kraft von Unlicht-Attacken."
+  },
+  "puppetMaster": {
+    "name": "Puppenspieler",
+    "description": "Verdreifacht Attackenkraft gegen Mimigma und Shuppet. 20% Chance, Normal- und Kampf-Pokémon zu verfluchen oder zu fesseln. 10% Chance, erlittenen Schaden zu halbieren."
+  },
+  "blackAndRed": {
+    "name": "Schwarz und Rot",
+    "description": "Unlicht- und Feuer-Attacken teilen ihre Typvorteile gegen die gleichen Typen! 15% Chance, das Ziel zu verbrennen. Verwandelt Normal-Attacken in Unlicht-Attacken und verstärkt ihre Kraft um 20%."
+  },
+  "zombieExperience": {
+    "name": "Zombie-Erfahrung",
+    "description": "Verdoppelt Attackenkraft gegen Unlicht-, Geister- und Boden-Pokémon. Erhöht alle Statuswerte um eine Stufe nach dem Besiegen eines Unlicht-, Geister- oder Boden-Pokémon."
+  },
+  "lastHope": {
+    "name": "Letzte Hoffnung",
+    "description": "Erhöht die Kraft aller Attacken bei niedrigen KP."
+  },
+  "ugly": {
+    "name": "Hässlich",
+    "description": "Senkt einen zufälligen Statuswert um eine Stufe beim Betreten des Kampfes und am Ende jeder Runde. 10% Chance, das Ziel zurückschrecken zu lassen."
+  },
+  "blandCardboardEater": {
+    "name": "Langweiliger Kartonessser",
+    "description": "Verdreifacht Attackenkraft gegen SmittyXTV. Erhöht Angriff um eine Stufe, wenn von einer Pflanzen-Attacke getroffen. Stellt 1/8 der maximalen KP bei Verwendung einer Pflanzen-Attacke wieder her."
+  },
+  "boring": {
+    "name": "Langweilig",
+    "description": "Senkt einen zufälligen Statuswert um eine Stufe beim Betreten des Kampfes und am Ende jeder Runde. Erhöht Normal-Attacken um 30%."
+  },
+  "moldyTouch": {
+    "name": "Schimmelberührung",
+    "description": "10% Chance, das Ziel bei Kontakt zu befallen oder schwer zu vergiften. Erhöht Gift-Attacken um 20%. Erleidet doppelten Schaden durch Charakterbrecher."
+  },
+  "eternalGiggle": {
+    "name": "Ewiges Kichern",
+    "description": "Erleidet doppelten Schaden durch Charakterbrecher. Verwirrt alle gegnerischen Pokémon und lässt sie zurückschrecken, wenn der Anwender besiegt wird."
+  },
+  "redMenace": {
+    "name": "Rote Bedrohung",
+    "description": "5% Chance, das Ziel zu verfluchen oder 10% Chance, es bei Kontakt zu verbrennen. Erhöht Feuer-Attacken um 20%. Erhöht Initiative um eine Stufe, wenn von einer Feuer-Attacke getroffen. Erleidet doppelten Schaden durch Charakterbrecher."
+  },
+  "ghostlyMold": {
+    "name": "Geisterschimmel",
+    "description": "10% Chance, das Ziel bei Kontakt schwer zu vergiften. Geister- und Gift-Attacken teilen ihre Typvorteile gegen dieselben Typen! Ändert Normal-Attacken in Geister-Attacken und erhöht ihre Stärke um 20%. Erleidet doppelten Schaden von Überbrücker."
+  },
+  "pacFungus": {
+    "name": "Pac-Pilz",
+    "description": "30% Chance, das Ziel bei Kontakt zu befallen. Erhöht Initiative und Angriff um eine Stufe, wenn das Ziel befallen ist. Erleidet doppelten Schaden durch Charakterbrecher."
+  },
+  "secretSauce": {
+    "name": "Geheime Soße",
+    "description": "10% Chance, das Ziel zu paralysieren, zu verbrennen, zu vergiften oder schwer zu vergiften. 10% Chance, Schaden in Höhe von 1/8 der maximalen KP des Ziels zuzufügen. 10% Chance, verschiedene Statuseffekte oder Wirkungen zu verursachen."
+  },
+  "mcpuzzle": {
+    "name": "McPuzzle",
+    "description": "20% Chance, das Ziel zu verwirren. 10% Chance, das Ziel zurückschrecken zu lassen. 20% Chance, Attackenkraft um 150% zu erhöhen. Erhöht einen zufälligen Statuswert um eine Stufe nach dem Besiegen eines Gegners."
+  },
+  "mayITakeYourOrder": {
+    "name": "Darf Ich Ihre Bestellung Aufnehmen",
+    "description": "Attacken dieses Pokémon werden immer zuerst ausgeführt."
+  },
+  "stealthShipping": {
+    "name": "Heimliche Lieferung",
+    "description": "50% Chance auf Stacheln, 20% Chance auf Tarnsteine, 20% Chance auf Giftspitzen oder 10% Chance auf Klebenetz, wenn von einer Kontakt-Attacke getroffen."
+  },
+  "cardboardEmpire": {
+    "name": "Karton-Imperium",
+    "description": "Erhöht zwei zufällige Statuswerte um eine Stufe nach dem Besiegen eines Gegners. Stellt 1/8 der maximalen KP nach dem Besiegen eines Gegners wieder her."
+  },
+  "aWinner": {
+    "name": "Ein Gewinner",
+    "description": "Erhöht einen zufälligen Statuswert um eine Stufe nach dem Besiegen eines Gegners."
+  },
+  "smugAura": {
+    "name": "Selbstgefällige Aura",
+    "description": "Verwandelt Normal-Attacken in Gift-Attacken und verstärkt ihre Kraft um 20%. Psycho- und Gift-Attacken teilen ihre Typvorteile gegen die gleichen Typen! 10% Chance, das Ziel zu vergiften."
+  },
+  "deepThoughts": {
+    "name": "Tiefe Gedanken",
+    "description": "30% Chance, das Ziel nach dem Einsatz einer Attacke zu verwirren."
+  },
+  "intellyLectAlly": {
+    "name": "Intellektueller Verbündeter",
+    "description": "Erhöht Spezial-Angriff um eine Stufe am Ende jeder Runde."
+  },
+  "insomniaInk": {
+    "name": "Schlaflose Tinte",
+    "description": "50% Chance, dem Ziel die Fähigkeit 'Komatös' oder den Status 'Albtraum' zu geben."
+  },
+  "nightmareClarinet": {
+    "name": "Albtraum-Klarinette",
+    "description": "Verwandelt alle Attacken in schallbasierte Attacken und erhöht ihre Kraft um 20%. Erhöht schallbasierte Attacken um 50%. 10% Chance, das Ziel zu verfluchen."
+  },
+  "jellyfishFever": {
+    "name": "Quallen-Fieber",
+    "description": "Verwandelt Normal-Attacken in Feuer-Attacken und verstärkt ihre Kraft um 20%. 10% Chance, das Ziel schwer zu vergiften, wenn eine Spezial-Attacke eingesetzt wird. 10% Chance, das Ziel zu verbrennen, wenn eine Physische Attacke eingesetzt wird. Feuer- und Gift-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "deepSeaVirus": {
+    "name": "Tiefsee-Virus",
+    "description": "Fügt dem Angreifer 1/8 seiner maximalen KP als Schaden zu, wenn er schwer vergiftet ist. 30% Chance, das Ziel schwer zu vergiften."
+  },
+  "bubblingBrains": {
+    "name": "Blubbernde Gehirne",
+    "description": "Erhöht Wasser-Attacken um 50%. Stellt 1/8 der maximalen KP bei Verwendung einer Kontakt-Attacke wieder her."
+  },
+  "cloakOfShadows": {
+    "name": "Schattenumhang",
+    "description": "Erhöht Geister-Attacken um 20%. Verwandelt Normal-Attacken in Geister-Attacken und erhöht ihre Kraft um 20%. Reduziert Schaden von sehr effektiven Attacken um 25%."
+  },
+  "acidWater": {
+    "name": "Säure-Wasser",
+    "description": "Gift- und Wasser-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Normal-Attacken in Gift-Attacken und verstärkt ihre Kraft um 20%. Verdoppelt die Kraft gegen Normal-, Stahl- und Kampf-Pokémon, wenn Wasser- oder Gift-Attacken eingesetzt werden."
+  },
+  "eightBitBlaze": {
+    "name": "Acht-Bit-Lodern",
+    "description": "Verstärkt Feuer-Attacken bei niedrigen KP. 10% Chance, das Ziel in einem Feuerwirbel zu fangen. Verwandelt Normal-Attacken in Feuer-Attacken und erhöht ihre Kraft um 20%. 10% Chance, das Ziel zu verbrennen."
+  },
+  "charredMemory": {
+    "name": "Verkohlte Erinnerung",
+    "description": "Senkt die Spezial-Verteidigung des Ziels um 1 Stufe nach dem Einsatz einer Feuer-Attacke. Feuer- und Psycho-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Normal-Attacken in Psycho-Attacken und verstärkt ihre Kraft um 20%."
+  },
+  "blackAndWhite": {
+    "name": "Schwarz und Weiß",
+    "description": "Negiert Schaden von Attacken, die nicht vom Typ Normal oder Unlicht sind."
+  },
+  "eightBitTerror": {
+    "name": "Acht-Bit-Terror",
+    "description": "Erhöht albtraumbezogene Attacken um 20%. 10% Chance, das Ziel zu verfluchen oder zurückschrecken zu lassen. 10% Chance, Schaden in Höhe von 1/8 der maximalen KP des Ziels zuzufügen."
+  },
+  "corruptionBlaze": {
+    "name": "Korruptions-Lohe",
+    "description": "Verstärkt Feuer-Attacken, wenn die KP niedrig sind. Unlicht- und Feuer-Attacken teilen ihre Typvorteile gegen die gleichen Typen! 30% Chance, die zuletzt eingesetzte Attacke des Ziels zu deaktivieren."
+  },
+  "oaksMistake": {
+    "name": "Eichs Fehler",
+    "description": "Senkt einen zufälligen Statuswert um eine Stufe beim Betreten des Kampfes. 10% Chance, das Ziel mit Egelsamen zu belegen oder in einem Strudel zu fangen. 10% Chance, das Ziel zu verbrennen. 30% Chance, 1/8 der maximalen KP nach einem Angriff wiederherzustellen."
+  },
+  "shellShock": {
+    "name": "Panzerschock",
+    "description": "Wasser- und Elektro-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Normal-Attacken in Elektro-Attacken und verstärkt ihre Kraft um 20%. 10% Chance, das Ziel zurückschrecken zu lassen, wenn eine Wasser- oder Normal-Attacke eingesetzt wird. 10% Chance, das Ziel zu paralysieren, wenn eine Wasser- oder Normal-Attacke eingesetzt wird."
+  },
+  "darkSeed": {
+    "name": "Dunkler Samen",
+    "description": "Pflanzen- und Unlicht-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Normal-Attacken in Unlicht-Attacken und verstärkt ihre Kraft um 20%. 10% Chance, das Ziel zurückschrecken zu lassen oder es mit Egelsamen zu belegen, wenn eine Pflanzen- oder Normal-Attacke eingesetzt wird."
+  },
+  "cursedShell": {
+    "name": "Verfluchter Panzer",
+    "description": "10% Chance, das Ziel zu verfluchen. Reduziert Schaden von Physischen Attacken um 25%."
+  },
+  "gothamsNightmare": {
+    "name": "Gothams Albtraum",
+    "description": "Verhindert den Austausch des Gegners. 20% Chance auf einen kritischen Treffer."
+  },
+  "doomGadgets": {
+    "name": "Verhängnis-Gadgets",
+    "description": "Verwandelt Normal-Attacken in Stahl-Attacken und erhöht ihre Kraft um 20%. Erhöht Stahl-Attacken um 20%. 10% Chance, das Ziel zu paralysieren, zu verbrennen, zu vergiften oder schwer zu vergiften."
+  },
+  "memeArmor": {
+    "name": "Meme-Rüstung",
+    "description": "50% Chance, Schaden von Attacken zu halbieren. Erhöht einen zufälligen Statuswert um eine Stufe und senkt einen zufälligen Statuswert um eine Stufe nach einem Treffer."
+  },
+  "memeified": {
+    "name": "Memeifiziert",
+    "description": "10% Chance, einen K.O.-Treffer zu überleben. 20% Chance, die Kraft von Spezial-Attacken zu verdoppeln."
+  },
+  "hungryTroll": {
+    "name": "Hungriger Troll",
+    "description": "50% Chance, 1/8 der maximalen KP nach einem Angriff wiederherzustellen. 50% Chance, einen zufälligen Statuswert um eine Stufe nach einem Angriff zu erhöhen."
+  },
+  "monotoneMood": {
+    "name": "Monotone Stimmung",
+    "description": "Verwandelt alle Attacken in Normal-Attacken. Erhöht Normal-Attacken um 20%. Normal-Attacken können Geist-Pokémon treffen. 10% Chance, das Ziel schläfrig zu machen."
+  },
+  "boredomAura": {
+    "name": "Langeweile-Aura",
+    "description": "Senkt einen zufälligen Statuswert des Gegners um zwei Stufen am Ende jeder Runde."
+  },
+  "squidlyStep": {
+    "name": "Tintenfisch-Schritt",
+    "description": "Erhöht schallbasierte Attacken und Tritt-Attacken um 30%. Erhöht Initiative um eine Stufe, wenn von einer Boden- oder Wasser-Attacke getroffen."
+  },
+  "nightmareInk": {
+    "name": "Albtraum-Tinte",
+    "description": "90% Chance, dem Ziel die Fähigkeit 'Komatös' oder den Status 'Albtraum' zu geben."
+  },
+  "abyssalMelody": {
+    "name": "Abgrundmelodie",
+    "description": "Verwandelt alle Attacken in schallbasierte Attacken und erhöht ihre Kraft um 20%. Erhöht schallbasierte Attacken um 50%. 10% Chance, das Ziel zu verfluchen."
+  },
+  "charmingMist": {
+    "name": "Charmanter Nebel",
+    "description": "Geist- und Fee-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Normal-Attacken in Fee-Attacken und verstärkt ihre Kraft um 20%. 20% Chance, das Ziel zu bezaubern, wenn eine Fee- oder Geist-Attacke eingesetzt wird, falls es das entgegengesetzte Geschlecht hat."
+  },
+  "ectoplasmicCharm": {
+    "name": "Ektoplasma-Charme",
+    "description": "20% Chance, das Ziel bei Verwendung einer Geister-Attacke zu verlieben, wenn es das andere Geschlecht hat. 50% Chance, Schaden in Höhe von 1/8 der maximalen KP des Ziels zuzufügen."
+  },
+  "superHungry": {
+    "name": "Super Hungrig",
+    "description": "50% Chance, 1/8 der maximalen KP nach einem Angriff wiederherzustellen. 50% Chance, einen zufälligen Statuswert um eine Stufe nach einem Angriff zu erhöhen."
+  },
+  "foolsGold": {
+    "name": "Narrengold",
+    "description": "Immun gegen Status-Attacken von anderen Pokémon. Unlicht- und Stahl-Attacken teilen ihre Typvorteile gegen die gleichen Typen!"
+  },
+  "showAndTell": {
+    "name": "Zeigen und Erzählen",
+    "description": "Verdoppelt Attackenkraft, wenn die verwendete Attacke sich von der zuletzt verwendeten unterscheidet."
+  },
+  "knightsShovel": {
+    "name": "Ritterschaufel",
+    "description": "Verdoppelt die Kraft von Boden- und Stahl-Attacken, wenn der Anwender eine Schwäche mit dem Ziel teilt. Immun gegen Boden-Attacken."
+  },
+  "heroicLeap": {
+    "name": "Heldenhafter Sprung",
+    "description": "Immun gegen Boden-Attacken. Erhöht Angriff um eine Stufe beim Betreten des Kampfes. Verwandelt Normal-Attacken in Flug-Attacken und erhöht ihre Kraft um 20%."
+  },
+  "digChampion": {
+    "name": "Grab-Champion",
+    "description": "Verdoppelt die Kraft von Schaufler."
+  },
+  "eightBitHunger": {
+    "name": "Acht-Bit-Hunger",
+    "description": "50% Chance, 1/8 der maximalen KP nach einem Angriff wiederherzustellen. 10% Chance, das Ziel zurückschrecken zu lassen."
+  },
+  "rockSolidMeme": {
+    "name": "Felsenfestes Meme",
+    "description": "Normal- und Gesteins-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Reduziert den Schaden von sehr effektiven Attacken um 25%."
+  },
+  "rockRoll": {
+    "name": "Gesteins-Rolle",
+    "description": "Erhöht Gestein-Attacken um 20%. Erhöht Attacken mit 'rolle' oder 'dreh' im Namen um 75%. 20% Chance, das Ziel bei Verwendung einer Attacke mit 'rolle' oder 'dreh' im Namen zurückschrecken zu lassen."
+  },
+  "staticShock": {
+    "name": "Statischer Schock",
+    "description": "30% Chance, das Ziel zu paralysieren. Erhöht Attackenkraft um 50% gegen paralysierte Ziele."
+  },
+  "horrorShow": {
+    "name": "Horror-Show",
+    "description": "Verhindert den Austausch des Gegners. Erhöht den höchsten Statuswert um eine Stufe nach dem Besiegen eines Gegners."
+  },
+  "sunbather": {
+    "name": "Sonnenbader",
+    "description": "Feuer- und Wasser-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Normal-Attacken in Wasser-Attacken und verstärkt ihre Kraft um 20%. Stellt 1/8 der maximalen KP am Ende jeder Runde bei starkem Sonnenschein wieder her. 30% Chance, das Wetter am Ende jeder Runde zu starkem Sonnenschein zu ändern."
+  },
+  "seedEater": {
+    "name": "Samenfresser",
+    "description": "Heilt KP anstatt Schaden zu nehmen, wenn von Pflanzen-Attacken getroffen. Verdoppelt Attackenkraft gegen Pflanzen-Pokémon. Stellt 1/8 der maximalen KP beim Angriff auf ein Pflanzen-Pokémon wieder her. Stellt 1/2 der maximalen KP wieder her, wenn von samenbasierten Attacken getroffen."
+  },
+  "vacaySoul": {
+    "name": "Urlaubs-Seele",
+    "description": "Verdreifacht die Kraft aller Attacken. Das Pokémon kann nur jede zweite Runde angreifen."
+  },
+  "screenSwim": {
+    "name": "Bildschirm-Schwimmer",
+    "description": "Stahl- und Wasser-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Stellt 1/8 der maximalen KP am Ende jeder Runde bei Regen wieder her. 10% Chance, das Ziel zurückschrecken zu lassen. 30% Chance, das Wetter am Ende jeder Runde zu Regen zu ändern."
+  },
+  "darkWaters": {
+    "name": "Dunkle Gewässer",
+    "description": "Unlicht- und Wasser-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Normal-Attacken in Unlicht-Attacken und verstärkt ihre Kraft um 20%. 10% Chance, das Ziel in einem Wasserstrudel zu fangen, wenn eine Wasser- oder Unlicht-Attacke eingesetzt wird. 10% Chance, Schaden in Höhe von 1/8 der maximalen KP des Ziels zu verursachen, wenn eine Wasser- oder Unlicht-Attacke eingesetzt wird."
+  },
+  "experimentError": {
+    "name": "Experiment-Fehler",
+    "description": "Senkt einen zufälligen Statuswert um eine Stufe beim Betreten des Kampfes. 10% Chance, das Ziel mit Egelsamen zu belegen oder in einem Strudel zu fangen. 10% Chance, das Ziel zu verbrennen. 30% Chance, 1/8 der maximalen KP nach einem Angriff wiederherzustellen."
+  },
+  "roundingError": {
+    "name": "Rundungsfehler",
+    "description": "Halbiert Schaden von Attacken mit Kraft teilbar durch 5, aber nicht durch 10. Erhöht Attacken mit Kraft nicht teilbar durch 10 oder teilbar durch 5 um 50%."
+  },
+  "idealForm": {
+    "name": "Idealform",
+    "description": "10% Chance für jeweils: Kritischer Treffer, Schaden halbieren, Attackenkraft verdoppeln, 1/8 der maximalen KP wiederherstellen nach einem Treffer oder Angriff."
+  },
+  "eliteStatic": {
+    "name": "Elite-Statik",
+    "description": "50% Chance, den Angreifer bei Kontakt zu paralysieren. Senkt einen zufälligen Statuswert des Angreifers um eine Stufe bei Kontakt. Fügt dem Angreifer 1/8 seiner maximalen KP als Schaden zu, wenn von einer Kontakt-Attacke getroffen."
+  },
+  "cockadoodleYes": {
+    "name": "Kikeriki Ja",
+    "description": "Erhöht einen zufälligen Statuswert um eine Stufe beim Betreten des Kampfes. Erhöht den höchsten Statuswert um eine Stufe nach dem Besiegen eines Gegners. Erhöht die Kraft von Kontakt-Attacken um 30%."
+  },
+  "carnivore": {
+    "name": "Fleischfresser",
+    "description": "Stellt 1/8 der maximalen KP beim Angriff auf bestimmte Pokémon-Typen wieder her. Erhöht Angriff und Initiative um eine Stufe nach dem Besiegen eines Gegners."
+  },
+  "nightShow": {
+    "name": "Nacht-Show",
+    "description": "Senkt einen zufälligen Statuswert des Gegners um zwei Stufen am Ende jeder Runde."
+  },
+  "nightmareHost": {
+    "name": "Albtraum-Wirt",
+    "description": "50% Chance, dass Attacken zuerst ausgeführt werden. 10% Chance, das Ziel zu paralysieren, zu vergiften oder zu verbrennen."
+  },
+  "pressurePlay": {
+    "name": "Druck-Spiel",
+    "description": "Erhöht den AP-Verbrauch von Attacken, die das Pokémon zum Ziel haben, um 2. Senkt Angriff um eine Stufe beim Betreten des Kampfes."
+  },
+  "aBCOrD": {
+    "name": "A, B, C oder D",
+    "description": "10% Chance, Angriff um 1 Stufe zu erhöhen. 10% Chance, das Ziel zu verbrennen. 10% Chance, das Ziel zu verwirren. 10% Chance, das Ziel schläfrig zu machen."
+  },
+  "midnightCookies": {
+    "name": "Mitternachts-Kekse",
+    "description": "30% Chance, 1/8 der maximalen KP am Ende jeder Runde wiederherzustellen. 30% Chance, einen zufälligen Statuswert um eine Stufe am Ende jeder Runde zu erhöhen."
+  },
+  "horribleCardboard": {
+    "name": "Schrecklicher Karton",
+    "description": "Verwandelt alle Attacken in Normal-Attacken und erhöht ihre Kraft um 20%. Normal-Attacken können Geist-Pokémon treffen. 30% Chance, Schaden in Höhe von 1/8 der maximalen KP des Ziels zuzufügen."
+  },
+  "theElderShadows": {
+    "name": "Die Alten Schatten",
+    "description": "Geist- und Unlicht-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Normal-Attacken in Unlicht-Attacken und verstärkt ihre Kraft um 20%. 30% Chance, am Ende jeder Runde Schaden in Höhe von 1/16 der maximalen KP des Ziels zu verursachen. 30% Chance, die Angriffskraft zu verdoppeln. Erhöht einen zufälligen Statuswert um 1 Stufe nach dem Besiegen eines Gegners."
+  },
+  "horribleGhostCardboard": {
+    "name": "Schrecklicher Geister-Karton",
+    "description": "Verwandelt Normal-Attacken in Geister-Attacken und erhöht ihre Kraft um 20%. Geister-Attacken können Normal-Pokémon treffen. 30% Chance, Schaden in Höhe von 1/8 der maximalen KP des Ziels zuzufügen."
+  },
+  "midnightCookiesOfDeath": {
+    "name": "Mitternachts-Kekse des Todes",
+    "description": "30% Chance, Schaden in Höhe von 1/8 der maximalen KP des Ziels am Ende jeder Runde zuzufügen. 30% Chance, einen zufälligen Statuswert um eine Stufe am Ende jeder Runde zu erhöhen."
+  },
+  "infomercialFame": {
+    "name": "Werbespot-Ruhm",
+    "description": "Erhöht alle Statuswerte um eine Stufe beim Betreten des Kampfes. 30% Chance, Schaden in Höhe von 1/8 der maximalen KP des Ziels am Ende jeder Runde zuzufügen."
+  },
+  "winnersGrin": {
+    "name": "Siegerlächeln",
+    "description": "Erhöht den höchsten Statuswert um eine Stufe nach dem Besiegen eines Gegners. Erhöht einen zufälligen Statuswert um eine Stufe nach dem Besiegen eines Gegners."
+  },
+  "fancyCardboard": {
+    "name": "Edler Karton",
+    "description": "Verwandelt Normal-Attacken in Normal-Attacken und erhöht ihre Kraft um 20%. Normal-Attacken können Geist-Pokémon treffen. Erhöht Attacken mit 60 oder weniger Kraft um 50%."
+  },
+  "unjustified": {
+    "name": "Ungerechtfertigt",
+    "description": "Normal- und Kampf-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Halbiert den Schaden durch Fee-Attacken. Erhöht Angriff um 1 Stufe, wenn es von einer Fee-Attacke getroffen wird."
+  },
+  "abyssalStance": {
+    "name": "Abgrund-Haltung",
+    "description": "30% Chance, einen zufälligen Statuswert um eine Stufe nach einem Treffer zu erhöhen. 30% Chance, Schaden in Höhe von 1/8 der maximalen KP des Ziels nach einem Treffer zuzufügen. 10% Chance, einen zufälligen Statuswert des Anwenders um eine Stufe nach einem Angriff zu senken. Verwandelt Normal-Attacken in Unlicht-Attacken und erhöht ihre Kraft um 20%."
+  },
+  "leafyLure": {
+    "name": "Blätter-Köder",
+    "description": "50% Chance, Schaden von sehr effektiven Attacken zu halbieren. 50% Chance, Schaden in Höhe von 1/4 der maximalen KP des Angreifers zuzufügen, wenn von einer sehr effektiven Attacke getroffen. 50% Chance, 1/6 der maximalen KP wiederherzustellen, wenn von einer sehr effektiven Attacke getroffen."
+  },
+  "voraciousVegetation": {
+    "name": "Gefräßige Vegetation",
+    "description": "Stellt 1/8 der maximalen KP beim Angriff auf bestimmte Pokémon-Typen wieder her. Erhöht Angriff und Initiative um eine Stufe nach dem Besiegen eines Gegners."
+  },
+  "solarPowerPlus": {
+    "name": "Solarkraft Plus",
+    "description": "Verdoppelt Spezial-Angriff. 30% Chance, das Wetter am Ende jeder Runde zu starkem Sonnenschein zu ändern."
+  },
+  "treasureGuard": {
+    "name": "Schatzwächter",
+    "description": "Reduziert erlittenen Schaden zufällig um 25-50%. 30% Chance, 1/8 der maximalen KP nach einem Treffer wiederherzustellen."
+  },
+  "goldenSkillLink": {
+    "name": "Goldene Fähigkeitsverbindung",
+    "description": "Maximiert die Anzahl der Treffer bei Mehrfachangriffen. 5% Chance, einen zufälligen Statuswert um 1 Stufe zu erhöhen nach einem Angriff."
+  },
+  "treasureProducer": {
+    "name": "Schatzproduzent",
+    "description": "50% Chance, das getragene Item des Ziels zu stehlen. Erhöht Item-Drops nach dem Kampf. Attacken werden immer zuletzt ausgeführt."
+  },
+  "multiMind": {
+    "name": "Mehrfachgeist",
+    "description": "Feuer- und Psycho-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Normal-Attacken in Psycho-Attacken und verstärkt ihre Kraft um 20%. 10% Chance, Schaden in Höhe von 1/8 der maximalen KP des Ziels zu verursachen."
+  },
+  "wakaFlockaFlame": {
+    "name": "Waka Flocka Flamme",
+    "description": "Verwandelt Normal-Attacken in Feuer-Attacken und verstärkt ihre Kraft um 20%. Flug- und Feuer-Attacken teilen ihre Typvorteile gegen die gleichen Typen! 10% Chance, das Ziel zu verbrennen. Immun gegen Feuer-Attacken und heilt KP, wenn es von Feuer-Attacken getroffen wird, anstatt Schaden zu erleiden."
+  },
+  "eerieLight": {
+    "name": "Unheimliches Licht",
+    "description": "Elektro- und Unlicht-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Verwandelt Normal-Attacken in Unlicht-Attacken und verstärkt ihre Kraft um 20%. Verwandelt Wasser-Attacken in Unlicht-Attacken und verstärkt ihre Kraft um 20%. 10% Chance, das Ziel zu verwirren. 10% Chance, das Ziel zu paralysieren."
+  },
+  "abyssalLure": {
+    "name": "Abgrund-Köder",
+    "description": "50% Chance, Schaden von sehr effektiven Attacken zu halbieren. 50% Chance, Schaden in Höhe von 1/4 der maximalen KP des Angreifers zuzufügen, wenn von einer sehr effektiven Attacke getroffen. 50% Chance, 1/6 der maximalen KP wiederherzustellen, wenn von einer sehr effektiven Attacke getroffen."
+  },
+  "nemoEater": {
+    "name": "Nemo-Fresser",
+    "description": "Verdoppelt Attackenkraft gegen Wasser-Pokémon. Stellt 1/8 der maximalen KP nach dem Besiegen eines Wasser-Pokémon wieder her. Erhöht den höchsten Statuswert um eine Stufe nach dem Besiegen eines Wasser-Pokémon."
+  },
+  "woodenLie": {
+    "name": "Hölzerne Lüge",
+    "description": "Verdoppelt Attackenkraft gegen bestimmte Pokémon-Typen. Reduziert Schaden von sehr effektiven Attacken um 25%."
+  },
+  "imARealBoy": {
+    "name": "Ich Bin Ein Echter Junge",
+    "description": "Verwandelt Normal-Attacken in Normal-Attacken und erhöht ihre Kraft um 20%. Verwandelt Nicht-Fee- und Nicht-Pflanzen-Attacken in Normal-Attacken und erhöht ihre Kraft um 30%. Senkt Angriff und einen zufälligen Statuswert um eine Stufe beim Betreten des Kampfes."
+  },
+  "lierLyer": {
+    "name": "Lügner Lügner",
+    "description": "Verwandelt Normal-Attacken in Unlicht-Attacken und verstärkt ihre Kraft um 20%. Fee- und Unlicht-Attacken teilen ihre Typvorteile gegen die gleichen Typen! Hat eine 10% Chance, einen Treffer zu überleben, der es ausschalten würde."
+  },
+  "copycatNinja": {
+    "name": "Kopierkatzen-Ninja",
+    "description": "Ändert den Typ des Anwenders, um dem Typ der Attacke zu entsprechen, von der er getroffen wurde. Wenn der Anwender nicht bereits denselben Typ hat, heilt er außerdem 1/8 seiner maximalen KP."
+  },
+  "hokage": {
+    "name": "Hokage",
+    "description": "Erhöht Feuer-, Wasser-, Flug- und Boden-Attacken um 20%."
+  },
+  "sharinganActivated": {
+    "name": "Sharingan Aktiviert",
+    "description": "Ändert den Typ des Anwenders, um seinem Angriff zu entsprechen."
+  },
+  "crowClone": {
+    "name": "Krähen-Klon",
+    "description": "Verwandelt Normal-Attacken in Flug-Attacken und verstärkt ihre Kraft um 20%. Unlicht-, Feuer- und Flug-Attacken teilen ihre Typvorteile gegen die gleichen Typen! 30% Chance, den Schaden von Angriffen zu halbieren. 30% Chance, 1/8 der maximalen KP wiederherzustellen, nachdem es von einem Angriff getroffen wurde."
+  },
+  "sharinganMastery": {
+    "name": "Sharingan-Meisterschaft",
+    "description": "15% Chance, Schaden in Höhe von 1/8 der maximalen KP des Ziels zuzufügen. 5% Chance, erlittenen Schaden zu vierteln. 15% Chance, einen zufälligen Statuswert um eine Stufe nach einem Angriff zu erhöhen."
+  },
+  "foreheadTap": {
+    "name": "Stirn-Tippen",
+    "description": "Erhöht Attacken mit 60 oder weniger Kraft um 50%. 10% Chance, das Ziel bei Verwendung von Attacken mit 60 oder weniger Kraft zurückschrecken zu lassen. 10% Chance, das Ziel bei Verwendung von Attacken mit 60 oder weniger Kraft zu paralysieren."
+  },
+  "eightTails": {
+    "name": "Acht Schwänze",
+    "description": "Mehrfach-Attacken treffen 4-8 Mal."
+  },
+  "rappingRampage": {
+    "name": "Rap-Randale",
+    "description": "Verwandelt alle Attacken in schallbasierte Attacken und erhöht ihre Kraft um 20%. Erhöht schallbasierte Attacken um 50%. 10% Chance, das Ziel zurückschrecken zu lassen."
+  },
+  "beastMode": {
+    "name": "Bestien-Modus",
+    "description": "Verdoppelt Attackenkraft, wenn KP unter 40% sind."
+  },
+  "nightmareSand": {
+    "name": "Albtraum-Sand",
+    "description": "Fügt Schaden in Höhe von 1/8 der maximalen KP des Ziels am Ende jeder Runde während eines Sandsturms zu. 30% Chance, einen zufälligen Statuswert des Ziels um eine Stufe am Ende jeder Runde während eines Sandsturms zu senken. 30% Chance, das Wetter am Ende jeder Runde zu einem Sandsturm zu ändern."
+  },
+  "soulEater": {
+    "name": "Seelenfresser",
+    "description": "Heilt KP bei Verwendung einer Attacke, die einem gesammelten Typ entspricht. Sammelt den Typ von besiegten Pokémon. Verliert gesammelte Typen beim Besiegt-Werden."
+  },
+  "soulDrain": {
+    "name": "Seelen-Entzug",
+    "description": "10% Chance, den Typ der verwendeten Attacke zu sammeln. Senkt zwei zufällige Statuswerte des Ziels um zwei Stufen, wenn der Attacken-Typ einem gesammelten Typ entspricht. Verliert gesammelte Typen beim Besiegt-Werden."
+  }
+}

@@ -1,0 +1,2694 @@
+{
+  "stench": {
+    "name": "Stench",
+    "description": "By releasing stench when attacking, this Pokémon may cause the target to flinch."
+  },
+  "drizzle": {
+    "name": "Drizzle",
+    "description": "The Pokémon makes it rain when it enters a battle."
+  },
+  "speedBoost": {
+    "name": "Speed Boost",
+    "description": "Its Speed stat is boosted every turn."
+  },
+  "battleArmor": {
+    "name": "Battle Armor",
+    "description": "Hard armor protects the Pokémon from critical hits."
+  },
+  "sturdy": {
+    "name": "Sturdy",
+    "description": "It cannot be knocked out with one hit. One-hit KO moves cannot knock it out, either."
+  },
+  "damp": {
+    "name": "Damp",
+    "description": "Prevents the use of explosive moves, such as Self-Destruct, by dampening its surroundings."
+  },
+  "limber": {
+    "name": "Limber",
+    "description": "Its limber body protects the Pokémon from paralysis."
+  },
+  "sandVeil": {
+    "name": "Sand Veil",
+    "description": "Boosts the Pokémon's evasiveness in a sandstorm."
+  },
+  "static": {
+    "name": "Static",
+    "description": "The Pokémon is charged with static electricity, so contact with it may cause paralysis."
+  },
+  "voltAbsorb": {
+    "name": "Volt Absorb",
+    "description": "Restores HP if hit by an Electric-type move instead of taking damage."
+  },
+  "waterAbsorb": {
+    "name": "Water Absorb",
+    "description": "Restores HP if hit by a Water-type move instead of taking damage."
+  },
+  "oblivious": {
+    "name": "Oblivious",
+    "description": "The Pokémon is oblivious, and that keeps it from being infatuated or falling for taunts."
+  },
+  "cloudNine": {
+    "name": "Cloud Nine",
+    "description": "Eliminates the effects of weather."
+  },
+  "compoundEyes": {
+    "name": "Compound Eyes",
+    "description": "The Pokémon's compound eyes boost its accuracy."
+  },
+  "insomnia": {
+    "name": "Insomnia",
+    "description": "The Pokémon is suffering from insomnia and cannot fall asleep."
+  },
+  "colorChange": {
+    "name": "Color Change",
+    "description": "The Pokémon's type becomes the type of the move used on it."
+  },
+  "immunity": {
+    "name": "Immunity",
+    "description": "The immune system of the Pokémon prevents it from getting poisoned."
+  },
+  "flashFire": {
+    "name": "Flash Fire",
+    "description": "Powers up the Pokémon's Fire-type moves if it's hit by one."
+  },
+  "shieldDust": {
+    "name": "Shield Dust",
+    "description": "This Pokémon's dust blocks the additional effects of attacks taken."
+  },
+  "ownTempo": {
+    "name": "Own Tempo",
+    "description": "This Pokémon has its own tempo, and that prevents it from becoming confused."
+  },
+  "suctionCups": {
+    "name": "Suction Cups",
+    "description": "This Pokémon uses suction cups to stay in one spot to negate all moves and items that force switching out."
+  },
+  "intimidate": {
+    "name": "Intimidate",
+    "description": "The Pokémon intimidates opposing Pokémon upon entering battle, lowering their Attack stat."
+  },
+  "shadowTag": {
+    "name": "Shadow Tag",
+    "description": "This Pokémon steps on the opposing Pokémon's shadow to prevent it from escaping."
+  },
+  "roughSkin": {
+    "name": "Rough Skin",
+    "description": "This Pokémon inflicts damage with its rough skin to the attacker on contact."
+  },
+  "wonderGuard": {
+    "name": "Wonder Guard",
+    "description": "Its mysterious power only lets supereffective moves hit the Pokémon."
+  },
+  "levitate": {
+    "name": "Levitate",
+    "description": "By floating in the air, the Pokémon receives full immunity to all Ground-type moves."
+  },
+  "effectSpore": {
+    "name": "Effect Spore",
+    "description": "Contact with the Pokémon may inflict poison, sleep, or paralysis on its attacker."
+  },
+  "synchronize": {
+    "name": "Synchronize",
+    "description": "The attacker will receive the same status condition if it inflicts a burn, poison, or paralysis to the Pokémon."
+  },
+  "clearBody": {
+    "name": "Clear Body",
+    "description": "Prevents other Pokémon's moves or Abilities from lowering the Pokémon's stats."
+  },
+  "naturalCure": {
+    "name": "Natural Cure",
+    "description": "All status conditions heal when the Pokémon switches out."
+  },
+  "lightningRod": {
+    "name": "Lightning Rod",
+    "description": "The Pokémon draws in all Electric-type moves. Instead of being hit by Electric-type moves, it boosts its Sp. Atk."
+  },
+  "sereneGrace": {
+    "name": "Serene Grace",
+    "description": "Boosts the likelihood of additional effects occurring when attacking."
+  },
+  "swiftSwim": {
+    "name": "Swift Swim",
+    "description": "Boosts the Pokémon's Speed stat in rain."
+  },
+  "chlorophyll": {
+    "name": "Chlorophyll",
+    "description": "Boosts the Pokémon's Speed stat in harsh sunlight."
+  },
+  "illuminate": {
+    "name": "Illuminate",
+    "description": "By illuminating its surroundings, the Pokémon raises the likelihood of meeting wild Pokémon and prevents its accuracy from being lowered."
+  },
+  "trace": {
+    "name": "Trace",
+    "description": "When it enters a battle, the Pokémon copies an opposing Pokémon's Ability."
+  },
+  "hugePower": {
+    "name": "Huge Power",
+    "description": "Doubles the Pokémon's Attack stat."
+  },
+  "poisonPoint": {
+    "name": "Poison Point",
+    "description": "Contact with the Pokémon may poison the attacker."
+  },
+  "innerFocus": {
+    "name": "Inner Focus",
+    "description": "The Pokémon's intensely focused, and that protects the Pokémon from flinching."
+  },
+  "magmaArmor": {
+    "name": "Magma Armor",
+    "description": "The Pokémon is covered with hot magma, which prevents the Pokémon from becoming frozen."
+  },
+  "waterVeil": {
+    "name": "Water Veil",
+    "description": "The Pokémon is covered with a water veil, which prevents the Pokémon from getting a burn."
+  },
+  "magnetPull": {
+    "name": "Magnet Pull",
+    "description": "Prevents Steel-type Pokémon from escaping using its magnetic force."
+  },
+  "soundproof": {
+    "name": "Soundproof",
+    "description": "Soundproofing gives the Pokémon full immunity to all sound-based moves."
+  },
+  "rainDish": {
+    "name": "Rain Dish",
+    "description": "The Pokémon gradually regains HP in rain."
+  },
+  "sandStream": {
+    "name": "Sand Stream",
+    "description": "The Pokémon summons a sandstorm when it enters a battle."
+  },
+  "pressure": {
+    "name": "Pressure",
+    "description": "By putting pressure on the opposing Pokémon, it raises their PP usage."
+  },
+  "thickFat": {
+    "name": "Thick Fat",
+    "description": "The Pokémon is protected by a layer of thick fat, which halves the damage taken from Fire- and Ice-type moves."
+  },
+  "earlyBird": {
+    "name": "Early Bird",
+    "description": "The Pokémon awakens from sleep twice as fast as other Pokémon."
+  },
+  "flameBody": {
+    "name": "Flame Body",
+    "description": "Contact with the Pokémon may burn the attacker."
+  },
+  "runAway": {
+    "name": "Run Away",
+    "description": "Enables a sure getaway from wild Pokémon."
+  },
+  "keenEye": {
+    "name": "Keen Eye",
+    "description": "Keen eyes prevent other Pokémon from lowering this Pokémon's accuracy."
+  },
+  "hyperCutter": {
+    "name": "Hyper Cutter",
+    "description": "The Pokémon's proud of its powerful pincers. They prevent other Pokémon from lowering its Attack stat."
+  },
+  "pickup": {
+    "name": "Pickup",
+    "description": "The Pokémon may pick up the item an opposing Pokémon held during a battle."
+  },
+  "truant": {
+    "name": "Truant",
+    "description": "The Pokémon can't use a move if it had used a move on the previous turn."
+  },
+  "hustle": {
+    "name": "Hustle",
+    "description": "Boosts the Attack stat, but lowers accuracy."
+  },
+  "cuteCharm": {
+    "name": "Cute Charm",
+    "description": "Contact with the Pokémon may cause infatuation."
+  },
+  "plus": {
+    "name": "Plus",
+    "description": "Boosts the Sp. Atk stat of the Pokémon if an ally with the Plus or Minus Ability is also in battle."
+  },
+  "minus": {
+    "name": "Minus",
+    "description": "Boosts the Sp. Atk stat of the Pokémon if an ally with the Plus or Minus Ability is also in battle."
+  },
+  "forecast": {
+    "name": "Forecast",
+    "description": "The Pokémon transforms with the weather to change its type to Water, Fire, or Ice."
+  },
+  "stickyHold": {
+    "name": "Sticky Hold",
+    "description": "Items held by the Pokémon are stuck fast and cannot be removed by other Pokémon."
+  },
+  "shedSkin": {
+    "name": "Shed Skin",
+    "description": "The Pokémon may heal its own status conditions by shedding its skin."
+  },
+  "guts": {
+    "name": "Guts",
+    "description": "It's so gutsy that having a status condition boosts the Pokémon's Attack stat."
+  },
+  "marvelScale": {
+    "name": "Marvel Scale",
+    "description": "The Pokémon's marvelous scales boost the Defense stat if it has a status condition."
+  },
+  "liquidOoze": {
+    "name": "Liquid Ooze",
+    "description": "The oozed liquid has a strong stench, which damages attackers using any draining move."
+  },
+  "overgrow": {
+    "name": "Overgrow",
+    "description": "Powers up Grass-type moves when the Pokémon's HP is low."
+  },
+  "blaze": {
+    "name": "Blaze",
+    "description": "Powers up Fire-type moves when the Pokémon's HP is low."
+  },
+  "torrent": {
+    "name": "Torrent",
+    "description": "Powers up Water-type moves when the Pokémon's HP is low."
+  },
+  "swarm": {
+    "name": "Swarm",
+    "description": "Powers up Bug-type moves when the Pokémon's HP is low."
+  },
+  "rockHead": {
+    "name": "Rock Head",
+    "description": "Protects the Pokémon from recoil damage."
+  },
+  "drought": {
+    "name": "Drought",
+    "description": "Turns the sunlight harsh when the Pokémon enters a battle."
+  },
+  "arenaTrap": {
+    "name": "Arena Trap",
+    "description": "Prevents opposing Pokémon from fleeing."
+  },
+  "vitalSpirit": {
+    "name": "Vital Spirit",
+    "description": "The Pokémon is full of vitality, and that prevents it from falling asleep."
+  },
+  "whiteSmoke": {
+    "name": "White Smoke",
+    "description": "The Pokémon is protected by its white smoke, which prevents other Pokémon from lowering its stats."
+  },
+  "purePower": {
+    "name": "Pure Power",
+    "description": "Using its pure power, the Pokémon doubles its Attack stat."
+  },
+  "shellArmor": {
+    "name": "Shell Armor",
+    "description": "A hard shell protects the Pokémon from critical hits."
+  },
+  "airLock": {
+    "name": "Air Lock",
+    "description": "Eliminates the effects of weather."
+  },
+  "tangledFeet": {
+    "name": "Tangled Feet",
+    "description": "Raises evasiveness if the Pokémon is confused."
+  },
+  "motorDrive": {
+    "name": "Motor Drive",
+    "description": "Boosts its Speed stat if hit by an Electric-type move instead of taking damage."
+  },
+  "rivalry": {
+    "name": "Rivalry",
+    "description": "Becomes competitive and deals more damage to Pokémon of the same gender, but deals less to Pokémon of the opposite gender."
+  },
+  "steadfast": {
+    "name": "Steadfast",
+    "description": "The Pokémon's determination boosts the Speed stat each time the Pokémon flinches."
+  },
+  "snowCloak": {
+    "name": "Snow Cloak",
+    "description": "Boosts the Pokémon's evasiveness in snow."
+  },
+  "gluttony": {
+    "name": "Gluttony",
+    "description": "Makes the Pokémon eat a held Berry when its HP drops to half or less, which is sooner than usual."
+  },
+  "angerPoint": {
+    "name": "Anger Point",
+    "description": "The Pokémon is angered when it takes a critical hit, and that maxes its Attack stat."
+  },
+  "unburden": {
+    "name": "Unburden",
+    "description": "Boosts the Speed stat if the Pokémon's held item is used or lost."
+  },
+  "heatproof": {
+    "name": "Heatproof",
+    "description": "The heatproof body of the Pokémon halves the damage from Fire-type moves that hit it."
+  },
+  "simple": {
+    "name": "Simple",
+    "description": "The stat changes the Pokémon receives are doubled."
+  },
+  "drySkin": {
+    "name": "Dry Skin",
+    "description": "Restores HP in rain or when hit by Water-type moves. Reduces HP in harsh sunlight, and increases the damage received from Fire-type moves."
+  },
+  "download": {
+    "name": "Download",
+    "description": "Compares an opposing Pokémon's Defense and Sp. Def stats before raising its own Attack or Sp. Atk stat—whichever will be more effective."
+  },
+  "ironFist": {
+    "name": "Iron Fist",
+    "description": "Powers up punching moves."
+  },
+  "poisonHeal": {
+    "name": "Poison Heal",
+    "description": "Restores HP if the Pokémon is poisoned instead of losing HP."
+  },
+  "adaptability": {
+    "name": "Adaptability",
+    "description": "Powers up moves of the same type as the Pokémon."
+  },
+  "skillLink": {
+    "name": "Skill Link",
+    "description": "Maximizes the number of times multistrike moves hit."
+  },
+  "hydration": {
+    "name": "Hydration",
+    "description": "Heals status conditions if it's raining."
+  },
+  "solarPower": {
+    "name": "Solar Power",
+    "description": "Boosts the Sp. Atk stat in harsh sunlight, but HP decreases every turn."
+  },
+  "quickFeet": {
+    "name": "Quick Feet",
+    "description": "Boosts the Speed stat if the Pokémon has a status condition."
+  },
+  "normalize": {
+    "name": "Normalize",
+    "description": "All the Pokémon's moves become Normal type. The power of those moves is boosted a little."
+  },
+  "sniper": {
+    "name": "Sniper",
+    "description": "Powers up moves if they become critical hits when attacking."
+  },
+  "magicGuard": {
+    "name": "Magic Guard",
+    "description": "The Pokémon only takes damage from attacks."
+  },
+  "noGuard": {
+    "name": "No Guard",
+    "description": "The Pokémon employs no-guard tactics to ensure incoming and outgoing attacks always land."
+  },
+  "stall": {
+    "name": "Stall",
+    "description": "The Pokémon moves after all other Pokémon do."
+  },
+  "technician": {
+    "name": "Technician",
+    "description": "Powers up the Pokémon's weaker moves."
+  },
+  "leafGuard": {
+    "name": "Leaf Guard",
+    "description": "Prevents status conditions in harsh sunlight."
+  },
+  "klutz": {
+    "name": "Klutz",
+    "description": "The Pokémon can't use any held items."
+  },
+  "moldBreaker": {
+    "name": "Mold Breaker",
+    "description": "Moves can be used on the target regardless of its Abilities."
+  },
+  "superLuck": {
+    "name": "Super Luck",
+    "description": "The Pokémon is so lucky that the critical-hit ratios of its moves are boosted."
+  },
+  "aftermath": {
+    "name": "Aftermath",
+    "description": "Damages the attacker if it contacts the Pokémon with a finishing hit."
+  },
+  "anticipation": {
+    "name": "Anticipation",
+    "description": "The Pokémon can sense an opposing Pokémon's dangerous moves."
+  },
+  "forewarn": {
+    "name": "Forewarn",
+    "description": "When it enters a battle, the Pokémon can tell one of the moves an opposing Pokémon has."
+  },
+  "unaware": {
+    "name": "Unaware",
+    "description": "When attacking, the Pokémon ignores the target Pokémon's stat changes."
+  },
+  "tintedLens": {
+    "name": "Tinted Lens",
+    "description": "The Pokémon can use \"not very effective\" moves to deal regular damage."
+  },
+  "filter": {
+    "name": "Filter",
+    "description": "Reduces the power of supereffective attacks taken."
+  },
+  "slowStart": {
+    "name": "Slow Start",
+    "description": "For five turns, the Pokémon's Attack and Speed stats are halved."
+  },
+  "scrappy": {
+    "name": "Scrappy",
+    "description": "The Pokémon can hit Ghost-type Pokémon with Normal- and Fighting-type moves."
+  },
+  "stormDrain": {
+    "name": "Storm Drain",
+    "description": "Draws in all Water-type moves. Instead of being hit by Water-type moves, it boosts its Sp. Atk."
+  },
+  "iceBody": {
+    "name": "Ice Body",
+    "description": "The Pokémon gradually regains HP in snow."
+  },
+  "solidRock": {
+    "name": "Solid Rock",
+    "description": "Reduces the power of supereffective attacks taken."
+  },
+  "snowWarning": {
+    "name": "Snow Warning",
+    "description": "The Pokémon makes it snow when it enters a battle."
+  },
+  "honeyGather": {
+    "name": "Honey Gather",
+    "description": "The Pokémon gathers Honey after a battle. The Honey is then sold for money."
+  },
+  "frisk": {
+    "name": "Frisk",
+    "description": "When it enters a battle, the Pokémon can check an opposing Pokémon's Ability."
+  },
+  "reckless": {
+    "name": "Reckless",
+    "description": "Powers up moves that have recoil damage."
+  },
+  "multitype": {
+    "name": "Multitype",
+    "description": "Changes the Pokémon's type to match the Plate or Z-Crystal it holds."
+  },
+  "flowerGift": {
+    "name": "Flower Gift",
+    "description": "Boosts the Attack and Sp. Def stats of itself and allies in harsh sunlight."
+  },
+  "badDreams": {
+    "name": "Bad Dreams",
+    "description": "Reduces the HP of sleeping opposing Pokémon."
+  },
+  "pickpocket": {
+    "name": "Pickpocket",
+    "description": "Steals an item from an attacker that made direct contact."
+  },
+  "sheerForce": {
+    "name": "Sheer Force",
+    "description": "Removes additional effects to increase the power of moves when attacking."
+  },
+  "contrary": {
+    "name": "Contrary",
+    "description": "Makes stat changes have an opposite effect."
+  },
+  "unnerve": {
+    "name": "Unnerve",
+    "description": "Unnerves opposing Pokémon and makes them unable to eat Berries."
+  },
+  "defiant": {
+    "name": "Defiant",
+    "description": "Boosts the Pokémon's Attack stat sharply when its stats are lowered."
+  },
+  "defeatist": {
+    "name": "Defeatist",
+    "description": "Halves the Pokémon's Attack and Sp. Atk stats when its HP becomes half or less."
+  },
+  "cursedBody": {
+    "name": "Cursed Body",
+    "description": "May disable a move used on the Pokémon."
+  },
+  "healer": {
+    "name": "Healer",
+    "description": "Sometimes heals an ally's status condition."
+  },
+  "friendGuard": {
+    "name": "Friend Guard",
+    "description": "Reduces damage done to allies."
+  },
+  "weakArmor": {
+    "name": "Weak Armor",
+    "description": "Physical attacks to the Pokémon lower its Defense stat but sharply raise its Speed stat."
+  },
+  "heavyMetal": {
+    "name": "Heavy Metal",
+    "description": "Doubles the Pokémon's weight."
+  },
+  "lightMetal": {
+    "name": "Light Metal",
+    "description": "Halves the Pokémon's weight."
+  },
+  "multiscale": {
+    "name": "Multiscale",
+    "description": "Reduces the amount of damage the Pokémon takes while its HP is full."
+  },
+  "toxicBoost": {
+    "name": "Toxic Boost",
+    "description": "Powers up physical attacks when the Pokémon is poisoned."
+  },
+  "flareBoost": {
+    "name": "Flare Boost",
+    "description": "Powers up special attacks when the Pokémon is burned."
+  },
+  "harvest": {
+    "name": "Harvest",
+    "description": "May create another Berry after one is used."
+  },
+  "telepathy": {
+    "name": "Telepathy",
+    "description": "Anticipates an ally's attack and dodges it."
+  },
+  "moody": {
+    "name": "Moody",
+    "description": "Raises one stat sharply and lowers another every turn."
+  },
+  "overcoat": {
+    "name": "Overcoat",
+    "description": "Protects the Pokémon from things like sand, hail, and powder."
+  },
+  "poisonTouch": {
+    "name": "Poison Touch",
+    "description": "May poison a target when the Pokémon makes contact."
+  },
+  "regenerator": {
+    "name": "Regenerator",
+    "description": "Restores a little HP when withdrawn from battle."
+  },
+  "bigPecks": {
+    "name": "Big Pecks",
+    "description": "Protects the Pokémon from Defense-lowering effects."
+  },
+  "sandRush": {
+    "name": "Sand Rush",
+    "description": "Boosts the Pokémon's Speed stat in a sandstorm."
+  },
+  "wonderSkin": {
+    "name": "Wonder Skin",
+    "description": "Makes status moves more likely to miss."
+  },
+  "analytic": {
+    "name": "Analytic",
+    "description": "Boosts move power when the Pokémon moves last."
+  },
+  "illusion": {
+    "name": "Illusion",
+    "description": "Comes out disguised as the Pokémon in the party's last spot."
+  },
+  "imposter": {
+    "name": "Imposter",
+    "description": "The Pokémon transforms itself into the Pokémon it's facing."
+  },
+  "infiltrator": {
+    "name": "Infiltrator",
+    "description": "Passes through the opposing Pokémon's barrier, substitute, and the like and strikes."
+  },
+  "mummy": {
+    "name": "Mummy",
+    "description": "Contact with the Pokémon changes the attacker's Ability to Mummy."
+  },
+  "moxie": {
+    "name": "Moxie",
+    "description": "The Pokémon shows moxie, and that boosts the Attack stat after knocking out any Pokémon."
+  },
+  "justified": {
+    "name": "Justified",
+    "description": "Being hit by a Dark-type move boosts the Attack stat of the Pokémon, for justice."
+  },
+  "rattled": {
+    "name": "Rattled",
+    "description": "Intimidate or being hit by a Dark-, Ghost-, or Bug-type move will scare the Pokémon and boost its Speed stat."
+  },
+  "magicBounce": {
+    "name": "Magic Bounce",
+    "description": "Reflects status moves instead of getting hit by them."
+  },
+  "sapSipper": {
+    "name": "Sap Sipper",
+    "description": "Boosts the Attack stat if hit by a Grass-type move instead of taking damage."
+  },
+  "prankster": {
+    "name": "Prankster",
+    "description": "Gives priority to a status move."
+  },
+  "sandForce": {
+    "name": "Sand Force",
+    "description": "Boosts the power of Rock-, Ground-, and Steel-type moves in a sandstorm."
+  },
+  "ironBarbs": {
+    "name": "Iron Barbs",
+    "description": "Inflicts damage on the attacker upon contact with iron barbs."
+  },
+  "zenMode": {
+    "name": "Zen Mode",
+    "description": "Changes the Pokémon's shape when HP is half or less."
+  },
+  "victoryStar": {
+    "name": "Victory Star",
+    "description": "Boosts the accuracy of its allies and itself."
+  },
+  "turboblaze": {
+    "name": "Turboblaze",
+    "description": "Moves can be used on the target regardless of its Abilities."
+  },
+  "teravolt": {
+    "name": "Teravolt",
+    "description": "Moves can be used on the target regardless of its Abilities."
+  },
+  "aromaVeil": {
+    "name": "Aroma Veil",
+    "description": "Protects itself and its allies from attacks that limit their move choices."
+  },
+  "flowerVeil": {
+    "name": "Flower Veil",
+    "description": "Ally Grass-type Pokémon are protected from status conditions and the lowering of their stats."
+  },
+  "cheekPouch": {
+    "name": "Cheek Pouch",
+    "description": "Restores HP as well when the Pokémon eats a Berry."
+  },
+  "protean": {
+    "name": "Protean",
+    "description": "Changes the Pokémon's type to the type of the move it's about to use."
+  },
+  "furCoat": {
+    "name": "Fur Coat",
+    "description": "Halves the damage from physical moves."
+  },
+  "magician": {
+    "name": "Magician",
+    "description": "The Pokémon steals the held item of a Pokémon it hits with a move."
+  },
+  "bulletproof": {
+    "name": "Bulletproof",
+    "description": "Protects the Pokémon from some ball and bomb moves."
+  },
+  "competitive": {
+    "name": "Competitive",
+    "description": "Boosts the Sp. Atk stat sharply when a stat is lowered."
+  },
+  "strongJaw": {
+    "name": "Strong Jaw",
+    "description": "The Pokémon's strong jaw boosts the power of its biting moves."
+  },
+  "refrigerate": {
+    "name": "Refrigerate",
+    "description": "Normal-type moves become Ice-type moves. The power of those moves is boosted a little."
+  },
+  "sweetVeil": {
+    "name": "Sweet Veil",
+    "description": "Prevents itself and ally Pokémon from falling asleep."
+  },
+  "stanceChange": {
+    "name": "Stance Change",
+    "description": "The Pokémon changes its form to Blade Forme when it uses an attack move and changes to Shield Forme when it uses King's Shield."
+  },
+  "galeWings": {
+    "name": "Gale Wings",
+    "description": "Gives priority to Flying-type moves when the Pokémon's HP is full."
+  },
+  "megaLauncher": {
+    "name": "Mega Launcher",
+    "description": "Powers up aura and pulse moves."
+  },
+  "grassPelt": {
+    "name": "Grass Pelt",
+    "description": "Boosts the Pokémon's Defense stat on Grassy Terrain."
+  },
+  "symbiosis": {
+    "name": "Symbiosis",
+    "description": "The Pokémon passes its item to an ally that has used up an item."
+  },
+  "toughClaws": {
+    "name": "Tough Claws",
+    "description": "Powers up moves that make direct contact."
+  },
+  "pixilate": {
+    "name": "Pixilate",
+    "description": "Normal-type moves become Fairy-type moves. The power of those moves is boosted a little."
+  },
+  "gooey": {
+    "name": "Gooey",
+    "description": "Contact with the Pokémon lowers the attacker's Speed stat."
+  },
+  "aerilate": {
+    "name": "Aerilate",
+    "description": "Normal-type moves become Flying-type moves. The power of those moves is boosted a little."
+  },
+  "parentalBond": {
+    "name": "Parental Bond",
+    "description": "Parent and child each attacks."
+  },
+  "darkAura": {
+    "name": "Dark Aura",
+    "description": "Powers up each Pokémon's Dark-type moves."
+  },
+  "fairyAura": {
+    "name": "Fairy Aura",
+    "description": "Powers up each Pokémon's Fairy-type moves."
+  },
+  "auraBreak": {
+    "name": "Aura Break",
+    "description": "The effects of \"Aura\" Abilities are reversed to lower the power of affected moves."
+  },
+  "primordialSea": {
+    "name": "Primordial Sea",
+    "description": "The Pokémon changes the weather to nullify Fire-type attacks."
+  },
+  "desolateLand": {
+    "name": "Desolate Land",
+    "description": "The Pokémon changes the weather to nullify Water-type attacks."
+  },
+  "deltaStream": {
+    "name": "Delta Stream",
+    "description": "The Pokémon changes the weather to eliminate all of the Flying type's weaknesses."
+  },
+  "stamina": {
+    "name": "Stamina",
+    "description": "Boosts the Defense stat when hit by an attack."
+  },
+  "wimpOut": {
+    "name": "Wimp Out",
+    "description": "The Pokémon cowardly switches out when its HP becomes half or less."
+  },
+  "emergencyExit": {
+    "name": "Emergency Exit",
+    "description": "The Pokémon, sensing danger, switches out when its HP becomes half or less."
+  },
+  "waterCompaction": {
+    "name": "Water Compaction",
+    "description": "Boosts the Pokémon's Defense stat sharply when hit by a Water-type move."
+  },
+  "merciless": {
+    "name": "Merciless",
+    "description": "The Pokémon's attacks become critical hits if the target is poisoned."
+  },
+  "shieldsDown": {
+    "name": "Shields Down",
+    "description": "When its HP becomes half or less, the Pokémon's shell breaks and it becomes aggressive."
+  },
+  "stakeout": {
+    "name": "Stakeout",
+    "description": "Doubles the damage dealt to the target's replacement if the target switches out."
+  },
+  "waterBubble": {
+    "name": "Water Bubble",
+    "description": "Lowers the power of Fire-type moves done to the Pokémon and prevents the Pokémon from getting a burn."
+  },
+  "steelworker": {
+    "name": "Steelworker",
+    "description": "Powers up Steel-type moves."
+  },
+  "berserk": {
+    "name": "Berserk",
+    "description": "Boosts the Pokémon's Sp. Atk stat when it takes a hit that causes its HP to become half or less."
+  },
+  "slushRush": {
+    "name": "Slush Rush",
+    "description": "Boosts the Pokémon's Speed stat in snow."
+  },
+  "longReach": {
+    "name": "Long Reach",
+    "description": "The Pokémon uses its moves without making contact with the target."
+  },
+  "liquidVoice": {
+    "name": "Liquid Voice",
+    "description": "All sound-based moves become Water-type moves."
+  },
+  "triage": {
+    "name": "Triage",
+    "description": "Gives priority to a healing move."
+  },
+  "galvanize": {
+    "name": "Galvanize",
+    "description": "Normal-type moves become Electric-type moves. The power of those moves is boosted a little."
+  },
+  "surgeSurfer": {
+    "name": "Surge Surfer",
+    "description": "Doubles the Pokémon's Speed stat on Electric Terrain."
+  },
+  "schooling": {
+    "name": "Schooling",
+    "description": "When it has a lot of HP, the Pokémon forms a powerful school. It stops schooling when its HP is low."
+  },
+  "disguise": {
+    "name": "Disguise",
+    "description": "Once per battle, the shroud that covers the Pokémon can protect it from an attack."
+  },
+  "battleBond": {
+    "name": "Battle Bond",
+    "description": "Defeating an opposing Pokémon strengthens the Pokémon's bond with its Trainer, and it becomes Ash-Greninja. Water Shuriken gets more powerful."
+  },
+  "powerConstruct": {
+    "name": "Power Construct",
+    "description": "Other Cells gather to aid when its HP becomes half or less. Then the Pokémon changes its form to Complete Forme."
+  },
+  "corrosion": {
+    "name": "Corrosion",
+    "description": "The Pokémon can poison the target even if it's a Steel or Poison type."
+  },
+  "comatose": {
+    "name": "Comatose",
+    "description": "It's always drowsing and will never wake up. It can attack without waking up."
+  },
+  "queenlyMajesty": {
+    "name": "Queenly Majesty",
+    "description": "Its majesty pressures the opposing Pokémon, making it unable to attack using priority moves."
+  },
+  "innardsOut": {
+    "name": "Innards Out",
+    "description": "Damages the attacker landing the finishing hit by the amount equal to its last HP."
+  },
+  "dancer": {
+    "name": "Dancer",
+    "description": "When another Pokémon uses a dance move, it can use a dance move following it regardless of its Speed."
+  },
+  "battery": {
+    "name": "Battery",
+    "description": "Powers up ally Pokémon's special moves."
+  },
+  "fluffy": {
+    "name": "Fluffy",
+    "description": "Halves the damage taken from moves that make direct contact, but doubles that of Fire-type moves."
+  },
+  "dazzling": {
+    "name": "Dazzling",
+    "description": "Surprises the opposing Pokémon, making it unable to attack using priority moves."
+  },
+  "soulHeart": {
+    "name": "Soul-Heart",
+    "description": "Boosts its Sp. Atk stat every time a Pokémon faints."
+  },
+  "tanglingHair": {
+    "name": "Tangling Hair",
+    "description": "Contact with the Pokémon lowers the attacker's Speed stat."
+  },
+  "receiver": {
+    "name": "Receiver",
+    "description": "The Pokémon copies the Ability of a defeated ally."
+  },
+  "powerOfAlchemy": {
+    "name": "Power of Alchemy",
+    "description": "The Pokémon copies the Ability of a defeated ally."
+  },
+  "beastBoost": {
+    "name": "Beast Boost",
+    "description": "The Pokémon boosts its most proficient stat each time it knocks out a Pokémon."
+  },
+  "rksSystem": {
+    "name": "RKS System",
+    "description": "Changes the Pokémon's type to match the memory disc it holds."
+  },
+  "electricSurge": {
+    "name": "Electric Surge",
+    "description": "Turns the ground into Electric Terrain when the Pokémon enters a battle."
+  },
+  "psychicSurge": {
+    "name": "Psychic Surge",
+    "description": "Turns the ground into Psychic Terrain when the Pokémon enters a battle."
+  },
+  "mistySurge": {
+    "name": "Misty Surge",
+    "description": "Turns the ground into Misty Terrain when the Pokémon enters a battle."
+  },
+  "grassySurge": {
+    "name": "Grassy Surge",
+    "description": "Turns the ground into Grassy Terrain when the Pokémon enters a battle."
+  },
+  "fullMetalBody": {
+    "name": "Full Metal Body",
+    "description": "Prevents other Pokémon's moves or Abilities from lowering the Pokémon's stats."
+  },
+  "shadowShield": {
+    "name": "Shadow Shield",
+    "description": "Reduces the amount of damage the Pokémon takes while its HP is full."
+  },
+  "prismArmor": {
+    "name": "Prism Armor",
+    "description": "Reduces the power of supereffective attacks taken."
+  },
+  "neuroforce": {
+    "name": "Neuroforce",
+    "description": "Powers up moves that are super effective."
+  },
+  "intrepidSword": {
+    "name": "Intrepid Sword",
+    "description": "Boosts the Pokémon's Attack stat when the Pokémon enters a battle."
+  },
+  "dauntlessShield": {
+    "name": "Dauntless Shield",
+    "description": "Boosts the Pokémon's Defense stat when the Pokémon enters a battle."
+  },
+  "libero": {
+    "name": "Libero",
+    "description": "Changes the Pokémon's type to the type of the move it's about to use."
+  },
+  "ballFetch": {
+    "name": "Ball Fetch",
+    "description": "The Pokémon will fetch the Poké Ball from the first failed throw of the battle."
+  },
+  "cottonDown": {
+    "name": "Cotton Down",
+    "description": "When the Pokémon is hit by an attack, it scatters cotton fluff around and lowers the Speed stat of all Pokémon except itself."
+  },
+  "propellerTail": {
+    "name": "Propeller Tail",
+    "description": "Ignores the effects of opposing Pokémon's Abilities and moves that draw in moves."
+  },
+  "mirrorArmor": {
+    "name": "Mirror Armor",
+    "description": "Bounces back only the stat-lowering effects that the Pokémon receives."
+  },
+  "gulpMissile": {
+    "name": "Gulp Missile",
+    "description": "When the Pokémon uses Surf or Dive, it will come back with prey. When it takes damage, it will spit out the prey to attack."
+  },
+  "stalwart": {
+    "name": "Stalwart",
+    "description": "Ignores the effects of opposing Pokémon's Abilities and moves that draw in moves."
+  },
+  "steamEngine": {
+    "name": "Steam Engine",
+    "description": "Boosts the Pokémon's Speed stat drastically if hit by a Fire- or Water-type move."
+  },
+  "punkRock": {
+    "name": "Punk Rock",
+    "description": "Boosts the power of sound-based moves. The Pokémon also takes half the damage from these kinds of moves."
+  },
+  "sandSpit": {
+    "name": "Sand Spit",
+    "description": "The Pokémon creates a sandstorm when it's hit by an attack."
+  },
+  "iceScales": {
+    "name": "Ice Scales",
+    "description": "The Pokémon is protected by ice scales, which halve the damage taken from special moves."
+  },
+  "ripen": {
+    "name": "Ripen",
+    "description": "Ripens Berries and doubles their effect."
+  },
+  "iceFace": {
+    "name": "Ice Face",
+    "description": "The Pokémon's ice head can take a physical attack as a substitute, but the attack also changes the Pokémon's appearance. The ice will be restored when it hails."
+  },
+  "powerSpot": {
+    "name": "Power Spot",
+    "description": "Just being next to the Pokémon powers up moves."
+  },
+  "mimicry": {
+    "name": "Mimicry",
+    "description": "Changes the Pokémon's type depending on the terrain."
+  },
+  "screenCleaner": {
+    "name": "Screen Cleaner",
+    "description": "When the Pokémon enters a battle, the effects of Light Screen, Reflect, and Aurora Veil are nullified for both opposing and ally Pokémon."
+  },
+  "steelySpirit": {
+    "name": "Steely Spirit",
+    "description": "Powers up ally Pokémon's Steel-type moves."
+  },
+  "perishBody": {
+    "name": "Perish Body",
+    "description": "When hit by a move that makes direct contact, the Pokémon and the attacker will faint after three turns unless they switch out of battle."
+  },
+  "wanderingSpirit": {
+    "name": "Wandering Spirit",
+    "description": "The Pokémon exchanges Abilities with a Pokémon that hits it with a move that makes direct contact."
+  },
+  "gorillaTactics": {
+    "name": "Gorilla Tactics",
+    "description": "Boosts the Pokémon's Attack stat but only allows the use of the first selected move."
+  },
+  "neutralizingGas": {
+    "name": "Neutralizing Gas",
+    "description": "If the Pokémon with Neutralizing Gas is in the battle, the effects of all Pokémon's Abilities will be nullified or will not be triggered."
+  },
+  "pastelVeil": {
+    "name": "Pastel Veil",
+    "description": "Protects the Pokémon and its ally Pokémon from being poisoned."
+  },
+  "hungerSwitch": {
+    "name": "Hunger Switch",
+    "description": "The Pokémon changes its form, alternating between its Full Belly Mode and Hangry Mode after the end of each turn."
+  },
+  "quickDraw": {
+    "name": "Quick Draw",
+    "description": "Enables the Pokémon to move first occasionally."
+  },
+  "unseenFist": {
+    "name": "Unseen Fist",
+    "description": "If the Pokémon uses moves that make direct contact, it can attack the target even if the target protects itself."
+  },
+  "curiousMedicine": {
+    "name": "Curious Medicine",
+    "description": "When the Pokémon enters a battle, it scatters medicine from its shell, which removes all stat changes from allies."
+  },
+  "transistor": {
+    "name": "Transistor",
+    "description": "Powers up Electric-type moves."
+  },
+  "dragonsMaw": {
+    "name": "Dragon's Maw",
+    "description": "Powers up Dragon-type moves."
+  },
+  "chillingNeigh": {
+    "name": "Chilling Neigh",
+    "description": "When the Pokémon knocks out a target, it utters a chilling neigh, which boosts its Attack stat."
+  },
+  "grimNeigh": {
+    "name": "Grim Neigh",
+    "description": "When the Pokémon knocks out a target, it utters a terrifying neigh, which boosts its Sp. Atk stat."
+  },
+  "asOneGlastrier": {
+    "name": "As One",
+    "description": "This Ability combines the effects of both Calyrex's Unnerve Ability and Glastrier's Chilling Neigh Ability."
+  },
+  "asOneSpectrier": {
+    "name": "As One",
+    "description": "This Ability combines the effects of both Calyrex's Unnerve Ability and Spectrier's Grim Neigh Ability."
+  },
+  "lingeringAroma": {
+    "name": "Lingering Aroma",
+    "description": "Contact with the Pokémon changes the attacker's Ability to Lingering Aroma."
+  },
+  "seedSower": {
+    "name": "Seed Sower",
+    "description": "Turns the ground into Grassy Terrain when the Pokémon is hit by an attack."
+  },
+  "thermalExchange": {
+    "name": "Thermal Exchange",
+    "description": "Boosts the Attack stat when the Pokémon is hit by a Fire-type move. The Pokémon also cannot be burned."
+  },
+  "angerShell": {
+    "name": "Anger Shell",
+    "description": "When an attack causes its HP to drop to half or less, the Pokémon gets angry. This lowers its Defense and Sp. Def stats but boosts its Attack, Sp. Atk, and Speed stats."
+  },
+  "purifyingSalt": {
+    "name": "Purifying Salt",
+    "description": "The Pokémon's pure salt protects it from status conditions and halves the damage taken from Ghost-type moves."
+  },
+  "wellBakedBody": {
+    "name": "Well-Baked Body",
+    "description": "The Pokémon takes no damage when hit by Fire-type moves. Instead, its Defense stat is sharply boosted."
+  },
+  "windRider": {
+    "name": "Wind Rider",
+    "description": "Boosts the Pokémon's Attack stat if Tailwind takes effect or if the Pokémon is hit by a wind move. The Pokémon also takes no damage from wind moves."
+  },
+  "guardDog": {
+    "name": "Guard Dog",
+    "description": "Boosts the Pokémon's Attack stat if intimidated. Moves and items that would force the Pokémon to switch out also fail to work."
+  },
+  "rockyPayload": {
+    "name": "Rocky Payload",
+    "description": "Powers up Rock-type moves."
+  },
+  "windPower": {
+    "name": "Wind Power",
+    "description": "The Pokémon becomes charged when it is hit by a wind move, boosting the power of the next Electric-type move the Pokémon uses."
+  },
+  "zeroToHero": {
+    "name": "Zero to Hero",
+    "description": "The Pokémon transforms into its Hero Form when it switches out."
+  },
+  "commander": {
+    "name": "Commander",
+    "description": "When the Pokémon enters a battle, it goes inside the mouth of an ally Dondozo if one is on the field. The Pokémon then issues commands from there."
+  },
+  "electromorphosis": {
+    "name": "Electromorphosis",
+    "description": "The Pokémon becomes charged when it takes damage, boosting the power of the next Electric-type move the Pokémon uses."
+  },
+  "protosynthesis": {
+    "name": "Protosynthesis",
+    "description": "Boosts the Pokémon's most proficient stat in harsh sunlight or if the Pokémon is holding Booster Energy."
+  },
+  "quarkDrive": {
+    "name": "Quark Drive",
+    "description": "Boosts the Pokémon's most proficient stat on Electric Terrain or if the Pokémon is holding Booster Energy."
+  },
+  "goodAsGold": {
+    "name": "Good as Gold",
+    "description": "A body of pure, solid gold gives the Pokémon full immunity to other Pokémon's status moves."
+  },
+  "vesselOfRuin": {
+    "name": "Vessel of Ruin",
+    "description": "The power of the Pokémon's ruinous vessel lowers the Sp. Atk stats of all Pokémon except itself."
+  },
+  "swordOfRuin": {
+    "name": "Sword of Ruin",
+    "description": "The power of the Pokémon's ruinous sword lowers the Defense stats of all Pokémon except itself."
+  },
+  "tabletsOfRuin": {
+    "name": "Tablets of Ruin",
+    "description": "The power of the Pokémon's ruinous wooden tablets lowers the Attack stats of all Pokémon except itself."
+  },
+  "beadsOfRuin": {
+    "name": "Beads of Ruin",
+    "description": "The power of the Pokémon's ruinous beads lowers the Sp. Def stats of all Pokémon except itself."
+  },
+  "orichalcumPulse": {
+    "name": "Orichalcum Pulse",
+    "description": "Turns the sunlight harsh when the Pokémon enters a battle. The ancient pulse thrumming through the Pokémon also boosts its Attack stat in harsh sunlight."
+  },
+  "hadronEngine": {
+    "name": "Hadron Engine",
+    "description": "Turns the ground into Electric Terrain when the Pokémon enters a battle. The futuristic engine within the Pokémon also boosts its Sp. Atk stat on Electric Terrain."
+  },
+  "opportunist": {
+    "name": "Opportunist",
+    "description": "If an opponent's stat is boosted, the Pokémon seizes the opportunity to boost the same stat for itself."
+  },
+  "cudChew": {
+    "name": "Cud Chew",
+    "description": "When the Pokémon eats a Berry, it will regurgitate that Berry at the end of the next turn and eat it one more time."
+  },
+  "sharpness": {
+    "name": "Sharpness",
+    "description": "Powers up slicing moves."
+  },
+  "supremeOverlord": {
+    "name": "Supreme Overlord",
+    "description": "When the Pokémon enters a battle, its Attack and Sp. Atk stats are slightly boosted for each of the allies in its party that have already been defeated."
+  },
+  "costar": {
+    "name": "Costar",
+    "description": "When the Pokémon enters a battle, it copies an ally's stat changes."
+  },
+  "toxicDebris": {
+    "name": "Toxic Debris",
+    "description": "Scatters poison spikes at the feet of the opposing team when the Pokémon takes damage from physical moves."
+  },
+  "armorTail": {
+    "name": "Armor Tail",
+    "description": "The mysterious tail covering the Pokémon's head makes opponents unable to use priority moves against the Pokémon or its allies."
+  },
+  "earthEater": {
+    "name": "Earth Eater",
+    "description": "If hit by a Ground-type move, the Pokémon has its HP restored instead of taking damage."
+  },
+  "myceliumMight": {
+    "name": "Mycelium Might",
+    "description": "The Pokémon will always act more slowly when using status moves, but these moves will be unimpeded by the Ability of the target."
+  },
+  "mindsEye": {
+    "name": "Mind's Eye",
+    "description": "The Pokémon ignores changes to opponents' evasiveness, its accuracy can't be lowered, and it can hit Ghost types with Normal- and Fighting-type moves."
+  },
+  "supersweetSyrup": {
+    "name": "Supersweet Syrup",
+    "description": "A sickly sweet scent spreads across the field the first time the Pokémon enters a battle, lowering the evasiveness of opposing Pokémon."
+  },
+  "hospitality": {
+    "name": "Hospitality",
+    "description": "When the Pokémon enters a battle, it showers its ally with hospitality, restoring a small amount of the ally's HP."
+  },
+  "toxicChain": {
+    "name": "Toxic Chain",
+    "description": "The power of the Pokémon's toxic chain may badly poison any target the Pokémon hits with a move."
+  },
+  "embodyAspectTeal": {
+    "name": "Embody Aspect",
+    "description": "The Pokémon's heart fills with memories, causing the Teal Mask to shine and the Pokémon's Speed stat to be boosted."
+  },
+  "embodyAspectWellspring": {
+    "name": "Embody Aspect",
+    "description": "The Pokémon's heart fills with memories, causing the Wellspring Mask to shine and the Pokémon's Sp. Def stat to be boosted."
+  },
+  "embodyAspectHearthflame": {
+    "name": "Embody Aspect",
+    "description": "The Pokémon's heart fills with memories, causing the Hearthflame Mask to shine and the Pokémon's Attack stat to be boosted."
+  },
+  "embodyAspectCornerstone": {
+    "name": "Embody Aspect",
+    "description": "The Pokémon's heart fills with memories, causing the Cornerstone Mask to shine and the Pokémon's Defense stat to be boosted."
+  },
+  "teraShift": {
+    "name": "Tera Shift",
+    "description": "When the Pokémon enters a battle, it absorbs the energy around itself and transforms into its Terastal Form."
+  },
+  "teraShell": {
+    "name": "Tera Shell",
+    "description": "The Pokémon's shell contains the powers of each type. All damage-dealing moves that hit the Pokémon when its HP is full will not be very effective."
+  },
+  "teraformZero": {
+    "name": "Teraform Zero",
+    "description": "When Terapagos changes into its Stellar Form, it uses its hidden powers to eliminate all effects of weather and terrain, reducing them to zero."
+  },
+  "poisonPuppeteer": {
+    "name": "Poison Puppeteer",
+    "description": "Pokémon poisoned by Pecharunt's moves will also become confused."
+  },
+  "unleashed": {
+    "name": "Unleashed",
+    "description": "Boosts the power of all moves when HP is low."
+  },
+  "hellFlame": {
+    "name": "Hell Flame",
+    "description": "Boosts the power of Fire-type moves by 50%."
+  },
+  "psychoLeaf": {
+    "name": "Psycho Leaf",
+    "description": "Changes Grass-type moves to Psychic-type and boosts their power by 20%."
+  },
+  "groundFlame": {
+    "name": "Ground Flame",
+    "description": "Changes Fire-type moves to Ground-type and boosts their power by 20%."
+  },
+  "magicalWater": {
+    "name": "Magical Water",
+    "description": "Changes Water-type moves to Fairy-type and boosts their power by 20%."
+  },
+  "nuclearEnergy": {
+    "name": "Nuclear Energy",
+    "description": "Changes Poison-type moves to Electric-type and boosts their power by 20%."
+  },
+  "poisonKing": {
+    "name": "Poison King",
+    "description": "Boosts the power of Poison-type moves by 60%."
+  },
+  "solidKong": {
+    "name": "Solid Kong",
+    "description": "Reduces damage from super effective moves by 50%."
+  },
+  "screepy": {
+    "name": "Screepy",
+    "description": "Ghost-type moves can hit Normal-types. Boosts Ghost-type moves by 30%. Immune to Intimidate."
+  },
+  "godFist": {
+    "name": "God Fist",
+    "description": "Boosts the power of punching moves by 50%."
+  },
+  "parentalHaunting": {
+    "name": "Parental Haunting",
+    "description": "Changes non-Normal-type moves to Ghost-type and boosts their power by 20%."
+  },
+  "nightmarate": {
+    "name": "Nightmarate",
+    "description": "Changes Normal-type moves to Primary-type and boosts their power by 20%."
+  },
+  "terrify": {
+    "name": "Terrify",
+    "description": "Lowers the opponent's Attack and Special Attack by 1 stage when entering battle."
+  },
+  "thunderAndFire": {
+    "name": "Thunder and Fire",
+    "description": "Fire and Electric-type moves share their type advantage against the same types!"
+  },
+  "electafireAbsorb": {
+    "name": "Electafire Absorb",
+    "description": "Heals HP when hit by Fire or Electric-type moves instead of taking damage."
+  },
+  "dirtThick": {
+    "name": "Dirt Thick",
+    "description": "Halves damage from Water and Ground-type moves."
+  },
+  "arcticBlaze": {
+    "name": "Arctic Blaze",
+    "description": "Changes Ice-type moves to Fire-type and vice versa, boosting their power by 35% when HP is below 65%."
+  },
+  "steamify": {
+    "name": "Steamify",
+    "description": "Changes Water-type moves to Fire-type and boosts their power by 20%."
+  },
+  "prehistoricHunt": {
+    "name": "Prehistoric Hunt",
+    "description": "30% chance to change weather to Rain each turn. Doubles Speed in Rain or Harsh Sunlight or Hail or Snow or Heavy Rain."
+  },
+  "popUp": {
+    "name": "Pop Up",
+    "description": "Lowers Defense by 1 stage and raises Speed by 1 stage when entering battle."
+  },
+  "earthSpeeder": {
+    "name": "Earth Speeder",
+    "description": "Raises Speed by 1 stage when hit by a Ground-type move."
+  },
+  "knockout": {
+    "name": "Knockout",
+    "description": "35% chance to land a critical hit when HP is below 50%."
+  },
+  "finalRound": {
+    "name": "Final Round",
+    "description": "Boosts the power of Fighting-type moves when HP is low."
+  },
+  "kickPunch": {
+    "name": "Kick Punch",
+    "description": "Boosts the power of kicking and punching moves by 30%."
+  },
+  "stabNormal": {
+    "name": "Stab Normal",
+    "description": "Boosts the power of Normal-type moves by 30%."
+  },
+  "adaptiveAi": {
+    "name": "Adaptive AI",
+    "description": "Raises stats by 1 or 2 stages depending on the opponent's highest stat. Raises Defense if opponent's highest stat is Attack, Special Defense if opponent's highest stat is Special Attack, Special Attack if opponent's highest stat is Special Defense, or Speed by 2 stages if opponent's highest stat is Speed."
+  },
+  "electric": {
+    "name": "Electric",
+    "description": "Boosts Electric-type moves by 50%, takes double damage from Water, and changes Normal-type moves to Electric-type with 20% power."
+  },
+  "existence": {
+    "name": "Existence",
+    "description": "Boosts all moves by 20%, neutralizes super effective moves, and neutralizes moves that would be super effective against the target."
+  },
+  "allConsuming": {
+    "name": "All Consuming",
+    "description": "Restores 1/8 of max HP and deals 1/8 of max HP as damage to the opponent when hit by a contact move."
+  },
+  "corrupt": {
+    "name": "Corrupt",
+    "description": "Has a 70% chance to badly poison the target after attacking."
+  },
+  "dragonKing": {
+    "name": "Dragon King",
+    "description": "Boosts the power of Dragon-type moves by 60%."
+  },
+  "sandCorruption": {
+    "name": "Sand Corruption",
+    "description": "Damages the attacker by 1/8 of its max HP and lowers its Speed by 1 stage if hit by a contact move."
+  },
+  "organicTwist": {
+    "name": "Organic Twist",
+    "description": "Grass and Rock-type moves share their type advantage against the same types!"
+  },
+  "healthySoak": {
+    "name": "Healthy Soak",
+    "description": "Raises Speed and Attack by 1 stage when hit by a Water-type move."
+  },
+  "inkBlindness": {
+    "name": "Ink Blindness",
+    "description": "Has a 35% chance to confuse the target after attacking."
+  },
+  "inkFry": {
+    "name": "Ink Fry",
+    "description": "Lowers the target's Speed and Special Defense by 1 stage after using a Water-type move."
+  },
+  "mooTime": {
+    "name": "Moo Time",
+    "description": "Raises Defense and Speed by 50% when HP is below 50%."
+  },
+  "fuelExchange": {
+    "name": "Fuel Exchange",
+    "description": "Raises Speed by 1 stage when hit by an Electric-type move. Restores 1/4 of max HP when hit by a Grass-type move. Raises Defense by 1 stage when hit by a Dark-type move. Raises Attack by 1 stage when hit by a Fairy-type move. Raises Special Defense by 1 stage when hit by a Psychic-type move. Raises Special Attack by 1 stage when hit by an Ice-type move."
+  },
+  "sunAndMoon": {
+    "name": "Sun and Moon",
+    "description": "Boosts the power of Fire-type and Rock-type moves by 20%."
+  },
+  "nightAndDay": {
+    "name": "Night and Day",
+    "description": "Has a 40% chance to inflict burn on contact when HP is above 50%, or a 35% chance to inflict sleep on contact when HP is below 50%."
+  },
+  "twoHalves": {
+    "name": "Two Halves",
+    "description": "Survives a hit that would knock it out and then sharply lowers foe's Speed, and restores 50% HP."
+  },
+  "alienRock": {
+    "name": "Alien Rock",
+    "description": "Psychic and Rock-type moves share their type advantage against the same types!"
+  },
+  "robot": {
+    "name": "Robot",
+    "description": "Raises ALL stats by 1 stage when entering battle. Lowers a random stat by 1 stage at the end of each turn."
+  },
+  "golemPlus": {
+    "name": "Golem Plus",
+    "description": "Boosts the power of Rock-type moves by 30% and increases Defense by 30%."
+  },
+  "nightmareFuel": {
+    "name": "Nightmare Fuel",
+    "description": "Changes Normal-type moves to Primary-type and boosts their power by 20%."
+  },
+  "smittyxtvVirus": {
+    "name": "SmittyNugget Virus",
+    "description": "Raises the highest stat by 1 stage after knocking out an opponent. 50% chance to lower a random stat of the target by 1 stage after attacking."
+  },
+  "staticCharge": {
+    "name": "Static Charge",
+    "description": "Applies the Charged status to the attacker on contact. 30% chance to paralyze on contact."
+  },
+  "darkStampede": {
+    "name": "Dark Stampede",
+    "description": "Raises a random stat by 1 stage after using a Dark-type move."
+  },
+  "colorChangeDefense": {
+    "name": "Color Change Defense",
+    "description": "Changes the user's type to match the type of move it was hit by. If the user isn't already the same type, it also heals 1/8 of its max HP."
+  },
+  "colorChangeSteal": {
+    "name": "Color Change Steal",
+    "description": "Changes the user's type to match the type of move it was hit by. Steals the target's held item if the user shares a type with the target."
+  },
+  "hauntingEcho": {
+    "name": "Haunting Echo",
+    "description": "30% chance to paralyze the target and deal 1/16 of its max HP as damage when using a Ghost-type move."
+  },
+  "maternalShade": {
+    "name": "Maternal Shade",
+    "description": "Has a 50% chance to quarter the damage of incoming attacks."
+  },
+  "spiritualBond": {
+    "name": "Spiritual Bond",
+    "description": "Inflicts 50% of damage to attacker"
+  },
+  "gravePower": {
+    "name": "Grave Power",
+    "description": "Boosts move power by 150% when HP is below 40%. 30% chance to badly poison the target."
+  },
+  "undead": {
+    "name": "Undead",
+    "description": "Has a 70% chance to survive a hit that would knock it out."
+  },
+  "scaleArmor": {
+    "name": "Scale Armor",
+    "description": "Reduces damage from Water, Electric, Fire, and Grass-type moves by 25%."
+  },
+  "pixelatedTongue": {
+    "name": "Pixelated Tongue",
+    "description": "30% chance to inflict a random status condition and lower a random stat of the target by 1 stage."
+  },
+  "staticTaste": {
+    "name": "Static Taste",
+    "description": "Boosts move power by 50% against paralyzed targets. 35% chance to paralyze the target."
+  },
+  "rockyHorrorShow": {
+    "name": "Rocky Horror Show",
+    "description": "Prevents the opponent from switching out. Raises two random stats by 1 stage when entering battle."
+  },
+  "hauntingBroadcast": {
+    "name": "Haunting Broadcast",
+    "description": "Curses all opposing Pokemon when the user faints."
+  },
+  "ectoplasmicTouch": {
+    "name": "Ectoplasmic Touch",
+    "description": "Damages the attacker by 1/12 of its max HP when hit by a contact move. Also damages the target by 1/12 of its max HP when using a contact move."
+  },
+  "toxicCombustion": {
+    "name": "Toxic Combustion",
+    "description": "Deals 1/8 of the attacker's max HP as damage if they are badly poisoned. 30% chance to badly poison the target."
+  },
+  "flamingEmission": {
+    "name": "Flaming Emission",
+    "description": "Fire and Poison-type moves share their type advantage against the same types!"
+  },
+  "burningDisease": {
+    "name": "Burning Disease",
+    "description": "Deals 1/8 of the attacker's max HP as damage if they are burned. 30% chance to burn the target."
+  },
+  "steadyStance": {
+    "name": "Steady Stance",
+    "description": "Raises the user's Attack, Defense, Special Attack, and Special Defense by 20%."
+  },
+  "balancedKick": {
+    "name": "Balanced Kick",
+    "description": "Kicking moves never miss and have their power boosted by 20%."
+  },
+  "phantomPouch": {
+    "name": "Phantom Pouch",
+    "description": "30% chance to restore 1/8 of max HP after being hit or attacking. Increases item drops after battle."
+  },
+  "hauntingScythe": {
+    "name": "Haunting Scythe",
+    "description": "Changes it's attacks to SPECIAL or PHYSICAL based on the opponent's weaker defense stat."
+  },
+  "soulCollector": {
+    "name": "Soul Collector",
+    "description": "Boosts moves that match collected types. Collects the type of knocked out Pokemon. Loses collected types when fainting."
+  },
+  "shadowSync": {
+    "name": "Shadow Sync",
+    "description": "Raises the user's highest stats by 1 when the opponent's stat changes. Boosts the power of all moves by 20%."
+  },
+  "frightfulCute": {
+    "name": "Frightful Cute",
+    "description": "Has a 33% chance to boost move power by 50% or halve the damage taken from attacks."
+  },
+  "ghostify": {
+    "name": "Ghostify",
+    "description": "Changes Normal-type moves to Ghost-type and boosts their power by 40%."
+  },
+  "foreverPartner": {
+    "name": "Forever Partner",
+    "description": "Boosts the power of all moves by 30%. Has a 40% chance to survive a hit that would knock it out."
+  },
+  "newAdaption": {
+    "name": "New Adaption",
+    "description": "Halves damage from Fire and Ground-type moves. Doubles the power of Steel-type moves against Fire, Poison, and Water-type Pokemon."
+  },
+  "steelStealer": {
+    "name": "Steel Stealer",
+    "description": "Raises Attack by 1 stage when hit by a Steel-type move."
+  },
+  "teraForce": {
+    "name": "Tera Force",
+    "description": "Ground-type moves can hit Flying-types. Boosts Ground-type moves by 30%. Immune to Intimidate."
+  },
+  "mudiate": {
+    "name": "Mudiate",
+    "description": "Changes Normal-type moves to Ground-type and boosts their power by 20% and gives them 20% chance to lower the foe's accuracy."
+  },
+  "gottaGoFast": {
+    "name": "Gotta Go Fast",
+    "description": "Doubles power if moving first. Takes double damage if moving second."
+  },
+  "imBlue": {
+    "name": "I'm Blue",
+    "description": "Boosts Water-type moves. Resists Fire, Water, and Steel-type moves. Boosts power by 50% against Fire, Ground, and Rock-type Pokemon."
+  },
+  "notShadow": {
+    "name": "Not Shadow",
+    "description": "Immune to Dark, Steel, and Ghost-type moves. Raises Attack, Defense, or Speed respectively when hit by a Dark, Steel, or Ghost-type move."
+  },
+  "animified": {
+    "name": "Animified",
+    "description": "Resists Normal and Fighting-type moves. Weak to Poison-type moves. Normal-type moves become Fairy-type and are boosted by 20%. 30% chance to survive a hit that would knock it out."
+  },
+  "longForgotten": {
+    "name": "Long Forgotten",
+    "description": "Lowers Defense and Special Defense by 1 stage when entering battle."
+  },
+  "waaaa": {
+    "name": "Waaaa",
+    "description": "Has a 25% chance to land a critical hit. 10% chance to badly poison the target."
+  },
+  "tooLate": {
+    "name": "Too Late",
+    "description": "Moves always go last. 35% chance to confuse, make drowsy, infest, or curse the target."
+  },
+  "memoriesOfTennis": {
+    "name": "Memories of Tennis",
+    "description": "Boosts the power of ball, sphere, orb, circle, bounce, and yellow-related moves by 50%. 30% chance to make the target flinch when using these moves."
+  },
+  "fireRafRaf": {
+    "name": "Fire Raf Raf",
+    "description": "Boosts Fire-type moves by 50%. Takes double damage from Water. Normal-type moves become Fire-type and are boosted by 20%."
+  },
+  "positivity": {
+    "name": "Positivity",
+    "description": "Boosts Electric-type moves by 20%. Has a 30% chance to survive a hit that would knock it out. 33% chance to halve damage from attacks."
+  },
+  "unfazed": {
+    "name": "Unfazed",
+    "description": "Halves damage from super effective moves."
+  },
+  "nightmareSauce": {
+    "name": "Nightmare Sauce",
+    "description": "50% chance to give the target the Comatose ability. 30% chance to give the target the Nightmare status, if they have the Comatose ability."
+  },
+  "hashSlingingSlasher": {
+    "name": "Hash Slinging Slasher",
+    "description": "Doubles the power of slicing moves."
+  },
+  "lifeAdvice": {
+    "name": "Life Advice",
+    "description": "Raises a random stat by 1 stage when entering battle. 40% chance to restore 1/8 of max HP when hit by an attack."
+  },
+  "woodCutter": {
+    "name": "Wood Cutter",
+    "description": "Boosts move power by 150% against Grass-type Pokemon. Raises Attack and Speed by 1 stage after knocking out a Grass-type Pokemon."
+  },
+  "axe": {
+    "name": "Axe",
+    "description": "Boosts the power of slicing moves by 50%. Boosts Steel-type moves by 30%."
+  },
+  "rubberMan": {
+    "name": "Rubber Man",
+    "description": "Halves damage from Physical and Steel-type moves. Electric-type move immunity and raises Attack by 1 stage. Takes double damage from Water-type moves. Boosts Normal, Fighting, and Flying-type moves by 50%."
+  },
+  "conquerorHaki": {
+    "name": "Conqueror Haki",
+    "description": "20% chance to double move power. 10% chance to put the target to sleep or paralyze it on contact."
+  },
+  "stretchy": {
+    "name": "Stretchy",
+    "description": "50% chance to WRAP the target, preventing it from switching out and damaging it each turn."
+  },
+  "demonSwordsman": {
+    "name": "Demon Swordsman",
+    "description": "Boosts the power of slicing moves by 50%. Steel, Ghost, and Dark-type moves share their type advantage against the same types!"
+  },
+  "cursedBlades": {
+    "name": "Cursed Blades",
+    "description": "Boosts the power of slicing moves by 50%. 20% chance to curse the target."
+  },
+  "strawhat": {
+    "name": "Strawhat",
+    "description": "Has a 15% chance to survive a hit that would knock it out. Boosts move power based on the number of fainted allies (up to 100% boost)."
+  },
+  "fairyFear": {
+    "name": "Fairy Fear",
+    "description": "Boosts Fairy-type moves by 20%. 10% chance to make the target flinch."
+  },
+  "shadowCharm": {
+    "name": "Shadow Charm",
+    "description": "Lowers Attack by 1 stage when entering battle. Prevents the opponent from switching out."
+  },
+  "yinYang": {
+    "name": "Yin Yang",
+    "description": "Ghost and Fairy-type moves share their type advantage against the same types!"
+  },
+  "stubbornStance": {
+    "name": "Stubborn Stance",
+    "description": "Has a 70% chance to survive a hit that would knock it out."
+  },
+  "miseryTouch": {
+    "name": "Misery Touch",
+    "description": "Changes a random stat of the target by 1 stage after attacking."
+  },
+  "justAJerk": {
+    "name": "Just a Jerk",
+    "description": "Lowers Defense by 1 stage when entering battle. Boosts Dark-type moves by 20%."
+  },
+  "bugabugabuga": {
+    "name": "Bugabugabuga",
+    "description": "Lowers all stats by 1 stage when entering battle. Prevents the opponent from switching out. Takes 20% more damage from attacks."
+  },
+  "justAMaskedJerk": {
+    "name": "Just a Masked Jerk",
+    "description": "Lowers Defense and a random stat by 1 stage when entering battle. Boosts the power of all moves by 20%."
+  },
+  "flameSpirit": {
+    "name": "Flame Spirit",
+    "description": "10% chance to burn the target. Instead of taking damage from Fire-type moves, raises two random stats by 1 stage."
+  },
+  "soulBurn": {
+    "name": "Soul Burn",
+    "description": "30% chance to burn the target. Deals 1/8 of the attacker's max HP as damage if they are burned."
+  },
+  "falseSafety": {
+    "name": "False Safety",
+    "description": "Lowers Special Defense by 1 stage when entering battle. 10% chance to burn, put to sleep, or paralyze attackers on contact."
+  },
+  "forestFury": {
+    "name": "Forest Fury",
+    "description": "Boosts the power of Grass-type moves by 150% when HP is below 50%."
+  },
+  "vineFist": {
+    "name": "Vine Fist",
+    "description": "Boosts the power of punching moves by 30%. 30% chance to seed or bind the target when using punching moves."
+  },
+  "theAvatar": {
+    "name": "The Avatar",
+    "description": "Boosts Fire, Water, Flying, and Ground-type moves by 20%."
+  },
+  "enlightened": {
+    "name": "Enlightened",
+    "description": "Boosts Psychic-type moves by 20%. Moves that would be not very effective become neutral."
+  },
+  "happyLittleAccidents": {
+    "name": "Happy Little Accidents",
+    "description": "Boosts moves with 65-85 power by 50%. Boosts moves with 60 or less power by 75%."
+  },
+  "originalAsmr": {
+    "name": "Original ASMR",
+    "description": "20% chance to put the target to sleep. Reduces damage taken by 20%. Boosts sound-based moves by 30%. Halves damage from sound-based moves."
+  },
+  "afropower": {
+    "name": "Afropower",
+    "description": "30% chance to triple move power."
+  },
+  "insectInfusion": {
+    "name": "Insect Infusion",
+    "description": "50% chance to infest the target for 5 turns."
+  },
+  "sentientAnt": {
+    "name": "Sentient Ant",
+    "description": "Raises stats by 1 or 2 stages depending on the opponent's highest stat. Raises Defense if opponent's highest stat is Attack, Special Defense if opponent's highest stat is Special Attack, Special Attack if opponent's highest stat is Special Defense, or Speed by 2 stages if opponent's highest stat is Speed."
+  },
+  "antRegen": {
+    "name": "Ant Regen",
+    "description": "Restores HP at the end of each turn."
+  },
+  "v8Engine": {
+    "name": "V8 Engine",
+    "description": "Raises Speed by 1 stage at the end of each turn."
+  },
+  "selfDriving": {
+    "name": "Self Driving",
+    "description": "Changes Normal-type moves to Psychic-type and boosts their power by 50%."
+  },
+  "limitedEdition": {
+    "name": "Limited Edition",
+    "description": "Raises two random stats by 1 stage when entering battle. 33% chance to boost move power by 20%."
+  },
+  "fieryDisguise": {
+    "name": "Fiery Disguise",
+    "description": "The Pokemon is protected from damage when it enters a battle or when its HP is full. This protection is removed after the Pokemon takes damage. Fire-type moves charge this ability."
+  },
+  "playfulBlaze": {
+    "name": "Playful Blaze",
+    "description": "Boosts Fire-type moves when HP is low. 30% chance to raise Attack by 1 stage after using a Fire-type move. 10% chance to burn the target when using a Fairy-type move."
+  },
+  "aquaDisguise": {
+    "name": "Aqua Disguise",
+    "description": "The Pokemon is protected from damage when it enters a battle or when its HP is full. This protection is removed after the Pokemon takes damage. Water-type moves charge this ability."
+  },
+  "phantomTorrent": {
+    "name": "Phantom Torrent",
+    "description": "Boosts Water-type moves when HP is low. 30% chance to raise Special Attack by 1 stage after using a Water-type move. 10% chance to trap the target in a whirlpool when using a Fairy-type move."
+  },
+  "sillyPressure": {
+    "name": "Silly Pressure",
+    "description": "Increases the PP cost of moves targetting the Pokemon. 30% chance to raise Attack by 1 stage after using a Psychic-type move. 10% chance to encore the target when using a Fairy-type move."
+  },
+  "telekineticDisguise": {
+    "name": "Telekinetic Disguise",
+    "description": "The Pokemon is protected from damage when it enters a battle or when its HP is full. This protection is removed after the Pokemon takes damage. Psychic-type moves charge this ability."
+  },
+  "electricDisguise": {
+    "name": "Electric Disguise",
+    "description": "The Pokemon is protected from damage when it enters a battle or when its HP is full. This protection is removed after the Pokemon takes damage. Electric-type moves charge this ability."
+  },
+  "lovelyStatic": {
+    "name": "Lovely Static",
+    "description": "30% chance to paralyze the attacker on contact. 30% chance to raise Special Attack by 1 stage after using an Electric-type move. 20% chance to infatuate the target when using a Fairy-type move if they are the opposite gender."
+  },
+  "ancientDisguise": {
+    "name": "Ancient Disguise",
+    "description": "The Pokemon is protected from damage when it enters a battle or when its HP is full. This protection is removed after the Pokemon takes damage. Rock-type moves charge this ability."
+  },
+  "madeToLast": {
+    "name": "Made to Last",
+    "description": "Has a 40% chance to survive a hit that would knock it out. 30% chance to raise Speed by 1 stage after using a Rock-type move. 10% chance to trap the target when using a Fairy-type move."
+  },
+  "multiPiece": {
+    "name": "Multi Piece",
+    "description": "Survives a hit that would knock it out and then sharply lowers its Speed. Heals HP after being hit."
+  },
+  "alienType": {
+    "name": "Alien Type",
+    "description": "Boosts Ice, Electric, and Grass-type moves by 20%."
+  },
+  "waterPowered": {
+    "name": "Water Powered",
+    "description": "Changes non-Psychic and non-Ground-type moves to Water-type and boosts their power by 20%. Instead of taking damage from Water-type moves, raises a random stat by 1 stage."
+  },
+  "madeOfIce": {
+    "name": "Made of Ice",
+    "description": "30% chance to freeze attackers on contact. Boosts Ice-type moves by 30%."
+  },
+  "shredded": {
+    "name": "Shredded",
+    "description": "33% chance to double move power. Changes Water and Normal-type moves to Fighting-type and boosts their power by 20%."
+  },
+  "sculptedIce": {
+    "name": "Sculpted Ice",
+    "description": "Raises a random stat among Speed, Defense, and Attack by 1 stage at the end of each turn."
+  },
+  "quaker": {
+    "name": "Quaker",
+    "description": "Ground-type moves can hit Flying-types. Boosts moves with 'quake' or 'magnitude' in their name by 50%."
+  },
+  "rockFortress": {
+    "name": "Rock Fortress",
+    "description": "Reduces damage from super effective moves by 50%."
+  },
+  "rockControl": {
+    "name": "Rock Control",
+    "description": "Sets up Stealth Rock when hit by a Physical move. Boosts Rock-type moves by 30%."
+  },
+  "unstoppablePoison": {
+    "name": "Unstoppable Poison",
+    "description": "Poison-type moves can hit Steel-types. Boosts Poison-type moves by 20%. 30% chance to badly poison the target."
+  },
+  "swiftClaws": {
+    "name": "Swift Claws",
+    "description": "Boosts contact moves by 30%. 30% chance to raise Accuracy, Attack, or Speed by 1 stage when using a contact move."
+  },
+  "tripleThreat": {
+    "name": "Triple Threat",
+    "description": "10% chance to land a critical hit. 10% chance to make the target flinch. 10% chance to freeze, paralyze, or burn on contact."
+  },
+  "dragonWrath": {
+    "name": "Dragon Wrath",
+    "description": "50% chance to deal 1/6 of the attacker's max HP as damage when hit by a contact move."
+  },
+  "hydraResilience": {
+    "name": "Hydra Resilience",
+    "description": "Survives a hit that would knock it out when at full HP. Blocks one-hit KO moves. Has a 25% chance to survive a hit that would knock it out."
+  },
+  "toxicOverload": {
+    "name": "Toxic Overload",
+    "description": "15% chance to badly poison the target. Boosts move power by 75% against poisoned or badly poisoned targets."
+  },
+  "recycleEnergy": {
+    "name": "Recycle Energy",
+    "description": "50% chance to restore 1/8 of max HP after being hit or attacking."
+  },
+  "neetProduced": {
+    "name": "NEET Produced",
+    "description": "Takes double damage from Water and Normal-type moves. Increases item drops after battle. Doubles power against Normal, Fairy, and Fighting-type Pokemon."
+  },
+  "ancientAutomaton": {
+    "name": "Ancient Automaton",
+    "description": "Raises a random stat among Speed, Defense, and Attack by 1 stage at the end of each turn."
+  },
+  "shadowOfColossus": {
+    "name": "Shadow of Colossus",
+    "description": "Has a 10% chance to survive a hit that would knock it out. Boosts Ghost-type moves by 30%. Reduces damage taken by 15%."
+  },
+  "trueFear": {
+    "name": "True Fear",
+    "description": "Lowers a random stat of the opponent by 1 stage at the end of each turn."
+  },
+  "sumoMaster": {
+    "name": "Sumo Master",
+    "description": "Boosts Fighting-type moves by 30%. Changes Normal-type moves to Ground-type and boosts their power by 30%."
+  },
+  "steadfastBulk": {
+    "name": "Steadfast Bulk",
+  "description": "30% chance to get flinched when attacked. when flinched raises Speed by 2 stages and Attack and Defense by 1 stage."
+  },
+  "bigGuts": {
+    "name": "Big Guts",
+    "description": "Attack is doubled when the Pokemon has a status condition. Ignores Attack drop from burn."
+  },
+  "luchadorsSpirit": {
+    "name": "Luchador's Spirit",
+    "description": "Changes Normal-type moves to Flying-type and boosts their power by 20%. Raises the highest stat by 1 stage after knocking out an opponent."
+  },
+  "maskedMight": {
+    "name": "Masked Might",
+    "description": "Doubles Attack and Special Attack when HP is above 50%."
+  },
+  "nachoLibre": {
+    "name": "Nacho Libre",
+    "description": "Boosts Fighting-type moves by 60%."
+  },
+  "pseudoScale": {
+    "name": "Pseudo Scale",
+    "description": "Halves damage taken when HP is full. Damages the attacker by 1/8 of its max HP when hit by a contact move."
+  },
+  "dracoForm": {
+    "name": "Draco Form",
+    "description": "Boosts Dragon-type moves by 20%. Dragon and Normal-type moves share their type advantage against the same types!"
+  },
+  "dittoType": {
+    "name": "Ditto Type",
+    "description": "Changes the user's type to resist the type of move it was hit by. Restores 1/8 of max HP if the type changes."
+  },
+  "morphingBlaze": {
+    "name": "Morphing Blaze",
+    "description": "Boosts Fire-type moves when HP is low. Changes Fire-type moves to Electric-type against Water-types and to Water-type against Ground-types when HP is below 50%."
+  },
+  "flameForm": {
+    "name": "Flame Form",
+    "description": "Boosts Fire-type moves by 20%. Fire and Normal-type moves share their type advantage against the same types!"
+  },
+  "ultimateAdaptation": {
+    "name": "Ultimate Adaptation",
+    "description": "Boosts the power of all moves by 20%. Super effective moves become neutral against this Pokemon."
+  },
+  "pseudoPerfection": {
+    "name": "Pseudo Perfection",
+    "description": "10% chance for each: critical hit, halve damage taken, double move power, restore 1/8 of max HP after being hit or attacking."
+  },
+  "dnaChange": {
+    "name": "DNA Change",
+  "description": "50% chance to change type and restore 1/8 of max HP when using a move."
+  },
+  "realisticStatic": {
+    "name": "Realistic Static",
+    "description": "50% chance to paralyze the attacker on contact. Lowers a random stat of the attacker by 1 stage on contact. Damages the attacker by 1/8 of its max HP when hit by a contact move."
+  },
+  "mascotForm": {
+    "name": "Mascot Form",
+    "description": "Boosts Electric-type moves by 20%. Electric and Normal-type moves share their type advantage against the same types!"
+  },
+  "copyGuard": {
+    "name": "Copy Guard",
+  "description": "Moves used by this Pokemon cannot miss. Reduces damage from super effective moves by 25%."
+  },
+  "muscleForm": {
+    "name": "Muscle Form",
+    "description": "Boosts Fighting-type moves by 20%. Fighting and Normal-type moves share their type advantage against the same types!"
+  },
+  "unrealPressure": {
+    "name": "Unreal Pressure",
+  "description": "Increases the PP cost of moves targetting the Pokemon by 2. Lowers a random stat and Accuracy of the opponent by 1 stage when entering battle."
+  },
+  "psychoForm": {
+    "name": "Psycho Form",
+    "description": "Boosts Psychic-type moves by 20%. Psychic and Normal-type moves share their type advantage against the same types!"
+  },
+  "clubClobber": {
+    "name": "Club Clobber",
+    "description": "Boosts Rock-type moves by 20%. Boosts the power of contact moves by 40%."
+  },
+  "yabaDabaDoo": {
+    "name": "Yaba Daba Doo",
+    "description": "Raises all stats by 1 stage when entering battle. Lowers a random stat by 1 stage at the end of each turn."
+  },
+  "meteorProof": {
+    "name": "Meteor Proof",
+    "description": "Reduces damage from Water, Rock, Fire, and Ice-type moves by 25%."
+  },
+  "sharkShred": {
+    "name": "Shark Shred",
+    "description": "Damages the target by 1/8 of its max HP when using a contact move. Restores 1/8 of max HP when using a contact move."
+  },
+  "attackBoost": {
+    "name": "Attack Boost",
+    "description": "Raises Attack by 1 stage at the end of each turn."
+  },
+  "reversedPsychology": {
+    "name": "Reversed Psychology",
+    "description": "Inverts stat changes. Inverts type effectiveness of moves."
+  },
+  "tailCommand": {
+    "name": "Tail Command",
+    "description": "Boosts the power of tail-related moves by 75%."
+  },
+  "abyssalAqua": {
+    "name": "Abyssal Aqua",
+    "description": "Water, Ghost, and Dark-type moves share their type advantage against the same types! 30% chance to trap the target in a whirlpool."
+  },
+  "omniscale": {
+    "name": "Omniscale",
+    "description": "30% chance to halve damage taken from attacks. 30% chance to raise a random stat by 1 stage when hit by an attack."
+  },
+  "bounceBack": {
+    "name": "Bounce Back",
+    "description": "30% chance to survive a hit that would knock it out and deal 1/8 of the attacker's max HP as damage."
+  },
+  "counterCoat": {
+    "name": "Counter Coat",
+    "description": "Damages the attacker by 1/6 of its max HP when hit by a contact move. Reduces damage taken by 15%."
+  },
+  "shinyScale": {
+    "name": "Shiny Scale",
+    "description": "10% chance to completely avoid damage from attacks."
+  },
+  "goldenLuck": {
+    "name": "Golden Luck",
+    "description": "30% chance to land a critical hit."
+  },
+  "oneInAMillion": {
+    "name": "One in a Million",
+    "description": "5% chance to quintuple move power."
+  },
+  "apexPredator": {
+    "name": "Apex Predator",
+    "description": "Lowers Defense by 1 stage when entering battle. Raises the highest stat by 1 stage after knocking out an opponent."
+  },
+  "terrorTunnel": {
+    "name": "Terror Tunnel",
+    "description": "Doubles the power of Dig."
+  },
+  "looseThreads": {
+    "name": "Loose Threads",
+    "description": "30% chance to trap the target. Quintuples the power of binding moves."
+  },
+  "streetSmart": {
+    "name": "Street Smart",
+    "description": "Boosts Steel, Dark, Normal, and Fighting-type moves by 20%."
+  },
+  "boosheFurCoat": {
+    "name": "Booshe Fur Coat",
+    "description": "Halves damage from Physical moves. 40% chance to reduce damage from Special moves by 25%."
+  },
+  "champion": {
+    "name": "Champion",
+    "description": "Raises all stats by 1 stage after knocking out an opponent. Badly poisons itself after using a move."
+  },
+  "snakeScale": {
+    "name": "Snake Scale",
+    "description": "50% chance to reduce damage taken by 25%. 30% chance to badly poison attackers on contact."
+  },
+  "deathClaws": {
+    "name": "Death Claws",
+    "description": "Boosts the power of contact moves by 50%. Moves that would be not very effective become neutral."
+  },
+  "industrialPower": {
+    "name": "Industrial Power",
+    "description": "Boosts Electric, Steel, and Poison-type moves by 30%."
+  },
+  "cogOverload": {
+    "name": "Cog Overload",
+    "description": "Boosts the power of gear and spin-related moves by 50%."
+  },
+  "multiGear": {
+    "name": "Multi Gear",
+    "description": "Raises Speed and a random stat by 1 stage when using Shift Gear."
+  },
+  "sugarRush": {
+    "name": "Sugar Rush",
+    "description": "Moves go first when HP is above 50%. Boosts move power by 20% when HP is above 50%."
+  },
+  "livingDelicacy": {
+    "name": "Living Delicacy",
+    "description": "Raises two random stats by 1 stage when entering battle. 33% chance to boost move power by 50%. 30% chance to restore 1/8 of max HP when hit by an attack."
+  },
+  "abandoned": {
+    "name": "Abandoned",
+    "description": "Raises Attack and Speed by 1 stage after being hit by an attack."
+  },
+  "lazyMight": {
+    "name": "Lazy Might",
+    "description": "Boosts the power of all moves when HP is low."
+  },
+  "lasagna": {
+    "name": "Lasagna",
+    "description": "Restores 1/2 of max HP when HP drops below 50%. Only activates once per battle."
+  },
+  "alienCat": {
+    "name": "Alien Cat",
+    "description": "Boosts Psychic-type moves by 20%. Infatuates cat-like Pokemon of the opposite gender. Immune to Ground-type moves."
+  },
+  "phaser": {
+    "name": "Phaser",
+    "description": "Negates damage from contact moves."
+  },
+  "virtualTacos": {
+    "name": "Virtual Tacos",
+    "description": "Restores 1/8 of max HP at the end of each turn."
+  },
+  "heyLookAtMe": {
+    "name": "Hey Look at Me",
+    "description": "Lowers two random stats by 1 stage and raises a random stat by 1 stage when entering battle."
+  },
+  "limitedTime": {
+    "name": "Limited Time",
+    "description": "Badly poisons itself when entering battle. 30% chance to triple move power. Raises a random stat by 1 stage after knocking out an opponent."
+  },
+  "boxBorn": {
+    "name": "Box Born",
+    "description": "Reduces the power of ball, sphere, and orb-related moves by 75%. Boosts Steel-type moves by 20%."
+  },
+  "imAPickle": {
+    "name": "I'm a Pickle",
+    "description": "Heals HP when hit by Water-type moves. Raises Speed by 1 stage when hit by Grass-type moves. Raises Attack by 1 stage when hit by Steel-type moves. 10% chance to make the target flinch."
+  },
+  "resourceful": {
+    "name": "Resourceful",
+  "description": "30% chance to steal the target's held item and raise Attack by 1 stage. 30% chance to obtain an item after battle."
+  },
+  "deadlyBrine": {
+    "name": "Deadly Brine",
+    "description": "Changes Normal-type moves to Water-type. Boosts Water-type moves by 30%. Water and Poison-type moves share their type advantage against the same types! 10% chance to badly poison the target."
+  },
+  "thicc": {
+    "name": "Thicc",
+    "description": "30% chance to reduce damage taken by 25%."
+  },
+  "enforcer": {
+    "name": "Enforcer",
+    "description": "Dark and Steel-type moves share their type advantage against the same types! Raises Attack by 1 stage after knocking out an opponent."
+  },
+  "spookySense": {
+    "name": "Spooky Sense",
+    "description": "Reduces damage from Ghost and Dark-type moves by 25%. Raises Attack and Speed by 1 stage if the opponent has a super effective move."
+  },
+  "unyieldingCourage": {
+    "name": "Unyielding Courage",
+    "description": "Survives a hit that would knock it out when at full HP. Blocks one-hit KO moves. Has a 25% chance to survive a hit that would knock it out."
+  },
+  "lovePower": {
+    "name": "Love Power",
+    "description": "50% chance to double move power. 30% chance to infatuate the target if they are the opposite gender."
+  },
+  "spiritWinds": {
+    "name": "Spirit Winds",
+    "description": "Ghost and Grass-type moves share their type advantage against the same types! Changes Dark and Normal-type moves to Ghost-type and boosts their power by 20%."
+  },
+  "leafDancer": {
+    "name": "Leaf Dancer",
+    "description": "Raises a random stat by 1 stage after using a Dark-type move. Raises a random stat by 1 stage when hit by a Grass-type move."
+  },
+  "slayerSensei": {
+    "name": "Slayer Sensei",
+    "description": "Triples move power against Ghost and Dark-type Pokemon. Raises a random stat by 1 stage after knocking out an opponent."
+  },
+  "balanced": {
+    "name": "Balanced",
+    "description": "Immune to confusion. Moves used by this Pokemon cannot miss. 50% chance to halve damage from attacks."
+  },
+  "enhancedFocus": {
+    "name": "Enhanced Focus",
+    "description": "25% chance to land a critical hit."
+  },
+  "luckySeven": {
+    "name": "Lucky Seven",
+    "description": "70% chance to boost moves with 70 base power by 70%. 70% chance to raise a random stat by 1 stage after attacking."
+  },
+  "lastLaugh": {
+    "name": "Last Laugh",
+    "description": "Deals 1/4 of the attacker's max HP as damage when fainting."
+  },
+  "foxWisdom": {
+    "name": "Fox Wisdom",
+    "description": "Changes Normal-type moves to Psychic-type. Boosts Psychic-type moves by 30%. Fire and Psychic-type moves share their type advantage against the same types!"
+  },
+  "eternalYouth": {
+    "name": "Eternal Youth",
+    "description": "Boosts Fairy-type moves by 30%. Changes Normal-type moves to Fairy-type. Has a 10% chance to survive a hit that would knock it out."
+  },
+  "flamingChakra": {
+    "name": "Flaming Chakra",
+    "description": "Changes non-Psychic-type moves to Fire-type. Boosts Fire-type moves by 50%. 10% chance to burn the target."
+  },
+  "adaptabugility": {
+    "name": "Adaptabugility",
+    "description": "Triples the power of Bug-type moves."
+  },
+  "shellRepair": {
+    "name": "Shell Repair",
+    "description": "Restores 1/4 of max HP when using Shell Smash. Raises Defense and Special Defense by 1 stage when using Shell Smash. Only activates once per battle."
+  },
+  "squeezer": {
+    "name": "Squeezer",
+    "description": "Quintuples the power of Wrap. 30% chance to trap the target."
+  },
+  "greenSpaghettiMonster": {
+    "name": "Green Spaghetti Monster",
+    "description": "15% chance to trap the target when using a Grass-type move. Boosts Grass-type moves by 20%. 10% chance to lower the target's Speed by 1 stage when using a Grass-type move."
+  },
+  "leechVines": {
+    "name": "Leech Vines",
+    "description": "Doubles the power of Vine Whip. 30% chance to seed or bind the target when using Vine Whip."
+  },
+  "regeneratorPlus": {
+    "name": "Regenerator Plus",
+    "description": "Restores 45% of max HP when switching out."
+  },
+  "plaguePsyche": {
+    "name": "Plague Psyche",
+    "description": "Poison and Psychic-type moves share their type advantage against the same types! Changes Normal-type moves to Poison-type. 10% chance to confuse or poison the target."
+  },
+  "toxicTrance": {
+    "name": "Toxic Trance",
+    "description": "30% chance to badly poison the target. 30% chance to put the target to sleep. Boosts move power by 50% when the user has a status condition."
+  },
+  "permafrostArmor": {
+    "name": "Permafrost Armor",
+    "description": "Halves damage from Fire, Ice, and Rock-type moves."
+  },
+  "glacialPace": {
+    "name": "Glacial Pace",
+    "description": "Lowers Speed by 2 stages when entering battle. Boosts Ice-type moves by 20%."
+  },
+  "iceKing": {
+    "name": "Ice King",
+    "description": "Boosts Ice-type moves by 50%. Changes Normal-type moves to Ice-type and boosts their power by 20%. 5% chance to freeze the target."
+  },
+  "despair": {
+    "name": "Despair",
+    "description": "Lowers a random stat of the opponent by 1 stage and raises a random stat of the user by 1 stage at the end of each turn."
+  },
+  "ohayogosumasu": {
+    "name": "Ohayogosumasu",
+    "description": "Lowers Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage when entering battle."
+  },
+  "abilityTextHere": {
+    "name": "Ability Text Here",
+    "description": "Gives the opponent this ability when entering battle. Raises two random stats by 1 stage when entering battle."
+  },
+  "exceptionCaught": {
+    "name": "Exception Caught",
+    "description": "Survives a hit that would knock it out and then sharply lowers its Speed. Heals HP after being hit."
+  },
+  "fourOFour": {
+    "name": "Four O Four",
+    "description": "10% chance to completely avoid damage from attacks."
+  },
+  "shadowSlayer": {
+    "name": "Shadow Slayer",
+    "description": "30% chance to burn, poison, paralyze, or badly poison the target when using a Ghost or Steel-type move."
+  },
+  "nightmareEmerald": {
+    "name": "Nightmare Emerald",
+    "description": "Boosts Rock and Dark-type moves by 30%. 50% chance to give the target the Comatose ability or the Nightmare status."
+  },
+  "imaginary": {
+    "name": "Imaginary",
+    "description": "Changes Normal-type moves to Fairy-type and boosts their power by 20%. 30% chance to halve damage from Physical moves."
+  },
+  "splinterSkin": {
+    "name": "Splinter Skin",
+    "description": "Damages the attacker by 1/12 of its max HP when hit by a contact move. Also damages the target by 1/12 of its max HP when using a contact move."
+  },
+  "jujutsuSorcerer": {
+    "name": "Jujutsu Sorcerer",
+    "description": "Boosts move power by 150% when the user or target has a status condition. 20% chance to cure own or target's status. 30% chance to inflict a random status. Ignores Attack drop from burn. 50% chance to inflict a random status on self if not already statused."
+  },
+  "toxicKing": {
+    "name": "Toxic King",
+    "description": "Always badly poisons the target."
+  },
+  "swampKing": {
+    "name": "Swamp King",
+    "description": "30% chance to poison the target. Changes Normal-type moves to Water-type and boosts their power by 20%. Water and Poison-type moves share their type advantage against the same types!"
+  },
+  "rageSoul": {
+    "name": "Rage Soul",
+    "description": "Boosts move power based on the number of fainted allies (up to 150% boost)."
+  },
+  "darkSide": {
+    "name": "Dark Side",
+    "description": "Doubles the power of Dark-type moves."
+  },
+  "puppetMaster": {
+    "name": "Puppet Master",
+    "description": "Triples move power against Mimikyu and Shuppet. 20% chance to curse or bind Normal and Fighting-type Pokemon. 10% chance to halve damage taken from attacks."
+  },
+  "blackAndRed": {
+    "name": "Black and Red",
+    "description": "Dark and Fire-type moves share their type advantage against the same types! 15% chance to burn the target. Changes Normal-type moves to Dark-type and boosts their power by 20%."
+  },
+  "zombieExperience": {
+    "name": "Zombie Experience",
+    "description": "Doubles move power against Dark, Ghost, and Ground-type Pokemon. Raises all stats by 1 stage after knocking out a Dark, Ghost, or Ground-type Pokemon."
+  },
+  "lastHope": {
+    "name": "Last Hope",
+    "description": "Boosts the power of all moves when HP is low."
+  },
+  "ugly": {
+    "name": "Ugly",
+    "description": "Lowers a random stat by 1 stage when entering battle and at the end of each turn. 10% chance to make the target flinch."
+  },
+  "blandCardboardEater": {
+    "name": "Bland Cardboard Eater",
+    "description": "Triples move power against SmittyXTV. Raises Attack by 1 stage when hit by a Grass-type move. Restores 1/8 of max HP when using a Grass-type move."
+  },
+  "boring": {
+    "name": "Boring",
+    "description": "Lowers a random stat by 1 stage when entering battle and at the end of each turn. Boosts Normal-type moves by 30%."
+  },
+  "moldyTouch": {
+    "name": "Moldy Touch",
+    "description": "10% chance to infest or badly poison the target on contact. Boosts Poison-type moves by 20%. Takes double damage from Mold Breaker."
+  },
+  "eternalGiggle": {
+    "name": "Eternal Giggle",
+    "description": "Takes double damage from Mold Breaker. Confuses and makes all opposing Pokemon flinch when the user faints."
+  },
+  "redMenace": {
+    "name": "Red Menace",
+    "description": "5% chance to curse the target or 10% chance to burn the target on contact. Boosts Fire-type moves by 20%. Raises Speed by 1 stage when hit by a Fire-type move. Takes double damage from Mold Breaker."
+  },
+  "ghostlyMold": {
+    "name": "Ghostly Mold",
+    "description": "10% chance to badly poison the target on contact. Ghost and Poison-type moves share their type advantage against the same types! Changes Normal-type moves to Ghost-type and boosts their power by 20%. Takes double damage from Mold Breaker."
+  },
+  "pacFungus": {
+    "name": "Pac Fungus",
+    "description": "30% chance to infest the target on contact. Raises Speed and Attack by 1 stage if the target is infested. Takes double damage from Mold Breaker."
+  },
+  "secretSauce": {
+    "name": "Secret Sauce",
+    "description": "10% chance to paralyze, burn, poison, or badly poison the target. 10% chance to deal damage equal to 1/8 of the target's max HP. 10% chance to apply various status conditions or effects."
+  },
+  "mcpuzzle": {
+    "name": "McPuzzle",
+    "description": "20% chance to confuse the target. 10% chance to make the target flinch. 20% chance to boost move power by 150%. Raises a random stat by 1 stage after knocking out an opponent."
+  },
+  "mayITakeYourOrder": {
+    "name": "May I Take Your Order",
+    "description": "Moves used by this Pokemon go first."
+  },
+  "stealthShipping": {
+    "name": "Stealth Shipping",
+    "description": "50% chance to set up Spikes, 20% chance for Stealth Rock, 20% chance for Toxic Spikes, or 10% chance for Sticky Web when hit by a contact move."
+  },
+  "cardboardEmpire": {
+    "name": "Cardboard Empire",
+    "description": "Raises two random stats by 1 stage after knocking out an opponent. Restores 1/8 of max HP after knocking out an opponent."
+  },
+  "aWinner": {
+    "name": "A Winner",
+    "description": "Raises a random stat by 1 stage after knocking out an opponent."
+  },
+  "smugAura": {
+    "name": "Smug Aura",
+    "description": "Changes Normal-type moves to Poison-type and boosts their power by 20%. Psychic and Poison-type moves share their type advantage against the same types! 10% chance to poison the target."
+  },
+  "deepThoughts": {
+    "name": "Deep Thoughts",
+    "description": "30% chance to confuse the target after using a move."
+  },
+  "intellyLectAlly": {
+    "name": "Intelly Lect Ally",
+    "description": "Raises Special Attack by 1 stage at the end of each turn."
+  },
+  "insomniaInk": {
+    "name": "Insomnia Ink",
+    "description": "50% chance to give the target the Comatose ability or the Nightmare status."
+  },
+  "nightmareClarinet": {
+    "name": "Nightmare Clarinet",
+    "description": "Changes all moves to sound-based and boosts their power by 20%. Boosts sound-based moves by 50%. 10% chance to curse the target."
+  },
+  "jellyfishFever": {
+    "name": "Jellyfish Fever",
+    "description": "Changes Normal-type moves to Fire-type and boosts their power by 20%. 10% chance to badly poison the target when using a Special move. 10% chance to burn the target when using a Physical move. Fire and Poison-type moves share their type advantage against the same types!"
+  },
+  "deepSeaVirus": {
+    "name": "Deep Sea Virus",
+    "description": "Deals 1/8 of the attacker's max HP as damage if they are badly poisoned. 30% chance to badly poison the target."
+  },
+  "bubblingBrains": {
+    "name": "Bubbling Brains",
+    "description": "Boosts Water-type moves by 50%. Restores 1/8 of max HP when using a contact move."
+  },
+  "cloakOfShadows": {
+    "name": "Cloak of Shadows",
+    "description": "Boosts Ghost-type moves by 20%. Changes Normal-type moves to Ghost-type and boosts their power by 20%. Reduces damage from super effective moves by 25%."
+  },
+  "acidWater": {
+    "name": "Acid Water",
+    "description": "Poison and Water-type moves share their type advantage against the same types! Changes Normal-type moves to Poison-type and boosts their power by 20%. Doubles power against Normal, Steel, and Fighting-type Pokemon when using Water or Poison-type moves."
+  },
+  "eightBitBlaze": {
+    "name": "Eight Bit Blaze",
+    "description": "Boosts Fire-type moves when HP is low. 10% chance to trap the target in a fiery vortex. Changes Normal-type moves to Fire-type and boosts their power by 20%. 10% chance to burn the target."
+  },
+  "charredMemory": {
+    "name": "Charred Memory",
+    "description": "Lowers the target's Special Defense by 1 stage after using a Fire-type move. Fire and Psychic-type moves share their type advantage against the same types! Changes Normal-type moves to Psychic-type and boosts their power by 20%."
+  },
+  "blackAndWhite": {
+    "name": "Black and White",
+    "description": "Negates damage from moves that are not Normal or Dark-type."
+  },
+  "eightBitTerror": {
+    "name": "Eight Bit Terror",
+    "description": "Boosts nightmare-related moves by 20%. 10% chance to curse or make the target flinch. 10% chance to deal damage equal to 1/8 of the target's max HP."
+  },
+  "corruptionBlaze": {
+    "name": "Corruption Blaze",
+    "description": "Boosts Fire-type moves when HP is low. Dark and Fire-type moves share their type advantage against the same types! 30% chance to disable the target's last used move."
+  },
+  "oaksMistake": {
+    "name": "Oak's Mistake",
+    "description": "Lowers a random stat by 1 stage when entering battle. 10% chance to seed or trap the target in a whirlpool. 10% chance to burn the target. 30% chance to restore 1/8 of max HP after attacking."
+  },
+  "shellShock": {
+    "name": "Shell Shock",
+    "description": "Water and Electric-type moves share their type advantage against the same types! Changes Normal-type moves to Electric-type and boosts their power by 20%. 10% chance to make the target flinch when using a Water or Normal-type move. 10% chance to paralyze the target when using a Water or Normal-type move."
+  },
+  "darkSeed": {
+    "name": "Dark Seed",
+    "description": "Grass and Dark-type moves share their type advantage against the same types! Changes Normal-type moves to Dark-type and boosts their power by 20%. 10% chance to make the target flinch or seed it when using a Grass or Normal-type move."
+  },
+  "cursedShell": {
+    "name": "Cursed Shell",
+    "description": "10% chance to curse the target. Reduces damage from Physical moves by 25%."
+  },
+  "gothamsNightmare": {
+    "name": "Gotham's Nightmare",
+    "description": "Prevents the opponent from switching out. 20% chance to land a critical hit."
+  },
+  "doomGadgets": {
+    "name": "Doom Gadgets",
+    "description": "Changes Normal-type moves to Steel-type and boosts their power by 20%. Boosts Steel-type moves by 20%. 10% chance to paralyze, burn, poison, or badly poison the target."
+  },
+  "memeArmor": {
+    "name": "Meme Armor",
+    "description": "50% chance to halve damage from attacks. Raises a random stat by 1 stage and lowers a random stat by 1 stage after being hit by an attack."
+  },
+  "memeified": {
+    "name": "Memeified",
+    "description": "Has a 10% chance to survive a hit that would knock it out. 20% chance to double the power of Special moves."
+  },
+  "hungryTroll": {
+    "name": "Hungry Troll",
+    "description": "50% chance to restore 1/8 of max HP after attacking. 50% chance to raise a random stat by 1 stage after attacking."
+  },
+  "monotoneMood": {
+    "name": "Monotone Mood",
+    "description": "Changes all moves to Normal-type. Boosts Normal-type moves by 20%. Normal-type moves can hit Ghost-types. 10% chance to make the target drowsy."
+  },
+  "boredomAura": {
+    "name": "Boredom Aura",
+    "description": "Lowers a random stat of the opponent by 2 stages at the end of each turn."
+  },
+  "squidlyStep": {
+    "name": "Squidly Step",
+    "description": "Boosts sound-based moves and kicking moves by 30%. Raises Speed by 1 stage when hit by a Ground or Water-type move."
+  },
+  "nightmareInk": {
+    "name": "Nightmare Ink",
+    "description": "90% chance to give the target the Comatose ability or the Nightmare status."
+  },
+  "abyssalMelody": {
+    "name": "Abyssal Melody",
+    "description": "Changes all moves to sound-based and boosts their power by 20%. Boosts sound-based moves by 50%. 10% chance to curse the target."
+  },
+  "charmingMist": {
+    "name": "Charming Mist",
+    "description": "Ghost and Fairy-type moves share their type advantage against the same types! Changes Normal-type moves to Fairy-type and boosts their power by 20%. 20% chance to infatuate the target when using a Fairy or Ghost-type move if they are the opposite gender."
+  },
+  "ectoplasmicCharm": {
+    "name": "Ectoplasmic Charm",
+    "description": "20% chance to infatuate the target when using a Ghost-type move if they are the opposite gender. 50% chance to deal damage equal to 1/8 of the target's max HP."
+  },
+  "superHungry": {
+    "name": "Super Hungry",
+    "description": "50% chance to restore 1/8 of max HP after attacking. 50% chance to raise a random stat by 1 stage after attacking."
+  },
+  "foolsGold": {
+    "name": "Fool's Gold",
+    "description": "Immune to status moves from other Pokemon. Dark and Steel-type moves share their type advantage against the same types!"
+  },
+  "showAndTell": {
+    "name": "Show and Tell",
+    "description": "Doubles move power if the move used is different from the last move used."
+  },
+  "knightsShovel": {
+    "name": "Knight's Shovel",
+    "description": "Doubles the power of Ground and Steel-type moves if the user shares a weakness with the target. Immune to Ground-type moves."
+  },
+  "heroicLeap": {
+    "name": "Heroic Leap",
+    "description": "Immune to Ground-type moves. Raises Attack by 1 stage when entering battle. Changes Normal-type moves to Flying-type and boosts their power by 20%."
+  },
+  "digChampion": {
+    "name": "Dig Champion",
+    "description": "Doubles the power of Dig."
+  },
+  "eightBitHunger": {
+    "name": "Eight Bit Hunger",
+    "description": "50% chance to restore 1/8 of max HP after attacking. 10% chance to make the target flinch."
+  },
+  "rockSolidMeme": {
+    "name": "Rock Solid Meme",
+    "description": "Normal and Rock-type moves share their type advantage against the same types! Reduces damage from super effective moves by 25%."
+  },
+  "rockRoll": {
+    "name": "Rock Roll",
+    "description": "Boosts Rock-type moves by 20%. Boosts moves with 'roll' or 'spin' in their name by 75%. 20% chance to make the target flinch when using a move with 'roll' or 'spin' in its name."
+  },
+  "staticShock": {
+    "name": "Static Shock",
+    "description": "30% chance to paralyze the target. Boosts move power by 50% against paralyzed targets."
+  },
+  "horrorShow": {
+    "name": "Horror Show",
+    "description": "Prevents the opponent from switching out. Raises the highest stat by 1 stage after knocking out an opponent."
+  },
+  "sunbather": {
+    "name": "Sunbather",
+    "description": "Fire and Water-type moves share their type advantage against the same types! Changes Normal-type moves to Water-type and boosts their power by 20%. Restores 1/8 of max HP at the end of each turn during harsh sunlight. 30% chance to change the weather to harsh sunlight at the end of each turn."
+  },
+  "seedEater": {
+    "name": "Seed Eater",
+    "description": "Heals HP when hit by Grass-type moves instead of taking damage. Doubles move power against Grass-type Pokemon. Restores 1/8 of max HP when attacking a Grass-type Pokemon. Restores 1/2 of max HP when hit by seed-based moves."
+  },
+  "vacaySoul": {
+    "name": "Vacay Soul",
+    "description": "Triples the power of all moves. The Pokemon can only attack every other turn."
+  },
+  "screenSwim": {
+    "name": "Screen Swim",
+    "description": "Steel and Water-type moves share their type advantage against the same types! Restores 1/8 of max HP at the end of each turn during rain. 10% chance to make the target flinch. 30% chance to change the weather to rain at the end of each turn."
+  },
+  "darkWaters": {
+    "name": "Dark Waters",
+    "description": "Dark and Water-type moves share their type advantage against the same types! Changes Normal-type moves to Dark-type and boosts their power by 20%. 10% chance to trap the target in a whirlpool when using a Water or Dark-type move. 10% chance to deal damage equal to 1/8 of the target's max HP when using a Water or Dark-type move."
+  },
+  "experimentError": {
+    "name": "Experiment Error",
+    "description": "Lowers a random stat by 1 stage when entering battle. 10% chance to seed or trap the target in a whirlpool. 10% chance to burn the target. 30% chance to restore 1/8 of max HP after attacking."
+  },
+  "roundingError": {
+    "name": "Rounding Error",
+    "description": "Halves damage from moves with power divisible by 5 but not by 10. Boosts moves with power not divisible by 10 or divisible by 5 by 50%."
+  },
+  "idealForm": {
+    "name": "Ideal Form",
+    "description": "10% chance for each: critical hit, halve damage taken, double move power, restore 1/8 of max HP after being hit or attacking."
+  },
+  "eliteStatic": {
+    "name": "Elite Static",
+    "description": "50% chance to paralyze the attacker on contact. Lowers a random stat of the attacker by 1 stage on contact. Damages the attacker by 1/8 of its max HP when hit by a contact move."
+  },
+  "cockadoodleYes": {
+    "name": "Cockadoodle Yes",
+    "description": "Raises a random stat by 1 stage when entering battle. Raises the highest stat by 1 stage after knocking out an opponent. Boosts the power of contact moves by 30%."
+  },
+  "carnivore": {
+    "name": "Carnivore",
+    "description": "Restores 1/8 of max HP when attacking certain types of Pokemon. Raises Attack and Speed by 1 stage after knocking out an opponent."
+  },
+  "nightShow": {
+    "name": "Night Show",
+    "description": "Lowers a random stat of the opponent by 2 stages at the end of each turn."
+  },
+  "nightmareHost": {
+    "name": "Nightmare Host",
+    "description": "50% chance for moves to go first. 10% chance to paralyze, poison, or burn the target."
+  },
+  "pressurePlay": {
+    "name": "Pressure Play",
+    "description": "Increases the PP cost of moves targetting the Pokemon by 2. Lowers Attack by 1 stage when entering battle."
+  },
+  "aBCOrD": {
+    "name": "A, B, C, or D",
+    "description": "10% chance to raise Attack by 1 stage. 10% chance to burn the target. 10% chance to confuse the target. 10% chance to make the target drowsy."
+  },
+  "midnightCookies": {
+    "name": "Midnight Cookies",
+    "description": "30% chance to restore 1/8 of max HP at the end of each turn. 30% chance to raise a random stat by 1 stage at the end of each turn."
+  },
+  "horribleCardboard": {
+    "name": "Horrible Cardboard",
+    "description": "Changes all moves to Normal-type and boosts their power by 20%. Normal-type moves can hit Ghost-types. 30% chance to deal damage equal to 1/8 of the target's max HP."
+  },
+  "theElderShadows": {
+    "name": "The Elder Shadows",
+    "description": "Ghost and Dark-type moves share their type advantage against the same types! Changes Normal-type moves to Dark-type and boosts their power by 20%. 30% chance to deal damage equal to 1/16 of the target's max HP at the end of each turn. 30% chance to double move power. Raises a random stat by 1 stage after knocking out an opponent."
+  },
+  "horribleGhostCardboard": {
+    "name": "Horrible Ghost Cardboard",
+    "description": "Changes Normal-type moves to Ghost-type and boosts their power by 20%. Ghost-type moves can hit Normal-types. 30% chance to deal damage equal to 1/8 of the target's max HP."
+  },
+  "midnightCookiesOfDeath": {
+    "name": "Midnight Cookies of Death",
+    "description": "30% chance to deal damage equal to 1/8 of the target's max HP at the end of each turn. 30% chance to raise a random stat by 1 stage at the end of each turn."
+  },
+  "infomercialFame": {
+    "name": "Infomercial Fame",
+    "description": "Raises all stats by 1 stage when entering battle. 30% chance to deal damage equal to 1/8 of the target's max HP at the end of each turn."
+  },
+  "winnersGrin": {
+    "name": "Winner's Grin",
+    "description": "Raises the highest stat by 1 stage after knocking out an opponent. Raises a random stat by 1 stage after knocking out an opponent."
+  },
+  "fancyCardboard": {
+    "name": "Fancy Cardboard",
+    "description": "Changes Normal-type moves to Normal-type and boosts their power by 20%. Normal-type moves can hit Ghost-types. Boosts moves with 60 or less power by 50%."
+  },
+  "unjustified": {
+    "name": "Unjustified",
+    "description": "Normal and Fighting-type moves share their type advantage against the same types! Halves damage from Fairy-type moves. Raises Attack by 1 stage when hit by a Fairy-type move."
+  },
+  "abyssalStance": {
+    "name": "Abyssal Stance",
+    "description": "30% chance to raise a random stat by 1 stage after being hit by an attack. 30% chance to deal damage equal to 1/8 of the target's max HP after being hit by an attack. 10% chance to lower a random stat of the user by 1 stage after attacking. Changes Normal-type moves to Dark-type and boosts their power by 20%."
+  },
+  "leafyLure": {
+    "name": "Leafy Lure",
+    "description": "50% chance to halve damage from super effective moves. 50% chance to deal damage equal to 1/4 of the attacker's max HP when hit by a super effective move. 50% chance to restore 1/6 of max HP when hit by a super effective move."
+  },
+  "voraciousVegetation": {
+    "name": "Voracious Vegetation",
+    "description": "Restores 1/8 of max HP when attacking certain types of Pokemon. Raises Attack and Speed by 1 stage after knocking out an opponent."
+  },
+  "solarPowerPlus": {
+    "name": "Solar Power Plus",
+    "description": "Doubles Special Attack. 30% chance to change the weather to harsh sunlight at the end of each turn."
+  },
+  "treasureGuard": {
+    "name": "Treasure Guard",
+    "description": "Randomly reduces damage taken by 25-50%. 30% chance to restore 1/8 of max HP after being hit by an attack."
+  },
+  "goldenSkillLink": {
+    "name": "Golden Skill Link",
+    "description": "Maximizes the number of times multi-hit moves hit. 5% chance to raise a random stat by 1 stage after attacking."
+  },
+  "treasureProducer": {
+    "name": "Treasure Producer",
+    "description": "50% chance to steal the target's held item. Increases item drops after battle. Moves always go last."
+  },
+  "multiMind": {
+    "name": "Multi Mind",
+    "description": "Fire and Psychic-type moves share their type advantage against the same types! Changes Normal-type moves to Psychic-type and boosts their power by 20%. 10% chance to deal damage equal to 1/8 of the target's max HP."
+  },
+  "wakaFlockaFlame": {
+    "name": "Waka Flocka Flame",
+    "description": "Changes Normal-type moves to Fire-type and boosts their power by 20%. Flying and Fire-type moves share their type advantage against the same types! 10% chance to burn the target. Immune to Fire-type moves and heals HP when hit by Fire-type moves instead of taking damage."
+  },
+  "eerieLight": {
+    "name": "Eerie Light",
+    "description": "Electric and Dark-type moves share their type advantage against the same types! Changes Normal-type moves to Dark-type and boosts their power by 20%. Changes Water-type moves to Dark-type and boosts their power by 20%. 10% chance to confuse the target. 10% chance to paralyze the target."
+  },
+  "abyssalLure": {
+    "name": "Abyssal Lure",
+    "description": "50% chance to halve damage from super effective moves. 50% chance to deal damage equal to 1/4 of the attacker's max HP when hit by a super effective move. 50% chance to restore 1/6 of max HP when hit by a super effective move."
+  },
+  "nemoEater": {
+    "name": "Nemo Eater",
+    "description": "Doubles move power against Water-type Pokemon. Restores 1/8 of max HP after knocking out a Water-type Pokemon. Raises the highest stat by 1 stage after knocking out a Water-type Pokemon."
+  },
+  "woodenLie": {
+    "name": "Wooden Lie",
+    "description": "Doubles move power against certain types of Pokemon. Reduces damage from super effective moves by 25%."
+  },
+  "imARealBoy": {
+    "name": "I'm a Real Boy",
+    "description": "Changes Normal-type moves to Normal-type and boosts their power by 20%. Changes non-Fairy and non-Grass-type moves to Normal-type and boosts their power by 30%. Lowers Attack and a random stat by 1 stage when entering battle."
+  },
+  "lierLyer": {
+    "name": "Lier Lyer",
+    "description": "Changes Normal-type moves to Dark-type and boosts their power by 20%. Fairy and Dark-type moves share their type advantage against the same types! Has a 10% chance to survive a hit that would knock it out."
+  },
+  "copycatNinja": {
+    "name": "Copycat Ninja",
+    "description": "Changes the user's type to match the type of move it was hit by. If the user isn't already the same type, it also heals 1/8 of its max HP."
+  },
+  "hokage": {
+    "name": "Hokage",
+    "description": "Boosts Fire, Water, Flying, and Ground-type moves by 20%."
+  },
+  "sharinganActivated": {
+    "name": "Sharingan Activated",
+    "description": "Changes the user's type to match it's attack."
+  },
+  "crowClone": {
+    "name": "Crow Clone",
+    "description": "Changes Normal-type moves to Flying-type and boosts their power by 20%. Dark, Fire, and Flying-type moves share their type advantage against the same types! 30% chance to halve damage from attacks. 30% chance to restore 1/8 of max HP after being hit by an attack."
+  },
+  "sharinganMastery": {
+    "name": "Sharingan Mastery",
+    "description": "15% chance to deal damage equal to 1/8 of the target's max HP. 5% chance to quarter damage taken from attacks. 15% chance to raise a random stat by 1 stage after attacking."
+  },
+  "foreheadTap": {
+    "name": "Forehead Tap",
+    "description": "Boosts moves with 60 or less power by 50%. 10% chance to make the target flinch when using moves with 60 or less power. 10% chance to paralyze the target when using moves with 60 or less power."
+  },
+  "eightTails": {
+    "name": "Eight Tails",
+    "description": "Multi-hit moves hit 4-8 times."
+  },
+  "rappingRampage": {
+    "name": "Rapping Rampage",
+    "description": "Changes all moves to sound-based and boosts their power by 20%. Boosts sound-based moves by 50%. 10% chance to make the target flinch."
+  },
+  "beastMode": {
+    "name": "Beast Mode",
+    "description": "Doubles move power when HP is below 40%."
+  },
+  "nightmareSand": {
+    "name": "Nightmare Sand",
+    "description": "Deals damage equal to 1/8 of the target's max HP at the end of each turn during a sandstorm. 30% chance to lower a random stat of the target by 1 stage at the end of each turn during a sandstorm. 30% chance to change the weather to a sandstorm at the end of each turn."
+  },
+  "soulEater": {
+    "name": "Soul Eater",
+    "description": "Heals HP when using a move that matches a collected type. Collects the type of knocked out Pokemon. Loses collected types when fainting."
+  },
+  "soulDrain": {
+    "name": "Soul Drain",
+    "description": "10% chance to collect the type of the move used. Lowers two random stats of the target by 2 stages if the move type matches a collected type. Loses collected types when fainting."
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "titles": {
+    "newPokemon": "新しいポケモン！",
+    "newFusion": "新しい融合！",
+    "newItem": "新しいアイテム！",
+    "newGameOverItem": "ゲームオーバー報酬！",
+    "newRibbonItem": "リボン報酬！",
+    "moneyObtained": "お金を獲得！",
+    "newShopUnlock": "ショップ解放要素!",
+    "newUnlock": "新たな解放！",
+    "newSmittyForm": "新しいスミティのフォーム！",
+    "newForm": "新しいフォルム！",
+    "rivalLost": "ライバル敗北...",
+    "modeChange": "モード変更！",
+    "rewardObtained": "報酬獲得！",
+    "voidOvertaken": "虚無に飲み込まれた！",
+    "newShopItem": "ショップに新しいアイテムが追加されました",
+    "manyMoreNuggets": "そしてもっとたくさんのキラキラ金塊！"
+  },
+  "gameModes": {
+    "nuzlocke": {
+      "description": "ナズロック: ひんしになったポケモンは\nパーティーから外されます..."
+    },
+    "draft": {
+      "description": "ローグ: ランダムに選ばれた2匹のポケモンで開始..."
+    },
+    "nuzlight": {
+      "description": "ナズライト: 回復アイテムは使用不可..."
+    },
+    "nightmare": {
+      "description": "ナズメア: ナズライト + ナズロック"
+    },
+    "default": {
+      "description": "ゲームモードが変更されました！"
+    }
+  },
+  "ui": {
+    "rivalVoid": "{{name}}は虚無の中に消えていった...",
+    "error": "報酬データの読み込みエラー",
+    "new": "新規"
+  }
+} 

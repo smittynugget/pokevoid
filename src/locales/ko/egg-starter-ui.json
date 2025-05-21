@@ -1,0 +1,11 @@
+{
+  "hatchAndSwap": "부화 및 교체",
+  "tooltip": "부화한 포켓몬을 확인하고 원한다면 1마리를 다른 포켓몬과 교체할 수 있습니다. 첫 번째 포켓몬은 교체할 수 없습니다.\n전설의 포켓몬은 전설/메가/다이맥스와만 교체 가능합니다",
+  "legendaryDisabled": "파티에 전설/메가/다이나 필요",
+  "onlyOnePokemon": "교체 불가: 파티원이 한 명뿐입니다",
+  "swapWithParty": "파티원과 교체",
+  "selectLegendaryPartyMember": "전설/메가/다이나와 교체",
+  "selectPartyMember": "파티원과 교체",
+  "confirmSwapMessage": "{{hatchedPokemon}}을(를) {{partyPokemon}}와(과) 교체하시겠습니까?",
+  "skipAnimationsPrompt": "모든 알 부화 애니메이션을 건너뛰시겠습니까?"
+} 

@@ -1,0 +1,12 @@
+{
+  "SEND_OUT": "いれかえる",
+  "SUMMARY": "つよさをみる",
+  "CANCEL": "やめる",
+  "RELEASE": "にがす",
+  "APPLY": "つかう",
+  "TEACH": "おしえる",
+  "TRANSFER": "わたす",
+  "TRADE": "₽{{value}}でこうかんする",
+  "selectPokeToPowerUp": "強化するポケモンを選んでください。",
+  "selectPokeToRelease": "手放すポケモンを選んでください。"
+}

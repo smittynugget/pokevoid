@@ -1,0 +1,450 @@
+{
+  "DUSCLOPS_NIGHTMARE_QUEST": {
+    "name": "夜骷颅的噩梦",
+    "task": "在噩梦模式下的第100、200、300、400或500波中，用夜骷颅连续击败阿洛雷的2只宝可梦"
+  },
+  "TAUROS_ELECTRIC_HIT_QUEST": {
+    "name": "肯泰罗的电击",
+    "task": "让肯泰罗被30次电属性招式击中"
+  },
+  "KECLEON_COLOR_CHANGE_QUEST": {
+    "name": "变隐龙的变色",
+    "task": "激活变隐龙的变色特性50次"
+  },
+  "GLISCOR_DARK_MOVE_KNOCKOUT_QUEST": {
+    "name": "天蝎王的暗黑击败",
+    "task": "用天蝎王的暗属性招式击败100只宝可梦"
+  },
+  "MAROWAK_CUBONE_FAINT_QUEST": {
+    "name": "嘎啦嘎啦与卡拉卡拉",
+    "task": "在卡拉卡拉在队伍中时让嘎啦嘎啦倒下"
+  },
+  "NOIVERN_DRAGON_MOVE_KNOCKOUT_QUEST": {
+    "name": "音波龙的龙之击败",
+    "task": "用音波龙的龙属性招式击败100只宝可梦"
+  },
+  "FERALIGATR_DRAGON_DEFEAT_QUEST": {
+    "name": "大力鳄的龙系挑战",
+    "task": "用大力鳄击败50只龙属性宝可梦"
+  },
+  "CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST": {
+    "name": "喷火龙的大地之力",
+    "task": "用喷火龙的地面属性招式击败100只宝可梦"
+  },
+  "VENUSAUR_PSYCHIC_MOVE_USE_QUEST": {
+    "name": "妙蛙花的超能力",
+    "task": "用妙蛙花使用超能力属性招式200次"
+  },
+  "BLASTOISE_FAIRY_DEFEAT_QUEST": {
+    "name": "水箭龟的妖精挑战",
+    "task": "用水箭龟击败50只妖精属性宝可梦"
+  },
+  "NIDOKING_DEFEAT_QUEST": {
+    "name": "尼多王的对决",
+    "task": "用你的尼多王击败10只尼多王"
+  },
+  "GENGAR_SPECIAL_WAVE_QUEST": {
+    "name": "耿鬼的特殊挑战",
+    "task": "让耿鬼在第一位置，不携带幽灵/毒属性招式但至少携带1个电属性招式，连续完成30波"
+  },
+  "WEEZING_FIRE_MOVE_KNOCKOUT_QUEST": {
+    "name": "双弹瓦斯的火焰",
+    "task": "用双弹瓦斯的火属性招式击败100只宝可梦"
+  },
+  "HITMONLEE_NORMAL_WAVE_QUEST": {
+    "name": "飞腿郎的普通挑战",
+    "task": "让飞腿郎在第一位置，只携带一般属性招式，且队伍中只有一般属性宝可梦，连续完成30波"
+  },
+  "HITMONCHAN_STAT_INCREASE_QUEST": {
+    "name": "快拳郎的能力提升",
+    "task": "用快拳郎使用能力提升招式50次"
+  },
+  "HITMON_DUO_WIN_QUEST": {
+    "name": "拳击组合胜利",
+    "task": "在队伍中同时拥有飞腿郎和快拳郎并获得胜利"
+  },
+  "KANGASKHAN_GHOST_MOVE_QUEST": {
+    "name": "袋兽的幽灵之力",
+    "task": "用袋兽使用幽灵属性招式50次"
+  },
+  "SCYTHER_TRIO_WIN_QUEST": {
+    "name": "飞天螳螂的三人组",
+    "task": "仅用包含飞天螳螂在内的3只宝可梦完成最后50波"
+  },
+  "GRENINJA_TRIO_WIN_QUEST": {
+    "name": "甲贺忍蛙的三人组",
+    "task": "仅用包含甲贺忍蛙在内的3只宝可梦完成最后50波"
+  },
+  "SIMISAGE_TRIO_WIN_QUEST": {
+    "name": "花椰猿的三人组",
+    "task": "仅用包含花椰猿在内的3只宝可梦完成最后50波"
+  },
+  "ELEMENTAL_MONKEY_WIN_QUEST": {
+    "name": "元素猴子的胜利",
+    "task": "使用冷水猿、火爆猿或花椰猿中的至少一只，且其必须恰好掌握4个以下属性的招式：飞行、火、水和地面，并获得胜利"
+  },
+  "ELECTIVIREMAGMORTAR_WIN_QUEST": {
+    "name": "电击魔兽与鸭嘴炎兽",
+    "task": "在队伍中同时拥有电击魔兽和鸭嘴炎兽并获得胜利"
+  },
+  "GYARADOS_GROUND_SWITCH_QUEST": {
+    "name": "暴鲤龙的地面考验",
+    "task": "让暴鲤龙被20次地面属性招式击中"
+  },
+  "LAPRAS_FIRE_MOVE_QUEST": {
+    "name": "拉普拉斯的火焰",
+    "task": "用拉普拉斯使用火属性招式50次"
+  },
+  "PORYGON_Z_ANALYTIC_USE_QUEST": {
+    "name": "多边兽Z的分析",
+    "task": "激活多边兽Z的分析特性50次"
+  },
+  "MEOWTH_JESTER_QUEST": {
+    "name": "喵喵的三人组",
+    "task": "仅用包含喵喵在内的3只宝可梦完成最后50波"
+  },
+  "DRAGONITE_LANCE_DEFEAT_QUEST": {
+    "name": "快龙对战渡",
+    "task": "用快龙连续击败渡的3只宝可梦"
+  },
+  "SUDOWOODO_WOOD_HAMMER_QUEST": {
+    "name": "树才怪的木槌",
+    "task": "用树才怪使用木槌100次"
+  },
+  "AMBIPOM_GIGA_IMPACT_QUEST": {
+    "name": "双尾怪手的终极冲击",
+    "task": "在一次对战中用双尾怪手使用终极冲击10次"
+  },
+  "MILTANK_STEEL_MOVE_KNOCKOUT_QUEST": {
+    "name": "大奶罐的钢铁之力",
+    "task": "用大奶罐的钢属性招式击败50只宝可梦"
+  },
+  "SLAKING_RIVAL_DEFEAT_QUEST": {
+    "name": "请假王的对手挑战",
+    "task": "用请假王在不切换的情况下击败3只对手的宝可梦"
+  },
+  "SOLROCK_LUNATONE_WIN_QUEST": {
+    "name": "太阳岩与月石",
+    "task": "在队伍中同时拥有太阳岩和月石并获得胜利"
+  },
+  "REGIGIGAS_REGI_DEFEAT_QUEST": {
+    "name": "雷吉奇卡斯的雷吉挑战",
+    "task": "用雷吉奇卡斯击败5只雷吉系列宝可梦"
+  },
+  "PIKACHU_RED_BLUE_WIN_QUEST": {
+    "name": "皮卡丘对战赤红与青绿",
+    "task": "在队伍中有皮卡丘的情况下击败赤红和青绿"
+  },
+  "SNORLAX_GRASS_KNOCKOUT_QUEST": {
+    "name": "卡比兽的草之力",
+    "task": "用卡比兽的草属性招式击败20只宝可梦"
+  },
+  "CLOYSTER_PRESENT_QUEST": {
+    "name": "刺甲贝的礼物",
+    "task": "在铁人模式下用刺甲贝使用礼物50次"
+  },
+  "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
+    "name": "长鼻叶对战朝北鼻",
+    "task": "用长鼻叶击败20只朝北鼻或朝北鼻的进化形态"
+  },
+  "CHANDELURE_REST_QUEST": {
+    "name": "水晶灯火灵的休息",
+    "task": "在一次对战中用水晶灯火灵使用休息10次"
+  },
+  "SMEARGLE_DEFEAT_QUEST": {
+    "name": "图图犬的胜利",
+    "task": "用图图犬击败100只宝可梦"
+  },
+  "MIMIKYU_CHARIZARD_KNOCKOUT_QUEST": {
+    "name": "谜拟Q对战喷火龙",
+    "task": "用谜拟Q击败3只喷火龙"
+  },
+  "MIMIKYU_GRENINJA_KNOCKOUT_QUEST": {
+    "name": "谜拟Q对战甲贺忍蛙",
+    "task": "用谜拟Q击败3只甲贺忍蛙"
+  },
+  "MIMIKYU_RAICHU_KNOCKOUT_QUEST": {
+    "name": "谜拟Q对战雷丘",
+    "task": "用谜拟Q击败3只雷丘"
+  },
+  "MIMIKYU_MEWTWO_KNOCKOUT_QUEST": {
+    "name": "谜拟Q对战超梦",
+    "task": "用谜拟Q击败2只超梦"
+  },
+  "MIMIKYU_REGIROCK_KNOCKOUT_QUEST": {
+    "name": "谜拟Q对战雷吉洛克",
+    "task": "用谜拟Q击败2只雷吉洛克"
+  },
+  "EISCUE_ROCK_KNOCKOUT_QUEST": {
+    "name": "冰砌鹅的岩石挑战",
+    "task": "用冰砌鹅击败50只岩石属性宝可梦"
+  },
+  "ZANGOOSE_SEVIPER_KNOCKOUT_QUEST": {
+    "name": "猫鼬斗蛇纹",
+    "task": "用猫鼬斩击败10只蛇纹熊"
+  },
+  "SEVIPER_ZANGOOSE_KNOCKOUT_QUEST": {
+    "name": "蛇纹斗猫鼬",
+    "task": "用蛇纹熊击败10只猫鼬斩"
+  },
+  "TRUBBISH_POISON_DEFEAT_QUEST": {
+    "name": "破破袋的毒系挑战",
+    "task": "用破破袋击败50只毒属性宝可梦"
+  },
+  "HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST": {
+    "name": "摔角鹰人的精英挑战",
+    "task": "用摔角鹰人击败6只来自对手或冠军的宝可梦"
+  },
+  "DITTO_DRAGONITE_TRANSFORM_QUEST": {
+    "name": "百变怪的快龙变身",
+    "task": "用百变怪变身成快龙5次"
+  },
+  "DITTO_CHARIZARD_TRANSFORM_QUEST": {
+    "name": "百变怪的喷火龙变身",
+    "task": "用百变怪变身成喷火龙5次"
+  },
+  "DITTO_PIKACHU_TRANSFORM_QUEST": {
+    "name": "百变怪的皮卡丘变身",
+    "task": "用百变怪变身成皮卡丘5次"
+  },
+  "DITTO_MACHAMP_TRANSFORM_QUEST": {
+    "name": "百变怪的怪力变身",
+    "task": "用百变怪变身成怪力5次"
+  },
+  "DITTO_MEWTWO_TRANSFORM_QUEST": {
+    "name": "百变怪的超梦变身",
+    "task": "用百变怪变身成超梦5次"
+  },
+  "FERALIGATOR_ROCK_MOVE_KNOCKOUT_QUEST": {
+    "name": "大力鳄的岩石之力",
+    "task": "用大力鳄的岩石属性招式击败50只宝可梦"
+  },
+  "WOBBUFFET_RIVAL_DEFEAT_QUEST": {
+    "name": "果然翁的对手挑战",
+    "task": "用果然翁击败3只对手的宝可梦"
+  },
+  "MAGIKARP_DEFEAT_QUEST": {
+    "name": "鲤鱼王的胜利",
+    "task": "用鲤鱼王击败50只宝可梦"
+  },
+  "KLINKLANG_GEAR_MOVE_QUEST": {
+    "name": "齿轮组的齿轮招式",
+    "task": "用齿轮组使用换挡和/或齿轮加速共100次"
+  },
+  "SPINDA_CONFUSION_RECOVERY_QUEST": {
+    "name": "晃晃斑的混乱恢复",
+    "task": "让晃晃斑从混乱状态中恢复10次"
+  },
+  "NINETALES_STORED_POWER_KNOCKOUT_QUEST": {
+    "name": "九尾的储存力量",
+    "task": "用九尾的储存力量击败50只宝可梦"
+  },
+  "SHUCKLE_DEFEAT_QUEST": {
+    "name": "壶壶的胜利",
+    "task": "用壶壶击败30只宝可梦"
+  },
+  "TANGELA_RIVAL_DEFEAT_QUEST": {
+    "name": "蔓藤怪的对手挑战",
+    "task": "用蔓藤怪击败3只对手的宝可梦"
+  },
+  "CLAYDOL_POISON_QUEST": {
+    "name": "念力土偶的毒系招式",
+    "task": "用念力土偶使用毒属性招式200次"
+  },
+  "TAUROS_DARK_WAVE_QUEST": {
+    "name": "肯泰罗的暗黑波浪",
+    "task": "在噩梦模式下，让队伍中的肯泰罗至少携带1个暗属性和1个幽灵属性招式（不能有一般属性招式），在第299波之后的任意50波中存活"
+  },
+  "DITTO_SPECIAL_WIN_QUEST": {
+    "name": "百变怪的特殊胜利",
+    "task": "用恰好3只宝可梦（包括百变怪）的队伍在最后50波中存活"
+  },
+  "MAROWAK_ZOMBIE_KNOCKOUT_QUEST": {
+    "name": "嘎啦嘎啦的不死之力",
+    "task": "用嘎啦嘎啦使用不祥之风、愤怒之拳、怨念、祸不单行或最后的抗争击败100只宝可梦"
+  },
+  "GRENINJA_YOKAI_WAVE_QUEST": {
+    "name": "甲贺忍蛙的妖怪波浪",
+    "task": "在噩梦模式下，让队伍中的甲贺忍蛙至少携带1个幽灵属性和1个暗属性招式（不能有水属性招式），在第299波之后的任意50波中存活"
+  },
+  "LICKITUNG_HYPER_WAVE_QUEST": {
+    "name": "大舌头的狂暴波浪",
+    "task": "在噩梦模式下，让队伍中的大舌头至少携带1个毒属性和1个暗属性招式（不能有一般属性招式），在第299波之后的任意50波中存活"
+  },
+  "CHARMANDER_NIGHTMARE_WIN_QUEST": {
+    "name": "小火龙的噩梦胜利",
+    "task": "在队伍中携带决意小火龙（故障形态）并在噩梦模式下获胜"
+  },
+  "GASTLY_NIGHTMARE_WAVE_QUEST": {
+    "name": "鬼斯的噩梦波浪",
+    "task": "在噩梦模式下，用3只或更少的宝可梦（包括鬼斯）的队伍在第299波之后的任意50波中存活"
+  },
+  "PIKACHU_PLUS_ULTRA_QUEST": {
+    "name": "皮卡丘的Plus Ultra",
+    "task": "在队伍中携带皮卡丘并在噩梦模式下获胜"
+  },
+  "CHARIZARD_HELLFLAME_QUEST": {
+    "name": "喷火龙的地狱之焰",
+    "task": "在噩梦模式下用喷火龙使用爆炸烈焰100次"
+  },
+  "EEVEE_NIGHTMARE_QUEST": {
+    "name": "伊布的噩梦",
+    "task": "在噩梦模式下的第100、200、300、400或500波中，用伊布连续击败青绿的2只宝可梦"
+  },
+  "SNORLAX_NIGHTMARE_QUEST": {
+    "name": "卡比兽的噩梦",
+    "task": "在噩梦模式下的第100、200、300、400或500波中，用卡比兽连续击败赤红的2只宝可梦"
+  },
+  "MEWTWO_NIGHTMARE_QUEST": {
+    "name": "超梦的噩梦",
+    "task": "在噩梦模式下的第400或500波中，用超梦连续击败坂木的3只宝可梦"
+  },
+  "TYRANITAR_NIGHTMARE_QUEST": {
+    "name": "班基拉斯的噩梦",
+    "task": "在噩梦模式下的第300、400或500波中，用班基拉斯连续击败赤焰松的2只宝可梦"
+  },
+  "OCTILLERY_NIGHTMARE_QUEST": {
+    "name": "章鱼桶的噩梦",
+    "task": "在噩梦模式下的第100、200、300、400或500波中，用章鱼桶连续击败米可利的2只宝可梦"
+  },
+  "REGIROCK_NIGHTMARE_QUEST": {
+    "name": "雷吉洛克的噩��",
+    "task": "在噩梦模式下的第300、400或500波中，用雷吉洛克连续击败大吾的2只宝可梦"
+  },
+  "EEVEE_GHOST_QUEST": {
+    "name": "伊布的幽灵之力",
+    "task": "用伊布的幽灵属性招式击败100只青绿的宝可梦"
+  },
+  "EEVEE_STEEL_QUEST": {
+    "name": "伊布的钢铁之力",
+    "task": "用伊布的钢属性招式击败100只青绿的宝可梦"
+  },
+  "EEVEE_GROUND_QUEST": {
+    "name": "伊布的大地之力",
+    "task": "用伊布的地面属性招式击败100只青绿的宝可梦"
+  },
+  "MAGICAL_PIKACHU_QUEST": {
+    "name": "魔法皮卡丘",
+    "task": "让皮卡丘至少掌握2个妖精属性招式并获得3次胜利"
+  },
+  "CHARMANDER_UNDERTALE_QUEST": {
+    "name": "小火龙的传说",
+    "task": "用3只或更少的宝可梦（包括小火龙）的队伍在最后50波中存活"
+  },
+  "SQUIRTLE_TORMENT_QUEST": {
+    "name": "杰尼龟的折磨",
+    "task": "在队伍中让杰尼龟目睹水箭龟倒下5次"
+  },
+  "BULBASAUR_TERROR_QUEST": {
+    "name": "妙蛙种子的恐惧",
+    "task": "用恰好2只宝可梦（包括妙蛙种子）的队伍连续存活50波"
+  },
+  "SHIFTRY_TENGU_QUEST": {
+    "name": "狡猾天狗的独舞",
+    "task": "仅用狡猾天狗在最后30波���存活"
+  },
+  "HYPNO_NIGHTMARE_QUEST": {
+    "name": "催眠貘的噩梦",
+    "task": "在噩梦模式下的娜姿波次（100、200、300、400或500）中，用催眠貘连续击败2只宝可梦"
+  },
+  "MAMOSWINE_NIGHTMARE_QUEST": {
+    "name": "象牙猪的噩梦",
+    "task": "在噩梦模式下的第50-100、150-200、250-300、350-400或450-500波中，用象牙猪击败50只对手的宝可梦"
+  },
+  "MORPEKO_NIGHTMARE_QUEST": {
+    "name": "莫鲁贝可的噩梦",
+    "task": "在噩梦模式下的露莎米奈波次（100、200或300）中，用莫鲁贝可连续击败2只宝可梦"
+  },
+  "CLEFABLE_GENGAR_QUEST": {
+    "name": "皮可西与耿鬼",
+    "task": "让队伍中只有耿鬼和皮可西并在最后40波中存活。耿鬼必须掌握一个妖精属性招式，皮可西必须掌握一个幽灵属性招式"
+  },
+  "REVAROOM_EXTRA_QUEST": {
+    "name": "毒贝比的额外挑战",
+    "task": "用恰好4只宝可梦获胜：毒贝比、毒贝比的进化形态、齿轮儿和齿轮组"
+  },
+  "GOLEM_FIRE_QUEST": {
+    "name": "隆隆岩的火焰考验",
+    "task": "让你的隆隆岩被火属性招式击中500次"
+  },
+  "DEINO_NIGHTMARE_QUEST": {
+    "name": "骓的噩梦",
+    "task": "在噩梦模式下的第100、200、300、400或500��中，用骓连续击败N的2只宝可梦"
+  },
+  "GOLURK_DREAD_QUEST": {
+    "name": "骨精灵的恐惧",
+    "task": "在噩梦模式下，在队伍中有骨精灵的情况下让100只其他宝可梦倒下"
+  },
+  "HARIYAMA_NIGHTMARE_QUEST": {
+    "name": "铁掌力士的噩梦",
+    "task": "在噩梦模式下的第100、200、300、400或500波中，用铁掌力士连续击败弗拉达利的2只宝可梦"
+  },
+  "SHARPEDO_NIGHTMARE_QUEST": {
+    "name": "巨牙鲨的噩梦",
+    "task": "在噩梦模式下的第300、400或500波中，用巨牙鲨连续击败水梧桐的3只宝可梦"
+  },
+  "FARIGIRAF_NIGHTMARE_QUEST": {
+    "name": "长颈鹿的噩梦",
+    "task": "在噩梦模式下的第100、200、300、400或500波中，用长颈鹿连续击败赤日的2只宝可梦"
+  },
+  "KINGDRA_NIGHTMARE_QUEST": {
+    "name": "刺龙王的噩梦",
+    "task": "在噩梦模式下的第100、200、300、400或500波中，用刺龙王连续击败小霞的2只宝可梦"
+  },
+  "EXCADRILL_NIGHTMARE_QUEST": {
+    "name": "地震龙的噩梦",
+    "task": "在噩梦模式下的第300、400或500波中，用地震龙连续击败小刚的3只宝可梦"
+  },
+  "LANTURN_NIGHTMARE_QUEST": {
+    "name": "电灯怪的噩梦",
+    "task": "在噩梦模式下的第300、400���500波中，用电灯怪连续击败小刚的3只宝可梦"
+  },
+  "PIKACHU_ROBO_NIGHTMARE_QUEST": {
+    "name": "机械皮卡丘的噩梦",
+    "task": "在噩梦模式下的第300、400或500波中，用皮卡丘连续击败马志士的3只宝可梦"
+  },
+  "DODRIO_NIGHTMARE_QUEST": {
+    "name": "嘟嘟利的噩梦",
+    "task": "在噩梦模式下的第300、400或500波中，用嘟嘟利连续击败拉里的3只宝可梦"
+  },
+  "SUNFLORA_NIGHTMARE_QUEST": {
+    "name": "向日花怪的噩梦",
+    "task": "在噩梦模式下的第300、400或500波中，用向日花怪连续击败洛兹的3只宝可梦"
+  },
+  "LUCARIO_NIGHTMARE_QUEST": {
+    "name": "路卡利欧的噩梦",
+    "task": "在噩梦模式下的第300、400或500波中，用路卡利欧连续击败竹兰的3只宝可梦"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "一般的力量！",
+    "task": "在多次对战中用一般属性宝可梦击败500只宝可梦"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "鲤鱼王的新招式",
+    "task": "用鲤鱼王击败500只宝可梦"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "百变怪的新招式",
+    "task": "用百变怪击败500只宝可梦"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "果然翁的新招式",
+    "task": "用果然翁击败500只宝可梦"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "图图犬的新招式",
+    "task": "用图图犬击败500只宝可梦"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "未知图腾的新招式",
+    "task": "用未知图腾击败500只宝可梦"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "无畏小子的新招式",
+    "task": "用无畏小子击败500只宝可梦"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "铁甲蛹的新招式",
+    "task": "用铁甲蛹击败500只宝可梦"
+  }
+}

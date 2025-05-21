@@ -1,0 +1,182 @@
+{
+    "rewardTitle": "LEVEL UP {{count}}!",
+    "level": "Level",
+    "description": {
+      "power": {
+        "increaseSlight": "Erhöhe Kraft leicht um {{powerValue}}.",
+        "increaseModerate": "Erhöhe Kraft mäßig um {{powerValue}}.",
+        "increaseSignificantWeak": "Erhöhe Kraft signifikant (für schwächere Attacken) um {{powerValue}}.",
+        "increaseVsAccuracyLow": "Erhöhe Kraft um {{powerValue}}, aber verringere Genauigkeit um {{accuracyValue}}.",
+        "increaseVsAccuracyHigh": "Erhöhe Kraft stark um {{powerValue}}, aber verringere Genauigkeit um {{accuracyValue}}.",
+        "increaseVsPriority": "Erhöhe Kraft um {{powerValue}}, aber setze Priorität auf {{priorityValue}}.",
+        "increaseVsRecoil": "Erhöhe Kraft um {{powerValue}}, aber füge {{recoilPercent}}% Rückstoßschaden hinzu.",
+        "increaseVsSelfStatDrop": "Erhöhe Kraft um {{powerValue}}, aber senke die {{statName1}} und {{statName2}} des Anwenders um {{stages}} Stufe(n) nach Gebrauch."
+      },
+      "accuracy": {
+        "increasePercentage": "Erhöhe Genauigkeit um {{value}}%.",
+        "perfectAccuracy": "Mache 100% Genauigkeit, aber verringere Kraft um {{powerValue}}.",
+        "perfectAccuracyNoPenalty": "Mache 100% Genauigkeit.",
+        "increaseVsPowerLow": "Erhöhe Genauigkeit um {{accuracyValue}}%, aber verringere Kraft um {{powerValue}}.",
+        "increaseVsPowerHigh": "Erhöhe Genauigkeit stark um {{accuracyValue}}%, aber verringere Kraft um {{powerValue}}.",
+        "increaseVsPp": "Erhöhe Genauigkeit um {{accuracyValue}}%, aber verringere Max PP.",
+        "setAccuracy": "Setze Genauigkeit auf {{value}}%."
+      },
+      "effectChance": {
+        "increaseToValue": "Erhöhe Chance auf Sekundäreffekt auf {{value}}%.",
+        "guaranteeVsPower": "Garantiere Sekundäreffekt, aber verringere Kraft um {{powerValue}}.",
+        "guaranteeVsAccuracy": "Garantiere Sekundäreffekt, aber verringere Genauigkeit um {{accuracyValue}}% (Statusattacken).",
+        "guaranteeVsPp": "Garantiere Sekundäreffekt, aber verringere Max PP."
+      },
+      "status": {
+        "addChance": "Füge eine {{chance}}% Chance hinzu, {{statusName}} zu verursachen.",
+        "addChanceVsPower": "Füge eine {{chance}}% Chance hinzu, {{statusName}} zu verursachen, aber verringere Kraft um {{powerValue}}.",
+        "addLeechSeed": "Füge Egelsamen-Effekt hinzu (gegen Nicht-Pflanzen-Typen), aber verringere Kraft um {{powerValue}}.",
+        "changeEffect": "Ändere Sekundäreffekt zu einer {{chance}}% Chance, {{statusName}} zu verursachen.",
+        "addSecondEffect": "{{chance}}% Chance, {{statusName1}} ODER {{statusName2}} zu verursachen, aber verringere Kraft um {{powerValue}}.",
+        "addStatusViaStatusMove": "Verursacht {{statusName}} (Ändert Genauigkeit auf {{accuracyValue}}%)."
+      },
+      "flinch": {
+        "addChance": "Füge eine {{chance}}% Chance hinzu, dass das Ziel zurückschreckt.",
+        "addChanceLow": "Füge eine {{chance}}% Chance hinzu, dass das Ziel zurückschreckt.",
+        "addChanceHighVsPower": "Füge eine {{chance}}% Chance hinzu, dass das Ziel zurückschreckt, aber verringere Kraft um {{powerValue}}.",
+        "addChancePriorityVsPower": "Füge eine {{chance}}% Chance hinzu, dass das Ziel zurückschreckt (Prioritätsattacken), aber verringere Kraft um {{powerValue}}.",
+        "increaseChance": "Erhöhe Zurückschreck-Chance auf {{chance}}%.",
+        "increaseChanceVsPower": "Erhöhe Zurückschreck-Chance auf {{chance}}%, aber verringere Kraft um {{powerValue}}."
+      },
+      "stat": {
+        "addRaiseSelfSingle": "Erhöhe {{statName}} des Anwenders um {{stages}} Stufe(n). Ändere Chance auf {{chance}}%.",
+        "addRaiseSelfMultiple": "Erhöhe {{statName1}} und {{statName2}} des Anwenders um {{stages}} Stufe(n).",
+        "increaseRaiseSelf": "Erhöhe Selbst-Boost-Effekt, um {{statName}} um {{stages}} Stufe(n) zu erhöhen.",
+        "addAnotherRaiseSelf": "Erhöhe {{newStatName}} des Anwenders um {{stages}} Stufe(n) zusätzlich zu {{existingStats}}.",
+        "addLowerTargetSingle": "Senke {{statName}} des Ziels um {{stages}} Stufe(n). Genauigkeit wird zu {{accuracy}}%. Kraft sinkt um {{powerValue}}.",
+        "addLowerTargetHarshChance": "{{chance}}% Chance, {{statName}} des Ziels stark um {{stages}} Stufen zu senken, aber verringere Kraft um {{powerValue}}.",
+        "addLowerTargetHarsh": "Senke {{statName}} des Ziels stark um {{stages}} Stufe(n) (Ändert Genauigkeit auf {{accuracy}}%).",
+        "addLowerTargetMultiple": "Senke {{statName1}} und {{statName2}} des Ziels um {{stages}} Stufe(n) (Ändert Genauigkeit auf {{accuracy}}%).",
+        "increaseLowerTarget": "Erhöhe Ziel-Stat-Senkung, um {{statName}} um {{stages}} Stufe(n) zu senken. Genauigkeit wird zu {{accuracy}}%. Kraft sinkt um {{powerValue}}.",
+        "increaseLowerTargetChance": "Erhöhe Chance, Ziel-Stats zu senken, auf {{chance}}%.",
+        "guaranteeLowerTarget": "Garantiere den Effekt, die Stats des Ziels zu senken. Kraft sinkt um {{powerValue}}. Genauigkeit sinkt um {{accuracyValue}}.",
+        "addAnotherLowerTarget": "Senke {{newStatName}} des Ziels um {{stages}} Stufe(n) zusätzlich zu {{existingStats}}. Kraft sinkt um {{powerValue}}.",
+        "addLowerTargetChance": "{{chance}}% Chance, {{statName}} des Ziels um {{stages}} Stufe(n) zu senken, aber verringere Kraft um {{powerValue}}."
+      },
+      "type": {
+        "changePowerBoost": "Ändere Typ zu {{typeName}} und erhöhe Kraft um {{powerValue}}.",
+        "changeAccuracyBoost": "Ändere Typ zu {{typeName}} und erhöhe Genauigkeit um {{accuracyValue}}%.",
+        "changeAddStatus": "Ändere Typ zu {{typeName}} und füge eine {{chance}}% Chance hinzu, {{statusName}} zu verursachen, aber verringere Kraft um {{powerValue}}.",
+        "changeAddHighCrit": "Ändere Typ zu {{typeName}} und füge eine hohe Volltrefferquote hinzu.",
+        "addTypeEffectiveness": "Verursache Schaden basierend auf {{typeName}}-Typ-Effektivität zusätzlich zum eigenen Typ. Erhöhe Kraft um {{powerValue}}.",
+        "superEffectiveVsType": "Verursacht immer sehr effektiven Schaden gegen {{targetTypeName}}-Typ-Pokémon.",
+        "becomeTypeless": "Wird Typenlos (immer neutraler Schaden) und erhöht Kraft um {{powerValue}}.",
+        "matchUserType": "Der Typ der Attacke entspricht immer dem Primärtyp des Anwenders.",
+        "weatherBall": "Der Typ der Attacke ändert sich je nach Wetter (wie Meteorologe).",
+        "terrainPulse": "Der Typ der Attacke ändert sich je nach Terrain (wie Terrenwandel).",
+        "hiddenPower": "Der Typ der Attacke ändert sich je nach den Eigenschaften des Anwenders (wie Kraftreserve)."
+      },
+      "multiHit": {
+        "add2to5": "Trifft 2-5 mal, Kraft wird zu {{powerValue}}. Effektchance auf {{chance}}% pro Treffer gesetzt. Chance & Kraft können nicht gesteigert werden.",
+        "addExact": "Trifft genau {{hits}} mal, Kraft wird zu {{powerValue}}. Effektchance auf {{chance}}% pro Treffer gesetzt. Chance & Kraft können nicht gesteigert werden.",
+        "addCheckAll": "Trifft genau {{hits}} mal, Genauigkeit pro Treffer, Kraft wird zu {{powerValue}}, Genauigkeit: {{accuracyReduction}}%. Effektchance auf {{chance}}% pro Treffer gesetzt. Chance & Kraft können nicht gesteigert werden.",
+        "changeToExact": "Trifft {{hits}} mal und Kraft wird zu {{powerValue}}. Effektchance auf {{chance}}% pro Treffer gesetzt. Chance & Kraft können nicht gesteigert werden.",
+        "changeToRange": "Trifft {{range}} mal, Kraft wird zu {{powerValue}}. Effektchance auf {{chance}}% pro Treffer gesetzt. Chance & Kraft können nicht gesteigert werden.",
+        "enableCheckAll": "Aktiviere Genauigkeitsprüfung für jeden Treffer (Mehrfachtreffer), Kraft wird zu {{powerValue}} & Genauigkeit: {{accuracyValue}}%. Chance & Kraft können nicht gesteigert werden.",
+        "disableCheckAll": "Deaktiviere Genauigkeitsprüfung für jeden Treffer, Kraft wird zu {{powerValue}} & Genauigkeit: {{accuracyValue}}%. Chance & Kraft können nicht gesteigert werden."
+      },
+      "heal": {
+        "addHitHeal": " Heilt um {{percent}}% des verursachten Schadens.",
+        "addHitHealVsPower": " Heilt um {{percent}}% des verursachten Schadens, aber verringere Kraft um {{powerValue}}.",
+        "increaseHitHealVsPower": "Erhöhe Absaug-Effekt, um {{percent}}% des verursachten Schadens zu heilen, aber verringere Kraft um {{powerValue}}.",
+        "addSelfHeal": "Anwender erholt sich um {{percent}}% seiner maximalen KP.",
+        "addPlantHeal": "Anwender erholt KP, wenn Pflanzenfeld aktiv ist.",
+        "addSandHeal": "Anwender erholt KP, wenn Sandsturm aktiv ist.",
+        "increaseSelfHeal": "Erhöhe Selbstheilung auf {{percent}}% der maximalen KP."
+      },
+      "recoil": {
+        "addVsPower": "Füge {{percent}}% Rückstoßschaden hinzu, aber erhöhe Kraft um {{powerValue}}.",
+        "addVsPowerAccuracy": "Füge {{percent}}% Rückstoßschaden hinzu, aber erhöhe Kraft um {{powerValue}} und verringere Genauigkeit um {{accuracyValue}}%.",
+        "increaseVsPower": "Erhöhe Rückstoßschaden auf {{percent}}%, aber erhöhe Kraft um {{powerValue}}.",
+        "decreaseVsPower": "Verringere Rückstoßschaden auf {{percent}}%, aber verringere Kraft um {{powerValue}}.",
+        "removeVsPower": "Entferne Rückstoßschaden, aber verringere Kraft um {{powerValue}}."
+      },
+      "sacrificial": {
+        "addFull": "Anwender wird nach Gebrauch besiegt, aber Kraft wird zu {{power}}.",
+        "addHalf": "Anwender verliert 50% maximale KP nach Gebrauch, aber Kraft wird zu {{power}}.",
+        "addOnHit": "Anwender wird besiegt, wenn die Attacke trifft, aber Kraft wird zu {{power}}."
+      },
+      "crit": {
+        "addHighCritVsPower": "Füge hohe Volltrefferquote hinzu, aber verringere Kraft um {{powerValue}} (für Attacken mit hoher Kraft).",
+        "addHighCrit": "Füge hohe Volltrefferquote hinzu.",
+        "addHighCritAndPower": "Füge hohe Volltrefferquote hinzu und erhöhe Kraft um {{powerValue}}.",
+        "upgradeToCritOnlyVsPower": "Upgrade auf immer Volltreffer, aber verringere Kraft um {{powerValue}}.",
+        "upgradeToCritOnlyVsAccuracy": "Upgrade auf immer Volltreffer, aber verringere Genauigkeit um {{accuracyValue}}%."
+      },
+      "flags": {
+        "ignoreProtect": "Attacke kann jetzt durch Schutz/Scanner treffen, aber verringere Kraft um {{powerValue}}.",
+        "ignoreAbilities": "Attacke ignoriert jetzt die Fähigkeiten des Ziels und erhöht Kraft um {{powerValue}}.",
+        "soundBased": "Attacke wird Schallbasiert (trifft durch Delegator) und erhöht Kraft um {{powerValue}}.",
+        "punchingMove": "Attacke wird zu einer Schlag-Attacke (verstärkt durch Eisenfaust) und erhöht Kraft um {{powerValue}}.",
+        "slicingMove": "Attacke wird zu einer Schnitt-Attacke (verstärkt durch Schärfe) und erhöht Kraft um {{powerValue}}.",
+        "pulseMove": "Attacke wird zu einer Puls-Attacke (verstärkt durch Mega-Launcher) und erhöht Kraft um {{powerValue}}.",
+        "bitingMove": "Attacke wird zu einer Biss-Attacke (verstärkt durch Starke Kiefer) und erhöht Kraft um {{powerValue}}.",
+        "windMove": "Attacke wird zu einer Wind-Attacke (beeinflusst durch Windritter/Windkraft) und erhöht Kraft um {{powerValue}}.",
+        "disableContact": "Attacke macht keinen Kontakt mehr und erhöht Kraft um {{powerValue}}.",
+        "enableContact": "Attacke macht jetzt Kontakt und erhöht Kraft um {{powerValue}}.",
+        "ignoreStatChanges": "Attacke ignoriert jetzt die Verteidigungsstatänderungen und Ausweichen des Ziels und erhöht Kraft um {{powerValue}}.",
+        "removeScreens": "Attacke entfernt jetzt Reflektor/Lichtschild/Auroraschleier und erhöht Kraft um {{powerValue}}.",
+        "thawTarget": "Attacke taut jetzt ein gefrorenes Ziel auf und erhöht Kraft um {{powerValue}}."
+      },
+      "priority": {
+        "increase": "Erhöhe Priorität auf {{value}}, aber verringere Kraft um {{powerValue}}.",
+        "decrease": "Verringere Priorität auf {{value}}, aber erhöhe Kraft um {{powerValue}}.",
+        "conditionalTerrain": "Erhöhe Priorität auf {{value}}, wenn {{terrain}} Terrain aktiv ist, und erhöhe Kraft um {{powerValue}}.",
+        "conditionalFirstTurn": "Schlägt fehl, wenn nicht erste Runde, Erhöhe Priorität auf {{value}} und erhöhe Kraft um {{powerValue}}.",
+        "conditionalTargetMoved": "Erhöhe Priorität auf {{value}}, wenn das Ziel in dieser Runde bereits gezogen hat, und erhöhe Kraft um {{powerValue}}."
+      },
+      "category": {
+        "changeToSpecial": "Ändere Kategorie zu Spezial.",
+        "changeToSpecialVsDef": "Ändere Kategorie zu Spezial, aber berechne Schaden mit der Verteidigung des Ziels.",
+        "changeToPhysical": "Ändere Kategorie zu Physisch.",
+        "changeToPhysicalVsSpDef": "Ändere Kategorie zu Physisch, aber berechne Schaden mit der Spezialverteidigung des Ziels.",
+        "changeStatusToDamage": "Ändere Kategorie zu {{category}} und setze Kraft auf {{power}}."
+      },
+      "misc": {
+        "addTrap": "Fängt das Ziel mit {{trapName}} für mehrere Runden ein, aber verringere Kraft um {{powerValue}}.",
+        "addForceSwitch": "Zwingt das Ziel zum Wechseln, aber verringere Kraft um {{powerValue}}.",
+        "addGrounding": "Bringt fliegende Ziele auf den Boden (entfernt Flug-Typ-Immunität).",
+        "fixedDamageLevel": "Ändere Schadensberechnung, um Schaden gleich dem Level des Anwenders zu verursachen (ersetzt Basis-Kraft).",
+        "fixedDamageValue": "Ändere Schadensberechnung, um festen {{value}} KP-Schaden zu verursachen.",
+        "fixedDamageTargetHalfHp": "Ändere Schadensberechnung, um Schaden gleich der Hälfte der aktuellen KP des Ziels zu verursachen (ersetzt Basis-Kraft).",
+        "addSurviveDamage": "Lässt das Ziel immer mit mindestens 1 KP überleben (wie Falsche Tränen) und erhöht Kraft um {{powerValue}}.",
+        "addWeightPowerTarget": "Kraft steigt basierend auf dem Gewicht des Ziels (wie Knirscher).",
+        "addWeightPowerCompare": "Kraft steigt, je schwerer der Anwender im Vergleich zum Ziel ist (wie Wuchtschlag).",
+        "addSpeedPowerSlower": "Kraft steigt, je langsamer der Anwender im Vergleich zum Ziel ist (wie Gyroball).",
+        "addSpeedPowerFaster": "Kraft steigt, je schneller der Anwender im Vergleich zum Ziel ist (wie Elektroball).",
+        "addHpPowerHighHp": "Kraft steigt, je höher die aktuellen KP des Anwenders sind (Max. Kraft: {{maxPower}}).",
+        "addHpPowerLowHp": "Kraft steigt, je niedriger die aktuellen KP des Anwenders sind (wie Verzweifler).",
+        "addSwitchOut": "Anwender wechselt nach Gebrauch aus, aber verringere Kraft um {{powerValue}} (wie Voltwechsel).",
+        "addChargeTurn": "Füge eine Aufladungsrunde vor dem Angriff hinzu, aber erhöhe Kraft um {{powerValue}}.",
+        "addChargeTurnWithBoost": "Füge eine Aufladungsrunde hinzu (erhöht {{statName}} des Anwenders um {{stages}} Stufe(n)) und erhöhe Kraft um {{powerValue}}.",
+        "addStealItemChance": "{{chance}}% Chance, das gehaltene Item des Ziels zu stehlen.",
+        "addStealItemGuaranteed": "Stiehlt das gehaltene Item des Ziels, aber verringere Kraft um {{powerValue}}.",
+        "addRemoveItem": "Entfernt das gehaltene Item des Ziels und erhöht Kraft um {{powerValue}}.",
+        "powerBoostWeather": "Kraft verdoppelt sich, wenn {{weather}} aktiv ist.",
+        "powerBoostTerrain": "Kraft verdoppelt sich, wenn {{terrain}} Terrain aktiv ist und das Ziel am Boden ist.",
+        "powerBoostConsecutive": "Kraft verdoppelt sich bei jedem aufeinanderfolgenden erfolgreichen Einsatz (max. 4x).",
+        "powerBoostTurnDamaged": "Kraft verdoppelt sich, wenn der Anwender in dieser Runde vom Ziel Schaden erlitten hat."
+      },
+      "statusSpecific": {
+        "increaseFieldDuration": "Erhöhe die Dauer von Feldeffekten (Schilde, Rückenwind, etc.), die durch diese Attacke gesetzt werden, auf {{turns}} Runden.",
+        "increaseVolatileDuration": "Erhöhe die Dauer von flüchtigen Status (Verwirrung, Verhöhnung, etc.), die durch diese Attacke verursacht werden.",
+        "ignoreProtect": "Attacke kann jetzt Ziele beeinflussen, die Schutz/Scanner verwenden.",
+        "addSelfHeal": "Anwender erholt sich um {{percent}}% seiner maximalen KP.",
+        "addSelfBoost": "Erhöhe {{statName}} des Anwenders um {{stages}} Stufe(n).",
+        "addArenaTrap": "Setzt {{trapName}} Falle auf der Seite des Gegners.",
+        "setWeather": "Ändert das Wetter zu {{weather}}.",
+        "setTerrain": "Ändert das Terrain zu {{terrain}}.",
+        "clearWeather": "Entfernt das aktuelle Wetter.",
+        "clearTerrain": "Entfernt das aktuelle Terrain."
+      }
+    },
+  "moveTriggers": {
+      "loweredItsHead": "{{pokemonName}}\nsenkte seinen Kopf!",
+      "tookInSunlight": "{{pokemonName}}\nnahm Sonnenlicht auf!"
+  }
+} 

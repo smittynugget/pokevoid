@@ -1,0 +1,331 @@
+{
+  "intro": "¡Bienvenido/a a PokéVoid! Este es un fangame de Pokémon centrado en el combate con elementos roguelite.\n$Este juego no está monetizado y no reclamamos ningún derecho de propiedad sobre Pokémon ni sobre ninguno de\n$los recursos con copyright utilizados.\n$El juego está en desarrollo, pero es completamente jugable.\nPara reportar bugs, por favor, hazlo en nuestra\n$comunidad de Discord.\n$Si el juego va lento, por favor, asegúrate de que tengas activada la opción 'Aceleración de gráficos' en los\n$ajustes de tu navegador.",
+  "titles": {
+    "essentials": "Conceptos Básicos",
+    "gameModes": "Modos de Juego",
+    "specialPokemon": "Pokémon Especiales",
+    "progression": "Progresión del Juego",
+    "permanentFeatures": "Funciones Permanentes",
+    "glitchSystem": "Sistema de Glitch",
+    "battleMechanics": "Mecánicas de Combate",
+    "formChanges": "Cambios de Forma",
+    "communityFeatures": "Funciones Comunitarias"
+  },
+  "accessMenu": {
+    "title": "Acceder al Menú",
+    "text": "Para acceder al menú, pulsa M o Escape mientras esperas una acción. El menú contiene ajustes y varias funciones."
+  },
+  "menu": "Desde este menú podrás acceder a los ajustes.\n$Podrás cambiar la velocidad del juego, el estilo de la ventana y demás.\n$Hay más opciones, ¡así que pruébalas todas!",
+  "starterSelect": "En esta pantalla, podrás elegir tus iniciales presionando Z\no Espacio. Estos serán tus miembros de equipo al comenzar.\n$Cada inicial tiene un valor. Tu equipo puede contener hasta 6\nmiembros mientras el valor total no pase de 10.\n$También puedes elegir su género, habilidad y forma\ndependiendo de las variantes que hayas conseguido.\n$Los IVs de los iniciales corresponderán al valor más alto de\nlos Pokémon de la misma especie que hayas obtenido.\n$¡Así que intenta conseguir muchos Pokémon de la misma\nespecie!",
+  "pokerus": "Cada día, 3 iniciales aleatorios tendrán un borde morado.\n$Si ves un inicial que tengas con este borde, prueba a\nañadirlo a tu equipo. ¡No olvides revisar sus datos!",
+  "statChange": "Los cambios de estadísticas se mantienen entre combates\nmientras que el Pokémon no vuelva a su Poké Ball.\n$Tus Pokémon vuelven a sus Poké Balls antes de combates contra entrenadores y de entrar a un nuevo bioma.\n$También puedes ver los cambios de estadísticas del Pokémon en campo manteniendo pulsado C o Shift.\n$También puedes ver los movimientos de un Pokémon enemigo manteniendo presionada la V.\n$Esto solo revela los movimientos que has visto usar al Pokémon en esta combate.",
+  "selectItem": "Tras cada combate, tendrás la opción de elegir entre tres objetos aleatorios. Solo podrás escoger uno.\n$Estos objetos pueden ser consumibles, objetos equipables u objetos pasivos permanentes (hasta acabar la partida).\n$La mayoría de los efectos de objetos no consumibles se acumularán de varias maneras.\n$Algunos objetos solo aparecerán si pueden ser utilizados, como las piedras evolutivas.\n$También puedes transferir objetos equipados entre Pokémon, utilizando la opción de transferir.\n$La opción de transferir aparecerá en la parte inferior derecha una vez hayas obtenido un objeto equipable.\n$También puedes comprar objetos consumibles con dinero y su variedad irá aumentando según tu avance.\n$Asegúrate de comprar antes de escoger una recompensa, ya que se avanzará automáticamente al siguiente combate.",
+  "eggGacha": "En esta pantalla podrás canjear tus vales por huevos\nde Pokémon.\n$Los huevos deben eclosionar y estarán más cerca de\nhacerlo tras cada combate.\n$Los huevos más raros tardarán más en eclosionar.\n$Los Pokémon que hayan salido del huevo no se\nañadirán a tu equipo, pero sí a tus iniciales.\n$Los Pokémon salidos de un huevo suelen tener mejores\nIVs que los Pokémon salvajes.\n$Algunos Pokémon solo pueden ser obtenidos de huevos.\n$Hay 3 máquinas diferentes entre las que elegir, cada\nuna con diferentes bonificaciones.\n$¡Así que escoge la que más te interese!",
+  "pokerogue": {
+      "title": "Dando a PokéRogue el Crédito que Merece",
+      "text": { 
+        "1":"¡Sin el brillante diseño de PokéRogue, PokéVoid no existiría hoy! ¡Su marco extensible me permitió experimentar, ROMPER y hacer de PokéVoid lo que es hoy!",
+        "2":"Donde PokéRogue se yergue como un faro brillante de lo que debería ser un roguelike de Pokémon...",
+        "3":"PokéVoid intenta aventurarse en las sombras, aportando un toque de hermoso caos y corrupción a su fórmula casi perfecta.",
+        "4":"¿Te gustan las partidas diarias, eventos, modos desafío? ¿Modos Endless o Splice? ¡Visita pokerogue.net y juega al original!"
+      }
+    },
+    "intrashop": {
+      "title": "¡El Inventario de la Tienda Cambia con Cada Compra!",
+      "text": { 
+        "1":"¡Con cada compra cambia el inventario de la tienda! ¡Úsalo a tu favor y asegúrate de conseguir primero lo que necesitas!",
+        "2":"¡Mantente atento a los objetos GRATUITOS, aparecen aleatoriamente en el inventario de la tienda!"
+      }
+    },
+    "runDetails": {
+      "title": "Atajo para Ver las Partidas Actuales",
+      "text": { 
+        "1":"Presiona R para ver los detalles de la partida actual inmediatamente (cuando estés en la pantalla de batalla / recompensas / título)"
+      }
+    },
+  "glitchRivals": {
+      "title": "Rivales Corrompidos",
+      "text": { 
+        "1":"Los Rivales que derrotaste en el pasado hacen eco desde el vacío, estos seres no son lo que parecen.",
+        "2":"Entidades corrompidas por el vacío, su verdadera forma te espera en el vacío. Sálvalos."
+      }
+    },
+  "legendary": {
+      "title": "Convierte Cualquier Pokémon en Legendario",
+      "text": { 
+        "1":"¡PokéVoid te permite hacer que CUALQUIER Pokémon sea legendario!",
+        "2":"¡Usando Objetos Glitch puedes hacer que los Pokémon tengan nuevas habilidades, tipos, movimientos, estadísticas y más!",
+        "3":"El Vacío te espera, Entrenador. ¡Abraza el poder prohibido para superarlo!"
+      }
+    },
+    "rivals": {
+      "title": "Rivales Aleatorios",
+      "text": { 
+        "1":"¡Cada partida presenta un rival aleatorio con un equipo temático y un Pokémon exclusivo!",
+        "2":"¡Derrótalos para desbloquear Misiones Glitch y obtener NUEVAS formas de Pokémon!"
+      }
+    },
+    "eggs": {
+      "title": "Eclosionar Huevos",
+      "text": { 
+        "1":"¡Eclosionar huevos es una forma poderosa de fortalecer tu equipo! A diferencia de las capturas salvajes, los Pokémon eclosionados se unen a tu grupo de iniciales con IVs superiores!",
+        "2":"¡Los huevos también son la única forma de obtener ciertas especies raras de Pokémon! ¡Haciéndolos esenciales para completar tu colección!",
+        "3":"¡Para usar los Vales de Huevos, simplemente presiona ESC o M para abrir el menú y selecciona Gacha de Huevos!"
+      }
+    },
+    "stats": {
+      "title": "Consultar tus Estadísticas",
+      "text": "Para ver tus estadísticas de juego, accede al menú y selecciona 'Estadísticas'. ¡Esto te mostrará tus batallas totales, victorias, dinero y otras estadísticas!"
+    },
+    "runHistory": {
+      "title": "Historial de Partidas",
+      "text": { 
+        "1":"¡Consulta información sobre tus equipos anteriores! Accede a través del menú y selecciona 'Historial de Partidas'.",
+        "2":"¡Esto te mostrará tus partidas anteriores, incluido tu equipo, objetos, resultados y más!"
+      }
+    },
+    "rivalQuests": {
+      "title": "Misiones Glitch",
+      "text": "¡Derrota a los rivales para desbloquear Misiones Glitch! Cómpralas en la TiendaPerma y complétalas para desbloquear permanentemente poderosas Formas Glitch para Pokémon específicos."
+    },
+    "smitom": {
+      "title": "Smitom",
+      "text": { 
+        "1":"Conoce a Smitom, ¡un Rotom especial en forma Smitty! Es un guía y un misterio...",
+        "2":"Interactúa con él cuando aparezca un signo de exclamación o guarda tu partida para obtener posibles recompensas."
+      }
+    },
+    "newForms": {
+      "title": "Formas Glitch y Smitty",
+      "text": { 
+        "1":"¡Desbloquea más de 150 nuevas evoluciones Glitch y Smitty!",
+        "2":"Las formas Glitch se desbloquean a través de Misiones de Rivales, desbloquear formas Smitty es un misterio..."
+      }
+    },
+    "bugs": {
+      "title": "¡Reportar Errores!",
+      "text": { 
+        "1":"¡PokéVoid está en Beta! Si encuentras un error, por favor repórtalo en el Discord.",
+        "2":"Incluye una captura de pantalla de tu consola (control+i en chrome) y tu archivo de guardado si es posible. ¡Tus comentarios ayudan a mejorar el juego!"
+      }
+    },
+    "nuzlight": {
+      "title": "Modo Nuzlight",
+      "text": "Una versión más ligera de Nuzlocke sin pérdida permanente de Pokémon. ¡No hay objetos curativos disponibles en las tiendas! Los Pokémon debilitados reviven después de alcanzar hitos de 10 oleadas."
+    },
+    "nuzlocke": {
+      "title": "Modo Nuzlocke",
+      "text": "Se aplican las reglas tradicionales del desafío Nuzlocke. Los Pokémon debilitados son eliminados permanentemente de tu equipo."
+    },
+    "journey": {
+      "title": "Modo Travesía",
+      "text": { 
+        "1":"Forma tu equipo para enfrentarte al Vacío. ¡Usa cualquier Pokémon que hayas capturado o eclosionado, incluidas las fusiones!",
+        "2":"Los Pokémon fusionados requieren ∞ORO para usarse. Los ObjetosPerma pueden reducir costos y aumentar tu límite de iniciales."
+        }
+    },
+    "unlockJourney": {
+      "title": "Desbloquea el Modo Travesía Capturando Pokémon",
+      "text": {
+        "1":"El Modo Travesía estará disponible después de capturar 15 Pokémon, ¡y te permite seleccionar tu equipo inicial de entre los Pokémon que hayas coleccionado!",
+        "2":"¡Después de capturar tu primer Pokémon, ve a la TIENDA y obtén la Misión de Captura Inicial para comenzar oficialmente la Misión de Desbloqueo de Travesía!"
+      }
+    },
+    "rogueMode": {
+      "title": "Modo Rogue",
+      "text": "¡Elige 2 pokémon aleatorios para comenzar tu partida! ¡Usa tu ∞ORO para cambiar tus opciones! ¡Cada partida es única!"
+    },
+    "bosses": {
+      "title": "Jefes Multi-Forma",
+      "text": "¡Cuidado con los poderosos jefes multi-forma! Cambian de forma y se curan completamente con poca salud, restableciendo los cambios de estadísticas. ¡Derrótalos para obtener valiosas recompensas!"
+    },
+    "abilities": {
+      "title": "Nuevas Habilidades",
+      "text": { 
+        "1":"¡Domina más de 400 nuevas habilidades de más de 150 transformaciones de Pokémon Glitch y Smitty!",
+        "2":"Los nuevos modos de juego amplían las habilidades que se pueden obtener de los objetos, incluidas poderosas habilidades Glitch que pueden redefinir las batallas."
+      }
+    },
+    "passiveAbilities": {
+      "title": "Objeto de Habilidad Pasiva",
+      "text": { 
+        "1":"Otorga a tu pokémon una habilidad pasiva, ¡proporcionando una habilidad extra!",
+        "2":"Estas no se acumulan, así que si obtienes una segunda, ¡REEMPLAZARÁ a la primera!"
+      }
+    },
+    "glitchItems": {
+      "title": "Piezas y Objetos Glitch",
+      "text": { 
+        "1":"¡Recolecta Piezas Glitch para obtener Objetos Glitch que alteran la realidad! Necesitas 2+ piezas para Objetos Glitch, 5+ para objetos de Cambio de Forma Glitch.",
+        "2":"Los objetos incluyen MT-Universales, Cambiadores de Habilidad, Cambiadores de Tipo, Intercambiadores de Estadísticas y más."
+      }
+    },
+    "fusionPokemon": {
+      "title": "Fusiones Capturables",
+      "text": { 
+        "1":"¡Todos los Pokémon Fusión son capturables y se añaden permanentemente a tu colección!",
+        "2":"Encuéntralos con una probabilidad base de 1/14 (mejorable con ∞OBJETOS). Usarlos cuesta ∞ORO."
+      }
+    },
+    "trainerPokemon": {
+      "title": "Capturar Pokémon de Entrenadores",
+      "text": { 
+        "1":"La mayoría de los entrenadores venderán sus Pokémon durante la batalla (¡excepto los Rivales!). ¡Los Pokémon capturados se añaden permanentemente a tu colección!",
+        "2":"El costo depende de la oleada pero puede reducirse con ∞OBJETOS."
+      }
+    },
+    "partyAbility": {
+      "title": "Habilidades de Equipo",
+      "text": { 
+        "1":"Obtenibles a través de la Tienda, estas costosas habilidades se aplican a TODOS los Pokémon de tu equipo actual durante una partida.",
+        "2":"Usa efectos potentes para todo el equipo: ¡Impulso Velocidad o Experto para todos!"
+      }
+    },
+    "permaMoney": {
+      "title": "DineroPerma (∞ORO)",
+      "text": { 
+        "1":"¡Gana ∞ORO persistente entre partidas! Úsalo para comprar ∞OBJETOS, cambiar los iniciales de Rogue o pagar el Impuesto de Fusión.",
+        "2":"Obtenlo de recompensas, guardando o interactuando con Smitom."
+      }
+    },
+    "saving": {
+      "title": "Guardado Local y Respaldo",
+      "text": { 
+        "1":"¡Si tus datos se pierden, se PERDERÁN PARA SIEMPRE! Usa el icono del disquete (arriba a la derecha) para EXPORTAR tu archivo de guardado con frecuencia.",
+        "2":"Esto recompensa con ∞ORO y protege contra la pérdida de datos."
+      }
+    },
+    "bounties": {
+      "title": "Sistema de Recompensas",
+      "text": { 
+        "1":"Introduce códigos de 6 letras en la consola para activar Recompensas.",
+        "2":"Las Recompensas son MISIONES que te permiten ganar ∞ORO/∞OBJETOS y son completamente reutilizables al completarlas."
+      }
+    },
+    "dailyBounty": {
+      "title": "¡Recompensa Diaria!",
+      "text": "¡Hay una nueva recompensa diaria disponible! Complétala para ganar ∞ORO/∞OBJETOS. El código ya está en la consola, ¡solo actívalo!"
+    },
+    "discord": {
+      "title": "Discord y Soporte",
+      "text": "Únete al Discord de Smittyverse para discusiones, informes de errores y comunidad. Encuentra códigos de recompensa y conéctate con otros jugadores."
+    },
+    "smittyForms": {
+      "title": "Formas Smitty",
+      "text": { 
+        "1":"Crea transformaciones únicas de Pokémon usando combinaciones específicas de CUATRO objetos Smitty.",
+        "2":"Algunos requieren un Pokémon base específico (por ejemplo, Rotom → Smitom)",
+        "3": "¡Otros son Universales, por lo que se puede usar cualquier Pokémon base! (por ejemplo, Caterpie → Picklisk). Todos ganan una habilidad pasiva aleatoria."
+      }
+    },
+    "smittyFormUnlocked": {
+      "title": "¡Forma Smitty Desbloqueada!",
+      "text": { 
+        "1":"¡Has desbloqueado una nueva forma Smitty! ¡Cada forma Smitty es diferente!",
+        "2":"¡Pero TODAS necesitan una combinación única de 4 objetos Smitty!",
+        "3": "La combinación se identifica a través de la consola, ¡encuentra el código de la forma SMITTY e introdúcelo para ver la receta prohibida!"
+      }
+    },
+    "smittyItems": {
+      "title": "ObjetosPerma (∞OBJETOS)",
+      "text": { 
+        "1":"Usa ∞ORO para comprar mejoras permanentes (∞OBJETOS) con diferentes tipos de duración: Basadas en uso (cantidad reducida después del uso) o Basadas en oleadas (cantidad reducida después de la oleada 50).",
+        "2":"¡Estas mejoras pueden aumentar las tasas de shiny/fusión/captura, reducir costos y proporcionar otros beneficios permanentes!"
+      }
+    },
+    "abilitySwitcher": {
+      "title": "Glitch: Cambiador de Habilidad",
+      "text": "¡Intercambia la habilidad actual de un Pokémon por una de sus otras habilidades! Requiere 2 Piezas Glitch."
+    },
+    "typeSwitcher": {
+      "title": "Glitch: Cambiadores de Tipo", 
+      "text": "Cambia los tipos primario Y secundario de un Pokémon. Requiere 2 Piezas Glitch."
+    },
+    "primarySwitcher": {
+      "title": "Glitch: Cambiador de Tipo Primario",
+      "text": "Cambia el tipo primario de un Pokémon. Requiere 2 Piezas Glitch."
+    },
+    "secondarySwitcher": {
+      "title": "Glitch: Cambiador de Tipo Secundario", 
+      "text": "Cambia el tipo secundario de un Pokémon. Requiere 2 Piezas Glitch."
+    },
+    "releaseItems": {
+      "title": "Glitch: Potenciadores de Liberación",
+      "text": { 
+        "1":"Libera a un Pokémon para otorgar su tipado, movimientos, habilidades o un aumento de estadísticas a otro.",
+        "2":"Alternativamente, gasta 5 'Tipos Coleccionados' de un Pokémon en lugar de liberarlo."
+      }
+    },
+    "anyTMs": {
+      "title": "Glitch: MT-Universales",
+      "text": "Estas MT pueden enseñar su movimiento a CUALQUIER Pokémon, ignorando las reglas normales de compatibilidad. Requiere 2 Piezas Glitch."
+    },
+    "anyAbilities": {
+      "title": "Glitch: Objeto de Habilidad",
+      "text": "¡Cambia la habilidad actual de un Pokémon por otra habilidad! Requiere 2 Piezas Glitch."
+    },
+    "statSwitchers": {
+      "title": "Glitch: Intercambiadores de Estadísticas",
+      "text": "Intercambia dos de las estadísticas base de un Pokémon (por ejemplo, Ataque y Defensa). Requiere 2 Piezas Glitch."
+    },
+    "newQuests": {
+      "title": "¡Nueva Misión Desbloqueada!",
+      "text": "¡Has desbloqueado una nueva misión! Aparecerá ALEATORIAMENTE (pero frecuentemente) en la TiendaPerma / Tienda en la pantalla de título. ¡Si no está allí, vuelve a tirar para encontrarla!"
+    },
+    "modeUnlocks": {
+      "title": "Desbloqueos de Modos de Juego",
+      "text": "Cuando se desbloquea un modo de juego, ¡también desbloquea una gran cantidad de nuevos objetos y habilidades! ¡Intenta desbloquearlos todos!"
+    },
+    "firstVictory": {
+      "title": "¡No Ha Terminado!",
+      "text": "¡Tu viaje apenas comienza! ¡Desbloquea los nuevos modos de juego para sumergirte más profundamente en el abismo y desentrañar los misterios del vacío!"
+    },
+    "theVoidUnlocked": {
+      "title": "¡El Vacío Desbloqueado!",
+      "text": "El Vacío donde todo comenzó. La fuente de toda corrupción. El verdadero rostro del vacío te espera..."
+    },
+    "theVoidOvertaken": {
+      "title": "¡Has Superado El Vacío!",
+      "text": "¡Te has vuelto demasiado poderoso para que el vacío te contenga! Sin embargo, la corrupción persiste, no dejes que se propague, ¡eres el único que puede mantenerla bajo control!"
+    },
+    "megaDynamax": {
+      "title": "Formas Mega y Dynamax",
+      "text": { 
+        "1":"Para Mega Evolucionar o Dynamaxiar a un Pokémon, ¡primero debes tener los objetos Mega Brazalete o Banda Dynamax!",
+        "2":"Una vez que tengas uno de estos objetos y tengas el pokémon apropiado, ¡un objeto de cambio de forma aparecerá aleatoriamente como recompensa!",
+        "3":"¡Después de la mega evolución o dynamaxiar, el Mega Brazalete o la Banda Dynamax se romperá!"
+      }
+    },
+    "moveUpgrades": {
+      "title": "Mejoras de Movimientos",
+      "text": { 
+        "1":"¡Ahora puedes mejorar movimientos! ¡Cada vez que uses un movimiento ganará un punto de EXP!",
+        "2":"¡Una vez que el movimiento tenga suficiente EXP, subirá de nivel, dándote opciones de mejora!",
+        "3": "¡La mejora durará toda la partida y cambiará el movimiento para todos, incluyendo tu equipo e incluso tus enemigos!"
+      }
+    },
+    "firstMoveUpgrade": {
+      "title": { 
+        "1":"¡Información Importante sobre Mejoras de Movimientos!", 
+        "2": "Combinaciones que Rompen el Juego",
+        "5":"Mejoras y Probabilidad de Efecto del Movimiento", 
+        "6":"La Mejora Más Reciente Tiene Prioridad"
+      },
+      "text": { 
+        "1":"¡Elige una mejora, y durante toda la partida ese movimiento será mejorado para todos, incluyendo tu equipo e incluso tus enemigos!",
+        "2": "Como puedes mejorar casi cualquier movimiento, algunas combinaciones no funcionarán o romperán el juego. Desafortunadamente, con la escala de esta actualización, esto es inevitable.",
+        "3": "Si esto ocurre, por favor recarga y elige una combinación de mejoras diferente.",
+        "4": "¡Si encuentras una combinación que no funciona, únete a Discord y añádela a la lista de combinaciones rotas!",
+        "5":"Ten en cuenta que los movimientos solo pueden tener UNA probabilidad de efecto (por ejemplo, 10% de probabilidad de paralizar), así que las mejoras O cambian directamente la probabilidad de efecto, O usan el valor de probabilidad anterior.",
+        "6":"Por último, las mejoras pueden sobrescribirse entre sí, ¡la mejora más reciente tiene prioridad!"
+      }
+    },
+    "eggSwap": {
+      "title": "Eclosión y Cambio de Huevos",
+      "text": { 
+        "1":"¡Revisa tu Pokémon eclosionado y, si lo deseas, cámbialo por uno de los miembros de tu equipo!",
+        "2":"¡Las únicas restricciones son que tu primer Pokémon no puede ser cambiado, y los legendarios solo pueden cambiarse por otros legendarios, Megas o Pokémon Dynamax!",
+        "3":"¡Feliz Eclosión!"
+      }
+    }
+}

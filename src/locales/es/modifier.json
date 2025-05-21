@@ -1,0 +1,24 @@
+{
+  "surviveDamageApply": "¡{{pokemonNameWithAffix}} resistió\nusando su {{typeName}}!",
+  "turnHealApply": "¡{{pokemonNameWithAffix}} recuperó algo de PS usando\nsu {{typeName}}!",
+  "hitHealApply": "¡{{pokemonNameWithAffix}} recuperó algo de PS usando\nsu {{typeName}}!",
+  "pokemonInstantReviveApply": "¡{{pokemonNameWithAffix}} fue reanimado\npor su {{typeName}}!",
+  "pokemonResetNegativeStatStageApply": "¡Las estadísticas reducidas de {{pokemonNameWithAffix}} fueron restauradas\npor su {{typeName}}!",
+  "moneyInterestApply": "¡Recibiste intereses de ₽{{moneyAmount}}\ndel {{typeName}}!",
+  "turnHeldItemTransferApply": "¡El {{itemName}} de {{pokemonNameWithAffix}} fue absorbido\npor el {{typeName}} de {{pokemonName}}!",
+  "contactHeldItemTransferApply": "¡El {{itemName}} de {{pokemonNameWithAffix}} fue robado\npor el {{typeName}} de {{pokemonName}}!",
+  "enemyTurnHealApply": "¡{{pokemonNameWithAffix}}\nrecuperó algunos PS!",
+  "bypassSpeedChanceApply": "¡{{pokemonName}} puede actuar más rápido de lo normal, gracias a su {{itemName}}!",
+  "permaRunQuest": {
+    "stage": "Etapa ",
+    "collectRewards": "Recoger Recompensas",
+    "stageProgress": "Progreso de Etapa: {{current}}/{{total}}",
+    "questComplete": "¡Misión Completada!",
+    "stageComplete": "¡Etapa Completada!",
+    "rewardTypes": {
+      "permaMoney": "∞ORO",
+      "permaModifier": "∞OBJETO",
+      "permaMoneyAndModifier": "∞ORO & ∞OBJETO"
+    }
+  }
+} 

@@ -1,0 +1,332 @@
+{
+  "intro": "Welcome to PokéVoid! This is a battle-focused Pokémon fangame with roguelite elements.\n$This game is not monetized and we claim no ownership of Pokémon nor of the copyrighted assets used.\n$The game is a work in progress, but fully playable.\nFor bug reports, please use the Discord community.\n$If the game runs slowly, please ensure 'Hardware Acceleration' is turned on in your browser settings.",
+  "menu": "From this menu you can access the settings.\n$From the settings you can change game speed, window style, and other options.\n$There are also various other features here, so be sure to check them all!",
+  "starterSelect": "From this screen, you can select your starters by pressing\nZ or the Space bar. These are your initial party members.\n$Each starter has a value. Your party can have up to\n6 members as long as the total does not exceed 10.\n$You can also select gender, ability, and form depending on\nthe variants you've caught or hatched.\n$The IVs for a species are also the best of every one you've\ncaught or hatched, so try to get lots of the same species!",
+  "pokerus": "A daily random 3 selectable starters have a purple border.\n$If you see a starter you own with one of these,\ntry adding it to your party. Be sure to check its summary!",
+  "statChange": "Stat changes persist across battles as long as your Pokémon aren't recalled.\n$Your Pokémon are recalled before a trainer battle and before entering a new biome.\n$You can view the stat changes for any Pokémon on the field by holding C or Shift.\n$You can also view the moveset for an enemy Pokémon by holding V.\n$This only reveals moves that you've seen the Pokémon use this battle.",
+  "selectItem": "After every battle, you are given a choice of 3 random items.\nYou may only pick one.\n$These range from consumables, to Pokémon held items, to passive permanent items.\n$Most non-consumable item effects will stack in various ways.\n$Some items will only show up if they can be used, such as evolution items.\n$You can also transfer held items between Pokémon using the transfer option.\n$The transfer option will appear in the bottom right once you have obtained a held item.\n$You may purchase consumable items with money, and a larger variety will be available the further you get.\n$Be sure to buy these before you pick your random item, as it will progress to the next battle once you do.",
+  "eggGacha": "From this screen, you can redeem your vouchers for\nPokémon eggs.\n$Eggs have to be hatched and get closer to hatching after\nevery battle. Rarer eggs take longer to hatch.\n$Hatched Pokémon also won't be added to your party, they will\nbe added to your starters.\n$Pokémon hatched from eggs generally have better IVs than\nwild Pokémon.\n$Some Pokémon can only even be obtained from eggs.\n$There are 3 different machines to pull from with different\nbonuses, so pick the one that suits you best!",
+  "titles": {
+    "essentials": "Essential Basics",
+    "gameModes": "Game Modes",
+    "specialPokemon": "Special Pokémon",
+    "progression": "Game Progression",
+    "permanentFeatures": "Permanent Features",
+    "glitchSystem": "Glitch System",
+    "battleMechanics": "Battle Mechanics",
+    "formChanges": "Form Changes",
+    "communityFeatures": "Community Features"
+  },
+  "accessMenu": {
+    "title": "Accessing the Menu",
+    "text": "To access the menu, press M or Escape while awaiting input. The menu contains settings and various features."
+  },
+  "pokerogue": {
+      "title": "Giving PokéRogue The Credit It Deserves",
+      "text": { 
+        "1":"Without PokéRogue’s brilliant design, PokéVoid wouldn’t be here today! Their extendable framework let me experiment, BREAK, and make PokéVoid what it is today!",
+        "2":"Where PokéRogue stands as a shining beacon of what a Pokémon roguelike should be...",
+        "3":"PokéVoid attempts to venture into the shadows, bringing a touch of beautiful chaos and corruption to their near-perfect formula.",
+        "4":"If you love daily runs, events, challenge modes? Endless or Splice modes? Visit pokerogue.net and play the original!"
+      }
+    },
+    "intrashop": {
+      "title": "Shop Inventory Changes Each Purchase!",
+      "text": { 
+        "1":"With each purchase the shop inventory changes! Use it to your advantage, and be sure to get what you need first!",
+        "2":"Keep an eye out for FREE items, they randomly appear in the shop's inventory!"
+      }
+    },
+    "runDetails": {
+      "title": "Shortcut to View Current Runs",
+      "text": { 
+        "1":"Press R to view the current run details immediately (when you're in the battle / rewards / title screen)"
+      }
+    },
+  "glitchRivals": {
+      "title": "Corrupted Rivals",
+      "text": { 
+        "1":"Past Rivals you defeated echo from the void, these beings are not what they seem.",
+        "2":"Corrupted entities twisted by the void, their true form lies in wait for you in the void. Save them."
+      }
+    },
+    "moveUpgrades": {
+      "title": "Move Upgrades",
+      "text": { 
+        "1":"You can now upgrade moves! Each time you use a move it'll gain an EXP point!",
+        "2":"Once the move has enough EXP, it'll level up, giving you a choice of upgrades!",
+        "3": "The upgrade will last for the whole run, and change the move for everyone, including your team, and even your enemies!"
+      }
+    },
+    "firstMoveUpgrade": {
+      "title": { 
+        "1":"Important Move Upgrade Info!", 
+        "2": "Game Breaking Combinations",
+        "5":"Upgrades and Move Effect Chance", 
+        "6":"The Newest Upgrade Gets Priority"
+      },
+      "text": { 
+        "1":"Choose one upgrade, and for the whole run that move will be upgraded for everyone, including your team, and even your enemies!",
+        "2": "Since you can upgrade almost any move, some combinations will not work or break the game, unfortunately with the scale of this update, this is unavoidable.",
+        "3": "If this happens, please refresh and choose a different upgrade combination.",
+        "4": "If you find a combination that doesn't work, please join discord and add it to the list of broken combinations!",
+        "5":"Please note that Moves can only have ONE effect chance (i.e. 10% chance to paralyze), so upgrades EITHER directly change the effect chance, OR use the previous chance value!",
+        "6":"Lastly, Upgrades can overwrite each other, the newest upgrade gets priority!"
+      }
+    },
+  "legendary": {
+      "title": "Make Any Pokémon Legendary",
+      "text": { 
+        "1":"PokéVoid lets you make ANY Pokémon legendary!",
+        "2":"By using Glitch Items you can make Pokemon have new abilities, types, moves, stats, and more!",
+        "3":"The Void awaits, Trainer. Embrace the forbidden power to overcome it!"
+      }
+    },
+    "rivals": {
+      "title": "Random Rivals",
+      "text": { 
+        "1":"Each run features a random rival with a themed team and signature Pokémon!",
+        "2":"Defeat them to unlock Glitch Quests for NEW Pokémon forms!"
+      }
+    },
+    "stats": {
+      "title": "Checking Your Stats",
+      "text": "To see your game stats, access the menu and select 'Stats'. This will show you your total battles, wins, money, and other stats!"
+    },
+    "runHistory": {
+      "title": "Run History",
+      "text": { 
+        "1":"See info on your past teams! Access via the menu and select 'Run History'.",
+        "2":"This will show you your previous runs, including your team, items, results, and more!"
+      }
+    },
+    "rivalQuests": {
+      "title": "Glitch Quests",
+      "text": "Defeat rivals to unlock Glitch Quests! Purchase these from the PermaShop and complete them to permanently unlock powerful Glitch Forms for specific Pokémon!"
+    },
+    "smitom": {
+      "title": "Smitom",
+      "text": { 
+        "1":"Meet Smitom, a special Rotom in Smitty form! He's a guide and a mystery...",
+        "2":"Interact with him when an exclamation mark appears or save your game for potential rewards."
+      }
+    },
+    "newForms": {
+      "title": "Glitch & Smitty Forms",
+      "text": { 
+        "1":"Unlock over 150 new Glitch and Smitty evolutions!",
+        "2":"Glitch forms are unlocked via Rival Quests, unlocking Smitty forms is a mystery..."
+      }
+    },
+    "bugs": {
+      "title": "Reporting Bugs!",
+      "text": { 
+        "1":"PokéVoid is in Beta! If you find a bug, please report it on the Discord.",
+        "2":"Include a screenshot of your console (control+i in chrome) and your save file if possible. Your feedback helps improve the game!"
+      }
+    },
+    "unlockJourney": {
+      "title": "Unlock Journey Mode By Catching Pokemon",
+      "text": {
+        "1":"Journey Mode becomes available after catching 15 Pokémon, and lets you select your starting team from your collected Pokémon!",
+        "2":"After catching your first pokemon, go to the SHOP and get the Starter Catch Quest to offically begin the Journey Unlock Quest!"
+      }
+    },
+    "eggs": {
+      "title": "Hatching Eggs",
+      "text": { 
+        "1":"Hatching eggs is a powerful way to strengthen your team! Unlike wild catches, hatched Pokémon join your starter pool with superior IVs!",
+        "2":"Eggs are also the only way to obtain certain rare Pokémon species! Making them essential for completing your collection!",
+        "3":"To use Egg Vouchers, simply press ESC or M to open the menu and select Egg Gacha!"
+      }
+    },
+    "eggSwap": {
+      "title": "Egg Hatching & Swapping",
+      "text": { 
+        "1":"Check your hatched Pokémon and if desired, swap 1 for one of your party members!",
+        "2":"Only restrictions are your first Pokémon can't be swapped, and legendaries can only be swapped with legendaries, Megas, or Dynamaxed Pokémon!",
+        "3":"Happy Hatching!"
+      }
+    },
+    
+    "nuzlight": {
+      "title": "Nuzlight Mode",
+      "text": "A lighter version of Nuzlocke with no permanent Pokémon loss. No healing items available in shops! Fainted Pokémon revive after reaching wave 10 milestones."
+    },
+    "nuzlocke": {
+      "title": "Nuzlocke Mode",
+      "text": "Traditional Nuzlocke challenge rules apply. Fainted Pokémon are permanently removed from your party."
+    },
+    "journey": {
+      "title": "Journey Mode",
+      "text": { 
+        "1":"Assemble your team to take on The Void. Use any Pokémon you've caught or hatched, including fusions! ",
+        "2":"Fusion Pokémon require ∞GOLD to use. PermaItems can reduce costs and increase your starter limit."
+        }
+    },
+    "rogueMode": {
+      "title": "Rogue Mode",
+      "text": "Draft 2 random pokemon to start your run with! Use your ∞GOLD to reroll your options! Each run is unique!"
+    },
+    "bosses": {
+      "title": "Multi-Form Bosses",
+      "text": "Beware of powerful multi-form bosses! They change form and fully heal at low HP, resetting stat changes. Defeat them for valuable rewards!"
+    },
+    "abilities": {
+      "title": "New Abilities",
+      "text": { 
+        "1":"Master over 400 new abilities from 150+ Glitch and Smitty Pokémon transformations!",
+        "2":"New game modes expand the abilities obtainable from items, including powerful Glitch abilities that can redefine battles."
+      }
+    },
+    "passiveAbilities": {
+      "title": "Passive Ability Item",
+      "text": { 
+        "1":"Grants your pokemon a passive ability, providing an extra ability!",
+        "2":"These do not stack, so if you get a second one, it WILL replace the first one!"
+      }
+    },
+    "glitchItems": {
+      "title": "Glitch Pieces & Items",
+      "text": { 
+        "1":"Collect Glitch Pieces to get reality-altering Glitch Items! Need 2+ pieces for Glitch Items, 5+ for Glitch Form Change items.",
+        "2":"Items include AnyTMs, Ability Swappers, Type Changers, Stat Swaps, and more!"
+      }
+    },
+    "fusionPokemon": {
+      "title": "Catchable Fusions",
+      "text": { 
+        "1":"All Fusion Pokémon are catchable and permanently added to your collection!",
+        "2":"Find them with a base 1/14 chance (improvable with ∞ITEMS). Using them costs ∞GOLD."
+      }
+    },
+    "trainerPokemon": {
+      "title": "Snag Trainer Pokémon",
+      "text": { 
+        "1":"Most trainers will sell their Pokémon during battle (except Rivals!). Caught Pokémon are added permanently to your collection!",
+        "2":"The cost depends on the wave but can be reduced with ∞ITEMS."
+      }
+    },
+    "partyAbility": {
+      "title": "Party Abilities",
+      "text": { 
+        "1":"Obtainable via the Shop, these expensive abilities apply to ALL Pokémon in your current party during a run!",
+        "2":"Use powerful team-wide effects: Speed Boost or Technician for everyone!"
+      }
+    },
+    "permaMoney": {
+      "title": "PermaMoney (∞GOLD)",
+      "text": { 
+        "1":"Earn persistent ∞GOLD between runs! Use it to buy ∞ITEMS, reroll Rogue starters, or pay the Fusion Tax.",
+        "2":"Get it from bounties, rewards, saving, or Smitom interactions."
+      }
+    },
+    "saving": {
+      "title": "Local Saving & Backup",
+      "text": { 
+        "1":"If your data is lost it's GONE FOREVER! Use the floppy disk icon (top-right) to EXPORT your save file often!",
+        "2":"This rewards ∞GOLD and protects against data loss."
+      }
+    },
+    "bounties": {
+      "title": "Bounty System",
+      "text": { 
+        "1":"Enter 6-letter codes in the console to activate Bounties.",
+        "2":"Bounties are QUESTS that let you earn ∞GOLD/∞ITEMS and are completely reusable upon completion!"
+      }
+    },
+    "dailyBounty": {
+      "title": "Daily Bounty!",
+      "text": "A new daily bounty is available! Complete it to earn ∞GOLD/∞ITEMS. The code is already in the console, just activate it!"
+    },
+    "discord": {
+      "title": "Discord & Support",
+      "text": "Join the Smittyverse Discord for discussion, bug reports, and community! Find bounty codes and connect with other players."
+    },
+    "smittyForms": {
+      "title": "Smitty Forms",
+      "text": { 
+        "1":"Create unique Pokémon transformations using specific combinations of FOUR Smitty items!",
+        "2":"Some require a specific base Pokémon (e.g., Rotom -> Smitom)",
+        "3": "Others are Universal, so any base Pokémon can be used! (e.g., Caterpie -> Picklisk). All gain a random passive ability."
+      }
+    },
+    "smittyFormUnlocked": {
+      "title": "Smitty Form Unlocked!",
+      "text": { 
+        "1":"You've unlocked a new Smitty form! Each smitty form is different!",
+        "2":"But ALL need a unique combination of 4 Smitty items!",
+        "3": "The combination is identified via the console, find the SMITTY form's code and enter it to see the forbidden recipe!"
+      }
+    },
+    "smittyItems": {
+      "title": "PermaItems (∞ITEMS)",
+      "text": { 
+        "1":"Use ∞GOLD to buy permanent upgrades (∞ITEMS) with different duration types: Usage-based (quantity reduced after use) or Wave-based (quantity reduced after wave 50).",
+        "2":"These upgrades can boost shiny/fusion/catch rates, lower costs, and provide other permanent benefits!"
+      }
+    },
+    "abilitySwitcher": {
+      "title": "Glitch: Ability Switcher",
+      "text": "Swap a Pokémon's current ability with one of its other ones! Requires 2 Glitch Pieces."
+    },
+    "typeSwitcher": {
+      "title": "Glitch: Type Switchers", 
+      "text": "Change a Pokémon's primary AND secondary types. Requires 2 Glitch Pieces."
+    },
+    "primarySwitcher": {
+      "title": "Glitch: Primary Type Switcher",
+      "text": "Change a Pokémon's primary type. Requires 2 Glitch Pieces."
+    },
+    "secondarySwitcher": {
+      "title": "Glitch: Secondary Type Switcher", 
+      "text": "Change a Pokémon's secondary type. Requires 2 Glitch Pieces."
+    },
+    "releaseItems": {
+      "title": "Glitch: Release Powerups",
+      "text": { 
+        "1":"Release a Pokémon to grant it's typing, moves, abilities, or a stat boost to another.",
+        "2":"Alternatively, spend 5 'Collected Types' from a Pokémon instead of releasing it."
+      }
+    },
+    "anyTMs": {
+      "title": "Glitch: AnyTMs",
+      "text": "These TMs can teach their move to ANY Pokémon, ignoring normal compatibility rules. Requires 2 Glitch Pieces."
+    },
+    "anyAbilities": {
+      "title": "Glitch: Ability Item",
+      "text": "Change a Pokémon's current ability to another ability! Requires 2 Glitch Pieces."
+    },
+    "statSwitchers": {
+      "title": "Glitch: Stat Switchers",
+      "text": "Swap two of a Pokémon's base stats (e.g., Attack and Defense). Requires 2 Glitch Pieces."
+    },
+    "newQuests": {
+      "title": "New Quest Unlocked!",
+      "text": "You've unlocked a new quest! It will appear RANDOMLY (but often) in the PermaShop / Shop on the title screen! If it's not there, reroll for it!"
+    },
+    "modeUnlocks": {
+      "title": "GameMode Unlocks",
+      "text": "When a game mode is unlocked, it will also unlock a ton of new items and abilities! Try to unlock them all!"
+    },
+    "firstVictory": {
+      "title": "It's Not Over!",
+      "text": "Your journey is just beginning! Unlock the new game modes to dive deeper into the abyss, and unravel the mysteries of the void!"
+    },
+    "theVoidUnlocked": {
+      "title": "The Void Unlocked!",
+      "text": "The Void where it all began. The source of all corruption. The true face of the void awaits..."
+    },
+    "theVoidOvertaken": {
+      "title": "You've Overtaken The Void!",
+      "text": "You've become too powerful for the void to contain! Yet the corruption persists, don't let it spread, you're the only one who can keep it under control!"
+    },
+    "megaDynamax": {
+      "title": "Mega & Dynamax Forms",
+      "text": { 
+        "1":"To Mega Evolve or Dynamax a Pokémon, you must first have the Mega Bracelet or Dynamax Band items!",
+        "2":"Once you have one of these items, and have the appropriate pokemon, a form change item will randomly appear as a reward item!",
+        "3":"After mega evolution or dynamaxing, the Mega Bracelet or Dynamax Band will break!"
+      }
+    }
+  }

@@ -1,0 +1,42 @@
+{
+  "titles": {
+    "newPokemon": "Neues Pokemon!",
+    "newFusion": "Neue Fusion!",
+    "newItem": "Neues Item!",
+    "newGameOverItem": "Game Over Belohnung!",
+    "newRibbonItem": "Band-Belohnung!",
+    "moneyObtained": "Geld erhalten!",
+    "newShopUnlock": "Shop-Freischaltung!",
+    "newUnlock": "Neue Freischaltung!",
+    "newSmittyForm": "Neue SMITTY-Form!",
+    "newForm": "Neue Form!",
+    "rivalLost": "RIVALE VERLOREN...",
+    "modeChange": "MODUS-WECHSEL!",
+    "rewardObtained": "Belohnung erhalten!",
+    "voidOvertaken": "DIE LEERE ÜBERWUNDEN!",
+    "newShopItem": "Neuer Shop-Gegenstand",
+    "manyMoreNuggets": "Und viele weitere glänzende Goldklumpen!"
+  },
+  "gameModes": {
+    "nuzlocke": {
+      "description": "Nuzlocke: Besiegte Pokémon werden\naus deinem Team entfernt..."
+    },
+    "draft": {
+      "description": "Rogue: Wähle 2 zufällige Pokémon\naus, um zu beginnen..."
+    },
+    "nuzlight": {
+      "description": "Nuzlight: Keine Heilungsgegenstände\nverfügbar..."
+    },
+    "nightmare": {
+      "description": "Nuzmare: Nuzlight + Nuzlocke"
+    },
+    "default": {
+      "description": "Der Spielmodus wurde geändert!"
+    }
+  },
+  "ui": {
+    "rivalVoid": "{{name}} verschwand in der Leere...",
+    "error": "Fehler beim Laden der Belohnung",
+    "new": "NEU"
+  }
+} 

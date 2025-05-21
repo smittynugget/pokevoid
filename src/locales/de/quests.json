@@ -1,0 +1,485 @@
+{
+  "TAUROS_ELECTRIC_HIT_QUEST": {
+    "name": "Tauros' Elektro-Treffer",
+    "task": "Lass Tauros von 30 Elektro-Attacken getroffen werden"
+  },
+  "KECLEON_COLOR_CHANGE_QUEST": {
+    "name": "Kecleons Farbwechsel",
+    "task": "Aktiviere Kecleons Fähigkeit Farbwechsel 50 Mal"
+  },
+  "GLISCOR_DARK_MOVE_KNOCKOUT_QUEST": {
+    "name": "Gliscors Unlicht-K.O.",
+    "task": "Besiege 100 Pokémon mit Gliscor unter Verwendung von Unlicht-Attacken"
+  },
+  "MAROWAK_CUBONE_FAINT_QUEST": {
+    "name": "Marowak-Tragabon-Niederlage",
+    "task": "Lass Marowak besiegt werden, während Tragabon in deinem Team ist"
+  },
+  "NOIVERN_DRAGON_MOVE_KNOCKOUT_QUEST": {
+    "name": "UHafdras Drachen-K.O.",
+    "task": "Besiege 100 Pokémon mit UHafra unter Verwendung von Drachen-Attacken"
+  },
+  "FERALIGATR_DRAGON_DEFEAT_QUEST": {
+    "name": "Impergators Drachen-Siege",
+    "task": "Besiege 50 Drachen-Pokémon mit Impergator"
+  },
+  "CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST": {
+    "name": "Gluraks Boden-K.O.",
+    "task": "Besiege 100 Pokémon mit Glurak unter Verwendung von Boden-Attacken"
+  },
+  "VENUSAUR_PSYCHIC_MOVE_USE_QUEST": {
+    "name": "Bisaflors Psycho-Attacken",
+    "task": "Setze 200 Mal Psycho-Attacken mit Bisaflor ein"
+  },
+  "BLASTOISE_FAIRY_DEFEAT_QUEST": {
+    "name": "Turtoks Fee-Siege",
+    "task": "Besiege 50 Fee-Pokémon mit Turtok"
+  },
+  "NIDOKING_DEFEAT_QUEST": {
+    "name": "Nidokings Duell",
+    "task": "Besiege 10 Nidoking mit deinem Nidoking"
+  },
+  "GENGAR_SPECIAL_WAVE_QUEST": {
+    "name": "Gengars Spezialwelle",
+    "task": "Überstehe 30 aufeinanderfolgende Wellen mit Gengar an erster Stelle, ohne Geist/Gift-Attacken, aber mit mindestens einer Elektro-Attacke"
+  },
+  "WEEZING_FIRE_MOVE_KNOCKOUT_QUEST": {
+    "name": "Smogmogs Feuer-K.O.",
+    "task": "Besiege 100 Pokémon mit Smogmog unter Verwendung von Feuer-Attacken"
+  },
+  "HITMONLEE_NORMAL_WAVE_QUEST": {
+    "name": "Kicklees Normal-Welle",
+    "task": "Überstehe 30 aufeinanderfolgende Wellen mit Kicklee als erstes Pokémon, nur mit Normal-Attacken und nur mit Normal-Pokémon im Team"
+  },
+  "HITMONCHAN_STAT_INCREASE_QUEST": {
+    "name": "Nockchans Statuswerte",
+    "task": "Setze 50 Mal statuswertsteigernde Attacken mit Nockchan ein"
+  },
+  "HITMON_DUO_WIN_QUEST": {
+    "name": "Hitmon-Duo Sieg",
+    "task": "Gewinne einen Durchlauf mit sowohl Kicklee als auch Nockchan in deinem Team"
+  },
+  "KANGASKHAN_GHOST_MOVE_QUEST": {
+    "name": "Kangamas Geister-Attacken",
+    "task": "Setze 50 Mal Geister-Attacken mit Kangama ein"
+  },
+  "SCYTHER_TRIO_WIN_QUEST": {
+    "name": "Sichlors Trio-Sieg",
+    "task": "Überstehe die letzten 50 Wellen mit nur 3 Pokémon, einschließlich Sichlor"
+  },
+  "GRENINJA_TRIO_WIN_QUEST": {
+    "name": "Quajutsu Trio-Sieg",
+    "task": "Überstehe die letzten 50 Wellen mit nur 3 Pokémon, einschließlich Quajutsu"
+  },
+  "SIMISAGE_TRIO_WIN_QUEST": {
+    "name": "Vegichita Trio-Sieg",
+    "task": "Überstehe die letzten 50 Wellen mit nur 3 Pokémon, einschließlich Vegichita"
+  },
+  "ELEMENTAL_MONKEY_WIN_QUEST": {
+    "name": "Elementaraffen-Sieg",
+    "task": "Gewinne mit mindestens einem der folgenden Pokémon: [Sodamak, Grillmak, Vegichita] mit genau 4 Attacken der folgenden Typen: [Flug, Feuer, Wasser und Boden]"
+  },
+  "ELECTIVIREMAGMORTAR_WIN_QUEST": {
+    "name": "Elevoltek & Magbrant Sieg",
+    "task": "Gewinne einen Durchlauf mit sowohl Elevoltek als auch Magbrant in deinem Team"
+  },
+  "GYARADOS_GROUND_SWITCH_QUEST": {
+    "name": "Garados' Boden-Wechsel",
+    "task": "Lass 20 Boden-Attacken gegen dein Garados einsetzen"
+  },
+  "LAPRAS_FIRE_MOVE_QUEST": {
+    "name": "Lapras' Feuer-Attacken",
+    "task": "Setze 50 Mal Feuer-Attacken mit Lapras ein"
+  },
+  "PORYGON_Z_ANALYTIC_USE_QUEST": {
+    "name": "Porygon-Z Analyse",
+    "task": "Aktiviere Porygon-Zs Fähigkeit Analyse 50 Mal"
+  },
+  "MEOWTH_JESTER_QUEST": {
+    "name": "Mauzis Trio-Sieg",
+    "task": "Überstehe die letzten 50 Wellen mit nur 3 Pokémon, einschließlich Mauzi"
+  },
+  "DRAGONITE_LANCE_DEFEAT_QUEST": {
+    "name": "Dragoran vs. Siegfried",
+    "task": "Besiege 3 von Siegfrieds Pokémon nacheinander mit Dragoran"
+  },
+  "SUDOWOODO_WOOD_HAMMER_QUEST": {
+    "name": "Mogelbaums Holzhammer",
+    "task": "Setze 100 Mal Holzhammer mit Mogelbaum ein"
+  },
+  "AMBIPOM_GIGA_IMPACT_QUEST": {
+    "name": "Ambipoms Gigastoß",
+    "task": "Setze 10 Mal Gigastoß mit Ambipom in einem Durchlauf ein"
+  },
+  "MILTANK_STEEL_MOVE_KNOCKOUT_QUEST": {
+    "name": "Miltanks Stahl-K.O.",
+    "task": "Besiege 50 Pokémon mit Miltank unter Verwendung von Stahl-Attacken"
+  },
+  "SLAKING_RIVAL_DEFEAT_QUEST": {
+    "name": "Letarking vs. Rivalen",
+    "task": "Besiege 3 Rivalen-Pokémon mit Letarking ohne zu wechseln"
+  },
+  "SOLROCK_LUNATONE_WIN_QUEST": {
+    "name": "Sonnfel & Lunastein Sieg",
+    "task": "Gewinne einen Durchlauf mit sowohl Sonnfel als auch Lunastein in deinem Team"
+  },
+  "REGIGIGAS_REGI_DEFEAT_QUEST": {
+    "name": "Regigigas vs. Regis",
+    "task": "Besiege 5 Regi-Pokémon mit Regigigas"
+  },
+  "PIKACHU_RED_BLUE_WIN_QUEST": {
+    "name": "Pikachu vs. Rot & Blau",
+    "task": "Gewinne gegen Rot und Blau mit Pikachu in deinem Team"
+  },
+  "SNORLAX_GRASS_KNOCKOUT_QUEST": {
+    "name": "Relaxos Pflanzen-K.O.",
+    "task": "Besiege 20 Pokémon mit Relaxo unter Verwendung von Pflanzen-Attacken"
+  },
+  "CLOYSTER_PRESENT_QUEST": {
+    "name": "Austos' Geschenk",
+    "task": "Setze 50 Mal Geschenk mit Austos im Nuzlocke-Modus ein"
+  },
+  "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
+    "name": "Blanas vs. Nasgnet",
+    "task": "Besiege 20 Nasgnet oder Voluminas mit Blanas"
+  },
+  "CHANDELURE_REST_QUEST": {
+    "name": "Skelabras Erholung",
+    "task": "Setze 10 Mal Erholung mit Skelabra in einem Durchlauf ein"
+  },
+  "SMEARGLE_DEFEAT_QUEST": {
+    "name": "Farbeagle-Siege",
+    "task": "Besiege 100 Pokémon mit Farbeagle"
+  },
+  "MIMIKYU_CHARIZARD_KNOCKOUT_QUEST": {
+    "name": "Mimigma vs. Glurak",
+    "task": "Besiege 3 Glurak mit Mimigma"
+  },
+  "MIMIKYU_GRENINJA_KNOCKOUT_QUEST": {
+    "name": "Mimigma vs. Quajutsu",
+    "task": "Besiege 3 Quajutsu mit Mimigma"
+  },
+  "MIMIKYU_RAICHU_KNOCKOUT_QUEST": {
+    "name": "Mimigma vs. Raichu",
+    "task": "Besiege 3 Raichu mit Mimigma"
+  },
+  "MIMIKYU_MEWTWO_KNOCKOUT_QUEST": {
+    "name": "Mimigma vs. Mewtu",
+    "task": "Besiege 2 Mewtu mit Mimigma"
+  },
+  "MIMIKYU_REGIROCK_KNOCKOUT_QUEST": {
+    "name": "Mimigma vs. Regirock",
+    "task": "Besiege 2 Regirock mit Mimigma"
+  },
+  "EISCUE_ROCK_KNOCKOUT_QUEST": {
+    "name": "Kubuin vs. Gestein",
+    "task": "Besiege 50 Gestein-Pokémon mit Kubuin"
+  },
+  "ZANGOOSE_SEVIPER_KNOCKOUT_QUEST": {
+    "name": "Sengo vs. Vipitis",
+    "task": "Besiege 10 Vipitis mit Sengo"
+  },
+  "SEVIPER_ZANGOOSE_KNOCKOUT_QUEST": {
+    "name": "Vipitis vs. Sengo",
+    "task": "Besiege 10 Sengo mit Vipitis"
+  },
+  "TRUBBISH_POISON_DEFEAT_QUEST": {
+    "name": "Unratütox vs. Gift",
+    "task": "Besiege 50 Gift-Pokémon mit Unratütox"
+  },
+  "HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST": {
+    "name": "Resladero vs. Rivalen & Champions",
+    "task": "Besiege 6 Pokémon von Rivalen oder Champions mit Resladero"
+  },
+  "DITTO_DRAGONITE_TRANSFORM_QUEST": {
+    "name": "Ditto zu Dragoran",
+    "task": "Verwandle dich 5 Mal mit Ditto in Dragoran"
+  },
+  "DITTO_CHARIZARD_TRANSFORM_QUEST": {
+    "name": "Ditto zu Glurak",
+    "task": "Verwandle dich 5 Mal mit Ditto in Glurak"
+  },
+  "DITTO_PIKACHU_TRANSFORM_QUEST": {
+    "name": "Ditto zu Pikachu",
+    "task": "Verwandle dich 5 Mal mit Ditto in Pikachu"
+  },
+  "DITTO_MACHAMP_TRANSFORM_QUEST": {
+    "name": "Ditto zu Machomei",
+    "task": "Verwandle dich 5 Mal mit Ditto in Machomei"
+  },
+  "DITTO_MEWTWO_TRANSFORM_QUEST": {
+    "name": "Ditto zu Mewtu",
+    "task": "Verwandle dich 5 Mal mit Ditto in Mewtu"
+  },
+  "FERALIGATOR_ROCK_MOVE_KNOCKOUT_QUEST": {
+    "name": "Impergators Gestein-K.O.",
+    "task": "Besiege 50 Pokémon mit Impergator unter Verwendung von Gestein-Attacken"
+  },
+  "WOBBUFFET_RIVAL_DEFEAT_QUEST": {
+    "name": "Woingenau vs. Rivalen",
+    "task": "Besiege 3 Rivalen-Pokémon mit Woingenau"
+  },
+  "MAGIKARP_DEFEAT_QUEST": {
+    "name": "Karpadors Siege",
+    "task": "Besiege 500 Pokémon mit Karpador"
+  },
+  "KLINKLANG_GEAR_MOVE_QUEST": {
+    "name": "Klingklangs Zahnräder",
+    "task": "Setze 100 Mal Gangwechsel und/oder Zahnradboost mit Klingklang ein"
+  },
+  "SPINDA_CONFUSION_RECOVERY_QUEST": {
+    "name": "Pandirs Verwirrungsüberwindung",
+    "task": "Überwinde 10 Mal die Verwirrung mit Pandir"
+  },
+  "NINETALES_STORED_POWER_KNOCKOUT_QUEST": {
+    "name": "Vulnonas Kraftreserve",
+    "task": "Besiege 50 Pokémon mit Vulnona unter Verwendung von Kraftreserve"
+  },
+  "SHUCKLE_DEFEAT_QUEST": {
+    "name": "Pottrott-Siege",
+    "task": "Besiege 30 Pokémon mit Pottrott"
+  },
+  "TANGELA_RIVAL_DEFEAT_QUEST": {
+    "name": "Tangela vs. Rivalen",
+    "task": "Besiege 3 Rivalen-Pokémon mit Tangela"
+  },
+  "CLAYDOL_POISON_QUEST": {
+    "name": "Lepumentas Gift-Attacken",
+    "task": "Setze 200 Mal Gift-Attacken mit Lepumentas ein"
+  },
+  "TAUROS_DARK_WAVE_QUEST": {
+    "name": "Tauros' Unlicht-Welle",
+    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team, das ein Tauros mit mindestens 1 Unlicht- und 1 Geist-Attacke enthält (es darf keine Normal-Attacken haben) im Albtraum-Modus"
+  },
+  "DITTO_SPECIAL_WIN_QUEST": {
+    "name": "Dittos Spezial-Sieg",
+    "task": "Überlebe die letzten 50 Wellen mit einem Team von genau 3 Pokémon, einschließlich Ditto"
+  },
+  "MAROWAK_ZOMBIE_KNOCKOUT_QUEST": {
+    "name": "Marowaks Zombie-K.O.",
+    "task": "Besiege 100 Pokémon mit Marowak unter Verwendung von Unheilböe, Wutfaust, Nachspiel, Hex oder Letzter Respekt"
+  },
+  "GRENINJA_YOKAI_WAVE_QUEST": {
+    "name": "Quajutsus Yokai-Welle",
+    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team, das ein Quajutsu mit mindestens 1 Geist- und 1 Unlicht-Attacke enthält (es darf keine Wasser-Attacken haben) im Albtraum-Modus"
+  },
+  "RAYQUAZA_SPECIAL_WIN_QUEST": {
+    "name": "Rayquazas Spezial-Sieg",
+    "task": "Überlebe die letzten 50 Wellen mit einem Team von 2 oder weniger Pokémon, einschließlich Rayquaza, es darf keine Flug- oder Drachen-Attacken haben"
+  },
+  "LICKITUNG_GIGGLE_KNOCKOUT_QUEST": {
+    "name": "Schlurps Schlecker-K.O.",
+    "task": "Besiege 300 Pokémon mit Schlurp unter Verwendung von Schlecker"
+  },
+  "LICKITUNG_HYPER_WAVE_QUEST": {
+    "name": "Schlurps Hyper-Welle",
+    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team, das ein Schlurp mit mindestens 1 Gift- und 1 Unlicht-Attacke enthält (es darf keine Normal-Attacken haben) im Albtraum-Modus"
+  },
+  "MUK_RED_DEFEAT_QUEST": {
+    "name": "Sleima vs. Rot",
+    "task": "Besiege 3 von Rots Pokémon mit Sleima"
+  },
+  "CHARMANDER_NIGHTMARE_WIN_QUEST": {
+    "name": "Glumandas Albtraum-Sieg",
+    "task": "Gewinne einen Albtraum-Durchlauf mit einem Determizard (Glitch-Form Glumanda) in deinem Team"
+  },
+  "GASTLY_NIGHTMARE_WAVE_QUEST": {
+    "name": "Nebulaks Albtraum-Welle",
+    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team von 3 oder weniger Pokémon, das Nebulak enthält, natürlich im Albtraum-Modus"
+  },
+  "PIKACHU_PLUS_ULTRA_QUEST": {
+    "name": "Pikachu Plus Ultra",
+    "task": "Gewinne einen Albtraum-Durchlauf mit Pikachu in deinem Team"
+  },
+  "CHARIZARD_HELLFLAME_QUEST": {
+    "name": "Gluraks Höllenfeuer",
+    "task": "Setze 100 Mal Lohekanonade mit Glurak im Albtraum-Modus ein"
+  },
+  "EEVEE_NIGHTMARE_QUEST": {
+    "name": "Evolis Albtraum",
+    "task": "Besiege 2 von Blaus Pokémon nacheinander mit Evoli während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "SNORLAX_NIGHTMARE_QUEST": {
+    "name": "Relaxos Albtraum",
+    "task": "Besiege 2 von Rots Pokémon nacheinander mit Relaxo während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "MEWTWO_NIGHTMARE_QUEST": {
+    "name": "Mewtus Albtraum",
+    "task": "Besiege 3 von Giovannis Pokémon nacheinander mit Mewtu während der Wellen 400 oder 500 im Albtraum-Modus"
+  },
+  "TYRANITAR_NIGHTMARE_QUEST": {
+    "name": "Despotars Albtraum",
+    "task": "Besiege 2 von Maxies Pokémon nacheinander mit Despotar während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "OCTILLERY_NIGHTMARE_QUEST": {
+    "name": "Octillerys Albtraum",
+    "task": "Besiege 2 von Wallaces Pokémon nacheinander mit Octillery während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "REGIROCK_NIGHTMARE_QUEST": {
+    "name": "Regirocks Albtraum",
+    "task": "Besiege 2 von Troys Pokémon nacheinander mit Regirock während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "EEVEE_GHOST_QUEST": {
+    "name": "Evolis Geister",
+    "task": "Besiege 100 von Blaus Pokémon mit Evoli unter Verwendung von Geist-Attacken"
+  },
+  "EEVEE_STEEL_QUEST": {
+    "name": "Evolis Stahl",
+    "task": "Besiege 100 von Blaus Pokémon mit Evoli unter Verwendung von Stahl-Attacken"
+  },
+  "EEVEE_GROUND_QUEST": {
+    "name": "Evolis Boden",
+    "task": "Besiege 100 von Blaus Pokémon mit Evoli unter Verwendung von Boden-Attacken"
+  },
+  "MAGICAL_PIKACHU_QUEST": {
+    "name": "Magisches Pikachu",
+    "task": "Gewinne 3 Durchläufe mit Pikachu, das mindestens 2 Fee-Attacken kennt"
+  },
+  "CHARMANDER_UNDERTALE_QUEST": {
+    "name": "Glumandas Undertale",
+    "task": "Überlebe die letzten 50 Wellen mit einem Team von 3 oder weniger Pokémon, einschließlich Glumanda"
+  },
+  "SQUIRTLE_TORMENT_QUEST": {
+    "name": "Schiggys Qual",
+    "task": "Lass Schiggy 5 Mal miterleben, wie Turtok in deinem Team besiegt wird"
+  },
+  "BULBASAUR_TERROR_QUEST": {
+    "name": "Bisasams Terror",
+    "task": "Überlebe 50 aufeinanderfolgende Wellen mit genau 2 Pokémon in deinem Team, einschließlich Bisasam"
+  },
+  "SHIFTRY_TENGU_QUEST": {
+    "name": "Tengulists Tengu",
+    "task": "Überlebe die letzten 30 Wellen nur mit Tengulist in deinem Team"
+  },
+  "HYPNO_NIGHTMARE_QUEST": {
+    "name": "Hypnos Albtraum",
+    "task": "Besiege 2 aufeinanderfolgende Pokémon mit Hypno während Sabrinas Wellen (100, 200, 300, 400 oder 500) im Albtraum-Modus"
+  },
+  "MAMOSWINE_NIGHTMARE_QUEST": {
+    "name": "Mamutels Albtraum",
+    "task": "Besiege 50 Rivalen-Pokémon mit Mamutel während der Wellen 50-100, 150-200, 250-300, 350-400 oder 450-500 im Albtraum-Modus"
+  },
+  "STARTER_CATCH_QUEST": {
+    "name": "Starter-Fang-Quest",
+    "task": "Fange 15 Pokémon?!",
+    "rewardText": "Schaltet den Reisemodus frei!"
+  },
+  "NUZLIGHT_UNLOCK_QUEST": {
+    "name": "Nuzlight-Freischaltungs-Quest",
+    "task": "Gewinne 3 Durchläufe, um den Nuzlight-Modus freizuschalten!",
+    "rewardText": "Schaltet den Nuzlight-Modus frei!"
+  },
+  "NUZLOCKE_UNLOCK_QUEST": {
+    "name": "Nuzlocke-Freischaltungs-Quest",
+    "task": "Gewinne 5 Nuzlight-Durchläufe, um den Nuzlocke-Modus freizuschalten!",
+    "rewardText": "Schaltet den Nuzlocke-Modus frei!"
+  },
+  "MORPEKO_NIGHTMARE_QUEST": {
+    "name": "Morpekos Albtraum",
+    "task": "Besiege 2 aufeinanderfolgende Pokémon mit Morpeko während Lusamins Wellen (100, 200 oder 300) im Albtraum-Modus"
+  },
+  "CLEFABLE_GENGAR_QUEST": {
+    "name": "Piepi & Gengar",
+    "task": "Überlebe die letzten 40 Wellen nur mit Gengar und Piepi in deinem Team. Gengar muss eine Fee-Attacke haben und Piepi muss eine Geist-Attacke haben"
+  },
+  "REVAROOM_EXTRA_QUEST": {
+    "name": "Revaroom Extra",
+    "task": "Gewinne einen Durchlauf mit genau 4 Pokémon: Revaroom, Varoom, Klink und Klang"
+  },
+  "GOLEM_FIRE_QUEST": {
+    "name": "Golems Feuer",
+    "task": "Lass dein Golem 500 Mal von Feuer-Attacken getroffen werden"
+  },
+  "DEINO_NIGHTMARE_QUEST": {
+    "name": "Kapunos Albtraum",
+    "task": "Besiege 2 von G-Cis' Pokémon nacheinander mit Kapuno während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "GOLURK_DREAD_QUEST": {
+    "name": "Golurkus Schrecken",
+    "task": "Lass 100 deiner Pokémon (außer Golurk) besiegt werden, während Golurk in deinem Team ist, im Albtraum-Modus"
+  },
+  "DUSCLOPS_NIGHTMARE_QUEST": {
+    "name": "Zwirrklops' Albtraum",
+    "task": "Besiege 2 von Allisters Pokémon nacheinander mit Zwirrklops während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "HARIYAMA_NIGHTMARE_QUEST": {
+    "name": "Hariyamas Albtraum",
+    "task": "Besiege 2 von Lysandres Pokémon nacheinander mit Hariyama während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "SHARPEDO_NIGHTMARE_QUEST": {
+    "name": "Tohaidos Albtraum",
+    "task": "Besiege 3 von Archies Pokémon nacheinander mit Tohaido während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "FARIGIRAF_NIGHTMARE_QUEST": {
+    "name": "Farigiraf's Albtraum",
+    "task": "Besiege 2 von Cyrus' Pokémon nacheinander mit Farigiraf während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "KINGDRA_NIGHTMARE_QUEST": {
+    "name": "Kingdras Albtraum",
+    "task": "Besiege 2 von Mistys Pokémon nacheinander mit Kingdra während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "EXCADRILL_NIGHTMARE_QUEST": {
+    "name": "Stalobors Albtraum",
+    "task": "Besiege 3 von Rockos Pokémon nacheinander mit Stalobor während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "LANTURN_NIGHTMARE_QUEST": {
+    "name": "Lanturns Albtraum",
+    "task": "Besiege 3 von Rockos Pokémon nacheinander mit Lanturn während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "PIKACHU_ROBO_NIGHTMARE_QUEST": {
+    "name": "Robo-Pikachus Albtraum",
+    "task": "Besiege 3 von Major Bobs Pokémon nacheinander mit Pikachu während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "DODRIO_NIGHTMARE_QUEST": {
+    "name": "Dodris Albtraum",
+    "task": "Besiege 3 von Larrys Pokémon nacheinander mit Dodri während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "SUNFLORA_NIGHTMARE_QUEST": {
+    "name": "Sonnfloras Albtraum",
+    "task": "Besiege 3 von Roses Pokémon nacheinander mit Sonnflora während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "LUCARIO_NIGHTMARE_QUEST": {
+    "name": "Lucarios Albtraum",
+    "task": "Besiege 3 von Cynthias Pokémon nacheinander mit Lucario während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+  },
+  "NORMAL_STRENGTH": {
+    "name": "Normal-Stärke!",
+    "task": "Besiege 500 Pokémon mit Normal-Pokémon über mehrere Durchläufe hinweg",
+    "rewardText": "Schaltet ein PermaItem frei, das die Resistenzen und Stärken von Normal-Typen verändert!"
+  },
+  "MAGIKARP_NEW_MOVES": {
+    "name": "Karpadors neue Attacken",
+    "task": "Besiege 500 Pokémon mit Karpador",
+    "rewardText": "Karpador wird ein größeres Attacken-Set haben!"
+  },
+  "DITTO_NEW_MOVES": {
+    "name": "Dittos neue Attacken",
+    "task": "Besiege 500 Pokémon mit Ditto",
+    "rewardText": "Ditto wird ein größeres Attacken-Set haben!"
+  },
+  "WOBBUFFET_NEW_MOVES": {
+    "name": "Woingenaus neue Attacken",
+    "task": "Besiege 500 Pokémon mit Woingenau",
+    "rewardText": "Woingenau wird ein größeres Attacken-Set haben!"
+  },
+  "SMEARGLE_NEW_MOVES": {
+    "name": "Farbeagles neue Attacken",
+    "task": "Besiege 500 Pokémon mit Farbeagle",
+    "rewardText": "Farbeagle wird ein größeres Attacken-Set haben!"
+  },
+  "UNOWN_NEW_MOVES": {
+    "name": "Unowns neue Attacken",
+    "task": "Besiege 500 Pokémon mit Unown",
+    "rewardText": "Unown wird ein größeres Attacken-Set haben!"
+  },
+  "TYROGUE_NEW_MOVES": {
+    "name": "Tyrogues neue Attacken",
+    "task": "Besiege 500 Pokémon mit Tyrogue",
+    "rewardText": "Tyrogue wird ein größeres Attacken-Set haben!"
+  },
+  "METAPOD_NEW_MOVES": {
+    "name": "Safcons neue Attacken",
+    "task": "Besiege 500 Pokémon mit Safcon",
+    "rewardText": "Safcon wird ein größeres Attacken-Set haben!"
+  }
+}

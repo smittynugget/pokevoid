@@ -1,0 +1,120 @@
+{
+  "console": {
+    "activeBounties": "Aktive Kopfgelder:",
+    "rivalBounties": "Rivalen-Kopfgelder",
+    "smittyBounties": "Smitty-Kopfgelder",
+    "questBounties": "Quest-Kopfgelder",
+    "bountiesCount": "{{title}} ({{current}}/{{max}})",
+    "activeQuests": "Aktive Quests:",
+    "questsCount": "({{current}}/{{max}})",
+    "submit": "Bestätigen",
+    "cancel": "Abbrechen",
+    "invalidConsoleCode": "Ungültiger Konsolencode",
+    "consoleCodeAlreadyUsed": "Konsolencode bereits verwendet",
+    "consoleCodeAccepted": "Konsolencode akzeptiert",
+    "toggleInfo": "im TITEL- oder KAMPF-Bildschirm zu öffnen!",
+    "shopAndConsoleShortcut": "im TITEL- oder KAMPF-Bildschirm zu öffnen!"
+  },
+  "bounty": {
+    "common": {
+      "status": {
+        "active": "AKTIV",
+        "inactive": "INAKTIV"
+      },
+      "baseReward": "Basis-Belohnungsverteilung"
+    },
+    "modalTitle": "Kopfgeld",
+    "status": {
+      "complete": "ABGESCHLOSSEN",
+      "activeStage": "AKTIVE PHASE {{stage}}",
+      "active": "AKTIV"
+    },
+    "sections": {
+      "rewards": {
+        "title": "Belohnungen:",
+        "unknown": "???"
+      },
+      "task": {
+        "title": "Aufgabe:",
+        "singleRun": "EINMALIGE Aufgabe:",
+        "multiRun": "MEHRMALIGE Aufgabe:",
+        "locked": "{{target}} muss erst freigeschaltet werden"
+      }
+    },
+    "error": "Fehler beim Laden des Kopfgelds",
+    "buttons": {
+      "swap": "Kopfgeld tauschen",
+      "activate": "Kopfgeld aktivieren",
+      "back": "Zurück",
+      "cancel": "Abbrechen"
+    },
+    "rival": {
+      "modalTitle": "Rivalen-Trainer Kopfgeld",
+      "invalidTrainer": "Ungültiger Trainer",
+      "task": "Besiege {{trainerName}} - Phase {{stage}}",
+      "progress": {
+        "title": "Phasen-Fortschritt:",
+        "count": "{{current}} / {{max}}"
+      },
+      "rewards": {
+        "stage1": "90% ∞GOLD | 8% ∞GEGENSTAND | 2% Beides",
+        "stage2": "75% ∞GOLD | 15% ∞GEGENSTAND | 10% Beides",
+        "stage3": "60% ∞GOLD | 25% ∞GEGENSTAND | 15% Beides",
+        "stage4": "40% ∞GOLD | 40% ∞GEGENSTAND | 20% Beides",
+        "stage5": "25% ∞GOLD | 45% ∞GEGENSTAND | 30% Beides"
+      }
+    },
+    "quest": {
+      "modalTitle": "Quest-Kopfgeld",
+      "invalidTask": "Ungültige Quest-Aufgabe",
+      "replacement": {
+        "title": "Wähle zu ersetzendes Kopfgeld",
+        "cancel": "Abbrechen"
+      },
+      "rewards": {
+        "default": "50% ∞GOLD | 35% ∞GEGENSTAND | 15% Beides"
+      },
+      "activeQuest": {
+        "modalTitle": "Quest!",
+        "buttons": {
+          "swap": "Quest tauschen",
+          "activate": "Quest aktivieren"
+        },
+        "rewards": {
+          "unlockForm": "Schalte {{pokemonName}}s neue Form frei!"
+        },
+        "progress": {
+          "title": "Phasen-Fortschritt:",
+          "count": "{{current}} / {{max}}"
+        }
+      }
+    },
+    "smitty": {
+      "modalTitle": "Pokemon Smitty-Kopfgeld",
+      "rewards": {
+        "withSpecies": "70% ∞GOLD | 20% ∞GEGENSTAND | 10% Beides",
+        "withoutSpecies": "40% ∞GOLD | 40% ∞GEGENSTAND | 20% Beides"
+      },
+      "task": {
+        "evolveAny": "Entwickle EIN BELIEBIGES Pokemon zu {{formName}}",
+        "evolveSpecific": "Entwickle {{basePokemon}} zu {{formName}}"
+      },
+      "items": {
+        "title": "Benötigte Items:"
+      },
+      "common": {
+        "any": "BELIEBIG"
+      }
+    }
+  },
+  "modeRewards": {
+    "classicModeRewardFusion": "Nutze Fusions-Pokémon!?",
+    "commonModeRewardAbilities": "Über 60 weitere Fähigkeiten für Fähigkeits-Wechsel-Items",
+    "nuzlightModeRewardTypeSwitch": "Primär- / Sekundärtyp tauschen",
+    "nuzlightModeRewardUpdatedInventory": "Inventar aktualisiert!",
+    "nuzlightModeRewardMoveRelease": "Attacke verlernen",
+    "nuzlockeModeRewardRank2": "RANG 2",
+    "accessShopInBattle": "Greife im KAMPF auf den ∞SHOP zu!",
+    "accessQuestsInBattle": "Greife im KAMPF auf QUESTS zu!"
+  }
+} 

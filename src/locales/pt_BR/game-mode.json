@@ -1,0 +1,16 @@
+{
+  "mode": "Modo",
+  "classic": "Jornada",
+  "endless": "Sem Fim",
+  "endlessSpliced": "Sem Fim (Fundido)",
+  "dailyRun": "Desafio Diário",
+  "unknown": "Desconhecido",
+  "challenge": "Desafio",
+  "nuzlocke": "Nuzlocke",
+  "draft": "Rogue",
+  "nuzlight": "Nuzlight",
+  "nightmare": "O Vazio",
+  "nuzlightDraft": "Nuzlight Rogue",
+  "nuzlockeDraft": "Nuzlocke Rogue",
+  "notClassic": "*Quando não estiver no modo Jornada"
+} 

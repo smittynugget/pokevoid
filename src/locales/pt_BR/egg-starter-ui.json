@@ -1,0 +1,11 @@
+{
+  "hatchAndSwap": "Chocar e Trocar",
+  "tooltip": "Verifique os Pokémon chocados e troque 1 por outro (se desejar). O primeiro Pokémon não pode ser trocado.\nPokémon lendários só podem ser trocados com lendários/mega/dyna",
+  "legendaryDisabled": "Necessário Lendário/Mega/Dyna no Time",
+  "onlyOnePokemon": "Não é Possível Trocar: Apenas Um Membro no Time",
+  "swapWithParty": "Trocar com membro do time",
+  "selectLegendaryPartyMember": "Trocar com um lendário/mega/dyna",
+  "selectPartyMember": "Trocar com um membro do time",
+  "confirmSwapMessage": "Trocar {{hatchedPokemon}} com {{partyPokemon}}?",
+  "skipAnimationsPrompt": "Pular todas as animações de chocagem de ovos?"
+} 

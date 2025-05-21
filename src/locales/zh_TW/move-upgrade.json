@@ -1,0 +1,182 @@
+{
+    "rewardTitle": "升級 {{count}}!",
+    "level": "等級",
+    "description": {
+      "power": {
+        "increaseSlight": "略微提高威力 {{powerValue}}。",
+        "increaseModerate": "適度提高威力 {{powerValue}}。",
+        "increaseSignificantWeak": "顯著提高威力（對於較弱的招式）{{powerValue}}。",
+        "increaseVsAccuracyLow": "提高威力 {{powerValue}} 但降低命中率 {{accuracyValue}}。",
+        "increaseVsAccuracyHigh": "大幅提高威力 {{powerValue}} 但降低命中率 {{accuracyValue}}。",
+        "increaseVsPriority": "提高威力 {{powerValue}} 但將優先度設為 {{priorityValue}}。",
+        "increaseVsRecoil": "提高威力 {{powerValue}} 但增加 {{recoilPercent}}% 的反作用傷害。",
+        "increaseVsSelfStatDrop": "提高威力 {{powerValue}} 但使用後降低使用者的 {{statName1}} 和 {{statName2}} {{stages}} 級。"
+      },
+      "accuracy": {
+        "increasePercentage": "提高命中率 {{value}}%。",
+        "perfectAccuracy": "使命中率達到100%，但降低威力 {{powerValue}}。",
+        "perfectAccuracyNoPenalty": "使命中率達到100%。",
+        "increaseVsPowerLow": "提高命中率 {{accuracyValue}}% 但降低威力 {{powerValue}}。",
+        "increaseVsPowerHigh": "大幅提高命中率 {{accuracyValue}}% 但降低威力 {{powerValue}}。",
+        "increaseVsPp": "提高命中率 {{accuracyValue}}% 但降低最大PP值。",
+        "setAccuracy": "將命中率設為 {{value}}%。"
+      },
+      "effectChance": {
+        "increaseToValue": "提高追加效果的發動機率至 {{value}}%。",
+        "guaranteeVsPower": "保證追加效果發動，但降低威力 {{powerValue}}。",
+        "guaranteeVsAccuracy": "保證追加效果發動，但降低命中率 {{accuracyValue}}%（變化類招式）。",
+        "guaranteeVsPp": "保證追加效果發動，但降低最大PP值。"
+      },
+      "status": {
+        "addChance": "增加 {{chance}}% 機率造成 {{statusName}}。",
+        "addChanceVsPower": "增加 {{chance}}% 機率造成 {{statusName}}，但降低威力 {{powerValue}}。",
+        "addLeechSeed": "增加寄生種子效果（對非草屬性），但降低威力 {{powerValue}}。",
+        "changeEffect": "將追加效果改為 {{chance}}% 機率造成 {{statusName}}。",
+        "addSecondEffect": "{{chance}}% 機率造成 {{statusName1}} 或 {{statusName2}}，但降低威力 {{powerValue}}。",
+        "addStatusViaStatusMove": "造成 {{statusName}}（命中率變為 {{accuracyValue}}%）。"
+      },
+      "flinch": {
+        "addChance": "增加 {{chance}}% 機率使目標畏縮。",
+        "addChanceLow": "增加 {{chance}}% 機率使目標畏縮。",
+        "addChanceHighVsPower": "增加 {{chance}}% 機率使目標畏縮，但降低威力 {{powerValue}}。",
+        "addChancePriorityVsPower": "增加 {{chance}}% 機率使目標畏縮（先制招式），但降低威力 {{powerValue}}。",
+        "increaseChance": "提高畏縮機率至 {{chance}}%。",
+        "increaseChanceVsPower": "提高畏縮機率至 {{chance}}%，但降低威力 {{powerValue}}。"
+      },
+      "stat": {
+        "addRaiseSelfSingle": "提高使用者的 {{statName}} {{stages}} 級。改變機率為 {{chance}}%。",
+        "addRaiseSelfMultiple": "提高使用者的 {{statName1}} 和 {{statName2}} {{stages}} 級。",
+        "increaseRaiseSelf": "增強自我提升效果，提高 {{statName}} {{stages}} 級。",
+        "addAnotherRaiseSelf": "除了 {{existingStats}} 外，還提高使用者的 {{newStatName}} {{stages}} 級。",
+        "addLowerTargetSingle": "降低目標的 {{statName}} {{stages}} 級。命中率變為 {{accuracy}}%。威力減少 {{powerValue}}。",
+        "addLowerTargetHarshChance": "{{chance}}% 機率大幅降低目標的 {{statName}} {{stages}} 級，但降低威力 {{powerValue}}。",
+        "addLowerTargetHarsh": "大幅降低目標的 {{statName}} {{stages}} 級（命中率變為 {{accuracy}}%）。",
+        "addLowerTargetMultiple": "降低目標的 {{statName1}} 和 {{statName2}} {{stages}} 級（命中率變為 {{accuracy}}%）。",
+        "increaseLowerTarget": "增強降低目標能力效果，降低 {{statName}} {{stages}} 級。命中率變為 {{accuracy}}%。威力減少 {{powerValue}}。",
+        "increaseLowerTargetChance": "提高降低目標能力的機率至 {{chance}}%。",
+        "guaranteeLowerTarget": "保證降低目標能力的效果。威力減少 {{powerValue}}。命中率減少 {{accuracyValue}}。",
+        "addAnotherLowerTarget": "除了 {{existingStats}} 外，還降低目標的 {{newStatName}} {{stages}} 級。威力減少 {{powerValue}}。",
+        "addLowerTargetChance": "{{chance}}% 機率降低目標的 {{statName}} {{stages}} 級，但降低威力 {{powerValue}}。"
+      },
+      "type": {
+        "changePowerBoost": "將屬性改為 {{typeName}} 並提高威力 {{powerValue}}。",
+        "changeAccuracyBoost": "將屬性改為 {{typeName}} 並提高命中率 {{accuracyValue}}%。",
+        "changeAddStatus": "將屬性改為 {{typeName}} 並增加 {{chance}}% 機率造成 {{statusName}}，但降低威力 {{powerValue}}。",
+        "changeAddHighCrit": "將屬性改為 {{typeName}} 並增加高爆擊率。",
+        "addTypeEffectiveness": "除了自身屬性外，還基於 {{typeName}} 屬性的克制關係造成傷害。提高威力 {{powerValue}}。",
+        "superEffectiveVsType": "對 {{targetTypeName}} 屬性的寶可夢總是造成效果拔群的傷害。",
+        "becomeTypeless": "變為無屬性（傷害始終為正常效果）並提高威力 {{powerValue}}。",
+        "matchUserType": "招式的屬性始終與使用者的主要屬性一致。",
+        "weatherBall": "招式的屬性根據天氣變化（如天氣球）。",
+        "terrainPulse": "招式的屬性根據場地變化（如大地波動）。",
+        "hiddenPower": "招式的屬性根據使用者的特性變化（如覺醒力量）。"
+      },
+      "multiHit": {
+        "add2to5": "攻擊2-5次，威力變為 {{powerValue}}。效果機率設為每次攻擊 {{chance}}%。機率和威力無法提升。",
+        "addExact": "精確攻擊 {{hits}} 次，威力變為 {{powerValue}}。效果機率設為每次攻擊 {{chance}}%。機率和威力無法提升。",
+        "addCheckAll": "精確攻擊 {{hits}} 次，每次單獨判定命中，威力變為 {{powerValue}}，命中率: {{accuracyReduction}}%。效果機率設為每次攻擊 {{chance}}%。機率和威力無法提升。",
+        "changeToExact": "攻擊 {{hits}} 次，威力變為 {{powerValue}}。效果機率設為每次攻擊 {{chance}}%。機率和威力無法提升。",
+        "changeToRange": "攻擊 {{range}} 次，威力變為 {{powerValue}}。效果機率設為每次攻擊 {{chance}}%。機率和威力無法提升。",
+        "enableCheckAll": "啟用每次攻擊單獨判定命中（連續攻擊），威力變為 {{powerValue}} 且命中率: {{accuracyValue}}%。機率和威力無法提升。",
+        "disableCheckAll": "禁用每次攻擊單獨判定命中，威力變為 {{powerValue}} 且命中率: {{accuracyValue}}%。機率和威力無法提升。"
+      },
+      "heal": {
+        "addHitHeal": "恢復造成傷害的 {{percent}}%。",
+        "addHitHealVsPower": "恢復造成傷害的 {{percent}}%，但降低威力 {{powerValue}}。",
+        "increaseHitHealVsPower": "增強吸取效果以恢復造成傷害的 {{percent}}%，但降低威力 {{powerValue}}。",
+        "addSelfHeal": "使用者恢復最大HP的 {{percent}}%。",
+        "addPlantHeal": "如果青草場地處於激活狀態，使用者恢復HP。",
+        "addSandHeal": "如果沙暴處於激活狀態，使用者恢復HP。",
+        "increaseSelfHeal": "增加自我治療量至最大HP的 {{percent}}%。"
+      },
+      "recoil": {
+        "addVsPower": "增加 {{percent}}% 反作用傷害，但提高威力 {{powerValue}}。",
+        "addVsPowerAccuracy": "增加 {{percent}}% 反作用傷害，但提高威力 {{powerValue}} 並降低命中率 {{accuracyValue}}%。",
+        "increaseVsPower": "增加反作用傷害至 {{percent}}%，但提高威力 {{powerValue}}。",
+        "decreaseVsPower": "減少反作用傷害至 {{percent}}%，但降低威力 {{powerValue}}。",
+        "removeVsPower": "移除反作用傷害，但降低威力 {{powerValue}}。"
+      },
+      "sacrificial": {
+        "addFull": "使用後使用者陷入瀕死，但威力變為 {{power}}。",
+        "addHalf": "使用後使用者失去50%最大HP，但威力變為 {{power}}。",
+        "addOnHit": "如果招式命中，使用者陷入瀕死，但威力變為 {{power}}。"
+      },
+      "crit": {
+        "addHighCritVsPower": "增加高爆擊率，但降低威力 {{powerValue}}（針對高威力招式）。",
+        "addHighCrit": "增加高爆擊率。",
+        "addHighCritAndPower": "增加高爆擊率並提高威力 {{powerValue}}。",
+        "upgradeToCritOnlyVsPower": "升級為必定爆擊，但降低威力 {{powerValue}}。",
+        "upgradeToCritOnlyVsAccuracy": "升級為必定爆擊，但降低命中率 {{accuracyValue}}%。"
+      },
+      "flags": {
+        "ignoreProtect": "招式現在可以穿透守住/看穿，但降低威力 {{powerValue}}。",
+        "ignoreAbilities": "招式現在無視目標的特性，並提高威力 {{powerValue}}。",
+        "soundBased": "招式變為聲音類（可穿透替身）並提高威力 {{powerValue}}。",
+        "punchingMove": "招式變為拳類（受鐵拳加成）並提高威力 {{powerValue}}。",
+        "slicingMove": "招式變為斬擊類（受鋒利加成）並提高威力 {{powerValue}}。",
+        "pulseMove": "招式變為波動類（受超級發射器加成）並提高威力 {{powerValue}}。",
+        "bitingMove": "招式變為咬咬類（受強壯下顎加成）並提高威力 {{powerValue}}。",
+        "windMove": "招式變為風類（受疾風之翼/威力影響）並提高威力 {{powerValue}}。",
+        "disableContact": "招式不再直接接觸並提高威力 {{powerValue}}。",
+        "enableContact": "招式現在直接接觸並提高威力 {{powerValue}}。",
+        "ignoreStatChanges": "招式現在無視目標的防禦能力變化和迴避率，並提高威力 {{powerValue}}。",
+        "removeScreens": "招式現在移除反射壁/光牆/極光幕，並提高威力 {{powerValue}}。",
+        "thawTarget": "招式現在能解凍目標，並提高威力 {{powerValue}}。"
+      },
+      "priority": {
+        "increase": "提高優先度至 {{value}}，但降低威力 {{powerValue}}。",
+        "decrease": "降低優先度至 {{value}}，但提高威力 {{powerValue}}。",
+        "conditionalTerrain": "如果 {{terrain}} 場地激活，則提高優先度至 {{value}} 並提高威力 {{powerValue}}。",
+        "conditionalFirstTurn": "如非首回合則失敗，提高優先度至 {{value}} 並提高威力 {{powerValue}}。",
+        "conditionalTargetMoved": "如果目標在本回合已行動，則提高優先度至 {{value}} 並提高威力 {{powerValue}}。"
+      },
+      "category": {
+        "changeToSpecial": "將分類改為特殊。",
+        "changeToSpecialVsDef": "將分類改為特殊，但使用目標的防禦計算傷害。",
+        "changeToPhysical": "將分類改為物理。",
+        "changeToPhysicalVsSpDef": "將分類改為物理，但使用目標的特防計算傷害。",
+        "changeStatusToDamage": "將分類改為 {{category}} 並設置威力為 {{power}}。"
+      },
+      "misc": {
+        "addTrap": "使用 {{trapName}} 困住目標數回合，但降低威力 {{powerValue}}。",
+        "addForceSwitch": "強制目標切換，但降低威力 {{powerValue}}。",
+        "addGrounding": "使空中目標著陸（移除飛行屬性免疫）。",
+        "fixedDamageLevel": "改變傷害計算，造成等同於使用者等級的固定傷害（替代基礎威力）。",
+        "fixedDamageValue": "改變傷害計算，造成固定 {{value}} HP的傷害。",
+        "fixedDamageTargetHalfHp": "改變傷害計算，造成等同於目標當前HP一半的傷害（替代基礎威力）。",
+        "addSurviveDamage": "總是讓目標保留至少1HP（如假斬）並提高威力 {{powerValue}}。",
+        "addWeightPowerTarget": "威力基於目標的體重增加（如下盤踢）。",
+        "addWeightPowerCompare": "使用者比目標越重，威力越高（如重磅衝撞）。",
+        "addSpeedPowerSlower": "使用者比目標越慢，威力越高（如陀螺球）。",
+        "addSpeedPowerFaster": "使用者比目標越快，威力越高（如電球）。",
+        "addHpPowerHighHp": "使用者當前HP越高，威力越高（最大威力：{{maxPower}}）。",
+        "addHpPowerLowHp": "使用者當前HP越低，威力越高（如報恩）。",
+        "addSwitchOut": "使用後切換出場，但降低威力 {{powerValue}}（如伏特替換）。",
+        "addChargeTurn": "攻擊前增加一個蓄力回合，但提高威力 {{powerValue}}。",
+        "addChargeTurnWithBoost": "增加一個蓄力回合（提高使用者的 {{statName}} {{stages}} 級）並提高威力 {{powerValue}}。",
+        "addStealItemChance": "{{chance}}% 機率偷取目標持有的道具。",
+        "addStealItemGuaranteed": "必定偷取目標持有的道具，但降低威力 {{powerValue}}。",
+        "addRemoveItem": "移除目標持有的道具並提高威力 {{powerValue}}。",
+        "powerBoostWeather": "如果 {{weather}} 激活，威力翻倍。",
+        "powerBoostTerrain": "如果 {{terrain}} 場地激活且目標在地面上，威力翻倍。",
+        "powerBoostConsecutive": "每次連續成功使用，威力翻倍（最多4倍）。",
+        "powerBoostTurnDamaged": "如果使用者在本回合被目標傷害，威力翻倍。"
+      },
+      "statusSpecific": {
+        "increaseFieldDuration": "增加此招式設置的場地效果（屏障、順風等）持續時間至 {{turns}} 回合。",
+        "increaseVolatileDuration": "增加此招式造成的易變狀態（混亂、挑釁等）持續時間。",
+        "ignoreProtect": "招式現在可以影響使用守住/看穿的目標。",
+        "addSelfHeal": "使用者恢復最大HP的 {{percent}}%。",
+        "addSelfBoost": "提高使用者的 {{statName}} {{stages}} 級。",
+        "addArenaTrap": "在對手場地一側設置 {{trapName}} 陷阱。",
+        "setWeather": "將天氣改為 {{weather}}。",
+        "setTerrain": "將場地改為 {{terrain}}。",
+        "clearWeather": "清除當前天氣。",
+        "clearTerrain": "清除當前場地。"
+      }
+    },
+  "moveTriggers": {
+      "loweredItsHead": "{{pokemonName}}\n低下了頭！",
+      "tookInSunlight": "{{pokemonName}}\n吸收了陽光！"
+  }
+} 

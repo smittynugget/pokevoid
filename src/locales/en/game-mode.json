@@ -1,0 +1,16 @@
+{
+  "mode": "Mode",
+  "classic": "Journey",
+  "endless": "Endless",
+  "endlessSpliced": "Endless (Spliced)",
+  "dailyRun": "Daily Run",
+  "unknown": "Unknown",
+  "challenge": "Challenge",
+  "nuzlocke": "Nuzlocke",
+  "draft": "Rogue",
+  "nuzlight": "Nuzlight",
+  "nightmare": "The Void",
+  "nuzlightDraft": "Nuzlight Rogue",
+  "nuzlockeDraft": "Nuzlocke Rogue",
+  "notClassic": "*While not in Journey mode"
+}

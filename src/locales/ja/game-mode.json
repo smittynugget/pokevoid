@@ -1,0 +1,16 @@
+{
+  "mode": "モード",
+  "classic": "ジャーニ",
+  "endless": "エンドレス",
+  "endlessSpliced": "エンドレス（融合）",
+  "dailyRun": "デイリーラン",
+  "unknown": "不明",
+  "challenge": "チャレンジ",
+  "nuzlocke": "ナズロック",
+  "draft": "ローグ",
+  "nuzlight": "ナズライト",
+  "nightmare": "虚無",
+  "nuzlightDraft": "ナズライトローグ",
+  "nuzlockeDraft": "ナズロックローグ",
+  "notClassic": "*ジャーニモード以外の場合"
+} 

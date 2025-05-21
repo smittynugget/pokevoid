@@ -1,0 +1,257 @@
+{
+  "tartauros": {
+    "name": "タルタウロス"
+  },
+  "zamowak": {
+    "name": "ゾンビロワク"
+  },
+  "greyokai": {
+    "name": "オバケニンジャ"
+  },
+  "jormunza": {
+    "name": "ヨルムンザ"
+  },
+  "licthulhu": {
+    "name": "リックトゥルフ"
+  },
+  "plasmist": {
+    "name": "プラズミスト"
+  },
+  "plustra": {
+    "name": "プラルトラ"
+  },
+  "hellchar": {
+    "name": "ヘルチャー"
+  },
+  "feareon": {
+    "name": "コワオン"
+  },
+  "omninom": {
+    "name": "オムノム"
+  },
+  "necromew": {
+    "name": "ネクロミュウ"
+  },
+  "diablotar": {
+    "name": "デビルバンギラス"
+  },
+  "smitom": {
+    "name": "スミトム"
+  },
+  "genomander": {
+    "name": "イビルマンダー"
+  },
+  "tormentle": {
+    "name": "イタミートル"
+  },
+  "terrorbulb": {
+    "name": "キョーフバルブ"
+  },
+  "dankitar": {
+    "name": "メームバンギラス"
+  },
+  "gastmoji": {
+    "name": "ゴーストモジ"
+  },
+  "noxabis": {
+    "name": "ヤミヌビス"
+  },
+  "floravora": {
+    "name": "フラワーボラ"
+  },
+  "chimerdrio": {
+    "name": "キメラドリオ"
+  },
+  "clefangar": {
+    "name": "ピクシーゲンガー"
+  },
+  "terroragon": {
+    "name": "テラードラゴン"
+  },
+  "godread": {
+    "name": "ゴッドドレッド"
+  },
+  "duschmare": {
+    "name": "ヨナイド"
+  },
+  "abyssuma": {
+    "name": "アビスマ"
+  },
+  "omnitto": {
+    "name": "オムニト"
+  },
+  "umbraffe": {
+    "name": "シャドーラフ"
+  },
+  "tartadra": {
+    "name": "タルタドラ"
+  },
+  "tengale": {
+    "name": "テンゲイル"
+  },
+  "hyplagus": {
+    "name": "ヒプノグス"
+  },
+  "demonoth": {
+    "name": "デモンモス"
+  },
+  "despeko": {
+    "name": "ゼツボウペコ"
+  },
+  "zoomer": {
+    "name": "ソクドー"
+  },
+  "voidash": {
+    "name": "ボイドダッシュ"
+  },
+  "wahcky": {
+    "name": "ワッキールイージ"
+  },
+  "wahzebub": {
+    "name": "ワールゼブブ"
+  },
+  "fineferno": {
+    "name": "ダイジョウブイヌ"
+  },
+  "sorbred": {
+    "name": "スポブレッド"
+  },
+  "corpanzee": {
+    "name": "カイシャパンジー"
+  },
+  "plankling": {
+    "name": "プチプランク"
+  },
+  "timbrick": {
+    "name": "モクザイリック"
+  },
+  "plankult": {
+    "name": "イビルプランク"
+  },
+  "sorbobo": {
+    "name": "ゴーストスポンジ"
+  },
+  "hamtaro": {
+    "name": "ハム太郎"
+  },
+  "elmold": {
+    "name": "エルモールド"
+  },
+  "funghomp": {
+    "name": "キノコパック"
+  },
+  "riddicus": {
+    "name": "ナゾーカス"
+  },
+  "boxecutive": {
+    "name": "ハコヤクイン"
+  },
+  "patnius": {
+    "name": "パトニアス"
+  },
+  "tentacrim": {
+    "name": "タコヤクザ"
+  },
+  "undeadtunasmit": {
+    "name": "シニマグロ"
+  },
+  "scarablanc": {
+    "name": "スカラブラン"
+  },
+  "batmare": {
+    "name": "コウモリメア"
+  },
+  "smitward": {
+    "name": "スミッワード"
+  },
+  "niteknite": {
+    "name": "ヨルナイト"
+  },
+  "dignitier": {
+    "name": "ホリキシ"
+  },
+  "cephaloom": {
+    "name": "タコグルーム"
+  },
+  "smitshade": {
+    "name": "スミシェード"
+  },
+  "smitspect": {
+    "name": "スミスペクター"
+  },
+  "smitwraith": {
+    "name": "スミレイス"
+  },
+  "smiternal": {
+    "name": "スミターナル"
+  },
+  "smittyfish": {
+    "name": "スミティフィッシュ"
+  },
+  "smittellect": {
+    "name": "スミテレクト"
+  },
+  "gallux": {
+    "name": "ガルクス"
+  },
+  "hostmitty": {
+    "name": "ホストミティ"
+  },
+  "smittynarie": {
+    "name": "スミリオネア"
+  },
+  "batboxbaba": {
+    "name": "バットハコババ"
+  },
+  "batboxbeyond": {
+    "name": "バットハコムコウ"
+  },
+  "victainer": {
+    "name": "ショウリナー"
+  },
+  "kakopier": {
+    "name": "コピーカカシ"
+  },
+  "karasu-me": {
+    "name": "カラスメ"
+  },
+  "bullktopus": {
+    "name": "ウシタコ"
+  },
+  "gumugumu": {
+    "name": "ゴムゴム"
+  },
+  "santoryu": {
+    "name": "サントウリュウ"
+  },
+  "roostace": {
+    "name": "ニワトリユースタス"
+  },
+  "bogace": {
+    "name": "オバケユースタス"
+  },
+  "milliant": {
+    "name": "ヒャクマンアリ"
+  },
+  "churry": {
+    "name": "チュリチェリー"
+  },
+  "gazorpsmitfield": {
+    "name": "ガゾープスミットフィールド"
+  },
+  "hologrick": {
+    "name": "ホログリック"
+  },
+  "seekling": {
+    "name": "シークリン"
+  },
+  "picklisk": {
+    "name": "ピックルリック"
+  },
+  "bravehound": {
+    "name": "ブレイブハウンド"
+  },
+  "missingno": {
+    "name": "ミッシングナン"
+  }
+}

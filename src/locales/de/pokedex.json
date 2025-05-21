@@ -1,0 +1,13 @@
+{
+  "voidex": "Voidex",
+  "enemyPrefix": "Gegner",
+  "partyPrefix": "Team",
+  "evolutionPrefix": "Entwicklung",
+  "allOtherPokemon": "Alle anderen Pokémon",
+  "pokemonDataNotFound": "Pokémon-Daten nicht gefunden.",
+  "errorLoadingSprite": "Fehler beim Laden des Sprites.",
+  "abilities": "Fähigkeiten",
+  "learnableMoves": "Erlernbare Attacken",
+  "eggMoves": "Ei-Attacken",
+  "loading": "Laden..."
+} 

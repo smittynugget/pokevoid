@@ -1,0 +1,13 @@
+{
+  "voidex": "Voidex",
+  "enemyPrefix": "Enemy",
+  "partyPrefix": "Party",
+  "evolutionPrefix": "Evolution",
+  "allOtherPokemon": "All Other Pokémon",
+  "pokemonDataNotFound": "Pokémon data not found.",
+  "errorLoadingSprite": "Error loading sprite.",
+  "abilities": "Abilities",
+  "learnableMoves": "Learnable Moves",
+  "eggMoves": "Egg Moves",
+  "loading": "Loading..."
+} 

@@ -1,0 +1,42 @@
+{
+  "titles": {
+    "newPokemon": "Nuovo Pokémon!",
+    "newFusion": "Nuova Fusione!",
+    "newItem": "Nuovo Strumento!",
+    "newGameOverItem": "Ricompensa Game Over!",
+    "newRibbonItem": "Ricompensa Fiocco!",
+    "moneyObtained": "Soldi Ottenuti!",
+    "newShopUnlock": "Sblocco Negozio!",
+    "newUnlock": "Nuovo Sblocco!",
+    "newSmittyForm": "Nuova Forma di SMITTY!",
+    "newForm": "Nuova Forma!",
+    "rivalLost": "RIVALE SCONFITTO...",
+    "modeChange": "CAMBIO MODALITÀ!",
+    "rewardObtained": "Ricompensa Ottenuta!",
+    "voidOvertaken": "IL VUOTO È STATO SOPRAFFATTO!",
+    "newShopItem": "Nuovo Oggetto del Negozio",
+    "manyMoreNuggets": "E Tante Altre Pepite Succose!"
+  },
+  "gameModes": {
+    "nuzlocke": {
+      "description": "Nuzlocke: I Pokémon svenuti vengono\nrimossi dalla tua squadra..."
+    },
+    "draft": {
+      "description": "Rogue: Scegli 2 Pokémon\ncasuali per iniziare..."
+    },
+    "nuzlight": {
+      "description": "Nuzlight: Nessun oggetto\ndi recupero disponibile..."
+    },
+    "nightmare": {
+      "description": "Nuzmare: Nuzlight + Nuzlocke"
+    },
+    "default": {
+      "description": "La modalità di gioco è stata cambiata!"
+    }
+  },
+  "ui": {
+    "rivalVoid": "{{name}} è svanito nel vuoto...",
+    "error": "Errore nel caricamento della ricompensa",
+    "new": "NUOVO"
+  }
+} 

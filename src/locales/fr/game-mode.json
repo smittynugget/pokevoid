@@ -1,0 +1,16 @@
+{
+  "mode": "Mode",
+  "classic": "Aventure",
+  "endless": "Sans Fin",
+  "endlessSpliced": "Sans Fin (Fusionné)",
+  "dailyRun": "Défi Quotidien",
+  "unknown": "Inconnu",
+  "challenge": "Défi",
+  "nuzlocke": "Nuzlocke",
+  "draft": "Rogue",
+  "nuzlight": "Nuzlight",
+  "nightmare": "Le Néant",
+  "nuzlightDraft": "Nuzlight Rogue",
+  "nuzlockeDraft": "Nuzlocke Rogue",
+  "notClassic": "*Hors du mode Aventure"
+} 

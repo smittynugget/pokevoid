@@ -1,0 +1,16 @@
+{
+  "mode": "Modus",
+  "classic": "Reise",
+  "endless": "Endlos",
+  "endlessSpliced": "Endlos (Gemischt)",
+  "dailyRun": "Täglicher Lauf",
+  "unknown": "Unbekannt",
+  "challenge": "Herausforderung",
+  "nuzlocke": "Nuzlocke",
+  "draft": "Rogue",
+  "nuzlight": "Nuzlight",
+  "nightmare": "Die Leere",
+  "nuzlightDraft": "Nuzlight Rogue",
+  "nuzlockeDraft": "Nuzlocke Rogue",
+  "notClassic": "*Wenn nicht im Reise-Modus"
+} 

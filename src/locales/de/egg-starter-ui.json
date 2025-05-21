@@ -1,0 +1,11 @@
+{
+  "hatchAndSwap": "Schlüpfen & Tauschen",
+  "tooltip": "Überprüfe geschlüpfte Pokémon und tausche 1 gegen ein anderes (wenn gewünscht). Das erste Pokémon kann nicht getauscht werden.\nLegendäre können nur mit Legendären/Mega/Dynamax getauscht werden",
+  "legendaryDisabled": "Legendäres/Mega/Dyna-Pokémon im Team benötigt",
+  "onlyOnePokemon": "Tausch nicht möglich: Nur ein Teammitglied",
+  "swapWithParty": "Mit Teammitglied tauschen",
+  "selectLegendaryPartyMember": "Mit einem legendären/Mega/Dyna tauschen",
+  "selectPartyMember": "Mit einem Teammitglied tauschen",
+  "confirmSwapMessage": "{{hatchedPokemon}} mit {{partyPokemon}} tauschen?",
+  "skipAnimationsPrompt": "Alle Ei-Schlüpf-Animationen überspringen?"
+} 

@@ -1,0 +1,82 @@
+{
+  "title": "Create a Custom Glitch Evolution",
+  "mods": "Mods",
+  "testMods": "Test Your Mods",
+  "uploadMods": "Upload Mods",
+  "createGlitchEvolution": "Create Glitch Evolution",
+  "removeMods": "Remove Mods",
+  "shareAndTakeMods": "Share & Take Mods",
+  "noModsToRemove": "No mods to remove.",
+  "errorLoadingMods": "Error loading mods. Please try again.",
+  "modRemoved": "{{name}} removed successfully.",
+  "errorRemovingMod": "Error removing mod. Please try again.",
+  "uploadSuccess": "Successfully uploaded {{count}} mod(s):",
+  "uploadFailed": "Failed to upload {{count}} mod(s):",
+  "reloadRequired": "Game will reload to apply changes.",
+  "fields": {
+    "species": "Species",
+    "formName": "Form Name (English)*",
+    "formLanguages": "Form Name (Additional Languages)",
+    "primaryType": "Primary Type",
+    "secondaryType": "Secondary Type",
+    "ability1": "Ability 1",
+    "ability2": "Ability 2",
+    "hiddenAbility": "Hidden Ability",
+    "stat1": "Stat 1 to Boost",
+    "stat2": "Stat 2 to Boost",
+    "stat3": "Stat 3 to Boost",
+    "distributionType": "Stat Boost Distribution Type",
+    "frontSprite": "Pokémon Front Sprite (150-200px)",
+    "backSprite": "Pokémon Back Sprite (150-200px)",
+    "rivalTrainer": "Rival",
+    "orRivalTrainer": "or Rival"
+  },
+  "distributionTypes": {
+    "even": "Even (+33% each Stat)",
+    "twoPriority": "Dual Priority (Stat 1 +40% | Stat 2 +40% | Stat 3 +20%)",
+    "scaling": "Scaled (Stat 1 +45% | Stat 2 +35% | Stat 3 +20%)",
+    "topPriority": "Top Priority (Stat 1 +40% | Stat 2 +30% | Stat 3 +30%)"
+  },
+  "buttons": {
+    "saveAndAdd": "Save & Reload",
+    "cancel": "Cancel"
+  },
+  "validation": {
+    "requiredField": "This field is required",
+    "invalidImage": "Invalid image format or size",
+    "imageSize": "Image should be 150-200px"
+  },
+  "statusMessages": {
+    "creatingMod": "Creating mod...",
+    "success": "Glitch form mod created and saved successfully!",
+    "downloadReady": "Your mod is ready to download",
+    "error": "Error creating mod: {{message}}",
+    "storageError": "Mod created but not saved to storage. You can still download it."
+  },
+  "sections": {
+    "basicInformation": "Basic Information",
+    "typesAbilities": "Types and Abilities",
+    "stats": "Stats",
+    "sprites": "Sprites",
+    "rivalTrainer": "Rivals That Reward This Form"
+  },
+  "imageUpload": {
+    "uploadButton": "Upload Image",
+    "noFileSelected": "No file selected",
+    "invalidSize": "Invalid image size (must be 150-200px)"
+  },
+  "dropdowns": {
+    "selectOptional": "- Select (Optional) -"
+  },
+  "languages": {
+    "es": "Spanish",
+    "fr": "French",
+    "de": "German",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "pt-BR": "Portuguese (Brazil)",
+    "it": "Italian",
+    "zh-TW": "Chinese (Traditional)",
+    "zh-CN": "Chinese (Simplified)"
+  }
+} 
