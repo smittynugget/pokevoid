@@ -2,7 +2,7 @@
 
 A fusion of Pokémon catching and battling with challenging roguelike gameplay. Every run is a fresh gauntlet of Pokémon battles! You'll progress through floors packed with unpredictable clashes. facing random pokemon, rivals, legendary bosses, evil teams, all while building your team on the fly.
 
-PokéVoid lovingly builds upon PokeRogue's excellent gameplay and adds 12 months worth of dedicated work, to make an experience unlike any other!
+PokéVoid lovingly builds upon PokeRogue's excellent gameplay and adds 14 months worth of dedicated work, to make an experience unlike any other!
 
 
 #### Running Locally
