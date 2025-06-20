@@ -4,6 +4,7 @@ import {getPokemonSpecies} from "#app/data/pokemon-species";
 import {Species} from "#enums/species";
 import {SelectModifierPhase} from "#app/phases/select-modifier-phase";
 import { SacrificeToggleModifier } from "#app/modifier/modifier.ts";
+import { PathNodeTypeFilter } from "#app/modifier/modifier-type";
 
 export class SelectNightmareDraftPhase extends Phase {
     constructor(scene: BattleScene) {
@@ -42,8 +43,8 @@ export class SelectNightmareDraftPhase extends Phase {
                     sacrificeModifiers.forEach(m => this.scene.removeModifier(m));
                     this.scene.gameData.sacrificeToggleOn = false;
                 }
-            }));
-        }));
+            }, PathNodeTypeFilter.NONE));
+        }, PathNodeTypeFilter.NONE));
 
         this.end();
     }

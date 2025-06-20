@@ -95,7 +95,7 @@ export class UiInputs {
       
       [Button.CYCLE_FUSION]:   () => this.buttonCycleOption(Button.CYCLE_FUSION),
       [Button.CYCLE_NATURE]:    () => this.buttonCycleOption(Button.CYCLE_NATURE),
-      [Button.V]:               () => this.buttonCycleOption(Button.V),
+      [Button.CYCLE_VARIANT]:    () => this.buttonCycleOption(Button.CYCLE_VARIANT),
       [Button.SPEED_UP]:        () => this.buttonSpeedChange(),
       [Button.SLOW_DOWN]:       () => this.buttonSpeedChange(false),
       [Button.CONSOLE]: () => this.buttonConsole(),
@@ -119,10 +119,9 @@ export class UiInputs {
       [Button.CYCLE_FORM]:      () => undefined,
       [Button.CYCLE_GENDER]:    () => undefined,
       [Button.CYCLE_ABILITY]:   () => undefined,
-      
       [Button.CYCLE_FUSION]:   () => undefined,
       [Button.CYCLE_NATURE]:    () => undefined,
-      [Button.V]:               () => this.buttonInfo(false),
+      [Button.CYCLE_VARIANT]:               () => this.buttonInfo(false),
       [Button.SPEED_UP]:        () => undefined,
       [Button.SLOW_DOWN]:       () => undefined,
       [Button.CONSOLE]: () => undefined,
@@ -270,7 +269,10 @@ export class UiInputs {
           break;
         case Mode.COMMAND:
         case Mode.MODIFIER_SELECT:
-          const slotId = this.scene.sessionSlotId || 0;
+          if (this.scene.sessionSlotId < 0) {
+            break;
+          }
+          const slotId = this.scene.sessionSlotId;
           
           (async () => {
             try {
@@ -306,7 +308,7 @@ export class UiInputs {
           break;
       }
     }
-    else if (button === Button.V) {
+    else if (button === Button.CYCLE_VARIANT) {
       const shopUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
       if (!shopUnlocked && (currentMode === Mode.TITLE || currentMode === Mode.COMMAND)) {
         return;
@@ -328,8 +330,13 @@ export class UiInputs {
       }
     } else if (button === Button.CYCLE_FORM && (currentMode === Mode.TITLE || currentMode === Mode.COMMAND)) {
       this.scene.ui.handleSaveButtonClick(this.scene as BattleScene);
-    } else if (button === Button.CYCLE_NATURE && (currentMode === Mode.TITLE)) {
-      activateSmitomTalk(this.scene);
+    } else if (button === Button.CYCLE_NATURE) {
+      if((currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.COMMAND) && this.scene.gameMode.isChaosMode) {
+          this.scene.ui.setOverlayMode(Mode.BATTLE_PATH, { viewOnly: true });
+      }
+      else if (currentMode === Mode.TITLE) {
+        activateSmitomTalk(this.scene);
+      }
     }
   }
 

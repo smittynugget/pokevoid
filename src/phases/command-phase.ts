@@ -1,5 +1,5 @@
 import BattleScene from "#app/battle-scene.js";
-import { TurnCommand, BattleType } from "#app/battle.js";
+import { TurnCommand, BattleType, DynamicModes } from "#app/battle.js";
 import { applyCheckTrappedAbAttrs, CheckTrappedAbAttr } from "#app/data/ability.js";
 import { TrappedTag, EncoreTag } from "#app/data/battler-tags.js";
 import { MoveTargetSet, getMoveTargets } from "#app/data/move.js";
@@ -25,6 +25,7 @@ import { BattleSpec } from "#app/enums/battle-spec.ts";
 import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
 import { QuestState, QuestUnlockables } from "#app/system/game-data.js";
 import { MoveUpgradePhase } from "./move-upgrade-phase.js";
+import { getDynamicModeLocalizedString } from "#app/battle.js";
 
 export class CommandPhase extends FieldPhase {
   protected fieldIndex: integer;
@@ -44,8 +45,6 @@ export class CommandPhase extends FieldPhase {
     // }
 
     if (this.fieldIndex) {
-      // If we somehow are attempting to check the right pokemon but there's only one pokemon out
-      // Switch back to the center pokemon. This can happen rarely in double battles with mid turn switching
       if (this.scene.getPlayerField().filter(p => p.isActive()).length === 1) {
         this.fieldIndex = FieldPosition.CENTER;
       } else {
@@ -165,16 +164,29 @@ export class CommandPhase extends FieldPhase {
         this.scene.currentBattle.turnCommands[this.fieldIndex] = turnCommand;
         success = true;
       } else if (cursor < playerPokemon.getMoveset().length) {
-        const move = playerPokemon.getMoveset()[cursor]!; //TODO: is this bang correct?
+        const move = playerPokemon.getMoveset()[cursor]!;
         this.scene.ui.setMode(Mode.MESSAGE);
 
-        // Decides between a Disabled, Not Implemented, or No PP translation message
-        const errorMessage =
-              playerPokemon.summonData.disabledMove === move.moveId ? "battle:moveDisabled" :
-                move.getName().endsWith(" (N)") ? "battle:moveNotImplemented" : "battle:moveNoPP";
-        const moveName = move.getName().replace(" (N)", ""); // Trims off the indicator
+        let errorMessage: string;
+        let isLocalizedMessage = false;
+        if (this.scene.challengeRestrictionActive !== DynamicModes.NONE) {
+          const challenge = getDynamicModeLocalizedString(this.scene.challengeRestrictionActive);
+          if (challenge) {
+            errorMessage = challenge.formatted;
+            isLocalizedMessage = true;
+          } else {
+            errorMessage = playerPokemon.summonData.disabledMove === move.moveId ? "battle:moveDisabled" :
+              move.getName().endsWith(" (N)") ? "battle:moveNotImplemented" : "battle:moveNoPP";
+          }
+          this.scene.challengeRestrictionActive = DynamicModes.NONE;
+        } else {
+          errorMessage = playerPokemon.summonData.disabledMove === move.moveId ? "battle:moveDisabled" :
+            move.getName().endsWith(" (N)") ? "battle:moveNotImplemented" : "battle:moveNoPP";
+        }
+        
+        const moveName = move.getName().replace(" (N)", "");
 
-        this.scene.ui.showText(i18next.t(errorMessage, { moveName: moveName }), null, () => {
+        this.scene.ui.showText(isLocalizedMessage ? errorMessage : i18next.t(errorMessage, { moveName: moveName }), null, () => {
           this.scene.ui.clearText();
           this.scene.ui.setMode(Mode.FIGHT, this.fieldIndex);
         }, null, true);
@@ -182,39 +194,32 @@ export class CommandPhase extends FieldPhase {
       break;
     case Command.BALL:
 
+      if (this.scene.dynamicMode?.noCatch) {
+        this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
+        this.scene.ui.setMode(Mode.MESSAGE);
+        const challenge = getDynamicModeLocalizedString(DynamicModes.NO_CATCH);
+        if (challenge) {
+          this.scene.ui.showText(challenge.formatted, null, () => {
+            this.scene.ui.showText("", 0);
+            this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
+          }, null, true);
+        }
+        break;
+      }
+
       const requiredMoney = this.scene.getRequiredMoneyForPokeBuy();
 
       const notInDex = (this.scene.getEnemyField().filter(p => p.isActive(true)).some(p => !p.scene.gameData.dexData[p.species.speciesId].caughtAttr) && this.scene.gameData.getStarterCount(d => !!d.caughtAttr) < Object.keys(speciesStarters).length - 1);
 
-      const restrictedForms = [
-        SpeciesFormKey.MEGA,
-        SpeciesFormKey.MEGA_X,
-        SpeciesFormKey.MEGA_Y,
-        SpeciesFormKey.PRIMAL,
-        SpeciesFormKey.ORIGIN,
-        SpeciesFormKey.INCARNATE,
-        SpeciesFormKey.THERIAN,
-        SpeciesFormKey.GIGANTAMAX,
-        SpeciesFormKey.GIGANTAMAX_SINGLE,
-        SpeciesFormKey.GIGANTAMAX_RAPID,
-        SpeciesFormKey.ETERNAMAX,
-        SpeciesFormKey.GLITCH,
-        SpeciesFormKey.GLITCH_B,
-        SpeciesFormKey.GLITCH_C,
-        SpeciesFormKey.GLITCH_D,
-        SpeciesFormKey.GLITCH_E,
-        SpeciesFormKey.SMITTY,
-        SpeciesFormKey.SMITTY_B
-      ];
-      const hasRestrictedForm = this.scene.getEnemyField().some(p => p.isActive(true) && restrictedForms.includes(p.getFormKey() as SpeciesFormKey));
+      const hasRestrictedForm = this.scene.getEnemyField().some(p => p.isActive(true) && p.isOPForm());
 
-      const voidNotOvertaken = !this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN];
+      const notChaosBeyondWaves = this.scene.currentBattle?.waveIndex <= 1000;
 
       if (!(Utils.randSeedInt(10000, 1) <= 1) && 
       (this.scene.arena.biomeType === Biome.END || 
       (this.scene.gameMode.isWavePreFinal(this.scene)) || 
-      this.scene.getEnemyField().some(p => p.isActive(true) && (p.species.legendary || p.species.subLegendary || p.species.mythical)) ||
-      hasRestrictedForm)) {
+      this.scene.getEnemyField().some(p => p.isActive(true) && (p.species.isLegendSubOrMystical() && notChaosBeyondWaves)) ||
+      (hasRestrictedForm && notChaosBeyondWaves))) {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         this.scene.ui.setMode(Mode.MESSAGE);
         this.scene.ui.showText(i18next.t("battle:noPokeballForce"), null, () => {
@@ -270,6 +275,7 @@ export class CommandPhase extends FieldPhase {
     case Command.POKEMON:
     case Command.RUN:
       const isSwitch = command === Command.POKEMON;
+      
       const cantRun = this.scene.gameMode.isTestMod || this.scene.gameMode.checkIfRival(this.scene) || this.scene.currentBattle.trainer?.config.trainerType == TrainerType.SMITTY || this.scene.currentBattle.battleSpec == BattleSpec.FINAL_BOSS
       if (!isSwitch && (this.scene.arena.biomeType === Biome.END || cantRun)) {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
@@ -293,12 +299,13 @@ export class CommandPhase extends FieldPhase {
       } else {
         const trapTag = playerPokemon.findTag(t => t instanceof TrappedTag) as TrappedTag;
         const trapped = new Utils.BooleanHolder(false);
+        const noSwitch = this.scene.dynamicMode?.noSwitch;
         const batonPass = isSwitch && args[0] as boolean;
         const trappedAbMessages: string[] = [];
         if (!batonPass) {
           enemyField.forEach(enemyPokemon => applyCheckTrappedAbAttrs(CheckTrappedAbAttr, enemyPokemon, trapped, playerPokemon, trappedAbMessages, true));
         }
-        if (batonPass || (!trapTag && !trapped.value)) {
+        if (batonPass || (!trapTag && !trapped.value && !noSwitch)) {
           this.scene.currentBattle.turnCommands[this.fieldIndex] = isSwitch
             ? { command: Command.POKEMON, cursor: cursor, args: args }
             : { command: Command.RUN };
@@ -331,6 +338,13 @@ export class CommandPhase extends FieldPhase {
                 this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
               }
             }, null, true);
+        } else if (isSwitch && noSwitch) {
+          const challenge = getDynamicModeLocalizedString(DynamicModes.NO_SWITCH);
+          if (challenge) {
+            this.scene.ui.showText(challenge.formatted, null, () => {
+              this.scene.ui.showText("", 0);
+            }, null, true);
+          }
         } else if (trapped.value && trappedAbMessages.length > 0) {
           if (!isSwitch) {
             this.scene.ui.setMode(Mode.MESSAGE);

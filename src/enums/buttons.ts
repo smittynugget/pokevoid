@@ -18,5 +18,6 @@ export enum Button {
 	SLOW_DOWN,
 	CYCLE_FUSION,
 	CONSOLE,
-	VOIDEX
+	VOIDEX,
+	CYCLE_VARIANT
 }

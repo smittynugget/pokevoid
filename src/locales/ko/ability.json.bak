@@ -1,0 +1,2694 @@
+{
+  "stench": {
+    "name": "악취",
+    "description": "악취를 풍겨서 공격했을 때 상대가 풀죽을 때가 있다."
+  },
+  "drizzle": {
+    "name": "잔비",
+    "description": "등장했을 때 날씨를 비로 만든다."
+  },
+  "speedBoost": {
+    "name": "가속",
+    "description": "매 턴 스피드가 올라간다."
+  },
+  "battleArmor": {
+    "name": "전투무장",
+    "description": "단단한 껍질에 보호받아 상대의 공격이 급소에 맞지 않는다."
+  },
+  "sturdy": {
+    "name": "옹골참",
+    "description": "상대 기술을 받아도 일격으로 쓰러지지 않는다. 일격필살 기술도 효과 없다."
+  },
+  "damp": {
+    "name": "습기",
+    "description": "주변을 습하게 함으로써 자폭 등 폭발하는 기술을 아무도 못 쓰게 한다."
+  },
+  "limber": {
+    "name": "유연",
+    "description": "유연한 몸으로 인해 마비 상태가 되지 않는다."
+  },
+  "sandVeil": {
+    "name": "모래숨기",
+    "description": "모래바람일 때 회피율이 올라간다."
+  },
+  "static": {
+    "name": "정전기",
+    "description": "정전기를 몸에 둘러 접촉한 상대를 마비시킬 때가 있다."
+  },
+  "voltAbsorb": {
+    "name": "축전",
+    "description": "전기타입의 기술을 받으면 데미지를 받지 않고 회복한다."
+  },
+  "waterAbsorb": {
+    "name": "저수",
+    "description": "물타입의 기술을 받으면 데미지를 받지 않고 회복한다."
+  },
+  "oblivious": {
+    "name": "둔감",
+    "description": "둔감해서 헤롱헤롱이나 도발 상태가 되지 않는다."
+  },
+  "cloudNine": {
+    "name": "날씨부정",
+    "description": "모든 날씨의 영향이 없어진다."
+  },
+  "compoundEyes": {
+    "name": "복안",
+    "description": "복안을 가지고 있어 기술의 명중률이 올라간다."
+  },
+  "insomnia": {
+    "name": "불면",
+    "description": "잠들지 못하는 체질이라 잠듦 상태가 되지 않는다."
+  },
+  "colorChange": {
+    "name": "변색",
+    "description": "상대에게 받은 기술의 타입으로 자신의 타입이 변화한다."
+  },
+  "immunity": {
+    "name": "면역",
+    "description": "체내에 면역을 가지고 있어 독 상태가 되지 않는다."
+  },
+  "flashFire": {
+    "name": "타오르는불꽃",
+    "description": "불꽃타입의 기술을 받으면 불꽃을 받아서 자신이 사용하는 불꽃타입의 기술이 강해진다."
+  },
+  "shieldDust": {
+    "name": "인분",
+    "description": "인분에 보호받아 기술의 추가 효과를 받지 않게 된다."
+  },
+  "ownTempo": {
+    "name": "마이페이스",
+    "description": "마이페이스라서 혼란 상태가 되지 않는다."
+  },
+  "suctionCups": {
+    "name": "흡반",
+    "description": "흡반으로 지면에 달라붙어 포켓몬을 교체시키는 기술이나 도구의 효과를 발휘하지 못하게 한다."
+  },
+  "intimidate": {
+    "name": "위협",
+    "description": "등장했을 때 위협해서 상대를 위축시켜 상대의 공격을 떨어뜨린다."
+  },
+  "shadowTag": {
+    "name": "그림자밟기",
+    "description": "상대의 그림자를 밟아 도망치거나 교체할 수 없게 한다."
+  },
+  "roughSkin": {
+    "name": "까칠한피부",
+    "description": "공격을 받았을 때 자신에게 접촉한 상대를 까칠까칠한 피부로 상처를 입힌다."
+  },
+  "wonderGuard": {
+    "name": "불가사의부적",
+    "description": "효과가 굉장한 기술만 맞는 불가사의한 힘."
+  },
+  "levitate": {
+    "name": "부유",
+    "description": "땅에서 뜨는 것으로 땅타입의 기술을 받지 않는다."
+  },
+  "effectSpore": {
+    "name": "포자",
+    "description": "공격으로 자신에게 접촉한 상대를 독이나 마비, 잠듦 상태로 만들 때가 있다."
+  },
+  "synchronize": {
+    "name": "싱크로",
+    "description": "자신이 걸린 독이나 마비, 화상을 상대에게 옮긴다."
+  },
+  "clearBody": {
+    "name": "클리어바디",
+    "description": "상대 기술이나 특성으로 능력이 떨어지지 않는다."
+  },
+  "naturalCure": {
+    "name": "자연회복",
+    "description": "지닌 포켓몬으로 돌아오면 상태 이상이 회복된다."
+  },
+  "lightningRod": {
+    "name": "피뢰침",
+    "description": "전기타입의 기술을 자신에게 끌어모아 데미지를 받지 않고 특수공격을 올린다."
+  },
+  "sereneGrace": {
+    "name": "하늘의은총",
+    "description": "하늘의 은총 덕분에 기술의 추가 효과가 나오기 쉽다."
+  },
+  "swiftSwim": {
+    "name": "쓱쓱",
+    "description": "비가 오는 날씨일 때 스피드가 올라간다."
+  },
+  "chlorophyll": {
+    "name": "엽록소",
+    "description": "날씨가 맑을 때 스피드가 올라간다."
+  },
+  "illuminate": {
+    "name": "발광",
+    "description": "주변을 밝게 하여 명중률이 떨어지지 않는다."
+  },
+  "trace": {
+    "name": "트레이스",
+    "description": "등장했을 때 상대의 특성을 트레이스해서 같은 특성이 된다."
+  },
+  "hugePower": {
+    "name": "천하장사",
+    "description": "물리공격의 위력이 2배가 된다."
+  },
+  "poisonPoint": {
+    "name": "독가시",
+    "description": "자신과 접촉한 상대를 독 상태로 만들 때가 있다."
+  },
+  "innerFocus": {
+    "name": "정신력",
+    "description": "단련한 정신으로 인하여 상대의 공격에 풀죽지 않는다."
+  },
+  "magmaArmor": {
+    "name": "마그마의무장",
+    "description": "뜨거운 마그마를 몸에 둘러서 얼음 상태가 되지 않는다."
+  },
+  "waterVeil": {
+    "name": "수의베일",
+    "description": "물의 베일을 몸에 둘러서 화상 상태가 되지 않는다."
+  },
+  "magnetPull": {
+    "name": "자력",
+    "description": "강철타입의 포켓몬을 자력으로 끌어모아 도망칠 수 없게 한다."
+  },
+  "soundproof": {
+    "name": "방음",
+    "description": "소리를 차단하는 것으로 소리 공격을 받지 않는다."
+  },
+  "rainDish": {
+    "name": "젖은접시",
+    "description": "비가 오는 날씨일 때 조금씩 HP를 회복한다."
+  },
+  "sandStream": {
+    "name": "모래날림",
+    "description": "등장했을 때 날씨를 모래바람으로 만든다."
+  },
+  "pressure": {
+    "name": "프레셔",
+    "description": "프레셔를 줘서 상대가 쓰는 기술의 PP를 많이 줄인다."
+  },
+  "thickFat": {
+    "name": "두꺼운지방",
+    "description": "두꺼운 지방으로 보호되고 있어 불꽃타입과 얼음타입의 기술의 데미지를 반감시킨다."
+  },
+  "earlyBird": {
+    "name": "일찍기상",
+    "description": "잠듦 상태가 되어도 2배 스피드로 깨어날 수 있다."
+  },
+  "flameBody": {
+    "name": "불꽃몸",
+    "description": "자신과 접촉한 상대를 화상 상태로 만들 때가 있다."
+  },
+  "runAway": {
+    "name": "도주",
+    "description": "야생 포켓몬으로부터 반드시 도망칠 수 있다."
+  },
+  "keenEye": {
+    "name": "날카로운눈",
+    "description": "날카로운 눈 덕분에 명중률이 떨어지지 않는다."
+  },
+  "hyperCutter": {
+    "name": "괴력집게",
+    "description": "힘이 자랑인 집게를 가지고 있어 상대가 공격을 떨어뜨리지 못한다."
+  },
+  "pickup": {
+    "name": "픽업",
+    "description": "상대가 지닌 도구를 주워올 때가 있다."
+  },
+  "truant": {
+    "name": "게으름",
+    "description": "기술을 사용하면 다음 턴은 쉰다."
+  },
+  "hustle": {
+    "name": "의욕",
+    "description": "자신의 공격이 높아지지만 명중률이 떨어진다."
+  },
+  "cuteCharm": {
+    "name": "헤롱헤롱바디",
+    "description": "자신과 접촉한 상대를 헤롱헤롱 상태로 만들 때가 있다."
+  },
+  "plus": {
+    "name": "플러스",
+    "description": "플러스나 마이너스의 특성을 가진 포켓몬이 동료에 있으면 자신의 특수공격이 올라간다."
+  },
+  "minus": {
+    "name": "마이너스",
+    "description": "플러스나 마이너스의 특성을 가진 포켓몬이 동료에 있으면 자신의 특수공격이 올라간다."
+  },
+  "forecast": {
+    "name": "기분파",
+    "description": "날씨의 영향을 받아 물타입, 불꽃타입, 얼음타입 중 하나로 변화한다."
+  },
+  "stickyHold": {
+    "name": "점착",
+    "description": "점착질의 몸에 도구가 달라붙어 있어 상대에게 도구를 뺏기지 않는다."
+  },
+  "shedSkin": {
+    "name": "탈피",
+    "description": "몸의 껍질을 벗어 던져 상태 이상을 회복할 때가 있다."
+  },
+  "guts": {
+    "name": "근성",
+    "description": "상태 이상이 되면 근성을 보여서 공격이 올라간다."
+  },
+  "marvelScale": {
+    "name": "이상한비늘",
+    "description": "상태 이상이 되면 이상한 비늘이 반응해서 방어가 올라간다."
+  },
+  "liquidOoze": {
+    "name": "해감액",
+    "description": "해감액을 흡수한 상대는 강렬한 악취로 데미지를 받아 HP가 줄어든다."
+  },
+  "overgrow": {
+    "name": "심록",
+    "description": "HP가 줄었을 때 풀타입 기술의 위력이 올라간다."
+  },
+  "blaze": {
+    "name": "맹화",
+    "description": "HP가 줄었을 때 불꽃타입 기술의 위력이 올라간다."
+  },
+  "torrent": {
+    "name": "급류",
+    "description": "HP가 줄었을 때 물타입 기술의 위력이 올라간다."
+  },
+  "swarm": {
+    "name": "벌레의알림",
+    "description": "HP가 줄었을 때 벌레타입 기술의 위력이 올라간다."
+  },
+  "rockHead": {
+    "name": "돌머리",
+    "description": "반동을 받는 기술을 사용해도 HP가 줄지 않는다."
+  },
+  "drought": {
+    "name": "가뭄",
+    "description": "등장했을 때 날씨를 맑음으로 만든다."
+  },
+  "arenaTrap": {
+    "name": "개미지옥",
+    "description": "배틀에서 상대를 도망칠 수 없게 한다."
+  },
+  "vitalSpirit": {
+    "name": "의기양양",
+    "description": "의기양양해져서 잠듦 상태가 되지 않는다."
+  },
+  "whiteSmoke": {
+    "name": "하얀연기",
+    "description": "하얀 연기의 보호를 받아 상대가 능력을 떨어뜨릴 수 없다."
+  },
+  "purePower": {
+    "name": "순수한힘",
+    "description": "요가의 힘으로 물리공격의 위력이 2배가 된다."
+  },
+  "shellArmor": {
+    "name": "조가비갑옷",
+    "description": "단단한 껍질의 보호를 받아 상대의 공격이 급소에 맞지 않는다."
+  },
+  "airLock": {
+    "name": "에어록",
+    "description": "모든 날씨의 영향이 없어진다."
+  },
+  "tangledFeet": {
+    "name": "갈지자걸음",
+    "description": "혼란 상태일 때는 회피율이 올라간다."
+  },
+  "motorDrive": {
+    "name": "전기엔진",
+    "description": "전기타입의 기술을 받으면 데미지를 받지 않고 스피드가 올라간다."
+  },
+  "rivalry": {
+    "name": "투쟁심",
+    "description": "성별이 같으면 투쟁심을 불태워 강해진다. 성별이 다르면 약해진다."
+  },
+  "steadfast": {
+    "name": "불굴의마음",
+    "description": "풀죽을 때마다 불굴의 마음을 불태워 스피드가 올라간다."
+  },
+  "snowCloak": {
+    "name": "눈숨기",
+    "description": "날씨가 눈일 때 회피율이 올라간다."
+  },
+  "gluttony": {
+    "name": "먹보",
+    "description": "HP가 줄어들면 먹을 나무열매를 HP가 절반일 때 먹어버린다."
+  },
+  "angerPoint": {
+    "name": "분노의경혈",
+    "description": "급소에 공격이 맞으면 크게 분노해 공격력이 최대가 된다."
+  },
+  "unburden": {
+    "name": "곡예",
+    "description": "지니던 도구가 없어지면 스피드가 올라간다."
+  },
+  "heatproof": {
+    "name": "내열",
+    "description": "내열인 몸으로 인해 불꽃타입 공격의 데미지를 반감한다."
+  },
+  "simple": {
+    "name": "단순",
+    "description": "능력 변화가 평소의 2배가 된다."
+  },
+  "drySkin": {
+    "name": "건조피부",
+    "description": "비가 오는 날씨나 물타입의 기술로 HP가 회복되고 맑을 때나 불꽃타입의 기술로는 줄어든다."
+  },
+  "download": {
+    "name": "다운로드",
+    "description": "상대의 방어와 특수방어를 비교해서 낮은 쪽 능력에 맞춰서 자신의 공격이나 특수공격을 올린다."
+  },
+  "ironFist": {
+    "name": "철주먹",
+    "description": "펀치를 사용하는 기술의 위력이 올라간다."
+  },
+  "poisonHeal": {
+    "name": "포이즌힐",
+    "description": "독 상태가 되면 HP가 줄지 않고 증가한다."
+  },
+  "adaptability": {
+    "name": "적응력",
+    "description": "자신과 같은 타입의 기술 위력이 올라간다."
+  },
+  "skillLink": {
+    "name": "스킬링크",
+    "description": "연속 기술을 사용하면 항상 최고 횟수를 사용할 수 있다."
+  },
+  "hydration": {
+    "name": "촉촉바디",
+    "description": "비가 오는 날씨일 때 상태 이상이 회복된다."
+  },
+  "solarPower": {
+    "name": "선파워",
+    "description": "날씨가 맑으면 특수공격이 올라가지만 매 턴 HP가 줄어든다."
+  },
+  "quickFeet": {
+    "name": "속보",
+    "description": "상태 이상이 되면 스피드가 올라간다."
+  },
+  "normalize": {
+    "name": "노말스킨",
+    "description": "어떤 타입의 기술도 모두 노말타입이 된다. 위력이 조금 올라간다."
+  },
+  "sniper": {
+    "name": "스나이퍼",
+    "description": "공격을 급소에 맞혔을 때 위력이 더욱 올라간다."
+  },
+  "magicGuard": {
+    "name": "매직가드",
+    "description": "공격 이외에는 데미지를 입지 않는다."
+  },
+  "noGuard": {
+    "name": "노가드",
+    "description": "노가드전법에 따라 서로가 사용하는 기술이 반드시 맞게 된다."
+  },
+  "stall": {
+    "name": "시간벌기",
+    "description": "기술을 사용하는 순서가 반드시 마지막이 된다."
+  },
+  "technician": {
+    "name": "테크니션",
+    "description": "위력이 약한 기술의 위력을 올려서 공격할 수 있다."
+  },
+  "leafGuard": {
+    "name": "리프가드",
+    "description": "날씨가 맑을 때는 상태 이상이 되지 않는다."
+  },
+  "klutz": {
+    "name": "서투름",
+    "description": "지니고 있는 도구를 쓸 수 없다."
+  },
+  "moldBreaker": {
+    "name": "틀깨기",
+    "description": "상대 특성에 방해받지 않고 상대에게 기술을 쓸 수 있다."
+  },
+  "superLuck": {
+    "name": "대운",
+    "description": "대운을 가지고 있어 상대의 급소에 공격이 맞기 쉽다."
+  },
+  "aftermath": {
+    "name": "유폭",
+    "description": "기절했을 때 접촉한 상대에게 데미지를 준다."
+  },
+  "anticipation": {
+    "name": "위험예지",
+    "description": "상대가 지닌 위험한 기술을 감지할 수 있다."
+  },
+  "forewarn": {
+    "name": "예지몽",
+    "description": "등장했을 때 상대가 지닌 기술을 하나만 꿰뚫어본다."
+  },
+  "unaware": {
+    "name": "천진",
+    "description": "상대의 능력 변화를 무시하고 공격할 수 있다."
+  },
+  "tintedLens": {
+    "name": "색안경",
+    "description": "효과가 별로인 기술을 통상의 위력으로 쓸 수 있다."
+  },
+  "filter": {
+    "name": "필터",
+    "description": "효과가 굉장한 공격의 위력을 약하게 만든다."
+  },
+  "slowStart": {
+    "name": "슬로스타트",
+    "description": "5턴 동안 공격과 스피드가 절반이 된다."
+  },
+  "scrappy": {
+    "name": "배짱",
+    "description": "고스트타입 포켓몬에게 노말타입과 격투타입의 기술을 맞게 한다."
+  },
+  "stormDrain": {
+    "name": "마중물",
+    "description": "물타입의 기술을 자신에게 끌어모아 데미지는 받지 않고 특수공격이 올라간다."
+  },
+  "iceBody": {
+    "name": "아이스바디",
+    "description": "날씨가 눈일 때 HP를 조금씩 회복한다."
+  },
+  "solidRock": {
+    "name": "하드록",
+    "description": "효과가 굉장한 공격의 위력을 약하게 만든다."
+  },
+  "snowWarning": {
+    "name": "눈퍼뜨리기",
+    "description": "등장했을 때 날씨를 눈으로 만든다."
+  },
+  "honeyGather": {
+    "name": "꿀모으기",
+    "description": "배틀이 끝났을 때 달콤한꿀을 주울 때가 있다. 배틀 후에 꿀을 팔아 돈을 받을 수 있다."
+  },
+  "frisk": {
+    "name": "통찰",
+    "description": "등장했을 때 상대의 특성을 통찰할 수 있다."
+  },
+  "reckless": {
+    "name": "이판사판",
+    "description": "반동 데미지를 받는 기술의 위력이 올라간다."
+  },
+  "multitype": {
+    "name": "멀티타입",
+    "description": "지니고 있는 플레이트나 Z크리스탈 타입에 따라 자신의 타입이 바뀐다."
+  },
+  "flowerGift": {
+    "name": "플라워기프트",
+    "description": "날씨가 맑을 때 자신과 같은 편의 공격과 특수방어의 능력이 올라간다."
+  },
+  "badDreams": {
+    "name": "나이트메어",
+    "description": "잠듦 상태의 상대에게 데미지를 준다."
+  },
+  "pickpocket": {
+    "name": "나쁜손버릇",
+    "description": "접촉한 상대의 도구를 훔친다."
+  },
+  "sheerForce": {
+    "name": "우격다짐",
+    "description": "기술의 추가 효과가 없어지지만 그만큼 높은 위력으로 기술을 사용할 수 있다."
+  },
+  "contrary": {
+    "name": "심술꾸러기",
+    "description": "능력의 변화가 역전해서 올라갈 때 떨어지고 떨어질 때 올라간다."
+  },
+  "unnerve": {
+    "name": "긴장감",
+    "description": "상대를 긴장시켜 나무열매를 먹지 못하게 한다."
+  },
+  "defiant": {
+    "name": "오기",
+    "description": "능력이 떨어지면 공격이 크게 올라간다."
+  },
+  "defeatist": {
+    "name": "무기력",
+    "description": "HP가 절반이 되면 무기력해져서 공격과 특수공격이 반감된다."
+  },
+  "cursedBody": {
+    "name": "저주받은바디",
+    "description": "공격을 받으면 상대의 기술을 사슬묶기 상태로 만들 때가 있다."
+  },
+  "healer": {
+    "name": "치유의마음",
+    "description": "같은 편의 상태 이상을 가끔 회복시킨다."
+  },
+  "friendGuard": {
+    "name": "프렌드가드",
+    "description": "같은 편의 데미지를 줄일 수 있다."
+  },
+  "weakArmor": {
+    "name": "깨어진갑옷",
+    "description": "물리 기술로 데미지를 받으면 방어가 떨어지고 스피드가 크게 올라간다."
+  },
+  "heavyMetal": {
+    "name": "헤비메탈",
+    "description": "자신의 무게가 2배가 된다."
+  },
+  "lightMetal": {
+    "name": "라이트메탈",
+    "description": "자신의 무게가 절반이 된다."
+  },
+  "multiscale": {
+    "name": "멀티스케일",
+    "description": "HP가 꽉 찼을 때 받는 데미지가 줄어든다."
+  },
+  "toxicBoost": {
+    "name": "독폭주",
+    "description": "독 상태가 되었을 때 물리 기술의 위력이 올라간다."
+  },
+  "flareBoost": {
+    "name": "열폭주",
+    "description": "화상 상태가 되었을 때 특수 기술의 위력이 올라간다."
+  },
+  "harvest": {
+    "name": "수확",
+    "description": "사용한 나무열매를 몇 번이고 만들어 낸다."
+  },
+  "telepathy": {
+    "name": "텔레파시",
+    "description": "같은 편의 공격의 낌새를 읽고 기술을 회피한다."
+  },
+  "moody": {
+    "name": "변덕쟁이",
+    "description": "매 턴 능력 중 하나가 크게 오르고 하나가 떨어진다."
+  },
+  "overcoat": {
+    "name": "방진",
+    "description": "모래바람이나 싸라기눈 등의 데미지를 입지 않는다. 가루의 기술을 받지 않는다."
+  },
+  "poisonTouch": {
+    "name": "독수",
+    "description": "접촉하기만 해도 상대를 독 상태로 만들 때가 있다."
+  },
+  "regenerator": {
+    "name": "재생력",
+    "description": "지닌 포켓몬으로 돌아오면 HP를 조금 회복한다."
+  },
+  "bigPecks": {
+    "name": "부풀린가슴",
+    "description": "방어를 떨어뜨리는 효과를 받지 않는다."
+  },
+  "sandRush": {
+    "name": "모래헤치기",
+    "description": "날씨가 모래바람일 때 스피드가 올라간다."
+  },
+  "wonderSkin": {
+    "name": "미라클스킨",
+    "description": "변화 기술을 받기 어려운 몸으로 되어 있다."
+  },
+  "analytic": {
+    "name": "애널라이즈",
+    "description": "제일 마지막에 기술을 쓰면 기술의 위력이 올라간다."
+  },
+  "illusion": {
+    "name": "일루전",
+    "description": "지닌 포켓몬 중 제일 뒤에 있는 포켓몬으로 둔갑하여 나와서 상대를 속인다."
+  },
+  "imposter": {
+    "name": "괴짜",
+    "description": "눈앞의 포켓몬으로 변신해버린다."
+  },
+  "infiltrator": {
+    "name": "틈새포착",
+    "description": "상대의 벽이나 대타출동을 뚫고 공격할 수 있다."
+  },
+  "mummy": {
+    "name": "미라",
+    "description": "상대가 접촉하면 상대를 미라로 만들어버린다."
+  },
+  "moxie": {
+    "name": "자기과신",
+    "description": "상대를 쓰러뜨리면 자신감이 붙어서 공격이 올라간다."
+  },
+  "justified": {
+    "name": "정의의마음",
+    "description": "악타입 공격을 받으면 정의감으로 공격이 올라간다."
+  },
+  "rattled": {
+    "name": "주눅",
+    "description": "위협이나 악타입과 고스트타입과 벌레타입의 기술에 주눅이 들어 스피드가 올라간다."
+  },
+  "magicBounce": {
+    "name": "매직미러",
+    "description": "상대가 쓴 변화 기술을 받지 않고 그대로 되받아칠 수 있다."
+  },
+  "sapSipper": {
+    "name": "초식",
+    "description": "풀타입 기술을 받으면 데미지를 입지 않고 공격이 올라간다."
+  },
+  "prankster": {
+    "name": "짓궂은마음",
+    "description": "변화 기술을 먼저 쓸 수 있다."
+  },
+  "sandForce": {
+    "name": "모래의힘",
+    "description": "날씨가 모래바람일 때 바위타입과 땅타입과 강철타입의 위력이 올라간다."
+  },
+  "ironBarbs": {
+    "name": "철가시",
+    "description": "자신과 접촉한 상대에게 철가시로 데미지를 준다."
+  },
+  "zenMode": {
+    "name": "달마모드",
+    "description": "HP가 절반 이하가 되면 모습이 변화한다."
+  },
+  "victoryStar": {
+    "name": "승리의별",
+    "description": "자신과 같은 편의 명중률이 올라간다."
+  },
+  "turboblaze": {
+    "name": "터보블레이즈",
+    "description": "상대 특성에 방해받지 않고 상대에게 기술을 쓸 수 있다."
+  },
+  "teravolt": {
+    "name": "테라볼티지",
+    "description": "상대 특성에 방해받지 않고 상대에게 기술을 쓸 수 있다."
+  },
+  "aromaVeil": {
+    "name": "아로마베일",
+    "description": "자신과 같은 편으로 향하는 멘탈 공격을 막을 수 있다."
+  },
+  "flowerVeil": {
+    "name": "플라워베일",
+    "description": "같은 편의 풀타입 포켓몬은 능력이 떨어지지 않고 상태 이상도 되지 않는다."
+  },
+  "cheekPouch": {
+    "name": "볼주머니",
+    "description": "어떤 나무열매라도 먹으면 HP도 회복한다."
+  },
+  "protean": {
+    "name": "변환자재",
+    "description": "자신이 사용한 기술과 같은 타입으로 변화한다."
+  },
+  "furCoat": {
+    "name": "퍼코트",
+    "description": "상대로부터 받는 물리 기술의 데미지가 절반이 된다."
+  },
+  "magician": {
+    "name": "매지션",
+    "description": "기술을 맞은 상대의 도구를 빼앗아 버린다."
+  },
+  "bulletproof": {
+    "name": "방탄",
+    "description": "상대 구슬이나 폭탄 등 기술을 막을 수 있다."
+  },
+  "competitive": {
+    "name": "승기",
+    "description": "능력이 떨어지면 특수공격이 크게 올라간다."
+  },
+  "strongJaw": {
+    "name": "옹골찬턱",
+    "description": "턱이 튼튼하여 무는 기술의 위력이 올라간다."
+  },
+  "refrigerate": {
+    "name": "프리즈스킨",
+    "description": "노말타입의 기술이 얼음타입이 된다. 위력이 조금 올라간다."
+  },
+  "sweetVeil": {
+    "name": "스위트베일",
+    "description": "같은 편의 포켓몬이 잠들지 않게 된다."
+  },
+  "stanceChange": {
+    "name": "배틀스위치",
+    "description": "공격 기술을 쓰면 블레이드폼으로 기술 킹실드를 쓰면 실드폼으로 변한다."
+  },
+  "galeWings": {
+    "name": "질풍날개",
+    "description": "HP가 꽉 찼을 때 비행타입의 기술을 먼저 쓸 수 있다."
+  },
+  "megaLauncher": {
+    "name": "메가런처",
+    "description": "파동 기술의 위력이 올라간다."
+  },
+  "grassPelt": {
+    "name": "풀모피",
+    "description": "그래스필드일 때 방어가 올라간다."
+  },
+  "symbiosis": {
+    "name": "공생",
+    "description": "같은 편이 도구를 쓰면 자신이 지니고 있는 도구를 같은 편에게 건넨다."
+  },
+  "toughClaws": {
+    "name": "단단한발톱",
+    "description": "상대에게 접촉하는 기술의 위력이 올라간다."
+  },
+  "pixilate": {
+    "name": "페어리스킨",
+    "description": "노말타입의 기술이 페어리타입이 된다. 위력이 조금 올라간다."
+  },
+  "gooey": {
+    "name": "미끈미끈",
+    "description": "공격으로 자신과 접촉한 상대의 스피드를 떨어뜨린다."
+  },
+  "aerilate": {
+    "name": "스카이스킨",
+    "description": "노말타입의 기술이 비행타입이 된다. 위력이 조금 올라간다."
+  },
+  "parentalBond": {
+    "name": "부자유친",
+    "description": "부모와 자식 2마리로 2번 공격할 수 있다."
+  },
+  "darkAura": {
+    "name": "다크오라",
+    "description": "전원의 악타입 기술이 강해진다."
+  },
+  "fairyAura": {
+    "name": "페어리오라",
+    "description": "전원의 페어리타입 기술이 강해진다."
+  },
+  "auraBreak": {
+    "name": "오라브레이크",
+    "description": "오라의 효과를 역전시켜 위력을 떨어뜨린다."
+  },
+  "primordialSea": {
+    "name": "시작의바다",
+    "description": "불꽃타입의 공격을 받지 않는 날씨로 만든다."
+  },
+  "desolateLand": {
+    "name": "끝의대지",
+    "description": "물타입의 공격을 받지 않는 날씨로 만든다."
+  },
+  "deltaStream": {
+    "name": "델타스트림",
+    "description": "비행타입의 약점이 없어지는 날씨로 만든다."
+  },
+  "stamina": {
+    "name": "지구력",
+    "description": "공격을 받으면 방어가 올라간다."
+  },
+  "wimpOut": {
+    "name": "도망태세",
+    "description": "HP가 절반이 되면 황급히 도망쳐서 지닌 포켓몬으로 돌아간다."
+  },
+  "emergencyExit": {
+    "name": "위기회피",
+    "description": "HP가 절반이 되면 위험을 회피하기 위해 지닌 포켓몬으로 돌아간다."
+  },
+  "waterCompaction": {
+    "name": "꾸덕꾸덕굳기",
+    "description": "물타입의 기술을 받으면 방어가 크게 올라간다."
+  },
+  "merciless": {
+    "name": "무도한행동",
+    "description": "독 상태의 상대를 공격하면 반드시 급소에 맞는다."
+  },
+  "shieldsDown": {
+    "name": "리밋실드",
+    "description": "HP가 절반이 되면 껍질이 깨져 공격적으로 된다."
+  },
+  "stakeout": {
+    "name": "잠복",
+    "description": "교체로 나온 상대에게 2배 데미지로 공격할 수 있다."
+  },
+  "waterBubble": {
+    "name": "수포",
+    "description": "자신을 향하는 불꽃타입 기술의 위력을 떨어뜨린다. 화상을 입지 않는다."
+  },
+  "steelworker": {
+    "name": "강철술사",
+    "description": "강철타입 기술의 위력이 올라간다."
+  },
+  "berserk": {
+    "name": "발끈",
+    "description": "상대의 공격으로 HP가 절반이 되면 특수공격이 올라간다."
+  },
+  "slushRush": {
+    "name": "눈치우기",
+    "description": "날씨가 눈일 때 스피드가 올라간다."
+  },
+  "longReach": {
+    "name": "원격",
+    "description": "모든 기술을 상대에게 접촉하지 않고 사용할 수 있다."
+  },
+  "liquidVoice": {
+    "name": "촉촉보이스",
+    "description": "모든 소리 기술이 물타입이 된다."
+  },
+  "triage": {
+    "name": "힐링시프트",
+    "description": "회복 기술을 먼저 사용할 수 있다."
+  },
+  "galvanize": {
+    "name": "일렉트릭스킨",
+    "description": "노말타입 기술이 전기타입이 된다. 위력이 조금 올라간다."
+  },
+  "surgeSurfer": {
+    "name": "서핑테일",
+    "description": "일렉트릭필드일 때 스피드가 2배가 된다."
+  },
+  "schooling": {
+    "name": "어군",
+    "description": "HP가 많을 때 무리지어 강해진다. HP가 얼마 남지 않으면 무리는 뿔뿔이 흩어진다."
+  },
+  "disguise": {
+    "name": "탈",
+    "description": "몸을 덮는 탈로 1번 공격을 막을 수 있다."
+  },
+  "battleBond": {
+    "name": "유대변화",
+    "description": "상대를 쓰러뜨리면 트레이너와의 유대감이 깊어져서 지우개굴닌자로 변한다. 물수리검이 강해진다."
+  },
+  "powerConstruct": {
+    "name": "스웜체인지",
+    "description": "HP가 절반이 되면 셀들이 응원하러 달려와 퍼펙트폼으로 모습이 변한다."
+  },
+  "corrosion": {
+    "name": "부식",
+    "description": "강철타입이나 독타입도 독 상태로 만들 수 있다."
+  },
+  "comatose": {
+    "name": "절대안깸",
+    "description": "항상 비몽사몽 상태로 절대 깨지 않는다. 잠든 상태로 공격할 수 있다."
+  },
+  "queenlyMajesty": {
+    "name": "여왕의위엄",
+    "description": "상대에게 위압감을 줘서 이쪽을 향한 선제 기술을 사용할 수 없게 한다."
+  },
+  "innardsOut": {
+    "name": "내용물분출",
+    "description": "상대가 쓰러뜨렸을 때 HP의 남은 양만큼 상대에게 데미지를 준다."
+  },
+  "dancer": {
+    "name": "무희",
+    "description": "누군가 춤 기술을 쓰면 자신도 이어서 춤 기술을 쓸 수 있다."
+  },
+  "battery": {
+    "name": "배터리",
+    "description": "같은 편 특수 기술의 위력을 올린다."
+  },
+  "fluffy": {
+    "name": "복슬복슬",
+    "description": "상대로부터 받은 접촉하는 기술의 데미지를 반감시키지만 불꽃타입 기술의 데미지는 2배가 된다."
+  },
+  "dazzling": {
+    "name": "비비드바디",
+    "description": "상대를 놀라게 해서 이쪽을 향한 선제 기술을 사용할 수 없게 한다."
+  },
+  "soulHeart": {
+    "name": "소울하트",
+    "description": "포켓몬이 기절할 때마다 특수공격이 올라간다."
+  },
+  "tanglingHair": {
+    "name": "컬리헤어",
+    "description": "공격으로 자신에게 접촉한 상대의 스피드를 떨어뜨린다."
+  },
+  "receiver": {
+    "name": "리시버",
+    "description": "쓰러진 같은 편의 특성을 이어받아 같은 특성으로 바뀐다."
+  },
+  "powerOfAlchemy": {
+    "name": "화학의힘",
+    "description": "쓰러진 같은 편의 특성을 이어받아 같은 특성으로 바뀐다."
+  },
+  "beastBoost": {
+    "name": "비스트부스트",
+    "description": "상대를 기절시켰을 때 자신의 가장 높은 능력이 올라간다."
+  },
+  "rksSystem": {
+    "name": "AR시스템",
+    "description": "지니고 있는 메모리로 자신의 타입이 변한다."
+  },
+  "electricSurge": {
+    "name": "일렉트릭메이커",
+    "description": "등장했을 때 일렉트릭필드를 사용한다."
+  },
+  "psychicSurge": {
+    "name": "사이코메이커",
+    "description": "등장했을 때 사이코필드를 사용한다."
+  },
+  "mistySurge": {
+    "name": "미스트메이커",
+    "description": "등장했을 때 미스트필드를 사용한다."
+  },
+  "grassySurge": {
+    "name": "그래스메이커",
+    "description": "등장했을 때 그래스필드를 사용한다."
+  },
+  "fullMetalBody": {
+    "name": "메탈프로텍트",
+    "description": "상대 기술이나 특성으로 능력이 떨어지지 않는다."
+  },
+  "shadowShield": {
+    "name": "스펙터가드",
+    "description": "HP가 꽉 찼을 때 받는 데미지가 줄어든다."
+  },
+  "prismArmor": {
+    "name": "프리즘아머",
+    "description": "효과가 굉장한 공격의 위력을 약하게 만든다."
+  },
+  "neuroforce": {
+    "name": "브레인포스",
+    "description": "효과가 굉장한 공격의 위력이 더욱 올라간다."
+  },
+  "intrepidSword": {
+    "name": "불요의검",
+    "description": "등장했을 때 공격이 올라간다."
+  },
+  "dauntlessShield": {
+    "name": "불굴의방패",
+    "description": "등장했을 때 방어가 올라간다."
+  },
+  "libero": {
+    "name": "리베로",
+    "description": "자신이 사용한 기술과 같은 타입으로 변화한다."
+  },
+  "ballFetch": {
+    "name": "볼줍기",
+    "description": "첫 번째로 실패한 몬스터볼을 주워온다."
+  },
+  "cottonDown": {
+    "name": "솜털",
+    "description": "공격을 받으면 솜털을 흩뿌려서 자신을 제외한 모든 포켓몬의 스피드를 떨어뜨린다."
+  },
+  "propellerTail": {
+    "name": "스크루지느러미",
+    "description": "상대의 기술을 끌어모으는 특성이나 기술의 영향을 받지 않는다."
+  },
+  "mirrorArmor": {
+    "name": "미러아머",
+    "description": "자신이 받는 능력 다운 효과에 한해 되받아친다."
+  },
+  "gulpMissile": {
+    "name": "그대로꿀꺽미사일",
+    "description": "파도타기나 다이빙을 쓰면 먹이를 물어온다. 데미지를 받으면 먹이를 토해내서 공격한다."
+  },
+  "stalwart": {
+    "name": "굳건한신념",
+    "description": "상대의 기술을 끌어모으는 특성이나 기술의 영향을 받지 않는다."
+  },
+  "steamEngine": {
+    "name": "증기기관",
+    "description": "물타입이나 불꽃타입 기술을 받으면 스피드가 매우 크게 올라간다."
+  },
+  "punkRock": {
+    "name": "펑크록",
+    "description": "소리 기술의 위력이 올라간다. 상대로부터 받는 소리 기술의 데미지는 절반이 된다."
+  },
+  "sandSpit": {
+    "name": "모래뿜기",
+    "description": "공격을 받으면 모래바람을 일으킨다."
+  },
+  "iceScales": {
+    "name": "얼음인분",
+    "description": "얼음인분의 보호를 받아 특수공격으로 받는 데미지가 절반이 된다."
+  },
+  "ripen": {
+    "name": "숙성",
+    "description": "나무열매를 숙성시켜서 효과가 2배가 된다."
+  },
+  "iceFace": {
+    "name": "아이스페이스",
+    "description": "물리공격을 머리의 얼음이 대신 맞아주지만 모습도 바뀐다. 얼음은 싸라기눈이 내리면 원래대로 돌아온다."
+  },
+  "powerSpot": {
+    "name": "파워스폿",
+    "description": "옆에 있기만 해도 기술의 위력이 올라간다."
+  },
+  "mimicry": {
+    "name": "의태",
+    "description": "필드의 상태에 따라 포켓몬의 타입이 바뀐다."
+  },
+  "screenCleaner": {
+    "name": "배리어프리",
+    "description": "등장했을 때 상대와 같은 편의 빛의장막, 리플렉터, 오로라베일의 효과가 사라진다."
+  },
+  "steelySpirit": {
+    "name": "강철정신",
+    "description": "같은 편의 강철타입 공격의 위력이 올라간다."
+  },
+  "perishBody": {
+    "name": "멸망의바디",
+    "description": "접촉하는 기술을 받으면 3턴 후에 양쪽 모두 기절한다. 교체되면 효과가 없어진다."
+  },
+  "wanderingSpirit": {
+    "name": "떠도는영혼",
+    "description": "접촉하는 기술로 공격해온 포켓몬과 특성을 바꾼다."
+  },
+  "gorillaTactics": {
+    "name": "무아지경",
+    "description": "공격이 올라가지만 처음에 선택한 기술 외에는 쓸 수 없게 된다."
+  },
+  "neutralizingGas": {
+    "name": "화학변화가스",
+    "description": "화학변화가스를 가진 포켓몬이 배틀에 나와 있으면 모든 포켓몬이 가진 특성의 효과가 사라지거나 발동하지 않게 된다."
+  },
+  "pastelVeil": {
+    "name": "파스텔베일",
+    "description": "자신과 같은 편이 독의 상태 이상 효과를 받지 않게 된다."
+  },
+  "hungerSwitch": {
+    "name": "꼬르륵스위치",
+    "description": "턴이 끝날 때마다 배부른 모양, 배고픈 모양, 배부른 모양...으로 번갈아서 모습을 바꾼다."
+  },
+  "quickDraw": {
+    "name": "퀵드로",
+    "description": "상대보다 먼저 행동할 수도 있다."
+  },
+  "unseenFist": {
+    "name": "보이지않는주먹",
+    "description": "상대에게 접촉하는 기술을 사용하면 방어의 효과를 무시하고 공격할 수 있다."
+  },
+  "curiousMedicine": {
+    "name": "기묘한약",
+    "description": "등장했을 때 조개껍질에서 약을 흩뿌려서 능력 변화를 원래대로 되돌린다."
+  },
+  "transistor": {
+    "name": "트랜지스터",
+    "description": "전기타입 기술의 위력이 올라간다."
+  },
+  "dragonsMaw": {
+    "name": "용의턱",
+    "description": "드래곤타입 기술의 위력이 올라간다."
+  },
+  "chillingNeigh": {
+    "name": "백의울음",
+    "description": "상대를 쓰러뜨리면 차가운 울음소리를 내면서 공격이 올라간다."
+  },
+  "grimNeigh": {
+    "name": "흑의울음",
+    "description": "상대를 쓰러뜨리면 무서운 울음소리를 내면서 특수공격이 올라간다."
+  },
+  "asOneGlastrier": {
+    "name": "혼연일체",
+    "description": "버드렉스의 긴장감과 블리자포스의 백의울음 두 가지 특성을 겸비한다."
+  },
+  "asOneSpectrier": {
+    "name": "혼연일체",
+    "description": "버드렉스의 긴장감과 레이스포스의 흑의울음 두 가지 특성을 겸비한다."
+  },
+  "lingeringAroma": {
+    "name": "가시지않는향기",
+    "description": "상대가 접촉하면 가시지 않는 향기가 상대에게 배어 버린다."
+  },
+  "seedSower": {
+    "name": "넘치는씨",
+    "description": "공격을 받으면 필드를 그래스필드로 만든다."
+  },
+  "thermalExchange": {
+    "name": "열교환",
+    "description": "불꽃타입 기술로 공격받으면 공격이 올라간다. 화상 상태가 되지 않는다."
+  },
+  "angerShell": {
+    "name": "분노의껍질",
+    "description": "상대의 공격에 의해 HP가 절반이 되면 화가 나서 방어와 특수방어가 떨어지지만 공격, 특수공격, 스피드가 올라간다."
+  },
+  "purifyingSalt": {
+    "name": "정화의소금",
+    "description": "깨끗한 소금에 의해 상태 이상이 되지 않는다. 고스트타입 기술의 데미지를 반감시킨다."
+  },
+  "wellBakedBody": {
+    "name": "노릇노릇바디",
+    "description": "불꽃타입 기술로 공격받으면 데미지를 입지 않고 방어가 크게 올라간다."
+  },
+  "windRider": {
+    "name": "바람타기",
+    "description": "순풍이 불거나 바람 기술로 공격받으면 데미지를 받지 않고 공격이 올라간다."
+  },
+  "guardDog": {
+    "name": "파수견",
+    "description": "위협을 받으면 공격이 올라간다. 포켓몬을 교체시키는 기술이나 도구의 효과를 받지 않는다."
+  },
+  "rockyPayload": {
+    "name": "바위나르기",
+    "description": "바위타입 기술의 위력이 올라간다."
+  },
+  "windPower": {
+    "name": "풍력발전",
+    "description": "바람 기술로 공격받으면 충전 상태가 된다."
+  },
+  "zeroToHero": {
+    "name": "마이티체인지",
+    "description": "지닌 포켓몬으로 돌아오면 마이티폼으로 변한다."
+  },
+  "commander": {
+    "name": "사령탑",
+    "description": "등장했을 때 같은 편에 어써러셔가 있으면 입속에 들어가 안에서 지시를 내린다."
+  },
+  "electromorphosis": {
+    "name": "전기로바꾸기",
+    "description": "데미지를 받으면 충전 상태가 된다."
+  },
+  "protosynthesis": {
+    "name": "고대활성",
+    "description": "부스트에너지를 지니고 있거나 날씨가 맑을 때 가장 높은 능력이 올라간다."
+  },
+  "quarkDrive": {
+    "name": "쿼크차지",
+    "description": "부스트에너지를 지니고 있거나 일렉트릭필드일 때 가장 높은 능력이 올라간다."
+  },
+  "goodAsGold": {
+    "name": "황금몸",
+    "description": "산화하지 않는 튼튼한 황금몸 덕분에 상대의 변화 기술의 영향을 받지 않는다."
+  },
+  "vesselOfRuin": {
+    "name": "재앙의그릇",
+    "description": "재앙을 부르는 그릇의 힘으로 자신을 제외한 모든 포켓몬의 특수 공격을 약하게 만든다."
+  },
+  "swordOfRuin": {
+    "name": "재앙의검",
+    "description": "재앙을 부르는 검의 힘으로 자신을 제외한 모든 포켓몬의 방어를 약하게 만든다."
+  },
+  "tabletsOfRuin": {
+    "name": "재앙의목간",
+    "description": "재앙을 부르는 목간의 힘으로 자신을 제외한 모든 포켓몬의 공격을 약하게 만든다."
+  },
+  "beadsOfRuin": {
+    "name": "재앙의구슬",
+    "description": "재앙을 부르는 곡옥의 힘으로 자신을 제외한 모든 포켓몬의 특수방어를 약하게 만든다."
+  },
+  "orichalcumPulse": {
+    "name": "진홍빛고동",
+    "description": "등장했을 때 날씨를 맑음으로 만든다. 햇살이 강하면 고대의 고동에 의해 공격이 강화된다."
+  },
+  "hadronEngine": {
+    "name": "하드론엔진",
+    "description": "등장했을 때 일렉트릭필드를 전개한다. 일렉트릭필드일 때 미래 기관에 의해 특수공격이 강화된다."
+  },
+  "opportunist": {
+    "name": "편승",
+    "description": "상대의 능력이 올라가면 자신도 편승해서 똑같이 자신도 올린다."
+  },
+  "cudChew": {
+    "name": "되새김질",
+    "description": "한 번에 한하여 나무열매를 먹으면 다음 턴이 끝날 때 위에서 꺼내서 또 먹는다."
+  },
+  "sharpness": {
+    "name": "예리함",
+    "description": "상대를 베는 기술의 위력이 올라간다."
+  },
+  "supremeOverlord": {
+    "name": "총대장",
+    "description": "등장했을 때 지금까지 쓰러진 같은 편의 수가 많을수록 조금씩 공격과 특수공격이 올라간다."
+  },
+  "costar": {
+    "name": "협연",
+    "description": "등장했을 때 같은 편의 능력 변화를 복사한다."
+  },
+  "toxicDebris": {
+    "name": "독치장",
+    "description": "물리 기술로 데미지를 받으면 상대의 발밑에 독압정을 뿌린다."
+  },
+  "armorTail": {
+    "name": "테일아머",
+    "description": "머리를 감싸고 있는 수수께끼의 꼬리가 이쪽을 향한 선제 기술을 사용할 수 없게 한다."
+  },
+  "earthEater": {
+    "name": "흙먹기",
+    "description": "땅타입의 기술로 공격받으면 데미지를 받지 않고 회복한다."
+  },
+  "myceliumMight": {
+    "name": "균사의힘",
+    "description": "변화 기술을 사용할 때 반드시 행동이 느려지지만 상대 특성에 방해받지 않는다."
+  },
+  "mindsEye": {
+    "name": "심안",
+    "description": "노말타입과 격투타입 기술을 고스트타입에게 맞힐 수 있다. 상대의 회피율 변화를 무시하고 명중률도 떨어지지 않는다."
+  },
+  "supersweetSyrup": {
+    "name": "감미로운꿀",
+    "description": "처음 등장했을 때 감미로운 꿀의 향기를 흩뿌려서 상대의 회피율을 떨어뜨린다."
+  },
+  "hospitality": {
+    "name": "대접",
+    "description": "등장했을 때 같은 편을 대접해서 HP를 조금 회복시킨다."
+  },
+  "toxicChain": {
+    "name": "독사슬",
+    "description": "독소를 머금은 사슬의 힘으로 기술에 맞은 상대를 맹독 상태로 만들 때가 있다."
+  },
+  "embodyAspectTeal": {
+    "name": "초상투영",
+    "description": "마음속에 깃든 추억의 힘으로 벽록의가면을 빛나게 하여 자신의 스피드를 올린다."
+  },
+  "embodyAspectWellspring": {
+    "name": "초상투영",
+    "description": "마음속에 깃든 추억의 힘으로 우물의가면을 빛나게 하여 자신의 특수방어를 올린다."
+  },
+  "embodyAspectHearthflame": {
+    "name": "초상투영",
+    "description": "마음속에 깃든 추억의 힘으로 화덕의가면을 빛나게 하여 자신의 공격력을 올린다."
+  },
+  "embodyAspectCornerstone": {
+    "name": "초상투영",
+    "description": "마음속에 깃든 추억의 힘으로 주춧돌의가면을 빛나게 하여 자신의 방어력을 올린다."
+  },
+  "teraShift": {
+    "name": "테라체인지",
+    "description": "등장했을 때 주위의 에너지를 흡수하여 테라스탈폼으로 변한다."
+  },
+  "teraShell": {
+    "name": "테라셸",
+    "description": "모든 타입의 힘이 담긴 등껍질이 HP가 꽉 찼을 때 받는 데미지를 모두 효과가 별로이게 만든다."
+  },
+  "teraformZero": {
+    "name": "제로포밍",
+    "description": "테라파고스가 스텔라폼이 되었을 때 숨겨진 힘에 의해 날씨와 필드의 영향을 모두 무효로 만든다."
+  },
+  "poisonPuppeteer": {
+    "name": "독조종",
+    "description": "복숭악동의 기술에 의해 독 상태가 된 상대는 혼란 상태도 되어 버린다."
+  },
+  "unleashed": {
+    "name": "해방",
+    "description": "체력이 낮을 때 모든 기술의 위력이 증가합니다."
+  },
+  "hellFlame": {
+    "name": "지옥의 불꽃",
+    "description": "불꽃 타입 기술의 위력이 50% 증가합니다."
+  },
+  "psychoLeaf": {
+    "name": "사이코 리프",
+    "description": "풀 타입 기술이 에스퍼 타입으로 변하고 위력이 20% 증가합니다."
+  },
+  "groundFlame": {
+    "name": "대지의 불꽃",
+    "description": "불꽃 타입 기술이 땅 타입으로 변하고 위력이 20% 증가합니다."
+  },
+  "magicalWater": {
+    "name": "마법의 물",
+    "description": "물 타입 기술이 페어리 타입으로 변하고 위력이 20% 증가합니다."
+  },
+  "nuclearEnergy": {
+    "name": "핵 에너지",
+    "description": "독 타입 기술이 전기 타입으로 변하고 위력이 20% 증가합니다."
+  },
+  "poisonKing": {
+    "name": "포이즌 킹",
+    "description": "독 타입 기술의 위력이 60% 증가합니다."
+  },
+  "solidKong": {
+    "name": "솔리드 콩",
+    "description": "효과가 뛰어난 기술의 데미지를 50% 감소시킵니다."
+  },
+  "screepy": {
+    "name": "스크리피",
+    "description": "고스트 타입 기술이 노말 타입에게 효과가 있습니다. 고스트 타입 기술의 위력이 30% 증가합니다. 위협에 면역입니다."
+  },
+  "godFist": {
+    "name": "신의 주먹",
+    "description": "펀치 기술의 위력이 50% 증가합니다."
+  },
+  "parentalHaunting": {
+    "name": "부모의 집착",
+    "description": "노말 타입이 아닌 기술이 고스트 타입으로 변하고 위력이 20% 증가합니다."
+  },
+  "nightmarate": {
+    "name": "나이트메어레이트",
+    "description": "노말 타입 기술이 주요 타입으로 변하고 위력이 20% 증가합니다."
+  },
+  "terrify": {
+    "name": "공포",
+    "description": "전투에 들어갈 때 상대의 공격과 특수공격을 1단계 낮춥니다."
+  },
+  "thunderAndFire": {
+    "name": "번개와 불꽃",
+    "description": "불꽃과 전기 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "electafireAbsorb": {
+    "name": "일렉트파이어 흡수",
+    "description": "불꽃이나 전기 타입 기술을 맞으면 데미지를 입는 대신 체력을 회복합니다."
+  },
+  "dirtThick": {
+    "name": "두꺼운 흙",
+    "description": "물과 땅 타입 기술의 데미지를 절반으로 줄입니다."
+  },
+  "arcticBlaze": {
+    "name": "극지의 불꽃",
+    "description": "얼음 타입 기술을 불꽃 타입으로, 불꽃 타입 기술을 얼음 타입으로 변경하며, HP가 65% 이하일 때 위력이 35% 증가합니다."
+  },
+  "steamify": {
+    "name": "증기화",
+    "description": "물 타입 기술이 불꽃 타입으로 변하고 위력이 20% 증가합니다."
+  },
+  "prehistoricHunt": {
+    "name": "선사시대의 사냥",
+    "description": "매 턴마다 30% 확률로 비가 내립니다. 비, 강한 햇살, 우박, 눈, 폭우 상태에서 속도가 2배가 됩니다."
+  },
+  "popUp": {
+    "name": "팝업",
+    "description": "전투에 들어갈 때 방어력이 1단계 낮아지고 속도가 1단계 증가합니다."
+  },
+  "earthSpeeder": {
+    "name": "대지의 질주자",
+    "description": "땅 타입 기술을 맞으면 속도가 1단계 증가합니다."
+  },
+  "knockout": {
+    "name": "녹아웃",
+    "description": "체력이 50% 미만일 때 35% 확률로 급소에 맞힙니다."
+  },
+  "finalRound": {
+    "name": "파이널 라운드",
+    "description": "체력이 낮을 때 격투 타입 기술의 위력이 증가합니다."
+  },
+  "kickPunch": {
+    "name": "킥 펀치",
+    "description": "발차기와 펀치 기술의 위력이 30% 증가합니다."
+  },
+  "stabNormal": {
+    "name": "노말 강화",
+    "description": "노말 타입 기술의 위력이 30% 증가합니다."
+  },
+  "adaptiveAi": {
+    "name": "적응형 AI",
+    "description": "상대의 가장 높은 능력치에 따라 능력치가 1단계 또는 2단계 상승합니다. 상대의 가장 높은 능력치가 공격일 경우 방어가, 특수공격일 경우 특수방어가, 특수방어일 경우 특수공격이, 스피드일 경우 스피드가 2단계 상승합니다."
+  },
+  "electric": {
+    "name": "일렉트릭",
+    "description": "전기 타입 기술의 위력이 50% 증가하고, 물 타입에게 받는 데미지가 2배가 되며, 노말 타입 기술을 20% 위력의 전기 타입으로 변경합니다."
+  },
+  "existence": {
+    "name": "존재",
+    "description": "모든 기술의 위력이 20% 증가하고, 효과가 뛰어난 기술의 효과를 무효화하며, 상대에게 효과가 뛰어날 기술의 효과도 무효화합니다."
+  },
+  "allConsuming": {
+    "name": "모두 삼키기",
+    "description": "접촉 기술을 맞으면 최대 체력의 1/8을 회복하고 상대에게 최대 체력의 1/8만큼 데미지를 줍니다."
+  },
+  "corrupt": {
+    "name": "부패",
+    "description": "공격 후 70% 확률로 상대를 심하게 중독시킵니다."
+  },
+  "dragonKing": {
+    "name": "드래곤 킹",
+    "description": "드래곤 타입 기술의 위력이 60% 증가합니다."
+  },
+  "sandCorruption": {
+    "name": "모래 부패",
+    "description": "접촉 기술을 맞으면 공격자의 최대 체력의 1/8만큼 데미지를 주고 속도를 1단계 낮춥니다."
+  },
+  "organicTwist": {
+    "name": "유기적 비틀림",
+    "description": "풀과 바위 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "healthySoak": {
+    "name": "건강한 흡수",
+    "description": "물 타입 기술을 맞으면 속도와 공격이 1단계 증가합니다."
+  },
+  "inkBlindness": {
+    "name": "잉크 실명",
+    "description": "공격 후 35% 확률로 상대를 혼란시킵니다."
+  },
+  "inkFry": {
+    "name": "잉크 프라이",
+    "description": "물 타입 기술을 사용한 후 상대의 속도와 특수방어를 1단계 낮춥니다."
+  },
+  "mooTime": {
+    "name": "무우 타임",
+    "description": "체력이 50% 미만일 때 방어력과 속도가 50% 증가합니다."
+  },
+  "fuelExchange": {
+    "name": "연료 교환",
+    "description": "전기 타입 기술을 맞으면 속도가 1단계, 풀 타입 기술을 맞으면 최대 체력의 1/4을 회복, 악 타입 기술을 맞으면 방어력이 1단계, 페어리 타입 기술을 맞으면 공격이 1단계, 에스퍼 타입 기술을 맞으면 특수방어가 1단계, 얼음 타입 기술을 맞으면 특수공격이 1단계 증가합니다."
+  },
+  "sunAndMoon": {
+    "name": "태양과 달",
+    "description": "불꽃 타입과 바위 타입 기술의 위력이 20% 증가합니다."
+  },
+  "nightAndDay": {
+    "name": "밤과 낮",
+    "description": "체력이 50% 이상일 때 접촉 시 40% 확률로 화상을 입히고, 체력이 50% 미만일 때 접촉 시 35% 확률로 잠들게 합니다."
+  },
+  "twoHalves": {
+    "name": "두 개의 반",
+    "description": "기절시킬 수 있는 공격을 견뎌내고 상대의 속도를 크게 낮춘 후 체력을 50% 회복합니다."
+  },
+  "alienRock": {
+    "name": "에일리언 록",
+    "description": "에스퍼와 바위 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "robot": {
+    "name": "로봇",
+    "description": "전투에 들어갈 때 모든 능력치가 1단계 상승합니다. 매 턴이 끝날 때마다 무작위 능력치가 1단계 하락합니다."
+  },
+  "golemPlus": {
+    "name": "골렘 플러스",
+    "description": "바위 타입 기술의 위력이 30% 증가하고 방어력이 30% 증가합니다."
+  },
+  "nightmareFuel": {
+    "name": "악몽의 연료",
+    "description": "노말 타입 기술을 주 타입으로 변경하고 위력이 20% 증가합니다."
+  },
+  "smittyxtvVirus": {
+    "name": "스미티너겟 바이러스",
+    "description": "상대를 쓰러뜨린 후 가장 높은 능력치가 1단계 상승합니다. 공격 후 50% 확률로 상대의 무작위 능력치를 1단계 하락시킵니다."
+  },
+  "staticCharge": {
+    "name": "정전기 충전",
+    "description": "접촉 시 공격자에게 충전 상태를 부여합니다. 접촉 시 30% 확률로 마비시킵니다."
+  },
+  "darkStampede": {
+    "name": "다크 스탬피드",
+    "description": "악 타입 기술을 사용한 후 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "colorChangeDefense": {
+    "name": "컬러 체인지 디펜스",
+    "description": "맞은 기술의 타입에 저항하는 타입으로 변합니다."
+  },
+  "colorChangeSteal": {
+    "name": "컬러 체인지 스틸",
+    "description": "맞은 기술의 타입으로 변합니다. 상대와 같은 타입을 공유할 때 상대의 지닌 도구를 훔칩니다."
+  },
+  "hauntingEcho": {
+    "name": "유령의 메아리",
+    "description": "고스트 타입 기술 사용 시 30% 확률로 상대를 마비시키고 최대 체력의 1/16만큼 데미지를 줍니다."
+  },
+  "maternalShade": {
+    "name": "모성의 그림자",
+    "description": "50% 확률로 받는 데미지를 1/4로 줄입니다."
+  },
+  "spiritualBond": {
+    "name": "영적 유대",
+    "description": "공격자에게 받은 데미지의 50%를 되돌립니다."
+  },
+  "gravePower": {
+    "name": "무덤의 힘",
+    "description": "체력이 40% 미만일 때 기술의 위력이 150% 증가합니다. 30% 확률로 상대를 심하게 중독시킵니다."
+  },
+  "undead": {
+    "name": "언데드",
+    "description": "70% 확률로 기절시킬 수 있는 공격을 견뎌냅니다."
+  },
+  "scaleArmor": {
+    "name": "비늘 갑옷",
+    "description": "물, 전기, 불꽃, 풀 타입 기술의 데미지를 25% 감소시킵니다."
+  },
+  "pixelatedTongue": {
+    "name": "픽셀화된 혀",
+    "description": "30% 확률로 상대에게 랜덤한 상태 이상을 걸고 랜덤한 능력치를 1단계 낮춥니다."
+  },
+  "staticTaste": {
+    "name": "정전기 맛",
+    "description": "마비된 상대에게 기술의 위력이 50% 증가합니다. 35% 확률로 상대를 마비시킵니다."
+  },
+  "rockyHorrorShow": {
+    "name": "록키 호러 쇼",
+    "description": "상대가 도망칠 수 없게 만듭니다. 전투에 들어갈 때 랜덤한 두 능력치가 1단계 증가합니다."
+  },
+  "hauntingBroadcast": {
+    "name": "유령의 방송",
+    "description": "사용자가 기절할 때 모든 상대 포켓몬에게 저주를 겁니다."
+  },
+  "ectoplasmicTouch": {
+    "name": "에크토플라즘 터치",
+    "description": "접촉 기술을 맞으면 공격자의 최대 체력의 1/12만큼 데미지를 줍니다. 접촉 기술을 사용할 때도 상대의 최대 체력의 1/12만큼 데미지를 줍니다."
+  },
+  "toxicCombustion": {
+    "name": "독성 연소",
+    "description": "심하게 중독된 공격자에게 최대 체력의 1/8만큼 데미지를 줍니다. 30% 확률로 상대를 심하게 중독시킵니다."
+  },
+  "flamingEmission": {
+    "name": "불타는 방출",
+    "description": "불꽃과 독 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "burningDisease": {
+    "name": "화상병",
+    "description": "화상 상태인 공격자에게 최대 체력의 1/8만큼 데미지를 줍니다. 30% 확률로 상대를 화상 상태로 만듭니다."
+  },
+  "steadyStance": {
+    "name": "안정된 자세",
+    "description": "사용자의 공격, 방어, 특수공격, 특수방어가 20% 증가합니다."
+  },
+  "balancedKick": {
+    "name": "균형 잡힌 발차기",
+    "description": "발차기 기술이 절대 빗나가지 않으며 위력이 20% 증가합니다."
+  },
+  "phantomPouch": {
+    "name": "유령 주머니",
+    "description": "공격을 받거나 공격할 때 30% 확률로 최대 체력의 1/8을 회복합니다. 전투 후 아이템 드롭률이 증가합니다."
+  },
+  "hauntingScythe": {
+    "name": "유령 낫",
+    "description": "기술을 사용하기 전에 기술의 분류를 반대로 바꿉니다."
+  },
+  "soulCollector": {
+    "name": "영혼 수집가",
+    "description": "수집한 타입과 일치하는 기술의 위력이 증가합니다. 쓰러뜨린 포켓몬의 타입을 수집합니다. 기절하면 수집한 타입을 잃습니다."
+  },
+  "shadowSync": {
+    "name": "그림자 동기화",
+    "description": "상대의 능력치가 변할 때 자신의 가장 높은 능력치가 1단계 상승합니다. 모든 기술의 위력이 20% 증가합니다."
+  },
+  "frightfulCute": {
+    "name": "무서운 귀여움",
+    "description": "33% 확률로 기술의 위력이 50% 증가하거나 받는 데미지가 절반이 됩니다."
+  },
+  "ghostify": {
+    "name": "고스트화",
+    "description": "노말 타입 기술이 고스트 타입으로 변하고 위력이 40% 증가합니다."
+  },
+  "foreverPartner": {
+    "name": "영원한 파트너",
+    "description": "모든 기술의 위력이 30% 증가합니다. 40% 확률로 기절시킬 수 있는 공격을 견뎌냅니다."
+  },
+  "newAdaption": {
+    "name": "새로운 적응",
+    "description": "불꽃과 땅 타입 기술의 데미지를 절반으로 줄입니다. 불꽃, 독, 물 타입 포켓몬을 상대로 강철 타입 기술의 위력이 2배가 됩니다."
+  },
+  "steelStealer": {
+    "name": "강철 도둑",
+    "description": "강철 타입 기술을 맞으면 공격이 1단계 증가합니다."
+  },
+  "teraForce": {
+    "name": "테라 포스",
+    "description": "땅 타입 기술이 비행 타입에게 효과가 있습니다. 땅 타입 기술의 위력이 30% 증가합니다. 위협에 면역입니다."
+  },
+  "mudiate": {
+    "name": "머디에이트",
+    "description": "노말 타입 기술이 땅 타입으로 변하고 위력이 20% 증가하며 20% 확률로 상대의 명중률을 낮춥니다."
+  },
+  "gottaGoFast": {
+    "name": "빨리 가야해",
+    "description": "먼저 행동하면 위력이 2배가 됩니다. 나중에 행동하면 받는 데미지가 2배가 됩니다."
+  },
+  "imBlue": {
+    "name": "아임 블루",
+    "description": "물 타입 기술의 위력이 증가합니다. 불꽃, 물, 강철 타입 기술에 저항합니다. 불꽃, 땅, 바위 타입 포켓몬을 상대로 위력이 50% 증가합니다."
+  },
+  "notShadow": {
+    "name": "그림자 아님",
+    "description": "악, 강철, 고스트 타입 기술에 면역입니다. 악, 강철, 고스트 타입 기술을 맞을 때 각각 공격, 방어, 스피드가 상승합니다."
+  },
+  "animified": {
+    "name": "애니미파이드",
+    "description": "노말과 격투 타입 기술에 저항합니다. 독 타입 기술에 약합니다. 노말 타입 기술이 페어리 타입이 되고 위력이 20% 증가합니다. 30% 확률로 기절시킬 수 있는 공격을 견뎌냅니다."
+  },
+  "longForgotten": {
+    "name": "오래된 망각",
+    "description": "전투에 들어갈 때 방어와 특수방어가 1단계 낮아집니다."
+  },
+  "waaaa": {
+    "name": "와아아아",
+    "description": "25% 확률로 급소에 맞힙니다. 10% 확률로 상대를 심하게 중독시킵니다."
+  },
+  "tooLate": {
+    "name": "너무 늦었어",
+    "description": "항상 마지막에 행동합니다. 35% 확률로 상대를 혼란시키거나, 졸리게 하거나, 감염시키거나, 저주를 겁니다."
+  },
+  "memoriesOfTennis": {
+    "name": "테니스의 추억",
+    "description": "공, 구체, 오브, 원형, 바운스, 노란색 관련 기술의 위력이 50% 증가합니다. 이러한 기술을 사용할 때 30% 확률로 상대를 풀죽게 만듭니다."
+  },
+  "fireRafRaf": {
+    "name": "파이어 라프 라프",
+    "description": "불꽃 타입 기술의 위력이 50% 증가합니다. 물 타입에게 2배의 데미지를 받습니다. 노말 타입 기술이 불꽃 타입이 되고 위력이 20% 증가합니다."
+  },
+  "positivity": {
+    "name": "긍정성",
+    "description": "전기 타입 기술의 위력이 20% 증가합니다. 30% 확률로 기절시킬 수 있는 공격을 견뎌냅니다. 33% 확률로 받는 데미지가 절반이 됩니다."
+  },
+  "unfazed": {
+    "name": "동요하지 않음",
+    "description": "효과가 뛰어난 기술의 데미지를 절반으로 줄입니다."
+  },
+  "nightmareSauce": {
+    "name": "악몽의 소스",
+    "description": "50% 확률로 상대에게 혼수상태 특성을 부여합니다. 30% 확률로 상대에게 악몽 상태를 부여합니다."
+  },
+  "hashSlingingSlasher": {
+    "name": "해시 슬링잉 슬래셔",
+    "description": "베기 기술의 위력이 2배가 됩니다."
+  },
+  "lifeAdvice": {
+    "name": "인생 조언",
+    "description": "전투에 들어갈 때 랜덤한 능력치가 1단계 증가합니다. 공격을 맞으면 40% 확률로 최대 체력의 1/8을 회복합니다."
+  },
+  "woodCutter": {
+    "name": "나무꾼",
+    "description": "풀 타입 포켓몬을 상대로 기술의 위력이 150% 증가합니다. 풀 타입 포켓몬을 쓰러뜨린 후 공격과 속도가 1단계 증가합니다."
+  },
+  "axe": {
+    "name": "도끼",
+    "description": "베기 기술의 위력이 50% 증가합니다. 강철 타입 기술의 위력이 30% 증가합니다."
+  },
+  "rubberMan": {
+    "name": "고무인간",
+    "description": "물리와 강철 타입 기술의 데미지를 절반으로 줄입니다. 전기 타입 기술을 이 포켓몬에게 유도하고 공격이 1단계 증가합니다. 물 타입 기술에 2배의 데미지를 받습니다. 노말, 격투, 비행 타입 기술의 위력이 50% 증가합니다."
+  },
+  "conquerorHaki": {
+    "name": "패왕색 하키",
+    "description": "20% 확률로 기술의 위력이 2배가 됩니다. 접촉 시 10% 확률로 상대를 잠들게 하거나 마비시킵니다."
+  },
+  "stretchy": {
+    "name": "늘어나는",
+    "description": "50% 확률로 상대를 조이기 상태로 만들어 교체를 막고 매 턴마다 데미지를 입힙니다."
+  },
+  "demonSwordsman": {
+    "name": "악마 검사",
+    "description": "베기 기술의 위력이 50% 증가합니다. 강철, 고스트, 악 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "cursedBlades": {
+    "name": "저주받은 검",
+    "description": "베기 기술의 위력이 50% 증가합니다. 20% 확률로 상대에게 저주를 겁니다."
+  },
+  "strawhat": {
+    "name": "밀짚모자",
+    "description": "15% 확률로 기절시킬 수 있는 공격을 견뎌냅니다. 기절한 아군의 수에 따라 기술의 위력이 증가합니다(최대 100% 증가)."
+  },
+  "fairyFear": {
+    "name": "페어리의 공포",
+    "description": "페어리 타입 기술의 위력이 20% 증가합니다. 10% 확률로 상대를 풀죽게 만듭니다."
+  },
+  "shadowCharm": {
+    "name": "그림자 매력",
+    "description": "전투에 들어갈 때 공격이 1단계 낮아집니다. 상대가 도망칠 수 없게 만듭니다."
+  },
+  "yinYang": {
+    "name": "음양",
+    "description": "고스트와 페어리 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "stubbornStance": {
+    "name": "고집스러운 자세",
+    "description": "70% 확률로 기절시킬 수 있는 공격을 견뎌냅니다."
+  },
+  "miseryTouch": {
+    "name": "비참한 터치",
+    "description": "공격 후 상대의 랜덤한 능력치를 1단계 변화시킵니다."
+  },
+  "justAJerk": {
+    "name": "그냥 나쁜 녀석",
+    "description": "전투에 들어갈 때 방어가 1단계 낮아집니다. 악 타입 기술의 위력이 20% 증가합니다."
+  },
+  "bugabugabuga": {
+    "name": "버가버가버가",
+    "description": "전투에 들어갈 때 모든 능력치가 1단계 낮아집니다. 상대가 도망칠 수 없게 만듭니다. 받는 데미지가 20% 증가합니다."
+  },
+  "justAMaskedJerk": {
+    "name": "그냥 가면 쓴 나쁜 녀석",
+    "description": "전투에 들어갈 때 방어와 랜덤한 능력치가 1단계 낮아집니다. 모든 기술의 위력이 20% 증가합니다."
+  },
+  "flameSpirit": {
+    "name": "불꽃 정령",
+    "description": "10% 확률로 상대를 화상 상태로 만듭니다. 불꽃 타입 기술에 데미지를 입는 대신, 무작위 능력치 두 개가 1단계 상승합니다."
+  },
+  "soulBurn": {
+    "name": "영혼 화상",
+    "description": "30% 확률로 상대를 화상 상태로 만듭니다. 화상 상태인 공격자에게 최대 체력의 1/8만큼 데미지를 줍니다."
+  },
+  "falseSafety": {
+    "name": "거짓된 안전",
+    "description": "전투에 들어갈 때 특수방어가 1단계 낮아집니다. 접촉 시 10% 확률로 공격자를 화상 상태로 만들거나, 잠들게 하거나, 마비시킵니다."
+  },
+  "forestFury": {
+    "name": "숲의 분노",
+    "description": "체력이 50% 미만일 때 풀 타입 기술의 위력이 150% 증가합니다."
+  },
+  "vineFist": {
+    "name": "덩굴 주먹",
+    "description": "펀치 기술의 위력이 30% 증가합니다. 펀치 기술 사용 시 30% 확률로 상대를 씨뿌리기 상태로 만들거나 속박합니다."
+  },
+  "theAvatar": {
+    "name": "아바타",
+    "description": "불꽃, 물, 비행, 땅 타입 기술의 위력이 20% 증가합니다."
+  },
+  "enlightened": {
+    "name": "깨달음",
+    "description": "에스퍼 타입 기술의 위력이 20% 증가합니다. 효과가 별로인 기술이 보통 효과가 됩니다."
+  },
+  "happyLittleAccidents": {
+    "name": "행복한 작은 사고들",
+    "description": "위력이 65 이상인 기술의 위력이 50% 증가합니다. 위력이 60 이하인 기술의 위력이 75% 증가합니다."
+  },
+  "originalAsmr": {
+    "name": "오리지널 ASMR",
+    "description": "20% 확률로 상대를 잠들게 합니다. 받는 데미지가 20% 감소합니다. 소리 기반 기술의 위력이 30% 증가합니다. 소리 기반 기술의 데미지를 절반으로 줄입니다."
+  },
+  "afropower": {
+    "name": "아프로 파워",
+    "description": "30% 확률로 기술의 위력이 3배가 됩니다."
+  },
+  "insectInfusion": {
+    "name": "곤충 주입",
+    "description": "50% 확률로 상대를 5턴 동안 감염시킵니다."
+  },
+  "sentientAnt": {
+    "name": "지각 있는 개미",
+    "description": "상대의 가장 높은 능력치에 따라 능력치가 1단계 또는 2단계 상승합니다. 상대의 가장 높은 능력치가 공격일 경우 방어가, 특수공격일 경우 특수방어가, 특수방어일 경우 특수공격이, 스피드일 경우 스피드가 2단계 상승합니다."
+  },
+  "antRegen": {
+    "name": "개미 재생",
+    "description": "매 턴 끝에 체력을 회복합니다."
+  },
+  "v8Engine": {
+    "name": "V8 엔진",
+    "description": "매 턴 끝에 속도가 1단계 증가합니다."
+  },
+  "selfDriving": {
+    "name": "자율 주행",
+    "description": "노말 타입 기술이 에스퍼 타입으로 변하고 위력이 50% 증가합니다."
+  },
+  "limitedEdition": {
+    "name": "한정판",
+    "description": "전투에 들어갈 때 랜덤한 두 능력치가 1단계 증가합니다. 33% 확률로 기술의 위력이 20% 증가합니다."
+  },
+  "fieryDisguise": {
+    "name": "불꽃 변장",
+    "description": "전투에 들어갈 때나 체력이 가득 찼을 때 데미지를 받지 않습니다. 이 보호는 데미지를 받으면 사라집니다. 불꽃 타입 기술이 이 특성을 충전합니다."
+  },
+  "playfulBlaze": {
+    "name": "장난스러운 불꽃",
+    "description": "체력이 낮을 때 불꽃 타입 기술의 위력이 증가합니다. 불꽃 타입 기술 사용 후 30% 확률로 공격이 1단계 증가합니다. 페어리 타입 기술 사용 시 10% 확률로 상대를 화상 상태로 만듭니다."
+  },
+  "aquaDisguise": {
+    "name": "물 변장",
+    "description": "전투에 들어갈 때나 체력이 가득 찼을 때 데미지를 받지 않습니다. 이 보호는 데미지를 받으면 사라집니다. 물 타입 기술이 이 특성을 충전합니다."
+  },
+  "phantomTorrent": {
+    "name": "유령 급류",
+    "description": "체력이 낮을 때 물 타입 기술의 위력이 증가합니다. 물 타입 기술 사용 후 30% 확률로 특수공격이 1단계 증가합니다. 페어리 타입 기술 사용 시 10% 확률로 상대를 소용돌이에 가둡니다."
+  },
+  "sillyPressure": {
+    "name": "바보 같은 압박",
+    "description": "이 포켓몬을 대상으로 하는 기술의 PP 소비가 증가합니다. 에스퍼 타입 기술 사용 후 30% 확률로 공격이 1단계 증가합니다. 페어리 타입 기술 사용 시 10% 확률로 상대를 앵콜 상태로 만듭니다."
+  },
+  "telekineticDisguise": {
+    "name": "염동력 변장",
+    "description": "전투에 들어갈 때나 체력이 가득 찼을 때 데미지를 받지 않습니다. 이 보호는 데미지를 받으면 사라집니다. 에스퍼 타입 기술이 이 특성을 충전합니다."
+  },
+  "electricDisguise": {
+    "name": "전기 변장",
+    "description": "전투에 들어갈 때나 체력이 가득 찼을 때 데미지를 받지 않습니다. 이 보호는 데미지를 받으면 사라집니다. 전기 타입 기술이 이 특성을 충전합니다."
+  },
+  "lovelyStatic": {
+    "name": "사랑스러운 정전기",
+    "description": "접촉 시 30% 확률로 공격자를 마비시킵니다. 전기 타입 기술 사용 후 30% 확률로 특수공격이 1단계 증가합니다. 페어리 타입 기술 사용 시 상대가 반대 성별이면 20% 확률로 헤롱헤롱 상태로 만듭니다."
+  },
+  "ancientDisguise": {
+    "name": "고대 변장",
+    "description": "전투에 들어갈 때나 체력이 가득 찼을 때 데미지를 받지 않습니다. 이 보호는 데미지를 받으면 사라집니다. 바위 타입 기술이 이 특성을 충전합니다."
+  },
+  "madeToLast": {
+    "name": "오래 가도록 만들어짐",
+    "description": "40% 확률로 기절시킬 수 있는 공격을 견뎌냅니다. 바위 타입 기술 사용 후 30% 확률로 속도가 1단계 증가합니다. 페어리 타입 기술 사용 시 10% 확률로 상대를 속박합니다."
+  },
+  "multiPiece": {
+    "name": "다중 조각",
+    "description": "기절시킬 수 있는 공격을 견뎌내고 속도가 크게 낮아집니다. 공격을 맞으면 체력을 회복합니다."
+  },
+  "alienType": {
+    "name": "에일리언 타입",
+    "description": "얼음, 전기, 풀 타입 기술의 위력이 20% 증가합니다."
+  },
+  "waterPowered": {
+    "name": "물 동력",
+    "description": "에스퍼와 땅 타입이 아닌 기술을 물 타입으로 변경하고 위력이 20% 증가합니다. 물 타입 기술에 데미지를 입는 대신, 무작위 능력치가 1단계 상승합니다."
+  },
+  "madeOfIce": {
+    "name": "얼음으로 만들어짐",
+    "description": "접촉 시 30% 확률로 공격자를 얼립니다. 얼음 타입 기술의 위력이 30% 증가합니다."
+  },
+  "shredded": {
+    "name": "찢어짐",
+    "description": "33% 확률로 기술의 위력이 2배가 됩니다. 물과 노말 타입 기술이 격투 타입으로 변하고 위력이 20% 증가합니다."
+  },
+  "sculptedIce": {
+    "name": "조각된 얼음",
+    "description": "매 턴 끝에 속도, 방어, 공격 중 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "quaker": {
+    "name": "지진",
+    "description": "땅 타입 기술이 비행 타입에게 효과가 있습니다. '지진'이나 '매그니튜드'가 이름에 들어간 기술의 위력이 50% 증가합니다."
+  },
+  "rockFortress": {
+    "name": "바위 요새",
+    "description": "효과가 뛰어난 기술의 데미지를 50% 감소시킵니다."
+  },
+  "rockControl": {
+    "name": "바위 제어",
+    "description": "물리 기술을 맞으면 스텔스록을 설치합니다. 바위 타입 기술의 위력이 30% 증가합니다."
+  },
+  "unstoppablePoison": {
+    "name": "멈출 수 없는 독",
+    "description": "독 타입 기술이 강철 타입에게 효과가 있습니다. 독 타입 기술의 위력이 20% 증가합니다. 30% 확률로 상대를 심하게 중독시킵니다."
+  },
+  "swiftClaws": {
+    "name": "빠른 발톱",
+    "description": "접촉 기술의 위력이 30% 증가합니다. 접촉 기술 사용 시 30% 확률로 명중률, 공격, 속도 중 하나가 1단계 증가합니다."
+  },
+  "tripleThreat": {
+    "name": "삼중 위협",
+    "description": "10% 확률로 급소에 맞힙니다. 10% 확률로 상대를 풀죽게 만듭니다. 접촉 시 10% 확률로 얼리거나, 마비시키거나, 화상 상태로 만듭니다."
+  },
+  "dragonWrath": {
+    "name": "드래곤의 분노",
+    "description": "접촉 기술을 맞으면 50% 확률로 공격자의 최대 체력의 1/6만큼 데미지를 줍니다."
+  },
+  "hydraResilience": {
+    "name": "히드라의 회복력",
+    "description": "체력이 가득 찼을 때 기절시킬 수 있는 공격을 견뎌냅니다. 일격필살 기술을 막습니다. 25% 확률로 기절시킬 수 있는 공격을 견뎌냅니다."
+  },
+  "toxicOverload": {
+    "name": "독성 과부하",
+    "description": "15% 확률로 상대를 심하게 중독시킵니다. 중독이나 심한 중독 상태의 상대를 상대로 기술의 위력이 75% 증가합니다."
+  },
+  "recycleEnergy": {
+    "name": "에너지 재활용",
+    "description": "공격을 받거나 공격할 때 50% 확률로 최대 체력의 1/8을 회복합니다."
+  },
+  "neetProduced": {
+    "name": "니트 제작",
+    "description": "물과 노말 타입 기술에 2배의 데미지를 받습니다. 전투 후 아이템 드롭률이 증가합니다. 노말, 페어리, 격투 타입 포켓몬을 상대로 위력이 2배가 됩니다."
+  },
+  "ancientAutomaton": {
+    "name": "고대 자동기계",
+    "description": "매 턴 끝에 속도, 방어, 공격 중 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "shadowOfColossus": {
+    "name": "거상의 그림자",
+    "description": "10% 확률로 기절시킬 수 있는 공격을 견뎌냅니다. 고스트 타입 기술의 위력이 30% 증가합니다. 받는 데미지가 15% 감소합니다."
+  },
+  "trueFear": {
+    "name": "진정한 공포",
+    "description": "매 턴 끝에 상대의 랜덤한 능력치를 1단계 낮춥니다."
+  },
+  "sumoMaster": {
+    "name": "스모 마스터",
+    "description": "격투 타입 기술의 위력이 30% 증가합니다. 노말 타입 기술이 땅 타입으로 변하고 위력이 30% 증가합니다."
+  },
+  "steadfastBulk": {
+    "name": "견고한 덩치",
+    "description": "공격을 받으면 30% 확률로 풀죽게 됩니다. 풀죽게 되면 속도가 2단계, 공격과 방어가 1단계 증가합니다."
+  },
+  "bigGuts": {
+    "name": "큰 근성",
+    "description": "상태 이상일 때 공격이 2배가 됩니다. 화상으로 인한 공격 감소를 무시합니다."
+  },
+  "luchadorsSpirit": {
+    "name": "루차도르의 정신",
+    "description": "노말 타입 기술이 비행 타입으로 변하고 위력이 20% 증가합니다. 상대를 쓰러뜨린 후 가장 높은 능력치가 1단계 증가합니다."
+  },
+  "maskedMight": {
+    "name": "가면의 힘",
+    "description": "체력이 50% 이상일 때 공격과 특수공격이 2배가 됩니다."
+  },
+  "nachoLibre": {
+    "name": "나초 리브레",
+    "description": "격투 타입 기술의 위력이 60% 증가합니다."
+  },
+  "pseudoScale": {
+    "name": "의사 비늘",
+    "description": "체력이 가득 찼을 때 받는 데미지가 절반이 됩니다. 접촉 기술을 맞으면 공격자의 최대 체력의 1/8만큼 데미지를 줍니다."
+  },
+  "dracoForm": {
+    "name": "드래코 폼",
+    "description": "드래곤 타입 기술의 위력이 20% 증가합니다. 드래곤과 노말 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "dittoType": {
+    "name": "메타몽 타입",
+    "description": "맞은 기술의 타입에 저항하는 타입으로 변합니다. 타입이 변하면 최대 체력의 1/8을 회복합니다."
+  },
+  "morphingBlaze": {
+    "name": "변형 불꽃",
+    "description": "체력이 낮을 때 불꽃 타입 기술의 위력이 증가합니다. 체력이 50% 미만일 때 물 타입을 상대로 불꽃 타입 기술이 전기 타입으로, 땅 타입을 상대로 물 타입으로 변합니다."
+  },
+  "flameForm": {
+    "name": "플레임 폼",
+    "description": "불꽃 타입 기술의 위력이 20% 증가합니다. 불꽃과 노말 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "ultimateAdaptation": {
+    "name": "궁극의 적응",
+    "description": "모든 기술의 위력이 20% 증가합니다. 이 포켓몬을 상대로 효과가 뛰어난 기술이 보통 효과가 됩니다."
+  },
+  "pseudoPerfection": {
+    "name": "의사 완벽",
+    "description": "각각 10% 확률로: 급소에 맞힘, 받는 데미지 절반, 기술의 위력 2배, 공격을 받거나 공격할 때 최대 체력의 1/8 회복."
+  },
+  "dnaChange": {
+    "name": "DNA 변화",
+    "description": "기술을 사용할 때 50% 확률로 타입이 변하고 최대 체력의 1/8을 회복합니다."
+  },
+  "realisticStatic": {
+    "name": "현실적인 정전기",
+    "description": "접촉 시 50% 확률로 공격자를 마비시킵니다. 접촉 시 공격자의 랜덤한 능력치를 1단계 낮춥니다. 접촉 기술을 맞으면 공격자의 최대 체력의 1/8만큼 데미지를 줍니다."
+  },
+  "mascotForm": {
+    "name": "마스코트 폼",
+    "description": "전기 타입 기술의 위력이 20% 증가합니다. 전기와 노말 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "copyGuard": {
+    "name": "복사 방지",
+    "description": "이 포켓몬이 사용하는 기술은 절대 빗나가지 않습니다. 효과가 뛰어난 기술의 데미지를 25% 감소시킵니다."
+  },
+  "muscleForm": {
+    "name": "머슬 폼",
+    "description": "격투 타입 기술의 위력이 20% 증가합니다. 격투와 노말 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "unrealPressure": {
+    "name": "비현실적인 압박",
+    "description": "이 포켓몬을 대상으로 하는 기술의 PP 소비가 2 증가합니다. 전투에 들어갈 때 상대의 랜덤한 능력치와 명중률을 1단계 낮춥니다."
+  },
+  "psychoForm": {
+    "name": "사이코 폼",
+    "description": "에스퍼 타입 기술의 위력이 20% 증가합니다. 에스퍼와 노말 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "clubClobber": {
+    "name": "클럽 강타",
+    "description": "바위 타입 기술의 위력이 20% 증가합니다. 접촉 기술의 위력이 40% 증가합니다."
+  },
+  "yabaDabaDoo": {
+    "name": "야바 다바 두",
+    "description": "전투에 들어갈 때 모든 능력치가 1단계 증가합니다. 매 턴 끝에 랜덤한 능력치가 1단계 낮아집니다."
+  },
+  "meteorProof": {
+    "name": "운석 방어",
+    "description": "물, 바위, 불꽃, 얼음 타입 기술의 데미지를 25% 감소시킵니다."
+  },
+  "sharkShred": {
+    "name": "상어 찢기",
+    "description": "접촉 기술을 사용할 때 상대의 최대 체력의 1/8만큼 데미지를 줍니다. 접촉 기술을 사용할 때 최대 체력의 1/8을 회복합니다."
+  },
+  "attackBoost": {
+    "name": "공격 강화",
+    "description": "매 턴 끝에 공격이 1단계 증가합니다."
+  },
+  "reversedPsychology": {
+    "name": "역심리",
+    "description": "능력치 변화가 반전됩니다. 기술의 타입 상성이 반전됩니다."
+  },
+  "tailCommand": {
+    "name": "꼬리 명령",
+    "description": "꼬리 관련 기술의 위력이 75% 증가합니다."
+  },
+  "abyssalAqua": {
+    "name": "심연의 물",
+    "description": "물, 고스트, 악 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 30% 확률로 상대를 소용돌이에 가두게 됩니다."
+  },
+  "omniscale": {
+    "name": "전능한 비늘",
+    "description": "30% 확률로 받는 데미지가 절반이 됩니다. 공격을 맞으면 30% 확률로 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "bounceBack": {
+    "name": "반동",
+    "description": "30% 확률로 기절시킬 수 있는 공격을 견뎌내고 공격자의 최대 체력의 1/8만큼 데미지를 줍니다."
+  },
+  "counterCoat": {
+    "name": "반격 코트",
+    "description": "접촉 기술을 맞으면 공격자의 최대 체력의 1/6만큼 데미지를 줍니다. 받는 데미지가 15% 감소합니다."
+  },
+  "shinyScale": {
+    "name": "빛나는 비늘",
+    "description": "10% 확률로 공격의 데미지를 완전히 피합니다."
+  },
+  "goldenLuck": {
+    "name": "황금 행운",
+    "description": "30% 확률로 급소에 맞힙니다."
+  },
+  "oneInAMillion": {
+    "name": "백만분의 일",
+    "description": "5% 확률로 기술의 위력이 5배가 됩니다."
+  },
+  "apexPredator": {
+    "name": "최상위 포식자",
+    "description": "전투에 들어갈 때 방어가 1단계 낮아집니다. 상대를 쓰러뜨린 후 가장 높은 능력치가 1단계 증가합니다."
+  },
+  "terrorTunnel": {
+    "name": "공포의 터널",
+    "description": "구멍파기의 위력이 2배가 됩니다."
+  },
+  "looseThreads": {
+    "name": "느슨한 실",
+    "description": "30% 확률로 상대를 속박합니다. 속박 기술의 위력이 5배가 됩니다."
+  },
+  "streetSmart": {
+    "name": "거리의 지혜",
+    "description": "강철, 악, 노말, 격투 타입 기술의 위력이 20% 증가합니다."
+  },
+  "boosheFurCoat": {
+    "name": "부시 모피 코트",
+    "description": "물리 기술의 데미지를 절반으로 줄입니다. 40% 확률로 특수 기술의 데미지를 25% 감소시킵니다."
+  },
+  "champion": {
+    "name": "챔피언",
+    "description": "상대를 쓰러뜨린 후 모든 능력치가 1단계 상승합니다. 기술을 사용한 후 자신이 맹독 상태가 됩니다."
+  },
+  "snakeScale": {
+    "name": "뱀 비늘",
+    "description": "50% 확률로 받는 데미지가 25% 감소합니다. 접촉 시 30% 확률로 공격자를 심하게 중독시킵니다."
+  },
+  "deathClaws": {
+    "name": "죽음의 발톱",
+    "description": "접촉 기술의 위력이 50% 증가합니다. 효과가 별로인 기술이 보통 효과가 됩니다."
+  },
+  "industrialPower": {
+    "name": "산업의 힘",
+    "description": "전기, 강철, 독 타입 기술의 위력이 30% 증가합니다."
+  },
+  "cogOverload": {
+    "name": "톱니바퀴 과부하",
+    "description": "톱니바퀴와 회전 관련 기술의 위력이 50% 증가합니다."
+  },
+  "multiGear": {
+    "name": "다중 톱니바퀴",
+    "description": "기어체인지 사용 시 속도와 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "sugarRush": {
+    "name": "슈가 러시",
+    "description": "체력이 50% 이상일 때 먼저 행동합니다. 체력이 50% 이상일 때 기술의 위력이 20% 증가합니다."
+  },
+  "livingDelicacy": {
+    "name": "살아있는 진미",
+    "description": "전투에 들어갈 때 랜덤한 두 능력치가 1단계 증가합니다. 33% 확률로 기술의 위력이 50% 증가합니다. 공격을 맞으면 30% 확률로 최대 체력의 1/8을 회복합니다."
+  },
+  "abandoned": {
+    "name": "버려짐",
+    "description": "공격을 맞으면 공격과 속도가 1단계 증가합니다."
+  },
+  "lazyMight": {
+    "name": "게으른 힘",
+    "description": "체력이 낮을 때 모든 기술의 위력이 증가합니다."
+  },
+  "lasagna": {
+    "name": "라자냐",
+    "description": "체력이 50% 미만으로 떨어지면 최대 체력의 1/2을 회복합니다. 전투당 한 번만 발동합니다."
+  },
+  "alienCat": {
+    "name": "에일리언 고양이",
+    "description": "에스퍼 타입 기술의 위력이 20% 증가합니다. 반대 성별의 고양이 같은 포켓몬을 헤롱헤롱하게 만듭니다. 땅 타입 기술에 면역입니다."
+  },
+  "phaser": {
+    "name": "페이저",
+    "description": "접촉 기술의 데미지를 무효화합니다."
+  },
+  "virtualTacos": {
+    "name": "가상 타코",
+    "description": "매 턴 끝에 최대 체력의 1/8을 회복합니다."
+  },
+  "heyLookAtMe": {
+    "name": "이봐 나 좀 봐",
+    "description": "전투에 들어갈 때 랜덤한 두 능력치가 1단계 낮아지고 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "limitedTime": {
+    "name": "한정된 시간",
+    "description": "전투에 들어갈 때 자신을 심하게 중독시킵니다. 30% 확률로 기술의 위력이 3배가 됩니다. 상대를 쓰러뜨린 후 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "boxBorn": {
+    "name": "상자에서 태어남",
+    "description": "공, 구체, 오브 관련 기술의 위력이 75% 감소합니다. 강철 타입 기술의 위력이 20% 증가합니다."
+  },
+  "imAPickle": {
+    "name": "나는 피클이야",
+    "description": "물 타입 기술을 맞으면 체력을 회복합니다. 풀 타입 기술을 맞으면 속도가 1단계 증가합니다. 강철 타입 기술을 맞으면 공격이 1단계 증가합니다. 10% 확률로 상대를 풀죽게 만듭니다."
+  },
+  "resourceful": {
+    "name": "자원 풍부",
+    "description": "30% 확률로 상대의 지닌 도구를 훔치고 공격이 1단계 증가합니다. 30% 확률로 전투 후 아이템을 얻습니다."
+  },
+  "deadlyBrine": {
+    "name": "치명적인 소금물",
+    "description": "노말 타입 기술을 물 타입으로 변경합니다. 물 타입 기술의 위력이 30% 증가합니다. 물과 독 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 10% 확률로 상대를 맹독 상태로 만듭니다."
+  },
+  "thicc": {
+    "name": "두꺼움",
+    "description": "30% 확률로 받는 데미지가 25% 감소합니다."
+  },
+  "enforcer": {
+    "name": "집행자",
+    "description": "악과 강철 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 상대를 쓰러뜨린 후 공격이 1단계 상승합니다."
+  },
+  "spookySense": {
+    "name": "으스스한 감각",
+    "description": "고스트와 악 타입 기술의 데미지를 25% 감소시킵니다. 상대가 효과가 뛰어난 기술을 가지고 있으면 공격과 속도가 1단계 증가합니다."
+  },
+  "unyieldingCourage": {
+    "name": "굽히지 않는 용기",
+    "description": "체력이 가득 찼을 때 기절시킬 수 있는 공격을 견뎌냅니다. 일격필살 기술을 막습니다. 25% 확률로 기절시킬 수 있는 공격을 견뎌냅니다."
+  },
+  "lovePower": {
+    "name": "사랑의 힘",
+    "description": "50% 확률로 기술의 위력이 2배가 됩니다. 상대가 반대 성별이면 30% 확률로 헤롱헤롱하게 만듭니다."
+  },
+  "spiritWinds": {
+    "name": "영혼의 바람",
+    "description": "고스트와 풀 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 악과 노말 타입 기술을 고스트 타입으로 변경하고 위력이 20% 증가합니다."
+  },
+  "leafDancer": {
+    "name": "나뭇잎 댄서",
+    "description": "악 타입 기술을 사용한 후 랜덤한 능력치가 1단계 증가합니다. 풀 타입 기술을 맞으면 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "slayerSensei": {
+    "name": "슬레이어 선생님",
+    "description": "고스트와 악 타입 포켓몬을 상대로 기술의 위력이 3배가 됩니다. 상대를 쓰러뜨린 후 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "balanced": {
+    "name": "균형 잡힘",
+    "description": "혼란에 면역입니다. 이 포켓몬이 사용하는 기술은 절대 빗나가지 않습니다. 50% 확률로 받는 데미지가 절반이 됩니다."
+  },
+  "enhancedFocus": {
+    "name": "강화된 집중",
+    "description": "25% 확률로 급소에 맞힙니다."
+  },
+  "luckySeven": {
+    "name": "럭키 세븐",
+    "description": "위력이 70인 기술의 위력이 70% 확률로 70% 증가합니다. 공격 후 70% 확률로 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "lastLaugh": {
+    "name": "마지막 웃음",
+    "description": "기절할 때 공격자의 최대 체력의 1/4만큼 데미지를 줍니다."
+  },
+  "foxWisdom": {
+    "name": "여우의 지혜",
+    "description": "노말 타입 기술을 에스퍼 타입으로 변경합니다. 에스퍼 타입 기술의 위력이 30% 증가합니다. 불꽃과 에스퍼 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "eternalYouth": {
+    "name": "영원한 젊음",
+    "description": "페어리 타입 기술의 위력이 30% 증가합니다. 노말 타입 기술이 페어리 타입으로 변합니다. 10% 확률로 기절시킬 수 있는 공격을 견뎌냅니다."
+  },
+  "flamingChakra": {
+    "name": "불타는 차크라",
+    "description": "에스퍼 타입이 아닌 기술이 불꽃 타입으로 변합니다. 불꽃 타입 기술의 위력이 50% 증가합니다. 10% 확률로 상대를 화상 상태로 만듭니다."
+  },
+  "adaptabugility": {
+    "name": "적응하는 벌레",
+    "description": "벌레 타입 기술의 위력이 3배가 됩니다."
+  },
+  "shellRepair": {
+    "name": "껍질 수리",
+    "description": "껍질깨기 사용 시 최대 체력의 1/4을 회복합니다. 껍질깨기 사용 시 방어와 특수방어가 1단계 증가합니다. 전투당 한 번만 발동합니다."
+  },
+  "squeezer": {
+    "name": "압착기",
+    "description": "김밥말이의 위력이 5배가 됩니다. 30% 확률로 상대를 속박합니다."
+  },
+  "greenSpaghettiMonster": {
+    "name": "초록 스파게티 괴물",
+    "description": "풀 타입 기술 사용 시 15% 확률로 상대를 속박합니다. 풀 타입 기술의 위력이 20% 증가합니다. 풀 타입 기술 사용 시 10% 확률로 상대의 속도를 1단계 낮춥니다."
+  },
+  "leechVines": {
+    "name": "흡수 덩굴",
+    "description": "덩굴채찍의 위력이 2배가 됩니다. 덩굴채찍 사용 시 30% 확률로 상대를 씨뿌리기 상태로 만들거나 속박합니다."
+  },
+  "regeneratorPlus": {
+    "name": "재생력 플러스",
+    "description": "교체될 때 최대 체력의 45%를 회복합니다."
+  },
+  "plaguePsyche": {
+    "name": "역병 정신",
+    "description": "독과 에스퍼 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 노말 타입 기술을 독 타입으로 변경합니다. 10% 확률로 상대를 혼란 또는 독 상태로 만듭니다."
+  },
+  "toxicTrance": {
+    "name": "독성 트랜스",
+    "description": "30% 확률로 상대를 심하게 중독시킵니다. 30% 확률로 상대를 잠들게 합니다. 사용자가 상태 이상일 때 기술의 위력이 50% 증가합니다."
+  },
+  "permafrostArmor": {
+    "name": "영구동토 갑옷",
+    "description": "불꽃, 얼음, 바위 타입 기술의 데미지를 절반으로 줄입니다."
+  },
+  "glacialPace": {
+    "name": "빙하의 속도",
+    "description": "전투에 들어갈 때 속도가 2단계 낮아집니다. 얼음 타입 기술의 위력이 20% 증가합니다."
+  },
+  "iceKing": {
+    "name": "얼음의 왕",
+    "description": "얼음 타입 기술의 위력이 50% 증가합니다. 노말 타입 기술이 얼음 타입으로 변하고 위력이 20% 증가합니다. 5% 확률로 상대를 얼립니다."
+  },
+  "despair": {
+    "name": "절망",
+    "description": "매 턴 끝에 상대의 랜덤한 능력치를 1단계 낮추고 사용자의 랜덤한 능력치를 1단계 증가시킵니다."
+  },
+  "ohayogosumasu": {
+    "name": "오하요고자이마스",
+    "description": "전투에 들어갈 때 공격, 방어, 특수공격, 특수방어, 속도가 1단계 낮아집니다."
+  },
+  "abilityTextHere": {
+    "name": "특성 텍스트 여기",
+    "description": "전투에 들어갈 때 상대에게 이 특성을 부여합니다. 전투에 들어갈 때 랜덤한 두 능력치가 1단계 증가합니다."
+  },
+  "exceptionCaught": {
+    "name": "예외 포착",
+    "description": "기절시킬 수 있는 공격을 견뎌내고 속도가 크게 낮아집니다. 공격을 맞으면 체력을 회복합니다."
+  },
+  "fourOFour": {
+    "name": "404",
+    "description": "10% 확률로 공격의 데미지를 완전히 피합니다."
+  },
+  "shadowSlayer": {
+    "name": "그림자 학살자",
+    "description": "고스트나 강철 타입 기술 사용 시 30% 확률로 상대를 화상, 중독, 마비, 심한 중독 상태로 만듭니다."
+  },
+  "nightmareEmerald": {
+    "name": "악몽의 에메랄드",
+    "description": "바위와 악몽 타입 기술의 위력이 30% 증가합니다. 50% 확률로 상대에게 혼수상태 특성이나 악몽 상태를 부여합니다."
+  },
+  "imaginary": {
+    "name": "상상의",
+    "description": "노말 타입 기술이 페어리 타입으로 변하고 위력이 20% 증가합니다. 30% 확률로 물리 기술의 데미지가 절반이 됩니다."
+  },
+  "splinterSkin": {
+    "name": "가시 피부",
+    "description": "접촉 기술을 맞으면 공격자의 최대 체력의 1/12만큼 데미지를 줍니다. 접촉 기술을 사용할 때도 상대의 최대 체력의 1/12만큼 데미지를 줍니다."
+  },
+  "jujutsuSorcerer": {
+    "name": "주술사",
+    "description": "사용자나 상대가 상태 이상일 때 기술의 위력이 150% 증가합니다. 20% 확률로 자신이나 상대의 상태 이상을 치료합니다. 30% 확률로 랜덤한 상태 이상을 걸립니다. 화상으로 인한 공격 감소를 무시합니다. 상태 이상이 아닐 때 50% 확률로 자신에게 랜덤한 상태 이상을 걸립니다."
+  },
+  "toxicKing": {
+    "name": "독의 왕",
+    "description": "항상 상대를 심하게 중독시킵니다."
+  },
+  "swampKing": {
+    "name": "늪지의 왕",
+    "description": "30% 확률로 상대를 독 상태로 만듭니다. 노말 타입 기술을 물 타입으로 변경하고 위력이 20% 증가합니다. 물과 독 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "rageSoul": {
+    "name": "분노의 영혼",
+    "description": "기절한 아군의 수에 따라 기술의 위력이 증가합니다(최대 150% 증가)."
+  },
+  "darkSide": {
+    "name": "다크 사이드",
+    "description": "악 타입 기술의 위력이 2배가 됩니다."
+  },
+  "puppetMaster": {
+    "name": "인형사",
+    "description": "미미큐와 슈퍼트를 상대로 기술의 위력이 3배가 됩니다. 20% 확률로 노말과 격투 타입 포켓몬을 저주하거나 속박합니다. 10% 확률로 받는 데미지가 절반이 됩니다."
+  },
+  "blackAndRed": {
+    "name": "검정과 빨강",
+    "description": "악과 불꽃 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 15% 확률로 상대를 화상 상태로 만듭니다. 노말 타입 기술을 악 타입으로 변경하고 위력이 20% 증가합니다."
+  },
+  "zombieExperience": {
+    "name": "좀비 경험",
+    "description": "악, 고스트, 땅 타입 포켓몬을 상대로 기술의 위력이 2배가 됩니다. 악, 고스트, 땅 타입 포켓몬을 쓰러뜨린 후 모든 능력치가 1단계 증가합니다."
+  },
+  "lastHope": {
+    "name": "마지막 희망",
+    "description": "체력이 낮을 때 모든 기술의 위력이 증가합니다."
+  },
+  "ugly": {
+    "name": "추함",
+    "description": "전투에 들어갈 때와 매 턴 끝에 랜덤한 능력치가 1단계 낮아집니다. 10% 확률로 상대를 풀죽게 만듭니다."
+  },
+  "blandCardboardEater": {
+    "name": "밋밋한 골판지 먹는 자",
+    "description": "스미티XTV를 상대로 기술의 위력이 3배가 됩니다. 풀 타입 기술을 맞으면 공격이 1단계 증가합니다. 풀 타입 기술을 사용할 때 최대 체력의 1/8을 회복합니다."
+  },
+  "boring": {
+    "name": "지루함",
+    "description": "전투에 들어갈 때와 매 턴 끝에 랜덤한 능력치가 1단계 낮아집니다. 노말 타입 기술의 위력이 30% 증가합니다."
+  },
+  "moldyTouch": {
+    "name": "곰팡이 터치",
+    "description": "접촉 시 10% 확률로 상대를 감염시키거나 심하게 중독시킵니다. 독 타입 기술의 위력이 20% 증가합니다. 틀깨기에 2배의 데미지를 받습니다."
+  },
+  "eternalGiggle": {
+    "name": "영원한 킥킥거림",
+    "description": "틀깨기에 2배의 데미지를 받습니다. 사용자가 기절할 때 모든 상대 포켓몬을 혼란시키고 풀죽게 만듭니다."
+  },
+  "redMenace": {
+    "name": "붉은 위협",
+    "description": "접촉 시 5% 확률로 상대를 저주하거나 10% 확률로 화상 상태로 만듭니다. 불꽃 타입 기술의 위력이 20% 증가합니다. 불꽃 타입 기술을 맞으면 속도가 1단계 증가합니다. 틀깨기에 2배의 데미지를 받습니다."
+  },
+  "ghostlyMold": {
+    "name": "유령 곰팡이",
+    "description": "접촉 시 10% 확률로 상대를 심하게 중독시킵니다. 사용자가 상대와 같은 약점을 공유할 때 고스트와 독 타입 기술의 위력이 2배가 됩니다. 노말 타입 기술이 고스트 타입으로 변하고 위력이 20% 증가합니다. 틀깨기에 2배의 데미지를 받습니다."
+  },
+  "pacFungus": {
+    "name": "팩맨 곰팡이",
+    "description": "접촉 시 30% 확률로 상대를 감염시킵니다. 상대가 감염된 상태일 때 속도와 공격이 1단계 증가합니다. 틀깨기에 2배의 데미지를 받습니다."
+  },
+  "secretSauce": {
+    "name": "비밀 소스",
+    "description": "10% 확률로 상대를 마비, 화상, 중독, 심한 중독 상태로 만듭니다. 10% 확률로 상대의 최대 체력의 1/8만큼 데미지를 줍니다. 10% 확률로 다양한 상태 이상이나 효과를 적용합니다."
+  },
+  "mcpuzzle": {
+    "name": "맥퍼즐",
+    "description": "20% 확률로 상대를 혼란시킵니다. 10% 확률로 상대를 풀죽게 만듭니다. 20% 확률로 기술의 위력이 150% 증가합니다. 상대를 쓰러뜨린 후 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "mayITakeYourOrder": {
+    "name": "주문하시겠습니까",
+    "description": "이 포켓몬이 사용하는 기술이 먼저 행동합니다."
+  },
+  "stealthShipping": {
+    "name": "스텔스 배송",
+    "description": "접촉 기술을 맞으면 50% 확률로 스파이크, 20% 확률로 스텔스록, 20% 확률로 독 스파이크, 10% 확률로 끈적끈적그물을 설치합니다."
+  },
+  "cardboardEmpire": {
+    "name": "골판지 제국",
+    "description": "상대를 쓰러뜨린 후 랜덤한 두 능력치가 1단계 증가합니다. 상대를 쓰러뜨린 후 최대 체력의 1/8을 회복합니다."
+  },
+  "aWinner": {
+    "name": "승자",
+    "description": "상대를 쓰러뜨린 후 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "smugAura": {
+    "name": "우쭐한 오라",
+    "description": "노말 타입 기술을 독 타입으로 변경하고 위력이 20% 증가합니다. 에스퍼와 독 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 10% 확률로 상대를 독 상태로 만듭니다."
+  },
+  "deepThoughts": {
+    "name": "깊은 생각",
+    "description": "기술을 사용한 후 30% 확률로 상대를 혼란 상태로 만듭니다."
+  },
+  "intellyLectAlly": {
+    "name": "지적 동맹",
+    "description": "매 턴 끝에 특수공격이 1단계 증가합니다."
+  },
+  "insomniaInk": {
+    "name": "불면증 잉크",
+    "description": "50% 확률로 상대에게 혼수상태 특성이나 악몽 상태를 부여합니다."
+  },
+  "nightmareClarinet": {
+    "name": "악몽의 클라리넷",
+    "description": "모든 기술이 소리 기반이 되고 위력이 20% 증가합니다. 소리 기반 기술의 위력이 50% 증가합니다. 10% 확률로 상대를 저주합니다."
+  },
+  "jellyfishFever": {
+    "name": "해파리 열병",
+    "description": "노말 타입 기술을 불꽃 타입으로 변경하고 위력이 20% 증가합니다. 특수 기술 사용 시 10% 확률로 상대를 맹독 상태로 만듭니다. 물리 기술 사용 시 10% 확률로 상대를 화상 상태로 만듭니다. 불꽃과 독 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "deepSeaVirus": {
+    "name": "심해 바이러스",
+    "description": "심하게 중독된 공격자에게 최대 체력의 1/8만큼 데미지를 줍니다. 30% 확률로 상대를 심하게 중독시킵니다."
+  },
+  "bubblingBrains": {
+    "name": "거품 뇌",
+    "description": "물 타입 기술의 위력이 50% 증가합니다. 접촉 기술을 사용할 때 최대 체력의 1/8을 회복합니다."
+  },
+  "cloakOfShadows": {
+    "name": "그림자의 망토",
+    "description": "고스트 타입 기술의 위력이 20% 증가합니다. 노말 타입 기술이 고스트 타입으로 변하고 위력이 20% 증가합니다. 효과가 뛰어난 기술의 데미지를 25% 감소시킵니다."
+  },
+  "acidWater": {
+    "name": "산성 물",
+    "description": "독과 물 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 노말 타입 기술을 독 타입으로 변경하고 위력이 20% 증가합니다. 물이나 독 타입 기술 사용 시 노말, 강철, 격투 타입 포켓몬에게 위력이 2배가 됩니다."
+  },
+  "eightBitBlaze": {
+    "name": "8비트 불꽃",
+    "description": "체력이 낮을 때 불꽃 타입 기술의 위력이 증가합니다. 10% 확률로 상대를 불꽃 소용돌이에 가둡니다. 노말 타입 기술이 불꽃 타입으로 변하고 위력이 20% 증가합니다. 10% 확률로 상대를 화상 상태로 만듭니다."
+  },
+  "charredMemory": {
+    "name": "그을린 기억",
+    "description": "불꽃 타입 기술 사용 후 상대의 특수방어가 1단계 하락합니다. 불꽃과 에스퍼 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 노말 타입 기술을 에스퍼 타입으로 변경하고 위력이 20% 증가합니다."
+  },
+  "blackAndWhite": {
+    "name": "흑백",
+    "description": "노말이나 악 타입이 아닌 기술의 데미지를 무효화합니다."
+  },
+  "eightBitTerror": {
+    "name": "8비트 공포",
+    "description": "악몽 관련 기술의 위력이 20% 증가합니다. 10% 확률로 상대를 저주하거나 풀죽게 만듭니다. 10% 확률로 상대의 최대 체력의 1/8만큼 데미지를 줍니다."
+  },
+  "corruptionBlaze": {
+    "name": "부패의 불꽃",
+    "description": "HP가 낮을 때 불꽃 타입 기술의 위력이 증가합니다. 악과 불꽃 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 30% 확률로 상대가 마지막에 사용한 기술을 사용 불가 상태로 만듭니다."
+  },
+  "oaksMistake": {
+    "name": "오박사의 실수",
+    "description": "전투에 들어갈 때 랜덤한 능력치가 1단계 낮아집니다. 10% 확률로 상대를 씨뿌리기 상태로 만들거나 소용돌이에 가둡니다. 10% 확률로 상대를 화상 상태로 만듭니다. 공격 후 30% 확률로 최대 체력의 1/8을 회복합니다."
+  },
+  "shellShock": {
+    "name": "쉘 쇼크",
+    "description": "물과 전기 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 노말 타입 기술을 전기 타입으로 변경하고 위력이 20% 증가합니다. 물이나 노말 타입 기술 사용 시 10% 확률로 상대를 풀죽음 상태로 만듭니다. 물이나 노말 타입 기술 사용 시 10% 확률로 상대를 마비 상태로 만듭니다."
+  },
+  "darkSeed": {
+    "name": "어둠의 씨앗",
+    "description": "풀과 악 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 노말 타입 기술을 악 타입으로 변경하고 위력이 20% 증가합니다. 풀이나 노말 타입 기술 사용 시 10% 확률로 상대를 풀죽음 상태로 만들거나 씨앗을 심습니다."
+  },
+  "cursedShell": {
+    "name": "저주받은 껍질",
+    "description": "10% 확률로 상대를 저주합니다. 물리 기술의 데미지를 25% 감소시킵니다."
+  },
+  "gothamsNightmare": {
+    "name": "고담의 악몽",
+    "description": "상대가 도망칠 수 없게 만듭니다. 20% 확률로 급소에 맞힙니다."
+  },
+  "doomGadgets": {
+    "name": "파멸의 도구",
+    "description": "노말 타입 기술이 강철 타입으로 변하고 위력이 20% 증가합니다. 강철 타입 기술의 위력이 20% 증가합니다. 10% 확률로 상대를 마비, 화상, 중독, 심한 중독 상태로 만듭니다."
+  },
+  "memeArmor": {
+    "name": "밈 갑옷",
+    "description": "50% 확률로 받는 데미지가 절반이 됩니다. 공격을 맞으면 랜덤한 능력치가 1단계 증가하고 다른 랜덤한 능력치가 1단계 낮아집니다."
+  },
+  "memeified": {
+    "name": "밈화",
+    "description": "10% 확률로 기절시킬 수 있는 공격을 견뎌냅니다. 20% 확률로 특수 기술의 위력이 2배가 됩니다."
+  },
+  "hungryTroll": {
+    "name": "배고픈 트롤",
+    "description": "공격 후 50% 확률로 최대 체력의 1/8을 회복합니다. 공격 후 50% 확률로 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "monotoneMood": {
+    "name": "단조로운 기분",
+    "description": "모든 기술이 노말 타입이 됩니다. 노말 타입 기술의 위력이 20% 증가합니다. 노말 타입 기술이 고스트 타입에게 효과가 있습니다. 10% 확률로 상대를 나른하게 만듭니다."
+  },
+  "boredomAura": {
+    "name": "지루함의 오라",
+    "description": "매 턴 끝에 상대의 랜덤한 능력치를 2단계 낮춥니다."
+  },
+  "squidlyStep": {
+    "name": "오징어의 발걸음",
+    "description": "소리 기반 기술과 발차기 기술의 위력이 30% 증가합니다. 땅이나 물 타입 기술을 맞으면 속도가 1단계 증가합니다."
+  },
+  "nightmareInk": {
+    "name": "악몽의 잉크",
+    "description": "90% 확률로 상대에게 혼수상태 특성이나 악몽 상태를 부여합니다."
+  },
+  "abyssalMelody": {
+    "name": "심연의 멜로디",
+    "description": "모든 기술이 소리 기반이 되고 위력이 20% 증가합니다. 소리 기반 기술의 위력이 50% 증가합니다. 10% 확률로 상대를 저주합니다."
+  },
+  "charmingMist": {
+    "name": "매혹적인 안개",
+    "description": "고스트와 페어리 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 노말 타입 기술을 페어리 타입으로 변경하고 위력이 20% 증가합니다. 페어리나 고스트 타입 기술 사용 시 상대가 반대 성별이라면 20% 확률로 상대를 헤롱헤롱 상태로 만듭니다."
+  },
+  "ectoplasmicCharm": {
+    "name": "에크토플라즘의 매력",
+    "description": "고스트 타입 기술 사용 시 20% 확률로 이성인 상대를 헤롱헤롱하게 만듭니다. 50% 확률로 상대의 최대 체력의 1/8만큼 데미지를 줍니다."
+  },
+  "superHungry": {
+    "name": "초 배고픔",
+    "description": "공격 후 50% 확률로 최대 체력의 1/8을 회복합니다. 공격 후 50% 확률로 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "foolsGold": {
+    "name": "바보의 황금",
+    "description": "다른 포켓몬의 상태 이상 기술에 면역입니다. 악과 강철 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다!"
+  },
+  "showAndTell": {
+    "name": "보여주고 말하기",
+    "description": "마지막으로 사용한 기술과 다른 기술을 사용하면 위력이 2배가 됩니다."
+  },
+  "knightsShovel": {
+    "name": "기사의 삽",
+    "description": "사용자가 상대와 같은 약점을 공유할 때 땅과 강철 타입 기술의 위력이 2배가 됩니다. 땅 타입 기술에 면역입니다."
+  },
+  "heroicLeap": {
+    "name": "영웅의 도약",
+    "description": "땅 타입 기술에 면역입니다. 전투에 들어갈 때 공격이 1단계 증가합니다. 노말 타입 기술이 비행 타입으로 변하고 위력이 20% 증가합니다."
+  },
+  "digChampion": {
+    "name": "파기 챔피언",
+    "description": "파기 기술의 위력이 2배가 됩니다."
+  },
+  "eightBitHunger": {
+    "name": "8비트 배고픔",
+    "description": "공격 후 50% 확률로 최대 체력의 1/8을 회복합니다. 10% 확률로 상대를 풀죽게 만듭니다."
+  },
+  "rockSolidMeme": {
+    "name": "바위처럼 단단한 밈",
+    "description": "노말과 바위 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 효과가 뛰어난 기술로 받는 데미지가 25% 감소합니다."
+  },
+  "rockRoll": {
+    "name": "바위 구르기",
+    "description": "바위 타입 기술의 위력이 20% 증가합니다. '구르기'나 '회전'이 포함된 기술의 위력이 75% 증가합니다. '구르기'나 '회전'이 포함된 기술 사용 시 20% 확률로 상대를 풀죽게 만듭니다."
+  },
+  "staticShock": {
+    "name": "정전기 쇼크",
+    "description": "30% 확률로 상대를 마비시킵니다. 마비된 상대를 상대로 기술의 위력이 50% 증가합니다."
+  },
+  "horrorShow": {
+    "name": "공포 쇼",
+    "description": "상대가 도망칠 수 없게 만듭니다. 상대를 쓰러뜨린 후 가장 높은 능력치가 1단계 증가합니다."
+  },
+  "sunbather": {
+    "name": "일광욕",
+    "description": "불꽃과 물 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 노말 타입 기술을 물 타입으로 변경하고 위력이 20% 증가합니다. 강한 햇살 상태에서 매 턴 끝에 최대 HP의 1/8을 회복합니다. 매 턴 끝에 30% 확률로 날씨를 강한 햇살로 변경합니다."
+  },
+  "seedEater": {
+    "name": "씨앗 먹는 자",
+    "description": "풀 타입 기술을 맞으면 데미지를 입는 대신 체력을 회복합니다. 풀 타입 포켓몬을 상대로 기술의 위력이 2배가 됩니다. 풀 타입 포켓몬을 공격할 때 최대 체력의 1/8을 회복합니다. 씨앗 기반 기술을 맞으면 최대 체력의 1/2을 회복합니다."
+  },
+  "vacaySoul": {
+    "name": "휴가 영혼",
+    "description": "모든 기술의 위력이 3배가 됩니다. 한 턴 쉬고 한 턴만 공격할 수 있습니다."
+  },
+  "screenSwim": {
+    "name": "스크린 수영",
+    "description": "강철과 물 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 비 상태에서 매 턴 끝에 최대 HP의 1/8을 회복합니다. 10% 확률로 상대를 풀죽음 상태로 만듭니다. 매 턴 끝에 30% 확률로 날씨를 비로 변경합니다."
+  },
+  "darkWaters": {
+    "name": "어둠의 물",
+    "description": "악과 물 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 노말 타입 기술을 악 타입으로 변경하고 위력이 20% 증가합니다. 물이나 악 타입 기술 사용 시 10% 확률로 상대를 소용돌이에 가두게 됩니다. 물이나 악 타입 기술 사용 시 10% 확률로 상대의 최대 HP의 1/8에 해당하는 데미지를 입힙니다."
+  },
+  "experimentError": {
+    "name": "실험 오류",
+    "description": "전투에 들어갈 때 랜덤한 능력치가 1단계 낮아집니다. 10% 확률로 상대를 씨뿌리기 상태로 만들거나 소용돌이에 가둡니다. 10% 확률로 상대를 화상 상태로 만듭니다. 공격 후 30% 확률로 최대 체력의 1/8을 회복합니다."
+  },
+  "roundingError": {
+    "name": "반올림 오류",
+    "description": "10으로 나누어떨어지지만 5로는 나누어떨어지지 않는 위력의 기술의 데미지가 절반이 됩니다. 10으로 나누어떨어지지 않거나 5로 나누어떨어지는 위력의 기술의 위력이 50% 증가합니다."
+  },
+  "idealForm": {
+    "name": "이상적인 형태",
+    "description": "각각 10% 확률로: 급소에 맞춤, 받는 데미지 절반, 기술 위력 2배, 공격을 맞거나 공격 후 최대 체력의 1/8 회복."
+  },
+  "eliteStatic": {
+    "name": "엘리트 정전기",
+    "description": "접촉 시 50% 확률로 공격자를 마비시킵니다. 접촉 시 공격자의 랜덤한 능력치를 1단계 낮춥니다. 접촉 기술을 맞으면 공격자의 최대 체력의 1/8만큼 데미지를 줍니다."
+  },
+  "cockadoodleYes": {
+    "name": "꼬끼오 예스",
+    "description": "전투에 들어갈 때 랜덤한 능력치가 1단계 증가합니다. 상대를 쓰러뜨린 후 가장 높은 능력치가 1단계 증가합니다. 접촉 기술의 위력이 30% 증가합니다."
+  },
+  "carnivore": {
+    "name": "육식동물",
+    "description": "특정 타입의 포켓몬을 공격할 때 최대 체력의 1/8을 회복합니다. 상대를 쓰러뜨린 후 공격과 속도가 1단계 증가합니다."
+  },
+  "nightShow": {
+    "name": "밤의 쇼",
+    "description": "매 턴 끝에 상대의 랜덤한 능력치를 2단계 낮춥니다."
+  },
+  "nightmareHost": {
+    "name": "악몽의 주인",
+    "description": "50% 확률로 기술이 먼저 행동합니다. 10% 확률로 상대를 마비, 중독, 화상 상태로 만듭니다."
+  },
+  "pressurePlay": {
+    "name": "압박 플레이",
+    "description": "이 포켓몬을 대상으로 하는 기술의 PP 소모가 2 증가합니다. 전투에 들어갈 때 공격이 1단계 낮아집니다."
+  },
+  "aBCOrD": {
+    "name": "A, B, C, 또는 D",
+    "description": "10% 확률로 공격이 1단계 상승합니다. 10% 확률로 상대를 화상 상태로 만듭니다. 10% 확률로 상대를 혼란 상태로 만듭니다. 10% 확률로 상대를 나른함 상태로 만듭니다."
+  },
+  "midnightCookies": {
+    "name": "한밤중의 쿠키",
+    "description": "매 턴 끝에 30% 확률로 최대 체력의 1/8을 회복합니다. 매 턴 끝에 30% 확률로 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "horribleCardboard": {
+    "name": "끔찍한 골판지",
+    "description": "모든 기술이 노말 타입이 되고 위력이 20% 증가합니다. 노말 타입 기술이 고스트 타입에게 효과가 있습니다. 30% 확률로 상대의 최대 체력의 1/8만큼 데미지를 줍니다."
+  },
+  "theElderShadows": {
+    "name": "고대의 그림자",
+    "description": "고스트와 악 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 노말 타입 기술을 악 타입으로 변경하고 위력이 20% 증가합니다. 30% 확률로 매 턴 끝에 상대의 최대 HP의 1/16에 해당하는 데미지를 입힙니다. 30% 확률로 기술의 위력이 2배가 됩니다. 상대를 쓰러뜨린 후 무작위 능력치가 1단계 상승합니다."
+  },
+  "horribleGhostCardboard": {
+    "name": "끔찍한 유령 골판지",
+    "description": "노말 타입 기술이 고스트 타입으로 변하고 위력이 20% 증가합니다. 고스트 타입 기술이 노말 타입에게 효과가 있습니다. 30% 확률로 상대의 최대 체력의 1/8만큼 데미지를 줍니다."
+  },
+  "midnightCookiesOfDeath": {
+    "name": "죽음의 한밤중 쿠키",
+    "description": "매 턴 끝에 30% 확률로 상대의 최대 체력의 1/8만큼 데미지를 줍니다. 매 턴 끝에 30% 확률로 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "infomercialFame": {
+    "name": "홈쇼핑 명성",
+    "description": "전투에 들어갈 때 모든 능력치가 1단계 증가합니다. 매 턴 끝에 30% 확률로 상대의 최대 체력의 1/8만큼 데미지를 줍니다."
+  },
+  "winnersGrin": {
+    "name": "승자의 미소",
+    "description": "상대를 쓰러뜨린 후 가장 높은 능력치가 1단계 증가합니다. 상대를 쓰러뜨린 후 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "fancyCardboard": {
+    "name": "멋진 골판지",
+    "description": "노말 타입 기술이 노말 타입으로 유지되고 위력이 20% 증가합니다. 노말 타입 기술이 고스트 타입에게 효과가 있습니다. 위력이 60 이하인 기술의 위력이 50% 증가합니다."
+  },
+  "unjustified": {
+    "name": "부당함",
+    "description": "노말과 격투 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 페어리 타입 기술로 받는 데미지가 절반이 됩니다. 페어리 타입 기술을 맞을 때 공격이 1단계 상승합니다."
+  },
+  "abyssalStance": {
+    "name": "심연의 자세",
+    "description": "공격을 맞은 후 30% 확률로 랜덤한 능력치가 1단계 증가합니다. 공격을 맞은 후 30% 확률로 상대의 최대 체력의 1/8만큼 데미지를 줍니다. 공격 후 10% 확률로 사용자의 랜덤한 능력치가 1단계 낮아집니다. 노말 타입 기술이 악 타입으로 변하고 위력이 20% 증가합니다."
+  },
+  "leafyLure": {
+    "name": "잎사귀 미끼",
+    "description": "50% 확률로 효과가 뛰어난 기술의 데미지가 절반이 됩니다. 효과가 뛰어난 기술을 맞으면 50% 확률로 공격자의 최대 체력의 1/4만큼 데미지를 줍니다. 효과가 뛰어난 기술을 맞으면 50% 확률로 최대 체력의 1/6을 회복합니다."
+  },
+  "voraciousVegetation": {
+    "name": "탐욕스러운 식물",
+    "description": "특정 타입의 포켓몬을 공격할 때 최대 체력의 1/8을 회복합니다. 상대를 쓰러뜨린 후 공격과 속도가 1단계 증가합니다."
+  },
+  "solarPowerPlus": {
+    "name": "태양의 힘 플러스",
+    "description": "특수공격이 2배가 됩니다. 매 턴 끝에 30% 확률로 날씨를 강한 햇살로 바꿉니다."
+  },
+  "treasureGuard": {
+    "name": "보물 수호자",
+    "description": "무작위로 받는 데미지를 25-50% 감소시킵니다. 공격을 맞은 후 30% 확률로 최대 체력의 1/8을 회복합니다."
+  },
+  "goldenSkillLink": {
+    "name": "황금 스킬 링크",
+    "description": "연속 공격 기술의 공격 횟수가 최대화됩니다. 공격 후 5% 확률로 무작위 능력치가 1단계 상승합니다."
+  },
+  "treasureProducer": {
+    "name": "보물 생산자",
+    "description": "50% 확률로 상대의 지닌 도구를 빼앗습니다. 전투 후 아이템 드롭률이 증가합니다. 기술이 항상 마지막에 행동합니다."
+  },
+  "multiMind": {
+    "name": "멀티 마인드",
+    "description": "불꽃과 에스퍼 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 노말 타입 기술을 에스퍼 타입으로 변경하고 위력이 20% 증가합니다. 10% 확률로 상대의 최대 HP의 1/8에 해당하는 데미지를 입힙니다."
+  },
+  "wakaFlockaFlame": {
+    "name": "와카 플로카 플레임",
+    "description": "노말 타입 기술을 불꽃 타입으로 변경하고 위력이 20% 증가합니다. 비행과 불꽃 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 10% 확률로 상대를 화상 상태로 만듭니다. 불꽃 타입 기술에 면역이며, 불꽃 타입 기술을 맞을 때 데미지를 입는 대신 HP를 회복합니다."
+  },
+  "eerieLight": {
+    "name": "기묘한 빛",
+    "description": "전기와 악 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 노말 타입 기술을 악 타입으로 변경하고 위력이 20% 증가합니다. 물 타입 기술을 악 타입으로 변경하고 위력이 20% 증가합니다. 10% 확률로 상대를 혼란 상태로 만듭니다. 10% 확률로 상대를 마비 상태로 만듭니다."
+  },
+  "abyssalLure": {
+    "name": "심연의 미끼",
+    "description": "50% 확률로 효과가 뛰어난 기술의 데미지가 절반이 됩니다. 효과가 뛰어난 기술을 맞으면 50% 확률로 공격자의 최대 체력의 1/4만큼 데미지를 줍니다. 효과가 뛰어난 기술을 맞으면 50% 확률로 최대 체력의 1/6을 회복합니다."
+  },
+  "nemoEater": {
+    "name": "니모 먹는 자",
+    "description": "물 타입 포켓몬을 상대로 기술의 위력이 2배가 됩니다. 물 타입 포켓몬을 쓰러뜨린 후 최대 체력의 1/8을 회복합니다. 물 타입 포켓몬을 쓰러뜨린 후 가장 높은 능력치가 1단계 증가합니다."
+  },
+  "woodenLie": {
+    "name": "나무 거짓말",
+    "description": "특정 타입의 포켓몬을 상대로 기술의 위력이 2배가 됩니다. 효과가 뛰어난 기술의 데미지를 25% 감소시킵니다."
+  },
+  "imARealBoy": {
+    "name": "난 진짜 소년이야",
+    "description": "노말 타입 기술이 노말 타입으로 유지되고 위력이 20% 증가합니다. 페어리와 풀 타입이 아닌 기술이 노말 타입으로 변하고 위력이 30% 증가합니다. 전투에 들어갈 때 공격과 랜덤한 능력치가 1단계 낮아집니다."
+  },
+  "lierLyer": {
+    "name": "거짓말쟁이",
+    "description": "노말 타입 기술을 악 타입으로 변경하고 위력이 20% 증가합니다. 페어리와 악 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 10% 확률로 쓰러질 위기에서 살아남습니다."
+  },
+  "copycatNinja": {
+    "name": "모방 닌자",
+    "description": "맞은 기술의 타입에 저항하는 타입으로 사용자의 타입이 변합니다."
+  },
+  "hokage": {
+    "name": "호카게",
+    "description": "불꽃, 물, 비행, 땅 타입 기술의 위력이 20% 증가합니다."
+  },
+  "sharinganActivated": {
+    "name": "사륜안 발동",
+    "description": "사용자의 타입이 자신의 공격 타입과 일치하도록 변합니다."
+  },
+  "crowClone": {
+    "name": "까마귀 복제",
+    "description": "노말 타입 기술을 비행 타입으로 변경하고 위력이 20% 증가합니다. 악, 불꽃, 비행 타입 기술이 같은 타입에 대해 타입 상성을 공유합니다! 30% 확률로 받는 데미지가 절반이 됩니다. 30% 확률로 공격을 맞은 후 최대 HP의 1/8을 회복합니다."
+  },
+  "sharinganMastery": {
+    "name": "사륜안 마스터리",
+    "description": "15% 확률로 상대의 최대 체력의 1/8만큼 데미지를 줍니다. 5% 확률로 받는 데미지가 1/4이 됩니다. 공격 후 15% 확률로 랜덤한 능력치가 1단계 증가합니다."
+  },
+  "foreheadTap": {
+    "name": "이마 찌르기",
+    "description": "위력이 60 이하인 기술의 위력이 50% 증가합니다. 위력이 60 이하인 기술 사용 시 10% 확률로 상대를 풀죽게 만듭니다. 위력이 60 이하인 기술 사용 시 10% 확률로 상대를 마비시킵니다."
+  },
+  "eightTails": {
+    "name": "팔미",
+    "description": "연속 공격 기술이 4-8번 맞습니다."
+  },
+  "rappingRampage": {
+    "name": "랩 광란",
+    "description": "모든 기술이 소리 기반이 되고 위력이 20% 증가합니다. 소리 기반 기술의 위력이 50% 증가합니다. 10% 확률로 상대를 풀죽게 만듭니다."
+  },
+  "beastMode": {
+    "name": "야수 모드",
+    "description": "체력이 40% 이하일 때 기술의 위력이 2배가 됩니다."
+  },
+  "nightmareSand": {
+    "name": "악몽의 모래",
+    "description": "모래바람 중에 매 턴 끝에 상대의 최대 체력의 1/8만큼 데미지를 줍니다. 모래바람 중에 매 턴 끝에 30% 확률로 상대의 랜덤한 능력치를 1단계 낮춥니다. 매 턴 끝에 30% 확률로 날씨를 모래바람으로 바꿉니다."
+  },
+  "soulEater": {
+    "name": "영혼 먹는 자",
+    "description": "수집한 타입과 일치하는 기술을 사용할 때 체력을 회복합니다. 쓰러뜨린 포켓몬의 타입을 수집합니다. 기절하면 수집한 타입을 잃습니다."
+  },
+  "soulDrain": {
+    "name": "영혼 흡수",
+    "description": "10% 확률로 사용한 기술의 타입을 수집합니다. 기술의 타입이 수집한 타입과 일치하면 상대의 랜덤한 두 능력치를 2단계 낮춥니다. 기절하면 수집한 타입을 잃습니다."
+  }
+}

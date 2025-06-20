@@ -32,6 +32,11 @@ export class CheckSwitchPhase extends BattlePhase {
       return;
     }
 
+    if (this.scene.dynamicMode?.noInitialSwitch) {
+      super.end();
+      return;
+    }
+
     if (this.scene.field.getAll().indexOf(pokemon) === -1) {
       this.scene.unshiftPhase(new SummonMissingPhase(this.scene, this.fieldIndex));
       super.end();

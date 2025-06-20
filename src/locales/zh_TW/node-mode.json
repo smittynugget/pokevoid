@@ -1,0 +1,206 @@
+{
+  "viewTitle": "戰鬥路徑地圖",
+  "selectTitle": "選擇戰鬥路徑",
+  "noPathMessage": "沒有可用的戰鬥路徑。\n請先生成一個！",
+  "unknownEncounter": "未知遭遇",
+  "unknownNode": "未知",
+  "descriptions": {
+    "wildPokemon": "野生寶可夢遭遇",
+    "trainerBattle": "訓練家戰鬥",
+    "rivalBattle": "勁敵戰鬥",
+    "majorBossBattle": "主要頭目戰鬥",
+    "recoveryBoss": "恢復頭目",
+    "evilBossBattle": "邪惡團隊頭目",
+    "eliteFour": "四天王成員",
+    "champion": "冠軍戰鬥",
+    "itemGeneral": "通用道具",
+    "addPokemon": "寶可夢專用道具",
+    "itemTm": "技能機獎勵",
+    "itemBerry": "樹果獎勵",
+    "mysteryNode": "神秘遭遇",
+    "convergencePoint": "路徑匯合",
+    "smittyBattle": "史密蒂戰鬥",
+    "evilGruntBattle": "邪惡團隊小兵",
+    "evilAdminBattle": "邪惡團隊幹部",
+    "randPermaItem": "隨機永久道具",
+    "permaItems": "永久道具",
+    "goldenPokeball": "黃金精靈球獎勵",
+    "rogueBallItems": "流氓球道具",
+    "masterBallItems": "大師球道具",
+    "abilitySwitchers": "特性切換器",
+    "statSwitchers": "能力值切換器",
+    "glitchPiece": "故障片段獎勵",
+    "dnaSplicers": "DNA接合器獎勵",
+    "money": "金錢獎勵",
+    "permaMoney": "永久金錢加成",
+    "releaseItems": "釋放道具",
+    "mints": "性格薄荷",
+    "eggVoucher": "蛋券獎勵",
+    "ppMax": "PP極限道具",
+    "collectedType": "屬性收集獎勵",
+    "expShare": "學習裝置道具",
+    "typeSwitcher": "屬性切換器",
+    "passiveAbility": "被動特性道具",
+    "anyTms": "任意技能機獎勵",
+    "challengeBoss": "挑戰路徑頭目戰鬥（難度提升）",
+    "challengeRival": "挑戰路徑勁敵戰鬥（難度提升）",
+    "challengeEvilBoss": "挑戰路徑邪惡頭目（難度提升）",
+    "challengeChampion": "挑戰路徑冠軍戰鬥（難度提升）",
+    "challengeReward": "完成挑戰路徑的稀有獎勵"
+  },
+  "names": {
+    "wildPokemon": "野生寶可夢",
+    "trainerBattle": "訓練家戰鬥",
+    "rivalBattle": "勁敵戰鬥",
+    "majorBossBattle": "主要頭目",
+    "recoveryBoss": "頭目戰鬥",
+    "evilBossBattle": "邪惡頭目",
+    "eliteFour": "四天王",
+    "champion": "冠軍",
+    "itemGeneral": "通用道具",
+    "addPokemon": "寶可夢道具",
+    "itemTm": "技能機道具",
+    "itemBerry": "樹果道具",
+    "mysteryNode": "神秘節點",
+    "convergencePoint": "匯合點",
+    "smittyBattle": "史密蒂戰鬥",
+    "evilGruntBattle": "邪惡小兵",
+    "evilAdminBattle": "邪惡幹部",
+    "randPermaItem": "隨機永久道具",
+    "permaItems": "永久道具",
+    "goldenPokeball": "黃金精靈球",
+    "rogueBallItems": "流氓球道具",
+    "masterBallItems": "大師球道具",
+    "abilitySwitchers": "特性切換器",
+    "statSwitchers": "能力值切換器",
+    "glitchPiece": "故障片段",
+    "dnaSplicers": "DNA接合器",
+    "money": "金錢",
+    "permaMoney": "永久金錢",
+    "releaseItems": "釋放道具",
+    "mints": "薄荷",
+    "eggVoucher": "蛋券",
+    "ppMax": "PP極限",
+    "collectedType": "收集屬性",
+    "expShare": "學習裝置",
+    "typeSwitcher": "屬性切換器",
+    "passiveAbility": "被動特性",
+    "anyTms": "任意技能機",
+    "challengeBoss": "挑戰頭目",
+    "challengeRival": "挑戰勁敵",
+    "challengeEvilBoss": "挑戰邪惡頭目",
+    "challengeChampion": "挑戰冠軍",
+    "challengeReward": "挑戰獎勵"
+  },
+  "challenge": {
+    "chaosChallenge": "混沌挑戰啟用",
+    "isNuzlocke": {
+      "name": "納茲洛克",
+      "description": "瀕死的寶可夢永久失去"
+    },
+    "isNuzlight": {
+      "name": "納茲輕",
+      "description": "商店中沒有可購買的治療道具"
+    },
+    "isNightmare": {
+      "name": "納茲噩夢",
+      "description": "納茲輕 + 納茲洛克"
+    },
+    "noExpGain": {
+      "name": "無經驗獲得",
+      "description": "寶可夢不獲得經驗值"
+    },
+    "noCatch": {
+      "name": "無法捕獲",
+      "description": "無法捕獲寶可夢"
+    },
+    "hasPassiveAbility": {
+      "name": "被動特性",
+      "description": "敵人的被動特性啟用"
+    },
+    "invertedTypes": {
+      "name": "屬性反轉",
+      "description": "屬性剋制關係反轉"
+    },
+    "boostedTrainer": {
+      "name": "混沌訓練家",
+      "description": "訓練家隊伍等級高於你的最高等級寶可夢"
+    },
+    "multiLegendaries": {
+      "name": "多傳說",
+      "description": "勁敵隊伍獲得+1傳說寶可夢"
+    },
+    "multiBoss": {
+      "name": "混沌頭目",
+      "description": "訓練家隊伍有+1頭目寶可夢"
+    },
+    "noInitialSwitch": {
+      "name": "無初始更換",
+      "description": "戰鬥開始時無法更換寶可夢"
+    },
+    "autoPressured": {
+      "name": "自動壓迫",
+      "description": "你的寶可夢自動處於壓迫狀態"
+    },
+    "noStatBoosts": {
+      "name": "無能力值提升",
+      "description": "你無法提升能力值"
+    },
+    "noStatusMoves": {
+      "name": "無變化招式",
+      "description": "你無法使用變化招式"
+    },
+    "noPhysicalMoves": {
+      "name": "無物理招式",
+      "description": "你無法使用物理招式"
+    },
+    "noSpecialMoves": {
+      "name": "無特殊招式",
+      "description": "你無法使用特殊招式"
+    },
+    "statSwap": {
+      "name": "能力值交換",
+      "description": "你的寶可夢的攻擊<->特防，特攻<->防禦互換。"
+    },
+    "extraDamageToTypes": {
+      "name": "對屬性額外傷害",
+      "description": "某些屬性受到額外傷害"
+    },
+    "noStab": {
+      "name": "無本系加成",
+      "description": "你的寶可夢的本系招式加成被禁用。"
+    },
+    "trickRoom": {
+      "name": "戲法空間",
+      "description": "速度優先級反轉"
+    },
+    "noSwitch": {
+      "name": "無法更換",
+      "description": "你無法在戰鬥中更換寶可夢"
+    },
+    "noResistances": {
+      "name": "無抗性",
+      "description": "你的寶可夢的屬性抗性被禁用。"
+    },
+    "noHealingItems": {
+      "name": "無治療道具",
+      "description": "你的治療道具不會生效（剩飯、貝殼之鈴等）"
+    },
+    "autoTorment": {
+      "name": "自動挑釁",
+      "description": "你無法連續使用同一招式！"
+    },
+    "legendaryNerf": {
+      "name": "傳說削弱",
+      "description": "你的傳說寶可夢造成一半傷害"
+    },
+    "typeExtraDamage": {
+      "name": "屬性額外傷害",
+      "description": "最強屬性造成1.5倍傷害"
+    },
+    "pokemonNerf": {
+      "name": "寶可夢削弱",
+      "description": "最強寶可夢造成一半傷害"
+    }
+  }
+} 

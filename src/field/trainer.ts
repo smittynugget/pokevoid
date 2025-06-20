@@ -1,4 +1,4 @@
-import BattleScene from "../battle-scene";
+import BattleScene, { RecoveryBossMode } from "../battle-scene";
 import {pokemonPrevolutions} from "../data/pokemon-evolutions";
 import PokemonSpecies, {getPokemonSpecies} from "../data/pokemon-species";
 import {
@@ -296,6 +296,23 @@ export default class Trainer extends Phaser.GameObjects.Container {
   }
 
   getPartyLevels(waveIndex: integer): integer[] {
+    const isBoostedLevelBoost = this.scene.dynamicMode?.boostedTrainer ? 4 : 0;
+    const isRecoveryBossLevelBoost = this.scene.recoveryBossMode === RecoveryBossMode.FACING_BOSS ? 1 : 0;
+    if (isBoostedLevelBoost || isRecoveryBossLevelBoost || this.config.trainerType === TrainerType.SMITTY || (this.scene.gameMode.modeId === GameModes.NIGHTMARE && this.scene.currentBattle.waveIndex > 300)) {
+      const playerParty = this.scene.getParty();
+      const highestPlayerLevel = Math.max(...playerParty.map(p => p.level));
+      const boostedLevel = highestPlayerLevel + isBoostedLevelBoost + isRecoveryBossLevelBoost;
+      
+      const ret: number[] = [];
+      let partyTemplate = this.getPartyTemplate();
+      
+      for (let i = 0; i < partyTemplate.size; i++) {
+        ret.push(boostedLevel);
+      }
+      
+      return ret;
+    }
+
     // return [1];
     // if(!this.isDynamicRival) {
     //   return [1];
@@ -480,7 +497,7 @@ export default class Trainer extends Phaser.GameObjects.Container {
     }, this.config.hasStaticParty ? this.calculateStaticPartySeedOffset(index) : this.scene.currentBattle.waveIndex + (this.config.getDerivedType() << 10) + (((!this.config.useSameSeedForAllMembers ? index : 0) + 1) << 8));
 
     
-    if (this.scene.currentBattle.waveIndex > 60 && ret.species.forms.length > 1 && Utils.randSeedInt(this.isDynamicRival ? 3 : 4, 1) == 1 ) {
+    if (this.scene.currentBattle.waveIndex > 60 && ret.species.forms.length > 1 && Utils.randSeedInt(this.isDynamicRival ? 3 : 4, 1) == 1 && this.config.trainerType !== TrainerType.SMITTY ) {
       ret.formIndex = Utils.randSeedInt(ret.species.forms.length -1, 1);
       ret.generateName();
       if(ret.isGlitchOrSmittyForm()) {

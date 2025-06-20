@@ -194,6 +194,11 @@ export class MovePhase extends BattlePhase {
           ppUsed += 2;
         }
       }
+      
+      // Apply autoPressured dynamic challenge - reduce player move PP after move use twice
+      if (this.pokemon.isPlayer() && this.scene.dynamicMode?.autoPressured) {
+        ppUsed += 1; // Additional PP cost for player moves
+      }
 
       if (!this.followUp && this.canMove() && !this.cancelled) {
         this.pokemon.lapseTags(BattlerTagLapseType.MOVE);

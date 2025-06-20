@@ -51,7 +51,7 @@ import {applyUniversalSmittyForm, pokemonFormChanges, SmittyFormTrigger} from "#
 import { GameDataType } from "#enums/game-data-type";
 
 export class EncounterPhase extends BattlePhase {
-  private loaded: boolean;
+  protected loaded: boolean;
 
   constructor(scene: BattleScene, loaded?: boolean) {
     super(scene);
@@ -97,6 +97,10 @@ export class EncounterPhase extends BattlePhase {
 
         if(this.scene.currentBattle.waveIndex >= 50) {
           this.scene.gameData.reducePermaWaveModifiers(this.scene);
+        }
+
+        if(battle.waveIndex === 2 && !this.scene.gameMode.isChaosMode) {
+          this.scene.gameData.updateGameModeStats(this.scene.gameMode.modeId);
         }
       }
       else if (!this.scene.gameMode.isTestMod) {
@@ -193,12 +197,13 @@ export class EncounterPhase extends BattlePhase {
           }
           enemyPokemon.setBoss();
           enemyPokemon.initBattleInfo();
-        } else if (!(battle.waveIndex % 1000)) {
-          enemyPokemon.formIndex = 1;
-          if(enemyPokemon.isGlitchOrSmittyForm()) {
-            enemyPokemon.toggleShadow(false);
-          }
-          enemyPokemon.updateScale();
+        } 
+        else if (!(battle.waveIndex % 1000)) {
+          // enemyPokemon.formIndex = 1;
+          // if(enemyPokemon.isGlitchOrSmittyForm()) {
+            // enemyPokemon.toggleShadow(false);
+          // }
+          // enemyPokemon.updateScale();
           const bossMBH = this.scene.findModifier(m => m instanceof TurnHeldItemTransferModifier && m.pokemonId === enemyPokemon.id, false) as TurnHeldItemTransferModifier;
           this.scene.removeModifier(bossMBH!);
           bossMBH?.setTransferrableFalse();
@@ -214,6 +219,33 @@ export class EncounterPhase extends BattlePhase {
 
     });
 
+    if (battle.battleType === BattleType.TRAINER && this.scene.dynamicMode?.multiBoss && !this.loaded) {
+      const nonBossPokemon = battle.enemyParty.filter(pokemon => !pokemon.isBoss());
+      if (nonBossPokemon.length > 0) {
+        const randomIndex = Utils.randSeedInt(nonBossPokemon.length);
+        const selectedPokemon = nonBossPokemon[randomIndex];
+        const bossSegments = this.scene.getEncounterBossSegments(battle.waveIndex, selectedPokemon.level, selectedPokemon.species, true);
+        selectedPokemon.setBoss(true, bossSegments);
+        selectedPokemon.initBattleInfo();
+      }
+    }
+
+    if (this.scene.getParty().filter(p => p.isShiny()).length === 6) {
+      this.scene.validateAchv(achvs.SHINY_PARTY);
+    }
+
+    if (battle.battleType === BattleType.TRAINER) {
+      loadEnemyAssets.push(battle.trainer?.loadAssets().then(() => battle.trainer?.initSprite())!); // TODO: is this bang correct?
+      if (battle.enemyParty.filter(p => p.isBoss()).length > 1) {
+        for (const enemyPokemon of battle.enemyParty) {
+          if (enemyPokemon.isBoss() && (!enemyPokemon.isPopulatedFromDataSource && !battle.trainer?.isDynamicRival)) {
+            enemyPokemon.setBoss(true, enemyPokemon.bossSegments);
+          }
+            enemyPokemon.initBattleInfo();
+        }
+      }
+    }
+
     if (battle.battleType === BattleType.TRAINER && battle.trainer?.isDynamicRival) {
       for (let i = battle.enemyParty.length - 1; i > 0; i--) {
         const j = randSeedInt(i + 1);
@@ -226,26 +258,6 @@ export class EncounterPhase extends BattlePhase {
         }
         loadEnemyAssets.push(enemyPokemon.loadAssets());
       });
-    }
-
-    if (this.scene.getParty().filter(p => p.isShiny()).length === 6) {
-      this.scene.validateAchv(achvs.SHINY_PARTY);
-    }
-
-    if (battle.battleType === BattleType.TRAINER) {
-      loadEnemyAssets.push(battle.trainer?.loadAssets().then(() => battle.trainer?.initSprite())!); // TODO: is this bang correct?
-    // } else {
-      // This block only applies for double battles to init the boss segments (idk why it's split up like this)
-      if (battle.enemyParty.filter(p => p.isBoss()).length > 1) {
-        for (const enemyPokemon of battle.enemyParty) {
-          // If the enemy pokemon is a boss and wasn't populated from data source, then set it up
-          // likely needs to be skipped
-          if (enemyPokemon.isBoss() && (!enemyPokemon.isPopulatedFromDataSource && !battle.trainer?.isDynamicRival)) {
-            enemyPokemon.setBoss(true, enemyPokemon.bossSegments);
-          }
-            enemyPokemon.initBattleInfo();
-        }
-      }
     }
 
     Promise.all(loadEnemyAssets).then(() => {
@@ -279,6 +291,7 @@ export class EncounterPhase extends BattlePhase {
           //@ts-ignore
           this.scene.gameData.saveAll(this.scene, true, this.scene.lastSavePlayTime >= 300).then(success => { // TODO: get rid of ts-ignore
             this.scene.disableMenu = false;
+
             if (!success) {
               return this.scene.reset(true);
             }
@@ -510,7 +523,7 @@ export class EncounterPhase extends BattlePhase {
           console.log(`Dialogue ${localizationKey} skipped`);
           this.doEncounterCommon(false);
         } else {
-          const count = 5643853 + this.scene.gameData.gameStats.classicSessionsPlayed;
+          const count = 821093 + this.scene.gameData.gameStats.sessionsPlayed;
           // The line below checks if an English ordinal is necessary or not based on whether an entry for encounterLocalizationKey exists in the language or not.
           const ordinalUsed = !i18next.exists(localizationKey, {fallbackLng: []}) || i18next.resolvedLanguage === "en" ? i18next.t("battleSpecDialogue:key", { count: count, ordinal: true }) : "";
           const cycleCount = count.toLocaleString() + ordinalUsed;

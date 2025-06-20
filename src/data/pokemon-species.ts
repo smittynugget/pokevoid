@@ -321,7 +321,7 @@ export abstract class PokemonSpeciesForm {
     }
 
     
-    protected isGlitchForm(formKey: string): boolean {
+    public isGlitchForm(formKey: string): boolean {
         const glitchFormValues = [
             SpeciesFormKey.GLITCH,
             SpeciesFormKey.GLITCH_B,

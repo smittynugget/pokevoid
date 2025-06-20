@@ -1194,7 +1194,10 @@ export default class PartyUiHandler extends MessageUiHandler {
       }
 
       if (trade) {
-        this.scene.addMoney(this.getPokemonTradeValue(releasedPokemon));
+        const tradeValue = this.getPokemonTradeValue(releasedPokemon);
+        this.scene.addMoney(tradeValue);
+        this.scene.gameData.gameStats.pokemonTradedForMoney++;
+        this.scene.gameData.gameStats.moneyEarnedFromTrading += tradeValue;
         this.scene.playSound("se/buy");
       }
       

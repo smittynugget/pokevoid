@@ -14,13 +14,15 @@ export class ModifierRewardPhase extends BattlePhase {
   protected isPerma: boolean;
   private onComplete: () => void;
   private isRivalTrainer: boolean;
-  constructor(scene: BattleScene, modifierTypeFunc: ModifierTypeFunc, isPerma: boolean = false, onComplete?: () => void, isRivalTrainer: boolean = false) {
+  protected isPermaItemNode: boolean;
+  constructor(scene: BattleScene, modifierTypeFunc: ModifierTypeFunc, isPerma: boolean = false, onComplete?: () => void, isRivalTrainer: boolean = false, isPermaItemNode: boolean = false) {
     super(scene);
 
     this.modifierType = modifierTypeFunc ? getModifierType(modifierTypeFunc) : null;
     this.isPerma = isPerma;
     this.onComplete = onComplete
     this.isRivalTrainer = isRivalTrainer;
+    this.isPermaItemNode = isPermaItemNode;
   };
 
   start() {
@@ -61,9 +63,8 @@ export class ModifierRewardPhase extends BattlePhase {
   }
 
   private handlePermaModifierReward(): ModifierType {
-    const rand = Utils.randSeedInt(100);
+    const rand = this.isPermaItemNode ? 100 : Utils.randSeedInt(100);
     let modifierKey: string;
-
 
     if (rand < 95) {
       modifierKey = this.getRandomPermaMoneyKey();

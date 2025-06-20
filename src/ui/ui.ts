@@ -75,6 +75,7 @@ import ModGlitchFormUiHandler from "./mod-glitch-form-ui-handler";
 import ModGlitchCreateFormUiHandler from "./mod-glitch-create-form-ui-handler";
 import ModManagementUiHandler from "./mod-management-ui-handler";
 import PokedexModalUiHandler from "./pokedex-modal-ui-handler";
+import BattlePathUiHandler from "./battle-path-ui-handler";
 
 export enum Mode {
   MESSAGE,
@@ -133,6 +134,7 @@ export enum Mode {
   TRANSFER_SAVE_FORM,
   IMPORT_DATA_FORM,
   POKEDEX,
+  BATTLE_PATH,
 }
 
 const transitionModes = [
@@ -186,7 +188,8 @@ const noTransitionModes = [
   Mode.MOD_MANAGEMENT,
   Mode.TRANSFER_SAVE_FORM,
   Mode.IMPORT_DATA_FORM,
-  Mode.POKEDEX
+  Mode.POKEDEX,
+  Mode.BATTLE_PATH
 ];
 
 
@@ -218,17 +221,15 @@ export default class UI extends Phaser.GameObjects.Container {
   private voidexContainer: Phaser.GameObjects.Container;
   private eggGachaButton: Phaser.GameObjects.Sprite;
   private eggGachaContainer: Phaser.GameObjects.Container;
+  private battlePathButton: Phaser.GameObjects.Sprite;
+  private battlePathContainer: Phaser.GameObjects.Container;
 
   constructor(scene: BattleScene) {
     super(scene, 0, scene.game.canvas.height / 6);
 
     this.mode = Mode.MESSAGE;
     this.modeChain = [];
-    
-    // Create an array with enough slots for all the possible modes
     this.handlers = new Array(Object.keys(Mode).length / 2);
-    
-    // Assign handlers to their corresponding enum indices
     this.handlers[Mode.MESSAGE] = new BattleMessageUiHandler(scene);
     this.handlers[Mode.TITLE] = new TitleUiHandler(scene);
     this.handlers[Mode.COMMAND] = new CommandUiHandler(scene);
@@ -284,6 +285,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.handlers[Mode.MOD_MANAGEMENT] = new ModManagementUiHandler(scene);
     this.handlers[Mode.TRANSFER_SAVE_FORM] = new TransferSaveFormUiHandler(scene);
     this.handlers[Mode.POKEDEX] = new PokedexModalUiHandler(scene);
+    this.handlers[Mode.BATTLE_PATH] = new BattlePathUiHandler(scene);
 
     if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) {
       console.log("Detected iOS device - preloading ImportDataFormUiHandler");
@@ -362,7 +364,29 @@ export default class UI extends Phaser.GameObjects.Container {
     this.eggGachaContainer.setName("egg-gacha-container");
     this.eggGachaContainer.add([this.eggGachaButton, eggGachaKeySprite]);
     this.permaMoneyContainer.add(this.eggGachaContainer);
+    this.battlePathButton = this.scene.add.sprite(0, 0, "items", "map");
+    this.battlePathButton.setName("battle-path-button");
+    this.battlePathButton.setScale(0.3);
+    this.battlePathButton.setAlpha(1);
+    this.battlePathButton.setInteractive({ useHandCursor: true });
+    this.battlePathButton.on('pointerdown', () => {
+      if (scene.gameMode?.isChaosMode) {
+        scene.ui.setOverlayMode(Mode.BATTLE_PATH, { viewOnly: true });
+      }
+    });
 
+    const battlePathIcon = scene.inputController?.getIconForLatestInputRecorded("BUTTON_CYCLE_NATURE");
+    const battlePathType = scene.inputController?.getLastSourceType() || "keyboard";
+    const battlePathKeySprite = this.scene.add.sprite(2, 2, battlePathType);
+    if (battlePathIcon) {
+      battlePathKeySprite.setFrame(battlePathIcon);
+    }
+    battlePathKeySprite.setScale(.4);
+
+    this.battlePathContainer = this.scene.add.container(0, 0);
+    this.battlePathContainer.setName("battle-path-container");
+    this.battlePathContainer.add([this.battlePathButton, battlePathKeySprite]);
+    this.permaMoneyContainer.add(this.battlePathContainer);
 
     this.permaModifierBar = new ModifierBar(scene as BattleScene)
     const rightEdge = 0;
@@ -913,6 +937,40 @@ export default class UI extends Phaser.GameObjects.Container {
       eggGachaContainer.dataset.activeState = "true";
     }
   }
+
+  public updateBattlePathIcon(scene: BattleScene): void {
+    const currentPhase = scene.getCurrentPhase();
+    
+    const isChaosMode = scene.gameMode?.isChaosMode;
+    const currentWave = scene.currentBattle?.waveIndex || 0;
+    const isValidPhase = currentPhase instanceof CommandPhase || currentPhase instanceof SelectModifierPhase;
+    const battlePathButtonWidth = this.battlePathContainer.displayWidth * this.battlePathContainer.scale;
+    
+    if (!isChaosMode || currentWave < 1 || !isValidPhase) {
+      if(this.battlePathContainer.alpha === 1) {
+        this.permaMoneyText.setX(this.permaMoneyText.x + battlePathButtonWidth + 8);
+      }
+      this.battlePathContainer.setAlpha(0);
+      const battlePathContainer = document.getElementById("apadBattlePath");
+      if (battlePathContainer) {
+        battlePathContainer.dataset.activeState = "false";
+      }
+      
+      return;
+    }
+    
+    if (this.battlePathContainer.alpha === 0) {
+      this.permaMoneyText.setX(this.permaMoneyText.x - battlePathButtonWidth - 8);
+
+    }
+    this.battlePathContainer.setAlpha(1);
+
+    
+    const battlePathContainer = document.getElementById("apadBattlePath");
+    if (battlePathContainer) {
+      battlePathContainer.dataset.activeState = "true";
+    }
+  }
   
   public updatePermaMoneyText(scene:BattleScene): void {
     if (this.permaMoneyText) {
@@ -933,16 +991,26 @@ export default class UI extends Phaser.GameObjects.Container {
     const topEdge = -scene.game.canvas.height / 6;
     const padding = 5;
 
-    this.saveContainer.setPosition(rightEdge - 5, topEdge + 5);
     const saveButtonWidth = this.saveContainer.displayWidth * this.saveContainer.scale;
-
-    this.voidexContainer.setPosition(rightEdge - saveButtonWidth - padding - 10, topEdge + 5);
     const voidexButtonWidth = this.voidexContainer.displayWidth * this.voidexContainer.scale;
-
-    this.eggGachaContainer.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - padding - 19, topEdge + 5);
     const eggGachaButtonWidth = this.eggGachaContainer.displayWidth * this.eggGachaContainer.scale;
+    const saveContainerXOffset = 5;
+    const voidexContainerXOffset = 10;
+    const eggGachaContainerXOffset = 19;
+    const battlePathContainerXOffset = 28;
+    const containerYOffset = 5;
+    const permaMoneyTextYOffset = 1;
 
-    this.permaMoneyText.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - padding - 23, topEdge + 1);
+    let battlePathButtonWidth = 0;
+    this.battlePathContainer.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - padding - battlePathContainerXOffset, topEdge + containerYOffset);
+    this.battlePathContainer.setAlpha(0);
+    const permaMoneyTextXOffset = 24;
+
+    this.saveContainer.setPosition(rightEdge - saveContainerXOffset, topEdge + containerYOffset);
+    this.voidexContainer.setPosition(rightEdge - saveButtonWidth - padding - voidexContainerXOffset, topEdge + containerYOffset);
+    this.eggGachaContainer.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - padding - eggGachaContainerXOffset, topEdge + containerYOffset);
+
+    this.permaMoneyText.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - padding - permaMoneyTextXOffset, topEdge + permaMoneyTextYOffset);
     this.permaMoneyContainer.add(this.permaMoneyText);
 
     if (!this.permaMoneyContainer.parentContainer) {

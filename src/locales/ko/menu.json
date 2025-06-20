@@ -104,5 +104,19 @@
   "noModsFound": "커스텀 모드를 찾을 수 없습니다",
   "readyToStartGame": "게임 시작 준비 완료",
   "errorLoadingMods": "모드 로딩 중 오류 발생",
-  "modComplete": "게임 시작 중..."
+  "modComplete": "게임 시작 중...",
+  "choosePath": "길을 선택하세요...",
+  "saviourPath": "구세주의 길을 선택하세요 - 구조화된 진행을 가진 전통적인 게임 모드.",
+  "reaperPath": "사신의 길을 선택하세요 - 동적 도전을 가진 혼돈 모드.",
+  "returnToMainMenu": "메인 메뉴로 돌아가기",
+  "returnToPathSelection": "길 선택으로 돌아가기",
+  "chaosMode": "카오스 모드 - 끊임없이 변화하는 도전과 함께 동적 전투 인카운터를 통해 자신만의 길을 선택하세요.",
+  "chaosRogue": "카오스 로그라이크 - 무작위 2마리 포켓몬을 선택하고 자신만의 길을 개척하세요!",
+  "chaosJourney": "카오스 여정 - 팀을 구성하고 자신만의 모험을 선택하세요!",
+  "selectChaosRogueMode": "카오스 로그라이크 - 무작위 2마리 포켓몬을 선택하고 자신만의 길을 개척하세요!",
+  "selectChaosJourneyMode": "카오스 여정 - 팀을 구성하고 자신만의 모험을 선택하세요!",
+  "selectChaosVoidMode": "카오스 공허 - 공허의 깊숙한 곳으로의 여행...",
+  "selectChaosRogueVoidMode": "카오스 로그라이크 공허 - 공허의 포옹을 통해 길을 개척하세요...",
+  "selectChaosInfiniteMode": "카오스 무한 - 시간이 모든 의미를 잃는 곳...",
+  "selectChaosInfiniteRogueMode": "카오스 무한 로그라이크 - 공허와 하나가 된 자들을 위해..."
 } 

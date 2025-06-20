@@ -206,7 +206,8 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
             const speciesId = Number(this.formFields["species"].getValue());
             const formName = this.formFields["formName"].getValue();
             const primaryType = Number(this.formFields["primaryType"].getValue());
-            const secondaryType = Number(this.formFields["secondaryType"].getValue()) || undefined;
+            const secondaryType = this.formFields["secondaryType"].getValue();
+            const secondaryTypeNumber = (secondaryType !== null && secondaryType !== '') ? Number(secondaryType) : undefined;
             const ability1 = Number(this.formFields["ability1"].getValue());
             const ability2 = Number(this.formFields["ability2"].getValue());
             const hiddenAbility = Number(this.formFields["hiddenAbility"].getValue());
@@ -242,7 +243,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
                 speciesId,
                 formName,
                 primaryType,
-                secondaryType,
+                secondaryType: secondaryTypeNumber,
                 abilities: [ability1, ability2, hiddenAbility],
                 stats: {
                     statsToBoost: [stat1, stat2, stat3],
@@ -275,25 +276,23 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
                         iconData: jsonData.sprites.icon
                     });
                     
+                    this.scene.gameData.gameStats.glitchModsCreated++;
+                    
                     this.downloadModJson(jsonData);
 
                     this.scene.gameData.testSpeciesForMod.push(jsonData.speciesId);
                     
-                    // Check if iOS device and use different reload approach
                     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
                     
                     await this.scene.gameData.saveAll(this.scene);
                     
                     if (isIOS) {
                         console.log("iOS device detected, using alternative page reload method");
-                        // For iOS, we can't use window.location.reload() in a promise callback
-                        // Instead, set a timeout to perform the reload
                         setTimeout(() => {
                             console.log("Performing iOS page reload");
                             window.location.href = window.location.href;
                         }, 100);
                     } else {
-                        // For non-iOS devices, use the standard reload approach
                         window.location.reload();
                     }
                     

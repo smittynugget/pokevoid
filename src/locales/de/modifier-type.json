@@ -2,10 +2,12 @@
   "ModifierType": {
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
+      "statLabel": "Pokeball-Gegenstand",
       "description": "Erhalte {{pokeballName}} x{{modifierCount}}. (Inventar: {{pokeballAmount}}) \nFangrate: {{catchRate}}"
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
+      "statLabel": "Ei-Gutschein",
       "description": "Erhalte {{voucherTypeName}} x{{modifierCount}}."
     },
     "PokemonHeldItemModifierType": {
@@ -44,6 +46,7 @@
     },
     "PokemonNatureChangeModifierType": {
       "name": "{{natureName}} Minze",
+      "statLabel": "Natur-Minze",
       "description": "Ändert das Wesen zu {{natureName}}. Schaltet dieses Wesen permanent für diesen Starter frei."
     },
     "DoubleBattleChanceBoosterModifierType": {
@@ -95,10 +98,12 @@
     },
     "TmModifierType": {
       "name": "TM{{moveId}} - {{moveName}}",
+      "statLabel": "TM-Gegenstand",
       "description": "Bringt einem Pokémon {{moveName}} bei."
     },
     "TmModifierTypeWithInfo": {
       "name": "TM{{moveId}} - {{moveName}}",
+      "statLabel": "TM-Gegenstand",
       "description": "Bringt einem Pokémon {{moveName}} bei\n(Halte C oder Shift für mehr Infos)."
     },
     "EvolutionItemModifierType": {
@@ -112,6 +117,7 @@
     },
     "TerastallizeModifierType": {
       "name": "{{teraType}} Terra-Stück",
+      "statLabel": "Tera-Splitter",
       "description": "{{teraType}} Terakristallisiert den Träger für bis zu 10 Kämpfe."
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -394,22 +400,27 @@
     },
     "AnyTmModifierType": {
       "name": "XM {{moveName}}",
+      "statLabel": "XM (Beliebige TM)",
       "description": "Bringt einem Pokémon {{moveName}} bei."
     },
     "AnyTmModifierTypeWithInfo": {
       "name": "++XM{{moveId}} - {{moveName}}++",
+      "statLabel": "XM (Beliebige TM)",
       "description": "Bringt JEDEM Pokémon {{moveName}} bei\n(Halte C oder Shift für mehr Infos)."
     },
     "TypeSwitcherModifierType": {
       "name": "Typ-Wechsler: {{type1}} / {{type2}}",
+      "statLabel": "Typ-Wechsler",
       "description": "Ändert die Typen eines Pokémon zu {{type1}} und {{type2}}."
     },
     "PrimaryTypeSwitcherModifierType": {
       "name": "Primärtyp-Wechsler: {{type1}}",
+      "statLabel": "Primärtyp-Wechsler",
       "description": "Ändert den Primärtyp eines Pokémon zu {{type1}}."
     },
     "SecondaryTypeSwitcherModifierType": {
       "name": "Sekundärtyp-Wechsler: {{type2}}",
+      "statLabel": "Sekundärtyp-Wechsler",
       "description": "Ändert den Sekundärtyp eines Pokémon zu {{type2}}."
     },
     "AbilitySwitcherModifierType": {
@@ -418,6 +429,7 @@
     },
     "RandomStatSwitcherModifierType": {
       "name": "{{stat1}} X {{stat2}}",
+      "statLabel": "Statuswerte-Wechsler",
       "description": "Tauscht die {{stat1}} und {{stat2}} Statuswerte des Pokémon. KOSTET 1x Glitch-Stück"
     },
     "GlitchPieceModifierType": {
@@ -683,16 +695,19 @@
     },
     "CollectedTypeModifierType": {
       "name": "Gesammelter Typ: {{type}}",
+      "statLabel": "Gesammelter Typ",
       "description": "Verwende 5 von JEDEM TYP-MIX anstelle eines freigesetzten Pokémon für Freisetzungs-Items."
     },
     "SacrificeModifierType": {
       "description": "Setze ein Pokémon frei, um {{stat}} eines anderen Pokémon um 15% zu erhöhen."
     },
     "StatSacrificeModifierTypeGenerator": {
-      "name": "{{stat}} freisetzen"
+      "name": "{{stat}} freisetzen",
+      "statLabel": "Statuswerte-Freilassung"
     },
     "StatSacrificeModifierType": {
       "name": "Statuswert-Freisetzung: {{stat}}",
+      "statLabel": "Statuswerte-Freilassung",
       "description": "Setze ein Pokémon frei, um {{stat}} eines anderen Pokémon um 15% zu erhöhen."
     },
     "TypeSacrificeModifierType": {
@@ -709,14 +724,16 @@
     },
     "PassiveAbilitySacrificeModifierType": {
       "name": "Passive-Fähigkeits-Freisetzung",
-      "description": "Setze ein Pokémon frei, um seine passive Fähigkeit als PRIMÄRE Fähigkeit einem anderen zuzuweisen."
+      "description": "Setze ein Pokémon frei, um seine PRIMÄRE Fähigkeit als PASSIVE Fähigkeit einem anderen zuzuweisen."
     },
     "AnyPassiveAbilityModifierType": {
       "name": "PASSIV {{abilityName}}",
+      "statLabel": "Beliebige Passive Fähigkeit-Gegenstand",
       "description": "Gib Passive {{abilityName}} einem BELIEBIGEN Pokémon\n(C oder Shift halten für mehr Informationen)."
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
+      "statLabel": "Beliebige Fähigkeit-Gegenstand",
       "description": "Gib {{abilityName}} einem BELIEBIGEN Pokémon\n(C oder Shift halten für mehr Informationen)."
     },
     "glitchPieceCost": {
@@ -726,6 +743,11 @@
       "name": "Freilassen-Item umschalten",
       "description": "Freilassen-Items EIN/AUS"
     }
+  },
+  "AddPokemonModifierType": {
+    "name": "{{pokemonName}}",
+    "statLabel": "Draft-Pokémon-Gegenstand",
+    "description": "Fügt {{pokemonName}} dem Team hinzu."
   },
   "SpeciesBoosterItem": {
     "LIGHT_BALL": {

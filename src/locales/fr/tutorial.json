@@ -327,5 +327,28 @@
       "5":"Veuillez noter que les capacités ne peuvent avoir QU'UNE SEULE chance d'effet (par exemple, 10% de chance de paralyser), donc les améliorations SOIT modifient directement la chance d'effet, SOIT utilisent la valeur de chance précédente !",
       "6":"Enfin, les améliorations peuvent se remplacer mutuellement, la dernière amélioration a la priorité !"
     }
+  },
+  "chaosAndGauntletModes": {
+    "title": {
+      "1": "NOUVEAUX MODES CHAOS",
+      "2": "NOUVEAUX MODES CHAOS",
+      "3": "MODES DÉFI!", 
+      "4": "MODES DÉFI!",
+      "5": "Rendez N'importe Quel Pokémon Légendaire"
+    },
+    "text": {
+      "1": "S'inspirant des maîtres des roguelike comme Slay the Spire, Inscryption et bien d'autres, les modes CHAOS de Pokevoid vous permettent de choisir le chemin que vous prendrez ensuite !",
+      "2": "Planifiez votre chemin et faites de votre mieux pour surmonter le Chaos au sein du VIDE !",
+      "3": "Entrez dans le Défi ! Affrontez vague après vague de rencontres intenses !",
+      "4": "Le style de combat original de Pokerogue, intensément remixé avec la folie aléatoire de Pokevoid et des mécaniques qui cassent le jeu !",
+      "5": "Allez-y dresseur, embrassez le pouvoir interdit du vide et rendez N'IMPORTE QUEL Pokémon légendaire !"
+    }
+  },
+  "thankYou": {
+    "title": "Cher Joueur",
+    "text": {
+      "1": "16 mois de folie de développement en solo signifient tout - chaque fois que quelqu'un comme vous s'amuse à jouer à ce jeu. Si mes idées bizarres fonctionnent vraiment et que vous vous amusez,", 
+      "2": "alors peut-être - je me rapproche de mon rêve de devenir un vrai développeur de jeux. Merci beaucoup de jouer à ma version chaotique et cassée de PokéRogue ! - Smitty"
+    }
   }
 }

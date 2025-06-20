@@ -59,6 +59,8 @@ export class SelectPermaModifierPhase extends BattlePhase {
                             this.scene.ui.playError();
                             return false;
                         } else {
+                            this.scene.gameData.gameStats.permaReroll++;
+                            
                             this.scene.addPermaMoney(-(rerollCost)!);
                             this.scene.updateUIPermaMoneyText();
                             this.scene.unshiftPhase(new SelectPermaModifierPhase(
@@ -122,6 +124,7 @@ export class SelectPermaModifierPhase extends BattlePhase {
         if (this.onEndCallback) {
             this.onEndCallback();
         }
+        
         super.end();
     }
 }

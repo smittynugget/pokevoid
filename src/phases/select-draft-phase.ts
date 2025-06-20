@@ -7,7 +7,7 @@ import {GameModes, getGameMode} from "../game-mode";
 import {Species} from "../enums/species";
 import {SelectModifierPhase} from "./select-modifier-phase";
 import {ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
-import { GlitchPieceModifierType } from "#app/modifier/modifier-type";
+import { GlitchPieceModifierType, PathNodeTypeFilter } from "#app/modifier/modifier-type";
 
 
 export class SelectDraftPhase extends Phase {
@@ -31,6 +31,8 @@ export class SelectDraftPhase extends Phase {
       loadPokemonAssets.push(tempPokemon.loadAssets());
     }
 
+    const isChaosRouge = false && this.scene.gameMode.isChaosMode;
+
     if (this.isTestMod) {
       this.scene.gameData.testSpeciesForMod.forEach(species => {
         addPokemon(species);
@@ -40,7 +42,7 @@ export class SelectDraftPhase extends Phase {
       addPokemon(Species.UNOWN);
     }
     
-        this.scene.currentBattle = new Battle(getGameMode(GameModes.DRAFT), 1, BattleType.WILD, null, false, this.scene);
+    this.scene.currentBattle = new Battle(getGameMode(isChaosRouge ? GameModes.CHAOS_ROGUE : GameModes.DRAFT), 1, BattleType.WILD, null, false, this.scene);
 
     if (!this.isTestMod) {
        
@@ -60,14 +62,19 @@ export class SelectDraftPhase extends Phase {
                             this.scene.sessionPlayTime = 0;
                             this.scene.lastSavePlayTime = 0;
           
-      }));
-                }));
+      }, PathNodeTypeFilter.NONE));
+                }, PathNodeTypeFilter.NONE));
     }
     else {
       this.scene.currentBattle = null;
       this.scene.newBattle();
       this.scene.arena.init();
-      this.scene.pushPhase(new ModifierRewardPhase(this.scene, () => new GlitchPieceModifierType(10)));
+      this.scene.sessionPlayTime = 0;
+      this.scene.lastSavePlayTime = 0;
+      
+      if (this.isTestMod) {
+        this.scene.pushPhase(new ModifierRewardPhase(this.scene, () => new GlitchPieceModifierType(10)));
+      }
     }
     this.end()
   }

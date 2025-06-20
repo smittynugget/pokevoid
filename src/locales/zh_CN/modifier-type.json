@@ -6,7 +6,8 @@
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
-      "description": "获得 {{voucherTypeName}} x{{modifierCount}}。"
+      "description": "获得 {{voucherTypeName}} x{{modifierCount}}。",
+      "statLabel": "蛋券"
     },
     "PokemonHeldItemModifierType": {
       "extra": {
@@ -44,7 +45,8 @@
     },
     "PokemonNatureChangeModifierType": {
       "name": "{{natureName}}薄荷",
-      "description": "将一只宝可梦的性格改为{{natureName}}并为\n该宝可梦永久解锁该性格。"
+      "description": "将一只宝可梦的性格改为{{natureName}}并为\n该宝可梦永久解锁该性格。",
+      "statLabel": "性格薄荷"
     },
     "DoubleBattleChanceBoosterModifierType": {
       "description": "接下来的{{battleCount}}场战斗是双打的概率翻倍。"
@@ -95,11 +97,13 @@
     },
     "TmModifierType": {
       "name": "招式学习器\n{{moveId}} - {{moveName}}",
-      "description": "教会一只宝可梦{{moveName}}。"
+      "description": "教会一只宝可梦{{moveName}}。",
+      "statLabel": "招式学习器道具"
     },
     "TmModifierTypeWithInfo": {
       "name": "招式学习器\n{{moveId}} - {{moveName}}",
-      "description": "教会一只宝可梦{{moveName}}\n(按住C或者Shift查看更多信息)。"
+      "description": "教会一只宝可梦{{moveName}}\n(按住C或者Shift查看更多信息)。",
+      "statLabel": "招式学习器道具"
     },
     "EvolutionItemModifierType": {
       "description": "使某些宝可梦进化。"
@@ -112,7 +116,8 @@
     },
     "TerastallizeModifierType": {
       "name": "{{teraType}}太晶碎块",
-      "description": "持有者获得{{teraType}}太晶化，\n持续10场战斗。"
+      "description": "持有者获得{{teraType}}太晶化，\n持续10场战斗。",
+      "statLabel": "太晶碎片"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "攻击时{{chancePercent}}%概率\n偷取对手物品。"
@@ -394,23 +399,28 @@
     },
     "AnyTmModifierType": {
       "name": "XM {{moveName}}",
-      "description": "让宝可梦学会{{moveName}}。"
+      "description": "让宝可梦学会{{moveName}}。",
+      "statLabel": "XM（任意招式学习器）"
     },
     "AnyTmModifierTypeWithInfo": {
       "name": "++XM{{moveId}} - {{moveName}}++",
-      "description": "让任何宝可梦学会{{moveName}}\n(按住C键或Shift键查看更多信息)。"
+      "description": "让任何宝可梦学会{{moveName}}\n(按住C键或Shift键查看更多信息)。",
+      "statLabel": "XM（任意招式学习器）"
     },
     "TypeSwitcherModifierType": {
       "name": "属性转换器：{{type1}} / {{type2}}",
-      "description": "将宝可梦的属性改为{{type1}}和{{type2}}。"
+      "description": "将宝可梦的属性改为{{type1}}和{{type2}}。",
+      "statLabel": "属性转换器"
     },
     "PrimaryTypeSwitcherModifierType": {
       "name": "主属性转换器：{{type1}}",
-      "description": "将宝可梦的主属性改为{{type1}}。"
+      "description": "将宝可梦的主属性改为{{type1}}。",
+      "statLabel": "主属性转换器"
     },
     "SecondaryTypeSwitcherModifierType": {
       "name": "副属性转换器：{{type2}}",
-      "description": "将宝可梦的副属性改为{{type2}}。"
+      "description": "将宝可梦的副属性改为{{type2}}。",
+      "statLabel": "副属性转换器"
     },
     "AbilitySwitcherModifierType": {
       "name": "特性转换器",
@@ -418,7 +428,8 @@
     },
     "RandomStatSwitcherModifierType": {
       "name": "{{stat1}} X {{stat2}}",
-      "description": "互换宝可梦的{{stat1}}和{{stat2}}能力值。消耗1个故障碎片"
+      "description": "互换宝可梦的{{stat1}}和{{stat2}}能力值。消耗1个故障碎片",
+      "statLabel": "能力值转换器"
     },
     "GlitchPieceModifierType": {
       "name": "故障碎片",
@@ -683,17 +694,20 @@
     },
     "CollectedTypeModifierType": {
       "name": "已收集属性：{{type}}",
-      "description": "使用5个任意属性组合代替放生宝可梦来获取放生道具。"
+      "description": "使用5个任意属性组合代替放生宝可梦来获取放生道具。",
+      "statLabel": "收集的属性"
     },
     "SacrificeModifierType": {
       "description": "释放一只宝可梦来提升另一只宝可梦的{{stat}}15%。"
     },
     "StatSacrificeModifierTypeGenerator": {
-      "name": "释放{{stat}}"
+      "name": "释放{{stat}}",
+      "statLabel": "能力值释放"
     },
     "StatSacrificeModifierType": {
       "name": "释放能力值：{{stat}}",
-      "description": "释放一只宝可梦来提升另一只宝可梦的{{stat}}15%。"
+      "description": "释放一只宝可梦来提升另一只宝可梦的{{stat}}15%。",
+      "statLabel": "能力值释放"
     },
     "TypeSacrificeModifierType": {
       "name": "释放属性",
@@ -709,15 +723,17 @@
     },
     "PassiveAbilitySacrificeModifierType": {
       "name": "释放被动特性",
-      "description": "释放一只宝可梦，将其被动特性作为主特性分配给另一只宝可梦。"
+      "description": "释放一只宝可梦，将其主特性作为被动特性分配给另一只宝可梦。"
     },
     "AnyPassiveAbilityModifierType": {
       "name": "被动特性{{abilityName}}",
-      "description": "将被动技能{{abilityName}}赋予任意宝可梦\n(按住C键或Shift键查看更多信息)。"
+      "description": "将被动技能{{abilityName}}赋予任意宝可梦\n(按住C键或Shift键查看更多信息)。",
+      "statLabel": "任意被动特性道具"
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
-      "description": "将{{abilityName}}赋予任意宝可梦\n(按住C键或Shift键查看更多信息)。"
+      "description": "将{{abilityName}}赋予任意宝可梦\n(按住C键或Shift键查看更多信息)。",
+      "statLabel": "任意特性道具"
     },
     "glitchPieceCost": {
       "text": "[[需要1个故障碎片]]"
@@ -727,6 +743,11 @@
       "description": "开启/关闭放生道具"
     }
   },
+  "AddPokemonModifierType": {
+      "name": "{{pokemonName}}",
+      "statLabel": "选秀宝可梦道具",
+      "description": "Adds {{pokemonName}} to the party."
+    },
   "SpeciesBoosterItem": {
     "LIGHT_BALL": {
       "name": "电气球",

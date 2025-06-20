@@ -1,0 +1,206 @@
+{
+  "viewTitle": "Battle Path Map",
+  "selectTitle": "Select Battle Path",
+  "noPathMessage": "No battle path available.\nGenerate one first!",
+  "unknownEncounter": "Unknown encounter",
+  "unknownNode": "Unknown",
+  "descriptions": {
+    "wildPokemon": "Wild Pokémon encounter",
+    "trainerBattle": "Trainer battle",
+    "rivalBattle": "Rival battle",
+    "majorBossBattle": "Major boss battle",
+    "recoveryBoss": "Recovery boss",
+    "evilBossBattle": "Evil team boss",
+    "eliteFour": "Elite Four member",
+    "champion": "Champion battle",
+    "itemGeneral": "General items",
+    "addPokemon": "Pokémon-specific items",
+    "itemTm": "TM rewards",
+    "itemBerry": "Berry rewards",
+    "mysteryNode": "Mystery encounter",
+    "convergencePoint": "Path convergence",
+    "smittyBattle": "Smitty battle",
+    "evilGruntBattle": "Evil team grunt",
+    "evilAdminBattle": "Evil team admin",
+    "randPermaItem": "Random Perma Item",
+    "permaItems": "Permanent Items",
+    "goldenPokeball": "Golden Pokéball rewards",
+    "rogueBallItems": "Rogue Ball items",
+    "masterBallItems": "Master Ball items",
+    "abilitySwitchers": "Ability switching items",
+    "statSwitchers": "Stat switching items",
+    "glitchPiece": "Glitch piece reward",
+    "dnaSplicers": "DNA Splicer reward",
+    "money": "Money reward",
+    "permaMoney": "Permanent money boost",
+    "releaseItems": "Release items",
+    "mints": "Nature mints",
+    "eggVoucher": "Egg voucher reward",
+    "ppMax": "PP Max items",
+    "collectedType": "Type collection rewards",
+    "expShare": "Exp Share items",
+    "typeSwitcher": "Type switching items",
+    "passiveAbility": "Passive ability items",
+    "anyTms": "Any TM rewards",
+    "challengeBoss": "Challenge path boss battle with enhanced difficulty",
+    "challengeRival": "Challenge path rival battle with enhanced difficulty",
+    "challengeEvilBoss": "Challenge path evil boss with enhanced difficulty",
+    "challengeChampion": "Challenge path champion battle with enhanced difficulty",
+    "challengeReward": "Rare reward for completing challenge path"
+  },
+  "names": {
+    "wildPokemon": "Wild Pokemon",
+    "trainerBattle": "Trainer Battle",
+    "rivalBattle": "Rival Battle",
+    "majorBossBattle": "Major Boss",
+    "recoveryBoss": "Boss Battle",
+    "evilBossBattle": "Evil Boss",
+    "eliteFour": "Elite Four",
+    "champion": "Champion",
+    "itemGeneral": "General Items",
+    "addPokemon": "Pokemon Items",
+    "itemTm": "TM Items",
+    "itemBerry": "Berry Items",
+    "mysteryNode": "Mystery Node",
+    "convergencePoint": "Convergence",
+    "smittyBattle": "Smitty Battle",
+    "evilGruntBattle": "Evil Grunt",
+    "evilAdminBattle": "Evil Admin",
+    "randPermaItem": "Random Perma Item",
+    "permaItems": "Permanent Items",
+    "goldenPokeball": "Golden Pokeball",
+    "rogueBallItems": "Rogue Ball Items",
+    "masterBallItems": "Master Ball Items",
+    "abilitySwitchers": "Ability Switchers",
+    "statSwitchers": "Stat Switchers",
+    "glitchPiece": "Glitch Piece",
+    "dnaSplicers": "DNA Splicer",
+    "money": "Money",
+    "permaMoney": "Permanent Money",
+    "releaseItems": "Release Items",
+    "mints": "Mints",
+    "eggVoucher": "Egg Voucher",
+    "ppMax": "PP Max",
+    "collectedType": "Collected Type",
+    "expShare": "EXP Share",
+    "typeSwitcher": "Type Switcher",
+    "passiveAbility": "Passive Ability",
+    "anyTms": "Any TMs",
+    "challengeBoss": "Challenge Boss",
+    "challengeRival": "Challenge Rival",
+    "challengeEvilBoss": "Challenge Evil Boss",
+    "challengeChampion": "Challenge Champion",
+    "challengeReward": "Challenge Reward"
+  },
+  "challenge": {
+    "chaosChallenge": "Chaos Challenge Active",
+    "isNuzlocke": {
+      "name": "Nuzlocke",
+      "description": "Fainted Pokémon are permanently lost"
+    },
+    "isNuzlight": {
+      "name": "Nuzlight",
+      "description": "No Purchasable Healing Items in Shop"
+    },
+    "isNightmare": {
+      "name": "Nuzmare",
+      "description": "Nuzlight + Nuzlocke"
+    },
+    "noExpGain": {
+      "name": "No EXP Gain",
+      "description": "Pokémon don't gain experience points"
+    },
+    "noCatch": {
+      "name": "No Catch",
+      "description": "Cannot catch Pokémon"
+    },
+    "hasPassiveAbility": {
+      "name": "Passive Ability",
+      "description": "Foes have their passive ability active"
+    },
+    "invertedTypes": {
+      "name": "Inverted Types",
+      "description": "Type effectiveness is inverted"
+    },
+    "boostedTrainer": {
+      "name": "Chaos Trainer",
+      "description": "Trainer's party is leveled higher than your highest level Pokémon"
+    },
+    "multiLegendaries": {
+      "name": "Multi Legendaries",
+      "description": "Rivals team gets +1 legendary Pokémon"
+    },
+    "multiBoss": {
+      "name": "Chaos Boss",
+      "description": "Trainer team has +1 boss Pokémon"
+    },
+    "noInitialSwitch": {
+      "name": "No Initial Switch",
+      "description": "Cannot switch Pokémon at battle start"
+    },
+    "autoPressured": {
+      "name": "Auto Pressured",
+      "description": "Your Pokémon are automatically under pressure"
+    },
+    "noStatBoosts": {
+      "name": "No Stat Boosts",
+      "description": "You can't stat boost"
+    },
+    "noStatusMoves": {
+      "name": "No Status Moves",
+      "description": "You can't use Status Moves"
+    },
+    "noPhysicalMoves": {
+      "name": "No Physical Moves",
+      "description": "You can't use Physical Moves"
+    },
+    "noSpecialMoves": {
+      "name": "No Special Moves",
+      "description": "You can't use Special Moves"
+    },
+    "statSwap": {
+      "name": "Stat Swap",
+      "description": "Your Pokémon's ATK <-> SPDEF and SPATK <-> DEF are swapped."
+    },
+    "extraDamageToTypes": {
+      "name": "Extra Damage to Types",
+      "description": "Certain types receive extra damage"
+    },
+    "noStab": {
+      "name": "No STAB",
+      "description": "Your Pokémon's Same Type Attack Bonus is disabled."
+    },
+    "trickRoom": {
+      "name": "Trick Room",
+      "description": "Speed priority is reversed"
+    },
+    "noSwitch": {
+      "name": "No Switch",
+      "description": "You cannot switch Pokémon during battle"
+    },
+    "noResistances": {
+      "name": "No Resistances",
+      "description": "Your Pokémon's Type resistances are disabled."
+    },
+    "noHealingItems": {
+      "name": "No Healing Items",
+      "description": "Your healing items don't activate (Leftovers, Shell Bell, etc.)"
+    },
+    "autoTorment": {
+      "name": "Auto Torment",
+      "description": "You can't use the same move in a row!"
+    },
+    "legendaryNerf": {
+      "name": "Legendary Nerf",
+      "description": "Your legendary Pokémon deal half damage"
+    },
+    "typeExtraDamage": {
+      "name": "Type Extra Damage",
+      "description": "Strongest type deals 1.5x damage"
+    },
+    "pokemonNerf": {
+      "name": "Pokémon Nerf",
+      "description": "Strongest Pokémon deals half damage"
+    }
+  }
+}

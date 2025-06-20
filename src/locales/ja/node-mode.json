@@ -1,0 +1,206 @@
+{
+  "viewTitle": "バトルパスマップ",
+  "selectTitle": "バトルパスを選択",
+  "noPathMessage": "利用可能なバトルパスがありません。\nまず生成してください！",
+  "unknownEncounter": "不明なエンカウント",
+  "unknownNode": "不明",
+  "descriptions": {
+    "wildPokemon": "野生ポケモンとのエンカウント",
+    "trainerBattle": "トレーナーバトル",
+    "rivalBattle": "ライバルバトル",
+    "majorBossBattle": "メジャーボスバトル",
+    "recoveryBoss": "回復ボス",
+    "evilBossBattle": "悪の組織ボス",
+    "eliteFour": "四天王メンバー",
+    "champion": "チャンピオンバトル",
+    "itemGeneral": "一般アイテム",
+    "addPokemon": "ポケモン専用アイテム",
+    "itemTm": "わざマシン報酬",
+    "itemBerry": "きのみ報酬",
+    "mysteryNode": "謎のエンカウント",
+    "convergencePoint": "パス収束",
+    "smittyBattle": "スミティバトル",
+    "evilGruntBattle": "悪の組織したっぱ",
+    "evilAdminBattle": "悪の組織幹部",
+    "randPermaItem": "ランダム永続アイテム",
+    "permaItems": "永続アイテム",
+    "goldenPokeball": "ゴールデンモンスターボール報酬",
+    "rogueBallItems": "ローグボールアイテム",
+    "masterBallItems": "マスターボールアイテム",
+    "abilitySwitchers": "とくせい変更アイテム",
+    "statSwitchers": "ステータス変更アイテム",
+    "glitchPiece": "グリッチピース報酬",
+    "dnaSplicers": "いでんしのくさび報酬",
+    "money": "お金報酬",
+    "permaMoney": "永続お金ブースト",
+    "releaseItems": "逃がすアイテム",
+    "mints": "せいかくミント",
+    "eggVoucher": "タマゴクーポン報酬",
+    "ppMax": "ポイントマックスアイテム",
+    "collectedType": "タイプコレクション報酬",
+    "expShare": "がくしゅうそうちアイテム",
+    "typeSwitcher": "タイプ変更アイテム",
+    "passiveAbility": "パッシブとくせいアイテム",
+    "anyTms": "任意のわざマシン報酬",
+    "challengeBoss": "チャレンジパスボスバトル（難易度上昇）",
+    "challengeRival": "チャレンジパスライバルバトル（難易度上昇）",
+    "challengeEvilBoss": "チャレンジパス悪ボス（難易度上昇）",
+    "challengeChampion": "チャレンジパスチャンピオンバトル（難易度上昇）",
+    "challengeReward": "チャレンジパス完了の希少な報酬"
+  },
+  "names": {
+    "wildPokemon": "野生ポケモン",
+    "trainerBattle": "トレーナーバトル",
+    "rivalBattle": "ライバルバトル",
+    "majorBossBattle": "メジャーボス",
+    "recoveryBoss": "ボスバトル",
+    "evilBossBattle": "悪ボス",
+    "eliteFour": "四天王",
+    "champion": "チャンピオン",
+    "itemGeneral": "一般アイテム",
+    "addPokemon": "ポケモンアイテム",
+    "itemTm": "わざマシンアイテム",
+    "itemBerry": "きのみアイテム",
+    "mysteryNode": "謎ノード",
+    "convergencePoint": "収束",
+    "smittyBattle": "スミティバトル",
+    "evilGruntBattle": "悪したっぱ",
+    "evilAdminBattle": "悪幹部",
+    "randPermaItem": "ランダム永続アイテム",
+    "permaItems": "永続アイテム",
+    "goldenPokeball": "ゴールデンモンスターボール",
+    "rogueBallItems": "ローグボールアイテム",
+    "masterBallItems": "マスターボールアイテム",
+    "abilitySwitchers": "とくせい変更",
+    "statSwitchers": "ステータス変更",
+    "glitchPiece": "グリッチピース",
+    "dnaSplicers": "いでんしのくさび",
+    "money": "お金",
+    "permaMoney": "永続お金",
+    "releaseItems": "逃がすアイテム",
+    "mints": "ミント",
+    "eggVoucher": "タマゴクーポン",
+    "ppMax": "ポイントマックス",
+    "collectedType": "コレクトタイプ",
+    "expShare": "がくしゅうそうち",
+    "typeSwitcher": "タイプ変更",
+    "passiveAbility": "パッシブとくせい",
+    "anyTms": "任意のわざマシン",
+    "challengeBoss": "チャレンジボス",
+    "challengeRival": "チャレンジライバル",
+    "challengeEvilBoss": "チャレンジ悪ボス",
+    "challengeChampion": "チャレンジチャンピオン",
+    "challengeReward": "チャレンジ報酬"
+  },
+  "challenge": {
+    "chaosChallenge": "カオスチャレンジ有効",
+    "isNuzlocke": {
+      "name": "ナズロック",
+      "description": "ひんしになったポケモンは永久に失われる"
+    },
+    "isNuzlight": {
+      "name": "ナズライト",
+      "description": "ショップで購入可能な回復アイテムなし"
+    },
+    "isNightmare": {
+      "name": "ナズメア",
+      "description": "ナズライト＋ナズロック"
+    },
+    "noExpGain": {
+      "name": "経験値なし",
+      "description": "ポケモンは経験値を得られない"
+    },
+    "noCatch": {
+      "name": "捕獲禁止",
+      "description": "ポケモンを捕獲できない"
+    },
+    "hasPassiveAbility": {
+      "name": "パッシブとくせい",
+      "description": "敵はパッシブとくせいが有効"
+    },
+    "invertedTypes": {
+      "name": "タイプ反転",
+      "description": "タイプ相性が反転"
+    },
+    "boostedTrainer": {
+      "name": "カオストレーナー",
+      "description": "トレーナーのパーティはあなたの最高レベルポケモンより高レベル"
+    },
+    "multiLegendaries": {
+      "name": "マルチ伝説",
+      "description": "ライバルチームは＋１伝説ポケモンを得る"
+    },
+    "multiBoss": {
+      "name": "カオスボス",
+      "description": "トレーナーチームは＋１ボスポケモンを持つ"
+    },
+    "noInitialSwitch": {
+      "name": "初期交代なし",
+      "description": "バトル開始時にポケモンを交代できない"
+    },
+    "autoPressured": {
+      "name": "オートプレッシャー",
+      "description": "あなたのポケモンは自動的にプレッシャー状態"
+    },
+    "noStatBoosts": {
+      "name": "ステータス上昇なし",
+      "description": "ステータスを上げられない"
+    },
+    "noStatusMoves": {
+      "name": "変化技なし",
+      "description": "変化技を使用できない"
+    },
+    "noPhysicalMoves": {
+      "name": "物理技なし",
+      "description": "物理技を使用できない"
+    },
+    "noSpecialMoves": {
+      "name": "特殊技なし",
+      "description": "特殊技を使用できない"
+    },
+    "statSwap": {
+      "name": "ステータス入れ替え",
+      "description": "あなたのポケモンのこうげき↔とくぼう、とくこう↔ぼうぎょが入れ替わる"
+    },
+    "extraDamageToTypes": {
+      "name": "タイプ追加ダメージ",
+      "description": "特定タイプは追加ダメージを受ける"
+    },
+    "noStab": {
+      "name": "STABなし",
+      "description": "あなたのポケモンのタイプ一致ボーナスが無効"
+    },
+    "trickRoom": {
+      "name": "トリックルーム",
+      "description": "すばやさ優先度が反転"
+    },
+    "noSwitch": {
+      "name": "交代なし",
+      "description": "バトル中にポケモンを交代できない"
+    },
+    "noResistances": {
+      "name": "耐性なし",
+      "description": "あなたのポケモンのタイプ耐性が無効"
+    },
+    "noHealingItems": {
+      "name": "回復アイテムなし",
+      "description": "回復アイテムが発動しない（たべのこし、かいがらのすずなど）"
+    },
+    "autoTorment": {
+      "name": "オートちょうはつ",
+      "description": "同じ技を連続で使用できない！"
+    },
+    "legendaryNerf": {
+      "name": "伝説弱体化",
+      "description": "あなたの伝説ポケモンは半分のダメージを与える"
+    },
+    "typeExtraDamage": {
+      "name": "タイプ追加ダメージ",
+      "description": "最強タイプは1.5倍ダメージを与える"
+    },
+    "pokemonNerf": {
+      "name": "ポケモン弱体化",
+      "description": "最強ポケモンは半分のダメージを与える"
+    }
+  }
+} 

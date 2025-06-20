@@ -14,7 +14,14 @@ export enum Unlockables {
     THE_VOID_OVERTAKEN,
     SMITTY_NUGGET,
     NUGGET_OF_SMITTY,
-    MANY_MORE_NUGGETS
+    MANY_MORE_NUGGETS,
+    NUZLIGHT_DRAFT_MODE,
+    NUZLOCKE_DRAFT_MODE,
+    CHAOS_JOURNEY_MODE,
+    CHAOS_VOID_MODE,
+    CHAOS_ROGUE_VOID_MODE,
+    CHAOS_INFINITE_MODE,
+    CHAOS_INFINITE_ROGUE_MODE
 }
 
 export function getUnlockableName(unlockable: Unlockables) {
@@ -45,6 +52,20 @@ export function getUnlockableName(unlockable: Unlockables) {
             return i18next.t("move:nuggetOfSmitty.name");
         case Unlockables.MANY_MORE_NUGGETS:
             return i18next.t("rewardObtainedUi:titles.manyMoreNuggets");
+        case Unlockables.NUZLIGHT_DRAFT_MODE:
+            return getModeName(GameModes.NUZLIGHT_DRAFT);
+        case Unlockables.NUZLOCKE_DRAFT_MODE:
+            return getModeName(GameModes.NUZLOCKE_DRAFT);
+        case Unlockables.CHAOS_JOURNEY_MODE:
+            return getModeName(GameModes.CHAOS_JOURNEY);
+        case Unlockables.CHAOS_VOID_MODE:
+            return getModeName(GameModes.CHAOS_VOID);
+        case Unlockables.CHAOS_ROGUE_VOID_MODE:
+            return getModeName(GameModes.CHAOS_ROGUE_VOID);
+        case Unlockables.CHAOS_INFINITE_MODE:
+            return getModeName(GameModes.CHAOS_INFINITE);
+        case Unlockables.CHAOS_INFINITE_ROGUE_MODE:
+            return getModeName(GameModes.CHAOS_INFINITE_ROGUE);
     }
 }
 

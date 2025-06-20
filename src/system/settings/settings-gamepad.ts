@@ -52,7 +52,7 @@ export const settingGamepadOptions = {
   [SettingGamepad.Button_Voidex]: [`KEY ${Button.VOIDEX.toString()}`, pressAction],
   [SettingGamepad.Button_Cycle_Ability]: [`KEY ${Button.CYCLE_ABILITY.toString()}`, pressAction],
   [SettingGamepad.Button_Cycle_Nature]: [`KEY ${Button.CYCLE_NATURE.toString()}`, pressAction],
-  [SettingGamepad.Button_Cycle_Variant]: [`KEY ${Button.V.toString()}`, pressAction],
+  [SettingGamepad.Button_Cycle_Variant]: [`KEY ${Button.CYCLE_VARIANT.toString()}`, pressAction],
   [SettingGamepad.Button_Speed_Up]: [`KEY ${Button.SPEED_UP.toString()}`, pressAction],
   [SettingGamepad.Button_Slow_Down]: [`KEY ${Button.SLOW_DOWN.toString()}`, pressAction],
   [SettingGamepad.Button_Submit]: [`KEY ${Button.SUBMIT.toString()}`, pressAction],

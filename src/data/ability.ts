@@ -5284,15 +5284,18 @@ export class SturdySpeedDropAbAttr extends PreDefendAbAttr {
   applyPreDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, cancelled: Utils.BooleanHolder, args: any[]): boolean {
     const damageHolder = args[0] as Utils.NumberHolder;
 
-    if (!simulated && pokemon.getHpRatio() === 1 && damageHolder.value >= pokemon.hp) {
-      // Prevent KO
+    if (pokemon.isFullHp()
+        && pokemon.getMaxHp() > 1
+        && damageHolder.value >= pokemon.hp) {
+      if (simulated) {
+        return true;
+      }
+      
       damageHolder.value = pokemon.hp - 1;
       cancelled.value = true;
 
-      // Lower Speed stat
       pokemon.scene.unshiftPhase(new StatChangePhase(attacker.scene, attacker.getBattlerIndex(), false, [BattleStat.SPD], -1));
-      pokemon.addTag(BattlerTagType.STURDY, 1);
-      return true;
+      return pokemon.addTag(BattlerTagType.STURDY, 1);
     }
 
     return false;
@@ -5324,10 +5327,13 @@ export class HealAfterHitAbAttr extends PostDefendAbAttr {
   }
 
   applyPostDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
-        if (!simulated && pokemon.findAndRemoveTags(tag => tag.tagType === BattlerTagType.STURDY)) {
-      const healAmount = Math.floor(pokemon.getMaxHp() / 2);
+    if (!simulated) {
+      const sturdyTag = pokemon.getTag(BattlerTagType.STURDY);
+      if (sturdyTag && sturdyTag.turnCount === 1) {
+        const healAmount = Math.floor(pokemon.getMaxHp() / 2);
         pokemon.scene.unshiftPhase(new PokemonHealPhase(pokemon.scene, pokemon.getBattlerIndex(), healAmount, getPokemonMessage(pokemon, i18next.t("abilityTrigger:restoredHP", { abilityName: pokemon.getAbility().name })), true));
-      return true;
+        return true;
+      }
     }
     return false;
   }

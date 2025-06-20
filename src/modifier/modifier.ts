@@ -73,16 +73,13 @@ export const modifierSortFunc = (a: Modifier, b: Modifier): number => {
     const aId = a instanceof PokemonHeldItemModifier && a.pokemonId ? a.pokemonId : 4294967295;
     const bId = b instanceof PokemonHeldItemModifier && b.pokemonId ? b.pokemonId : 4294967295;
 
-    //First sort by pokemonID
     if (aId < bId) {
         return 1;
     } else if (aId > bId) {
         return -1;
     } else if (aId === bId) {
-        //Then sort by item type
         if (typeNameMatch === 0) {
             return itemNameMatch;
-            //Finally sort by item name
         } else {
             return typeNameMatch;
         }
@@ -823,7 +820,7 @@ export class TerastallizeModifier extends LapsingPokemonHeldItemModifier {
         super(type, pokemonId, battlesLeft || duration, stackCount);
 
         this.teraType = teraType;
-        this.isTransferrable = hasPermaModifierByType(PermaType.PERMA_TRANSFER_TERA);
+        this.isTransferrable = false;
     }
 
     matchType(modifier: Modifier): boolean {
@@ -859,7 +856,11 @@ export class TerastallizeModifier extends LapsingPokemonHeldItemModifier {
         if (!ret) {
             pokemon.updateSpritePipelineData();
         }
-        this.isTransferrable = pokemon.scene.gameData.hasPermaModifierByType(PermaType.PERMA_TRANSFER_TERA);
+        if(pokemon.isPlayer()) {
+            this.isTransferrable = pokemon.scene.gameData.hasPermaModifierByType(PermaType.PERMA_TRANSFER_TERA);
+        } else {
+            this.isTransferrable = false;
+        }
         return ret;
     }
 
@@ -869,6 +870,10 @@ export class TerastallizeModifier extends LapsingPokemonHeldItemModifier {
 
     getMaxHeldItemCount(pokemon: Pokemon): integer {
         return 1;
+    }
+
+    getTransferrable(withinParty: boolean): boolean {
+        return withinParty && this.isTransferrable;
     }
 }
 
@@ -1370,6 +1375,11 @@ export class TurnHealModifier extends PokemonHeldItemModifier {
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
 
+        // Check for noHealingItems dynamic challenge - prevent healing items for player pokemon
+        if (pokemon.scene.dynamicMode?.noHealingItems && pokemon.isPlayer()) {
+            return false;
+        }
+
         if (!pokemon.isFullHp()) {
             const scene = pokemon.scene;
             scene.unshiftPhase(new PokemonHealPhase(scene, pokemon.getBattlerIndex(),
@@ -1464,6 +1474,11 @@ export class HitHealModifier extends PokemonHeldItemModifier {
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
 
+        // Check for noHealingItems dynamic challenge - prevent healing items for player pokemon
+        if (pokemon.scene.dynamicMode?.noHealingItems && pokemon.isPlayer()) {
+            return false;
+        }
+
         if (pokemon.turnData.damageDealt && !pokemon.isFullHp()) {
             const scene = pokemon.scene;
             scene.unshiftPhase(new PokemonHealPhase(scene, pokemon.getBattlerIndex(),
@@ -1539,6 +1554,11 @@ export class BerryModifier extends PokemonHeldItemModifier {
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
 
+        // Check for noHealingItems dynamic challenge - prevent berry effects for player pokemon
+        if (pokemon.scene.dynamicMode?.noHealingItems && pokemon.isPlayer()) {
+            return false;
+        }
+
         const preserve = new Utils.BooleanHolder(false);
         pokemon.scene.applyModifiers(PreserveBerryModifier, pokemon.isPlayer(), pokemon, preserve);
 
@@ -1603,6 +1623,11 @@ export class PokemonInstantReviveModifier extends PokemonHeldItemModifier {
 
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
+
+        // Check for noHealingItems dynamic challenge - prevent revive items for player pokemon
+        if (pokemon.scene.dynamicMode?.noHealingItems && pokemon.isPlayer()) {
+            return false;
+        }
 
         pokemon.scene.unshiftPhase(new PokemonHealPhase(pokemon.scene, pokemon.getBattlerIndex(),
             Utils.toDmgValue(pokemon.getMaxHp() / 2), i18next.t("modifier:pokemonInstantReviveApply", {
@@ -3140,7 +3165,6 @@ export function overrideModifiers(scene: BattleScene, isPlayer: boolean = true):
         return;
     }
 
-    // If it's the opponent, clear all of their current modifiers to avoid stacking
     if (!isPlayer) {
         scene.clearEnemyModifiers();
     }
@@ -3542,7 +3566,7 @@ export class StatSacrificeModifier extends PokemonHeldItemModifier {
     }
 
     getArgs(): any[] {
-        return super.getArgs().concat([this.stat, this.glitchReduced]);
+        return super.getArgs().concat([this.stat, this.pokemonSacrifice, this.glitchReduced]);
     }
 
     apply(args: any[]): boolean {
@@ -4121,6 +4145,12 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
     }
 
     protected completeQuest(scene: BattleScene): void {
+        if (this.consoleCode && this.consoleCode !== "") {
+            scene.gameData.gameStats.bountiesCompleted++;
+        } else {
+            scene.gameData.gameStats.questsCompleted++;
+        }
+        
         if (this.stages && this.currentStageIndex !== undefined) {
             let assignStage = false;
             if(scene.currentBattle.trainer?.rivalStage) {

@@ -1,0 +1,206 @@
+{
+  "viewTitle": "战斗路径地图",
+  "selectTitle": "选择战斗路径",
+  "noPathMessage": "没有可用的战斗路径。\n请先生成一个！",
+  "unknownEncounter": "未知遭遇",
+  "unknownNode": "未知",
+  "descriptions": {
+    "wildPokemon": "野生宝可梦遭遇",
+    "trainerBattle": "训练家战斗",
+    "rivalBattle": "劲敌战斗",
+    "majorBossBattle": "主要头目战斗",
+    "recoveryBoss": "恢复头目",
+    "evilBossBattle": "邪恶团队头目",
+    "eliteFour": "四天王成员",
+    "champion": "冠军战斗",
+    "itemGeneral": "通用道具",
+    "addPokemon": "宝可梦专用道具",
+    "itemTm": "技能机奖励",
+    "itemBerry": "树果奖励",
+    "mysteryNode": "神秘遭遇",
+    "convergencePoint": "路径汇合",
+    "smittyBattle": "史密蒂战斗",
+    "evilGruntBattle": "邪恶团队小兵",
+    "evilAdminBattle": "邪恶团队干部",
+    "randPermaItem": "随机永久道具",
+    "permaItems": "永久道具",
+    "goldenPokeball": "黄金精灵球奖励",
+    "rogueBallItems": "流氓球道具",
+    "masterBallItems": "大师球道具",
+    "abilitySwitchers": "特性切换器",
+    "statSwitchers": "能力值切换器",
+    "glitchPiece": "故障片段奖励",
+    "dnaSplicers": "DNA接合器奖励",
+    "money": "金钱奖励",
+    "permaMoney": "永久金钱加成",
+    "releaseItems": "释放道具",
+    "mints": "性格薄荷",
+    "eggVoucher": "蛋券奖励",
+    "ppMax": "PP极限道具",
+    "collectedType": "类型收集奖励",
+    "expShare": "学习装置道具",
+    "typeSwitcher": "类型切换器",
+    "passiveAbility": "被动特性道具",
+    "anyTms": "任意技能机奖励",
+    "challengeBoss": "挑战路径头目战斗（难度提升）",
+    "challengeRival": "挑战路径劲敌战斗（难度提升）",
+    "challengeEvilBoss": "挑战路径邪恶头目（难度提升）",
+    "challengeChampion": "挑战路径冠军战斗（难度提升）",
+    "challengeReward": "完成挑战路径的稀有奖励"
+  },
+  "names": {
+    "wildPokemon": "野生宝可梦",
+    "trainerBattle": "训练家战斗",
+    "rivalBattle": "劲敌战斗",
+    "majorBossBattle": "主要头目",
+    "recoveryBoss": "头目战斗",
+    "evilBossBattle": "邪恶头目",
+    "eliteFour": "四天王",
+    "champion": "冠军",
+    "itemGeneral": "通用道具",
+    "addPokemon": "宝可梦道具",
+    "itemTm": "技能机道具",
+    "itemBerry": "树果道具",
+    "mysteryNode": "神秘节点",
+    "convergencePoint": "汇合点",
+    "smittyBattle": "史密蒂战斗",
+    "evilGruntBattle": "邪恶小兵",
+    "evilAdminBattle": "邪恶干部",
+    "randPermaItem": "随机永久道具",
+    "permaItems": "永久道具",
+    "goldenPokeball": "黄金精灵球",
+    "rogueBallItems": "流氓球道具",
+    "masterBallItems": "大师球道具",
+    "abilitySwitchers": "特性切换器",
+    "statSwitchers": "能力值切换器",
+    "glitchPiece": "故障片段",
+    "dnaSplicers": "DNA接合器",
+    "money": "金钱",
+    "permaMoney": "永久金钱",
+    "releaseItems": "释放道具",
+    "mints": "薄荷",
+    "eggVoucher": "蛋券",
+    "ppMax": "PP极限",
+    "collectedType": "收集类型",
+    "expShare": "学习装置",
+    "typeSwitcher": "类型切换器",
+    "passiveAbility": "被动特性",
+    "anyTms": "任意技能机",
+    "challengeBoss": "挑战头目",
+    "challengeRival": "挑战劲敌",
+    "challengeEvilBoss": "挑战邪恶头目",
+    "challengeChampion": "挑战冠军",
+    "challengeReward": "挑战奖励"
+  },
+  "challenge": {
+    "chaosChallenge": "混沌挑战启用",
+    "isNuzlocke": {
+      "name": "纳兹洛克",
+      "description": "濒死的宝可梦永久失去"
+    },
+    "isNuzlight": {
+      "name": "纳兹轻",
+      "description": "商店中没有可购买的治疗道具"
+    },
+    "isNightmare": {
+      "name": "纳兹噩梦",
+      "description": "纳兹轻 + 纳兹洛克"
+    },
+    "noExpGain": {
+      "name": "无经验获得",
+      "description": "宝可梦不获得经验值"
+    },
+    "noCatch": {
+      "name": "无法捕获",
+      "description": "无法捕获宝可梦"
+    },
+    "hasPassiveAbility": {
+      "name": "被动特性",
+      "description": "敌人的被动特性启用"
+    },
+    "invertedTypes": {
+      "name": "类型反转",
+      "description": "类型克制关系反转"
+    },
+    "boostedTrainer": {
+      "name": "混沌训练家",
+      "description": "训练家队伍等级高于你的最高等级宝可梦"
+    },
+    "multiLegendaries": {
+      "name": "多传说",
+      "description": "劲敌队伍获得+1传说宝可梦"
+    },
+    "multiBoss": {
+      "name": "混沌头目",
+      "description": "训练家队伍有+1头目宝可梦"
+    },
+    "noInitialSwitch": {
+      "name": "无初始更换",
+      "description": "战斗开始时无法更换宝可梦"
+    },
+    "autoPressured": {
+      "name": "自动压迫",
+      "description": "你的宝可梦自动处于压迫状态"
+    },
+    "noStatBoosts": {
+      "name": "无能力值提升",
+      "description": "你无法提升能力值"
+    },
+    "noStatusMoves": {
+      "name": "无变化招式",
+      "description": "你无法使用变化招式"
+    },
+    "noPhysicalMoves": {
+      "name": "无物理招式",
+      "description": "你无法使用物理招式"
+    },
+    "noSpecialMoves": {
+      "name": "无特殊招式",
+      "description": "你无法使用特殊招式"
+    },
+    "statSwap": {
+      "name": "能力值交换",
+      "description": "你的宝可梦的攻击<->特防，特攻<->防御互换。"
+    },
+    "extraDamageToTypes": {
+      "name": "对类型额外伤害",
+      "description": "某些类型受到额外伤害"
+    },
+    "noStab": {
+      "name": "无本系加成",
+      "description": "你的宝可梦的本系招式加成被禁用。"
+    },
+    "trickRoom": {
+      "name": "戏法空间",
+      "description": "速度优先级反转"
+    },
+    "noSwitch": {
+      "name": "无法更换",
+      "description": "你无法在战斗中更换宝可梦"
+    },
+    "noResistances": {
+      "name": "无抗性",
+      "description": "你的宝可梦的类型抗性被禁用。"
+    },
+    "noHealingItems": {
+      "name": "无治疗道具",
+      "description": "你的治疗道具不会生效（剩饭、贝壳之铃等）"
+    },
+    "autoTorment": {
+      "name": "自动挑衅",
+      "description": "你无法连续使用同一招式！"
+    },
+    "legendaryNerf": {
+      "name": "传说削弱",
+      "description": "你的传说宝可梦造成一半伤害"
+    },
+    "typeExtraDamage": {
+      "name": "类型额外伤害",
+      "description": "最强类型造成1.5倍伤害"
+    },
+    "pokemonNerf": {
+      "name": "宝可梦削弱",
+      "description": "最强宝可梦造成一半伤害"
+    }
+  }
+} 

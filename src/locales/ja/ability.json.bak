@@ -1,0 +1,2658 @@
+{
+  "stench": {
+    "name": "あくしゅう",
+    "description": "臭い においを 放つことによって 攻撃した ときに 相手を ひるませることが ある。"
+  },
+  "drizzle": {
+    "name": "あめふらし",
+    "description": "登場 したときに 天気を 雨に する。"
+  },
+  "speedBoost": {
+    "name": "かそく",
+    "description": "毎ターン 素早さが 上がる。"
+  },
+  "battleArmor": {
+    "name": "カブトアーマー",
+    "description": "硬い 甲羅に 守られて 相手の 攻撃が 急所に 当たらない。"
+  },
+  "sturdy": {
+    "name": "がんじょう",
+    "description": "相手の 技を 受けても 一撃で 倒されることが ない。 一撃必殺技も 効かない。"
+  },
+  "damp": {
+    "name": "しめりけ",
+    "description": "あたりを 湿らせることに よって じばく などの 爆発する 技を だれも 使えなくなる。"
+  },
+  "limber": {
+    "name": "じゅうなん",
+    "description": "柔軟な 体によって まひ状態に ならない。"
+  },
+  "sandVeil": {
+    "name": "すながくれ",
+    "description": "砂あらしの とき 回避率が 上がる。"
+  },
+  "static": {
+    "name": "せいでんき",
+    "description": "静電気を 体に まとい 触った 相手を まひさせる ことがある。"
+  },
+  "voltAbsorb": {
+    "name": "ちくでん",
+    "description": "でんきタイプの 技を 受けると ダメージを 受けずに 回復する。"
+  },
+  "waterAbsorb": {
+    "name": "ちょすい",
+    "description": "みずタイプの 技を 受けると ダメージを 受けずに 回復する。"
+  },
+  "oblivious": {
+    "name": "どんかん",
+    "description": "鈍感なので メロメロや ちょうはつ状態に ならない。"
+  },
+  "cloudNine": {
+    "name": "ノーてんき",
+    "description": "あらゆる 天気の 影響が なくなって しまう。"
+  },
+  "compoundEyes": {
+    "name": "ふくがん",
+    "description": "複眼を 持っているため 技の 命中率が 上がる。"
+  },
+  "insomnia": {
+    "name": "ふみん",
+    "description": "眠れない 体質 なので ねむり状態に ならない。"
+  },
+  "colorChange": {
+    "name": "へんしょく",
+    "description": "相手から 受けた 技の タイプに 自分の タイプが 変化 する。"
+  },
+  "immunity": {
+    "name": "めんえき",
+    "description": "体内に 免疫を 持っているため どく状態に ならない。"
+  },
+  "flashFire": {
+    "name": "もらいび",
+    "description": "ほのおタイプの 技を 受けると 炎を もらい 自分が 出す ほのおタイプの 技が 強くなる。"
+  },
+  "shieldDust": {
+    "name": "りんぷん",
+    "description": "りんぷんに 守られて 技の 追加効果を 受けなくなる。"
+  },
+  "ownTempo": {
+    "name": "マイペース",
+    "description": "マイペースなので こんらん状態に ならない。"
+  },
+  "suctionCups": {
+    "name": "きゅうばん",
+    "description": "吸盤で 地面に 張り付き ポケモンを 入れ替えさせる 技や 道具が 効かなくなる。"
+  },
+  "intimidate": {
+    "name": "いかく",
+    "description": "登場 したとき 威嚇して 相手を 萎縮させ 相手の 攻撃を 下げて しまう。"
+  },
+  "shadowTag": {
+    "name": "かげふみ",
+    "description": "相手の 影を 踏み 逃げたり 交代 できなくする。"
+  },
+  "roughSkin": {
+    "name": "さめはだ",
+    "description": "攻撃を 受けたとき 自分に 触れた 相手を ざらざらの 肌で キズつける。"
+  },
+  "wonderGuard": {
+    "name": "ふしぎなまもり",
+    "description": "効果バツグンの 技しか 当たらない 不思議な 力。"
+  },
+  "levitate": {
+    "name": "ふゆう",
+    "description": "地面から 浮くことによって じめんタイプの 技を 受けない。"
+  },
+  "effectSpore": {
+    "name": "ほうし",
+    "description": "攻撃で 自分に 触れた 相手を どくや まひや ねむり状態に する ことがある。"
+  },
+  "synchronize": {
+    "name": "シンクロ",
+    "description": "自分が なってしまった どくや まひや やけどを 相手に うつす。"
+  },
+  "clearBody": {
+    "name": "クリアボディ",
+    "description": "相手の 技や 特性で 能力を 下げられない。"
+  },
+  "naturalCure": {
+    "name": "しぜんかいふく",
+    "description": "手持ちに ひっこむと 状態異常が 治る。"
+  },
+  "lightningRod": {
+    "name": "ひらいしん",
+    "description": "でんきタイプの 技を 自分に 寄せつけ ダメージを 受けずに 特攻が 上がる。"
+  },
+  "sereneGrace": {
+    "name": "てんのめぐみ",
+    "description": "天の恵みの おかげで 技の 追加効果が でやすい。"
+  },
+  "swiftSwim": {
+    "name": "すいすい",
+    "description": "天気が 雨のとき 素早さが 上がる。"
+  },
+  "chlorophyll": {
+    "name": "ようりょくそ",
+    "description": "天気が 晴れのとき 素早さが 上がる。"
+  },
+  "illuminate": {
+    "name": "はっこう",
+    "description": "あたりを 明るくすることで 命中率を 下げられない。"
+  },
+  "trace": {
+    "name": "トレース",
+    "description": "登場 したとき 相手の 特性を トレースして 同じ 特性に なる。"
+  },
+  "hugePower": {
+    "name": "ちからもち",
+    "description": "物理攻撃の 威力が ２倍になる。"
+  },
+  "poisonPoint": {
+    "name": "どくのトゲ",
+    "description": "自分に 触った 相手を どく状態に することがある。"
+  },
+  "innerFocus": {
+    "name": "せいしんりょく",
+    "description": "鍛えられた 精神に よって 相手の 攻撃に ひるまない。"
+  },
+  "magmaArmor": {
+    "name": "マグマのよろい",
+    "description": "熱い マグマを 身にまとい こおり状態に ならない。"
+  },
+  "waterVeil": {
+    "name": "みずのベール",
+    "description": "水のベールを 身にまとい やけど状態に ならない。"
+  },
+  "magnetPull": {
+    "name": "じりょく",
+    "description": "はがねタイプの ポケモンを 磁力で 引きつけて 逃げられなくする。"
+  },
+  "soundproof": {
+    "name": "ぼうおん",
+    "description": "音を 遮断 することに よって 音の 攻撃を 受けない。"
+  },
+  "rainDish": {
+    "name": "あめうけざら",
+    "description": "天気が 雨のとき 少しずつ ＨＰを 回復する。"
+  },
+  "sandStream": {
+    "name": "すなおこし",
+    "description": "登場 したとき 天気を 砂あらしにする。"
+  },
+  "pressure": {
+    "name": "プレッシャー",
+    "description": "プレッシャーを あたえて 相手の 使う 技の ＰＰを 多く 減らす。"
+  },
+  "thickFat": {
+    "name": "あついしぼう",
+    "description": "厚い 脂肪で 守られているので ほのおタイプと こおりタイプの 技の ダメージを 半減させる。"
+  },
+  "earlyBird": {
+    "name": "はやおき",
+    "description": "ねむり状態に なっても ２倍の 早さで 目覚める ことが できる。"
+  },
+  "flameBody": {
+    "name": "ほのおのからだ",
+    "description": "自分に 触った 相手を やけど状態に する ことがある。"
+  },
+  "runAway": {
+    "name": "にげあし",
+    "description": "野生の ポケモンから 必ず 逃げられる。"
+  },
+  "keenEye": {
+    "name": "するどいめ",
+    "description": "鋭い 目の おかげで 命中率を 下げられない。"
+  },
+  "hyperCutter": {
+    "name": "かいりきバサミ",
+    "description": "力自慢の ハサミを 持っているので 相手に 攻撃を 下げられない。"
+  },
+  "pickup": {
+    "name": "ものひろい",
+    "description": "戦闘が 終わったとき 相手の 持った 道具を 一つ 拾ってくることが ある。"
+  },
+  "truant": {
+    "name": "なまけ",
+    "description": "技を 出すと 次の ターンは 休んでしまう。"
+  },
+  "hustle": {
+    "name": "はりきり",
+    "description": "自分の 攻撃が 高くなるが 命中率が 下がる。"
+  },
+  "cuteCharm": {
+    "name": "メロメロボディ",
+    "description": "自分に 触った 相手を メロメロに することが ある。"
+  },
+  "plus": {
+    "name": "プラス",
+    "description": "プラスか マイナスの 特性を 持つ ポケモンが 仲間に いると 自分の 特攻が 上がる。"
+  },
+  "minus": {
+    "name": "マイナス",
+    "description": "プラスか マイナスの 特性を 持つ ポケモンが 仲間に いると 自分の 特攻が 上がる。"
+  },
+  "forecast": {
+    "name": "てんきや",
+    "description": "天気の 影響を 受けて みずタイプ ほのおタイプ こおりタイプの どれかに 変化する。"
+  },
+  "stickyHold": {
+    "name": "ねんちゃく",
+    "description": "粘着質の 体に 道具が くっついているため 相手に 道具を 奪われない。"
+  },
+  "shedSkin": {
+    "name": "だっぴ",
+    "description": "体の 皮を 脱ぎ捨てることで 状態異常を 治すことが ある。"
+  },
+  "guts": {
+    "name": "こんじょう",
+    "description": "状態異常に なると 根性を だして 攻撃が 上がる。"
+  },
+  "marvelScale": {
+    "name": "ふしぎなうろこ",
+    "description": "状態異常に なると 不思議なウロコが 反応して 防御が 上がる。"
+  },
+  "liquidOoze": {
+    "name": "ヘドロえき",
+    "description": "ヘドロ液を 吸い取った 相手は 強烈な 悪臭で ダメージを 受けて ＨＰを 減らす。"
+  },
+  "overgrow": {
+    "name": "しんりょく",
+    "description": "ＨＰが 減ったとき くさタイプの 技の 威力が 上がる。"
+  },
+  "blaze": {
+    "name": "もうか",
+    "description": "ＨＰが 減ったとき ほのおタイプの 技の 威力が 上がる。"
+  },
+  "torrent": {
+    "name": "げきりゅう",
+    "description": "ＨＰが 減ったとき みずタイプの 技の 威力が 上がる。"
+  },
+  "swarm": {
+    "name": "むしのしらせ",
+    "description": "ＨＰが 減ったとき むしタイプの 技の 威力が 上がる。"
+  },
+  "rockHead": {
+    "name": "いしあたま",
+    "description": "反動を 受ける 技を 出しても ＨＰが 減らない。"
+  },
+  "drought": {
+    "name": "ひでり",
+    "description": "登場 したときに 天気を 晴れに する。"
+  },
+  "arenaTrap": {
+    "name": "ありじごく",
+    "description": "戦闘で 相手を 逃げられなくする。"
+  },
+  "vitalSpirit": {
+    "name": "やるき",
+    "description": "やる気を だすことに よって ねむり状態に ならない。"
+  },
+  "whiteSmoke": {
+    "name": "しろいけむり",
+    "description": "白い煙に 守られて 相手に 能力を 下げられない。"
+  },
+  "purePower": {
+    "name": "ヨガパワー",
+    "description": "ヨガの 力で 物理攻撃の 威力が ２倍に なる。"
+  },
+  "shellArmor": {
+    "name": "シェルアーマー",
+    "description": "硬い 殻に 守られ 相手の 攻撃が 急所に 当たらない。"
+  },
+  "airLock": {
+    "name": "エアロック",
+    "description": "あらゆる 天気の 影響が なくなって しまう。"
+  },
+  "tangledFeet": {
+    "name": "ちどりあし",
+    "description": "こんらん状態の ときは 回避率が アップする。"
+  },
+  "motorDrive": {
+    "name": "でんきエンジン",
+    "description": "でんきタイプの 技を 受けると ダメージを 受けずに 素早さが 上がる。"
+  },
+  "rivalry": {
+    "name": "とうそうしん",
+    "description": "性別が 同じだと 闘争心を 燃やして 強くなる。 性別が 違うと 弱くなる。"
+  },
+  "steadfast": {
+    "name": "ふくつのこころ",
+    "description": "ひるむ たびに 不屈の心を 燃やして 素早さが 上がる。"
+  },
+  "snowCloak": {
+    "name": "ゆきがくれ",
+    "description": "天気が ゆきのとき 回避率が 上がる。"
+  },
+  "gluttony": {
+    "name": "くいしんぼう",
+    "description": "ＨＰが 少なくなったら 食べる きのみを ＨＰ 半分の 時に 食べてしまう。"
+  },
+  "angerPoint": {
+    "name": "いかりのつぼ",
+    "description": "急所に 攻撃が 当たると 怒りくるって 攻撃力が 最大に なる。"
+  },
+  "unburden": {
+    "name": "かるわざ",
+    "description": "持っていた 道具が なくなると 素早さが 上がる。"
+  },
+  "heatproof": {
+    "name": "たいねつ",
+    "description": "耐熱の 体に よって ほのおタイプの 技の 威力を 半減させる。"
+  },
+  "simple": {
+    "name": "たんじゅん",
+    "description": "能力 変化が いつもの ２倍に なる。"
+  },
+  "drySkin": {
+    "name": "かんそうはだ",
+    "description": "天気が 雨の時や みずタイプの 技で ＨＰが 回復し はれの時や ほのおタイプの 技で 減ってしまう。"
+  },
+  "download": {
+    "name": "ダウンロード",
+    "description": "相手の 防御と 特防を くらべて 低い ほうの 能力に あわせて 自分の 攻撃か 特攻を 上げる。"
+  },
+  "ironFist": {
+    "name": "てつのこぶし",
+    "description": "パンチを 使う 技の 威力が 上がる。"
+  },
+  "poisonHeal": {
+    "name": "ポイズンヒール",
+    "description": "どく状態に なると ＨＰが 減らずに 増えていく。"
+  },
+  "adaptability": {
+    "name": "てきおうりょく",
+    "description": "自分と おなじ タイプの 技の 威力が 上がる。"
+  },
+  "skillLink": {
+    "name": "スキルリンク",
+    "description": "連続技を 使うと いつも 最高回数 出すことが できる。"
+  },
+  "hydration": {
+    "name": "うるおいボディ",
+    "description": "天気が 雨のとき 状態異常が 治る。"
+  },
+  "solarPower": {
+    "name": "サンパワー",
+    "description": "天気が 晴れると 特攻が 上がるが 毎ターン ＨＰが 減る。"
+  },
+  "quickFeet": {
+    "name": "はやあし",
+    "description": "状態異常に なると 素早さが 上がる。"
+  },
+  "normalize": {
+    "name": "ノーマルスキン",
+    "description": "どんな タイプの 技でも すべて ノーマルタイプに なる。 威力が 少し 上がる。"
+  },
+  "sniper": {
+    "name": "スナイパー",
+    "description": "攻撃を 急所に 当てると 威力が さらに 上がる。"
+  },
+  "magicGuard": {
+    "name": "マジックガード",
+    "description": "攻撃 以外では ダメージを 受けない。"
+  },
+  "noGuard": {
+    "name": "ノーガード",
+    "description": "ノーガード戦法に よって お互いの 出す 技が かならず 当たる ようになる。"
+  },
+  "stall": {
+    "name": "あとだし",
+    "description": "技を 出す 順番が かならず 最後に なる。"
+  },
+  "technician": {
+    "name": "テクニシャン",
+    "description": "威力が 低い 技の 威力を 高くして 攻撃できる。"
+  },
+  "leafGuard": {
+    "name": "リーフガード",
+    "description": "天気が 晴れのときは 状態異常に ならない。"
+  },
+  "klutz": {
+    "name": "ぶきよう",
+    "description": "持っている 道具を 使うことが できない。"
+  },
+  "moldBreaker": {
+    "name": "かたやぶり",
+    "description": "相手の 特性に ジャマされる ことなく 相手に 技を 出すことが できる。"
+  },
+  "superLuck": {
+    "name": "きょううん",
+    "description": "強運を 持っているため 相手の 急所に 攻撃が 当たりやすい。"
+  },
+  "aftermath": {
+    "name": "ゆうばく",
+    "description": "ひんしに なったとき 触った 相手に ダメージを あたえる。"
+  },
+  "anticipation": {
+    "name": "きけんよち",
+    "description": "相手の 持つ 危険な 技を 察知する ことができる。"
+  },
+  "forewarn": {
+    "name": "よちむ",
+    "description": "登場 したとき 相手の 持つ 技を ひとつだけ 読み取る。"
+  },
+  "unaware": {
+    "name": "てんねん",
+    "description": "相手の 能力の 変化を 無視して 攻撃が できる。"
+  },
+  "tintedLens": {
+    "name": "いろめがね",
+    "description": "効果が いまひとつの 技を 通常の 威力で 出すことが できる。"
+  },
+  "filter": {
+    "name": "フィルター",
+    "description": "効果バツグンに なってしまう 攻撃の 威力を 弱める ことが できる。"
+  },
+  "slowStart": {
+    "name": "スロースタート",
+    "description": "５ターンの あいだ 攻撃と 素早さが 半分に なる。"
+  },
+  "scrappy": {
+    "name": "きもったま",
+    "description": "ゴーストタイプの ポケモンに ノーマルタイプと かくとうタイプの 技を 当てることが できる。"
+  },
+  "stormDrain": {
+    "name": "よびみず",
+    "description": "みずタイプの 技を 自分に よせつけ ダメージは 受けずに 特攻が 上がる。"
+  },
+  "iceBody": {
+    "name": "アイスボディ",
+    "description": "天気が ゆきのとき HPを 少しずつ 回復 する。"
+  },
+  "solidRock": {
+    "name": "ハードロック",
+    "description": "効果バツグンに なってしまう 攻撃の 威力を 弱める ことが できる。"
+  },
+  "snowWarning": {
+    "name": "ゆきふらし",
+    "description": "登場 したときに 天気を ゆきに する。"
+  },
+  "honeyGather": {
+    "name": "みつあつめ",
+    "description": "戦闘が 終わったとき あまいミツを 拾う。そのあまいミツが 売られて お金を もらう。"
+  },
+  "frisk": {
+    "name": "おみとおし",
+    "description": "登場 したとき 相手の 持ち物を 見通すことが できる。"
+  },
+  "reckless": {
+    "name": "すてみ",
+    "description": "反動で ダメージを 受ける 技の 威力が 上がる。"
+  },
+  "multitype": {
+    "name": "マルチタイプ",
+    "description": "持っている プレートや Ｚクリスタルの タイプによって 自分の タイプが 変わる。"
+  },
+  "flowerGift": {
+    "name": "フラワーギフト",
+    "description": "天気が 晴れのとき 自分と 味方の 攻撃と 特防の 能力が 上がる。"
+  },
+  "badDreams": {
+    "name": "ナイトメア",
+    "description": "ねむり状態の 相手に ダメージを あたえる。"
+  },
+  "pickpocket": {
+    "name": "わるいてぐせ",
+    "description": "触られた 相手の 道具を 盗んで しまう。"
+  },
+  "sheerForce": {
+    "name": "ちからずく",
+    "description": "技の 追加効果は なくなるが そのぶん 高い 威力で 技を 出すことが できる。"
+  },
+  "contrary": {
+    "name": "あまのじゃく",
+    "description": "能力の 変化が 逆転して 上がるときに 下がり 下がるときに 上がる。"
+  },
+  "unnerve": {
+    "name": "きんちょうかん",
+    "description": "相手を 緊張させて きのみを 食べられなく させる。"
+  },
+  "defiant": {
+    "name": "まけんき",
+    "description": "能力を 下げられると 攻撃が ぐーんと 上がる。"
+  },
+  "defeatist": {
+    "name": "よわき",
+    "description": "ＨＰが 半分に なると 弱気に なって 攻撃と 特攻が 半減する。"
+  },
+  "cursedBody": {
+    "name": "のろわれボディ",
+    "description": "攻撃を 受けると 相手の 技を かなしばり状態に することが ある。"
+  },
+  "healer": {
+    "name": "いやしのこころ",
+    "description": "状態異常の 味方を たまに 治してあげる。"
+  },
+  "friendGuard": {
+    "name": "フレンドガード",
+    "description": "味方の ダメージを 減らすことが できる。"
+  },
+  "weakArmor": {
+    "name": "くだけるよろい",
+    "description": "物理技で ダメージを 受けると 防御が 下がり 素早さが ぐーんと 上がる。"
+  },
+  "heavyMetal": {
+    "name": "ヘヴィメタル",
+    "description": "自分の 重さが ２倍に なる。"
+  },
+  "lightMetal": {
+    "name": "ライトメタル",
+    "description": "自分の 重さが 半分に なる。"
+  },
+  "multiscale": {
+    "name": "マルチスケイル",
+    "description": "ＨＰが 満タンの ときに 受ける ダメージが 少なくなる。"
+  },
+  "toxicBoost": {
+    "name": "どくぼうそう",
+    "description": "どく状態に なったとき 物理技の 威力が 上がる。"
+  },
+  "flareBoost": {
+    "name": "ねつぼうそう",
+    "description": "やけど状態に なったとき 特殊技の 威力が 上がる。"
+  },
+  "harvest": {
+    "name": "しゅうかく",
+    "description": "使った きのみを 何回も 作りだす。"
+  },
+  "telepathy": {
+    "name": "テレパシー",
+    "description": "味方の 攻撃を 読み取って 技を 回避する。"
+  },
+  "moody": {
+    "name": "ムラっけ",
+    "description": "毎ターン 能力の どれかが ぐーんと 上がって どれかが 下がる。"
+  },
+  "overcoat": {
+    "name": "ぼうじん",
+    "description": "すなあらしや あられなどの ダメージを 受けない。 粉の 技を 受けない。"
+  },
+  "poisonTouch": {
+    "name": "どくしゅ",
+    "description": "触る だけで 相手を どく 状態に することがある。"
+  },
+  "regenerator": {
+    "name": "さいせいりょく",
+    "description": "手持ちに 引っ込むと ＨＰが 少し 回復する。"
+  },
+  "bigPecks": {
+    "name": "はとむね",
+    "description": "防御を 下げる 効果を 受けない。"
+  },
+  "sandRush": {
+    "name": "すなかき",
+    "description": "天気が すなあらし のとき 素早さが 上がる。"
+  },
+  "wonderSkin": {
+    "name": "ミラクルスキン",
+    "description": "変化技を 受けにくい 体に なっている。"
+  },
+  "analytic": {
+    "name": "アナライズ",
+    "description": "いちばん 最後に 技を 出すと 技の 威力が 上がる。"
+  },
+  "illusion": {
+    "name": "イリュージョン",
+    "description": "手持ちの いちばん うしろに いる ポケモンに なりきって 登場して 相手を 化かす。"
+  },
+  "imposter": {
+    "name": "かわりもの",
+    "description": "目の前の ポケモンに 変身 してしまう。"
+  },
+  "infiltrator": {
+    "name": "すりぬけ",
+    "description": "相手の 壁や 身代わりを すりぬけて 攻撃 できる"
+  },
+  "mummy": {
+    "name": "ミイラ",
+    "description": "相手に 触られると 相手を ミイラに してしまう。"
+  },
+  "moxie": {
+    "name": "じしんかじょう",
+    "description": "相手を 倒すと 自信が ついて 攻撃が 上がる。"
+  },
+  "justified": {
+    "name": "せいぎのこころ",
+    "description": "あくタイプの 攻撃を 受けると 正義感で 攻撃が 上がる。"
+  },
+  "rattled": {
+    "name": "びびり",
+    "description": "あく ゴースト むしタイプの 攻撃を 受けたり いかくを されると びびって 素早さが 上がる。"
+  },
+  "magicBounce": {
+    "name": "マジックミラー",
+    "description": "相手に だされた 変化技を 受けずに そのまま 返す ことが できる。"
+  },
+  "sapSipper": {
+    "name": "そうしょく",
+    "description": "くさタイプの 技を 受けると ダメージを 受けずに 攻撃が 上がる。"
+  },
+  "prankster": {
+    "name": "いたずらごころ",
+    "description": "変化技を 先制で 出すことが できる。"
+  },
+  "sandForce": {
+    "name": "すなのちから",
+    "description": "天気が すなあらしの とき いわタイプと じめんタイプと はがねタイプの 威力が 上がる。"
+  },
+  "ironBarbs": {
+    "name": "てつのトゲ",
+    "description": "自分に 触った 相手に 鉄のトゲで ダメージを あたえる。"
+  },
+  "zenMode": {
+    "name": "ダルマモード",
+    "description": "ＨＰが 半分 以下に なると 姿が 変化する。"
+  },
+  "victoryStar": {
+    "name": "しょうりのほし",
+    "description": "自分や 味方の 命中率が 上がる。"
+  },
+  "turboblaze": {
+    "name": "ターボブレイズ",
+    "description": "相手の 特性に ジャマされる ことなく 相手に 技を 出すことが できる。"
+  },
+  "teravolt": {
+    "name": "テラボルテージ",
+    "description": "相手の 特性に ジャマされる ことなく 相手に 技を 出すことが できる。"
+  },
+  "aromaVeil": {
+    "name": "アロマベール",
+    "description": "自分と 味方への メンタル 攻撃を 防ぐことが できる。"
+  },
+  "flowerVeil": {
+    "name": "フラワーベール",
+    "description": "味方の 草ポケモンは 能力が 下がらず 状態異常にも ならない。"
+  },
+  "cheekPouch": {
+    "name": "ほおぶくろ",
+    "description": "どんな きのみでも 食べると ＨＰも 回復する。"
+  },
+  "protean": {
+    "name": "へんげんじざい",
+    "description": "自分が 出す 技と 同じ タイプに 変化する。"
+  },
+  "furCoat": {
+    "name": "ファーコート",
+    "description": "相手から 受ける 物理技の ダメージが 半分に なる。"
+  },
+  "magician": {
+    "name": "マジシャン",
+    "description": "技を 当てた 相手の 道具を 奪ってしまう。"
+  },
+  "bulletproof": {
+    "name": "ぼうだん",
+    "description": "相手の 弾や 爆弾などの 技を 防ぐことが できる。"
+  },
+  "competitive": {
+    "name": "かちき",
+    "description": "能力を 下げられると 特攻が ぐーんと 上がる。"
+  },
+  "strongJaw": {
+    "name": "がんじょうあご",
+    "description": "あごが 頑丈で 噛む 技の 威力が 高くなる。"
+  },
+  "refrigerate": {
+    "name": "フリーズスキン",
+    "description": "ノーマルタイプの 技が こおりタイプに なる。 威力が 少し 上がる。"
+  },
+  "sweetVeil": {
+    "name": "スイートベール",
+    "description": "味方の ポケモンは 眠らなくなる。"
+  },
+  "stanceChange": {
+    "name": "バトルスイッチ",
+    "description": "攻撃技を 出すと ブレードフォルムに 技 キングシールドを 出すと シールドフォルムに 変化する。"
+  },
+  "galeWings": {
+    "name": "はやてのつばさ",
+    "description": "ＨＰが 満タン だと ひこうタイプの 技を 先制で 出すことが できる。"
+  },
+  "megaLauncher": {
+    "name": "メガランチャー",
+    "description": "波動の 技の 威力が 高くなる。"
+  },
+  "grassPelt": {
+    "name": "くさのけがわ",
+    "description": "グラスフィールドのとき 防御が 上がる。"
+  },
+  "symbiosis": {
+    "name": "きょうせい",
+    "description": "味方が 道具を 使うと 自分の 持っている 道具を 味方に 渡す。"
+  },
+  "toughClaws": {
+    "name": "かたいツメ",
+    "description": "相手に 接触する 技の 威力が 高くなる。"
+  },
+  "pixilate": {
+    "name": "フェアリースキン",
+    "description": "ノーマルタイプの 技が フェアリータイプになる。 威力が 少し 上がる。"
+  },
+  "gooey": {
+    "name": "ぬめぬめ",
+    "description": "攻撃で 自分に 触れた 相手の 素早さを 下げる。"
+  },
+  "aerilate": {
+    "name": "スカイスキン",
+    "description": "ノーマルタイプの 技が ひこうタイプになる。 威力が 少し 上がる。"
+  },
+  "parentalBond": {
+    "name": "おやこあい",
+    "description": "親子 ２匹で ２回 攻撃することが できる。"
+  },
+  "darkAura": {
+    "name": "ダークオーラ",
+    "description": "全員の あくタイプの 技が 強くなる。"
+  },
+  "fairyAura": {
+    "name": "フェアリーオーラ",
+    "description": "全員の フェアリータイプの 技が 強くなる。"
+  },
+  "auraBreak": {
+    "name": "オーラブレイク",
+    "description": "オーラの 効果を 逆転させて 威力を 下げる。"
+  },
+  "primordialSea": {
+    "name": "はじまりのうみ",
+    "description": "ほのおタイプの 攻撃を 受けない 天気にする。"
+  },
+  "desolateLand": {
+    "name": "おわりのだいち",
+    "description": "みずタイプの 攻撃を 受けない 天気にする。"
+  },
+  "deltaStream": {
+    "name": "デルタストリーム",
+    "description": "ひこうタイプの 弱点が なくなる 天気にする。"
+  },
+  "stamina": {
+    "name": "じきゅうりょく",
+    "description": "攻撃を 受けると 防御が 上がる。"
+  },
+  "wimpOut": {
+    "name": "にげごし",
+    "description": "ＨＰが 半分に なると あわてて 逃げ出して 手持ちに 引っ込んで しまう。"
+  },
+  "emergencyExit": {
+    "name": "ききかいひ",
+    "description": "ＨＰが 半分に なると 危険を 回避するため 手持ちに 引っ込んで しまう。"
+  },
+  "waterCompaction": {
+    "name": "みずがため",
+    "description": "みずタイプの 技を 受けると 防御が ぐーんと 上がる。"
+  },
+  "merciless": {
+    "name": "ひとでなし",
+    "description": "どく状態の 相手を 攻撃すると かならず 急所に 当たる。"
+  },
+  "shieldsDown": {
+    "name": "リミットシールド",
+    "description": "ＨＰが 半分に なると 殻が 壊れて 攻撃的に なる。"
+  },
+  "stakeout": {
+    "name": "はりこみ",
+    "description": "交代で 出てきた 相手に ２倍の ダメージで 攻撃 できる。"
+  },
+  "waterBubble": {
+    "name": "すいほう",
+    "description": "自分に 対する ほのおタイプの 技の 威力を 下げる。 やけど しない。"
+  },
+  "steelworker": {
+    "name": "はがねつかい",
+    "description": "はがねタイプの 技の 威力が 上がる。"
+  },
+  "berserk": {
+    "name": "ぎゃくじょう",
+    "description": "相手の 攻撃で ＨＰが 半分に なると 特攻が 上がる。"
+  },
+  "slushRush": {
+    "name": "ゆきかき",
+    "description": "天気が ゆき のとき 素早さが 上がる。"
+  },
+  "longReach": {
+    "name": "えんかく",
+    "description": "すべての 技を 相手に 接触 しないで 出すことが できる。"
+  },
+  "liquidVoice": {
+    "name": "うるおいボイス",
+    "description": "すべての 音技が みずタイプに なる。"
+  },
+  "triage": {
+    "name": "ヒーリングシフト",
+    "description": "回復技を 先制で 出すことが できる。"
+  },
+  "galvanize": {
+    "name": "エレキスキン",
+    "description": "ノーマルタイプの 技が でんきタイプになる。 威力が 少し 上がる。"
+  },
+  "surgeSurfer": {
+    "name": "サーフテール",
+    "description": "エレキフィールド のとき 素早さが ２倍に なる。"
+  },
+  "schooling": {
+    "name": "ぎょぐん",
+    "description": "ＨＰが 多いときは 群れて 強くなる。 ＨＰの 残りが 少なくなると 群れは 散り散りに なってしまう。"
+  },
+  "disguise": {
+    "name": "ばけのかわ",
+    "description": "体を 被う 化けの皮で １回 攻撃を 防ぐことが できる。"
+  },
+  "battleBond": {
+    "name": "きずなへんげ",
+    "description": "相手を 倒すと トレーナーとの キズナが 深まり サトシゲッコウガに 変化する。みずしゅりけんが 強くなる。"
+  },
+  "powerConstruct": {
+    "name": "スワームチェンジ",
+    "description": "ＨＰが 半分に なると セルたちが 応援に 駆けつけ パーフェクトフォルムに 姿を 変える。"
+  },
+  "corrosion": {
+    "name": "ふしょく",
+    "description": "はがねタイプや どくタイプも どく状態に することが できる。"
+  },
+  "comatose": {
+    "name": "ぜったいねむり",
+    "description": "つねに 夢うつつの 状態で 絶対に 目覚めない。 眠ったまま 攻撃が できる。"
+  },
+  "queenlyMajesty": {
+    "name": "じょおうのいげん",
+    "description": "相手に 威圧感を あたえ こちらに むかって 先制技を 出せない ようにする。"
+  },
+  "innardsOut": {
+    "name": "とびだすなかみ",
+    "description": "相手に 倒されたとき ＨＰの 残りの ぶんだけ 相手に ダメージを あたえる。"
+  },
+  "dancer": {
+    "name": "おどりこ",
+    "description": "だれかが 踊り技を 使うと 自分も それに 続いて 踊り技を 出すことが できる。"
+  },
+  "battery": {
+    "name": "バッテリー",
+    "description": "味方の 特殊技の 威力を 上げる。"
+  },
+  "fluffy": {
+    "name": "もふもふ",
+    "description": "相手から 受けた 接触する 技の ダメージを 半減するが ほのおタイプの 技の ダメージは ２倍になる。"
+  },
+  "dazzling": {
+    "name": "ビビッドボディ",
+    "description": "相手を びっくり させて こちらに むかって 先制技を 出せない ようにする。"
+  },
+  "soulHeart": {
+    "name": "ソウルハート",
+    "description": "ポケモンが ひんしに なるたびに 特攻が 上がる。"
+  },
+  "tanglingHair": {
+    "name": "カーリーヘアー",
+    "description": "攻撃で 自分に 触れた 相手の 素早さを 下げる。"
+  },
+  "receiver": {
+    "name": "レシーバー",
+    "description": "倒された 味方の 特性を 受け継いで 同じ 特性に なる。"
+  },
+  "powerOfAlchemy": {
+    "name": "かがくのちから",
+    "description": "倒された 味方の 特性を 受け継いで 同じ 特性に なる。"
+  },
+  "beastBoost": {
+    "name": "ビーストブースト",
+    "description": "相手を 倒したとき 自分の いちばん 高い 能力が 上がる。"
+  },
+  "rksSystem": {
+    "name": "ＡＲシステム",
+    "description": "持っている メモリで 自分の タイプが 変わる。"
+  },
+  "electricSurge": {
+    "name": "エレキメイカー",
+    "description": "登場 したときに エレキフィールドを はりめぐらせる。"
+  },
+  "psychicSurge": {
+    "name": "サイコメイカー",
+    "description": "登場 したときに サイコフィールドを はりめぐらせる。"
+  },
+  "mistySurge": {
+    "name": "ミストメイカー",
+    "description": "登場 したときに ミストフィールドを はりめぐらせる。"
+  },
+  "grassySurge": {
+    "name": "グラスメイカー",
+    "description": "登場 したときに グラスフィールドを はりめぐらせる。"
+  },
+  "fullMetalBody": {
+    "name": "メタルプロテクト",
+    "description": "相手の 技や 特性で 能力を 下げられない。"
+  },
+  "shadowShield": {
+    "name": "ファントムガード",
+    "description": "ＨＰが 満タンの ときに 受ける ダメージが 少なくなる。"
+  },
+  "prismArmor": {
+    "name": "プリズムアーマー",
+    "description": "効果バツグンに なってしまう 攻撃の 威力を 弱める ことが できる。"
+  },
+  "neuroforce": {
+    "name": "ブレインフォース",
+    "description": "効果バツグンの 攻撃で 威力が さらに 上がる。"
+  },
+  "intrepidSword": {
+    "name": "ふとうのけん",
+    "description": "登場 したときに 攻撃が 上がる。"
+  },
+  "dauntlessShield": {
+    "name": "ふくつのたて",
+    "description": "登場 したときに 防御が 上がる。"
+  },
+  "libero": {
+    "name": "リベロ",
+    "description": "自分が 出す 技と 同じ タイプに 変化する。"
+  },
+  "ballFetch": {
+    "name": "たまひろい",
+    "description": "1回目に 投げて 失敗 した モンスターボールを 拾ってくる。"
+  },
+  "cottonDown": {
+    "name": "わたげ",
+    "description": "攻撃を 受けると わたげを ばらまいて 自分以外の ポケモン すべての 素早さを 下げる。"
+  },
+  "propellerTail": {
+    "name": "スクリューおびれ",
+    "description": "相手の 技を 引き受ける 特性や 技の 影響を 無視 できる。"
+  },
+  "mirrorArmor": {
+    "name": "ミラーアーマー",
+    "description": "自分が 受けた 能力 ダウンの 効果 だけを 跳ね返す。"
+  },
+  "gulpMissile": {
+    "name": "うのミサイル",
+    "description": "なみのりか ダイビングを すると 獲物を くわえてくる。 ダメージを 受けると 獲物を 吐きだして 攻撃。"
+  },
+  "stalwart": {
+    "name": "すじがねいり",
+    "description": "相手の 技を 引き受ける 特性や 技の 影響を 無視 できる。"
+  },
+  "steamEngine": {
+    "name": "じょうききかん",
+    "description": "みずタイプ ほのおタイプの 技を 受けると 素早さが ぐぐーんと 上がる。"
+  },
+  "punkRock": {
+    "name": "パンクロック",
+    "description": "音技の 威力が 上がる。 受けた 音技の ダメージは 半分に なる。"
+  },
+  "sandSpit": {
+    "name": "すなはき",
+    "description": "攻撃を 受けると 砂あらしを 起こす。"
+  },
+  "iceScales": {
+    "name": "こおりのりんぷん",
+    "description": "こおりのりんぷんに 守られて 特殊攻撃で 受ける ダメージが 半減 する。"
+  },
+  "ripen": {
+    "name": "じゅくせい",
+    "description": "熟成 させることで きのみの 効果が 倍に なる。"
+  },
+  "iceFace": {
+    "name": "アイスフェイス",
+    "description": "物理攻撃は 頭の 氷が みがわりに なるが 姿も 変わる。 氷は あられが 降ると 元に戻る。"
+  },
+  "powerSpot": {
+    "name": "パワースポット",
+    "description": "隣に いるだけで 技の 威力が 上がる。"
+  },
+  "mimicry": {
+    "name": "ぎたい",
+    "description": "フィールドの 状態に あわせて ポケモンの タイプが 変わる。"
+  },
+  "screenCleaner": {
+    "name": "バリアフリー",
+    "description": "登場 したときに 敵と 味方の ひかりのかべ リフレクター オーロラベールの 効果が 消える。"
+  },
+  "steelySpirit": {
+    "name": "はがねのせいしん",
+    "description": "味方の はがねタイプの 攻撃の 威力が 上がる。"
+  },
+  "perishBody": {
+    "name": "ほろびのボディ",
+    "description": "接触する 技を 受けると お互い ３ターン たつと ひんしになる。 交代すると 効果は なくなる。"
+  },
+  "wanderingSpirit": {
+    "name": "さまようたましい",
+    "description": "接触する 技で 攻撃 してきた ポケモンと 特性を 入れ替える。"
+  },
+  "gorillaTactics": {
+    "name": "ごりむちゅう",
+    "description": "攻撃は 上がるが 最初に 選んだ 技しか 出せなくなる。"
+  },
+  "neutralizingGas": {
+    "name": "かがくへんかガス",
+    "description": "かがくへんかガスの ポケモンが 場にいると すべての ポケモンの 特性の 効果が 消えたり 発動 しなくなる。"
+  },
+  "pastelVeil": {
+    "name": "パステルベール",
+    "description": "自分も 味方も どくの 状態異常を 受けなくなる。"
+  },
+  "hungerSwitch": {
+    "name": "はらぺこスイッチ",
+    "description": "ターンの 終わりに まんぷくもよう はらぺこもよう まんぷくもよう……と 交互に 姿を 変える。"
+  },
+  "quickDraw": {
+    "name": "クイックドロウ",
+    "description": "相手より 先に 行動できることが ある。"
+  },
+  "unseenFist": {
+    "name": "ふかしのこぶし",
+    "description": "相手に 接触する 技なら 守りの 効果を 無視して 攻撃することが できる。"
+  },
+  "curiousMedicine": {
+    "name": "きみょうなくすり",
+    "description": "登場 したときに 貝がらから 薬を 振りまいて 味方の 能力変化を 元に戻す。"
+  },
+  "transistor": {
+    "name": "トランジスタ",
+    "description": "でんきタイプの 技の 威力が 上がる。"
+  },
+  "dragonsMaw": {
+    "name": "りゅうのあぎと",
+    "description": "ドラゴンタイプの 技の 威力が 上がる。"
+  },
+  "chillingNeigh": {
+    "name": "しろのいななき",
+    "description": "相手を 倒すと 冷たい 声で いなないて 攻撃が 上がる。"
+  },
+  "grimNeigh": {
+    "name": "くろのいななき",
+    "description": "相手を 倒すと 恐ろしい 声で いなないて 特攻が 上がる。"
+  },
+  "asOneGlastrier": {
+    "name": "じんばいったい",
+    "description": "バドレックスの きんちょうかんと ブリザポスの しろのいななきの 二つの 特性を あわせ持つ。"
+  },
+  "asOneSpectrier": {
+    "name": "じんばいったい",
+    "description": "バドレックスの きんちょうかんと レイスポスの くろのいななきの 二つの 特性を あわせ持つ。"
+  },
+  "lingeringAroma": {
+    "name": "とれないにおい",
+    "description": "直接攻撃を受けたとき、相手の特性もとれないにおいにする。"
+  },
+  "seedSower": {
+    "name": "こぼれダネ",
+    "description": "攻撃を 受けると グラスフィールドに する。"
+  },
+  "thermalExchange": {
+    "name": "ねつこうかん",
+    "description": "ほのおタイプの 技を 受けると 攻撃が 上がる。 やけど状態に ならない。"
+  },
+  "angerShell": {
+    "name": "いかりのこうら",
+    "description": "相手の攻撃で HPが 半分に なると 怒りで 防御と 特防が 下がるが 攻撃 特攻 素早さが 上がる。"
+  },
+  "purifyingSalt": {
+    "name": "きよめのしお",
+    "description": "清らかな塩で 状態異常に ならない。 ゴーストタイプの 技の ダメージを 半減させる。"
+  },
+  "wellBakedBody": {
+    "name": "こんがりボディ",
+    "description": "ほのおタイプの 技を 受けると ダメージを 受けずに 防御が ぐーんと 上がる。"
+  },
+  "windRider": {
+    "name": "かぜのり",
+    "description": "おいかぜが 吹いたり 風技を 受けると ダメージを 受けずに 攻撃が 上がる。"
+  },
+  "guardDog": {
+    "name": "ばんけん",
+    "description": "いかく されると 攻撃が 上がる。 ポケモンを 入れ替えさせる 技や 道具が 効かない。"
+  },
+  "rockyPayload": {
+    "name": "いわはこび",
+    "description": "いわタイプの 技の 威力が 上がる。"
+  },
+  "windPower": {
+    "name": "ふうりょくでんき",
+    "description": "風技を 受けると じゅうでん 状態に なる。"
+  },
+  "zeroToHero": {
+    "name": "マイティチェンジ",
+    "description": "手持ちに ひっこむと マイティフォルムに 変化する。"
+  },
+  "commander": {
+    "name": "しれいとう",
+    "description": "登場したとき 味方に ヘイラッシャが いると 口の中に 入って そこから 指令を だす。"
+  },
+  "electromorphosis": {
+    "name": "でんきにかえる",
+    "description": "ダメージを 受けると じゅうでん 状態に なる。"
+  },
+  "protosynthesis": {
+    "name": "こだいかっせい",
+    "description": "ブーストエナジーを 持たせるか 天気が 晴れのとき いちばん 高い能力が 上がる。"
+  },
+  "quarkDrive": {
+    "name": "クォークチャージ",
+    "description": "ブーストエナジーを 持たせるか エレキフィールドのとき いちばん 高い能力が 上がる。"
+  },
+  "goodAsGold": {
+    "name": "おうごんのからだ",
+    "description": "酸化せず 丈夫な 黄金の体は 相手からの 変化技を 受けない。"
+  },
+  "vesselOfRuin": {
+    "name": "わざわいのうつわ",
+    "description": "災厄を 呼ぶ 器の力で 自分以外の 特攻が 弱くなる。"
+  },
+  "swordOfRuin": {
+    "name": "わざわいのつるぎ",
+    "description": "災厄を 呼ぶ 剣の力で 自分以外の 防御が 弱くなる。"
+  },
+  "tabletsOfRuin": {
+    "name": "わざわいのおふだ",
+    "description": "災厄を 呼ぶ 木札の力で 自分以外の 攻撃が 弱くなる。"
+  },
+  "beadsOfRuin": {
+    "name": "わざわいのたま",
+    "description": "災厄を 呼ぶ 勾玉の力で 自分以外の 特防が 弱くなる。"
+  },
+  "orichalcumPulse": {
+    "name": "ひひいろのこどう",
+    "description": "登場したとき 天気を 晴れにする。 日差しが 強いと 古代の 鼓動により 攻撃が 高まる。"
+  },
+  "hadronEngine": {
+    "name": "ハドロンエンジン",
+    "description": "登場したとき エレキフィールドを はる。 エレキフィールドだと 未来の 機関により 特攻が 高まる。"
+  },
+  "opportunist": {
+    "name": "びんじょう",
+    "description": "相手の 能力が 上がったとき 自分も 便乗して 同じように 能力を 上げる。"
+  },
+  "cudChew": {
+    "name": "はんすう",
+    "description": "きのみを 食べると 次のターンの 終わりに 胃から 出して もう1回だけ 食べる。"
+  },
+  "sharpness": {
+    "name": "きれあじ",
+    "description": "相手を 切る技の 威力が 上がる。"
+  },
+  "supremeOverlord": {
+    "name": "そうだいしょう",
+    "description": "登場したとき 今まで 倒された 味方の 数が 多いほど 少しずつ 攻撃と 特攻が 上がる。"
+  },
+  "costar": {
+    "name": "きょうえん",
+    "description": "登場 したときに 味方の 能力変化を コピーする。"
+  },
+  "toxicDebris": {
+    "name": "どくげしょう",
+    "description": "物理技で ダメージを 受けると 相手の 足下に どくびしが ちらばる。"
+  },
+  "armorTail": {
+    "name": "テイルアーマー",
+    "description": "頭を包む 謎のしっぽが こちらに むかって 先制技を 出せない ようにする。"
+  },
+  "earthEater": {
+    "name": "どしょく",
+    "description": "じめんタイプの 技を 受けると ダメージを 受けずに 回復する。"
+  },
+  "myceliumMight": {
+    "name": "きんしのちから",
+    "description": "変化技を 出すとき 必ず 行動が 遅くなるが 相手の 特性に ジャマされない。"
+  },
+  "mindsEye": {
+    "name": "しんがん",
+    "description": "ノーマル かくとうタイプの技を ゴーストタイプに 当てることが できる。 相手の 回避率の 変化を 無視し 命中率も 下げられない。"
+  },
+  "supersweetSyrup": {
+    "name": "かんろなミツ",
+    "description": "最初に 登場 したとき 甘ったるい 蜜の香りを ふりまいて 相手の 回避率を 下げる。"
+  },
+  "hospitality": {
+    "name": "おもてなし",
+    "description": "登場したとき 味方を もてなして HPを 少しだけ 回復してあげる。"
+  },
+  "toxicChain": {
+    "name": "どくのくさり",
+    "description": "毒素を ふくんだ 鎖の力で 技を 当てた 相手を 猛毒の状態に することが ある。"
+  },
+  "embodyAspectTeal": {
+    "name": "おもかげやどし",
+    "description": "思い出を 心に 宿すことで みどりのめんを かがやかせ 自分の 素早さを 上げる。"
+  },
+  "embodyAspectWellspring": {
+    "name": "おもかげやどし",
+    "description": "思い出を 心に 宿すことで いどのめんを かがやかせ 自分の 特防を 上げる。"
+  },
+  "embodyAspectHearthflame": {
+    "name": "おもかげやどし",
+    "description": "思い出を 心に 宿すことで かまどのめんを かがやかせ 自分の 攻撃を 上げる。"
+  },
+  "embodyAspectCornerstone": {
+    "name": "おもかげやどし",
+    "description": "思い出を 心に 宿すことで いしずえのめんを かがやかせ 自分の 防御を 上げる。"
+  },
+  "teraShift": {
+    "name": "テラスチェンジ",
+    "description": "登場したとき 周囲の エネルギーを 吸収し テラスタルフォルムに 変化する。"
+  },
+  "teraShell": {
+    "name": "テラスシェル",
+    "description": "全タイプの力を 秘めた甲羅は HPが 満タンの ときに 受ける ダメージを すべて 今ひとつに する。"
+  },
+  "teraformZero": {
+    "name": "ゼロフォーミング",
+    "description": "テラパゴスが ステラフォルムに なったとき 秘められた力で 天気と フィールドの 影響を すべて ゼロにする。"
+  },
+  "poisonPuppeteer": {
+    "name": "どくくぐつ",
+    "description": "モモワロウの 技によって どく状態に なった 相手は こんらん状態にも なってしまう。"
+  },
+  "unleashed": {
+    "name": "解放",
+    "description": "HPが低い時、全ての技の威力が上昇する。"
+  },
+  "hellFlame": {
+    "name": "業火",
+    "description": "ほのお技の威力が50%上昇する。"
+  },
+  "psychoLeaf": {
+    "name": "サイコリーフ",
+    "description": "くさ技がエスパー技になり、威力が20%上昇する。"
+  },
+  "groundFlame": {
+    "name": "大地の炎",
+    "description": "ほのお技がじめん技になり、威力が20%上昇する。"
+  },
+  "magicalWater": {
+    "name": "魔法の水",
+    "description": "みず技がフェアリー技になり、威力が20%上昇する。"
+  },
+  "nuclearEnergy": {
+    "name": "核エネルギー",
+    "description": "どく技が電気技になり、威力が20%上昇する。"
+  },
+  "poisonKing": {
+    "name": "毒の帝王",
+    "description": "どく技の威力が60%上昇する。"
+  },
+  "solidKong": {
+    "name": "鋼の巨猿",
+    "description": "効果抜群の技のダメージを50%軽減する。"
+  },
+  "screepy": {
+    "name": "スクリーピー",
+    "description": "ゴーストタイプの技がノーマルタイプに効果があります。ゴーストタイプの技の威力が30%上がります。いかくに免疫です。"
+  },
+  "godFist": {
+    "name": "神拳",
+    "description": "パンチ技の威力が50%上昇する。"
+  },
+  "parentalHaunting": {
+    "name": "親霊の加護",
+    "description": "ノーマル技以外の技がゴースト技になり、威力が20%上昇する。"
+  },
+  "nightmarate": {
+    "name": "悪夢の化身",
+    "description": "ノーマル技が第一タイプの技になり、威力が20%上昇する。"
+  },
+  "terrify": {
+    "name": "戦慄",
+    "description": "戦闘に出た時、相手の攻撃と特攻を1段階下げる。"
+  },
+  "thunderAndFire": {
+    "name": "サンダーアンドファイア",
+    "description": "ほのおタイプと電気タイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "electafireAbsorb": {
+    "name": "雷炎吸収",
+    "description": "ほのおと電気技を受けた時、ダメージを受ける代わりにHPを回復する。"
+  },
+  "dirtThick": {
+    "name": "厚土の防壁",
+    "description": "みずとじめん技のダメージを半減する。"
+  },
+  "arcticBlaze": {
+    "name": "アークティックブレイズ",
+    "description": "こおりタイプの技をほのおタイプに、ほのおタイプの技をこおりタイプに変更し、HPが65%以下の時に威力が35%上がります。"
+  },
+  "steamify": {
+    "name": "蒸気化",
+    "description": "みず技がほのお技になり、威力が20%上昇する。"
+  },
+  "prehistoricHunt": {
+    "name": "原始の狩人",
+    "description": "毎ターン30%の確率で天気が雨になる。雨・強い日差し・雹・雪・大雨の時、素早さが2倍になる。"
+  },
+  "popUp": {
+    "name": "急襲",
+    "description": "戦闘に出た時、防御が1段階下がり、素早さが1段階上がる。"
+  },
+  "earthSpeeder": {
+    "name": "大地の駆け手",
+    "description": "じめん技を受けた時、素早さが1段階上がる。"
+  },
+  "knockout": {
+    "name": "決死の一撃",
+    "description": "HPが50%以下の時、急所に当たる確率が35%上昇する。"
+  },
+  "finalRound": {
+    "name": "最後の一撃",
+    "description": "HPが低い時、かくとう技の威力が上昇する。"
+  },
+  "kickPunch": {
+    "name": "格闘の達人",
+    "description": "キックとパンチ技の威力が30%上昇する。"
+  },
+  "stabNormal": {
+    "name": "ノーマルの支配者",
+    "description": "ノーマル技の威力が30%上昇する。"
+  },
+  "adaptiveAi": {
+    "name": "アダプティブAI",
+    "description": "相手の最も高い能力値に応じて能力が1段階または2段階上がります。相手の最も高い能力値が攻撃の場合は防御が、特攻の場合は特防が、特防の場合は特攻が、素早さの場合は素早さが2段階上がります。"
+  },
+  "electric": {
+    "name": "エレクトリック",
+    "description": "電気タイプの技の威力が50%上がり、みずタイプからのダメージが2倍になり、ノーマルタイプの技を20%の威力の電気タイプに変更します。"
+  },
+  "existence": {
+    "name": "存在の力",
+    "description": "全ての技の威力が20%上昇し、効果抜群のダメージを等倍にする。相手への効果抜群も等倍になる。"
+  },
+  "allConsuming": {
+    "name": "全てを喰らう者",
+    "description": "接触技を受けた時、最大HPの1/8を回復し、相手に最大HPの1/8のダメージを与える。"
+  },
+  "corrupt": {
+    "name": "腐敗",
+    "description": "攻撃後、70%の確率で相手を猛毒状態にする。"
+  },
+  "dragonKing": {
+    "name": "竜王",
+    "description": "ドラゴン技の威力が60%上昇する。"
+  },
+  "sandCorruption": {
+    "name": "砂の腐食",
+    "description": "接触技を受けた時、相手の最大HPの1/8のダメージを与え、素早さを1段階下げる。"
+  },
+  "organicTwist": {
+    "name": "オーガニックツイスト",
+    "description": "くさタイプといわタイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "healthySoak": {
+    "name": "活力の水",
+    "description": "みず技を受けた時、素早さと攻撃が1段階上がる。"
+  },
+  "inkBlindness": {
+    "name": "墨の盲目",
+    "description": "攻撃後、35%の確率で相手を混乱させる。"
+  },
+  "inkFry": {
+    "name": "墨の焦がし",
+    "description": "みず技を使用後、相手の素早さと特防を1段階下げる。"
+  },
+  "mooTime": {
+    "name": "牛の時間",
+    "description": "HPが50%以下の時、防御と素早さが50%上昇する。"
+  },
+  "fuelExchange": {
+    "name": "エネルギー交換",
+    "description": "でんき技を受けると素早さが1段階、くさ技を受けると最大HPの1/4回復、あく技を受けると防御が1段階、フェアリー技を受けると攻撃が1段階、エスパー技を受けると特防が1段階、こおり技を受けると特攻が1段階上がる。"
+  },
+  "sunAndMoon": {
+    "name": "日月",
+    "description": "ほのお技とイワ技の威力が20%上昇する。"
+  },
+  "nightAndDay": {
+    "name": "昼夜",
+    "description": "HPが50%以上の時は接触時に40%の確率でやけど、50%以下の時は35%の確率で眠り状態にする。"
+  },
+  "twoHalves": {
+    "name": "二分の魂",
+    "description": "瀕死の攻撃を1回耐え、相手の素早さを大きく下げ、HPを50%回復する。"
+  },
+  "alienRock": {
+    "name": "エイリアンロック",
+    "description": "エスパータイプといわタイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "robot": {
+    "name": "ロボット",
+    "description": "バトルに入る時、全ての能力が1段階上がります。各ターンの終わりにランダムな能力が1段階下がります。"
+  },
+  "golemPlus": {
+    "name": "ゴーレム＋",
+    "description": "イワ技の威力が30%上昇し、防御が30%上昇する。"
+  },
+  "nightmareFuel": {
+    "name": "ナイトメアフュエル",
+    "description": "ノーマルタイプの技をメインタイプに変更し、威力が20%上がります。"
+  },
+  "smittyxtvVirus": {
+    "name": "スミティナゲットウイルス",
+    "description": "相手を倒した後、最も高い能力値が1段階上がります。攻撃後、50%の確率で相手のランダムな能力を1段階下げます。"
+  },
+  "staticCharge": {
+    "name": "静電荷",
+    "description": "接触時に攻撃した相手を帯電状態にする。30%の確率で相手を麻痺させる。"
+  },
+  "darkStampede": {
+    "name": "暗黒の暴走",
+    "description": "あく技を使用後、ランダムな能力が1段階上がる。"
+  },
+  "colorChangeDefense": {
+    "name": "防御色変化",
+    "description": "受けた技のタイプに対して耐性を持つタイプに変化する。"
+  },
+  "colorChangeSteal": {
+    "name": "擬態泥棒",
+    "description": "受けた技のタイプに変化する。相手と同じタイプになった時、相手の持ち物を奪う。"
+  },
+  "hauntingEcho": {
+    "name": "怨霊の残響",
+    "description": "ゴースト技使用時、30%の確率で相手を麻痺させ、最大HPの1/16のダメージを与える。"
+  },
+  "maternalShade": {
+    "name": "母なる影",
+    "description": "50%の確率で受けるダメージを1/4に軽減する。"
+  },
+  "spiritualBond": {
+    "name": "霊的な絆",
+    "description": "受けたダメージの50%を攻撃してきた相手に与える。"
+  },
+  "gravePower": {
+    "name": "墓場の力",
+    "description": "HPが40%以下の時、技の威力が150%上昇する。30%の確率で相手を猛毒状態にする。"
+  },
+  "undead": {
+    "name": "不死",
+    "description": "瀕死の攻撃を70%の確率で耐える。"
+  },
+  "scaleArmor": {
+    "name": "鱗の鎧",
+    "description": "みず、でんき、ほのお、くさ技のダメージを25%軽減する。"
+  },
+  "pixelatedTongue": {
+    "name": "ピクセルの舌",
+    "description": "30%の確率でランダムな状態異常を付与し、相手のランダムな能力を1段階下げる。"
+  },
+  "staticTaste": {
+    "name": "静電の味覚",
+    "description": "まひ状態の相手に対して技の威力が50%上昇する。35%の確率で相手をまひ状態にする。"
+  },
+  "rockyHorrorShow": {
+    "name": "岩のホラーショー",
+    "description": "相手を交代できなくする。戦闘に出た時、ランダムな能力を2つ1段階ずつ上げる。"
+  },
+  "hauntingBroadcast": {
+    "name": "怨霊の放送",
+    "description": "瀕死になった時、相手全員をのろい状態にする。"
+  },
+  "ectoplasmicTouch": {
+    "name": "霊体の接触",
+    "description": "接触技を受けた時、相手の最大HPの1/12のダメージを与える。接触技を使用時、相手の最大HPの1/12のダメージを与える。"
+  },
+  "toxicCombustion": {
+    "name": "毒の燃焼",
+    "description": "猛毒状態の相手に最大HPの1/8のダメージを与える。30%の確率で相手を猛毒状態にする。"
+  },
+  "flamingEmission": {
+    "name": "フレイミングエミッション",
+    "description": "ほのおタイプとどくタイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "burningDisease": {
+    "name": "燃える病",
+    "description": "やけど状態の相手に最大HPの1/8のダメージを与える。30%の確率で相手をやけど状態にする。"
+  },
+  "steadyStance": {
+    "name": "不動の構え",
+    "description": "攻撃、防御、特攻、特防が20%上昇する。"
+  },
+  "balancedKick": {
+    "name": "精密キック",
+    "description": "キック技が必ず命中し、威力が20%上昇する。"
+  },
+  "phantomPouch": {
+    "name": "幽霊の袋",
+    "description": "攻撃を受けた時や攻撃した時、30%の確率で最大HPの1/8を回復する。戦闘後のアイテムドロップ率が上昇する。"
+  },
+  "hauntingScythe": {
+    "name": "死神の大鎌",
+    "description": "技を使用する前に、物理技は特殊技に、特殊技は物理技に変化する。"
+  },
+  "soulCollector": {
+    "name": "魂の収集者",
+    "description": "集めたタイプと一致する技の威力が上昇する。倒した相手のタイプを収集する。瀕死になると収集したタイプを失う。"
+  },
+  "shadowSync": {
+    "name": "シャドウシンク",
+    "description": "相手の能力が変化した時、自分の最も高い能力が1段階上がります。全ての技の威力が20%上がります。"
+  },
+  "frightfulCute": {
+    "name": "恐怖の可愛さ",
+    "description": "33%の確率で技の威力が50%上昇するか、受けるダメージが半減する。"
+  },
+  "ghostify": {
+    "name": "ゴースト化",
+    "description": "ノーマル技がゴースト技になり、威力が40%上昇する。"
+  },
+  "foreverPartner": {
+    "name": "永遠の相棒",
+    "description": "全ての技の威力が30%上昇する。40%の確率で瀕死の攻撃を耐える。"
+  },
+  "newAdaption": {
+    "name": "新適応",
+    "description": "ほのおとじめん技のダメージを半減する。ほのお、どく、みずタイプに対してはがね技の威力が2倍になる。"
+  },
+  "steelStealer": {
+    "name": "鋼の盗人",
+    "description": "はがね技を受けた時、攻撃が1段階上がる。"
+  },
+  "teraForce": {
+    "name": "大地の力",
+    "description": "じめん技がひこうタイプに当たるようになる。じめん技の威力が30%上昇する。いかくを無効化する。"
+  },
+  "mudiate": {
+    "name": "泥化",
+    "description": "ノーマル技がじめん技になり、威力が20%上昇し、20%の確率で相手の命中率を下げる。"
+  },
+  "gottaGoFast": {
+    "name": "先制の極意",
+    "description": "先に行動すると技の威力が2倍になる。後に行動すると受けるダメージが2倍になる。"
+  },
+  "imBlue": {
+    "name": "蒼の意志",
+    "description": "みず技の威力が上昇する。ほのお、みず、はがね技に耐性を持つ。ほのお、じめん、いわタイプに対して威力が50%上昇する。"
+  },
+  "notShadow": {
+    "name": "ノットシャドウ",
+    "description": "あく、はがね、ゴーストタイプの技に免疫です。あく、はがね、ゴーストタイプの技を受けた時、それぞれ攻撃、防御、素早さが上がります。"
+  },
+  "animified": {
+    "name": "アニメ化",
+    "description": "ノーマルとかくとう技に耐性を持つ。どく技に弱い。ノーマル技がフェアリー技になり威力が20%上昇する。30%の確率で瀕死の攻撃を耐える。"
+  },
+  "longForgotten": {
+    "name": "忘却の彼方",
+    "description": "戦闘に出た時、防御と特防が1段階下がる。"
+  },
+  "waaaa": {
+    "name": "ワァァァ",
+    "description": "25%の確率で急所に当たる。10%の確率で相手を猛毒状態にする。"
+  },
+  "tooLate": {
+    "name": "手遅れ",
+    "description": "必ず最後に行動する。35%の確率で相手を混乱、眠気、寄生、のろい状態にする。"
+  },
+  "memoriesOfTennis": {
+    "name": "テニスの記憶",
+    "description": "ボール、球体、オーブ、円形、バウンド、黄色に関連する技の威力が50%上昇する。これらの技を使用時、30%の確率で相手をひるませる。"
+  },
+  "fireRafRaf": {
+    "name": "炎のラフラフ",
+    "description": "ほのお技の威力が50%上昇する。みず技のダメージが2倍になる。ノーマル技がほのお技になり、威力が20%上昇する。"
+  },
+  "positivity": {
+    "name": "ポジティブ思考",
+    "description": "でんき技の威力が20%上昇する。30%の確率で瀕死の攻撃を耐える。33%の確率で受けるダメージが半減する。"
+  },
+  "unfazed": {
+    "name": "動じぬ心",
+    "description": "効果抜群の技のダメージを半減する。"
+  },
+  "nightmareSauce": {
+    "name": "悪夢のソース",
+    "description": "50%の確率で相手の特性を眠り状態にする。30%の確率で相手を悪夢状態にする。"
+  },
+  "hashSlingingSlasher": {
+    "name": "斬撃の達人",
+    "description": "斬撃技の威力が2倍になる。"
+  },
+  "lifeAdvice": {
+    "name": "人生相談",
+    "description": "戦闘に出た時、ランダムな能力が1段階上がる。攻撃を受けた時、40%の確率で最大HPの1/8を回復する。"
+  },
+  "woodCutter": {
+    "name": "木こり",
+    "description": "くさタイプに対して技の威力が150%上昇する。くさタイプを倒した時、攻撃と素早さが1段階上がる。"
+  },
+  "axe": {
+    "name": "斧",
+    "description": "斬撃技の威力が50%上昇する。はがね技の威力が30%上昇する。"
+  },
+  "rubberMan": {
+    "name": "ゴム人間",
+    "description": "物理とはがね技のダメージを半減する。でんき技を引き付け、攻撃が1段階上がる。みず技のダメージが2倍になる。ノーマル、かくとう、ひこう技の威力が50%上昇する。"
+  },
+  "conquerorHaki": {
+    "name": "覇王色の覇気",
+    "description": "20%の確率で技の威力が2倍になる。接触時に10%の確率で相手を眠りまたはまひ状態にする。"
+  },
+  "stretchy": {
+    "name": "ストレッチー",
+    "description": "50%の確率で相手をまきつき状態にし、交代を防ぎ、毎ターンダメージを与えます。"
+  },
+  "demonSwordsman": {
+    "name": "デーモンソードマン",
+    "description": "斬る技の威力が50%上がります。はがね、ゴースト、あくタイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "cursedBlades": {
+    "name": "呪われた剣",
+    "description": "斬撃技の威力が50%上昇する。20%の確率で相手をのろい状態にする。"
+  },
+  "strawhat": {
+    "name": "麦わら帽子",
+    "description": "15%の確率で瀕死の攻撃を耐える。倒れた味方の数に応じて技の威力が上昇する（最大100%）。"
+  },
+  "fairyFear": {
+    "name": "妖精の恐怖",
+    "description": "フェアリー技の威力が20%上昇する。10%の確率で相手をひるませる。"
+  },
+  "shadowCharm": {
+    "name": "影の魅力",
+    "description": "戦闘に出た時、攻撃が1段階下がる。相手を交代できなくする。"
+  },
+  "yinYang": {
+    "name": "インヤン",
+    "description": "ゴーストタイプとフェアリータイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "stubbornStance": {
+    "name": "頑固な構え",
+    "description": "70%の確率で瀕死の攻撃を耐える。"
+  },
+  "miseryTouch": {
+    "name": "不幸の接触",
+    "description": "攻撃後、相手のランダムな能力を1段階変化させる。"
+  },
+  "justAJerk": {
+    "name": "ただの嫌な奴",
+    "description": "戦闘に出た時、防御が1段階下がる。あく技の威力が20%上昇する。"
+  },
+  "bugabugabuga": {
+    "name": "バグバグバグ",
+    "description": "戦闘に出た時、全ての能力が1段階下がる。相手を交代できなくする。受けるダメージが20%増加する。"
+  },
+  "justAMaskedJerk": {
+    "name": "仮面の嫌な奴",
+    "description": "戦闘に出た時、防御とランダムな能力が1段階下がる。全ての技の威力が20%上昇する。"
+  },
+  "flameSpirit": {
+    "name": "フレイムスピリット",
+    "description": "10%の確率で相手をやけど状態にします。ほのおタイプの技からダメージを受ける代わりに、ランダムな能力が2つ1段階上がります。"
+  },
+  "soulBurn": {
+    "name": "魂の炎",
+    "description": "30%の確率で相手をやけど状態にする。やけど状態の相手に最大HPの1/8のダメージを与える。"
+  },
+  "falseSafety": {
+    "name": "偽りの安全",
+    "description": "戦闘に出た時、特防が1段階下がる。接触してきた相手を10%の確率でやけど、ねむり、まひ状態にする。"
+  },
+  "forestFury": {
+    "name": "森の怒り",
+    "description": "HPが50%以下の時、くさ技の威力が150%上昇する。"
+  },
+  "vineFist": {
+    "name": "蔓の拳",
+    "description": "パンチ技の威力が30%上昇する。パンチ技使用時、30%の確率で相手をやどりぎまたはバインド状態にする。"
+  },
+  "theAvatar": {
+    "name": "アバター",
+    "description": "ほのお、みず、ひこう、じめん技の威力が20%上昇する。"
+  },
+  "enlightened": {
+    "name": "悟り",
+    "description": "エスパー技の威力が20%上昇する。効果が今ひとつの時でも通常のダメージになる。"
+  },
+  "happyLittleAccidents": {
+    "name": "幸せな小さな事故",
+    "description": "威力65以上の技は50%上昇し、威力60以下の技は75%上昇する。"
+  },
+  "originalAsmr": {
+    "name": "オリジナルASMR",
+    "description": "20%の確率で相手を眠り状態にする。受けるダメージが20%減少する。音系の技の威力が30%上昇し、音系の技のダメージを半減する。"
+  },
+  "afropower": {
+    "name": "アフロパワー",
+    "description": "30%の確率で技の威力が3倍になる。"
+  },
+  "insectInfusion": {
+    "name": "虫の寄生",
+    "description": "50%の確率で相手を5ターンの間、寄生状態にする。"
+  },
+  "sentientAnt": {
+    "name": "センティエントアント",
+    "description": "相手の最も高い能力値に応じて能力が1段階または2段階上がります。相手の最も高い能力値が攻撃の場合は防御が、特攻の場合は特防が、特防の場合は特攻が、素早さの場合は素早さが2段階上がります。"
+  },
+  "antRegen": {
+    "name": "アリの再生",
+    "description": "ターン終了時にHPを回復する。"
+  },
+  "v8Engine": {
+    "name": "V8エンジン",
+    "description": "ターン終了時に素早さが1段階上がる。"
+  },
+  "selfDriving": {
+    "name": "自動運転",
+    "description": "ノーマル技がエスパー技になり、威力が50%上昇する。"
+  },
+  "limitedEdition": {
+    "name": "限定版",
+    "description": "戦闘に出た時、ランダムな能力を2つ1段階ずつ上げる。33%の確率で技の威力が20%上昇する。"
+  },
+  "fieryDisguise": {
+    "name": "炎の化身",
+    "description": "戦闘に出た時またはHPが満タンの時、1回だけダメージを防ぐ。この効果はダメージを受けると解除される。ほのお技でこの能力が回復する。"
+  },
+  "playfulBlaze": {
+    "name": "遊び火",
+    "description": "HPが低い時、ほのお技の威力が上昇する。ほのお技使用後、30%の確率で攻撃が1段階上がる。フェアリー技使用時、10%の確率で相手をやけど状態にする。"
+  },
+  "aquaDisguise": {
+    "name": "水の化身",
+    "description": "戦闘に出た時またはHPが満タンの時、1回だけダメージを防ぐ。この効果はダメージを受けると解除される。みず技でこの能力が回復する。"
+  },
+  "phantomTorrent": {
+    "name": "幻影の激流",
+    "description": "HPが低い時、みず技の威力が上昇する。みず技使用後、30%の確率で特攻が1段階上がる。フェアリー技使用時、10%の確率で相手をうずしおの状態にする。"
+  },
+  "sillyPressure": {
+    "name": "おかしなプレッシャー",
+    "description": "相手の技のPP消費が増える。エスパー技使用後、30%の確率で攻撃が1段階上がる。フェアリー技使用時、10%の確率で相手をアンコール状態にする。"
+  },
+  "telekineticDisguise": {
+    "name": "念力の化身",
+    "description": "戦闘に出た時またはHPが満タンの時、1回だけダメージを防ぐ。この効果はダメージを受けると解除される。エスパー技でこの能力が回復する。"
+  },
+  "electricDisguise": {
+    "name": "電気の化身",
+    "description": "戦闘に出た時またはHPが満タンの時、1回だけダメージを防ぐ。この効果はダメージを受けると解除される。でんき技でこの能力が回復する。"
+  },
+  "lovelyStatic": {
+    "name": "愛らしい静電気",
+    "description": "接触してきた相手を30%の確率でまひ状態にする。でんき技使用後、30%の確率で特攻が1段階上がる。異性の相手にフェアリー技を使用時、20%の確率でメロメロ状態にする。"
+  },
+  "ancientDisguise": {
+    "name": "古代の化身",
+    "description": "戦闘に出た時またはHPが満タンの時、1回だけダメージを防ぐ。この効果はダメージを受けると解除される。いわ技でこの能力が回復する。"
+  },
+  "madeToLast": {
+    "name": "永続の意志",
+    "description": "40%の確率で瀕死の攻撃を耐える。いわ技使用後、30%の確率で素早さが1段階上がる。フェアリー技使用時、10%の確率で相手を交代できなくする。"
+  },
+  "multiPiece": {
+    "name": "多重分裂",
+    "description": "瀕死の攻撃を1回耐え、素早さが大きく下がる。ダメージを受けた後にHPを回復する。"
+  },
+  "alienType": {
+    "name": "エイリアンタイプ",
+    "description": "こおり、でんき、くさ技の威力が20%上昇する。"
+  },
+  "waterPowered": {
+    "name": "ウォーターパワード",
+    "description": "エスパーとじめんタイプ以外の技をみずタイプに変更し、威力が20%上がります。みずタイプの技からダメージを受ける代わりに、ランダムな能力が1段階上がります。"
+  },
+  "madeOfIce": {
+    "name": "氷の化身",
+    "description": "接触してきた相手を30%の確率でこおり状態にする。こおり技の威力が30%上昇する。"
+  },
+  "shredded": {
+    "name": "鍛え抜かれた肉体",
+    "description": "33%の確率で技の威力が2倍になる。みずとノーマル技がかくとう技になり、威力が20%上昇する。"
+  },
+  "sculptedIce": {
+    "name": "氷の彫刻",
+    "description": "ターン終了時に素早さ、防御、攻撃のいずれかが1段階上がる。"
+  },
+  "quaker": {
+    "name": "地震使い",
+    "description": "じめん技がひこうタイプに当たるようになる。'じしん'や'マグニチュード'を含む技の威力が50%上昇する。"
+  },
+  "rockFortress": {
+    "name": "岩の要塞",
+    "description": "効果抜群の技のダメージを50%軽減する。"
+  },
+  "rockControl": {
+    "name": "岩石操作",
+    "description": "物理技を受けた時にステルスロックを設置する。いわ技の威力が30%上昇する。"
+  },
+  "unstoppablePoison": {
+    "name": "止められない毒",
+    "description": "どく技がはがねタイプに当たるようになる。どく技の威力が20%上昇する。30%の確率で相手を猛毒状態にする。"
+  },
+  "swiftClaws": {
+    "name": "素早い爪",
+    "description": "接触技の威力が30%上昇する。接触技使用時、30%の確率で命中率、攻撃、素早さのいずれかが1段階上がる。"
+  },
+  "tripleThreat": {
+    "name": "三重の脅威",
+    "description": "10%の確率で急所に当たる。10%の確率で相手をひるませる。接触時に10%の確率でこおり、まひ、やけど状態にする。"
+  },
+  "dragonWrath": {
+    "name": "竜の怒り",
+    "description": "接触技を受けた時、50%の確率で相手の最大HPの1/6のダメージを与える。"
+  },
+  "hydraResilience": {
+    "name": "ヒドラの生命力",
+    "description": "HPが満タンの時、瀕死の攻撃を1回耐える。一撃必殺技を無効化する。25%の確率で瀕死の攻撃を耐える。"
+  },
+  "toxicOverload": {
+    "name": "毒の過負荷",
+    "description": "15%の確率で相手を猛毒状態にする。どく・猛毒状態の相手に対して技の威力が75%上昇する。"
+  },
+  "recycleEnergy": {
+    "name": "エネルギー再利用",
+    "description": "攻撃を受けた時や攻撃した時、50%の確率で最大HPの1/8を回復する。"
+  },
+  "neetProduced": {
+    "name": "ニート製",
+    "description": "みずとノーマル技のダメージが2倍になる。戦闘後のアイテムドロップ率が上昇する。ノーマル、フェアリー、かくとうタイプに対して威力が2倍になる。"
+  },
+  "ancientAutomaton": {
+    "name": "古代の機械",
+    "description": "ターン終了時に素早さ、防御、攻撃のいずれかが1段階上がる。"
+  },
+  "shadowOfColossus": {
+    "name": "巨像の影",
+    "description": "10%の確率で瀕死の攻撃を耐える。ゴースト技の威力が30%上昇する。受けるダメージが15%減少する。"
+  },
+  "trueFear": {
+    "name": "真の恐怖",
+    "description": "ターン終了時に相手のランダムな能力を1段階下げる。"
+  },
+  "sumoMaster": {
+    "name": "相撲の達人",
+    "description": "かくとう技の威力が30%上昇する。ノーマル技がじめん技になり、威力が30%上昇する。"
+  },
+  "steadfastBulk": {
+    "name": "不動の巨体",
+    "description": "攻撃を受けた時、30%の確率でひるむ。ひるんだ時、素早さが2段階、攻撃と防御が1段階上がる。"
+  },
+  "bigGuts": {
+    "name": "大きな根性",
+    "description": "状態異常の時、攻撃が2倍になる。やけど状態による攻撃の低下を無視する。"
+  },
+  "luchadorsSpirit": {
+    "name": "レスラー魂",
+    "description": "ノーマル技がひこう技になり、威力が20%上昇する。相手を倒した時、最も高い能力が1段階上がる。"
+  },
+  "maskedMight": {
+    "name": "仮面の力",
+    "description": "HPが50%以上の時、攻撃と特攻が2倍になる。"
+  },
+  "nachoLibre": {
+    "name": "ナチョ・リブレ",
+    "description": "かくとう技の威力が60%上昇する。"
+  },
+  "pseudoScale": {
+    "name": "疑似鱗",
+    "description": "HPが満タンの時、受けるダメージが半減する。接触技を受けた時、相手の最大HPの1/8のダメージを与える。"
+  },
+  "dracoForm": {
+    "name": "ドラコフォーム",
+    "description": "ドラゴンタイプの技の威力が20%上がります。ドラゴンとノーマルタイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "dittoType": {
+    "name": "メタモンタイプ",
+    "description": "受けた技のタイプに対して耐性を持つタイプに変化する。タイプが変化した時、最大HPの1/8を回復する。"
+  },
+  "morphingBlaze": {
+    "name": "変形する炎",
+    "description": "HPが低い時、ほのお技の威力が上昇する。HPが50%以下の時、みずタイプに対してほのお技がでんき技に、じめんタイプに対してみず技に変化する。"
+  },
+  "flameForm": {
+    "name": "フレイムフォーム",
+    "description": "ほのおタイプの技の威力が20%上がります。ほのおとノーマルタイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "ultimateAdaptation": {
+    "name": "究極の適応",
+    "description": "全ての技の威力が20%上昇する。効果抜群の技が等倍になる。"
+  },
+  "pseudoPerfection": {
+    "name": "疑似完璧",
+    "description": "それぞれ10%の確率で：急所に当たる、受けるダメージが半減する、技の威力が2倍になる、攻撃を受けた時や攻撃した時に最大HPの1/8を回復する。"
+  },
+  "dnaChange": {
+    "name": "DNA変化",
+    "description": "技を使用時、50%の確率でタイプが変化し、最大HPの1/8を回復する。"
+  },
+  "realisticStatic": {
+    "name": "リアルな静電気",
+    "description": "接触してきた相手を50%の確率でまひ状態にする。接触時に相手のランダムな能力を1段階下げる。接触技を受けた時、相手の最大HPの1/8のダメージを与える。"
+  },
+  "mascotForm": {
+    "name": "マスコットフォーム",
+    "description": "電気タイプの技の威力が20%上がります。電気とノーマルタイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "copyGuard": {
+    "name": "コピーガード",
+    "description": "この特性を持つポケモンの技は必ず命中する。効果抜群の技のダメージを25%軽減する。"
+  },
+  "muscleForm": {
+    "name": "マッスルフォーム",
+    "description": "かくとうタイプの技の威力が20%上がります。かくとうとノーマルタイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "unrealPressure": {
+    "name": "非現実のプレッシャー",
+    "description": "相手の技のPP消費が2増える。戦闘に出た時、相手のランダムな能力と命中率を1段階下げる。"
+  },
+  "psychoForm": {
+    "name": "サイコフォーム",
+    "description": "エスパータイプの技の威力が20%上がります。エスパーとノーマルタイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "clubClobber": {
+    "name": "棍棒の一撃",
+    "description": "いわ技の威力が20%上昇する。接触技の威力が40%上昇する。"
+  },
+  "yabaDabaDoo": {
+    "name": "ヤバダバドゥー",
+    "description": "戦闘に出た時、全ての能力が1段階上がる。ターン終了時にランダムな能力が1段階下がる。"
+  },
+  "meteorProof": {
+    "name": "隕石耐性",
+    "description": "みず、いわ、ほのお、こおり技のダメージを25%軽減する。"
+  },
+  "sharkShred": {
+    "name": "鮫の裂傷",
+    "description": "接触技使用時、相手の最大HPの1/8のダメージを与え、自分の最大HPの1/8を回復する。"
+  },
+  "attackBoost": {
+    "name": "攻撃ブースト",
+    "description": "ターン終了時に攻撃が1段階上がる。"
+  },
+  "reversedPsychology": {
+    "name": "逆心理",
+    "description": "能力変化が逆転する。技のタイプ相性が逆転する。"
+  },
+  "tailCommand": {
+    "name": "尾の指揮",
+    "description": "尾に関連する技の威力が75%上昇する。"
+  },
+  "abyssalAqua": {
+    "name": "アビサルアクア",
+    "description": "みず、ゴースト、あくタイプの技が同じタイプに対してタイプ相性を共有します！30%の確率で相手を渦に閉じ込めます。"
+  },
+  "omniscale": {
+    "name": "全知の鱗",
+    "description": "30%の確率で受けるダメージが半減する。攻撃を受けた時、30%の確率でランダムな能力が1段階上がる。"
+  },
+  "bounceBack": {
+    "name": "跳ね返し",
+    "description": "30%の確率で瀕死の攻撃を耐え、相手の最大HPの1/8のダメージを与える。"
+  },
+  "counterCoat": {
+    "name": "反撃の外皮",
+    "description": "接触技を受けた時、相手の最大HPの1/6のダメージを与える。受けるダメージが15%減少する。"
+  },
+  "shinyScale": {
+    "name": "輝く鱗",
+    "description": "10%の確率で攻撃を完全に回避する。"
+  },
+  "goldenLuck": {
+    "name": "黄金の幸運",
+    "description": "30%の確率で急所に当たる。"
+  },
+  "oneInAMillion": {
+    "name": "百万分の一",
+    "description": "5%の確率で技の威力が5倍になる。"
+  },
+  "apexPredator": {
+    "name": "頂点捕食者",
+    "description": "戦闘に出た時、防御が1段階下がる。相手を倒した時、最も高い能力が1段階上がる。"
+  },
+  "terrorTunnel": {
+    "name": "恐怖のトンネル",
+    "description": "あなをほる技の威力が2倍になる。"
+  },
+  "looseThreads": {
+    "name": "緩い糸",
+    "description": "30%の確率で相手を交代できなくする。バインド技の威力が5倍になる。"
+  },
+  "streetSmart": {
+    "name": "ストリートの知恵",
+    "description": "はがね、あく、ノーマル、かくとう技の威力が20%上昇する。"
+  },
+  "boosheFurCoat": {
+    "name": "ブーシェの毛皮",
+    "description": "物理技のダメージを半減する。40%の確率で特殊技のダメージを25%軽減する。"
+  },
+  "champion": {
+    "name": "チャンピオン",
+    "description": "相手を倒した後、全ての能力が1段階上がります。技を使用した後、自分が猛毒状態になります。"
+  },
+  "snakeScale": {
+    "name": "蛇の鱗",
+    "description": "50%の確率で受けるダメージが25%減少する。接触してきた相手を30%の確率で猛毒状態にする。"
+  },
+  "deathClaws": {
+    "name": "死の爪",
+    "description": "接触技の威力が50%上昇する。効果が今ひとつの時でも通常のダメージになる。"
+  },
+  "industrialPower": {
+    "name": "産業の力",
+    "description": "でんき、はがね、どく技の威力が30%上昇する。"
+  },
+  "cogOverload": {
+    "name": "歯車過負荷",
+    "description": "歯車や回転に関連する技の威力が50%上昇する。"
+  },
+  "multiGear": {
+    "name": "マルチギア",
+    "description": "ギアチェンジ使用時、素早さとランダムな能力が1段階上がる。"
+  },
+  "sugarRush": {
+    "name": "シュガーラッシュ",
+    "description": "HPが50%以上の時、技が必ず先制する。HPが50%以上の時、技の威力が20%上昇する。"
+  },
+  "livingDelicacy": {
+    "name": "生きる美食",
+    "description": "戦闘に出た時、ランダムな能力を2つ1段階ずつ上げる。33%の確率で技の威力が50%上昇する。攻撃を受けた時、30%の確率で最大HPの1/8を回復する。"
+  },
+  "abandoned": {
+    "name": "見捨てられし者",
+    "description": "攻撃を受けた時、攻撃と素早さが1段階上がる。"
+  },
+  "lazyMight": {
+    "name": "怠惰な力",
+    "description": "HPが低い時、全ての技の威力が上昇する。"
+  },
+  "lasagna": {
+    "name": "ラザニア",
+    "description": "HPが50%以下になった時、1回だけHPを50%回復する。"
+  },
+  "alienCat": {
+    "name": "エイリアンキャット",
+    "description": "エスパー技の威力が20%上昇する。異性の猫系ポケモンをメロメロ状態にする。じめん技を無効化する。"
+  },
+  "phaser": {
+    "name": "フェイザー",
+    "description": "接触技のダメージを無効化する。"
+  },
+  "virtualTacos": {
+    "name": "バーチャルタコス",
+    "description": "ターン終了時に最大HPの1/8を回復する。"
+  },
+  "heyLookAtMe": {
+    "name": "ほら見て見て",
+    "description": "戦闘に出た時、ランダムな能力を2つ1段階下げ、ランダムな能力を1つ1段階上げる。"
+  },
+  "limitedTime": {
+    "name": "限られた時間",
+    "description": "戦闘に出た時、自分が猛毒状態になる。30%の確率で技の威力が3倍になる。相手を倒した時、ランダムな能力が1段階上がる。"
+  },
+  "boxBorn": {
+    "name": "箱生まれ",
+    "description": "ボール、球体、オーブ関連の技の威力が75%減少する。はがね技の威力が20%上昇する。"
+  },
+  "imAPickle": {
+    "name": "私はピクルス",
+    "description": "みず技を受けた時にHPを回復する。くさ技を受けた時に素早さが1段階上がる。はがね技を受けた時に攻撃が1段階上がる。10%の確率で相手をひるませる。"
+  },
+  "resourceful": {
+    "name": "臨機応変",
+    "description": "30%の確率で相手の持ち物を奪い、攻撃が1段階上がる。30%の確率で戦闘後にアイテムを入手する。"
+  },
+  "deadlyBrine": {
+    "name": "デッドリーブライン",
+    "description": "ノーマルタイプの技をみずタイプに変更します。みずタイプの技の威力が30%上がります。みずとどくタイプの技が同じタイプに対してタイプ相性を共有します！10%の確率で相手を猛毒状態にします。"
+  },
+  "thicc": {
+    "name": "分厚い",
+    "description": "30%の確率で受けるダメージが25%減少する。"
+  },
+  "enforcer": {
+    "name": "エンフォーサー",
+    "description": "あくとはがねタイプの技が同じタイプに対してタイプ相性を共有します！相手を倒した後、攻撃が1段階上がります。"
+  },
+  "spookySense": {
+    "name": "不気味な感覚",
+    "description": "ゴーストとあく技のダメージを25%軽減する。相手が効果抜群の技を持っている時、攻撃と素早さが1段階上がる。"
+  },
+  "unyieldingCourage": {
+    "name": "不屈の勇気",
+    "description": "HPが満タンの時、瀕死の攻撃を1回耐える。一撃必殺技を無効化する。25%の確率で瀕死の攻撃を耐える。"
+  },
+  "lovePower": {
+    "name": "愛の力",
+    "description": "50%の確率で技の威力が2倍になる。異性の相手を30%の確率でメロメロ状態にする。"
+  },
+  "spiritWinds": {
+    "name": "スピリットウィンズ",
+    "description": "ゴーストとくさタイプの技が同じタイプに対してタイプ相性を共有します！あくとノーマルタイプの技をゴーストタイプに変更し、威力が20%上がります。"
+  },
+  "leafDancer": {
+    "name": "葉の舞手",
+    "description": "あく技使用後、ランダムな能力が1段階上がる。くさ技を受けた時、ランダムな能力が1段階上がる。"
+  },
+  "slayerSensei": {
+    "name": "討伐の師匠",
+    "description": "ゴーストとあくタイプに対して技の威力が3倍になる。相手を倒した時、ランダムな能力が1段階上がる。"
+  },
+  "balanced": {
+    "name": "バランス",
+    "description": "こんらんを無効化する。この特性を持つポケモンの技は必ず命中する。50%の確率で受けるダメージが半減する。"
+  },
+  "enhancedFocus": {
+    "name": "高められた集中",
+    "description": "25%の確率で急所に当たる。"
+  },
+  "luckySeven": {
+    "name": "ラッキーセブン",
+    "description": "威力70の技が70%の確率で威力が70%上昇する。攻撃後、70%の確率でランダムな能力が1段階上がる。"
+  },
+  "lastLaugh": {
+    "name": "最後の笑い",
+    "description": "瀕死になった時、相手の最大HPの1/4のダメージを与える。"
+  },
+  "foxWisdom": {
+    "name": "フォックスウィズダム",
+    "description": "ノーマルタイプの技をエスパータイプに変更します。エスパータイプの技の威力が30%上がります。ほのおとエスパータイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "eternalYouth": {
+    "name": "永遠の若さ",
+    "description": "フェアリー技の威力が30%上昇する。ノーマル技がフェアリー技になる。10%の確率で瀕死の攻撃を耐える。"
+  },
+  "flamingChakra": {
+    "name": "燃えるチャクラ",
+    "description": "エスパー技以外の技がほのお技になる。ほのお技の威力が50%上昇する。10%の確率で相手をやけど状態にする。"
+  },
+  "adaptabugility": {
+    "name": "虫の適応力",
+    "description": "むし技の威力が3倍になる。"
+  },
+  "shellRepair": {
+    "name": "殻の修復",
+    "description": "からをやぶるを使用時、最大HPの1/4を回復し、防御と特防が1段階上がる。1戦闘に1回のみ発動する。"
+  },
+  "squeezer": {
+    "name": "締め付け屋",
+    "description": "まきつくの威力が5倍になる。30%の確率で相手を交代できなくする。"
+  },
+  "greenSpaghettiMonster": {
+    "name": "緑のスパゲッティ怪物",
+    "description": "くさ技使用時、15%の確率で相手を交代できなくする。くさ技の威力が20%上昇する。くさ技使用時、10%の確率で相手の素早さを1段階下げる。"
+  },
+  "leechVines": {
+    "name": "吸収つる",
+    "description": "つるのムチの威力が2倍になる。つるのムチ使用時、30%の確率で相手をやどりぎまたはバインド状態にする。"
+  },
+  "regeneratorPlus": {
+    "name": "さいせいりょく＋",
+    "description": "手持ちに引っ込む時、最大HPの45%を回復する。"
+  },
+  "plaguePsyche": {
+    "name": "プレイグサイキ",
+    "description": "どくとエスパータイプの技が同じタイプに対してタイプ相性を共有します！ノーマルタイプの技をどくタイプに変更します。10%の確率で相手を混乱またはどく状態にします。"
+  },
+  "toxicTrance": {
+    "name": "毒の恍惚",
+    "description": "30%の確率で相手を猛毒状態にする。30%の確率で相手を眠り状態にする。状態異常の時、技の威力が50%上昇する。"
+  },
+  "permafrostArmor": {
+    "name": "永久凍土の鎧",
+    "description": "ほのお、こおり、いわ技のダメージを半減する。"
+  },
+  "glacialPace": {
+    "name": "氷河の歩み",
+    "description": "戦闘に出た時、素早さが2段階下がる。こおり技の威力が20%上昇する。"
+  },
+  "iceKing": {
+    "name": "氷の王",
+    "description": "こおり技の威力が50%上昇する。ノーマル技がこおり技になり、威力が20%上昇する。5%の確率で相手をこおり状態にする。"
+  },
+  "despair": {
+    "name": "絶望",
+    "description": "ターン終了時に相手のランダムな能力を1段階下げ、自分のランダムな能力を1段階上げる。"
+  },
+  "ohayogosumasu": {
+    "name": "おはようございます",
+    "description": "戦闘に出た時、攻撃、防御、特攻、特防、素早さが1段階下がる。"
+  },
+  "abilityTextHere": {
+    "name": "特性テキスト",
+    "description": "戦闘に出た時、相手にこの特性を与える。ランダムな能力を2つ1段階ずつ上げる。"
+  },
+  "exceptionCaught": {
+    "name": "例外捕捉",
+    "description": "瀕死の攻撃を1回耐え、素早さが大きく下がる。ダメージを受けた後にHPを回復する。"
+  },
+  "fourOFour": {
+    "name": "404エラー",
+    "description": "10%の確率で攻撃を完全に回避する。"
+  },
+  "shadowSlayer": {
+    "name": "影の討伐者",
+    "description": "ゴーストまたははがね技使用時、30%の確率で相手をやけど、どく、まひ、または猛毒状態にする。"
+  },
+  "nightmareEmerald": {
+    "name": "悪夢のエメラルド",
+    "description": "いわとナイトメア技の威力が30%上昇する。50%の確率で相手の特性をねむけに変更するか、悪夢状態にする。"
+  },
+  "imaginary": {
+    "name": "想像上の",
+    "description": "ノーマル技がフェアリー技になり、威力が20%上昇する。30%の確率で物理技のダメージを半減する。"
+  },
+  "splinterSkin": {
+    "name": "棘の皮膚",
+    "description": "接触技を受けた時、相手の最大HPの1/12のダメージを与える。接触技使用時、相手の最大HPの1/12のダメージを与える。"
+  },
+  "jujutsuSorcerer": {
+    "name": "呪術師",
+    "description": "自分または相手が状態異常の時、技の威力が150%上昇する。20%の確率で自分または相手の状態異常を治す。30%の確率でランダムな状態異常を付与する。やけど状態による攻撃の低下を無視する。状態異常でない時、50%の確率で自分にランダムな状態異常を付与する。"
+  },
+  "toxicKing": {
+    "name": "毒の王",
+    "description": "必ず相手を猛毒状態にする。"
+  },
+  "swampKing": {
+    "name": "スワンプキング",
+    "description": "30%の確率で相手をどく状態にします。ノーマルタイプの技をみずタイプに変更し、威力が20%上がります。みずとどくタイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "rageSoul": {
+    "name": "怒りの魂",
+    "description": "倒れた味方の数に応じて技の威力が上昇する（最大150%）。"
+  },
+  "darkSide": {
+    "name": "ダークサイド",
+    "description": "あく技の威力が2倍になる。"
+  },
+  "puppetMaster": {
+    "name": "人形使い",
+    "description": "ミミッキュとゴーストに対して技の威力が3倍になる。20%の確率でノーマルとかくとうタイプをのろいまたはバインド状態にする。10%の確率で受けるダメージが半減する。"
+  },
+  "blackAndRed": {
+    "name": "ブラックアンドレッド",
+    "description": "あくとほのおタイプの技が同じタイプに対してタイプ相性を共有します！15%の確率で相手をやけど状態にします。ノーマルタイプの技をあくタイプに変更し、威力が20%上がります。"
+  },
+  "zombieExperience": {
+    "name": "ゾンビ経験",
+    "description": "あく、ゴースト、じめんタイプに対して技の威力が2倍になる。あく、ゴースト、じめんタイプを倒した時、全ての能力が1段階上がる。"
+  },
+  "lastHope": {
+    "name": "最後の希望",
+    "description": "HPが低い時、全ての技の威力が上昇する。"
+  },
+  "ugly": {
+    "name": "醜い",
+    "description": "戦闘に出た時とターン終了時にランダムな能力が1段階下がる。10%の確率で相手をひるませる。"
+  },
+  "blandCardboardEater": {
+    "name": "味のない段ボール食い",
+    "description": "スミッティに対して技の威力が3倍になる。くさ技を受けた時、攻撃が1段階上がる。くさ技使用時、最大HPの1/8を回復する。"
+  },
+  "boring": {
+    "name": "退屈",
+    "description": "戦闘に出た時とターン終了時にランダムな能力が1段階下がる。ノーマル技の威力が30%上昇する。"
+  },
+  "moldyTouch": {
+    "name": "カビの接触",
+    "description": "接触時に10%の確率で相手を寄生または猛毒状態にする。どく技の威力が20%上昇する。とくせいなしの技のダメージが2倍になる。"
+  },
+  "eternalGiggle": {
+    "name": "永遠の笑い",
+    "description": "とくせいなしの技のダメージが2倍になる。瀕死になった時、相手全員をこんらんとひるみ状態にする。"
+  },
+  "redMenace": {
+    "name": "赤の脅威",
+    "description": "接触時に5%の確率でのろい状態、または10%の確率でやけど状態にする。ほのお技の威力が20%上昇する。ほのお技を受けた時、素早さが1段階上がる。とくせいなしの技のダメージが2倍になる。"
+  },
+  "ghostlyMold": {
+    "name": "幽霊カビ",
+    "description": "接触時に10%の確率で相手を猛毒状態にする。相手と同じ弱点を持つ場合、ゴーストとどく技の威力が2倍になる。ノーマル技がゴースト技になり、威力が20%上昇する。とくせいなしの技のダメージが2倍になる。"
+  },
+  "pacFungus": {
+    "name": "パックファンガス",
+    "description": "接触時に30%の確率で相手を寄生状態にする。相手が寄生状態の時、素早さと攻撃が1段階上がる。とくせいなしの技のダメージが2倍になる。"
+  },
+  "secretSauce": {
+    "name": "秘密のソース",
+    "description": "10%の確率でまひ、やけど、どく、または猛毒状態にする。10%の確率で相手の最大HPの1/8のダメージを与える。10%の確率で様々な状態異常や効果を付与する。"
+  },
+  "mcpuzzle": {
+    "name": "マックパズル",
+    "description": "20%の確率で相手をこんらん状態にする。10%の確率で相手をひるませる。20%の確率で技の威力が150%上昇する。相手を倒した時、ランダムな能力が1段階上がる。"
+  },
+  "mayITakeYourOrder": {
+    "name": "ご注文承ります",
+    "description": "この特性を持つポケモンの技が必ず先制する。"
+  },
+  "stealthShipping": {
+    "name": "隠密配送",
+    "description": "接触技を受けた時、50%の確率でまきびし、20%の確率でステルスロック、20%の確率でどくびし、10%の確率でねばねばネットを設置する。"
+  },
+  "cardboardEmpire": {
+    "name": "段ボール帝国",
+    "description": "相手を倒した時、ランダムな能力を2つ1段階ずつ上げ、最大HPの1/8を回復する。"
+  },
+  "aWinner": {
+    "name": "勝者",
+    "description": "相手を倒した時、ランダムな能力が1段階上がる。"
+  },
+  "smugAura": {
+    "name": "スマッグオーラ",
+    "description": "ノーマルタイプの技をどくタイプに変更し、威力が20%上がります。エスパーとどくタイプの技が同じタイプに対してタイプ相性を共有します！10%の確率で相手をどく状態にします。"
+  },
+  "deepThoughts": {
+    "name": "ディープソーツ",
+    "description": "技を使用した後、30%の確率で相手を混乱状態にします。"
+  },
+  "intellyLectAlly": {
+    "name": "知的同盟",
+    "description": "ターン終了時に特攻が1段階上がる。"
+  },
+  "insomniaInk": {
+    "name": "不眠のインク",
+    "description": "50%の確率で相手の特性をねむけに変更するか、悪夢状態にする。"
+  },
+  "nightmareClarinet": {
+    "name": "悪夢のクラリネット",
+    "description": "全ての技が音系の技になり、威力が20%上昇する。音系の技の威力が50%上昇する。10%の確率で相手をのろい状態にする。"
+  },
+  "jellyfishFever": {
+    "name": "ジェリーフィッシュフィーバー",
+    "description": "ノーマルタイプの技をほのおタイプに変更し、威力が20%上がります。特殊技を使用時、10%の確率で相手を猛毒状態にします。物理技を使用時、10%の確率で相手をやけど状態にします。ほのおとどくタイプの技が同じタイプに対してタイプ相性を共有します！"
+  },
+  "deepSeaVirus": {
+    "name": "深海ウイルス",
+    "description": "猛毒状態の相手に最大HPの1/8のダメージを与える。30%の確率で相手を猛毒状態にする。"
+  },
+  "bubblingBrains": {
+    "name": "泡立つ頭脳",
+    "description": "みず技の威力が50%上昇する。接触技使用時、最大HPの1/8を回復する。"
+  },
+  "cloakOfShadows": {
+    "name": "影のマント",
+    "description": "ゴースト技の威力が20%上昇する。ノーマル技がゴースト技になり、威力が20%上昇する。効果抜群の技のダメージを25%軽減する。"
+  },
+  "acidWater": {
+    "name": "アシッドウォーター",
+    "description": "どくとみずタイプの技が同じタイプに対してタイプ相性を共有します！ノーマルタイプの技をどくタイプに変更し、威力が20%上がります。みずまたはどくタイプの技を使用時、ノーマル、はがね、かくとうタイプのポケモンに対して威力が2倍になります。"
+  },
+  "eightBitBlaze": {
+    "name": "8ビットの炎",
+    "description": "HPが低い時、ほのお技の威力が上昇する。10%の確率で相手を炎の渦に閉じ込める。ノーマル技がほのお技になり、威力が20%上昇する。10%の確率で相手をやけど状態にする。"
+  },
+  "charredMemory": {
+    "name": "チャードメモリー",
+    "description": "ほのおタイプの技を使用後、相手の特防が1段階下がります。ほのおとエスパータイプの技が同じタイプに対してタイプ相性を共有します！ノーマルタイプの技をエスパータイプに変更し、威力が20%上がります。"
+  },
+  "blackAndWhite": {
+    "name": "白と黒",
+    "description": "ノーマルとあく技以外の技のダメージを無効化する。"
+  },
+  "eightBitTerror": {
+    "name": "8ビットの恐怖",
+    "description": "悪夢関連の技の威力が20%上昇する。10%の確率で相手をのろい状態またはひるみ状態にする。10%の確率で相手の最大HPの1/8のダメージを与える。"
+  },
+  "corruptionBlaze": {
+    "name": "コラプションブレイズ",
+    "description": "HPが低い時、ほのおタイプの技の威力が上がります。あくとほのおタイプの技が同じタイプに対してタイプ相性を共有します！30%の確率で相手が最後に使用した技を使用不能にします。"
+  },
+  "oaksMistake": {
+    "name": "オーキドの失敗",
+    "description": "戦闘に出た時、ランダムな能力が1段階下がる。10%の確率で相手を寄生またはうずしお状態にする。10%の確率で相手をやけど状態にする。攻撃後、30%の確率で最大HPの1/8を回復する。"
+  },
+  "shellShock": {
+    "name": "シェルショック",
+    "description": "みずと電気タイプの技が同じタイプに対してタイプ相性を共有します！ノーマルタイプの技を電気タイプに変更し、威力が20%上がります。みずまたはノーマルタイプの技を使用時、10%の確率で相手をひるみ状態にします。みずまたはノーマルタイプの技を使用時、10%の確率で相手をまひ状態にします。"
+  },
+  "darkSeed": {
+    "name": "ダークシード",
+    "description": "くさとあくタイプの技が同じタイプに対してタイプ相性を共有します！ノーマルタイプの技をあくタイプに変更し、威力が20%上がります。くさまたはノーマルタイプの技を使用時、10%の確率で相手をひるみ状態にするか、種を植え付けます。"
+  },
+  "cursedShell": {
+    "name": "呪われた殻",
+    "description": "10%の確率で相手をのろい状態にする。物理技のダメージを25%軽減する。"
+  },
+  "gothamsNightmare": {
+    "name": "ゴッサムの悪夢",
+    "description": "相手を交代できなくする。20%の確率で急所に当たる。"
+  },
+  "doomGadgets": {
+    "name": "破滅の装置",
+    "description": "ノーマル技がはがね技になり、威力が20%上昇する。はがね技の威力が20%上昇する。10%の確率で相手をまひ、やけど、どく、または猛毒状態にする。"
+  },
+  "memeArmor": {
+    "name": "ミーム装甲",
+    "description": "50%の確率で受けるダメージが半減する。攻撃を受けた時、ランダムな能力が1段階上がり、別のランダムな能力が1段階下がる。"
+  },
+  "memeified": {
+    "name": "ミーム化",
+    "description": "10%の確率で瀕死の攻撃を耐える。20%の確率で特殊技の威力が2倍になる。"
+  },
+  "hungryTroll": {
+    "name": "飢えたトロール",
+    "description": "相手を倒した時、最大HPの1/8を回復する。攻撃を受けた時、30%の確率で相手の最大HPの1/8のダメージを与える。"
+  },
+  "showAndTell": {
+    "name": "見せて語れ",
+    "description": "前のターンと異なる技を使用した時、技の威力が2倍になる。"
+  },
+  "knightsShovel": {
+    "name": "騎士のシャベル",
+    "description": "相手と同じ弱点を持つ場合、じめんとはがね技の威力が2倍になる。じめん技を無効化する。"
+  },
+  "heroicLeap": {
+    "name": "英雄の跳躍",
+    "description": "じめん技を無効化する。戦闘に出た時、攻撃が1段階上がる。ノーマル技がひこう技になり、威力が20%上昇する。"
+  },
+  "digChampion": {
+    "name": "穴掘りの達人",
+    "description": "あなをほるの威力が2倍になる。"
+  },
+  "eightBitHunger": {
+    "name": "8ビットの飢え",
+    "description": "攻撃後、50%の確率で最大HPの1/8を回復する。10%の確率で相手をひるませる。"
+  },
+  "rockSolidMeme": {
+    "name": "ロックソリッドミーム",
+    "description": "ノーマルといわタイプの技が同じタイプに対してタイプ相性を共有します！効果抜群の技からのダメージが25%減少します。"
+  },
+  "rockRoll": {
+    "name": "ロックンロール",
+    "description": "いわ技の威力が20%上昇する。'ころがる'や'まわる'を含む技の威力が75%上昇する。これらの技使用時、20%の確率で相手をひるませる。"
+  },
+  "staticShock": {
+    "name": "静電ショック",
+    "description": "30%の確率で相手をまひ状態にする。まひ状態の相手に対して技の威力が50%上昇する。"
+  },
+  "horrorShow": {
+    "name": "恐怖ショー",
+    "description": "相手を交代できなくする。相手を倒した時、最も高い能力が1段階上がる。"
+  },
+  "sunbather": {
+    "name": "サンベイザー",
+    "description": "ほのおとみずタイプの技が同じタイプに対してタイプ相性を共有します！ノーマルタイプの技をみずタイプに変更し、威力が20%上がります。強い日差しの時、各ターンの終わりに最大HPの1/8回復します。各ターンの終わりに30%の確率で天気を強い日差しに変更します。"
+  },
+  "seedEater": {
+    "name": "種喰らい",
+    "description": "くさ技を受けた時、ダメージを受ける代わりにHPを回復する。くさタイプに対して技の威力が2倍になる。くさタイプを攻撃時、最大HPの1/8を回復する。種系の技を受けた時、最大HPの1/2を回復する。"
+  },
+  "vacaySoul": {
+    "name": "休暇の魂",
+    "description": "全ての技の威力が3倍になる。1ターンおきにしか攻撃できない。"
+  },
+  "screenSwim": {
+    "name": "スクリーンスイム",
+    "description": "はがねとみずタイプの技が同じタイプに対してタイプ相性を共有します！雨の時、各ターンの終わりに最大HPの1/8回復します。10%の確率で相手をひるみ状態にします。各ターンの終わりに30%の確率で天気を雨に変更します。"
+  },
+  "darkWaters": {
+    "name": "ダークウォーターズ",
+    "description": "あくとみずタイプの技が同じタイプに対してタイプ相性を共有します！ノーマルタイプの技をあくタイプに変更し、威力が20%上がります。みずまたはあくタイプの技を使用時、10%の確率で相手を渦に閉じ込めます。みずまたはあくタイプの技を使用時、10%の確率で相手の最大HPの1/8に相当するダメージを与えます。"
+  },
+  "experimentError": {
+    "name": "実験エラー",
+    "description": "戦闘に出た時、ランダムな能力が1段階下がる。10%の確率で相手を寄生またはうずしお状態にする。10%の確率で相手をやけど状態にする。攻撃後、30%の確率で最大HPの1/8を回復する。"
+  },
+  "roundingError": {
+    "name": "丸め誤差",
+    "description": "威力が10の倍数で5の倍数でない技のダメージを半減する。威力が10の倍数でないか5の倍数である技の威力が50%上昇する。"
+  },
+  "idealForm": {
+    "name": "理想の姿",
+    "description": "それぞれ10%の確率で：急所に当たる、受けるダメージが半減する、技の威力が2倍になる、攻撃を受けた時や攻撃した時に最大HPの1/8を回復する。"
+  },
+  "eliteStatic": {
+    "name": "エリート帯電",
+    "description": "接触してきた相手を50%の確率でまひ状態にする。接触時に相手のランダムな能力を1段階下げる。接触技を受けた時、相手の最大HPの1/8のダメージを与える。"
+  },
+  "cockadoodleYes": {
+    "name": "コケコッコー",
+    "description": "戦闘に出た時、ランダムな能力が1段階上がる。相手を倒した時、最も高い能力が1段階上がる。接触技の威力が30%上昇する。"
+  },
+  "carnivore": {
+    "name": "肉食",
+    "description": "特定のタイプのポケモンを攻撃時、最大HPの1/8を回復する。相手を倒した時、攻撃と素早さが1段階上がる。"
+  },
+  "nightShow": {
+    "name": "夜の舞台",
+    "description": "ターン終了時に相手のランダムな能力を2段階下げる。"
+  },
+  "nightmareHost": {
+    "name": "悪夢の宿主",
+    "description": "50%の確率で技が先制する。10%の確率で相手をまひ、どく、またはやけど状態にする。"
+  },
+  "pressurePlay": {
+    "name": "プレッシャープレイ",
+    "description": "相手の技のPP消費が2増える。戦闘に出た時、攻撃が1段階下がる。"
+  },
+  "aBCOrD": {
+    "name": "A、B、C、またはD",
+    "description": "10%の確率で攻撃が1段階上がります。10%の確率で相手をやけど状態にします。10%の確率で相手を混乱状態にします。10%の確率で相手を眠気状態にします。"
+  },
+  "midnightCookies": {
+    "name": "真夜中のクッキー",
+    "description": "ターン終了時、30%の確率で最大HPの1/8を回復する。30%の確率でランダムな能力が1段階上がる。"
+  },
+  "horribleCardboard": {
+    "name": "恐ろしい段ボール",
+    "description": "全ての技がノーマル技になり、威力が20%上昇する。ノーマル技がゴーストタイプに当たるようになる。30%の確率で相手の最大HPの1/8のダメージを与える。"
+  },
+  "theElderShadows": {
+    "name": "ジ・エルダーシャドウズ",
+    "description": "ゴーストとあくタイプの技が同じタイプに対してタイプ相性を共有します！ノーマルタイプの技をあくタイプに変更し、威力が20%上がります。30%の確率で各ターンの終わりに相手の最大HPの1/16に相当するダメージを与えます。30%の確率で技の威力が2倍になります。相手を倒した後、ランダムな能力が1段階上がります。"
+  },
+  "horribleGhostCardboard": {
+    "name": "恐ろしい幽霊段ボール",
+    "description": "ノーマル技がゴースト技になり、威力が20%上昇する。ゴースト技がノーマルタイプに当たるようになる。30%の確率で相手の最大HPの1/8のダメージを与える。"
+  },
+  "midnightCookiesOfDeath": {
+    "name": "死の真夜中クッキー",
+    "description": "ターン終了時、30%の確率で相手の最大HPの1/8のダメージを与える。30%の確率でランダムな能力が1段階上がる。"
+  },
+  "infomercialFame": {
+    "name": "通販の名声",
+    "description": "戦闘に出た時、全ての能力が1段階上がる。30%の確率でターン終了時に相手の最大HPの1/8のダメージを与える。"
+  },
+  "winnersGrin": {
+    "name": "勝者の笑み",
+    "description": "相手を倒した時、最も高い能力が1段階上がり、ランダムな能力も1段階上がる。"
+  },
+  "fancyCardboard": {
+    "name": "高級段ボール",
+    "description": "ノーマル技の威力が20%上昇する。ノーマル技がゴーストタイプに当たるようになる。威力60以下の技の威力が50%上昇する。"
+  },
+  "unjustified": {
+    "name": "アンジャスティファイド",
+    "description": "ノーマルとかくとうタイプの技が同じタイプに対してタイプ相性を共有します！フェアリータイプの技からのダメージが半減します。フェアリータイプの技を受けた時、攻撃が1段階上がります。"
+  },
+  "abyssalStance": {
+    "name": "深淵の構え",
+    "description": "攻撃を受けた時、30%の確率でランダムな能力が1段階上がる。30%の確率で相手の最大HPの1/8のダメージを与える。攻撃後、10%の確率で自分のランダムな能力が1段階下がる。ノーマル技があく技になり、威力が20%上昇する。"
+  },
+  "leafyLure": {
+    "name": "葉の誘惑",
+    "description": "50%の確率で効果抜群の技のダメージを半減する。効果抜群の技を受けた時、50%の確率で相手の最大HPの1/4のダメージを与え、50%の確率で自分の最大HPの1/6を回復する。"
+  },
+  "voraciousVegetation": {
+    "name": "貪欲な植物",
+    "description": "特定のタイプのポケモンを攻撃時、最大HPの1/8を回復する。相手を倒した時、攻撃と素早さが1段階上がる。"
+  },
+  "solarPowerPlus": {
+    "name": "サンパワー＋",
+    "description": "特攻が2倍になる。30%の確率で天気が強い日差しになる。"
+  },
+  "treasureGuard": {
+    "name": "財宝の守護",
+    "description": "受けるダメージをランダムに25-50%軽減する。攻撃を受けた時、30%の確率で最大HPの1/8を回復する。"
+  },
+  "goldenSkillLink": {
+    "name": "ゴールデンスキルリンク",
+    "description": "連続攻撃技の攻撃回数が最大化されます。攻撃後、5%の確率でランダムな能力が1段階上がります。"
+  },
+  "treasureProducer": {
+    "name": "財宝生産者",
+    "description": "50%の確率で相手の持ち物を奪う。戦闘後のアイテムドロップ率が上昇する。技が必ず最後に出る。"
+  },
+  "multiMind": {
+    "name": "マルチマインド",
+    "description": "ほのおとエスパータイプの技が同じタイプに対してタイプ相性を共有します！ノーマルタイプの技をエスパータイプに変更し、威力が20%上がります。10%の確率で相手の最大HPの1/8に相当するダメージを与えます。"
+  },
+  "wakaFlockaFlame": {
+    "name": "ワカフロッカフレイム",
+    "description": "ノーマルタイプの技をほのおタイプに変更し、威力が20%上がります。ひこうとほのおタイプの技が同じタイプに対してタイプ相性を共有します！10%の確率で相手をやけど状態にします。ほのおタイプの技に免疫で、ほのおタイプの技を受けた時、ダメージを受ける代わりにHPを回復します。"
+  },
+  "eerieLight": {
+    "name": "イーリーライト",
+    "description": "電気とあくタイプの技が同じタイプに対してタイプ相性を共有します！ノーマルタイプの技をあくタイプに変更し、威力が20%上がります。みずタイプの技をあくタイプに変更し、威力が20%上がります。10%の確率で相手を混乱状態にします。10%の確率で相手をまひ状態にします。"
+  },
+  "abyssalLure": {
+    "name": "深淵の誘い",
+    "description": "50%の確率で効果抜群の技のダメージを半減する。効果抜群の技を受けた時、50%の確率で相手の最大HPの1/4のダメージを与え、50%の確率で自分の最大HPの1/6を回復する。"
+  },
+  "nemoEater": {
+    "name": "ニモイーター",
+    "description": "みずタイプのポケモンに対して技の威力が2倍になる。みずタイプのポケモンを倒した時、最大HPの1/8を回復し、最も高い能力が1段階上がる。"
+  },
+  "woodenLie": {
+    "name": "木の嘘",
+    "description": "特定のタイプのポケモンに対して技の威力が2倍になる。効果抜群の技のダメージを25%軽減する。"
+  },
+  "imARealBoy": {
+    "name": "本物の少年",
+    "description": "ノーマル技の威力が20%上昇する。フェアリーとくさ技以外の技がノーマル技になり、威力が30%上昇する。戦闘に出た時、攻撃とランダムな能力が1段階下がる。"
+  },
+  "lierLyer": {
+    "name": "ライアーライアー",
+    "description": "ノーマルタイプの技をあくタイプに変更し、威力が20%上がります。フェアリーとあくタイプの技が同じタイプに対してタイプ相性を共有します！10%の確率で倒れるはずの攻撃を耐えます。"
+  },
+  "copycatNinja": {
+    "name": "コピー忍者",
+    "description": "受けた技のタイプに対して耐性を持つタイプに変化する。"
+  },
+  "hokage": {
+    "name": "火影",
+    "description": "ほのお、みず、ひこう、じめん技の威力が20%上昇する。"
+  },
+  "sharinganActivated": {
+    "name": "写輪眼発動",
+    "description": "使用した技のタイプに自分のタイプが変化する。"
+  },
+  "crowClone": {
+    "name": "クロウクローン",
+    "description": "ノーマルタイプの技をひこうタイプに変更し、威力が20%上がります。あく、ほのお、ひこうタイプの技が同じタイプに対してタイプ相性を共有します！30%の確率で受けるダメージが半減します。30%の確率で攻撃を受けた後、最大HPの1/8を回復します。"
+  },
+  "sharinganMastery": {
+    "name": "写輪眼の極意",
+    "description": "15%の確率で相手の最大HPの1/8のダメージを与える。5%の確率で受けるダメージが1/4になる。15%の確率で攻撃後、ランダムな能力が1段階上がる。"
+  },
+  "foreheadTap": {
+    "name": "額タップ",
+    "description": "威力60以下の技の威力が50%上昇する。威力60以下の技使用時、10%の確率で相手をひるませる。威力60以下の技使用時、10%の確率で相手をまひ状態にする。"
+  },
+  "eightTails": {
+    "name": "八尾",
+    "description": "連続技が4-8回当たる。"
+  },
+  "rappingRampage": {
+    "name": "ラップ暴走",
+    "description": "全ての技が音系の技になり、威力が20%上昇する。音系の技の威力が50%上昇する。10%の確率で相手をひるませる。"
+  },
+  "beastMode": {
+    "name": "獣化",
+    "description": "HPが40%以下の時、技の威力が2倍になる。"
+  },
+  "nightmareSand": {
+    "name": "悪夢の砂",
+    "description": "すなあらしの時、ターン終了時に相手の最大HPの1/8のダメージを与える。すなあらしの時、30%の確率でターン終了時に相手のランダムな能力を1段階下げる。30%の確率でターン終了時に天気がすなあらしになる。"
+  },
+  "soulEater": {
+    "name": "魂喰らい",
+    "description": "集めたタイプと一致する技を使用時、HPを回復する。倒したポケモンのタイプを集める。気絶すると集めたタイプを失う。"
+  },
+  "soulDrain": {
+    "name": "魂吸収",
+    "description": "10%の確率で使用した技のタイプを集める。技のタイプが集めたタイプと一致する場合、相手のランダムな2つの能力を2段階下げる。気絶すると集めたタイプを失う。"
+  }
+}

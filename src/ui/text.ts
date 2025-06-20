@@ -151,15 +151,15 @@ export function getTextStyleOptions(style: TextStyle, uiTheme: UiTheme, extraSty
     shadowYpos = 3;
     break;
   case TextStyle.STATS_LABEL:
-    let fontSizeLabel = "96px";
+    let fontSizeLabel = "65px";
     switch (lang) {
     case "de":
       shadowXpos = 3;
       shadowYpos = 3;
-      fontSizeLabel = "80px";
+      fontSizeLabel = "60px";
       break;
     default:
-      fontSizeLabel = "96px";
+      fontSizeLabel = "65px";
       break;
     }
     styleOptions.fontSize =  fontSizeLabel;
@@ -167,13 +167,13 @@ export function getTextStyleOptions(style: TextStyle, uiTheme: UiTheme, extraSty
     case TextStyle.STATS_VALUE:
       shadowXpos = 3;
       shadowYpos = 3;
-    let fontSizeValue = "96px";
+    let fontSizeValue = "65px";
     switch (lang) {
     case "de":
-      fontSizeValue = "80px";
+      fontSizeValue = "60px";
       break;
     default:
-      fontSizeValue = "96px";
+      fontSizeValue = "65px";
       break;
     }
     styleOptions.fontSize =  fontSizeValue;

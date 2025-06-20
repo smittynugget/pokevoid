@@ -1,11 +1,14 @@
 {
   "ModifierType": {
+    
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
+      "statLabel": "Pokeball Item",
       "description": "Receive {{pokeballName}} x{{modifierCount}} (Inventory: {{pokeballAmount}}) \nCatch Rate: {{catchRate}}"
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
+      "statLabel": "Egg Voucher",
       "description": "Receive {{voucherTypeName}} x{{modifierCount}}."
     },
     "PokemonHeldItemModifierType": {
@@ -44,6 +47,7 @@
     },
     "PokemonNatureChangeModifierType": {
       "name": "{{natureName}} Mint",
+      "statLabel": "Nature Mint",
       "description": "Changes a Pokémon's nature to {{natureName}} and permanently unlocks the nature for the starter."
     },
     "DoubleBattleChanceBoosterModifierType": {
@@ -95,19 +99,23 @@
     },
     "AnyTmModifierType": {
       "name": "++XM {{moveName}}++",
+      "statLabel": "XM (Any TM)",
       "description": "Teach {{moveName}} to a Pokémon."
     },
     "AnyTmModifierTypeWithInfo": {
       "name": "++XM{{moveId}} - {{moveName}}++",
+      "statLabel": "XM (Any TM)",
       "description": "Teach {{moveName}} to ANY Pokémon\n(Hold C or Shift for more info)."
     },
 
     "TmModifierType": {
       "name": "TM {{moveName}}",
+      "statLabel": "TM Item",
       "description": "Teach {{moveName}} to a Pokémon."
     },
     "TmModifierTypeWithInfo": {
       "name": "TM{{moveId}} - {{moveName}}",
+      "statLabel": "TM Item",
       "description": "Teach {{moveName}} to a Pokémon\n(Hold C or Shift for more info)."
     },
     "EvolutionItemModifierType": {
@@ -121,6 +129,7 @@
     },
     "TerastallizeModifierType": {
       "name": "{{teraType}} Tera Shard",
+      "statLabel": "Tera Shard",
       "description": "{{teraType}} Terastallizes the holder for up to 10 battles."
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -138,14 +147,17 @@
 
     "TypeSwitcherModifierType": {
       "name": "Type Switcher: {{type1}} / {{type2}}",
+      "statLabel": "Type Switcher",
       "description": "Changes a Pokémon's types to {{type1}} and {{type2}}."
     },
     "PrimaryTypeSwitcherModifierType": {
       "name": "Primary Type Switcher: {{type1}}",
+      "statLabel": "Primary Type Switcher",
       "description": "Changes a Pokémon's primary type to {{type1}}."
     },
     "SecondaryTypeSwitcherModifierType": {
       "name": "Secondary Type Switcher: {{type2}}",
+      "statLabel": "Secondary Type Switcher",
       "description": "Changes a Pokémon's secondary type to {{type2}}."
     },
     "AbilitySwitcherModifierType": {
@@ -154,6 +166,7 @@
     },
     "RandomStatSwitcherModifierType": {
       "name": "{{stat1}} X {{stat2}}",
+      "statLabel": "Stat Switcher",
       "description": "Switches the {{stat1}} and {{stat2}} stats of the Pokémon. COSTS 1x Glitch Piece"
     },
     "GlitchPieceModifierType": {
@@ -419,6 +432,7 @@
     },
     "CollectedTypeModifierType": {
       "name": "Collected Type: {{type}}",
+      "statLabel": "Collected Type",
       "description": "Use 5 of ANY TYPE MIX instead of releasing a Pokémon for Release Items."
     },
     "SacrificeModifierType": {
@@ -429,10 +443,12 @@
       "description": "Toggle ON/OFF Release Items"
     },
     "StatSacrificeModifierTypeGenerator": {
-      "name": "Release {{stat}}"
+      "name": "Release {{stat}}",
+      "statLabel": "Stat Release"
     },
     "StatSacrificeModifierType": {
       "name": "Stat Release: {{stat}}",
+      "statLabel": "Stat Release",
       "description": "Release a Pokémon to boost another pokemon's {{stat}} by 15%."
     },
     "TypeSacrificeModifierType": {
@@ -449,14 +465,16 @@
     },
     "PassiveAbilitySacrificeModifierType": {
       "name": "Passive Ability Release",
-      "description": "Release a Pokémon to assign its passive ability as a PRIMARY ability to another."
+      "description": "Release a Pokémon to assign its PRIMARY ability as a PASSIVE ability for another."
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
+      "statLabel": "Any Ability Item",
       "description": "Give {{abilityName}} to ANY Pokémon\n(Hold C or Shift for more info)."
     },
     "AnyPassiveAbilityModifierType": {
       "name": "++PASSIVE {{abilityName}}++",
+      "statLabel": "Any Passive Ability Item",
       "description": "Give Passive {{abilityName}} to ANY Pokémon\n(Hold C or Shift for more info)."
     },
     "glitchPieceCost": {
@@ -579,6 +597,11 @@
     "ENEMY_STATUS_EFFECT_HEAL_CHANCE": { "name": "Full Heal Token", "description": "Adds a 2.5% chance every turn to heal a status condition." },
     "ENEMY_ENDURE_CHANCE": { "name": "Endure Token" },
     "ENEMY_FUSED_CHANCE": { "name": "Fusion Token", "description": "Adds a 1% chance that a wild Pokémon will be a fusion." }
+  },
+  "AddPokemonModifierType": {
+    "name": "{{pokemonName}}",
+    "statLabel": "Draft Pokemon:",
+    "description": "Adds {{pokemonName}} to the party."
   },
   "SpeciesBoosterItem": {
     "LIGHT_BALL": { "name": "Light Ball", "description": "It's a mysterious orb that boosts Pikachu's Attack and Sp. Atk stats." },

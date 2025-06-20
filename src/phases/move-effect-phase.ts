@@ -162,6 +162,14 @@ export class MoveEffectPhase extends PokemonPhase {
           // Only log the move's result on the first strike
           if (firstHit) {
             user.pushMoveHistory(moveHistoryEntry);
+            
+            if (user.isPlayer() && !this.move.virtual) {
+              const moveType = move.type;
+              if (!this.scene.gameData.gameStats.typeOfMovesUsed[moveType]) {
+                this.scene.gameData.gameStats.typeOfMovesUsed[moveType] = 0;
+              }
+              this.scene.gameData.gameStats.typeOfMovesUsed[moveType]++;
+            }
           }
 
           /**

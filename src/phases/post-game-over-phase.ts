@@ -19,6 +19,9 @@ export class PostGameOverPhase extends Phase {
       if (this.scene.gameMode.isTestMod) {
         this.scene.gameData.testSpeciesForMod = this.scene.gameData.testSpeciesForMod.slice(6);
       }
+      
+      this.scene.gameData.resetBattlePathData();
+      
       this.scene.gameData.saveAll(this.scene, true, true, true).then(success => {
         if (!success) {
           return this.scene.reset(true);
@@ -27,6 +30,7 @@ export class PostGameOverPhase extends Phase {
           this.scene.reset();
           this.scene.unshiftPhase(new TitlePhase(this.scene));
           this.end();
+          return;
         }
         this.scene.gameData.tryClearSession(this.scene, this.scene.sessionSlotId).then((success: boolean | [boolean, boolean]) => {
           if (!success[0]) {

@@ -12,7 +12,7 @@ import {StatusEffect} from "#app/enums/status-effect.js";
 import {addPokeballOpenParticles, addPokeballCaptureStars} from "#app/field/anims.js";
 import {EnemyPokemon} from "#app/field/pokemon.js";
 import {getPokemonNameWithAffix} from "#app/messages.js";
-import {PokemonHeldItemModifier} from "#app/modifier/modifier.js";
+import {PokemonHeldItemModifier, TerastallizeAccessModifier} from "#app/modifier/modifier.js";
 import {achvs} from "#app/system/achv.js";
 import {PartyUiMode, PartyOption} from "#app/ui/party-ui-handler.js";
 import {SummaryUiMode} from "#app/ui/summary-ui-handler.js";
@@ -54,21 +54,50 @@ export class AttemptCapturePhase extends PokemonPhase {
         }
 
         this.scene.pokeballCounts[this.pokeballType]--;
+        
+        switch (this.pokeballType) {
+            case PokeballType.POKEBALL:
+                this.scene.gameData.gameStats.pokeballsThrown++;
+                break;
+            case PokeballType.GREAT_BALL:
+                this.scene.gameData.gameStats.greatballsThrown++;
+                break;
+            case PokeballType.ULTRA_BALL:
+                this.scene.gameData.gameStats.ultraballsThrown++;
+                break;
+            case PokeballType.ROGUE_BALL:
+                this.scene.gameData.gameStats.rogueballsThrown++;
+                break;
+            case PokeballType.MASTER_BALL:
+                this.scene.gameData.gameStats.masterballsThrown++;
+                break;
+        }
 
         this.originalY = pokemon.y;
 
         const _3m = 3 * pokemon.getMaxHp();
         const _2h = 2 * pokemon.hp;
         
-        let catchRateMultiplier = 1.25
+        let catchRateMultiplier = 1.25;
 
-        if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_CATCH_RATE_3)) {
+        if((pokemon.isOPForm() && this.scene.currentBattle?.waveIndex <= 1000) || (this.scene.currentBattle.battleType === BattleType.TRAINER && this.scene.gameMode.checkIfRival(this.scene))) {
+            catchRateMultiplier = 0.05;
+        }
+
+
+        else if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_CATCH_RATE_3)) {
             catchRateMultiplier = 2;
         } else if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_CATCH_RATE_2)) {
             catchRateMultiplier = 1.75;
         } else if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_CATCH_RATE_1)) {
             catchRateMultiplier = 1.5;
         }
+
+        if(this.scene.dynamicMode) {
+            catchRateMultiplier *= 0.15;
+        }
+
+
 
         const catchRate = pokemon.species.catchRate * catchRateMultiplier;
         const pokeballMultiplier = getPokeballCatchMultiplier(this.pokeballType);
@@ -176,6 +205,7 @@ export class AttemptCapturePhase extends PokemonPhase {
                                                 () => {
                                                     this.scene.ui.getHandler().clear();
                                                     this.scene.gameData.setObtainedFusionUnlock(pokemon, pokemon.fusionSpecies!.speciesId)
+                                                    this.scene.gameData.gameStats.fusionsCaptured++;
                                                     this.catch();
                                                 }
                                             ]
@@ -235,6 +265,9 @@ export class AttemptCapturePhase extends PokemonPhase {
             
             const moneyToDeduct = this.scene.getRequiredMoneyForPokeBuy();
             this.scene.addMoney(-moneyToDeduct);
+            
+            this.scene.gameData.gameStats.trainerPokemonSnatched++;
+            this.scene.gameData.gameStats.moneySpentFromSnatching += moneyToDeduct;
 
             this.scene.gameData.reducePermaModifierByType([
                 PermaType.PERMA_TRAINER_SNATCH_COST_1,
@@ -316,19 +349,20 @@ export class AttemptCapturePhase extends PokemonPhase {
                 };
                 const addToParty = () => {
                     const newPokemon = pokemon.addToParty(this.pokeballType);
-                    const modifiers = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier, false);
+                    const modifiers = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier && !(m instanceof TerastallizeAccessModifier), false);
                     if (this.scene.getParty().filter(p => p.isShiny()).length === 6) {
                         this.scene.validateAchv(achvs.SHINY_PARTY);
                     }
-                    Promise.all(modifiers.map(m => this.scene.addModifier(m, true))).then(() => {
-                        this.scene.updateModifiers(true);
-                        
-                        uniqueRemovePokemon();
+                    uniqueRemovePokemon();
                         if (newPokemon) {
                             newPokemon.loadAssets().then(end);
                         } else {
                             end();
                         }
+                    Promise.all(modifiers.map(m => this.scene.addModifier(m, true))).then(() => {
+                        this.scene.updateModifiers(true);
+                        
+                        
                     });
                 };
                 Promise.all([pokemon.hideInfo(), this.scene.gameData.setPokemonCaught(pokemon)]).then(() => {

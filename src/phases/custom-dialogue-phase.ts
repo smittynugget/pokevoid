@@ -1,6 +1,6 @@
 import BattleScene from "../battle-scene";
 import { Mode } from "../ui/ui";
-import {Phase} from "#app/phase";
+import {Phase} from "../phase";
 
 export class CustomDialoguePhase extends Phase {
     private charKey: string;

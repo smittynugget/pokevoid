@@ -181,6 +181,7 @@ export default class ModManagementUiHandler extends UiHandler {
                                 iconData: jsonData.sprites.icon || jsonData.sprites.front
                             });
                             
+                            
                             successfulMods.push(jsonData.formName);
                         } catch (storageError) {
                             console.error("Error storing mod:", storageError);
@@ -197,6 +198,8 @@ export default class ModManagementUiHandler extends UiHandler {
             
             document.body.removeChild(fileInput);
             this.isUploading = false;
+
+            
             
             await this.scene.gameData.saveAll(this.scene);
             
@@ -321,16 +324,6 @@ export default class ModManagementUiHandler extends UiHandler {
                     this.scene.ui.showText(i18next.t("modGlitchCreateFormUi:modRemoved", { name: mod.formName }), null, 
                         () => {
                             window.location.reload();
-                            // modStorage.getModsBySpecies(mod.speciesId).then(mods => {
-                            //     if (mods.length === 0 && index !== -1) {
-                            //         window.location.reload();
-                            //     } else {
-                            //         this.clear();
-                            //         this.scene.ui.setMode(Mode.TITLE);
-                            //         this.show();
-
-                            //     }
-                            // });
                         });
                 } catch (error) {
                     console.error("Error removing mod:", error);

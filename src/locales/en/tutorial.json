@@ -24,7 +24,7 @@
   "pokerogue": {
       "title": "Giving PokéRogue The Credit It Deserves",
       "text": { 
-        "1":"Without PokéRogue’s brilliant design, PokéVoid wouldn’t be here today! Their extendable framework let me experiment, BREAK, and make PokéVoid what it is today!",
+        "1":"Without PokéRogue's brilliant design, PokéVoid wouldn't be here today! Their extendable framework let me experiment, BREAK, and make PokéVoid what it is today!",
         "2":"Where PokéRogue stands as a shining beacon of what a Pokémon roguelike should be...",
         "3":"PokéVoid attempts to venture into the shadows, bringing a touch of beautiful chaos and corruption to their near-perfect formula.",
         "4":"If you love daily runs, events, challenge modes? Endless or Splice modes? Visit pokerogue.net and play the original!"
@@ -74,7 +74,7 @@
         "6":"Lastly, Upgrades can overwrite each other, the newest upgrade gets priority!"
       }
     },
-  "legendary": {
+    "legendary": {
       "title": "Make Any Pokémon Legendary",
       "text": { 
         "1":"PokéVoid lets you make ANY Pokémon legendary!",
@@ -328,5 +328,29 @@
         "2":"Once you have one of these items, and have the appropriate pokemon, a form change item will randomly appear as a reward item!",
         "3":"After mega evolution or dynamaxing, the Mega Bracelet or Dynamax Band will break!"
       }
+    },
+    "chaosAndGauntletModes": {
+      "title": {
+        "1": "NEW CHAOS MODES",
+        "2": "NEW CHAOS MODES",
+        "3": "GAUNTLET MODES!", 
+        "4": "GAUNTLET MODES!",
+        "5": "Make Any Pokémon Legendary"
+      },
+      "text": {
+        "1": "Taking inspiration from roguelike masters Slay the Spire, Inscryption, and many more, Pokevoid's CHAOS modes let you choose the path you'll take next!",
+        "2": "Plan your path, and do your best to overcome the Chaos within the VOID!",
+        "3": "Enter the Gauntlet! Take on wave after wave of intense encounters!",
+        "4": "Pokerogue's OG battle style, intensively remixed with random Pokevoid madness and game breaking mechanics!",
+        "5": "Go forth trainer, embrace the void's forbidden power, and make ANY Pokémon legendary!"
+      }
+    },
+    "thankYou": {
+      "title": "Dear Player",
+      "text": {
+        "1": "16 months of solo dev madness means everything - every time someone like you has a blast playing this game. If my weird ideas actually work and you're having fun,", 
+        "2": "then maybe - I'm closer to my dream of becoming an actual game developer. Thank you so much for playing my chaotic, broken version of PokéRogue! - Smitty"
+      }
     }
   }
+

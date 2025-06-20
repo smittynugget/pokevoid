@@ -73,7 +73,9 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 EnhancedTutorial.MENU_ACCESS,
                 EnhancedTutorial.SAVING_1,
                 EnhancedTutorial.STATS,
-                EnhancedTutorial.RUN_HISTORY_1
+                EnhancedTutorial.RUN_HISTORY_1,
+                EnhancedTutorial.STARTER_CATCH_QUEST,
+                EnhancedTutorial.RUN_DETAILS_1
             ]
         },
         gameModes: {
@@ -86,7 +88,8 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 EnhancedTutorial.UNLOCK_JOURNEY,
                 EnhancedTutorial.ENDGAME,
                 EnhancedTutorial.MODE_UNLOCKS,
-                EnhancedTutorial.FIRST_VICTORY
+                EnhancedTutorial.FIRST_VICTORY,
+                EnhancedTutorial.CHAOS_AND_GAUNTLET_MODES
             ]
         },
         specialPokemon: {
@@ -116,7 +119,8 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 EnhancedTutorial.PERMA_MONEY_1,
                 EnhancedTutorial.BOUNTIES_1,
                 EnhancedTutorial.DAILY_BOUNTY,
-                EnhancedTutorial.SMITTY_ITEMS_1
+                EnhancedTutorial.SMITTY_ITEMS_1,
+                EnhancedTutorial.INTRASHOP_1
             ]
         },
         glitchSystem: {
@@ -157,7 +161,9 @@ export default class TutorialUiHandler extends ModalUiHandler {
             title: i18next.t("tutorial:titles.communityFeatures"),
             tutorials: [
                 EnhancedTutorial.DISCORD,
-                EnhancedTutorial.SMITOM
+                EnhancedTutorial.SMITOM,
+                EnhancedTutorial.POKEROGUE_1,
+                EnhancedTutorial.THANK_YOU
             ]
         }
     };
@@ -1287,6 +1293,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 case Button.RIGHT:
                 case Button.ACTION:
                 case Button.SUBMIT:
+                case Button.CANCEL:
                     if (this.currentStageIndex < this.tutorialConfig.stages.length - 1) {
                         return handleAsyncNavigation(() => this.navigateStage(1));
                     } else if (this.currentStageIndex === this.tutorialConfig.stages.length - 1) {
@@ -1296,15 +1303,15 @@ export default class TutorialUiHandler extends ModalUiHandler {
                     }
                     break;
 
-                case Button.CANCEL:
-                    if (this.tutorialConfig.isFromMenu) {
-                        this.cancelInMenuMode();
-                    } else {
-                        this.cancelAction();
-                    }
-                    ui.playSelect();
-                    return true;
-                    break;
+                // case Button.CANCEL:
+                //     if (this.tutorialConfig.isFromMenu) {
+                //         this.cancelInMenuMode();
+                //     } else {
+                //         this.cancelAction();
+                //     }
+                //     ui.playSelect();
+                //     return true;
+                //     break;
             }
         }
 

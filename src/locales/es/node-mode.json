@@ -1,0 +1,206 @@
+{
+  "viewTitle": "Mapa de Ruta de Batalla",
+  "selectTitle": "Seleccionar Ruta de Batalla",
+  "noPathMessage": "No hay ruta de batalla disponible.\n¡Genera una primero!",
+  "unknownEncounter": "Encuentro desconocido",
+  "unknownNode": "Desconocido",
+  "descriptions": {
+    "wildPokemon": "Encuentro con Pokémon salvaje",
+    "trainerBattle": "Batalla de entrenador",
+    "rivalBattle": "Batalla de rival",
+    "majorBossBattle": "Batalla de jefe mayor",
+    "recoveryBoss": "Jefe de recuperación",
+    "evilBossBattle": "Jefe del equipo malvado",
+    "eliteFour": "Miembro del Alto Mando",
+    "champion": "Batalla de campeón",
+    "itemGeneral": "Objetos generales",
+    "addPokemon": "Objetos específicos de Pokémon",
+    "itemTm": "Recompensas de MT",
+    "itemBerry": "Recompensas de bayas",
+    "mysteryNode": "Encuentro misterioso",
+    "convergencePoint": "Convergencia de rutas",
+    "smittyBattle": "Batalla de Smitty",
+    "evilGruntBattle": "Recluta del equipo malvado",
+    "evilAdminBattle": "Administrador del equipo malvado",
+    "randPermaItem": "Objeto Permanente Aleatorio",
+    "permaItems": "Objetos Permanentes",
+    "goldenPokeball": "Recompensas de Pokéball Dorada",
+    "rogueBallItems": "Objetos de Rogue Ball",
+    "masterBallItems": "Objetos de Master Ball",
+    "abilitySwitchers": "Intercambiadores de habilidades",
+    "statSwitchers": "Intercambiadores de estadísticas",
+    "glitchPiece": "Recompensa de pieza glitch",
+    "dnaSplicers": "Recompensa de Fusionador ADN",
+    "money": "Recompensa de dinero",
+    "permaMoney": "Aumento permanente de dinero",
+    "releaseItems": "Objetos de liberación",
+    "mints": "Mentas de naturaleza",
+    "eggVoucher": "Recompensa de cupón de huevo",
+    "ppMax": "Objetos Más PP",
+    "collectedType": "Recompensas de colección de tipos",
+    "expShare": "Objetos Repartir Exp",
+    "typeSwitcher": "Intercambiador de tipos",
+    "passiveAbility": "Objetos de habilidad pasiva",
+    "anyTms": "Cualquier recompensa de MT",
+    "challengeBoss": "Batalla de jefe de ruta desafío con dificultad aumentada",
+    "challengeRival": "Batalla de rival de ruta desafío con dificultad aumentada",
+    "challengeEvilBoss": "Jefe malvado de ruta desafío con dificultad aumentada",
+    "challengeChampion": "Batalla de campeón de ruta desafío con dificultad aumentada",
+    "challengeReward": "Recompensa rara por completar ruta desafío"
+  },
+  "names": {
+    "wildPokemon": "Pokémon Salvaje",
+    "trainerBattle": "Batalla de Entrenador",
+    "rivalBattle": "Batalla de Rival",
+    "majorBossBattle": "Jefe Mayor",
+    "recoveryBoss": "Batalla de Jefe",
+    "evilBossBattle": "Jefe Malvado",
+    "eliteFour": "Alto Mando",
+    "champion": "Campeón",
+    "itemGeneral": "Objetos Generales",
+    "addPokemon": "Objetos Pokémon",
+    "itemTm": "Objetos MT",
+    "itemBerry": "Objetos Baya",
+    "mysteryNode": "Nodo Misterioso",
+    "convergencePoint": "Convergencia",
+    "smittyBattle": "Batalla Smitty",
+    "evilGruntBattle": "Recluta Malvado",
+    "evilAdminBattle": "Administrador Malvado",
+    "randPermaItem": "Objeto Permanente Aleatorio",
+    "permaItems": "Objetos Permanentes",
+    "goldenPokeball": "Pokéball Dorada",
+    "rogueBallItems": "Objetos Rogue Ball",
+    "masterBallItems": "Objetos Master Ball",
+    "abilitySwitchers": "Intercambiadores de Habilidades",
+    "statSwitchers": "Intercambiadores de Estadísticas",
+    "glitchPiece": "Pieza Glitch",
+    "dnaSplicers": "Fusionador ADN",
+    "money": "Dinero",
+    "permaMoney": "Dinero Permanente",
+    "releaseItems": "Objetos de Liberación",
+    "mints": "Mentas",
+    "eggVoucher": "Cupón de Huevo",
+    "ppMax": "Más PP",
+    "collectedType": "Tipo Coleccionado",
+    "expShare": "Repartir Exp",
+    "typeSwitcher": "Intercambiador de Tipos",
+    "passiveAbility": "Habilidad Pasiva",
+    "anyTms": "Cualquier MT",
+    "challengeBoss": "Jefe Desafío",
+    "challengeRival": "Rival Desafío",
+    "challengeEvilBoss": "Jefe Malvado Desafío",
+    "challengeChampion": "Campeón Desafío",
+    "challengeReward": "Recompensa Desafío"
+  },
+  "challenge": {
+    "chaosChallenge": "Desafío Caos Activo",
+    "isNuzlocke": {
+      "name": "Nuzlocke",
+      "description": "Los Pokémon debilitados se pierden permanentemente"
+    },
+    "isNuzlight": {
+      "name": "Nuzlight",
+      "description": "No hay objetos de curación comprables en la tienda"
+    },
+    "isNightmare": {
+      "name": "Nuzmare",
+      "description": "Nuzlight + Nuzlocke"
+    },
+    "noExpGain": {
+      "name": "Sin Ganancia de Exp",
+      "description": "Los Pokémon no ganan puntos de experiencia"
+    },
+    "noCatch": {
+      "name": "Sin Captura",
+      "description": "No se pueden capturar Pokémon"
+    },
+    "hasPassiveAbility": {
+      "name": "Habilidad Pasiva",
+      "description": "Los enemigos tienen su habilidad pasiva activa"
+    },
+    "invertedTypes": {
+      "name": "Tipos Invertidos",
+      "description": "La efectividad de tipos está invertida"
+    },
+    "boostedTrainer": {
+      "name": "Entrenador Caos",
+      "description": "El equipo del entrenador está a nivel más alto que tu Pokémon de mayor nivel"
+    },
+    "multiLegendaries": {
+      "name": "Multi Legendarios",
+      "description": "El equipo rival obtiene +1 Pokémon legendario"
+    },
+    "multiBoss": {
+      "name": "Jefe Caos",
+      "description": "El equipo entrenador tiene +1 Pokémon jefe"
+    },
+    "noInitialSwitch": {
+      "name": "Sin Cambio Inicial",
+      "description": "No se puede cambiar Pokémon al inicio de la batalla"
+    },
+    "autoPressured": {
+      "name": "Auto Presionado",
+      "description": "Tus Pokémon están automáticamente bajo presión"
+    },
+    "noStatBoosts": {
+      "name": "Sin Aumentos de Estadísticas",
+      "description": "No puedes aumentar estadísticas"
+    },
+    "noStatusMoves": {
+      "name": "Sin Movimientos de Estado",
+      "description": "No puedes usar Movimientos de Estado"
+    },
+    "noPhysicalMoves": {
+      "name": "Sin Movimientos Físicos",
+      "description": "No puedes usar Movimientos Físicos"
+    },
+    "noSpecialMoves": {
+      "name": "Sin Movimientos Especiales",
+      "description": "No puedes usar Movimientos Especiales"
+    },
+    "statSwap": {
+      "name": "Intercambio de Estadísticas",
+      "description": "ATK <-> DEF ESP y AT ESP <-> DEF de tus Pokémon están intercambiados."
+    },
+    "extraDamageToTypes": {
+      "name": "Daño Extra a Tipos",
+      "description": "Ciertos tipos reciben daño extra"
+    },
+    "noStab": {
+      "name": "Sin STAB",
+      "description": "El Bono de Ataque del Mismo Tipo de tus Pokémon está desactivado."
+    },
+    "trickRoom": {
+      "name": "Espacio Raro",
+      "description": "La prioridad de velocidad está invertida"
+    },
+    "noSwitch": {
+      "name": "Sin Cambio",
+      "description": "No puedes cambiar Pokémon durante la batalla"
+    },
+    "noResistances": {
+      "name": "Sin Resistencias",
+      "description": "Las resistencias de tipo de tus Pokémon están desactivadas."
+    },
+    "noHealingItems": {
+      "name": "Sin Objetos de Curación",
+      "description": "Tus objetos de curación no se activan (Restos, Campana Concha, etc.)"
+    },
+    "autoTorment": {
+      "name": "Auto Tormento",
+      "description": "¡No puedes usar el mismo movimiento seguido!"
+    },
+    "legendaryNerf": {
+      "name": "Nerf Legendario",
+      "description": "Tus Pokémon legendarios causan la mitad de daño"
+    },
+    "typeExtraDamage": {
+      "name": "Daño Extra de Tipo",
+      "description": "El tipo más fuerte causa 1.5x daño"
+    },
+    "pokemonNerf": {
+      "name": "Nerf Pokémon",
+      "description": "El Pokémon más fuerte causa la mitad de daño"
+    }
+  }
+} 

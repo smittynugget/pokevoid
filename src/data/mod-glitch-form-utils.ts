@@ -306,7 +306,7 @@ export function registerModGlitchForm(formData: ModGlitchFormData): boolean {
         formName,
         formKey,
         primaryType,
-        secondaryType || null,
+        secondaryType === null || secondaryType === undefined ? null : secondaryType,
         species.height,
         species.weight,
         abilities[0],

@@ -6,6 +6,7 @@
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
+      "statLabel": "タマゴ引換券",
       "description": "{{voucherTypeName}} x{{modifierCount}}こ てにいれる"
     },
     "PokemonHeldItemModifierType": {
@@ -44,6 +45,7 @@
     },
     "PokemonNatureChangeModifierType": {
       "name": "{{natureName}} Mint",
+      "statLabel": "せいかくミント",
       "description": "ポケモンのせいかくを {{natureName}}にかえて スターターのせいかくをえいきゅうにかいじょする"
     },
     "DoubleBattleChanceBoosterModifierType": {
@@ -95,10 +97,12 @@
     },
     "TmModifierType": {
       "name": "TM{{moveId}} - {{moveName}}",
+      "statLabel": "わざマシンアイテム",
       "description": "ポケモンに {{moveName}} をおしえる"
     },
     "TmModifierTypeWithInfo": {
       "name": "TM{{moveId}} - {{moveName}}",
+      "statLabel": "わざマシンアイテム",
       "description": "ポケモンに {{moveName}} をおしえる\n(Hold C or Shift for more info)"
     },
     "EvolutionItemModifierType": {
@@ -112,6 +116,7 @@
     },
     "TerastallizeModifierType": {
       "name": "{{teraType}} Tera Shard",
+      "statLabel": "テラピース",
       "description": "ポケモンを{{teraType}}タイプにテラスタル（10かいのバトルまで）"
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -394,23 +399,28 @@
     },
     "AnyTmModifierType": {
       "name": "XM {{moveName}}",
-      "description": "ポケモンに{{moveName}}を覚えさせる。"
+      "statLabel": "XM（任意のわざマシン）",
+      "description": "どのポケモンにも {{moveName}} をおしえる"
     },
     "AnyTmModifierTypeWithInfo": {
       "name": "++XM{{moveId}} - {{moveName}}++",
-      "description": "どのポケモンにも{{moveName}}を覚えさせる\n(CキーまたはShiftキーで詳細表示)。"
+      "statLabel": "XM（任意のわざマシン）",
+      "description": "どのポケモンにも {{moveName}} をおしえる\n(Hold C or Shift for more info)"
     },
     "TypeSwitcherModifierType": {
-      "name": "タイプチェンジャー：{{type1}} / {{type2}}",
-      "description": "ポケモンのタイプを{{type1}}と{{type2}}に変更する。"
+      "name": "タイプチェンジャー: {{type1}} / {{type2}}",
+      "statLabel": "タイプチェンジャー",
+      "description": "ポケモンのタイプを {{type1}} と {{type2}} にかえる"
     },
     "PrimaryTypeSwitcherModifierType": {
-      "name": "第一タイプチェンジャー：{{type1}}",
-      "description": "ポケモンの第一タイプを{{type1}}に変更する。"
+      "name": "だい1タイプチェンジャー: {{type1}}",
+      "statLabel": "第一タイプチェンジャー",
+      "description": "ポケモンのだい1タイプを {{type1}} にかえる"
     },
     "SecondaryTypeSwitcherModifierType": {
-      "name": "第二タイプチェンジャー：{{type2}}",
-      "description": "ポケモンの第二タイプを{{type2}}に変更する。"
+      "name": "だい2タイプチェンジャー: {{type2}}",
+      "statLabel": "第二タイプチェンジャー",
+      "description": "ポケモンのだい2タイプを {{type2}} にかえる"
     },
     "AbilitySwitcherModifierType": {
       "name": "とくせいチェンジャー",
@@ -418,7 +428,8 @@
     },
     "RandomStatSwitcherModifierType": {
       "name": "{{stat1}} X {{stat2}}",
-      "description": "ポケモンの{{stat1}}と{{stat2}}のステータスを入れ替える。グリッチピース1個が必要。"
+      "statLabel": "能力値チェンジャー",
+      "description": "ポケモンの {{stat1}} と {{stat2}} のステータスをいれかえる。グリッチのかけらを1つ ひつよう"
     },
     "GlitchPieceModifierType": {
       "name": "グリッチピース",
@@ -682,42 +693,47 @@
       }
     },
     "CollectedTypeModifierType": {
-      "name": "収集したタイプ：{{type}}",
-      "description": "ポケモンを手放す代わりに、どのタイプの組み合わせでも5個使用して手放しアイテムを入手できます。"
+      "name": "しゅうしゅうタイプ: {{type}}",
+      "statLabel": "収集したタイプ",
+      "description": "どうぐをかいほうするために ポケモンをかいほうするかわりに どのタイプでも5つ つかう"
     },
     "SacrificeModifierType": {
       "description": "ポケモンを手放して、他のポケモンの{{stat}}を15%上昇させます。"
     },
     "StatSacrificeModifierTypeGenerator": {
-      "name": "{{stat}}を手放す"
+      "name": "かいほう {{stat}}",
+      "statLabel": "能力値リリース"
     },
     "StatSacrificeModifierType": {
-      "name": "ステータス放出：{{stat}}",
-      "description": "ポケモンを手放して、他のポケモンの{{stat}}を15%上昇させます。"
+      "name": "ステータスかいほう: {{stat}}",
+      "statLabel": "能力値リリース",
+      "description": "ポケモンをかいほうして べつのポケモンの {{stat}} を15%あげる"
     },
     "TypeSacrificeModifierType": {
-      "name": "タイプ放出",
+      "name": "タイプかいほう",
       "description": "ポケモンを手放して、他のポケモンにタイプを継承させます。"
     },
     "MoveSacrificeModifierType": {
-      "name": "わざ放出",
+      "name": "わざかいほう",
       "description": "ポケモンを手放して、他のポケモンにわざを継承させます。"
     },
     "AbilitySacrificeModifierType": {
-      "name": "特性放出",
+      "name": "とくせいかいほう",
       "description": "ポケモンを手放して、他のポケモンに特性を継承させます。"
     },
     "PassiveAbilitySacrificeModifierType": {
-      "name": "パッシブ特性放出",
-      "description": "ポケモンを手放して、そのパッシブ特性を他のポケモンの主特性として割り当てます。"
+      "name": "パッシブとくせいかいほう",
+      "description": "ポケモンを手放して、その主特性を他のポケモンのパッシブ特性として割り当てます。"
     },
     "AnyPassiveAbilityModifierType": {
       "name": "パッシブ {{abilityName}}",
-      "description": "任意のポケモンにパッシブ{{abilityName}}を付与\n(CキーまたはShiftキーを長押しで詳細表示)。"
+      "statLabel": "任意のパッシブ特性アイテム",
+      "description": "どのポケモンにも パッシブとくせい {{abilityName}} をあたえる\n(Hold C or Shift for more info)"
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
-      "description": "任意のポケモンに{{abilityName}}を付与\n(CキーまたはShiftキーを長押しで詳細表示)。"
+      "statLabel": "任意の特性アイテム",
+      "description": "どのポケモンにも {{abilityName}} をあたえる\n(Hold C or Shift for more info)"
     },
     "glitchPieceCost": {
       "text": "[[グリッチピース1個が必要]]"

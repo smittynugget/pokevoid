@@ -1,4 +1,4 @@
-import BattleScene from "#app/battle-scene.js";
+import BattleScene, { RecoveryBossMode } from "#app/battle-scene.js";
 import { biomeLinks, getBiomeName } from "#app/data/biomes.js";
 import { Biome } from "#app/enums/biome.js";
 import { MoneyInterestModifier, MapModifier } from "#app/modifier/modifier.js";
@@ -8,6 +8,7 @@ import { BattlePhase } from "./battle-phase";
 import * as Utils from "#app/utils.js";
 import { PartyHealPhase } from "./party-heal-phase";
 import { SwitchBiomePhase } from "./switch-biome-phase";
+import { BiomeChange } from "#app/system/game-data.js";
 
 export class SelectBiomePhase extends BattlePhase {
   constructor(scene: BattleScene) {
@@ -20,11 +21,13 @@ export class SelectBiomePhase extends BattlePhase {
     const currentBiome = this.scene.arena.biomeType;
 
     const setNextBiome = (nextBiome: Biome) => {
-      if (this.scene.currentBattle.waveIndex % 10 === 1) {
+      if ((this.scene.currentBattle.waveIndex % 10 === 1 && !this.scene.gameMode.isChaosMode) || this.scene.recoveryBossMode === RecoveryBossMode.RECOVERY_OBTAINED) {
         this.scene.applyModifiers(MoneyInterestModifier, true, this.scene);
         this.scene.unshiftPhase(new PartyHealPhase(this.scene, false));
+        this.scene.recoveryBossMode = RecoveryBossMode.NONE;
       }
       this.scene.unshiftPhase(new SwitchBiomePhase(this.scene, nextBiome));
+      this.scene.gameData.biomeChange = BiomeChange.NONE;
       this.end();
     };
 

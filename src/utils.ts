@@ -234,6 +234,10 @@ export function formatLargeNumber(count: integer, threshold: integer): string {
 const AbbreviationsLargeNumber: string[] = ["", "K", "M", "B", "t", "q", "Q", "s", "S", "o", "n", "d"];
 
 export function formatFancyLargeNumber(number: number, rounded: number = 3): string {
+  if (typeof number !== 'number' || isNaN(number) || !isFinite(number)) {
+    return "0";
+  }
+  
   let exponent: number;
 
   if (number < 1000) {

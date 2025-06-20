@@ -1,6 +1,6 @@
 import {loggedInUser} from "#app/account.js";
 import BattleScene from "#app/battle-scene.js";
-import {BattleType, setupFixedBattles} from "#app/battle.js";
+import {BattleType, setupFixedBattlePaths, setupFixedBattles, resetBattlePathGlobalState} from "#app/battle.js";
 import {getDailyRunStarters, fetchDailyRunSeed} from "#app/data/daily-run.js";
 import {Gender} from "#app/data/gender.js";
 import {getBiomeKey} from "#app/field/arena.js";
@@ -33,7 +33,7 @@ import {ShopModifierSelectPhase} from "./shop-modifier-select-phase";
 import ModifierSelectUiHandler from "#app/ui/modifier-select-ui-handler.js";
 import {checkQuestState, QuestState, QuestUnlockables} from "#app/system/game-data";
 import {TitleSummarySystem} from "#app/system/title-summary-system";
-import {RewardObtainedType} from "#app/ui/reward-obtained-ui-handler";
+import {RewardObtainedType, UnlockModePokeSpriteType} from "#app/ui/reward-obtained-ui-handler";
 import {Species} from "#enums/species";
 import {RewardObtainDisplayPhase} from "#app/phases/reward-obtain-display-phase";
 import {setupNightmareFixedBattles} from "#app/battle";
@@ -49,6 +49,8 @@ import { EnhancedTutorial } from "#app/ui/tutorial-registry";
 import { getAllRivalTrainerTypes } from "#app/data/trainer-config.js";
 import { logNext30DaysLegendaryGachaSpecies } from "#app/data/egg";
 import PokedexUiHandler from "#app/ui/pokedex-ui-handler.js";
+import { BattlePathPhase } from "./battle-path-phase";
+import { ChaosEncounterPhase } from "./chaos-encounter-phase";
 
 export class TitlePhase extends Phase {
     private loaded: boolean;
@@ -87,7 +89,16 @@ export class TitlePhase extends Phase {
     }
 
     showOptions(): void {
+        this.scene.ui.clearText();
         const options: OptionSelectItem[] = [];
+
+        // Define setModeAndEnd function at the top so it's accessible to all options
+        const setModeAndEnd = (gameMode: GameModes) => {
+            this.gameMode = gameMode;
+            this.scene.ui.setMode(Mode.MESSAGE);
+            this.scene.ui.clearText();
+            this.end();
+        };
 
         if (this.scene.gameData.testSpeciesForMod.length > 0) {
             options.push({
@@ -109,12 +120,6 @@ export class TitlePhase extends Phase {
                 }
             });
         }
-        const setModeAndEnd = (gameMode: GameModes) => {
-            this.gameMode = gameMode;
-            this.scene.ui.setMode(Mode.MESSAGE);
-            this.scene.ui.clearText();
-            this.end();
-        };
         
         const shopNeedsRefresh = !this.scene.gameData.currentPermaShopOptions || 
                                Date.now() - this.scene.gameData.lastPermaShopRefreshTime >= 20 * 60 * 1000;
@@ -127,93 +132,15 @@ export class TitlePhase extends Phase {
         options.push({
                 label: i18next.t("menu:newGame"),
                 handler: () => {
-                    const availableModes = [GameModes.DRAFT];
-
-                    
-                    if (this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED)) {
-                        availableModes.push(GameModes.CLASSIC);
+                    if (!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.CHAOS_AND_GAUNTLET_MODES)) {
+                        this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.CHAOS_AND_GAUNTLET_MODES, true, false).then(() => {
+                            this.showGameModeSelection();
+                        });
+                        return true;
+                    } else {
+                        this.showGameModeSelection();
+                        return true;
                     }
-                    if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
-                        availableModes.push(GameModes.NUZLIGHT);
-                    }
-                    if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
-                        availableModes.push(GameModes.NUZLOCKE);
-                    }
-
-                    if(this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
-                        availableModes.push(GameModes.NIGHTMARE);
-                    }
-
-                    if(this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) {
-                        availableModes.push(GameModes.NUZLIGHT_DRAFT);
-                    }
-
-                    if(this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) {
-                        availableModes.push(GameModes.NUZLOCKE_DRAFT);
-                    }
-
-                    const baseModesToShow = [
-                        GameModes.DRAFT,
-                        GameModes.CLASSIC,
-                        GameModes.NUZLIGHT,
-                        GameModes.NUZLOCKE
-                    ];
-                    
-                    const advancedModesToShow = [
-                        GameModes.NIGHTMARE,
-                        GameModes.NUZLIGHT_DRAFT,
-                        GameModes.NUZLOCKE_DRAFT
-                    ];
-                    
-                    const nuzlockeUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
-                    const modesToShow = [...baseModesToShow];
-                    
-                    if (nuzlockeUnlocked) {
-                        modesToShow.push(...advancedModesToShow);
-                    }
-                    
-                    const modeOptions = modesToShow.map(mode => {
-                        const isAvailable = availableModes.includes(mode);
-                        return {
-                            label: isAvailable ? GameMode.getModeName(mode) : "???",
-                            handler: () => {
-                                if (isAvailable) {
-                                    setModeAndEnd(mode);
-                                    return true;
-                                }
-                                return false;
-                            },
-                            onHover: () => {
-                                if (isAvailable) {
-                                    this.scene.ui.showText(this.getModeDescription(mode));
-                                } else {
-                                    const hint = this.getUnlockHint(mode, availableModes);
-                                    this.scene.ui.showText(hint);
-                                }
-                            }
-                        };
-                    });
-
-                    modeOptions.push({
-                        label: i18next.t("menu:cancel"),
-                        handler: () => {
-                            this.scene.clearPhaseQueue();
-                            this.scene.pushPhase(new TitlePhase(this.scene));
-                            super.end();
-                            return true;
-                        },
-                        onHover: () => {
-                            this.scene.ui.showText(i18next.t("menu:selectGameMode"));
-                        }
-                    });
-
-                    this.scene.ui.showText(availableModes.length > 0 ? this.getModeDescription(availableModes[0]) : i18next.t("menu:selectGameMode"), null, () =>
-                        this.scene.ui.setOverlayMode(Mode.OPTION_SELECT, {
-                            options: modeOptions,
-                            supportHover: true
-                        })
-                    );
-                    return true;
                 }
             },
             {
@@ -222,6 +149,7 @@ export class TitlePhase extends Phase {
                     this.scene.ui.setOverlayMode(Mode.SAVE_SLOT, SaveSlotUiMode.LOAD,
                         (slotId: integer) => {
                             if (slotId === -1) {
+                                this.scene.ui.clearText();
                                 return this.showOptions();
                             }
                             this.loadSaveSlot(slotId);
@@ -293,6 +221,7 @@ export class TitlePhase extends Phase {
             noCancel: true,
             yOffset: 60
         };
+        console.log(config);
         this.scene.ui.setMode(Mode.TITLE, config);
 
         let introTutorials = [EnhancedTutorial.LEGENDARY_POKEMON_1, EnhancedTutorial.BUG_TYPES_1];
@@ -382,7 +311,7 @@ export class TitlePhase extends Phase {
             this.scene.gameData.updateDailyBountyCode();
             this.scene.gameData.localSaveAll(this.scene);
         }
-        else if(Utils.randSeedInt(100, 1) <= 5) {
+        else if(Utils.randSeedInt(100, 1) <= 1) {
             if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SAVING_1)) {
                 this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SAVING_1, true, false);
             }
@@ -404,8 +333,11 @@ export class TitlePhase extends Phase {
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.GLITCH_FORMS_1)) {
                 this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.GLITCH_FORMS_1, true, false);
             }
-            else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SMITTY_FORMS_1)) {
+            else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SMITTY_FORMS_1) && this.scene.gameData.uniSmittyUnlocks.length > 0) {
                 this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SMITTY_FORMS_1, true, false);
+            }
+            else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.THANK_YOU)) {
+                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.THANK_YOU, true, false);
             }
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.DISCORD)) {
                 this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.DISCORD, true, false);
@@ -413,6 +345,8 @@ export class TitlePhase extends Phase {
         }
             
         }
+        // setupFixedBattlePaths(this.scene);
+        // this.scene.ui.setOverlayMode(Mode.BATTLE_PATH);
             
         // this.scene.ui.setOverlayMode(Mode.POKEDEX);
 
@@ -434,6 +368,49 @@ export class TitlePhase extends Phase {
         // });
     }
 
+    private showGameModeSelection(): void {
+        const startTypeOptions = [
+            {
+                label: i18next.t("menu:chaos"),
+                handler: () => {
+                    this.showChaosModes();
+                    return true;
+                },
+                onHover: () => {
+                    this.scene.ui.showText(i18next.t("menu:chaosDescription"));
+                }
+            },
+            {
+                label: i18next.t("menu:gauntlet"),
+                handler: () => {
+                    this.showGauntletModes();
+                    return true;
+                },
+                onHover: () => {
+                    this.scene.ui.showText(i18next.t("menu:gauntletDescription"));
+                }
+            },
+            {
+                label: i18next.t("menu:cancel"),
+                handler: () => {
+                    this.scene.clearPhaseQueue();
+                    this.scene.pushPhase(new TitlePhase(this.scene));
+                    super.end();
+                    return true;
+                },
+                onHover: () => {
+                    this.scene.ui.showText(i18next.t("menu:selectGameMode"));
+                }
+            }
+        ];
+
+        this.scene.ui.showText(i18next.t("menu:choosePath"), null, () =>
+            this.scene.ui.setOverlayMode(Mode.OPTION_SELECT, {
+                options: startTypeOptions,
+                supportHover: true
+            })
+        );
+    }
 
     loadSaveSlot(slotId: integer): void {
         this.scene.sessionSlotId = slotId > -1 || !loggedInUser ? slotId : loggedInUser.lastSessionSlot;
@@ -535,6 +512,7 @@ export class TitlePhase extends Phase {
                 this.scene.pushPhase(new SelectChallengePhase(this.scene));
             }
             else if(this.scene.gameMode.isTestMod) {
+                this.scene.sessionSlotId = -1;
                 this.scene.pushPhase(new SelectDraftPhase(this.scene, true));
 
                 if (this.gameMode !== GameModes.SHOP) {
@@ -547,6 +525,40 @@ export class TitlePhase extends Phase {
                 this.scene.pushPhase(new EncounterPhase(this.scene, this.loaded));
 
                 super.end();
+            }
+            else if (this.scene.gameMode.isChaosMode) {
+
+                this.scene.ui.setOverlayMode(Mode.SAVE_SLOT, SaveSlotUiMode.SAVE, (slotId: integer) => {
+                    if (slotId === -1) {
+                        this.scene.clearPhaseQueue();
+                        this.scene.pushPhase(new TitlePhase(this.scene));
+                        super.end();
+                        return;
+                    }
+                    this.scene.sessionSlotId = slotId;
+
+                    this.scene.gameData.resetBattlePathData();
+                    this.scene.battlePathWave = 1;
+
+                    setupFixedBattlePaths(this.scene);
+                    
+                    if (this.gameMode !== GameModes.SHOP) {
+                        this.scene.newArena(this.scene.gameMode.getStartingBiome(this.scene));
+                    }
+
+                    this.scene.money = this.scene.gameMode.getStartingMoney();
+
+                    if (this.gameMode === GameModes.CHAOS_ROGUE || this.gameMode === GameModes.CHAOS_ROGUE_VOID || this.gameMode === GameModes.CHAOS_INFINITE_ROGUE) {
+                        this.scene.pushPhase(new SelectDraftPhase(this.scene));
+                    } else {
+                        this.scene.pushPhase(new SelectStarterPhase(this.scene));
+                    }
+
+                    this.scene.pushPhase(new BattlePathPhase(this.scene, undefined, false));
+
+                    super.end();
+                });
+            return;
             }
             else if (this.scene.gameMode.isDraft && !this.scene.gameMode.isNightmare) {
                 this.scene.ui.setOverlayMode(Mode.SAVE_SLOT, SaveSlotUiMode.SAVE, (slotId: integer) => {
@@ -594,30 +606,70 @@ export class TitlePhase extends Phase {
             this.scene.playBgm();
         }
 
-
-        this.scene.pushPhase(new EncounterPhase(this.scene, this.loaded));
+        if (!this.scene.gameMode.isChaosMode) {
+            this.scene.pushPhase(new EncounterPhase(this.scene, this.loaded));
+        }
 
         if (this.loaded) {
-            if (this.scene.gameMode.isNightmare) {
-                setupNightmareFixedBattles(this.scene);
-            }
-            else {
-                setupFixedBattles(this.scene);
-            }
+            if (this.scene.gameMode.isChaosMode) {
+                
+                if (this.scene.battlePathWave === 1) {
+                    this.scene.gameData.resetBattlePathData();
+                    resetBattlePathGlobalState();
+                }
+                
+                const startWave = this.scene.battlePathWave > 1000 ? Math.floor(this.scene.battlePathWave / 1000) * 1000 + 1 : 1;
+                setupFixedBattlePaths(this.scene, startWave);
+                
+                const enemyParty = this.scene.getEnemyParty();
+                const hasActiveBattle = this.scene.currentBattle && (enemyParty && enemyParty.filter(p => !p.isFainted()).length > 0);
+                
+                if (hasActiveBattle) {
+                    this.scene.pushPhase(new ChaosEncounterPhase(this.scene, true));
 
-            const availablePartyMembers = this.scene.getParty().filter(p => p.isAllowedInBattle()).length;
 
-            this.scene.pushPhase(new SummonPhase(this.scene, 0, true, true));
-            if (this.scene.currentBattle.double && availablePartyMembers > 1) {
-                this.scene.pushPhase(new SummonPhase(this.scene, 1, true, true));
-            }
+                    const availablePartyMembers = this.scene.getParty().filter(p => p.isAllowedInBattle()).length;
 
-            if (this.scene.currentBattle.battleType !== BattleType.TRAINER && (this.scene.currentBattle.waveIndex > 1 || !this.scene.gameMode.isDaily)) {
-                const minPartySize = this.scene.currentBattle.double ? 2 : 1;
-                if (availablePartyMembers > minPartySize) {
-                    this.scene.pushPhase(new CheckSwitchPhase(this.scene, 0, this.scene.currentBattle.double));
-                    if (this.scene.currentBattle.double) {
-                        this.scene.pushPhase(new CheckSwitchPhase(this.scene, 1, this.scene.currentBattle.double));
+                    this.scene.pushPhase(new SummonPhase(this.scene, 0, true, true));
+                    if (this.scene.currentBattle.double && availablePartyMembers > 1) {
+                        this.scene.pushPhase(new SummonPhase(this.scene, 1, true, true));
+                    }
+
+                    if (this.scene.currentBattle.battleType !== BattleType.TRAINER && (this.scene.currentBattle.waveIndex > 1 || !this.scene.gameMode.isDaily)) {
+                        const minPartySize = this.scene.currentBattle.double ? 2 : 1;
+                        if (availablePartyMembers > minPartySize) {
+                            this.scene.pushPhase(new CheckSwitchPhase(this.scene, 0, this.scene.currentBattle.double));
+                            if (this.scene.currentBattle.double) {
+                                this.scene.pushPhase(new CheckSwitchPhase(this.scene, 1, this.scene.currentBattle.double));
+                            }
+                        }
+                    }
+                } else {
+                    this.scene.pushPhase(new BattlePathPhase(this.scene, undefined, false));
+                }
+                
+            } else {
+                if (this.scene.gameMode.isNightmare) {
+                    setupNightmareFixedBattles(this.scene);
+                }
+                else {
+                    setupFixedBattles(this.scene);
+                }
+
+                const availablePartyMembers = this.scene.getParty().filter(p => p.isAllowedInBattle()).length;
+
+                this.scene.pushPhase(new SummonPhase(this.scene, 0, true, true));
+                if (this.scene.currentBattle.double && availablePartyMembers > 1) {
+                    this.scene.pushPhase(new SummonPhase(this.scene, 1, true, true));
+                }
+
+                if (this.scene.currentBattle.battleType !== BattleType.TRAINER && (this.scene.currentBattle.waveIndex > 1 || !this.scene.gameMode.isDaily)) {
+                    const minPartySize = this.scene.currentBattle.double ? 2 : 1;
+                    if (availablePartyMembers > minPartySize) {
+                        this.scene.pushPhase(new CheckSwitchPhase(this.scene, 0, this.scene.currentBattle.double));
+                        if (this.scene.currentBattle.double) {
+                            this.scene.pushPhase(new CheckSwitchPhase(this.scene, 1, this.scene.currentBattle.double));
+                        }
                     }
                 }
             }
@@ -632,12 +684,216 @@ export class TitlePhase extends Phase {
         super.end();
     }
 
+    private showGauntletModes(): void {
+        const availableModes = [GameModes.DRAFT];
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED)) {
+            availableModes.push(GameModes.CLASSIC);
+        }
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            availableModes.push(GameModes.NUZLIGHT);
+        }
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            availableModes.push(GameModes.NUZLOCKE);
+        }
+
+        if(this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
+            availableModes.push(GameModes.NIGHTMARE);
+        }
+
+        if(this.scene.gameData.unlocks[Unlockables.NUZLIGHT_DRAFT_MODE] || this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
+            availableModes.push(GameModes.NUZLIGHT_DRAFT);
+        }
+
+        if(this.scene.gameData.unlocks[Unlockables.NUZLOCKE_DRAFT_MODE] || this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
+            availableModes.push(GameModes.NUZLOCKE_DRAFT);
+        }
+
+        const modesToShow = [GameModes.DRAFT, GameModes.CLASSIC, GameModes.NUZLIGHT, GameModes.NUZLOCKE];
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED) || this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
+            modesToShow.push(GameModes.NUZLIGHT_DRAFT);
+        }
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED) || this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
+            modesToShow.push(GameModes.NUZLOCKE_DRAFT);
+        }
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            modesToShow.push(GameModes.NIGHTMARE);
+        }
+        
+        const setModeAndEnd = (gameMode: GameModes) => {
+            this.gameMode = gameMode;
+            this.scene.ui.setMode(Mode.MESSAGE);
+            this.scene.ui.clearText();
+            this.end();
+        };
+        
+        const modeOptions = modesToShow.map(mode => {
+            const isAvailable = availableModes.includes(mode);
+            return {
+                label: isAvailable ? GameMode.getModeName(mode) : "???",
+                handler: () => {
+                    if (isAvailable) {
+                        setModeAndEnd(mode);
+                        return true;
+                    }
+                    return false;
+                },
+                onHover: () => {
+                    if (isAvailable) {
+                        this.scene.ui.showText(this.getModeDescription(mode));
+                    } else {
+                        const hint = this.getUnlockHint(mode, availableModes);
+                        this.scene.ui.showText(hint);
+                    }
+                }
+            };
+        });
+
+        modeOptions.push({
+            label: i18next.t("menu:cancel"),
+            handler: () => {
+                this.scene.ui.clearText();
+                this.showOptions();
+                return true;
+            },
+            onHover: () => {
+                this.scene.ui.showText(i18next.t("menu:selectGameMode"));
+            }
+        });
+
+        this.scene.ui.revertMode().then(() => {
+            this.scene.ui.showText(availableModes.length > 0 ? this.getModeDescription(availableModes[0]) : i18next.t("menu:selectGameMode"), null, () =>
+                this.scene.ui.setOverlayMode(Mode.OPTION_SELECT, {
+                    options: modeOptions,
+                    supportHover: true
+                })
+            );
+        });
+    }
+
+    private showChaosModes(): void {
+        const availableModes = [GameModes.CHAOS_ROGUE];
+        
+        if (this.scene.gameData.unlocks[Unlockables.CHAOS_JOURNEY_MODE]) {
+            availableModes.push(GameModes.CHAOS_JOURNEY);
+        }
+        
+        if (this.scene.gameData.unlocks[Unlockables.CHAOS_VOID_MODE]) {
+            availableModes.push(GameModes.CHAOS_VOID);
+        }
+        
+        if (this.scene.gameData.unlocks[Unlockables.CHAOS_ROGUE_VOID_MODE]) {
+            availableModes.push(GameModes.CHAOS_ROGUE_VOID);
+        }
+        
+        if (this.scene.gameData.unlocks[Unlockables.CHAOS_INFINITE_MODE]) {
+            availableModes.push(GameModes.CHAOS_INFINITE);
+        }
+        
+        if (this.scene.gameData.unlocks[Unlockables.CHAOS_INFINITE_ROGUE_MODE]) {
+            availableModes.push(GameModes.CHAOS_INFINITE_ROGUE);
+        }
+
+        const modesToShow = [
+            GameModes.CHAOS_ROGUE,
+            GameModes.CHAOS_JOURNEY
+        ];
+        
+        if (this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
+            modesToShow.push(GameModes.CHAOS_VOID);
+        if (this.scene.gameData.gameStats.nightmareSessionsWon >= 1) {
+            modesToShow.push(GameModes.CHAOS_ROGUE_VOID);
+        }
+        if (this.scene.gameData.gameStats.chaosJourneySessionsWon >= 1) {
+            modesToShow.push(GameModes.CHAOS_INFINITE);
+        }
+        if (this.scene.gameData.gameStats.chaosRogueVoidSessionsWon >= 1) {
+            modesToShow.push(GameModes.CHAOS_INFINITE_ROGUE);
+        }
+        }
+        
+        const setModeAndEnd = (gameMode: GameModes) => {
+            this.gameMode = gameMode;
+            this.scene.ui.setMode(Mode.MESSAGE);
+            this.scene.ui.clearText();
+            this.end();
+        };
+        
+        const modeOptions = modesToShow.map(mode => {
+            const isAvailable = availableModes.includes(mode);
+            return {
+                label: isAvailable ? GameMode.getModeName(mode) : "???",
+                handler: () => {
+                    if (isAvailable) {
+                        setModeAndEnd(mode);
+                        return true;
+                    }
+                    return false;
+                },
+                onHover: () => {
+                    if (isAvailable) {
+                        this.scene.ui.showText(this.getModeDescription(mode));
+                    } else {
+                        let hint = "";
+                        switch (mode) {
+                            case GameModes.CHAOS_ROGUE:
+                                hint = i18next.t("menu:unlockHintChaosRogue");
+                                break;
+                            case GameModes.CHAOS_JOURNEY:
+                                hint = i18next.t("menu:unlockHintChaosJourney");
+                                break;
+                            case GameModes.CHAOS_VOID:
+                            case GameModes.CHAOS_ROGUE_VOID:
+                            case GameModes.CHAOS_INFINITE:
+                                hint = i18next.t("menu:unlockHintDraftMode");
+                                break;
+                            case GameModes.CHAOS_INFINITE_ROGUE:
+                                hint = i18next.t("menu:unlockHintChaosInfiniteRogue");
+                                break;
+                            default:
+                                hint = "???";
+                        }
+                        this.scene.ui.showText(hint);
+                    }
+                }
+            };
+        });
+
+        modeOptions.push({
+            label: i18next.t("menu:cancel"),
+            handler: () => {
+                this.scene.ui.clearText();
+                this.showOptions();
+                return true;
+            },
+            onHover: () => {
+                this.scene.ui.showText(i18next.t("menu:selectGameMode"));
+            }
+        });
+
+        this.scene.ui.revertMode().then(() => {
+            this.scene.ui.showText(availableModes.length > 0 ? this.getModeDescription(availableModes[0]) : i18next.t("menu:selectGameMode"), null, () =>
+                this.scene.ui.setOverlayMode(Mode.OPTION_SELECT, {
+                    options: modeOptions,
+                    supportHover: true
+                })
+            );
+        });
+    }
+
     private getModeDescription(mode: GameModes): string {
         switch (mode) {
             case GameModes.DRAFT:
                 return i18next.t("menu:selectRogueMode");
+            case GameModes.CHAOS_ROGUE:
+                return i18next.t("menu:selectChaosRogueMode");
             case GameModes.CLASSIC:
                 return i18next.t("menu:selectJourneyMode");
+            case GameModes.CHAOS_JOURNEY:
+                return i18next.t("menu:selectChaosJourneyMode");
             case GameModes.NUZLIGHT:
                 return i18next.t("menu:selectNuzlightMode");
             case GameModes.NUZLOCKE:
@@ -648,6 +904,14 @@ export class TitlePhase extends Phase {
                 return i18next.t("menu:selectNuzlightDraftMode");
             case GameModes.NUZLOCKE_DRAFT:
                 return i18next.t("menu:selectNuzlockeDraftMode");
+            case GameModes.CHAOS_VOID:
+                return i18next.t("menu:selectChaosVoidMode");
+            case GameModes.CHAOS_ROGUE_VOID:
+                return i18next.t("menu:selectChaosRogueVoidMode");
+            case GameModes.CHAOS_INFINITE:
+                return i18next.t("menu:selectChaosInfiniteMode");
+            case GameModes.CHAOS_INFINITE_ROGUE:
+                return i18next.t("menu:selectChaosInfiniteRogueMode");
             default:
                 return "";
         }
@@ -658,6 +922,8 @@ export class TitlePhase extends Phase {
         const hasNuzlight = availableModes.includes(GameModes.NUZLIGHT);
         const hasNuzlocke = availableModes.includes(GameModes.NUZLOCKE);
         const hasVoid = availableModes.includes(GameModes.NIGHTMARE);
+        const hasNuzlightDraft = availableModes.includes(GameModes.NUZLIGHT_DRAFT);
+        const hasNuzlockeDraft = availableModes.includes(GameModes.NUZLOCKE_DRAFT);
         
         if (!hasClassic) {
             if (mode === GameModes.CLASSIC) {
@@ -679,11 +945,55 @@ export class TitlePhase extends Phase {
                 return i18next.t("menu:unlockHintVoid");
             }
             return "???";
-        } else {
-            if (mode === GameModes.NUZLIGHT_DRAFT || mode === GameModes.NUZLOCKE_DRAFT) {
-                return i18next.t("menu:unlockHintDraftMode");
+        } else if (!hasNuzlightDraft) {
+            if (mode === GameModes.NUZLIGHT_DRAFT) {
+                return i18next.t("menu:unlockHintNuzlightDraft");
             }
             return "???";
+        } else if (!hasNuzlockeDraft) {
+            if (mode === GameModes.NUZLOCKE_DRAFT) {
+                return i18next.t("menu:unlockHintNuzlockeDraft");
+            }
+            return "???";
+        } else {
+            return "???";
         }
+    }
+
+    private getChaosUnlockHint(): string {
+        const nuzlightUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED);
+        const nuzlockeUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
+        const nuzlightDraftUnlocked = this.scene.gameData.gameStats.nuzlightSessionsWon >= 2;
+        const nuzlockeDraftUnlocked = this.scene.gameData.gameStats.nuzlockeSessionsWon >= 2;
+        const nightmareUnlocked = this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE];
+        
+        if (!nuzlightDraftUnlocked && !nuzlockeUnlocked) {
+            return i18next.t("menu:unlockHintChaos1");
+        } else if (nuzlightDraftUnlocked && !nuzlockeDraftUnlocked) {
+            return i18next.t("menu:unlockHintChaos2");
+        } else if (nuzlockeUnlocked || nightmareUnlocked) {
+            return i18next.t("menu:unlockHintChaos3");
+        }
+        
+        return "???";
+    }
+
+    private isChaosUnlocked(): boolean {
+        return true;
+        const nuzlightUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED);
+        const nuzlockeUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
+        const nuzlightDraftUnlocked = this.scene.gameData.gameStats.nuzlightSessionsWon >= 2;
+        const nuzlockeDraftUnlocked = this.scene.gameData.gameStats.nuzlockeSessionsWon >= 2;
+        const nightmareUnlocked = this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE];
+        
+        if (!nuzlightDraftUnlocked && !nuzlockeUnlocked) {
+            return this.scene.gameData.gameStats.draftSessionsWon >= 3 || this.scene.gameData.gameStats.nuzlightSessionsWon >= 1;
+        } else if (nuzlightDraftUnlocked && !nuzlockeDraftUnlocked) {
+            return this.scene.gameData.gameStats.nuzlightDraftSessionsWon >= 2 || this.scene.gameData.gameStats.nuzlockeSessionsWon >= 1;
+        } else if (nuzlockeUnlocked || nightmareUnlocked) {
+            return this.scene.gameData.gameStats.nuzlockeSessionsWon >= 2 || this.scene.gameData.gameStats.nuzlockeDraftSessionsWon >= 1;
+        }
+        
+        return false;
     }
 }

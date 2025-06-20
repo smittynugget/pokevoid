@@ -2523,16 +2523,14 @@ export function getAllRivalTrainerTypes(): RivalTrainerType[] {
   return [...rivalPool, ...championPool, ...evilTeamAdminPool, ...gymLeaderPool, ...otherTrainerPool];
 }
 
-export function getDynamicRivalType(rivalStage: number, gameData: GameData, scene: BattleScene): RivalTrainerType {
-    if (rivalStage === 1 || gameData.playerRival === null) {
+export function getDynamicRivalType(rivalStage: number, gameData: GameData, randomRival:boolean = false): RivalTrainerType {
+    if (rivalStage === 1 || randomRival || gameData.playerRival === null ) {
     const allPools = getAllRivalTrainerTypes();
-        const availableRivals = allPools.filter(rival => !gameData.defeatedRivals.includes(rival));
-
-        if (availableRivals.length > 0) {
-            gameData.playerRival = Utils.randSeedItem(availableRivals);
-        } else if (gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
+        if (gameData.unlocks[Unlockables.NIGHTMARE_MODE] || randomRival) {
             gameData.playerRival = Utils.randSeedItem(allPools);
-       }
+        } else {
+            gameData.playerRival = Utils.randSeedItem(allPools.filter(rival => !gameData.defeatedRivals.includes(rival)));
+        }
     }
 
     if (gameData.playerRival === null) {
@@ -2688,17 +2686,21 @@ export function scaleTrainerParty(config: TrainerConfig, rivalStage: number, tra
   }
 
     if (partySize >= 5) {
-    partyMemberFuncs.push((scene: BattleScene, slot: TrainerSlot, strength: PartyMemberStrength) => {
-      const waveIndex = scene.currentBattle.waveIndex;
-      const levels = scene.currentBattle.trainer.getPartyLevels(waveIndex);
-      const level = levels[4] || levels[levels.length - 1];
-      const lastPool = pokemonPools[pokemonPools.length - 1];
-      const uniqueLastPool = lastPool.filter(species => !usedSpecies.has(species));
-      return getRandomPartyMemberFunc(uniqueLastPool.length > 0 ? uniqueLastPool : lastPool, TrainerSlot.TRAINER)(scene, level, strength);
-    });
+      const pushLegendaryFunc = (scene: BattleScene, slot: TrainerSlot, strength: PartyMemberStrength) => {
+        const waveIndex = scene.currentBattle.waveIndex;
+        const levels = scene.currentBattle.trainer.getPartyLevels(waveIndex);
+        const level = levels[4] || levels[levels.length - 1];
+        const lastPool = pokemonPools[pokemonPools.length - 1];
+        const uniqueLastPool = lastPool.filter(species => !usedSpecies.has(species));
+        return getRandomPartyMemberFunc(uniqueLastPool.length > 0 ? uniqueLastPool : lastPool, TrainerSlot.TRAINER)(scene, level, strength);
+      };
+      partyMemberFuncs.push(pushLegendaryFunc);
+      if (scene.dynamicMode?.multiLegendaries) {
+        partyMemberFuncs.push(pushLegendaryFunc);
+      }
     }
 
-  if (partySize === 6) {
+  if (partySize === 6 && !scene.dynamicMode?.multiLegendaries) {
     partyMemberFuncs.push(getUniqueRandomPokemon(usedSpecies, pokemonPools));
   }
 
@@ -2776,32 +2778,55 @@ export function scaleTrainerParty(config: TrainerConfig, rivalStage: number, tra
   }
 
   if (rivalStage >= 4) {
-
     let bossIndices: number[] = [];
     if (rivalStage === 4) {
-      bossIndices = [0]; 
+      bossIndices = [0];
     } else if (rivalStage === 5) {
-      bossIndices = [0, 4]; 
-    } else if (rivalStage >= 6) {
-      bossIndices = [0, 4]; 
-      let randomIndex;
-      do {
-        randomIndex = Utils.randSeedInt(partySize);
-      } while (randomIndex === 0 || randomIndex === 4);
-      bossIndices.push(randomIndex);
-    }
+      if (scene.gameMode.isChaosMode) {
+        bossIndices = [0];
+        let randomIndex;
+        do {
+          randomIndex = Utils.randSeedInt(partySize);
+        } while (randomIndex === 0);
+        bossIndices.push(randomIndex);
+      } else {
+        bossIndices = [0, 4];
+      }
+    } else if (rivalStage === 6) {
+      if (scene.gameMode.isChaosMode) {
+        bossIndices = [0];
+        let randomIndex;
+        do {
+          randomIndex = Utils.randSeedInt(partySize);
+        } while (randomIndex === 0);
+        bossIndices.push(randomIndex);
+      } else {
+        bossIndices = [0, 4];
+        let randomIndex;
+        do {
+          randomIndex = Utils.randSeedInt(partySize);
+        } while (randomIndex === 0 || randomIndex === 4);
+        bossIndices.push(randomIndex);
+      }
+    } 
 
     bossIndices.forEach((index, i) => {
       const originalFunc = scaledConfig.partyMemberFuncs[index];
       scaledConfig.setPartyMemberFunc(index, (scene: BattleScene, slot: TrainerSlot, strength: PartyMemberStrength) => {
         const pokemon = originalFunc(scene, slot, strength);
         if(rivalStage >= 4) {
-          if (rivalStage === 4) {
+          if (scene.gameMode.isChaosMode && (rivalStage === 5 || rivalStage === 6)) {
+            if (index === 0) {
+              pokemon.setBoss(true, 3);
+            } else {
+              pokemon.setBoss(true, 2);
+            }
+          } else if (rivalStage === 4) {
             pokemon.setBoss(true, 3);
           } else if (rivalStage === 5) {
-            pokemon.setBoss(true, index === 0 ? 3 : 2); 
+            pokemon.setBoss(true, index === 0 ? 3 : 2);
           } else if (rivalStage >= 6) {
-            pokemon.setBoss(true, index === 0 ? 4 : index === 4 ? 3 : 2); 
+            pokemon.setBoss(true, index === 0 ? 4 : index === 4 ? 3 : 2);
           }
           pokemon.initBattleInfo();
         }

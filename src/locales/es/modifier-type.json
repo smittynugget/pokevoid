@@ -4,8 +4,14 @@
       "name": "{{modifierCount}}x {{pokeballName}}",
       "description": "Recibes {{modifierCount}}x {{pokeballName}} (En inventario: {{pokeballAmount}}) \nRatio de captura: {{catchRate}}."
     },
+    "AddPokemonModifierType": {
+      "name": "{{pokemonName}}",
+      "statLabel": "Objeto Pokémon Draft",
+      "description": "Adds {{pokemonName}} to the party."
+    },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
+      "statLabel": "Vale de Huevo",
       "description": "Recibes {{modifierCount}}x {{voucherTypeName}}."
     },
     "PokemonHeldItemModifierType": {
@@ -44,6 +50,7 @@
     },
     "PokemonNatureChangeModifierType": {
       "name": "Menta {{natureName}}",
+      "statLabel": "Menta de Naturaleza",
       "description": "Cambia la naturaleza de un Pokémon a {{natureName}} y desbloquea permanentemente dicha naturaleza para el inicial."
     },
     "DoubleBattleChanceBoosterModifierType": {
@@ -95,10 +102,12 @@
     },
     "TmModifierType": {
       "name": "MT{{moveId}} - {{moveName}}",
+      "statLabel": "Objeto MT",
       "description": "Enseña {{moveName}} a un Pokémon."
     },
     "TmModifierTypeWithInfo": {
       "name": "MT{{moveId}} - {{moveName}}",
+      "statLabel": "Objeto MT",
       "description": "Enseña {{moveName}} a un Pokémon\n(Mantén pulsado C o Shift para más info)."
     },
     "EvolutionItemModifierType": {
@@ -112,6 +121,7 @@
     },
     "TerastallizeModifierType": {
       "name": "Teralito {{teraType}}",
+      "statLabel": "Teralito",
       "description": "Teracristaliza al portador al tipo {{teraType}} durante 10 combates."
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -394,22 +404,27 @@
     },
     "AnyTmModifierType": {
       "name": "XM {{moveName}}",
+      "statLabel": "XM (Cualquier MT)",
       "description": "Enseña {{moveName}} a cualquier Pokémon."
     },
     "AnyTmModifierTypeWithInfo": {
       "name": "++XM{{moveId}} - {{moveName}}++",
+      "statLabel": "XM (Cualquier MT)",
       "description": "Enseña {{moveName}} a cualquier Pokémon\n(Mantén pulsado C o Shift para más info)."
     },
     "TypeSwitcherModifierType": {
       "name": "Cambiador de Tipo: {{type1}} / {{type2}}",
+      "statLabel": "Cambiador de Tipo",
       "description": "Cambia los tipos de un Pokémon a {{type1}} y {{type2}}."
     },
     "PrimaryTypeSwitcherModifierType": {
       "name": "Cambiador de Tipo Primario: {{type1}}",
+      "statLabel": "Cambiador de Tipo Primario",
       "description": "Cambia el tipo primario de un Pokémon a {{type1}}."
     },
     "SecondaryTypeSwitcherModifierType": {
       "name": "Cambiador de Tipo Secundario: {{type2}}",
+      "statLabel": "Cambiador de Tipo Secundario",
       "description": "Cambia el tipo secundario de un Pokémon a {{type2}}."
     },
     "AbilitySwitcherModifierType": {
@@ -418,6 +433,7 @@
     },
     "RandomStatSwitcherModifierType": {
       "name": "{{stat1}} X {{stat2}}",
+      "statLabel": "Cambiador de Estadísticas",
       "description": "Intercambia las estadísticas {{stat1}} y {{stat2}} del Pokémon. CUESTA 1x Fragmento de Glitch"
     },
     "GlitchPieceModifierType": {
@@ -683,16 +699,19 @@
     },
     "CollectedTypeModifierType": {
       "name": "Tipo Recolectado: {{type}}",
+      "statLabel": "Tipo Recolectado",
       "description": "Usa 5 de CUALQUIER MEZCLA DE TIPO en lugar de liberar un Pokémon para Objetos de Liberación."
     },
     "SacrificeModifierType": {
       "description": "Libera un Pokémon para aumentar el {{stat}} de otro Pokémon en un 15%."
     },
     "StatSacrificeModifierTypeGenerator": {
-      "name": "Liberar {{stat}}"
+      "name": "Liberar {{stat}}",
+      "statLabel": "Liberación de Estadísticas"
     },
     "StatSacrificeModifierType": {
       "name": "Liberación de Estadística: {{stat}}",
+      "statLabel": "Liberación de Estadísticas",
       "description": "Libera un Pokémon para aumentar el {{stat}} de otro Pokémon en un 15%."
     },
     "TypeSacrificeModifierType": {
@@ -709,14 +728,16 @@
     },
     "PassiveAbilitySacrificeModifierType": {
       "name": "Liberación de Habilidad Pasiva",
-      "description": "Libera un Pokémon para asignar su habilidad pasiva como habilidad PRIMARIA a otro."
+      "description": "Libera un Pokémon para asignar su habilidad PRIMARIA como habilidad PASIVA a otro."
     },
     "AnyPassiveAbilityModifierType": {
       "name": "PASIVA {{abilityName}}",
+      "statLabel": "Objeto de Cualquier Habilidad Pasiva",
       "description": "Dar Pasiva {{abilityName}} a CUALQUIER Pokémon\n(Mantén C o Shift para más información)."
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
+      "statLabel": "Objeto de Cualquier Habilidad",
       "description": "Dar {{abilityName}} a CUALQUIER Pokémon\n(Mantén C o Shift para más información)."
     },
     "glitchPieceCost": {

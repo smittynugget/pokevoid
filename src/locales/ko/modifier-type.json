@@ -2,11 +2,13 @@
   "ModifierType": {
     "AddPokeballModifierType": {
       "name": "{{pokeballName}} {{modifierCount}}개",
-      "description": "{{pokeballName}} {{modifierCount}}개 (현재: {{pokeballAmount}}개)를 획득한다.\n포획률: {{catchRate}}"
+      "description": "{{pokeballName}} {{modifierCount}}개 (현재: {{pokeballAmount}}개)를 획득한다.\n포획률: {{catchRate}}",
+      "statLabel": "포켓몬볼"
     },
     "AddVoucherModifierType": {
       "name": "{{voucherTypeName}} {{modifierCount}}장",
-      "description": "{{voucherTypeName}} {{modifierCount}}장을 획득한다."
+      "description": "{{voucherTypeName}} {{modifierCount}}장을 획득한다.",
+      "statLabel": "알 상품권"
     },
     "PokemonHeldItemModifierType": {
       "extra": {
@@ -44,7 +46,8 @@
     },
     "PokemonNatureChangeModifierType": {
       "name": "{{natureName}}민트",
-      "description": "포켓몬의 성격을 {{natureName}}[[로]] 바꾸고 스타팅에도 등록한다."
+      "description": "포켓몬의 성격을 {{natureName}}[[로]] 바꾸고 스타팅에도 등록한다.",
+      "statLabel": "성격 민트"
     },
     "DoubleBattleChanceBoosterModifierType": {
       "description": "{{battleCount}}번의 배틀 동안 더블 배틀이 등장할 확률이 두 배가 된다."
@@ -95,11 +98,13 @@
     },
     "TmModifierType": {
       "name": "No.{{moveId}} {{moveName}}",
-      "description": "포켓몬에게 {{moveName}}[[를]] 가르침."
+      "description": "포켓몬에게 {{moveName}}[[를]] 가르침.",
+      "statLabel": "기술머신 아이템"
     },
     "TmModifierTypeWithInfo": {
       "name": "No.{{moveId}} {{moveName}}",
-      "description": "포켓몬에게 {{moveName}}[[를]] 가르침.\n(C 또는 Shift를 꾹 눌러 정보 확인)"
+      "description": "포켓몬에게 {{moveName}}[[를]] 가르침.\n(C 또는 Shift를 꾹 눌러 정보 확인)",
+      "statLabel": "기술머신 아이템"
     },
     "EvolutionItemModifierType": {
       "description": "어느 특정 포켓몬을 진화시킨다."
@@ -112,7 +117,8 @@
     },
     "TerastallizeModifierType": {
       "name": "테라피스 {{teraType}}",
-      "description": "지니게 하면 10번의 배틀 동안 {{teraType}} 테라스탈타입으로 테라스탈한다."
+      "description": "지니게 하면 10번의 배틀 동안 {{teraType}} 테라스탈타입으로 테라스탈한다.",
+      "statLabel": "테라피스"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "공격했을 때, {{chancePercent}}%의 확률로 상대의 도구를 도둑질한다."
@@ -394,23 +400,28 @@
     },
     "AnyTmModifierType": {
       "name": "XM {{moveName}}",
-      "description": "포켓몬에게 {{moveName}}을(를) 가르칩니다."
+      "description": "포켓몬에게 {{moveName}}을(를) 가르칩니다.",
+      "statLabel": "XM (모든 기술머신)"
     },
     "AnyTmModifierTypeWithInfo": {
       "name": "++XM{{moveId}} - {{moveName}}++",
-      "description": "아무 포켓몬에게나 {{moveName}}을(를) 가르칩니다\n(자세한 정보는 C키 또는 Shift키를 눌러세요)."
+      "description": "아무 포켓몬에게나 {{moveName}}을(를) 가르칩니다\n(자세한 정보는 C키 또는 Shift키를 눌러세요).",
+      "statLabel": "XM (모든 기술머신)"
     },
     "TypeSwitcherModifierType": {
       "name": "타입 변경: {{type1}} / {{type2}}",
-      "description": "포켓몬의 타입을 {{type1}}와(과) {{type2}}(으)로 변경합니다."
+      "description": "포켓몬의 타입을 {{type1}}와(과) {{type2}}(으)로 변경합니다.",
+      "statLabel": "타입 변경"
     },
     "PrimaryTypeSwitcherModifierType": {
       "name": "제1 타입 변경: {{type1}}",
-      "description": "포켓몬의 제1 타입을 {{type1}}(으)로 변경합니다."
+      "description": "포켓몬의 제1 타입을 {{type1}}(으)로 변경합니다.",
+      "statLabel": "제1 타입 변경"
     },
     "SecondaryTypeSwitcherModifierType": {
       "name": "제2 타입 변경: {{type2}}",
-      "description": "포켓몬의 제2 타입을 {{type2}}(으)로 변경합니다."
+      "description": "포켓몬의 제2 타입을 {{type2}}(으)로 변경합니다.",
+      "statLabel": "제2 타입 변경"
     },
     "AbilitySwitcherModifierType": {
       "name": "특성 변경",
@@ -418,7 +429,8 @@
     },
     "RandomStatSwitcherModifierType": {
       "name": "{{stat1}} X {{stat2}}",
-      "description": "포켓몬의 {{stat1}}와(과) {{stat2}} 능력치를 서로 바꿉니다. 글리치 조각 1개가 필요합니다."
+      "description": "포켓몬의 {{stat1}}와(과) {{stat2}} 능력치를 서로 바꿉니다. 글리치 조각 1개가 필요합니다.",
+      "statLabel": "능력치 변경"
     },
     "GlitchPieceModifierType": {
       "name": "글리치 조각",
@@ -683,17 +695,20 @@
     },
     "CollectedTypeModifierType": {
       "name": "수집된 타입: {{type}}",
-      "description": "포켓몬을 놓아주는 대신 아무 타입 조합 5개를 사용하여 놓아주기 아이템을 얻습니다."
+      "description": "포켓몬을 놓아주는 대신 아무 타입 조합 5개를 사용하여 놓아주기 아이템을 얻습니다.",
+      "statLabel": "수집된 타입"
     },
     "SacrificeModifierType": {
       "description": "포켓몬을 놓아주어 다른 포켓몬의 {{stat}}을(를) 15% 증가시킵니다."
     },
     "StatSacrificeModifierTypeGenerator": {
-      "name": "{{stat}} 방출"
+      "name": "{{stat}} 방출",
+      "statLabel": "능력치 방출"
     },
     "StatSacrificeModifierType": {
       "name": "스탯 방출: {{stat}}",
-      "description": "포켓몬을 놓아주어 다른 포켓몬의 {{stat}}을(를) 15% 증가시킵니다."
+      "description": "포켓몬을 놓아주어 다른 포켓몬의 {{stat}}을(를) 15% 증가시킵니다.",
+      "statLabel": "스탯 방출"
     },
     "TypeSacrificeModifierType": {
       "name": "타입 방출",
@@ -709,15 +724,17 @@
     },
     "PassiveAbilitySacrificeModifierType": {
       "name": "패시브 특성 방출",
-      "description": "포켓몬을 놓아주어 해당 패시브 특성을 다른 포켓몬의 주 특성으로 지정합니다."
+      "description": "포켓몬을 놓아주어 해당 주 특성을 다른 포켓몬의 패시브 특성으로 지정합니다."
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
-      "description": "아무 포켓몬에게 {{abilityName}} 부여\n(자세한 정보는 C키나 Shift키를 길게 누르세요)."
+      "description": "아무 포켓몬에게 {{abilityName}} 부여\n(자세한 정보는 C키나 Shift키를 길게 누르세요).",
+      "statLabel": "모든 특성 아이템"
     },
     "AnyPassiveAbilityModifierType": {
       "name": "패시브 {{abilityName}}",
-      "description": "아무 포켓몬에게 패시브 {{abilityName}} 부여\n(자세한 정보는 C키나 Shift키를 길게 누르세요)."
+      "description": "아무 포켓몬에게 패시브 {{abilityName}} 부여\n(자세한 정보는 C키나 Shift키를 길게 누르세요).",
+      "statLabel": "모든 패시브 특성 아이템"
     },
     "glitchPieceCost": {
       "text": "[[글리치 조각 1개 필요]]"
@@ -727,6 +744,11 @@
       "description": "놓아주기 아이템 켜기/끄기"
     }
   },
+  "AddPokemonModifierType": {
+      "name": "{{pokemonName}}",
+      "statLabel": "드래프트 포켓몬 아이템",
+      "description": "Adds {{pokemonName}} to the party."
+    },
   "SpeciesBoosterItem": {
     "LIGHT_BALL": {
       "name": "전기구슬",

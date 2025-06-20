@@ -20,7 +20,13 @@ export class BattleEndPhase extends BattlePhase {
 
     if(Utils.randSeedInt(100) < betterRewardChance) {
       if(isTrainer) {
-        this.scene.addPhaseAfterTarget(new ModifierRewardPhase(this.scene, null, true, null, isRivalTrainer), TrainerVictoryPhase);
+        if(!this.scene.gameMode.isChaosMode) {
+          this.scene.addPhaseAfterTarget(new ModifierRewardPhase(this.scene, null, true, null, isRivalTrainer), TrainerVictoryPhase);
+        } else {
+          this.scene.unshiftPhase(new ModifierRewardPhase(
+            this.scene, null, true, null, isRivalTrainer
+          ));
+        }
       }
       else {
         this.scene.unshiftPhase(new ModifierRewardPhase(
@@ -55,8 +61,13 @@ export class BattleEndPhase extends BattlePhase {
     if (this.scene.currentBattle.trainer) {
       this.scene.gameData.gameStats.trainersDefeated++;
     }
-    if (this.scene.gameMode.isEndless && this.scene.currentBattle.waveIndex + 1 > this.scene.gameData.gameStats.highestEndlessWave) {
-      this.scene.gameData.gameStats.highestEndlessWave = this.scene.currentBattle.waveIndex + 1;
+    if (this.scene.gameMode.isInfinite) {
+      if(this.scene.gameMode.isDraft && this.scene.currentBattle.waveIndex + 1 > this.scene.gameData.gameStats.highestInfiniteRogueWave) {
+        this.scene.gameData.gameStats.highestInfiniteRogueWave = this.scene.currentBattle.waveIndex + 1;
+      }
+      else if(!this.scene.gameMode.isDraft && this.scene.currentBattle.waveIndex + 1 > this.scene.gameData.gameStats.highestInfiniteWave) {
+        this.scene.gameData.gameStats.highestInfiniteWave = this.scene.currentBattle.waveIndex + 1;
+      }
     }
 
     if (this.scene.gameMode.isEndless && this.scene.currentBattle.waveIndex >= 5850) {

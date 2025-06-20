@@ -12,6 +12,7 @@ export class Phase {
       this.scene.abilityBar.resetAutoHideTimer();
     }
     this.scene.ui.updateSaveIcon(this.scene);
+    this.scene.ui.updateBattlePathIcon(this.scene);
   }
 
   end() {

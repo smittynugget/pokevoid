@@ -165,7 +165,7 @@ import {
   VariableMovePowerAbAttr
 } from "../data/ability";
 import PokemonData from "../system/pokemon-data";
-import { BattlerIndex } from "../battle";
+import { BattlerIndex, DynamicModes } from "../battle";
 import { Mode } from "../ui/ui";
 import PartyUiHandler, { PartyOption, PartyUiMode } from "../ui/party-ui-handler";
 import SoundFade from "phaser3-rex-plugins/plugins/soundfade";
@@ -1073,6 +1073,15 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
       this.stats[s] = value;
     }
 
+    if (this.isPlayer() && this.scene.dynamicMode?.statSwap) {
+      const tempAtk = this.stats[Stat.ATK];
+      const tempSpatk = this.stats[Stat.SPATK];
+      this.stats[Stat.ATK] = this.stats[Stat.SPDEF];
+      this.stats[Stat.SPATK] = this.stats[Stat.DEF];
+      this.stats[Stat.SPDEF] = tempAtk;
+      this.stats[Stat.DEF] = tempSpatk;
+    }
+
   }
 
 
@@ -1357,7 +1366,8 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
   
   getCurrentAbilityIndex(): integer {
     const currentAbility = this.getAbility(true).id;
-    return [this.species.ability1, this.species.ability2, this.species.abilityHidden].indexOf(currentAbility);
+    const currentForm = this.isFusion() ? this.fusionSpecies!.forms[this.fusionFormIndex] || this.fusionSpecies : this.species.forms.length > 0 ? this.species.forms[this.formIndex] : this.species;
+    return [currentForm.ability1, currentForm.ability2, currentForm.abilityHidden].indexOf(currentAbility);
   }
 
   setAbility(newAbility: Abilities, abilityIndex: integer): void {
@@ -1386,6 +1396,11 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     // returns override if valid for current case
     if ((Overrides.PASSIVE_ABILITY_OVERRIDE !== Abilities.NONE && this.isPlayer()) ||
         (Overrides.OPP_PASSIVE_ABILITY_OVERRIDE !== Abilities.NONE && !this.isPlayer())) {
+      return true;
+    }
+
+    // Check dynamicMode for enemy Pokemon
+    if (!this.isPlayer() && this.scene.dynamicMode?.hasPassiveAbility) {
       return true;
     }
 
@@ -1623,6 +1638,29 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
       }
       const multiplier = new Utils.NumberHolder(getTypeDamageMultiplier(moveType, defType));
       applyChallenges(this.scene.gameMode, ChallengeType.TYPE_EFFECTIVENESS, multiplier);
+      
+      // Apply noResistances dynamic challenge - ignore resistances for player pokemon
+      if (this.scene.dynamicMode?.noResistances && this.isPlayer() && multiplier.value < 1) {
+        multiplier.value = 1; // Convert resistance to neutral damage
+      }
+      
+      // Apply invertedTypes dynamic challenge
+      if (this.scene.dynamicMode?.invertedTypes) {
+        // Invert effectiveness: 2x becomes 0.5x, 0.5x becomes 2x, 0.25x becomes 4x, etc.
+        if (multiplier.value === 2) {
+          multiplier.value = 0.5;
+        } else if (multiplier.value === 0.5) {
+          multiplier.value = 2;
+        } else if (multiplier.value === 4) {
+          multiplier.value = 0.25;
+        } else if (multiplier.value === 0.25) {
+          multiplier.value = 4;
+        } else if (multiplier.value === 0) {
+          multiplier.value = 2; // No effect becomes super effective
+        }
+        // 1x (neutral) stays 1x
+      }
+      
       return multiplier.value;
     }).reduce((acc, cur) => acc * cur, 1) as TypeDamageMultiplier;
 
@@ -1908,6 +1946,31 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     }
 
     return this.shiny;
+  }
+
+  isOPForm(): boolean {
+    const restrictedForms = [
+      SpeciesFormKey.MEGA,
+        SpeciesFormKey.MEGA_X,
+        SpeciesFormKey.MEGA_Y,
+        SpeciesFormKey.PRIMAL,
+        SpeciesFormKey.ORIGIN,
+        SpeciesFormKey.INCARNATE,
+        SpeciesFormKey.THERIAN,
+        SpeciesFormKey.GIGANTAMAX,
+        SpeciesFormKey.GIGANTAMAX_SINGLE,
+        SpeciesFormKey.GIGANTAMAX_RAPID,
+        SpeciesFormKey.ETERNAMAX,
+        SpeciesFormKey.GLITCH,
+        SpeciesFormKey.GLITCH_B,
+        SpeciesFormKey.GLITCH_C,
+        SpeciesFormKey.GLITCH_D,
+        SpeciesFormKey.GLITCH_E,
+        SpeciesFormKey.SMITTY,
+        SpeciesFormKey.SMITTY_B
+    ];
+
+    return restrictedForms.includes(this.getFormKey() as SpeciesFormKey);
   }
 
   /**
@@ -2518,21 +2581,27 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
         const sourceTypes = source.getTypes();
         const matchesSourceType = sourceTypes[0] === moveType || (sourceTypes.length > 1 && sourceTypes[1] === moveType);
         const stabMultiplier = new Utils.NumberHolder(1);
-        if (sourceTeraType === Type.UNKNOWN && matchesSourceType) {
-          if (sourceTypes.length === 2 && sourceTypes[0] === sourceTypes[1] && sourceTypes[0] === moveType) {
-            stabMultiplier.value += 1.0;
-          }
-          else {
+        
+        // Apply noSTAB dynamic challenge - skip STAB bonus for player moves
+        if (this.scene.dynamicMode?.noSTAB && source.isPlayer()) {
+          stabMultiplier.value = 1;
+        } else {
+          if (sourceTeraType === Type.UNKNOWN && matchesSourceType) {
+            if (sourceTypes.length === 2 && sourceTypes[0] === sourceTypes[1] && sourceTypes[0] === moveType) {
+              stabMultiplier.value += 1.0;
+            }
+            else {
+              stabMultiplier.value += 0.5;
+            }
+          } else if (sourceTeraType !== Type.UNKNOWN && sourceTeraType === moveType) {
             stabMultiplier.value += 0.5;
           }
-        } else if (sourceTeraType !== Type.UNKNOWN && sourceTeraType === moveType) {
-          stabMultiplier.value += 0.5;
-        }
 
-        applyAbAttrs(StabBoostAbAttr, source, null, false, stabMultiplier);
+          applyAbAttrs(StabBoostAbAttr, source, null, false, stabMultiplier);
 
-        if (sourceTeraType !== Type.UNKNOWN && matchesSourceType) {
-          stabMultiplier.value = Math.min(stabMultiplier.value + 0.5, 2.25);
+          if (sourceTeraType !== Type.UNKNOWN && matchesSourceType) {
+            stabMultiplier.value = Math.min(stabMultiplier.value + 0.5, 2.25);
+          }
         }
 
         // 25% damage debuff on moves hitting more than one non-fainted target (regardless of immunities)
@@ -2633,6 +2702,22 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
 
         // This attribute may modify damage arbitrarily, so be careful about changing its order of application.
         applyMoveAttrs(ModifiedDamageAttr, source, this, move, damage);
+
+        if (this.scene.dynamicMode) {
+          const dynamicMode = this.scene.dynamicMode;
+          
+          if (source.isPlayer() && dynamicMode.legendaryNerf && (source.species.isLegendSubOrMystical())) {
+            damage.value = Math.floor(damage.value * 0.5);
+          }
+
+          if (!source.isPlayer() && this.isPlayer() && dynamicMode.typeExtraDamage !== undefined && typeof dynamicMode.typeExtraDamage !== 'boolean' && this.getTypes().includes(dynamicMode.typeExtraDamage)) {
+            damage.value = Math.floor(damage.value * 1.5);
+          }
+
+          if (source.isPlayer() && dynamicMode.pokemonNerf !== undefined && source.species.speciesId === dynamicMode.pokemonNerf) {
+            damage.value = Math.floor(damage.value * 0.5);
+          }
+        }
 
         console.log("damage", damage.value, move.name, power, sourceAtk, targetDef);
 
@@ -3807,6 +3892,14 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
       return true;
     }
     return false;
+  }
+
+  isGlitchForm(): boolean {
+     if (!this.species.forms?.length) {
+      return false;
+    }
+    const currentForm = this.species.forms[this.formIndex];
+    return currentForm.isGlitchForm(currentForm.getFormKey());
   }
 
   isSmittyForm(): boolean {
@@ -5057,6 +5150,44 @@ export class PokemonMove {
     if (this.moveId && pokemon.summonData?.disabledMove === this.moveId) {
       return false;
     }
+
+    if (pokemon.scene.dynamicMode && pokemon.isPlayer()) {
+      const move = this.getMove();
+
+      const isRestrictionActive = pokemon.scene.challengeRestrictionActive !== DynamicModes.NONE;
+      
+      if (pokemon.scene.dynamicMode.noStatusMoves && move.category === MoveCategory.STATUS) {
+        if (!isRestrictionActive) {
+          pokemon.scene.challengeRestrictionActive = DynamicModes.NO_STATUS_MOVES;
+        }
+        return false;
+      }
+
+      if (move.id !== Moves.STRUGGLE && pokemon.scene.dynamicMode.noPhysicalMoves && move.category === MoveCategory.PHYSICAL) {
+        if (!isRestrictionActive) {
+          pokemon.scene.challengeRestrictionActive = DynamicModes.NO_PHYSICAL_MOVES;
+        }
+        return false;
+      }
+
+      if (pokemon.scene.dynamicMode.noSpecialMoves && move.category === MoveCategory.SPECIAL) {
+        if (!isRestrictionActive) {
+          pokemon.scene.challengeRestrictionActive = DynamicModes.NO_SPECIAL_MOVES;
+        }
+        return false;
+      }
+      
+      if (move.id !== Moves.STRUGGLE && pokemon.scene.dynamicMode.autoTorment) {
+        const lastMove = pokemon.getLastXMoves(1);
+        if (lastMove.length > 0 && lastMove[0].move === this.moveId && lastMove[0].result === MoveResult.SUCCESS) {
+          if (!isRestrictionActive) {
+            pokemon.scene.challengeRestrictionActive = DynamicModes.AUTO_TORMENT;
+          }
+          return false;
+        }
+      }
+    }
+
     return (ignorePp || this.ppUsed < this.getMovePp() || this.getMove().pp === -1) && !this.getMove().name.endsWith(" (N)");
   }
 

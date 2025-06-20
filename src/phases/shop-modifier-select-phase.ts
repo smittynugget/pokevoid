@@ -132,6 +132,9 @@ export class ShopModifierSelectPhase extends Phase {
                         if (!Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
                             this.scene.addPermaMoney(-cost!);
                             this.scene.updateUIPermaMoneyText();
+                            if (!(modifier instanceof RerollModifier)) {
+                                this.scene.gameData.gameStats.permaItemsBought++;
+                            }
                             if (modifier instanceof RerollModifier) {
                                 this.refreshShopOptions();
                                 this.scene.unshiftPhase(new ShopModifierSelectPhase(this.scene, this.modifierTiers, this.onEndCallback));

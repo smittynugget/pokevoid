@@ -1,4 +1,4 @@
-import BattleScene from "./battle-scene";
+import BattleScene, { RecoveryBossMode } from "./battle-scene";
 import { EnemyPokemon, PlayerPokemon, QueuedMove } from "./field/pokemon";
 import { Command } from "./ui/command-ui-handler";
 import * as Utils from "./utils";
@@ -30,11 +30,43 @@ import {trainerTypeDialogue} from "#app/data/dialogue";
 import {ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
 import {TrainerVictoryPhase} from "#app/phases/trainer-victory-phase";
 import { Unlockables } from "./system/unlockables";
+import { Type } from "./data/type";
 
 export enum BattleType {
-    WILD,
-    TRAINER,
-    CLEAR
+  WILD,
+  TRAINER,
+  CLEAR
+}
+
+export enum DynamicModes {
+  NONE,
+  IS_NUZLOCKE,
+  IS_NUZLIGHT,
+  IS_NIGHTMARE,
+  NO_EXP_GAIN,
+  NO_CATCH,
+  HAS_PASSIVE_ABILITY,
+  INVERTED_TYPES,
+  BOOSTED_TRAINER,
+  MULTI_LEGENDARIES,
+  MULTI_BOSS,
+  NO_INITIAL_SWITCH,
+  AUTO_PRESSURED,
+  NO_STAT_BOOSTS,
+  NO_STATUS_MOVES,
+  NO_PHYSICAL_MOVES,
+  NO_SPECIAL_MOVES,
+  STAT_SWAP,
+  EXTRA_DAMAGE_TO_TYPES,
+  NO_STAB,
+  TRICK_ROOM,
+  NO_SWITCH,
+  NO_RESISTANCES,
+  NO_HEALING_ITEMS,
+  AUTO_TORMENT,
+  LEGENDARY_NERF,
+  TYPE_EXTRA_DAMAGE,
+  POKEMON_NERF
 }
 
 export enum BattlerIndex {
@@ -141,7 +173,7 @@ export default class Battle {
     const baseLevel = 1 + levelWaveIndex / 2 + Math.pow(levelWaveIndex / 25, 2);
     const bossMultiplier = 1.2;
 
-    if (this.gameMode.isBoss(waveIndex) || this.gameMode.isWavePreFinal(this.scene, waveIndex)) {
+    if (this.gameMode.isBoss(waveIndex) || this.gameMode.isWavePreFinal(this.scene, waveIndex) || this.scene.recoveryBossMode === RecoveryBossMode.FACING_BOSS) {
 
       if(this.waveIndex >= 21) {
        const playerParty = this.scene.getParty();
@@ -242,13 +274,7 @@ export default class Battle {
       moneyAmount.value *= 2;
     }
 
-
-    // const userLocale = navigator.language || "en-US";
-    // const formattedMoneyAmount = moneyAmount.value.toLocaleString(userLocale);
-    // const message = i18next.t("battle:moneyPickedUp", { moneyAmount: formattedMoneyAmount });
-    // scene.queueMessage(message, undefined, true);
-
-    if(scene.currentBattle.battleType == BattleType.TRAINER) {
+    if(scene.currentBattle.battleType == BattleType.TRAINER && !scene.gameMode.isChaosMode) {
       scene.addPhaseAfterTarget(new RewardObtainDisplayPhase(
           scene,
           {
@@ -288,8 +314,6 @@ export default class Battle {
     const turnMultiplier = Phaser.Tweens.Builders.GetEaseFunction("Sine.easeIn")(1 - Math.min(this.turn - 2, 10 * partyMemberTurnMultiplier) / (10 * partyMemberTurnMultiplier));
     const finalBattleScore = Math.ceil(this.battleScore * turnMultiplier);
     scene.score += finalBattleScore;
-    console.log(`Battle Score: ${finalBattleScore} (${this.turn - 1} Turns x${Math.floor(turnMultiplier * 100) / 100})`);
-    console.log(`Total Score: ${scene.score}`);
     scene.updateScoreText();
   }
 
@@ -470,7 +494,6 @@ export default class Battle {
       Phaser.Math.RND.state(this.battleSeedState);
     } else {
       Phaser.Math.RND.sow([ Utils.shiftCharCodes(this.battleSeed, this.turn << 6) ]);
-      console.log("Battle Seed:", this.battleSeed);
     }
     scene.rngCounter = this.rngCounter++;
     scene.rngSeedOverride = this.battleSeed;
@@ -480,6 +503,10 @@ export default class Battle {
     scene.rngCounter = tempRngCounter;
     scene.rngSeedOverride = tempSeedOverride;
     return ret;
+  }
+
+  isStage6RivalWave(): boolean {
+    return this.waveIndex % 1000 !== 0 && this.waveIndex % 500 === 0;
   }
 }
 
@@ -1278,7 +1305,7 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
     }
 }
 
-export function createSmittyBattle(scene: BattleScene, seed: number): FixedBattleConfig {
+export function createSmittyBattle(scene: BattleScene, seed: number, isChaosMode: boolean = false): FixedBattleConfig {
     
     scene.resetSeed(seed);
 
@@ -1318,6 +1345,13 @@ export function createSmittyBattle(scene: BattleScene, seed: number): FixedBattl
     while (specificFormSlots.size < 2) {
         const randomSlot = Utils.randSeedInt(6);
         specificFormSlots.add(randomSlot);
+    }
+
+    const bossSlots = new Set<number>();
+    const bossCount = isChaosMode ? 3 : 6;
+    while (bossSlots.size < bossCount) {
+        const randomSlot = Utils.randSeedInt(6);
+        bossSlots.add(randomSlot);
     }
 
    
@@ -1374,7 +1408,9 @@ export function createSmittyBattle(scene: BattleScene, seed: number): FixedBattl
             }
 
            
-            pokemon.setBoss(true, specificFormSlots.has(i) ? 4 : 3);
+            if (bossSlots.has(i)) {
+                pokemon.setBoss(true, isChaosMode ? 2 : specificFormSlots.has(i) ? 4 : 3);
+            }
             pokemon.initBattleInfo();
             return pokemon;
         });
@@ -1442,6 +1478,7 @@ export interface FixedBattleSeeds {
         bossPlacement: number;
         trainerGeneration: number;
     };
+    smittySeed: number;
 }
 
 function generateFixedSeeds(baseSeed: number): FixedBattleSeeds {
@@ -1473,11 +1510,13 @@ function generateFixedSeeds(baseSeed: number): FixedBattleSeeds {
             bossGeneration: getUniqueHash('_mbg')
         },
         evilTeam: {
+            rangeSelection: getUniqueHash('_etr'),
             gruntPlacement: getUniqueHash('_etg'),
             adminPlacement: getUniqueHash('_eta'),
             bossPlacement: getUniqueHash('_etb'),
             trainerGeneration: getUniqueHash('_ett')
-        }
+        },
+        smittySeed: getUniqueHash('_smitty')
     };
 }
 
@@ -1519,7 +1558,7 @@ export function setupFixedBattles(scene: BattleScene) {
 
         try {
             scene.resetSeed(seeds.rivalSelection);
-            const primaryRival = getDynamicRivalType(1, scene.gameData, scene);
+            const primaryRival = getDynamicRivalType(1, scene.gameData, false);
             
             let secondaryRivals = [];
             if (scene.gameData.defeatedRivals?.length > 0) {
@@ -1877,3 +1916,3661 @@ function generateWavePlacementChart(waves: number[], eventType: string, maxWave:
     }
     return chart;
 }
+
+export enum PathNodeType {
+  WILD_POKEMON,
+  TRAINER_BATTLE,
+  RIVAL_BATTLE,
+  MAJOR_BOSS_BATTLE,
+  RECOVERY_BOSS,
+  EVIL_BOSS_BATTLE,
+  ELITE_FOUR,
+  CHAMPION,
+  ITEM_GENERAL,
+  ADD_POKEMON,
+  ITEM_TM,
+  ITEM_BERRY,
+  MYSTERY_NODE,
+  CONVERGENCE_POINT,
+  SMITTY_BATTLE,
+  EVIL_GRUNT_BATTLE,
+  EVIL_ADMIN_BATTLE,
+  RAND_PERMA_ITEM,
+  PERMA_ITEMS,
+  GOLDEN_POKEBALL,
+  ROGUE_BALL_ITEMS,
+  MASTER_BALL_ITEMS,
+  ABILITY_SWITCHERS,
+  STAT_SWITCHERS,
+  GLITCH_PIECE,
+  DNA_SPLICERS,
+  MONEY,
+  PERMA_MONEY,
+  RELEASE_ITEMS,
+  MINTS,
+  EGG_VOUCHER,
+  PP_MAX,
+  COLLECTED_TYPE,
+  EXP_SHARE,
+  TYPE_SWITCHER,
+  PASSIVE_ABILITY,
+  ANY_TMS,
+  CHALLENGE_BOSS,
+  CHALLENGE_RIVAL,
+  CHALLENGE_EVIL_BOSS,
+  CHALLENGE_CHAMPION,
+  CHALLENGE_REWARD
+}
+
+export interface PathNode {
+  id: string;
+  wave: number;
+  nodeType: PathNodeType;
+  battleConfig?: FixedBattleConfig;
+  connections: string[];
+  previousConnections: string[];
+  position: { x: number; y: number };
+  isRequired: boolean;
+  dynamicMode?: DynamicMode;
+  metadata?: {
+    rivalStage?: number;
+    rivalType?: RivalTrainerType;
+    eliteType?: string;
+    bossType?: string;
+    evilTeamType?: 'grunt' | 'admin' | 'boss';
+    dynamicModeCount?: number;
+    challengeType?: 'nightmare' | 'nuzlocke' | 'nuzlight';
+    challengeNodeIndex?: number;
+    totalChallengeNodes?: number;
+    challengeReward?: boolean;
+    rewardType?: string;
+    smittyVariantIndex?: number;
+  };
+}
+
+export interface PathLayer {
+  layerIndex: number;
+  startWave: number;
+  endWave: number;
+  convergenceWave: number;
+  nodes: PathNode[];
+  branches: number;
+}
+
+export interface BattlePath {
+  totalWaves: number;
+  layers: PathLayer[];
+  convergencePoints: number[];
+  nodeMap: Map<string, PathNode>;
+  waveToNodeMap: Map<number, PathNode[]>;
+}
+
+let currentBattlePath: BattlePath | null = null;
+
+function generatePathNodeId(wave: number, branch: number = 0, type: string = ""): string {
+  return `${wave}_${branch}_${type}`;
+}
+
+function generateNodePositions(nodeCount: number, wave: number = 0): number[] {
+  const positions: number[] = [];
+  const waveOffset = (wave * 7) % 100;
+  
+  switch (nodeCount) {
+    case 1:
+      positions.push((Utils.randSeedInt(4) + waveOffset) % 4);
+      break;
+    case 2:
+      const spacing2 = (Utils.randSeedInt(4) + waveOffset) % 4;
+      if (spacing2 === 0) {
+        positions.push(0, 3);
+      } else if (spacing2 === 1) {
+        positions.push(1, 2);
+      } else if (spacing2 === 2) {
+        positions.push(0, 2);
+      } else {
+        positions.push(1, 3);
+      }
+      break;
+    case 3:
+      const spacing3 = (Utils.randSeedInt(3) + waveOffset) % 3;
+      if (spacing3 === 0) {
+        positions.push(0, 1, 3);
+      } else if (spacing3 === 1) {
+        positions.push(0, 2, 3);
+      } else {
+        positions.push(1, 2, 3);
+      }
+      break;
+    case 4:
+      positions.push(0, 1, 2, 3);
+      break;
+  }
+  
+  return [...new Set(positions)].sort((a, b) => a - b);
+}
+
+function validateNodePositions(nodes: PathNode[], wave: number): boolean {
+  const positionsAtWave = nodes
+    .filter(n => n.wave === wave)
+    .map(n => n.position.x);
+  
+  const uniquePositions = new Set(positionsAtWave);
+  
+  if (positionsAtWave.length !== uniquePositions.size) {
+    const duplicates = positionsAtWave.filter((pos, index) => 
+      positionsAtWave.indexOf(pos) !== index
+    );
+    console.warn(`❌ Duplicate positions found at wave ${wave}: [${duplicates.join(', ')}]`);
+    return false;
+  }
+  
+  return true;
+}
+
+function resolvePositionConflicts(layer: PathLayer): void {
+  const nodesByWave = new Map<number, PathNode[]>();
+  
+  for (const node of layer.nodes) {
+    if (!nodesByWave.has(node.wave)) {
+      nodesByWave.set(node.wave, []);
+    }
+    nodesByWave.get(node.wave)!.push(node);
+  }
+  
+  for (const [wave, waveNodes] of nodesByWave) {
+    const positionMap = new Map<number, PathNode[]>();
+    
+    for (const node of waveNodes) {
+      if (!positionMap.has(node.position.x)) {
+        positionMap.set(node.position.x, []);
+      }
+      positionMap.get(node.position.x)!.push(node);
+    }
+    
+    for (const [position, nodesAtPosition] of positionMap) {
+      if (nodesAtPosition.length > 1) {
+        const availablePositions = [0, 1, 2, 3].filter(pos => 
+          !positionMap.has(pos) || positionMap.get(pos)!.length === 0
+        );
+        
+        for (let i = 1; i < nodesAtPosition.length; i++) {
+          if (availablePositions.length > 0) {
+            const newPosition = availablePositions.shift()!;
+            nodesAtPosition[i].position.x = newPosition;
+            nodesAtPosition[i].id = generatePathNodeId(wave, newPosition, PathNodeType[nodesAtPosition[i].nodeType].toLowerCase());
+          } 
+        }
+      }
+    }
+  }
+}
+
+function validateConnectivity(battlePath: BattlePath): { isValid: boolean; issues: string[] } {
+  const issues: string[] = [];
+  let isValid = true;
+  
+  const firstWave = Math.min(...Array.from(battlePath.waveToNodeMap.keys()));
+  
+  for (const [wave, nodesAtWave] of battlePath.waveToNodeMap) {
+    if (wave === firstWave) {
+      continue;
+    }
+    
+    for (const node of nodesAtWave) {
+      if (!node.previousConnections || node.previousConnections.length === 0) {
+        const issueText = `❌ Node ${node.id} at wave ${wave}:[${node.position.x}] has no incoming connections`;
+        issues.push(issueText);
+        isValid = false;
+      } 
+    }
+  }
+  
+  return { isValid, issues };
+}
+
+function fixConnectivityIssues(battlePath: BattlePath): void {
+  const { isValid, issues } = validateConnectivity(battlePath);
+  
+  if (isValid) {
+    return;
+  }
+  
+  const isChallengeNode = (node: PathNode): boolean => {
+    return node.nodeType === PathNodeType.CHALLENGE_BOSS ||
+           node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
+           node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
+           node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
+           node.nodeType === PathNodeType.CHALLENGE_REWARD;
+  };
+  
+  const isFirstChallengeNode = (node: PathNode): boolean => {
+    return isChallengeNode(node) && node.metadata?.challengeNodeIndex === 1;
+  };
+  
+  const isChallengeRewardNode = (node: PathNode): boolean => {
+    return node.nodeType === PathNodeType.CHALLENGE_REWARD;
+  };
+  
+  const firstWave = Math.min(...Array.from(battlePath.waveToNodeMap.keys()));
+  const allWaves = Array.from(battlePath.waveToNodeMap.keys()).sort((a, b) => a - b);
+  
+  for (const wave of allWaves) {
+    if (wave === firstWave) continue;
+    
+    const nodesAtWave = battlePath.waveToNodeMap.get(wave) || [];
+    
+    for (const node of nodesAtWave) {
+      if (!node.previousConnections || node.previousConnections.length === 0) {
+        
+        if (isChallengeRewardNode(node)) {
+          continue;
+        }
+        
+        const prevWave = wave - 1;
+        let prevNodes = battlePath.waveToNodeMap.get(prevWave) || [];
+        
+        if (prevNodes.length === 0 && !isChallengeRewardNode(node)) {
+          continue;
+        }
+        
+        const validPrevNodes = prevNodes.filter(prevNode => {
+          if (isChallengeRewardNode(node)) {
+            return isChallengeNode(prevNode) && !isChallengeRewardNode(prevNode);
+          }
+          
+          if (isChallengeNode(node) && !isFirstChallengeNode(node)) {
+            return isChallengeNode(prevNode) && !isChallengeRewardNode(prevNode);
+          }
+          
+          return !isChallengeRewardNode(prevNode);
+        });
+        
+        if (validPrevNodes.length > 0) {
+          const bestConnector = validPrevNodes.reduce((best, prevNode) => {
+            const bestDiff = Math.abs(best.position.x - node.position.x);
+            const nodeDiff = Math.abs(prevNode.position.x - node.position.x);
+            const bestConnections = best.connections ? best.connections.length : 0;
+            const nodeConnections = prevNode.connections ? prevNode.connections.length : 0;
+            
+            if (nodeConnections < bestConnections) return prevNode;
+            if (nodeConnections > bestConnections) return best;
+            return nodeDiff < bestDiff ? prevNode : best;
+          });
+          
+          if (!bestConnector.connections.includes(node.id)) {
+            addBidirectionalConnection(bestConnector, node);
+          } else {
+          }
+        } else {
+        }
+      }
+    }
+  }
+  
+  const finalValidation = validateConnectivity(battlePath);
+  if (!finalValidation.isValid) {
+  }
+}
+
+function getDynamicModeFromScene(scene: BattleScene, wave?: number): DynamicMode {
+  const gameMode = scene.gameMode;
+  const currentWave = wave || scene.currentBattle?.waveIndex || 0;
+  
+  return {
+    isNuzlocke: gameMode.isNuzlockeActive ? gameMode.isNuzlockeActive(scene) : gameMode.isNuzlocke,
+    isNuzlight: gameMode.isNuzlight,
+    isNightmare: gameMode.isNightmare,
+    noExpGain: gameMode.noExpGain
+  };
+}
+
+function createPathNode(
+  wave: number, 
+  nodeType: PathNodeType, 
+  branch: number = 0, 
+  battleConfig?: FixedBattleConfig,
+  metadata?: any,
+  dynamicMode?: DynamicMode
+): PathNode {
+  const typeString = PathNodeType[nodeType].toLowerCase();
+  return {
+    id: generatePathNodeId(wave, branch, typeString),
+    wave,
+    nodeType,
+    battleConfig,
+    connections: [],
+    previousConnections: [],
+    position: { x: branch, y: wave },
+    isRequired: nodeType === PathNodeType.RIVAL_BATTLE || nodeType === PathNodeType.MAJOR_BOSS_BATTLE || nodeType === PathNodeType.CONVERGENCE_POINT || nodeType === PathNodeType.SMITTY_BATTLE,
+    dynamicMode,
+    metadata
+  };
+}
+
+function createConvergencePoint(wave: number): PathNode {
+  return createPathNode(wave, PathNodeType.CONVERGENCE_POINT, 0);
+}
+
+interface SpecialBattleWaves {
+  rivalWaves: number[];
+  majorBossWaves: number[];
+  recoveryBossWaves: number[];
+  eliteFourWaves: number[];
+  championWaves: number[];
+  smittyWaves: number[];
+  evilTeamWaves: {
+    grunts: number[];
+    admins: number[];
+    bosses: number[];
+  };
+}
+
+
+function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: number, waveOffset: number = 0): SpecialBattleWaves {
+  const WAVE_THRESHOLDS = {
+    SMALL_RUN: 500,
+    MEDIUM_RUN: 1000,
+    SEGMENT_SIZE: 500
+  };
+
+  const RIVAL_COUNTS = {
+    SMALL_RUN: 5,
+    MEDIUM_RUN: 10,
+    LARGE_RUN: 10
+  };
+
+  const STAGE_PERCENTAGES = {
+    STAGE_1_END: 0.2,
+    STAGE_2_END: 0.35,
+    STAGE_3_END: 0.5,
+    STAGE_4_END: 0.65,
+    STAGE_5_END: 0.8,
+    STAGE_6_END: 0.99
+  };
+
+  const ELITE_FOUR_RANGES = {
+    FIRST_MIN: 0.1,
+    FIRST_MAX: 0.3,
+    SECOND_MIN: 0.3,
+    SECOND_MAX: 0.6,
+    THIRD_MIN: 0.6,
+    THIRD_MAX: 0.99
+  };
+
+  const EVIL_TEAM_RANGES = {
+    FIRST_START: 0.01,
+    FIRST_END: 0.07,
+    ADMIN_START: 0.08,
+    ADMIN_END: 0.15,
+    BOSS_END: 0.25,
+    FALLBACK_BOSS_START: 0.26,
+    SECOND_MIN: 0.3,
+    SECOND_MAX: 0.6,
+    THIRD_MIN: 0.6,
+    THIRD_MAX: 0.99
+  };
+
+  const MAJOR_BOSS_CONFIG = {
+    WAVE_INTERVAL: 10,
+    MIN_WAVE_PERCENTAGE: 0.3,
+    MAX_WAVE_PERCENTAGE: 0.99,
+    MIN_SEPARATION_PERCENTAGE: 0.13,
+    FINAL_WAVE_THRESHOLD: 500
+  };
+
+  const RECOVERY_BOSS_CONFIG = {
+    WAVE_INTERVAL: 30,
+    MIN_WAVE_PERCENTAGE: 0.3,
+    MAX_WAVE_PERCENTAGE: 0.99,
+    MIN_SEPARATION_PERCENTAGE: 0.13,
+    FINAL_WAVE_THRESHOLD: 500
+  };
+
+  const ATTEMPT_LIMITS = {
+    MAX_ATTEMPTS: 100,
+    PLACEMENT_ATTEMPTS: 100
+  };
+
+  const specialWaves: SpecialBattleWaves = {
+    rivalWaves: [],
+    majorBossWaves: [],
+    recoveryBossWaves: [],
+    eliteFourWaves: [],
+    championWaves: [],
+    smittyWaves: [],
+    evilTeamWaves: {
+      grunts: [],
+      admins: [],
+      bosses: []
+    }
+  };
+
+  const globalGeneratedWaves = new Set<number>();
+
+  const segments: Array<{start: number, end: number, segmentSize: number}> = [];
+  
+  for (let segmentStart = 1; segmentStart <= totalWaves; segmentStart += WAVE_THRESHOLDS.SEGMENT_SIZE) {
+    const segmentEnd = Math.min(segmentStart + WAVE_THRESHOLDS.SEGMENT_SIZE - 1, totalWaves);
+    const segmentSize = segmentEnd - segmentStart + 1;
+    segments.push({start: segmentStart, end: segmentEnd, segmentSize});
+  }
+
+  const generateSegmentSpecialWaves = (segmentIndex: number, segmentStart: number, segmentEnd: number, segmentSize: number) => {
+    const segmentWaveOffset = segmentStart - 1 + waveOffset;
+    const generatedWaves = new Set<number>();
+
+    const evilTeamThirdMinWave = Math.floor(segmentSize * EVIL_TEAM_RANGES.THIRD_MIN) + segmentWaveOffset;
+    const evilTeamThirdMaxWave = Math.floor(segmentSize * EVIL_TEAM_RANGES.THIRD_MAX) + segmentWaveOffset;
+
+    scene.resetSeed(seeds.evilTeam.rangeSelection + segmentWaveOffset + 2000);
+    let [evilTeamThirdRangeStart, evilTeamThirdAvailableWaves] = findEliteFourRange(evilTeamThirdMinWave, evilTeamThirdMaxWave, generatedWaves);
+
+    if (evilTeamThirdRangeStart !== -1 && evilTeamThirdAvailableWaves.length >= 10) {
+      scene.resetSeed(seeds.evilTeam.gruntPlacement + segmentWaveOffset + 2000);
+      
+      const evilTeamThirdSelectedWaves = evilTeamThirdAvailableWaves.slice(0, 10);
+
+      specialWaves.evilTeamWaves.grunts.push(evilTeamThirdSelectedWaves[0]);
+      specialWaves.evilTeamWaves.grunts.push(evilTeamThirdSelectedWaves[1]);
+      specialWaves.evilTeamWaves.admins.push(evilTeamThirdSelectedWaves[2]);
+      specialWaves.evilTeamWaves.grunts.push(evilTeamThirdSelectedWaves[3]);
+      specialWaves.evilTeamWaves.grunts.push(evilTeamThirdSelectedWaves[4]);
+      specialWaves.evilTeamWaves.admins.push(evilTeamThirdSelectedWaves[5]);
+      specialWaves.evilTeamWaves.grunts.push(evilTeamThirdSelectedWaves[6]);
+      specialWaves.evilTeamWaves.grunts.push(evilTeamThirdSelectedWaves[7]);
+      specialWaves.evilTeamWaves.admins.push(evilTeamThirdSelectedWaves[8]);
+      specialWaves.evilTeamWaves.bosses.push(evilTeamThirdSelectedWaves[9]);
+
+      evilTeamThirdSelectedWaves.forEach(wave => {
+        generatedWaves.add(wave);
+        globalGeneratedWaves.add(wave);
+      });
+    }
+
+    scene.resetSeed(seeds.rivalSelection + segmentWaveOffset);
+    let allRivalTypes = getAllRivalTrainerTypes ? getAllRivalTrainerTypes() : [];
+    
+    let numRivals: number;
+    let finalWaveRivals: number[] = [];
+    
+    const isSmallRunSegment = segmentSize <= WAVE_THRESHOLDS.SMALL_RUN;
+    const isMediumRunSegment = segmentSize <= WAVE_THRESHOLDS.MEDIUM_RUN;
+    
+    const segmentFinalWave = segmentEnd + waveOffset;
+    const isSegmentBoundary500 = segmentEnd % WAVE_THRESHOLDS.SEGMENT_SIZE === 0;
+    const isSegmentBoundary1000 = segmentEnd % WAVE_THRESHOLDS.MEDIUM_RUN === 0;
+    
+    if (isSmallRunSegment) {
+      numRivals = RIVAL_COUNTS.SMALL_RUN;
+      if (isSegmentBoundary500 && !isSegmentBoundary1000) {
+        finalWaveRivals = [segmentFinalWave];
+      }
+    } else if (isMediumRunSegment) {
+      numRivals = RIVAL_COUNTS.MEDIUM_RUN;
+    } else {
+      numRivals = RIVAL_COUNTS.LARGE_RUN;
+    }
+
+    for (const finalWave of finalWaveRivals) {
+      generatedWaves.add(finalWave);
+      globalGeneratedWaves.add(finalWave);
+      specialWaves.rivalWaves.push(finalWave);
+    }
+
+    const getStageRanges = () => {
+      return {
+        1: { start: Math.floor(segmentSize * EVIL_TEAM_RANGES.FIRST_START) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_1_END) + segmentWaveOffset },
+        2: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_1_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_2_END) + segmentWaveOffset },
+        3: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_2_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_3_END) + segmentWaveOffset },
+        4: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_3_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_4_END) + segmentWaveOffset },
+        5: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_4_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_5_END) + segmentWaveOffset },
+        6: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_5_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_6_END) + segmentWaveOffset }
+      };
+    };
+
+    const selectedRivals: any[] = [];
+    while (selectedRivals.length < numRivals && allRivalTypes.length > 0) {
+      const randomIndex = Utils.randSeedInt(allRivalTypes.length);
+      const selectedRival = allRivalTypes[randomIndex];
+      selectedRivals.push(selectedRival);
+      allRivalTypes.splice(randomIndex, 1);
+    }
+
+    scene.resetSeed(seeds.rivalPokemon + segmentWaveOffset);
+    
+    for (let stage = 1; stage <= 6; stage++) {
+      for (let rivalIndex = 0; rivalIndex < numRivals; rivalIndex++) {
+        const rival = selectedRivals[rivalIndex];
+        
+        const { start, end } = getStageRanges()[stage];
+        let waveNumber: number;
+        let attempts = 0;
+
+        do {
+          if (stage === 6 && rivalIndex === 0 && finalWaveRivals.includes(segmentFinalWave)) {
+            waveNumber = segmentFinalWave;
+            break;
+          } else {
+            waveNumber = Utils.randSeedInt(end - start + 1) + start;
+          }
+          attempts++;
+          if (attempts >= ATTEMPT_LIMITS.MAX_ATTEMPTS) {
+            console.warn(`Failed to find available wave slot for rival stage ${stage} in segment ${segmentIndex}`);
+            break;
+          }
+        } while (generatedWaves.has(waveNumber) || globalGeneratedWaves.has(waveNumber));
+
+        if (attempts < ATTEMPT_LIMITS.MAX_ATTEMPTS && !(stage === 6 && rivalIndex === 0 && finalWaveRivals.includes(segmentFinalWave))) {
+          generatedWaves.add(waveNumber);
+          globalGeneratedWaves.add(waveNumber);
+          specialWaves.rivalWaves.push(waveNumber);
+        }
+      }
+    }
+
+    const eliteFourMinWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.FIRST_MIN) + segmentWaveOffset;
+    const eliteFourMaxWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.FIRST_MAX) + segmentWaveOffset;
+    
+    scene.resetSeed(seeds.eliteFour.rangeSelection + segmentWaveOffset);
+    let [eliteFourRangeStart, eliteFourAvailableWaves] = findEliteFourRange(eliteFourMinWave, eliteFourMaxWave, generatedWaves);
+
+    if (eliteFourRangeStart !== -1 && eliteFourAvailableWaves.length >= 5) {
+      scene.resetSeed(seeds.eliteFour.wavePlacement + segmentWaveOffset);
+      const eliteFourSelectedWaves: number[] = [];
+      const eliteFourWavesCopy = [...eliteFourAvailableWaves];
+
+      for (let i = 0; i < 5; i++) {
+        const index = Utils.randSeedInt(eliteFourWavesCopy.length);
+        eliteFourSelectedWaves.push(eliteFourWavesCopy[index]);
+        eliteFourWavesCopy.splice(index, 1);
+      }
+
+      eliteFourSelectedWaves.sort((a, b) => a - b);
+      
+      for (let i = 0; i < 4; i++) {
+        specialWaves.eliteFourWaves.push(eliteFourSelectedWaves[i]);
+        generatedWaves.add(eliteFourSelectedWaves[i]);
+        globalGeneratedWaves.add(eliteFourSelectedWaves[i]);
+      }
+      specialWaves.championWaves.push(eliteFourSelectedWaves[4]);
+      generatedWaves.add(eliteFourSelectedWaves[4]);
+      globalGeneratedWaves.add(eliteFourSelectedWaves[4]);
+    }
+
+    const secondEliteFourMinWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.SECOND_MIN) + segmentWaveOffset;
+    const secondEliteFourMaxWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.SECOND_MAX) + segmentWaveOffset;
+    
+    scene.resetSeed(seeds.eliteFour.rangeSelection + segmentWaveOffset + 1000);
+    let [secondEliteFourRangeStart, secondEliteFourAvailableWaves] = findEliteFourRange(secondEliteFourMinWave, secondEliteFourMaxWave, generatedWaves);
+
+    if (secondEliteFourRangeStart !== -1 && secondEliteFourAvailableWaves.length >= 5) {
+      scene.resetSeed(seeds.eliteFour.wavePlacement + segmentWaveOffset + 1000);
+      const secondEliteFourSelectedWaves: number[] = [];
+      const secondEliteFourWavesCopy = [...secondEliteFourAvailableWaves];
+
+      for (let i = 0; i < 5; i++) {
+        const index = Utils.randSeedInt(secondEliteFourWavesCopy.length);
+        secondEliteFourSelectedWaves.push(secondEliteFourWavesCopy[index]);
+        secondEliteFourWavesCopy.splice(index, 1);
+      }
+
+      secondEliteFourSelectedWaves.sort((a, b) => a - b);
+      
+      for (let i = 0; i < 4; i++) {
+        specialWaves.eliteFourWaves.push(secondEliteFourSelectedWaves[i]);
+        generatedWaves.add(secondEliteFourSelectedWaves[i]);
+        globalGeneratedWaves.add(secondEliteFourSelectedWaves[i]);
+      }
+      specialWaves.championWaves.push(secondEliteFourSelectedWaves[4]);
+      generatedWaves.add(secondEliteFourSelectedWaves[4]);
+      globalGeneratedWaves.add(secondEliteFourSelectedWaves[4]);
+    }
+
+    const thirdEliteFourMinWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.THIRD_MIN) + segmentWaveOffset;
+    const thirdEliteFourMaxWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.THIRD_MAX) + segmentWaveOffset;
+    
+    scene.resetSeed(seeds.eliteFour.rangeSelection + segmentWaveOffset + 2000);
+    let [thirdEliteFourRangeStart, thirdEliteFourAvailableWaves] = findEliteFourRange(thirdEliteFourMinWave, thirdEliteFourMaxWave, generatedWaves);
+
+    if (thirdEliteFourRangeStart !== -1 && thirdEliteFourAvailableWaves.length >= 5) {
+      scene.resetSeed(seeds.eliteFour.wavePlacement + segmentWaveOffset + 2000);
+      const thirdEliteFourSelectedWaves: number[] = [];
+      const thirdEliteFourWavesCopy = [...thirdEliteFourAvailableWaves];
+
+      for (let i = 0; i < 5; i++) {
+        const index = Utils.randSeedInt(thirdEliteFourWavesCopy.length);
+        thirdEliteFourSelectedWaves.push(thirdEliteFourWavesCopy[index]);
+        thirdEliteFourWavesCopy.splice(index, 1);
+      }
+
+      thirdEliteFourSelectedWaves.sort((a, b) => a - b);
+      
+      for (let i = 0; i < 4; i++) {
+        specialWaves.eliteFourWaves.push(thirdEliteFourSelectedWaves[i]);
+        generatedWaves.add(thirdEliteFourSelectedWaves[i]);
+        globalGeneratedWaves.add(thirdEliteFourSelectedWaves[i]);
+      }
+      specialWaves.championWaves.push(thirdEliteFourSelectedWaves[4]);
+      generatedWaves.add(thirdEliteFourSelectedWaves[4]);
+      globalGeneratedWaves.add(thirdEliteFourSelectedWaves[4]);
+    }
+
+    function placeEvilBattle(
+      scene: BattleScene,
+      seed: number,
+      minWave: number,
+      maxWave: number,
+      generatedWaves: Set<number>,
+      maxAttempts = ATTEMPT_LIMITS.PLACEMENT_ATTEMPTS
+    ): number {
+      scene.resetSeed(seed);
+      let waveNumber: number;
+      let attempts = 0;
+      
+      do {
+        waveNumber = Utils.randSeedInt(maxWave - minWave + 1) + minWave;
+        attempts++;
+        if (attempts >= maxAttempts) {
+          return -1;
+        }
+      } while (generatedWaves.has(waveNumber) || globalGeneratedWaves.has(waveNumber));
+      
+      return waveNumber;
+    }
+
+    const evilFirstStart = Math.floor(segmentSize * EVIL_TEAM_RANGES.FIRST_START) + segmentWaveOffset;
+    const evilFirstEnd = Math.floor(segmentSize * EVIL_TEAM_RANGES.FIRST_END) + segmentWaveOffset;
+
+    const firstRoundGrunts: number[] = [];
+    for (let i = 0; i < 3; i++) {
+      const wave = placeEvilBattle(scene, seeds.evilTeam.gruntPlacement + segmentWaveOffset + i, evilFirstStart, evilFirstEnd, generatedWaves);
+      if (wave !== -1) {
+        specialWaves.evilTeamWaves.grunts.push(wave);
+        firstRoundGrunts.push(wave);
+        generatedWaves.add(wave);
+        globalGeneratedWaves.add(wave);
+      }
+    }
+
+    const adminStart = firstRoundGrunts.length > 0 ? 
+      Math.max(...firstRoundGrunts) + 1 : 
+      Math.floor(segmentSize * EVIL_TEAM_RANGES.ADMIN_START) + segmentWaveOffset;
+    const adminEnd = Math.floor(segmentSize * EVIL_TEAM_RANGES.ADMIN_END) + segmentWaveOffset;
+    const adminWave = placeEvilBattle(scene, seeds.evilTeam.adminPlacement + segmentWaveOffset, adminStart, adminEnd, generatedWaves);
+    
+    if (adminWave !== -1) {
+      specialWaves.evilTeamWaves.admins.push(adminWave);
+      generatedWaves.add(adminWave);
+      globalGeneratedWaves.add(adminWave);
+
+      const bossStart = adminWave + 1;
+      const bossEnd = Math.floor(segmentSize * EVIL_TEAM_RANGES.BOSS_END) + segmentWaveOffset;
+      const bossWave = placeEvilBattle(scene, seeds.evilTeam.bossPlacement + segmentWaveOffset, bossStart, bossEnd, generatedWaves);
+      
+      if (bossWave !== -1) {
+        specialWaves.evilTeamWaves.bosses.push(bossWave);
+        generatedWaves.add(bossWave);
+        globalGeneratedWaves.add(bossWave);
+      }
+    } else {
+      const fallbackBossStart = Math.floor(segmentSize * EVIL_TEAM_RANGES.FALLBACK_BOSS_START) + segmentWaveOffset;
+      const fallbackBossEnd = Math.floor(segmentSize * EVIL_TEAM_RANGES.BOSS_END) + segmentWaveOffset;
+      const fallbackBossWave = placeEvilBattle(scene, seeds.evilTeam.bossPlacement + segmentWaveOffset + 100, fallbackBossStart, fallbackBossEnd, generatedWaves);
+      
+      if (fallbackBossWave !== -1) {
+        specialWaves.evilTeamWaves.bosses.push(fallbackBossWave);
+        generatedWaves.add(fallbackBossWave);
+        globalGeneratedWaves.add(fallbackBossWave);
+      }
+    }
+
+    scene.resetSeed(seeds.majorBoss.wavePlacement + segmentWaveOffset);
+    const majorBossMinWave = Math.floor(segmentSize * MAJOR_BOSS_CONFIG.MIN_WAVE_PERCENTAGE) + segmentWaveOffset;
+    const majorBossMaxWave = Math.floor(segmentSize * MAJOR_BOSS_CONFIG.MAX_WAVE_PERCENTAGE) + segmentWaveOffset;
+    const availableBossWaves: number[] = [];
+    
+    for (let wave = majorBossMinWave; wave <= majorBossMaxWave; wave++) {
+      if (!generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)) {
+        availableBossWaves.push(wave);
+      }
+    }
+
+    if (availableBossWaves.length >= 1) {
+      scene.resetSeed(seeds.majorBoss.bossGeneration + segmentWaveOffset);
+      const firstBossIndex = Utils.randSeedInt(availableBossWaves.length);
+      const firstBossWave = availableBossWaves[firstBossIndex];
+      specialWaves.majorBossWaves.push(firstBossWave);
+      generatedWaves.add(firstBossWave);
+      globalGeneratedWaves.add(firstBossWave);
+
+      const minSeparation = Math.max(MAJOR_BOSS_CONFIG.WAVE_INTERVAL, Math.floor(segmentSize * MAJOR_BOSS_CONFIG.MIN_SEPARATION_PERCENTAGE));
+      const validSecondBossWaves = availableBossWaves.filter(wave => 
+        Math.abs(wave - firstBossWave) >= minSeparation && !generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)
+      );
+
+      if (validSecondBossWaves.length > 0) {
+        const secondBossIndex = Utils.randSeedInt(validSecondBossWaves.length);
+        const secondBossWave = validSecondBossWaves[secondBossIndex];
+        specialWaves.majorBossWaves.push(secondBossWave);
+        generatedWaves.add(secondBossWave);
+        globalGeneratedWaves.add(secondBossWave);
+
+        const validThirdBossWaves = availableBossWaves.filter(wave => 
+          Math.abs(wave - firstBossWave) >= minSeparation && 
+          Math.abs(wave - secondBossWave) >= minSeparation && 
+          !generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)
+        );
+
+        if (validThirdBossWaves.length > 0) {
+          const thirdBossIndex = Utils.randSeedInt(validThirdBossWaves.length);
+          const thirdBossWave = validThirdBossWaves[thirdBossIndex];
+          specialWaves.majorBossWaves.push(thirdBossWave);
+          generatedWaves.add(thirdBossWave);
+          globalGeneratedWaves.add(thirdBossWave);
+
+          const validFourthBossWaves = availableBossWaves.filter(wave => 
+            Math.abs(wave - firstBossWave) >= minSeparation && 
+            Math.abs(wave - secondBossWave) >= minSeparation && 
+            Math.abs(wave - thirdBossWave) >= minSeparation && 
+            !generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)
+          );
+
+          if (validFourthBossWaves.length > 0) {
+            const fourthBossIndex = Utils.randSeedInt(validFourthBossWaves.length);
+            const fourthBossWave = validFourthBossWaves[fourthBossIndex];
+            specialWaves.majorBossWaves.push(fourthBossWave);
+            generatedWaves.add(fourthBossWave);
+            globalGeneratedWaves.add(fourthBossWave);
+
+            const validFifthBossWaves = availableBossWaves.filter(wave => 
+              Math.abs(wave - firstBossWave) >= minSeparation && 
+              Math.abs(wave - secondBossWave) >= minSeparation && 
+              Math.abs(wave - thirdBossWave) >= minSeparation && 
+              Math.abs(wave - fourthBossWave) >= minSeparation && 
+              !generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)
+            );
+
+            if (validFifthBossWaves.length > 0) {
+              const fifthBossIndex = Utils.randSeedInt(validFifthBossWaves.length);
+              const fifthBossWave = validFifthBossWaves[fifthBossIndex];
+              specialWaves.majorBossWaves.push(fifthBossWave);
+              generatedWaves.add(fifthBossWave);
+              globalGeneratedWaves.add(fifthBossWave);
+            }
+          }
+        }
+      }
+    }
+
+    if (segmentSize >= MAJOR_BOSS_CONFIG.FINAL_WAVE_THRESHOLD && segmentWaveOffset === waveOffset) {
+      const finalWave = segmentEnd + waveOffset;
+      if (!specialWaves.rivalWaves.includes(finalWave)) {
+        specialWaves.majorBossWaves.push(finalWave);
+        globalGeneratedWaves.add(finalWave);
+      }
+    }
+
+    const evilTeamSecondMinWave = Math.floor(segmentSize * EVIL_TEAM_RANGES.SECOND_MIN) + segmentWaveOffset;
+    const evilTeamSecondMaxWave = Math.floor(segmentSize * EVIL_TEAM_RANGES.SECOND_MAX) + segmentWaveOffset;
+
+    scene.resetSeed(seeds.evilTeam.rangeSelection + segmentWaveOffset);
+    let [evilTeamRangeStart, evilTeamAvailableWaves] = findEliteFourRange(evilTeamSecondMinWave, evilTeamSecondMaxWave, generatedWaves);
+
+    if (evilTeamRangeStart !== -1 && evilTeamAvailableWaves.length >= 5) {
+      scene.resetSeed(seeds.evilTeam.gruntPlacement + segmentWaveOffset);
+      const evilTeamSelectedWaves: number[] = [];
+      const evilTeamWavesCopy = [...evilTeamAvailableWaves];
+
+      for (let i = 0; i < 5; i++) {
+        const index = Utils.randSeedInt(evilTeamWavesCopy.length);
+        evilTeamSelectedWaves.push(evilTeamWavesCopy[index]);
+        evilTeamWavesCopy.splice(index, 1);
+      }
+
+      evilTeamSelectedWaves.sort((a, b) => a - b);
+
+      specialWaves.evilTeamWaves.grunts.push(evilTeamSelectedWaves[0]);
+      specialWaves.evilTeamWaves.grunts.push(evilTeamSelectedWaves[1]);
+      specialWaves.evilTeamWaves.admins.push(evilTeamSelectedWaves[2]);
+      specialWaves.evilTeamWaves.admins.push(evilTeamSelectedWaves[3]);
+      specialWaves.evilTeamWaves.bosses.push(evilTeamSelectedWaves[4]);
+
+      evilTeamSelectedWaves.forEach(wave => {
+        generatedWaves.add(wave);
+        globalGeneratedWaves.add(wave);
+      });
+    }
+
+
+
+    for (let wave = RECOVERY_BOSS_CONFIG.WAVE_INTERVAL + segmentWaveOffset; wave <= segmentEnd + waveOffset; wave += RECOVERY_BOSS_CONFIG.WAVE_INTERVAL) {
+      if (wave % RECOVERY_BOSS_CONFIG.WAVE_INTERVAL === 0 && !generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)) {
+        specialWaves.recoveryBossWaves.push(wave);
+        generatedWaves.add(wave);
+        globalGeneratedWaves.add(wave);
+      }
+    }
+
+    const finalWave = segmentEnd + waveOffset;
+    if (finalWave % 1000 === 0) {
+      specialWaves.smittyWaves.push(finalWave);
+      generatedWaves.add(finalWave);
+      globalGeneratedWaves.add(finalWave);
+    }
+  };
+
+  segments.forEach((segment, index) => {
+    generateSegmentSpecialWaves(index, segment.start, segment.end, segment.segmentSize);
+  });
+
+  return specialWaves;
+}
+
+interface WaveRange {
+  start: number;
+  end: number;
+  probabilities: { [key in PathNodeType]?: number };
+  dynamicMode?: DynamicMode;
+}
+
+interface NodeGenerationResult {
+  nodeType: PathNodeType;
+  battleConfig?: FixedBattleConfig;
+  dynamicMode?: DynamicMode;
+}
+
+
+
+function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange {
+  const configs: WaveRange[] = [
+    {
+      start: 1,
+      end: 10000000,
+      probabilities: {
+        [PathNodeType.WILD_POKEMON]: 1000,
+        [PathNodeType.TRAINER_BATTLE]: 1000,
+        [PathNodeType.ITEM_BERRY]: 70,
+        [PathNodeType.MONEY]: 70,
+        [PathNodeType.MAJOR_BOSS_BATTLE]: 15,
+        [PathNodeType.MYSTERY_NODE]: 35,
+        [PathNodeType.MINTS]: 35,
+        [PathNodeType.PP_MAX]: 35,
+        [PathNodeType.ROGUE_BALL_ITEMS]: 5,
+        [PathNodeType.COLLECTED_TYPE]: 60,
+        [PathNodeType.ITEM_GENERAL]: 35,
+        [PathNodeType.ABILITY_SWITCHERS]: 35,
+        [PathNodeType.TYPE_SWITCHER]: 60,
+        [PathNodeType.PASSIVE_ABILITY]: 35,
+        [PathNodeType.EGG_VOUCHER]: 35,
+        [PathNodeType.RELEASE_ITEMS]: 35,
+        [PathNodeType.RAND_PERMA_ITEM]: 5,
+        [PathNodeType.PERMA_ITEMS]: 3,
+        [PathNodeType.PERMA_MONEY]: 25,
+        [PathNodeType.GOLDEN_POKEBALL]: 1,
+        [PathNodeType.MASTER_BALL_ITEMS]: 1,
+        [PathNodeType.GLITCH_PIECE]: 70,
+        [PathNodeType.EXP_SHARE]: 25,
+        [PathNodeType.DNA_SPLICERS]: 25,
+        [PathNodeType.ANY_TMS]: 35,
+        [PathNodeType.ADD_POKEMON]: 25,
+        [PathNodeType.STAT_SWITCHERS]: 35,
+        [PathNodeType.RECOVERY_BOSS]: 15,
+        [PathNodeType.ITEM_TM]: 60,
+      }
+    }
+    // },
+    // {
+    //   start: 21,
+    //   end: 50,
+    //   probabilities: {
+    //     [PathNodeType.WILD_POKEMON]: 22,
+    //     [PathNodeType.TRAINER_BATTLE]: 18,
+    //     [PathNodeType.ITEM_GENERAL]: 10,
+    //     [PathNodeType.ADD_POKEMON]: 7,
+    //     [PathNodeType.ITEM_TM]: 6,
+    //     [PathNodeType.MYSTERY_NODE]: 4,
+    //     [PathNodeType.MONEY]: 7,
+    //     [PathNodeType.GOLDEN_POKEBALL]: 4,
+    //     [PathNodeType.MINTS]: 3,
+    //     [PathNodeType.EGG_VOUCHER]: 3,
+    //     [PathNodeType.PP_MAX]: 2,
+    //     [PathNodeType.ABILITY_SWITCHERS]: 1,
+    //     [PathNodeType.COLLECTED_TYPE]: 1,
+    //     [PathNodeType.EXP_SHARE]: 6,
+    //     [PathNodeType.TYPE_SWITCHER]: 3,
+    //     [PathNodeType.PASSIVE_ABILITY]: 2,
+    //     [PathNodeType.ANY_TMS]: 1
+    //   }
+    // },
+    // {
+    //   start: 51,
+    //   end: 70,
+    //   probabilities: {
+    //     [PathNodeType.WILD_POKEMON]: 18,
+    //     [PathNodeType.TRAINER_BATTLE]: 16,
+    //     [PathNodeType.ELITE_FOUR]: 11,
+    //     [PathNodeType.ITEM_GENERAL]: 9,
+    //     [PathNodeType.ADD_POKEMON]: 7,
+    //     [PathNodeType.ITEM_TM]: 5,
+    //     [PathNodeType.MYSTERY_NODE]: 3,
+    //     [PathNodeType.MONEY]: 5,
+    //     [PathNodeType.GOLDEN_POKEBALL]: 3,
+    //     [PathNodeType.ROGUE_BALL_ITEMS]: 3,
+    //     [PathNodeType.MINTS]: 3,
+    //     [PathNodeType.PP_MAX]: 2,
+    //     [PathNodeType.ABILITY_SWITCHERS]: 2,
+    //     [PathNodeType.COLLECTED_TYPE]: 1,
+    //     [PathNodeType.EXP_SHARE]: 5,
+    //     [PathNodeType.TYPE_SWITCHER]: 3,
+    //     [PathNodeType.PASSIVE_ABILITY]: 3,
+    //     [PathNodeType.ANY_TMS]: 1
+    //   }
+    // },
+    // {
+    //   start: 55,
+    //   end: 60,
+    //   dynamicMode: { isNuzlocke: true },
+    //   probabilities: {
+    //     [PathNodeType.WILD_POKEMON]: 30,
+    //     [PathNodeType.TRAINER_BATTLE]: 18,
+    //     [PathNodeType.ITEM_GENERAL]: 13,
+    //     [PathNodeType.MYSTERY_NODE]: 7,
+    //     [PathNodeType.MONEY]: 4,
+    //     [PathNodeType.RELEASE_ITEMS]: 7,
+    //     [PathNodeType.MINTS]: 3,
+    //     [PathNodeType.PP_MAX]: 3,
+    //     [PathNodeType.EGG_VOUCHER]: 3,
+    //     [PathNodeType.EXP_SHARE]: 6,
+    //     [PathNodeType.TYPE_SWITCHER]: 3,
+    //     [PathNodeType.PASSIVE_ABILITY]: 2,
+    //     [PathNodeType.ANY_TMS]: 1
+    //   }
+    // },
+    // {
+    //   start: 71,
+    //   end: 99,
+    //   probabilities: {
+    //     [PathNodeType.WILD_POKEMON]: 13,
+    //     [PathNodeType.TRAINER_BATTLE]: 10,
+    //     [PathNodeType.ELITE_FOUR]: 11,
+    //     [PathNodeType.EVIL_BOSS_BATTLE]: 7,
+    //     [PathNodeType.ITEM_GENERAL]: 7,
+    //     [PathNodeType.ADD_POKEMON]: 5,
+    //     [PathNodeType.ITEM_TM]: 3,
+    //     [PathNodeType.MYSTERY_NODE]: 3,
+    //     [PathNodeType.MONEY]: 4,
+    //     [PathNodeType.PERMA_MONEY]: 3,
+    //     [PathNodeType.GOLDEN_POKEBALL]: 4,
+    //     [PathNodeType.ROGUE_BALL_ITEMS]: 3,
+    //     [PathNodeType.MASTER_BALL_ITEMS]: 3,
+    //     [PathNodeType.ABILITY_SWITCHERS]: 3,
+    //     [PathNodeType.GLITCH_PIECE]: 2,
+    //     [PathNodeType.DNA_SPLICERS]: 2,
+    //     [PathNodeType.MINTS]: 2,
+    //     [PathNodeType.PP_MAX]: 3,
+    //     [PathNodeType.COLLECTED_TYPE]: 2,
+    //     [PathNodeType.EXP_SHARE]: 4,
+    //     [PathNodeType.TYPE_SWITCHER]: 3,
+    //     [PathNodeType.PASSIVE_ABILITY]: 3,
+    //     [PathNodeType.ANY_TMS]: 2
+    //   }
+    // },
+    // {
+    //   start: 100,
+    //   end: 110,
+    //   probabilities: {
+    //     [PathNodeType.ELITE_FOUR]: 18,
+    //     [PathNodeType.CHAMPION]: 9,
+    //     [PathNodeType.MAJOR_BOSS_BATTLE]: 9,
+    //     [PathNodeType.TRAINER_BATTLE]: 7,
+    //     [PathNodeType.ADD_POKEMON]: 5,
+    //     [PathNodeType.ITEM_TM]: 4,
+    //     [PathNodeType.MYSTERY_NODE]: 3,
+    //     [PathNodeType.RAND_PERMA_ITEM]: 7,
+    //     [PathNodeType.PERMA_MONEY]: 4,
+    //     [PathNodeType.MASTER_BALL_ITEMS]: 5,
+    //     [PathNodeType.GLITCH_PIECE]: 3,
+    //     [PathNodeType.DNA_SPLICERS]: 3,
+    //     [PathNodeType.PP_MAX]: 3,
+    //     [PathNodeType.COLLECTED_TYPE]: 3,
+    //     [PathNodeType.ABILITY_SWITCHERS]: 2,
+    //     [PathNodeType.MINTS]: 2,
+    //     [PathNodeType.EXP_SHARE]: 5,
+    //     [PathNodeType.TYPE_SWITCHER]: 4,
+    //     [PathNodeType.PASSIVE_ABILITY]: 4,
+    //     [PathNodeType.ANY_TMS]: 1
+    //   }
+    // },
+    // {
+    //   start: 111,
+    //   end: 150,
+    //   probabilities: {
+    //     [PathNodeType.ELITE_FOUR]: 13,
+    //     [PathNodeType.CHAMPION]: 10,
+    //     [PathNodeType.MAJOR_BOSS_BATTLE]: 7,
+    //     [PathNodeType.EVIL_BOSS_BATTLE]: 5,
+    //     [PathNodeType.TRAINER_BATTLE]: 4,
+    //     [PathNodeType.ADD_POKEMON]: 4,
+    //     [PathNodeType.ITEM_TM]: 3,
+    //     [PathNodeType.MYSTERY_NODE]: 2,
+    //     [PathNodeType.RAND_PERMA_ITEM]: 9,
+    //     [PathNodeType.PERMA_MONEY]: 7,
+    //     [PathNodeType.MASTER_BALL_ITEMS]: 7,
+    //     [PathNodeType.GLITCH_PIECE]: 5,
+    //     [PathNodeType.DNA_SPLICERS]: 5,
+    //     [PathNodeType.RELEASE_ITEMS]: 3,
+    //     [PathNodeType.PP_MAX]: 2,
+    //     [PathNodeType.COLLECTED_TYPE]: 1,
+    //     [PathNodeType.EXP_SHARE]: 6,
+    //     [PathNodeType.TYPE_SWITCHER]: 5,
+    //     [PathNodeType.PASSIVE_ABILITY]: 5,
+    //     [PathNodeType.ANY_TMS]: 3
+    //   }
+    // }
+  ];
+
+  for (const config of configs) {
+    if (wave >= config.start && wave <= config.end) {
+      if (config.dynamicMode && dynamicMode) {
+        const matches = Object.entries(config.dynamicMode).every(([key, value]) => 
+          dynamicMode[key as keyof DynamicMode] === value
+        );
+        if (matches) {
+          return config;
+        }
+      } else if (!config.dynamicMode) {
+        return config;
+      }
+    }
+  }
+
+  return configs[0];
+}
+
+function generateChallengeRanges(maxWave: number, waveOffset: number = 0): Array<{ start: number; end: number }> {
+  const ranges: Array<{ start: number; end: number }> = [];
+  
+  let currentStart = 50 + waveOffset;
+  let rangeIndex = 0;
+  
+  while (currentStart < maxWave) {
+    let rangeSize: number;
+    
+    if (rangeIndex === 0) {
+      rangeSize = 50;
+    } else if (rangeIndex === 1) {
+      rangeSize = 75;
+    } else {
+      rangeSize = rangeIndex % 2 === 0 ? 50 : 75;
+    }
+    
+    const currentEnd = Math.min(currentStart + rangeSize, maxWave);
+    
+    if (currentEnd > currentStart) {
+      ranges.push({ start: currentStart, end: currentEnd });
+    }
+    
+    currentStart = currentEnd;
+    rangeIndex++;
+  }
+  
+  return ranges;
+}
+
+function getChallengeRangeForWave(wave: number, maxWave: number, waveOffset: number = 0): { start: number; end: number } | null {
+  const ranges = generateChallengeRanges(maxWave, waveOffset);
+  
+  for (const range of ranges) {
+    if (wave >= range.start && wave <= range.end) {
+      return range;
+    }
+  }
+  
+  return null;
+}
+
+function getChallengeRangeIndex(rangeStart: number, maxWave: number, waveOffset: number = 0): number {
+  const ranges = generateChallengeRanges(maxWave, waveOffset);
+  
+  for (let i = 0; i < ranges.length; i++) {
+    if (ranges[i].start === rangeStart) {
+      return i;
+    }
+  }
+  
+  return 0;
+}
+
+function calculateAdditionalPropertiesCount(rangeStart: number, maxWave: number, waveOffset: number = 0): number {
+  const rangeIndex = getChallengeRangeIndex(rangeStart, maxWave, waveOffset);
+  return Math.max(0, rangeIndex - 1);
+}
+
+function createPathLayer(
+  scene: BattleScene,
+  layerIndex: number,
+  startWave: number,
+  endWave: number,
+  convergenceWave: number,
+  seeds: any,
+  rivalWaves: number[],
+  bossWaves: number[],
+  specialWaves?: SpecialBattleWaves,
+  totalWaves?: number,
+  globalRivalAssignments?: Map<number, { stage: number; rival: any }>,
+  globalChallengeRanges?: Set<number>
+): PathLayer {
+  const globalStartWave = Math.min(...(specialWaves?.rivalWaves || [startWave]));
+  const waveOffset = globalStartWave > 1 ? globalStartWave - 1 : 0;
+  const CHALLENGE_RANGES = generateChallengeRanges(totalWaves || 500, waveOffset);
+
+  const LAYER_CONFIG = {
+    DEFAULT_BRANCHES: 3,
+    MIN_RANGE_SIZE: 5,
+    CHALLENGE_BRANCH_FIRST: 2,
+    CHALLENGE_BRANCH_OTHER: 3,
+    SEED_MULTIPLIER: 7919
+  };
+
+  const NODE_GENERATION = {
+    SINGLE_NODE_THRESHOLD: 2,
+    TWO_NODE_THRESHOLD: 150,
+    THREE_NODE_THRESHOLD: 700,
+    MAX_ATTEMPTS: 100
+  };
+
+  const layer: PathLayer = {
+    layerIndex,
+    startWave,
+    endWave,
+    convergenceWave,
+    nodes: [],
+    branches: LAYER_CONFIG.DEFAULT_BRANCHES
+  };
+
+  const waveNodeTracker = new Map<number, Set<number>>();
+  
+  scene.resetSeed(seeds.baseSeed + layerIndex);
+
+  if (specialWaves) {
+    const allSpecialWaves = new Map<number, { type: PathNodeType; config?: FixedBattleConfig; metadata?: any; dynamicMode?: DynamicMode }>();
+    
+    scene.resetSeed(seeds.rivalSelection);
+    const primaryRival = getDynamicRivalType ? getDynamicRivalType(1, scene.gameData, false) : null;
+    
+    let rivalCounter = 0;
+    let eliteFourCounter = 0;
+    let totalEliteFourWaves = specialWaves.eliteFourWaves.length;
+
+    specialWaves.rivalWaves.filter(w => w >= startWave && w <= endWave).forEach(wave => {
+      const assignment = globalRivalAssignments?.get(wave);
+      const rivalStage = assignment?.stage || Math.min(6, Math.floor(wave / 50) + 1);
+      const rivalType = assignment?.rival || primaryRival;
+      const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
+      const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
+      
+      allSpecialWaves.set(wave, {
+        type: PathNodeType.RIVAL_BATTLE,
+        config: createRivalBattle(rivalStage, rivalType, false),
+        metadata: { 
+          rivalStage, 
+          rivalType,
+          dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined
+        },
+        dynamicMode
+      });
+      rivalCounter++;
+    });
+
+    specialWaves.eliteFourWaves.filter(w => w >= startWave && w <= endWave).forEach(wave => {
+      const eliteFourTypes = [
+        TRAINER_TYPES.ELITE_FOUR.FIRST,
+        TRAINER_TYPES.ELITE_FOUR.SECOND,
+        TRAINER_TYPES.ELITE_FOUR.THIRD,
+        TRAINER_TYPES.ELITE_FOUR.FOURTH
+      ];
+      const trainerType = eliteFourTypes[eliteFourCounter % 4];
+      const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
+      const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
+      const globalEliteFourIndex = specialWaves.eliteFourWaves.indexOf(wave);
+      const isLastEliteFour = globalEliteFourIndex === totalEliteFourWaves - 1;
+      
+      allSpecialWaves.set(wave, {
+        type: PathNodeType.ELITE_FOUR,
+        config: createEliteFourBattle(trainerType, false, seeds.baseSeed),
+        metadata: { 
+          eliteType: ['first', 'second', 'third', 'fourth'][eliteFourCounter % 4],
+          dynamicModeCount: (dynamicModeCount > 0 && isLastEliteFour) ? dynamicModeCount : undefined
+        },
+        dynamicMode
+      });
+      eliteFourCounter++;
+    });
+
+    specialWaves.championWaves.filter(w => w >= startWave && w <= endWave).forEach(wave => {
+      const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
+      const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
+      
+      allSpecialWaves.set(wave, {
+        type: PathNodeType.CHAMPION,
+        config: createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed),
+        metadata: {
+          dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined
+        },
+        dynamicMode
+      });
+    });
+
+    specialWaves.majorBossWaves.filter(w => w >= startWave && w <= endWave).forEach(wave => {
+      const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
+      const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
+      
+      allSpecialWaves.set(wave, {
+        type: PathNodeType.MAJOR_BOSS_BATTLE,
+        metadata: {
+          bossType: 'major',
+          dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined
+        },
+        dynamicMode
+      });
+    });
+
+    specialWaves.recoveryBossWaves.filter(w => w >= startWave && w <= endWave).forEach(wave => {
+      const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
+      const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
+      
+      allSpecialWaves.set(wave, {
+        type: PathNodeType.RECOVERY_BOSS,
+        metadata: {
+          bossType: 'recovery',
+          dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined
+        },
+        dynamicMode
+      });
+    });
+
+    specialWaves.evilTeamWaves.grunts.filter(w => w >= startWave && w <= endWave).forEach(wave => {
+      const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
+      const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
+      
+      allSpecialWaves.set(wave, {
+        type: PathNodeType.EVIL_GRUNT_BATTLE,
+        config: createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_GRUNTS, 35, false),
+        metadata: { 
+          evilTeamType: 'grunt',
+          dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined
+        },
+        dynamicMode
+      });
+    });
+
+    specialWaves.evilTeamWaves.admins.filter(w => w >= startWave && w <= endWave).forEach(wave => {
+      const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
+      const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
+      
+      allSpecialWaves.set(wave, {
+        type: PathNodeType.EVIL_ADMIN_BATTLE,
+        config: createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_ADMINS, 35, false),
+        metadata: { 
+          evilTeamType: 'admin',
+          dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined
+        },
+        dynamicMode
+      });
+    });
+
+    specialWaves.evilTeamWaves.bosses.filter(w => w >= startWave && w <= endWave).forEach(wave => {
+      const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
+      const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
+      
+      allSpecialWaves.set(wave, {
+        type: PathNodeType.EVIL_BOSS_BATTLE,
+        config: createEvilBossBattle(scene, 35),
+        metadata: { 
+          evilTeamType: 'boss',
+          dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined
+        },
+        dynamicMode
+      });
+    });
+
+    specialWaves.smittyWaves.filter(w => w >= startWave && w <= endWave).forEach(wave => {
+      const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
+      const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
+      const smittyBattleConfig = createSmittyBattle(scene, seeds.smittySeed || seeds.baseSeed, true);
+      
+      let smittyVariantIndex = 0;
+      if (smittyBattleConfig.getTrainer) {
+        const trainer = smittyBattleConfig.getTrainer(scene);
+        if (trainer.config && trainer.config.smittyVariantIndex !== undefined) {
+          smittyVariantIndex = trainer.config.smittyVariantIndex;
+        }
+      }
+      
+      allSpecialWaves.set(wave, {
+        type: PathNodeType.SMITTY_BATTLE,
+        config: smittyBattleConfig,
+        metadata: {
+          dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined,
+          smittyVariantIndex: smittyVariantIndex
+        },
+        dynamicMode
+      });
+    });
+
+    for (const [wave, specialData] of allSpecialWaves) {
+      const branch = 2;
+      const node = createPathNode(
+        wave,
+        specialData.type,
+        branch,
+        specialData.config,
+        specialData.metadata,
+        specialData.dynamicMode
+      );
+      layer.nodes.push(node);
+      waveNodeTracker.set(wave, new Set([branch]));
+    }
+  }
+
+  const existingWaves = new Set<number>();
+  for (const node of layer.nodes) {
+    existingWaves.add(node.wave);
+  }
+
+  const generatedChallengeRanges = globalChallengeRanges || new Set<number>();
+
+  for (const range of CHALLENGE_RANGES) {
+    if (range.end < startWave || range.start > endWave || generatedChallengeRanges.has(range.start)) {
+      continue;
+    }
+    
+    const layerRangeStart = Math.max(range.start, startWave);
+    const layerRangeEnd = Math.min(range.end, endWave);
+    
+    if (layerRangeEnd - layerRangeStart < LAYER_CONFIG.MIN_RANGE_SIZE) {
+      continue;
+    }
+    
+    scene.resetSeed(seeds.baseSeed + range.start * LAYER_CONFIG.SEED_MULTIPLIER);
+    
+    const nodeCount = Utils.randSeedInt(3) + 3;
+    
+    let challengeType: 'nightmare' | 'nuzlocke' | 'nuzlight';
+    if (nodeCount === 3) {
+      challengeType = 'nightmare';
+    } else if (nodeCount === 4) {
+      challengeType = Utils.randSeedInt(100) < 80 ? 'nuzlocke' : 'nuzlight';
+    } else {
+      challengeType = Utils.randSeedInt(2) === 0 ? 'nuzlocke' : 'nuzlight';
+    }
+    
+            const additionalPropertiesCount = calculateAdditionalPropertiesCount(range.start, totalWaves || 500, waveOffset);
+    const additionalProperties: (keyof DynamicMode)[] = [];
+    
+    if (additionalPropertiesCount > 0) {
+      const availableProperties: (keyof DynamicMode)[] = [
+        'noCatch', 'noExpGain', 'hasPassiveAbility', 'invertedTypes',
+        'boostedTrainer', 'multiLegendaries', 'multiBoss', 'noInitialSwitch',
+        'autoPressured', 'noStatBoosts', 'noStatusMoves', 'noPhysicalMoves', 'noSpecialMoves', 'statSwap',
+        'noSTAB', 'trickRoom', 'noSwitch',
+        'noResistances', 'noHealingItems', 'autoTorment', 'legendaryNerf', 'typeExtraDamage', 'pokemonNerf'
+      ];
+      
+      const propertiesToAdd = Math.min(additionalPropertiesCount, availableProperties.length);
+      for (let i = 0; i < propertiesToAdd; i++) {
+        const randomIndex = Utils.randSeedInt(availableProperties.length);
+        additionalProperties.push(availableProperties[randomIndex]);
+        availableProperties.splice(randomIndex, 1);
+      }
+
+      const moveRestrictionProperties = ['noStatusMoves', 'noPhysicalMoves', 'noSpecialMoves'];
+      const activeMoveRestrictions = moveRestrictionProperties.filter(prop => additionalProperties.includes(prop));
+      
+      if (activeMoveRestrictions.length >= 2) {
+        const keepIndex = Utils.randSeedInt(activeMoveRestrictions.length);
+        const propertyToKeep = activeMoveRestrictions[keepIndex];
+        const propertiesToRemove = activeMoveRestrictions.filter((_, index) => index !== keepIndex);
+        
+        propertiesToRemove.forEach(property => {
+          const index = additionalProperties.indexOf(property);
+          if (index !== -1) {
+            additionalProperties.splice(index, 1);
+          }
+        });
+        
+        const remainingProperties = availableProperties.filter(prop => 
+          !additionalProperties.includes(prop) && 
+          !moveRestrictionProperties.includes(prop)
+        );
+        
+        for (let i = 0; i < propertiesToRemove.length; i++) {
+          if (remainingProperties.length > 0) {
+            const randomIndex = Utils.randSeedInt(remainingProperties.length);
+            const replacementProperty = remainingProperties[randomIndex];
+            additionalProperties.push(replacementProperty);
+            remainingProperties.splice(randomIndex, 1);
+          }
+        }
+      }
+    }
+    
+    
+    debugChallengeSlotSearch(layerRangeStart, layerRangeEnd, nodeCount, waveNodeTracker, existingWaves);
+    
+    let challengePath: ChallengePathInfo | null = null;
+    let foundStartWave: number | null = null;
+    
+    const maxSearchWave = layerRangeEnd - nodeCount;
+    for (let potentialStart = layerRangeStart; potentialStart <= maxSearchWave; potentialStart++) {
+      if (checkChallengeSlotAvailability(potentialStart, nodeCount, layerRangeEnd, waveNodeTracker, existingWaves)) {
+        foundStartWave = potentialStart;
+        
+        scene.resetSeed(seeds.baseSeed + foundStartWave * 1337);
+        
+        const { nodes, rewardNode } = constructChallengePathNodes(
+          scene,
+          foundStartWave,
+          nodeCount,
+          challengeType,
+          additionalProperties,
+          seeds
+        );
+        
+        challengePath = {
+          startWave: foundStartWave,
+          nodeCount,
+          challengeType,
+          additionalProperties,
+          nodes,
+          rewardNode
+        };
+        
+        for (let i = 0; i <= nodeCount; i++) {
+          existingWaves.add(foundStartWave + i);
+        }
+        
+        break;
+      }
+    }
+    
+    if (challengePath && foundStartWave !== null) {
+      challengePath.nodes.forEach((node, index) => {
+        const existingBranches = waveNodeTracker.get(node.wave) || new Set();
+        if (index === 0) {
+          existingBranches.add(LAYER_CONFIG.CHALLENGE_BRANCH_FIRST);
+        } else {
+          existingBranches.add(LAYER_CONFIG.CHALLENGE_BRANCH_OTHER);
+        }
+        waveNodeTracker.set(node.wave, existingBranches);
+        layer.nodes.push(node);
+      });
+      
+      const rewardBranches = waveNodeTracker.get(challengePath.rewardNode.wave) || new Set();
+      rewardBranches.add(LAYER_CONFIG.CHALLENGE_BRANCH_OTHER);
+      waveNodeTracker.set(challengePath.rewardNode.wave, rewardBranches);
+      layer.nodes.push(challengePath.rewardNode);
+      
+      generatedChallengeRanges.add(range.start);
+      
+    } else {
+    }
+  }
+
+  for (let wave = startWave; wave <= endWave; wave++) {
+    const hasSpecialBattle = waveNodeTracker.has(wave);
+    
+    if (hasSpecialBattle) {
+      const existingNodes = layer.nodes.filter(n => n.wave === wave);
+      const challengeNodes = existingNodes.filter(n => 
+        n.nodeType === PathNodeType.CHALLENGE_BOSS ||
+        n.nodeType === PathNodeType.CHALLENGE_RIVAL ||
+        n.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
+        n.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
+        n.nodeType === PathNodeType.CHALLENGE_REWARD
+      );
+      
+      if (challengeNodes.length > 0) {
+        const isFirstChallengeNode = challengeNodes.some(n => n.metadata?.challengeNodeIndex === 1);
+        if (isFirstChallengeNode) {
+        } else {
+        }
+      } else {
+      }
+      
+      const isFirstChallengeNode = challengeNodes.some(n => n.metadata?.challengeNodeIndex === 0);
+      const isNonFirstChallengeNode = challengeNodes.length > 0 && !isFirstChallengeNode;
+      const hasChallengeRewardNode = challengeNodes.some(n => n.nodeType === PathNodeType.CHALLENGE_REWARD);
+      
+      if (!isFirstChallengeNode && !isNonFirstChallengeNode) {
+        continue;
+      }
+    }
+
+    scene.resetSeed(seeds.baseSeed + wave * 1000);
+    const rand = Utils.randSeedInt(1000);
+    let nodesPerWave: number;
+    
+    const isFirstWaveOfLayer = wave === startWave && layerIndex > 0;
+    
+    if (isFirstWaveOfLayer) {
+      nodesPerWave = Math.max(2, Math.floor(rand / 250) + 2);
+    } else {
+      if (rand < NODE_GENERATION.SINGLE_NODE_THRESHOLD) {
+        nodesPerWave = 1;
+      } else if (rand < NODE_GENERATION.TWO_NODE_THRESHOLD) {
+        nodesPerWave = 2;
+      } else if (rand < NODE_GENERATION.THREE_NODE_THRESHOLD) {
+        nodesPerWave = 3;
+      } else {
+        nodesPerWave = 4;
+      }
+    }
+    
+    const usedPositions = waveNodeTracker.get(wave) || new Set();
+    const availablePositions = [0, 1, 2, 3].filter(pos => !usedPositions.has(pos));
+    
+    nodesPerWave = Math.min(nodesPerWave, availablePositions.length);
+    
+    if (nodesPerWave === 0) {
+      continue;
+    }
+    
+    const positions = generateNodePositions(nodesPerWave, wave)
+      .filter(pos => availablePositions.includes(pos))
+      .slice(0, nodesPerWave);
+    
+    if (positions.length < nodesPerWave) {
+      const extraPositions = availablePositions
+        .filter(pos => !positions.includes(pos))
+        .slice(0, nodesPerWave - positions.length);
+      positions.push(...extraPositions);
+    }
+    
+    waveNodeTracker.set(wave, new Set([...usedPositions, ...positions]));
+    
+    for (let nodeIndex = 0; nodeIndex < positions.length; nodeIndex++) {
+      const branch = positions[nodeIndex];
+      
+      let nodeType: PathNodeType = PathNodeType.WILD_POKEMON;
+      let battleConfig: FixedBattleConfig | undefined;
+
+      const nodeResult = generateWaveBasedNode(wave, scene, seeds, nodeIndex);
+      nodeType = nodeResult.nodeType;
+      battleConfig = nodeResult.battleConfig;
+
+      layer.nodes.push(createPathNode(wave, nodeType, branch, battleConfig));
+    }
+    
+    const existingChallengeNodes = layer.nodes.filter(n => 
+      n.wave === wave && (
+        n.nodeType === PathNodeType.CHALLENGE_BOSS ||
+        n.nodeType === PathNodeType.CHALLENGE_RIVAL ||
+        n.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
+        n.nodeType === PathNodeType.CHALLENGE_CHAMPION
+      )
+    );
+    
+    if (existingChallengeNodes.length > 0) {
+      console.log(`🌊 Wave ${wave}: Regular nodes (${positions.length}) + Challenge node (${existingChallengeNodes.length}) - ${positions.map((_, i) => {
+        const nodeResult = generateWaveBasedNode(wave, scene, seeds, i);
+        return PathNodeType[nodeResult.nodeType];
+      }).join(', ')} + ${existingChallengeNodes.map(n => PathNodeType[n.nodeType]).join(', ')}`);
+    } else {
+      console.log(`🌊 Wave ${wave}: Regular nodes (${positions.length}) - ${positions.map((_, i) => {
+        const nodeResult = generateWaveBasedNode(wave, scene, seeds, i);
+        return PathNodeType[nodeResult.nodeType];
+      }).join(', ')}`);
+    }
+  }
+
+  resolvePositionConflicts(layer);
+  
+  layer.nodes.sort((a, b) => a.wave - b.wave || a.position.x - b.position.x);
+  
+  for (let wave = startWave; wave <= endWave; wave++) {
+    if (!validateNodePositions(layer.nodes, wave)) {
+      console.warn(`❌ Position validation failed for wave ${wave} in layer ${layerIndex}`);
+    }
+  }
+  
+  return layer;
+}
+
+function connectPathNodes(layer: PathLayer, nextLayer?: PathLayer, seeds?: any): void {
+  const currentNodes = layer.nodes;
+  const nextNodes = nextLayer?.nodes || [];
+
+  for (const node of currentNodes) {
+    if (!node.connections) {
+      node.connections = [];
+    }
+    if (!node.previousConnections) {
+      node.previousConnections = [];
+    }
+  }
+  for (const node of nextNodes) {
+    if (!node.connections) {
+      node.connections = [];
+    }
+    if (!node.previousConnections) {
+      node.previousConnections = [];
+    }
+  }
+
+  const regularNodes = currentNodes.filter(n => n.nodeType !== PathNodeType.CONVERGENCE_POINT);
+  const nextRegularNodes = nextNodes.filter(n => n.nodeType !== PathNodeType.CONVERGENCE_POINT);
+
+  const allLayerNodes = [...regularNodes, ...nextRegularNodes];
+  const nodesByWave = new Map<number, PathNode[]>();
+  
+  for (const node of allLayerNodes) {
+    if (node.nodeType !== PathNodeType.CONVERGENCE_POINT) {
+      if (!nodesByWave.has(node.wave)) {
+        nodesByWave.set(node.wave, []);
+      }
+      nodesByWave.get(node.wave)!.push(node);
+    }
+  }
+  
+  for (const [wave, waveNodes] of nodesByWave) {
+    waveNodes.sort((a, b) => a.position.x - b.position.x);
+  }
+
+  processWaveConnections(regularNodes, nodesByWave, layer.convergenceWave, seeds);
+  
+  if (nextLayer) {
+    ensurePathConnectivity(layer, nextLayer, seeds);
+  }
+  
+  debugPathConnections(regularNodes, nodesByWave, []);
+}
+
+function processWaveConnections(currentNodes: PathNode[], nodesByWave: Map<number, PathNode[]>, convergenceWave: number, seeds?: any): void {
+  const waves = Array.from(nodesByWave.keys()).sort((a, b) => a - b).filter(w => w <= convergenceWave);
+  
+  const isChallengeNode = (node: PathNode, includeReward: boolean = true): boolean => {
+    return node.nodeType === PathNodeType.CHALLENGE_BOSS ||
+           node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
+           node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
+           node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
+           (includeReward && node.nodeType === PathNodeType.CHALLENGE_REWARD);
+  };
+  
+  const isFirstChallengeNode = (node: PathNode): boolean => {
+    return isChallengeNode(node) && node.metadata?.challengeNodeIndex === 1;
+  };
+  
+  const isChallengeRewardNode = (node: PathNode): boolean => {
+    return node.nodeType === PathNodeType.CHALLENGE_REWARD;
+  };
+  
+  for (let i = 0; i < waves.length - 1; i++) {
+    const currentWave = waves[i];
+    const nextWave = waves[i + 1];
+    
+    if (nextWave - currentWave !== 1) {
+      continue;
+    }
+    
+    const allCurrentWaveNodes = nodesByWave.get(currentWave) || [];
+    const allNextWaveNodes = nodesByWave.get(nextWave) || [];
+    
+    const currentWaveNodes = allCurrentWaveNodes.filter(node => !isChallengeNode(node) || isFirstChallengeNode(node));
+    const nextWaveNodes = allNextWaveNodes.filter(node => !isChallengeNode(node) || (isFirstChallengeNode(node) && !isChallengeRewardNode(node)));
+    
+    if (currentWaveNodes.length === 0 || nextWaveNodes.length === 0) {
+      continue;
+    }
+    
+    currentWaveNodes.sort((a, b) => a.position.x - b.position.x);
+    nextWaveNodes.sort((a, b) => a.position.x - b.position.x);
+    
+    const isConnectingToConvergenceWave = nextWave % 20 === 0;
+    const isConnectingFromConvergenceWave = currentWave % 20 === 0;
+    
+    createNonCrossingConnections(currentWaveNodes, nextWaveNodes, seeds);
+  }
+  
+  const filteredNodesByWave = new Map<number, PathNode[]>();
+  for (const [wave, nodes] of nodesByWave) {
+    const regularNodes = nodes.filter(node => !isChallengeNode(node, false) || (isFirstChallengeNode(node) && !isChallengeRewardNode(node)));
+    if (regularNodes.length > 0) {
+      filteredNodesByWave.set(wave, regularNodes);
+    }
+  }
+  
+  ensureAllNodesConnected(filteredNodesByWave, convergenceWave, seeds);
+}
+
+function createNonCrossingConnections(currentNodes: PathNode[], nextNodes: PathNode[], seeds?: any): void {
+  
+  for (const currentNode of currentNodes) {
+    if (!currentNode.connections) {
+      currentNode.connections = [];
+    }
+    if (!currentNode.previousConnections) {
+      currentNode.previousConnections = [];
+    }
+  }
+  
+  for (const nextNode of nextNodes) {
+    if (!nextNode.connections) {
+      nextNode.connections = [];
+    }
+    if (!nextNode.previousConnections) {
+      nextNode.previousConnections = [];
+    }
+  }
+
+  if (nextNodes.length === 1) {
+    const singleTarget = nextNodes[0];
+    for (const currentNode of currentNodes) {
+      addBidirectionalConnection(currentNode, singleTarget);
+    }
+    return;
+  }
+
+  if (currentNodes.length === 1) {
+    const singleSource = currentNodes[0];
+    for (const nextNode of nextNodes) {
+      addBidirectionalConnection(singleSource, nextNode);
+    }
+    return;
+  }
+  
+  const connectionMatrix: boolean[][] = [];
+  for (let i = 0; i < currentNodes.length; i++) {
+    connectionMatrix[i] = new Array(nextNodes.length).fill(false);
+  }
+  
+  const currentWave = currentNodes.length > 0 ? currentNodes[0].wave : 0;
+  const bias = seeds ? calculateConnectionBias(currentNodes, seeds, currentWave) : 'balanced';
+  const randomSeed = seeds ? (seeds.baseSeed + currentWave * 311) : Math.floor(Math.random() * 1000);
+  const processOrder = getDirectionalProcessOrder(currentNodes, bias, randomSeed);
+  const processIndices = processOrder.map(node => currentNodes.indexOf(node));
+  const connectedTargets = new Set<number>();
+  
+  for (const currentIndex of processIndices) {
+    const currentNode = currentNodes[currentIndex];
+    const currentPosition = currentNode.position.x;
+    
+    const validTargets: { index: number; distance: number }[] = [];
+    for (let nextIndex = 0; nextIndex < nextNodes.length; nextIndex++) {
+      const nextNode = nextNodes[nextIndex];
+      const distance = Math.abs(currentPosition - nextNode.position.x);
+      validTargets.push({ index: nextIndex, distance });
+    }
+    
+    validTargets.sort((a, b) => a.distance - b.distance);
+    
+    let connectionsAdded = 0;
+    const maxConnections = Math.min(2, nextNodes.length);
+    
+    for (const target of validTargets) {
+      if (connectionsAdded >= maxConnections) break;
+      
+      const nextIndex = target.index;
+      
+      if (!wouldCreateCrossing(currentIndex, nextIndex, connectionMatrix)) {
+        connectionMatrix[currentIndex][nextIndex] = true;
+        addBidirectionalConnection(currentNode, nextNodes[nextIndex]);
+        connectedTargets.add(nextIndex);
+        connectionsAdded++;
+      }
+    }
+    
+    if (connectionsAdded === 0 && validTargets.length > 0) {
+      const fallbackTarget = validTargets[0];
+      const nextIndex = fallbackTarget.index;
+      connectionMatrix[currentIndex][nextIndex] = true;
+      addBidirectionalConnection(currentNode, nextNodes[nextIndex]);
+      connectedTargets.add(nextIndex);
+    }
+  }
+  
+  for (let nextIndex = 0; nextIndex < nextNodes.length; nextIndex++) {
+    if (!connectedTargets.has(nextIndex)) {
+      let bestCurrentIndex = 0;
+      let bestDistance = Math.abs(currentNodes[0].position.x - nextNodes[nextIndex].position.x);
+      
+      for (let currentIndex = 1; currentIndex < currentNodes.length; currentIndex++) {
+        const distance = Math.abs(currentNodes[currentIndex].position.x - nextNodes[nextIndex].position.x);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestCurrentIndex = currentIndex;
+        }
+      }
+      
+      if (!connectionMatrix[bestCurrentIndex][nextIndex]) {
+        connectionMatrix[bestCurrentIndex][nextIndex] = true;
+        addBidirectionalConnection(currentNodes[bestCurrentIndex], nextNodes[nextIndex]);
+      }
+    }
+  }
+}
+
+function wouldCreateCrossing(currentIndex: number, nextIndex: number, connectionMatrix: boolean[][]): boolean {
+  for (let i = 0; i < connectionMatrix.length; i++) {
+    for (let j = 0; j < connectionMatrix[i].length; j++) {
+      if (connectionMatrix[i][j]) {
+        if ((i < currentIndex && j > nextIndex) || (i > currentIndex && j < nextIndex)) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+function ensureAllNodesConnected(nodesByWave: Map<number, PathNode[]>, convergenceWave: number, seeds?: any): void {
+  const isChallengeNode = (node: PathNode): boolean => {
+    return node.nodeType === PathNodeType.CHALLENGE_BOSS ||
+           node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
+           node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
+           node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
+           node.nodeType === PathNodeType.CHALLENGE_REWARD;
+  };
+  
+  const isFirstChallengeNode = (node: PathNode): boolean => {
+    return isChallengeNode(node) && node.metadata?.challengeNodeIndex === 1;
+  };
+  
+  const isChallengeRewardNode = (node: PathNode): boolean => {
+    return node.nodeType === PathNodeType.CHALLENGE_REWARD;
+  };
+
+  const waves = Array.from(nodesByWave.keys()).sort((a, b) => a - b).filter(w => w <= convergenceWave);
+  for (let i = 0; i < waves.length; i++) {
+    const currentWave = waves[i];
+    const currentNodes = nodesByWave.get(currentWave) || [];
+    
+    if (currentNodes.length === 0) continue;
+    
+    const bias = seeds ? calculateConnectionBias(currentNodes, seeds, currentWave) : 'balanced';
+    const randomSeed = seeds ? (seeds.baseSeed + currentWave * 419) : Math.floor(Math.random() * 1000);
+    const processOrder = getDirectionalProcessOrder(currentNodes, bias, randomSeed);
+    
+    for (const currentNode of processOrder) {
+      if (currentNode.connections.length === 0) {
+        let targetNode: PathNode | null = null;
+        
+        if (isChallengeRewardNode(currentNode)) {
+          for (let j = i + 1; j < waves.length; j++) {
+            const futureWave = waves[j];
+            const futureNodes = nodesByWave.get(futureWave) || [];
+            
+            if (futureNodes.length > 0) {
+              targetNode = findBestConnector(currentNode, futureNodes);
+              break;
+            }
+          }
+        } else {
+          if (i + 1 < waves.length) {
+            const nextWave = waves[i + 1];
+            if (nextWave - currentWave === 1) {
+              const nextNodes = nodesByWave.get(nextWave) || [];
+              
+              const validNextNodes = nextNodes.filter(node => {
+                if (isChallengeNode(currentNode) && !isFirstChallengeNode(currentNode)) {
+                  return isChallengeNode(node) && !isChallengeRewardNode(node);
+                }
+                
+                return !isChallengeRewardNode(node);
+              });
+              
+              if (validNextNodes.length > 0) {
+                targetNode = findBestConnector(currentNode, validNextNodes);
+              }
+            }
+          }
+        }
+        
+        if (targetNode) {
+          addBidirectionalConnection(currentNode, targetNode);
+        } 
+      }
+    }
+    
+    if (i > 0) {
+      const disconnectedNodes: PathNode[] = [];
+      for (const currentNode of currentNodes) {
+        if (!currentNode.previousConnections || currentNode.previousConnections.length === 0) {
+          disconnectedNodes.push(currentNode);
+        }
+      }
+      
+      if (disconnectedNodes.length > 0) {
+        for (const currentNode of disconnectedNodes) {
+          let bestConnector: PathNode | null = null;
+          
+          if (isChallengeRewardNode(currentNode)) {
+            for (let searchWave = i - 1; searchWave >= 0; searchWave--) {
+              const searchWaveIndex = waves[searchWave];
+              const prevNodes = nodesByWave.get(searchWaveIndex) || [];
+              
+              const validPrevNodes = prevNodes.filter(prevNode => {
+                return isChallengeNode(prevNode) && !isChallengeRewardNode(prevNode);
+              });
+              
+              if (validPrevNodes.length > 0) {
+                bestConnector = findBestConnector(currentNode, validPrevNodes);
+                break;
+              }
+            }
+          } else {
+            const prevWave = waves[i - 1];
+            if (currentWave - prevWave === 1) {
+              const prevNodes = nodesByWave.get(prevWave) || [];
+              
+              const validPrevNodes = prevNodes.filter(prevNode => {
+                if (isChallengeNode(currentNode) && !isFirstChallengeNode(currentNode)) {
+                  return isChallengeNode(prevNode) && !isChallengeRewardNode(prevNode);
+                }
+                
+                return !isChallengeRewardNode(prevNode);
+              });
+              
+              if (validPrevNodes.length > 0) {
+                bestConnector = findBestConnector(currentNode, validPrevNodes);
+              }
+            }
+          }
+          
+          if (bestConnector) {
+            addBidirectionalConnection(bestConnector, currentNode);
+          }
+        }
+      }
+    }
+  }
+}
+
+function findBestConnector(referenceNode: PathNode, candidateNodes: PathNode[]): PathNode | null {
+  if (candidateNodes.length === 0) return null;
+  
+  const referencePosition = referenceNode.position.x;
+  
+  let bestConnector: PathNode | null = null;
+  let bestScore = -1;
+  
+  for (const candidate of candidateNodes) {
+    const distance = Math.abs(candidate.position.x - referencePosition);
+    const connectionCount = candidate.connections ? candidate.connections.length : 0;
+    const isAdjacent = distance <= 1;
+    
+    let score = 100;
+    score -= distance * 15;
+    score -= connectionCount * 10;
+    if (isAdjacent) score += 25;
+    if (connectionCount === 0) score -= 30;
+    
+    if (score > bestScore) {
+      bestScore = score;
+      bestConnector = candidate;
+    }
+  }
+  
+  return bestConnector;
+}
+
+function debugPathConnections(currentNodes: PathNode[], nodesByWave: Map<number, PathNode[]>, convergenceNodes: PathNode[]): void {
+  const allNodes = [...currentNodes];
+  for (const waveNodes of nodesByWave.values()) {
+    allNodes.push(...waveNodes);
+  }
+
+  const nodesByWaveComplete = new Map<number, PathNode[]>();
+  for (const node of allNodes) {
+    if (!nodesByWaveComplete.has(node.wave)) {
+      nodesByWaveComplete.set(node.wave, []);
+    }
+    nodesByWaveComplete.get(node.wave)!.push(node);
+  }
+  
+  for (const [wave, nodes] of nodesByWaveComplete) {
+    nodes.sort((a, b) => a.position.x - b.position.x);
+  }
+  
+  const allWaves = Array.from(nodesByWaveComplete.keys()).sort((a, b) => a - b);
+  
+  const deadEnds = allNodes.filter(node => node.connections.length === 0);
+  const unconnectedNodes = [];
+  
+  for (let i = 0; i < allWaves.length; i++) {
+    const wave = allWaves[i];
+    
+    if (i < allWaves.length - 1) {
+      const nextWave = allWaves[i + 1];
+      const nextNodes = nodesByWaveComplete.get(nextWave) || [];
+      
+      const unconnectedNextNodes = nextNodes.filter(nextNode => {
+        return !allNodes.some(prevNode => 
+          prevNode.wave <= wave && prevNode.connections.includes(nextNode.id)
+        );
+      });
+      
+      if (unconnectedNextNodes.length > 0) {
+        unconnectedNodes.push({
+          wave: nextWave,
+          nodes: unconnectedNextNodes.map(n => `[${n.position.x}]${PathNodeType[n.nodeType]}`).join(', ')
+        });
+      }
+    }
+  }
+  
+  if (deadEnds.length > 0 || unconnectedNodes.length > 0) {
+    
+    if (deadEnds.length > 0) {
+      deadEnds.forEach(node => {
+      });
+    }
+    
+    if (unconnectedNodes.length > 0) {
+      unconnectedNodes.forEach(issue => {
+      });
+    }
+    
+  }
+}
+
+function getValidConnections(currentPosition: number, nextWaveNodes: PathNode[]): PathNode[] {
+  const adjacentTargets: PathNode[] = [];
+  const nearbyTargets: PathNode[] = [];
+  
+  for (const node of nextWaveNodes) {
+    const distance = Math.abs(currentPosition - node.position.x);
+    if (distance <= 1) {
+      adjacentTargets.push(node);
+    } else if (distance <= 2) {
+      nearbyTargets.push(node);
+    }
+  }
+  
+  if (adjacentTargets.length > 0) {
+    const shuffled = [...adjacentTargets];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Utils.randSeedInt(i + 1);
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+  
+  if (nearbyTargets.length > 0) {
+    const shuffled = [...nearbyTargets];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Utils.randSeedInt(i + 1);
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+  
+  const allTargets = [...nextWaveNodes];
+  for (let i = allTargets.length - 1; i > 0; i--) {
+    const j = Utils.randSeedInt(i + 1);
+    [allTargets[i], allTargets[j]] = [allTargets[j], allTargets[i]];
+  }
+  return allTargets;
+}
+
+
+
+function ensurePathConnectivity(layer: PathLayer, nextLayer?: PathLayer, seeds?: any): void {
+  if (!nextLayer) {
+    return;
+  }
+
+  const isChallengeNode = (node: PathNode): boolean => {
+    return node.nodeType === PathNodeType.CHALLENGE_BOSS ||
+           node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
+           node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
+           node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
+           node.nodeType === PathNodeType.CHALLENGE_REWARD;
+  };
+  
+  const isFirstChallengeNode = (node: PathNode): boolean => {
+    return isChallengeNode(node) && node.metadata?.challengeNodeIndex === 1;
+  };
+  
+  const isChallengeRewardNode = (node: PathNode): boolean => {
+    return node.nodeType === PathNodeType.CHALLENGE_REWARD;
+  };
+
+  const currentRegularNodes = layer.nodes.filter(n => n.nodeType !== PathNodeType.CONVERGENCE_POINT);
+  const nextRegularNodes = nextLayer.nodes.filter(n => 
+    n.nodeType !== PathNodeType.CONVERGENCE_POINT && 
+    (!isChallengeNode(n) || (isFirstChallengeNode(n) && !isChallengeRewardNode(n)))
+  );
+  
+  const connectedNextNodes = new Set<string>();
+  
+  for (const currentNode of currentRegularNodes) {
+    for (const connectionId of currentNode.connections) {
+      connectedNextNodes.add(connectionId);
+    }
+  }
+
+  for (const currentNode of currentRegularNodes) {
+    if (currentNode.connections.length === 0 && nextRegularNodes.length > 0) {
+      const adjacentWaveNodes = nextRegularNodes.filter(node => 
+        Math.abs(node.wave - currentNode.wave) === 1 || isChallengeRewardNode(currentNode)
+      );
+      
+      if (adjacentWaveNodes.length > 0) {
+        const currentBranch = currentNode.position.x;
+        const adjacentTargets = adjacentWaveNodes.filter(node => {
+          const targetBranch = node.position.x;
+          return Math.abs(currentBranch - targetBranch) <= 1;
+        });
+        
+        if (adjacentTargets.length > 0) {
+          addBidirectionalConnection(currentNode, adjacentTargets[0]);
+          connectedNextNodes.add(adjacentTargets[0].id);
+        } else if (adjacentWaveNodes.length > 0) {
+          const closest = adjacentWaveNodes.reduce((closest, node) => {
+            const currentDiff = Math.abs(currentBranch - node.position.x);
+            const closestDiff = Math.abs(currentBranch - closest.position.x);
+            return currentDiff < closestDiff ? node : closest;
+          });
+          addBidirectionalConnection(currentNode, closest);
+          connectedNextNodes.add(closest.id);
+        }
+      }
+    }
+  }
+
+  const currentWave = nextRegularNodes.length > 0 ? nextRegularNodes[0].wave : 0;
+  const bias = seeds ? calculateConnectionBias(currentRegularNodes, seeds, currentWave) : 'balanced';
+  const randomSeed = seeds ? (seeds.baseSeed + currentWave * 503) : Math.floor(Math.random() * 1000);
+  const processOrderNext = getDirectionalProcessOrder(nextRegularNodes, bias, randomSeed);
+
+  for (const nextNode of processOrderNext) {
+    if (!connectedNextNodes.has(nextNode.id)) {
+      const adjacentWaveNodes = currentRegularNodes.filter(node => 
+        (Math.abs(node.wave - nextNode.wave) === 1 || isChallengeRewardNode(node)) && 
+        node.connections.length < 3
+      );
+      
+      if (adjacentWaveNodes.length > 0) {
+        const closest = adjacentWaveNodes.reduce((closest, node) => {
+          const currentDiff = Math.abs(nextNode.position.x - node.position.x);
+          const closestDiff = Math.abs(nextNode.position.x - closest.position.x);
+          return currentDiff < closestDiff ? node : closest;
+        });
+        addBidirectionalConnection(closest, nextNode);
+        connectedNextNodes.add(nextNode.id);
+      }
+    }
+  }
+
+  const lastWaveInLayer = Math.max(...currentRegularNodes.map(n => n.wave));
+  const firstWaveInNextLayer = Math.min(...nextRegularNodes.map(n => n.wave));
+  
+  if (firstWaveInNextLayer === lastWaveInLayer + 1) {
+    const lastWaveNodes = currentRegularNodes.filter(n => n.wave === lastWaveInLayer);
+    const firstWaveNextNodes = nextRegularNodes.filter(n => n.wave === firstWaveInNextLayer);
+    
+    const bias = seeds ? calculateConnectionBias(lastWaveNodes, seeds, lastWaveInLayer) : 'balanced';
+      const randomSeed = seeds ? (seeds.baseSeed + lastWaveInLayer * 709) : Math.floor(Math.random() * 1000);
+      const processOrderLast = getDirectionalProcessOrder(lastWaveNodes, bias, randomSeed);
+      
+      for (const lastNode of processOrderLast) {
+        if (lastNode.connections.length === 0 && firstWaveNextNodes.length > 0) {
+          const currentBranch = lastNode.position.x;
+          const adjacentTargets = firstWaveNextNodes.filter(node => 
+            Math.abs(node.position.x - currentBranch) <= 1
+          );
+          
+          if (adjacentTargets.length > 0) {
+            addBidirectionalConnection(lastNode, adjacentTargets[0]);
+          } else {
+            const closest = firstWaveNextNodes.reduce((closest, node) => {
+              const currentDiff = Math.abs(currentBranch - node.position.x);
+              const closestDiff = Math.abs(currentBranch - closest.position.x);
+              return currentDiff < closestDiff ? node : closest;
+            });
+            addBidirectionalConnection(lastNode, closest);
+          }
+        }
+      }
+  }
+}
+
+function debugBattlePathIntegrity(battlePath: BattlePath): void {
+  
+  let totalIssues = 0;
+  const positionIssues: string[] = [];
+  const connectivityIssues: string[] = [];
+  const structuralIssues: string[] = [];
+  const bidirectionalIssues: string[] = [];
+  
+  for (const [wave, nodesAtWave] of battlePath.waveToNodeMap) {
+    const positions = nodesAtWave.map(n => n.position.x);
+    const uniquePositions = new Set(positions);
+    
+    if (positions.length !== uniquePositions.size) {
+      const duplicates = positions.filter((pos, index) => positions.indexOf(pos) !== index);
+      const issue = `Wave ${wave}: Duplicate positions [${duplicates.join(', ')}]`;
+      positionIssues.push(issue);
+      totalIssues++;
+    }
+    
+    for (const node of nodesAtWave) {
+      if (node.position.x < 0 || node.position.x > 3) {
+        const issue = `Wave ${wave}: Node ${node.id} has invalid position ${node.position.x}`;
+        structuralIssues.push(issue);
+        totalIssues++;
+      }
+      
+      if (!node.previousConnections) {
+        const issue = `Wave ${wave}: Node ${node.id} missing previousConnections array`;
+        structuralIssues.push(issue);
+        totalIssues++;
+      }
+      
+      for (const connectionId of node.connections) {
+        const targetNode = battlePath.nodeMap.get(connectionId);
+        if (targetNode && (!targetNode.previousConnections || !targetNode.previousConnections.includes(node.id))) {
+          const issue = `Bidirectional mismatch: ${node.id} -> ${connectionId} (missing reverse connection)`;
+          bidirectionalIssues.push(issue);
+          totalIssues++;
+        }
+      }
+    }
+  }
+  
+  const { isValid: connectivityValid, issues: connIssues } = validateConnectivity(battlePath);
+  connectivityIssues.push(...connIssues);
+  totalIssues += connIssues.length;
+  
+  let totalNodes = 0;
+  let totalConnections = 0;
+  let totalPreviousConnections = 0;
+  const disconnectedComponents: string[] = [];
+  
+  for (const [, node] of battlePath.nodeMap) {
+    totalNodes++;
+    totalConnections += node.connections.length;
+    totalPreviousConnections += node.previousConnections ? node.previousConnections.length : 0;
+    
+    if (node.connections.length === 0) {
+      const firstWave = Math.min(...Array.from(battlePath.waveToNodeMap.keys()));
+      const lastWave = Math.max(...Array.from(battlePath.waveToNodeMap.keys()));
+      
+      if (node.wave !== lastWave) {
+        disconnectedComponents.push(`${node.id} (wave ${node.wave})`);
+        totalIssues++;
+      }
+    }
+  }
+  
+  
+}
+
+export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1): BattlePath {
+  try {
+    
+    if (!scene.gameData.nightmareBattleSeeds) {
+      const baseSeed = Utils.randInt(1000000);
+      scene.gameData.nightmareBattleSeeds = generateUniqueSeeds(baseSeed);
+    }
+
+    const seeds = scene.gameData.nightmareBattleSeeds;
+    const totalWaves = scene.gameMode.isChaosVoid || scene.gameMode.isInfinite ? 1000 : 500;
+    const waveOffset = startWave - 1;
+    
+    const segmentSize = 500;
+    const numSegments = Math.ceil(totalWaves / segmentSize);
+    
+    const combinedSpecialWaves: SpecialBattleWaves = {
+      rivalWaves: [],
+      majorBossWaves: [],
+      recoveryBossWaves: [],
+      eliteFourWaves: [],
+      championWaves: [],
+      smittyWaves: [],
+      evilTeamWaves: {
+        grunts: [],
+        admins: [],
+        bosses: []
+      }
+    };
+
+    for (let segment = 0; segment < numSegments; segment++) {
+      const segmentStart = segment * segmentSize + startWave;
+      const segmentWaves = Math.min(segmentSize, totalWaves - segment * segmentSize);
+      
+      if (segmentWaves <= 0) break;
+      
+      const segmentSpecialWaves = generateSpecialBattleWaves(scene, seeds, segmentWaves, segmentStart - 1);
+      
+      combinedSpecialWaves.rivalWaves.push(...segmentSpecialWaves.rivalWaves);
+      combinedSpecialWaves.majorBossWaves.push(...segmentSpecialWaves.majorBossWaves);
+      combinedSpecialWaves.recoveryBossWaves.push(...segmentSpecialWaves.recoveryBossWaves);
+      combinedSpecialWaves.eliteFourWaves.push(...segmentSpecialWaves.eliteFourWaves);
+      combinedSpecialWaves.championWaves.push(...segmentSpecialWaves.championWaves);
+      combinedSpecialWaves.smittyWaves.push(...segmentSpecialWaves.smittyWaves);
+      combinedSpecialWaves.evilTeamWaves.grunts.push(...segmentSpecialWaves.evilTeamWaves.grunts);
+      combinedSpecialWaves.evilTeamWaves.admins.push(...segmentSpecialWaves.evilTeamWaves.admins);
+      combinedSpecialWaves.evilTeamWaves.bosses.push(...segmentSpecialWaves.evilTeamWaves.bosses);
+    }
+    
+    scene.resetSeed(seeds.rivalSelection);
+    // const primaryRival = getDynamicRivalType ? getDynamicRivalType(1, scene.gameData, scene) : null;
+    
+    const globalRivalAssignments = new Map<number, { stage: number; rival: any }>();
+    const sortedRivalWaves = [...combinedSpecialWaves.rivalWaves].sort((a, b) => a - b);
+    
+    scene.resetSeed(seeds.rivalSelection);
+    const allRivalTypes = getAllRivalTrainerTypes ? getAllRivalTrainerTypes() : [];
+    const selectedRivals: any[] = [];
+    while (selectedRivals.length < Math.min(6, allRivalTypes.length)) {
+      const randomIndex = Utils.randSeedInt(allRivalTypes.length);
+      const randomRival = allRivalTypes[randomIndex];
+      if (!selectedRivals.includes(randomRival)) {
+        selectedRivals.push(randomRival);
+      }
+    }
+    
+    const rivalsPerStage = Math.ceil(sortedRivalWaves.length / 6);
+    for (let i = 0; i < sortedRivalWaves.length; i++) {
+      const wave = sortedRivalWaves[i];
+      const stage = startWave > 1000 ? 6 : Math.min(Math.floor(i / rivalsPerStage) + 1, 6);
+      const rivalIndex = i % rivalsPerStage;
+      
+      const shuffledRivals = [...selectedRivals];
+      scene.resetSeed(seeds.rivalSelection + stage * 1000);
+      for (let j = shuffledRivals.length - 1; j > 0; j--) {
+        const k = Utils.randSeedInt(j + 1);
+        [shuffledRivals[j], shuffledRivals[k]] = [shuffledRivals[k], shuffledRivals[j]];
+      }
+      
+      const selectedRival = shuffledRivals[rivalIndex % shuffledRivals.length];
+      
+      globalRivalAssignments.set(wave, { 
+        stage: stage, 
+        rival: selectedRival
+      });
+    }
+    
+    const layerSize = 20;
+    const convergencePoints = [];
+    for (let i = layerSize; i <= totalWaves; i += layerSize) {
+      convergencePoints.push(i + waveOffset);
+    }
+
+    const battlePath: BattlePath = {
+      totalWaves: startWave + totalWaves - 1,
+      layers: [],
+      convergencePoints,
+      nodeMap: new Map(),
+      waveToNodeMap: new Map()
+    };
+
+    const globalChallengeRanges = new Set<number>();
+
+    let currentWave = startWave;
+    for (let i = 0; i < convergencePoints.length; i++) {
+      const convergenceWave = convergencePoints[i];
+      const endWave = convergenceWave;
+      
+      if (currentWave > endWave) {
+        continue;
+      }
+
+      const layer = createPathLayer(
+        scene,
+        i,
+        currentWave,
+        endWave,
+        convergenceWave,
+        seeds,
+        combinedSpecialWaves.rivalWaves,
+        combinedSpecialWaves.majorBossWaves,
+        combinedSpecialWaves,
+        startWave + totalWaves - 1,
+        globalRivalAssignments,
+        globalChallengeRanges
+      );
+
+      battlePath.layers.push(layer);
+      currentWave = convergenceWave + 1;
+    }
+
+    for (let i = 0; i < battlePath.layers.length; i++) {
+      const currentLayer = battlePath.layers[i];
+      const nextLayer = battlePath.layers[i + 1];
+      connectPathNodes(currentLayer, nextLayer, seeds);
+    }
+
+    for (const layer of battlePath.layers) {
+      for (const node of layer.nodes) {
+        battlePath.nodeMap.set(node.id, node);
+        
+        if (!battlePath.waveToNodeMap.has(node.wave)) {
+          battlePath.waveToNodeMap.set(node.wave, []);
+        }
+        battlePath.waveToNodeMap.get(node.wave)!.push(node);
+      }
+    }
+
+    fixConnectivityIssues(battlePath);
+    
+    let connectionIssues = 0;
+    for (const [, node] of battlePath.nodeMap) {
+      for (const connectionId of node.connections) {
+        const targetNode = battlePath.nodeMap.get(connectionId);
+        if (targetNode && !targetNode.previousConnections.includes(node.id)) {
+          targetNode.previousConnections.push(node.id);
+          connectionIssues++;
+        }
+      }
+    }
+    
+    debugBattlePathIntegrity(battlePath);
+
+    const fixedBattles: FixedBattleConfigs = {};
+    for (const [, node] of battlePath.nodeMap) {
+      if (node.battleConfig) {
+        fixedBattles[node.wave] = node.battleConfig;
+      }
+    }
+
+    // scene.gameMode.battleConfig = fixedBattles;
+    scene.gameData.battlePath = battlePath;
+    currentBattlePath = battlePath;
+
+    outputAllWavesWithPaths(scene, battlePath);
+
+    const challengeNodes = Array.from(battlePath.nodeMap.values()).filter(node => 
+      node.nodeType === PathNodeType.CHALLENGE_BOSS ||
+      node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
+      node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
+      node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
+      node.nodeType === PathNodeType.CHALLENGE_REWARD
+    );
+    
+    if (challengeNodes.length > 0) {
+      challengeNodes.sort((a, b) => a.wave - b.wave);
+      challengeNodes.forEach(node => {
+        const dynamicModeCount = node.dynamicMode ? Object.keys(node.dynamicMode).filter(key => node.dynamicMode![key as keyof DynamicMode]).length : 0;
+        const connections = node.connections.map(id => {
+          const connectedNode = battlePath.nodeMap.get(id);
+          return connectedNode ? `${connectedNode.wave}:${PathNodeType[connectedNode.nodeType]}` : id;
+        }).join(', ');
+      });
+      
+      const challengePathsByRange = new Map<string, PathNode[]>();
+      challengeNodes.forEach(node => {
+        if (node.nodeType !== PathNodeType.CHALLENGE_REWARD) {
+          const range = getChallengeRangeForWave(node.wave, battlePath.totalWaves, waveOffset);
+          if (range) {
+            const rangeKey = `${range.start}-${range.end}`;
+            if (!challengePathsByRange.has(rangeKey)) {
+              challengePathsByRange.set(rangeKey, []);
+            }
+            challengePathsByRange.get(rangeKey)!.push(node);
+          }
+        }
+      });
+      
+      challengePathsByRange.forEach((pathNodes, range) => {
+        pathNodes.sort((a, b) => a.wave - b.wave);
+        pathNodes.forEach((node, index) => {
+          const isFirstNode = node.metadata?.challengeNodeIndex === 1;
+          const connections = node.connections.map(id => {
+            const connectedNode = battlePath.nodeMap.get(id);
+            return connectedNode ? `${connectedNode.wave}:${PathNodeType[connectedNode.nodeType]}` : id;
+          }).join(', ');
+        });
+      });
+    } else {
+    }
+
+    const challengeRewardNodes = Array.from(battlePath.nodeMap.values()).filter(node => 
+      node.nodeType === PathNodeType.CHALLENGE_REWARD
+    );
+    
+    if (challengeRewardNodes.length > 0) {
+      challengeRewardNodes.forEach(rewardNode => {
+        
+        if (rewardNode.previousConnections && rewardNode.previousConnections.length > 0) {
+          console.log(`   ⬅️ Incoming connections (${rewardNode.previousConnections.length}):`);
+          rewardNode.previousConnections.forEach(connectionId => {
+            const sourceNode = battlePath.nodeMap.get(connectionId);
+            if (sourceNode) {
+              const isChallenge = sourceNode.nodeType === PathNodeType.CHALLENGE_BOSS ||
+                                sourceNode.nodeType === PathNodeType.CHALLENGE_RIVAL ||
+                                sourceNode.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
+                                sourceNode.nodeType === PathNodeType.CHALLENGE_CHAMPION;
+              const isRegular = !isChallenge && sourceNode.nodeType !== PathNodeType.CHALLENGE_REWARD;
+              const status = isRegular ? "❌ INVALID" : "✅ Valid";
+              
+              if (isRegular) {
+              }
+            } else {
+            }
+          });
+        } else {
+        }
+        
+        const prevWave = rewardNode.wave - 1;
+        const prevWaveNodes = battlePath.waveToNodeMap.get(prevWave) || [];
+        console.log(`   📊 Wave ${prevWave} nodes (${prevWaveNodes.length}) - ALL CONNECTIONS:`);
+        prevWaveNodes.forEach(prevNode => {
+          const hasConnectionToReward = prevNode.connections.includes(rewardNode.id);
+          const nodeStatus = hasConnectionToReward ? "🔗 CONNECTS TO REWARD" : "   ";
+          console.log(`     ${nodeStatus} [${prevNode.position.x}] ${PathNodeType[prevNode.nodeType]} (${prevNode.id})`);
+          console.log(`       All connections: [${prevNode.connections.map(id => {
+            const target = battlePath.nodeMap.get(id);
+            return target ? `${target.wave}:${PathNodeType[target.nodeType]}` : id;
+          }).join(', ')}]`);
+          if (hasConnectionToReward) {
+          }
+        });
+        
+        if (rewardNode.connections && rewardNode.connections.length > 0) {
+          rewardNode.connections.forEach(connectionId => {
+            const targetNode = battlePath.nodeMap.get(connectionId);
+            if (targetNode) {
+            } else {
+            }
+          });
+        }
+      });
+    } else {
+    }
+
+    return battlePath;
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+export function getCurrentBattlePath(): BattlePath | null {
+  return currentBattlePath;
+}
+
+export function getAvailablePathsFromWave(wave: number): PathNode[] {
+  if (!currentBattlePath) {
+    return [];
+  }
+
+  const currentNodes = currentBattlePath.waveToNodeMap.get(wave) || [];
+  const availablePaths: PathNode[] = [];
+
+  for (const node of currentNodes) {
+    for (const connectionId of node.connections) {
+      const connectedNode = currentBattlePath.nodeMap.get(connectionId);
+      if (connectedNode) {
+        availablePaths.push(connectedNode);
+      }
+    }
+  }
+
+  return availablePaths;
+}
+
+export function selectPath(scene: BattleScene, selectedNodeId: string): boolean {
+  if (!currentBattlePath) {
+    return false;
+  }
+
+  const selectedNode = currentBattlePath.nodeMap.get(selectedNodeId);
+  if (!selectedNode) {
+    return false;
+  }
+
+  scene.gameData.selectedPath = selectedNodeId;
+  scene.gameData.currentPathPosition = selectedNode.wave;
+
+  return true;
+}
+
+export function getPathVisualizationData(battlePath: BattlePath): any {
+  const visualization = {
+    layers: [],
+    totalWaves: battlePath.totalWaves
+  };
+
+  for (const layer of battlePath.layers) {
+    const layerData = {
+      startWave: layer.startWave,
+      endWave: layer.endWave,
+      convergenceWave: layer.convergenceWave,
+      nodes: layer.nodes.map(node => ({
+        id: node.id,
+        wave: node.wave,
+        type: PathNodeType[node.nodeType],
+        position: node.position,
+        connections: node.connections,
+        previousConnections: node.previousConnections,
+        isRequired: node.isRequired,
+        metadata: node.metadata
+      }))
+    };
+    visualization.layers.push(layerData);
+  }
+
+  return visualization;
+}
+
+
+function getNodeTypeIcon(nodeType: PathNodeType): string {
+  switch (nodeType) {
+    case PathNodeType.WILD_POKEMON: return "🦎";
+    case PathNodeType.TRAINER_BATTLE: return "⚔️";
+    case PathNodeType.RIVAL_BATTLE: return "👑";
+    case PathNodeType.MAJOR_BOSS_BATTLE: return "🏛️";
+    case PathNodeType.RECOVERY_BOSS: return "🔟";
+    case PathNodeType.EVIL_BOSS_BATTLE: return "😈";
+    case PathNodeType.ELITE_FOUR: return "🏆";
+    case PathNodeType.CHAMPION: return "👑";
+    case PathNodeType.ITEM_GENERAL: return "🎁";
+    case PathNodeType.ADD_POKEMON: return "🐾";
+    case PathNodeType.ITEM_TM: return "💿";
+    case PathNodeType.ITEM_BERRY: return "🍓";
+    case PathNodeType.MYSTERY_NODE: return "❓";
+    case PathNodeType.CONVERGENCE_POINT: return "🎯";
+    case PathNodeType.SMITTY_BATTLE: return "✨";
+    case PathNodeType.EVIL_GRUNT_BATTLE: return "🔴";
+    case PathNodeType.EVIL_ADMIN_BATTLE: return "🟣";
+    case PathNodeType.RAND_PERMA_ITEM: return "🪩";
+    case PathNodeType.GOLDEN_POKEBALL: return "🟡";
+    case PathNodeType.ROGUE_BALL_ITEMS: return "⚫";
+    case PathNodeType.MASTER_BALL_ITEMS: return "🟣";
+    case PathNodeType.ABILITY_SWITCHERS: return "🔄";
+    case PathNodeType.STAT_SWITCHERS: return "📊";
+    case PathNodeType.GLITCH_PIECE: return "🧩";
+    case PathNodeType.DNA_SPLICERS: return "🧬";
+    case PathNodeType.MONEY: return "💰";
+    case PathNodeType.PERMA_MONEY: return "💎";
+    case PathNodeType.RELEASE_ITEMS: return "🔓";
+    case PathNodeType.MINTS: return "🌿";
+    case PathNodeType.EGG_VOUCHER: return "🥚";
+    case PathNodeType.PP_MAX: return "⚡";
+    case PathNodeType.COLLECTED_TYPE: return "📋";
+    case PathNodeType.EXP_SHARE: return "📈";
+    case PathNodeType.TYPE_SWITCHER: return "🔀";
+    case PathNodeType.PASSIVE_ABILITY: return "🌟";
+    case PathNodeType.ANY_TMS: return "💽";
+    case PathNodeType.CHALLENGE_BOSS: return "🎯👑";
+    case PathNodeType.CHALLENGE_RIVAL: return "🎯⚔️";
+    case PathNodeType.CHALLENGE_EVIL_BOSS: return "🎯💀";
+    case PathNodeType.CHALLENGE_CHAMPION: return "🎯🏆";
+    case PathNodeType.CHALLENGE_REWARD: return "🎯🎁";
+    default: return "❓";
+  }
+}
+
+export function logVisualBattlePath(battlePath: BattlePath): void {
+
+  for (let layerIndex = 0; layerIndex < battlePath.layers.length; layerIndex++) {
+    const layer = battlePath.layers[layerIndex];
+    
+
+    const nodesByWave = new Map<number, PathNode[]>();
+    for (const node of layer.nodes) {
+      if (!nodesByWave.has(node.wave)) {
+        nodesByWave.set(node.wave, []);
+      }
+      nodesByWave.get(node.wave)!.push(node);
+    }
+
+    const sortedWaves = Array.from(nodesByWave.keys()).sort((a, b) => a - b);
+    
+    for (const wave of sortedWaves) {
+      const nodesAtWave = nodesByWave.get(wave)!;
+      
+      const regularNodesAtWave = nodesAtWave.filter(n => n.nodeType !== PathNodeType.CONVERGENCE_POINT);
+      
+      const nodeCount = regularNodesAtWave.length;
+
+      console.log(`\nWave ${wave.toString().padStart(3)} (${nodeCount} choices):`);
+      
+      const branches = ['A', 'B', 'C'];
+      let lineOutput = "    ";
+      
+      for (let i = 0; i < 3; i++) {
+        const node = regularNodesAtWave[i];
+        if (node) {
+          const typeIcon = getNodeTypeIcon(node.nodeType);
+          const requiredStr = node.isRequired ? "🔥" : " ";
+          const metaStr = node.metadata?.rivalStage ? ` R${node.metadata.rivalStage}` : "";
+          lineOutput += `[${branches[i]}] ${typeIcon}${requiredStr}${metaStr}`.padEnd(20);
+        } else {
+          lineOutput += "                    ";
+        }
+        if (i < 2) lineOutput += " │ ";
+      }
+      
+      
+      if (nodeCount > 3) {
+        let extraLineOutput = "    ";
+        for (let i = 3; i < Math.min(6, nodeCount); i++) {
+          const node = regularNodesAtWave[i];
+          if (node) {
+            const typeIcon = getNodeTypeIcon(node.nodeType);
+            const requiredStr = node.isRequired ? "🔥" : " ";
+            const metaStr = node.metadata?.rivalStage ? ` R${node.metadata.rivalStage}` : "";
+            extraLineOutput += `[${branches[i % 3]}+] ${typeIcon}${requiredStr}${metaStr}`.padEnd(20);
+          }
+          if (i < Math.min(5, nodeCount - 1)) extraLineOutput += " │ ";
+        }
+      }
+    }
+
+    if (layerIndex < battlePath.layers.length - 1) {
+    }
+  }
+
+}
+
+function addBidirectionalConnection(fromNode: PathNode, toNode: PathNode): void {
+  const isChallengeRewardNode = (node: PathNode): boolean => {
+    return node.nodeType === PathNodeType.CHALLENGE_REWARD;
+  };
+  
+  if (!isChallengeRewardNode(fromNode) && !isChallengeRewardNode(toNode)) {
+    if (Math.abs(fromNode.wave - toNode.wave) !== 1) {
+      return;
+    }
+  }
+  
+  // if ((fromNode.id.includes('challenge_reward') && !toNode.id.includes('challenge')) || 
+  //     (toNode.id.includes('challenge_reward') && !fromNode.id.includes('challenge'))) {
+  //   return;
+  // }
+  if (!fromNode.connections.includes(toNode.id)) {
+    fromNode.connections.push(toNode.id);
+  }
+  if (!toNode.previousConnections.includes(fromNode.id)) {
+    toNode.previousConnections.push(fromNode.id);
+  }
+}
+
+interface ConnectionBias {
+  leftHeavy: number;
+  rightHeavy: number;
+  centerHeavy: number;
+  wavesSinceLastBias: number;
+  lastBiasDirection: 'left' | 'right' | 'center' | 'none';
+}
+
+function calculateConnectionBias(prevWaveNodes: PathNode[], seeds: any, waveIndex: number): 'left' | 'right' | 'center' | 'balanced' {
+  if (prevWaveNodes.length === 0) return 'balanced';
+  
+  const leftConnections = prevWaveNodes.filter(n => n.position.x <= 1).reduce((sum, n) => sum + n.connections.length, 0);
+  const rightConnections = prevWaveNodes.filter(n => n.position.x >= 2).reduce((sum, n) => sum + n.connections.length, 0);
+  const centerConnections = prevWaveNodes.filter(n => n.position.x === 1 || n.position.x === 2).reduce((sum, n) => sum + n.connections.length, 0);
+  
+  const total = leftConnections + rightConnections + centerConnections;
+  if (total === 0) return 'balanced';
+  
+  const leftRatio = leftConnections / total;
+  const rightRatio = rightConnections / total;
+  
+  const randomFactor = (seeds.baseSeed + waveIndex * 137) % 100 / 100.0;
+  
+  if (leftRatio > 0.6 + randomFactor * 0.2) {
+    return 'right';
+  } else if (rightRatio > 0.6 + randomFactor * 0.2) {
+    return 'left';
+  } else if (Math.abs(leftRatio - rightRatio) < 0.3) {
+    return 'center';
+  }
+  
+  return 'balanced';
+}
+
+function getDirectionalProcessOrder(nodes: PathNode[], bias: 'left' | 'right' | 'center' | 'balanced', randomSeed: number): PathNode[] {
+  const processOrder = [...nodes];
+  
+  if (bias === 'left') {
+    processOrder.sort((a, b) => a.position.x - b.position.x);
+  } else if (bias === 'right') {
+    processOrder.sort((a, b) => b.position.x - a.position.x);
+  } else if (bias === 'center') {
+    processOrder.sort((a, b) => Math.abs(1.5 - a.position.x) - Math.abs(1.5 - b.position.x));
+  } else {
+    if ((randomSeed % 3) === 0) {
+      processOrder.sort((a, b) => a.position.x - b.position.x);
+    } else if ((randomSeed % 3) === 1) {
+      processOrder.sort((a, b) => b.position.x - a.position.x);
+    } else {
+      for (let i = processOrder.length - 1; i > 0; i--) {
+        const j = (randomSeed + i) % (i + 1);
+        [processOrder[i], processOrder[j]] = [processOrder[j], processOrder[i]];
+      }
+    }
+  }
+  
+  return processOrder;
+}
+
+export function outputAllWavesWithPaths(scene: BattleScene, battlePath: BattlePath): void {
+  
+  const specialNodeTypes = [
+    PathNodeType.MAJOR_BOSS_BATTLE,
+    PathNodeType.RECOVERY_BOSS,
+    PathNodeType.ELITE_FOUR,
+    PathNodeType.CHAMPION,
+    PathNodeType.RIVAL_BATTLE,
+    PathNodeType.EVIL_BOSS_BATTLE,
+    PathNodeType.EVIL_GRUNT_BATTLE,
+    PathNodeType.EVIL_ADMIN_BATTLE,
+    PathNodeType.SMITTY_BATTLE,
+    PathNodeType.CHALLENGE_BOSS,
+    PathNodeType.CHALLENGE_RIVAL,
+    PathNodeType.CHALLENGE_EVIL_BOSS,
+    PathNodeType.CHALLENGE_CHAMPION,
+    PathNodeType.CHALLENGE_REWARD
+  ];
+
+  const getNodeTypeName = (node: PathNode): string => {
+    switch (node.nodeType) {
+      case PathNodeType.MAJOR_BOSS_BATTLE: return "MAJOR_BOSS";
+      case PathNodeType.ELITE_FOUR: return "ELITE_FOUR";
+      case PathNodeType.CHAMPION: return "CHAMPION";
+      case PathNodeType.RIVAL_BATTLE: return "RIVAL";
+      case PathNodeType.EVIL_BOSS_BATTLE: 
+        return node.metadata?.evilTeamType === 'boss' ? "EVIL_BOSS" : "EVIL_ADMIN";
+      case PathNodeType.EVIL_GRUNT_BATTLE: return "EVIL_GRUNT";
+      case PathNodeType.EVIL_ADMIN_BATTLE: return "EVIL_ADMIN";
+      case PathNodeType.RECOVERY_BOSS: return "RECOVERY_BOSS";
+      case PathNodeType.SMITTY_BATTLE: return "SMITTY";
+      case PathNodeType.CHALLENGE_BOSS: return "CHALLENGE_BOSS";
+      case PathNodeType.CHALLENGE_RIVAL: return "CHALLENGE_RIVAL";
+      case PathNodeType.CHALLENGE_EVIL_BOSS: return "CHALLENGE_EVIL_BOSS";
+      case PathNodeType.CHALLENGE_CHAMPION: return "CHALLENGE_CHAMPION";
+      case PathNodeType.CHALLENGE_REWARD: return "CHALLENGE_REWARD";
+      default: return "OTHER";
+    }
+  };
+
+
+  for (let wave = 1; wave <= battlePath.totalWaves; wave++) {
+    const nodesForWave = battlePath.waveToNodeMap.get(wave);
+    
+    if (nodesForWave && nodesForWave.length > 0) {
+      const relevantNodes = nodesForWave.filter(node => 
+        specialNodeTypes.includes(node.nodeType)
+      );
+      
+      if (relevantNodes.length > 0) {
+        
+        relevantNodes.forEach((node, index) => {
+          const nodeTypeName = getNodeTypeName(node);
+          let extraInfo = "";
+          
+          if (node.metadata) {
+            if (node.metadata.rivalStage !== undefined) {
+              extraInfo += ` (stage ${node.metadata.rivalStage})`;
+            }
+            if (node.metadata.rivalType !== undefined) {
+              extraInfo += ` (${node.metadata.rivalType})`;
+            }
+            if (node.metadata.eliteType !== undefined) {
+              extraInfo += ` (${node.metadata.eliteType})`;
+            }
+            if (node.metadata.bossType !== undefined) {
+              extraInfo += ` (${node.metadata.bossType})`;
+            }
+            if (node.metadata.evilTeamType !== undefined) {
+              extraInfo += ` (${node.metadata.evilTeamType})`;
+            }
+            if (node.metadata.dynamicModeCount !== undefined) {
+              extraInfo += ` [${node.metadata.dynamicModeCount} dynamic modes]`;
+            }
+          }
+          
+          if (node.dynamicMode && Object.keys(node.dynamicMode).length > 0) {
+            const activeModes = Object.entries(node.dynamicMode)
+              .filter(([, value]) => value)
+              .map(([key]) => key)
+              .join(', ');
+            extraInfo += ` {${activeModes}}`;
+          }
+          
+        });
+      }
+    }
+  }
+  
+  
+  const specialBattleCounts = {
+    MAJOR_BOSS: 0,
+    ELITE_FOUR: 0,
+    CHAMPION: 0,
+    RIVAL: 0,
+    EVIL_BOSS: 0,
+    EVIL_GRUNT: 0,
+    EVIL_ADMIN: 0,
+    SMITTY: 0
+  };
+  
+  const specialBattleDetails = {
+    MAJOR_BOSS: [] as {wave: number, nodeCount: number}[],
+    ELITE_FOUR: [] as {wave: number, nodeCount: number}[],
+    CHAMPION: [] as {wave: number, nodeCount: number}[],
+    RIVAL: [] as {wave: number, nodeCount: number, stage?: number, rival?: any}[],
+    EVIL_BOSS: [] as {wave: number, nodeCount: number}[],
+    EVIL_GRUNT: [] as {wave: number, nodeCount: number}[],
+    EVIL_ADMIN: [] as {wave: number, nodeCount: number}[],
+    SMITTY: [] as {wave: number, nodeCount: number}[]
+  };
+
+  for (const [, node] of battlePath.nodeMap) {
+    const nodeTypeName = getNodeTypeName(node);
+    if (nodeTypeName in specialBattleCounts) {
+      specialBattleCounts[nodeTypeName as keyof typeof specialBattleCounts]++;
+      
+      const nodesAtWave = battlePath.waveToNodeMap.get(node.wave) || [];
+      const nodeCount = nodesAtWave.length;
+      
+      if (nodeCount === 1) {
+        if (nodeTypeName === 'RIVAL') {
+          specialBattleDetails.RIVAL.push({
+            wave: node.wave, 
+            nodeCount, 
+            stage: node.metadata?.rivalStage,
+            rival: node.metadata?.rivalType
+          });
+        } else {
+          specialBattleDetails[nodeTypeName as keyof typeof specialBattleDetails].push({
+            wave: node.wave, 
+            nodeCount
+          });
+        }
+      }
+    }
+  }
+  
+  Object.entries(specialBattleCounts).forEach(([type, count]) => {
+    const details = specialBattleDetails[type as keyof typeof specialBattleDetails];
+    const singleNodeBattles = details.length;
+    
+    if (singleNodeBattles > 0) {
+      if (type === 'RIVAL') {
+        const rivalDetails = details as {wave: number, nodeCount: number, stage?: number, rival?: any}[];
+        const rivalInfo = rivalDetails.map(d => 
+          `wave ${d.wave} (${d.nodeCount} nodes, stage ${d.stage || '?'}, rival ${d.rival || '?'})`
+        ).join(', ');
+      } else {
+        const waveInfo = details.map(d => 
+          `wave ${d.wave} (${d.nodeCount} nodes)`
+        ).join(', ');
+      }
+    }
+  });
+}
+
+export function logWavesWithSpecialBattles(scene: BattleScene): string {
+  const battlePath = setupFixedBattlePaths(scene);
+  
+  const specialNodeTypes = [
+    PathNodeType.MAJOR_BOSS_BATTLE,
+    PathNodeType.RECOVERY_BOSS,
+    PathNodeType.ELITE_FOUR, 
+    PathNodeType.CHAMPION,
+    PathNodeType.RIVAL_BATTLE,
+    PathNodeType.EVIL_BOSS_BATTLE,
+    PathNodeType.EVIL_GRUNT_BATTLE,
+    PathNodeType.EVIL_ADMIN_BATTLE
+  ];
+  
+  const getNodeTypeName = (nodeType: PathNodeType): string => {
+    switch (nodeType) {
+      case PathNodeType.MAJOR_BOSS_BATTLE: return "MAJOR_BOSS";
+      case PathNodeType.ELITE_FOUR: return "ELITE_FOUR";
+      case PathNodeType.CHAMPION: return "CHAMPION";
+      case PathNodeType.RIVAL_BATTLE: return "RIVAL";
+      case PathNodeType.EVIL_BOSS_BATTLE: return "EVIL_BOSS";
+      case PathNodeType.EVIL_GRUNT_BATTLE: return "EVIL_GRUNT";
+      case PathNodeType.EVIL_ADMIN_BATTLE: return "EVIL_ADMIN";
+      default: return "TRAINER";
+    }
+  };
+
+  let output = "";
+  
+  for (let wave = 1; wave <= battlePath.totalWaves; wave++) {
+    const nodesForWave = battlePath.waveToNodeMap.get(wave);
+    
+    if (nodesForWave && nodesForWave.length > 0) {
+      const specialNodes = nodesForWave.filter(node => 
+        specialNodeTypes.includes(node.nodeType)
+      );
+      
+      if (specialNodes.length > 0) {
+        output += `wave ${wave} (${specialNodes.length} nodes):\n`;
+        
+        specialNodes.forEach((node, index) => {
+          const nodeTypeName = getNodeTypeName(node.nodeType);
+          let extraInfo = "";
+          
+          if (node.metadata?.dynamicModeCount !== undefined) {
+            extraInfo += ` [${node.metadata.dynamicModeCount} dynamic modes]`;
+          }
+          
+          if (node.dynamicMode && Object.keys(node.dynamicMode).length > 0) {
+            const activeModes = Object.entries(node.dynamicMode)
+              .filter(([, value]) => value)
+              .map(([key]) => key)
+              .join(', ');
+            extraInfo += ` {${activeModes}}`;
+          }
+          
+          output += `  node ${index + 1}: ${nodeTypeName}${extraInfo}\n`;
+        });
+        output += "\n";
+      }
+    }
+  }
+  
+  return output;
+}
+
+function createEvilBossBattle(scene: BattleScene, seedOffset: number = 35): FixedBattleConfig {
+  const hasDefeatedEvilBoss = scene.gameData.gameStats?.trainersDefeated > 0 && 
+    scene.gameData.gameStats?.battles > 20;
+  
+  const bossTypes = hasDefeatedEvilBoss ? 
+    TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND : 
+    TRAINER_TYPES.EVIL_TEAM_BOSSES.FIRST;
+  
+  return createTrainerBattle(bossTypes, seedOffset, false);
+}
+
+function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nodeIndex: number = 0): NodeGenerationResult {
+  const config = getWaveRangeConfig(wave);
+  const probabilities = config.probabilities;
+  const dynamicMode = config.dynamicMode;
+
+  scene.resetSeed(seeds.baseSeed + wave * 1000 + nodeIndex * 100);
+  
+  const nodeOutcomes = Object.entries(probabilities).map(([nodeTypeStr, weight]) => ({
+    weight,
+    nodeType: parseInt(nodeTypeStr) as PathNodeType
+  }));
+  
+  const totalWeight = nodeOutcomes.reduce((sum, outcome) => sum + outcome.weight, 0);
+  const randomValue = Utils.randSeedInt(totalWeight);
+  let currentWeight = 0;
+  
+  for (const outcomeData of nodeOutcomes) {
+    currentWeight += outcomeData.weight;
+    if (randomValue < currentWeight) {
+      let battleConfig: FixedBattleConfig | undefined;
+      
+      switch (outcomeData.nodeType) {
+        case PathNodeType.TRAINER_BATTLE:
+          battleConfig = undefined;
+          break;
+        case PathNodeType.ELITE_FOUR:
+          const eliteFourTypes = [
+            TRAINER_TYPES.ELITE_FOUR.FIRST,
+            TRAINER_TYPES.ELITE_FOUR.SECOND,
+            TRAINER_TYPES.ELITE_FOUR.THIRD,
+            TRAINER_TYPES.ELITE_FOUR.FOURTH
+          ];
+          const randomEliteType = eliteFourTypes[Utils.randSeedInt(eliteFourTypes.length)];
+          battleConfig = createEliteFourBattle(randomEliteType, false, seeds.baseSeed);
+          break;
+        case PathNodeType.CHAMPION:
+          battleConfig = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed);
+          break;
+        case PathNodeType.MAJOR_BOSS_BATTLE:
+        case PathNodeType.RECOVERY_BOSS:
+          battleConfig = undefined;
+          break;
+        case PathNodeType.EVIL_BOSS_BATTLE:
+          battleConfig = createEvilBossBattle(scene, 35);
+          break;
+        case PathNodeType.MYSTERY_NODE:
+          battleConfig = undefined;
+          break;
+        case PathNodeType.WILD_POKEMON:
+        case PathNodeType.RIVAL_BATTLE:
+        case PathNodeType.EVIL_GRUNT_BATTLE:
+        case PathNodeType.EVIL_ADMIN_BATTLE:
+        case PathNodeType.SMITTY_BATTLE:
+        case PathNodeType.CONVERGENCE_POINT:
+        case PathNodeType.ITEM_GENERAL:
+        case PathNodeType.ADD_POKEMON:
+        case PathNodeType.ITEM_TM:
+        case PathNodeType.ITEM_BERRY:
+        case PathNodeType.RAND_PERMA_ITEM:
+        case PathNodeType.PERMA_ITEMS:
+        case PathNodeType.GOLDEN_POKEBALL:
+        case PathNodeType.ROGUE_BALL_ITEMS:
+        case PathNodeType.MASTER_BALL_ITEMS:
+        case PathNodeType.ABILITY_SWITCHERS:
+        case PathNodeType.STAT_SWITCHERS:
+        case PathNodeType.GLITCH_PIECE:
+        case PathNodeType.DNA_SPLICERS:
+        case PathNodeType.MONEY:
+        case PathNodeType.PERMA_MONEY:
+        case PathNodeType.RELEASE_ITEMS:
+        case PathNodeType.MINTS:
+        case PathNodeType.EGG_VOUCHER:
+        case PathNodeType.PP_MAX:
+        case PathNodeType.COLLECTED_TYPE:
+        case PathNodeType.EXP_SHARE:
+        case PathNodeType.TYPE_SWITCHER:
+        case PathNodeType.PASSIVE_ABILITY:
+        case PathNodeType.ANY_TMS:
+        case PathNodeType.CHALLENGE_REWARD:
+          battleConfig = undefined;
+          break;
+      }
+      
+      return {
+        nodeType: outcomeData.nodeType,
+        battleConfig,
+        dynamicMode
+      };
+    }
+  }
+  
+  return {
+    nodeType: nodeOutcomes.length > 0 ? nodeOutcomes[0].nodeType : PathNodeType.WILD_POKEMON,
+    dynamicMode
+  };
+}
+
+export interface DynamicMode {
+  isNuzlocke?: boolean;
+  isNuzlight?: boolean;
+  isNightmare?: boolean;
+  noExpGain?: boolean;
+  noCatch?: boolean;
+  hasPassiveAbility?: boolean;
+  invertedTypes?: boolean;
+  boostedTrainer?: boolean;
+  multiLegendaries?: boolean;
+  multiBoss?: boolean;
+  noInitialSwitch?: boolean;
+  autoPressured?: boolean;
+  noStatBoosts?: boolean;
+  noStatusMoves?: boolean;
+  noPhysicalMoves?: boolean;
+  noSpecialMoves?: boolean;
+  statSwap?: boolean;
+  noSTAB?: boolean;
+  trickRoom?: boolean;
+  noSwitch?: boolean;
+  noResistances?: boolean;
+  noHealingItems?: boolean;
+  autoTorment?: boolean;
+  legendaryNerf?: boolean;
+  typeExtraDamage?: Type | boolean;
+  pokemonNerf?: Species | boolean;
+}
+
+interface WaveRange {
+  start: number;
+  end: number;
+  probabilities: { [key in PathNodeType]?: number };
+  dynamicMode?: DynamicMode;
+}
+
+interface NodeGenerationResult {
+  nodeType: PathNodeType;
+  battleConfig?: FixedBattleConfig;
+  dynamicMode?: DynamicMode;
+}
+
+function generateDynamicModeForWave(wave: number, scene: BattleScene, seeds: any): DynamicMode | undefined {
+  if (wave <= 150) {
+    return undefined;
+  }
+
+  const dynamicModeProperties: (keyof DynamicMode)[] = [
+    'isNuzlight',
+    'noCatch',
+    'noExpGain',
+    'hasPassiveAbility',
+    'invertedTypes',
+    'boostedTrainer',
+    'multiLegendaries',
+    'multiBoss',
+    'noInitialSwitch',
+    'autoPressured',
+    'noStatBoosts',
+    'noStatusMoves',
+    'noPhysicalMoves',
+    'noSpecialMoves',
+    'statSwap',
+    'noSTAB',
+    'trickRoom',
+    'noSwitch',
+    'noResistances',
+    'noHealingItems',
+    'autoTorment',
+    'legendaryNerf',
+    'typeExtraDamage',
+    'pokemonNerf'
+  ];
+
+  const numPropertiesToAdd = Math.floor((wave - 150) / 150) + 1;
+  const maxProperties = Math.min(numPropertiesToAdd, dynamicModeProperties.length);
+
+  if (maxProperties <= 0) {
+    return undefined;
+  }
+
+  scene.resetSeed(seeds.baseSeed + wave * 777);
+  
+  const selectedProperties: (keyof DynamicMode)[] = [];
+  const availableProperties = [...dynamicModeProperties];
+
+  for (let i = 0; i < maxProperties; i++) {
+    if (availableProperties.length === 0) break;
+    
+    const randomIndex = Utils.randSeedInt(availableProperties.length);
+    const selectedProperty = availableProperties[randomIndex];
+    selectedProperties.push(selectedProperty);
+    availableProperties.splice(randomIndex, 1);
+  }
+
+  const dynamicMode: DynamicMode = {};
+  selectedProperties.forEach(property => {
+    if (property === 'typeExtraDamage') {
+      dynamicMode[property] = Type.NORMAL;
+    } else if (property === 'pokemonNerf') {
+      dynamicMode[property] = Species.BULBASAUR;
+    } else {
+      dynamicMode[property] = true;
+    }
+  });
+
+  const moveRestrictionProperties = ['noStatusMoves', 'noPhysicalMoves', 'noSpecialMoves'];
+  const activeMoveRestrictions = moveRestrictionProperties.filter(prop => dynamicMode[prop]);
+  
+  if (activeMoveRestrictions.length >= 2) {
+    const keepIndex = Utils.randSeedInt(activeMoveRestrictions.length);
+    const propertyToKeep = activeMoveRestrictions[keepIndex];
+    const propertiesToRemove = activeMoveRestrictions.filter((_, index) => index !== keepIndex);
+    
+    propertiesToRemove.forEach(property => {
+      delete dynamicMode[property];
+    });
+    
+    const remainingProperties = dynamicModeProperties.filter(prop => 
+      !selectedProperties.includes(prop) && 
+      !moveRestrictionProperties.includes(prop)
+    );
+    
+    for (let i = 0; i < propertiesToRemove.length; i++) {
+      if (remainingProperties.length > 0) {
+        const randomIndex = Utils.randSeedInt(remainingProperties.length);
+        const replacementProperty = remainingProperties[randomIndex];
+        if (replacementProperty === 'typeExtraDamage') {
+          dynamicMode[replacementProperty] = Type.NORMAL;
+        } else if (replacementProperty === 'pokemonNerf') {
+          dynamicMode[replacementProperty] = Species.BULBASAUR;
+        } else {
+          dynamicMode[replacementProperty] = true;
+        }
+        remainingProperties.splice(randomIndex, 1);
+      }
+    }
+  }
+
+  return dynamicMode;
+}
+
+interface ChallengePathInfo {
+  startWave: number;
+  nodeCount: number;
+  challengeType: 'nightmare' | 'nuzlocke' | 'nuzlight';
+  additionalProperties: (keyof DynamicMode)[];
+  nodes: PathNode[];
+  rewardNode: PathNode;
+}
+
+function generateChallengePath(
+  scene: BattleScene,
+  startWave: number,
+  waveRange: number,
+  seeds: any,
+  existingWaves: Set<number>
+): ChallengePathInfo | null {
+  const rangeStart = waveRange;
+  const rangeEnd = rangeStart + 74;
+  
+  scene.resetSeed(seeds.baseSeed + startWave * 1337);
+  
+  const nodeCount = Utils.randSeedInt(100) < 40 ? 4 : (Utils.randSeedInt(100) < 70 ? 5 : 3);
+  
+  let challengeType: 'nightmare' | 'nuzlocke' | 'nuzlight';
+  if (nodeCount === 3) {
+    challengeType = 'nightmare';
+  } else if (nodeCount === 4) {
+    challengeType = Utils.randSeedInt(100) < 80 ? 'nuzlocke' : 'nuzlight';
+  } else {
+    challengeType = Utils.randSeedInt(2) === 0 ? 'nuzlocke' : 'nuzlight';
+  }
+  
+  const additionalPropertiesCount = calculateAdditionalPropertiesCount(rangeStart, 999999);
+  const additionalProperties: (keyof DynamicMode)[] = [];
+  
+  if (additionalPropertiesCount > 0) {
+    const availableProperties: (keyof DynamicMode)[] = [
+      'noCatch', 'noExpGain', 'hasPassiveAbility', 'invertedTypes',
+      'boostedTrainer', 'multiLegendaries', 'multiBoss', 'noInitialSwitch',
+      'autoPressured', 'noStatBoosts', 'noStatusMoves', 'noPhysicalMoves', 'noSpecialMoves', 'statSwap',
+      'noSTAB', 'trickRoom', 'noSwitch',
+      'noResistances', 'noHealingItems', 'autoTorment', 'legendaryNerf', 'typeExtraDamage', 'pokemonNerf'
+    ];
+    
+    const propertiesToAdd = Math.min(additionalPropertiesCount, availableProperties.length);
+    for (let i = 0; i < propertiesToAdd; i++) {
+      const randomIndex = Utils.randSeedInt(availableProperties.length);
+      additionalProperties.push(availableProperties[randomIndex]);
+      availableProperties.splice(randomIndex, 1);
+    }
+  }
+  
+  const waveNodeTracker = new Map<number, Set<number>>();
+  
+  if (!checkChallengeSlotAvailability(startWave, nodeCount, rangeEnd, waveNodeTracker, existingWaves)) {
+    return null;
+  }
+  
+  for (let i = 0; i <= nodeCount; i++) {
+    existingWaves.add(startWave + i);
+  }
+  
+  const { nodes, rewardNode } = constructChallengePathNodes(
+    scene,
+    startWave,
+    nodeCount,
+    challengeType,
+    additionalProperties,
+    seeds
+  );
+  
+  
+  return {
+    startWave,
+    nodeCount,
+    challengeType,
+    additionalProperties,
+    nodes,
+    rewardNode
+  };
+}
+
+export function testChallengePathGeneration(scene: BattleScene): void {
+  
+  const CHALLENGE_RANGES = generateChallengeRanges(500);
+  
+  const seeds = {
+    baseSeed: 12345,
+    rivalSelection: 67890,
+    challengePath: 11111
+  };
+  
+  const existingWaves = new Set<number>();
+  
+  for (const range of CHALLENGE_RANGES) {
+    
+    const challengePath = generateChallengePath(
+      scene,
+      range.start + 10,
+      range.start,
+      seeds,
+      existingWaves
+    );
+    
+    if (challengePath) {
+      
+      challengePath.nodes.forEach(node => {
+        const dynamicModeCount = node.dynamicMode ? Object.keys(node.dynamicMode).length : 0;
+        if (node.dynamicMode) {
+          const activeProperties = Object.keys(node.dynamicMode).filter(key => node.dynamicMode![key as keyof DynamicMode]);
+        }
+      });
+    } else {
+    }
+  }
+  
+}
+
+function checkChallengeSlotAvailability(
+  startWave: number,
+  nodeCount: number,
+  rangeEnd: number,
+  waveNodeTracker: Map<number, Set<number>>,
+  existingWaves: Set<number>
+): boolean {
+  const CHALLENGE_BRANCH_FIRST = 2;
+  const CHALLENGE_BRANCH_OTHER = 3;
+  
+  const requiredWaves = nodeCount + 1;
+  
+  if (startWave + requiredWaves - 1 > rangeEnd) {
+    return false;
+  }
+  
+  for (let i = 0; i < requiredWaves; i++) {
+    const wave = startWave + i;
+    
+    if (existingWaves.has(wave)) {
+      return false;
+    }
+    
+    const requiredBranch = i === 0 ? CHALLENGE_BRANCH_FIRST : CHALLENGE_BRANCH_OTHER;
+    const occupiedBranches = waveNodeTracker.get(wave);
+    
+    if (occupiedBranches && occupiedBranches.has(requiredBranch)) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+function debugChallengeSlotSearch(
+  layerRangeStart: number,
+  layerRangeEnd: number,
+  nodeCount: number,
+  waveNodeTracker: Map<number, Set<number>>,
+  existingWaves: Set<number>
+): void {
+  
+  const maxSearchWave = layerRangeEnd - nodeCount;
+  let availableSlots = 0;
+  let conflictReasons: string[] = [];
+  
+  for (let wave = layerRangeStart; wave <= maxSearchWave; wave++) {
+    const isAvailable = checkChallengeSlotAvailability(wave, nodeCount, layerRangeEnd, waveNodeTracker, existingWaves);
+    
+    if (isAvailable) {
+      availableSlots++;
+    } else {
+      let reason = '';
+      if (wave + nodeCount > layerRangeEnd) {
+        reason = 'extends beyond range';
+      } else {
+        const conflicts = [];
+        for (let i = 0; i <= nodeCount; i++) {
+          const checkWave = wave + i;
+          if (existingWaves.has(checkWave)) {
+            conflicts.push(`W${checkWave}:existing`);
+          } else {
+            const requiredBranch = i === 0 ? 2 : 3;
+            const occupiedBranches = waveNodeTracker.get(checkWave);
+            if (occupiedBranches && occupiedBranches.has(requiredBranch)) {
+              conflicts.push(`W${checkWave}:B${requiredBranch}`);
+            }
+          }
+        }
+        reason = conflicts.join(', ');
+      }
+      if (!conflictReasons.includes(reason)) {
+        conflictReasons.push(reason);
+      }
+    }
+  }
+  
+  if (conflictReasons.length > 0) {
+  }
+}
+
+function constructChallengePathNodes(
+  scene: BattleScene,
+  startWave: number,
+  nodeCount: number,
+  challengeType: 'nightmare' | 'nuzlocke' | 'nuzlight',
+  additionalProperties: (keyof DynamicMode)[],
+  seeds: any
+): { nodes: PathNode[]; rewardNode: PathNode } {
+  const challengeNodeTypes = [
+    PathNodeType.CHALLENGE_BOSS,
+    PathNodeType.CHALLENGE_RIVAL,
+    PathNodeType.CHALLENGE_EVIL_BOSS,
+    PathNodeType.CHALLENGE_CHAMPION
+  ];
+  
+  const nodes: PathNode[] = [];
+  
+  for (let i = 0; i < nodeCount; i++) {
+    const wave = startWave + i;
+    const nodeType = challengeNodeTypes[Utils.randSeedInt(challengeNodeTypes.length)];
+    
+    const dynamicMode: DynamicMode = {};
+    
+    if (challengeType === 'nightmare') {
+      dynamicMode.isNightmare = true;
+    } else if (challengeType === 'nuzlocke') {
+      dynamicMode.isNuzlocke = true;
+    } else if (challengeType === 'nuzlight') {
+      dynamicMode.isNuzlight = true;
+    }
+    
+    additionalProperties.forEach(prop => {
+      dynamicMode[prop] = true;
+    });
+    
+    let battleConfig: FixedBattleConfig | undefined;
+    let metadata: any = {
+      challengeType,
+      challengeNodeIndex: i + 1,
+      totalChallengeNodes: nodeCount,
+      dynamicModeCount: Object.keys(dynamicMode).length
+    };
+    
+    switch (nodeType) {
+      case PathNodeType.CHALLENGE_BOSS:
+        battleConfig = undefined;
+        metadata.bossType = 'challenge_major';
+        break;
+      case PathNodeType.CHALLENGE_RIVAL:
+        const randomRival = getDynamicRivalType(6, scene.gameData, true);
+        battleConfig = createRivalBattle(6, randomRival, Utils.randSeedInt(100) < 20);
+        metadata.rivalStage = 6;
+        metadata.rivalType = randomRival;
+        break;
+      case PathNodeType.CHALLENGE_EVIL_BOSS:
+        battleConfig = createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND, 35, false);
+        metadata.evilTeamType = 'boss';
+        break;
+      case PathNodeType.CHALLENGE_CHAMPION:
+        battleConfig = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed);
+        break;
+    }
+    
+    const branch = i === 0 ? 3 : 4;
+    
+    const node = createPathNode(
+      wave,
+      nodeType,
+      branch,
+      battleConfig,
+      metadata,
+      dynamicMode
+    );
+    
+    nodes.push(node);
+  }
+  
+  const rewardWave = startWave + nodeCount;
+  const rewardNodeType = Utils.randSeedInt(100) < 50 ? 'master_ball' : 'golden_pokeball';
+  const rewardNode = createPathNode(
+    rewardWave,
+    PathNodeType.CHALLENGE_REWARD,
+    4,
+    undefined,
+    {
+      challengeReward: true,
+      rewardType: rewardNodeType
+    }
+  );
+  
+  for (let i = 0; i < nodes.length - 1; i++) {
+    addBidirectionalConnection(nodes[i], nodes[i + 1]);
+  }
+  addBidirectionalConnection(nodes[nodes.length - 1], rewardNode);
+  
+  return { nodes, rewardNode };
+}
+
+export function getDynamicModeLocalizedString(mode: DynamicModes): { name: string; description: string; formatted: string } | null {
+  if (mode === DynamicModes.NONE) {
+    return null;
+  }
+
+  const modeMap: { [key in DynamicModes]: string } = {
+    [DynamicModes.NONE]: "",
+    [DynamicModes.IS_NUZLOCKE]: "nodeMode:challenge:isNuzlocke",
+    [DynamicModes.IS_NUZLIGHT]: "nodeMode:challenge:isNuzlight",
+    [DynamicModes.IS_NIGHTMARE]: "nodeMode:challenge:isNightmare",
+    [DynamicModes.NO_EXP_GAIN]: "nodeMode:challenge:noExpGain",
+    [DynamicModes.NO_CATCH]: "nodeMode:challenge:noCatch",
+    [DynamicModes.HAS_PASSIVE_ABILITY]: "nodeMode:challenge:hasPassiveAbility",
+    [DynamicModes.INVERTED_TYPES]: "nodeMode:challenge:invertedTypes",
+    [DynamicModes.BOOSTED_TRAINER]: "nodeMode:challenge:boostedTrainer",
+    [DynamicModes.MULTI_LEGENDARIES]: "nodeMode:challenge:multiLegendaries",
+    [DynamicModes.MULTI_BOSS]: "nodeMode:challenge:multiBoss",
+    [DynamicModes.NO_INITIAL_SWITCH]: "nodeMode:challenge:noInitialSwitch",
+    [DynamicModes.AUTO_PRESSURED]: "nodeMode:challenge:autoPressured",
+    [DynamicModes.NO_STAT_BOOSTS]: "nodeMode:challenge:noStatBoosts",
+    [DynamicModes.NO_STATUS_MOVES]: "nodeMode:challenge:noStatusMoves",
+    [DynamicModes.NO_PHYSICAL_MOVES]: "nodeMode:challenge:noPhysicalMoves",
+    [DynamicModes.NO_SPECIAL_MOVES]: "nodeMode:challenge:noSpecialMoves",
+    [DynamicModes.STAT_SWAP]: "nodeMode:challenge:statSwap",
+    [DynamicModes.NO_STAB]: "nodeMode:challenge:noStab",
+    [DynamicModes.TRICK_ROOM]: "nodeMode:challenge:trickRoom",
+    [DynamicModes.NO_SWITCH]: "nodeMode:challenge:noSwitch",
+    [DynamicModes.NO_RESISTANCES]: "nodeMode:challenge:noResistances",
+    [DynamicModes.NO_HEALING_ITEMS]: "nodeMode:challenge:noHealingItems",
+    [DynamicModes.AUTO_TORMENT]: "nodeMode:challenge:autoTorment",
+    [DynamicModes.LEGENDARY_NERF]: "nodeMode:challenge:legendaryNerf",
+    [DynamicModes.TYPE_EXTRA_DAMAGE]: "nodeMode:challenge:typeExtraDamage",
+    [DynamicModes.POKEMON_NERF]: "nodeMode:challenge:pokemonNerf"
+  };
+
+  const challengeKey = modeMap[mode];
+  if (!challengeKey) {
+    return null;
+  }
+
+  const name = i18next.t(`${challengeKey}.name`);
+  const description = i18next.t(`${challengeKey}.description`);
+  const challengeText = i18next.t(`nodeMode:challenge:chaosChallenge`);
+  
+  return {
+    name,
+    description,
+    formatted: `${challengeText} ${name}: ${description}`
+  };
+}
+
+export function resetBattlePathGlobalState(): void {
+  currentBattlePath = null;
+}
+

@@ -51,9 +51,9 @@ export default class ModGlitchFormUiHandler extends FormModalUiHandler {
     }
     
     async handleButtonPress(index: number): Promise<boolean> {
-        if (index === 0) { // Upload button
+        if (index === 0) {
             return this.uploadMod();
-        } else { // Cancel button
+        } else {
             this.clear();
             this.scene.ui.revertMode();
             return true;
@@ -81,7 +81,6 @@ export default class ModGlitchFormUiHandler extends FormModalUiHandler {
         
         this.createFileInput("jsonFile", "JSON Configuration", startY + 20, ".json", this.handleJsonFileChange.bind(this));
         
-        // Status field
         const statusField = addTextObject(
             this.scene,
             10,
@@ -94,7 +93,8 @@ export default class ModGlitchFormUiHandler extends FormModalUiHandler {
         this.modalContainer.add(statusField);
         this.formFields["status"] = { 
             element: statusField, 
-            setValue: (text) => statusField.setText(text)
+            setValue: (text) => statusField.setText(text),
+            setVisible: (visible) => statusField.setVisible(visible)
         };
         
         const formatNote = addTextObject(
@@ -230,12 +230,12 @@ export default class ModGlitchFormUiHandler extends FormModalUiHandler {
         this.uploadError = message;
         const statusField = this.formFields["status"];
         
-        if (statusField) {
+        if (statusField && statusField.setVisible) {
             if (message) {
                 statusField.setValue(message);
-                statusField.element.setVisible(true);
+                statusField.setVisible(true);
             } else {
-                statusField.element.setVisible(false);
+                statusField.setVisible(false);
             }
         }
     }
@@ -265,8 +265,11 @@ export default class ModGlitchFormUiHandler extends FormModalUiHandler {
                         speciesId: this.jsonData.speciesId,
                         formName: this.jsonData.formName,
                         jsonData: this.jsonData,
-                        spriteData: this.jsonData.sprites.front
+                        spriteData: this.jsonData.sprites.front,
+                        iconData: this.jsonData.sprites.icon || this.jsonData.sprites.front
                     });
+                    
+                    this.scene.gameData.gameStats.glitchModsUploaded++;
                     
                     this.scene.ui.showText(
                         "Glitch form mod uploaded and saved successfully!",

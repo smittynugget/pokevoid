@@ -7,6 +7,7 @@ import i18next from "i18next";
 import {Button} from "#enums/buttons";
 import { getPokemonNameWithAffix } from "#app/messages.js";
 import { CommandPhase } from "#app/phases/command-phase.js";
+import { getDynamicModeLocalizedString, DynamicModes } from "#app/battle.js";
 
 export enum Command {
   FIGHT = 0,

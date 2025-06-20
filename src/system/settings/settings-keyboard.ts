@@ -86,8 +86,8 @@ export const settingKeyboardOptions = {
     [SettingKeyboard.Alt_Button_Voidex]: [`KEY ${Button.VOIDEX.toString()}`, pressAction],
   [SettingKeyboard.Button_Cycle_Nature]: [`KEY ${Button.CYCLE_NATURE.toString()}`, pressAction],
   [SettingKeyboard.Alt_Button_Cycle_Nature]: [`KEY ${Button.CYCLE_NATURE.toString()}`, pressAction],
-  [SettingKeyboard.Button_Cycle_Variant]: [`KEY ${Button.V.toString()}`, pressAction],
-  [SettingKeyboard.Alt_Button_Cycle_Variant]: [`KEY ${Button.V.toString()}`, pressAction],
+  [SettingKeyboard.Button_Cycle_Variant]: [`KEY ${Button.CYCLE_VARIANT.toString()}`, pressAction],
+  [SettingKeyboard.Alt_Button_Cycle_Variant]: [`KEY ${Button.CYCLE_VARIANT.toString()}`, pressAction],
   [SettingKeyboard.Button_Speed_Up]: [`KEY ${Button.SPEED_UP.toString()}`, pressAction],
   [SettingKeyboard.Alt_Button_Speed_Up]: [`KEY ${Button.SPEED_UP.toString()}`, pressAction],
   [SettingKeyboard.Button_Slow_Down]: [`KEY ${Button.SLOW_DOWN.toString()}`, pressAction],
@@ -202,27 +202,27 @@ export function setSettingKeyboard(scene: BattleScene, setting: SettingKeyboard,
       }
     }
     break;
-        // case SettingKeyboard.Default_Layout:
-        //     if (value && scene.ui) {
-        //             const cancelHandler = () => {
-        //                 scene.ui.revertMode();
-        //                 (scene.ui.getHandler() as SettingsKeyboardUiHandler).setOptionCursor(Object.values(SettingKeyboard).indexOf(SettingKeyboard.Default_Layout), 0, true);
-        //                 (scene.ui.getHandler() as SettingsKeyboardUiHandler).updateBindings();
-        //                 return false;
-        //             };
-        //             const changeKeyboardHandler = (keyboardLayout: string) => {
-        //                 scene.inputController.setChosenKeyboardLayout(keyboardLayout);
-        //                 cancelHandler();
-        //                 return true;
-        //             };
-        //             scene.ui.setOverlayMode(Mode.OPTION_SELECT, {
-        //                 options: [{
-        //                     label: 'Default',
-        //                     handler: changeKeyboardHandler,
-        //                 }]
-        //             });
-        //             return false;
-        //     }
+        case SettingKeyboard.Default_Layout:
+            if (value && scene.ui) {
+                    const cancelHandler = () => {
+                        scene.ui.revertMode();
+                        (scene.ui.getHandler() as SettingsKeyboardUiHandler).setOptionCursor(Object.values(SettingKeyboard).indexOf(SettingKeyboard.Default_Layout), 0, true);
+                        (scene.ui.getHandler() as SettingsKeyboardUiHandler).updateBindings();
+                        return false;
+                    };
+                    const changeKeyboardHandler = (keyboardLayout: string) => {
+                        scene.inputController.setChosenKeyboardLayout(keyboardLayout);
+                        cancelHandler();
+                        return true;
+                    };
+                    scene.ui.setOverlayMode(Mode.OPTION_SELECT, {
+                        options: [{
+                            label: 'Default',
+                            handler: changeKeyboardHandler,
+                        }]
+                    });
+                    return false;
+            }
   }
   return true;
 

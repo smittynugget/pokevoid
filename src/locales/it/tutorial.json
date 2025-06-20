@@ -328,5 +328,28 @@
         "2":"Le uniche restrizioni sono che il tuo primo Pokémon non può essere scambiato, e i leggendari possono essere scambiati solo con altri leggendari, Mega o Pokémon Dynamax!",
         "3":"Buona Schiusa!"
       }
+    },
+  "chaosAndGauntletModes": {
+    "title": {
+      "1": "NUOVE MODALITÀ CHAOS",
+      "2": "NUOVE MODALITÀ CHAOS",
+      "3": "MODALITÀ SFIDA!",
+      "4": "MODALITÀ SFIDA!",
+      "5": "Rendi Leggendario Qualsiasi Pokémon"
+    },
+    "text": {
+      "1": "Prendendo ispirazione dai maestri roguelike come Slay the Spire, Inscryption e molti altri, le modalità CHAOS di Pokevoid ti permettono di scegliere il percorso che prenderai dopo!",
+      "2": "Pianifica il tuo percorso e fai del tuo meglio per superare il Chaos all'interno del VUOTO!",
+      "3": "Entra nella Sfida! Affronta ondata dopo ondata di incontri intensi!",
+      "4": "Lo stile di battaglia originale di Pokerogue, intensamente remixato con follia casuale di Pokevoid e meccaniche che rompono il gioco!",
+      "5": "Vai avanti allenatore, abbraccia il potere proibito del vuoto e rendi QUALSIASI Pokémon leggendario!"
     }
+  },
+  "thankYou": {
+    "title": "Caro Giocatore",
+    "text": {
+      "1": "16 mesi di follia di sviluppo in solitario significano tutto - ogni volta che qualcuno come te si diverte giocando a questo gioco. Se le mie idee strane funzionano davvero e ti stai divertendo,", 
+      "2": "allora forse - sono più vicino al mio sogno di diventare un vero sviluppatore di giochi. Grazie mille per aver giocato alla mia versione caotica e rotta di PokéRogue! - Smitty"
+    }
+  }
 }

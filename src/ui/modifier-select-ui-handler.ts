@@ -27,10 +27,12 @@ export const SHOP_OPTIONS_ROW_LIMIT = 12;
 export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   private modifierContainer: Phaser.GameObjects.Container;
   private rerollButtonContainer: Phaser.GameObjects.Container;
+  private permaRerollButtonContainer: Phaser.GameObjects.Container;
   private lockRarityButtonContainer: Phaser.GameObjects.Container;
   private transferButtonContainer: Phaser.GameObjects.Container;
   private checkButtonContainer: Phaser.GameObjects.Container;
   private rerollCostText: Phaser.GameObjects.Text;
+  private permaRerollCostText: Phaser.GameObjects.Text;
   private lockRarityButtonText: Phaser.GameObjects.Text;
   private moveInfoOverlay : DynamicMoveInfoOverlay;
   private moveInfoOverlayActive : boolean = false;
@@ -38,6 +40,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   private rowCursor: integer = 0;
   private player: boolean;
   private rerollCost: integer;
+  private permaRerollCost: integer;
   private transferButtonWidth: integer;
   private checkButtonWidth: integer;
 
@@ -107,6 +110,20 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     this.rerollCostText.setPositionRelative(rerollButtonText, rerollButtonText.displayWidth + 5, 1);
     this.rerollButtonContainer.add(this.rerollCostText);
 
+    this.permaRerollButtonContainer = this.scene.add.container(16, -64);
+    this.permaRerollButtonContainer.setVisible(false);
+    ui.add(this.permaRerollButtonContainer);
+
+    const permaRerollButtonText = addTextObject(this.scene, -4, -2, i18next.t("modifierSelectUiHandler:permaReroll"), TextStyle.PARTY);
+    permaRerollButtonText.setOrigin(0, 0);
+    this.permaRerollButtonContainer.add(permaRerollButtonText);
+
+    this.permaRerollCostText = addTextObject(this.scene, 0, 0, "", TextStyle.MONEY);
+    this.permaRerollCostText.setName("text-permaReroll-cost");
+    this.permaRerollCostText.setOrigin(0, 0);
+    this.permaRerollCostText.setPositionRelative(permaRerollButtonText, permaRerollButtonText.displayWidth + 5, 1);
+    this.permaRerollButtonContainer.add(this.permaRerollCostText);
+
     this.lockRarityButtonContainer = this.scene.add.container(16, -64);
     this.lockRarityButtonContainer.setVisible(false);
     ui.add(this.lockRarityButtonContainer);
@@ -166,14 +183,26 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     this.rerollButtonContainer.setVisible(false);
     this.rerollButtonContainer.setAlpha(0);
 
+    this.permaRerollButtonContainer.setVisible(false);
+    this.permaRerollButtonContainer.setAlpha(0);
+
     this.lockRarityButtonContainer.setVisible(false);
     this.lockRarityButtonContainer.setAlpha(0);
 
     this.rerollButtonContainer.setPositionRelative(this.lockRarityButtonContainer, 0, canLockRarities ? -12 : 0);
 
-    this.rerollCost = args[3] as integer;
+    this.permaRerollButtonContainer.setPositionRelative(this.rerollButtonContainer, 70, 0);
+
+    if (typeof args[3] === 'object' && args[3] !== null && 'rerollCost' in args[3] && 'permaRerollCost' in args[3]) {
+      this.rerollCost = args[3].rerollCost;
+      this.permaRerollCost = args[3].permaRerollCost;
+    } else {
+      this.rerollCost = args[3] as integer;
+      this.permaRerollCost = 5000;
+    }
 
     this.updateRerollCostText();
+    this.updatePermaRerollCostText();
 
     const typeOptions = args[1] as ModifierTypeOption[];
     const shopTypeOptions = !this.forcedDraftSelection ? getPlayerShopModifierTypeOptionsForWave(this.scene, this.scene.getWaveMoneyAmount(1)) : null;
@@ -250,14 +279,16 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
 
       this.rerollButtonContainer.setAlpha(0);
+      this.permaRerollButtonContainer.setAlpha(0);
       this.checkButtonContainer.setAlpha(0);
       this.lockRarityButtonContainer.setAlpha(0);
       this.rerollButtonContainer.setVisible(true);
+      this.permaRerollButtonContainer.setVisible(!this.forcedDraftSelection);
       this.checkButtonContainer.setVisible(true);
       this.lockRarityButtonContainer.setVisible(canLockRarities);
 
       this.scene.tweens.add({
-        targets: [ this.rerollButtonContainer, this.lockRarityButtonContainer, this.checkButtonContainer ],
+        targets: [ this.rerollButtonContainer, this.permaRerollButtonContainer, this.lockRarityButtonContainer, this.checkButtonContainer ],
         alpha: 1,
         duration: 250
       });
@@ -265,10 +296,12 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const updateCursorTarget = () => {
         if (this.scene.shopCursorTarget === ShopCursorTarget.CHECK_TEAM) {
           this.setRowCursor(0);
-          this.setCursor(2);
+          const buttonLayout = this.getButtonLayout();
+          const checkTeamIndex = buttonLayout.findIndex(btn => btn.descKey === "modifierSelectUiHandler:checkTeamDesc");
+          this.setCursor(checkTeamIndex >= 0 ? checkTeamIndex : 2);
         } else {
           this.setRowCursor(this.scene.shopCursorTarget);
-      this.setCursor(0);
+          this.setCursor(0);
         }
       };
 
@@ -326,7 +359,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     } else {
       switch (button) {
         case Button.UP:
-          if (this.rowCursor === 0 && this.cursor === 3) {
+          if (this.rowCursor === 0 && this.lockRarityButtonContainer.visible && this.cursor === (this.getRowItems(0) - 1)) {
             success = this.setCursor(0);
           } else if (this.rowCursor < this.shopOptionsRows.length + 1) {
             success = this.setRowCursor(this.rowCursor + 1);
@@ -336,31 +369,13 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           if (this.rowCursor) {
             success = this.setRowCursor(this.rowCursor - 1);
           } else if (this.lockRarityButtonContainer.visible && this.cursor === 0) {
-            success = this.setCursor(3);
+            success = this.setCursor(this.getRowItems(0) - 1);
           }
           break;
         case Button.LEFT:
           if (!this.rowCursor) {
-            switch (this.cursor) {
-              case 0:
-                success = false;
-                break;
-              case 1:
-            if (this.lockRarityButtonContainer.visible) {
-              success = this.setCursor(3);
-            } else {
-                success = this.rerollButtonContainer.visible && this.setCursor(0);
-            }
-                break;
-              case 2:
-                if (this.transferButtonContainer.visible) {
-                  success = this.setCursor(1);
-                } else if (this.rerollButtonContainer.visible) {
-                  success = this.setCursor(0);
-                } else {
-                  success = false;
-                }
-                break;
+            if (this.cursor > 0) {
+              success = this.setCursor(this.cursor - 1);
             }
           } else if (this.cursor) {
             success = this.setCursor(this.cursor - 1);
@@ -370,27 +385,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           break;
         case Button.RIGHT:
           if (!this.rowCursor) {
-            switch (this.cursor) {
-              case 0:
-                if (this.transferButtonContainer.visible) {
-                  success = this.setCursor(1);
-                } else {
-                  success = this.setCursor(2);
-                }
-                break;
-              case 1:
-                success = this.setCursor(2);
-                break;
-              case 2:
-                success = false;
-                break;
-          case 3:
-            if (this.transferButtonContainer.visible) {
-              success = this.setCursor(1);
-            } else {
-              success = this.setCursor(2);
-            }
-            break;
+            if (this.cursor < this.getRowItems(this.rowCursor) - 1) {
+              success = this.setCursor(this.cursor + 1);
             }
           } else if (this.cursor < this.getRowItems(this.rowCursor) - 1) {
             success = this.setCursor(this.cursor + 1);
@@ -416,15 +412,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       this.cursorObj = this.scene.add.image(0, 0, "cursor");
       this.modifierContainer.add(this.cursorObj);
     }
-
-    // Safely get options array for the current row
     const options = (this.rowCursor === 1 ? this.options : 
       (this.rowCursor >= 2 && this.shopOptionsRows.length >= (this.rowCursor - 1) ? 
         this.shopOptionsRows[this.shopOptionsRows.length - (this.rowCursor - 1)] : []));
     
     if (!options || options.length === 0 || cursor >= options.length) {
-      // console.warn(`Invalid cursor position: options is ${options ? (options.length === 0 ? 'empty' : 'valid') : 'undefined'}, cursor=${cursor}`);
-      
       if (options && options.length > 0) {
         this.cursor = Math.min(cursor, options.length - 1);
       } else if (this.rowCursor > 0) {
@@ -492,18 +484,17 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         const pokemonAbility = type.getPokemon().getAbility();
         this.moveInfoOverlay.show(pokemonAbility.description);
       }
-    } else if (cursor === 0) {
-      this.cursorObj.setPosition(6, this.lockRarityButtonContainer.visible ? -72 : -60);
-      ui.showText(i18next.t("modifierSelectUiHandler:rerollDesc"));
-    } else if (cursor === 1) {
-      this.cursorObj.setPosition((this.scene.game.canvas.width - this.transferButtonWidth - this.checkButtonWidth)/6 - 30, -60);
-      ui.showText(i18next.t("modifierSelectUiHandler:transferDesc"));
-    } else if (cursor === 2) {
-      this.cursorObj.setPosition((this.scene.game.canvas.width - this.checkButtonWidth)/6 - 10, -60);
-      ui.showText(i18next.t("modifierSelectUiHandler:checkTeamDesc"));
     } else {
-      this.cursorObj.setPosition(6, -60);
-      ui.showText(i18next.t("modifierSelectUiHandler:lockRaritiesDesc"));
+      const buttonLayout = this.getButtonLayout();
+      const buttonInfo = buttonLayout[cursor];
+      
+      if (buttonInfo) {
+        this.cursorObj.setPosition(buttonInfo.x, buttonInfo.y);
+        ui.showText(i18next.t(buttonInfo.descKey));
+      } else {
+        this.cursor = Math.min(cursor, buttonLayout.length - 1);
+        return this.setCursor(this.cursor);
+      }
     }
 
     return ret;
@@ -516,11 +507,12 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       this.rowCursor = rowCursor;
       let newCursor = Math.round(this.cursor / Math.max(this.getRowItems(lastRowCursor) - 1, 1) * (this.getRowItems(rowCursor) - 1));
       if (rowCursor === 0) {
-        if (newCursor === 0 && !this.rerollButtonContainer.visible) {
-          newCursor = 1;
+        const maxCursor = this.getRowItems(rowCursor) - 1;
+        if (newCursor > maxCursor) {
+          newCursor = maxCursor;
         }
-        if (newCursor === 1 && !this.transferButtonContainer.visible) {
-          newCursor = 2;
+        if (newCursor < 0) {
+          newCursor = 0;
         }
       }
       this.cursor = -1;
@@ -531,10 +523,47 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     return false;
   }
 
+  public getButtonLayout(): Array<{x: number, y: number, descKey: string}> {
+    const layout = [
+      { x: 6, y: this.lockRarityButtonContainer.visible ? -72 : -60, descKey: "modifierSelectUiHandler:rerollDesc" }
+    ];
+    
+    if (this.permaRerollButtonContainer.visible) {
+      layout.push({ x: 76, y: this.lockRarityButtonContainer.visible ? -72 : -60, descKey: "modifierSelectUiHandler:permaRerollDesc" });
+    }
+    if (this.transferButtonContainer.visible) {
+      layout.push({ 
+        x: (this.scene.game.canvas.width - this.transferButtonWidth - this.checkButtonWidth)/6 - 30, 
+        y: -60, 
+        descKey: "modifierSelectUiHandler:transferDesc" 
+      });
+      layout.push({ 
+        x: (this.scene.game.canvas.width - this.checkButtonWidth)/6 - 10, 
+        y: -60, 
+        descKey: "modifierSelectUiHandler:checkTeamDesc" 
+      });
+    } else {
+      layout.push({ 
+        x: (this.scene.game.canvas.width - this.checkButtonWidth)/6 - 10, 
+        y: -60, 
+        descKey: "modifierSelectUiHandler:checkTeamDesc" 
+      });
+    }
+    if (this.lockRarityButtonContainer.visible) {
+      layout.push({ 
+        x: 6, 
+        y: -60, 
+        descKey: "modifierSelectUiHandler:lockRaritiesDesc" 
+      });
+    }
+    
+    return layout;
+  }
+
   private getRowItems(rowCursor: integer): integer {
     switch (rowCursor) {
       case 0:
-        return 3;
+        return this.getButtonLayout().length;
       case 1:
         return this.options.length;
       default:
@@ -553,6 +582,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
    setRerollCost(rerollCost: integer): void {
     this.rerollCost = rerollCost;
+  }
+
+  setPermaRerollCost(permaRerollCost: integer): void {
+    this.permaRerollCost = permaRerollCost;
   }
 
   updateCostText(): void {
@@ -583,6 +616,16 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     this.rerollCostText.setText(i18next.t(translationKey, { formattedMoney }));
     this.rerollCostText.setColor(this.getTextColor(textStyle));
     this.rerollCostText.setShadowColor(this.getTextColor(textStyle, true));
+  }
+
+  updatePermaRerollCostText(): void {
+    const canReroll = this.scene.gameData.permaMoney >= this.permaRerollCost;
+    const textStyle = canReroll ? TextStyle.PERFECT_IV : TextStyle.PARTY_RED;
+    const formattedMoney = Utils.formatMoney(this.scene.moneyFormat, this.permaRerollCost);
+    
+    this.permaRerollCostText.setText(i18next.t("modifierSelectUiHandler:permaRerollCost", { formattedMoney }));
+    this.permaRerollCostText.setColor(this.getTextColor(textStyle));
+    this.permaRerollCostText.setShadowColor(this.getTextColor(textStyle, true));
   }
 
   updateLockRaritiesText(): void {
@@ -620,7 +663,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       onComplete: () => options.forEach(o => o.destroy())
     });
 
-    [ this.rerollButtonContainer, this.checkButtonContainer, this.transferButtonContainer, this.lockRarityButtonContainer ].forEach(container => {
+    [ this.rerollButtonContainer, this.permaRerollButtonContainer, this.checkButtonContainer, this.transferButtonContainer, this.lockRarityButtonContainer ].forEach(container => {
       if (container.visible) {
         this.scene.tweens.add({
           targets: container,
@@ -701,7 +744,6 @@ class ModifierOption extends Phaser.GameObjects.Container {
         const newPokemon = (this.modifierTypeOption.type as AddPokemonModifierType).getPokemon();
         item = this.scene.add.sprite(0, 0, newPokemon.getIconAtlasKey());
         item.setFrame(newPokemon.getIconId(false));
-        // Temporary fix to show pokemon's default icon if variant icon doesn't exist
         if (item.frame.name !== newPokemon.getIconId(false)) {
           const temp = newPokemon.shiny;
           newPokemon.shiny = false;

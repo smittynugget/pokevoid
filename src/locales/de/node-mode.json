@@ -1,0 +1,206 @@
+{
+  "viewTitle": "Kampfpfad-Karte",
+  "selectTitle": "Kampfpfad auswählen",
+  "noPathMessage": "Kein Kampfpfad verfügbar.\nErstelle zuerst einen!",
+  "unknownEncounter": "Unbekannte Begegnung",
+  "unknownNode": "Unbekannt",
+  "descriptions": {
+    "wildPokemon": "Wilde Pokémon-Begegnung",
+    "trainerBattle": "Trainerkampf",
+    "rivalBattle": "Rivalkampf",
+    "majorBossBattle": "Großer Bosskampf",
+    "recoveryBoss": "Erholungsboss",
+    "evilBossBattle": "Böses Team Boss",
+    "eliteFour": "Top Vier Mitglied",
+    "champion": "Championkampf",
+    "itemGeneral": "Allgemeine Gegenstände",
+    "addPokemon": "Pokémon-spezifische Gegenstände",
+    "itemTm": "TM-Belohnungen",
+    "itemBerry": "Beeren-Belohnungen",
+    "mysteryNode": "Geheimnisvolle Begegnung",
+    "convergencePoint": "Pfadkonvergenz",
+    "smittyBattle": "Smitty-Kampf",
+    "evilGruntBattle": "Böses Team Handlanger",
+    "evilAdminBattle": "Böses Team Admin",
+    "randPermaItem": "Zufälliger Perma-Gegenstand",
+    "permaItems": "Permanente Gegenstände",
+    "goldenPokeball": "Goldener Pokéball-Belohnungen",
+    "rogueBallItems": "Schurken-Ball Gegenstände",
+    "masterBallItems": "Meisterball Gegenstände",
+    "abilitySwitchers": "Fähigkeitswechsler",
+    "statSwitchers": "Statuswechsler",
+    "glitchPiece": "Glitch-Stück Belohnung",
+    "dnaSplicers": "DNS-Spleißer Belohnung",
+    "money": "Geld-Belohnung",
+    "permaMoney": "Permanenter Geld-Boost",
+    "releaseItems": "Freigabe-Gegenstände",
+    "mints": "Wesen-Bonbons",
+    "eggVoucher": "Ei-Gutschein Belohnung",
+    "ppMax": "AP-Plus Gegenstände",
+    "collectedType": "Typ-Sammlungsbelohnungen",
+    "expShare": "EP-Teiler Gegenstände",
+    "typeSwitcher": "Typwechsler",
+    "passiveAbility": "Passive Fähigkeits-Gegenstände",
+    "anyTms": "Beliebige TM-Belohnungen",
+    "challengeBoss": "Herausforderungspfad Bosskampf mit erhöhter Schwierigkeit",
+    "challengeRival": "Herausforderungspfad Rivalkampf mit erhöhter Schwierigkeit",
+    "challengeEvilBoss": "Herausforderungspfad böser Boss mit erhöhter Schwierigkeit",
+    "challengeChampion": "Herausforderungspfad Championkampf mit erhöhter Schwierigkeit",
+    "challengeReward": "Seltene Belohnung für das Abschließen des Herausforderungspfads"
+  },
+  "names": {
+    "wildPokemon": "Wilde Pokémon",
+    "trainerBattle": "Trainerkampf",
+    "rivalBattle": "Rivalkampf",
+    "majorBossBattle": "Großer Boss",
+    "recoveryBoss": "Bosskampf",
+    "evilBossBattle": "Böser Boss",
+    "eliteFour": "Top Vier",
+    "champion": "Champion",
+    "itemGeneral": "Allgemeine Gegenstände",
+    "addPokemon": "Pokémon-Gegenstände",
+    "itemTm": "TM-Gegenstände",
+    "itemBerry": "Beeren-Gegenstände",
+    "mysteryNode": "Geheimnis-Knoten",
+    "convergencePoint": "Konvergenz",
+    "smittyBattle": "Smitty-Kampf",
+    "evilGruntBattle": "Böser Handlanger",
+    "evilAdminBattle": "Böser Admin",
+    "randPermaItem": "Zufälliger Perma-Gegenstand",
+    "permaItems": "Permanente Gegenstände",
+    "goldenPokeball": "Goldener Pokéball",
+    "rogueBallItems": "Schurken-Ball Gegenstände",
+    "masterBallItems": "Meisterball Gegenstände",
+    "abilitySwitchers": "Fähigkeitswechsler",
+    "statSwitchers": "Statuswechsler",
+    "glitchPiece": "Glitch-Stück",
+    "dnaSplicers": "DNS-Spleißer",
+    "money": "Geld",
+    "permaMoney": "Permanentes Geld",
+    "releaseItems": "Freigabe-Gegenstände",
+    "mints": "Bonbons",
+    "eggVoucher": "Ei-Gutschein",
+    "ppMax": "AP-Plus",
+    "collectedType": "Gesammelter Typ",
+    "expShare": "EP-Teiler",
+    "typeSwitcher": "Typwechsler",
+    "passiveAbility": "Passive Fähigkeit",
+    "anyTms": "Beliebige TMs",
+    "challengeBoss": "Herausforderungs-Boss",
+    "challengeRival": "Herausforderungs-Rivale",
+    "challengeEvilBoss": "Herausforderungs-Böser Boss",
+    "challengeChampion": "Herausforderungs-Champion",
+    "challengeReward": "Herausforderungs-Belohnung"
+  },
+  "challenge": {
+    "chaosChallenge": "Chaos-Herausforderung aktiv",
+    "isNuzlocke": {
+      "name": "Nuzlocke",
+      "description": "Besiegte Pokémon sind dauerhaft verloren"
+    },
+    "isNuzlight": {
+      "name": "Nuzlight",
+      "description": "Keine käuflichen Heilgegenstände im Shop"
+    },
+    "isNightmare": {
+      "name": "Nuzmare",
+      "description": "Nuzlight + Nuzlocke"
+    },
+    "noExpGain": {
+      "name": "Kein EP-Gewinn",
+      "description": "Pokémon erhalten keine Erfahrungspunkte"
+    },
+    "noCatch": {
+      "name": "Kein Fangen",
+      "description": "Kann keine Pokémon fangen"
+    },
+    "hasPassiveAbility": {
+      "name": "Passive Fähigkeit",
+      "description": "Gegner haben ihre passive Fähigkeit aktiv"
+    },
+    "invertedTypes": {
+      "name": "Umgekehrte Typen",
+      "description": "Typ-Effektivität ist umgekehrt"
+    },
+    "boostedTrainer": {
+      "name": "Chaos-Trainer",
+      "description": "Trainerteam ist höher gelevelt als dein stärkstes Pokémon"
+    },
+    "multiLegendaries": {
+      "name": "Multi-Legendäre",
+      "description": "Rivalenteam erhält +1 legendäres Pokémon"
+    },
+    "multiBoss": {
+      "name": "Chaos-Boss",
+      "description": "Trainerteam hat +1 Boss-Pokémon"
+    },
+    "noInitialSwitch": {
+      "name": "Kein anfänglicher Wechsel",
+      "description": "Kann Pokémon nicht zu Kampfbeginn wechseln"
+    },
+    "autoPressured": {
+      "name": "Auto-Druck",
+      "description": "Deine Pokémon stehen automatisch unter Druck"
+    },
+    "noStatBoosts": {
+      "name": "Keine Statusverbesserungen",
+      "description": "Du kannst keine Statuswerte verstärken"
+    },
+    "noStatusMoves": {
+      "name": "Keine Status-Attacken",
+      "description": "Du kannst keine Status-Attacken verwenden"
+    },
+    "noPhysicalMoves": {
+      "name": "Keine physischen Attacken",
+      "description": "Du kannst keine physischen Attacken verwenden"
+    },
+    "noSpecialMoves": {
+      "name": "Keine Spezial-Attacken",
+      "description": "Du kannst keine Spezial-Attacken verwenden"
+    },
+    "statSwap": {
+      "name": "Status-Tausch",
+      "description": "Deiner Pokémon ATK <-> SPDEF und SPATK <-> DEF sind getauscht."
+    },
+    "extraDamageToTypes": {
+      "name": "Extra-Schaden gegen Typen",
+      "description": "Bestimmte Typen erhalten Extra-Schaden"
+    },
+    "noStab": {
+      "name": "Kein STAB",
+      "description": "Deiner Pokémon Gleicher-Typ-Attacken-Bonus ist deaktiviert."
+    },
+    "trickRoom": {
+      "name": "Bizarroraum",
+      "description": "Initiative-Priorität ist umgekehrt"
+    },
+    "noSwitch": {
+      "name": "Kein Wechsel",
+      "description": "Du kannst Pokémon nicht während des Kampfes wechseln"
+    },
+    "noResistances": {
+      "name": "Keine Resistenzen",
+      "description": "Deiner Pokémon Typ-Resistenzen sind deaktiviert."
+    },
+    "noHealingItems": {
+      "name": "Keine Heilgegenstände",
+      "description": "Deine Heilgegenstände aktivieren sich nicht (Überreste, Muschelglocke, etc.)"
+    },
+    "autoTorment": {
+      "name": "Auto-Folter",
+      "description": "Du kannst nicht dieselbe Attacke hintereinander verwenden!"
+    },
+    "legendaryNerf": {
+      "name": "Legendär-Schwächung",
+      "description": "Deine legendären Pokémon verursachen halben Schaden"
+    },
+    "typeExtraDamage": {
+      "name": "Typ Extra-Schaden",
+      "description": "Stärkster Typ verursacht 1,5x Schaden"
+    },
+    "pokemonNerf": {
+      "name": "Pokémon-Schwächung",
+      "description": "Stärkstes Pokémon verursacht halben Schaden"
+    }
+  }
+} 

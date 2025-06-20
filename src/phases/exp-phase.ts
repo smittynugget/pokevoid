@@ -18,6 +18,11 @@ export class ExpPhase extends PlayerPartyMemberPokemonPhase {
   start() {
     super.start();
 
+    if (this.scene.dynamicMode?.noExpGain) {
+      this.end();
+      return;
+    }
+
     const pokemon = this.getPokemon();
     const exp = new Utils.NumberHolder(this.expValue);
     this.scene.applyModifiers(ExpBoosterModifier, true, exp);

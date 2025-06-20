@@ -358,7 +358,7 @@ export default abstract class AbstractControlSettingsUiHandler extends UiHandler
    * Show the UI with the provided arguments.
    *
    * @param args - Arguments to be passed to the show method.
-   * @returns `true` if successful.
+   * @returns `true` if successful.rf
    */
   show(args: any[]): boolean {
     super.show(args);
@@ -402,9 +402,7 @@ export default abstract class AbstractControlSettingsUiHandler extends UiHandler
     // Extract the type of the gamepad from the active configuration.
     const configType = activeConfig.padType;
 
-    // Retrieve the layout settings based on the type of the gamepad.
-    const layout = this.layout.get(configType);
-    // Update the main controller with configuration details from the selected layout.
+    const layout = this.layout[configType];
     if (layout) {
     this.keys = layout.keys;
     this.optionsContainer = layout.optionsContainer;
@@ -415,7 +413,6 @@ export default abstract class AbstractControlSettingsUiHandler extends UiHandler
     this.inputsIcons = layout.inputsIcons;
     this.bindingSettings = layout.bindingSettings;
 
-    // Return true indicating the layout was successfully applied.
     return true;
     }
     return false;

@@ -2,11 +2,13 @@
   "ModifierType": {
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
-      "description": "獲得 {{pokeballName}} x{{modifierCount}} (已有：{{pokeballAmount}}) \n捕捉倍率：{{catchRate}}。"
+      "description": "獲得 {{pokeballName}} x{{modifierCount}} (已有：{{pokeballAmount}}) \n捕捉倍率：{{catchRate}}。",
+      "statLabel": "選秀寶可夢道具"
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
-      "description": "獲得 {{voucherTypeName}} x{{modifierCount}}。"
+      "description": "獲得 {{voucherTypeName}} x{{modifierCount}}。",
+      "statLabel": "蛋券"
     },
     "PokemonHeldItemModifierType": {
       "extra": {
@@ -44,13 +46,14 @@
     },
     "PokemonNatureChangeModifierType": {
       "name": "{{natureName}}薄荷",
-      "description": "將一隻寶可夢的性格改爲{{natureName}}併爲該寶可\n夢永久解鎖該性格。"
+      "description": "將一隻寶可夢的性格改爲{{natureName}}併爲該寶可\n夢永久解鎖該性格。",
+      "statLabel": "性格薄荷"
     },
     "DoubleBattleChanceBoosterModifierType": {
       "description": "接下來的{{battleCount}}場戰鬥是雙打的概率翻倍。"
     },
     "TempBattleStatBoosterModifierType": {
-      "description": "爲所有成員寶可夢提升一級{{tempBattleStatName}}，持續5場戰鬥。"
+      "description": "為所有成員寶可夢提升一級{{tempBattleStatName}}，持續5場戰鬥。"
     },
     "AttackTypeBoosterModifierType": {
       "description": "一隻寶可夢的{{moveType}}系招式威力提升20%。"
@@ -95,11 +98,13 @@
     },
     "TmModifierType": {
       "name": "招式學習器 {{moveId}} - {{moveName}}",
-      "description": "教會一隻寶可夢{{moveName}}。"
+      "description": "教會一隻寶可夢{{moveName}}。",
+      "statLabel": "招式學習器道具"
     },
     "TmModifierTypeWithInfo": {
       "name": "TM{{moveId}} - {{moveName}}",
-      "description": "教會一隻寶可夢{{moveName}}\n(Hold C or Shift for more info)。"
+      "description": "教會一隻寶可夢{{moveName}}\n(Hold C or Shift for more info)。",
+      "statLabel": "招式學習器道具"
     },
     "EvolutionItemModifierType": {
       "description": "使某些寶可夢進化。"
@@ -112,7 +117,8 @@
     },
     "TerastallizeModifierType": {
       "name": "{{teraType}}太晶碎塊",
-      "description": "持有者獲得{{teraType}}太晶化10場戰鬥。"
+      "description": "持有者獲得{{teraType}}太晶化10場戰鬥。",
+      "statLabel": "太晶碎片"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "攻擊時{{chancePercent}}%概率偷取對手物品。"
@@ -390,23 +396,28 @@
     },
     "AnyTmModifierType": {
       "name": "XM {{moveName}}",
-      "description": "讓寶可夢學會{{moveName}}。"
+      "description": "讓寶可夢學會{{moveName}}。",
+      "statLabel": "XM（任意招式學習器）"
     },
     "AnyTmModifierTypeWithInfo": {
       "name": "++XM{{moveId}} - {{moveName}}++",
-      "description": "讓任何寶可夢學會{{moveName}}\n(按住C鍵或Shift鍵查看更多資訊)。"
+      "description": "讓任何寶可夢學會{{moveName}}\n(按住C鍵或Shift鍵查看更多資訊)。",
+      "statLabel": "XM（任意招式學習器）"
     },
     "TypeSwitcherModifierType": {
       "name": "屬性轉換器：{{type1}} / {{type2}}",
-      "description": "將寶可夢的屬性改為{{type1}}和{{type2}}。"
+      "description": "將寶可夢的屬性改為{{type1}}和{{type2}}。",
+      "statLabel": "屬性轉換器"
     },
     "PrimaryTypeSwitcherModifierType": {
       "name": "主要屬性轉換器：{{type1}}",
-      "description": "將寶可夢的主要屬性改為{{type1}}。"
+      "description": "將寶可夢的主要屬性改為{{type1}}。",
+      "statLabel": "主屬性轉換器"
     },
     "SecondaryTypeSwitcherModifierType": {
       "name": "次要屬性轉換器：{{type2}}",
-      "description": "將寶可夢的次要屬性改為{{type2}}。"
+      "description": "將寶可夢的次要屬性改為{{type2}}。",
+      "statLabel": "副屬性轉換器"
     },
     "AbilitySwitcherModifierType": {
       "name": "特性轉換器",
@@ -414,7 +425,8 @@
     },
     "RandomStatSwitcherModifierType": {
       "name": "{{stat1}} X {{stat2}}",
-      "description": "互換寶可夢的{{stat1}}和{{stat2}}能力值。需要消耗1個故障碎片"
+      "description": "互換寶可夢的{{stat1}}和{{stat2}}能力值。需要消耗1個故障碎片",
+      "statLabel": "能力值轉換器"
     },
     "GlitchPieceModifierType": {
       "name": "故障碎片",
@@ -679,17 +691,20 @@
     },
     "CollectedTypeModifierType": {
       "name": "已收集屬性：{{type}}",
-      "description": "使用5個任意屬性組合代替釋放寶可夢來獲取釋放道具。"
+      "description": "使用5個任意屬性組合代替釋放寶可夢來獲取釋放道具。",
+      "statLabel": "收集的屬性"
     },
     "SacrificeModifierType": {
       "description": "釋放一隻寶可夢來提升另一隻寶可夢的{{stat}}15%。"
     },
     "StatSacrificeModifierTypeGenerator": {
-      "name": "釋放{{stat}}"
+      "name": "釋放{{stat}}",
+      "statLabel": "能力值釋放"
     },
     "StatSacrificeModifierType": {
       "name": "釋放能力值：{{stat}}",
-      "description": "釋放一隻寶可夢來提升另一隻寶可夢的{{stat}}15%。"
+      "description": "釋放一隻寶可夢來提升另一隻寶可夢的{{stat}}15%。",
+      "statLabel": "能力值釋放"
     },
     "TypeSacrificeModifierType": {
       "name": "釋放屬性",
@@ -705,15 +720,17 @@
     },
     "PassiveAbilitySacrificeModifierType": {
       "name": "釋放被動特性",
-      "description": "釋放一隻寶可夢將其被動特性作為主要特性賦予另一隻。"
+      "description": "釋放一隻寶可夢將其主要特性作為被動特性賦予另一隻。"
     },
     "AnyPassiveAbilityModifierType": {
       "name": "被動{{abilityName}}",
-      "description": "將被動技能{{abilityName}}賦予任意寶可夢\n(按住C鍵或Shift鍵查看更多資訊)。"
+      "description": "將被動技能{{abilityName}}賦予任意寶可夢\n(按住C鍵或Shift鍵查看更多資訊)。",
+      "statLabel": "任意被動特性道具"
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
-      "description": "將{{abilityName}}賦予任意寶可夢\n(按住C鍵或Shift鍵查看更多資訊)。"
+      "description": "將{{abilityName}}賦予任意寶可夢\n(按住C鍵或Shift鍵查看更多資訊)。",
+      "statLabel": "任意特性道具"
     },
     "glitchPieceCost": {
       "text": "[[需要消耗1個故障碎片]]"
@@ -723,6 +740,11 @@
       "description": "開啟/關閉放生道具"
     }
   },
+  "AddPokemonModifierType": {
+      "name": "{{pokemonName}}",
+      "statLabel": "選秀寶可夢道具",
+      "description": "Adds {{pokemonName}} to the party."
+    },
   "SpeciesBoosterItem": {
     "LIGHT_BALL": {
       "name": "電氣球",

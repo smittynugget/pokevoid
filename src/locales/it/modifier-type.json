@@ -4,8 +4,14 @@
       "name": "{{modifierCount}}x {{pokeballName}}",
       "description": "Ricevi {{pokeballName}} x{{modifierCount}} (Inventario: {{pokeballAmount}}) \nTasso di cattura: {{catchRate}}."
     },
+    "AddPokemonModifierType": {
+      "name": "{{pokemonName}}",
+      "statLabel": "Oggetto Pokémon Draft",
+      "description": "Adds {{pokemonName}} to the party."
+    },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}.",
+      "statLabel": "Buono Uovo",
       "description": "Ricevi {{voucherTypeName}} x{{modifierCount}}."
     },
     "PokemonHeldItemModifierType": {
@@ -44,6 +50,7 @@
     },
     "PokemonNatureChangeModifierType": {
       "name": "Menta {{natureName}}.",
+      "statLabel": "Menta della Natura",
       "description": "Cambia la natura del Pokémon in {{natureName}} e sblocca la natura nel menu degli starter."
     },
     "DoubleBattleChanceBoosterModifierType": {
@@ -95,10 +102,12 @@
     },
     "TmModifierType": {
       "name": "MT{{moveId}} - {{moveName}}.",
+      "statLabel": "Oggetto MT",
       "description": "Insegna {{moveName}} a un Pokémon."
     },
     "TmModifierTypeWithInfo": {
       "name": "MT{{moveId}} - {{moveName}}",
+      "statLabel": "Oggetto MT",
       "description": "Insegna {{moveName}} a un Pokémon\n(Tieni premuto C o Shift per maggiori informazioni)."
     },
     "EvolutionItemModifierType": {
@@ -112,6 +121,7 @@
     },
     "TerastallizeModifierType": {
       "name": "Teralite {{teraType}}",
+      "statLabel": "Teralite",
       "description": "Teracristallizza in {{teraType}} il possessore per massimo 10 battaglie."
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -394,22 +404,27 @@
     },
     "AnyTmModifierType": {
       "name": "XM {{moveName}}",
-      "description": "Insegna {{moveName}} a un Pokémon."
+      "statLabel": "XM (Qualsiasi MT)",
+      "description": "Insegna {{moveName}} a qualsiasi Pokémon."
     },
     "AnyTmModifierTypeWithInfo": {
       "name": "++XM{{moveId}} - {{moveName}}++",
-      "description": "Insegna {{moveName}} a QUALSIASI Pokémon\n(Tieni premuto C o Maiusc per maggiori informazioni)."
+      "statLabel": "XM (Qualsiasi MT)",
+      "description": "Insegna {{moveName}} a qualsiasi Pokémon\n(Tieni premuto C o Shift per maggiori informazioni)."
     },
     "TypeSwitcherModifierType": {
-      "name": "Cambio Tipo: {{type1}} / {{type2}}",
+      "name": "Cambia Tipo: {{type1}} / {{type2}}",
+      "statLabel": "Cambia Tipo",
       "description": "Cambia i tipi di un Pokémon in {{type1}} e {{type2}}."
     },
     "PrimaryTypeSwitcherModifierType": {
-      "name": "Cambio Tipo Primario: {{type1}}",
+      "name": "Cambia Tipo Primario: {{type1}}",
+      "statLabel": "Cambia Tipo Primario",
       "description": "Cambia il tipo primario di un Pokémon in {{type1}}."
     },
     "SecondaryTypeSwitcherModifierType": {
-      "name": "Cambio Tipo Secondario: {{type2}}",
+      "name": "Cambia Tipo Secondario: {{type2}}",
+      "statLabel": "Cambia Tipo Secondario",
       "description": "Cambia il tipo secondario di un Pokémon in {{type2}}."
     },
     "AbilitySwitcherModifierType": {
@@ -418,7 +433,8 @@
     },
     "RandomStatSwitcherModifierType": {
       "name": "{{stat1}} X {{stat2}}",
-      "description": "Scambia le statistiche {{stat1}} e {{stat2}} del Pokémon. COSTA 1x Frammento Glitch"
+      "statLabel": "Cambia Statistiche",
+      "description": "Scambia le statistiche {{stat1}} e {{stat2}} del Pokémon. COSTA 1x Frammento Glitch."
     },
     "GlitchPieceModifierType": {
       "name": "Frammento Glitch",
@@ -683,16 +699,19 @@
     },
     "CollectedTypeModifierType": {
       "name": "Tipo Raccolto: {{type}}",
-      "description": "Usa 5 di QUALSIASI MIX DI TIPO invece di rilasciare un Pokémon per gli Strumenti di Rilascio."
+      "statLabel": "Tipo Raccolto",
+      "description": "Usa 5 di QUALSIASI COMBINAZIONE DI TIPO invece di rilasciare un Pokémon per gli Oggetti di Rilascio."
     },
     "SacrificeModifierType": {
       "description": "Rilascia un Pokémon per aumentare {{stat}} di un altro Pokémon del 15%."
     },
     "StatSacrificeModifierTypeGenerator": {
-      "name": "Rilascia {{stat}}"
+      "name": "Rilascia {{stat}}",
+      "statLabel": "Rilascio Statistiche"
     },
     "StatSacrificeModifierType": {
       "name": "Rilascio Statistica: {{stat}}",
+      "statLabel": "Rilascio Statistiche",
       "description": "Rilascia un Pokémon per aumentare {{stat}} di un altro Pokémon del 15%."
     },
     "TypeSacrificeModifierType": {
@@ -709,15 +728,17 @@
     },
     "PassiveAbilitySacrificeModifierType": {
       "name": "Rilascio Abilità Passiva",
-      "description": "Rilascia un Pokémon per assegnare la sua abilità passiva come abilità PRIMARIA a un altro."
+      "description": "Rilascia un Pokémon per assegnare la sua abilità PRIMARIA come abilità PASSIVA a un altro."
     },
     "AnyPassiveAbilityModifierType": {
       "name": "PASSIVA {{abilityName}}",
-      "description": "Dai Passiva {{abilityName}} a QUALSIASI Pokémon\n(Tieni premuto C o Shift per più informazioni)."
+      "statLabel": "Oggetto di Qualsiasi Abilità Passiva",
+      "description": "Dai l'abilità passiva {{abilityName}} a QUALSIASI Pokémon\n(Tieni premuto C o Shift per maggiori informazioni)."
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
-      "description": "Dai {{abilityName}} a QUALSIASI Pokémon\n(Tieni premuto C o Shift per più informazioni)."
+      "statLabel": "Oggetto di Qualsiasi Abilità",
+      "description": "Dai {{abilityName}} a QUALSIASI Pokémon\n(Tieni premuto C o Shift per maggiori informazioni)."
     },
     "glitchPieceCost": {
       "text": "[[COSTA 1x Frammento Glitch]]"

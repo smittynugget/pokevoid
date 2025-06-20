@@ -92,12 +92,10 @@ export const vouchers: Vouchers = {};
 export function initVouchers() {
   for (const achv of [achvs.CLASSIC_VICTORY]) {
       const voucherType = achv.score >= 150
-          ? VoucherType.GOLDEN
+          ? VoucherType.PREMIUM
           : achv.score >= 100
-              ? VoucherType.PREMIUM
-              : achv.score >= 75
-                  ? VoucherType.PLUS
-                  : VoucherType.REGULAR;
+              ? VoucherType.PLUS
+              : VoucherType.REGULAR;
       vouchers[achv.id] = new Voucher(voucherType, getAchievementDescription(achv.localizationKey));
     }
 
@@ -106,8 +104,8 @@ export function initVouchers() {
 
     for (const trainerType of bossTrainerTypes) {
       const voucherType = trainerConfigs[trainerType].moneyMultiplier < 10
-          ? VoucherType.PLUS
-          : VoucherType.PREMIUM;
+          ? VoucherType.REGULAR
+          : VoucherType.PLUS;
       const key = TrainerType[trainerType];
       const trainerName = trainerConfigs[trainerType].name;
       const trainer = trainerConfigs[trainerType];

@@ -148,6 +148,7 @@ export class PermaModifiers {
             }
         }
             const addedModifier = modifier.add(this.modifiers, false, scene);
+            
             scene.ui.updatePermaModifierBar(this);
             return addedModifier;
         }

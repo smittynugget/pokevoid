@@ -2,10 +2,12 @@
   "ModifierType": {
     "AddPokeballModifierType": {
       "name": "{{pokeballName}} x{{modifierCount}}",
+      "statLabel": "Objet Pokeball",
       "description": "Recevez {{modifierCount}} {{pokeballName}}·s. (Inventaire : {{pokeballAmount}})\nTaux de capture : {{catchRate}}"
     },
     "AddVoucherModifierType": {
       "name": "{{voucherTypeName}} x{{modifierCount}}",
+      "statLabel": "Bon d'Œuf",
       "description": "Recevez {{modifierCount}} {{voucherTypeName}}."
     },
     "PokemonHeldItemModifierType": {
@@ -44,6 +46,7 @@
     },
     "PokemonNatureChangeModifierType": {
       "name": "Aromate {{natureName}}",
+      "statLabel": "Aromate de Nature",
       "description": "Donne la nature {{natureName}} à un Pokémon et la débloque pour le starter lui étant lié."
     },
     "DoubleBattleChanceBoosterModifierType": {
@@ -95,10 +98,12 @@
     },
     "TmModifierType": {
       "name": "CT{{moveId}} - {{moveName}}",
+      "statLabel": "Objet CT",
       "description": "Apprend la capacité {{moveName}} à un Pokémon."
     },
     "TmModifierTypeWithInfo": {
       "name": "CT{{moveId}} - {{moveName}}",
+      "statLabel": "Objet CT",
       "description": "Apprend la capacité {{moveName}} à un Pokémon.\n(Maintenez C ou Maj pour plus d'infos)"
     },
     "EvolutionItemModifierType": {
@@ -112,6 +117,7 @@
     },
     "TerastallizeModifierType": {
       "name": "Téra-Éclat {{teraType}}",
+      "statLabel": "Téra-Éclat",
       "description": "{{teraType}} Téracristallise son porteur pendant 10 combats."
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -394,22 +400,27 @@
     },
     "AnyTmModifierType": {
       "name": "CX {{moveName}}",
+      "statLabel": "CX (N'importe quelle CT)",
       "description": "Apprend {{moveName}} à un Pokémon."
     },
     "AnyTmModifierTypeWithInfo": {
       "name": "++XM{{moveId}} - {{moveName}}++",
+      "statLabel": "CX (N'importe quelle CT)",
       "description": "Apprend la capacité {{moveName}} à N'IMPORTE QUEL Pokémon\n(Maintenez C ou Maj pour plus d'infos)."
     },
     "TypeSwitcherModifierType": {
       "name": "Changeur de Type : {{type1}} / {{type2}}",
+      "statLabel": "Changeur de Type",
       "description": "Change les types d'un Pokémon en {{type1}} et {{type2}}."
     },
     "PrimaryTypeSwitcherModifierType": {
       "name": "Changeur de Type Primaire : {{type1}}",
+      "statLabel": "Changeur de Type Primaire",
       "description": "Change le type primaire d'un Pokémon en {{type1}}."
     },
     "SecondaryTypeSwitcherModifierType": {
       "name": "Changeur de Type Secondaire : {{type2}}",
+      "statLabel": "Changeur de Type Secondaire",
       "description": "Change le type secondaire d'un Pokémon en {{type2}}."
     },
     "AbilitySwitcherModifierType": {
@@ -418,6 +429,7 @@
     },
     "RandomStatSwitcherModifierType": {
       "name": "{{stat1}} X {{stat2}}",
+      "statLabel": "Changeur de Statistiques",
       "description": "Échange les statistiques {{stat1}} et {{stat2}} du Pokémon. COÛTE 1x Fragment de Bug"
     },
     "GlitchPieceModifierType": {
@@ -683,16 +695,19 @@
     },
     "CollectedTypeModifierType": {
       "name": "Type Collecté : {{type}}",
+      "statLabel": "Type Collecté",
       "description": "Utilisez 5 de N'IMPORTE QUEL MÉLANGE DE TYPE au lieu de relâcher un Pokémon pour les Objets de Relâchement."
     },
     "SacrificeModifierType": {
       "description": "Relâchez un Pokémon pour augmenter {{stat}} d'un autre Pokémon de 15%."
     },
     "StatSacrificeModifierTypeGenerator": {
-      "name": "Relâcher {{stat}}"
+      "name": "Relâcher {{stat}}",
+      "statLabel": "Relâchement de Statistiques"
     },
     "StatSacrificeModifierType": {
       "name": "Relâchement de Statistique : {{stat}}",
+      "statLabel": "Relâchement de Statistiques",
       "description": "Relâchez un Pokémon pour augmenter {{stat}} d'un autre Pokémon de 15%."
     },
     "TypeSacrificeModifierType": {
@@ -709,14 +724,16 @@
     },
     "PassiveAbilitySacrificeModifierType": {
       "name": "Relâchement de Capacité Passive",
-      "description": "Relâchez un Pokémon pour attribuer sa capacité passive comme capacité PRIMAIRE à un autre."
+      "description": "Relâchez un Pokémon pour attribuer sa capacité PRIMAIRE comme capacité PASSIVE à un autre."
     },
     "AnyPassiveAbilityModifierType": {
       "name": "PASSIF {{abilityName}}",
+      "statLabel": "Objet de N'importe quel Talent Passif",
       "description": "Donner la Passive {{abilityName}} à N'IMPORTE QUEL Pokémon\n(Maintenir C ou Shift pour plus d'infos)."
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
+      "statLabel": "Objet de N'importe quel Talent",
       "description": "Donner {{abilityName}} à N'IMPORTE QUEL Pokémon\n(Maintenir C ou Shift pour plus d'infos)."
     },
     "glitchPieceCost": {
@@ -726,6 +743,11 @@
       "name": "Activer l'Objet de Libération",
       "description": "Activer/Désactiver les Objets de Libération"
     }
+  },
+  "AddPokemonModifierType": {
+    "name": "{{pokemonName}}",
+    "statLabel": "Objet Pokémon de Recrutement",
+    "description": "Ajoute {{pokemonName}} à l'équipe."
   },
   "SpeciesBoosterItem": {
     "LIGHT_BALL": {

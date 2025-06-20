@@ -282,7 +282,7 @@ export class LoadingScene extends SceneBase {
     this.loadAtlas(`smitems_32`, "smitems");
     this.loadAtlas(`smitems_192`, "smitems");
   
-    this.loadAtlas("dualsock", "inputs");
+    this.loadAtlas("dualshock", "inputs");
     this.loadAtlas("xbox", "inputs");
     this.loadAtlas("keyboard", "inputs");
 
@@ -498,7 +498,7 @@ export class LoadingScene extends SceneBase {
             const soundConfig = {
               loop: false,
               mute: false,
-              volume: .4
+              volume: .2
             };
 
             if (this.cache.audio.exists('voice/logoSmittyNugget')) {

@@ -103,7 +103,8 @@ export default class TutorialListUiHandler extends UiHandler {
                     EnhancedTutorial.ROGUE_MODE,
                     EnhancedTutorial.NUZLOCKE,
                     EnhancedTutorial.NUZLIGHT,
-                    EnhancedTutorial.ENDGAME
+                    EnhancedTutorial.ENDGAME,
+                    EnhancedTutorial.CHAOS_AND_GAUNTLET_MODES
                 ]
             },
             { 
@@ -176,7 +177,8 @@ export default class TutorialListUiHandler extends UiHandler {
                 tutorials: [
                     EnhancedTutorial.DISCORD,
                     EnhancedTutorial.SMITOM,
-                    EnhancedTutorial.POKEROGUE_1
+                    EnhancedTutorial.POKEROGUE_1,
+                    EnhancedTutorial.THANK_YOU
                 ]
             }
         ];

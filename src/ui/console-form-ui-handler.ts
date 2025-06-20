@@ -371,7 +371,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                                 async () => {
                                     try {
                                         await this.scene.gameData.permaModifiers.addModifier(this.scene, questModifier as PersistentModifier);
-
+                                        this.scene.trackPermaModifierObtained(questModifier);
                                         this.scene.ui.revertMode();
                                         this.scene.ui.revertMode();
                                         this.scene.playSound("item_fanfare");
@@ -1231,6 +1231,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
             buttonActions: [
                 async () => {
                     if (!this.scene.gameData.permaModifiers.findModifier(m => m.match(quest))) {
+                        this.scene.trackPermaModifierObtained(quest);
                         await this.scene.gameData.permaModifiers.addModifier(this.scene, quest);
                         this.scene.gameData.localSaveAll(this.scene);
                     }

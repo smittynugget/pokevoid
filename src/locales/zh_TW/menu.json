@@ -104,5 +104,19 @@
   "noModsFound": "找不到自定義模組",
   "readyToStartGame": "準備開始遊戲",
   "errorLoadingMods": "載入模組時發生錯誤",
-  "modComplete": "遊戲開始中..."
+  "modComplete": "遊戲開始中...",
+  "choosePath": "選擇你的道路...",
+  "saviourPath": "選擇救世主之路 - 具有結構化進度的傳統遊戲模式。",
+  "reaperPath": "選擇死神之路 - 具有動態挑戰的混沌模式。",
+  "returnToMainMenu": "返回主選單",
+  "returnToPathSelection": "返回路徑選擇",
+  "chaosMode": "混沌模式 - 透過不斷變化的挑戰在動態戰鬥遭遇中選擇自己的道路。",
+  "chaosRogue": "混沌盜賊 - 選擇2隻隨機寶可夢並開闢自己的道路！",
+  "chaosJourney": "混沌旅程 - 組建隊伍並選擇自己的冒險！",
+  "selectChaosRogueMode": "混沌盜賊 - 選擇2隻隨機寶可夢並開闢自己的道路！",
+  "selectChaosJourneyMode": "混沌旅程 - 組建隊伍並選擇自己的冒險！",
+  "selectChaosVoidMode": "混沌虛空 - 踏入虛空深處的旅程...",
+  "selectChaosRogueVoidMode": "混沌盜賊虛空 - 在虛空的擁抱中開闢道路...",
+  "selectChaosInfiniteMode": "混沌無盡 - 時間失去所有意義的地方...",
+  "selectChaosInfiniteRogueMode": "混沌無盡盜賊 - 獻給與虛空合一的人..."
 }

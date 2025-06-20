@@ -38,6 +38,11 @@ export class StatChangePhase extends PokemonPhase {
   start() {
     const pokemon = this.getPokemon();
 
+    if (this.scene.dynamicMode?.noStatBoosts && this.player && this.levels > 0) {
+      this.end();
+      return;
+    }
+
     let random = false;
 
     if (this.stats.length === 1 && this.stats[0] === BattleStat.RAND) {

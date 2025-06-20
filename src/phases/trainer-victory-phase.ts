@@ -9,6 +9,7 @@ import { BattlePhase } from "./battle-phase";
 import { ModifierRewardPhase } from "./modifier-reward-phase";
 import { MoneyRewardPhase } from "./money-reward-phase";
 import { TrainerSlot } from "#app/data/trainer-config";
+import { TRAINER_TYPES } from "#app/battle.js";
 
 export class TrainerVictoryPhase extends BattlePhase {
   constructor(scene: BattleScene) {
@@ -28,6 +29,9 @@ export class TrainerVictoryPhase extends BattlePhase {
     }
 
     const trainerType = this.scene.currentBattle.trainer?.config.trainerType!; // TODO: is this bang correct?
+    
+    this.incrementTrainerTypeStats(trainerType);
+    
     if (vouchers.hasOwnProperty(TrainerType[trainerType])) {
       if (!this.scene.validateVoucher(vouchers[TrainerType[trainerType]]) && this.scene.currentBattle.trainer?.config.isBoss && !this.scene.currentBattle.trainer?.isDynamicRival) {
         this.scene.unshiftPhase(new ModifierRewardPhase(this.scene, [modifierTypes.VOUCHER, modifierTypes.VOUCHER, modifierTypes.VOUCHER_PLUS][vouchers[TrainerType[trainerType]].voucherType]));
@@ -67,5 +71,31 @@ export class TrainerVictoryPhase extends BattlePhase {
     }, null, true);
 
     this.showEnemyTrainer();
+  }
+
+  private incrementTrainerTypeStats(trainerType: TrainerType): void {
+    if (TRAINER_TYPES.ELITE_FOUR.FIRST.includes(trainerType) || 
+        TRAINER_TYPES.ELITE_FOUR.SECOND.includes(trainerType) ||
+        TRAINER_TYPES.ELITE_FOUR.THIRD.includes(trainerType) ||
+        TRAINER_TYPES.ELITE_FOUR.FOURTH.includes(trainerType)) {
+      this.scene.gameData.gameStats.elite4Defeated++;
+    } 
+    else if (TRAINER_TYPES.ELITE_FOUR.CHAMPION.includes(trainerType)) {
+      this.scene.gameData.gameStats.championsDefeated++;
+    } 
+    else if (TRAINER_TYPES.EVIL_TEAM_GRUNTS.includes(trainerType)) {
+      this.scene.gameData.gameStats.gruntsDefeated++;
+    } 
+    else if (TRAINER_TYPES.EVIL_TEAM_ADMINS.some(admins => 
+               Array.isArray(admins) ? admins.includes(trainerType) : admins === trainerType)) {
+      this.scene.gameData.gameStats.evilAdminsDefeated++;
+    } 
+    else if (TRAINER_TYPES.EVIL_TEAM_BOSSES.FIRST.includes(trainerType) ||
+               TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND.includes(trainerType)) {
+      this.scene.gameData.gameStats.evilBossesDefeated++;
+    } 
+    else if (trainerType === TrainerType.SMITTY) {
+      this.scene.gameData.gameStats.smittysDefeated++;
+    }
   }
 }

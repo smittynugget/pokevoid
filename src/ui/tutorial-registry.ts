@@ -63,6 +63,8 @@ export enum EnhancedTutorial {
     THE_VOID_UNLOCKED = "THE_VOID_UNLOCKED",
     THE_VOID_OVERTAKEN = "THE_VOID_OVERTAKEN",
     MEGA_DYNAMAX_1 = "MEGA_DYNAMAX_1",
+    CHAOS_AND_GAUNTLET_MODES = "CHAOS_AND_GAUNTLET_MODES",
+    THANK_YOU = "THANK_YOU",
 
 }
 
@@ -207,6 +209,8 @@ export class TutorialRegistry {
         this.registerTheVoidUnlockedTutorial();
         this.registerTheVoidOvertakenTutorial();
         this.registerMegaDynamaxTutorials();
+        this.registerChaosAndGauntletModesTutorial();
+        this.registerThankYouTutorial();
     }
     
     /**
@@ -394,8 +398,8 @@ export class TutorialRegistry {
                     { key: "smitems_192", frame: "permaLongerStatBoosts", scale: 0.16, x: -20, y: -10 },
                     { key: "smitems_192", frame: "permaStarterPointLimitInc", scale: 0.16, x: 20, y: -10 },
                     { 
-                        key: getPokemonSpecies(Species.CATERPIE).getIconAtlasKey(), 
-                        frame: getPokemonSpecies(Species.CATERPIE).getIconId(false), 
+                        key: getPokemonSpecies(Species.UMBREON).getIconAtlasKey(), 
+                        frame: getPokemonSpecies(Species.UMBREON).getIconId(false), 
                         scale: 1.1, 
                         x: 0 
                     },
@@ -1619,6 +1623,117 @@ export class TutorialRegistry {
                 }
             ],
             isTipActive: false
+        });
+    }
+
+    private registerChaosAndGauntletModesTutorial(): void {
+        this.tutorialConfigs.set(EnhancedTutorial.CHAOS_AND_GAUNTLET_MODES, {
+            title: i18next.t("tutorial:chaosAndGauntletModes.title.1"),
+            stages: [{
+                sprites: [
+                    { key: "smitems_192", frame: "glitchAbilitySwitch", scale: 0.16, x: -10 },
+                    { key: "smitems_192", frame: "exclamationMark", scale: 0.12, x: 10 }
+                ],
+                text: i18next.t("tutorial:chaosAndGauntletModes.text.1"),
+                title: i18next.t("tutorial:chaosAndGauntletModes.title.1")
+            },
+            {
+                sprites: [
+                    { key: "smitems_192", frame: "permaMoreRevive", scale: 0.16, x: -10 },
+                    { key: "smitems_192", frame: "exclamationMark", scale: 0.12, x: 10 }
+                ],
+                text: i18next.t("tutorial:chaosAndGauntletModes.text.2"),
+                title: i18next.t("tutorial:chaosAndGauntletModes.title.2")
+            },
+            {
+                sprites: [
+                    { key: "smitems_192", frame: "permaPostBattleMoney", scale: 0.16 }
+                ],
+                text: i18next.t("tutorial:chaosAndGauntletModes.text.3"),
+                title: i18next.t("tutorial:chaosAndGauntletModes.title.3")
+            },
+            {
+                sprites: [
+                    { key: "smitems_192", frame: "permaMetronomeLevelup", scale: 0.16 }
+                ],
+                text: i18next.t("tutorial:chaosAndGauntletModes.text.4"),
+                title: i18next.t("tutorial:chaosAndGauntletModes.title.4")
+            },
+            {
+                sprites: [
+                    { key: "smitems_192", frame: "permaLongerStatBoosts", scale: 0.16, x: -20, y: -10 },
+                    { key: "smitems_192", frame: "permaStarterPointLimitInc", scale: 0.16, x: 20, y: -10 },
+                    { 
+                        key: getPokemonSpecies(Species.CHARIZARD).getIconAtlasKey(), 
+                        frame: getPokemonSpecies(Species.CHARIZARD).getIconId(false), 
+                        scale: 1.1, 
+                        x: 0 
+                    }
+                ],
+                text: i18next.t("tutorial:chaosAndGauntletModes.text.5"),
+                title: i18next.t("tutorial:chaosAndGauntletModes.title.5")
+            }
+            ],
+            isTipActive: false,
+        });
+    }
+
+    private registerThankYouTutorial(): void {
+        this.tutorialConfigs.set(EnhancedTutorial.THANK_YOU, {
+            title: i18next.t("tutorial:thankYou.title"),
+            stages: [{
+                sprites: [
+                    { 
+                        spriteType: 'smitty_logo',
+                        smittyLogoId: 126,
+                        scale: 0.25,
+                        key: "smitty_logo"
+                    }
+                ],
+                text: i18next.t("tutorial:thankYou.text.1"),
+                title: i18next.t("tutorial:thankYou.title")
+            },
+            {
+                sprites: [
+                    { key: "smitems_192", frame: "permaPartyAbility", scale: 0.12, x: 0, y: -15 },
+                    { 
+                        spriteType: 'smitty_logo',
+                        smittyLogoId: 106,
+                        scale: 0.12,
+                        x: -40,
+                        y: 10,
+                        key: "smitty_logo"
+                    },
+                    { 
+                        spriteType: 'smitty_logo',
+                        smittyLogoId: 122,
+                        scale: 0.12,
+                        x: -13,
+                        y: 10,
+                        key: "smitty_logo"
+                    },
+                    { 
+                        spriteType: 'smitty_logo',
+                        smittyLogoId: 40,
+                        scale: 0.12,
+                        x: 13,
+                        y: 10,
+                        key: "smitty_logo"
+                    },
+                    { 
+                        spriteType: 'smitty_logo',
+                        smittyLogoId: 77,
+                        scale: 0.12,
+                        x: 40,
+                        y: 10,
+                        key: "smitty_logo"
+                    }
+                ],
+                text: i18next.t("tutorial:thankYou.text.2"),
+                title: i18next.t("tutorial:thankYou.title")
+            }],
+            isTipActive: false,
+            
         });
     }
 } 

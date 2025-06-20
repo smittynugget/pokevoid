@@ -327,5 +327,28 @@
         "2":"¡Las únicas restricciones son que tu primer Pokémon no puede ser cambiado, y los legendarios solo pueden cambiarse por otros legendarios, Megas o Pokémon Dynamax!",
         "3":"¡Feliz Eclosión!"
       }
+    },
+  "chaosAndGauntletModes": {
+    "title": {
+      "1": "NUEVOS MODOS CAOS",
+      "2": "NUEVOS MODOS CAOS",
+            "3": "¡MODOS DESAFÍO!",
+      "4": "¡MODOS DESAFÍO!",
+      "5": "Haz Legendario Cualquier Pokémon"
+    },
+    "text": {
+      "1": "Inspirándose en maestros de roguelike como Slay the Spire, Inscryption y muchos más, ¡los modos CAOS de Pokevoid te permiten elegir el camino que tomarás después!",
+      "2": "¡Planifica tu camino y haz tu mejor esfuerzo para superar el Caos dentro del VACÍO!",
+      "3": "¡Entra al Desafío! ¡Enfréntate a oleada tras oleada de encuentros intensos!",
+      "4": "¡El estilo de batalla original de Pokerogue, intensamente remezclado con locura aleatoria de Pokevoid y mecánicas que rompen el juego!",
+      "5": "¡Adelante entrenador, abraza el poder prohibido del vacío y haz CUALQUIER Pokémon legendario!"
     }
+  },
+  "thankYou": {
+    "title": "Querido Jugador",
+    "text": {
+      "1": "16 meses de locura de desarrollo en solitario significa todo - cada vez que alguien como tú se divierte jugando este juego. Si mis ideas raras realmente funcionan y te diviertes,", 
+      "2": "entonces tal vez - estoy más cerca de mi sueño de convertirme en un verdadero desarrollador de juegos. ¡Muchas gracias por jugar mi versión caótica y rota de PokéRogue! - Smitty"
+    }
+  }
 }

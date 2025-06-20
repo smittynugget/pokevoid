@@ -200,10 +200,35 @@ export class FaintPhase extends PokemonPhase {
           pokemon.trySetStatus(StatusEffect.FAINT);
           if (pokemon.isPlayer()) {
             this.scene.currentBattle.removeFaintedParticipant(pokemon as PlayerPokemon);
-          } else {
-            this.scene.addFaintedEnemyScore(pokemon as EnemyPokemon);
-            this.scene.currentBattle.addPostBattleLoot(pokemon as EnemyPokemon);
+                  } else {
+          this.scene.addFaintedEnemyScore(pokemon as EnemyPokemon);
+          this.scene.currentBattle.addPostBattleLoot(pokemon as EnemyPokemon);
+          
+          if (!pokemon.isPlayer()) {
+            const enemyPokemon = pokemon as EnemyPokemon;
+            const enemyTypes = enemyPokemon.getTypes();
+            enemyTypes.forEach(type => {
+              if (!this.scene.gameData.gameStats.typeOfDefeated[type]) {
+                this.scene.gameData.gameStats.typeOfDefeated[type] = 0;
+              }
+              this.scene.gameData.gameStats.typeOfDefeated[type]++;
+            });
           }
+          
+          if (!pokemon.isPlayer() && pokemon.turnData?.attacksReceived?.length) {
+            const lastAttack = pokemon.turnData.attacksReceived[0];
+            const attackingPokemon = this.scene.getPokemonById(lastAttack.sourceId);
+            if (attackingPokemon && attackingPokemon.isPlayer()) {
+              const playerTypes = attackingPokemon.getTypes();
+              playerTypes.forEach(type => {
+                if (!this.scene.gameData.gameStats.playerKnockoutType[type]) {
+                  this.scene.gameData.gameStats.playerKnockoutType[type] = 0;
+                }
+                this.scene.gameData.gameStats.playerKnockoutType[type]++;
+              });
+            }
+          }
+        }
           this.scene.field.remove(pokemon);
           this.end();
         }

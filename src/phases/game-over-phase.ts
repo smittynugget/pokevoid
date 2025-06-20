@@ -1,43 +1,23 @@
 import { clientSessionId } from "#app/account";
 import BattleScene from "#app/battle-scene";
 import { BattleType } from "#app/battle";
-import { getCharVariantFromDialogue } from "#app/data/dialogue";
-import { pokemonEvolutions } from "#app/data/pokemon-evolutions";
 import PokemonSpecies, { getPokemonSpecies } from "#app/data/pokemon-species";
-import { trainerConfigs, getAllRivalTrainerTypes} from "#app/data/trainer-config";
-import { PlayerGender } from "#app/enums/player-gender";
-import { TrainerType } from "#app/enums/trainer-type";
-import Pokemon from "#app/field/pokemon";
-import { modifierTypes } from "#app/modifier/modifier-type";
 import { achvs, ChallengeAchv } from "#app/system/achv";
 import { Unlockables } from "#app/system/unlockables";
 import { Mode } from "#app/ui/ui";
+import { GameModes } from "../game-mode";
 import i18next from "i18next";
-import * as Utils from "#app/utils";
 import { BattlePhase } from "./battle-phase";
-import { CheckSwitchPhase } from "./check-switch-phase";
-import { EncounterPhase } from "./encounter-phase";
-import { GameOverModifierRewardPhase } from "./game-over-modifier-reward-phase";
-import { RibbonModifierRewardPhase } from "./ribbon-modifier-reward-phase";
-import { SummonPhase } from "./summon-phase";
 import { EndCardPhase } from "./end-card-phase";
 import { PostGameOverPhase } from "./post-game-over-phase";
-import { UnlockPhase } from "./unlock-phase";
 import {
   SessionSaveData,
-  QuestState,
-  QuestUnlockables,
-  RewardType,
-  getRandomLockedQuestForRival
 } from "../system/game-data";
 import TrainerData from "../system/trainer-data";
 import PokemonData from "../system/pokemon-data";
 import PersistentModifierData from "../system/modifier-data";
 import ChallengeData from "../system/challenge-data";
 import ArenaData from "../system/arena-data";
-import {QuestUnlockPhase} from "#app/phases/quest-unlock-phase";
-import {PermaWinQuestModifier} from "#app/modifier/modifier";
-import {UnlockUniSmittyPhase} from "#app/phases/unlock-unismitty-phase";
 
 export class GameOverPhase extends BattlePhase {
   private victory: boolean;
@@ -63,24 +43,18 @@ export class GameOverPhase extends BattlePhase {
     else {
       this.handleGameOver();
     }
-
-
-
   }
 
   handleGameOver(): void {
     const doGameOver = (newClear: boolean) => {
       this.scene.disableMenu = true;
       this.scene.time.delayedCall(1000, () => {
-        if (this.victory && newClear) {
-          if (this.scene.gameMode.isClassic) {
-            this.scene.validateAchv(achvs.UNEVOLVED_CLASSIC_VICTORY);
-            this.scene.gameData.gameStats.sessionsWon++;
-
-          } else if (this.scene.gameMode.isDaily && newClear) {
-            this.scene.gameData.gameStats.dailyRunSessionsWon++;
-          }
+        this.scene.gameData.updateGameModeStats(this.scene.gameMode.modeId, this.victory);
+        
+        if (this.victory && newClear && this.scene.gameMode.isClassic) {
+          this.scene.validateAchv(achvs.UNEVOLVED_CLASSIC_VICTORY);
         }
+        
         if (!this.scene.gameMode.isTestMod) {
           this.scene.gameData.saveRunHistory(this.scene, this.getFinalSessionData(), this.victory);
         }
@@ -124,10 +98,6 @@ export class GameOverPhase extends BattlePhase {
       doGameOver(false);
     }
   }
-
-
-
-
 
   /**
    * This function mirrors game-data.ts' getSessionSaveData() to update the session data to reflect any changes that occurred within the last wave

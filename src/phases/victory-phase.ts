@@ -1,5 +1,5 @@
-import BattleScene from "../battle-scene.js";
-import {BATTLE_WAVES, BattlerIndex, BattleType, majorBossWaves} from "../battle.js";
+import BattleScene, { RecoveryBossMode } from "../battle-scene.js";
+import {BATTLE_WAVES, BattlerIndex, BattleType, majorBossWaves, setupFixedBattlePaths} from "../battle.js";
 import {modifierTypes, nuzlightUnlockQuestModifier, nuzlockeUnlockQuestModifier} from "../modifier/modifier-type.js";
 import { ExpShareModifier, ExpBalanceModifier, MultipleParticipantExpBonusModifier, PokemonExpBoosterModifier, PermaRivalWinQuestModifier, PermaBeatTrainerQuestModifier, PermaWinQuestModifier, PersistentModifier} from "../modifier/modifier.js";
 import * as Utils from "../utils.js";
@@ -33,6 +33,9 @@ import {achvs} from "#app/system/achv";
 import {RibbonModifierRewardPhase} from "#app/phases/ribbon-modifier-reward-phase";
 import Pokemon from "#app/field/pokemon";
 import PokemonSpecies, {getPokemonSpecies} from "#app/data/pokemon-species";
+import {PathNodeTypeFilter} from "#app/modifier/modifier-type";
+import { BattlePathPhase } from "./battle-path-phase";
+import { PathNodeContext } from "./battle-path-phase";
 
 export class VictoryPhase extends PokemonPhase {
 
@@ -52,6 +55,14 @@ export class VictoryPhase extends PokemonPhase {
     }
 
     this.scene.gameData.gameStats.pokemonDefeated++;
+    
+    const defeatedPokemon = this.getPokemon();
+    if (defeatedPokemon.isGlitchForm()) {
+      this.scene.gameData.gameStats.glitchFormsDefeated++;
+    }
+    if (defeatedPokemon.isSmittyForm()) {
+      this.scene.gameData.gameStats.smittyFormsDefeated++;
+    }
 
     const participantIds = this.scene.currentBattle.playerParticipantIds;
     const party = this.scene.getParty();
@@ -138,6 +149,9 @@ export class VictoryPhase extends PokemonPhase {
       this.scene.pushPhase(new BattleEndPhase(this.scene));
       if (this.scene.currentBattle.battleType === BattleType.TRAINER) {
         this.scene.unshiftPhase(new TrainerVictoryPhase(this.scene));
+        if(this.scene.gameMode.isChaosMode && this.scene.currentBattle.trainer.config.trainerType === TrainerType.SMITTY) {
+          this.scene.unshiftPhase(new UnlockUniSmittyPhase(this.scene));
+        }
       }
       let trainerIsRival = this.scene.currentBattle.trainer != undefined ? this.scene.currentBattle.trainer.isDynamicRival : false;
       if (trainerIsRival) {
@@ -166,49 +180,50 @@ export class VictoryPhase extends PokemonPhase {
       if (this.scene.gameMode.isEndless || !this.scene.gameMode.isWaveFinal(this.scene.currentBattle.waveIndex)) {
         this.scene.pushPhase(new EggLapsePhase(this.scene));
         
-        
-
-        
-        this.scene.pushPhase(new SelectModifierPhase(this.scene));
+        this.scene.pushPhase(new SelectModifierPhase(this.scene, 0, undefined, false, undefined, PathNodeTypeFilter.NONE));
         ShowRewards(this.scene, 20, false, false);
-        if (this.scene.currentBattle.waveIndex % 10 === 0 || trainerIsRival) {
-          this.scene.pushPhase(new SelectModifierPhase(this.scene, 1));
+        if ((this.scene.currentBattle.waveIndex % 10 === 0 && !this.scene.gameMode.isChaosMode) || trainerIsRival || this.scene.recoveryBossMode === RecoveryBossMode.FACING_BOSS) {
+          if(this.scene.recoveryBossMode === RecoveryBossMode.FACING_BOSS) {
+            this.scene.recoveryBossMode = RecoveryBossMode.RECOVERY_OBTAINED;
+          }
+          this.scene.pushPhase(new SelectModifierPhase(this.scene, 1, undefined, false, undefined, PathNodeTypeFilter.NONE));
         }
 
 
         if (this.scene.currentBattle.waveIndex % 100 === 1) {
-          this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_SHARE));
+          this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_SHARE, false));
         }
         if (this.scene.gameMode.isDaily) {
-          this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_CHARM));
+          this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_CHARM, false));
           if (this.scene.currentBattle.waveIndex > 10 && !this.scene.gameMode.isWaveFinal(this.scene.currentBattle.waveIndex)) {
-            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.GOLDEN_POKEBALL));
+            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.GOLDEN_POKEBALL, false));
           }
         } else {
           const superExpWave = !this.scene.gameMode.isEndless ? (this.scene.offsetGym ? 0 : 20) : 10;
+          
           if(Utils.randSeedInt(100, 1) <= 2) {
-            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.GLITCH_PIECE));
+            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.GLITCH_PIECE, false));
           }
           else if(Utils.randSeedInt(100, 1) <= 1) {
-            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.RELIC_GOLD));
+            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.RELIC_GOLD, false));
           }
           else if(Utils.randSeedInt(100, 1) <= 2) {
-            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.BIG_NUGGET));
+            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.BIG_NUGGET, false));
           }
           if (this.scene.gameMode.isEndless && this.scene.currentBattle.waveIndex === 10) {
-            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_SHARE));
+            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_SHARE, false));
           }
           if (this.scene.currentBattle.waveIndex <= 750 && ((this.scene.currentBattle.waveIndex <= 500 && this.scene.currentBattle.waveIndex % 3 === 0) || (this.scene.currentBattle.waveIndex % 30) === superExpWave)) {
-            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_CHARM));
+            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_CHARM, false));
           }
-          if (!(this.scene.currentBattle.waveIndex % 40)) {
-            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.GOLDEN_POKEBALL));
+          if (this.scene.currentBattle.waveIndex % 40 === 0 && !this.scene.gameMode.isChaosMode) {
+            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.GOLDEN_POKEBALL, false));
           }
-          if (this.scene.currentBattle.waveIndex % 100 === 8 || this.scene.currentBattle.waveIndex % 100 === 15) {
-            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_SHARE));
+          if (!!this.scene.gameMode.isChaosMode && (this.scene.currentBattle.waveIndex % 100 === 8 || this.scene.currentBattle.waveIndex % 100 === 15)) {
+            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_SHARE, false));
           }
           if (this.scene.gameMode.isEndless && !(this.scene.currentBattle.waveIndex % 50)) {
-            this.scene.pushPhase(new ModifierRewardPhase(this.scene, !(this.scene.currentBattle.waveIndex % 250) ? modifierTypes.VOUCHER_PREMIUM : modifierTypes.VOUCHER_PLUS));
+            this.scene.pushPhase(new ModifierRewardPhase(this.scene, !(this.scene.currentBattle.waveIndex % 250) ? modifierTypes.VOUCHER_PREMIUM : modifierTypes.VOUCHER_PLUS, false));
             this.scene.pushPhase(new AddEnemyBuffModifierPhase(this.scene));
           }
           if (!(this.scene.currentBattle.waveIndex % 50)) {
@@ -221,10 +236,19 @@ export class VictoryPhase extends PokemonPhase {
               } else {
                 voucherType = modifierTypes.VOUCHER_PREMIUM;
               }
-            this.scene.pushPhase(new ModifierRewardPhase(this.scene, voucherType));
+            this.scene.pushPhase(new ModifierRewardPhase(this.scene, voucherType, false));
           }
         }
-        this.scene.pushPhase(new NewBattlePhase(this.scene));
+        
+        const pathContext = (this.scene as any).pathNodeContext;
+        if (this.scene.gameMode.isChaosMode && pathContext === PathNodeContext.BATTLE_NODE) {
+          if (this.scene.gameMode.isInfinite && this.scene.currentBattle.waveIndex % 1000 === 0) {
+            setupFixedBattlePaths(this.scene, this.scene.currentBattle.waveIndex + 1);
+          }
+            this.scene.pushPhase(new BattlePathPhase(this.scene));
+        } else {
+          this.scene.pushPhase(new NewBattlePhase(this.scene));
+        }
       } else {
         this.scene.currentBattle.battleType = BattleType.CLEAR;
         this.scene.score += this.scene.gameMode.getClearScoreBonus();
@@ -266,6 +290,7 @@ export class VictoryPhase extends PokemonPhase {
       }
 
       if (!this.scene.gameMode.isNightmare && this.scene.gameMode.isWavePreFinal(this.scene)) {
+        this.scene.gameData.gameStats.majorBossesDefeated++;
         this.scene.unshiftPhase(new SelectPermaModifierPhase(this.scene));
     }
 
@@ -273,6 +298,10 @@ export class VictoryPhase extends PokemonPhase {
           const currentWave = this.scene.currentBattle.waveIndex;
           const isCenturyWave = currentWave % 100 === 0 && currentWave < 500;
           const isMajorBossWave = majorBossWaves.includes(currentWave);
+
+          if (isMajorBossWave) {
+            this.scene.gameData.gameStats.majorBossesDefeated++;
+          }
 
           if (isCenturyWave || isMajorBossWave) {
               this.scene.unshiftPhase(new SelectPermaModifierPhase(this.scene));
@@ -322,14 +351,19 @@ export class VictoryPhase extends PokemonPhase {
               ));
           }
 
-          if(isCenturyWave) {
-            if (currentWave >= 200 && Utils.randSeedFloat(0, 1) < 0.05) {
+          if(currentWave >= 200) {
+            if (currentWave >= 300 && Utils.randSeedFloat(0, 1) < 0.05) {
               this.scene.unshiftPhase(new UnlockUniSmittyPhase(this.scene));
             } else {
               this.scene.gameData.handleQuestUnlocks(this.scene, this.scene.currentBattle.trainer.dynamicRivalType);
             }
             this.scene.pushPhase(new SelectNightmareDraftPhase(this.scene));
           }
+      }
+
+      if(this.scene.gameMode.isChaosMode && this.scene.currentBattle.isStage6RivalWave()) {
+        this.scene.gameData.handleQuestUnlocks(this.scene, this.scene.currentBattle.trainer.dynamicRivalType);
+      
       }
     }
 

@@ -321,7 +321,8 @@ export class TutorialService {
                     EnhancedTutorial.UNLOCK_JOURNEY,
                     EnhancedTutorial.ENDGAME,
                     EnhancedTutorial.MODE_UNLOCKS,
-                    EnhancedTutorial.FIRST_VICTORY
+                    EnhancedTutorial.FIRST_VICTORY,
+                    EnhancedTutorial.CHAOS_AND_GAUNTLET_MODES
                 ]
             },
             specialPokemon: {
@@ -392,7 +393,8 @@ export class TutorialService {
                 title: "Community Features",
                 tutorials: [
                     EnhancedTutorial.DISCORD,
-                    EnhancedTutorial.SMITOM
+                    EnhancedTutorial.SMITOM,
+                    EnhancedTutorial.THANK_YOU
                 ]
             },
             smittyForms: {

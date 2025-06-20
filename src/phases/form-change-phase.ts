@@ -15,8 +15,7 @@ import {
   PokemonFormChangeItemModifier
 } from "#app/modifier/modifier";
 import {FormChangeItem} from "#enums/form-change-items";
-import { MegaEvolutionAccessModifier } from "#app/modifier/modifier.ts";
-import { GigantamaxAccessModifier } from "#app/modifier/modifier.ts";
+import { AnyPassiveAbilityModifier, AbilitySacrificeModifier, AnyAbilityModifier, TypeSacrificeModifier, PassiveAbilitySacrificeModifier, TypeSwitcherModifier, AbilitySwitcherModifier, MegaEvolutionAccessModifier, GigantamaxAccessModifier } from "../modifier/modifier";
 
 export class FormChangePhase extends EvolutionPhase {
   private formChange: SpeciesFormChange;
@@ -130,6 +129,11 @@ export class FormChangePhase extends EvolutionPhase {
                       this.scene.time.delayedCall(900, () => {
                         this.pokemon.changeForm(this.formChange).then(() => {
 
+                          if (this.formChange.formKey.startsWith('glitch')) {
+                            this.scene.gameData.gameStats.glitchEvolutions++;
+                          } else if (this.formChange.formKey.startsWith('smitty')) {
+                            this.scene.gameData.gameStats.smittyEvolutions++;
+                          }
                           
                           if (this.formChange.formKey.startsWith('smitty') || this.formChange.formKey.startsWith('glitch')) {
                             this.removeSmittyModifiers(this.pokemon);
@@ -150,6 +154,21 @@ export class FormChangePhase extends EvolutionPhase {
                           ).forEach(modifier => {
                                       modifier.apply([this.scene, this.pokemon]);
                                   });
+
+                          const modifiers = this.pokemon.scene.findModifiers(m => 
+                              (m instanceof AbilitySwitcherModifier || 
+                              m instanceof TypeSwitcherModifier ||
+                              m instanceof AnyAbilityModifier ||          
+                              m instanceof TypeSacrificeModifier ||
+                              m instanceof AbilitySacrificeModifier ||
+                              m instanceof PassiveAbilitySacrificeModifier ||
+                              m instanceof AnyPassiveAbilityModifier) &&
+                              (m as any).pokemonId === this.pokemon.id
+                            );
+
+                            for (const modifier of modifiers) {
+                              modifier.apply([this.pokemon]);                
+                            }
 
                           if (!this.modal) {
                             this.scene.unshiftPhase(new EndEvolutionPhase(this.scene));

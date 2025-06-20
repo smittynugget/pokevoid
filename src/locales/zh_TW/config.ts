@@ -63,6 +63,7 @@ import moveUpgrade from "./move-upgrade.json";
 import eggStarterUi from "./egg-starter-ui.json";
 import modGlitchCreateFormUi from "./mod-glitch-create-form-ui.json";
 import pokedex from "./pokedex.json";
+import nodeMode from "./node-mode.json";
 export const zhTwConfig = {
   ability,
   abilityTriggers,
@@ -128,5 +129,6 @@ export const zhTwConfig = {
   moveUpgrade,
   eggStarterUi,
   modGlitchCreateFormUi,
-  pokedex
+  pokedex,
+  nodeMode
 };

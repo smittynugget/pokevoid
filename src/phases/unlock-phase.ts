@@ -1,7 +1,7 @@
 import BattleScene from "#app/battle-scene.js";
 import { Phase } from "#app/phase.js";
 import { RewardObtainDisplayPhase } from "./reward-obtain-display-phase.js";
-import { RewardConfig, RewardObtainedType } from "#app/ui/reward-obtained-ui-handler.js";
+import { RewardConfig, RewardObtainedType, UnlockModePokeSpriteType } from "#app/ui/reward-obtained-ui-handler.js";
 import { Unlockables, getUnlockableName } from "#app/system/unlockables.js";
 import { Mode } from "#app/ui/ui.js";
 import i18next from "i18next";
@@ -12,12 +12,14 @@ export class UnlockPhase extends Phase {
     private onComplete: () => void;
     private sprite: string | null;
     private isModeUnlock: boolean;
-    constructor(scene: BattleScene, unlockable: Unlockables, sprite: string | null, isModeUnlock: boolean = false, onComplete?: () => void) {
+    private unlockableSpriteType: UnlockModePokeSpriteType;
+    constructor(scene: BattleScene, unlockable: Unlockables, sprite: string | null, isModeUnlock: boolean = false, unlockableSpriteType: UnlockModePokeSpriteType = UnlockModePokeSpriteType.GLITCH, onComplete?: () => void) {
         super(scene);
         this.unlockable = unlockable;
         this.onComplete = onComplete;
         this.sprite = sprite;
         this.isModeUnlock = isModeUnlock;
+        this.unlockableSpriteType = unlockableSpriteType;
     }
 
     start(): void {
@@ -29,6 +31,7 @@ export class UnlockPhase extends Phase {
                 unlockable: this.unlockable,
                 sprite: this.sprite || null,
                 isModeUnlock: this.isModeUnlock,
+                unlockableSpriteType: this.unlockableSpriteType,
             };
 
             if(this.unlockable === Unlockables.MANY_MORE_NUGGETS) {

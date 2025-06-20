@@ -30,6 +30,11 @@ export abstract class FieldPhase extends BattlePhase {
     const speedReversed = new Utils.BooleanHolder(false);
     this.scene.arena.applyTags(TrickRoomTag, speedReversed);
 
+    // Apply trickRoom dynamic challenge - reverse speed order
+    if (this.scene.dynamicMode?.trickRoom) {
+      speedReversed.value = !speedReversed.value;
+    }
+
     if (speedReversed.value) {
       orderedTargets = orderedTargets.reverse();
     }

@@ -36,6 +36,7 @@ enum MenuOptions {
 
 let socialUrl = "https://www.tiktok.com/@smittynugget";
 const discordUrl = "https://discord.gg/xsQummMK3H";
+const githubUrl = "https://github.com/smittynugget/pokevoid";
 
 export default class MenuUiHandler extends MessageUiHandler {
   private readonly textPadding = 8;
@@ -342,6 +343,14 @@ export default class MenuUiHandler extends MessageUiHandler {
         },
         keepOpen: true
       },
+      {
+        label: "Github",
+        handler: () => {
+          window.open(githubUrl, "_blank")?.focus();
+          return true;
+        },
+        keepOpen: true
+      }
       ];
     if (!bypassLogin && loggedInUser?.hasAdminRole) {
       communityOptions.push({

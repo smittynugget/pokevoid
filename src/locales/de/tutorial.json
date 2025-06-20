@@ -327,5 +327,28 @@
         "2":"Die einzigen Einschränkungen sind, dass dein erstes Pokémon nicht getauscht werden kann und legendäre Pokémon nur gegen andere legendäre, Mega- oder Dynamax-Pokémon getauscht werden können!",
         "3":"Fröhliches Schlüpfen!"
       }
+    },
+    "chaosAndGauntletModes": {
+      "title": {
+        "1": "NEUE CHAOS-MODI",
+        "2": "NEUE CHAOS-MODI",
+              "3": "HERAUSFORDERUNGS-MODI!",
+      "4": "HERAUSFORDERUNGS-MODI!",
+        "5": "Mache jedes Pokémon legendär"
+      },
+      "text": {
+        "1": "Inspiriert von Roguelike-Meistern wie Slay the Spire, Inscryption und vielen mehr, lassen dich Pokevoids CHAOS-Modi den Pfad wählen, den du als nächstes einschlagen wirst!",
+        "2": "Plane deinen Pfad und gib dein Bestes, um das Chaos in der LEERE zu überwinden!",
+        "3": "Betritt die Herausforderung! Stelle dich Welle für Welle intensiver Begegnungen!",
+        "4": "Pokerogues ursprünglicher Kampfstil, intensiv neu gemischt mit zufälligem Pokevoid-Wahnsinn und spielbrechenden Mechaniken!",
+        "5": "Geh voran, Trainer, umarme die verbotene Macht der Leere und mache JEDES Pokémon legendär!"
+      }
+    },
+    "thankYou": {
+      "title": "Lieber Spieler",
+      "text": {
+        "1": "16 Monate des Solo-Entwicklungswahnsinns bedeuten alles - jedes Mal, wenn jemand wie du eine großartige Zeit beim Spielen dieses Spiels hat. Wenn meine verrückten Ideen tatsächlich funktionieren und du Spaß hast,", 
+        "2": "dann bin ich vielleicht - meinem Traum näher, ein echter Spieleentwickler zu werden. Vielen Dank, dass du meine chaotische, kaputte Version von PokéRogue spielst! - Smitty"
+      }
     }
 }

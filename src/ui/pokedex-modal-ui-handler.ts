@@ -18,8 +18,10 @@ import { Moves } from "../enums/moves";
 import { ModalConfig, ModalUiHandler } from "./modal-ui-handler";
 import { RewardType } from "../system/game-data";
 import { getModPokemonName } from "../data/mod-glitch-form-utils";
+import { modGlitchFormData, getModFormSystemName } from "../data/mod-glitch-form-data";
 import Pokemon, { EnemyPokemon } from "#app/field/pokemon.js";
 import { pokemonEvolutions } from "../data/pokemon-evolutions";
+import { modStorage } from "../system/mod-storage";
 enum PokedexDisplayMode {
     ABILITIES,
     MOVES
@@ -681,41 +683,12 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 spriteKey = `pkmn__glitch__${sanitizedFormName}`;
 
                 if (!this.scene.textures.exists(spriteKey)) {
-                     await new Promise<void>((resolve, reject) => {
-                        this.scene.load.embeddedAtlas(
-                            spriteKey,
-                            `images/pokemon/glitch/${sanitizedFormName}.png`
-                        );
-
-                        this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
-                            if (this.scene.anims && typeof this.scene.anims.create === 'function' && !this.scene.anims.exists(spriteKey)) {
-                                if (this.scene.textures.get(spriteKey).getFrameNames().length > 1) {
-                                     this.scene.anims.create({
-                                        key: spriteKey,
-                                        frames: this.scene.anims.generateFrameNames(spriteKey),
-                                        frameRate: 24,
-                                        repeat: -1
-                                    });
-                                } else {
-                                     this.scene.anims.create({
-                                        key: spriteKey,
-                                        frames: [{ key: spriteKey }],
-                                        frameRate: 1,
-                                        repeat: -1
-                                    });
-                                }
-                            }
-                            resolve();
-                        });
-
-                        this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (file: any) => {
-                            reject(new Error(`Failed to load glitch texture: ${file.key}`));
-                        });
-
-                        if (!this.scene.load.isLoading()) {
-                            this.scene.load.start();
-                        }
-                     });
+                    try {
+                        await this.loadGlitchSpriteFromFile(sanitizedFormName, spriteKey);
+                    } catch (fileLoadError) {
+                        console.warn(`Failed to load glitch sprite from file, trying data: ${fileLoadError.message}`);
+                        await this.loadGlitchSpriteFromData(speciesId, sanitizedFormName, spriteKey);
+                    }
                 }
 
             } else {
@@ -771,24 +744,123 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             this.spriteContainer.add(errorText);
         }
     }
+
+    private async loadGlitchSpriteFromFile(sanitizedFormName: string, spriteKey: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this.scene.load.embeddedAtlas(
+                spriteKey,
+                `images/pokemon/glitch/${sanitizedFormName}.png`
+            );
+
+            this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
+                if (this.scene.anims && typeof this.scene.anims.create === 'function' && !this.scene.anims.exists(spriteKey)) {
+                    if (this.scene.textures.get(spriteKey).getFrameNames().length > 1) {
+                        this.scene.anims.create({
+                            key: spriteKey,
+                            frames: this.scene.anims.generateFrameNames(spriteKey),
+                            frameRate: 24,
+                            repeat: -1
+                        });
+                    } else {
+                        this.scene.anims.create({
+                            key: spriteKey,
+                            frames: [{ key: spriteKey }],
+                            frameRate: 1,
+                            repeat: -1
+                        });
+                    }
+                }
+                resolve();
+            });
+
+            this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (file: any) => {
+                reject(new Error(`Failed to load glitch texture: ${file.key}`));
+            });
+
+            if (!this.scene.load.isLoading()) {
+                this.scene.load.start();
+            }
+        });
+    }
+
+    private async loadGlitchSpriteFromData(speciesId: Species, sanitizedFormName: string, spriteKey: string): Promise<void> {
+        try {
+            const systemName = getModFormSystemName(speciesId, sanitizedFormName);
+            let spriteData: string | null = null;
+
+            if (modGlitchFormData[systemName] && modGlitchFormData[systemName].sprites && modGlitchFormData[systemName].sprites.front) {
+                spriteData = modGlitchFormData[systemName].sprites.front as string;
+            } else {
+                const modId = `${speciesId}_${sanitizedFormName}`;
+                const storedMod = await modStorage.getMod(modId);
+                if (storedMod && storedMod.spriteData) {
+                    spriteData = storedMod.spriteData;
+                }
+            }
+
+            if (!spriteData) {
+                throw new Error(`No sprite data found for ${sanitizedFormName}`);
+            }
+
+            return new Promise<void>((resolve, reject) => {
+                let objectUrl: string;
+                
+                if (typeof spriteData === 'string') {
+                    if (spriteData.startsWith('data:')) {
+                        objectUrl = spriteData;
+                    } else {
+                        objectUrl = `data:image/png;base64,${spriteData}`;
+                    }
+                } else {
+                    reject(new Error('Invalid sprite data format'));
+                    return;
+                }
+                
+                this.scene.load.image(spriteKey, objectUrl);
+                
+                this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
+                    if (this.scene.anims && typeof this.scene.anims.create === 'function' && !this.scene.anims.exists(spriteKey)) {
+                        this.scene.anims.create({
+                            key: spriteKey,
+                            frames: [{ key: spriteKey }],
+                            frameRate: 1,
+                            repeat: -1
+                        });
+                    }
+                    resolve();
+                });
+                
+                this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (file: any) => {
+                    reject(new Error(`Failed to load glitch sprite: ${file.key}`));
+                });
+                
+                if (!this.scene.load.isLoading()) {
+                    this.scene.load.start();
+                }
+            });
+        } catch (error) {
+            console.error(`Error loading glitch sprite for ${sanitizedFormName}:`, error);
+            throw error;
+        }
+    }
     
     private setTypeIcons(type1: Type, type2: Type | null): void {
-        
+        this.typingContainer.removeAll(true);
         this.type1Icon = this.scene.add.sprite(3, 0, Utils.getLocalizedSpriteKey("types"));
         this.type1Icon.setFrame(Type[type1].toLowerCase());
         this.type1Icon.setOrigin(0, 0.5);
         this.type1Icon.setScale(0.5);
         this.typingContainer.add(this.type1Icon);
         
-        if (type2 !== null && type2 !== type1) {
+        if (type2 !== null) {
             this.type2Icon = this.scene.add.sprite(23, 0, Utils.getLocalizedSpriteKey("types"));
             this.type2Icon.setFrame(Type[type2].toLowerCase());
             this.type2Icon.setOrigin(0, 0.5);
             this.type2Icon.setScale(0.5);
             this.typingContainer.add(this.type2Icon);
             
-        } else {
-             
+        } else if(this.type2Icon) {
+            this.type2Icon.setVisible(false);
         }
     }
     

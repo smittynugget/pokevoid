@@ -99,6 +99,7 @@ export class SwitchSummonPhase extends SummonPhase {
     
     if(this.player) {
       this.scene.currentBattle.markPokemonAsSwitchedOut(this.lastPokemon.id);
+      this.scene.gameData.gameStats.pokemonSwitched++;
     }
 
     applyPreSwitchOutAbAttrs(PreSwitchOutAbAttr, this.lastPokemon);

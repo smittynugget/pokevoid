@@ -30,6 +30,13 @@ export enum RewardObtainedType {
     NIGHTMARE_MODE_CHANGE,
 }
 
+export enum UnlockModePokeSpriteType {
+    NORMAL = 1,
+    GLITCH = 2,
+    NORMAL_INVERTED = 3,
+    GLITCH_INVERTED = 4,
+}
+
 export interface RewardConfig {
     type: RewardObtainedType;
     name?: string;
@@ -47,6 +54,7 @@ export interface RewardConfig {
     sprite?: string;
     isModeUnlock?: boolean;
     isLevelUp?: boolean;
+    unlockableSpriteType?: UnlockModePokeSpriteType;
 }
 
 export default class RewardObtainedUiHandler extends ModalUiHandler {
@@ -272,24 +280,19 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         let imagePath;
 
         if (this.rewardConfig.isMod) {
-            // For mod forms, use a special sprite key pattern
             spriteKey = `pkmn__glitch__${pokeName.toLowerCase()}`;
             
-            // Check if the sprite is already loaded
             if (this.scene.textures.exists(spriteKey)) {
-                // Even if sprite is loaded, ensure mod icon is loaded too
                 this.textureLoaded = true;
                 return;
             }
             
-            // For mod forms, sprite data should be retrieved from mod storage
             try {
                 const modId = `${this.rewardConfig.pokemon?.speciesId || ''}_${pokeName.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
                 const storedMod = await modStorage.getMod(modId);
                 
                 if (storedMod && storedMod.spriteData) {
                     
-                    // Use data URL or base64 string for the sprite
                     return new Promise((resolve, reject) => {
                         let spriteData = storedMod.spriteData;
                         let objectUrl: string;
@@ -305,7 +308,6 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                         this.scene.load.image(spriteKey, objectUrl);
                         
                         this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
-                            // Create animation for the sprite
                             if (this.scene.anims && typeof this.scene.anims.create === 'function' && !this.scene.anims.exists(spriteKey)) {
                                 this.scene.anims.create({
                                     key: spriteKey,
@@ -329,26 +331,35 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                     });
                 } else {
                     console.error(`Mod ${pokeName} not found in storage`);
-                    // Fallback to standard glitch form as a placeholder
                     imagePath = `images/pokemon/glitch/missingno.png`;
                 }
             } catch (error) {
                 console.error(`Error loading mod ${pokeName} from storage:`, error);
-                // Fallback to standard glitch form as a placeholder
                 imagePath = `images/pokemon/glitch/missingno.png`;
             }
-        } else if (this.rewardConfig.isGlitch) {
-            spriteKey = `pkmn__glitch__${pokeName}`;
-            imagePath = `images/pokemon/glitch/${pokeName}.png`;
         } else {
-            spriteKey = `pkmn__smitty__${pokeName}`;
-            imagePath = `images/pokemon/smitty/${pokeName}.png`;
+            const spriteType = this.rewardConfig.unlockableSpriteType || UnlockModePokeSpriteType.GLITCH;
+            
+            switch (spriteType) {
+                case UnlockModePokeSpriteType.NORMAL:
+                case UnlockModePokeSpriteType.NORMAL_INVERTED:
+                    spriteKey = `pkmn__${pokeName}`;
+                    imagePath = `images/pokemon/${pokeName}.png`;
+                    break;
+                case UnlockModePokeSpriteType.GLITCH:
+                case UnlockModePokeSpriteType.GLITCH_INVERTED:
+                default:
+                    spriteKey = `pkmn__glitch__${pokeName}`;
+                    imagePath = `images/pokemon/glitch/${pokeName}.png`;
+                    break;
+            }
+            
+            if (this.scene.textures.exists(spriteKey)) {
+                this.textureLoaded = true;
+                return;
+            }
         }
 
-        if (this.scene.textures.exists(spriteKey)) {
-            this.textureLoaded = true;
-            return;
-        }
 
         return new Promise((resolve, reject) => {
             this.scene.load.embeddedAtlas(
@@ -629,12 +640,22 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         const pokeName = this.rewardConfig.isModeUnlock ? this.rewardConfig.sprite : this.rewardConfig.name;
         let spriteKey;
         
+        const spriteType = this.rewardConfig.unlockableSpriteType || UnlockModePokeSpriteType.GLITCH;
+        
         if (this.rewardConfig.isMod) {
             spriteKey = `pkmn__glitch__${pokeName.toLowerCase()}`;
-        } else if (this.rewardConfig.isGlitch) {
-            spriteKey = `pkmn__glitch__${pokeName}`;
         } else {
-            spriteKey = `pkmn__smitty__${pokeName}`;
+            switch (spriteType) {
+                case UnlockModePokeSpriteType.NORMAL:
+                case UnlockModePokeSpriteType.NORMAL_INVERTED:
+                    spriteKey = `pkmn__${pokeName}`;
+                    break;
+                case UnlockModePokeSpriteType.GLITCH:
+                case UnlockModePokeSpriteType.GLITCH_INVERTED:
+                default:
+                    spriteKey = `pkmn__glitch__${pokeName}`;
+                    break;
+            }
         }
         
         const position = this.getSpritePosition(0, 0);
@@ -655,6 +676,22 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
         if (this.scene.spritePipeline) {
             this.rewardSprite.setPipeline(this.scene.spritePipeline);
+        }
+        
+        if (spriteType === UnlockModePokeSpriteType.NORMAL_INVERTED || 
+            spriteType === UnlockModePokeSpriteType.GLITCH_INVERTED) {
+            try {
+                if (this.rewardSprite.postFX && typeof this.rewardSprite.postFX.addColorMatrix === 'function') {
+                    const colorMatrix = this.rewardSprite.postFX.addColorMatrix();
+                    colorMatrix.negative();
+                } else {
+                    this.rewardSprite.setTint(0xFF00FF);
+                    this.rewardSprite.setBlendMode(Phaser.BlendModes.SCREEN);
+                }
+            } catch (error) {
+                this.rewardSprite.setTint(0xFF00FF);
+                this.rewardSprite.setBlendMode(Phaser.BlendModes.NORMAL);
+            }
         }
     }
 
