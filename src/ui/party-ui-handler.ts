@@ -1126,11 +1126,10 @@ export default class PartyUiHandler extends MessageUiHandler {
       m.pokemonId === pokemon.id
     ) as CollectedTypeModifier[];
     
-    const totalStackCount = collectedTypeModifiers.reduce((sum, modifier) => 
-      sum + modifier.stackCount, 0);
+    const hasEnough = collectedTypeModifiers.some(modifier => modifier.hasEnoughCollected(5));
     
     this.currentSacrifice.pokemonId = pokemon.id;
-    this.currentSacrifice.hasEnough = totalStackCount >= 5;
+    this.currentSacrifice.hasEnough = hasEnough;
     
     return this.currentSacrifice.hasEnough;
   }
@@ -1165,8 +1164,10 @@ export default class PartyUiHandler extends MessageUiHandler {
       m.pokemonId === pokemon.id
     ) as CollectedTypeModifier[];
     
-    const totalCollectedModifiers = collectedTypeModifiers.reduce((sum, modifier) => 
-      sum + modifier.stackCount, 0);
+    const totalCollectedModifiers = collectedTypeModifiers.reduce((sum, modifier) => {
+      const modifierTotal = Object.values(modifier.collectedTypes).reduce((subSum, count) => subSum + count, 0);
+      return sum + modifierTotal;
+    }, 0);
 
     const nuggetValue = this.scene.getWaveMoneyAmount(1); // Nugget value
     const bigNuggetValue = this.scene.getWaveMoneyAmount(2.5); // Big Nugget value

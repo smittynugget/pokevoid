@@ -50,6 +50,7 @@ import {GameDataType} from "#enums/game-data-type";
 import {Moves} from "#enums/moves";
 import {PlayerGender} from "#enums/player-gender";
 import {Species} from "#enums/species";
+import {GameMechanicsID, GameMechanicsVersion} from "#enums/gameMechanicsID";
 import {applyChallenges, ChallengeType} from "#app/data/challenge.js";
 import {WeatherType} from "#app/enums/weather-type.js";
 import {TerrainType} from "#app/data/terrain.js";
@@ -175,6 +176,7 @@ export interface SystemSaveData {
     smitomTalks: number[];
     rewardOverlayOpacity: number;
     testSpeciesForMod: number[];
+    testModsCount: number;
 }
 
 export interface SessionSaveData {
@@ -196,6 +198,7 @@ export interface SessionSaveData {
     timestamp: integer;
     challenges: ChallengeData[];
     playerRival: RivalTrainerType;
+    chaosAltRivals: RivalTrainerType[];
     sessionQuestModifierData?: Record<string, number>;
     activeConsoleCodeQuests?: string[];
     nightmareBattleSeeds: NightmareBattleSeeds | null;
@@ -214,6 +217,7 @@ export interface SessionSaveData {
     battlePathWave?: integer;
     dynamicMode?: DynamicMode;
     rivalWave?: integer;
+    gameMechanicTracking?: Record<string, string>;
     
 }
 
@@ -413,6 +417,7 @@ export class GameData {
     public permaMoney: number = 0;
     public permaModifiers: PermaModifiers;
     public testSpeciesForMod: number[] = [];
+    public testModsCount: number = 0;
 
     public currentPermaShopOptions: ModifierTypeOption[] | null = null;
     public lastPermaShopRefreshTime: number = 0;
@@ -424,6 +429,7 @@ export class GameData {
     public dailyBountyCode: string = "";
     public questUnlockables: Partial<Record<QuestUnlockables, QuestProgress>>;
     public playerRival: RivalTrainerType | null = null;
+    public chaosAltRivals: RivalTrainerType[] = [];
     public defeatedRivals: RivalTrainerType[] = [];
     private sessionQuestModifierData: Record<string, number> = {};
     private activeConsoleCodeQuests: string[] = [];
@@ -475,6 +481,14 @@ export class GameData {
             [Unlockables.SMITTY_NUGGET]: false,
             [Unlockables.NUGGET_OF_SMITTY]: false,
             [Unlockables.MANY_MORE_NUGGETS]: false,
+            [Unlockables.NUZLIGHT_DRAFT_MODE]: false,
+            [Unlockables.NUZLOCKE_DRAFT_MODE]: false,
+            [Unlockables.CHAOS_JOURNEY_MODE]: false,
+            [Unlockables.CHAOS_VOID_MODE]: false,
+            [Unlockables.CHAOS_ROGUE_VOID_MODE]: false,
+            [Unlockables.CHAOS_INFINITE_MODE]: false,
+            [Unlockables.CHAOS_INFINITE_ROGUE_MODE]: false,
+
         };
         this.achvUnlocks = {};
         this.voucherUnlocks = {};
@@ -501,6 +515,7 @@ export class GameData {
         this.tempHatchedPokemon = [];
         this.pendingMoveUpgrades = -1;
         this.testSpeciesForMod = [];
+        this.testModsCount = 0;
         this.biomeChange = BiomeChange.NONE;
     }
 
@@ -585,6 +600,7 @@ export class GameData {
             lastSaveTime: this.lastSaveTime,
             rewardOverlayOpacity: this.rewardOverlayOpacity,
             testSpeciesForMod: this.testSpeciesForMod,
+            testModsCount: this.testModsCount,
         };
     }
 
@@ -604,12 +620,9 @@ export class GameData {
 
     public async loadSystem(): Promise<boolean> {
 
-            let importResult = false;
-            
-            importResult = await this.importFromHardcodedPath("./pokesav/chaos-test-mobile.prsv");
-            // importResult = await this.importFromHardcodedPath("./pokesav/void-breaks.prsv");
-            
-            return true;
+            // let importResult = false;
+            // importResult = await this.importFromHardcodedPath("./pokesav/void200.prsv");
+            // return true;
 
             if (bypassLogin && !this.getLocalStorageItem(`data_${loggedInUser?.username}`)) {
                 this.updatePermaMoney(this.scene, 12500);
@@ -977,8 +990,12 @@ export class GameData {
                     this.testSpeciesForMod = systemData.testSpeciesForMod;
                 }
 
+                if (systemData.testModsCount) {
+                    this.testModsCount = systemData.testModsCount;
+                }
+
                 
-                this.updatePermaMoney(this.scene, systemData.permaMoney != undefined ? systemData.permaMoney : 10000);
+                // this.updatePermaMoney(this.scene, systemData.permaMoney != undefined ? systemData.permaMoney : 10000);
                 this.scene.ui.updatePermaMoneyText(this.scene);
 
                 if (systemData.permaModifiers) {
@@ -1158,7 +1175,7 @@ export class GameData {
                 }).filter(Boolean);
             }
 
-            if (k === "lastPermaShopRefreshTime" || k === "lastSmitomReward" || k === "lastDailyBountyTime" || k === "lastSaveTime" || k === "rewardOverlayOpacity" || k === "permaShopRerollCount") {
+            if (k === "lastPermaShopRefreshTime" || k === "lastSmitomReward" || k === "lastDailyBountyTime" || k === "lastSaveTime" || k === "rewardOverlayOpacity" || k === "permaShopRerollCount" || k === "testModsCount") {
                 return v as number;
             }
 
@@ -1542,6 +1559,7 @@ export class GameData {
             timestamp: new Date().getTime(),
             challenges: scene.gameMode.challenges.map(c => new ChallengeData(c)),
             playerRival: this.playerRival,
+            chaosAltRivals: this.chaosAltRivals,
             sessionQuestModifierData: this.sessionQuestModifierData,
             activeConsoleCodeQuests: this.activeConsoleCodeQuests,
             nightmareBattleSeeds: this.nightmareBattleSeeds,
@@ -1560,6 +1578,7 @@ export class GameData {
             battlePathWave: scene.battlePathWave,
             dynamicMode: scene.dynamicMode,
             rivalWave: scene.rivalWave,
+            gameMechanicTracking: scene.gameMechanicTracking,
         } as SessionSaveData;
     }
 
@@ -1656,9 +1675,28 @@ export class GameData {
                     this.preargsForShop = _sessionData.preargsForShop || {};
                     this.biomeChange = _sessionData.biomeChange || BiomeChange.NONE;
                     this.recoveryBossMode = _sessionData.recoveryBossMode || RecoveryBossMode.NONE;
+                    scene.recoveryBossMode = _sessionData.recoveryBossMode || RecoveryBossMode.NONE;
                     scene.pathNodeContext = _sessionData.pathNodeContext === undefined || _sessionData.pathNodeContext === null ? null : _sessionData.pathNodeContext;
                     scene.selectedNodeType = _sessionData.selectedNodeType === undefined || _sessionData.selectedNodeType === null ? null : _sessionData.selectedNodeType;
                     this.battlePath = _sessionData.battlePath || null;
+                    scene.gameMechanicTracking = _sessionData.gameMechanicTracking || { [GameMechanicsID.CHAOS_MODE]: GameMechanicsVersion.CHAOS_V1, [GameMechanicsID.COLLECTED_TYPE_MODIFIER]: GameMechanicsVersion.COLLECTED_TYPE_MODIFIER_V1 };
+                    
+                    // Update the global currentBattlePath when loading saved battle path
+                    // const { setCurrentBattlePath, reconstructBattlePathFromLayers, regenerateSpecialNodeProperties } = await import("../battle");
+                    // if (this.battlePath) {
+                    //     // Reconstruct the complete battle path with Maps from saved layers data
+                    //     const reconstructedBattlePath = reconstructBattlePathFromLayers(this.battlePath);
+                        
+                    //     // Regenerate battleConfig and metadata for special wave nodes
+                    //     regenerateSpecialNodeProperties(scene, reconstructedBattlePath);
+                        
+                    //     this.battlePath = reconstructedBattlePath;
+                    //     setCurrentBattlePath(reconstructedBattlePath);
+                    // } else {
+                    //     // Reset global state if no saved battle path
+                    //     setCurrentBattlePath(null);
+                    // }
+                    
                     this.selectedPath = _sessionData.selectedPath || "";
                     scene.battlePathWave = _sessionData.battlePathWave || 1;
                     scene.dynamicMode = _sessionData.dynamicMode || undefined;
@@ -1666,9 +1704,10 @@ export class GameData {
                     const loadPokemonAssets: Promise<void>[] = [];
 
                     let waveDebug = _sessionData.waveIndex;
-                    // waveDebug = 89;
+                    // waveDebug = 71;
 
                     const party = scene.getParty();
+                    // this.modifyPartyData(_sessionData.party, scene);
 
                     for (const p of _sessionData.party) {
                         const pokemon = p.toPokemon(scene) as PlayerPokemon;
@@ -1700,6 +1739,7 @@ export class GameData {
                     const battleType = _sessionData.battleType || 0;
                     const trainerConfig = _sessionData.trainer ? _sessionData.trainer.rivalConfig ? _sessionData.trainer.rivalConfig : trainerConfigs[_sessionData.trainer.trainerType] : null;
                     const battle = scene.newBattle(waveDebug, battleType, _sessionData.trainer, battleType === BattleType.TRAINER ? trainerConfig?.doubleOnly || _sessionData.trainer?.variant === TrainerVariant.DOUBLE : _sessionData.enemyParty.length > 1);
+                    // this.modifyEnemyPartyData(_sessionData.enemyParty, scene);
                     battle.enemyLevels = _sessionData.enemyParty.map(p => p.level);
 
                         scene.arena.init();
@@ -1712,6 +1752,7 @@ export class GameData {
                         }
 
                         else {
+
 
                         _sessionData.enemyParty.forEach((enemyData, e) => {
                             const enemyPokemon = enemyData.toPokemon(scene, battleType, e, _sessionData.trainer?.variant === TrainerVariant.DOUBLE) as EnemyPokemon;
@@ -1741,6 +1782,8 @@ export class GameData {
 
                     scene.updateModifiers(true);
 
+                    scene.consolidateCollectedTypeModifiers();
+
                     for (const enemyModifierData of _sessionData.enemyModifiers) {
                         const modifier = enemyModifierData.toModifier(scene, modifiersModule[enemyModifierData.className]);
                         if (modifier) {
@@ -1752,6 +1795,7 @@ export class GameData {
 
                     
                     this.playerRival = _sessionData.playerRival || null;
+                    this.chaosAltRivals = _sessionData.chaosAltRivals || []
                     this.sessionQuestModifierData = _sessionData.sessionQuestModifierData || {};
                     this.activeConsoleCodeQuests = _sessionData.activeConsoleCodeQuests || [];
 
@@ -1784,6 +1828,7 @@ export class GameData {
     }
 
     modifyPartyData(partyData: PokemonData[], scene: BattleScene) {
+        return;
         partyData.splice(0, partyData.length);
 
         const poke1 = new PokemonData({
@@ -2037,19 +2082,20 @@ export class GameData {
     }
 
     modifyEnemyPartyData(partyData: PokemonData[], scene: BattleScene) {
+        return;
         partyData.splice(0, partyData.length);
 
         const poke1 = new PokemonData({
             id: randSeedInt(1000),
             player: false,
-            species: Species.NIDOKING,
-            formIndex: 1,
+            species: Species.BLISSEY,
+            formIndex: 0,
             abilityIndex: 0,
             passive: true,
             shiny: false,
             variant: 0,
             pokeball: PokeballType.POKEBALL,
-            level: 5,
+            level: 1000,
             exp: 0,
             levelExp: 0,
             gender: Gender.MALE,
@@ -2398,6 +2444,10 @@ export class GameData {
                 return v ? v as Record<number, PreargsForShop> : {};
             }
 
+            if (k === "gameMechanicTracking") {
+                return v ? v as Record<string, string> : {};
+            }
+
             if (k === "pathNodeContext") {
                 return v !== undefined ? v : null;
             }
@@ -2460,6 +2510,10 @@ export class GameData {
 
             if (k === "playerRival") {
                 return v as TrainerType | null;
+            }
+
+            if (k === "chaosAltRivals") {
+                return v as TrainerType[];
             }
 
             if (k === "sessionQuestModifierData") {
@@ -3509,6 +3563,17 @@ export class GameData {
         if (systemdata.gameStats.playerKnockoutType === undefined) {
             systemdata.gameStats.playerKnockoutType = {};
         }
+
+        if (systemdata.gameStats.chaosNuzlightSessionsPlayed === undefined) {
+            systemdata.gameStats.chaosNuzlightSessionsPlayed = 0;
+            systemdata.gameStats.chaosNuzlightSessionsWon = 0;
+            systemdata.gameStats.chaosNuzlockeSessionsPlayed = 0;
+            systemdata.gameStats.chaosNuzlockeSessionsWon = 0;
+            systemdata.gameStats.chaosNuzlightDraftSessionsPlayed = 0;
+            systemdata.gameStats.chaosNuzlightDraftSessionsWon = 0;
+            systemdata.gameStats.chaosNuzlockeDraftSessionsPlayed = 0;
+            systemdata.gameStats.chaosNuzlockeDraftSessionsWon = 0;
+        }
   }
 
     public updateGameModeStats(gameMode: GameModes, isVictory: boolean = false): void {
@@ -3610,6 +3675,34 @@ export class GameData {
             gameStats.chaosInfiniteRogueSessionsWon++;
             } else {
             gameStats.chaosInfiniteRogueSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLIGHT:
+            if (isVictory) {
+            gameStats.chaosNuzlightSessionsWon++;
+            } else {
+            gameStats.chaosNuzlightSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLOCKE:
+            if (isVictory) {
+            gameStats.chaosNuzlockeSessionsWon++;
+            } else {
+            gameStats.chaosNuzlockeSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLIGHT_DRAFT:
+            if (isVictory) {
+            gameStats.chaosNuzlightDraftSessionsWon++;
+            } else {
+            gameStats.chaosNuzlightDraftSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLOCKE_DRAFT:
+            if (isVictory) {
+            gameStats.chaosNuzlockeDraftSessionsWon++;
+            } else {
+            gameStats.chaosNuzlockeDraftSessionsPlayed++;
             }
             break;
         }
@@ -3920,7 +4013,7 @@ public getRandomBountyCode(): string {
             const rivalMods = allMods.filter(mod => {
               return mod.jsonData.unlockConditions && 
                     mod.jsonData.unlockConditions.rivalTrainerTypes &&
-                    mod.jsonData.unlockConditions.rivalTrainerTypes.includes(targetRival);
+                    mod.jsonData.unlockConditions.rivalTrainerTypes.includes(targetRival) || this.scene.gameMode.isChaosMode;
             });
 
             if (rivalMods.length > 0) {
@@ -3968,9 +4061,9 @@ public getRandomBountyCode(): string {
                 }
             ));
         
-        } else if (this.unlocks[Unlockables.NIGHTMARE_MODE]) {
+        } else if (this.unlocks[Unlockables.NIGHTMARE_MODE] || this.scene.gameMode.isChaosMode) {
           checkAndUnlockModForm().then(hasUnlockedMod => {
-            if (!hasUnlockedMod) {
+            if (!hasUnlockedMod || this.scene.gameMode.isChaosMode) {
               handleQuestUnlock();
             }
           });

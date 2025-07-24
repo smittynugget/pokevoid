@@ -1,102 +1,138 @@
 {
-  "viewTitle": "Mapa da Rota de Batalha",
-  "selectTitle": "Selecionar Rota de Batalha",
-  "noPathMessage": "Nenhuma rota de batalha disponível.\nGere uma primeiro!",
+  "viewTitle": "Mapa do Caminho de Batalha",
+  "selectTitle": "Selecionar Caminho de Batalha",
+  "noPathMessage": "Nenhum caminho de batalha disponível.\nGere um primeiro!",
   "unknownEncounter": "Encontro desconhecido",
   "unknownNode": "Desconhecido",
   "descriptions": {
-    "wildPokemon": "Encontro com Pokémon selvagem",
-    "trainerBattle": "Batalha de treinador",
-    "rivalBattle": "Batalha de rival",
-    "majorBossBattle": "Batalha de chefe maior",
-    "recoveryBoss": "Chefe de recuperação",
-    "evilBossBattle": "Chefe da equipe malvada",
-    "eliteFour": "Membro da Elite dos Quatro",
-    "champion": "Batalha de campeão",
-    "itemGeneral": "Itens gerais",
-    "addPokemon": "Itens específicos de Pokémon",
-    "itemTm": "Recompensas de MT",
-    "itemBerry": "Recompensas de berries",
-    "mysteryNode": "Encontro misterioso",
-    "convergencePoint": "Convergência de rotas",
+    "wildPokemon": "Encontro Com Pokémon Selvagem",
+    "trainerBattle": "Batalha De Treinador",
+    "rivalBattle": "Batalha De Rival",
+    "majorBossBattle": "Batalha De Chefe Maior",
+    "recoveryBoss": "Chefe De Recuperação",
+    "evilBossBattle": "Chefe Da Equipe Malvada",
+    "eliteFour": "Membro Da Elite Dos Quatro",
+    "champion": "Batalha Do Campeão",
+    "itemGeneral": "Recompensas Gerais",
+    "addPokemon": "Recompensas de Recrutamento Pokémon",
+    "itemTm": "Recompensas TM",
+    "itemBerry": "Recompensas De Frutas",
+    "mysteryNode": "Encontro Misterioso",
+    "convergencePoint": "Convergência De Caminhos",
     "smittyBattle": "Batalha Smitty",
-    "evilGruntBattle": "Recruta da equipe malvada",
-    "evilAdminBattle": "Administrador da equipe malvada",
-    "randPermaItem": "Item Permanente Aleatório",
-    "permaItems": "Itens Permanentes",
-    "goldenPokeball": "Recompensas de Pokébola Dourada",
-    "rogueBallItems": "Itens de Rogue Ball",
-    "masterBallItems": "Itens de Master Ball",
-    "abilitySwitchers": "Trocadores de habilidades",
-    "statSwitchers": "Trocadores de atributos",
-    "glitchPiece": "Recompensa de peça glitch",
-    "dnaSplicers": "Recompensa de Elo de DNA",
-    "money": "Recompensa de dinheiro",
-    "permaMoney": "Impulso permanente de dinheiro",
-    "releaseItems": "Itens de soltura",
-    "mints": "Hortelãs de natureza",
-    "eggVoucher": "Recompensa de cupom de ovo",
-    "ppMax": "Itens PP Máximo",
-    "collectedType": "Recompensas de coleção de tipos",
-    "expShare": "Itens Compartilhar Exp",
-    "typeSwitcher": "Trocador de tipos",
-    "passiveAbility": "Itens de habilidade passiva",
-    "anyTms": "Qualquer recompensa de MT",
-    "challengeBoss": "Batalha de chefe da rota desafio com dificuldade aumentada",
-    "challengeRival": "Batalha de rival da rota desafio com dificuldade aumentada",
-    "challengeEvilBoss": "Chefe malvado da rota desafio com dificuldade aumentada",
-    "challengeChampion": "Batalha de campeão da rota desafio com dificuldade aumentada",
-    "challengeReward": "Recompensa rara por completar a rota desafio"
+    "evilGruntBattle": "Recruta Da Equipe Malvada",
+    "evilAdminBattle": "Admin Da Equipe Malvada",
+    "randPermaItem": "Item ∞ Aleatório",
+    "permaItems": "Recompensas Item ∞",
+    "goldenPokeball": "Recompensas Pokébola Dourada",
+    "rogueBallItems": "Recompensas Rogue Ball",
+    "masterBallItems": "Recompensas Master Ball",
+    "greatBallItems": "Recompensas Great Ball",
+    "ultraBallItems": "Recompensas Ultra Ball",
+    "abilitySwitchers": "Recompensas Trocador De Habilidades",
+    "statSwitchers": "Recompensas Trocador De Status",
+    "glitchPiece": "Recompensa Peça Glitch",
+    "dnaSplicers": "Recompensa Fusionador DNA",
+    "money": "Recompensa De Dinheiro",
+    "permaMoney": "Aumento Permanente De Dinheiro",
+    "releaseItems": "Recompensas De Liberação",
+    "mints": "Recompensas De Hortelãs",
+    "eggVoucher": "Recompensa Cupom De Ovo",
+    "ppMax": "Recompensas PP Máximo",
+    "collectedType": "Recompensas De Coleção De Tipos",
+    "expShare": "Recompensas Compartilhar Exp",
+    "typeSwitcher": "Recompensas Trocador De Tipos",
+    "passiveAbility": "Recompensas Habilidade Passiva",
+    "anyTms": "Recompensas Qualquer TM",
+    "anyTmsMaster": "Recompensas Qualquer TM Mestre",
+    "teraShards": "Recompensas Fragmentos Tera",
+    "challengeBoss": "Batalha de chefe do caminho desafio com dificuldade aumentada",
+    "challengeRival": "Batalha de rival do caminho desafio com dificuldade aumentada",
+    "challengeEvilBoss": "Chefe malvado do caminho desafio com dificuldade aumentada",
+    "challengeChampion": "Batalha de campeão do caminho desafio com dificuldade aumentada",
+    "challengeReward": "Recompensa rara por completar o caminho desafio",
+    "potion": "Recompensas Itens De Cura",
+    "reviverSeed": "Semente Reviver para revivificação automática",
+    "sacredAsh": "Cinza Sagrada - Cura completamente todos os Pokémon derrotados",
+    "shellBell": "Sino Concha - Cura baseada no dano causado",
+    "leftovers": "Sobras - Cura a cada turno",
+    "quickClaw": "Garra Rápida - Chance de agir primeiro",
+    "wideLens": "Lente Ampla - Precisão de movimentos aumentada",
+    "gripClaw": "Garra Aderente - Rouba itens no contato",
+    "eviolite": "Evolucianita - Bônus defensivo para Pokémon em evolução",
+    "scopeLens": "Lente de Mira - Taxa de acerto crítico aumentada",
+    "collectedShop": "Gaste Essências por recompensas",
+    "vitamin": "Recompensas genéricas de potencializadores de status (Proteína, Ferro, Cálcio, etc.)",
+    "moveUpgrade": "Melhorias de movimentos para movimentos Pokémon",
+    "lowTierMoveUpgrade": "Melhorias de movimentos com limite de nível III"
   },
   "names": {
     "wildPokemon": "Pokémon Selvagem",
-    "trainerBattle": "Batalha de Treinador",
-    "rivalBattle": "Batalha de Rival",
+    "trainerBattle": "Batalha De Treinador",
+    "rivalBattle": "Batalha De Rival",
     "majorBossBattle": "Chefe Maior",
-    "recoveryBoss": "Batalha de Chefe",
+    "recoveryBoss": "Chefe De Recuperação",
     "evilBossBattle": "Chefe Malvado",
-    "eliteFour": "Elite dos Quatro",
+    "eliteFour": "Elite Dos Quatro",
     "champion": "Campeão",
-    "itemGeneral": "Itens Gerais",
-    "addPokemon": "Itens Pokémon",
-    "itemTm": "Itens MT",
-    "itemBerry": "Itens Berry",
+    "itemGeneral": "Recompensas Gerais",
+    "addPokemon": "Recrutamento Pokémon",
+    "itemTm": "Recompensas TM",
+    "itemBerry": "Recompensas Frutas",
     "mysteryNode": "Nó Misterioso",
     "convergencePoint": "Convergência",
     "smittyBattle": "Batalha Smitty",
     "evilGruntBattle": "Recruta Malvado",
-    "evilAdminBattle": "Administrador Malvado",
-    "randPermaItem": "Item Permanente Aleatório",
-    "permaItems": "Itens Permanentes",
+    "evilAdminBattle": "Admin Malvado",
+    "randPermaItem": "Item ∞ Aleatório",
+    "permaItems": "Recompensas Item ∞",
     "goldenPokeball": "Pokébola Dourada",
-    "rogueBallItems": "Itens Rogue Ball",
-    "masterBallItems": "Itens Master Ball",
-    "abilitySwitchers": "Trocadores de Habilidades",
-    "statSwitchers": "Trocadores de Atributos",
+    "rogueBallItems": "Recompensas Rogue Ball",
+    "masterBallItems": "Recompensas Master Ball",
+    "greatBallItems": "Recompensas Great Ball",
+    "ultraBallItems": "Recompensas Ultra Ball",
+    "abilitySwitchers": "Trocadores De Habilidades",
+    "statSwitchers": "Trocadores De Status",
     "glitchPiece": "Peça Glitch",
-    "dnaSplicers": "Elo de DNA",
+    "dnaSplicers": "Fusionador DNA",
     "money": "Dinheiro",
-    "permaMoney": "Dinheiro Permanente",
-    "releaseItems": "Itens de Soltura",
-    "mints": "Hortelãs",
-    "eggVoucher": "Cupom de Ovo",
+    "permaMoney": "∞OURO",
+    "releaseItems": "Recompensas De Liberação",
+    "mints": "Recompensas Hortelãs",
+    "eggVoucher": "Cupom De Ovo",
     "ppMax": "PP Máximo",
     "collectedType": "Tipo Coletado",
     "expShare": "Compartilhar Exp",
-    "typeSwitcher": "Trocador de Tipos",
-    "passiveAbility": "Habilidade Passiva",
-    "anyTms": "Qualquer MT",
+    "typeSwitcher": "Trocadores De Tipos",
+    "passiveAbility": "Habilidades Passivas",
+    "anyTms": "Recompensas Qualquer TM",
+    "anyTmsMaster": "Qualquer TM Mestre",
+    "teraShards": "Recompensas Fragmentos Tera",
     "challengeBoss": "Chefe Desafio",
     "challengeRival": "Rival Desafio",
     "challengeEvilBoss": "Chefe Malvado Desafio",
     "challengeChampion": "Campeão Desafio",
-    "challengeReward": "Recompensa Desafio"
+    "challengeReward": "Recompensa Desafio",
+    "potion": "Recompensas Itens De Cura",
+    "reviverSeed": "Semente Reviver",
+    "sacredAsh": "Cinza Sagrada",
+    "shellBell": "Sino Concha",
+    "leftovers": "Sobras",
+    "quickClaw": "Garra Rápida",
+    "wideLens": "Lente Ampla",
+    "gripClaw": "Garra Aderente",
+    "eviolite": "Evolucianita",
+    "scopeLens": "Lente de Mira",
+    "collectedShop": "O Colecionador",
+    "vitamin": "Vitaminas Baratas",
+    "moveUpgrade": "Melhorias de Movimentos",
+    "lowTierMoveUpgrade": "Melhorias de Movimentos de Nível Baixo"
   },
   "challenge": {
     "chaosChallenge": "Desafio Caos Ativo",
     "isNuzlocke": {
       "name": "Nuzlocke",
-      "description": "Pokémon desmaiados são perdidos permanentemente"
+      "description": "TODOS os Pokémon derrotados são removidos da equipe! (incluindo os já derrotados)"
     },
     "isNuzlight": {
       "name": "Nuzlight",
@@ -104,7 +140,7 @@
     },
     "isNightmare": {
       "name": "Nuzmare",
-      "description": "Nuzlight + Nuzlocke"
+      "description": "Nenhum item de cura comprável na loja + \nTODOS os Pokémon derrotados são removidos da equipe! (incluindo os já derrotados)"
     },
     "noExpGain": {
       "name": "Sem Ganho de Exp",
@@ -120,7 +156,7 @@
     },
     "invertedTypes": {
       "name": "Tipos Invertidos",
-      "description": "Efetividade de tipos é invertida"
+      "description": "Efetividade de tipos está invertida"
     },
     "boostedTrainer": {
       "name": "Treinador Caos",
@@ -143,36 +179,36 @@
       "description": "Seus Pokémon estão automaticamente sob pressão"
     },
     "noStatBoosts": {
-      "name": "Sem Aumento de Atributos",
-      "description": "Você não pode aumentar atributos"
+      "name": "Sem Aumentos de Status",
+      "description": "Você não pode aumentar status"
     },
     "noStatusMoves": {
-      "name": "Sem Golpes de Status",
-      "description": "Você não pode usar Golpes de Status"
+      "name": "Sem Movimentos de Status",
+      "description": "Você não pode usar Movimentos de Status"
     },
     "noPhysicalMoves": {
-      "name": "Sem Golpes Físicos",
-      "description": "Você não pode usar Golpes Físicos"
+      "name": "Sem Movimentos Físicos",
+      "description": "Você não pode usar Movimentos Físicos"
     },
     "noSpecialMoves": {
-      "name": "Sem Golpes Especiais",
-      "description": "Você não pode usar Golpes Especiais"
+      "name": "Sem Movimentos Especiais",
+      "description": "Você não pode usar Movimentos Especiais"
     },
     "statSwap": {
-      "name": "Troca de Atributos",
-      "description": "ATK <-> DEF ESP e AT ESP <-> DEF dos seus Pokémon são trocados."
+      "name": "Troca de Status",
+      "description": "ATK <-> DEF ESP e AT ESP <-> DEF dos seus Pokémon estão trocados."
     },
     "extraDamageToTypes": {
-      "name": "Dano Extra para Tipos",
+      "name": "Dano Extra aos Tipos",
       "description": "Certos tipos recebem dano extra"
     },
     "noStab": {
       "name": "Sem STAB",
-      "description": "Bônus de Ataque do Mesmo Tipo dos seus Pokémon está desabilitado."
+      "description": "O Bônus de Ataque do Mesmo Tipo dos seus Pokémon está desativado."
     },
     "trickRoom": {
-      "name": "Espaço Estranho",
-      "description": "Prioridade de velocidade é invertida"
+      "name": "Espaço Bizarro",
+      "description": "Prioridade de velocidade está invertida"
     },
     "noSwitch": {
       "name": "Sem Troca",
@@ -180,15 +216,15 @@
     },
     "noResistances": {
       "name": "Sem Resistências",
-      "description": "Resistências de tipo dos seus Pokémon estão desabilitadas."
+      "description": "As resistências de tipo dos seus Pokémon estão desativadas."
     },
     "noHealingItems": {
       "name": "Sem Itens de Cura",
-      "description": "Seus itens de cura não ativam (Sobras, Concha do Sino, etc.)"
+      "description": "Seus itens de cura não ativam (Sobras, Sino Concha, etc.)"
     },
     "autoTorment": {
       "name": "Auto Tormento",
-      "description": "Você não pode usar o mesmo golpe seguido!"
+      "description": "Você não pode usar o mesmo movimento seguido!"
     },
     "legendaryNerf": {
       "name": "Nerf Lendário",

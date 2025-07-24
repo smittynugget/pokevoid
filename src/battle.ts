@@ -31,6 +31,7 @@ import {ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
 import {TrainerVictoryPhase} from "#app/phases/trainer-victory-phase";
 import { Unlockables } from "./system/unlockables";
 import { Type } from "./data/type";
+import { GameMechanicsID, GameMechanicsVersion } from "./enums/gameMechanicsID";
 
 export enum BattleType {
   WILD,
@@ -175,7 +176,7 @@ export default class Battle {
 
     if (this.gameMode.isBoss(waveIndex) || this.gameMode.isWavePreFinal(this.scene, waveIndex) || this.scene.recoveryBossMode === RecoveryBossMode.FACING_BOSS) {
 
-      if(this.waveIndex >= 21) {
+      if(this.waveIndex >= 21 || this.battleSpec === BattleSpec.FINAL_BOSS) {
        const playerParty = this.scene.getParty();
         let highestPlayerLevel = 0;
         
@@ -260,6 +261,22 @@ export default class Battle {
       ret.pokemonId = null;
       return ret;
     }));
+  }
+
+  giveMoney(scene: BattleScene, moneyMultiplier: number = 0.55): void {
+    const moneyAmount = new Utils.IntegerHolder(scene.getWaveMoneyAmount(Utils.randSeedFloat(0.1, 0.55)));
+    scene.applyModifiers(MoneyMultiplierModifier, true, moneyAmount);
+
+    scene.unshiftPhase(new RewardObtainDisplayPhase(
+      scene,
+      {
+        type: RewardObtainedType.MONEY,
+        amount: moneyAmount.value,
+        isMaxStack: true
+      }, () => {
+        scene.addMoney(moneyAmount.value);
+      }
+    ));
   }
 
   pickUpScatteredMoney(scene: BattleScene): void {
@@ -1951,15 +1968,33 @@ export enum PathNodeType {
   EGG_VOUCHER,
   PP_MAX,
   COLLECTED_TYPE,
+  COLLECTED_SHOP,
   EXP_SHARE,
   TYPE_SWITCHER,
   PASSIVE_ABILITY,
   ANY_TMS,
+  // ANY_TMS_MASTER,
+  TERA_SHARDS,
   CHALLENGE_BOSS,
   CHALLENGE_RIVAL,
   CHALLENGE_EVIL_BOSS,
   CHALLENGE_CHAMPION,
-  CHALLENGE_REWARD
+  CHALLENGE_REWARD,
+  GREAT_BALL_ITEMS,
+  ULTRA_BALL_ITEMS,
+  HEAL_ITEMS,
+  REVIVER_SEED,
+  SACRED_ASH,
+  SHELL_BELL,
+  LEFTOVERS,
+  QUICK_CLAW,
+  WIDE_LENS,
+  GRIP_CLAW,
+  EVIOLITE,
+  SCOPE_LENS,
+  VITAMIN,
+  MOVE_UPGRADE,
+  LOW_TIER_MOVE_UPGRADE
 }
 
 export interface PathNode {
@@ -2785,24 +2820,27 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
   const configs: WaveRange[] = [
     {
       start: 1,
-      end: 10000000,
+      end: 149,
       probabilities: {
-        [PathNodeType.WILD_POKEMON]: 1000,
-        [PathNodeType.TRAINER_BATTLE]: 1000,
-        [PathNodeType.ITEM_BERRY]: 70,
-        [PathNodeType.MONEY]: 70,
+        [PathNodeType.WILD_POKEMON]: 800,
+        [PathNodeType.TRAINER_BATTLE]: 700,
+        [PathNodeType.ITEM_BERRY]: 60,
+        [PathNodeType.MONEY]: 35,
         [PathNodeType.MAJOR_BOSS_BATTLE]: 15,
-        [PathNodeType.MYSTERY_NODE]: 35,
+        [PathNodeType.MYSTERY_NODE]: 150,
         [PathNodeType.MINTS]: 35,
+        [PathNodeType.TERA_SHARDS]: 10,
         [PathNodeType.PP_MAX]: 35,
         [PathNodeType.ROGUE_BALL_ITEMS]: 5,
-        [PathNodeType.COLLECTED_TYPE]: 60,
+        [PathNodeType.COLLECTED_TYPE]: 50,
+        [PathNodeType.COLLECTED_SHOP]: 45,
+        // [PathNodeType.COLLECTED_SHOP]: 300,
         [PathNodeType.ITEM_GENERAL]: 35,
         [PathNodeType.ABILITY_SWITCHERS]: 35,
         [PathNodeType.TYPE_SWITCHER]: 60,
         [PathNodeType.PASSIVE_ABILITY]: 35,
         [PathNodeType.EGG_VOUCHER]: 35,
-        [PathNodeType.RELEASE_ITEMS]: 35,
+        [PathNodeType.RELEASE_ITEMS]: 20,
         [PathNodeType.RAND_PERMA_ITEM]: 5,
         [PathNodeType.PERMA_ITEMS]: 3,
         [PathNodeType.PERMA_MONEY]: 25,
@@ -2816,32 +2854,179 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.STAT_SWITCHERS]: 35,
         [PathNodeType.RECOVERY_BOSS]: 15,
         [PathNodeType.ITEM_TM]: 60,
+        [PathNodeType.HEAL_ITEMS]: 35,
+        [PathNodeType.REVIVER_SEED]: 3,
+        [PathNodeType.SACRED_ASH]: 3,
+        [PathNodeType.GREAT_BALL_ITEMS]: 35,
+        [PathNodeType.ULTRA_BALL_ITEMS]: 15,
+        [PathNodeType.QUICK_CLAW]: 3,
+        [PathNodeType.WIDE_LENS]: 3,
+        [PathNodeType.GRIP_CLAW]: 3,
+        [PathNodeType.EVIOLITE]: 3,
+        [PathNodeType.SCOPE_LENS]: 3,
+        [PathNodeType.VITAMIN]: 150,
+        [PathNodeType.MOVE_UPGRADE]: 50,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
       }
-    }
-    // },
-    // {
-    //   start: 21,
-    //   end: 50,
-    //   probabilities: {
-    //     [PathNodeType.WILD_POKEMON]: 22,
-    //     [PathNodeType.TRAINER_BATTLE]: 18,
-    //     [PathNodeType.ITEM_GENERAL]: 10,
-    //     [PathNodeType.ADD_POKEMON]: 7,
-    //     [PathNodeType.ITEM_TM]: 6,
-    //     [PathNodeType.MYSTERY_NODE]: 4,
-    //     [PathNodeType.MONEY]: 7,
-    //     [PathNodeType.GOLDEN_POKEBALL]: 4,
-    //     [PathNodeType.MINTS]: 3,
-    //     [PathNodeType.EGG_VOUCHER]: 3,
-    //     [PathNodeType.PP_MAX]: 2,
-    //     [PathNodeType.ABILITY_SWITCHERS]: 1,
-    //     [PathNodeType.COLLECTED_TYPE]: 1,
-    //     [PathNodeType.EXP_SHARE]: 6,
-    //     [PathNodeType.TYPE_SWITCHER]: 3,
-    //     [PathNodeType.PASSIVE_ABILITY]: 2,
-    //     [PathNodeType.ANY_TMS]: 1
-    //   }
-    // },
+    },
+    {
+      start: 150,
+      end: 300,
+      probabilities: {
+        [PathNodeType.WILD_POKEMON]: 900,
+        [PathNodeType.TRAINER_BATTLE]: 600,
+        [PathNodeType.ELITE_FOUR]: 200,
+        [PathNodeType.ITEM_BERRY]: 60,
+        [PathNodeType.MONEY]: 35,
+        [PathNodeType.MAJOR_BOSS_BATTLE]: 50,
+        [PathNodeType.MYSTERY_NODE]: 100,
+        [PathNodeType.MINTS]: 35,
+        [PathNodeType.TERA_SHARDS]: 10,
+        [PathNodeType.PP_MAX]: 35,
+        [PathNodeType.ROGUE_BALL_ITEMS]: 5,
+        [PathNodeType.COLLECTED_TYPE]: 60,
+        [PathNodeType.COLLECTED_SHOP]: 45,
+        [PathNodeType.ITEM_GENERAL]: 35,
+        [PathNodeType.ABILITY_SWITCHERS]: 35,
+        [PathNodeType.TYPE_SWITCHER]: 60,
+        [PathNodeType.PASSIVE_ABILITY]: 35,
+        [PathNodeType.EGG_VOUCHER]: 35,
+        [PathNodeType.RELEASE_ITEMS]: 20,
+        [PathNodeType.RAND_PERMA_ITEM]: 5,
+        [PathNodeType.PERMA_ITEMS]: 3,
+        [PathNodeType.PERMA_MONEY]: 25,
+        [PathNodeType.GOLDEN_POKEBALL]: 1,
+        [PathNodeType.MASTER_BALL_ITEMS]: 1,
+        [PathNodeType.GLITCH_PIECE]: 70,
+        [PathNodeType.EXP_SHARE]: 25,
+        [PathNodeType.DNA_SPLICERS]: 25,
+        [PathNodeType.ANY_TMS]: 35,
+        [PathNodeType.ADD_POKEMON]: 25,
+        [PathNodeType.STAT_SWITCHERS]: 35,
+        [PathNodeType.RECOVERY_BOSS]: 15,
+        [PathNodeType.ITEM_TM]: 60,
+        [PathNodeType.HEAL_ITEMS]: 35,
+        [PathNodeType.REVIVER_SEED]: 3,
+        [PathNodeType.SACRED_ASH]: 3,
+        [PathNodeType.GREAT_BALL_ITEMS]: 35,
+        [PathNodeType.ULTRA_BALL_ITEMS]: 15,
+        [PathNodeType.QUICK_CLAW]: 3,
+        [PathNodeType.WIDE_LENS]: 3,
+        [PathNodeType.GRIP_CLAW]: 3,
+        [PathNodeType.EVIOLITE]: 3,
+        [PathNodeType.SCOPE_LENS]: 3,
+        [PathNodeType.VITAMIN]: 150,
+        [PathNodeType.MOVE_UPGRADE]: 50,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+      }
+    },
+    {
+      start: 301,
+      end: 500,
+      probabilities: {
+        [PathNodeType.WILD_POKEMON]: 900,
+        [PathNodeType.TRAINER_BATTLE]: 500,
+        [PathNodeType.ELITE_FOUR]: 200,
+        [PathNodeType.CHAMPION]: 100,
+        [PathNodeType.ITEM_BERRY]: 60,
+        [PathNodeType.MONEY]: 35,
+        [PathNodeType.MAJOR_BOSS_BATTLE]: 50,
+        [PathNodeType.MYSTERY_NODE]: 100,
+        [PathNodeType.MINTS]: 35,
+        [PathNodeType.TERA_SHARDS]: 10,
+        [PathNodeType.PP_MAX]: 35,
+        [PathNodeType.ROGUE_BALL_ITEMS]: 5,
+        [PathNodeType.COLLECTED_TYPE]: 60,
+        [PathNodeType.COLLECTED_SHOP]: 45,
+        [PathNodeType.ITEM_GENERAL]: 35,
+        [PathNodeType.ABILITY_SWITCHERS]: 35,
+        [PathNodeType.TYPE_SWITCHER]: 60,
+        [PathNodeType.PASSIVE_ABILITY]: 35,
+        [PathNodeType.EGG_VOUCHER]: 35,
+        [PathNodeType.RELEASE_ITEMS]: 20,
+        [PathNodeType.RAND_PERMA_ITEM]: 5,
+        [PathNodeType.PERMA_ITEMS]: 3,
+        [PathNodeType.PERMA_MONEY]: 25,
+        [PathNodeType.GOLDEN_POKEBALL]: 1,
+        [PathNodeType.MASTER_BALL_ITEMS]: 1,
+        [PathNodeType.GLITCH_PIECE]: 70,
+        [PathNodeType.EXP_SHARE]: 25,
+        [PathNodeType.DNA_SPLICERS]: 25,
+        [PathNodeType.ANY_TMS]: 35,
+        [PathNodeType.ADD_POKEMON]: 25,
+        [PathNodeType.STAT_SWITCHERS]: 35,
+        [PathNodeType.RECOVERY_BOSS]: 15,
+        [PathNodeType.ITEM_TM]: 60,
+        [PathNodeType.HEAL_ITEMS]: 35,
+        [PathNodeType.REVIVER_SEED]: 3,
+        [PathNodeType.SACRED_ASH]: 3,
+        [PathNodeType.GREAT_BALL_ITEMS]: 35,
+        [PathNodeType.ULTRA_BALL_ITEMS]: 15,
+        [PathNodeType.QUICK_CLAW]: 3,
+        [PathNodeType.WIDE_LENS]: 3,
+        [PathNodeType.GRIP_CLAW]: 3,
+        [PathNodeType.EVIOLITE]: 3,
+        [PathNodeType.SCOPE_LENS]: 3,
+        [PathNodeType.VITAMIN]: 150,
+        [PathNodeType.MOVE_UPGRADE]: 50,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+      }
+    },
+    {
+      start: 501,
+      end: 10000000,
+      probabilities: {
+        [PathNodeType.WILD_POKEMON]: 900,
+        [PathNodeType.TRAINER_BATTLE]: 500,
+        [PathNodeType.ELITE_FOUR]: 200,
+        [PathNodeType.CHAMPION]: 100,
+        [PathNodeType.SMITTY_BATTLE]: 5,
+        [PathNodeType.ITEM_BERRY]: 60,
+        [PathNodeType.MONEY]: 35,
+        [PathNodeType.MAJOR_BOSS_BATTLE]: 75,
+        [PathNodeType.MYSTERY_NODE]: 100,
+        [PathNodeType.MINTS]: 35,
+        [PathNodeType.TERA_SHARDS]: 10,
+        [PathNodeType.PP_MAX]: 35,
+        [PathNodeType.ROGUE_BALL_ITEMS]: 5,
+        [PathNodeType.COLLECTED_TYPE]: 50,
+        [PathNodeType.COLLECTED_SHOP]: 45,
+        [PathNodeType.ITEM_GENERAL]: 35,
+        [PathNodeType.ABILITY_SWITCHERS]: 35,
+        [PathNodeType.TYPE_SWITCHER]: 60,
+        [PathNodeType.PASSIVE_ABILITY]: 35,
+        [PathNodeType.EGG_VOUCHER]: 35,
+        [PathNodeType.RELEASE_ITEMS]: 20,
+        [PathNodeType.RAND_PERMA_ITEM]: 5,
+        [PathNodeType.PERMA_ITEMS]: 3,
+        [PathNodeType.PERMA_MONEY]: 25,
+        [PathNodeType.GOLDEN_POKEBALL]: 1,
+        [PathNodeType.MASTER_BALL_ITEMS]: 1,
+        [PathNodeType.GLITCH_PIECE]: 70,
+        [PathNodeType.EXP_SHARE]: 25,
+        [PathNodeType.DNA_SPLICERS]: 25,
+        [PathNodeType.ANY_TMS]: 35,
+        [PathNodeType.ADD_POKEMON]: 25,
+        [PathNodeType.STAT_SWITCHERS]: 35,
+        [PathNodeType.RECOVERY_BOSS]: 15,
+        [PathNodeType.ITEM_TM]: 60,
+        [PathNodeType.HEAL_ITEMS]: 35,
+        [PathNodeType.REVIVER_SEED]: 3,
+        [PathNodeType.SACRED_ASH]: 3,
+        [PathNodeType.GREAT_BALL_ITEMS]: 35,
+        [PathNodeType.ULTRA_BALL_ITEMS]: 15,
+        // [PathNodeType.SHELL_BELL]: 1,
+        // [PathNodeType.LEFTOVERS]: 1,
+        [PathNodeType.QUICK_CLAW]: 3,
+        [PathNodeType.WIDE_LENS]: 3,
+        [PathNodeType.GRIP_CLAW]: 3,
+        [PathNodeType.EVIOLITE]: 3,
+        [PathNodeType.SCOPE_LENS]: 3,
+        [PathNodeType.VITAMIN]: 150,
+        [PathNodeType.MOVE_UPGRADE]: 50,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+      }
+    },
     // {
     //   start: 51,
     //   end: 70,
@@ -3294,15 +3479,33 @@ function createPathLayer(
     
     scene.resetSeed(seeds.baseSeed + range.start * LAYER_CONFIG.SEED_MULTIPLIER);
     
-    const nodeCount = Utils.randSeedInt(3) + 3;
-    
+    const chaosVersion = scene.gameMechanicTracking[GameMechanicsID.CHAOS_MODE];
+    const isChaosV2 = chaosVersion === GameMechanicsVersion.CHAOS_V2;
+
+    let nodeCount: number;
     let challengeType: 'nightmare' | 'nuzlocke' | 'nuzlight';
-    if (nodeCount === 3) {
-      challengeType = 'nightmare';
-    } else if (nodeCount === 4) {
-      challengeType = Utils.randSeedInt(100) < 80 ? 'nuzlocke' : 'nuzlight';
+
+    if (isChaosV2) {
+      nodeCount = 2;
+      
+      const rand = Utils.randSeedInt(100);
+      if (rand < 5) {
+        challengeType = 'nuzlight';
+      } else if (rand < 65) { // 5 + 60
+        challengeType = 'nuzlocke';
+      } else {
+        challengeType = 'nightmare';
+      }
     } else {
-      challengeType = Utils.randSeedInt(2) === 0 ? 'nuzlocke' : 'nuzlight';
+      nodeCount = Utils.randSeedInt(3) + 3;
+      
+      if (nodeCount === 3) {
+        challengeType = 'nightmare';
+      } else if (nodeCount === 4) {
+        challengeType = Utils.randSeedInt(100) < 80 ? 'nuzlocke' : 'nuzlight';
+      } else {
+        challengeType = Utils.randSeedInt(2) === 0 ? 'nuzlocke' : 'nuzlight';
+      }
     }
     
             const additionalPropertiesCount = calculateAdditionalPropertiesCount(range.start, totalWaves || 500, waveOffset);
@@ -4269,6 +4472,7 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
       const randomRival = allRivalTypes[randomIndex];
       if (!selectedRivals.includes(randomRival)) {
         selectedRivals.push(randomRival);
+        scene.gameData.chaosAltRivals.push(randomRival);
       }
     }
     
@@ -4571,6 +4775,9 @@ function getNodeTypeIcon(nodeType: PathNodeType): string {
     case PathNodeType.ADD_POKEMON: return "🐾";
     case PathNodeType.ITEM_TM: return "💿";
     case PathNodeType.ITEM_BERRY: return "🍓";
+    case PathNodeType.HEAL_ITEMS: return "🌿";
+    case PathNodeType.REVIVER_SEED: return "🌱";
+    case PathNodeType.SACRED_ASH: return "🌟";
     case PathNodeType.MYSTERY_NODE: return "❓";
     case PathNodeType.CONVERGENCE_POINT: return "🎯";
     case PathNodeType.SMITTY_BATTLE: return "✨";
@@ -4579,6 +4786,8 @@ function getNodeTypeIcon(nodeType: PathNodeType): string {
     case PathNodeType.RAND_PERMA_ITEM: return "🪩";
     case PathNodeType.GOLDEN_POKEBALL: return "🟡";
     case PathNodeType.ROGUE_BALL_ITEMS: return "⚫";
+    case PathNodeType.GREAT_BALL_ITEMS: return "🟠";
+    case PathNodeType.ULTRA_BALL_ITEMS: return "🟣";
     case PathNodeType.MASTER_BALL_ITEMS: return "🟣";
     case PathNodeType.ABILITY_SWITCHERS: return "🔄";
     case PathNodeType.STAT_SWITCHERS: return "📊";
@@ -4591,15 +4800,28 @@ function getNodeTypeIcon(nodeType: PathNodeType): string {
     case PathNodeType.EGG_VOUCHER: return "🥚";
     case PathNodeType.PP_MAX: return "⚡";
     case PathNodeType.COLLECTED_TYPE: return "📋";
+    case PathNodeType.COLLECTED_SHOP: return "🛒";
     case PathNodeType.EXP_SHARE: return "📈";
     case PathNodeType.TYPE_SWITCHER: return "🔀";
     case PathNodeType.PASSIVE_ABILITY: return "🌟";
     case PathNodeType.ANY_TMS: return "💽";
+    case PathNodeType.ANY_TMS_MASTER: return "💽💽";
+    case PathNodeType.TERA_SHARDS: return "💎";
     case PathNodeType.CHALLENGE_BOSS: return "🎯👑";
     case PathNodeType.CHALLENGE_RIVAL: return "🎯⚔️";
     case PathNodeType.CHALLENGE_EVIL_BOSS: return "🎯💀";
     case PathNodeType.CHALLENGE_CHAMPION: return "🎯🏆";
     case PathNodeType.CHALLENGE_REWARD: return "🎯🎁";
+    case PathNodeType.SHELL_BELL: return "🔔";
+    case PathNodeType.LEFTOVERS: return "🍎";
+    case PathNodeType.QUICK_CLAW: return "⚡";
+    case PathNodeType.WIDE_LENS: return "🔍";
+    case PathNodeType.GRIP_CLAW: return "🦅";
+    case PathNodeType.EVIOLITE: return "💎";
+    case PathNodeType.SCOPE_LENS: return "🎯";
+    case PathNodeType.VITAMIN: return "💊";
+    case PathNodeType.MOVE_UPGRADE: return "⚡";
+    case PathNodeType.LOW_TIER_MOVE_UPGRADE: return "🔹";
     default: return "❓";
   }
 }
@@ -5045,6 +5267,8 @@ function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nod
         case PathNodeType.PERMA_ITEMS:
         case PathNodeType.GOLDEN_POKEBALL:
         case PathNodeType.ROGUE_BALL_ITEMS:
+        case PathNodeType.GREAT_BALL_ITEMS:
+        case PathNodeType.ULTRA_BALL_ITEMS:
         case PathNodeType.MASTER_BALL_ITEMS:
         case PathNodeType.ABILITY_SWITCHERS:
         case PathNodeType.STAT_SWITCHERS:
@@ -5057,11 +5281,27 @@ function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nod
         case PathNodeType.EGG_VOUCHER:
         case PathNodeType.PP_MAX:
         case PathNodeType.COLLECTED_TYPE:
+        case PathNodeType.COLLECTED_SHOP:
         case PathNodeType.EXP_SHARE:
         case PathNodeType.TYPE_SWITCHER:
         case PathNodeType.PASSIVE_ABILITY:
         case PathNodeType.ANY_TMS:
+        // case PathNodeType.ANY_TMS_MASTER:
+        case PathNodeType.TERA_SHARDS:
         case PathNodeType.CHALLENGE_REWARD:
+        case PathNodeType.HEAL_ITEMS:
+        case PathNodeType.REVIVER_SEED:
+        case PathNodeType.SACRED_ASH:
+        case PathNodeType.SHELL_BELL:
+        case PathNodeType.LEFTOVERS:
+        case PathNodeType.QUICK_CLAW:
+        case PathNodeType.WIDE_LENS:
+        case PathNodeType.GRIP_CLAW:
+        case PathNodeType.EVIOLITE:
+        case PathNodeType.SCOPE_LENS:
+        case PathNodeType.VITAMIN:
+        case PathNodeType.MOVE_UPGRADE:
+        case PathNodeType.LOW_TIER_MOVE_UPGRADE:
           battleConfig = undefined;
           break;
       }
@@ -5123,12 +5363,30 @@ interface NodeGenerationResult {
 }
 
 function generateDynamicModeForWave(wave: number, scene: BattleScene, seeds: any): DynamicMode | undefined {
-  if (wave <= 150) {
+  if (wave < 100) {
     return undefined;
   }
 
-  const dynamicModeProperties: (keyof DynamicMode)[] = [
-    'isNuzlight',
+  const numPropertiesToAdd = wave === 100 ? 1 : Math.floor((wave - 100) / 150) + 1;
+  
+  if (numPropertiesToAdd <= 0) {
+    return undefined;
+  }
+
+  scene.resetSeed(seeds.baseSeed + wave * 777);
+  
+  const selectedProperties: (keyof DynamicMode)[] = [];
+  
+  let selectedPrimaryChallenge: keyof DynamicMode;
+  if (wave < 400) {
+    selectedPrimaryChallenge = 'isNuzlocke';
+  } else {
+    const primaryChallengeProperties: (keyof DynamicMode)[] = ['isNuzlocke', 'isNightmare'];
+    selectedPrimaryChallenge = Utils.randSeedItem(primaryChallengeProperties);
+  }
+  selectedProperties.push(selectedPrimaryChallenge);
+
+  const secondaryProperties: (keyof DynamicMode)[] = [
     'noCatch',
     'noExpGain',
     'hasPassiveAbility',
@@ -5154,19 +5412,10 @@ function generateDynamicModeForWave(wave: number, scene: BattleScene, seeds: any
     'pokemonNerf'
   ];
 
-  const numPropertiesToAdd = Math.floor((wave - 150) / 150) + 1;
-  const maxProperties = Math.min(numPropertiesToAdd, dynamicModeProperties.length);
+  const maxProperties = Math.min(numPropertiesToAdd, secondaryProperties.length + 1);
+  const availableProperties = [...secondaryProperties];
 
-  if (maxProperties <= 0) {
-    return undefined;
-  }
-
-  scene.resetSeed(seeds.baseSeed + wave * 777);
-  
-  const selectedProperties: (keyof DynamicMode)[] = [];
-  const availableProperties = [...dynamicModeProperties];
-
-  for (let i = 0; i < maxProperties; i++) {
+  for (let i = 1; i < maxProperties; i++) {
     if (availableProperties.length === 0) break;
     
     const randomIndex = Utils.randSeedInt(availableProperties.length);
@@ -5198,7 +5447,7 @@ function generateDynamicModeForWave(wave: number, scene: BattleScene, seeds: any
       delete dynamicMode[property];
     });
     
-    const remainingProperties = dynamicModeProperties.filter(prop => 
+    const remainingProperties = secondaryProperties.filter(prop => 
       !selectedProperties.includes(prop) && 
       !moveRestrictionProperties.includes(prop)
     );
@@ -5243,15 +5492,33 @@ function generateChallengePath(
   
   scene.resetSeed(seeds.baseSeed + startWave * 1337);
   
-  const nodeCount = Utils.randSeedInt(100) < 40 ? 4 : (Utils.randSeedInt(100) < 70 ? 5 : 3);
-  
+  const chaosVersion = scene.gameMechanicTracking[GameMechanicsID.CHAOS_MODE];
+  const isChaosV2 = chaosVersion === GameMechanicsVersion.CHAOS_V2;
+
+  let nodeCount: number;
   let challengeType: 'nightmare' | 'nuzlocke' | 'nuzlight';
-  if (nodeCount === 3) {
-    challengeType = 'nightmare';
-  } else if (nodeCount === 4) {
-    challengeType = Utils.randSeedInt(100) < 80 ? 'nuzlocke' : 'nuzlight';
+
+  if (isChaosV2) {
+    nodeCount = 2;
+    
+    const rand = Utils.randSeedInt(100);
+    if (rand < 5) {
+      challengeType = 'nuzlight';
+    } else if (rand < 65) { // 5 + 60
+      challengeType = 'nuzlocke';
+    } else {
+      challengeType = 'nightmare';
+    }
   } else {
-    challengeType = Utils.randSeedInt(2) === 0 ? 'nuzlocke' : 'nuzlight';
+    nodeCount = Utils.randSeedInt(100) < 40 ? 4 : (Utils.randSeedInt(100) < 70 ? 5 : 3);
+    
+    if (nodeCount === 3) {
+      challengeType = 'nightmare';
+    } else if (nodeCount === 4) {
+      challengeType = Utils.randSeedInt(100) < 80 ? 'nuzlocke' : 'nuzlight';
+    } else {
+      challengeType = Utils.randSeedInt(2) === 0 ? 'nuzlocke' : 'nuzlight';
+    }
   }
   
   const additionalPropertiesCount = calculateAdditionalPropertiesCount(rangeStart, 999999);
@@ -5476,11 +5743,12 @@ function constructChallengePathNodes(
         metadata.rivalType = randomRival;
         break;
       case PathNodeType.CHALLENGE_EVIL_BOSS:
-        battleConfig = createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND, 35, false);
+        battleConfig = createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND, 35 + wave, false);
         metadata.evilTeamType = 'boss';
         break;
       case PathNodeType.CHALLENGE_CHAMPION:
-        battleConfig = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed);
+        battleConfig = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed + wave);
+        metadata.eliteType = 'champion';
         break;
     }
     
@@ -5572,5 +5840,245 @@ export function getDynamicModeLocalizedString(mode: DynamicModes): { name: strin
 
 export function resetBattlePathGlobalState(): void {
   currentBattlePath = null;
+}
+
+export function setCurrentBattlePath(battlePath: BattlePath | null): void {
+  currentBattlePath = battlePath;
+}
+
+export function reconstructBattlePathFromLayers(savedBattlePath: any): BattlePath {
+  const battlePath: BattlePath = {
+    totalWaves: savedBattlePath.totalWaves,
+    layers: savedBattlePath.layers,
+    convergencePoints: savedBattlePath.convergencePoints,
+    nodeMap: new Map<string, PathNode>(),
+    waveToNodeMap: new Map<number, PathNode[]>()
+  };
+
+  for (const layer of battlePath.layers) {
+    for (const node of layer.nodes) {
+      battlePath.nodeMap.set(node.id, node);
+      
+      if (!battlePath.waveToNodeMap.has(node.wave)) {
+        battlePath.waveToNodeMap.set(node.wave, []);
+      }
+      battlePath.waveToNodeMap.get(node.wave)!.push(node);
+    }
+  }
+
+  return battlePath;
+}
+
+export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: BattlePath): void {
+  const seeds = scene.gameData.fixedBattleSeeds || generateFixedSeeds(Utils.randInt(1000000));
+  
+  for (const [nodeId, node] of battlePath.nodeMap) {
+    if (node.nodeType === PathNodeType.RIVAL_BATTLE) {
+      const rivalStage = node.metadata?.rivalStage || Math.min(6, Math.floor(node.wave / 50) + 1);
+      const rivalType = node.metadata?.rivalType || TrainerType.BLUE;
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      node.battleConfig = createRivalBattle(rivalStage, rivalType, false);
+      node.metadata = {
+        ...node.metadata,
+        rivalStage,
+        rivalType,
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.SMITTY_BATTLE) {
+      const smittyBattleConfig = createSmittyBattle(scene, seeds.smittySeed || seeds.baseSeed, true);
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      node.battleConfig = smittyBattleConfig;
+      node.metadata = {
+        ...node.metadata,
+        smittyVariantIndex: 0,
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.MAJOR_BOSS_BATTLE) {
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      node.battleConfig = new FixedBattleConfig()
+        .setBattleType(BattleType.TRAINER)
+        .setSeedOffsetWave(node.wave);
+        
+      node.metadata = {
+        ...node.metadata,
+        bossType: 'major',
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.RECOVERY_BOSS) {
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      node.battleConfig = new FixedBattleConfig()
+        .setBattleType(BattleType.TRAINER)
+        .setSeedOffsetWave(node.wave);
+        
+      node.metadata = {
+        ...node.metadata,
+        bossType: 'recovery',
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.ELITE_FOUR) {
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      scene.resetSeed(seeds.eliteFour.trainerGeneration + node.wave);
+      const eliteFourTypes = [
+        TRAINER_TYPES.ELITE_FOUR.FIRST,
+        TRAINER_TYPES.ELITE_FOUR.SECOND,
+        TRAINER_TYPES.ELITE_FOUR.THIRD,
+        TRAINER_TYPES.ELITE_FOUR.FOURTH
+      ];
+      const eliteFourCounter = Math.floor((node.wave - 1) / 100) % 4;
+      const trainerType = eliteFourTypes[eliteFourCounter];
+      
+      node.battleConfig = createEliteFourBattle(trainerType, false, seeds.baseSeed);
+      node.metadata = {
+        ...node.metadata,
+        eliteType: ['first', 'second', 'third', 'fourth'][eliteFourCounter],
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.CHAMPION) {
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      node.battleConfig = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed);
+      node.metadata = {
+        ...node.metadata,
+        eliteType: 'champion',
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.EVIL_BOSS_BATTLE) {
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      node.battleConfig = createEvilBossBattle(scene, 35);
+      node.metadata = {
+        ...node.metadata,
+        evilTeamType: 'boss',
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.EVIL_GRUNT_BATTLE) {
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      node.battleConfig = createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_GRUNTS, 35, false);
+      node.metadata = {
+        ...node.metadata,
+        evilTeamType: 'grunt',
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.EVIL_ADMIN_BATTLE) {
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      node.battleConfig = createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_ADMINS, 35, false);
+      node.metadata = {
+        ...node.metadata,
+        evilTeamType: 'admin',
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.CHALLENGE_BOSS) {
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      node.battleConfig = new FixedBattleConfig()
+        .setBattleType(BattleType.TRAINER)
+        .setSeedOffsetWave(node.wave);
+      
+      node.metadata = {
+        ...node.metadata,
+        bossType: 'challenge_major',
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.CHALLENGE_RIVAL) {
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      const rivalStage = node.metadata?.rivalStage || 6;
+      const rivalType = node.metadata?.rivalType || TrainerType.BLUE;
+      
+      node.battleConfig = createRivalBattle(rivalStage, rivalType, Utils.randSeedInt(100) < 20);
+      node.metadata = {
+        ...node.metadata,
+        rivalStage,
+        rivalType,
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS) {
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      node.battleConfig = createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND, 35 + node.wave, false);
+      node.metadata = {
+        ...node.metadata,
+        evilTeamType: 'boss',
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.CHALLENGE_CHAMPION) {
+      const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+      node.battleConfig = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed + node.wave);
+      node.metadata = {
+        ...node.metadata,
+        eliteType: 'champion',
+        dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
+      };
+      node.dynamicMode = dynamicMode;
+    }
+    
+    else if (node.nodeType === PathNodeType.CHALLENGE_REWARD) {
+      node.metadata = {
+        ...node.metadata,
+        challengeReward: true,
+        rewardType: node.metadata?.rewardType || 'golden_pokeball'
+      };
+    }
+    
+    // else if (node.nodeType === PathNodeType.TRAINER_BATTLE) {
+    //   const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
+      
+    //   if (dynamicMode && Object.keys(dynamicMode).length > 0) {
+    //     scene.resetSeed(seeds.baseSeed + node.wave * 1000);
+    //     const trainerPool = [TrainerType.ACE_TRAINER, TrainerType.VETERAN];
+        
+    //     node.battleConfig = createTrainerBattle(trainerPool, node.wave);
+    //     node.dynamicMode = dynamicMode;
+    //     node.metadata = {
+    //       ...node.metadata,
+    //       dynamicModeCount: Object.keys(dynamicMode).length
+    //     };
+    //   }
+    // }
+  }
 }
 

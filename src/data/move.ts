@@ -1269,7 +1269,7 @@ export class CritOnlyAttr extends MoveAttr {
 }
 
 export class FixedDamageAttr extends MoveAttr {
-  private damage: integer;
+  public damage: integer;
 
   constructor(damage: integer) {
     super();
@@ -1867,7 +1867,7 @@ export class HealOnAllyAttr extends HealAttr {
  * @see {@linkcode getUserBenefitScore}
  */
 export class HitHealAttr extends MoveEffectAttr {
-  private healRatio: number;
+  public healRatio: number;
   private message: string;
   private healStat: Stat | null;
 
@@ -1941,7 +1941,7 @@ export class IncrementMovePriorityAttr extends MoveAttr {
   /** The condition for a move's priority being incremented */
   private moveIncrementFunc: (pokemon: Pokemon, target:Pokemon, move: Move) => boolean;
   /** The amount to increment priority by, if condition passes. */
-  private increaseAmount: integer;
+  public increaseAmount: integer;
 
   constructor(moveIncrementFunc: (pokemon: Pokemon, target:Pokemon, move: Move) => boolean, increaseAmount = 1) {
     super();
@@ -2189,7 +2189,7 @@ export class PsychoShiftEffectAttr extends MoveEffectAttr {
  * "If Knock Off causes a Pokémon with the Sticky Hold Ability to faint, it can now remove that Pokémon's held item."
  */
 export class StealHeldItemChanceAttr extends MoveEffectAttr {
-  private chance: number;
+  public chance: number;
 
   constructor(chance: number) {
     super(false, MoveEffectTrigger.HIT);
@@ -2498,7 +2498,7 @@ export class BypassBurnDamageReductionAttr extends MoveAttr {
 }
 
 export class WeatherChangeAttr extends MoveEffectAttr {
-  private weatherType: WeatherType;
+  public weatherType: WeatherType;
 
   constructor(weatherType: WeatherType) {
     super();
@@ -2534,7 +2534,7 @@ export class ClearWeatherAttr extends MoveEffectAttr {
 }
 
 export class TerrainChangeAttr extends MoveEffectAttr {
-  private terrainType: TerrainType;
+  public terrainType: TerrainType;
 
   constructor(terrainType: TerrainType) {
     super();
@@ -5050,6 +5050,28 @@ export class AddArenaTrapTagAttr extends AddArenaTagAttr {
       }
       return tag.layers < tag.maxLayers;
     };
+  }
+}
+
+export class AddArenaTrapTagUpgradeAttr extends AddArenaTagAttr {
+  getCondition(): MoveConditionFunc {
+    return (user, target, move) => {
+      const side = this.selfSideTarget ? ArenaTagSide.PLAYER : ArenaTagSide.ENEMY;
+      const tag = user.scene.arena.getTagOnSide(this.tagType, side) as ArenaTrapTag;
+      if (!tag) {
+        return true;
+      }
+      return tag.layers < tag.maxLayers;
+    };
+  }
+
+   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
+    if (move.chance < 0 || move.chance === 100 || user.randSeedInt(100) < move.chance) {
+      user.scene.arena.addTag(this.tagType, this.turnCount, move.id, user.id, this.selfSideTarget ? ArenaTagSide.PLAYER : ArenaTagSide.ENEMY);
+      return true;
+    }
+
+    return false;
   }
 }
 

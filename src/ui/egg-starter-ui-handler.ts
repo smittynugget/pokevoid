@@ -342,7 +342,7 @@ export default class eggStarterUi extends StarterSelectUiHandler {
             ui.showText(i18next.t(messageKey, { defaultValue: defaultMessage }), null, () => {
                 
                 const options = this.currentParty
-                    .filter((pokemon, index) => index !== 0 && (!isLegendary || pokemon.species.isLegendSubOrMystical() || pokemon.isMega()))
+                    .filter((pokemon, index) => index !== 0 && (!isLegendary || pokemon.species.isLegendSubOrMystical() || pokemon.isMega() || pokemon.isMax()))
                     .map((pokemon, index) => {
                     return {
                         label: pokemon.species.getName() + (pokemon.nickname ? ` (${pokemon.nickname})` : ""),

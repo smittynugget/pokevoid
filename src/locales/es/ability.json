@@ -1513,7 +1513,7 @@
   },
   "soulCollector": {
     "name": "Colector de Almas",
-    "description": "Potencia los movimientos que coinciden con los tipos recolectados. Recolecta el tipo de los Pokémon debilitados. Pierde los tipos recolectados al debilitarse."
+    "description": "Potencia los movimientos que coinciden con el tipo de esencia. Recolecta el tipo de los Pokémon debilitados. Pierde las esencias al debilitarse."
   },
   "shadowSync": {
     "name": "Sincronización Sombría",
@@ -2685,10 +2685,10 @@
   },
   "soulEater": {
     "name": "Devorador de Almas",
-    "description": "Recupera PS al usar un movimiento que coincida con un tipo recolectado. Recolecta el tipo de los Pokémon debilitados. Pierde los tipos recolectados al debilitarse."
+    "description": "Recupera PS al usar un movimiento que coincida con un tipo de esencia. Recolecta el tipo de los Pokémon debilitados. Pierde las esencias al debilitarse."
   },
   "soulDrain": {
     "name": "Drenaje de Alma",
-    "description": "10% de probabilidad de recolectar el tipo del movimiento usado. Baja dos estadísticas aleatorias del objetivo en 2 niveles si el tipo del movimiento coincide con un tipo recolectado. Pierde los tipos recolectados al debilitarse."
+    "description": "10% de probabilidad de recolectar el tipo del movimiento usado. Baja dos estadísticas aleatorias del objetivo en 2 niveles si el tipo del movimiento coincide con un tipo de esencia. Pierde tipos de esencia al debilitarse."
   }
 }

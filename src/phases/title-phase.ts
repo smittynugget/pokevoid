@@ -1,6 +1,6 @@
 import {loggedInUser} from "#app/account.js";
 import BattleScene from "#app/battle-scene.js";
-import {BattleType, setupFixedBattlePaths, setupFixedBattles, resetBattlePathGlobalState} from "#app/battle.js";
+import {BattleType, setupFixedBattlePaths, setupFixedBattles, resetBattlePathGlobalState, getCurrentBattlePath} from "#app/battle.js";
 import {getDailyRunStarters, fetchDailyRunSeed} from "#app/data/daily-run.js";
 import {Gender} from "#app/data/gender.js";
 import {getBiomeKey} from "#app/field/arena.js";
@@ -28,7 +28,8 @@ import {SelectStarterPhase} from "./select-starter-phase";
 import {SummonPhase} from "./summon-phase";
 import {SelectDraftPhase} from "#app/phases/select-draft-phase";
 import {transferSave, transferLoad} from "#app/account";
-import {SelectModifierPhase, ShowRewards} from "./select-modifier-phase";
+import { SelectModifierPhase } from "./select-modifier-phase";
+import { ShowRewards } from "#app/utils/show-rewards.js";
 import {ShopModifierSelectPhase} from "./shop-modifier-select-phase";
 import ModifierSelectUiHandler from "#app/ui/modifier-select-ui-handler.js";
 import {checkQuestState, QuestState, QuestUnlockables} from "#app/system/game-data";
@@ -51,6 +52,8 @@ import { logNext30DaysLegendaryGachaSpecies } from "#app/data/egg";
 import PokedexUiHandler from "#app/ui/pokedex-ui-handler.js";
 import { BattlePathPhase } from "./battle-path-phase";
 import { ChaosEncounterPhase } from "./chaos-encounter-phase";
+import { outputPokemonData } from "#app/data/extract_data";
+import { GameMechanicsID, GameMechanicsVersion } from "#app/enums/gameMechanicsID.js";
 
 export class TitlePhase extends Phase {
     private loaded: boolean;
@@ -85,6 +88,12 @@ export class TitlePhase extends Phase {
             console.error(err);
             this.showOptions();
         });
+
+        //  this.scene.pushPhase(new SelectDraftPhase(this.scene));
+        //     this.scene.ui.setMode(Mode.MESSAGE);
+        //     this.scene.ui.clearText();
+        //     super.end();
+        //     return;
         
     }
 
@@ -100,15 +109,7 @@ export class TitlePhase extends Phase {
             this.end();
         };
 
-        if (this.scene.gameData.testSpeciesForMod.length > 0) {
-            options.push({
-                label: i18next.t("modGlitchCreateFormUi:testMods"),
-                handler: () => {
-                    setModeAndEnd(GameModes.TEST_MOD);
-                    return true;
-                }
-            });
-        }
+        
         
         const lastSessionSlot = this.scene.gameData.getLastPlayedSessionSlot();
         if (loggedInUser && lastSessionSlot !== -1) {
@@ -119,6 +120,25 @@ export class TitlePhase extends Phase {
                     return true;
                 }
             });
+        }
+
+        if (this.scene.gameData.testSpeciesForMod.length > 0) {
+            if(this.scene.gameData.testModsCount > 0) {
+                this.scene.gameData.testModsCount--;
+                options.push({
+                    label: i18next.t("modGlitchCreateFormUi:testMods"),
+                    handler: () => {
+                        setModeAndEnd(GameModes.TEST_MOD);
+                        return true;
+                        }
+                    });
+            }
+            else {
+                this.scene.gameData.testSpeciesForMod = [];
+            }
+        }
+        else if(this.scene.gameData.testModsCount > 0) {
+            this.scene.gameData.testModsCount = 0;
         }
         
         const shopNeedsRefresh = !this.scene.gameData.currentPermaShopOptions || 
@@ -191,7 +211,7 @@ export class TitlePhase extends Phase {
                 keepOpen: true
             },
             {
-                label: i18next.t("modGlitchCreateFormUi:mods"),
+                label: i18next.t("modGlitchCreateFormUi:wikiMods"),
                 handler: () => {
                     this.scene.ui.setOverlayMode(Mode.MOD_MANAGEMENT);
                     return true;
@@ -223,6 +243,8 @@ export class TitlePhase extends Phase {
         };
         console.log(config);
         this.scene.ui.setMode(Mode.TITLE, config);
+
+        // outputPokemonData(false);
 
         let introTutorials = [EnhancedTutorial.LEGENDARY_POKEMON_1, EnhancedTutorial.BUG_TYPES_1];
         let firstVictoryTutorials = [EnhancedTutorial.FIRST_VICTORY, EnhancedTutorial.NEW_QUESTS];
@@ -259,6 +281,10 @@ export class TitlePhase extends Phase {
             this.scene.gameData.tutorialService.showCombinedTutorial("", introTutorials, true, false, true);
             this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.NEW_QUESTS);
             this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1);
+        }
+
+        else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.MOVE_UPGRADES_EX)) {
+            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.MOVE_UPGRADES_EX, true, false);
         }
 
          else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.POKEROGUE_1)) {
@@ -345,6 +371,8 @@ export class TitlePhase extends Phase {
         }
             
         }
+
+
         // setupFixedBattlePaths(this.scene);
         // this.scene.ui.setOverlayMode(Mode.BATTLE_PATH);
             
@@ -539,6 +567,8 @@ export class TitlePhase extends Phase {
 
                     this.scene.gameData.resetBattlePathData();
                     this.scene.battlePathWave = 1;
+                    this.scene.dynamicMode = null;
+                    this.scene.gameMechanicTracking = { [GameMechanicsID.CHAOS_MODE]: GameMechanicsVersion.CHAOS_V2, [GameMechanicsID.COLLECTED_TYPE_MODIFIER]: GameMechanicsVersion.COLLECTED_TYPE_MODIFIER_V2 };
 
                     setupFixedBattlePaths(this.scene);
                     
@@ -548,7 +578,7 @@ export class TitlePhase extends Phase {
 
                     this.scene.money = this.scene.gameMode.getStartingMoney();
 
-                    if (this.gameMode === GameModes.CHAOS_ROGUE || this.gameMode === GameModes.CHAOS_ROGUE_VOID || this.gameMode === GameModes.CHAOS_INFINITE_ROGUE) {
+                    if (this.gameMode === GameModes.CHAOS_ROGUE || this.gameMode === GameModes.CHAOS_ROGUE_VOID || this.gameMode === GameModes.CHAOS_INFINITE_ROGUE || this.gameMode === GameModes.CHAOS_NUZLIGHT_DRAFT || this.gameMode === GameModes.CHAOS_NUZLOCKE_DRAFT) {
                         this.scene.pushPhase(new SelectDraftPhase(this.scene));
                     } else {
                         this.scene.pushPhase(new SelectStarterPhase(this.scene));
@@ -619,7 +649,11 @@ export class TitlePhase extends Phase {
                 }
                 
                 const startWave = this.scene.battlePathWave > 1000 ? Math.floor(this.scene.battlePathWave / 1000) * 1000 + 1 : 1;
+                
+                // Only generate battle path if no saved path exists
+                // if (!this.scene.gameData.battlePath && !getCurrentBattlePath()) {
                 setupFixedBattlePaths(this.scene, startWave);
+                // }
                 
                 const enemyParty = this.scene.getEnemyParty();
                 const hasActiveBattle = this.scene.currentBattle && (enemyParty && enemyParty.filter(p => !p.isFainted()).length > 0);
@@ -781,6 +815,22 @@ export class TitlePhase extends Phase {
             availableModes.push(GameModes.CHAOS_JOURNEY);
         }
         
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            availableModes.push(GameModes.CHAOS_NUZLIGHT);
+        }
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            availableModes.push(GameModes.CHAOS_NUZLOCKE);
+        }
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            availableModes.push(GameModes.CHAOS_NUZLIGHT_DRAFT);
+        }
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            availableModes.push(GameModes.CHAOS_NUZLOCKE_DRAFT);
+        }
+        
         if (this.scene.gameData.unlocks[Unlockables.CHAOS_VOID_MODE]) {
             availableModes.push(GameModes.CHAOS_VOID);
         }
@@ -801,6 +851,22 @@ export class TitlePhase extends Phase {
             GameModes.CHAOS_ROGUE,
             GameModes.CHAOS_JOURNEY
         ];
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            modesToShow.push(GameModes.CHAOS_NUZLIGHT);
+        }
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            modesToShow.push(GameModes.CHAOS_NUZLIGHT_DRAFT);
+        }
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            modesToShow.push(GameModes.CHAOS_NUZLOCKE);
+        }
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            modesToShow.push(GameModes.CHAOS_NUZLOCKE_DRAFT);
+        }
         
         if (this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
             modesToShow.push(GameModes.CHAOS_VOID);
@@ -912,6 +978,14 @@ export class TitlePhase extends Phase {
                 return i18next.t("menu:selectChaosInfiniteMode");
             case GameModes.CHAOS_INFINITE_ROGUE:
                 return i18next.t("menu:selectChaosInfiniteRogueMode");
+            case GameModes.CHAOS_NUZLIGHT:
+                return i18next.t("menu:selectChaosNuzlightMode");
+            case GameModes.CHAOS_NUZLOCKE:
+                return i18next.t("menu:selectChaosNuzlockeMode");
+            case GameModes.CHAOS_NUZLIGHT_DRAFT:
+                return i18next.t("menu:selectChaosNuzlightDraftMode");
+            case GameModes.CHAOS_NUZLOCKE_DRAFT:
+                return i18next.t("menu:selectChaosNuzlockeDraftMode");
             default:
                 return "";
         }

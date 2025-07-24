@@ -376,7 +376,7 @@ export class TutorialService {
                     EnhancedTutorial.PASSIVE_ABILITIES_1,
                     EnhancedTutorial.PARTY_ABILITY_1,
                     EnhancedTutorial.BUG_TYPES_1,
-                    EnhancedTutorial.MOVE_UPGRADES_1,
+                    EnhancedTutorial.MOVE_UPGRADES_EX,
                     EnhancedTutorial.FIRST_MOVE_UPGRADE_1
                 ]
             },

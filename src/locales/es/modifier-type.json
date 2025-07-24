@@ -71,6 +71,10 @@
     "PokemonBaseStatBoosterModifierType": {
       "description": "Aumenta la est. {{statName}} base del portador en un 10%.\nCuanto mayores sean tus IVs, mayor será el límite de acumulación."
     },
+    "PlayerPokemonBaseStatBoosterModifierType": {
+      "name": "Barato",
+      "description": "Aumenta la est. {{statName}} base del portador en un 5%."
+    },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restaura el 100% de los PS de todos los Pokémon."
     },
@@ -122,7 +126,7 @@
     "TerastallizeModifierType": {
       "name": "Teralito {{teraType}}",
       "statLabel": "Teralito",
-      "description": "Teracristaliza al portador al tipo {{teraType}} durante 10 combates."
+      "description": "Teracristaliza al portador al tipo {{teraType}} durante 10 combates. 20 combates si tienes Orbe Teracristal"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "Al atacar, hay un {{chancePercent}}% de posibilidades de que robes el objeto que tiene el enemigo."
@@ -152,7 +156,7 @@
     },
     "TERA_ORB": {
       "name": "Orbe Teracristal",
-      "description": "Los Teralitos están disponibles."
+      "description": "Los Teralitos duran 10 turnos más."
     },
     "MAP": {
       "name": "Mapa",
@@ -314,7 +318,7 @@
     },
     "BERRY_POUCH": {
       "name": "Saco bayas",
-      "description": "Añade un 15% de posibilidades de que una baya no se gaste al usarla."
+      "description": "Añade un 10% de posibilidades de que una baya no se gaste al usarla."
     },
     "FOCUS_BAND": {
       "name": "Banda aguante",
@@ -412,6 +416,13 @@
       "statLabel": "XM (Cualquier MT)",
       "description": "Enseña {{moveName}} a cualquier Pokémon\n(Mantén pulsado C o Shift para más info)."
     },
+
+    "MOVE_UPGRADE": {
+      "name": "Mejora de Movimiento",
+      "statLabel": "Objeto Mejora de Movimiento",
+      "description": "Mejora aleatoriamente uno de los movimientos de tu equipo"
+    },
+
     "TypeSwitcherModifierType": {
       "name": "Cambiador de Tipo: {{type1}} / {{type2}}",
       "statLabel": "Cambiador de Tipo",
@@ -698,9 +709,10 @@
       }
     },
     "CollectedTypeModifierType": {
-      "name": "Tipo Recolectado: {{type}}",
-      "statLabel": "Tipo Recolectado",
-      "description": "Usa 5 de CUALQUIER MEZCLA DE TIPO en lugar de liberar un Pokémon para Objetos de Liberación."
+      "name": "Esencias",
+      "shopName": "Esencia {{type}}",
+      "statLabel": "Esencia",
+      "description": "Usa 5 en lugar de liberar un Pokémon para Objetos de Liberación o intercambia por recompensas con el Coleccionista."
     },
     "SacrificeModifierType": {
       "description": "Libera un Pokémon para aumentar el {{stat}} de otro Pokémon en un 15%."
@@ -1012,6 +1024,7 @@
     "waves": "oleadas",
     "uses": "usos",
     "glitchPieceCost": "*CUESTA 2x Fragmento Glitch",
-    "moreInfo": "(Mantén pulsado C o Shift para más info)."
+    "moreInfo": "(Mantén pulsado C o Shift para más info).",
+    "upgrade": "Mejora"
   }
 }

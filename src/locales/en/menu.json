@@ -130,5 +130,9 @@
   "selectChaosVoidMode": "Chaos Void - Journey into the depths of the void...",
   "selectChaosRogueVoidMode": "Chaos Rogue Void - Draft your way through the void's embrace...",
   "selectChaosInfiniteMode": "Chaos Infinite - Where time loses all meaning...",
-  "selectChaosInfiniteRogueMode": "Chaos Infinite Rogue - For those who have become one with the void..."
+  "selectChaosInfiniteRogueMode": "Chaos Infinite Rogue - For those who have become one with the void...",
+  "selectChaosNuzlightMode": "Chaos Nuzlight - Journey through chaos with no purchasable items!",
+  "selectChaosNuzlockeMode": "Chaos Nuzlocke - Journey through chaos where fainted pokemon are lost forever!",
+  "selectChaosNuzlightDraftMode": "Chaos Nuzlight Rogue - Draft your way through chaos with no purchasable items!",
+  "selectChaosNuzlockeDraftMode": "Chaos Nuzlocke Rogue - Draft your way through chaos where fainted pokemon are lost forever!"
 }

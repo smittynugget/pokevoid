@@ -67,6 +67,10 @@
     "PokemonBaseStatBoosterModifierType": {
       "description": "增加持有者的{{statName}}10%，個體值越高堆疊\n上限越高。"
     },
+    "PlayerPokemonBaseStatBoosterModifierType": {
+      "name": "便宜",
+      "description": "增加持有者的{{statName}}5%。"
+    },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "所有寶可夢完全恢復HP。"
     },
@@ -117,7 +121,7 @@
     },
     "TerastallizeModifierType": {
       "name": "{{teraType}}太晶碎塊",
-      "description": "持有者獲得{{teraType}}太晶化10場戰鬥。",
+      "description": "持有者獲得{{teraType}}太晶化10場戰鬥。若有太晶珠則可持續20場戰鬥。",
       "statLabel": "太晶碎片"
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -148,7 +152,7 @@
     },
     "TERA_ORB": {
       "name": "太晶珠",
-      "description": "能讓攜帶着太晶碎塊戰鬥的寶可夢進行\n太晶化。"
+      "description": "太晶碎塊的效果可以再持續10回合。"
     },
     "MAP": {
       "name": "地圖",
@@ -306,7 +310,7 @@
     },
     "BERRY_POUCH": {
       "name": "樹果袋",
-      "description": "使用樹果時有15%的幾率不會消耗樹果。"
+      "description": "使用樹果時有10%的幾率不會消耗樹果。"
     },
     "FOCUS_BAND": {
       "name": "氣勢頭帶",
@@ -403,6 +407,11 @@
       "name": "++XM{{moveId}} - {{moveName}}++",
       "description": "讓任何寶可夢學會{{moveName}}\n(按住C鍵或Shift鍵查看更多資訊)。",
       "statLabel": "XM（任意招式學習器）"
+    },
+    "MOVE_UPGRADE": {
+      "name": "招式升級",
+      "statLabel": "招式升級道具",
+      "description": "隨機升級你隊伍中的一個招式"
     },
     "TypeSwitcherModifierType": {
       "name": "屬性轉換器：{{type1}} / {{type2}}",
@@ -690,9 +699,10 @@
       }
     },
     "CollectedTypeModifierType": {
-      "name": "已收集屬性：{{type}}",
-      "description": "使用5個任意屬性組合代替釋放寶可夢來獲取釋放道具。",
-      "statLabel": "收集的屬性"
+      "name": "精華",
+      "shopName": "{{type}}精華",
+      "description": "使用5個代替釋放寶可夢來獲得釋放道具，或與收藏家交換獎勵。",
+      "statLabel": "精華"
     },
     "SacrificeModifierType": {
       "description": "釋放一隻寶可夢來提升另一隻寶可夢的{{stat}}15%。"
@@ -1009,6 +1019,7 @@
     "waves": "波",
     "uses": "次",
     "glitchPieceCost": "*需要消耗2個故障碎片",
-    "moreInfo": "(按住C鍵或Shift鍵查看更多資訊)"
+    "moreInfo": "(按住C鍵或Shift鍵查看更多資訊)",
+    "upgrade": "升級"
   }
 }

@@ -67,6 +67,10 @@
     "PokemonBaseStatBoosterModifierType": {
       "description": "Erhöht den {{statName}} Basiswert des Trägers um 10%. Das Stapellimit erhöht sich, je höher dein IS-Wert ist."
     },
+    "PlayerPokemonBaseStatBoosterModifierType": {
+      "name": "Günstig",
+      "description": "Erhöht den {{statName}} Basiswert des Trägers um 5%."
+    },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Stellt 100% der KP aller Pokémon her."
     },
@@ -118,7 +122,7 @@
     "TerastallizeModifierType": {
       "name": "{{teraType}} Terra-Stück",
       "statLabel": "Tera-Splitter",
-      "description": "{{teraType}} Terakristallisiert den Träger für bis zu 10 Kämpfe."
+      "description": "{{teraType}} Terakristallisiert den Träger für bis zu 10 Kämpfe. 20 Kämpfe mit Terakristall-Orb"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "Beim Angriff besteht eine {{chancePercent}}%ige Chance, dass das getragene Item des Gegners gestohlen wird."
@@ -131,6 +135,11 @@
     },
     "EnemyEndureChanceModifierType": {
       "description": "Gibt den Träger eine {{chancePercent}}%ige Chance, einen Angriff zu überleben."
+    },
+    "MOVE_UPGRADE": {
+      "name": "Attacken-Upgrade",
+      "statLabel": "Attacken-Upgrade-Gegenstand",
+      "description": "Verbessert zufällig eine Attacke deines Teams"
     },
     "RARE_CANDY": {
       "name": "Sonderbonbon"
@@ -148,7 +157,7 @@
     },
     "TERA_ORB": {
       "name": "Terakristall-Orb",
-      "description": "Tera-Stücke werden verfügbar."
+      "description": "Tera-Stücke halten 10 Runden länger."
     },
     "MAP": {
       "name": "Karte",
@@ -310,7 +319,7 @@
     },
     "BERRY_POUCH": {
       "name": "Beerentüte",
-      "description": "Fügt eine 15% Chance hinzu, dass Beeren nicht verbraucht werden."
+      "description": "Fügt eine 10% Chance hinzu, dass Beeren nicht verbraucht werden."
     },
     "FOCUS_BAND": {
       "name": "Fokusband",
@@ -694,9 +703,10 @@
       }
     },
     "CollectedTypeModifierType": {
-      "name": "Gesammelter Typ: {{type}}",
-      "statLabel": "Gesammelter Typ",
-      "description": "Verwende 5 von JEDEM TYP-MIX anstelle eines freigesetzten Pokémon für Freisetzungs-Items."
+      "name": "Essenzen",
+      "shopName": "{{type}}-Essenz",
+      "statLabel": "Essenz",
+      "description": "Verwende 5 anstatt ein Pokémon für Freilassungsgegenstände freizulassen oder tausche gegen Belohnungen beim Sammler."
     },
     "SacrificeModifierType": {
       "description": "Setze ein Pokémon frei, um {{stat}} eines anderen Pokémon um 15% zu erhöhen."
@@ -1013,6 +1023,7 @@
     "waves": "Wellen",
     "uses": "Verwendungen",
     "glitchPieceCost": "*KOSTET 2x Glitch-Stück",
-    "moreInfo": "(Halte C / Shift für Infos)"
+    "moreInfo": "(Halte C / Shift für Infos)",
+    "upgrade": "Verbesserung"
   }
 }

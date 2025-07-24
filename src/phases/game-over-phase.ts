@@ -33,7 +33,7 @@ export class GameOverPhase extends BattlePhase {
     super.start();
 
     // Failsafe if players somehow skip floor 200 in classic mode
-    if (this.scene.gameMode.isClassic && this.scene.currentBattle.waveIndex > 200) {
+    if (this.scene.gameMode.isClassic && this.scene.currentBattle.waveIndex > 90 && !this.scene.gameMode.isChaosMode) {
       this.victory = true;
     }
 
@@ -49,7 +49,6 @@ export class GameOverPhase extends BattlePhase {
     const doGameOver = (newClear: boolean) => {
       this.scene.disableMenu = true;
       this.scene.time.delayedCall(1000, () => {
-        this.scene.gameData.updateGameModeStats(this.scene.gameMode.modeId, this.victory);
         
         if (this.victory && newClear && this.scene.gameMode.isClassic) {
           this.scene.validateAchv(achvs.UNEVOLVED_CLASSIC_VICTORY);

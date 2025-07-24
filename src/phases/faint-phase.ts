@@ -17,7 +17,7 @@ import { ToggleDoublePositionPhase } from "./toggle-double-position-phase";
 import { GameOverPhase } from "./game-over-phase";
 import { SwitchPhase } from "./switch-phase";
 import { VictoryPhase } from "./victory-phase";
-import {ShowRewards} from "#app/phases/select-modifier-phase";
+import { ShowRewards } from "#app/utils/show-rewards.js";
 import * as Utils from "#app/utils";
 import {PokemonReviveModifierType} from "#app/modifier/modifier-type";
 import {PermaFaintQuestModifier, PermaKnockoutQuestModifier} from "#app/modifier/modifier";
@@ -185,7 +185,7 @@ export class FaintPhase extends PokemonPhase {
 
     pokemon.faintCry(() => {
       if (pokemon instanceof PlayerPokemon) {
-        pokemon.addFriendship(-10);
+        pokemon.addFriendship(-3);
       }
       pokemon.hideInfo();
       this.scene.playSound("se/faint");

@@ -23,7 +23,6 @@ import {doc, updateDoc} from "firebase/firestore";
 
 enum MenuOptions {
   GAME_SETTINGS,
-  ACHIEVEMENTS,
   STATS,
   RUN_HISTORY,
   EGG_LIST,
@@ -436,10 +435,6 @@ export default class MenuUiHandler extends MessageUiHandler {
       switch (adjustedCursor) {
         case MenuOptions.GAME_SETTINGS:
           ui.setOverlayMode(Mode.SETTINGS);
-          success = true;
-          break;
-        case MenuOptions.ACHIEVEMENTS:
-          ui.setOverlayMode(Mode.ACHIEVEMENTS);
           success = true;
           break;
         case MenuOptions.STATS:

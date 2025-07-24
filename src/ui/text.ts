@@ -151,11 +151,11 @@ export function getTextStyleOptions(style: TextStyle, uiTheme: UiTheme, extraSty
     shadowYpos = 3;
     break;
   case TextStyle.STATS_LABEL:
+    shadowXpos = 2;
+    shadowYpos = 2;
     let fontSizeLabel = "65px";
     switch (lang) {
     case "de":
-      shadowXpos = 3;
-      shadowYpos = 3;
       fontSizeLabel = "60px";
       break;
     default:
@@ -165,8 +165,8 @@ export function getTextStyleOptions(style: TextStyle, uiTheme: UiTheme, extraSty
     styleOptions.fontSize =  fontSizeLabel;
     break;
     case TextStyle.STATS_VALUE:
-      shadowXpos = 3;
-      shadowYpos = 3;
+      shadowXpos = 2;
+      shadowYpos = 2;
     let fontSizeValue = "65px";
     switch (lang) {
     case "de":
@@ -284,6 +284,7 @@ export function getTextColor(textStyle: TextStyle, shadow?: boolean, uiTheme: Ui
       }
       return !shadow ? "#484848" : "#d0d0c8";
     case TextStyle.SUMMARY_RED:
+      return !shadow ? "#e70808" : "#632929";
     case TextStyle.TOOLTIP_TITLE:
       return !shadow ? "#e70808" : "#ffbd73";
     case TextStyle.SUMMARY_BLUE:

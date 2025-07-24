@@ -297,11 +297,13 @@
     }
   },
   "moveUpgrades": {
-    "title": "Améliorations de Capacités",
+    "title": "NOUVELLES Améliorations de Capacités de Pokevoid !",
     "text": { 
-      "1":"Vous pouvez maintenant améliorer les capacités ! Chaque fois que vous utilisez une capacité, elle gagne un point d'EXP !",
-      "2":"Une fois que la capacité a suffisamment d'EXP, elle monte de niveau, vous offrant des options d'amélioration !",
-      "3": "L'amélioration durera pendant toute la partie et changera la capacité pour tous, y compris votre équipe et même vos adversaires !"
+      "1":"Vous pouvez maintenant améliorer les capacités avec une TONNE d'améliorations différentes !",
+      "2":"Améliorez la priorité, PUISSANCE, effet, chance, statut multi-coups d'une capacité et plus !",
+      "3": "Chaque amélioration a son propre Chemin d'Amélioration avec plusieurs Niveaux !",
+      "4": "Les améliorations peuvent rendre N'IMPORTE QUELLE capacité absolument révolutionnaire ! CEPENDANT - chaque amélioration commence au niveau le plus bas 1 (faible).",
+      "5": "En améliorant continuellement une capacité, vous pouvez rendre même la capacité la plus faible LÉGENDAIRE !"
     }
   },
   "eggSwap": {

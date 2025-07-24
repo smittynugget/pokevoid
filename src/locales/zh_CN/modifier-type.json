@@ -66,6 +66,10 @@
     "PokemonBaseStatBoosterModifierType": {
       "description": "增加10%持有者的{{statName}}，\n个体值越高堆叠上限越高。"
     },
+    "PlayerPokemonBaseStatBoosterModifierType": {
+      "name": "便宜",
+      "description": "增加5%持有者的{{statName}}。"
+    },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "所有宝可梦完全回复HP。"
     },
@@ -116,7 +120,7 @@
     },
     "TerastallizeModifierType": {
       "name": "{{teraType}}太晶碎块",
-      "description": "持有者获得{{teraType}}太晶化，\n持续10场战斗。",
+      "description": "持有者获得{{teraType}}太晶化，\n持续10场战斗。若有太晶珠则可持续20场战斗。",
       "statLabel": "太晶碎片"
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -147,7 +151,7 @@
     },
     "TERA_ORB": {
       "name": "太晶珠",
-      "description": "能让携带着太晶碎块战斗的宝可梦\n进行太晶化。"
+      "description": "太晶碎块的效果可以再持续10回合。"
     },
     "MAP": {
       "name": "地图",
@@ -309,7 +313,7 @@
     },
     "BERRY_POUCH": {
       "name": "树果袋",
-      "description": "使用树果时有15%的几率不会消耗树果。"
+      "description": "使用树果时有10%的几率不会消耗树果。"
     },
     "FOCUS_BAND": {
       "name": "气势头带",
@@ -406,6 +410,11 @@
       "name": "++XM{{moveId}} - {{moveName}}++",
       "description": "让任何宝可梦学会{{moveName}}\n(按住C键或Shift键查看更多信息)。",
       "statLabel": "XM（任意招式学习器）"
+    },
+    "MOVE_UPGRADE": {
+      "name": "招式升级",
+      "statLabel": "招式升级道具",
+      "description": "随机升级你队伍中的一个招式"
     },
     "TypeSwitcherModifierType": {
       "name": "属性转换器：{{type1}} / {{type2}}",
@@ -693,9 +702,10 @@
       }
     },
     "CollectedTypeModifierType": {
-      "name": "已收集属性：{{type}}",
-      "description": "使用5个任意属性组合代替放生宝可梦来获取放生道具。",
-      "statLabel": "收集的属性"
+      "name": "精华",
+      "shopName": "{{type}}精华",
+      "description": "使用5个代替释放宝可梦来获得释放道具，或与收藏家交换奖励。",
+      "statLabel": "精华"
     },
     "SacrificeModifierType": {
       "description": "释放一只宝可梦来提升另一只宝可梦的{{stat}}15%。"
@@ -1012,6 +1022,7 @@
     "waves": "波",
     "uses": "次",
     "glitchPieceCost": "*需要2个故障碎片",
-    "moreInfo": "(按住C键或Shift键查看更多信息)"
+    "moreInfo": "(按住C键或Shift键查看更多信息)",
+    "upgrade": "升级"
   }
 }

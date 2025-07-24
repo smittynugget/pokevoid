@@ -68,6 +68,10 @@
     "PokemonBaseStatBoosterModifierType": {
       "description": "Aumenta o atributo base de {{statName}} em 10%. Quanto maior os IVs, maior o limite de aumento."
     },
+    "PlayerPokemonBaseStatBoosterModifierType": {
+      "name": "Barato",
+      "description": "Aumenta o atributo base de {{statName}} em 5%."
+    },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restaura totalmente os PS de todos os Pokémon."
     },
@@ -118,7 +122,7 @@
     },
     "TerastallizeModifierType": {
       "name": "Fragmento Tera {{teraType}}",
-      "description": "Terastalize um Pokémon para o tipo {{teraType}} por 10 ondas.",
+      "description": "Terastalize um Pokémon para o tipo {{teraType}} por até 10 batalhas. 20 batalhas se tiver o Orbe Tera.",
       "statLabel": "Fragmento Tera"
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -149,7 +153,7 @@
     },
     "TERA_ORB": {
       "name": "Orbe Tera",
-      "description": "Fragmentos Tera ficam disponíveis."
+      "description": "Fragmentos Tera duram por mais 10 turnos."
     },
     "MAP": {
       "name": "Mapa",
@@ -311,7 +315,7 @@
     },
     "BERRY_POUCH": {
       "name": "Bolsa de Berries",
-      "description": "Adiciona uma chance de 15% de que uma berry usada não seja consumida."
+      "description": "Adiciona uma chance de 10% de que uma berry usada não seja consumida."
     },
     "FOCUS_BAND": {
       "name": "Bandana",
@@ -408,6 +412,11 @@
       "name": "++XM{{moveId}} - {{moveName}}++",
       "description": "Ensina {{moveName}} a QUALQUER Pokémon\n(Segure C ou Shift para mais informações).",
       "statLabel": "XM (Qualquer MT)"
+    },
+    "MOVE_UPGRADE": {
+      "name": "Melhoria de Movimento",
+      "statLabel": "Item de Melhoria de Movimento",
+      "description": "Melhora aleatoriamente um dos movimentos da sua equipe"
     },
     "TypeSwitcherModifierType": {
       "name": "Trocador de Tipo: {{type1}} / {{type2}}",
@@ -695,9 +704,10 @@
       }
     },
     "CollectedTypeModifierType": {
-      "name": "Tipo Coletado: {{type}}",
-      "description": "Use 5 de QUALQUER MISTURA DE TIPO em vez de liberar um Pokémon para Itens de Liberação.",
-      "statLabel": "Tipo Coletado"
+      "name": "Essências",
+      "shopName": "Essência {{type}}",
+      "description": "Use 5 em vez de liberar um Pokémon para Itens de Liberação ou troque por recompensas com o Colecionador.",
+      "statLabel": "Essência"
     },
     "SacrificeModifierType": {
       "description": "Libere um Pokémon para aumentar {{stat}} de outro Pokémon em 15%."
@@ -1014,6 +1024,7 @@
     "waves": "ondas",
     "uses": "usos",
     "glitchPieceCost": "*CUSTA 2x Peça Glitch",
-    "moreInfo": "(Segure C / Shift para informações)"
+    "moreInfo": "(Segure C / Shift para informações)",
+    "upgrade": "Melhoria"
   }
 }

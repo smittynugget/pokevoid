@@ -19,6 +19,8 @@ import { ShopModifierSelectPhase } from "./phases/shop-modifier-select-phase";
 import { SelectPermaModifierPhase } from "./phases/select-perma-modifier-phase";
 import { QuestUnlockables, QuestState } from "./system/game-data";
 import { activateSmitomTalk } from "./ui/title-ui-handler";
+import ModifierSelectUiHandler from "./ui/modifier-select-ui-handler";
+import { AddPokemonModifierType } from "./modifier/modifier-type";
 
 type ActionKeys = Record<Button, () => void>;
 
@@ -146,12 +148,18 @@ export class UiInputs {
 
   
   buttonStats(pressed: boolean = true): void {
-    
-    // allow access to Button.STATS as a toggle for other elements
+    const uiHandler = this.scene.ui?.getHandler();
+    if (pressed && uiHandler instanceof ModifierSelectUiHandler) {
+      const currentOption = uiHandler.getCurrentSelectedOption();
+      if (currentOption?.modifierTypeOption?.type instanceof AddPokemonModifierType) {
+        this.scene.ui.setOverlayMode(Mode.POKEDEX, currentOption.modifierTypeOption.type.getPokemon().species.speciesId);
+        return;
+      }
+    }
+
     for (const t of this.scene.getInfoToggles(true)) {
       t.toggleInfo(pressed);
     }
-    // handle normal pokemon battle ui
     for (const p of this.scene.getField().filter(p => p?.isActive(true))) {
       p.toggleStats(pressed);
     }
@@ -209,6 +217,16 @@ export class UiInputs {
     const currentMode = this.scene.ui?.getMode();
 
     if (currentMode === Mode.TITLE || currentMode === Mode.COMMAND || currentMode === Mode.MODIFIER_SELECT) {
+      if(currentMode === Mode.MODIFIER_SELECT) {
+        const uiHandler = this.scene.ui?.getHandler();
+        if (uiHandler instanceof ModifierSelectUiHandler) {
+          const currentOption = uiHandler.getCurrentSelectedOption();
+          if (currentOption?.modifierTypeOption?.type instanceof AddPokemonModifierType) {
+            this.scene.ui.setOverlayMode(Mode.POKEDEX, currentOption.modifierTypeOption.type.getPokemon().species.speciesId);
+            return
+          }
+        }
+      }
       this.scene.ui.setOverlayMode(Mode.POKEDEX);
     }
   }

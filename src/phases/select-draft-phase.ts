@@ -5,9 +5,11 @@ import {getPokemonSpecies} from "../data/pokemon-species";
 import Battle, {BattleType} from "../battle";
 import {GameModes, getGameMode} from "../game-mode";
 import {Species} from "../enums/species";
-import {SelectModifierPhase} from "./select-modifier-phase";
+import { SelectModifierPhase } from "./select-modifier-phase";
+import { ShowRewards } from "#app/utils/show-rewards.js";
 import {ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
 import { GlitchPieceModifierType, PathNodeTypeFilter } from "#app/modifier/modifier-type";
+import { CollectedTypeShopPhase } from "./collected-type-shop-phase";
 
 
 export class SelectDraftPhase extends Phase {
@@ -25,13 +27,13 @@ export class SelectDraftPhase extends Phase {
     const loadPokemonAssets: Promise<void>[] = [];
 
     const addPokemon = (species: Species) => {
-      const tempPokemon = this.scene.addPlayerPokemon(getPokemonSpecies(species), 1, undefined, undefined, undefined, false);
+      const tempPokemon = this.scene.addPlayerPokemon(getPokemonSpecies(species), 5, undefined, undefined, undefined, false);
       tempPokemon.setVisible(false);
       party.push(tempPokemon);
       loadPokemonAssets.push(tempPokemon.loadAssets());
     }
 
-    const isChaosRouge = false && this.scene.gameMode.isChaosMode;
+    const isChaosRouge = this.scene.gameMode.isChaosMode;
 
     if (this.isTestMod) {
       this.scene.gameData.testSpeciesForMod.forEach(species => {
@@ -42,11 +44,21 @@ export class SelectDraftPhase extends Phase {
       addPokemon(Species.UNOWN);
     }
     
+    // this.scene.currentBattle = new Battle(getGameMode(isChaosRouge ? GameModes.CHAOS_ROGUE : GameModes.DRAFT), 95, BattleType.WILD, null, false, this.scene);
     this.scene.currentBattle = new Battle(getGameMode(isChaosRouge ? GameModes.CHAOS_ROGUE : GameModes.DRAFT), 1, BattleType.WILD, null, false, this.scene);
 
     if (!this.isTestMod) {
-       
+        
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
+        // this.scene.unshiftPhase(new CollectedTypeShopPhase(this.scene, 1, undefined, false, () => {
+        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
+        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
+        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
+        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
+        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
+        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
+        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
+
            
                 this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
                     const pokemon = party.splice(0, 1)[0];
@@ -64,6 +76,12 @@ export class SelectDraftPhase extends Phase {
           
       }, PathNodeTypeFilter.NONE));
                 }, PathNodeTypeFilter.NONE));
+                // }, PathNodeTypeFilter.NONE));
+                // }, PathNodeTypeFilter.NONE));
+                // }, PathNodeTypeFilter.NONE));
+                // }, PathNodeTypeFilter.NONE));
+                // }, PathNodeTypeFilter.NONE));
+                // }, PathNodeTypeFilter.NONE));
     }
     else {
       this.scene.currentBattle = null;
@@ -73,6 +91,7 @@ export class SelectDraftPhase extends Phase {
       this.scene.lastSavePlayTime = 0;
       
       if (this.isTestMod) {
+      // if (this.isTestMod || true) {
         this.scene.pushPhase(new ModifierRewardPhase(this.scene, () => new GlitchPieceModifierType(10)));
       }
     }

@@ -1513,7 +1513,7 @@
   },
   "soulCollector": {
     "name": "Seelensammler",
-    "description": "Verstärkt Attacken, die mit gesammelten Typen übereinstimmen. Sammelt den Typ besiegter Pokémon. Verliert gesammelte Typen beim Besiegt-Werden."
+    "description": "Verstärkt Attacken, die dem Essenz-Typ entsprechen. Sammelt den Typ besiegter Pokémon. Verliert Essenzen beim Besiegt-Werden."
   },
   "shadowSync": {
     "name": "Schatten-Synchronisation",
@@ -2685,10 +2685,10 @@
   },
   "soulEater": {
     "name": "Seelenfresser",
-    "description": "Heilt KP bei Verwendung einer Attacke, die einem gesammelten Typ entspricht. Sammelt den Typ von besiegten Pokémon. Verliert gesammelte Typen beim Besiegt-Werden."
+    "description": "Heilt KP bei Verwendung einer Attacke, die einem Essenz-Typ entspricht. Sammelt den Typ besiegter Pokémon. Verliert Essenzen beim Besiegt-Werden."
   },
   "soulDrain": {
     "name": "Seelen-Entzug",
-    "description": "10% Chance, den Typ der verwendeten Attacke zu sammeln. Senkt zwei zufällige Statuswerte des Ziels um zwei Stufen, wenn der Attacken-Typ einem gesammelten Typ entspricht. Verliert gesammelte Typen beim Besiegt-Werden."
+    "description": "10% Chance, den Typ der verwendeten Attacke zu sammeln. Senkt zwei zufällige Werte des Ziels um 2 Stufen, wenn der Attacken-Typ einem Essenz-Typ entspricht. Verliert Essenz-Typen beim Besiegt-Werden."
   }
 }

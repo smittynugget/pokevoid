@@ -12,7 +12,7 @@ import {StatusEffect} from "#app/enums/status-effect.js";
 import {addPokeballOpenParticles, addPokeballCaptureStars} from "#app/field/anims.js";
 import {EnemyPokemon} from "#app/field/pokemon.js";
 import {getPokemonNameWithAffix} from "#app/messages.js";
-import {PokemonHeldItemModifier, TerastallizeAccessModifier} from "#app/modifier/modifier.js";
+import {PokemonHeldItemModifier, TerastallizeAccessModifier, PokemonBaseStatModifier} from "#app/modifier/modifier.js";
 import {achvs} from "#app/system/achv.js";
 import {PartyUiMode, PartyOption} from "#app/ui/party-ui-handler.js";
 import {SummaryUiMode} from "#app/ui/summary-ui-handler.js";
@@ -349,7 +349,7 @@ export class AttemptCapturePhase extends PokemonPhase {
                 };
                 const addToParty = () => {
                     const newPokemon = pokemon.addToParty(this.pokeballType);
-                    const modifiers = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier && !(m instanceof TerastallizeAccessModifier), false);
+                    const modifiers = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier && !(m instanceof TerastallizeAccessModifier || m instanceof PokemonBaseStatModifier), false);
                     if (this.scene.getParty().filter(p => p.isShiny()).length === 6) {
                         this.scene.validateAchv(achvs.SHINY_PARTY);
                     }

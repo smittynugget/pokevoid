@@ -67,6 +67,10 @@
     "PokemonBaseStatBoosterModifierType": {
       "description": "Augmente de 10% {{statName}} de base de son porteur. Plus les IV sont hauts, plus il peut en porter."
     },
+    "PlayerPokemonBaseStatBoosterModifierType": {
+      "name": "Bon Marché",
+      "description": "Augmente de 5% {{statName}} de base de son porteur."
+    },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restaure tous les PV de toute l'équipe."
     },
@@ -118,7 +122,7 @@
     "TerastallizeModifierType": {
       "name": "Téra-Éclat {{teraType}}",
       "statLabel": "Téra-Éclat",
-      "description": "{{teraType}} Téracristallise son porteur pendant 10 combats."
+      "description": "{{teraType}} Téracristallise son porteur pendant 10 combats. 20 combats si vous avez l'Orbe Téracristal"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "{{chancePercent}}% de chances de voler un objet de l'adversaire en l'attaquant."
@@ -131,6 +135,11 @@
     },
     "EnemyEndureChanceModifierType": {
       "description": "Ajoute {{chancePercent}}% de chances d'encaisser un coup."
+    },
+    "MOVE_UPGRADE": {
+      "name": "Amélioration de Capacité",
+      "statLabel": "Objet d'Amélioration de Capacité",
+      "description": "Améliore aléatoirement l'une des capacités de votre équipe"
     },
     "RARE_CANDY": {
       "name": "Super Bonbon"
@@ -148,7 +157,7 @@
     },
     "TERA_ORB": {
       "name": "Orbe Téracristal",
-      "description": "Débloque les Téra-Éclats dans la boutique."
+      "description": "Les Téra-Éclats durent 10 tours de plus."
     },
     "MAP": {
       "name": "Carte",
@@ -310,7 +319,7 @@
     },
     "BERRY_POUCH": {
       "name": "Sac à Baies",
-      "description": "Ajoute 15% de chances qu'une Baie utilisée ne soit pas consommée."
+      "description": "Ajoute 10% de chances qu'une Baie utilisée ne soit pas consommée."
     },
     "FOCUS_BAND": {
       "name": "Bandeau",
@@ -694,9 +703,10 @@
       }
     },
     "CollectedTypeModifierType": {
-      "name": "Type Collecté : {{type}}",
-      "statLabel": "Type Collecté",
-      "description": "Utilisez 5 de N'IMPORTE QUEL MÉLANGE DE TYPE au lieu de relâcher un Pokémon pour les Objets de Relâchement."
+      "name": "Essences",
+      "shopName": "Essence {{type}}",
+      "statLabel": "Essence",
+      "description": "Utilisez 5 au lieu de relâcher un Pokémon pour les Objets de Libération ou échangez contre des récompenses avec le Collectionneur."
     },
     "SacrificeModifierType": {
       "description": "Relâchez un Pokémon pour augmenter {{stat}} d'un autre Pokémon de 15%."
@@ -1013,6 +1023,7 @@
     "waves": "vagues",
     "uses": "utilisations",
     "glitchPieceCost": "*COÛTE 2x Fragment de Bug",
-    "moreInfo": "(Maintenez C / Maj pour infos)"
+    "moreInfo": "(Maintenez C / Maj pour infos)",
+    "upgrade": "Amélioration"
   }
 }

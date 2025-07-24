@@ -12,7 +12,8 @@ import { EggLapsePhase } from "./egg-lapse-phase";
 import { ExpPhase } from "./exp-phase";
 import {GameOverPhase} from "./game-over-phase";
 import { ModifierRewardPhase } from "./modifier-reward-phase";
-import { SelectModifierPhase, ShowRewards } from "./select-modifier-phase";
+import { SelectModifierPhase } from "./select-modifier-phase";
+import { ShowRewards } from "#app/utils/show-rewards.js";
 import { ShowPartyExpBarPhase } from "./show-party-exp-bar-phase";
 import { TrainerVictoryPhase } from "./trainer-victory-phase";
 import {TrainerType} from "#enums/trainer-type";
@@ -82,7 +83,7 @@ export class VictoryPhase extends PokemonPhase {
         const pId = partyMember.id;
         const participated = participantIds.has(pId);
         if (participated) {
-          partyMember.addFriendship(2);
+          partyMember.addFriendship(6);
         }
         if (!expPartyMembers.includes(partyMember)) {
           continue;
@@ -187,7 +188,13 @@ export class VictoryPhase extends PokemonPhase {
             this.scene.recoveryBossMode = RecoveryBossMode.RECOVERY_OBTAINED;
           }
           this.scene.pushPhase(new SelectModifierPhase(this.scene, 1, undefined, false, undefined, PathNodeTypeFilter.NONE));
+
+        if (this.scene.dynamicMode || trainerIsRival) {
+          this.scene.pushPhase(new SelectModifierPhase(this.scene, 0, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
         }
+        }
+
+        
 
 
         if (this.scene.currentBattle.waveIndex % 100 === 1) {
@@ -212,9 +219,6 @@ export class VictoryPhase extends PokemonPhase {
           }
           if (this.scene.gameMode.isEndless && this.scene.currentBattle.waveIndex === 10) {
             this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_SHARE, false));
-          }
-          if (this.scene.currentBattle.waveIndex <= 750 && ((this.scene.currentBattle.waveIndex <= 500 && this.scene.currentBattle.waveIndex % 3 === 0) || (this.scene.currentBattle.waveIndex % 30) === superExpWave)) {
-            this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_CHARM, false));
           }
           if (this.scene.currentBattle.waveIndex % 40 === 0 && !this.scene.gameMode.isChaosMode) {
             this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.GOLDEN_POKEBALL, false));
@@ -253,6 +257,7 @@ export class VictoryPhase extends PokemonPhase {
         this.scene.currentBattle.battleType = BattleType.CLEAR;
         this.scene.score += this.scene.gameMode.getClearScoreBonus();
         this.scene.updateScoreText();
+        this.scene.gameData.updateGameModeStats(this.scene.gameMode.modeId, true);
 
         if (this.scene.gameMode.isNightmare) {
           if (!this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) {
@@ -263,7 +268,7 @@ export class VictoryPhase extends PokemonPhase {
           }
           this.scene.unshiftPhase(new UnlockUniSmittyPhase(this.scene));
         }
-        else {
+        else if(!this.scene.gameMode.isChaosMode) {
           this.scene.gameData.handleQuestUnlocks(this.scene);
           this.handleUnlocks();
         }
@@ -327,7 +332,6 @@ export class VictoryPhase extends PokemonPhase {
                 this.scene.modifiers.splice(this.scene.modifiers.indexOf(m), 1);
               }
               this.scene.updateModifiers(true).then(() => this.scene.updateUIPositions());
-          }
 
           if ((isNuzlight || isNuzlocke) && isCenturyWave) {
               let targetMode = GameModes.CLASSIC; 
@@ -357,13 +361,31 @@ export class VictoryPhase extends PokemonPhase {
             } else {
               this.scene.gameData.handleQuestUnlocks(this.scene, this.scene.currentBattle.trainer.dynamicRivalType);
             }
-            this.scene.pushPhase(new SelectNightmareDraftPhase(this.scene));
+          }
+          this.scene.pushPhase(new SelectNightmareDraftPhase(this.scene));
           }
       }
 
       if(this.scene.gameMode.isChaosMode && this.scene.currentBattle.isStage6RivalWave()) {
-        this.scene.gameData.handleQuestUnlocks(this.scene, this.scene.currentBattle.trainer.dynamicRivalType);
-      
+        const dynamicRivalType = this.scene.currentBattle.trainer.dynamicRivalType;
+        const eligibleRivals = this.scene.gameData.chaosAltRivals.filter(r => r !== dynamicRivalType);
+        
+        if (eligibleRivals.length > 0) {
+            const randomRival1 = Utils.randSeedItem(eligibleRivals);
+            this.scene.gameData.handleQuestUnlocks(this.scene, dynamicRivalType);
+            this.scene.gameData.handleQuestUnlocks(this.scene, randomRival1);
+            
+            if (this.scene.gameData.chaosAltRivals.length > 2) {
+                const remainingEligible = eligibleRivals.filter(r => r !== randomRival1);
+                if (remainingEligible.length > 0) {
+                    const randomRival2 = Utils.randSeedItem(remainingEligible);
+                    this.scene.gameData.handleQuestUnlocks(this.scene, randomRival2);
+                }
+            }
+        } else {
+            this.scene.gameData.handleQuestUnlocks(this.scene, dynamicRivalType);
+        }
+          this.handleUnlocks();
       }
     }
 

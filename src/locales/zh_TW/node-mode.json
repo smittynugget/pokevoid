@@ -6,15 +6,15 @@
   "unknownNode": "未知",
   "descriptions": {
     "wildPokemon": "野生寶可夢遭遇",
-    "trainerBattle": "訓練家戰鬥",
+    "trainerBattle": "訓練師戰鬥",
     "rivalBattle": "勁敵戰鬥",
-    "majorBossBattle": "主要頭目戰鬥",
-    "recoveryBoss": "恢復頭目",
-    "evilBossBattle": "邪惡團隊頭目",
+    "majorBossBattle": "主要Boss戰鬥",
+    "recoveryBoss": "恢復Boss",
+    "evilBossBattle": "邪惡團隊Boss",
     "eliteFour": "四天王成員",
     "champion": "冠軍戰鬥",
-    "itemGeneral": "通用道具",
-    "addPokemon": "寶可夢專用道具",
+    "itemGeneral": "一般獎勵",
+    "addPokemon": "選秀寶可夢獎勵",
     "itemTm": "技能機獎勵",
     "itemBerry": "樹果獎勵",
     "mysteryNode": "神秘遭遇",
@@ -22,93 +22,129 @@
     "smittyBattle": "史密蒂戰鬥",
     "evilGruntBattle": "邪惡團隊小兵",
     "evilAdminBattle": "邪惡團隊幹部",
-    "randPermaItem": "隨機永久道具",
-    "permaItems": "永久道具",
-    "goldenPokeball": "黃金精靈球獎勵",
-    "rogueBallItems": "流氓球道具",
-    "masterBallItems": "大師球道具",
-    "abilitySwitchers": "特性切換器",
-    "statSwitchers": "能力值切換器",
-    "glitchPiece": "故障片段獎勵",
-    "dnaSplicers": "DNA接合器獎勵",
+    "randPermaItem": "隨機∞道具",
+    "permaItems": "∞道具獎勵",
+    "goldenPokeball": "金色精靈球獎勵",
+    "rogueBallItems": "流氓球獎勵",
+    "masterBallItems": "大師球獎勵",
+    "greatBallItems": "超級球獎勵",
+    "ultraBallItems": "高級球獎勵",
+    "abilitySwitchers": "特性切換獎勵",
+    "statSwitchers": "能力值切換獎勵",
+    "glitchPiece": "故障碎片獎勵",
+    "dnaSplicers": "基因楔獎勵",
     "money": "金錢獎勵",
     "permaMoney": "永久金錢加成",
-    "releaseItems": "釋放道具",
-    "mints": "性格薄荷",
+    "releaseItems": "釋放獎勵",
+    "mints": "薄荷獎勵",
     "eggVoucher": "蛋券獎勵",
-    "ppMax": "PP極限道具",
+    "ppMax": "PP提升獎勵",
     "collectedType": "屬性收集獎勵",
-    "expShare": "學習裝置道具",
-    "typeSwitcher": "屬性切換器",
-    "passiveAbility": "被動特性道具",
+    "expShare": "學習裝置獎勵",
+    "typeSwitcher": "屬性切換獎勵",
+    "passiveAbility": "被動特性獎勵",
     "anyTms": "任意技能機獎勵",
-    "challengeBoss": "挑戰路徑頭目戰鬥（難度提升）",
-    "challengeRival": "挑戰路徑勁敵戰鬥（難度提升）",
-    "challengeEvilBoss": "挑戰路徑邪惡頭目（難度提升）",
-    "challengeChampion": "挑戰路徑冠軍戰鬥（難度提升）",
-    "challengeReward": "完成挑戰路徑的稀有獎勵"
+    "anyTmsMaster": "大師級任意技能機獎勵",
+    "teraShards": "太晶碎片獎勵",
+    "challengeBoss": "難度增加的挑戰路徑Boss戰鬥",
+    "challengeRival": "難度增加的挑戰路徑勁敵戰鬥",
+    "challengeEvilBoss": "難度增加的挑戰路徑邪惡Boss",
+    "challengeChampion": "難度增加的挑戰路徑冠軍戰鬥",
+    "challengeReward": "完成挑戰路徑的稀有獎勵",
+    "potion": "治療道具獎勵",
+    "reviverSeed": "自動復活的復活種子",
+    "sacredAsh": "聖灰 - 完全治癒所有瀕死寶可夢",
+    "shellBell": "貝殼之鈴 - 基於造成傷害的治療",
+    "leftovers": "剩飯 - 每回合治療",
+    "quickClaw": "先制之爪 - 有機會先行動",
+    "wideLens": "廣角鏡 - 提高招式命中率",
+    "gripClaw": "緊握之爪 - 接觸時偷取道具",
+    "eviolite": "進化奇石 - 為進化中的寶可夢提供防禦加成",
+    "scopeLens": "焦點鏡 - 提高會心一擊率",
+    "collectedShop": "花費精華獲得獎勵",
+    "vitamin": "通用屬性提升道具獎勵（蛋白質、鐵、鈣等）",
+    "moveUpgrade": "寶可夢招式的招式升級",
+    "lowTierMoveUpgrade": "等級III上限的招式升級"
   },
   "names": {
     "wildPokemon": "野生寶可夢",
-    "trainerBattle": "訓練家戰鬥",
+    "trainerBattle": "訓練師戰鬥",
     "rivalBattle": "勁敵戰鬥",
-    "majorBossBattle": "主要頭目",
-    "recoveryBoss": "頭目戰鬥",
-    "evilBossBattle": "邪惡頭目",
+    "majorBossBattle": "主要Boss",
+    "recoveryBoss": "恢復Boss",
+    "evilBossBattle": "邪惡Boss",
     "eliteFour": "四天王",
     "champion": "冠軍",
-    "itemGeneral": "通用道具",
-    "addPokemon": "寶可夢道具",
-    "itemTm": "技能機道具",
-    "itemBerry": "樹果道具",
+    "itemGeneral": "一般獎勵",
+    "addPokemon": "選秀寶可夢",
+    "itemTm": "技能機獎勵",
+    "itemBerry": "樹果獎勵",
     "mysteryNode": "神秘節點",
-    "convergencePoint": "匯合點",
+    "convergencePoint": "匯合",
     "smittyBattle": "史密蒂戰鬥",
     "evilGruntBattle": "邪惡小兵",
     "evilAdminBattle": "邪惡幹部",
-    "randPermaItem": "隨機永久道具",
-    "permaItems": "永久道具",
-    "goldenPokeball": "黃金精靈球",
-    "rogueBallItems": "流氓球道具",
-    "masterBallItems": "大師球道具",
+    "randPermaItem": "隨機∞道具",
+    "permaItems": "∞道具獎勵",
+    "goldenPokeball": "金色精靈球",
+    "rogueBallItems": "流氓球獎勵",
+    "masterBallItems": "大師球獎勵",
+    "greatBallItems": "超級球獎勵",
+    "ultraBallItems": "高級球獎勵",
     "abilitySwitchers": "特性切換器",
     "statSwitchers": "能力值切換器",
-    "glitchPiece": "故障片段",
-    "dnaSplicers": "DNA接合器",
+    "glitchPiece": "故障碎片",
+    "dnaSplicers": "基因楔",
     "money": "金錢",
-    "permaMoney": "永久金錢",
-    "releaseItems": "釋放道具",
-    "mints": "薄荷",
+    "permaMoney": "∞金幣",
+    "releaseItems": "釋放獎勵",
+    "mints": "薄荷獎勵",
     "eggVoucher": "蛋券",
-    "ppMax": "PP極限",
+    "ppMax": "PP提升",
     "collectedType": "收集屬性",
     "expShare": "學習裝置",
     "typeSwitcher": "屬性切換器",
     "passiveAbility": "被動特性",
-    "anyTms": "任意技能機",
-    "challengeBoss": "挑戰頭目",
+    "anyTms": "任意技能機獎勵",
+    "anyTmsMaster": "大師任意技能機",
+    "teraShards": "太晶碎片獎勵",
+    "challengeBoss": "挑戰Boss",
     "challengeRival": "挑戰勁敵",
-    "challengeEvilBoss": "挑戰邪惡頭目",
+    "challengeEvilBoss": "挑戰邪惡Boss",
     "challengeChampion": "挑戰冠軍",
-    "challengeReward": "挑戰獎勵"
+    "challengeReward": "挑戰獎勵",
+    "potion": "治療道具獎勵",
+    "reviverSeed": "復活種子",
+    "sacredAsh": "聖灰",
+    "shellBell": "貝殼之鈴",
+    "leftovers": "剩飯",
+    "quickClaw": "先制之爪",
+    "wideLens": "廣角鏡",
+    "gripClaw": "緊握之爪",
+    "eviolite": "進化奇石",
+    "scopeLens": "焦點鏡",
+    "collectedShop": "收藏家",
+    "vitamin": "便宜維他命",
+    "moveUpgrade": "招式升級",
+    "lowTierMoveUpgrade": "低等級招式升級"
   },
   "challenge": {
-    "chaosChallenge": "混沌挑戰啟用",
+    "chaosChallenge": "混沌挑戰啟動",
     "isNuzlocke": {
       "name": "納茲洛克",
-      "description": "瀕死的寶可夢永久失去"
+      "description": "所有昏厥的寶可夢都會從隊伍中移除！（包括當前已昏厥的）"
     },
     "isNuzlight": {
-      "name": "納茲輕",
+      "name": "納茲光",
       "description": "商店中沒有可購買的治療道具"
     },
     "isNightmare": {
-      "name": "納茲噩夢",
-      "description": "納茲輕 + 納茲洛克"
+      "name": "納茲魘",
+      "description": "商店中沒有可購買的治療道具 + \n所有昏厥的寶可夢都會從隊伍中移除！（包括當前已昏厥的）"
     },
     "noExpGain": {
-      "name": "無經驗獲得",
-      "description": "寶可夢不獲得經驗值"
+      "name": "無經驗值獲得",
+      "description": "寶可夢不會獲得經驗值"
     },
     "noCatch": {
       "name": "無法捕獲",
@@ -116,27 +152,27 @@
     },
     "hasPassiveAbility": {
       "name": "被動特性",
-      "description": "敵人的被動特性啟用"
+      "description": "敵人的被動特性處於啟動狀態"
     },
     "invertedTypes": {
       "name": "屬性反轉",
-      "description": "屬性剋制關係反轉"
+      "description": "屬性效果被反轉"
     },
     "boostedTrainer": {
-      "name": "混沌訓練家",
-      "description": "訓練家隊伍等級高於你的最高等級寶可夢"
+      "name": "混沌訓練師",
+      "description": "訓練師的隊伍等級高於你的最高等級寶可夢"
     },
     "multiLegendaries": {
       "name": "多傳說",
       "description": "勁敵隊伍獲得+1傳說寶可夢"
     },
     "multiBoss": {
-      "name": "混沌頭目",
-      "description": "訓練家隊伍有+1頭目寶可夢"
+      "name": "混沌Boss",
+      "description": "訓練師隊伍有+1Boss寶可夢"
     },
     "noInitialSwitch": {
-      "name": "無初始更換",
-      "description": "戰鬥開始時無法更換寶可夢"
+      "name": "無初始交換",
+      "description": "戰鬥開始時無法交換寶可夢"
     },
     "autoPressured": {
       "name": "自動壓迫",
@@ -160,11 +196,11 @@
     },
     "statSwap": {
       "name": "能力值交換",
-      "description": "你的寶可夢的攻擊<->特防，特攻<->防禦互換。"
+      "description": "你的寶可夢的攻擊<->特防和特攻<->防禦被交換。"
     },
     "extraDamageToTypes": {
-      "name": "對屬性額外傷害",
-      "description": "某些屬性受到額外傷害"
+      "name": "屬性額外傷害",
+      "description": "某些屬性會受到額外傷害"
     },
     "noStab": {
       "name": "無本系加成",
@@ -172,11 +208,11 @@
     },
     "trickRoom": {
       "name": "戲法空間",
-      "description": "速度優先級反轉"
+      "description": "速度優先級被反轉"
     },
     "noSwitch": {
-      "name": "無法更換",
-      "description": "你無法在戰鬥中更換寶可夢"
+      "name": "無法交換",
+      "description": "你無法在戰鬥中交換寶可夢"
     },
     "noResistances": {
       "name": "無抗性",
@@ -184,11 +220,11 @@
     },
     "noHealingItems": {
       "name": "無治療道具",
-      "description": "你的治療道具不會生效（剩飯、貝殼之鈴等）"
+      "description": "你的治療道具不會啟動（剩飯、貝殼之鈴等）"
     },
     "autoTorment": {
       "name": "自動挑釁",
-      "description": "你無法連續使用同一招式！"
+      "description": "你無法連續使用相同的招式！"
     },
     "legendaryNerf": {
       "name": "傳說削弱",

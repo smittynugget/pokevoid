@@ -51,11 +51,13 @@
       }
     },
     "moveUpgrades": {
-      "title": "Move Upgrades",
+      "title": "Pokevoid's NEW Move Upgrades!",
       "text": { 
-        "1":"You can now upgrade moves! Each time you use a move it'll gain an EXP point!",
-        "2":"Once the move has enough EXP, it'll level up, giving you a choice of upgrades!",
-        "3": "The upgrade will last for the whole run, and change the move for everyone, including your team, and even your enemies!"
+        "1":"You can now upgrade moves with a TON of different upgrades!",
+        "2":"Upgrade a move's priority, POWER, effect, chance, multi hit status, and more!",
+        "3": "Each upgrade has it's own Upgrade Path with multiple Tiers!",
+        "4": "Upgrades can make ANY move absolutely game breaking! HOWEVER - each upgrade starts at the lowest tier 1 (weak).",
+        "5": "By continuously upgrading a move, you can make even the weakest move LEGENDARY!"
       }
     },
     "firstMoveUpgrade": {
@@ -286,7 +288,7 @@
       "title": "Glitch: Release Powerups",
       "text": { 
         "1":"Release a Pokémon to grant it's typing, moves, abilities, or a stat boost to another.",
-        "2":"Alternatively, spend 5 'Collected Types' from a Pokémon instead of releasing it."
+        "2":"Alternatively, spend 5 'Essences' from a Pokémon instead of releasing it."
       }
     },
     "anyTMs": {

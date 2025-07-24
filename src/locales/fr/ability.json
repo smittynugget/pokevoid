@@ -1512,8 +1512,8 @@
     "description": "Change ses attaques en SPÉCIALES ou PHYSIQUES selon la statistique de défense la plus faible de l'adversaire."
   },
   "soulCollector": {
-    "name": "Collecteur d'Âmes",
-    "description": "Augmente les capacités qui correspondent aux types collectés. Collecte le type des Pokémon mis K.O. Perd les types collectés en étant mis K.O."
+    "name": "Collectionneur d'Âmes",
+    "description": "Booste les capacités qui correspondent au type d'essence. Collecte le type des Pokémon mis K.O. Perd les essences en tombant K.O."
   },
   "shadowSync": {
     "name": "Synchronisation Ombragée",
@@ -2684,11 +2684,11 @@
     "description": "Inflige des dégâts équivalents à 1/8 des PV max de la cible à la fin de chaque tour pendant une tempête de sable. 30% de chances de baisser une statistique aléatoire de la cible d'un niveau à la fin de chaque tour pendant une tempête de sable. 30% de chances de changer la météo en tempête de sable à la fin de chaque tour."
   },
   "soulEater": {
-    "name": "Mangeur d'Âmes",
-    "description": "Restaure des PV en utilisant une capacité qui correspond à un type collecté. Collecte le type des Pokémon mis K.O. Perd les types collectés en étant mis K.O."
+    "name": "Dévoreur d'Âmes",
+    "description": "Restaure les PV en utilisant une capacité qui correspond à un type d'essence. Collecte le type des Pokémon mis K.O. Perd les essences en tombant K.O."
   },
   "soulDrain": {
-    "name": "Drain d'Âme",
-    "description": "10% de chances de collecter le type de la capacité utilisée. Baisse deux statistiques aléatoires de la cible de deux niveaux si le type de la capacité correspond à un type collecté. Perd les types collectés en étant mis K.O."
+    "name": "Drainage d'Âmes",
+    "description": "10% de chance de collecter le type de la capacité utilisée. Réduit deux stats aléatoires de la cible de 2 niveaux si le type de la capacité correspond à un type d'essence. Perd les types d'essence en tombant K.O."
   }
 }

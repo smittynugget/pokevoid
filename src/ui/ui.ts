@@ -7,6 +7,7 @@ import FightUiHandler from "./fight-ui-handler";
 import MessageUiHandler from "./message-ui-handler";
 import ConfirmUiHandler from "./confirm-ui-handler";
 import ModifierSelectUiHandler from "./modifier-select-ui-handler";
+import { CollectedTypeShopUiHandler } from "./collected-type-shop-ui-handler";
 import BallUiHandler from "./ball-ui-handler";
 import SummaryUiHandler from "./summary-ui-handler";
 import StarterSelectUiHandler from "./starter-select-ui-handler";
@@ -76,7 +77,6 @@ import ModGlitchCreateFormUiHandler from "./mod-glitch-create-form-ui-handler";
 import ModManagementUiHandler from "./mod-management-ui-handler";
 import PokedexModalUiHandler from "./pokedex-modal-ui-handler";
 import BattlePathUiHandler from "./battle-path-ui-handler";
-
 export enum Mode {
   MESSAGE,
   TITLE,
@@ -85,6 +85,7 @@ export enum Mode {
   BALL,
   TARGET_SELECT,
   MODIFIER_SELECT,
+  COLLECTED_TYPE_SELECT,
   SAVE_SLOT,
   PARTY,
   SUMMARY,
@@ -223,6 +224,8 @@ export default class UI extends Phaser.GameObjects.Container {
   private eggGachaContainer: Phaser.GameObjects.Container;
   private battlePathButton: Phaser.GameObjects.Sprite;
   private battlePathContainer: Phaser.GameObjects.Container;
+  private runInfoButton: Phaser.GameObjects.Sprite;
+  private runInfoContainer: Phaser.GameObjects.Container;
 
   constructor(scene: BattleScene) {
     super(scene, 0, scene.game.canvas.height / 6);
@@ -237,6 +240,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.handlers[Mode.BALL] = new BallUiHandler(scene);
     this.handlers[Mode.TARGET_SELECT] = new TargetSelectUiHandler(scene);
     this.handlers[Mode.MODIFIER_SELECT] = new ModifierSelectUiHandler(scene);
+    this.handlers[Mode.COLLECTED_TYPE_SELECT] = new CollectedTypeShopUiHandler(scene);
     this.handlers[Mode.SAVE_SLOT] = new SaveSlotSelectUiHandler(scene);
     this.handlers[Mode.PARTY] = new PartyUiHandler(scene);
     this.handlers[Mode.SUMMARY] = new SummaryUiHandler(scene);
@@ -387,6 +391,54 @@ export default class UI extends Phaser.GameObjects.Container {
     this.battlePathContainer.setName("battle-path-container");
     this.battlePathContainer.add([this.battlePathButton, battlePathKeySprite]);
     this.permaMoneyContainer.add(this.battlePathContainer);
+
+    this.runInfoButton = this.scene.add.sprite(0, 0, "smitems_192", "permaRunAnything");
+    this.runInfoButton.setName("run-info-button");
+    this.runInfoButton.setScale(0.05);
+    this.runInfoButton.setAlpha(1);
+    this.runInfoButton.setInteractive({ useHandCursor: true });
+    this.runInfoButton.on('pointerdown', () => {
+      const currentMode = scene.ui?.getMode();
+      if (currentMode === Mode.COMMAND || currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.COLLECTED_TYPE_SELECT) {
+        if (scene.sessionSlotId < 0) {
+          return;
+        }
+        const slotId = scene.sessionSlotId;
+        
+        (async () => {
+          try {
+            const sessionData = await scene.gameData.getSession(slotId);
+            if (sessionData) {
+              const activeRunEntry = {
+                entry: sessionData,
+                isVictory: false,
+                isFavorite: false,
+                isActive: true
+              };
+              scene.ui.setOverlayMode(Mode.RUN_INFO, activeRunEntry, true);
+            }
+          } catch (error) {
+            console.error("Error loading session data:", error);
+          }
+        })();
+      }
+      if (currentMode === Mode.TITLE) {
+        scene.ui.setOverlayMode(Mode.RUN_HISTORY);
+      }
+    });
+
+    const runInfoIcon = scene.inputController?.getIconForLatestInputRecorded("BUTTON_CYCLE_SHINY");
+    const runInfoType = scene.inputController?.getLastSourceType() || "keyboard";
+    const runInfoKeySprite = this.scene.add.sprite(2, 2, runInfoType);
+    if (runInfoIcon) {
+      runInfoKeySprite.setFrame(runInfoIcon);
+    }
+    runInfoKeySprite.setScale(.4);
+
+    this.runInfoContainer = this.scene.add.container(0, 0);
+    this.runInfoContainer.setName("run-info-container");
+    this.runInfoContainer.add([this.runInfoButton, runInfoKeySprite]);
+    this.permaMoneyContainer.add(this.runInfoContainer);
 
     this.permaModifierBar = new ModifierBar(scene as BattleScene)
     const rightEdge = 0;
@@ -948,7 +1000,7 @@ export default class UI extends Phaser.GameObjects.Container {
     
     if (!isChaosMode || currentWave < 1 || !isValidPhase) {
       if(this.battlePathContainer.alpha === 1) {
-        this.permaMoneyText.setX(this.permaMoneyText.x + battlePathButtonWidth + 8);
+        this.permaMoneyText.setX(this.permaMoneyText.x + battlePathButtonWidth + 9);
       }
       this.battlePathContainer.setAlpha(0);
       const battlePathContainer = document.getElementById("apadBattlePath");
@@ -960,7 +1012,7 @@ export default class UI extends Phaser.GameObjects.Container {
     }
     
     if (this.battlePathContainer.alpha === 0) {
-      this.permaMoneyText.setX(this.permaMoneyText.x - battlePathButtonWidth - 8);
+      this.permaMoneyText.setX(this.permaMoneyText.x - battlePathButtonWidth - 9);
 
     }
     this.battlePathContainer.setAlpha(1);
@@ -969,6 +1021,34 @@ export default class UI extends Phaser.GameObjects.Container {
     const battlePathContainer = document.getElementById("apadBattlePath");
     if (battlePathContainer) {
       battlePathContainer.dataset.activeState = "true";
+    }
+  }
+
+  public updateRunInfoIcon(scene: BattleScene): void {
+    const currentPhase = scene.getCurrentPhase();
+    if (!(currentPhase instanceof TitlePhase || currentPhase instanceof CommandPhase || currentPhase instanceof SelectModifierPhase)) {
+      this.runInfoContainer.setAlpha(0);
+      const runInfoContainer = document.getElementById("apadRunInfo");
+      if (runInfoContainer) {
+        runInfoContainer.dataset.activeState = "false";
+      }
+      return;
+    }
+    
+    if (scene.sessionSlotId < 0) {
+      this.runInfoContainer.setAlpha(0);
+      const runInfoContainer = document.getElementById("apadRunInfo");
+      if (runInfoContainer) {
+        runInfoContainer.dataset.activeState = "false";
+      }
+      return;
+    }
+    
+    this.runInfoContainer.setAlpha(1);
+    
+    const runInfoContainer = document.getElementById("apadRunInfo");
+    if (runInfoContainer) {
+      runInfoContainer.dataset.activeState = "true";
     }
   }
   
@@ -994,23 +1074,26 @@ export default class UI extends Phaser.GameObjects.Container {
     const saveButtonWidth = this.saveContainer.displayWidth * this.saveContainer.scale;
     const voidexButtonWidth = this.voidexContainer.displayWidth * this.voidexContainer.scale;
     const eggGachaButtonWidth = this.eggGachaContainer.displayWidth * this.eggGachaContainer.scale;
+    const runInfoButtonWidth = this.runInfoContainer.displayWidth * this.runInfoContainer.scale;
     const saveContainerXOffset = 5;
     const voidexContainerXOffset = 10;
     const eggGachaContainerXOffset = 19;
-    const battlePathContainerXOffset = 28;
+    const runInfoContainerXOffset = 28;
+    const battlePathContainerXOffset = 38;
     const containerYOffset = 5;
     const permaMoneyTextYOffset = 1;
 
     let battlePathButtonWidth = 0;
-    this.battlePathContainer.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - padding - battlePathContainerXOffset, topEdge + containerYOffset);
+    this.battlePathContainer.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - runInfoButtonWidth - padding - battlePathContainerXOffset, topEdge + containerYOffset);
     this.battlePathContainer.setAlpha(0);
-    const permaMoneyTextXOffset = 24;
+    const permaMoneyTextXOffset = 33;
 
     this.saveContainer.setPosition(rightEdge - saveContainerXOffset, topEdge + containerYOffset);
     this.voidexContainer.setPosition(rightEdge - saveButtonWidth - padding - voidexContainerXOffset, topEdge + containerYOffset);
     this.eggGachaContainer.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - padding - eggGachaContainerXOffset, topEdge + containerYOffset);
+    this.runInfoContainer.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - padding - runInfoContainerXOffset, topEdge + containerYOffset);
 
-    this.permaMoneyText.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - padding - permaMoneyTextXOffset, topEdge + permaMoneyTextYOffset);
+    this.permaMoneyText.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - runInfoButtonWidth - padding - permaMoneyTextXOffset, topEdge + permaMoneyTextYOffset);
     this.permaMoneyContainer.add(this.permaMoneyText);
 
     if (!this.permaMoneyContainer.parentContainer) {

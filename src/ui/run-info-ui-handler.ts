@@ -21,6 +21,7 @@ import { PokemonHeldItemModifier, TerastallizeModifier } from "../modifier/modif
 import {modifierSortFunc} from "../modifier/modifier";
 import { Species } from "#enums/species";
 import { PlayerGender } from "#enums/player-gender";
+import { PlayerPokemon } from "../field/pokemon";
 
 /**
  * RunInfoUiMode indicates possible overlays of RunInfoUiHandler.
@@ -498,15 +499,16 @@ export default class RunInfoUiHandler extends UiHandler {
    * Default Information: Icon, Level, Nature, Ability, Passive, Shiny Status, Fusion Status, Stats, and Moves.
    * B-Side Information: Icon + Held Items (Can be displayed to the user through pressing the abilityButton)
    */
- 	private parsePartyInfo(): void {
-    const party = this.runInfo.party;
+ 	  private parsePartyInfo(): void {
+    const isCurrentSession = this.isActiveRun && this.scene.sessionSlotId >= 0 && this.runInfo.seed === this.scene.seed;
+    const party = isCurrentSession ? this.scene.getParty() : this.runInfo.party;
     const currentLanguage = i18next.resolvedLanguage ?? "en";
  		const windowHeight = ((this.scene.game.canvas.height / 6) - 23)/6;
 
- 		party.forEach((p: PokemonData, i: integer) => {
+ 		party.forEach((p: PokemonData | PlayerPokemon, i: integer) => {
       const pokemonInfoWindow = new RoundRectangle(this.scene, 0, 14, (this.statsBgWidth*2)+10, windowHeight-2, 3);
 
- 			const pokemon = p.toPokemon(this.scene);
+ 			const pokemon = (isCurrentSession && p instanceof PlayerPokemon) ? p : (p as PokemonData).toPokemon(this.scene);
  			const pokemonInfoContainer = this.scene.add.container(this.statsBgWidth+5, (windowHeight-0.5)*i);
 
  			const types = pokemon.getTypes();
@@ -683,7 +685,9 @@ export default class RunInfoUiHandler extends UiHandler {
       pokemonInfoContainer.add(heldItemsContainer);
       pokemonInfoContainer.setName("PkmnInfo");
       this.partyContainer.add(pokemonInfoContainer);
-      pokemon.destroy();
+      if (!isCurrentSession || !(p instanceof PlayerPokemon)) {
+        pokemon.destroy();
+      }
  		});
     this.runContainer.add(this.partyContainer);
  	}

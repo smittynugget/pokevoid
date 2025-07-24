@@ -604,6 +604,70 @@ const displayStats: DisplayStats = {
     },
     hidden: true
   },
+  chaosNuzlightSessionsPlayed: {
+    label_key: "chaosNuzlightRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlightSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlightSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlightSessionsWon: {
+    label_key: "chaosNuzlightWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlightSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlightSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlockeSessionsPlayed: {
+    label_key: "chaosNuzlockeRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlockeSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlockeSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlockeSessionsWon: {
+    label_key: "chaosNuzlockeWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlockeSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlockeSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlightDraftSessionsPlayed: {
+    label_key: "chaosNuzlightRogueRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlightDraftSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlightDraftSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlightDraftSessionsWon: {
+    label_key: "chaosNuzlightRogueWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlightDraftSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlightDraftSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlockeDraftSessionsPlayed: {
+    label_key: "chaosNuzlockeRogueRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlockeDraftSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlockeDraftSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlockeDraftSessionsWon: {
+    label_key: "chaosNuzlockeRogueWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlockeDraftSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlockeDraftSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
   normalTypeDefeated: {
     label_key: "normalTypeDefeated",
     sourceFunc: gameData => (gameData.gameStats.typeOfDefeated[Type.NORMAL] || 0).toString(),

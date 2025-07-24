@@ -67,6 +67,10 @@
     "PokemonBaseStatBoosterModifierType": {
       "description": "지니게 하면 {{statName}} 종족값을 10% 올려준다. 개체값이 높을수록 더 많이 누적시킬 수 있다."
     },
+    "PlayerPokemonBaseStatBoosterModifierType": {
+      "name": "저렴한",
+      "description": "지니게 하면 {{statName}} 종족값을 5% 올려준다."
+    },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "자신의 포켓몬의 HP를 모두 회복한다."
     },
@@ -117,7 +121,7 @@
     },
     "TerastallizeModifierType": {
       "name": "테라피스 {{teraType}}",
-      "description": "지니게 하면 10번의 배틀 동안 {{teraType}} 테라스탈타입으로 테라스탈한다.",
+      "description": "지니게 하면 10번의 배틀 동안 {{teraType}} 테라스탈타입으로 테라스탈한다. 테라스탈오브가 있다면 20번의 배틀 동안 지속된다.",
       "statLabel": "테라피스"
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -148,7 +152,7 @@
     },
     "TERA_ORB": {
       "name": "테라스탈오브",
-      "description": "테라피스를 사용할 수 있게 된다."
+      "description": "테라피스가 10턴 더 지속된다."
     },
     "MAP": {
       "name": "지도",
@@ -310,7 +314,7 @@
     },
     "BERRY_POUCH": {
       "name": "열매주머니",
-      "description": "사용한 나무열매가 소모되지 않을 확률이 15% 추가된다."
+      "description": "사용한 나무열매가 소모되지 않을 확률이 10% 추가된다."
     },
     "FOCUS_BAND": {
       "name": "기합의머리띠",
@@ -407,6 +411,11 @@
       "name": "++XM{{moveId}} - {{moveName}}++",
       "description": "아무 포켓몬에게나 {{moveName}}을(를) 가르칩니다\n(자세한 정보는 C키 또는 Shift키를 눌러세요).",
       "statLabel": "XM (모든 기술머신)"
+    },
+    "MOVE_UPGRADE": {
+      "name": "기술 업그레이드",
+      "statLabel": "기술 업그레이드 아이템",
+      "description": "파티의 기술 중 하나를 무작위로 업그레이드합니다"
     },
     "TypeSwitcherModifierType": {
       "name": "타입 변경: {{type1}} / {{type2}}",
@@ -694,9 +703,10 @@
       }
     },
     "CollectedTypeModifierType": {
-      "name": "수집된 타입: {{type}}",
-      "description": "포켓몬을 놓아주는 대신 아무 타입 조합 5개를 사용하여 놓아주기 아이템을 얻습니다.",
-      "statLabel": "수집된 타입"
+      "name": "에센스",
+      "shopName": "{{type}} 에센스",
+      "description": "포켓몬을 방출하는 대신 5개를 사용하여 방출 아이템을 얻거나 수집가와 보상을 교환하세요.",
+      "statLabel": "에센스"
     },
     "SacrificeModifierType": {
       "description": "포켓몬을 놓아주어 다른 포켓몬의 {{stat}}을(를) 15% 증가시킵니다."
@@ -1013,6 +1023,7 @@
     "waves": "웨이브",
     "uses": "사용",
     "glitchPieceCost": "*글리치 조각 2개 필요",
-    "moreInfo": "(자세한 정보는 C키나 Shift키를 길게 누르세요)"
+    "moreInfo": "(자세한 정보는 C키나 Shift키를 길게 누르세요)",
+    "upgrade": "강화"
   }
 }

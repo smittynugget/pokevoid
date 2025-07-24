@@ -55,7 +55,7 @@ export class MoveEffectPhase extends PokemonPhase {
        */
     const overridden = new Utils.BooleanHolder(false);
     /** The {@linkcode Move} object from {@linkcode allMoves} invoked by this phase */
-    const move = this.move.getMove();
+    const move = this.move.getMove(user.isPlayer());
 
     // Assume single target for override
     applyMoveAttrs(OverrideMoveEffectAttr, user, this.getTarget() ?? null, move, overridden, this.move.virtual).then(() => {
@@ -153,7 +153,7 @@ export class MoveEffectPhase extends PokemonPhase {
           }
 
           /** Is the target protected by Protect, etc. or a relevant conditional protection effect? */
-          const isProtected = (bypassIgnoreProtect.value || !this.move.getMove().checkFlag(MoveFlags.IGNORE_PROTECT, user, target))
+          const isProtected = (bypassIgnoreProtect.value || !this.move.getMove(user.isPlayer()).checkFlag(MoveFlags.IGNORE_PROTECT, user, target))
               && (hasConditionalProtectApplied.value || target.findTags(t => t instanceof ProtectedTag).find(t => target.lapseTag(t.tagType)));
 
           /** Does this phase represent the invoked move's first strike? */
@@ -260,7 +260,7 @@ export class MoveEffectPhase extends PokemonPhase {
                   if (hitResult !== HitResult.NO_EFFECT) {
                     // Apply all non-self-targeted POST_APPLY effects
                     applyFilteredMoveAttrs((attr: MoveAttr) => attr instanceof MoveEffectAttr && (attr as MoveEffectAttr).trigger === MoveEffectTrigger.POST_APPLY
-                        && !(attr as MoveEffectAttr).selfTarget && (!attr.firstHitOnly || firstHit) && (!attr.lastHitOnly || lastHit), user, target, this.move.getMove()).then(() => {
+                        && !(attr as MoveEffectAttr).selfTarget && (!attr.firstHitOnly || firstHit) && (!attr.lastHitOnly || lastHit), user, target, this.move.getMove(user.isPlayer())).then(() => {
                       /**
                          * If the move hit, and the target doesn't have Shield Dust,
                          * apply the chance to flinch the target gained from King's Rock
@@ -274,9 +274,9 @@ export class MoveEffectPhase extends PokemonPhase {
                       }
                       // If the move was not protected against, apply all HIT effects
                       Utils.executeIf(!isProtected && !chargeEffect, () => applyFilteredMoveAttrs((attr: MoveAttr) => attr instanceof MoveEffectAttr && (attr as MoveEffectAttr).trigger === MoveEffectTrigger.HIT
-                            && (!attr.firstHitOnly || firstHit) && (!attr.lastHitOnly || lastHit) && (!attr.firstTargetOnly || firstTarget), user, target, this.move.getMove()).then(() => {
+                            && (!attr.firstHitOnly || firstHit) && (!attr.lastHitOnly || lastHit) && (!attr.firstTargetOnly || firstTarget), user, target, this.move.getMove(user.isPlayer())).then(() => {
                         // Apply the target's post-defend ability effects (as long as the target is active or can otherwise apply them)
-                        return Utils.executeIf(!target.isFainted() || target.canApplyAbility(), () => applyPostDefendAbAttrs(PostDefendAbAttr, target, user, this.move.getMove(), hitResult).then(() => {
+                        return Utils.executeIf(!target.isFainted() || target.canApplyAbility(), () => applyPostDefendAbAttrs(PostDefendAbAttr, target, user, this.move.getMove(user.isPlayer()), hitResult).then(() => {
                           // If the invoked move is an enemy attack, apply the enemy's status effect-inflicting tags and tokens
                           target.lapseTag(BattlerTagType.BEAK_BLAST_CHARGING);
                           if (move.category === MoveCategory.PHYSICAL && user.isPlayer() !== target.isPlayer()) {
@@ -287,12 +287,12 @@ export class MoveEffectPhase extends PokemonPhase {
                           }
                         })).then(() => {
                           // Apply the user's post-attack ability effects
-                          applyPostAttackAbAttrs(PostAttackAbAttr, user, target, this.move.getMove(), hitResult).then(() => {
+                          applyPostAttackAbAttrs(PostAttackAbAttr, user, target, this.move.getMove(user.isPlayer()), hitResult).then(() => {
                             /**
                                * If the invoked move is an attack, apply the user's chance to
                                * steal an item from the target granted by Grip Claw
                                */
-                            if (this.move.getMove() instanceof AttackMove) {
+                            if (this.move.getMove(user.isPlayer()) instanceof AttackMove) {
                               this.scene.applyModifiers(ContactHeldItemTransferChanceModifier, this.player, user, target);
                             }
                             resolve();
@@ -364,7 +364,7 @@ export class MoveEffectPhase extends PokemonPhase {
      */
   hitCheck(target: Pokemon): boolean {
     // Moves targeting the user and entry hazards can't miss
-    if ([MoveTarget.USER, MoveTarget.ENEMY_SIDE].includes(this.move.getMove().moveTarget)) {
+    if ([MoveTarget.USER, MoveTarget.ENEMY_SIDE].includes(this.move.getMove(this.getUserPokemon()!.isPlayer()).moveTarget)) {
       return true;
     }
 
@@ -374,7 +374,7 @@ export class MoveEffectPhase extends PokemonPhase {
     // However, if an ability with the MaxMultiHitAbAttr, namely Skill Link, is present, act as a normal
     // multi-hit move and proceed with all hits
     if (user.turnData.hitsLeft < user.turnData.hitCount) {
-      if (!this.move.getMove().hasFlag(MoveFlags.CHECK_ALL_HITS) || user.hasAbilityWithAttr(MaxMultiHitAbAttr)) {
+      if (!this.move.getMove(user.isPlayer()).hasFlag(MoveFlags.CHECK_ALL_HITS) || user.hasAbilityWithAttr(MaxMultiHitAbAttr)) {
         return true;
       }
     }
@@ -393,17 +393,17 @@ export class MoveEffectPhase extends PokemonPhase {
     }
 
     const semiInvulnerableTag = target.getTag(SemiInvulnerableTag);
-    if (semiInvulnerableTag && !this.move.getMove().getAttrs(HitsTagAttr).some(hta => hta.tagType === semiInvulnerableTag.tagType)) {
+    if (semiInvulnerableTag && !this.move.getMove(user.isPlayer()).getAttrs(HitsTagAttr).some(hta => hta.tagType === semiInvulnerableTag.tagType)) {
       return false;
     }
 
-    const moveAccuracy = this.move.getMove().calculateBattleAccuracy(user!, target); // TODO: is the bang correct here?
+    const moveAccuracy = this.move.getMove(user.isPlayer()).calculateBattleAccuracy(user!, target); // TODO: is the bang correct here?
 
     if (moveAccuracy === -1) {
       return true;
     }
 
-    const accuracyMultiplier = user.getAccuracyMultiplier(target, this.move.getMove());
+    const accuracyMultiplier = user.getAccuracyMultiplier(target, this.move.getMove(user.isPlayer()));
     const rand = user.randSeedInt(100, 1);
 
     return rand <= moveAccuracy * (accuracyMultiplier!); // TODO: is this bang correct?

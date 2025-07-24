@@ -1,7 +1,7 @@
 {
-  "viewTitle": "배틀 경로 지도",
-  "selectTitle": "배틀 경로 선택",
-  "noPathMessage": "사용 가능한 배틀 경로가 없습니다.\n먼저 생성하세요!",
+  "viewTitle": "배틀 패스 맵",
+  "selectTitle": "배틀 패스 선택",
+  "noPathMessage": "사용 가능한 배틀 패스가 없습니다.\n먼저 생성하세요!",
   "unknownEncounter": "알 수 없는 조우",
   "unknownNode": "알 수 없음",
   "descriptions": {
@@ -13,105 +13,141 @@
     "evilBossBattle": "악의 조직 보스",
     "eliteFour": "사천왕 멤버",
     "champion": "챔피언 배틀",
-    "itemGeneral": "일반 아이템",
-    "addPokemon": "포켓몬 전용 아이템",
+    "itemGeneral": "일반 보상",
+    "addPokemon": "드래프트 포켓몬 보상",
     "itemTm": "기술머신 보상",
-    "itemBerry": "열매 보상",
-    "mysteryNode": "미스터리 조우",
-    "convergencePoint": "경로 합류",
+    "itemBerry": "나무열매 보상",
+    "mysteryNode": "신비한 조우",
+    "convergencePoint": "패스 수렴",
     "smittyBattle": "스미티 배틀",
-    "evilGruntBattle": "악의 조직 부하",
+    "evilGruntBattle": "악의 조직 졸개",
     "evilAdminBattle": "악의 조직 간부",
-    "randPermaItem": "랜덤 영구 아이템",
-    "permaItems": "영구 아이템",
-    "goldenPokeball": "골든 포켓볼 보상",
-    "rogueBallItems": "로그 볼 아이템",
-    "masterBallItems": "마스터볼 아이템",
-    "abilitySwitchers": "특성 교환 아이템",
-    "statSwitchers": "스탯 교환 아이템",
+    "randPermaItem": "랜덤 ∞아이템",
+    "permaItems": "∞아이템 보상",
+    "goldenPokeball": "황금 몬스터볼 보상",
+    "rogueBallItems": "로그볼 보상",
+    "masterBallItems": "마스터볼 보상",
+    "greatBallItems": "슈퍼볼 보상",
+    "ultraBallItems": "하이퍼볼 보상",
+    "abilitySwitchers": "특성 교체 보상",
+    "statSwitchers": "스탯 교체 보상",
     "glitchPiece": "글리치 조각 보상",
     "dnaSplicers": "DNA 접합기 보상",
     "money": "돈 보상",
     "permaMoney": "영구 돈 부스트",
-    "releaseItems": "방생 아이템",
-    "mints": "성격 민트",
-    "eggVoucher": "알 바우처 보상",
-    "ppMax": "PP맥스 아이템",
-    "collectedType": "타입 수집 보상",
-    "expShare": "학습장치 아이템",
-    "typeSwitcher": "타입 교환 아이템",
-    "passiveAbility": "패시브 특성 아이템",
-    "anyTms": "모든 기술머신 보상",
-    "challengeBoss": "챌린지 경로 보스 배틀 (난이도 증가)",
-    "challengeRival": "챌린지 경로 라이벌 배틀 (난이도 증가)",
-    "challengeEvilBoss": "챌린지 경로 악의 보스 (난이도 증가)",
-    "challengeChampion": "챌린지 경로 챔피언 배틀 (난이도 증가)",
-    "challengeReward": "챌린지 경로 완주를 위한 희귀 보상"
+    "releaseItems": "릴리즈 보상",
+    "mints": "민트 보상",
+    "eggVoucher": "알 교환권 보상",
+    "ppMax": "PP맥스 보상",
+    "collectedType": "타입 컬렉션 보상",
+    "expShare": "학습장치 보상",
+    "typeSwitcher": "타입 교체 보상",
+    "passiveAbility": "패시브 특성 보상",
+    "anyTms": "임의 기술머신 보상",
+    "anyTmsMaster": "마스터 임의 기술머신 보상",
+    "teraShards": "테라 조각 보상",
+    "challengeBoss": "난이도가 증가한 챌린지 패스 보스 배틀",
+    "challengeRival": "난이도가 증가한 챌린지 패스 라이벌 배틀",
+    "challengeEvilBoss": "난이도가 증가한 챌린지 패스 악의 보스",
+    "challengeChampion": "난이도가 증가한 챌린지 패스 챔피언 배틀",
+    "challengeReward": "챌린지 패스 완료의 희귀 보상",
+    "potion": "회복 아이템 보상",
+    "reviverSeed": "자동 부활을 위한 부활의씨",
+    "sacredAsh": "성스러운재 - 모든 기절한 포켓몬을 완전 회복",
+    "shellBell": "조개껍질방울 - 입힌 데미지에 기반한 회복",
+    "leftovers": "먹다남은음식 - 매턴 회복",
+    "quickClaw": "선제공격발톱 - 먼저 행동할 기회",
+    "wideLens": "광각렌즈 - 기술 명중률 증가",
+    "gripClaw": "끈적끈적발톱 - 접촉 시 아이템 훔치기",
+    "eviolite": "진화의휘석 - 진화하는 포켓몬의 방어 보너스",
+    "scopeLens": "초점렌즈 - 급소 적중률 증가",
+    "collectedShop": "에센스를 사용하여 보상 획득",
+    "vitamin": "일반 스탯 부스터 보상 (단백질, 철분, 칼슘 등)",
+    "moveUpgrade": "포켓몬 기술을 위한 기술 업그레이드",
+    "lowTierMoveUpgrade": "레벨 III 상한의 기술 업그레이드"
   },
   "names": {
     "wildPokemon": "야생 포켓몬",
     "trainerBattle": "트레이너 배틀",
     "rivalBattle": "라이벌 배틀",
     "majorBossBattle": "메이저 보스",
-    "recoveryBoss": "보스 배틀",
+    "recoveryBoss": "회복 보스",
     "evilBossBattle": "악의 보스",
     "eliteFour": "사천왕",
     "champion": "챔피언",
-    "itemGeneral": "일반 아이템",
-    "addPokemon": "포켓몬 아이템",
-    "itemTm": "기술머신 아이템",
-    "itemBerry": "열매 아이템",
-    "mysteryNode": "미스터리 노드",
-    "convergencePoint": "합류",
+    "itemGeneral": "일반 보상",
+    "addPokemon": "드래프트 포켓몬",
+    "itemTm": "기술머신 보상",
+    "itemBerry": "나무열매 보상",
+    "mysteryNode": "신비 노드",
+    "convergencePoint": "수렴",
     "smittyBattle": "스미티 배틀",
-    "evilGruntBattle": "악의 부하",
+    "evilGruntBattle": "악의 졸개",
     "evilAdminBattle": "악의 간부",
-    "randPermaItem": "랜덤 영구 아이템",
-    "permaItems": "영구 아이템",
-    "goldenPokeball": "골든 포켓볼",
-    "rogueBallItems": "로그 볼 아이템",
-    "masterBallItems": "마스터볼 아이템",
-    "abilitySwitchers": "특성 교환기",
-    "statSwitchers": "스탯 교환기",
+    "randPermaItem": "랜덤 ∞아이템",
+    "permaItems": "∞아이템 보상",
+    "goldenPokeball": "황금 몬스터볼",
+    "rogueBallItems": "로그볼 보상",
+    "masterBallItems": "마스터볼 보상",
+    "greatBallItems": "슈퍼볼 보상",
+    "ultraBallItems": "하이퍼볼 보상",
+    "abilitySwitchers": "특성 교체기",
+    "statSwitchers": "스탯 교체기",
     "glitchPiece": "글리치 조각",
     "dnaSplicers": "DNA 접합기",
     "money": "돈",
-    "permaMoney": "영구 돈",
-    "releaseItems": "방생 아이템",
-    "mints": "민트",
-    "eggVoucher": "알 바우처",
+    "permaMoney": "∞골드",
+    "releaseItems": "릴리즈 보상",
+    "mints": "민트 보상",
+    "eggVoucher": "알 교환권",
     "ppMax": "PP맥스",
     "collectedType": "수집된 타입",
     "expShare": "학습장치",
-    "typeSwitcher": "타입 교환기",
+    "typeSwitcher": "타입 교체기",
     "passiveAbility": "패시브 특성",
-    "anyTms": "모든 기술머신",
+    "anyTms": "임의 기술머신 보상",
+    "anyTmsMaster": "마스터 임의 기술머신",
+    "teraShards": "테라 조각 보상",
     "challengeBoss": "챌린지 보스",
     "challengeRival": "챌린지 라이벌",
     "challengeEvilBoss": "챌린지 악의 보스",
     "challengeChampion": "챌린지 챔피언",
-    "challengeReward": "챌린지 보상"
+    "challengeReward": "챌린지 보상",
+    "potion": "회복 아이템 보상",
+    "reviverSeed": "부활의씨",
+    "sacredAsh": "성스러운재",
+    "shellBell": "조개껍질방울",
+    "leftovers": "먹다남은음식",
+    "quickClaw": "선제공격발톱",
+    "wideLens": "광각렌즈",
+    "gripClaw": "끈적끈적발톱",
+    "eviolite": "진화의휘석",
+    "scopeLens": "초점렌즈",
+    "collectedShop": "수집가",
+    "vitamin": "저렴한 비타민",
+    "moveUpgrade": "기술 업그레이드",
+    "lowTierMoveUpgrade": "저급 기술 업그레이드"
   },
   "challenge": {
     "chaosChallenge": "카오스 챌린지 활성",
     "isNuzlocke": {
-      "name": "너즈락",
-      "description": "기절한 포켓몬은 영구적으로 잃는다"
+      "name": "너즐록",
+      "description": "기절한 모든 포켓몬이 파티에서 제거됩니다! (현재 기절한 포켓몬 포함)"
     },
     "isNuzlight": {
-      "name": "너즈라이트",
-      "description": "상점에서 구매 가능한 회복 아이템 없음"
+      "name": "너즐라이트",
+      "description": "상점에서 치료 아이템을 구매할 수 없습니다"
     },
     "isNightmare": {
       "name": "너즈메어",
-      "description": "너즈라이트 + 너즈락"
+      "description": "상점에서 치료 아이템을 구매할 수 없습니다 + \n기절한 모든 포켓몬이 파티에서 제거됩니다! (현재 기절한 포켓몬 포함)"
     },
     "noExpGain": {
       "name": "경험치 획득 없음",
       "description": "포켓몬이 경험치를 얻지 못함"
     },
     "noCatch": {
-      "name": "포획 불가",
+      "name": "포획 금지",
       "description": "포켓몬을 포획할 수 없음"
     },
     "hasPassiveAbility": {
@@ -119,8 +155,8 @@
       "description": "적들이 패시브 특성을 활성화함"
     },
     "invertedTypes": {
-      "name": "타입 반전",
-      "description": "타입 상성이 반전됨"
+      "name": "타입 역전",
+      "description": "타입 상성이 역전됨"
     },
     "boostedTrainer": {
       "name": "카오스 트레이너",
@@ -135,7 +171,7 @@
       "description": "트레이너 팀이 +1 보스 포켓몬을 가짐"
     },
     "noInitialSwitch": {
-      "name": "초기 교체 불가",
+      "name": "초기 교체 없음",
       "description": "배틀 시작 시 포켓몬을 교체할 수 없음"
     },
     "autoPressured": {
@@ -143,8 +179,8 @@
       "description": "당신의 포켓몬이 자동으로 프레셔 상태"
     },
     "noStatBoosts": {
-      "name": "스탯 부스트 없음",
-      "description": "스탯을 부스트할 수 없음"
+      "name": "스탯 증가 없음",
+      "description": "스탯을 증가시킬 수 없음"
     },
     "noStatusMoves": {
       "name": "변화 기술 없음",
@@ -159,28 +195,28 @@
       "description": "특수 기술을 사용할 수 없음"
     },
     "statSwap": {
-      "name": "스탯 교환",
-      "description": "당신의 포켓몬의 공격 <-> 특방, 특공 <-> 방어가 교환됨"
+      "name": "스탯 교체",
+      "description": "당신의 포켓몬의 공격<->특방과 특공<->방어가 교체됨."
     },
     "extraDamageToTypes": {
-      "name": "타입 추가 데미지",
+      "name": "타입에 추가 데미지",
       "description": "특정 타입이 추가 데미지를 받음"
     },
     "noStab": {
       "name": "STAB 없음",
-      "description": "당신의 포켓몬의 타입 일치 공격 보너스가 비활성화됨"
+      "description": "당신의 포켓몬의 동일 타입 공격 보너스가 비활성화됨."
     },
     "trickRoom": {
       "name": "트릭룸",
-      "description": "스피드 우선순위가 반전됨"
+      "description": "스피드 우선순위가 역전됨"
     },
     "noSwitch": {
-      "name": "교체 불가",
+      "name": "교체 없음",
       "description": "배틀 중 포켓몬을 교체할 수 없음"
     },
     "noResistances": {
       "name": "저항 없음",
-      "description": "당신의 포켓몬의 타입 저항이 비활성화됨"
+      "description": "당신의 포켓몬의 타입 저항이 비활성화됨."
     },
     "noHealingItems": {
       "name": "회복 아이템 없음",

@@ -298,11 +298,13 @@
       }
     },
     "moveUpgrades": {
-      "title": "Potenziamenti delle Mosse",
+      "title": "NUOVI Potenziamenti Mosse di Pokevoid!",
       "text": { 
-        "1":"Ora puoi potenziare le mosse! Ogni volta che usi una mossa, guadagnerà un punto EXP!",
-        "2":"Una volta che la mossa ha abbastanza EXP, salirà di livello, offrendoti una scelta di potenziamenti!",
-        "3": "Il potenziamento durerà per l'intera partita e cambierà la mossa per tutti, incluso il tuo team e persino i tuoi nemici!"
+        "1":"Ora puoi potenziare le mosse con UN SACCO di potenziamenti diversi!",
+        "2":"Potenzia priorità, POTENZA, effetto, probabilità, stato multi-colpo di una mossa e altro!",
+        "3": "Ogni potenziamento ha il proprio Percorso di Potenziamento con multipli Livelli!",
+        "4": "I potenziamenti possono rendere QUALSIASI mossa assolutamente rivoluzionaria! TUTTAVIA - ogni potenziamento inizia al livello più basso 1 (debole).",
+        "5": "Potenziando continuamente una mossa, puoi rendere anche la mossa più debole LEGGENDARIA!"
       }
     },
     "firstMoveUpgrade": {

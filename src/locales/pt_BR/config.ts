@@ -64,6 +64,8 @@ import eggStarterUi from "./egg-starter-ui.json";
 import modGlitchCreateFormUi from "./mod-glitch-create-form-ui.json";
 import pokedex from "./pokedex.json";
 import nodeMode from "./node-mode.json";
+import moveUpgradeAttrs from "./move-upgrade-attrs.json";
+
 export const ptBrConfig = {
   ability,
   abilityTriggers,
@@ -130,5 +132,6 @@ export const ptBrConfig = {
   eggStarterUi,
   modGlitchCreateFormUi,
   pokedex,
-  nodeMode
+  nodeMode,
+  moveUpgradeAttrs
 };

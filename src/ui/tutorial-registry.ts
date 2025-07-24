@@ -16,7 +16,7 @@ export enum EnhancedTutorial {
     BUG_TYPES_1 = "BUG_TYPES_1",
     INTRASHOP_1 = "INTRASHOP_1",
     STARTER_CATCH_QUEST = "STARTER_CATCH_QUEST",
-    MOVE_UPGRADES_1 = "MOVE_UPGRADES_1",
+    MOVE_UPGRADES_EX = "MOVE_UPGRADES_EX",
     FIRST_MOVE_UPGRADE_1 = "FIRST_MOVE_UPGRADE_1",
     NUZLIGHT = "NUZLIGHT",
     NUZLOCKE = "NUZLOCKE",
@@ -271,32 +271,70 @@ export class TutorialRegistry {
     }
 
     private registerMoveUpgradesTutorials(): void {
-        this.tutorialConfigs.set(EnhancedTutorial.MOVE_UPGRADES_1, {
+        this.tutorialConfigs.set(EnhancedTutorial.MOVE_UPGRADES_EX, {
             title: i18next.t("tutorial:moveUpgrades.title"),
             stages: [{
                 sprites: [
-                    { key: "items", frame: "tm_dragon", scale: 1, x: 0, y: 0 },
-                    { key: "smitems_192", frame: "permaLongerStatBoosts", scale: 0.16, x: 20, y: 0, flipX: true },
+                    { key: "smitems_192", frame: "smittyCrystal", scale: 0.12, x: -40, y: 0 },
+                    { key: "smitems_192", frame: "smittyHumor", scale: 0.12, x: 0, y: 0 },
+                    { key: "smitems_192", frame: "smittyCrystal", scale: 0.12, x: 40, y: 0 },
                 ],
                 text: i18next.t("tutorial:moveUpgrades.text.1"),
                 title: i18next.t("tutorial:moveUpgrades.title")
             },
             {
                 sprites: [
-                    { key: "smitems_192", frame: "smittyVoid", scale: 0.12, x: -40, y: 0 },
-                    { key: "smitems_192", frame: "smittyVoid", scale: 0.12, x: 0, y: 0 },
-                    { key: "smitems_192", frame: "smittyVoid", scale: 0.12, x: 40, y: 0 },
+                    { key: "items", frame: "tm_dragon", scale: 1, x: 0, y: 0 },
+                    { key: "smitems_192", frame: "permaLongerStatBoosts", scale: 0.16, x: 20, y: 0, flipX: true },
                 ],
                 text: i18next.t("tutorial:moveUpgrades.text.2"),
                 title: i18next.t("tutorial:moveUpgrades.title")
             },
             {
                 sprites: [
-                    { key: "items", frame: "tm_dragon", scale: 1, x: 0, y: 0 },
-                    { key: "smitems_192", frame: "exclamationMark", scale: 0.10, x: 10, y: 0 },
+                    { key: "smitems_192", frame: "glitchAbilitySwitch", scale: 0.16, x: -10 },
+                    { key: "smitems_192", frame: "exclamationMark", scale: 0.12, x: 10 }
 
                 ],
                 text: i18next.t("tutorial:moveUpgrades.text.3"),
+                title: i18next.t("tutorial:moveUpgrades.title")
+            },
+            {
+                sprites: [
+                    { 
+                        key: getPokemonSpecies(Species.MAGIKARP).getIconAtlasKey(), 
+                        frame: getPokemonSpecies(Species.MAGIKARP).getIconId(false), 
+                        scale: 0.9, 
+                        x: -30 
+                    },
+                    { 
+                        key: getPokemonSpecies(Species.MAGIKARP).getIconAtlasKey(), 
+                        frame: getPokemonSpecies(Species.MAGIKARP).getIconId(false), 
+                        scale: 0.9, 
+                        x: 0 
+                    },
+                    { 
+                        key: getPokemonSpecies(Species.MAGIKARP).getIconAtlasKey(), 
+                        frame: getPokemonSpecies(Species.MAGIKARP).getIconId(false), 
+                        scale: 0.9, 
+                        x: 30 
+                    }
+
+                ],
+                text: i18next.t("tutorial:moveUpgrades.text.4"),
+                title: i18next.t("tutorial:moveUpgrades.title")
+            },
+            {
+                sprites: [
+                   {
+                    
+                        key: getPokemonSpecies(Species.GYARADOS).getIconAtlasKey(), 
+                        frame: getPokemonSpecies(Species.GYARADOS).getIconId(true, 1), 
+                        scale: 1.2, 
+                        x: 0  
+                    }
+                ],
+                text: i18next.t("tutorial:moveUpgrades.text.5"),
                 title: i18next.t("tutorial:moveUpgrades.title")
             }
             ],

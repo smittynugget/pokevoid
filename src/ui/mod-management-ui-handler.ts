@@ -41,6 +41,15 @@ export default class ModManagementUiHandler extends UiHandler {
         
         const options: OptionSelectItem[] = [
             {
+                label: i18next.t("modGlitchCreateFormUi:browseUserMods"),
+                handler: () => {
+                    window.open("https://void.scooom.xyz/gallery.html", "_blank");
+                    this.clear();
+                    this.scene.ui.setMode(Mode.TITLE);
+                    return true;
+                }
+            },
+            {
                 label: i18next.t("modGlitchCreateFormUi:uploadMods"),
                 handler: () => {
                     this.handleUploadMods();
@@ -55,9 +64,27 @@ export default class ModManagementUiHandler extends UiHandler {
                 }
             },
             {
-                label: i18next.t("modGlitchCreateFormUi:shareAndTakeMods"),
+                label: i18next.t("modGlitchCreateFormUi:showOffYourMods"),
                 handler: () => {
                     window.open("https://discord.gg/cnfc8ESx7Z", "_blank");
+                    this.clear();
+                    this.scene.ui.setMode(Mode.TITLE);
+                    return true;
+                }
+            },
+            {
+                label: i18next.t("modGlitchCreateFormUi:gatchaCalendar"),
+                handler: () => {
+                    window.open("https://void.scooom.xyz/gacha.html", "_blank");
+                    this.clear();
+                    this.scene.ui.setMode(Mode.TITLE);
+                    return true;
+                }
+            },
+            {
+                label: i18next.t("modGlitchCreateFormUi:browseGlitchForms"),
+                handler: () => {
+                    window.open("https://void.scooom.xyz/galleryCore.html", "_blank");
                     this.clear();
                     this.scene.ui.setMode(Mode.TITLE);
                     return true;
@@ -75,7 +102,7 @@ export default class ModManagementUiHandler extends UiHandler {
         
         modStorage.getAllMods().then(mods => {
             if (mods.length > 0) {
-                options.splice(2, 0, {
+                options.splice(6, 0, {
                     label: i18next.t("modGlitchCreateFormUi:removeMods"),
                     handler: () => {
                         this.showRemoveModsOptions();

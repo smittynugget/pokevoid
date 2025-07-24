@@ -39,7 +39,7 @@ import { ScanIvsPhase } from "./scan-ivs-phase";
 import { ShinySparklePhase } from "./shiny-sparkle-phase";
 import { SummonPhase } from "./summon-phase";
 import { ToggleDoublePositionPhase } from "./toggle-double-position-phase";
-import {ShowRewards} from "#app/phases/select-modifier-phase";
+import { ShowRewards } from "#app/utils/show-rewards.js";
 import {TrainerType} from "#enums/trainer-type";
 import {randSeedInt} from "#app/utils";
 import {ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
@@ -67,7 +67,7 @@ export class EncounterPhase extends BattlePhase {
 
     this.scene.eventTarget.dispatchEvent(new EncounterPhaseEvent());
 
-    if (this.scene.gameMode.isClassic && this.scene.currentBattle.waveIndex > 90) {
+    if (this.scene.gameMode.isClassic && this.scene.currentBattle.waveIndex > 90 && !this.scene.gameMode.isChaosMode) {
       this.scene.unshiftPhase(new GameOverPhase(this.scene));
     }
 
@@ -161,6 +161,23 @@ export class EncounterPhase extends BattlePhase {
           if (this.scene.currentBattle.battleSpec === BattleSpec.FINAL_BOSS) {
             battle.enemyParty[e].ivs = new Array(6).fill(31);
           }
+          
+          if (battle.waveIndex >= (this.scene.gameMode.isChaosMode ? 100 : 40) && 
+              !!this.scene.getEncounterBossSegments(battle.waveIndex, level, enemySpecies) &&
+              this.scene.currentBattle.battleSpec !== BattleSpec.FINAL_BOSS) {
+            const enemyPokemon = battle.enemyParty[e];
+            if (enemyPokemon.species.forms.length > 1) {
+              const formChance = battle.waveIndex >= (this.scene.gameMode.isChaosMode ? 300 : 60) ? 70 : 50;
+              if (Utils.randSeedInt(100) < formChance) {
+                enemyPokemon.formIndex = Utils.randSeedInt(enemyPokemon.species.forms.length - 1) + 1;
+                enemyPokemon.generateName();
+                if (enemyPokemon.isGlitchOrSmittyForm()) {
+                  enemyPokemon.toggleShadow(false);
+                }
+              }
+            }
+          }
+          
           this.scene.getParty().slice(0, !battle.double ? 1 : 2).reverse().forEach(playerPokemon => {
             applyAbAttrs(SyncEncounterNatureAbAttr, playerPokemon, null, false, battle.enemyParty[e]);
           });

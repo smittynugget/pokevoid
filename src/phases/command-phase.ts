@@ -103,9 +103,7 @@ export class CommandPhase extends FieldPhase {
     }
     else if(this.scene.currentBattle.battleType === BattleType.WILD) {
       let introTutorials: EnhancedTutorial[];
-      // if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.MOVE_UPGRADES_1)) {
-      //         this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.MOVE_UPGRADES_1, true, false);
-      //     }
+      
       if(this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.UNLOCKED)
       && !this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.STARTER_CATCH_QUEST)) {
             this.scene.gameData.tutorialService.showTutorial(EnhancedTutorial.NEW_QUESTS, false, false);

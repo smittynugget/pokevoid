@@ -22,6 +22,8 @@ import { modGlitchFormData, getModFormSystemName } from "../data/mod-glitch-form
 import Pokemon, { EnemyPokemon } from "#app/field/pokemon.js";
 import { pokemonEvolutions } from "../data/pokemon-evolutions";
 import { modStorage } from "../system/mod-storage";
+import { AddPokemonModifierType } from "../modifier/modifier-type";
+import ModifierSelectUiHandler from "./modifier-select-ui-handler";
 enum PokedexDisplayMode {
     ABILITIES,
     MOVES
@@ -50,6 +52,8 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
     private currentDisplay: PokedexDisplayMode = PokedexDisplayMode.ABILITIES;
     private selectedSpeciesId: Species;
     private selectedFormIndex: number = 0;
+    private isModifierPokemon: boolean = false;
+    private isModifierPhaseNoneSelected: boolean = false;
     private scrollPosition: number = 0;
     private readonly MAX_VISIBLE_MOVES = 9;
     
@@ -103,20 +107,32 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             }]
         };
         
+        const currentPhase = this.scene.getCurrentPhase();
+        const isSelectModifierPhase = currentPhase?.constructor?.name === 'SelectModifierPhase';
+        
+        const hasSpeciesArg = args.length > 0 && typeof args[0] === 'number';
+        this.isModifierPhaseNoneSelected = isSelectModifierPhase && !hasSpeciesArg;
+        
         if (this.scene.currentBattle) {
-            const enemyPokemon = this.scene.getEnemyField();
-            if (enemyPokemon && enemyPokemon.length > 0) {
-                this.enemyPokemon = enemyPokemon[0];
-                this.selectedSpeciesId = enemyPokemon[0].getSpeciesForm().speciesId;
-            } 
-            else if (args.length > 0 && typeof args[0] === 'number') {
+            if (hasSpeciesArg && isSelectModifierPhase) {
                 this.selectedSpeciesId = args[0];
-            } else {
-                const speciesValues = Object.values(Species).filter(value => typeof value === 'number') as number[];
-                const randomIndex = Math.floor(Math.random() * speciesValues.length);
-                this.selectedSpeciesId = speciesValues[randomIndex] as Species;
             }
-        } else if (args.length > 0 && typeof args[0] === 'number') {
+            else {
+                const enemyPokemon = this.scene.getEnemyField();
+                if (hasSpeciesArg) {
+                    this.selectedSpeciesId = args[0];
+                } 
+                else if (enemyPokemon && enemyPokemon.length > 0) {
+                    this.enemyPokemon = enemyPokemon[0];
+                    this.selectedSpeciesId = enemyPokemon[0].getSpeciesForm().speciesId;
+                } 
+                else {
+                    const speciesValues = Object.values(Species).filter(value => typeof value === 'number') as number[];
+                    const randomIndex = Math.floor(Math.random() * speciesValues.length);
+                    this.selectedSpeciesId = speciesValues[randomIndex] as Species;
+                }
+            }
+        } else if (hasSpeciesArg) {
             this.selectedSpeciesId = args[0];
         } else {
             const speciesValues = Object.values(Species).filter(value => typeof value === 'number') as number[];
@@ -129,7 +145,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             this.createPokemonDropdown();
             
             if (this.selectionDropdown) {
-                if (!this.enemyPokemon) {
+                if (!this.enemyPokemon && !this.isModifierPokemon) {
                     this.selectionDropdown.value = this.selectedSpeciesId.toString();
                 }
                 this.navLeftButton?.setVisible(true);
@@ -242,6 +258,86 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         let initialSpeciesId: Species | null = null;
         let addedBattleOptions = false;
 
+        const currentModifierPokemon: Species[] = [];
+        const addedEvolutionSpecies = new Set<Species>();
+
+        const addEvolutionsForPokemon = (speciesId: Species, dropdown: HTMLSelectElement, addedSet: Set<Species>) => {
+            const evolutions = pokemonEvolutions[speciesId] || [];
+            for (const evolution of evolutions) {
+                if (!addedSet.has(evolution.speciesId)) {
+                    const evolutionSpeciesId = evolution.speciesId;
+                    const evolutionSpeciesData = getPokemonSpecies(evolutionSpeciesId);
+                    if (evolutionSpeciesData) {
+                        const evolutionOption = document.createElement('option');
+                        evolutionOption.value = `evolution:${evolutionSpeciesId.toString()}`;
+                        const speciesKey = Object.keys(Species).find(key => Species[key] === evolutionSpeciesId);
+                        evolutionOption.text = `${i18next.t('pokedex:evolutionPrefix')}: ${speciesKey ? i18next.t(`pokemon:${speciesKey.toLowerCase()}`) : `${i18next.t('pokemon:unknown')} (${evolutionSpeciesId})`}`;
+                        dropdown.add(evolutionOption);
+                        addedBattleOptions = true;
+                        addedSet.add(evolutionSpeciesId);
+
+                        addEvolutionsForPokemon(evolutionSpeciesId, dropdown, addedSet);
+                    }
+                }
+            }
+        };
+
+        try {
+            const currentPhase = this.scene.getCurrentPhase();
+                if (currentPhase?.constructor?.name === 'SelectModifierPhase') {
+                    const rewardOptions = (currentPhase as any).getCurrentRewardOptions();
+                    if (rewardOptions) {
+                        rewardOptions.forEach(option => {
+                            if (option.type instanceof AddPokemonModifierType) {
+                                const pokemon = option.type.getPokemon();
+                                const speciesId = pokemon.species.speciesId;
+                                if (!currentModifierPokemon.includes(speciesId)) {
+                                    currentModifierPokemon.push(speciesId);
+                                }
+                            }
+                        });
+                    }
+
+                const modifierSelectHandler = this.scene.ui.handlers[Mode.MODIFIER_SELECT] as ModifierSelectUiHandler;
+                if (modifierSelectHandler && typeof modifierSelectHandler.getCurrentShopOptions === 'function') {
+                    const shopOptions = modifierSelectHandler.getCurrentShopOptions();
+                    shopOptions.forEach(option => {
+                        if (option.type instanceof AddPokemonModifierType) {
+                            const pokemon = option.type.getPokemon();
+                            const speciesId = pokemon.species.speciesId;
+                            if (!currentModifierPokemon.includes(speciesId)) {
+                                currentModifierPokemon.push(speciesId);
+                            }
+                        }
+                    });
+                }
+            this.isModifierPokemon = currentModifierPokemon.length > 0;
+            if (this.isModifierPokemon && this.isModifierPhaseNoneSelected) {
+                    this.selectedSpeciesId = currentModifierPokemon[0];
+                initialSpeciesId = this.selectedSpeciesId;
+            }
+        }
+        }
+         catch (e) {
+            console.log('Could not access current phase or shop options:', e);
+        }
+
+        currentModifierPokemon.forEach(speciesId => {
+            const modifierOption = document.createElement('option');
+            modifierOption.value = `modifier:${speciesId.toString()}`;
+            const speciesKey = Object.keys(Species).find(key => Species[key] === speciesId);
+            modifierOption.text = `${speciesKey ? i18next.t(`pokemon:${speciesKey.toLowerCase()}`) : `${i18next.t('pokemon:unknown')} (${speciesId})`}`;
+            dropdown.add(modifierOption);
+            addedBattleOptions = true;
+            
+            if (this.selectedSpeciesId === speciesId && !initialSpeciesId) {
+                modifierOption.selected = true;
+                initialSpeciesId = speciesId;
+            }
+
+            addEvolutionsForPokemon(speciesId, dropdown, addedEvolutionSpecies);
+        });
+
         if (this.scene.currentBattle) {
             const enemyPokemon = this.scene.getEnemyField();
             if (enemyPokemon && enemyPokemon.length > 0) {
@@ -253,10 +349,12 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 enemyOption.text = `${i18next.t('pokedex:enemyPrefix')}: ${speciesKey ? i18next.t(`pokemon:${speciesKey.toLowerCase()}`) : `${i18next.t('pokemon:unknown')} (${enemySpecies})`}`;
                 dropdown.add(enemyOption);
                 addedBattleOptions = true;
-                if (this.enemyPokemon && this.enemyPokemon.getSpeciesForm().speciesId === enemySpecies) {
+                if (this.enemyPokemon && this.enemyPokemon.getSpeciesForm().speciesId === enemySpecies && !initialSpeciesId) {
                     enemyOption.selected = true;
                     initialSpeciesId = enemySpecies;
                 }
+
+                addEvolutionsForPokemon(enemySpecies, dropdown, addedEvolutionSpecies);
             }
 
             const playerParty = this.scene.getParty();
@@ -274,48 +372,13 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                              option.selected = true;
                              initialSpeciesId = speciesId;
                         }
+
+                        addEvolutionsForPokemon(speciesId, dropdown, addedEvolutionSpecies);
                     }
                 });
             }
 
-            const pokemonToAddEvolutionsFor: Species[] = [];
-            if (enemyPokemon && enemyPokemon.length > 0) {
-                pokemonToAddEvolutionsFor.push(enemyPokemon[0].getSpeciesForm().speciesId);
-            }
-            if (playerParty && playerParty.length > 0) {
-                playerParty.forEach(pokemon => {
-                    if (pokemon) {
-                        pokemonToAddEvolutionsFor.push(pokemon.getSpeciesForm().speciesId);
-                    }
-                });
-            }
 
-            const addedEvolutionSpecies = new Set<Species>();
-
-            const addEvolutionsToDropdown = (speciesId: Species, addedSet: Set<Species>) => {
-                 const evolutions = pokemonEvolutions[speciesId] || [];
-                 for (const evolution of evolutions) {
-                     if (!addedSet.has(evolution.speciesId)) {
-                         const evolutionSpeciesId = evolution.speciesId;
-                         const evolutionSpeciesData = getPokemonSpecies(evolutionSpeciesId);
-                         if (evolutionSpeciesData) {
-                              const evolutionOption = document.createElement('option');
-                             evolutionOption.value = `evolution:${evolutionSpeciesId.toString()}`;
-                             const speciesKey = Object.keys(Species).find(key => Species[key] === evolutionSpeciesId);
-                             evolutionOption.text = `${i18next.t('pokedex:evolutionPrefix')}: ${speciesKey ? i18next.t(`pokemon:${speciesKey.toLowerCase()}`) : `${i18next.t('pokemon:unknown')} (${evolutionSpeciesId})`}`;
-                             dropdown.add(evolutionOption);
-                             addedBattleOptions = true;
-                             addedSet.add(evolutionSpeciesId);
-
-                             addEvolutionsToDropdown(evolutionSpeciesId, addedSet);
-                         }
-                     }
-                 }
-             };
-
-            pokemonToAddEvolutionsFor.forEach(speciesId => {
-                 addEvolutionsToDropdown(speciesId, addedEvolutionSpecies);
-            });
 
             if (addedBattleOptions) {
                 const separatorOption = document.createElement('option');
@@ -334,7 +397,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 const isAlreadyAdded = dropdown.options.length > 0 && Array.from(dropdown.options).some(opt => {
                      const optValue = opt.value;
                      if (optValue === speciesId.toString()) return true;
-                     if (optValue.startsWith('enemy:') || optValue.startsWith('party:')) {
+                     if (optValue.startsWith('enemy:') || optValue.startsWith('party:') || optValue.startsWith('modifier:') || optValue.startsWith('evolution:')) {
                          const parts = optValue.split(':');
                          if (parts.length >= 2 && parseInt(parts[parts.length - 1], 10) === speciesId) {
                              return true;
@@ -369,7 +432,11 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
              if (firstValidOption) {
                 firstValidOption.selected = true;
                  const selectedValue = firstValidOption.value;
-                 if (selectedValue.startsWith('enemy:')) {
+                 if (selectedValue.startsWith('modifier:')) {
+                     const parts = selectedValue.split(':');
+                     const modifierSpeciesId = parseInt(parts[1], 10) as Species;
+                     this.loadPokemonData(modifierSpeciesId);
+                 } else if (selectedValue.startsWith('enemy:')) {
                      const enemyPokemon = this.scene.getEnemyField();
                      if (enemyPokemon && enemyPokemon.length > 0) {
                          this.loadPokemonData(enemyPokemon[0]);
@@ -388,7 +455,11 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
          } else if (initialSpeciesId) {
               const selectedOption = Array.from(dropdown.options).find(opt => opt.selected);
               if (selectedOption) {
-                  if (selectedOption.value.startsWith('enemy:')) {
+                  if (selectedOption.value.startsWith('modifier:')) {
+                      const parts = selectedOption.value.split(':');
+                      const modifierSpeciesId = parseInt(parts[1], 10) as Species;
+                      this.loadPokemonData(modifierSpeciesId);
+                  } else if (selectedOption.value.startsWith('enemy:')) {
                       if (this.enemyPokemon) {
                           this.loadPokemonData(this.enemyPokemon);
                       } 
@@ -403,7 +474,6 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                        const parts = selectedOption.value.split(':');
                        const evolutionSpeciesId = parseInt(parts[1], 10) as Species;
                        this.loadPokemonData(evolutionSpeciesId);
-                       this.loadPokemonData(Number(selectedOption.value) as Species);
                   }
               }
          }
@@ -419,7 +489,11 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             this.selectedFormIndex = 0;
 
 
-            if (selectedValue.startsWith('enemy:')) {
+            if (selectedValue.startsWith('modifier:')) {
+                 const parts = selectedValue.split(':');
+                 const modifierSpeciesId = parseInt(parts[1], 10) as Species;
+                 this.loadPokemonData(modifierSpeciesId);
+            } else if (selectedValue.startsWith('enemy:')) {
                 const enemyPokemon = this.scene.getEnemyField();
                  if (enemyPokemon && enemyPokemon.length > 0) {
                      this.loadPokemonData(enemyPokemon[0]);

@@ -66,6 +66,10 @@
     "PokemonBaseStatBoosterModifierType": {
       "description": "ポケモンの{{statName}}のきほんステータスを10パーセントあげる。こたいちがたかいほどスタックのげんかいもたかくなる。"
     },
+    "PlayerPokemonBaseStatBoosterModifierType": {
+      "name": "安価",
+      "description": "ポケモンの{{statName}}のきほんステータスを5パーセントあげる。"
+    },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "すべてのポケモンのHPを100パーセントかいふくする"
     },
@@ -117,7 +121,7 @@
     "TerastallizeModifierType": {
       "name": "{{teraType}} Tera Shard",
       "statLabel": "テラピース",
-      "description": "ポケモンを{{teraType}}タイプにテラスタル（10かいのバトルまで）"
+      "description": "ポケモンを{{teraType}}タイプにテラスタル（10かいのバトルまで）。テラスタルオーブを持っていれば20かいのバトルまで。"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "こうげきするとき あいてがもっているアイテムを {{chancePercent}}パーセントのかくりつでぬすむ"
@@ -130,6 +134,11 @@
     },
     "EnemyEndureChanceModifierType": {
       "description": "こうげきをこらえるかくりつを{{chancePercent}}パーセントふやす"
+    },
+    "MOVE_UPGRADE": {
+      "name": "わざアップグレード",
+      "statLabel": "わざアップグレードアイテム",
+      "description": "パーティのわざをランダムでアップグレードする"
     },
     "RARE_CANDY": {
       "name": "ふしぎなアメ"
@@ -147,7 +156,7 @@
     },
     "TERA_ORB": {
       "name": "テラスタルオーブ",
-      "description": "テラピースがつかえるようになる"
+      "description": "テラピースの効果が10ターン延長される"
     },
     "MAP": {
       "name": "ちず",
@@ -309,7 +318,7 @@
     },
     "BERRY_POUCH": {
       "name": "きのみぶくろ",
-      "description": "つかったきのみがつかわれないかくりつを15パーセントふやす"
+      "description": "つかったきのみがつかわれないかくりつを10パーセントふやす"
     },
     "FOCUS_BAND": {
       "name": "きあいのハチマキ",
@@ -693,9 +702,10 @@
       }
     },
     "CollectedTypeModifierType": {
-      "name": "しゅうしゅうタイプ: {{type}}",
-      "statLabel": "収集したタイプ",
-      "description": "どうぐをかいほうするために ポケモンをかいほうするかわりに どのタイプでも5つ つかう"
+      "name": "エッセンス",
+      "shopName": "{{type}}エッセンス",
+      "statLabel": "エッセンス",
+      "description": "リリースアイテムのためにポケモンを逃がす代わりに5個使うか、コレクターと報酬を交換します。"
     },
     "SacrificeModifierType": {
       "description": "ポケモンを手放して、他のポケモンの{{stat}}を15%上昇させます。"
@@ -970,6 +980,7 @@
     "waves": "ウェーブ",
     "uses": "回使用可能",
     "glitchPieceCost": "*グリッチピース2個が必要",
-    "moreInfo": "(Cキー/Shiftキー長押しで詳細表示)"
+    "moreInfo": "(Cキー/Shiftキー長押しで詳細表示)",
+    "upgrade": "強化"
   }
 }

@@ -1,6 +1,6 @@
 //import { battleAnimRawData } from "./battle-anim-raw-data";
 import BattleScene from "../battle-scene";
-import { AttackMove, BeakBlastHeaderAttr, ChargeAttr, DelayedAttackAttr, MoveFlags, SelfStatusMove, allMoves } from "./move";
+import { AttackMove, BeakBlastHeaderAttr, ChargeAttr, DelayedAttackAttr, Move, MoveFlags, SelfStatusMove, allMoves } from "./move";
 import Pokemon from "../field/pokemon";
 import * as Utils from "../utils";
 import { BattlerIndex } from "../battle";
@@ -539,7 +539,42 @@ export function initMoveChargeAnim(scene: BattleScene, chargeAnim: ChargeAnim): 
             populateMoveChargeAnim(chargeAnim, ca);
           }
           resolve();
+        })
+        .catch(error => {
+          console.error(`Failed to load charge animation ${ChargeAnim[chargeAnim]}:`, error);
+          const fallbackConfig = new AnimConfig();
+          fallbackConfig.frames = [[]];
+          fallbackConfig.frameTimedEvents = new Map();
+          chargeAnims.set(chargeAnim, fallbackConfig);
+          resolve();
         });
+    }
+  });
+}
+
+export function ensureChargeAnimsForMove(scene: BattleScene, move: Move): Promise<void> {
+  return new Promise(resolve => {
+    const chargeAttrs = move.getAttrs(ChargeAttr);
+    const delayedAttackAttrs = move.getAttrs(DelayedAttackAttr);
+    
+    const initPromises: Promise<void>[] = [];
+    
+    for (const chargeAttr of chargeAttrs) {
+      if (chargeAttr instanceof ChargeAttr) {
+        initPromises.push(initMoveChargeAnim(scene, chargeAttr.chargeAnim));
+      }
+    }
+    
+    for (const delayedAttr of delayedAttackAttrs) {
+      if (delayedAttr instanceof DelayedAttackAttr) {
+        initPromises.push(initMoveChargeAnim(scene, delayedAttr.chargeAnim));
+      }
+    }
+    
+    if (initPromises.length > 0) {
+      Promise.all(initPromises).then(() => resolve());
+    } else {
+      resolve();
     }
   });
 }
@@ -811,6 +846,10 @@ export abstract class BattleAnim {
 
       const anim = this.getAnim();
 
+      if (!anim || !anim.frames || anim.frames.length === 0) {
+        return cleanUpAndComplete();
+      }
+
       const userInitialX = user.x;
       const userInitialY = user.y;
       const targetInitialX = target.x;
@@ -819,20 +858,20 @@ export abstract class BattleAnim {
       this.srcLine = [ userFocusX, userFocusY, targetFocusX, targetFocusY ];
       this.dstLine = [ userInitialX, userInitialY, targetInitialX, targetInitialY ];
 
-      let r = anim!.frames.length; // TODO: is this bang correct?
+      let r = anim.frames.length;
       let f = 0;
 
       scene.tweens.addCounter({
         duration: Utils.getFrameMs(3),
-        repeat: anim!.frames.length, // TODO: is this bang correct?
+        repeat: anim.frames.length,
         onRepeat: () => {
           if (!f) {
             userSprite.setVisible(false);
             targetSprite.setVisible(false);
           }
 
-          const spriteFrames = anim!.frames[f]; // TODO: is the bang correcT?
-          const frameData = this.getGraphicFrameData(scene, anim!.frames[f]); // TODO: is the bang correct?
+          const spriteFrames = anim.frames[f];
+          const frameData = this.getGraphicFrameData(scene, anim.frames[f]);
           let u = 0;
           let t = 0;
           let g = 0;
@@ -873,7 +912,7 @@ export abstract class BattleAnim {
             } else {
               const sprites = spriteCache[AnimFrameTarget.GRAPHIC];
               if (g === sprites.length) {
-                const newSprite: Phaser.GameObjects.Sprite = scene.addFieldSprite(0, 0, anim!.graphic, 1); // TODO: is the bang correct?
+                const newSprite: Phaser.GameObjects.Sprite = scene.addFieldSprite(0, 0, anim.graphic, 1);
                 sprites.push(newSprite);
                 scene.field.add(newSprite);
                 spritePriorities.push(1);
@@ -1064,9 +1103,37 @@ export class MoveChargeAnim extends MoveAnim {
   }
 
   getAnim(): AnimConfig {
-    return chargeAnims.get(this.chargeAnim) instanceof AnimConfig
-      ? chargeAnims.get(this.chargeAnim) as AnimConfig
-      : chargeAnims.get(this.chargeAnim)![this.user?.isPlayer() ? 0 : 1] as AnimConfig; // TODO: is this bang correct?
+    const chargeAnimConfig = chargeAnims.get(this.chargeAnim);
+    
+    if (chargeAnimConfig === undefined) {
+      chargeAnims.set(this.chargeAnim, null);
+      
+      try {
+        const chargeAnimName = ChargeAnim[this.chargeAnim].toLowerCase().replace(/\_/g, "-");
+        const fallbackConfig = new AnimConfig();
+        fallbackConfig.frames = [[]];
+        fallbackConfig.frameTimedEvents = new Map();
+        chargeAnims.set(this.chargeAnim, fallbackConfig);
+        return fallbackConfig;
+      } catch (error) {
+        console.error(`Failed to create fallback charge animation for ${ChargeAnim[this.chargeAnim]}:`, error);
+        const minimalConfig = new AnimConfig();
+        minimalConfig.frames = [[]];
+        minimalConfig.frameTimedEvents = new Map();
+        return minimalConfig;
+      }
+    }
+    
+    if (chargeAnimConfig === null) {
+      const minimalConfig = new AnimConfig();
+      minimalConfig.frames = [[]];
+      minimalConfig.frameTimedEvents = new Map();
+      return minimalConfig;
+    }
+    
+    return chargeAnimConfig instanceof AnimConfig
+      ? chargeAnimConfig as AnimConfig
+      : chargeAnimConfig![this.user?.isPlayer() ? 0 : 1] as AnimConfig;
   }
 }
 

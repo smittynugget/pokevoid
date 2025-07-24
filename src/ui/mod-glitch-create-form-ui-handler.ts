@@ -281,6 +281,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
                     this.downloadModJson(jsonData);
 
                     this.scene.gameData.testSpeciesForMod.push(jsonData.speciesId);
+                    this.scene.gameData.testModsCount += 2;
                     
                     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
                     
@@ -635,7 +636,8 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
                 const exceedsMaxIndex = abilityId > maxAbilityIndex;
                 const isRemovedAbility = REMOVED_ABILITIES.includes(abilityId);
                 return !labelEndsWithN && !exceedsMaxIndex && !isRemovedAbility;
-            });
+            })
+            .sort((a, b) => a.label.localeCompare(b.label));
 
         this.createDropdown("ability1", i18next.t("modGlitchCreateFormUi:fields.ability1"), abilityOptions);
         this.createDropdown("ability2", i18next.t("modGlitchCreateFormUi:fields.ability2"), abilityOptions);

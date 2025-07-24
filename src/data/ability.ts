@@ -5646,16 +5646,18 @@ export class PreAttackBoostIfCollectedTypeMatchAbAttr extends PreAttackAbAttr {
     let totalBoost = 0;
 
     collectedModifiers.forEach(mod => {
-      if (defender.getTypes().includes(mod.collectedType)) {
-        totalBoost += 0.1 * mod.getStackCount(); // 10% boost per stack
-      }
+      defender.getTypes().forEach(defenderType => {
+        const typeCount = mod.getTypeCount(defenderType);
+        if (typeCount > 0) {
+          totalBoost += 0.1 * typeCount;
+        }
+      });
     });
 
     if (totalBoost > 0) {
-      // fix ability
       (args[0] as Utils.NumberHolder).value *= (1 + totalBoost);
-    return true;
-  }
+      return true;
+    }
 
     return false;
   }
@@ -5670,9 +5672,9 @@ export class PostAttackHealIfCollectedTypeMatchAbAttr extends PostAttackAbAttr {
     let matchingTypes = 0;
 
     collectedModifiers.forEach(mod => {
-      if (defender.getTypes().includes(mod.collectedType)) {
-        matchingTypes++;
-      }
+      defender.getTypes().forEach(defenderType => {
+        matchingTypes += mod.getTypeCount(defenderType);
+      });
     });
 
     if (matchingTypes > 0) {
@@ -5726,9 +5728,9 @@ export class PostAttackStatChangeIfCollectedTypeMatchAbAttr extends PostAttackAb
     let matchingTypes = 0;
 
     collectedModifiers.forEach(mod => {
-      if (defender.getTypes().includes(mod.collectedType)) {
-        matchingTypes++;
-      }
+      defender.getTypes().forEach(defenderType => {
+        matchingTypes += mod.getTypeCount(defenderType);
+      });
     });
 
     if (matchingTypes > 0) {

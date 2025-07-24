@@ -297,11 +297,13 @@
       }
     },
     "moveUpgrades": {
-      "title": "Mejoras de Movimientos",
+      "title": "¡NUEVAS Mejoras de Movimientos de Pokevoid!",
       "text": { 
-        "1":"¡Ahora puedes mejorar movimientos! ¡Cada vez que uses un movimiento ganará un punto de EXP!",
-        "2":"¡Una vez que el movimiento tenga suficiente EXP, subirá de nivel, dándote opciones de mejora!",
-        "3": "¡La mejora durará toda la partida y cambiará el movimiento para todos, incluyendo tu equipo e incluso tus enemigos!"
+        "1":"¡Ahora puedes mejorar movimientos con UN MONTÓN de mejoras diferentes!",
+        "2":"¡Mejora la prioridad, PODER, efecto, probabilidad, estado de golpes múltiples de un movimiento y más!",
+        "3": "¡Cada mejora tiene su propia Ruta de Mejora con múltiples Niveles!",
+        "4": "¡Las mejoras pueden hacer que CUALQUIER movimiento sea absolutamente revolucionario! SIN EMBARGO - cada mejora comienza en el nivel más bajo 1 (débil).",
+        "5": "¡Mejorando continuamente un movimiento, puedes hacer que incluso el movimiento más débil sea LEGENDARIO!"
       }
     },
     "firstMoveUpgrade": {

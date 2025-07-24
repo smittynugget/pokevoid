@@ -126,7 +126,7 @@ export default class TutorialListUiHandler extends UiHandler {
                     EnhancedTutorial.RIVAL_QUESTS,
                     EnhancedTutorial.FIRST_VICTORY,
                     EnhancedTutorial.THE_VOID_UNLOCKED,
-                    EnhancedTutorial.MOVE_UPGRADES_1,
+                    EnhancedTutorial.MOVE_UPGRADES_EX,
                     EnhancedTutorial.FIRST_MOVE_UPGRADE_1
                 ]
             },

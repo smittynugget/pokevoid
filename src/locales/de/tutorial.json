@@ -297,11 +297,13 @@
       }
     },
     "moveUpgrades": {
-      "title": "Attacken-Verbesserungen",
+      "title": "NEUE Attacken-Upgrades von Pokevoid!",
       "text": { 
-        "1":"Du kannst jetzt Attacken verbessern! Jedes Mal, wenn du eine Attacke einsetzt, erhält sie einen EP-Punkt!",
-        "2":"Sobald die Attacke genug EP hat, steigt sie eine Stufe auf und bietet dir eine Auswahl an Verbesserungen!",
-        "3": "Die Verbesserung hält für den gesamten Durchlauf an und verändert die Attacke für alle, einschließlich deines Teams und sogar deiner Gegner!"
+        "1":"Du kannst jetzt Attacken mit einer MENGE verschiedener Upgrades verbessern!",
+        "2":"Verbessere Priorität, KRAFT, Effekt, Wahrscheinlichkeit, Mehrfachtreffer-Status einer Attacke und mehr!",
+        "3": "Jedes Upgrade hat seinen eigenen Upgrade-Pfad mit mehreren Stufen!",
+        "4": "Upgrades können JEDE Attacke absolut spielverändernde machen! JEDOCH - jedes Upgrade beginnt auf der niedrigsten Stufe 1 (schwach).",
+        "5": "Durch kontinuierliches Verbessern einer Attacke kannst du selbst die schwächste Attacke LEGENDÄR machen!"
       }
     },
     "firstMoveUpgrade": {

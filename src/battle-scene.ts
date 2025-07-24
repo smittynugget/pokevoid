@@ -38,7 +38,8 @@ import {
   GigantamaxAccessModifier,
   TerastallizeAccessModifier,
   CollectedTypeModifier,
-  MoveUpgradeModifier
+  MoveUpgradeModifier,
+  reduceGlitchPieceModifier
 } from "./modifier/modifier";
 import { PokeballType } from "./data/pokeball";
 import {
@@ -54,6 +55,7 @@ import { Arena, ArenaBase } from "./field/arena";
 import { BiomeChange, GameData } from "./system/game-data";
 import { TextStyle, addTextObject, getTextColor } from "./ui/text";
 import Move, { allMoves } from "./data/move";
+import { Type } from "./data/type";
 import {
   ModifierPoolType,
   getDefaultModifierTypeForTier,
@@ -142,6 +144,7 @@ import { Moves } from "#enums/moves";
 import { PlayerGender } from "#enums/player-gender";
 import { Species } from "#enums/species";
 import { UiTheme } from "#enums/ui-theme";
+import { GameMechanicsID, GameMechanicsVersion } from "#enums/gameMechanicsID";
 import { TimedEventManager } from "#app/timed-event-manager.js";
 import i18next from "i18next";
 import { TrainerType } from "#enums/trainer-type";
@@ -169,6 +172,8 @@ import { BattlerIndex } from "./battle";
 import {FaintPhase} from "#app/phases/faint-phase";
 import { DynamicMode, DynamicModes, PathNodeType } from "./battle";
 import { PathNodeContext } from "./phases/battle-path-phase";
+import { UpgradePath } from "#enums/upgrade-path";
+import { UpgradeCategory } from "#enums/upgrade-category";
 
 
 // export const bypassLogin = import.meta.env.VITE_BYPASS_LOGIN === "1";
@@ -292,6 +297,7 @@ export default class BattleScene extends SceneBase {
 
   public gameData: GameData;
   public sessionSlotId: integer;
+  public gameMechanicTracking: Record<GameMechanicsID, GameMechanicsVersion> = { [GameMechanicsID.CHAOS_MODE]: GameMechanicsVersion.CHAOS_V2, [GameMechanicsID.COLLECTED_TYPE_MODIFIER]: GameMechanicsVersion.COLLECTED_TYPE_MODIFIER_V2 } as Record<GameMechanicsID, GameMechanicsVersion>;
 
   /** PhaseQueue: dequeue/remove the first element to get the next phase */
   public phaseQueue: Phase[];
@@ -400,6 +406,7 @@ export default class BattleScene extends SceneBase {
   public selectedNodeType: PathNodeType | null = null;
 
   public static currentScene: BattleScene | null = null;
+  public enemyMovesUpgradedForWave: { wave: integer; moves: integer[] } = { wave: 1, moves: [] };
 
   constructor() {
     super("battle");
@@ -1121,6 +1128,7 @@ export default class BattleScene extends SceneBase {
     this.battlePathWave = 1;
     this.pathNodeContext = null;
     this.selectedNodeType = null;
+    this.dynamicMode = null;
 
     this.gameMode = getGameMode(GameModes.CLASSIC);
 
@@ -2071,7 +2079,7 @@ export default class BattleScene extends SceneBase {
       const keyDetails = key.split("/");
       switch (keyDetails[0]) {
         case "hellowelcome":
-          config["volume"] = this.bgmVolume;
+          config["volume"] = this.masterVolume * this.bgmVolume;
       case "level_up_fanfare":
       case "item_fanfare":
       case "minor_fanfare":
@@ -2584,7 +2592,7 @@ export default class BattleScene extends SceneBase {
     this.trackModifierObtained(modifier);
   }
 
-  getWaveMoneyAmount(moneyMultiplier: number): integer {
+  getWaveMoneyAmount(moneyMultiplier: number = 0.55): integer {
     const waveIndex = this.currentBattle.waveIndex;
     const waveSetIndex = Math.ceil(waveIndex / 10) - 1;
     const moneyValue = Math.pow((waveSetIndex + 1 + (0.75 + (((waveIndex - 1) % 10) + 1) / 10)) * 100, 1 + 0.005 * waveSetIndex) * moneyMultiplier;
@@ -2608,6 +2616,12 @@ export default class BattleScene extends SceneBase {
         if (modifier instanceof TerastallizeModifier) {
           modifiersToRemove.push(...(this.findModifiers(m => m instanceof TerastallizeModifier && m.pokemonId === modifier.pokemonId)));
         }
+        if (modifier instanceof MoveUpgradeModifier) {
+          this.removeMatchingUpgrade(modifier.moveId, modifier.upgradeCategory || null);
+          this.clearMoveUpgradeCache(modifier.moveId);
+          reduceGlitchPieceModifier(this.getParty()[0], 2);
+          success = true;
+        }
         if ((modifier as PersistentModifier).add(this.modifiers, !!virtual, this)) {
           
           if (modifier instanceof PokemonFormChangeItemModifier || modifier instanceof TerastallizeModifier || modifier instanceof CollectedTypeModifier || modifier instanceof AbilitySwitcherModifier || modifier instanceof TypeSwitcherModifier || modifier instanceof AnyAbilityModifier || modifier instanceof TypeSacrificeModifier || modifier instanceof AbilitySacrificeModifier || modifier instanceof PassiveAbilitySacrificeModifier || modifier instanceof AnyPassiveAbilityModifier || modifier instanceof MoveSacrificeModifier) {
@@ -2623,9 +2637,8 @@ export default class BattleScene extends SceneBase {
             this.playSound(soundName);
           }
         } else if (!virtual) {
-          const defaultModifierType = getDefaultModifierTypeForTier(modifier.type.tier);
-          this.queueMessage(i18next.t("battle:itemStackFull", { fullItemName: modifier.type.name, itemName: defaultModifierType.name }), undefined, true);
-          return this.addModifier(defaultModifierType.newModifier(), ignoreUpdate, playSound, false, instant).then(success => resolve(success));
+          this.currentBattle.giveMoney(this, 0.25);
+          return resolve(true);
         }
 
         for (const rm of modifiersToRemove) {
@@ -2691,6 +2704,10 @@ export default class BattleScene extends SceneBase {
       const modifiersToRemove: PersistentModifier[] = [];
       if (modifier instanceof TerastallizeModifier) {
         modifiersToRemove.push(...(this.findModifiers(m => m instanceof TerastallizeModifier && m.pokemonId === modifier.pokemonId, false)));
+      }
+      if (modifier instanceof MoveUpgradeModifier) {
+        this.removeMatchingUpgrade(modifier.moveId, modifier.upgradeCategory || null, true);
+        this.clearMoveUpgradeCache(modifier.moveId);
       }
       if ((modifier as PersistentModifier).add(this.enemyModifiers, false, this)) {
         if (modifier instanceof PokemonFormChangeItemModifier || modifier instanceof TerastallizeModifier || modifier instanceof TypeSwitcherModifier || modifier instanceof AnyAbilityModifier  || modifier instanceof AnyPassiveAbilityModifier) {
@@ -2859,6 +2876,14 @@ export default class BattleScene extends SceneBase {
     this.updateModifiers(false).then(() => this.updateUIPositions());
   }
 
+  clearEnemyMoveUpgradeModifiers(): void {
+    const modifiersToRemove = this.enemyModifiers.filter(m => m instanceof MoveUpgradeModifier);
+    for (const m of modifiersToRemove) {
+      this.enemyModifiers.splice(this.enemyModifiers.indexOf(m), 1);
+    }
+    this.updateModifiers(false).then(() => this.updateUIPositions());
+  }
+
   setModifiersVisible(visible: boolean) {
     [ this.modifierBar, this.enemyModifierBar ].map(m => m.setVisible(visible));
   }
@@ -2917,6 +2942,11 @@ export default class BattleScene extends SceneBase {
       if (modifier instanceof PokemonFormChangeItemModifier || modifier instanceof TerastallizeModifier) {
         modifier.apply([ this.getPokemonById(modifier.pokemonId), false ]);
       }
+      
+      if (modifier instanceof MoveUpgradeModifier) {
+        this.clearMoveUpgradeCache(modifier.moveId);
+      }
+      
       return true;
     }
 
@@ -2983,6 +3013,46 @@ export default class BattleScene extends SceneBase {
     }
 
     return null;
+  }
+
+  public consolidateCollectedTypeModifiers(): void {
+    const collectedTypeVersion = this.gameMechanicTracking[GameMechanicsID.COLLECTED_TYPE_MODIFIER];
+    const isLegacyV1 = collectedTypeVersion === GameMechanicsVersion.COLLECTED_TYPE_MODIFIER_V1 || 
+                       !collectedTypeVersion;
+    
+    if (!isLegacyV1) {
+      return;
+    }
+    
+    const pokemonModifiers = new Map<number, CollectedTypeModifier[]>();
+    
+    this.modifiers.forEach(modifier => {
+      if (modifier instanceof CollectedTypeModifier) {
+        if (!pokemonModifiers.has(modifier.pokemonId)) {
+          pokemonModifiers.set(modifier.pokemonId, []);
+        }
+        pokemonModifiers.get(modifier.pokemonId)!.push(modifier);
+      }
+    });
+    
+    pokemonModifiers.forEach((modifiers, pokemonId) => {
+      if (modifiers.length > 1) {
+        const consolidated = modifiers[0];
+        
+        for (let i = 1; i < modifiers.length; i++) {
+          const modifier = modifiers[i];
+          
+          for (const [typeStr, count] of Object.entries(modifier.collectedTypes)) {
+            const type = parseInt(typeStr) as Type;
+            consolidated.collectedTypes[type] = (consolidated.collectedTypes[type] || 0) + count;
+          }
+          
+          this.removeModifier(modifier);
+        }
+      }
+    });
+    
+    this.gameMechanicTracking[GameMechanicsID.COLLECTED_TYPE_MODIFIER] = GameMechanicsVersion.COLLECTED_TYPE_MODIFIER_V2;
   }
 
   triggerPokemonFormChange(
@@ -3168,28 +3238,82 @@ export default class BattleScene extends SceneBase {
     return this.majorBossWave;
   }
 
-  getUpgradesForMove(moveId: Moves): MoveUpgradeModifier[] {
+  getUpgradesForMove(moveId: Moves, isPlayerMove: boolean = true): MoveUpgradeModifier[] {
     return this.findModifiers(m => 
       m instanceof MoveUpgradeModifier && 
       (m as MoveUpgradeModifier).moveId === moveId
-    ) as MoveUpgradeModifier[];
+    , isPlayerMove) as MoveUpgradeModifier[];
   }
 
-  getUpgradedMove(baseMove:Move): Move {
+  /**
+   * Remove existing move upgrade modifiers that match the new upgrade's moveId and category
+   * @param moveId - The move ID to check for conflicts
+   * @param upgradeCategory - The upgrade category (can be null for enum-less upgrades)
+   * @param isEnemy - Whether to check enemy modifiers instead of player modifiers
+   */
+  removeMatchingUpgrade(moveId: Moves, upgradeCategory: UpgradeCategory | null, isEnemy: boolean = false): void {
+    const modifiersToRemove: PersistentModifier[] = [];
+    const modifiersToCheck = isEnemy ? this.enemyModifiers : this.modifiers;
+    
+    for (const modifier of modifiersToCheck) {
+      if (modifier instanceof MoveUpgradeModifier && modifier.moveId === moveId) {
+        if (upgradeCategory && modifier.upgradeCategory) {
+          if (modifier.upgradeCategory === upgradeCategory) {
+            modifiersToRemove.push(modifier);
+          }
+        }
+        else if (!upgradeCategory && !modifier.upgradeCategory) {
+          modifiersToRemove.push(modifier);
+        }
+      }
+    }
+    
+    for (const modifier of modifiersToRemove) {
+      this.removeModifier(modifier, isEnemy);
+    }
+    
+    this.clearMoveUpgradeCache(moveId);
+  }
+
+  private clearMoveUpgradeCache(moveId?: Moves): void {
+    if (!this.gameData?.upgradedMoves) {
+      return;
+    }
+    
+    if (moveId !== undefined) {
+      const keysToRemove = Object.keys(this.gameData.upgradedMoves).filter(key => 
+        key.startsWith(`${moveId}_`)
+      );
+      for (const key of keysToRemove) {
+        delete this.gameData.upgradedMoves[key];
+      }
+    } else {
+      this.gameData.upgradedMoves = {};
+    }
+  }
+
+  getUpgradedMove(baseMove:Move, isPlayerMove: boolean = true, excludeTierUpgrades: boolean = false): Move {
         if (this.gameData) {
           if (!this.gameData.upgradedMoves) {
             this.gameData.upgradedMoves = {};
           }
           
-          const moveUpgradeModifiers = this.getUpgradesForMove(baseMove.id);
+          let moveUpgradeModifiers = this.getUpgradesForMove(baseMove.id, isPlayerMove);
+          
+          if (excludeTierUpgrades) {
+            moveUpgradeModifiers = moveUpgradeModifiers.filter(modifier => !modifier.upgradeCategory);
+          }
           
           if (moveUpgradeModifiers.length > 0) {
             const modifierKey = moveUpgradeModifiers
-              .map(m => m.type.id)
+              .map(m => {
+                const modifier = m as MoveUpgradeModifier;
+                return `${m.type.id}_${modifier.powerBoost}_${modifier.accuracyBoost}_${modifier.upgradeCategory || 'none'}_${modifier.upgradeTier || 0}`;
+              })
               .sort()
-              .join('_');
+              .join('|');
             
-            const cacheKey = `${baseMove.id}_${modifierKey}`;
+            const cacheKey = `${baseMove.id}_${modifierKey}_excludeTier:${excludeTierUpgrades}`;
             if (!this.gameData.upgradedMoves[cacheKey]) {
               let upgradedMove = baseMove.clone();
               
@@ -3230,7 +3354,7 @@ export default class BattleScene extends SceneBase {
 
 
   private logPhases(): void {
-    return;
+    // return;
     console.log('\n=== PHASE QUEUES STATE ===');
     console.log('Current Phase:', this.currentPhase?.constructor.name || 'None');
     console.log('Standby Phase:', this.standbyPhase?.constructor.name || 'None');

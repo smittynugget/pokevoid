@@ -24,6 +24,7 @@ import { Abilities } from "#app/enums/abilities";
 import { SpeciesFormChangeRevertWeatherFormTrigger, SpeciesFormChangeWeatherTrigger } from "#app/data/pokemon-forms";
 import { CommonAnimPhase } from "#app/phases/common-anim-phase";
 import { ShowAbilityPhase } from "#app/phases/show-ability-phase";
+import { pokemonEvolutions } from "#app/data/pokemon-evolutions";
 
 export class Arena {
   public scene: BattleScene;
@@ -83,6 +84,7 @@ export class Arena {
     }
     const isBoss = !!this.scene.getEncounterBossSegments(waveIndex, level) && !!this.pokemonPool[BiomePoolTier.BOSS].length
         && (this.biomeType !== Biome.END || this.scene.gameMode.isClassic || this.scene.gameMode.isWaveFinal(waveIndex));
+    const strongBoss = isBoss && this.scene.gameMode.isChaosMode ? waveIndex >= 100 : waveIndex >= 50;
     const randVal = isBoss ? 64 : 512;
     // luck influences encounter rarity
     let luckModifier = 0;
@@ -92,7 +94,9 @@ export class Arena {
     const tierValue = Utils.randSeedInt(randVal - luckModifier);
     let tier = !isBoss
         ? tierValue >= 156 ? BiomePoolTier.COMMON : tierValue >= 32 ? BiomePoolTier.UNCOMMON : tierValue >= 6 ? BiomePoolTier.RARE : tierValue >= 1 ? BiomePoolTier.SUPER_RARE : BiomePoolTier.ULTRA_RARE
-        : tierValue >= 20 ? BiomePoolTier.BOSS : tierValue >= 6 ? BiomePoolTier.BOSS_RARE : tierValue >= 1 ? BiomePoolTier.BOSS_SUPER_RARE : BiomePoolTier.BOSS_ULTRA_RARE;
+        : strongBoss
+          ? tierValue >= 30 ? BiomePoolTier.BOSS_RARE : tierValue >= 7 ? BiomePoolTier.BOSS : tierValue >= 3 ? BiomePoolTier.BOSS_SUPER_RARE : BiomePoolTier.BOSS_ULTRA_RARE
+          : tierValue >= 20 ? BiomePoolTier.BOSS : tierValue >= 6 ? BiomePoolTier.BOSS_RARE : tierValue >= 1 ? BiomePoolTier.BOSS_SUPER_RARE : BiomePoolTier.BOSS_ULTRA_RARE;
     while (!this.pokemonPool[tier].length) {
       console.log(`Downgraded rarity tier from ${BiomePoolTier[tier]} to ${BiomePoolTier[tier - 1]}`);
       tier--;
@@ -153,6 +157,26 @@ export class Arena {
       console.log("Replaced", Species[ret.speciesId], "with", Species[newSpeciesId]);
       ret = getPokemonSpecies(newSpeciesId);
     }
+
+    if (strongBoss) {
+      let currentSpeciesId = ret.speciesId;
+      let finalSpeciesId = currentSpeciesId;
+      
+      while (pokemonEvolutions.hasOwnProperty(currentSpeciesId)) {
+        const evolutions = pokemonEvolutions[currentSpeciesId];
+        if (evolutions.length > 0) {
+          currentSpeciesId = evolutions[0].speciesId;
+          finalSpeciesId = currentSpeciesId;
+        } else {
+          break;
+        }
+      }
+      
+      if (finalSpeciesId !== ret.speciesId) {
+        ret = getPokemonSpecies(finalSpeciesId);
+      }
+    }
+
     return ret;
   }
 

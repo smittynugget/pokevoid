@@ -55,6 +55,7 @@ export interface RewardConfig {
     isModeUnlock?: boolean;
     isLevelUp?: boolean;
     unlockableSpriteType?: UnlockModePokeSpriteType;
+    isMaxStack?: boolean;
 }
 
 export default class RewardObtainedUiHandler extends ModalUiHandler {
@@ -84,7 +85,9 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             case RewardObtainedType.RIBBON_MODIFIER:
                 return i18next.t("rewardObtainedUi:titles.newRibbonItem");
             case RewardObtainedType.MONEY:
-                return i18next.t("rewardObtainedUi:titles.moneyObtained");
+                return this.rewardConfig.isMaxStack 
+                    ? i18next.t("rewardObtainedUi:titles.maxStackMoney")
+                    : i18next.t("rewardObtainedUi:titles.moneyObtained");
             case RewardObtainedType.UNLOCK:
             case RewardObtainedType.QUEST_UNLOCK:
                 return this.rewardConfig.isInitialQuestUnlock ? i18next.t("rewardObtainedUi:titles.newShopUnlock") : i18next.t("rewardObtainedUi:titles.newUnlock");

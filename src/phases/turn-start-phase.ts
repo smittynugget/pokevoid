@@ -55,17 +55,22 @@ export class TurnStartPhase extends FieldPhase {
           return -1;
         }
       } else if (aCommand?.command === Command.FIGHT) {
-        const aMove = allMoves[aCommand.move!.move];//TODO: is the bang correct here?
-        const bMove = allMoves[bCommand!.move!.move];//TODO: is the bang correct here?
+        // Get the Pokemon for each battler to access their upgraded moves
+        const aPokemon = this.scene.getField().find(p => p?.isActive() && p.getBattlerIndex() === a)!;
+        const bPokemon = this.scene.getField().find(p => p?.isActive() && p.getBattlerIndex() === b)!;
+        
+        // Use upgraded moves instead of base moves for priority calculation
+        const aMove = this.scene.getUpgradedMove(allMoves[aCommand.move!.move], aPokemon.isPlayer());
+        const bMove = this.scene.getUpgradedMove(allMoves[bCommand!.move!.move], bPokemon.isPlayer());
 
         const aPriority = new Utils.IntegerHolder(aMove.priority);
         const bPriority = new Utils.IntegerHolder(bMove.priority);
 
-        applyMoveAttrs(IncrementMovePriorityAttr, this.scene.getField().find(p => p?.isActive() && p.getBattlerIndex() === a)!, null, aMove, aPriority); //TODO: is the bang correct here?
-        applyMoveAttrs(IncrementMovePriorityAttr, this.scene.getField().find(p => p?.isActive() && p.getBattlerIndex() === b)!, null, bMove, bPriority); //TODO: is the bang correct here?
+        applyMoveAttrs(IncrementMovePriorityAttr, aPokemon, null, aMove, aPriority); //TODO: is the bang correct here?
+        applyMoveAttrs(IncrementMovePriorityAttr, bPokemon, null, bMove, bPriority); //TODO: is the bang correct here?
 
-        applyAbAttrs(ChangeMovePriorityAbAttr, this.scene.getField().find(p => p?.isActive() && p.getBattlerIndex() === a)!, null, false, aMove, aPriority); //TODO: is the bang correct here?
-        applyAbAttrs(ChangeMovePriorityAbAttr, this.scene.getField().find(p => p?.isActive() && p.getBattlerIndex() === b)!, null, false, bMove, bPriority); //TODO: is the bang correct here?
+        applyAbAttrs(ChangeMovePriorityAbAttr, aPokemon, null, false, aMove, aPriority); //TODO: is the bang correct here?
+        applyAbAttrs(ChangeMovePriorityAbAttr, bPokemon, null, false, bMove, bPriority); //TODO: is the bang correct here?
 
         if (aPriority.value !== bPriority.value) {
           const bracketDifference = Math.ceil(aPriority.value) - Math.ceil(bPriority.value);
@@ -106,7 +111,7 @@ export class TurnStartPhase extends FieldPhase {
           continue;
         }
         const move = pokemon.getMoveset().find(m => m?.moveId === queuedMove.move) || new PokemonMove(queuedMove.move);
-        if (move.getMove().hasAttr(MoveHeaderAttr)) {
+        if (move.getMove(pokemon.isPlayer()).hasAttr(MoveHeaderAttr)) {
           this.scene.unshiftPhase(new MoveHeaderPhase(this.scene, pokemon, move));
         }
         if (pokemon.isPlayer()) {

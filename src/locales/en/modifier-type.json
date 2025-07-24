@@ -68,6 +68,10 @@
     "PokemonBaseStatBoosterModifierType": {
       "description": "Increases the holder's base {{statName}} by 10%. The higher your IVs, the higher the stack limit."
     },
+    "PlayerPokemonBaseStatBoosterModifierType": {
+      "name": "Cheap",
+      "description": "Increases the holder's base {{statName}} by 1%."
+    },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restores 100% HP for all Pokémon."
     },
@@ -130,7 +134,7 @@
     "TerastallizeModifierType": {
       "name": "{{teraType}} Tera Shard",
       "statLabel": "Tera Shard",
-      "description": "{{teraType}} Terastallizes the holder for up to 10 battles."
+      "description": "{{teraType}} Terastallizes the holder for up to 10 battles. 20 battles if have Tera Orb"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "Upon attacking, there is a {{chancePercent}}% chance the foe's held item will be stolen."
@@ -145,18 +149,24 @@
       "description": "Adds a {{chancePercent}}% chance of enduring a hit."
     },
 
+    "MOVE_UPGRADE": {
+      "name": "Move Upgrade",
+      "statLabel": "Move Upgrade Item",
+      "description": "Randomly upgrades one of your party's moves"
+    },
+
     "TypeSwitcherModifierType": {
-      "name": "Type Switcher: {{type1}} / {{type2}}",
+      "name": "{{type1}} / {{type2}}",
       "statLabel": "Type Switcher",
       "description": "Changes a Pokémon's types to {{type1}} and {{type2}}."
     },
     "PrimaryTypeSwitcherModifierType": {
-      "name": "Primary Type Switcher: {{type1}}",
+      "name": "{{type1}} / DEFAULT",
       "statLabel": "Primary Type Switcher",
       "description": "Changes a Pokémon's primary type to {{type1}}."
     },
     "SecondaryTypeSwitcherModifierType": {
-      "name": "Secondary Type Switcher: {{type2}}",
+      "name": "DEFAULT / {{type2}}",
       "statLabel": "Secondary Type Switcher",
       "description": "Changes a Pokémon's secondary type to {{type2}}."
     },
@@ -431,9 +441,10 @@
       }
     },
     "CollectedTypeModifierType": {
-      "name": "Collected Type: {{type}}",
-      "statLabel": "Collected Type",
-      "description": "Use 5 of ANY TYPE MIX instead of releasing a Pokémon for Release Items."
+      "name": "Essences",
+      "shopName": "{{type}} Essence",
+      "statLabel": "Essence",
+      "description": "Use 5x instead of releasing a Pokémon for Release Items or exchange for rewards with the Collector."
     },
     "SacrificeModifierType": {
       "description": "Release a Pokémon to boost another pokemon's {{stat}} by 15%."
@@ -486,7 +497,7 @@
 
     "MEGA_BRACELET": { "name": "Mega Bracelet", "description": "Mega Stones become available." },
     "DYNAMAX_BAND": { "name": "Dynamax Band", "description": "Max Mushrooms become available." },
-    "TERA_ORB": { "name": "Tera Orb", "description": "Tera Shards become available." },
+    "TERA_ORB": { "name": "Tera Orb", "description": "Tera Shards last for 10 more turns." },
 
     "MAP": { "name": "Map", "description": "Allows you to choose your destination at a crossroads." },
 
@@ -561,7 +572,7 @@
     "HEALING_CHARM": { "name": "Healing Charm", "description": "Increases the effectiveness of HP restoring moves and items by 10% (excludes Revives)." },
     "CANDY_JAR": { "name": "Candy Jar", "description": "Increases the number of levels added by Rare Candy items by 1." },
 
-    "BERRY_POUCH": { "name": "Berry Pouch", "description": "Adds a 15% chance that a used berry will not be consumed." },
+    "BERRY_POUCH": { "name": "Berry Pouch", "description": "Adds a 10% chance that a used berry will not be consumed." },
 
     "FOCUS_BAND": { "name": "Focus Band", "description": "Adds a 10% chance to survive with 1 HP after being damaged enough to faint." },
 
@@ -864,6 +875,8 @@
     "glitchPieceCost": "*COSTS 2x Glitch Piece",
     "permaMoney": "∞GOLD",
     "permaItem": "∞ITEM",
-    "moreInfo": "(Hold C / Shift for info)"
+    "moreInfo": "(Hold C / Shift for info)",
+    "morePokeInfo": "(Press P / Shift for info)",
+    "upgrade": "Upgrade"
   }
 }

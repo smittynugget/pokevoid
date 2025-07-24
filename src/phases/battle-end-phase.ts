@@ -1,5 +1,5 @@
 import { applyPostBattleAbAttrs, PostBattleAbAttr } from "#app/data/ability.js";
-import { LapsingPersistentModifier, LapsingPokemonHeldItemModifier } from "#app/modifier/modifier.js";
+import { LapsingPersistentModifier, LapsingPokemonHeldItemModifier, MoveUpgradeModifier } from "#app/modifier/modifier.js";
 import { BattlePhase } from "./battle-phase";
 import { GameOverPhase } from "./game-over-phase";
 import {BattleType} from "#app/battle";
@@ -8,6 +8,7 @@ import {PermaType} from "#app/modifier/perma-modifiers";
 import * as Utils from "#app/utils";
 import {ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
 import {TrainerVictoryPhase} from "#app/phases/trainer-victory-phase";
+import { modifierTypes } from "../modifier/modifier-type.js";
 
 export class BattleEndPhase extends BattlePhase {
   start() {
@@ -17,6 +18,11 @@ export class BattleEndPhase extends BattlePhase {
     const isTrainer = this.scene.currentBattle.battleType == BattleType.TRAINER;
     const isRivalTrainer = isTrainer && this.scene.currentBattle.trainer?.isDynamicRival;
     let betterRewardChance = isRivalTrainer ? 100 : 15;
+
+    const superExpWave = !this.scene.gameMode.isEndless ? (this.scene.offsetGym ? 0 : 20) : 10;
+    if (this.scene.currentBattle.waveIndex <= 750 && ((this.scene.currentBattle.waveIndex <= 500 && this.scene.currentBattle.waveIndex % 3 === 0) || (this.scene.currentBattle.waveIndex % 30) === superExpWave)) {
+        this.scene.unshiftPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_CHARM, false));
+    }
 
     if(Utils.randSeedInt(100) < betterRewardChance) {
       if(isTrainer) {
@@ -86,6 +92,7 @@ export class BattleEndPhase extends BattlePhase {
     }
 
     this.scene.clearEnemyHeldItemModifiers();
+    this.scene.clearEnemyMoveUpgradeModifiers();
 
     const lapsingModifiers = this.scene.findModifiers(m => m instanceof LapsingPersistentModifier || m instanceof LapsingPokemonHeldItemModifier) as (LapsingPersistentModifier | LapsingPokemonHeldItemModifier)[];
     for (const m of lapsingModifiers) {

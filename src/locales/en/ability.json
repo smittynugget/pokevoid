@@ -1513,7 +1513,7 @@
   },
   "soulCollector": {
     "name": "Soul Collector",
-    "description": "Boosts moves that match collected types. Collects the type of knocked out Pokemon. Loses collected types when fainting."
+    "description": "Boosts moves that match essence type. Collects the type of knocked out Pokemon. Loses essences when fainting."
   },
   "shadowSync": {
     "name": "Shadow Sync",
@@ -2685,10 +2685,10 @@
   },
   "soulEater": {
     "name": "Soul Eater",
-    "description": "Heals HP when using a move that matches a collected type. Collects the type of knocked out Pokemon. Loses collected types when fainting."
+    "description": "Heals HP when using a move that matches a essence type. Collects the type of knocked out Pokemon. Loses essences when fainting."
   },
   "soulDrain": {
     "name": "Soul Drain",
-    "description": "10% chance to collect the type of the move used. Lowers two random stats of the target by 2 stages if the move type matches a collected type. Loses collected types when fainting."
+    "description": "10% chance to collect the type of the move used. Lowers two random stats of the target by 2 stages if the move type matches a essence type. Loses essence types when fainting."
   }
 }

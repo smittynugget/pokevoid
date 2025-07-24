@@ -1,182 +1,210 @@
 {
-    "rewardTitle": "レベルアップ {{count}}！",
-    "level": "レベル",
-    "description": {
-      "power": {
-        "increaseSlight": "威力を{{powerValue}}少し上げる。",
-        "increaseModerate": "威力を{{powerValue}}適度に上げる。",
-        "increaseSignificantWeak": "威力を{{powerValue}}大幅に上げる（弱い技用）。",
-        "increaseVsAccuracyLow": "威力を{{powerValue}}上げるが、命中率を{{accuracyValue}}下げる。",
-        "increaseVsAccuracyHigh": "威力を{{powerValue}}大きく上げるが、命中率を{{accuracyValue}}下げる。",
-        "increaseVsPriority": "威力を{{powerValue}}上げるが、優先度を{{priorityValue}}にする。",
-        "increaseVsRecoil": "威力を{{powerValue}}上げるが、{{recoilPercent}}%の反動ダメージを追加する。",
-        "increaseVsSelfStatDrop": "威力を{{powerValue}}上げるが、使用後に自分の{{statName1}}と{{statName2}}を{{stages}}段階下げる。"
-      },
-      "accuracy": {
-        "increasePercentage": "命中率を{{value}}%上げる。",
-        "perfectAccuracy": "命中率を100%にするが、威力を{{powerValue}}下げる。",
-        "perfectAccuracyNoPenalty": "命中率を100%にする。",
-        "increaseVsPowerLow": "命中率を{{accuracyValue}}%上げるが、威力を{{powerValue}}下げる。",
-        "increaseVsPowerHigh": "命中率を{{accuracyValue}}%大きく上げるが、威力を{{powerValue}}下げる。",
-        "increaseVsPp": "命中率を{{accuracyValue}}%上げるが、最大PPを下げる。",
-        "setAccuracy": "命中率を{{value}}%にする。"
-      },
-      "effectChance": {
-        "increaseToValue": "追加効果の発動確率を{{value}}%に上げる。",
-        "guaranteeVsPower": "追加効果を必ず発動させるが、威力を{{powerValue}}下げる。",
-        "guaranteeVsAccuracy": "追加効果を必ず発動させるが、命中率を{{accuracyValue}}%下げる（変化技）。",
-        "guaranteeVsPp": "追加効果を必ず発動させるが、最大PPを下げる。"
-      },
-      "status": {
-        "addChance": "{{statusName}}を与える確率{{chance}}%を追加する。",
-        "addChanceVsPower": "{{statusName}}を与える確率{{chance}}%を追加するが、威力を{{powerValue}}下げる。",
-        "addLeechSeed": "やどりぎの効果を追加する（草タイプ以外に対して）が、威力を{{powerValue}}下げる。",
-        "changeEffect": "追加効果を{{statusName}}を与える確率{{chance}}%に変更する。",
-        "addSecondEffect": "{{statusName1}}または{{statusName2}}を与える確率{{chance}}%だが、威力を{{powerValue}}下げる。",
-        "addStatusViaStatusMove": "{{statusName}}を与える（命中率が{{accuracyValue}}%に変わる）。"
-      },
-      "flinch": {
-        "addChance": "相手をひるませる確率{{chance}}%を追加する。",
-        "addChanceLow": "相手をひるませる確率{{chance}}%を追加する。",
-        "addChanceHighVsPower": "相手をひるませる確率{{chance}}%を追加するが、威力を{{powerValue}}下げる。",
-        "addChancePriorityVsPower": "相手をひるませる確率{{chance}}%を追加する（先制技）が、威力を{{powerValue}}下げる。",
-        "increaseChance": "ひるみ確率を{{chance}}%に上げる。",
-        "increaseChanceVsPower": "ひるみ確率を{{chance}}%に上げるが、威力を{{powerValue}}下げる。"
-      },
-      "stat": {
-        "addRaiseSelfSingle": "自分の{{statName}}を{{stages}}段階上げる。確率を{{chance}}%に変更する。",
-        "addRaiseSelfMultiple": "自分の{{statName1}}と{{statName2}}を{{stages}}段階上げる。",
-        "increaseRaiseSelf": "自己強化効果を増やして{{statName}}を{{stages}}段階上げる。",
-        "addAnotherRaiseSelf": "{{existingStats}}に加えて自分の{{newStatName}}を{{stages}}段階上げる。",
-        "addLowerTargetSingle": "相手の{{statName}}を{{stages}}段階下げる。命中率が{{accuracy}}%になる。威力が{{powerValue}}下がる。",
-        "addLowerTargetHarshChance": "相手の{{statName}}を大きく{{stages}}段階下げる確率{{chance}}%だが、威力を{{powerValue}}下げる。",
-        "addLowerTargetHarsh": "相手の{{statName}}を大きく{{stages}}段階下げる（命中率が{{accuracy}}%に変わる）。",
-        "addLowerTargetMultiple": "相手の{{statName1}}と{{statName2}}を{{stages}}段階下げる（命中率が{{accuracy}}%に変わる）。",
-        "increaseLowerTarget": "相手の能力低下効果を強化して{{statName}}を{{stages}}段階下げる。命中率が{{accuracy}}%になる。威力が{{powerValue}}下がる。",
-        "increaseLowerTargetChance": "相手の能力を下げる確率を{{chance}}%に上げる。",
-        "guaranteeLowerTarget": "相手の能力を下げる効果を確実にする。威力が{{powerValue}}下がる。命中率が{{accuracyValue}}下がる。",
-        "addAnotherLowerTarget": "{{existingStats}}に加えて相手の{{newStatName}}を{{stages}}段階下げる。威力が{{powerValue}}下がる。",
-        "addLowerTargetChance": "相手の{{statName}}を{{stages}}段階下げる確率{{chance}}%だが、威力を{{powerValue}}下げる。"
-      },
-      "type": {
-        "changePowerBoost": "タイプを{{typeName}}に変更し、威力を{{powerValue}}上げる。",
-        "changeAccuracyBoost": "タイプを{{typeName}}に変更し、命中率を{{accuracyValue}}%上げる。",
-        "changeAddStatus": "タイプを{{typeName}}に変更し、{{statusName}}を与える確率{{chance}}%を追加するが、威力を{{powerValue}}下げる。",
-        "changeAddHighCrit": "タイプを{{typeName}}に変更し、急所に当たりやすくする。",
-        "addTypeEffectiveness": "自身のタイプに加えて{{typeName}}タイプの相性でダメージを与える。威力を{{powerValue}}上げる。",
-        "superEffectiveVsType": "{{targetTypeName}}タイプのポケモンに対して常に「効果は抜群だ」になる。",
-        "becomeTypeless": "タイプなし（常にダメージは等倍）になり、威力を{{powerValue}}上げる。",
-        "matchUserType": "技のタイプが常に使用者のメインタイプと一致する。",
-        "weatherBall": "天気に応じて技のタイプが変わる（ウェザーボールのように）。",
-        "terrainPulse": "フィールドに応じて技のタイプが変わる（テラバーストのように）。",
-        "hiddenPower": "使用者の個性に応じて技のタイプが変わる（めざめるパワーのように）。"
-      },
-      "multiHit": {
-        "add2to5": "2〜5回攻撃し、威力は{{powerValue}}になる。効果発動確率は1ヒットにつき{{chance}}%に設定。確率と威力は強化できない。",
-        "addExact": "正確に{{hits}}回攻撃し、威力は{{powerValue}}になる。効果発動確率は1ヒットにつき{{chance}}%に設定。確率と威力は強化できない。",
-        "addCheckAll": "正確に{{hits}}回攻撃し、ヒットごとの命中判定あり、威力は{{powerValue}}、命中率：{{accuracyReduction}}%になる。効果発動確率は1ヒットにつき{{chance}}%に設定。確率と威力は強化できない。",
-        "changeToExact": "{{hits}}回攻撃し、威力は{{powerValue}}になる。効果発動確率は1ヒットにつき{{chance}}%に設定。確率と威力は強化できない。",
-        "changeToRange": "{{range}}回攻撃し、威力は{{powerValue}}になる。効果発動確率は1ヒットにつき{{chance}}%に設定。確率と威力は強化できない。",
-        "enableCheckAll": "各ヒットごとの命中判定を有効にし（連続攻撃）、威力は{{powerValue}}、命中率：{{accuracyValue}}%になる。確率と威力は強化できない。",
-        "disableCheckAll": "各ヒットごとの命中判定を無効にし、威力は{{powerValue}}、命中率：{{accuracyValue}}%になる。確率と威力は強化できない。"
-      },
-      "heal": {
-        "addHitHeal": " 与えたダメージの{{percent}}%分回復する。",
-        "addHitHealVsPower": " 与えたダメージの{{percent}}%分回復するが、威力を{{powerValue}}下げる。",
-        "increaseHitHealVsPower": "吸収効果を強化して与えたダメージの{{percent}}%分回復するが、威力を{{powerValue}}下げる。",
-        "addSelfHeal": "自分の最大HPの{{percent}}%を回復する。",
-        "addPlantHeal": "グラスフィールドが有効な場合、HPを回復する。",
-        "addSandHeal": "砂嵐が有効な場合、HPを回復する。",
-        "increaseSelfHeal": "自己回復量を最大HPの{{percent}}%に増やす。"
-      },
-      "recoil": {
-        "addVsPower": "{{percent}}%の反動ダメージを追加するが、威力を{{powerValue}}上げる。",
-        "addVsPowerAccuracy": "{{percent}}%の反動ダメージを追加するが、威力を{{powerValue}}上げ、命中率を{{accuracyValue}}%下げる。",
-        "increaseVsPower": "反動ダメージを{{percent}}%に増やすが、威力を{{powerValue}}上げる。",
-        "decreaseVsPower": "反動ダメージを{{percent}}%に減らすが、威力を{{powerValue}}下げる。",
-        "removeVsPower": "反動ダメージを除去するが、威力を{{powerValue}}下げる。"
-      },
-      "sacrificial": {
-        "addFull": "使用後に自分が瀕死になるが、威力は{{power}}になる。",
-        "addHalf": "使用後に自分の最大HPの50%を失うが、威力は{{power}}になる。",
-        "addOnHit": "技が当たると自分が瀕死になるが、威力は{{power}}になる。"
-      },
-      "crit": {
-        "addHighCritVsPower": "急所に当たりやすくするが、威力を{{powerValue}}下げる（高威力技向け）。",
-        "addHighCrit": "急所に当たりやすくする。",
-        "addHighCritAndPower": "急所に当たりやすくし、威力を{{powerValue}}上げる。",
-        "upgradeToCritOnlyVsPower": "必ず急所に当たるようにするが、威力を{{powerValue}}下げる。",
-        "upgradeToCritOnlyVsAccuracy": "必ず急所に当たるようにするが、命中率を{{accuracyValue}}%下げる。"
-      },
-      "flags": {
-        "ignoreProtect": "技が「まもる」や「みきり」を貫通できるようになるが、威力を{{powerValue}}下げる。",
-        "ignoreAbilities": "技が相手の特性を無視するようになり、威力を{{powerValue}}上げる。",
-        "soundBased": "技が音技になる（身代わりを貫通）、威力を{{powerValue}}上げる。",
-        "punchingMove": "技がパンチ技になる（てつのこぶしで強化）、威力を{{powerValue}}上げる。",
-        "slicingMove": "技が斬撃技になる（するどいツメで強化）、威力を{{powerValue}}上げる。",
-        "pulseMove": "技が波動技になる（メガランチャーで強化）、威力を{{powerValue}}上げる。",
-        "bitingMove": "技が咬む技になる（がんじょうあごで強化）、威力を{{powerValue}}上げる。",
-        "windMove": "技が風技になる（かぜのり/ちからの影響を受ける）、威力を{{powerValue}}上げる。",
-        "disableContact": "技が接触しなくなり、威力を{{powerValue}}上げる。",
-        "enableContact": "技が接触するようになり、威力を{{powerValue}}上げる。",
-        "ignoreStatChanges": "技が相手の防御系能力変化と回避率を無視するようになり、威力を{{powerValue}}上げる。",
-        "removeScreens": "技が「リフレクター」「ひかりのかべ」「オーロラベール」を除去するようになり、威力を{{powerValue}}上げる。",
-        "thawTarget": "技が凍った相手を溶かすようになり、威力を{{powerValue}}上げる。"
-      },
-      "priority": {
-        "increase": "優先度を{{value}}に上げるが、威力を{{powerValue}}下げる。",
-        "decrease": "優先度を{{value}}に下げるが、威力を{{powerValue}}上げる。",
-        "conditionalTerrain": "{{terrain}}フィールドが有効な場合、優先度を{{value}}に上げ、威力を{{powerValue}}上げる。",
-        "conditionalFirstTurn": "最初のターンでなければ失敗し、優先度を{{value}}に上げ、威力を{{powerValue}}上げる。",
-        "conditionalTargetMoved": "相手がすでにそのターンに行動していれば優先度を{{value}}に上げ、威力を{{powerValue}}上げる。"
-      },
-      "category": {
-        "changeToSpecial": "分類を特殊に変更する。",
-        "changeToSpecialVsDef": "分類を特殊に変更するが、相手の防御でダメージを計算する。",
-        "changeToPhysical": "分類を物理に変更する。",
-        "changeToPhysicalVsSpDef": "分類を物理に変更するが、相手の特防でダメージを計算する。",
-        "changeStatusToDamage": "分類を{{category}}に変更し、威力を{{power}}に設定する。"
-      },
-      "misc": {
-        "addTrap": "相手を{{trapName}}で数ターン拘束するが、威力を{{powerValue}}下げる。",
-        "addForceSwitch": "相手を強制的に交代させるが、威力を{{powerValue}}下げる。",
-        "addGrounding": "空中にいる相手を地面に着地させる（ひこうタイプの免疫を除去）。",
-        "fixedDamageLevel": "使用者のレベルと同じ固定ダメージを与えるよう計算方法を変更する（基本威力を置き換え）。",
-        "fixedDamageValue": "固定{{value}}ダメージを与えるよう計算方法を変更する。",
-        "fixedDamageTargetHalfHp": "相手の現在HPの半分のダメージを与えるよう計算方法を変更する（基本威力を置き換え）。",
-        "addSurviveDamage": "相手を必ず最低1HPで生き残るようにする（みねうちのように）、威力を{{powerValue}}上げる。",
-        "addWeightPowerTarget": "相手の重さに応じて威力が上がる（けたぐりのように）。",
-        "addWeightPowerCompare": "相手と比べて使用者が重いほど威力が上がる（ヘビーボンバーのように）。",
-        "addSpeedPowerSlower": "相手と比べて使用者が遅いほど威力が上がる（ジャイロボールのように）。",
-        "addSpeedPowerFaster": "相手と比べて使用者が速いほど威力が上がる（エレキボールのように）。",
-        "addHpPowerHighHp": "使用者の現在HPが高いほど威力が上がる（最大威力：{{maxPower}}）。",
-        "addHpPowerLowHp": "使用者の現在HPが低いほど威力が上がる（きしかいせいのように）。",
-        "addSwitchOut": "使用後に自分が交代するが、威力を{{powerValue}}下げる（ボルトチェンジのように）。",
-        "addChargeTurn": "攻撃前に溜めターンを追加するが、威力を{{powerValue}}上げる。",
-        "addChargeTurnWithBoost": "溜めターンを追加し（自分の{{statName}}を{{stages}}段階上げる）、威力を{{powerValue}}上げる。",
-        "addStealItemChance": "相手の持ち道具を盗む確率{{chance}}%。",
-        "addStealItemGuaranteed": "相手の持ち道具を確実に盗むが、威力を{{powerValue}}下げる。",
-        "addRemoveItem": "相手の持ち道具を除去し、威力を{{powerValue}}上げる。",
-        "powerBoostWeather": "{{weather}}が有効な場合、威力が2倍になる。",
-        "powerBoostTerrain": "{{terrain}}フィールドが有効で相手が地面にいる場合、威力が2倍になる。",
-        "powerBoostConsecutive": "連続で成功するごとに威力が2倍になる（最大4倍）。",
-        "powerBoostTurnDamaged": "そのターンに相手からダメージを受けた場合、威力が2倍になる。"
-      },
-      "statusSpecific": {
-        "increaseFieldDuration": "この技で設定されるフィールド効果（壁、おいかぜなど）の持続ターンを{{turns}}ターンに増やす。",
-        "increaseVolatileDuration": "この技で与える状態異常（混乱、ちょうはつなど）の持続時間を増やす。",
-        "ignoreProtect": "技が「まもる」や「みきり」を使用している相手に効果を与えられるようになる。",
-        "addSelfHeal": "自分の最大HPの{{percent}}%を回復する。",
-        "addSelfBoost": "自分の{{statName}}を{{stages}}段階上げる。",
-        "addArenaTrap": "相手のフィールド側に{{trapName}}トラップを設置する。",
-        "setWeather": "天気を{{weather}}に変更する。",
-        "setTerrain": "フィールドを{{terrain}}に変更する。",
-        "clearWeather": "現在の天気を晴れにする。",
-        "clearTerrain": "現在のフィールドを元に戻す。"
-      }
+  "rewardTitle": "レベルアップ {{count}}!",
+  "level": "レベル",
+  "description": {
+    "power": {
+      "increaseVsAccuracy": "基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "increaseOnly": "威力が{{powerValue}}上がります。"
     },
+    "accuracy": {
+      "perfectAccuracy": "基本命中率が完璧(100%)になり、基本威力が{{newPower}}になります。",
+      "increaseVsPower": "基本命中率が{{newAccuracy}}%になり、基本威力が{{newPower}}になります。"
+    },
+    "effectChance": {
+      "increaseToValueVsPower": "基本効果発動率が{{value}}%になり、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "increaseToValueVsPowerNoAccuracy": "基本効果発動率が{{value}}%になり、基本威力が{{newPower}}になります。"
+    },
+    "status": {
+      "addChanceVsPower": "{{statusName}}状態にする確率{{chance}}%を追加し、基本威力が{{powerValue}}になります。",
+      "addChanceOnly": "{{statusName}}状態にする確率{{chance}}%を追加します。",
+      "addLeechSeedVsPower": "やどりぎのタネ効果を追加し(くさタイプ以外)、基本威力が{{powerValue}}になります。",
+      "addLeechSeedOnly": "やどりぎのタネ効果を追加します(くさタイプ以外)。",
+      "changeEffect": "追加効果を{{statusName}}状態にする確率{{chance}}%に変更します。",
+      "addSecondEffect": "技の発動率が{{statusName1}}または{{statusName2}}状態にする確率{{chance}}%になります。",
+      "addSecondEffectVsPower": "技の発動率が{{statusName1}}または{{statusName2}}状態にする確率{{chance}}%になり、基本威力が{{newPower}}になります。",
+      "addSecondEffectVsAccuracy": "技の発動率が{{statusName1}}または{{statusName2}}状態にする確率{{chance}}%になり、基本命中率が{{newAccuracy}}%になります。",
+      "addSecondEffectVsPowerAndAccuracy": "技の発動率が{{statusName1}}または{{statusName2}}状態にする確率{{chance}}%になり、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "guaranteeEffect": "追加効果が必ず発動します。",
+      "guaranteeEffectVsPower": "追加効果が必ず発動し、基本威力が{{powerValue}}になります。",
+      "guaranteeEffectVsAccuracy": "追加効果が必ず発動し、命中率が{{accuracyValue}}%になります。",
+      "guaranteeEffectVsPowerAndAccuracy": "追加効果が必ず発動し、基本威力が{{powerValue}}になり、命中率が{{accuracyValue}}%になります。",
+      "addStatusViaStatusMove": "{{statusName}}状態にします(命中率が{{accuracyValue}}%に変更)。",
+      "addStatus": "{{statusName}}状態にする確率{{chance}}%を追加します。",
+      "improveChance": "状態異常の基本効果発動率を{{chance}}%({{statusName}})に向上させます。",
+      "improveChanceNoAccuracy": "状態異常の基本効果発動率を{{chance}}%({{statusName}})に向上させ、基本威力が{{newPower}}になります。",
+      "improveChanceVsPower": "状態異常の基本効果発動率を{{chance}}%({{statusName}})に向上させ、基本威力が{{newPower}}になります。",
+      "improveChanceVsAccuracy": "状態異常の基本効果発動率を{{chance}}%({{statusName}})に向上させ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "improveChanceVsPowerAndAccuracy": "状態異常の基本効果発動率を{{chance}}%({{statusName}})に向上させ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "improveChanceCapped": "状態異常の基本効果発動率は既に最大({{chance}}%)のため、基本威力が{{newPower}}になります。",
+      "improveChanceCappedVsAccuracy": "状態異常の基本効果発動率は既に最大({{chance}}%)のため、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。"
+    },
+    "flinch": {
+      "addChanceVsPower": "相手をひるませる確率{{chance}}%を追加し、基本威力が{{powerValue}}になります。",
+      "addChanceOnly": "相手をひるませる確率{{chance}}%を追加します。"
+    },
+    "stat": {
+      "addRaiseSelfSingle": "使用者の{{statName}}を{{stages}}段階上げます。確率が{{chance}}%に変更され、基本威力が{{newPower}}になります。",
+      "addRaiseSelfSingleSameChance": "使用者の{{statName}}を{{stages}}段階上げます。基本効果発動率は{{chance}}%のまま、基本威力が{{newPower}}になります。",
+      "addRaiseSelfSingleEffectChanceBecomes": "使用者の{{statName}}を{{stages}}段階上げます。基本効果発動率が{{chance}}%になり、基本威力が{{newPower}}になります。",
+      "addRaiseSelfSingleWithRecoil": "使用者の{{statName}}を{{stages}}段階上げます。確率が{{chance}}%に変更され、使用者が{{recoilCost}}%の反動ダメージを受け、基本威力が{{newPower}}になります。",
+      "addRaiseSelfSingleWithRecoilSameChance": "使用者の{{statName}}を{{stages}}段階上げます。基本効果発動率は{{chance}}%のままですが、使用者が{{recoilCost}}%の反動ダメージを受け、基本威力が{{newPower}}になります。",
+      "addRaiseSelfSingleWithRecoilEffectChanceBecomes": "使用者の{{statName}}を{{stages}}段階上げます。基本効果発動率が{{chance}}%になりますが、使用者が{{recoilCost}}%の反動ダメージを受け、基本威力が{{newPower}}になります。",
+      "increaseRaiseSelf": "自己強化効果を増加させ、{{statName}}を{{stages}}段階上げます。",
+      "increaseRaiseSelfSameChance": "自己強化効果を増加させ、{{statName}}を{{stages}}段階上げます。基本効果発動率は{{chance}}%のままです。",
+      "increaseRaiseSelfEffectChanceBecomes": "自己強化効果を増加させ、{{statName}}を{{stages}}段階上げます。基本効果発動率が{{chance}}%になります。",
+      "increaseRaiseSelfVsPower": "自己強化効果を増加させ、{{statName}}を{{stages}}段階上げ、基本威力が{{newPower}}になります。",
+      "increaseRaiseSelfVsPowerSameChance": "自己強化効果を増加させ、{{statName}}を{{stages}}段階上げ、基本威力が{{newPower}}になります。基本効果発動率は{{chance}}%のままです。",
+      "increaseRaiseSelfVsPowerEffectChanceBecomes": "自己強化効果を増加させ、{{statName}}を{{stages}}段階上げ、基本威力が{{newPower}}になります。基本効果発動率が{{chance}}%になります。",
+      "addAnotherRaiseSelf": "{{existingStats}}に加えて、使用者の{{newStatName}}を{{stages}}段階上げます。",
+      "addAnotherRaiseSelfSameChance": "{{existingStats}}に加えて、使用者の{{newStatName}}を{{stages}}段階上げます。基本効果発動率は{{chance}}%のままです。",
+      "addAnotherRaiseSelfEffectChanceBecomes": "{{existingStats}}に加えて、使用者の{{newStatName}}を{{stages}}段階上げます。基本効果発動率が{{chance}}%になります。",
+      "addAnotherRaiseSelfVsPower": "{{existingStats}}に加えて、使用者の{{newStatName}}を{{stages}}段階上げますが、威力が{{powerValue}}下がります。",
+      "addAnotherRaiseSelfVsPowerSameChance": "{{existingStats}}に加えて、使用者の{{newStatName}}を{{stages}}段階上げますが、威力が{{powerValue}}下がります。基本効果発動率は{{chance}}%のままです。",
+      "addAnotherRaiseSelfVsPowerEffectChanceBecomes": "{{existingStats}}に加えて、使用者の{{newStatName}}を{{stages}}段階上げますが、威力が{{powerValue}}下がります。基本効果発動率が{{chance}}%になります。",
+      "addLowerTargetSingle": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "addLowerTargetSingleNoAccuracy": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になります。",
+      "addLowerTargetSingleWithChance": "{{chance}}%の確率で相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "addLowerTargetSingleNoAccuracyWithChance": "{{chance}}%の確率で相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になります。",
+      "addLowerTargetSingleSameChance": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。基本効果発動率は{{chance}}%のままです。",
+      "addLowerTargetSingleNoAccuracySameChance": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になります。基本効果発動率は{{chance}}%のままです。",
+      "addLowerTargetSingleEffectChanceBecomes": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。基本効果発動率が{{chance}}%になります。",
+      "addLowerTargetSingleNoAccuracyEffectChanceBecomes": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になります。基本効果発動率が{{chance}}%になります。",
+      "increaseLowerTarget": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "increaseLowerTargetNoAccuracy": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になります。",
+      "increaseLowerTargetWithChance": "{{chance}}%の確率で相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "increaseLowerTargetNoAccuracyWithChance": "{{chance}}%の確率で相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になります。",
+      "increaseLowerTargetSameChance": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。基本効果発動率は{{chance}}%のままです。",
+      "increaseLowerTargetNoAccuracySameChance": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になります。基本効果発動率は{{chance}}%のままです。",
+      "increaseLowerTargetEffectChanceBecomes": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。基本効果発動率が{{chance}}%になります。",
+      "increaseLowerTargetNoAccuracyEffectChanceBecomes": "相手の{{statName}}を{{stages}}段階下げ、基本威力が{{newPower}}になります。基本効果発動率が{{chance}}%になります。",
+      "addAnotherLowerTarget": "同時に相手の{{newStatName}}も{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "addAnotherLowerTargetNoAccuracy": "同時に相手の{{newStatName}}も{{stages}}段階下げ、基本威力が{{newPower}}になります。",
+      "addAnotherLowerTargetWithChance": "{{chance}}%の確率で同時に相手の{{newStatName}}も{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "addAnotherLowerTargetNoAccuracyWithChance": "{{chance}}%の確率で同時に相手の{{newStatName}}も{{stages}}段階下げ、基本威力が{{newPower}}になります。",
+      "addAnotherLowerTargetSameChance": "同時に相手の{{newStatName}}も{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。基本効果発動率は{{chance}}%のままです。",
+      "addAnotherLowerTargetNoAccuracySameChance": "同時に相手の{{newStatName}}も{{stages}}段階下げ、基本威力が{{newPower}}になります。基本効果発動率は{{chance}}%のままです。",
+      "addAnotherLowerTargetEffectChanceBecomes": "同時に相手の{{newStatName}}も{{stages}}段階下げ、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。基本効果発動率が{{chance}}%になります。",
+      "addAnotherLowerTargetNoAccuracyEffectChanceBecomes": "同時に相手の{{newStatName}}も{{stages}}段階下げ、基本威力が{{newPower}}になります。基本効果発動率が{{chance}}%になります。"
+    },
+    "type": {
+      "matchUserType": "技のタイプが常に使用者の主タイプと一致します。",
+      "weatherBall": "技のタイプが天気によって変化します(ウェザーボールのように)。",
+      "terrainPulse": "技のタイプがフィールドによって変化します(フィールドパルスのように)。",
+      "hiddenPower": "技のタイプが使用者の特性によって変化します(めざめるパワーのように)。",
+      "becomeTypeless": "無タイプになり(常に等倍ダメージ)、威力が{{powerValue}}上がります。",
+      "superEffectiveVsType": "{{targetTypeName}}タイプのポケモンに対して常に効果抜群のダメージを与えます。",
+      "directChange": "技のタイプを{{typeName}}に変更します。"
+    },
+    "multiHit": {
+      "addWithCheckAll": "技が{{hits}}回の連続攻撃になり、基本威力が{{newPower}}になり、基本命中率が{{accuracyCost}}%になり、基本効果発動率が{{chance}}%(全攻撃に影響)になります。",
+      "addNoCheckAll": "技が{{hits}}回の連続攻撃になり、基本威力が{{newPower}}になり、基本命中率が{{accuracyCost}}%になり、基本効果発動率が{{chance}}%になります。",
+      "changeWithCheckAll": "{{hits}}回の連続攻撃に変更され、基本威力が{{newPower}}になり、基本命中率が{{accuracyCost}}%になり、基本効果発動率が{{chance}}%(全攻撃に影響)になります。",
+      "changeNoCheckAll": "{{hits}}回の連続攻撃に変更され、基本威力が{{newPower}}になり、基本命中率が{{accuracyCost}}%になり、基本効果発動率が{{chance}}%になります。"
+    },
+    "heal": {
+      "addHitHealVsPower": "与えたダメージの{{percent}}%を回復し、基本威力が{{newPower}}になります。",
+      "increaseHitHealVsPower": "吸収効果を与えたダメージの{{percent}}%に増加させ、基本威力が{{newPower}}になります。",
+      "addINGRAINVsPower": "使用者が5ターンの間毎ターン最大HPの1/16を回復し交代できなくなりますが(ねをはる効果)、威力が{{powerValue}}下がります。",
+      "addINGRAINOnly": "使用者が5ターンの間毎ターン最大HPの1/16を回復し交代できなくなります(ねをはる効果)。",
+      "addAQUA_RINGVsPower": "使用者が5ターンの間毎ターン最大HPの1/16を回復しますが(アクアリング効果)、威力が{{powerValue}}下がります。",
+      "addAQUA_RINGOnly": "使用者が5ターンの間毎ターン最大HPの1/16を回復します(アクアリング効果)。",
+      "addPlantHeal": "グラスフィールドが発動中の場合、使用者がHPを回復します。グラスフィールドが発動していない場合は技が失敗します。",
+      "addSandHeal": "すなあらしが発動中の場合、使用者がHPを回復します。すなあらしが発動していない場合は技が失敗します。"
+    },
+    "recoil": {
+      "addVsPower": "反動ダメージ{{percent}}%、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "addVsPowerOnly": "反動ダメージ{{percent}}%、基本威力が{{newPower}}になります。",
+      "increaseVsPower": "反動ダメージが{{percent}}%に設定され、基本威力が{{newPower}}になります。",
+      "increaseVsPowerOnly": "反動ダメージが{{percent}}%に設定され、基本威力が{{newPower}}になります。",
+      "increaseVsPowerAndAccuracy": "反動ダメージが{{percent}}%に設定され、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "decreaseVsPower": "反動が{{percent}}%になり、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "decreaseVsPowerNoAccuracy": "反動が{{percent}}%になり、基本威力が{{newPower}}になります。",
+      "removeVsPower": "反動ダメージが除去され、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "removeVsPowerNoAccuracy": "反動ダメージが除去され、基本威力が{{newPower}}になります。"
+    },
+    "sacrificial": {
+      "addHalf": "使用後にHPの半分を犠牲にし、基本威力が{{power}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "addHalfNoAccuracy": "使用後にHPの半分を犠牲にし、基本威力が{{power}}になります。",
+      "upgradeFull": "使用後に全HPを犠牲にし、基本威力が{{power}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "upgradeFullNoAccuracy": "使用後に全HPを犠牲にし、基本威力が{{power}}になります。",
+      "upgradeOnHit": "命中時のみHPを犠牲にし、基本威力が{{power}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "upgradeOnHitNoAccuracy": "命中時のみHPを犠牲にし、基本威力が{{power}}になります。"
+    },
+    "crit": {
+      "increaseRatio": "急所に当たりやすくなり、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "increaseRatioNoAccuracy": "急所に当たりやすくなり、基本威力が{{newPower}}になります。",
+      "upgradeToCritOnly": "急所にしか当たらなくなり、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "upgradeToCritOnlyNoAccuracy": "急所にしか当たらなくなり、基本威力が{{newPower}}になります。"
+    },
+    "confusion": {
+      "addChanceVsPower": "相手を混乱させる確率{{chance}}%を追加しますが、威力が{{powerValue}}下がります。"
+    },
+    "curse": {
+      "addChanceVsPower": "相手をのろいにする確率{{chance}}%を追加しますが(毎ターン最大HPの1/4を失う)、威力が{{powerValue}}下がります。"
+    },
+    "flags": {
+      "ignoreProtect": "技がまもる/みきりを貫通できるようになりますが、威力が{{powerValue}}下がります。",
+      "ignoreAbilities": "技が相手の特性を無視するようになり、威力が{{powerValue}}上がります。",
+      "soundBased": "技が音技になり(みがわりを貫通)、威力が{{powerValue}}上がります。",
+      "punchingMove": "技がパンチ技になり(てつのこぶしで強化)、威力が{{powerValue}}上がります。",
+      "slicingMove": "技が切る技になり(きれあじで強化)、威力が{{powerValue}}上がります。",
+      "pulseMove": "技が波動技になり(メガランチャーで強化)、威力が{{powerValue}}上がります。",
+      "bitingMove": "技がかみつく技になり(がんじょうあごで強化)、威力が{{powerValue}}上がります。",
+      "windMove": "技が風技になり(かぜおこし/かぜのちからの影響)、威力が{{powerValue}}上がります。",
+      "ballBombMove": "技がボール/爆弾技になり、威力が{{powerValue}}上がります。",
+      "powderMove": "技が粉技になり、威力が{{powerValue}}上がります。",
+      "danceMove": "技が踊り技になり、威力が{{powerValue}}上がります。",
+      "disableContact": "技が接触しなくなり、威力が{{powerValue}}上がります。",
+      "enableContact": "技が接触するようになり、威力が{{powerValue}}上がります。",
+      "ignoreStatChanges": "技が相手の防御能力変化と回避を無視するようになり、威力が{{powerValue}}上がります。",
+      "removeScreens": "技がリフレクター/ひかりのかべ/オーロラベールを除去するようになり、威力が{{powerValue}}上がります。"
+    },
+    "priority": {
+      "increase": "優先度が+{{value}}になり、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "increaseNoAccuracy": "優先度が+{{value}}になり、基本威力が{{newPower}}になります。",
+      "decrease": "優先度が{{value}}になり、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "decreaseNoAccuracy": "優先度が{{value}}になり、基本威力が{{newPower}}になります。",
+      "conditionalTerrain": "{{terrain}}フィールドが発動中の場合、優先度が{{value}}に上がり、威力が{{powerValue}}上がります。",
+      "conditionalFirstTurn": "最初のターンでなければ失敗し、優先度が{{value}}に上がり、威力が{{powerValue}}上がります。"
+    },
+    "category": {
+      "changeToSpecial": "分類を特殊に変更します。",
+      "changeToPhysical": "分類を物理に変更します。"
+    },
+    "misc": {
+      "addTrap": "{{trapName}}で相手を数ターン拘束しますが、威力が{{powerValue}}下がります。",
+      "addSwitchOut": "使用者が使用後に交代しますが、威力が{{powerValue}}下がります(とんぼがえりのように)。",
+      "addGrounding": "空中の相手を地面に引きずり下ろします(ひこうタイプの無効を除去)。",
+      "fixedDamageLevel": "ダメージ計算を使用者のレベルと同じダメージを与えるように変更します(基本威力を置き換え)。",
+      "fixedDamageValue": "ダメージ計算を固定{{value}}HPダメージを与えるように変更します。",
+      "fixedDamageTargetHalfHp": "ダメージ計算を相手の現在HPの半分と同じダメージを与えるように変更します(基本威力を置き換え)。",
+      "addSurviveDamage": "常に相手を最低1HPは残すようになり(みねうちのように)、威力が{{powerValue}}上がります。",
+      "addWeightPowerTarget": "相手の重さに基づいて威力が上がります(けたぐりのように)。",
+      "addWeightPowerCompare": "使用者が相手より重いほど威力が上がります(ヘビーボンバーのように)。",
+      "addSpeedPowerSlower": "使用者が相手より遅いほど威力が上がります(ジャイロボールのように)。",
+      "addSpeedPowerFaster": "使用者が相手より速いほど威力が上がります(エレキボールのように)。",
+      "addHpPowerHighHp": "使用者の現在HPが高いほど威力が上がります。",
+      "addHpPowerLowHp": "使用者の現在HPが低いほど威力が上がります(きしかいせいのように)。",
+      "addChargeTurn": "攻撃前にため時間が追加され、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "addChargeTurnWithBoost": "ため時間が追加され(使用者の{{statName}}を{{stages}}段階上げ)、基本威力が{{newPower}}になり、基本命中率が{{newAccuracy}}%になります。",
+      "addStealItemChance": "{{chance}}%の確率で相手の持ち物を盗み、基本威力が{{newPower}}になります。",
+      "addStealItemGuaranteed": "相手の持ち物を盗み(100%確率)、基本威力が{{newPower}}になります。",
+      "addRemoveItem": "相手の持ち物を除去し、基本威力が{{newPower}}になります。",
+      "powerBoostWeather": "{{weather}}が発動中の場合、威力が2倍になります。",
+      "powerBoostTerrain": "{{terrain}}フィールドが発動中で相手が地面にいる場合、威力が2倍になります。",
+      "powerBoostConsecutive": "連続成功使用のたびに威力が2倍になります(最大4倍)。",
+      "powerBoostTurnDamaged": "使用者がこのターンに相手からダメージを受けた場合、威力が2倍になります。"
+    },
+    "statusSpecific": {
+      "setWeather": "天気を{{weather}}に変更します。{{weather}}が既に発動中の場合は技が失敗します。",
+      "setTerrain": "フィールドを{{terrain}}に変更します。{{terrain}}フィールドが既に発動中の場合は技が失敗します。",
+      "clearWeather": "現在の天気を解除します。",
+      "clearTerrain": "現在のフィールドを解除します。",
+      "addArenaTrap": "相手の場に{{trapName}}のトラップを設置します。{{trapName}}が既に発動中の場合は技が失敗します。"
+    }
+  },
   "moveTriggers": {
-      "loweredItsHead": "{{pokemonName}}は\n頭を下げた！",
-      "tookInSunlight": "{{pokemonName}}は\n日光を吸収した！"
+    "loweredItsHead": "{{pokemonName}}は\n頭を下げた！",
+    "tookInSunlight": "{{pokemonName}}は\n日光を吸収した！"
   }
 } 

@@ -22,6 +22,45 @@ interface NodeSprite {
   flipX?: boolean;
 }
 
+function extractNodePattern(nodeId: string): string | null {
+  const match = nodeId.match(/^(\d+_\d+)/);
+  return match ? match[1] : null;
+}
+
+function hasConnectionByPattern(connections: string[], targetNodeId: string): boolean {
+  const targetPattern = extractNodePattern(targetNodeId);
+  if (!targetPattern) {
+    return false;
+  }
+  
+  return connections.some(connectionId => {
+    const connectionPattern = extractNodePattern(connectionId);
+    return connectionPattern === targetPattern;
+  });
+}
+
+function findNodeByPattern(battlePath: any, selectedPath: string): any | null {
+  const selectedPattern = extractNodePattern(selectedPath);
+  if (!selectedPattern) {
+    return null;
+  }
+  
+  const [waveStr, indexStr] = selectedPattern.split('_');
+  const wave = parseInt(waveStr, 10);
+  const pathIndex = parseInt(indexStr, 10) - 1;
+  
+  if (isNaN(wave) || isNaN(pathIndex)) {
+    return null;
+  }
+  
+  const nodesAtWave = battlePath.waveToNodeMap.get(wave);
+  if (!nodesAtWave || pathIndex >= nodesAtWave.length) {
+    return null;
+  }
+  
+  return nodesAtWave[pathIndex];
+}
+
 export default class BattlePathUiHandler extends ModalUiHandler {
   private pathContainer: Phaser.GameObjects.Container;
   private scrollContainer: Phaser.GameObjects.Container;
@@ -67,6 +106,10 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
   private lastScrollTime: number = 0;
   private readonly SCROLL_THROTTLE_MS = 150;
+  
+  private inputDelayTimer: Phaser.Time.TimerEvent | null = null;
+  private inputBlocked: boolean = false;
+  private readonly INPUT_DELAY_MS = 3000;
 
   public refreshCurrentWave(): void {
     const newWave = this.scene.battlePathWave || 1;
@@ -133,6 +176,12 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     if (super.show([config])) {
       this.currentWave = this.scene.battlePathWave || 1;
       
+      this.inputBlocked = true;
+      this.inputDelayTimer = this.scene.time.delayedCall(this.INPUT_DELAY_MS, () => {
+        this.inputBlocked = false;
+        this.inputDelayTimer = null;
+      });
+      
       this.ensureContainersExist();
       
       let battlePath = (this.scene as any).gameData?.battlePath;
@@ -172,6 +221,12 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     this.scrollPosition = 0;
     this.isDragging = false;
     this.onNodeSelected = null;
+    
+    if (this.inputDelayTimer) {
+      this.inputDelayTimer.destroy();
+      this.inputDelayTimer = null;
+    }
+    this.inputBlocked = false;
     
     this.hideCustomTooltip();
     
@@ -395,7 +450,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     let shouldHideText = false;
     
     if (isActiveWave) {
-      if (!this.viewOnlyMode && previouslySelectedNode && previouslySelectedNode.connections && !previouslySelectedNode.connections.includes(node.id)) {
+      if (!this.viewOnlyMode && previouslySelectedNode && previouslySelectedNode.connections && !previouslySelectedNode.connections.includes(node.id) && !hasConnectionByPattern(previouslySelectedNode.connections, node.id)) {
         nodeAlpha = 0.5;
         shouldHideText = true;
       }
@@ -465,7 +520,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       
       if (wave !== firstWave) {
         for (const [, prevNode] of battlePath.nodeMap) {
-          if (prevNode.wave < wave && prevNode.connections.includes(node.id)) {
+          if (prevNode.wave < wave && (prevNode.connections.includes(node.id))) {
             hasIncomingConnection = true;
             break;
           }
@@ -808,7 +863,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     this.hideCustomTooltip();
     
     const tooltipWidth = 1200;
-    const tooltipHeight = challengeCount > 6 ? 1000 : challengeCount > 3 ? 500 : 250;
+    const tooltipHeight = challengeCount > 6 ? 1000 : 500;
     const showManyLines = challengeCount > 6;
     const padding = 16;
     
@@ -831,6 +886,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     this.customTooltipContainer.setDepth(1000);
     
     const tooltipBg = addWindow(this.scene, -tooltipWidth / 2, -tooltipHeight / 2, tooltipWidth, tooltipHeight);
+    tooltipBg.setAlpha(0.9); // Make background semi-transparent
     this.customTooltipContainer.add(tooltipBg);
 
     
@@ -948,15 +1004,33 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       [PathNodeType.EGG_VOUCHER]: "eggVoucher",
       [PathNodeType.PP_MAX]: "ppMax",
       [PathNodeType.COLLECTED_TYPE]: "collectedType",
+      [PathNodeType.COLLECTED_SHOP]: "collectedShop",
       [PathNodeType.EXP_SHARE]: "expShare",
       [PathNodeType.TYPE_SWITCHER]: "typeSwitcher",
       [PathNodeType.PASSIVE_ABILITY]: "passiveAbility",
       [PathNodeType.ANY_TMS]: "anyTms",
+      //[PathNodeType.ANY_TMS_MASTER]: "anyTmsMaster",
+      [PathNodeType.TERA_SHARDS]: "teraShards",
       [PathNodeType.CHALLENGE_BOSS]: "challengeBoss",
       [PathNodeType.CHALLENGE_RIVAL]: "challengeRival",
       [PathNodeType.CHALLENGE_EVIL_BOSS]: "challengeEvilBoss",
       [PathNodeType.CHALLENGE_CHAMPION]: "challengeChampion",
-      [PathNodeType.CHALLENGE_REWARD]: "challengeReward"
+      [PathNodeType.CHALLENGE_REWARD]: "challengeReward",
+      [PathNodeType.GREAT_BALL_ITEMS]: "greatBallItems",
+      [PathNodeType.ULTRA_BALL_ITEMS]: "ultraBallItems",
+      [PathNodeType.HEAL_ITEMS]: "potion",
+      [PathNodeType.REVIVER_SEED]: "reviverSeed",
+      [PathNodeType.SACRED_ASH]: "sacredAsh",
+      [PathNodeType.SHELL_BELL]: "shellBell",
+      [PathNodeType.LEFTOVERS]: "leftovers",
+      [PathNodeType.QUICK_CLAW]: "quickClaw",
+      [PathNodeType.WIDE_LENS]: "wideLens",
+      [PathNodeType.GRIP_CLAW]: "gripClaw",
+      [PathNodeType.EVIOLITE]: "eviolite",
+      [PathNodeType.SCOPE_LENS]: "scopeLens",
+      [PathNodeType.VITAMIN]: "vitamin",
+      [PathNodeType.MOVE_UPGRADE]: "moveUpgrade",
+      [PathNodeType.LOW_TIER_MOVE_UPGRADE]: "lowTierMoveUpgrade"
     };
     
     const key = descriptionKeys[nodeType];
@@ -1118,9 +1192,11 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       case PathNodeType.EVIL_GRUNT_BATTLE: return { key: "items", frame: "thick_club", scale: 0.35 };
       case PathNodeType.EVIL_ADMIN_BATTLE: return { key: "items", frame: "malicious_armor", scale: 0.35 };
       case PathNodeType.RAND_PERMA_ITEM: return { key: "smitems_192", frame: "glitchModSoul", scale: 0.0525 };
-      case PathNodeType.PERMA_ITEMS: return { key: "smitems_192", frame: "permaTrainerSnatchCost", scale: 0.0525 };
+      case PathNodeType.PERMA_ITEMS: return { key: "smitems_192", frame: "permaMetronomeLevelup", scale: 0.0525 };
       case PathNodeType.GOLDEN_POKEBALL: return { key: "items", frame: "pb_gold", scale: 0.35 };
       case PathNodeType.ROGUE_BALL_ITEMS: return { key: "items", frame: "rb", scale: 0.35 };
+      case PathNodeType.GREAT_BALL_ITEMS: return { key: "items", frame: "gb", scale: 0.35 };
+      case PathNodeType.ULTRA_BALL_ITEMS: return { key: "items", frame: "ub", scale: 0.35 };
       case PathNodeType.MASTER_BALL_ITEMS: return { key: "items", frame: "mb", scale: 0.35 };
       case PathNodeType.ABILITY_SWITCHERS: return { key: "smitems_192", frame: "glitchAbilitySwitch", scale: 0.0525 };
       case PathNodeType.STAT_SWITCHERS: return { key: "smitems_192", frame: "glitchStatSwitch", scale: 0.06 };
@@ -1133,15 +1209,31 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       case PathNodeType.EGG_VOUCHER: return { key: "items", frame: "coupon", scale: 0.35 };
       case PathNodeType.PP_MAX: return { key: "items", frame: "pp_max", scale: 0.35 };
       case PathNodeType.COLLECTED_TYPE: return { key: "smitems_192", frame: "modSoulCollected", scale: 0.0525 };
+      case PathNodeType.COLLECTED_SHOP: return { key: "smitems_192", frame: "permaTrainerSnatchCost", scale: 0.0525 };
       case PathNodeType.EXP_SHARE: return { key: "items", frame: "exp_share", scale: 0.35 };
       case PathNodeType.TYPE_SWITCHER: return { key: "smitems_192", frame: "glitchTypeSwitch", scale: 0.0525 };
       case PathNodeType.PASSIVE_ABILITY: return { key: "smitems_192", frame: "modPassiveAbility", scale: 0.0525 };
       case PathNodeType.ANY_TMS: return { key: "smitems_192", frame: "glitchTm", scale: 0.0525 };
+      // case PathNodeType.ANY_TMS_MASTER: return { key: "items", frame: "mb", scale: 0.35 };
+      case PathNodeType.TERA_SHARDS: return { key: "items", frame: "stellar_tera_shard", scale: 0.35 };
       case PathNodeType.CHALLENGE_BOSS: return { key: "smitems_192", frame: "glitchCommandSeal", scale: 0.0525 };
       case PathNodeType.CHALLENGE_RIVAL: return { key: "smitems_192", frame: "glitchCommandSeal", scale: 0.0525 };
       case PathNodeType.CHALLENGE_EVIL_BOSS: return { key: "smitems_192", frame: "glitchCommandSeal", scale: 0.0525 };
       case PathNodeType.CHALLENGE_CHAMPION: return { key: "smitems_192", frame: "glitchCommandSeal", scale: 0.0525 };
       case PathNodeType.CHALLENGE_REWARD: return { key: "items", frame: "master_ribbon", scale: 0.35 };
+      case PathNodeType.HEAL_ITEMS: return { key: "items", frame: "potion", scale: 0.35 };
+      case PathNodeType.REVIVER_SEED: return { key: "items", frame: "reviver_seed", scale: 0.35 };
+      case PathNodeType.SACRED_ASH: return { key: "items", frame: "sacred_ash", scale: 0.35 };
+      case PathNodeType.SHELL_BELL: return { key: "items", frame: "shell_bell", scale: 0.35 };
+      case PathNodeType.LEFTOVERS: return { key: "items", frame: "leftovers", scale: 0.35 };
+      case PathNodeType.QUICK_CLAW: return { key: "items", frame: "quick_claw", scale: 0.35 };
+      case PathNodeType.WIDE_LENS: return { key: "items", frame: "wide_lens", scale: 0.35 };
+      case PathNodeType.GRIP_CLAW: return { key: "items", frame: "grip_claw", scale: 0.35 };
+      case PathNodeType.EVIOLITE: return { key: "items", frame: "eviolite", scale: 0.35 };
+      case PathNodeType.SCOPE_LENS: return { key: "items", frame: "scope_lens", scale: 0.35 };
+      case PathNodeType.VITAMIN: return { key: "items", frame: "protein", scale: 0.35 };
+      case PathNodeType.MOVE_UPGRADE: return { key: "smitems_192", frame: "smittyShard", scale: 0.0525 };
+      case PathNodeType.LOW_TIER_MOVE_UPGRADE: return { key: "smitems_192", frame: "smittyVoid", scale: 0.0525 };
       default: return { key: "smitems_192", frame: "permaMoreRewardChoice", scale: 0.0525 };
     }
   }
@@ -1192,15 +1284,33 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       [PathNodeType.EGG_VOUCHER]: "eggVoucher",
       [PathNodeType.PP_MAX]: "ppMax",
       [PathNodeType.COLLECTED_TYPE]: "collectedType",
+      [PathNodeType.COLLECTED_SHOP]: "collectedShop",
       [PathNodeType.EXP_SHARE]: "expShare",
       [PathNodeType.TYPE_SWITCHER]: "typeSwitcher",
       [PathNodeType.PASSIVE_ABILITY]: "passiveAbility",
       [PathNodeType.ANY_TMS]: "anyTms",
+      // [PathNodeType.ANY_TMS_MASTER]: "anyTmsMaster",
+      [PathNodeType.TERA_SHARDS]: "teraShards",
       [PathNodeType.CHALLENGE_BOSS]: "challengeBoss",
       [PathNodeType.CHALLENGE_RIVAL]: "challengeRival",
       [PathNodeType.CHALLENGE_EVIL_BOSS]: "challengeEvilBoss",
       [PathNodeType.CHALLENGE_CHAMPION]: "challengeChampion",
-      [PathNodeType.CHALLENGE_REWARD]: "challengeReward"
+      [PathNodeType.CHALLENGE_REWARD]: "challengeReward",
+      [PathNodeType.GREAT_BALL_ITEMS]: "greatBallItems",
+      [PathNodeType.ULTRA_BALL_ITEMS]: "ultraBallItems",
+      [PathNodeType.HEAL_ITEMS]: "potion",
+      [PathNodeType.REVIVER_SEED]: "reviverSeed",
+      [PathNodeType.SACRED_ASH]: "sacredAsh",
+      [PathNodeType.SHELL_BELL]: "shellBell",
+      [PathNodeType.LEFTOVERS]: "leftovers",
+      [PathNodeType.QUICK_CLAW]: "quickClaw",
+      [PathNodeType.WIDE_LENS]: "wideLens",
+      [PathNodeType.GRIP_CLAW]: "gripClaw",
+      [PathNodeType.EVIOLITE]: "eviolite",
+      [PathNodeType.SCOPE_LENS]: "scopeLens",
+      [PathNodeType.VITAMIN]: "vitamin",
+      [PathNodeType.MOVE_UPGRADE]: "moveUpgrade",
+      [PathNodeType.LOW_TIER_MOVE_UPGRADE]: "lowTierMoveUpgrade"
     };
     
     const key = nameKeys[nodeType];
@@ -1211,6 +1321,10 @@ export default class BattlePathUiHandler extends ModalUiHandler {
   }
 
   processInput(button: Button): boolean {
+    if (this.inputBlocked) {
+      return true;
+    }
+    
     const ui = this.getUi();
 
     switch (button) {
@@ -1668,18 +1782,33 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       return [];
     }
     
-    const previouslySelectedNode = battlePath.nodeMap.get(selectedPath);
+    let previouslySelectedNode = battlePath.nodeMap.get(selectedPath);
     if (!previouslySelectedNode) {
-      console.warn(`Previously selected node ${selectedPath} not found in battle path`);
-      return [];
+      previouslySelectedNode = findNodeByPattern(battlePath, selectedPath);
+      if (!previouslySelectedNode) {
+        console.warn(`Previously selected node ${selectedPath} not found in battle path (even by pattern)`);
+        return [];
+      }
     }
     
     const availableNodeIds: string[] = [];
-    const nodesAtCurrentWave = battlePath.waveToNodeMap.get(currentWave) || [];
+    let nodesAtCurrentWave = battlePath.waveToNodeMap.get(currentWave) || [];
     
     for (const currentWaveNode of nodesAtCurrentWave) {
-      if (previouslySelectedNode.connections && previouslySelectedNode.connections.includes(currentWaveNode.id)) {
+      if (previouslySelectedNode.connections && (previouslySelectedNode.connections.includes(currentWaveNode.id) || hasConnectionByPattern(previouslySelectedNode.connections, currentWaveNode.id))) {
         availableNodeIds.push(currentWaveNode.id);
+      }
+    }
+    
+    if (availableNodeIds.length === 0) {
+      this.scene.battlePathWave = previouslySelectedNode.wave + 1;
+      const newCurrentWave = this.scene.battlePathWave;
+      nodesAtCurrentWave = battlePath.waveToNodeMap.get(newCurrentWave) || [];
+      
+      for (const currentWaveNode of nodesAtCurrentWave) {
+        if (previouslySelectedNode.connections && (previouslySelectedNode.connections.includes(currentWaveNode.id) || hasConnectionByPattern(previouslySelectedNode.connections, currentWaveNode.id))) {
+          availableNodeIds.push(currentWaveNode.id);
+        }
       }
     }
     
@@ -1721,7 +1850,11 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       return -1;
     }
 
-    const previouslySelectedNode = battlePath.nodeMap.get(selectedPath);
+    let previouslySelectedNode = battlePath.nodeMap.get(selectedPath);
+    if (!previouslySelectedNode) {
+      previouslySelectedNode = findNodeByPattern(battlePath, selectedPath);
+    }
+    
     if (!previouslySelectedNode || !previouslySelectedNode.connections) {
       return -1;
     }
@@ -1747,7 +1880,12 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       return null;
     }
 
-    return battlePath.nodeMap.get(selectedPath) || null;
+    let previouslySelectedNode = battlePath.nodeMap.get(selectedPath);
+    if (!previouslySelectedNode) {
+      previouslySelectedNode = findNodeByPattern(battlePath, selectedPath);
+    }
+
+    return previouslySelectedNode || null;
   }
 
   private shouldShowTextInViewMode(node: any, isHovered: boolean = false): boolean {
@@ -1771,8 +1909,11 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     if (selectedPath) {
       const battlePath = getCurrentBattlePath();
       if (battlePath) {
-        const selectedNode = battlePath.nodeMap.get(selectedPath);
-        if (selectedNode && selectedNode.connections && selectedNode.connections.includes(node.id)) {
+        let selectedNode = battlePath.nodeMap.get(selectedPath);
+        if (!selectedNode) {
+          selectedNode = findNodeByPattern(battlePath, selectedPath);
+        }
+        if (selectedNode && selectedNode.connections && (selectedNode.connections.includes(node.id) || hasConnectionByPattern(selectedNode.connections, node.id))) {
           return true;
         }
       }

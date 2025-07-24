@@ -62,9 +62,6 @@ function getHazardName(hazard: ArenaTagType): string {
   return i18next.t(`arenaFlyout:${toCamelCase(ArenaTagType[hazard])}`);
 }
 
-/**
- * Phase that handles upgrading a move that has been used many times
- */
 export class MoveUpgradePhase extends Phase {
     private moveId: Moves;
     private upgradedMoveName: string;
@@ -102,9 +99,6 @@ export class MoveUpgradePhase extends Phase {
         this.end();
     }
     
-    /**
-     * Shows 3-4 options for upgrading the move
-     */
     private showMoveUpgradeOptions(): void {
         const upgradeOptions = this.generateMoveUpgradeOptions();
         
@@ -112,9 +106,6 @@ export class MoveUpgradePhase extends Phase {
         this.scene.unshiftPhase(new SelectMoveUpgradeModifierPhase(this.scene, 0, [ModifierTier.COMMON, ModifierTier.GREAT, ModifierTier.ULTRA], true, upgradeOptions, null, () => this.generateMoveUpgradeOptions()));
     }
     
-    /**
-     * Generate upgrade options for the move based on its characteristics
-     */
     private generateMoveUpgradeOptions(): ModifierType[] {
         const baseMove = this.scene.getUpgradedMove(allMoves[this.moveId]);
         const moveGenerator = new MoveUpgradeModifierTypeGenerator();
@@ -212,6 +203,22 @@ export class MoveUpgradePhase extends Phase {
         const FLINCH_INCREASE_CHANCE = 10;
         const FLINCH_INCREASE_HIGH_CHANCE = 20;
         const FLINCH_INCREASE_HIGH_POWER_PENALTY = 15;
+        const CONFUSION_CHANCE_LOW = 10;
+        const CONFUSION_CHANCE_MEDIUM = 20;
+        const CONFUSION_CHANCE_HIGH = 30;
+        const CONFUSION_POWER_PENALTY_LOW = 10;
+        const CONFUSION_POWER_PENALTY_MEDIUM = 15;
+        const CONFUSION_POWER_PENALTY_HIGH = 25;
+        const ENCORE_CHANCE_LOW = 10;
+        const ENCORE_CHANCE_HIGH = 30;
+        const ENCORE_POWER_PENALTY = 25;
+        const CURSE_CHANCE_LOW = 10;
+        const CURSE_CHANCE_HIGH = 30;
+        const CURSE_POWER_PENALTY_LOW = 30;
+        const CURSE_POWER_PENALTY_HIGH = 50;
+        const HEAL_OVER_TIME_POWER_PENALTY = 25;
+        const HEAL_OVER_TIME_DURATION = 5;
+        const ALWAYS_CRIT_NEXT_MOVE_POWER_PENALTY = 50;
         const ADD_STAT_BOOST_SELF_CHANCE_NON_STATUS = 20;
         const ADD_STAT_LOWER_TARGET_POWER_PENALTY = 15;
         const ADD_STAT_LOWER_TARGET_ACC_PENALTY_STATUS = 5;
@@ -554,6 +561,11 @@ export class MoveUpgradePhase extends Phase {
             if (!hasHitHealAttr) {
                 upgrades.push(moveGenerator.getType(this.moveId, -HITHEAL_THIRD_POWER_PENALTY, null, null, 0, i18next.t("moveUpgrade:description:heal:addHitHealVsPower", { percent: 33, powerValue: HITHEAL_THIRD_POWER_PENALTY  }), null, null, [new HitHealAttr(HITHEAL_THIRD)]));
                 upgrades.push(moveGenerator.getType(this.moveId, -HITHEAL_50_POWER_PENALTY, null, null, 0, i18next.t("moveUpgrade:description:heal:addHitHealVsPower", { percent: 50, powerValue: HITHEAL_50_POWER_PENALTY }), null, null, [new HitHealAttr(HITHEAL_HALF)]));
+
+                if (!baseMove.getAttrs(AddBattlerTagAttr).some((a:AddBattlerTagAttr) => a.tagType === BattlerTagType.AQUA_RING || a.tagType === BattlerTagType.INGRAIN)) {
+                    upgrades.push(moveGenerator.getType(this.moveId, -HEAL_OVER_TIME_POWER_PENALTY, null, null, 0, i18next.t("moveUpgrade:description:heal:addAquaRingVsPower", { powerValue: HEAL_OVER_TIME_POWER_PENALTY }), null, null, [new AddBattlerTagAttr(BattlerTagType.AQUA_RING, true, true)]));
+                    upgrades.push(moveGenerator.getType(this.moveId, -HEAL_OVER_TIME_POWER_PENALTY, null, null, 0, i18next.t("moveUpgrade:description:heal:addIngrainVsPower", { powerValue: HEAL_OVER_TIME_POWER_PENALTY }), null, null, [new AddBattlerTagAttr(BattlerTagType.INGRAIN, true, true)]));
+                }
             }
             else { 
                 const healAttr = baseMove.getAttrs(HitHealAttr)[0] as HitHealAttr; 
@@ -600,6 +612,11 @@ export class MoveUpgradePhase extends Phase {
             upgrades.push(moveGenerator.getType(this.moveId, 0, null, null, 0, i18next.t("moveUpgrade:description:heal:addSelfHeal", { percent: Math.round(HEAL_STATUS_ADD_25 * 100) }), null, null, [new HealAttr(HEAL_STATUS_ADD_25, true, true)]));
             upgrades.push(moveGenerator.getType(this.moveId, 0, null, null, 0, i18next.t("moveUpgrade:description:heal:addPlantHeal"), null, null, [new PlantHealAttr()]));
             upgrades.push(moveGenerator.getType(this.moveId, 0, null, null, 0, i18next.t("moveUpgrade:description:heal:addSandHeal"), null, null, [new SandHealAttr()]));
+
+            if (!baseMove.getAttrs(AddBattlerTagAttr).some((a:AddBattlerTagAttr) => a.tagType === BattlerTagType.AQUA_RING || a.tagType === BattlerTagType.INGRAIN)) {
+                upgrades.push(moveGenerator.getType(this.moveId, 0, null, null, 0, i18next.t("moveUpgrade:description:heal:addAquaRing"), null, null, [new AddBattlerTagAttr(BattlerTagType.AQUA_RING, true, true)]));
+                upgrades.push(moveGenerator.getType(this.moveId, 0, null, null, 0, i18next.t("moveUpgrade:description:heal:addIngrain"), null, null, [new AddBattlerTagAttr(BattlerTagType.INGRAIN, true, true)]));
+            }
         }
 
         if (!isStatusMove && !hasAnySecondaryEffect && !hasGuaranteedSecondaryEffect && !hasFlinch) { 
@@ -617,6 +634,21 @@ export class MoveUpgradePhase extends Phase {
             }
             if (!baseMove.getAttrs(AddBattlerTagAttr).some((a:AddBattlerTagAttr) => a.tagType === BattlerTagType.SEEDED)) {
                 upgrades.push(moveGenerator.getType(this.moveId, -ADD_LEECH_SEED_POWER_PENALTY, null, null, 0, i18next.t("moveUpgrade:description:status:addLeechSeed", { powerValue: ADD_LEECH_SEED_POWER_PENALTY }), 100, null, [new AddBattlerTagAttr(BattlerTagType.SEEDED)]));
+            }
+
+            if (!hasConfuseAttr) {
+                upgrades.push(moveGenerator.getType(this.moveId, -CONFUSION_POWER_PENALTY_LOW, null, null, 0, i18next.t("moveUpgrade:description:confusion:addChanceVsPower", { chance: CONFUSION_CHANCE_LOW, powerValue: CONFUSION_POWER_PENALTY_LOW }), CONFUSION_CHANCE_LOW, null, [new ConfuseAttr()]));
+                upgrades.push(moveGenerator.getType(this.moveId, -CONFUSION_POWER_PENALTY_HIGH, null, null, 0, i18next.t("moveUpgrade:description:confusion:addChanceVsPower", { chance: CONFUSION_CHANCE_HIGH, powerValue: CONFUSION_POWER_PENALTY_HIGH }), CONFUSION_CHANCE_HIGH, null, [new ConfuseAttr()]));
+            }
+
+            if (!baseMove.getAttrs(AddBattlerTagAttr).some((a:AddBattlerTagAttr) => a.tagType === BattlerTagType.ENCORE)) {
+                upgrades.push(moveGenerator.getType(this.moveId, -ENCORE_POWER_PENALTY, null, null, 0, i18next.t("moveUpgrade:description:encore:addChanceVsPower", { chance: ENCORE_CHANCE_LOW, powerValue: ENCORE_POWER_PENALTY }), ENCORE_CHANCE_LOW, null, [new AddBattlerTagAttr(BattlerTagType.ENCORE, true, true)]));
+                upgrades.push(moveGenerator.getType(this.moveId, -ENCORE_POWER_PENALTY, null, null, 0, i18next.t("moveUpgrade:description:encore:addChanceVsPower", { chance: ENCORE_CHANCE_HIGH, powerValue: ENCORE_POWER_PENALTY }), ENCORE_CHANCE_HIGH, null, [new AddBattlerTagAttr(BattlerTagType.ENCORE, true, true)]));
+            }
+
+            if (!baseMove.getAttrs(AddBattlerTagAttr).some((a:AddBattlerTagAttr) => a.tagType === BattlerTagType.CURSED)) {
+                upgrades.push(moveGenerator.getType(this.moveId, -CURSE_POWER_PENALTY_LOW, null, null, 0, i18next.t("moveUpgrade:description:curse:addChanceVsPower", { chance: CURSE_CHANCE_LOW, powerValue: CURSE_POWER_PENALTY_LOW }), CURSE_CHANCE_LOW, null, [new AddBattlerTagAttr(BattlerTagType.CURSED, true, true)]));
+                upgrades.push(moveGenerator.getType(this.moveId, -CURSE_POWER_PENALTY_HIGH, null, null, 0, i18next.t("moveUpgrade:description:curse:addChanceVsPower", { chance: CURSE_CHANCE_HIGH, powerValue: CURSE_POWER_PENALTY_HIGH }), CURSE_CHANCE_HIGH, null, [new AddBattlerTagAttr(BattlerTagType.CURSED, true, true)]));
             }
         } else if (!isStatusMove && (hasAnySecondaryEffect || hasGuaranteedSecondaryEffect)) { 
             const currentStatusAttr = statusEffectAttrs[0] as StatusEffectAttr | undefined;
@@ -794,6 +826,11 @@ export class MoveUpgradePhase extends Phase {
             else if (hasHighCrit && !isCritOnly) { 
                  upgrades.push(moveGenerator.getType(this.moveId, -CRIT_ONLY_POWER_PENALTY, null, null, 0, i18next.t("moveUpgrade:description:crit:upgradeToCritOnlyVsPower", { powerValue: CRIT_ONLY_POWER_PENALTY }), null, null, [new CritOnlyAttr()])); 
                  upgrades.push(moveGenerator.getType(this.moveId, 0, null, null, -CRIT_ONLY_ACC_PENALTY, i18next.t("moveUpgrade:description:crit:upgradeToCritOnlyVsAccuracy", { accuracyValue: CRIT_ONLY_ACC_PENALTY }), null, null, [new CritOnlyAttr()])); 
+            }
+
+            if (!baseMove.getAttrs(AddBattlerTagAttr).some((a:AddBattlerTagAttr) => a.tagType === BattlerTagType.ALWAYS_CRIT)) {
+                const adjustedPowerPenalty = Math.max(10, Math.floor(baseMovePower * 0.5));
+                upgrades.push(moveGenerator.getType(this.moveId, -adjustedPowerPenalty, null, null, 0, i18next.t("moveUpgrade:description:crit:alwaysCritNextMoveVsPower", { powerValue: adjustedPowerPenalty }), null, null, [new AddBattlerTagAttr(BattlerTagType.ALWAYS_CRIT, 1)]));
             }
         }
 
@@ -1005,10 +1042,7 @@ export class MoveUpgradePhase extends Phase {
 
         return this.shuffleArray(upgrades);
     }
-    
-    /**
-     * Shuffles an array in place
-     */
+
     private shuffleArray<T>(array: T[]): T[] {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Utils.randSeedInt(i+1));

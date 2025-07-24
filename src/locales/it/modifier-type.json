@@ -71,6 +71,10 @@
     "PokemonBaseStatBoosterModifierType": {
       "description": "Aumenta {{statName}} di base del possessore del 10%."
     },
+    "PlayerPokemonBaseStatBoosterModifierType": {
+      "name": "Economico",
+      "description": "Aumenta {{statName}} di base del possessore del 5%."
+    },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restituisce il 100% dei PS a tutti i Pokémon."
     },
@@ -122,7 +126,7 @@
     "TerastallizeModifierType": {
       "name": "Teralite {{teraType}}",
       "statLabel": "Teralite",
-      "description": "Teracristallizza in {{teraType}} il possessore per massimo 10 battaglie."
+      "description": "Teracristallizza in {{teraType}} il possessore per massimo 10 battaglie. 20 battaglie se si ha la Terasfera"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "Quando il possessore attacca, c'è una probabilità del {{chancePercent}}% che l'oggetto in possesso del nemico gli venga rubato."
@@ -152,7 +156,7 @@
     },
     "TERA_ORB": {
       "name": "Terasfera",
-      "description": "I teraliti diventano disponibili."
+      "description": "I teraliti durano 10 turni in più."
     },
     "MAP": {
       "name": "Mappa",
@@ -314,7 +318,7 @@
     },
     "BERRY_POUCH": {
       "name": "Porta bacche",
-      "description": "Aggiunge il 15% di possibilità che una bacca usata non venga consumata."
+      "description": "Aggiunge il 10% di possibilità che una bacca usata non venga consumata."
     },
     "FOCUS_BAND": {
       "name": "Bandana",
@@ -411,6 +415,11 @@
       "name": "++XM{{moveId}} - {{moveName}}++",
       "statLabel": "XM (Qualsiasi MT)",
       "description": "Insegna {{moveName}} a qualsiasi Pokémon\n(Tieni premuto C o Shift per maggiori informazioni)."
+    },
+    "MOVE_UPGRADE": {
+      "name": "Potenziamento Mossa",
+      "statLabel": "Oggetto Potenziamento Mossa",
+      "description": "Potenzia casualmente una delle mosse della tua squadra"
     },
     "TypeSwitcherModifierType": {
       "name": "Cambia Tipo: {{type1}} / {{type2}}",
@@ -698,9 +707,10 @@
       }
     },
     "CollectedTypeModifierType": {
-      "name": "Tipo Raccolto: {{type}}",
-      "statLabel": "Tipo Raccolto",
-      "description": "Usa 5 di QUALSIASI COMBINAZIONE DI TIPO invece di rilasciare un Pokémon per gli Oggetti di Rilascio."
+      "name": "Essenze",
+      "shopName": "Essenza {{type}}",
+      "statLabel": "Essenza",
+      "description": "Usa 5 invece di liberare un Pokémon per Oggetti di Liberazione o scambia per ricompense con il Collezionista."
     },
     "SacrificeModifierType": {
       "description": "Rilascia un Pokémon per aumentare {{stat}} di un altro Pokémon del 15%."
@@ -1012,6 +1022,7 @@
     "waves": "ondate",
     "uses": "usi",
     "glitchPieceCost": "*COSTA 2x Frammento Glitch",
-    "moreInfo": "(Tieni premuto C / Shift per informazioni)"
+    "moreInfo": "(Tieni premuto C / Shift per informazioni)",
+    "upgrade": "Potenziamento"
   }
 }

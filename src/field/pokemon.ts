@@ -68,6 +68,7 @@ import {
   EnemyFusionChanceModifier,
   HiddenAbilityRateBoosterModifier,
   PokemonBaseStatModifier,
+  PlayerPokemonBaseStatBoosterModifier,
   PokemonFriendshipBoosterModifier,
   PokemonHeldItemModifier,
   PokemonNatureWeightModifier,
@@ -1042,6 +1043,7 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
       }
     }
     this.scene.applyModifiers(PokemonBaseStatModifier, this.isPlayer(), this, baseStats);
+    this.scene.applyModifiers(PlayerPokemonBaseStatBoosterModifier, this.isPlayer(), this, baseStats);
     this.scene.applyModifiers(StatSacrificeModifier, this.isPlayer(), this, baseStats);
     this.scene.applyModifiers(StatSwitcherModifier, this.isPlayer(), this, baseStats);
     const stats = Utils.getEnumValues(Stat);
@@ -5191,12 +5193,12 @@ export class PokemonMove {
     return (ignorePp || this.ppUsed < this.getMovePp() || this.getMove().pp === -1) && !this.getMove().name.endsWith(" (N)");
   }
 
-  getMove(): Move {
+  getMove(isPlayerMove: boolean = true): Move {
     const baseMove = allMoves[this.moveId];
     if(this.virtual === false) {
       const scene = BattleScene.currentScene;
       if(scene) {
-        return scene.getUpgradedMove(baseMove);
+        return scene.getUpgradedMove(baseMove, isPlayerMove);
       }
     }
     return baseMove;

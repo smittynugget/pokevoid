@@ -39,7 +39,11 @@ export enum GameModes {
   CHAOS_VOID,
   CHAOS_ROGUE_VOID,
   CHAOS_INFINITE,
-  CHAOS_INFINITE_ROGUE
+  CHAOS_INFINITE_ROGUE,
+  CHAOS_NUZLIGHT,
+  CHAOS_NUZLOCKE,
+  CHAOS_NUZLIGHT_DRAFT,
+  CHAOS_NUZLOCKE_DRAFT
 }
 
 interface GameModeConfig {
@@ -286,6 +290,10 @@ export class GameMode implements GameModeConfig {
         return waveIndex === 500;
       case GameModes.CHAOS_ROGUE:
       case GameModes.CHAOS_JOURNEY:
+      case GameModes.CHAOS_NUZLIGHT:
+      case GameModes.CHAOS_NUZLOCKE:
+      case GameModes.CHAOS_NUZLIGHT_DRAFT:
+      case GameModes.CHAOS_NUZLOCKE_DRAFT:
         return waveIndex === 500;
       case GameModes.CHAOS_VOID:
       case GameModes.CHAOS_ROGUE_VOID:
@@ -307,9 +315,14 @@ export class GameMode implements GameModeConfig {
       case GameModes.NUZLIGHT:
       case GameModes.NUZLIGHT_DRAFT:
       case GameModes.NUZLOCKE_DRAFT:
+        return 90;
       case GameModes.CHAOS_ROGUE:
       case GameModes.CHAOS_JOURNEY:
-        return 90;
+      case GameModes.CHAOS_NUZLIGHT:
+      case GameModes.CHAOS_NUZLOCKE:
+      case GameModes.CHAOS_NUZLIGHT_DRAFT:
+      case GameModes.CHAOS_NUZLOCKE_DRAFT:
+        return 500;
       case GameModes.ENDLESS:
       case GameModes.SPLICED_ENDLESS:
         return 5000;
@@ -350,6 +363,10 @@ export class GameMode implements GameModeConfig {
         return majorBossWaves.includes(wave);
       case GameModes.CHAOS_ROGUE:
       case GameModes.CHAOS_JOURNEY:
+      case GameModes.CHAOS_NUZLIGHT:
+      case GameModes.CHAOS_NUZLOCKE:
+      case GameModes.CHAOS_NUZLIGHT_DRAFT:
+      case GameModes.CHAOS_NUZLOCKE_DRAFT:
         return scene.majorBossWave == wave;
     }
   }
@@ -480,6 +497,14 @@ export class GameMode implements GameModeConfig {
         return i18next.t("gameMode:chaosInfinite");
       case GameModes.CHAOS_INFINITE_ROGUE:
         return i18next.t("gameMode:chaosInfiniteRogue");
+      case GameModes.CHAOS_NUZLIGHT:
+        return i18next.t("gameMode:chaosNuzlight");
+      case GameModes.CHAOS_NUZLOCKE:
+        return i18next.t("gameMode:chaosNuzlocke");
+      case GameModes.CHAOS_NUZLIGHT_DRAFT:
+        return i18next.t("gameMode:chaosNuzlightDraft");
+      case GameModes.CHAOS_NUZLOCKE_DRAFT:
+        return i18next.t("gameMode:chaosNuzlockeDraft");
     }
   }
 
@@ -521,6 +546,14 @@ export class GameMode implements GameModeConfig {
         return i18next.t("gameMode:chaosInfinite");
       case GameModes.CHAOS_INFINITE_ROGUE:
         return i18next.t("gameMode:chaosInfiniteRogue");
+      case GameModes.CHAOS_NUZLIGHT:
+        return i18next.t("gameMode:chaosNuzlight");
+      case GameModes.CHAOS_NUZLOCKE:
+        return i18next.t("gameMode:chaosNuzlocke");
+      case GameModes.CHAOS_NUZLIGHT_DRAFT:
+        return i18next.t("gameMode:chaosNuzlightDraft");
+      case GameModes.CHAOS_NUZLOCKE_DRAFT:
+        return i18next.t("gameMode:chaosNuzlockeDraft");
     }
   }
 
@@ -535,6 +568,8 @@ export class GameMode implements GameModeConfig {
         return !this.isClassic;
       case RunType.NUZLOCKE:
         return this.isNuzlocke;
+      case RunType.NIGHTMARE:
+        return this.isNightmare;
       default:
         return false;
     }
@@ -643,5 +678,13 @@ export function getGameMode(gameMode: GameModes, scene?: BattleScene): GameMode 
       return new GameMode(GameModes.CHAOS_INFINITE, { ...baseConfig, isInfinite: true, isChaosMode: true, isClassic: true, hasTrainers: true });
     case GameModes.CHAOS_INFINITE_ROGUE:
       return new GameMode(GameModes.CHAOS_INFINITE_ROGUE, { ...baseConfig, isInfinite: true, isChaosMode: true, isDraft: true, hasTrainers: true });
+    case GameModes.CHAOS_NUZLIGHT:
+      return new GameMode(GameModes.CHAOS_NUZLIGHT, { ...baseConfig, isChaosMode: true, isNuzlight: true, hasTrainers: true, hasNoShop: true });
+    case GameModes.CHAOS_NUZLOCKE:
+      return new GameMode(GameModes.CHAOS_NUZLOCKE, { ...baseConfig, isChaosMode: true, isNuzlocke: true, hasTrainers: true });
+    case GameModes.CHAOS_NUZLIGHT_DRAFT:
+      return new GameMode(GameModes.CHAOS_NUZLIGHT_DRAFT, { ...baseConfig, isChaosMode: true, isNuzlight: true, isDraft: true, hasTrainers: true, hasNoShop: true });
+    case GameModes.CHAOS_NUZLOCKE_DRAFT:
+      return new GameMode(GameModes.CHAOS_NUZLOCKE_DRAFT, { ...baseConfig, isChaosMode: true, isNuzlocke: true, isDraft: true, hasTrainers: true });
   }
 }

@@ -19753,12 +19753,12 @@ export function inheritMovesForGlitchForms() {
 
 export function removeUnimplementedMoves() {
   Object.keys(pokemonSpeciesLevelMoves).forEach(speciesId => {
-    pokemonSpeciesLevelMoves[speciesId] = pokemonSpeciesLevelMoves[speciesId].filter(([level, move]) => !allMoves[move].isUnimplemented());
+    pokemonSpeciesLevelMoves[speciesId] = pokemonSpeciesLevelMoves[speciesId].filter(([level, move]) => !allMoves[move].isUnimplemented() && move !== Moves.DRAGON_TAIL && move !== Moves.TELEPORT);
   });
 
   Object.keys(pokemonFormLevelMoves).forEach(speciesId => {
     Object.keys(pokemonFormLevelMoves[speciesId]).forEach(formIndex => {
-      pokemonFormLevelMoves[speciesId][formIndex] = pokemonFormLevelMoves[speciesId][formIndex].filter(([level, move]) => !allMoves[move].isUnimplemented());
+      pokemonFormLevelMoves[speciesId][formIndex] = pokemonFormLevelMoves[speciesId][formIndex].filter(([level, move]) => !allMoves[move].isUnimplemented() && move !== Moves.DRAGON_TAIL && move !== Moves.TELEPORT);
     });
   });
 }

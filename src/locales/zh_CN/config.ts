@@ -30,6 +30,7 @@ import menuUiHandler from "./menu-ui-handler.json";
 import modifier from "./modifier.json";
 import modifierType from "./modifier-type.json";
 import move from "./move.json";
+import moveUpgradeAttrs from "./move-upgrade-attrs.json";
 import nature from "./nature.json";
 import partyUiHandler from "./party-ui-handler.json";
 import pokeball from "./pokeball.json";
@@ -64,6 +65,8 @@ import eggStarterUi from "./egg-starter-ui.json";
 import modGlitchCreateFormUi from "./mod-glitch-create-form-ui.json";
 import pokedex from "./pokedex.json";
 import nodeMode from "./node-mode.json";
+import moveUpgradeAttrs from "./move-upgrade-attrs.json";
+
 export const zhCnConfig = {
   ability,
   abilityTriggers,
@@ -97,6 +100,7 @@ export const zhCnConfig = {
   modifier,
   modifierType,
   move,
+  moveUpgradeAttrs,
   nature,
   pokeball,
   pokemon,
@@ -130,5 +134,6 @@ export const zhCnConfig = {
   eggStarterUi,
   modGlitchCreateFormUi,
   pokedex,
-  nodeMode
+  nodeMode,
+  moveUpgradeAttrs
 };

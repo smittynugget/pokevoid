@@ -1513,7 +1513,7 @@
   },
   "soulCollector": {
     "name": "Coletor de Almas",
-    "description": "Aumenta golpes que correspondem aos tipos coletados. Coleta o tipo dos Pokémon nocauteados. Perde os tipos coletados ao desmaiar."
+    "description": "Potencializa movimentos que correspondem ao tipo de essência. Coleta o tipo dos Pokémon derrotados. Perde essências ao desmaiar."
   },
   "shadowSync": {
     "name": "Sincronização Sombria",
@@ -2685,10 +2685,10 @@
   },
   "soulEater": {
     "name": "Devorador de Almas",
-    "description": "Recupera HP ao usar um golpe que corresponde a um tipo coletado. Coleta o tipo dos Pokémon nocauteados. Perde os tipos coletados ao desmaiar."
+    "description": "Recupera HP ao usar um movimento que corresponde a um tipo de essência. Coleta o tipo dos Pokémon derrotados. Perde essências ao desmaiar."
   },
   "soulDrain": {
     "name": "Dreno de Alma",
-    "description": "10% de chance de coletar o tipo do golpe usado. Reduz dois atributos aleatórios do alvo em 2 estágios se o tipo do golpe corresponder a um tipo coletado. Perde os tipos coletados ao desmaiar."
+    "description": "10% de chance de coletar o tipo do movimento usado. Reduz dois status aleatórios do alvo em 2 estágios se o tipo do movimento corresponder a um tipo de essência. Perde tipos de essência ao desmaiar."
   }
 }

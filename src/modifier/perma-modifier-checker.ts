@@ -14,6 +14,17 @@ export function hasPermaModifierByType(permaType: PermaType): boolean {
     return gameDataInstance.hasPermaModifierByType(permaType);
 }
 
+export function hasTerastallizeAccess(): boolean {
+    if (!gameDataInstance) {
+        throw new Error("PermaModifierChecker not initialized");
+    }
+    const scene = (gameDataInstance as any).scene;
+    if (!scene) {
+        return false;
+    }
+    return scene.modifiers.filter((modifier: any) => modifier.constructor.name === 'TerastallizeAccessModifier').length > 0;
+}
+
 export function isQuestCompleted(quest: QuestUnlockables): boolean {
     if (!gameDataInstance) {
         throw new Error("PermaModifierChecker not initialized");
