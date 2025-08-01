@@ -1,8 +1,9 @@
 export enum ModifierTier {
-  COMMON,
+  MEH = -1,
+  COMMON = 0,
   GREAT,
   ULTRA,
   ROGUE,
   MASTER,
-  LUXURY
+  LUXURY,
 }

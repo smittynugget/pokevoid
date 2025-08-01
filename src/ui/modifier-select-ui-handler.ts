@@ -13,8 +13,7 @@ import { addTextObject, getTextStyleOptions, getModifierTierTextTint, getTextCol
 import { addWindow } from "./ui-theme";
 import AwaitableUiHandler from "./awaitable-ui-handler";
 import { Mode } from "./ui";
-import { LockModifierTiersModifier, PokemonHeldItemModifier } from "../modifier/modifier";
-import { MoveUpgradeModifier } from "../modifier/modifier";
+import { LockModifierTiersModifier, PokemonHeldItemModifier, PersistentModifier, MoveUpgradeModifier } from "../modifier/modifier";
 import { handleTutorial, Tutorial } from "../tutorial";
 import {Button} from "../enums/buttons";
 import DynamicMoveInfoOverlay from "./dynamic-move-info-overlay";
@@ -32,9 +31,10 @@ import { BattlerTagType } from "../enums/battler-tag-type";
 import { ArenaTagType } from "../enums/arena-tag-type";
 import { WeatherType } from "../data/weather";
 import { TerrainType } from "../data/terrain";
-import * as Utils from "../utils";
+import PartyUiHandler, { PartyUiMode } from "./party-ui-handler";
 
 export const SHOP_OPTIONS_ROW_LIMIT = 12;
+const ALT_SPEEDUP = 0.425;
 
 export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   protected modifierContainer: Phaser.GameObjects.Container;
@@ -76,6 +76,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   private secondaryEffectNote: boolean = false;
   private flinchWarning: boolean = false;
   private lineCount: integer = 0;
+  
+  private storedModifierSelectCallback: Function | null = null;
+  private storedTypeOptions: any[] | null = null;
+  private storedRerollCost: any | null = null;
+  private storedDraftOnly: boolean = false;
 
   constructor(scene: BattleScene) {
     super(scene, Mode.CONFIRM);
@@ -261,10 +266,12 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     const maxUpgradeCount = typeOptions.map(to => to.upgradeCount).reduce((max, current) => Math.max(current, max), 0);
 
-    /* Force updateModifiers without pokemonSpecificModifiers */
     this.scene.getModifierBar().updateModifiers(this.scene.modifiers, true);
 
-    /* Multiplies the appearance duration by the speed parameter so that it is always constant, and avoids "flashbangs" at game speed x5 */
+    this.scene.getModifierBar().getAll().forEach((icon: any) => icon.setAlpha(0.1));
+    this.scene.getModifierBar(true).getAll().forEach((icon: any) => icon.setAlpha(0.1));
+    this.scene.ui.permaModifierBar.getAll().forEach((icon: any) => icon.setAlpha(0.1));
+
     this.scene.showShopOverlay(750 * this.scene.gameSpeed);
     this.scene.updateBiomeWaveText();
     this.scene.updateMoneyText();
@@ -273,7 +280,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     this.scene.tweens.addCounter({
       ease: "Sine.easeIn",
-      duration: 1250,
+      duration: Utils.rewardSpeedHandler(1250, this.scene.lockedRewardSpeed),
       onUpdate: t => {
         const value = t.getValue();
         const index = Math.floor(value * typeOptions.length);
@@ -285,20 +292,20 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
     });
 
-    this.scene.time.delayedCall(1000 + maxUpgradeCount * 2000, () => {
+    this.scene.time.delayedCall(Utils.rewardSpeedHandler((1000 + maxUpgradeCount * 2000), this.scene.lockedRewardSpeed), () => {
       for (const shopOption of this.shopOptionsRows.flat()) {
         shopOption.show(0, 0);
       }
     });
 
-    this.scene.time.delayedCall(4000 + maxUpgradeCount * 2000, () => {
+    this.scene.time.delayedCall(Utils.rewardSpeedHandler((4000 + maxUpgradeCount * 2000), this.scene.lockedRewardSpeed), () => {
       if (partyHasHeldItem) {
         this.transferButtonContainer.setAlpha(0);
         this.transferButtonContainer.setVisible(true);
         this.scene.tweens.add({
           targets: this.transferButtonContainer,
           alpha: 1,
-          duration: 250
+          duration: Utils.rewardSpeedHandler(250, this.scene.lockedRewardSpeed)
         });
       }
 
@@ -314,7 +321,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       this.scene.tweens.add({
         targets: [ this.rerollButtonContainer, this.permaRerollButtonContainer, this.lockRarityButtonContainer, this.checkButtonContainer ],
         alpha: 1,
-        duration: 250
+        duration: Utils.rewardSpeedHandler(250, this.scene.lockedRewardSpeed)
       });
 
       const updateCursorTarget = () => {
@@ -546,6 +553,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     return false;
   }
 
+  
+
   public getButtonLayout(): Array<{x: number, y: number, descKey: string}> {
     const layout = [
       { x: 6, y: this.lockRarityButtonContainer.visible ? -72 : -60, descKey: "modifierSelectUiHandler:rerollDesc" }
@@ -554,18 +563,16 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     if (this.permaRerollButtonContainer.visible) {
       layout.push({ x: 76, y: this.lockRarityButtonContainer.visible ? -72 : -60, descKey: "modifierSelectUiHandler:permaRerollDesc" });
     }
+    
     if (this.transferButtonContainer.visible) {
       layout.push({ 
         x: (this.scene.game.canvas.width - this.transferButtonWidth - this.checkButtonWidth)/6 - 30, 
         y: -60, 
         descKey: "modifierSelectUiHandler:transferDesc" 
       });
-      layout.push({ 
-        x: (this.scene.game.canvas.width - this.checkButtonWidth)/6 - 10, 
-        y: -60, 
-        descKey: "modifierSelectUiHandler:checkTeamDesc" 
-      });
-    } else {
+    }
+    
+    if (this.checkButtonContainer.visible) {
       layout.push({ 
         x: (this.scene.game.canvas.width - this.checkButtonWidth)/6 - 10, 
         y: -60, 
@@ -1890,11 +1897,13 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     this.getUi().clearText();
     this.eraseCursor();
 
-    /* Multiplies the fade time duration by the speed parameter so that it is always constant, and avoids "flashbangs" at game speed x5 */
     this.scene.hideShopOverlay(750 * this.scene.gameSpeed);
     this.scene.hideLuckText(250);
 
-    /* Normally already called just after the shop, but not sure if it happens in 100% of cases */
+    this.scene.getModifierBar().getAll().forEach((icon: any) => icon.setAlpha(1));
+    this.scene.getModifierBar(true).getAll().forEach((icon: any) => icon.setAlpha(1));
+    this.scene.ui.permaModifierBar.getAll().forEach((icon: any) => icon.setAlpha(1));
+
     this.scene.getModifierBar().updateModifiers(this.scene.modifiers);
 
     const options = this.options.concat(this.shopOptionsRows.flat());
@@ -1933,6 +1942,240 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       this.cursorObj.destroy();
     }
     this.cursorObj = null;
+  }
+
+  private isModifierRemovable(modifier: PersistentModifier): boolean {
+    if (modifier instanceof MoveUpgradeModifier) return true;
+    return false;
+  }
+
+
+
+  private selectModifierForRemoval(modifier: PersistentModifier): void {
+    if (modifier.stackCount > 1) {
+      this.showQuantitySelection(modifier);
+    } else {
+      this.showRemovalConfirmation(modifier, 1);
+    }
+  }
+
+  private showQuantitySelection(modifier: PersistentModifier): void {
+    const quantityOptions = [];
+    
+    for (let i = 1; i <= modifier.stackCount; i++) {
+      quantityOptions.push({
+        label: `${i} ${modifier.type.name}${i > 1 ? 's' : ''}`,
+        handler: () => {
+          this.showRemovalConfirmation(modifier, i);
+          return true;
+        }
+      });
+    }
+
+    quantityOptions.push({
+      label: i18next.t("modifierSelectUiHandler:cancel"),
+      handler: () => {
+        this.showRemoveUpgradesPopup();
+        return true;
+      }
+    });
+
+    const config = {
+      options: quantityOptions,
+      maxOptions: 6,
+      yOffset: 0
+    };
+
+    this.scene.ui.setOverlayMode(Mode.MENU_OPTION_SELECT, config);
+  }
+
+  private showRemovalConfirmation(modifier: PersistentModifier, quantity: number): void {
+    const itemName = modifier.type.name;
+    const quantityText = quantity > 1 ? `${quantity} ` : "";
+    const pokemonText = modifier instanceof PokemonHeldItemModifier 
+      ? ` from ${this.scene.getPokemonById(modifier.pokemonId)?.name || "Unknown"}` 
+      : "";
+    
+    const message = i18next.t("modifierSelectUiHandler:confirmRemoval", {
+      quantity: quantityText,
+      itemName: itemName,
+      pokemon: pokemonText
+    });
+
+    this.scene.ui.showText(message, null, () => {
+      this.scene.ui.setOverlayMode(Mode.CONFIRM, 
+        () => {
+          this.executeModifierRemoval(modifier, quantity);
+          return true;
+        }, 
+        () => {
+          this.scene.ui.revertMode();
+          this.scene.ui.clearText();
+          return true;
+        }, 
+        false, -98, 32, 500
+      );
+    });
+  }
+
+  private executeModifierRemoval(modifier: PersistentModifier, quantity: number): void {
+    if (quantity >= modifier.stackCount) {
+      this.scene.removeModifier(modifier);
+    } else {
+      modifier.stackCount -= quantity;
+    }
+    
+    this.scene.updateModifiers().then(() => {
+      this.scene.ui.revertMode();
+      this.scene.ui.showText(
+        i18next.t("modifierSelectUiHandler:itemRemoved", {
+          quantity: quantity > 1 ? `${quantity} ` : "",
+          itemName: modifier.type.name
+        }), 
+        null, 
+        () => {
+          this.scene.ui.clearText();
+        }
+      );
+    });
+  }
+
+  showTransferSubmenu(): void {
+    this.showTransferItemsMode();
+    return;
+    const hasTransferableItems = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier && m.isTransferrable).length > 0;
+    const hasRemovableUpgrades = this.getMoveUpgradeModifiersCount() > 0;
+    
+    const options = [];
+    
+    if (hasTransferableItems) {
+      options.push({
+        label: i18next.t("modifierSelectUiHandler:transferItems"),
+        handler: () => {
+          this.showTransferItemsMode();
+          return true;
+        }
+      });
+    }
+    
+    if (hasRemovableUpgrades) {
+      options.push({
+        label: i18next.t("modifierSelectUiHandler:removeUpgrades"),
+        handler: () => {
+          this.showRemoveUpgradesPopup();
+          return true;
+        }
+      });
+    }
+    
+    options.push({
+      label: i18next.t("modifierSelectUiHandler:cancel"),
+      handler: () => {
+        this.returnToModifierSelect();
+        return true;
+      }
+    });
+
+    if (options.length === 1) {
+      this.scene.ui.showText(i18next.t("modifierSelectUiHandler:noTransferableItems"), null, () => {
+        this.scene.ui.clearText();
+      });
+      return;
+    }
+
+    const config = {
+      options: options,
+      maxOptions: 4,
+      yOffset: 0
+    };
+
+    this.scene.ui.setOverlayMode(Mode.MENU_OPTION_SELECT, config);
+  }
+
+  private getMoveUpgradeModifiersCount(): number {
+    return this.scene.modifiers.filter(m => 
+      m instanceof MoveUpgradeModifier && this.isModifierRemovable(m)
+    ).length;
+  }
+
+  private getRemovableMoveUpgradeModifiers(): {modifier: MoveUpgradeModifier, displayText: string}[] {
+    return this.scene.modifiers
+      .filter(m => m instanceof MoveUpgradeModifier && this.isModifierRemovable(m))
+      .map(modifier => ({
+        modifier: modifier as MoveUpgradeModifier,
+        displayText: this.formatMoveUpgradeDisplay(modifier as MoveUpgradeModifier)
+      }));
+  }
+
+  private formatMoveUpgradeDisplay(modifier: MoveUpgradeModifier): string {
+    const move = allMoves[modifier.moveId];
+    const stackText = modifier.stackCount > 1 ? ` (${modifier.stackCount})` : "";
+    return `${move.name} Upgrade${stackText}`;
+  }
+
+  showTransferItemsMode(): void {
+    const party = this.scene.getParty();
+    
+    this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.MODIFIER_TRANSFER, -1, (fromSlotIndex: integer, itemIndex: integer, itemQuantity: integer, toSlotIndex: integer) => {
+      if (toSlotIndex !== undefined && fromSlotIndex < 6 && toSlotIndex < 6 && fromSlotIndex !== toSlotIndex && itemIndex > -1) {
+        const itemModifiers = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier
+          && m.isTransferrable && m.pokemonId === party[fromSlotIndex].id) as PokemonHeldItemModifier[];
+        const itemModifier = itemModifiers[itemIndex];
+        this.scene.tryTransferHeldItemModifier(itemModifier, party[toSlotIndex], true, itemQuantity);
+      } else {
+        this.returnToModifierSelect();
+      }
+    }, PartyUiHandler.FilterItemMaxStacks);
+  }
+
+  showRemoveUpgradesPopup(): void {
+    const removableUpgrades = this.getRemovableMoveUpgradeModifiers();
+    
+    if (removableUpgrades.length === 0) {
+      this.scene.ui.showText(i18next.t("modifierSelectUiHandler:noUpgradesToRemove"), null, () => {
+        this.scene.ui.clearText();
+      });
+      return;
+    }
+
+    const options = removableUpgrades.map((item, index) => ({
+      label: item.displayText,
+      handler: () => {
+        this.selectModifierForRemoval(item.modifier);
+        return true;
+      }
+    }));
+
+    options.push({
+      label: i18next.t("modifierSelectUiHandler:cancel"),
+      handler: () => {
+        this.returnToModifierSelect();
+        return true;
+      }
+    });
+
+    const config = {
+      options: options,
+      maxOptions: 8,
+      yOffset: 0
+    };
+
+    this.scene.ui.setOverlayMode(Mode.MENU_OPTION_SELECT, config);
+  }
+
+  setCallbackContext(typeOptions: any[], modifierSelectCallback: Function, rerollCost: any, draftOnly: boolean): void {
+    this.storedTypeOptions = typeOptions;
+    this.storedModifierSelectCallback = modifierSelectCallback;
+    this.storedRerollCost = rerollCost;
+    this.storedDraftOnly = draftOnly;
+  }
+
+  private returnToModifierSelect(): void {
+    if (this.storedTypeOptions && this.storedModifierSelectCallback && this.storedRerollCost !== null) {
+      this.scene.ui.setMode(Mode.MODIFIER_SELECT, true, this.storedTypeOptions, this.storedModifierSelectCallback, this.storedRerollCost, this.storedDraftOnly);
+    } else {
+      this.scene.ui.revertMode();
+    }
   }
 }
 
@@ -2040,7 +2283,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
       this.scene.tweens.add({
         targets: this.pb,
         y: 0,
-        duration: 1250,
+        duration: Utils.rewardSpeedHandler(1250, this.scene.lockedRewardSpeed),
         ease: "Bounce.Out"
       });
 
@@ -2051,7 +2294,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
       this.scene.tweens.addCounter({
         from: 1,
         to: 0,
-        duration: 1250,
+        duration: Utils.rewardSpeedHandler(1250, this.scene.lockedRewardSpeed),
         ease: "Bounce.Out",
         onUpdate: t => {
           if (!this.scene) {
@@ -2070,7 +2313,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
 
       for (let u = 0; u < this.modifierTypeOption.upgradeCount; u++) {
         const upgradeIndex = u;
-        this.scene.time.delayedCall(remainingDuration - 2000 * (this.modifierTypeOption.upgradeCount - (upgradeIndex + 1 + upgradeCountOffset)), () => {
+        this.scene.time.delayedCall(Utils.rewardSpeedHandler((remainingDuration - 2000 * (this.modifierTypeOption.upgradeCount - (upgradeIndex + 1 + upgradeCountOffset))), this.scene.lockedRewardSpeed), () => {
           (this.scene as BattleScene).playSound("se/upgrade", { rate: 1 + 0.25 * upgradeIndex });
           this.pbTint.setPosition(this.pb.x, this.pb.y);
           this.pbTint.setTintFill(0xFFFFFF);
@@ -2079,14 +2322,14 @@ export class ModifierOption extends Phaser.GameObjects.Container {
           this.scene.tweens.add({
             targets: this.pbTint,
             alpha: 1,
-            duration: 1000,
+            duration: Utils.rewardSpeedHandler(1000, this.scene.lockedRewardSpeed),
             ease: "Sine.easeIn",
             onComplete: () => {
               this.pb.setTexture("pb", this.getPbAtlasKey(-this.modifierTypeOption.upgradeCount + (upgradeIndex + 1)));
               this.scene.tweens.add({
                 targets: this.pbTint,
                 alpha: 0,
-                duration: 750,
+                duration: Utils.rewardSpeedHandler(750, this.scene.lockedRewardSpeed),
                 ease: "Sine.easeOut",
                 onComplete: () => {
                   this.pbTint.setVisible(false);
@@ -2098,7 +2341,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
       }
     }
 
-    this.scene.time.delayedCall(remainingDuration + 2000, () => {
+    this.scene.time.delayedCall(Utils.rewardSpeedHandler((remainingDuration + 2000), this.scene.lockedRewardSpeed), () => {
       if (!this.scene) {
         return;
       }
@@ -2109,8 +2352,8 @@ export class ModifierOption extends Phaser.GameObjects.Container {
 
         this.scene.tweens.add({
           targets: this.pb,
-          duration: 500,
-          delay: 250,
+          duration: Utils.rewardSpeedHandler(500, this.scene.lockedRewardSpeed),
+          delay: Utils.rewardSpeedHandler(250, this.scene.lockedRewardSpeed),
           ease: "Sine.easeIn",
           alpha: 0,
           onComplete: () => this.pb.destroy()
@@ -2119,7 +2362,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
 
       this.scene.tweens.add({
         targets: this.itemContainer,
-        duration: 500,
+        duration: Utils.rewardSpeedHandler(500, this.scene.lockedRewardSpeed),
         ease: "Elastic.Out",
         scale: 2,
         alpha: 1
@@ -2128,14 +2371,14 @@ export class ModifierOption extends Phaser.GameObjects.Container {
         this.scene.tweens.add({
           targets: this.itemTint,
           alpha: 0,
-          duration: 500,
+          duration: Utils.rewardSpeedHandler(500, this.scene.lockedRewardSpeed),
           ease: "Sine.easeIn",
           onComplete: () => this.itemTint.destroy()
         });
       }
       this.scene.tweens.add({
         targets: this.itemText,
-        duration: 500,
+        duration: Utils.rewardSpeedHandler(500, this.scene.lockedRewardSpeed),
         alpha: 1,
         y: 25,
         ease: "Cubic.easeInOut"
@@ -2143,7 +2386,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
       if (this.itemCostText) {
         this.scene.tweens.add({
           targets: this.itemCostText,
-          duration: 500,
+          duration: Utils.rewardSpeedHandler(500, this.scene.lockedRewardSpeed),
           alpha: 1,
           y: this.getItemCostTextY(),
           ease: "Cubic.easeInOut"

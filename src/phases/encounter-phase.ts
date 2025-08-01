@@ -158,16 +158,27 @@ export class EncounterPhase extends BattlePhase {
         } else {
           const enemySpecies = this.scene.randomSpecies(battle.waveIndex, level, true);
           battle.enemyParty[e] = this.scene.addEnemyPokemon(enemySpecies, level, TrainerSlot.NONE, !!this.scene.getEncounterBossSegments(battle.waveIndex, level, enemySpecies));
-          if (this.scene.currentBattle.battleSpec === BattleSpec.FINAL_BOSS) {
+          if (this.scene.currentBattle.battleSpec === BattleSpec.FINAL_BOSS && battle.waveIndex < 1001) {
             battle.enemyParty[e].ivs = new Array(6).fill(31);
           }
+
+          const waveIndex = this.scene.gameMode.isNightmare ? battle.waveIndex % 100 : battle.waveIndex;
           
-          if (battle.waveIndex >= (this.scene.gameMode.isChaosMode ? 100 : 40) && 
-              !!this.scene.getEncounterBossSegments(battle.waveIndex, level, enemySpecies) &&
+          if (waveIndex >= (this.scene.gameMode.isChaosMode ? 100 : 40) && 
+              !!this.scene.getEncounterBossSegments(waveIndex, level, enemySpecies) &&
               this.scene.currentBattle.battleSpec !== BattleSpec.FINAL_BOSS) {
             const enemyPokemon = battle.enemyParty[e];
             if (enemyPokemon.species.forms.length > 1) {
-              const formChance = battle.waveIndex >= (this.scene.gameMode.isChaosMode ? 300 : 60) ? 70 : 50;
+              let formChance: number;
+              if (this.scene.gameMode.isChaosMode) {
+                if (this.scene.gameMode.isChaosShort) {
+                  formChance = waveIndex >= 300 ? 70 : 50;
+                } else {
+                  formChance = waveIndex >= 135 ? 70 : 50;
+                }
+              } else {
+                formChance = waveIndex >= 60 ? 70 : 50;
+              }
               if (Utils.randSeedInt(100) < formChance) {
                 enemyPokemon.formIndex = Utils.randSeedInt(enemyPokemon.species.forms.length - 1) + 1;
                 enemyPokemon.generateName();
@@ -526,7 +537,7 @@ export class EncounterPhase extends BattlePhase {
       ShowRewards(this.scene);
     }
     else {
-      ShowRewards(this.scene);
+      ShowRewards(this.scene, 20, false);
     }
   }
 

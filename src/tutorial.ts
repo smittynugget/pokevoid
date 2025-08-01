@@ -12,6 +12,7 @@ export enum Tutorial {
   Stat_Change = "STAT_CHANGE",
   Select_Item = "SELECT_ITEM",
   Egg_Gacha = "EGG_GACHA",
+  Backup_Reminder = "BACKUP_REMINDER",
 }
 
 const tutorialHandlers = {
@@ -61,11 +62,24 @@ const tutorialHandlers = {
       scene.ui.showText(i18next.t("tutorial:eggGacha"), null, () => scene.ui.showText("", null, () => resolve()), null, true);
     });
   },
+  [Tutorial.Backup_Reminder]: (scene: BattleScene) => {
+    return new Promise<void>(resolve => {
+      scene.ui.showText(i18next.t("tutorial:backupReminder"), null, () => {
+        scene.ui.handleSaveButtonClick(scene).then(() => {
+          resolve();
+        });
+      }, null, true);
+    });
+  },
 };
 
 export function handleTutorial(scene: BattleScene, tutorial: Tutorial): Promise<boolean> {
   return new Promise<boolean>(resolve => {
-  if ((tutorial === Tutorial.Intro && scene.gameData.getTutorialFlags()[tutorial]) || (tutorial !== Tutorial.Intro)) {
+    if (tutorial === Tutorial.Backup_Reminder) {
+      if (!scene.gameData.shouldShowBackupReminder()) {
+        return resolve(false);
+      }
+    } else if ((tutorial === Tutorial.Intro && scene.gameData.getTutorialFlags()[tutorial]) || (tutorial !== Tutorial.Intro)) {
       return resolve(false);
     }
 
@@ -74,7 +88,11 @@ export function handleTutorial(scene: BattleScene, tutorial: Tutorial): Promise<
       handler.tutorialActive = true;
     }
     tutorialHandlers[tutorial](scene).then(() => {
-      scene.gameData.saveTutorialFlag(tutorial, true);
+      if (tutorial === Tutorial.Backup_Reminder) {
+        scene.gameData.updateBackupReminderTime();
+      } else {
+        scene.gameData.saveTutorialFlag(tutorial, true);
+      }
       if (handler instanceof AwaitableUiHandler) {
         handler.tutorialActive = false;
       }

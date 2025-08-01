@@ -119,7 +119,7 @@ class DefaultOverrides {
 
   // -------------
   // EGG OVERRIDES
-  // -------------
+  // -------------x
   readonly EGG_IMMEDIATE_HATCH_OVERRIDE: boolean = false;
   readonly EGG_TIER_OVERRIDE: EggTier | null = null;
   readonly EGG_SHINY_OVERRIDE: boolean = false;

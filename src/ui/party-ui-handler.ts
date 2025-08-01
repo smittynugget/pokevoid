@@ -106,6 +106,7 @@ export enum PartyOption {
   TRANSFER,
   SUMMARY,
   UNPAUSE_EVOLUTION,
+  PAUSE_EVOLUTION,
   SPLICE,
   UNSPLICE,
   RELEASE,
@@ -223,7 +224,7 @@ export default class PartyUiHandler extends MessageUiHandler {
 
   public static NoEffectMessage = i18next.t("partyUiHandler:anyEffect");
 
-  private localizedOptions = [PartyOption.SEND_OUT, PartyOption.SUMMARY, PartyOption.CANCEL, PartyOption.APPLY, PartyOption.RELEASE, PartyOption.TEACH, PartyOption.SPLICE, PartyOption.UNSPLICE, PartyOption.REVIVE, PartyOption.TRANSFER, PartyOption.UNPAUSE_EVOLUTION, PartyOption.PASS_BATON, PartyOption.RENAME];
+  private localizedOptions = [PartyOption.SEND_OUT, PartyOption.SUMMARY, PartyOption.CANCEL, PartyOption.APPLY, PartyOption.RELEASE, PartyOption.TEACH, PartyOption.SPLICE, PartyOption.UNSPLICE, PartyOption.REVIVE, PartyOption.TRANSFER, PartyOption.UNPAUSE_EVOLUTION, PartyOption.PAUSE_EVOLUTION, PartyOption.PASS_BATON, PartyOption.RENAME];
 
   constructor(scene: BattleScene) {
     super(scene, Mode.PARTY);
@@ -419,7 +420,7 @@ export default class PartyUiHandler extends MessageUiHandler {
           return true;
           
         }
-          else if ((option !== PartyOption.SUMMARY && option !== PartyOption.UNPAUSE_EVOLUTION && option !== PartyOption.UNSPLICE && option !== PartyOption.RELEASE && option !== PartyOption.CANCEL && option !== PartyOption.RENAME)
+          else if ((option !== PartyOption.SUMMARY && option !== PartyOption.UNPAUSE_EVOLUTION && option !== PartyOption.UNSPLICE && option !== PartyOption.RELEASE && option !== PartyOption.CANCEL && option !== PartyOption.RENAME && option !== PartyOption.PAUSE_EVOLUTION)
             || (option === PartyOption.RELEASE && this.partyUiMode === PartyUiMode.RELEASE || this.partyUiMode === PartyUiMode.ADDPOKEMON && option === PartyOption.ADDPOKEMON)) {
           let filterResult: string | null;
           const getTransferrableItemsFromPokemon = (pokemon: PlayerPokemon) =>
@@ -507,7 +508,19 @@ export default class PartyUiHandler extends MessageUiHandler {
           this.clearOptions();
           ui.playSelect();
           pokemon.pauseEvolutions = false;
-          this.showText(i18next.t("partyUiHandler:unpausedEvolutions", { pokemonName: getPokemonNameWithAffix(pokemon) }), undefined, () => this.showText("", 0), null, true);
+          this.showText(i18next.t("partyUiHandler:unpausedEvolutions", { pokemonName: getPokemonNameWithAffix(pokemon) }), undefined, () => {
+            this.showText("", 0);
+            this.updateOptions();
+          }, null, true);
+        }
+          else if (option === PartyOption.PAUSE_EVOLUTION) {
+          this.clearOptions();
+          ui.playSelect();
+          pokemon.pauseEvolutions = true;
+          this.showText(i18next.t("partyUiHandler:pausedEvolutions", { pokemonName: getPokemonNameWithAffix(pokemon) }), undefined, () => {
+            this.showText("", 0);
+            this.updateOptions();
+          }, null, true);
         }
           else if (option === PartyOption.UNSPLICE) {
           this.clearOptions();
@@ -969,6 +982,8 @@ export default class PartyUiHandler extends MessageUiHandler {
 
       if (pokemon.pauseEvolutions && pokemonEvolutions.hasOwnProperty(pokemon.species.speciesId)) {
         this.options.push(PartyOption.UNPAUSE_EVOLUTION);
+      } else if (!pokemon.pauseEvolutions && pokemonEvolutions.hasOwnProperty(pokemon.species.speciesId)) {
+        this.options.push(PartyOption.PAUSE_EVOLUTION);
       }
 
       if (this.partyUiMode === PartyUiMode.SWITCH) {

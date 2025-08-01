@@ -368,11 +368,12 @@ export class VictoryPhase extends PokemonPhase {
 
       if(this.scene.gameMode.isChaosMode && this.scene.currentBattle.isStage6RivalWave()) {
         const dynamicRivalType = this.scene.currentBattle.trainer.dynamicRivalType;
+        this.scene.gameData.handleQuestUnlocks(this.scene, dynamicRivalType);
+        if(!this.scene.gameMode.isChaosShort) {
         const eligibleRivals = this.scene.gameData.chaosAltRivals.filter(r => r !== dynamicRivalType);
         
         if (eligibleRivals.length > 0) {
             const randomRival1 = Utils.randSeedItem(eligibleRivals);
-            this.scene.gameData.handleQuestUnlocks(this.scene, dynamicRivalType);
             this.scene.gameData.handleQuestUnlocks(this.scene, randomRival1);
             
             if (this.scene.gameData.chaosAltRivals.length > 2) {
@@ -382,8 +383,7 @@ export class VictoryPhase extends PokemonPhase {
                     this.scene.gameData.handleQuestUnlocks(this.scene, randomRival2);
                 }
             }
-        } else {
-            this.scene.gameData.handleQuestUnlocks(this.scene, dynamicRivalType);
+        }
         }
           this.handleUnlocks();
       }

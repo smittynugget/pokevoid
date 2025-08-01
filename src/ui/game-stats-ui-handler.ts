@@ -668,6 +668,135 @@ const displayStats: DisplayStats = {
     },
     hidden: true
   },
+  // Short chaos mode stats (Midnight variants)
+  chaosRogueShortSessionsPlayed: {
+    label_key: "chaosRogueShortRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosRogueShortSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosRogueShortSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosRogueShortSessionsWon: {
+    label_key: "chaosRogueShortWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosRogueShortSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosRogueShortSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosJourneyShortSessionsPlayed: {
+    label_key: "chaosJourneyShortRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosJourneyShortSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosJourneyShortSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosJourneyShortSessionsWon: {
+    label_key: "chaosJourneyShortWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosJourneyShortSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosJourneyShortSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosVoidShortSessionsPlayed: {
+    label_key: "chaosVoidShortRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosVoidShortSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosVoidShortSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosVoidShortSessionsWon: {
+    label_key: "chaosVoidShortWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosVoidShortSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosVoidShortSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosRogueVoidShortSessionsPlayed: {
+    label_key: "chaosRogueVoidShortRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosRogueVoidShortSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosRogueVoidShortSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosRogueVoidShortSessionsWon: {
+    label_key: "chaosRogueVoidShortWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosRogueVoidShortSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosRogueVoidShortSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlightShortSessionsPlayed: {
+    label_key: "chaosNuzlightShortRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlightShortSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlightShortSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlightShortSessionsWon: {
+    label_key: "chaosNuzlightShortWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlightShortSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlightShortSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlockeShortSessionsPlayed: {
+    label_key: "chaosNuzlockeShortRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlockeShortSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlockeShortSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlockeShortSessionsWon: {
+    label_key: "chaosNuzlockeShortWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlockeShortSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlockeShortSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlightDraftShortSessionsPlayed: {
+    label_key: "chaosNuzlightDraftShortRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlightDraftShortSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlightDraftShortSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlightDraftShortSessionsWon: {
+    label_key: "chaosNuzlightDraftShortWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlightDraftShortSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlightDraftShortSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlockeDraftShortSessionsPlayed: {
+    label_key: "chaosNuzlockeDraftShortRuns",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlockeDraftShortSessionsPlayed > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlockeDraftShortSessionsPlayed.toString() : "???";
+    },
+    hidden: true
+  },
+  chaosNuzlockeDraftShortSessionsWon: {
+    label_key: "chaosNuzlockeDraftShortWins",
+    sourceFunc: gameData => {
+      const isUnlocked = gameData.gameStats.chaosNuzlockeDraftShortSessionsWon > 0;
+      return isUnlocked ? gameData.gameStats.chaosNuzlockeDraftShortSessionsWon.toString() : "???";
+    },
+    hidden: true
+  },
   normalTypeDefeated: {
     label_key: "normalTypeDefeated",
     sourceFunc: gameData => (gameData.gameStats.typeOfDefeated[Type.NORMAL] || 0).toString(),

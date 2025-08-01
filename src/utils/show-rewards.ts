@@ -4,6 +4,24 @@ import { PermaType } from "#app/modifier/perma-modifiers.js";
 import * as Utils from "#app/utils.js";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase.js";
 import { CollectedTypeShopPhase } from "#app/phases/collected-type-shop-phase.js";
+import { CollectedTypeModifier } from "#app/modifier/modifier.js";
+
+function getTotalCollectedTypes(scene: BattleScene): number {
+    const party = scene.getParty();
+    let total = 0;
+    
+    for (const pokemon of party) {
+        const modifiers = scene.findModifiers(m => 
+            m instanceof CollectedTypeModifier && m.pokemonId === pokemon.id
+        ) as CollectedTypeModifier[];
+        
+        for (const modifier of modifiers) {
+            total += Object.values(modifier.collectedTypes).reduce((sum, count) => sum + count, 0);
+        }
+    }
+    
+    return total;
+}
 
 export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideChance: boolean = true, unshiftRatherThanPush: boolean = true, pathNodeFilter: PathNodeTypeFilter = PathNodeTypeFilter.NONE) {
     if (scene.gameMode.isTestMod) {
@@ -27,7 +45,8 @@ export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideCh
         Utils.randSeedInt(chance, 1) == 1 ||
         (overrideChance && (scene.currentBattle.trainer &&
             (scene.currentBattle.trainer.config.title == "Rival") ||
-            scene.currentBattle.waveIndex % 10 == 0))
+            (scene.dynamicMode ||
+            scene.currentBattle.waveIndex % 10 == 0)))
     ) {
         if(unshiftRatherThanPush) {
             scene.unshiftPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, pathNodeFilter));
@@ -41,8 +60,10 @@ export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideCh
     }
 
     const chaosChance = chance * 3;
-    if ((scene.currentBattle.waveIndex > 1) && scene.gameMode.isChaosMode && Utils.randSeedInt(chaosChance, 1) == 1 || 
-        (!scene.gameMode.isChaosMode && (scene.currentBattle.waveIndex % 26 == 0 || Utils.randSeedInt(chance, 1) == 1 ))) {
+    const totalCollectedTypes = getTotalCollectedTypes(scene);
+    if (totalCollectedTypes > 10 && ((scene.currentBattle.waveIndex > 1) && 
+    scene.gameMode.isChaosMode && Utils.randSeedInt(chaosChance, 1) == 1 || 
+        (!scene.gameMode.isChaosMode && (scene.currentBattle.waveIndex % 26 == 0 || Utils.randSeedInt(chance, 1) == 1 )))) {
         if(unshiftRatherThanPush) {
             scene.unshiftPhase(new CollectedTypeShopPhase(scene, 1, undefined, false, undefined, undefined));
         }
@@ -55,20 +76,42 @@ export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideCh
         }
     }
 
-    const moveUpgradeChance = chance - 4;
+    const easierChance = chance - 4;
     if ((scene.currentBattle.waveIndex > 1) && 
-    (Utils.randSeedInt(moveUpgradeChance, 1) == 1 && scene.currentBattle.waveIndex % 10 == 0) || 
-        (scene.currentBattle.waveIndex % 10 == 0 && !scene.gameMode.isChaosMode)) {
+    ((Utils.randSeedInt(easierChance, 1) == 1) || overrideChance) &&
+        (scene.currentBattle.waveIndex % 10 == 0 || 
+        scene.dynamicMode)) {
         if(unshiftRatherThanPush) {
             scene.unshiftPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
-            if(Utils.randSeedInt(moveUpgradeChance, 1) == 1) {
+            if(Utils.randSeedInt(easierChance, 1) == 1) {
                 scene.unshiftPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
             }
         }
         else {
             scene.pushPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
-            if(Utils.randSeedInt(moveUpgradeChance, 1) == 1) {
+            if(Utils.randSeedInt(easierChance, 1) == 1) {
                 scene.pushPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
+            }
+        }
+        if(!permaReduced) {
+            scene.gameData.reducePermaModifierByType([PermaType.PERMA_SHOW_REWARDS_1, PermaType.PERMA_SHOW_REWARDS_2, PermaType.PERMA_SHOW_REWARDS_3], scene);
+        }
+    }
+
+    if ((scene.currentBattle.waveIndex > 1) && 
+    ((Utils.randSeedInt(easierChance, 1) == 1) || overrideChance) &&
+        (scene.currentBattle.waveIndex % 10 == 0 || 
+        scene.dynamicMode)) {
+        if(unshiftRatherThanPush) {
+            scene.unshiftPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, PathNodeTypeFilter.VITAMIN));
+            if(Utils.randSeedInt(easierChance, 1) == 1) {
+                scene.unshiftPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, PathNodeTypeFilter.VITAMIN));
+            }
+        }
+        else {
+            scene.pushPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, PathNodeTypeFilter.VITAMIN));
+            if(Utils.randSeedInt(easierChance, 1) == 1) {
+                scene.pushPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, PathNodeTypeFilter.VITAMIN));
             }
         }
         if(!permaReduced) {

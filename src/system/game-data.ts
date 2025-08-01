@@ -169,14 +169,16 @@ export interface SystemSaveData {
     lastSmitomReward?: number;
     lastDailyBountyTime?: number;
     dailyBountyCode?: string;
-    lastSaveTime?: number;
-    defeatedRivals: RivalTrainerType[];
+      lastSaveTime?: number;
+  lastBackupTime?: number;
+  defeatedRivals: RivalTrainerType[];
     uniSmittyUnlocks: string[];
     modFormsUnlocked?: string[];
     smitomTalks: number[];
     rewardOverlayOpacity: number;
     testSpeciesForMod: number[];
     testModsCount: number;
+    isNewPlayer?: boolean;
 }
 
 export interface SessionSaveData {
@@ -418,14 +420,16 @@ export class GameData {
     public permaModifiers: PermaModifiers;
     public testSpeciesForMod: number[] = [];
     public testModsCount: number = 0;
+    public isNewPlayer: boolean = false;
 
     public currentPermaShopOptions: ModifierTypeOption[] | null = null;
     public lastPermaShopRefreshTime: number = 0;
     public permaShopRerollCount: number = 0;
     public lastSmitomReward: number = 0;
     public lastDailyBountyTime: number = 0;
-    public lastSaveTime: number = 0;
-    public rewardOverlayOpacity: number = 1;
+      public lastSaveTime: number = 0;
+  public lastBackupTime: number = 0;
+  public rewardOverlayOpacity: number = 1;
     public dailyBountyCode: string = "";
     public questUnlockables: Partial<Record<QuestUnlockables, QuestProgress>>;
     public playerRival: RivalTrainerType | null = null;
@@ -465,6 +469,7 @@ export class GameData {
         this.starterData = {};
         this.gameStats = new GameStats();
         this.runHistory = {};
+        this.isNewPlayer = this.gameStats?.sessionsPlayed === 0;
         this.moveUsageCount = {};
         this.pendingMoveUpgrades = -1;
         this.unlocks = {
@@ -598,9 +603,11 @@ export class GameData {
             lastDailyBountyTime: this.lastDailyBountyTime,
             dailyBountyCode: this.dailyBountyCode,
             lastSaveTime: this.lastSaveTime,
+            lastBackupTime: this.lastBackupTime,
             rewardOverlayOpacity: this.rewardOverlayOpacity,
             testSpeciesForMod: this.testSpeciesForMod,
             testModsCount: this.testModsCount,
+            isNewPlayer: this.isNewPlayer,
         };
     }
 
@@ -621,7 +628,7 @@ export class GameData {
     public async loadSystem(): Promise<boolean> {
 
             // let importResult = false;
-            // importResult = await this.importFromHardcodedPath("./pokesav/void200.prsv");
+            // importResult = await this.importFromHardcodedPath("./pokesav/ishida-cant-forward.prsv");
             // return true;
 
             if (bypassLogin && !this.getLocalStorageItem(`data_${loggedInUser?.username}`)) {
@@ -982,6 +989,17 @@ export class GameData {
                     this.lastSaveTime = systemData.lastSaveTime;
                 }
 
+                if (systemData.lastBackupTime !== undefined) {
+                    this.lastBackupTime = systemData.lastBackupTime;
+                } else {
+                    const totalSessionsPlayed = this.gameStats.sessionsPlayed;
+                    if (totalSessionsPlayed >= 1) {
+                        this.lastBackupTime = Date.now() - (7 * 24 * 60 * 60 * 1000);
+                    } else {
+                        this.lastBackupTime = Date.now();
+                    }
+                }
+
                 if (systemData.rewardOverlayOpacity) {
                     this.rewardOverlayOpacity = systemData.rewardOverlayOpacity;
                 }
@@ -994,8 +1012,9 @@ export class GameData {
                     this.testModsCount = systemData.testModsCount;
                 }
 
+                this.isNewPlayer = systemData.isNewPlayer ?? false;
                 
-                // this.updatePermaMoney(this.scene, systemData.permaMoney != undefined ? systemData.permaMoney : 10000);
+                this.updatePermaMoney(this.scene, systemData.permaMoney != undefined ? systemData.permaMoney : 10000);
                 this.scene.ui.updatePermaMoneyText(this.scene);
 
                 if (systemData.permaModifiers) {
@@ -1175,7 +1194,7 @@ export class GameData {
                 }).filter(Boolean);
             }
 
-            if (k === "lastPermaShopRefreshTime" || k === "lastSmitomReward" || k === "lastDailyBountyTime" || k === "lastSaveTime" || k === "rewardOverlayOpacity" || k === "permaShopRerollCount" || k === "testModsCount") {
+            if (k === "lastPermaShopRefreshTime" || k === "lastSmitomReward" || k === "lastDailyBountyTime" || k === "lastSaveTime" || k === "lastBackupTime" || k === "rewardOverlayOpacity" || k === "permaShopRerollCount" || k === "testModsCount") {
                 return v as number;
             }
 
@@ -3705,6 +3724,62 @@ export class GameData {
             gameStats.chaosNuzlockeDraftSessionsPlayed++;
             }
             break;
+        case GameModes.CHAOS_ROGUE_SHORT:
+            if (isVictory) {
+                gameStats.chaosRogueShortSessionsWon++;
+            } else {
+                gameStats.chaosRogueShortSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_JOURNEY_SHORT:
+            if (isVictory) {
+                gameStats.chaosJourneyShortSessionsWon++;
+            } else {
+                gameStats.chaosJourneyShortSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_VOID_SHORT:
+            if (isVictory) {
+                gameStats.chaosVoidShortSessionsWon++;
+            } else {
+                gameStats.chaosVoidShortSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_ROGUE_VOID_SHORT:
+            if (isVictory) {
+                gameStats.chaosRogueVoidShortSessionsWon++;
+            } else {
+                gameStats.chaosRogueVoidShortSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLIGHT_SHORT:
+            if (isVictory) {
+                gameStats.chaosNuzlightShortSessionsWon++;
+            } else {
+                gameStats.chaosNuzlightShortSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLOCKE_SHORT:
+            if (isVictory) {
+                gameStats.chaosNuzlockeShortSessionsWon++;
+            } else {
+                gameStats.chaosNuzlockeShortSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT:
+            if (isVictory) {
+                gameStats.chaosNuzlightDraftShortSessionsWon++;
+            } else {
+                gameStats.chaosNuzlightDraftShortSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT:
+            if (isVictory) {
+                gameStats.chaosNuzlockeDraftShortSessionsWon++;
+            } else {
+                gameStats.chaosNuzlockeDraftShortSessionsPlayed++;
+            }
+            break;
         }
         
         this.checkAndUnlockGameModes();
@@ -3728,7 +3803,7 @@ export class GameData {
     }
 
     public isDailyBountyTime() : boolean {
-        return this.lastDailyBountyTime + 24 * 60 * 60 * 500 < Date.now();
+        return this.lastDailyBountyTime + 2 * 60 * 60 * 1000 < Date.now();
     }
 
     public updateDailyBountyTime(): void {
@@ -3745,9 +3820,6 @@ export class GameData {
         return this.lastSaveTime + 20 * 60 * 1000 < Date.now();
     }
 
-    public updateSaveRewardTime(): void {
-        this.lastSaveTime = Date.now();
-    }
 
     public updateRewardOverlayOpacity(opacity: number): void {
         this.rewardOverlayOpacity = opacity;
@@ -4170,6 +4242,24 @@ public getRandomBountyCode(): string {
             this.unlocks[Unlockables.CHAOS_INFINITE_ROGUE_MODE] = true;
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.CHAOS_INFINITE_ROGUE_MODE, Species.ARCEUS.toString(), true, UnlockModePokeSpriteType.NORMAL_INVERTED));
         }
+    }
+
+    public updateSaveRewardTime(): void {
+        this.lastSaveTime = Date.now();
+    }
+
+    public isBackupReminderTime(): boolean {
+        const threeDaysInMs = 3 * 24 * 60 * 60 * 1000;
+        return this.lastBackupTime + threeDaysInMs < Date.now();
+    }
+
+    public updateBackupReminderTime(): void {
+        this.lastBackupTime = Date.now();
+    }
+
+    public shouldShowBackupReminder(): boolean {
+        const totalSessionsPlayed = this.gameStats.sessionsPlayed;
+        return totalSessionsPlayed >= 1 && this.isBackupReminderTime();
     }
 }
 

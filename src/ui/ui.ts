@@ -77,6 +77,7 @@ import ModGlitchCreateFormUiHandler from "./mod-glitch-create-form-ui-handler";
 import ModManagementUiHandler from "./mod-management-ui-handler";
 import PokedexModalUiHandler from "./pokedex-modal-ui-handler";
 import BattlePathUiHandler from "./battle-path-ui-handler";
+import { LoginPhase } from "#app/phases/login-phase.js";
 export enum Mode {
   MESSAGE,
   TITLE,
@@ -214,7 +215,7 @@ export default class UI extends Phaser.GameObjects.Container {
 
   private permaMoneyContainer: Phaser.GameObjects.Container;
   protected permaMoneyText: Phaser.GameObjects.Text;
-  private permaModifierBar: ModifierBar;
+  public permaModifierBar: ModifierBar;
   private saveButton: Phaser.GameObjects.Sprite;
   private saveContainer: Phaser.GameObjects.Container;
   private saveExclamationWindow: Phaser.GameObjects.Container;
@@ -450,7 +451,8 @@ export default class UI extends Phaser.GameObjects.Container {
 
   public async handleSaveButtonClick(scene: BattleScene): Promise<void> {
     const currentPhase = scene.getCurrentPhase();
-    if (!(currentPhase instanceof TitlePhase || currentPhase instanceof CommandPhase)) {
+    const isLoginPhase = currentPhase instanceof LoginPhase;
+    if (!(currentPhase instanceof TitlePhase || currentPhase instanceof CommandPhase || isLoginPhase)) {
       return;
     }
     
@@ -459,7 +461,7 @@ export default class UI extends Phaser.GameObjects.Container {
     }
     
     const exportSuccess = await scene.gameData.tryExportData(GameDataType.COMBINED);
-    if (exportSuccess && scene.gameData.isSaveRewardTime()) {
+    if (exportSuccess && !isLoginPhase && scene.gameData.isSaveRewardTime()) {
       scene.unshiftPhase(new ModifierRewardPhase(
           scene, null, true,
           () => {

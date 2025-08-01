@@ -57,6 +57,8 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
         spriteSource = "201-a";
     }
 
+    spriteSource = Array.isArray(spriteSource) ? spriteSource[0] : spriteSource;
+
     const spriteKey = `pkmn__${spriteSource}`;
 
         if (this.scene.textures.exists(spriteKey)) {
@@ -95,6 +97,8 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
     if (spriteSource == 201) {
         spriteSource = "201-a";
     }
+
+    spriteSource = Array.isArray(spriteSource) ? spriteSource[0] : spriteSource;
     if (!spriteSource) {
             return;
         }
@@ -108,6 +112,8 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
                 console.log('[QuestBountyUI] Cleaning up existing sprite');
                 this.questSprite.destroy();
             }
+
+        
 
         const spriteKey = `pkmn__${spriteSource}`; 
 

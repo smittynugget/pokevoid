@@ -457,9 +457,9 @@ export class SelectModifierPhase extends BattlePhase {
 
         let baseValue = 100;
         if (this.constructor.name === 'CollectedTypeShopPhase') {
-            baseValue = 2500;
+            baseValue = 1500;
         } else if (this.pathNodeFilter !== PathNodeTypeFilter.NONE) {
-            baseValue = this.pathNodeFilter === PathNodeTypeFilter.MASTER_BALL_ITEMS ? 2500 : 1000;
+            baseValue = this.pathNodeFilter === PathNodeTypeFilter.MASTER_BALL_ITEMS ? 1500 : 1000;
         }
         if (Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
             this.cachedRerollCost = baseValue;
@@ -496,9 +496,9 @@ export class SelectModifierPhase extends BattlePhase {
         let hasFilter = this.pathNodeFilter !== PathNodeTypeFilter.NONE;
         let permaBaseValue = 300;
         if (this.constructor.name === 'CollectedTypeShopPhase') {
-            permaBaseValue = 2000;
+            permaBaseValue = 1250;
         } else if (hasFilter) {
-            permaBaseValue = this.pathNodeFilter === PathNodeTypeFilter.MASTER_BALL_ITEMS ? 2000 : 750;
+            permaBaseValue = this.pathNodeFilter === PathNodeTypeFilter.MASTER_BALL_ITEMS ? 1250 : 750;
         }
 
         if (Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
@@ -622,16 +622,8 @@ export class SelectModifierPhase extends BattlePhase {
                 break;
                 
             case "modifierSelectUiHandler:transferDesc":
-                this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.MODIFIER_TRANSFER, -1, (fromSlotIndex: integer, itemIndex: integer, itemQuantity: integer, toSlotIndex: integer) => {
-                    if (toSlotIndex !== undefined && fromSlotIndex < 6 && toSlotIndex < 6 && fromSlotIndex !== toSlotIndex && itemIndex > -1) {
-                        const itemModifiers = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier
-                            && m.isTransferrable && m.pokemonId === party[fromSlotIndex].id) as PokemonHeldItemModifier[];
-                        const itemModifier = itemModifiers[itemIndex];
-                        this.scene.tryTransferHeldItemModifier(itemModifier, party[toSlotIndex], true, itemQuantity);
-                    } else {
-                        this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly);
-                    }
-                }, PartyUiHandler.FilterItemMaxStacks);
+                uiHandler.setCallbackContext(typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly);
+                uiHandler.showTransferSubmenu();
                 break;
                 
             case "modifierSelectUiHandler:checkTeamDesc":

@@ -726,6 +726,14 @@ export function hashCode(str: string): number {
   return Math.abs(hash);
 }
 
+export function rewardSpeedHandler(speed: integer, lockedRewardSpeed: boolean): integer {
+    if (lockedRewardSpeed) {
+      const ALT_SPEEDUP = .425;
+      return fixedInt(speed * ALT_SPEEDUP);
+    } else {
+      return speed;
+    }
+  }
 
 export function base64ToUint8Array(base64: string): Uint8Array {
   const binaryString = atob(base64);

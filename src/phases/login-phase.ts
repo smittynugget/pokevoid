@@ -108,6 +108,10 @@ export class LoginPhase extends Phase {
       this.scene.unshiftPhase(new SelectGenderPhase(this.scene));
     }
 
-    handleTutorial(this.scene, Tutorial.Intro).then(() => super.end());
+    handleTutorial(this.scene, Tutorial.Intro).then(() => {
+      handleTutorial(this.scene, Tutorial.Backup_Reminder).then(() => {
+        super.end();
+      });
+    });
   }
 }

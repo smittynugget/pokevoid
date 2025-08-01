@@ -48,20 +48,20 @@ function findNodeByPattern(battlePath: any, selectedPath: string): any | null {
     return null;
   }
   
-  const [waveStr, indexStr] = selectedPattern.split('_');
-  const wave = parseInt(waveStr, 10);
-  const pathIndex = parseInt(indexStr, 10) -1;
-  
-  if (isNaN(wave) || isNaN(pathIndex)) {
+  const wave = parseInt(selectedPattern.split('_')[0], 10);
+  if (isNaN(wave)) {
     return null;
   }
   
   const nodesAtWave = battlePath.waveToNodeMap.get(wave);
-  if (!nodesAtWave || pathIndex >= nodesAtWave.length) {
+  if (!nodesAtWave) {
     return null;
   }
   
-  return nodesAtWave[pathIndex];
+  return nodesAtWave.find(node => {
+    const nodePattern = extractNodePattern(node.id);
+    return nodePattern === selectedPattern;
+  }) || null;
 }
 
 export class BattlePathPhase extends BattlePhase {

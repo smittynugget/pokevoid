@@ -278,6 +278,7 @@ export default class BattleScene extends SceneBase {
   public enableTouchControls: boolean = false;
   public enableVibration: boolean = false;
   public showBgmBar: boolean = true;
+  public lockedRewardSpeed: boolean = true;
 
   /**
    * Determines the selected battle style.
@@ -1326,7 +1327,39 @@ export default class BattleScene extends SceneBase {
   }
 
   isBiomeChange(previousWave: integer): boolean {
-    return previousWave > 0 && ((!(previousWave % 10) && !this.gameMode.isChaosMode) || (this.recoveryBossMode === RecoveryBossMode.RECOVERY_OBTAINED) || (previousWave % Utils.randSeedInt(6,3) === 0 && previousWave < 100) || ((this.gameMode.hasShortBiomes || this.gameMode.isDaily) && (previousWave % 50) === 49))
+    return previousWave > 0 && ((!(previousWave % 10) && !this.gameMode.isChaosMode) || (this.recoveryBossMode === RecoveryBossMode.RECOVERY_OBTAINED) || (previousWave % Utils.randSeedInt(6,3) === 0 && previousWave < 100) || ((this.gameMode.hasShortBiomes || this.gameMode.isDaily) && (previousWave % 50) === 49) || this.shouldTriggerLowHpRecovery())
+  }
+
+
+  shouldTriggerLowHpRecovery(): boolean {
+    if (!this.gameMode.isChaosMode || Utils.randSeedInt(20) !== 0) {
+      return false;
+    }
+
+    const party = this.getParty();
+    if (party.length === 0) {
+      return false;
+    }
+
+    let totalHpPercentage = 0;
+    for (const pokemon of party) {
+      if (pokemon) {
+        totalHpPercentage += pokemon.getHpRatio(true);
+      }
+    }
+
+    const averageHpPercentage = totalHpPercentage / party.length;
+
+    const baseCost = this.getWaveMoneyAmount(1);
+    const maxReviveCost = Math.ceil(baseCost * 2.75);
+    const requiredMoney = maxReviveCost * 3;
+
+    if (averageHpPercentage < 0.35 && this.money < requiredMoney) {
+      this.recoveryBossMode = RecoveryBossMode.RECOVERY_OBTAINED;
+      return true;
+    }
+
+    return false;
   }
 
   saveBiomeChange(previousWave: integer): void {

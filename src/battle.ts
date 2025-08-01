@@ -176,7 +176,7 @@ export default class Battle {
 
     if (this.gameMode.isBoss(waveIndex) || this.gameMode.isWavePreFinal(this.scene, waveIndex) || this.scene.recoveryBossMode === RecoveryBossMode.FACING_BOSS) {
 
-      if(this.waveIndex >= 21 || this.battleSpec === BattleSpec.FINAL_BOSS) {
+      if(waveIndex >= 21 || this.battleSpec === BattleSpec.FINAL_BOSS) {
        const playerParty = this.scene.getParty();
         let highestPlayerLevel = 0;
         
@@ -523,7 +523,8 @@ export default class Battle {
   }
 
   isStage6RivalWave(): boolean {
-    return this.waveIndex % 1000 !== 0 && this.waveIndex % 500 === 0;
+    const shortModeFactor = this.gameMode.isChaosShort ? .4 : 1;
+    return (this.waveIndex % (1000 * shortModeFactor) !== 0 && this.waveIndex % (500 * shortModeFactor) === 0);
   }
 }
 
@@ -2302,47 +2303,48 @@ interface SpecialBattleWaves {
 
 
 function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: number, waveOffset: number = 0): SpecialBattleWaves {
+  const shortModeFactor = scene.gameMode.isChaosShort ? .4 : 1;
   const WAVE_THRESHOLDS = {
-    SMALL_RUN: 500,
-    MEDIUM_RUN: 1000,
-    SEGMENT_SIZE: 500
+    SMALL_RUN: 500 * shortModeFactor,
+    MEDIUM_RUN: 1000 * shortModeFactor,
+    SEGMENT_SIZE: 500 * shortModeFactor
   };
 
   const RIVAL_COUNTS = {
-    SMALL_RUN: 5,
-    MEDIUM_RUN: 10,
-    LARGE_RUN: 10
+    SMALL_RUN: Math.ceil(5 * shortModeFactor),
+    MEDIUM_RUN: Math.ceil(10 * shortModeFactor),
+    LARGE_RUN: Math.ceil(10 * shortModeFactor)
   };
 
   const STAGE_PERCENTAGES = {
-    STAGE_1_END: 0.2,
-    STAGE_2_END: 0.35,
-    STAGE_3_END: 0.5,
-    STAGE_4_END: 0.65,
-    STAGE_5_END: 0.8,
-    STAGE_6_END: 0.99
+    STAGE_1_END: 0.2,   // 100/500, 50/250
+    STAGE_2_END: 0.35,  // 175/500, 87.5/250
+    STAGE_3_END: 0.5,   // 250/500, 125/250
+    STAGE_4_END: 0.65,  // 325/500, 162.5/250
+    STAGE_5_END: 0.8,   // 400/500, 200/250
+    STAGE_6_END: 0.99   // 495/500, 247.5/250
   };
 
   const ELITE_FOUR_RANGES = {
-    FIRST_MIN: 0.1,
-    FIRST_MAX: 0.3,
-    SECOND_MIN: 0.3,
-    SECOND_MAX: 0.6,
-    THIRD_MIN: 0.6,
-    THIRD_MAX: 0.99
+    FIRST_MIN: 0.1,   // 50/500, 25/250
+    FIRST_MAX: 0.3,   // 150/500, 75/250
+    SECOND_MIN: 0.3,  // 150/500, 75/250
+    SECOND_MAX: 0.5,  // 300/500, 150/250
+    THIRD_MIN: 0.6,   // 300/500, 150/250
+    THIRD_MAX: 0.8   // 495/500, 247.5/250
   };
 
   const EVIL_TEAM_RANGES = {
-    FIRST_START: 0.01,
-    FIRST_END: 0.07,
-    ADMIN_START: 0.08,
-    ADMIN_END: 0.15,
-    BOSS_END: 0.25,
-    FALLBACK_BOSS_START: 0.26,
-    SECOND_MIN: 0.3,
-    SECOND_MAX: 0.6,
-    THIRD_MIN: 0.6,
-    THIRD_MAX: 0.99
+    FIRST_START: 0.01,  // 5/500, 2.5/250
+    FIRST_END: 0.07,    // 35/500, 17.5/250
+    ADMIN_START: 0.08,  // 40/500, 20/250
+    ADMIN_END: 0.15,    // 75/500, 37.5/250
+    BOSS_END: 0.25,     // 125/500, 62.5/250
+    FALLBACK_BOSS_START: 0.26,  // 130/500, 65/250
+    SECOND_MIN: 0.5,    // 150/500, 75/250
+    SECOND_MAX: 0.7,    // 300/500, 150/250
+    THIRD_MIN: 0.75,     // 300/500, 150/250
+    THIRD_MAX: 0.99     // 495/500, 247.5/250
   };
 
   const MAJOR_BOSS_CONFIG = {
@@ -2350,7 +2352,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
     MIN_WAVE_PERCENTAGE: 0.3,
     MAX_WAVE_PERCENTAGE: 0.99,
     MIN_SEPARATION_PERCENTAGE: 0.13,
-    FINAL_WAVE_THRESHOLD: 500
+    FINAL_WAVE_THRESHOLD: 500 * shortModeFactor
   };
 
   const RECOVERY_BOSS_CONFIG = {
@@ -2358,7 +2360,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
     MIN_WAVE_PERCENTAGE: 0.3,
     MAX_WAVE_PERCENTAGE: 0.99,
     MIN_SEPARATION_PERCENTAGE: 0.13,
-    FINAL_WAVE_THRESHOLD: 500
+    FINAL_WAVE_THRESHOLD: 500 * shortModeFactor
   };
 
   const ATTEMPT_LIMITS = {
@@ -2422,86 +2424,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       });
     }
 
-    scene.resetSeed(seeds.rivalSelection + segmentWaveOffset);
-    let allRivalTypes = getAllRivalTrainerTypes ? getAllRivalTrainerTypes() : [];
     
-    let numRivals: number;
-    let finalWaveRivals: number[] = [];
-    
-    const isSmallRunSegment = segmentSize <= WAVE_THRESHOLDS.SMALL_RUN;
-    const isMediumRunSegment = segmentSize <= WAVE_THRESHOLDS.MEDIUM_RUN;
-    
-    const segmentFinalWave = segmentEnd + waveOffset;
-    const isSegmentBoundary500 = segmentEnd % WAVE_THRESHOLDS.SEGMENT_SIZE === 0;
-    const isSegmentBoundary1000 = segmentEnd % WAVE_THRESHOLDS.MEDIUM_RUN === 0;
-    
-    if (isSmallRunSegment) {
-      numRivals = RIVAL_COUNTS.SMALL_RUN;
-      if (isSegmentBoundary500 && !isSegmentBoundary1000) {
-        finalWaveRivals = [segmentFinalWave];
-      }
-    } else if (isMediumRunSegment) {
-      numRivals = RIVAL_COUNTS.MEDIUM_RUN;
-    } else {
-      numRivals = RIVAL_COUNTS.LARGE_RUN;
-    }
-
-    for (const finalWave of finalWaveRivals) {
-      generatedWaves.add(finalWave);
-      globalGeneratedWaves.add(finalWave);
-      specialWaves.rivalWaves.push(finalWave);
-    }
-
-    const getStageRanges = () => {
-      return {
-        1: { start: Math.floor(segmentSize * EVIL_TEAM_RANGES.FIRST_START) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_1_END) + segmentWaveOffset },
-        2: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_1_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_2_END) + segmentWaveOffset },
-        3: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_2_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_3_END) + segmentWaveOffset },
-        4: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_3_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_4_END) + segmentWaveOffset },
-        5: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_4_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_5_END) + segmentWaveOffset },
-        6: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_5_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_6_END) + segmentWaveOffset }
-      };
-    };
-
-    const selectedRivals: any[] = [];
-    while (selectedRivals.length < numRivals && allRivalTypes.length > 0) {
-      const randomIndex = Utils.randSeedInt(allRivalTypes.length);
-      const selectedRival = allRivalTypes[randomIndex];
-      selectedRivals.push(selectedRival);
-      allRivalTypes.splice(randomIndex, 1);
-    }
-
-    scene.resetSeed(seeds.rivalPokemon + segmentWaveOffset);
-    
-    for (let stage = 1; stage <= 6; stage++) {
-      for (let rivalIndex = 0; rivalIndex < numRivals; rivalIndex++) {
-        const rival = selectedRivals[rivalIndex];
-        
-        const { start, end } = getStageRanges()[stage];
-        let waveNumber: number;
-        let attempts = 0;
-
-        do {
-          if (stage === 6 && rivalIndex === 0 && finalWaveRivals.includes(segmentFinalWave)) {
-            waveNumber = segmentFinalWave;
-            break;
-          } else {
-            waveNumber = Utils.randSeedInt(end - start + 1) + start;
-          }
-          attempts++;
-          if (attempts >= ATTEMPT_LIMITS.MAX_ATTEMPTS) {
-            console.warn(`Failed to find available wave slot for rival stage ${stage} in segment ${segmentIndex}`);
-            break;
-          }
-        } while (generatedWaves.has(waveNumber) || globalGeneratedWaves.has(waveNumber));
-
-        if (attempts < ATTEMPT_LIMITS.MAX_ATTEMPTS && !(stage === 6 && rivalIndex === 0 && finalWaveRivals.includes(segmentFinalWave))) {
-          generatedWaves.add(waveNumber);
-          globalGeneratedWaves.add(waveNumber);
-          specialWaves.rivalWaves.push(waveNumber);
-        }
-      }
-    }
 
     const eliteFourMinWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.FIRST_MIN) + segmentWaveOffset;
     const eliteFourMaxWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.FIRST_MAX) + segmentWaveOffset;
@@ -2656,6 +2579,87 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
         specialWaves.evilTeamWaves.bosses.push(fallbackBossWave);
         generatedWaves.add(fallbackBossWave);
         globalGeneratedWaves.add(fallbackBossWave);
+      }
+    }
+
+    scene.resetSeed(seeds.rivalSelection + segmentWaveOffset);
+    let allRivalTypes = getAllRivalTrainerTypes ? getAllRivalTrainerTypes() : [];
+    
+    let numRivals: number;
+    let finalWaveRivals: number[] = [];
+    
+    const isSmallRunSegment = segmentSize <= WAVE_THRESHOLDS.SMALL_RUN;
+    const isMediumRunSegment = segmentSize <= WAVE_THRESHOLDS.MEDIUM_RUN;
+    
+    const segmentFinalWave = segmentEnd + waveOffset;
+    const isSegmentBoundary500 = segmentEnd % WAVE_THRESHOLDS.SEGMENT_SIZE === 0;
+    const isSegmentBoundary1000 = segmentEnd % WAVE_THRESHOLDS.MEDIUM_RUN === 0;
+    
+    if (isSmallRunSegment) {
+      numRivals = RIVAL_COUNTS.SMALL_RUN;
+      if (isSegmentBoundary500 && !isSegmentBoundary1000) {
+        finalWaveRivals = [segmentFinalWave];
+      }
+    } else if (isMediumRunSegment) {
+      numRivals = RIVAL_COUNTS.MEDIUM_RUN;
+    } else {
+      numRivals = RIVAL_COUNTS.LARGE_RUN;
+    }
+
+    for (const finalWave of finalWaveRivals) {
+      generatedWaves.add(finalWave);
+      globalGeneratedWaves.add(finalWave);
+      specialWaves.rivalWaves.push(finalWave);
+    }
+
+    const getStageRanges = () => {
+      return {
+        1: { start: Math.floor(segmentSize * EVIL_TEAM_RANGES.FIRST_START) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_1_END) + segmentWaveOffset },
+        2: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_1_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_2_END) + segmentWaveOffset },
+        3: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_2_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_3_END) + segmentWaveOffset },
+        4: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_3_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_4_END) + segmentWaveOffset },
+        5: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_4_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_5_END) + segmentWaveOffset },
+        6: { start: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_5_END) + 1 + segmentWaveOffset, end: Math.floor(segmentSize * STAGE_PERCENTAGES.STAGE_6_END) + segmentWaveOffset }
+      };
+    };
+
+    const selectedRivals: any[] = [];
+    while (selectedRivals.length < numRivals && allRivalTypes.length > 0) {
+      const randomIndex = Utils.randSeedInt(allRivalTypes.length);
+      const selectedRival = allRivalTypes[randomIndex];
+      selectedRivals.push(selectedRival);
+      allRivalTypes.splice(randomIndex, 1);
+    }
+
+    scene.resetSeed(seeds.rivalPokemon + segmentWaveOffset);
+    
+    for (let stage = 1; stage <= 6; stage++) {
+      for (let rivalIndex = 0; rivalIndex < numRivals; rivalIndex++) {
+        const rival = selectedRivals[rivalIndex];
+        
+        const { start, end } = getStageRanges()[stage];
+        let waveNumber: number;
+        let attempts = 0;
+
+        do {
+          if (stage === 6 && rivalIndex === 0 && finalWaveRivals.includes(segmentFinalWave)) {
+            waveNumber = segmentFinalWave;
+            break;
+          } else {
+            waveNumber = Utils.randSeedInt(end - start + 1) + start;
+          }
+          attempts++;
+          if (attempts >= ATTEMPT_LIMITS.MAX_ATTEMPTS) {
+            console.warn(`Failed to find available wave slot for rival stage ${stage} in segment ${segmentIndex}`);
+            break;
+          }
+        } while (generatedWaves.has(waveNumber) || globalGeneratedWaves.has(waveNumber));
+
+        if (attempts < ATTEMPT_LIMITS.MAX_ATTEMPTS && !(stage === 6 && rivalIndex === 0 && finalWaveRivals.includes(segmentFinalWave))) {
+          generatedWaves.add(waveNumber);
+          globalGeneratedWaves.add(waveNumber);
+          specialWaves.rivalWaves.push(waveNumber);
+        }
       }
     }
 
@@ -2830,13 +2834,12 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.MYSTERY_NODE]: 150,
         [PathNodeType.MINTS]: 35,
         [PathNodeType.TERA_SHARDS]: 10,
-        [PathNodeType.PP_MAX]: 35,
+        [PathNodeType.PP_MAX]: 30,
         [PathNodeType.ROGUE_BALL_ITEMS]: 5,
-        [PathNodeType.COLLECTED_TYPE]: 50,
+        [PathNodeType.COLLECTED_TYPE]: 60,
         [PathNodeType.COLLECTED_SHOP]: 45,
-        // [PathNodeType.COLLECTED_SHOP]: 300,
         [PathNodeType.ITEM_GENERAL]: 35,
-        [PathNodeType.ABILITY_SWITCHERS]: 35,
+        [PathNodeType.ABILITY_SWITCHERS]: 30,
         [PathNodeType.TYPE_SWITCHER]: 60,
         [PathNodeType.PASSIVE_ABILITY]: 35,
         [PathNodeType.EGG_VOUCHER]: 35,
@@ -2847,10 +2850,10 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.GOLDEN_POKEBALL]: 1,
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
-        [PathNodeType.EXP_SHARE]: 25,
+        [PathNodeType.EXP_SHARE]: 20,
         [PathNodeType.DNA_SPLICERS]: 25,
         [PathNodeType.ANY_TMS]: 35,
-        [PathNodeType.ADD_POKEMON]: 25,
+        [PathNodeType.ADD_POKEMON]: 30,
         [PathNodeType.STAT_SWITCHERS]: 35,
         [PathNodeType.RECOVERY_BOSS]: 15,
         [PathNodeType.ITEM_TM]: 60,
@@ -2865,8 +2868,8 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.EVIOLITE]: 3,
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
-        [PathNodeType.MOVE_UPGRADE]: 50,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+        [PathNodeType.MOVE_UPGRADE]: 80,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
       }
     },
     {
@@ -2879,15 +2882,15 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.ITEM_BERRY]: 60,
         [PathNodeType.MONEY]: 35,
         [PathNodeType.MAJOR_BOSS_BATTLE]: 50,
-        [PathNodeType.MYSTERY_NODE]: 100,
+        [PathNodeType.MYSTERY_NODE]: 150,
         [PathNodeType.MINTS]: 35,
         [PathNodeType.TERA_SHARDS]: 10,
-        [PathNodeType.PP_MAX]: 35,
+        [PathNodeType.PP_MAX]: 30,
         [PathNodeType.ROGUE_BALL_ITEMS]: 5,
         [PathNodeType.COLLECTED_TYPE]: 60,
         [PathNodeType.COLLECTED_SHOP]: 45,
         [PathNodeType.ITEM_GENERAL]: 35,
-        [PathNodeType.ABILITY_SWITCHERS]: 35,
+        [PathNodeType.ABILITY_SWITCHERS]: 30,
         [PathNodeType.TYPE_SWITCHER]: 60,
         [PathNodeType.PASSIVE_ABILITY]: 35,
         [PathNodeType.EGG_VOUCHER]: 35,
@@ -2898,10 +2901,10 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.GOLDEN_POKEBALL]: 1,
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
-        [PathNodeType.EXP_SHARE]: 25,
+        [PathNodeType.EXP_SHARE]: 10,
         [PathNodeType.DNA_SPLICERS]: 25,
         [PathNodeType.ANY_TMS]: 35,
-        [PathNodeType.ADD_POKEMON]: 25,
+        [PathNodeType.ADD_POKEMON]: 45,
         [PathNodeType.STAT_SWITCHERS]: 35,
         [PathNodeType.RECOVERY_BOSS]: 15,
         [PathNodeType.ITEM_TM]: 60,
@@ -2916,8 +2919,8 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.EVIOLITE]: 3,
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
-        [PathNodeType.MOVE_UPGRADE]: 50,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+        [PathNodeType.MOVE_UPGRADE]: 80,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
       }
     },
     {
@@ -2929,17 +2932,17 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.ELITE_FOUR]: 200,
         [PathNodeType.CHAMPION]: 100,
         [PathNodeType.ITEM_BERRY]: 60,
-        [PathNodeType.MONEY]: 35,
+        [PathNodeType.MONEY]: 50,
         [PathNodeType.MAJOR_BOSS_BATTLE]: 50,
-        [PathNodeType.MYSTERY_NODE]: 100,
+        [PathNodeType.MYSTERY_NODE]: 200,
         [PathNodeType.MINTS]: 35,
         [PathNodeType.TERA_SHARDS]: 10,
-        [PathNodeType.PP_MAX]: 35,
+        [PathNodeType.PP_MAX]: 25,
         [PathNodeType.ROGUE_BALL_ITEMS]: 5,
         [PathNodeType.COLLECTED_TYPE]: 60,
         [PathNodeType.COLLECTED_SHOP]: 45,
         [PathNodeType.ITEM_GENERAL]: 35,
-        [PathNodeType.ABILITY_SWITCHERS]: 35,
+        [PathNodeType.ABILITY_SWITCHERS]: 15,
         [PathNodeType.TYPE_SWITCHER]: 60,
         [PathNodeType.PASSIVE_ABILITY]: 35,
         [PathNodeType.EGG_VOUCHER]: 35,
@@ -2950,10 +2953,10 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.GOLDEN_POKEBALL]: 1,
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
-        [PathNodeType.EXP_SHARE]: 25,
+        [PathNodeType.EXP_SHARE]: 5,
         [PathNodeType.DNA_SPLICERS]: 25,
         [PathNodeType.ANY_TMS]: 35,
-        [PathNodeType.ADD_POKEMON]: 25,
+        [PathNodeType.ADD_POKEMON]: 45,
         [PathNodeType.STAT_SWITCHERS]: 35,
         [PathNodeType.RECOVERY_BOSS]: 15,
         [PathNodeType.ITEM_TM]: 60,
@@ -2968,8 +2971,8 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.EVIOLITE]: 3,
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
-        [PathNodeType.MOVE_UPGRADE]: 50,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+        [PathNodeType.MOVE_UPGRADE]: 100,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
       }
     },
     {
@@ -2982,17 +2985,17 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.CHAMPION]: 100,
         [PathNodeType.SMITTY_BATTLE]: 5,
         [PathNodeType.ITEM_BERRY]: 60,
-        [PathNodeType.MONEY]: 35,
+        [PathNodeType.MONEY]: 50,
         [PathNodeType.MAJOR_BOSS_BATTLE]: 75,
-        [PathNodeType.MYSTERY_NODE]: 100,
+        [PathNodeType.MYSTERY_NODE]: 200,
         [PathNodeType.MINTS]: 35,
         [PathNodeType.TERA_SHARDS]: 10,
-        [PathNodeType.PP_MAX]: 35,
+        [PathNodeType.PP_MAX]: 20,
         [PathNodeType.ROGUE_BALL_ITEMS]: 5,
-        [PathNodeType.COLLECTED_TYPE]: 50,
+        [PathNodeType.COLLECTED_TYPE]: 65,
         [PathNodeType.COLLECTED_SHOP]: 45,
         [PathNodeType.ITEM_GENERAL]: 35,
-        [PathNodeType.ABILITY_SWITCHERS]: 35,
+        [PathNodeType.ABILITY_SWITCHERS]: 10,
         [PathNodeType.TYPE_SWITCHER]: 60,
         [PathNodeType.PASSIVE_ABILITY]: 35,
         [PathNodeType.EGG_VOUCHER]: 35,
@@ -3003,28 +3006,25 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.GOLDEN_POKEBALL]: 1,
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
-        [PathNodeType.EXP_SHARE]: 25,
         [PathNodeType.DNA_SPLICERS]: 25,
         [PathNodeType.ANY_TMS]: 35,
-        [PathNodeType.ADD_POKEMON]: 25,
+        [PathNodeType.ADD_POKEMON]: 55,
         [PathNodeType.STAT_SWITCHERS]: 35,
         [PathNodeType.RECOVERY_BOSS]: 15,
         [PathNodeType.ITEM_TM]: 60,
-        [PathNodeType.HEAL_ITEMS]: 35,
+        [PathNodeType.HEAL_ITEMS]: 45,
         [PathNodeType.REVIVER_SEED]: 3,
         [PathNodeType.SACRED_ASH]: 3,
         [PathNodeType.GREAT_BALL_ITEMS]: 35,
         [PathNodeType.ULTRA_BALL_ITEMS]: 15,
-        // [PathNodeType.SHELL_BELL]: 1,
-        // [PathNodeType.LEFTOVERS]: 1,
         [PathNodeType.QUICK_CLAW]: 3,
         [PathNodeType.WIDE_LENS]: 3,
         [PathNodeType.GRIP_CLAW]: 3,
         [PathNodeType.EVIOLITE]: 3,
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
-        [PathNodeType.MOVE_UPGRADE]: 50,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+        [PathNodeType.MOVE_UPGRADE]: 100,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
       }
     },
     // {
@@ -3247,7 +3247,8 @@ function createPathLayer(
 ): PathLayer {
   const globalStartWave = Math.min(...(specialWaves?.rivalWaves || [startWave]));
   const waveOffset = globalStartWave > 1 ? globalStartWave - 1 : 0;
-  const CHALLENGE_RANGES = generateChallengeRanges(totalWaves || 500, waveOffset);
+  const shortModeFactor = scene.gameMode.isChaosShort ? .4 : 1;
+  const CHALLENGE_RANGES = generateChallengeRanges(totalWaves || 500 * shortModeFactor, waveOffset);
 
   const LAYER_CONFIG = {
     DEFAULT_BRANCHES: 3,
@@ -3508,7 +3509,8 @@ function createPathLayer(
       }
     }
     
-            const additionalPropertiesCount = calculateAdditionalPropertiesCount(range.start, totalWaves || 500, waveOffset);
+    const shortModeFactor = scene.gameMode.isChaosShort ? .4 : 1;
+    const additionalPropertiesCount = calculateAdditionalPropertiesCount(range.start, totalWaves || 500 * shortModeFactor, waveOffset);
     const additionalProperties: (keyof DynamicMode)[] = [];
     
     if (additionalPropertiesCount > 0) {
@@ -4419,10 +4421,11 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
     }
 
     const seeds = scene.gameData.nightmareBattleSeeds;
-    const totalWaves = scene.gameMode.isChaosVoid || scene.gameMode.isInfinite ? 1000 : 500;
+    const shortModeFactor = scene.gameMode.isChaosShort ? .4 : 1;
+    const totalWaves = scene.gameMode.isChaosVoid || scene.gameMode.isInfinite ? 1000 * shortModeFactor : 500 * shortModeFactor;
     const waveOffset = startWave - 1;
     
-    const segmentSize = 500;
+    const segmentSize = 500 * shortModeFactor;
     const numSegments = Math.ceil(totalWaves / segmentSize);
     
     const combinedSpecialWaves: SpecialBattleWaves = {
@@ -4501,6 +4504,10 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
     const convergencePoints = [];
     for (let i = layerSize; i <= totalWaves; i += layerSize) {
       convergencePoints.push(i + waveOffset);
+    }
+    
+    if (convergencePoints.length === 0 || convergencePoints[convergencePoints.length - 1] < totalWaves + waveOffset) {
+      convergencePoints.push(totalWaves + waveOffset);
     }
 
     const battlePath: BattlePath = {

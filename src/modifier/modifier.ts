@@ -223,6 +223,7 @@ export abstract class PersistentModifier extends Modifier {
     public stackCount: integer;
     public virtualStackCount: integer;
     protected replaceExisting: boolean = false;
+    public isRemovable: boolean = true;
 
     constructor(type: ModifierType, stackCount?: integer) {
         super(type);

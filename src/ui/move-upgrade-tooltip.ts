@@ -247,6 +247,7 @@ export class MoveUpgradeTooltipUtils {
     
     
     lines.push(...this.compareRecoilDamage(scene, currentMove, upgradedMove));
+    lines.push(...this.compareHPSacrifice(scene, currentMove, upgradedMove));
     lines.push(...this.compareHealAmount(scene, currentMove, upgradedMove));
     lines.push(...this.compareMultiHit(scene, currentMove, upgradedMove));
     lines.push(...this.compareCritRate(scene, currentMove, upgradedMove));
@@ -314,6 +315,40 @@ export class MoveUpgradeTooltipUtils {
       const recoilLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:recoilDamage"), TextStyle.SUMMARY_GOLD, uiTheme);
       const recoilText = getBBCodeFrag(`${currentRecoil}%`, TextStyle.WINDOW, uiTheme);
       lines.push(`${recoilLabel}: ${recoilText}`);
+    }
+    
+    return lines;
+  }
+
+  private static compareHPSacrifice(scene: BattleScene, currentMove: Move, upgradedMove: Move): string[] {
+    const lines: string[] = [];
+    const uiTheme = scene.uiTheme;
+    
+    const getSacrificeType = (move: Move): string => {
+      if (move.hasAttr(SacrificialAttr)) return i18next.t("moveUpgradeAttrs:sacrificialFull");
+      if (move.hasAttr(HalfSacrificialAttr)) return i18next.t("moveUpgradeAttrs:sacrificialHalf");
+      if (move.hasAttr(SacrificialAttrOnHit)) return i18next.t("moveUpgradeAttrs:sacrificialOnHit");
+      return "";
+    };
+    
+    const currentSacrifice = getSacrificeType(currentMove);
+    const upgradedSacrifice = getSacrificeType(upgradedMove);
+    
+    if (currentSacrifice !== upgradedSacrifice && upgradedSacrifice) {
+      const sacrificeLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:sacrificial"), TextStyle.SUMMARY_GOLD, uiTheme);
+      if (currentSacrifice) {
+        const currentSacrificeText = getBBCodeFrag(currentSacrifice, TextStyle.SUMMARY_RED, uiTheme);
+        const newSacrificeText = getBBCodeFrag(upgradedSacrifice, TextStyle.SUMMARY_GREEN, uiTheme);
+        const arrow = getBBCodeFrag(" → ", TextStyle.WINDOW, uiTheme);
+        lines.push(`${sacrificeLabel}: ${currentSacrificeText}${arrow}${newSacrificeText}`);
+      } else {
+        const sacrificeText = getBBCodeFrag(upgradedSacrifice, TextStyle.SUMMARY_RED, uiTheme);
+        lines.push(`${sacrificeLabel}: ${sacrificeText}`);
+      }
+    } else if (currentSacrifice) {
+      const sacrificeLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:sacrificial"), TextStyle.SUMMARY_GOLD, uiTheme);
+      const sacrificeText = getBBCodeFrag(currentSacrifice, TextStyle.WINDOW, uiTheme);
+      lines.push(`${sacrificeLabel}: ${sacrificeText}`);
     }
     
     return lines;

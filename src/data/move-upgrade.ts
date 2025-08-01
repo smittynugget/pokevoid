@@ -280,7 +280,6 @@ export class MoveUpgrade {
         ];
 
         static CRIT_PATH = [
-            { pSetToRatio: .35 },
             { pSetToRatio: .45 },
             { pSetToRatio: .5 },
             { pSetToRatio: .55 },
@@ -432,12 +431,6 @@ export class MoveUpgrade {
         ];
 
         static CHARGE_MOVE_PATH = [
-            { pBoost: 20, desc: "moveUpgrade:description:misc:addChargeTurn", accCost: 15 },
-            { pBoost: 20, desc: "moveUpgrade:description:misc:addChargeTurn", accCost: 10 },
-            { pBoost: 20, desc: "moveUpgrade:description:misc:addChargeTurn", accCost: 5 },
-            { pBoost: 30, desc: "moveUpgrade:description:misc:addChargeTurn", accCost: 15 },
-            { pBoost: 30, desc: "moveUpgrade:description:misc:addChargeTurn", accCost: 10 },
-            { pBoost: 30, desc: "moveUpgrade:description:misc:addChargeTurn", accCost: 5 },
             { pBoost: 40, desc: "moveUpgrade:description:misc:addChargeTurn", accCost: 15 },
             { pBoost: 40, desc: "moveUpgrade:description:misc:addChargeTurn", accCost: 10 },
             { pBoost: 40, desc: "moveUpgrade:description:misc:addChargeTurn", accCost: 5 },
@@ -527,12 +520,10 @@ export class MoveUpgrade {
         ];
 
         static POSITIVE_PRIORITY_PATH = [
-            { prio: 1, pSetToRatio: .25 },
             { prio: 1, pSetToRatio: .3 },
-            { prio: 2, pSetToRatio: .3 },
-            { prio: 2, pSetToRatio: .35 },
-            { prio: 2, pSetToRatio: .4 },
-            { prio: 2, pSetToRatio: .45 },
+            { prio: 1, pSetToRatio: .35 },
+            { prio: 1, pSetToRatio: .4 },
+            { prio: 1, pSetToRatio: .45 },
             { prio: 2, pSetToRatio: .5 },
             { prio: 2, pSetToRatio: .55 },
             { prio: 2, pSetToRatio: .6 },
@@ -908,9 +899,9 @@ export class MoveUpgrade {
         const hasStatBoostSelf = selfBoostAttrs.length > 0;
         const hasStatLowerTarget = targetLowerAttrs.length > 0;
         const hasHealAttr = healAttr !== undefined;
-        const isVeryRare = Utils.randSeedInt(500) <= 1;
+        const isVeryRare = Utils.randSeedInt(200) <= 1;
         // const isVeryRare = Utils.randSeedInt(10) <= 1;
-        const isRare = Utils.randSeedInt(150) <= 1;
+        const isRare = Utils.randSeedInt(100) <= 1;
         // const isRare = Utils.randSeedInt(10) <= 1;
         const isMinorRare = Utils.randSeedInt(50) <= 1;
         const hasPathlessUpgrade = MoveUpgrade.doesPathlessUpgradeExist(moveId, scene, isPlayer);
@@ -1223,7 +1214,11 @@ export class MoveUpgrade {
                     if (nextStep) {
                         const currentStats = Array.isArray(targetLowerAttr.stats) ? targetLowerAttr.stats : [targetLowerAttr.stats];
                         const currentStatNames = currentStats.map(s => getBattleStatName(s)).join(" & ");
-                        const powerPenalty = 0;
+                        let powerPenalty = 0;
+                        if (nextStep.pSetToRatio !== undefined) {
+                            powerPenalty = Math.round(baseMovePower * nextStep.pSetToRatio) - baseMovePower;
+                        }
+                        powerPenalty = MoveUpgrade.capPowerBoost(baseMovePower, powerPenalty);
                         const accPenalty = isStatusMove && baseMoveAccuracy !== -1 ? -nextStep.accCost : 0;
                         const newPower = baseMovePower + powerPenalty;
                         const newAccuracy = baseMoveAccuracy === -1 ? 100 : Math.max(50, baseMoveAccuracy + accPenalty);
@@ -1310,7 +1305,7 @@ export class MoveUpgrade {
                         }
                     }
                 }
-            } else if (shouldOfferUpgradeCategory(UpgradeCategory.STAT_LOWER_TARGET) && !hasStatLowerTarget && !isStatusMove && hasPower && !selfLowerAttrs.length) {
+            } else if (shouldOfferUpgradeCategory(UpgradeCategory.STAT_LOWER_TARGET) && !hasStatLowerTarget && !isStatusMove && hasPower && !selfLowerAttrs.length && !isMultiHit) {
                 const upgradeTier = getNextUpgradeTier(UpgradeCategory.STAT_LOWER_TARGET);
                 
                 if (upgradeTier !== null) {
@@ -1319,7 +1314,11 @@ export class MoveUpgrade {
                     if (nextStep) {
                         const stat = Utils.randSeedItem([BattleStat.ATK, BattleStat.DEF, BattleStat.SPATK, BattleStat.SPDEF, BattleStat.SPD, BattleStat.ACC, BattleStat.EVA]);
                         const statName = getBattleStatName(stat);
-                        const powerPenalty = 0;
+                        let powerPenalty = 0;
+                        if (nextStep.pSetToRatio !== undefined) {
+                            powerPenalty = Math.round(baseMovePower * nextStep.pSetToRatio) - baseMovePower;
+                        }
+                        powerPenalty = MoveUpgrade.capPowerBoost(baseMovePower, powerPenalty);
                         const accPenalty = isStatusMove && baseMoveAccuracy !== -1 ? -nextStep.accCost : 0;
                         const newPower = baseMovePower + powerPenalty;
                         const newAccuracy = baseMoveAccuracy === -1 ? 100 : Math.max(50, baseMoveAccuracy + accPenalty);
@@ -1364,7 +1363,7 @@ export class MoveUpgrade {
                 }
             }
 
-            if (!hasPathlessUpgrade && !isStatusMove && baseMove.type !== Type.GROUND && !baseMove.getAttrs(AddBattlerTagAttr).some((a: any) => a.tagType === BattlerTagType.IGNORE_FLYING) && hasPower && isMinorRare) {
+            if (!hasPathlessUpgrade && !isStatusMove && baseMove.type !== Type.GROUND && !baseMove.getAttrs(AddBattlerTagAttr).some((a: any) => a.tagType === BattlerTagType.IGNORE_FLYING) && hasPower && isRare) {
                     let attributes: MoveAttr[] = [];
                     
                     attributes = [new AddBattlerTagAttr(BattlerTagType.IGNORE_FLYING), new RemoveBattlerTagAttr([BattlerTagType.FLYING, BattlerTagType.MAGNET_RISEN])];
@@ -1602,7 +1601,7 @@ export class MoveUpgrade {
             }
         }
 
-        if (shouldOfferUpgradeCategory(UpgradeCategory.MULTI_HIT) && !isStatusMove && hasPower) {
+        if (shouldOfferUpgradeCategory(UpgradeCategory.MULTI_HIT) && !isStatusMove && hasPower && !isMultiHit) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.MULTI_HIT);
             
             if (upgradeTier !== null) {
@@ -1646,7 +1645,7 @@ export class MoveUpgrade {
             }
         }
 
-        if (shouldOfferUpgradeCategory(UpgradeCategory.ITEM_INTERACTION) && isPhysicalMove && !isStatusMove && hasPower && !isSelfTarget) {
+        if (shouldOfferUpgradeCategory(UpgradeCategory.ITEM_INTERACTION) && isPhysicalMove && !isStatusMove && hasPower && !isSelfTarget && isRare) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.ITEM_INTERACTION);
             
             if (upgradeTier !== null) {
@@ -1676,10 +1675,10 @@ export class MoveUpgrade {
             }
         }
 
-        if (shouldOfferUpgradeCategory(UpgradeCategory.SACRIFICIAL) && !isStatusMove && !isMultiHit && hasPower && baseMove.id !== Moves.STRUGGLE) {
+        if (shouldOfferUpgradeCategory(UpgradeCategory.SACRIFICIAL) && !isStatusMove && !isMultiHit && hasPower && baseMove.id !== Moves.STRUGGLE && baseMovePower < 70) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.SACRIFICIAL);
             
-            if (upgradeTier !== null) {
+            if (upgradeTier !== null && (upgradeTier > 1 || isMinorRare)) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.SACRIFICIAL_PATH[tierIndex];
 
@@ -1719,7 +1718,7 @@ export class MoveUpgrade {
         if (shouldOfferUpgradeCategory(UpgradeCategory.CHARGE_MOVE) && !isStatusMove && !isMultiHit && hasPower && baseMovePower <= 100 && !selfLowerAttrs.length) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.CHARGE_MOVE);
             
-            if (upgradeTier !== null) {
+            if (upgradeTier !== null && (upgradeTier > 1 || isRare)) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.CHARGE_MOVE_PATH[tierIndex];
 

@@ -66,9 +66,11 @@ export class ModifierRewardPhase extends BattlePhase {
     const rand = this.isPermaItemNode ? 100 : Utils.randSeedInt(100);
     let modifierKey: string;
 
-    if (rand < 95) {
+    if (rand < 80 && false) {
       modifierKey = this.getRandomPermaMoneyKey();
       this.isPerma = false;
+    } else if (true || rand < 95) {
+      modifierKey = this.getRandomEggVoucher();
     } else {
       modifierKey = getRandomPermaModifierKey();
     }
@@ -108,6 +110,18 @@ export class ModifierRewardPhase extends BattlePhase {
         return 'PERMA_MONEY_5';
       }
     }
+  }
+
+  private getRandomEggVoucher(): string {
+    const voucherRand = Utils.randSeedInt(500);
+    
+      if (voucherRand < 300) {
+        return 'VOUCHER';
+      } else if (voucherRand < 450) {
+        return 'VOUCHER_PLUS';
+      } else {
+        return 'VOUCHER_PREMIUM';
+      }
   }
 }
 

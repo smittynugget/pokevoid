@@ -135,6 +135,7 @@ export const SettingKeys = {
   Shop_Overlay_Opacity: "SHOP_OVERLAY_OPACITY",
   Reward_Overlay_Opacity: "REWARD_OVERLAY_OPACITY",
   Normal_Effectiveness: "NORMAL_EFFECTIVENESS",
+  Locked_Reward_Speed: "LOCKED_REWARD_SPEED",
 };
 
 /**
@@ -156,6 +157,13 @@ export const Setting: Array<Setting> = [
       { value: "5x", label: "5x" },
     ],
     default: 2,
+    type: SettingType.GENERAL
+  },
+  {
+    key: SettingKeys.Locked_Reward_Speed,
+    label: i18next.t("settings:lockedRewardSpeed"),
+    options: OFF_ON,
+    default: 1,
     type: SettingType.GENERAL
   },
   {
@@ -694,6 +702,9 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
     break;
     case SettingKeys.Skip_Seen_Dialogues:
       scene.skipSeenDialogues = Setting[index].options[value].value === "On";
+      break;
+    case SettingKeys.Locked_Reward_Speed:
+      scene.lockedRewardSpeed = Setting[index].options[value].value === "On";
       break;
     case SettingKeys.Battle_Style:
       scene.battleStyle = value;

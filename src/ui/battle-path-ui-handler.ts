@@ -45,20 +45,20 @@ function findNodeByPattern(battlePath: any, selectedPath: string): any | null {
     return null;
   }
   
-  const [waveStr, indexStr] = selectedPattern.split('_');
-  const wave = parseInt(waveStr, 10);
-  const pathIndex = parseInt(indexStr, 10) - 1;
-  
-  if (isNaN(wave) || isNaN(pathIndex)) {
+  const wave = parseInt(selectedPattern.split('_')[0], 10);
+  if (isNaN(wave)) {
     return null;
   }
   
   const nodesAtWave = battlePath.waveToNodeMap.get(wave);
-  if (!nodesAtWave || pathIndex >= nodesAtWave.length) {
+  if (!nodesAtWave) {
     return null;
   }
   
-  return nodesAtWave[pathIndex];
+  return nodesAtWave.find(node => {
+    const nodePattern = extractNodePattern(node.id);
+    return nodePattern === selectedPattern;
+  }) || null;
 }
 
 export default class BattlePathUiHandler extends ModalUiHandler {
@@ -1620,6 +1620,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     const max30WaveInSegment = current30Segment * 30;
     
     const max30WaveLimit = segmentStart + max30WaveInSegment - 1;
+    // const max30WaveLimit = 520;
     
     let max500WaveLimit = Infinity;
     if (this.currentWave % 500 !== 0) {

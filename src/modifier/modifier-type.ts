@@ -2500,8 +2500,11 @@ export class EvolutionItemModifierType extends PokemonModifierType implements Ge
     public evolutionItem: EvolutionItem;
 
     constructor(evolutionItem: EvolutionItem) {
-        super("", EvolutionItem[evolutionItem].toLowerCase(), (_type, args) => new Modifiers.EvolutionItemModifier(this, (args[0] as PlayerPokemon).id),
+        super("", EvolutionItem[evolutionItem].toLowerCase(),         (_type, args) => new Modifiers.EvolutionItemModifier(this, (args[0] as PlayerPokemon).id),
             (pokemon: PlayerPokemon) => {
+                if (pokemon.pauseEvolutions) {
+                    return PartyUiHandler.NoEffectMessage;
+                }
                 if (pokemonEvolutions.hasOwnProperty(pokemon.species.speciesId) && pokemonEvolutions[pokemon.species.speciesId].filter(e => e.item === this.evolutionItem
                     && (!e.condition || e.condition.predicate(pokemon)) && (e.preFormKey === null || e.preFormKey === pokemon.getFormKey())).length && (pokemon.getFormKey() !== SpeciesFormKey.GIGANTAMAX)) {
                     return null;
@@ -2855,11 +2858,11 @@ class EvolutionItemModifierTypeGenerator extends ModifierTypeGenerator {
             }
 
             const evolutionItemPool = [
-                party.filter(p => pokemonEvolutions.hasOwnProperty(p.species.speciesId)).map(p => {
+                party.filter(p => pokemonEvolutions.hasOwnProperty(p.species.speciesId) && !p.pauseEvolutions).map(p => {
                     const evolutions = pokemonEvolutions[p.species.speciesId];
                     return evolutions.filter(e => e.item !== EvolutionItem.NONE && (e.evoFormKey === null || (e.preFormKey || "") === p.getFormKey()) && (!e.condition || e.condition.predicate(p)));
                 }).flat(),
-                party.filter(p => p.isFusion() && p.fusionSpecies && pokemonEvolutions.hasOwnProperty(p.fusionSpecies.speciesId)).map(p => {
+                party.filter(p => p.isFusion() && p.fusionSpecies && pokemonEvolutions.hasOwnProperty(p.fusionSpecies.speciesId) && !p.pauseEvolutions).map(p => {
                     const evolutions = pokemonEvolutions[p.fusionSpecies!.speciesId];
                     return evolutions.filter(e => e.item !== EvolutionItem.NONE && (e.evoFormKey === null || (e.preFormKey || "") === p.getFusionFormKey()) && (!e.condition || e.condition.predicate(p)));
                 }).flat()
@@ -2920,7 +2923,7 @@ class FormChangeItemModifierTypeGenerator extends ModifierTypeGenerator {
 
             if (!this.onlySmittyItems) {
                 formChangeItemPool = [...new Set(party.filter(p =>
-                    pokemonFormChanges.hasOwnProperty(p.species.speciesId)
+                    pokemonFormChanges.hasOwnProperty(p.species.speciesId) && !p.pauseEvolutions
                 ).map(p => {
                     const formChanges = pokemonFormChanges[p.species.speciesId] || [];
                     let items = [];
@@ -3328,8 +3331,7 @@ export const modifierTypes = {
 
     SECONDARY_TYPE_SWITCHER: () => new SecondaryTypeSwitcherModifierTypeGenerator(),
 
-
-
+    ANYTM_MEH: () => new AnyTmModifierTypeGenerator(ModifierTier.MEH),
     ANYTM_COMMON: () => new AnyTmModifierTypeGenerator(ModifierTier.COMMON),
     ANYTM_GREAT: () => new AnyTmModifierTypeGenerator(ModifierTier.GREAT),
     ANYTM_ULTRA: () => new AnyTmModifierTypeGenerator(ModifierTier.ULTRA),
@@ -3785,6 +3787,7 @@ function shouldHideHealingModifier(party: Pokemon[]): boolean {
 
 const modifierPool: ModifierPool = {
     [ModifierTier.COMMON]: [
+        new WeightedModifierType(modifierTypes.ANYTM_MEH, glitchPieceWeightAdjustment, 1),
         new WeightedModifierType(modifierTypes.ANYTM_COMMON, glitchPieceWeightAdjustment, 6),
         new WeightedModifierType(modifierTypes.ANYTM_COMMON, glitchPieceWeightAdjustment, 3),
         new WeightedModifierType(modifierTypes.ANYTM_GREAT, glitchPieceWeightAdjustment, 6),
@@ -3798,17 +3801,17 @@ const modifierPool: ModifierPool = {
         new WeightedModifierType(modifierTypes.ANY_PASSIVE_ABILITY, glitchPieceWeightAdjustment, 6),
         new WeightedModifierType(modifierTypes.ULTRA_BALL, (party: Pokemon[]) => (hasMaximumBalls(party, PokeballType.ULTRA_BALL) || party[0].scene.pokeballCounts[PokeballType.ULTRA_BALL] >= 10) ? 0 : 2, 2),
         new WeightedModifierType(modifierTypes.TM_GREAT, 6),
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 8, 8), 12),
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 8, 8), 12),
+        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 12, 12), 12),
+        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 10, 10), 12),
         new WeightedModifierType(modifierTypes.TM_COMMON, 2),
-        new WeightedModifierType(modifierTypes.POTION, (party: Pokemon[]) => {
-             if (shouldHideHealingModifier(party)) return 0;
-          const thresholdPartyMemberCount = Math.min(party.filter(p => (p.getInverseHp() >= 20 || p.getHpRatio() <= 0.8) && !p.isFainted()).length, 3);
-          return thresholdPartyMemberCount * 3;
-        }, 9),
+        // new WeightedModifierType(modifierTypes.POTION, (party: Pokemon[]) => {
+        //      if (shouldHideHealingModifier(party)) return 0;
+        //   const thresholdPartyMemberCount = Math.min(party.filter(p => (p.getInverseHp() >= 20 || p.getHpRatio() <= 0.8) && !p.isFainted()).length, 3);
+        //   return thresholdPartyMemberCount * 3;
+        // }, 9),
         new WeightedModifierType(modifierTypes.SUPER_POTION, (party: Pokemon[]) => {
              if (shouldHideHealingModifier(party)) return 0;
-          const thresholdPartyMemberCount = Math.min(party.filter(p => (p.getInverseHp() >= 40 || p.getHpRatio() <= 0.6) && !p.isFainted()).length, 3);
+          const thresholdPartyMemberCount = Math.min(party.filter(p => (p.getInverseHp() >= 20 || p.getHpRatio() <= 0.8) && !p.isFainted()).length, 3);
           return thresholdPartyMemberCount;
         }, 3),
       
@@ -3819,6 +3822,7 @@ const modifierPool: ModifierPool = {
     [ModifierTier.GREAT]: [
         new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 14, 12), 12),
         new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 16), 16),
+        new WeightedModifierType(modifierTypes.MOVE_UPGRADE,  (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 8, 8), 8),
         new WeightedModifierType(modifierTypes.ANYTM_GREAT, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 16), 16),
         new WeightedModifierType(modifierTypes.ANYTM_GREAT, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 8), 8),
         new WeightedModifierType(modifierTypes.ANYTM_ULTRA, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 12), 12),
@@ -3913,6 +3917,7 @@ const modifierPool: ModifierPool = {
         return m;
     }),
     [ModifierTier.ULTRA]: [
+        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 10, 10), 12),
          new WeightedModifierType(modifierTypes.MOVE_UPGRADE,  (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 14, 8), 14),
         new WeightedModifierType(modifierTypes.ANYTM_GREAT, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 8), 8),
         new WeightedModifierType(modifierTypes.ANYTM_ULTRA, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 8), 8),
@@ -4026,8 +4031,8 @@ const modifierPool: ModifierPool = {
         new WeightedModifierType(modifierTypes.SOUL_DEW, 1),
         new WeightedModifierType(modifierTypes.STAT_SACRIFICE, (party: Pokemon[]) => party.length > 1 ? glitchSacrificeWeightAdjustment(party) : 0, 1),
         new WeightedModifierType(modifierTypes.RARER_CANDY, 1),
-        new WeightedModifierType(modifierTypes.SHELL_BELL, (party: Pokemon[]) => party[0].scene.gameMode.isChaosMode ? 4 : 0, 4),
-        new WeightedModifierType(modifierTypes.LEFTOVERS, (party: Pokemon[]) => party[0].scene.gameMode.isChaosMode ? 4 : 0, 4),
+        new WeightedModifierType(modifierTypes.SHELL_BELL, (party: Pokemon[]) => party[0].scene.gameMode.isChaosMode ? 2 : 0, 2),
+        new WeightedModifierType(modifierTypes.LEFTOVERS, (party: Pokemon[]) => party[0].scene.gameMode.isChaosMode ? 2 : 0, 2),
         new WeightedModifierType(modifierTypes.ANY_SMITTY_PASSIVE_ABILITY, glitchPieceWeightAdjustment, 1),
         new WeightedModifierType(modifierTypes.ANY_SMITTY_ABILITY, glitchPieceWeightAdjustment, 1),
         new WeightedModifierType(modifierTypes.CANDY_JAR, skipInLastClassicWaveOrDefault(1)),
@@ -7199,7 +7204,7 @@ export const starterCatchQuestModifier = questModifierTypes.PERMA_CATCH_QUEST("S
         rewardId: GameModes.CLASSIC,
         questId: QuestUnlockables.STARTER_CATCH_QUEST,
         questSpriteId: Species.CATERPIE,
-        rewardText: i18next.t("quests:STARTER_CATCH_QUEST.rewardText"), // Updated
+        rewardText: i18next.t("quests:STARTER_CATCH_QUEST.rewardText"),
     },
     task: i18next.t("quests:STARTER_CATCH_QUEST.task")
 });
@@ -7214,7 +7219,7 @@ export const nuzlightUnlockQuestModifier = questModifierTypes.PERMA_WIN_QUEST("N
         rewardId: GameModes.NUZLIGHT,
         questId: QuestUnlockables.NUZLIGHT_UNLOCK_QUEST,
         questSpriteId: Species.NUZLEAF,
-        rewardText: i18next.t("quests:NUZLIGHT_UNLOCK_QUEST.rewardText"), // Updated
+        rewardText: i18next.t("quests:NUZLIGHT_UNLOCK_QUEST.rewardText"),
     },
     task: i18next.t("quests:NUZLIGHT_UNLOCK_QUEST.task")
 });
@@ -7229,7 +7234,7 @@ export const nuzlockeUnlockQuestModifier = questModifierTypes.PERMA_WIN_QUEST("N
         rewardId: GameModes.NUZLOCKE,
         questId: QuestUnlockables.NUZLOCKE_UNLOCK_QUEST,
         questSpriteId: Species.SHIFTRY,
-        rewardText: i18next.t("quests:NUZLOCKE_UNLOCK_QUEST.rewardText"), // Updated
+        rewardText: i18next.t("quests:NUZLOCKE_UNLOCK_QUEST.rewardText"),
     },
     task: i18next.t("quests:NUZLOCKE_UNLOCK_QUEST.task")
 });

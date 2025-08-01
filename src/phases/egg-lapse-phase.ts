@@ -96,6 +96,34 @@ export class EggLapsePhase extends Phase {
             }
             this.scene.replacePlayerPokemon(partyIndex, selectedPokemon);
           }
+        } else if (selectedPokemon && !releasedPokemon) {
+          const currentParty = this.scene.getParty();
+          const lowestLevel = Math.min(...currentParty.map(p => p.level));
+          selectedPokemon.level = lowestLevel;
+          selectedPokemon.calculateStats();
+          
+          if (selectedStarter.moveset) {
+            selectedPokemon.tryPopulateMoveset(selectedStarter.moveset);
+          }
+          if (selectedStarter.abilityIndex !== undefined) {
+            selectedPokemon.abilityIndex = selectedStarter.abilityIndex;
+          }
+          if (selectedStarter.nature !== undefined) {
+            selectedPokemon.nature = selectedStarter.nature;
+          }
+          if (selectedStarter.passive !== undefined) {
+            selectedPokemon.passive = selectedStarter.passive;
+          }
+          if (selectedStarter.pokerus !== undefined) {
+            selectedPokemon.pokerus = selectedStarter.pokerus;
+          }
+          if (selectedStarter.nickname) {
+            selectedPokemon.nickname = selectedStarter.nickname;
+          }
+          if (selectedStarter.fusionIndex >= 0 && selectedPokemon.fusionSpecies) {
+            selectedPokemon.fusionFormIndex = selectedStarter.fusionIndex;
+          }
+          this.scene.getParty().push(selectedPokemon);
         }
       }
       

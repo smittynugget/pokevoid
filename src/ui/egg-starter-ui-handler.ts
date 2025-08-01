@@ -250,7 +250,7 @@ export default class eggStarterUi extends StarterSelectUiHandler {
     
     resetFilters(): void {}
 
-    getPokemonSelectedOptions(): OptionItem[] {
+        getPokemonSelectedOptions(): OptionItem[] {
         const ui = this.getUi();
         const options: OptionItem[] = [];
 
@@ -262,8 +262,21 @@ export default class eggStarterUi extends StarterSelectUiHandler {
             return options;
         }
         
-                const isLegendary = this.lastSpecies.isLegendSubOrMystical();
-                const onlyOnePokemon = this.currentParty.length == 1;
+        const isLegendary = this.lastSpecies.isLegendSubOrMystical();
+        const onlyOnePokemon = this.currentParty.length == 1;
+        const canAddToParty = this.currentParty.length < 6 && !isLegendary;
+        
+        // Add to Party option (highest priority)
+        if (canAddToParty) {
+            options.push({
+                label: i18next.t("eggStarterUi:addToParty", 
+                    { defaultValue: "Add to Party" }),
+                handler: () => {
+                    this.showAddToPartyConfirmation();
+                    return true;
+                }
+            });
+        }
         
                 if (isLegendary && !this.legendaryEnabled) {
                         options.push({
@@ -417,6 +430,52 @@ export default class eggStarterUi extends StarterSelectUiHandler {
         this.instructionRowY = 0;
         
         super.updateInstructions();
+    }
+
+    private showAddToPartyConfirmation(): void {
+        const ui = this.getUi();
+        this.blockInput = true;
+        
+        const selectedHatchedPokemon = this.lastSpecies;
+        const starterPrefs = this.starterPreferences[selectedHatchedPokemon.speciesId] || {};
+        
+        const hasPassive = this.isPassiveAvailable(selectedHatchedPokemon.speciesId);
+        const hasPokerus = this.pokerusSpecies.some(s => s.speciesId === selectedHatchedPokemon.speciesId);
+
+        const selectedStarter: Starter = {
+            species: selectedHatchedPokemon,
+            dexAttr: this.dexAttrCursor,
+            abilityIndex: this.abilityCursor,
+            fusionIndex: this.fusionCursor,
+            passive: hasPassive,
+            nature: this.natureCursor as unknown as Nature,
+            moveset: this.starterMoveset,
+            pokerus: hasPokerus,
+            nickname: starterPrefs.nickname
+        };
+
+        ui.setMode(this.getMode()).then(() => {
+            ui.showText(i18next.t("eggStarterUi:confirmAddMessage", { 
+                defaultValue: "Add {{hatchedPokemon}} to your party?",
+                hatchedPokemon: selectedHatchedPokemon.name
+            }), null, () => {
+                ui.setModeWithoutClear(Mode.CONFIRM, () => {
+                    if (this.eggStarterSelectCallback) {
+                        // Clear UI
+                        this.clear();
+                        this.scene.ui.showText("", 0);
+                        
+                        // Call callback with null for released (no swap, just add)
+                        this.eggStarterSelectCallback(selectedStarter, null);
+                    }
+                }, () => {
+                    // Cancel - return to main selection
+                    ui.setMode(this.getMode());
+                    this.blockInput = false;
+                });
+            });
+            this.blockInput = false;
+        });
     }
 
     private dummyCallback(_starters: Starter[]): void {}

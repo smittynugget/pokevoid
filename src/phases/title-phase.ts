@@ -578,7 +578,7 @@ export class TitlePhase extends Phase {
 
                     this.scene.money = this.scene.gameMode.getStartingMoney();
 
-                    if (this.gameMode === GameModes.CHAOS_ROGUE || this.gameMode === GameModes.CHAOS_ROGUE_VOID || this.gameMode === GameModes.CHAOS_INFINITE_ROGUE || this.gameMode === GameModes.CHAOS_NUZLIGHT_DRAFT || this.gameMode === GameModes.CHAOS_NUZLOCKE_DRAFT) {
+                    if (this.gameMode === GameModes.CHAOS_ROGUE || this.gameMode === GameModes.CHAOS_ROGUE_SHORT || this.gameMode === GameModes.CHAOS_ROGUE_VOID || this.gameMode === GameModes.CHAOS_ROGUE_VOID_SHORT || this.gameMode === GameModes.CHAOS_INFINITE_ROGUE || this.gameMode === GameModes.CHAOS_NUZLIGHT_DRAFT || this.gameMode === GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT || this.gameMode === GameModes.CHAOS_NUZLOCKE_DRAFT || this.gameMode === GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT) {
                         this.scene.pushPhase(new SelectDraftPhase(this.scene));
                     } else {
                         this.scene.pushPhase(new SelectStarterPhase(this.scene));
@@ -809,126 +809,304 @@ export class TitlePhase extends Phase {
     }
 
     private showChaosModes(): void {
-        const availableModes = [GameModes.CHAOS_ROGUE];
-        
-        if (this.scene.gameData.unlocks[Unlockables.CHAOS_JOURNEY_MODE]) {
-            availableModes.push(GameModes.CHAOS_JOURNEY);
+        // Check if this is a new player (based on saved flag, not current stats)
+        if (this.scene.gameData.isNewPlayer) {
+            this.showNewPlayerChaosModes();
+            return;
         }
         
-        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            availableModes.push(GameModes.CHAOS_NUZLIGHT);
-        }
-        
-        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            availableModes.push(GameModes.CHAOS_NUZLOCKE);
-        }
-        
-        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            availableModes.push(GameModes.CHAOS_NUZLIGHT_DRAFT);
-        }
-        
-        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            availableModes.push(GameModes.CHAOS_NUZLOCKE_DRAFT);
-        }
-        
-        if (this.scene.gameData.unlocks[Unlockables.CHAOS_VOID_MODE]) {
-            availableModes.push(GameModes.CHAOS_VOID);
-        }
-        
-        if (this.scene.gameData.unlocks[Unlockables.CHAOS_ROGUE_VOID_MODE]) {
-            availableModes.push(GameModes.CHAOS_ROGUE_VOID);
-        }
-        
-        if (this.scene.gameData.unlocks[Unlockables.CHAOS_INFINITE_MODE]) {
-            availableModes.push(GameModes.CHAOS_INFINITE);
-        }
-        
-        if (this.scene.gameData.unlocks[Unlockables.CHAOS_INFINITE_ROGUE_MODE]) {
-            availableModes.push(GameModes.CHAOS_INFINITE_ROGUE);
-        }
+        // For existing players (legacy), show categories with full Midnight/Abyss choice
+        this.showExistingPlayerChaosModes();
+    }
 
-        const modesToShow = [
-            GameModes.CHAOS_ROGUE,
-            GameModes.CHAOS_JOURNEY
-        ];
+    /**
+     * Show chaos modes for NEW players (progressive unlock system)
+     */
+    private showNewPlayerChaosModes(): void {
+        const availableModes = this.getAvailableChaosModeCategories();
+        const modesToShow = this.getChaosModeCategoriesToShow();
         
-        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            modesToShow.push(GameModes.CHAOS_NUZLIGHT);
-        }
-        
-        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            modesToShow.push(GameModes.CHAOS_NUZLIGHT_DRAFT);
-        }
-        
-        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            modesToShow.push(GameModes.CHAOS_NUZLOCKE);
-        }
-        
-        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            modesToShow.push(GameModes.CHAOS_NUZLOCKE_DRAFT);
-        }
-        
-        if (this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
-            modesToShow.push(GameModes.CHAOS_VOID);
-        if (this.scene.gameData.gameStats.nightmareSessionsWon >= 1) {
-            modesToShow.push(GameModes.CHAOS_ROGUE_VOID);
-        }
-        if (this.scene.gameData.gameStats.chaosJourneySessionsWon >= 1) {
-            modesToShow.push(GameModes.CHAOS_INFINITE);
-        }
-        if (this.scene.gameData.gameStats.chaosRogueVoidSessionsWon >= 1) {
-            modesToShow.push(GameModes.CHAOS_INFINITE_ROGUE);
-        }
-        }
-        
-        const setModeAndEnd = (gameMode: GameModes) => {
-            this.gameMode = gameMode;
-            this.scene.ui.setMode(Mode.MESSAGE);
-            this.scene.ui.clearText();
-            this.end();
-        };
-        
-        const modeOptions = modesToShow.map(mode => {
-            const isAvailable = availableModes.includes(mode);
+        const modeOptions = modesToShow.map(baseModeKey => {
+            const isAvailable = availableModes.includes(baseModeKey);
             return {
-                label: isAvailable ? GameMode.getModeName(mode) : "???",
+                label: isAvailable ? GameMode.getChaosBaseName(baseModeKey) : "???",
                 handler: () => {
                     if (isAvailable) {
-                        setModeAndEnd(mode);
+                        this.handleNewPlayerModeSelection(baseModeKey);
                         return true;
                     }
                     return false;
                 },
                 onHover: () => {
                     if (isAvailable) {
-                        this.scene.ui.showText(this.getModeDescription(mode));
+                        this.scene.ui.showText(this.getModeDescription(this.getShortVariant(baseModeKey)));
                     } else {
-                        let hint = "";
-                        switch (mode) {
-                            case GameModes.CHAOS_ROGUE:
-                                hint = i18next.t("menu:unlockHintChaosRogue");
-                                break;
-                            case GameModes.CHAOS_JOURNEY:
-                                hint = i18next.t("menu:unlockHintChaosJourney");
-                                break;
-                            case GameModes.CHAOS_VOID:
-                            case GameModes.CHAOS_ROGUE_VOID:
-                            case GameModes.CHAOS_INFINITE:
-                                hint = i18next.t("menu:unlockHintDraftMode");
-                                break;
-                            case GameModes.CHAOS_INFINITE_ROGUE:
-                                hint = i18next.t("menu:unlockHintChaosInfiniteRogue");
-                                break;
-                            default:
-                                hint = "???";
-                        }
-                        this.scene.ui.showText(hint);
+                        this.scene.ui.showText(this.getChaosUnlockHint(baseModeKey));
                     }
                 }
             };
         });
 
-        modeOptions.push({
+        const firstAvailable = availableModes.length > 0 ? availableModes[0] : null;
+        this.showModeSelectionUI(modeOptions, firstAvailable ? this.getModeDescription(this.getShortVariant(firstAvailable)) : i18next.t("menu:selectChaosMode"));
+    }
+
+    /**
+     * Handle mode selection for new players (progressive unlock logic)
+     */
+    private handleNewPlayerModeSelection(baseModeKey: string): void {
+        const hasCompletedShort = this.hasCompletedShortMode(baseModeKey);
+        
+        if (hasCompletedShort) {
+            // Show Midnight/Abyss choice
+            this.showMidnightAbyssChoice(baseModeKey);
+        } else {
+            // Auto-select short variant (Midnight)
+            this.gameMode = this.getShortVariant(baseModeKey);
+            this.scene.ui.setMode(Mode.MESSAGE);
+            this.scene.ui.clearText();
+            this.end();
+        }
+    }
+
+    /**
+     * Show chaos modes for EXISTING players (full choice system)
+     */
+    private showExistingPlayerChaosModes(): void {
+        const availableModes = this.getAvailableChaosModeCategories();
+        const modesToShow = this.getChaosModeCategoriesToShow();
+        
+        const modeOptions = modesToShow.map(baseModeKey => {
+            const isAvailable = availableModes.includes(baseModeKey);
+            const hasWonMode = this.hasWonChaosMode(baseModeKey);
+            return {
+                label: isAvailable ? GameMode.getChaosBaseName(baseModeKey) : "???",
+                handler: () => {
+                    if (isAvailable) {
+                        if (hasWonMode) {
+                            this.showMidnightAbyssChoice(baseModeKey);
+                        } else {
+                            this.gameMode = this.getShortVariant(baseModeKey);
+                            this.scene.ui.setMode(Mode.MESSAGE);
+                            this.scene.ui.clearText();
+                            this.end();
+                        }
+                        return true;
+                    }
+                    return false;
+                },
+                onHover: () => {
+                    if (isAvailable) {
+                        this.scene.ui.showText(this.getModeDescription(this.getShortVariant(baseModeKey)));
+                    } else {
+                        this.scene.ui.showText(this.getChaosUnlockHint(baseModeKey));
+                    }
+                }
+            };
+        });
+
+        const firstAvailable = availableModes.length > 0 ? availableModes[0] : null;
+        this.showModeSelectionUI(modeOptions, firstAvailable ? this.getModeDescription(this.getShortVariant(firstAvailable)) : i18next.t("menu:selectChaosMode"));
+    }
+
+    /**
+     * Show Midnight/Abyss choice for a specific mode
+     */
+    private showMidnightAbyssChoice(baseModeKey: string): void {
+        const shortMode = this.getShortVariant(baseModeKey);
+        const longMode = this.getLongVariant(baseModeKey);
+        const modeName = GameMode.getChaosBaseName(baseModeKey);
+        
+        const variantOptions = [
+            {
+                label: i18next.t("menu:midnight", { mode: modeName }),
+                handler: () => {
+                    this.gameMode = shortMode;
+                    this.scene.ui.setMode(Mode.MESSAGE);
+                    this.scene.ui.clearText();
+                    this.end();
+                    return true;
+                },
+                onHover: () => {
+                    this.scene.ui.showText(i18next.t("menu:midnightDescription", { mode: modeName }));
+                }
+            },
+            {
+                label: i18next.t("menu:abyss", { mode: modeName }),
+                handler: () => {
+                    this.gameMode = longMode;
+                    this.scene.ui.setMode(Mode.MESSAGE);
+                    this.scene.ui.clearText();
+                    this.end();
+                    return true;
+                },
+                onHover: () => {
+                    this.scene.ui.showText(i18next.t("menu:abyssDescription", { mode: modeName }));
+                }
+            }
+        ];
+
+        this.showModeSelectionUI(variantOptions, i18next.t("menu:midnightDescription", { mode: modeName }));
+    }
+
+    /**
+     * Check if new player has completed short version of a mode
+     */
+    private hasCompletedShortMode(baseModeKey: string): boolean {
+        const stats = this.scene.gameData.gameStats;
+        
+        switch (baseModeKey) {
+            case "CHAOS_ROGUE":
+                return stats.chaosRogueShortSessionsWon > 0;
+            case "CHAOS_JOURNEY":
+                return stats.chaosJourneyShortSessionsWon > 0;
+            case "CHAOS_NUZLIGHT":
+                return stats.chaosNuzlightShortSessionsWon > 0;
+            case "CHAOS_NUZLOCKE":
+                return stats.chaosNuzlockeShortSessionsWon > 0;
+            case "CHAOS_NUZLIGHT_DRAFT":
+                return stats.chaosNuzlightDraftShortSessionsWon > 0;
+            case "CHAOS_NUZLOCKE_DRAFT":
+                return stats.chaosNuzlockeDraftShortSessionsWon > 0;
+            case "CHAOS_VOID":
+                return stats.chaosVoidShortSessionsWon > 0;
+            case "CHAOS_ROGUE_VOID":
+                return stats.chaosRogueVoidShortSessionsWon > 0;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Get available chaos mode categories (unlocked modes only)
+     */
+    private getAvailableChaosModeCategories(): string[] {
+        const categories = ["CHAOS_ROGUE"];
+        
+        if (this.scene.gameData.unlocks[Unlockables.CHAOS_JOURNEY_MODE]) {
+            categories.push("CHAOS_JOURNEY");
+        }
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            categories.push("CHAOS_NUZLIGHT");
+            categories.push("CHAOS_NUZLIGHT_DRAFT");
+        }
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            categories.push("CHAOS_NUZLOCKE");
+            categories.push("CHAOS_NUZLOCKE_DRAFT");
+        }
+        
+        if (this.scene.gameData.unlocks[Unlockables.CHAOS_VOID_MODE]) {
+            categories.push("CHAOS_VOID");
+        }
+        
+        if (this.scene.gameData.unlocks[Unlockables.CHAOS_ROGUE_VOID_MODE]) {
+            categories.push("CHAOS_ROGUE_VOID");
+        }
+        
+        if (this.scene.gameData.unlocks[Unlockables.CHAOS_INFINITE_MODE]) {
+            categories.push("CHAOS_INFINITE");
+        }
+        
+        if (this.scene.gameData.unlocks[Unlockables.CHAOS_INFINITE_ROGUE_MODE]) {
+            categories.push("CHAOS_INFINITE_ROGUE");
+        }
+        
+        return categories;
+    }
+
+    /**
+     * Get chaos mode categories to show (including locked modes)
+     */
+    private getChaosModeCategoriesToShow(): string[] {
+        const modesToShow = ["CHAOS_ROGUE", "CHAOS_JOURNEY"];
+        
+        // Add quest-based modes conditionally
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            modesToShow.push("CHAOS_NUZLIGHT");
+            modesToShow.push("CHAOS_NUZLIGHT_DRAFT");
+        }
+        
+        if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            modesToShow.push("CHAOS_NUZLOCKE");
+            modesToShow.push("CHAOS_NUZLOCKE_DRAFT");
+        }
+        
+        // Add nightmare-based modes with session requirements
+        if (this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
+            modesToShow.push("CHAOS_VOID");
+            if (this.scene.gameData.gameStats.nightmareSessionsWon >= 1) {
+                modesToShow.push("CHAOS_ROGUE_VOID");
+            }
+            if (this.scene.gameData.gameStats.chaosJourneySessionsWon >= 1) {
+                modesToShow.push("CHAOS_INFINITE");
+            }
+            if (this.scene.gameData.gameStats.chaosRogueVoidSessionsWon >= 1) {
+                modesToShow.push("CHAOS_INFINITE_ROGUE");
+            }
+        }
+        
+        return modesToShow;
+    }
+
+    /**
+     * Get short variant GameMode from base mode key
+     */
+    private getShortVariant(baseModeKey: string): GameModes {
+        switch (baseModeKey) {
+            case "CHAOS_ROGUE":
+                return GameModes.CHAOS_ROGUE_SHORT;
+            case "CHAOS_JOURNEY":
+                return GameModes.CHAOS_JOURNEY_SHORT;
+            case "CHAOS_NUZLIGHT":
+                return GameModes.CHAOS_NUZLIGHT_SHORT;
+            case "CHAOS_NUZLOCKE":
+                return GameModes.CHAOS_NUZLOCKE_SHORT;
+            case "CHAOS_NUZLIGHT_DRAFT":
+                return GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT;
+            case "CHAOS_NUZLOCKE_DRAFT":
+                return GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT;
+            case "CHAOS_VOID":
+                return GameModes.CHAOS_VOID_SHORT;
+            case "CHAOS_ROGUE_VOID":
+                return GameModes.CHAOS_ROGUE_VOID_SHORT;
+            default:
+                return GameModes.CHAOS_ROGUE_SHORT;
+        }
+    }
+
+    /**
+     * Get long variant GameMode from base mode key
+     */
+    private getLongVariant(baseModeKey: string): GameModes {
+        switch (baseModeKey) {
+            case "CHAOS_ROGUE":
+                return GameModes.CHAOS_ROGUE;
+            case "CHAOS_JOURNEY":
+                return GameModes.CHAOS_JOURNEY;
+            case "CHAOS_NUZLIGHT":
+                return GameModes.CHAOS_NUZLIGHT;
+            case "CHAOS_NUZLOCKE":
+                return GameModes.CHAOS_NUZLOCKE;
+            case "CHAOS_NUZLIGHT_DRAFT":
+                return GameModes.CHAOS_NUZLIGHT_DRAFT;
+            case "CHAOS_NUZLOCKE_DRAFT":
+                return GameModes.CHAOS_NUZLOCKE_DRAFT;
+            case "CHAOS_VOID":
+                return GameModes.CHAOS_VOID;
+            case "CHAOS_ROGUE_VOID":
+                return GameModes.CHAOS_ROGUE_VOID;
+            default:
+                return GameModes.CHAOS_ROGUE;
+        }
+    }
+
+    /**
+     * Helper to show mode selection UI
+     */
+    private showModeSelectionUI(options: any[], headerText: string): void {
+        options.push({
             label: i18next.t("menu:cancel"),
             handler: () => {
                 this.scene.ui.clearText();
@@ -941,9 +1119,9 @@ export class TitlePhase extends Phase {
         });
 
         this.scene.ui.revertMode().then(() => {
-            this.scene.ui.showText(availableModes.length > 0 ? this.getModeDescription(availableModes[0]) : i18next.t("menu:selectGameMode"), null, () =>
+            this.scene.ui.showText(headerText, null, () =>
                 this.scene.ui.setOverlayMode(Mode.OPTION_SELECT, {
-                    options: modeOptions,
+                    options: options,
                     supportHover: true
                 })
             );
@@ -985,6 +1163,23 @@ export class TitlePhase extends Phase {
             case GameModes.CHAOS_NUZLIGHT_DRAFT:
                 return i18next.t("menu:selectChaosNuzlightDraftMode");
             case GameModes.CHAOS_NUZLOCKE_DRAFT:
+                return i18next.t("menu:selectChaosNuzlockeDraftMode");
+            // Short chaos mode variants (Midnight) - same descriptions as long variants
+            case GameModes.CHAOS_ROGUE_SHORT:
+                return i18next.t("menu:selectChaosRogueMode");
+            case GameModes.CHAOS_JOURNEY_SHORT:
+                return i18next.t("menu:selectChaosJourneyMode");
+            case GameModes.CHAOS_VOID_SHORT:
+                return i18next.t("menu:selectChaosVoidMode");
+            case GameModes.CHAOS_ROGUE_VOID_SHORT:
+                return i18next.t("menu:selectChaosRogueVoidMode");
+            case GameModes.CHAOS_NUZLIGHT_SHORT:
+                return i18next.t("menu:selectChaosNuzlightMode");
+            case GameModes.CHAOS_NUZLOCKE_SHORT:
+                return i18next.t("menu:selectChaosNuzlockeMode");
+            case GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT:
+                return i18next.t("menu:selectChaosNuzlightDraftMode");
+            case GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT:
                 return i18next.t("menu:selectChaosNuzlockeDraftMode");
             default:
                 return "";
@@ -1034,7 +1229,55 @@ export class TitlePhase extends Phase {
         }
     }
 
-    private getChaosUnlockHint(): string {
+    private hasWonChaosMode(baseModeKey: string): boolean {
+        const stats = this.scene.gameData.gameStats;
+        
+        switch (baseModeKey) {
+            case "CHAOS_ROGUE":
+                return stats.chaosRogueSessionsWon > 0;
+            case "CHAOS_JOURNEY":
+                return stats.chaosJourneySessionsWon > 0;
+            case "CHAOS_NUZLIGHT":
+                return stats.chaosNuzlightSessionsWon > 0;
+            case "CHAOS_NUZLOCKE":
+                return stats.chaosNuzlockeSessionsWon > 0;
+            case "CHAOS_NUZLIGHT_DRAFT":
+                return stats.chaosNuzlightDraftSessionsWon > 0;
+            case "CHAOS_NUZLOCKE_DRAFT":
+                return stats.chaosNuzlockeDraftSessionsWon > 0;
+            case "CHAOS_VOID":
+                return stats.chaosVoidSessionsWon > 0;
+            case "CHAOS_ROGUE_VOID":
+                return stats.chaosRogueVoidSessionsWon > 0;
+            case "CHAOS_INFINITE":
+                return stats.chaosInfiniteSessionsWon > 0;
+            case "CHAOS_INFINITE_ROGUE":
+                return stats.chaosInfiniteRogueSessionsWon > 0;
+            default:
+                return false;
+        }
+    }
+
+    private getChaosUnlockHint(baseModeKey?: string): string {
+        // If a specific mode key is provided, give mode-specific hints
+        if (baseModeKey) {
+            switch (baseModeKey) {
+                case "CHAOS_ROGUE":
+                    return i18next.t("menu:unlockHintChaosRogue");
+                case "CHAOS_JOURNEY":
+                    return i18next.t("menu:unlockHintChaosJourney");
+                case "CHAOS_VOID":
+                case "CHAOS_ROGUE_VOID":
+                case "CHAOS_INFINITE":
+                    return i18next.t("menu:unlockHintDraftMode");
+                case "CHAOS_INFINITE_ROGUE":
+                    return i18next.t("menu:unlockHintChaosInfiniteRogue");
+                default:
+                    return "???";
+            }
+        }
+        
+        // Original general chaos unlock hint logic
         const nuzlightUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED);
         const nuzlockeUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
         const nuzlightDraftUnlocked = this.scene.gameData.gameStats.nuzlightSessionsWon >= 2;
