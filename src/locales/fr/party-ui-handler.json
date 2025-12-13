@@ -13,6 +13,7 @@
   "TRADE": "Échanger pour ₽{{value}}",
   "ALL": "Tout",
   "PASS_BATON": "Relais",
+  "PAUSE_EVOLUTION": "Suspendre Évolution",
   "UNPAUSE_EVOLUTION": "Réactiver Évolution",
   "REVIVE": "Ranimer",
   "RENAME": "Renommer",

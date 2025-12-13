@@ -5,7 +5,7 @@
     "gameModes": "Modos de Juego",
     "specialPokemon": "Pokémon Especiales",
     "progression": "Progresión del Juego",
-    "permanentFeatures": "Funciones Permanentes",
+    "permanentFeatures": "Funciones Omega",
     "glitchSystem": "Sistema de Glitch",
     "battleMechanics": "Mecánicas de Combate",
     "formChanges": "Cambios de Forma",
@@ -21,6 +21,7 @@
   "statChange": "Los cambios de estadísticas se mantienen entre combates\nmientras que el Pokémon no vuelva a su Poké Ball.\n$Tus Pokémon vuelven a sus Poké Balls antes de combates contra entrenadores y de entrar a un nuevo bioma.\n$También puedes ver los cambios de estadísticas del Pokémon en campo manteniendo pulsado C o Shift.\n$También puedes ver los movimientos de un Pokémon enemigo manteniendo presionada la V.\n$Esto solo revela los movimientos que has visto usar al Pokémon en esta combate.",
   "selectItem": "Tras cada combate, tendrás la opción de elegir entre tres objetos aleatorios. Solo podrás escoger uno.\n$Estos objetos pueden ser consumibles, objetos equipables u objetos pasivos permanentes (hasta acabar la partida).\n$La mayoría de los efectos de objetos no consumibles se acumularán de varias maneras.\n$Algunos objetos solo aparecerán si pueden ser utilizados, como las piedras evolutivas.\n$También puedes transferir objetos equipados entre Pokémon, utilizando la opción de transferir.\n$La opción de transferir aparecerá en la parte inferior derecha una vez hayas obtenido un objeto equipable.\n$También puedes comprar objetos consumibles con dinero y su variedad irá aumentando según tu avance.\n$Asegúrate de comprar antes de escoger una recompensa, ya que se avanzará automáticamente al siguiente combate.",
   "eggGacha": "En esta pantalla podrás canjear tus vales por huevos\nde Pokémon.\n$Los huevos deben eclosionar y estarán más cerca de\nhacerlo tras cada combate.\n$Los huevos más raros tardarán más en eclosionar.\n$Los Pokémon que hayan salido del huevo no se\nañadirán a tu equipo, pero sí a tus iniciales.\n$Los Pokémon salidos de un huevo suelen tener mejores\nIVs que los Pokémon salvajes.\n$Algunos Pokémon solo pueden ser obtenidos de huevos.\n$Hay 3 máquinas diferentes entre las que elegir, cada\nuna con diferentes bonificaciones.\n$¡Así que escoge la que más te interese!",
+  "backupReminder": "Por favor, respalda tu partida guardada descargándola a tu dispositivo.\n$Esto ayudará a evitar que tengas que empezar de nuevo si se pierden los datos de tu navegador.",
   "pokerogue": {
       "title": "Dando a PokéRogue el Crédito que Merece",
       "text": { 
@@ -86,7 +87,7 @@
     },
     "rivalQuests": {
       "title": "Misiones Glitch",
-      "text": "¡Derrota a los rivales para desbloquear Misiones Glitch! Cómpralas en la TiendaPerma y complétalas para desbloquear permanentemente poderosas Formas Glitch para Pokémon específicos."
+      "text": "¡Derrota a los rivales para desbloquear Misiones Glitch! Cómpralas en la TiendaOmega y complétalas para desbloquear poderosas Formas Glitch para Pokémon específicos para siempre."
     },
     "smitom": {
       "title": "Smitom",
@@ -121,7 +122,7 @@
       "title": "Modo Travesía",
       "text": { 
         "1":"Forma tu equipo para enfrentarte al Vacío. ¡Usa cualquier Pokémon que hayas capturado o eclosionado, incluidas las fusiones!",
-        "2":"Los Pokémon fusionados requieren ∞ORO para usarse. Los ObjetosPerma pueden reducir costos y aumentar tu límite de iniciales."
+        "2":"Los Pokémon fusionados requieren ΩORO para usarse. Los OmegaObjetos pueden reducir costos y aumentar tu límite de iniciales."
         }
     },
     "unlockJourney": {
@@ -133,7 +134,7 @@
     },
     "rogueMode": {
       "title": "Modo Rogue",
-      "text": "¡Elige 2 pokémon aleatorios para comenzar tu partida! ¡Usa tu ∞ORO para cambiar tus opciones! ¡Cada partida es única!"
+      "text": "¡Elige 2 pokémon aleatorios para comenzar tu partida! ¡Usa tu ΩORO para cambiar tus opciones! ¡Cada partida es única!"
     },
     "bosses": {
       "title": "Jefes Multi-Forma",
@@ -164,14 +165,14 @@
       "title": "Fusiones Capturables",
       "text": { 
         "1":"¡Todos los Pokémon Fusión son capturables y se añaden permanentemente a tu colección!",
-        "2":"Encuéntralos con una probabilidad base de 1/14 (mejorable con ∞OBJETOS). Usarlos cuesta ∞ORO."
+        "2":"Encuéntralos con una probabilidad base de 1/14 (mejorable con ΩOBJETOS). Usarlos cuesta ΩORO."
       }
     },
     "trainerPokemon": {
       "title": "Capturar Pokémon de Entrenadores",
       "text": { 
         "1":"La mayoría de los entrenadores venderán sus Pokémon durante la batalla (¡excepto los Rivales!). ¡Los Pokémon capturados se añaden permanentemente a tu colección!",
-        "2":"El costo depende de la oleada pero puede reducirse con ∞OBJETOS."
+        "2":"El costo depende de la oleada pero puede reducirse con ΩOBJETOS."
       }
     },
     "partyAbility": {
@@ -182,9 +183,9 @@
       }
     },
     "permaMoney": {
-      "title": "DineroPerma (∞ORO)",
+      "title": "OmegaDinero (ΩORO)",
       "text": { 
-        "1":"¡Gana ∞ORO persistente entre partidas! Úsalo para comprar ∞OBJETOS, cambiar los iniciales de Rogue o pagar el Impuesto de Fusión.",
+        "1":"¡Gana ΩORO persistente entre partidas! Úsalo para comprar ΩOBJETOS, cambiar los iniciales de Rogue o pagar el Impuesto de Fusión.",
         "2":"Obtenlo de recompensas, guardando o interactuando con Smitom."
       }
     },
@@ -192,19 +193,19 @@
       "title": "Guardado Local y Respaldo",
       "text": { 
         "1":"¡Si tus datos se pierden, se PERDERÁN PARA SIEMPRE! Usa el icono del disquete (arriba a la derecha) para EXPORTAR tu archivo de guardado con frecuencia.",
-        "2":"Esto recompensa con ∞ORO y protege contra la pérdida de datos."
+        "2":"Esto recompensa con ΩORO y protege contra la pérdida de datos."
       }
     },
     "bounties": {
       "title": "Sistema de Recompensas",
       "text": { 
         "1":"Introduce códigos de 6 letras en la consola para activar Recompensas.",
-        "2":"Las Recompensas son MISIONES que te permiten ganar ∞ORO/∞OBJETOS y son completamente reutilizables al completarlas."
+        "2":"Las Recompensas son MISIONES que te permiten ganar ΩORO/ΩOBJETOS y son completamente reutilizables al completarlas."
       }
     },
     "dailyBounty": {
       "title": "¡Recompensa Diaria!",
-      "text": "¡Hay una nueva recompensa diaria disponible! Complétala para ganar ∞ORO/∞OBJETOS. El código ya está en la consola, ¡solo actívalo!"
+      "text": "¡Hay una nueva recompensa diaria disponible! Complétala para ganar ΩORO/ΩOBJETOS. El código ya está en la consola, ¡solo actívalo!"
     },
     "discord": {
       "title": "Discord y Soporte",
@@ -227,10 +228,10 @@
       }
     },
     "smittyItems": {
-      "title": "ObjetosPerma (∞OBJETOS)",
+      "title": "OmegaObjetos (ΩOBJETOS)",
       "text": { 
-        "1":"Usa ∞ORO para comprar mejoras permanentes (∞OBJETOS) con diferentes tipos de duración: Basadas en uso (cantidad reducida después del uso) o Basadas en oleadas (cantidad reducida después de la oleada 50).",
-        "2":"¡Estas mejoras pueden aumentar las tasas de shiny/fusión/captura, reducir costos y proporcionar otros beneficios permanentes!"
+        "1":"Usa ΩORO para comprar mejoras duraderas (ΩOBJETOS) con diferentes tipos de duración: Basadas en uso (cantidad reducida después del uso) o Basadas en oleadas (cantidad reducida después de la oleada 50).",
+        "2":"¡Estas mejoras pueden aumentar las tasas de shiny/fusión/captura, reducir costos y proporcionar otros beneficios duraderos!"
       }
     },
     "abilitySwitcher": {
@@ -270,7 +271,7 @@
     },
     "newQuests": {
       "title": "¡Nueva Misión Desbloqueada!",
-      "text": "¡Has desbloqueado una nueva misión! Aparecerá ALEATORIAMENTE (pero frecuentemente) en la TiendaPerma / Tienda en la pantalla de título. ¡Si no está allí, vuelve a tirar para encontrarla!"
+      "text": "¡Has desbloqueado una nueva misión! Aparecerá ALEATORIAMENTE (pero frecuentemente) en la TiendaOmega / Tienda en la pantalla de título. ¡Si no está allí, vuelve a tirar para encontrarla!"
     },
     "modeUnlocks": {
       "title": "Desbloqueos de Modos de Juego",
@@ -349,8 +350,99 @@
   "thankYou": {
     "title": "Querido Jugador",
     "text": {
-      "1": "16 meses de locura de desarrollo en solitario significa todo - cada vez que alguien como tú se divierte jugando este juego. Si mis ideas raras realmente funcionan y te diviertes,", 
+      "1": "24 meses de locura de desarrollo en solitario significa todo - cada vez que alguien como tú se divierte jugando este juego. Si mis ideas raras realmente funcionan y te diviertes,", 
       "2": "entonces tal vez - estoy más cerca de mi sueño de convertirme en un verdadero desarrollador de juegos. ¡Muchas gracias por jugar mi versión caótica y rota de PokéRogue! - Smitty"
+    }
+  },
+  "pokevoidV2Update": {
+    "title": {
+      "1": "¡Bienvenido a PokéVoid V2!",
+      "2": "Rediseño Completo de UI",
+      "3a": "Nuevo Campeón Jugable: Apollo",
+      "3b": "Nueva Campeona Jugable: Diana",
+      "4": "Selección de Personaje Campeón",
+      "5": "Árboles de Habilidades",
+      "6": "Nuevos Modos",
+      "7": "Comandos de Batalla",
+      "8": "¡Muchas Más Funciones!"
+    },
+    "text": {
+      "1": "¡Bienvenido a la NUEVA Actualización Versión 2.0b de PokéVoid - LA ACTUALIZACIÓN COLOSAL!! ¡Esta actualización trae una revisión completa con NUEVA UI, Campeones, Árboles de Habilidades y mucho más!",
+      "2": "¡Experimenta un rediseño completo de UI con nuevos iconos y diseño visual mejorado en todo el juego!",
+      "3a": "Campeón del Sol, Apollo - ¡canaliza su poder radiante como una de las últimas luces que rechaza la noche interminable del vacío!",
+      "3b": "Campeona de la Luna, Diana - ¡teje hilos iluminados por la luna para rastrear los movimientos del vacío y guiar a otros a la seguridad!",
+      "4": "¡Elige tu Campeón y enfréntate al vacío! ¡Cada Campeón tiene tipos únicos, Pokémon firma y su propio árbol de habilidades!",
+      "5": "¡Desbloquea habilidades poderosas a través del Árbol de Habilidades de tu Campeón! ¡Usa Puntos de Habilidad para comprar nodos y Tokens de Árbol para subir de nivel!",
+      "6": "¡La nueva variante de modo caos FTL te espera!",
+      "7": "¡Seis nuevos comandos de batalla te dan más control! ¡Accede a tu Árbol de Habilidades, revisa enemigos, obtén huevos y más en plena batalla!",
+      "8": "¡Mejor manejo de localizaciones + traducciones mejoradas, e innumerables otras funciones te esperan! ¡Sumérgete y descúbrelas todas!"
+    }
+  },
+  "ftlModeSelect": {
+    "title": { "1": "NUEVO Modo FTL" },
+    "text": { "1": "¡FTL (Más Rápido que la Luz) es la nueva variante caos más rápida! ¡Salta directo al caos!" }
+  },
+  "championSelectEssence": {
+    "title": { "1": "Selección de Campeón", "2": "Sistema de Esencia", "3": "Subir de Nivel a los Campeones" },
+    "text": {
+      "1": "¡A quién elegirás para aventurarte en el vacío! ¡Cada Campeón tiene tipos únicos, Pokémon firma y árbol de habilidades!",
+      "2": "¡Colecciona Esencias derrotando Pokémon! ¡Las Esencias corresponden al tipo del Pokémon derrotado y se usan para liberar Campeones corruptos y desbloquear habilidades poderosas!",
+      "3": "¡Usa las Esencias coleccionadas para subir de nivel a tus Campeones! ¡Los niveles más altos desbloquean habilidades más poderosas en sus Árboles de Habilidades!"
+    }
+  },
+  "championSelectSpecialEssences": {
+    "title": { "1": "Esencias Glitch y Smitty", "2": "Esencia Glitch", "3": "Esencia Smitty" },
+    "text": {
+      "1": "¡Algunas habilidades poderosas requieren Esencias especiales: Esencia Glitch y Esencia Smitty! ¡Estas desbloquean las habilidades más fuertes!",
+      "2": "Para desbloquear NUEVAS Formas Glitch Corruptas de RAREZA MAESTRO+ y Pokémon Legendarios Poderosos - ¡colecciona esencias glitch derrotando pokémon glitch!",
+      "3": "Para desbloquear NUEVAS Habilidades Smitty Prohibidas de RAREZA MAESTRO+ y Alt Builds Rotos - ¡colecciona esencias smitty enfrentándote a la Corrupción misma!"
+    }
+  },
+  "skillTreeApolloDianaTypes": {
+    "title": { "1": "Sistema de Tipos Aleatorios" },
+    "text": { "1": "¡Apollo y Diana son Campeones especiales con tipos ALEATORIOS! ¡Al inicio de cada partida, se te asignan dos tipos aleatorios!" }
+  },
+  "skillTreeSetTypes": {
+    "title": { "1": "Campeones de Tipo", "2": "Brock - Campeón de Roca", "3": "Sinergia de Tipo" },
+    "text": {
+      "1": "¡La mayoría de los Campeones tienen especializaciones de tipo FIJAS! ¡Todo su Árbol de Habilidades y pool de Pokémon gira en torno a sus tipos!",
+      "2": "¡Brock se especializa en tipos Tierra y Roca! ¡Su Árbol de Habilidades ofrece MTs de Tierra y Roca, potenciadores y habilidades!",
+      "3": "¡Construye tu equipo alrededor de los tipos de tu Campeón! ¡Captura Pokémon que coincidan para maximizar el potencial de tu Árbol de Habilidades!"
+    }
+  },
+  "skillTreeProgression": {
+    "title": { "1": "Puntos de Habilidad", "2": "Tokens de Árbol" },
+    "text": {
+      "1": "¡Los Puntos de Habilidad se usan para comprar nodos en tu Árbol de Habilidades! ¡Se ganan en batallas, recompensas y eventos especiales!",
+      "2": "¡Los Tokens de Árbol suben de nivel tu Árbol de Habilidades! ¡Cada nivel expande tu Árbol de Habilidades, revelando habilidades más poderosas más profundas en el árbol!"
+    }
+  },
+  "starterSelectCatchRequirements": {
+    "title": { "1": "¡Apollo y Diana son Comodines!", "2": "Campeones de Tipo", "3": "Los Campeones Liberados Empiezan de Nuevo", "4": "Captura para Expandir el Pool" },
+    "text": {
+      "1": "¡Apollo y Diana pueden usar TODOS los Pokémon sin importar el tipo! ¡Son perfectos para máxima flexibilidad!",
+      "2": "¡Los Campeones especializados en tipo como Brock solo pueden usar Pokémon que coincidan con su afinidad! ¡Brock usa tipos Tierra y Roca!",
+      "3": "¡Como nuevos Campeones que has liberado recientemente de la corrupción del vacío, deben empezar de nuevo y reconstruir su colección!",
+      "4": "¡Los Campeones de Tipo solo tienen acceso a los pokémon que capturas mientras los usas! ¡Cuantos más captures, más opciones tendrán!"
+    }
+  },
+  "starterSelectSignature": {
+    "title": { "1": "¿Qué son los Pokémon Firma?", "2": "Alt Builds Legendarios" },
+    "text": {
+      "1": "¡Los Pokémon Firma son iniciales especiales únicos para cada Campeón! ¡Sus iconos están marcados con potencial de caos!",
+      "2": "¡Las Firmas pueden transformarse en Alt Builds - formas alternativas con diferentes stats, habilidades e incluso tipos! ¡Un Pokémon completamente nuevo!"
+    }
+  },
+  "commandUINewCommands": {
+    "title": { "1": "¡Seis Nuevos Comandos!", "2": "Comando Equipo", "3": "Comando Árbol de Habilidades", "4": "Comando Revisar", "5": "Comando Huevos", "6": "Comando Tienda", "7": "Comando Mapa" },
+    "text": {
+      "1": "¡PokéVoid V2 añade SEIS nuevos comandos de batalla! ¡Accede a ellos durante la batalla para opciones poderosas!",
+      "2": "EQUIPO: ¡Muestra instantáneamente información detallada sobre los stats, habilidades y movimientos de tu equipo!",
+      "3": "ÁRBOL DE HABILIDADES: ¡Accede al Árbol de Habilidades de tu Campeón en plena batalla! ¡Gasta puntos y desbloquea nuevas habilidades sobre la marcha!",
+      "4": "REVISAR: ¡Revisa CUALQUIER Pokémon! ¡Ve convenientemente las habilidades posibles, formas, distribución de stats y sets de movimientos!",
+      "5": "HUEVOS: ¡Obtén huevos del gacha de huevos!",
+      "6": "TIENDA: ¡Acceso rápido a la tienda!",
+      "7": "MAPA: ¡Muestra tu camino actual dentro del Caos!"
     }
   }
 }

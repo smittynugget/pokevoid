@@ -21,6 +21,7 @@ import i18next from "i18next";
 import {PokemonPhase} from "./pokemon-phase";
 import {VictoryPhase} from "./victory-phase";
 import {BattleType} from "#app/battle";
+import { Type } from "#app/data/type.js";
 import {FaintPhase} from "#app/phases/faint-phase";
 import {QuestUnlockPhase} from "#app/phases/quest-unlock-phase";
 import {PermaCatchQuestModifier} from "#app/modifier/modifier";
@@ -31,8 +32,6 @@ import {Gender} from "#app/data/gender";
 import { RewardObtainDisplayPhase } from "./reward-obtain-display-phase.js";
 import {starterCatchQuestModifier} from "#app/modifier/modifier-type";
 import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
-
-
 export class AttemptCapturePhase extends PokemonPhase {
     private pokeballType: PokeballType;
     private pokeball: Phaser.GameObjects.Sprite;
@@ -54,7 +53,7 @@ export class AttemptCapturePhase extends PokemonPhase {
         }
 
         this.scene.pokeballCounts[this.pokeballType]--;
-        
+
         switch (this.pokeballType) {
             case PokeballType.POKEBALL:
                 this.scene.gameData.gameStats.pokeballsThrown++;
@@ -77,14 +76,12 @@ export class AttemptCapturePhase extends PokemonPhase {
 
         const _3m = 3 * pokemon.getMaxHp();
         const _2h = 2 * pokemon.hp;
-        
+
         let catchRateMultiplier = 1.25;
 
         if((pokemon.isOPForm() && this.scene.currentBattle?.waveIndex <= 1000) || (this.scene.currentBattle.battleType === BattleType.TRAINER && this.scene.gameMode.checkIfRival(this.scene))) {
             catchRateMultiplier = 0.05;
         }
-
-
         else if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_CATCH_RATE_3)) {
             catchRateMultiplier = 2;
         } else if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_CATCH_RATE_2)) {
@@ -96,9 +93,18 @@ export class AttemptCapturePhase extends PokemonPhase {
         if(this.scene.dynamicMode) {
             catchRateMultiplier *= 0.15;
         }
+        try {
+            const addByType = (this.scene.gameData as any).activeSkillTree?.catchRateBonusByType as Partial<Record<Type, number>> | undefined;
+            if (addByType) {
+                const t1 = pokemon.species.type1 as Type;
+                const t2 = (pokemon.species.type2 as Type) ?? undefined;
+                const bonus = (addByType[t1] ?? 0) + (t2 ? (addByType[t2] ?? 0) : 0);
 
+                catchRateMultiplier = Math.max(0, catchRateMultiplier + bonus);
+            }
+        } catch {
 
-
+        }
         const catchRate = pokemon.species.catchRate * catchRateMultiplier;
         const pokeballMultiplier = getPokeballCatchMultiplier(this.pokeballType);
         const statusMultiplier = pokemon.status ? getStatusEffectCatchRateMultiplier(pokemon.status.effect) : 1;
@@ -259,13 +265,11 @@ export class AttemptCapturePhase extends PokemonPhase {
 
     catch() {
         const pokemon = this.getPokemon() as EnemyPokemon;
-
-        
         if (this.scene.currentBattle.battleType === BattleType.TRAINER) {
-            
+
             const moneyToDeduct = this.scene.getRequiredMoneyForPokeBuy();
             this.scene.addMoney(-moneyToDeduct);
-            
+
             this.scene.gameData.gameStats.trainerPokemonSnatched++;
             this.scene.gameData.gameStats.moneySpentFromSnatching += moneyToDeduct;
 
@@ -275,8 +279,6 @@ export class AttemptCapturePhase extends PokemonPhase {
                 PermaType.PERMA_TRAINER_SNATCH_COST_3
             ], this.scene);
         }
-
-        
         this.scene.gameData.reducePermaModifierByType([
             PermaType.PERMA_CATCH_RATE_1,
             PermaType.PERMA_CATCH_RATE_2,
@@ -289,13 +291,9 @@ export class AttemptCapturePhase extends PokemonPhase {
             this.scene.pushPhase(new QuestUnlockPhase(this.scene, starterQuestData, true));
             this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.NEW_QUESTS, true);
         }
-
-        
         this.scene.gameData.permaModifiers
             .findModifiers(m => m instanceof PermaCatchQuestModifier)
             .forEach(modifier => modifier.apply([this.scene]));
-
-
         const speciesForm = !pokemon.fusionSpecies ? pokemon.getSpeciesForm() : pokemon.getFusionSpeciesForm();
 
         if (speciesForm.abilityHidden && (pokemon.fusionSpecies ? pokemon.fusionAbilityIndex : pokemon.abilityIndex) === speciesForm.getAbilityCount() - 1) {
@@ -314,11 +312,18 @@ export class AttemptCapturePhase extends PokemonPhase {
             this.scene.validateAchv(achvs.CATCH_MYTHICAL);
         }
 
+        const activeTree = (this.scene.gameData as any).activeSkillTree;
+        if (activeTree && activeTree.legendaryEncounterChanceBySpecies) {
+            const speciesId = pokemon.species.speciesId;
+            if (activeTree.legendaryEncounterChanceBySpecies[speciesId] !== undefined) {
+                console.log(`[Legendary] Removing species ${speciesId} from encounter chance map after capture`);
+                delete activeTree.legendaryEncounterChanceBySpecies[speciesId];
+            }
+        }
+
         this.scene.pokemonInfoContainer.show(pokemon, true);
 
         this.scene.gameData.updateSpeciesDexIvs(pokemon.species.getRootSpeciesId(true), pokemon.ivs);
-
-
         this.scene.ui.setMode(Mode.MESSAGE).then(() => {
             this.scene.ui.showText(i18next.t("battle:pokemonCaught", {pokemonName: getPokemonNameWithAffix(pokemon)}), null, () => {
                 const end = () => {
@@ -361,8 +366,6 @@ export class AttemptCapturePhase extends PokemonPhase {
                         }
                     Promise.all(modifiers.map(m => this.scene.addModifier(m, true))).then(() => {
                         this.scene.updateModifiers(true);
-                        
-                        
                     });
                 };
                 Promise.all([pokemon.hideInfo(), this.scene.gameData.setPokemonCaught(pokemon)]).then(() => {
@@ -389,7 +392,7 @@ export class AttemptCapturePhase extends PokemonPhase {
                                     });
                                 }, () => {
                                     this.scene.ui.setMode(Mode.MESSAGE).then(() => {
-                                        
+
                                         uniqueRemovePokemon();
                                         end();
                                     });

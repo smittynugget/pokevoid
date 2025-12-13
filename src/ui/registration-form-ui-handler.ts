@@ -7,8 +7,6 @@ import i18next from "i18next";
 import {sanitizeEmailString} from "#app/frontend-to-server/utils-";
 import {isValidFullEmail} from "#app/utils";
 import {transferSave} from "#app/account";
-
-
 export default class RegistrationFormUiHandler extends FormModalUiHandler {
   getModalTitle(config?: ModalConfig): string {
     return i18next.t("menu:register");

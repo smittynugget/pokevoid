@@ -4,6 +4,7 @@
   "general": "常规",
   "display": "显示",
   "audio": "音频",
+  "skipFaintCry": "跳过濒死叫声",
   "gamepad": "手柄",
   "keyboard": "键盘",
   "gameSpeed": "游戏速度",
@@ -103,5 +104,6 @@
   "items": "道具",
   "reroll": "刷新",
   "shop": "购买",
-  "checkTeam": "检查队伍"
+  "checkTeam": "检查队伍",
+  "lockedRewardSpeed": "锁定奖励动画速度"
 }

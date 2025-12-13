@@ -1,29 +1,29 @@
-import { allMoves, MoveCategory, MoveTarget, MoveFlags, MoveAttr, MoveCondition, 
-  MultiHitType, HighCritAttr, CritOnlyAttr, FixedDamageAttr, LevelDamageAttr, 
-  RandomLevelDamageAttr, TargetHalfHpDamageAttr, RecoilAttr, SacrificialAttr, 
-  SacrificialAttrOnHit, HalfSacrificialAttr, HealAttr, HitHealAttr, MultiHitAttr, 
-  StatusEffectAttr, MultiStatusEffectAttr, StatChangeAttr, FlinchAttr, ProtectAttr, 
-  ChargeAttr, VariablePowerAttr, LowHpPowerAttr, HpPowerAttr, WeightPowerAttr, 
-  CompareWeightPowerAttr, ConsecutiveUseDoublePowerAttr, TurnDamagedDoublePowerAttr, 
-  VariableAccuracyAttr, ToxicAccuracyAttr, BlizzardAccuracyAttr, ThunderAccuracyAttr, 
-  StormAccuracyAttr, MinimizeAccuracyAttr, IgnoreOpponentStatChangesAttr, VariableDefAttr, 
-  DefDefAttr, VariableAtkAttr, DefAtkAttr, TargetAtkUserAtkAttr, IgnoreAccuracyAttr, 
-  TrapAttr, HitsTagAttr, RemoveScreensAttr, RemoveArenaTrapAttr, IncrementMovePriorityAttr, 
-  BypassSleepAttr, BypassBurnDamageReductionAttr, TypelessAttr, SurviveDamageAttr, 
-  OneHitKOAttr, OneHitKOAccuracyAttr, SheerColdAccuracyAttr, BoostHealAttr, PlantHealAttr, 
-  SandHealAttr, WeatherBallTypeAttr, TerrainPulseTypeAttr, HiddenPowerTypeAttr, 
-  MatchUserTypeAttr, RemoveTypeAttr, AddTypeAttr, CopyTypeAttr, AddBattlerTagAttr, 
-  LapseBattlerTagAttr, RemoveBattlerTagAttr, AddArenaTagAttr, AddArenaTrapTagAttr, 
-  WeatherChangeAttr, ClearWeatherAttr, TerrainChangeAttr, ClearTerrainAttr, 
-  ForceSwitchOutAttr, StealHeldItemChanceAttr, RemoveHeldItemAttr, IgnoreWeatherTypeDebuffAttr, 
+import { allMoves, MoveCategory, MoveTarget, MoveFlags, MoveAttr, MoveCondition,
+  MultiHitType, HighCritAttr, CritOnlyAttr, FixedDamageAttr, LevelDamageAttr,
+  RandomLevelDamageAttr, TargetHalfHpDamageAttr, RecoilAttr, SacrificialAttr,
+  SacrificialAttrOnHit, HalfSacrificialAttr, HealAttr, HitHealAttr, MultiHitAttr,
+  StatusEffectAttr, MultiStatusEffectAttr, StatChangeAttr, FlinchAttr, ProtectAttr,
+  ChargeAttr, VariablePowerAttr, LowHpPowerAttr, HpPowerAttr, WeightPowerAttr,
+  CompareWeightPowerAttr, ConsecutiveUseDoublePowerAttr, TurnDamagedDoublePowerAttr,
+  VariableAccuracyAttr, ToxicAccuracyAttr, BlizzardAccuracyAttr, ThunderAccuracyAttr,
+  StormAccuracyAttr, MinimizeAccuracyAttr, IgnoreOpponentStatChangesAttr, VariableDefAttr,
+  DefDefAttr, VariableAtkAttr, DefAtkAttr, TargetAtkUserAtkAttr, IgnoreAccuracyAttr,
+  TrapAttr, HitsTagAttr, RemoveScreensAttr, RemoveArenaTrapAttr, IncrementMovePriorityAttr,
+  BypassSleepAttr, BypassBurnDamageReductionAttr, TypelessAttr, SurviveDamageAttr,
+  OneHitKOAttr, OneHitKOAccuracyAttr, SheerColdAccuracyAttr, BoostHealAttr, PlantHealAttr,
+  SandHealAttr, WeatherBallTypeAttr, TerrainPulseTypeAttr, HiddenPowerTypeAttr,
+  MatchUserTypeAttr, RemoveTypeAttr, AddTypeAttr, CopyTypeAttr, AddBattlerTagAttr,
+  LapseBattlerTagAttr, RemoveBattlerTagAttr, AddArenaTagAttr, AddArenaTrapTagAttr,
+  WeatherChangeAttr, ClearWeatherAttr, TerrainChangeAttr, ClearTerrainAttr,
+  ForceSwitchOutAttr, StealHeldItemChanceAttr, RemoveHeldItemAttr, IgnoreWeatherTypeDebuffAttr,
   ConfuseAttr, FirstMoveCondition, MultiHitToExactThreeCondition, MultiHitToRangeFourToEightCondition,
-  WaterSuperEffectTypeMultiplierAttr, HealStatusEffectAttr, 
-  GyroBallPowerAttr, ElectroBallPowerAttr, MovePowerMultiplierAttr, ChangeMultiHitTypeAttr, 
-  WaterShurikenMultiHitTypeAttr, JawLockAttr, CurseAttr, RechargeAttr, WaterShurikenPowerAttr, 
-  SpitUpPowerAttr, SwallowHealAttr, MultiHitPowerIncrementAttr, LastMoveDoublePowerAttr, 
-  EatBerryAttr, StealEatBerryAttr, ExposedMoveAttr, SmittyTypeAttr, ResistLastMoveTypeAttr, 
-  FlyingTypeMultiplierAttr, ConsecutiveUseMultiBasePowerAttr, AnyTypeSuperEffectTypeMultiplierAttr, 
-  AnyTypeMultiplierAttr, PostVictoryStatChangeAttr, TerrainMovePriorityAttr, 
+  WaterSuperEffectTypeMultiplierAttr, HealStatusEffectAttr,
+  GyroBallPowerAttr, ElectroBallPowerAttr, MovePowerMultiplierAttr, ChangeMultiHitTypeAttr,
+  WaterShurikenMultiHitTypeAttr, JawLockAttr, CurseAttr, RechargeAttr, WaterShurikenPowerAttr,
+  SpitUpPowerAttr, SwallowHealAttr, MultiHitPowerIncrementAttr, LastMoveDoublePowerAttr,
+  EatBerryAttr, StealEatBerryAttr, ExposedMoveAttr, SmittyTypeAttr, ResistLastMoveTypeAttr,
+  FlyingTypeMultiplierAttr, ConsecutiveUseMultiBasePowerAttr, AnyTypeSuperEffectTypeMultiplierAttr,
+  AnyTypeMultiplierAttr, PostVictoryStatChangeAttr, TerrainMovePriorityAttr,
   FirstTurnPriorityAttr, ConditionalPriorityAttr, TerrainPowerBoostAttr, WeatherPowerBoostAttr
 } from './move';
 
@@ -33,8 +33,6 @@ import { BattlerTagType } from '../enums/battler-tag-type';
 let allMoveAttributes: {[key: string]: any} = {};
 let allMoveConditions: {[key: string]: any} = {};
 let moveAttrsAndValues: any = {};
-
-
 export function initMoveRegistry() {
   allMoveAttributes = {
     MoveAttr,
@@ -138,10 +136,10 @@ export function initMoveRegistry() {
     AnyTypeSuperEffectTypeMultiplierAttr,
     AnyTypeMultiplierAttr,
     PostVictoryStatChangeAttr,
-    TerrainMovePriorityAttr, 
-    FirstTurnPriorityAttr, 
-    ConditionalPriorityAttr, 
-    TerrainPowerBoostAttr, 
+    TerrainMovePriorityAttr,
+    FirstTurnPriorityAttr,
+    ConditionalPriorityAttr,
+    TerrainPowerBoostAttr,
     WeatherPowerBoostAttr
   };
 

@@ -61,11 +61,11 @@ export default class UnavailableModalUiHandler extends ModalUiHandler {
         Utils.removeCookie(Utils.sessionIdKey);
         this.scene.reset(true, true);
       } else {
-        this.reconnectDuration = Math.min(this.reconnectDuration * 2, this.maxTime); // Set a max delay so it isn't infinite
+        this.reconnectDuration = Math.min(this.reconnectDuration * 2, this.maxTime);
         this.reconnectTimer =
             setTimeout(
               () => this.tryReconnect(),
-              // Adds a random factor to avoid pendulum effect during long total breakdown
+
               this.reconnectDuration + (Math.random() * this.randVarianceTime));
       }
     });

@@ -40,7 +40,8 @@ export enum TextStyle {
   BGM_BAR,
   PERFECT_IV,
   TITLE_MESSAGE,
-  SNATCH_COST
+  SNATCH_COST,
+  SUMMARY_VOID
 }
 
 export interface TextStyleOptions {
@@ -61,10 +62,10 @@ export function addTextObject(scene: Phaser.Scene, x: number, y: number, content
     ret.setLineSpacing(scale * 30);
   }
 
-  if (ret.lineSpacing < 12 && i18next.resolvedLanguage === "ja") {
-    ret.setLineSpacing(ret.lineSpacing + 35);
+  const isKorean = i18next.resolvedLanguage === 'ko';
+  if (isKorean) {
+    ret.setLineSpacing(ret.lineSpacing * 1.5);
   }
-
   return ret;
 }
 
@@ -76,8 +77,9 @@ export function setTextStyle(obj: Phaser.GameObjects.Text, scene: Phaser.Scene, 
     obj.setLineSpacing(scale * 30);
   }
 
-  if (obj.lineSpacing < 12 && i18next.resolvedLanguage === "ja") {
-    obj.setLineSpacing(obj.lineSpacing + 35);
+  const isKorean = i18next.resolvedLanguage === 'ko';
+  if (isKorean) {
+    obj.setLineSpacing(obj.lineSpacing * 1.5);
   }
 }
 
@@ -92,8 +94,9 @@ export function addBBCodeTextObject(scene: Phaser.Scene, x: number, y: number, c
     ret.setLineSpacing(scale * 60);
   }
 
-  if (ret.lineSpacing < 12 && i18next.resolvedLanguage === "ja") {
-    ret.setLineSpacing(ret.lineSpacing + 35);
+  const isKorean = i18next.resolvedLanguage === 'ko';
+  if (isKorean) {
+    ret.setLineSpacing(ret.lineSpacing * 1.5);
   }
 
   return ret;
@@ -136,6 +139,12 @@ export function getTextStyleOptions(style: TextStyle, uiTheme: UiTheme, extraSty
       shadowYpos = 4;
       styleOptions.stroke = "#b666d2";
       styleOptions.strokeThickness = 0.5;
+      break;
+    case TextStyle.SUMMARY_VOID:
+      shadowXpos = 4;
+      shadowYpos = 4;
+      styleOptions.stroke = "#6b4d2a";
+      styleOptions.strokeThickness = 3;
       break;
     case TextStyle.SUMMARY:
     case TextStyle.SUMMARY_ALT:
@@ -317,10 +326,10 @@ export function getTextColor(textStyle: TextStyle, shadow?: boolean, uiTheme: Ui
     return !shadow ? "#f8f8f8" : "#6b5a73";
     case TextStyle.SNATCH_COST:
       return !shadow ? "#40c8f8" : "#006090";
+    case TextStyle.SUMMARY_VOID:
+      return !shadow ? "#CBAB76" : "#2a1f10";
   }
 }
-
-
 export function getModifierTierTextTint(tier: ModifierTier): integer {
   switch (tier) {
     case ModifierTier.COMMON:

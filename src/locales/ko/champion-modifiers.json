@@ -1,0 +1,48 @@
+{
+  "modifierType": {
+    "championStatBooster": {
+      "name": "{{champion}} 훈련: {{stats}}",
+      "description": "{{champion}}의 포켓몬에게 {{stats}}을(를) {{percent}}% 증가",
+      "descriptionConditional": "{{types}} 타입 또는 시그니처 포켓몬에게 {{stats}}을(를) {{percent}}% 증가. 비{{types}} 비시그니처 포켓몬은 {{firstStat}} 증가만 받습니다."
+    },
+    "championPokemonStatBooster": {
+      "name": "{{champion}}의 {{flavor}} [{{stats}}]",
+      "description": "선택한 포켓몬의 {{stats}}을(를) {{percent}}% 영구 증가. {{champion}}의 훈련 방법이 담겨 있습니다.",
+      "descriptionConditional": "{{types}} 타입 또는 시그니처 포켓몬의 {{stats}}을(를) {{percent}}% 영구 증가. 비{{types}} 비시그니처 포켓몬은 {{firstStat}} 증가만 받습니다. {{champion}}의 훈련 방법이 담겨 있습니다."
+    },
+    "trainerBondAbility": {
+      "name": "{{champion}}의 리밋 브레이크: {{ability}}",
+      "description": "{{champion}}의 포켓몬에게 {{chance}}% 확률로 {{ability}} 활성화. {{abilityDescription}}"
+    },
+    "teraAbility": {
+      "name": "{{type}} 테라 어빌리티: {{ability}}",
+      "description": "{{type}} 타입으로 테라스탈화 중 {{chance}}% 확률로 {{ability}} 활성화. {{abilityDescription}}"
+    },
+    "pokemonAltBuild": {
+      "name": "{{buildName}}",
+      "description": "{{description}} - 이 포켓몬의 능력치와 특성을 변경합니다",
+      "wrongSpecies": "이 대체 빌드는 {{species}}만 가능합니다"
+    },
+    "championTm": {
+      "name": "{{champion}}의 TM: {{move}}",
+      "description": "포켓몬에게 {{move}}을(를) 가르칩니다. {{champion}}의 스타일과 호환됩니다."
+    },
+    "championXm": {
+      "name": "{{champion}}의 XM: {{move}}",
+      "description": "강력한 기술 {{move}}을(를) 가르칩니다. {{champion}}이 마스터했습니다."
+    }
+  },
+  "modifier": {
+    "championStatBooster": {
+      "extra": {
+        "inoperable": "이 포켓몬은 {{champion}}의 훈련과 호환되지 않습니다"
+      }
+    },
+    "trainerBondAbility": {
+      "extra": {
+        "activated": "{{champion}}의 리밋 브레이크가 {{ability}}을(를) 활성화했습니다!"
+      }
+    }
+  }
+}
+

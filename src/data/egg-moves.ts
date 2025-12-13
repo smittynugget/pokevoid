@@ -2,8 +2,6 @@ import { allMoves } from "./move";
 import * as Utils from "../utils";
 import { Moves } from "#enums/moves";
 import { Species } from "#enums/species";
-
-
 export const speciesEggMoves = {
   [Species.BULBASAUR]: [ Moves.SAPPY_SEED, Moves.SLUDGE_WAVE, Moves.EARTH_POWER, Moves.MATCHA_GOTCHA ],
   [Species.CHARMANDER]: [ Moves.DRAGON_DANCE, Moves.BITTER_BLADE, Moves.EARTH_POWER, Moves.OBLIVION_WING ],

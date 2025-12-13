@@ -5,7 +5,7 @@ import SettingsKeyboardUiHandler from "#app/ui/settings/settings-keyboard-ui-han
 import i18next from "i18next";
 
 export enum SettingKeyboard {
-    // Default_Layout = "DEFAULT_LAYOUT",
+
     Button_Up = "BUTTON_UP",
     Alt_Button_Up = "ALT_BUTTON_UP",
     Button_Down = "BUTTON_DOWN",
@@ -46,12 +46,15 @@ export enum SettingKeyboard {
     Alt_Button_Slow_Down = "ALT_BUTTON_SLOW_DOWN",
     Button_Submit = "BUTTON_SUBMIT",
     Alt_Button_Submit = "ALT_BUTTON_SUBMIT",
+    Button_Toggle_Perma_Bar = "BUTTON_TOGGLE_PERMA_BAR",
+    Button_Toggle_Player_Bar = "BUTTON_TOGGLE_PLAYER_BAR",
+    Button_Toggle_Foe_Bar = "BUTTON_TOGGLE_FOE_BAR",
 }
 
 const pressAction = i18next.t("settings:pressToBind");
 
 export const settingKeyboardOptions = {
-  // [SettingKeyboard.Default_Layout]: ['Default'],
+
   [SettingKeyboard.Button_Up]: [`KEY ${Button.UP.toString()}`, pressAction],
   [SettingKeyboard.Button_Down]: [`KEY ${Button.DOWN.toString()}`, pressAction],
   [SettingKeyboard.Alt_Button_Up]: [`KEY ${Button.UP.toString()}`, pressAction],
@@ -77,7 +80,7 @@ export const settingKeyboardOptions = {
   [SettingKeyboard.Alt_Button_Cycle_Gender]: [`KEY ${Button.CYCLE_GENDER.toString()}`, pressAction],
   [SettingKeyboard.Button_Cycle_Ability]: [`KEY ${Button.CYCLE_ABILITY.toString()}`, pressAction],
   [SettingKeyboard.Alt_Button_Cycle_Ability]: [`KEY ${Button.CYCLE_ABILITY.toString()}`, pressAction],
-    
+
     [SettingKeyboard.Button_Cycle_Fusion]: [`KEY ${Button.CYCLE_FUSION.toString()}`, pressAction],
     [SettingKeyboard.Alt_Button_Cycle_Fusion]: [`KEY ${Button.CYCLE_FUSION.toString()}`, pressAction],
     [SettingKeyboard.Button_Smitty_Console]: [`KEY ${Button.CONSOLE.toString()}`, pressAction],
@@ -93,10 +96,13 @@ export const settingKeyboardOptions = {
   [SettingKeyboard.Button_Slow_Down]: [`KEY ${Button.SLOW_DOWN.toString()}`, pressAction],
   [SettingKeyboard.Alt_Button_Slow_Down]: [`KEY ${Button.SLOW_DOWN.toString()}`, pressAction],
   [SettingKeyboard.Alt_Button_Submit]: [`KEY ${Button.SUBMIT.toString()}`, pressAction],
+  [SettingKeyboard.Button_Toggle_Perma_Bar]: [`KEY ${Button.TOGGLE_PERMA_BAR.toString()}`, pressAction],
+  [SettingKeyboard.Button_Toggle_Player_Bar]: [`KEY ${Button.TOGGLE_PLAYER_BAR.toString()}`, pressAction],
+  [SettingKeyboard.Button_Toggle_Foe_Bar]: [`KEY ${Button.TOGGLE_FOE_BAR.toString()}`, pressAction],
 };
 
 export const settingKeyboardDefaults = {
-  // [SettingKeyboard.Default_Layout]: 0,
+
   [SettingKeyboard.Button_Up]: 0,
   [SettingKeyboard.Button_Down]: 0,
   [SettingKeyboard.Button_Left]: 0,
@@ -123,7 +129,7 @@ export const settingKeyboardDefaults = {
   [SettingKeyboard.Alt_Button_Cycle_Gender]: 0,
   [SettingKeyboard.Button_Cycle_Ability]: 0,
   [SettingKeyboard.Alt_Button_Cycle_Ability]: 0,
-    
+
     [SettingKeyboard.Button_Cycle_Fusion]: 0,
     [SettingKeyboard.Alt_Button_Cycle_Fusion]: 0,
   [SettingKeyboard.Button_Cycle_Nature]: 0,
@@ -135,6 +141,9 @@ export const settingKeyboardDefaults = {
   [SettingKeyboard.Button_Slow_Down]: 0,
   [SettingKeyboard.Alt_Button_Slow_Down]: 0,
   [SettingKeyboard.Alt_Button_Submit]: 0,
+  [SettingKeyboard.Button_Toggle_Perma_Bar]: 0,
+  [SettingKeyboard.Button_Toggle_Player_Bar]: 0,
+  [SettingKeyboard.Button_Toggle_Foe_Bar]: 0,
 };
 
 export const settingKeyboardBlackList = [
@@ -147,8 +156,6 @@ export const settingKeyboardBlackList = [
   SettingKeyboard.Button_Left,
   SettingKeyboard.Button_Right,
 ];
-
-
 export function setSettingKeyboard(scene: BattleScene, setting: SettingKeyboard, value: integer): boolean {
   switch (setting) {
   case SettingKeyboard.Button_Up:
@@ -163,7 +170,7 @@ export function setSettingKeyboard(scene: BattleScene, setting: SettingKeyboard,
   case SettingKeyboard.Button_Cycle_Form:
   case SettingKeyboard.Button_Cycle_Gender:
   case SettingKeyboard.Button_Cycle_Ability:
-  
+
   case SettingKeyboard.Button_Cycle_Fusion:
   case SettingKeyboard.Button_Cycle_Nature:
   case SettingKeyboard.Button_Cycle_Variant:
@@ -181,7 +188,7 @@ export function setSettingKeyboard(scene: BattleScene, setting: SettingKeyboard,
   case SettingKeyboard.Alt_Button_Cycle_Form:
   case SettingKeyboard.Alt_Button_Cycle_Gender:
   case SettingKeyboard.Alt_Button_Cycle_Ability:
-  
+
   case SettingKeyboard.Alt_Button_Cycle_Fusion:
   case SettingKeyboard.Alt_Button_Cycle_Nature:
   case SettingKeyboard.Alt_Button_Cycle_Variant:

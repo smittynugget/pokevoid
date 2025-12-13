@@ -31,8 +31,6 @@ export abstract class ArenaTag {
   public sourceMove?: Moves;
   public sourceId?: integer;
   public side: ArenaTagSide;
-
-
   constructor(tagType: ArenaTagType, turnCount: integer, sourceMove: Moves | undefined, sourceId?: integer, side: ArenaTagSide = ArenaTagSide.BOTH) {
     this.tagType = tagType;
     this.turnCount = turnCount;
@@ -65,11 +63,6 @@ export abstract class ArenaTag {
         : null;
   }
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Mist_(move) Mist}.
- * Prevents Pokémon on the opposing side from lowering the stats of the Pokémon in the Mist.
- */
 export class MistTag extends ArenaTag {
   constructor(turnCount: integer, sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.MIST, turnCount, Moves.MIST, sourceId, side);
@@ -97,41 +90,13 @@ export class MistTag extends ArenaTag {
     return true;
   }
 }
-
-/**
- * Reduces the damage of specific move categories in the arena.
- * @extends ArenaTag
- */
 export class WeakenMoveScreenTag extends ArenaTag {
   protected weakenedCategories: MoveCategory[];
-
-  /**
-   * Creates a new instance of the WeakenMoveScreenTag class.
-   *
-   * @param tagType - The type of the arena tag.
-   * @param turnCount - The number of turns the tag is active.
-   * @param sourceMove - The move that created the tag.
-   * @param sourceId - The ID of the source of the tag.
-   * @param side - The side (player or enemy) the tag affects.
-   * @param weakenedCategories - The categories of moves that are weakened by this tag.
-   */
   constructor(tagType: ArenaTagType, turnCount: integer, sourceMove: Moves, sourceId: integer, side: ArenaTagSide, weakenedCategories: MoveCategory[]) {
     super(tagType, turnCount, sourceMove, sourceId, side);
 
     this.weakenedCategories = weakenedCategories;
   }
-
-  /**
-   * Applies the weakening effect to the move.
-   *
-   * @param arena - The arena where the move is applied.
-   * @param args - The arguments for the move application.
-   * @param args[0] - The category of the move.
-   * @param args[1] - A boolean indicating whether it is a double battle.
-   * @param args[2] - An object of type `Utils.NumberHolder` that holds the damage multiplier
-   *
-   * @returns True if the move was weakened, otherwise false.
-   */
   apply(arena: Arena, args: any[]): boolean {
     if (this.weakenedCategories.includes((args[0] as MoveCategory))) {
       (args[2] as Utils.NumberHolder).value = (args[1] as boolean) ? 2732/4096 : 0.5;
@@ -140,11 +105,6 @@ export class WeakenMoveScreenTag extends ArenaTag {
     return false;
   }
 }
-
-/**
- * Reduces the damage of physical moves.
- * Used by {@linkcode Moves.REFLECT}
- */
 class ReflectTag extends WeakenMoveScreenTag {
   constructor(turnCount: integer, sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.REFLECT, turnCount, Moves.REFLECT, sourceId, side, [MoveCategory.PHYSICAL]);
@@ -156,11 +116,6 @@ class ReflectTag extends WeakenMoveScreenTag {
     }
   }
 }
-
-/**
- * Reduces the damage of special moves.
- * Used by {@linkcode Moves.LIGHT_SCREEN}
- */
 class LightScreenTag extends WeakenMoveScreenTag {
   constructor(turnCount: integer, sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.LIGHT_SCREEN, turnCount, Moves.LIGHT_SCREEN, sourceId, side, [MoveCategory.SPECIAL]);
@@ -172,11 +127,6 @@ class LightScreenTag extends WeakenMoveScreenTag {
     }
   }
 }
-
-/**
- * Reduces the damage of physical and special moves.
- * Used by {@linkcode Moves.AURORA_VEIL}
- */
 class AuroraVeilTag extends WeakenMoveScreenTag {
   constructor(turnCount: integer, sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.AURORA_VEIL, turnCount, Moves.AURORA_VEIL, sourceId, side, [MoveCategory.SPECIAL, MoveCategory.PHYSICAL]);
@@ -190,15 +140,10 @@ class AuroraVeilTag extends WeakenMoveScreenTag {
 }
 
 type ProtectConditionFunc = (arena: Arena, moveId: Moves) => boolean;
-
-/**
- * Class to implement conditional team protection
- * applies protection based on the attributes of incoming moves
- */
 export class ConditionalProtectTag extends ArenaTag {
-  /** The condition function to determine which moves are negated */
+
   protected protectConditionFunc: ProtectConditionFunc;
-  /** Does this apply to all moves, including those that ignore other forms of protection? */
+
   protected ignoresBypass: boolean;
 
   constructor(tagType: ArenaTagType, sourceMove: Moves, sourceId: integer, side: ArenaTagSide, condition: ProtectConditionFunc, ignoresBypass: boolean = false) {
@@ -211,21 +156,7 @@ export class ConditionalProtectTag extends ArenaTag {
   onAdd(arena: Arena): void {
     arena.scene.queueMessage(i18next.t(`arenaTag:conditionalProtectOnAdd${this.side === ArenaTagSide.PLAYER ? "Player" : this.side === ArenaTagSide.ENEMY ? "Enemy" : ""}`, { moveName: super.getMoveName() }));
   }
-
-  // Removes default message for effect removal
   onRemove(arena: Arena): void { }
-
-  /**
-   * apply(): Checks incoming moves against the condition function
-   * and protects the target if conditions are met
-   * @param arena The arena containing this tag
-   * @param args\[0\] (Utils.BooleanHolder) Signals if the move is cancelled
-   * @param args\[1\] (Pokemon) The Pokemon using the move
-   * @param args\[2\] (Pokemon) The intended target of the move
-   * @param args\[3\] (Moves) The parameters to the condition function
-   * @param args\[4\] (Utils.BooleanHolder) Signals if the applied protection supercedes protection-ignoring effects
-   * @returns
-   */
   apply(arena: Arena, args: any[]): boolean {
     const [ cancelled, user, target, moveId, ignoresBypass ] = args;
 
@@ -252,15 +183,6 @@ export class ConditionalProtectTag extends ArenaTag {
     return false;
   }
 }
-
-/**
- * Condition function for {@link https://bulbapedia.bulbagarden.net/wiki/Quick_Guard_(move) Quick Guard's}
- * protection effect.
- * @param arena {@linkcode Arena} The arena containing the protection effect
- * @param moveId {@linkcode Moves} The move to check against this condition
- * @returns `true` if the incoming move's priority is greater than 0. This includes
- * moves with modified priorities from abilities (e.g. Prankster)
- */
 const QuickGuardConditionFunc: ProtectConditionFunc = (arena, moveId) => {
   const move = allMoves[moveId];
   const priority = new Utils.IntegerHolder(move.priority);
@@ -273,24 +195,11 @@ const QuickGuardConditionFunc: ProtectConditionFunc = (arena, moveId) => {
   }
   return priority.value > 0;
 };
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Quick_Guard_(move) Quick Guard}
- * Condition: The incoming move has increased priority.
- */
 class QuickGuardTag extends ConditionalProtectTag {
   constructor(sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.QUICK_GUARD, Moves.QUICK_GUARD, sourceId, side, QuickGuardConditionFunc);
   }
 }
-
-/**
- * Condition function for {@link https://bulbapedia.bulbagarden.net/wiki/Wide_Guard_(move) Wide Guard's}
- * protection effect.
- * @param arena {@linkcode Arena} The arena containing the protection effect
- * @param moveId {@linkcode Moves} The move to check against this condition
- * @returns `true` if the incoming move is multi-targeted (even if it's only used against one Pokemon).
- */
 const WideGuardConditionFunc: ProtectConditionFunc = (arena, moveId) : boolean => {
   const move = allMoves[moveId];
 
@@ -303,34 +212,15 @@ const WideGuardConditionFunc: ProtectConditionFunc = (arena, moveId) : boolean =
           }
           return false;
 };
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Wide_Guard_(move) Wide Guard}
- * Condition: The incoming move can target multiple Pokemon. The move's source
- * can be an ally or enemy.
- */
 class WideGuardTag extends ConditionalProtectTag {
   constructor(sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.WIDE_GUARD, Moves.WIDE_GUARD, sourceId, side, WideGuardConditionFunc);
         }
   }
-
-/**
- * Condition function for {@link https://bulbapedia.bulbagarden.net/wiki/Mat_Block_(move) Mat Block's}
- * protection effect.
- * @param arena {@linkcode Arena} The arena containing the protection effect.
- * @param moveId {@linkcode Moves} The move to check against this condition.
- * @returns `true` if the incoming move is not a Status move.
- */
 const MatBlockConditionFunc: ProtectConditionFunc = (arena, moveId) : boolean => {
   const move = allMoves[moveId];
   return move.category !== MoveCategory.STATUS;
 };
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Mat_Block_(move) Mat Block}
- * Condition: The incoming move is a Physical or Special attack move.
- */
 class MatBlockTag extends ConditionalProtectTag {
   constructor(sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.MAT_BLOCK, Moves.MAT_BLOCK, sourceId, side, MatBlockConditionFunc);
@@ -347,15 +237,6 @@ class MatBlockTag extends ConditionalProtectTag {
   }
 }
 }
-
-/**
- * Condition function for {@link https://bulbapedia.bulbagarden.net/wiki/Crafty_Shield_(move) Crafty Shield's}
- * protection effect.
- * @param arena {@linkcode Arena} The arena containing the protection effect
- * @param moveId {@linkcode Moves} The move to check against this condition
- * @returns `true` if the incoming move is a Status move, is not a hazard, and does not target all
- * Pokemon or sides of the field.
- */
 const CraftyShieldConditionFunc: ProtectConditionFunc = (arena, moveId) => {
   const move = allMoves[moveId];
   return move.category === MoveCategory.STATUS
@@ -363,55 +244,29 @@ const CraftyShieldConditionFunc: ProtectConditionFunc = (arena, moveId) => {
     && move.moveTarget !== MoveTarget.BOTH_SIDES
     && move.moveTarget !== MoveTarget.ALL;
 };
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Crafty_Shield_(move) Crafty Shield}
- * Condition: The incoming move is a Status move, is not a hazard, and does
- * not target all Pokemon or sides of the field.
- */
 class CraftyShieldTag extends ConditionalProtectTag {
   constructor(sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.CRAFTY_SHIELD, Moves.CRAFTY_SHIELD, sourceId, side, CraftyShieldConditionFunc, true);
   }
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Lucky_Chant_(move) Lucky Chant}.
- * Prevents critical hits against the tag's side.
- */
 export class NoCritTag extends ArenaTag {
-  /**
-   * Constructor method for the NoCritTag class
-   * @param turnCount `integer` the number of turns this effect lasts
-   * @param sourceMove {@linkcode Moves} the move that created this effect
-   * @param sourceId `integer` the ID of the {@linkcode Pokemon} that created this effect
-   * @param side {@linkcode ArenaTagSide} the side to which this effect belongs
-   */
+
   constructor(turnCount: integer, sourceMove: Moves, sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.NO_CRIT, turnCount, sourceMove, sourceId, side);
         }
-
-  /** Queues a message upon adding this effect to the field */
   onAdd(arena: Arena): void {
     arena.scene.queueMessage(i18next.t(`arenaTag:noCritOnAdd${this.side === ArenaTagSide.PLAYER ? "Player" : "Enemy"}`, {
       moveName: this.getMoveName()
     }));
   }
-
-  /** Queues a message upon removing this effect from the field */
   onRemove(arena: Arena): void {
-    const source = arena.scene.getPokemonById(this.sourceId!); // TODO: is this bang correct?
+    const source = arena.scene.getPokemonById(this.sourceId!);
     arena.scene.queueMessage(i18next.t("arenaTag:noCritOnRemove", {
       pokemonNameWithAffix: getPokemonNameWithAffix(source ?? undefined),
       moveName: this.getMoveName()
     }));
   }
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Wish_(move) Wish}.
- * Heals the Pokémon in the user's position the turn after Wish is used.
- */
 class WishTag extends ArenaTag {
   private battlerIndex: BattlerIndex;
   private triggerMessage: string;
@@ -442,22 +297,8 @@ class WishTag extends ArenaTag {
     }
   }
 }
-
-/**
- * Abstract class to implement weakened moves of a specific type.
- */
 export class WeakenMoveTypeTag extends ArenaTag {
   private weakenedType: Type;
-
-  /**
-   * Creates a new instance of the WeakenMoveTypeTag class.
-   *
-   * @param tagType - The type of the arena tag.
-   * @param turnCount - The number of turns the tag is active.
-   * @param type - The type being weakened from this tag.
-   * @param sourceMove - The move that created the tag.
-   * @param sourceId - The ID of the source of the tag.
-   */
   constructor(tagType: ArenaTagType, turnCount: integer, type: Type, sourceMove: Moves, sourceId: integer) {
     super(tagType, turnCount, sourceMove, sourceId);
 
@@ -473,11 +314,6 @@ export class WeakenMoveTypeTag extends ArenaTag {
     return false;
   }
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Mud_Sport_(move) Mud Sport}.
- * Weakens Electric type moves for a set amount of turns, usually 5.
- */
 class MudSportTag extends WeakenMoveTypeTag {
   constructor(turnCount: integer, sourceId: integer) {
     super(ArenaTagType.MUD_SPORT, turnCount, Type.ELECTRIC, Moves.MUD_SPORT, sourceId);
@@ -491,11 +327,6 @@ class MudSportTag extends WeakenMoveTypeTag {
     arena.scene.queueMessage(i18next.t("arenaTag:mudSportOnRemove"));
   }
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Water_Sport_(move) Water Sport}.
- * Weakens Fire type moves for a set amount of turns, usually 5.
- */
 class WaterSportTag extends WeakenMoveTypeTag {
   constructor(turnCount: integer, sourceId: integer) {
     super(ArenaTagType.WATER_SPORT, turnCount, Type.FIRE, Moves.WATER_SPORT, sourceId);
@@ -509,23 +340,9 @@ class WaterSportTag extends WeakenMoveTypeTag {
     arena.scene.queueMessage(i18next.t("arenaTag:waterSportOnRemove"));
   }
 }
-
-/**
- * Abstract class to implement arena traps.
- */
 export class ArenaTrapTag extends ArenaTag {
   public layers: integer;
   public maxLayers: integer;
-
-  /**
-   * Creates a new instance of the ArenaTrapTag class.
-   *
-   * @param tagType - The type of the arena tag.
-   * @param sourceMove - The move that created the tag.
-   * @param sourceId - The ID of the source of the tag.
-   * @param side - The side (player or enemy) the tag affects.
-   * @param maxLayers - The maximum amount of layers this tag can have.
-   */
   constructor(tagType: ArenaTagType, sourceMove: Moves, sourceId: integer, side: ArenaTagSide, maxLayers: integer) {
     super(tagType, 0, sourceMove, sourceId, side);
 
@@ -558,12 +375,6 @@ export class ArenaTrapTag extends ArenaTag {
     return pokemon.isGrounded() ? 1 : Phaser.Math.Linear(0, 1 / Math.pow(2, this.layers), Math.min(pokemon.getHpRatio(), 0.5) * 2);
   }
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Spikes_(move) Spikes}.
- * Applies up to 3 layers of Spikes, dealing 1/8th, 1/6th, or 1/4th of the the Pokémon's HP
- * in damage for 1, 2, or 3 layers of Spikes respectively if they are summoned into this trap.
- */
 class SpikesTag extends ArenaTrapTag {
   constructor(sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.SPIKES, Moves.SPIKES, sourceId, side, 3);
@@ -599,13 +410,6 @@ class SpikesTag extends ArenaTrapTag {
     return false;
   }
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Toxic_Spikes_(move) Toxic Spikes}.
- * Applies up to 2 layers of Toxic Spikes, poisoning or badly poisoning any Pokémon who is
- * summoned into this trap if 1 or 2 layers of Toxic Spikes respectively are up. Poison-type
- * Pokémon summoned into this trap remove it entirely.
- */
 class ToxicSpikesTag extends ArenaTrapTag {
   private neutralized: boolean;
 
@@ -658,12 +462,6 @@ class ToxicSpikesTag extends ArenaTrapTag {
     return super.getMatchupScoreMultiplier(pokemon);
   }
 }
-
-/**
- * Arena Tag class for delayed attacks, such as {@linkcode Moves.FUTURE_SIGHT} or {@linkcode Moves.DOOM_DESIRE}.
- * Delays the attack's effect by a set amount of turns, usually 3 (including the turn the move is used),
- * and deals damage after the turn count is reached.
- */
 class DelayedAttackTag extends ArenaTag {
   public targetIndex: BattlerIndex;
 
@@ -677,7 +475,7 @@ class DelayedAttackTag extends ArenaTag {
     const ret = super.lapse(arena);
 
     if (!ret) {
-      arena.scene.unshiftPhase(new MoveEffectPhase(arena.scene, this.sourceId!, [ this.targetIndex ], new PokemonMove(this.sourceMove!, 0, 0, true))); // TODO: are those bangs correct?
+      arena.scene.unshiftPhase(new MoveEffectPhase(arena.scene, this.sourceId!, [ this.targetIndex ], new PokemonMove(this.sourceMove!, 0, 0, true)));
     }
 
     return ret;
@@ -685,12 +483,6 @@ class DelayedAttackTag extends ArenaTag {
 
   onRemove(arena: Arena): void { }
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Stealth_Rock_(move) Stealth Rock}.
- * Applies up to 1 layer of Stealth Rocks, dealing percentage-based damage to any Pokémon
- * who is summoned into the trap, based on the Rock type's type effectiveness.
- */
 class StealthRockTag extends ArenaTrapTag {
   constructor(sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.STEALTH_ROCK, Moves.STEALTH_ROCK, sourceId, side, 1);
@@ -761,12 +553,6 @@ class StealthRockTag extends ArenaTrapTag {
     return Phaser.Math.Linear(super.getMatchupScoreMultiplier(pokemon), 1, 1 - Math.pow(damageHpRatio, damageHpRatio));
   }
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Sticky_Web_(move) Sticky Web}.
- * Applies up to 1 layer of Sticky Web, which lowers the Speed by one stage
- * to any Pokémon who is summoned into this trap.
- */
 class StickyWebTag extends ArenaTrapTag {
   constructor(sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.STICKY_WEB, Moves.STICKY_WEB, sourceId, side, 1);
@@ -795,12 +581,6 @@ class StickyWebTag extends ArenaTrapTag {
   }
 
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Trick_Room_(move) Trick Room}.
- * Reverses the Speed stats for all Pokémon on the field as long as this arena tag is up,
- * also reversing the turn order for all Pokémon on the field as well.
- */
 export class TrickRoomTag extends ArenaTag {
   constructor(turnCount: integer, sourceId: integer) {
     super(ArenaTagType.TRICK_ROOM, turnCount, Moves.TRICK_ROOM, sourceId);
@@ -823,12 +603,6 @@ export class TrickRoomTag extends ArenaTag {
     arena.scene.queueMessage(i18next.t("arenaTag:trickRoomOnRemove"));
   }
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Gravity_(move) Gravity}.
- * Grounds all Pokémon on the field, including Flying-types and those with
- * {@linkcode Abilities.LEVITATE} for the duration of the arena tag, usually 5 turns.
- */
 export class GravityTag extends ArenaTag {
   constructor(turnCount: integer) {
     super(ArenaTagType.GRAVITY, turnCount, Moves.GRAVITY);
@@ -847,12 +621,6 @@ export class GravityTag extends ArenaTag {
     arena.scene.queueMessage(i18next.t("arenaTag:gravityOnRemove"));
   }
 }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Tailwind_(move) Tailwind}.
- * Doubles the Speed of the Pokémon who created this arena tag, as well as all allied Pokémon.
- * Applies this arena tag for 4 turns (including the turn the move was used).
- */
 class TailwindTag extends ArenaTag {
   constructor(turnCount: integer, sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.TAILWIND, turnCount, Moves.TAILWIND, sourceId, side);
@@ -863,16 +631,16 @@ class TailwindTag extends ArenaTag {
       arena.scene.queueMessage(i18next.t(`arenaTag:tailwindOnAdd${this.side === ArenaTagSide.PLAYER ? "Player" : this.side === ArenaTagSide.ENEMY ? "Enemy" : ""}`));
     }
 
-    const source = arena.scene.getPokemonById(this.sourceId!); //TODO: this bang is questionable!
+    const source = arena.scene.getPokemonById(this.sourceId!);
     const party = (source?.isPlayer() ? source.scene.getPlayerField() : source?.scene.getEnemyField()) ?? [];
 
     for (const pokemon of party) {
-      // Apply the CHARGED tag to party members with the WIND_POWER ability
+
       if (pokemon.hasAbility(Abilities.WIND_POWER) && !pokemon.getTag(BattlerTagType.CHARGED)) {
         pokemon.addTag(BattlerTagType.CHARGED);
         pokemon.scene.queueMessage(i18next.t("abilityTriggers:windPowerCharged", { pokemonName: getPokemonNameWithAffix(pokemon), moveName: this.getMoveName() }));
       }
-      // Raise attack by one stage if party member has WIND_RIDER ability
+
       if (pokemon.hasAbility(Abilities.WIND_RIDER)) {
         pokemon.scene.unshiftPhase(new ShowAbilityPhase(pokemon.scene, pokemon.getBattlerIndex()));
         pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, [BattleStat.ATK], 1, true));
@@ -886,11 +654,6 @@ class TailwindTag extends ArenaTag {
     }
   }
     }
-
-/**
- * Arena Tag class for {@link https://bulbapedia.bulbagarden.net/wiki/Happy_Hour_(move) Happy Hour}.
- * Doubles the prize money from trainers and money moves like {@linkcode Moves.PAY_DAY} and {@linkcode Moves.MAKE_IT_RAIN}.
- */
 class HappyHourTag extends ArenaTag {
   constructor(turnCount: integer, sourceId: integer, side: ArenaTagSide) {
     super(ArenaTagType.HAPPY_HOUR, turnCount, Moves.HAPPY_HOUR, sourceId, side);
@@ -918,7 +681,7 @@ export function getArenaTag(tagType: ArenaTagType, turnCount: integer, sourceMov
     case ArenaTagType.CRAFTY_SHIELD:
       return new CraftyShieldTag(sourceId, side);
   case ArenaTagType.NO_CRIT:
-    return new NoCritTag(turnCount, sourceMove!, sourceId, side); // TODO: is this bang correct?
+    return new NoCritTag(turnCount, sourceMove!, sourceId, side);
     case ArenaTagType.MUD_SPORT:
       return new MudSportTag(turnCount, sourceId);
     case ArenaTagType.WATER_SPORT:
@@ -929,7 +692,7 @@ export function getArenaTag(tagType: ArenaTagType, turnCount: integer, sourceMov
       return new ToxicSpikesTag(sourceId, side);
     case ArenaTagType.FUTURE_SIGHT:
     case ArenaTagType.DOOM_DESIRE:
-    return new DelayedAttackTag(tagType, sourceMove, sourceId, targetIndex!); // TODO:questionable bang
+    return new DelayedAttackTag(tagType, sourceMove, sourceId, targetIndex!);
     case ArenaTagType.WISH:
       return new WishTag(turnCount, sourceId, side);
     case ArenaTagType.STEALTH_ROCK:

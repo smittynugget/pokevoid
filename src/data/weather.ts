@@ -246,7 +246,7 @@ interface WeatherPoolEntry {
   weight: integer;
 }
 
-export function getRandomWeatherType(arena: any /* Importing from arena causes a circular dependency */): WeatherType {
+export function getRandomWeatherType(arena: any ): WeatherType {
   let weatherPool: WeatherPoolEntry[] = [];
   const hasSun = arena.getTimeOfDay() < 2;
   switch (arena.biomeType) {

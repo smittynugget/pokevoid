@@ -29,12 +29,6 @@ export class Voucher {
   validate(scene: BattleScene, args?: any[]): boolean {
     return !this.conditionFunc || this.conditionFunc(scene, args);
   }
-
-  /**
-   * Get the name of the voucher
-   * @param playerGender - this is ignored here. It's only there to match the signature of the function in the Achv class
-   * @returns the name of the voucher
-   */
   getName(playerGender: PlayerGender): string {
     return getVoucherTypeName(this.voucherType);
   }

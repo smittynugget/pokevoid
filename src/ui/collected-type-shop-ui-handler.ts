@@ -21,48 +21,48 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
         if (this.collectedTypeDisplay) {
             this.collectedTypeDisplay.destroy();
         }
-        
+
         const rightX = (this.scene.game.canvas.width / 6) - 45;
         const centerY = -(this.scene.game.canvas.height / 6) / 2 - 25;
-        
+
         this.collectedTypeDisplay = this.scene.add.container(rightX, centerY);
         this.collectedTypeDisplay.setName("collected-type-display");
 
         this.collectedTypeTitle = addTextObject(
-            this.scene, 
-            0, 
-            -13, 
-            i18next.t("pokemonInfo:Stat.Total", { defaultValue: "Total" }), 
+            this.scene,
+            0,
+            -13,
+            i18next.t("pokemonInfo:Stat.Total", { defaultValue: "Total" }),
             TextStyle.WINDOW,
             { fontSize: "56px" }
         );
         this.collectedTypeTitle.setOrigin(0, 0.5);
-        
-        this.collectedTypeIcon = this.scene.add.sprite(5, 0, "smitems_192", "modSoulCollected");
-        this.collectedTypeIcon.setScale(0.075); 
-        
+
+        this.collectedTypeIcon = this.scene.add.sprite(5, 0, "smitems", "modSoulCollected");
+        this.collectedTypeIcon.setScale(0.15);
+
         this.collectedTypeText = addTextObject(
-            this.scene, 
-            15, 
-            0, 
-            "0", 
+            this.scene,
+            15,
+            0,
+            "0",
             TextStyle.MONEY,
             { fontSize: "64px" }
         );
         this.collectedTypeText.setOrigin(0, 0.5);
-        
+
         this.collectedTypeDisplay.add([this.collectedTypeTitle, this.collectedTypeIcon, this.collectedTypeText]);
         this.modifierContainer.add(this.collectedTypeDisplay);
     }
 
     show(args: any[]): boolean {
         const result = super.show(args);
-        
+
         if (result) {
             this.setupCollectedTypeDisplay();
             this.updateCollectedTypeDisplay();
         }
-        
+
         return result;
     }
 
@@ -71,7 +71,7 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
             const total = this.getTotalCollectedTypes();
             this.collectedTypeText.setText(total.toString());
         }
-        
+
         if (this.options) {
             for (const option of this.options) {
                 if (option instanceof CollectedTypeModifierOption) {
@@ -88,17 +88,17 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
     private getTotalCollectedTypesInternal(): number {
         const party = this.scene.getParty();
         let total = 0;
-        
+
         for (const pokemon of party) {
-            const modifiers = this.scene.findModifiers(m => 
+            const modifiers = this.scene.findModifiers(m =>
                 m instanceof CollectedTypeModifier && m.pokemonId === pokemon.id
             ) as CollectedTypeModifier[];
-            
+
             for (const modifier of modifiers) {
                 total += Object.values(modifier.collectedTypes).reduce((sum, count) => sum + count, 0);
             }
         }
-        
+
         return total;
     }
 
@@ -110,13 +110,13 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
         const layout = this.getShopLayout();
         const row = Math.floor(index / layout.itemsPerRow);
         const col = index % layout.itemsPerRow;
-        
+
         const itemsInRow = Math.min(layout.itemsPerRow, typeOptions.length - row * layout.itemsPerRow);
         const sliceWidth = (this.scene.game.canvas.width / 6) / (itemsInRow + 2);
-        
+
         const x = sliceWidth * (col + 1) + (sliceWidth * 0.5);
         const y = -this.scene.game.canvas.height / 12 - 60 + (row * 45);
-        
+
         return new CollectedTypeModifierOption(this.scene, x, y, typeOptions[index], true);
     }
 
@@ -131,7 +131,7 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
     setCursor(cursor: integer): boolean {
         const ui = this.getUi();
         const ret = super.setCursor(cursor);
-        
+
         if (!this.cursorObj) {
             this.cursorObj = this.scene.add.image(0, 0, "cursor");
             this.modifierContainer.add(this.cursorObj);
@@ -140,7 +140,7 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
         if (this.rowCursor === 0) {
             const buttonLayout = this.getButtonLayout();
             const buttonInfo = buttonLayout[cursor];
-            
+
             if (buttonInfo) {
                 this.cursorObj.setPosition(buttonInfo.x, buttonInfo.y);
                 this.cursorObj.setScale(1);
@@ -154,7 +154,7 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
 
         if (this.rowCursor === 1) {
             const options = this.options;
-            
+
             if (!options || options.length === 0 || cursor >= options.length) {
                 return false;
             }
@@ -164,13 +164,13 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
             const layout = this.getShopLayout();
             const row = Math.floor(cursor / layout.itemsPerRow);
             const col = cursor % layout.itemsPerRow;
-            
+
             const itemsInRow = Math.min(layout.itemsPerRow, options.length - row * layout.itemsPerRow);
             const sliceWidth = (this.scene.game.canvas.width / 6) / (itemsInRow + 2);
-            
+
             const x = sliceWidth * (col + 1) + (sliceWidth * 0.5);
             const y = -this.scene.game.canvas.height / 12 - 60 + (row * 45);
-            
+
             this.cursorObj.setPosition(x - 15, y);
             this.cursorObj.setScale(2);
 
@@ -263,7 +263,7 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
                             success = this.setRowCursor(0);
                         }
                         break;
-                        
+
                     case Button.DOWN:
                         if (currentRow < totalRows - 1) {
                             const newRow = currentRow + 1;
@@ -275,7 +275,7 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
                             success = this.setRowCursor(0);
                         }
                         break;
-                        
+
                     case Button.LEFT:
                         if (currentCol > 0) {
                             success = this.setCursor(this.cursor - 1);
@@ -286,7 +286,7 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
                             success = this.setCursor(newCursor);
                         }
                         break;
-                        
+
                     case Button.RIGHT:
                         const itemsInCurrentRow = Math.min(layout.itemsPerRow, this.options.length - currentRow * layout.itemsPerRow);
                         if (currentCol < itemsInCurrentRow - 1) {
@@ -306,13 +306,13 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
 
         return success;
     }
-    
+
     clear() {
         if (this.collectedTypeDisplay) {
             this.collectedTypeDisplay.destroy();
             this.collectedTypeDisplay = null;
         }
-        
+
         super.clear();
     }
 }
@@ -326,37 +326,37 @@ export class CollectedTypeModifierOption extends ModifierOption {
     }
 
     protected getItemCostTextY(): number {
-        return 41; 
+        return 41;
     }
-    
+
     private canAfford(): boolean {
         const cost = this.modifierTypeOption.cost || 0;
         if (cost === 0) return true;
-        
+
         const total = this.getTotalCollectedTypes();
         return total >= cost;
     }
-    
+
     private getTotalCollectedTypes(): number {
         const scene = this.scene as BattleScene;
         const uiHandler = scene.ui.getHandler();
         if (uiHandler instanceof CollectedTypeShopUiHandler) {
             return uiHandler.getTotalCollectedTypes();
         }
-        
+
         const party = scene.getParty();
         let total = 0;
-        
+
         for (const pokemon of party) {
-            const modifiers = scene.findModifiers(m => 
+            const modifiers = scene.findModifiers(m =>
                 m instanceof CollectedTypeModifier && m.pokemonId === pokemon.id
             ) as CollectedTypeModifier[];
-            
+
             for (const modifier of modifiers) {
                 total += Object.values(modifier.collectedTypes).reduce((sum, count) => sum + count, 0);
             }
         }
-        
+
         return total;
     }
 
@@ -369,7 +369,7 @@ export class CollectedTypeModifierOption extends ModifierOption {
                 y: 48,
                 ease: "Cubic.easeInOut"
             });
-        } 
+        }
     }
 
     updateCostText(): void {
@@ -377,23 +377,23 @@ export class CollectedTypeModifierOption extends ModifierOption {
             if (this.itemCostText) {
                 this.itemCostText.setText("");
             }
-            
+
             if (!this.collectedIcon) {
-                this.collectedIcon = this.scene.add.sprite(-10, 0, "smitems_192", "modSoulCollected");
-                this.collectedIcon.setScale(0.0925);
+                this.collectedIcon = this.scene.add.sprite(-10, 0, "smitems", "modSoulCollected");
+                this.collectedIcon.setScale(0.185);
                 this.collectedIcon.setAlpha(0);
                 this.add(this.collectedIcon);
-            } 
-            
+            }
+
             if (!this.itemCostText) {
                 const canAfford = this.canAfford();
                 const textStyle = canAfford ? TextStyle.MONEY : TextStyle.PARTY_RED;
-                
+
                 this.itemCostText = addTextObject(
-                    this.scene, 
-                    25, 
-                    0, 
-                    this.modifierTypeOption.cost.toString(), 
+                    this.scene,
+                    25,
+                    0,
+                    this.modifierTypeOption.cost.toString(),
                     textStyle,
                     { fontSize: "78px" }
                 );
@@ -402,7 +402,7 @@ export class CollectedTypeModifierOption extends ModifierOption {
             } else {
                 const canAfford = this.canAfford();
                 const textStyle = canAfford ? TextStyle.MONEY : TextStyle.PARTY_RED;
-                
+
                 const battleScene = this.scene as BattleScene;
                 this.itemCostText.setFontSize("82px");
                 this.itemCostText.setPosition(5, 0);
@@ -412,4 +412,4 @@ export class CollectedTypeModifierOption extends ModifierOption {
             }
         }
     }
-} 
+}

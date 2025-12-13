@@ -136,6 +136,14 @@
     "EnemyEndureChanceModifierType": {
       "description": "받은 공격을 버텨낼 확률이 {{chancePercent}}% 추가된다."
     },
+    "SKILL_POINTS": {
+      "name": "스킬 포인트 x{{amount}}",
+      "description": "스킬 포인트 {{amount}}개를 획득합니다. 스킬 트리에서 스킬을 해금하는 데 사용됩니다."
+    },
+    "SKILL_TOKENS": {
+      "name": "스킬 트리 토큰 x{{amount}}",
+      "description": "스킬 트리 토큰 {{amount}}개를 획득합니다. 스킬 트리를 레벨 업하는 데 사용됩니다!"
+    },
     "RARE_CANDY": {
       "name": "이상한사탕"
     },
@@ -708,6 +716,10 @@
       "description": "포켓몬을 방출하는 대신 5개를 사용하여 방출 아이템을 얻거나 수집가와 보상을 교환하세요.",
       "statLabel": "에센스"
     },
+    "PermaCollectedTypeModifierType": {
+      "name": "수집된 에센스",
+      "description": "수집된 에센스 저장:"
+    },
     "SacrificeModifierType": {
       "description": "포켓몬을 놓아주어 다른 포켓몬의 {{stat}}을(를) 15% 증가시킵니다."
     },
@@ -1023,7 +1035,10 @@
     "waves": "웨이브",
     "uses": "사용",
     "glitchPieceCost": "*글리치 조각 2개 필요",
+    "permaMoney": "Ω골드",
+    "permaItem": "Ω아이템",
     "moreInfo": "(자세한 정보는 C키나 Shift키를 길게 누르세요)",
+    "morePokeInfo": "(P / Shift로 정보 보기)",
     "upgrade": "강화"
   }
 }

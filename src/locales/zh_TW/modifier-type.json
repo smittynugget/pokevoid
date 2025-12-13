@@ -189,6 +189,10 @@
       "name": "復活種子",
       "description": "受到技能攻擊傷害瀕死時，\n恢復該瀕死寶可夢的HP至1/2。"
     },
+    "WHITE_HERB": {
+      "name": "白色香草",
+      "description": "寶可夢攜帶後，能在戰鬥中恢復任何被降低的能力。"
+    },
     "ETHER": {
       "name": "PP單項小補劑"
     },
@@ -704,6 +708,18 @@
       "description": "使用5個代替釋放寶可夢來獲得釋放道具，或與收藏家交換獎勵。",
       "statLabel": "精華"
     },
+    "PermaCollectedTypeModifierType": {
+      "name": "收集的精華",
+      "description": "儲存收集的精華:"
+    },
+    "SKILL_POINTS": {
+      "name": "技能點×{{amount}}",
+      "description": "獲得{{amount}}個技能點。用於在技能樹中解鎖技能。"
+    },
+    "SKILL_TOKENS": {
+      "name": "技能樹代幣×{{amount}}",
+      "description": "獲得{{amount}}個技能樹代幣。用於升級你的技能樹！"
+    },
     "SacrificeModifierType": {
       "description": "釋放一隻寶可夢來提升另一隻寶可夢的{{stat}}15%。"
     },
@@ -1019,7 +1035,10 @@
     "waves": "波",
     "uses": "次",
     "glitchPieceCost": "*需要消耗2個故障碎片",
+    "permaMoney": "Ω金幣",
+    "permaItem": "Ω道具",
     "moreInfo": "(按住C鍵或Shift鍵查看更多資訊)",
+    "morePokeInfo": "(按 P / Shift 查看資訊)",
     "upgrade": "升級"
   }
 }

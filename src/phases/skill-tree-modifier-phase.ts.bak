@@ -1,0 +1,704 @@
+import BattleScene from "#app/battle-scene";
+import { Phase } from "#app/phase";
+import { Mode } from "#app/ui/ui";
+import { SkillTreeRewardType } from "#app/system/skill-tree-data";
+import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
+import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator, modifierTypes, PokemonAltBuildModifierTypeGenerator } from "#app/modifier/modifier-type";
+import { Abilities } from "#enums/abilities";
+import { allAbilities } from "#app/data/ability";
+import { Species } from "#enums/species";
+import { Type } from "#app/data/type";
+import { VoucherType } from "#app/system/voucher";
+import { FormChangeItem } from "#enums/form-change-items";
+import { SkillTreeSelectors } from "#app/system/skill-tree-selectors";
+import { getPokemonSpecies } from "#app/data/pokemon-species";
+import { QuestUnlockables, QuestState } from "#app/system/game-data.js";
+import { PokemonAltBuildDefinition, POKEMON_ALT_BUILDS, PokemonAltBuildId } from "#app/data/pokemon-alt-buid";
+import { PlayerPokemon } from "#app/field/pokemon";
+import Battle, { BattleType } from "#app/battle";
+import { GameModes, getGameMode } from "#app/game-mode";
+import { PlayableChampionData } from "#app/system/playable-champions.js";
+import { SkillTreeNode } from "#app/system/skill-tree-data.js";
+import { SkillTreePhase, SkillTreePhaseConfig, SkillTreeMode, PokemonSelection } from "#app/phases/skill-tree-phase";
+import { SkillTreeConfig } from "#app/ui/skill-tree-ui-handler";
+import { PermaType } from "#app/modifier/perma-modifiers";
+import { RewardObtainedType } from "#app/ui/reward-obtained-ui-handler";
+
+interface SkillTreeNodeLike { rewardData: { type: SkillTreeRewardType, data?: any }; name?: string }
+
+export class SkillTreeModifierPhase extends Phase {
+  private node: SkillTreeNode;
+  private championData: PlayableChampionData;
+  private placeholderPokemon: PlayerPokemon | null = null;
+  private createdDummyBattle: boolean = false;
+
+  constructor(scene: BattleScene, node: SkillTreeNode, championData: PlayableChampionData) {
+    super(scene);
+    this.node = node;
+    this.championData = championData;
+  }
+
+  start(): void {
+    super.start();
+
+    // Add placeholder Pokemon if party is empty to provide scene access for generators
+    this.addPlaceholderPokemon();
+
+    if (this.node.rewardData.type === SkillTreeRewardType.ROGUEBALL_RARITY_SELECT) {
+      this.scene.unshiftPhase(new SelectModifierPhase(
+        this.scene,
+        0,
+        undefined,
+        false,
+        () => this.returnToSkillTree(),
+        PathNodeTypeFilter.ROGUE_BALL_ITEMS,
+        0
+      ));
+      this.end();
+      return;
+    }
+    if (this.node.rewardData.type === SkillTreeRewardType.MASTERBALL_RARITY_SELECT) {
+      this.scene.unshiftPhase(new SelectModifierPhase(
+        this.scene,
+        0,
+        undefined,
+        false,
+        () => this.returnToSkillTree(),
+        PathNodeTypeFilter.MASTER_BALL_ITEMS,
+        0
+      ));
+      this.end();
+      return;
+    }
+
+    const modifierOptions = this.createSkillTreeModifierOptions();
+
+    if (modifierOptions.length === 0) {
+      console.error(`No modifier options generated for node: ${this.node.name}`);
+      this.end();
+      return;
+    }
+
+     this.scene.unshiftPhase(new SelectModifierPhase(
+       this.scene,
+       0,
+       undefined,
+       false,
+       () => this.returnToSkillTree(),
+       PathNodeTypeFilter.NONE,
+       0,
+       modifierOptions  // Pass pre-generated options to bypass pool generation
+     ));
+
+    this.end();
+  }
+
+  private createSkillTreeModifierOptions(): ModifierTypeOption[] {
+    const options: ModifierTypeOption[] = [];
+
+    switch (this.node.rewardData.type) {
+      case SkillTreeRewardType.TM_FILTERED:
+        const tmOption = this.createTmModifierOption();
+        if (tmOption) options.push(tmOption);
+        break;
+
+      case SkillTreeRewardType.XM_FILTERED:
+        const xmOption = this.createXmModifierOption();
+        if (xmOption) options.push(xmOption);
+        break;
+
+      case SkillTreeRewardType.SIGNATURE_POKEMON:
+        // Generate 4 signature Pokemon options by default
+        const signaturePokemonOptions = this.createMultiplePokemonOptions(() => this.createSignaturePokemonOption(), 4);
+        options.push(...signaturePokemonOptions);
+        break;
+
+      case SkillTreeRewardType.GENERAL_POKEMON:
+        // Generate 4 general Pokemon options by default
+        const generalPokemonOptions = this.createMultiplePokemonOptions(() => this.createGeneralPokemonOption(), 4);
+        options.push(...generalPokemonOptions);
+        break;
+
+      case SkillTreeRewardType.LEGENDARY_POKEMON:
+        const legendaryPokemonOption = this.createLegendaryPokemonOption();
+        if (legendaryPokemonOption) options.push(legendaryPokemonOption);
+        break;
+
+      case SkillTreeRewardType.ABILITY_GRANT:
+        const abilityOption = this.createAbilityModifierOption();
+        if (abilityOption) options.push(abilityOption);
+        break;
+      case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
+        const passiveAbilityOption = this.createPassiveAbilityOption();
+        if (passiveAbilityOption) options.push(passiveAbilityOption);
+        break;
+
+      case SkillTreeRewardType.TRAINER_BOND_ABILITY:
+        const trainerBondOption = this.createTrainerBondAbilityOption();
+        if (trainerBondOption) options.push(trainerBondOption);
+        break;
+
+      case SkillTreeRewardType.STAT_BOOST:
+        const statBoostOption = this.createStatBoostModifierOption();
+        if (statBoostOption) options.push(statBoostOption);
+        break;
+
+      case SkillTreeRewardType.MOVE_UPGRADE:
+        const moveUpgradeOption = this.createMoveUpgradeOption();
+        if (moveUpgradeOption) options.push(moveUpgradeOption);
+        break;
+      case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
+        const moveUpgradeSpecificOption = this.createMoveUpgradeSpecificOption();
+        if (moveUpgradeSpecificOption) options.push(moveUpgradeSpecificOption);
+        break;
+
+      case SkillTreeRewardType.MEGA_STONE:
+        const megaStoneOption = this.createMegaStoneOption();
+        if (megaStoneOption) options.push(megaStoneOption);
+        break;
+      case SkillTreeRewardType.DYNA_MUSHROOM:
+        const dynamaxOption = this.createDynamaxOption();
+        if (dynamaxOption) options.push(dynamaxOption);
+        break;
+      case SkillTreeRewardType.GLITCH_CHANGE:
+        const glitchChangeOption = this.createGlitchChangeOption();
+        if (glitchChangeOption) options.push(glitchChangeOption);
+        break;
+
+      case SkillTreeRewardType.POKEMON_ALT_BUILD:
+        const altBuildOption = this.createAltBuildOption();
+        if (altBuildOption) options.push(altBuildOption);
+        break;
+
+      case SkillTreeRewardType.PERMA_ITEM:
+        const permaItemOption = this.createPermaItemOption();
+        if (permaItemOption) options.push(permaItemOption);
+        break;
+      case SkillTreeRewardType.PERMA_MONEY:
+        options.push(...this.createPermaMoneyOption());
+        break;
+      case SkillTreeRewardType.MONEY_REWARD:
+        options.push(...this.createMoneyRewardOption());
+        break;
+
+      // NEW: Missing reward mappings
+      case SkillTreeRewardType.TERA_ABILITY: {
+        const opt = this.createTeraAbilityOption();
+        if (opt) options.push(opt);
+        break;
+      }
+
+      case SkillTreeRewardType.SMITTY_ABILITY: {
+        const opt = this.createSmittyAbilityOption();
+        if (opt) options.push(opt);
+        break;
+      }
+
+      case SkillTreeRewardType.TYPE_SWITCHER: {
+        const opt = this.createTypeSwitcherOption();
+        if (opt) options.push(opt);
+        break;
+      }
+
+      case SkillTreeRewardType.GLITCH_FORM_UNLOCK: {
+        // Immediate session unlock (no modifier option)
+        this.grantGlitchFormUnlockImmediate();
+        break;
+      }
+
+      case SkillTreeRewardType.ESSENCE_BUNDLE: {
+        this.grantEssenceBundleImmediate();
+        break;
+      }
+
+      case SkillTreeRewardType.SKILL_POINTS: {
+        this.grantSkillPointsImmediate();
+        break;
+      }
+
+      case SkillTreeRewardType.SKILL_TREE_TOKENS: {
+        this.grantSkillTreeTokensImmediate();
+        break;
+      }
+
+      // NEW: Boosters/balls/vouchers/tera/catching/revive/fusion
+      case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
+        options.push(...this.createTypeBoosterOption());
+        break;
+      case SkillTreeRewardType.GOLDEN_POKEBALL:
+        options.push(...this.createGoldenPokeballOption());
+        break;
+      case SkillTreeRewardType.MASTER_BALL:
+        options.push(...this.createMasterBallOption());
+        break;
+      case SkillTreeRewardType.EGG_VOUCHER:
+        options.push(...this.createEggVoucherOption());
+        break;
+      case SkillTreeRewardType.TERA_TYPE:
+        options.push(...this.createTeraTypeOption());
+        break;
+    }
+
+    return options;
+  }
+
+  private createTmModifierOption(): ModifierTypeOption | null {
+    const generator = modifierTypes.CHAMPION_TM(this.championData);
+    const tmModifierType = generator.generateType(this.scene.getParty(), [this.node.rewardData.data.moveId]);
+
+    if (tmModifierType) {
+      return new ModifierTypeOption(tmModifierType, 0, 0);
+    }
+    return null;
+  }
+
+  private createXmModifierOption(): ModifierTypeOption | null {
+    // XM should behave like AnyTM with preselected move id
+    try {
+      const anyTmGen = (modifierTypes as any).ANY_TM as (() => any);
+      if (typeof anyTmGen === "function") {
+        const gen = anyTmGen();
+        const xmType = gen.generateType(this.scene.getParty(), [this.node.rewardData?.data?.moveId]);
+        if (xmType) return new ModifierTypeOption(xmType, 0, 0);
+      }
+    } catch {}
+    // Fallback to champion XM generator if available
+    try {
+      const generator = modifierTypes.CHAMPION_XM(this.championData);
+      const xmModifierType = generator.generateType(this.scene.getParty(), [this.node.rewardData?.data?.moveId]);
+      if (xmModifierType) return new ModifierTypeOption(xmModifierType, 0, 0);
+    } catch {}
+    return null;
+  }
+
+  private createSignaturePokemonOption(): ModifierTypeOption | null {
+    const generator = modifierTypes.CHAMPION_SIGNATURE_POKEMON(this.championData);
+    // Signature Pokemon should use specific species from node data
+    const pokemonModifierType = generator.generateType(this.scene.getParty(), [this.node.rewardData.data.species]);
+
+    if (pokemonModifierType) {
+      return new ModifierTypeOption(pokemonModifierType, 0, 0);
+    }
+    return null;
+  }
+
+  private createGeneralPokemonOption(): ModifierTypeOption | null {
+    const generator = modifierTypes.CHAMPION_GENERAL_POKEMON(this.championData);
+    // Let the generator use SkillTreeSelectors.pickGeneralPokemon() for random selection
+    const pokemonModifierType = generator.generateType(this.scene.getParty());
+
+    if (pokemonModifierType) {
+      return new ModifierTypeOption(pokemonModifierType, 0, 0);
+    }
+    return null;
+  }
+
+  private createLegendaryPokemonOption(): ModifierTypeOption | null {
+    // Legendary Pokemon use same generator as signature but with legendary species
+    const addPokemonType = new AddPokemonModifierType(this.node.rewardData.data.species);
+    return new ModifierTypeOption(addPokemonType, 0, 0);
+  }
+
+  private createMultiplePokemonOptions(createOptionFn: () => ModifierTypeOption | null, count: number = 4): ModifierTypeOption[] {
+    const options: ModifierTypeOption[] = [];
+    for (let i = 0; i < count; i++) {
+      const option = createOptionFn();
+      if (option) {
+        options.push(option);
+      }
+    }
+    return options;
+  }
+
+  private createAbilityModifierOption(): ModifierTypeOption | null {
+    const generator = modifierTypes.CHAMPION_ABILITY(this.championData);
+    const abilityModifierType = generator.generateType(this.scene.getParty(), [this.node.rewardData.data.abilityId]);
+
+    if (abilityModifierType) {
+      return new ModifierTypeOption(abilityModifierType, 0, 0);
+    }
+    return null;
+  }
+
+  private createPassiveAbilityOption(): ModifierTypeOption | null {
+    const provided = this.node.rewardData?.data?.abilityId as Abilities | undefined;
+    const chosen = provided ?? SkillTreeSelectors.pickPassiveAbility(this.championData);
+    const type = (modifierTypes as any).ANY_PASSIVE_ABILITY?.().generateType(this.scene.getParty(), chosen != null ? [allAbilities[chosen]] : undefined);
+    return type ? new ModifierTypeOption(type, 0, 0) : null;
+  }
+
+  private createPermaMoneyOption(): ModifierTypeOption[] {
+    const t = (modifierTypes as any).SELECTABLE_PMONEY_3?.();
+    return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+  }
+  private createMoneyRewardOption(): ModifierTypeOption[] {
+    const t = (modifierTypes as any).RELIC_GOLD?.();
+    return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+  }
+  private createTypeBoosterOption(): ModifierTypeOption[] {
+    const gen = (modifierTypes as any).ATTACK_TYPE_BOOSTER?.();
+    if (!gen) return [];
+    const providedType = this.node.rewardData?.data?.type as Type | undefined;
+    const selectedType = providedType ?? SkillTreeSelectors.pickTypeBoosterType(this.championData);
+    const t = gen.generateType(this.scene.getParty(), [selectedType]);
+    return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+  }
+  private createGoldenPokeballOption(): ModifierTypeOption[] {
+    const t = (modifierTypes as any).GOLDEN_POKEBALL?.();
+    return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+  }
+  private createMasterBallOption(): ModifierTypeOption[] {
+    const t = (modifierTypes as any).MASTER_BALL?.();
+    return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+  }
+  private createEggVoucherOption(): ModifierTypeOption[] {
+    const tier = this.node.rewardData.data.tier;
+    let key: keyof typeof modifierTypes = 'VOUCHER';
+    if (tier === VoucherType.PLUS) key = 'VOUCHER_PLUS' as any;
+    if (tier === VoucherType.PREMIUM) key = 'VOUCHER_PREMIUM' as any;
+    const t = (modifierTypes as any)[key]?.();
+    return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+  }
+  private createTeraTypeOption(): ModifierTypeOption[] {
+    const gen = (modifierTypes as any).TERA_SHARD?.();
+    if (!gen?.generateType) return [];
+    const providedType = this.node.rewardData?.data?.type as Type | undefined;
+    const selectedType = providedType ?? (this.championData.preferredTeraTypes?.[0] ?? this.championData.type1);
+    const t = gen.generateType(this.scene.getParty(), [selectedType]);
+    return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+  }
+
+  private createTrainerBondAbilityOption(): ModifierTypeOption | null {
+    const gen = new TrainerBondAbilityModifierTypeGenerator();
+    const type = gen.generateType(this.scene.getParty(), [
+      this.championData.id,
+      this.node.rewardData.data.abilityId,
+      this.node.rewardData.data.activationChance || 0.15
+    ]);
+    return type ? new ModifierTypeOption(type, 0, 0) : null;
+  }
+
+  private createStatBoostModifierOption(): ModifierTypeOption | null {
+    const gen = new ChampionPokemonStatBoosterModifierTypeGenerator();
+    const type = gen.generateType(this.scene.getParty(), [
+      this.championData.id,
+      this.node.rewardData.data.stats,
+      this.node.rewardData.data.boostPercent || 0.01
+    ]);
+    return type ? new ModifierTypeOption(type, 0, 0) : null;
+  }
+
+  private createMoveUpgradeOption(): ModifierTypeOption | null {
+    const filterUpgrades = this.node.rewardData.data.filterUpgrades;
+    if (!filterUpgrades) return null;
+    
+    const gen = new MoveUpgradeModifierTypeGenerator(false, filterUpgrades);
+    const type = gen.generateType(this.scene.getParty());
+    return type ? new ModifierTypeOption(type, 0, 0) : null;
+  }
+
+  private createMoveUpgradeSpecificOption(): ModifierTypeOption | null {
+    const data = this.node.rewardData?.data;
+    const filterUpgrades = data?.filterUpgrades ?? data;
+    if (!filterUpgrades) return null;
+    
+    const gen = new MoveUpgradeModifierTypeGenerator(false, filterUpgrades);
+    const type = gen.generateType(this.scene.getParty());
+    return type ? new ModifierTypeOption(type, 0, 0) : null;
+  }
+
+  private createMegaStoneOption(): ModifierTypeOption | null {
+    const megaStone = this.node.rewardData.data.megaStone;
+
+    // Use existing form-change item system (aligns with codebase)
+    // NOTE: The codebase exposes form-change via FormChangeItem types, not a generic MEGA_STONE entry.
+    // Prefer the concrete generator (e.g., FORM_CHANGE_ITEM) if available and pass the selected item as pregen args.
+    const formChangeGenFactory = (modifierTypes as any).FORM_CHANGE_ITEM?.();
+    if (formChangeGenFactory) {
+      const formChangeType = formChangeGenFactory.generateType(this.scene.getParty(), [megaStone]);
+      if (formChangeType) {
+        return new ModifierTypeOption(formChangeType, 0, 0);
+      }
+    }
+    return null;
+  }
+
+  private createDynamaxOption(): ModifierTypeOption | null {
+    // Dynamax uses a single form-change item: MAX_MUSHROOMS
+    const formChangeGenFactory = (modifierTypes as any).FORM_CHANGE_ITEM?.();
+    if (formChangeGenFactory) {
+      const formChangeType = formChangeGenFactory.generateType(this.scene.getParty(), [FormChangeItem.MAX_MUSHROOMS]);
+      if (formChangeType) {
+        return new ModifierTypeOption(formChangeType, 0, 0);
+      }
+    }
+    return null;
+  }
+  private createGlitchChangeOption(): ModifierTypeOption | null {
+    // Glitch change uses a single form-change item: GLITCHI_GLITCHI_FRUIT
+    const formChangeGenFactory = (modifierTypes as any).FORM_CHANGE_ITEM?.();
+    if (formChangeGenFactory) {
+      const formChangeType = formChangeGenFactory.generateType(this.scene.getParty(), [FormChangeItem.GLITCHI_GLITCHI_FRUIT]);
+      if (formChangeType) {
+        return new ModifierTypeOption(formChangeType, 0, 0);
+      }
+    }
+    return null;
+  }
+
+  private createAltBuildOption(): ModifierTypeOption | null {
+    const altBuildData = this.createAltBuildDefinition();
+    const gen = new PokemonAltBuildModifierTypeGenerator();
+    const type = gen.generateType(this.scene.getParty(), [altBuildData.id]);
+    return type ? new ModifierTypeOption(type, 0, 0) : null;
+  }
+
+  private createPermaItemOption(): ModifierTypeOption | null {
+    const permaType = this.node.rewardData.data.permaType as PermaType;
+
+    // Use existing perma modifier entries (align with codebase's explicit perma factories)
+    // The codebase exposes specific factories like PERMA_NEW_NORMAL, PERMA_REROLL_COST_1, etc., not a single PERMA_MODIFIER.
+    // Map the enum value to its corresponding factory function on modifierTypes.
+    const permaFactoryName = this.resolvePermaFactoryName(permaType);
+    const permaFactory = (modifierTypes as any)[permaFactoryName] as (() => any) | undefined;
+    if (permaFactory) {
+      return new ModifierTypeOption(permaFactory(), 0, 0);
+    }
+    return null;
+  }
+
+  private resolvePermaFactoryName(permaType: PermaType): string {
+    // Minimal mapping helper for documentation purposes. Implementation may vary.
+    // Example mappings; extend as needed to cover all PermaType values.
+    switch (permaType) {
+      case PermaType.PERMA_NEW_NORMAL: return "PERMA_NEW_NORMAL";
+      case PermaType.PERMA_PARTY_ABILITY: return "PERMA_PARTY_ABILITY";
+      case PermaType.PERMA_REROLL_COST_1: return "PERMA_REROLL_COST_1";
+      case PermaType.PERMA_SHOW_REWARDS_1: return "PERMA_SHOW_REWARDS_1";
+      default: return "PERMA_NEW_NORMAL";
+    }
+  }
+
+  private createAltBuildDefinition(): PokemonAltBuildDefinition {
+    const altBuildId = this.node.rewardData.data.altBuildId as PokemonAltBuildId;
+    return POKEMON_ALT_BUILDS[altBuildId];
+  }
+
+  // Removed local name helper; use ChampionUtils.getChampionDisplayName(this.championData.id) at call sites
+
+  private checkCompletionRequirements(config: any): boolean {
+    if (config.mode !== SkillTreeMode.POKEMON_SELECTION) {
+      return false;
+    }
+    
+    const activeSkillTree = config.activeSkillTree;
+    const nodes = config.nodes;
+    
+    if (!activeSkillTree?.unlockedNodes || !nodes) {
+      return false;
+    }
+    
+    // Check if we have both signature and general Pokemon unlocked
+    const hasSignature = nodes.some((n: any) => 
+      activeSkillTree.unlockedNodes.has(n.id) && 
+      n.rewardData.type === SkillTreeRewardType.SIGNATURE_POKEMON
+    );
+    const hasGeneral = nodes.some((n: any) => 
+      activeSkillTree.unlockedNodes.has(n.id) && 
+      n.rewardData.type === SkillTreeRewardType.GENERAL_POKEMON
+    );
+    
+    return hasSignature && hasGeneral;
+  }
+
+  private returnToSkillTree(): void {
+    // Remove placeholder before returning to skill tree
+    this.removePlaceholderPokemon();
+    
+    // Get the original SkillTreeConfig that was passed to the UI handler
+    const originalConfig = (this.scene.gameData as any).tempSkillTreeConfig as SkillTreeConfig;
+    
+    if (originalConfig) {
+      // Check if requirements are met using helper method
+      if (this.checkCompletionRequirements(originalConfig)) {
+        // Requirements met - trigger completion instead of returning to skill tree
+        this.cleanupDummyBattle();
+        if (originalConfig.onSelectionsComplete) {
+          originalConfig.onSelectionsComplete();
+        } else if (originalConfig.onClose) {
+          originalConfig.onClose();
+        }
+        (this.scene.gameData as any).tempSkillTreeConfig = undefined;
+        return;
+      }
+      
+      // Continue with existing SkillTreePhase creation logic...
+      // Convert SkillTreeConfig to SkillTreePhaseConfig and preserve original callbacks
+      const phaseConfig: SkillTreePhaseConfig = {
+        mode: originalConfig.mode,
+        requiredSelections: originalConfig.requiredSelections,
+        onComplete: (selections?: PokemonSelection[]) => {
+          // Clean up dummy battle when skill tree session completes
+          this.cleanupDummyBattle();
+          // Use the original callbacks if they exist
+          if (originalConfig.onSelectionsComplete) {
+            originalConfig.onSelectionsComplete();
+          } else if (originalConfig.onClose) {
+            originalConfig.onClose();
+          }
+          // Clean up temp config
+          (this.scene.gameData as any).tempSkillTreeConfig = undefined;
+        },
+        onCancel: () => {
+          // Clean up dummy battle when skill tree session is cancelled
+          this.cleanupDummyBattle();
+          // Use the original cancel callback
+          if (originalConfig.onCancel) {
+            originalConfig.onCancel();
+          }
+          // Clean up temp config
+          (this.scene.gameData as any).tempSkillTreeConfig = undefined;
+        }
+      };
+      
+      // Unshift SkillTreePhase with proper config - this prevents ChampionSelectPhase continuation
+      this.scene.unshiftPhase(new SkillTreePhase(this.scene, phaseConfig));
+    } else {
+      // Fallback: direct UI mode (less robust)
+      const activeSkillTree = this.scene.gameData.activeSkillTree;
+      if (activeSkillTree) {
+        const fallbackConfig: SkillTreeConfig = {
+          mode: SkillTreeMode.POKEMON_SELECTION,
+          activeSkillTree,
+          championData: this.championData,
+        };
+        this.scene.ui.setMode(Mode.SKILL_TREE, fallbackConfig);
+      }
+    }
+  }
+
+  private addPlaceholderPokemon(): void {
+    const party = this.scene.getParty();
+    if (party.length === 0) {
+      // Create dummy battle for state consistency (following SelectDraftPhase pattern)
+      if (!this.scene.currentBattle) {
+        this.scene.currentBattle = new Battle(
+          getGameMode(GameModes.CLASSIC), // Use classic mode for skill tree context
+          1, // Wave 1 for skill tree context
+          BattleType.WILD,
+          null, // No trainer
+          false, // Not double battle
+          this.scene
+        );
+        this.createdDummyBattle = true;
+      }
+      
+      // Create and track placeholder Pokemon
+      this.placeholderPokemon = this.scene.addPlayerPokemon(getPokemonSpecies(Species.UNOWN), 1, undefined, undefined, undefined, false);
+      this.placeholderPokemon.setVisible(false);
+      party.push(this.placeholderPokemon);
+      
+      // Add Onix for alt build testing only in enhanced debug mode
+        const onixPokemon = this.scene.addPlayerPokemon(getPokemonSpecies(Species.ONIX), 1, undefined, undefined, undefined, false);
+        onixPokemon.setVisible(false);
+        party.push(onixPokemon);
+    }
+  }
+
+  private removePlaceholderPokemon(): void {
+    if (this.placeholderPokemon) {
+      const party = this.scene.getParty();
+      const index = party.indexOf(this.placeholderPokemon);
+      if (index !== -1) {
+        party.splice(index, 1);
+        this.placeholderPokemon.destroy();
+      }
+      this.placeholderPokemon = null;
+    }
+    
+    // DON'T clean up dummy battle here - it should persist for the entire skill tree session
+    // The fake battle will be cleaned up when the skill tree phase completes
+  }
+  
+  private cleanupDummyBattle(): void {
+    // Separate method for cleaning up dummy battle when skill tree session ends
+    if (this.createdDummyBattle) {
+      this.scene.currentBattle = null;
+      this.createdDummyBattle = false;
+    }
+  }
+
+  // NEW: helpers for missing rewards
+  private createTeraAbilityOption(): ModifierTypeOption | null {
+    const abilityId = this.node.rewardData.data.abilityId as Abilities;
+    const gen = new TeraAbilityModifierTypeGenerator();
+    const type = gen.generateType(this.scene.getParty(), [this.championData.id, abilityId]);
+    return type ? new ModifierTypeOption(type, 0, 0) : null;
+  }
+
+  private createSmittyAbilityOption(): ModifierTypeOption | null {
+    // Prefer champion-aware generator backed by pickSmittyAbility; fallback to explicit ability if provided
+    const provided = this.node.rewardData?.data?.abilityId as Abilities | undefined;
+    const gen = modifierTypes.CHAMPION_SMITTY_ABILITY(this.championData);
+    const type = gen.generateType(this.scene.getParty(), provided != null ? [provided] : undefined);
+    return type ? new ModifierTypeOption(type, 0, 0) : null;
+  }
+
+  private createTypeSwitcherOption(): ModifierTypeOption | null {
+    // Prefer explicit types from reward data, otherwise use selector
+    const data = this.node.rewardData.data || {};
+    const provided: Type[] | undefined = Array.isArray(data.types)
+      ? data.types as Type[]
+      : (data.type != null ? [data.type as Type] : undefined);
+    const chosen = provided ?? SkillTreeSelectors.pickTypeSwitcherTypes(this.championData);
+    const primary = chosen[0] ?? null;
+    const secondary = chosen[1] ?? null;
+    const gen = (modifierTypes as any).TYPE_SWITCHER();
+    const type = gen.generateType(this.scene.getParty(), [primary, secondary]);
+    return type ? new ModifierTypeOption(type, 0, 0) : null;
+  }
+
+  private grantGlitchFormUnlockImmediate(): void {
+    const questId = this.node.rewardData?.data?.unlockableId as QuestUnlockables;
+    
+    if (questId && questId in QuestUnlockables) {
+        const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(questId);
+        
+        if (!this.scene.gameData.activeSkillTree.sessionQuestUnlockables) {
+            this.scene.gameData.activeSkillTree.sessionQuestUnlockables = {};
+        }
+        this.scene.gameData.activeSkillTree.sessionQuestUnlockables[questId] = {
+            questUnlockData: questUnlockData
+        };
+        
+        const species = getPokemonSpecies(questUnlockData.rewardId as Species);
+        const formName = species.getGlitchFormName(true, undefined, questUnlockData.rewardType)?.toLowerCase();
+        
+        this.scene.ui.setMode(Mode.REWARD_OBTAINED, { 
+            type: RewardObtainedType.FORM, 
+            name: formName, 
+            isGlitch: true 
+        });
+    }
+  }
+
+  private grantEssenceBundleImmediate(): void {
+    const provided = this.node.rewardData?.data;
+    const picked = provided?.type != null && provided?.amount != null
+      ? { type: provided.type as Type, amount: provided.amount as number }
+      : SkillTreeSelectors.pickEssenceBundle(this.championData);
+    this.scene.ui.setMode(Mode.REWARD_OBTAINED, { type: RewardObtainedType.ESSENCE_BUNDLE, amount: picked.amount });
+  }
+
+  private grantSkillPointsImmediate(): void {
+    const amount = this.node.rewardData?.data?.amount ?? SkillTreeSelectors.pickSkillPoints();
+    this.scene.ui.setMode(Mode.REWARD_OBTAINED, { type: RewardObtainedType.SKILL_POINTS, amount });
+  }
+
+  private grantSkillTreeTokensImmediate(): void {
+    const amount = this.node.rewardData?.data?.amount ?? SkillTreeSelectors.pickSkillTreeTokens();
+    this.scene.ui.setMode(Mode.REWARD_OBTAINED, { type: RewardObtainedType.SKILL_TREE_TOKENS, amount });
+  }
+}
+
+

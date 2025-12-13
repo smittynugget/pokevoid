@@ -38,11 +38,6 @@ export default class BgmBar extends Phaser.GameObjects.Container {
     this.setVisible(false);
     this.shown = false;
   }
-
-  /*
-    * Set the BGM Name to the BGM bar.
-    * @param {string} bgmName The name of the BGM to set.
-   */
   setBgmToBgmBar(bgmName: string): void {
     this.musicText.setText(`${i18next.t("bgmName:music")}${this.getRealBgmName(bgmName)}`);
 
@@ -56,17 +51,8 @@ export default class BgmBar extends Phaser.GameObjects.Container {
 
     this.y = baseY;
   }
-
-  /*
-    Show or hide the BGM bar.
-    @param {boolean} visible Whether to show or hide the BGM bar.
-   */
   public toggleBgmBar(visible: boolean): void {
-    /*
-      Prevents the bar from being displayed if musicText is completely empty.
-      This can be the case, for example, when the game's 1st music track takes a long time to reach the client,
-      and the menu is opened before it is played.
-    */
+
     if (this.musicText.text === "") {
       this.setVisible(false);
       return;

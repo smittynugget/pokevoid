@@ -8,20 +8,16 @@ import {Button} from "#enums/buttons";
 import {InputsIcons} from "#app/ui/settings/abstract-control-settings-ui-handler.js";
 import NavigationMenu, {NavigationManager} from "#app/ui/settings/navigationMenu";
 import { Setting, SettingKeys, SettingType } from "#app/system/settings/settings";
+import { attachModalBackground, ModalBackgroundHandle } from "../modal-background-utils";
 import i18next from "i18next";
-
-
-/**
- * Abstract class for handling UI elements related to settings.
- */
 export default class AbstractSettingsUiHandler extends UiHandler {
   private settingsContainer: Phaser.GameObjects.Container;
   private optionsContainer: Phaser.GameObjects.Container;
   private navigationContainer: NavigationMenu;
 
   private scrollCursor: integer;
-
   private optionsBg: Phaser.GameObjects.NineSlice;
+  private actionsBg: Phaser.GameObjects.NineSlice;
 
   private optionCursors: integer[];
 
@@ -31,6 +27,7 @@ export default class AbstractSettingsUiHandler extends UiHandler {
   protected navigationIcons: InputsIcons;
 
   private cursorObj: Phaser.GameObjects.NineSlice | null;
+  private _settingsPatterns?: { nav?: ModalBackgroundHandle; options?: ModalBackgroundHandle; actions?: ModalBackgroundHandle };
 
   private reloadSettings: Array<Setting>;
   private reloadRequired: boolean;
@@ -46,10 +43,6 @@ export default class AbstractSettingsUiHandler extends UiHandler {
     this.reloadRequired = false;
     this.rowsToDisplay = 8;
   }
-
-  /**
-   * Setup UI elements
-   */
   setup() {
     const ui = this.getUi();
 
@@ -58,19 +51,16 @@ export default class AbstractSettingsUiHandler extends UiHandler {
     this.settingsContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.game.canvas.width / 6, this.scene.game.canvas.height / 6 - 20), Phaser.Geom.Rectangle.Contains);
 
     this.navigationIcons = {};
-
     this.navigationContainer = new NavigationMenu(this.scene, 0, 0);
-
     this.optionsBg = addWindow(this.scene, 0, this.navigationContainer.height, (this.scene.game.canvas.width / 6) - 2, (this.scene.game.canvas.height / 6) - 16 - this.navigationContainer.height - 2);
     this.optionsBg.setName("window-options-bg");
     this.optionsBg.setOrigin(0, 0);
-
-    const actionsBg = addWindow(this.scene, 0, (this.scene.game.canvas.height / 6) - this.navigationContainer.height, (this.scene.game.canvas.width / 6) - 2, 22);
-    actionsBg.setOrigin(0, 0);
-
+    this.actionsBg = addWindow(this.scene, 0, (this.scene.game.canvas.height / 6) - 22, (this.scene.game.canvas.width / 6) - 2, 22);
+    this.actionsBg.setName("window-actions-bg");
+    this.actionsBg.setOrigin(0, 0);
     const iconAction = this.scene.add.sprite(0, 0, "keyboard");
     iconAction.setOrigin(0, -0.1);
-    iconAction.setPositionRelative(actionsBg, this.navigationContainer.width - 32, 4);
+    iconAction.setPositionRelative(this.actionsBg, this.navigationContainer.width - 32, 4);
     this.navigationIcons["BUTTON_ACTION"] = iconAction;
 
     const actionText = addTextObject(this.scene, 0, 0, i18next.t("settings:action"), TextStyle.SETTINGS_LABEL);
@@ -79,7 +69,7 @@ export default class AbstractSettingsUiHandler extends UiHandler {
 
     const iconCancel = this.scene.add.sprite(0, 0, "keyboard");
     iconCancel.setOrigin(0, -0.1);
-    iconCancel.setPositionRelative(actionsBg, this.navigationContainer.width - 100, 4);
+    iconCancel.setPositionRelative(this.actionsBg, this.navigationContainer.width - 100, 4);
     this.navigationIcons["BUTTON_CANCEL"] = iconCancel;
 
     const cancelText = addTextObject(this.scene, 0, 0, i18next.t("settings:back"), TextStyle.SETTINGS_LABEL);
@@ -129,10 +119,9 @@ export default class AbstractSettingsUiHandler extends UiHandler {
         });
 
     this.optionCursors = this.settings.map(setting => setting.default);
-
-    this.settingsContainer.add(this.optionsBg);
     this.settingsContainer.add(this.navigationContainer);
-    this.settingsContainer.add(actionsBg);
+    this.settingsContainer.add(this.optionsBg);
+    this.settingsContainer.add(this.actionsBg);
     this.settingsContainer.add(this.optionsContainer);
     this.settingsContainer.add(iconAction);
     this.settingsContainer.add(iconCancel);
@@ -146,9 +135,7 @@ export default class AbstractSettingsUiHandler extends UiHandler {
 
     this.settingsContainer.setVisible(false);
   }
-  /**
-   * Update the bindings for the current active device configuration.
-   */
+
   updateBindings(): void {
     for (const settingName of Object.keys(this.navigationIcons)) {
       if (settingName === "BUTTON_HOME") {
@@ -169,18 +156,30 @@ export default class AbstractSettingsUiHandler extends UiHandler {
     }
     NavigationManager.getInstance().updateIcons();
   }
-
-  /**
-   * Show the UI with the provided arguments.
-   *
-   * @param args - Arguments to be passed to the show method.
-   * @returns `true` if successful.
-   */
   show(args: any[]): boolean {
     super.show(args);
     this.updateBindings();
+    this._settingsPatterns = this._settingsPatterns || {};
+    this._settingsPatterns.nav = attachModalBackground(
+      this.scene,
+      this.settingsContainer,
+      () => ({ bgX: this.navigationContainer.x, bgY: this.navigationContainer.y, bgWidth: this.navigationContainer.width, bgHeight: this.navigationContainer.height }),
+      { mask: false, alphaMultiplier: 0.4, gridInc: -2 }
+    );
+    this._settingsPatterns.options = attachModalBackground(
+      this.scene,
+      this.settingsContainer,
+      () => ({ bgX: this.optionsBg.x, bgY: this.optionsBg.y, bgWidth: this.optionsBg.width, bgHeight: this.optionsBg.height }),
+      { mask: false, alphaMultiplier: 0.7 }
+    );
+    this._settingsPatterns.actions = attachModalBackground(
+      this.scene,
+      this.settingsContainer,
+      () => ({ bgX: this.actionsBg.x, bgY: this.actionsBg.y, bgWidth: this.actionsBg.width, bgHeight: this.actionsBg.height }),
+      { mask: false, alphaMultiplier: 0.4, gridInc: -2 }
+    );
 
-    const settings: object = localStorage.hasOwnProperty(this.localStorageKey) ? JSON.parse(localStorage.getItem(this.localStorageKey)!) : {}; // TODO: is this bang correct?
+    const settings: object = localStorage.hasOwnProperty(this.localStorageKey) ? JSON.parse(localStorage.getItem(this.localStorageKey)!) : {};
 
     this.settings.forEach((setting, s) => this.setOptionCursor(s, settings.hasOwnProperty(setting.key) ? settings[setting.key] : this.settings[s].default));
 
@@ -190,29 +189,20 @@ export default class AbstractSettingsUiHandler extends UiHandler {
     this.getUi().moveTo(this.settingsContainer, this.getUi().length - 1);
 
     this.getUi().hideTooltip();
+    this._settingsPatterns?.nav?.redraw();
+    this._settingsPatterns?.options?.redraw();
+    this._settingsPatterns?.actions?.redraw();
 
     return true;
   }
-
-  /**
-   * Processes input from a specified button.
-   * This method handles navigation through a UI menu, including movement through menu items
-   * and handling special actions like cancellation. Each button press may adjust the cursor
-   * position or the menu scroll, and plays a sound effect if the action was successful.
-   *
-   * @param button - The button pressed by the user.
-   * @returns `true` if the action associated with the button was successfully processed, `false` otherwise.
-   */
   processInput(button: Button): boolean {
     const ui = this.getUi();
-    // Defines the maximum number of rows that can be displayed on the screen.
-
     let success = false;
 
     if (button === Button.CANCEL) {
       success = true;
       NavigationManager.getInstance().reset();
-      // Reverts UI to its previous state on cancel.
+
       this.scene.ui.revertMode();
     } else {
       const cursor = this.cursor + this.scrollCursor;
@@ -225,37 +215,33 @@ export default class AbstractSettingsUiHandler extends UiHandler {
               success = this.setScrollCursor(this.scrollCursor - 1);
             }
           } else {
-            // When at the top of the menu and pressing UP, move to the bottommost item.
-            // First, set the cursor to the last visible element, preparing for the scroll to the end.
             const successA = this.setCursor(this.rowsToDisplay - 1);
-            // Then, adjust the scroll to display the bottommost elements of the menu.
+
             const successB = this.setScrollCursor(this.optionValueLabels.length - this.rowsToDisplay);
-            success = successA && successB; // success is just there to play the little validation sound effect
+            success = successA && successB;
           }
           break;
         case Button.DOWN:
           if (cursor < this.optionValueLabels.length - 1) {
-            if (this.cursor < this.rowsToDisplay - 1) {// if the visual cursor is in the frame of 0 to 8
+            if (this.cursor < this.rowsToDisplay - 1) {
               success = this.setCursor(this.cursor + 1);
             } else if (this.scrollCursor < this.optionValueLabels.length - this.rowsToDisplay) {
               success = this.setScrollCursor(this.scrollCursor + 1);
             }
           } else {
-            // When at the bottom of the menu and pressing DOWN, move to the topmost item.
-            // First, set the cursor to the first visible element, resetting the scroll to the top.
             const successA = this.setCursor(0);
-            // Then, reset the scroll to start from the first element of the menu.
+
             const successB = this.setScrollCursor(0);
-            success = successA && successB; // Indicates a successful cursor and scroll adjustment.
+            success = successA && successB;
           }
           break;
         case Button.LEFT:
-          if (this.optionCursors[cursor]) {// Moves the option cursor left, if possible.
+          if (this.optionCursors[cursor]) {
             success = this.setOptionCursor(cursor, this.optionCursors[cursor] - 1, true);
           }
           break;
         case Button.RIGHT:
-          // Moves the option cursor right, if possible.
+
           if (this.optionCursors[cursor] < this.optionValueLabels[cursor].length - 1) {
             success = this.setOptionCursor(cursor, this.optionCursors[cursor] + 1, true);
           }
@@ -272,20 +258,12 @@ export default class AbstractSettingsUiHandler extends UiHandler {
         break;
       }
     }
-
-    // Plays a select sound effect if an action was successfully processed.
     if (success) {
       ui.playSelect();
     }
 
     return success;
   }
-
-  /**
-   * Activate the specified setting if it is activatable.
-   * @param setting The setting to activate.
-   * @returns Whether the setting was successfully activated.
-   */
   activateSetting(setting: Setting): boolean {
     switch (setting.key) {
     case SettingKeys.Move_Touch_Controls:
@@ -294,13 +272,6 @@ export default class AbstractSettingsUiHandler extends UiHandler {
     }
     return false;
   }
-
-  /**
-   * Set the cursor to the specified position.
-   *
-   * @param cursor - The cursor position to set.
-   * @returns `true` if the cursor was set successfully.
-   */
   setCursor(cursor: integer): boolean {
     const ret = super.setCursor(cursor);
 
@@ -314,15 +285,6 @@ export default class AbstractSettingsUiHandler extends UiHandler {
 
     return ret;
   }
-
-  /**
-   * Set the option cursor to the specified position.
-   *
-   * @param settingIndex - The index of the setting.
-   * @param cursor - The cursor position to set.
-   * @param save - Whether to save the setting to local storage.
-   * @returns `true` if the option cursor was set successfully.
-   */
   setOptionCursor(settingIndex: integer, cursor: integer, save?: boolean): boolean {
     const setting = this.settings[settingIndex];
 
@@ -352,13 +314,6 @@ export default class AbstractSettingsUiHandler extends UiHandler {
 
     return true;
   }
-
-  /**
-   * Set the scroll cursor to the specified position.
-   *
-   * @param scrollCursor - The scroll cursor position to set.
-   * @returns `true` if the scroll cursor was set successfully.
-   */
   setScrollCursor(scrollCursor: integer): boolean {
     if (scrollCursor === this.scrollCursor) {
       return false;
@@ -372,10 +327,6 @@ export default class AbstractSettingsUiHandler extends UiHandler {
 
     return true;
   }
-
-  /**
-   * Update the scroll position of the settings UI.
-   */
   updateSettingsScroll(): void {
     this.optionsContainer.setY(-16 * this.scrollCursor);
 
@@ -387,11 +338,13 @@ export default class AbstractSettingsUiHandler extends UiHandler {
       }
     }
   }
-
-  /**
-   * Clear the UI elements and state.
-   */
   clear() {
+
+    this._settingsPatterns?.nav?.clear();
+    this._settingsPatterns?.options?.clear();
+    this._settingsPatterns?.actions?.clear();
+    this._settingsPatterns = undefined;
+
     super.clear();
     this.settingsContainer.setVisible(false);
     this.eraseCursor();
@@ -401,10 +354,6 @@ export default class AbstractSettingsUiHandler extends UiHandler {
       this.scene.reset(true, false, true);
     }
   }
-
-  /**
-   * Erase the cursor from the UI.
-   */
   eraseCursor() {
     if (this.cursorObj) {
       this.cursorObj.destroy();

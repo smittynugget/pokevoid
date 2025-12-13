@@ -1,6 +1,4 @@
-/**
- * enum for the game data types
- */
+
 export enum GameDataType {
   SYSTEM,
   SESSION,

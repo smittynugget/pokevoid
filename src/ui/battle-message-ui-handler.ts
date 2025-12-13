@@ -20,6 +20,7 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
   public commandWindow: Phaser.GameObjects.NineSlice;
   public movesWindowContainer: Phaser.GameObjects.Container;
   public nameBoxContainer: Phaser.GameObjects.Container;
+  public messageContainer: Phaser.GameObjects.Container;
 
   public readonly wordWrapWidth: number = 1780;
 
@@ -59,8 +60,8 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
     this.movesWindowContainer.add([movesWindow, moveDetailsWindow]);
     ui.add(this.movesWindowContainer);
 
-    const messageContainer = this.scene.add.container(12, -39);
-    ui.add(messageContainer);
+    this.messageContainer = this.scene.add.container(12, -39);
+    ui.add(this.messageContainer);
 
     const message = addTextObject(this.scene, 0, 0, "", TextStyle.MESSAGE, {
       maxLines: 2,
@@ -68,7 +69,7 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
         width: this.wordWrapWidth
       }
     });
-    messageContainer.add(message);
+    this.messageContainer.add(message);
 
     this.message = message;
 
@@ -82,12 +83,12 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
 
     this.nameBoxContainer.add(this.nameBox);
     this.nameBoxContainer.add(this.nameText);
-    messageContainer.add(this.nameBoxContainer);
+    this.messageContainer.add(this.nameBoxContainer);
 
     const prompt = this.scene.add.sprite(0, 0, "prompt");
     prompt.setVisible(false);
     prompt.setOrigin(0, 0);
-    messageContainer.add(prompt);
+    this.messageContainer.add(prompt);
 
     this.prompt = prompt;
 
@@ -127,6 +128,12 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
   }
 
   show(args: any[]): boolean {
+    if (this.prompt) {
+      this.prompt.anims.stop();
+      this.prompt.setVisible(false);
+    }
+    this.pendingPrompt = false;
+
     super.show(args);
 
     this.commandWindow.setVisible(false);
@@ -242,11 +249,9 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
   }
 
   getIvDescriptor(value: integer, typeIv: integer, pokemonId: integer): string {
-    const starterSpecies = this.scene.getPokemonById(pokemonId)!.species.getRootSpeciesId(); // we are using getRootSpeciesId() here because we want to check against the baby form, not the mid form if it exists
+    const starterSpecies = this.scene.getPokemonById(pokemonId)!.species.getRootSpeciesId();
     const starterIvs: number[] = this.scene.gameData.dexData[starterSpecies].ivs;
-    const uiTheme = (this.scene as BattleScene).uiTheme; // Assuming uiTheme is accessible
-
-    // Function to wrap text in color based on comparison
+    const uiTheme = (this.scene as BattleScene).uiTheme;
     const coloredText = (text: string, isBetter: boolean, ivValue) => {
       let textStyle: TextStyle;
       if (isBetter) {
@@ -289,5 +294,9 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
 
   hideNameText(): void {
     this.nameBoxContainer.setVisible(false);
+  }
+
+  getMessageContainer(): Phaser.GameObjects.Container {
+    return this.messageContainer;
   }
 }

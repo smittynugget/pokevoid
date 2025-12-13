@@ -9,7 +9,7 @@
   "checkTeamDesc": "Consulter votre équipe ou utiliser un objet\nde changement de forme.",
   "rerollCost": "₽{{formattedMoney}}",
   "itemCost": "₽{{formattedMoney}}",
-  "rerollPermaCost": "∞{{formattedMoney}}",
-  "itemPermaCost": "∞{{formattedMoney}}",
+  "rerollPermaCost": "Ω{{formattedMoney}}",
+  "itemPermaCost": "Ω{{formattedMoney}}",
   "refreshTimer": "Actualisation dans: {{minutes}}:{{seconds}}"
 }

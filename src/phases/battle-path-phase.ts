@@ -17,11 +17,13 @@ import i18next from "i18next";
 import { ReturnPhase } from "./return-phase.js";
 import { ShowTrainerPhase } from "./show-trainer-phase.js";
 import BattleScene, { RecoveryBossMode } from "#app/battle-scene.js";
+import { SkillPointSources } from "../system/skill-point-sources";
+import Overrides from "#app/overrides.js";
 
 export enum PathNodeContext {
-  BATTLE_NODE,     
+  BATTLE_NODE,
   ITEM_REWARD_NODE,
-  MONEY_NODE,      
+  MONEY_NODE,
   SPECIAL_REWARD_NODE
 }
 
@@ -35,7 +37,7 @@ function hasConnectionByPattern(connections: string[], targetNodeId: string): bo
   if (!targetPattern) {
     return false;
   }
-  
+
   return connections.some(connectionId => {
     const connectionPattern = extractNodePattern(connectionId);
     return connectionPattern === targetPattern;
@@ -47,17 +49,17 @@ function findNodeByPattern(battlePath: any, selectedPath: string): any | null {
   if (!selectedPattern) {
     return null;
   }
-  
+
   const wave = parseInt(selectedPattern.split('_')[0], 10);
   if (isNaN(wave)) {
     return null;
   }
-  
+
   const nodesAtWave = battlePath.waveToNodeMap.get(wave);
   if (!nodesAtWave) {
     return null;
   }
-  
+
   return nodesAtWave.find(node => {
     const nodePattern = extractNodePattern(node.id);
     return nodePattern === selectedPattern;
@@ -86,15 +88,26 @@ export class BattlePathPhase extends BattlePhase {
       return;
     }
 
+    const selectedPath = this.scene.gameData?.selectedPath;
+    if (selectedPath && this.shouldIncrementWave) {
+      let previousNode = battlePath.nodeMap.get(selectedPath);
+      if (!previousNode) {
+        previousNode = findNodeByPattern(battlePath, selectedPath);
+      }
+      if (previousNode && this.battlePathWave >= previousNode.wave + 1) {
+        this.shouldIncrementWave = false;
+      }
+    }
+
     if (this.shouldIncrementWave) {
       this.incrementBathPathWave();
       this.scene.gameData.localSaveAll(this.scene);
-    } 
+    }
 
     this.scene.ui.setMode(Mode.BATTLE_PATH, {
       onNodeSelected: (node: PathNode) => this.handleNodeSelection(node)
     });
-    
+
     const uiHandler = this.scene.ui.getHandler();
     if (uiHandler && typeof (uiHandler as any).refreshCurrentWave === 'function') {
       (uiHandler as any).refreshCurrentWave();
@@ -114,11 +127,11 @@ export class BattlePathPhase extends BattlePhase {
       if(this.battlePathWave === 2) {
         this.scene.gameData.updateGameModeStats(this.scene.gameMode.modeId);
       }
-    
+
       if (this.scene.gameData) {
         this.scene.gameData.currentPathPosition = this.battlePathWave;
       }
-      
+
       this.scene.updateGameInfo();
       this.scene.updateBiomeWaveText(this.battlePathWave);
     }
@@ -143,6 +156,11 @@ export class BattlePathPhase extends BattlePhase {
       if(this.battlePathWave % 3 === 0) {
         this.scene.unshiftPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_CHARM, false));
       }
+      try {
+        this.checkSkillTreeNodeRewards();
+      } catch (e) {
+        console.warn("Skill tree reward from item node failed:", e);
+      }
       this.createMoneyRewardWithBattlePathReturn();
     }
   }
@@ -150,7 +168,7 @@ export class BattlePathPhase extends BattlePhase {
   private createMoneyRewardWithBattlePathReturn(): void {
     const amount = Utils.randSeedInt(500, 200) + this.battlePathWave * 5;
     this.scene.money += amount;
-    
+
     this.scene.unshiftPhase(new RewardObtainDisplayPhase(
       this.scene,
       {
@@ -169,7 +187,7 @@ export class BattlePathPhase extends BattlePhase {
 
   private assignDynamicModeTargets(dynamicMode: DynamicMode): void {
     const playerParty = this.scene.getParty().filter(p => !p.isFainted());
-    
+
     if (playerParty.length > 0) {
       const strongestPokemon = playerParty.reduce((strongest, current) => {
       const strongestTotal = strongest.stats.reduce((sum, stat) => sum + stat, 0);
@@ -190,55 +208,82 @@ export class BattlePathPhase extends BattlePhase {
   }
 
   private getAvailableNodesForCurrentWave(): PathNode[] {
+  const battlePath = getCurrentBattlePath();
 
+  if (!battlePath) {
+    return [];
+  }
+
+  const selectedPath = this.scene.gameData?.selectedPath;
+
+  if (!selectedPath) {
     const currentWave = this.battlePathWave || 1;
-    const battlePath = getCurrentBattlePath();
-    
-    if (!battlePath) {
-      return [];
-    }
-    
+
     if (currentWave === 1) {
       return battlePath.waveToNodeMap.get(1) || [];
     }
-    
-    const selectedPath = this.scene.gameData?.selectedPath;
-    if (!selectedPath) {
-      console.warn("No previously selected path found for wave validation");
+
+    if ((currentWave - 1) % 1000 === 0) {
+      const nodesAtCurrentWave = battlePath.waveToNodeMap.get(currentWave) || [];
+      return nodesAtCurrentWave;
+    }
+
+    if (Overrides.BATTLE_PATH_BYPASS_NODE_VALIDATION_OVERRIDE) {
+      const nodesAtCurrentWave = battlePath.waveToNodeMap.get(currentWave) || [];
+      return nodesAtCurrentWave;
+    }
+    console.warn(`No previously selected path found for wave validation at wave ${currentWave}`);
+    return [];
+  }
+
+  let previouslySelectedNode = battlePath.nodeMap.get(selectedPath);
+  if (!previouslySelectedNode) {
+    previouslySelectedNode = findNodeByPattern(battlePath, selectedPath);
+    if (!previouslySelectedNode) {
+      console.warn(`Previously selected node ${selectedPath} not found in battle path (even by pattern)`);
       return [];
     }
-    
-    let previouslySelectedNode = battlePath.nodeMap.get(selectedPath);
-    if (!previouslySelectedNode) {
-      previouslySelectedNode = findNodeByPattern(battlePath, selectedPath);
-      if (!previouslySelectedNode) {
-        console.warn(`Previously selected node ${selectedPath} not found in battle path (even by pattern)`);
-        return [];
-      }
-    }
-    
-    const availableNodes: PathNode[] = [];
-    let nodesAtCurrentWave = battlePath.waveToNodeMap.get(currentWave) || [];
-    
-    for (const currentWaveNode of nodesAtCurrentWave) {
-      if (previouslySelectedNode.connections && (previouslySelectedNode.connections.includes(currentWaveNode.id) || hasConnectionByPattern(previouslySelectedNode.connections, currentWaveNode.id))) {
-        availableNodes.push(currentWaveNode);
-      }
-    }
-    
-    if (availableNodes.length === 0) {
-      this.battlePathWave = previouslySelectedNode.wave + 1;
-      const newCurrentWave = this.battlePathWave;
-      nodesAtCurrentWave = battlePath.waveToNodeMap.get(newCurrentWave) || [];
-      
-      for (const currentWaveNode of nodesAtCurrentWave) {
-        if (previouslySelectedNode.connections && (previouslySelectedNode.connections.includes(currentWaveNode.id) || hasConnectionByPattern(previouslySelectedNode.connections, currentWaveNode.id))) {
-          availableNodes.push(currentWaveNode);
+  }
+
+  const expectedWave = previouslySelectedNode.wave + 1;
+
+  if (this.battlePathWave !== expectedWave) {
+    this.battlePathWave = expectedWave;
+    this.scene.battlePathWave = expectedWave;
+  }
+
+  if (previouslySelectedNode.nodeType === PathNodeType.CHALLENGE_REWARD) {
+    const connectedNodes: PathNode[] = [];
+    if (previouslySelectedNode.connections && previouslySelectedNode.connections.length > 0) {
+      for (const connectionId of previouslySelectedNode.connections) {
+        let targetNode = battlePath.nodeMap.get(connectionId);
+        if (!targetNode) {
+          targetNode = findNodeByPattern(battlePath, connectionId);
+        }
+        if (targetNode && targetNode.wave > previouslySelectedNode.wave) {
+          connectedNodes.push(targetNode);
         }
       }
     }
-    
-    return availableNodes;
+    if (connectedNodes.length > 0) {
+      return connectedNodes;
+    }
+  }
+
+  const availableNodes: PathNode[] = [];
+  const nodesAtCurrentWave = battlePath.waveToNodeMap.get(expectedWave) || [];
+
+  for (const currentWaveNode of nodesAtCurrentWave) {
+    if (previouslySelectedNode.connections && (previouslySelectedNode.connections.includes(currentWaveNode.id) || hasConnectionByPattern(previouslySelectedNode.connections, currentWaveNode.id))) {
+      availableNodes.push(currentWaveNode);
+    }
+  }
+
+  if (availableNodes.length > 0) {
+    this.scene.gameData.localSaveAll(this.scene);
+  }
+
+  return availableNodes;
   }
 
   private validateNodeSelection(node: PathNode): boolean {
@@ -250,7 +295,7 @@ export class BattlePathPhase extends BattlePhase {
 
     const availableNodes = this.getAvailableNodesForCurrentWave();
     const isAvailable = availableNodes.some(availableNode => availableNode.id === node.id);
-    
+
     if (!isAvailable) {
       const currentWave = this.battlePathWave || 1;
       console.warn(`🚫 Node ${node.id} at wave ${node.wave} is not available from current wave ${currentWave}`);
@@ -266,7 +311,7 @@ export class BattlePathPhase extends BattlePhase {
       console.warn(`❌ Invalid node selection: ${node.id}`);
       return;
     }
-    
+
     if (!selectPath(this.scene, node.id)) {
       console.warn(`Failed to select path node: ${node.id}`);
       return;
@@ -274,7 +319,7 @@ export class BattlePathPhase extends BattlePhase {
 
     if (node.dynamicMode && (node.dynamicMode.typeExtraDamage !== undefined || node.dynamicMode.pokemonNerf !== undefined)) {
       this.assignDynamicModeTargets(node.dynamicMode);
-      
+
       this.scene.dynamicMode = node.dynamicMode;
     }
     else {
@@ -286,7 +331,7 @@ export class BattlePathPhase extends BattlePhase {
     }
 
     this.routeToPhase(node);
-    
+
     this.scene.ui.setMode(Mode.MESSAGE);
     this.end();
   }
@@ -309,7 +354,7 @@ export class BattlePathPhase extends BattlePhase {
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, node.nodeType);
         this.handleWildPokemonNode(node);
         break;
-      
+
       case PathNodeType.TRAINER_BATTLE:
       case PathNodeType.EVIL_BOSS_BATTLE:
       case PathNodeType.ELITE_FOUR:
@@ -322,7 +367,7 @@ export class BattlePathPhase extends BattlePhase {
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, node.nodeType);
         this.handleTrainerBattleNode(node);
         break;
-      
+
       case PathNodeType.RIVAL_BATTLE:
       case PathNodeType.CHALLENGE_RIVAL:
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, node.nodeType);
@@ -385,7 +430,8 @@ export class BattlePathPhase extends BattlePhase {
         this.handleCollectedShopNode(node);
         this.updateCurrentBattleWave();
         break;
-
+      case PathNodeType.SKILL_POINT:
+      case PathNodeType.SKILL_TOKEN:
       case PathNodeType.GLITCH_PIECE:
       case PathNodeType.EGG_VOUCHER:
       case PathNodeType.EXP_SHARE:
@@ -445,17 +491,14 @@ export class BattlePathPhase extends BattlePhase {
     }
     this.scene.newBattle(node.wave, BattleType.TRAINER);
     this.scene.handleBiomeChange(node.wave, lastBattle, true);
-
-    
-    
     if (!this.scene.currentBattle.turnCommands) {
       this.scene.currentBattle.turnCommands = [];
     }
-    
+
     const playerField = this.scene.getPlayerField();
     playerField.forEach((_, p) => this.scene.unshiftPhase(new ReturnPhase(this.scene, p)));
     this.scene.pushPhase(new ShowTrainerPhase(this.scene));
-    
+
     this.scene.pushPhase(new ChaosEncounterPhase(this.scene, false));
   }
 
@@ -469,8 +512,6 @@ export class BattlePathPhase extends BattlePhase {
         return PathNodeTypeFilter.PASSIVE_ABILITY;
       case PathNodeType.ANY_TMS:
         return PathNodeTypeFilter.ANY_TMS;
-      // case PathNodeType.ANY_TMS_MASTER:
-      //   return PathNodeTypeFilter.ANY_TMS_MASTER;
       case PathNodeType.TERA_SHARDS:
         return PathNodeTypeFilter.TERA_SHARDS;
       case PathNodeType.MINTS:
@@ -537,16 +578,14 @@ export class BattlePathPhase extends BattlePhase {
   private handleItemRewardNode(node: PathNode): void {
     let rerollCount = 0;
     let modifierTiers = undefined;
-    
-    if (node.nodeType === PathNodeType.PERMA_ITEMS || 
+
+    if (node.nodeType === PathNodeType.PERMA_ITEMS ||
         node.nodeType === PathNodeType.GOLDEN_POKEBALL ||
         node.nodeType === PathNodeType.MASTER_BALL_ITEMS) {
       rerollCount = 0;
     }
 
     const pathNodeFilter = this.getPathNodeTypeFilter(node.nodeType);
-    
-    // Check for bonus reward chance
     let chance = 20;
     if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_SHOW_REWARDS_3)) {
       chance = 14;
@@ -555,11 +594,11 @@ export class BattlePathPhase extends BattlePhase {
     } else if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_SHOW_REWARDS_1)) {
       chance = 18;
     }
-    
+
     this.scene.gameData.reducePermaModifierByType([PermaType.PERMA_SHOW_REWARDS_1, PermaType.PERMA_SHOW_REWARDS_2, PermaType.PERMA_SHOW_REWARDS_3], this.scene);
-    
+
     const bonusReward = Utils.randSeedInt(chance, 1) === 1;
-    
+
     if (bonusReward) {
       this.scene.unshiftPhase(new SelectModifierPhase(this.scene, rerollCount, modifierTiers, false, undefined, pathNodeFilter));
       this.scene.unshiftPhase(new SelectModifierPhase(this.scene, rerollCount, modifierTiers, false, this.createReturnToBattlePathCallback(), pathNodeFilter));
@@ -568,13 +607,24 @@ export class BattlePathPhase extends BattlePhase {
     }
   }
 
+  private checkSkillTreeNodeRewards(): void {
+    if (!this.scene.gameData.activeSkillTree) return;
+    if (this.scene.pathNodeContext !== PathNodeContext.ITEM_REWARD_NODE) return;
+
+    const nodeType = this.scene.selectedNodeType as PathNodeType | undefined;
+    if (nodeType === undefined || nodeType === null) return;
+
+    const skillPointSources = new SkillPointSources(this.scene);
+    skillPointSources.checkRareItemNodeReward(nodeType);
+  }
+
   private handlePermaItemNode(node: PathNode): void {
     const selectPermaPhase = new SelectPermaModifierPhase(this.scene, 0, undefined, this.createReturnToBattlePathCallback());
     this.scene.unshiftPhase(selectPermaPhase);
   }
 
   private createModifierRewardPhaseWithCallback(modifierTypeFunc: any, isPerma: boolean = false): ModifierRewardPhase {
-    
+
     const modifierRewardPhase = new ModifierRewardPhase(this.scene, modifierTypeFunc, isPerma, null, false, isPerma);
     const originalEnd = modifierRewardPhase.end.bind(modifierRewardPhase);
     modifierRewardPhase.end = () => {
@@ -588,6 +638,12 @@ export class BattlePathPhase extends BattlePhase {
     switch (node.nodeType) {
       case PathNodeType.GLITCH_PIECE:
         this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["GLITCH_PIECE"]));
+        break;
+      case PathNodeType.SKILL_POINT:
+        this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["SKILL_POINTS"]));
+        break;
+      case PathNodeType.SKILL_TOKEN:
+        this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["SKILL_TOKENS"]));
         break;
       case PathNodeType.PERMA_MONEY:
         const randPerma = Utils.randSeedInt(1000);
@@ -611,7 +667,7 @@ export class BattlePathPhase extends BattlePhase {
       case PathNodeType.MONEY:
         const randMoney = Utils.randSeedInt(100);
         if (randMoney < 20) {
-          this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["RELIC_COIN"]));
+          this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["RELIC_GOLD"]));
         } else {
           this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["BIG_NUGGET"]));
         }
@@ -646,12 +702,12 @@ export class BattlePathPhase extends BattlePhase {
   private handleMoneyRewardNode(node: PathNode): void {
     const isPerma = node.nodeType === PathNodeType.PERMA_MONEY;
     let amount: number;
-    
+
     if (isPerma) {
       amount = Utils.randSeedInt(1000, 250) + node.wave * 10;
-      
+
       this.scene.addPermaMoney(amount);
-      
+
       this.scene.unshiftPhase(new RewardObtainDisplayPhase(
         this.scene,
         {
@@ -683,7 +739,7 @@ export class BattlePathPhase extends BattlePhase {
       { weight: 3, outcome: 'CHAMPION' },
       { weight: 10, outcome: 'EVIL_ADMIN_BATTLE' },
       { weight: 5, outcome: 'RECOVERY_BOSS' },
-      
+
       { weight: 10, outcome: 'ITEM_GENERAL' },
       { weight: 10, outcome: 'ADD_POKEMON' },
       { weight: 10, outcome: 'ITEM_TM' },
@@ -702,7 +758,7 @@ export class BattlePathPhase extends BattlePhase {
       { weight: 10, outcome: 'TYPE_SWITCHER' },
       { weight: 10, outcome: 'PASSIVE_ABILITY' },
       { weight: 12, outcome: 'ANY_TMS' },
-      // { weight: 1, outcome: 'ANY_TMS_MASTER' },
+
       { weight: 8, outcome: 'TERA_SHARDS' },
       { weight: 3, outcome: 'DNA_SPLICERS' },
       { weight: 10, outcome: 'VITAMIN' },
@@ -713,21 +769,23 @@ export class BattlePathPhase extends BattlePhase {
       { weight: 4, outcome: 'GRIP_CLAW' },
       { weight: 4, outcome: 'EVIOLITE' },
       { weight: 4, outcome: 'SCOPE_LENS' },
-      
+
       { weight: 2, outcome: 'PERMA_ITEMS' },
       { weight: 10, outcome: 'GLITCH_PIECE' },
       { weight: 10, outcome: 'EGG_VOUCHER' },
       { weight: 10, outcome: 'EXP_SHARE' },
       { weight: 10, outcome: 'PERMA_MONEY' },
+      { weight: 3, outcome: 'SKILL_POINT' },
+      { weight: 1, outcome: 'SKILL_TOKEN' },
       { weight: 3, outcome: 'RAND_PERMA_ITEM' },
-      
+
       { weight: 10, outcome: 'MONEY' }
     ];
 
     const totalWeight = MYSTERY_OUTCOMES.reduce((sum, outcome) => sum + outcome.weight, 0);
     const randomValue = Utils.randSeedInt(totalWeight);
     let currentWeight = 0;
-    
+
     for (const outcomeData of MYSTERY_OUTCOMES) {
       currentWeight += outcomeData.weight;
       if (randomValue < currentWeight) {
@@ -735,7 +793,7 @@ export class BattlePathPhase extends BattlePhase {
         return;
       }
     }
-    
+
     this.executeMysteryOutcome(node, MYSTERY_OUTCOMES[0].outcome);
   }
 
@@ -745,210 +803,196 @@ export class BattlePathPhase extends BattlePhase {
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, PathNodeType.WILD_POKEMON);
         this.handleWildPokemonNode(node);
         break;
-        
+
       case 'TRAINER_BATTLE':
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, PathNodeType.TRAINER_BATTLE);
         this.handleTrainerBattleNode(node);
         break;
-        
+
       case 'RIVAL_BATTLE':
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, PathNodeType.RIVAL_BATTLE);
         this.addWaveToRivalWaves(node.wave);
         this.handleTrainerBattleNode(node);
         break;
-        
+
       case 'EVIL_GRUNT_BATTLE':
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, PathNodeType.EVIL_GRUNT_BATTLE);
         this.handleTrainerBattleNode(node);
         break;
-        
+
       case 'ELITE_FOUR':
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, PathNodeType.ELITE_FOUR);
         this.handleTrainerBattleNode(node);
         break;
-        
+
       case 'CHAMPION':
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, PathNodeType.CHAMPION);
         this.handleTrainerBattleNode(node);
         break;
-        
-      // case 'SMITTY_BATTLE':
-      //   this.setPathNodeContext(PathNodeContext.BATTLE_NODE, PathNodeType.SMITTY_BATTLE);
-      //   this.handleTrainerBattleNode(node);
-      //   break;
-        
       case 'EVIL_ADMIN_BATTLE':
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, PathNodeType.EVIL_ADMIN_BATTLE);
         this.handleTrainerBattleNode(node);
         break;
-        
+
       case 'RECOVERY_BOSS':
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, PathNodeType.RECOVERY_BOSS);
         this.scene.recoveryBossMode = RecoveryBossMode.FACING_BOSS;
         Utils.randSeedInt(100) < 50 ? this.handleWildPokemonNode(node) : this.handleTrainerBattleNode(node);
         break;
-        
+
       case 'ITEM_GENERAL':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.ITEM_GENERAL);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.ITEM_GENERAL)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'ADD_POKEMON':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.ADD_POKEMON);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.ADD_POKEMON)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'ITEM_TM':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.ITEM_TM);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.ITEM_TM)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'ITEM_BERRY':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.ITEM_BERRY);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.ITEM_BERRY)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'ROGUE_BALL_ITEMS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.ROGUE_BALL_ITEMS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 2, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.ROGUE_BALL_ITEMS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'GREAT_BALL_ITEMS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.GREAT_BALL_ITEMS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.GREAT_BALL_ITEMS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'ULTRA_BALL_ITEMS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.ULTRA_BALL_ITEMS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.ULTRA_BALL_ITEMS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'MASTER_BALL_ITEMS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.MASTER_BALL_ITEMS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 3, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.MASTER_BALL_ITEMS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'ABILITY_SWITCHERS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.ABILITY_SWITCHERS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.ABILITY_SWITCHERS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'RELEASE_ITEMS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.RELEASE_ITEMS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.RELEASE_ITEMS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'MINTS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.MINTS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.MINTS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'PP_MAX':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.PP_MAX);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.PP_MAX)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'COLLECTED_TYPE':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.COLLECTED_TYPE);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.COLLECTED_TYPE)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'COLLECTED_SHOP':
         this.setPathNodeContext(PathNodeContext.SPECIAL_REWARD_NODE, PathNodeType.COLLECTED_SHOP);
         this.scene.saveBiomeChange(node.wave - 1);
         this.handleCollectedShopNode(node);
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'STAT_SWITCHERS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.STAT_SWITCHERS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.STAT_SWITCHERS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'TYPE_SWITCHER':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.TYPE_SWITCHER);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.TYPE_SWITCHER)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'PASSIVE_ABILITY':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.PASSIVE_ABILITY);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.PASSIVE_ABILITY)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'ANY_TMS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.ANY_TMS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.ANY_TMS)));
         this.updateCurrentBattleWave();
         break;
-        
-      // case 'ANY_TMS_MASTER':
-      //   this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.ANY_TMS_MASTER);
-      //   this.scene.saveBiomeChange(node.wave - 1);
-      //   this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.ANY_TMS_MASTER)));
-      //   this.updateCurrentBattleWave();
-      //   break;
-        
       case 'TERA_SHARDS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.TERA_SHARDS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.TERA_SHARDS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'DNA_SPLICERS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.DNA_SPLICERS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.DNA_SPLICERS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'PERMA_ITEMS':
         this.setPathNodeContext(PathNodeContext.SPECIAL_REWARD_NODE, PathNodeType.PERMA_ITEMS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.handlePermaItemNode(node);
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'GLITCH_PIECE':
         this.setPathNodeContext(PathNodeContext.SPECIAL_REWARD_NODE, PathNodeType.GLITCH_PIECE);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["GLITCH_PIECE"]));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'EGG_VOUCHER':
         this.setPathNodeContext(PathNodeContext.SPECIAL_REWARD_NODE, PathNodeType.EGG_VOUCHER);
         this.scene.saveBiomeChange(node.wave - 1);
@@ -964,95 +1008,107 @@ export class BattlePathPhase extends BattlePhase {
         this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes[voucherKey]));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'EXP_SHARE':
         this.setPathNodeContext(PathNodeContext.SPECIAL_REWARD_NODE, PathNodeType.EXP_SHARE);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["EXP_SHARE"]));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'PERMA_MONEY':
         this.setPathNodeContext(PathNodeContext.SPECIAL_REWARD_NODE, PathNodeType.PERMA_MONEY);
         this.scene.saveBiomeChange(node.wave - 1);
         const randPerma = Utils.randSeedInt(1000);
-        const permaMoneyKey = randPerma < 750 ? "PERMA_MONEY_1" : randPerma < 900 ? "PERMA_MONEY_2" : 
+        const permaMoneyKey = randPerma < 750 ? "PERMA_MONEY_1" : randPerma < 900 ? "PERMA_MONEY_2" :
                              randPerma < 950 ? "PERMA_MONEY_3" : randPerma < 975 ? "PERMA_MONEY_4" : "PERMA_MONEY_5";
         this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes[permaMoneyKey]));
         this.updateCurrentBattleWave();
         break;
-        
-        
       case 'RAND_PERMA_ITEM':
         this.setPathNodeContext(PathNodeContext.SPECIAL_REWARD_NODE, PathNodeType.RAND_PERMA_ITEM);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(null, true));
         this.updateCurrentBattleWave();
         break;
-        
+
+      case 'SKILL_POINT':
+        this.setPathNodeContext(PathNodeContext.SPECIAL_REWARD_NODE, PathNodeType.SKILL_POINT);
+        this.scene.saveBiomeChange(node.wave - 1);
+        this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["SKILL_POINTS"]));
+        this.updateCurrentBattleWave();
+        break;
+
+      case 'SKILL_TOKEN':
+        this.setPathNodeContext(PathNodeContext.SPECIAL_REWARD_NODE, PathNodeType.SKILL_TOKEN);
+        this.scene.saveBiomeChange(node.wave - 1);
+        this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["SKILL_TOKENS"]));
+        this.updateCurrentBattleWave();
+        break;
+
       case 'MONEY':
         this.setPathNodeContext(PathNodeContext.MONEY_NODE, PathNodeType.MONEY);
         this.scene.saveBiomeChange(node.wave - 1);
         this.createMoneyRewardWithBattlePathReturn();
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'QUICK_CLAW':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.QUICK_CLAW);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.QUICK_CLAW)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'WIDE_LENS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.WIDE_LENS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.WIDE_LENS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'GRIP_CLAW':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.GRIP_CLAW);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.GRIP_CLAW)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'EVIOLITE':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.EVIOLITE);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.EVIOLITE)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'SCOPE_LENS':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.SCOPE_LENS);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.SCOPE_LENS)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'VITAMIN':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.VITAMIN);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.VITAMIN)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'MOVE_UPGRADE':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.MOVE_UPGRADE);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.MOVE_UPGRADE)));
         this.updateCurrentBattleWave();
         break;
-        
+
       case 'LOW_TIER_MOVE_UPGRADE':
         this.setPathNodeContext(PathNodeContext.ITEM_REWARD_NODE, PathNodeType.LOW_TIER_MOVE_UPGRADE);
         this.scene.saveBiomeChange(node.wave - 1);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), this.getPathNodeTypeFilter(PathNodeType.LOW_TIER_MOVE_UPGRADE)));
         this.updateCurrentBattleWave();
         break;
-        
+
       default:
         console.warn(`Unknown mystery outcome: ${outcome}`);
         this.setPathNodeContext(PathNodeContext.BATTLE_NODE, PathNodeType.WILD_POKEMON);
@@ -1068,35 +1124,50 @@ export class BattlePathPhase extends BattlePhase {
       },
       () => {
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, undefined, PathNodeTypeFilter.ROGUE_BALL_ITEMS));
-        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 0, undefined, false, this.createReturnToBattlePathCallback(), PathNodeTypeFilter.MOVE_UPGRADE))
+        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 0, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
+        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), PathNodeTypeFilter.MOVE_UPGRADE))
       },
       () => {
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 0, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
-        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 0, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
-        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 0, undefined, false, this.createReturnToBattlePathCallback(), PathNodeTypeFilter.MOVE_UPGRADE));
+        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
+        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
+        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
+        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), PathNodeTypeFilter.MOVE_UPGRADE));
       },
       () => {
         const selectPermaPhase = new SelectPermaModifierPhase(this.scene);
         this.scene.unshiftPhase(selectPermaPhase);
         this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 0, undefined, false, undefined, PathNodeTypeFilter.NONE));
-        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 0, undefined, false, this.createReturnToBattlePathCallback(), PathNodeTypeFilter.MOVE_UPGRADE));
+        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 0, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
+        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, undefined, false, this.createReturnToBattlePathCallback(), PathNodeTypeFilter.MOVE_UPGRADE));
       },
       () => {
         this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["GOLDEN_POKEBALL"]));
+      },
+      () => {
+        this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["SKILL_POINTS_5"]));
+      },
+      () => {
+        this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["SKILL_TOKENS_5"]));
       }
     ];
 
-    const rand = Utils.randSeedInt(100);
-    const selectedOutcome = rand < 10 ? outcomes[4] : outcomes[Utils.randSeedInt(4)];
+    let selectedOutcome: () => void;
+    if (Overrides.CHALLENGE_REWARD_OUTCOME_OVERRIDE >= 0 && Overrides.CHALLENGE_REWARD_OUTCOME_OVERRIDE < outcomes.length) {
+      selectedOutcome = outcomes[Overrides.CHALLENGE_REWARD_OUTCOME_OVERRIDE];
+    } else {
+      const rand = Utils.randSeedInt(100);
+      selectedOutcome = rand < 5 ? outcomes[4] : outcomes[Utils.randSeedInt(6)];
+    }
     selectedOutcome();
   }
 
   private handleCollectedShopNode(node: PathNode): void {
     this.scene.unshiftPhase(new CollectedTypeShopPhase(
-      this.scene, 
-      0, 
-      undefined, 
-      false, 
+      this.scene,
+      0,
+      undefined,
+      false,
       this.createReturnToBattlePathCallback(),
       PathNodeTypeFilter.NONE,
       0
@@ -1109,4 +1180,4 @@ export class BattlePathPhase extends BattlePhase {
     }
     super.end();
   }
-} 
+}

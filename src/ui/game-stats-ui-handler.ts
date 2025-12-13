@@ -12,6 +12,7 @@ import i18next from "i18next";
 import { UiTheme } from "../enums/ui-theme";
 import { generateModifierStats } from "../modifier/modifier-type";
 import { Type } from "../data/type";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 
 interface DisplayStat {
   label_key?: string;
@@ -668,7 +669,7 @@ const displayStats: DisplayStats = {
     },
     hidden: true
   },
-  // Short chaos mode stats (Midnight variants)
+
   chaosRogueShortSessionsPlayed: {
     label_key: "chaosRogueShortRuns",
     sourceFunc: gameData => {
@@ -1082,7 +1083,7 @@ const displayStats: DisplayStats = {
     sourceFunc: gameData => (gameData.gameStats.playerKnockoutType[Type.STELLAR] || 0).toString(),
     hidden: true
   }
-  
+
 };
 
 function getCompleteDisplayStats(gameData: GameData): DisplayStats {
@@ -1091,35 +1092,43 @@ function getCompleteDisplayStats(gameData: GameData): DisplayStats {
     ...displayStats,
     ...modifierStats
   };
-  
+
   const sortedEntries = Object.entries(allStats).sort(([keyA, statA], [keyB, statB]) => {
     const valueA = typeof statA === 'string' ? statA : (statA as DisplayStat).sourceFunc!(gameData);
     const valueB = typeof statB === 'string' ? statB : (statB as DisplayStat).sourceFunc!(gameData);
-    
+
     const getIsLabelLocked = (key: string, stat: DisplayStat | string, value: string) => {
       if (typeof stat === 'string') return false;
-      
+
       const isLocked = value === "???";
       const isSmittysDefeated = key === "smittysDefeated" && (value === "???" || parseInt(value) < 1);
-      
+
       return isLocked || (stat.hidden && (!isNaN(parseInt(value)) && !parseInt(value))) || isSmittysDefeated;
     };
-    
+
     const isLabelLockedA = getIsLabelLocked(keyA, statA, valueA);
     const isLabelLockedB = getIsLabelLocked(keyB, statB, valueB);
-    
+
     if (isLabelLockedA && !isLabelLockedB) return 1;
     if (!isLabelLockedA && isLabelLockedB) return -1;
-    
+
     return 0;
   });
-  
+
   return Object.fromEntries(sortedEntries);
 }
 
 export default class GameStatsUiHandler extends UiHandler {
   private gameStatsContainer: Phaser.GameObjects.Container;
   private statsContainer: Phaser.GameObjects.Container;
+  private _statsPatterns?: {
+    header?: ModalBackgroundHandle;
+    left?: ModalBackgroundHandle;
+    right?: ModalBackgroundHandle;
+    headerCallback?: () => any;
+    leftCallback?: () => any;
+    rightCallback?: () => any;
+  };
 
   private statLabels: Phaser.GameObjects.Text[];
   private statValues: Phaser.GameObjects.Text[];
@@ -1156,10 +1165,7 @@ export default class GameStatsUiHandler extends UiHandler {
       statsBg.setOrigin(0, 0);
       return statsBg;
     });
-
     this.statsContainer = this.scene.add.container(0, 0);
-
-
     new Array(18).fill(null).map((_, s) => {
 
       const statLabel = addTextObject(this.scene, 8 + (s % 2 === 1 ? statsBgWidth : 0), 28 + Math.floor(s / 2) * 16, "", TextStyle.STATS_LABEL);
@@ -1178,6 +1184,13 @@ export default class GameStatsUiHandler extends UiHandler {
     this.gameStatsContainer.add(statsBgLeft);
     this.gameStatsContainer.add(statsBgRight);
     this.gameStatsContainer.add(this.statsContainer);
+    this._statsPatterns = this._statsPatterns || {};
+    this._statsPatterns.headerCallback = () => ({ bgX: headerBg.x, bgY: headerBg.y, bgWidth: headerBg.width, bgHeight: headerBg.height });
+    this._statsPatterns.leftCallback = () => ({ bgX: statsBgLeft.x, bgY: statsBgLeft.y, bgWidth: statsBgLeft.width, bgHeight: statsBgLeft.height });
+    this._statsPatterns.rightCallback = () => ({ bgX: statsBgRight.x, bgY: statsBgRight.y, bgWidth: statsBgRight.width, bgHeight: statsBgRight.height });
+    this._statsPatterns.header = attachModalBackground(this.scene, this.gameStatsContainer, this._statsPatterns.headerCallback!, { mask: false });
+    this._statsPatterns.left = attachModalBackground(this.scene, this.gameStatsContainer, this._statsPatterns.leftCallback!, { mask: false });
+    this._statsPatterns.right = attachModalBackground(this.scene, this.gameStatsContainer, this._statsPatterns.rightCallback!, { mask: false });
 
     const isLegacyTheme = this.scene.uiTheme === UiTheme.LEGACY;
     this.arrowDown = this.scene.add.sprite(statsBgWidth, this.scene.game.canvas.height / 6 - (isLegacyTheme? 9 : 5), "prompt");
@@ -1210,7 +1223,24 @@ export default class GameStatsUiHandler extends UiHandler {
     this.updateArrows();
 
     this.gameStatsContainer.setVisible(true);
+    if (!this._statsPatterns) {
+      this._statsPatterns = {} as any;
+      this._statsPatterns.headerCallback = () => ({ bgX: 0, bgY: 0, bgWidth: (this.scene.game.canvas.width / 6) - 2, bgHeight: 24 });
+      this._statsPatterns.leftCallback = () => ({ bgX: 0, bgY: 24, bgWidth: ((this.scene.game.canvas.width / 6) - 2) / 2 + 2, bgHeight: Math.floor((this.scene.game.canvas.height / 6) - 24 - 2) });
+      this._statsPatterns.rightCallback = () => ({ bgX: (((this.scene.game.canvas.width / 6) - 2) / 2) - 2, bgY: 24, bgWidth: ((this.scene.game.canvas.width / 6) - 2) / 2 + 2, bgHeight: Math.floor((this.scene.game.canvas.height / 6) - 24 - 2) });
 
+      this._statsPatterns.header = attachModalBackground(this.scene, this.gameStatsContainer, this._statsPatterns.headerCallback!, { mask: false });
+      this._statsPatterns.left = attachModalBackground(this.scene, this.gameStatsContainer, this._statsPatterns.leftCallback!, { mask: false });
+      this._statsPatterns.right = attachModalBackground(this.scene, this.gameStatsContainer, this._statsPatterns.rightCallback!, { mask: false });
+    }
+
+    this._statsPatterns?.headerCallback();
+    this._statsPatterns?.leftCallback();
+    this._statsPatterns?.rightCallback();
+
+    this._statsPatterns?.header?.redraw();
+    this._statsPatterns?.left?.redraw();
+    this._statsPatterns?.right?.redraw();
     this.getUi().moveTo(this.gameStatsContainer, this.getUi().length - 1);
 
     this.getUi().hideTooltip();
@@ -1226,7 +1256,7 @@ export default class GameStatsUiHandler extends UiHandler {
       const value = stat.sourceFunc!(this.scene.gameData);
       const isLocked = value === "???";
       const isSmittysDefeated = key === "smittysDefeated" && (value === "???" || parseInt(value) < 1);
-      
+
       let labelText = "???";
       if (!isLocked && (!stat.hidden || isNaN(parseInt(value)) || parseInt(value)) && !isSmittysDefeated) {
         if (stat.label_key) {
@@ -1237,7 +1267,7 @@ export default class GameStatsUiHandler extends UiHandler {
           labelText = key;
         }
       }
-      
+
       this.statLabels[s].setText(labelText);
       this.statValues[s].setText(value);
     });
@@ -1301,6 +1331,11 @@ export default class GameStatsUiHandler extends UiHandler {
   }
 
   clear() {
+    this._statsPatterns?.header?.clear();
+    this._statsPatterns?.left?.clear();
+    this._statsPatterns?.right?.clear();
+    this._statsPatterns = undefined;
+
     super.clear();
     this.gameStatsContainer.setVisible(false);
   }

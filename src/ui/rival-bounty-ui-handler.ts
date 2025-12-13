@@ -32,7 +32,7 @@ export default class RivalBountyUiHandler extends BountyUiHandler {
     }
 
      protected getMaxStages(): number {
-        return 5; 
+        return 5;
     }
 
     protected getTaskText(): string {
@@ -73,8 +73,6 @@ export default class RivalBountyUiHandler extends BountyUiHandler {
 
             const config = trainerConfigs[trainerInfo];
             this.spriteKey = config.getSpriteKey(false, false);
-
-
             console.log(`[RivalBountyUI] Loading trainer texture: ${this.spriteKey}`);
 
             return new Promise((resolve, reject) => {
@@ -226,14 +224,14 @@ export default class RivalBountyUiHandler extends BountyUiHandler {
         this.modalContainer.add(this.replacementContainer);
 
         const bg = this.scene.add.rectangle(
-            0,  
-            0, 
+            0,
+            0,
             this.scene.game.canvas.width,
             this.scene.game.canvas.height,
             0x000000,
             0.6
         );
-        bg.setOrigin(0.5, 0.5); 
+        bg.setOrigin(0.5, 0.5);
         this.replacementContainer.add(bg);
 
         const bountyListContainer = this.scene.add.container(
@@ -258,7 +256,7 @@ export default class RivalBountyUiHandler extends BountyUiHandler {
         );
         bountyListContainer.add(title);
 
-        let currentY = 18; 
+        let currentY = 18;
         this.bountyButtons = [];
 
         existingBounties.forEach((bounty) => {
@@ -272,13 +270,13 @@ export default class RivalBountyUiHandler extends BountyUiHandler {
         bountyListContainer.add(this.cancelButton);
         this.bountyButtons.push(this.cancelButton);
 
-        const windowHeight = currentY + 20; 
-        const windowWidth = 65; 
+        const windowHeight = currentY + 20;
+        const windowWidth = 65;
 
         const bountyListBg = addWindow(
             this.scene,
-            0, 
-            0, 
+            0,
+            0,
             windowWidth,
             windowHeight
         );
@@ -375,9 +373,9 @@ export default class RivalBountyUiHandler extends BountyUiHandler {
         const container = this.scene.add.container(0, yPosition);
 
         const bg = this.scene.add.rectangle(
-            32, 
+            32,
             3,
-            55, 
+            55,
             10,
             0x444444
         );

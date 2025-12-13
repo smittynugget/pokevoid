@@ -1,6 +1,6 @@
 import BattleScene from "#app/battle-scene.js";
 import {ModifierTier} from "#app/modifier/modifier-tier.js";
-import {ModifierTypeOption, ModifierType, getShopModifierTypeOptions} from "#app/modifier/modifier-type.js";
+import {ModifierTypeOption, ModifierType, getShopModifierTypeOptions, PermaPartyAbilityModifierType} from "#app/modifier/modifier-type.js";
 import {Modifier, ReduceShopCostModifier} from "#app/modifier/modifier.js";
 import ShopSelectUiHandler, {SHOP_OPTIONS_ROW_LIMIT} from "#app/ui/shop-select-ui-handler.js";
 import {Mode} from "#app/ui/ui.js";
@@ -45,6 +45,10 @@ export class ShopModifierSelectPhase extends Phase {
 
     async start() {
         super.start();
+
+        if (this.rerollCount > 0) {
+            this.scene.reroll = false;
+        }
 
         this.scene.gameData.localSaveAll(this.scene);
 
@@ -195,7 +199,7 @@ export class ShopModifierSelectPhase extends Phase {
                                 this.scene.ui.revertMode();
                             }
                         ]
-                    }, null, existingQuest, true); 
+                    }, null, existingQuest, true);
                 } else {
 
                     this.scene.ui.setOverlayMode(Mode.QUEST_ACTIVE, {
@@ -203,7 +207,7 @@ export class ShopModifierSelectPhase extends Phase {
                             () => {
                                 this.scene.ui.revertMode();
                                 applyModifier(modifier, true);
-                                shopUiHandler.removeSelectedOption(); 
+                                shopUiHandler.removeSelectedOption();
                                 this.scene.ui.clearText();
                             },
                             () => {
@@ -228,7 +232,7 @@ export class ShopModifierSelectPhase extends Phase {
 
     getAvailableModifierOptions(): ModifierTypeOption[] {
         const currentTime = Date.now();
-        const refreshInterval = 20 * 60 * 1000; 
+        const refreshInterval = 10 * 60 * 1000;
 
         if (!this.scene.gameData.currentPermaShopOptions ||
             currentTime - this.scene.gameData.lastPermaShopRefreshTime >= refreshInterval) {
@@ -240,7 +244,42 @@ export class ShopModifierSelectPhase extends Phase {
 
     refreshShopOptions(refreshTime: boolean = true): void {
         const allOptions = getShopModifierTypeOptions(this.scene.gameData, false, this.scene);
-        const newOptions = Utils.randSeedShuffle(allOptions).slice(0, 4);
+
+        const isQuestOption = (option: ModifierTypeOption): boolean => {
+            return option.type.constructor.name.includes('Quest') ||
+                   (option.type.id && option.type.id.includes('QUEST'));
+        };
+
+        const isPartyAbilityOption = (option: ModifierTypeOption): boolean => {
+            return option.type instanceof PermaPartyAbilityModifierType;
+        };
+
+        const questOptions = allOptions.filter(isQuestOption);
+        const partyAbilityOptions = allOptions.filter(isPartyAbilityOption);
+
+        const guaranteedOptions: ModifierTypeOption[] = [];
+        const usedOptions = new Set<ModifierTypeOption>();
+
+        if (questOptions.length > 0) {
+            const randomQuestOption = Utils.randSeedShuffle(questOptions)[0];
+            guaranteedOptions.push(randomQuestOption);
+            usedOptions.add(randomQuestOption);
+        }
+
+        if (partyAbilityOptions.length > 0 && (guaranteedOptions.length === 0 || Utils.randSeedInt(10) < 5)) {
+            const availablePartyOptions = partyAbilityOptions.filter(option => !usedOptions.has(option));
+            if (availablePartyOptions.length > 0) {
+                const randomPartyOption = Utils.randSeedShuffle(availablePartyOptions)[0];
+                guaranteedOptions.push(randomPartyOption);
+                usedOptions.add(randomPartyOption);
+            }
+        }
+
+        const remainingOptions = allOptions.filter(option => !usedOptions.has(option));
+        const additionalOptions = Utils.randSeedShuffle(remainingOptions)
+            .slice(0, 4 - guaranteedOptions.length);
+
+        const newOptions = [...guaranteedOptions, ...additionalOptions];
 
         this.scene.gameData.updatePermaShopOptions(newOptions);
         if (refreshTime) {
@@ -264,6 +303,7 @@ export class ShopModifierSelectPhase extends Phase {
     }
 
     reroll(): void {
+        this.scene.reroll = true;
         this.scene.addPermaMoney(-(this.getRerollCost())!);
         this.scene.updateUIPermaMoneyText();
         this.scene.playSound("se/buy");
@@ -271,7 +311,7 @@ export class ShopModifierSelectPhase extends Phase {
     }
 
     refreshPhase(isReroll: boolean = false): void {
-        this.refreshShopOptions(!isReroll);    
+        this.refreshShopOptions(!isReroll);
 
         if (this.scene.getCurrentPhase() instanceof ShopModifierSelectPhase) {
 
@@ -279,8 +319,8 @@ export class ShopModifierSelectPhase extends Phase {
 
             this.scene.ui.clearText();
 
-            this.rerollCount = isReroll ? this.rerollCount + 1 : 1;
-            
+            this.rerollCount = isReroll ? this.rerollCount + 1 : 0;
+
             const newPhase = new ShopModifierSelectPhase(
                 this.scene,
                 this.modifierTiers,
@@ -300,7 +340,10 @@ export class ShopModifierSelectPhase extends Phase {
     }
 
     getRerollCost(): number {
-        const baseValue = 500; 
+        if (Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
+            return 0;
+        }
+        const baseValue = 500;
         return Math.min(Math.ceil(baseValue * Math.pow(2, this.rerollCount)), Number.MAX_SAFE_INTEGER);
     }
 
@@ -312,11 +355,11 @@ export class ShopModifierSelectPhase extends Phase {
             this.scene.ui.clearText();
             this.scene.unshiftPhase(new ShopModifierSelectPhase(
                 this.scene,
-                this.modifierTiers, 
-                this.onEndCallback, 
+                this.modifierTiers,
+                this.onEndCallback,
                 this.currentOptions
             ));
-        } else if (!this.refreshing && !this.scene.currentBattle && !(this.scene.getNextPhase() instanceof TitlePhase)) { 
+        } else if (!this.refreshing && !this.scene.currentBattle && !(this.scene.getNextPhase() instanceof TitlePhase)) {
             this.scene.clearPhaseQueue();
             this.scene.unshiftPhase(new TitlePhase(this.scene, true));
         }

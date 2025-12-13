@@ -12,6 +12,9 @@
     "SPDEFshortened": "特防",
     "SPD": "速度",
     "SPDshortened": "速度",
+    "ACC": "命中",
+    "EVA": "閃避",
+    "HPStat": "HP",
     "Total": "總計"
   },
   "Type": {
@@ -34,6 +37,8 @@
     "DRAGON": "龍",
     "DARK": "惡",
     "FAIRY": "妖精",
-    "STELLAR": "星晶"
+    "STELLAR": "星晶",
+    "SMITTY": "斯米提",
+    "GLITCH": "故障"
   }
 }

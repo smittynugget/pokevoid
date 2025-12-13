@@ -30,8 +30,6 @@ export class QuestManagerPhase extends Phase {
         this.scene.playSound("level_up_fanfare");
         this.showQuestUI();
     }
-
-
     private determineMode(): Mode {
         if (this.questModifier.questUnlockData?.questId) {
             if (this.questModifier.consoleCode) {

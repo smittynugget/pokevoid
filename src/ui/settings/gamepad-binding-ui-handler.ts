@@ -4,8 +4,6 @@ import {Mode} from "../ui";
 import {Device} from "#enums/devices";
 import {getIconWithSettingName, getKeyWithKeycode} from "#app/configs/inputs/configHandler";
 import {addTextObject, TextStyle} from "#app/ui/text";
-
-
 export default class GamepadBindingUiHandler extends AbstractBindingUiHandler {
 
   constructor(scene: BattleScene, mode: Mode | null = null) {
@@ -14,8 +12,6 @@ export default class GamepadBindingUiHandler extends AbstractBindingUiHandler {
   }
   setup() {
     super.setup();
-
-    // New button icon setup.
     this.newButtonIcon = this.scene.add.sprite(0, 0, "xbox");
     this.newButtonIcon.setPositionRelative(this.optionSelectBg, 78, 16);
     this.newButtonIcon.setOrigin(0.5);
@@ -46,8 +42,8 @@ export default class GamepadBindingUiHandler extends AbstractBindingUiHandler {
   }
 
   gamepadButtonDown(pad: Phaser.Input.Gamepad.Gamepad, button: Phaser.Input.Gamepad.Button, value: number): void {
-    const blacklist = [12, 13, 14, 15]; // d-pad buttons are blacklisted.
-    // Check conditions before processing the button press.
+    const blacklist = [12, 13, 14, 15];
+
     if (!this.listening || pad.id.toLowerCase() !== this.getSelectedDevice() || blacklist.includes(button.index) || this.buttonPressed !== null) {
       return;
     }
@@ -71,10 +67,6 @@ export default class GamepadBindingUiHandler extends AbstractBindingUiHandler {
     }
     return false;
   }
-
-  /**
-     * Clear the UI elements and state.
-     */
   clear() {
     super.clear();
     this.targetButtonIcon.setVisible(false);

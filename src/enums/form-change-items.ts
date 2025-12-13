@@ -95,8 +95,8 @@ export enum FormChangeItem {
     DRACO_PLATE,
     DREAD_PLATE,
     PIXIE_PLATE,
-    BLANK_PLATE,  // TODO: Find a potential use for this
-    LEGEND_PLATE, // TODO: Find a potential use for this
+    BLANK_PLATE,
+    LEGEND_PLATE,
     FIGHTING_MEMORY,
     FLYING_MEMORY,
     POISON_MEMORY,
@@ -114,8 +114,8 @@ export enum FormChangeItem {
     DRAGON_MEMORY,
     DARK_MEMORY,
     FAIRY_MEMORY,
-    BLANK_MEMORY,  // TODO: Find a potential use for this
-    
+    BLANK_MEMORY,
+
     GLITCHI_GLITCHI_FRUIT,
     GLITCH_COMMAND_SEAL,
     GLITCH_MOD_SOUL,
@@ -163,5 +163,5 @@ export enum FormChangeItem {
     SMITTY_TOUCH,
     SMITTY_VOICE,
     SMITTY_VOID,
-    
+
 }

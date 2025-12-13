@@ -38,7 +38,7 @@ export class PostTurnStatusEffectPhase extends PokemonPhase {
           break;
         }
         if (damage.value) {
-          // Set preventEndure flag to avoid pokemon surviving thanks to focus band, sturdy, endure ...
+
           this.scene.damageNumberHandler.add(this.getPokemon(), pokemon.damage(damage.value, false, true));
           pokemon.updateInfo();
         }

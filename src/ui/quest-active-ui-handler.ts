@@ -6,7 +6,7 @@ import { PermaRunQuestModifier } from "../modifier/modifier";
 import {addTextObject, TextStyle} from "#app/ui/text";
 import i18next from "i18next";
 import {randSeedInt} from "#app/utils";
-import { RewardType } from "../system/game-data";
+import { RewardType } from "#enums/reward-type";
 import { GameModes } from "../game-mode";
 
 export default class QuestActiveUiHandler extends QuestBountyUiHandler {
@@ -56,7 +56,7 @@ export default class QuestActiveUiHandler extends QuestBountyUiHandler {
 
         if (this.questModifier?.questUnlockData?.rewardType === RewardType.GAME_MODE) {
             const gameMode = this.questModifier.questUnlockData.rewardId;
-            
+
             let unlocks: string[] = [];
             switch (gameMode) {
                 case GameModes.CLASSIC:
@@ -170,7 +170,7 @@ export default class QuestActiveUiHandler extends QuestBountyUiHandler {
         )[0] as PermaRunQuestModifier;
 
         return {
-            status: activeModifier 
+            status: activeModifier
                 ? i18next.t("questUi:bounty.common.status.active")
                 : i18next.t("questUi:bounty.common.status.inactive")
         };

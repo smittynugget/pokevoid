@@ -57,11 +57,11 @@
         "count": "{{current}} / {{max}}"
       },
       "rewards": {
-        "stage1": "90% ∞ORO | 8% ∞OGGETTO | 2% Entrambi",
-        "stage2": "75% ∞ORO | 15% ∞OGGETTO | 10% Entrambi",
-        "stage3": "60% ∞ORO | 25% ∞OGGETTO | 15% Entrambi",
-        "stage4": "40% ∞ORO | 40% ∞OGGETTO | 20% Entrambi",
-        "stage5": "25% ∞ORO | 45% ∞OGGETTO | 30% Entrambi"
+        "stage1": "90% ΩORO | 8% ΩOGGETTO | 2% Entrambi",
+        "stage2": "75% ΩORO | 15% ΩOGGETTO | 10% Entrambi",
+        "stage3": "60% ΩORO | 25% ΩOGGETTO | 15% Entrambi",
+        "stage4": "40% ΩORO | 40% ΩOGGETTO | 20% Entrambi",
+        "stage5": "25% ΩORO | 45% ΩOGGETTO | 30% Entrambi"
       }
     },
     "quest": {
@@ -72,7 +72,7 @@
         "cancel": "Annulla"
       },
       "rewards": {
-        "default": "50% ∞ORO | 35% ∞OGGETTO | 15% Entrambi"
+        "default": "50% ΩORO | 35% ΩOGGETTO | 15% Entrambi"
       },
       "activeQuest": {
         "modalTitle": "Missione!",
@@ -92,8 +92,8 @@
     "smitty": {
       "modalTitle": "Taglia Pokémon Smitty",
       "rewards": {
-        "withSpecies": "70% ∞ORO | 20% ∞OGGETTO | 10% Entrambi",
-        "withoutSpecies": "40% ∞ORO | 40% ∞OGGETTO | 20% Entrambi"
+        "withSpecies": "70% ΩORO | 20% ΩOGGETTO | 10% Entrambi",
+        "withoutSpecies": "40% ΩORO | 40% ΩOGGETTO | 20% Entrambi"
       },
       "task": {
         "evolveAny": "Fai Evolvere UN QUALSIASI Pokémon in {{formName}}",
@@ -114,7 +114,7 @@
     "nuzlightModeRewardUpdatedInventory": "Inventario Aggiornato!",
     "nuzlightModeRewardMoveRelease": "Dimentica Mossa",
     "nuzlockeModeRewardRank2": "GRADO 2",
-    "accessShopInBattle": "Accedi al ∞NEGOZIO in LOTTA!",
+    "accessShopInBattle": "Accedi al ΩNEGOZIO in LOTTA!",
     "accessQuestsInBattle": "Accedi alle MISSIONI in LOTTA!"
   }
 } 

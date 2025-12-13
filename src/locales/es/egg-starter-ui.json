@@ -1,11 +1,13 @@
 {
-  "hatchAndSwap": "Eclosionar e Intercambiar",
-  "tooltip": "Revisa los Pokémon eclosionados e intercambia 1 por otro (si lo deseas). El primer Pokémon no se puede intercambiar.\nLos legendarios solo pueden intercambiarse con legendarios/megas/dinamax",
+  "hatchAndSwap": "¡Eclosionar, Añadir o Intercambiar!",
+  "tooltip": "Revisa los Pokémon eclosionados y añádelos al equipo (si hay espacio) o intercámbialos con otro. El primer Pokémon no se puede intercambiar.\nLos Legendarios solo se pueden intercambiar con legendarios/megas/dynas",
   "legendaryDisabled": "Necesitas Legendario/Mega/Dina en el Equipo",
   "onlyOnePokemon": "No se Puede Intercambiar: Solo Un Miembro en el Equipo",
   "swapWithParty": "Intercambiar con miembro del equipo",
   "selectLegendaryPartyMember": "Intercambiar con un legendario/mega/dina",
   "selectPartyMember": "Intercambiar con un miembro del equipo",
   "confirmSwapMessage": "¿Intercambiar {{hatchedPokemon}} con {{partyPokemon}}?",
-  "skipAnimationsPrompt": "¿Omitir todas las animaciones de eclosión de huevos?"
+  "skipAnimationsPrompt": "¿Omitir todas las animaciones de eclosión de huevos?",
+  "addToParty": "Añadir al Equipo",
+  "confirmAddMessage": "¿Añadir {{hatchedPokemon}} a tu equipo?"
 } 

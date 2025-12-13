@@ -13,10 +13,14 @@
     "newForm": "Nouvelle Boutique Débloquée !",
     "rivalLost": "RIVAL PERDU...",
     "modeChange": "CHANGEMENT DE MODE !",
+    "skillPoints": "Points de Compétence",
+    "skillTreeTokens": "Jetons d'Arbre de Compétences",
     "rewardObtained": "Récompense Obtenue !",
     "voidOvertaken": "LE NÉANT A PRIS LE DESSUS !",
     "newShopItem": "Nouvel Objet de Boutique",
-    "manyMoreNuggets": "Et Plein d'Autres Pépites Juteuses !"
+    "manyMoreNuggets": "Et Plein d'Autres Pépites Juteuses !",
+    "legendaryPower": "Puissance Légendaire !",
+    "legendaryCatchable": "{{pokemon}} est maintenant Capturable !"
   },
   "gameModes": {
     "nuzlocke": {

@@ -1,0 +1,49 @@
+{
+  "modifierType": {
+    "championStatBooster": {
+      "name": "{{champion}} Training: {{stats}}",
+      "description": "Boosts {{stats}} by {{percent}}% for {{champion}}'s Pokemon",
+      "descriptionConditional": "Boosts {{stats}} by {{percent}}% for {{types}}-type Pokemon or signature Pokemon. Non-{{types}} non-signature Pokemon only gain {{firstStat}} boost."
+    },
+    "championPokemonStatBooster": {
+      "name": "{{champion}}'s {{flavor}} [{{stats}}]",
+      "description": "Permanently increases {{stats}} by {{percent}}% for the selected Pokemon. Infused with {{champion}}'s training methods.",
+      "descriptionConditional": "Permanently increases {{stats}} by {{percent}}% for {{types}}-type Pokemon or signature Pokemon. Non-{{types}} non-signature Pokemon only gain {{firstStat}} boost. Infused with {{champion}}'s training methods."
+    },
+    "trainerBondAbility": {
+      "name": "{{champion}}'s Limit Break: {{ability}}",
+      "description": "{{chance}}% chance to activate {{ability}} for {{champion}}'s Pokemon. {{abilityDescription}}"
+    },
+    "teraAbility": {
+      "name": "{{type}} Tera Ability: {{ability}}",
+      "description": "{{chance}}% chance to activate {{ability}} while Terastallized as {{type}} type. {{abilityDescription}}"
+    },
+    "pokemonAltBuild": {
+      "name": "{{buildName}}",
+      "description": "{{description}} - Modifies this Pokemon's stats and abilities",
+      "wrongSpecies": "This alt build is only for {{species}}"
+    },
+    "championTm": {
+      "name": "{{champion}}'s TM: {{move}}",
+      "description": "Teaches {{move}} to a Pokemon. Compatible with {{champion}}'s style."
+    },
+    "championXm": {
+      "name": "{{champion}}'s XM: {{move}}",
+      "description": "Teaches the powerful move {{move}}. Mastered by {{champion}}."
+    }
+  },
+  "modifier": {
+    "championStatBooster": {
+      "extra": {
+        "inoperable": "This Pokemon is not compatible with {{champion}}'s training"
+      }
+    },
+    "trainerBondAbility": {
+      "extra": {
+        "activated": "{{champion}}'s Limit Break activated {{ability}}!"
+      }
+    }
+  }
+}
+
+

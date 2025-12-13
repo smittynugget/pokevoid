@@ -24,7 +24,8 @@ import {RewardObtainedType} from "./ui/reward-obtained-ui-handler";
 import {Mode} from "./ui/ui";
 import {RewardObtainDisplayPhase} from "./phases/reward-obtain-display-phase";
 import {PartyMemberStrength} from "#enums/party-member-strength";
-import {allSpecies, SpeciesFormKey, universalSmittyForms} from "#app/data/pokemon-species";
+import {allSpecies, universalSmittyForms} from "#app/data/pokemon-species";
+import { SpeciesFormKey } from "#enums/species-form-key";
 import {applyUniversalSmittyForm, pokemonFormChanges, SmittyFormTrigger} from "#app/data/pokemon-forms";
 import {trainerTypeDialogue} from "#app/data/dialogue";
 import {ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
@@ -32,6 +33,7 @@ import {TrainerVictoryPhase} from "#app/phases/trainer-victory-phase";
 import { Unlockables } from "./system/unlockables";
 import { Type } from "./data/type";
 import { GameMechanicsID, GameMechanicsVersion } from "./enums/gameMechanicsID";
+import Overrides from "./overrides";
 
 export enum BattleType {
   WILD,
@@ -114,13 +116,11 @@ export default class Battle {
   private battleSeedState: string | null;
   public moneyScattered: number;
   public lastUsedPokeball: PokeballType | null;
-  public playerFaints: number; // The amount of times pokemon on the players side have fainted
-  public enemyFaints: number; // The amount of times pokemon on the enemies side have fainted
+  public playerFaints: number;
+  public enemyFaints: number;
   public scene: BattleScene;
 
   public switchedOutPokemon: Set<number> = new Set();
-
-
   private rngCounter: integer = 0;
 
   constructor(gameMode: GameMode, waveIndex: integer, battleType: BattleType, trainer?: Trainer, double?: boolean, scene?: BattleScene) {
@@ -138,6 +138,7 @@ export default class Battle {
     this.double = !!double;
     this.enemySwitchCounter = 0;
     this.turn = 0;
+    this.turnCommands = {};
     this.playerParticipantIds = new Set<integer>();
     this.battleScore = 0;
     this.postBattleLoot = [];
@@ -179,13 +180,13 @@ export default class Battle {
       if(waveIndex >= 21 || this.battleSpec === BattleSpec.FINAL_BOSS) {
        const playerParty = this.scene.getParty();
         let highestPlayerLevel = 0;
-        
+
         playerParty.forEach(pokemon => {
           if (pokemon.level > highestPlayerLevel) {
             highestPlayerLevel = pokemon.level;
           }
         });
-        
+
         return highestPlayerLevel + 5;
       }
 
@@ -193,7 +194,7 @@ export default class Battle {
       if (this.battleSpec === BattleSpec.FINAL_BOSS || !(waveIndex % 250)) {
         return Math.ceil(ret / 25) * 25;
       }
-      //@ts-ignore
+
       if (this.battleSpec === BattleSpec.FINAL_BOSS) {
         ret += 5;
       }
@@ -523,8 +524,8 @@ export default class Battle {
   }
 
   isStage6RivalWave(): boolean {
-    const shortModeFactor = this.gameMode.isChaosShort ? .4 : 1;
-    return (this.waveIndex % (1000 * shortModeFactor) !== 0 && this.waveIndex % (500 * shortModeFactor) === 0);
+    const modeFactor = this.gameMode.isChaosFTL ? .2 : (this.gameMode.isChaosShort ? .4 : 1);
+    return (this.waveIndex % (1000 * modeFactor) !== 0 && this.waveIndex % (500 * modeFactor) === 0);
   }
 }
 
@@ -572,15 +573,6 @@ export class FixedBattleConfig {
     return this;
   }
 }
-
-
-/**
- * Helper function to generate a random trainer for evil team trainers and the elite 4/champion
- * @param trainerPool The TrainerType or list of TrainerTypes that can possibly be generated
- * @param randomGender whether or not to randomly (50%) generate a female trainer (for use with evil team grunts)
- * @param seedOffset the seed offset to use for the random generation of the trainer
- * @returns the generated trainer
- */
 function getRandomTrainerFunc(trainerPool: (TrainerType | TrainerType[])[], randomGender: boolean = false, seedOffset: number  = 0): GetTrainerFunc {
   return (scene: BattleScene) => {
     const rand = Utils.randSeedInt(trainerPool.length);
@@ -599,8 +591,6 @@ function getRandomTrainerFunc(trainerPool: (TrainerType | TrainerType[])[], rand
     if (randomGender) {
       trainerGender = (Utils.randInt(2) === 0) ? TrainerVariant.FEMALE : TrainerVariant.DEFAULT;
     }
-
-    /* 1/3 chance for evil team grunts to be double battles */
     const evilTeamGrunts = [TrainerType.ROCKET_GRUNT, TrainerType.MAGMA_GRUNT, TrainerType.AQUA_GRUNT, TrainerType.GALACTIC_GRUNT, TrainerType.PLASMA_GRUNT, TrainerType.FLARE_GRUNT];
 
     return new Trainer(scene, trainerTypes[rand], trainerGender);
@@ -760,7 +750,7 @@ const createRivalBattle = (rivalStage: number, playerRival?: RivalTrainerType, i
   new FixedBattleConfig()
     .setBattleType(BattleType.TRAINER)
     .setGetTrainerFunc(scene => {
-      const rivalConfig = playerRival 
+      const rivalConfig = playerRival
         ? getDynamicRivalConfig(rivalStage, playerRival, scene)
         : getDynamicRival(rivalStage, scene.gameData, scene);
       return new Trainer(
@@ -784,11 +774,11 @@ const createTrainerBattle = (
   const config = new FixedBattleConfig()
     .setBattleType(BattleType.TRAINER)
     .setGetTrainerFunc(getRandomTrainerFunc(trainerPool, randomGender));
-  
+
   if (seedOffset) {
     config.setSeedOffsetWave(seedOffset);
   }
-  
+
   return config;
 };
 
@@ -800,7 +790,7 @@ const createEliteFourBattle = (
   const config = new FixedBattleConfig()
       .setBattleType(BattleType.TRAINER)
       .setGetTrainerFunc(scene => {
-        const selectedType = Array.isArray(trainerType) 
+        const selectedType = Array.isArray(trainerType)
             ? trainerType[Utils.randSeedInt(trainerType.length)]
             : trainerType;
 
@@ -861,36 +851,36 @@ export interface NightmareBattleSeeds {
 }
 
 function findEliteFourRange(startWave: number, endWave: number, generatedWaves: Set<number>): [number, number[]] {
-    
+
     const validRanges: Array<[number, number[]]> = [];
-    
+
     const segmentBase = Math.floor(startWave / 100) * 100;
     let firstRangeStart = Math.max(segmentBase + 31, Math.ceil(startWave / 10) * 10);
 
     if (firstRangeStart % 10 === 0) {
         firstRangeStart += 1;
     }
-    
+
     for (let rangeStart = firstRangeStart; rangeStart <= endWave - 9; rangeStart += 10) {
         const availableWaves: number[] = [];
-        
+
         for (let wave = rangeStart; wave < rangeStart + 10; wave++) {
             if (!generatedWaves.has(wave)) {
                 availableWaves.push(wave);
             }
         }
-        
+
         if (availableWaves.length >= 5) {
             validRanges.push([rangeStart, availableWaves]);
         }
     }
-    
+
     if (validRanges.length > 0) {
         const selectedIndex = Utils.randSeedInt(validRanges.length);
         const [selectedStart, selectedWaves] = validRanges[selectedIndex];
         return [selectedStart, selectedWaves];
     }
-    
+
     return [-1, []];
 }
 
@@ -907,7 +897,7 @@ export let evilTeamWaves = {
 export let remainingRivalWaves: number[] = [];
 function generateUniqueSeeds(baseSeed: number): NightmareBattleSeeds {
     const usedHashes = new Set<number>();
-    
+
     function getUniqueHash(suffix: string): number {
         let hash: number;
         let attempt = 0;
@@ -1025,14 +1015,14 @@ function generateUniqueSeeds(baseSeed: number): NightmareBattleSeeds {
 
 export function setupNightmareFixedBattles(scene: BattleScene) {
     try {
-                
+
         if (!scene.gameData.nightmareBattleSeeds) {
               const baseSeed = Utils.randInt(1000000);
             scene.gameData.nightmareBattleSeeds = generateUniqueSeeds(baseSeed);
         }
 
         const seeds = scene.gameData.nightmareBattleSeeds;
-                
+
         nightmareFixedBattles = {};
         majorBossWaves = [];
         eliteFourWaves = [];
@@ -1049,15 +1039,12 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
                 3: { start: hundred + 21, end: hundred + 35 },
                 4: { start: hundred + 36, end: hundred + 55 },
                 5: { start: hundred + 56, end: hundred + 70 },
-                6: { 
+                6: {
                     start: hundred + 71,
                     end: isNewestRival ? (isFinalSegment ? 499 : hundred + 100) : hundred + 95
                 }
             };
         };
-
-        
-
         try {
             scene.resetSeed(seeds.rivalSelection);
             const allRivalTypes = getAllRivalTrainerTypes();
@@ -1068,10 +1055,10 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
                     selectedRivals.push(randomRival);
                 }
             }
-            
+
             for (let hundred = 0; hundred < 500; hundred += 100) {
                 try {
-                                        
+
                     if (hundred === 400) {
                         const wave500 = 500;
                       nightmareFixedBattles[wave500] = createSmittyBattle(scene, seeds.smittySeed);
@@ -1080,14 +1067,14 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
                     }
 
                     scene.resetSeed(seeds.rivalPlacement[hundred]);
-                    
+
                     const numRivalsToUse = Math.min(Math.floor(hundred / 100) + 1, 5);
                     const rivalsForSegment = selectedRivals.slice(0, numRivalsToUse);
                     scene.resetSeed(seeds.rivalPokemon[hundred]);
 
                     rivalsForSegment.forEach((rival, rivalIndex) => {
                         const stageRanges = getStageRanges(hundred, rivalIndex);
-                        
+
                         for (let stage = 2; stage <= 6; stage++) {
                             try {
                                 const { start: stageStartWave, end: stageEndWave } = stageRanges[stage];
@@ -1096,7 +1083,7 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
                                 let attempts = 0;
                                 const maxAttempts = 100;
                                 let segmentRival = rivalIndex === Math.floor(hundred / 100);
-                                
+
                                 do {
                                     if (stage === 6 && segmentRival) {
                                         waveNumber = adjustedEndWave;
@@ -1127,12 +1114,12 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
                     try {
                         scene.resetSeed(seeds.eliteFour.rangeSelection[hundred]);
                         const [rangeStart, availableWaves] = findEliteFourRange(hundred, hundred + 99, generatedWaves);
-                        
+
                         if (rangeStart !== -1 && availableWaves.length >= 5) {
                             scene.resetSeed(seeds.eliteFour.wavePlacement[hundred]);
                             const selectedWaves: number[] = [];
                             const wavesCopy = [...availableWaves];
-                            
+
                             for (let i = 0; i < 5; i++) {
                                 const index = Utils.randSeedInt(wavesCopy.length);
                                 selectedWaves.push(wavesCopy[index]);
@@ -1140,12 +1127,12 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
                             }
 
                             selectedWaves.sort((a, b) => a - b);
-                            
+
                             eliteFourWaves.push(...selectedWaves);
 
                             scene.resetSeed(seeds.eliteFour.trainerGeneration[hundred]);
                             const seedOffset = seeds.eliteFour.trainerGeneration[hundred];
-                            
+
                             nightmareFixedBattles[selectedWaves[0]] = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.FIRST, false, seedOffset);
                             nightmareFixedBattles[selectedWaves[1]] = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.SECOND, false, seedOffset);
                             nightmareFixedBattles[selectedWaves[2]] = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.THIRD, false, seedOffset);
@@ -1159,7 +1146,7 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
                             if (hundred === 0 ? true : hundred >= 100) {
                                 try {
                                     scene.resetSeed(seeds.majorBoss.wavePlacement[hundred]);
-                                    
+
                                     const availableBossWaves: number[] = [];
                                     const bossStartWave = hundred === 0 ? 50 : Math.max(hundred + 50, hundred);
                                     for (let wave = bossStartWave; wave < hundred + 100 && wave <= 499; wave++) {
@@ -1185,12 +1172,12 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
                     try {
                     scene.resetSeed(seeds.evilTeam.rangeSelection[hundred]);
                     const [rangeStart, availableWaves] = findEliteFourRange(hundred, hundred + 99, generatedWaves);
-                    
+
                     if (rangeStart !== -1 && availableWaves.length >= 5) {
                         scene.resetSeed(seeds.evilTeam.wavePlacement[hundred]);
                         const selectedWaves: number[] = [];
                         const wavesCopy = [...availableWaves];
-                        
+
                         for (let i = 0; i < 5; i++) {
                             const index = Utils.randSeedInt(wavesCopy.length);
                             selectedWaves.push(wavesCopy[index]);
@@ -1248,23 +1235,23 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
             }
 
              const distributeRemainingRivals = (scene: BattleScene, selectedRivals: RivalTrainerType[], generatedWaves: Set<number>) => {
-             
+
               const allRivalTypes = getAllRivalTrainerTypes();
               const remainingRivals = allRivalTypes.filter(rival => !selectedRivals.includes(rival));
               const rivalsPerSegment = Math.floor(remainingRivals.length / 5);
-             
+
               for (let hundred = 0; hundred < 500; hundred += 100) {
-                 
+
                   const segmentRivals = remainingRivals.splice(0, rivalsPerSegment);
                   scene.resetSeed(seeds.rivalPlacement[hundred]);
-                  
+
                   segmentRivals.forEach(rival => {
                       try {
-                         
+
                           let waveNumber: number;
                           let attempts = 0;
                           const maxAttempts = 100;
-                          
+
                           do {
                               waveNumber = Utils.randSeedInt(100) + hundred + 1;
                               attempts++;
@@ -1281,22 +1268,20 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
                                     break;
                                 }
                             }
-                          
+
                           generatedWaves.add(waveNumber);
                           remainingRivalWaves.push(waveNumber);
-                          
+
                           const battle = createRivalBattle(randomRivalStage, rival, true);
                           nightmareFixedBattles[waveNumber] = battle;
-                          
+
                           rivalInfo[waveNumber] = {
                               stage: randomRivalStage,
                               trainerType: rival,
                               waveNumber: waveNumber
                           };
-                          
-                         
                           scene.resetSeed(seeds.rivalPokemon[hundred]);
-                          
+
                       } catch (error) {
                           throw error;
                       }
@@ -1324,13 +1309,11 @@ export function setupNightmareFixedBattles(scene: BattleScene) {
 }
 
 export function createSmittyBattle(scene: BattleScene, seed: number, isChaosMode: boolean = false): FixedBattleConfig {
-    
-    scene.resetSeed(seed);
 
-   
+    scene.resetSeed(seed);
     const smittyConfig = new TrainerConfig(TrainerType.SMITTY);
     smittyConfig.setName("SMITTY");
-   
+
     smittyConfig.setHasCharSprite();
     smittyConfig.setMoneyMultiplier(2.5);
     const smittyBgmOptions = ["battle_bb_elite", "battle_aether_boss", "battle_aether_boss", "battle_legendary_giratina", "battle_legendary_deoxys", "battle_legendary_kanto", "battle_legendary_regis", "battle_legendary_arceus", "battle_final", "battle_skull_boss", "battle_rocket_boss", "battle_legendary_gro_kyo", "battle_legendary_kyurem", "battle_legendary_origin_forme", "battle_legendary_dusk_dawn", "battle_galactic_boss", "battle_legendary_glas_spec", "battle_legendary_zac_zam"];
@@ -1340,8 +1323,6 @@ export function createSmittyBattle(scene: BattleScene, seed: number, isChaosMode
     smittyConfig.setPartyTemplates(trainerPartyTemplates.CHAMPION);
     smittyConfig.setBoss();
     smittyConfig.setStaticParty();
-
-   
     const smittyDialogues = trainerTypeDialogue[TrainerType.SMITTY]?.[0];
     if (smittyDialogues) {
         const encounterMessages = smittyDialogues.encounter as string[];
@@ -1349,17 +1330,19 @@ export function createSmittyBattle(scene: BattleScene, seed: number, isChaosMode
         const defeatMessages = smittyDialogues.defeat as string[];
 
         let randomIndex = Utils.randSeedInt(encounterMessages.length, 0);
-        smittyConfig.smittyVariantIndex = randomIndex == 30 || randomIndex == 39 ? 10 : randomIndex;
+        smittyConfig.smittyVariantIndex =
+            randomIndex == 29 ? 78 :
+            randomIndex == 30 ? 78 :
+            randomIndex == 39 ? 9 :
+            randomIndex;
 
         smittyConfig.encounterMessages = [encounterMessages[randomIndex]];
         smittyConfig.victoryMessages = [victoryMessages[randomIndex]];
         smittyConfig.defeatMessages = [defeatMessages[randomIndex]];
     }
-
-   
     const usedForms = new Set<string>();
     const specificFormSlots = new Set<number>();
-    
+
     while (specificFormSlots.size < 2) {
         const randomSlot = Utils.randSeedInt(6);
         specificFormSlots.add(randomSlot);
@@ -1371,21 +1354,15 @@ export function createSmittyBattle(scene: BattleScene, seed: number, isChaosMode
         const randomSlot = Utils.randSeedInt(6);
         bossSlots.add(randomSlot);
     }
-
-   
     for (let i = 0; i < 6; i++) {
         smittyConfig.setPartyMemberFunc(i, (scene: BattleScene, slot: TrainerSlot, strength: PartyMemberStrength) => {
             const waveIndex = scene.currentBattle.waveIndex;
             const levels = scene.currentBattle.trainer.getPartyLevels(waveIndex);
             const level = levels[i] || levels[levels.length - 1];
-
-           
             const pokemon = getSpeciesFilterRandomPartyMemberFunc(
                 species => species.baseTotal >= 540,
                 TrainerSlot.TRAINER
             )(scene, level, strength);
-
-           
             if (specificFormSlots.has(i)) {
                 const universalSmittyFormNames = ["smitshade", "smitspect", "smitwraith", "smiternal"];
                 let availableForms = universalSmittyFormNames.filter(form => !usedForms.has(form));
@@ -1399,7 +1376,7 @@ export function createSmittyBattle(scene: BattleScene, seed: number, isChaosMode
                 pokemon.generateName();
                 pokemon.toggleShadow(false);
             } else {
-               
+
                 const universalFormChanges = pokemonFormChanges[Species.NONE] || [];
                 let availableUniversalForms = universalFormChanges.filter(fc => {
                     const trigger = fc.findTrigger(SmittyFormTrigger) as SmittyFormTrigger;
@@ -1424,8 +1401,6 @@ export function createSmittyBattle(scene: BattleScene, seed: number, isChaosMode
                     }
                 }
             }
-
-           
             if (bossSlots.has(i)) {
                 pokemon.setBoss(true, isChaosMode ? 2 : specificFormSlots.has(i) ? 4 : 3);
             }
@@ -1444,30 +1419,28 @@ export function createSmittyBattle(scene: BattleScene, seed: number, isChaosMode
             undefined,
             undefined,
             smittyConfig,
-            6
+            6,
+            false
         ));
-};
-
-
-
+}
 export const OldClassicFixedBattles: FixedBattleConfigs = {
- 
+
   [BATTLE_WAVES.RIVAL.FIRST]: createRivalBattle(1),
   [BATTLE_WAVES.RIVAL.SECOND]: createRivalBattle(2),
   [BATTLE_WAVES.RIVAL.THIRD]: createRivalBattle(3),
   [BATTLE_WAVES.RIVAL.FOURTH]: createRivalBattle(4),
   [BATTLE_WAVES.RIVAL.FIFTH]: createRivalBattle(5),
   [BATTLE_WAVES.RIVAL.FINAL]: createRivalBattle(6),
- 
+
   [BATTLE_WAVES.GRUNT.FIRST]: createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_GRUNTS, 0, true),
   [BATTLE_WAVES.GRUNT.SECOND]: createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_GRUNTS, 35, true),
   [BATTLE_WAVES.GRUNT.THIRD]: createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_GRUNTS, 35, true),
- 
+
   [BATTLE_WAVES.ADMIN]: createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_ADMINS, 35, true),
 
   [BATTLE_WAVES.BOSS.FIRST]: createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_BOSSES.FIRST, 35),
   [BATTLE_WAVES.BOSS.SECOND]: createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND, 35),
- 
+
   [BATTLE_WAVES.ELITE_FOUR.FIRST]: createTrainerBattle(TRAINER_TYPES.ELITE_FOUR.FIRST),
   [BATTLE_WAVES.ELITE_FOUR.SECOND]: createTrainerBattle(TRAINER_TYPES.ELITE_FOUR.SECOND, 182),
   [BATTLE_WAVES.ELITE_FOUR.THIRD]: createTrainerBattle(TRAINER_TYPES.ELITE_FOUR.THIRD, 182),
@@ -1501,7 +1474,7 @@ export interface FixedBattleSeeds {
 
 function generateFixedSeeds(baseSeed: number): FixedBattleSeeds {
     const usedHashes = new Set<number>();
-    
+
     function getUniqueHash(suffix: string): number {
         let hash: number;
         let attempt = 0;
@@ -1565,11 +1538,11 @@ export function setupFixedBattles(scene: BattleScene) {
 
         const getStageRanges = (rivalIndex: number) => {
             return {
-                1: { start: 1, end: 15 },         
-                2: { start: 16, end: 30 },        
-                3: { start: 31, end: 45 },        
-                4: { start: 46, end: 60 },        
-                5: { start: 61, end: 75 },        
+                1: { start: 1, end: 15 },
+                2: { start: 16, end: 30 },
+                3: { start: 31, end: 45 },
+                4: { start: 46, end: 60 },
+                5: { start: 61, end: 75 },
                 6: { start: 76, end: rivalIndex === 0 ? 90 : 89 }
             };
         };
@@ -1577,17 +1550,17 @@ export function setupFixedBattles(scene: BattleScene) {
         try {
             scene.resetSeed(seeds.rivalSelection);
             const primaryRival = getDynamicRivalType(1, scene.gameData, false);
-            
+
             let secondaryRivals = [];
             if (scene.gameData.defeatedRivals?.length > 0) {
-               
+
                 const defeatedRivals = [...scene.gameData.defeatedRivals];
                 while (secondaryRivals.length < 5) {
                     const randomIndex = Utils.randSeedInt(defeatedRivals.length);
                     secondaryRivals.push(defeatedRivals[randomIndex]);
                 }
             }
-           
+
             scene.resetSeed(seeds.rivalPokemon);
             for (let stage = 1; stage <= 6; stage++) {
                 const { start, end } = getStageRanges(0)[stage];
@@ -1609,7 +1582,12 @@ export function setupFixedBattles(scene: BattleScene) {
 
                 generatedWaves.add(waveNumber);
                 _rivalWaves.push(waveNumber);
-                fixedBattles[waveNumber] = createRivalBattle(stage, primaryRival, false);
+                const smittyChance = Overrides.SMITTY_FINAL_BATTLE_CHANCE_OVERRIDE ?? 25;
+                if (stage === 6 && Utils.randSeedInt(100) < smittyChance) {
+                    fixedBattles[waveNumber] = createSmittyBattle(scene, seeds.smittySeed || seeds.baseSeed, false);
+                } else {
+                    fixedBattles[waveNumber] = createRivalBattle(stage, primaryRival, false);
+                }
             }
 
             if (secondaryRivals.length > 0) {
@@ -1665,7 +1643,7 @@ export function setupFixedBattles(scene: BattleScene) {
 
             scene.resetSeed(seeds.majorBoss.wavePlacement);
             const availableBossWaves: number[] = [];
-            
+
             for (let wave = 40; wave <= 90; wave++) {
                 if (!generatedWaves.has(wave)) {
                     availableBossWaves.push(wave);
@@ -1679,7 +1657,7 @@ export function setupFixedBattles(scene: BattleScene) {
                 _majorBossWaves.push(firstBossWave);
                 generatedWaves.add(firstBossWave);
 
-                  const validSecondBossWaves = availableBossWaves.filter(wave => 
+                  const validSecondBossWaves = availableBossWaves.filter(wave =>
                       Math.abs(wave - firstBossWave) >= 20 && !generatedWaves.has(wave)
                   );
 
@@ -1703,7 +1681,7 @@ export function setupFixedBattles(scene: BattleScene) {
                 scene.resetSeed(seed);
                 let waveNumber: number;
                 let attempts = 0;
-                
+
                 do {
                     waveNumber = Utils.randSeedInt(maxWave - minWave + 1) + minWave;
                     attempts++;
@@ -1711,14 +1689,12 @@ export function setupFixedBattles(scene: BattleScene) {
                         break;
                     }
                 } while (generatedWaves.has(waveNumber));
-                
+
                 generatedWaves.add(waveNumber);
                 scene.resetSeed(seeds.evilTeam.trainerGeneration);
                 createBattle(waveNumber);
                 return waveNumber;
             }
-
-           
             const evilTeamWaves = {
                 grunts1: [],
                 admin1: null,
@@ -1728,8 +1704,6 @@ export function setupFixedBattles(scene: BattleScene) {
                 admin3: null,
                 boss2: null
             };
-
-           
             for (let i = 0; i < 3; i++) {
                 const wave = placeEvilBattle(
                     scene,
@@ -1785,15 +1759,11 @@ export function setupFixedBattles(scene: BattleScene) {
                 scene.resetSeed(seeds.evilTeam.gruntPlacement);
                 const selectedWaves: number[] = [];
                 const wavesCopy = [...availableWaves];
-
-               
                 for (let i = 0; i < 5; i++) {
                     const index = Utils.randSeedInt(wavesCopy.length);
                     selectedWaves.push(wavesCopy[index]);
                     wavesCopy.splice(index, 1);
                 }
-
-               
                 selectedWaves.sort((a, b) => a - b);
                 fixedBattles[selectedWaves[0]] = createTrainerBattle(
                     TRAINER_TYPES.EVIL_TEAM_GRUNTS,
@@ -1833,8 +1803,6 @@ export function setupFixedBattles(scene: BattleScene) {
 
                 selectedWaves.forEach(wave => generatedWaves.add(wave));
             }
-
-           
             scene.gameMode.battleConfig = fixedBattles;
             classicFixedBattles = fixedBattles;
             rivalWaves = _rivalWaves;
@@ -1920,9 +1888,6 @@ function generateNightmareCombinedWaveChart(
 
     return chart;
 }
-
-
-
 function generateWavePlacementChart(waves: number[], eventType: string, maxWave: number): string[] {
     const chart: string[] = [];
     for (let i = 1; i <= maxWave; i += 10) {
@@ -1974,7 +1939,7 @@ export enum PathNodeType {
   TYPE_SWITCHER,
   PASSIVE_ABILITY,
   ANY_TMS,
-  // ANY_TMS_MASTER,
+
   TERA_SHARDS,
   CHALLENGE_BOSS,
   CHALLENGE_RIVAL,
@@ -1995,7 +1960,9 @@ export enum PathNodeType {
   SCOPE_LENS,
   VITAMIN,
   MOVE_UPGRADE,
-  LOW_TIER_MOVE_UPGRADE
+  LOW_TIER_MOVE_UPGRADE,
+  SKILL_POINT,
+  SKILL_TOKEN
 }
 
 export interface PathNode {
@@ -2050,7 +2017,7 @@ function generatePathNodeId(wave: number, branch: number = 0, type: string = "")
 function generateNodePositions(nodeCount: number, wave: number = 0): number[] {
   const positions: number[] = [];
   const waveOffset = (wave * 7) % 100;
-  
+
   switch (nodeCount) {
     case 1:
       positions.push((Utils.randSeedInt(4) + waveOffset) % 4);
@@ -2081,7 +2048,7 @@ function generateNodePositions(nodeCount: number, wave: number = 0): number[] {
       positions.push(0, 1, 2, 3);
       break;
   }
-  
+
   return [...new Set(positions)].sort((a, b) => a - b);
 }
 
@@ -2089,52 +2056,52 @@ function validateNodePositions(nodes: PathNode[], wave: number): boolean {
   const positionsAtWave = nodes
     .filter(n => n.wave === wave)
     .map(n => n.position.x);
-  
+
   const uniquePositions = new Set(positionsAtWave);
-  
+
   if (positionsAtWave.length !== uniquePositions.size) {
-    const duplicates = positionsAtWave.filter((pos, index) => 
+    const duplicates = positionsAtWave.filter((pos, index) =>
       positionsAtWave.indexOf(pos) !== index
     );
     console.warn(`❌ Duplicate positions found at wave ${wave}: [${duplicates.join(', ')}]`);
     return false;
   }
-  
+
   return true;
 }
 
 function resolvePositionConflicts(layer: PathLayer): void {
   const nodesByWave = new Map<number, PathNode[]>();
-  
+
   for (const node of layer.nodes) {
     if (!nodesByWave.has(node.wave)) {
       nodesByWave.set(node.wave, []);
     }
     nodesByWave.get(node.wave)!.push(node);
   }
-  
+
   for (const [wave, waveNodes] of nodesByWave) {
     const positionMap = new Map<number, PathNode[]>();
-    
+
     for (const node of waveNodes) {
       if (!positionMap.has(node.position.x)) {
         positionMap.set(node.position.x, []);
       }
       positionMap.get(node.position.x)!.push(node);
     }
-    
+
     for (const [position, nodesAtPosition] of positionMap) {
       if (nodesAtPosition.length > 1) {
-        const availablePositions = [0, 1, 2, 3].filter(pos => 
+        const availablePositions = [0, 1, 2, 3].filter(pos =>
           !positionMap.has(pos) || positionMap.get(pos)!.length === 0
         );
-        
+
         for (let i = 1; i < nodesAtPosition.length; i++) {
           if (availablePositions.length > 0) {
             const newPosition = availablePositions.shift()!;
             nodesAtPosition[i].position.x = newPosition;
             nodesAtPosition[i].id = generatePathNodeId(wave, newPosition, PathNodeType[nodesAtPosition[i].nodeType].toLowerCase());
-          } 
+          }
         }
       }
     }
@@ -2144,33 +2111,33 @@ function resolvePositionConflicts(layer: PathLayer): void {
 function validateConnectivity(battlePath: BattlePath): { isValid: boolean; issues: string[] } {
   const issues: string[] = [];
   let isValid = true;
-  
+
   const firstWave = Math.min(...Array.from(battlePath.waveToNodeMap.keys()));
-  
+
   for (const [wave, nodesAtWave] of battlePath.waveToNodeMap) {
     if (wave === firstWave) {
       continue;
     }
-    
+
     for (const node of nodesAtWave) {
       if (!node.previousConnections || node.previousConnections.length === 0) {
         const issueText = `❌ Node ${node.id} at wave ${wave}:[${node.position.x}] has no incoming connections`;
         issues.push(issueText);
         isValid = false;
-      } 
+      }
     }
   }
-  
+
   return { isValid, issues };
 }
 
 function fixConnectivityIssues(battlePath: BattlePath): void {
   const { isValid, issues } = validateConnectivity(battlePath);
-  
+
   if (isValid) {
     return;
   }
-  
+
   const isChallengeNode = (node: PathNode): boolean => {
     return node.nodeType === PathNodeType.CHALLENGE_BOSS ||
            node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
@@ -2178,61 +2145,61 @@ function fixConnectivityIssues(battlePath: BattlePath): void {
            node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
            node.nodeType === PathNodeType.CHALLENGE_REWARD;
   };
-  
+
   const isFirstChallengeNode = (node: PathNode): boolean => {
     return isChallengeNode(node) && node.metadata?.challengeNodeIndex === 1;
   };
-  
+
   const isChallengeRewardNode = (node: PathNode): boolean => {
     return node.nodeType === PathNodeType.CHALLENGE_REWARD;
   };
-  
+
   const firstWave = Math.min(...Array.from(battlePath.waveToNodeMap.keys()));
   const allWaves = Array.from(battlePath.waveToNodeMap.keys()).sort((a, b) => a - b);
-  
+
   for (const wave of allWaves) {
     if (wave === firstWave) continue;
-    
+
     const nodesAtWave = battlePath.waveToNodeMap.get(wave) || [];
-    
+
     for (const node of nodesAtWave) {
       if (!node.previousConnections || node.previousConnections.length === 0) {
-        
+
         if (isChallengeRewardNode(node)) {
           continue;
         }
-        
+
         const prevWave = wave - 1;
         let prevNodes = battlePath.waveToNodeMap.get(prevWave) || [];
-        
+
         if (prevNodes.length === 0 && !isChallengeRewardNode(node)) {
           continue;
         }
-        
+
         const validPrevNodes = prevNodes.filter(prevNode => {
           if (isChallengeRewardNode(node)) {
             return isChallengeNode(prevNode) && !isChallengeRewardNode(prevNode);
           }
-          
+
           if (isChallengeNode(node) && !isFirstChallengeNode(node)) {
             return isChallengeNode(prevNode) && !isChallengeRewardNode(prevNode);
           }
-          
+
           return !isChallengeRewardNode(prevNode);
         });
-        
+
         if (validPrevNodes.length > 0) {
           const bestConnector = validPrevNodes.reduce((best, prevNode) => {
             const bestDiff = Math.abs(best.position.x - node.position.x);
             const nodeDiff = Math.abs(prevNode.position.x - node.position.x);
             const bestConnections = best.connections ? best.connections.length : 0;
             const nodeConnections = prevNode.connections ? prevNode.connections.length : 0;
-            
+
             if (nodeConnections < bestConnections) return prevNode;
             if (nodeConnections > bestConnections) return best;
             return nodeDiff < bestDiff ? prevNode : best;
           });
-          
+
           if (!bestConnector.connections.includes(node.id)) {
             addBidirectionalConnection(bestConnector, node);
           } else {
@@ -2242,7 +2209,7 @@ function fixConnectivityIssues(battlePath: BattlePath): void {
       }
     }
   }
-  
+
   const finalValidation = validateConnectivity(battlePath);
   if (!finalValidation.isValid) {
   }
@@ -2251,7 +2218,7 @@ function fixConnectivityIssues(battlePath: BattlePath): void {
 function getDynamicModeFromScene(scene: BattleScene, wave?: number): DynamicMode {
   const gameMode = scene.gameMode;
   const currentWave = wave || scene.currentBattle?.waveIndex || 0;
-  
+
   return {
     isNuzlocke: gameMode.isNuzlockeActive ? gameMode.isNuzlockeActive(scene) : gameMode.isNuzlocke,
     isNuzlight: gameMode.isNuzlight,
@@ -2261,14 +2228,16 @@ function getDynamicModeFromScene(scene: BattleScene, wave?: number): DynamicMode
 }
 
 function createPathNode(
-  wave: number, 
-  nodeType: PathNodeType, 
-  branch: number = 0, 
+  wave: number,
+  nodeType: PathNodeType,
+  branch: number = 0,
   battleConfig?: FixedBattleConfig,
   metadata?: any,
-  dynamicMode?: DynamicMode
+  dynamicMode?: DynamicMode,
+  isRequiredOverride?: boolean
 ): PathNode {
   const typeString = PathNodeType[nodeType].toLowerCase();
+  const defaultRequired = nodeType === PathNodeType.RIVAL_BATTLE || nodeType === PathNodeType.MAJOR_BOSS_BATTLE || nodeType === PathNodeType.CONVERGENCE_POINT || nodeType === PathNodeType.SMITTY_BATTLE;
   return {
     id: generatePathNodeId(wave, branch, typeString),
     wave,
@@ -2277,7 +2246,7 @@ function createPathNode(
     connections: [],
     previousConnections: [],
     position: { x: branch, y: wave },
-    isRequired: nodeType === PathNodeType.RIVAL_BATTLE || nodeType === PathNodeType.MAJOR_BOSS_BATTLE || nodeType === PathNodeType.CONVERGENCE_POINT || nodeType === PathNodeType.SMITTY_BATTLE,
+    isRequired: isRequiredOverride !== undefined ? isRequiredOverride : defaultRequired,
     dynamicMode,
     metadata
   };
@@ -2300,67 +2269,139 @@ interface SpecialBattleWaves {
     bosses: number[];
   };
 }
-
-
 function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: number, waveOffset: number = 0): SpecialBattleWaves {
-  const shortModeFactor = scene.gameMode.isChaosShort ? .4 : 1;
+  const modeFactor = scene.gameMode.isChaosFTL ? .2 : (scene.gameMode.isChaosShort ? .4 : 1);
   const WAVE_THRESHOLDS = {
-    SMALL_RUN: 500 * shortModeFactor,
-    MEDIUM_RUN: 1000 * shortModeFactor,
-    SEGMENT_SIZE: 500 * shortModeFactor
+    SMALL_RUN: 500 * modeFactor,
+    MEDIUM_RUN: 1000 * modeFactor,
+    SEGMENT_SIZE: 500 * modeFactor
   };
 
   const RIVAL_COUNTS = {
-    SMALL_RUN: Math.ceil(5 * shortModeFactor),
-    MEDIUM_RUN: Math.ceil(10 * shortModeFactor),
-    LARGE_RUN: Math.ceil(10 * shortModeFactor)
+    SMALL_RUN: Math.ceil(5 * modeFactor),
+    MEDIUM_RUN: Math.ceil(10 * modeFactor),
+    LARGE_RUN: Math.ceil(10 * modeFactor)
   };
 
-  const STAGE_PERCENTAGES = {
-    STAGE_1_END: 0.2,   // 100/500, 50/250
-    STAGE_2_END: 0.35,  // 175/500, 87.5/250
-    STAGE_3_END: 0.5,   // 250/500, 125/250
-    STAGE_4_END: 0.65,  // 325/500, 162.5/250
-    STAGE_5_END: 0.8,   // 400/500, 200/250
-    STAGE_6_END: 0.99   // 495/500, 247.5/250
+  const STAGE_PERCENTAGES = scene.gameMode.isChaosFTL ? {
+    STAGE_1_END: 0.18,
+    STAGE_2_END: 0.32,
+    STAGE_3_END: 0.48,
+    STAGE_4_END: 0.64,
+    STAGE_5_END: 0.80,
+    STAGE_6_END: 0.98
+  } : scene.gameMode.isChaosShort ? {
+    STAGE_1_END: 0.18,
+    STAGE_2_END: 0.33,
+    STAGE_3_END: 0.48,
+    STAGE_4_END: 0.63,
+    STAGE_5_END: 0.78,
+    STAGE_6_END: 0.98
+  } : {
+    STAGE_1_END: 0.2,
+    STAGE_2_END: 0.35,
+    STAGE_3_END: 0.5,
+    STAGE_4_END: 0.65,
+    STAGE_5_END: 0.8,
+    STAGE_6_END: 0.99
   };
 
-  const ELITE_FOUR_RANGES = {
-    FIRST_MIN: 0.1,   // 50/500, 25/250
-    FIRST_MAX: 0.3,   // 150/500, 75/250
-    SECOND_MIN: 0.3,  // 150/500, 75/250
-    SECOND_MAX: 0.5,  // 300/500, 150/250
-    THIRD_MIN: 0.6,   // 300/500, 150/250
-    THIRD_MAX: 0.8   // 495/500, 247.5/250
+  const ELITE_FOUR_RANGES = scene.gameMode.isChaosFTL ? {
+    FIRST_MIN: 0.20,
+    FIRST_MAX: 0.42,
+    SECOND_MIN: 0.52,
+    SECOND_MAX: 0.72,
+    THIRD_MIN: 0.75,
+    THIRD_MAX: 0.90
+  } : scene.gameMode.isChaosShort ? {
+    FIRST_MIN: 0.10,
+    FIRST_MAX: 0.28,
+    SECOND_MIN: 0.32,
+    SECOND_MAX: 0.50,
+    THIRD_MIN: 0.55,
+    THIRD_MAX: 0.75
+  } : {
+    FIRST_MIN: 0.1,
+    FIRST_MAX: 0.3,
+    SECOND_MIN: 0.3,
+    SECOND_MAX: 0.5,
+    THIRD_MIN: 0.6,
+    THIRD_MAX: 0.8
   };
 
-  const EVIL_TEAM_RANGES = {
-    FIRST_START: 0.01,  // 5/500, 2.5/250
-    FIRST_END: 0.07,    // 35/500, 17.5/250
-    ADMIN_START: 0.08,  // 40/500, 20/250
-    ADMIN_END: 0.15,    // 75/500, 37.5/250
-    BOSS_END: 0.25,     // 125/500, 62.5/250
-    FALLBACK_BOSS_START: 0.26,  // 130/500, 65/250
-    SECOND_MIN: 0.5,    // 150/500, 75/250
-    SECOND_MAX: 0.7,    // 300/500, 150/250
-    THIRD_MIN: 0.75,     // 300/500, 150/250
-    THIRD_MAX: 0.99     // 495/500, 247.5/250
+  const EVIL_TEAM_RANGES = scene.gameMode.isChaosFTL ? {
+    FIRST_START: 0.02,
+    FIRST_END: 0.25,
+    ADMIN_START: 0.28,
+    ADMIN_END: 0.40,
+    BOSS_END: 0.50,
+    FALLBACK_BOSS_START: 0.52,
+    SECOND_MIN: 0.55,
+    SECOND_MAX: 0.75,
+    THIRD_MIN: 0.78,
+    THIRD_MAX: 0.95
+  } : scene.gameMode.isChaosShort ? {
+    FIRST_START: 0.02,
+    FIRST_END: 0.15,
+    ADMIN_START: 0.17,
+    ADMIN_END: 0.28,
+    BOSS_END: 0.38,
+    FALLBACK_BOSS_START: 0.40,
+    SECOND_MIN: 0.50,
+    SECOND_MAX: 0.70,
+    THIRD_MIN: 0.72,
+    THIRD_MAX: 0.95
+  } : {
+    FIRST_START: 0.01,
+    FIRST_END: 0.07,
+    ADMIN_START: 0.08,
+    ADMIN_END: 0.15,
+    BOSS_END: 0.25,
+    FALLBACK_BOSS_START: 0.26,
+    SECOND_MIN: 0.5,
+    SECOND_MAX: 0.7,
+    THIRD_MIN: 0.75,
+    THIRD_MAX: 0.99
   };
 
-  const MAJOR_BOSS_CONFIG = {
+  const MAJOR_BOSS_CONFIG = scene.gameMode.isChaosFTL ? {
+    WAVE_INTERVAL: 8,
+    MIN_WAVE_PERCENTAGE: 0.45,
+    MAX_WAVE_PERCENTAGE: 0.95,
+    MIN_SEPARATION_PERCENTAGE: 0.15,
+    FINAL_WAVE_THRESHOLD: 100
+  } : scene.gameMode.isChaosShort ? {
     WAVE_INTERVAL: 10,
-    MIN_WAVE_PERCENTAGE: 0.3,
+    MIN_WAVE_PERCENTAGE: 0.48,
+    MAX_WAVE_PERCENTAGE: 0.96,
+    MIN_SEPARATION_PERCENTAGE: 0.14,
+    FINAL_WAVE_THRESHOLD: 200
+  } : {
+    WAVE_INTERVAL: 10,
+    MIN_WAVE_PERCENTAGE: 0.5,
     MAX_WAVE_PERCENTAGE: 0.99,
     MIN_SEPARATION_PERCENTAGE: 0.13,
-    FINAL_WAVE_THRESHOLD: 500 * shortModeFactor
+    FINAL_WAVE_THRESHOLD: 500 * modeFactor
   };
 
-  const RECOVERY_BOSS_CONFIG = {
+  const RECOVERY_BOSS_CONFIG = scene.gameMode.isChaosFTL ? {
+    WAVE_INTERVAL: 20,
+    MIN_WAVE_PERCENTAGE: 0.25,
+    MAX_WAVE_PERCENTAGE: 0.90,
+    MIN_SEPARATION_PERCENTAGE: 0.15,
+    FINAL_WAVE_THRESHOLD: 100
+  } : scene.gameMode.isChaosShort ? {
+    WAVE_INTERVAL: 25,
+    MIN_WAVE_PERCENTAGE: 0.28,
+    MAX_WAVE_PERCENTAGE: 0.92,
+    MIN_SEPARATION_PERCENTAGE: 0.14,
+    FINAL_WAVE_THRESHOLD: 200
+  } : {
     WAVE_INTERVAL: 30,
     MIN_WAVE_PERCENTAGE: 0.3,
     MAX_WAVE_PERCENTAGE: 0.99,
     MIN_SEPARATION_PERCENTAGE: 0.13,
-    FINAL_WAVE_THRESHOLD: 500 * shortModeFactor
+    FINAL_WAVE_THRESHOLD: 500 * modeFactor
   };
 
   const ATTEMPT_LIMITS = {
@@ -2385,7 +2426,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
   const globalGeneratedWaves = new Set<number>();
 
   const segments: Array<{start: number, end: number, segmentSize: number}> = [];
-  
+
   for (let segmentStart = 1; segmentStart <= totalWaves; segmentStart += WAVE_THRESHOLDS.SEGMENT_SIZE) {
     const segmentEnd = Math.min(segmentStart + WAVE_THRESHOLDS.SEGMENT_SIZE - 1, totalWaves);
     const segmentSize = segmentEnd - segmentStart + 1;
@@ -2404,7 +2445,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
 
     if (evilTeamThirdRangeStart !== -1 && evilTeamThirdAvailableWaves.length >= 10) {
       scene.resetSeed(seeds.evilTeam.gruntPlacement + segmentWaveOffset + 2000);
-      
+
       const evilTeamThirdSelectedWaves = evilTeamThirdAvailableWaves.slice(0, 10);
 
       specialWaves.evilTeamWaves.grunts.push(evilTeamThirdSelectedWaves[0]);
@@ -2423,12 +2464,9 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
         globalGeneratedWaves.add(wave);
       });
     }
-
-    
-
     const eliteFourMinWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.FIRST_MIN) + segmentWaveOffset;
     const eliteFourMaxWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.FIRST_MAX) + segmentWaveOffset;
-    
+
     scene.resetSeed(seeds.eliteFour.rangeSelection + segmentWaveOffset);
     let [eliteFourRangeStart, eliteFourAvailableWaves] = findEliteFourRange(eliteFourMinWave, eliteFourMaxWave, generatedWaves);
 
@@ -2444,7 +2482,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       }
 
       eliteFourSelectedWaves.sort((a, b) => a - b);
-      
+
       for (let i = 0; i < 4; i++) {
         specialWaves.eliteFourWaves.push(eliteFourSelectedWaves[i]);
         generatedWaves.add(eliteFourSelectedWaves[i]);
@@ -2457,7 +2495,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
 
     const secondEliteFourMinWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.SECOND_MIN) + segmentWaveOffset;
     const secondEliteFourMaxWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.SECOND_MAX) + segmentWaveOffset;
-    
+
     scene.resetSeed(seeds.eliteFour.rangeSelection + segmentWaveOffset + 1000);
     let [secondEliteFourRangeStart, secondEliteFourAvailableWaves] = findEliteFourRange(secondEliteFourMinWave, secondEliteFourMaxWave, generatedWaves);
 
@@ -2473,7 +2511,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       }
 
       secondEliteFourSelectedWaves.sort((a, b) => a - b);
-      
+
       for (let i = 0; i < 4; i++) {
         specialWaves.eliteFourWaves.push(secondEliteFourSelectedWaves[i]);
         generatedWaves.add(secondEliteFourSelectedWaves[i]);
@@ -2484,33 +2522,35 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       globalGeneratedWaves.add(secondEliteFourSelectedWaves[4]);
     }
 
-    const thirdEliteFourMinWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.THIRD_MIN) + segmentWaveOffset;
-    const thirdEliteFourMaxWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.THIRD_MAX) + segmentWaveOffset;
-    
-    scene.resetSeed(seeds.eliteFour.rangeSelection + segmentWaveOffset + 2000);
-    let [thirdEliteFourRangeStart, thirdEliteFourAvailableWaves] = findEliteFourRange(thirdEliteFourMinWave, thirdEliteFourMaxWave, generatedWaves);
+    if (totalWaves >= 150) {
+      const thirdEliteFourMinWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.THIRD_MIN) + segmentWaveOffset;
+      const thirdEliteFourMaxWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.THIRD_MAX) + segmentWaveOffset;
 
-    if (thirdEliteFourRangeStart !== -1 && thirdEliteFourAvailableWaves.length >= 5) {
-      scene.resetSeed(seeds.eliteFour.wavePlacement + segmentWaveOffset + 2000);
-      const thirdEliteFourSelectedWaves: number[] = [];
-      const thirdEliteFourWavesCopy = [...thirdEliteFourAvailableWaves];
+      scene.resetSeed(seeds.eliteFour.rangeSelection + segmentWaveOffset + 2000);
+      let [thirdEliteFourRangeStart, thirdEliteFourAvailableWaves] = findEliteFourRange(thirdEliteFourMinWave, thirdEliteFourMaxWave, generatedWaves);
 
-      for (let i = 0; i < 5; i++) {
-        const index = Utils.randSeedInt(thirdEliteFourWavesCopy.length);
-        thirdEliteFourSelectedWaves.push(thirdEliteFourWavesCopy[index]);
-        thirdEliteFourWavesCopy.splice(index, 1);
+      if (thirdEliteFourRangeStart !== -1 && thirdEliteFourAvailableWaves.length >= 5) {
+        scene.resetSeed(seeds.eliteFour.wavePlacement + segmentWaveOffset + 2000);
+        const thirdEliteFourSelectedWaves: number[] = [];
+        const thirdEliteFourWavesCopy = [...thirdEliteFourAvailableWaves];
+
+        for (let i = 0; i < 5; i++) {
+          const index = Utils.randSeedInt(thirdEliteFourWavesCopy.length);
+          thirdEliteFourSelectedWaves.push(thirdEliteFourWavesCopy[index]);
+          thirdEliteFourWavesCopy.splice(index, 1);
+        }
+
+        thirdEliteFourSelectedWaves.sort((a, b) => a - b);
+
+        for (let i = 0; i < 4; i++) {
+          specialWaves.eliteFourWaves.push(thirdEliteFourSelectedWaves[i]);
+          generatedWaves.add(thirdEliteFourSelectedWaves[i]);
+          globalGeneratedWaves.add(thirdEliteFourSelectedWaves[i]);
+        }
+        specialWaves.championWaves.push(thirdEliteFourSelectedWaves[4]);
+        generatedWaves.add(thirdEliteFourSelectedWaves[4]);
+        globalGeneratedWaves.add(thirdEliteFourSelectedWaves[4]);
       }
-
-      thirdEliteFourSelectedWaves.sort((a, b) => a - b);
-      
-      for (let i = 0; i < 4; i++) {
-        specialWaves.eliteFourWaves.push(thirdEliteFourSelectedWaves[i]);
-        generatedWaves.add(thirdEliteFourSelectedWaves[i]);
-        globalGeneratedWaves.add(thirdEliteFourSelectedWaves[i]);
-      }
-      specialWaves.championWaves.push(thirdEliteFourSelectedWaves[4]);
-      generatedWaves.add(thirdEliteFourSelectedWaves[4]);
-      globalGeneratedWaves.add(thirdEliteFourSelectedWaves[4]);
     }
 
     function placeEvilBattle(
@@ -2524,7 +2564,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       scene.resetSeed(seed);
       let waveNumber: number;
       let attempts = 0;
-      
+
       do {
         waveNumber = Utils.randSeedInt(maxWave - minWave + 1) + minWave;
         attempts++;
@@ -2532,7 +2572,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
           return -1;
         }
       } while (generatedWaves.has(waveNumber) || globalGeneratedWaves.has(waveNumber));
-      
+
       return waveNumber;
     }
 
@@ -2550,12 +2590,12 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       }
     }
 
-    const adminStart = firstRoundGrunts.length > 0 ? 
-      Math.max(...firstRoundGrunts) + 1 : 
+    const adminStart = firstRoundGrunts.length > 0 ?
+      Math.max(...firstRoundGrunts) + 1 :
       Math.floor(segmentSize * EVIL_TEAM_RANGES.ADMIN_START) + segmentWaveOffset;
     const adminEnd = Math.floor(segmentSize * EVIL_TEAM_RANGES.ADMIN_END) + segmentWaveOffset;
     const adminWave = placeEvilBattle(scene, seeds.evilTeam.adminPlacement + segmentWaveOffset, adminStart, adminEnd, generatedWaves);
-    
+
     if (adminWave !== -1) {
       specialWaves.evilTeamWaves.admins.push(adminWave);
       generatedWaves.add(adminWave);
@@ -2564,7 +2604,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       const bossStart = adminWave + 1;
       const bossEnd = Math.floor(segmentSize * EVIL_TEAM_RANGES.BOSS_END) + segmentWaveOffset;
       const bossWave = placeEvilBattle(scene, seeds.evilTeam.bossPlacement + segmentWaveOffset, bossStart, bossEnd, generatedWaves);
-      
+
       if (bossWave !== -1) {
         specialWaves.evilTeamWaves.bosses.push(bossWave);
         generatedWaves.add(bossWave);
@@ -2574,7 +2614,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       const fallbackBossStart = Math.floor(segmentSize * EVIL_TEAM_RANGES.FALLBACK_BOSS_START) + segmentWaveOffset;
       const fallbackBossEnd = Math.floor(segmentSize * EVIL_TEAM_RANGES.BOSS_END) + segmentWaveOffset;
       const fallbackBossWave = placeEvilBattle(scene, seeds.evilTeam.bossPlacement + segmentWaveOffset + 100, fallbackBossStart, fallbackBossEnd, generatedWaves);
-      
+
       if (fallbackBossWave !== -1) {
         specialWaves.evilTeamWaves.bosses.push(fallbackBossWave);
         generatedWaves.add(fallbackBossWave);
@@ -2584,17 +2624,17 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
 
     scene.resetSeed(seeds.rivalSelection + segmentWaveOffset);
     let allRivalTypes = getAllRivalTrainerTypes ? getAllRivalTrainerTypes() : [];
-    
+
     let numRivals: number;
     let finalWaveRivals: number[] = [];
-    
+
     const isSmallRunSegment = segmentSize <= WAVE_THRESHOLDS.SMALL_RUN;
     const isMediumRunSegment = segmentSize <= WAVE_THRESHOLDS.MEDIUM_RUN;
-    
+
     const segmentFinalWave = segmentEnd + waveOffset;
     const isSegmentBoundary500 = segmentEnd % WAVE_THRESHOLDS.SEGMENT_SIZE === 0;
     const isSegmentBoundary1000 = segmentEnd % WAVE_THRESHOLDS.MEDIUM_RUN === 0;
-    
+
     if (isSmallRunSegment) {
       numRivals = RIVAL_COUNTS.SMALL_RUN;
       if (isSegmentBoundary500 && !isSegmentBoundary1000) {
@@ -2609,7 +2649,13 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
     for (const finalWave of finalWaveRivals) {
       generatedWaves.add(finalWave);
       globalGeneratedWaves.add(finalWave);
-      specialWaves.rivalWaves.push(finalWave);
+      scene.resetSeed(seeds.smittySeed || seeds.baseSeed);
+      const smittyChance = Overrides.SMITTY_FINAL_BATTLE_CHANCE_OVERRIDE ?? 25;
+      if (Utils.randSeedInt(100) < smittyChance) {
+        specialWaves.smittyWaves.push(finalWave);
+      } else {
+        specialWaves.rivalWaves.push(finalWave);
+      }
     }
 
     const getStageRanges = () => {
@@ -2632,11 +2678,11 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
     }
 
     scene.resetSeed(seeds.rivalPokemon + segmentWaveOffset);
-    
+
     for (let stage = 1; stage <= 6; stage++) {
       for (let rivalIndex = 0; rivalIndex < numRivals; rivalIndex++) {
         const rival = selectedRivals[rivalIndex];
-        
+
         const { start, end } = getStageRanges()[stage];
         let waveNumber: number;
         let attempts = 0;
@@ -2667,7 +2713,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
     const majorBossMinWave = Math.floor(segmentSize * MAJOR_BOSS_CONFIG.MIN_WAVE_PERCENTAGE) + segmentWaveOffset;
     const majorBossMaxWave = Math.floor(segmentSize * MAJOR_BOSS_CONFIG.MAX_WAVE_PERCENTAGE) + segmentWaveOffset;
     const availableBossWaves: number[] = [];
-    
+
     for (let wave = majorBossMinWave; wave <= majorBossMaxWave; wave++) {
       if (!generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)) {
         availableBossWaves.push(wave);
@@ -2683,7 +2729,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       globalGeneratedWaves.add(firstBossWave);
 
       const minSeparation = Math.max(MAJOR_BOSS_CONFIG.WAVE_INTERVAL, Math.floor(segmentSize * MAJOR_BOSS_CONFIG.MIN_SEPARATION_PERCENTAGE));
-      const validSecondBossWaves = availableBossWaves.filter(wave => 
+      const validSecondBossWaves = availableBossWaves.filter(wave =>
         Math.abs(wave - firstBossWave) >= minSeparation && !generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)
       );
 
@@ -2694,9 +2740,9 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
         generatedWaves.add(secondBossWave);
         globalGeneratedWaves.add(secondBossWave);
 
-        const validThirdBossWaves = availableBossWaves.filter(wave => 
-          Math.abs(wave - firstBossWave) >= minSeparation && 
-          Math.abs(wave - secondBossWave) >= minSeparation && 
+        const validThirdBossWaves = availableBossWaves.filter(wave =>
+          Math.abs(wave - firstBossWave) >= minSeparation &&
+          Math.abs(wave - secondBossWave) >= minSeparation &&
           !generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)
         );
 
@@ -2707,10 +2753,10 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
           generatedWaves.add(thirdBossWave);
           globalGeneratedWaves.add(thirdBossWave);
 
-          const validFourthBossWaves = availableBossWaves.filter(wave => 
-            Math.abs(wave - firstBossWave) >= minSeparation && 
-            Math.abs(wave - secondBossWave) >= minSeparation && 
-            Math.abs(wave - thirdBossWave) >= minSeparation && 
+          const validFourthBossWaves = availableBossWaves.filter(wave =>
+            Math.abs(wave - firstBossWave) >= minSeparation &&
+            Math.abs(wave - secondBossWave) >= minSeparation &&
+            Math.abs(wave - thirdBossWave) >= minSeparation &&
             !generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)
           );
 
@@ -2721,11 +2767,11 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
             generatedWaves.add(fourthBossWave);
             globalGeneratedWaves.add(fourthBossWave);
 
-            const validFifthBossWaves = availableBossWaves.filter(wave => 
-              Math.abs(wave - firstBossWave) >= minSeparation && 
-              Math.abs(wave - secondBossWave) >= minSeparation && 
-              Math.abs(wave - thirdBossWave) >= minSeparation && 
-              Math.abs(wave - fourthBossWave) >= minSeparation && 
+            const validFifthBossWaves = availableBossWaves.filter(wave =>
+              Math.abs(wave - firstBossWave) >= minSeparation &&
+              Math.abs(wave - secondBossWave) >= minSeparation &&
+              Math.abs(wave - thirdBossWave) >= minSeparation &&
+              Math.abs(wave - fourthBossWave) >= minSeparation &&
               !generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)
             );
 
@@ -2779,9 +2825,6 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
         globalGeneratedWaves.add(wave);
       });
     }
-
-
-
     for (let wave = RECOVERY_BOSS_CONFIG.WAVE_INTERVAL + segmentWaveOffset; wave <= segmentEnd + waveOffset; wave += RECOVERY_BOSS_CONFIG.WAVE_INTERVAL) {
       if (wave % RECOVERY_BOSS_CONFIG.WAVE_INTERVAL === 0 && !generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)) {
         specialWaves.recoveryBossWaves.push(wave);
@@ -2817,21 +2860,119 @@ interface NodeGenerationResult {
   battleConfig?: FixedBattleConfig;
   dynamicMode?: DynamicMode;
 }
-
-
-
 function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange {
   const configs: WaveRange[] = [
     {
       start: 1,
+      end: 9,
+      probabilities: {
+        [PathNodeType.WILD_POKEMON]: 850,
+
+        [PathNodeType.TRAINER_BATTLE]: 650,
+        [PathNodeType.ITEM_BERRY]: 60,
+        [PathNodeType.MONEY]: 35,
+        [PathNodeType.MYSTERY_NODE]: 200,
+        [PathNodeType.MINTS]: 35,
+        [PathNodeType.TERA_SHARDS]: 10,
+        [PathNodeType.PP_MAX]: 30,
+        [PathNodeType.ROGUE_BALL_ITEMS]: 5,
+        [PathNodeType.COLLECTED_TYPE]: 60,
+        [PathNodeType.ITEM_GENERAL]: 35,
+        [PathNodeType.ABILITY_SWITCHERS]: 30,
+        [PathNodeType.TYPE_SWITCHER]: 60,
+        [PathNodeType.PASSIVE_ABILITY]: 35,
+        [PathNodeType.EGG_VOUCHER]: 35,
+        [PathNodeType.RAND_PERMA_ITEM]: 5,
+        [PathNodeType.PERMA_ITEMS]: 3,
+        [PathNodeType.PERMA_MONEY]: 25,
+        [PathNodeType.GOLDEN_POKEBALL]: 1,
+        [PathNodeType.MASTER_BALL_ITEMS]: 1,
+        [PathNodeType.GLITCH_PIECE]: 70,
+        [PathNodeType.EXP_SHARE]: 20,
+        [PathNodeType.DNA_SPLICERS]: 5,
+        [PathNodeType.ANY_TMS]: 35,
+        [PathNodeType.ADD_POKEMON]: 30,
+        [PathNodeType.STAT_SWITCHERS]: 35,
+        [PathNodeType.ITEM_TM]: 60,
+        [PathNodeType.REVIVER_SEED]: 3,
+        [PathNodeType.GREAT_BALL_ITEMS]: 35,
+        [PathNodeType.ULTRA_BALL_ITEMS]: 15,
+        [PathNodeType.QUICK_CLAW]: 3,
+        [PathNodeType.WIDE_LENS]: 3,
+        [PathNodeType.GRIP_CLAW]: 3,
+        [PathNodeType.EVIOLITE]: 3,
+        [PathNodeType.SCOPE_LENS]: 3,
+        [PathNodeType.VITAMIN]: 150,
+        [PathNodeType.MOVE_UPGRADE]: 80,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.SKILL_POINT]: 20,
+        [PathNodeType.SKILL_TOKEN]: 25,
+      }
+    },
+    {
+      start: 10,
+      end: 50,
+      probabilities: {
+        [PathNodeType.WILD_POKEMON]: 850,
+        [PathNodeType.TRAINER_BATTLE]: 650,
+        [PathNodeType.SMITTY_BATTLE]: 1,
+        [PathNodeType.ITEM_BERRY]: 60,
+        [PathNodeType.MONEY]: 35,
+
+        [PathNodeType.MYSTERY_NODE]: 200,
+        [PathNodeType.MINTS]: 35,
+        [PathNodeType.TERA_SHARDS]: 10,
+        [PathNodeType.PP_MAX]: 30,
+        [PathNodeType.ROGUE_BALL_ITEMS]: 5,
+        [PathNodeType.COLLECTED_TYPE]: 60,
+        [PathNodeType.COLLECTED_SHOP]: 10,
+        [PathNodeType.ITEM_GENERAL]: 35,
+        [PathNodeType.ABILITY_SWITCHERS]: 30,
+        [PathNodeType.TYPE_SWITCHER]: 60,
+        [PathNodeType.PASSIVE_ABILITY]: 35,
+        [PathNodeType.EGG_VOUCHER]: 35,
+        [PathNodeType.RELEASE_ITEMS]: 20,
+        [PathNodeType.RAND_PERMA_ITEM]: 5,
+        [PathNodeType.PERMA_ITEMS]: 3,
+        [PathNodeType.PERMA_MONEY]: 25,
+        [PathNodeType.GOLDEN_POKEBALL]: 1,
+        [PathNodeType.MASTER_BALL_ITEMS]: 1,
+        [PathNodeType.GLITCH_PIECE]: 70,
+        [PathNodeType.EXP_SHARE]: 20,
+        [PathNodeType.DNA_SPLICERS]: 5,
+        [PathNodeType.ANY_TMS]: 35,
+        [PathNodeType.ADD_POKEMON]: 30,
+        [PathNodeType.STAT_SWITCHERS]: 35,
+        [PathNodeType.RECOVERY_BOSS]: 10,
+        [PathNodeType.ITEM_TM]: 60,
+        [PathNodeType.HEAL_ITEMS]: 35,
+        [PathNodeType.REVIVER_SEED]: 3,
+        [PathNodeType.SACRED_ASH]: 3,
+        [PathNodeType.GREAT_BALL_ITEMS]: 35,
+        [PathNodeType.ULTRA_BALL_ITEMS]: 15,
+        [PathNodeType.QUICK_CLAW]: 3,
+        [PathNodeType.WIDE_LENS]: 3,
+        [PathNodeType.GRIP_CLAW]: 3,
+        [PathNodeType.EVIOLITE]: 3,
+        [PathNodeType.SCOPE_LENS]: 3,
+        [PathNodeType.VITAMIN]: 150,
+        [PathNodeType.MOVE_UPGRADE]: 80,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.SKILL_POINT]: 20,
+        [PathNodeType.SKILL_TOKEN]: 25,
+      }
+    },
+    {
+      start: 51,
       end: 149,
       probabilities: {
-        [PathNodeType.WILD_POKEMON]: 800,
-        [PathNodeType.TRAINER_BATTLE]: 700,
+        [PathNodeType.WILD_POKEMON]: 850,
+        [PathNodeType.TRAINER_BATTLE]: 650,
+        [PathNodeType.SMITTY_BATTLE]: 5,
         [PathNodeType.ITEM_BERRY]: 60,
         [PathNodeType.MONEY]: 35,
         [PathNodeType.MAJOR_BOSS_BATTLE]: 15,
-        [PathNodeType.MYSTERY_NODE]: 150,
+        [PathNodeType.MYSTERY_NODE]: 200,
         [PathNodeType.MINTS]: 35,
         [PathNodeType.TERA_SHARDS]: 10,
         [PathNodeType.PP_MAX]: 30,
@@ -2851,7 +2992,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
         [PathNodeType.EXP_SHARE]: 20,
-        [PathNodeType.DNA_SPLICERS]: 25,
+        [PathNodeType.DNA_SPLICERS]: 5,
         [PathNodeType.ANY_TMS]: 35,
         [PathNodeType.ADD_POKEMON]: 30,
         [PathNodeType.STAT_SWITCHERS]: 35,
@@ -2870,6 +3011,8 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 80,
         [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.SKILL_POINT]: 20,
+        [PathNodeType.SKILL_TOKEN]: 25,
       }
     },
     {
@@ -2879,10 +3022,11 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.WILD_POKEMON]: 900,
         [PathNodeType.TRAINER_BATTLE]: 600,
         [PathNodeType.ELITE_FOUR]: 200,
+        [PathNodeType.SMITTY_BATTLE]: 5,
         [PathNodeType.ITEM_BERRY]: 60,
         [PathNodeType.MONEY]: 35,
         [PathNodeType.MAJOR_BOSS_BATTLE]: 50,
-        [PathNodeType.MYSTERY_NODE]: 150,
+        [PathNodeType.MYSTERY_NODE]: 200,
         [PathNodeType.MINTS]: 35,
         [PathNodeType.TERA_SHARDS]: 10,
         [PathNodeType.PP_MAX]: 30,
@@ -2902,7 +3046,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
         [PathNodeType.EXP_SHARE]: 10,
-        [PathNodeType.DNA_SPLICERS]: 25,
+        [PathNodeType.DNA_SPLICERS]: 5,
         [PathNodeType.ANY_TMS]: 35,
         [PathNodeType.ADD_POKEMON]: 45,
         [PathNodeType.STAT_SWITCHERS]: 35,
@@ -2921,6 +3065,8 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 80,
         [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.SKILL_POINT]: 20,
+        [PathNodeType.SKILL_TOKEN]: 25,
       }
     },
     {
@@ -2931,6 +3077,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.TRAINER_BATTLE]: 500,
         [PathNodeType.ELITE_FOUR]: 200,
         [PathNodeType.CHAMPION]: 100,
+        [PathNodeType.SMITTY_BATTLE]: 5,
         [PathNodeType.ITEM_BERRY]: 60,
         [PathNodeType.MONEY]: 50,
         [PathNodeType.MAJOR_BOSS_BATTLE]: 50,
@@ -2954,7 +3101,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
         [PathNodeType.EXP_SHARE]: 5,
-        [PathNodeType.DNA_SPLICERS]: 25,
+        [PathNodeType.DNA_SPLICERS]: 5,
         [PathNodeType.ANY_TMS]: 35,
         [PathNodeType.ADD_POKEMON]: 45,
         [PathNodeType.STAT_SWITCHERS]: 35,
@@ -2973,6 +3120,8 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 100,
         [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.SKILL_POINT]: 20,
+        [PathNodeType.SKILL_TOKEN]: 25,
       }
     },
     {
@@ -3006,7 +3155,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.GOLDEN_POKEBALL]: 1,
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
-        [PathNodeType.DNA_SPLICERS]: 25,
+        [PathNodeType.DNA_SPLICERS]: 5,
         [PathNodeType.ANY_TMS]: 35,
         [PathNodeType.ADD_POKEMON]: 55,
         [PathNodeType.STAT_SWITCHERS]: 35,
@@ -3025,139 +3174,16 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 100,
         [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.SKILL_POINT]: 20,
+        [PathNodeType.SKILL_TOKEN]: 25,
       }
     },
-    // {
-    //   start: 51,
-    //   end: 70,
-    //   probabilities: {
-    //     [PathNodeType.WILD_POKEMON]: 18,
-    //     [PathNodeType.TRAINER_BATTLE]: 16,
-    //     [PathNodeType.ELITE_FOUR]: 11,
-    //     [PathNodeType.ITEM_GENERAL]: 9,
-    //     [PathNodeType.ADD_POKEMON]: 7,
-    //     [PathNodeType.ITEM_TM]: 5,
-    //     [PathNodeType.MYSTERY_NODE]: 3,
-    //     [PathNodeType.MONEY]: 5,
-    //     [PathNodeType.GOLDEN_POKEBALL]: 3,
-    //     [PathNodeType.ROGUE_BALL_ITEMS]: 3,
-    //     [PathNodeType.MINTS]: 3,
-    //     [PathNodeType.PP_MAX]: 2,
-    //     [PathNodeType.ABILITY_SWITCHERS]: 2,
-    //     [PathNodeType.COLLECTED_TYPE]: 1,
-    //     [PathNodeType.EXP_SHARE]: 5,
-    //     [PathNodeType.TYPE_SWITCHER]: 3,
-    //     [PathNodeType.PASSIVE_ABILITY]: 3,
-    //     [PathNodeType.ANY_TMS]: 1
-    //   }
-    // },
-    // {
-    //   start: 55,
-    //   end: 60,
-    //   dynamicMode: { isNuzlocke: true },
-    //   probabilities: {
-    //     [PathNodeType.WILD_POKEMON]: 30,
-    //     [PathNodeType.TRAINER_BATTLE]: 18,
-    //     [PathNodeType.ITEM_GENERAL]: 13,
-    //     [PathNodeType.MYSTERY_NODE]: 7,
-    //     [PathNodeType.MONEY]: 4,
-    //     [PathNodeType.RELEASE_ITEMS]: 7,
-    //     [PathNodeType.MINTS]: 3,
-    //     [PathNodeType.PP_MAX]: 3,
-    //     [PathNodeType.EGG_VOUCHER]: 3,
-    //     [PathNodeType.EXP_SHARE]: 6,
-    //     [PathNodeType.TYPE_SWITCHER]: 3,
-    //     [PathNodeType.PASSIVE_ABILITY]: 2,
-    //     [PathNodeType.ANY_TMS]: 1
-    //   }
-    // },
-    // {
-    //   start: 71,
-    //   end: 99,
-    //   probabilities: {
-    //     [PathNodeType.WILD_POKEMON]: 13,
-    //     [PathNodeType.TRAINER_BATTLE]: 10,
-    //     [PathNodeType.ELITE_FOUR]: 11,
-    //     [PathNodeType.EVIL_BOSS_BATTLE]: 7,
-    //     [PathNodeType.ITEM_GENERAL]: 7,
-    //     [PathNodeType.ADD_POKEMON]: 5,
-    //     [PathNodeType.ITEM_TM]: 3,
-    //     [PathNodeType.MYSTERY_NODE]: 3,
-    //     [PathNodeType.MONEY]: 4,
-    //     [PathNodeType.PERMA_MONEY]: 3,
-    //     [PathNodeType.GOLDEN_POKEBALL]: 4,
-    //     [PathNodeType.ROGUE_BALL_ITEMS]: 3,
-    //     [PathNodeType.MASTER_BALL_ITEMS]: 3,
-    //     [PathNodeType.ABILITY_SWITCHERS]: 3,
-    //     [PathNodeType.GLITCH_PIECE]: 2,
-    //     [PathNodeType.DNA_SPLICERS]: 2,
-    //     [PathNodeType.MINTS]: 2,
-    //     [PathNodeType.PP_MAX]: 3,
-    //     [PathNodeType.COLLECTED_TYPE]: 2,
-    //     [PathNodeType.EXP_SHARE]: 4,
-    //     [PathNodeType.TYPE_SWITCHER]: 3,
-    //     [PathNodeType.PASSIVE_ABILITY]: 3,
-    //     [PathNodeType.ANY_TMS]: 2
-    //   }
-    // },
-    // {
-    //   start: 100,
-    //   end: 110,
-    //   probabilities: {
-    //     [PathNodeType.ELITE_FOUR]: 18,
-    //     [PathNodeType.CHAMPION]: 9,
-    //     [PathNodeType.MAJOR_BOSS_BATTLE]: 9,
-    //     [PathNodeType.TRAINER_BATTLE]: 7,
-    //     [PathNodeType.ADD_POKEMON]: 5,
-    //     [PathNodeType.ITEM_TM]: 4,
-    //     [PathNodeType.MYSTERY_NODE]: 3,
-    //     [PathNodeType.RAND_PERMA_ITEM]: 7,
-    //     [PathNodeType.PERMA_MONEY]: 4,
-    //     [PathNodeType.MASTER_BALL_ITEMS]: 5,
-    //     [PathNodeType.GLITCH_PIECE]: 3,
-    //     [PathNodeType.DNA_SPLICERS]: 3,
-    //     [PathNodeType.PP_MAX]: 3,
-    //     [PathNodeType.COLLECTED_TYPE]: 3,
-    //     [PathNodeType.ABILITY_SWITCHERS]: 2,
-    //     [PathNodeType.MINTS]: 2,
-    //     [PathNodeType.EXP_SHARE]: 5,
-    //     [PathNodeType.TYPE_SWITCHER]: 4,
-    //     [PathNodeType.PASSIVE_ABILITY]: 4,
-    //     [PathNodeType.ANY_TMS]: 1
-    //   }
-    // },
-    // {
-    //   start: 111,
-    //   end: 150,
-    //   probabilities: {
-    //     [PathNodeType.ELITE_FOUR]: 13,
-    //     [PathNodeType.CHAMPION]: 10,
-    //     [PathNodeType.MAJOR_BOSS_BATTLE]: 7,
-    //     [PathNodeType.EVIL_BOSS_BATTLE]: 5,
-    //     [PathNodeType.TRAINER_BATTLE]: 4,
-    //     [PathNodeType.ADD_POKEMON]: 4,
-    //     [PathNodeType.ITEM_TM]: 3,
-    //     [PathNodeType.MYSTERY_NODE]: 2,
-    //     [PathNodeType.RAND_PERMA_ITEM]: 9,
-    //     [PathNodeType.PERMA_MONEY]: 7,
-    //     [PathNodeType.MASTER_BALL_ITEMS]: 7,
-    //     [PathNodeType.GLITCH_PIECE]: 5,
-    //     [PathNodeType.DNA_SPLICERS]: 5,
-    //     [PathNodeType.RELEASE_ITEMS]: 3,
-    //     [PathNodeType.PP_MAX]: 2,
-    //     [PathNodeType.COLLECTED_TYPE]: 1,
-    //     [PathNodeType.EXP_SHARE]: 6,
-    //     [PathNodeType.TYPE_SWITCHER]: 5,
-    //     [PathNodeType.PASSIVE_ABILITY]: 5,
-    //     [PathNodeType.ANY_TMS]: 3
-    //   }
-    // }
   ];
 
   for (const config of configs) {
     if (wave >= config.start && wave <= config.end) {
       if (config.dynamicMode && dynamicMode) {
-        const matches = Object.entries(config.dynamicMode).every(([key, value]) => 
+        const matches = Object.entries(config.dynamicMode).every(([key, value]) =>
           dynamicMode[key as keyof DynamicMode] === value
         );
         if (matches) {
@@ -3174,13 +3200,13 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
 
 function generateChallengeRanges(maxWave: number, waveOffset: number = 0): Array<{ start: number; end: number }> {
   const ranges: Array<{ start: number; end: number }> = [];
-  
+
   let currentStart = 50 + waveOffset;
   let rangeIndex = 0;
-  
+
   while (currentStart < maxWave) {
     let rangeSize: number;
-    
+
     if (rangeIndex === 0) {
       rangeSize = 50;
     } else if (rangeIndex === 1) {
@@ -3188,41 +3214,41 @@ function generateChallengeRanges(maxWave: number, waveOffset: number = 0): Array
     } else {
       rangeSize = rangeIndex % 2 === 0 ? 50 : 75;
     }
-    
+
     const currentEnd = Math.min(currentStart + rangeSize, maxWave);
-    
+
     if (currentEnd > currentStart) {
       ranges.push({ start: currentStart, end: currentEnd });
     }
-    
+
     currentStart = currentEnd;
     rangeIndex++;
   }
-  
+
   return ranges;
 }
 
 function getChallengeRangeForWave(wave: number, maxWave: number, waveOffset: number = 0): { start: number; end: number } | null {
   const ranges = generateChallengeRanges(maxWave, waveOffset);
-  
+
   for (const range of ranges) {
     if (wave >= range.start && wave <= range.end) {
       return range;
     }
   }
-  
+
   return null;
 }
 
 function getChallengeRangeIndex(rangeStart: number, maxWave: number, waveOffset: number = 0): number {
   const ranges = generateChallengeRanges(maxWave, waveOffset);
-  
+
   for (let i = 0; i < ranges.length; i++) {
     if (ranges[i].start === rangeStart) {
       return i;
     }
   }
-  
+
   return 0;
 }
 
@@ -3245,10 +3271,12 @@ function createPathLayer(
   globalRivalAssignments?: Map<number, { stage: number; rival: any }>,
   globalChallengeRanges?: Set<number>
 ): PathLayer {
-  const globalStartWave = Math.min(...(specialWaves?.rivalWaves || [startWave]));
-  const waveOffset = globalStartWave > 1 ? globalStartWave - 1 : 0;
-  const shortModeFactor = scene.gameMode.isChaosShort ? .4 : 1;
-  const CHALLENGE_RANGES = generateChallengeRanges(totalWaves || 500 * shortModeFactor, waveOffset);
+  const segmentSize = scene.gameMode.isChaosFTL ? 100 : (scene.gameMode.isChaosShort ? 200 : 500);
+  const baseWaveOffset = startWave > 1 ? Math.floor((startWave - 1) / segmentSize) * segmentSize : 0;
+  const waveOffset = baseWaveOffset;
+  const modeFactor = scene.gameMode.isChaosFTL ? .2 : (scene.gameMode.isChaosShort ? .4 : 1);
+  const ftlStartOffset = scene.gameMode.isChaosFTL ? 10 : 0;
+  const CHALLENGE_RANGES = generateChallengeRanges(totalWaves || 500 * modeFactor, waveOffset + ftlStartOffset);
 
   const LAYER_CONFIG = {
     DEFAULT_BRANCHES: 3,
@@ -3275,15 +3303,15 @@ function createPathLayer(
   };
 
   const waveNodeTracker = new Map<number, Set<number>>();
-  
+
   scene.resetSeed(seeds.baseSeed + layerIndex);
 
   if (specialWaves) {
     const allSpecialWaves = new Map<number, { type: PathNodeType; config?: FixedBattleConfig; metadata?: any; dynamicMode?: DynamicMode }>();
-    
+
     scene.resetSeed(seeds.rivalSelection);
     const primaryRival = getDynamicRivalType ? getDynamicRivalType(1, scene.gameData, false) : null;
-    
+
     let rivalCounter = 0;
     let eliteFourCounter = 0;
     let totalEliteFourWaves = specialWaves.eliteFourWaves.length;
@@ -3294,12 +3322,12 @@ function createPathLayer(
       const rivalType = assignment?.rival || primaryRival;
       const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
       const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
-      
+
       allSpecialWaves.set(wave, {
         type: PathNodeType.RIVAL_BATTLE,
         config: createRivalBattle(rivalStage, rivalType, false),
-        metadata: { 
-          rivalStage, 
+        metadata: {
+          rivalStage,
           rivalType,
           dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined
         },
@@ -3320,11 +3348,11 @@ function createPathLayer(
       const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
       const globalEliteFourIndex = specialWaves.eliteFourWaves.indexOf(wave);
       const isLastEliteFour = globalEliteFourIndex === totalEliteFourWaves - 1;
-      
+
       allSpecialWaves.set(wave, {
         type: PathNodeType.ELITE_FOUR,
         config: createEliteFourBattle(trainerType, false, seeds.baseSeed),
-        metadata: { 
+        metadata: {
           eliteType: ['first', 'second', 'third', 'fourth'][eliteFourCounter % 4],
           dynamicModeCount: (dynamicModeCount > 0 && isLastEliteFour) ? dynamicModeCount : undefined
         },
@@ -3336,7 +3364,7 @@ function createPathLayer(
     specialWaves.championWaves.filter(w => w >= startWave && w <= endWave).forEach(wave => {
       const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
       const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
-      
+
       allSpecialWaves.set(wave, {
         type: PathNodeType.CHAMPION,
         config: createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed),
@@ -3350,7 +3378,7 @@ function createPathLayer(
     specialWaves.majorBossWaves.filter(w => w >= startWave && w <= endWave).forEach(wave => {
       const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
       const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
-      
+
       allSpecialWaves.set(wave, {
         type: PathNodeType.MAJOR_BOSS_BATTLE,
         metadata: {
@@ -3364,7 +3392,7 @@ function createPathLayer(
     specialWaves.recoveryBossWaves.filter(w => w >= startWave && w <= endWave).forEach(wave => {
       const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
       const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
-      
+
       allSpecialWaves.set(wave, {
         type: PathNodeType.RECOVERY_BOSS,
         metadata: {
@@ -3378,11 +3406,11 @@ function createPathLayer(
     specialWaves.evilTeamWaves.grunts.filter(w => w >= startWave && w <= endWave).forEach(wave => {
       const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
       const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
-      
+
       allSpecialWaves.set(wave, {
         type: PathNodeType.EVIL_GRUNT_BATTLE,
         config: createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_GRUNTS, 35, false),
-        metadata: { 
+        metadata: {
           evilTeamType: 'grunt',
           dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined
         },
@@ -3393,11 +3421,11 @@ function createPathLayer(
     specialWaves.evilTeamWaves.admins.filter(w => w >= startWave && w <= endWave).forEach(wave => {
       const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
       const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
-      
+
       allSpecialWaves.set(wave, {
         type: PathNodeType.EVIL_ADMIN_BATTLE,
         config: createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_ADMINS, 35, false),
-        metadata: { 
+        metadata: {
           evilTeamType: 'admin',
           dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined
         },
@@ -3408,11 +3436,11 @@ function createPathLayer(
     specialWaves.evilTeamWaves.bosses.filter(w => w >= startWave && w <= endWave).forEach(wave => {
       const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
       const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
-      
+
       allSpecialWaves.set(wave, {
         type: PathNodeType.EVIL_BOSS_BATTLE,
         config: createEvilBossBattle(scene, 35),
-        metadata: { 
+        metadata: {
           evilTeamType: 'boss',
           dynamicModeCount: dynamicModeCount > 0 ? dynamicModeCount : undefined
         },
@@ -3424,7 +3452,7 @@ function createPathLayer(
       const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
       const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
       const smittyBattleConfig = createSmittyBattle(scene, seeds.smittySeed || seeds.baseSeed, true);
-      
+
       let smittyVariantIndex = 0;
       if (smittyBattleConfig.getTrainer) {
         const trainer = smittyBattleConfig.getTrainer(scene);
@@ -3432,7 +3460,7 @@ function createPathLayer(
           smittyVariantIndex = trainer.config.smittyVariantIndex;
         }
       }
-      
+
       allSpecialWaves.set(wave, {
         type: PathNodeType.SMITTY_BATTLE,
         config: smittyBattleConfig,
@@ -3470,16 +3498,16 @@ function createPathLayer(
     if (range.end < startWave || range.start > endWave || generatedChallengeRanges.has(range.start)) {
       continue;
     }
-    
+
     const layerRangeStart = Math.max(range.start, startWave);
     const layerRangeEnd = Math.min(range.end, endWave);
-    
+
     if (layerRangeEnd - layerRangeStart < LAYER_CONFIG.MIN_RANGE_SIZE) {
       continue;
     }
-    
+
     scene.resetSeed(seeds.baseSeed + range.start * LAYER_CONFIG.SEED_MULTIPLIER);
-    
+
     const chaosVersion = scene.gameMechanicTracking[GameMechanicsID.CHAOS_MODE];
     const isChaosV2 = chaosVersion === GameMechanicsVersion.CHAOS_V2;
 
@@ -3488,18 +3516,18 @@ function createPathLayer(
 
     if (isChaosV2) {
       nodeCount = 2;
-      
+
       const rand = Utils.randSeedInt(100);
       if (rand < 5) {
         challengeType = 'nuzlight';
-      } else if (rand < 65) { // 5 + 60
+      } else if (rand < 65) {
         challengeType = 'nuzlocke';
       } else {
         challengeType = 'nightmare';
       }
     } else {
       nodeCount = Utils.randSeedInt(3) + 3;
-      
+
       if (nodeCount === 3) {
         challengeType = 'nightmare';
       } else if (nodeCount === 4) {
@@ -3508,11 +3536,11 @@ function createPathLayer(
         challengeType = Utils.randSeedInt(2) === 0 ? 'nuzlocke' : 'nuzlight';
       }
     }
-    
-    const shortModeFactor = scene.gameMode.isChaosShort ? .4 : 1;
-    const additionalPropertiesCount = calculateAdditionalPropertiesCount(range.start, totalWaves || 500 * shortModeFactor, waveOffset);
+
+    const modeFactor = scene.gameMode.isChaosFTL ? .2 : (scene.gameMode.isChaosShort ? .4 : 1);
+    const additionalPropertiesCount = calculateAdditionalPropertiesCount(range.start, totalWaves || 500 * modeFactor, waveOffset);
     const additionalProperties: (keyof DynamicMode)[] = [];
-    
+
     if (additionalPropertiesCount > 0) {
       const availableProperties: (keyof DynamicMode)[] = [
         'noCatch', 'noExpGain', 'hasPassiveAbility', 'invertedTypes',
@@ -3521,7 +3549,7 @@ function createPathLayer(
         'noSTAB', 'trickRoom', 'noSwitch',
         'noResistances', 'noHealingItems', 'autoTorment', 'legendaryNerf', 'typeExtraDamage', 'pokemonNerf'
       ];
-      
+
       const propertiesToAdd = Math.min(additionalPropertiesCount, availableProperties.length);
       for (let i = 0; i < propertiesToAdd; i++) {
         const randomIndex = Utils.randSeedInt(availableProperties.length);
@@ -3531,24 +3559,24 @@ function createPathLayer(
 
       const moveRestrictionProperties = ['noStatusMoves', 'noPhysicalMoves', 'noSpecialMoves'];
       const activeMoveRestrictions = moveRestrictionProperties.filter(prop => additionalProperties.includes(prop));
-      
+
       if (activeMoveRestrictions.length >= 2) {
         const keepIndex = Utils.randSeedInt(activeMoveRestrictions.length);
         const propertyToKeep = activeMoveRestrictions[keepIndex];
         const propertiesToRemove = activeMoveRestrictions.filter((_, index) => index !== keepIndex);
-        
+
         propertiesToRemove.forEach(property => {
           const index = additionalProperties.indexOf(property);
           if (index !== -1) {
             additionalProperties.splice(index, 1);
           }
         });
-        
-        const remainingProperties = availableProperties.filter(prop => 
-          !additionalProperties.includes(prop) && 
+
+        const remainingProperties = availableProperties.filter(prop =>
+          !additionalProperties.includes(prop) &&
           !moveRestrictionProperties.includes(prop)
         );
-        
+
         for (let i = 0; i < propertiesToRemove.length; i++) {
           if (remainingProperties.length > 0) {
             const randomIndex = Utils.randSeedInt(remainingProperties.length);
@@ -3559,46 +3587,74 @@ function createPathLayer(
         }
       }
     }
-    
-    
     debugChallengeSlotSearch(layerRangeStart, layerRangeEnd, nodeCount, waveNodeTracker, existingWaves);
-    
+
     let challengePath: ChallengePathInfo | null = null;
     let foundStartWave: number | null = null;
-    
-    const maxSearchWave = layerRangeEnd - nodeCount;
-    for (let potentialStart = layerRangeStart; potentialStart <= maxSearchWave; potentialStart++) {
-      if (checkChallengeSlotAvailability(potentialStart, nodeCount, layerRangeEnd, waveNodeTracker, existingWaves)) {
-        foundStartWave = potentialStart;
-        
-        scene.resetSeed(seeds.baseSeed + foundStartWave * 1337);
-        
-        const { nodes, rewardNode } = constructChallengePathNodes(
-          scene,
-          foundStartWave,
-          nodeCount,
-          challengeType,
-          additionalProperties,
-          seeds
-        );
-        
-        challengePath = {
-          startWave: foundStartWave,
-          nodeCount,
-          challengeType,
-          additionalProperties,
-          nodes,
-          rewardNode
-        };
-        
-        for (let i = 0; i <= nodeCount; i++) {
-          existingWaves.add(foundStartWave + i);
+
+    if (Overrides.FORCE_CHALLENGE_PATH_WAVE_OVERRIDE !== null &&
+        Overrides.FORCE_CHALLENGE_PATH_WAVE_OVERRIDE >= layerRangeStart &&
+        Overrides.FORCE_CHALLENGE_PATH_WAVE_OVERRIDE <= layerRangeEnd - nodeCount) {
+      foundStartWave = Overrides.FORCE_CHALLENGE_PATH_WAVE_OVERRIDE;
+
+      scene.resetSeed(seeds.baseSeed + foundStartWave * 1337);
+
+      const { nodes, rewardNode } = constructChallengePathNodes(
+        scene,
+        foundStartWave,
+        nodeCount,
+        challengeType,
+        additionalProperties,
+        seeds
+      );
+
+      challengePath = {
+        startWave: foundStartWave,
+        nodeCount,
+        challengeType,
+        additionalProperties,
+        nodes,
+        rewardNode
+      };
+
+      for (let i = 0; i <= nodeCount; i++) {
+        existingWaves.add(foundStartWave + i);
+      }
+    } else {
+      const maxSearchWave = layerRangeEnd - nodeCount;
+      for (let potentialStart = layerRangeStart; potentialStart <= maxSearchWave; potentialStart++) {
+        if (checkChallengeSlotAvailability(potentialStart, nodeCount, layerRangeEnd, waveNodeTracker, existingWaves)) {
+          foundStartWave = potentialStart;
+
+          scene.resetSeed(seeds.baseSeed + foundStartWave * 1337);
+
+          const { nodes, rewardNode } = constructChallengePathNodes(
+            scene,
+            foundStartWave,
+            nodeCount,
+            challengeType,
+            additionalProperties,
+            seeds
+          );
+
+          challengePath = {
+            startWave: foundStartWave,
+            nodeCount,
+            challengeType,
+            additionalProperties,
+            nodes,
+            rewardNode
+          };
+
+          for (let i = 0; i <= nodeCount; i++) {
+            existingWaves.add(foundStartWave + i);
+          }
+
+          break;
         }
-        
-        break;
       }
     }
-    
+
     if (challengePath && foundStartWave !== null) {
       challengePath.nodes.forEach((node, index) => {
         const existingBranches = waveNodeTracker.get(node.wave) || new Set();
@@ -3610,31 +3666,31 @@ function createPathLayer(
         waveNodeTracker.set(node.wave, existingBranches);
         layer.nodes.push(node);
       });
-      
+
       const rewardBranches = waveNodeTracker.get(challengePath.rewardNode.wave) || new Set();
       rewardBranches.add(LAYER_CONFIG.CHALLENGE_BRANCH_OTHER);
       waveNodeTracker.set(challengePath.rewardNode.wave, rewardBranches);
       layer.nodes.push(challengePath.rewardNode);
-      
+
       generatedChallengeRanges.add(range.start);
-      
+
     } else {
     }
   }
 
   for (let wave = startWave; wave <= endWave; wave++) {
     const hasSpecialBattle = waveNodeTracker.has(wave);
-    
+
     if (hasSpecialBattle) {
       const existingNodes = layer.nodes.filter(n => n.wave === wave);
-      const challengeNodes = existingNodes.filter(n => 
+      const challengeNodes = existingNodes.filter(n =>
         n.nodeType === PathNodeType.CHALLENGE_BOSS ||
         n.nodeType === PathNodeType.CHALLENGE_RIVAL ||
         n.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
         n.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
         n.nodeType === PathNodeType.CHALLENGE_REWARD
       );
-      
+
       if (challengeNodes.length > 0) {
         const isFirstChallengeNode = challengeNodes.some(n => n.metadata?.challengeNodeIndex === 1);
         if (isFirstChallengeNode) {
@@ -3642,11 +3698,11 @@ function createPathLayer(
         }
       } else {
       }
-      
+
       const isFirstChallengeNode = challengeNodes.some(n => n.metadata?.challengeNodeIndex === 0);
       const isNonFirstChallengeNode = challengeNodes.length > 0 && !isFirstChallengeNode;
       const hasChallengeRewardNode = challengeNodes.some(n => n.nodeType === PathNodeType.CHALLENGE_REWARD);
-      
+
       if (!isFirstChallengeNode && !isNonFirstChallengeNode) {
         continue;
       }
@@ -3655,9 +3711,9 @@ function createPathLayer(
     scene.resetSeed(seeds.baseSeed + wave * 1000);
     const rand = Utils.randSeedInt(1000);
     let nodesPerWave: number;
-    
+
     const isFirstWaveOfLayer = wave === startWave && layerIndex > 0;
-    
+
     if (isFirstWaveOfLayer) {
       nodesPerWave = Math.max(2, Math.floor(rand / 250) + 2);
     } else {
@@ -3671,32 +3727,32 @@ function createPathLayer(
         nodesPerWave = 4;
       }
     }
-    
+
     const usedPositions = waveNodeTracker.get(wave) || new Set();
     const availablePositions = [0, 1, 2, 3].filter(pos => !usedPositions.has(pos));
-    
+
     nodesPerWave = Math.min(nodesPerWave, availablePositions.length);
-    
+
     if (nodesPerWave === 0) {
       continue;
     }
-    
+
     const positions = generateNodePositions(nodesPerWave, wave)
       .filter(pos => availablePositions.includes(pos))
       .slice(0, nodesPerWave);
-    
+
     if (positions.length < nodesPerWave) {
       const extraPositions = availablePositions
         .filter(pos => !positions.includes(pos))
         .slice(0, nodesPerWave - positions.length);
       positions.push(...extraPositions);
     }
-    
+
     waveNodeTracker.set(wave, new Set([...usedPositions, ...positions]));
-    
+
     for (let nodeIndex = 0; nodeIndex < positions.length; nodeIndex++) {
       const branch = positions[nodeIndex];
-      
+
       let nodeType: PathNodeType = PathNodeType.WILD_POKEMON;
       let battleConfig: FixedBattleConfig | undefined;
 
@@ -3706,8 +3762,8 @@ function createPathLayer(
 
       layer.nodes.push(createPathNode(wave, nodeType, branch, battleConfig));
     }
-    
-    const existingChallengeNodes = layer.nodes.filter(n => 
+
+    const existingChallengeNodes = layer.nodes.filter(n =>
       n.wave === wave && (
         n.nodeType === PathNodeType.CHALLENGE_BOSS ||
         n.nodeType === PathNodeType.CHALLENGE_RIVAL ||
@@ -3715,30 +3771,18 @@ function createPathLayer(
         n.nodeType === PathNodeType.CHALLENGE_CHAMPION
       )
     );
-    
-    if (existingChallengeNodes.length > 0) {
-      console.log(`🌊 Wave ${wave}: Regular nodes (${positions.length}) + Challenge node (${existingChallengeNodes.length}) - ${positions.map((_, i) => {
-        const nodeResult = generateWaveBasedNode(wave, scene, seeds, i);
-        return PathNodeType[nodeResult.nodeType];
-      }).join(', ')} + ${existingChallengeNodes.map(n => PathNodeType[n.nodeType]).join(', ')}`);
-    } else {
-      console.log(`🌊 Wave ${wave}: Regular nodes (${positions.length}) - ${positions.map((_, i) => {
-        const nodeResult = generateWaveBasedNode(wave, scene, seeds, i);
-        return PathNodeType[nodeResult.nodeType];
-      }).join(', ')}`);
-    }
   }
 
   resolvePositionConflicts(layer);
-  
+
   layer.nodes.sort((a, b) => a.wave - b.wave || a.position.x - b.position.x);
-  
+
   for (let wave = startWave; wave <= endWave; wave++) {
     if (!validateNodePositions(layer.nodes, wave)) {
       console.warn(`❌ Position validation failed for wave ${wave} in layer ${layerIndex}`);
     }
   }
-  
+
   return layer;
 }
 
@@ -3768,7 +3812,7 @@ function connectPathNodes(layer: PathLayer, nextLayer?: PathLayer, seeds?: any):
 
   const allLayerNodes = [...regularNodes, ...nextRegularNodes];
   const nodesByWave = new Map<number, PathNode[]>();
-  
+
   for (const node of allLayerNodes) {
     if (node.nodeType !== PathNodeType.CONVERGENCE_POINT) {
       if (!nodesByWave.has(node.wave)) {
@@ -3777,23 +3821,23 @@ function connectPathNodes(layer: PathLayer, nextLayer?: PathLayer, seeds?: any):
       nodesByWave.get(node.wave)!.push(node);
     }
   }
-  
+
   for (const [wave, waveNodes] of nodesByWave) {
     waveNodes.sort((a, b) => a.position.x - b.position.x);
   }
 
   processWaveConnections(regularNodes, nodesByWave, layer.convergenceWave, seeds);
-  
+
   if (nextLayer) {
     ensurePathConnectivity(layer, nextLayer, seeds);
   }
-  
+
   debugPathConnections(regularNodes, nodesByWave, []);
 }
 
 function processWaveConnections(currentNodes: PathNode[], nodesByWave: Map<number, PathNode[]>, convergenceWave: number, seeds?: any): void {
   const waves = Array.from(nodesByWave.keys()).sort((a, b) => a - b).filter(w => w <= convergenceWave);
-  
+
   const isChallengeNode = (node: PathNode, includeReward: boolean = true): boolean => {
     return node.nodeType === PathNodeType.CHALLENGE_BOSS ||
            node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
@@ -3801,42 +3845,42 @@ function processWaveConnections(currentNodes: PathNode[], nodesByWave: Map<numbe
            node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
            (includeReward && node.nodeType === PathNodeType.CHALLENGE_REWARD);
   };
-  
+
   const isFirstChallengeNode = (node: PathNode): boolean => {
     return isChallengeNode(node) && node.metadata?.challengeNodeIndex === 1;
   };
-  
+
   const isChallengeRewardNode = (node: PathNode): boolean => {
     return node.nodeType === PathNodeType.CHALLENGE_REWARD;
   };
-  
+
   for (let i = 0; i < waves.length - 1; i++) {
     const currentWave = waves[i];
     const nextWave = waves[i + 1];
-    
+
     if (nextWave - currentWave !== 1) {
       continue;
     }
-    
+
     const allCurrentWaveNodes = nodesByWave.get(currentWave) || [];
     const allNextWaveNodes = nodesByWave.get(nextWave) || [];
-    
+
     const currentWaveNodes = allCurrentWaveNodes.filter(node => !isChallengeNode(node) || isFirstChallengeNode(node));
     const nextWaveNodes = allNextWaveNodes.filter(node => !isChallengeNode(node) || (isFirstChallengeNode(node) && !isChallengeRewardNode(node)));
-    
+
     if (currentWaveNodes.length === 0 || nextWaveNodes.length === 0) {
       continue;
     }
-    
+
     currentWaveNodes.sort((a, b) => a.position.x - b.position.x);
     nextWaveNodes.sort((a, b) => a.position.x - b.position.x);
-    
+
     const isConnectingToConvergenceWave = nextWave % 20 === 0;
     const isConnectingFromConvergenceWave = currentWave % 20 === 0;
-    
+
     createNonCrossingConnections(currentWaveNodes, nextWaveNodes, seeds);
   }
-  
+
   const filteredNodesByWave = new Map<number, PathNode[]>();
   for (const [wave, nodes] of nodesByWave) {
     const regularNodes = nodes.filter(node => !isChallengeNode(node, false) || (isFirstChallengeNode(node) && !isChallengeRewardNode(node)));
@@ -3844,12 +3888,12 @@ function processWaveConnections(currentNodes: PathNode[], nodesByWave: Map<numbe
       filteredNodesByWave.set(wave, regularNodes);
     }
   }
-  
+
   ensureAllNodesConnected(filteredNodesByWave, convergenceWave, seeds);
 }
 
 function createNonCrossingConnections(currentNodes: PathNode[], nextNodes: PathNode[], seeds?: any): void {
-  
+
   for (const currentNode of currentNodes) {
     if (!currentNode.connections) {
       currentNode.connections = [];
@@ -3858,7 +3902,7 @@ function createNonCrossingConnections(currentNodes: PathNode[], nextNodes: PathN
       currentNode.previousConnections = [];
     }
   }
-  
+
   for (const nextNode of nextNodes) {
     if (!nextNode.connections) {
       nextNode.connections = [];
@@ -3883,40 +3927,40 @@ function createNonCrossingConnections(currentNodes: PathNode[], nextNodes: PathN
     }
     return;
   }
-  
+
   const connectionMatrix: boolean[][] = [];
   for (let i = 0; i < currentNodes.length; i++) {
     connectionMatrix[i] = new Array(nextNodes.length).fill(false);
   }
-  
+
   const currentWave = currentNodes.length > 0 ? currentNodes[0].wave : 0;
   const bias = seeds ? calculateConnectionBias(currentNodes, seeds, currentWave) : 'balanced';
   const randomSeed = seeds ? (seeds.baseSeed + currentWave * 311) : Math.floor(Math.random() * 1000);
   const processOrder = getDirectionalProcessOrder(currentNodes, bias, randomSeed);
   const processIndices = processOrder.map(node => currentNodes.indexOf(node));
   const connectedTargets = new Set<number>();
-  
+
   for (const currentIndex of processIndices) {
     const currentNode = currentNodes[currentIndex];
     const currentPosition = currentNode.position.x;
-    
+
     const validTargets: { index: number; distance: number }[] = [];
     for (let nextIndex = 0; nextIndex < nextNodes.length; nextIndex++) {
       const nextNode = nextNodes[nextIndex];
       const distance = Math.abs(currentPosition - nextNode.position.x);
       validTargets.push({ index: nextIndex, distance });
     }
-    
+
     validTargets.sort((a, b) => a.distance - b.distance);
-    
+
     let connectionsAdded = 0;
     const maxConnections = Math.min(2, nextNodes.length);
-    
+
     for (const target of validTargets) {
       if (connectionsAdded >= maxConnections) break;
-      
+
       const nextIndex = target.index;
-      
+
       if (!wouldCreateCrossing(currentIndex, nextIndex, connectionMatrix)) {
         connectionMatrix[currentIndex][nextIndex] = true;
         addBidirectionalConnection(currentNode, nextNodes[nextIndex]);
@@ -3924,7 +3968,7 @@ function createNonCrossingConnections(currentNodes: PathNode[], nextNodes: PathN
         connectionsAdded++;
       }
     }
-    
+
     if (connectionsAdded === 0 && validTargets.length > 0) {
       const fallbackTarget = validTargets[0];
       const nextIndex = fallbackTarget.index;
@@ -3933,12 +3977,12 @@ function createNonCrossingConnections(currentNodes: PathNode[], nextNodes: PathN
       connectedTargets.add(nextIndex);
     }
   }
-  
+
   for (let nextIndex = 0; nextIndex < nextNodes.length; nextIndex++) {
     if (!connectedTargets.has(nextIndex)) {
       let bestCurrentIndex = 0;
       let bestDistance = Math.abs(currentNodes[0].position.x - nextNodes[nextIndex].position.x);
-      
+
       for (let currentIndex = 1; currentIndex < currentNodes.length; currentIndex++) {
         const distance = Math.abs(currentNodes[currentIndex].position.x - nextNodes[nextIndex].position.x);
         if (distance < bestDistance) {
@@ -3946,7 +3990,7 @@ function createNonCrossingConnections(currentNodes: PathNode[], nextNodes: PathN
           bestCurrentIndex = currentIndex;
         }
       }
-      
+
       if (!connectionMatrix[bestCurrentIndex][nextIndex]) {
         connectionMatrix[bestCurrentIndex][nextIndex] = true;
         addBidirectionalConnection(currentNodes[bestCurrentIndex], nextNodes[nextIndex]);
@@ -3976,11 +4020,11 @@ function ensureAllNodesConnected(nodesByWave: Map<number, PathNode[]>, convergen
            node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
            node.nodeType === PathNodeType.CHALLENGE_REWARD;
   };
-  
+
   const isFirstChallengeNode = (node: PathNode): boolean => {
     return isChallengeNode(node) && node.metadata?.challengeNodeIndex === 1;
   };
-  
+
   const isChallengeRewardNode = (node: PathNode): boolean => {
     return node.nodeType === PathNodeType.CHALLENGE_REWARD;
   };
@@ -3989,22 +4033,22 @@ function ensureAllNodesConnected(nodesByWave: Map<number, PathNode[]>, convergen
   for (let i = 0; i < waves.length; i++) {
     const currentWave = waves[i];
     const currentNodes = nodesByWave.get(currentWave) || [];
-    
+
     if (currentNodes.length === 0) continue;
-    
+
     const bias = seeds ? calculateConnectionBias(currentNodes, seeds, currentWave) : 'balanced';
     const randomSeed = seeds ? (seeds.baseSeed + currentWave * 419) : Math.floor(Math.random() * 1000);
     const processOrder = getDirectionalProcessOrder(currentNodes, bias, randomSeed);
-    
+
     for (const currentNode of processOrder) {
       if (currentNode.connections.length === 0) {
         let targetNode: PathNode | null = null;
-        
+
         if (isChallengeRewardNode(currentNode)) {
           for (let j = i + 1; j < waves.length; j++) {
             const futureWave = waves[j];
             const futureNodes = nodesByWave.get(futureWave) || [];
-            
+
             if (futureNodes.length > 0) {
               targetNode = findBestConnector(currentNode, futureNodes);
               break;
@@ -4015,28 +4059,28 @@ function ensureAllNodesConnected(nodesByWave: Map<number, PathNode[]>, convergen
             const nextWave = waves[i + 1];
             if (nextWave - currentWave === 1) {
               const nextNodes = nodesByWave.get(nextWave) || [];
-              
+
               const validNextNodes = nextNodes.filter(node => {
                 if (isChallengeNode(currentNode) && !isFirstChallengeNode(currentNode)) {
                   return isChallengeNode(node) && !isChallengeRewardNode(node);
                 }
-                
+
                 return !isChallengeRewardNode(node);
               });
-              
+
               if (validNextNodes.length > 0) {
                 targetNode = findBestConnector(currentNode, validNextNodes);
               }
             }
           }
         }
-        
+
         if (targetNode) {
           addBidirectionalConnection(currentNode, targetNode);
-        } 
+        }
       }
     }
-    
+
     if (i > 0) {
       const disconnectedNodes: PathNode[] = [];
       for (const currentNode of currentNodes) {
@@ -4044,20 +4088,20 @@ function ensureAllNodesConnected(nodesByWave: Map<number, PathNode[]>, convergen
           disconnectedNodes.push(currentNode);
         }
       }
-      
+
       if (disconnectedNodes.length > 0) {
         for (const currentNode of disconnectedNodes) {
           let bestConnector: PathNode | null = null;
-          
+
           if (isChallengeRewardNode(currentNode)) {
             for (let searchWave = i - 1; searchWave >= 0; searchWave--) {
               const searchWaveIndex = waves[searchWave];
               const prevNodes = nodesByWave.get(searchWaveIndex) || [];
-              
+
               const validPrevNodes = prevNodes.filter(prevNode => {
                 return isChallengeNode(prevNode) && !isChallengeRewardNode(prevNode);
               });
-              
+
               if (validPrevNodes.length > 0) {
                 bestConnector = findBestConnector(currentNode, validPrevNodes);
                 break;
@@ -4067,21 +4111,21 @@ function ensureAllNodesConnected(nodesByWave: Map<number, PathNode[]>, convergen
             const prevWave = waves[i - 1];
             if (currentWave - prevWave === 1) {
               const prevNodes = nodesByWave.get(prevWave) || [];
-              
+
               const validPrevNodes = prevNodes.filter(prevNode => {
                 if (isChallengeNode(currentNode) && !isFirstChallengeNode(currentNode)) {
                   return isChallengeNode(prevNode) && !isChallengeRewardNode(prevNode);
                 }
-                
+
                 return !isChallengeRewardNode(prevNode);
               });
-              
+
               if (validPrevNodes.length > 0) {
                 bestConnector = findBestConnector(currentNode, validPrevNodes);
               }
             }
           }
-          
+
           if (bestConnector) {
             addBidirectionalConnection(bestConnector, currentNode);
           }
@@ -4093,29 +4137,29 @@ function ensureAllNodesConnected(nodesByWave: Map<number, PathNode[]>, convergen
 
 function findBestConnector(referenceNode: PathNode, candidateNodes: PathNode[]): PathNode | null {
   if (candidateNodes.length === 0) return null;
-  
+
   const referencePosition = referenceNode.position.x;
-  
+
   let bestConnector: PathNode | null = null;
   let bestScore = -1;
-  
+
   for (const candidate of candidateNodes) {
     const distance = Math.abs(candidate.position.x - referencePosition);
     const connectionCount = candidate.connections ? candidate.connections.length : 0;
     const isAdjacent = distance <= 1;
-    
+
     let score = 100;
     score -= distance * 15;
     score -= connectionCount * 10;
     if (isAdjacent) score += 25;
     if (connectionCount === 0) score -= 30;
-    
+
     if (score > bestScore) {
       bestScore = score;
       bestConnector = candidate;
     }
   }
-  
+
   return bestConnector;
 }
 
@@ -4132,29 +4176,29 @@ function debugPathConnections(currentNodes: PathNode[], nodesByWave: Map<number,
     }
     nodesByWaveComplete.get(node.wave)!.push(node);
   }
-  
+
   for (const [wave, nodes] of nodesByWaveComplete) {
     nodes.sort((a, b) => a.position.x - b.position.x);
   }
-  
+
   const allWaves = Array.from(nodesByWaveComplete.keys()).sort((a, b) => a - b);
-  
+
   const deadEnds = allNodes.filter(node => node.connections.length === 0);
   const unconnectedNodes = [];
-  
+
   for (let i = 0; i < allWaves.length; i++) {
     const wave = allWaves[i];
-    
+
     if (i < allWaves.length - 1) {
       const nextWave = allWaves[i + 1];
       const nextNodes = nodesByWaveComplete.get(nextWave) || [];
-      
+
       const unconnectedNextNodes = nextNodes.filter(nextNode => {
-        return !allNodes.some(prevNode => 
+        return !allNodes.some(prevNode =>
           prevNode.wave <= wave && prevNode.connections.includes(nextNode.id)
         );
       });
-      
+
       if (unconnectedNextNodes.length > 0) {
         unconnectedNodes.push({
           wave: nextWave,
@@ -4163,26 +4207,26 @@ function debugPathConnections(currentNodes: PathNode[], nodesByWave: Map<number,
       }
     }
   }
-  
+
   if (deadEnds.length > 0 || unconnectedNodes.length > 0) {
-    
+
     if (deadEnds.length > 0) {
       deadEnds.forEach(node => {
       });
     }
-    
+
     if (unconnectedNodes.length > 0) {
       unconnectedNodes.forEach(issue => {
       });
     }
-    
+
   }
 }
 
 function getValidConnections(currentPosition: number, nextWaveNodes: PathNode[]): PathNode[] {
   const adjacentTargets: PathNode[] = [];
   const nearbyTargets: PathNode[] = [];
-  
+
   for (const node of nextWaveNodes) {
     const distance = Math.abs(currentPosition - node.position.x);
     if (distance <= 1) {
@@ -4191,7 +4235,7 @@ function getValidConnections(currentPosition: number, nextWaveNodes: PathNode[])
       nearbyTargets.push(node);
     }
   }
-  
+
   if (adjacentTargets.length > 0) {
     const shuffled = [...adjacentTargets];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -4200,7 +4244,7 @@ function getValidConnections(currentPosition: number, nextWaveNodes: PathNode[])
     }
     return shuffled;
   }
-  
+
   if (nearbyTargets.length > 0) {
     const shuffled = [...nearbyTargets];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -4209,7 +4253,7 @@ function getValidConnections(currentPosition: number, nextWaveNodes: PathNode[])
     }
     return shuffled;
   }
-  
+
   const allTargets = [...nextWaveNodes];
   for (let i = allTargets.length - 1; i > 0; i--) {
     const j = Utils.randSeedInt(i + 1);
@@ -4217,9 +4261,6 @@ function getValidConnections(currentPosition: number, nextWaveNodes: PathNode[])
   }
   return allTargets;
 }
-
-
-
 function ensurePathConnectivity(layer: PathLayer, nextLayer?: PathLayer, seeds?: any): void {
   if (!nextLayer) {
     return;
@@ -4232,23 +4273,23 @@ function ensurePathConnectivity(layer: PathLayer, nextLayer?: PathLayer, seeds?:
            node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
            node.nodeType === PathNodeType.CHALLENGE_REWARD;
   };
-  
+
   const isFirstChallengeNode = (node: PathNode): boolean => {
     return isChallengeNode(node) && node.metadata?.challengeNodeIndex === 1;
   };
-  
+
   const isChallengeRewardNode = (node: PathNode): boolean => {
     return node.nodeType === PathNodeType.CHALLENGE_REWARD;
   };
 
   const currentRegularNodes = layer.nodes.filter(n => n.nodeType !== PathNodeType.CONVERGENCE_POINT);
-  const nextRegularNodes = nextLayer.nodes.filter(n => 
-    n.nodeType !== PathNodeType.CONVERGENCE_POINT && 
+  const nextRegularNodes = nextLayer.nodes.filter(n =>
+    n.nodeType !== PathNodeType.CONVERGENCE_POINT &&
     (!isChallengeNode(n) || (isFirstChallengeNode(n) && !isChallengeRewardNode(n)))
   );
-  
+
   const connectedNextNodes = new Set<string>();
-  
+
   for (const currentNode of currentRegularNodes) {
     for (const connectionId of currentNode.connections) {
       connectedNextNodes.add(connectionId);
@@ -4257,17 +4298,17 @@ function ensurePathConnectivity(layer: PathLayer, nextLayer?: PathLayer, seeds?:
 
   for (const currentNode of currentRegularNodes) {
     if (currentNode.connections.length === 0 && nextRegularNodes.length > 0) {
-      const adjacentWaveNodes = nextRegularNodes.filter(node => 
+      const adjacentWaveNodes = nextRegularNodes.filter(node =>
         Math.abs(node.wave - currentNode.wave) === 1 || isChallengeRewardNode(currentNode)
       );
-      
+
       if (adjacentWaveNodes.length > 0) {
         const currentBranch = currentNode.position.x;
         const adjacentTargets = adjacentWaveNodes.filter(node => {
           const targetBranch = node.position.x;
           return Math.abs(currentBranch - targetBranch) <= 1;
         });
-        
+
         if (adjacentTargets.length > 0) {
           addBidirectionalConnection(currentNode, adjacentTargets[0]);
           connectedNextNodes.add(adjacentTargets[0].id);
@@ -4291,11 +4332,11 @@ function ensurePathConnectivity(layer: PathLayer, nextLayer?: PathLayer, seeds?:
 
   for (const nextNode of processOrderNext) {
     if (!connectedNextNodes.has(nextNode.id)) {
-      const adjacentWaveNodes = currentRegularNodes.filter(node => 
-        (Math.abs(node.wave - nextNode.wave) === 1 || isChallengeRewardNode(node)) && 
+      const adjacentWaveNodes = currentRegularNodes.filter(node =>
+        (Math.abs(node.wave - nextNode.wave) === 1 || isChallengeRewardNode(node)) &&
         node.connections.length < 3
       );
-      
+
       if (adjacentWaveNodes.length > 0) {
         const closest = adjacentWaveNodes.reduce((closest, node) => {
           const currentDiff = Math.abs(nextNode.position.x - node.position.x);
@@ -4310,22 +4351,22 @@ function ensurePathConnectivity(layer: PathLayer, nextLayer?: PathLayer, seeds?:
 
   const lastWaveInLayer = Math.max(...currentRegularNodes.map(n => n.wave));
   const firstWaveInNextLayer = Math.min(...nextRegularNodes.map(n => n.wave));
-  
+
   if (firstWaveInNextLayer === lastWaveInLayer + 1) {
     const lastWaveNodes = currentRegularNodes.filter(n => n.wave === lastWaveInLayer);
     const firstWaveNextNodes = nextRegularNodes.filter(n => n.wave === firstWaveInNextLayer);
-    
+
     const bias = seeds ? calculateConnectionBias(lastWaveNodes, seeds, lastWaveInLayer) : 'balanced';
       const randomSeed = seeds ? (seeds.baseSeed + lastWaveInLayer * 709) : Math.floor(Math.random() * 1000);
       const processOrderLast = getDirectionalProcessOrder(lastWaveNodes, bias, randomSeed);
-      
+
       for (const lastNode of processOrderLast) {
         if (lastNode.connections.length === 0 && firstWaveNextNodes.length > 0) {
           const currentBranch = lastNode.position.x;
-          const adjacentTargets = firstWaveNextNodes.filter(node => 
+          const adjacentTargets = firstWaveNextNodes.filter(node =>
             Math.abs(node.position.x - currentBranch) <= 1
           );
-          
+
           if (adjacentTargets.length > 0) {
             addBidirectionalConnection(lastNode, adjacentTargets[0]);
           } else {
@@ -4342,37 +4383,37 @@ function ensurePathConnectivity(layer: PathLayer, nextLayer?: PathLayer, seeds?:
 }
 
 function debugBattlePathIntegrity(battlePath: BattlePath): void {
-  
+
   let totalIssues = 0;
   const positionIssues: string[] = [];
   const connectivityIssues: string[] = [];
   const structuralIssues: string[] = [];
   const bidirectionalIssues: string[] = [];
-  
+
   for (const [wave, nodesAtWave] of battlePath.waveToNodeMap) {
     const positions = nodesAtWave.map(n => n.position.x);
     const uniquePositions = new Set(positions);
-    
+
     if (positions.length !== uniquePositions.size) {
       const duplicates = positions.filter((pos, index) => positions.indexOf(pos) !== index);
       const issue = `Wave ${wave}: Duplicate positions [${duplicates.join(', ')}]`;
       positionIssues.push(issue);
       totalIssues++;
     }
-    
+
     for (const node of nodesAtWave) {
       if (node.position.x < 0 || node.position.x > 3) {
         const issue = `Wave ${wave}: Node ${node.id} has invalid position ${node.position.x}`;
         structuralIssues.push(issue);
         totalIssues++;
       }
-      
+
       if (!node.previousConnections) {
         const issue = `Wave ${wave}: Node ${node.id} missing previousConnections array`;
         structuralIssues.push(issue);
         totalIssues++;
       }
-      
+
       for (const connectionId of node.connections) {
         const targetNode = battlePath.nodeMap.get(connectionId);
         if (targetNode && (!targetNode.previousConnections || !targetNode.previousConnections.includes(node.id))) {
@@ -4383,51 +4424,49 @@ function debugBattlePathIntegrity(battlePath: BattlePath): void {
       }
     }
   }
-  
+
   const { isValid: connectivityValid, issues: connIssues } = validateConnectivity(battlePath);
   connectivityIssues.push(...connIssues);
   totalIssues += connIssues.length;
-  
+
   let totalNodes = 0;
   let totalConnections = 0;
   let totalPreviousConnections = 0;
   const disconnectedComponents: string[] = [];
-  
+
   for (const [, node] of battlePath.nodeMap) {
     totalNodes++;
     totalConnections += node.connections.length;
     totalPreviousConnections += node.previousConnections ? node.previousConnections.length : 0;
-    
+
     if (node.connections.length === 0) {
       const firstWave = Math.min(...Array.from(battlePath.waveToNodeMap.keys()));
       const lastWave = Math.max(...Array.from(battlePath.waveToNodeMap.keys()));
-      
+
       if (node.wave !== lastWave) {
         disconnectedComponents.push(`${node.id} (wave ${node.wave})`);
         totalIssues++;
       }
     }
   }
-  
-  
 }
 
 export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1): BattlePath {
   try {
-    
+
     if (!scene.gameData.nightmareBattleSeeds) {
       const baseSeed = Utils.randInt(1000000);
       scene.gameData.nightmareBattleSeeds = generateUniqueSeeds(baseSeed);
     }
 
     const seeds = scene.gameData.nightmareBattleSeeds;
-    const shortModeFactor = scene.gameMode.isChaosShort ? .4 : 1;
-    const totalWaves = scene.gameMode.isChaosVoid || scene.gameMode.isInfinite ? 1000 * shortModeFactor : 500 * shortModeFactor;
+    const modeFactor = scene.gameMode.isChaosFTL ? .2 : (scene.gameMode.isChaosShort ? .4 : 1);
+    const totalWaves = scene.gameMode.isChaosVoid || scene.gameMode.isInfinite ? 1000 * modeFactor : 500 * modeFactor;
     const waveOffset = startWave - 1;
-    
-    const segmentSize = 500 * shortModeFactor;
+
+    const segmentSize = 500 * modeFactor;
     const numSegments = Math.ceil(totalWaves / segmentSize);
-    
+
     const combinedSpecialWaves: SpecialBattleWaves = {
       rivalWaves: [],
       majorBossWaves: [],
@@ -4445,11 +4484,11 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
     for (let segment = 0; segment < numSegments; segment++) {
       const segmentStart = segment * segmentSize + startWave;
       const segmentWaves = Math.min(segmentSize, totalWaves - segment * segmentSize);
-      
+
       if (segmentWaves <= 0) break;
-      
+
       const segmentSpecialWaves = generateSpecialBattleWaves(scene, seeds, segmentWaves, segmentStart - 1);
-      
+
       combinedSpecialWaves.rivalWaves.push(...segmentSpecialWaves.rivalWaves);
       combinedSpecialWaves.majorBossWaves.push(...segmentSpecialWaves.majorBossWaves);
       combinedSpecialWaves.recoveryBossWaves.push(...segmentSpecialWaves.recoveryBossWaves);
@@ -4460,13 +4499,11 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
       combinedSpecialWaves.evilTeamWaves.admins.push(...segmentSpecialWaves.evilTeamWaves.admins);
       combinedSpecialWaves.evilTeamWaves.bosses.push(...segmentSpecialWaves.evilTeamWaves.bosses);
     }
-    
+
     scene.resetSeed(seeds.rivalSelection);
-    // const primaryRival = getDynamicRivalType ? getDynamicRivalType(1, scene.gameData, scene) : null;
-    
     const globalRivalAssignments = new Map<number, { stage: number; rival: any }>();
     const sortedRivalWaves = [...combinedSpecialWaves.rivalWaves].sort((a, b) => a - b);
-    
+
     scene.resetSeed(seeds.rivalSelection);
     const allRivalTypes = getAllRivalTrainerTypes ? getAllRivalTrainerTypes() : [];
     const selectedRivals: any[] = [];
@@ -4478,34 +4515,34 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
         scene.gameData.chaosAltRivals.push(randomRival);
       }
     }
-    
+
     const rivalsPerStage = Math.ceil(sortedRivalWaves.length / 6);
     for (let i = 0; i < sortedRivalWaves.length; i++) {
       const wave = sortedRivalWaves[i];
       const stage = startWave > 1000 ? 6 : Math.min(Math.floor(i / rivalsPerStage) + 1, 6);
       const rivalIndex = i % rivalsPerStage;
-      
+
       const shuffledRivals = [...selectedRivals];
       scene.resetSeed(seeds.rivalSelection + stage * 1000);
       for (let j = shuffledRivals.length - 1; j > 0; j--) {
         const k = Utils.randSeedInt(j + 1);
         [shuffledRivals[j], shuffledRivals[k]] = [shuffledRivals[k], shuffledRivals[j]];
       }
-      
+
       const selectedRival = shuffledRivals[rivalIndex % shuffledRivals.length];
-      
-      globalRivalAssignments.set(wave, { 
-        stage: stage, 
+
+      globalRivalAssignments.set(wave, {
+        stage: stage,
         rival: selectedRival
       });
     }
-    
+
     const layerSize = 20;
     const convergencePoints = [];
     for (let i = layerSize; i <= totalWaves; i += layerSize) {
       convergencePoints.push(i + waveOffset);
     }
-    
+
     if (convergencePoints.length === 0 || convergencePoints[convergencePoints.length - 1] < totalWaves + waveOffset) {
       convergencePoints.push(totalWaves + waveOffset);
     }
@@ -4524,7 +4561,7 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
     for (let i = 0; i < convergencePoints.length; i++) {
       const convergenceWave = convergencePoints[i];
       const endWave = convergenceWave;
-      
+
       if (currentWave > endWave) {
         continue;
       }
@@ -4557,7 +4594,7 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
     for (const layer of battlePath.layers) {
       for (const node of layer.nodes) {
         battlePath.nodeMap.set(node.id, node);
-        
+
         if (!battlePath.waveToNodeMap.has(node.wave)) {
           battlePath.waveToNodeMap.set(node.wave, []);
         }
@@ -4566,7 +4603,7 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
     }
 
     fixConnectivityIssues(battlePath);
-    
+
     let connectionIssues = 0;
     for (const [, node] of battlePath.nodeMap) {
       for (const connectionId of node.connections) {
@@ -4577,7 +4614,7 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
         }
       }
     }
-    
+
     debugBattlePathIntegrity(battlePath);
 
     const fixedBattles: FixedBattleConfigs = {};
@@ -4586,21 +4623,19 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
         fixedBattles[node.wave] = node.battleConfig;
       }
     }
-
-    // scene.gameMode.battleConfig = fixedBattles;
     scene.gameData.battlePath = battlePath;
     currentBattlePath = battlePath;
 
     outputAllWavesWithPaths(scene, battlePath);
 
-    const challengeNodes = Array.from(battlePath.nodeMap.values()).filter(node => 
+    const challengeNodes = Array.from(battlePath.nodeMap.values()).filter(node =>
       node.nodeType === PathNodeType.CHALLENGE_BOSS ||
       node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
       node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
       node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
       node.nodeType === PathNodeType.CHALLENGE_REWARD
     );
-    
+
     if (challengeNodes.length > 0) {
       challengeNodes.sort((a, b) => a.wave - b.wave);
       challengeNodes.forEach(node => {
@@ -4610,7 +4645,7 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
           return connectedNode ? `${connectedNode.wave}:${PathNodeType[connectedNode.nodeType]}` : id;
         }).join(', ');
       });
-      
+
       const challengePathsByRange = new Map<string, PathNode[]>();
       challengeNodes.forEach(node => {
         if (node.nodeType !== PathNodeType.CHALLENGE_REWARD) {
@@ -4624,7 +4659,7 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
           }
         }
       });
-      
+
       challengePathsByRange.forEach((pathNodes, range) => {
         pathNodes.sort((a, b) => a.wave - b.wave);
         pathNodes.forEach((node, index) => {
@@ -4638,15 +4673,14 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
     } else {
     }
 
-    const challengeRewardNodes = Array.from(battlePath.nodeMap.values()).filter(node => 
+    const challengeRewardNodes = Array.from(battlePath.nodeMap.values()).filter(node =>
       node.nodeType === PathNodeType.CHALLENGE_REWARD
     );
-    
+
     if (challengeRewardNodes.length > 0) {
       challengeRewardNodes.forEach(rewardNode => {
-        
+
         if (rewardNode.previousConnections && rewardNode.previousConnections.length > 0) {
-          console.log(`   ⬅️ Incoming connections (${rewardNode.previousConnections.length}):`);
           rewardNode.previousConnections.forEach(connectionId => {
             const sourceNode = battlePath.nodeMap.get(connectionId);
             if (sourceNode) {
@@ -4656,7 +4690,7 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
                                 sourceNode.nodeType === PathNodeType.CHALLENGE_CHAMPION;
               const isRegular = !isChallenge && sourceNode.nodeType !== PathNodeType.CHALLENGE_REWARD;
               const status = isRegular ? "❌ INVALID" : "✅ Valid";
-              
+
               if (isRegular) {
               }
             } else {
@@ -4664,22 +4698,15 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
           });
         } else {
         }
-        
+
         const prevWave = rewardNode.wave - 1;
         const prevWaveNodes = battlePath.waveToNodeMap.get(prevWave) || [];
-        console.log(`   📊 Wave ${prevWave} nodes (${prevWaveNodes.length}) - ALL CONNECTIONS:`);
         prevWaveNodes.forEach(prevNode => {
           const hasConnectionToReward = prevNode.connections.includes(rewardNode.id);
-          const nodeStatus = hasConnectionToReward ? "🔗 CONNECTS TO REWARD" : "   ";
-          console.log(`     ${nodeStatus} [${prevNode.position.x}] ${PathNodeType[prevNode.nodeType]} (${prevNode.id})`);
-          console.log(`       All connections: [${prevNode.connections.map(id => {
-            const target = battlePath.nodeMap.get(id);
-            return target ? `${target.wave}:${PathNodeType[target.nodeType]}` : id;
-          }).join(', ')}]`);
           if (hasConnectionToReward) {
           }
         });
-        
+
         if (rewardNode.connections && rewardNode.connections.length > 0) {
           rewardNode.connections.forEach(connectionId => {
             const targetNode = battlePath.nodeMap.get(connectionId);
@@ -4766,8 +4793,6 @@ export function getPathVisualizationData(battlePath: BattlePath): any {
 
   return visualization;
 }
-
-
 function getNodeTypeIcon(nodeType: PathNodeType): string {
   switch (nodeType) {
     case PathNodeType.WILD_POKEMON: return "🦎";
@@ -4837,8 +4862,6 @@ export function logVisualBattlePath(battlePath: BattlePath): void {
 
   for (let layerIndex = 0; layerIndex < battlePath.layers.length; layerIndex++) {
     const layer = battlePath.layers[layerIndex];
-    
-
     const nodesByWave = new Map<number, PathNode[]>();
     for (const node of layer.nodes) {
       if (!nodesByWave.has(node.wave)) {
@@ -4848,19 +4871,19 @@ export function logVisualBattlePath(battlePath: BattlePath): void {
     }
 
     const sortedWaves = Array.from(nodesByWave.keys()).sort((a, b) => a - b);
-    
+
     for (const wave of sortedWaves) {
       const nodesAtWave = nodesByWave.get(wave)!;
-      
+
       const regularNodesAtWave = nodesAtWave.filter(n => n.nodeType !== PathNodeType.CONVERGENCE_POINT);
-      
+
       const nodeCount = regularNodesAtWave.length;
 
       console.log(`\nWave ${wave.toString().padStart(3)} (${nodeCount} choices):`);
-      
+
       const branches = ['A', 'B', 'C'];
       let lineOutput = "    ";
-      
+
       for (let i = 0; i < 3; i++) {
         const node = regularNodesAtWave[i];
         if (node) {
@@ -4873,8 +4896,6 @@ export function logVisualBattlePath(battlePath: BattlePath): void {
         }
         if (i < 2) lineOutput += " │ ";
       }
-      
-      
       if (nodeCount > 3) {
         let extraLineOutput = "    ";
         for (let i = 3; i < Math.min(6, nodeCount); i++) {
@@ -4900,17 +4921,12 @@ function addBidirectionalConnection(fromNode: PathNode, toNode: PathNode): void 
   const isChallengeRewardNode = (node: PathNode): boolean => {
     return node.nodeType === PathNodeType.CHALLENGE_REWARD;
   };
-  
+
   if (!isChallengeRewardNode(fromNode) && !isChallengeRewardNode(toNode)) {
     if (Math.abs(fromNode.wave - toNode.wave) !== 1) {
       return;
     }
   }
-  
-  // if ((fromNode.id.includes('challenge_reward') && !toNode.id.includes('challenge')) || 
-  //     (toNode.id.includes('challenge_reward') && !fromNode.id.includes('challenge'))) {
-  //   return;
-  // }
   if (!fromNode.connections.includes(toNode.id)) {
     fromNode.connections.push(toNode.id);
   }
@@ -4929,19 +4945,19 @@ interface ConnectionBias {
 
 function calculateConnectionBias(prevWaveNodes: PathNode[], seeds: any, waveIndex: number): 'left' | 'right' | 'center' | 'balanced' {
   if (prevWaveNodes.length === 0) return 'balanced';
-  
+
   const leftConnections = prevWaveNodes.filter(n => n.position.x <= 1).reduce((sum, n) => sum + n.connections.length, 0);
   const rightConnections = prevWaveNodes.filter(n => n.position.x >= 2).reduce((sum, n) => sum + n.connections.length, 0);
   const centerConnections = prevWaveNodes.filter(n => n.position.x === 1 || n.position.x === 2).reduce((sum, n) => sum + n.connections.length, 0);
-  
+
   const total = leftConnections + rightConnections + centerConnections;
   if (total === 0) return 'balanced';
-  
+
   const leftRatio = leftConnections / total;
   const rightRatio = rightConnections / total;
-  
+
   const randomFactor = (seeds.baseSeed + waveIndex * 137) % 100 / 100.0;
-  
+
   if (leftRatio > 0.6 + randomFactor * 0.2) {
     return 'right';
   } else if (rightRatio > 0.6 + randomFactor * 0.2) {
@@ -4949,13 +4965,13 @@ function calculateConnectionBias(prevWaveNodes: PathNode[], seeds: any, waveInde
   } else if (Math.abs(leftRatio - rightRatio) < 0.3) {
     return 'center';
   }
-  
+
   return 'balanced';
 }
 
 function getDirectionalProcessOrder(nodes: PathNode[], bias: 'left' | 'right' | 'center' | 'balanced', randomSeed: number): PathNode[] {
   const processOrder = [...nodes];
-  
+
   if (bias === 'left') {
     processOrder.sort((a, b) => a.position.x - b.position.x);
   } else if (bias === 'right') {
@@ -4974,12 +4990,12 @@ function getDirectionalProcessOrder(nodes: PathNode[], bias: 'left' | 'right' | 
       }
     }
   }
-  
+
   return processOrder;
 }
 
 export function outputAllWavesWithPaths(scene: BattleScene, battlePath: BattlePath): void {
-  
+
   const specialNodeTypes = [
     PathNodeType.MAJOR_BOSS_BATTLE,
     PathNodeType.RECOVERY_BOSS,
@@ -5003,7 +5019,7 @@ export function outputAllWavesWithPaths(scene: BattleScene, battlePath: BattlePa
       case PathNodeType.ELITE_FOUR: return "ELITE_FOUR";
       case PathNodeType.CHAMPION: return "CHAMPION";
       case PathNodeType.RIVAL_BATTLE: return "RIVAL";
-      case PathNodeType.EVIL_BOSS_BATTLE: 
+      case PathNodeType.EVIL_BOSS_BATTLE:
         return node.metadata?.evilTeamType === 'boss' ? "EVIL_BOSS" : "EVIL_ADMIN";
       case PathNodeType.EVIL_GRUNT_BATTLE: return "EVIL_GRUNT";
       case PathNodeType.EVIL_ADMIN_BATTLE: return "EVIL_ADMIN";
@@ -5017,22 +5033,20 @@ export function outputAllWavesWithPaths(scene: BattleScene, battlePath: BattlePa
       default: return "OTHER";
     }
   };
-
-
   for (let wave = 1; wave <= battlePath.totalWaves; wave++) {
     const nodesForWave = battlePath.waveToNodeMap.get(wave);
-    
+
     if (nodesForWave && nodesForWave.length > 0) {
-      const relevantNodes = nodesForWave.filter(node => 
+      const relevantNodes = nodesForWave.filter(node =>
         specialNodeTypes.includes(node.nodeType)
       );
-      
+
       if (relevantNodes.length > 0) {
-        
+
         relevantNodes.forEach((node, index) => {
           const nodeTypeName = getNodeTypeName(node);
           let extraInfo = "";
-          
+
           if (node.metadata) {
             if (node.metadata.rivalStage !== undefined) {
               extraInfo += ` (stage ${node.metadata.rivalStage})`;
@@ -5053,7 +5067,7 @@ export function outputAllWavesWithPaths(scene: BattleScene, battlePath: BattlePa
               extraInfo += ` [${node.metadata.dynamicModeCount} dynamic modes]`;
             }
           }
-          
+
           if (node.dynamicMode && Object.keys(node.dynamicMode).length > 0) {
             const activeModes = Object.entries(node.dynamicMode)
               .filter(([, value]) => value)
@@ -5061,13 +5075,11 @@ export function outputAllWavesWithPaths(scene: BattleScene, battlePath: BattlePa
               .join(', ');
             extraInfo += ` {${activeModes}}`;
           }
-          
+
         });
       }
     }
   }
-  
-  
   const specialBattleCounts = {
     MAJOR_BOSS: 0,
     ELITE_FOUR: 0,
@@ -5078,7 +5090,7 @@ export function outputAllWavesWithPaths(scene: BattleScene, battlePath: BattlePa
     EVIL_ADMIN: 0,
     SMITTY: 0
   };
-  
+
   const specialBattleDetails = {
     MAJOR_BOSS: [] as {wave: number, nodeCount: number}[],
     ELITE_FOUR: [] as {wave: number, nodeCount: number}[],
@@ -5094,40 +5106,40 @@ export function outputAllWavesWithPaths(scene: BattleScene, battlePath: BattlePa
     const nodeTypeName = getNodeTypeName(node);
     if (nodeTypeName in specialBattleCounts) {
       specialBattleCounts[nodeTypeName as keyof typeof specialBattleCounts]++;
-      
+
       const nodesAtWave = battlePath.waveToNodeMap.get(node.wave) || [];
       const nodeCount = nodesAtWave.length;
-      
+
       if (nodeCount === 1) {
         if (nodeTypeName === 'RIVAL') {
           specialBattleDetails.RIVAL.push({
-            wave: node.wave, 
-            nodeCount, 
+            wave: node.wave,
+            nodeCount,
             stage: node.metadata?.rivalStage,
             rival: node.metadata?.rivalType
           });
         } else {
           specialBattleDetails[nodeTypeName as keyof typeof specialBattleDetails].push({
-            wave: node.wave, 
+            wave: node.wave,
             nodeCount
           });
         }
       }
     }
   }
-  
+
   Object.entries(specialBattleCounts).forEach(([type, count]) => {
     const details = specialBattleDetails[type as keyof typeof specialBattleDetails];
     const singleNodeBattles = details.length;
-    
+
     if (singleNodeBattles > 0) {
       if (type === 'RIVAL') {
         const rivalDetails = details as {wave: number, nodeCount: number, stage?: number, rival?: any}[];
-        const rivalInfo = rivalDetails.map(d => 
+        const rivalInfo = rivalDetails.map(d =>
           `wave ${d.wave} (${d.nodeCount} nodes, stage ${d.stage || '?'}, rival ${d.rival || '?'})`
         ).join(', ');
       } else {
-        const waveInfo = details.map(d => 
+        const waveInfo = details.map(d =>
           `wave ${d.wave} (${d.nodeCount} nodes)`
         ).join(', ');
       }
@@ -5137,18 +5149,18 @@ export function outputAllWavesWithPaths(scene: BattleScene, battlePath: BattlePa
 
 export function logWavesWithSpecialBattles(scene: BattleScene): string {
   const battlePath = setupFixedBattlePaths(scene);
-  
+
   const specialNodeTypes = [
     PathNodeType.MAJOR_BOSS_BATTLE,
     PathNodeType.RECOVERY_BOSS,
-    PathNodeType.ELITE_FOUR, 
+    PathNodeType.ELITE_FOUR,
     PathNodeType.CHAMPION,
     PathNodeType.RIVAL_BATTLE,
     PathNodeType.EVIL_BOSS_BATTLE,
     PathNodeType.EVIL_GRUNT_BATTLE,
     PathNodeType.EVIL_ADMIN_BATTLE
   ];
-  
+
   const getNodeTypeName = (nodeType: PathNodeType): string => {
     switch (nodeType) {
       case PathNodeType.MAJOR_BOSS_BATTLE: return "MAJOR_BOSS";
@@ -5163,26 +5175,26 @@ export function logWavesWithSpecialBattles(scene: BattleScene): string {
   };
 
   let output = "";
-  
+
   for (let wave = 1; wave <= battlePath.totalWaves; wave++) {
     const nodesForWave = battlePath.waveToNodeMap.get(wave);
-    
+
     if (nodesForWave && nodesForWave.length > 0) {
-      const specialNodes = nodesForWave.filter(node => 
+      const specialNodes = nodesForWave.filter(node =>
         specialNodeTypes.includes(node.nodeType)
       );
-      
+
       if (specialNodes.length > 0) {
         output += `wave ${wave} (${specialNodes.length} nodes):\n`;
-        
+
         specialNodes.forEach((node, index) => {
           const nodeTypeName = getNodeTypeName(node.nodeType);
           let extraInfo = "";
-          
+
           if (node.metadata?.dynamicModeCount !== undefined) {
             extraInfo += ` [${node.metadata.dynamicModeCount} dynamic modes]`;
           }
-          
+
           if (node.dynamicMode && Object.keys(node.dynamicMode).length > 0) {
             const activeModes = Object.entries(node.dynamicMode)
               .filter(([, value]) => value)
@@ -5190,25 +5202,25 @@ export function logWavesWithSpecialBattles(scene: BattleScene): string {
               .join(', ');
             extraInfo += ` {${activeModes}}`;
           }
-          
+
           output += `  node ${index + 1}: ${nodeTypeName}${extraInfo}\n`;
         });
         output += "\n";
       }
     }
   }
-  
+
   return output;
 }
 
 function createEvilBossBattle(scene: BattleScene, seedOffset: number = 35): FixedBattleConfig {
-  const hasDefeatedEvilBoss = scene.gameData.gameStats?.trainersDefeated > 0 && 
+  const hasDefeatedEvilBoss = scene.gameData.gameStats?.trainersDefeated > 0 &&
     scene.gameData.gameStats?.battles > 20;
-  
-  const bossTypes = hasDefeatedEvilBoss ? 
-    TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND : 
+
+  const bossTypes = hasDefeatedEvilBoss ?
+    TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND :
     TRAINER_TYPES.EVIL_TEAM_BOSSES.FIRST;
-  
+
   return createTrainerBattle(bossTypes, seedOffset, false);
 }
 
@@ -5218,21 +5230,21 @@ function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nod
   const dynamicMode = config.dynamicMode;
 
   scene.resetSeed(seeds.baseSeed + wave * 1000 + nodeIndex * 100);
-  
+
   const nodeOutcomes = Object.entries(probabilities).map(([nodeTypeStr, weight]) => ({
     weight,
     nodeType: parseInt(nodeTypeStr) as PathNodeType
   }));
-  
+
   const totalWeight = nodeOutcomes.reduce((sum, outcome) => sum + outcome.weight, 0);
   const randomValue = Utils.randSeedInt(totalWeight);
   let currentWeight = 0;
-  
+
   for (const outcomeData of nodeOutcomes) {
     currentWeight += outcomeData.weight;
     if (randomValue < currentWeight) {
       let battleConfig: FixedBattleConfig | undefined;
-      
+
       switch (outcomeData.nodeType) {
         case PathNodeType.TRAINER_BATTLE:
           battleConfig = undefined;
@@ -5257,6 +5269,9 @@ function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nod
         case PathNodeType.EVIL_BOSS_BATTLE:
           battleConfig = createEvilBossBattle(scene, 35);
           break;
+        case PathNodeType.SMITTY_BATTLE:
+          battleConfig = createSmittyBattle(scene, seeds.smittySeed || seeds.baseSeed, true);
+          break;
         case PathNodeType.MYSTERY_NODE:
           battleConfig = undefined;
           break;
@@ -5264,7 +5279,6 @@ function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nod
         case PathNodeType.RIVAL_BATTLE:
         case PathNodeType.EVIL_GRUNT_BATTLE:
         case PathNodeType.EVIL_ADMIN_BATTLE:
-        case PathNodeType.SMITTY_BATTLE:
         case PathNodeType.CONVERGENCE_POINT:
         case PathNodeType.ITEM_GENERAL:
         case PathNodeType.ADD_POKEMON:
@@ -5293,7 +5307,7 @@ function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nod
         case PathNodeType.TYPE_SWITCHER:
         case PathNodeType.PASSIVE_ABILITY:
         case PathNodeType.ANY_TMS:
-        // case PathNodeType.ANY_TMS_MASTER:
+
         case PathNodeType.TERA_SHARDS:
         case PathNodeType.CHALLENGE_REWARD:
         case PathNodeType.HEAL_ITEMS:
@@ -5309,10 +5323,12 @@ function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nod
         case PathNodeType.VITAMIN:
         case PathNodeType.MOVE_UPGRADE:
         case PathNodeType.LOW_TIER_MOVE_UPGRADE:
+        case PathNodeType.SKILL_POINT:
+        case PathNodeType.SKILL_TOKEN:
           battleConfig = undefined;
           break;
       }
-      
+
       return {
         nodeType: outcomeData.nodeType,
         battleConfig,
@@ -5320,7 +5336,7 @@ function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nod
       };
     }
   }
-  
+
   return {
     nodeType: nodeOutcomes.length > 0 ? nodeOutcomes[0].nodeType : PathNodeType.WILD_POKEMON,
     dynamicMode
@@ -5370,20 +5386,22 @@ interface NodeGenerationResult {
 }
 
 function generateDynamicModeForWave(wave: number, scene: BattleScene, seeds: any): DynamicMode | undefined {
-  if (wave < 100) {
+  const waveThreshold = scene.gameMode.isChaosFTL ? 70 : 100;
+
+  if (wave < waveThreshold) {
     return undefined;
   }
 
-  const numPropertiesToAdd = wave === 100 ? 1 : Math.floor((wave - 100) / 150) + 1;
-  
+  const numPropertiesToAdd = wave === waveThreshold ? 1 : Math.floor((wave - waveThreshold) / 150) + 1;
+
   if (numPropertiesToAdd <= 0) {
     return undefined;
   }
 
   scene.resetSeed(seeds.baseSeed + wave * 777);
-  
+
   const selectedProperties: (keyof DynamicMode)[] = [];
-  
+
   let selectedPrimaryChallenge: keyof DynamicMode;
   if (wave < 400) {
     selectedPrimaryChallenge = 'isNuzlocke';
@@ -5424,7 +5442,7 @@ function generateDynamicModeForWave(wave: number, scene: BattleScene, seeds: any
 
   for (let i = 1; i < maxProperties; i++) {
     if (availableProperties.length === 0) break;
-    
+
     const randomIndex = Utils.randSeedInt(availableProperties.length);
     const selectedProperty = availableProperties[randomIndex];
     selectedProperties.push(selectedProperty);
@@ -5444,21 +5462,21 @@ function generateDynamicModeForWave(wave: number, scene: BattleScene, seeds: any
 
   const moveRestrictionProperties = ['noStatusMoves', 'noPhysicalMoves', 'noSpecialMoves'];
   const activeMoveRestrictions = moveRestrictionProperties.filter(prop => dynamicMode[prop]);
-  
+
   if (activeMoveRestrictions.length >= 2) {
     const keepIndex = Utils.randSeedInt(activeMoveRestrictions.length);
     const propertyToKeep = activeMoveRestrictions[keepIndex];
     const propertiesToRemove = activeMoveRestrictions.filter((_, index) => index !== keepIndex);
-    
+
     propertiesToRemove.forEach(property => {
       delete dynamicMode[property];
     });
-    
-    const remainingProperties = secondaryProperties.filter(prop => 
-      !selectedProperties.includes(prop) && 
+
+    const remainingProperties = secondaryProperties.filter(prop =>
+      !selectedProperties.includes(prop) &&
       !moveRestrictionProperties.includes(prop)
     );
-    
+
     for (let i = 0; i < propertiesToRemove.length; i++) {
       if (remainingProperties.length > 0) {
         const randomIndex = Utils.randSeedInt(remainingProperties.length);
@@ -5496,9 +5514,9 @@ function generateChallengePath(
 ): ChallengePathInfo | null {
   const rangeStart = waveRange;
   const rangeEnd = rangeStart + 74;
-  
+
   scene.resetSeed(seeds.baseSeed + startWave * 1337);
-  
+
   const chaosVersion = scene.gameMechanicTracking[GameMechanicsID.CHAOS_MODE];
   const isChaosV2 = chaosVersion === GameMechanicsVersion.CHAOS_V2;
 
@@ -5507,18 +5525,18 @@ function generateChallengePath(
 
   if (isChaosV2) {
     nodeCount = 2;
-    
+
     const rand = Utils.randSeedInt(100);
     if (rand < 5) {
       challengeType = 'nuzlight';
-    } else if (rand < 65) { // 5 + 60
+    } else if (rand < 65) {
       challengeType = 'nuzlocke';
     } else {
       challengeType = 'nightmare';
     }
   } else {
     nodeCount = Utils.randSeedInt(100) < 40 ? 4 : (Utils.randSeedInt(100) < 70 ? 5 : 3);
-    
+
     if (nodeCount === 3) {
       challengeType = 'nightmare';
     } else if (nodeCount === 4) {
@@ -5527,10 +5545,10 @@ function generateChallengePath(
       challengeType = Utils.randSeedInt(2) === 0 ? 'nuzlocke' : 'nuzlight';
     }
   }
-  
+
   const additionalPropertiesCount = calculateAdditionalPropertiesCount(rangeStart, 999999);
   const additionalProperties: (keyof DynamicMode)[] = [];
-  
+
   if (additionalPropertiesCount > 0) {
     const availableProperties: (keyof DynamicMode)[] = [
       'noCatch', 'noExpGain', 'hasPassiveAbility', 'invertedTypes',
@@ -5539,7 +5557,7 @@ function generateChallengePath(
       'noSTAB', 'trickRoom', 'noSwitch',
       'noResistances', 'noHealingItems', 'autoTorment', 'legendaryNerf', 'typeExtraDamage', 'pokemonNerf'
     ];
-    
+
     const propertiesToAdd = Math.min(additionalPropertiesCount, availableProperties.length);
     for (let i = 0; i < propertiesToAdd; i++) {
       const randomIndex = Utils.randSeedInt(availableProperties.length);
@@ -5547,17 +5565,17 @@ function generateChallengePath(
       availableProperties.splice(randomIndex, 1);
     }
   }
-  
+
   const waveNodeTracker = new Map<number, Set<number>>();
-  
+
   if (!checkChallengeSlotAvailability(startWave, nodeCount, rangeEnd, waveNodeTracker, existingWaves)) {
     return null;
   }
-  
+
   for (let i = 0; i <= nodeCount; i++) {
     existingWaves.add(startWave + i);
   }
-  
+
   const { nodes, rewardNode } = constructChallengePathNodes(
     scene,
     startWave,
@@ -5566,8 +5584,6 @@ function generateChallengePath(
     additionalProperties,
     seeds
   );
-  
-  
   return {
     startWave,
     nodeCount,
@@ -5579,19 +5595,19 @@ function generateChallengePath(
 }
 
 export function testChallengePathGeneration(scene: BattleScene): void {
-  
+
   const CHALLENGE_RANGES = generateChallengeRanges(500);
-  
+
   const seeds = {
     baseSeed: 12345,
     rivalSelection: 67890,
     challengePath: 11111
   };
-  
+
   const existingWaves = new Set<number>();
-  
+
   for (const range of CHALLENGE_RANGES) {
-    
+
     const challengePath = generateChallengePath(
       scene,
       range.start + 10,
@@ -5599,9 +5615,9 @@ export function testChallengePathGeneration(scene: BattleScene): void {
       seeds,
       existingWaves
     );
-    
+
     if (challengePath) {
-      
+
       challengePath.nodes.forEach(node => {
         const dynamicModeCount = node.dynamicMode ? Object.keys(node.dynamicMode).length : 0;
         if (node.dynamicMode) {
@@ -5611,7 +5627,7 @@ export function testChallengePathGeneration(scene: BattleScene): void {
     } else {
     }
   }
-  
+
 }
 
 function checkChallengeSlotAvailability(
@@ -5623,28 +5639,28 @@ function checkChallengeSlotAvailability(
 ): boolean {
   const CHALLENGE_BRANCH_FIRST = 2;
   const CHALLENGE_BRANCH_OTHER = 3;
-  
+
   const requiredWaves = nodeCount + 1;
-  
+
   if (startWave + requiredWaves - 1 > rangeEnd) {
     return false;
   }
-  
+
   for (let i = 0; i < requiredWaves; i++) {
     const wave = startWave + i;
-    
+
     if (existingWaves.has(wave)) {
       return false;
     }
-    
+
     const requiredBranch = i === 0 ? CHALLENGE_BRANCH_FIRST : CHALLENGE_BRANCH_OTHER;
     const occupiedBranches = waveNodeTracker.get(wave);
-    
+
     if (occupiedBranches && occupiedBranches.has(requiredBranch)) {
       return false;
     }
   }
-  
+
   return true;
 }
 
@@ -5655,14 +5671,14 @@ function debugChallengeSlotSearch(
   waveNodeTracker: Map<number, Set<number>>,
   existingWaves: Set<number>
 ): void {
-  
+
   const maxSearchWave = layerRangeEnd - nodeCount;
   let availableSlots = 0;
   let conflictReasons: string[] = [];
-  
+
   for (let wave = layerRangeStart; wave <= maxSearchWave; wave++) {
     const isAvailable = checkChallengeSlotAvailability(wave, nodeCount, layerRangeEnd, waveNodeTracker, existingWaves);
-    
+
     if (isAvailable) {
       availableSlots++;
     } else {
@@ -5690,7 +5706,7 @@ function debugChallengeSlotSearch(
       }
     }
   }
-  
+
   if (conflictReasons.length > 0) {
   }
 }
@@ -5707,17 +5723,32 @@ function constructChallengePathNodes(
     PathNodeType.CHALLENGE_BOSS,
     PathNodeType.CHALLENGE_RIVAL,
     PathNodeType.CHALLENGE_EVIL_BOSS,
-    PathNodeType.CHALLENGE_CHAMPION
+    PathNodeType.CHALLENGE_CHAMPION,
+    PathNodeType.SMITTY_BATTLE
   ];
-  
+
   const nodes: PathNode[] = [];
-  
+
   for (let i = 0; i < nodeCount; i++) {
     const wave = startWave + i;
-    const nodeType = challengeNodeTypes[Utils.randSeedInt(challengeNodeTypes.length)];
-    
+    const nodeUniqueOffset = i * 7919;
+
+    scene.resetSeed(seeds.baseSeed + wave * 1337 + nodeUniqueOffset);
+
+    let nodeType: PathNodeType;
+
+    const smittyChance = Overrides.SMITTY_FINAL_BATTLE_CHANCE_OVERRIDE;
+    if (smittyChance !== null && Utils.randSeedInt(100) < smittyChance) {
+      nodeType = PathNodeType.SMITTY_BATTLE;
+    } else {
+      const availableTypes = smittyChance !== null
+        ? challengeNodeTypes.filter(t => t !== PathNodeType.SMITTY_BATTLE)
+        : challengeNodeTypes;
+      nodeType = availableTypes[Utils.randSeedInt(availableTypes.length)];
+    }
+
     const dynamicMode: DynamicMode = {};
-    
+
     if (challengeType === 'nightmare') {
       dynamicMode.isNightmare = true;
     } else if (challengeType === 'nuzlocke') {
@@ -5725,11 +5756,11 @@ function constructChallengePathNodes(
     } else if (challengeType === 'nuzlight') {
       dynamicMode.isNuzlight = true;
     }
-    
+
     additionalProperties.forEach(prop => {
       dynamicMode[prop] = true;
     });
-    
+
     let battleConfig: FixedBattleConfig | undefined;
     let metadata: any = {
       challengeType,
@@ -5737,7 +5768,7 @@ function constructChallengePathNodes(
       totalChallengeNodes: nodeCount,
       dynamicModeCount: Object.keys(dynamicMode).length
     };
-    
+
     switch (nodeType) {
       case PathNodeType.CHALLENGE_BOSS:
         battleConfig = undefined;
@@ -5750,29 +5781,41 @@ function constructChallengePathNodes(
         metadata.rivalType = randomRival;
         break;
       case PathNodeType.CHALLENGE_EVIL_BOSS:
-        battleConfig = createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND, 35 + wave, false);
+        battleConfig = createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND, 35 + wave + nodeUniqueOffset, false);
         metadata.evilTeamType = 'boss';
         break;
       case PathNodeType.CHALLENGE_CHAMPION:
-        battleConfig = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed + wave);
+        battleConfig = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed + wave + nodeUniqueOffset);
         metadata.eliteType = 'champion';
         break;
+      case PathNodeType.SMITTY_BATTLE:
+        battleConfig = createSmittyBattle(scene, (seeds.smittySeed || seeds.baseSeed) + wave + nodeUniqueOffset, true);
+        let smittyVariantIdx = 0;
+        if (battleConfig.getTrainer) {
+          const trainer = battleConfig.getTrainer(scene);
+          if (trainer.config && trainer.config.smittyVariantIndex !== undefined) {
+            smittyVariantIdx = trainer.config.smittyVariantIndex;
+          }
+        }
+        metadata.smittyVariantIndex = smittyVariantIdx;
+        break;
     }
-    
+
     const branch = i === 0 ? 3 : 4;
-    
+
     const node = createPathNode(
       wave,
       nodeType,
       branch,
       battleConfig,
       metadata,
-      dynamicMode
+      dynamicMode,
+      false
     );
-    
+
     nodes.push(node);
   }
-  
+
   const rewardWave = startWave + nodeCount;
   const rewardNodeType = Utils.randSeedInt(100) < 50 ? 'master_ball' : 'golden_pokeball';
   const rewardNode = createPathNode(
@@ -5783,14 +5826,16 @@ function constructChallengePathNodes(
     {
       challengeReward: true,
       rewardType: rewardNodeType
-    }
+    },
+    undefined,
+    false
   );
-  
+
   for (let i = 0; i < nodes.length - 1; i++) {
     addBidirectionalConnection(nodes[i], nodes[i + 1]);
   }
   addBidirectionalConnection(nodes[nodes.length - 1], rewardNode);
-  
+
   return { nodes, rewardNode };
 }
 
@@ -5837,7 +5882,7 @@ export function getDynamicModeLocalizedString(mode: DynamicModes): { name: strin
   const name = i18next.t(`${challengeKey}.name`);
   const description = i18next.t(`${challengeKey}.description`);
   const challengeText = i18next.t(`nodeMode:challenge:chaosChallenge`);
-  
+
   return {
     name,
     description,
@@ -5865,7 +5910,7 @@ export function reconstructBattlePathFromLayers(savedBattlePath: any): BattlePat
   for (const layer of battlePath.layers) {
     for (const node of layer.nodes) {
       battlePath.nodeMap.set(node.id, node);
-      
+
       if (!battlePath.waveToNodeMap.has(node.wave)) {
         battlePath.waveToNodeMap.set(node.wave, []);
       }
@@ -5878,13 +5923,13 @@ export function reconstructBattlePathFromLayers(savedBattlePath: any): BattlePat
 
 export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: BattlePath): void {
   const seeds = scene.gameData.fixedBattleSeeds || generateFixedSeeds(Utils.randInt(1000000));
-  
+
   for (const [nodeId, node] of battlePath.nodeMap) {
     if (node.nodeType === PathNodeType.RIVAL_BATTLE) {
       const rivalStage = node.metadata?.rivalStage || Math.min(6, Math.floor(node.wave / 50) + 1);
       const rivalType = node.metadata?.rivalType || TrainerType.BLUE;
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       node.battleConfig = createRivalBattle(rivalStage, rivalType, false);
       node.metadata = {
         ...node.metadata,
@@ -5894,27 +5939,35 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.SMITTY_BATTLE) {
       const smittyBattleConfig = createSmittyBattle(scene, seeds.smittySeed || seeds.baseSeed, true);
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
+      let smittyVariantIdx2 = 0;
+      if (smittyBattleConfig.getTrainer) {
+        const trainer = smittyBattleConfig.getTrainer(scene);
+        if (trainer.config && trainer.config.smittyVariantIndex !== undefined) {
+          smittyVariantIdx2 = trainer.config.smittyVariantIndex;
+        }
+      }
+
       node.battleConfig = smittyBattleConfig;
       node.metadata = {
         ...node.metadata,
-        smittyVariantIndex: 0,
+        smittyVariantIndex: smittyVariantIdx2,
         dynamicModeCount: dynamicMode ? Object.keys(dynamicMode).length : undefined
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.MAJOR_BOSS_BATTLE) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       node.battleConfig = new FixedBattleConfig()
         .setBattleType(BattleType.TRAINER)
         .setSeedOffsetWave(node.wave);
-        
+
       node.metadata = {
         ...node.metadata,
         bossType: 'major',
@@ -5922,14 +5975,14 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.RECOVERY_BOSS) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       node.battleConfig = new FixedBattleConfig()
         .setBattleType(BattleType.TRAINER)
         .setSeedOffsetWave(node.wave);
-        
+
       node.metadata = {
         ...node.metadata,
         bossType: 'recovery',
@@ -5937,10 +5990,10 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.ELITE_FOUR) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       scene.resetSeed(seeds.eliteFour.trainerGeneration + node.wave);
       const eliteFourTypes = [
         TRAINER_TYPES.ELITE_FOUR.FIRST,
@@ -5950,7 +6003,7 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       ];
       const eliteFourCounter = Math.floor((node.wave - 1) / 100) % 4;
       const trainerType = eliteFourTypes[eliteFourCounter];
-      
+
       node.battleConfig = createEliteFourBattle(trainerType, false, seeds.baseSeed);
       node.metadata = {
         ...node.metadata,
@@ -5959,10 +6012,10 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.CHAMPION) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       node.battleConfig = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed);
       node.metadata = {
         ...node.metadata,
@@ -5971,10 +6024,10 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.EVIL_BOSS_BATTLE) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       node.battleConfig = createEvilBossBattle(scene, 35);
       node.metadata = {
         ...node.metadata,
@@ -5983,10 +6036,10 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.EVIL_GRUNT_BATTLE) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       node.battleConfig = createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_GRUNTS, 35, false);
       node.metadata = {
         ...node.metadata,
@@ -5995,10 +6048,10 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.EVIL_ADMIN_BATTLE) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       node.battleConfig = createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_ADMINS, 35, false);
       node.metadata = {
         ...node.metadata,
@@ -6007,14 +6060,14 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.CHALLENGE_BOSS) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       node.battleConfig = new FixedBattleConfig()
         .setBattleType(BattleType.TRAINER)
         .setSeedOffsetWave(node.wave);
-      
+
       node.metadata = {
         ...node.metadata,
         bossType: 'challenge_major',
@@ -6022,13 +6075,13 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.CHALLENGE_RIVAL) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       const rivalStage = node.metadata?.rivalStage || 6;
       const rivalType = node.metadata?.rivalType || TrainerType.BLUE;
-      
+
       node.battleConfig = createRivalBattle(rivalStage, rivalType, Utils.randSeedInt(100) < 20);
       node.metadata = {
         ...node.metadata,
@@ -6038,10 +6091,10 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       node.battleConfig = createTrainerBattle(TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND, 35 + node.wave, false);
       node.metadata = {
         ...node.metadata,
@@ -6050,10 +6103,10 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.CHALLENGE_CHAMPION) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
+
       node.battleConfig = createEliteFourBattle(TRAINER_TYPES.ELITE_FOUR.CHAMPION, true, seeds.baseSeed + node.wave);
       node.metadata = {
         ...node.metadata,
@@ -6062,7 +6115,7 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
       };
       node.dynamicMode = dynamicMode;
     }
-    
+
     else if (node.nodeType === PathNodeType.CHALLENGE_REWARD) {
       node.metadata = {
         ...node.metadata,
@@ -6070,22 +6123,5 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
         rewardType: node.metadata?.rewardType || 'golden_pokeball'
       };
     }
-    
-    // else if (node.nodeType === PathNodeType.TRAINER_BATTLE) {
-    //   const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
-      
-    //   if (dynamicMode && Object.keys(dynamicMode).length > 0) {
-    //     scene.resetSeed(seeds.baseSeed + node.wave * 1000);
-    //     const trainerPool = [TrainerType.ACE_TRAINER, TrainerType.VETERAN];
-        
-    //     node.battleConfig = createTrainerBattle(trainerPool, node.wave);
-    //     node.dynamicMode = dynamicMode;
-    //     node.metadata = {
-    //       ...node.metadata,
-    //       dynamicModeCount: Object.keys(dynamicMode).length
-    //     };
-    //   }
-    // }
   }
 }
-

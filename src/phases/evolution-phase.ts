@@ -19,12 +19,14 @@ import { AbilitySacrificeModifier } from "#app/modifier/modifier.ts";
 import { TypeSacrificeModifier } from "#app/modifier/modifier.ts";
 import { PassiveAbilitySacrificeModifier } from "#app/modifier/modifier.ts";
 import { AnyAbilityModifier } from "#app/modifier/modifier.ts";
+import { SpeciesFormKey } from "#enums/species-form-key";
 
 export class EvolutionPhase extends Phase {
   protected pokemon: PlayerPokemon;
   protected lastLevel: integer;
 
   private evolution: SpeciesFormEvolution | null;
+  private modeRealignEvent: Phaser.Time.TimerEvent | null = null;
 
   protected evolutionContainer: Phaser.GameObjects.Container;
   protected evolutionBaseBg: Phaser.GameObjects.Image;
@@ -62,6 +64,16 @@ export class EvolutionPhase extends Phase {
       }
 
       this.scene.fadeOutBgm(undefined, false);
+
+      this.modeRealignEvent = this.scene.time.addEvent({
+        delay: 50,
+        loop: true,
+        callback: () => {
+          if (this.scene.ui.getMode() !== Mode.EVOLUTION_SCENE) {
+            this.scene.ui.setModeForceTransition(Mode.EVOLUTION_SCENE);
+          }
+        }
+      });
 
       const evolutionHandler = this.scene.ui.getHandler() as EvolutionSceneHandler;
 
@@ -111,14 +123,58 @@ export class EvolutionPhase extends Phase {
         sprite.setPipelineData("spriteKey", this.pokemon.getSpriteKey());
         sprite.setPipelineData("shiny", this.pokemon.shiny);
         sprite.setPipelineData("variant", this.pokemon.variant);
-        [ "spriteColors", "fusionSpriteColors" ].map(k => {
-          if (this.pokemon.summonData?.speciesForm) {
-            k += "Base";
-          }
-          sprite.pipelineData[k] = this.pokemon.getSprite().pipelineData[k];
-        });
-        sprite.setScale(this.pokemon.getSpriteScale());
+      [ "spriteColors", "fusionSpriteColors" ].map(k => {
+        if (this.pokemon.summonData?.speciesForm) {
+          k += "Base";
+        }
+        sprite.pipelineData[k] = this.pokemon.getSprite().pipelineData[k];
       });
+
+      sprite.setScale(this.pokemon.getSpriteScale());
+      });
+
+      const isAltBuildFormChange = (this as any)?.formChange?.formKey === SpeciesFormKey.ALT_BUILD;
+      const hasAltBuild = !!(this.pokemon.altBuildSpriteColors && this.pokemon.altBuildTargetColors);
+      const preSnapshot = (this.pokemon as any)._preStateAltBuildSnapshot;
+      const hadAltBuildAlready = preSnapshot && preSnapshot.altBuildRank > 0;
+
+      if (isAltBuildFormChange && hasAltBuild && !hadAltBuildAlready) {
+        [ this.pokemonSprite, this.pokemonTintSprite ].forEach(sprite => {
+          delete sprite.pipelineData["altBuildSpriteColors"];
+          delete sprite.pipelineData["altBuildTargetColors"];
+          delete sprite.pipelineData["altBuildBlendMode"];
+          delete sprite.pipelineData["altBuildInversionFactor"];
+        });
+      }
+
+      if (hasAltBuild) {
+        const applyToPre = !isAltBuildFormChange || hadAltBuildAlready;
+
+        [ this.pokemonEvoSprite, this.pokemonEvoTintSprite ].forEach(sprite => {
+          sprite.pipelineData["altBuildSpriteColors"] = this.pokemon.altBuildSpriteColors;
+          sprite.pipelineData["altBuildTargetColors"] = this.pokemon.altBuildTargetColors;
+          sprite.pipelineData["altBuildBlendMode"] = this.pokemon.altBuildBlendMode || 'replace';
+          sprite.pipelineData["altBuildInversionFactor"] = this.pokemon.altBuildInversionFactor || 0.0;
+        });
+
+        if (applyToPre) {
+          const preData = preSnapshot && preSnapshot.altBuildSpriteColors ? preSnapshot : {
+            altBuildSpriteColors: this.pokemon.altBuildSpriteColors,
+            altBuildTargetColors: this.pokemon.altBuildTargetColors,
+            altBuildBlendMode: this.pokemon.altBuildBlendMode || 'replace',
+            altBuildInversionFactor: this.pokemon.altBuildInversionFactor || 0.0
+          };
+
+          [ this.pokemonSprite, this.pokemonTintSprite ].forEach(sprite => {
+            sprite.pipelineData["altBuildSpriteColors"] = preData.altBuildSpriteColors;
+            sprite.pipelineData["altBuildTargetColors"] = preData.altBuildTargetColors;
+            sprite.pipelineData["altBuildBlendMode"] = preData.altBuildBlendMode;
+            sprite.pipelineData["altBuildInversionFactor"] = preData.altBuildInversionFactor;
+          });
+        }
+
+        delete (this.pokemon as any)._preStateAltBuildSnapshot;
+      }
       this.pokemon.getPossibleEvolution(this.evolution).then(evolvedPokemon => {
         this.pokemonEvoSprite.setScale(evolvedPokemon.getSpriteScale());
         this.pokemonEvoTintSprite.setScale(evolvedPokemon.getSpriteScale());
@@ -128,6 +184,13 @@ export class EvolutionPhase extends Phase {
     });
   }
 
+  end() {
+    if (this.modeRealignEvent) {
+      this.modeRealignEvent.remove();
+      this.modeRealignEvent = null;
+    }
+    super.end();
+  }
   doEvolution(): void {
     const evolutionHandler = this.scene.ui.getHandler() as EvolutionSceneHandler;
     const preName = getPokemonNameWithAffix(this.pokemon);
@@ -211,6 +274,10 @@ export class EvolutionPhase extends Phase {
                           this.scene.unshiftPhase(new EndEvolutionPhase(this.scene));
 
                           this.scene.ui.showText(i18next.t("menu:stoppedEvolving", { pokemonName: preName }), null, () => {
+                            if (this.modeRealignEvent) {
+                              this.modeRealignEvent.remove();
+                              this.modeRealignEvent = null;
+                            }
                             this.scene.ui.showText(i18next.t("menu:pauseEvolutionsQuestion", { pokemonName: preName }), null, () => {
                               const end = () => {
                                 this.scene.ui.showText("", 0);
@@ -239,15 +306,15 @@ export class EvolutionPhase extends Phase {
 
                           this.pokemon.evolve(this.evolution, this.pokemon.species).then(() => {
                             this.scene.gameData.gameStats.totalEvolutions++;
-                            
+
                             const levelMoves = this.pokemon.getLevelMoves(this.lastLevel + 1, true);
                             for (const lm of levelMoves) {
                               this.scene.unshiftPhase(new LearnMovePhase(this.scene, this.scene.getParty().indexOf(this.pokemon), lm[1]));
                             }
                             this.scene.unshiftPhase(new EndEvolutionPhase(this.scene));
-                            
-                            const modifiers = this.pokemon.scene.findModifiers(m => 
-                              (m instanceof AbilitySwitcherModifier || 
+
+                            const modifiers = this.pokemon.scene.findModifiers(m =>
+                              (m instanceof AbilitySwitcherModifier ||
                                m instanceof TypeSwitcherModifier ||
                                m instanceof AnyAbilityModifier ||
                                m instanceof TypeSacrificeModifier ||
@@ -256,7 +323,7 @@ export class EvolutionPhase extends Phase {
                                m instanceof AnyPassiveAbilityModifier) &&
                               (m as any).pokemonId === this.pokemon.id
                             );
-                            
+
                             for (const modifier of modifiers) {
                               modifier.apply([this.pokemon]);
                             }

@@ -9,11 +9,12 @@ import { PartyUiMode } from "#app/ui/party-ui-handler.js";
 import { BattlePhase } from "./battle-phase.js";
 import { MoveUpgradePhase } from "./move-upgrade-phase.js";
 import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
+import Overrides from "#app/overrides";
 
 export class SelectMoveUpgradeModifierPhase extends SelectModifierPhase {
     private moveUpgradeOptions: ModifierType[];
     private rerollCallback?: () => ModifierType[];
-    
+
     constructor(
         scene: BattleScene,
         rerollCount: number,
@@ -27,43 +28,46 @@ export class SelectMoveUpgradeModifierPhase extends SelectModifierPhase {
         this.moveUpgradeOptions = moveUpgradeOptions;
         this.rerollCallback = rerollCallback;
     }
-    
+
     getModifierTypeOptions(modifierCount: number): ModifierTypeOption[] {
-        return this.moveUpgradeOptions.slice(0, modifierCount).map(type => ({ 
+        return this.moveUpgradeOptions.slice(0, modifierCount).map(type => ({
             id: Utils.randomString(16),
-            type, 
+            type,
             upgradeCount: 1,
-            cost: 0 
+            cost: 0
         }));
     }
 
     getRerollCost(): number {
+        if (Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
+            return 0;
+        }
         const baseValue = 10000;
         return Math.min(baseValue * Math.pow(2, this.rerollCount), Number.MAX_SAFE_INTEGER);
     }
-    
+
     getPoolType(): any {
         return null;
     }
-    
+
     start() {
-        BattlePhase.prototype.start.call(this); 
+        BattlePhase.prototype.start.call(this);
         this.scene.reroll = false;
 
         const typeOptions = this.getModifierTypeOptions(3);
-        
+
         const modifierSelectCallback = (rowCursor: number, cursor: number) => {
             if (rowCursor < 0 || cursor < 0) {
                 this.scene.ui.playError();
                 return false;
             }
-            
+
             let modifierType: ModifierType | undefined;
-            
+
             switch (rowCursor) {
-                case 0: 
+                case 0:
                     switch (cursor) {
-                        case 0: 
+                        case 0:
                             const rerollCost = this.getRerollCost();
                             if (this.scene.gameData.permaMoney < rerollCost) {
                                 this.scene.ui.playError();
@@ -71,24 +75,24 @@ export class SelectMoveUpgradeModifierPhase extends SelectModifierPhase {
                             } else {
                                 const newOptions = this.rerollCallback ? this.rerollCallback() : this.shuffleArray([...this.moveUpgradeOptions]);
                                 const newPhase = new SelectMoveUpgradeModifierPhase(
-                                    this.scene, 
-                                    this.rerollCount + 1, 
-                                    [ModifierTier.COMMON, ModifierTier.GREAT, ModifierTier.ULTRA], 
-                                    true, 
+                                    this.scene,
+                                    this.rerollCount + 1,
+                                    [ModifierTier.COMMON, ModifierTier.GREAT, ModifierTier.ULTRA],
+                                    true,
                                     newOptions,
                                     null,
                                     this.rerollCallback
                                 );
-                                
+
                                 this.scene.unshiftPhase(newPhase);
                                 if(Utils.randSeedInt(100) <= 50) {
                                     this.scene.gameData.reducePermaModifierByType([
-                                        PermaType.PERMA_REROLL_COST_1, 
-                                        PermaType.PERMA_REROLL_COST_2, 
+                                        PermaType.PERMA_REROLL_COST_1,
+                                        PermaType.PERMA_REROLL_COST_2,
                                         PermaType.PERMA_REROLL_COST_3
                                     ], this.scene);
                                 }
-                                
+
                                 this.scene.addPermaMoney(-rerollCost);
                                 this.scene.animateMoneyChanged(false);
                                 this.scene.playSound("se/buy");
@@ -96,24 +100,24 @@ export class SelectMoveUpgradeModifierPhase extends SelectModifierPhase {
                                 this.scene.ui.setMode(Mode.MESSAGE).then(() => this.end());
                             }
                             break;
-                        case 1: 
-                            break; 
-                        case 2: 
+                        case 1:
+                            break;
+                        case 2:
                             this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.CHECK, -1, () => {
                                 const moveOptions = this.getModifierTypeOptions(3);
                                 this.scene.ui.setMode(
-                                    Mode.MODIFIER_SELECT, 
-                                    this.isPlayer(), 
-                                    moveOptions, 
-                                    modifierSelectCallback, 
-                                    this.getRerollCost(), 
+                                    Mode.MODIFIER_SELECT,
+                                    this.isPlayer(),
+                                    moveOptions,
+                                    modifierSelectCallback,
+                                    this.getRerollCost(),
                                     true
                                 );
                             });
                             break;
                     }
                     return true;
-                case 1: 
+                case 1:
                     if (cursor < this.moveUpgradeOptions.length) {
                         modifierType = this.moveUpgradeOptions[cursor];
                     }
@@ -130,16 +134,16 @@ export class SelectMoveUpgradeModifierPhase extends SelectModifierPhase {
                     return result;
                 }
             }
-            
+
             this.scene.ui.playError();
             return false;
         };
         this.scene.ui.setMode(
-            Mode.MODIFIER_SELECT, 
-            this.isPlayer(), 
-            typeOptions, 
-            modifierSelectCallback, 
-            this.getRerollCost(), 
+            Mode.MODIFIER_SELECT,
+            this.isPlayer(),
+            typeOptions,
+            modifierSelectCallback,
+            this.getRerollCost(),
             true
         );
 
@@ -147,7 +151,7 @@ export class SelectMoveUpgradeModifierPhase extends SelectModifierPhase {
             this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.FIRST_MOVE_UPGRADE_1, true, false);
         }
     }
-    
+
     private shuffleArray<T>(array: T[]): T[] {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Utils.randSeedInt(i+1));
@@ -155,4 +159,4 @@ export class SelectMoveUpgradeModifierPhase extends SelectModifierPhase {
         }
         return array;
     }
-} 
+}

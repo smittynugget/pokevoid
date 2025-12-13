@@ -5,7 +5,7 @@
     "gameModes": "Modos de Jogo",
     "specialPokemon": "Pokémon Especiais",
     "progression": "Progressão do Jogo",
-    "permanentFeatures": "Recursos Permanentes",
+    "permanentFeatures": "Recursos Omega",
     "glitchSystem": "Sistema de Glitch",
     "battleMechanics": "Mecânicas de Batalha",
     "formChanges": "Mudanças de Forma",
@@ -20,7 +20,8 @@
   "pokerus": "Todo dia, 3 Pokémon iniciais ficam com uma borda roxa.\n$Caso veja um inicial que você possui com uma dessa, tente\nadicioná-lo a sua equipe. Lembre-se de olhar seu sumário!",
   "statChange": "As mudanças de atributos se mantém após a batalha desde que o Pokémon não seja trocado.\n$Seus Pokémon voltam a suas Poké Bolas antes de batalhas contra treinadores e de entrar em um novo bioma.\n$Para ver as mudanças de atributos dos Pokémon em campo, mantena C ou Shift pressionado durante a batalha.\n$Você também pode ver os movimentos de um Pokémon inimigo segurando V.\n$Isso só mostra os movimentos que o Pokémon já usou na atual batalha.",
   "selectItem": "Após cada batalha, você pode escolher entre 3 itens aleatórios.\n$Você pode escolher apenas um deles.\n$Esses itens variam entre consumíveis, itens de segurar e itens passivos permanentes.\n$A maioria dos efeitos de itens não consumíveis podem ser acumulados.\n$Alguns itens só aparecerão se puderem ser usados, como os itens de evolução.\n$Você também pode transferir itens de segurar entre os Pokémon utilizando a opção \"Alterar\".\n$A opção de transferir irá aparecer no canto inferior direito assim que você obter um item de segurar.\n$Você pode comprar itens consumíveis com dinheiro, e sua variedade aumentará conforme você for mais longe.\n$Certifique-se de comprá-los antes de escolher seu item aleatório. Ao escolhê-lo, a próxima batalha começará.",
-  "eggGacha": "Nesta tela, você pode trocar seus vouchers por\novos de Pokémon.\n$Os ovos precisam chocar e se aproximam da eclosão\napós cada batalha. Ovos mais raros levam mais\ntempo para chocar.\n$Pokémon chocados não serão adicionados à sua equipe,\nmas serão adicionados aos seus iniciais.\n$Pokémon chocados de ovos geralmente têm IVs\nmelhores do que Pokémon selvagens.\n$Alguns Pokémon só podem ser obtidos de ovos.\n$Existem 3 máquinas diferentes para escolher com diferentes\nbônus, então escolha a que melhor se adapta a você!",
+  "eggGacha": "Desta tela, você pode resgatar seus vales por ovos de Pokémon.\n$Os ovos precisam chocar e ficam mais próximos de chocar após cada batalha.\n$Ovos mais raros demoram mais para chocar.\n$Pokémon chocados não serão adicionados ao seu time, eles serão adicionados aos seus iniciais.\n$Pokémon chocados de ovos geralmente têm IVs melhores que Pokémon selvagens.\n$Alguns Pokémon só podem ser obtidos de ovos.\n$Há 3 máquinas diferentes das quais você pode puxar com bônus diferentes, então escolha a que melhor se adequa a você!",
+  "backupReminder": "Por favor, faça backup do seu save baixando-o para o seu dispositivo.\n$Isso ajudará a evitar que você tenha que começar tudo de novo caso os dados do seu navegador sejam perdidos.",
   "pokerogue": {
     "title": "Dando ao PokéRogue o Crédito que Merece",
     "text": { 
@@ -86,7 +87,7 @@
   },
   "rivalQuests": {
     "title": "Missões Glitch",
-    "text": "Derrote os rivais para desbloquear Missões Glitch! Compre-as na LojaPerma e complete-as para desbloquear permanentemente poderosas Formas Glitch para Pokémon específicos."
+    "text": "Derrote os rivais para desbloquear Missões Glitch! Compre-as na OmegaLoja e complete-as para desbloquear permanentemente poderosas Formas Glitch para Pokémon específicos."
   },
   "smitom": {
     "title": "Smitom",
@@ -121,7 +122,7 @@
     "title": "Modo Jornada",
     "text": { 
       "1":"Monte sua equipe para enfrentar O Vazio. Use qualquer Pokémon que você capturou ou chocou, incluindo fusões!",
-      "2":"Pokémon fundidos requerem ∞OURO para serem usados. ItensPerma podem reduzir custos e aumentar seu limite de iniciais."
+      "2":"Pokémon fundidos requerem ΩOURO para serem usados. OmegaItens podem reduzir custos e aumentar seu limite de iniciais."
     }
   },
   "unlockJourney": {
@@ -133,7 +134,7 @@
   },
   "rogueMode": {
     "title": "Modo Rogue",
-    "text": "Escolha 2 pokémon aleatórios para começar sua partida! Use seu ∞OURO para mudar suas opções! Cada partida é única!"
+    "text": "Escolha 2 pokémon aleatórios para começar sua partida! Use seu ΩOURO para mudar suas opções! Cada partida é única!"
   },
   "bosses": {
     "title": "Chefes Multi-Forma",
@@ -164,14 +165,14 @@
     "title": "Fusões Capturáveis",
     "text": { 
       "1":"Todos os Pokémon Fusão são capturáveis e adicionados permanentemente à sua coleção!",
-      "2":"Encontre-os com uma chance base de 1/14 (melhorável com ∞ITENS). Usá-los custa ∞OURO."
+      "2":"Encontre-os com uma chance base de 1/14 (melhorável com ΩITENS). Usá-los custa ΩOURO."
     }
   },
   "trainerPokemon": {
     "title": "Capturar Pokémon de Treinadores",
     "text": { 
       "1":"A maioria dos treinadores venderá seus Pokémon durante a batalha (exceto os Rivais!). Os Pokémon capturados são adicionados permanentemente à sua coleção!",
-      "2":"O custo depende da onda, mas pode ser reduzido com ∞ITENS."
+      "2":"O custo depende da onda, mas pode ser reduzido com ΩITENS."
     }
   },
   "partyAbility": {
@@ -182,9 +183,9 @@
     }
   },
   "permaMoney": {
-    "title": "DinheiroPerma (∞OURO)",
+    "title": "OmegaDinheiro (ΩOURO)",
     "text": { 
-      "1":"Ganhe ∞OURO persistente entre partidas! Use-o para comprar ∞ITENS, renovar os iniciais do Rogue ou pagar a Taxa de Fusão.",
+      "1":"Ganhe ΩOURO persistente entre partidas! Use-o para comprar ΩITENS, renovar os iniciais do Rogue ou pagar a Taxa de Fusão.",
       "2":"Obtenha-o através de recompensas, salvando ou interagindo com Smitom."
     }
   },
@@ -192,19 +193,19 @@
     "title": "Salvamento Local e Backup",
     "text": { 
       "1":"Se seus dados forem perdidos, eles serão PERDIDOS PARA SEMPRE! Use o ícone de disquete (canto superior direito) para EXPORTAR seu arquivo de salvamento com frequência!",
-      "2":"Isso recompensa com ∞OURO e protege contra perda de dados."
+      "2":"Isso recompensa com ΩOURO e protege contra perda de dados."
     }
   },
   "bounties": {
     "title": "Sistema de Recompensas",
     "text": { 
       "1":"Insira códigos de 6 letras no console para ativar Recompensas.",
-      "2":"Recompensas são MISSÕES que permitem ganhar ∞OURO/∞ITENS e são completamente reutilizáveis após completá-las."
+      "2":"Recompensas são MISSÕES que permitem ganhar ΩOURO/ΩITENS e são completamente reutilizáveis após completá-las."
     }
   },
   "dailyBounty": {
     "title": "Recompensa Diária!",
-    "text": "Uma nova recompensa diária está disponível! Complete-a para ganhar ∞OURO/∞ITENS. O código já está no console, basta ativá-lo!"
+    "text": "Uma nova recompensa diária está disponível! Complete-a para ganhar ΩOURO/ΩITENS. O código já está no console, basta ativá-lo!"
   },
   "discord": {
     "title": "Discord e Suporte",
@@ -227,10 +228,10 @@
     }
   },
   "smittyItems": {
-    "title": "ItensPerma (∞ITENS)",
+    "title": "OmegaItens (ΩITENS)",
     "text": { 
-      "1":"Use ∞OURO para comprar melhorias permanentes (∞ITENS) com diferentes tipos de duração: Baseadas em uso (quantidade reduzida após o uso) ou Baseadas em ondas (quantidade reduzida após a onda 50).",
-      "2":"Essas melhorias podem aumentar as taxas de shiny/fusão/captura, reduzir custos e fornecer outros benefícios permanentes!"
+      "1":"Use ΩOURO para comprar melhorias duradouras (ΩITENS) com diferentes tipos de duração: Baseadas em uso (quantidade reduzida após o uso) ou Baseadas em ondas (quantidade reduzida após a onda 50).",
+      "2":"Essas melhorias podem aumentar as taxas de shiny/fusão/captura, reduzir custos e fornecer outros benefícios duradouros!"
     }
   },
   "abilitySwitcher": {
@@ -270,7 +271,7 @@
   },
   "newQuests": {
     "title": "Nova Missão Desbloqueada!",
-    "text": "Você desbloqueou uma nova missão! Ela aparecerá ALEATORIAMENTE (mas frequentemente) na LojaPerma / Loja na tela de título! Se ela não estiver lá, redefina para encontrá-la!"
+    "text": "Você desbloqueou uma nova missão! Ela aparecerá ALEATORIAMENTE (mas frequentemente) na OmegaLoja / Loja na tela de título! Se ela não estiver lá, redefina para encontrá-la!"
   },
   "modeUnlocks": {
     "title": "Desbloqueios de Modos de Jogo",
@@ -349,8 +350,99 @@
   "thankYou": {
     "title": "Caro Jogador",
     "text": {
-      "1": "16 meses de loucura de desenvolvimento solo significam tudo - toda vez que alguém como você se diverte jogando este jogo. Se minhas ideias estranhas realmente funcionam e você está se divertindo,", 
+      "1": "24 meses de loucura de desenvolvimento solo significam tudo - toda vez que alguém como você se diverte jogando este jogo. Se minhas ideias estranhas realmente funcionam e você está se divertindo,", 
       "2": "então talvez - eu esteja mais perto do meu sonho de me tornar um verdadeiro desenvolvedor de jogos. Muito obrigado por jogar minha versão caótica e quebrada do PokéRogue! - Smitty"
+    }
+  },
+  "pokevoidV2Update": {
+    "title": {
+      "1": "Bem-vindo ao PokéVoid V2!",
+      "2": "Redesign Completo da UI",
+      "3a": "Novo Campeão Jogável: Apollo",
+      "3b": "Nova Campeã Jogável: Diana",
+      "4": "Seleção de Personagem Campeão",
+      "5": "Árvores de Habilidades",
+      "6": "Novos Modos",
+      "7": "Comandos de Batalha",
+      "8": "Muito Mais Recursos!"
+    },
+    "text": {
+      "1": "Bem-vindo à NOVA Atualização Versão 2.0b do PokéVoid - A ATUALIZAÇÃO COLOSSAL!! Esta atualização traz uma revisão completa com NOVA UI, Campeões, Árvores de Habilidades e muito mais!",
+      "2": "Experimente um redesign completo da UI com novos ícones e design visual aprimorado em todo o jogo!",
+      "3a": "Campeão do Sol, Apollo - canaliza seu poder radiante como uma das últimas luzes empurrando de volta a noite sem fim do vazio!",
+      "3b": "Campeã da Lua, Diana - tece fios iluminados pela lua para rastrear os movimentos do vazio e guiar outros para a segurança!",
+      "4": "Escolha seu Campeão e enfrente o vazio! Cada Campeão tem tipos únicos, Pokémon assinatura e sua própria árvore de habilidades!",
+      "5": "Desbloqueie habilidades poderosas através da Árvore de Habilidades do seu Campeão! Use Pontos de Habilidade para comprar nós e Tokens de Árvore para subir de nível!",
+      "6": "A nova variante do modo caos FTL espera por você!",
+      "7": "Seis novos comandos de batalha dão mais controle! Acesse sua Árvore de Habilidades, verifique inimigos, obtenha ovos e mais no meio da batalha!",
+      "8": "Melhor tratamento de localização + traduções aprimoradas, e inúmeros outros recursos esperam por você! Mergulhe e descubra todos!"
+    }
+  },
+  "ftlModeSelect": {
+    "title": { "1": "NOVO Modo FTL" },
+    "text": { "1": "FTL (Mais Rápido que a Luz) é a nova variante caos mais rápida! Pule direto para o caos!" }
+  },
+  "championSelectEssence": {
+    "title": { "1": "Seleção de Campeão", "2": "Sistema de Essência", "3": "Subir de Nível os Campeões" },
+    "text": {
+      "1": "Quem você escolherá para se aventurar no vazio! Cada Campeão tem tipos únicos, Pokémon assinatura e árvore de habilidades!",
+      "2": "Colete Essências derrotando Pokémon! Essências correspondem ao tipo do Pokémon derrotado e são usadas para libertar Campeões corrompidos e desbloquear habilidades poderosas!",
+      "3": "Use as Essências coletadas para subir de nível seus Campeões! Níveis mais altos desbloqueiam habilidades mais poderosas em suas Árvores de Habilidades!"
+    }
+  },
+  "championSelectSpecialEssences": {
+    "title": { "1": "Essências Glitch e Smitty", "2": "Essência Glitch", "3": "Essência Smitty" },
+    "text": {
+      "1": "Algumas habilidades poderosas requerem Essências especiais: Essência Glitch e Essência Smitty! Estas desbloqueiam as habilidades mais fortes!",
+      "2": "Para desbloquear NOVAS Formas Glitch Corrompidas de RARIDADE MESTRE+ e Pokémon Lendários Poderosos - colete essências glitch derrotando pokémon glitch!",
+      "3": "Para desbloquear NOVAS Habilidades Smitty Proibidas de RARIDADE MESTRE+ e Alt Builds Quebrados - colete essências smitty enfrentando a Corrupção em si!"
+    }
+  },
+  "skillTreeApolloDianaTypes": {
+    "title": { "1": "Sistema de Tipos Aleatórios" },
+    "text": { "1": "Apollo e Diana são Campeões especiais com tipos ALEATÓRIOS! No início de cada partida, dois tipos aleatórios são atribuídos a você!" }
+  },
+  "skillTreeSetTypes": {
+    "title": { "1": "Campeões de Tipo", "2": "Brock - Campeão da Pedra", "3": "Sinergia de Tipo" },
+    "text": {
+      "1": "A maioria dos Campeões tem especializações de tipo FIXAS! Toda a sua Árvore de Habilidades e pool de Pokémon gira em torno de seus tipos!",
+      "2": "Brock se especializa em tipos Terra e Pedra! Sua Árvore de Habilidades oferece MTs de Terra e Pedra, impulsionadores e habilidades!",
+      "3": "Construa sua equipe em torno dos tipos do seu Campeão! Capture Pokémon correspondentes para maximizar o potencial da sua Árvore de Habilidades!"
+    }
+  },
+  "skillTreeProgression": {
+    "title": { "1": "Pontos de Habilidade", "2": "Tokens de Árvore" },
+    "text": {
+      "1": "Pontos de Habilidade são usados para comprar nós na sua Árvore de Habilidades! Ganhos em batalhas, recompensas e eventos especiais!",
+      "2": "Tokens de Árvore sobem de nível sua Árvore de Habilidades! Cada nível expande sua Árvore de Habilidades, revelando habilidades mais poderosas mais profundas na árvore!"
+    }
+  },
+  "starterSelectCatchRequirements": {
+    "title": { "1": "Apollo e Diana são Coringas!", "2": "Campeões de Tipo", "3": "Campeões Libertados Começam do Zero", "4": "Capture para Expandir o Pool" },
+    "text": {
+      "1": "Apollo e Diana podem usar TODOS os Pokémon independentemente do tipo! São perfeitos para máxima flexibilidade!",
+      "2": "Campeões especializados em tipo como Brock só podem usar Pokémon que correspondam à sua afinidade! Brock usa tipos Terra e Pedra!",
+      "3": "Como novos Campeões que você libertou recentemente da corrupção do vazio, eles precisam começar do zero e reconstruir sua coleção!",
+      "4": "Campeões de Tipo só têm acesso aos pokémon que você captura enquanto os usa! Quanto mais você capturar, mais opções eles terão!"
+    }
+  },
+  "starterSelectSignature": {
+    "title": { "1": "O que são Pokémon Assinatura?", "2": "Alt Builds Lendários" },
+    "text": {
+      "1": "Pokémon Assinatura são iniciais especiais únicos para cada Campeão! Seus ícones são marcados com potencial de caos!",
+      "2": "Assinaturas podem se transformar em Alt Builds - formas alternativas com diferentes stats, habilidades e até tipos! Um Pokémon completamente novo!"
+    }
+  },
+  "commandUINewCommands": {
+    "title": { "1": "Seis Novos Comandos!", "2": "Comando Equipe", "3": "Comando Árvore de Habilidades", "4": "Comando Verificar", "5": "Comando Ovos", "6": "Comando Loja", "7": "Comando Mapa" },
+    "text": {
+      "1": "PokéVoid V2 adiciona SEIS novos comandos de batalha! Acesse durante a batalha para opções poderosas!",
+      "2": "EQUIPE: Exiba instantaneamente informações detalhadas sobre stats, habilidades e movimentos da sua equipe!",
+      "3": "ÁRVORE DE HABILIDADES: Acesse a Árvore de Habilidades do seu Campeão no meio da batalha! Gaste pontos e desbloqueie novas habilidades na hora!",
+      "4": "VERIFICAR: Verifique QUALQUER Pokémon! Veja convenientemente habilidades possíveis, formas, distribuição de stats e conjuntos de movimentos!",
+      "5": "OVOS: Obtenha ovos do gacha de ovos!",
+      "6": "LOJA: Acesso rápido à loja!",
+      "7": "MAPA: Exiba seu caminho atual dentro do Caos!"
     }
   }
 }

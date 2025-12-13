@@ -27,70 +27,30 @@ import { CommandPhase } from "#app/phases/command-phase.js";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase.js";
 
 const defaultMessage = i18next.t("partyUiHandler:choosePokemon");
-
-/**
- * Indicates the reason why the party UI is being opened.
- */
 export enum PartyUiMode {
-  /**
-   * Indicates that the party UI is open because of a user-opted switch.  This
-   * type of switch can be cancelled.
-   */
+
   SWITCH,
-  /**
-   * Indicates that the party UI is open because of a faint or other forced
-   * switch (eg, move effect). This type of switch cannot be cancelled.
-   */
+
   FAINT_SWITCH,
-  /**
-   * Indicates that the party UI is open because of a start-of-encounter optional
-   * switch. This type of switch can be cancelled.
-   */
+
   POST_BATTLE_SWITCH,
-  /**
-   * Indicates that the party UI is open because of the move Revival Blessing.
-   * This selection cannot be cancelled.
-   */
+
   REVIVAL_BLESSING,
-  /**
-   * Indicates that the party UI is open to select a mon to apply a modifier to.
-   * This type of selection can be cancelled.
-   */
+
   MODIFIER,
-  /**
-   * Indicates that the party UI is open to select a mon to apply a move
-   * modifier to (such as an Ether or PP Up).  This type of selection can be cancelled.
-   */
+
   MOVE_MODIFIER,
-  /**
-   * Indicates that the party UI is open to select a mon to teach a TM.  This
-   * type of selection can be cancelled.
-   */
+
   TM_MODIFIER,
-  /**
-   * Indicates that the party UI is open to select a mon to remember a move.
-   * This type of selection can be cancelled.
-   */
+
   REMEMBER_MOVE_MODIFIER,
-  /**
-   * Indicates that the party UI is open to transfer items between mons.  This
-   * type of selection can be cancelled.
-   */
+
   MODIFIER_TRANSFER,
-  /**
-   * Indicates that the party UI is open because of a DNA Splicer.  This
-   * type of selection can be cancelled.
-   */
+
   SPLICE,
-  /**
-   * Indicates that the party UI is open to release a party member.  This
-   * type of selection can be cancelled.
-   */
+
   RELEASE,
-  /**
-   * Indicates that the party UI is open to check the team.  This
-   * type of selection can be cancelled.
-   */
+
   CHECK,
   SACRIFICE,
   ADDPOKEMON
@@ -118,9 +78,9 @@ export enum PartyOption {
   MOVE_2,
   MOVE_3,
   MOVE_4,
-  
+
   SACRIFICE,
-  
+
   ADDPOKEMON,
   TRADE,
   ALL = 4000
@@ -152,7 +112,7 @@ export default class PartyUiHandler extends MessageUiHandler {
   private optionsCursor: integer = 0;
   private optionsScrollCursor: integer = 0;
   private optionsScrollTotal: integer = 0;
-  /** This is only public for test/ui/transfer-item.test.ts */
+
   public optionsContainer: Phaser.GameObjects.Container;
   private optionsBg: Phaser.GameObjects.NineSlice;
   private optionsCursorObj: Phaser.GameObjects.Image | null;
@@ -161,11 +121,11 @@ export default class PartyUiHandler extends MessageUiHandler {
   private transferMode: boolean;
   private transferOptionCursor: integer;
   private transferCursor: integer;
-  /** Current quantity selection for every item held by the pokemon selected for the transfer */
+
   private transferQuantities: integer[];
-  /** Stack size of every item that the selected pokemon is holding */
+
   private transferQuantitiesMax: integer[];
-  /** Whether to transfer all items */
+
   private transferAll: boolean;
 
   private lastCursor: integer = 0;
@@ -177,9 +137,9 @@ export default class PartyUiHandler extends MessageUiHandler {
 
   private iconAnimHandler: PokemonIconAnimHandler;
 
-  private currentSacrifice: { pokemonId: number | null, hasEnough: boolean } = { 
-    pokemonId: null, 
-    hasEnough: false 
+  private currentSacrifice: { pokemonId: number | null, hasEnough: boolean } = {
+    pokemonId: null,
+    hasEnough: false
   };
 
   private static FilterAll = (_pokemon: PlayerPokemon) => null;
@@ -197,12 +157,6 @@ export default class PartyUiHandler extends MessageUiHandler {
     }
     return null;
   };
-
-  /**
-   * For consistency reasons, this looks like the above filters. However this is used only internally and is always enforced for switching.
-   * @param pokemon The pokemon to check.
-   * @returns
-   */
   private FilterChallengeLegal = (pokemon: PlayerPokemon) => {
     const challengeAllowed = new Utils.BooleanHolder(true);
     applyChallenges(this.scene.gameMode, ChallengeType.POKEMON_IN_BATTLE, pokemon, challengeAllowed);
@@ -281,14 +235,12 @@ export default class PartyUiHandler extends MessageUiHandler {
 
     this.iconAnimHandler = new PokemonIconAnimHandler();
     this.iconAnimHandler.setup(this.scene);
-
-    // prepare move overlay. in case it appears to be too big, set the overlayScale to .5
     const overlayScale = 1;
     this.moveInfoOverlay = new MoveInfoOverlay(this.scene, {
       scale: overlayScale,
       top: true,
       x: 1,
-      y: -MoveInfoOverlay.getHeight(overlayScale) - 1, //this.scene.game.canvas.height / 6 - MoveInfoOverlay.getHeight(overlayScale) - 29,
+      y: -MoveInfoOverlay.getHeight(overlayScale) - 1,
       width: this.scene.game.canvas.width / 12 - 30,
     });
     ui.add(this.moveInfoOverlay);
@@ -297,8 +249,6 @@ export default class PartyUiHandler extends MessageUiHandler {
 
     this.partySlots = [];
   }
-
-
   show(args: any[]): boolean {
     if (!args.length || this.active) {
       return false;
@@ -373,25 +323,25 @@ export default class PartyUiHandler extends MessageUiHandler {
           this.startTransfer();
 
           let ableToTransfer: string;
-          for (let p = 0; p < this.scene.getParty().length; p++) { // this fore look goes through each of the party pokemon
+          for (let p = 0; p < this.scene.getParty().length; p++) {
             const newPokemon = this.scene.getParty()[p];
-            // this next line gets all of the transferable items from pokemon [p]; it does this by getting all the held modifiers that are transferable and checking to see if they belong to pokemon [p]
+
             const getTransferrableItemsFromPokemon = (newPokemon: PlayerPokemon) =>
               this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier && (m as PokemonHeldItemModifier).isTransferrable && (m as PokemonHeldItemModifier).pokemonId === newPokemon.id) as PokemonHeldItemModifier[];
-            // this next bit checks to see if the the selected item from the original transfer pokemon exists on the new pokemon [p]; this returns undefined if the new pokemon doesn't have the item at all, otherwise it returns the pokemonHeldItemModifier for that item
+
             const matchingModifier = newPokemon.scene.findModifier(m => m instanceof PokemonHeldItemModifier && m.pokemonId === newPokemon.id && m.matchType(getTransferrableItemsFromPokemon(pokemon)[this.transferOptionCursor])) as PokemonHeldItemModifier;
-            const partySlot = this.partySlots.filter(m => m.getPokemon() === newPokemon)[0]; // this gets pokemon [p] for us
-            if (p !== this.transferCursor) { // this skips adding the able/not able labels on the pokemon doing the transfer
-              if (matchingModifier) { // if matchingModifier exists then the item exists on the new pokemon
-                if (matchingModifier.getMaxStackCount(this.scene) === matchingModifier.stackCount) { // checks to see if the stack of items is at max stack; if so, set the description label to "Not able"
+            const partySlot = this.partySlots.filter(m => m.getPokemon() === newPokemon)[0];
+            if (p !== this.transferCursor) {
+              if (matchingModifier) {
+                if (matchingModifier.getMaxStackCount(this.scene) === matchingModifier.stackCount) {
                   ableToTransfer = "Not able";
-                } else { // if the pokemon isn't at max stack, make the label "Able"
+                } else {
                   ableToTransfer = "Able";
                 }
-              } else { // if matchingModifier doesn't exist, that means the pokemon doesn't have any of the item, and we need to show "Able"
+              } else {
                 ableToTransfer = "Able";
               }
-            } else { // this else relates to the transfer pokemon. We set the text to be blank so there's no "Able"/"Not able" text
+            } else {
               ableToTransfer = "";
             }
             partySlot.slotHpBar.setVisible(false);
@@ -406,7 +356,7 @@ export default class PartyUiHandler extends MessageUiHandler {
           return true;
         }
         else if (this.partyUiMode === PartyUiMode.REMEMBER_MOVE_MODIFIER && option !== PartyOption.CANCEL) {
-          // clear overlay on cancel
+
           this.moveInfoOverlay.clear();
           const filterResult = (this.selectFilter as PokemonSelectFilter)(pokemon);
           if (filterResult === null) {
@@ -418,7 +368,7 @@ export default class PartyUiHandler extends MessageUiHandler {
           }
           ui.playSelect();
           return true;
-          
+
         }
           else if ((option !== PartyOption.SUMMARY && option !== PartyOption.UNPAUSE_EVOLUTION && option !== PartyOption.UNSPLICE && option !== PartyOption.RELEASE && option !== PartyOption.CANCEL && option !== PartyOption.RENAME && option !== PartyOption.PAUSE_EVOLUTION)
             || (option === PartyOption.RELEASE && this.partyUiMode === PartyUiMode.RELEASE || this.partyUiMode === PartyUiMode.ADDPOKEMON && option === PartyOption.ADDPOKEMON)) {
@@ -431,7 +381,7 @@ export default class PartyUiHandler extends MessageUiHandler {
               filterResult = this.FilterChallengeLegal(pokemon);
             }
             if (filterResult === null && this.partyUiMode === PartyUiMode.MOVE_MODIFIER) {
-              filterResult = this.moveSelectFilter(pokemon.moveset[this.optionsCursor]!); // TODO: is this bang correct?
+              filterResult = this.moveSelectFilter(pokemon.moveset[this.optionsCursor]!);
             }
           } else {
             filterResult = (this.selectFilter as PokemonModifierTransferSelectFilter)(pokemon, getTransferrableItemsFromPokemon(this.scene.getParty()[this.transferCursor])[this.transferOptionCursor]);
@@ -591,44 +541,42 @@ export default class PartyUiHandler extends MessageUiHandler {
       } else {
         switch (button) {
         case Button.LEFT:
-          /** Decrease quantity for the current item and update UI */
+
           if (this.partyUiMode === PartyUiMode.MODIFIER_TRANSFER) {
             this.transferQuantities[option] = this.transferQuantities[option] === 1 ? this.transferQuantitiesMax[option] : this.transferQuantities[option] - 1;
             this.updateOptions();
-            success = this.setCursor(this.optionsCursor); /** Place again the cursor at the same position. Necessary, otherwise the cursor disappears */
+            success = this.setCursor(this.optionsCursor);
           }
           break;
         case Button.RIGHT:
-          /** Increase quantity for the current item and update UI */
+
           if (this.partyUiMode === PartyUiMode.MODIFIER_TRANSFER) {
             this.transferQuantities[option] = this.transferQuantities[option] === this.transferQuantitiesMax[option] ? 1 : this.transferQuantities[option] + 1;
             this.updateOptions();
-            success = this.setCursor(this.optionsCursor); /** Place again the cursor at the same position. Necessary, otherwise the cursor disappears */
+            success = this.setCursor(this.optionsCursor);
           }
           break;
         case Button.UP:
-          /** If currently selecting items to transfer, reset quantity selection */
+
           if (this.partyUiMode === PartyUiMode.MODIFIER_TRANSFER) {
             if (option !== PartyOption.ALL) {
             this.transferQuantities[option] = this.transferQuantitiesMax[option];
             }
             this.updateOptions();
           }
-          success = this.setCursor(this.optionsCursor ? this.optionsCursor - 1 : this.options.length - 1); /** Move cursor */
+          success = this.setCursor(this.optionsCursor ? this.optionsCursor - 1 : this.options.length - 1);
           break;
         case Button.DOWN:
-          /** If currently selecting items to transfer, reset quantity selection */
+
           if (this.partyUiMode === PartyUiMode.MODIFIER_TRANSFER) {
             if (option !== PartyOption.ALL) {
             this.transferQuantities[option] = this.transferQuantitiesMax[option];
             }
             this.updateOptions();
           }
-          success = this.setCursor(this.optionsCursor < this.options.length - 1 ? this.optionsCursor + 1 : 0); /** Move cursor */
+          success = this.setCursor(this.optionsCursor < this.options.length - 1 ? this.optionsCursor + 1 : 0);
           break;
         }
-
-        // show move description
         if (this.partyUiMode === PartyUiMode.REMEMBER_MOVE_MODIFIER) {
           const option = this.options[this.optionsCursor];
           const pokemon = this.scene.getParty()[this.cursor];
@@ -636,7 +584,7 @@ export default class PartyUiHandler extends MessageUiHandler {
           if (move) {
             this.moveInfoOverlay.show(move);
           } else {
-            // or hide the overlay, in case it's the cancel button
+
             this.moveInfoOverlay.clear();
           }
         }
@@ -645,7 +593,7 @@ export default class PartyUiHandler extends MessageUiHandler {
       if (button === Button.ACTION) {
         if (this.cursor < 6) {
           if (this.partyUiMode === PartyUiMode.MODIFIER_TRANSFER && !this.transferMode) {
-            /** Initialize item quantities for the selected Pokemon */
+
             const itemModifiers = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier
               && m.isTransferrable && m.pokemonId === this.scene.getParty()[this.cursor].id) as PokemonHeldItemModifier[];
             this.transferQuantities = itemModifiers.map(item => item.getStackCount());
@@ -660,7 +608,7 @@ export default class PartyUiHandler extends MessageUiHandler {
         }
         return true;
       } else if (button === Button.CANCEL) {
-        
+
         if ((this.partyUiMode === PartyUiMode.MODIFIER_TRANSFER || this.partyUiMode === PartyUiMode.SPLICE || this.partyUiMode === PartyUiMode.SACRIFICE) && this.transferMode) {
           this.clearTransfer();
           ui.playSelect();
@@ -834,7 +782,7 @@ export default class PartyUiHandler extends MessageUiHandler {
       if (!this.transferMode) {
         optionsMessage = i18next.t("partyUiHandler:selectAnotherPokemonToSplice");
       }
-      
+
     case PartyUiMode.SACRIFICE:
       if (!this.transferMode) {
         optionsMessage = i18next.t("partyUiHandler:selectPokeToPowerUp");
@@ -851,8 +799,6 @@ export default class PartyUiHandler extends MessageUiHandler {
     this.showText(optionsMessage, 0);
 
     this.updateOptions();
-
-    /** When an item is being selected for transfer, the message box is taller as the message occupies two lines */
     if (this.partyUiMode === PartyUiMode.MODIFIER_TRANSFER) {
       this.partyMessageBox.setSize(262 - Math.max(this.optionsBg.displayWidth - 56, 0), 42);
     } else {
@@ -879,7 +825,7 @@ export default class PartyUiHandler extends MessageUiHandler {
       : [];
 
     if (this.partyUiMode === PartyUiMode.REMEMBER_MOVE_MODIFIER && learnableLevelMoves?.length) {
-      // show the move overlay with info for the first move
+
       this.moveInfoOverlay.show(allMoves[learnableLevelMoves[0]]);
     }
 
@@ -910,14 +856,8 @@ export default class PartyUiHandler extends MessageUiHandler {
 
           const moveHistory = this.scene.getPlayerField()[this.fieldIndex].getMoveHistory();
           const isBatonPassMove = this.partyUiMode === PartyUiMode.FAINT_SWITCH && moveHistory.length && allMoves[moveHistory[moveHistory.length - 1].move].getAttrs(ForceSwitchOutAttr)[0]?.isBatonPass() && moveHistory[moveHistory.length - 1].result === MoveResult.SUCCESS;
-
-          // isBatonPassMove and allowBatonModifierSwitch shouldn't ever be true
-          // at the same time, because they both explicitly check for a mutually
-          // exclusive partyUiMode. But better safe than sorry.
           this.options.push(isBatonPassMove && !allowBatonModifierSwitch ? PartyOption.PASS_BATON : PartyOption.SEND_OUT);
           if (allowBatonModifierSwitch && !isBatonPassMove) {
-            // the BATON modifier gives an extra switch option for
-            // pokemon-command switches, allowing buffs to be optionally passed
             this.options.push(PartyOption.PASS_BATON);
           }
         }
@@ -948,7 +888,7 @@ export default class PartyUiHandler extends MessageUiHandler {
         break;
       case PartyUiMode.SACRIFICE:
         if (this.transferMode) {
-      
+
           if (this.cursor !== this.transferCursor && (this.cursor !== 0 || this.hasEnoughCollectedTypeModifiers(pokemon))) {
             this.options.push(PartyOption.SACRIFICE);
           }
@@ -956,8 +896,6 @@ export default class PartyUiHandler extends MessageUiHandler {
           this.options.push(PartyOption.APPLY);
         }
         break;
-        
-          
       case PartyUiMode.ADDPOKEMON:
         this.showReleaseOption();
         break;
@@ -1056,7 +994,7 @@ export default class PartyUiHandler extends MessageUiHandler {
         case PartyOption.MOVE_2:
         case PartyOption.MOVE_3:
         case PartyOption.MOVE_4:
-          const move = pokemon.moveset[option - PartyOption.MOVE_1]!; // TODO: is the bang correct?
+          const move = pokemon.moveset[option - PartyOption.MOVE_1]!;
           if (this.showMovePp) {
             const maxPP = move.getMovePp();
             const currPP = maxPP - move.ppUsed;
@@ -1080,7 +1018,7 @@ export default class PartyUiHandler extends MessageUiHandler {
             else {
               optionName = i18next.t(`partyUiHandler:${PartyOption[sacrificeOption ? sacrificeOption : option]}`);
             }
-            
+
           }
           break;
         }
@@ -1102,13 +1040,9 @@ export default class PartyUiHandler extends MessageUiHandler {
         optionText.setShadowColor("#006090");
       }
       optionText.setOrigin(0, 0);
-
-      /** For every item that has stack bigger than 1, display the current quantity selection */
       const itemModifier = itemModifiers[option];
       if (this.partyUiMode === PartyUiMode.MODIFIER_TRANSFER && this.transferQuantitiesMax[option] > 1 && !this.transferMode && itemModifier !== undefined && itemModifier.type.name === optionName) {
         let amountText = ` (${this.transferQuantities[option]})`;
-
-        /** If the amount held is the maximum, display the count in red */
         if (this.transferQuantitiesMax[option] === itemModifier.getMaxHeldItemCount(undefined)) {
           amountText = `[color=${getTextColor(TextStyle.SUMMARY_RED)}]${amountText}[/color]`;
         }
@@ -1135,21 +1069,19 @@ export default class PartyUiHandler extends MessageUiHandler {
     if (this.currentSacrifice.pokemonId === pokemon.id) {
       return this.currentSacrifice.hasEnough;
     }
-    
-    const collectedTypeModifiers = this.scene.findModifiers(m => 
-      m instanceof CollectedTypeModifier && 
+
+    const collectedTypeModifiers = this.scene.findModifiers(m =>
+      m instanceof CollectedTypeModifier &&
       m.pokemonId === pokemon.id
     ) as CollectedTypeModifier[];
-    
+
     const hasEnough = collectedTypeModifiers.some(modifier => modifier.hasEnoughCollected(5));
-    
+
     this.currentSacrifice.pokemonId = pokemon.id;
     this.currentSacrifice.hasEnough = hasEnough;
-    
+
     return this.currentSacrifice.hasEnough;
   }
-
-
   startTransfer(): void {
     this.transferMode = true;
     this.transferCursor = this.cursor;
@@ -1173,20 +1105,20 @@ export default class PartyUiHandler extends MessageUiHandler {
 
   getPokemonTradeValue(pokemon: PlayerPokemon): integer {
     const baseTotal = pokemon.getSpeciesForm().baseTotal;
-    
-    const collectedTypeModifiers = this.scene.findModifiers(m => 
-      m instanceof CollectedTypeModifier && 
+
+    const collectedTypeModifiers = this.scene.findModifiers(m =>
+      m instanceof CollectedTypeModifier &&
       m.pokemonId === pokemon.id
     ) as CollectedTypeModifier[];
-    
+
     const totalCollectedModifiers = collectedTypeModifiers.reduce((sum, modifier) => {
       const modifierTotal = Object.values(modifier.collectedTypes).reduce((subSum, count) => subSum + count, 0);
       return sum + modifierTotal;
     }, 0);
 
-    const nuggetValue = this.scene.getWaveMoneyAmount(1); // Nugget value
-    const bigNuggetValue = this.scene.getWaveMoneyAmount(2.5); // Big Nugget value
-    const coinRelicValue = this.scene.getWaveMoneyAmount(10); // Coin Relic value
+    const nuggetValue = this.scene.getWaveMoneyAmount(1);
+    const bigNuggetValue = this.scene.getWaveMoneyAmount(2.5);
+    const coinRelicValue = this.scene.getWaveMoneyAmount(10);
 
     if (pokemon.friendship >= 150 || totalCollectedModifiers >= 8) {
       return coinRelicValue;
@@ -1196,8 +1128,6 @@ export default class PartyUiHandler extends MessageUiHandler {
       return nuggetValue;
     }
   }
-
-
   doRelease(slotIndex: integer, trade: boolean = false): void {
     this.showText(this.getReleaseMessage(getPokemonNameWithAffix(this.scene.getParty()[slotIndex])), null, () => {
       this.clearPartySlots();
@@ -1216,7 +1146,7 @@ export default class PartyUiHandler extends MessageUiHandler {
         this.scene.gameData.gameStats.moneyEarnedFromTrading += tradeValue;
         this.scene.playSound("se/buy");
       }
-      
+
       if (this.partyUiMode === PartyUiMode.RELEASE || this.partyUiMode === PartyUiMode.ADDPOKEMON) {
         const selectCallback = this.selectCallback;
         this.selectCallback = null;
@@ -1257,14 +1187,14 @@ export default class PartyUiHandler extends MessageUiHandler {
     let formChangeItemModifiers = this.scene.findModifiers(m => m instanceof PokemonFormChangeItemModifier && m.pokemonId === pokemon.id && !m.isGlitchOrSmittyItem()) as PokemonFormChangeItemModifier[];
     const ultraNecrozmaModifiers = formChangeItemModifiers.filter(m => m.active && m.formChangeItem === FormChangeItem.ULTRANECROZIUM_Z);
     if (ultraNecrozmaModifiers.length > 0) {
-      // ULTRANECROZIUM_Z is active and deactivating it should be the only option
+
       return ultraNecrozmaModifiers;
     }
     if (formChangeItemModifiers.find(m => m.active)) {
-      // a form is currently active. the user has to disable the form or activate ULTRANECROZIUM_Z
+
       formChangeItemModifiers = formChangeItemModifiers.filter(m => m.active || m.formChangeItem === FormChangeItem.ULTRANECROZIUM_Z);
     } else if (pokemon.species.speciesId === Species.NECROZMA) {
-      // no form is currently active. the user has to activate some form, except ULTRANECROZIUM_Z
+
       formChangeItemModifiers = formChangeItemModifiers.filter(m => m.formChangeItem !== FormChangeItem.ULTRANECROZIUM_Z);
     }
     return formChangeItemModifiers;
@@ -1275,19 +1205,15 @@ export default class PartyUiHandler extends MessageUiHandler {
   }
 
   clearOptions() {
-    // hide the overlay
+
     this.moveInfoOverlay.clear();
     this.optionsMode = false;
     this.optionsScroll = false;
     this.optionsScrollCursor = 0;
     this.optionsScrollTotal = 0;
-
-
     this.options.splice(0, this.options.length);
     this.optionsContainer.removeAll(true);
     this.eraseOptionsCursor();
-    
-    // Clear the sacrifice cache
     this.currentSacrifice.pokemonId = null;
     this.currentSacrifice.hasEnough = false;
 
@@ -1307,7 +1233,7 @@ export default class PartyUiHandler extends MessageUiHandler {
     this.moveInfoOverlay.clear();
     this.partyContainer.setVisible(false);
     this.clearPartySlots();
-    
+
     this.currentSacrifice.pokemonId = null;
     this.currentSacrifice.hasEnough = false;
   }
@@ -1330,9 +1256,7 @@ class PartySlot extends Phaser.GameObjects.Container {
   public slotHpBar: Phaser.GameObjects.Image;
   public slotHpOverlay: Phaser.GameObjects.Sprite;
   public slotHpText: Phaser.GameObjects.Text;
-  public slotDescriptionLabel: Phaser.GameObjects.Text; // this is used to show text instead of the HP bar i.e. for showing "Able"/"Not Able" for TMs when you try to learn them
-
-
+  public slotDescriptionLabel: Phaser.GameObjects.Text;
   private pokemonIcon: Phaser.GameObjects.Container;
   private iconAnimHandler: PokemonIconAnimHandler;
 

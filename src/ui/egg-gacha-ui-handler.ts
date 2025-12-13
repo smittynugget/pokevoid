@@ -13,6 +13,7 @@ import Overrides from "#app/overrides";
 import { GachaType } from "#app/enums/gacha-types";
 import i18next from "i18next";
 import { EggTier } from "#enums/egg-type";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 
 export default class EggGachaUiHandler extends MessageUiHandler {
   private eggGachaContainer: Phaser.GameObjects.Container;
@@ -37,6 +38,14 @@ export default class EggGachaUiHandler extends MessageUiHandler {
   private defaultText: string;
 
   private scale: number = 0.1666666667;
+  private _gachaPatterns?: {
+    voucherContainers?: ModalBackgroundHandle[];
+    pullOptionsArea?: ModalBackgroundHandle;
+    messageArea?: ModalBackgroundHandle;
+  };
+  private voucherContainers: Phaser.GameObjects.Container[] = [];
+  private gachaMessageBoxContainer?: Phaser.GameObjects.Container;
+  private voucherBackgrounds: Phaser.GameObjects.NineSlice[] = [];
 
   constructor(scene: BattleScene) {
     super(scene, Mode.EGG_GACHA);
@@ -62,6 +71,19 @@ export default class EggGachaUiHandler extends MessageUiHandler {
 
     const bg = this.scene.add.nineslice(0, 0, "default_bg", undefined, 320, 180, 0, 0, 16, 0);
     bg.setOrigin(0, 0);
+
+    try {
+      if (bg.postFX && typeof bg.postFX.addColorMatrix === 'function') {
+        const colorMatrix = bg.postFX.addColorMatrix();
+        colorMatrix.negative();
+      } else {
+        bg.setTint(0xFFFFFF);
+        bg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
+      }
+    } catch (error) {
+      bg.setTint(0x000000);
+      bg.setBlendMode(Phaser.BlendModes.SCREEN);
+    }
 
     this.eggGachaContainer.add(bg);
 
@@ -99,7 +121,7 @@ export default class EggGachaUiHandler extends MessageUiHandler {
 
       const gachaInfoContainer = this.scene.add.container(160, 46);
 
-      const currentLanguage = i18next.resolvedLanguage!; // TODO: is this bang correct?
+      const currentLanguage = i18next.resolvedLanguage!;
       let gachaTextStyle = TextStyle.WINDOW_ALT;
       let gachaX = 4;
       let gachaY = 0;
@@ -201,8 +223,6 @@ export default class EggGachaUiHandler extends MessageUiHandler {
 
     this.eggGachaOptionsContainer = this.scene.add.container((this.scene.game.canvas.width / 6), 148);
     this.eggGachaContainer.add(this.eggGachaOptionsContainer);
-
-
     this.eggGachaOptionSelectBg = addWindow(this.scene, 0, 0, 96, 16 + 576 * this.scale);
     this.eggGachaOptionSelectBg.setOrigin(1, 1);
     this.eggGachaOptionsContainer.add(this.eggGachaOptionSelectBg);
@@ -217,7 +237,7 @@ export default class EggGachaUiHandler extends MessageUiHandler {
       { multiplier: multiplierOne, description: `25 ${i18next.t("egg:pulls")}`, icon: getVoucherTypeIcon(VoucherType.GOLDEN) }
     ];
 
-    const resolvedLanguage = i18next.resolvedLanguage!; // TODO: is this bang correct?
+    const resolvedLanguage = i18next.resolvedLanguage!;
     const pullOptionsText = pullOptions.map(option =>{
       const desc = option.description.split(" ");
       if (desc[0].length < 2) {
@@ -259,6 +279,7 @@ export default class EggGachaUiHandler extends MessageUiHandler {
       const bg = addWindow(this.scene, 0, 0, 56, 22);
       bg.setOrigin(1, 0);
       container.add(bg);
+      this.voucherBackgrounds.push(bg);
 
       const countLabel = addTextObject(this.scene, -48, 3, "0", TextStyle.WINDOW);
       countLabel.setOrigin(0, 0);
@@ -273,6 +294,7 @@ export default class EggGachaUiHandler extends MessageUiHandler {
       icon.setScale(0.5);
       container.add(icon);
 
+      this.voucherContainers.push(container);
       this.eggGachaContainer.add(container);
     });
 
@@ -286,22 +308,22 @@ export default class EggGachaUiHandler extends MessageUiHandler {
     this.eggGachaSummaryContainer.setVisible(false);
     this.eggGachaContainer.add(this.eggGachaSummaryContainer);
 
-    const gachaMessageBoxContainer = this.scene.add.container(0, 148);
-    this.eggGachaContainer.add(gachaMessageBoxContainer);
+    this.gachaMessageBoxContainer = this.scene.add.container(0, 148);
+    this.eggGachaContainer.add(this.gachaMessageBoxContainer);
 
     const gachaMessageBox = addWindow(this.scene, 0, 0, 320, 32);
     gachaMessageBox.setOrigin(0, 0);
-    gachaMessageBoxContainer.add(gachaMessageBox);
+    this.gachaMessageBoxContainer.add(gachaMessageBox);
 
     this.eggGachaMessageBox = gachaMessageBox;
 
     const gachaMessageText = addTextObject(this.scene, 8, 8, "", TextStyle.WINDOW, { maxLines: 2 });
     gachaMessageText.setOrigin(0, 0);
-    gachaMessageBoxContainer.add(gachaMessageText);
+    this.gachaMessageBoxContainer.add(gachaMessageText);
 
     this.message = gachaMessageText;
 
-    this.eggGachaContainer.add(gachaMessageBoxContainer);
+    this.eggGachaContainer.add(this.gachaMessageBoxContainer);
 
     this.setCursor(0);
   }
@@ -318,10 +340,51 @@ export default class EggGachaUiHandler extends MessageUiHandler {
     }
 
     this.updateVoucherCounts();
+    this._gachaPatterns = this._gachaPatterns || {};
+    this._gachaPatterns.voucherContainers = [];
+    this.voucherContainers.forEach((voucherContainer, index) => {
+      const handle = attachModalBackground(
+        this.scene,
+        voucherContainer,
+        () => {
+          const bg = this.voucherBackgrounds[index];
+          const displayOriginX = (bg as any).displayOriginX ?? bg.width * (bg as any).originX ?? 0;
+          const displayOriginY = (bg as any).displayOriginY ?? bg.height * (bg as any).originY ?? 0;
+          return { bgX: bg.x - displayOriginX, bgY: bg.y - displayOriginY, bgWidth: bg.width, bgHeight: bg.height };
+        },
+        { mask: false, alphaMultiplier: 0.35, getTarget: () => this.voucherBackgrounds[index], gridInc: -3 }
+      );
+      this._gachaPatterns.voucherContainers!.push(handle);
+    });
+    this._gachaPatterns.pullOptionsArea = attachModalBackground(
+      this.scene,
+      this.eggGachaOptionsContainer,
+      () => {
+        const bg = this.eggGachaOptionSelectBg;
+        const displayOriginX = (bg as any).displayOriginX ?? bg.width * (bg as any).originX ?? 0;
+        const displayOriginY = (bg as any).displayOriginY ?? bg.height * (bg as any).originY ?? 0;
+        return { bgX: bg.x - displayOriginX, bgY: bg.y - displayOriginY, bgWidth: bg.width, bgHeight: bg.height };
+      },
+      { mask: false, alphaMultiplier: 0.5, getTarget: () => this.eggGachaOptionSelectBg }
+    );
+    this._gachaPatterns.messageArea = attachModalBackground(
+      this.scene,
+      this.gachaMessageBoxContainer!,
+      () => {
+        const bg = this.eggGachaMessageBox;
+        const displayOriginX = (bg as any).displayOriginX ?? bg.width * (bg as any).originX ?? 0;
+        const displayOriginY = (bg as any).displayOriginY ?? bg.height * (bg as any).originY ?? 0;
+        return { bgX: bg.x - displayOriginX, bgY: bg.y - displayOriginY, bgWidth: bg.width, bgHeight: bg.height };
+      },
+      { mask: false, alphaMultiplier: 0.4, getTarget: () => this.eggGachaMessageBox }
+    );
 
     this.getUi().bringToTop(this.eggGachaContainer);
 
     this.eggGachaContainer.setVisible(true);
+    this._gachaPatterns?.voucherContainers?.forEach(handle => handle.redraw());
+    this._gachaPatterns?.pullOptionsArea?.redraw();
+    this._gachaPatterns?.messageArea?.redraw();
 
     handleTutorial(this.scene, Tutorial.Egg_Gacha);
 
@@ -436,9 +499,6 @@ export default class EggGachaUiHandler extends MessageUiHandler {
       eggs = [];
       for (let i = 1; i <= pullCount; i++) {
         const eggOptions: IEggOptions = { scene: this.scene, pulled: true, sourceType: this.gachaCursor };
-
-        // Before creating the last egg, check if the guaranteed egg tier was already generated
-        // if not, override the egg tier
         if (i === pullCount) {
           const guaranteedEggTier = this.getGuaranteedEggTierFromPullCount(pullCount);
           if (!eggs.some(egg => egg.tier >= guaranteedEggTier) && guaranteedEggTier !== EggTier.COMMON) {
@@ -449,10 +509,8 @@ export default class EggGachaUiHandler extends MessageUiHandler {
         const egg = new Egg(eggOptions);
         eggs.push(egg);
       }
-      // Shuffle the eggs in case the guaranteed one got added as last egg
+
       eggs = Utils.randSeedShuffle<Egg>(eggs);
-
-
       (this.scene.currentBattle ? this.scene.gameData.saveAll(this.scene, true, true, true) : this.scene.gameData.saveSystem()).then(success => {
         if (!success) {
           return this.scene.reset(true);
@@ -767,6 +825,12 @@ export default class EggGachaUiHandler extends MessageUiHandler {
   }
 
   clear(): void {
+
+    this._gachaPatterns?.voucherContainers?.forEach(handle => handle.clear());
+    this._gachaPatterns?.pullOptionsArea?.clear();
+    this._gachaPatterns?.messageArea?.clear();
+    this._gachaPatterns = undefined;
+
     super.clear();
     this.setGachaCursor(-1);
     this.eggGachaContainer.setVisible(false);

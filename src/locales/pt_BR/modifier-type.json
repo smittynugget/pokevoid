@@ -709,6 +709,18 @@
       "description": "Use 5 em vez de liberar um Pokémon para Itens de Liberação ou troque por recompensas com o Colecionador.",
       "statLabel": "Essência"
     },
+    "PermaCollectedTypeModifierType": {
+      "name": "Essências Coletadas",
+      "description": "Armazena essências coletadas:"
+    },
+    "SKILL_POINTS": {
+      "name": "Pontos de Habilidade x{{amount}}",
+      "description": "Ganhe {{amount}} Pontos de Habilidade. Usados para desbloquear habilidades na Árvore de Habilidades."
+    },
+    "SKILL_TOKENS": {
+      "name": "Fichas de Árvore de Habilidades x{{amount}}",
+      "description": "Ganhe {{amount}} Fichas de Árvore de Habilidades. Usadas para evoluir sua Árvore de Habilidades!"
+    },
     "SacrificeModifierType": {
       "description": "Libere um Pokémon para aumentar {{stat}} de outro Pokémon em 15%."
     },
@@ -1024,7 +1036,10 @@
     "waves": "ondas",
     "uses": "usos",
     "glitchPieceCost": "*CUSTA 2x Peça Glitch",
+    "permaMoney": "ΩOURO",
+    "permaItem": "ΩITEM",
     "moreInfo": "(Segure C / Shift para informações)",
+    "morePokeInfo": "(Pressione P / Shift para info)",
     "upgrade": "Melhoria"
   }
 }

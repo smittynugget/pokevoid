@@ -1,6 +1,7 @@
 import { UiTheme } from "#enums/ui-theme";
 import { legacyCompatibleImages } from "#app/scene-base";
 import BattleScene from "../battle-scene";
+import { calculateCornerLayout, createCornerSprites, positionCornersAfterElement } from "./modal-background-utils";
 
 export enum WindowVariant {
   NORMAL,
@@ -41,18 +42,15 @@ export function addWindow(scene: BattleScene, x: number, y: number, width: numbe
     windowVariant = WindowVariant.NORMAL;
   }
 
-  const borderSize = scene.uiTheme ? 6 : 8;
+  const borderSize =  scene.uiTheme ? 6 : 8;
 
-  const window = scene.add.nineslice(x, y, `window_${scene.windowType}${getWindowVariantSuffix(windowVariant)}`, undefined, width, height, borderSize, borderSize, borderSize, borderSize);
+  let windowKey = `window_${scene.windowType}${getWindowVariantSuffix(windowVariant)}`
+
+  const window = scene.add.nineslice(x, y, windowKey, undefined, width, height, borderSize, borderSize, borderSize, borderSize);
   window.setOrigin(0, 0);
 
   if (mergeMaskLeft || mergeMaskTop || maskOffsetX || maskOffsetY) {
-    /**
-     * x: left
-     * y: top
-     * width: right
-     * height: bottom
-     */
+
     const maskRect = new Phaser.GameObjects.Rectangle(
       scene,
       6*(x  - (mergeMaskLeft ? 2 : 0) - (maskOffsetX || 0)),
@@ -68,6 +66,22 @@ export function addWindow(scene: BattleScene, x: number, y: number, width: numbe
   }
 
   return window;
+}
+
+export function injectWindowCorners(
+  scene: BattleScene,
+  window: Phaser.GameObjects.NineSlice,
+  container: Phaser.GameObjects.Container,
+  useAlt: boolean = false
+): void {
+  return;
+  if (scene.windowType < 1 || scene.windowType > 5) {
+    return;
+  }
+
+  const layout = calculateCornerLayout(window.x, window.y, window.width, window.height, { useAlt });
+  const corners = createCornerSprites(scene, container, layout);
+  positionCornersAfterElement(container, window, corners);
 }
 
 export function updateWindowType(scene: BattleScene, windowTypeIndex: integer): void {

@@ -14,6 +14,7 @@
     "SPDshortened": "速度",
     "ACC": "命中率",
     "EVA": "回避率",
+    "HPStat": "HP",
     "Total": "总计"
   },
   "Type": {
@@ -36,6 +37,8 @@
     "DRAGON": "龙",
     "DARK": "恶",
     "FAIRY": "妖精",
-    "STELLAR": "星晶"
+    "STELLAR": "星晶",
+    "SMITTY": "斯米提",
+    "GLITCH": "故障"
   }
 }

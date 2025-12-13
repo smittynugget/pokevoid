@@ -64,6 +64,7 @@
   "fieldVolume": "Vol. combats",
   "seVolume": "Vol. effets",
   "uiVolume": "Vol. menus",
+  "skipFaintCry": "Ignorer les sons de K.O.",
   "musicPreference": "Préf. musicale",
   "mixed": "Mixte",
   "gamepadPleasePlug": "Veuillez brancher une manette ou appuyer sur un bouton.",
@@ -104,5 +105,6 @@
   "items": "Obj. gratuits",
   "reroll": "Relance",
   "shop": "Boutique",
-  "checkTeam": "Équipe"
+  "checkTeam": "Équipe",
+  "lockedRewardSpeed": "Verrouiller vitesse des récompenses"
 }

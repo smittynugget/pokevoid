@@ -2,12 +2,13 @@
   "ModifierType": {
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
+      "statLabel": "Oggetto Poké Ball",
       "description": "Ricevi {{pokeballName}} x{{modifierCount}} (Inventario: {{pokeballAmount}}) \nTasso di cattura: {{catchRate}}."
     },
     "AddPokemonModifierType": {
       "name": "{{pokemonName}}",
-      "statLabel": "Oggetto Pokémon Draft",
-      "description": "Adds {{pokemonName}} to the party."
+      "statLabel": "Pokémon Draft:",
+      "description": "Aggiunge {{pokemonName}} alla squadra."
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}.",
@@ -406,6 +407,14 @@
       "name": "Gettone della fusione",
       "description": "Aggiunge l'1% di possibilità che un Pokémon selvatico sia una fusione."
     },
+    "SKILL_POINTS": {
+      "name": "Punti Abilità x{{amount}}",
+      "description": "Ottieni {{amount}} Punti Abilità. Usati per sbloccare abilità nell'Albero delle Abilità."
+    },
+    "SKILL_TOKENS": {
+      "name": "Token Albero Abilità x{{amount}}",
+      "description": "Ottieni {{amount}} Token Albero Abilità. Usati per far salire di livello il tuo Albero delle Abilità!"
+    },
     "AnyTmModifierType": {
       "name": "XM {{moveName}}",
       "statLabel": "XM (Qualsiasi MT)",
@@ -712,6 +721,10 @@
       "statLabel": "Essenza",
       "description": "Usa 5 invece di liberare un Pokémon per Oggetti di Liberazione o scambia per ricompense con il Collezionista."
     },
+    "PermaCollectedTypeModifierType": {
+      "name": "Essenze Raccolte",
+      "description": "Memorizza le essenze raccolte:"
+    },
     "SacrificeModifierType": {
       "description": "Rilascia un Pokémon per aumentare {{stat}} di un altro Pokémon del 15%."
     },
@@ -757,6 +770,11 @@
       "name": "Attiva/Disattiva Strumento Rilascio",
       "description": "Attiva/Disattiva Strumenti Rilascio"
     }
+  },
+  "AddPokemonModifierType": {
+    "name": "{{pokemonName}}",
+    "statLabel": "Pokémon Draft:",
+    "description": "Aggiunge {{pokemonName}} alla squadra."
   },
   "SpeciesBoosterItem": {
     "LIGHT_BALL": {
@@ -1022,7 +1040,10 @@
     "waves": "ondate",
     "uses": "usi",
     "glitchPieceCost": "*COSTA 2x Frammento Glitch",
+    "permaMoney": "ΩORO",
+    "permaItem": "ΩOGGETTO",
     "moreInfo": "(Tieni premuto C / Shift per informazioni)",
+    "morePokeInfo": "(Premi P / Shift per info)",
     "upgrade": "Potenziamento"
   }
 }

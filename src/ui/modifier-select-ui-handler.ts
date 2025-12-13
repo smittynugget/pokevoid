@@ -6,7 +6,8 @@ import {
     AddPokemonModifierType,
     PermaModifierType,
     AnyTmModifierType, AnyAbilityModifierType, AnyPassiveAbilityModifierType, PermaPartyAbilityModifierType,
-    MoveUpgradeModifierType
+    MoveUpgradeModifierType,
+    PokemonAltBuildModifierType
 } from "../modifier/modifier-type";
 import { getPokeballAtlasKey, PokeballType } from "../data/pokeball";
 import { addTextObject, getTextStyleOptions, getModifierTierTextTint, getTextColor, TextStyle, addBBCodeTextObject, getBBCodeFrag } from "./text";
@@ -20,6 +21,7 @@ import DynamicMoveInfoOverlay from "./dynamic-move-info-overlay";
 import Move, { allMoves, MoveCategory, MoveFlags, MoveAttr, MoveCondition, MultiHitAttr, FlinchAttr, RecoilAttr, SacrificialAttr, HalfSacrificialAttr, SacrificialAttrOnHit, HealAttr, HitHealAttr, HighCritAttr, CritOnlyAttr, ChargeAttr, StatusEffectAttr, MultiStatusEffectAttr, StatChangeAttr, MultiHitType, RemoveHeldItemAttr, StealHeldItemChanceAttr, ConfuseAttr, AddBattlerTagAttr, WeatherChangeAttr, ClearWeatherAttr, TerrainChangeAttr, ClearTerrainAttr, AddArenaTrapTagAttr, AddArenaTrapTagUpgradeAttr, MatchUserTypeAttr, WeatherBallTypeAttr, TerrainPulseTypeAttr, HiddenPowerTypeAttr, TypelessAttr, AnyTypeSuperEffectTypeMultiplierAttr, GyroBallPowerAttr, ElectroBallPowerAttr, WeightPowerAttr, CompareWeightPowerAttr, HpPowerAttr, LowHpPowerAttr, ConsecutiveUseDoublePowerAttr, TurnDamagedDoublePowerAttr, TerrainMovePriorityAttr, FirstTurnPriorityAttr, ForceSwitchOutAttr, SurviveDamageAttr, TrapAttr, FixedDamageAttr, LevelDamageAttr, TargetHalfHpDamageAttr, IgnoreOpponentStatChangesAttr, RemoveScreensAttr } from "../data/move";
 import { Type } from "../data/type";
 import * as Utils from "./../utils";
+import { createSporadicPattern } from "./../utils";
 import Overrides from "../overrides";
 import i18next from "i18next";
 import { ShopCursorTarget } from "../enums/shop-cursor-target";
@@ -32,6 +34,10 @@ import { ArenaTagType } from "../enums/arena-tag-type";
 import { WeatherType } from "../data/weather";
 import { TerrainType } from "../data/terrain";
 import PartyUiHandler, { PartyUiMode } from "./party-ui-handler";
+import { ChampionUtils } from "#app/system/champion-utils";
+import { getPokemonSpecies } from "#app/data/pokemon-species";
+import { SkillTreeMode } from "#app/phases/skill-tree-phase";
+import { SkillTreeRewardType } from "#app/system/skill-tree-data";
 
 export const SHOP_OPTIONS_ROW_LIMIT = 12;
 const ALT_SPEEDUP = 0.425;
@@ -52,13 +58,13 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   private upgradeTooltipContainer: Phaser.GameObjects.Container | null = null;
   private upgradeTooltipBg: Phaser.GameObjects.NineSlice | null = null;
   private upgradeTooltipText: BBCodeText | null = null;
-  
+
   private readonly TOOLTIP_WIDTH = 625 / 6;
   private readonly TOOLTIP_BASE_HEIGHT = 375 / 6;
   private readonly TOOLTIP_OFFSET_X = 20;
-  
+
   private tooltipCache: Map<string, {text: string, multiHitWarning: boolean, secondaryEffectNote: boolean, flinchWarning: boolean}> = new Map();
-  
+
   protected rowCursor: integer = 0;
   protected player: boolean;
   private rerollCost: integer;
@@ -76,11 +82,14 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   private secondaryEffectNote: boolean = false;
   private flinchWarning: boolean = false;
   private lineCount: integer = 0;
-  
+
   private storedModifierSelectCallback: Function | null = null;
   private storedTypeOptions: any[] | null = null;
   private storedRerollCost: any | null = null;
   private storedDraftOnly: boolean = false;
+
+  private patternOverlay: Phaser.GameObjects.Container | null = null;
+  private patternCreated: boolean = false;
 
   constructor(scene: BattleScene) {
     super(scene, Mode.CONFIRM);
@@ -264,7 +273,16 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
     }
 
+    const isPathContext = this.scene.pathNodeContext !== null || this.scene.skillTreeModifierContext;
+    const pathSpeedMultiplier = isPathContext ? 0.833 : 1.0;
+
+    const getPathAdjustedDuration = (duration: integer): integer => {
+      const adjustedDuration = Math.floor(duration * pathSpeedMultiplier);
+      return Utils.rewardSpeedHandler(adjustedDuration, this.scene.lockedRewardSpeed) as unknown as integer;
+    };
+
     const maxUpgradeCount = typeOptions.map(to => to.upgradeCount).reduce((max, current) => Math.max(current, max), 0);
+    const effectiveUpgradeCount = isPathContext ? 0 : maxUpgradeCount;
 
     this.scene.getModifierBar().updateModifiers(this.scene.modifiers, true);
 
@@ -276,36 +294,59 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     this.scene.updateBiomeWaveText();
     this.scene.updateMoneyText();
 
+    if (!this.patternCreated) {
+      this.patternOverlay = this.scene.add.container(0, 0);
+      this.scene.fieldUI.add(this.patternOverlay);
+      const shopOverlay = (this.scene as any).shopOverlay;
+      if (shopOverlay) {
+        this.scene.fieldUI.moveAbove(this.patternOverlay, shopOverlay);
+      }
+      createSporadicPattern(this.scene, this.patternOverlay);
+      this.patternCreated = true;
+    }
+
+    if (this.patternOverlay) {
+      this.patternOverlay.setVisible(true);
+      this.patternOverlay.setAlpha(0);
+      this.patternOverlay.setPosition(0, -this.scene.game.canvas.height / 6);
+      this.scene.tweens.add({
+        targets: this.patternOverlay,
+        alpha: 1,
+        duration: 750 * this.scene.gameSpeed,
+        ease: "Sine.easeOut"
+      });
+    }
+
     let i = 0;
 
     this.scene.tweens.addCounter({
       ease: "Sine.easeIn",
-      duration: Utils.rewardSpeedHandler(1250, this.scene.lockedRewardSpeed),
+      duration: getPathAdjustedDuration(1250),
       onUpdate: t => {
         const value = t.getValue();
         const index = Math.floor(value * typeOptions.length);
         if (index > i && index <= typeOptions.length) {
           const option = this.options[i];
-          option?.show(Math.floor((1 - value) * 1250) * 0.325 + 2000 * maxUpgradeCount, -(maxUpgradeCount - typeOptions[i].upgradeCount));
+          option?.show(Math.floor((1 - value) * 1250) * 0.325 + 2000 * effectiveUpgradeCount, -(effectiveUpgradeCount - typeOptions[i].upgradeCount));
           i++;
         }
       }
     });
 
-    this.scene.time.delayedCall(Utils.rewardSpeedHandler((1000 + maxUpgradeCount * 2000), this.scene.lockedRewardSpeed), () => {
+    this.scene.time.delayedCall(getPathAdjustedDuration(1000 + effectiveUpgradeCount * 2000), () => {
       for (const shopOption of this.shopOptionsRows.flat()) {
         shopOption.show(0, 0);
       }
     });
 
-    this.scene.time.delayedCall(Utils.rewardSpeedHandler((4000 + maxUpgradeCount * 2000), this.scene.lockedRewardSpeed), () => {
+    this.scene.time.delayedCall(getPathAdjustedDuration(4000 + effectiveUpgradeCount * 2000), () => {
       if (partyHasHeldItem) {
         this.transferButtonContainer.setAlpha(0);
         this.transferButtonContainer.setVisible(true);
         this.scene.tweens.add({
           targets: this.transferButtonContainer,
           alpha: 1,
-          duration: Utils.rewardSpeedHandler(250, this.scene.lockedRewardSpeed)
+          duration: getPathAdjustedDuration(250)
         });
       }
 
@@ -321,7 +362,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       this.scene.tweens.add({
         targets: [ this.rerollButtonContainer, this.permaRerollButtonContainer, this.lockRarityButtonContainer, this.checkButtonContainer ],
         alpha: 1,
-        duration: Utils.rewardSpeedHandler(250, this.scene.lockedRewardSpeed)
+        duration: getPathAdjustedDuration(250)
       });
 
       const updateCursorTarget = () => {
@@ -376,6 +417,13 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
     } else if (button === Button.CANCEL) {
       if (this.player && !this.forcedDraftSelection) {
+        try {
+          const cfg = (this.scene.gameData as any).tempSkillTreeConfig;
+          if (cfg && (cfg.mode === SkillTreeMode.POKEMON_SELECTION || cfg.mode === "POKEMON_SELECTION")) {
+            ui.playError();
+            return true;
+          }
+        } catch {}
         success = true;
         if (this.onActionInput) {
           const originalOnActionInput = this.onActionInput;
@@ -443,18 +491,18 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       this.cursorObj = this.scene.add.image(0, 0, "cursor");
       this.modifierContainer.add(this.cursorObj);
     }
-    const options = (this.rowCursor === 1 ? this.options : 
-      (this.rowCursor >= 2 && this.shopOptionsRows.length >= (this.rowCursor - 1) ? 
+    const options = (this.rowCursor === 1 ? this.options :
+      (this.rowCursor >= 2 && this.shopOptionsRows.length >= (this.rowCursor - 1) ?
         this.shopOptionsRows[this.shopOptionsRows.length - (this.rowCursor - 1)] : []));
-    
+
     if (!options || options.length === 0 || cursor >= options.length) {
       if (options && options.length > 0) {
         this.cursor = Math.min(cursor, options.length - 1);
       } else if (this.rowCursor > 0) {
         for (let r = 0; r <= this.shopOptionsRows.length + 1; r++) {
           if (r !== this.rowCursor) {
-            const altOptions = (r === 1 ? this.options : 
-              (r >= 2 && this.shopOptionsRows.length >= (r-1) ? 
+            const altOptions = (r === 1 ? this.options :
+              (r >= 2 && this.shopOptionsRows.length >= (r-1) ?
                 this.shopOptionsRows[this.shopOptionsRows.length - (r - 1)] : null));
             if (altOptions && altOptions.length > 0) {
               console.log(`Found alternative row ${r} with ${altOptions.length} options`);
@@ -488,21 +536,21 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         console.warn(`Option at index ${this.cursor} is undefined!`);
         return ret;
       }
-      
+
       if (!option.modifierTypeOption) {
         console.warn(`ModifierTypeOption is undefined for option at index ${this.cursor}`);
         return ret;
       }
-      
+
       const type = option.modifierTypeOption.type;
       if (!type) {
         console.warn(`Type is undefined for modifierTypeOption at index ${this.cursor}`);
         return ret;
       }
-      
+
       const desc = type.getDescription(this.scene);
       ui.showText(desc);
-      
+
       if (type instanceof TmModifierType || type instanceof AnyTmModifierType) {
         this.moveInfoOverlay.show(this.scene.getUpgradedMove(allMoves[type.moveId]));
       }
@@ -511,13 +559,13 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
       else if(type instanceof MoveUpgradeModifierType) {
         this.moveInfoOverlay.show(type.getDescription(this.scene));
-        
+
         this.showUpgradeTooltip(type);
       }
     } else {
       const buttonLayout = this.getButtonLayout();
       const buttonInfo = buttonLayout[cursor];
-      
+
       if (buttonInfo) {
         this.cursorObj.setPosition(buttonInfo.x, buttonInfo.y);
         ui.showText(i18next.t(buttonInfo.descKey));
@@ -552,41 +600,38 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     return false;
   }
-
-  
-
   public getButtonLayout(): Array<{x: number, y: number, descKey: string}> {
     const layout = [
       { x: 6, y: this.lockRarityButtonContainer.visible ? -72 : -60, descKey: "modifierSelectUiHandler:rerollDesc" }
     ];
-    
+
     if (this.permaRerollButtonContainer.visible) {
       layout.push({ x: 76, y: this.lockRarityButtonContainer.visible ? -72 : -60, descKey: "modifierSelectUiHandler:permaRerollDesc" });
     }
-    
+
     if (this.transferButtonContainer.visible) {
-      layout.push({ 
-        x: (this.scene.game.canvas.width - this.transferButtonWidth - this.checkButtonWidth)/6 - 30, 
-        y: -60, 
-        descKey: "modifierSelectUiHandler:transferDesc" 
+      layout.push({
+        x: (this.scene.game.canvas.width - this.transferButtonWidth - this.checkButtonWidth)/6 - 30,
+        y: -60,
+        descKey: "modifierSelectUiHandler:transferDesc"
       });
     }
-    
+
     if (this.checkButtonContainer.visible) {
-      layout.push({ 
-        x: (this.scene.game.canvas.width - this.checkButtonWidth)/6 - 10, 
-        y: -60, 
-        descKey: "modifierSelectUiHandler:checkTeamDesc" 
+      layout.push({
+        x: (this.scene.game.canvas.width - this.checkButtonWidth)/6 - 10,
+        y: -60,
+        descKey: "modifierSelectUiHandler:checkTeamDesc"
       });
     }
     if (this.lockRarityButtonContainer.visible) {
-      layout.push({ 
-        x: 6, 
-        y: -60, 
-        descKey: "modifierSelectUiHandler:lockRaritiesDesc" 
+      layout.push({
+        x: 6,
+        y: -60,
+        descKey: "modifierSelectUiHandler:lockRaritiesDesc"
       });
     }
-    
+
     return layout;
   }
 
@@ -601,11 +646,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           return 0;
         }
         const index = this.shopOptionsRows.length - (rowCursor - 1);
-      
+
         if (index < 0 || index >= this.shopOptionsRows.length) {
           return 0;
         }
-        
+
         return this.shopOptionsRows[index].length;
     }
   }
@@ -629,7 +674,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
   updateRerollCostText(): void {
     const isDraft = this.forcedDraftSelection;
-    const canReroll = isDraft 
+    const canReroll = isDraft
       ? this.scene.gameData.permaMoney >= this.rerollCost
       : this.scene.money >= this.rerollCost;
 
@@ -637,8 +682,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       ? canReroll ? TextStyle.PERFECT_IV : TextStyle.PARTY_RED
       : canReroll ? TextStyle.MONEY : TextStyle.PARTY_RED;
 
-    const translationKey = isDraft 
-      ? "modifierSelectUiHandler:rerollPermaCost" 
+    const translationKey = isDraft
+      ? "modifierSelectUiHandler:rerollPermaCost"
       : "modifierSelectUiHandler:rerollCost";
 
     const formattedMoney = Utils.formatMoney(this.scene.moneyFormat, this.rerollCost);
@@ -652,7 +697,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const canReroll = this.scene.gameData.permaMoney >= this.permaRerollCost;
     const textStyle = canReroll ? TextStyle.PERFECT_IV : TextStyle.PARTY_RED;
     const formattedMoney = Utils.formatMoney(this.scene.moneyFormat, this.permaRerollCost);
-    
+
     this.permaRerollCostText.setText(i18next.t("modifierSelectUiHandler:permaRerollCost", { formattedMoney }));
     this.permaRerollCostText.setColor(this.getTextColor(textStyle));
     this.permaRerollCostText.setShadowColor(this.getTextColor(textStyle, true));
@@ -676,19 +721,19 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     this.upgradeTooltipContainer.setDepth(10000000000);
     this.upgradeTooltipBg = addWindow(this.scene, 0, 0, this.TOOLTIP_WIDTH, this.getTooltipHeight(comparisonText));
     this.upgradeTooltipText = this.createColoredComparisonText(comparisonText);
-    
+
     const selectedOption = this.options[this.cursor];
     if (selectedOption) {
       const isRightmostOption = this.cursor === this.options.length - 1;
       let tooltipX: number;
-      
+
       if (isRightmostOption && this.options.length > 1) {
         const secondFromLeftOption = this.options[1];
         tooltipX = secondFromLeftOption.x - this.TOOLTIP_OFFSET_X;
       } else {
         tooltipX = selectedOption.x + this.TOOLTIP_OFFSET_X;
       }
-      
+
       const tooltipY = selectedOption.y - this.getTooltipHeight(comparisonText) / 2;
       this.upgradeTooltipContainer.setPosition(tooltipX, tooltipY);
     }
@@ -699,11 +744,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
   private generateComparisonText(modifierType: MoveUpgradeModifierType): string {
     this.lineCount = 0;
-    
+
     const tempModifier = modifierType.newModifier() as MoveUpgradeModifier;
     const moveId = tempModifier.moveId;
     const cacheKey = `${moveId}_${tempModifier.powerBoost}_${tempModifier.accuracyBoost}_${tempModifier.upgradeCategory}`;
-    
+
     if (this.tooltipCache.has(cacheKey)) {
       const cached = this.tooltipCache.get(cacheKey)!;
       this.multiHitWarning = cached.multiHitWarning;
@@ -718,32 +763,16 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const uiTheme = this.scene.uiTheme;
 
     const comparisonLines: string[] = [];
-    
-    const toRoman = (num: number): string => {
-      const romanNumerals: [string, number][] = [
-        ['M', 1000], ['CM', 900], ['D', 500], ['CD', 400],
-        ['C', 100], ['XC', 90], ['L', 50], ['XL', 40],
-        ['X', 10], ['IX', 9], ['V', 5], ['IV', 4], ['I', 1]
-      ];
-      let result = '';
-      for (const [letter, value] of romanNumerals) {
-        while (num >= value) {
-          result += letter;
-          num -= value;
-        }
-      }
-      return result;
-    };
 
     let displayTier = tempModifier.upgradeTier;
     let displayCategory: string | undefined = i18next.t(`moveUpgradeAttrs:${tempModifier.upgradeCategory}`);
     let shouldShowEX = false;
-    
+
     const activeUpgrades = this.scene.getUpgradesForMove(moveId);
-    
+
     if (!tempModifier.upgradeCategory) {
       const categoryUpgrade = activeUpgrades.find(upgrade => upgrade.upgradeCategory);
-      
+
       if (categoryUpgrade) {
         displayTier = categoryUpgrade.upgradeTier;
       }
@@ -756,17 +785,17 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         shouldShowEX = true;
       }
     }
-    
-    const tierDisplay = displayTier ? ` ${toRoman(displayTier)}` : "";
+
+    const tierDisplay = displayTier ? ` ${Utils.intToRoman(displayTier)}` : "";
     const exDisplay = shouldShowEX ? ` ${i18next.t("moveUpgradeAttrs:EX")}` : "";
     const moveName = getBBCodeFrag(`${currentMove.name}${tierDisplay}${exDisplay}`, TextStyle.SUMMARY_GOLD, uiTheme);
     comparisonLines.push(moveName);
-    
+
     if (displayCategory) {
       const categoryInfo = getBBCodeFrag(displayCategory, TextStyle.PERFECT_IV, uiTheme);
       comparisonLines.push(categoryInfo);
     }
-    
+
     this.multiHitWarning = false;
     const isMultiHit = currentMove.attrs.some(attr => attr instanceof MultiHitAttr || attr.constructor.name.includes('MultiHit'));
     if (isMultiHit) {
@@ -790,11 +819,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         comparisonLines.push(warningLine);
       });
     }
-    
+
     comparisonLines.push('');
-    
+
     comparisonLines.push(...this.compareBasicStats(currentMove, upgradedMove));
-   
+
     this.secondaryEffectNote = false;
     if (currentMove.chance > 0 || upgradedMove.chance > 0) {
       comparisonLines.push('');
@@ -809,14 +838,14 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     this.lineCount = comparisonLines.length;
     const result = comparisonLines.join('\n');
-    
+
     return result;
   }
 
   private compareBasicStats(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     if (currentMove.power !== upgradedMove.power && upgradedMove.power > 0) {
       const powerLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:power"), TextStyle.SUMMARY_GOLD, uiTheme);
       const currentPower = getBBCodeFrag(currentMove.power.toString(), upgradedMove.power > currentMove.power ? TextStyle.SUMMARY_RED : TextStyle.WINDOW, uiTheme);
@@ -828,7 +857,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const power = getBBCodeFrag(currentMove.power.toString(), TextStyle.WINDOW, uiTheme);
       lines.push(`${powerLabel}: ${power}`);
     }
-    
+
     if (currentMove.accuracy !== upgradedMove.accuracy && upgradedMove.accuracy > 0) {
       const accuracyLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:accuracy"), TextStyle.SUMMARY_GOLD, uiTheme);
       const currentAcc = getBBCodeFrag(`${currentMove.accuracy}%`, upgradedMove.accuracy > currentMove.accuracy ? TextStyle.SUMMARY_RED : TextStyle.WINDOW, uiTheme);
@@ -840,16 +869,16 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const accuracy = getBBCodeFrag(`${currentMove.accuracy}%`, TextStyle.WINDOW, uiTheme);
       lines.push(`${accuracyLabel}: ${accuracy}`);
     }
-    
+
     if (currentMove.chance !== upgradedMove.chance && upgradedMove.chance > 0) {
       const chanceLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:chance"), TextStyle.SUMMARY_GOLD, uiTheme);
       const displayCurrentChance = currentMove.chance === -1 ? 0 : currentMove.chance;
       let displayUpgradedChance = upgradedMove.chance === -1 ? 0 : upgradedMove.chance;
-      
+
       if (this.flinchWarning && displayUpgradedChance > 30) {
         displayUpgradedChance = 30;
       }
-      
+
       const currentChance = getBBCodeFrag(`${displayCurrentChance}%`, upgradedMove.chance > currentMove.chance ? TextStyle.SUMMARY_RED : TextStyle.WINDOW, uiTheme);
       const newChance = getBBCodeFrag(`${displayUpgradedChance}%`, upgradedMove.chance > currentMove.chance ? TextStyle.SUMMARY_GREEN : TextStyle.SUMMARY_RED, uiTheme);
       const arrow = getBBCodeFrag(" → ", TextStyle.WINDOW, uiTheme);
@@ -859,10 +888,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const chance = getBBCodeFrag(`${currentMove.chance}%`, TextStyle.WINDOW, uiTheme);
       lines.push(`${chanceLabel}: ${chance}`);
     }
-    
+
     const currentEffectivePriority = this.calculateEffectivePriority(currentMove);
     const upgradedEffectivePriority = this.calculateEffectivePriority(upgradedMove);
-    
+
     if (currentEffectivePriority !== upgradedEffectivePriority && upgradedEffectivePriority !== 0) {
       const priorityLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:priority"), TextStyle.SUMMARY_GOLD, uiTheme);
       const currentPriority = getBBCodeFrag(currentEffectivePriority.toString(), upgradedEffectivePriority > currentEffectivePriority ? TextStyle.SUMMARY_RED : TextStyle.WINDOW, uiTheme);
@@ -874,7 +903,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const priority = getBBCodeFrag(currentEffectivePriority.toString(), TextStyle.WINDOW, uiTheme);
       lines.push(`${priorityLabel}: ${priority}`);
     }
-    
+
     if (currentMove.category !== upgradedMove.category) {
       const categoryLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:category"), TextStyle.SUMMARY_GOLD, uiTheme);
       const currentCat = getBBCodeFrag(MoveCategory[currentMove.category], TextStyle.WINDOW, uiTheme);
@@ -886,7 +915,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const category = getBBCodeFrag(MoveCategory[currentMove.category], TextStyle.WINDOW, uiTheme);
       lines.push(`${categoryLabel}: ${category}`);
     }
-    
+
     if (currentMove.type !== upgradedMove.type) {
       const typeLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:type"), TextStyle.SUMMARY_GOLD, uiTheme);
       const currentType = getBBCodeFrag(Type[currentMove.type], TextStyle.WINDOW, uiTheme);
@@ -898,7 +927,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const type = getBBCodeFrag(Type[currentMove.type], TextStyle.WINDOW, uiTheme);
       lines.push(`${typeLabel}: ${type}`);
     }
-    
+
     lines.push(...this.compareRecoilDamage(currentMove, upgradedMove));
     lines.push(...this.compareHealAmount(currentMove, upgradedMove));
     lines.push(...this.compareHPSacrifice(currentMove, upgradedMove));
@@ -908,7 +937,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     lines.push(...this.compareStatusEffect(currentMove, upgradedMove));
     lines.push(...this.compareSelfBoost(currentMove, upgradedMove));
     lines.push(...this.compareFoeDebuff(currentMove, upgradedMove));
-    
+
     lines.push(...this.compareItemInteraction(currentMove, upgradedMove));
     lines.push(...this.compareEffectChanceExtensions(currentMove, upgradedMove));
     lines.push(...this.compareGroundingEffects(currentMove, upgradedMove));
@@ -923,7 +952,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     lines.push(...this.compareFixedDamageEffects(currentMove, upgradedMove));
     lines.push(...this.compareMoveFlags(currentMove, upgradedMove));
     lines.push(...this.compareBattleMechanicsEffects(currentMove, upgradedMove));
-    
+
     return lines;
   }
 
@@ -935,23 +964,23 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         priority.value += attr.increaseAmount;
       }
     }
-    
+
     return priority.value;
   }
 
   private compareRecoilDamage(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentRecoilAttr = currentMove.getAttrs(RecoilAttr)[0] as RecoilAttr | undefined;
     const upgradedRecoilAttr = upgradedMove.getAttrs(RecoilAttr)[0] as RecoilAttr | undefined;
-    
+
     const currentRecoil = currentRecoilAttr ? Math.round(currentRecoilAttr.damageRatio * 100) : 0;
     const upgradedRecoil = upgradedRecoilAttr ? Math.round(upgradedRecoilAttr.damageRatio * 100) : 0;
-    
+
     if (currentRecoil !== upgradedRecoil && upgradedRecoil > 0) {
       const recoilLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:recoilDamage"), TextStyle.SUMMARY_GOLD, uiTheme);
-      
+
       if (currentRecoil === 0 && upgradedRecoil > 0) {
         const currentRecoilText = getBBCodeFrag(`${currentRecoil}%`, TextStyle.WINDOW, uiTheme);
         const newRecoilText = getBBCodeFrag(`${upgradedRecoil}%`, TextStyle.SUMMARY_RED, uiTheme);
@@ -968,24 +997,24 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const recoilText = getBBCodeFrag(`${currentRecoil}%`, TextStyle.WINDOW, uiTheme);
       lines.push(`${recoilLabel}: ${recoilText}`);
     }
-    
+
     return lines;
   }
 
   private compareHealAmount(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentHealAttr = currentMove.getAttrs(HealAttr)[0] as HealAttr | undefined;
     const upgradedHealAttr = upgradedMove.getAttrs(HealAttr)[0] as HealAttr | undefined;
     const currentHitHealAttr = currentMove.getAttrs(HitHealAttr)[0] as HitHealAttr | undefined;
     const upgradedHitHealAttr = upgradedMove.getAttrs(HitHealAttr)[0] as HitHealAttr | undefined;
-    
-    const currentHeal = currentHealAttr ? Math.round(currentHealAttr.healRatio * 100) : 
+
+    const currentHeal = currentHealAttr ? Math.round(currentHealAttr.healRatio * 100) :
                        currentHitHealAttr ? Math.round(currentHitHealAttr.healRatio * 100) : 0;
-    const upgradedHeal = upgradedHealAttr ? Math.round(upgradedHealAttr.healRatio * 100) : 
+    const upgradedHeal = upgradedHealAttr ? Math.round(upgradedHealAttr.healRatio * 100) :
                         upgradedHitHealAttr ? Math.round(upgradedHitHealAttr.healRatio * 100) : 0;
-    
+
     if (currentHeal !== upgradedHeal && upgradedHeal > 0) {
       const healLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:healAmount"), TextStyle.SUMMARY_GOLD, uiTheme);
       const currentHealText = getBBCodeFrag(`${currentHeal}%`, upgradedHeal > currentHeal ? TextStyle.SUMMARY_RED : TextStyle.WINDOW, uiTheme);
@@ -997,24 +1026,24 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const healText = getBBCodeFrag(`${currentHeal}%`, TextStyle.WINDOW, uiTheme);
       lines.push(`${healLabel}: ${healText}`);
     }
-    
+
     return lines;
   }
 
   private compareHPSacrifice(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const getSacrificeType = (move: Move): string => {
       if (move.hasAttr(SacrificialAttr)) return i18next.t("moveUpgradeAttrs:sacrificialFull");
       if (move.hasAttr(HalfSacrificialAttr)) return i18next.t("moveUpgradeAttrs:sacrificialHalf");
       if (move.hasAttr(SacrificialAttrOnHit)) return i18next.t("moveUpgradeAttrs:sacrificialOnHit");
       return "";
     };
-    
+
     const currentSacrifice = getSacrificeType(currentMove);
     const upgradedSacrifice = getSacrificeType(upgradedMove);
-    
+
     if (currentSacrifice !== upgradedSacrifice && upgradedSacrifice) {
       const sacrificeLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:sacrificial"), TextStyle.SUMMARY_GOLD, uiTheme);
       if (currentSacrifice) {
@@ -1031,17 +1060,17 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const sacrificeText = getBBCodeFrag(currentSacrifice, TextStyle.WINDOW, uiTheme);
       lines.push(`${sacrificeLabel}: ${sacrificeText}`);
     }
-    
+
     return lines;
   }
 
   private compareMultiHit(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentMultiHitAttr = currentMove.getAttrs(MultiHitAttr)[0] as MultiHitAttr | undefined;
     const upgradedMultiHitAttr = upgradedMove.getAttrs(MultiHitAttr)[0] as MultiHitAttr | undefined;
-    
+
     const getMultiHitDescription = (multiHitType: MultiHitType): string => {
       switch (multiHitType) {
         case MultiHitType._2: return "2";
@@ -1051,10 +1080,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         default: return "1";
       }
     };
-    
+
     const currentMultiHit = currentMultiHitAttr ? getMultiHitDescription(currentMultiHitAttr.getMultiHitType) : "";
     const upgradedMultiHit = upgradedMultiHitAttr ? getMultiHitDescription(upgradedMultiHitAttr.getMultiHitType) : "";
-    
+
     if (currentMultiHit !== upgradedMultiHit && upgradedMultiHit) {
       const multiHitLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:multiHitType"), TextStyle.SUMMARY_GOLD, uiTheme);
       if (currentMultiHit) {
@@ -1071,34 +1100,34 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const multiHitText = getBBCodeFrag(currentMultiHit, TextStyle.WINDOW, uiTheme);
       lines.push(`${multiHitLabel}: ${multiHitText}`);
     }
-    
+
     return lines;
   }
 
   private compareCritRate(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentHighCritAttr = currentMove.getAttrs(HighCritAttr)[0] as HighCritAttr | undefined;
     const upgradedHighCritAttr = upgradedMove.getAttrs(HighCritAttr)[0] as HighCritAttr | undefined;
     const currentCritOnly = currentMove.hasAttr(CritOnlyAttr);
     const upgradedCritOnly = upgradedMove.hasAttr(CritOnlyAttr);
-    
+
     const getCurrentCritRate = (): string => {
       if (currentCritOnly) return "100%";
       if (currentHighCritAttr) return "10%";
       return "";
     };
-    
+
     const getUpgradedCritRate = (): string => {
       if (upgradedCritOnly) return "100%";
       if (upgradedHighCritAttr) return "10%";
       return "";
     };
-    
+
     const currentCritRate = getCurrentCritRate();
     const upgradedCritRate = getUpgradedCritRate();
-    
+
     if (currentCritRate !== upgradedCritRate && upgradedCritRate) {
       const critLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:highCritRate"), TextStyle.SUMMARY_GOLD, uiTheme);
       if (currentCritRate) {
@@ -1115,36 +1144,36 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const critText = getBBCodeFrag(currentCritRate, TextStyle.WINDOW, uiTheme);
       lines.push(`${critLabel}: ${critText}`);
     }
-    
+
     return lines;
   }
 
   private compareChargeTurn(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentChargeAttr = currentMove.getAttrs(ChargeAttr)[0] as ChargeAttr | undefined;
     const upgradedChargeAttr = upgradedMove.getAttrs(ChargeAttr)[0] as ChargeAttr | undefined;
-    
+
     const hasCurrentCharge = !!currentChargeAttr;
     const hasUpgradedCharge = !!upgradedChargeAttr;
-    
+
     const currentHasStatBoost = currentChargeAttr && currentMove.getAttrs(StatChangeAttr).some((attr: StatChangeAttr) => attr.selfTarget);
     const upgradedHasStatBoost = upgradedChargeAttr && upgradedMove.getAttrs(StatChangeAttr).some((attr: StatChangeAttr) => attr.selfTarget);
-    
+
     const getCurrentChargeText = (): string => {
       if (!hasCurrentCharge) return "";
       return i18next.t("moveUpgradeAttrs:chargeTurn");
     };
-    
+
     const getUpgradedChargeText = (): string => {
       if (!hasUpgradedCharge) return "";
       return i18next.t("moveUpgradeAttrs:chargeTurn");
     };
-    
+
     const currentChargeText = getCurrentChargeText();
     const upgradedChargeText = getUpgradedChargeText();
-    
+
     if (currentChargeText !== upgradedChargeText && upgradedChargeText) {
       const chargeLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:charge"), TextStyle.SUMMARY_GOLD, uiTheme);
       if (currentChargeText) {
@@ -1161,20 +1190,20 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const chargeDisplayText = getBBCodeFrag(currentChargeText, TextStyle.WINDOW, uiTheme);
       lines.push(`${chargeLabel}: ${chargeDisplayText}`);
     }
-    
+
     return lines;
   }
 
   private compareStatusEffect(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const getStatusEffectDescription = (move: Move): string => {
       const statusAttrs = move.getAttrs(StatusEffectAttr);
       if (statusAttrs.length === 0) return "";
-      
+
       const statusNames: string[] = [];
-      
+
       for (const attr of statusAttrs) {
         if (attr instanceof MultiStatusEffectAttr) {
           const multiStatusNames = attr.effects.map(effect => {
@@ -1187,13 +1216,13 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           statusNames.push(i18next.t(i18nKey));
         }
       }
-      
+
       return statusNames.join(" / ");
     };
-    
+
     const currentStatusText = getStatusEffectDescription(currentMove);
     const upgradedStatusText = getStatusEffectDescription(upgradedMove);
-    
+
     if (currentStatusText !== upgradedStatusText && upgradedStatusText) {
       const statusLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:statusEffect"), TextStyle.SUMMARY_GOLD, uiTheme);
       if (currentStatusText) {
@@ -1210,17 +1239,17 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const statusDisplayText = getBBCodeFrag(currentStatusText, TextStyle.WINDOW, uiTheme);
       lines.push(`${statusLabel}: ${statusDisplayText}`);
     }
-    
+
     return lines;
   }
 
   private compareSelfBoost(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentSelfBoostAttrs = currentMove.getAttrs(StatChangeAttr).filter((attr: StatChangeAttr) => attr.selfTarget && attr.levels > 0);
     const upgradedSelfBoostAttrs = upgradedMove.getAttrs(StatChangeAttr).filter((attr: StatChangeAttr) => attr.selfTarget && attr.levels > 0);
-    
+
     const getSelfBoostText = (attrs: StatChangeAttr[]): string => {
       if (attrs.length === 0) return "";
       const boostTexts = attrs.map(attr => {
@@ -1229,10 +1258,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       });
       return boostTexts.join(", ");
     };
-    
+
     const currentSelfBoostText = getSelfBoostText(currentSelfBoostAttrs as StatChangeAttr[]);
     const upgradedSelfBoostText = getSelfBoostText(upgradedSelfBoostAttrs as StatChangeAttr[]);
-    
+
     if (currentSelfBoostText !== upgradedSelfBoostText && upgradedSelfBoostText) {
       const boostLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:statChangeSelf"), TextStyle.SUMMARY_GOLD, uiTheme);
       if (currentSelfBoostText) {
@@ -1249,17 +1278,17 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const boostDisplayText = getBBCodeFrag(currentSelfBoostText, TextStyle.WINDOW, uiTheme);
       lines.push(`${boostLabel}: ${boostDisplayText}`);
     }
-    
+
     return lines;
   }
 
   private compareFoeDebuff(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentFoeDebuffAttrs = currentMove.getAttrs(StatChangeAttr).filter((attr: StatChangeAttr) => !attr.selfTarget && attr.levels < 0);
     const upgradedFoeDebuffAttrs = upgradedMove.getAttrs(StatChangeAttr).filter((attr: StatChangeAttr) => !attr.selfTarget && attr.levels < 0);
-    
+
     const getFoeDebuffText = (attrs: StatChangeAttr[]): string => {
       if (attrs.length === 0) return "";
       const debuffTexts = attrs.map(attr => {
@@ -1268,10 +1297,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       });
       return debuffTexts.join(", ");
     };
-    
+
     const currentFoeDebuffText = getFoeDebuffText(currentFoeDebuffAttrs as StatChangeAttr[]);
     const upgradedFoeDebuffText = getFoeDebuffText(upgradedFoeDebuffAttrs as StatChangeAttr[]);
-    
+
     if (currentFoeDebuffText !== upgradedFoeDebuffText && upgradedFoeDebuffText) {
       const debuffLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:statChangeTarget"), TextStyle.SUMMARY_GOLD, uiTheme);
       if (currentFoeDebuffText) {
@@ -1288,52 +1317,52 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const debuffDisplayText = getBBCodeFrag(currentFoeDebuffText, TextStyle.WINDOW, uiTheme);
       lines.push(`${debuffLabel}: ${debuffDisplayText}`);
     }
-    
+
     return lines;
   }
 
   private compareItemInteraction(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentRemove = currentMove.hasAttr(RemoveHeldItemAttr);
     const upgradedRemove = upgradedMove.hasAttr(RemoveHeldItemAttr);
     const currentSteal = currentMove.getAttrs(StealHeldItemChanceAttr)[0] as StealHeldItemChanceAttr | undefined;
     const upgradedSteal = upgradedMove.getAttrs(StealHeldItemChanceAttr)[0] as StealHeldItemChanceAttr | undefined;
-    
+
     const getCurrentDesc = (): string => {
       if (currentSteal) return `${Math.round(currentSteal.chance * 100)}%`;
       if (currentRemove) return i18next.t("moveUpgradeAttrs:removeFoeItem");
       return "";
     };
-    
+
     const getUpgradedDesc = (): string => {
       if (upgradedSteal) return `${Math.round(upgradedSteal.chance * 100)}%`;
       if (upgradedRemove) return i18next.t("moveUpgradeAttrs:removeFoeItem");
       return "";
     };
-    
+
     const currentDesc = getCurrentDesc();
     const upgradedDesc = getUpgradedDesc();
-    
+
     if (currentDesc !== upgradedDesc && upgradedDesc) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelEffect"), TextStyle.SUMMARY_GOLD, uiTheme);
       const value = getBBCodeFrag(upgradedDesc.includes('%') ? `${i18next.t("moveUpgradeAttrs:stealFoeItem")} (${upgradedDesc})` : upgradedDesc, TextStyle.SUMMARY_GREEN, uiTheme);
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
-    
+
     return lines;
   }
 
   private compareEffectChanceExtensions(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const effects = [
       { attr: FlinchAttr, key: "moveUpgradeAttrs:flinchStatus" },
       { attr: ConfuseAttr, key: "moveUpgradeAttrs:confuseStatus" },
-      { 
+      {
         check: (move: Move) => move.getAttrs(AddBattlerTagAttr).some((a: any) => a.tagType === BattlerTagType.SEEDED),
         key: "moveUpgradeAttrs:leechSeedStatus"
       },
@@ -1342,10 +1371,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         key: "moveUpgradeAttrs:curseStatus"
       }
     ];
-    
+
     for (const effect of effects) {
       let currentHas: boolean, upgradedHas: boolean;
-      
+
       if (effect.attr) {
         currentHas = currentMove.hasAttr(effect.attr);
         upgradedHas = upgradedMove.hasAttr(effect.attr);
@@ -1353,7 +1382,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         currentHas = effect.check!(currentMove);
         upgradedHas = effect.check!(upgradedMove);
       }
-      
+
       if (upgradedHas) {
         const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelStatus"), TextStyle.SUMMARY_GOLD, uiTheme);
         const value = getBBCodeFrag(i18next.t(effect.key), !currentHas ? TextStyle.SUMMARY_GREEN : TextStyle.WINDOW, uiTheme);
@@ -1361,51 +1390,51 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         lines.push(`${label}${colon}${value}`);
       }
     }
-    
+
     return lines;
   }
 
   private compareGroundingEffects(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentGround = currentMove.getAttrs(AddBattlerTagAttr).some((a: any) => a.tagType === BattlerTagType.IGNORE_FLYING);
     const upgradedGround = upgradedMove.getAttrs(AddBattlerTagAttr).some((a: any) => a.tagType === BattlerTagType.IGNORE_FLYING);
-    
+
     if (!currentGround && upgradedGround) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelEffect"), TextStyle.SUMMARY_GOLD, uiTheme);
       const value = getBBCodeFrag(i18next.t("moveUpgradeAttrs:groundFlyingTypes"), TextStyle.SUMMARY_GREEN, uiTheme);
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
-    
+
     return lines;
   }
 
   private compareWeatherEffects(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentWeatherAttr = currentMove.getAttrs(WeatherChangeAttr)[0] as WeatherChangeAttr | undefined;
     const upgradedWeatherAttr = upgradedMove.getAttrs(WeatherChangeAttr)[0] as WeatherChangeAttr | undefined;
     const currentClear = currentMove.hasAttr(ClearWeatherAttr);
     const upgradedClear = upgradedMove.hasAttr(ClearWeatherAttr);
-    
+
     const getCurrentWeather = (): string => {
       if (currentClear) return i18next.t("moveUpgradeAttrs:clearWeather");
       if (currentWeatherAttr) return this.getWeatherName(currentWeatherAttr.weatherType);
       return "";
     };
-    
+
     const getUpgradedWeather = (): string => {
       if (upgradedClear) return i18next.t("moveUpgradeAttrs:clearWeather");
       if (upgradedWeatherAttr) return this.getWeatherName(upgradedWeatherAttr.weatherType);
       return "";
     };
-    
+
     const currentWeather = getCurrentWeather();
     const upgradedWeather = getUpgradedWeather();
-    
+
     if (currentWeather !== upgradedWeather && upgradedWeather) {
       const labelKey = upgradedClear ? "moveUpgradeAttrs:labelEffect" : "moveUpgradeAttrs:labelWeatherChange";
       const label = getBBCodeFrag(i18next.t(labelKey), TextStyle.SUMMARY_GOLD, uiTheme);
@@ -1413,34 +1442,34 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
-    
+
     return lines;
   }
 
   private compareTerrainEffects(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentTerrainAttr = currentMove.getAttrs(TerrainChangeAttr)[0] as TerrainChangeAttr | undefined;
     const upgradedTerrainAttr = upgradedMove.getAttrs(TerrainChangeAttr)[0] as TerrainChangeAttr | undefined;
     const currentClear = currentMove.hasAttr(ClearTerrainAttr);
     const upgradedClear = upgradedMove.hasAttr(ClearTerrainAttr);
-    
+
     const getCurrentTerrain = (): string => {
       if (currentClear) return i18next.t("moveUpgradeAttrs:clearTerrain");
       if (currentTerrainAttr) return this.getTerrainName(currentTerrainAttr.terrainType);
       return "";
     };
-    
+
     const getUpgradedTerrain = (): string => {
       if (upgradedClear) return i18next.t("moveUpgradeAttrs:clearTerrain");
       if (upgradedTerrainAttr) return this.getTerrainName(upgradedTerrainAttr.terrainType);
       return "";
     };
-    
+
     const currentTerrain = getCurrentTerrain();
     const upgradedTerrain = getUpgradedTerrain();
-    
+
     if (currentTerrain !== upgradedTerrain && upgradedTerrain) {
       const labelKey = upgradedClear ? "moveUpgradeAttrs:labelEffect" : "moveUpgradeAttrs:labelTerrainChange";
       const label = getBBCodeFrag(i18next.t(labelKey), TextStyle.SUMMARY_GOLD, uiTheme);
@@ -1448,14 +1477,14 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
-    
+
     return lines;
   }
 
   private compareArenaTrapSetup(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     let currentTrapAttr = currentMove.getAttrs(AddArenaTrapTagAttr)[0] as AddArenaTrapTagAttr | undefined;
     let upgradedTrapAttr = upgradedMove.getAttrs(AddArenaTrapTagAttr)[0] as AddArenaTrapTagAttr | undefined;
 
@@ -1466,24 +1495,24 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     if (!upgradedTrapAttr && upgradedMove.hasAttr(AddArenaTrapTagUpgradeAttr)) {
       upgradedTrapAttr = upgradedMove.getAttrs(AddArenaTrapTagUpgradeAttr)[0] as AddArenaTrapTagUpgradeAttr | undefined;
     }
-    
+
     const currentTrap = currentTrapAttr ? this.getHazardName(currentTrapAttr.tagType) : "";
     const upgradedTrap = upgradedTrapAttr ? this.getHazardName(upgradedTrapAttr.tagType) : "";
-    
+
     if (currentTrap !== upgradedTrap && upgradedTrap) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelSetup"), TextStyle.SUMMARY_GOLD, uiTheme);
       const value = getBBCodeFrag(upgradedTrap, TextStyle.SUMMARY_GREEN, uiTheme);
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
-    
+
     return lines;
   }
 
   private compareTypeModifications(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const typeEffects = [
       { attr: MatchUserTypeAttr, key: "moveUpgradeAttrs:matchPrimaryType" },
       { attr: WeatherBallTypeAttr, key: "moveUpgradeAttrs:weatherBoost" },
@@ -1491,11 +1520,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       { attr: HiddenPowerTypeAttr, key: "moveUpgradeAttrs:ivType" },
       { attr: TypelessAttr, key: "moveUpgradeAttrs:typelessType" }
     ];
-    
+
     for (const effect of typeEffects) {
       const currentHas = currentMove.hasAttr(effect.attr);
       const upgradedHas = upgradedMove.hasAttr(effect.attr);
-      
+
       if (upgradedHas) {
         const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelEffect"), TextStyle.SUMMARY_GOLD, uiTheme);
         const value = getBBCodeFrag(i18next.t(effect.key), !currentHas ? TextStyle.SUMMARY_GREEN : TextStyle.WINDOW, uiTheme);
@@ -1503,10 +1532,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         lines.push(`${label}${colon}${value}`);
       }
     }
-    
+
     const currentSuperAttr = currentMove.getAttrs(AnyTypeSuperEffectTypeMultiplierAttr)[0] as AnyTypeSuperEffectTypeMultiplierAttr | undefined;
     const upgradedSuperAttr = upgradedMove.getAttrs(AnyTypeSuperEffectTypeMultiplierAttr)[0] as AnyTypeSuperEffectTypeMultiplierAttr | undefined;
-    
+
     if (!currentSuperAttr && upgradedSuperAttr) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelSuperEffectiveVs"), TextStyle.SUMMARY_GOLD, uiTheme);
       const value = getBBCodeFrag(this.getTypeName(upgradedSuperAttr.superEffectiveAgainstType), TextStyle.SUMMARY_GREEN, uiTheme);
@@ -1518,45 +1547,45 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
-    
+
     return lines;
   }
 
   private compareHealingOverTime(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const getCurrentHeal = (): string => {
       const attrs = currentMove.getAttrs(AddBattlerTagAttr);
       if (attrs.some((a: any) => a.tagType === BattlerTagType.AQUA_RING)) return i18next.t("moveUpgradeAttrs:aquaRing");
       if (attrs.some((a: any) => a.tagType === BattlerTagType.INGRAIN)) return i18next.t("moveUpgradeAttrs:ingrain");
       return "";
     };
-    
+
     const getUpgradedHeal = (): string => {
       const attrs = upgradedMove.getAttrs(AddBattlerTagAttr);
       if (attrs.some((a: any) => a.tagType === BattlerTagType.AQUA_RING)) return i18next.t("moveUpgradeAttrs:aquaRing");
       if (attrs.some((a: any) => a.tagType === BattlerTagType.INGRAIN)) return i18next.t("moveUpgradeAttrs:ingrain");
       return "";
     };
-    
+
     const currentHeal = getCurrentHeal();
     const upgradedHeal = getUpgradedHeal();
-    
+
     if (currentHeal !== upgradedHeal && upgradedHeal) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelHeal"), TextStyle.SUMMARY_GOLD, uiTheme);
       const value = getBBCodeFrag(i18next.t("moveUpgradeAttrs:healEndOfTurn"), TextStyle.SUMMARY_GREEN, uiTheme);
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
-    
+
     return lines;
   }
 
   private compareVariablePowerEffects(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const powerEffects = [
       { attr: GyroBallPowerAttr, key: "moveUpgradeAttrs:slowerStrongerBoost" },
       { attr: ElectroBallPowerAttr, key: "moveUpgradeAttrs:fasterStrongerBoost" },
@@ -1567,11 +1596,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       { attr: ConsecutiveUseDoublePowerAttr, key: "moveUpgradeAttrs:repeatedUseBoost" },
       { attr: TurnDamagedDoublePowerAttr, key: "moveUpgradeAttrs:revengeBoost" }
     ];
-    
+
     for (const effect of powerEffects) {
       const currentHas = currentMove.hasAttr(effect.attr);
       const upgradedHas = upgradedMove.hasAttr(effect.attr);
-      
+
       if (upgradedHas) {
         const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelEffect"), TextStyle.SUMMARY_GOLD, uiTheme);
         const value = getBBCodeFrag(i18next.t(effect.key), !currentHas ? TextStyle.SUMMARY_GREEN : TextStyle.WINDOW, uiTheme);
@@ -1579,19 +1608,19 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         lines.push(`${label}${colon}${value}`);
       }
     }
-    
+
     return lines;
   }
 
   private comparePriorityModifications(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const currentTerrainPrio = currentMove.getAttrs(TerrainMovePriorityAttr)[0] as TerrainMovePriorityAttr | undefined;
     const upgradedTerrainPrio = upgradedMove.getAttrs(TerrainMovePriorityAttr)[0] as TerrainMovePriorityAttr | undefined;
     const currentFirstTurnPrio = currentMove.getAttrs(FirstTurnPriorityAttr)[0] as FirstTurnPriorityAttr | undefined;
     const upgradedFirstTurnPrio = upgradedMove.getAttrs(FirstTurnPriorityAttr)[0] as FirstTurnPriorityAttr | undefined;
-    
+
     if (!currentTerrainPrio && upgradedTerrainPrio) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelEffect"), TextStyle.SUMMARY_GOLD, uiTheme);
       const value = getBBCodeFrag(i18next.t("moveUpgradeAttrs:terrainPriorityBoost"), TextStyle.SUMMARY_GREEN, uiTheme);
@@ -1603,7 +1632,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
-    
+
     if (!currentFirstTurnPrio && upgradedFirstTurnPrio) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelEffect"), TextStyle.SUMMARY_GOLD, uiTheme);
       const value = getBBCodeFrag(i18next.t("moveUpgradeAttrs:firstTurnOnlyPriority"), TextStyle.SUMMARY_GREEN, uiTheme);
@@ -1615,23 +1644,23 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
-    
+
     return lines;
   }
 
   private compareUtilityEffects(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const utilityEffects = [
       { attr: ForceSwitchOutAttr, key: "moveUpgradeAttrs:switchAfterAtk" },
       { attr: SurviveDamageAttr, key: "moveUpgradeAttrs:endure" }
     ];
-    
+
     for (const effect of utilityEffects) {
       const currentHas = currentMove.hasAttr(effect.attr);
       const upgradedHas = upgradedMove.hasAttr(effect.attr);
-      
+
       if (upgradedHas) {
         const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelEffect"), TextStyle.SUMMARY_GOLD, uiTheme);
         const value = getBBCodeFrag(i18next.t(effect.key), !currentHas ? TextStyle.SUMMARY_GREEN : TextStyle.WINDOW, uiTheme);
@@ -1639,27 +1668,27 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         lines.push(`${label}${colon}${value}`);
       }
     }
-    
+
     const currentTrapAttr = currentMove.getAttrs(TrapAttr)[0] as TrapAttr | undefined;
     const upgradedTrapAttr = upgradedMove.getAttrs(TrapAttr)[0] as TrapAttr | undefined;
-    
+
     const currentTrap = currentTrapAttr ? this.getTrapName(currentTrapAttr.tagType) : "";
     const upgradedTrap = upgradedTrapAttr ? this.getTrapName(upgradedTrapAttr.tagType) : "";
-    
+
     if (currentTrap !== upgradedTrap && upgradedTrap) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelTrap"), TextStyle.SUMMARY_GOLD, uiTheme);
       const value = getBBCodeFrag(upgradedTrap, TextStyle.SUMMARY_GREEN, uiTheme);
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
-    
+
     return lines;
   }
 
   private compareFixedDamageEffects(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const getCurrentFixedDamage = (): string => {
       if (currentMove.hasAttr(LevelDamageAttr)) return i18next.t("moveUpgradeAttrs:levelDamage");
       if (currentMove.hasAttr(TargetHalfHpDamageAttr)) return i18next.t("moveUpgradeAttrs:halfTargetHp");
@@ -1667,7 +1696,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       if (fixedAttr) return `${fixedAttr.damage}`;
       return "";
     };
-    
+
     const getUpgradedFixedDamage = (): string => {
       if (upgradedMove.hasAttr(LevelDamageAttr)) return i18next.t("moveUpgradeAttrs:levelDamage");
       if (upgradedMove.hasAttr(TargetHalfHpDamageAttr)) return i18next.t("moveUpgradeAttrs:halfTargetHp");
@@ -1675,24 +1704,24 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       if (fixedAttr) return `${fixedAttr.damage}`;
       return "";
     };
-    
+
     const currentFixed = getCurrentFixedDamage();
     const upgradedFixed = getUpgradedFixedDamage();
-    
+
     if (currentFixed !== upgradedFixed && upgradedFixed) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelFixedDmg"), TextStyle.SUMMARY_GOLD, uiTheme);
       const value = getBBCodeFrag(upgradedFixed, TextStyle.SUMMARY_GREEN, uiTheme);
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
-    
+
     return lines;
   }
 
   private compareMoveFlags(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const flagEffects = [
       { flag: MoveFlags.IGNORE_ABILITIES, key: "moveUpgradeAttrs:uniqueCategoryIgnoreAbilities" },
       { flag: MoveFlags.SOUND_BASED, key: "moveUpgradeAttrs:uniqueCategorySoundMove" },
@@ -1705,11 +1734,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       { flag: MoveFlags.POWDER_MOVE, key: "moveUpgradeAttrs:uniqueCategoryPowderMove" },
       { flag: MoveFlags.DANCE_MOVE, key: "moveUpgradeAttrs:uniqueCategoryDanceMove" }
     ];
-    
+
     for (const effect of flagEffects) {
       const currentHas = currentMove.hasFlag(effect.flag);
       const upgradedHas = upgradedMove.hasFlag(effect.flag);
-      
+
       if (upgradedHas) {
         const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelUniqueCategory"), TextStyle.SUMMARY_GOLD, uiTheme);
         const value = getBBCodeFrag(i18next.t(effect.key), !currentHas ? TextStyle.SUMMARY_GREEN : TextStyle.WINDOW, uiTheme);
@@ -1717,23 +1746,23 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         lines.push(`${label}${colon}${value}`);
       }
     }
-    
+
     return lines;
   }
 
   private compareBattleMechanicsEffects(currentMove: Move, upgradedMove: Move): string[] {
     const lines: string[] = [];
     const uiTheme = this.scene.uiTheme;
-    
+
     const mechanicsEffects = [
       { attr: IgnoreOpponentStatChangesAttr, key: "moveUpgradeAttrs:ignoreStatChanges" },
       { attr: RemoveScreensAttr, key: "moveUpgradeAttrs:removeScreens" }
     ];
-    
+
     for (const effect of mechanicsEffects) {
       const currentHas = currentMove.hasAttr(effect.attr);
       const upgradedHas = upgradedMove.hasAttr(effect.attr);
-      
+
       if (!currentHas && upgradedHas) {
         const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelEffect"), TextStyle.SUMMARY_GOLD, uiTheme);
         const value = getBBCodeFrag(i18next.t(effect.key), TextStyle.SUMMARY_GREEN, uiTheme);
@@ -1741,7 +1770,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         lines.push(`${label}${colon}${value}`);
       }
     }
-    
+
     return lines;
   }
 
@@ -1754,13 +1783,13 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const words = text.split(' ');
     const lines: string[] = [];
     let currentLine = '';
-    
+
     const avgCharWidth = 6;
     const maxCharsPerLine = Math.floor(maxWidth / avgCharWidth);
-    
+
     for (const word of words) {
       const testLine = currentLine ? `${currentLine} ${word}` : word;
-      
+
       if (testLine.length <= maxCharsPerLine) {
         currentLine = testLine;
       } else {
@@ -1772,11 +1801,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         }
       }
     }
-    
+
     if (currentLine) {
       lines.push(currentLine);
     }
-    
+
     return lines;
   }
 
@@ -1792,7 +1821,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
   private getTooltipHeight(comparisonText: string): integer {
     let additionalHeight = 0;
-    
+
     if (this.multiHitWarning) {
       this.lineCount--;
       additionalHeight += 100 / 6;
@@ -1802,16 +1831,16 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       this.lineCount--;
       additionalHeight += 100 / 6;
     }
-    
+
     if (this.secondaryEffectNote) {
       this.lineCount-= 3;
       additionalHeight += 180 / 6;
     }
-    
+
     if (this.lineCount > 7) {
       additionalHeight += (this.lineCount - 7) * (25 / 6);
     }
-    
+
     return this.TOOLTIP_BASE_HEIGHT + additionalHeight;
   }
 
@@ -1855,7 +1884,18 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   }
 
   protected getShopTypeOptions(): ModifierTypeOption[] | null {
-    return !this.forcedDraftSelection ? getPlayerShopModifierTypeOptionsForWave(this.scene, this.scene.getWaveMoneyAmount(1)) : null;
+    if (this.forcedDraftSelection) {
+      return null;
+    }
+    const options = getPlayerShopModifierTypeOptionsForWave(this.scene, this.scene.getWaveMoneyAmount(1));
+    if ((this.scene as BattleScene).skillTreeModifierContext && options) {
+      options.forEach(option => {
+        if (option.cost > 0) {
+          option.cost = Math.round(option.cost * 2);
+        }
+      });
+    }
+    return options;
   }
 
   protected createModifierOption(typeOptions: ModifierTypeOption[], index: number, optionsYOffset: number): ModifierOption {
@@ -1898,7 +1938,23 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     this.eraseCursor();
 
     this.scene.hideShopOverlay(750 * this.scene.gameSpeed);
-    this.scene.hideLuckText(250);
+
+    if (this.patternOverlay && !this.scene.reroll) {
+      const overlayToDestroy = this.patternOverlay;
+      this.scene.tweens.add({
+        targets: overlayToDestroy,
+        alpha: 0,
+        duration: 750 * this.scene.gameSpeed,
+        ease: "Cubic.easeIn",
+        onComplete: () => {
+          if (overlayToDestroy) {
+            overlayToDestroy.destroy();
+          }
+        }
+      });
+      this.patternOverlay = null;
+      this.patternCreated = false;
+    }
 
     this.scene.getModifierBar().getAll().forEach((icon: any) => icon.setAlpha(1));
     this.scene.getModifierBar(true).getAll().forEach((icon: any) => icon.setAlpha(1));
@@ -1948,9 +2004,6 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     if (modifier instanceof MoveUpgradeModifier) return true;
     return false;
   }
-
-
-
   private selectModifierForRemoval(modifier: PersistentModifier): void {
     if (modifier.stackCount > 1) {
       this.showQuantitySelection(modifier);
@@ -1961,7 +2014,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
   private showQuantitySelection(modifier: PersistentModifier): void {
     const quantityOptions = [];
-    
+
     for (let i = 1; i <= modifier.stackCount; i++) {
       quantityOptions.push({
         label: `${i} ${modifier.type.name}${i > 1 ? 's' : ''}`,
@@ -1992,10 +2045,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   private showRemovalConfirmation(modifier: PersistentModifier, quantity: number): void {
     const itemName = modifier.type.name;
     const quantityText = quantity > 1 ? `${quantity} ` : "";
-    const pokemonText = modifier instanceof PokemonHeldItemModifier 
-      ? ` from ${this.scene.getPokemonById(modifier.pokemonId)?.name || "Unknown"}` 
+    const pokemonText = modifier instanceof PokemonHeldItemModifier
+      ? ` from ${this.scene.getPokemonById(modifier.pokemonId)?.name || "Unknown"}`
       : "";
-    
+
     const message = i18next.t("modifierSelectUiHandler:confirmRemoval", {
       quantity: quantityText,
       itemName: itemName,
@@ -2003,16 +2056,16 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     });
 
     this.scene.ui.showText(message, null, () => {
-      this.scene.ui.setOverlayMode(Mode.CONFIRM, 
+      this.scene.ui.setOverlayMode(Mode.CONFIRM,
         () => {
           this.executeModifierRemoval(modifier, quantity);
           return true;
-        }, 
+        },
         () => {
           this.scene.ui.revertMode();
           this.scene.ui.clearText();
           return true;
-        }, 
+        },
         false, -98, 32, 500
       );
     });
@@ -2024,15 +2077,15 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     } else {
       modifier.stackCount -= quantity;
     }
-    
+
     this.scene.updateModifiers().then(() => {
       this.scene.ui.revertMode();
       this.scene.ui.showText(
         i18next.t("modifierSelectUiHandler:itemRemoved", {
           quantity: quantity > 1 ? `${quantity} ` : "",
           itemName: modifier.type.name
-        }), 
-        null, 
+        }),
+        null,
         () => {
           this.scene.ui.clearText();
         }
@@ -2045,9 +2098,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     return;
     const hasTransferableItems = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier && m.isTransferrable).length > 0;
     const hasRemovableUpgrades = this.getMoveUpgradeModifiersCount() > 0;
-    
+
     const options = [];
-    
+
     if (hasTransferableItems) {
       options.push({
         label: i18next.t("modifierSelectUiHandler:transferItems"),
@@ -2057,7 +2110,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         }
       });
     }
-    
+
     if (hasRemovableUpgrades) {
       options.push({
         label: i18next.t("modifierSelectUiHandler:removeUpgrades"),
@@ -2067,7 +2120,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         }
       });
     }
-    
+
     options.push({
       label: i18next.t("modifierSelectUiHandler:cancel"),
       handler: () => {
@@ -2093,7 +2146,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   }
 
   private getMoveUpgradeModifiersCount(): number {
-    return this.scene.modifiers.filter(m => 
+    return this.scene.modifiers.filter(m =>
       m instanceof MoveUpgradeModifier && this.isModifierRemovable(m)
     ).length;
   }
@@ -2115,7 +2168,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
   showTransferItemsMode(): void {
     const party = this.scene.getParty();
-    
+
     this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.MODIFIER_TRANSFER, -1, (fromSlotIndex: integer, itemIndex: integer, itemQuantity: integer, toSlotIndex: integer) => {
       if (toSlotIndex !== undefined && fromSlotIndex < 6 && toSlotIndex < 6 && fromSlotIndex !== toSlotIndex && itemIndex > -1) {
         const itemModifiers = this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier
@@ -2130,7 +2183,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
   showRemoveUpgradesPopup(): void {
     const removableUpgrades = this.getRemovableMoveUpgradeModifiers();
-    
+
     if (removableUpgrades.length === 0) {
       this.scene.ui.showText(i18next.t("modifierSelectUiHandler:noUpgradesToRemove"), null, () => {
         this.scene.ui.clearText();
@@ -2190,7 +2243,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
   public itemCostText: Phaser.GameObjects.Text;
   public showCost: boolean;
   private useSmitemsAtlas(): boolean {
-    return this.modifierTypeOption.type.group === "glitch" || 
+    return this.modifierTypeOption.type.group === "glitch" ||
            this.modifierTypeOption.type.group === "perma";
   }
 
@@ -2240,12 +2293,66 @@ export class ModifierOption extends Phaser.GameObjects.Container {
           item.setFrame(newPokemon.getIconId(false));
           newPokemon.shiny = temp;
         }
-      } else {
-        item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems_192" : "items", this.modifierTypeOption.type.iconImage);
-        if(this.useSmitemsAtlas()) {
-          item.setScale(!this.modifierTypeOption.cost ? 0.167 : 0.1);
+      } else if (this.modifierTypeOption.type instanceof PokemonAltBuildModifierType) {
+        try {
+          const altBuildType = this.modifierTypeOption.type as PokemonAltBuildModifierType;
+          const altBuild = (altBuildType as any).altBuild;
+          if (altBuild?.species) {
+            const pokemonSpecies = getPokemonSpecies(altBuild.species);
+            if (pokemonSpecies) {
+              item = this.scene.add.sprite(0, 0, pokemonSpecies.getIconAtlasKey());
+              item.setFrame(pokemonSpecies.getIconId(false));
+              if (item.postFX && typeof item.postFX.addColorMatrix === 'function') {
+                const colorMatrix = item.postFX.addColorMatrix();
+                colorMatrix.negative();
+              }
+            } else {
+              item = this.scene.add.sprite(0, 0, "smitems", "pokemon_alt_build");
+
+            }
+          } else {
+            item = this.scene.add.sprite(0, 0, "smitems", "pokemon_alt_build");
+
+          }
+        } catch (error) {
+          console.warn("Failed to render alt build pokemon icon:", error);
+          item = this.scene.add.sprite(0, 0, "smitems", "pokemon_alt_build");
+
         }
-        else if (this.modifierTypeOption.cost) {
+      } else if (this.modifierTypeOption.type?.group === "trainerBondAbility") {
+        try {
+          const championId = (this.scene as BattleScene).gameData?.selectedChampionId || (this.scene as BattleScene).gameData?.activeSkillTree?.championId || "apollo_diana";
+          const key = ChampionUtils.getChampionSpriteKey(championId, (this.scene as BattleScene).gameData.gender);
+          if (this.scene.textures.exists(key)) {
+            item = this.scene.add.sprite(0, 0, key);
+            item.setScale(0.6);
+          } else {
+
+            item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems" : "items", this.modifierTypeOption.type.iconImage);
+          }
+        } catch {
+          item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems" : "items", this.modifierTypeOption.type.iconImage);
+        }
+        if (item.postFX && typeof item.postFX.addColorMatrix === 'function') {
+          const colorMatrix = item.postFX.addColorMatrix();
+          colorMatrix.negative();
+        }
+      } else if (this.modifierTypeOption.type?.group === "teraAbility") {
+        item = this.scene.add.sprite(0, 0, "items", "stellar_tera_shard");
+        if (item.postFX && typeof item.postFX.addColorMatrix === 'function') {
+          const colorMatrix = item.postFX.addColorMatrix();
+          colorMatrix.negative();
+        }
+      } else {
+
+        const useItemsAtlas = !this.useSmitemsAtlas();
+        const isChampionGroup = this.modifierTypeOption.type?.group === "champion";
+        const atlasKey = useItemsAtlas ? "items" : "smitems";
+        const frame = isChampionGroup ? "protein" : this.modifierTypeOption.type.iconImage;
+        item = this.scene.add.sprite(0, 0, atlasKey, frame);
+        if (!useItemsAtlas) {
+          item.setScale(!this.modifierTypeOption.cost ? 0.4: 0.35);
+        } else if (this.modifierTypeOption.cost) {
           item.setScale(.5);
         }
       }
@@ -2279,11 +2386,20 @@ export class ModifierOption extends Phaser.GameObjects.Container {
   }
 
   show(remainingDuration: integer, upgradeCountOffset: integer) {
+    const battleScene = this.scene as BattleScene;
+    const isPathContext = battleScene.pathNodeContext !== null || battleScene.skillTreeModifierContext;
+    const pathSpeedMultiplier = isPathContext ? 0.833 : 1.0;
+
+    const getPathAdjustedDuration = (duration: integer): integer => {
+      const adjustedDuration = Math.floor(duration * pathSpeedMultiplier);
+      return Utils.rewardSpeedHandler(adjustedDuration, battleScene.lockedRewardSpeed) as unknown as integer;
+    };
+
     if (!this.modifierTypeOption.cost) {
       this.scene.tweens.add({
         targets: this.pb,
         y: 0,
-        duration: Utils.rewardSpeedHandler(1250, this.scene.lockedRewardSpeed),
+        duration: getPathAdjustedDuration(1250),
         ease: "Bounce.Out"
       });
 
@@ -2294,7 +2410,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
       this.scene.tweens.addCounter({
         from: 1,
         to: 0,
-        duration: Utils.rewardSpeedHandler(1250, this.scene.lockedRewardSpeed),
+        duration: getPathAdjustedDuration(1250),
         ease: "Bounce.Out",
         onUpdate: t => {
           if (!this.scene) {
@@ -2302,7 +2418,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
           }
           const value = t.getValue();
           if (!bounce && value > lastValue) {
-            (this.scene as BattleScene).playSound("se/pb_bounce_1", { volume: 1 / ++bounceCount });
+            battleScene.playSound("se/pb_bounce_1", { volume: 1 / ++bounceCount });
             bounce = true;
           } else if (bounce && value < lastValue) {
             bounce = false;
@@ -2311,49 +2427,59 @@ export class ModifierOption extends Phaser.GameObjects.Container {
         }
       });
 
-      for (let u = 0; u < this.modifierTypeOption.upgradeCount; u++) {
-        const upgradeIndex = u;
-        this.scene.time.delayedCall(Utils.rewardSpeedHandler((remainingDuration - 2000 * (this.modifierTypeOption.upgradeCount - (upgradeIndex + 1 + upgradeCountOffset))), this.scene.lockedRewardSpeed), () => {
-          (this.scene as BattleScene).playSound("se/upgrade", { rate: 1 + 0.25 * upgradeIndex });
-          this.pbTint.setPosition(this.pb.x, this.pb.y);
-          this.pbTint.setTintFill(0xFFFFFF);
-          this.pbTint.setAlpha(0);
-          this.pbTint.setVisible(true);
-          this.scene.tweens.add({
-            targets: this.pbTint,
-            alpha: 1,
-            duration: Utils.rewardSpeedHandler(1000, this.scene.lockedRewardSpeed),
-            ease: "Sine.easeIn",
-            onComplete: () => {
-              this.pb.setTexture("pb", this.getPbAtlasKey(-this.modifierTypeOption.upgradeCount + (upgradeIndex + 1)));
-              this.scene.tweens.add({
-                targets: this.pbTint,
-                alpha: 0,
-                duration: Utils.rewardSpeedHandler(750, this.scene.lockedRewardSpeed),
-                ease: "Sine.easeOut",
-                onComplete: () => {
-                  this.pbTint.setVisible(false);
-                }
-              });
-            }
+      if (!isPathContext) {
+        for (let u = 0; u < this.modifierTypeOption.upgradeCount; u++) {
+          const upgradeIndex = u;
+          this.scene.time.delayedCall(Utils.rewardSpeedHandler((remainingDuration - 2000 * (this.modifierTypeOption.upgradeCount - (upgradeIndex + 1 + upgradeCountOffset))), battleScene.lockedRewardSpeed), () => {
+            battleScene.playSound("se/upgrade", { rate: 1 + 0.25 * upgradeIndex });
+            this.pbTint.setPosition(this.pb.x, this.pb.y);
+            this.pbTint.setTintFill(0xFFFFFF);
+            this.pbTint.setAlpha(0);
+            this.pbTint.setVisible(true);
+            this.scene.tweens.add({
+              targets: this.pbTint,
+              alpha: 1,
+              duration: Utils.rewardSpeedHandler(1000, battleScene.lockedRewardSpeed),
+              ease: "Sine.easeIn",
+              onComplete: () => {
+                this.pb.setTexture("pb", this.getPbAtlasKey(-this.modifierTypeOption.upgradeCount + (upgradeIndex + 1)));
+                this.scene.tweens.add({
+                  targets: this.pbTint,
+                  alpha: 0,
+                  duration: Utils.rewardSpeedHandler(750, battleScene.lockedRewardSpeed),
+                  ease: "Sine.easeOut",
+                  onComplete: () => {
+                    this.pbTint.setVisible(false);
+                  }
+                });
+              }
+            });
           });
-        });
+        }
+      } else {
+        if (this.modifierTypeOption.upgradeCount > 0) {
+          this.pb.setTexture("pb", this.getPbAtlasKey(0));
+        }
       }
     }
 
-    this.scene.time.delayedCall(Utils.rewardSpeedHandler((remainingDuration + 2000), this.scene.lockedRewardSpeed), () => {
+    const revealDelay = isPathContext
+      ? getPathAdjustedDuration(remainingDuration + 1500)
+      : Utils.rewardSpeedHandler((remainingDuration + 2000), battleScene.lockedRewardSpeed);
+
+    this.scene.time.delayedCall(revealDelay, () => {
       if (!this.scene) {
         return;
       }
 
       if (!this.modifierTypeOption.cost) {
         this.pb.setTexture("pb", `${this.getPbAtlasKey(0)}_open`);
-        (this.scene as BattleScene).playSound("se/pb_rel");
+        battleScene.playSound("se/pb_rel");
 
         this.scene.tweens.add({
           targets: this.pb,
-          duration: Utils.rewardSpeedHandler(500, this.scene.lockedRewardSpeed),
-          delay: Utils.rewardSpeedHandler(250, this.scene.lockedRewardSpeed),
+          duration: getPathAdjustedDuration(500),
+          delay: getPathAdjustedDuration(250),
           ease: "Sine.easeIn",
           alpha: 0,
           onComplete: () => this.pb.destroy()
@@ -2362,7 +2488,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
 
       this.scene.tweens.add({
         targets: this.itemContainer,
-        duration: Utils.rewardSpeedHandler(500, this.scene.lockedRewardSpeed),
+        duration: getPathAdjustedDuration(500),
         ease: "Elastic.Out",
         scale: 2,
         alpha: 1
@@ -2371,14 +2497,14 @@ export class ModifierOption extends Phaser.GameObjects.Container {
         this.scene.tweens.add({
           targets: this.itemTint,
           alpha: 0,
-          duration: Utils.rewardSpeedHandler(500, this.scene.lockedRewardSpeed),
+          duration: getPathAdjustedDuration(500),
           ease: "Sine.easeIn",
           onComplete: () => this.itemTint.destroy()
         });
       }
       this.scene.tweens.add({
         targets: this.itemText,
-        duration: Utils.rewardSpeedHandler(500, this.scene.lockedRewardSpeed),
+        duration: getPathAdjustedDuration(500),
         alpha: 1,
         y: 25,
         ease: "Cubic.easeInOut"
@@ -2386,13 +2512,13 @@ export class ModifierOption extends Phaser.GameObjects.Container {
       if (this.itemCostText) {
         this.scene.tweens.add({
           targets: this.itemCostText,
-          duration: Utils.rewardSpeedHandler(500, this.scene.lockedRewardSpeed),
+          duration: getPathAdjustedDuration(500),
           alpha: 1,
           y: this.getItemCostTextY(),
           ease: "Cubic.easeInOut"
         });
       }
-      
+
       this.additionalDisplayTweens();
     });
   }
@@ -2428,22 +2554,19 @@ export class CollectedTypeModifierOption extends ModifierOption {
     updateCostText(): void {
         if (this.showCost && this.itemCostText) {
             const cost = this.modifierTypeOption.cost || 0;
-            
+
             if (this.itemCostText) {
                 this.itemCostText.destroy();
             }
-            
+
             const costContainer = this.scene.add.container(0, 50);
-            
-            const costIcon = this.scene.add.sprite(-10, 0, "smitems_192", "modSoulCollected");
-            costIcon.setScale(0.0525);
-            
+
+            const costIcon = this.scene.add.sprite(-10, 0, "smitems", "modSoulCollected");
             const costText = addTextObject(this.scene, 10, 0, cost.toString(), TextStyle.MONEY);
             costText.setOrigin(0, 0.5);
-            
+
             costContainer.add([costIcon, costText]);
             this.add(costContainer);
         }
     }
 }
-

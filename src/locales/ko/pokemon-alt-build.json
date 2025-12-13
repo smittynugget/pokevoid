@@ -1,0 +1,295 @@
+{
+  "onix_crystal_leviathan": {
+    "name": "크리스탈 리바이어던",
+    "description": "높은 HP와 특수 방어를 가진 방어형 얼음/바위 롱스톤 빌드"
+  },
+  "onix_stone_defender": {
+    "name": "돌 방어자",
+    "description": "탱크 중심 방어형 롱스톤 빌드"
+  },
+  "geodude_tank_mode": {
+    "name": "탱크 모드",
+    "description": "초방어형 꼬마돌 빌드"
+  },
+  "geodude_speed_form": {
+    "name": "스피드 폼",
+    "description": "고속 전기형 꼬마돌 빌드"
+  },
+  "rhyhorn_rampage": {
+    "name": "폭주",
+    "description": "공격적인 격투형 뿔카노 빌드"
+  },
+  "onix_brock_signature": {
+    "name": "웅의 파트너",
+    "description": "웅의 믿음직한 시그니처 바위 타입 동료"
+  },
+  "geodude_brock_signature": {
+    "name": "웅의 파트너",
+    "description": "웅의 충실한 시그니처 바위 타입 동료"
+  },
+  "staryu_misty_signature": {
+    "name": "이슬의 파트너",
+    "description": "이슬의 우아한 시그니처 물 타입 동료"
+  },
+  "psyduck_misty_signature": {
+    "name": "이슬의 파트너",
+    "description": "이슬의 독특한 시그니처 물 타입 동료"
+  },
+  "voltorb_surge_signature": {
+    "name": "마티스의 파트너",
+    "description": "마티스의 전기적인 시그니처 전기 타입 동료"
+  },
+  "pikachu_surge_signature": {
+    "name": "마티스의 파트너",
+    "description": "마티스의 강력한 시그니처 전기 타입 동료"
+  },
+  "electabuzz_surge_signature": {
+    "name": "마티스의 파트너",
+    "description": "마티스의 충격적인 시그니처 전기 타입 동료"
+  },
+  "magikarp_misty_signature": {
+    "name": "이슬의 파트너",
+    "description": "이슬의 결연한 시그니처 물 타입 동료"
+  },
+  "poliwag_misty_signature": {
+    "name": "이슬의 파트너",
+    "description": "이슬의 활기찬 시그니처 물 타입 동료"
+  },
+  "azurill_misty_signature": {
+    "name": "이슬의 파트너",
+    "description": "이슬의 사랑스러운 시그니처 물 타입 동료"
+  },
+  "goldeen_misty_signature": {
+    "name": "이슬의 파트너",
+    "description": "이슬의 우아한 시그니처 물 타입 동료"
+  },
+  "horsea_misty_signature": {
+    "name": "이슬의 파트너",
+    "description": "이슬의 충성스러운 시그니처 물 타입 동료"
+  },
+  "togepi_misty_signature": {
+    "name": "이슬의 파트너",
+    "description": "이슬의 소중한 시그니처 페어리 타입 동료"
+  },
+  "corsola_misty_signature": {
+    "name": "이슬의 파트너",
+    "description": "이슬의 쾌활한 시그니처 물 타입 동료"
+  },
+  "luvdisc_misty_signature": {
+    "name": "이슬의 파트너",
+    "description": "이슬의 진심 어린 시그니처 물 타입 동료"
+  },
+  "clauncher_misty_signature": {
+    "name": "이슬의 파트너",
+    "description": "이슬의 강력한 시그니처 물 타입 동료"
+  },
+  "staryu_chronos_gear": {
+    "name": "크로노스 기어",
+    "description": "시간 에너지가 주입된 강철/물 별가사리, 방어적 정밀함과 비에 축복받은 회복력을 지님"
+  },
+  "magikarp_splash_tyrant": {
+    "name": "물튀김 폭군",
+    "description": "약점을 초월한 물/격투 잉어킹, 싸움꾼의 결의와 위협적인 힘을 구현"
+  },
+  "psyduck_kappa_quack": {
+    "name": "갓파 꽥",
+    "description": "신비로운 장난을 부리는 물/고스트 고라파덕, 그림자 속박 능력과 영적인 혼란을 지님"
+  },
+  "poliwag_lightning_drum": {
+    "name": "번개 드럼",
+    "description": "갈바닉 에너지로 맥동하는 전기/물 발챙이, 빠른 흐름과 재생 활력을 지님"
+  },
+  "azurill_bounce_champion": {
+    "name": "바운스 챔피언",
+    "description": "에어리레이트 우아함으로 날아오르는 비행/페어리 루리리, 픽시레이트 힘과 챔피언급 점프력을 지님"
+  },
+  "goldeen_piercing_stinger": {
+    "name": "관통 침",
+    "description": "관통 공격과 테크니션 정밀함, 저격수 정확도를 갖춘 물/벌레 콘치"
+  },
+  "horsea_fireball_seahorse": {
+    "name": "파이어볼 해마",
+    "description": "플래시 파이어 강렬함과 가뭄을 가져오는 열기, 불타는 결의를 지닌 불/물 쏘드라"
+  },
+  "togepi_eggshell_fortress": {
+    "name": "달걀껍질 요새",
+    "description": "청아한 은총과 솔리드 록 방어, 전투로 단련된 갑옷을 지닌 노말/바위 토게피"
+  },
+  "corsola_toxic_coral": {
+    "name": "독성 산호",
+    "description": "포이즌 힐과 무자비한 타격, 독성 파편 보호로 번성하는 독/물 코산호"
+  },
+  "luvdisc_heartbreaker": {
+    "name": "하트브레이커",
+    "description": "다크 오라와 프랭크스터 속임수, 스위프트 스윔 회피로 가슴 아픔을 주는 악/물 사랑동이"
+  },
+  "clauncher_buster_dragon_blaster": {
+    "name": "버스터 드래곤 블래스터",
+    "description": "드래곤즈 마우 맹렬함과 메가 런처 사거리, 시어 포스 파괴력으로 무장한 물/드래곤 완철포"
+  },
+  "vulpix_brock_signature": {
+    "name": "웅의 파트너",
+    "description": "웅의 신비로운 시그니처 불 타입 동료"
+  },
+  "zubat_brock_signature": {
+    "name": "웅의 파트너",
+    "description": "웅의 민첩한 시그니처 독 타입 동료"
+  },
+  "bonsly_brock_signature": {
+    "name": "웅의 파트너",
+    "description": "웅의 회복력 있는 시그니처 바위 타입 동료"
+  },
+  "mudkip_brock_signature": {
+    "name": "웅의 파트너",
+    "description": "웅의 튼튼한 시그니처 물 타입 동료"
+  },
+  "pineco_brock_signature": {
+    "name": "웅의 파트너",
+    "description": "웅의 방어적인 시그니처 벌레 타입 동료"
+  },
+  "croagunk_brock_signature": {
+    "name": "웅의 파트너",
+    "description": "웅의 교활한 시그니처 독 타입 동료"
+  },
+  "happiny_brock_signature": {
+    "name": "웅의 파트너",
+    "description": "웅의 자상한 시그니처 노말 타입 동료"
+  },
+  "lotad_brock_signature": {
+    "name": "웅의 파트너",
+    "description": "웅의 평온한 시그니처 물 타입 동료"
+  },
+  "comfey_brock_signature": {
+    "name": "웅의 파트너",
+    "description": "웅의 부드러운 시그니처 페어리 타입 동료"
+  },
+  "geodude_phantom_fist": {
+    "name": "팬텀 피스트",
+    "description": "유령의 섀도 태그와 터프 클로, 아이언 피스트 기술을 부유하는 우아함으로 휘두르는 바위/고스트 꼬마돌"
+  },
+  "vulpix_flaming_forest_spirit": {
+    "name": "불타는 숲의 정령",
+    "description": "가뭄을 부르는 불꽃과 그래스 펠트 보호, 클로로필 활력으로 숲의 정령을 구현하는 불/풀 식스테일"
+  },
+  "zubat_vampiric_fiend": {
+    "name": "뱀파이어 악귀",
+    "description": "뱀파이어의 목시와 커스드 바디 공포, 스트롱 죠 맹렬함을 채널링하는 악/고스트 주뱃"
+  },
+  "bonsly_tear_drop": {
+    "name": "눈물방울",
+    "description": "스킬 링크 정밀함과 워터 컴팩션 회복력, 재생의 눈물로 흐르는 바위/물 꼬지지"
+  },
+  "mudkip_stone_skinned_salamander": {
+    "name": "돌피부 도롱뇽",
+    "description": "돌피부 방어와 필터 보호, 급류 힘으로 갑옷을 두른 물/바위 물짱이"
+  },
+  "pineco_iron_plated_grenade": {
+    "name": "철갑 수류탄",
+    "description": "애프터매스 폭발과 플레임 바디 강렬함, 아이언 바브 보복으로 폭발하는 불/강철 피콘"
+  },
+  "croagunk_jester_of_pestilence": {
+    "name": "역병의 광대",
+    "description": "픽시레이트 부식과 중화 가스, 파멸의 비석 혼돈을 퍼뜨리는 독/페어리 삐딱구리"
+  },
+  "happiny_pink_fortress": {
+    "name": "핑크 요새",
+    "description": "프렌드 가드 지원과 힐러 자비, 자연 치유 회복으로 요새화된 노말/페어리 핑복"
+  },
+  "lotad_shadow_lily": {
+    "name": "그림자 연꽃",
+    "description": "레인 디시 유지와 섀도 태그 속박, 저수 회복력으로 떠다니는 물/고스트 연꽃몬"
+  },
+  "comfey_aqua_bloom": {
+    "name": "아쿠아 블룸",
+    "description": "드리즐 양육과 워터 버블 보호, 씨앗 뿌리기 활력으로 꽃피는 풀/물 큐아링"
+  },
+  "riolu_apollo_diana_signature": {
+    "name": "아폴로 & 디아나의 파트너",
+    "description": "아폴로 & 디아나의 용감한 시그니처 격투 타입 동료"
+  },
+  "solrock_apollo_diana_signature": {
+    "name": "아폴로 & 디아나의 파트너",
+    "description": "아폴로 & 디아나의 빛나는 시그니처 바위 타입 동료"
+  },
+  "lunatone_apollo_diana_signature": {
+    "name": "아폴로 & 디아나의 파트너",
+    "description": "아폴로 & 디아나의 신비로운 시그니처 바위 타입 동료"
+  },
+  "larvesta_apollo_diana_signature": {
+    "name": "아폴로 & 디아나의 파트너",
+    "description": "아폴로 & 디아나의 불타는 시그니처 벌레 타입 동료"
+  },
+  "swablu_apollo_diana_signature": {
+    "name": "아폴로 & 디아나의 파트너",
+    "description": "아폴로 & 디아나의 푹신한 시그니처 노말 타입 동료"
+  },
+  "castform_apollo_diana_signature": {
+    "name": "아폴로 & 디아나의 파트너",
+    "description": "아폴로 & 디아나의 적응력 있는 시그니처 노말 타입 동료"
+  },
+  "litwick_apollo_diana_signature": {
+    "name": "아폴로 & 디아나의 파트너",
+    "description": "아폴로 & 디아나의 깜빡이는 시그니처 고스트 타입 동료"
+  },
+  "eevee_apollo_diana_signature": {
+    "name": "아폴로 & 디아나의 파트너",
+    "description": "아폴로 & 디아나의 다재다능한 시그니처 노말 타입 동료"
+  },
+  "teddiursa_apollo_diana_signature": {
+    "name": "아폴로 & 디아나의 파트너",
+    "description": "아폴로 & 디아나의 귀여운 시그니처 노말 타입 동료"
+  },
+  "cleffa_apollo_diana_signature": {
+    "name": "아폴로 & 디아나의 파트너",
+    "description": "아폴로 & 디아나의 별빛 시그니처 페어리 타입 동료"
+  },
+  "sunkern_apollo_diana_signature": {
+    "name": "아폴로 & 디아나의 파트너",
+    "description": "아폴로 & 디아나의 희망찬 시그니처 풀 타입 동료"
+  },
+  "riolu_shadow_warrior": {
+    "name": "그림자 전사",
+    "description": "목시 공격성과 적응력, 위협적인 존재감으로 그림자 전투를 마스터한 고스트/격투 리오루"
+  },
+  "solrock_void_constellation": {
+    "name": "공허의 별자리",
+    "description": "솔라 파워 강렬함과 부유 우아함, 다크 오라 지배력으로 공허 에너지를 발산하는 바위/악 솔록"
+  },
+  "lunatone_dream_weaver": {
+    "name": "꿈의 직조자",
+    "description": "부유 신비와 변덕 기질, 매직 가드 보호로 꿈을 엮는 바위/에스퍼 루나톤"
+  },
+  "larvesta_toxic_spinner": {
+    "name": "독성 회전자",
+    "description": "독 사슬 고통과 까칠한 피부 방어, 부식 마스터리로 독 그물을 치는 벌레/독 활화르바"
+  },
+  "swablu_frost_nimbus": {
+    "name": "서리 적운",
+    "description": "푹신함 방어와 냉동건조 힘, 눈 경보 지배력으로 서리 낀 구름 위를 떠다니는 얼음/비행 파비코"
+  },
+  "castform_dust_devil": {
+    "name": "먼지 악마",
+    "description": "모래바람 혼돈과 스톰 드레인 흡수, 까칠한 피부 투지로 먼지 악마처럼 소용돌이치는 바위/땅 캐스퐁"
+  },
+  "litwick_wyrmflame": {
+    "name": "웜플레임",
+    "description": "웜플레임 분노와 드래곤즈 마우 맹렬함, 플래시 파이어 강렬함, 부유 신비로 불타는 불/드래곤 불켜미"
+  },
+  "eevee_untamed_spirit": {
+    "name": "길들여지지 않은 영혼",
+    "description": "슈퍼 럭 행운과 청아한 은총, 프리즘 아머 보호로 길들여지지 않은 잠재력을 구현하는 노말/노말 이브이"
+  },
+  "teddiursa_sweet_tooth": {
+    "name": "단것 좋아",
+    "description": "순수한 힘의 강함과 미스트 필드 마법, 수확 풍요로 꿀처럼 달콤한 힘에 탐닉하는 페어리/페어리 깜지곰"
+  },
+  "cleffa_meteoric_core": {
+    "name": "유성의 핵",
+    "description": "플레임 바디 열기와 매직 가드 보호, 솔리드 록 회복력으로 유성의 본질에서 단련된 페어리/강철 삐"
+  },
+  "sunkern_plasma_sprout": {
+    "name": "플라즈마 새싹",
+    "description": "갈바나이즈 변환과 솔라 파워 강렬함, 일렉트릭 필드 지배력으로 플라즈마 에너지가 튀기는 전기/풀 해너츠"
+  },
+  "championPartner": "{{champion}}의 파트너"
+}

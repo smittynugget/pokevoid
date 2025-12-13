@@ -3,6 +3,8 @@ import { ModifierPoolType, getPlayerModifierTypeOptions, ModifierTypeOption, Pat
 import { ModifierTier } from "../modifier/modifier-tier";
 import BattleScene from "../battle-scene";
 import { CollectedTypeModifier } from "../modifier/modifier";
+import { Type } from "../data/type";
+import { SkillPointSources } from "../system/skill-point-sources";
 import { Mode } from "../ui/ui";
 import { CollectedTypeShopUiHandler } from "../ui/collected-type-shop-ui-handler";
 import { PartyUiMode } from "../ui/party-ui-handler";
@@ -13,12 +15,12 @@ import { BattlePhase } from "./battle-phase";
 import * as Utils from "../utils";
 import { Modifier } from "../modifier/modifier";
 import Overrides from "#app/overrides";
-import { 
-    PokemonModifierType, 
-    PokemonMoveModifierType, 
-    TmModifierType, 
-    RememberMoveModifierType, 
-    PokemonPpRestoreModifierType, 
+import {
+    PokemonModifierType,
+    PokemonMoveModifierType,
+    TmModifierType,
+    RememberMoveModifierType,
+    PokemonPpRestoreModifierType,
     PokemonPpUpModifierType,
     FusePokemonModifierType,
     StatSacrificeModifierType,
@@ -32,7 +34,7 @@ import { PartyOption } from "../ui/party-ui-handler";
 import { PermaType } from "#app/modifier/perma-modifiers.js";
 
 export class CollectedTypeShopPhase extends SelectModifierPhase {
-    
+
     constructor(scene: BattleScene, rerollCount: integer = 0, modifierTiers?: ModifierTier[], draftOnly: boolean = false, onEndCallback?: () => void, pathNodeFilter: PathNodeTypeFilter = PathNodeTypeFilter.NONE, permaRerollCount: integer = 0) {
         super(scene, rerollCount, modifierTiers, draftOnly, onEndCallback, pathNodeFilter, permaRerollCount);
     }
@@ -50,7 +52,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
 
     start() {
         BattlePhase.prototype.start.call(this);
-        
+
         if (!this.rerollCount && !this.permaRerollCount) {
             this.updateSeed();
         } else {
@@ -63,14 +65,14 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
         if(this.getPoolType() !== null) {
             regenerateModifierPoolThresholds(party, this.getPoolType(), Math.max(this.rerollCount, this.permaRerollCount));
         }
-        
+
         const typeOptions: ModifierTypeOption[] = this.getModifierTypeOptions(8);
 
         const modifierSelectCallback = this.getCollectedTypeShopCallback(typeOptions, party);
         const costs = this.getRerollCost(typeOptions, this.scene.lockModifierTiers);
-        
+
         this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, costs, this.draftOnly);
-        
+
         setTimeout(() => {
             this.updateCollectedTypeUI();
         }, 100);
@@ -88,14 +90,14 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                 });
                 return false;
             }
-            
+
             let modifierType: ModifierType | undefined;
             let cost: integer | undefined;
-            
+
             switch (rowCursor) {
                 case 0:
                     return this.handleButtonAction(cursor, typeOptions, this.getCollectedTypeShopCallback(typeOptions, party), party);
-            
+
                 case 1:
                     if (cursor < typeOptions.length && typeOptions[cursor]) {
                         modifierType = typeOptions[cursor].type;
@@ -124,33 +126,33 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                     this.scene.ui.playError();
                     return false;
                 }
-                
+
                 const result = this.scene.addModifier(modifier, false, playSound);
-                
+
                 const handleSuccess = () => {
                     if (cost) {
                         this.handlePurchase(cost);
                     }
-                    
+
                     const updatedTypeOptions = typeOptions.filter((_, index) => index !== cursor);
-                    
+
                     if (updatedTypeOptions.length === 0) {
                         this.scene.ui.clearText();
                         this.scene.ui.setMode(Mode.MESSAGE);
                         this.end();
                         return;
                     }
-                    
+
                     this.scene.ui.clearText();
                     this.scene.ui.setMode(Mode.MESSAGE);
-                    
+
                     this['currentTypeOptions'] = updatedTypeOptions;
                     setTimeout(() => {
                         this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), updatedTypeOptions, this.getCollectedTypeShopCallback(updatedTypeOptions, party), this.getRerollCost(updatedTypeOptions, this.scene.lockModifierTiers), this.draftOnly);
                         this.updateCollectedTypeUI();
                     }, 100);
                 };
-                
+
                 if (result instanceof Promise) {
                             handleSuccess();
                 } else {
@@ -178,7 +180,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                         }
                     }, modifierType.selectFilter);
                 }
-                
+
                 else if (modifierType instanceof StatSacrificeModifierType || modifierType instanceof TypeSacrificeModifierType || modifierType instanceof AbilitySacrificeModifierType || modifierType instanceof PassiveAbilitySacrificeModifierType || modifierType instanceof MoveSacrificeModifierType) {
                     this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.SACRIFICE, -1, (fromSlotIndex: integer, targetSlotIndex: integer) => {
                         if (targetSlotIndex !== undefined && fromSlotIndex < 6 && targetSlotIndex < 6 && fromSlotIndex !== targetSlotIndex) {
@@ -220,7 +222,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                                 } else {
                                     modifier = modifierType.newModifier(party[slotIndex], option - PartyOption.MOVE_1);
                                 }
-                                
+
                                 if (modifier) {
                                     return applyModifier(modifier, true);
                                 } else {
@@ -235,7 +237,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                     }, pokemonModifierType.selectFilter, modifierType instanceof PokemonMoveModifierType ? (modifierType as PokemonMoveModifierType).moveSelectFilter : undefined, tmMoveId, isPpRestoreModifier);
                 }
             }
-            
+
             else if (modifierType instanceof AddPokemonModifierType) {
                 if (this.scene.getParty().length == 6) {
                     const promptRelease = () => {
@@ -286,14 +288,14 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                     return false;
                 }
             }
-            
+
             return false;
         };
     }
 
     getModifierTypeOptions(modifierCount: integer = 8): ModifierTypeOption[] {
         const options = getPlayerModifierTypeOptions(8, this.scene.getParty(), undefined, false, PathNodeTypeFilter.NONE, ModifierPoolType.COLLECTOR);
-        
+
         return options.map(option => {
             const tier = option.type.tier || ModifierTier.COMMON;
             const cost = this.calculateCollectedTypeCost(tier);
@@ -303,60 +305,65 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
 
     private calculateCollectedTypeCost(tier: ModifierTier): number {
         const baseCosts = {
-            [ModifierTier.COMMON]: 7,
-            [ModifierTier.GREAT]: 15,
-            [ModifierTier.ULTRA]: 25,
-            [ModifierTier.ROGUE]: 50,
-            [ModifierTier.MASTER]: 100,
+            [ModifierTier.COMMON]: 2,
+            [ModifierTier.GREAT]: 4,
+            [ModifierTier.ULTRA]: 6,
+            [ModifierTier.ROGUE]: 10,
+            [ModifierTier.MASTER]: 25,
         };
-        return baseCosts[tier] || 15;
+        return baseCosts[tier] || 8;
     }
 
     private getTotalCollectedTypes(): number {
         const party = this.scene.getParty();
         let total = 0;
-        
+
         for (const pokemon of party) {
-            const modifiers = this.scene.findModifiers(m => 
+            const modifiers = this.scene.findModifiers(m =>
                 m instanceof CollectedTypeModifier && m.pokemonId === pokemon.id
             ) as CollectedTypeModifier[];
-            
+
             for (const modifier of modifiers) {
                 total += Object.values(modifier.collectedTypes).reduce((sum, count) => sum + count, 0);
             }
         }
-        
+
         return total;
     }
 
-    private deductCollectedTypes(amount: number): boolean {
+    private deductCollectedTypes(amount: number): Map<Type, number> | null {
         const party = this.scene.getParty();
         let remaining = amount;
-        
+        const deducted = new Map<Type, number>();
+
         for (const pokemon of party) {
             if (remaining <= 0) break;
-            
-            const modifiers = this.scene.findModifiers(m => 
+
+            const modifiers = this.scene.findModifiers(m =>
                 m instanceof CollectedTypeModifier && m.pokemonId === pokemon.id
             ) as CollectedTypeModifier[];
-            
+
             for (const modifier of modifiers) {
                 if (remaining <= 0) break;
-                
+
                 if (modifier.hasEnoughCollected(remaining)) {
                     if (modifier.reduceCollected(remaining)) {
+                        const current = deducted.get(modifier.type) || 0;
+                        deducted.set(modifier.type, current + remaining);
                         remaining = 0;
                     }
                 } else {
                     const available = Object.values(modifier.collectedTypes).reduce((sum, count) => sum + count, 0);
                     if (available > 0 && modifier.reduceCollected(available)) {
+                        const current = deducted.get(modifier.type) || 0;
+                        deducted.set(modifier.type, current + available);
                         remaining -= available;
                     }
                 }
             }
         }
-        
-        return remaining === 0;
+
+        return remaining === 0 ? deducted : null;
     }
 
     protected canAffordCost(cost: number): boolean {
@@ -364,9 +371,15 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
     }
 
     protected handlePurchase(cost: number): void {
-        if (this.deductCollectedTypes(cost)) {
+        const deductedTypes = this.deductCollectedTypes(cost);
+        if (deductedTypes) {
             this.scene.playSound("se/buy");
-            
+
+            const skillPointSources = new SkillPointSources(this.scene);
+            for (const [type, amount] of deductedTypes.entries()) {
+                skillPointSources.checkCollectorTradeReward(type, amount);
+            }
+
             this.updateCollectedTypeUI();
         }
     }
@@ -374,25 +387,25 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
     protected handleButtonAction(cursor: integer, typeOptions: ModifierTypeOption[], modifierSelectCallback: Function, party: any[]): boolean {
         const uiHandler = this.scene.ui.getHandler() as CollectedTypeShopUiHandler;
         const buttonLayout = uiHandler.getButtonLayout();
-        
+
         if (cursor >= buttonLayout.length) {
             this.scene.ui.playError();
             return false;
         }
-        
+
         const buttonInfo = buttonLayout[cursor];
-        
+
         switch (buttonInfo.descKey) {
             case "modifierSelectUiHandler:rerollDesc":
                 const rerollCosts = this.getRerollCost(typeOptions, this.scene.lockModifierTiers);
                     this.scene.reroll = true;
-                    
+
                     this.scene.gameData.gameStats.reroll++;
-                    
+
                      if(Utils.randSeedInt(100) <= 50) {
                         this.scene.gameData.reducePermaModifierByType([PermaType.PERMA_REROLL_COST_1, PermaType.PERMA_REROLL_COST_2, PermaType.PERMA_REROLL_COST_3], this.scene);
                      }
-                    
+
                     this.scene.unshiftPhase(new CollectedTypeShopPhase(this.scene, this.rerollCount + 1, typeOptions.map(o => o.type?.tier).filter(t => t !== undefined) as ModifierTier[], this.draftOnly, undefined, this.pathNodeFilter, this.permaRerollCount));
                     this.scene.ui.clearText();
                     this.scene.ui.setMode(Mode.MESSAGE).then(() => this.end());
@@ -408,7 +421,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                     }
                     this.scene.playSound("se/buy");
                 break;
-                
+
             case "modifierSelectUiHandler:permaRerollDesc":
                 const permaRerollCosts = this.getRerollCost(typeOptions, this.scene.lockModifierTiers);
                 const permaRerollCost = permaRerollCosts.permaRerollCost;
@@ -418,7 +431,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                 } else {
                     this.scene.reroll = true;
                     this.scene.gameData.gameStats.permaReroll++;
-                    
+
                     this.scene.unshiftPhase(new CollectedTypeShopPhase(this.scene, this.rerollCount, typeOptions.map(o => o.type?.tier).filter(t => t !== undefined) as ModifierTier[], this.draftOnly, undefined, this.pathNodeFilter, this.permaRerollCount + 1));
                     this.scene.ui.clearText();
                     this.scene.ui.setMode(Mode.MESSAGE).then(() => this.end());
@@ -429,13 +442,13 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                     this.scene.playSound("se/buy");
                 }
                 break;
-                
+
             case "modifierSelectUiHandler:checkTeamDesc":
                 this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.CHECK, -1, () => {
                     this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly);
                 });
                 break;
-                
+
             case "modifierSelectUiHandler:lockRaritiesDesc":
                 this.scene.lockModifierTiers = !this.scene.lockModifierTiers;
                 const lockCosts = this.getRerollCost(typeOptions, this.scene.lockModifierTiers);
@@ -445,11 +458,11 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                 uiHandler.updateRerollCostText();
                 uiHandler.updatePermaRerollCostText();
                 return false;
-                
+
             default:
                 return super.handleButtonAction(cursor, typeOptions, modifierSelectCallback, party);
         }
-        
+
         return true;
     }
 
@@ -457,14 +470,14 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
         this.scene.resetSeed();
         SelectModifierPhase.clearShopOptionsCache();
     }
-    
+
     getPoolType(): ModifierPoolType {
         if (this.draftOnly) {
             return ModifierPoolType.DRAFT;
         }
         return ModifierPoolType.COLLECTOR;
     }
-    
+
     isPlayer(): boolean {
         return true;
     }
@@ -472,4 +485,4 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
     public getCurrentTypeOptions(): ModifierTypeOption[] {
         return this.getCurrentRewardOptions();
     }
-} 
+}

@@ -1,4 +1,6 @@
 {
+  "chaosTitle": "CHAOS",
+  "chaosSubtitle": "Choisissez votre chemin alors que vous vous aventurez au cœur des ténèbres",
   "viewTitle": "Carte du Chemin de Bataille",
   "selectTitle": "Sélectionner le Chemin de Bataille",
   "noPathMessage": "Aucun chemin de bataille disponible.\nGénérez-en un d'abord !",
@@ -22,8 +24,8 @@
     "smittyBattle": "Combat Smitty",
     "evilGruntBattle": "Sbire De L'équipe Maléfique",
     "evilAdminBattle": "Admin De L'équipe Maléfique",
-    "randPermaItem": "Objet ∞ Aléatoire",
-    "permaItems": "Récompenses Objet ∞",
+    "randPermaItem": "ΩObjet Aléatoire",
+    "permaItems": "Récompenses ΩObjet",
     "goldenPokeball": "Récompenses Pokéball Dorée",
     "rogueBallItems": "Récompenses Rogue Ball",
     "masterBallItems": "Récompenses Master Ball",
@@ -34,7 +36,7 @@
     "glitchPiece": "Récompense Morceau De Glitch",
     "dnaSplicers": "Récompense Épisseuses ADN",
     "money": "Récompense D'argent",
-    "permaMoney": "Bonus D'argent Permanent",
+    "permaMoney": "ΩOR",
     "releaseItems": "Récompenses De Libération",
     "mints": "Récompenses Menthe",
     "eggVoucher": "Récompense Bon D'œuf",
@@ -64,7 +66,9 @@
     "collectedShop": "Dépensez les Essences pour des récompenses",
     "vitamin": "Récompenses génériques de boosters de stats (Protéine, Fer, Calcium, etc.)",
     "moveUpgrade": "Améliorations de capacités pour les capacités Pokémon",
-    "lowTierMoveUpgrade": "Améliorations de capacités avec plafond niveau III"
+    "lowTierMoveUpgrade": "Améliorations de capacités avec plafond niveau III",
+    "skillPoints": "Points de Compétence pour débloquer des compétences dans l'Arbre de Compétences.",
+    "skillToken": "Les Jetons d'Arbre de Compétences augmentent le niveau de votre Arbre de Compétences !"
   },
   "names": {
     "wildPokemon": "Pokémon Sauvage",
@@ -84,8 +88,8 @@
     "smittyBattle": "Combat Smitty",
     "evilGruntBattle": "Sbire Maléfique",
     "evilAdminBattle": "Admin Maléfique",
-    "randPermaItem": "Objet ∞ Aléatoire",
-    "permaItems": "Récompenses Objet ∞",
+    "randPermaItem": "ΩObjet Aléatoire",
+    "permaItems": "Récompenses ΩObjet",
     "goldenPokeball": "Pokéball Dorée",
     "rogueBallItems": "Récompenses Rogue Ball",
     "masterBallItems": "Récompenses Master Ball",
@@ -96,7 +100,7 @@
     "glitchPiece": "Morceau De Glitch",
     "dnaSplicers": "Épisseuses ADN",
     "money": "Argent",
-    "permaMoney": "∞OR",
+    "permaMoney": "ΩOR",
     "releaseItems": "Récompenses De Libération",
     "mints": "Récompenses Menthe",
     "eggVoucher": "Bon D'Œuf",
@@ -126,7 +130,9 @@
     "collectedShop": "Le Collectionneur",
     "vitamin": "Vitamines Bon Marché",
     "moveUpgrade": "Améliorations de Capacités",
-    "lowTierMoveUpgrade": "Améliorations de Capacités de Bas Niveau"
+    "lowTierMoveUpgrade": "Améliorations de Capacités de Bas Niveau",
+    "skillPoints": "Points Compétence",
+    "skillToken": "Jeton d'Arbre"
   },
   "challenge": {
     "chaosChallenge": "Défi Chaos Actif",
@@ -238,5 +244,7 @@
       "name": "Nerf Pokémon",
       "description": "Le Pokémon le plus fort inflige la moitié des dégâts"
     }
-  }
+  },
+  "tooltipDetails": "DÉTAILS",
+  "tooltipBack": "Retour"
 } 

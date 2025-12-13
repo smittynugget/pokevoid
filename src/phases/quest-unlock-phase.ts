@@ -1,6 +1,7 @@
 import BattleScene from "#app/battle-scene.js";
 import { Phase } from "#app/phase.js";
-import { QuestUnlockables, getQuestUnlockableName, RewardType, QuestUnlockData } from "#app/system/game-data.js";
+import { QuestUnlockables, getQuestUnlockableName, QuestUnlockData } from "#app/system/game-data.js";
+import { RewardType } from "#enums/reward-type";
 import { Mode } from "#app/ui/ui.js";
 import i18next from "i18next";
 import { RewardObtainDisplayPhase } from "./reward-obtain-display-phase";
@@ -29,11 +30,11 @@ export class QuestUnlockPhase extends Phase {
                 {
                     type: RewardObtainedType.FORM,
                     name: isGlitchForm ? getPokemonSpecies(rewardId as Species)
-                        .getGlitchFormName(true).toLowerCase() : getPokemonSpecies(rewardId as Species)
+                        .getGlitchFormName(true, undefined, this.questUnlockData.rewardType).toLowerCase() : getPokemonSpecies(rewardId as Species)
                         .getSmittyFormName(true).toLowerCase(),
                     isGlitch: isGlitchForm,
                     isInitialQuestUnlock: this.isQuestInitialUnlock
-                } : 
+                } :
             {
                 type: RewardObtainedType.QUEST_UNLOCK,
                 name: this.isGlitchOrSmittyFormReward() ? i18next.t("questUi:bounty.quest.activeQuest.rewards.unlockForm", {

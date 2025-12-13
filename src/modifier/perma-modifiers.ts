@@ -1,4 +1,4 @@
-import {PermaModifier, PermaQuestModifier, PermaRunQuestModifier, PersistentModifier} from "#app/modifier/modifier";
+import {PermaModifier, PermaQuestModifier, PermaRunQuestModifier, PersistentModifier, PermaCollectedTypeModifier} from "#app/modifier/modifier";
 import BattleScene from "#app/battle-scene";
 import {QuestState, QuestUnlockables} from "#app/system/game-data";
 import * as Utils from "../utils";
@@ -92,7 +92,7 @@ export class PermaModifiers {
 
     addModifier(scene: BattleScene, _modifier: PersistentModifier): boolean {
         let modifier = _modifier;
-        if (modifier instanceof PermaRunQuestModifier || modifier instanceof PermaModifier) {
+        if (modifier instanceof PermaRunQuestModifier || modifier instanceof PermaModifier || modifier instanceof PermaCollectedTypeModifier) {
         if (modifier instanceof PermaRunQuestModifier) {
             const quest = modifier.questUnlockData;
 
@@ -148,8 +148,11 @@ export class PermaModifiers {
             }
         }
             const addedModifier = modifier.add(this.modifiers, false, scene);
-            
+
             scene.ui.updatePermaModifierBar(this);
+            if (modifier instanceof PermaCollectedTypeModifier) {
+                scene.ui.updatePermaCollectedTypeDisplay(scene);
+            }
             return addedModifier;
         }
     }

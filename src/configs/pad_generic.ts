@@ -1,6 +1,4 @@
-/**
- * Generic pad mapping
- */
+
 const pad_generic = {
   padID: "Generic",
   padType: "generic",

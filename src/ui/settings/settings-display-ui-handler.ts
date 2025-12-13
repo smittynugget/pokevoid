@@ -5,20 +5,10 @@ import AbstractSettingsUiHandler from "./abstract-settings-ui-handler";
 import { SettingKeys, SettingType } from "#app/system/settings/settings";
 
 export default class SettingsDisplayUiHandler extends AbstractSettingsUiHandler {
-  /**
-   * Creates an instance of SettingsGamepadUiHandler.
-   *
-   * @param scene - The BattleScene instance.
-   * @param mode - The UI mode, optional.
-   */
+
   constructor(scene: BattleScene, mode: Mode | null = null) {
     super(scene, SettingType.DISPLAY, mode);
     this.title = "Display";
-
-    /**
-     * Update to current language from default value.
-     * - default value is 'English'
-     */
     const languageIndex = this.settings.findIndex(s => s.key === SettingKeys.Language);
     if (languageIndex >= 0) {
       const currentLocale = localStorage.getItem("prLang");

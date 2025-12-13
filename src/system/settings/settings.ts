@@ -61,10 +61,6 @@ const AUTO_DISABLED: SettingOption[] = [
     label: i18next.t("settings:disabled")
   }
 ];
-
-/**
- * Types for helping separate settings to different menus
- */
 export enum SettingType {
   GENERAL,
   DISPLAY,
@@ -83,16 +79,11 @@ export interface Setting {
   default: number
   type: SettingType
   requireReload?: boolean
-  /** Whether the setting can be activated or not */
+
   activatable?: boolean
-  /** Determines whether the setting should be hidden from the UI */
+
   isHidden?: () => boolean
 }
-
-/**
- * Setting Keys for existing settings
- * to be used when trying to find or update Settings
- */
 export const SettingKeys = {
   Game_Speed: "GAME_SPEED",
   HP_Bar_Speed: "HP_BAR_SPEED",
@@ -106,8 +97,6 @@ export const SettingKeys = {
   Touch_Controls: "TOUCH_CONTROLS",
   Vibration: "VIBRATION",
   Language: "LANGUAGE",
-  UI_Theme: "UI_THEME",
-  Window_Type: "WINDOW_TYPE",
   Money_Format: "MONEY_FORMAT",
   Damage_Numbers: "DAMAGE_NUMBERS",
   Move_Animations: "MOVE_ANIMATIONS",
@@ -129,6 +118,7 @@ export const SettingKeys = {
   Field_Volume: "FIELD_VOLUME",
   SE_Volume: "SE_VOLUME",
   UI_Volume: "UI_SOUND_EFFECTS",
+  Skip_Faint_Cry: "SKIP_FAINT_CRY",
   Music_Preference: "MUSIC_PREFERENCE",
   Show_BGM_Bar: "SHOW_BGM_BAR",
   Move_Touch_Controls: "MOVE_TOUCH_CONTROLS",
@@ -137,13 +127,9 @@ export const SettingKeys = {
   Normal_Effectiveness: "NORMAL_EFFECTIVENESS",
   Locked_Reward_Speed: "LOCKED_REWARD_SPEED",
 };
-
-/**
- * All Settings not related to controls
- */
 export const Setting: Array<Setting> = [
   {
-    
+
     key: SettingKeys.Game_Speed,
     label: i18next.t("settings:gameSpeed"),
     options: [
@@ -271,13 +257,6 @@ export const Setting: Array<Setting> = [
     default: 0,
     type: SettingType.GENERAL
   },
-  // {
-  //   key: SettingKeys.Tutorials,
-  //   label: i18next.t("settings:tutorials"),
-  //   options: OFF_ON,
-  //   default: 0,
-  //   type: SettingType.GENERAL
-  // },
   {
     key: SettingKeys.Vibration,
     label: i18next.t("settings:vibrations"),
@@ -301,36 +280,6 @@ export const Setting: Array<Setting> = [
     default: 0,
     type: SettingType.DISPLAY,
     requireReload: true
-  },
-  {
-    key: SettingKeys.UI_Theme,
-    label: i18next.t("settings:uiTheme"),
-    options: [
-      {
-        value: "Default",
-        label: i18next.t("settings:default")
-      },
-      {
-        value: "Legacy",
-        label: i18next.t("settings:legacy")
-      }
-    ],
-    default: 0,
-    type: SettingType.DISPLAY,
-    requireReload: true
-  },
-  {
-    key: SettingKeys.Window_Type,
-    label: i18next.t("settings:windowType"),
-    options: new Array(5).fill(null).map((_, i) => {
-      const windowType = (i + 1).toString();
-      return {
-        value: windowType,
-        label: windowType
-      };
-    }),
-    default: 0,
-    type: SettingType.DISPLAY
   },
   {
     key: SettingKeys.Money_Format,
@@ -554,6 +503,13 @@ export const Setting: Array<Setting> = [
     type: SettingType.AUDIO
   },
   {
+    key: SettingKeys.Skip_Faint_Cry,
+    label: i18next.t("settings:skipFaintCry"),
+    options: OFF_ON,
+    default: 0,
+    type: SettingType.AUDIO
+  },
+  {
     key: SettingKeys.Music_Preference,
     label: i18next.t("settings:musicPreference"),
     options: [
@@ -625,31 +581,12 @@ export const Setting: Array<Setting> = [
     requireReload: false
   },
 ];
-
-/**
- * Return the index of a Setting
- * @param key SettingKey
- * @returns index or -1 if doesn't exist
- */
 export function settingIndex(key: string) {
   return Setting.findIndex(s => s.key === key);
 }
-
-/**
- * Resets all settings to their defaults
- * @param scene current BattleScene
- */
 export function resetSettings(scene: BattleScene) {
   Setting.forEach(s => setSetting(scene, s.key, s.default));
 }
-
-/**
- * Updates a setting for current BattleScene
- * @param scene current BattleScene
- * @param setting string ideally from SettingKeys
- * @param value value to update setting with
- * @returns true if successful, false if not
- */
 export function setSetting(scene: BattleScene, setting: string, value: integer): boolean {
   const index: number = settingIndex(setting);
   if (index === -1) {
@@ -658,7 +595,7 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
   switch (Setting[index].key) {
     case SettingKeys.Game_Speed:
       scene.gameSpeed = parseFloat(Setting[index].options[value].value.replace("x", ""));
-      // scene.gameSpeed = 5.0;
+
       break;
     case SettingKeys.Master_Volume:
       scene.masterVolume = value ? parseInt(Setting[index].options[value].value) * 0.01 : 0;
@@ -679,21 +616,15 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
   case SettingKeys.UI_Volume:
     scene.uiVolume = value ? parseInt(Setting[index].options[value].value) * 0.01 : 0;
     break;
+  case SettingKeys.Skip_Faint_Cry:
+    scene.skipFaintCry = Setting[index].options[value].value === "On";
+    break;
     case SettingKeys.Music_Preference:
       scene.musicPreference = value;
       break;
     case SettingKeys.Damage_Numbers:
       scene.damageNumbersMode = value;
       break;
-    case SettingKeys.UI_Theme:
-      scene.uiTheme = value;
-      break;
-    case SettingKeys.Window_Type:
-      updateWindowType(scene, parseInt(Setting[index].options[value].value));
-      break;
-    // case SettingKeys.Tutorials:
-    //   scene.enableTutorials = Setting[index].options[value].value === "On";
-    //   break;
     case SettingKeys.Move_Info:
       scene.enableMoveInfo = Setting[index].options[value].value === "On";
       break;
@@ -805,7 +736,7 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
               i18next.changeLanguage(locale);
               localStorage.setItem("prLang", locale);
               cancelHandler();
-              // Reload the whole game to apply the new locale since also some constants are translated
+
               window.location.reload();
               return true;
             } catch (error) {
@@ -855,10 +786,6 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
               label: "日本語",
               handler: () => changeLocaleHandler("ja")
             },
-            // {
-            //   label: "Català",
-            //   handler: () => changeLocaleHandler("ca-ES")
-            // },
             {
                 label: i18next.t("settings:back"),
                 handler: () => cancelHandler()

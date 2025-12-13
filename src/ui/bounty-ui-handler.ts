@@ -26,8 +26,6 @@ export default abstract class BountyUiHandler extends ModalUiHandler {
     protected customButtonLabel: string | null = null;
 
     protected buttonIndex: number = 1;
-
-
     constructor(scene: BattleScene, mode: Mode | null = null) {
         super(scene, mode);
         this.currentStageView = 1;
@@ -68,8 +66,6 @@ export default abstract class BountyUiHandler extends ModalUiHandler {
         if (this.customButtonLabel) {
             return [this.customButtonLabel];
         }
-        
-
         if (this.viewOnly || !this.canModifyBounty() || this.isLocked()) {
             return [i18next.t("questUi:bounty.buttons.back")];
         } else if (this.hasActiveBountyOfSameType()) {
@@ -119,7 +115,7 @@ export default abstract class BountyUiHandler extends ModalUiHandler {
         );
 
         return {
-            status: permaModifier 
+            status: permaModifier
                 ? i18next.t("questUi:bounty.common.status.active")
                 : i18next.t("questUi:bounty.common.status.inactive")
         };
@@ -500,7 +496,7 @@ export default abstract class BountyUiHandler extends ModalUiHandler {
             this.scene,
             0,
             0,
-            this.isLocked() ? 
+            this.isLocked() ?
                 i18next.t("questUi:bounty.sections.task.title") :
                 (this.questModifier?.runDuration === RunDuration.SINGLE_RUN ?
                     i18next.t("questUi:bounty.sections.task.singleRun") :
@@ -562,12 +558,8 @@ export default abstract class BountyUiHandler extends ModalUiHandler {
     protected updateButtonLabels(): void {
 
         if (!this.buttonContainers || !this.buttonBgs) return;
-
-
         let labels = this.getButtonLabels();
         let showSecondButton = labels.length > 1;
-
-
         this.buttonContainers.forEach((container, index) => {
 
             if (!container) return;

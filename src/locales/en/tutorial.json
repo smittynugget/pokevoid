@@ -6,12 +6,13 @@
   "statChange": "Stat changes persist across battles as long as your Pokémon aren't recalled.\n$Your Pokémon are recalled before a trainer battle and before entering a new biome.\n$You can view the stat changes for any Pokémon on the field by holding C or Shift.\n$You can also view the moveset for an enemy Pokémon by holding V.\n$This only reveals moves that you've seen the Pokémon use this battle.",
   "selectItem": "After every battle, you are given a choice of 3 random items.\nYou may only pick one.\n$These range from consumables, to Pokémon held items, to passive permanent items.\n$Most non-consumable item effects will stack in various ways.\n$Some items will only show up if they can be used, such as evolution items.\n$You can also transfer held items between Pokémon using the transfer option.\n$The transfer option will appear in the bottom right once you have obtained a held item.\n$You may purchase consumable items with money, and a larger variety will be available the further you get.\n$Be sure to buy these before you pick your random item, as it will progress to the next battle once you do.",
   "eggGacha": "From this screen, you can redeem your vouchers for\nPokémon eggs.\n$Eggs have to be hatched and get closer to hatching after\nevery battle. Rarer eggs take longer to hatch.\n$Hatched Pokémon also won't be added to your party, they will\nbe added to your starters.\n$Pokémon hatched from eggs generally have better IVs than\nwild Pokémon.\n$Some Pokémon can only even be obtained from eggs.\n$There are 3 different machines to pull from with different\nbonuses, so pick the one that suits you best!",
+  "backupReminder": "Please backup your save by downloading it to your device.\n$This will help prevent you from starting all over again should your browser data be lost.",
   "titles": {
     "essentials": "Essential Basics",
     "gameModes": "Game Modes",
     "specialPokemon": "Special Pokémon",
     "progression": "Game Progression",
-    "permanentFeatures": "Permanent Features",
+    "permanentFeatures": "Omega Features",
     "glitchSystem": "Glitch System",
     "battleMechanics": "Battle Mechanics",
     "formChanges": "Form Changes",
@@ -104,7 +105,7 @@
     },
     "rivalQuests": {
       "title": "Glitch Quests",
-      "text": "Defeat rivals to unlock Glitch Quests! Purchase these from the PermaShop and complete them to permanently unlock powerful Glitch Forms for specific Pokémon!"
+      "text": "Defeat rivals to unlock Glitch Quests! Purchase these from the OmegaShop and complete them to permanently unlock powerful Glitch Forms for specific Pokémon!"
     },
     "smitom": {
       "title": "Smitom",
@@ -163,12 +164,12 @@
       "title": "Journey Mode",
       "text": { 
         "1":"Assemble your team to take on The Void. Use any Pokémon you've caught or hatched, including fusions! ",
-        "2":"Fusion Pokémon require ∞GOLD to use. PermaItems can reduce costs and increase your starter limit."
+        "2":"Fusion Pokémon require ΩGOLD to use. OmegaItems can reduce costs and increase your starter limit."
         }
     },
     "rogueMode": {
       "title": "Rogue Mode",
-      "text": "Draft 2 random pokemon to start your run with! Use your ∞GOLD to reroll your options! Each run is unique!"
+      "text": "Draft 2 random pokemon to start your run with! Use your ΩGOLD to reroll your options! Each run is unique!"
     },
     "bosses": {
       "title": "Multi-Form Bosses",
@@ -199,14 +200,14 @@
       "title": "Catchable Fusions",
       "text": { 
         "1":"All Fusion Pokémon are catchable and permanently added to your collection!",
-        "2":"Find them with a base 1/14 chance (improvable with ∞ITEMS). Using them costs ∞GOLD."
+        "2":"Find them with a base 1/14 chance (improvable with ΩITEMS). Using them costs ΩGOLD."
       }
     },
     "trainerPokemon": {
       "title": "Snag Trainer Pokémon",
       "text": { 
         "1":"Most trainers will sell their Pokémon during battle (except Rivals!). Caught Pokémon are added permanently to your collection!",
-        "2":"The cost depends on the wave but can be reduced with ∞ITEMS."
+        "2":"The cost depends on the wave but can be reduced with ΩITEMS."
       }
     },
     "partyAbility": {
@@ -217,9 +218,9 @@
       }
     },
     "permaMoney": {
-      "title": "PermaMoney (∞GOLD)",
+      "title": "OmegaMoney (ΩGOLD)",
       "text": { 
-        "1":"Earn persistent ∞GOLD between runs! Use it to buy ∞ITEMS, reroll Rogue starters, or pay the Fusion Tax.",
+        "1":"Earn persistent ΩGOLD between runs! Use it to buy ΩITEMS, reroll Rogue starters, or pay the Fusion Tax.",
         "2":"Get it from bounties, rewards, saving, or Smitom interactions."
       }
     },
@@ -227,19 +228,19 @@
       "title": "Local Saving & Backup",
       "text": { 
         "1":"If your data is lost it's GONE FOREVER! Use the floppy disk icon (top-right) to EXPORT your save file often!",
-        "2":"This rewards ∞GOLD and protects against data loss."
+        "2":"This rewards ΩGOLD and protects against data loss."
       }
     },
     "bounties": {
       "title": "Bounty System",
       "text": { 
         "1":"Enter 6-letter codes in the console to activate Bounties.",
-        "2":"Bounties are QUESTS that let you earn ∞GOLD/∞ITEMS and are completely reusable upon completion!"
+        "2":"Bounties are QUESTS that let you earn ΩGOLD/ΩITEMS and are completely reusable upon completion!"
       }
     },
     "dailyBounty": {
       "title": "Daily Bounty!",
-      "text": "A new daily bounty is available! Complete it to earn ∞GOLD/∞ITEMS. The code is already in the console, just activate it!"
+      "text": "A new daily bounty is available! Complete it to earn ΩGOLD/ΩITEMS. The code is already in the console, just activate it!"
     },
     "discord": {
       "title": "Discord & Support",
@@ -262,10 +263,10 @@
       }
     },
     "smittyItems": {
-      "title": "PermaItems (∞ITEMS)",
+      "title": "OmegaItems (ΩITEMS)",
       "text": { 
-        "1":"Use ∞GOLD to buy permanent upgrades (∞ITEMS) with different duration types: Usage-based (quantity reduced after use) or Wave-based (quantity reduced after wave 50).",
-        "2":"These upgrades can boost shiny/fusion/catch rates, lower costs, and provide other permanent benefits!"
+        "1":"Use ΩGOLD to buy long-lasting upgrades (ΩITEMS) with different duration types: Usage-based (quantity reduced after use) or Wave-based (quantity reduced after wave 50).",
+        "2":"These upgrades can boost shiny/fusion/catch rates, lower costs, and provide other long-lasting benefits!"
       }
     },
     "abilitySwitcher": {
@@ -305,7 +306,7 @@
     },
     "newQuests": {
       "title": "New Quest Unlocked!",
-      "text": "You've unlocked a new quest! It will appear RANDOMLY (but often) in the PermaShop / Shop on the title screen! If it's not there, reroll for it!"
+      "text": "You've unlocked a new quest! It will appear RANDOMLY (but often) in the OmegaShop / Shop on the title screen! If it's not there, reroll for it!"
     },
     "modeUnlocks": {
       "title": "GameMode Unlocks",
@@ -350,8 +351,138 @@
     "thankYou": {
       "title": "Dear Player",
       "text": {
-        "1": "16 months of solo dev madness means everything - every time someone like you has a blast playing this game. If my weird ideas actually work and you're having fun,", 
+        "1": "~24 months of solo dev madness means everything - every time someone like you has a blast playing this game. If my weird ideas actually work and you're having fun,", 
         "2": "then maybe - I'm closer to my dream of becoming an actual game developer. Thank you so much for playing my chaotic, broken version of PokéRogue! - Smitty"
+      }
+    },
+    "pokevoidV2Update": {
+      "title": {
+        "1": "Welcome to PokéVoid V2!",
+        "2": "Complete UI Revamp",
+        "3a": "New Playable Champion: Apollo",
+        "3b": "New Playable Champion: Diana",
+        "4": "Champion Character Select",
+        "5": "Skill Trees",
+        "6": "New Modes",
+        "7": "Battle Commands",
+        "8": "Many More Features!"
+      },
+      "text": {
+        "1": "Welcome to PokéVoid's NEW Version 2.0b Update - The COLOSSAL UPDATE!! This update brings a complete overhaul with NEW UI, Champions, Skill Trees, and much more!",
+        "2": "Experience a complete UI revamp with new icons and improved visual design throughout the game!",
+        "3a": "Champion of Sun, Apollo - channels his radiant power as one of the last lights pushing back the void's endless night!",
+        "3b": "Champion of Moon, Diana - weaves moonlit threads to track the void's movements and guide others to safety!",
+        "4": "Choose your Champion and take on the void! Each Champion has unique types, signature Pokémon, and their own skill tree!",
+        "5": "Unlock powerful skills through your Champion's Skill Tree! Use Skill Points to purchase nodes and Tree Tokens to level up!",
+        "6": "New chaos mode variant FTL awaits!",
+        "7": "Six new battle commands give you more control! Access your Skill Tree, check enemies, get eggs, and more mid-battle!",
+        "8": "Better locale handling + improved translations, and countless other features await! Dive in and discover them all!"
+      }
+    },
+    "ftlModeSelect": {
+      "title": {
+        "1": "NEW FTL Mode"
+      },
+      "text": {
+        "1": "FTL (Faster Than Light) is the new fastest chaos variant! Jump straight into the chaos!"
+      }
+    },
+    "championSelectEssence": {
+      "title": {
+        "1": "Champion Selection",
+        "2": "Essence System",
+        "3": "Level Up Champions"
+      },
+      "text": {
+        "1": "Who will you choose to venture into the void! Each Champion has unique typing, signature Pokémon, and skill tree!",
+        "2": "Collect Essences by defeating Pokémon! Essences match the defeated Pokémon's type and are used to free corrupted Champions and unlock powerful skills!",
+        "3": "Use collected Essences to level up your Champions! Higher levels unlock more powerful skills in their Skill Trees!"
+      }
+    },
+    "championSelectSpecialEssences": {
+      "title": {
+        "1": "Glitch & Smitty Essences",
+        "2": "Glitch Essence",
+        "3": "Smitty Essence"
+      },
+      "text": {
+        "1": "Some powerful skills require special Essences: Glitch Essence and Smitty Essence! These unlock the strongest abilities!",
+        "2": "To unlock NEW MASTER+ RARITY Corrupted Glitch Forms and Powerful Legendary Pokémon - collect glitch essences by defeating glitch pokemon!",
+        "3": "To unlock NEW MASTER+ RARITY Forbidden Smitty Abilities and Broken Alt Builds - collect smitty essences by facing the Corruption itself!"
+      }
+    },
+    "skillTreeApolloDianaTypes": {
+      "title": {
+        "1": "Randomized Type System"
+      },
+      "text": {
+        "1": "Apollo and Diana are special Champions with RANDOMIZED types! At the start of each run, you're assigned two random types!"
+      }
+    },
+    "skillTreeSetTypes": {
+      "title": {
+        "1": "Champions of Type",
+        "2": "Brock - Champion of Rock",
+        "3": "Type Synergy"
+      },
+      "text": {
+        "1": "Most Champions have FIXED type specializations! Their entire Skill Tree and Pokémon pool revolves around their types!",
+        "2": "Brock specializes in Ground and Rock types! His Skill Tree offers Ground and Rock TMs, boosters, and abilities!",
+        "3": "Build your team around your Champion's types! Catch Pokémon that match to maximize your Skill Tree potential!"
+      }
+    },
+    "skillTreeProgression": {
+      "title": {
+        "1": "Skill Points",
+        "2": "Tree Tokens"
+      },
+      "text": {
+        "1": "Skill Points are used to purchase nodes in your Skill Tree! Earned from battles, rewards, and special events!",
+        "2": "Tree Tokens level up your Skill Tree! Each level expands your Skill tree, revealing more powerful skills deeper in the tree!"
+      }
+    },
+    "starterSelectCatchRequirements": {
+      "title": {
+        "1": "Apollo & Diana are Wild Cards!",
+        "2": "Champions of Type",
+        "3": "Freed Champions Start Fresh",
+        "4": "Catch to Expand Pool"
+      },
+      "text": {
+        "1": "Apollo and Diana can use ALL Pokémon regardless of type! They're perfect for maximum flexibility!",
+        "2": "Type-specialized Champions like Brock can only use Pokémon matching their affinity! Brock uses Ground and Rock types!",
+        "3": "As new Champions you recently freed from the void's corruption, they must start fresh and rebuild their collection!",
+        "4": "Type Champions only have access to the pokemon you catch while using them! The more you catch, the more options they'll have!"
+      }
+    },
+    "starterSelectSignature": {
+      "title": {
+        "1": "What Are Signature Pokemon?",
+        "2": "Legendary Alt Builds"
+      },
+      "text": {
+        "1": "Signature Pokémon are special starters unique to each Champion! Their icons are marked with chaos potential!",
+        "2": "Signatures can transform into Alt Builds - alternate forms with different stats, abilities, and even types! A whole new Pokémon!"
+      }
+    },
+    "commandUINewCommands": {
+      "title": {
+        "1": "Six New Commands!",
+        "2": "Team Command",
+        "3": "Skill Tree Command",
+        "4": "Check Command",
+        "5": "Eggs Command",
+        "6": "Shop Command",
+        "7": "Map Command"
+      },
+      "text": {
+        "1": "PokéVoid V2 adds SIX new battle commands! Access them during battle for powerful options!",
+        "2": "TEAM: Instantly view detailed information about your party's stats, abilities, and moves!",
+        "3": "SKILL TREE: Access your Champion's Skill Tree mid-battle! Spend points and unlock new abilities on the fly!",
+        "4": "CHECK: Check ANY Pokémon! Conveniently see possible abilities, forms, stat spread, and movesets!",
+        "5": "EGGS: Get eggs from the egg gacha!",
+        "6": "SHOP: Quick access to the shop!",
+        "7": "MAP: View your current path within the Chaos!"
       }
     }
   }

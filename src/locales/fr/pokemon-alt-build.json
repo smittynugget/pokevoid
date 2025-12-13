@@ -1,0 +1,295 @@
+{
+  "onix_crystal_leviathan": {
+    "name": "Attack Snake",
+    "description": "Build offensif à haute vitesse d'Onix"
+  },
+  "onix_stone_defender": {
+    "name": "Stone Defender",
+    "description": "Build défensif tank d'Onix"
+  },
+  "geodude_tank_mode": {
+    "name": "Tank Mode",
+    "description": "Build ultra-défensif de Geodude"
+  },
+  "geodude_speed_form": {
+    "name": "Speed Form",
+    "description": "Build électrique rapide de Geodude"
+  },
+  "rhyhorn_rampage": {
+    "name": "Rampage",
+    "description": "Build combattant agressif de Rhyhorn"
+  },
+  "onix_brock_signature": {
+    "name": "Partenaire de Pierre",
+    "description": "Le fidèle compagnon type Roche de Pierre"
+  },
+  "geodude_brock_signature": {
+    "name": "Partenaire de Pierre",
+    "description": "Le loyal compagnon type Roche de Pierre"
+  },
+  "staryu_misty_signature": {
+    "name": "Partenaire d'Ondine",
+    "description": "Le gracieux compagnon type Eau d'Ondine"
+  },
+  "psyduck_misty_signature": {
+    "name": "Partenaire d'Ondine",
+    "description": "Le compagnon type Eau excentrique d'Ondine"
+  },
+  "voltorb_surge_signature": {
+    "name": "Partenaire du Major Bob",
+    "description": "Le compagnon type Électrik électrifiant du Major Bob"
+  },
+  "pikachu_surge_signature": {
+    "name": "Partenaire du Major Bob",
+    "description": "Le puissant compagnon type Électrik du Major Bob"
+  },
+  "electabuzz_surge_signature": {
+    "name": "Partenaire du Major Bob",
+    "description": "Le choquant compagnon type Électrik du Major Bob"
+  },
+  "magikarp_misty_signature": {
+    "name": "Partenaire d'Ondine",
+    "description": "Le compagnon type Eau déterminé d'Ondine"
+  },
+  "poliwag_misty_signature": {
+    "name": "Partenaire d'Ondine",
+    "description": "Le compagnon type Eau fougueux d'Ondine"
+  },
+  "azurill_misty_signature": {
+    "name": "Partenaire d'Ondine",
+    "description": "L'adorable compagnon type Eau d'Ondine"
+  },
+  "goldeen_misty_signature": {
+    "name": "Partenaire d'Ondine",
+    "description": "Le compagnon type Eau élégant d'Ondine"
+  },
+  "horsea_misty_signature": {
+    "name": "Partenaire d'Ondine",
+    "description": "Le fidèle compagnon type Eau d'Ondine"
+  },
+  "togepi_misty_signature": {
+    "name": "Partenaire d'Ondine",
+    "description": "Le précieux compagnon type Fée d'Ondine"
+  },
+  "corsola_misty_signature": {
+    "name": "Partenaire d'Ondine",
+    "description": "Le joyeux compagnon type Eau d'Ondine"
+  },
+  "luvdisc_misty_signature": {
+    "name": "Partenaire d'Ondine",
+    "description": "Le compagnon type Eau sincère d'Ondine"
+  },
+  "clauncher_misty_signature": {
+    "name": "Partenaire d'Ondine",
+    "description": "Le puissant compagnon type Eau d'Ondine"
+  },
+  "staryu_chronos_gear": {
+    "name": "Engrenage Chronos",
+    "description": "Un Stari Acier/Eau imprégné d'énergie temporelle, maniant précision défensive et résilience sous la pluie"
+  },
+  "magikarp_splash_tyrant": {
+    "name": "Tyran Trempette",
+    "description": "Un Magicarpe Eau/Combat ayant transcendé la faiblesse, incarnant une détermination bagarreuse et une puissance intimidante"
+  },
+  "psyduck_kappa_quack": {
+    "name": "Couac Kappa",
+    "description": "Un Psykokwak Eau/Spectre canalisant une malice mystique avec des capacités de liaison d'ombre et une confusion éthérée"
+  },
+  "poliwag_lightning_drum": {
+    "name": "Tambour Éclair",
+    "description": "Un Ptitard Électrik/Eau vibrant d'énergie galvanisée, de courants rapides et de vitalité régénératrice"
+  },
+  "azurill_bounce_champion": {
+    "name": "Champion Rebond",
+    "description": "Un Azurill Vol/Fée planant avec une grâce aérienne, une puissance pixélisée et une prouesse de rebond de niveau champion"
+  },
+  "goldeen_piercing_stinger": {
+    "name": "Dard Perçant",
+    "description": "Un Poissirène Eau/Insecte équipé d'attaques pénétrantes, d'une précision de technicien et d'une justesse de tireur d'élite"
+  },
+  "horsea_fireball_seahorse": {
+    "name": "Hippocampe Boule de Feu",
+    "description": "Un Hypotrempe Feu/Eau flamboyant avec une intensité torche, une chaleur sécheresse et une détermination brûlante"
+  },
+  "togepi_eggshell_fortress": {
+    "name": "Forteresse Coquille",
+    "description": "Un Togepi Normal/Roche fortifié par une grâce séreine, une défense solide et une armure aguerrie"
+  },
+  "corsola_toxic_coral": {
+    "name": "Corail Toxique",
+    "description": "Un Corayon Poison/Eau prospérant grâce au soin poison, aux frappes impitoyables et à la protection des débris toxiques"
+  },
+  "luvdisc_heartbreaker": {
+    "name": "Briseur de Cœur",
+    "description": "Un Lovdisc Ténèbres/Eau infligeant un chagrin d'amour avec une aura sombre, des tours farceurs et une évasion glissade"
+  },
+  "clauncher_buster_dragon_blaster": {
+    "name": "Canon Dragon Destructeur",
+    "description": "Un Flingouste Eau/Dragon armé de la férocité de la mâchoire dragon, d'une portée méga et d'une dévastation sans limite"
+  },
+  "vulpix_brock_signature": {
+    "name": "Partenaire de Pierre",
+    "description": "Le compagnon type Feu mystique de Pierre"
+  },
+  "zubat_brock_signature": {
+    "name": "Partenaire de Pierre",
+    "description": "Le compagnon type Poison véloce de Pierre"
+  },
+  "bonsly_brock_signature": {
+    "name": "Partenaire de Pierre",
+    "description": "Le compagnon type Roche résilient de Pierre"
+  },
+  "mudkip_brock_signature": {
+    "name": "Partenaire de Pierre",
+    "description": "Le compagnon type Eau robuste de Pierre"
+  },
+  "pineco_brock_signature": {
+    "name": "Partenaire de Pierre",
+    "description": "Le compagnon type Insecte défensif de Pierre"
+  },
+  "croagunk_brock_signature": {
+    "name": "Partenaire de Pierre",
+    "description": "Le compagnon type Poison rusé de Pierre"
+  },
+  "happiny_brock_signature": {
+    "name": "Partenaire de Pierre",
+    "description": "Le compagnon type Normal bienveillant de Pierre"
+  },
+  "lotad_brock_signature": {
+    "name": "Partenaire de Pierre",
+    "description": "Le compagnon type Eau tranquille de Pierre"
+  },
+  "comfey_brock_signature": {
+    "name": "Partenaire de Pierre",
+    "description": "Le compagnon type Fée doux de Pierre"
+  },
+  "geodude_phantom_fist": {
+    "name": "Poing Fantôme",
+    "description": "Un Racaillou Roche/Spectre maniant la marque ombre, les griffes dures et les techniques de poing de fer avec une grâce lévitante"
+  },
+  "vulpix_flaming_forest_spirit": {
+    "name": "Esprit de la Forêt Enflammée",
+    "description": "Un Goupix Feu/Plante incarnant les esprits de la forêt avec des flammes invoquant la sécheresse, une protection toison herbue et une vitalité chlorophylle"
+  },
+  "zubat_vampiric_fiend": {
+    "name": "Démon Vampirique",
+    "description": "Un Nosferapti Ténèbres/Spectre canalisant l'impudence vampirique, la terreur du corps maudit et la férocité de la mâchoire solide"
+  },
+  "bonsly_tear_drop": {
+    "name": "Larme",
+    "description": "Un Manzaï Roche/Eau coulant avec la précision multi-coups, la résilience compactage et des larmes régénératrices"
+  },
+  "mudkip_stone_skinned_salamander": {
+    "name": "Salamandre à Peau de Pierre",
+    "description": "Un Gobou Eau/Roche armé d'une défense peau de pierre, d'une protection filtre et d'une puissance torrent"
+  },
+  "pineco_iron_plated_grenade": {
+    "name": "Grenade Blindée",
+    "description": "Un Pomdepik Feu/Acier explosif avec une détonation boom final, une intensité corps ardent et une rétorsion épine de fer"
+  },
+  "croagunk_jester_of_pestilence": {
+    "name": "Bouffon de la Peste",
+    "description": "Un Cradopaud Poison/Fée répandant la corrosion pixélisée, le gaz neutralisant et le chaos des tablettes de la ruine"
+  },
+  "happiny_pink_fortress": {
+    "name": "Forteresse Rose",
+    "description": "Un Ptiravi Normal/Fée fortifié par le soutien garde-ami, la compassion cœur soin et le rétablissement médicament nature"
+  },
+  "lotad_shadow_lily": {
+    "name": "Lys de l'Ombre",
+    "description": "Un Nénupiot Eau/Spectre dérivant avec la subsistance cuvette, la liaison marque ombre et la résilience absorb eau"
+  },
+  "comfey_aqua_bloom": {
+    "name": "Floraison Aqua",
+    "description": "Un Guérilande Plante/Eau fleurissant avec la nutrition crachin, la protection bulles d'eau et la vitalité semeur de graines"
+  },
+  "riolu_apollo_diana_signature": {
+    "name": "Partenaire d'Apollon & Diane",
+    "description": "Le compagnon type Combat courageux d'Apollon & Diane"
+  },
+  "solrock_apollo_diana_signature": {
+    "name": "Partenaire d'Apollon & Diane",
+    "description": "Le compagnon type Roche radieux d'Apollon & Diane"
+  },
+  "lunatone_apollo_diana_signature": {
+    "name": "Partenaire d'Apollon & Diane",
+    "description": "Le compagnon type Roche mystique d'Apollon & Diane"
+  },
+  "larvesta_apollo_diana_signature": {
+    "name": "Partenaire d'Apollon & Diane",
+    "description": "Le compagnon type Insecte flamboyant d'Apollon & Diane"
+  },
+  "swablu_apollo_diana_signature": {
+    "name": "Partenaire d'Apollon & Diane",
+    "description": "Le compagnon type Normal duveteux d'Apollon & Diane"
+  },
+  "castform_apollo_diana_signature": {
+    "name": "Partenaire d'Apollon & Diane",
+    "description": "Le compagnon type Normal adaptatif d'Apollon & Diane"
+  },
+  "litwick_apollo_diana_signature": {
+    "name": "Partenaire d'Apollon & Diane",
+    "description": "Le compagnon type Spectre vacillant d'Apollon & Diane"
+  },
+  "eevee_apollo_diana_signature": {
+    "name": "Partenaire d'Apollon & Diane",
+    "description": "Le compagnon type Normal polyvalent d'Apollon & Diane"
+  },
+  "teddiursa_apollo_diana_signature": {
+    "name": "Partenaire d'Apollon & Diane",
+    "description": "Le compagnon type Normal câlin d'Apollon & Diane"
+  },
+  "cleffa_apollo_diana_signature": {
+    "name": "Partenaire d'Apollon & Diane",
+    "description": "Le compagnon type Fée étoilé d'Apollon & Diane"
+  },
+  "sunkern_apollo_diana_signature": {
+    "name": "Partenaire d'Apollon & Diane",
+    "description": "Le compagnon type Plante plein d'espoir d'Apollon & Diane"
+  },
+  "riolu_shadow_warrior": {
+    "name": "Guerrier de l'Ombre",
+    "description": "Un Riolu Spectre/Combat maîtrisant le combat d'ombre avec l'agression impudence, l'adaptabilité et une présence intimidante"
+  },
+  "solrock_void_constellation": {
+    "name": "Constellation du Néant",
+    "description": "Un Seleroc Roche/Ténèbres irradiant l'énergie du néant avec une intensité force soleil, une grâce lévitation et une domination aura ténébreuse"
+  },
+  "lunatone_dream_weaver": {
+    "name": "Tisseur de Rêves",
+    "description": "Un Seleroc Roche/Psy tissant des rêves avec le mystère lévitation, le tempérament lunatique et la protection garde magik"
+  },
+  "larvesta_toxic_spinner": {
+    "name": "Tisseur Toxique",
+    "description": "Un Pyronille Insecte/Poison tissant des toiles toxiques avec l'affliction chaîne toxique, la défense peau dure et la maîtrise corrosion"
+  },
+  "swablu_frost_nimbus": {
+    "name": "Nimbus de Givre",
+    "description": "Un Tylton Glace/Vol dérivant sur des nuages chargés de givre avec une défense boule de poils, la puissance peau féérique et la domination alerte neige"
+  },
+  "castform_dust_devil": {
+    "name": "Tourbillon de Poussière",
+    "description": "Un Morphéo Roche/Sol tourbillonnant comme un diable de poussière avec le chaos sable volant, l'absorption lavabo et le cran peau dure"
+  },
+  "litwick_wyrmflame": {
+    "name": "Flamme-Wyrm",
+    "description": "Un Funécire Feu/Dragon brûlant avec la fureur flamme-wyrm, la férocité mâchoire dragon, l'intensité torche et le mystique lévitation"
+  },
+  "eevee_untamed_spirit": {
+    "name": "Esprit Indompté",
+    "description": "Un Evoli Normal/Normal incarnant le potentiel indompté avec la fortune chanceux, la grâce séreine et la protection armure prisme"
+  },
+  "teddiursa_sweet_tooth": {
+    "name": "Bec Sucré",
+    "description": "Un Teddiursa Fée/Fée s'adonnant à la puissance douce comme le miel avec la force force pure, la magie champ brumeux et l'abondance récolte"
+  },
+  "cleffa_meteoric_core": {
+    "name": "Cœur Météorique",
+    "description": "Un Mélo Fée/Acier forgé à partir d'essence météorique avec la chaleur corps ardent, la protection garde magik et la résilience solide roc"
+  },
+  "sunkern_plasma_sprout": {
+    "name": "Pousse Plasma",
+    "description": "Un Tournegrin Électrik/Plante crépitant d'énergie plasma, de conversion peau électrique, d'intensité force soleil et de domination champ électrique"
+  },
+  "championPartner": "Partenaire de {{champion}}"
+}

@@ -1,4 +1,15 @@
 {
+  "profile": "PERFIL",
+  "ability": "HABILIDAD",
+  "passive": "PASIVA",
+  "idNo": "N.º ID",
+  "trainerMemo": "MEMO ENTRENADOR",
+  "stats": "ESTADÍSTICAS",
+  "items": "OBJETOS",
+  "exp": "EXP.",
+  "moves": "MOVIMIENTOS",
+  "description": "DESCRIPCIÓN",
+  "effect": "EFECTO",
   "pokemonInfo": "Info. Pokémon",
   "status": "Estado",
   "powerAccuracyCategory": "Potencia\nPrecisión\nCategoría",
@@ -13,5 +24,32 @@
   "metFragment": {
     "normal": "encontrado al Nv. {{level}},\n{{biome}}.",
     "apparently": "aparentemente encontrado al Nv. {{level}},\n{{biome}}."
+  },
+  "natureFragment": {
+    "Hardy": "{{nature}}",
+    "Lonely": "{{nature}}",
+    "Brave": "{{nature}}",
+    "Adamant": "{{nature}}",
+    "Naughty": "{{nature}}",
+    "Bold": "{{nature}}",
+    "Docile": "{{nature}}",
+    "Relaxed": "{{nature}}",
+    "Impish": "{{nature}}",
+    "Lax": "{{nature}}",
+    "Timid": "{{nature}}",
+    "Hasty": "{{nature}}",
+    "Serious": "{{nature}}",
+    "Jolly": "{{nature}}",
+    "Naive": "{{nature}}",
+    "Modest": "{{nature}}",
+    "Mild": "{{nature}}",
+    "Quiet": "{{nature}}",
+    "Bashful": "{{nature}}",
+    "Rash": "{{nature}}",
+    "Calm": "{{nature}}",
+    "Gentle": "{{nature}}",
+    "Sassy": "{{nature}}",
+    "Careful": "{{nature}}",
+    "Quirky": "{{nature}}"
   }
 }

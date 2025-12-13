@@ -148,8 +148,4 @@ export default class AdminUiHandler extends FormModalUiHandler {
   clear(): void {
     super.clear();
   }
-
-    // closeModal(): void {
-    //     this.clear();
-    //     this.scene.ui.closeModal();
 }

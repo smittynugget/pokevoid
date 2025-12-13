@@ -57,11 +57,11 @@
         "count": "{{current}} / {{max}}"
       },
       "rewards": {
-        "stage1": "90% ∞OURO | 8% ∞ITEM | 2% Ambos",
-        "stage2": "75% ∞OURO | 15% ∞ITEM | 10% Ambos",
-        "stage3": "60% ∞OURO | 25% ∞ITEM | 15% Ambos",
-        "stage4": "40% ∞OURO | 40% ∞ITEM | 20% Ambos",
-        "stage5": "25% ∞OURO | 45% ∞ITEM | 30% Ambos"
+        "stage1": "90% ΩOURO | 8% ΩITEM | 2% Ambos",
+        "stage2": "75% ΩOURO | 15% ΩITEM | 10% Ambos",
+        "stage3": "60% ΩOURO | 25% ΩITEM | 15% Ambos",
+        "stage4": "40% ΩOURO | 40% ΩITEM | 20% Ambos",
+        "stage5": "25% ΩOURO | 45% ΩITEM | 30% Ambos"
       }
     },
     "quest": {
@@ -72,7 +72,7 @@
         "cancel": "Cancelar"
       },
       "rewards": {
-        "default": "50% ∞OURO | 35% ∞ITEM | 15% Ambos"
+        "default": "50% ΩOURO | 35% ΩITEM | 15% Ambos"
       },
       "activeQuest": {
         "modalTitle": "Missão!",
@@ -92,8 +92,8 @@
     "smitty": {
       "modalTitle": "Recompensa Pokémon do Smitty",
       "rewards": {
-        "withSpecies": "70% ∞OURO | 20% ∞ITEM | 10% Ambos",
-        "withoutSpecies": "40% ∞OURO | 40% ∞ITEM | 20% Ambos"
+        "withSpecies": "70% ΩOURO | 20% ΩITEM | 10% Ambos",
+        "withoutSpecies": "40% ΩOURO | 40% ΩITEM | 20% Ambos"
       },
       "task": {
         "evolveAny": "Evolua QUALQUER Pokémon Para {{formName}}",
@@ -114,7 +114,7 @@
     "nuzlightModeRewardUpdatedInventory": "Inventário Atualizado!",
     "nuzlightModeRewardMoveRelease": "Esquecer Movimento",
     "nuzlockeModeRewardRank2": "RANK 2",
-    "accessShopInBattle": "Acesse a ∞LOJA em BATALHA!",
+    "accessShopInBattle": "Acesse a ΩLOJA em BATALHA!",
     "accessQuestsInBattle": "Acesse MISSÕES em BATALHA!"
   }
 } 

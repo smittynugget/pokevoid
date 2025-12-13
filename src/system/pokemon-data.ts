@@ -12,6 +12,8 @@ import { loadBattlerTag } from "../data/battler-tags";
 import { Biome } from "#enums/biome";
 import { Moves } from "#enums/moves";
 import { Species } from "#enums/species";
+import { PokemonAltBuildId } from "#app/data/pokemon-alt-buid.ts";
+import { Abilities } from "#enums/abilities";
 
 export default class PokemonData {
   public id: integer;
@@ -50,9 +52,10 @@ export default class PokemonData {
   public fusionVariant: Variant;
   public fusionGender: Gender;
   public fusionLuck: integer;
-
-  
   public universalSmittyForm?: UniversalSmittyForm;
+  public altBuildId?: PokemonAltBuildId;
+  public altBuildRank?: number;
+  public altPassiveForRun?: Abilities;
 
   public boss: boolean;
   public bossSegments?: integer;
@@ -103,6 +106,9 @@ export default class PokemonData {
     this.fusionLuck = source.fusionLuck !== undefined ? source.fusionLuck : (source.fusionShiny ? source.fusionVariant + 1 : 0);
 
     this.universalSmittyForm = source.universalSmittyForm;
+    this.altBuildId = source.altBuildId;
+    this.altBuildRank = source.altBuildRank;
+    this.altPassiveForRun = source.altPassiveForRun;
 
     if (!forHistory) {
       this.boss = (source instanceof EnemyPokemon && !!source.bossSegments) || (!this.player && !!source.boss);
@@ -156,8 +162,6 @@ export default class PokemonData {
         }
       })
       : scene.addEnemyPokemon(species, this.level, battleType === BattleType.TRAINER ? !double || !(partyMemberIndex % 2) ? TrainerSlot.TRAINER : TrainerSlot.TRAINER_PARTNER : TrainerSlot.NONE, this.boss, this);
-
-
     if (this.summonData) {
       ret.primeSummonData(this.summonData);
     }

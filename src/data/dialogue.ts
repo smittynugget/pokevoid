@@ -53,7 +53,7 @@ export const trainerTypeDialogue: TrainerTypeDialogue = {
         "dialogue:youngster.victory.13",
       ]
     },
-    //LASS
+
     {
       encounter: [
         "dialogue:lass.encounter.1",
@@ -228,7 +228,7 @@ export const trainerTypeDialogue: TrainerTypeDialogue = {
         "dialogue:black_belt.victory.2",
       ]
     },
-    //BATTLE GIRL
+
     {
       encounter: [
         "dialogue:battle_girl.encounter.1",
@@ -3164,8 +3164,6 @@ export const doubleBattleDialogue = {
     encounter: [ "doubleBattleDialogue:piers_marnie_double.encounter.1"],
     victory: [ "doubleBattleDialogue:piers_marnie_double.victory.1"]
   },
-
-
 };
 
 export const battleSpecDialogue = {
@@ -3210,8 +3208,6 @@ export function initTrainerTypeDialogue(): void {
     }
   }
 }
-
-
 export const DynamicRivalDialogue: TrainerTypeDialogue = {
   [TrainerType.BLUE]: [
     {

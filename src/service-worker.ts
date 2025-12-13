@@ -1,6 +1,3 @@
-/// <reference lib="webworker" />
-/* eslint-disable no-restricted-globals */
-
 type CacheUrls = readonly string[];
 
 const CACHE_NAME = 'pokerogue-cache-v1';
@@ -36,7 +33,7 @@ self.addEventListener('fetch', (event: FetchEvent) => {
       }
 
       const networkResponse = await fetch(event.request);
-      
+
       if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
         return networkResponse;
       }
@@ -50,7 +47,7 @@ self.addEventListener('fetch', (event: FetchEvent) => {
           console.error('Cache update failed:', cacheError.message);
         }
       }
-      
+
       return networkResponse;
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -87,4 +84,4 @@ self.addEventListener('activate', (event: ExtendableEvent) => {
       }
     }
   })());
-}); 
+});

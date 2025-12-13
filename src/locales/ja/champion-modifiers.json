@@ -1,0 +1,48 @@
+{
+  "modifierType": {
+    "championStatBooster": {
+      "name": "{{champion}}トレーニング: {{stats}}",
+      "description": "{{champion}}のポケモンの{{stats}}を{{percent}}%アップ",
+      "descriptionConditional": "{{types}}タイプまたはシグネチャーポケモンの{{stats}}を{{percent}}%アップ。{{types}}タイプでもシグネチャーでもないポケモンは{{firstStat}}のみアップ。"
+    },
+    "championPokemonStatBooster": {
+      "name": "{{champion}}の{{flavor}} [{{stats}}]",
+      "description": "選択したポケモンの{{stats}}を永続的に{{percent}}%アップ。{{champion}}のトレーニング法が込められています。",
+      "descriptionConditional": "{{types}}タイプまたはシグネチャーポケモンの{{stats}}を永続的に{{percent}}%アップ。{{types}}タイプでもシグネチャーでもないポケモンは{{firstStat}}のみアップ。{{champion}}のトレーニング法が込められています。"
+    },
+    "trainerBondAbility": {
+      "name": "{{champion}}のリミットブレイク: {{ability}}",
+      "description": "{{champion}}のポケモンが{{chance}}%の確率で{{ability}}を発動。{{abilityDescription}}"
+    },
+    "teraAbility": {
+      "name": "{{type}}テラスタル特性: {{ability}}",
+      "description": "{{type}}タイプにテラスタル中、{{chance}}%の確率で{{ability}}を発動。{{abilityDescription}}"
+    },
+    "pokemonAltBuild": {
+      "name": "{{buildName}}",
+      "description": "{{description}} - このポケモンのステータスと特性を変更",
+      "wrongSpecies": "このオルトビルドは{{species}}専用です"
+    },
+    "championTm": {
+      "name": "{{champion}}のわざマシン: {{move}}",
+      "description": "ポケモンに{{move}}を教える。{{champion}}のスタイルに対応。"
+    },
+    "championXm": {
+      "name": "{{champion}}のXM: {{move}}",
+      "description": "強力なわざ{{move}}を教える。{{champion}}がマスターした技。"
+    }
+  },
+  "modifier": {
+    "championStatBooster": {
+      "extra": {
+        "inoperable": "このポケモンは{{champion}}のトレーニングに対応していません"
+      }
+    },
+    "trainerBondAbility": {
+      "extra": {
+        "activated": "{{champion}}のリミットブレイクが{{ability}}を発動！"
+      }
+    }
+  }
+}
+

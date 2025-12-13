@@ -4,6 +4,7 @@
   "general": "常規",
   "display": "顯示",
   "audio": "音頻",
+  "skipFaintCry": "跳過瀕死叫聲",
   "gamepad": "手柄",
   "keyboard": "鍵盤",
   "gameSpeed": "遊戲速度",
@@ -97,5 +98,6 @@
   "gamepadSupport": "手柄支持",
   "moveTouchControls": "移動觸控控制",
   "shopOverlayOpacity": "商店顯示不透明度",
-  "rewardOverlayOpacity": "獎勵顯示不透明度"
+  "rewardOverlayOpacity": "獎勵顯示不透明度",
+  "lockedRewardSpeed": "鎖定獎勵動畫速度"
 }

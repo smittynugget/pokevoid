@@ -1,4 +1,8 @@
 {
   "moneyOwned": "₽{{formattedMoney}}",
-  "permaMoneyOwned": "∞{{formattedMoney}}"
+  "permaMoneyOwned": "Ω{{formattedMoney}}",
+  "catch": "CATCH",
+  "togglePermaBar": "ΩItems",
+  "togglePlayerBar": "Bag",
+  "toggleFoeBar": "Foe"
 }

@@ -1,0 +1,295 @@
+{
+  "onix_crystal_leviathan": {
+    "name": "Attack Snake",
+    "description": "Build offensivo ad alta velocità di Onix"
+  },
+  "onix_stone_defender": {
+    "name": "Stone Defender",
+    "description": "Build difensivo tank di Onix"
+  },
+  "geodude_tank_mode": {
+    "name": "Tank Mode",
+    "description": "Build ultra-difensivo di Geodude"
+  },
+  "geodude_speed_form": {
+    "name": "Speed Form",
+    "description": "Build elettrico ad alta velocità di Geodude"
+  },
+  "rhyhorn_rampage": {
+    "name": "Rampage",
+    "description": "Build lottatore aggressivo di Rhyhorn"
+  },
+  "onix_brock_signature": {
+    "name": "Partner di Brock",
+    "description": "Il fidato compagno di tipo Roccia di Brock"
+  },
+  "geodude_brock_signature": {
+    "name": "Partner di Brock",
+    "description": "Il leale compagno di tipo Roccia di Brock"
+  },
+  "staryu_misty_signature": {
+    "name": "Partner di Misty",
+    "description": "Il grazioso compagno di tipo Acqua di Misty"
+  },
+  "psyduck_misty_signature": {
+    "name": "Partner di Misty",
+    "description": "Il bizzarro compagno di tipo Acqua di Misty"
+  },
+  "voltorb_surge_signature": {
+    "name": "Partner del Tenente Surge",
+    "description": "L'elettrizzante compagno di tipo Elettro del Tenente Surge"
+  },
+  "pikachu_surge_signature": {
+    "name": "Partner del Tenente Surge",
+    "description": "Il potente compagno di tipo Elettro del Tenente Surge"
+  },
+  "electabuzz_surge_signature": {
+    "name": "Partner del Tenente Surge",
+    "description": "Lo scioccante compagno di tipo Elettro del Tenente Surge"
+  },
+  "magikarp_misty_signature": {
+    "name": "Partner di Misty",
+    "description": "Il determinato compagno firma di tipo Acqua di Misty"
+  },
+  "poliwag_misty_signature": {
+    "name": "Partner di Misty",
+    "description": "Il vivace compagno firma di tipo Acqua di Misty"
+  },
+  "azurill_misty_signature": {
+    "name": "Partner di Misty",
+    "description": "L'adorabile compagno firma di tipo Acqua di Misty"
+  },
+  "goldeen_misty_signature": {
+    "name": "Partner di Misty",
+    "description": "L'elegante compagno firma di tipo Acqua di Misty"
+  },
+  "horsea_misty_signature": {
+    "name": "Partner di Misty",
+    "description": "Il leale compagno firma di tipo Acqua di Misty"
+  },
+  "togepi_misty_signature": {
+    "name": "Partner di Misty",
+    "description": "Il prezioso compagno firma di tipo Folletto di Misty"
+  },
+  "corsola_misty_signature": {
+    "name": "Partner di Misty",
+    "description": "L'allegro compagno firma di tipo Acqua di Misty"
+  },
+  "luvdisc_misty_signature": {
+    "name": "Partner di Misty",
+    "description": "Il sentimentale compagno firma di tipo Acqua di Misty"
+  },
+  "clauncher_misty_signature": {
+    "name": "Partner di Misty",
+    "description": "Il potente compagno firma di tipo Acqua di Misty"
+  },
+  "staryu_chronos_gear": {
+    "name": "Ingranaggio Cronos",
+    "description": "Uno Staryu Acciaio/Acqua infuso di energia temporale, con precisione difensiva e resilienza benedetta dalla pioggia"
+  },
+  "magikarp_splash_tyrant": {
+    "name": "Tiranno dello Splash",
+    "description": "Un Magikarp Acqua/Lotta che ha trasceso la debolezza, incarnando determinazione combattiva e potere intimidatorio"
+  },
+  "psyduck_kappa_quack": {
+    "name": "Qua Qua Kappa",
+    "description": "Uno Psyduck Acqua/Spettro che canalizza malizia mistica con abilità di legame d'ombra e confusione eterea"
+  },
+  "poliwag_lightning_drum": {
+    "name": "Tamburo Fulmine",
+    "description": "Un Poliwag Elettro/Acqua pulsante di energia galvanizzata, correnti veloci e vitalità rigenerativa"
+  },
+  "azurill_bounce_champion": {
+    "name": "Campione del Rimbalzo",
+    "description": "Un Azurill Volante/Folletto che vola con grazia aerilata, potere pixelato e abilità di rimbalzo da campione"
+  },
+  "goldeen_piercing_stinger": {
+    "name": "Pungiglione Perforante",
+    "description": "Un Goldeen Acqua/Coleottero equipaggiato con attacchi penetranti, precisione da tecnico e mira da cecchino"
+  },
+  "horsea_fireball_seahorse": {
+    "name": "Cavalluccio Palla di Fuoco",
+    "description": "Un Horsea Fuoco/Acqua ardente con intensità di fuoco flash, calore portatore di siccità e determinazione scottante"
+  },
+  "togepi_eggshell_fortress": {
+    "name": "Fortezza Guscio d'Uovo",
+    "description": "Un Togepi Normale/Roccia fortificato con grazia serena, difesa roccia solida e armatura temprata dalla battaglia"
+  },
+  "corsola_toxic_coral": {
+    "name": "Corallo Tossico",
+    "description": "Un Corsola Veleno/Acqua che prospera con cura veleno, colpi spietati e protezione da detriti tossici"
+  },
+  "luvdisc_heartbreaker": {
+    "name": "Spezzacuori",
+    "description": "Un Luvdisc Buio/Acqua che spezza cuori con aura oscura, trucchi da burlone e evasione nuoto veloce"
+  },
+  "clauncher_buster_dragon_blaster": {
+    "name": "Blaster Drago Buster",
+    "description": "Un Clauncher Acqua/Drago armato con ferocia da fauci di drago, portata da mega cannone e devastazione forza bruta"
+  },
+  "vulpix_brock_signature": {
+    "name": "Partner di Brock",
+    "description": "Il mistico compagno firma di tipo Fuoco di Brock"
+  },
+  "zubat_brock_signature": {
+    "name": "Partner di Brock",
+    "description": "Il veloce compagno firma di tipo Veleno di Brock"
+  },
+  "bonsly_brock_signature": {
+    "name": "Partner di Brock",
+    "description": "Il resiliente compagno firma di tipo Roccia di Brock"
+  },
+  "mudkip_brock_signature": {
+    "name": "Partner di Brock",
+    "description": "Il robusto compagno firma di tipo Acqua di Brock"
+  },
+  "pineco_brock_signature": {
+    "name": "Partner di Brock",
+    "description": "Il difensivo compagno firma di tipo Coleottero di Brock"
+  },
+  "croagunk_brock_signature": {
+    "name": "Partner di Brock",
+    "description": "L'astuto compagno firma di tipo Veleno di Brock"
+  },
+  "happiny_brock_signature": {
+    "name": "Partner di Brock",
+    "description": "Il premuroso compagno firma di tipo Normale di Brock"
+  },
+  "lotad_brock_signature": {
+    "name": "Partner di Brock",
+    "description": "Il tranquillo compagno firma di tipo Acqua di Brock"
+  },
+  "comfey_brock_signature": {
+    "name": "Partner di Brock",
+    "description": "Il gentile compagno firma di tipo Folletto di Brock"
+  },
+  "geodude_phantom_fist": {
+    "name": "Pugno Fantasma",
+    "description": "Un Geodude Roccia/Spettro che brandisce tag ombra spettrale, artigli duri e tecniche pugno di ferro con grazia levitante"
+  },
+  "vulpix_flaming_forest_spirit": {
+    "name": "Spirito della Foresta Fiammeggiante",
+    "description": "Un Vulpix Fuoco/Erba che incarna spiriti della foresta con fiamme che evocano siccità, protezione pelle d'erba e vitalità clorofilla"
+  },
+  "zubat_vampiric_fiend": {
+    "name": "Demone Vampirico",
+    "description": "Uno Zubat Buio/Spettro che canalizza spavalderia vampirica, terrore corpo maledetto e ferocia mascella forte"
+  },
+  "bonsly_tear_drop": {
+    "name": "Goccia di Lacrima",
+    "description": "Un Bonsly Roccia/Acqua che scorre con precisione legame abilità, resilienza compattazione acqua e lacrime rigenerative"
+  },
+  "mudkip_stone_skinned_salamander": {
+    "name": "Salamandra Pelle di Pietra",
+    "description": "Un Mudkip Acqua/Roccia corazzato con difesa pelle di pietra, protezione filtro e potere torrente"
+  },
+  "pineco_iron_plated_grenade": {
+    "name": "Granata Corazzata di Ferro",
+    "description": "Un Pineco Fuoco/Acciaio esplosivo con detonazione conseguenza, intensità corpo fiamma e ritorsione spuntoni di ferro"
+  },
+  "croagunk_jester_of_pestilence": {
+    "name": "Giullare della Pestilenza",
+    "description": "Un Croagunk Veleno/Folletto che diffonde corrosione pixelata, gas neutralizzante e caos delle tavole della rovina"
+  },
+  "happiny_pink_fortress": {
+    "name": "Fortezza Rosa",
+    "description": "Un Happiny Normale/Folletto fortificato con supporto guardia amica, compassione guaritore e recupero cura naturale"
+  },
+  "lotad_shadow_lily": {
+    "name": "Giglio d'Ombra",
+    "description": "Un Lotad Acqua/Spettro che fluttua con sostentamento piatto pioggia, legame tag ombra e resilienza assorbiacqua"
+  },
+  "comfey_aqua_bloom": {
+    "name": "Fioritura Acquatica",
+    "description": "Un Comfey Erba/Acqua che fiorisce con nutrimento piovischio, protezione bolla d'acqua e vitalità seminatore"
+  },
+  "riolu_apollo_diana_signature": {
+    "name": "Partner di Apollo e Diana",
+    "description": "Il coraggioso compagno firma di tipo Lotta di Apollo e Diana"
+  },
+  "solrock_apollo_diana_signature": {
+    "name": "Partner di Apollo e Diana",
+    "description": "Il radioso compagno firma di tipo Roccia di Apollo e Diana"
+  },
+  "lunatone_apollo_diana_signature": {
+    "name": "Partner di Apollo e Diana",
+    "description": "Il mistico compagno firma di tipo Roccia di Apollo e Diana"
+  },
+  "larvesta_apollo_diana_signature": {
+    "name": "Partner di Apollo e Diana",
+    "description": "L'ardente compagno firma di tipo Coleottero di Apollo e Diana"
+  },
+  "swablu_apollo_diana_signature": {
+    "name": "Partner di Apollo e Diana",
+    "description": "Il soffice compagno firma di tipo Normale di Apollo e Diana"
+  },
+  "castform_apollo_diana_signature": {
+    "name": "Partner di Apollo e Diana",
+    "description": "L'adattabile compagno firma di tipo Normale di Apollo e Diana"
+  },
+  "litwick_apollo_diana_signature": {
+    "name": "Partner di Apollo e Diana",
+    "description": "Il tremolante compagno firma di tipo Spettro di Apollo e Diana"
+  },
+  "eevee_apollo_diana_signature": {
+    "name": "Partner di Apollo e Diana",
+    "description": "Il versatile compagno firma di tipo Normale di Apollo e Diana"
+  },
+  "teddiursa_apollo_diana_signature": {
+    "name": "Partner di Apollo e Diana",
+    "description": "Il coccoloso compagno firma di tipo Normale di Apollo e Diana"
+  },
+  "cleffa_apollo_diana_signature": {
+    "name": "Partner di Apollo e Diana",
+    "description": "Il stellato compagno firma di tipo Folletto di Apollo e Diana"
+  },
+  "sunkern_apollo_diana_signature": {
+    "name": "Partner di Apollo e Diana",
+    "description": "Lo speranzoso compagno firma di tipo Erba di Apollo e Diana"
+  },
+  "riolu_shadow_warrior": {
+    "name": "Guerriero dell'Ombra",
+    "description": "Un Riolu Spettro/Lotta che padroneggia il combattimento d'ombra con aggressione spavalderia, adattabilità e presenza intimidatoria"
+  },
+  "solrock_void_constellation": {
+    "name": "Costellazione del Vuoto",
+    "description": "Un Solrock Roccia/Buio che irradia energia del vuoto con intensità potere solare, grazia levitante e dominanza aura oscura"
+  },
+  "lunatone_dream_weaver": {
+    "name": "Tessitore di Sogni",
+    "description": "Un Lunatone Roccia/Psico che tesse sogni con mistero levitante, temperamento lunatico e protezione magiguardia"
+  },
+  "larvesta_toxic_spinner": {
+    "name": "Filatore Tossico",
+    "description": "Un Larvesta Coleottero/Veleno che tesse ragnatele tossiche con afflizione catena tossica, difesa pelle ruvida e maestria corrosione"
+  },
+  "swablu_frost_nimbus": {
+    "name": "Nimbo di Gelo",
+    "description": "Uno Swablu Ghiaccio/Volante che fluttua su nuvole cariche di gelo con difesa soffice, potere refrigerante e dominio avviso neve"
+  },
+  "castform_dust_devil": {
+    "name": "Diavolo di Polvere",
+    "description": "Un Castform Roccia/Terra che turbina come un diavolo di polvere con caos sabbiafiume, assorbimento risucchiotempesta e grinta pelle ruvida"
+  },
+  "litwick_wyrmflame": {
+    "name": "Fiamma del Wyrm",
+    "description": "Un Litwick Fuoco/Drago che brucia con furia fiamma del wyrm, ferocia fauci di drago, intensità fuoco flash e mistero levitante"
+  },
+  "eevee_untamed_spirit": {
+    "name": "Spirito Indomito",
+    "description": "Un Eevee Normale/Normale che incarna potenziale indomito con fortuna super fortuna, grazia serena e protezione armatura prisma"
+  },
+  "teddiursa_sweet_tooth": {
+    "name": "Goloso",
+    "description": "Un Teddiursa Folletto/Folletto che si abbandona al potere dolce come il miele con forza potere puro, magia nebbia crescente e abbondanza raccolto"
+  },
+  "cleffa_meteoric_core": {
+    "name": "Nucleo Meteorico",
+    "description": "Un Cleffa Folletto/Acciaio forgiato da essenza meteorica con calore corpo fiamma, protezione magiguardia e resilienza roccia solida"
+  },
+  "sunkern_plasma_sprout": {
+    "name": "Germoglio di Plasma",
+    "description": "Un Sunkern Elettro/Erba crepitante di energia plasma, conversione galvanizzante, intensità potere solare e dominanza campo elettrico"
+  },
+  "championPartner": "Partner di {{champion}}"
+}

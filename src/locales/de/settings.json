@@ -64,6 +64,7 @@
   "fieldVolume": "Rufe & Attacken",
   "seVolume": "Spezialeffekte",
   "uiVolume": "Benutzeroberfläche",
+  "skipFaintCry": "Kampfunfähig-Sounds überspringen",
   "musicPreference": "Musik Präferenz",
   "mixed": "Gemischt",
   "gamepadPleasePlug": "Bitte einen Controller anschließen oder eine Taste drücken.",
@@ -104,5 +105,6 @@
   "items": "Items",
   "reroll": "Neu rollen",
   "shop": "Shop",
-  "checkTeam": "Team überprüfen"
+  "checkTeam": "Team überprüfen",
+  "lockedRewardSpeed": "Belohnungsgeschwindigkeit sperren"
 }

@@ -10,12 +10,13 @@
   "statChange": "Statuswertveränderungen halten solange an, wie dein Pokémon auf dem Feld bleibt.\n$Pokémon werden am Anfang eines Trainerkampfes oder bei einem Arealwechsel automatisch zurückgerufen.\n$Nutze C oder Shift, um aktuelle Statuswertveränderungen anzuzeigen.",
   "selectItem": "Nach jedem Kampf kannst du aus 3 zufälligen Items exakt eines auswählen.\n$Es gibt u. A. Heilitems, tragbare Items und Basis-Items, die dir einen permanenten Vorteil verschaffen.\n$Die meisten tragbaren und permanenten Items werden stärker, wenn du sie mehrfach sammelst.\n$Manche Items, wie Entwicklungssteine, tauchen nur auf, wenn du sie auch nutzen kannst.\n$Mithilfe der \"Transfer\"-Option kannst du Items zwischen deinen Pokémon verschieben.\n$Sie erscheint rechts unten, sobald du einem deiner Pokémon dein Item zum Tragen gegeben hast.\n$Du kannst Heilitems auch gegen Geld erwerben. Je weiter du kommst, desto mehr stehen dir zur Auswahl.\n$Erledige deine Einkäufe als erstes, denn sobald du dein zufälliges Item auswählst, beginnt der nächste Kampf.",
   "eggGacha": "Hier kannst du deine Gutscheine gegen Pokémon-Eier\ntauschen.\n$Eier schlüpfen, nachdem du eine gewisse Anzahl Kämpfe\nabsolviert hast. Je seltener das Ei, desto länger dauert es.\n$Geschlüpfte Pokémon werden nicht deinem Team hinzugefügt,\nsondern deinen verfügbaren Startern.\n$In der Regel haben sie bessere DVs als in der Wildnis\ngefangene Pokémon.\n$Es gibt sogar Pokémon, die du nur aus Eiern erhalten kannst.\n$Es gibt drei Gacha-Maschinen mit je unterschiedlichen Boni,\nalso such' dir die aus, die dir am besten gefällt!",
+  "backupReminder": "Bitte erstelle eine Sicherung deines Spielstands, indem du ihn auf dein Gerät herunterlädst.\n$Dies hilft zu verhindern, dass du von vorne anfangen musst, sollten deine Browserdaten verloren gehen.",
   "titles": {
     "essentials": "Grundlegende Konzepte",
     "gameModes": "Spielmodi",
     "specialPokemon": "Spezielle Pokémon",
     "progression": "Spielfortschritt",
-    "permanentFeatures": "Dauerhafte Funktionen",
+    "permanentFeatures": "Omega-Funktionen",
     "glitchSystem": "Glitch-System",
     "battleMechanics": "Kampfmechaniken",
     "formChanges": "Formwechsel",
@@ -86,7 +87,7 @@
     },
     "rivalQuests": {
       "title": "Glitch-Quests",
-      "text": "Besiege Rivalen, um Glitch-Quests freizuschalten! Kaufe sie im PermaShop und schließe sie ab, um dauerhaft mächtige Glitch-Formen für bestimmte Pokémon freizuschalten!"
+      "text": "Besiege Rivalen, um Glitch-Quests freizuschalten! Kaufe sie im OmegaShop und schließe sie ab, um dauerhaft mächtige Glitch-Formen für bestimmte Pokémon freizuschalten!"
     },
     "smitom": {
       "title": "Smitom",
@@ -121,7 +122,7 @@
       "title": "Reise-Modus",
       "text": { 
         "1":"Stelle dein Team zusammen, um die Leere zu bekämpfen. Nutze jedes Pokémon, das du gefangen oder geschlüpft hast, einschließlich Fusionen!",
-        "2":"Fusions-Pokémon benötigen ∞GOLD zur Nutzung. PermaItems können Kosten senken und dein Starterlimit erhöhen."
+        "2":"Fusions-Pokémon benötigen ΩGOLD zur Nutzung. OmegaGegenstände können Kosten senken und dein Starterlimit erhöhen."
         }
     },
     "unlockJourney": {
@@ -133,7 +134,7 @@
     },
     "rogueMode": {
       "title": "Rogue-Modus",
-      "text": "Wähle 2 zufällige Pokémon, um deinen Durchlauf zu starten! Nutze dein ∞GOLD, um deine Optionen neu zu würfeln! Jeder Durchlauf ist einzigartig!"
+      "text": "Wähle 2 zufällige Pokémon, um deinen Durchlauf zu starten! Nutze dein ΩGOLD, um deine Optionen neu zu würfeln! Jeder Durchlauf ist einzigartig!"
     },
     "bosses": {
       "title": "Multi-Form-Bosse",
@@ -164,14 +165,14 @@
       "title": "Fangbare Fusionen",
       "text": { 
         "1":"Alle Fusions-Pokémon sind fangbar und werden dauerhaft deiner Sammlung hinzugefügt!",
-        "2":"Finde sie mit einer Grundchance von 1/14 (verbesserbar mit ∞ITEMS). Ihre Verwendung kostet ∞GOLD."
+        "2":"Finde sie mit einer Grundchance von 1/14 (verbesserbar mit ΩGEGENSTÄNDE). Ihre Verwendung kostet ΩGOLD."
       }
     },
     "trainerPokemon": {
       "title": "Trainer-Pokémon schnappen",
       "text": { 
         "1":"Die meisten Trainer verkaufen ihre Pokémon während des Kampfes (außer Rivalen!). Gefangene Pokémon werden dauerhaft deiner Sammlung hinzugefügt!",
-        "2":"Die Kosten hängen von der Welle ab, können aber mit ∞ITEMS reduziert werden."
+        "2":"Die Kosten hängen von der Welle ab, können aber mit ΩGEGENSTÄNDE reduziert werden."
       }
     },
     "partyAbility": {
@@ -182,9 +183,9 @@
       }
     },
     "permaMoney": {
-      "title": "PermaGeld (∞GOLD)",
+      "title": "OmegaGeld (ΩGOLD)",
       "text": { 
-        "1":"Verdiene dauerhaftes ∞GOLD zwischen Durchläufen! Nutze es, um ∞ITEMS zu kaufen, Rogue-Starter neu zu würfeln oder die Fusionssteuer zu bezahlen.",
+        "1":"Verdiene dauerhaftes ΩGOLD zwischen Durchläufen! Nutze es, um ΩGEGENSTÄNDE zu kaufen, Rogue-Starter neu zu würfeln oder die Fusionssteuer zu bezahlen.",
         "2":"Erhalte es durch Kopfgelder, Belohnungen, Speichern oder Interaktionen mit Smitom."
       }
     },
@@ -192,19 +193,19 @@
       "title": "Lokales Speichern & Backup",
       "text": { 
         "1":"Wenn deine Daten verloren gehen, sind sie FÜR IMMER VERLOREN! Nutze das Diskettensymbol (oben rechts), um deine Speicherdatei regelmäßig zu EXPORTIEREN!",
-        "2":"Dies belohnt dich mit ∞GOLD und schützt vor Datenverlust."
+        "2":"Dies belohnt dich mit ΩGOLD und schützt vor Datenverlust."
       }
     },
     "bounties": {
       "title": "Kopfgeldsystem",
       "text": { 
         "1":"Gib 6-Buchstaben-Codes in der Konsole ein, um Kopfgelder zu aktivieren.",
-        "2":"Kopfgelder sind QUESTS, die dir ermöglichen, ∞GOLD/∞ITEMS zu verdienen, und sind nach Abschluss komplett wiederverwendbar!"
+        "2":"Kopfgelder sind QUESTS, die dir ermöglichen, ΩGOLD/ΩGEGENSTÄNDE zu verdienen, und sind nach Abschluss komplett wiederverwendbar!"
       }
     },
     "dailyBounty": {
       "title": "Tägliches Kopfgeld!",
-      "text": "Ein neues tägliches Kopfgeld ist verfügbar! Schließe es ab, um ∞GOLD/∞ITEMS zu verdienen. Der Code ist bereits in der Konsole, aktiviere ihn einfach!"
+      "text": "Ein neues tägliches Kopfgeld ist verfügbar! Schließe es ab, um ΩGOLD/ΩGEGENSTÄNDE zu verdienen. Der Code ist bereits in der Konsole, aktiviere ihn einfach!"
     },
     "discord": {
       "title": "Discord & Support",
@@ -227,10 +228,10 @@
       }
     },
     "smittyItems": {
-      "title": "PermaItems (∞ITEMS)",
+      "title": "OmegaGegenstände (ΩGEGENSTÄNDE)",
       "text": { 
-        "1":"Nutze ∞GOLD, um dauerhafte Verbesserungen (∞ITEMS) mit verschiedenen Dauern zu kaufen: Nutzungsbasiert (Menge reduziert nach Nutzung) oder Wellenbasiert (Menge reduziert nach Welle 50).",
-        "2":"Diese Verbesserungen können Shiny/Fusions/Fang-Raten erhöhen, Kosten senken und andere dauerhafte Vorteile bieten!"
+        "1":"Nutze ΩGOLD, um langanhaltende Verbesserungen (ΩGEGENSTÄNDE) mit verschiedenen Dauern zu kaufen: Nutzungsbasiert (Menge reduziert nach Nutzung) oder Wellenbasiert (Menge reduziert nach Welle 50).",
+        "2":"Diese Verbesserungen können Shiny/Fusions/Fang-Raten erhöhen, Kosten senken und andere langanhaltende Vorteile bieten!"
       }
     },
     "abilitySwitcher": {
@@ -270,7 +271,7 @@
     },
     "newQuests": {
       "title": "Neue Quest freigeschaltet!",
-      "text": "Du hast eine neue Quest freigeschaltet! Sie erscheint ZUFÄLLIG (aber häufig) im PermaShop / Shop auf dem Titelbildschirm. Wenn sie nicht da ist, rolle neu um sie zu finden!"
+      "text": "Du hast eine neue Quest freigeschaltet! Sie erscheint ZUFÄLLIG (aber häufig) im OmegaShop / Shop auf dem Titelbildschirm. Wenn sie nicht da ist, rolle neu um sie zu finden!"
     },
     "modeUnlocks": {
       "title": "Spielmodus-Freischaltungen",
@@ -349,8 +350,99 @@
     "thankYou": {
       "title": "Lieber Spieler",
       "text": {
-        "1": "16 Monate des Solo-Entwicklungswahnsinns bedeuten alles - jedes Mal, wenn jemand wie du eine großartige Zeit beim Spielen dieses Spiels hat. Wenn meine verrückten Ideen tatsächlich funktionieren und du Spaß hast,", 
+        "1": "24 Monate des Solo-Entwicklungswahnsinns bedeuten alles - jedes Mal, wenn jemand wie du eine großartige Zeit beim Spielen dieses Spiels hat. Wenn meine verrückten Ideen tatsächlich funktionieren und du Spaß hast,", 
         "2": "dann bin ich vielleicht - meinem Traum näher, ein echter Spieleentwickler zu werden. Vielen Dank, dass du meine chaotische, kaputte Version von PokéRogue spielst! - Smitty"
+      }
+    },
+    "pokevoidV2Update": {
+      "title": {
+        "1": "Willkommen bei PokéVoid V2!",
+        "2": "Komplettes UI-Redesign",
+        "3a": "Neuer spielbarer Champion: Apollo",
+        "3b": "Neuer spielbarer Champion: Diana",
+        "4": "Champion-Charakterauswahl",
+        "5": "Fertigkeitenbäume",
+        "6": "Neue Modi",
+        "7": "Kampfbefehle",
+        "8": "Viele weitere Funktionen!"
+      },
+      "text": {
+        "1": "Willkommen bei PokéVoids NEUEM Version 2.0b Update - Das KOLOSSALE UPDATE!! Dieses Update bringt eine komplette Überarbeitung mit NEUEM UI, Champions, Fertigkeitenbäumen und vielem mehr!",
+        "2": "Erlebe ein komplettes UI-Redesign mit neuen Symbolen und verbessertem visuellem Design im gesamten Spiel!",
+        "3a": "Champion der Sonne, Apollo - kanalisiert seine strahlende Kraft als eines der letzten Lichter, die die endlose Nacht der Leere zurückdrängen!",
+        "3b": "Champion des Mondes, Diana - webt mondbeleuchtete Fäden, um die Bewegungen der Leere zu verfolgen und andere in Sicherheit zu führen!",
+        "4": "Wähle deinen Champion und nimm es mit der Leere auf! Jeder Champion hat einzigartige Typen, Signatur-Pokémon und seinen eigenen Fertigkeitenbaum!",
+        "5": "Schalte mächtige Fähigkeiten durch den Fertigkeitenbaum deines Champions frei! Nutze Fertigkeitspunkte, um Knoten zu kaufen, und Baum-Token zum Aufleveln!",
+        "6": "Die neue Chaos-Modus-Variante FTL wartet!",
+        "7": "Sechs neue Kampfbefehle geben dir mehr Kontrolle! Greife auf deinen Fertigkeitenbaum zu, prüfe Gegner, hole Eier und mehr mitten im Kampf!",
+        "8": "Bessere Lokalisierungsverarbeitung + verbesserte Übersetzungen und unzählige weitere Funktionen warten! Tauche ein und entdecke sie alle!"
+      }
+    },
+    "ftlModeSelect": {
+      "title": { "1": "NEUER FTL-Modus" },
+      "text": { "1": "FTL (Schneller als das Licht) ist die neue schnellste Chaos-Variante! Spring direkt ins Chaos!" }
+    },
+    "championSelectEssence": {
+      "title": { "1": "Champion-Auswahl", "2": "Essenz-System", "3": "Champions aufleveln" },
+      "text": {
+        "1": "Wen wählst du, um in die Leere vorzudringen! Jeder Champion hat einzigartige Typen, Signatur-Pokémon und Fertigkeitenbaum!",
+        "2": "Sammle Essenzen durch das Besiegen von Pokémon! Essenzen entsprechen dem Typ des besiegten Pokémon und werden verwendet, um verdorbene Champions zu befreien und mächtige Fähigkeiten freizuschalten!",
+        "3": "Nutze gesammelte Essenzen, um deine Champions aufzuleveln! Höhere Level schalten mächtigere Fähigkeiten in ihren Fertigkeitenbäumen frei!"
+      }
+    },
+    "championSelectSpecialEssences": {
+      "title": { "1": "Glitch- & Smitty-Essenzen", "2": "Glitch-Essenz", "3": "Smitty-Essenz" },
+      "text": {
+        "1": "Einige mächtige Fähigkeiten erfordern spezielle Essenzen: Glitch-Essenz und Smitty-Essenz! Diese schalten die stärksten Fähigkeiten frei!",
+        "2": "Um NEUE MEISTER+-SELTENHEIT verdorbene Glitch-Formen und mächtige legendäre Pokémon freizuschalten - sammle Glitch-Essenzen durch das Besiegen von Glitch-Pokémon!",
+        "3": "Um NEUE MEISTER+-SELTENHEIT verbotene Smitty-Fähigkeiten und kaputte Alt-Builds freizuschalten - sammle Smitty-Essenzen, indem du dich der Verderbnis selbst stellst!"
+      }
+    },
+    "skillTreeApolloDianaTypes": {
+      "title": { "1": "Zufälliges Typsystem" },
+      "text": { "1": "Apollo und Diana sind besondere Champions mit ZUFÄLLIGEN Typen! Zu Beginn jedes Durchlaufs werden dir zwei zufällige Typen zugewiesen!" }
+    },
+    "skillTreeSetTypes": {
+      "title": { "1": "Champions der Typen", "2": "Rocko - Champion des Gesteins", "3": "Typ-Synergie" },
+      "text": {
+        "1": "Die meisten Champions haben FESTE Typ-Spezialisierungen! Ihr gesamter Fertigkeitenbaum und Pokémon-Pool dreht sich um ihre Typen!",
+        "2": "Rocko spezialisiert sich auf Boden- und Gesteins-Typen! Sein Fertigkeitenbaum bietet Boden- und Gesteins-TMs, Booster und Fähigkeiten!",
+        "3": "Baue dein Team um die Typen deines Champions auf! Fange Pokémon, die dazu passen, um das Potenzial deines Fertigkeitenbaums zu maximieren!"
+      }
+    },
+    "skillTreeProgression": {
+      "title": { "1": "Fertigkeitspunkte", "2": "Baum-Token" },
+      "text": {
+        "1": "Fertigkeitspunkte werden verwendet, um Knoten in deinem Fertigkeitenbaum zu kaufen! Verdiene sie durch Kämpfe, Belohnungen und besondere Events!",
+        "2": "Baum-Token leveln deinen Fertigkeitenbaum auf! Jedes Level erweitert deinen Fertigkeitenbaum und enthüllt mächtigere Fähigkeiten tiefer im Baum!"
+      }
+    },
+    "starterSelectCatchRequirements": {
+      "title": { "1": "Apollo & Diana sind Wildcards!", "2": "Champions der Typen", "3": "Befreite Champions starten neu", "4": "Fangen erweitert den Pool" },
+      "text": {
+        "1": "Apollo und Diana können ALLE Pokémon unabhängig vom Typ verwenden! Sie sind perfekt für maximale Flexibilität!",
+        "2": "Typ-spezialisierte Champions wie Rocko können nur Pokémon verwenden, die zu ihrer Affinität passen! Rocko verwendet Boden- und Gesteins-Typen!",
+        "3": "Als neue Champions, die du kürzlich aus der Verderbnis der Leere befreit hast, müssen sie neu anfangen und ihre Sammlung wieder aufbauen!",
+        "4": "Typ-Champions haben nur Zugang zu den Pokémon, die du fängst, während du sie verwendest! Je mehr du fängst, desto mehr Optionen haben sie!"
+      }
+    },
+    "starterSelectSignature": {
+      "title": { "1": "Was sind Signatur-Pokémon?", "2": "Legendäre Alt-Builds" },
+      "text": {
+        "1": "Signatur-Pokémon sind spezielle Starter, die für jeden Champion einzigartig sind! Ihre Symbole sind mit Chaos-Potenzial markiert!",
+        "2": "Signaturen können sich in Alt-Builds verwandeln - alternative Formen mit anderen Statuswerten, Fähigkeiten und sogar Typen! Ein völlig neues Pokémon!"
+      }
+    },
+    "commandUINewCommands": {
+      "title": { "1": "Sechs neue Befehle!", "2": "Team-Befehl", "3": "Fertigkeitenbaum-Befehl", "4": "Prüfen-Befehl", "5": "Eier-Befehl", "6": "Shop-Befehl", "7": "Karten-Befehl" },
+      "text": {
+        "1": "PokéVoid V2 fügt SECHS neue Kampfbefehle hinzu! Greife während des Kampfes darauf zu für mächtige Optionen!",
+        "2": "TEAM: Zeige sofort detaillierte Informationen über die Statuswerte, Fähigkeiten und Attacken deines Teams an!",
+        "3": "FERTIGKEITENBAUM: Greife mitten im Kampf auf den Fertigkeitenbaum deines Champions zu! Gib Punkte aus und schalte neue Fähigkeiten spontan frei!",
+        "4": "PRÜFEN: Prüfe JEDES Pokémon! Sieh bequem mögliche Fähigkeiten, Formen, Statusverteilung und Attackensets!",
+        "5": "EIER: Hole Eier aus dem Ei-Gacha!",
+        "6": "SHOP: Schnellzugriff auf den Shop!",
+        "7": "KARTE: Zeige deinen aktuellen Pfad innerhalb des Chaos an!"
       }
     }
 }

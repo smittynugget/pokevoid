@@ -1,6 +1,8 @@
 {
   "viewTitle": "Mapa de Ruta de Batalla",
   "selectTitle": "Seleccionar Ruta de Batalla",
+  "chaosTitle": "CAOS",
+  "chaosSubtitle": "Elige tu camino mientras te aventuras en el corazón de la oscuridad",
   "noPathMessage": "No hay ruta de batalla disponible.\n¡Genera una primero!",
   "unknownEncounter": "Encuentro desconocido",
   "unknownNode": "Desconocido",
@@ -22,8 +24,8 @@
     "smittyBattle": "Batalla De Smitty",
     "evilGruntBattle": "Recluta Del Equipo Malvado",
     "evilAdminBattle": "Administrador Del Equipo Malvado",
-    "randPermaItem": "Objeto ∞ Aleatorio",
-    "permaItems": "Recompensas De Objeto ∞",
+    "randPermaItem": "ΩObjeto Aleatorio",
+    "permaItems": "Recompensas De ΩObjeto",
     "goldenPokeball": "Recompensas De Pokéball Dorada",
     "rogueBallItems": "Recompensas De Rogue Ball",
     "masterBallItems": "Recompensas De Master Ball",
@@ -34,7 +36,7 @@
     "glitchPiece": "Recompensa De Pieza Glitch",
     "dnaSplicers": "Recompensa De Fusionador ADN",
     "money": "Recompensa De Dinero",
-    "permaMoney": "Aumento Permanente De Dinero",
+    "permaMoney": "ΩORO",
     "releaseItems": "Recompensas De Liberación",
     "mints": "Recompensas De Mentas",
     "eggVoucher": "Recompensa De Cupón De Huevo",
@@ -64,7 +66,9 @@
     "collectedShop": "Gasta Esencias por recompensas",
     "vitamin": "Recompensas genéricas de potenciadores de estadísticas (Proteína, Hierro, Calcio, etc.)",
     "moveUpgrade": "Mejoras de movimientos para movimientos Pokémon",
-    "lowTierMoveUpgrade": "Mejoras de movimientos con límite de nivel III"
+    "lowTierMoveUpgrade": "Mejoras de movimientos con límite de nivel III",
+    "skillPoints": "Puntos de Habilidad para desbloquear habilidades en el Árbol de Habilidades.",
+    "skillToken": "¡Las Fichas de Árbol suben de nivel tu Árbol de Habilidades!"
   },
   "names": {
     "wildPokemon": "Pokémon Salvaje",
@@ -84,8 +88,8 @@
     "smittyBattle": "Batalla Smitty",
     "evilGruntBattle": "Recluta Malvado",
     "evilAdminBattle": "Administrador Malvado",
-    "randPermaItem": "Objeto ∞ Aleatorio",
-    "permaItems": "Recompensas Objeto ∞",
+    "randPermaItem": "Objeto Ω Aleatorio",
+    "permaItems": "Recompensas Objeto Ω",
     "goldenPokeball": "Pokéball Dorada",
     "rogueBallItems": "Recompensas Rogue Ball",
     "masterBallItems": "Recompensas Master Ball",
@@ -96,7 +100,7 @@
     "glitchPiece": "Pieza Glitch",
     "dnaSplicers": "Fusionador ADN",
     "money": "Dinero",
-    "permaMoney": "∞ORO",
+    "permaMoney": "ΩORO",
     "releaseItems": "Recompensas De Liberación",
     "mints": "Recompensas De Mentas",
     "eggVoucher": "Cupón De Huevo",
@@ -126,7 +130,9 @@
     "collectedShop": "El Coleccionista",
     "vitamin": "Vitaminas Baratas",
     "moveUpgrade": "Mejoras de Movimientos",
-    "lowTierMoveUpgrade": "Mejoras de Movimientos de Nivel Bajo"
+    "lowTierMoveUpgrade": "Mejoras de Movimientos de Nivel Bajo",
+    "skillPoints": "Puntos de Habilidad",
+    "skillToken": "Ficha de Árbol"
   },
   "challenge": {
     "chaosChallenge": "Desafío Caos Activo",
@@ -238,5 +244,7 @@
       "name": "Nerf Pokémon",
       "description": "El Pokémon más fuerte causa la mitad de daño"
     }
-  }
+  },
+  "tooltipDetails": "DETALLES",
+  "tooltipBack": "Volver"
 } 

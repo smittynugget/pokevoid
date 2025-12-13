@@ -5,6 +5,9 @@ import { addTextObject, TextStyle } from "./text";
 import { Mode } from "./ui";
 
 export default class LoadingModalUiHandler extends ModalUiHandler {
+  protected alphaMultiplier: number = 0.5;
+  protected gridInc: number = -3;
+
   constructor(scene: BattleScene, mode: Mode | null = null) {
     super(scene, mode);
   }
@@ -28,7 +31,6 @@ export default class LoadingModalUiHandler extends ModalUiHandler {
   getButtonLabels(): string[] {
     return [ ];
   }
-
   setup(): void {
     super.setup();
 

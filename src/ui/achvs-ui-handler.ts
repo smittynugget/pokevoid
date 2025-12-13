@@ -80,8 +80,6 @@ export default class AchvsUiHandler extends MessageUiHandler {
     this.headerActionText = addTextObject(this.scene, 0, 0, "", TextStyle.WINDOW, {fontSize:"60px"});
     this.headerActionText.setOrigin(0, 0);
     this.headerActionText.setPositionRelative(this.headerBg, 264, 8);
-
-    // We need to get the player gender from the game data to add the correct prefix to the achievement name
     const genderIndex = this.scene.gameData.gender ?? PlayerGender.MALE;
     const genderStr = PlayerGender[genderIndex].toLowerCase();
 
@@ -184,7 +182,7 @@ export default class AchvsUiHandler extends MessageUiHandler {
   }
 
   protected showAchv(achv: Achv) {
-    // We need to get the player gender from the game data to add the correct prefix to the achievement name
+
     const genderIndex = this.scene.gameData.gender ?? PlayerGender.MALE;
     const genderStr = PlayerGender[genderIndex].toLowerCase();
 
@@ -302,13 +300,6 @@ export default class AchvsUiHandler extends MessageUiHandler {
     }
     return ret;
   }
-
-  /**
-   * setScrollCursor(scrollCursor: integer) : boolean
-   * scrollCursor refers to the page's position within the entire sum of the data, unlike cursor, which refers to a user's position within displayed data
-   * @param takes a scrollCursor that has been updated based on user behavior
-   * @returns returns a boolean that indicates whether the updated scrollCursor led to an update in the data displayed.
-   */
   setScrollCursor(scrollCursor: integer): boolean {
     if (scrollCursor === this.scrollCursor) {
       return false;
@@ -328,12 +319,6 @@ export default class AchvsUiHandler extends MessageUiHandler {
     }
     return true;
   }
-
-
-  /**
-   * updateAchvIcons(): void
-   * Determines what data is to be displayed on the UI and updates it accordingly based on the current value of this.scrollCursor
-   */
   updateAchvIcons(): void {
     this.headerText.text = this.achvsName;
     this.headerActionText.text = this.vouchersName;
@@ -369,11 +354,6 @@ export default class AchvsUiHandler extends MessageUiHandler {
 
     this.currentTotal = this.achvsTotal;
   }
-
-  /**
-   * updateVoucherIcons(): void
-   * Determines what data is to be displayed on the UI and updates it accordingly based on the current value of this.scrollCursor
-   */
   updateVoucherIcons(): void {
     this.headerText.text = this.vouchersName;
     this.headerActionText.text = this.achvsName;

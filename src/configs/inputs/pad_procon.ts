@@ -1,9 +1,5 @@
 import {SettingGamepad} from "#app/system/settings/settings-gamepad.js";
 import {Button} from "#app/enums/buttons";
-
-/**
- * Nintendo Pro Controller mapping
- */
 const pad_procon = {
   padID: "Pro Controller",
   padType: "xbox",
@@ -12,8 +8,8 @@ const pad_procon = {
     RC_E: 0,
     RC_W: 3,
     RC_N: 2,
-    START: 9, // +
-    SELECT: 8, // -
+    START: 9,
+    SELECT: 8,
     LB: 4,
     RB: 5,
     LT: 6,
@@ -24,7 +20,7 @@ const pad_procon = {
     LC_S: 13,
     LC_W: 14,
     LC_E: 15,
-    MENU: 16, // Home
+    MENU: 16,
   },
   icons: {
     RC_S: "XB_Letter_B_OL.png",

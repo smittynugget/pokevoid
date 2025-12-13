@@ -16,9 +16,9 @@
     "questComplete": "Quest Complete!",
     "stageComplete": "Stage Complete!",
     "rewardTypes": {
-      "permaMoney": "∞GOLD",
-      "permaModifier": "∞ITEM",
-      "permaMoneyAndModifier": "∞GOLD & ∞ITEM"
+      "permaMoney": "ΩGOLD",
+      "permaModifier": "ΩITEM",
+      "permaMoneyAndModifier": "ΩGOLD & ΩITEM"
     }
   }
 }

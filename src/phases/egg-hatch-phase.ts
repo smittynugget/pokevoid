@@ -12,54 +12,42 @@ import { Mode } from "#app/ui/ui.js";
 import i18next from "i18next";
 import SoundFade from "phaser3-rex-plugins/plugins/soundfade";
 import * as Utils from "#app/utils.js";
-/**
- * Class that represents egg hatching
- */
+
 export class EggHatchPhase extends Phase {
-  /** The egg that is hatching */
+
   private egg: Egg;
-
-  /** The number of eggs that are hatching */
   private eggsToHatchCount: integer;
-  /** The container that lists how many eggs are hatching */
+
   private eggCounterContainer: EggCounterContainer;
-  
-  /** Speed multiplier for animations when there are many eggs */
   private speedMultiplier: number;
-
-  /** The scene handler for egg hatching */
   private eggHatchHandler: EggHatchSceneHandler;
-  /** The phaser gameobject container that holds everything */
+
   private eggHatchContainer: Phaser.GameObjects.Container;
-  /** The phaser image that is the background */
+
   private eggHatchBg: Phaser.GameObjects.Image;
-  /** The phaser rectangle that overlays during the scene */
+
   private eggHatchOverlay: Phaser.GameObjects.Rectangle;
-  /** The phaser container that holds the egg */
+
   private eggContainer: Phaser.GameObjects.Container;
-  /** The phaser sprite of the egg */
+
   private eggSprite: Phaser.GameObjects.Sprite;
-  /** The phaser sprite of the cracks in an egg */
+
   private eggCrackSprite: Phaser.GameObjects.Sprite;
-  /** The phaser sprite that represents the overlaid light rays */
+
   private eggLightraysOverlay: Phaser.GameObjects.Sprite;
-  /** The phaser sprite of the hatched Pokemon */
+
   private pokemonSprite: Phaser.GameObjects.Sprite;
-  /** The phaser sprite for shiny sparkles */
+
   private pokemonShinySparkle: Phaser.GameObjects.Sprite;
-
-  /** The {@link PokemonInfoContainer} of the newly hatched Pokemon */
   private infoContainer: PokemonInfoContainer;
-
-  /** The newly hatched {@link PlayerPokemon} */
   public pokemon: PlayerPokemon;
-  /** The index of which egg move is unlocked. 0-2 is common, 3 is rare */
+
   private eggMoveIndex: integer;
-  /** Internal booleans representing if the egg is hatched, able to be skipped, or skipped */
+
   private hatched: boolean;
   private canSkip: boolean;
   private skipped: boolean;
-  /** The sound effect being played when the egg is hatched */
+
   private evolutionBgm: AnySound;
 
   constructor(scene: BattleScene, egg: Egg, eggsToHatchCount: integer) {
@@ -67,15 +55,9 @@ export class EggHatchPhase extends Phase {
 
     this.egg = egg;
     this.eggsToHatchCount = eggsToHatchCount;
-    
+
     this.speedMultiplier = eggsToHatchCount > 5 ? 0.3 : 1.0;
   }
-
-  /**
-   * Helper to apply speedMultiplier to animation timings
-   * @param duration The original duration in ms
-   * @returns The scaled duration based on speedMultiplier
-   */
   private applySpeed(duration: number): number {
     return Utils.fixedInt(duration * this.speedMultiplier);
   }
@@ -161,24 +143,20 @@ export class EggHatchPhase extends Phase {
         this.canSkip = true;
 
         if(this.eggsToHatchCount > 100) {
-          // Initialize necessary display components before skipping
+
           this.eggCrackSprite.setVisible(true);
           this.eggCrackSprite.setFrame("4");
           this.eggLightraysOverlay.setVisible(true);
           this.eggLightraysOverlay.play("egg_lightrays");
-          
-          // Set up the Pokémon sprite before showing info
           this.pokemonSprite.play(this.pokemon.getSpriteKey(true));
           this.pokemonSprite.setPipelineData("ignoreTimeTint", true);
           this.pokemonSprite.setPipelineData("spriteKey", this.pokemon.getSpriteKey());
           this.pokemonSprite.setPipelineData("shiny", this.pokemon.shiny);
           this.pokemonSprite.setPipelineData("variant", this.pokemon.variant);
           this.pokemonSprite.setVisible(true);
-          
-          // Mark as hatched before skipping
           this.hatched = true;
           this.trySkip();
-          // Add a short delay to ensure all components are ready
+
           this.scene.time.delayedCall(50, () => {
             this.doReveal();
           });
@@ -242,14 +220,6 @@ export class EggHatchPhase extends Phase {
     }
     super.end();
   }
-
-  /**
-   * Function that animates egg shaking
-   * @param intensity of horizontal shaking. Doubled on the first call (where count is 0)
-   * @param repeatCount the number of times this function should be called (asynchronous recursion?!?)
-   * @param count the current number of times this function has been called.
-   * @returns nothing since it's a Promise<void>
-   */
   doEggShake(intensity: number, repeatCount?: integer, count?: integer): Promise<void> {
     return new Promise(resolve => {
       if (repeatCount === undefined) {
@@ -272,7 +242,7 @@ export class EggHatchPhase extends Phase {
             duration: 250,
             onComplete: () => {
               count!++;
-              if (count! < repeatCount!) { // we know they are defined
+              if (count! < repeatCount!) {
                 return this.doEggShake(intensity, repeatCount, count).then(() => resolve());
               }
               this.scene.tweens.add({
@@ -304,10 +274,6 @@ export class EggHatchPhase extends Phase {
     }
     return true;
   }
-
-  /**
-   * Plays the animation of an egg hatch
-   */
   doHatch(): void {
     this.canSkip = false;
     this.hatched = true;
@@ -340,10 +306,6 @@ export class EggHatchPhase extends Phase {
       }
     });
   }
-
-  /**
-   * Function to do the logic and animation of completing a hatch and revealing the Pokemon
-   */
   doReveal(): void {
     const isShiny = this.pokemon.isShiny();
     if (this.pokemon.species.subLegendary) {
@@ -385,17 +347,17 @@ export class EggHatchPhase extends Phase {
           this.scene.gameData.setPokemonCaught(this.pokemon, true, true).then(() => {
             this.scene.gameData.setEggMoveUnlocked(this.pokemon.species, this.eggMoveIndex).then(() => {
               this.scene.ui.showText("", 0);
-              
+
               if (this.scene.gameData.tempHatchedPokemon) {
                 this.scene.gameData.tempHatchedPokemon.push(this.pokemon);
               }
-              
+
               const isLastEgg = !this.scene.findPhase((p) => p instanceof EggHatchPhase && p !== this);
-              
+
               if (isLastEgg) {
                 if (!this.scene.gameData.tempHatchedPokemon) {
                   const hatchedPokemon: PlayerPokemon[] = [this.pokemon];
-                  
+
                   const pendingPhases: Phase[] = [];
                   let phase = this.scene.findPhase(p => p instanceof EggHatchPhase && p !== this);
                   while (phase) {
@@ -403,18 +365,18 @@ export class EggHatchPhase extends Phase {
                     phase.end();
                     phase = this.scene.findPhase(p => p instanceof EggHatchPhase && p !== this);
                   }
-                  
+
                   for (const phase of pendingPhases) {
                     const eggPhase = phase as EggHatchPhase;
                     if (eggPhase.pokemon) {
                       hatchedPokemon.push(eggPhase.pokemon);
                     }
                   }
-                  
+
                   this.scene.ui.setMode(Mode.EGG_STARTER_SELECT, hatchedPokemon);
                 }
               }
-              
+
               this.end();
             });
           });
@@ -428,22 +390,9 @@ export class EggHatchPhase extends Phase {
       ease: "Cubic.easeOut"
     });
   }
-
-  /**
-   * Helper function to generate sine. (Why is this not a Utils?!?)
-   * @param index random number from 0-7 being passed in to scale pi/128
-   * @param amplitude Scaling
-   * @returns a number
-   */
   sin(index: integer, amplitude: integer): number {
     return amplitude * Math.sin(index * (Math.PI / 128));
   }
-
-  /**
-   * Animates spraying
-   * @param intensity number of times this is repeated (this is a badly named variable)
-   * @param offsetY how much to offset the Y coordinates
-   */
   doSpray(intensity: integer, offsetY?: number) {
     this.scene.tweens.addCounter({
       repeat: intensity,
@@ -453,12 +402,6 @@ export class EggHatchPhase extends Phase {
       }
     });
   }
-
-  /**
-   * Animates a particle used in the spray animation
-   * @param trigIndex Used to modify the particle's vertical speed, is a random number from 0-7
-   * @param offsetY how much to offset the Y coordinate
-   */
   doSprayParticle(trigIndex: integer, offsetY: number) {
     const initialX = this.eggHatchBg.displayWidth / 2;
     const initialY = this.eggHatchBg.displayHeight / 2 + offsetY;

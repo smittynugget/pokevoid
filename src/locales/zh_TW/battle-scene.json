@@ -1,3 +1,8 @@
 {
-  "moneyOwned": "₽{{formattedMoney}}"
+  "moneyOwned": "₽{{formattedMoney}}",
+  "permaMoneyOwned": "Ω{{formattedMoney}}",
+  "catch": "捕獲",
+  "togglePermaBar": "Ω道具",
+  "togglePlayerBar": "背包",
+  "toggleFoeBar": "敵方"
 }

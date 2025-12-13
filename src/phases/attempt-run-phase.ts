@@ -23,8 +23,6 @@ export class AttemptRunPhase extends PokemonPhase {
     const enemyField = this.scene.getEnemyField();
 
     let escapeChance: Utils.IntegerHolder;
-
-    
      if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_RUN_ANYTHING_1)) {
       escapeChance = new Utils.IntegerHolder(1000);
     } else {
@@ -37,7 +35,7 @@ export class AttemptRunPhase extends PokemonPhase {
     if (playerPokemon.randSeedInt(256) < escapeChance.value) {
       this.scene.playSound("se/flee");
       this.scene.queueMessage(i18next.t("battle:runAwaySuccess"), null, true, 500);
-      
+
       this.scene.gameData.gameStats.battlesEscaped++;
 
       this.scene.tweens.add({
@@ -62,8 +60,6 @@ export class AttemptRunPhase extends PokemonPhase {
       } else {
         this.scene.pushPhase(new BattlePathPhase(this.scene));
       }
-
-      
       this.scene.gameData.reducePermaModifierByType([PermaType.PERMA_RUN_ANYTHING_1], this.scene);
     } else {
       this.scene.queueMessage(i18next.t("battle:runAwayCannotEscape"), null, true, 500);

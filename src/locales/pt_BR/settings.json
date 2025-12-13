@@ -64,6 +64,7 @@
   "fieldVolume": "Ambiente",
   "seVolume": "Ef. Sonoros",
   "uiVolume": "Interface",
+  "skipFaintCry": "Pular sons de desmaio",
   "musicPreference": "Preferência de Música",
   "mixed": "Misto",
   "gamepadPleasePlug": "Conecte um controle ou pressione um botão",
@@ -104,5 +105,6 @@
   "items": "Itens",
   "reroll": "Atualizar",
   "shop": "Loja",
-  "checkTeam": "Checar Time"
+  "checkTeam": "Checar Time",
+  "lockedRewardSpeed": "Bloquear Velocidade de Recompensas"
 }

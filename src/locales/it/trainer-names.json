@@ -147,6 +147,9 @@
   "lysandre": "Elisio",
   "lusamine": "Samina",
   "guzma": "Guzman",
+  "rose": "Rose",
+  "oleana": "Oleana",
+  "plumeria": "Plumeria",
   "blue_red_double": "Blu & Rosso",
   "red_blue_double": "Rosso & Blu",
   "tate_liza_double": "Tell & Pat",
@@ -156,5 +159,8 @@
   "alder_iris_double": "Nardo & Iris",
   "iris_alder_double": "Iris & Nardo",
   "marnie_piers_double": "Mary & Ginepro",
-  "piers_marnie_double": "Ginepro & Mary"
+  "piers_marnie_double": "Ginepro & Mary",
+
+  "apollo": "Apollo",
+  "diana": "Diana"
 }

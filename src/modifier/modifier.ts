@@ -1,5 +1,6 @@
 import * as ModifierTypes from "./modifier-type";
 import BattleScene from "../battle-scene";
+import { SkillPointSources } from "../system/skill-point-sources";
 import {getLevelTotalExp} from "../data/exp";
 import {MAX_PER_TYPE_POKEBALLS, PokeballType} from "../data/pokeball";
 import Pokemon, {PlayerPokemon} from "../field/pokemon";
@@ -17,25 +18,17 @@ import {BerryType} from "#enums/berry-type";
 import {StatusEffect, getStatusEffectHealText} from "../data/status-effect";
 import {achvs} from "../system/achv";
 import {VoucherType} from "../system/voucher";
-import {pokemonFormChanges, SpeciesFormChange, SpeciesFormChangeItemTrigger} from "../data/pokemon-forms";
+import {pokemonFormChanges, SpeciesFormChange, SpeciesFormChangeItemTrigger, AltBuildTrigger} from "../data/pokemon-forms";
 import {FormChangeItem} from "#enums/form-change-items";
 import {Nature} from "#app/data/nature";
 import Overrides from "#app/overrides";
-import {
-    getModifierType,
-    ModifierType, ModifierTypeGenerator,
-    modifierTypes,
-    PermaModifierType,
-    PermaModifierTypeGenerator,
-    QuestModifierType,
-    RandomStatSwitcherModifierType
-} from "./modifier-type";
-import {Command} from "#app/ui/command-ui-handler";
 import {Species} from "#enums/species";
+import {SpeciesFormKey} from "#enums/species-form-key";
 import i18next from "i18next";
 
 import {allMoves} from "#app/data/move";
 import {Abilities} from "#app/enums/abilities";
+import { calculateAltBuildStatsWithSwapping } from "../data/alt-build-stat-calculator";
 import {LearnMovePhase} from "#app/phases/learn-move-phase.js";
 import {LevelUpPhase} from "#app/phases/level-up-phase.js";
 import {PokemonHealPhase} from "#app/phases/pokemon-heal-phase.js";
@@ -46,7 +39,8 @@ import {RunType, RunDuration} from "#enums/quest-type-conditions";
 import Trainer from "#app/field/trainer";
 import Move from "#app/data/move";
 import {Ability, allAbilities} from "#app/data/ability";
-import {QuestState, QuestUnlockables, QuestUnlockData, RewardType} from "#app/system/game-data";
+import {QuestState, QuestUnlockables, QuestUnlockData} from "#app/system/game-data";
+import {RewardType} from "#enums/reward-type";
 import {QuestUnlockPhase} from "#app/phases/quest-unlock-phase";
 import {PermaDuration, PermaType} from "#app/modifier/perma-modifiers";
 import {hasPermaModifierByType, hasTerastallizeAccess} from '#app/modifier/perma-modifier-checker';
@@ -56,7 +50,9 @@ import {UnlockUniSmittyPhase} from "#app/phases/unlock-unismitty-phase";
 import {QuestManagerPhase} from "#app/phases/quest-manager-phase";
 import {Phase} from "#app/phase";
 import {Mode} from "#app/ui/ui";
+import {Command} from "../ui/command-ui-handler";
 import {getPokemonSpecies} from "#app/data/pokemon-species";
+import {FormChangePhase} from "#app/phases/form-change-phase";
 import {TrainerType} from "#enums/trainer-type";
 import {trainerConfigs} from "#app/data/trainer-config";
 import { Moves } from "#app/enums/moves.js";
@@ -64,8 +60,9 @@ import { MoveTarget, MoveCategory, MoveAttr, MoveCondition, MoveFlags, ChangeMul
 import { UpgradePath } from "#app/enums/upgrade-path.js";
 import { UpgradeCategory } from "#app/enums/upgrade-category.js";
 import { MoveUpgradeTooltipUtils } from "../ui/move-upgrade-tooltip";
-
-
+import { PathNodeContext } from "#app/phases/battle-path-phase";
+import { PokemonAltBuildDefinition, AltBuildColorPalette } from "#app/data/pokemon-alt-buid.js";
+import { ChampionUtils } from "#app/system/champion-utils";
 export type ModifierPredicate = (modifier: Modifier) => boolean;
 
 const iconOverflowIndex = 40;
@@ -94,20 +91,14 @@ export const modifierSortFunc = (a: Modifier, b: Modifier): number => {
 export class ModifierBar extends Phaser.GameObjects.Container {
     private player: boolean;
     private modifierCache: PersistentModifier[];
-
-    
+    private overflowHideTimeout: number | null = null;
     constructor(scene: BattleScene, enemy?: boolean) {
         super(scene, 1 + (enemy ? 302 : 0), 13);
 
         this.player = !enemy;
         this.setScale(this.player ? 0.3 : 0.35);
+        this.overflowHideTimeout = null;
     }
-
-    /**
-     * Method to update content displayed in {@linkcode ModifierBar}
-     * @param {PersistentModifier[]} modifiers - The list of modifiers to be displayed in the {@linkcode ModifierBar}
-     * @param {boolean} hideHeldItems - If set to "true", only modifiers not assigned to a Pokémon are displayed
-     */
     updateModifiers(modifiers: PersistentModifier[], hideHeldItems: boolean = false) {
         this.removeAll(true);
 
@@ -128,6 +119,10 @@ export class ModifierBar extends Phaser.GameObjects.Container {
             this.setModifierIconPosition(icon, sortedVisibleIconModifiers.length);
             icon.setInteractive(new Phaser.Geom.Rectangle(0, 0, 32, 24), Phaser.Geom.Rectangle.Contains);
             icon.on("pointerover", () => {
+                if (thisArg.overflowHideTimeout !== null) {
+                    clearTimeout(thisArg.overflowHideTimeout);
+                    thisArg.overflowHideTimeout = null;
+                }
                 if (modifier instanceof MoveUpgradeModifier) {
                     MoveUpgradeTooltipUtils.showTooltip(
                         this.scene as BattleScene,
@@ -172,7 +167,13 @@ export class ModifierBar extends Phaser.GameObjects.Container {
                     (this.scene as BattleScene).ui.hideTooltip();
                 }
                 if (this.modifierCache && this.modifierCache.length > iconOverflowIndex) {
-                    thisArg.updateModifierOverflowVisibility(false);
+                    if (thisArg.overflowHideTimeout !== null) {
+                        clearTimeout(thisArg.overflowHideTimeout);
+                    }
+                    thisArg.overflowHideTimeout = window.setTimeout(() => {
+                        thisArg.updateModifierOverflowVisibility(false);
+                        thisArg.overflowHideTimeout = null;
+                    }, 150);
                 }
             });
         });
@@ -192,19 +193,21 @@ export class ModifierBar extends Phaser.GameObjects.Container {
     }
 
     setModifierIconPosition(icon: Phaser.GameObjects.Container, modifierCount: integer) {
-        const rowIcons: integer = 33 + 6 * Math.max((Math.ceil(Math.min(modifierCount, 24) / 12) - 2), 0);
+        const scene = this.scene as BattleScene;
+        const isInBattle = scene.currentBattle !== null && scene.currentBattle !== undefined;
+        const rowIcons: integer = isInBattle ? 23 : 27;
 
-        const x = (this.getIndex(icon) % rowIcons) * 28 / (rowIcons / 33);
-        const y = Math.floor(this.getIndex(icon) / rowIcons) * 20;
+        const x = (this.getIndex(icon) % rowIcons) * 28;
+        const y = Math.floor(this.getIndex(icon) / rowIcons) * 30;
 
         icon.setPosition(this.player ? x : -x, y);
     }
 }
 
 export abstract class Modifier {
-    public type: ModifierType;
+    public type: ModifierTypes.ModifierType;
 
-    constructor(type: ModifierType) {
+    constructor(type: ModifierTypes.ModifierType) {
         this.type = type;
     }
 
@@ -225,7 +228,7 @@ export abstract class PersistentModifier extends Modifier {
     protected replaceExisting: boolean = false;
     public isRemovable: boolean = true;
 
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type);
         this.stackCount = stackCount === undefined ? 1 : stackCount;
         this.virtualStackCount = 0;
@@ -283,7 +286,11 @@ export abstract class PersistentModifier extends Modifier {
     getIcon(scene: BattleScene, forSummary?: boolean): Phaser.GameObjects.Container {
         const container = scene.add.container(0, 0);
 
-        const item = scene.add.sprite(0, 12, useSmitemAtlas(this.type) ? "smitems_32": "items");
+        const _useSmitemAtlas = useSmitemAtlas(this.type);
+        const item = scene.add.sprite(0, 12, _useSmitemAtlas ? "smitems": "items");
+        if (_useSmitemAtlas) {
+            item.setScale(0.5);
+        }
         item.setFrame(this.type.iconImage);
         item.setOrigin(0, 0.5);
         container.add(item);
@@ -318,7 +325,7 @@ export abstract class PersistentModifier extends Modifier {
 }
 
 export abstract class ConsumableModifier extends Modifier {
-    constructor(type: ModifierType) {
+    constructor(type: ModifierTypes.ModifierType) {
         super(type);
     }
 
@@ -335,7 +342,7 @@ export class AddPokeballModifier extends ConsumableModifier {
     private pokeballType: PokeballType;
     private count: integer;
 
-    constructor(type: ModifierType, pokeballType: PokeballType, count: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokeballType: PokeballType, count: integer) {
         super(type);
 
         this.pokeballType = pokeballType;
@@ -354,7 +361,7 @@ export class AddVoucherModifier extends ConsumableModifier {
     private voucherType: VoucherType;
     private count: integer;
 
-    constructor(type: ModifierType, voucherType: VoucherType, count: integer) {
+    constructor(type: ModifierTypes.ModifierType, voucherType: VoucherType, count: integer) {
         super(type);
 
         this.voucherType = voucherType;
@@ -372,7 +379,7 @@ export class AddVoucherModifier extends ConsumableModifier {
 export abstract class LapsingPersistentModifier extends PersistentModifier {
     protected battlesLeft: integer;
 
-    constructor(type: ModifierTypes.ModifierType, battlesLeft?: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierTypes.ModifierType, battlesLeft?: integer, stackCount?: integer) {
         super(type, stackCount);
 
         this.battlesLeft = battlesLeft!;
@@ -425,12 +432,6 @@ export class DoubleBattleChanceBoosterModifier extends LapsingPersistentModifier
     getArgs(): any[] {
         return [this.battlesLeft];
     }
-
-    /**
-     * Modifies the chance of a double battle occurring
-     * @param args A single element array containing the double battle chance as a NumberHolder
-     * @returns {boolean} Returns true if the modifier was applied
-     */
     apply(args: any[]): boolean {
         const doubleBattleChance = args[0] as Utils.NumberHolder;
         doubleBattleChance.value = Math.ceil(doubleBattleChance.value / 2);
@@ -486,7 +487,7 @@ export class TempBattleStatBoosterModifier extends LapsingPersistentModifier {
 }
 
 export class MapModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -504,7 +505,7 @@ export class MapModifier extends PersistentModifier {
 }
 
 export class MegaEvolutionAccessModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -520,10 +521,8 @@ export class MegaEvolutionAccessModifier extends PersistentModifier {
         return 1;
     }
 }
-
-
 export class GlitchPieceModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         let initialStackCount = Utils.randSeedInt(4, 2);
 
         if(stackCount) {
@@ -605,7 +604,7 @@ export class GlitchPieceModifier extends PersistentModifier {
 }
 
 export class SacrificeToggleModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -642,7 +641,7 @@ export class SacrificeToggleModifier extends PersistentModifier {
 }
 
 export class GigantamaxAccessModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -660,7 +659,7 @@ export class GigantamaxAccessModifier extends PersistentModifier {
 }
 
 export class TerastallizeAccessModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -681,7 +680,7 @@ export abstract class PokemonHeldItemModifier extends PersistentModifier {
     public pokemonId: integer;
     readonly isTransferrable: boolean = true;
 
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, stackCount);
 
         this.pokemonId = pokemonId;
@@ -720,7 +719,11 @@ export abstract class PokemonHeldItemModifier extends PersistentModifier {
             const item = scene.add.sprite(16, this.virtualStackCount ? 8 : 16, "items");
             item.setScale(0.5);
             item.setOrigin(0, 0.5);
-            item.setTexture(useSmitemAtlas(this.type) ? "smitems_32" : "items", this.type.iconImage);
+            const _useSmitemAtlas = useSmitemAtlas(this.type);
+            item.setTexture(_useSmitemAtlas ? "smitems" : "items", this.type.iconImage);
+            if (_useSmitemAtlas) {
+                item.setScale(0.25);
+            }
             container.add(item);
 
             const stackText = this.getIconStackText(scene);
@@ -779,7 +782,7 @@ export abstract class LapsingPokemonHeldItemModifier extends PokemonHeldItemModi
     protected battlesLeft: integer;
     readonly isTransferrable: boolean = false;
 
-    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, battlesLeft?: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierTypes.ModifierType, pokemonId: integer, battlesLeft?: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
 
         this.battlesLeft = battlesLeft!;
@@ -818,8 +821,6 @@ export abstract class LapsingPokemonHeldItemModifier extends PokemonHeldItemModi
 export class TerastallizeModifier extends LapsingPokemonHeldItemModifier {
     public teraType: Type;
     isTransferrable: boolean = false;
-
-    
     constructor(type: ModifierTypes.TerastallizeModifierType, pokemonId: integer, teraType: Type, battlesLeft?: integer, stackCount?: integer) {
         let duration = 10;
         if (hasTerastallizeAccess()) {
@@ -977,20 +978,13 @@ export class PlayerPokemonBaseStatBoosterModifier extends PokemonHeldItemModifie
         return 250;
     }
 }
-
-/**
- * Modifier used for held items that apply {@linkcode Stat} boost(s)
- * using a multiplier.
- * @extends PokemonHeldItemModifier
- * @see {@linkcode apply}
- */
 export class StatBoosterModifier extends PokemonHeldItemModifier {
-    /** The stats that the held item boosts */
+
     protected stats: Stat[];
-    /** The multiplier used to increase the relevant stat(s) */
+
     protected multiplier: number;
 
-    constructor(type: ModifierType, pokemonId: integer, stats: Stat[], multiplier: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stats: Stat[], multiplier: number, stackCount?: integer) {
         super(type, pokemonId, stackCount);
 
         this.stats = stats;
@@ -1015,27 +1009,9 @@ export class StatBoosterModifier extends PokemonHeldItemModifier {
 
         return false;
     }
-
-    /**
-     * Checks if the incoming stat is listed in {@linkcode stats}
-     * @param args [0] {@linkcode Pokemon} N/A
-     *             [1] {@linkcode Stat} being checked at the time
-     *             [2] {@linkcode Utils.NumberHolder} N/A
-     * @returns true if the stat could be boosted, false otherwise
-     */
     shouldApply(args: any[]): boolean {
         return super.shouldApply(args) && this.stats.includes(args[1] as Stat);
     }
-
-    /**
-     * Boosts the incoming stat by a {@linkcode multiplier} if the stat is listed
-     * in {@linkcode stats}.
-     * @param args [0] {@linkcode Pokemon} N/A
-     *             [1] {@linkcode Stat} N/A
-     *             [2] {@linkcode Utils.NumberHolder} that holds the resulting value of the stat
-     * @returns true if the stat boost applies successfully, false otherwise
-     * @see shouldApply
-     */
     apply(args: any[]): boolean {
         const statValue = args[2] as Utils.NumberHolder;
 
@@ -1047,13 +1023,6 @@ export class StatBoosterModifier extends PokemonHeldItemModifier {
         return 1;
     }
 }
-
-/**
- * Modifier used for held items, specifically Eviolite, that apply
- * {@linkcode Stat} boost(s) using a multiplier if the holder can evolve.
- * @extends StatBoosterModifier
- * @see {@linkcode apply}
- */
 export class EvolutionStatBoosterModifier extends StatBoosterModifier {
     clone() {
         return super.clone() as EvolutionStatBoosterModifier;
@@ -1062,19 +1031,6 @@ export class EvolutionStatBoosterModifier extends StatBoosterModifier {
     matchType(modifier: Modifier): boolean {
         return modifier instanceof EvolutionStatBoosterModifier;
     }
-
-    /**
-     * Boosts the incoming stat value by a {@linkcode multiplier} if the holder
-     * can evolve. Note that, if the holder is a fusion, they will receive
-     * only half of the boost if either of the fused members are fully
-     * evolved. However, if they are both unevolved, the full boost
-     * will apply.
-     * @param args [0] {@linkcode Pokemon} that holds the held item
-     *             [1] {@linkcode Stat} N/A
-     *             [2] {@linkcode Utils.NumberHolder} that holds the resulting value of the stat
-     * @returns true if the stat boost applies successfully, false otherwise
-     * @see shouldApply
-     */
     apply(args: any[]): boolean {
         const holder = args[0] as Pokemon;
         const statValue = args[2] as Utils.NumberHolder;
@@ -1090,18 +1046,11 @@ export class EvolutionStatBoosterModifier extends StatBoosterModifier {
         return false;
     }
 }
-
-/**
- * Modifier used for held items that apply {@linkcode Stat} boost(s) using a
- * multiplier if the holder is of a specific {@linkcode Species}.
- * @extends StatBoosterModifier
- * @see {@linkcode apply}
- */
 export class SpeciesStatBoosterModifier extends StatBoosterModifier {
-    /** The species that the held item's stat boost(s) apply to */
+
     private species: Species[];
 
-    constructor(type: ModifierType, pokemonId: integer, stats: Stat[], multiplier: number, species: Species[], stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stats: Stat[], multiplier: number, species: Species[], stackCount?: integer) {
         super(type, pokemonId, stats, multiplier, stackCount);
 
         this.species = species;
@@ -1125,41 +1074,19 @@ export class SpeciesStatBoosterModifier extends StatBoosterModifier {
 
         return false;
     }
-
-    /**
-     * Checks if the incoming stat is listed in {@linkcode stats} and if the holder's {@linkcode Species}
-     * (or its fused species) is listed in {@linkcode species}.
-     * @param args [0] {@linkcode Pokemon} that holds the held item
-     *             [1] {@linkcode Stat} being checked at the time
-     *             [2] {@linkcode Utils.NumberHolder} N/A
-     * @returns true if the stat could be boosted, false otherwise
-     */
     shouldApply(args: any[]): boolean {
         const holder = args[0] as Pokemon;
         return super.shouldApply(args) && (this.species.includes(holder.getSpeciesForm(true).speciesId) || (holder.isFusion() && this.species.includes(holder.getFusionSpeciesForm(true).speciesId)));
     }
-
-    /**
-     * Checks if either parameter is included in the corresponding lists
-     * @param speciesId {@linkcode Species} being checked
-     * @param stat {@linkcode Stat} being checked
-     * @returns true if both parameters are in {@linkcode species} and {@linkcode stats} respectively, false otherwise
-     */
     contains(speciesId: Species, stat: Stat): boolean {
         return this.species.includes(speciesId) && this.stats.includes(stat);
     }
 }
-
-/**
- * Modifier used for held items that apply critical-hit stage boost(s).
- * @extends PokemonHeldItemModifier
- * @see {@linkcode apply}
- */
 export class CritBoosterModifier extends PokemonHeldItemModifier {
-    /** The amount of stages by which the held item increases the current critical-hit stage value */
+
     protected stageIncrement: number;
 
-    constructor(type: ModifierType, pokemonId: integer, stageIncrement: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stageIncrement: number, stackCount?: integer) {
         super(type, pokemonId, stackCount);
 
         this.stageIncrement = stageIncrement;
@@ -1180,13 +1107,6 @@ export class CritBoosterModifier extends PokemonHeldItemModifier {
 
         return false;
     }
-
-    /**
-     * Increases the current critical-hit stage value by {@linkcode stageIncrement}.
-     * @param args [0] {@linkcode Pokemon} N/A
-     *             [1] {@linkcode Utils.IntegerHolder} that holds the resulting critical-hit level
-     * @returns true if the critical-hit stage boost applies successfully, false otherwise
-     */
     apply(args: any[]): boolean {
         const critStage = args[1] as Utils.NumberHolder;
 
@@ -1198,18 +1118,11 @@ export class CritBoosterModifier extends PokemonHeldItemModifier {
         return 1;
     }
 }
-
-/**
- * Modifier used for held items that apply critical-hit stage boost(s)
- * if the holder is of a specific {@linkcode Species}.
- * @extends CritBoosterModifier
- * @see {@linkcode shouldApply}
- */
 export class SpeciesCritBoosterModifier extends CritBoosterModifier {
-    /** The species that the held item's critical-hit stage boost applies to */
+
     private species: Species[];
 
-    constructor(type: ModifierType, pokemonId: integer, stageIncrement: number, species: Species[], stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stageIncrement: number, species: Species[], stackCount?: integer) {
         super(type, pokemonId, stageIncrement, stackCount);
 
         this.species = species;
@@ -1226,29 +1139,17 @@ export class SpeciesCritBoosterModifier extends CritBoosterModifier {
     matchType(modifier: Modifier): boolean {
         return modifier instanceof SpeciesCritBoosterModifier;
     }
-
-    /**
-     * Checks if the holder's {@linkcode Species} (or its fused species) is listed
-     * in {@linkcode species}.
-     * @param args [0] {@linkcode Pokemon} that holds the held item
-     *             [1] {@linkcode Utils.IntegerHolder} N/A
-     * @returns true if the critical-hit level can be incremented, false otherwise
-     */
     shouldApply(args: any[]) {
         const holder = args[0] as Pokemon;
 
         return super.shouldApply(args) && (this.species.includes(holder.getSpeciesForm(true).speciesId) || (holder.isFusion() && this.species.includes(holder.getFusionSpeciesForm(true).speciesId)));
     }
 }
-
-/**
- * Applies Specific Type item boosts (e.g., Magnet)
- */
 export class AttackTypeBoosterModifier extends PokemonHeldItemModifier {
     private moveType: Type;
     private boostMultiplier: number;
 
-    constructor(type: ModifierType, pokemonId: integer, moveType: Type, boostPercent: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, moveType: Type, boostPercent: number, stackCount?: integer) {
         super(type, pokemonId, stackCount);
 
         this.moveType = moveType;
@@ -1275,14 +1176,6 @@ export class AttackTypeBoosterModifier extends PokemonHeldItemModifier {
     shouldApply(args: any[]): boolean {
         return super.shouldApply(args) && args.length === 3 && typeof args[1] === "number" && args[2] instanceof Utils.NumberHolder;
     }
-
-    /**
-     * @param {Array<any>} args Array
-     *                          - Index 0: {Pokemon} Pokemon
-     *                          - Index 1: {number} Move type
-     *                          - Index 2: {Utils.NumberHolder} Move power
-     * @returns {boolean} Returns true if boosts have been applied to the move.
-     */
     apply(args: any[]): boolean {
         if (args[1] === this.moveType && (args[2] as Utils.NumberHolder).value >= 1) {
             (args[2] as Utils.NumberHolder).value = Math.floor((args[2] as Utils.NumberHolder).value * (1 + (this.getStackCount() * this.boostMultiplier)));
@@ -1302,7 +1195,7 @@ export class AttackTypeBoosterModifier extends PokemonHeldItemModifier {
 }
 
 export class SurviveDamageModifier extends PokemonHeldItemModifier {
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
 
@@ -1341,7 +1234,7 @@ export class SurviveDamageModifier extends PokemonHeldItemModifier {
 }
 
 export class BypassSpeedChanceModifier extends PokemonHeldItemModifier {
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
 
@@ -1384,7 +1277,7 @@ export class BypassSpeedChanceModifier extends PokemonHeldItemModifier {
 }
 
 export class FlinchChanceModifier extends PokemonHeldItemModifier {
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
 
@@ -1418,7 +1311,7 @@ export class FlinchChanceModifier extends PokemonHeldItemModifier {
 }
 
 export class TurnHealModifier extends PokemonHeldItemModifier {
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
 
@@ -1454,18 +1347,11 @@ export class TurnHealModifier extends PokemonHeldItemModifier {
         return 4;
     }
 }
-
-/**
- * Modifier used for held items, namely Toxic Orb and Flame Orb, that apply a
- * set {@linkcode StatusEffect} at the end of a turn.
- * @extends PokemonHeldItemModifier
- * @see {@linkcode apply}
- */
 export class TurnStatusEffectModifier extends PokemonHeldItemModifier {
-    /** The status effect to be applied by the held item */
+
     private effect: StatusEffect;
 
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
 
         switch (type.id) {
@@ -1477,17 +1363,6 @@ export class TurnStatusEffectModifier extends PokemonHeldItemModifier {
                 break;
         }
     }
-
-    /**
-     * Checks if {@linkcode modifier} is an instance of this class,
-     * intentionally ignoring potentially different {@linkcode effect}s
-     * to prevent held item stockpiling since the item obtained first
-     * would be the only item able to {@linkcode apply} successfully.
-     * @override
-     * @param modifier {@linkcode Modifier} being type tested
-     * @return true if {@linkcode modifier} is an instance of
-     * TurnStatusEffectModifier, false otherwise
-     */
     matchType(modifier: Modifier): boolean {
         return modifier instanceof TurnStatusEffectModifier;
     }
@@ -1495,13 +1370,6 @@ export class TurnStatusEffectModifier extends PokemonHeldItemModifier {
     clone() {
         return new TurnStatusEffectModifier(this.type, this.pokemonId, this.stackCount);
     }
-
-    /**
-     * Tries to inflicts the holder with the associated {@linkcode StatusEffect}.
-     * @param args [0] {@linkcode Pokemon} that holds the held item
-     * @returns true if the status effect was applied successfully, false if
-     * otherwise
-     */
     apply(args: any[]): boolean {
         return (args[0] as Pokemon).trySetStatus(this.effect, true, undefined, undefined, this.type.name);
     }
@@ -1516,7 +1384,7 @@ export class TurnStatusEffectModifier extends PokemonHeldItemModifier {
 }
 
 export class HitHealModifier extends PokemonHeldItemModifier {
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
 
@@ -1553,7 +1421,7 @@ export class HitHealModifier extends PokemonHeldItemModifier {
 }
 
 export class LevelIncrementBoosterModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -1584,7 +1452,7 @@ export class BerryModifier extends PokemonHeldItemModifier {
     public berryType: BerryType;
     public consumed: boolean;
 
-    constructor(type: ModifierType, pokemonId: integer, berryType: BerryType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, berryType: BerryType, stackCount?: integer) {
         super(type, pokemonId, stackCount);
 
         this.berryType = berryType;
@@ -1634,7 +1502,7 @@ export class BerryModifier extends PokemonHeldItemModifier {
 }
 
 export class PreserveBerryModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -1664,7 +1532,7 @@ export class PreserveBerryModifier extends PersistentModifier {
 }
 
 export class PokemonInstantReviveModifier extends PokemonHeldItemModifier {
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
 
@@ -1697,14 +1565,8 @@ export class PokemonInstantReviveModifier extends PokemonHeldItemModifier {
         return 1;
     }
 }
-
-/**
- * Modifier used for White Herb, which resets negative {@linkcode Stat} changes
- * @extends PokemonHeldItemModifier
- * @see {@linkcode apply}
- */
 export class PokemonResetNegativeStatStageModifier extends PokemonHeldItemModifier {
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
 
@@ -1715,12 +1577,6 @@ export class PokemonResetNegativeStatStageModifier extends PokemonHeldItemModifi
     clone() {
         return new PokemonResetNegativeStatStageModifier(this.type, this.pokemonId, this.stackCount);
     }
-
-    /**
-     * Restores any negative stat stages of the mon to 0
-     * @param args args[0] is the {@linkcode Pokemon} whose stat stages are being checked
-     * @returns true if any stat changes were applied (item was used), false otherwise
-     */
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
         const loweredStats = pokemon.summonData.battleStats.filter(s => s < 0);
@@ -1745,7 +1601,7 @@ export class PokemonResetNegativeStatStageModifier extends PokemonHeldItemModifi
 export abstract class ConsumablePokemonModifier extends ConsumableModifier {
     public pokemonId: integer;
 
-    constructor(type: ModifierType, pokemonId: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer) {
         super(type);
 
         this.pokemonId = pokemonId;
@@ -1766,7 +1622,7 @@ export class PokemonHpRestoreModifier extends ConsumablePokemonModifier {
     private healStatus: boolean;
     public fainted: boolean;
 
-    constructor(type: ModifierType, pokemonId: integer, restorePoints: integer, restorePercent: number, healStatus: boolean, fainted?: boolean) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, restorePoints: integer, restorePercent: number, healStatus: boolean, fainted?: boolean) {
         super(type, pokemonId);
 
         this.restorePoints = restorePoints;
@@ -1799,7 +1655,7 @@ export class PokemonHpRestoreModifier extends ConsumablePokemonModifier {
 }
 
 export class PokemonStatusHealModifier extends ConsumablePokemonModifier {
-    constructor(type: ModifierType, pokemonId: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer) {
         super(type, pokemonId);
     }
 
@@ -1811,7 +1667,7 @@ export class PokemonStatusHealModifier extends ConsumablePokemonModifier {
 }
 
 export class RerollModifier extends ConsumableModifier {
-    constructor(type: ModifierType) {
+    constructor(type: ModifierTypes.ModifierType) {
         super(type);
     }
 
@@ -1823,7 +1679,7 @@ export class RerollModifier extends ConsumableModifier {
 export abstract class ConsumablePokemonMoveModifier extends ConsumablePokemonModifier {
     public moveIndex: integer;
 
-    constructor(type: ModifierType, pokemonId: integer, moveIndex: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, moveIndex: integer) {
         super(type, pokemonId);
 
         this.moveIndex = moveIndex;
@@ -1833,7 +1689,7 @@ export abstract class ConsumablePokemonMoveModifier extends ConsumablePokemonMod
 export class PokemonPpRestoreModifier extends ConsumablePokemonMoveModifier {
     private restorePoints: integer;
 
-    constructor(type: ModifierType, pokemonId: integer, moveIndex: integer, restorePoints: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, moveIndex: integer, restorePoints: integer) {
         super(type, pokemonId, moveIndex);
 
         this.restorePoints = restorePoints;
@@ -1851,7 +1707,7 @@ export class PokemonPpRestoreModifier extends ConsumablePokemonMoveModifier {
 export class PokemonAllMovePpRestoreModifier extends ConsumablePokemonModifier {
     private restorePoints: integer;
 
-    constructor(type: ModifierType, pokemonId: integer, restorePoints: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, restorePoints: integer) {
         super(type, pokemonId);
 
         this.restorePoints = restorePoints;
@@ -1870,7 +1726,7 @@ export class PokemonAllMovePpRestoreModifier extends ConsumablePokemonModifier {
 export class PokemonPpUpModifier extends ConsumablePokemonMoveModifier {
     private upPoints: integer;
 
-    constructor(type: ModifierType, pokemonId: integer, moveIndex: integer, upPoints: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, moveIndex: integer, upPoints: integer) {
         super(type, pokemonId, moveIndex);
 
         this.upPoints = upPoints;
@@ -1888,7 +1744,7 @@ export class PokemonPpUpModifier extends ConsumablePokemonMoveModifier {
 export class PokemonNatureChangeModifier extends ConsumablePokemonModifier {
     public nature: Nature;
 
-    constructor(type: ModifierType, pokemonId: integer, nature: Nature) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, nature: Nature) {
         super(type, pokemonId);
 
         this.nature = nature;
@@ -1910,7 +1766,7 @@ export class PokemonNatureChangeModifier extends ConsumablePokemonModifier {
 }
 
 export class PokemonLevelIncrementModifier extends ConsumablePokemonModifier {
-    constructor(type: ModifierType, pokemonId: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer) {
         super(type, pokemonId);
     }
 
@@ -1950,7 +1806,7 @@ export class TmModifier extends ConsumablePokemonModifier {
 export class RememberMoveModifier extends ConsumablePokemonModifier {
     public levelMoveIndex: integer;
 
-    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, levelMoveIndex: integer) {
+    constructor(type: ModifierTypes.ModifierTypes.ModifierType, pokemonId: integer, levelMoveIndex: integer) {
         super(type, pokemonId);
 
         this.levelMoveIndex = levelMoveIndex;
@@ -2000,7 +1856,7 @@ export class EvolutionItemModifier extends ConsumablePokemonModifier {
 export class FusePokemonModifier extends ConsumablePokemonModifier {
     public fusePokemonId: integer;
 
-    constructor(type: ModifierType, pokemonId: integer, fusePokemonId: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, fusePokemonId: integer) {
         super(type, pokemonId);
 
         this.fusePokemonId = fusePokemonId;
@@ -2018,7 +1874,7 @@ export class FusePokemonModifier extends ConsumablePokemonModifier {
 }
 
 export class MultipleParticipantExpBonusModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -2042,7 +1898,7 @@ export class MultipleParticipantExpBonusModifier extends PersistentModifier {
 export class HealingBoosterModifier extends PersistentModifier {
     private multiplier: number;
 
-    constructor(type: ModifierType, multiplier: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, multiplier: number, stackCount?: integer) {
         super(type, stackCount);
 
         this.multiplier = multiplier;
@@ -2075,7 +1931,7 @@ export class HealingBoosterModifier extends PersistentModifier {
 export class ExpBoosterModifier extends PersistentModifier {
     private boostMultiplier: integer;
 
-    constructor(type: ModifierType, boostPercent: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, boostPercent: number, stackCount?: integer) {
         super(type, stackCount);
 
         this.boostMultiplier = boostPercent * 0.01;
@@ -2148,7 +2004,7 @@ export class PokemonExpBoosterModifier extends PokemonHeldItemModifier {
 }
 
 export class ExpShareModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -2170,7 +2026,7 @@ export class ExpShareModifier extends PersistentModifier {
 }
 
 export class ExpBalanceModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -2217,7 +2073,7 @@ export class PokemonFriendshipBoosterModifier extends PokemonHeldItemModifier {
 }
 
 export class PokemonNatureWeightModifier extends PokemonHeldItemModifier {
-    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
 
@@ -2324,7 +2180,7 @@ export class PokemonMultiHitModifier extends PokemonHeldItemModifier {
 export class PokemonFormChangeItemModifier extends PokemonHeldItemModifier {
     public formChangeItem: FormChangeItem;
     public active: boolean;
-    
+
     readonly isTransferrable: boolean = false;
 
     constructor(type: ModifierTypes.FormChangeItemModifierType, pokemonId: integer, formChangeItem: FormChangeItem, active: boolean, stackCount?: integer) {
@@ -2393,7 +2249,7 @@ export class PokemonFormChangeItemModifier extends PokemonHeldItemModifier {
 export class MoneyRewardModifier extends ConsumableModifier {
     private moneyMultiplier: number;
 
-    constructor(type: ModifierType, moneyMultiplier: number) {
+    constructor(type: ModifierTypes.ModifierType, moneyMultiplier: number) {
         super(type);
 
         this.moneyMultiplier = moneyMultiplier;
@@ -2412,7 +2268,7 @@ export class MoneyRewardModifier extends ConsumableModifier {
 }
 
 export class MoneyMultiplierModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -2436,7 +2292,7 @@ export class MoneyMultiplierModifier extends PersistentModifier {
 }
 
 export class DamageMoneyRewardModifier extends PokemonHeldItemModifier {
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
 
@@ -2463,7 +2319,7 @@ export class DamageMoneyRewardModifier extends PokemonHeldItemModifier {
 }
 
 export class MoneyInterestModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -2497,7 +2353,7 @@ export class MoneyInterestModifier extends PersistentModifier {
 }
 
 export class HiddenAbilityRateBoosterModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -2521,7 +2377,7 @@ export class HiddenAbilityRateBoosterModifier extends PersistentModifier {
 }
 
 export class ShinyRateBoosterModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -2545,7 +2401,7 @@ export class ShinyRateBoosterModifier extends PersistentModifier {
 }
 
 export class LockModifierTiersModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -2567,7 +2423,7 @@ export class LockModifierTiersModifier extends PersistentModifier {
 }
 
 export class SwitchEffectTransferModifier extends PokemonHeldItemModifier {
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
 
@@ -2591,7 +2447,7 @@ export class SwitchEffectTransferModifier extends PokemonHeldItemModifier {
 export class PermaMoneyModifier extends ConsumableModifier {
     public amount: number;
     public reduceGlitchPiece: boolean;
-    constructor(type: ModifierType, amount: number, reduceGlitchPiece: boolean = false) {
+    constructor(type: ModifierTypes.ModifierType, amount: number, reduceGlitchPiece: boolean = false) {
         super(type);
         this.amount = amount;
         this.reduceGlitchPiece = reduceGlitchPiece;
@@ -2608,7 +2464,7 @@ export class PermaMoneyModifier extends ConsumableModifier {
 }
 
 export abstract class PermaLapsingPersistentModifier extends LapsingPersistentModifier {
-    constructor(type: ModifierType, battlesLeft: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, battlesLeft: integer, stackCount?: integer) {
         super(type, battlesLeft, stackCount);
     }
 
@@ -2624,7 +2480,7 @@ export abstract class PermaLapsingPersistentModifier extends LapsingPersistentMo
 export class IncreasedMoneyBoostModifier extends PermaLapsingPersistentModifier {
     private moneyBoostMultiplier: number;
 
-    constructor(type: ModifierType, battlesLeft: integer, moneyBoostMultiplier: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, battlesLeft: integer, moneyBoostMultiplier: number, stackCount?: integer) {
         super(type, battlesLeft, stackCount);
         this.moneyBoostMultiplier = moneyBoostMultiplier;
     }
@@ -2647,7 +2503,7 @@ export class IncreasedMoneyBoostModifier extends PermaLapsingPersistentModifier 
 export abstract class PermaLimitedUseModifier extends PersistentModifier {
     protected usesLeft: integer;
 
-    constructor(type: ModifierType, usesLeft: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, usesLeft: integer, stackCount?: integer) {
         super(type, stackCount);
         this.usesLeft = usesLeft;
     }
@@ -2688,7 +2544,7 @@ export abstract class PermaLimitedUseModifier extends PersistentModifier {
 export class ReduceShopCostModifier extends PermaLimitedUseModifier {
     private costReductionPercent: number;
 
-    constructor(type: ModifierType, usesLeft: integer, costReductionPercent: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, usesLeft: integer, costReductionPercent: number, stackCount?: integer) {
         super(type, usesLeft, stackCount);
         this.costReductionPercent = costReductionPercent;
     }
@@ -2703,22 +2559,10 @@ export class ReduceShopCostModifier extends PermaLimitedUseModifier {
         return new ReduceShopCostModifier(this.type, this.getUsesLeft(), this.costReductionPercent, this.stackCount);
     }
 }
-
-/**
- * Abstract class for held items that steal other Pokemon's items.
- * @see {@linkcode TurnHeldItemTransferModifier}
- * @see {@linkcode ContactHeldItemTransferChanceModifier}
- */
 export abstract class HeldItemTransferModifier extends PokemonHeldItemModifier {
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
-
-    /**
-     * Determines the targets to transfer items from when this applies.
-     * @param args\[0\] the {@linkcode Pokemon} holding this item
-     * @returns the opponents of the source {@linkcode Pokemon}
-     */
     getTargets(args: any[]): Pokemon[] {
         const pokemon = args[0];
 
@@ -2726,13 +2570,6 @@ export abstract class HeldItemTransferModifier extends PokemonHeldItemModifier {
             ? pokemon.getOpponents()
             : [];
     }
-
-    /**
-     * Steals an item from a set of target Pokemon.
-     * This prioritizes high-tier held items when selecting the item to steal.
-     * @param args \[0\] The {@linkcode Pokemon} holding this item
-     * @returns true if an item was stolen; false otherwise.
-     */
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
         const opponents = this.getTargets(args);
@@ -2750,7 +2587,7 @@ export abstract class HeldItemTransferModifier extends PokemonHeldItemModifier {
 
         const poolType = pokemon.isPlayer() ? ModifierTypes.ModifierPoolType.PLAYER : pokemon.hasTrainer() ? ModifierTypes.ModifierPoolType.TRAINER : ModifierTypes.ModifierPoolType.WILD;
 
-        const transferredModifierTypes: ModifierTypes.ModifierType[] = [];
+        const transferredModifierTypes: ModifierTypes.ModifierTypes.ModifierType[] = [];
         const itemModifiers = pokemon.scene.findModifiers(m => m instanceof PokemonHeldItemModifier
             && m.pokemonId === targetPokemon.id && m.isTransferrable, targetPokemon.isPlayer()) as PokemonHeldItemModifier[];
         let highestItemTier = itemModifiers.map(m => m.type.getOrInferTier(poolType)).reduce((highestTier, tier) => Math.max(tier!, highestTier), 0);
@@ -2788,18 +2625,12 @@ export abstract class HeldItemTransferModifier extends PokemonHeldItemModifier {
 
     abstract getTransferredItemCount(): integer;
 
-    abstract getTransferMessage(pokemon: Pokemon, targetPokemon: Pokemon, item: ModifierTypes.ModifierType): string;
+    abstract getTransferMessage(pokemon: Pokemon, targetPokemon: Pokemon, item: ModifierTypes.ModifierTypes.ModifierType): string;
 }
-
-/**
- * Modifier for held items that steal items from the enemy at the end of
- * each turn.
- * @see {@linkcode modifierTypes[MINI_BLACK_HOLE]}
- */
 export class TurnHeldItemTransferModifier extends HeldItemTransferModifier {
-    isTransferrable: boolean = true;
+    isTransferrable: boolean = false;
 
-    constructor(type: ModifierType, pokemonId: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
     }
 
@@ -2815,7 +2646,7 @@ export class TurnHeldItemTransferModifier extends HeldItemTransferModifier {
         return this.getStackCount();
     }
 
-    getTransferMessage(pokemon: Pokemon, targetPokemon: Pokemon, item: ModifierTypes.ModifierType): string {
+    getTransferMessage(pokemon: Pokemon, targetPokemon: Pokemon, item: ModifierTypes.ModifierTypes.ModifierType): string {
         return i18next.t("modifier:turnHeldItemTransferApply", {
             pokemonNameWithAffix: getPokemonNameWithAffix(targetPokemon),
             itemName: item.name,
@@ -2832,28 +2663,14 @@ export class TurnHeldItemTransferModifier extends HeldItemTransferModifier {
         this.isTransferrable = false;
     }
 }
-
-/**
- * Modifier for held items that add a chance to steal items from the target of a
- * successful attack.
- * @see {@linkcode modifierTypes[GRIP_CLAW]}
- * @see {@linkcode HeldItemTransferModifier}
- */
 export class ContactHeldItemTransferChanceModifier extends HeldItemTransferModifier {
     private chance: number;
 
-    constructor(type: ModifierType, pokemonId: integer, chancePercent: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, chancePercent: number, stackCount?: integer) {
         super(type, pokemonId, stackCount);
 
         this.chance = chancePercent / 100;
     }
-
-    /**
-     * Determines the target to steal items from when this applies.
-     * @param args\[0\] The {@linkcode Pokemon} holding this item
-     * @param args\[1\] The {@linkcode Pokemon} the holder is targeting with an attack
-     * @returns The target (args[1]) stored in array format for use in {@linkcode HeldItemTransferModifier.apply}
-     */
     getTargets(args: any[]): Pokemon[] {
         const target = args[1];
 
@@ -2878,7 +2695,7 @@ export class ContactHeldItemTransferChanceModifier extends HeldItemTransferModif
         return Phaser.Math.RND.realInRange(0, 1) < (this.chance * this.getStackCount()) ? 1 : 0;
     }
 
-    getTransferMessage(pokemon: Pokemon, targetPokemon: Pokemon, item: ModifierTypes.ModifierType): string {
+    getTransferMessage(pokemon: Pokemon, targetPokemon: Pokemon, item: ModifierTypes.ModifierTypes.ModifierType): string {
         return i18next.t("modifier:contactHeldItemTransferApply", {
             pokemonNameWithAffix: getPokemonNameWithAffix(targetPokemon),
             itemName: item.name,
@@ -2893,7 +2710,7 @@ export class ContactHeldItemTransferChanceModifier extends HeldItemTransferModif
 }
 
 export class IvScannerModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -2916,7 +2733,7 @@ export class IvScannerModifier extends PersistentModifier {
 }
 
 export class ExtraModifierModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -2940,7 +2757,7 @@ export class ExtraModifierModifier extends PersistentModifier {
 }
 
 export abstract class EnemyPersistentModifier extends PersistentModifier {
-    constructor(type: ModifierType, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
         super(type, stackCount);
     }
 
@@ -2952,7 +2769,7 @@ export abstract class EnemyPersistentModifier extends PersistentModifier {
 abstract class EnemyDamageMultiplierModifier extends EnemyPersistentModifier {
     protected damageMultiplier: number;
 
-    constructor(type: ModifierType, damageMultiplier: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, damageMultiplier: number, stackCount?: integer) {
         super(type, stackCount);
 
         this.damageMultiplier = damageMultiplier;
@@ -2970,7 +2787,7 @@ abstract class EnemyDamageMultiplierModifier extends EnemyPersistentModifier {
 }
 
 export class EnemyDamageBoosterModifier extends EnemyDamageMultiplierModifier {
-    constructor(type: ModifierType, boostPercent: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, boostPercent: number, stackCount?: integer) {
         super(type, 1.05, stackCount);
     }
 
@@ -2992,7 +2809,7 @@ export class EnemyDamageBoosterModifier extends EnemyDamageMultiplierModifier {
 }
 
 export class EnemyDamageReducerModifier extends EnemyDamageMultiplierModifier {
-    constructor(type: ModifierType, reductionPercent: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, reductionPercent: number, stackCount?: integer) {
         super(type, 0.975, stackCount);
     }
 
@@ -3016,7 +2833,7 @@ export class EnemyDamageReducerModifier extends EnemyDamageMultiplierModifier {
 export class EnemyTurnHealModifier extends EnemyPersistentModifier {
     public healPercent: number;
 
-    constructor(type: ModifierType, healPercent: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, healPercent: number, stackCount?: integer) {
         super(type, stackCount);
 
         this.healPercent = 2;
@@ -3056,7 +2873,7 @@ export class EnemyAttackStatusEffectChanceModifier extends EnemyPersistentModifi
     public effect: StatusEffect;
     public chance: number;
 
-    constructor(type: ModifierType, effect: StatusEffect, chancePercent: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, effect: StatusEffect, chancePercent: number, stackCount?: integer) {
         super(type, stackCount);
 
         this.effect = effect;
@@ -3092,7 +2909,7 @@ export class EnemyAttackStatusEffectChanceModifier extends EnemyPersistentModifi
 export class EnemyStatusEffectHealChanceModifier extends EnemyPersistentModifier {
     public chance: number;
 
-    constructor(type: ModifierType, chancePercent: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, chancePercent: number, stackCount?: integer) {
         super(type, stackCount);
 
         this.chance = .025;
@@ -3130,7 +2947,7 @@ export class EnemyStatusEffectHealChanceModifier extends EnemyPersistentModifier
 export class EnemyEndureChanceModifier extends EnemyPersistentModifier {
     public chance: number;
 
-    constructor(type: ModifierType, chancePercent?: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, chancePercent?: number, stackCount?: integer) {
         super(type, stackCount || 10);
 
         this.chance = .02;
@@ -3170,7 +2987,7 @@ export class EnemyEndureChanceModifier extends EnemyPersistentModifier {
 export class EnemyFusionChanceModifier extends EnemyPersistentModifier {
     private chance: number;
 
-    constructor(type: ModifierType, chancePercent: number, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, chancePercent: number, stackCount?: integer) {
         super(type, stackCount);
 
         this.chance = chancePercent / 100;
@@ -3202,14 +3019,6 @@ export class EnemyFusionChanceModifier extends EnemyPersistentModifier {
         return 10;
     }
 }
-
-/**
- * Uses either `MODIFIER_OVERRIDE` in overrides.ts to set {@linkcode PersistentModifier}s for either:
- *  - The player
- *  - The enemy
- * @param scene current {@linkcode BattleScene}
- * @param isPlayer {@linkcode boolean} for whether the the player (`true`) or enemy (`false`) is being overridden
- */
 export function overrideModifiers(scene: BattleScene, isPlayer: boolean = true): void {
     const modifiersOverride: ModifierTypes.ModifierOverride[] = isPlayer ? Overrides.STARTING_MODIFIER_OVERRIDE : Overrides.OPP_MODIFIER_OVERRIDE;
     if (!modifiersOverride || modifiersOverride.length === 0 || !scene) {
@@ -3221,7 +3030,7 @@ export function overrideModifiers(scene: BattleScene, isPlayer: boolean = true):
     }
 
     modifiersOverride.forEach(item => {
-        const modifierFunc = modifierTypes[item.name];
+        const modifierFunc = ModifierTypes.modifierTypes[item.name];
         const modifier = modifierFunc().withIdFromFunc(modifierFunc).newModifier() as PersistentModifier;
         modifier.stackCount = item.count || 1;
 
@@ -3232,15 +3041,6 @@ export function overrideModifiers(scene: BattleScene, isPlayer: boolean = true):
         }
     });
 }
-
-/**
- * Uses either `HELD_ITEMS_OVERRIDE` in overrides.ts to set {@linkcode PokemonHeldItemModifier}s for either:
- *  - The first member of the player's team when starting a new game
- *  - An enemy {@linkcode Pokemon} being spawned in
- * @param scene current {@linkcode BattleScene}
- * @param pokemon {@linkcode Pokemon} whose held items are being overridden
- * @param isPlayer {@linkcode boolean} for whether the {@linkcode pokemon} is the player's (`true`) or an enemy (`false`)
- */
 export function overrideHeldItems(scene: BattleScene, pokemon: Pokemon, isPlayer: boolean = true): void {
     const heldItemsOverride: ModifierTypes.ModifierOverride[] = isPlayer ? Overrides.STARTING_HELD_ITEMS_OVERRIDE : Overrides.OPP_HELD_ITEMS_OVERRIDE;
     if (!heldItemsOverride || heldItemsOverride.length === 0 || !scene) {
@@ -3248,11 +3048,11 @@ export function overrideHeldItems(scene: BattleScene, pokemon: Pokemon, isPlayer
     }
 
     heldItemsOverride.forEach(item => {
-        const modifierFunc = modifierTypes[item.name];
-        let modifierType: ModifierType | null = modifierFunc();
+        const modifierFunc = ModifierTypes.modifierTypes[item.name];
+        let modifierType: ModifierTypes.ModifierType | null = modifierFunc();
         const qty = item.count || 1;
 
-        if (modifierType instanceof ModifierTypes.ModifierTypeGenerator) {
+        if (modifierType instanceof ModifierTypes.ModifierTypes.ModifierTypeGenerator) {
             const pregenArgs = ("type" in item) && (item.type !== null) ? [item.type] : undefined;
             modifierType = modifierType.generateType([], pregenArgs);
         }
@@ -3269,10 +3069,9 @@ export function overrideHeldItems(scene: BattleScene, pokemon: Pokemon, isPlayer
         }
     })
 }
-
-
 export function reduceGlitchPieceModifier(pokemon: Pokemon, count:number = 2): void {
-    if(pokemon && pokemon.isPlayer()) {
+    const reduceChance = Utils.randSeedInt(100) <= 90;
+    if(pokemon && pokemon.isPlayer() && reduceChance && (!pokemon.scene.gameMode.isChaosMode || pokemon.scene?.pathNodeContext === PathNodeContext.BATTLE_NODE)) {
         const glitchModifier = pokemon.scene.findModifier(m => m instanceof GlitchPieceModifier) as GlitchPieceModifier;
         if (glitchModifier) {
             glitchModifier.stackCount = Math.max(glitchModifier.stackCount - count, 0);
@@ -3282,13 +3081,11 @@ export function reduceGlitchPieceModifier(pokemon: Pokemon, count:number = 2): v
         }
     }
 }
-
-
 export class AnyAbilityModifier extends PokemonHeldItemModifier {
     ability: Abilities;
     readonly isTransferrable: boolean = false;
 
-    constructor(type: ModifierType, pokemonId: integer, ability: Abilities, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, ability: Abilities, stackCount?: integer) {
         super(type, pokemonId, stackCount);
         this.ability = ability;
     }
@@ -3335,13 +3132,11 @@ export class AnyAbilityModifier extends PokemonHeldItemModifier {
         return false;
     }
 }
-
-
 export class AnyPassiveAbilityModifier extends PokemonHeldItemModifier {
     ability: Abilities;
     readonly isTransferrable: boolean = false;
     protected replaceExisting: boolean = true;
-    constructor(type: ModifierType, pokemonId: integer, ability: Abilities, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, ability: Abilities, stackCount?: integer) {
         super(type, pokemonId, stackCount);
         this.ability = ability;
     }
@@ -3382,19 +3177,17 @@ export class AnyPassiveAbilityModifier extends PokemonHeldItemModifier {
         return false;
     }
 }
-
-
 export class StatSwitcherModifier extends PokemonHeldItemModifier {
-    private stat1: Stat;    
+    private stat1: Stat;
     private stat2: Stat;
     private glitchReduced: boolean;
     readonly isTransferrable: boolean = false;
-    constructor(type: ModifierType, pokemonId: integer, stat1: Stat, stat2: Stat, glitchReduced: boolean = false, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stat1: Stat, stat2: Stat, glitchReduced: boolean = false, stackCount?: integer) {
         super(type, pokemonId, stackCount);
         this.stat1 = stat1;
         this.stat2 = stat2;
         this.glitchReduced = glitchReduced;
-       
+
     }
 
     getArgs(): any[] {
@@ -3432,14 +3225,12 @@ export class StatSwitcherModifier extends PokemonHeldItemModifier {
         return false;
     }
 }
-
-
 export class AbilitySwitcherModifier extends PokemonHeldItemModifier {
     private assignedAbilityIndex: integer | undefined = undefined;
     readonly isTransferrable: boolean = false;
     protected replaceExisting: boolean = true;
 
-    constructor(type: ModifierType, pokemonId: integer, assignedAbilityIndex?: integer, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, assignedAbilityIndex?: integer, stackCount?: integer) {
         super(type, pokemonId, stackCount);
         this.assignedAbilityIndex = assignedAbilityIndex;
     }
@@ -3463,7 +3254,7 @@ export class AbilitySwitcherModifier extends PokemonHeldItemModifier {
         const currentAbility = pokemon.getAbility().id;
         const abilities: Abilities[] = [];
 
-        const currentForm = pokemon.isFusion() 
+        const currentForm = pokemon.isFusion()
             ? pokemon.fusionSpecies!.forms[pokemon.fusionFormIndex] || pokemon.fusionSpecies
             : pokemon.species.forms[pokemon.formIndex] || pokemon.species;
 
@@ -3487,8 +3278,8 @@ export class AbilitySwitcherModifier extends PokemonHeldItemModifier {
                 }
             } while ((pokemon.getAbility().id === currentAbility && abilities.length > 1) && !(abilities.length == 2 && abilities[0] === abilities[1]) && !(abilities.length == 3 && abilities[0] === abilities[1] && abilities[1] === abilities[2]));
 
-        this.assignedAbilityIndex = pokemon.isFusion() 
-            ? pokemon.fusionAbilityIndex 
+        this.assignedAbilityIndex = pokemon.isFusion()
+            ? pokemon.fusionAbilityIndex
             : pokemon.abilityIndex;
 
         reduceGlitchPieceModifier(pokemon);
@@ -3513,14 +3304,12 @@ export class AbilitySwitcherModifier extends PokemonHeldItemModifier {
         return false;
     }
 }
-
-
 export class TypeSwitcherModifier extends PokemonHeldItemModifier {
     newPrimaryType: Type | null;
     newSecondaryType: Type | null;
     readonly isTransferrable: boolean = false;
     protected replaceExisting: boolean = true;
-    constructor(type: ModifierType, pokemonId: integer, newPrimaryType: Type | null, newSecondaryType: Type | null, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, newPrimaryType: Type | null, newSecondaryType: Type | null, stackCount?: integer) {
         super(type, pokemonId, stackCount);
         this.newPrimaryType = newPrimaryType;
         this.newSecondaryType = newSecondaryType;
@@ -3534,11 +3323,11 @@ export class TypeSwitcherModifier extends PokemonHeldItemModifier {
         const pokemon = args[0] as Pokemon;
         pokemon.makeSpeciesUnique();
 
-        const getForm = (species: Species, formIndex: integer) => 
+        const getForm = (species: Species, formIndex: integer) =>
             species.forms.length > 0 ? species.forms[formIndex] : species;
 
         const normalForm = getForm(pokemon.species, pokemon.formIndex);
-        
+
         if (this.newPrimaryType !== null && this.newPrimaryType >= 0) {
             normalForm.type1 = this.newPrimaryType;
         }
@@ -3601,7 +3390,7 @@ export class StatSacrificeModifier extends PokemonHeldItemModifier {
     private glitchReduced: boolean;
     private pokemonSacrifice: PlayerPokemon | undefined;
     readonly isTransferrable: boolean = false;
-    constructor(type: ModifierType, pokemonId: integer, stat: Stat, pokemonSacrifice?: PlayerPokemon, glitchReduced: boolean = false, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, stat: Stat, pokemonSacrifice?: PlayerPokemon, glitchReduced: boolean = false, stackCount?: integer) {
         super(type, pokemonId, stackCount);
         this.stat = stat;
         this.glitchReduced = glitchReduced;
@@ -3658,7 +3447,7 @@ export class MoveSacrificeModifier extends PokemonHeldItemModifier {
     private glitchReduced: boolean;
     readonly isTransferrable: boolean = false;
 
-    constructor(type: ModifierType, pokemonId: integer, pokemonSacrifice?: PlayerPokemon, glitchReduced: boolean = false, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, pokemonSacrifice?: PlayerPokemon, glitchReduced: boolean = false, stackCount?: integer) {
         super(type, pokemonId, stackCount);
         this.pokemonSacrifice = pokemonSacrifice;
         this.glitchReduced = glitchReduced;
@@ -3678,7 +3467,7 @@ export class MoveSacrificeModifier extends PokemonHeldItemModifier {
 
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
-        
+
         if (this.pokemonSacrifice instanceof PlayerPokemon) {
             const moves = this.pokemonSacrifice.getMoveset();
             moves.forEach((move, index) => {
@@ -3723,7 +3512,7 @@ export class TypeSacrificeModifier extends PokemonHeldItemModifier {
     private glitchReduced: boolean = false;
     readonly isTransferrable: boolean = false;
     protected replaceExisting: boolean = true;
-    constructor(type: ModifierType, pokemonId: integer, primaryType: Type = Type.UNKNOWN, secondaryType: Type = Type.UNKNOWN, sacrificePokemon?: PlayerPokemon, glitchReduced: boolean = false, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, primaryType: Type = Type.UNKNOWN, secondaryType: Type = Type.UNKNOWN, sacrificePokemon?: PlayerPokemon, glitchReduced: boolean = false, stackCount?: integer) {
         super(type, pokemonId, stackCount);
         this.sacrificePokemon = sacrificePokemon;
         this.primaryType = primaryType;
@@ -3746,12 +3535,12 @@ export class TypeSacrificeModifier extends PokemonHeldItemModifier {
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
         pokemon.makeSpeciesUnique();
-        
+
         if (this.sacrificePokemon) {
             const types = this.sacrificePokemon.getTypes();
             this.primaryType = types[0];
             this.secondaryType = types.length > 1 ? types[1] : Type.UNKNOWN;
-            
+
             const normalForm = pokemon.species.forms.length > 0 ? pokemon.species.forms[pokemon.formIndex] : pokemon.species;
             normalForm.type1 = this.primaryType;
             normalForm.type2 = this.secondaryType;
@@ -3806,7 +3595,7 @@ export class AbilitySacrificeModifier extends PokemonHeldItemModifier {
     readonly isTransferrable: boolean = false;
     protected replaceExisting: boolean = true;
 
-    constructor(type: ModifierType, pokemonId: integer, ability: Abilities, sacrificePokemon: PlayerPokemon, glitchReduced: boolean = false, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, ability: Abilities, sacrificePokemon: PlayerPokemon, glitchReduced: boolean = false, stackCount?: integer) {
         super(type, pokemonId, stackCount);
         this.sacrificePokemon = sacrificePokemon;
         this.ability = ability;
@@ -3879,7 +3668,7 @@ export class PassiveAbilitySacrificeModifier extends PokemonHeldItemModifier {
     readonly isTransferrable: boolean = false;
     protected replaceExisting: boolean = true;
 
-    constructor(type: ModifierType, pokemonId: integer, ability: Abilities, sacrificePokemon: PlayerPokemon, glitchReduced: boolean = false, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, ability: Abilities, sacrificePokemon: PlayerPokemon, glitchReduced: boolean = false, stackCount?: integer) {
         super(type, pokemonId, stackCount);
         this.sacrificePokemon = sacrificePokemon;
         this.ability = ability;
@@ -3901,7 +3690,7 @@ export class PassiveAbilitySacrificeModifier extends PokemonHeldItemModifier {
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
         pokemon.makeSpeciesUnique();
-        if (this.sacrificePokemon) { 
+        if (this.sacrificePokemon) {
             this.ability = this.sacrificePokemon.getAbility().id;
 
             pokemon.altPassiveForRun = this.ability;
@@ -3940,21 +3729,21 @@ export class PassiveAbilitySacrificeModifier extends PokemonHeldItemModifier {
 }
 
 export function reduceCollectedTypeModifiers(scene: BattleScene, pokemon: PlayerPokemon): boolean {
-  const collectedTypeModifiers = scene.findModifiers(m => 
-    m instanceof CollectedTypeModifier && 
+  const collectedTypeModifiers = scene.findModifiers(m =>
+    m instanceof CollectedTypeModifier &&
     m.pokemonId === pokemon.id
   ) as CollectedTypeModifier[];
-  
+
   if (collectedTypeModifiers.length === 0) {
     return false;
   }
-  
+
   for (const modifier of collectedTypeModifiers) {
     if (modifier.hasEnoughCollected(5)) {
       return modifier.reduceCollected(5);
     }
   }
-  
+
   return false;
 }
 
@@ -3962,7 +3751,7 @@ export class AddPokemonModifier extends ConsumableModifier {
     private scene: BattleScene;
     private newPokemon: PlayerPokemon;
 
-    constructor(type: ModifierType, scene: BattleScene, newPokemon: PlayerPokemon) {
+    constructor(type: ModifierTypes.ModifierType, scene: BattleScene, newPokemon: PlayerPokemon) {
         super(type);
         this.scene = scene;
         this.newPokemon = newPokemon;
@@ -3971,26 +3760,25 @@ export class AddPokemonModifier extends ConsumableModifier {
     apply(args: any[]): boolean {
         const scene = args[0] as BattleScene;
         scene.getParty().push(this.newPokemon);
+        this.newPokemon.setVisible(false);
         this.newPokemon.loadAssets();
         reduceGlitchPieceModifier(this.newPokemon, 3);
         return true;
     }
 }
-
-
 export class CollectedTypeModifier extends PokemonHeldItemModifier {
     public collectedTypes: Record<Type, number>;
     readonly isTransferrable: boolean = false;
-    
-    constructor(type: ModifierType, pokemonId: integer, collectedTypeOrRecord: Type | Record<Type, number>, stackCount?: integer) {
+
+    constructor(type: ModifierTypes.ModifierType, pokemonId: integer, collectedTypeOrRecord: Type | Record<Type, number>, stackCount?: integer) {
         super(type, pokemonId, stackCount);
-        
+
         if (typeof collectedTypeOrRecord === 'number') {
             this.collectedTypes = {} as Record<Type, number>;
-            
+
             const count = stackCount && stackCount > 1 ? stackCount : 1;
             this.collectedTypes[collectedTypeOrRecord] = count;
-            
+
             this.stackCount = 1;
         } else {
             this.collectedTypes = { ...collectedTypeOrRecord };
@@ -4015,12 +3803,12 @@ export class CollectedTypeModifier extends PokemonHeldItemModifier {
 
         let remainingToReduce = amountToReduce;
         const typeKeys = Object.keys(this.collectedTypes).map(key => parseInt(key) as Type);
-        
+
         while (remainingToReduce > 0 && typeKeys.length > 0) {
             const randomIndex = Math.floor(Math.random() * typeKeys.length);
             const randomType = typeKeys[randomIndex];
             const currentCount = this.collectedTypes[randomType];
-            
+
             if (currentCount <= remainingToReduce) {
                 remainingToReduce -= currentCount;
                 delete this.collectedTypes[randomType];
@@ -4030,9 +3818,9 @@ export class CollectedTypeModifier extends PokemonHeldItemModifier {
                 remainingToReduce = 0;
             }
         }
-        
+
         this.stackCount = Object.values(this.collectedTypes).reduce((sum, count) => sum + count, 0);
-        
+
         return true;
     }
 
@@ -4067,15 +3855,18 @@ export class CollectedTypeModifier extends PokemonHeldItemModifier {
 
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
+        if (!pokemon) {
+            return false;
+        }
         return pokemon.id === this.pokemonId;
     }
 
     add(modifiers: PersistentModifier[], virtual: boolean, scene: BattleScene): boolean {
-        const existingModifier = modifiers.find(m => 
-            m instanceof CollectedTypeModifier && 
+        const existingModifier = modifiers.find(m =>
+            m instanceof CollectedTypeModifier &&
             m.pokemonId === this.pokemonId
         ) as CollectedTypeModifier;
-        
+
         if (existingModifier) {
             for (const [type, count] of Object.entries(this.collectedTypes)) {
                 const typeKey = parseInt(type) as Type;
@@ -4084,20 +3875,76 @@ export class CollectedTypeModifier extends PokemonHeldItemModifier {
             existingModifier.stackCount = Object.values(existingModifier.collectedTypes).reduce((sum, count) => sum + count, 0);
             return true;
         }
-        
+
         return super.add(modifiers, virtual, scene);
     }
 }
 
+export class PermaCollectedTypeModifier extends PersistentModifier {
+    public collectedTypes: Record<Type, number>;
+    readonly isTransferrable: boolean = false;
 
+    constructor(type: ModifierTypes.ModifierType, collectedTypeOrRecord?: Type | Record<Type, number>, stackCount?: integer) {
+        super(type, stackCount);
 
+        if (typeof collectedTypeOrRecord === 'number') {
+            this.collectedTypes = {} as Record<Type, number>;
+            const count = stackCount && stackCount > 1 ? stackCount : 1;
+            this.collectedTypes[collectedTypeOrRecord] = count;
+        } else if (collectedTypeOrRecord) {
+            this.collectedTypes = { ...collectedTypeOrRecord };
+        } else {
+            this.collectedTypes = {} as Record<Type, number>;
+        }
+    }
+
+    addCollected(type: Type, count: number = 1): void {
+        this.collectedTypes[type] = (this.collectedTypes[type] || 0) + count;
+    }
+
+    removeCollected(type: Type, count: number = 1): boolean {
+        const current = this.collectedTypes[type] || 0;
+        if (current < count) return false;
+        this.collectedTypes[type] = current - count;
+        if (this.collectedTypes[type] <= 0) delete this.collectedTypes[type];
+        return true;
+    }
+
+      getMaxStackCount(scene: BattleScene): integer {
+        return 1;
+    }
+
+    getTypeCount(type: Type): number {
+        return this.collectedTypes[type] || 0;
+    }
+
+    getStackCount(): number {
+        return Math.max(Object.values(this.collectedTypes).reduce((sum, count) => sum + count, 0), 0);
+    }
+
+    matchType(modifier: Modifier): boolean {
+        return modifier instanceof PermaCollectedTypeModifier;
+    }
+
+    match(modifier: Modifier): boolean {
+        return modifier instanceof PermaCollectedTypeModifier;
+    }
+
+    getArgs(): any[] {
+        return super.getArgs().concat([this.collectedTypes]);
+    }
+
+    clone(): PermaCollectedTypeModifier {
+        return new PermaCollectedTypeModifier(this.type, this.collectedTypes, this.stackCount);
+    }
+}
 
 export abstract class PermaQuestModifier extends PersistentModifier {
     protected condition: () => boolean;
     public questUnlockData: QuestUnlockData;
     protected count: number;
 
-    constructor(type: ModifierType, condition: () => boolean, questUnlockData: QuestUnlockData, count: number = 1) {
+    constructor(type: ModifierTypes.ModifierType, condition: () => boolean, questUnlockData: QuestUnlockData, count: number = 1) {
         super(type);
         this.condition = condition;
         this.questUnlockData = questUnlockData;
@@ -4122,7 +3969,7 @@ export abstract class PermaQuestModifier extends PersistentModifier {
             fontSize: "70px",
             color: "#fff"
         });
-        
+
         countText.setStroke("#000", 16);
         countText.setOrigin(1, 0);
         container.add(countText);
@@ -4155,7 +4002,7 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
     public consoleCode?: string;
     private currentMode: Mode;
 
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration, condition: (...args: any[]) => boolean, goalCount: number, questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0, resetOnFail: boolean = false, stages?: QuestStage[], currentStageIndex: number = 0, consoleCode: string = "" ) {
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration, condition: (...args: any[]) => boolean, goalCount: number, questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0, resetOnFail: boolean = false, stages?: QuestStage[], currentStageIndex: number = 0, consoleCode: string = "" ) {
         super(type, condition, questUnlockData, goalCount);
         this.runType = runType;
         this.duration = duration;
@@ -4254,7 +4101,7 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
         } else {
             scene.gameData.gameStats.questsCompleted++;
         }
-        
+
         if (this.stages && this.currentStageIndex !== undefined) {
             let assignStage = false;
             if(scene.currentBattle.trainer?.rivalStage) {
@@ -4312,10 +4159,10 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
                     this.handlePermaModifierReward(scene);
                     break;
                 case RewardType.PERMA_MONEY:
-                    this.handleMoneyReward(scene, questUnlockData.rewardId as keyof typeof modifierTypes);
+                    this.handleMoneyReward(scene, questUnlockData.rewardId as keyof typeof ModifierTypes.modifierTypes);
                     break;
                 case RewardType.PERMA_MONEY_AND_MODIFIER:
-                    this.handleMoneyReward(scene, questUnlockData.rewardId as keyof typeof modifierTypes);
+                    this.handleMoneyReward(scene, questUnlockData.rewardId as keyof typeof ModifierTypes.modifierTypes);
                     this.handlePermaModifierReward(scene);
                     break;
             }
@@ -4331,7 +4178,7 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
 
     protected handlePermaModifierReward(scene: BattleScene): void {
             const randomKey = getRandomPermaModifierKey();
-            let modifierTypeFunc = modifierTypes[randomKey];
+            let modifierTypeFunc = ModifierTypes.modifierTypes[randomKey];
             try {
                 this.handleRewardPhase(scene, ModifierRewardPhase, [
                     scene,
@@ -4344,9 +4191,9 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
 
     }
 
-    protected handleMoneyReward(scene: BattleScene, moneyModifierKey: keyof typeof modifierTypes): void {
+    protected handleMoneyReward(scene: BattleScene, moneyModifierKey: keyof typeof ModifierTypes.modifierTypes): void {
         try {
-            const modifierTypeFunc = modifierTypes[moneyModifierKey];
+            const modifierTypeFunc = ModifierTypes.modifierTypes[moneyModifierKey];
 
             if (modifierTypeFunc && moneyModifierKey.startsWith('PERMA_MONEY_')) {
                 this.handleRewardPhase(scene, ModifierRewardPhase, [
@@ -4395,8 +4242,6 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
         return modifier instanceof PermaRunQuestModifier &&
             modifier.modifierId === this.modifierId && modifier.consoleCode === this.consoleCode;
     }
-
-
     resetCount(scene: BattleScene): void {
         if (this.duration === RunDuration.SINGLE_RUN) {
             scene.gameData.resetSessionQuestModifierCount(this.modifierId);
@@ -4471,16 +4316,16 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
             }
             else if (typeof questData.rewardId === 'number') {
                 speciesId = questData.rewardId;
-            } 
+            }
             else if (Array.isArray(questData.rewardId) && questData.rewardId.length > 0 &&
                 typeof questData.rewardId[0] === 'number') {
                 speciesId = questData.rewardId[0];
             }
-            
+
         }
 
-            const questBG = scene.add.sprite(5, this.virtualStackCount ? 8 : 16, "smitems_32", "quest");
-            questBG.setScale(0.85);
+            const questBG = scene.add.sprite(5, this.virtualStackCount ? 8 : 16, "smitems", "quest");
+            questBG.setScale(0.45);
             questBG.setOrigin(0, 0.5);
             container.add(questBG);
 
@@ -4528,9 +4373,9 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
     }
 
 private addFallbackIcon(scene: BattleScene, container: Phaser.GameObjects.Container): void {
-    const item = scene.add.sprite(16, this.virtualStackCount ? 8 : 16, "smitems_32",
+    const item = scene.add.sprite(16, this.virtualStackCount ? 8 : 16, "smitems",
         this.modifierTypeOption.type.iconImage);
-    item.setScale(0.5);
+    item.setScale(0.25);
     item.setOrigin(0, 0.5);
     container.add(item);
 }
@@ -4552,7 +4397,7 @@ private addFallbackIcon(scene: BattleScene, container: Phaser.GameObjects.Contai
 }
 
 export class PermaWinQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4570,7 +4415,7 @@ export class PermaWinQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaLoseQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4588,7 +4433,7 @@ export class PermaLoseQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaRivalWinQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4606,7 +4451,7 @@ export class PermaRivalWinQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaEndOfBattleQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4624,7 +4469,7 @@ export class PermaEndOfBattleQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaCatchQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4642,7 +4487,7 @@ export class PermaCatchQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaMoveQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4660,7 +4505,7 @@ export class PermaMoveQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaFaintQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4678,7 +4523,7 @@ export class PermaFaintQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaKnockoutQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4698,7 +4543,7 @@ export class PermaKnockoutQuestModifier extends PermaRunQuestModifier {
 export class PermaSpecialMoveQuestModifier extends PermaRunQuestModifier {
     private conditionQuest: Unlockables;
 
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4717,7 +4562,7 @@ export class PermaSpecialMoveQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaBeatTrainerQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4735,7 +4580,7 @@ export class PermaBeatTrainerQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaUseAbilityQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4753,7 +4598,7 @@ export class PermaUseAbilityQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaHitQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4771,7 +4616,7 @@ export class PermaHitQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaWaveCheckQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (scene: BattleScene, waveIndex: number) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4791,7 +4636,7 @@ export class PermaWaveCheckQuestModifier extends PermaRunQuestModifier {
 export class PermaCountdownWaveCheckQuestModifier extends PermaWaveCheckQuestModifier {
     public readonly startWave: number;
 
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (scene: BattleScene, waveIndex: number) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4810,7 +4655,7 @@ export class PermaCountdownWaveCheckQuestModifier extends PermaWaveCheckQuestMod
 }
 
 export class PermaTagRemovalQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4828,7 +4673,7 @@ export class PermaTagRemovalQuestModifier extends PermaRunQuestModifier {
 }
 
 export class PermaFormChangeQuestModifier extends PermaRunQuestModifier {
-    constructor(type: ModifierType, runType: RunType, duration: RunDuration,
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
                 condition: (...args: any[]) => boolean, goalCount: number,
                 questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
                 resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
@@ -4844,11 +4689,9 @@ export class PermaFormChangeQuestModifier extends PermaRunQuestModifier {
             this.currentStageIndex, this.consoleCode);
     }
 }
-
-
 export class PermaModifier extends PersistentModifier {
     constructor(
-        type: PermaModifierType,
+        type: ModifierTypes.PermaModifierType,
         public permaType: PermaType,
         public remainingCount: number,
         public permaDuration: PermaDuration,
@@ -4906,7 +4749,7 @@ export class PermaModifier extends PersistentModifier {
     }
 
     clone(): PermaModifier {
-        return new PermaModifier(this.type as PermaModifierType, this.permaType, this.remainingCount, this.permaDuration, this.condition, this.stackCount);
+        return new PermaModifier(this.type as ModifierTypes.PermaModifierType, this.permaType, this.remainingCount, this.permaDuration, this.condition, this.stackCount);
 
     }
 
@@ -4945,7 +4788,7 @@ export class PermaModifier extends PersistentModifier {
 export class PermaPartyAbilityModifier extends PermaModifier {
     public readonly ability: Ability;
 
-    constructor(type: ModifierType, initialCount: number, permaDuration: PermaDuration, abilityID: Abilities, condition: () => boolean = () => true, stackCount?: integer) {
+    constructor(type: ModifierTypes.ModifierType, initialCount: number, permaDuration: PermaDuration, abilityID: Abilities, condition: () => boolean = () => true, stackCount?: integer) {
         super(type, PermaType.PERMA_PARTY_ABILITY, initialCount, permaDuration, condition, stackCount);
         this.ability = allAbilities[abilityID];
     }
@@ -4972,7 +4815,7 @@ export class PermaPartyAbilityModifier extends PermaModifier {
     }
 }
 
-function useSmitemAtlas(modifierType :ModifierType): boolean {
+function useSmitemAtlas(modifierType :ModifierTypes.ModifierType): boolean {
     return modifierType.group == "perma" || modifierType.group == "glitch";
 }
 
@@ -4993,7 +4836,7 @@ export class MoveUpgradeModifier extends PersistentModifier {
     public upgradeTier?: number;
 
     constructor(
-        type: ModifierType,
+        type: ModifierTypes.ModifierType,
         moveId: Moves,
         powerBoost: integer = 0,
         typeChange: Type | null = null,
@@ -5031,15 +4874,15 @@ export class MoveUpgradeModifier extends PersistentModifier {
             return false;
         }
         const other = modifier as MoveUpgradeModifier;
-        
+
         if (this.upgradeCategory && other.upgradeCategory) {
             return this.moveId === other.moveId && this.upgradeCategory === other.upgradeCategory;
         }
-        
+
         if (!this.upgradeCategory && !other.upgradeCategory) {
             return this.moveId === other.moveId;
         }
-        
+
         return false;
     }
 
@@ -5176,6 +5019,710 @@ export class MoveUpgradeModifier extends PersistentModifier {
     }
 
     getMaxStackCount(_scene: BattleScene): integer {
-        return 1000000; 
+        return 1000000;
     }
+}
+export class TrainerBondAbilityModifier extends PersistentModifier {
+  public ability: Abilities;
+  private bonusActivationChance: number;
+  private championId: string;
+  private activatedThisTurn: boolean = false;
+  private lastCheckTurn: number = -1;
+
+  constructor(type: ModifierType, championId: string, ability: Abilities, bonusChance: number = 0.05) {
+    super(type, 1 as unknown as integer);
+    this.ability = ability;
+    this.bonusActivationChance = bonusChance;
+    this.championId = championId;
+  }
+
+  match(modifier: any): boolean {
+    return modifier instanceof TrainerBondAbilityModifier && modifier.championId === this.championId && modifier.ability === this.ability;
+  }
+
+  apply(args: any[]): boolean {
+    const pokemon = args[0] as Pokemon;
+    const scene = pokemon.scene as BattleScene;
+    if (scene.gameData.selectedChampionId !== this.championId || !pokemon.isPlayer()) {
+      return false;
+    }
+
+    const currentTurn = scene.currentBattle?.turn || 0;
+    if (currentTurn !== this.lastCheckTurn) {
+      this.lastCheckTurn = currentTurn;
+      const stackCount = this.getStackCount();
+      const effectiveChance = Math.min(1.0, 0.05 * stackCount);
+      const chance = Math.round(effectiveChance * 100);
+      this.activatedThisTurn = Utils.randSeedInt(100) < chance;
+    }
+
+    return this.activatedThisTurn;
+  }
+
+  clone(): TrainerBondAbilityModifier {
+    return new TrainerBondAbilityModifier(this.type, this.championId, this.ability, this.bonusActivationChance);
+  }
+
+  getMaxStackCount(): integer {
+    return 50 as unknown as integer;
+  }
+
+  getIcon(scene: BattleScene, forSummary?: boolean): Phaser.GameObjects.Container {
+    const container = scene.add.container(0, 0);
+
+    const championSpriteKey = this.type.iconImage;
+    const championScale = ChampionUtils.getChampionTrainerBondScale(this.championId);
+    const iconScale = 0.45 * championScale;
+
+    try {
+      if (scene.textures.exists(championSpriteKey)) {
+        const sprite = scene.add.sprite(0, 15, championSpriteKey);
+        sprite.setOrigin(0, 0.5);
+        sprite.setScale(iconScale);
+
+        if (sprite.postFX && typeof sprite.postFX.addColorMatrix === 'function') {
+          const colorMatrix = sprite.postFX.addColorMatrix();
+          colorMatrix.negative();
+        }
+
+        container.add(sprite);
+      } else {
+        const fallbackSprite = scene.add.sprite(0, 6, "items");
+        fallbackSprite.setFrame("trainer");
+        fallbackSprite.setOrigin(0, 0.5);
+
+        if (fallbackSprite.postFX && typeof fallbackSprite.postFX.addColorMatrix === 'function') {
+          const colorMatrix = fallbackSprite.postFX.addColorMatrix();
+          colorMatrix.negative();
+        }
+
+        container.add(fallbackSprite);
+      }
+    } catch (error) {
+      const fallbackSprite = scene.add.sprite(0, 6, "items");
+      fallbackSprite.setFrame("trainer");
+      fallbackSprite.setOrigin(0, 0.5);
+
+      if (fallbackSprite.postFX && typeof fallbackSprite.postFX.addColorMatrix === 'function') {
+        const colorMatrix = fallbackSprite.postFX.addColorMatrix();
+        colorMatrix.negative();
+      }
+
+      container.add(fallbackSprite);
+    }
+
+    const stackText = this.getIconStackText(scene);
+    if (stackText) {
+      container.add(stackText);
+    }
+
+    return container;
+  }
+
+  getArgs(): any[] { return [this.championId, this.ability, this.bonusActivationChance]; }
+}
+
+export class PokemonAltBuildModifier extends PokemonHeldItemModifier {
+  private altBuild: PokemonAltBuildDefinition;
+
+  matchType(modifier: Modifier): boolean {
+    return modifier instanceof PokemonAltBuildModifier;
+  }
+
+  getMaxHeldItemCount(pokemon: Pokemon): integer {
+    return 1;
+  };
+
+  constructor(type: ModifierType, pokemonId: integer, altBuild: PokemonAltBuildDefinition) {
+    super(type, pokemonId, 1);
+
+    if (altBuild && !altBuild.name) {
+      altBuild.name = `Alt Build ${altBuild.id}`;
+    }
+
+    this.altBuild = altBuild;
+  }
+
+  match(modifier: Modifier): boolean {
+    if (modifier instanceof PokemonAltBuildModifier) {
+      const sameId = modifier.pokemonId === this.pokemonId && modifier.altBuild.id === this.altBuild.id;
+      const sameRank = (modifier.altBuild.rank || 1) === (this.altBuild.rank || 1);
+      return sameId && sameRank;
+    }
+    return false;
+  }
+
+  getIcon(scene: BattleScene, forSummary?: boolean): Phaser.GameObjects.Container {
+    const container = scene.add.container(0, 0);
+
+    const pokemon = this.getPokemon(scene);
+    if (pokemon) {
+      const pokemonIcon = scene.addPokemonIcon(pokemon, -2, 10, 0, 0.5);
+      container.add(pokemonIcon);
+      container.setName(pokemon.id.toString());
+    }
+
+    if (!forSummary) {
+      const stackText = this.getIconStackText(scene);
+      if (stackText) {
+        container.add(stackText);
+      }
+
+      const virtualStackText = this.getIconStackText(scene, true);
+      if (virtualStackText) {
+        container.add(virtualStackText);
+      }
+    } else {
+      container.setScale(0.5);
+    }
+
+    return container;
+  }
+
+  apply(args: any[]): boolean {
+    const pokemon = args[0] as Pokemon;
+    const isAlreadyApplied = pokemon.altBuildId === this.altBuild.id
+        && pokemon.altBuildRank === this.altBuild.rank;
+    if (pokemon.id !== this.pokemonId) return false;
+
+    if (!isAlreadyApplied) {
+      pokemon.altBuildChange = true;
+    }
+
+    const preStateSnapshot = {
+      altBuildSpriteColors: pokemon.altBuildSpriteColors ? [...pokemon.altBuildSpriteColors] : null,
+      altBuildTargetColors: pokemon.altBuildTargetColors ? [...pokemon.altBuildTargetColors] : null,
+      altBuildBlendMode: pokemon.altBuildBlendMode,
+      altBuildInversionFactor: pokemon.altBuildInversionFactor || 0.0,
+      altBuildRank: pokemon.altBuildRank || 0
+    };
+
+    this.applyAltBuildToPokemon(pokemon, isAlreadyApplied);
+
+    if (isAlreadyApplied) {
+      return true;
+    }
+
+    const altBuildFormChange = new SpeciesFormChange(
+      pokemon.species.speciesId,
+      pokemon.species.forms[pokemon.formIndex]?.formKey || "",
+      SpeciesFormKey.ALT_BUILD,
+      new AltBuildTrigger(this.altBuild.id)
+    );
+
+    (pokemon as any)._preStateAltBuildSnapshot = preStateSnapshot;
+
+    pokemon.scene.unshiftPhase(new FormChangePhase(pokemon.scene, pokemon, altBuildFormChange, false));
+    return true;
+  }
+
+  public applyAltBuildToPokemon(pokemon: Pokemon, skipColorUpdate: boolean = false): void {
+    const existingBuildId = pokemon.altBuildId;
+    const existingRank = pokemon.altBuildRank ?? 0;
+    const newRank = this.altBuild.rank ?? 1;
+
+    const isProgressingRank = existingBuildId === this.altBuild.id && newRank > existingRank;
+
+    const species = pokemon.makeSpeciesUnique();
+    const currentForm = species.forms && species.forms.length > pokemon.formIndex
+      ? species.forms[pokemon.formIndex]
+      : species;
+
+    let originalStats: integer[];
+    if (this.altBuild.species) {
+      const defaultSpecies = getPokemonSpecies(this.altBuild.species);
+      if (defaultSpecies) {
+        if (pokemon.formIndex > 0 && defaultSpecies.forms && defaultSpecies.forms[pokemon.formIndex]) {
+          originalStats = [...defaultSpecies.forms[pokemon.formIndex].baseStats];
+        } else {
+          originalStats = [...defaultSpecies.baseStats];
+        }
+      } else {
+        originalStats = [...currentForm.baseStats];
+      }
+    } else {
+      originalStats = [...currentForm.baseStats];
+    }
+
+    if (isProgressingRank) {
+      currentForm.baseStats = [...originalStats];
+    }
+
+    if (this.altBuild.statFocus) {
+      const focusStats = this.altBuild.statFocus;
+      if (focusStats.length < 2 || focusStats.length > 3) {
+        console.error(`Alt build ${this.altBuild.id}: statFocus must have 2-3 elements`);
+        return;
+      }
+
+      const uniqueStats = new Set(focusStats);
+      if (uniqueStats.size !== focusStats.length) {
+        console.error(`Alt build ${this.altBuild.id}: statFocus contains duplicates`);
+        return;
+      }
+
+      for (const stat of focusStats) {
+        if (stat < Stat.HP || stat > Stat.SPD) {
+          console.error(`Alt build ${this.altBuild.id}: Invalid stat ${stat}`);
+          return;
+        }
+      }
+
+      const originalBaseStats = [...currentForm.baseStats];
+      const newBaseStats = calculateAltBuildStatsWithSwapping(
+        originalBaseStats,
+        focusStats,
+        this.altBuild.rank || 0
+      );
+
+      currentForm.baseStats = newBaseStats;
+      currentForm.baseTotal = newBaseStats.reduce((sum, s) => sum + s, 0);
+    }
+
+    if (!isProgressingRank) {
+      const [a1, a2, ah] = this.altBuild.abilityChanges;
+      if (a1 !== undefined) currentForm.ability1 = a1;
+      if (a2 !== undefined) currentForm.ability2 = a2;
+      if (ah !== undefined) currentForm.abilityHidden = ah;
+
+      if (this.altBuild.passiveAbilityChange) {
+        pokemon.altPassiveForRun = this.altBuild.passiveAbilityChange;
+        pokemon.passive = true;
+      }
+
+      if (this.altBuild.typeChanges) {
+        const [t1, t2] = this.altBuild.typeChanges;
+        if (t1 !== undefined) currentForm.type1 = t1;
+        if (t2 !== undefined) currentForm.type2 = t2;
+      }
+    } else if (newRank === 10) {
+      if (this.altBuild.finalAbilityReplacements) {
+        const [a1, a2, ah] = this.altBuild.finalAbilityReplacements;
+        if (a1 !== undefined) currentForm.ability1 = a1;
+        if (a2 !== undefined) currentForm.ability2 = a2;
+        if (ah !== undefined) currentForm.abilityHidden = ah;
+      }
+
+      if (this.altBuild.finalPassive) {
+        pokemon.altPassiveForRun = this.altBuild.finalPassive;
+        pokemon.passive = true;
+      }
+    }
+
+    pokemon.calculateStats();
+
+    pokemon.altBuildId = this.altBuild.id;
+    pokemon.altBuildRank = newRank;
+
+    const baseName = pokemon.species.getName(pokemon.formIndex);
+
+    let altBuildDisplayName = i18next.t(`pokemonAltBuild:${this.altBuild.id}.name`);
+
+    if (this.altBuild.id.includes('apollo_diana_signature')) {
+      const scene = pokemon.scene as BattleScene;
+      const championId = scene?.gameData?.selectedChampionId;
+      if (championId === 'apollo' || championId === 'diana') {
+        const championName = ChampionUtils.getChampionDisplayName(championId);
+        altBuildDisplayName = i18next.t("pokemonAltBuild:championPartner", { champion: championName });
+      }
+    }
+
+    const rankSuffix = Utils.intToRoman(newRank);
+    const altBuildName = rankSuffix
+      ? `${baseName} (${altBuildDisplayName} ${rankSuffix})`
+      : `${baseName} (${altBuildDisplayName})`;
+    pokemon.nickname = btoa(unescape(encodeURIComponent(altBuildName)));
+
+    if (this.altBuild.spriteColorPalette && pokemon.scene) {
+      if (skipColorUpdate) {
+        return;
+      }
+      const adjustedPalette = this.createRankAdjustedPalette(
+        this.altBuild.spriteColorPalette,
+        newRank
+      );
+
+      const inversionFactor = newRank >= 6 ? (newRank - 5) / 5 * 0.7 : 0.0;
+
+      pokemon.updateAltBuildPalette({
+        ...this.altBuild,
+        spriteColorPalette: adjustedPalette,
+        inversionFactor: inversionFactor
+      });
+    }
+
+    pokemon.altBuildChange = false;
+  }
+
+  private createIntensityAdjustedPalette(palette: AltBuildColorPalette, intensity: number): AltBuildColorPalette {
+    const adjustedPalette = palette.targetPalette.map(targetHex => {
+      const targetRgb = this.hexToRgb(targetHex);
+      const baseGray = Math.round((targetRgb.r + targetRgb.g + targetRgb.b) / 3);
+
+      const adjustedRgb = {
+        r: Math.round(baseGray + (targetRgb.r - baseGray) * intensity),
+        g: Math.round(baseGray + (targetRgb.g - baseGray) * intensity),
+        b: Math.round(baseGray + (targetRgb.b - baseGray) * intensity),
+      };
+
+      return this.rgbToHex(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
+    });
+
+    return {
+      ...palette,
+      targetPalette: adjustedPalette
+    };
+  }
+
+  private createRankAdjustedPalette(palette: AltBuildColorPalette, rank: number): AltBuildColorPalette {
+    const basePalette = (rank >= 6 && palette.darkPalette) ? palette.darkPalette : palette.targetPalette;
+    const isPhase1 = rank <= 5;
+
+    if (!palette.rankProgression) {
+      const colorIntensity = rank >= 10 ? 1.0 :
+                             rank >= 8 ? 0.75 :
+                             rank >= 6 ? 0.5 :
+                             rank >= 3 ? 0.25 : 0.1;
+      return this.createIntensityAdjustedPalette({ ...palette, targetPalette: basePalette }, colorIntensity);
+    }
+
+    const progression = palette.rankProgression;
+
+    let saturationMultiplier: number;
+    let lightnessMultiplier: number;
+
+    if (isPhase1) {
+      switch (progression.type) {
+        case 'exponential':
+          saturationMultiplier = Math.pow(rank / 5, 2);
+          break;
+        case 'milestone':
+          saturationMultiplier = rank >= 5 ? 1.0 :
+                                rank >= 4 ? 0.85 :
+                                rank >= 3 ? 0.7 :
+                                rank >= 2 ? 0.55 : 0.55;
+          break;
+        default:
+          saturationMultiplier = rank / 5;
+      }
+
+      if (rank <= 2) {
+        lightnessMultiplier = 0.0;
+      } else {
+        lightnessMultiplier = -(rank - 2) / 3;
+      }
+    } else {
+      saturationMultiplier = 1.0;
+      const darkRank = rank - 5;
+      lightnessMultiplier = 1.0 - (darkRank / 5) * 0.5;
+    }
+
+    const adjustedPalette = basePalette.map(targetHex => {
+      const rgb = this.hexToRgb(targetHex);
+      const hsl = this.rgbToHsl(rgb);
+
+      if (progression.saturationScale !== undefined) {
+        hsl.s *= (progression.saturationScale * saturationMultiplier);
+        hsl.s = Math.max(0, Math.min(1, hsl.s));
+      } else {
+        hsl.s *= saturationMultiplier;
+      }
+
+      if (progression.lightnessAdjust !== undefined) {
+        const lightnessOffset = progression.lightnessAdjust * lightnessMultiplier;
+        hsl.l += lightnessOffset;
+        hsl.l = Math.max(0, Math.min(1, hsl.l));
+      }
+
+      if (progression.hueShift !== undefined) {
+        const hueOffset = progression.hueShift * lightnessMultiplier;
+        hsl.h = (hsl.h + hueOffset + 360) % 360;
+      }
+
+      const adjustedRgb = this.hslToRgb(hsl);
+      return this.rgbToHex(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
+    });
+
+    return {
+      ...palette,
+      targetPalette: adjustedPalette
+    };
+  }
+
+  private rgbToHsl(rgb: { r: number, g: number, b: number }): { h: number, s: number, l: number } {
+    const r = rgb.r / 255;
+    const g = rgb.g / 255;
+    const b = rgb.b / 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const l = (max + min) / 2;
+
+    if (max === min) {
+      return { h: 0, s: 0, l };
+    }
+
+    const d = max - min;
+    const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+    let h: number;
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+      default: h = 0;
+    }
+
+    return { h: h * 360, s, l };
+  }
+
+  private hslToRgb(hsl: { h: number, s: number, l: number }): { r: number, g: number, b: number } {
+    const h = hsl.h / 360;
+    const s = hsl.s;
+    const l = hsl.l;
+
+    if (s === 0) {
+      const gray = Math.round(l * 255);
+      return { r: gray, g: gray, b: gray };
+    }
+
+    const hue2rgb = (p: number, q: number, t: number): number => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+
+    return {
+      r: Math.round(hue2rgb(p, q, h + 1/3) * 255),
+      g: Math.round(hue2rgb(p, q, h) * 255),
+      b: Math.round(hue2rgb(p, q, h - 1/3) * 255),
+    };
+  }
+
+  private hexToRgb(hex: string): { r: number, g: number, b: number } {
+    hex = hex.replace(/^#/, '');
+    return {
+      r: parseInt(hex.substring(0, 2), 16),
+      g: parseInt(hex.substring(2, 4), 16),
+      b: parseInt(hex.substring(4, 6), 16),
+    };
+  }
+
+  private rgbToHex(r: number, g: number, b: number): string {
+    return '#' + [r, g, b].map(x => {
+      const hex = x.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    }).join('');
+  }
+
+  clone(): PokemonAltBuildModifier {
+    return new PokemonAltBuildModifier(this.type, this.pokemonId, this.altBuild);
+  }
+
+  getArgs(): any[] {
+    return [this.pokemonId, this.altBuild];
+  }
+}
+
+export class TeraAbilityModifier extends PersistentModifier {
+  public abilityId: Abilities;
+  public teraType: Type;
+  private championId: string;
+  private activationChance: number;
+  private activatedThisTurn: boolean = false;
+  private lastCheckTurn: number = -1;
+
+  constructor(type: ModifierType, championId: string, abilityId: Abilities, teraType: Type, activationChance: number = 0.10) {
+    super(type, 1);
+    this.championId = championId;
+    this.abilityId = abilityId;
+    this.teraType = teraType;
+    this.activationChance = activationChance;
+  }
+
+  match(modifier: Modifier): boolean {
+    return modifier instanceof TeraAbilityModifier &&
+        modifier.abilityId === this.abilityId &&
+        modifier.teraType === this.teraType &&
+        modifier.championId === this.championId;
+  }
+
+  apply(args: any[]): boolean {
+    const pokemon = args[0] as Pokemon;
+    if (!pokemon.isPlayer()) return false;
+
+    const scene = pokemon.scene as BattleScene;
+    if (scene.gameData.selectedChampionId !== this.championId) return false;
+
+    const teraActive = !!scene.findModifiers(m => (m as any).pokemonId === pokemon.id && m instanceof TerastallizeModifier).length;
+    if (!teraActive) return false;
+
+    const currentTurn = scene.currentBattle?.turn || 0;
+    if (currentTurn !== this.lastCheckTurn) {
+      this.lastCheckTurn = currentTurn;
+      const stackCount = this.getStackCount();
+      const effectiveChance = Math.min(1.0, 0.10 * stackCount);
+      const chance = Math.round(effectiveChance * 100);
+      this.activatedThisTurn = Utils.randSeedInt(100) < chance;
+    }
+
+    return this.activatedThisTurn;
+  }
+
+  clone(): TeraAbilityModifier {
+    return new TeraAbilityModifier(this.type, this.championId, this.abilityId, this.teraType, this.activationChance);
+  }
+
+  getMaxStackCount(): integer {
+    return 50 as unknown as integer;
+  }
+
+  getIcon(scene: BattleScene, forSummary?: boolean): Phaser.GameObjects.Container {
+    const container = scene.add.container(0, 0);
+
+    const item = scene.add.sprite(0, 12, "items");
+    item.setFrame(this.type.iconImage);
+    item.setOrigin(0, 0.5);
+
+    if (item.postFX && typeof item.postFX.addColorMatrix === 'function') {
+      const colorMatrix = item.postFX.addColorMatrix();
+      colorMatrix.negative();
+    }
+
+    container.add(item);
+
+    const stackText = this.getIconStackText(scene);
+    if (stackText) {
+      container.add(stackText);
+    }
+
+    return container;
+  }
+
+  getArgs(): any[] {
+    return [this.championId, this.abilityId, this.teraType, this.activationChance];
+  }
+}
+
+export class SkillPointRewardModifier extends ConsumableModifier {
+  private amount: number;
+
+  constructor(type: ModifierTypes.ModifierType, amount: number) {
+    super(type);
+    this.amount = amount;
+  }
+
+  apply(args: any[]): boolean {
+    const scene = args[0] as BattleScene;
+    if (!scene) {
+      return false;
+    }
+    const activeSkillTree = scene.gameData?.activeSkillTree;
+    if (!activeSkillTree) {
+      return false;
+    }
+    activeSkillTree.skillPoints = (activeSkillTree.skillPoints || 0) + this.amount;
+    return true;
+  }
+}
+
+export class SkillTreeTokenRewardModifier extends ConsumableModifier {
+  private amount: number;
+
+  constructor(type: ModifierTypes.ModifierType, amount: number) {
+    super(type);
+    this.amount = amount;
+  }
+
+  apply(args: any[]): boolean {
+    const scene = args[0] as BattleScene;
+    if (!scene) {
+      return false;
+    }
+    const activeSkillTree = scene.gameData?.activeSkillTree;
+    if (!activeSkillTree) {
+      return false;
+    }
+    activeSkillTree.tokens = (activeSkillTree.tokens || 0) + this.amount;
+    return true;
+  }
+}
+
+export class ChampionPokemonStatBoosterModifier extends PokemonHeldItemModifier {
+  private championId: string;
+  private stats: Stat[];
+  private boostPercent: number;
+  private championTypes: Type[];
+  readonly isTransferrable: boolean = false;
+
+  constructor(type: ModifierType, pokemonId: integer, championId: string, stats: Stat[], boostPercent: number = 0.01, championTypes?: Type[]) {
+    super(type, pokemonId, 1);
+    this.championId = championId;
+    this.stats = stats;
+    this.boostPercent = boostPercent;
+    this.championTypes = championTypes || [];
+  }
+
+  match(modifier: Modifier): boolean {
+    return modifier instanceof ChampionPokemonStatBoosterModifier &&
+      modifier.pokemonId === this.pokemonId &&
+      modifier.championId === this.championId &&
+      JSON.stringify([...(modifier.stats || [])].sort()) === JSON.stringify([...(this.stats || [])].sort());
+  }
+
+  shouldApply(args: any[]): boolean {
+    return super.shouldApply(args) && args.length === 2 && args[1] instanceof Array;
+  }
+
+  apply(args: any[]): boolean {
+    const pokemon = args[0] as Pokemon;
+    const baseStats = args[1] as number[];
+    const scene = pokemon.scene as BattleScene;
+
+    if (pokemon.id !== this.pokemonId) return false;
+    if (scene.gameData.selectedChampionId !== this.championId || !pokemon.isPlayer()) {
+      return false;
+    }
+    let effectiveStats = this.stats;
+    if (this.championTypes.length > 0 && this.stats.length > 1) {
+      const hasTypeMatch = this.championTypes.some(champType => pokemon.isOfType(champType));
+
+      if (hasTypeMatch) {
+        effectiveStats = this.stats;
+      } else {
+        effectiveStats = [this.stats[0]];
+      }
+    }
+    for (const stat of effectiveStats) {
+      baseStats[stat] = Math.min(
+        Math.floor(baseStats[stat] * (1 + (this.boostPercent * this.getStackCount()))),
+        999999
+      );
+    }
+
+    return true;
+  }
+
+  clone(): ChampionPokemonStatBoosterModifier {
+    return new ChampionPokemonStatBoosterModifier(this.type, this.pokemonId, this.championId, this.stats.slice(), this.boostPercent, this.championTypes);
+  }
+
+  matchType(modifier: Modifier): boolean {
+    return modifier instanceof ChampionPokemonStatBoosterModifier &&
+      modifier.championId === this.championId &&
+      JSON.stringify([...(modifier.stats || [])].sort()) === JSON.stringify([...(this.stats || [])].sort());
+  }
+
+  getMaxHeldItemCount(_pokemon?: Pokemon): integer {
+    return 250;
+  }
+
+  getMaxStackCount(): integer { return 5 as unknown as integer; }
+  getArgs(): any[] { return [this.pokemonId, this.championId, this.stats, this.boostPercent, this.championTypes]; }
 }

@@ -47,7 +47,7 @@ document.addEventListener('visibilitychange', (): void => {
 });
 
 window.addEventListener('beforeunload', (event: BeforeUnloadEvent): void => {
-  if (game?.scene?.scenes?.some((scene: Phaser.Scene): boolean => 
+  if (game?.scene?.scenes?.some((scene: Phaser.Scene): boolean =>
     scene.scene.key === 'battle' && scene.scene.isActive()
   )) {
     event.preventDefault();
@@ -107,10 +107,6 @@ const config: Phaser.Types.Core.GameConfig = {
     noAudio: false
   }
 };
-
-/**
- * Sets this object's position relative to another object with a given offset
- */
 const setPositionRelative = function (guideObject: Phaser.GameObjects.GameObject, x: number, y: number) {
   const offsetX = guideObject.width * (-0.5 + (0.5 - guideObject.originX));
   const offsetY = guideObject.height * (-0.5 + (0.5 - guideObject.originY));

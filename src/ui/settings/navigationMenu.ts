@@ -8,23 +8,12 @@ import i18next from "i18next";
 
 const LEFT = "LEFT";
 const RIGHT = "RIGHT";
-
-/**
- * Manages navigation and menus tabs within the setting menu.
- */
 export class NavigationManager {
   private static instance: NavigationManager;
   public modes: Mode[];
   public selectedMode: Mode = Mode.SETTINGS;
   public navigationMenus: NavigationMenu[] = new Array<NavigationMenu>();
   public labels: string[];
-
-  /**
-   * Creates an instance of NavigationManager.
-   * To create a new tab in the menu, add the mode to the modes array and the label to the labels array.
-   * and instantiate a new NavigationMenu instance in your handler
-   * like: this.navigationContainer = new NavigationMenu(this.scene, 0, 0);
-   */
   constructor() {
     this.modes = [
       Mode.SETTINGS,
@@ -40,23 +29,12 @@ export class NavigationManager {
     this.selectedMode = Mode.SETTINGS;
     this.updateNavigationMenus();
   }
-
-  /**
-   * Gets the singleton instance of the NavigationManager.
-   * @returns The singleton instance of NavigationManager.
-   */
   public static getInstance(): NavigationManager {
     if (!NavigationManager.instance) {
       NavigationManager.instance = new NavigationManager();
     }
     return NavigationManager.instance;
   }
-
-  /**
-   * Navigates modes based on given direction
-   * @param scene The current BattleScene instance
-   * @param direction LEFT or RIGHT
-   */
   public navigate(scene, direction) {
     const pos = this.modes.indexOf(this.selectedMode);
     const maxPos = this.modes.length - 1;
@@ -71,19 +49,11 @@ export class NavigationManager {
     scene.ui.setMode(this.selectedMode);
     this.updateNavigationMenus();
   }
-
-  /**
-   * Updates all navigation menus.
-   */
   public updateNavigationMenus() {
     for (const instance of this.navigationMenus) {
       instance.update();
     }
   }
-
-  /**
-   * Updates icons for all navigation menus.
-   */
   public updateIcons() {
     for (const instance of this.navigationMenus) {
       instance.updateIcons();
@@ -96,23 +66,12 @@ export default class NavigationMenu extends Phaser.GameObjects.Container {
   private navigationIcons: InputsIcons;
   public scene: BattleScene;
   protected headerTitles: Phaser.GameObjects.Text[] = new Array<Phaser.GameObjects.Text>();
-
-  /**
-   * Creates an instance of NavigationMenu.
-   * @param scene The current BattleScene instance.
-   * @param x The x position of the NavigationMenu.
-   * @param y The y position of the NavigationMenu.
-   */
   constructor(scene: BattleScene, x: number, y: number) {
     super(scene, x, y);
     this.scene = scene;
 
     this.setup();
   }
-
-  /**
-   * Sets up the NavigationMenu by adding windows, icons, and labels.
-   */
   setup() {
     const navigationManager = NavigationManager.getInstance();
     const headerBg = addWindow(this.scene, 0, 0, (this.scene.game.canvas.width / 6) - 2, 24);
@@ -150,10 +109,6 @@ export default class NavigationMenu extends Phaser.GameObjects.Container {
     navigationManager.navigationMenus.push(this);
     navigationManager.updateNavigationMenus();
   }
-
-  /**
-   * Updates the NavigationMenu's header titles based on the selected mode.
-   */
   update() {
     const navigationManager = NavigationManager.getInstance();
     const posSelected = navigationManager.modes.indexOf(navigationManager.selectedMode);
@@ -162,10 +117,6 @@ export default class NavigationMenu extends Phaser.GameObjects.Container {
       setTextStyle(title, this.scene, index === posSelected ? TextStyle.SETTINGS_SELECTED : TextStyle.SETTINGS_LABEL);
     }
   }
-
-  /**
-   * Updates the icons in the NavigationMenu based on the latest input recorded.
-   */
   updateIcons() {
     const specialIcons = {
       "BUTTON_HOME": "HOME.png",
@@ -189,12 +140,6 @@ export default class NavigationMenu extends Phaser.GameObjects.Container {
       }
     }
   }
-
-  /**
-   * Handles navigation based on the button pressed.
-   * @param button The button pressed for navigation.
-   * @returns A boolean indicating if the navigation was handled.
-   */
   navigate(button: Button): boolean {
     const navigationManager = NavigationManager.getInstance();
     switch (button) {

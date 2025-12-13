@@ -1,3 +1,8 @@
 {
-  "moneyOwned": "₽{{formattedMoney}}"
+  "moneyOwned": "₽{{formattedMoney}}",
+  "permaMoneyOwned": "Ω{{formattedMoney}}",
+  "catch": "포획",
+  "togglePermaBar": "Ω도구",
+  "togglePlayerBar": "가방",
+  "toggleFoeBar": "적"
 }

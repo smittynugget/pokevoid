@@ -53,16 +53,12 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
   private type2Icon: Phaser.GameObjects.Sprite;
   private type3Icon: Phaser.GameObjects.Sprite;
   private expBar: Phaser.GameObjects.Image;
-
-  // #region Type effectiveness hint objects
   private effectivenessContainer: Phaser.GameObjects.Container;
   private effectivenessWindow: Phaser.GameObjects.NineSlice;
   private effectivenessText: Phaser.GameObjects.Text;
   private currentEffectiveness?: string;
-  // #endregion
-
   private moveLevelContainer: Phaser.GameObjects.Container;
-  
+
   private moveLevelWindow: Phaser.GameObjects.NineSlice;
   private moveLevelText: Phaser.GameObjects.Text;
   private currentMoveLevel?: string;
@@ -97,8 +93,6 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     this.lastExp = -1;
     this.lastLevelExp = -1;
     this.lastLevel = -1;
-
-    // Initially invisible and shown via Pokemon.showInfo
     this.setVisible(false);
 
     this.box = this.scene.add.sprite(0, 0, this.getTextureName());
@@ -220,8 +214,6 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
 
       this.expBar = expBar;
       this.expMaskRect = expMaskRect;
-      
-      
     }
 
     this.statsContainer = this.scene.add.container(0, 0);
@@ -239,26 +231,20 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
 
     this.statValuesContainer = this.scene.add.container(0, 0);
     this.statsContainer.add(this.statValuesContainer);
-
-    // this gives us a different starting location from the left of the label and padding between stats for a player vs enemy
-    // since the player won't have HP to show, it doesn't need to change from the current version
     const startingX = this.player ? -this.statsBox.width + 8 : -this.statsBox.width + 5;
     const paddingX = this.player ? 4 : 2;
     const statOverflow = this.player ? 1 : 0;
-    this.battleStatOrder = this.player ? this.battleStatOrderPlayer : this.battleStatOrderEnemy; // this tells us whether or not to use the player or enemy battle stat order
+    this.battleStatOrder = this.player ? this.battleStatOrderPlayer : this.battleStatOrderEnemy;
 
     this.battleStatOrder.map((s, i) => {
-      // we do a check for i > statOverflow to see when the stat labels go onto the next column
-      // For enemies, we have HP (i=0) by itself then a new column, so we check for i > 0
-      // For players, we don't have HP, so we start with i = 0 and i = 1 for our first column, and so need to check for i > 1
-      const statX = i > statOverflow ? this.statNumbers[Math.max(i - 2, 0)].x + this.statNumbers[Math.max(i - 2, 0)].width + paddingX : startingX; // we have the Math.max(i - 2, 0) in there so for i===1 to not return a negative number; since this is now based on anything >0 instead of >1, we need to allow for i-2 < 0
+      const statX = i > statOverflow ? this.statNumbers[Math.max(i - 2, 0)].x + this.statNumbers[Math.max(i - 2, 0)].width + paddingX : startingX;
 
-      const baseY = -this.statsBox.height / 2 + 4; // this is the baseline for the y-axis
-      let statY: number; // this will be the y-axis placement for the labels
+      const baseY = -this.statsBox.height / 2 + 4;
+      let statY: number;
       if (this.battleStatOrder[i] === BattleStat.SPD || this.battleStatOrder[i] === BattleStat.HP) {
         statY = baseY + 5;
       } else {
-        statY = baseY + (!!(i % 2) === this.player ? 10 : 0); // we compare i % 2 against this.player to tell us where to place the label; because this.battleStatOrder for enemies has HP, this.battleStatOrder[1]=ATK, but for players this.battleStatOrder[0]=ATK, so this comparing i % 2 to this.player fixes this issue for us
+        statY = baseY + (!!(i % 2) === this.player ? 10 : 0);
       }
 
       const statLabel = this.scene.add.sprite(statX, statY, "pbinfo_stat", BattleStat[s]);
@@ -302,8 +288,6 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     this.moveLevelContainer.add(this.moveLevelText);
 
     this.moveLevelContainer.setVisible(false);
-
-
     this.type2Icon = this.scene.add.sprite(player ? -139 : -15, player ? -1 : -2.5, `pbinfo_${player ? "player" : "enemy"}_type2`);
     this.type2Icon.setName("icon_type_2");
     this.type2Icon.setOrigin(0, 0);
@@ -402,14 +386,12 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
           this.championRibbon.setVisible(true);
         }
       }
-
-      // Check if Player owns all genders and forms of the Pokemon
       const missingDexAttrs = ((dexEntry.caughtAttr & opponentPokemonDexAttr) < opponentPokemonDexAttr);
 
       const ownedAbilityAttrs = pokemon.scene.gameData.starterData[pokemon.species.getRootSpeciesId()].abilityAttr;
 
       let playerOwnsThisAbility = false;
-      // Check if the player owns ability for the root form
+
       if ((ownedAbilityAttrs & 1) > 0 && pokemon.hasSameAbilityInRootForm(0)) {
         playerOwnsThisAbility = true;
       }
@@ -511,8 +493,6 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
       alpha: visible ? 1 : 0
     });
   }
-
-  
   updateBossSegments(pokemon: EnemyPokemon): void {
     const boss = !!pokemon.bossSegments;
 
@@ -600,7 +580,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
         const glitchFormName = pokemon.species.getGlitchFormName(false, this.scene as BattleScene);
         if (glitchFormName) {
           this.glitchFormText.setText(i18next.t("battleInfo:glitchForm", { formName: glitchFormName }));
-          this.glitchFormText.setPositionRelative(this.nameText, 0, 10);
+          this.glitchFormText.setPositionRelative(this.nameText, 0, 20);
           this.glitchFormText.setVisible(true);
         } else {
           this.glitchFormText.setVisible(false);
@@ -608,7 +588,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
       } else {
         this.glitchFormText.setVisible(false);
       }
-      
+
       const wasMoveLevelVisible = this.moveLevelContainer?.visible || false;
 
       if (this.lastStatus !== (pokemon.status?.effect || StatusEffect.NONE)) {
@@ -744,7 +724,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
 
     try {
         while (nameTextWidth > (this.player || !this.boss ? 60 : 98) - ((pokemon.gender !== Gender.GENDERLESS ? 6 : 0) + (pokemon.fusionSpecies ? 8 : 0) + (pokemon.isShiny() ? 8 : 0) + (Math.min(pokemon.level.toString().length, 3) - 3) * 8)) {
-            if (displayName.length <= 1) break; // Prevent infinite loop if name is too short
+            if (displayName.length <= 1) break;
             displayName = `${displayName.slice(0, displayName.endsWith(".") ? -2 : -1).trimEnd()}.`;
             nameSizeTest.setText(displayName);
             nameTextWidth = nameSizeTest.displayWidth;
@@ -855,10 +835,6 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
       }
     });
   }
-
-  /**
-   * Request the flyoutMenu to toggle if available and hides or shows the effectiveness window where necessary
-   */
   toggleFlyout(visible: boolean): void {
     this.flyoutMenu?.toggleFlyout(visible);
 
@@ -880,11 +856,6 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
       }
     }
   }
-
-  /**
-   * Show or hide the type effectiveness multiplier window
-   * Passing undefined will hide the window
-   */
   updateEffectiveness(effectiveness?: string) {
     if (this.player) {
       return;
@@ -900,11 +871,6 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     this.effectivenessWindow.width = 10 + this.effectivenessText.displayWidth;
     this.effectivenessContainer.setVisible(true);
   }
-
-  /**
-   * Show or hide the move level info window
-   * Passing undefined will hide the window
-   */
   updateMoveLevel(pokemonId?: number, moveId?: number) {
     if (!this.player || pokemonId === undefined || moveId === undefined) {
       this.moveLevelContainer.setVisible(false);
@@ -915,34 +881,34 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     const gameData = (this.scene as BattleScene).gameData;
     const moveUsageCount = gameData.moveUsageCount?.[moveId] || 0;
     const movesTotalNeeded = (this.scene as BattleScene).getCurrentUsesForLevelUp(moveId);
-    
+
     const moveLevel = (this.scene as BattleScene).getUpgradesForMove(moveId).length + 1;
-    
+
     const displayText = `${i18next.t("moveUpgrade:level")} ${moveLevel} (${moveUsageCount % movesTotalNeeded}/${movesTotalNeeded})`;
-    
+
     if (this.flyoutMenu?.flyoutVisible) {
       this.moveLevelContainer.setVisible(false);
-      this.moveLevelContainer.alpha = 0; 
+      this.moveLevelContainer.alpha = 0;
       return;
     }
-    
+
     if (this.currentMoveLevel !== displayText) {
       this.currentMoveLevel = displayText;
       this.moveLevelText.setText(displayText);
-      
+
       const padding = 20;
       this.moveLevelWindow.width = padding + this.moveLevelText.displayWidth;
-      
+
       this.moveLevelContainer.setVisible(false);
-      this.moveLevelContainer.alpha = 0; 
-      
+      this.moveLevelContainer.alpha = 0;
+
       this.lastUsedMoveInfo = {
         pokemonId,
         moveId,
       };
     } else {
       this.moveLevelContainer.setVisible(false);
-      this.moveLevelContainer.alpha = 0; 
+      this.moveLevelContainer.alpha = 0;
     }
   }
 
@@ -972,5 +938,5 @@ export class EnemyBattleInfo extends BattleInfo {
     super(scene, 140, -141, false);
   }
 
-  setMini(mini: boolean): void { } // Always mini
+  setMini(mini: boolean): void { }
 }

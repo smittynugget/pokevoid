@@ -9,6 +9,7 @@ import PokemonSpecies, {
     speciesStarters
 } from "../data/pokemon-species";
 import * as Utils from "../utils";
+import { SkillTreeUtils } from "#app/system/skill-tree-utils";
 import Overrides from "#app/overrides";
 import PokemonData from "./pokemon-data";
 import PersistentModifierData from "./modifier-data";
@@ -39,7 +40,7 @@ import {TerrainChangedEvent, WeatherChangedEvent} from "#app/events/arena.js";
 import {
     EnemyAttackStatusEffectChanceModifier,
     GlitchPieceModifier, PermaQuestModifier,
-    PermaHitQuestModifier, PermaModifier, PersistentModifier, PokemonFormChangeItemModifier, PermaRunQuestModifier
+    PermaHitQuestModifier, PermaModifier, PersistentModifier, PokemonFormChangeItemModifier, PermaRunQuestModifier, TurnHeldItemTransferModifier
 } from "../modifier/modifier";
 import {StatusEffect} from "#app/data/status-effect.js";
 import ChallengeData from "./challenge-data";
@@ -50,10 +51,13 @@ import {GameDataType} from "#enums/game-data-type";
 import {Moves} from "#enums/moves";
 import {PlayerGender} from "#enums/player-gender";
 import {Species} from "#enums/species";
+import {RewardType} from "#enums/reward-type";
 import {GameMechanicsID, GameMechanicsVersion} from "#enums/gameMechanicsID";
+import { ActiveSkillTreeData } from "#app/system/skill-tree-data";
 import {applyChallenges, ChallengeType} from "#app/data/challenge.js";
 import {WeatherType} from "#app/enums/weather-type.js";
 import {TerrainType} from "#app/data/terrain.js";
+import { ChampionUtils } from "./champion-utils";
 import {OutdatedPhase} from "#app/phases/outdated-phase.js";
 import {ReloadSessionPhase} from "#app/phases/reload-session-phase.js";
 import {RUN_HISTORY_LIMIT} from "#app/ui/run-history-ui-handler";
@@ -63,6 +67,7 @@ import {Gender} from "#app/data/gender";
 import {
     ModifierTypeGenerator,
     ModifierTypeOption,
+    getModifierType,
     modifierTypes,
     PermaModifierTypeGenerator,
     PermaPartyAbilityModifierTypeGenerator,
@@ -95,10 +100,26 @@ import { getModPokemonName } from "../data/mod-glitch-form-utils";
 import { getModFormSystemName } from "#app/data/mod-glitch-form-data.js";
 import { PathNodeContext } from "#app/phases/battle-path-phase";
 import { PathNodeType } from "#app/battle";
-
+import { ChampionLevelUpData, SkillCategory } from "#app/system/playable-champions";
+import { ChampionLevelUpPhase } from "#app/phases/champion-level-up-phase";
+import { CHAMPION_DEFINITIONS } from "#app/system/champion-registry";
 export const defaultStarterSpecies: Species[] = [];
 
-const saveKey = "x0i2O7WRiANTqPmZ"; // Temporary; secure encryption is not yet necessary
+export const INTERNAL_BACKUP_VERSION = 10;
+
+export const VERSIONS_REQUIRING_BACKUP: string[] = [
+    "v2.0b [The Colossal Update]"
+];
+
+export interface BackupInfo {
+    key: string;
+    version: string;
+    sanitizedVersion: string;
+    timestamp?: number;
+    displayName: string;
+}
+
+const saveKey = "x0i2O7WRiANTqPmZ";
 
 export function getDataTypeKey(dataType: GameDataType, slotId: integer = 0): string {
     switch (dataType) {
@@ -171,6 +192,7 @@ export interface SystemSaveData {
     dailyBountyCode?: string;
       lastSaveTime?: number;
   lastBackupTime?: number;
+  lastBackupVersion?: number;
   defeatedRivals: RivalTrainerType[];
     uniSmittyUnlocks: string[];
     modFormsUnlocked?: string[];
@@ -179,6 +201,9 @@ export interface SystemSaveData {
     testSpeciesForMod: number[];
     testModsCount: number;
     isNewPlayer?: boolean;
+    selectedChampionId?: string;
+    championData?: Record<string, any>;
+    pendingChampionLevelUps?: Record<string, ChampionLevelUpData[]>;
 }
 
 export interface SessionSaveData {
@@ -220,7 +245,30 @@ export interface SessionSaveData {
     dynamicMode?: DynamicMode;
     rivalWave?: integer;
     gameMechanicTracking?: Record<string, string>;
-    
+    activeSkillTree?: ActiveSkillTreeDataSerialized;
+}
+
+export interface ActiveSkillTreeDataSerialized {
+    championId: string;
+    runtimeType1?: number;
+    runtimeType2?: number;
+    treeLevel: number;
+    maxVisibleDepth: number;
+    unlockedNodes: string[];
+    skillEffects: Record<string, any>;
+    seed: number;
+    selectedPokemon: { signature?: Species; general?: Species };
+    unlockedGlitchForms: string[];
+    skillPoints: number;
+    tokens: number;
+    starterPokemon?: Species;
+    catchRateBonusByType?: Record<string, number>;
+    reviveChanceByType?: Record<string, number>;
+    reviveChanceBySpecies?: Record<string, number>;
+    essenceTypeWeights?: Record<string, number>;
+    fusionPriorityChanceByType?: Record<string, number>;
+    fusionPriorityChanceBySpecies?: Record<string, number>;
+    legendaryEncounterChanceBySpecies?: Record<string, number>;
 }
 
 interface Unlocks {
@@ -251,6 +299,8 @@ export interface DexEntry {
     caughtCount: integer;
     hatchedCount: integer;
     ivs: integer[];
+    championObtainedBy?: bigint;
+    temporary?: boolean;
 }
 
 export const DexAttr = {
@@ -262,6 +312,30 @@ export const DexAttr = {
     VARIANT_2: 32n,
     VARIANT_3: 64n,
     DEFAULT_FORM: 128n
+};
+
+export const ChampionBit = {
+    APOLLO_DIANA: 1n << 0n,
+    BROCK: 1n << 1n,
+    MISTY: 1n << 2n,
+    LT_SURGE: 1n << 3n,
+    ERIKA: 1n << 4n,
+    KOGA: 1n << 5n,
+    SABRINA: 1n << 6n,
+    BLAINE: 1n << 7n,
+    GIOVANNI: 1n << 8n,
+};
+
+export const CHAMPION_ID_TO_BIT: Record<string, bigint> = {
+    "apollo_diana": ChampionBit.APOLLO_DIANA,
+    "brock": ChampionBit.BROCK,
+    "misty": ChampionBit.MISTY,
+    "lt_surge": ChampionBit.LT_SURGE,
+    "erika": ChampionBit.ERIKA,
+    "koga": ChampionBit.KOGA,
+    "sabrina": ChampionBit.SABRINA,
+    "blaine": ChampionBit.BLAINE,
+    "giovanni": ChampionBit.GIOVANNI,
 };
 
 export interface DexAttrProps {
@@ -282,7 +356,7 @@ export type RunHistoryData = Record<number, RunEntry>;
 export interface RunEntry {
     entry: SessionSaveData;
     isVictory: boolean;
-    /*Automatically set to false at the moment - implementation TBD*/
+
     isFavorite: boolean;
 }
 
@@ -311,27 +385,22 @@ export interface StarterAttributes {
 export interface StarterPreferences {
     [key: integer]: StarterAttributes;
 }
-
-// the latest data saved/loaded for the Starter Preferences. Required to reduce read/writes. Initialize as "{}", since this is the default value and no data needs to be stored if present.
-// if they ever add private static variables, move this into StarterPrefs
 const StarterPrefers_DEFAULT: string = "{}";
 let StarterPrefers_private_latest: string = StarterPrefers_DEFAULT;
 
 export class StarterPrefs {
-    // called on starter selection show once
+
     static load(): StarterPreferences {
         return JSON.parse(
             StarterPrefers_private_latest = (localStorage.getItem(`starterPrefs_${loggedInUser?.username}`) || StarterPrefers_DEFAULT)
         );
     }
-
-    // called on starter selection clear, always
     static save(prefs: StarterPreferences): void {
         const pStr: string = JSON.stringify(prefs);
         if (pStr !== StarterPrefers_private_latest) {
-            // something changed, store the update
+
             localStorage.setItem(`starterPrefs_${loggedInUser?.username}`, pStr);
-            // update the latest prefs
+
             StarterPrefers_private_latest = pStr;
         }
     }
@@ -346,7 +415,7 @@ export interface StarterDataEntry {
     passiveAttr: integer;
     valueReduction: integer;
     classicWinCount: integer;
-    
+
     obtainedFusions: Species[];
     fusionMovesets: StarterMoveset[] | StarterFormMoveData[] | null;
 }
@@ -421,6 +490,11 @@ export class GameData {
     public testSpeciesForMod: number[] = [];
     public testModsCount: number = 0;
     public isNewPlayer: boolean = false;
+    public selectedChampionId?: string;
+    public championData?: Record<string, any>;
+    public pendingChampionLevelUps?: Record<string, ChampionLevelUpData[]>;
+    public activeSkillTree?: ActiveSkillTreeData;
+    public tempSkillTreeConfig?: any;
 
     public currentPermaShopOptions: ModifierTypeOption[] | null = null;
     public lastPermaShopRefreshTime: number = 0;
@@ -429,6 +503,7 @@ export class GameData {
     public lastDailyBountyTime: number = 0;
       public lastSaveTime: number = 0;
   public lastBackupTime: number = 0;
+  public lastBackupVersion: number = 0;
   public rewardOverlayOpacity: number = 1;
     public dailyBountyCode: string = "";
     public questUnlockables: Partial<Record<QuestUnlockables, QuestProgress>>;
@@ -440,6 +515,7 @@ export class GameData {
     public uniSmittyUnlocks: string[] = [];
     public modFormsUnlocked: string[] = [];
     public dataLoadAttempted: boolean = false;
+    private dataLoaded: boolean = false;
     public nightmareBattleSeeds: NightmareBattleSeeds | null = null;
     public fixedBattleSeeds: FixedBattleSeeds | null = null;
     public sacrificeToggleOn: boolean = false;
@@ -506,7 +582,7 @@ export class GameData {
         this.eggs = [];
         this.eggPity = [0, 0, 0, 0];
         this.unlockPity = [0, 0, 0, 0];
-        
+
         this.permaModifiers = new PermaModifiers();
         this.questUnlockables = {};
         this.uniSmittyUnlocks = [];
@@ -524,12 +600,336 @@ export class GameData {
         this.biomeChange = BiomeChange.NONE;
     }
 
+    private ensureChampionDataIntegrity(): void {
+        if (!this.championData) {
+            this.championData = {};
+        }
+        if (!this.pendingChampionLevelUps) {
+            this.pendingChampionLevelUps = {} as Record<string, ChampionLevelUpData[]>;
+        }
+        Object.keys(this.championData).forEach((championId) => {
+            const champ: any = this.championData![championId] || {};
+            champ.unlockedSkills = champ.unlockedSkills || {};
+            champ.unlockedTMs = champ.unlockedTMs || [];
+            champ.unlockedXMs = champ.unlockedXMs || [];
+            champ.unlockedAbilities = champ.unlockedAbilities || [];
+            champ.unlockedSmittyAbilities = champ.unlockedSmittyAbilities || [];
+            champ.unlockedMegaStones = champ.unlockedMegaStones || [];
+            champ.unlockedMaxMushrooms = champ.unlockedMaxMushrooms || false;
+            champ.unlockedTypeSwitchers = champ.unlockedTypeSwitchers || [];
+            champ.unlockedEssenceBundles = champ.unlockedEssenceBundles || [];
+            champ.unlockedPermaItems = champ.unlockedPermaItems || [];
+            champ.unlockedStatBoosts = champ.unlockedStatBoosts || [];
+            champ.unlockedAltBuilds = champ.unlockedAltBuilds || [];
+            champ.unlockedConditionalAbilities = champ.unlockedConditionalAbilities || [];
+            champ.unlockedMoveUpgrades = champ.unlockedMoveUpgrades || [];
+            this.championData![championId] = champ;
+        });
+    }
+
+    public validateChampionGlitchForms(championId: string): void {
+        const champ = this.championData?.[championId] as any;
+        if (!champ) return;
+
+        let defId = championId;
+        if (championId === "apollo" || championId === "diana") {
+            defId = "apollo_diana";
+        }
+        const def = CHAMPION_DEFINITIONS[defId];
+        if (!def) return;
+
+        const baseUnlocked = (def as any).unlockedGlitchForms || [];
+        const lockedSkills = def.lockedSkills || {};
+
+        const validForms = [...baseUnlocked];
+        const validUnlockableIds: Record<string, any> = { ...((def as any).glitchFormUnlockableIds || {}) };
+
+        for (const [skillId, skill] of Object.entries(lockedSkills)) {
+            const s = skill as any;
+            if (s.category === SkillCategory.GLITCH_FORMS &&
+                s.unlockLevel <= (champ.level || 1) &&
+                champ.unlockedSkills?.[skillId]) {
+                try {
+                    const questData = this.getQuestUnlockDataFromModifierTypes(s.unlockableId);
+                    if (questData?.rewardId) {
+                        const species = (allSpecies as any)?.[questData.rewardId - 1];
+                        const formKey = species?.getGlitchFormName?.(true, undefined, questData.rewardType);
+                        if (formKey && formKey !== "unknown") {
+                            const lowerKey = formKey.toLowerCase();
+                            if (!validForms.includes(lowerKey)) {
+                                validForms.push(lowerKey);
+                            }
+                            validUnlockableIds[lowerKey] = s.unlockableId;
+                        }
+                    }
+                } catch {}
+            }
+        }
+
+        champ.unlockedGlitchForms = [...new Set(validForms)];
+        champ.glitchFormUnlockableIds = validUnlockableIds;
+    }
+
+    public applyChampionLevelUnlocks(championId: string): void {
+        try {
+            if (!this.championData) return;
+            const champ: any = this.championData[championId];
+            if (!champ) return;
+            const def = CHAMPION_DEFINITIONS?.[championId];
+            const lockedSkills = (def && def.lockedSkills) ? def.lockedSkills : {};
+
+            this.ensureChampionDataIntegrity();
+            champ.unlockedSkills = champ.unlockedSkills || {};
+
+            const now = Date.now();
+            const currentLevel = champ.level || 1;
+
+            for (const [skillId, skill] of Object.entries(lockedSkills)) {
+                const s: any = skill;
+                const unlockLevel = s?.unlockLevel ?? 0;
+                if (unlockLevel <= currentLevel && !champ.unlockedSkills[skillId]) {
+                    champ.unlockedSkills[skillId] = { skillId, unlockedAt: now, level: currentLevel };
+
+                    const unlockId = s?.unlockableId;
+                    switch (s?.category) {
+                        case SkillCategory.TMS:
+                            champ.unlockedTMs = champ.unlockedTMs || [];
+                            if (unlockId !== undefined && !champ.unlockedTMs.includes(unlockId)) champ.unlockedTMs.push(unlockId);
+                            break;
+                        case SkillCategory.XMS:
+                            champ.unlockedXMs = champ.unlockedXMs || [];
+                            if (unlockId !== undefined && !champ.unlockedXMs.includes(unlockId)) champ.unlockedXMs.push(unlockId);
+                            break;
+                        case SkillCategory.PASSIVE_ABILITIES:
+                        case SkillCategory.ABILITY_POOL:
+                            champ.unlockedAbilities = champ.unlockedAbilities || [];
+                            if (unlockId !== undefined && !champ.unlockedAbilities.includes(unlockId)) {
+
+                                const isSmitty = unlockId >= 311;
+                                const abilityName = (allAbilities as any)[unlockId]?.name || "UNKNOWN";
+                                console.log(`[DIAGNOSTIC] Game Data - Unlocking ability to unlockedAbilities:`, {
+                                    championId: (champ as any).id || "unknown",
+                                    skillCategory: category,
+                                    abilityId: unlockId,
+                                    abilityName,
+                                    isSmittyAbility: isSmitty,
+                                    CRITICAL_WARNING: isSmitty && category === SkillCategory.PASSIVE_ABILITIES
+                                        ? "🔴 SMITTY ABILITY BEING ADDED VIA PASSIVE_ABILITIES CATEGORY!"
+                                        : undefined
+                                });
+                                champ.unlockedAbilities.push(unlockId);
+                            }
+                            break;
+                        case SkillCategory.SMITTY_ABILITIES:
+                            champ.unlockedSmittyAbilities = champ.unlockedSmittyAbilities || [];
+                            if (unlockId !== undefined && !champ.unlockedSmittyAbilities.includes(unlockId)) {
+
+                                const abilityName = (allAbilities as any)[unlockId]?.name || "UNKNOWN";
+                                console.log(`[DIAGNOSTIC] Game Data - Unlocking Smitty ability (correct path):`, {
+                                    championId: (champ as any).id || "unknown",
+                                    abilityId: unlockId,
+                                    abilityName
+                                });
+                                champ.unlockedSmittyAbilities.push(unlockId);
+                            }
+                            break;
+                        case SkillCategory.TRAINER_BOND_ABILITIES:
+                            champ.unlockedConditionalAbilities = champ.unlockedConditionalAbilities || [];
+                            if (unlockId !== undefined && !champ.unlockedConditionalAbilities.includes(unlockId)) champ.unlockedConditionalAbilities.push(unlockId);
+                            break;
+                        case SkillCategory.MEGA_STONES:
+                            champ.unlockedMegaStones = champ.unlockedMegaStones || [];
+                            if (unlockId !== undefined && !champ.unlockedMegaStones.includes(unlockId)) champ.unlockedMegaStones.push(unlockId);
+                            break;
+                        case SkillCategory.DYNA_MUSHROOMS:
+                            champ.unlockedMaxMushrooms = true;
+                            break;
+                        case SkillCategory.TYPE_SWITCHERS:
+                            champ.unlockedTypeSwitchers = champ.unlockedTypeSwitchers || [];
+                            if (unlockId !== undefined && !champ.unlockedTypeSwitchers.includes(unlockId)) champ.unlockedTypeSwitchers.push(unlockId);
+                            break;
+                        case SkillCategory.ESSENCE_BUNDLES:
+                            champ.unlockedEssenceBundles = champ.unlockedEssenceBundles || [];
+                            if (unlockId !== undefined && !champ.unlockedEssenceBundles.includes(unlockId)) champ.unlockedEssenceBundles.push(unlockId);
+                            break;
+                        case SkillCategory.PERMA_ITEMS:
+                            champ.unlockedPermaItems = champ.unlockedPermaItems || [];
+                            if (unlockId !== undefined && !champ.unlockedPermaItems.includes(unlockId)) champ.unlockedPermaItems.push(unlockId);
+                            break;
+                        case SkillCategory.STAT_BOOSTS:
+                            champ.unlockedStatBoosts = champ.unlockedStatBoosts || [];
+                            if (unlockId !== undefined && !champ.unlockedStatBoosts.includes(unlockId)) champ.unlockedStatBoosts.push(unlockId);
+                            break;
+                        case SkillCategory.MOVE_UPGRADES:
+                            champ.unlockedMoveUpgrades = champ.unlockedMoveUpgrades || [];
+                            if (unlockId !== undefined && !champ.unlockedMoveUpgrades.includes(unlockId)) champ.unlockedMoveUpgrades.push(unlockId);
+                            break;
+
+                        case SkillCategory.SIGNATURE_POKEMON: {
+                            try {
+                                if (unlockId !== undefined) {
+                                  const species = unlockId as Species;
+                                  (champ as any).unlockedSignaturePokemon = (champ as any).unlockedSignaturePokemon || [];
+                                  const arr = (champ as any).unlockedSignaturePokemon as Species[];
+                                  if (!arr.includes(species)) {
+                                    arr.push(species);
+                                    const altBuildId = ChampionUtils.getAutoUnlockAltBuildId(species, { id: championId } as any);
+                                    if (altBuildId) {
+                                        champ.unlockedAltBuilds = champ.unlockedAltBuilds || [];
+                                        if (!champ.unlockedAltBuilds.includes(altBuildId)) {
+                                            champ.unlockedAltBuilds.push(altBuildId);
+                                        }
+                                    }
+                                  }
+                                }
+                            } catch {}
+                            break;
+                        }
+                        case SkillCategory.LEGENDARY_POKEMON: {
+                            try {
+                                if (unlockId !== undefined) {
+                                  const species = unlockId as Species;
+                                  (champ as any).unlockedLegendaryPokemon = (champ as any).unlockedLegendaryPokemon || [];
+                                  const arr = (champ as any).unlockedLegendaryPokemon as Species[];
+                                  if (!arr.includes(species)) arr.push(species);
+                                }
+                            } catch {}
+                            break;
+                        }
+                        case SkillCategory.MOVE_UPGRADES_SPECIFIC:
+                            champ.unlockedMoveAttrUpgrades = champ.unlockedMoveAttrUpgrades || [];
+                            if (typeof unlockId === "string" && !champ.unlockedMoveAttrUpgrades.includes(unlockId)) champ.unlockedMoveAttrUpgrades.push(unlockId);
+                            break;
+                        case SkillCategory.TYPE_BOOSTERS:
+                            champ.unlockedTypeBoosters = champ.unlockedTypeBoosters || [];
+                            if (unlockId !== undefined && !champ.unlockedTypeBoosters.includes(unlockId)) champ.unlockedTypeBoosters.push(unlockId);
+                            break;
+                        case SkillCategory.VOUCHERS:
+                            champ.unlockedVoucherTiers = champ.unlockedVoucherTiers || [];
+                            if (unlockId !== undefined && !champ.unlockedVoucherTiers.includes(unlockId)) champ.unlockedVoucherTiers.push(unlockId);
+                            break;
+                        case SkillCategory.RARITY_SELECT_ROGUE:
+                            champ.unlockedBallRaritySelect = champ.unlockedBallRaritySelect || {};
+                            champ.unlockedBallRaritySelect.rogue = true;
+                            break;
+                        case SkillCategory.RARITY_SELECT_MASTER:
+                            champ.unlockedBallRaritySelect = champ.unlockedBallRaritySelect || {};
+                            champ.unlockedBallRaritySelect.master = true;
+                            break;
+                        case SkillCategory.MONEY_REWARDS:
+                            champ.unlockedMoneyReward = true;
+                            break;
+                        case SkillCategory.PERMA_MONEY:
+                            champ.unlockedPermaMoney = true;
+                            break;
+                        case SkillCategory.ESSENCE_TYPE_WEIGHTS:
+                            champ.unlockedEssenceWeightTypes = champ.unlockedEssenceWeightTypes || [];
+                            if (unlockId !== undefined && !champ.unlockedEssenceWeightTypes.includes(unlockId)) champ.unlockedEssenceWeightTypes.push(unlockId);
+                            break;
+                        case SkillCategory.TERA_TYPES:
+                        case SkillCategory.TERA_TYPE_REWARDS:
+                            champ.unlockedTeraTypes = champ.unlockedTeraTypes || [];
+                            if (unlockId !== undefined && !champ.unlockedTeraTypes.includes(unlockId)) champ.unlockedTeraTypes.push(unlockId);
+                            break;
+                        case SkillCategory.CATCHING:
+                            champ.unlockedCatchRateTypes = champ.unlockedCatchRateTypes || [];
+                            if (unlockId !== undefined && !champ.unlockedCatchRateTypes.includes(unlockId)) champ.unlockedCatchRateTypes.push(unlockId);
+                            break;
+                        case SkillCategory.FUSION:
+                        case SkillCategory.FUSION_PRIORITIES: {
+                            try {
+                                const upd = { types: [] as any[], species: [] as any[] };
+                                if (unlockId && typeof unlockId === "object") {
+                                    if ((unlockId as any).types) upd.types = (unlockId as any).types;
+                                    if ((unlockId as any).species) upd.species = (unlockId as any).species;
+                                }
+                                champ.preferredFusionSecondary = champ.preferredFusionSecondary || { types: [], species: [] };
+                                champ.preferredFusionSecondary.types = [
+                                    ...(champ.preferredFusionSecondary.types || []),
+                                    ...upd.types
+                                ];
+                                champ.preferredFusionSecondary.species = [
+                                    ...(champ.preferredFusionSecondary.species || []),
+                                    ...upd.species
+                                ];
+                            } catch {}
+                            break;
+                        }
+                        case SkillCategory.REVIVAL: {
+                            try {
+                                const inc = unlockId && typeof unlockId === "object" ? unlockId as any : {};
+                                champ.reviveBoostTargets = champ.reviveBoostTargets || { types: [], species: [], amount: 0 };
+                                champ.reviveBoostTargets.types = [
+                                    ...(champ.reviveBoostTargets.types || []),
+                                    ...((inc.types || []) as any[])
+                                ];
+                                champ.reviveBoostTargets.species = [
+                                    ...(champ.reviveBoostTargets.species || []),
+                                    ...((inc.species || []) as any[])
+                                ];
+                                champ.reviveBoostTargets.amount = (champ.reviveBoostTargets.amount || 0) + (inc.amount || 0);
+                            } catch {}
+                            break;
+                        }
+                        case SkillCategory.POKEBALLS: {
+                            try {
+                                if (typeof unlockId === "string") {
+                                    const key = unlockId.toLowerCase();
+                                    if (key.includes("gold")) champ.unlockedGoldenPokeball = true;
+                                    if (key.includes("master")) champ.unlockedMasterBall = true;
+                                }
+                            } catch {}
+                            break;
+                        }
+                        case SkillCategory.POKEMON_ALT_BUILDS:
+                            champ.unlockedAltBuilds = champ.unlockedAltBuilds || [];
+                            if (unlockId !== undefined && !champ.unlockedAltBuilds.includes(unlockId)) champ.unlockedAltBuilds.push(unlockId);
+                            break;
+                        case SkillCategory.GLITCH_FORMS: {
+                            try {
+                                const questId = unlockId as QuestUnlockables;
+                                if (!questId) break;
+                                const questData = this.getQuestUnlockDataFromModifierTypes(questId);
+                                if (!questData || !questData.rewardId) break;
+                                const species = (allSpecies as any)?.[questData.rewardId - 1];
+                                if (!species) break;
+                                const formKey = species.getGlitchFormName?.(true, undefined, questData.rewardType);
+                                if (!formKey || formKey === "unknown") break;
+                                champ.unlockedGlitchForms = champ.unlockedGlitchForms || [];
+                                champ.glitchFormUnlockableIds = champ.glitchFormUnlockableIds || {};
+                                if (!champ.unlockedGlitchForms.includes(formKey.toLowerCase())) {
+                                    champ.unlockedGlitchForms.push(formKey.toLowerCase());
+                                }
+                                champ.glitchFormUnlockableIds[formKey.toLowerCase()] = questId;
+                            } catch {}
+                            break;
+                        }
+                        case SkillCategory.SKILL_TREE_STARTER_NODES:
+                            champ.starterNodeUpgradesUnlocked = Math.min(6, Math.max(0, (champ.starterNodeUpgradesUnlocked || 0) + 1));
+                            break;
+                        default:
+
+                            break;
+                    }
+                }
+            }
+
+            this.saveSystem();
+        } catch (e) {
+            console.warn("applyChampionLevelUnlocks failed:", e);
+        }
+    }
+
     public resetBattlePathData(): void {
         this.battlePath = null;
         this.nightmareBattleSeeds = null;
         this.fixedBattleSeeds = null;
         this.selectedPath = "";
         this.currentPathPosition = 0;
+        this.activeSkillTree = undefined;
+        this.selectedChampionId = undefined;
+        (this as any).tempSkillTreeNodes = undefined;
+        this.tempSkillTreeConfig = undefined;
     }
 
     findBigIntPaths(obj: any, currentPath: string = ''): string[] {
@@ -565,11 +965,60 @@ export class GameData {
                     if (bigIntPaths.length > 0) {
                     }
                 } catch (error) {
-                    // If JSON.parse fails, it's not an object, so no BigInt
+
                 }
             }
         }
         return localStorage.getItem(key);
+    }
+
+    private shouldCreateVersionBackup(savedVersion: string): boolean {
+        let versionToCheck = savedVersion;
+        if (Overrides.FAKE_PREVIOUS_VERSION_OVERRIDE && VERSIONS_REQUIRING_BACKUP.length > 0) {
+            versionToCheck = VERSIONS_REQUIRING_BACKUP[0];
+        }
+
+        if (!versionToCheck || !loggedInUser?.username) {
+            return false;
+        }
+
+        if (!VERSIONS_REQUIRING_BACKUP.includes(versionToCheck)) {
+            return false;
+        }
+
+        const currentVersion = this.getDisplayVersion();
+        if (!currentVersion || versionToCheck === currentVersion) {
+            return false;
+        }
+
+        const sanitizedVersion = versionToCheck.replace(/[^a-zA-Z0-9]/g, '_');
+        const backupKey = `data_backup_${sanitizedVersion}_${loggedInUser.username}`;
+
+        return localStorage.getItem(backupKey) === null;
+    }
+
+    private createVersionBackup(systemDataStr: string, savedVersion: string): void {
+        const sanitizedVersion = savedVersion.replace(/[^a-zA-Z0-9]/g, '_');
+        const backupKey = `data_backup_${sanitizedVersion}_${loggedInUser.username}`;
+
+        const sessionDataArray: (string | null)[] = [];
+        for (let slotId = 0; slotId < 5; slotId++) {
+            const sessionDataStr = this.getLocalStorageItem(`sessionData${slotId ? slotId : ""}_${loggedInUser?.username}`);
+            sessionDataArray.push(sessionDataStr || null);
+        }
+
+        const combinedBackupData = {
+            systemData: systemDataStr,
+            sessionData: sessionDataArray
+        };
+
+        const backupData = {
+            data: JSON.stringify(combinedBackupData),
+            timestamp: Date.now(),
+            version: savedVersion,
+            isCombined: true
+        };
+        localStorage.setItem(backupKey, JSON.stringify(backupData));
     }
 
     public getSystemSaveData(): SystemSaveData {
@@ -585,7 +1034,7 @@ export class GameData {
             voucherUnlocks: this.voucherUnlocks,
             voucherCounts: this.voucherCounts,
             eggs: this.eggs.map(e => new EggData(e)),
-            gameVersion: this.scene.game.config.gameVersion,
+            gameVersion: this.getDisplayVersion(),
             timestamp: new Date().getTime(),
             eggPity: this.eggPity.slice(0),
             unlockPity: this.unlockPity.slice(0),
@@ -604,54 +1053,82 @@ export class GameData {
             dailyBountyCode: this.dailyBountyCode,
             lastSaveTime: this.lastSaveTime,
             lastBackupTime: this.lastBackupTime,
+            lastBackupVersion: this.lastBackupVersion,
             rewardOverlayOpacity: this.rewardOverlayOpacity,
             testSpeciesForMod: this.testSpeciesForMod,
             testModsCount: this.testModsCount,
             isNewPlayer: this.isNewPlayer,
+            selectedChampionId: this.selectedChampionId ?? null,
+            championData: this.championData ?? null,
+            pendingChampionLevelUps: this.pendingChampionLevelUps ?? null,
         };
     }
 
     public saveSystem(): Promise<boolean> {
         return new Promise<boolean>(async (resolve) => {
-            this.scene.ui.savingIcon.show();
-            const data = this.getSystemSaveData();
+            if (!this.dataLoaded) {
+                resolve(false);
+                return;
+            }
+            try {
+                this.scene.ui.savingIcon.show();
+                const data = this.getSystemSaveData();
 
-            const serializedData = this.serializeBigInt(data);
+                const serializedData = this.serializeBigInt(data);
 
-            this.setLocalStorageItem(`data_${loggedInUser?.username}`, encrypt(serializedData, bypassLogin));
-            this.scene.ui.savingIcon.hide();
-            resolve(true);
+                if (!serializedData || serializedData === 'undefined' || serializedData === 'null') {
+                    alert('[SAVE ERROR] Serialization produced invalid data. Save aborted.');
+                    resolve(false);
+                    return;
+                }
+
+                this.setLocalStorageItem(`data_${loggedInUser?.username}`, encrypt(serializedData, bypassLogin));
+                this.scene.ui.savingIcon.hide();
+                resolve(true);
+            } catch (error) {
+                alert('[SAVE ERROR] ' + (error as Error).message);
+                resolve(false);
+            }
         });
     }
-
-
     public async loadSystem(): Promise<boolean> {
+        this.dataLoaded = false;
 
-            // let importResult = false;
-            // importResult = await this.importFromHardcodedPath("./pokesav/ishida-cant-forward.prsv");
-            // return true;
-
+        try {
             if (bypassLogin && !this.getLocalStorageItem(`data_${loggedInUser?.username}`)) {
                 this.updatePermaMoney(this.scene, 12500);
+                this.dataLoaded = true;
                 return false;
             }
 
             if (bypassLogin) {
-            const systemDataStr = decrypt(this.getLocalStorageItem(`data_${loggedInUser?.username}`)!, bypassLogin);
-            const sessionDataStrArray = [];
-            for (let slotId = 0; slotId < 5; slotId++) {
-                const sessionDataStr = this.getLocalStorageItem(`sessionData${slotId ? slotId : ""}_${loggedInUser?.username}`);
-                if (sessionDataStr) {
-                    sessionDataStrArray.push(decrypt(sessionDataStr, bypassLogin));
+                const systemDataStr = decrypt(this.getLocalStorageItem(`data_${loggedInUser?.username}`)!, bypassLogin);
+
+                if (!systemDataStr || systemDataStr === 'null' || systemDataStr === 'undefined') {
+                    alert('[LOAD ERROR] System data is corrupted or missing');
+                    this.dataLoaded = true;
+                    return false;
                 }
-                else {
-                    sessionDataStrArray.push(null);
+
+                const sessionDataStrArray = [];
+                for (let slotId = 0; slotId < 5; slotId++) {
+                    const sessionDataStr = this.getLocalStorageItem(`sessionData${slotId ? slotId : ""}_${loggedInUser?.username}`);
+                    if (sessionDataStr) {
+                        sessionDataStrArray.push(decrypt(sessionDataStr, bypassLogin));
+                    } else {
+                        sessionDataStrArray.push(null);
+                    }
                 }
-            }
-            return await this.initSystemWithStr(systemDataStr, sessionDataStrArray);
+                return await this.initSystemWithStr(systemDataStr, sessionDataStrArray);
             } else {
-                return false
+                this.dataLoaded = true;
+                return false;
             }
+        } catch (error) {
+            alert('[LOAD ERROR] ' + (error as Error).message);
+            this.dataLoaded = true;
+            return false;
+        }
     }
 
     public async importFromHardcodedPath(filePath: string): Promise<boolean> {
@@ -661,30 +1138,30 @@ export class GameData {
                 console.error("Failed to fetch file:", response.statusText);
                 return false;
             }
-            
+
             const file = await response.blob();
-            
+
             const reader = new FileReader();
             return new Promise<boolean>((resolve) => {
                 reader.onload = async (event) => {
                     try {
                         const encryptedData = event.target?.result?.toString() || "";
-                        
+
                         let dataStr = "";
-                        
+
                         try {
                             dataStr = AES.decrypt(encryptedData, saveKey).toString(enc.Utf8);
                         } catch (decryptError) {
                             console.error("Standard decryption failed:", decryptError);
                         }
-                        
+
                         if (!dataStr || dataStr.trim() === "") {
                             try {
                                 const directData = JSON.parse(encryptedData);
                                 dataStr = encryptedData;
                             } catch (parseError) {
                                 console.error("Direct JSON parse failed:", parseError);
-                                
+
                                 try {
                                     const altKey = "PokemonRogueSaveKey";
                                     dataStr = AES.decrypt(encryptedData, altKey).toString(enc.Utf8);
@@ -693,13 +1170,13 @@ export class GameData {
                                 }
                             }
                         }
-                        
+
                         if (!dataStr || dataStr.trim() === "") {
                             console.error("Decrypted data is empty. Possible file corruption, wrong decryption key, or empty file.");
                             resolve(false);
                             return;
                         }
-                        
+
                         try {
                             this.combinedData = JSON.parse(dataStr) as { systemData?: SystemSaveData, sessionData?: SessionSaveData[] };
                         } catch (parseError) {
@@ -707,7 +1184,7 @@ export class GameData {
                             resolve(false);
                             return;
                         }
-                        
+
                         if (typeof this.combinedData.systemData === 'string') {
                             this.combinedData.systemData = this.deserializeBigInt(JSON.parse(this.combinedData.systemData));
                         }
@@ -741,14 +1218,14 @@ export class GameData {
                         }
 
                         await this.initSystem(this.combinedData.systemData, this.combinedData.sessionData as SessionSaveData[]);
-                        
+
                         resolve(true);
                     } catch (error) {
                         console.error("Error importing from hardcoded path:", error);
                         resolve(false);
                     }
                 };
-                
+
                 reader.readAsText(file);
             });
         } catch (error) {
@@ -770,16 +1247,23 @@ export class GameData {
 
             return await this.initSystem(systemData, sessionDataArray);
         } catch (error) {
-            console.error("Error initializing system from string:", error);
+            alert('[LOAD ERROR] initSystemWithStr failed: ' + (error as Error).message);
             return false;
         }
     }
-
-
     async initSystem(systemData: SystemSaveData, sessionData: SessionSaveData[]): Promise<boolean> {
         return new Promise<boolean>(async (resolve) => {
             try {
-              
+                this.dataLoaded = false;
+
+                try {
+                    if (this.shouldCreateVersionBackup(systemData.gameVersion)) {
+                        const originalDataStr = this.serializeBigInt(systemData);
+                        this.createVersionBackup(originalDataStr, systemData.gameVersion);
+                    }
+                } catch (backupError) {
+                }
+
                 const serializedSystemData = this.serializeBigInt(systemData);
                 this.setLocalStorageItem(`data_${loggedInUser?.username}`, serializedSystemData);
 
@@ -807,8 +1291,6 @@ export class GameData {
                 this.saveSetting(SettingKeys.Player_Gender, systemData.gender === PlayerGender.FEMALE ? 1 : 0);
 
                 const initStarterData = !systemData.starterData;
-
-                
                 const newSmittySpeciesData = this.initSmittySpeciesData();
                 const newUpdate = true;
                 Object.keys(newSmittySpeciesData).forEach(speciesId => {
@@ -817,7 +1299,7 @@ export class GameData {
                     }
                 });
 
-                if (initStarterData) {
+                    if (initStarterData) {
                     this.initStarterData();
 
                     if (systemData["starterMoveData"]) {
@@ -833,7 +1315,7 @@ export class GameData {
                             this.starterData[s].eggMoves = starterEggMoveData[s];
                         }
                     }
-                    
+
                     if (systemData["starterObtainedFusionData"]) {
                         const starterObtainedFusionData = systemData["starterObtainedFusionData"];
                         for (const s of Object.keys(starterObtainedFusionData)) {
@@ -848,7 +1330,7 @@ export class GameData {
                         }
                     }
 
-                    this.migrateStarterAbilities(systemData, this.starterData);
+                        this.migrateStarterAbilities(systemData, this.starterData);
                 }
                 else {
                     Object.keys(systemData.starterData).forEach(sd => {
@@ -861,8 +1343,6 @@ export class GameData {
                         }
 
                     });
-
-                    
                     Object.keys(systemData.starterData).forEach(speciesId => {
                         if (!systemData.starterData[speciesId].obtainedFusions) {
                             systemData.starterData[speciesId].obtainedFusions = [];
@@ -871,11 +1351,24 @@ export class GameData {
                             systemData.starterData[speciesId].fusionMovesets = [];
                         }
                     });
-
-                    
-
                     this.starterData = systemData.starterData;
                 }
+                    this.selectedChampionId = (systemData as any).selectedChampionId;
+
+                    if (this.selectedChampionId === "apollo_diana" || !this.selectedChampionId) {
+                        this.selectedChampionId = this.gender === PlayerGender.FEMALE ? "diana" : "apollo";
+                    }
+
+                    this.championData = (systemData as any).championData || {};
+                    this.pendingChampionLevelUps = (systemData as any).pendingChampionLevelUps || {};
+                    this.ensureChampionDataIntegrity();
+
+                    if (this.championData) {
+                        Object.keys(this.championData).forEach(id => {
+                            this.applyChampionLevelUnlocks(id);
+                            this.validateChampionGlitchForms(id);
+                        });
+                    }
 
                 if (systemData.gameStats) {
                     if (systemData.gameStats.legendaryPokemonCaught !== undefined && systemData.gameStats.subLegendaryPokemonCaught === undefined) {
@@ -894,7 +1387,9 @@ export class GameData {
                 }
 
                 if (systemData.defeatedRivals) {
-                    this.defeatedRivals = systemData.defeatedRivals;
+                    this.defeatedRivals = systemData.defeatedRivals.filter(
+                        (rival: number) => rival !== TrainerType.SMITTY
+                    );
                 }
 
                 if (systemData.uniSmittyUnlocks) {
@@ -955,8 +1450,6 @@ export class GameData {
                 } else {
                     this.questUnlockables = {};
                 }
-
-
                 if (systemData.currentPermaShopOptions) {
                     this.currentPermaShopOptions = systemData.currentPermaShopOptions;
                 }
@@ -1000,6 +1493,12 @@ export class GameData {
                     }
                 }
 
+                if (systemData.lastBackupVersion !== undefined) {
+                    this.lastBackupVersion = systemData.lastBackupVersion;
+                } else {
+                    this.lastBackupVersion = 0;
+                }
+
                 if (systemData.rewardOverlayOpacity) {
                     this.rewardOverlayOpacity = systemData.rewardOverlayOpacity;
                 }
@@ -1013,23 +1512,37 @@ export class GameData {
                 }
 
                 this.isNewPlayer = systemData.isNewPlayer ?? false;
-                
+
                 this.updatePermaMoney(this.scene, systemData.permaMoney != undefined ? systemData.permaMoney : 10000);
                 this.scene.ui.updatePermaMoneyText(this.scene);
 
+                const modifiersModule = await import("../modifier/modifier");
+                this.permaModifiers = new PermaModifiers();
+
                 if (systemData.permaModifiers) {
-                    const modifiersModule = await import("../modifier/modifier");
-                    this.permaModifiers = new PermaModifiers();
                     for (const modifierDataPlain of systemData.permaModifiers) {
-                        const modifierData = new PersistentModifierData(modifierDataPlain, true);
-                        const modifier = modifierData.toModifier(this.scene, modifiersModule[modifierData.className]);
-                        if (modifier) {
-                            this.permaModifiers.addModifier(this.scene, modifier);
+                        try {
+                            const modifierData = new PersistentModifierData(modifierDataPlain, true);
+                            const modifier = modifierData.toModifier(this.scene, modifiersModule[modifierData.className]);
+                            if (modifier) {
+                                this.permaModifiers.addModifier(this.scene, modifier);
+                            } else {
+                                alert('[LOAD WARNING] Modifier returned null: ' + modifierData.className);
+                            }
+                        } catch (modError) {
+                            alert('[LOAD WARNING] Failed to load modifier: ' + modifierDataPlain?.className);
                         }
                     }
                 }
 
-                // this.addTestPermaModifier();
+                let permaModifier = this.permaModifiers?.getModifiers().find((m: any) => m.constructor.name === 'PermaCollectedTypeModifier') as any;
+
+                if (!permaModifier) {
+                    const modifierTypeModule = await import("../modifier/modifier-type");
+                    const permaType = new modifierTypeModule.PermaCollectedTypeModifierType();
+                    permaModifier = new modifiersModule.PermaCollectedTypeModifier(permaType);
+                    this.permaModifiers.addModifier(this.scene, permaModifier, true);
+                }
                 this.scene.ui.updatePermaModifierBar(this.permaModifiers);
 
                 for (const questId in this.questUnlockables) {
@@ -1041,18 +1554,14 @@ export class GameData {
                         }
                     }
                 }
+                this.dataLoaded = true;
                 resolve(true);
             } catch (err) {
-                console.error(err);
+                alert('[LOAD ERROR] initSystem failed: ' + (err as Error).message);
                 resolve(false);
             }
         });
     }
-
-    /**
-     * Retrieves current run history data, organized by time stamp.
-     * At the moment, only retrievable from locale cache
-     */
     async getRunHistoryData(scene: BattleScene): Promise<RunHistoryData> {
         if (!Utils.isLocal) {
             const lsItemKey = `runHistoryData_${loggedInUser?.username}`;
@@ -1084,20 +1593,10 @@ export class GameData {
             }
         }
     }
-
-    /**
-     * Saves a new entry to Run History
-     * @param scene: BattleScene object
-     * @param runEntry: most recent SessionSaveData of the run
-     * @param isVictory: result of the run
-     * Arbitrary limit of 25 runs per player - Will delete runs, starting with the oldest one, if needed
-     */
     async saveRunHistory(scene: BattleScene, runEntry: SessionSaveData, isVictory: boolean): Promise<boolean> {
         const runHistoryData = await this.getRunHistoryData(scene);
-        // runHistoryData should always return run history or {} empty object
-        let timestamps = Object.keys(runHistoryData).map(Number);
 
-        // Arbitrary limit of 25 entries per user --> Can increase or decrease
+        let timestamps = Object.keys(runHistoryData).map(Number);
         while (timestamps.length >= RUN_HISTORY_LIMIT) {
             const oldestTimestamp = (Math.min.apply(Math, timestamps)).toString();
             delete runHistoryData[oldestTimestamp];
@@ -1111,31 +1610,30 @@ export class GameData {
             isFavorite: false,
         };
         this.setLocalStorageItem(`runHistoryData_${loggedInUser?.username}`, encrypt(JSON.stringify(runHistoryData), bypassLogin));
-        /**
-         * Networking Code DO NOT DELETE
-         *
-         if (!Utils.isLocal) {
-         try {
-         await Utils.apiPost("savedata/runHistory", JSON.stringify(runHistoryData), undefined, true);
-         return true;
-         } catch (err) {
-         return false;
-         }
-         */
+
         return true;
     }
 
     parseSystemData(dataStr: string): SystemSaveData {
+        try {
         return JSON.parse(dataStr, (k: string, v: any) => {
             if (k === "gameStats") {
-                return new GameStats(v);
+                try {
+                    return new GameStats(v);
+                } catch (gsError) {
+                    alert('[PARSE ERROR] Failed to parse game stats');
+                    return new GameStats({});
+                }
             } else if (k === "eggs") {
                 const ret: EggData[] = [];
                 if (v === null) {
                     v = [];
                 }
                 for (const e of v) {
-                    ret.push(new EggData(e));
+                    try {
+                        ret.push(new EggData(e));
+                    } catch (eggError) {
+                    }
                 }
                 return ret;
             }
@@ -1211,11 +1709,22 @@ export class GameData {
             }
 
             if (k === "permaModifiers") {
-                return v.map((modifierData: any) => new PersistentModifierData(modifierData, true));
+                return v.map((modifierData: any) => {
+                    try {
+                        return new PersistentModifierData(modifierData, true);
+                    } catch (pmError) {
+                        alert('[PARSE ERROR] Failed to parse perma modifier: ' + modifierData?.className);
+                        return null;
+                    }
+                }).filter(Boolean);
             }
 
             return k.endsWith("Attr") && !["natureAttr", "abilityAttr", "passiveAttr"].includes(k) ? BigInt(v) : v;
         }) as SystemSaveData;
+        } catch (error) {
+            alert('[PARSE ERROR] System data parsing failed: ' + (error as Error).message);
+            throw error;
+        }
     }
 
     private deserializeAndParseSystemData(systemData: string | SystemSaveData): SystemSaveData {
@@ -1309,9 +1818,6 @@ export class GameData {
             }
         return parsedQuestUnlockables;
     }
-
-
-
     convertSystemDataStr(dataStr: string, shorten: boolean = false): string {
         if (!shorten) {
             dataStr = dataStr.replace(/\$pAttr/g, "$pa");
@@ -1340,17 +1846,10 @@ export class GameData {
             localStorage.removeItem(`sessionData${s ? s : ""}_${loggedInUser?.username}`);
         }
     }
-
-    /**
-     * Saves a setting to localStorage
-     * @param setting string ideally of SettingKeys
-     * @param valueIndex index of the setting's option
-     * @returns true
-     */
     public saveSetting(setting: string, valueIndex: integer): boolean {
         let settings: object = {};
         if (localStorage.hasOwnProperty("settings")) {
-            settings = JSON.parse(this.getLocalStorageItem("settings")!); // TODO: is this bang correct?
+            settings = JSON.parse(this.getLocalStorageItem("settings")!);
         }
 
         setSetting(this.scene, setting, valueIndex);
@@ -1361,106 +1860,72 @@ export class GameData {
 
         return true;
     }
-
-    /**
-     * Saves the mapping configurations for a specified device.
-     *
-     * @param deviceName - The name of the device for which the configurations are being saved.
-     * @param config - The configuration object containing custom mapping details.
-     * @returns `true` if the configurations are successfully saved.
-     */
     public saveMappingConfigs(deviceName: string, config): boolean {
-        const key = deviceName.toLowerCase();  // Convert the gamepad name to lowercase to use as a key
-        let mappingConfigs: object = {};  // Initialize an empty object to hold the mapping configurations
-        if (localStorage.hasOwnProperty("mappingConfigs")) {// Check if 'mappingConfigs' exists in localStorage
-            mappingConfigs = JSON.parse(this.getLocalStorageItem("mappingConfigs")!); // TODO: is this bang correct?
-        }  // Parse the existing 'mappingConfigs' from localStorage
+        const key = deviceName.toLowerCase();
+        let mappingConfigs: object = {};
+        if (localStorage.hasOwnProperty("mappingConfigs")) {
+            mappingConfigs = JSON.parse(this.getLocalStorageItem("mappingConfigs")!);
+        }
         if (!mappingConfigs[key]) {
             mappingConfigs[key] = {};
-        }  // If there is no configuration for the given key, create an empty object for it
-        mappingConfigs[key].custom = config.custom;  // Assign the custom configuration to the mapping configuration for the given key
-        this.setLocalStorageItem("mappingConfigs", JSON.stringify(mappingConfigs));  // Save the updated mapping configurations back to localStorage
-        return true;  // Return true to indicate the operation was successful
+        }
+        mappingConfigs[key].custom = config.custom;
+        this.setLocalStorageItem("mappingConfigs", JSON.stringify(mappingConfigs));
+        return true;
     }
-
-    /**
-     * Loads the mapping configurations from localStorage and injects them into the input controller.
-     *
-     * @returns `true` if the configurations are successfully loaded and injected; `false` if no configurations are found in localStorage.
-     *
-     * @remarks
-     * This method checks if the 'mappingConfigs' entry exists in localStorage. If it does not exist, the method returns `false`.
-     * If 'mappingConfigs' exists, it parses the configurations and injects each configuration into the input controller
-     * for the corresponding gamepad or device key. The method then returns `true` to indicate success.
-     */
     public loadMappingConfigs(): boolean {
-        if (!localStorage.hasOwnProperty("mappingConfigs")) {// Check if 'mappingConfigs' exists in localStorage
+        if (!localStorage.hasOwnProperty("mappingConfigs")) {
             return false;
-        }  // If 'mappingConfigs' does not exist, return false
+        }
 
-        const mappingConfigs = JSON.parse(this.getLocalStorageItem("mappingConfigs")!);  // Parse the existing 'mappingConfigs' from localStorage // TODO: is this bang correct?
+        const mappingConfigs = JSON.parse(this.getLocalStorageItem("mappingConfigs")!);
 
-        for (const key of Object.keys(mappingConfigs)) {// Iterate over the keys of the mapping configurations
-            
-            if (!Object.values(mappingConfigs[key]).includes("BUTTON_CYCLE_FUSION") || !Object.values(mappingConfigs[key]).includes("BUTTON_CONSOLE")) {
-                return false;
+        for (const key of Object.keys(mappingConfigs)) {
+            const config = mappingConfigs[key];
+
+            if (config.custom) {
+                const mappedValues = Object.values(config.custom);
+                if (!mappedValues.includes("BUTTON_CYCLE_FUSION") || !mappedValues.includes("BUTTON_CONSOLE")) {
+                    return false;
+                }
             }
-            this.scene.inputController.injectConfig(key, mappingConfigs[key]);
-        }  // Inject each configuration into the input controller for the corresponding key
+            this.scene.inputController.injectConfig(key, config);
+        }
 
-        return true;  // Return true to indicate the operation was successful
+        return true;
     }
 
     public resetMappingToFactory(): boolean {
-        if (!localStorage.hasOwnProperty("mappingConfigs")) {// Check if 'mappingConfigs' exists in localStorage
+        if (!localStorage.hasOwnProperty("mappingConfigs")) {
             return false;
-        }  // If 'mappingConfigs' does not exist, return false
+        }
         localStorage.removeItem("mappingConfigs");
         this.scene.inputController.resetConfigs();
-        return true; // TODO: is `true` the correct return value?
+        return true;
     }
-
-    /**
-     * Saves a gamepad setting to localStorage.
-     *
-     * @param setting - The gamepad setting to save.
-     * @param valueIndex - The index of the value to set for the gamepad setting.
-     * @returns `true` if the setting is successfully saved.
-     *
-     * @remarks
-     * This method initializes an empty object for gamepad settings if none exist in localStorage.
-     * It then updates the setting in the current scene and iterates over the default gamepad settings
-     * to update the specified setting with the new value. Finally, it saves the updated settings back
-     * to localStorage and returns `true` to indicate success.
-     */
     public saveControlSetting(device: Device, localStoragePropertyName: string, setting: SettingGamepad | SettingKeyboard, settingDefaults, valueIndex: integer): boolean {
-        let settingsControls: object = {};  // Initialize an empty object to hold the gamepad settings
+        let settingsControls: object = {};
 
-        if (localStorage.hasOwnProperty(localStoragePropertyName)) {  // Check if 'settingsControls' exists in localStorage
-            settingsControls = JSON.parse(this.getLocalStorageItem(localStoragePropertyName)!);  // Parse the existing 'settingsControls' from localStorage // TODO: is this bang correct?
+        if (localStorage.hasOwnProperty(localStoragePropertyName)) {
+            settingsControls = JSON.parse(this.getLocalStorageItem(localStoragePropertyName)!);
         }
 
         if (device === Device.GAMEPAD) {
-            setSettingGamepad(this.scene, setting as SettingGamepad, valueIndex);  // Set the gamepad setting in the current scene
+            setSettingGamepad(this.scene, setting as SettingGamepad, valueIndex);
         } else if (device === Device.KEYBOARD) {
-            setSettingKeyboard(this.scene, setting as SettingKeyboard, valueIndex);  // Set the keyboard setting in the current scene
+            setSettingKeyboard(this.scene, setting as SettingKeyboard, valueIndex);
         }
 
-        Object.keys(settingDefaults).forEach(s => {  // Iterate over the default gamepad settings
-            if (s === setting) {// If the current setting matches, update its value
+        Object.keys(settingDefaults).forEach(s => {
+            if (s === setting) {
                 settingsControls[s] = valueIndex;
             }
         });
 
-        this.setLocalStorageItem(localStoragePropertyName, JSON.stringify(settingsControls));  // Save the updated gamepad settings back to localStorage
+        this.setLocalStorageItem(localStoragePropertyName, JSON.stringify(settingsControls));
 
-        return true;  // Return true to indicate the operation was successful
+        return true;
     }
-
-    /**
-     * Loads Settings from local storage if available
-     * @returns true if succesful, false if not
-     */
     private loadSettings(): boolean {
         resetSettings(this.scene);
 
@@ -1468,13 +1933,13 @@ export class GameData {
             return false;
         }
 
-        const settings = JSON.parse(this.getLocalStorageItem("settings")!); // TODO: is this bang correct?
+        const settings = JSON.parse(this.getLocalStorageItem("settings")!);
 
         for (const setting of Object.keys(settings)) {
             setSetting(this.scene, setting, settings[setting]);
         }
 
-        return true; // TODO: is `true` the correct return value?
+        return true;
     }
 
     private loadGamepadSettings(): boolean {
@@ -1483,20 +1948,20 @@ export class GameData {
         if (!localStorage.hasOwnProperty("settingsGamepad")) {
             return false;
         }
-        const settingsGamepad = JSON.parse(this.getLocalStorageItem("settingsGamepad")!); // TODO: is this bang correct?
+        const settingsGamepad = JSON.parse(this.getLocalStorageItem("settingsGamepad")!);
 
         for (const setting of Object.keys(settingsGamepad)) {
             setSettingGamepad(this.scene, setting as SettingGamepad, settingsGamepad[setting]);
         }
 
-        return true; // TODO: is `true` the correct return value?
+        return true;
     }
 
     public saveTutorialFlag(tutorial: Tutorial, flag: boolean): boolean {
         const key = getDataTypeKey(GameDataType.TUTORIALS);
         let tutorials: object = {};
         if (localStorage.hasOwnProperty(key)) {
-            tutorials = JSON.parse(this.getLocalStorageItem(key)!); // TODO: is this bang correct?
+            tutorials = JSON.parse(this.getLocalStorageItem(key)!);
         }
 
         Object.keys(Tutorial).map(t => t as Tutorial).forEach(t => {
@@ -1522,7 +1987,7 @@ export class GameData {
             return ret;
         }
 
-        const tutorials = JSON.parse(this.getLocalStorageItem(key)!); // TODO: is this bang correct?
+        const tutorials = JSON.parse(this.getLocalStorageItem(key)!);
 
         for (const tutorial of Object.keys(tutorials)) {
             ret[tutorial] = tutorials[tutorial];
@@ -1549,7 +2014,7 @@ export class GameData {
             return ret;
         }
 
-        const dialogues = JSON.parse(this.getLocalStorageItem(key)!); // TODO: is this bang correct?
+        const dialogues = JSON.parse(this.getLocalStorageItem(key)!);
 
         for (const dialogue of Object.keys(dialogues)) {
             ret[dialogue] = dialogues[dialogue];
@@ -1574,7 +2039,7 @@ export class GameData {
             waveIndex: scene.currentBattle?.waveIndex ?? 0,
             battleType: scene.currentBattle?.battleType ?? "",
             trainer: scene.currentBattle?.battleType === BattleType.TRAINER ? new TrainerData(scene.currentBattle.trainer) : null,
-            gameVersion: scene.game.config.gameVersion,
+            gameVersion: this.getDisplayVersion(),
             timestamp: new Date().getTime(),
             challenges: scene.gameMode.challenges.map(c => new ChallengeData(c)),
             playerRival: this.playerRival,
@@ -1598,13 +2063,111 @@ export class GameData {
             dynamicMode: scene.dynamicMode,
             rivalWave: scene.rivalWave,
             gameMechanicTracking: scene.gameMechanicTracking,
+            activeSkillTree: this.activeSkillTree ? this.serializeActiveSkillTree() : undefined,
         } as SessionSaveData;
     }
-
-
     public getSessionSavedData(scene: BattleScene, slotId: integer): SessionSaveData {
           const sessionDataStr = this.getLocalStorageItem(`sessionData${slotId ? slotId : ""}_${loggedInUser?.username}`);
           return JSON.parse(sessionDataStr);
+    }
+
+    private serializeActiveSkillTree(): ActiveSkillTreeDataSerialized | undefined {
+        if (!this.activeSkillTree) return undefined;
+        return {
+            championId: this.activeSkillTree.championId,
+            treeLevel: this.activeSkillTree.treeLevel,
+            maxVisibleDepth: this.activeSkillTree.maxVisibleDepth,
+            unlockedNodes: Array.from(this.activeSkillTree.unlockedNodes),
+            skillEffects: Object.fromEntries(this.activeSkillTree.skillEffects),
+            seed: this.activeSkillTree.seed,
+            selectedPokemon: this.activeSkillTree.selectedPokemon,
+            unlockedGlitchForms: this.activeSkillTree.unlockedGlitchForms,
+            skillPoints: this.activeSkillTree.skillPoints,
+            tokens: this.activeSkillTree.tokens,
+            starterPokemon: this.activeSkillTree.starterPokemon,
+            catchRateBonusByType: this.activeSkillTree.catchRateBonusByType as any,
+            reviveChanceByType: this.activeSkillTree.reviveChanceByType,
+            reviveChanceBySpecies: this.activeSkillTree.reviveChanceBySpecies,
+            essenceTypeWeights: this.activeSkillTree.essenceTypeWeights as any,
+            fusionPriorityChanceByType: this.activeSkillTree.fusionPriorityChanceByType,
+            fusionPriorityChanceBySpecies: this.activeSkillTree.fusionPriorityChanceBySpecies,
+            legendaryEncounterChanceBySpecies: this.activeSkillTree.legendaryEncounterChanceBySpecies
+        };
+    }
+
+    private deserializeActiveSkillTree(data: ActiveSkillTreeDataSerialized): ActiveSkillTreeData {
+        return {
+            championId: data.championId,
+            treeLevel: data.treeLevel,
+            maxVisibleDepth: data.maxVisibleDepth,
+            unlockedNodes: new Set(data.unlockedNodes || []),
+            skillEffects: new Map(Object.entries(data.skillEffects || {})),
+            seed: data.seed,
+            selectedPokemon: data.selectedPokemon || {},
+            unlockedGlitchForms: data.unlockedGlitchForms || [],
+            skillPoints: data.skillPoints,
+            tokens: data.tokens,
+            starterPokemon: data.starterPokemon,
+            catchRateBonusByType: data.catchRateBonusByType as any,
+            reviveChanceByType: data.reviveChanceByType || {},
+            reviveChanceBySpecies: data.reviveChanceBySpecies || {},
+            essenceTypeWeights: data.essenceTypeWeights as any,
+            fusionPriorityChanceByType: data.fusionPriorityChanceByType || {},
+            fusionPriorityChanceBySpecies: data.fusionPriorityChanceBySpecies || {},
+            legendaryEncounterChanceBySpecies: data.legendaryEncounterChanceBySpecies || {}
+        };
+    }
+
+    public ensureActiveSkillTreeOnLegacyLoad(scene: BattleScene): void {
+        const mechanicsVersion = scene.gameMechanicTracking?.[GameMechanicsID.CHAMPION_MODE] ?? GameMechanicsVersion.PRE_CHAMPION;
+        if (!this.activeSkillTree && mechanicsVersion === GameMechanicsVersion.PRE_CHAMPION) {
+            const championId = this.selectedChampionId || (this.gender === PlayerGender.FEMALE ? "diana" : "apollo");
+            this.initializeSkillTree(championId);
+        }
+    }
+
+    public initializeSkillTree(championId: string): ActiveSkillTreeData {
+        if (championId === "apollo_diana") {
+            championId = this.gender === PlayerGender.FEMALE ? "diana" : "apollo";
+        }
+
+        let runtimeType1: Type | undefined;
+        let runtimeType2: Type | undefined;
+
+        if (championId === "apollo" || championId === "diana") {
+            const allTypes = Object.values(Type).filter(t =>
+                typeof t === 'number' &&
+                t >= Type.NORMAL &&
+                t <= Type.FAIRY
+            ) as Type[];
+
+            const shuffled = Utils.randSeedShuffle([...allTypes]);
+            runtimeType1 = shuffled[0];
+            runtimeType2 = shuffled.find(t => t !== runtimeType1) ?? shuffled[1];
+        }
+
+        this.activeSkillTree = {
+            championId,
+            runtimeType1,
+            runtimeType2,
+            treeLevel: 1,
+            maxVisibleDepth: 2,
+            unlockedNodes: new Set(["root_0"]),
+            skillEffects: new Map(),
+            seed: this.scene.seed,
+            selectedPokemon: {},
+            unlockedGlitchForms: [],
+            skillPoints: Overrides.SKILL_TREE_DEFAULT_SKILL_POINTS_OVERRIDE ?? 2,
+            tokens: 0,
+            catchRateBonusByType: {},
+            reviveChanceByType: {},
+            reviveChanceBySpecies: {},
+            essenceTypeWeights: {},
+            fusionPriorityChanceByType: {},
+            fusionPriorityChanceBySpecies: {},
+            legendaryEncounterChanceBySpecies: {}
+        };
+        return this.activeSkillTree;
     }
 
     getSession(slotId: integer): Promise<SessionSaveData | null> {
@@ -1664,24 +2227,20 @@ export class GameData {
             console.error(`Modifier type ${modifierKey} not found in modifierTypes`);
         }
     }
-
-    
-
     loadSession(scene: BattleScene, slotId: integer, sessionData?: SessionSaveData): Promise<boolean> {
         return new Promise(async (resolve, reject) => {
             try {
                 const initSessionFromData = async (_sessionData: SessionSaveData) => {
                     console.debug(_sessionData);
 
-                    scene.gameMode = getGameMode(_sessionData.gameMode || GameModes.CLASSIC, scene);
+                    const migratedGameMode = this.migrateGameMode(_sessionData);
+                    scene.gameMode = getGameMode(migratedGameMode, scene);
                     if (_sessionData.challenges) {
                         scene.gameMode.challenges = _sessionData.challenges.map(c => c.toChallenge());
                     }
 
                     scene.setSeed(_sessionData.seed || scene.game.config.seed[0]);
                     scene.resetSeed();
-
-
                     scene.sessionPlayTime = _sessionData.playTime || 0;
                     scene.lastSavePlayTime = 0;
 
@@ -1698,44 +2257,25 @@ export class GameData {
                     scene.pathNodeContext = _sessionData.pathNodeContext === undefined || _sessionData.pathNodeContext === null ? null : _sessionData.pathNodeContext;
                     scene.selectedNodeType = _sessionData.selectedNodeType === undefined || _sessionData.selectedNodeType === null ? null : _sessionData.selectedNodeType;
                     this.battlePath = _sessionData.battlePath || null;
-                    scene.gameMechanicTracking = _sessionData.gameMechanicTracking || { [GameMechanicsID.CHAOS_MODE]: GameMechanicsVersion.CHAOS_V1, [GameMechanicsID.COLLECTED_TYPE_MODIFIER]: GameMechanicsVersion.COLLECTED_TYPE_MODIFIER_V1 };
-                    
-                    // Update the global currentBattlePath when loading saved battle path
-                    // const { setCurrentBattlePath, reconstructBattlePathFromLayers, regenerateSpecialNodeProperties } = await import("../battle");
-                    // if (this.battlePath) {
-                    //     // Reconstruct the complete battle path with Maps from saved layers data
-                    //     const reconstructedBattlePath = reconstructBattlePathFromLayers(this.battlePath);
-                        
-                    //     // Regenerate battleConfig and metadata for special wave nodes
-                    //     regenerateSpecialNodeProperties(scene, reconstructedBattlePath);
-                        
-                    //     this.battlePath = reconstructedBattlePath;
-                    //     setCurrentBattlePath(reconstructedBattlePath);
-                    // } else {
-                    //     // Reset global state if no saved battle path
-                    //     setCurrentBattlePath(null);
-                    // }
-                    
-                    this.selectedPath = _sessionData.selectedPath || "";
-                    scene.battlePathWave = _sessionData.battlePathWave || 1;
+                    scene.gameMechanicTracking = _sessionData.gameMechanicTracking || {
+                        [GameMechanicsID.CHAOS_MODE]: GameMechanicsVersion.CHAOS_V1,
+                        [GameMechanicsID.COLLECTED_TYPE_MODIFIER]: GameMechanicsVersion.COLLECTED_TYPE_MODIFIER_V1,
+                        [GameMechanicsID.CHAMPION_MODE]: GameMechanicsVersion.PRE_CHAMPION
+                    };
+                    this.selectedPath = Overrides.STARTING_SELECTED_PATH_OVERRIDE || _sessionData.selectedPath || "";
+                    scene.battlePathWave = Overrides.STARTING_BATTLE_PATH_WAVE_OVERRIDE || _sessionData.battlePathWave || 1;
                     scene.dynamicMode = _sessionData.dynamicMode || undefined;
                     scene.rivalWave = _sessionData.rivalWave || 0;
                     const loadPokemonAssets: Promise<void>[] = [];
 
                     let waveDebug = _sessionData.waveIndex;
-                    // waveDebug = 71;
-
                     const party = scene.getParty();
-                    // this.modifyPartyData(_sessionData.party, scene);
-
                     for (const p of _sessionData.party) {
                         const pokemon = p.toPokemon(scene) as PlayerPokemon;
                         pokemon.setVisible(false);
                         loadPokemonAssets.push(pokemon.loadAssets());
                         party.push(pokemon);
                     }
-
-
                     Object.keys(scene.pokeballCounts).forEach((key: string) => {
                         scene.pokeballCounts[key] = _sessionData.pokeballCounts[key] || 0;
                     });
@@ -1758,21 +2298,25 @@ export class GameData {
                     const battleType = _sessionData.battleType || 0;
                     const trainerConfig = _sessionData.trainer ? _sessionData.trainer.rivalConfig ? _sessionData.trainer.rivalConfig : trainerConfigs[_sessionData.trainer.trainerType] : null;
                     const battle = scene.newBattle(waveDebug, battleType, _sessionData.trainer, battleType === BattleType.TRAINER ? trainerConfig?.doubleOnly || _sessionData.trainer?.variant === TrainerVariant.DOUBLE : _sessionData.enemyParty.length > 1);
-                    // this.modifyEnemyPartyData(_sessionData.enemyParty, scene);
+
                     battle.enemyLevels = _sessionData.enemyParty.map(p => p.level);
 
                         scene.arena.init();
 
                         if(_sessionData.trainer?.trainerType === TrainerType.SMITTY) {
-                            battle.enemyLevels?.forEach((level, e) => {
-                                battle.enemyParty[e] = battle.trainer?.genPartyMember(e)!;
-                                loadPokemonAssets.push(battle.enemyParty[e].loadAssets());
-                            });
+                            const isInBattlePathSelection = (scene.battlePathWave > waveDebug);
+
+                            if (isInBattlePathSelection) {
+                                battle.enemyParty = [];
+                            } else {
+                                battle.enemyLevels?.forEach((level, e) => {
+                                    battle.enemyParty[e] = battle.trainer?.genPartyMember(e)!;
+                                    loadPokemonAssets.push(battle.enemyParty[e].loadAssets());
+                                });
+                            }
                         }
 
                         else {
-
-
                         _sessionData.enemyParty.forEach((enemyData, e) => {
                             const enemyPokemon = enemyData.toPokemon(scene, battleType, e, _sessionData.trainer?.variant === TrainerVariant.DOUBLE) as EnemyPokemon;
                             battle.enemyParty[e] = enemyPokemon;
@@ -1785,10 +2329,10 @@ export class GameData {
                         }
 
                     scene.arena.weather = _sessionData.arena.weather;
-                    scene.arena.eventTarget.dispatchEvent(new WeatherChangedEvent(WeatherType.NONE, scene.arena.weather?.weatherType!, scene.arena.weather?.turnsLeft!)); // TODO: is this bang correct?
+                    scene.arena.eventTarget.dispatchEvent(new WeatherChangedEvent(WeatherType.NONE, scene.arena.weather?.weatherType!, scene.arena.weather?.turnsLeft!));
 
                     scene.arena.terrain = _sessionData.arena.terrain;
-                    scene.arena.eventTarget.dispatchEvent(new TerrainChangedEvent(TerrainType.NONE, scene.arena.terrain?.terrainType!, scene.arena.terrain?.turnsLeft!)); // TODO: is this bang correct?
+                    scene.arena.eventTarget.dispatchEvent(new TerrainChangedEvent(TerrainType.NONE, scene.arena.terrain?.terrainType!, scene.arena.terrain?.turnsLeft!));
 
                     const modifiersModule = await import("../modifier/modifier");
 
@@ -1811,14 +2355,29 @@ export class GameData {
                     }
 
                     scene.updateModifiers(false);
-
-                    
+                    const mbhTypeId = getModifierType(modifierTypes.MINI_BLACK_HOLE).id;
+                    scene.getEnemyParty().forEach(enemy => {
+                        if (!enemy) return;
+                        if ((enemy as any).is2ndStageBoss) return;
+                        const hasMBH = !!scene.findModifiers(
+                            m => m instanceof TurnHeldItemTransferModifier && m.pokemonId === enemy.id && m.type.id === mbhTypeId,
+                            false
+                        ).length;
+                        if (hasMBH) {
+                            (enemy as EnemyPokemon).is2ndStageBoss = true;
+                        }
+                    });
                     this.playerRival = _sessionData.playerRival || null;
+                    if (_sessionData.activeSkillTree) {
+                        this.activeSkillTree = this.deserializeActiveSkillTree(_sessionData.activeSkillTree);
+                    } else {
+                        this.activeSkillTree = undefined;
+                    }
+
+                    this.ensureActiveSkillTreeOnLegacyLoad(scene);
                     this.chaosAltRivals = _sessionData.chaosAltRivals || []
                     this.sessionQuestModifierData = _sessionData.sessionQuestModifierData || {};
                     this.activeConsoleCodeQuests = _sessionData.activeConsoleCodeQuests || [];
-
-
                     Promise.all(loadPokemonAssets).then(() => resolve(true));
                 };
                 if(this.combinedData.sessionData?.length) {
@@ -1827,16 +2386,16 @@ export class GameData {
                 } else if (sessionData) {
                     await initSessionFromData(sessionData);
                 } else {
-                const data = await this.getSession(slotId);
-                if (data) {
-                    await initSessionFromData(data);
-                } else {
-                    resolve(false);
-                            return;
+                    const data = await this.getSession(slotId);
+                    if (data) {
+                        await initSessionFromData(data);
+                    } else {
+                        resolve(false);
+                        return;
+                    }
                 }
-            }
 
-            scene.sessionSlotId = slotId; // Set the current session slot ID
+            scene.sessionSlotId = slotId;
             resolve(true);
             } catch (err) {
             console.error("Error loading session:", err);
@@ -2091,13 +2650,6 @@ export class GameData {
         });
 
         partyData.push(poke1, poke2, poke3, poke4, poke5, poke6);
-
-        // partyData.forEach((pokemon, index) => {
-        //     const abilities = [Abilities.MISERY_TOUCH, Abilities.JUST_A_JERK, Abilities.SPIRITUAL_BOND, Abilities.VINE_FIST, Abilities.TOXIC_COMBUSTION, Abilities.SOUL_COLLECTOR];
-        //
-        //     pokemon.summonData.ability = abilities[index % abilities.length];
-        //     pokemon.passive = true;
-        // });
     }
 
     modifyEnemyPartyData(partyData: PokemonData[], scene: BattleScene) {
@@ -2330,9 +2882,6 @@ export class GameData {
             fusionLuck: 0,
             boss: false,
         });
-
-        // partyData.push(poke1);
-        // partyData.push(poke1, poke2, poke3, poke4, poke5, poke6);
         partyData.push(poke1);
 
         partyData.forEach((pokemon, index) => {
@@ -2345,14 +2894,10 @@ export class GameData {
 
     deleteSession(slotId: integer): Promise<boolean> {
         return new Promise<boolean>(async (resolve) => {
-            localStorage.removeItem(`sessionData${this.scene.sessionSlotId ? this.scene.sessionSlotId : ""}_${loggedInUser?.username}`);
+            localStorage.removeItem(`sessionData${slotId ? slotId : ""}_${loggedInUser?.username}`);
             return resolve(true);
         });
     }
-
-    /* Defines a localStorage item 'daily' to check on clears, offline implementation of savedata/newclear API
-    If a GameModes clear other than Daily is checked, newClear = true as usual
-    If a Daily mode is cleared, checks if it was already cleared before, based on seed, and returns true only to new daily clear runs */
     offlineNewClear(scene: BattleScene): Promise<boolean> {
         return new Promise<boolean>(resolve => {
             const sessionData = this.getSessionSaveData(scene);
@@ -2361,7 +2906,7 @@ export class GameData {
 
             if (sessionData.gameMode === GameModes.DAILY) {
                 if (localStorage.hasOwnProperty("daily")) {
-                    daily = JSON.parse(atob(this.getLocalStorageItem("daily")!)); // TODO: is this bang correct?
+                    daily = JSON.parse(atob(this.getLocalStorageItem("daily")!));
                     if (daily.includes(seed)) {
                         return resolve(false);
                     } else {
@@ -2396,12 +2941,12 @@ export class GameData {
         for (let slotId = 0; slotId < 5; slotId++) {
             const sessionKey = `sessionData${slotId ? slotId : ""}_${loggedInUser?.username}`;
             const sessionData = this.getLocalStorageItem(sessionKey);
-            
+
             if (sessionData) {
                 try {
                     const parsedData = JSON.parse(decrypt(sessionData, bypassLogin));
                     const sessionTimestamp = parsedData?.timestamp || 0;
-                    
+
                     if (sessionTimestamp > latestTimestamp) {
                         latestTimestamp = sessionTimestamp;
                         lastSlot = slotId;
@@ -2548,18 +3093,16 @@ export class GameData {
     }
 
     private serializeBigInt(obj: any): any {
+        try {
         return JSON.stringify(obj, (key, value) => {
-            // Handle bigint directly
             if (typeof value === "bigint") {
                 return value.toString() + "n";
             }
 
-            // Only recursively parse objects that might contain BigInt values
             if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
-                // Check if this is a DexEntry or contains DexAttr-related fields
-                const mightContainBigInt = 
-                    'seenAttr' in value || 
-                    'caughtAttr' in value || 
+                const mightContainBigInt =
+                    'seenAttr' in value ||
+                    'caughtAttr' in value ||
                     'dexData' in value ||
                     key === 'dexData';
 
@@ -2571,22 +3114,24 @@ export class GameData {
                 for (const k in value) {
                     if (Object.prototype.hasOwnProperty.call(value, k)) {
                         try {
-                            // Recursively handle all nested values
-                            newObj[k] = JSON.parse(this.serializeBigInt(value[k]));
+                            const serialized = this.serializeBigInt(value[k]);
+                            if (serialized === undefined || serialized === "undefined") {
+                                newObj[k] = value[k];
+                            } else {
+                                newObj[k] = JSON.parse(serialized);
+                            }
                         } catch (error) {
-                            console.error(`Error parsing nested value for key ${k}:`, error);
-                            newObj[k] = value[k]; // Fallback to original value
+                            newObj[k] = value[k];
                         }
                     }
                 }
                 return newObj;
             }
 
-            // Only recursively parse arrays if they're within a BigInt-containing context
             if (Array.isArray(value)) {
-                const parentMightContainBigInt = 
-                    key === 'dexData' || 
-                    key === 'seenAttr' || 
+                const parentMightContainBigInt =
+                    key === 'dexData' ||
+                    key === 'seenAttr' ||
                     key === 'caughtAttr';
 
                 if (!parentMightContainBigInt) {
@@ -2595,37 +3140,50 @@ export class GameData {
 
                 return value.map(item => {
                     try {
-                        // Recursively handle all items in array
-                        return JSON.parse(this.serializeBigInt(item));
+                        const serialized = this.serializeBigInt(item);
+                        if (serialized === undefined || serialized === "undefined") {
+                            return item;
+                        } else {
+                            return JSON.parse(serialized);
+                        }
                     } catch (error) {
-                        console.error('Error parsing array item:', error);
-                        return item; // Fallback to original value
+                        return item;
                     }
                 });
             }
 
             return value;
         });
+        } catch (error) {
+            alert('[SERIALIZE ERROR] ' + (error as Error).message);
+            throw error;
+        }
     }
-
-
     private deserializeBigInt(obj: any): any {
+        try {
         return JSON.parse(JSON.stringify(obj), (key, value) => {
             if (typeof value === 'string') {
                 if (/^\d+n$/.test(value)) {
                     return BigInt(value.slice(0, -1));
                 }
-                // Handle cases where BigInt was stringified without 'n'
                 if (['caughtAttr', 'seenAttr', 'abilityAttr'].includes(key)) {
                     return BigInt(value);
                 }
             }
             return value;
         });
+        } catch (error) {
+            alert('[DESERIALIZE ERROR] ' + (error as Error).message);
+            throw error;
+        }
     }
     saveAll(scene: BattleScene, skipVerification: boolean = false, sync: boolean = false, useCachedSession: boolean = false, useCachedSystem: boolean = false): Promise<boolean> {
         return new Promise<boolean>(async (resolve) => {
             try {
+            if (!this.dataLoaded) {
+                resolve(false);
+                return;
+            }
             await updateUserInfo();
 
             let systemData = useCachedSystem
@@ -2640,27 +3198,39 @@ export class GameData {
 
             let serializedSystemData = this.serializeBigInt(systemData);
 
+            if (!serializedSystemData || serializedSystemData === 'undefined') {
+                alert('[SAVE ERROR] System data serialization failed');
+                resolve(false);
+                return;
+            }
+
             if(!scene.gameMode.isTestMod && sessionData.playTime && sessionData.party.length > 0 && sessionData.waveIndex > 0) {
-            let serializedSessionData = this.serializeBigInt(sessionData);
-            this.setLocalStorageItem(`sessionData${scene.sessionSlotId ? scene.sessionSlotId : ""}_${loggedInUser?.username}`, encrypt(serializedSessionData, bypassLogin));
-                console.debug("Session data saved to slot", scene.sessionSlotId);
+                let serializedSessionData = this.serializeBigInt(sessionData);
+
+                if (!serializedSessionData || serializedSessionData === 'undefined') {
+                    alert('[SAVE ERROR] Session data serialization failed');
+                    resolve(false);
+                    return;
+                }
+
+                this.setLocalStorageItem(`sessionData${scene.sessionSlotId ? scene.sessionSlotId : ""}_${loggedInUser?.username}`, encrypt(serializedSessionData, bypassLogin));
             }
             this.setLocalStorageItem(`data_${loggedInUser?.username}`, encrypt(serializedSystemData, bypassLogin));
 
                 resolve(true);
             } catch (error) {
-                console.error("Error saving all data locally:", error);
+                alert('[SAVE ERROR] saveAll failed: ' + (error as Error).message);
                 resolve(false);
             }
         });
     }
-
-    
     public localSaveAll(scene: BattleScene): void {
+        if (!this.dataLoaded) {
+            return;
+        }
         this.saveAll(scene).then(() => {
-            console.debug("Local save completed");
         }).catch(error => {
-            console.error("Error in background save:", error);
+            alert('[SAVE ERROR] localSaveAll failed: ' + error.message);
         });
     }
 
@@ -2696,7 +3266,7 @@ export class GameData {
                     const validSessionData = sessionDataStrs.filter(Boolean)
                         .map(str => this.deserializeBigInt(JSON.parse(decrypt(str!, bypassLogin))))
                         .filter((session: any) => session?.timestamp && (session?.party?.length > 0 || session?.enemyParty?.length > 0))
-                        .map(session => this.serializeBigInt(session)); // Serialize each session
+                        .map(session => this.serializeBigInt(session));
 
                     const combinedData = {
                         systemData: systemData,
@@ -2704,35 +3274,35 @@ export class GameData {
                     };
 
                     encryptedData = AES.encrypt(JSON.stringify(combinedData), saveKey);
-                    
+
                     const now = new Date();
                     const month = now.getMonth() + 1;
                     const day = now.getDate();
                     const hour = now.getHours();
                     const minute = now.getMinutes();
-                    
+
                     if (this.scene.currentBattle) {
                         const waveIndex = this.scene.currentBattle.waveIndex;
                         const gameMode = this.scene.gameMode.getName();
-                        
+
                         let playerPokemonName = "Unknown";
                         if (this.scene.getParty().length > 0) {
                             playerPokemonName = this.scene.getParty()[0].name || "Unknown";
                         }
-                        
+
                         let enemyPokemonName = "Unknown";
                         if (this.scene.getEnemyParty().length > 0) {
                             enemyPokemonName = this.scene.getEnemyParty()[0].name || "Unknown";
                         }
-                        
+
                         downloadName = `${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}_${hour.toString().padStart(2, '0')}-${minute.toString().padStart(2, '0')}_wave_${waveIndex}_${playerPokemonName}_vs_${enemyPokemonName}_${gameMode}_`;
                     } else {
                         downloadName = `${month.toString().padStart(2, '0')}_${day.toString().padStart(2, '0')}_${hour.toString().padStart(2, '0')}-${minute.toString().padStart(2, '0')}_title_screen_save`;
                     }
-                    
+
                     downloadName = `PokeVoid_${downloadName}.prsv`;
-                } 
-              
+                }
+
                 else {
                     switch (dataType) {
                         case GameDataType.SYSTEM:
@@ -2764,11 +3334,50 @@ export class GameData {
         });
     }
 
+    public async getExportDataBlob(): Promise<Blob | null> {
+        try {
+            const systemDataStr = this.getLocalStorageItem(`data_${loggedInUser?.username}`);
+            if (!systemDataStr) {
+                return null;
+            }
+
+            const sessionDataStrs = await Promise.all(
+                Array.from({ length: 5 }, (_, i) =>
+                    this.getLocalStorageItem(`sessionData${i || ""}_${loggedInUser?.username}`)
+                )
+            );
+
+            const systemData = this.parseSystemData(
+                this.convertSystemDataStr(
+                    JSON.stringify(this.serializeBigInt(
+                        this.deserializeBigInt(JSON.parse(decrypt(systemDataStr, bypassLogin)))
+                    ))
+                )
+            );
+
+            const validSessionData = sessionDataStrs.filter(Boolean)
+                .map(str => this.deserializeBigInt(JSON.parse(decrypt(str!, bypassLogin))))
+                .filter((session: any) => session?.timestamp && (session?.party?.length > 0 || session?.enemyParty?.length > 0))
+                .map(session => this.serializeBigInt(session));
+
+            const combinedData = {
+                systemData: systemData,
+                sessionData: validSessionData
+            };
+
+            const encryptedData = AES.encrypt(JSON.stringify(combinedData), saveKey);
+            return new Blob([encryptedData.toString()], { type: "text/json" });
+        } catch (error) {
+            console.error("Error creating export data blob:", error);
+            return null;
+        }
+    }
+
     public importData(dataType: GameDataType, slotId: integer = 0): void {
         const dataKey = `${getDataTypeKey(dataType, slotId)}_${loggedInUser?.username}`;
-        
+
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-        
+
         if (isIOS) {
             try {
                 import("../ui/import-data-form-ui-handler").then(module => {
@@ -2790,10 +3399,10 @@ export class GameData {
                 return;
             }
         }
-        
+
         this.useTraditionalFileInput(dataType, slotId);
     }
-    
+
     private useTraditionalFileInput(dataType: GameDataType, slotId: integer = 0): void {
         const existingFile = document.getElementById("saveFile");
         existingFile?.remove();
@@ -3034,7 +3643,125 @@ export class GameData {
         this.starterData = starterData;
     }
 
-    
+    registerChampionObtainedPokemon(speciesId: Species, championId: string, temporary: boolean = false): void {
+        const isApolloDiana = (championId === "apollo" || championId === "diana");
+
+        if (isApolloDiana && !temporary) {
+            return;
+        }
+
+        const championBit = CHAMPION_ID_TO_BIT[championId];
+        if (!championBit && !isApolloDiana) {
+            console.warn(`[ChampionDex] Unknown champion ID "${championId}" - cannot register`);
+            return;
+        }
+
+        if (!this.dexData[speciesId]) {
+            console.warn(`[ChampionDex] dexData[${speciesId}] missing, initializing`);
+            this.dexData[speciesId] = {
+                seenAttr: 0n,
+                caughtAttr: 0n,
+                natureAttr: 0,
+                seenCount: 0,
+                caughtCount: 0,
+                hatchedCount: 0,
+                ivs: [0, 0, 0, 0, 0, 0],
+                championObtainedBy: 0n,
+                temporary: temporary
+            };
+        }
+
+        const entry = this.dexData[speciesId];
+
+        if (temporary) {
+            entry.temporary = true;
+        }
+
+        if (entry.caughtAttr === 0n) {
+            const defaultStarterAttr = DexAttr.NON_SHINY | DexAttr.MALE | DexAttr.DEFAULT_VARIANT | DexAttr.DEFAULT_FORM;
+            entry.seenAttr = defaultStarterAttr;
+            entry.caughtAttr = defaultStarterAttr;
+            entry.seenCount = 1;
+            entry.caughtCount = 1;
+            for (const i in entry.ivs) {
+                entry.ivs[i] = 10;
+            }
+        }
+
+        if (!temporary && !isApolloDiana) {
+            if (entry.championObtainedBy === undefined) {
+                entry.championObtainedBy = 0n;
+            }
+
+            const hadBefore = (entry.championObtainedBy & championBit) !== 0n;
+            entry.championObtainedBy |= championBit;
+
+            if (!hadBefore) {
+                console.log(`[ChampionDex] ${championId} obtained species ${speciesId}, bits: ${entry.championObtainedBy.toString(2).padStart(9, '0')}`);
+            }
+        }
+
+        if (!this.starterData[speciesId]) {
+            this.starterData[speciesId] = {
+                moveset: null,
+                eggMoves: 0,
+                candyCount: 0,
+                friendship: 0,
+                abilityAttr: AbilityAttr.ABILITY_1,
+                passiveAttr: 0,
+                valueReduction: 0,
+                classicWinCount: 0,
+                obtainedFusions: [],
+                fusionMovesets: []
+            };
+        } else if (this.starterData[speciesId].abilityAttr === 0) {
+            this.starterData[speciesId].abilityAttr = AbilityAttr.ABILITY_1;
+        }
+    }
+
+    isPokemonAvailableToChampion(speciesId: Species, championId: string): boolean {
+        const entry = this.dexData[speciesId];
+
+        if (!entry || entry.caughtAttr === 0n) {
+            return false;
+        }
+
+        if (championId === "apollo_diana" || championId === "apollo" || championId === "diana") {
+            return true;
+        }
+
+        if (entry.championObtainedBy === undefined || entry.championObtainedBy === 0n) {
+            return false;
+        }
+
+        const championBit = CHAMPION_ID_TO_BIT[championId];
+        if (!championBit) {
+            console.warn(`[ChampionDex] Unknown champion ID "${championId}" in availability check`);
+            return false;
+        }
+
+        return (entry.championObtainedBy & championBit) !== 0n;
+    }
+
+    clearTemporaryPokemon(): void {
+        for (const speciesId in this.dexData) {
+            const entry = this.dexData[speciesId];
+            if (entry.temporary) {
+                if (entry.championObtainedBy === 0n || entry.championObtainedBy === undefined) {
+                    entry.caughtAttr = 0n;
+                    entry.seenAttr = 0n;
+                    entry.caughtCount = 0;
+                    entry.seenCount = 0;
+                    entry.ivs = [0, 0, 0, 0, 0, 0];
+                    console.log(`[Cleanup] Cleared temporary Pokemon ${speciesId}`);
+                } else {
+                    console.log(`[Cleanup] Skipping ${speciesId} - actually caught (championObtainedBy: ${entry.championObtainedBy.toString(2)})`);
+                }
+
+                delete entry.temporary;
+            }
+        }
+    }
     private initSmittySpeciesData(): { [key: number]: any } {
         const newSpeciesData = {};
         allSpecies.forEach(species => {
@@ -3135,6 +3862,9 @@ export class GameData {
                 }
             }
 
+            const championId = this.selectedChampionId || "apollo_diana";
+            this.registerChampionObtainedPokemon(pokemon.species.speciesId, championId);
+
             const checkPrevolution = () => {
                 if (hasPrevolution) {
                     const prevolutionSpecies = pokemonPrevolutions[species.speciesId];
@@ -3193,7 +3923,7 @@ export class GameData {
     }
 
     addStarterCandy(species: PokemonSpecies, count: integer): void {
-        
+
         this.scene.candyBar.showStarterSpeciesCandy(species.speciesId, count + 3);
         this.starterData[species.speciesId].candyCount += count + 3;
     }
@@ -3231,8 +3961,6 @@ export class GameData {
             }
         });
     }
-
-    
     public setObtainedFusionUnlock(pokemon: Pokemon, fusionSpecies: Species): Promise<boolean> {
         return new Promise<boolean>(resolve => {
             const rootSpeciesId = pokemon.species.getRootSpeciesId(true);
@@ -3363,8 +4091,6 @@ export class GameData {
             }
             return value;
         };
-
-
         for (let v = 0; v < this.starterData[speciesId]?.valueReduction; v++) {
             value = decrementValue(value);
         }
@@ -3566,19 +4292,19 @@ export class GameData {
             systemdata.gameStats.reroll = 0;
             systemdata.gameStats.permaReroll = 0;
         }
-        
+
         if (systemdata.gameStats.modifiersObtained === undefined) {
             systemdata.gameStats.modifiersObtained = {};
         }
-        
+
         if (systemdata.gameStats.typeOfDefeated === undefined) {
             systemdata.gameStats.typeOfDefeated = {};
         }
-        
+
         if (systemdata.gameStats.typeOfMovesUsed === undefined) {
             systemdata.gameStats.typeOfMovesUsed = {};
         }
-        
+
         if (systemdata.gameStats.playerKnockoutType === undefined) {
             systemdata.gameStats.playerKnockoutType = {};
         }
@@ -3593,6 +4319,25 @@ export class GameData {
             systemdata.gameStats.chaosNuzlockeDraftSessionsPlayed = 0;
             systemdata.gameStats.chaosNuzlockeDraftSessionsWon = 0;
         }
+
+        if (systemdata.gameStats.chaosRogueShortSessionsPlayed === undefined) {
+            systemdata.gameStats.chaosRogueShortSessionsPlayed = 0;
+            systemdata.gameStats.chaosRogueShortSessionsWon = 0;
+            systemdata.gameStats.chaosJourneyShortSessionsPlayed = 0;
+            systemdata.gameStats.chaosJourneyShortSessionsWon = 0;
+            systemdata.gameStats.chaosVoidShortSessionsPlayed = 0;
+            systemdata.gameStats.chaosVoidShortSessionsWon = 0;
+            systemdata.gameStats.chaosRogueVoidShortSessionsPlayed = 0;
+            systemdata.gameStats.chaosRogueVoidShortSessionsWon = 0;
+            systemdata.gameStats.chaosNuzlightShortSessionsPlayed = 0;
+            systemdata.gameStats.chaosNuzlightShortSessionsWon = 0;
+            systemdata.gameStats.chaosNuzlockeShortSessionsPlayed = 0;
+            systemdata.gameStats.chaosNuzlockeShortSessionsWon = 0;
+            systemdata.gameStats.chaosNuzlightDraftShortSessionsPlayed = 0;
+            systemdata.gameStats.chaosNuzlightDraftShortSessionsWon = 0;
+            systemdata.gameStats.chaosNuzlockeDraftShortSessionsPlayed = 0;
+            systemdata.gameStats.chaosNuzlockeDraftShortSessionsWon = 0;
+        }
   }
 
     public updateGameModeStats(gameMode: GameModes, isVictory: boolean = false): void {
@@ -3603,7 +4348,7 @@ export class GameData {
         else {
             gameStats.sessionsPlayed++;
         }
-        
+
         switch (gameMode) {
         case GameModes.CLASSIC:
             if (isVictory) {
@@ -3780,12 +4525,68 @@ export class GameData {
                 gameStats.chaosNuzlockeDraftShortSessionsPlayed++;
             }
             break;
+        case GameModes.CHAOS_ROGUE_FTL:
+            if (isVictory) {
+                gameStats.chaosRogueFTLSessionsWon++;
+            } else {
+                gameStats.chaosRogueFTLSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_JOURNEY_FTL:
+            if (isVictory) {
+                gameStats.chaosJourneyFTLSessionsWon++;
+            } else {
+                gameStats.chaosJourneyFTLSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_VOID_FTL:
+            if (isVictory) {
+                gameStats.chaosVoidFTLSessionsWon++;
+            } else {
+                gameStats.chaosVoidFTLSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_ROGUE_VOID_FTL:
+            if (isVictory) {
+                gameStats.chaosRogueVoidFTLSessionsWon++;
+            } else {
+                gameStats.chaosRogueVoidFTLSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLIGHT_FTL:
+            if (isVictory) {
+                gameStats.chaosNuzlightFTLSessionsWon++;
+            } else {
+                gameStats.chaosNuzlightFTLSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLOCKE_FTL:
+            if (isVictory) {
+                gameStats.chaosNuzlockeFTLSessionsWon++;
+            } else {
+                gameStats.chaosNuzlockeFTLSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLIGHT_DRAFT_FTL:
+            if (isVictory) {
+                gameStats.chaosNuzlightDraftFTLSessionsWon++;
+            } else {
+                gameStats.chaosNuzlightDraftFTLSessionsPlayed++;
+            }
+            break;
+        case GameModes.CHAOS_NUZLOCKE_DRAFT_FTL:
+            if (isVictory) {
+                gameStats.chaosNuzlockeDraftFTLSessionsWon++;
+            } else {
+                gameStats.chaosNuzlockeDraftFTLSessionsPlayed++;
+            }
+            break;
         }
-        
-        this.checkAndUnlockGameModes();
-    }
 
-    
+        if(isVictory) {
+            this.checkAndUnlockGameModes();
+        }
+    }
     public updatePermaShopOptions(options: ModifierTypeOption[]): void {
         this.currentPermaShopOptions = options;
     }
@@ -3795,7 +4596,7 @@ export class GameData {
     }
 
     public isSmitomRewardTime() : boolean {
-        return this.lastSmitomReward + 20 * 60 * 1000 < Date.now();
+        return this.lastSmitomReward + 10 * 60 * 1000 < Date.now();
     }
 
     public updateSmitomRewardTime(): void {
@@ -3813,14 +4614,15 @@ export class GameData {
     public updateDailyBountyCode(): void {
         this.dailyBountyCode = this.getRandomBountyCode();
         this.updateDailyBountyTime();
-        
+
     }
 
     public isSaveRewardTime() : boolean {
-        return this.lastSaveTime + 20 * 60 * 1000 < Date.now();
+        if (Overrides.ALWAYS_SAVE_REWARD_OVERRIDE) {
+            return true;
+        }
+        return this.lastSaveTime + 10 * 60 * 1000 < Date.now();
     }
-
-
     public updateRewardOverlayOpacity(opacity: number): void {
         this.rewardOverlayOpacity = opacity;
     }
@@ -3845,11 +4647,9 @@ export class GameData {
         }
 
     }
-
-    
     public setQuestState(questId: QuestUnlockables, state: QuestState, questUnlockData?: QuestUnlockData): void {
         this.questUnlockables[questId] = { state, questUnlockData };
-        
+
         if (state === QuestState.COMPLETED && questUnlockData) {
             if (questUnlockData.rewardType === RewardType.GLITCH_FORM_A ||
                 questUnlockData.rewardType === RewardType.GLITCH_FORM_B ||
@@ -3864,9 +4664,6 @@ export class GameData {
     public getQuestState(questId: QuestUnlockables): QuestState | undefined {
         return this.questUnlockables[questId]?.state;
     }
-
-
-
     setQuestStageProgress(questId: QuestUnlockables, stageIndex: number, questUnlockData: QuestUnlockData): void {
         const questProgress: QuestProgress = {
             state: this.questUnlockables[questId]?.state || QuestState.UNLOCKED,
@@ -3906,7 +4703,7 @@ export class GameData {
             this.tutorialService.saveTutorialFlag(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1, true);
         }
     }
-    
+
     isModFormUnlocked(formName: string): boolean {
         return this.modFormsUnlocked.includes(formName);
     }
@@ -3933,14 +4730,14 @@ export class GameData {
 
 public getRandomBountyCode(): string {
     const availablePools = [];
-    
-    const hasSmittyCodes = Object.keys(SMITTY_CONSOLE_CODES).some(formName => 
+
+    const hasSmittyCodes = Object.keys(SMITTY_CONSOLE_CODES).some(formName =>
         this.isUniSmittyFormUnlocked(formName)
     );
     if (hasSmittyCodes) {
         availablePools.push(() => this.getRandomSmittyBountyCode());
     }
-    
+
     availablePools.push(
         () => this.getRandomRivalBountyCode(),
         () => this.getRandomQuestBountyCode()
@@ -3965,9 +4762,9 @@ public getRandomBountyCode(): string {
                 acc[formName] = code;
                 return acc;
             }, {} as Record<string, string>);
-        
+
         return this.getRandomConsoleCode(unlockedSmittyCodes);
-    } 
+    }
 
     public getCompletedQuestForSpecies(speciesId: Species, rewardType: RewardType = RewardType.GLITCH_FORM_A): boolean {
         for (const [questId, QuestProgress] of Object.entries(this.questUnlockables)) {
@@ -3984,6 +4781,22 @@ public getRandomBountyCode(): string {
                 }
             }
         }
+
+        if (this.activeSkillTree?.sessionQuestUnlockables) {
+            for (const [questId, QuestProgress] of Object.entries(this.activeSkillTree.sessionQuestUnlockables)) {
+                const questUnlockData = QuestProgress.questUnlockData;
+                if (questUnlockData?.rewardType === rewardType) {
+                    if (Array.isArray(questUnlockData.rewardId)) {
+                        if (questUnlockData.rewardId.includes(speciesId)) {
+                            return true;
+                        }
+                    } else if (questUnlockData.rewardId === speciesId) {
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
 
@@ -3993,8 +4806,6 @@ public getRandomBountyCode(): string {
         }
         return false;
     }
-
-    
     public getPermaModifiersByType(permaType: PermaType): PermaModifier[] {
         return this.permaModifiers.getPermaModifiersByType(permaType);
     }
@@ -4019,13 +4830,8 @@ public getRandomBountyCode(): string {
     public reducePermaWaveModifiers(scene: BattleScene): void {
         this.permaModifiers.reducePermaWaveModifiers(scene);
     }
-
-
-    
     public getFusionTaxCost(): number {
         let cost = 1000;
-
-        
         if (this.hasPermaModifierByType(PermaType.PERMA_CHEAPER_FUSIONS_3)) {
             cost *= 0.25;
         } else if (this.hasPermaModifierByType(PermaType.PERMA_CHEAPER_FUSIONS_2)) {
@@ -4068,6 +4874,10 @@ public getRandomBountyCode(): string {
 
     handleQuestUnlocks(scene: BattleScene, rival: RivalTrainerType = null): void {
       const targetRival = rival ?? this.playerRival;
+      const validRivalTypes = getAllRivalTrainerTypes();
+      if (targetRival && !validRivalTypes.includes(targetRival)) {
+        return;
+      }
       if (targetRival) {
         const handleQuestUnlock = () => {
           const questToUnlock = getRandomLockedQuestForRival(targetRival, this);
@@ -4083,19 +4893,19 @@ public getRandomBountyCode(): string {
           try {
             const allMods = await modStorage.getAllMods();
             const rivalMods = allMods.filter(mod => {
-              return mod.jsonData.unlockConditions && 
+              return mod.jsonData.unlockConditions &&
                     mod.jsonData.unlockConditions.rivalTrainerTypes &&
                     mod.jsonData.unlockConditions.rivalTrainerTypes.includes(targetRival) || this.scene.gameMode.isChaosMode;
             });
 
             if (rivalMods.length > 0) {
-              const uncompletedMods = rivalMods.filter(mod => 
+              const uncompletedMods = rivalMods.filter(mod =>
                 !this.isModFormUnlocked(getModFormSystemName(mod.speciesId, mod.formName))
               );
 
               if (uncompletedMods.length > 0) {
                 const chosenMod = Utils.randSeedItem(uncompletedMods);
-                
+
                 const phase = new UnlockModFormPhase(scene, chosenMod.formName, () => {
                   this.unlockModForm(getModFormSystemName(chosenMod.speciesId, chosenMod.formName));
                 });
@@ -4111,8 +4921,9 @@ public getRandomBountyCode(): string {
         };
 
         if (!this.defeatedRivals.includes(targetRival)) {
+          console.log('[QUEST_UNLOCKS] Queuing RIVAL_TO_VOID phase for:', targetRival, 'defeatedRivals:', this.defeatedRivals);
           this.defeatedRivals.push(targetRival);
-          
+
           this.gameStats.rivalsDefeated++;
 
           const rivalName = i18next.t(`trainerNames:${TrainerType[targetRival].toLowerCase()}`);
@@ -4132,7 +4943,7 @@ public getRandomBountyCode(): string {
                     });
                 }
             ));
-        
+
         } else if (this.unlocks[Unlockables.NIGHTMARE_MODE] || this.scene.gameMode.isChaosMode) {
           checkAndUnlockModForm().then(hasUnlockedMod => {
             if (!hasUnlockedMod || this.scene.gameMode.isChaosMode) {
@@ -4204,20 +5015,20 @@ public getRandomBountyCode(): string {
     }
 
     private checkAndUnlockGameModes(): void {
-        if (this.gameStats.nuzlightSessionsWon >= 2 && !this.unlocks[Unlockables.NUZLIGHT_DRAFT_MODE]) {
+        if ((this.gameStats.nuzlightSessionsWon >= 2 || this.gameStats.chaosNuzlightSessionsWon >= 2 || this.gameStats.chaosNuzlightShortSessionsWon >= 2) && !this.unlocks[Unlockables.NUZLIGHT_DRAFT_MODE]) {
             this.unlocks[Unlockables.NUZLIGHT_DRAFT_MODE] = true;
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.NUZLIGHT_DRAFT_MODE, Species.NUZLEAF.toString(), true, UnlockModePokeSpriteType.NORMAL_INVERTED));
         }
 
-        if (this.gameStats.nuzlockeSessionsWon >= 2 && !this.unlocks[Unlockables.NUZLOCKE_DRAFT_MODE]) {
+        if ((this.gameStats.nuzlockeSessionsWon >= 2 || this.gameStats.chaosNuzlockeSessionsWon >= 2 || this.gameStats.chaosNuzlockeShortSessionsWon >= 2) && !this.unlocks[Unlockables.NUZLOCKE_DRAFT_MODE]) {
             this.unlocks[Unlockables.NUZLOCKE_DRAFT_MODE] = true;
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.NUZLOCKE_DRAFT_MODE, Species.SHIFTRY.toString(), true, UnlockModePokeSpriteType.NORMAL_INVERTED));
         }
 
         const journeyUnlocked = this.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED);
-        const chaosRogueBeaten = this.gameStats.chaosRogueSessionsWon >= 1;
-        const draftSessionsCondition = this.gameStats.draftSessionsWon >= 3;
-        
+        const chaosRogueBeaten = this.gameStats.chaosRogueSessionsWon >= 1 || this.gameStats.chaosRogueShortSessionsWon >= 1;
+        const draftSessionsCondition = this.gameStats.sessionsWon >= 3;
+
         if (journeyUnlocked && (chaosRogueBeaten || draftSessionsCondition) && !this.unlocks[Unlockables.CHAOS_JOURNEY_MODE]) {
             this.unlocks[Unlockables.CHAOS_JOURNEY_MODE] = true;
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.CHAOS_JOURNEY_MODE, Species.CATERPIE.toString(), true, UnlockModePokeSpriteType.NORMAL_INVERTED));
@@ -4233,7 +5044,7 @@ public getRandomBountyCode(): string {
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.CHAOS_ROGUE_VOID_MODE, Species.DARKRAI.toString(), true, UnlockModePokeSpriteType.NORMAL_INVERTED));
         }
 
-        if (this.gameStats.chaosRogueVoidSessionsWon >= 3 && !this.unlocks[Unlockables.CHAOS_INFINITE_MODE]) {
+        if (this.gameStats.chaosRogueVoidSessionsWon >= 2 && !this.unlocks[Unlockables.CHAOS_INFINITE_MODE]) {
             this.unlocks[Unlockables.CHAOS_INFINITE_MODE] = true;
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.CHAOS_INFINITE_MODE, Species.ARCEUS.toString(), true, UnlockModePokeSpriteType.NORMAL));
         }
@@ -4261,26 +5072,368 @@ public getRandomBountyCode(): string {
         const totalSessionsPlayed = this.gameStats.sessionsPlayed;
         return totalSessionsPlayed >= 1 && this.isBackupReminderTime();
     }
+
+    public getDisplayVersion(): string {
+        const baseVersion = i18next.t("menu:gameVersion") || this.scene.game.config.gameVersion;
+        return this.formatVersionWithInternal(baseVersion);
+    }
+
+    private formatVersionWithInternal(baseVersion: string): string {
+        return baseVersion.replace(/\.X/g, `.${INTERNAL_BACKUP_VERSION}`);
+    }
+
+    private shouldCreateVersionChangeBackup(): boolean {
+        return this.lastBackupVersion !== INTERNAL_BACKUP_VERSION;
+    }
+
+    private cleanupOldBackups(): void {
+        const username = loggedInUser?.username;
+        if (!username) {
+            return;
+        }
+
+        const currentVersion = INTERNAL_BACKUP_VERSION;
+        const previousVersion = currentVersion - 1;
+
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key?.startsWith(`data_removed_backup_`) && key.endsWith(`_${username}`)) {
+                keysToRemove.push(key);
+                continue;
+            }
+            if (key?.startsWith(`data_backup_`) && key.endsWith(`_${username}`)) {
+                const versionMatch = key.match(/data_backup_VERSION_(\d+)_/);
+                if (versionMatch) {
+                    const backupVersion = parseInt(versionMatch[1], 10);
+                    if (currentVersion === 1) {
+                        if (backupVersion !== 1) {
+                            keysToRemove.push(key);
+                        }
+                    } else {
+                        if (backupVersion !== currentVersion && backupVersion !== previousVersion) {
+                            keysToRemove.push(key);
+                        }
+                    }
+                } else {
+                    keysToRemove.push(key);
+                }
+            }
+        }
+
+        for (const key of keysToRemove) {
+            localStorage.removeItem(key);
+        }
+    }
+
+    private createVersionChangeBackup(): void {
+        const username = loggedInUser?.username;
+        if (!username) {
+            return;
+        }
+
+        const systemData = this.getSystemSaveData();
+        const systemDataStr = this.serializeBigInt(systemData);
+
+        const backupKey = `data_backup_VERSION_${INTERNAL_BACKUP_VERSION}_${username}`;
+
+        const backupData = {
+            data: systemDataStr,
+            timestamp: Date.now(),
+            version: this.getDisplayVersion(),
+            type: "VERSION_CHANGE",
+            backupVersion: INTERNAL_BACKUP_VERSION,
+            isCombined: false
+        };
+
+        try {
+            localStorage.setItem(backupKey, JSON.stringify(backupData));
+        } catch (e) {
+            if (e instanceof DOMException && e.name === 'QuotaExceededError') {
+                alert("Version backup failed: Storage quota exceeded. Consider exporting your save data manually.");
+                return;
+            }
+            throw e;
+        }
+
+        this.lastBackupVersion = INTERNAL_BACKUP_VERSION;
+    }
+
+    public checkAndCreateBackups(): void {
+        this.cleanupOldBackups();
+        if (this.shouldCreateVersionChangeBackup()) {
+            this.createVersionChangeBackup();
+        }
+        this.localSaveAll(this.scene);
+    }
+
+    public getAvailableBackups(): BackupInfo[] {
+        const backups: BackupInfo[] = [];
+        const username = loggedInUser?.username;
+
+        if (!username) {
+            return backups;
+        }
+
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key?.startsWith(`data_backup_`) && key.endsWith(`_${username}`)) {
+                const sanitizedVersion = key.replace(`data_backup_`, '').replace(`_${username}`, '');
+                try {
+                    const stored = localStorage.getItem(key);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        let displayName = '';
+                        const dateStr = new Date(parsed.timestamp || Date.now()).toLocaleDateString();
+
+                        if (parsed.type === 'DAILY_BACKUP') {
+                            displayName = `Daily Backup (${dateStr})`;
+                        } else if (parsed.type === 'VERSION_CHANGE') {
+                            displayName = `Version ${parsed.backupVersion || '?'} Backup (${dateStr})`;
+                        } else if (parsed.type === '10_DAY_BACKUP') {
+                            displayName = `Legacy Backup (${dateStr})`;
+                        } else {
+                            displayName = `${parsed.version || sanitizedVersion} (${dateStr})`;
+                        }
+
+                        backups.push({
+                            key: key,
+                            version: parsed.version || sanitizedVersion,
+                            sanitizedVersion: sanitizedVersion,
+                            timestamp: parsed.timestamp,
+                            displayName: displayName
+                        });
+                    }
+                } catch {
+                    backups.push({
+                        key: key,
+                        version: sanitizedVersion,
+                        sanitizedVersion: sanitizedVersion,
+                        displayName: sanitizedVersion
+                    });
+                }
+            }
+        }
+
+        backups.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        return backups;
+    }
+
+    public revertToBackup(backupInfo: BackupInfo): boolean {
+        const username = loggedInUser?.username;
+        if (!username) {
+            return false;
+        }
+
+        const backupKey = backupInfo.key;
+        const currentDataKey = `data_${username}`;
+
+        const backupStored = localStorage.getItem(backupKey);
+
+        if (!backupStored) {
+            return false;
+        }
+
+        try {
+            const parsed = JSON.parse(backupStored);
+            const backupData = parsed.data || backupStored;
+            const isCombined = parsed.isCombined || false;
+
+            if (isCombined) {
+                let combinedData: { systemData?: string } | null = null;
+                try {
+                    combinedData = JSON.parse(backupData);
+                } catch {
+                    combinedData = null;
+                }
+                if (combinedData && combinedData.systemData) {
+                    localStorage.setItem(currentDataKey, combinedData.systemData);
+                }
+            } else {
+                localStorage.setItem(currentDataKey, backupData);
+            }
+
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    public enqueueChampionLevelUp(championId: string, entry: ChampionLevelUpData): void {
+        if (!this.pendingChampionLevelUps) {
+            this.pendingChampionLevelUps = {} as Record<string, ChampionLevelUpData[]>;
+        }
+        if (!this.pendingChampionLevelUps[championId]) {
+            this.pendingChampionLevelUps[championId] = [] as ChampionLevelUpData[];
+        }
+        this.pendingChampionLevelUps[championId].push(entry);
+    }
+
+    public drainChampionLevelUps(scene: BattleScene, championId?: string): void {
+        if (!this.pendingChampionLevelUps) {
+            return;
+        }
+        const ids = championId ? [championId] : Object.keys(this.pendingChampionLevelUps);
+        for (const id of ids) {
+            const queue = this.pendingChampionLevelUps[id];
+            if (!queue || queue.length === 0) continue;
+            while (queue.length > 0) {
+                const _entry = queue.shift() as ChampionLevelUpData;
+                try {
+                    scene.unshiftPhase(new ChampionLevelUpPhase(scene, id, _entry.skill));
+                } catch (_) {  }
+            }
+        }
+    }
+
+    public getPermaCollectedTypeModifier(): any {
+        try {
+            const list = this.permaModifiers?.getModifiers?.() || [];
+            let perma = list.find((m: any) => m.constructor?.name === 'PermaCollectedTypeModifier');
+            if (!perma) {
+                const create = async () => {
+                    const modifiersModule = await import("../modifier/modifier");
+                    const modifierTypeModule = await import("../modifier/modifier-type");
+                    const permaType = new modifierTypeModule.PermaCollectedTypeModifierType();
+                    const mod = new modifiersModule.PermaCollectedTypeModifier(permaType);
+                    this.permaModifiers.addModifier(this.scene, mod, true);
+                    this.scene.ui.updatePermaModifierBar(this.permaModifiers);
+                    return mod;
+                };
+                (create() as any).catch(() => {});
+                perma = list.find((m: any) => m.constructor?.name === 'PermaCollectedTypeModifier');
+            }
+            return perma;
+        } catch { return undefined; }
+    }
+
+    public getEssenceCount(type: Type): number {
+        const perma: any = this.getPermaCollectedTypeModifier();
+        if (!perma) return 0;
+        try { return perma.getTypeCount?.(type) || (perma.collectedTypes?.[type] || 0); } catch { return 0; }
+    }
+
+    public getAllEssenceTotals(): Record<number, number> {
+        const perma: any = this.getPermaCollectedTypeModifier();
+        const out: Record<number, number> = {};
+        if (!perma || !perma.collectedTypes) return out;
+        try {
+            for (const k of Object.keys(perma.collectedTypes)) {
+                const t = parseInt(k);
+                const c = perma.collectedTypes[k];
+                if (typeof c === 'number' && c > 0) out[t] = c;
+            }
+        } catch {}
+        return out;
+    }
+
+    public addEssence(type: Type, amount: number): void {
+        if (amount <= 0) return;
+        const perma: any = this.getPermaCollectedTypeModifier();
+        if (!perma) return;
+        try {
+            perma.addCollected?.(type, amount);
+            this.scene.ui.updatePermaModifierBar(this.permaModifiers);
+            this.saveSystem?.();
+        } catch {}
+    }
+
+    public tryConsumeEssence(type: Type, amount: number = 1): boolean {
+        if (amount <= 0) return true;
+        const perma: any = this.getPermaCollectedTypeModifier();
+        if (!perma) return false;
+        const have = this.getEssenceCount(type);
+        if (have < amount) return false;
+        try {
+            const ok = perma.removeCollected?.(type, amount);
+            if (ok === false) return false;
+            this.scene.ui.updatePermaModifierBar(this.permaModifiers);
+            return true;
+        } catch { return false; }
+    }
+
+    private migrateGameMode(sessionData: SessionSaveData): GameModes {
+        const rawMode = sessionData.gameMode;
+
+        if (rawMode === undefined || rawMode === null) {
+            return GameModes.CLASSIC;
+        }
+
+        if (rawMode !== GameModes.SHOP) {
+            return rawMode;
+        }
+
+        const hasBattlePath = sessionData.battlePath !== null && sessionData.battlePath !== undefined;
+        const hasChaosRivals = (sessionData as any).chaosAltRivals && (sessionData as any).chaosAltRivals.length > 0;
+        const isChaosV2Save = sessionData.gameMechanicTracking &&
+            Object.values(sessionData.gameMechanicTracking).some(v =>
+                v === GameMechanicsVersion.CHAOS_V2 || v === "CHAOS_V2_BALANCE_IMPROVEMENTS"
+            );
+
+        const shouldMigrateToChaos = hasBattlePath && (isChaosV2Save || hasChaosRivals);
+
+        if (shouldMigrateToChaos) {
+            return this.inferChaosMode(sessionData);
+        }
+
+        return rawMode;
+    }
+
+    private inferChaosMode(sessionData: SessionSaveData): GameModes {
+        const totalWaves = sessionData.battlePath?.totalWaves;
+        const waveIndex = sessionData.waveIndex || 0;
+        const dynamicMode = sessionData.dynamicMode as any;
+        const isDraft = dynamicMode?.isDraft === true;
+        const isNuzlocke = dynamicMode?.isNuzlocke === true;
+        const isNuzlight = dynamicMode?.isNuzlight === true;
+        const isVoid = dynamicMode?.isChaosVoid === true;
+
+        let effectiveWaves = totalWaves;
+
+        if (totalWaves !== undefined && waveIndex > totalWaves) {
+            effectiveWaves = undefined;
+        }
+
+        if (effectiveWaves === undefined && waveIndex > 0) {
+            if (waveIndex <= 100) {
+                effectiveWaves = 100;
+            } else if (waveIndex <= 200) {
+                effectiveWaves = 200;
+            } else if (waveIndex <= 500) {
+                effectiveWaves = 500;
+            } else if (waveIndex <= 1000) {
+                effectiveWaves = 1000;
+            } else {
+                effectiveWaves = 100000;
+            }
+        }
+
+        if (effectiveWaves !== undefined) {
+            if (effectiveWaves <= 100) {
+                if (isVoid) return isDraft ? GameModes.CHAOS_ROGUE_VOID_FTL : GameModes.CHAOS_VOID_FTL;
+                if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_FTL : GameModes.CHAOS_NUZLOCKE_FTL;
+                if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_FTL : GameModes.CHAOS_NUZLIGHT_FTL;
+                return isDraft ? GameModes.CHAOS_ROGUE_FTL : GameModes.CHAOS_JOURNEY_FTL;
+            }
+            if (effectiveWaves <= 200) {
+                if (isVoid) return isDraft ? GameModes.CHAOS_ROGUE_VOID_SHORT : GameModes.CHAOS_VOID_SHORT;
+                if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT : GameModes.CHAOS_NUZLOCKE_SHORT;
+                if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT : GameModes.CHAOS_NUZLIGHT_SHORT;
+                return isDraft ? GameModes.CHAOS_ROGUE_SHORT : GameModes.CHAOS_JOURNEY_SHORT;
+            }
+            if (effectiveWaves <= 500) {
+                if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT : GameModes.CHAOS_NUZLOCKE;
+                if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT : GameModes.CHAOS_NUZLIGHT;
+                return isDraft ? GameModes.CHAOS_ROGUE : GameModes.CHAOS_JOURNEY;
+            }
+            if (effectiveWaves <= 1000) {
+                return isDraft ? GameModes.CHAOS_ROGUE_VOID : GameModes.CHAOS_VOID;
+            }
+        }
+
+        return isDraft ? GameModes.CHAOS_INFINITE_ROGUE : GameModes.CHAOS_INFINITE;
+    }
 }
-
-
-export enum RewardType {
-    GLITCH_FORM_A,
-    MODIFIER,
-    GAME_MODE,
-    UNLOCKABLE,
-    GLITCH_FORM_B,
-    GLITCH_FORM_C,
-    GLITCH_FORM_D,
-    GLITCH_FORM_E,
-    SMITTY_FORM,
-    SMITTY_FORM_B,
-    PERMA_MODIFIER,
-    PERMA_MONEY,
-    PERMA_MONEY_AND_MODIFIER,
-    NEW_MOVES_FOR_SPECIES
-}
-
 export interface QuestUnlockData {
     rewardType: RewardType;
     rewardId: Species | keyof typeof modifierTypes | GameModes | Species[] | QuestUnlockables;
@@ -4290,8 +5443,6 @@ export interface QuestUnlockData {
     questSpriteId?: string | Species | TrainerType;
     cloned?: boolean;
 }
-
-
 export enum QuestUnlockables {
     TAUROS_ELECTRIC_HIT_QUEST,
     KECLEON_COLOR_CHANGE_QUEST,
@@ -4411,8 +5562,6 @@ export enum QuestUnlockables {
     SUNFLORA_NIGHTMARE_QUEST,
     DODRIO_NIGHTMARE_QUEST,
     LANTURN_NIGHTMARE_QUEST,
-
-    // RIVAL BOUNTY QUESTS
     BLUE_BOUNTY_QUEST,
     LANCE_BOUNTY_QUEST,
     CYNTHIA_BOUNTY_QUEST,
@@ -4436,7 +5585,7 @@ export enum QuestUnlockables {
     GUZMA_BOUNTY_QUEST,
     LUSAMINE_BOUNTY_QUEST,
     NEMONA_BOUNTY_QUEST,
-    // OLYMPIA_BOUNTY_QUEST,
+
     NORMAN_BOUNTY_QUEST,
     ALLISTER_BOUNTY_QUEST,
     IRIS_BOUNTY_QUEST,
@@ -4673,11 +5822,6 @@ export const rivalQuestMap: Partial<Record<RivalTrainerType, QuestUnlockables[]>
         QuestUnlockables.ELECTIVIREMAGMORTAR_WIN_QUEST,
         QuestUnlockables.MILTANK_STEEL_MOVE_KNOCKOUT_QUEST,
     ],
-    // [TrainerType.OLYMPIA]: [
-    //     QuestUnlockables.PORYGON_Z_ANALYTIC_USE_QUEST,
-    //     QuestUnlockables.CLAYDOL_POISON_QUEST,
-    //     QuestUnlockables.KECLEON_COLOR_CHANGE_QUEST,
-    // ],
     [TrainerType.NORMAN]: [
         QuestUnlockables.SLAKING_RIVAL_DEFEAT_QUEST,
         QuestUnlockables.SPINDA_CONFUSION_RECOVERY_QUEST,
@@ -4740,7 +5884,7 @@ export const rivalStageTwoQuestMap: Partial<Record<RivalTrainerType, QuestUnlock
         QuestUnlockables.FARIGIRAF_NIGHTMARE_QUEST,
     ],
     [TrainerType.LT_SURGE]: [
-        QuestUnlockables.ELECTIVIREMAGMORTAR_WIN_QUEST, // No change as stage 1 is sufficient
+        QuestUnlockables.ELECTIVIREMAGMORTAR_WIN_QUEST,
     ],
     [TrainerType.HAU]: [
         QuestUnlockables.BULBASAUR_TERROR_QUEST,
@@ -4789,9 +5933,6 @@ export const rivalStageTwoQuestMap: Partial<Record<RivalTrainerType, QuestUnlock
     [TrainerType.NEMONA]: [
         QuestUnlockables.OCTILLERY_NIGHTMARE_QUEST,
     ],
-    // [TrainerType.OLYMPIA]: [
-    //     QuestUnlockables.CLEFABLE_GENGAR_QUEST,
-    // ],
     [TrainerType.NORMAN]: [
         QuestUnlockables.LICKITUNG_HYPER_WAVE_QUEST,
     ],
@@ -4803,14 +5944,12 @@ export const rivalStageTwoQuestMap: Partial<Record<RivalTrainerType, QuestUnlock
         QuestUnlockables.CHARMANDER_NIGHTMARE_WIN_QUEST,
     ],
     [TrainerType.ROXIE]: [
-        QuestUnlockables.MUK_RED_DEFEAT_QUEST, // No change as stage 1 is sufficient
+        QuestUnlockables.MUK_RED_DEFEAT_QUEST,
     ],
     [TrainerType.SABRINA]: [
         QuestUnlockables.HYPNO_NIGHTMARE_QUEST,
     ],
 };
-
-
 function getAllQuestsForRival(rivalType: RivalTrainerType, gameData: GameData): QuestUnlockables[] {
     const baseQuests = rivalQuestMap[rivalType] || [];
     const stageTwo = gameData.unlocks[Unlockables.NIGHTMARE_MODE] ?

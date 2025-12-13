@@ -1,0 +1,295 @@
+{
+  "onix_crystal_leviathan": {
+    "name": "アタックスネーク",
+    "description": "高速オフェンスのイワーク"
+  },
+  "onix_stone_defender": {
+    "name": "ストーンディフェンダー",
+    "description": "防御特化のイワーク"
+  },
+  "geodude_tank_mode": {
+    "name": "タンクモード",
+    "description": "超防御のイシツブテ"
+  },
+  "geodude_speed_form": {
+    "name": "スピードフォーム",
+    "description": "高速電気のイシツブテ"
+  },
+  "rhyhorn_rampage": {
+    "name": "暴走",
+    "description": "攻撃的な格闘のサイホーン"
+  },
+  "onix_brock_signature": {
+    "name": "タケシの相棒",
+    "description": "タケシの信頼できる岩タイプの相棒"
+  },
+  "geodude_brock_signature": {
+    "name": "タケシの相棒",
+    "description": "タケシの忠実な岩タイプの相棒"
+  },
+  "staryu_misty_signature": {
+    "name": "カスミの相棒",
+    "description": "カスミの優雅な水タイプの相棒"
+  },
+  "psyduck_misty_signature": {
+    "name": "カスミの相棒",
+    "description": "カスミの風変わりな水タイプの相棒"
+  },
+  "voltorb_surge_signature": {
+    "name": "マチスの相棒",
+    "description": "マチスの電撃的な電気タイプの相棒"
+  },
+  "pikachu_surge_signature": {
+    "name": "マチスの相棒",
+    "description": "マチスの強力な電気タイプの相棒"
+  },
+  "electabuzz_surge_signature": {
+    "name": "マチスの相棒",
+    "description": "マチスの衝撃的な電気タイプの相棒"
+  },
+  "magikarp_misty_signature": {
+    "name": "カスミの相棒",
+    "description": "カスミの決意溢れる水タイプの相棒"
+  },
+  "poliwag_misty_signature": {
+    "name": "カスミの相棒",
+    "description": "カスミの元気な水タイプの相棒"
+  },
+  "azurill_misty_signature": {
+    "name": "カスミの相棒",
+    "description": "カスミの愛らしい水タイプの相棒"
+  },
+  "goldeen_misty_signature": {
+    "name": "カスミの相棒",
+    "description": "カスミの優雅な水タイプの相棒"
+  },
+  "horsea_misty_signature": {
+    "name": "カスミの相棒",
+    "description": "カスミの忠実な水タイプの相棒"
+  },
+  "togepi_misty_signature": {
+    "name": "カスミの相棒",
+    "description": "カスミの大切なフェアリータイプの相棒"
+  },
+  "corsola_misty_signature": {
+    "name": "カスミの相棒",
+    "description": "カスミの陽気な水タイプの相棒"
+  },
+  "luvdisc_misty_signature": {
+    "name": "カスミの相棒",
+    "description": "カスミの心温まる水タイプの相棒"
+  },
+  "clauncher_misty_signature": {
+    "name": "カスミの相棒",
+    "description": "カスミの強力な水タイプの相棒"
+  },
+  "staryu_chronos_gear": {
+    "name": "クロノスギア",
+    "description": "時間のエネルギーが宿った鋼/水タイプのヒトデマン。防御精度と雨に恵まれた回復力を持つ"
+  },
+  "magikarp_splash_tyrant": {
+    "name": "スプラッシュタイラント",
+    "description": "弱さを超越した水/格闘タイプのコイキング。根性ある決意と威圧的な力を体現"
+  },
+  "psyduck_kappa_quack": {
+    "name": "カッパクワック",
+    "description": "神秘的ないたずらを操る水/ゴーストタイプのコダック。影縛りの能力と霊的な混乱"
+  },
+  "poliwag_lightning_drum": {
+    "name": "ライトニングドラム",
+    "description": "電気化されたエネルギーで脈打つ電気/水タイプのニョロモ。素早い流れと再生活力"
+  },
+  "azurill_bounce_champion": {
+    "name": "バウンスチャンピオン",
+    "description": "エアリレートの優雅さで舞う飛行/フェアリータイプのルリリ。ピクシレートの力とチャンピオン級の跳躍力"
+  },
+  "goldeen_piercing_stinger": {
+    "name": "ピアシングスティンガー",
+    "description": "貫通攻撃を備えた水/虫タイプのトサキント。テクニシャンの精度とスナイパーの正確さ"
+  },
+  "horsea_fireball_seahorse": {
+    "name": "ファイアボールシーホース",
+    "description": "フラッシュファイアの激しさで燃える炎/水タイプのタッツー。日照りの熱と灼熱の決意"
+  },
+  "togepi_eggshell_fortress": {
+    "name": "エッグシェルフォートレス",
+    "description": "セレーングレースで強化されたノーマル/岩タイプのトゲピー。ソリッドロックの防御と戦いで鍛えられた装甲"
+  },
+  "corsola_toxic_coral": {
+    "name": "トキシックコーラル",
+    "description": "ポイズンヒールで繁栄する毒/水タイプのサニーゴ。無慈悲な攻撃と毒デブリの保護"
+  },
+  "luvdisc_heartbreaker": {
+    "name": "ハートブレイカー",
+    "description": "ダークオーラで心を砕く悪/水タイプのラブカス。いたずらごころとすいすいの回避"
+  },
+  "clauncher_buster_dragon_blaster": {
+    "name": "バスタードラゴンブラスター",
+    "description": "ドラゴンの顎の獰猛さで武装した水/ドラゴンタイプのウデッポウ。メガランチャーの射程とちからずくの破壊力"
+  },
+  "vulpix_brock_signature": {
+    "name": "タケシの相棒",
+    "description": "タケシの神秘的な炎タイプの相棒"
+  },
+  "zubat_brock_signature": {
+    "name": "タケシの相棒",
+    "description": "タケシの素早い毒タイプの相棒"
+  },
+  "bonsly_brock_signature": {
+    "name": "タケシの相棒",
+    "description": "タケシの頑強な岩タイプの相棒"
+  },
+  "mudkip_brock_signature": {
+    "name": "タケシの相棒",
+    "description": "タケシの堅実な水タイプの相棒"
+  },
+  "pineco_brock_signature": {
+    "name": "タケシの相棒",
+    "description": "タケシの防御的な虫タイプの相棒"
+  },
+  "croagunk_brock_signature": {
+    "name": "タケシの相棒",
+    "description": "タケシの策略家な毒タイプの相棒"
+  },
+  "happiny_brock_signature": {
+    "name": "タケシの相棒",
+    "description": "タケシの思いやりのあるノーマルタイプの相棒"
+  },
+  "lotad_brock_signature": {
+    "name": "タケシの相棒",
+    "description": "タケシの穏やかな水タイプの相棒"
+  },
+  "comfey_brock_signature": {
+    "name": "タケシの相棒",
+    "description": "タケシの優しいフェアリータイプの相棒"
+  },
+  "geodude_phantom_fist": {
+    "name": "ファントムフィスト",
+    "description": "幽霊のシャドータグを操る岩/ゴーストタイプのイシツブテ。かたいツメとてつのこぶしの技、浮遊の優雅さ"
+  },
+  "vulpix_flaming_forest_spirit": {
+    "name": "フレイミングフォレストスピリット",
+    "description": "森の精霊を体現する炎/草タイプのロコン。日照りを呼ぶ炎、くさのけがわの保護、ようりょくその活力"
+  },
+  "zubat_vampiric_fiend": {
+    "name": "ヴァンパイリックフィーンド",
+    "description": "吸血鬼のじしんかじょうを操る悪/ゴーストタイプのズバット。のろわれボディの恐怖とがんじょうあごの獰猛さ"
+  },
+  "bonsly_tear_drop": {
+    "name": "ティアドロップ",
+    "description": "スキルリンクの精度で流れる岩/水タイプのウソハチ。みずがための回復力と再生の涙"
+  },
+  "mudkip_stone_skinned_salamander": {
+    "name": "ストーンスキンドサラマンダー",
+    "description": "石の皮膚の防御で武装した水/岩タイプのミズゴロウ。フィルターの保護とげきりゅうの力"
+  },
+  "pineco_iron_plated_grenade": {
+    "name": "アイアンプレーテッドグレネード",
+    "description": "ゆうばくの爆発力を持つ炎/鋼タイプのクヌギダマ。ほのおのからだの激しさとてつのとげの報復"
+  },
+  "croagunk_jester_of_pestilence": {
+    "name": "ジェスターオブペスティレンス",
+    "description": "ピクシレートの腐食を広げる毒/フェアリータイプのグレッグル。かがくへんかガスとわざわいのおふだの混沌"
+  },
+  "happiny_pink_fortress": {
+    "name": "ピンクフォートレス",
+    "description": "フレンドガードのサポートで強化されたノーマル/フェアリータイプのピンプク。いやしのこころの思いやりとしぜんかいふくの回復"
+  },
+  "lotad_shadow_lily": {
+    "name": "シャドウリリー",
+    "description": "あめうけざらの維持で漂う水/ゴーストタイプのハスボー。かげふみの束縛とちょすいの回復力"
+  },
+  "comfey_aqua_bloom": {
+    "name": "アクアブルーム",
+    "description": "あめふらしの育成で咲く草/水タイプのキュワワー。すいほうの保護とこぼれダネの活力"
+  },
+  "riolu_apollo_diana_signature": {
+    "name": "アポロ＆ダイアナの相棒",
+    "description": "アポロ＆ダイアナの勇敢な格闘タイプの相棒"
+  },
+  "solrock_apollo_diana_signature": {
+    "name": "アポロ＆ダイアナの相棒",
+    "description": "アポロ＆ダイアナの輝く岩タイプの相棒"
+  },
+  "lunatone_apollo_diana_signature": {
+    "name": "アポロ＆ダイアナの相棒",
+    "description": "アポロ＆ダイアナの神秘的な岩タイプの相棒"
+  },
+  "larvesta_apollo_diana_signature": {
+    "name": "アポロ＆ダイアナの相棒",
+    "description": "アポロ＆ダイアナの燃え盛る虫タイプの相棒"
+  },
+  "swablu_apollo_diana_signature": {
+    "name": "アポロ＆ダイアナの相棒",
+    "description": "アポロ＆ダイアナのふわふわなノーマルタイプの相棒"
+  },
+  "castform_apollo_diana_signature": {
+    "name": "アポロ＆ダイアナの相棒",
+    "description": "アポロ＆ダイアナの適応力のあるノーマルタイプの相棒"
+  },
+  "litwick_apollo_diana_signature": {
+    "name": "アポロ＆ダイアナの相棒",
+    "description": "アポロ＆ダイアナの揺らめくゴーストタイプの相棒"
+  },
+  "eevee_apollo_diana_signature": {
+    "name": "アポロ＆ダイアナの相棒",
+    "description": "アポロ＆ダイアナの多才なノーマルタイプの相棒"
+  },
+  "teddiursa_apollo_diana_signature": {
+    "name": "アポロ＆ダイアナの相棒",
+    "description": "アポロ＆ダイアナの抱きしめたくなるノーマルタイプの相棒"
+  },
+  "cleffa_apollo_diana_signature": {
+    "name": "アポロ＆ダイアナの相棒",
+    "description": "アポロ＆ダイアナの星のようなフェアリータイプの相棒"
+  },
+  "sunkern_apollo_diana_signature": {
+    "name": "アポロ＆ダイアナの相棒",
+    "description": "アポロ＆ダイアナの希望に満ちた草タイプの相棒"
+  },
+  "riolu_shadow_warrior": {
+    "name": "シャドウウォリアー",
+    "description": "影の戦闘を極めたゴースト/格闘タイプのリオル。じしんかじょうの攻撃性、てきおうりょく、いかくの存在感"
+  },
+  "solrock_void_constellation": {
+    "name": "ヴォイドコンステレーション",
+    "description": "虚無のエネルギーを放射する岩/悪タイプのソルロック。サンパワーの激しさ、ふゆうの優雅さ、ダークオーラの支配"
+  },
+  "lunatone_dream_weaver": {
+    "name": "ドリームウィーバー",
+    "description": "夢を紡ぐ岩/エスパータイプのルナトーン。ふゆうの神秘、むらっけの気質、マジックガードの保護"
+  },
+  "larvesta_toxic_spinner": {
+    "name": "トキシックスピナー",
+    "description": "毒の糸を紡ぐ虫/毒タイプのメラルバ。どくのくさりの苦悶、さめはだの防御、ふしょくのマスタリー"
+  },
+  "swablu_frost_nimbus": {
+    "name": "フロストニンバス",
+    "description": "霜をまとった雲に漂う氷/飛行タイプのチルット。もふもふの防御、フリーズスキンの力、ゆきふらしの支配"
+  },
+  "castform_dust_devil": {
+    "name": "ダストデビル",
+    "description": "砂嵐の悪魔として渦巻く岩/地面タイプのポワルン。すなおこしの混沌、よびみずの吸収、さめはだの根性"
+  },
+  "litwick_wyrmflame": {
+    "name": "ワームフレイム",
+    "description": "竜の炎で燃える炎/ドラゴンタイプのヒトモシ。ドラゴンの顎の獰猛さ、もらいびの激しさ、ふゆうの神秘"
+  },
+  "eevee_untamed_spirit": {
+    "name": "アンテイムドスピリット",
+    "description": "野生のポテンシャルを体現するノーマル/ノーマルタイプのイーブイ。きょううんの幸運、てんのめぐみ、プリズムアーマーの保護"
+  },
+  "teddiursa_sweet_tooth": {
+    "name": "スイートトゥース",
+    "description": "蜜のように甘い力に耽るフェアリー/フェアリータイプのヒメグマ。ちからもちの強さ、ミストメイカーの魔法、しゅうかくの恵み"
+  },
+  "cleffa_meteoric_core": {
+    "name": "メテオリックコア",
+    "description": "隕石のエッセンスから鍛えられたフェアリー/鋼タイプのピィ。ほのおのからだの熱、マジックガードの保護、がんじょうの回復力"
+  },
+  "sunkern_plasma_sprout": {
+    "name": "プラズマスプラウト",
+    "description": "プラズマエネルギーで弾ける電気/草タイプのヒマナッツ。エレキスキンの変換、サンパワーの激しさ、エレキメイカーの支配"
+  },
+  "championPartner": "{{champion}}のパートナー"
+}

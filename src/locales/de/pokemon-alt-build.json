@@ -1,0 +1,295 @@
+{
+  "onix_crystal_leviathan": {
+    "name": "Kristall-Leviathan",
+    "description": "Defensiver Eis/Gestein Onix-Build mit hohen KP und Spezial-Verteidigung"
+  },
+  "onix_stone_defender": {
+    "name": "Stein-Verteidiger",
+    "description": "Tank-fokussierter defensiver Onix-Build"
+  },
+  "geodude_tank_mode": {
+    "name": "Tank-Modus",
+    "description": "Ultra-defensiver Kleinstein-Build"
+  },
+  "geodude_speed_form": {
+    "name": "Tempo-Form",
+    "description": "Hochgeschwindigkeits-Elektro-Kleinstein-Build"
+  },
+  "rhyhorn_rampage": {
+    "name": "Amoklauf",
+    "description": "Aggressiver Kampf-Rihorn-Build"
+  },
+  "onix_brock_signature": {
+    "name": "Rockos Partner",
+    "description": "Rockos vertrauenswürdiger Signatur-Gesteins-Typ-Begleiter"
+  },
+  "geodude_brock_signature": {
+    "name": "Rockos Partner",
+    "description": "Rockos treuer Signatur-Gesteins-Typ-Begleiter"
+  },
+  "staryu_misty_signature": {
+    "name": "Mistys Partner",
+    "description": "Mistys anmutiger Signatur-Wasser-Typ-Begleiter"
+  },
+  "psyduck_misty_signature": {
+    "name": "Mistys Partner",
+    "description": "Mistys eigenwilliger Signatur-Wasser-Typ-Begleiter"
+  },
+  "voltorb_surge_signature": {
+    "name": "Major Bobs Partner",
+    "description": "Major Bobs elektrisierender Signatur-Elektro-Typ-Begleiter"
+  },
+  "pikachu_surge_signature": {
+    "name": "Major Bobs Partner",
+    "description": "Major Bobs mächtiger Signatur-Elektro-Typ-Begleiter"
+  },
+  "electabuzz_surge_signature": {
+    "name": "Major Bobs Partner",
+    "description": "Major Bobs schockierender Signatur-Elektro-Typ-Begleiter"
+  },
+  "magikarp_misty_signature": {
+    "name": "Mistys Partner",
+    "description": "Mistys entschlossener Signatur-Wasser-Typ-Begleiter"
+  },
+  "poliwag_misty_signature": {
+    "name": "Mistys Partner",
+    "description": "Mistys temperamentvoller Signatur-Wasser-Typ-Begleiter"
+  },
+  "azurill_misty_signature": {
+    "name": "Mistys Partner",
+    "description": "Mistys entzückender Signatur-Wasser-Typ-Begleiter"
+  },
+  "goldeen_misty_signature": {
+    "name": "Mistys Partner",
+    "description": "Mistys eleganter Signatur-Wasser-Typ-Begleiter"
+  },
+  "horsea_misty_signature": {
+    "name": "Mistys Partner",
+    "description": "Mistys loyaler Signatur-Wasser-Typ-Begleiter"
+  },
+  "togepi_misty_signature": {
+    "name": "Mistys Partner",
+    "description": "Mistys kostbarer Signatur-Fee-Typ-Begleiter"
+  },
+  "corsola_misty_signature": {
+    "name": "Mistys Partner",
+    "description": "Mistys fröhlicher Signatur-Wasser-Typ-Begleiter"
+  },
+  "luvdisc_misty_signature": {
+    "name": "Mistys Partner",
+    "description": "Mistys herzlicher Signatur-Wasser-Typ-Begleiter"
+  },
+  "clauncher_misty_signature": {
+    "name": "Mistys Partner",
+    "description": "Mistys kraftvoller Signatur-Wasser-Typ-Begleiter"
+  },
+  "staryu_chronos_gear": {
+    "name": "Chronos-Getriebe",
+    "description": "Ein Stahl/Wasser Sterndu durchdrungen von temporaler Energie, mit defensiver Präzision und regen-gesegneter Widerstandskraft"
+  },
+  "magikarp_splash_tyrant": {
+    "name": "Platscher-Tyrann",
+    "description": "Ein Wasser/Kampf Karpador, das Schwäche überwunden hat, verkörpert kampflustige Entschlossenheit und einschüchternde Macht"
+  },
+  "psyduck_kappa_quack": {
+    "name": "Kappa-Quak",
+    "description": "Ein Wasser/Geist Enton, das mystischen Unfug kanalisiert mit schattenbindenden Fähigkeiten und ätherischer Verwirrung"
+  },
+  "poliwag_lightning_drum": {
+    "name": "Blitz-Trommel",
+    "description": "Ein Elektro/Wasser Quapsel pulsierend mit galvanisierter Energie, schnellen Strömungen und regenerativer Vitalität"
+  },
+  "azurill_bounce_champion": {
+    "name": "Sprung-Champion",
+    "description": "Ein Flug/Fee Azurill schwebend mit Aerilate-Anmut, Pixilate-Kraft und Champion-Level Sprungkraft"
+  },
+  "goldeen_piercing_stinger": {
+    "name": "Durchbohrender Stachel",
+    "description": "Ein Wasser/Käfer Goldini ausgestattet mit durchdringenden Attacken, Techniker-Präzision und Scharfschützen-Genauigkeit"
+  },
+  "horsea_fireball_seahorse": {
+    "name": "Feuerball-Seepferdchen",
+    "description": "Ein Feuer/Wasser Seeper brennend mit Feuerfänger-Intensität, dürrebringender Hitze und glühender Entschlossenheit"
+  },
+  "togepi_eggshell_fortress": {
+    "name": "Eierschalen-Festung",
+    "description": "Ein Normal/Gestein Togepi befestigt mit Edelmut, Felskern-Verteidigung und kampfgestählter Rüstung"
+  },
+  "corsola_toxic_coral": {
+    "name": "Gift-Koralle",
+    "description": "Ein Gift/Wasser Corasonn gedeihend durch Giftheilung, gnadenlose Schläge und toxischen Trümmerschutz"
+  },
+  "luvdisc_heartbreaker": {
+    "name": "Herzensbrecher",
+    "description": "Ein Unlicht/Wasser Liebiskus, das Herzschmerz verbreitet mit dunkler Aura, Strolch-Tricks und Wassertempo-Ausweichung"
+  },
+  "clauncher_buster_dragon_blaster": {
+    "name": "Buster-Drachen-Blaster",
+    "description": "Ein Wasser/Drache Scampisto bewaffnet mit Drachenschlund-Wildheit, Megawerfer-Reichweite und Rohe-Gewalt-Verwüstung"
+  },
+  "vulpix_brock_signature": {
+    "name": "Rockos Partner",
+    "description": "Rockos mystischer Signatur-Feuer-Typ-Begleiter"
+  },
+  "zubat_brock_signature": {
+    "name": "Rockos Partner",
+    "description": "Rockos flinker Signatur-Gift-Typ-Begleiter"
+  },
+  "bonsly_brock_signature": {
+    "name": "Rockos Partner",
+    "description": "Rockos widerstandsfähiger Signatur-Gesteins-Typ-Begleiter"
+  },
+  "mudkip_brock_signature": {
+    "name": "Rockos Partner",
+    "description": "Rockos robuster Signatur-Wasser-Typ-Begleiter"
+  },
+  "pineco_brock_signature": {
+    "name": "Rockos Partner",
+    "description": "Rockos defensiver Signatur-Käfer-Typ-Begleiter"
+  },
+  "croagunk_brock_signature": {
+    "name": "Rockos Partner",
+    "description": "Rockos gerissener Signatur-Gift-Typ-Begleiter"
+  },
+  "happiny_brock_signature": {
+    "name": "Rockos Partner",
+    "description": "Rockos fürsorglicher Signatur-Normal-Typ-Begleiter"
+  },
+  "lotad_brock_signature": {
+    "name": "Rockos Partner",
+    "description": "Rockos ruhiger Signatur-Wasser-Typ-Begleiter"
+  },
+  "comfey_brock_signature": {
+    "name": "Rockos Partner",
+    "description": "Rockos sanfter Signatur-Fee-Typ-Begleiter"
+  },
+  "geodude_phantom_fist": {
+    "name": "Phantom-Faust",
+    "description": "Ein Gestein/Geist Kleinstein mit spektralem Wegsperre, Krallenwucht und Eisenfaust-Techniken mit schwebender Anmut"
+  },
+  "vulpix_flaming_forest_spirit": {
+    "name": "Flammender Waldgeist",
+    "description": "Ein Feuer/Pflanze Vulpix, das Waldgeister verkörpert mit dürrebeschwörenden Flammen, Grasfell-Schutz und Chlorophyll-Vitalität"
+  },
+  "zubat_vampiric_fiend": {
+    "name": "Vampirischer Unhold",
+    "description": "Ein Unlicht/Geist Zubat, das vampirische Hochmut kanalisiert, Verfluchter-Körper-Terror und Starke-Kiefer-Wildheit"
+  },
+  "bonsly_tear_drop": {
+    "name": "Tränentropfen",
+    "description": "Ein Gestein/Wasser Mobai fließend mit Wertelink-Präzision, Wasserverdichtung-Widerstandskraft und regenerativen Tränen"
+  },
+  "mudkip_stone_skinned_salamander": {
+    "name": "Steinhaut-Salamander",
+    "description": "Ein Wasser/Gestein Hydropi gepanzert mit Steinhaut-Verteidigung, Filter-Schutz und Sturzbach-Kraft"
+  },
+  "pineco_iron_plated_grenade": {
+    "name": "Eisenplattierte Granate",
+    "description": "Ein Feuer/Stahl Tannza explosiv mit Finalschlag-Detonation, Flammkörper-Intensität und Eisenstachel-Vergeltung"
+  },
+  "croagunk_jester_of_pestilence": {
+    "name": "Narr der Pestilenz",
+    "description": "Ein Gift/Fee Glibunkel, das pixilierte Korrosion verbreitet, neutralisierendes Gas und Tafeln-des-Ruins-Chaos"
+  },
+  "happiny_pink_fortress": {
+    "name": "Rosa Festung",
+    "description": "Ein Normal/Fee Wonneira befestigt mit Freundeshut-Unterstützung, Heiler-Mitgefühl und Innere-Kraft-Erholung"
+  },
+  "lotad_shadow_lily": {
+    "name": "Schatten-Lilie",
+    "description": "Ein Wasser/Geist Loturzel treibend mit Regenschale-Erhaltung, Wegsperre-Bindung und H2O-Absorber-Widerstandskraft"
+  },
+  "comfey_aqua_bloom": {
+    "name": "Aqua-Blüte",
+    "description": "Ein Pflanze/Wasser Curelei blühend mit Niesel-Pflege, Wasserblase-Schutz und Samenstreuer-Vitalität"
+  },
+  "riolu_apollo_diana_signature": {
+    "name": "Apollo & Dianas Partner",
+    "description": "Apollo & Dianas tapferer Signatur-Kampf-Typ-Begleiter"
+  },
+  "solrock_apollo_diana_signature": {
+    "name": "Apollo & Dianas Partner",
+    "description": "Apollo & Dianas strahlender Signatur-Gesteins-Typ-Begleiter"
+  },
+  "lunatone_apollo_diana_signature": {
+    "name": "Apollo & Dianas Partner",
+    "description": "Apollo & Dianas mystischer Signatur-Gesteins-Typ-Begleiter"
+  },
+  "larvesta_apollo_diana_signature": {
+    "name": "Apollo & Dianas Partner",
+    "description": "Apollo & Dianas lodernder Signatur-Käfer-Typ-Begleiter"
+  },
+  "swablu_apollo_diana_signature": {
+    "name": "Apollo & Dianas Partner",
+    "description": "Apollo & Dianas flauschiger Signatur-Normal-Typ-Begleiter"
+  },
+  "castform_apollo_diana_signature": {
+    "name": "Apollo & Dianas Partner",
+    "description": "Apollo & Dianas anpassungsfähiger Signatur-Normal-Typ-Begleiter"
+  },
+  "litwick_apollo_diana_signature": {
+    "name": "Apollo & Dianas Partner",
+    "description": "Apollo & Dianas flackernder Signatur-Geist-Typ-Begleiter"
+  },
+  "eevee_apollo_diana_signature": {
+    "name": "Apollo & Dianas Partner",
+    "description": "Apollo & Dianas vielseitiger Signatur-Normal-Typ-Begleiter"
+  },
+  "teddiursa_apollo_diana_signature": {
+    "name": "Apollo & Dianas Partner",
+    "description": "Apollo & Dianas knuddeliger Signatur-Normal-Typ-Begleiter"
+  },
+  "cleffa_apollo_diana_signature": {
+    "name": "Apollo & Dianas Partner",
+    "description": "Apollo & Dianas sternenhafter Signatur-Fee-Typ-Begleiter"
+  },
+  "sunkern_apollo_diana_signature": {
+    "name": "Apollo & Dianas Partner",
+    "description": "Apollo & Dianas hoffnungsvoller Signatur-Pflanze-Typ-Begleiter"
+  },
+  "riolu_shadow_warrior": {
+    "name": "Schatten-Krieger",
+    "description": "Ein Geist/Kampf Riolu, das Schattenkampf meistert mit Hochmut-Aggression, Anpassung und einschüchternder Präsenz"
+  },
+  "solrock_void_constellation": {
+    "name": "Leere-Konstellation",
+    "description": "Ein Gestein/Unlicht Sonnfel, das Leere-Energie ausstrahlt mit Solarkraft-Intensität, Schwebe-Anmut und Dunkle-Aura-Dominanz"
+  },
+  "lunatone_dream_weaver": {
+    "name": "Traum-Weber",
+    "description": "Ein Gestein/Psycho Lunastein, das Träume webt mit Schwebe-Mysterium, Gefühlswippe-Temperament und Magieschild-Schutz"
+  },
+  "larvesta_toxic_spinner": {
+    "name": "Gift-Spinner",
+    "description": "Ein Käfer/Gift Ignivor, das giftige Netze spinnt mit Giftkette-Affliction, Rauhaut-Verteidigung und Korrosion-Meisterschaft"
+  },
+  "swablu_frost_nimbus": {
+    "name": "Frost-Nimbus",
+    "description": "Ein Eis/Flug Wablu treibend auf frostbeladenen Wolken mit Flauschigkeit-Verteidigung, Kühlhaut-Kraft und Hagelalarm-Herrschaft"
+  },
+  "castform_dust_devil": {
+    "name": "Staubteufel",
+    "description": "Ein Gestein/Boden Formeo wirbelnd als Staubteufel mit Sandsturm-Chaos, Sturmsog-Absorption und Rauhaut-Körnung"
+  },
+  "litwick_wyrmflame": {
+    "name": "Wyrmflamme",
+    "description": "Ein Feuer/Drache Lichtel brennend mit Wyrmflammen-Wut, Drachenschlund-Wildheit, Feuerfänger-Intensität und Schwebe-Mystik"
+  },
+  "eevee_untamed_spirit": {
+    "name": "Ungezähmter Geist",
+    "description": "Ein Normal/Normal Evoli, das ungezähmtes Potenzial verkörpert mit Glückspilz-Glück, Edelmut und Prismarüstung-Schutz"
+  },
+  "teddiursa_sweet_tooth": {
+    "name": "Naschkatze",
+    "description": "Ein Fee/Fee Teddiursa schwelgend in honigsüßer Kraft mit Kraftkoloss-Stärke, Nebel-Feld-Magie und Reiche-Ernte-Fülle"
+  },
+  "cleffa_meteoric_core": {
+    "name": "Meteorischer Kern",
+    "description": "Ein Fee/Stahl Pii geschmiedet aus meteorischer Essenz mit Flammkörper-Hitze, Magieschild-Schutz und Felskern-Widerstandskraft"
+  },
+  "sunkern_plasma_sprout": {
+    "name": "Plasma-Spross",
+    "description": "Ein Elektro/Pflanze Sonnkern knisternd mit Plasma-Energie, Galvanisierung-Umwandlung, Solarkraft-Intensität und Elektro-Feld-Dominanz"
+  },
+  "championPartner": "{{champion}}s Partner"
+}

@@ -34,8 +34,6 @@ export class DropDownLabel {
     this.state = state;
   }
 }
-
-
 export class DropDownOption extends Phaser.GameObjects.Container {
   public state: DropDownState = DropDownState.ON;
   public toggle: Phaser.GameObjects.Sprite;
@@ -65,8 +63,6 @@ export class DropDownOption extends Phaser.GameObjects.Container {
     this.text = addTextObject(scene, 0, 0, currentLabel.text || "", TextStyle.TOOLTIP_CONTENT);
     this.text.setOrigin(0, 0.5);
     this.add(this.text);
-
-    // Add to container the sprite for each label if there is one
     for (let i=0; i < this.labels.length; i++) {
       const sprite = this.labels[i].sprite;
       if (sprite) {
@@ -78,14 +74,6 @@ export class DropDownOption extends Phaser.GameObjects.Container {
       }
     }
   }
-
-  /**
-   * Initialize the toggle icon based on the provided DropDownType
-   * For DropDownType.SINGLE: uses a cursor arrow icon
-   * For other types: uses a candy icon
-   * @param type the DropDownType to use
-   * @param visible whether the icon should be visible or not
-   */
   setupToggleIcon(type: DropDownType, visible: boolean): void {
     if (type === DropDownType.SINGLE) {
       this.toggle = this.scene.add.sprite(0, 0, "cursor");
@@ -101,10 +89,6 @@ export class DropDownOption extends Phaser.GameObjects.Container {
     this.toggle.setVisible(visible);
     this.updateToggleIconColor();
   }
-
-  /**
-   * Set the toggle icon color based on the current state
-   */
   private updateToggleIconColor(): void {
     switch (this.state) {
     case DropDownState.ON:
@@ -121,13 +105,6 @@ export class DropDownOption extends Phaser.GameObjects.Container {
       break;
     }
   }
-
-  /**
-   * Switch the option to its next state and update visuals
-   * If only ON/OFF are possible, toggle between the two
-   * For radials, move to the next state in the list
-   * @returns the updated DropDownState
-   */
   public toggleOptionState(): DropDownState {
     if (this.labels.length > 1) {
       return this.setCurrentLabel((this.currentLabelIndex + 1) % this.labels.length);
@@ -135,12 +112,6 @@ export class DropDownOption extends Phaser.GameObjects.Container {
     const newState = this.state === DropDownState.ON ? DropDownState.OFF : DropDownState.ON;
     return this.setOptionState(newState);
   }
-
-  /**
-   * Set the option to the given state and update visuals
-   * @param newState the state to switch to
-   * @returns the new DropDownState
-   */
   public setOptionState(newState: DropDownState): DropDownState {
     const newLabelIndex = this.labels.findIndex(label => label.state === newState);
     if (newLabelIndex !== -1 && newLabelIndex !== this.currentLabelIndex) {
@@ -151,12 +122,6 @@ export class DropDownOption extends Phaser.GameObjects.Container {
     this.updateToggleIconColor();
     return newState;
   }
-
-  /**
-   * Change the option state to the one at the given index and update visuals
-   * @param index index of the state to switch to
-   * @returns the new DropDownState
-   */
   private setCurrentLabel(index: number): DropDownState {
     const currentLabel = this.labels[this.currentLabelIndex];
     const newLabel = this.labels[index];
@@ -166,8 +131,6 @@ export class DropDownOption extends Phaser.GameObjects.Container {
     }
 
     this.currentLabelIndex = index;
-
-    // update state, sprite and text to fit the new label
     this.state = newLabel.state;
     this.updateToggleIconColor();
 
@@ -183,28 +146,13 @@ export class DropDownOption extends Phaser.GameObjects.Container {
 
     return this.state;
   }
-
-  /**
-   * Set the current SortDirection to the provided value and update icon accordingly
-   * @param SortDirection the new SortDirection to use
-   */
   public setDirection(dir: SortDirection): void {
     this.dir = dir;
     this.toggle.flipX = this.dir === SortDirection.DESC;
   }
-
-  /**
-   * Toggle the current SortDirection value
-   */
   public toggleDirection(): void {
     this.setDirection(this.dir * -1);
   }
-
-  /**
-   * Place the label elements (text and sprite if there is one) to the provided x and y position
-   * @param x the horizontal position
-   * @param y the vertical position
-   */
   setLabelPosition(x: number, y: number) {
     let textX = x;
     for (let i=0; i < this.labels.length; i++) {
@@ -222,32 +170,18 @@ export class DropDownOption extends Phaser.GameObjects.Container {
       this.text.y = y;
     }
   }
-
-  /**
-   * Place the toggle icon at the provided position
-   * @param x the horizontal position
-   * @param y the vertical position
-   */
   setTogglePosition(x: number, y: number) {
     if (this.toggle) {
       this.toggle.x = x;
       this.toggle.y = y;
     }
   }
-
-  /**
-   * @returns the x position to use for the current label depending on if it has a sprite or not
-   */
   getCurrentLabelX(): number | undefined {
     if (this.labels[this.currentLabelIndex].sprite) {
       return this.labels[this.currentLabelIndex].sprite?.x;
     }
     return this.text.x;
   }
-
-  /**
-   * @returns max width needed to display all of the labels
-   */
   getWidth(): number {
     let w = 0;
     const currentText = this.text.text;
@@ -261,8 +195,6 @@ export class DropDownOption extends Phaser.GameObjects.Container {
   }
 
 }
-
-
 export class DropDown extends Phaser.GameObjects.Container {
   public options: DropDownOption[];
   private window: Phaser.GameObjects.NineSlice;
@@ -292,15 +224,11 @@ export class DropDown extends Phaser.GameObjects.Container {
     this.cursorObj.setScale(0.5);
     this.cursorObj.setOrigin(0, 0.5);
     this.cursorObj.setVisible(false);
-
-    // For MULTI and HYBRID filter, add an ALL option at the top
     if (this.dropDownType === DropDownType.MULTI || this.dropDownType === DropDownType.HYBRID) {
       this.options.unshift(new DropDownOption(scene, "ALL", new DropDownLabel(i18next.t("filterBar:all"), undefined, this.checkForAllOn() ? DropDownState.ON : DropDownState.OFF)));
     }
 
     this.defaultSettings = this.getSettings();
-
-    // Place ui elements in the correct spot
     options.forEach((option, index) => {
       const toggleVisibility = type !== DropDownType.SINGLE || option.state === DropDownState.ON;
       option.setupToggleIcon(type, toggleVisibility);
@@ -344,7 +272,7 @@ export class DropDown extends Phaser.GameObjects.Container {
   }
 
   resetCursor(): boolean {
-    // If we are an hybrid dropdown in "hover" mode, don't move the cursor back to 0
+
     if (this.dropDownType === DropDownType.HYBRID && this.checkForAllOff()) {
       return this.setCursor(this.lastCursor);
     }
@@ -365,7 +293,7 @@ export class DropDown extends Phaser.GameObjects.Container {
     } else {
       this.cursorObj.y = this.options[cursor].y + 3.5;
       this.cursorObj.setVisible(true);
-      // If hydrid type, we need to update the filters when going up/down in the list
+
       if (this.dropDownType === DropDownType.HYBRID) {
         this.lastCursor = cursor;
         this.onChange();
@@ -373,23 +301,15 @@ export class DropDown extends Phaser.GameObjects.Container {
     }
     return true;
   }
-
-  /**
-   * Switch the option at the provided index to its next state and update visuals
-   * Update accordingly the other options if needed:
-   *  - if "all" is toggled, also update all other options
-   *  - for DropDownType.SINGLE, unselect the previously selected option if applicable
-   * @param index the index of the option for which to update the state
-   */
   toggleOptionState(index: number = this.cursor): void {
     const option: DropDownOption = this.options[index];
     if (this.dropDownType === DropDownType.MULTI || this.dropDownType === DropDownType.HYBRID) {
       const newState = option.toggleOptionState();
       if (index === 0) {
-        // we are on the All option > put all other options to the newState
+
         this.setAllOptions(newState);
       } else {
-        // select the "all" option if all others are selected, other unselect it
+
         if (newState === DropDownState.ON && this.checkForAllOn()) {
           this.options[0].setOptionState(DropDownState.ON);
         } else {
@@ -415,30 +335,12 @@ export class DropDown extends Phaser.GameObjects.Container {
     }
     this.onChange();
   }
-
-  /**
-   * Check whether all options except the "ALL" one are ON
-   * @returns true if all options are set to DropDownState.ON, false otherwise
-   */
   checkForAllOn(): boolean {
     return this.options.every((option, i) => i === 0 || option.state === DropDownState.ON);
   }
-
-  /**
-   * Check whether all options except the "ALL" one are OFF
-   * @returns true if all options are set to DropDownState.OFF, false otherwise
-   */
   checkForAllOff(): boolean {
     return this.options.every((option, i) => i === 0 || option.state === DropDownState.OFF);
   }
-
-  /**
-   * Get the current selected values for each option
-   * @returns an array of values, depending on the DropDownType
-   *  - if MULTI or HYBRID, an array of all the values of the options set to ON (except the ALL one)
-   *  - if RADIAL, an array where the value for each option is of the form { val: any, state: DropDownState }
-   *  - if SINGLE, a single object of the form { val: any, state: SortDirection }
-   */
   getVals(): any[] {
     if (this.dropDownType === DropDownType.MULTI) {
       return this.options.filter((option, i) => i > 0 && option.state === DropDownState.ON).map((option) => option.val);
@@ -447,11 +349,11 @@ export class DropDown extends Phaser.GameObjects.Container {
       if (selected.length > 0) {
         return selected;
       }
-      // if nothing is selected and the ALL option is hovered, return all elements
+
       if (this.cursor === 0) {
         return this.options.filter((_, i) => i > 0).map(option => option.val);
       }
-      // if nothing is selected and a single option is hovered, return that one
+
       return [this.options[this.cursor].val];
     } else if (this.dropDownType === DropDownType.RADIAL) {
       return this.options.map((option) => {
@@ -463,12 +365,6 @@ export class DropDown extends Phaser.GameObjects.Container {
       });
     }
   }
-
-  /**
-   * Get the current selected settings dictionary for each option
-   * @returns an array of dictionaries with the current state of each option
-   * - the settings dictionary is like this { val: any, state: DropDownState, cursor: boolean, dir: SortDirection }
-   */
   private getSettings(): any[] {
     const settings : any[] = [];
     for (let i = 0; i < this.options.length; i++) {
@@ -476,11 +372,6 @@ export class DropDown extends Phaser.GameObjects.Container {
     }
     return settings;
   }
-
-  /**
-   * Check whether the values of all options are the same as the default ones
-   * @returns true if they are the same, false otherwise
-   */
   public hasDefaultValues(): boolean {
     const currentValues = this.getSettings();
 
@@ -506,17 +397,13 @@ export class DropDown extends Phaser.GameObjects.Container {
       return false;
     }
   }
-
-  /**
-   * Set all values to their default state
-   */
   public resetToDefault(): void {
     if (this.defaultSettings.length > 0) {
       this.setCursor(this.defaultCursor);
       this.lastDir = SortDirection.ASC;
 
       for (let i = 0; i < this.options.length; i++) {
-        // reset values with the defaultValues
+
         if (this.dropDownType === DropDownType.SINGLE) {
           if (this.defaultSettings[i].state === DropDownState.OFF) {
             this.options[i].setOptionState(DropDownState.OFF);
@@ -535,13 +422,8 @@ export class DropDown extends Phaser.GameObjects.Container {
       }
     }
   }
-
-  /**
-   * Set all options to a specific state
-   * @param state the DropDownState to assign to each option
-   */
   private setAllOptions(state: DropDownState) : void {
-    // For single type dropdown, setting all options is not relevant
+
     if (this.dropDownType === DropDownType.SINGLE) {
       return;
     }
@@ -550,24 +432,12 @@ export class DropDown extends Phaser.GameObjects.Container {
       option.setOptionState(state);
     }
   }
-
-  /**
-   * Set all options to their ON state
-   */
   public selectAllOptions() {
     this.setAllOptions(DropDownState.ON);
   }
-
-  /**
-   * Set all options to their OFF state
-   */
   public unselectAllOptions() {
     this.setAllOptions(DropDownState.OFF);
   }
-
-  /**
-   * Automatically set the width and position based on the size of options
-   */
   autoSize(): void {
     let maxWidth = 0;
     let x = 0;

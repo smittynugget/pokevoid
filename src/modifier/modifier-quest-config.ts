@@ -2,14 +2,12 @@ import {ModifierType, QuestModifierTypeGenerator} from "./modifier-type";
 import { RunType, RunDuration } from "../enums/quest-type-conditions";
 import { Unlockables } from "../system/unlockables";
 import {QuestUnlockables, QuestUnlockData} from "#app/system/game-data";
-
-
 export interface QuestStage {
     runType: RunType;
     duration: RunDuration;
     condition: (...args: any[]) => boolean;
     goalCount: number;
-    questUnlockData?: QuestUnlockData; // Optional stage-specific rewards
+    questUnlockData?: QuestUnlockData;
     task?: string;
 }
 

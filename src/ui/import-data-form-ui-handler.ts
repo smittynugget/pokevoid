@@ -84,10 +84,10 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
         this.slotId = slotId;
         this.isModImport = isModImport;
     }
-    
+
     private createInGameFileInput(): void {
         this.removeFileInput();
-        
+
         const overlay = document.createElement('div');
         overlay.style.position = 'fixed';
         overlay.style.left = '50%';
@@ -100,14 +100,14 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
         overlay.style.zIndex = '1000';
         overlay.style.minWidth = '250px';
         overlay.style.textAlign = 'center';
-        
+
         const title = document.createElement('h3');
         title.textContent = this.isModImport ? i18next.t("importData:importModData") : i18next.t("importData:importSaveData");
         title.style.color = 'white';
         title.style.margin = '0 0 15px 0';
         title.style.fontFamily = 'monospace, Arial';
         overlay.appendChild(title);
-        
+
         const fileInputContainer = document.createElement('div');
         fileInputContainer.style.position = 'relative';
         fileInputContainer.style.width = '120px';
@@ -118,7 +118,7 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
         fileInputContainer.style.cursor = 'pointer';
         fileInputContainer.style.overflow = 'hidden';
         fileInputContainer.style.border = '2px solid white';
-        
+
         const label = document.createElement('div');
         label.textContent = i18next.t("importData:selectFile");
         label.style.position = 'absolute';
@@ -133,7 +133,7 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
         label.style.fontSize = '14px';
         label.style.pointerEvents = 'none';
         fileInputContainer.appendChild(label);
-        
+
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = this.isModImport ? '.json' : '.prsv';
@@ -146,25 +146,25 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
         fileInput.style.opacity = '0';
         fileInput.style.cursor = 'pointer';
         fileInput.style.fontSize = '100px';
-        
+
         const infoText = document.createElement('p');
-        infoText.textContent = this.isModImport 
-            ? i18next.t("importData:selectJsonModFiles") 
+        infoText.textContent = this.isModImport
+            ? i18next.t("importData:selectJsonModFiles")
             : i18next.t("importData:selectPrsvSaveFile");
         infoText.style.color = 'white';
         infoText.style.fontFamily = 'monospace, Arial';
         infoText.style.fontSize = '12px';
         infoText.style.margin = '0 0 15px 0';
         overlay.appendChild(infoText);
-        
+
         fileInput.addEventListener('change', (e: Event) => {
             this.handleFileSelected(e);
             overlay.remove();
         });
-        
+
         fileInputContainer.appendChild(fileInput);
         overlay.appendChild(fileInputContainer);
-        
+
         const cancelButton = document.createElement('button');
         cancelButton.textContent = i18next.t("importData:cancel");
         cancelButton.style.padding = '8px 15px';
@@ -180,30 +180,30 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
             this.onCancel();
         };
         overlay.appendChild(cancelButton);
-        
+
         this.fileInputElement = fileInput;
         this.fileInputContainer = fileInputContainer;
         this.customOverlay = overlay;
-        
+
         document.body.appendChild(overlay);
-        
+
         this.applyGameStylingToOverlay(overlay);
     }
-    
+
     private applyGameStylingToOverlay(overlay: HTMLDivElement): void {
         const canvas = this.scene.game.canvas;
         const bounds = canvas.getBoundingClientRect();
-        
+
         overlay.style.backgroundColor = '#000000';
         overlay.style.border = '2px solid white';
         overlay.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.3)';
         overlay.style.color = 'white';
-        
+
         if (bounds) {
             overlay.style.maxWidth = `${Math.min(300, bounds.width * 0.8)}px`;
         }
     }
-    
+
     private removeFileInput(): void {
         if (this.customOverlay) {
             if (this.customOverlay.parentNode) {
@@ -214,7 +214,7 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
             this.fileInputElement = null;
         }
     }
-    
+
     private async handleFileSelected(e: Event): Promise<void> {
         const files = (e.target as HTMLInputElement).files;
         if (!files || files.length === 0) return;
@@ -259,7 +259,7 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
             try {
                 const jsonData = await this.readFileAsJson(file);
                 const success = await loadModGlitchFormFromJson(this.scene, jsonData);
-                
+
                 if (success) {
                     try {
                         await modStorage.storeMod({
@@ -269,7 +269,7 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
                             spriteData: jsonData.sprites.front,
                             iconData: jsonData.sprites.icon || jsonData.sprites.front
                         });
-                        
+
                         successfulMods.push(jsonData.formName);
                     } catch (storageError) {
                         console.error("Error storing mod:", storageError);
@@ -285,12 +285,10 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
         }
 
         await this.scene.gameData.saveAll(this.scene);
-        
-        
         const message = this.generateModUploadResultMessage(successfulMods, failedMods);
         this.clear();
         this.getUi().setMode(Mode.MESSAGE);
-        
+
         this.scene.ui.showText(message, null, () => {
             if (successfulMods.length > 0) {
                 window.location.reload();
@@ -318,7 +316,7 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
 
     private generateModUploadResultMessage(successfulMods: string[], failedMods: string[]): string {
         let message = "";
-        
+
         if (successfulMods.length > 0) {
             message += i18next.t("importData:uploadSuccess", { count: successfulMods.length });
             if (successfulMods.length <= 5) {
@@ -326,18 +324,18 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
             }
             message += "\n\n";
         }
-        
+
         if (failedMods.length > 0) {
             message += i18next.t("importData:uploadFailed", { count: failedMods.length });
             if (failedMods.length <= 5) {
                 message += "\n• " + failedMods.join("\n• ");
             }
         }
-        
+
         if (successfulMods.length > 0) {
             message += "\n\n" + i18next.t("importData:reloadRequired");
         }
-        
+
         return message;
     }
 
@@ -364,16 +362,16 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
 
     show(args: any[]): boolean {
         console.log("ImportDataFormUiHandler show method called with args:", args);
-        
+
         if (!this.modalContainer) {
             console.warn("modalContainer not initialized, setting up handler");
             this.setup();
         }
-        
+
         if (args && args.length > 0 && args[0] === 'mod') {
             this.setImportParameters(GameDataType.COMBINED, 0, true);
             console.log("Set for mod import");
-            
+
             const buttonLabels = this.getButtonLabels();
             const config: ModalConfig = {
                 buttonActions: buttonLabels.map(label => () => this.handleButtonClick(label))
@@ -384,7 +382,7 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
             const dataType = args[0] as GameDataType;
             this.setImportParameters(dataType, 0, false);
             console.log("Set import parameters from numeric arg:", { dataType, slotId: 0 });
-            
+
             const buttonLabels = this.getButtonLabels();
             const config: ModalConfig = {
                 buttonActions: buttonLabels.map(label => () => this.handleButtonClick(label))
@@ -398,7 +396,7 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
             this.setImportParameters(dataType, slotId, isModImport);
             console.log("Set import parameters:", { dataType, slotId, isModImport });
         }
-        
+
         if (!args || !args.length || !args[0] || typeof args[0] !== 'object' || !("buttonActions" in args[0])) {
             console.log("Creating default buttonActions config");
             const buttonLabels = this.getButtonLabels();
@@ -407,18 +405,18 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
             };
             args = [config];
         }
-        
+
         try {
             if (this.isIOS || this.isModImport) {
                 const result = super.show(args);
-                
+
                 setTimeout(() => {
                     this.createInGameFileInput();
                     if (this.modalContainer) {
                         this.modalContainer.setVisible(false);
                     }
                 }, 100);
-                
+
                 return result;
             } else {
                 return super.show(args);
@@ -429,9 +427,9 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
             return false;
         }
     }
-    
+
     clear(): void {
         super.clear();
         this.removeFileInput();
     }
-} 
+}

@@ -4,6 +4,7 @@
   "general": "全般",
   "display": "ディスプレイ",
   "audio": "音声",
+  "skipFaintCry": "ひんし時の鳴き声をスキップ",
   "gamepad": "コントローラー",
   "keyboard": "キーボード",
   "gameSpeed": "ゲームスピード",
@@ -65,5 +66,6 @@
   "controller": "コントローラー",
   "gamepadSupport": "コントローラーサポート",
   "shopOverlayOpacity": "ショップオーバーレイの透明度",
-  "rewardOverlayOpacity": "報酬オーバーレイの透明度"
+  "rewardOverlayOpacity": "報酬オーバーレイの透明度",
+  "lockedRewardSpeed": "報酬速度をロック"
 }

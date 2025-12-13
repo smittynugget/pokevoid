@@ -3,7 +3,8 @@ import { TurnCommand, BattleType, DynamicModes } from "#app/battle.js";
 import { applyCheckTrappedAbAttrs, CheckTrappedAbAttr } from "#app/data/ability.js";
 import { TrappedTag, EncoreTag } from "#app/data/battler-tags.js";
 import { MoveTargetSet, getMoveTargets } from "#app/data/move.js";
-import { SpeciesFormKey, speciesStarters } from "#app/data/pokemon-species.js";
+import { speciesStarters } from "#app/data/pokemon-species.js";
+import { SpeciesFormKey } from "#enums/species-form-key";
 import { Type } from "#app/data/type.js";
 import { Abilities } from "#app/enums/abilities.js";
 import { BattlerTagType } from "#app/enums/battler-tag-type.js";
@@ -26,6 +27,7 @@ import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
 import { QuestState, QuestUnlockables } from "#app/system/game-data.js";
 import { MoveUpgradePhase } from "./move-upgrade-phase.js";
 import { getDynamicModeLocalizedString } from "#app/battle.js";
+import { SkillTreePhase } from "#app/phases/skill-tree-phase";
 
 export class CommandPhase extends FieldPhase {
   protected fieldIndex: integer;
@@ -38,12 +40,6 @@ export class CommandPhase extends FieldPhase {
 
   start() {
     super.start();
-
-    // Check for any pending move upgrades
-    // if(this.checkPendingMoveUpgrades()){
-    //   return;
-    // }
-
     if (this.fieldIndex) {
       if (this.scene.getPlayerField().filter(p => p.isActive()).length === 1) {
         this.fieldIndex = FieldPosition.CENTER;
@@ -54,8 +50,6 @@ export class CommandPhase extends FieldPhase {
         }
       }
     }
-
-
     if (this.scene.currentBattle.turnCommands[this.fieldIndex]?.skip) {
       return this.end();
     }
@@ -66,7 +60,7 @@ export class CommandPhase extends FieldPhase {
 
     while (moveQueue.length && moveQueue[0]
         && moveQueue[0].move && (!playerPokemon.getMoveset().find(m => m?.moveId === moveQueue[0].move)
-          || !playerPokemon.getMoveset()[playerPokemon.getMoveset().findIndex(m => m?.moveId === moveQueue[0].move)]!.isUsable(playerPokemon, moveQueue[0].ignorePP))) { // TODO: is the bang correct?
+          || !playerPokemon.getMoveset()[playerPokemon.getMoveset().findIndex(m => m?.moveId === moveQueue[0].move)]!.isUsable(playerPokemon, moveQueue[0].ignorePP))) {
       moveQueue.shift();
     }
 
@@ -76,7 +70,7 @@ export class CommandPhase extends FieldPhase {
         this.handleCommand(Command.FIGHT, -1, false);
       } else {
         const moveIndex = playerPokemon.getMoveset().findIndex(m => m?.moveId === queuedMove.move);
-        if (moveIndex > -1 && playerPokemon.getMoveset()[moveIndex]!.isUsable(playerPokemon, queuedMove.ignorePP)) { // TODO: is the bang correct?
+        if (moveIndex > -1 && playerPokemon.getMoveset()[moveIndex]!.isUsable(playerPokemon, queuedMove.ignorePP)) {
           this.handleCommand(Command.FIGHT, moveIndex, queuedMove.ignorePP, { targets: queuedMove.targets, multiple: queuedMove.targets.length > 1 });
         } else {
           this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
@@ -88,7 +82,7 @@ export class CommandPhase extends FieldPhase {
 
     if(this.scene.currentBattle.battleType === BattleType.TRAINER) {
       let introTutorials: EnhancedTutorial[];
-      if (this.scene.gameMode.checkIfRival(this.scene)) {          
+      if (this.scene.gameMode.checkIfRival(this.scene)) {
             introTutorials = [EnhancedTutorial.RIVALS_1];
       }
       else if(this.scene.currentBattle.trainer?.isCorrupted && this.scene.currentBattle.trainer?.isDynamicRival) {
@@ -103,7 +97,7 @@ export class CommandPhase extends FieldPhase {
     }
     else if(this.scene.currentBattle.battleType === BattleType.WILD) {
       let introTutorials: EnhancedTutorial[];
-      
+
       if(this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.UNLOCKED)
       && !this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.STARTER_CATCH_QUEST)) {
             this.scene.gameData.tutorialService.showTutorial(EnhancedTutorial.NEW_QUESTS, false, false);
@@ -143,7 +137,7 @@ export class CommandPhase extends FieldPhase {
       if (cursor === -1 ||
             playerPokemon.trySelectMove(cursor, args[0] as boolean) ||
             (useStruggle = cursor > -1 && !playerPokemon.getMoveset().filter(m => m?.isUsable(playerPokemon)).length)) {
-        const moveId = !useStruggle ? cursor > -1 ? playerPokemon.getMoveset()[cursor]!.moveId : Moves.NONE : Moves.STRUGGLE; // TODO: is the bang correct?
+        const moveId = !useStruggle ? cursor > -1 ? playerPokemon.getMoveset()[cursor]!.moveId : Moves.NONE : Moves.STRUGGLE;
         const turnCommand: TurnCommand = { command: Command.FIGHT, cursor: cursor, move: { move: moveId, targets: [], ignorePP: args[0] }, args: args };
         const moveTargets: MoveTargetSet = args.length < 3 ? getMoveTargets(playerPokemon, moveId) : args[2];
         if (!moveId) {
@@ -153,9 +147,9 @@ export class CommandPhase extends FieldPhase {
           this.scene.unshiftPhase(new SelectTargetPhase(this.scene, this.fieldIndex));
         }
         if (moveTargets.targets.length <= 1 || moveTargets.multiple) {
-            turnCommand.move!.targets = moveTargets.targets; //TODO: is the bang correct here?
+            turnCommand.move!.targets = moveTargets.targets;
         } else if (playerPokemon.getTag(BattlerTagType.CHARGING) && playerPokemon.getMoveQueue().length >= 1) {
-            turnCommand.move!.targets = playerPokemon.getMoveQueue()[0].targets; //TODO: is the bang correct here?
+            turnCommand.move!.targets = playerPokemon.getMoveQueue()[0].targets;
         } else {
           this.scene.unshiftPhase(new SelectTargetPhase(this.scene, this.fieldIndex));
         }
@@ -181,7 +175,7 @@ export class CommandPhase extends FieldPhase {
           errorMessage = playerPokemon.summonData.disabledMove === move.moveId ? "battle:moveDisabled" :
             move.getName().endsWith(" (N)") ? "battle:moveNotImplemented" : "battle:moveNoPP";
         }
-        
+
         const moveName = move.getName().replace(" (N)", "");
 
         this.scene.ui.showText(isLocalizedMessage ? errorMessage : i18next.t(errorMessage, { moveName: moveName }), null, () => {
@@ -212,10 +206,16 @@ export class CommandPhase extends FieldPhase {
       const hasRestrictedForm = this.scene.getEnemyField().some(p => p.isActive(true) && p.isOPForm());
 
       const notChaosBeyondWaves = this.scene.currentBattle?.waveIndex <= 1000;
+      const activeTree = (this.scene.gameData as any).activeSkillTree;
+      const enemy = this.scene.getEnemyField().find(p => p.isActive(true));
+      const isRivalBattle = (this.scene.currentBattle?.battleType === BattleType.TRAINER) && this.scene.gameMode.checkIfRival(this.scene);
+      const encounterChanceMap = activeTree?.legendaryEncounterChanceBySpecies || {};
+      const isLegendaryPriorityTarget = !!(encounterChanceMap[enemy?.species.speciesId] !== undefined);
+      const legendaryOverride = !isRivalBattle && isLegendaryPriorityTarget;
 
-      if (!(Utils.randSeedInt(10000, 1) <= 1) && 
-      (this.scene.arena.biomeType === Biome.END || 
-      (this.scene.gameMode.isWavePreFinal(this.scene)) || 
+      if (!legendaryOverride && !(Utils.randSeedInt(10000, 1) <= 1) &&
+      (this.scene.arena.biomeType === Biome.END ||
+      (this.scene.gameMode.isWavePreFinal(this.scene)) ||
       this.scene.getEnemyField().some(p => p.isActive(true) && (p.species.isLegendSubOrMystical() && notChaosBeyondWaves)) ||
       (hasRestrictedForm && notChaosBeyondWaves))) {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
@@ -234,7 +234,7 @@ export class CommandPhase extends FieldPhase {
       } else if (this.scene.currentBattle.battleType === BattleType.TRAINER && this.scene.money < requiredMoney) {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         this.scene.ui.setMode(Mode.MESSAGE);
-        
+
         this.scene.ui.showText(i18next.t("battle:noPokeballBuy", {
           requiredMoney: requiredMoney
         }), null, () => {
@@ -273,7 +273,7 @@ export class CommandPhase extends FieldPhase {
     case Command.POKEMON:
     case Command.RUN:
       const isSwitch = command === Command.POKEMON;
-      
+
       const cantRun = this.scene.gameMode.isTestMod || this.scene.gameMode.checkIfRival(this.scene) || this.scene.currentBattle.trainer?.config.trainerType == TrainerType.SMITTY || this.scene.currentBattle.battleSpec == BattleSpec.FINAL_BOSS
       if (!isSwitch && (this.scene.arena.biomeType === Biome.END || cantRun)) {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
@@ -358,11 +358,11 @@ export class CommandPhase extends FieldPhase {
       break;
     }
 
-    if (success!) { // TODO: is the bang correct?
+    if (success!) {
       this.end();
     }
 
-    return success!; // TODO: is the bang correct?
+    return success!;
   }
 
   cancel() {
@@ -384,7 +384,7 @@ export class CommandPhase extends FieldPhase {
 
     const moveIndex = pokemon.getMoveset().findIndex(m => m?.moveId === encoreTag.moveId);
 
-    if (moveIndex === -1 || !pokemon.getMoveset()[moveIndex]!.isUsable(pokemon)) { // TODO: is this bang correct?
+    if (moveIndex === -1 || !pokemon.getMoveset()[moveIndex]!.isUsable(pokemon)) {
       return false;
     }
 
@@ -404,14 +404,28 @@ export class CommandPhase extends FieldPhase {
   end() {
     this.scene.ui.setMode(Mode.MESSAGE).then(() => super.end());
   }
-
-
+  openSkillTreeFromCommand(): void {
+    const gameData: any = (this.scene as any).gameData;
+    if (!gameData?.activeSkillTree) {
+      return;
+    }
+    const skillTreePhase = new SkillTreePhase(this.scene, {
+      mode: "BATTLE_ACCESS",
+      onComplete: undefined,
+      onCancel: () => {
+        this.scene.ui.setMode(Mode.COMMAND, this.getFieldIndex());
+      }
+    });
+    this.scene.unshiftPhase(skillTreePhase);
+    this.scene.unshiftPhase(this);
+    this.scene.shiftPhase();
+  }
   checkPendingMoveUpgrades(): boolean {
     if (this.scene.gameData.pendingMoveUpgrades >= 0) {
       const pendingUpgrade = this.scene.gameData.pendingMoveUpgrades;
         this.scene.gameData.pendingMoveUpgrades = -1;
         const moveUpgradePhase = new MoveUpgradePhase(
-          this.scene, 
+          this.scene,
           pendingUpgrade
         );
 

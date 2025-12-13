@@ -1,7 +1,10 @@
 import BattleScene from "#app/battle-scene.js";
 import { Biome } from "#app/enums/biome.js";
-import { getBiomeKey } from "#app/field/arena.js";
+import { getBiomeKey, getBiomeHasProps } from "#app/field/arena.js";
+import { isIPhone } from "#app/loading-scene.js";
 import { BattlePhase } from "./battle-phase";
+import Overrides from "#app/overrides.js";
+import { AssetLoadProfiler } from "#app/system/asset-load-profiler.js";
 
 export class SwitchBiomePhase extends BattlePhase {
   private nextBiome: Biome;
@@ -19,6 +22,58 @@ export class SwitchBiomePhase extends BattlePhase {
       return this.end();
     }
 
+    if (isIPhone()) {
+      this.loadNextBiomeAssets().then(() => this.performBiomeSwitch());
+      return;
+    }
+    this.performBiomeSwitch();
+  }
+
+  private loadNextBiomeAssets(): Promise<void> {
+    return new Promise(resolve => {
+      const biomeKey = getBiomeKey(this.nextBiome);
+      if (this.scene.textures.exists(`${biomeKey}_bg`)) {
+        resolve();
+        return;
+      }
+
+      if (Overrides.DEBUG_IOS_MODE) {
+        AssetLoadProfiler.getInstance().trackLazyLoad(`${biomeKey}_bg`, "SwitchBiomePhase.loadNextBiomeAssets");
+      }
+
+      const isBaseAnimated = biomeKey === "end";
+
+      this.scene.loadImage(`${biomeKey}_bg`, "arenas");
+      if (!isBaseAnimated) {
+        this.scene.loadImage(`${biomeKey}_a`, "arenas");
+        this.scene.loadImage(`${biomeKey}_b`, "arenas");
+      } else {
+        this.scene.loadAtlas(`${biomeKey}_a`, "arenas");
+        this.scene.loadAtlas(`${biomeKey}_b`, "arenas");
+      }
+
+      if (getBiomeHasProps(this.nextBiome)) {
+        for (let p = 1; p <= 3; p++) {
+          const isPropAnimated = p === 3 && ["power_plant", "end"].includes(biomeKey);
+          const propKey = `${biomeKey}_b_${p}`;
+          if (!isPropAnimated) {
+            this.scene.loadImage(propKey, "arenas");
+          } else {
+            this.scene.loadAtlas(propKey, "arenas");
+          }
+        }
+      }
+
+      this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
+        resolve();
+      });
+      if (!this.scene.load.isLoading()) {
+        this.scene.load.start();
+      }
+    });
+  }
+
+  private performBiomeSwitch(): void {
     this.scene.tweens.add({
       targets: [this.scene.arenaEnemy, this.scene.lastEnemyTrainer],
       x: "+=300",

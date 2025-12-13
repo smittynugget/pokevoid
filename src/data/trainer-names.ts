@@ -88,7 +88,7 @@ export const trainerNamePools = {
   [TrainerType.FISHERMAN]: ["Andre","Arnold","Barney","Chris","Edgar","Henry","Jonah","Justin","Kyle","Martin","Marvin","Ralph","Raymond","Scott","Stephen","Wilton","Tully","Andrew","Barny","Carter","Claude","Dale","Elliot","Eugene","Ivan","Ned","Nolan","Roger","Ronald","Wade","Wayne","Darian","Kai","Chip","Hank","Kaden","Tommy","Tylor","Alec","Brett","Cameron","Cody","Cole","Cory","Erick","George","Joseph","Juan","Kenneth","Luc","Miguel","Travis","Walter","Zachary","Josh","Gideon","Kyler","Liam","Murphy","Bruce","Damon","Devon","Hubert","Jones","Lydon","Mick","Pete","Sean","Sid","Vince","Bucky","Dean","Eustace","Kenzo","Leroy","Mack","Ryder","Ewan","Finn","Murray","Seward","Shad","Wharton","Finley","Fisher","Fisk","River","Sheaffer","Timin","Carl","Ernest","Hal","Herbert","Hisato","Mike","Vernon","Harriet","Marina","Chase"],
   [TrainerType.GUITARIST]: ["Anna","Beverly","January","Tina","Alicia","Claudia","Julia","Lidia","Mireia","Noelia","Sara","Sheila","Tatiana"],
   [TrainerType.HARLEQUIN]: ["Charley","Ian","Jack","Kerry","Louis","Pat","Paul","Rick","Anders","Clarence","Gary"],
-  [TrainerType.HIKER]: ["Anthony","Bailey","Benjamin","Daniel","Erik","Jim","Kenny","Leonard","Michael","Parry","Phillip","Russell","Sidney","Tim","Timothy","Alan","Brice","Clark","Eric","Lenny","Lucas","Mike","Trent","Devan","Eli","Marc","Sawyer","Allen","Daryl","Dudley","Earl","Franklin","Jeremy","Marcos","Nob","Oliver","Wayne","Alexander","Damon","Jonathan","Justin","Kevin","Lorenzo","Louis","Maurice","Nicholas","Reginald","Robert","Theodore","Bruce","Clarke","Devin","Dwight","Edwin","Eoin","Noland","Russel","Andy","Bret","Darrell","Gene","Hardy","Hugh","Jebediah","Jeremiah","Kit","Neil","Terrell","Don","Doug","Hunter","Jared","Jerome","Keith","Manuel","Markus","Otto","Shelby","Stephen","Teppei","Tobias","Wade","Zaiem","Aaron","Alain","Bergin","Bernard","Brent","Corwin","Craig","Delmon","Dunstan","Orestes","Ross","Davian","Calhoun","David","Gabriel","Ryan","Thomas","Travis","Zachary","Anuhea","Barnaby","Claus","Collin","Colson","Dexter","Dillan","Eugine","Farkas","Hisato","Julius","Kenji","Irwin","Lionel","Paul","Richter","Valentino","Donald","Douglas","Kevyn","Chester"], //["Angela","Carla","Celia","Daniela","Estela","Fatima","Helena","Leire","Lucia","Luna","Manuela","Mar","Marina","Miyu","Nancy","Nerea","Paula","Rocio","Yanira"]
+  [TrainerType.HIKER]: ["Anthony","Bailey","Benjamin","Daniel","Erik","Jim","Kenny","Leonard","Michael","Parry","Phillip","Russell","Sidney","Tim","Timothy","Alan","Brice","Clark","Eric","Lenny","Lucas","Mike","Trent","Devan","Eli","Marc","Sawyer","Allen","Daryl","Dudley","Earl","Franklin","Jeremy","Marcos","Nob","Oliver","Wayne","Alexander","Damon","Jonathan","Justin","Kevin","Lorenzo","Louis","Maurice","Nicholas","Reginald","Robert","Theodore","Bruce","Clarke","Devin","Dwight","Edwin","Eoin","Noland","Russel","Andy","Bret","Darrell","Gene","Hardy","Hugh","Jebediah","Jeremiah","Kit","Neil","Terrell","Don","Doug","Hunter","Jared","Jerome","Keith","Manuel","Markus","Otto","Shelby","Stephen","Teppei","Tobias","Wade","Zaiem","Aaron","Alain","Bergin","Bernard","Brent","Corwin","Craig","Delmon","Dunstan","Orestes","Ross","Davian","Calhoun","David","Gabriel","Ryan","Thomas","Travis","Zachary","Anuhea","Barnaby","Claus","Collin","Colson","Dexter","Dillan","Eugine","Farkas","Hisato","Julius","Kenji","Irwin","Lionel","Paul","Richter","Valentino","Donald","Douglas","Kevyn","Chester"],
   [TrainerType.HOOLIGANS]: ["Jim & Cas","Rob & Sal"],
   [TrainerType.HOOPSTER]: ["Bobby","John","Lamarcus","Derrick","Nicolas"],
   [TrainerType.INFIELDER]: ["Alex","Connor","Todd"],
@@ -168,36 +168,3 @@ function fetchAndPopulateTrainerNames(url: string, parser: DOMParser, trainerNam
       });
   });
 }
-
-/*export function scrapeTrainerNames() {
-  const parser = new DOMParser();
-  const trainerTypeNames = {};
-  const populateTrainerNamePromises: Promise<void>[] = [];
-  for (let t of Object.keys(trainerNameConfigs)) {
-    populateTrainerNamePromises.push(new Promise<void>(resolve => {
-      const trainerType = t;
-      trainerTypeNames[trainerType] = [];
-
-      const config = trainerNameConfigs[t] as TrainerNameConfig;
-      const trainerNames = new Set<string>();
-      const femaleTrainerNames = new Set<string>();
-      console.log(config.urls, config.femaleUrls)
-      const trainerClassRequests = config.urls.map(u => fetchAndPopulateTrainerNames(u, parser, trainerNames, femaleTrainerNames));
-      if (config.femaleUrls)
-        trainerClassRequests.push(...config.femaleUrls.map(u => fetchAndPopulateTrainerNames(u, parser, null, femaleTrainerNames, true)));
-      Promise.all(trainerClassRequests).then(() => {
-        console.log(trainerNames, femaleTrainerNames)
-        trainerTypeNames[trainerType] = !femaleTrainerNames.size ? Array.from(trainerNames) : [ Array.from(trainerNames), Array.from(femaleTrainerNames) ];
-        resolve();
-      });
-    }));
-  }
-  Promise.all(populateTrainerNamePromises).then(() => {
-    let output = 'export const trainerNamePools = {';
-    Object.keys(trainerTypeNames).forEach(t => {
-      output += `\n\t[TrainerType.${TrainerType[t]}]: ${JSON.stringify(trainerTypeNames[t])},`;
-    });
-    output += `\n};`;
-    console.log(output);
-  });
-}*/

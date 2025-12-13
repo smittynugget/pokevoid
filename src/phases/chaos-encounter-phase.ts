@@ -38,7 +38,7 @@ export class ChaosEncounterPhase extends EncounterPhase {
     if (needsPlayerTransition) {
       this.scene.arenaPlayer.setBiome(this.scene.arena.biomeType);
       this.scene.arenaEnemy.setBiome(this.scene.arena.biomeType);
-      
+
       const enemyField = this.scene.getEnemyField();
       this.scene.tweens.add({
         targets: [this.scene.arenaEnemy, this.scene.currentBattle.trainer, enemyField, this.scene.arenaPlayer, this.scene.trainer].flat(),
@@ -76,4 +76,4 @@ export class ChaosEncounterPhase extends EncounterPhase {
       });
     }
   }
-} 
+}

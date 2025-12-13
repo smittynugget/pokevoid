@@ -25,6 +25,7 @@ import EggHatchSceneHandler from "./egg-hatch-scene-handler";
 import EggListUiHandler from "./egg-list-ui-handler";
 import EggGachaUiHandler from "./egg-gacha-ui-handler";
 import {addWindow, WindowVariant} from "./ui-theme";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 import LoginFormUiHandler from "./login-form-ui-handler";
 import RegistrationFormUiHandler from "./registration-form-ui-handler";
 import LoadingModalUiHandler from "./loading-modal-ui-handler";
@@ -54,7 +55,8 @@ import AutoCompleteUiHandler from "./autocomplete-ui-handler";
 import ShopSelectUiHandler from "./shop-select-ui-handler";
 import { GameObjects } from 'phaser';
 import {PermaModifiers} from "#app/modifier/perma-modifiers";
-import {ModifierBar} from "#app/modifier/modifier";
+import {ModifierBar, PermaCollectedTypeModifier} from "#app/modifier/modifier";
+import { Type } from "#app/data/type";
 import ConsoleFormUiHandler from "#app/ui/console-form-ui-handler";
 import SmittyPokemonBountyUIHandler from "#app/ui/smitty-pokemon-bounty-ui-handler";
 import RivalBountyUiHandler from "#app/ui/rival-bounty-ui-handler";
@@ -71,13 +73,18 @@ import { QuestUnlockables, QuestState } from "../system/game-data";
 import TutorialUiHandler from "./tutorial-ui-handler";
 import TutorialListUiHandler from "./tutorial-list-ui-handler";
 import TransferSaveFormUiHandler from "./transfer-save-form-ui-handler";
+import BugReportFormUiHandler from "./bug-report-form-ui-handler";
+import BackupRestoreFormUiHandler from "./backup-restore-form-ui-handler";
 import EggStarterUiHandler from "./egg-starter-ui-handler.js";
 import ModGlitchFormUiHandler from "./mod-glitch-form-ui-handler";
 import ModGlitchCreateFormUiHandler from "./mod-glitch-create-form-ui-handler";
 import ModManagementUiHandler from "./mod-management-ui-handler";
 import PokedexModalUiHandler from "./pokedex-modal-ui-handler";
+import SkillTreeUiHandler from "./skill-tree-ui-handler";
 import BattlePathUiHandler from "./battle-path-ui-handler";
 import { LoginPhase } from "#app/phases/login-phase.js";
+import ChampionSelectUiHandler from "#app/ui/champion-select-ui-handler";
+import ChampionLevelUpUiHandler from "#app/ui/champion-level-up-ui-handler";
 export enum Mode {
   MESSAGE,
   TITLE,
@@ -137,6 +144,11 @@ export enum Mode {
   IMPORT_DATA_FORM,
   POKEDEX,
   BATTLE_PATH,
+  CHAMPION_SELECT,
+  SKILL_TREE,
+  CHAMPION_LEVEL_UP,
+  BUG_REPORT_FORM,
+  BACKUP_RESTORE_FORM,
 }
 
 const transitionModes = [
@@ -155,6 +167,7 @@ const transitionModes = [
 
 const noTransitionModes = [
   Mode.TITLE,
+  Mode.MESSAGE,
   Mode.CONFIRM,
   Mode.OPTION_SELECT,
   Mode.MENU,
@@ -191,10 +204,11 @@ const noTransitionModes = [
   Mode.TRANSFER_SAVE_FORM,
   Mode.IMPORT_DATA_FORM,
   Mode.POKEDEX,
-  Mode.BATTLE_PATH
+  Mode.BATTLE_PATH,
+  Mode.CHAMPION_SELECT,
+  Mode.SKILL_TREE,
+  Mode.BUG_REPORT_FORM
 ];
-
-
 type DisplayListItem = GameObjects.GameObject & Partial<GameObjects.Components.Depth & GameObjects.Components.Visible & GameObjects.Components.Alpha>;
 
 export default class UI extends Phaser.GameObjects.Container {
@@ -210,8 +224,24 @@ export default class UI extends Phaser.GameObjects.Container {
   private tooltipBg: Phaser.GameObjects.NineSlice;
   private tooltipTitle: Phaser.GameObjects.Text;
   private tooltipContent: Phaser.GameObjects.Text;
+  private _tooltipPattern?: ModalBackgroundHandle;
 
   private overlayActive: boolean;
+
+  private readonly UI_CONSTANTS = {
+    TOP_EDGE_OFFSET: -1,
+    LEFT_PADDING: 5,
+    TOP_PADDING: 5,
+    TOGGLE_BUTTON_ICON_SCALE: 0.16,
+    TOGGLE_BUTTON_ICON_SIZE: 32,
+    TOGGLE_BUTTON_TEXT_SIZE: 30,
+    TOGGLE_BUTTON_TEXT_Y_OFFSET: 5,
+    TOGGLE_BUTTON_WIDTH: 25,
+    TOGGLE_BUTTON_HORIZONTAL_SPACING: 11,
+    TOGGLE_ROW_HEIGHT: 10,
+    BAR_X_OFFSET_ADJUSTMENT: -10,
+    PERMA_COLLECTED_TYPE_SPACING: 5,
+  };
 
   private permaMoneyContainer: Phaser.GameObjects.Container;
   protected permaMoneyText: Phaser.GameObjects.Text;
@@ -227,6 +257,25 @@ export default class UI extends Phaser.GameObjects.Container {
   private battlePathContainer: Phaser.GameObjects.Container;
   private runInfoButton: Phaser.GameObjects.Sprite;
   private runInfoContainer: Phaser.GameObjects.Container;
+
+  private permaBarToggleButton: Phaser.GameObjects.Sprite;
+  private permaBarToggleContainer: Phaser.GameObjects.Container;
+  private permaBarSubtext: Phaser.GameObjects.Text;
+  public permaBarVisible: boolean = true;
+
+  private playerBarToggleButton: Phaser.GameObjects.Sprite;
+  private playerBarToggleContainer: Phaser.GameObjects.Container;
+  private playerBarSubtext: Phaser.GameObjects.Text;
+  public playerBarVisible: boolean = false;
+
+  private foeBarToggleButton: Phaser.GameObjects.Sprite;
+  private foeBarToggleContainer: Phaser.GameObjects.Container;
+  private foeBarSubtext: Phaser.GameObjects.Text;
+  public foeBarVisible: boolean = false;
+  private lastKnownBattleState: boolean = false;
+
+  private permaCollectedTypeContainer: Phaser.GameObjects.Container;
+  private permaCollectedTypeIcon: Phaser.GameObjects.Sprite;
 
   constructor(scene: BattleScene) {
     super(scene, 0, scene.game.canvas.height / 6);
@@ -291,6 +340,12 @@ export default class UI extends Phaser.GameObjects.Container {
     this.handlers[Mode.TRANSFER_SAVE_FORM] = new TransferSaveFormUiHandler(scene);
     this.handlers[Mode.POKEDEX] = new PokedexModalUiHandler(scene);
     this.handlers[Mode.BATTLE_PATH] = new BattlePathUiHandler(scene);
+
+    this.handlers[Mode.CHAMPION_SELECT] = new ChampionSelectUiHandler(scene);
+    this.handlers[Mode.SKILL_TREE] = new SkillTreeUiHandler(scene);
+    this.handlers[Mode.CHAMPION_LEVEL_UP] = new ChampionLevelUpUiHandler(scene);
+    this.handlers[Mode.BUG_REPORT_FORM] = new BugReportFormUiHandler(scene);
+    this.handlers[Mode.BACKUP_RESTORE_FORM] = new BackupRestoreFormUiHandler(scene);
 
     if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) {
       console.log("Detected iOS device - preloading ImportDataFormUiHandler");
@@ -393,9 +448,9 @@ export default class UI extends Phaser.GameObjects.Container {
     this.battlePathContainer.add([this.battlePathButton, battlePathKeySprite]);
     this.permaMoneyContainer.add(this.battlePathContainer);
 
-    this.runInfoButton = this.scene.add.sprite(0, 0, "smitems_192", "permaRunAnything");
+    this.runInfoButton = this.scene.add.sprite(0, 0, "smitems", "permaRunAnything");
     this.runInfoButton.setName("run-info-button");
-    this.runInfoButton.setScale(0.05);
+    this.runInfoButton.setScale(0.15);
     this.runInfoButton.setAlpha(1);
     this.runInfoButton.setInteractive({ useHandCursor: true });
     this.runInfoButton.on('pointerdown', () => {
@@ -405,7 +460,7 @@ export default class UI extends Phaser.GameObjects.Container {
           return;
         }
         const slotId = scene.sessionSlotId;
-        
+
         (async () => {
           try {
             const sessionData = await scene.gameData.getSession(slotId);
@@ -441,12 +496,144 @@ export default class UI extends Phaser.GameObjects.Container {
     this.runInfoContainer.add([this.runInfoButton, runInfoKeySprite]);
     this.permaMoneyContainer.add(this.runInfoContainer);
 
-    this.permaModifierBar = new ModifierBar(scene as BattleScene)
-    const rightEdge = 0;
-    const topEdge = -scene.game.canvas.height / 6;
-    this.permaModifierBar.setPosition(1, topEdge + 2);
+    this.permaBarToggleButton = this.scene.add.sprite(0, 0, "smitems", "permaGlitchPieceMaxPlus");
+    this.permaBarToggleButton.setName("perma-bar-toggle-button");
+    this.permaBarToggleButton.setScale(this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE);
+    this.permaBarToggleButton.setAlpha(1);
+    this.permaBarToggleButton.setInteractive({ useHandCursor: true });
+    this.permaBarToggleButton.on('pointerdown', () => this.handlePermaBarToggle(scene as BattleScene));
+
+    let permaBarToggleIcon = scene.inputController?.getIconForLatestInputRecorded("BUTTON_TOGGLE_PERMA_BAR");
+    if (!permaBarToggleIcon) {
+      permaBarToggleIcon = "O.png";
+    }
+    const permaBarToggleType = scene.inputController?.getLastSourceType() || "keyboard";
+    const permaBarToggleKeySprite = this.scene.add.sprite(2, 2, permaBarToggleType);
+    permaBarToggleKeySprite.setFrame(permaBarToggleIcon);
+    permaBarToggleKeySprite.setScale(.4);
+
+    this.permaBarSubtext = addTextObject(this.scene, -3, this.UI_CONSTANTS.TOGGLE_BUTTON_TEXT_Y_OFFSET, i18next.t("battleScene:togglePermaBar"), TextStyle.PERFECT_IV, { fontSize: `${this.UI_CONSTANTS.TOGGLE_BUTTON_TEXT_SIZE}px` });
+    this.permaBarSubtext.setOrigin(0, 0);
+    this.permaBarSubtext.setShadow(0, 0, "#000000", 0);
+    this.permaBarSubtext.setVisible(true);
+
+    this.permaBarToggleContainer = this.scene.add.container(0, 0);
+    this.permaBarToggleContainer.setName("perma-bar-toggle-container");
+    this.permaBarToggleContainer.add([this.permaBarToggleButton, permaBarToggleKeySprite, this.permaBarSubtext]);
+    this.permaMoneyContainer.add(this.permaBarToggleContainer);
+
+    this.playerBarToggleButton = this.scene.add.sprite(0, 0, "smitems", "permaStartBall");
+    this.playerBarToggleButton.setName("player-bar-toggle-button");
+    this.playerBarToggleButton.setScale(this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE);
+    this.playerBarToggleButton.setAlpha(1);
+    this.playerBarToggleButton.setInteractive({ useHandCursor: true });
+    this.playerBarToggleButton.on('pointerdown', () => this.handlePlayerBarToggle(scene as BattleScene));
+
+    let playerBarToggleIcon = scene.inputController?.getIconForLatestInputRecorded("BUTTON_TOGGLE_PLAYER_BAR");
+    if (!playerBarToggleIcon) {
+      playerBarToggleIcon = "B.png";
+    }
+    const playerBarToggleType = scene.inputController?.getLastSourceType() || "keyboard";
+    const playerBarToggleKeySprite = this.scene.add.sprite(2, 2, playerBarToggleType);
+    playerBarToggleKeySprite.setFrame(playerBarToggleIcon);
+    playerBarToggleKeySprite.setScale(.4);
+
+    this.playerBarSubtext = addTextObject(this.scene, -3, this.UI_CONSTANTS.TOGGLE_BUTTON_TEXT_Y_OFFSET, i18next.t("battleScene:togglePlayerBar"), TextStyle.PERFECT_IV, { fontSize: `${this.UI_CONSTANTS.TOGGLE_BUTTON_TEXT_SIZE}px` });
+    this.playerBarSubtext.setOrigin(0, 0);
+    this.playerBarSubtext.setShadow(0, 0, "#000000", 0);
+    this.playerBarSubtext.setVisible(false);
+
+    this.playerBarToggleContainer = this.scene.add.container(0, 0);
+    this.playerBarToggleContainer.setName("player-bar-toggle-container");
+    this.playerBarToggleContainer.add([this.playerBarToggleButton, playerBarToggleKeySprite, this.playerBarSubtext]);
+    this.permaMoneyContainer.add(this.playerBarToggleContainer);
+
+    this.foeBarToggleButton = this.scene.add.sprite(0, 0, "smitems", "smittyMask");
+    this.foeBarToggleButton.setName("foe-bar-toggle-button");
+    this.foeBarToggleButton.setScale(this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE);
+    this.foeBarToggleButton.setAlpha(1);
+    this.foeBarToggleButton.setInteractive({ useHandCursor: true });
+    this.foeBarToggleButton.on('pointerdown', () => this.handleFoeBarToggle(scene as BattleScene));
+
+    let foeBarToggleIcon = scene.inputController?.getIconForLatestInputRecorded("BUTTON_TOGGLE_FOE_BAR");
+    if (!foeBarToggleIcon) {
+      foeBarToggleIcon = "I.png";
+    }
+    const foeBarToggleType = scene.inputController?.getLastSourceType() || "keyboard";
+    const foeBarToggleKeySprite = this.scene.add.sprite(2, 2, foeBarToggleType);
+    foeBarToggleKeySprite.setFrame(foeBarToggleIcon);
+    foeBarToggleKeySprite.setScale(.4);
+
+    this.foeBarSubtext = addTextObject(this.scene, -3, this.UI_CONSTANTS.TOGGLE_BUTTON_TEXT_Y_OFFSET, i18next.t("battleScene:toggleFoeBar"), TextStyle.PERFECT_IV, { fontSize: `${this.UI_CONSTANTS.TOGGLE_BUTTON_TEXT_SIZE}px` });
+    this.foeBarSubtext.setOrigin(0, 0);
+    this.foeBarSubtext.setShadow(0, 0, "#000000", 0);
+    this.foeBarSubtext.setVisible(false);
+
+    this.foeBarToggleContainer = this.scene.add.container(0, 0);
+    this.foeBarToggleContainer.setName("foe-bar-toggle-container");
+    this.foeBarToggleContainer.add([this.foeBarToggleButton, foeBarToggleKeySprite, this.foeBarSubtext]);
+    this.permaMoneyContainer.add(this.foeBarToggleContainer);
+
+    this.permaCollectedTypeIcon = this.scene.add.sprite(0, 0, "smitems", "modSoulCollected");
+    this.permaCollectedTypeIcon.setName("perma-collected-type-icon");
+    this.permaCollectedTypeIcon.setScale(this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE);
+    this.permaCollectedTypeIcon.setAlpha(1);
+    this.permaCollectedTypeIcon.setInteractive({ useHandCursor: true });
+    this.permaCollectedTypeIcon.on('pointerover', () => this.showPermaCollectedTypeTooltip(scene as BattleScene));
+    this.permaCollectedTypeIcon.on('pointerout', () => (scene as BattleScene).ui.hideTooltip());
+
+    this.permaCollectedTypeContainer = this.scene.add.container(0, 0);
+    this.permaCollectedTypeContainer.setName("perma-collected-type-container");
+    this.permaCollectedTypeContainer.add([this.permaCollectedTypeIcon]);
+    this.permaCollectedTypeContainer.setVisible(false);
+    this.permaMoneyContainer.add(this.permaCollectedTypeContainer);
+
+    this.permaModifierBar = new ModifierBar(scene as BattleScene);
+    const barXOffset = this.getBarXOffset();
+    const topEdge = this.getTopEdge(scene as BattleScene);
+    this.permaModifierBar.setPosition(barXOffset, topEdge + this.UI_CONSTANTS.TOP_PADDING);
     this.permaModifierBar.setName("perma-modifier-bar");
     this.add(this.permaModifierBar);
+
+    const initialBarXOffset = this.getBarXOffsetRightOfToggles(scene as BattleScene);
+    const initialBarYPosition = topEdge + this.UI_CONSTANTS.TOP_PADDING - 3;
+    this.permaModifierBar.setPosition(initialBarXOffset, initialBarYPosition);
+    this.permaModifierBar.setVisible(true);
+    this.updateToggleButtonVisuals();
+  }
+
+  private getTopEdge(scene: BattleScene): number {
+    return this.UI_CONSTANTS.TOP_EDGE_OFFSET * (scene.game.canvas.height / 6);
+  }
+
+  private getIconHeight(): number {
+    return this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SIZE * this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE;
+  }
+
+  private getPermaBarToggleIconCenterY(): number {
+    return this.permaBarToggleContainer.y + this.permaBarToggleButton.y;
+  }
+
+  private getPlayerBarToggleIconCenterY(): number {
+    return this.playerBarToggleContainer.y + this.playerBarToggleButton.y;
+  }
+
+  private getBarXOffset(): number {
+    return this.UI_CONSTANTS.LEFT_PADDING + this.UI_CONSTANTS.TOGGLE_BUTTON_WIDTH + this.UI_CONSTANTS.BAR_X_OFFSET_ADJUSTMENT;
+  }
+
+  private getBarXOffsetRightOfToggles(scene: BattleScene): number {
+    const leftPadding = this.UI_CONSTANTS.LEFT_PADDING;
+    const permaCollectedTypeWidth = this.permaCollectedTypeContainer.visible ?
+        (this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SIZE * this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE) + this.UI_CONSTANTS.PERMA_COLLECTED_TYPE_SPACING : 0;
+
+    const isInBattle = scene.currentBattle !== null && scene.currentBattle !== undefined;
+    const numToggles = isInBattle ? 3 : 1;
+
+    const togglesWidth = numToggles * this.UI_CONSTANTS.TOGGLE_BUTTON_HORIZONTAL_SPACING;
+    const barSpacing = -2;
+
+    return leftPadding + permaCollectedTypeWidth + togglesWidth + barSpacing;
   }
 
   public async handleSaveButtonClick(scene: BattleScene): Promise<void> {
@@ -455,11 +642,11 @@ export default class UI extends Phaser.GameObjects.Container {
     if (!(currentPhase instanceof TitlePhase || currentPhase instanceof CommandPhase || isLoginPhase)) {
       return;
     }
-    
+
     if (currentPhase instanceof CommandPhase && this.mode !== Mode.COMMAND) {
       await this.setMode(Mode.COMMAND, (currentPhase as CommandPhase).getFieldIndex());
     }
-    
+
     const exportSuccess = await scene.gameData.tryExportData(GameDataType.COMBINED);
     if (exportSuccess && !isLoginPhase && scene.gameData.isSaveRewardTime()) {
       scene.unshiftPhase(new ModifierRewardPhase(
@@ -478,14 +665,148 @@ export default class UI extends Phaser.GameObjects.Container {
     scene.ui.setOverlayMode(Mode.POKEDEX);
   }
 
+  public handlePermaBarToggle(scene: BattleScene): void {
+    this.permaBarVisible = !this.permaBarVisible;
+
+    const barXOffset = this.getBarXOffsetRightOfToggles(scene);
+    const topEdge = this.getTopEdge(scene);
+    const barYPosition = topEdge + this.UI_CONSTANTS.TOP_PADDING - 3;
+
+    if (this.permaBarVisible) {
+      this.playerBarVisible = false;
+      this.foeBarVisible = false;
+      this.permaModifierBar.setPosition(barXOffset, barYPosition);
+      this.permaModifierBar.setVisible(true);
+      scene.getModifierBar().setVisible(false);
+      scene.getModifierBar(true).setVisible(false);
+    } else {
+      this.permaModifierBar.setVisible(false);
+    }
+
+    this.updateToggleButtonVisuals();
+  }
+
+  public handlePlayerBarToggle(scene: BattleScene): void {
+    this.playerBarVisible = !this.playerBarVisible;
+
+    const barXOffset = this.getBarXOffsetRightOfToggles(scene);
+    const topEdge = this.getTopEdge(scene);
+    const barYPosition = topEdge + this.UI_CONSTANTS.TOP_PADDING - 3;
+    const uiContainerBarY = (scene.game.canvas.height / 6) + barYPosition;
+
+    if (this.playerBarVisible) {
+      this.permaBarVisible = false;
+      this.foeBarVisible = false;
+      scene.getModifierBar().setPosition(barXOffset, uiContainerBarY);
+      scene.getModifierBar().setVisible(true);
+      this.permaModifierBar.setVisible(false);
+      scene.getModifierBar(true).setVisible(false);
+    } else {
+      scene.getModifierBar().setVisible(false);
+    }
+
+    this.updateToggleButtonVisuals();
+  }
+
+  public handleFoeBarToggle(scene: BattleScene): void {
+    this.foeBarVisible = !this.foeBarVisible;
+
+    if (this.foeBarVisible) {
+      this.permaBarVisible = false;
+      this.playerBarVisible = false;
+      scene.getModifierBar(true).setVisible(true);
+      this.permaModifierBar.setVisible(false);
+      scene.getModifierBar().setVisible(false);
+    } else {
+      scene.getModifierBar(true).setVisible(false);
+    }
+
+    this.updateToggleButtonVisuals();
+  }
+
+  private updateToggleButtonVisuals(): void {
+    if (this.permaBarVisible) {
+      if (this.permaBarToggleButton.postFX) {
+        this.permaBarToggleButton.postFX.clear();
+        const colorMatrix = this.permaBarToggleButton.postFX.addColorMatrix();
+        colorMatrix.negative();
+      }
+      this.permaBarSubtext.setVisible(true);
+    } else {
+      if (this.permaBarToggleButton.postFX) {
+        this.permaBarToggleButton.postFX.clear();
+      }
+      this.permaBarSubtext.setVisible(false);
+    }
+
+    if (this.playerBarVisible) {
+      if (this.playerBarToggleButton.postFX) {
+        this.playerBarToggleButton.postFX.clear();
+        const colorMatrix = this.playerBarToggleButton.postFX.addColorMatrix();
+        colorMatrix.negative();
+      }
+      this.playerBarSubtext.setVisible(true);
+    } else {
+      if (this.playerBarToggleButton.postFX) {
+        this.playerBarToggleButton.postFX.clear();
+      }
+      this.playerBarSubtext.setVisible(false);
+    }
+
+    if (this.foeBarVisible) {
+      if (this.foeBarToggleButton.postFX) {
+        this.foeBarToggleButton.postFX.clear();
+        const colorMatrix = this.foeBarToggleButton.postFX.addColorMatrix();
+        colorMatrix.negative();
+      }
+      this.foeBarSubtext.setVisible(true);
+    } else {
+      if (this.foeBarToggleButton.postFX) {
+        this.foeBarToggleButton.postFX.clear();
+      }
+      this.foeBarSubtext.setVisible(false);
+    }
+  }
+
   updatePermaModifierBar(permaModifiers: PermaModifiers): void {
-
-
-    const visibleModifiers = permaModifiers.getModifiers();
+    const visibleModifiers = permaModifiers.getModifiers().filter(
+        m => !(m instanceof PermaCollectedTypeModifier)
+    );
 
     this.permaModifierBar.updateModifiers(visibleModifiers);
-    this.permaModifierBar.setVisible(true)
+    this.permaModifierBar.setVisible(this.permaBarVisible);
+  }
 
+  public updatePermaCollectedTypeDisplay(scene: BattleScene): void {
+    const permaModifier = scene.gameData.permaModifiers.getModifiers().find(
+        m => m instanceof PermaCollectedTypeModifier
+    ) as PermaCollectedTypeModifier | undefined;
+
+    if (permaModifier && Object.keys(permaModifier.collectedTypes).length > 0) {
+        this.permaCollectedTypeContainer.setVisible(true);
+    } else {
+        this.permaCollectedTypeContainer.setVisible(false);
+    }
+
+    this.updatePermaMoneyText(scene);
+  }
+
+  private showPermaCollectedTypeTooltip(scene: BattleScene): void {
+    const permaModifier = scene.gameData.permaModifiers.getModifiers().find(
+        m => m instanceof PermaCollectedTypeModifier
+    ) as PermaCollectedTypeModifier | undefined;
+
+    if (permaModifier && permaModifier.collectedTypes) {
+        const typeEntries = Object.entries(permaModifier.collectedTypes)
+            .filter(([, count]) => (count as number) > 0)
+            .map(([type, count]) => `${i18next.t(`pokemonInfo:Type.${Type[parseInt(type)]}`)} x${count}`)
+            .join(", ");
+
+        const title = i18next.t("modifierType:ModifierType.PermaCollectedTypeModifierType.name", { defaultValue: "Collected Essences" });
+        const description = typeEntries || "No essences collected";
+
+        scene.ui.showTooltip(title, description, true);
+    }
   }
 
   setup(): void {
@@ -515,7 +836,13 @@ export default class UI extends Phaser.GameObjects.Container {
     this.updatePermaMoneyText((this.scene as BattleScene));
 
     this.updatePermaModifierBar((this.scene as BattleScene).gameData.permaModifiers);
+    this.updatePermaCollectedTypeDisplay(this.scene as BattleScene);
 
+    if (this.permaBarVisible) {
+      const scene = this.scene as BattleScene;
+      scene.getModifierBar()?.setVisible(false);
+      scene.getModifierBar(true)?.setVisible(false);
+    }
   }
 
   private setupTooltip() {
@@ -553,6 +880,10 @@ export default class UI extends Phaser.GameObjects.Container {
 
   getMessageHandler(): BattleMessageUiHandler {
     return this.handlers[Mode.MESSAGE] as BattleMessageUiHandler;
+  }
+
+  getPermaMoneyContainer(): Phaser.GameObjects.Container {
+    return this.permaMoneyContainer;
   }
 
   processInfoButton(pressed: boolean) {
@@ -630,13 +961,40 @@ export default class UI extends Phaser.GameObjects.Container {
       callback();
     };
 
-    const maxPageLength = 108;
+    const lang = i18next.resolvedLanguage;
+    const isCJK = lang === 'ja' || lang === 'zh-CN' || lang === 'zh-TW';
+    const maxPageLength = isCJK ? 53 : 108;
     const maxWordsPerPage = 19;
 
     const splitIntoPages = (text: string): string[] => {
 
       if (text.indexOf("$") > -1) {
         const pages = text.split(/\$/g).map(m => m.trim());
+        return pages;
+      }
+
+      if (isCJK) {
+        const pages: string[] = [];
+        let currentPage = "";
+
+        for (let i = 0; i < text.length; i++) {
+          const char = text[i];
+          const potentialPage = currentPage + char;
+
+          if (potentialPage.length > maxPageLength) {
+            if (currentPage) {
+              pages.push(currentPage);
+            }
+            currentPage = char;
+          } else {
+            currentPage = potentialPage;
+          }
+        }
+
+        if (currentPage) {
+          pages.push(currentPage);
+        }
+
         return pages;
       }
 
@@ -703,7 +1061,22 @@ export default class UI extends Phaser.GameObjects.Container {
     this.tooltipContent.setText(wrappedContent);
     this.tooltipContent.y = title ? 16 : 4;
     this.tooltipBg.width = Math.min(Math.max(this.tooltipTitle.displayWidth, this.tooltipContent.displayWidth) + 12, 684);
-    this.tooltipBg.height = (title ? 31 : 19) + 10.5 * (wrappedContent.split("\n").length - 1);
+
+    const lineCount = wrappedContent.split("\n").length;
+    const isJapanese = i18next.resolvedLanguage === 'ja';
+    const baseHeight = title ? (isJapanese ? 35 : 31) : (isJapanese ? 23 : 19);
+    const perLineHeight = isJapanese ? 7.5 : 10.5;
+    this.tooltipBg.height = baseHeight + perLineHeight * (lineCount - 1);
+    if (!this._tooltipPattern) {
+      this._tooltipPattern = attachModalBackground(
+        this.scene as BattleScene,
+        this.tooltipContainer,
+        () => ({ bgX: this.tooltipBg.x, bgY: this.tooltipBg.y, bgWidth: this.tooltipBg.width, bgHeight: this.tooltipBg.height }),
+        { mask: false, alphaMultiplier: 1.0, getTarget: () => this.tooltipBg }
+      );
+    } else {
+      this._tooltipPattern.redraw({ bgX: this.tooltipBg.x, bgY: this.tooltipBg.y, bgWidth: this.tooltipBg.width, bgHeight: this.tooltipBg.height });
+    }
     if (overlap) {
       (this.scene as BattleScene).uiContainer.moveAbove(this.tooltipContainer, this);
     } else {
@@ -714,12 +1087,22 @@ export default class UI extends Phaser.GameObjects.Container {
   hideTooltip(): void {
     this.tooltipContainer.setVisible(false);
     this.tooltipTitle.clearTint();
+    this._tooltipPattern?.clear();
+    this._tooltipPattern = undefined;
   }
 
   update(): void {
     if (this.tooltipContainer.visible) {
       const reverse = this.scene.game.input.mousePointer && this.scene.game.input.mousePointer.x >= this.scene.game.canvas.width - this.tooltipBg.width * 6 - 12;
-      this.tooltipContainer.setPosition(!reverse ? this.scene.game.input.mousePointer!.x / 6 + 2 : this.scene.game.input.mousePointer!.x / 6 - this.tooltipBg.width - 2, this.scene.game.input.mousePointer!.y / 6 + 2);
+      const newX = !reverse ? this.scene.game.input.mousePointer!.x / 6 + 2 : this.scene.game.input.mousePointer!.x / 6 - this.tooltipBg.width - 2;
+      const newY = this.scene.game.input.mousePointer!.y / 6 + 2;
+      const oldX = this.tooltipContainer.x;
+      const oldY = this.tooltipContainer.y;
+      this.tooltipContainer.setPosition(newX, newY);
+
+      if (this._tooltipPattern && (oldX !== newX || oldY !== newY)) {
+        this._tooltipPattern.redraw({ bgX: this.tooltipBg.x, bgY: this.tooltipBg.y, bgWidth: this.tooltipBg.width, bgHeight: this.tooltipBg.height });
+      }
     }
   }
 
@@ -788,7 +1171,7 @@ export default class UI extends Phaser.GameObjects.Container {
 
   private setModeInternal(mode: Mode, clear: boolean, forceTransition: boolean, chainMode: boolean, args: any[]): Promise<void> {
     return new Promise(resolve => {
-      
+
       if (this.mode === mode && !forceTransition) {
         resolve();
         return;
@@ -796,29 +1179,28 @@ export default class UI extends Phaser.GameObjects.Container {
 
       const doSetMode = () => {
         if (this.mode !== mode) {
-          
           if (clear) {
             this.getHandler().clear();
           }
-          
+
           if (chainMode && this.mode && !clear) {
             this.modeChain.push(this.mode);
             (this.scene as BattleScene).updateGameInfo();
           }
-          
+
           this.mode = mode;
           const touchControls = document?.getElementById("touchControls");
           if (touchControls) {
             touchControls.dataset.uiMode = Mode[mode];
-            
+
             const scene = this.scene as BattleScene;
             const shopUnlocked = scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
             const consoleUnlocked = scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED);
-            
+
             touchControls.dataset.shopUnlocked = shopUnlocked ? "true" : "false";
             touchControls.dataset.consoleUnlocked = consoleUnlocked ? "true" : "false";
           }
-          
+
           const newHandler = this.getHandler();
           if (newHandler) {
             newHandler.show(args);
@@ -874,7 +1256,7 @@ export default class UI extends Phaser.GameObjects.Container {
 
   revertMode(): Promise<boolean> {
     return new Promise<boolean>(resolve => {
-      
+
       if (!this?.modeChain?.length) {
         return resolve(false);
       }
@@ -882,6 +1264,7 @@ export default class UI extends Phaser.GameObjects.Container {
       const lastMode = this.mode;
 
       const doRevertMode = () => {
+        const prevMode = this.mode;
         this.getHandler().clear();
         this.mode = this.modeChain.pop()!;
         (this.scene as BattleScene).updateGameInfo();
@@ -907,7 +1290,7 @@ export default class UI extends Phaser.GameObjects.Container {
 
   revertModes(): Promise<void> {
     return new Promise<void>(resolve => {
-      
+
       if (!this?.modeChain?.length) {
         return resolve();
       }
@@ -949,7 +1332,7 @@ export default class UI extends Phaser.GameObjects.Container {
     }
     this.saveContainer.setAlpha(1);
     this.saveButton.setAlpha(0.5);
-    
+
     const saveButton = document.getElementById("apadSave");
     if (saveButton) {
       saveButton.dataset.activeState = "false";
@@ -965,9 +1348,9 @@ export default class UI extends Phaser.GameObjects.Container {
         voidexContainer.dataset.activeState = "false";
       }
       return;
-    } 
+    }
     this.voidexContainer.setAlpha(1);
-    
+
     const voidexContainer = document.getElementById("apadVoidex");
     if (voidexContainer) {
       voidexContainer.dataset.activeState = "true";
@@ -985,7 +1368,7 @@ export default class UI extends Phaser.GameObjects.Container {
       return;
     }
     this.eggGachaContainer.setAlpha(1);
-    
+
     const eggGachaContainer = document.getElementById("apadEggGacha");
     if (eggGachaContainer) {
       eggGachaContainer.dataset.activeState = "true";
@@ -994,12 +1377,12 @@ export default class UI extends Phaser.GameObjects.Container {
 
   public updateBattlePathIcon(scene: BattleScene): void {
     const currentPhase = scene.getCurrentPhase();
-    
+
     const isChaosMode = scene.gameMode?.isChaosMode;
     const currentWave = scene.currentBattle?.waveIndex || 0;
     const isValidPhase = currentPhase instanceof CommandPhase || currentPhase instanceof SelectModifierPhase;
     const battlePathButtonWidth = this.battlePathContainer.displayWidth * this.battlePathContainer.scale;
-    
+
     if (!isChaosMode || currentWave < 1 || !isValidPhase) {
       if(this.battlePathContainer.alpha === 1) {
         this.permaMoneyText.setX(this.permaMoneyText.x + battlePathButtonWidth + 9);
@@ -1009,17 +1392,15 @@ export default class UI extends Phaser.GameObjects.Container {
       if (battlePathContainer) {
         battlePathContainer.dataset.activeState = "false";
       }
-      
+
       return;
     }
-    
+
     if (this.battlePathContainer.alpha === 0) {
       this.permaMoneyText.setX(this.permaMoneyText.x - battlePathButtonWidth - 9);
 
     }
     this.battlePathContainer.setAlpha(1);
-
-    
     const battlePathContainer = document.getElementById("apadBattlePath");
     if (battlePathContainer) {
       battlePathContainer.dataset.activeState = "true";
@@ -1036,7 +1417,7 @@ export default class UI extends Phaser.GameObjects.Container {
       }
       return;
     }
-    
+
     if (scene.sessionSlotId < 0) {
       this.runInfoContainer.setAlpha(0);
       const runInfoContainer = document.getElementById("apadRunInfo");
@@ -1045,15 +1426,15 @@ export default class UI extends Phaser.GameObjects.Container {
       }
       return;
     }
-    
+
     this.runInfoContainer.setAlpha(1);
-    
+
     const runInfoContainer = document.getElementById("apadRunInfo");
     if (runInfoContainer) {
       runInfoContainer.dataset.activeState = "true";
     }
   }
-  
+
   public updatePermaMoneyText(scene:BattleScene): void {
     if (this.permaMoneyText) {
       this.permaMoneyText.destroy();
@@ -1065,13 +1446,14 @@ export default class UI extends Phaser.GameObjects.Container {
 
     const formattedMoney = Utils.formatMoney(scene.moneyFormat, scene.gameData?.permaMoney || 0);
     const text = i18next.t("battleScene:permaMoneyOwned", { formattedMoney });
-    
+
     this.permaMoneyText.setText(text);
     this.permaMoneyText.setVisible(true);
 
     const rightEdge = scene.game.canvas.width / 6;
-    const topEdge = -scene.game.canvas.height / 6;
-    const padding = 5;
+    const topEdge = this.getTopEdge(scene);
+    const padding = this.UI_CONSTANTS.TOP_PADDING;
+    const leftPadding = this.UI_CONSTANTS.LEFT_PADDING;
 
     const saveButtonWidth = this.saveContainer.displayWidth * this.saveContainer.scale;
     const voidexButtonWidth = this.voidexContainer.displayWidth * this.voidexContainer.scale;
@@ -1094,6 +1476,30 @@ export default class UI extends Phaser.GameObjects.Container {
     this.voidexContainer.setPosition(rightEdge - saveButtonWidth - padding - voidexContainerXOffset, topEdge + containerYOffset);
     this.eggGachaContainer.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - padding - eggGachaContainerXOffset, topEdge + containerYOffset);
     this.runInfoContainer.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - padding - runInfoContainerXOffset, topEdge + containerYOffset);
+
+    const permaCollectedTypeWidth = this.permaCollectedTypeContainer.visible ?
+        (this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SIZE * this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE) + this.UI_CONSTANTS.PERMA_COLLECTED_TYPE_SPACING : 0;
+    this.permaCollectedTypeContainer.setPosition(leftPadding, topEdge + padding);
+
+    const toggleStartX = leftPadding + permaCollectedTypeWidth;
+    this.permaBarToggleContainer.setPosition(toggleStartX, topEdge + padding);
+    this.playerBarToggleContainer.setPosition(toggleStartX + this.UI_CONSTANTS.TOGGLE_BUTTON_HORIZONTAL_SPACING, topEdge + padding);
+    this.foeBarToggleContainer.setPosition(toggleStartX + (this.UI_CONSTANTS.TOGGLE_BUTTON_HORIZONTAL_SPACING * 2), topEdge + padding);
+
+    const isInBattle = (this.scene as BattleScene).currentBattle !== null && (this.scene as BattleScene).currentBattle !== undefined;
+    this.playerBarToggleContainer.setVisible(isInBattle);
+    this.foeBarToggleContainer.setVisible(isInBattle);
+
+    if (isInBattle !== this.lastKnownBattleState) {
+      this.lastKnownBattleState = isInBattle;
+      this.updatePermaModifierBar((this.scene as BattleScene).gameData.permaModifiers);
+    }
+
+    if (this.permaBarVisible) {
+      const barXOffset = this.getBarXOffsetRightOfToggles(scene);
+      const barYPosition = topEdge + padding - 3;
+      this.permaModifierBar.setPosition(barXOffset, barYPosition);
+    }
 
     this.permaMoneyText.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - runInfoButtonWidth - padding - permaMoneyTextXOffset, topEdge + permaMoneyTextYOffset);
     this.permaMoneyContainer.add(this.permaMoneyText);
@@ -1121,8 +1527,8 @@ export default class UI extends Phaser.GameObjects.Container {
         this.saveExclamationWindow = this.scene.add.container(relativeX, relativeY);
         this.saveExclamationWindow.setName("save-exclamation");
 
-        const exclamationSprite = this.scene.add.sprite(0, 0, 'smitems_32', 'exclamationMark');
-        exclamationSprite.setScale(0.15);
+        const exclamationSprite = this.scene.add.sprite(0, 0, 'smitems', 'exclamationMark');
+        exclamationSprite.setScale(0.075);
         exclamationSprite.setOrigin(0.5, 0.5);
 
         this.saveExclamationWindow.add(exclamationSprite);

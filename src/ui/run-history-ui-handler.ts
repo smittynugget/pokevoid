@@ -15,19 +15,13 @@ import { TrainerVariant } from "../field/trainer";
 import { SessionHistoryResult } from "../system/session-history";
 import { loggedInUser } from "../account";
 import { GameMode } from "../game-mode";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 
 export type RunSelectCallback = (cursor: integer) => void;
 
 export const RUN_HISTORY_LIMIT: number = 25;
-// Maximum slots for active sessions (concurrent runs)
-export const MAX_SESSION_SLOTS: number = 3; 
 
-/**
- * RunHistoryUiHandler handles the UI of the Run History Menu
- * Run History itself is broken into an array of RunEntryContainer objects that can show the user basic details about their run and allow them to access more details about their run through cursor action.
- * It navigates similarly to the UI of the save slot select menu.
- * The only valid input buttons are Button.ACTION and Button.CANCEL.
- */
+export const MAX_SESSION_SLOTS: number = 3;
 export default class RunHistoryUiHandler extends MessageUiHandler {
 
   private runSelectContainer: Phaser.GameObjects.Container;
@@ -44,6 +38,8 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
 
   private runContainerInitialY: number;
 
+  private _runHistoryPatterns?: { runs?: ModalBackgroundHandle[], empty?: ModalBackgroundHandle };
+
   constructor(scene: BattleScene) {
     super(scene, Mode.RUN_HISTORY);
   }
@@ -55,8 +51,21 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
     this.runSelectContainer.setVisible(false);
     ui.add(this.runSelectContainer);
 
-    const loadSessionBg = this.scene.add.rectangle(0, 0, this.scene.game.canvas.width / 6, -this.scene.game.canvas.height / 6, 0x006860);
+    const loadSessionBg = this.scene.add.nineslice(0, 0, "default_bg", undefined, this.scene.game.canvas.width / 6, this.scene.game.canvas.height / 6, 0, 0, 16, 0);
     loadSessionBg.setOrigin(0, 0);
+    loadSessionBg.setY(-this.scene.game.canvas.height / 6);
+    try {
+        if (loadSessionBg.postFX && typeof loadSessionBg.postFX.addColorMatrix === 'function') {
+            const colorMatrix = loadSessionBg.postFX.addColorMatrix();
+            colorMatrix.negative();
+        } else {
+            loadSessionBg.setTint(0xFFFFFF);
+            loadSessionBg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
+        }
+    } catch (error) {
+        loadSessionBg.setTint(0x000000);
+        loadSessionBg.setBlendMode(Phaser.BlendModes.SCREEN);
+    }
     this.runSelectContainer.add(loadSessionBg);
 
     this.runContainerInitialY = -this.scene.game.canvas.height / 6 + 8;
@@ -66,10 +75,7 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
 
     this.runs = [];
 
-    this.scene.loadImage("hall_of_fame_red", "ui");
-    this.scene.loadImage("hall_of_fame_blue", "ui");
-    // For some reason, the game deletes/unloads the rival sprites. As a result, Run Info cannot access the rival sprites.
-    // The rivals are loaded here to have some way of accessing those sprites.
+    this.scene.loadImage("hall_of_fame", "ui");
     this.scene.loadAtlas("rival_f", "trainer");
     this.scene.loadAtlas("rival_m", "trainer");
   }
@@ -79,26 +85,18 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
 
     this.getUi().bringToTop(this.runSelectContainer);
     this.runSelectContainer.setVisible(true);
-    this.populateRuns(this.scene);
 
-    this.setScrollCursor(0);
-    this.setCursor(0);
-
-    //Destroys the cursor if there are no runs saved so far.
-    if (this.runs.length === 0) {
-      this.clearCursor();
-    }
+    this.populateRuns(this.scene).then(() => {
+      this.attachRunBackgrounds();
+      this.setScrollCursor(0);
+      this.setCursor(0);
+      if (this.runs.length === 0) {
+        this.clearCursor();
+      }
+    });
 
     return true;
   }
-
-  /**
-   * Performs a certain action based on the button pressed by the user
-   * @param button
-   * The user can navigate through the runs with Button.UP/Button.DOWN.
-   * Button.ACTION allows the user to access more information about their runs.
-   * Button.CANCEL allows the user to go back.
-   */
   override processInput(button: Button): boolean {
     const ui = this.getUi();
 
@@ -147,13 +145,25 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
     return success || error;
   }
 
-  /**
-   * Fetches all current active sessions/runs
-   * @returns An array of current active session data and their slot IDs
-   */
+  private attachRunBackgrounds(): void {
+    if (this.runs.length > 0) {
+      this._runHistoryPatterns = this._runHistoryPatterns || {};
+      this._runHistoryPatterns.runs = [];
+      this.runs.forEach((runEntry) => {
+        const handle = attachModalBackground(
+          this.scene,
+          this.runsContainer,
+          () => ({ bgX: runEntry.x, bgY: runEntry.y, bgWidth: 304, bgHeight: 52 }),
+          { mask: false, alphaMultiplier: 0.7, getTarget: () => runEntry.getAt(0) as Phaser.GameObjects.GameObject }
+        );
+        this._runHistoryPatterns!.runs!.push(handle);
+      });
+      this._runHistoryPatterns?.runs?.forEach(handle => handle.redraw());
+    }
+  }
   private async getCurrentSessions(): Promise<{ sessionData: SessionSaveData, slotId: number }[]> {
     const sessions: { sessionData: SessionSaveData, slotId: number }[] = [];
-    
+
     for (let slot = 0; slot < MAX_SESSION_SLOTS; slot++) {
       try {
         const key = `sessionData${slot ? slot : ""}_${loggedInUser?.username}`;
@@ -166,59 +176,41 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
         console.error(`Error loading session data for slot ${slot}:`, error);
       }
     }
-    
+
     return sessions;
   }
-
-  /**
-   * This retrieves the player's run history and facilitates the processes necessary for the output display.
-   * It also includes current active sessions in the display.
-   * @param scene: BattleScene
-   * Runs are displayed from newest --> oldest in descending order.
-   * Active runs are shown first, followed by completed runs.
-   */
   private async populateRuns(scene: BattleScene) {
-    // Get the active sessions first
+
     const activeSessions = await this.getCurrentSessions();
     const activeRunCount = activeSessions.length;
-    
-    // Then get the completed runs
     const response = await this.scene.gameData.getRunHistoryData(this.scene);
     const timestamps = Object.keys(response);
-    
-    // If no runs at all, show empty
     if (timestamps.length === 0 && activeRunCount === 0) {
       this.showEmpty();
       return;
     }
-    
-    // Add active sessions to the display first
     let entryIndex = 0;
     for (let i = 0; i < activeRunCount; i++) {
       const session = activeSessions[i];
-      
-      // Create a RunEntry-compatible object for active sessions
       const activeRunEntry: RunEntry = {
         entry: session.sessionData,
         isVictory: false,
         isFavorite: false,
-        isActive: true  // This marks it as an active run
+        isActive: true
       };
-      
+
       const entry = new RunEntryContainer(this.scene, activeRunEntry, entryIndex);
       this.scene.add.existing(entry);
       this.runsContainer.add(entry);
       this.runs.push(entry);
       entryIndex++;
     }
-    
-    // Add completed runs after active sessions
     if (timestamps.length > 0) {
       const timestampsNo = timestamps.map(Number);
       if (timestamps.length > 1) {
         timestampsNo.sort((a, b) => b - a);
       }
-      
+
       const entryCount = timestamps.length;
       for (let s = 0; s < entryCount; s++) {
         const entry = new RunEntryContainer(this.scene, response[timestampsNo[s]], entryIndex);
@@ -228,15 +220,11 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
         entryIndex++;
       }
     }
-    
+
     if (this.cursorObj && this.runs.length > 0) {
       this.runsContainer.bringToTop(this.cursorObj);
     }
   }
-
-  /**
-   * If the player has no runs saved so far, this creates a giant window labeled empty instead.
-   */
   private async showEmpty() {
     const emptyWindow = addWindow(this.scene, 0, 0, 304, 165);
     this.runsContainer.add(emptyWindow);
@@ -244,6 +232,15 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
     const emptyText = addTextObject(this.scene, 0, 0, i18next.t("saveSlotSelectUiHandler:empty"), TextStyle.WINDOW, {fontSize: "128px"});
     emptyText.setPosition(emptyWindowCoordinates.x-18, emptyWindowCoordinates.y-15);
     this.runsContainer.add(emptyText);
+
+    this._runHistoryPatterns = this._runHistoryPatterns || {};
+    this._runHistoryPatterns.empty = attachModalBackground(
+      this.scene,
+      this.runsContainer,
+      () => ({ bgX: emptyWindow.x, bgY: emptyWindow.y, bgWidth: emptyWindow.width, bgHeight: emptyWindow.height }),
+      { mask: false, alphaMultiplier: 0.6, getTarget: () => emptyWindow }
+    );
+    this._runHistoryPatterns.empty.redraw();
   }
 
   override setCursor(cursor: number): boolean {
@@ -268,19 +265,21 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
         targets: this.runsContainer,
         y: this.runContainerInitialY - 56 * scrollCursor,
         duration: Utils.fixedInt(325),
-        ease: "Sine.easeInOut"
+        ease: "Sine.easeInOut",
+        onComplete: () => {
+          this._runHistoryPatterns?.runs?.forEach(h => h.redraw());
+        }
       });
     }
     return changed;
   }
-
-  /**
-   * Called when the player returns back to the menu
-   * Uses the functions clearCursor() and clearRuns()
-   */
   override clear() {
     super.clear();
     this.runSelectContainer.setVisible(false);
+
+    this._runHistoryPatterns?.runs?.forEach(handle => handle.clear());
+    this._runHistoryPatterns?.empty?.clear();
+    this._runHistoryPatterns = undefined;
     this.clearCursor();
     this.runSelectCallback = null;
     this.clearRuns();
@@ -298,12 +297,6 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
     this.runsContainer.removeAll(true);
   }
 }
-
-/**
- * RunEntryContainer : stores/displays an individual run
- * slotId: necessary for positioning
- * entryData: the data of an individual run
- */
 class RunEntryContainer extends Phaser.GameObjects.Container {
   private slotId: number;
   public entryData: RunEntry;
@@ -316,17 +309,6 @@ class RunEntryContainer extends Phaser.GameObjects.Container {
 
     this.setup(this.entryData);
   }
-
-  /**
-   * This processes the individual run's data for display.
-   *
-   * Each RunEntryContainer displayed should have the following information:
-   * Run Result: Victory || Defeat || [No text for active run]
-   * Game Mode + Final Wave
-   * Time Stamp
-   *
-   * The player's party and their levels at the time of the last wave of the run are also displayed.
-   */
   private setup(run: RunEntry) {
     const victory = run.isVictory;
     const isActive = 'isActive' in run && run.isActive === true;
@@ -334,17 +316,15 @@ class RunEntryContainer extends Phaser.GameObjects.Container {
 
     const slotWindow = addWindow(this.scene, 0, 0, 304, 52);
     this.add(slotWindow);
-
-    // For active runs, don't show victory/defeat text
     if (!isActive) {
-      // Run Result: Victory
+
       if (victory) {
         const gameOutcomeLabel = addTextObject(this.scene, 8, 5, `${i18next.t("runHistory:victory")}`, TextStyle.WINDOW);
         this.add(gameOutcomeLabel);
-      } else { // Run Result: Defeats
+      } else {
         const genderIndex = this.scene.gameData.gender ?? PlayerGender.UNSET;
         const genderStr = PlayerGender[genderIndex].toLowerCase();
-        // Defeats from wild Pokemon battles will show the Pokemon responsible by the text of the run result.
+
         if (data.battleType === BattleType.WILD) {
           const enemyContainer = this.scene.add.container(8, 5);
           const gameOutcomeLabel = addTextObject(this.scene, 0, 0, `${i18next.t("runHistory:defeatedWild", { context: genderStr })}`, TextStyle.WINDOW);
@@ -381,7 +361,7 @@ class RunEntryContainer extends Phaser.GameObjects.Container {
           this.add(enemyContainer);
         }
       }
-    } 
+    }
 
     const gameModeLabel = addTextObject(this.scene, 8, isActive ? 5 : 21, `${GameMode.getModeName(data.gameMode)}`, TextStyle.WINDOW);
 
@@ -391,7 +371,7 @@ class RunEntryContainer extends Phaser.GameObjects.Container {
       const coords = gameModeLabel.getTopRight();
       splicedIcon.setPosition(coords.x+5, 27);
       this.add(splicedIcon);
-      // 4 spaces of room for the Spliced icon
+
       gameModeLabel.appendText("    - ", false);
     } else {
       gameModeLabel.appendText(" - ", false);
@@ -401,10 +381,6 @@ class RunEntryContainer extends Phaser.GameObjects.Container {
 
     const timestampLabel = addTextObject(this.scene, 8, 33, new Date(data.timestamp).toLocaleString(), TextStyle.WINDOW);
     this.add(timestampLabel);
-
-    // pokemonIconsContainer holds the run's party Pokemon icons and levels
-    // Icons should be level with each other here, but there are significant number of icons that have a center axis / position far from the norm.
-    // The code here does not account for icon weirdness.
     const pokemonIconsContainer = this.scene.add.container(140, 17);
 
     data.party.forEach((p: PokemonData, i: integer) => {
@@ -429,8 +405,6 @@ class RunEntryContainer extends Phaser.GameObjects.Container {
     this.add(pokemonIconsContainer);
   }
 }
-
-// Extend the RunEntry interface to include optional isActive property
 interface RunEntry {
   entry: SessionSaveData;
   isVictory: boolean;
@@ -441,4 +415,3 @@ interface RunEntry {
 interface RunEntryContainer {
   scene: BattleScene;
 }
-

@@ -39,16 +39,14 @@ export default class PartyExpBar extends Phaser.GameObjects.Container {
       this.pokemonIcon.setScale(0.5);
 
       this.add(this.pokemonIcon);
-
-      // if we want to only display the level in the small frame
       if (showOnlyLevelUp) {
-        if (newLevel > 200) { // if the level is greater than 200, we only display Lv. UP
+        if (newLevel > 200) {
           this.expText.setText("Lv. UP");
-        } else { // otherwise we display Lv. Up and the new level
+        } else {
           this.expText.setText(`Lv. UP: ${newLevel.toString()}`);
         }
       } else {
-        // if we want to display the exp
+
         this.expText.setText(`+${expValue.toString()}`);
       }
 

@@ -3,5 +3,11 @@
   "ball": "Ball",
   "pokemon": "Pokémon",
   "run": "Fliehen",
-  "actionMessage": "Was soll\n{{pokemonName}} tun?"
+  "actionMessage": "Was soll\n{{pokemonName}} tun?",
+  "skillTree": "Fertigkeitenbaum",
+  "team": "Team",
+  "check": "Prüfen",
+  "eggs": "Eier",
+  "shop": "Shop",
+  "map": "Karte"
 }

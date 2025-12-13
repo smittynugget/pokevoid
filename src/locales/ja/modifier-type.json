@@ -2,7 +2,13 @@
   "ModifierType": {
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
+      "statLabel": "ポケボールアイテム",
       "description": "{{pokeballName}} x{{modifierCount}}こ てにいれる (インベントリ: {{pokeballAmount}}) \nほそくりつ: {{catchRate}}"
+    },
+    "AddPokemonModifierType": {
+      "name": "{{pokemonName}}",
+      "statLabel": "ドラフトポケモン:",
+      "description": "{{pokemonName}}をパーティに追加します。"
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
@@ -707,6 +713,18 @@
       "statLabel": "エッセンス",
       "description": "リリースアイテムのためにポケモンを逃がす代わりに5個使うか、コレクターと報酬を交換します。"
     },
+    "PermaCollectedTypeModifierType": {
+      "name": "収集エッセンス",
+      "description": "収集したエッセンスを保存:"
+    },
+    "SKILL_POINTS": {
+      "name": "スキルポイント×{{amount}}",
+      "description": "スキルポイントを{{amount}}獲得。スキルツリーでスキルを解放するのに使用。"
+    },
+    "SKILL_TOKENS": {
+      "name": "スキルツリートークン×{{amount}}",
+      "description": "スキルツリートークンを{{amount}}獲得。スキルツリーをレベルアップするのに使用！"
+    },
     "SacrificeModifierType": {
       "description": "ポケモンを手放して、他のポケモンの{{stat}}を15%上昇させます。"
     },
@@ -752,6 +770,11 @@
       "name": "にがすアイテム きりかえ",
       "description": "にがすアイテム オン/オフ"
     }
+  },
+  "AddPokemonModifierType": {
+    "name": "{{pokemonName}}",
+    "statLabel": "ドラフトポケモン:",
+    "description": "{{pokemonName}}をパーティに追加します。"
   },
   "SpeciesBoosterItem": {
     "LIGHT_BALL": {
@@ -928,6 +951,43 @@
     "CHILL_DRIVE": "フリーズカセット",
     "DOUSE_DRIVE": "アクアカセット",
     "ULTRANECROZIUM_Z": "ウルトラネクロZ",
+    "FIST_PLATE": "こぶしのプレート",
+    "SKY_PLATE": "あおぞらプレート",
+    "TOXIC_PLATE": "もうどくプレート",
+    "EARTH_PLATE": "だいちのプレート",
+    "STONE_PLATE": "がんせきプレート",
+    "INSECT_PLATE": "たまむしプレート",
+    "SPOOKY_PLATE": "もののけプレート",
+    "IRON_PLATE": "こうてつプレート",
+    "FLAME_PLATE": "ひのたまプレート",
+    "SPLASH_PLATE": "しずくプレート",
+    "MEADOW_PLATE": "みどりのプレート",
+    "ZAP_PLATE": "いかずちプレート",
+    "MIND_PLATE": "ふしぎのプレート",
+    "ICICLE_PLATE": "つららのプレート",
+    "DRACO_PLATE": "りゅうのプレート",
+    "DREAD_PLATE": "こわもてプレート",
+    "PIXIE_PLATE": "せいれいプレート",
+    "BLANK_PLATE": "ブランクプレート",
+    "LEGEND_PLATE": "レジェンドプレート",
+    "FIGHTING_MEMORY": "ファイトメモリ",
+    "FLYING_MEMORY": "フライングメモリ",
+    "POISON_MEMORY": "ポイズンメモリ",
+    "GROUND_MEMORY": "グラウンドメモリ",
+    "ROCK_MEMORY": "ロックメモリ",
+    "BUG_MEMORY": "バグメモリ",
+    "GHOST_MEMORY": "ゴーストメモリ",
+    "STEEL_MEMORY": "スチールメモリ",
+    "FIRE_MEMORY": "ファイヤーメモリ",
+    "WATER_MEMORY": "ウオーターメモリ",
+    "GRASS_MEMORY": "グラスメモリ",
+    "ELECTRIC_MEMORY": "エレクトロメモリ",
+    "PSYCHIC_MEMORY": "サイキックメモリ",
+    "ICE_MEMORY": "アイスメモリ",
+    "DRAGON_MEMORY": "ドラゴンメモリ",
+    "DARK_MEMORY": "ダークメモリ",
+    "FAIRY_MEMORY": "フェアリーメモリ",
+    "BLANK_MEMORY": "ブランクメモリ",
     "SMITTY_AURA": "スミティのオーラ",
     "SMITTY_BRAIN": "スミティの脳",
     "SMITTY_CHAIN": "スミティの鎖",
@@ -980,7 +1040,10 @@
     "waves": "ウェーブ",
     "uses": "回使用可能",
     "glitchPieceCost": "*グリッチピース2個が必要",
+    "permaMoney": "Ωゴールド",
+    "permaItem": "Ωアイテム",
     "moreInfo": "(Cキー/Shiftキー長押しで詳細表示)",
+    "morePokeInfo": "(P / Shift で詳細)",
     "upgrade": "強化"
   }
 }

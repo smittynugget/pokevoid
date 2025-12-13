@@ -1,0 +1,98 @@
+{
+  "title": "Select Champion",
+  "confirmSelection": "Start run with {{name}}?",
+  "subheader": "Who will you choose to venture into the Void?",
+  "levelUp": "LEVEL UP!",
+  "characterUnlocked": "{{name}}\nUNLOCKED!",
+  "unlocked": "Unlocked",
+  "lockedGauge": "Committed: {{current}} / {{required}}",
+  "xp": "XP",
+  "potential": "POTENTIAL",
+  "level": "LEVEL",
+  "locked": "LOCKED",
+  "unlockRequired": "Requires: {{requirement}}",
+  "essenceHint": "Use Required Essence to Level Up!",
+  "essencesHeader": "Essences:",
+  "skillsHeader": "SKILLS",
+  "skillsSubheader": "Skills will randomly appear in Skill Tree.",
+  "rarity": {
+    "common": "COMMON",
+    "great": "GREAT", 
+    "ultra": "ULTRA",
+    "master": "MASTER",
+    "rogue": "ROGUE",
+    "legendary": "LEGENDARY"
+  },
+  "unlockCharacter": "Unlock Character",
+  "unlockCharacterTooltip": "Unlock by using {{current}}/{{required}} Essences to Unlock",
+  "tooltip": {
+    "lockedSkillTitle": "Locked Skill",
+    "levelRequired": "Must be Level {{level}} to unlock.",
+    "lockedPrefix": "LOCKED",
+    "unlockWithEssence": "Unlock by using {{current}}/{{required}} Essences to Level Up!",
+    "levelUpRequired": "Level up to unlock this skill.",
+    "defaultTm": "Teach a {{types}} TM to a Pokémon",
+    "defaultXm": "Teach a {{types}} XM to a Pokémon",
+    "defaultEssence": "Add {{amount}} {{types}} Type Essences to your collection",
+    "defaultBooster": "Receive a {{types}} Type Booster item",
+    "defaultTeraAbility": "Use {{types}} to activate Tera Abilities",
+    "defaultEssenceWeight": "Increase {{types}} Essence drop weight by {{weight}}",
+    "defaultCatchRate": "Increase catch rate for {{types}} Pokémon by {{percent}}%",
+    "defaultFusionPriority": "Increase fusion priority for {{types}} Pokémon",
+    "defaultRevive": "Increase revive chance for {{types}} Pokémon by {{percent}}%",
+    "defaultTokens": "Receive Skill Tree Tokens to unlock nodes",
+    "defaultPoints": "Receive Skill Points to purchase skills",
+    "typesFallback": "Unknown"
+  },
+  "skillList": {
+    "levelPrefix": "Lvl {{level}}",
+    "unknownSkill": "???"
+  },
+  "defaultSkillLabels": {
+    "tms": "{{types}} TMs",
+    "xms": "{{types}} XMs",
+    "abilities": "{{types}} Abilities",
+    "teraAbilities": "{{types}} Tera Abilities",
+    "statBoosts": "{{types}} Stat Boosts",
+    "tokens": "Skill Tree Tokens",
+    "points": "Skill Points",
+    "boosters": "{{types}} Boosters",
+    "essence": "{{types}} Essence",
+    "reviveBoost": "{{types}} Revive Boost",
+    "essenceWeights": "{{types}} Essence Weights",
+    "catchBonus": "{{types}} Catch Bonus",
+    "fusionPriority": "{{types}} Fusion Priority"
+  },
+  "button": {
+    "useEssence": "Use Essence"
+  },
+  "brock": { "description": "Champion of Rock" },
+  "misty": { "description": "Champion of Water" },
+  "apollo": {
+    "name": "Apollo",
+    "description": "Champion of Sun"
+  },
+  "diana": {
+    "name": "Diana",
+    "description": "Champion of Moon"
+  },
+  "generic": { "description": "The default champion." },
+  "champions": {
+  "title": "Choose Your Champion",
+  "brock": {
+    "name": "Brock - Rock Specialist",
+    "description": "Master of Ground and Rock types",
+    "essenceRequirement": "Requires {{ground}} Ground + {{rock}} Rock essences"
+  },
+  "misty": {
+    "name": "Misty - Water Specialist", 
+    "description": "Master of Water types",
+    "essenceRequirement": "Requires {{water}} Water essences"
+  },
+  "generic": {
+    "name": "Balanced Champion",
+    "description": "No type specialization",
+    "essenceRequirement": "No special requirements"
+  }
+}
+}

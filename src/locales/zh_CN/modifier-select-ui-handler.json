@@ -9,7 +9,7 @@
   "checkTeamDesc": "检查队伍或使用形态改变道具",
   "rerollCost": "₽{{formattedMoney}}",
   "itemCost": "₽{{formattedMoney}}",
-  "rerollPermaCost": "∞{{formattedMoney}}",
-  "itemPermaCost": "∞{{formattedMoney}}",
+  "rerollPermaCost": "Ω{{formattedMoney}}",
+  "itemPermaCost": "Ω{{formattedMoney}}",
   "refreshTimer": "刷新倒计时: {{minutes}}:{{seconds}}"
 }

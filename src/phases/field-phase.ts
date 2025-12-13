@@ -11,14 +11,11 @@ export abstract class FieldPhase extends BattlePhase {
   getOrder(): BattlerIndex[] {
     const playerField = this.scene.getPlayerField().filter(p => p.isActive()) as Pokemon[];
     const enemyField = this.scene.getEnemyField().filter(p => p.isActive()) as Pokemon[];
-
-    // We shuffle the list before sorting so speed ties produce random results
     let orderedTargets: Pokemon[] = playerField.concat(enemyField);
-    // We seed it with the current turn to prevent an inconsistency where it
-    // was varying based on how long since you last reloaded
+    const turn = this.scene.currentBattle?.turn ?? 0;
     this.scene.executeWithSeedOffset(() => {
       orderedTargets = Utils.randSeedShuffle(orderedTargets);
-    }, this.scene.currentBattle.turn, this.scene.waveSeed);
+    }, turn, this.scene.waveSeed);
 
     orderedTargets.sort((a: Pokemon, b: Pokemon) => {
       const aSpeed = a?.getBattleStat(Stat.SPD) || 0;
@@ -29,8 +26,6 @@ export abstract class FieldPhase extends BattlePhase {
 
     const speedReversed = new Utils.BooleanHolder(false);
     this.scene.arena.applyTags(TrickRoomTag, speedReversed);
-
-    // Apply trickRoom dynamic challenge - reverse speed order
     if (this.scene.dynamicMode?.trickRoom) {
       speedReversed.value = !speedReversed.value;
     }

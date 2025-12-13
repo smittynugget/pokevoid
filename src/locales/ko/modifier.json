@@ -16,9 +16,9 @@
     "questComplete": "퀘스트 완료!",
     "stageComplete": "스테이지 완료!",
     "rewardTypes": {
-      "permaMoney": "∞골드",
-      "permaModifier": "∞아이템",
-      "permaMoneyAndModifier": "∞골드 & ∞아이템"
+      "permaMoney": "Ω골드",
+      "permaModifier": "Ω아이템",
+      "permaMoneyAndModifier": "Ω골드 & Ω아이템"
     }
   }
 } 

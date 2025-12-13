@@ -2,6 +2,8 @@ import BattleScene from "../battle-scene";
 import AwaitableUiHandler from "./awaitable-ui-handler";
 import { Mode } from "./ui";
 import * as Utils from "../utils";
+import i18next from "i18next";
+import { addTextObject, TextStyle } from "./text";
 
 export default abstract class MessageUiHandler extends AwaitableUiHandler {
   protected textTimer: Phaser.Time.TimerEvent | null;
@@ -50,28 +52,64 @@ export default abstract class MessageUiHandler extends AwaitableUiHandler {
     }
 
     if (text) {
-      // Predetermine overflow line breaks to avoid words breaking while displaying
-      const textWords = text.split(" ");
-      let lastLineCount = 1;
-      let newText = "";
-      for (let w = 0; w < textWords.length; w++) {
-        const nextWordText = newText ? `${newText} ${textWords[w]}` : textWords[w];
+      const lang = i18next.resolvedLanguage;
+      const isCJK = lang === 'ja' || lang === 'zh-CN' || lang === 'zh-TW';
 
-        if (textWords[w].includes("\n")) {
-          newText = nextWordText;
-          lastLineCount++;
-        } else {
-          const lineCount = this.message.runWordWrap(nextWordText).split(/\n/g).length;
-          if (lineCount > lastLineCount) {
-            lastLineCount = lineCount;
-            newText = `${newText}\n${textWords[w]}`;
+      if (isCJK) {
+        const style = this.message.style as Phaser.Types.GameObjects.Text.TextStyle;
+        const wrapWidth = style.wordWrap?.width || 1780;
+        const effectiveDisplayWidth = wrapWidth * this.message.scale;
+
+        let newText = "";
+        let currentLine = "";
+
+        for (let i = 0; i < text.length; i++) {
+          const char = text[i];
+
+          if (char === '\n') {
+            newText += currentLine + char;
+            currentLine = "";
           } else {
-            newText = nextWordText;
+            const testLine = currentLine + char;
+
+            const testTextObject = addTextObject(this.scene, 0, 0, testLine, TextStyle.MESSAGE, {});
+            const displayWidth = testTextObject.displayWidth;
+            testTextObject.destroy();
+
+            if (displayWidth > effectiveDisplayWidth && currentLine.length > 0) {
+              newText += currentLine + '\n';
+              currentLine = char;
+            } else {
+              currentLine = testLine;
+            }
           }
         }
-      }
 
-      text = newText;
+        newText += currentLine;
+        text = newText;
+      } else {
+        const textWords = text.split(" ");
+        let lastLineCount = 1;
+        let newText = "";
+        for (let w = 0; w < textWords.length; w++) {
+          const nextWordText = newText ? `${newText} ${textWords[w]}` : textWords[w];
+
+          if (textWords[w].includes("\n")) {
+            newText = nextWordText;
+            lastLineCount++;
+          } else {
+            const lineCount = this.message.runWordWrap(nextWordText).split(/\n/g).length;
+            if (lineCount > lastLineCount) {
+              lastLineCount = lineCount;
+              newText = `${newText}\n${textWords[w]}`;
+            } else {
+              newText = nextWordText;
+            }
+          }
+        }
+
+        text = newText;
+      }
     }
 
     if (this.textTimer) {
@@ -99,7 +137,7 @@ export default abstract class MessageUiHandler extends AwaitableUiHandler {
       this.textTimer = this.scene.time.addEvent({
         delay: delay,
         callback: () => {
-          const charIndex = text.length - (this.textTimer?.repeatCount!); // TODO: is this bang correct?
+          const charIndex = text.length - (this.textTimer?.repeatCount!);
           const charVar = charVarMap.get(charIndex);
           const charSound = soundMap.get(charIndex);
           const charDelay = delayMap.get(charIndex);
@@ -126,11 +164,11 @@ export default abstract class MessageUiHandler extends AwaitableUiHandler {
             }
           };
           if (charDelay) {
-            this.textTimer!.paused = true; // TODO: is the bang correct?
+            this.textTimer!.paused = true;
             this.scene.tweens.addCounter({
               duration: Utils.getFrameMs(charDelay),
               onComplete: () => {
-                this.textTimer!.paused = false; // TODO: is the bang correct?
+                this.textTimer!.paused = false;
                 advance();
               }
             });
@@ -192,6 +230,21 @@ export default abstract class MessageUiHandler extends AwaitableUiHandler {
   }
 
   clear() {
+    if (this.prompt) {
+      this.prompt.anims.stop();
+      this.prompt.setVisible(false);
+    }
+    this.pendingPrompt = false;
+    this.awaitingActionInput = false;
+    this.onActionInput = null;
+    if (this.textTimer) {
+      this.textTimer.remove();
+      this.textTimer = null;
+    }
+    if (this.textCallbackTimer) {
+      this.textCallbackTimer.destroy();
+      this.textCallbackTimer = null;
+    }
     super.clear();
   }
 

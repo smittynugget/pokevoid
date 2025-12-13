@@ -1,0 +1,295 @@
+{
+  "onix_crystal_leviathan": {
+    "name": "攻擊之蛇",
+    "description": "高速進攻型大岩蛇"
+  },
+  "onix_stone_defender": {
+    "name": "岩石防禦者",
+    "description": "坦克防禦型大岩蛇"
+  },
+  "geodude_tank_mode": {
+    "name": "坦克模式",
+    "description": "超防禦型小拳石"
+  },
+  "geodude_speed_form": {
+    "name": "速度形態",
+    "description": "高速電氣型小拳石"
+  },
+  "rhyhorn_rampage": {
+    "name": "暴走",
+    "description": "攻擊性格鬥型鐵甲犀牛"
+  },
+  "onix_brock_signature": {
+    "name": "小剛的夥伴",
+    "description": "小剛值得信賴的岩石屬性夥伴"
+  },
+  "geodude_brock_signature": {
+    "name": "小剛的夥伴",
+    "description": "小剛忠實的岩石屬性夥伴"
+  },
+  "staryu_misty_signature": {
+    "name": "小霞的夥伴",
+    "description": "小霞優雅的水屬性夥伴"
+  },
+  "psyduck_misty_signature": {
+    "name": "小霞的夥伴",
+    "description": "小霞古怪的水屬性夥伴"
+  },
+  "voltorb_surge_signature": {
+    "name": "馬志士的夥伴",
+    "description": "馬志士電氣的電屬性夥伴"
+  },
+  "pikachu_surge_signature": {
+    "name": "馬志士的夥伴",
+    "description": "馬志士強力的電屬性夥伴"
+  },
+  "electabuzz_surge_signature": {
+    "name": "馬志士的夥伴",
+    "description": "馬志士震撼的電屬性夥伴"
+  },
+  "magikarp_misty_signature": {
+    "name": "小霞的夥伴",
+    "description": "小霞堅毅的水屬性夥伴"
+  },
+  "poliwag_misty_signature": {
+    "name": "小霞的夥伴",
+    "description": "小霞活潑的水屬性夥伴"
+  },
+  "azurill_misty_signature": {
+    "name": "小霞的夥伴",
+    "description": "小霞可愛的水屬性夥伴"
+  },
+  "goldeen_misty_signature": {
+    "name": "小霞的夥伴",
+    "description": "小霞優雅的水屬性夥伴"
+  },
+  "horsea_misty_signature": {
+    "name": "小霞的夥伴",
+    "description": "小霞忠誠的水屬性夥伴"
+  },
+  "togepi_misty_signature": {
+    "name": "小霞的夥伴",
+    "description": "小霞珍貴的妖精屬性夥伴"
+  },
+  "corsola_misty_signature": {
+    "name": "小霞的夥伴",
+    "description": "小霞開朗的水屬性夥伴"
+  },
+  "luvdisc_misty_signature": {
+    "name": "小霞的夥伴",
+    "description": "小霞深情的水屬性夥伴"
+  },
+  "clauncher_misty_signature": {
+    "name": "小霞的夥伴",
+    "description": "小霞強力的水屬性夥伴"
+  },
+  "staryu_chronos_gear": {
+    "name": "時空齒輪",
+    "description": "注入時間能量的鋼/水屬性海星星，擁有防禦精準和雨天祝福的韌性"
+  },
+  "magikarp_splash_tyrant": {
+    "name": "濺躍暴君",
+    "description": "超越弱點的水/格鬥屬性鯉魚王，體現了頑強的決心和威嚇力量"
+  },
+  "psyduck_kappa_quack": {
+    "name": "河童呱呱",
+    "description": "引導神秘惡作劇的水/幽靈屬性可達鴨，擁有影子束縛能力和空靈混亂"
+  },
+  "poliwag_lightning_drum": {
+    "name": "閃電鼓",
+    "description": "脈動著電流能量的電/水屬性蚊香蝌蚪，擁有迅捷水流和再生活力"
+  },
+  "azurill_bounce_champion": {
+    "name": "彈跳冠軍",
+    "description": "翱翔天際的飛行/妖精屬性露力麗，擁有飛行化優雅、妖精化力量和冠軍級彈跳能力"
+  },
+  "goldeen_piercing_stinger": {
+    "name": "穿刺毒針",
+    "description": "裝備穿透攻擊的水/蟲屬性角金魚，擁有技術員精準和狙擊手準度"
+  },
+  "horsea_fireball_seahorse": {
+    "name": "火球海馬",
+    "description": "燃燒著引火強度的火/水屬性墨海馬，帶來乾旱熱度和灼熱決心"
+  },
+  "togepi_eggshell_fortress": {
+    "name": "蛋殼堡壘",
+    "description": "以寧靜恩惠加固的一般/岩石屬性波克比，擁有堅硬岩石防禦和久經沙場的護甲"
+  },
+  "corsola_toxic_coral": {
+    "name": "毒珊瑚",
+    "description": "以毒療癒茁壯的毒/水屬性太陽珊瑚，擁有無情打擊和毒碎屑保護"
+  },
+  "luvdisc_heartbreaker": {
+    "name": "心碎者",
+    "description": "散播心碎的惡/水屬性愛心魚，擁有黑暗氣場、惡作劇心和悠游自如的閃避"
+  },
+  "clauncher_buster_dragon_blaster": {
+    "name": "龍破爆擊手",
+    "description": "裝備龍之顎兇猛的水/龍屬性鐵臂槍蝦，擁有超級發射器射程和強行蠻力毀滅"
+  },
+  "vulpix_brock_signature": {
+    "name": "小剛的夥伴",
+    "description": "小剛神秘的火屬性夥伴"
+  },
+  "zubat_brock_signature": {
+    "name": "小剛的夥伴",
+    "description": "小剛敏捷的毒屬性夥伴"
+  },
+  "bonsly_brock_signature": {
+    "name": "小剛的夥伴",
+    "description": "小剛堅韌的岩石屬性夥伴"
+  },
+  "mudkip_brock_signature": {
+    "name": "小剛的夥伴",
+    "description": "小剛穩健的水屬性夥伴"
+  },
+  "pineco_brock_signature": {
+    "name": "小剛的夥伴",
+    "description": "小剛防禦型的蟲屬性夥伴"
+  },
+  "croagunk_brock_signature": {
+    "name": "小剛的夥伴",
+    "description": "小剛狡猾的毒屬性夥伴"
+  },
+  "happiny_brock_signature": {
+    "name": "小剛的夥伴",
+    "description": "小剛溫柔的一般屬性夥伴"
+  },
+  "lotad_brock_signature": {
+    "name": "小剛的夥伴",
+    "description": "小剛寧靜的水屬性夥伴"
+  },
+  "comfey_brock_signature": {
+    "name": "小剛的夥伴",
+    "description": "小剛溫和的妖精屬性夥伴"
+  },
+  "geodude_phantom_fist": {
+    "name": "幽靈之拳",
+    "description": "揮舞著幽靈影子標記的岩石/幽靈屬性小拳石，擁有硬爪和鐵拳技巧與漂浮優雅"
+  },
+  "vulpix_flaming_forest_spirit": {
+    "name": "燃燒森林精靈",
+    "description": "體現森林精靈的火/草屬性六尾，擁有召喚乾旱的火焰、草皮保護和葉綠素活力"
+  },
+  "zubat_vampiric_fiend": {
+    "name": "吸血惡魔",
+    "description": "引導吸血鬼自信的惡/幽靈屬性超音蝠，擁有詛咒身軀恐懼和強壯之顎兇猛"
+  },
+  "bonsly_tear_drop": {
+    "name": "淚滴",
+    "description": "流淌著連續技精準的岩石/水屬性盆才怪，擁有蓄水韌性和再生之淚"
+  },
+  "mudkip_stone_skinned_salamander": {
+    "name": "石皮蠑螈",
+    "description": "披著石皮防禦裝甲的水/岩石屬性水躍魚，擁有過濾保護和激流力量"
+  },
+  "pineco_iron_plated_grenade": {
+    "name": "鐵甲手榴彈",
+    "description": "爆炸性的火/鋼屬性榛果球，擁有引爆餘波、火焰身軀強度和鐵刺反擊"
+  },
+  "croagunk_jester_of_pestilence": {
+    "name": "瘟疫小丑",
+    "description": "散播妖精化腐蝕的毒/妖精屬性不良蛙，擁有中和氣體和毀滅石板混亂"
+  },
+  "happiny_pink_fortress": {
+    "name": "粉紅堡壘",
+    "description": "以友誼守護加固的一般/妖精屬性小福蛋，擁有治癒師慈悲和自然治癒恢復"
+  },
+  "lotad_shadow_lily": {
+    "name": "暗影睡蓮",
+    "description": "漂流著雨盤維持的水/幽靈屬性蓮葉童子，擁有影子標記束縛和儲水韌性"
+  },
+  "comfey_aqua_bloom": {
+    "name": "水之綻放",
+    "description": "綻放著細雨滋養的草/水屬性花療環環，擁有水泡保護和播種者活力"
+  },
+  "riolu_apollo_diana_signature": {
+    "name": "阿波羅與黛安娜的夥伴",
+    "description": "阿波羅與黛安娜勇敢的格鬥屬性夥伴"
+  },
+  "solrock_apollo_diana_signature": {
+    "name": "阿波羅與黛安娜的夥伴",
+    "description": "阿波羅與黛安娜光輝的岩石屬性夥伴"
+  },
+  "lunatone_apollo_diana_signature": {
+    "name": "阿波羅與黛安娜的夥伴",
+    "description": "阿波羅與黛安娜神秘的岩石屬性夥伴"
+  },
+  "larvesta_apollo_diana_signature": {
+    "name": "阿波羅與黛安娜的夥伴",
+    "description": "阿波羅與黛安娜燃燒的蟲屬性夥伴"
+  },
+  "swablu_apollo_diana_signature": {
+    "name": "阿波羅與黛安娜的夥伴",
+    "description": "阿波羅與黛安娜蓬鬆的一般屬性夥伴"
+  },
+  "castform_apollo_diana_signature": {
+    "name": "阿波羅與黛安娜的夥伴",
+    "description": "阿波羅與黛安娜適應性強的一般屬性夥伴"
+  },
+  "litwick_apollo_diana_signature": {
+    "name": "阿波羅與黛安娜的夥伴",
+    "description": "阿波羅與黛安娜閃爍的幽靈屬性夥伴"
+  },
+  "eevee_apollo_diana_signature": {
+    "name": "阿波羅與黛安娜的夥伴",
+    "description": "阿波羅與黛安娜多才多藝的一般屬性夥伴"
+  },
+  "teddiursa_apollo_diana_signature": {
+    "name": "阿波羅與黛安娜的夥伴",
+    "description": "阿波羅與黛安娜可愛的一般屬性夥伴"
+  },
+  "cleffa_apollo_diana_signature": {
+    "name": "阿波羅與黛安娜的夥伴",
+    "description": "阿波羅與黛安娜星光閃耀的妖精屬性夥伴"
+  },
+  "sunkern_apollo_diana_signature": {
+    "name": "阿波羅與黛安娜的夥伴",
+    "description": "阿波羅與黛安娜充滿希望的草屬性夥伴"
+  },
+  "riolu_shadow_warrior": {
+    "name": "暗影戰士",
+    "description": "精通影子戰鬥的幽靈/格鬥屬性利歐路，擁有自信侵略、適應力和威嚇氣場"
+  },
+  "solrock_void_constellation": {
+    "name": "虛空星座",
+    "description": "散發虛空能量的岩石/惡屬性太陽岩，擁有太陽之力強度、漂浮優雅和黑暗氣場支配"
+  },
+  "lunatone_dream_weaver": {
+    "name": "織夢者",
+    "description": "編織夢境的岩石/超能力屬性月石，擁有漂浮神秘、喜怒無常和魔法守護保護"
+  },
+  "larvesta_toxic_spinner": {
+    "name": "毒旋者",
+    "description": "紡織毒網的蟲/毒屬性燃燒蟲，擁有毒鏈折磨、粗糙皮膚防禦和腐蝕精通"
+  },
+  "swablu_frost_nimbus": {
+    "name": "霜雲",
+    "description": "飄浮在霜雲上的冰/飛行屬性青綿鳥，擁有毛茸茸防禦、冷凍化力量和降雪預警支配"
+  },
+  "castform_dust_devil": {
+    "name": "沙塵惡魔",
+    "description": "旋轉成沙塵惡魔的岩石/地面屬性飄浮泡泡，擁有揚沙混亂、引水吸收和粗糙皮膚堅毅"
+  },
+  "litwick_wyrmflame": {
+    "name": "龍焰",
+    "description": "燃燒著龍焰之怒的火/龍屬性燭光靈，擁有龍之顎兇猛、引火強度和漂浮神秘"
+  },
+  "eevee_untamed_spirit": {
+    "name": "狂野之魂",
+    "description": "體現狂野潛力的一般/一般屬性伊布，擁有超幸運命運、寧靜恩惠和稜鏡裝甲保護"
+  },
+  "teddiursa_sweet_tooth": {
+    "name": "甜食愛好者",
+    "description": "沉迷於蜂蜜甜美力量的妖精/妖精屬性熊寶寶，擁有大力士力量、薄霧場地魔法和收穫豐盛"
+  },
+  "cleffa_meteoric_core": {
+    "name": "隕石核心",
+    "description": "由隕石精華鍛造的妖精/鋼屬性皮寶寶，擁有火焰身軀熱度、魔法守護保護和堅硬岩石韌性"
+  },
+  "sunkern_plasma_sprout": {
+    "name": "電漿萌芽",
+    "description": "噼啪作響著電漿能量的電/草屬性向日種子，擁有電流轉換、太陽之力強度和電氣場地支配"
+  },
+  "championPartner": "{{champion}}的夥伴"
+}

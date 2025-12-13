@@ -10,8 +10,6 @@ import { ShowRewards } from "#app/utils/show-rewards.js";
 import {ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
 import { GlitchPieceModifierType, PathNodeTypeFilter } from "#app/modifier/modifier-type";
 import { CollectedTypeShopPhase } from "./collected-type-shop-phase";
-
-
 export class SelectDraftPhase extends Phase {
 
   private isTestMod: boolean;
@@ -22,7 +20,7 @@ export class SelectDraftPhase extends Phase {
 
   start() {
     super.start();
-    
+
     const party = this.scene.getParty();
     const loadPokemonAssets: Promise<void>[] = [];
 
@@ -41,29 +39,38 @@ export class SelectDraftPhase extends Phase {
       });
     }
     else {
-      addPokemon(Species.UNOWN);
+      const active: any = this.scene.gameData?.activeSkillTree;
+      const sel = active?.selectedPokemon || {};
+      const sig = sel.signature as Species | undefined;
+      const gen = sel.general as Species | undefined;
+      const startLevel = this.scene.gameMode.getStartingLevel();
+      if (typeof sig === "number" || typeof gen === "number") {
+        const addReal = (sp: Species | undefined) => {
+          if (typeof sp !== "number") return;
+          const tempPokemon = this.scene.addPlayerPokemon(getPokemonSpecies(sp), startLevel, undefined, undefined, undefined, false);
+          tempPokemon.setVisible(false);
+          party.push(tempPokemon);
+          loadPokemonAssets.push(tempPokemon.loadAssets());
+        };
+        addReal(sig);
+        addReal(gen);
+      } else {
+        addPokemon(Species.UNOWN);
+        addPokemon(Species.ONIX);
+      }
     }
-    
-    // this.scene.currentBattle = new Battle(getGameMode(isChaosRouge ? GameModes.CHAOS_ROGUE : GameModes.DRAFT), 95, BattleType.WILD, null, false, this.scene);
     this.scene.currentBattle = new Battle(getGameMode(isChaosRouge ? GameModes.CHAOS_ROGUE : GameModes.DRAFT), 1, BattleType.WILD, null, false, this.scene);
 
     if (!this.isTestMod) {
-        
-        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
-        // this.scene.unshiftPhase(new CollectedTypeShopPhase(this.scene, 1, undefined, false, () => {
-        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
-        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
-        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
-        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
-        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
-        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
-        // this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
 
-           
+        this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
                 this.scene.unshiftPhase(new SelectModifierPhase(this.scene, 1, null, true, () => {
-                    const pokemon = party.splice(0, 1)[0];
-                    pokemon.destroy();
-                    
+                    const first = party[0];
+                    if (first && first.species?.speciesId === Species.UNOWN) {
+                        const placeholder = party.splice(0, 1)[0];
+                        placeholder.destroy();
+                    }
+
                     const newPokemon = party[0];
                         newPokemon.visible = false;
                         const loadPokemonAssets: Promise<void>[] = [];
@@ -73,15 +80,9 @@ export class SelectDraftPhase extends Phase {
                             this.scene.arena.init();
                             this.scene.sessionPlayTime = 0;
                             this.scene.lastSavePlayTime = 0;
-          
+
       }, PathNodeTypeFilter.NONE));
                 }, PathNodeTypeFilter.NONE));
-                // }, PathNodeTypeFilter.NONE));
-                // }, PathNodeTypeFilter.NONE));
-                // }, PathNodeTypeFilter.NONE));
-                // }, PathNodeTypeFilter.NONE));
-                // }, PathNodeTypeFilter.NONE));
-                // }, PathNodeTypeFilter.NONE));
     }
     else {
       this.scene.currentBattle = null;
@@ -89,9 +90,9 @@ export class SelectDraftPhase extends Phase {
       this.scene.arena.init();
       this.scene.sessionPlayTime = 0;
       this.scene.lastSavePlayTime = 0;
-      
+
       if (this.isTestMod) {
-      // if (this.isTestMod || true) {
+
         this.scene.pushPhase(new ModifierRewardPhase(this.scene, () => new GlitchPieceModifierType(10)));
       }
     }

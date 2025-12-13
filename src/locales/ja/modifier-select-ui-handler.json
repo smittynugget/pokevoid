@@ -9,7 +9,7 @@
   "checkTeamDesc": "チームの　状態を　確認する\nフォルムチェンジアイテムを　有効・無効にする",
   "rerollCost": "₽{{formattedMoney}}",
   "itemCost": "₽{{formattedMoney}}",
-  "rerollPermaCost": "∞{{formattedMoney}}",
-  "itemPermaCost": "∞{{formattedMoney}}",
+  "rerollPermaCost": "Ω{{formattedMoney}}",
+  "itemPermaCost": "Ω{{formattedMoney}}",
   "refreshTimer": "更新まで: {{minutes}}:{{seconds}}"
 }

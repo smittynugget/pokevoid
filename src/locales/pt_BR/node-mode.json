@@ -1,6 +1,8 @@
 {
   "viewTitle": "Mapa do Caminho de Batalha",
   "selectTitle": "Selecionar Caminho de Batalha",
+  "chaosTitle": "CAOS",
+  "chaosSubtitle": "Escolha seu caminho enquanto se aventura no coração das trevas",
   "noPathMessage": "Nenhum caminho de batalha disponível.\nGere um primeiro!",
   "unknownEncounter": "Encontro desconhecido",
   "unknownNode": "Desconhecido",
@@ -22,8 +24,8 @@
     "smittyBattle": "Batalha Smitty",
     "evilGruntBattle": "Recruta Da Equipe Malvada",
     "evilAdminBattle": "Admin Da Equipe Malvada",
-    "randPermaItem": "Item ∞ Aleatório",
-    "permaItems": "Recompensas Item ∞",
+    "randPermaItem": "Item Ω Aleatório",
+    "permaItems": "Recompensas Item Ω",
     "goldenPokeball": "Recompensas Pokébola Dourada",
     "rogueBallItems": "Recompensas Rogue Ball",
     "masterBallItems": "Recompensas Master Ball",
@@ -34,7 +36,7 @@
     "glitchPiece": "Recompensa Peça Glitch",
     "dnaSplicers": "Recompensa Fusionador DNA",
     "money": "Recompensa De Dinheiro",
-    "permaMoney": "Aumento Permanente De Dinheiro",
+    "permaMoney": "Aumento ΩOURO",
     "releaseItems": "Recompensas De Liberação",
     "mints": "Recompensas De Hortelãs",
     "eggVoucher": "Recompensa Cupom De Ovo",
@@ -64,7 +66,9 @@
     "collectedShop": "Gaste Essências por recompensas",
     "vitamin": "Recompensas genéricas de potencializadores de status (Proteína, Ferro, Cálcio, etc.)",
     "moveUpgrade": "Melhorias de movimentos para movimentos Pokémon",
-    "lowTierMoveUpgrade": "Melhorias de movimentos com limite de nível III"
+    "lowTierMoveUpgrade": "Melhorias de movimentos com limite de nível III",
+    "skillPoints": "Pontos de Habilidade para desbloquear habilidades na Árvore de Habilidades.",
+    "skillToken": "Fichas de Árvore de Habilidades evoluem sua Árvore de Habilidades!"
   },
   "names": {
     "wildPokemon": "Pokémon Selvagem",
@@ -84,8 +88,8 @@
     "smittyBattle": "Batalha Smitty",
     "evilGruntBattle": "Recruta Malvado",
     "evilAdminBattle": "Admin Malvado",
-    "randPermaItem": "Item ∞ Aleatório",
-    "permaItems": "Recompensas Item ∞",
+    "randPermaItem": "Item Ω Aleatório",
+    "permaItems": "Recompensas Item Ω",
     "goldenPokeball": "Pokébola Dourada",
     "rogueBallItems": "Recompensas Rogue Ball",
     "masterBallItems": "Recompensas Master Ball",
@@ -96,7 +100,7 @@
     "glitchPiece": "Peça Glitch",
     "dnaSplicers": "Fusionador DNA",
     "money": "Dinheiro",
-    "permaMoney": "∞OURO",
+    "permaMoney": "ΩOURO",
     "releaseItems": "Recompensas De Liberação",
     "mints": "Recompensas Hortelãs",
     "eggVoucher": "Cupom De Ovo",
@@ -126,7 +130,9 @@
     "collectedShop": "O Colecionador",
     "vitamin": "Vitaminas Baratas",
     "moveUpgrade": "Melhorias de Movimentos",
-    "lowTierMoveUpgrade": "Melhorias de Movimentos de Nível Baixo"
+    "lowTierMoveUpgrade": "Melhorias de Movimentos de Nível Baixo",
+    "skillPoints": "Pontos de Habilidade",
+    "skillToken": "Ficha de Habilidade"
   },
   "challenge": {
     "chaosChallenge": "Desafio Caos Ativo",
@@ -238,5 +244,7 @@
       "name": "Nerf Pokémon",
       "description": "Pokémon mais forte causa metade do dano"
     }
-  }
+  },
+  "tooltipDetails": "DETALHES",
+  "tooltipBack": "Voltar"
 } 

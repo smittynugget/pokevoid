@@ -1,0 +1,99 @@
+{
+  "title": "选择冠军",
+  "confirmSelection": "使用{{name}}开始挑战？",
+  "subheader": "选择谁与你一同闯入虚空？",
+  "levelUp": "升级！",
+  "characterUnlocked": "{{name}}\n已解锁！",
+  "unlocked": "已解锁",
+  "lockedGauge": "投入度: {{current}} / {{required}}",
+  "xp": "经验值",
+  "potential": "潜力",
+  "level": "等级",
+  "locked": "已锁定",
+  "unlockRequired": "需要: {{requirement}}",
+  "essenceHint": "使用所需精华来升级！",
+  "essencesHeader": "精华:",
+  "skillsHeader": "技能",
+  "skillsSubheader": "技能将随机出现在技能树中。",
+  "rarity": {
+    "common": "普通",
+    "great": "优秀", 
+    "ultra": "超级",
+    "master": "大师",
+    "rogue": "流氓",
+    "legendary": "传说"
+  },
+  "unlockCharacter": "解锁角色",
+  "unlockCharacterTooltip": "使用{{current}}/{{required}}精华来解锁",
+  "tooltip": {
+    "lockedSkillTitle": "已锁定技能",
+    "levelRequired": "需要达到{{level}}级才能解锁。",
+    "lockedPrefix": "已锁定",
+    "unlockWithEssence": "使用{{current}}/{{required}}精华升级来解锁！",
+    "levelUpRequired": "升级以解锁此技能。",
+    "defaultTm": "教给宝可梦一个{{types}}属性招式机",
+    "defaultXm": "教给宝可梦一个{{types}}属性XM",
+    "defaultEssence": "将{{amount}}个{{types}}属性精华添加到收藏中",
+    "defaultBooster": "获得一个{{types}}属性强化道具",
+    "defaultTeraAbility": "使用{{types}}来激活太晶特性",
+    "defaultEssenceWeight": "增加{{types}}精华掉落权重{{weight}}",
+    "defaultCatchRate": "增加{{types}}宝可梦捕获率{{percent}}%",
+    "defaultFusionPriority": "增加{{types}}宝可梦融合优先级",
+    "defaultRevive": "增加{{types}}宝可梦复活几率{{percent}}%",
+    "defaultTokens": "获得技能树代币以解锁节点",
+    "defaultPoints": "获得技能点以购买技能",
+    "typesFallback": "未知"
+  },
+  "skillList": {
+    "levelPrefix": "Lv {{level}}",
+    "unknownSkill": "???"
+  },
+  "defaultSkillLabels": {
+    "tms": "{{types}} 招式机",
+    "xms": "{{types}} XM",
+    "abilities": "{{types}} 特性",
+    "teraAbilities": "{{types}} 太晶特性",
+    "statBoosts": "{{types}} 能力值提升",
+    "tokens": "技能树代币",
+    "points": "技能点",
+    "boosters": "{{types}} 强化道具",
+    "essence": "{{types}} 精华",
+    "reviveBoost": "{{types}} 复活提升",
+    "essenceWeights": "{{types}} 精华权重",
+    "catchBonus": "{{types}} 捕获加成",
+    "fusionPriority": "{{types}} 融合优先级"
+  },
+  "button": {
+    "useEssence": "使用精华"
+  },
+  "brock": { "description": "岩石冠军" },
+  "misty": { "description": "水系冠军" },
+  "apollo": {
+    "name": "阿波罗",
+    "description": "太阳冠军"
+  },
+  "diana": {
+    "name": "戴安娜",
+    "description": "月亮冠军"
+  },
+  "generic": { "description": "默认冠军。" },
+  "champions": {
+  "title": "选择你的冠军",
+  "brock": {
+    "name": "小刚 - 岩石专家",
+    "description": "地面和岩石属性大师",
+    "essenceRequirement": "需要{{ground}}地面 + {{rock}}岩石精华"
+  },
+  "misty": {
+    "name": "小霞 - 水系专家", 
+    "description": "水属性大师",
+    "essenceRequirement": "需要{{water}}水属性精华"
+  },
+  "generic": {
+    "name": "平衡冠军",
+    "description": "无属性专精",
+    "essenceRequirement": "无特殊要求"
+  }
+}
+}
+

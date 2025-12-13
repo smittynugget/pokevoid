@@ -12,7 +12,8 @@ export abstract class PokemonPhase extends FieldPhase {
     super(scene);
 
     if (battlerIndex === undefined) {
-      battlerIndex = scene.getField().find(p => p?.isActive())!.getBattlerIndex(); // TODO: is the bang correct here?
+      const activePokemon = scene.getField().find(p => p?.isActive());
+      battlerIndex = activePokemon ? activePokemon.getBattlerIndex() : 0;
     }
 
     this.battlerIndex = battlerIndex;
@@ -22,8 +23,8 @@ export abstract class PokemonPhase extends FieldPhase {
 
   getPokemon(): Pokemon {
     if (this.battlerIndex > BattlerIndex.ENEMY_2) {
-      return this.scene.getPokemonById(this.battlerIndex)!; //TODO: is this bang correct?
+      return this.scene.getPokemonById(this.battlerIndex)!;
     }
-    return this.scene.getField()[this.battlerIndex]!; //TODO: is this bang correct?
+    return this.scene.getField()[this.battlerIndex]!;
   }
 }

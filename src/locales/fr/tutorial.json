@@ -5,7 +5,7 @@
     "gameModes": "Modes de Jeu",
     "specialPokemon": "Pokémon Spéciaux",
     "progression": "Progression du Jeu",
-    "permanentFeatures": "Fonctionnalités Permanentes",
+    "permanentFeatures": "Fonctionnalités Omega",
     "glitchSystem": "Système de Glitch",
     "battleMechanics": "Mécaniques de Combat",
     "formChanges": "Changements de Forme",
@@ -21,6 +21,7 @@
   "statChange": "Les changements de stats restent à travers les combats tant que le Pokémon n'est pas rappelé.\n$Vos Pokémon sont rappelés avant un combat de Dresseur et avant d'entrer dans un nouveau biome.\n$Vous pouvez voir en combat les changements de stats d'un Pokémon en maintenant C ou Maj.\n$Vous pouvez également voir les capacités de l'adversaire en maintenant V.\n$Seules les capacités que le Pokémon a utilisées dans ce combat sont consultables.",
   "selectItem": "Après chaque combat, vous avez le choix entre 3 objets\ntirés au sort. Vous ne pouvez en prendre qu'un.\n$Cela peut être des objets consommables, des objets à\nfaire tenir, ou des objets passifs aux effets permanents.\n$La plupart des effets des objets non-consommables se cumuleront de diverses manières.\n$Certains objets apparaitront s'ils peuvent être utilisés, comme les objets d'évolution.\n$Vous pouvez aussi transférer des objets tenus entre Pokémon en utilisant l'option de transfert.\n$L'option de transfert apparait en bas à droite dès que vous avez obtenu un objet à faire tenir.\n$Vous pouvez acheter des consommables avec de l'argent.\nPlus vous progressez, plus le choix sera varié.\n$Choisir un des objets gratuits déclenchera le prochain combat, donc faites bien tous vos achats avant.",
   "eggGacha": "Sur cet écran, vous pouvez échanger vos coupons contre\ndes œufs de Pokémon.\n$Les œufs doivent éclore et se rapprochent de l'éclosion\naprès chaque combat. Les œufs plus rares prennent plus\nde temps à éclore.\n$Les Pokémon éclos ne sont pas ajoutés à votre équipe,\nmais à vos starters.\n$Les Pokémon éclos ont généralement de meilleures IV\nque les Pokémon sauvages.\n$Certains Pokémon ne peuvent être obtenus que par des œufs.\n$Il y a 3 machines différentes avec différents bonus,\nalors choisissez celle qui vous convient le mieux!",
+  "backupReminder": "Veuillez sauvegarder votre progression en la téléchargeant sur votre appareil.\n$Cela vous évitera de devoir tout recommencer si les données de votre navigateur venaient à être perdues.",
   "pokerogue": {
     "title": "Rendre à PokéRogue le Crédit qu'il Mérite",
     "text": { 
@@ -86,7 +87,7 @@
   },
   "rivalQuests": {
     "title": "Quêtes Glitch",
-    "text": "Battez les rivaux pour débloquer des Quêtes Glitch ! Achetez-les dans le PermaMagasin et complétez-les pour débloquer définitivement de puissantes Formes Glitch pour des Pokémon spécifiques !"
+    "text": "Battez les rivaux pour débloquer des Quêtes Glitch ! Achetez-les dans le OmegaMagasin et complétez-les pour débloquer définitivement de puissantes Formes Glitch pour des Pokémon spécifiques !"
   },
   "smitom": {
     "title": "Smitom",
@@ -121,7 +122,7 @@
     "title": "Mode Voyage",
     "text": { 
       "1":"Constituez votre équipe pour affronter Le Néant. Utilisez n'importe quel Pokémon que vous avez capturé ou fait éclore, y compris les fusions !",
-      "2":"Les Pokémon fusionnés nécessitent de l'∞OR pour être utilisés. Les PermaObjets peuvent réduire les coûts et augmenter votre limite de départ."
+      "2":"Les Pokémon fusionnés nécessitent de l'ΩOR pour être utilisés. Les OmegaObjets peuvent réduire les coûts et augmenter votre limite de départ."
     }
   },
   "unlockJourney": {
@@ -133,7 +134,7 @@
   },
   "rogueMode": {
     "title": "Mode Rogue",
-    "text": "Choisissez 2 pokémon aléatoires pour commencer votre partie ! Utilisez votre ∞OR pour changer vos options ! Chaque partie est unique !"
+    "text": "Choisissez 2 pokémon aléatoires pour commencer votre partie ! Utilisez votre ΩOR pour changer vos options ! Chaque partie est unique !"
   },
   "bosses": {
     "title": "Boss Multi-Formes",
@@ -164,14 +165,14 @@
     "title": "Fusions Capturables",
     "text": { 
       "1":"Tous les Pokémon Fusion sont capturables et ajoutés définitivement à votre collection !",
-      "2":"Trouvez-les avec une chance de base de 1/14 (améliorable avec des ∞OBJETS). Les utiliser coûte de l'∞OR."
+      "2":"Trouvez-les avec une chance de base de 1/14 (améliorable avec des ΩOBJETS). Les utiliser coûte de l'ΩOR."
     }
   },
   "trainerPokemon": {
     "title": "Capturer les Pokémon des Dresseurs",
     "text": { 
       "1":"La plupart des dresseurs vendront leurs Pokémon pendant le combat (sauf les Rivaux !). Les Pokémon capturés sont ajoutés définitivement à votre collection !",
-      "2":"Le coût dépend de la vague mais peut être réduit avec des ∞OBJETS."
+      "2":"Le coût dépend de la vague mais peut être réduit avec des ΩOBJETS."
     }
   },
   "partyAbility": {
@@ -182,9 +183,9 @@
     }
   },
   "permaMoney": {
-    "title": "PermaArgent (∞OR)",
+    "title": "OmegaArgent (ΩOR)",
     "text": { 
-      "1":"Gagnez de l'∞OR persistant entre les parties ! Utilisez-le pour acheter des ∞OBJETS, relancer les départs en Rogue, ou payer la Taxe de Fusion.",
+      "1":"Gagnez de l'ΩOR persistant entre les parties ! Utilisez-le pour acheter des ΩOBJETS, relancer les départs en Rogue, ou payer la Taxe de Fusion.",
       "2":"Obtenez-le grâce aux primes, récompenses, sauvegardes ou interactions avec Smitom."
     }
   },
@@ -192,19 +193,19 @@
     "title": "Sauvegarde Locale et Backup",
     "text": { 
       "1":"Si vos données sont perdues, elles sont PERDUES À JAMAIS ! Utilisez l'icône de disquette (en haut à droite) pour EXPORTER votre fichier de sauvegarde souvent !",
-      "2":"Cela récompense avec de l'∞OR et protège contre la perte de données."
+      "2":"Cela récompense avec de l'ΩOR et protège contre la perte de données."
     }
   },
   "bounties": {
     "title": "Système de Primes",
     "text": { 
       "1":"Entrez des codes à 6 lettres dans la console pour activer des Primes.",
-      "2":"Les Primes sont des QUÊTES qui vous permettent de gagner de l'∞OR/∞OBJETS et sont complètement réutilisables après achèvement !"
+      "2":"Les Primes sont des QUÊTES qui vous permettent de gagner de l'ΩOR/ΩOBJETS et sont complètement réutilisables après achèvement !"
     }
   },
   "dailyBounty": {
     "title": "Prime Quotidienne !",
-    "text": "Une nouvelle prime quotidienne est disponible ! Complétez-la pour gagner de l'∞OR/∞OBJETS. Le code est déjà dans la console, activez-le simplement !"
+    "text": "Une nouvelle prime quotidienne est disponible ! Complétez-la pour gagner de l'ΩOR/ΩOBJETS. Le code est déjà dans la console, activez-le simplement !"
   },
   "discord": {
     "title": "Discord et Support",
@@ -227,10 +228,10 @@
     }
   },
   "smittyItems": {
-    "title": "PermaObjets (∞OBJETS)",
+    "title": "OmegaObjets (ΩOBJETS)",
     "text": { 
-      "1":"Utilisez de l'∞OR pour acheter des améliorations permanentes (∞OBJETS) avec différents types de durée : Basée sur l'utilisation (quantité réduite après utilisation) ou Basée sur les vagues (quantité réduite après la vague 50).",
-      "2":"Ces améliorations peuvent augmenter les taux de shiny/fusion/capture, réduire les coûts et fournir d'autres avantages permanents !"
+      "1":"Utilisez de l'ΩOR pour acheter des améliorations durables (ΩOBJETS) avec différents types de durée : Basée sur l'utilisation (quantité réduite après utilisation) ou Basée sur les vagues (quantité réduite après la vague 50).",
+      "2":"Ces améliorations peuvent augmenter les taux de shiny/fusion/capture, réduire les coûts et fournir d'autres avantages durables !"
     }
   },
   "abilitySwitcher": {
@@ -270,7 +271,7 @@
   },
   "newQuests": {
     "title": "Nouvelle Quête Débloquée !",
-    "text": "Vous avez débloqué une nouvelle quête ! Elle apparaîtra ALÉATOIREMENT (mais souvent) dans le PermaMagasin / Magasin sur l'écran titre ! Si elle n'y est pas, relancez pour la trouver !"
+    "text": "Vous avez débloqué une nouvelle quête ! Elle apparaîtra ALÉATOIREMENT (mais souvent) dans le OmegaMagasin / Magasin sur l'écran titre ! Si elle n'y est pas, relancez pour la trouver !"
   },
   "modeUnlocks": {
     "title": "Débloquages de Modes de Jeu",
@@ -349,8 +350,99 @@
   "thankYou": {
     "title": "Cher Joueur",
     "text": {
-      "1": "16 mois de folie de développement en solo signifient tout - chaque fois que quelqu'un comme vous s'amuse à jouer à ce jeu. Si mes idées bizarres fonctionnent vraiment et que vous vous amusez,", 
+      "1": "24 mois de folie de développement en solo signifient tout - chaque fois que quelqu'un comme vous s'amuse à jouer à ce jeu. Si mes idées bizarres fonctionnent vraiment et que vous vous amusez,", 
       "2": "alors peut-être - je me rapproche de mon rêve de devenir un vrai développeur de jeux. Merci beaucoup de jouer à ma version chaotique et cassée de PokéRogue ! - Smitty"
+    }
+  },
+  "pokevoidV2Update": {
+    "title": {
+      "1": "Bienvenue dans PokéVoid V2 !",
+      "2": "Refonte Complète de l'UI",
+      "3a": "Nouveau Champion Jouable : Apollon",
+      "3b": "Nouveau Champion Jouable : Diane",
+      "4": "Sélection du Personnage Champion",
+      "5": "Arbres de Compétences",
+      "6": "Nouveaux Modes",
+      "7": "Commandes de Combat",
+      "8": "Bien Plus de Fonctionnalités !"
+    },
+    "text": {
+      "1": "Bienvenue dans la NOUVELLE mise à jour Version 2.0b de PokéVoid - La MISE À JOUR COLOSSALE !! Cette mise à jour apporte une refonte complète avec une NOUVELLE UI, des Champions, des Arbres de Compétences et bien plus !",
+      "2": "Découvrez une refonte complète de l'UI avec de nouvelles icônes et un design visuel amélioré dans tout le jeu !",
+      "3a": "Champion du Soleil, Apollon - canalise sa puissance radieuse comme l'une des dernières lumières repoussant la nuit sans fin du néant !",
+      "3b": "Champion de la Lune, Diane - tisse des fils de clair de lune pour traquer les mouvements du néant et guider les autres vers la sécurité !",
+      "4": "Choisissez votre Champion et affrontez le néant ! Chaque Champion a des types uniques, un Pokémon signature et son propre arbre de compétences !",
+      "5": "Débloquez des compétences puissantes grâce à l'Arbre de Compétences de votre Champion ! Utilisez les Points de Compétence pour acheter des nœuds et les Jetons d'Arbre pour monter de niveau !",
+      "6": "La nouvelle variante du mode chaos FTL vous attend !",
+      "7": "Six nouvelles commandes de combat vous donnent plus de contrôle ! Accédez à votre Arbre de Compétences, vérifiez les ennemis, obtenez des œufs et plus en plein combat !",
+      "8": "Meilleure gestion des locales + traductions améliorées, et d'innombrables autres fonctionnalités vous attendent ! Plongez et découvrez-les toutes !"
+    }
+  },
+  "ftlModeSelect": {
+    "title": { "1": "NOUVEAU Mode FTL" },
+    "text": { "1": "FTL (Plus Rapide que la Lumière) est la nouvelle variante chaos la plus rapide ! Sautez directement dans le chaos !" }
+  },
+  "championSelectEssence": {
+    "title": { "1": "Sélection du Champion", "2": "Système d'Essence", "3": "Monter les Champions de Niveau" },
+    "text": {
+      "1": "Qui choisirez-vous pour vous aventurer dans le néant ! Chaque Champion a des types uniques, un Pokémon signature et un arbre de compétences !",
+      "2": "Collectez des Essences en battant des Pokémon ! Les Essences correspondent au type du Pokémon vaincu et sont utilisées pour libérer les Champions corrompus et débloquer des compétences puissantes !",
+      "3": "Utilisez les Essences collectées pour faire monter vos Champions de niveau ! Les niveaux supérieurs débloquent des compétences plus puissantes dans leurs Arbres de Compétences !"
+    }
+  },
+  "championSelectSpecialEssences": {
+    "title": { "1": "Essences Glitch & Smitty", "2": "Essence Glitch", "3": "Essence Smitty" },
+    "text": {
+      "1": "Certaines compétences puissantes nécessitent des Essences spéciales : Essence Glitch et Essence Smitty ! Celles-ci débloquent les capacités les plus fortes !",
+      "2": "Pour débloquer de NOUVELLES Formes Glitch Corrompues de RARETÉ MAÎTRE+ et des Pokémon Légendaires Puissants - collectez des essences glitch en battant des pokémon glitch !",
+      "3": "Pour débloquer de NOUVELLES Capacités Smitty Interdites de RARETÉ MAÎTRE+ et des Alt Builds Brisés - collectez des essences smitty en affrontant la Corruption elle-même !"
+    }
+  },
+  "skillTreeApolloDianaTypes": {
+    "title": { "1": "Système de Types Aléatoires" },
+    "text": { "1": "Apollon et Diane sont des Champions spéciaux avec des types ALÉATOIRES ! Au début de chaque partie, deux types aléatoires vous sont attribués !" }
+  },
+  "skillTreeSetTypes": {
+    "title": { "1": "Champions de Type", "2": "Pierre - Champion de la Roche", "3": "Synergie de Type" },
+    "text": {
+      "1": "La plupart des Champions ont des spécialisations de type FIXES ! Tout leur Arbre de Compétences et leur pool de Pokémon tourne autour de leurs types !",
+      "2": "Pierre se spécialise dans les types Sol et Roche ! Son Arbre de Compétences offre des CT Sol et Roche, des boosters et des capacités !",
+      "3": "Construisez votre équipe autour des types de votre Champion ! Attrapez des Pokémon correspondants pour maximiser le potentiel de votre Arbre de Compétences !"
+    }
+  },
+  "skillTreeProgression": {
+    "title": { "1": "Points de Compétence", "2": "Jetons d'Arbre" },
+    "text": {
+      "1": "Les Points de Compétence sont utilisés pour acheter des nœuds dans votre Arbre de Compétences ! Gagnés lors des combats, des récompenses et des événements spéciaux !",
+      "2": "Les Jetons d'Arbre font monter votre Arbre de Compétences de niveau ! Chaque niveau étend votre Arbre de compétences, révélant des compétences plus puissantes plus profondes dans l'arbre !"
+    }
+  },
+  "starterSelectCatchRequirements": {
+    "title": { "1": "Apollon & Diane sont des Jokers !", "2": "Champions de Type", "3": "Les Champions Libérés Repartent de Zéro", "4": "Capturez pour Étendre le Pool" },
+    "text": {
+      "1": "Apollon et Diane peuvent utiliser TOUS les Pokémon quel que soit le type ! Ils sont parfaits pour une flexibilité maximale !",
+      "2": "Les Champions spécialisés en type comme Pierre ne peuvent utiliser que des Pokémon correspondant à leur affinité ! Pierre utilise les types Sol et Roche !",
+      "3": "En tant que nouveaux Champions que vous avez récemment libérés de la corruption du néant, ils doivent repartir de zéro et reconstruire leur collection !",
+      "4": "Les Champions de Type n'ont accès qu'aux pokémon que vous capturez en les utilisant ! Plus vous en capturez, plus ils auront d'options !"
+    }
+  },
+  "starterSelectSignature": {
+    "title": { "1": "Que sont les Pokémon Signature ?", "2": "Alt Builds Légendaires" },
+    "text": {
+      "1": "Les Pokémon Signature sont des starters spéciaux uniques à chaque Champion ! Leurs icônes sont marquées d'un potentiel de chaos !",
+      "2": "Les Signatures peuvent se transformer en Alt Builds - des formes alternatives avec des stats, capacités et même types différents ! Un Pokémon entièrement nouveau !"
+    }
+  },
+  "commandUINewCommands": {
+    "title": { "1": "Six Nouvelles Commandes !", "2": "Commande Équipe", "3": "Commande Arbre de Compétences", "4": "Commande Vérifier", "5": "Commande Œufs", "6": "Commande Boutique", "7": "Commande Carte" },
+    "text": {
+      "1": "PokéVoid V2 ajoute SIX nouvelles commandes de combat ! Accédez-y pendant le combat pour des options puissantes !",
+      "2": "ÉQUIPE : Affichez instantanément les informations détaillées sur les stats, capacités et attaques de votre équipe !",
+      "3": "ARBRE DE COMPÉTENCES : Accédez à l'Arbre de Compétences de votre Champion en plein combat ! Dépensez des points et débloquez de nouvelles capacités à la volée !",
+      "4": "VÉRIFIER : Vérifiez N'IMPORTE QUEL Pokémon ! Voyez facilement les capacités possibles, formes, répartition des stats et sets d'attaques !",
+      "5": "ŒUFS : Obtenez des œufs du gacha d'œufs !",
+      "6": "BOUTIQUE : Accès rapide à la boutique !",
+      "7": "CARTE : Affichez votre chemin actuel dans le Chaos !"
     }
   }
 }

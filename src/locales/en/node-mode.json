@@ -1,6 +1,8 @@
 {
   "viewTitle": "Battle Path Map",
   "selectTitle": "Select Battle Path",
+  "chaosTitle": "CHAOS",
+  "chaosSubtitle": "Choose your path as you venture into the heart of darkness",
   "noPathMessage": "No battle path available.\nGenerate one first!",
   "unknownEncounter": "Unknown encounter",
   "unknownNode": "Unknown",
@@ -22,8 +24,8 @@
     "smittyBattle": "Smitty Battle",
     "evilGruntBattle": "Evil Team Grunt",
     "evilAdminBattle": "Evil Team Admin",
-    "randPermaItem": "Random ∞Item",
-    "permaItems": "∞Item Rewards",
+    "randPermaItem": "Random ΩItem",
+    "permaItems": "ΩItem Rewards",
     "goldenPokeball": "Golden Pokéball Rewards",
     "rogueBallItems": "Rogue Ball Rewards",
     "masterBallItems": "Master Ball Rewards",
@@ -34,7 +36,7 @@
     "glitchPiece": "Glitch Piece Reward",
     "dnaSplicers": "DNA Splicer Reward",
     "money": "Money",
-    "permaMoney": "∞GOLD",
+    "permaMoney": "ΩGOLD",
     "releaseItems": "Release Rewards",
     "mints": "Mint Rewards",
     "eggVoucher": "Egg Voucher Reward",
@@ -64,7 +66,9 @@
     "scopeLens": "Increases critical hit ratio",
     "vitamin": "Generic stat booster rewards (Protein, Iron, Calcium, etc.)",
     "moveUpgrade": "Move upgrades for Pokemon moves",
-    "lowTierMoveUpgrade": "Move upgrades with III tier cap"
+    "lowTierMoveUpgrade": "Move upgrades with III tier cap",
+    "skillPoints": "Skill Points for unlocking skills in the Skill Tree.",
+    "skillToken": "Skill Tree Tokens level up your Skill Tree!"
   },
   "names": {
     "wildPokemon": "Wild Pokemon",
@@ -84,8 +88,8 @@
     "smittyBattle": "Smitty Battle",
     "evilGruntBattle": "Evil Grunt",
     "evilAdminBattle": "Evil Admin",
-    "randPermaItem": "Random ∞Item",
-    "permaItems": "∞Item Rewards",
+    "randPermaItem": "Random ΩItem",
+    "permaItems": "ΩItem Rewards",
     "goldenPokeball": "Golden Pokeball",
     "rogueBallItems": "Rogue Ball Rewards",
     "masterBallItems": "Master Ball Rewards",
@@ -96,7 +100,7 @@
     "glitchPiece": "Glitch Piece",
     "dnaSplicers": "DNA Splicer",
     "money": "Money",
-    "permaMoney": "∞GOLD",
+    "permaMoney": "ΩGOLD",
     "releaseItems": "Release Rewards",
     "mints": "Mint Rewards",
     "eggVoucher": "Egg Voucher",
@@ -126,7 +130,9 @@
     "scopeLens": "Scope Lens",
     "vitamin": "Cheap Vitamins",
     "moveUpgrade": "Move Upgrades",
-    "lowTierMoveUpgrade": "Low Tier Move Upgrades"
+    "lowTierMoveUpgrade": "Low Tier Move Upgrades",
+    "skillPoints": "Skill Points",
+    "skillToken": "Skill Token"
   },
   "challenge": {
     "chaosChallenge": "Chaos Challenge Active",
@@ -238,5 +244,7 @@
       "name": "Pokémon Nerf",
       "description": "Strongest Pokémon deals half damage"
     }
-  }
+  },
+  "tooltipDetails": "DETAILS",
+  "tooltipBack": "Back"
 }

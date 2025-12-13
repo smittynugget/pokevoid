@@ -57,11 +57,11 @@
         "count": "{{current}} / {{max}}"
       },
       "rewards": {
-        "stage1": "90% ∞金幣 | 8% ∞道具 | 2% 兩者",
-        "stage2": "75% ∞金幣 | 15% ∞道具 | 10% 兩者",
-        "stage3": "60% ∞金幣 | 25% ∞道具 | 15% 兩者",
-        "stage4": "40% ∞金幣 | 40% ∞道具 | 20% 兩者",
-        "stage5": "25% ∞金幣 | 45% ∞道具 | 30% 兩者"
+        "stage1": "90% Ω金幣 | 8% Ω道具 | 2% 兩者",
+        "stage2": "75% Ω金幣 | 15% Ω道具 | 10% 兩者",
+        "stage3": "60% Ω金幣 | 25% Ω道具 | 15% 兩者",
+        "stage4": "40% Ω金幣 | 40% Ω道具 | 20% 兩者",
+        "stage5": "25% Ω金幣 | 45% Ω道具 | 30% 兩者"
       }
     },
     "quest": {
@@ -72,7 +72,7 @@
         "cancel": "取消"
       },
       "rewards": {
-        "default": "50% ∞金幣 | 35% ∞道具 | 15% 兩者"
+        "default": "50% Ω金幣 | 35% Ω道具 | 15% 兩者"
       },
       "activeQuest": {
         "modalTitle": "任務！",
@@ -92,8 +92,8 @@
     "smitty": {
       "modalTitle": "寶可夢幽打懸賞",
       "rewards": {
-        "withSpecies": "70% ∞金幣 | 20% ∞道具 | 10% 兩者",
-        "withoutSpecies": "40% ∞金幣 | 40% ∞道具 | 20% 兩者"
+        "withSpecies": "70% Ω金幣 | 20% Ω道具 | 10% 兩者",
+        "withoutSpecies": "40% Ω金幣 | 40% Ω道具 | 20% 兩者"
       },
       "task": {
         "evolveAny": "將任意寶可夢進化為{{formName}}",
@@ -114,7 +114,7 @@
     "nuzlightModeRewardUpdatedInventory": "物品欄已更新！",
     "nuzlightModeRewardMoveRelease": "遺忘招式",
     "nuzlockeModeRewardRank2": "等級 2",
-    "accessShopInBattle": "在戰鬥中訪問∞商店！",
+    "accessShopInBattle": "在戰鬥中訪問Ω商店！",
     "accessQuestsInBattle": "在戰鬥中訪問任務！"
   }
 }

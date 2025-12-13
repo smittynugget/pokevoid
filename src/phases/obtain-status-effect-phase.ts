@@ -18,9 +18,9 @@ export class ObtainStatusEffectPhase extends PokemonPhase {
     super(scene, battlerIndex);
 
     this.statusEffect = statusEffect;
-    this.cureTurn = cureTurn!; // TODO: is this bang correct?
-    this.sourceText = sourceText!; // TODO: is this bang correct?
-    this.sourcePokemon = sourcePokemon!; // For tracking which Pokemon caused the status effect // TODO: is this bang correct?
+    this.cureTurn = cureTurn!;
+    this.sourceText = sourceText!;
+    this.sourcePokemon = sourcePokemon!;
   }
 
   start() {
@@ -28,7 +28,7 @@ export class ObtainStatusEffectPhase extends PokemonPhase {
     if (!pokemon?.status) {
       if (pokemon?.trySetStatus(this.statusEffect, false, this.sourcePokemon)) {
         if (this.cureTurn) {
-            pokemon.status!.cureTurn = this.cureTurn; // TODO: is this bang correct?
+            pokemon.status!.cureTurn = this.cureTurn;
         }
         pokemon.updateInfo(true);
         new CommonBattleAnim(CommonAnim.POISON + (this.statusEffect! - 1), pokemon).play(this.scene, () => {

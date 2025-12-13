@@ -1,0 +1,99 @@
+{
+  "title": "Selecionar Campeão",
+  "confirmSelection": "Iniciar corrida com {{name}}?",
+  "subheader": "Quem você escolherá para se aventurar no Vazio?",
+  "levelUp": "SUBIU DE NÍVEL!",
+  "characterUnlocked": "{{name}}\nDESBLOQUEADO!",
+  "unlocked": "Desbloqueado",
+  "lockedGauge": "Comprometido: {{current}} / {{required}}",
+  "xp": "XP",
+  "potential": "POTENCIAL",
+  "level": "NÍVEL",
+  "locked": "BLOQUEADO",
+  "unlockRequired": "Requer: {{requirement}}",
+  "essenceHint": "Use a Essência necessária para subir de nível!",
+  "essencesHeader": "Essências:",
+  "skillsHeader": "HABILIDADES",
+  "skillsSubheader": "Habilidades aparecerão aleatoriamente na Árvore de Habilidades.",
+  "rarity": {
+    "common": "COMUM",
+    "great": "GRANDE",
+    "ultra": "ULTRA",
+    "master": "MESTRE",
+    "rogue": "ROGUE",
+    "legendary": "LENDÁRIO"
+  },
+  "unlockCharacter": "Desbloquear Personagem",
+  "unlockCharacterTooltip": "Desbloqueie usando {{current}}/{{required}} Essências",
+  "tooltip": {
+    "lockedSkillTitle": "Habilidade Bloqueada",
+    "levelRequired": "Precisa ser Nível {{level}} para desbloquear.",
+    "lockedPrefix": "BLOQUEADO",
+    "unlockWithEssence": "Desbloqueie usando {{current}}/{{required}} Essências para subir de nível!",
+    "levelUpRequired": "Suba de nível para desbloquear esta habilidade.",
+    "defaultTm": "Ensine uma MT de tipo {{types}} a um Pokémon",
+    "defaultXm": "Ensine uma XM de tipo {{types}} a um Pokémon",
+    "defaultEssence": "Adicione {{amount}} Essências de tipo {{types}} à sua coleção",
+    "defaultBooster": "Receba um item Potenciador de tipo {{types}}",
+    "defaultTeraAbility": "Use {{types}} para ativar Habilidades Tera",
+    "defaultEssenceWeight": "Aumenta o peso de drop de Essência {{types}} em {{weight}}",
+    "defaultCatchRate": "Aumenta a taxa de captura para Pokémon {{types}} em {{percent}}%",
+    "defaultFusionPriority": "Aumenta a prioridade de fusão para Pokémon {{types}}",
+    "defaultRevive": "Aumenta a chance de reviver para Pokémon {{types}} em {{percent}}%",
+    "defaultTokens": "Receba Tokens da Árvore de Habilidades para desbloquear nós",
+    "defaultPoints": "Receba Pontos de Habilidade para comprar habilidades",
+    "typesFallback": "Desconhecido"
+  },
+  "skillList": {
+    "levelPrefix": "Nv {{level}}",
+    "unknownSkill": "???"
+  },
+  "defaultSkillLabels": {
+    "tms": "MTs {{types}}",
+    "xms": "XMs {{types}}",
+    "abilities": "Habilidades {{types}}",
+    "teraAbilities": "Habilidades Tera {{types}}",
+    "statBoosts": "Aumentos de Stats {{types}}",
+    "tokens": "Fichas da Árvore de Habilidades",
+    "points": "Pontos de Habilidade",
+    "boosters": "Impulsionadores {{types}}",
+    "essence": "Essência {{types}}",
+    "reviveBoost": "Aumento de Reviver {{types}}",
+    "essenceWeights": "Pesos de Essência {{types}}",
+    "catchBonus": "Bônus de Captura {{types}}",
+    "fusionPriority": "Prioridade de Fusão {{types}}"
+  },
+  "button": {
+    "useEssence": "Usar Essência"
+  },
+  "brock": { "description": "Campeão da Rocha" },
+  "misty": { "description": "Campeã da Água" },
+  "apollo": {
+    "name": "Apollo",
+    "description": "Campeão do Sol"
+  },
+  "diana": {
+    "name": "Diana",
+    "description": "Campeã da Lua"
+  },
+  "generic": { "description": "O campeão padrão." },
+  "champions": {
+    "title": "Escolha Seu Campeão",
+    "brock": {
+      "name": "Brock - Especialista em Rocha",
+      "description": "Mestre dos tipos Terra e Rocha",
+      "essenceRequirement": "Requer {{ground}} essências Terra + {{rock}} essências Rocha"
+    },
+    "misty": {
+      "name": "Misty - Especialista em Água",
+      "description": "Mestra dos tipos Água",
+      "essenceRequirement": "Requer {{water}} essências Água"
+    },
+    "generic": {
+      "name": "Campeão Equilibrado",
+      "description": "Sem especialização de tipo",
+      "essenceRequirement": "Sem requisitos especiais"
+    }
+  }
+}
+

@@ -14,6 +14,7 @@
     "SPDshortened": "すばやさ",
     "ACC": "めいちゅう",
     "EVA": "かいひ",
+    "HPStat": "HP",
     "Total": "合計"
   },
   "Type": {
@@ -36,6 +37,8 @@
     "DRAGON": "ドラゴン",
     "DARK": "あく",
     "FAIRY": "フェアリー",
-    "STELLAR": "ステラ"
+    "STELLAR": "ステラ",
+    "SMITTY": "スミッティ",
+    "GLITCH": "グリッチ"
   }
 }

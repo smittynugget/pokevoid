@@ -25,6 +25,9 @@ import { SpeciesFormChangeRevertWeatherFormTrigger, SpeciesFormChangeWeatherTrig
 import { CommonAnimPhase } from "#app/phases/common-anim-phase";
 import { ShowAbilityPhase } from "#app/phases/show-ability-phase";
 import { pokemonEvolutions } from "#app/data/pokemon-evolutions";
+import { isIPhone } from "../loading-scene";
+import Overrides from "../overrides";
+import { AssetLoadProfiler } from "../system/asset-load-profiler";
 
 export class Arena {
   public scene: BattleScene;
@@ -51,7 +54,60 @@ export class Arena {
     this.updatePoolsForTimeOfDay();
   }
 
-  init() {
+  loadBiomeAssets(): Promise<void> {
+    return new Promise(resolve => {
+      const biomeKey = getBiomeKey(this.biomeType);
+
+      if (this.scene.textures.exists(`${biomeKey}_bg`)) {
+        resolve();
+        return;
+      }
+
+      if (Overrides.DEBUG_IOS_MODE) {
+        AssetLoadProfiler.getInstance().trackLazyLoad(`${biomeKey}_bg`, "Arena.loadBiomeAssets");
+      }
+
+      const isBaseAnimated = biomeKey === "end";
+
+      this.scene.loadImage(`${biomeKey}_bg`, "arenas");
+      if (!isBaseAnimated) {
+        this.scene.loadImage(`${biomeKey}_a`, "arenas");
+        this.scene.loadImage(`${biomeKey}_b`, "arenas");
+      } else {
+        this.scene.loadAtlas(`${biomeKey}_a`, "arenas");
+        this.scene.loadAtlas(`${biomeKey}_b`, "arenas");
+      }
+
+      if (getBiomeHasProps(this.biomeType)) {
+        for (let p = 1; p <= 3; p++) {
+          const isPropAnimated = p === 3 && ["power_plant", "end"].includes(biomeKey);
+          const propKey = `${biomeKey}_b_${p}`;
+          if (!isPropAnimated) {
+            this.scene.loadImage(propKey, "arenas");
+          } else {
+            this.scene.loadAtlas(propKey, "arenas");
+          }
+        }
+      }
+
+      this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
+        resolve();
+      });
+      if (!this.scene.load.isLoading()) {
+        this.scene.load.start();
+      }
+    });
+  }
+
+  init(): void {
+    if (isIPhone()) {
+      this.loadBiomeAssets().then(() => this.initInternal());
+      return;
+    }
+    this.initInternal();
+  }
+
+  private initInternal(): void {
     const biomeKey = getBiomeKey(this.biomeType);
 
     this.scene.arenaPlayer.setBiome(this.biomeType);
@@ -61,8 +117,6 @@ export class Arena {
     this.scene.arenaBg.setTexture(`${biomeKey}_bg`);
     this.scene.arenaBgTransition.setTexture(`${biomeKey}_bg`);
 
-    // Redo this on initialise because during save/load the current wave isn't always
-    // set correctly during construction
     this.updatePoolsForTimeOfDay();
   }
 
@@ -86,7 +140,7 @@ export class Arena {
         && (this.biomeType !== Biome.END || this.scene.gameMode.isClassic || this.scene.gameMode.isWaveFinal(waveIndex));
     const strongBoss = isBoss && this.scene.gameMode.isChaosMode ? waveIndex >= 100 : waveIndex >= 50;
     const randVal = isBoss ? 64 : 512;
-    // luck influences encounter rarity
+
     let luckModifier = 0;
     if (typeof luckValue !== "undefined") {
       luckModifier = luckValue * (isBoss ? 0.5 : 2);
@@ -161,7 +215,7 @@ export class Arena {
     if (strongBoss) {
       let currentSpeciesId = ret.speciesId;
       let finalSpeciesId = currentSpeciesId;
-      
+
       while (pokemonEvolutions.hasOwnProperty(currentSpeciesId)) {
         const evolutions = pokemonEvolutions[currentSpeciesId];
         if (evolutions.length > 0) {
@@ -171,7 +225,7 @@ export class Arena {
           break;
         }
       }
-      
+
       if (finalSpeciesId !== ret.speciesId) {
         ret = getPokemonSpecies(finalSpeciesId);
       }
@@ -188,7 +242,7 @@ export class Arena {
     let tier = !isBoss
         ? tierValue >= 156 ? BiomePoolTier.COMMON : tierValue >= 32 ? BiomePoolTier.UNCOMMON : tierValue >= 6 ? BiomePoolTier.RARE : tierValue >= 1 ? BiomePoolTier.SUPER_RARE : BiomePoolTier.ULTRA_RARE
         : tierValue >= 20 ? BiomePoolTier.BOSS : tierValue >= 6 ? BiomePoolTier.BOSS_RARE : tierValue >= 1 ? BiomePoolTier.BOSS_SUPER_RARE : BiomePoolTier.BOSS_ULTRA_RARE;
-    
+
     while (tier && !this.trainerPool[tier].length) {
       console.log(`Downgraded trainer rarity tier from ${BiomePoolTier[tier]} to ${BiomePoolTier[tier - 1]}`);
       tier--;
@@ -309,25 +363,12 @@ export class Arena {
 
     return 131 / 180;
   }
-
-  /**
-   * Sets weather to the override specified in overrides.ts
-   * @param weather new weather to set of type WeatherType
-   * @returns true to force trySetWeather to return true
-   */
   trySetWeatherOverride(weather: WeatherType): boolean {
     this.weather = new Weather(weather, 0);
     this.scene.unshiftPhase(new CommonAnimPhase(this.scene, undefined, undefined, CommonAnim.SUNNY + (weather - 1)));
-    this.scene.queueMessage(getWeatherStartMessage(weather)!); // TODO: is this bang correct?
+    this.scene.queueMessage(getWeatherStartMessage(weather)!);
     return true;
   }
-
-  /**
-   * Attempts to set a new weather to the battle
-   * @param weather new weather to set of type WeatherType
-   * @param hasPokemonSource is the new weather from a pokemon
-   * @returns true if new weather set, false if no weather provided or attempting to set the same weather as currently in use
-   */
   trySetWeather(weather: WeatherType, hasPokemonSource: boolean): boolean {
     if (Overrides.WEATHER_OVERRIDE) {
       return this.trySetWeatherOverride(Overrides.WEATHER_OVERRIDE);
@@ -340,13 +381,13 @@ export class Arena {
     const oldWeatherType = this.weather?.weatherType || WeatherType.NONE;
 
     this.weather = weather ? new Weather(weather, hasPokemonSource ? 5 : 0) : null;
-    this.eventTarget.dispatchEvent(new WeatherChangedEvent(oldWeatherType, this.weather?.weatherType!, this.weather?.turnsLeft!)); // TODO: is this bang correct?
+    this.eventTarget.dispatchEvent(new WeatherChangedEvent(oldWeatherType, this.weather?.weatherType!, this.weather?.turnsLeft!));
 
     if (this.weather) {
       this.scene.unshiftPhase(new CommonAnimPhase(this.scene, undefined, undefined, CommonAnim.SUNNY + (weather - 1)));
-      this.scene.queueMessage(getWeatherStartMessage(weather)!); // TODO: is this bang correct?
+      this.scene.queueMessage(getWeatherStartMessage(weather)!);
     } else {
-      this.scene.queueMessage(getWeatherClearMessage(oldWeatherType)!); // TODO: is this bang correct?
+      this.scene.queueMessage(getWeatherClearMessage(oldWeatherType)!);
     }
 
     this.scene.getField(true).filter(p => p.isOnField()).map(pokemon => {
@@ -356,10 +397,6 @@ export class Arena {
 
     return true;
   }
-
-  /**
-   * Function to trigger all weather based form changes
-   */
   triggerWeatherBasedFormChanges(): void {
     this.scene.getField(true).forEach( p => {
       if (p.hasAbility(Abilities.FORECAST) && p.species.speciesId === Species.CASTFORM) {
@@ -368,10 +405,6 @@ export class Arena {
       }
     });
   }
-
-  /**
-   * Function to trigger all weather based form changes back into their normal forms
-   */
   triggerWeatherBasedFormChangesToNormal(): void {
     this.scene.getField(true).forEach( p => {
       if (p.hasAbility(Abilities.FORECAST, false, true) && p.species.speciesId === Species.CASTFORM) {
@@ -389,15 +422,15 @@ export class Arena {
     const oldTerrainType = this.terrain?.terrainType || TerrainType.NONE;
 
     this.terrain = terrain ? new Terrain(terrain, hasPokemonSource ? 5 : 0) : null;
-    this.eventTarget.dispatchEvent(new TerrainChangedEvent(oldTerrainType, this.terrain?.terrainType!, this.terrain?.turnsLeft!)); // TODO: are those bangs correct?
+    this.eventTarget.dispatchEvent(new TerrainChangedEvent(oldTerrainType, this.terrain?.terrainType!, this.terrain?.turnsLeft!));
 
     if (this.terrain) {
       if (!ignoreAnim) {
         this.scene.unshiftPhase(new CommonAnimPhase(this.scene, undefined, undefined, CommonAnim.MISTY_TERRAIN + (terrain - 1)));
       }
-      this.scene.queueMessage(getTerrainStartMessage(terrain)!); // TODO: is this bang correct?
+      this.scene.queueMessage(getTerrainStartMessage(terrain)!);
     } else {
-      this.scene.queueMessage(getTerrainClearMessage(oldTerrainType)!); // TODO: is this bang correct?
+      this.scene.queueMessage(getTerrainClearMessage(oldTerrainType)!);
     }
 
     this.scene.getField(true).filter(p => p.isOnField()).map(pokemon => {
@@ -433,11 +466,6 @@ export class Arena {
 
     return weatherMultiplier * terrainMultiplier;
   }
-
-  /**
-   * Gets the denominator for the chance for a trainer spawn
-   * @returns n where 1/n is the chance of a trainer battle
-   */
   getTrainerChance(): integer {
     switch (this.biomeType) {
       case Biome.METROPOLIS:
@@ -683,8 +711,6 @@ export class Arena {
     }
     return !!tag;
   }
-
-
   removeAllTags(): void {
     while (this.tags.length) {
       this.tags[0].onRemove(this);
@@ -693,12 +719,8 @@ export class Arena {
       this.tags.splice(0, 1);
     }
   }
-
-  /**
-   * Clears weather, terrain and arena tags when entering new biome or trainer battle.
-   */
   resetArenaEffects(): void {
-    // Don't reset weather if a Biome's permanent weather is active
+
     if (this.weather?.turnsLeft !== 0) {
       this.trySetWeather(WeatherType.NONE, false);
     }

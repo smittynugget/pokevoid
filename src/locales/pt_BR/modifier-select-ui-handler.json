@@ -9,7 +9,7 @@
   "checkTeamDesc": "Cheque seu time ou use um item de mudança de forma.",
   "rerollCost": "₽{{formattedMoney}}",
   "itemCost": "₽{{formattedMoney}}",
-  "rerollPermaCost": "∞{{formattedMoney}}",
-  "itemPermaCost": "∞{{formattedMoney}}",
+  "rerollPermaCost": "Ω{{formattedMoney}}",
+  "itemPermaCost": "Ω{{formattedMoney}}",
   "refreshTimer": "Atualiza em: {{minutes}}:{{seconds}}"
 }

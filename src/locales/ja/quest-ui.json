@@ -57,11 +57,11 @@
         "count": "{{current}} / {{max}}"
       },
       "rewards": {
-        "stage1": "90% ∞ゴールド | 8% ∞アイテム | 2% 両方",
-        "stage2": "75% ∞ゴールド | 15% ∞アイテム | 10% 両方",
-        "stage3": "60% ∞ゴールド | 25% ∞アイテム | 15% 両方",
-        "stage4": "40% ∞ゴールド | 40% ∞アイテム | 20% 両方",
-        "stage5": "25% ∞ゴールド | 45% ∞アイテム | 30% 両方"
+        "stage1": "90% Ωゴールド | 8% Ωアイテム | 2% 両方",
+        "stage2": "75% Ωゴールド | 15% Ωアイテム | 10% 両方",
+        "stage3": "60% Ωゴールド | 25% Ωアイテム | 15% 両方",
+        "stage4": "40% Ωゴールド | 40% Ωアイテム | 20% 両方",
+        "stage5": "25% Ωゴールド | 45% Ωアイテム | 30% 両方"
       }
     },
     "quest": {
@@ -72,7 +72,7 @@
         "cancel": "キャンセル"
       },
       "rewards": {
-        "default": "50% ∞ゴールド | 35% ∞アイテム | 15% 両方"
+        "default": "50% Ωゴールド | 35% Ωアイテム | 15% 両方"
       },
       "activeQuest": {
         "modalTitle": "クエスト！",
@@ -92,8 +92,8 @@
     "smitty": {
       "modalTitle": "ポケモンスミッティ討伐",
       "rewards": {
-        "withSpecies": "70% ∞ゴールド | 20% ∞アイテム | 10% 両方",
-        "withoutSpecies": "40% ∞ゴールド | 40% ∞アイテム | 20% 両方"
+        "withSpecies": "70% Ωゴールド | 20% Ωアイテム | 10% 両方",
+        "withoutSpecies": "40% Ωゴールド | 40% Ωアイテム | 20% 両方"
       },
       "task": {
         "evolveAny": "任意のポケモンを{{formName}}に進化させる",
@@ -114,7 +114,7 @@
     "nuzlightModeRewardUpdatedInventory": "インベントリが更新されました！",
     "nuzlightModeRewardMoveRelease": "わざを わすれる",
     "nuzlockeModeRewardRank2": "ランク 2",
-    "accessShopInBattle": "バトルちゅうに ∞ショップに アクセス！",
+    "accessShopInBattle": "バトルちゅうに Ωショップに アクセス！",
     "accessQuestsInBattle": "バトルちゅうに クエストに アクセス！"
   }
 } 

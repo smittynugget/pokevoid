@@ -9,8 +9,6 @@ import { StarterMoveset, StarterAttributes } from "../system/game-data";
 import { PokemonIconAnimMode } from "./pokemon-icon-anim-handler";
 import { Gender } from "../data/gender";
 import { EnhancedTutorial } from "./tutorial-registry";
-
-
 export type EggStarterSelectCallback = (selected: Starter | null, released: Pokemon | null) => void;
 
 export default class eggStarterUi extends StarterSelectUiHandler {
@@ -45,7 +43,7 @@ export default class eggStarterUi extends StarterSelectUiHandler {
             0.90
         );
         this.titleBg.setOrigin(0.5, 0);
-        this.titleBg.setDepth(1000);
+        this.titleBg.setDepth(999);
         this.titleBg.setScrollFactor(0);
 
         const newBgStartX = screenWidth * 0.15;
@@ -63,10 +61,9 @@ export default class eggStarterUi extends StarterSelectUiHandler {
             0.90
         );
         this.newTitleBg.setOrigin(0.5, 0);
-        this.newTitleBg.setDepth(1000);
+        this.newTitleBg.setDepth(999);
         this.newTitleBg.setScrollFactor(0);
 
-        const titleTextWidth = screenWidth * 0.26;
         const titleTextCenterX = newBgCenterX;
 
         this.titleText = this.scene.add.text(
@@ -81,7 +78,7 @@ export default class eggStarterUi extends StarterSelectUiHandler {
             }
         );
         this.titleText.setOrigin(0.5, 0.5);
-        this.titleText.setDepth(1001);
+        this.titleText.setDepth(999);
         this.titleText.setScrollFactor(0);
 
         this.tipText = this.scene.add.text(
@@ -98,7 +95,7 @@ export default class eggStarterUi extends StarterSelectUiHandler {
             }
         );
         this.tipText.setOrigin(0, 0.5);
-        this.tipText.setDepth(1001);
+        this.tipText.setDepth(999);
         this.tipText.setScrollFactor(0);
 
         this.titleBg.setVisible(false);
@@ -115,13 +112,13 @@ export default class eggStarterUi extends StarterSelectUiHandler {
 
         if (args.length >= 1) {
                         const hatchedPokemon = args[0] as PlayerPokemon[];
-            
+
                         if (args.length >= 2 && args[1] instanceof Function) {
                 this.eggStarterSelectCallback = args[1] as EggStarterSelectCallback;
             } else {
                 this.eggStarterSelectCallback = null;
             }
-            
+
             const speciesMap = new Map<number, PlayerPokemon>();
 
             for (const pokemon of hatchedPokemon) {
@@ -137,24 +134,24 @@ export default class eggStarterUi extends StarterSelectUiHandler {
 
             const partyPokemon = this.scene.getParty();
             this.currentParty = partyPokemon;
-            
+
             this.legendaryEnabled = [...partyPokemon].slice(1).some(pokemon => pokemon.species.isLegendSubOrMystical() || pokemon.isMax() || pokemon.isMega());
-            
+
             this.customizeUIForEggSelection();
-            
+
             const result = super.show([this.dummyCallback.bind(this)]);
-            
+
             this.displayPartyInStarterIcons(partyPokemon);
-            
+
             this.populateHatchedPokemon();
 
             if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.EGG_SWAP_1)) {
                 this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.EGG_SWAP_1, true, false);
             }
-            
+
             return result;
         }
-        
+
         return false;
     }
 
@@ -162,23 +159,23 @@ export default class eggStarterUi extends StarterSelectUiHandler {
                 if (this.valueLimitLabel) {
             this.valueLimitLabel.setVisible(false);
         }
-        
+
                 if (this.filterBarContainer) {
             this.filterBarContainer.setVisible(false);
             this.filterInstructionsContainer.setVisible(false);
         }
-        
+
                 this.setFilterMode(false);
-        
+
     }
 
     private displayPartyInStarterIcons(partyPokemon: Pokemon[]): void {
                 for (let i = 0; i < this.starterIcons.length; i++) {
             this.starterIcons[i].setTexture("pokemon_icons_0");
             this.starterIcons[i].setFrame("unknown");
-            this.starterIcons[i].setVisible(false);         
+            this.starterIcons[i].setVisible(false);
             }
-        
+
                 for (let i = 0; i < partyPokemon.length; i++) {
             if (i < this.starterIcons.length) {
                 const pokemon = partyPokemon[i];
@@ -187,24 +184,24 @@ export default class eggStarterUi extends StarterSelectUiHandler {
                 const isFemale = pokemon.isFemale();
                 const shiny = pokemon.shiny;
                 const variant = pokemon.variant;
-                
+
                 if (i >= this.starterSpecies.length) {
                     this.addToParty(
-                        pokemon.species, 
-                        this.getCurrentDexProps(pokemon.species.speciesId), 
-                        pokemon.abilityIndex, 
-                        pokemon.nature, 
+                        pokemon.species,
+                        this.getCurrentDexProps(pokemon.species.speciesId),
+                        pokemon.abilityIndex,
+                        pokemon.nature,
                         pokemon.moveset as StarterMoveset,
                         pokemon.fusionFormIndex || -1
                     );
                 } else {
                     this.starterSpecies[i] = pokemon.species;
                 }
-                
+
                 this.starterIcons[i].setTexture(pokemon.species.getIconAtlasKey(formIndex, shiny, variant));
                 this.starterIcons[i].setFrame(pokemon.species.getIconId(isFemale, formIndex, shiny, variant));
                 this.checkIconId(this.starterIcons[i], pokemon.species, isFemale, formIndex, shiny, variant);
-                this.starterIcons[i].setVisible(true);                 
+                this.starterIcons[i].setVisible(true);
                                 if (this.iconAnimHandler) {
                     this.iconAnimHandler.addOrUpdate(this.starterIcons[i], PokemonIconAnimMode.PASSIVE);
                 }
@@ -214,20 +211,20 @@ export default class eggStarterUi extends StarterSelectUiHandler {
 
     private populateHatchedPokemon(): void {
                 this.filteredStarterContainers = [];
-        
+
                 this.scrollCursor = 0;
-        
+
                 this.starterContainers.forEach(container => {
             container.setVisible(false);
         });
-        
+
                 const hatchedSpecies = this.hatchedPokemon.map(p => p.species);
-        
+
                 hatchedSpecies.forEach(species => {
                         const container = this.starterContainers.find(c => c.species.speciesId === species.speciesId);
             if (container) {
                                 this.filteredStarterContainers.push(container);
-                
+
                                 container.icon.setAlpha(species.isLegendSubOrMystical() && !this.legendaryEnabled ? 0.375 : 1);
                                 if(species.isLegendSubOrMystical() && !this.legendaryEnabled) {
                                     container.icon.setTint(0x808080);
@@ -237,9 +234,9 @@ export default class eggStarterUi extends StarterSelectUiHandler {
 
             }
         });
-        
+
                 this.updateScroll();
-        
+
                 if (this.filteredStarterContainers.length > 0) {
                         this.setSpecies(this.filteredStarterContainers[0].species);
                         this.setCursor(0);
@@ -247,7 +244,7 @@ export default class eggStarterUi extends StarterSelectUiHandler {
     }
 
     updateStarters = (): void => {};
-    
+
     resetFilters(): void {}
 
         getPokemonSelectedOptions(): OptionItem[] {
@@ -257,19 +254,17 @@ export default class eggStarterUi extends StarterSelectUiHandler {
         if (this.isEggModePartyPokemonSelected()) {
             return null;
         }
-        
+
         if (!this.lastSpecies) {
             return options;
         }
-        
+
         const isLegendary = this.lastSpecies.isLegendSubOrMystical();
         const onlyOnePokemon = this.currentParty.length == 1;
         const canAddToParty = this.currentParty.length < 6 && !isLegendary;
-        
-        // Add to Party option (highest priority)
         if (canAddToParty) {
             options.push({
-                label: i18next.t("eggStarterUi:addToParty", 
+                label: i18next.t("eggStarterUi:addToParty",
                     { defaultValue: "Add to Party" }),
                 handler: () => {
                     this.showAddToPartyConfirmation();
@@ -277,14 +272,14 @@ export default class eggStarterUi extends StarterSelectUiHandler {
                 }
             });
         }
-        
+
                 if (isLegendary && !this.legendaryEnabled) {
                         options.push({
-                label: i18next.t("eggStarterUi:legendaryDisabled", 
+                label: i18next.t("eggStarterUi:legendaryDisabled",
                     { defaultValue: "Need Legendary/Mega/Dyna in Party" }),
                 handler: () => {
                     ui.playError();
-                    this.showText(i18next.t("eggStarterUi:legendaryDisabled", 
+                    this.showText(i18next.t("eggStarterUi:legendaryDisabled",
                         { defaultValue: "You need to swap a legendary/mega/dyna for this Pokémon." }));
                     return false;
                 }
@@ -292,11 +287,11 @@ export default class eggStarterUi extends StarterSelectUiHandler {
         }
         else if (onlyOnePokemon) {
             options.push({
-                label: i18next.t("eggStarterUi:onlyOnePokemon", 
+                label: i18next.t("eggStarterUi:onlyOnePokemon",
                     { defaultValue: "Can't Swap: Only One Party Member" }),
                 handler: () => {
                     ui.playError();
-                    this.showText(i18next.t("eggStarterUi:onlyOnePokemon", 
+                    this.showText(i18next.t("eggStarterUi:onlyOnePokemon",
                         { defaultValue: "You can't swap the first/only party member." }));
                     return false;
                 }
@@ -304,7 +299,7 @@ export default class eggStarterUi extends StarterSelectUiHandler {
         }
         else {
                         options.push({
-                label: i18next.t("eggStarterUi:swapWithParty", 
+                label: i18next.t("eggStarterUi:swapWithParty",
                     { defaultValue: "Swap with party member" }),
                 handler: () => {
                     this.showSwapOptions();
@@ -312,26 +307,26 @@ export default class eggStarterUi extends StarterSelectUiHandler {
                 }
             });
         }
-        
+
                 const parentOptions = super.getPokemonSelectedOptions();
         const filteredParentOptions = parentOptions.filter(option => {
             const label = option.label;
-            return !label.includes(i18next.t("starterSelectUiHandler:addToParty")) && 
+            return !label.includes(i18next.t("starterSelectUiHandler:addToParty")) &&
                    !label.includes(i18next.t("starterSelectUiHandler:removeFromParty"));
         });
-        
+
                 options.push(...filteredParentOptions);
-        
+
         return options;
     }
 
     private showSwapOptions(): void {
         const ui = this.getUi();
         this.blockInput = true;
-        
+
         const selectedHatchedPokemon = this.lastSpecies;
         const starterPrefs = this.starterPreferences[selectedHatchedPokemon.speciesId] || {};
-        
+
         const hasPassive = this.isPassiveAvailable(selectedHatchedPokemon.speciesId);
         const hasPokerus = this.pokerusSpecies.some(s => s.speciesId === selectedHatchedPokemon.speciesId);
 
@@ -353,25 +348,27 @@ export default class eggStarterUi extends StarterSelectUiHandler {
             const defaultMessage = isLegendary ? "Select a legendary/mega/dyna to swap with selected." : "Select a party member to swap with the hatched Pokémon.";
 
             ui.showText(i18next.t(messageKey, { defaultValue: defaultMessage }), null, () => {
-                
-                const options = this.currentParty
-                    .filter((pokemon, index) => index !== 0 && (!isLegendary || pokemon.species.isLegendSubOrMystical() || pokemon.isMega() || pokemon.isMax()))
-                    .map((pokemon, index) => {
+
+                const eligiblePokemon = this.currentParty
+                    .map((pokemon, originalIndex) => ({ pokemon, originalIndex }))
+                    .filter(({ pokemon, originalIndex }) => originalIndex !== 0 && (!isLegendary || pokemon.species.isLegendSubOrMystical() || pokemon.isMega() || pokemon.isMax()));
+
+                const options = eligiblePokemon.map(({ pokemon, originalIndex }) => {
                     return {
                         label: pokemon.species.getName() + (pokemon.nickname ? ` (${pokemon.nickname})` : ""),
                         handler: () => {
                             this.blockInput = true;
                             ui.setMode(this.getMode()).then(() => {
-                                ui.showText(i18next.t("eggStarterUi:confirmSwapMessage", { 
+                                ui.showText(i18next.t("eggStarterUi:confirmSwapMessage", {
                                     defaultValue: "Swap {{hatchedPokemon}} with {{partyPokemon}}?",
                                     hatchedPokemon: selectedHatchedPokemon.name,
                                     partyPokemon: pokemon.species.name
                                 }), null, () => {
                                     ui.setModeWithoutClear(Mode.CONFIRM, () => {
                                         if (this.eggStarterSelectCallback) {
-                                            
+
                                             this.clear();
-                                            
+
                                             this.scene.ui.showText("", 0);
 
                                             this.eggStarterSelectCallback(selectedStarter, pokemon);
@@ -385,9 +382,9 @@ export default class eggStarterUi extends StarterSelectUiHandler {
                             return true;
                         },
                         onHover: () => {
-                            this.starterIconsCursorIndex = index + 1;
+                            this.starterIconsCursorIndex = originalIndex;
                             this.starterIconsCursorObj.setVisible(true);
-                            this.moveStarterIconsCursor(index + 1);
+                            this.moveStarterIconsCursor(originalIndex);
                         }
                     };
                 });
@@ -412,13 +409,13 @@ export default class eggStarterUi extends StarterSelectUiHandler {
                     maxOptions: 8,
                     yOffset: 19
                 });
-                
-                if (this.currentParty.length > 1) {
-                    this.starterIconsCursorIndex = 1;
+
+                if (eligiblePokemon.length > 0) {
+                    this.starterIconsCursorIndex = eligiblePokemon[0].originalIndex;
                     this.starterIconsCursorObj.setVisible(true);
-                    this.moveStarterIconsCursor(1);
+                    this.moveStarterIconsCursor(eligiblePokemon[0].originalIndex);
                 }
-                
+
                 this.blockInput = false;
             });
         });
@@ -428,17 +425,17 @@ export default class eggStarterUi extends StarterSelectUiHandler {
         this.instructionsContainer.removeAll();
         this.instructionRowX = 0;
         this.instructionRowY = 0;
-        
+
         super.updateInstructions();
     }
 
     private showAddToPartyConfirmation(): void {
         const ui = this.getUi();
         this.blockInput = true;
-        
+
         const selectedHatchedPokemon = this.lastSpecies;
         const starterPrefs = this.starterPreferences[selectedHatchedPokemon.speciesId] || {};
-        
+
         const hasPassive = this.isPassiveAvailable(selectedHatchedPokemon.speciesId);
         const hasPokerus = this.pokerusSpecies.some(s => s.speciesId === selectedHatchedPokemon.speciesId);
 
@@ -455,21 +452,19 @@ export default class eggStarterUi extends StarterSelectUiHandler {
         };
 
         ui.setMode(this.getMode()).then(() => {
-            ui.showText(i18next.t("eggStarterUi:confirmAddMessage", { 
+            ui.showText(i18next.t("eggStarterUi:confirmAddMessage", {
                 defaultValue: "Add {{hatchedPokemon}} to your party?",
                 hatchedPokemon: selectedHatchedPokemon.name
             }), null, () => {
                 ui.setModeWithoutClear(Mode.CONFIRM, () => {
                     if (this.eggStarterSelectCallback) {
-                        // Clear UI
+
                         this.clear();
                         this.scene.ui.showText("", 0);
-                        
-                        // Call callback with null for released (no swap, just add)
                         this.eggStarterSelectCallback(selectedStarter, null);
                     }
                 }, () => {
-                    // Cancel - return to main selection
+
                     ui.setMode(this.getMode());
                     this.blockInput = false;
                 });
@@ -479,7 +474,7 @@ export default class eggStarterUi extends StarterSelectUiHandler {
     }
 
     private dummyCallback(_starters: Starter[]): void {}
-    
+
     isPartyValid(): boolean {
         return false;
     }
@@ -487,20 +482,18 @@ export default class eggStarterUi extends StarterSelectUiHandler {
     protected getMode(): Mode {
         return Mode.EGG_STARTER_SELECT;
     }
-    
+
     setFilterMode(filterMode: boolean): boolean {
                 if (filterMode === true) {
             return false;
         }
-        
+
         return super.setFilterMode(false);
     }
 
     getValueLimit(): integer {
         return 1000;
     }
-
-
     clear() {
         super.clear();
 

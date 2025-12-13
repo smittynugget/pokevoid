@@ -16,9 +16,9 @@
     "questComplete": "任务完成！",
     "stageComplete": "阶段完成！",
     "rewardTypes": {
-      "permaMoney": "∞金币",
-      "permaModifier": "∞道具",
-      "permaMoneyAndModifier": "∞金币 & ∞道具"
+      "permaMoney": "Ω金币",
+      "permaModifier": "Ω道具",
+      "permaMoneyAndModifier": "Ω金币 & Ω道具"
     }
   }
 } 

@@ -23,6 +23,11 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
   private smittySprite: Phaser.GameObjects.Sprite;
   private textureLoaded: boolean = false;
   private exclamationWindow: Phaser.GameObjects.Container;
+  private versionText: Phaser.GameObjects.Text;
+  private taglineClickCount: number = 0;
+  private taglineClickTimer: NodeJS.Timeout | null = null;
+  private versionClickCount: number = 0;
+  private versionClickTimer: NodeJS.Timeout | null = null;
 
   private titleStatsTimer: NodeJS.Timeout | null;
 
@@ -47,6 +52,10 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
 
     const taglineText = addTextObject(this.scene, logo.x, logo.y + logo.displayHeight + 3, i18next.t("menu:tagline"), TextStyle.TITLE_MESSAGE, { fontSize: "40px" });
     taglineText.setOrigin(0.5, 0);
+    taglineText.setInteractive({ useHandCursor: true });
+    taglineText.on('pointerdown', () => {
+      this.handleTaglineClick();
+    });
     this.titleContainer.add(taglineText);
 
     if (this.scene.eventManager.isEventActive()) {
@@ -59,9 +68,20 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
     this.splashMessageText.setOrigin(0.5, 0.5);
     this.splashMessageText.setAngle(-20);
     this.titleContainer.add(this.splashMessageText);
-
-
     this.splashMessageText.setVisible(false);
+
+    const gameWidth = this.scene.game.canvas.width / 6;
+    const gameHeight = this.scene.game.canvas.height / 6;
+    const displayVersion = this.scene.gameData?.getDisplayVersion() || i18next.t("menu:gameVersion");
+    this.versionText = addTextObject(this.scene, gameWidth - 2, gameHeight - 1,
+      displayVersion, TextStyle.BATTLE_INFO, { fontSize: "26px" });
+    this.versionText.setOrigin(1, 1);
+    this.versionText.setAlpha(0.7);
+    this.titleContainer.add(this.versionText);
+    this.versionText.setInteractive({ useHandCursor: true });
+    this.versionText.on('pointerdown', () => {
+        this.handleVersionClick();
+    });
 
     this.loadSmittyTexture()
         .then(() => {
@@ -107,13 +127,9 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
         console.error("[TitleUiHandler] Smitty texture not loaded.");
         return;
     }
-
-    
     const spriteKey = `pkmn__glitch__smitom`;
-    const x = (this.scene.game.canvas.width / 6) - 25; 
+    const x = (this.scene.game.canvas.width / 6) - 25;
     const y = this.scene.game.canvas.height / 6 - 10;
-
-
     this.smittySprite = this.scene.addPokemonSprite(
         null,
         x,
@@ -125,7 +141,7 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
     );
 
     this.smittySprite.setOrigin(0.5, 1);
-    this.smittySprite.setScale(0.2); 
+    this.smittySprite.setScale(0.2);
 
     this.scene.tweens.add({
         targets: this.smittySprite,
@@ -135,9 +151,6 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
         yoyo: true,
         repeat: -1
     });
-
-
-
     if (this.smittySprite.texture.frameTotal > 1) {
         this.smittySprite.play(spriteKey);
     }
@@ -153,6 +166,60 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
         this.activateSmitomTalk();
     });
   }
+
+private handleTaglineClick(): void {
+  this.taglineClickCount++;
+
+  if (this.taglineClickTimer) {
+    clearTimeout(this.taglineClickTimer);
+  }
+
+  this.taglineClickTimer = setTimeout(() => {
+    this.taglineClickCount = 0;
+  }, 2000);
+
+  if (this.taglineClickCount >= 3) {
+    this.taglineClickCount = 0;
+    if (this.taglineClickTimer) {
+      clearTimeout(this.taglineClickTimer);
+      this.taglineClickTimer = null;
+    }
+    this.scene.ui.setOverlayMode(Mode.BUG_REPORT_FORM, {
+      buttonActions: [
+        () => {},
+        () => {
+          this.scene.ui.revertMode();
+        }
+      ]
+    });
+  }
+}
+
+private handleVersionClick(): void {
+    this.versionClickCount++;
+
+    if (this.versionClickTimer) {
+        clearTimeout(this.versionClickTimer);
+    }
+
+    this.versionClickTimer = setTimeout(() => {
+        this.versionClickCount = 0;
+    }, 3000);
+
+    if (this.versionClickCount >= 10) {
+        this.versionClickCount = 0;
+        if (this.versionClickTimer) {
+            clearTimeout(this.versionClickTimer);
+            this.versionClickTimer = null;
+        }
+        this.scene.ui.setOverlayMode(Mode.BACKUP_RESTORE_FORM, {
+            buttonActions: [
+                () => {},
+                () => { this.scene.ui.revertMode(); }
+            ]
+        });
+    }
+}
 
 public activateSmitomTalk(initialTalk: boolean = false): void {
   this.scene.getRandomSmittySound(undefined, true);
@@ -183,23 +250,23 @@ private setupExclamationWindow(x: number, y: number): void {
         callback: () => {
             const smitomWidth = this.smittySprite.displayWidth;
             const smitomHeight = this.smittySprite.displayHeight;
-            
-            const relativeX = this.smittySprite.x;  
-            const relativeY = this.smittySprite.y - smitomHeight - 4;  
-            
+
+            const relativeX = this.smittySprite.x;
+            const relativeY = this.smittySprite.y - smitomHeight - 4;
+
             this.exclamationWindow = this.scene.add.container(relativeX, relativeY);
-            
-            const exclamationSprite = this.scene.add.sprite(0, 0, 'smitems_192', 'exclamationMark');
-            exclamationSprite.setScale(0.085); 
-            exclamationSprite.setOrigin(0.5, 0.5); 
-            
+
+            const exclamationSprite = this.scene.add.sprite(0, 0, 'smitems', 'exclamationMark');
+            exclamationSprite.setScale(0.20);
+            exclamationSprite.setOrigin(0.5, 0.5);
+
             this.exclamationWindow.add(exclamationSprite);
-            
+
             this.titleContainer.add(this.exclamationWindow);
-            
+
             this.scene.tweens.add({
                 targets: this.exclamationWindow,
-                y: relativeY - 2, 
+                y: relativeY - 2,
                 duration: 2500,
                 ease: 'Sine.easeInOut',
                 yoyo: true,
@@ -209,10 +276,10 @@ private setupExclamationWindow(x: number, y: number): void {
             exclamationSprite.on('error', () => {
                 console.error('[TitleUiHandler] Failed to load exclamation mark sprite frame. Falling back to text version.');
                 exclamationSprite.destroy();
-                
+
                 const baseSize = Math.max(smitomWidth, smitomHeight) / 5;
                 const windowSize = baseSize * 1.2;
-                
+
                 const windowBg = addWindow(
                     this.scene,
                     -windowSize/2,
@@ -225,7 +292,7 @@ private setupExclamationWindow(x: number, y: number): void {
                     0,
                     WindowVariant.XTHIN
                 );
-                
+
                 const exclamationText = addTextObject(
                     this.scene,
                     0,
@@ -235,7 +302,7 @@ private setupExclamationWindow(x: number, y: number): void {
                     { fontSize: `45px` }
                 );
                 exclamationText.setOrigin(0.5);
-                
+
                 this.exclamationWindow.add([windowBg, exclamationText]);
             });
         },
@@ -245,6 +312,10 @@ private setupExclamationWindow(x: number, y: number): void {
 
   show(args: any[]): boolean {
     const ret = super.show(args);
+
+    if (this.versionText && this.scene.gameData) {
+      this.versionText.setText(this.scene.gameData.getDisplayVersion());
+    }
 
     if (ret) {
         this.splashMessage = Utils.randItem(getSplashMessages());
@@ -261,6 +332,7 @@ private setupExclamationWindow(x: number, y: number): void {
 
         if (this.optionSelectContainer) {
             let xPos = 85;
+            let yPos = -6;
             const lang = i18next.resolvedLanguage;
             if (lang === 'en') {
                 xPos = 85;
@@ -273,13 +345,16 @@ private setupExclamationWindow(x: number, y: number): void {
             else if (lang === 'de') {
                 xPos = 95;
             }
-            else if (lang === 'zh-CN' || lang === 'zh-TW' || lang === 'ja') {
+            else if (lang === 'zh-CN' || lang === 'zh-TW') {
                 xPos = 65;
+            }
+            else if (lang === 'ja') {
+                xPos = 82;
+                yPos = -9;
             }
             else if (lang === 'ko') {
                 xPos = 75;
             }
-            const yPos = -6;
             this.optionSelectContainer.setPosition(xPos, yPos);
             this.optionSelectBg.setVisible(false);
         }
@@ -357,12 +432,6 @@ private setupExclamationWindow(x: number, y: number): void {
     }
   }
 }
-
-/**
- * Activates Smitom's dialogue and handles reward logic
- * @param scene - The BattleScene instance
- * @param initialTalk - Whether this is the initial talk with Smitom
- */
 export function activateSmitomTalk(scene: BattleScene, initialTalk: boolean = false): void {
   scene.getRandomSmittySound(undefined, true);
   const dialogueKey = getSmitomDialogue(scene);

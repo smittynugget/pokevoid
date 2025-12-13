@@ -6,13 +6,6 @@ import { EggHatchPhase } from "#app/phases/egg-hatch-phase.js";
 
 export default class EggHatchSceneHandler extends UiHandler {
   public eggHatchContainer: Phaser.GameObjects.Container;
-
-  /**
-   * Allows subscribers to listen for events
-   *
-   * Current Events:
-   * - {@linkcode EggEventType.EGG_COUNT_CHANGED} {@linkcode EggCountChangedEvent}
-   */
   public readonly eventTarget: EventTarget = new EventTarget();
 
   constructor(scene: BattleScene) {

@@ -5,6 +5,7 @@
   "endlessSpliced": "Endless (Spliced)",
   "dailyRun": "Daily Run",
   "unknown": "Unknown",
+  "shop": "Shop",
   "challenge": "Challenge",
   "nuzlocke": "Gauntlet Nuzlocke",
   "draft": "Gauntlet Rogue",
@@ -23,5 +24,9 @@
   "chaosNuzlocke": "Chaos Nuzlocke",
   "chaosNuzlightDraft": "Chaos Nuzlight Rogue",
   "chaosNuzlockeDraft": "Chaos Nuzlocke Rogue",
+  "chaosMode": "Chaos Mode",
+  "midnight": "Midnight",
+  "abyss": "Abyss",
+  "ftl": "FTL",
   "notClassic": "*While not in Journey mode"
 }

@@ -11,9 +11,9 @@ export class MessagePhase extends Phase {
     super(scene);
 
     this.text = text;
-    this.callbackDelay = callbackDelay!; // TODO: is this bang correct?
-    this.prompt = prompt!; // TODO: is this bang correct?
-    this.promptDelay = promptDelay!; // TODO: is this bang correct?
+    this.callbackDelay = callbackDelay!;
+    this.prompt = prompt!;
+    this.promptDelay = promptDelay!;
   }
 
   start() {

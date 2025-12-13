@@ -14,6 +14,12 @@ import berry from "./berry.json";
 import bgmName from "./bgm-name.json";
 import biome from "./biome.json";
 import challenges from "./challenges.json";
+import championSelect from "./champion-select.json";
+import skillTree from "./skill-tree.json";
+import championLevelUp from "./champion-level-up.json";
+import championSkills from "./champion-skills.json";
+import championModifiers from "./champion-modifiers.json";
+import pokemonAltBuild from "./pokemon-alt-build.json";
 import commandUiHandler from "./command-ui-handler.json";
 import dialogue from "./dialogue.json";
 import battleSpecDialogue from "./dialogue-final-boss.json";
@@ -81,6 +87,12 @@ export const koConfig = {
   bgmName,
   biome,
   challenges,
+  championSelect,
+  skillTree,
+  championLevelUp,
+  championSkills,
+  championModifiers,
+  pokemonAltBuild,
   commandUiHandler,
   common,
   achv,

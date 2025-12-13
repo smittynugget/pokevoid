@@ -3,5 +3,11 @@
   "ball": "Bolas",
   "pokemon": "Pokémon",
   "run": "Fugir",
-  "actionMessage": "O que {{pokemonName}}\ndeve fazer?"
+  "actionMessage": "O que {{pokemonName}}\ndeve fazer?",
+  "skillTree": "Árvore de Habilidades",
+  "team": "Time",
+  "check": "Verificar",
+  "eggs": "Ovos",
+  "shop": "Loja",
+  "map": "Mapa"
 }

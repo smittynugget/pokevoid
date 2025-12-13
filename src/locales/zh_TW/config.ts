@@ -65,6 +65,12 @@ import modGlitchCreateFormUi from "./mod-glitch-create-form-ui.json";
 import pokedex from "./pokedex.json";
 import nodeMode from "./node-mode.json";
 import moveUpgradeAttrs from "./move-upgrade-attrs.json";
+import championSelect from "./champion-select.json";
+import skillTree from "./skill-tree.json";
+import championLevelUp from "./champion-level-up.json";
+import championSkills from "./champion-skills.json";
+import championModifiers from "./champion-modifiers.json";
+import pokemonAltBuild from "./pokemon-alt-build.json";
 
 export const zhTwConfig = {
   ability,
@@ -133,5 +139,11 @@ export const zhTwConfig = {
   modGlitchCreateFormUi,
   pokedex,
   nodeMode,
-  moveUpgradeAttrs
+  moveUpgradeAttrs,
+  championSelect,
+  skillTree,
+  championLevelUp,
+  championSkills,
+  championModifiers,
+  pokemonAltBuild
 };

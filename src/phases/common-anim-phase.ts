@@ -10,7 +10,7 @@ export class CommonAnimPhase extends PokemonPhase {
   constructor(scene: BattleScene, battlerIndex?: BattlerIndex, targetIndex?: BattlerIndex | undefined, anim?: CommonAnim) {
     super(scene, battlerIndex);
 
-    this.anim = anim!; // TODO: is this bang correct?
+    this.anim = anim!;
     this.targetIndex = targetIndex;
   }
 

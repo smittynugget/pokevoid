@@ -15,6 +15,7 @@ import * as Utils from "#app/utils.js";
 import { BattlePhase } from "./battle-phase";
 import { PermaType } from "#app/modifier/perma-modifiers";
 import {PersistentModifier} from "#app/modifier/modifier";
+import Overrides from "#app/overrides";
 
 export class SelectPermaModifierPhase extends BattlePhase {
     private rerollCount: integer;
@@ -35,7 +36,7 @@ export class SelectPermaModifierPhase extends BattlePhase {
             this.updateSeed();
         }
 
-        const modifierCount = 4;  
+        const modifierCount = 4;
         const typeOptions = this.getPermaOptions(modifierCount);
 
         const modifierSelectCallback = (rowCursor: integer, cursor: integer) => {
@@ -60,7 +61,7 @@ export class SelectPermaModifierPhase extends BattlePhase {
                             return false;
                         } else {
                             this.scene.gameData.gameStats.permaReroll++;
-                            
+
                             this.scene.addPermaMoney(-(rerollCost)!);
                             this.scene.updateUIPermaMoneyText();
                             this.scene.unshiftPhase(new SelectPermaModifierPhase(
@@ -116,7 +117,10 @@ export class SelectPermaModifierPhase extends BattlePhase {
     }
 
     getRerollCost(): number {
-        const baseValue = 1000;  
+        if (Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
+            return 0;
+        }
+        const baseValue = 1000;
         return Math.min(baseValue * Math.pow(2, this.rerollCount), Number.MAX_SAFE_INTEGER);
     }
 
@@ -124,7 +128,7 @@ export class SelectPermaModifierPhase extends BattlePhase {
         if (this.onEndCallback) {
             this.onEndCallback();
         }
-        
+
         super.end();
     }
 }

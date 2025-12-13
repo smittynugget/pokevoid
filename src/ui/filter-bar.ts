@@ -43,16 +43,8 @@ export class FilterBar extends Phaser.GameObjects.Container {
 
     this.uiTheme = scene.uiTheme;
   }
-
-  /**
-   * Add a new filter to the FilterBar, as long that a unique DropDownColumn is provided
-   * @param column  the DropDownColumn that will be used to access the filter values
-   * @param title   the string that will get displayed in the filter bar
-   * @param dropDown the DropDown with all options for this filter
-   * @returns true if successful, false if the provided column was already in use for another filter
-   */
   addFilter(column: DropDownColumn, title: string, dropDown: DropDown): boolean {
-    // The column should be unique to each filter,
+
     if (this.columns.includes(column)) {
       return false;
     }
@@ -70,19 +62,9 @@ export class FilterBar extends Phaser.GameObjects.Container {
 
     return true;
   }
-
-  /**
-   * Get the DropDown associated to a given filter
-   * @param col the DropDownColumn used to register the filter to retrieve
-   * @returns the associated DropDown if it exists, undefined otherwise
-   */
   getFilter(col: DropDownColumn) : DropDown {
     return this.dropDowns[this.columns.indexOf(col)];
   }
-
-  /**
-   * Highlight the labels of the FilterBar if the filters are different from their default values
-   */
   updateFilterLabels(): void {
     for (let i = 0; i < this.numFilters; i++) {
       if (this.dropDowns[i].hasDefaultValues()) {
@@ -92,10 +74,6 @@ export class FilterBar extends Phaser.GameObjects.Container {
       }
     }
   }
-
-  /**
-   * Position the filter dropdowns evenly across the width of the container
-   */
   private calcFilterPositions(): void {
     const paddingX = 6;
     const cursorOffset = 8;
@@ -117,10 +95,6 @@ export class FilterBar extends Phaser.GameObjects.Container {
       this.dropDowns[i].y = this.height;
     }
   }
-
-  /**
-   * Move the leftmost dropdown to the left of the FilterBar instead of below it
-   */
   offsetHybridFilters(): void {
     for (let i=0; i<this.dropDowns.length; i++) {
       if (this.dropDowns[i].dropDownType === DropDownType.HYBRID) {
@@ -159,7 +133,7 @@ export class FilterBar extends Phaser.GameObjects.Container {
   }
 
   incDropDownCursor(): boolean {
-    if (this.dropDowns[this.lastCursor].cursor === this.dropDowns[this.lastCursor].options.length - 1) {// if at the bottom of the list, wrap around
+    if (this.dropDowns[this.lastCursor].cursor === this.dropDowns[this.lastCursor].options.length - 1) {
       return this.dropDowns[this.lastCursor].setCursor(0);
     } else {
       return this.dropDowns[this.lastCursor].setCursor(this.dropDowns[this.lastCursor].cursor + 1);
@@ -167,7 +141,7 @@ export class FilterBar extends Phaser.GameObjects.Container {
   }
 
   decDropDownCursor(): boolean {
-    if (this.dropDowns[this.lastCursor].cursor === 0) {// if at the top of the list, wrap around
+    if (this.dropDowns[this.lastCursor].cursor === 0) {
       return this.dropDowns[this.lastCursor].setCursor(this.dropDowns[this.lastCursor].options.length - 1);
     } else {
       return this.dropDowns[this.lastCursor].setCursor(this.dropDowns[this.lastCursor].cursor - 1);
@@ -187,12 +161,6 @@ export class FilterBar extends Phaser.GameObjects.Container {
       dropDown.resetToDefault();
     }
   }
-
-  /**
-   * Find the nearest filter to the provided container
-   * @param container the StarterContainer to compare position against
-   * @returns the index of the closest filter
-   */
   getNearestFilter(container: StarterContainer): number {
 
     const midx = container.x + container.icon.displayWidth / 2;

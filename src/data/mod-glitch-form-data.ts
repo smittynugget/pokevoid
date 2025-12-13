@@ -1,7 +1,7 @@
 import { Abilities } from "../enums/abilities";
 import { Species } from "../enums/species";
 import { Type } from "./type";
-import { SpeciesFormKey } from "./pokemon-species";
+import { SpeciesFormKey } from "#enums/species-form-key";
 import { FormChangeItem } from "../enums/form-change-items";
 import { TrainerType } from "../enums/trainer-type";
 import { RivalTrainerType } from "./trainer-config";

@@ -1,0 +1,295 @@
+{
+  "onix_crystal_leviathan": {
+    "name": "Attack Snake",
+    "description": "Build ofensivo de alta velocidade de Onix"
+  },
+  "onix_stone_defender": {
+    "name": "Stone Defender",
+    "description": "Build defensivo tank de Onix"
+  },
+  "geodude_tank_mode": {
+    "name": "Tank Mode",
+    "description": "Build ultra-defensivo de Geodude"
+  },
+  "geodude_speed_form": {
+    "name": "Speed Form",
+    "description": "Build elétrico de alta velocidade de Geodude"
+  },
+  "rhyhorn_rampage": {
+    "name": "Rampage",
+    "description": "Build lutador agressivo de Rhyhorn"
+  },
+  "onix_brock_signature": {
+    "name": "Parceiro de Brock",
+    "description": "O fiel companheiro tipo Pedra de Brock"
+  },
+  "geodude_brock_signature": {
+    "name": "Parceiro de Brock",
+    "description": "O leal companheiro tipo Pedra de Brock"
+  },
+  "staryu_misty_signature": {
+    "name": "Parceiro de Misty",
+    "description": "O gracioso companheiro tipo Água de Misty"
+  },
+  "psyduck_misty_signature": {
+    "name": "Parceiro de Misty",
+    "description": "O peculiar companheiro tipo Água de Misty"
+  },
+  "voltorb_surge_signature": {
+    "name": "Parceiro do Tenente Surge",
+    "description": "O eletrizante companheiro tipo Elétrico do Tenente Surge"
+  },
+  "pikachu_surge_signature": {
+    "name": "Parceiro do Tenente Surge",
+    "description": "O poderoso companheiro tipo Elétrico do Tenente Surge"
+  },
+  "electabuzz_surge_signature": {
+    "name": "Parceiro do Tenente Surge",
+    "description": "O chocante companheiro tipo Elétrico do Tenente Surge"
+  },
+  "magikarp_misty_signature": {
+    "name": "Parceiro de Misty",
+    "description": "O determinado companheiro assinatura tipo Água de Misty"
+  },
+  "poliwag_misty_signature": {
+    "name": "Parceiro de Misty",
+    "description": "O animado companheiro assinatura tipo Água de Misty"
+  },
+  "azurill_misty_signature": {
+    "name": "Parceiro de Misty",
+    "description": "O adorável companheiro assinatura tipo Água de Misty"
+  },
+  "goldeen_misty_signature": {
+    "name": "Parceiro de Misty",
+    "description": "O elegante companheiro assinatura tipo Água de Misty"
+  },
+  "horsea_misty_signature": {
+    "name": "Parceiro de Misty",
+    "description": "O leal companheiro assinatura tipo Água de Misty"
+  },
+  "togepi_misty_signature": {
+    "name": "Parceiro de Misty",
+    "description": "O precioso companheiro assinatura tipo Fada de Misty"
+  },
+  "corsola_misty_signature": {
+    "name": "Parceiro de Misty",
+    "description": "O alegre companheiro assinatura tipo Água de Misty"
+  },
+  "luvdisc_misty_signature": {
+    "name": "Parceiro de Misty",
+    "description": "O sentimental companheiro assinatura tipo Água de Misty"
+  },
+  "clauncher_misty_signature": {
+    "name": "Parceiro de Misty",
+    "description": "O poderoso companheiro assinatura tipo Água de Misty"
+  },
+  "staryu_chronos_gear": {
+    "name": "Engrenagem Cronos",
+    "description": "Um Staryu Aço/Água infundido com energia temporal, com precisão defensiva e resiliência abençoada pela chuva"
+  },
+  "magikarp_splash_tyrant": {
+    "name": "Tirano do Splash",
+    "description": "Um Magikarp Água/Lutador que transcendeu a fraqueza, incorporando determinação combativa e poder intimidador"
+  },
+  "psyduck_kappa_quack": {
+    "name": "Quack Kappa",
+    "description": "Um Psyduck Água/Fantasma canalizando travessura mística com habilidades de ligação sombria e confusão etérea"
+  },
+  "poliwag_lightning_drum": {
+    "name": "Tambor Relâmpago",
+    "description": "Um Poliwag Elétrico/Água pulsando com energia galvanizada, correntes rápidas e vitalidade regenerativa"
+  },
+  "azurill_bounce_champion": {
+    "name": "Campeão do Salto",
+    "description": "Um Azurill Voador/Fada voando com graça aerilada, poder pixelado e proeza de salto de campeão"
+  },
+  "goldeen_piercing_stinger": {
+    "name": "Ferrão Perfurante",
+    "description": "Um Goldeen Água/Inseto equipado com ataques penetrantes, precisão de técnico e mira de atirador"
+  },
+  "horsea_fireball_seahorse": {
+    "name": "Cavalo-Marinho Bola de Fogo",
+    "description": "Um Horsea Fogo/Água ardente com intensidade de fogo flash, calor trazedor de seca e determinação escaldante"
+  },
+  "togepi_eggshell_fortress": {
+    "name": "Fortaleza Casca de Ovo",
+    "description": "Um Togepi Normal/Pedra fortificado com graça serena, defesa de rocha sólida e armadura endurecida pela batalha"
+  },
+  "corsola_toxic_coral": {
+    "name": "Coral Tóxico",
+    "description": "Um Corsola Veneno/Água prosperando com cura de veneno, golpes impiedosos e proteção de detritos tóxicos"
+  },
+  "luvdisc_heartbreaker": {
+    "name": "Quebra-Corações",
+    "description": "Um Luvdisc Sombrio/Água quebrando corações com aura sombria, truques de brincalhão e evasão de nado rápido"
+  },
+  "clauncher_buster_dragon_blaster": {
+    "name": "Blaster Dragão Buster",
+    "description": "Um Clauncher Água/Dragão armado com ferocidade de mandíbulas de dragão, alcance de mega lançador e devastação de força bruta"
+  },
+  "vulpix_brock_signature": {
+    "name": "Parceiro de Brock",
+    "description": "O místico companheiro assinatura tipo Fogo de Brock"
+  },
+  "zubat_brock_signature": {
+    "name": "Parceiro de Brock",
+    "description": "O veloz companheiro assinatura tipo Veneno de Brock"
+  },
+  "bonsly_brock_signature": {
+    "name": "Parceiro de Brock",
+    "description": "O resiliente companheiro assinatura tipo Pedra de Brock"
+  },
+  "mudkip_brock_signature": {
+    "name": "Parceiro de Brock",
+    "description": "O robusto companheiro assinatura tipo Água de Brock"
+  },
+  "pineco_brock_signature": {
+    "name": "Parceiro de Brock",
+    "description": "O defensivo companheiro assinatura tipo Inseto de Brock"
+  },
+  "croagunk_brock_signature": {
+    "name": "Parceiro de Brock",
+    "description": "O astuto companheiro assinatura tipo Veneno de Brock"
+  },
+  "happiny_brock_signature": {
+    "name": "Parceiro de Brock",
+    "description": "O carinhoso companheiro assinatura tipo Normal de Brock"
+  },
+  "lotad_brock_signature": {
+    "name": "Parceiro de Brock",
+    "description": "O tranquilo companheiro assinatura tipo Água de Brock"
+  },
+  "comfey_brock_signature": {
+    "name": "Parceiro de Brock",
+    "description": "O gentil companheiro assinatura tipo Fada de Brock"
+  },
+  "geodude_phantom_fist": {
+    "name": "Punho Fantasma",
+    "description": "Um Geodude Pedra/Fantasma brandindo tag sombra espectral, garras duras e técnicas de punho de ferro com graça levitante"
+  },
+  "vulpix_flaming_forest_spirit": {
+    "name": "Espírito da Floresta Flamejante",
+    "description": "Um Vulpix Fogo/Planta incorporando espíritos da floresta com chamas que invocam seca, proteção de pele de grama e vitalidade clorofila"
+  },
+  "zubat_vampiric_fiend": {
+    "name": "Demônio Vampírico",
+    "description": "Um Zubat Sombrio/Fantasma canalizando bravata vampírica, terror de corpo amaldiçoado e ferocidade de mandíbula forte"
+  },
+  "bonsly_tear_drop": {
+    "name": "Gota de Lágrima",
+    "description": "Um Bonsly Pedra/Água fluindo com precisão de ligação de habilidade, resiliência de compactação de água e lágrimas regenerativas"
+  },
+  "mudkip_stone_skinned_salamander": {
+    "name": "Salamandra Pele de Pedra",
+    "description": "Um Mudkip Água/Pedra blindado com defesa de pele de pedra, proteção de filtro e poder torrencial"
+  },
+  "pineco_iron_plated_grenade": {
+    "name": "Granada Blindada de Ferro",
+    "description": "Um Pineco Fogo/Aço explosivo com detonação de consequência, intensidade de corpo flamejante e retaliação de espinhos de ferro"
+  },
+  "croagunk_jester_of_pestilence": {
+    "name": "Bobo da Pestilência",
+    "description": "Um Croagunk Veneno/Fada espalhando corrosão pixelada, gás neutralizante e caos das tábuas da ruína"
+  },
+  "happiny_pink_fortress": {
+    "name": "Fortaleza Rosa",
+    "description": "Um Happiny Normal/Fada fortificado com suporte de guarda amiga, compaixão de curador e recuperação de cura natural"
+  },
+  "lotad_shadow_lily": {
+    "name": "Lírio Sombrio",
+    "description": "Um Lotad Água/Fantasma flutuando com sustento de prato de chuva, ligação de tag sombra e resiliência de absorção de água"
+  },
+  "comfey_aqua_bloom": {
+    "name": "Floração Aquática",
+    "description": "Um Comfey Planta/Água florescendo com nutrição de garoa, proteção de bolha de água e vitalidade de semeador"
+  },
+  "riolu_apollo_diana_signature": {
+    "name": "Parceiro de Apollo e Diana",
+    "description": "O corajoso companheiro assinatura tipo Lutador de Apollo e Diana"
+  },
+  "solrock_apollo_diana_signature": {
+    "name": "Parceiro de Apollo e Diana",
+    "description": "O radiante companheiro assinatura tipo Pedra de Apollo e Diana"
+  },
+  "lunatone_apollo_diana_signature": {
+    "name": "Parceiro de Apollo e Diana",
+    "description": "O místico companheiro assinatura tipo Pedra de Apollo e Diana"
+  },
+  "larvesta_apollo_diana_signature": {
+    "name": "Parceiro de Apollo e Diana",
+    "description": "O ardente companheiro assinatura tipo Inseto de Apollo e Diana"
+  },
+  "swablu_apollo_diana_signature": {
+    "name": "Parceiro de Apollo e Diana",
+    "description": "O fofo companheiro assinatura tipo Normal de Apollo e Diana"
+  },
+  "castform_apollo_diana_signature": {
+    "name": "Parceiro de Apollo e Diana",
+    "description": "O adaptável companheiro assinatura tipo Normal de Apollo e Diana"
+  },
+  "litwick_apollo_diana_signature": {
+    "name": "Parceiro de Apollo e Diana",
+    "description": "O tremeluzente companheiro assinatura tipo Fantasma de Apollo e Diana"
+  },
+  "eevee_apollo_diana_signature": {
+    "name": "Parceiro de Apollo e Diana",
+    "description": "O versátil companheiro assinatura tipo Normal de Apollo e Diana"
+  },
+  "teddiursa_apollo_diana_signature": {
+    "name": "Parceiro de Apollo e Diana",
+    "description": "O fofinho companheiro assinatura tipo Normal de Apollo e Diana"
+  },
+  "cleffa_apollo_diana_signature": {
+    "name": "Parceiro de Apollo e Diana",
+    "description": "O estrelado companheiro assinatura tipo Fada de Apollo e Diana"
+  },
+  "sunkern_apollo_diana_signature": {
+    "name": "Parceiro de Apollo e Diana",
+    "description": "O esperançoso companheiro assinatura tipo Planta de Apollo e Diana"
+  },
+  "riolu_shadow_warrior": {
+    "name": "Guerreiro das Sombras",
+    "description": "Um Riolu Fantasma/Lutador dominando o combate sombrio com agressão bravata, adaptabilidade e presença intimidadora"
+  },
+  "solrock_void_constellation": {
+    "name": "Constelação do Vazio",
+    "description": "Um Solrock Pedra/Sombrio irradiando energia do vazio com intensidade de poder solar, graça levitante e dominância de aura sombria"
+  },
+  "lunatone_dream_weaver": {
+    "name": "Tecelão de Sonhos",
+    "description": "Um Lunatone Pedra/Psíquico tecendo sonhos com mistério levitante, temperamento instável e proteção de guarda mágica"
+  },
+  "larvesta_toxic_spinner": {
+    "name": "Fiandeiro Tóxico",
+    "description": "Um Larvesta Inseto/Veneno tecendo teias tóxicas com aflição de cadeia tóxica, defesa de pele áspera e maestria de corrosão"
+  },
+  "swablu_frost_nimbus": {
+    "name": "Nimbo de Gelo",
+    "description": "Um Swablu Gelo/Voador flutuando em nuvens carregadas de gelo com defesa fofa, poder refrigerante e domínio de aviso de neve"
+  },
+  "castform_dust_devil": {
+    "name": "Diabo de Poeira",
+    "description": "Um Castform Pedra/Terra rodopiando como um diabo de poeira com caos de corrente de areia, absorção de dreno de tempestade e garra de pele áspera"
+  },
+  "litwick_wyrmflame": {
+    "name": "Chama do Wyrm",
+    "description": "Um Litwick Fogo/Dragão queimando com fúria de chama do wyrm, ferocidade de mandíbulas de dragão, intensidade de fogo flash e mistério levitante"
+  },
+  "eevee_untamed_spirit": {
+    "name": "Espírito Indomável",
+    "description": "Um Eevee Normal/Normal incorporando potencial indomável com fortuna de super sorte, graça serena e proteção de armadura prisma"
+  },
+  "teddiursa_sweet_tooth": {
+    "name": "Guloso",
+    "description": "Um Teddiursa Fada/Fada se entregando ao poder doce como mel com força de poder puro, magia de neblina crescente e abundância de colheita"
+  },
+  "cleffa_meteoric_core": {
+    "name": "Núcleo Meteórico",
+    "description": "Um Cleffa Fada/Aço forjado de essência meteórica com calor de corpo flamejante, proteção de guarda mágica e resiliência de rocha sólida"
+  },
+  "sunkern_plasma_sprout": {
+    "name": "Broto de Plasma",
+    "description": "Um Sunkern Elétrico/Planta crepitando com energia de plasma, conversão galvanizante, intensidade de poder solar e dominância de campo elétrico"
+  },
+  "championPartner": "Parceiro de {{champion}}"
+}

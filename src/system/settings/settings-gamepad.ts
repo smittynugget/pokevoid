@@ -46,7 +46,7 @@ export const settingGamepadOptions = {
   [SettingGamepad.Button_Cycle_Form]: [`KEY ${Button.CYCLE_FORM.toString()}`, pressAction],
   [SettingGamepad.Button_Cycle_Shiny]: [`KEY ${Button.CYCLE_SHINY.toString()}`, pressAction],
   [SettingGamepad.Button_Cycle_Gender]: [`KEY ${Button.CYCLE_GENDER.toString()}`, pressAction],
-  
+
   [SettingGamepad.Button_Cycle_Fusion]: [`KEY ${Button.CYCLE_FUSION.toString()}`, pressAction],
   [SettingGamepad.Button_Smitty_Console]: [`KEY ${Button.CONSOLE.toString()}`, pressAction],
   [SettingGamepad.Button_Voidex]: [`KEY ${Button.VOIDEX.toString()}`, pressAction],
@@ -73,7 +73,7 @@ export const settingGamepadDefaults = {
   [SettingGamepad.Button_Cycle_Shiny]: 0,
   [SettingGamepad.Button_Cycle_Gender]: 0,
   [SettingGamepad.Button_Cycle_Ability]: 0,
-  
+
   [SettingGamepad.Button_Cycle_Fusion]: 0,
   [SettingGamepad.Button_Cycle_Nature]: 0,
   [SettingGamepad.Button_Cycle_Variant]: 0,
@@ -92,8 +92,6 @@ export const settingGamepadBlackList = [
 export function setSettingGamepad(scene: BattleScene, setting: SettingGamepad, value: integer): boolean {
   switch (setting) {
   case SettingGamepad.Gamepad_Support:
-    // if we change the value of the gamepad support, we call a method in the inputController to
-    // activate or deactivate the controller listener
     scene.inputController.setGamepadSupport(settingGamepadOptions[setting][value] !== "Disabled");
     break;
   case SettingGamepad.Button_Action:
@@ -104,7 +102,7 @@ export function setSettingGamepad(scene: BattleScene, setting: SettingGamepad, v
   case SettingGamepad.Button_Cycle_Form:
   case SettingGamepad.Button_Cycle_Gender:
   case SettingGamepad.Button_Cycle_Ability:
-  
+
   case SettingGamepad.Button_Cycle_Fusion:
   case SettingGamepad.Button_Cycle_Nature:
   case SettingGamepad.Button_Cycle_Variant:
@@ -142,7 +140,7 @@ export function setSettingGamepad(scene: BattleScene, setting: SettingGamepad, v
         };
         scene.ui.setOverlayMode(Mode.OPTION_SELECT, {
           options: [...gp.map((g: string) => ({
-            label: truncateString(g, 30), // Truncate the gamepad name for display
+            label: truncateString(g, 30),
             handler: () => changeGamepadHandler(g)
           })), {
             label: "Cancel",

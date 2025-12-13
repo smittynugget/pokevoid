@@ -62,8 +62,8 @@ const cfg_keyboard_qwerty = {
     KEY_INSERT: Phaser.Input.Keyboard.KeyCodes.INSERT,
     KEY_PAGE_DOWN: Phaser.Input.Keyboard.KeyCodes.PAGE_DOWN,
     KEY_PAGE_UP: Phaser.Input.Keyboard.KeyCodes.PAGE_UP,
-    KEY_PLUS: Phaser.Input.Keyboard.KeyCodes.NUMPAD_ADD, // Assuming numpad plus
-    KEY_MINUS: Phaser.Input.Keyboard.KeyCodes.NUMPAD_SUBTRACT, // Assuming numpad minus
+    KEY_PLUS: Phaser.Input.Keyboard.KeyCodes.NUMPAD_ADD,
+    KEY_MINUS: Phaser.Input.Keyboard.KeyCodes.NUMPAD_SUBTRACT,
     KEY_QUOTATION: Phaser.Input.Keyboard.KeyCodes.QUOTES,
     KEY_SHIFT: Phaser.Input.Keyboard.KeyCodes.SHIFT,
     KEY_SPACE: Phaser.Input.Keyboard.KeyCodes.SPACE,
@@ -130,8 +130,6 @@ const cfg_keyboard_qwerty = {
     KEY_F10: "F10.png",
     KEY_F11: "F11.png",
     KEY_F12: "F12.png",
-
-
     KEY_PAGE_DOWN: "PAGE_DOWN.png",
     KEY_PAGE_UP: "PAGE_UP.png",
 
@@ -206,6 +204,9 @@ const cfg_keyboard_qwerty = {
     [SettingKeyboard.Alt_Button_Cycle_Variant]: Button.CYCLE_VARIANT,
     [SettingKeyboard.Alt_Button_Speed_Up]: Button.SPEED_UP,
     [SettingKeyboard.Alt_Button_Slow_Down]: Button.SLOW_DOWN,
+    [SettingKeyboard.Button_Toggle_Perma_Bar]: Button.TOGGLE_PERMA_BAR,
+    [SettingKeyboard.Button_Toggle_Player_Bar]: Button.TOGGLE_PLAYER_BAR,
+    [SettingKeyboard.Button_Toggle_Foe_Bar]: Button.TOGGLE_FOE_BAR,
   },
   default: {
     KEY_ARROW_UP: SettingKeyboard.Button_Up,
@@ -223,20 +224,20 @@ const cfg_keyboard_qwerty = {
     KEY_E: SettingKeyboard.Button_Cycle_Ability,
     KEY_N: SettingKeyboard.Button_Cycle_Nature,
     KEY_V: SettingKeyboard.Button_Cycle_Variant,
-    
+
     KEY_U: SettingKeyboard.Button_Cycle_Fusion,
     KEY_PLUS: -1,
     KEY_MINUS: -1,
     KEY_A: SettingKeyboard.Alt_Button_Left,
-    KEY_B: -1,
+    KEY_B: SettingKeyboard.Button_Toggle_Player_Bar,
     KEY_D: SettingKeyboard.Alt_Button_Right,
     KEY_H: -1,
-    KEY_I: -1,
+    KEY_I: SettingKeyboard.Button_Toggle_Foe_Bar,
     KEY_J: -1,
     KEY_K: -1,
     KEY_L: -1,
     KEY_M: SettingKeyboard.Alt_Button_Menu,
-    KEY_O: -1,
+    KEY_O: SettingKeyboard.Button_Toggle_Perma_Bar,
     KEY_P: SettingKeyboard.Button_Voidex,
     KEY_Q: -1,
     KEY_S: SettingKeyboard.Alt_Button_Down,

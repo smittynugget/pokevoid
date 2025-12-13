@@ -13,6 +13,8 @@ import { Arena } from "./field/arena";
 import Overrides from "#app/overrides";
 import * as Utils from "./utils";
 import { Biome } from "#enums/biome";
+import { GameMechanicsID, GameMechanicsVersion } from "#enums/gameMechanicsID";
+
 import { Species } from "#enums/species";
 import { Challenges } from "./enums/challenges";
 
@@ -52,6 +54,14 @@ export enum GameModes {
   CHAOS_NUZLOCKE_SHORT,
   CHAOS_NUZLIGHT_DRAFT_SHORT,
   CHAOS_NUZLOCKE_DRAFT_SHORT,
+  CHAOS_ROGUE_FTL,
+  CHAOS_JOURNEY_FTL,
+  CHAOS_VOID_FTL,
+  CHAOS_ROGUE_VOID_FTL,
+  CHAOS_NUZLIGHT_FTL,
+  CHAOS_NUZLOCKE_FTL,
+  CHAOS_NUZLIGHT_DRAFT_FTL,
+  CHAOS_NUZLOCKE_DRAFT_FTL,
 }
 
 interface GameModeConfig {
@@ -74,6 +84,7 @@ interface GameModeConfig {
   isChaosMode?: boolean;
   isChaosVoid?: boolean;
   isChaosShort?: boolean;
+  isChaosFTL?: boolean;
   isInfinite?: boolean;
   noExpGain?: boolean;
 }
@@ -108,6 +119,7 @@ export class GameMode implements GameModeConfig {
   public isTestMod: boolean;
   public isChaosMode: boolean;
   public isChaosShort: boolean;
+  public isChaosFTL: boolean;
   public noExpGain: boolean;
   constructor(modeId: GameModes, config: GameModeConfig, battleConfig?: FixedBattleConfigs) {
     this.modeId = modeId;
@@ -118,30 +130,12 @@ export class GameMode implements GameModeConfig {
     }
     this.battleConfig = battleConfig || {};
   }
-
-  /**
-   * Helper function to see if a GameMode has a specific challenge type
-   * @param challenge the Challenges it looks for
-   * @returns true if the game mode has that challenge
-   */
   hasChallenge(challenge: Challenges): boolean {
     return this.challenges.some(c => c.id === challenge && c.value !== 0);
   }
-
-  /**
-   * Helper function to see if the game mode is using fresh start
-   * @returns true if a fresh start challenge is being applied
-   */
   isFreshStartChallenge(): boolean {
     return this.hasChallenge(Challenges.FRESH_START);
   }
-
-  /**
-   * @returns either:
-   * - override from overrides.ts
-   * - 20 for Daily Runs
-   * - 5 for all other modes
-   */
   getStartingLevel(): integer {
     if (Overrides.STARTING_LEVEL_OVERRIDE) {
       return Overrides.STARTING_LEVEL_OVERRIDE;
@@ -153,12 +147,6 @@ export class GameMode implements GameModeConfig {
         return 5;
     }
   }
-
-  /**
-   * @returns either:
-   * - override from overrides.ts
-   * - 1000
-   */
   getStartingMoney(scene?: BattleScene): integer {
   let startingMoney = 1000;
 
@@ -180,14 +168,6 @@ export class GameMode implements GameModeConfig {
 
   return Overrides.STARTING_MONEY_OVERRIDE || startingMoney;
   }
-
-  /**
-   * @param scene current BattleScene
-   * @returns either:
-   * - random biome for Daily mode
-   * - override from overrides.ts
-   * - Town
-   */
   getStartingBiome(scene: BattleScene): Biome {
         return scene.generateRandomBiome(this.getWaveForDifficulty(1));
   }
@@ -200,17 +180,8 @@ export class GameMode implements GameModeConfig {
         return waveIndex;
     }
   }
-
-  /**
-   * Determines whether or not to generate a trainer
-   * @param waveIndex the current floor the player is on (trainer sprites fail to generate on X1 floors)
-   * @param arena the arena that contains the scene and functions
-   * @returns true if a trainer should be generated, false otherwise
-   */
   isWaveTrainer(waveIndex: integer, arena: Arena): boolean {
-    /**
-     * Daily spawns trainers on floors 5, 15, 20, 25, 30, 35, 40, and 45
-     */
+
     if (this.isDaily) {
       return waveIndex % 10 === 5 || (!(waveIndex % 10) && waveIndex > 10 && !this.isWaveFinal(waveIndex));
     }
@@ -220,11 +191,6 @@ export class GameMode implements GameModeConfig {
     if ((waveIndex % 30) === (arena.scene.offsetGym ? 0 : 20) && !this.isWaveFinal(waveIndex)) {
       return true;
     } else if (waveIndex % 10 !== 1 && waveIndex % 10 || arena.scene.recoveryBossMode === RecoveryBossMode.FACING_BOSS) {
-      /**
-       * Do not check X1 floors since there's a bug that stops trainer sprites from appearing
-       * after a X0 full party heal
-       */
-
       const trainerChance = arena.getTrainerChance();
       let allowTrainerBattle = true;
       if (trainerChance) {
@@ -265,22 +231,17 @@ export class GameMode implements GameModeConfig {
 
   getOverrideSpecies(scene: BattleScene, debugging = false, wave = -1): PokemonSpecies | null {
     if (this.isWavePreFinal(scene, wave) || debugging) {
+      const effectiveWave = wave > -1 ? wave : (scene?.currentBattle?.waveIndex || 0);
       const allFinalBossSpecies = allSpecies.filter(s =>
           s.baseTotal >= 540
       && pokemonFormChanges.hasOwnProperty(s.speciesId)
+      && !(s.speciesId === Species.ETERNATUS && effectiveWave <= 70)
     );
       return Utils.randSeedItem(allFinalBossSpecies);
     }
 
     return null;
   }
-
-  /**
-   * Checks if wave provided is the final for current or specified game mode
-   * @param waveIndex
-   * @param modeId game mode
-   * @returns if the current wave is final for classic or daily OR a minor boss in endless
-   */
   isWaveFinal(waveIndex: integer, modeId: GameModes = this.modeId): boolean {
     switch (modeId) {
       case GameModes.CLASSIC:
@@ -298,15 +259,31 @@ export class GameMode implements GameModeConfig {
         return waveIndex === 50;
       case GameModes.NIGHTMARE:
         return waveIndex === 500;
+      case GameModes.CHAOS_VOID_SHORT:
+      case GameModes.CHAOS_ROGUE_VOID_SHORT:
+        return waveIndex === 400;
       case GameModes.CHAOS_ROGUE:
       case GameModes.CHAOS_JOURNEY:
       case GameModes.CHAOS_NUZLIGHT:
       case GameModes.CHAOS_NUZLIGHT_DRAFT:
       case GameModes.CHAOS_NUZLOCKE_DRAFT:
-      case GameModes.CHAOS_VOID_SHORT:
         return waveIndex === 500;
       case GameModes.CHAOS_JOURNEY_SHORT:
-      case GameModes.CHAOS_ROGUE_VOID_SHORT:
+      case GameModes.CHAOS_ROGUE_SHORT:
+      case GameModes.CHAOS_NUZLIGHT_SHORT:
+      case GameModes.CHAOS_NUZLOCKE_SHORT:
+      case GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT:
+      case GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT:
+        return waveIndex === 200;
+      case GameModes.CHAOS_ROGUE_FTL:
+      case GameModes.CHAOS_JOURNEY_FTL:
+      case GameModes.CHAOS_NUZLIGHT_FTL:
+      case GameModes.CHAOS_NUZLOCKE_FTL:
+      case GameModes.CHAOS_NUZLIGHT_DRAFT_FTL:
+      case GameModes.CHAOS_NUZLOCKE_DRAFT_FTL:
+        return waveIndex === 100;
+      case GameModes.CHAOS_VOID_FTL:
+      case GameModes.CHAOS_ROGUE_VOID_FTL:
         return waveIndex === 200;
       case GameModes.CHAOS_VOID:
       case GameModes.CHAOS_ROGUE_VOID:
@@ -336,15 +313,26 @@ export class GameMode implements GameModeConfig {
       case GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT:
       case GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT:
         return 200;
+      case GameModes.CHAOS_ROGUE_FTL:
+      case GameModes.CHAOS_JOURNEY_FTL:
+      case GameModes.CHAOS_NUZLIGHT_FTL:
+      case GameModes.CHAOS_NUZLOCKE_FTL:
+      case GameModes.CHAOS_NUZLIGHT_DRAFT_FTL:
+      case GameModes.CHAOS_NUZLOCKE_DRAFT_FTL:
+        return 100;
       case GameModes.CHAOS_ROGUE:
       case GameModes.CHAOS_JOURNEY:
       case GameModes.CHAOS_NUZLIGHT:
       case GameModes.CHAOS_NUZLOCKE:
       case GameModes.CHAOS_NUZLIGHT_DRAFT:
       case GameModes.CHAOS_NUZLOCKE_DRAFT:
+        return 500;
       case GameModes.CHAOS_VOID_SHORT:
       case GameModes.CHAOS_ROGUE_VOID_SHORT:
-        return 500;
+        return 400;
+      case GameModes.CHAOS_VOID_FTL:
+      case GameModes.CHAOS_ROGUE_VOID_FTL:
+        return 200;
       case GameModes.ENDLESS:
       case GameModes.SPLICED_ENDLESS:
         return 5000;
@@ -397,60 +385,42 @@ export class GameMode implements GameModeConfig {
       case GameModes.CHAOS_NUZLOCKE_SHORT:
       case GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT:
       case GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT:
+      case GameModes.CHAOS_ROGUE_FTL:
+      case GameModes.CHAOS_JOURNEY_FTL:
+      case GameModes.CHAOS_VOID_FTL:
+      case GameModes.CHAOS_ROGUE_VOID_FTL:
+      case GameModes.CHAOS_NUZLIGHT_FTL:
+      case GameModes.CHAOS_NUZLOCKE_FTL:
+      case GameModes.CHAOS_NUZLIGHT_DRAFT_FTL:
+      case GameModes.CHAOS_NUZLOCKE_DRAFT_FTL:
         return scene.majorBossWave == wave;
     }
   }
 
   isBoss(waveIndex: integer): boolean {
+    const forceBossWave = Overrides.BOSS_WAVE_OVERRIDE || 0;
+    if (forceBossWave > 0 && waveIndex === forceBossWave) {
+      return true;
+    }
     return waveIndex % 10 === 0;
   }
-
-  /**
-   * Every 50 waves of an Endless mode is a boss
-   * At this time it is paradox pokemon
-   * @returns true if waveIndex is a multiple of 50 in Endless
-   */
   isEndlessBoss(waveIndex: integer): boolean {
     return !!(waveIndex % 50) &&
         (this.modeId === GameModes.ENDLESS || this.modeId === GameModes.SPLICED_ENDLESS);
   }
-
-  /**
-   * Every 250 waves of an Endless mode is a minor boss
-   * At this time it is Eternatus
-   * @returns true if waveIndex is a multiple of 250 in Endless
-   */
   isEndlessMinorBoss(waveIndex: integer): boolean {
     return waveIndex % 250 === 0 &&
         (this.modeId === GameModes.ENDLESS || this.modeId === GameModes.SPLICED_ENDLESS);
   }
-
-  /**
-   * Every 1000 waves of an Endless mode is a major boss
-   * At this time it is Eternamax Eternatus
-   * @returns true if waveIndex is a multiple of 1000 in Endless
-   */
   isEndlessMajorBoss(waveIndex: integer): boolean {
     return waveIndex % 1000 === 0 &&
         (this.modeId === GameModes.ENDLESS || this.modeId === GameModes.SPLICED_ENDLESS);
   }
-
-  /**
-   * Checks whether there is a fixed battle on this gamemode on a given wave.
-   * @param {integer} waveIndex The wave to check.
-   * @returns {boolean} If this game mode has a fixed battle on this wave
-   */
   isFixedBattle(waveIndex: integer): boolean {
     const dummyConfig = new FixedBattleConfig();
     return this.battleConfig.hasOwnProperty(waveIndex) || applyChallenges(this, ChallengeType.FIXED_BATTLES, waveIndex, dummyConfig);
 
   }
-
-  /**
-   * Returns the config for the fixed battle for a particular wave.
-   * @param {integer} waveIndex The wave to check.
-   * @returns {boolean} The fixed battle for this wave.
-   */
   getFixedBattle(waveIndex: integer, isChaosMode: boolean = false): FixedBattleConfig {
     const challengeConfig = new FixedBattleConfig();
     if (applyChallenges(this, ChallengeType.FIXED_BATTLES, waveIndex, challengeConfig)) {
@@ -463,8 +433,6 @@ export class GameMode implements GameModeConfig {
   setChaosBattleConfig(chaosBattleConfig: FixedBattleConfig) {
     this.chaosBattleConfig = chaosBattleConfig;
   }
-
-
   getClearScoreBonus(): integer {
     switch (this.modeId) {
       case GameModes.CLASSIC:
@@ -554,6 +522,8 @@ export class GameMode implements GameModeConfig {
         return i18next.t("gameMode:nuzlocke");
       case GameModes.DRAFT:
         return i18next.t("gameMode:draft");
+      case GameModes.SHOP:
+        return i18next.t("gameMode:shop");
       case GameModes.NUZLIGHT:
         return i18next.t("gameMode:nuzlight");
       case GameModes.NIGHTMARE:
@@ -600,10 +570,26 @@ export class GameMode implements GameModeConfig {
         return `${i18next.t("gameMode:chaosNuzlightDraft")} ${i18next.t("gameMode:midnight")}`;
       case GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT:
         return `${i18next.t("gameMode:chaosNuzlockeDraft")} ${i18next.t("gameMode:midnight")}`;
+      case GameModes.CHAOS_ROGUE_FTL:
+        return `${i18next.t("gameMode:chaosRogue")} ${i18next.t("gameMode:ftl")}`;
+      case GameModes.CHAOS_JOURNEY_FTL:
+        return `${i18next.t("gameMode:chaosJourney")} ${i18next.t("gameMode:ftl")}`;
+      case GameModes.CHAOS_VOID_FTL:
+        return `${i18next.t("gameMode:chaosVoid")} ${i18next.t("gameMode:ftl")}`;
+      case GameModes.CHAOS_ROGUE_VOID_FTL:
+        return `${i18next.t("gameMode:chaosRogueVoid")} ${i18next.t("gameMode:ftl")}`;
+      case GameModes.CHAOS_NUZLIGHT_FTL:
+        return `${i18next.t("gameMode:chaosNuzlight")} ${i18next.t("gameMode:ftl")}`;
+      case GameModes.CHAOS_NUZLOCKE_FTL:
+        return `${i18next.t("gameMode:chaosNuzlocke")} ${i18next.t("gameMode:ftl")}`;
+      case GameModes.CHAOS_NUZLIGHT_DRAFT_FTL:
+        return `${i18next.t("gameMode:chaosNuzlightDraft")} ${i18next.t("gameMode:ftl")}`;
+      case GameModes.CHAOS_NUZLOCKE_DRAFT_FTL:
+        return `${i18next.t("gameMode:chaosNuzlockeDraft")} ${i18next.t("gameMode:ftl")}`;
+      default:
+        return i18next.t("gameMode:unknown");
     }
   }
-
-  
   isRunType(runType: RunType): boolean {
     switch (runType) {
       case RunType.ANY:
@@ -620,8 +606,6 @@ export class GameMode implements GameModeConfig {
         return false;
     }
   }
-
-  
   checkIfRival(scene: BattleScene): boolean {
     const waveIndex = scene.currentBattle.waveIndex;
     return rivalWaves.includes(waveIndex) || scene.rivalWave === waveIndex;
@@ -631,7 +615,7 @@ export class GameMode implements GameModeConfig {
     if (scene.dynamicMode?.isNuzlight || scene.dynamicMode?.isNightmare) {
       return false;
     }
-    
+
     if (this.isNightmare) {
       const waveIndex = scene.currentBattle?.waveIndex ?? 0;
       if ((waveIndex >= 100 && waveIndex < 300) || (waveIndex >= 400 && waveIndex <= 500)) {
@@ -645,7 +629,7 @@ export class GameMode implements GameModeConfig {
     if (scene.dynamicMode?.isNuzlocke || scene.dynamicMode?.isNightmare) {
       return true;
     }
-    
+
     if (this.isNightmare) {
       const waveIndex = scene.currentBattle?.waveIndex ?? 0;
       if (waveIndex >= 300 && waveIndex <= 500) {
@@ -673,6 +657,10 @@ export class GameMode implements GameModeConfig {
         return i18next.t("gameMode:chaosVoid");
       case "CHAOS_ROGUE_VOID":
         return i18next.t("gameMode:chaosRogueVoid");
+      case "CHAOS_INFINITE":
+        return i18next.t("gameMode:chaosInfinite");
+      case "CHAOS_INFINITE_ROGUE":
+        return i18next.t("gameMode:chaosInfiniteRogue");
       default:
         return i18next.t("gameMode:chaosMode");
     }
@@ -701,6 +689,7 @@ export function getGameMode(gameMode: GameModes, scene?: BattleScene): GameMode 
     isChaosMode: false,
     isChaosVoid: false,
     isChaosShort: false,
+    isChaosFTL: false,
     noExpGain: false
   };
   switch (gameMode) {
@@ -772,5 +761,35 @@ export function getGameMode(gameMode: GameModes, scene?: BattleScene): GameMode 
       return new GameMode(GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT, { ...baseConfig, isChaosMode: true, isNuzlight: true, isDraft: true, hasTrainers: true, hasNoShop: true, isChaosShort: true });
     case GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT:
       return new GameMode(GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT, { ...baseConfig, isChaosMode: true, isNuzlocke: true, isDraft: true, hasTrainers: true, isChaosShort: true });
+    case GameModes.CHAOS_ROGUE_FTL:
+      return new GameMode(GameModes.CHAOS_ROGUE_FTL, { ...baseConfig, isChaosMode: true, isDraft: true, hasTrainers: true, isChaosFTL: true });
+    case GameModes.CHAOS_JOURNEY_FTL:
+      return new GameMode(GameModes.CHAOS_JOURNEY_FTL, { ...baseConfig, isChaosMode: true, isClassic: true, hasTrainers: true, isChaosFTL: true });
+    case GameModes.CHAOS_VOID_FTL:
+      return new GameMode(GameModes.CHAOS_VOID_FTL, { ...baseConfig, isChaosMode: true, isChaosVoid: true, isClassic: true, hasTrainers: true, isChaosFTL: true });
+    case GameModes.CHAOS_ROGUE_VOID_FTL:
+      return new GameMode(GameModes.CHAOS_ROGUE_VOID_FTL, { ...baseConfig, isChaosMode: true, isChaosVoid: true, isDraft: true, hasTrainers: true, isChaosFTL: true });
+    case GameModes.CHAOS_NUZLIGHT_FTL:
+      return new GameMode(GameModes.CHAOS_NUZLIGHT_FTL, { ...baseConfig, isChaosMode: true, isNuzlight: true, hasTrainers: true, hasNoShop: true, isChaosFTL: true });
+    case GameModes.CHAOS_NUZLOCKE_FTL:
+      return new GameMode(GameModes.CHAOS_NUZLOCKE_FTL, { ...baseConfig, isChaosMode: true, isNuzlocke: true, hasTrainers: true, isChaosFTL: true });
+    case GameModes.CHAOS_NUZLIGHT_DRAFT_FTL:
+      return new GameMode(GameModes.CHAOS_NUZLIGHT_DRAFT_FTL, { ...baseConfig, isChaosMode: true, isNuzlight: true, isDraft: true, hasTrainers: true, hasNoShop: true, isChaosFTL: true });
+    case GameModes.CHAOS_NUZLOCKE_DRAFT_FTL:
+      return new GameMode(GameModes.CHAOS_NUZLOCKE_DRAFT_FTL, { ...baseConfig, isChaosMode: true, isNuzlocke: true, isDraft: true, hasTrainers: true, isChaosFTL: true });
   }
+}
+
+export function isRogueMode(gameMode: GameMode): boolean {
+  return gameMode.modeId === GameModes.CHAOS_ROGUE ||
+         gameMode.modeId === GameModes.CHAOS_ROGUE_VOID ||
+         gameMode.modeId === GameModes.CHAOS_INFINITE_ROGUE ||
+         gameMode.modeId === GameModes.CHAOS_ROGUE_SHORT ||
+         gameMode.modeId === GameModes.CHAOS_ROGUE_FTL ||
+         gameMode.modeId === GameModes.CHAOS_ROGUE_VOID_FTL ||
+         gameMode.isDraft;
+}
+
+export function getChampionMechanicsVersion(scene: BattleScene): GameMechanicsVersion {
+  return scene.gameMechanicTracking?.[GameMechanicsID.CHAMPION_MODE] ?? GameMechanicsVersion.PRE_CHAMPION;
 }

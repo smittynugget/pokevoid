@@ -4,11 +4,11 @@ import {
   allSpecies,
   isGlitchFormKey,
   PokemonForm,
-  SpeciesFormKey,
   UniversalSmittyForm,
   universalSmittyForms,
     pokemonSmittyForms,
 } from "./pokemon-species";
+import { SpeciesFormKey } from "#enums/species-form-key";
 import { StatusEffect } from "./status-effect";
 import { MoveCategory, allMoves } from "./move";
 import { Constructor } from "#app/utils";
@@ -22,8 +22,6 @@ import { WeatherType } from "./weather";
 import {getMinNightmareTypeValue, setNightmareTypeInteractions, Type} from "#app/data/type";
 import {FormChangeItem} from "#enums/form-change-items";
 import { ModGlitchFormData, modGlitchFormData } from "./mod-glitch-form-data";
-
-
 export type SpeciesFormChangeConditionPredicate = (p: Pokemon) => boolean;
 export type SpeciesFormChangeConditionEnforceFunc = (p: Pokemon) => void;
 
@@ -35,8 +33,6 @@ export class SpeciesFormChange {
   public quiet: boolean;
   public readonly conditions: SpeciesFormChangeCondition[];
   public modFormName: string;
-
-
   constructor(speciesId: Species, preFormKey: string, evoFormKey: string, trigger: SpeciesFormChangeTrigger, quiet: boolean = false, ...conditions: SpeciesFormChangeCondition[]) {
     this.speciesId = speciesId;
     this.preFormKey = preFormKey;
@@ -85,7 +81,7 @@ export class SpeciesFormChange {
     const trigger = this.trigger;
 
     if (trigger instanceof SpeciesFormChangeCompoundTrigger) {
-      return trigger.triggers.find(t => t.hasTriggerType(triggerType))!; // TODO: is this bang correct?
+      return trigger.triggers.find(t => t.hasTriggerType(triggerType))!;
     }
 
     return trigger;
@@ -113,7 +109,7 @@ export class SpeciesFormChangeCondition {
 
   constructor(predicate: SpeciesFormChangeConditionPredicate, enforceFunc?: SpeciesFormChangeConditionEnforceFunc) {
     this.predicate = predicate;
-    this.enforceFunc = enforceFunc!; // TODO: is this bang correct?
+    this.enforceFunc = enforceFunc!;
   }
 }
 
@@ -169,8 +165,6 @@ export class SpeciesFormChangeItemTrigger extends SpeciesFormChangeTrigger {
     return !!pokemon.scene.findModifier(m => m instanceof PokemonFormChangeItemModifier && m.pokemonId === pokemon.id && m.formChangeItem === this.item && m.active === this.active);
   }
 }
-
-
 export class GlitchPieceTrigger extends SpeciesFormChangeTrigger {
   private requiredCount: number;
 
@@ -182,15 +176,11 @@ export class GlitchPieceTrigger extends SpeciesFormChangeTrigger {
   canChange(pokemon: Pokemon): boolean {
     const glitchPieceModifier = pokemon.scene.findModifier(m => m instanceof GlitchPieceModifier) as GlitchPieceModifier;
     if ((glitchPieceModifier && glitchPieceModifier.getStackCount() >= this.requiredCount) && !pokemon.species.forms[pokemon.formIndex].formKey.includes("glitch")) {
-      
-      // reduceGlitchPieceModifier(pokemon, this.requiredCount);
       return true;
     }
     return false;
   }
 }
-
-
 export class SmittyFormTrigger extends SpeciesFormChangeTrigger {
   public requiredItems: FormChangeItem[];
   public name: string;
@@ -217,11 +207,22 @@ export class SmittyFormTrigger extends SpeciesFormChangeTrigger {
     ) as PokemonFormChangeItemModifier[];
 
     const currentItems = currentModifiers.map(m => m.formChangeItem);
-
-    
     return this.requiredItems.every(requiredItem =>
         currentItems.includes(requiredItem)
     );
+  }
+}
+
+export class AltBuildTrigger extends SpeciesFormChangeTrigger {
+  public altBuildId: string;
+
+  constructor(altBuildId: string) {
+    super();
+    this.altBuildId = altBuildId;
+  }
+
+  canChange(pokemon: Pokemon): boolean {
+    return true;
   }
 }
 
@@ -320,16 +321,10 @@ export class SpeciesDefaultFormMatchTrigger extends SpeciesFormChangeTrigger {
     return this.formKey === pokemon.species.forms[pokemon.scene.getSpeciesFormIndex(pokemon.species, pokemon.gender, pokemon.getNature(), true)].formKey;
   }
 }
-
-/**
- * Class used for triggering form changes based on weather.
- * Used by Castform.
- * @extends SpeciesFormChangeTrigger
- */
 export class SpeciesFormChangeWeatherTrigger extends SpeciesFormChangeTrigger {
-  /** The ability that  triggers the form change */
+
   public ability: Abilities;
-  /** The list of weathers that trigger the form change */
+
   public weathers: WeatherType[];
 
   constructor(ability: Abilities, weathers: WeatherType[]) {
@@ -337,13 +332,6 @@ export class SpeciesFormChangeWeatherTrigger extends SpeciesFormChangeTrigger {
     this.ability = ability;
     this.weathers = weathers;
   }
-
-  /**
-   * Checks if the Pokemon has the required ability and is in the correct weather while
-   * the weather or ability is also not suppressed.
-   * @param {Pokemon} pokemon the pokemon that is trying to do the form change
-   * @returns `true` if the Pokemon can change forms, `false` otherwise
-   */
   canChange(pokemon: Pokemon): boolean {
     const currentWeather = pokemon.scene.arena.weather?.weatherType ?? WeatherType.NONE;
     const isWeatherSuppressed = pokemon.scene.arena.weather?.isEffectSuppressed(pokemon.scene);
@@ -352,17 +340,10 @@ export class SpeciesFormChangeWeatherTrigger extends SpeciesFormChangeTrigger {
     return !isAbilitySuppressed && !isWeatherSuppressed && (pokemon.hasAbility(this.ability) && this.weathers.includes(currentWeather));
   }
 }
-
-/**
- * Class used for reverting to the original form when the weather runs out
- * or when the user loses the ability/is suppressed.
- * Used by Castform.
- * @extends SpeciesFormChangeTrigger
- */
 export class SpeciesFormChangeRevertWeatherFormTrigger extends SpeciesFormChangeTrigger {
-  /** The ability that triggers the form change*/
+
   public ability: Abilities;
-  /** The list of weathers that will also trigger a form change to original form */
+
   public weathers: WeatherType[];
 
   constructor(ability: Abilities, weathers: WeatherType[]) {
@@ -370,13 +351,6 @@ export class SpeciesFormChangeRevertWeatherFormTrigger extends SpeciesFormChange
     this.ability = ability;
     this.weathers = weathers;
   }
-
-  /**
-   * Checks if the Pokemon has the required ability and the weather is one that will revert
-   * the Pokemon to its original form or the weather or ability is suppressed
-   * @param {Pokemon} pokemon the pokemon that is trying to do the form change
-   * @returns `true` if the Pokemon will revert to its original form, `false` otherwise
-   */
   canChange(pokemon: Pokemon): boolean {
     if (pokemon.hasAbility(this.ability, false, true)) {
       const currentWeather = pokemon.scene.arena.weather?.weatherType ?? WeatherType.NONE;
@@ -394,34 +368,30 @@ export class SpeciesFormChangeRevertWeatherFormTrigger extends SpeciesFormChange
 }
 
 export function getSpeciesFormChangeMessage(pokemon: Pokemon, formChange: SpeciesFormChange, preName: string): string {
-  const isMega = formChange.formKey.indexOf(SpeciesFormKey.MEGA) > -1;
-  const isGmax = formChange.formKey.indexOf(SpeciesFormKey.GIGANTAMAX) > -1;
-  const isEmax = formChange.formKey.indexOf(SpeciesFormKey.ETERNAMAX) > -1;
-  const isRevert = !isMega && formChange.formKey === pokemon.species.forms[0].formKey;
-  if (isMega) {
-    return i18next.t("battlePokemonForm:megaChange", { preName, pokemonName: pokemon.name });
-  }
-  if (isGmax) {
-    return i18next.t("battlePokemonForm:gigantamaxChange", { preName, pokemonName: pokemon.name });
-  }
-  if (isEmax) {
-    return i18next.t("battlePokemonForm:eternamaxChange", { preName, pokemonName: pokemon.name });
-  }
-  if (isRevert) {
-    return i18next.t("battlePokemonForm:revertChange", { pokemonName: getPokemonNameWithAffix(pokemon) });
-  }
-  if (pokemon.getAbility().id === Abilities.DISGUISE) {
-    return i18next.t("battlePokemonForm:disguiseChange");
+  if (pokemon.species.forms && pokemon.species.forms.length > 0) {
+
+    const isMega = formChange.formKey.indexOf(SpeciesFormKey.MEGA) > -1;
+    const isGmax = formChange.formKey.indexOf(SpeciesFormKey.GIGANTAMAX) > -1;
+    const isEmax = formChange.formKey.indexOf(SpeciesFormKey.ETERNAMAX) > -1;
+    const isRevert = !isMega && formChange.formKey === pokemon.species.forms[0].formKey;
+    if (isMega) {
+      return i18next.t("battlePokemonForm:megaChange", { preName, pokemonName: pokemon.name });
+    }
+    if (isGmax) {
+      return i18next.t("battlePokemonForm:gigantamaxChange", { preName, pokemonName: pokemon.name });
+    }
+    if (isEmax) {
+      return i18next.t("battlePokemonForm:eternamaxChange", { preName, pokemonName: pokemon.name });
+    }
+    if (isRevert) {
+      return i18next.t("battlePokemonForm:revertChange", { pokemonName: getPokemonNameWithAffix(pokemon) });
+    }
+    if (pokemon.getAbility().id === Abilities.DISGUISE) {
+      return i18next.t("battlePokemonForm:disguiseChange");
+    }
   }
   return i18next.t("battlePokemonForm:formChange", { preName });
 }
-
-/**
- * Gives a condition for form changing checking if a species is registered as caught in the player's dex data.
- * Used for fusion forms such as Kyurem and Necrozma.
- * @param species {@linkcode Species}
- * @returns A {@linkcode SpeciesFormChangeCondition} checking if that species is registered as caught
- */
 function getSpeciesDependentFormChangeCondition(species: Species): SpeciesFormChangeCondition {
   return new SpeciesFormChangeCondition(p => !!p.scene.gameData.dexData[species].caughtAttr);
 }
@@ -429,7 +399,6 @@ function getSpeciesDependentFormChangeCondition(species: Species): SpeciesFormCh
 interface PokemonFormChanges {
   [key: string]: SpeciesFormChange[]
 }
-
 export const pokemonFormChanges: PokemonFormChanges = {
   [Species.VENUSAUR]: [
     new SpeciesFormChange(Species.VENUSAUR, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.VENUSAURITE)),
@@ -847,19 +816,19 @@ export const pokemonFormChanges: PokemonFormChanges = {
     new SpeciesFormChange(Species.OGERPON, "teal-mask", "wellspring-mask", new SpeciesFormChangeItemTrigger(FormChangeItem.WELLSPRING_MASK)),
     new SpeciesFormChange(Species.OGERPON, "teal-mask", "hearthflame-mask", new SpeciesFormChangeItemTrigger(FormChangeItem.HEARTHFLAME_MASK)),
     new SpeciesFormChange(Species.OGERPON, "teal-mask", "cornerstone-mask", new SpeciesFormChangeItemTrigger(FormChangeItem.CORNERSTONE_MASK)),
-    new SpeciesFormChange(Species.OGERPON, "teal-mask", "teal-mask-tera", new SpeciesFormChangeManualTrigger(), true), //When holding a Grass Tera Shard
-    new SpeciesFormChange(Species.OGERPON, "teal-mask-tera", "teal-mask", new SpeciesFormChangeManualTrigger(), true), //When no longer holding a Grass Tera Shard
-    new SpeciesFormChange(Species.OGERPON, "wellspring-mask", "wellspring-mask-tera", new SpeciesFormChangeManualTrigger(), true), //When holding a Water Tera Shard
-    new SpeciesFormChange(Species.OGERPON, "wellspring-mask-tera", "wellspring-mask", new SpeciesFormChangeManualTrigger(), true), //When no longer holding a Water Tera Shard
-    new SpeciesFormChange(Species.OGERPON, "hearthflame-mask", "hearthflame-mask-tera", new SpeciesFormChangeManualTrigger(), true), //When holding a Fire Tera Shard
-    new SpeciesFormChange(Species.OGERPON, "hearthflame-mask-tera", "hearthflame-mask", new SpeciesFormChangeManualTrigger(), true), //When no longer holding a Fire Tera Shard
-    new SpeciesFormChange(Species.OGERPON, "cornerstone-mask", "cornerstone-mask-tera", new SpeciesFormChangeManualTrigger(), true), //When holding a Rock Tera Shard
-    new SpeciesFormChange(Species.OGERPON, "cornerstone-mask-tera", "cornerstone-mask", new SpeciesFormChangeManualTrigger(), true) //When no longer holding a Rock Tera Shard
+    new SpeciesFormChange(Species.OGERPON, "teal-mask", "teal-mask-tera", new SpeciesFormChangeManualTrigger(), true),
+    new SpeciesFormChange(Species.OGERPON, "teal-mask-tera", "teal-mask", new SpeciesFormChangeManualTrigger(), true),
+    new SpeciesFormChange(Species.OGERPON, "wellspring-mask", "wellspring-mask-tera", new SpeciesFormChangeManualTrigger(), true),
+    new SpeciesFormChange(Species.OGERPON, "wellspring-mask-tera", "wellspring-mask", new SpeciesFormChangeManualTrigger(), true),
+    new SpeciesFormChange(Species.OGERPON, "hearthflame-mask", "hearthflame-mask-tera", new SpeciesFormChangeManualTrigger(), true),
+    new SpeciesFormChange(Species.OGERPON, "hearthflame-mask-tera", "hearthflame-mask", new SpeciesFormChangeManualTrigger(), true),
+    new SpeciesFormChange(Species.OGERPON, "cornerstone-mask", "cornerstone-mask-tera", new SpeciesFormChangeManualTrigger(), true),
+    new SpeciesFormChange(Species.OGERPON, "cornerstone-mask-tera", "cornerstone-mask", new SpeciesFormChangeManualTrigger(), true)
   ],
   [Species.TERAPAGOS]: [
     new SpeciesFormChange(Species.TERAPAGOS, "", "terastal", new SpeciesFormChangeManualTrigger(), true),
-    new SpeciesFormChange(Species.TERAPAGOS, "terastal", "stellar", new SpeciesFormChangeManualTrigger(), true), //When holding a Stellar Tera Shard
-    new SpeciesFormChange(Species.TERAPAGOS, "stellar", "terastal", new SpeciesFormChangeManualTrigger(), true) //When no longer holding a Stellar Tera Shard
+    new SpeciesFormChange(Species.TERAPAGOS, "terastal", "stellar", new SpeciesFormChangeManualTrigger(), true),
+    new SpeciesFormChange(Species.TERAPAGOS, "stellar", "terastal", new SpeciesFormChangeManualTrigger(), true)
   ],
   [Species.GALAR_DARMANITAN]: [
     new SpeciesFormChange(Species.GALAR_DARMANITAN, "", "zen", new SpeciesFormChangeManualTrigger(), true),
@@ -897,205 +866,159 @@ export const pokemonFormChanges: PokemonFormChanges = {
 };
 
 export const SMITTY_FORM_ITEMS = {
-  
+
   'tartauros': [
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_TOUCH
   ],
-
-  
   'zamowak': [
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_GLITCH
   ],
-
-  
   'greyokai': [
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_SHARD,
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_CUBE
   ],
-
-  
   'jormunza': [
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_CRYSTAL
   ],
-
-  
   'licthulhu': [
     FormChangeItem.SMITTY_SHARD,
     FormChangeItem.SMITTY_SURGE,
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_ORB
   ],
-
-  
   'plasmist': [
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_FLUX,
     FormChangeItem.SMITTY_DARK,
     FormChangeItem.SMITTY_CORE
   ],
-
-  
   'plustra': [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_CRYSTAL
   ],
-
-  
   'hellchar': [
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_SURGE,
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_FIBER
   ],
-
-  
   'feareon': [
     FormChangeItem.SMITTY_PULSE,
     FormChangeItem.SMITTY_RELIC,
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_SHARD
   ],
-
-  
   'omninom': [
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_ORB,
     FormChangeItem.SMITTY_NEBULA
   ],
-
-  
   'necromew': [
     FormChangeItem.SMITTY_CORE,
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_DREAMS
   ],
-
-  
   'diablotar': [
     FormChangeItem.SMITTY_PLASMA,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_MASK
   ],
-
-  
   'smitom': [
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_FUEL
   ],
-  
+
   'zoomer': [
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_CRYSTAL,
     FormChangeItem.SMITTY_FLUX
   ],
-
-  
   'voidash': [
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_MASK,
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_PRISM
   ],
-
-  
   'wahcky': [
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_CRYSTAL,
     FormChangeItem.SMITTY_POISON
   ],
-
-  
   'wahzebub': [
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_RELIC
   ],
-
-  
   'fineferno': [
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_HEART
   ],
-
-  
   'sorbred': [
     FormChangeItem.SMITTY_FUEL,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_CRYSTAL
   ],
-
-  
   'corpanzee': [
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_HEART,
     FormChangeItem.SMITTY_FEAR
   ],
-
-  
   'plankling': [
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_PULSE
   ],
-
-  
   'timbrick': [
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_DREAMS,
     FormChangeItem.SMITTY_PULSE
   ],
-
-  
   'plankult': [
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_PULSE,
     FormChangeItem.SMITTY_ORB
   ],
-
-  
   'sorbobo': [
     FormChangeItem.SMITTY_FLUX,
     FormChangeItem.SMITTY_SHARD,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_PLASMA
   ],
-
-  
   'hamtaro': [
     FormChangeItem.SMITTY_ERROR,
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_JUICE
   ],
-  
+
   'elmold': [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_FLUX,
@@ -1109,135 +1032,103 @@ export const SMITTY_FORM_ITEMS = {
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_SOUL
   ],
-
-  
   'riddicus': [
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_RELIC,
     FormChangeItem.SMITTY_AURA
   ],
-
-  
   'boxecutive': [
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_DREAMS
   ],
-
-  
   'patnius': [
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_RELIC
   ],
-
-  
   'tentacrim': [
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_FLUX,
     FormChangeItem.SMITTY_NEBULA
   ],
-
-  
   'undeadtunasmit': [
     FormChangeItem.SMITTY_CORE,
     FormChangeItem.SMITTY_MASK,
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_NEBULA
   ],
-
-  
   'genomander': [
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_ERROR,
     FormChangeItem.SMITTY_SHARD,
     FormChangeItem.SMITTY_FIBER
   ],
-
-  
   'tormentle': [
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_PLASMA
   ],
-
-  
   'terrorbulb': [
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_CORE,
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_CIRCUIT
   ],
-
-  
   'scarablanc': [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_JUICE
   ],
-
-  
   'batmare': [
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_ERROR
   ],
-
-  
   'dankitar': [
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_SHARD,
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_ERROR
   ],
-  
+
   'cephaloom': [
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_FUEL,
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_AURA
   ],
-
-  
   'smitward': [
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_CORE
   ],
-
-  
   'gastmoji': [
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_HUMOR
   ],
-
-  
   'niteknite': [
     FormChangeItem.SMITTY_DREAMS,
     FormChangeItem.SMITTY_PLASMA,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_CRYSTAL
   ],
-
-  
   'dignitier': [
     FormChangeItem.SMITTY_DREAMS,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_PLASMA,
     FormChangeItem.SMITTY_HEART
   ],
-
-  
   'smitshade': [
     FormChangeItem.SMITTY_HEART,
     FormChangeItem.SMITTY_VOICE,
@@ -1265,183 +1156,139 @@ export const SMITTY_FORM_ITEMS = {
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_ERROR
   ],
-
-  
   'smittyfish': [
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_ERROR,
     FormChangeItem.SMITTY_MASK,
     FormChangeItem.SMITTY_LIQUID
   ],
-
-  
   'smittellect': [
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_SURGE,
     FormChangeItem.SMITTY_CRYSTAL
   ],
-
-  
   'gallux': [
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_HEART
   ],
-
-  
   'hostmitty': [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_DREAMS,
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_DARK
   ],
-
-  
   'smittynarie': [
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_ERROR
   ],
-
-  
   'batboxbaba': [
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_CORE
   ],
-  
+
   'batboxbeyond': [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_CHAIN
   ],
-
-  
   'victainer': [
     FormChangeItem.SMITTY_RELIC,
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_ORB,
     FormChangeItem.SMITTY_PLASMA
   ],
-
-  
   'noxabis': [
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_DARK,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_FLUX
   ],
-
-  
   'floravora': [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_SHARD
   ],
-
-  
   'chimerdrio': [
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_VOICE
   ],
-
-  
   'kakopier': [
     FormChangeItem.SMITTY_PULSE,
     FormChangeItem.SMITTY_DREAMS,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_AURA
   ],
-
-  
   'karasu-me': [
     FormChangeItem.SMITTY_DARK,
     FormChangeItem.SMITTY_FIRE,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_HEART
   ],
-
-  
   'bullktopus': [
     FormChangeItem.SMITTY_SURGE,
     FormChangeItem.SMITTY_CRYSTAL,
     FormChangeItem.SMITTY_ORB,
     FormChangeItem.SMITTY_FLUX
   ],
-
-  
   'gumugumu': [
     FormChangeItem.SMITTY_HEART,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_DARK,
     FormChangeItem.SMITTY_CUBE
   ],
-
-  
   'santoryu': [
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_CORE,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_MASK
   ],
-
-  
   'roostace': [
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_FUEL
   ],
-
-  
   'bogace': [
     FormChangeItem.SMITTY_PLASMA,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_ESSENCE
   ],
-
-  
   'milliant': [
     FormChangeItem.SMITTY_MIST,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_DARK
   ],
-
-  
   'terroragon': [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_MIST
   ],
-
-  
   'godread': [
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_PULSE,
     FormChangeItem.SMITTY_TOUCH
   ],
-
-  
   'duschmare': [
     FormChangeItem.SMITTY_PLASMA,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_PULSE,
     FormChangeItem.SMITTY_SLIME
   ],
-
-  
   'abyssuma': [
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_SURGE,
@@ -1455,96 +1302,72 @@ export const SMITTY_FORM_ITEMS = {
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_FUEL
   ],
-
-  
   'omnitto': [
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_MIST
   ],
-
-  
   'umbraffe': [
     FormChangeItem.SMITTY_RELIC,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_MASK
   ],
-
-  
   'tartadra': [
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_MASK,
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_SURGE
   ],
-
-  
   'churry': [
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_HEART,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_SURGE
   ],
-
-  
   'gazorpsmitfield': [
     FormChangeItem.SMITTY_ORB,
     FormChangeItem.SMITTY_DARK,
     FormChangeItem.SMITTY_MIST,
     FormChangeItem.SMITTY_ERROR
   ],
-
-  
   'hologrick': [
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_MIST,
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_RELIC
   ],
-
-  
   'seekling': [
     FormChangeItem.SMITTY_FUEL,
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_MIST
   ],
-
-  
   'picklisk': [
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_MIST
   ],
-
-  
   'bravehound': [
     FormChangeItem.SMITTY_HEART,
     FormChangeItem.SMITTY_FLUX,
     FormChangeItem.SMITTY_MIST,
     FormChangeItem.SMITTY_VOID
   ],
-
-  
   'tengale': [
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_FUEL
   ],
-
-  
   'hyplagus': [
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_DARK
   ],
-
-  
   'demonoth': [
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_CIRCUIT,
@@ -1558,8 +1381,6 @@ export const SMITTY_FORM_ITEMS = {
     FormChangeItem.SMITTY_ERROR,
     FormChangeItem.SMITTY_SHARD
   ],
-
-  
   'missingno': [
     FormChangeItem.SMITTY_MIST,
     FormChangeItem.SMITTY_RELIC,
@@ -1774,7 +1595,7 @@ export function initSmittyForms() {
   addUniversalSmittyForm({ formName: "undeadtunasmit", formKey: SpeciesFormKey.SMITTY, primaryType: Type.WATER, secondaryType: Type.GHOST, ability1: Abilities.ABYSSAL_AQUA, ability2: Abilities.DEEP_SEA_VIRUS, abilityHidden: Abilities.BUBBLING_BRAINS, totalStats: 582, hp: 129, attack: 143, defense: 112, spAttack: 60, spDefense: 65, speed: 73, requiredItems: getSmittyItems("undeadtunasmit") });
   addUniversalSmittyForm({ formName: "scarablanc", formKey: SpeciesFormKey.SMITTY, primaryType: Type.BUG, secondaryType: null, ability1: Abilities.SOUL_EATER, ability2: Abilities.CURSED_SHELL, abilityHidden: Abilities.NIGHTMARATE, totalStats: 607, hp: 73, attack: 173, defense: 150, spAttack: 63, spDefense: 112, speed: 35, requiredItems: getSmittyItems("scarablanc") });
   addUniversalSmittyForm({ formName: "batmare", formKey: SpeciesFormKey.SMITTY, primaryType: Type.DARK, secondaryType: null, ability1: Abilities.GOTHAMS_NIGHTMARE, ability2: Abilities.DOOM_GADGETS, abilityHidden: Abilities.NIGHTMARATE, totalStats: 632, hp: 82, attack: 106, defense: 132, spAttack: 71, spDefense: 78, speed: 163, requiredItems: getSmittyItems("batmare") });
-  // addUniversalSmittyForm({ formName: "cephaloom", formKey: SpeciesFormKey.SMITTY, primaryType: Type.WATER, secondaryType: Type.NORMAL, ability1: Abilities.MONOTONE_MOOD, ability2: Abilities.BOREDOM_AURA, abilityHidden: Abilities.SQUIDLY_STEP, totalStats: 606, hp: 72, attack: 83, defense: 75, spAttack: 140, spDefense: 128, speed: 107, requiredItems: getSmittyItems("cephaloom") });
+
   addUniversalSmittyForm({ formName: "smitward", formKey: SpeciesFormKey.SMITTY, primaryType: Type.WATER, secondaryType: null, ability1: Abilities.NIGHTMARE_INK, ability2: Abilities.ABYSSAL_MELODY, abilityHidden: Abilities.NIGHTMARATE, totalStats: 665, hp: 82, attack: 118, defense: 76, spAttack: 171, spDefense: 154, speed: 64, requiredItems: getSmittyItems("smitward") });
   addUniversalSmittyForm({ formName: "niteknite", formKey: SpeciesFormKey.SMITTY, primaryType: Type.DARK, secondaryType: Type.STEEL, ability1: Abilities.SUPER_HUNGRY, ability2: Abilities.FOOLS_GOLD, abilityHidden: Abilities.SHOW_AND_TELL, totalStats: 566, hp: 64, attack: 126, defense: 111, spAttack: 76, spDefense: 111, speed: 78, requiredItems: getSmittyItems("niteknite") });
   addUniversalSmittyForm({ formName: "dignitier", formKey: SpeciesFormKey.SMITTY, primaryType: Type.GROUND, secondaryType: Type.STEEL, ability1: Abilities.KNIGHTS_SHOVEL, ability2: Abilities.HEROIC_LEAP, abilityHidden: Abilities.DIG_CHAMPION, totalStats: 614, hp: 103, attack: 173, defense: 151, spAttack: 57, spDefense: 77, speed: 53, requiredItems: getSmittyItems("dignitier") });
@@ -1913,11 +1734,11 @@ const glitchFormSpecies = [
   Species.SIMISEAR,
   Species.SIMIPOUR,
   Species.HITMONLEE,
-  Species.EEVEE,     
-  Species.MIMIKYU,   
-  Species.DITTO,     
-  Species.FERALIGATR, 
-  Species.PIKACHU    
+  Species.EEVEE,
+  Species.MIMIKYU,
+  Species.DITTO,
+  Species.FERALIGATR,
+  Species.PIKACHU
 ];
 
 const glitchAltFormSpecies = [
@@ -1941,23 +1762,23 @@ function addGlitchAltFormChanges() {
 
   addGlitchFormChangeAlt(Species.HITMONLEE, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_COMMAND_SEAL);
 
-  addGlitchFormChangeAlt(Species.EEVEE, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_MOD_SOUL); // cybeon
-  addGlitchFormChangeAlt(Species.EEVEE, SpeciesFormKey.GLITCH_C, FormChangeItem.GLITCH_MASTER_PARTS); // teraeon
+  addGlitchFormChangeAlt(Species.EEVEE, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_MOD_SOUL);
+  addGlitchFormChangeAlt(Species.EEVEE, SpeciesFormKey.GLITCH_C, FormChangeItem.GLITCH_MASTER_PARTS);
 
-  addGlitchFormChangeAlt(Species.MIMIKYU, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_SHOUT); // ninjukyu
-  addGlitchFormChangeAlt(Species.MIMIKYU, SpeciesFormKey.GLITCH_C, FormChangeItem.GLITCH_MOD_SOUL); // mewmewni
-  addGlitchFormChangeAlt(Species.MIMIKYU, SpeciesFormKey.GLITCH_D, FormChangeItem.GLITCH_MASTER_PARTS); // ririkyu
-  addGlitchFormChangeAlt(Species.MIMIKYU, SpeciesFormKey.GLITCH_E, FormChangeItem.GLITCH_COMMAND_SEAL); // regirokuy
+  addGlitchFormChangeAlt(Species.MIMIKYU, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_SHOUT);
+  addGlitchFormChangeAlt(Species.MIMIKYU, SpeciesFormKey.GLITCH_C, FormChangeItem.GLITCH_MOD_SOUL);
+  addGlitchFormChangeAlt(Species.MIMIKYU, SpeciesFormKey.GLITCH_D, FormChangeItem.GLITCH_MASTER_PARTS);
+  addGlitchFormChangeAlt(Species.MIMIKYU, SpeciesFormKey.GLITCH_E, FormChangeItem.GLITCH_COMMAND_SEAL);
 
-  addGlitchFormChangeAlt(Species.DITTO, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_SHOUT); // chamelezard
-  addGlitchFormChangeAlt(Species.DITTO, SpeciesFormKey.GLITCH_C, FormChangeItem.GLITCH_MASTER_PARTS); // pikatto
-  addGlitchFormChangeAlt(Species.DITTO, SpeciesFormKey.GLITCH_D, FormChangeItem.GLITCH_MOD_SOUL); // machitto
-  addGlitchFormChangeAlt(Species.DITTO, SpeciesFormKey.GLITCH_E, FormChangeItem.GLITCH_COMMAND_SEAL); // mewtate
+  addGlitchFormChangeAlt(Species.DITTO, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_SHOUT);
+  addGlitchFormChangeAlt(Species.DITTO, SpeciesFormKey.GLITCH_C, FormChangeItem.GLITCH_MASTER_PARTS);
+  addGlitchFormChangeAlt(Species.DITTO, SpeciesFormKey.GLITCH_D, FormChangeItem.GLITCH_MOD_SOUL);
+  addGlitchFormChangeAlt(Species.DITTO, SpeciesFormKey.GLITCH_E, FormChangeItem.GLITCH_COMMAND_SEAL);
 
-  addGlitchFormChangeAlt(Species.SIMISAGE, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_MOD_SOUL); // silvaback
+  addGlitchFormChangeAlt(Species.SIMISAGE, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_MOD_SOUL);
 
-  addGlitchFormChangeAlt(Species.FERALIGATR, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_SHOUT); // yabbagatr
-  addGlitchFormChangeAlt(Species.PIKACHU, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_MASTER_PARTS); // rokachubo
+  addGlitchFormChangeAlt(Species.FERALIGATR, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_SHOUT);
+  addGlitchFormChangeAlt(Species.PIKACHU, SpeciesFormKey.GLITCH_B, FormChangeItem.GLITCH_MASTER_PARTS);
 }
 
 addGlitchFormChanges();

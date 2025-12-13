@@ -9,7 +9,7 @@
   "checkTeamDesc": "파티를 확인하거나 폼 변경 아이템을 사용합니다.",
   "rerollCost": "₽{{formattedMoney}}",
   "itemCost": "₽{{formattedMoney}}",
-  "rerollPermaCost": "∞{{formattedMoney}}",
-  "itemPermaCost": "∞{{formattedMoney}}",
+  "rerollPermaCost": "Ω{{formattedMoney}}",
+  "itemPermaCost": "Ω{{formattedMoney}}",
   "refreshTimer": "새로고침까지: {{minutes}}:{{seconds}}"
 }

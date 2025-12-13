@@ -1,8 +1,9 @@
 import {loggedInUser} from "#app/account.js";
 import BattleScene from "#app/battle-scene.js";
-import {BattleType, setupFixedBattlePaths, setupFixedBattles, resetBattlePathGlobalState, getCurrentBattlePath} from "#app/battle.js";
+import Battle, {BattleType, setupFixedBattlePaths, setupFixedBattles, resetBattlePathGlobalState, getCurrentBattlePath, setCurrentBattlePath, reconstructBattlePathFromLayers} from "#app/battle.js";
 import {getDailyRunStarters, fetchDailyRunSeed} from "#app/data/daily-run.js";
 import {Gender} from "#app/data/gender.js";
+import {getPokemonSpecies} from "#app/data/pokemon-species.js";
 import {getBiomeKey} from "#app/field/arena.js";
 import {GameModes, GameMode, getGameMode} from "#app/game-mode.js";
 import {
@@ -26,34 +27,42 @@ import {EncounterPhase} from "./encounter-phase";
 import {SelectChallengePhase} from "./select-challenge-phase";
 import {SelectStarterPhase} from "./select-starter-phase";
 import {SummonPhase} from "./summon-phase";
-import {SelectDraftPhase} from "#app/phases/select-draft-phase";
-import {transferSave, transferLoad} from "#app/account";
+import {SelectDraftPhase} from "#app/phases/select-draft-phase.js";
+import {transferSave, transferLoad} from "#app/account.js";
 import { SelectModifierPhase } from "./select-modifier-phase";
 import { ShowRewards } from "#app/utils/show-rewards.js";
 import {ShopModifierSelectPhase} from "./shop-modifier-select-phase";
+import {SkillTreePhase, SkillTreeMode} from "./skill-tree-phase";
 import ModifierSelectUiHandler from "#app/ui/modifier-select-ui-handler.js";
-import {checkQuestState, QuestState, QuestUnlockables} from "#app/system/game-data";
-import {TitleSummarySystem} from "#app/system/title-summary-system";
-import {RewardObtainedType, UnlockModePokeSpriteType} from "#app/ui/reward-obtained-ui-handler";
-import {Species} from "#enums/species";
-import {RewardObtainDisplayPhase} from "#app/phases/reward-obtain-display-phase";
-import {setupNightmareFixedBattles} from "#app/battle";
-import {TrainerType} from "#enums/trainer-type";
-import {trainerConfigs, TrainerSlot} from "#app/data/trainer-config";
-import {TrainerVariant} from "#app/field/trainer";
-import {PlayerGender} from "#enums/player-gender";
-import {getCharVariantFromDialogue, getSmitomDialogue} from "#app/data/dialogue";
-import {EndCardPhase} from "#app/phases/end-card-phase";
+import {checkQuestState, QuestState, QuestUnlockables} from "#app/system/game-data.js";
+import {TitleSummarySystem} from "#app/system/title-summary-system.js";
+import {RewardObtainedType, UnlockModePokeSpriteType} from "#app/ui/reward-obtained-ui-handler.js";
+import {Species} from "#app/enums/species.js";
+import {RewardObtainDisplayPhase} from "#app/phases/reward-obtain-display-phase.js";
+import {setupNightmareFixedBattles} from "#app/battle.js";
+import {TrainerType} from "#app/enums/trainer-type.js";
+import {trainerConfigs, TrainerSlot} from "#app/data/trainer-config.js";
+import {TrainerVariant} from "#app/field/trainer.js";
+import {PlayerGender} from "#app/enums/player-gender.js";
+import {getCharVariantFromDialogue, getSmitomDialogue} from "#app/data/dialogue.js";
+import {EndCardPhase} from "#app/phases/end-card-phase.js";
 import { UnlockPhase } from "./unlock-phase";
-import TitleUiHandler from "#app/ui/title-ui-handler.ts";
-import { EnhancedTutorial } from "#app/ui/tutorial-registry";
+import TitleUiHandler from "#app/ui/title-ui-handler.js";
+import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
 import { getAllRivalTrainerTypes } from "#app/data/trainer-config.js";
-import { logNext30DaysLegendaryGachaSpecies } from "#app/data/egg";
+import { logNext30DaysLegendaryGachaSpecies } from "#app/data/egg.js";
 import PokedexUiHandler from "#app/ui/pokedex-ui-handler.js";
 import { BattlePathPhase } from "./battle-path-phase";
 import { ChaosEncounterPhase } from "./chaos-encounter-phase";
-import { outputPokemonData } from "#app/data/extract_data";
+import { outputPokemonData } from "#app/data/extract_data.js";
 import { GameMechanicsID, GameMechanicsVersion } from "#app/enums/gameMechanicsID.js";
+import { ChampionModeIntegration, setupBattleFlow } from "#app/system/champion-mode-integration.js";
+import { ChampionSelectPhase } from "#app/phases/champion-select-phase.js";
+import { ChampionManager } from "#app/system/champion-manager.js";
+import { ChampionUtils } from "#app/system/champion-utils.js";
+import { POKEMON_ALT_BUILDS, PokemonAltBuildId } from "#app/data/pokemon-alt-buid.js";
+import { PokemonAltBuildModifier } from "#app/modifier/modifier.js";
+import { PokemonAltBuildModifierType } from "#app/modifier/modifier-type.js";
 
 export class TitlePhase extends Phase {
     private loaded: boolean;
@@ -61,6 +70,7 @@ export class TitlePhase extends Phase {
     public gameMode: GameModes;
     private titleSummarySystem: TitleSummarySystem | null = null;
     private fromShop: boolean = false;
+    private debugModeActive: boolean = false;
 
     constructor(scene: BattleScene, fromShop: boolean = false) {
         super(scene);
@@ -80,37 +90,39 @@ export class TitlePhase extends Phase {
 
         this.titleSummarySystem = new TitleSummarySystem(this.scene);
 
+        this.scene.gameData.checkAndCreateBackups();
+
+        if(this.debugModeActive) {
+            if (false) {
+                this.debugMistySkillTree();
+                return;
+            }
+            if (true) {
+                this.debugChampionSelect();
+                return;
+            }
+        }
+
         this.scene.gameData.getSession(loggedInUser?.lastSessionSlot ?? -1).then(sessionData => {
             this.scene.showTitleBG();
             this.showOptions();
-            
+
         }).catch(err => {
             console.error(err);
             this.showOptions();
         });
-
-        //  this.scene.pushPhase(new SelectDraftPhase(this.scene));
-        //     this.scene.ui.setMode(Mode.MESSAGE);
-        //     this.scene.ui.clearText();
-        //     super.end();
-        //     return;
-        
     }
 
     showOptions(): void {
         this.scene.ui.clearText();
         const options: OptionSelectItem[] = [];
 
-        // Define setModeAndEnd function at the top so it's accessible to all options
         const setModeAndEnd = (gameMode: GameModes) => {
             this.gameMode = gameMode;
             this.scene.ui.setMode(Mode.MESSAGE);
             this.scene.ui.clearText();
             this.end();
         };
-
-        
-        
         const lastSessionSlot = this.scene.gameData.getLastPlayedSessionSlot();
         if (loggedInUser && lastSessionSlot !== -1) {
             options.push({
@@ -140,20 +152,20 @@ export class TitlePhase extends Phase {
         else if(this.scene.gameData.testModsCount > 0) {
             this.scene.gameData.testModsCount = 0;
         }
-        
-        const shopNeedsRefresh = !this.scene.gameData.currentPermaShopOptions || 
-                               Date.now() - this.scene.gameData.lastPermaShopRefreshTime >= 20 * 60 * 1000;
-        
+
+        const shopNeedsRefresh = !this.scene.gameData.currentPermaShopOptions ||
+        Date.now() - this.scene.gameData.lastPermaShopRefreshTime >= 10 * 60 * 1000;
+
         const shopButton = document.getElementById("apadShop");
         if (shopButton) {
             shopButton.dataset.activeState = shopNeedsRefresh ? "true" : "false";
         }
-        
+
         options.push({
                 label: i18next.t("menu:newGame"),
                 handler: () => {
                     if (!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.CHAOS_AND_GAUNTLET_MODES)) {
-                        this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.CHAOS_AND_GAUNTLET_MODES, true, false).then(() => {
+                        this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.CHAOS_AND_GAUNTLET_MODES, true, false, 0).then(() => {
                             this.showGameModeSelection();
                         });
                         return true;
@@ -184,7 +196,7 @@ export class TitlePhase extends Phase {
                     return true;
                 },
                 item: shopNeedsRefresh ? 'exclamationMark' : undefined,
-                itemArgs: ['smitems_192']
+                itemArgs: ['smitems']
             },
             {
                 label: i18next.t("menu:questsAndBounties"),
@@ -241,21 +253,30 @@ export class TitlePhase extends Phase {
             noCancel: true,
             yOffset: 60
         };
-        console.log(config);
         this.scene.ui.setMode(Mode.TITLE, config);
-
-        // outputPokemonData(false);
-
         let introTutorials = [EnhancedTutorial.LEGENDARY_POKEMON_1, EnhancedTutorial.BUG_TYPES_1];
         let firstVictoryTutorials = [EnhancedTutorial.FIRST_VICTORY, EnhancedTutorial.NEW_QUESTS];
         let bountiesTutorials = [EnhancedTutorial.DAILY_BOUNTY, EnhancedTutorial.BOUNTIES_1];
         let menuAccess = [EnhancedTutorial.MENU_ACCESS, EnhancedTutorial.STATS, EnhancedTutorial.RUN_HISTORY_1];
         let testDetails = [EnhancedTutorial.EGG_SWAP_1, EnhancedTutorial.EGGS_1, EnhancedTutorial.UNLOCK_JOURNEY];
+        let v2UpdateTutorials = [
+            EnhancedTutorial.POKEVOID_V2_UPDATE,
+            EnhancedTutorial.FTL_MODE_SELECT,
+            EnhancedTutorial.CHAMPION_SELECT_ESSENCE,
+            EnhancedTutorial.SPECIAL_ESSENCES_INTRO,
+            EnhancedTutorial.SPECIAL_ESSENCES_GLITCH,
+            EnhancedTutorial.SPECIAL_ESSENCES_SMITTY,
+            EnhancedTutorial.SKILLTREE_APOLLO_DIANA_TYPES,
+            EnhancedTutorial.SKILLTREE_SET_TYPES,
+            EnhancedTutorial.SKILLTREE_PROGRESSION,
+            EnhancedTutorial.STARTER_SELECT_CATCH_REQUIREMENTS,
+            EnhancedTutorial.STARTER_SELECT_SIGNATURE,
+            EnhancedTutorial.COMMAND_UI_NEW_COMMANDS
+        ];
 
-        // if(true || !this.scene.gameData.tutorialService.allTutorialsCompleted(testDetails)) {
-        //         this.scene.gameData.tutorialService.showCombinedTutorial("", testDetails, true, false, true);
-        // }
-
+        if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.POKEVOID_V2_UPDATE)) {
+            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.POKEVOID_V2_UPDATE, true, false, 0);
+        }
         if(!this.fromShop) {
         if(!this.scene.gameData.tutorialService.allTutorialsCompleted(introTutorials)) {
             if(this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED)) {
@@ -278,58 +299,58 @@ export class TitlePhase extends Phase {
             if(this.scene.gameData.defeatedRivals.length > 0) {
                 introTutorials.push(EnhancedTutorial.FIRST_VICTORY);
             }
-            this.scene.gameData.tutorialService.showCombinedTutorial("", introTutorials, true, false, true);
+            this.scene.gameData.tutorialService.showCombinedTutorial("", introTutorials, true, false, true, 0);
             this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.NEW_QUESTS);
             this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1);
         }
 
         else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.MOVE_UPGRADES_EX)) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.MOVE_UPGRADES_EX, true, false);
+            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.MOVE_UPGRADES_EX, true, false, 0);
         }
 
          else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.POKEROGUE_1)) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.POKEROGUE_1, true, false);
+            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.POKEROGUE_1, true, false, 0);
         }
 
         else if(!this.scene.gameData.tutorialService.allTutorialsCompleted(firstVictoryTutorials) && this.scene.gameData.defeatedRivals.length > 0) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", firstVictoryTutorials, true, false, true);
+            this.scene.gameData.tutorialService.showCombinedTutorial("", firstVictoryTutorials, true, false, true, 0);
         }
 
         else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.JOURNEY_1) && this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED)) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.JOURNEY_1, true, false);
+            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.JOURNEY_1, true, false, 0);
         }
 
        else if (!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.NUZLIGHT) && this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.NUZLIGHT, EnhancedTutorial.NEW_QUESTS], true, false, true);
+            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.NUZLIGHT, EnhancedTutorial.NEW_QUESTS], true, false, true, 0);
         }
         else if (!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.NUZLOCKE) && this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.NUZLOCKE, EnhancedTutorial.NEW_QUESTS], true, false, true);
+            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.NUZLOCKE, EnhancedTutorial.NEW_QUESTS], true, false, true, 0);
         }
 
         else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.THE_VOID_UNLOCKED) && this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.THE_VOID_UNLOCKED, EnhancedTutorial.NEW_QUESTS], true, false, true);
+            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.THE_VOID_UNLOCKED, EnhancedTutorial.NEW_QUESTS], true, false, true, 0);
         }
 
         else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.THE_VOID_OVERTAKEN) && this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.THE_VOID_OVERTAKEN, EnhancedTutorial.NEW_QUESTS, EnhancedTutorial.SMITTY_FORM_UNLOCKED_1], true, false, true);
+            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.THE_VOID_OVERTAKEN, EnhancedTutorial.NEW_QUESTS, EnhancedTutorial.SMITTY_FORM_UNLOCKED_1], true, false, true, 0);
         }
 
         else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.NEW_QUESTS) && this.scene.gameData.defeatedRivals.length > 0) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.NEW_QUESTS, true, false);
+            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.NEW_QUESTS, true, false, 0);
         }
 
         else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1)) {
             if(this.scene.gameData.uniSmittyUnlocks.length > 0) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1, true, false);
+                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1, true, false, 0);
             }
             else {
                 this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1);
             }
         }
-         
+
         else if(this.scene.gameData.isDailyBountyTime()) {
             if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.BOUNTIES_1)) {
-                this.scene.gameData.tutorialService.showCombinedTutorial("", bountiesTutorials, true, false, true);
+                this.scene.gameData.tutorialService.showCombinedTutorial("", bountiesTutorials, true, false, true, 0);
             }
             else {
             this.scene.gameData.tutorialService.showTutorial(EnhancedTutorial.DAILY_BOUNTY, false, false);
@@ -339,61 +360,38 @@ export class TitlePhase extends Phase {
         }
         else if(Utils.randSeedInt(100, 1) <= 1) {
             if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SAVING_1)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SAVING_1, true, false);
+                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SAVING_1, true, false, 0);
             }
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SMITOM)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SMITOM, true, false);
+                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SMITOM, true, false, 0);
             }
             else if(!this.scene.gameData.tutorialService.allTutorialsCompleted(menuAccess)) {
-                this.scene.gameData.tutorialService.showCombinedTutorial("", menuAccess, true, false, true);
+                this.scene.gameData.tutorialService.showCombinedTutorial("", menuAccess, true, false, true, 0);
             }
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.RIVAL_QUESTS)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.RIVAL_QUESTS, true, false);
+                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.RIVAL_QUESTS, true, false, 0);
             }
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.ABILITIES_1)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.ABILITIES_1, true, false);
+                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.ABILITIES_1, true, false, 0);
             }
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.NEW_FORMS_1)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.NEW_FORMS_1, true, false);
+                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.NEW_FORMS_1, true, false, 0);
             }
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.GLITCH_FORMS_1)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.GLITCH_FORMS_1, true, false);
+                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.GLITCH_FORMS_1, true, false, 0);
             }
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SMITTY_FORMS_1) && this.scene.gameData.uniSmittyUnlocks.length > 0) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SMITTY_FORMS_1, true, false);
+                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SMITTY_FORMS_1, true, false, 0);
             }
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.THANK_YOU)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.THANK_YOU, true, false);
+                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.THANK_YOU, true, false, 0);
             }
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.DISCORD)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.DISCORD, true, false);
+                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.DISCORD, true, false, 0);
             }
         }
-            
+
         }
-
-
-        // setupFixedBattlePaths(this.scene);
-        // this.scene.ui.setOverlayMode(Mode.BATTLE_PATH);
-            
-        // this.scene.ui.setOverlayMode(Mode.POKEDEX);
-
-        // const rivalConfig = trainerConfigs[TrainerType.RED];
-        // const rivalName = i18next.t(`trainerClasses:${rivalConfig.getTitle(TrainerSlot.TRAINER, TrainerVariant.DEFAULT).toLowerCase().replace(/\s/g, "_")}`);
-        //
-        // this.scene.ui.setOverlayMode(Mode.REWARD_OBTAINED, {
-        //     buttonActions: [
-        //         () => {
-        //             this.scene.ui.getHandler().clear();
-        //             // Handle quest unlock after overlay is cleared
-        //             // handleQuestUnlock();
-        //         }
-        //     ]
-        // }, {
-        //     name: "MONEY",
-        //     amount: 100,
-        //     type: RewardObtainedType.MONEY
-        // });
     }
 
     private showGameModeSelection(): void {
@@ -401,6 +399,7 @@ export class TitlePhase extends Phase {
             {
                 label: i18next.t("menu:chaos"),
                 handler: () => {
+                    this.scene.gameData.selectedChampionId = undefined;
                     this.showChaosModes();
                     return true;
                 },
@@ -411,6 +410,7 @@ export class TitlePhase extends Phase {
             {
                 label: i18next.t("menu:gauntlet"),
                 handler: () => {
+                    this.scene.gameData.selectedChampionId = undefined;
                     this.showGauntletModes();
                     return true;
                 },
@@ -447,6 +447,7 @@ export class TitlePhase extends Phase {
         this.scene.gameData.loadSession(this.scene, slotId, slotId === -1 ? this.lastSessionData : undefined).then((success: boolean) => {
             if (success) {
                 this.loaded = true;
+                this.scene.gameData.ensureActiveSkillTreeOnLegacyLoad(this.scene);
                 this.scene.ui.showText(i18next.t("menu:sessionSuccess"), null, () => this.end());
             } else {
                 this.end();
@@ -532,195 +533,78 @@ export class TitlePhase extends Phase {
     }
 
     end(): void {
-        if (!this.loaded && !this.scene.gameMode.isDaily) {
+        if (this.debugModeActive) {
+            super.end();
+            return;
+        }
+
+        if (this.gameMode === GameModes.SHOP) {
+            this.scene.gameMode = getGameMode(this.gameMode);
+            this.scene.unshiftPhase(new ShopModifierSelectPhase(this.scene));
+            super.end();
+            return;
+        }
+
+        if (!this.loaded && !this.scene.gameMode.isDaily && !this.scene.gameData.selectedChampionId) {
             this.scene.arena.preloadBgm();
             this.scene.gameMode = getGameMode(this.gameMode);
 
-            if (this.gameMode === GameModes.CHALLENGE) {
-                this.scene.pushPhase(new SelectChallengePhase(this.scene));
-            }
-            else if(this.scene.gameMode.isTestMod) {
-                this.scene.sessionSlotId = -1;
-                this.scene.pushPhase(new SelectDraftPhase(this.scene, true));
+            this.scene.gameMechanicTracking[GameMechanicsID.CHAMPION_MODE] = GameMechanicsVersion.CHAMPION_V1;
 
-                if (this.gameMode !== GameModes.SHOP) {
-                    this.scene.newArena(this.scene.gameMode.getStartingBiome(this.scene));
-                }
-
-                setupFixedBattles(this.scene);
-                this.scene.money = this.scene.gameMode.getStartingMoney();
-
-                this.scene.pushPhase(new EncounterPhase(this.scene, this.loaded));
-
-                super.end();
-            }
-            else if (this.scene.gameMode.isChaosMode) {
-
-                this.scene.ui.setOverlayMode(Mode.SAVE_SLOT, SaveSlotUiMode.SAVE, (slotId: integer) => {
-                    if (slotId === -1) {
-                        this.scene.clearPhaseQueue();
-                        this.scene.pushPhase(new TitlePhase(this.scene));
-                        super.end();
-                        return;
-                    }
-                    this.scene.sessionSlotId = slotId;
-
-                    this.scene.gameData.resetBattlePathData();
-                    this.scene.battlePathWave = 1;
-                    this.scene.dynamicMode = null;
-                    this.scene.gameMechanicTracking = { [GameMechanicsID.CHAOS_MODE]: GameMechanicsVersion.CHAOS_V2, [GameMechanicsID.COLLECTED_TYPE_MODIFIER]: GameMechanicsVersion.COLLECTED_TYPE_MODIFIER_V2 };
-
-                    setupFixedBattlePaths(this.scene);
-                    
-                    if (this.gameMode !== GameModes.SHOP) {
-                        this.scene.newArena(this.scene.gameMode.getStartingBiome(this.scene));
-                    }
-
-                    this.scene.money = this.scene.gameMode.getStartingMoney();
-
-                    if (this.gameMode === GameModes.CHAOS_ROGUE || this.gameMode === GameModes.CHAOS_ROGUE_SHORT || this.gameMode === GameModes.CHAOS_ROGUE_VOID || this.gameMode === GameModes.CHAOS_ROGUE_VOID_SHORT || this.gameMode === GameModes.CHAOS_INFINITE_ROGUE || this.gameMode === GameModes.CHAOS_NUZLIGHT_DRAFT || this.gameMode === GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT || this.gameMode === GameModes.CHAOS_NUZLOCKE_DRAFT || this.gameMode === GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT) {
-                        this.scene.pushPhase(new SelectDraftPhase(this.scene));
-                    } else {
-                        this.scene.pushPhase(new SelectStarterPhase(this.scene));
-                    }
-
-                    this.scene.pushPhase(new BattlePathPhase(this.scene, undefined, false));
-
-                    super.end();
-                });
-            return;
-            }
-            else if (this.scene.gameMode.isDraft && !this.scene.gameMode.isNightmare) {
-                this.scene.ui.setOverlayMode(Mode.SAVE_SLOT, SaveSlotUiMode.SAVE, (slotId: integer) => {
-                    if (slotId === -1) {
-                        this.scene.clearPhaseQueue();
-                        this.scene.pushPhase(new TitlePhase(this.scene));
-                        super.end();
-                        return;
-                    }
-                        this.scene.sessionSlotId = slotId;
-
-                        this.scene.pushPhase(new SelectDraftPhase(this.scene));
-
-                        if (this.gameMode !== GameModes.SHOP) {
-                            this.scene.newArena(this.scene.gameMode.getStartingBiome(this.scene));
-                        }
-
-                        setupFixedBattles(this.scene);
-                        this.scene.money = this.scene.gameMode.getStartingMoney();
-
-                        this.scene.pushPhase(new EncounterPhase(this.scene, this.loaded));
-
-                        super.end();
-                });
-                return; 
-            } 
-            else if (this.gameMode === GameModes.SHOP) {
-                this.scene.unshiftPhase(new ShopModifierSelectPhase(this.scene));
-                super.end();
-                return;
-            } else {
-                if(this.gameMode === GameModes.NIGHTMARE) {
-                    setupNightmareFixedBattles(this.scene);
-                }
-                this.scene.pushPhase(new SelectStarterPhase(this.scene));
-            }
-
-            if (this.gameMode !== GameModes.SHOP) {
-                this.scene.newArena(this.scene.gameMode.getStartingBiome(this.scene));
-            }
-            if(this.gameMode != GameModes.NIGHTMARE) {
-                setupFixedBattles(this.scene);
-            }
+            this.initializeChampionMode(() => {
+            });
         } else {
             this.scene.playBgm();
-        }
-
-        if (!this.scene.gameMode.isChaosMode) {
-            this.scene.pushPhase(new EncounterPhase(this.scene, this.loaded));
-        }
-
-        if (this.loaded) {
             if (this.scene.gameMode.isChaosMode) {
-                
+
                 if (this.scene.battlePathWave === 1) {
                     this.scene.gameData.resetBattlePathData();
                     resetBattlePathGlobalState();
                 }
-                
+
                 const startWave = this.scene.battlePathWave > 1000 ? Math.floor(this.scene.battlePathWave / 1000) * 1000 + 1 : 1;
-                
-                // Only generate battle path if no saved path exists
-                // if (!this.scene.gameData.battlePath && !getCurrentBattlePath()) {
-                setupFixedBattlePaths(this.scene, startWave);
-                // }
-                
+
+                if (!this.scene.gameData.battlePath || !getCurrentBattlePath()) {
+                    setupFixedBattlePaths(this.scene, startWave);
+                } else {
+                    const reconstructedPath = reconstructBattlePathFromLayers(this.scene.gameData.battlePath);
+                    setCurrentBattlePath(reconstructedPath);
+                    this.scene.gameData.battlePath = reconstructedPath;
+                }
+
                 const enemyParty = this.scene.getEnemyParty();
                 const hasActiveBattle = this.scene.currentBattle && (enemyParty && enemyParty.filter(p => !p.isFainted()).length > 0);
-                
+
                 if (hasActiveBattle) {
-                    this.scene.pushPhase(new ChaosEncounterPhase(this.scene, true));
-
-
-                    const availablePartyMembers = this.scene.getParty().filter(p => p.isAllowedInBattle()).length;
-
-                    this.scene.pushPhase(new SummonPhase(this.scene, 0, true, true));
-                    if (this.scene.currentBattle.double && availablePartyMembers > 1) {
-                        this.scene.pushPhase(new SummonPhase(this.scene, 1, true, true));
-                    }
-
-                    if (this.scene.currentBattle.battleType !== BattleType.TRAINER && (this.scene.currentBattle.waveIndex > 1 || !this.scene.gameMode.isDaily)) {
-                        const minPartySize = this.scene.currentBattle.double ? 2 : 1;
-                        if (availablePartyMembers > minPartySize) {
-                            this.scene.pushPhase(new CheckSwitchPhase(this.scene, 0, this.scene.currentBattle.double));
-                            if (this.scene.currentBattle.double) {
-                                this.scene.pushPhase(new CheckSwitchPhase(this.scene, 1, this.scene.currentBattle.double));
-                            }
-                        }
-                    }
+                    this.scene.pushPhase(new EncounterPhase(this.scene, true));
                 } else {
-                    this.scene.pushPhase(new BattlePathPhase(this.scene, undefined, false));
+                    this.scene.pushPhase(new BattlePathPhase(this.scene));
                 }
-                
+
             } else {
                 if (this.scene.gameMode.isNightmare) {
                     setupNightmareFixedBattles(this.scene);
-                }
-                else {
+                } else {
                     setupFixedBattles(this.scene);
                 }
-
-                const availablePartyMembers = this.scene.getParty().filter(p => p.isAllowedInBattle()).length;
-
-                this.scene.pushPhase(new SummonPhase(this.scene, 0, true, true));
-                if (this.scene.currentBattle.double && availablePartyMembers > 1) {
-                    this.scene.pushPhase(new SummonPhase(this.scene, 1, true, true));
-                }
-
-                if (this.scene.currentBattle.battleType !== BattleType.TRAINER && (this.scene.currentBattle.waveIndex > 1 || !this.scene.gameMode.isDaily)) {
-                    const minPartySize = this.scene.currentBattle.double ? 2 : 1;
-                    if (availablePartyMembers > minPartySize) {
-                        this.scene.pushPhase(new CheckSwitchPhase(this.scene, 0, this.scene.currentBattle.double));
-                        if (this.scene.currentBattle.double) {
-                            this.scene.pushPhase(new CheckSwitchPhase(this.scene, 1, this.scene.currentBattle.double));
-                        }
-                    }
-                }
+                this.scene.pushPhase(new EncounterPhase(this.scene, true));
             }
-        }
 
-        for (const achv of Object.keys(this.scene.gameData.achvUnlocks)) {
-            if (vouchers.hasOwnProperty(achv) && achv !== "CLASSIC_VICTORY") {
-                this.scene.validateVoucher(vouchers[achv]);
-            }
         }
-
         super.end();
     }
 
+    private initializeChampionMode(onReady: (availableStarters: Species[]) => void): void {
+        this.scene.gameData.selectedChampionId = undefined;
+        ChampionModeIntegration.initializeChampionSelection(this.scene, this.gameMode, {
+            onChampionReady: (_championId: string, availableStarters: Species[]) => {
+                onReady(availableStarters);
+            }
+        });
+    }
     private showGauntletModes(): void {
         const availableModes = [GameModes.DRAFT];
-        
+
         if (this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED)) {
             availableModes.push(GameModes.CLASSIC);
         }
@@ -744,26 +628,26 @@ export class TitlePhase extends Phase {
         }
 
         const modesToShow = [GameModes.DRAFT, GameModes.CLASSIC, GameModes.NUZLIGHT, GameModes.NUZLOCKE];
-        
+
         if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED) || this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
             modesToShow.push(GameModes.NUZLIGHT_DRAFT);
         }
-        
+
         if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED) || this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
             modesToShow.push(GameModes.NUZLOCKE_DRAFT);
         }
-        
+
         if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
             modesToShow.push(GameModes.NIGHTMARE);
         }
-        
+
         const setModeAndEnd = (gameMode: GameModes) => {
             this.gameMode = gameMode;
             this.scene.ui.setMode(Mode.MESSAGE);
             this.scene.ui.clearText();
             this.end();
         };
-        
+
         const modeOptions = modesToShow.map(mode => {
             const isAvailable = availableModes.includes(mode);
             return {
@@ -809,23 +693,34 @@ export class TitlePhase extends Phase {
     }
 
     private showChaosModes(): void {
-        // Check if this is a new player (based on saved flag, not current stats)
-        if (this.scene.gameData.isNewPlayer) {
-            this.showNewPlayerChaosModes();
+        const proceed = () => {
+            if (this.scene.gameData.isNewPlayer) {
+                this.showNewPlayerChaosModes();
+                return;
+            }
+            this.showExistingPlayerChaosModes();
+        };
+
+        const hasWonAnySession = (this.scene.gameData.gameStats.sessionsWon || 0) > 0;
+
+        if (!hasWonAnySession) {
+            this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.FTL_MODE_SELECT);
+            proceed();
             return;
         }
-        
-        // For existing players (legacy), show categories with full Midnight/Abyss choice
-        this.showExistingPlayerChaosModes();
+
+        if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.FTL_MODE_SELECT)) {
+            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.FTL_MODE_SELECT, true, false, 0).then(proceed);
+            return;
+        }
+
+        proceed();
     }
 
-    /**
-     * Show chaos modes for NEW players (progressive unlock system)
-     */
     private showNewPlayerChaosModes(): void {
         const availableModes = this.getAvailableChaosModeCategories();
         const modesToShow = this.getChaosModeCategoriesToShow();
-        
+
         const modeOptions = modesToShow.map(baseModeKey => {
             const isAvailable = availableModes.includes(baseModeKey);
             return {
@@ -839,7 +734,7 @@ export class TitlePhase extends Phase {
                 },
                 onHover: () => {
                     if (isAvailable) {
-                        this.scene.ui.showText(this.getModeDescription(this.getShortVariant(baseModeKey)));
+                        this.scene.ui.showText(this.getModeDescription(this.getFTLVariant(baseModeKey)));
                     } else {
                         this.scene.ui.showText(this.getChaosUnlockHint(baseModeKey));
                     }
@@ -848,45 +743,41 @@ export class TitlePhase extends Phase {
         });
 
         const firstAvailable = availableModes.length > 0 ? availableModes[0] : null;
-        this.showModeSelectionUI(modeOptions, firstAvailable ? this.getModeDescription(this.getShortVariant(firstAvailable)) : i18next.t("menu:selectChaosMode"));
+        this.showModeSelectionUI(modeOptions, firstAvailable ? this.getModeDescription(this.getFTLVariant(firstAvailable)) : i18next.t("menu:selectChaosMode"));
     }
 
-    /**
-     * Handle mode selection for new players (progressive unlock logic)
-     */
     private handleNewPlayerModeSelection(baseModeKey: string): void {
+        const hasCompletedFTL = this.hasCompletedFTLMode(baseModeKey);
         const hasCompletedShort = this.hasCompletedShortMode(baseModeKey);
-        
-        if (hasCompletedShort) {
-            // Show Midnight/Abyss choice
-            this.showMidnightAbyssChoice(baseModeKey);
+        const hasCompletedLong = this.hasCompletedLongMode(baseModeKey);
+
+        if (hasCompletedShort || hasCompletedFTL || hasCompletedLong) {
+            this.showMidnightAbyssFTLChoice(baseModeKey);
         } else {
-            // Auto-select short variant (Midnight)
-            this.gameMode = this.getShortVariant(baseModeKey);
+            this.gameMode = this.getFTLVariant(baseModeKey);
             this.scene.ui.setMode(Mode.MESSAGE);
             this.scene.ui.clearText();
             this.end();
         }
     }
 
-    /**
-     * Show chaos modes for EXISTING players (full choice system)
-     */
     private showExistingPlayerChaosModes(): void {
         const availableModes = this.getAvailableChaosModeCategories();
         const modesToShow = this.getChaosModeCategoriesToShow();
-        
+
         const modeOptions = modesToShow.map(baseModeKey => {
             const isAvailable = availableModes.includes(baseModeKey);
-            const hasWonMode = this.hasWonChaosMode(baseModeKey);
+            const hasCompletedFTL = this.hasCompletedFTLMode(baseModeKey);
+            const hasCompletedShort = this.hasCompletedShortMode(baseModeKey);
+            const hasCompletedLong = this.hasCompletedLongMode(baseModeKey);
             return {
                 label: isAvailable ? GameMode.getChaosBaseName(baseModeKey) : "???",
                 handler: () => {
                     if (isAvailable) {
-                        if (hasWonMode) {
-                            this.showMidnightAbyssChoice(baseModeKey);
+                        if (hasCompletedShort || hasCompletedFTL || hasCompletedLong) {
+                            this.showMidnightAbyssFTLChoice(baseModeKey);
                         } else {
-                            this.gameMode = this.getShortVariant(baseModeKey);
+                            this.gameMode = this.getFTLVariant(baseModeKey);
                             this.scene.ui.setMode(Mode.MESSAGE);
                             this.scene.ui.clearText();
                             this.end();
@@ -897,7 +788,7 @@ export class TitlePhase extends Phase {
                 },
                 onHover: () => {
                     if (isAvailable) {
-                        this.scene.ui.showText(this.getModeDescription(this.getShortVariant(baseModeKey)));
+                        this.scene.ui.showText(this.getModeDescription(this.getFTLVariant(baseModeKey)));
                     } else {
                         this.scene.ui.showText(this.getChaosUnlockHint(baseModeKey));
                     }
@@ -906,18 +797,32 @@ export class TitlePhase extends Phase {
         });
 
         const firstAvailable = availableModes.length > 0 ? availableModes[0] : null;
-        this.showModeSelectionUI(modeOptions, firstAvailable ? this.getModeDescription(this.getShortVariant(firstAvailable)) : i18next.t("menu:selectChaosMode"));
+        this.showModeSelectionUI(modeOptions, firstAvailable ? this.getModeDescription(this.getFTLVariant(firstAvailable)) : i18next.t("menu:selectChaosMode"));
     }
 
-    /**
-     * Show Midnight/Abyss choice for a specific mode
-     */
-    private showMidnightAbyssChoice(baseModeKey: string): void {
+    private showMidnightAbyssFTLChoice(baseModeKey: string): void {
+        const ftlMode = this.getFTLVariant(baseModeKey);
         const shortMode = this.getShortVariant(baseModeKey);
         const longMode = this.getLongVariant(baseModeKey);
         const modeName = GameMode.getChaosBaseName(baseModeKey);
-        
+        const hasWonShort = this.hasCompletedShortMode(baseModeKey);
+        const hasWonLong = this.hasCompletedLongMode(baseModeKey);
+        const hasWonFTL = this.hasCompletedFTLMode(baseModeKey);
+
         const variantOptions = [
+            {
+                label: i18next.t("menu:ftl", { mode: modeName }),
+                handler: () => {
+                    this.gameMode = ftlMode;
+                    this.scene.ui.setMode(Mode.MESSAGE);
+                    this.scene.ui.clearText();
+                    this.end();
+                    return true;
+                },
+                onHover: () => {
+                    this.scene.ui.showText(i18next.t("menu:ftlDescription", { mode: modeName }));
+                }
+            },
             {
                 label: i18next.t("menu:midnight", { mode: modeName }),
                 handler: () => {
@@ -930,8 +835,11 @@ export class TitlePhase extends Phase {
                 onHover: () => {
                     this.scene.ui.showText(i18next.t("menu:midnightDescription", { mode: modeName }));
                 }
-            },
-            {
+            }
+        ];
+
+        if (hasWonShort || hasWonLong || hasWonFTL) {
+            variantOptions.push({
                 label: i18next.t("menu:abyss", { mode: modeName }),
                 handler: () => {
                     this.gameMode = longMode;
@@ -943,18 +851,15 @@ export class TitlePhase extends Phase {
                 onHover: () => {
                     this.scene.ui.showText(i18next.t("menu:abyssDescription", { mode: modeName }));
                 }
-            }
-        ];
+            });
+        }
 
-        this.showModeSelectionUI(variantOptions, i18next.t("menu:midnightDescription", { mode: modeName }));
+        this.showModeSelectionUI(variantOptions, i18next.t("menu:ftlDescription", { mode: modeName }));
     }
 
-    /**
-     * Check if new player has completed short version of a mode
-     */
     private hasCompletedShortMode(baseModeKey: string): boolean {
         const stats = this.scene.gameData.gameStats;
-        
+
         switch (baseModeKey) {
             case "CHAOS_ROGUE":
                 return stats.chaosRogueShortSessionsWon > 0;
@@ -977,63 +882,105 @@ export class TitlePhase extends Phase {
         }
     }
 
-    /**
-     * Get available chaos mode categories (unlocked modes only)
-     */
+    private hasCompletedFTLMode(baseModeKey: string): boolean {
+        const stats = this.scene.gameData.gameStats;
+
+        switch (baseModeKey) {
+            case "CHAOS_ROGUE":
+                return stats.chaosRogueFTLSessionsWon > 0;
+            case "CHAOS_JOURNEY":
+                return stats.chaosJourneyFTLSessionsWon > 0;
+            case "CHAOS_NUZLIGHT":
+                return stats.chaosNuzlightFTLSessionsWon > 0;
+            case "CHAOS_NUZLOCKE":
+                return stats.chaosNuzlockeFTLSessionsWon > 0;
+            case "CHAOS_NUZLIGHT_DRAFT":
+                return stats.chaosNuzlightDraftFTLSessionsWon > 0;
+            case "CHAOS_NUZLOCKE_DRAFT":
+                return stats.chaosNuzlockeDraftFTLSessionsWon > 0;
+            case "CHAOS_VOID":
+                return stats.chaosVoidFTLSessionsWon > 0;
+            case "CHAOS_ROGUE_VOID":
+                return stats.chaosRogueVoidFTLSessionsWon > 0;
+            default:
+                return false;
+        }
+    }
+
+    private hasCompletedLongMode(baseModeKey: string): boolean {
+        const stats = this.scene.gameData.gameStats;
+
+        switch (baseModeKey) {
+            case "CHAOS_ROGUE":
+                return stats.chaosRogueSessionsWon > 0;
+            case "CHAOS_JOURNEY":
+                return stats.chaosJourneySessionsWon > 0;
+            case "CHAOS_NUZLIGHT":
+                return stats.chaosNuzlightSessionsWon > 0;
+            case "CHAOS_NUZLOCKE":
+                return stats.chaosNuzlockeSessionsWon > 0;
+            case "CHAOS_NUZLIGHT_DRAFT":
+                return stats.chaosNuzlightDraftSessionsWon > 0;
+            case "CHAOS_NUZLOCKE_DRAFT":
+                return stats.chaosNuzlockeDraftSessionsWon > 0;
+            case "CHAOS_VOID":
+                return stats.chaosVoidSessionsWon > 0;
+            case "CHAOS_ROGUE_VOID":
+                return stats.chaosRogueVoidSessionsWon > 0;
+            default:
+                return false;
+        }
+    }
+
     private getAvailableChaosModeCategories(): string[] {
         const categories = ["CHAOS_ROGUE"];
-        
+
         if (this.scene.gameData.unlocks[Unlockables.CHAOS_JOURNEY_MODE]) {
             categories.push("CHAOS_JOURNEY");
         }
-        
+
         if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
             categories.push("CHAOS_NUZLIGHT");
             categories.push("CHAOS_NUZLIGHT_DRAFT");
         }
-        
+
         if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
             categories.push("CHAOS_NUZLOCKE");
             categories.push("CHAOS_NUZLOCKE_DRAFT");
         }
-        
+
         if (this.scene.gameData.unlocks[Unlockables.CHAOS_VOID_MODE]) {
             categories.push("CHAOS_VOID");
         }
-        
+
         if (this.scene.gameData.unlocks[Unlockables.CHAOS_ROGUE_VOID_MODE]) {
             categories.push("CHAOS_ROGUE_VOID");
         }
-        
+
         if (this.scene.gameData.unlocks[Unlockables.CHAOS_INFINITE_MODE]) {
             categories.push("CHAOS_INFINITE");
         }
-        
+
         if (this.scene.gameData.unlocks[Unlockables.CHAOS_INFINITE_ROGUE_MODE]) {
             categories.push("CHAOS_INFINITE_ROGUE");
         }
-        
+
         return categories;
     }
 
-    /**
-     * Get chaos mode categories to show (including locked modes)
-     */
     private getChaosModeCategoriesToShow(): string[] {
         const modesToShow = ["CHAOS_ROGUE", "CHAOS_JOURNEY"];
-        
-        // Add quest-based modes conditionally
+
         if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
             modesToShow.push("CHAOS_NUZLIGHT");
             modesToShow.push("CHAOS_NUZLIGHT_DRAFT");
         }
-        
+
         if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
             modesToShow.push("CHAOS_NUZLOCKE");
             modesToShow.push("CHAOS_NUZLOCKE_DRAFT");
         }
-        
-        // Add nightmare-based modes with session requirements
+
         if (this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
             modesToShow.push("CHAOS_VOID");
             if (this.scene.gameData.gameStats.nightmareSessionsWon >= 1) {
@@ -1046,13 +993,10 @@ export class TitlePhase extends Phase {
                 modesToShow.push("CHAOS_INFINITE_ROGUE");
             }
         }
-        
+
         return modesToShow;
     }
 
-    /**
-     * Get short variant GameMode from base mode key
-     */
     private getShortVariant(baseModeKey: string): GameModes {
         switch (baseModeKey) {
             case "CHAOS_ROGUE":
@@ -1076,9 +1020,33 @@ export class TitlePhase extends Phase {
         }
     }
 
-    /**
-     * Get long variant GameMode from base mode key
-     */
+    private getFTLVariant(baseModeKey: string): GameModes {
+        switch (baseModeKey) {
+            case "CHAOS_ROGUE":
+                return GameModes.CHAOS_ROGUE_FTL;
+            case "CHAOS_JOURNEY":
+                return GameModes.CHAOS_JOURNEY_FTL;
+            case "CHAOS_NUZLIGHT":
+                return GameModes.CHAOS_NUZLIGHT_FTL;
+            case "CHAOS_NUZLOCKE":
+                return GameModes.CHAOS_NUZLOCKE_FTL;
+            case "CHAOS_NUZLIGHT_DRAFT":
+                return GameModes.CHAOS_NUZLIGHT_DRAFT_FTL;
+            case "CHAOS_NUZLOCKE_DRAFT":
+                return GameModes.CHAOS_NUZLOCKE_DRAFT_FTL;
+            case "CHAOS_VOID":
+                return GameModes.CHAOS_VOID_FTL;
+            case "CHAOS_ROGUE_VOID":
+                return GameModes.CHAOS_ROGUE_VOID_FTL;
+            case "CHAOS_INFINITE":
+                return GameModes.CHAOS_INFINITE;
+            case "CHAOS_INFINITE_ROGUE":
+                return GameModes.CHAOS_INFINITE_ROGUE;
+            default:
+                return GameModes.CHAOS_ROGUE_FTL;
+        }
+    }
+
     private getLongVariant(baseModeKey: string): GameModes {
         switch (baseModeKey) {
             case "CHAOS_ROGUE":
@@ -1097,14 +1065,15 @@ export class TitlePhase extends Phase {
                 return GameModes.CHAOS_VOID;
             case "CHAOS_ROGUE_VOID":
                 return GameModes.CHAOS_ROGUE_VOID;
+            case "CHAOS_INFINITE":
+                return GameModes.CHAOS_INFINITE;
+            case "CHAOS_INFINITE_ROGUE":
+                return GameModes.CHAOS_INFINITE_ROGUE;
             default:
                 return GameModes.CHAOS_ROGUE;
         }
     }
 
-    /**
-     * Helper to show mode selection UI
-     */
     private showModeSelectionUI(options: any[], headerText: string): void {
         options.push({
             label: i18next.t("menu:cancel"),
@@ -1164,7 +1133,6 @@ export class TitlePhase extends Phase {
                 return i18next.t("menu:selectChaosNuzlightDraftMode");
             case GameModes.CHAOS_NUZLOCKE_DRAFT:
                 return i18next.t("menu:selectChaosNuzlockeDraftMode");
-            // Short chaos mode variants (Midnight) - same descriptions as long variants
             case GameModes.CHAOS_ROGUE_SHORT:
                 return i18next.t("menu:selectChaosRogueMode");
             case GameModes.CHAOS_JOURNEY_SHORT:
@@ -1181,6 +1149,22 @@ export class TitlePhase extends Phase {
                 return i18next.t("menu:selectChaosNuzlightDraftMode");
             case GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT:
                 return i18next.t("menu:selectChaosNuzlockeDraftMode");
+            case GameModes.CHAOS_ROGUE_FTL:
+                return i18next.t("menu:selectChaosRogueMode");
+            case GameModes.CHAOS_JOURNEY_FTL:
+                return i18next.t("menu:selectChaosJourneyMode");
+            case GameModes.CHAOS_VOID_FTL:
+                return i18next.t("menu:selectChaosVoidMode");
+            case GameModes.CHAOS_ROGUE_VOID_FTL:
+                return i18next.t("menu:selectChaosRogueVoidMode");
+            case GameModes.CHAOS_NUZLIGHT_FTL:
+                return i18next.t("menu:selectChaosNuzlightMode");
+            case GameModes.CHAOS_NUZLOCKE_FTL:
+                return i18next.t("menu:selectChaosNuzlockeMode");
+            case GameModes.CHAOS_NUZLIGHT_DRAFT_FTL:
+                return i18next.t("menu:selectChaosNuzlightDraftMode");
+            case GameModes.CHAOS_NUZLOCKE_DRAFT_FTL:
+                return i18next.t("menu:selectChaosNuzlockeDraftMode");
             default:
                 return "";
         }
@@ -1193,7 +1177,7 @@ export class TitlePhase extends Phase {
         const hasVoid = availableModes.includes(GameModes.NIGHTMARE);
         const hasNuzlightDraft = availableModes.includes(GameModes.NUZLIGHT_DRAFT);
         const hasNuzlockeDraft = availableModes.includes(GameModes.NUZLOCKE_DRAFT);
-        
+
         if (!hasClassic) {
             if (mode === GameModes.CLASSIC) {
                 return i18next.t("menu:unlockHintClassic");
@@ -1231,24 +1215,24 @@ export class TitlePhase extends Phase {
 
     private hasWonChaosMode(baseModeKey: string): boolean {
         const stats = this.scene.gameData.gameStats;
-        
+
         switch (baseModeKey) {
             case "CHAOS_ROGUE":
-                return stats.chaosRogueSessionsWon > 0;
+                return stats.chaosRogueSessionsWon > 0 || stats.chaosRogueShortSessionsWon > 0 || stats.chaosRogueFTLSessionsWon > 0;
             case "CHAOS_JOURNEY":
-                return stats.chaosJourneySessionsWon > 0;
+                return stats.chaosJourneySessionsWon > 0 || stats.chaosJourneyShortSessionsWon > 0 || stats.chaosJourneyFTLSessionsWon > 0;
             case "CHAOS_NUZLIGHT":
-                return stats.chaosNuzlightSessionsWon > 0;
+                return stats.chaosNuzlightSessionsWon > 0 || stats.chaosNuzlightShortSessionsWon > 0 || stats.chaosNuzlightFTLSessionsWon > 0;
             case "CHAOS_NUZLOCKE":
-                return stats.chaosNuzlockeSessionsWon > 0;
+                return stats.chaosNuzlockeSessionsWon > 0 || stats.chaosNuzlockeShortSessionsWon > 0 || stats.chaosNuzlockeFTLSessionsWon > 0;
             case "CHAOS_NUZLIGHT_DRAFT":
-                return stats.chaosNuzlightDraftSessionsWon > 0;
+                return stats.chaosNuzlightDraftSessionsWon > 0 || stats.chaosNuzlightDraftShortSessionsWon > 0 || stats.chaosNuzlightDraftFTLSessionsWon > 0;
             case "CHAOS_NUZLOCKE_DRAFT":
-                return stats.chaosNuzlockeDraftSessionsWon > 0;
+                return stats.chaosNuzlockeDraftSessionsWon > 0 || stats.chaosNuzlockeDraftShortSessionsWon > 0 || stats.chaosNuzlockeDraftFTLSessionsWon > 0;
             case "CHAOS_VOID":
-                return stats.chaosVoidSessionsWon > 0;
+                return stats.chaosVoidSessionsWon > 0 || stats.chaosVoidShortSessionsWon > 0 || stats.chaosVoidFTLSessionsWon > 0;
             case "CHAOS_ROGUE_VOID":
-                return stats.chaosRogueVoidSessionsWon > 0;
+                return stats.chaosRogueVoidSessionsWon > 0 || stats.chaosRogueVoidShortSessionsWon > 0 || stats.chaosRogueVoidFTLSessionsWon > 0;
             case "CHAOS_INFINITE":
                 return stats.chaosInfiniteSessionsWon > 0;
             case "CHAOS_INFINITE_ROGUE":
@@ -1259,7 +1243,6 @@ export class TitlePhase extends Phase {
     }
 
     private getChaosUnlockHint(baseModeKey?: string): string {
-        // If a specific mode key is provided, give mode-specific hints
         if (baseModeKey) {
             switch (baseModeKey) {
                 case "CHAOS_ROGUE":
@@ -1276,14 +1259,13 @@ export class TitlePhase extends Phase {
                     return "???";
             }
         }
-        
-        // Original general chaos unlock hint logic
+
         const nuzlightUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED);
         const nuzlockeUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
         const nuzlightDraftUnlocked = this.scene.gameData.gameStats.nuzlightSessionsWon >= 2;
         const nuzlockeDraftUnlocked = this.scene.gameData.gameStats.nuzlockeSessionsWon >= 2;
         const nightmareUnlocked = this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE];
-        
+
         if (!nuzlightDraftUnlocked && !nuzlockeUnlocked) {
             return i18next.t("menu:unlockHintChaos1");
         } else if (nuzlightDraftUnlocked && !nuzlockeDraftUnlocked) {
@@ -1291,7 +1273,7 @@ export class TitlePhase extends Phase {
         } else if (nuzlockeUnlocked || nightmareUnlocked) {
             return i18next.t("menu:unlockHintChaos3");
         }
-        
+
         return "???";
     }
 
@@ -1302,7 +1284,7 @@ export class TitlePhase extends Phase {
         const nuzlightDraftUnlocked = this.scene.gameData.gameStats.nuzlightSessionsWon >= 2;
         const nuzlockeDraftUnlocked = this.scene.gameData.gameStats.nuzlockeSessionsWon >= 2;
         const nightmareUnlocked = this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE];
-        
+
         if (!nuzlightDraftUnlocked && !nuzlockeUnlocked) {
             return this.scene.gameData.gameStats.draftSessionsWon >= 3 || this.scene.gameData.gameStats.nuzlightSessionsWon >= 1;
         } else if (nuzlightDraftUnlocked && !nuzlockeDraftUnlocked) {
@@ -1310,7 +1292,280 @@ export class TitlePhase extends Phase {
         } else if (nuzlockeUnlocked || nightmareUnlocked) {
             return this.scene.gameData.gameStats.nuzlockeSessionsWon >= 2 || this.scene.gameData.gameStats.nuzlockeDraftSessionsWon >= 1;
         }
-        
+
         return false;
+    }
+
+    private debugMistySkillTree(): void {
+
+        this.debugModeActive = true;
+
+        const USE_POKEMON_SELECTION_MODE = false;
+        const USE_ENHANCED_DEBUG_MODE = false;
+        const DEBUG_SKILL_POINTS = 1000;
+        const DEBUG_MAX_DEPTH = 10;
+
+        try {
+            const championId = "misty";
+            this.scene.gameData.selectedChampionId = championId;
+
+            const manager = ChampionManager.initialize(this.scene.gameData);
+            const mistyData = manager.getChampionData(championId);
+
+            const activeSkillTree = this.scene.gameData.initializeSkillTree(championId);
+
+            if (USE_ENHANCED_DEBUG_MODE) {
+                activeSkillTree.skillPoints = DEBUG_SKILL_POINTS;
+                activeSkillTree.maxVisibleDepth = DEBUG_MAX_DEPTH;
+                activeSkillTree.tokens = 100;
+            } else {
+                activeSkillTree.maxVisibleDepth = 3;
+            }
+            this.scene.ui.setMode(Mode.MESSAGE);
+            this.scene.ui.clearText();
+
+            const debugModeFunc = () => {
+                if(true) {
+                    const party = this.scene.getParty();
+                    const onixPokemon = this.scene.addPlayerPokemon(getPokemonSpecies(Species.STARYU), 30, undefined, undefined, undefined, false);
+                    onixPokemon.setVisible(false);
+                    party.push(onixPokemon);
+                    onixPokemon.loadAssets();
+
+                    const signatureBuild = POKEMON_ALT_BUILDS[PokemonAltBuildId.STARYU_CHRONOS_GEAR];
+                    if (signatureBuild) {
+                    const modifier = new PokemonAltBuildModifier(
+                        null,
+                        onixPokemon.id,
+                        { ...signatureBuild, rank: 9 }
+                    );
+                    modifier.applyAltBuildToPokemon(onixPokemon);
+                    this.scene.unshiftPhase(new SkillTreePhase(this.scene, {
+                                    mode: SkillTreeMode.INITIAL_ACCESS,
+                                    onComplete: () => {
+                                        setupBattleFlow(this.scene, false);
+                                    },
+                                    showLoading: true
+                                }));
+                    }
+                }
+                else if (false) {
+                    this.scene.unshiftPhase(new SkillTreePhase(this.scene, {
+                        mode: SkillTreeMode.POKEMON_SELECTION,
+                        requiredSelections: 2,
+                        onComplete: (selections?: Array<{ species: number; isSignature: boolean }>) => {
+                            this.scene.clearPhaseQueue();
+                            if (selections && selections.length) {
+                                const active = this.scene.gameData.activeSkillTree;
+                                if (active) {
+                                    const sig = selections.find(s => s.isSignature)?.species;
+                                    const gen = selections.find(s => !s.isSignature)?.species;
+                                    active.selectedPokemon = { signature: sig as any, general: gen as any };
+                                }
+                            }
+                            this.scene.sessionSlotId = -1;
+                            setupBattleFlow(this.scene, false);
+                        },
+                        showLoading: true,
+                        onCancel: () => {
+                            this.scene.clearPhaseQueue();
+                            this.scene.pushPhase(new TitlePhase(this.scene));
+                        }
+                    }));
+
+                    this.gameMode = GameModes.CLASSIC;
+                    this.scene.gameMode = getGameMode(this.gameMode);
+                } else {
+                    this.gameMode = GameModes.CHAOS_ROGUE;
+                    this.scene.gameMode = getGameMode(this.gameMode);
+
+                    const championId = this.scene.gameData.selectedChampionId || "brock";
+                    this.scene.gameData.selectedChampionId = championId;
+                    const championData = (this.scene.gameData as any).championData?.[championId] || {};
+                    const result = ChampionUtils.filterStartersByChampion(
+                        this.scene,
+                        championData,
+                        this.scene.gameMode
+                    );
+                    const availableStarters: Species[] = result.allStarters;
+
+                    this.scene.unshiftPhase(new SelectStarterPhase(this.scene, {
+                        availableStarters: availableStarters,
+                        onStarterSelected: (starterInput: any) => {
+                            const starters = Array.isArray(starterInput) ? starterInput : [starterInput];
+
+                            if (this.scene.gameData.activeSkillTree) {
+                                this.scene.gameData.activeSkillTree.starterPokemon = starters[0].species.speciesId;
+                            }
+
+                            this.scene.sessionSlotId = -1;
+
+                            const party = this.scene.getParty();
+                            const loadPokemonAssets: Promise<void>[] = [];
+
+                            starters.forEach((starter, index) => {
+                                const starterProps = this.scene.gameData.getSpeciesDexAttrProps(starter.species, starter.dexAttr);
+                                const starterFormIndex = Math.min(starterProps.formIndex, Math.max(starter.species.forms.length - 1, 0));
+                                const starterGender = starter.species.malePercent !== null
+                                    ? !starterProps.female ? Gender.MALE : Gender.FEMALE
+                                    : Gender.GENDERLESS;
+                                const starterIvs = this.scene.gameData.dexData[starter.species.speciesId].ivs.slice(0);
+
+                                const starterPokemon = this.scene.addPlayerPokemon(
+                                    starter.species,
+                                    this.scene.gameMode.getStartingLevel(),
+                                    starter.abilityIndex,
+                                    starterFormIndex,
+                                    starterGender,
+                                    starterProps.shiny,
+                                    starterProps.variant,
+                                    starterIvs,
+                                    starter.nature
+                                );
+
+                                if (starter.moveset) {
+                                    starterPokemon.tryPopulateMoveset(starter.moveset);
+                                }
+                                if (starter.passive) {
+                                    starterPokemon.passive = true;
+                                }
+                                starterPokemon.luck = this.scene.gameData.getDexAttrLuck(this.scene.gameData.dexData[starter.species.speciesId].caughtAttr);
+                                if (starter.pokerus) {
+                                    starterPokemon.pokerus = true;
+                                }
+                                if (starter.nickname) {
+                                    starterPokemon.nickname = starter.nickname;
+                                }
+                                if (starter.fusionIndex > -1) {
+                                    starterPokemon.generateFusionViaSpeciesID(this.scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
+                                }
+
+                                console.log(`[TitlePhase Debug] Checking signature status for starter ${index}...`);
+
+                                const championId = this.scene.gameData.selectedChampionId;
+                                let selectedIsSignature = false;
+                                let altBuildId: PokemonAltBuildId | null = null;
+
+                                if (championId) {
+                                    const championData = (this.scene.gameData as any).championData?.[championId];
+                                    if (championData) {
+                                        const inBaseList = championData.signaturePokemon?.includes(starter.species.speciesId) || false;
+
+                                        const unlockedSignatures = (championData as any).unlockedSignaturePokemon as Species[] | undefined;
+                                        const inUnlockedList = unlockedSignatures?.includes(starter.species.speciesId) || false;
+
+                                        selectedIsSignature = inBaseList || inUnlockedList;
+
+                                        if (selectedIsSignature) {
+                                            altBuildId = ChampionUtils.getSignatureAltBuildId(starter.species.speciesId, championData);
+                                        }
+                                    }
+                                }
+
+                                console.log(`[TitlePhase Debug] championId=${championId}, selectedIsSignature=${selectedIsSignature}, altBuildId=${altBuildId}`);
+
+                                if (selectedIsSignature) {
+                                    console.log(`[TitlePhase Debug] Setting isSignature=true on Pokemon ${starterPokemon.species.name} (ID: ${starterPokemon.id})`);
+                                    starterPokemon.isSignature = true;
+
+                                    if (altBuildId) {
+                                        console.log(`[TitlePhase Debug] Looking up alt build: ${altBuildId}`);
+                                        const altBuild = POKEMON_ALT_BUILDS[altBuildId];
+
+                                        if (altBuild) {
+                                            console.log(`[TitlePhase Debug] Found alt build ${altBuild.id}, creating modifier and applying...`);
+                                            const modifierType = new PokemonAltBuildModifierType(altBuild);
+                                            const modifier = new PokemonAltBuildModifier(modifierType, starterPokemon.id, altBuild);
+                                            modifier.applyAltBuildToPokemon(starterPokemon);
+                                            console.log(`[TitlePhase Debug] Alt build applied. Pokemon altBuildId=${starterPokemon.altBuildId}, altBuildRank=${starterPokemon.altBuildRank}`);
+                                        } else {
+                                            console.warn(`[TitlePhase Debug] Alt build ${altBuildId} not found in POKEMON_ALT_BUILDS`);
+                                        }
+                                    } else {
+                                        console.log(`[TitlePhase Debug] No altBuildId for this signature Pokemon`);
+                                    }
+                                } else {
+                                    console.log(`[TitlePhase Debug] NOT a signature starter, skipping signature logic`);
+                                }
+
+                                starterPokemon.setVisible(false);
+                                party.push(starterPokemon);
+                                loadPokemonAssets.push(starterPokemon.loadAssets());
+
+                            });
+                            Promise.all(loadPokemonAssets).then(() => {
+                                this.scene.unshiftPhase(new SkillTreePhase(this.scene, {
+                                    mode: SkillTreeMode.INITIAL_ACCESS,
+                                    onComplete: () => {
+                                        setupBattleFlow(this.scene, false);
+                                    },
+                                    showLoading: true
+                                }));
+
+                                this.end();
+                            });
+                        }
+                    }));
+                }
+                this.end();
+
+            }
+
+            debugModeFunc()
+        } catch (error) {
+            console.error("🔧 DEBUG: Error initializing Misty skill tree:", error);
+            this.showOptions();
+            return;
+        }
+    }
+
+    private debugChampionSelect(): void {
+        this.debugModeActive = true;
+
+        const DEBUG_GAME_MODE = GameModes.CHAOS_ROGUE;
+
+        try {
+            this.gameMode = DEBUG_GAME_MODE;
+            this.scene.gameMode = getGameMode(this.gameMode);
+
+            this.scene.arena.preloadBgm();
+
+            this.scene.gameMechanicTracking[GameMechanicsID.CHAMPION_MODE] = GameMechanicsVersion.CHAMPION_V1;
+
+            this.scene.ui.setMode(Mode.MESSAGE);
+            this.scene.ui.clearText();
+
+            ChampionModeIntegration.initializeChampionSelection(this.scene, this.gameMode, {
+                onChampionReady: (championId: string, availableStarters: Species[]) => {
+                }
+            });
+
+            this.end();
+
+        } catch (error) {
+            this.debugModeActive = false;
+            this.showOptions();
+        }
+    }
+
+    private autoApplyAltBuildModifiers(): void {
+        const DEBUG_AUTO_ALT_BUILD = false;
+        if (!DEBUG_AUTO_ALT_BUILD) return;
+
+        this.scene.getParty().forEach((pokemon, index) => {
+        });
+
+        const onixPokemon = this.scene.getParty().find(pokemon => pokemon.species.speciesId === Species.ONIX);
+        if (onixPokemon) {
+            onixPokemon.extractActualSpriteColors("pkmn__95");
+            onixPokemon.extractActualSpriteColors("pkmn__back__95");
+
+            const altBuild = POKEMON_ALT_BUILDS[PokemonAltBuildId.ONIX_CRYSTAL_LEVIATHAN];
+            if (altBuild) {
+                const altBuildType = new PokemonAltBuildModifierType(altBuild);
+                const altBuildModifier = new PokemonAltBuildModifier(altBuildType, onixPokemon.id, altBuild);
+                this.scene.addModifier(altBuildModifier, true, false, false, true);
+            }
+        }
     }
 }

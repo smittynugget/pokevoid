@@ -80,8 +80,8 @@ export default class PokemonInfoContainer extends Phaser.GameObjects.Container {
 
   setup(): void {
     this.setName("pkmn-info");
-    const currentLanguage = i18next.resolvedLanguage!; // TODO: is this bang correct?
-    const langSettingKey = Object.keys(languageSettings).find(lang => currentLanguage?.includes(lang))!; // TODO: is this bang correct?
+    const currentLanguage = i18next.resolvedLanguage!;
+    const langSettingKey = Object.keys(languageSettings).find(lang => currentLanguage?.includes(lang))!;
     const textSettings = languageSettings[langSettingKey];
     const infoBg = addWindow(this.scene, 0, 0, this.infoWindowWidth, 132);
     infoBg.setOrigin(0.5, 0.5);
@@ -135,12 +135,8 @@ export default class PokemonInfoContainer extends Phaser.GameObjects.Container {
 
     this.add(infoBg);
     this.add(this.statsContainer);
-
-    // The position should be set per language
     const infoContainerLabelXPos = textSettings?.infoContainerLabelXPos || -18;
     const infoContainerTextXPos = textSettings?.infoContainerTextXPos || -14;
-
-    // The font size should be set by language
     const infoContainerTextSize = textSettings?.infoContainerTextSize || "64px";
 
     this.pokemonFormLabelText = addTextObject(this.scene, infoContainerLabelXPos, 19, i18next.t("pokemonInfoContainer:form"), TextStyle.WINDOW, { fontSize: infoContainerTextSize });
@@ -258,12 +254,6 @@ export default class PokemonInfoContainer extends Phaser.GameObjects.Container {
       this.pokemonAbilityText.setText(pokemon.getAbility(true).name);
       this.pokemonAbilityText.setColor(getTextColor(abilityTextStyle, false, this.scene.uiTheme));
       this.pokemonAbilityText.setShadowColor(getTextColor(abilityTextStyle, true, this.scene.uiTheme));
-
-      /**
-       * If the opposing Pokemon only has 1 normal ability and is using the hidden ability it should have the same behavior
-       * if it had 2 normal abilities. This code checks if that is the case and uses the correct opponent Pokemon abilityIndex (2)
-       * for calculations so it aligns with where the hidden ability is stored in the starter data's abilityAttr (4)
-       */
       const opponentPokemonOneNormalAbility = (pokemon.species.getAbilityCount() === 2);
       const opponentPokemonAbilityIndex = (opponentPokemonOneNormalAbility && pokemon.abilityIndex === 1) ? 2 : pokemon.abilityIndex;
       const opponentPokemonAbilityAttr = 1 << opponentPokemonAbilityIndex;
@@ -328,7 +318,7 @@ export default class PokemonInfoContainer extends Phaser.GameObjects.Container {
           ? this.scene.gameData.dexData[starterSpeciesId].ivs
           : null;
 
-      this.statsContainer.updateIvs(pokemon.ivs, originalIvs!); // TODO: is this bang correct?
+      this.statsContainer.updateIvs(pokemon.ivs, originalIvs!);
 
       this.scene.tweens.add({
         targets: this,

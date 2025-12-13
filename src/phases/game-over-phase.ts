@@ -10,6 +10,13 @@ import i18next from "i18next";
 import { BattlePhase } from "./battle-phase";
 import { EndCardPhase } from "./end-card-phase";
 import { PostGameOverPhase } from "./post-game-over-phase";
+import { ChampionManager } from "#app/system/champion-manager";
+import { SkillTreeUtils } from "#app/system/skill-tree-utils";
+import ChampionXPManager from "#app/system/champion-xp-manager";
+import { ChampionLevelUpPhase } from "#app/phases/champion-level-up-phase";
+import { RewardObtainDisplayPhase } from "#app/phases/reward-obtain-display-phase";
+import { RewardObtainedType } from "#app/ui/reward-obtained-ui-handler";
+import { SkillCategory } from "#app/system/playable-champions";
 import {
   SessionSaveData,
 } from "../system/game-data";
@@ -31,15 +38,13 @@ export class GameOverPhase extends BattlePhase {
 
   start() {
     super.start();
-
-    // Failsafe if players somehow skip floor 200 in classic mode
     if (this.scene.gameMode.isClassic && this.scene.currentBattle.waveIndex > 90 && !this.scene.gameMode.isChaosMode) {
       this.victory = true;
     }
 
     if (this.victory && this.scene.gameMode.isEndless) {
       this.scene.ui.showDialogue(i18next.t("PGMmiscDialogue:ending_endless"), i18next.t("PGMmiscDialogue:ending_name"), 0, () => this.handleGameOver());
-    } 
+    }
     else {
       this.handleGameOver();
     }
@@ -49,11 +54,31 @@ export class GameOverPhase extends BattlePhase {
     const doGameOver = (newClear: boolean) => {
       this.scene.disableMenu = true;
       this.scene.time.delayedCall(1000, () => {
-        
+        try {
+          ChampionXPManager.finalizeEndOfRunLevelUps(this.scene);
+          try {
+            const gd: any = this.scene.gameData;
+            const champId: string | undefined = gd?.selectedChampionId || gd?.activeSkillTree?.championId;
+            const next = this.scene.getNextPhase();
+            if (next && next instanceof ChampionLevelUpPhase) {
+              this.scene.unshiftPhase(this);
+              return;
+            }
+            if (champId && gd.pendingChampionLevelUps && gd.pendingChampionLevelUps[champId]?.length > 0) {
+
+              this.scene.unshiftPhase(this);
+              ChampionXPManager.processPendingLevelUps(this.scene, champId);
+              return;
+            }
+          } catch (_) {  }
+        } catch (e) {
+          console.warn("Champion XP finalize failed:", e);
+        }
+
         if (this.victory && newClear && this.scene.gameMode.isClassic) {
           this.scene.validateAchv(achvs.UNEVOLVED_CLASSIC_VICTORY);
         }
-        
+
         if (!this.scene.gameMode.isTestMod) {
           this.scene.gameData.saveRunHistory(this.scene, this.getFinalSessionData(), this.victory);
         }
@@ -97,12 +122,6 @@ export class GameOverPhase extends BattlePhase {
       doGameOver(false);
     }
   }
-
-  /**
-   * This function mirrors game-data.ts' getSessionSaveData() to update the session data to reflect any changes that occurred within the last wave
-   * This means that level ups, item usage, evolutions, etc. will all be accurately reflected.
-   * @returns {@linkCode SessionSaveData} an updated version of the wave's SessionSaveData that accurately reflects the events of the wave
-   */
   private getFinalSessionData(): SessionSaveData {
     return {
       seed: this.scene.seed,
@@ -125,4 +144,3 @@ export class GameOverPhase extends BattlePhase {
     } as SessionSaveData;
   }
 }
-

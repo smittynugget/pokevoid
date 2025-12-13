@@ -37,6 +37,8 @@
     "DRAGON": "Drache",
     "DARK": "Unlicht",
     "FAIRY": "Fee",
-    "STELLAR": "Stellar"
+    "STELLAR": "Stellar",
+    "SMITTY": "Smitty",
+    "GLITCH": "Glitch"
   }
 }

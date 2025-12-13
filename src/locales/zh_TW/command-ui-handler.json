@@ -3,5 +3,11 @@
   "ball": "精靈球",
   "pokemon": "寶可夢",
   "run": "逃跑",
-  "actionMessage": "要讓\n{{pokemonName}} 做甚麼？"
+  "actionMessage": "要讓\n{{pokemonName}} 做甚麼？",
+  "skillTree": "技能樹",
+  "team": "隊伍",
+  "check": "查看",
+  "eggs": "蛋",
+  "shop": "商店",
+  "map": "地圖"
 }

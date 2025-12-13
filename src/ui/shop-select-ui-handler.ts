@@ -18,6 +18,7 @@ import {Button} from "#enums/buttons";
 import DynamicMoveInfoOverlay from "./dynamic-move-info-overlay";
 import { allMoves } from "../data/move";
 import * as Utils from "./../utils";
+import { createSporadicPattern } from "./../utils";
 import Overrides from "#app/overrides";
 import i18next from "i18next";
 import { ShopCursorTarget } from "#app/enums/shop-cursor-target";
@@ -52,8 +53,11 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
   private selectedOption: ModifierTypeOption | null = null;
 
   private refreshTimerText: Phaser.GameObjects.Text;
-  private refreshInterval: number = 20 * 60 * 1000;
+  private refreshInterval: number = 10 * 60 * 1000;
   private refreshShopFunction: (() => void) | null = null;
+
+  private patternOverlay: Phaser.GameObjects.Container | null = null;
+  private patternCreated: boolean = false;
 
   constructor(scene: BattleScene) {
     super(scene, Mode.CONFIRM);
@@ -114,8 +118,6 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
     this.refreshTimerText.setOrigin(0, 0);
     this.refreshTimerText.setVisible(false);
     ui.add(this.refreshTimerText);
-
-
     this.toggleContainer = this.scene.add.container(2, -150);
     this.toggleContainer.setVisible(false);
     ui.add(this.toggleContainer);
@@ -199,12 +201,31 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
     }
 
     const maxUpgradeCount = typeOptions.map(to => to.upgradeCount).reduce((max, current) => Math.max(current, max), 0);
-
-    /* Force updateModifiers without pokemonSpecificModifiers */
     this.scene.getModifierBar().updateModifiers(this.scene.modifiers, true);
-
-    /* Multiplies the appearance duration by the speed parameter so that it is always constant, and avoids "flashbangs" at game speed x5 */
     this.scene.showShopOverlay(750 * this.scene.gameSpeed);
+
+    if (!this.patternCreated) {
+      this.patternOverlay = this.scene.add.container(0, 0);
+      this.scene.fieldUI.add(this.patternOverlay);
+      const shopOverlay = (this.scene as any).shopOverlay;
+      if (shopOverlay) {
+        this.scene.fieldUI.moveAbove(this.patternOverlay, shopOverlay);
+      }
+      createSporadicPattern(this.scene, this.patternOverlay);
+      this.patternCreated = true;
+    }
+
+    if (this.patternOverlay) {
+      this.patternOverlay.setVisible(true);
+      this.patternOverlay.setAlpha(0);
+      this.patternOverlay.setPosition(0, -this.scene.game.canvas.height / 6);
+      this.scene.tweens.add({
+        targets: this.patternOverlay,
+        alpha: 1,
+        duration: 750 * this.scene.gameSpeed,
+        ease: "Sine.easeOut"
+      });
+    }
 
     let i = 0;
 
@@ -239,10 +260,10 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
       this.toggleContainer.setAlpha(0);
 
       const isNuzlockeQuestCompleted = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
-      
+
       if (isNuzlockeQuestCompleted) {
         this.toggleContainer.removeAll(true);
-        
+
         const icon = this.scene.inputController?.getIconForLatestInputRecorded("BUTTON_CYCLE_VARIANT");
         const type = this.scene.inputController?.getLastSourceType() || "keyboard";
         const keySprite = this.scene.add.sprite(3, 3.5, type);
@@ -250,10 +271,10 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
           keySprite.setFrame(icon);
         }
         keySprite.setScale(.6);
-        
+
         const toggleText = addTextObject(this.scene, keySprite.displayWidth * keySprite.scaleX + 4, 0, i18next.t("questUi:console.toggleInfo"), TextStyle.PARTY, {fontSize: "30px"});
         toggleText.setOrigin(0, 0);
-        
+
         this.toggleContainer.add([keySprite, toggleText]);
         this.toggleContainer.setVisible(true);
         this.toggleContainer.setAlpha(0);
@@ -271,7 +292,7 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
           currentOptions: this.options.length,
           shopRows: this.shopOptionsRows.map(row => row.length)
         });
-        
+
         this.setRowCursor(this.scene.shopCursorTarget);
         this.setCursor(0);
       };
@@ -287,8 +308,6 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
     this.remainingOptions = [...typeOptions];
 
     return true;
-
-
   }
 
   processInput(button: Button): boolean {
@@ -331,7 +350,7 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
           originalOnActionInput(-1);
           this.moveInfoOverlayActive = this.moveInfoOverlay.active;
           this.moveInfoOverlay.setVisible(false);
-          this.moveInfoOverlay.active = false; 
+          this.moveInfoOverlay.active = false;
         }
       }
     } else {
@@ -350,14 +369,14 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
           break;
         case Button.LEFT:
         if (this.rowCursor === 0) {
-          success = false; 
+          success = false;
         } else if (this.cursor > 0) {
             success = this.setCursor(this.cursor - 1);
           }
           break;
         case Button.RIGHT:
         if (this.rowCursor === 0) {
-          success = false; 
+          success = false;
           } else if (this.cursor < this.getRowItems(this.rowCursor) - 1) {
             success = this.setCursor(this.cursor + 1);
           }
@@ -385,10 +404,10 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
     }
 
     const options = (this.rowCursor === 1 ? this.options : this.shopOptionsRows[this.shopOptionsRows.length - (this.rowCursor - 1)]);
-    
+
     console.log(`Options array length: ${options?.length || 'undefined'}`);
     console.log(`Current cursor: ${this.cursor}, is valid index: ${this.cursor < (options?.length || 0)}`);
-    
+
     if (!options || options.length === 0 || this.cursor >= options.length) {
       console.warn(`Invalid cursor position: options is ${options ? (options.length === 0 ? 'empty' : 'valid') : 'undefined'}, cursor=${this.cursor}`);
       if (options && options.length > 0) {
@@ -403,7 +422,7 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
                 console.log(`Found alternative row ${r} with ${altOptions.length} options`);
                 this.rowCursor = r;
                 this.cursor = 0;
-                return this.setCursor(0); 
+                return this.setCursor(0);
               }
             }
           }
@@ -427,12 +446,12 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
 
       const option = options[this.cursor];
       console.log(`Selected option:`, option ? 'valid' : 'undefined');
-      
+
       if (!option) {
         console.warn(`Option at index ${this.cursor} is undefined!`);
         return ret;
       }
-      
+
       const type = option.modifierTypeOption.type;
       type && ui.showText(type.getDescription(this.scene));
       if (type instanceof TmModifierType) {
@@ -452,20 +471,20 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
     return ret;
   }
 
-  private row1CursorPosition: number = 0; 
+  private row1CursorPosition: number = 0;
 
   setRowCursor(rowCursor: integer): boolean {
     const lastRowCursor = this.rowCursor;
-    const maxRowCursor = this.shopOptionsRows.length + 1; 
+    const maxRowCursor = this.shopOptionsRows.length + 1;
 
     if (rowCursor !== lastRowCursor && rowCursor >= 0 && rowCursor <= maxRowCursor) {
       if (lastRowCursor === 1 && rowCursor === 0) {
-        this.row1CursorPosition = this.cursor; 
+        this.row1CursorPosition = this.cursor;
         this.rowCursor = 0;
-        this.setCursor(0); 
+        this.setCursor(0);
       } else if (lastRowCursor === 0 && rowCursor === 1) {
         this.rowCursor = 1;
-        this.setCursor(this.row1CursorPosition); 
+        this.setCursor(this.row1CursorPosition);
       } else {
       this.rowCursor = rowCursor;
         let newCursor = Math.min(this.cursor, this.getRowItems(rowCursor) - 1);
@@ -537,11 +556,24 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
     this.onActionInput = null;
     this.getUi().clearText();
     this.eraseCursor();
-
-    /* Multiplies the fade time duration by the speed parameter so that it is always constant, and avoids "flashbangs" at game speed x5 */
     this.scene.hideShopOverlay(750 * this.scene.gameSpeed);
 
-    /* Normally already called just after the shop, but not sure if it happens in 100% of cases */
+    if (this.patternOverlay && !this.scene.reroll) {
+      const overlayToDestroy = this.patternOverlay;
+      this.scene.tweens.add({
+        targets: overlayToDestroy,
+        alpha: 0,
+        duration: 750 * this.scene.gameSpeed,
+        ease: "Cubic.easeIn",
+        onComplete: () => {
+          if (overlayToDestroy) {
+            overlayToDestroy.destroy();
+          }
+        }
+      });
+      this.patternOverlay = null;
+      this.patternCreated = false;
+    }
     this.scene.getModifierBar().updateModifiers(this.scene.modifiers);
 
     const options = this.options.concat(this.shopOptionsRows.flat());
@@ -609,7 +641,7 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
       rowCursor: this.rowCursor,
       cursor: this.cursor
     });
-    
+
     if (this.selectedOption && this.scene.gameData.currentPermaShopOptions) {
       console.log("Removing option with ID:", this.selectedOption.id);
       this.scene.gameData.currentPermaShopOptions = this.scene.gameData.currentPermaShopOptions.filter(
@@ -631,7 +663,7 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
       });
       console.log("Added reroll option as shop was empty");
     }
-    
+
     console.log("Shop state after removal:", {
       options: this.options.length,
       shopRows: this.shopOptionsRows.map(row => row.length),
@@ -728,37 +760,35 @@ class ModifierOption extends Phaser.GameObjects.Container {
         const questType = this.modifierTypeOption.type as QuestModifierType;
         const questData = questType.config.questUnlockData;
         let speciesId: Species | undefined;
-        
+
         if (questData.questSpriteId) {
           speciesId = questData.questSpriteId;
-        } 
+        }
         else if (Array.isArray(questData.rewardId) && questData.rewardId.length > 0 && typeof questData.rewardId[0] === 'number') {
           speciesId = questData.rewardId[0];
         }
         else if (typeof questData.rewardId === 'number') {
           speciesId = questData.rewardId;
-        } 
-        
-
+        }
         if (speciesId) {
           const pokemon = getPokemonSpecies(speciesId);
           item = this.scene.add.sprite(0, 0, pokemon.getIconAtlasKey());
           item.setFrame(pokemon.getIconId(false));
           item.setScale(0.75)
 
-          this.itemBG = this.scene.add.sprite(0, 0, "smitems_192", "quest");
-          this.itemBG.setScale(0.167);
+          this.itemBG = this.scene.add.sprite(0, 0, "smitems", "quest");
+          this.itemBG.setScale(0.5);
 
         } else {
-          item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems_192" : "items", this.modifierTypeOption.type.iconImage);
+          item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems" : "items", this.modifierTypeOption.type.iconImage);
           if(this.useSmitemsAtlas()) {
-            item.setScale(0.167);
+            item.setScale(0.5);
           }
         }
       } else {
-        item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems_192" : "items", this.modifierTypeOption.type.iconImage);
+        item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems" : "items", this.modifierTypeOption.type.iconImage);
         if(this.useSmitemsAtlas()) {
-          item.setScale(0.167);
+          item.setScale(0.5);
         }
       }
       return item;
@@ -776,7 +806,7 @@ class ModifierOption extends Phaser.GameObjects.Container {
       this.itemContainer.add(this.itemTint);
     }
 
-    this.itemText = addTextObject(this.scene, 0, 35, this.modifierTypeOption.type?.name, TextStyle.PARTY, { align: "center" }); 
+    this.itemText = addTextObject(this.scene, 0, 35, this.modifierTypeOption.type?.name, TextStyle.PARTY, { align: "center" });
     this.itemText.setOrigin(0.5, 0);
     this.itemText.setAlpha(0);
     this.itemText.setTint(this.modifierTypeOption.type?.tier ? getModifierTierTextTint(this.modifierTypeOption.type?.tier) : undefined);
@@ -827,7 +857,7 @@ class ModifierOption extends Phaser.GameObjects.Container {
         const upgradeIndex = u;
         this.scene.time.delayedCall(remainingDuration - 2000 * (this.modifierTypeOption.upgradeCount - (upgradeIndex + 1 + upgradeCountOffset)), () => {
           (this.scene as BattleScene).playSound("se/upgrade");
-          // (this.scene as BattleScene).playSound("se/upgrade", { rate: 1 + 0.25 * upgradeIndex });
+
           this.pbTint.setPosition(this.pb.x, this.pb.y);
           this.pbTint.setTintFill(0xFFFFFF);
           this.pbTint.setAlpha(0);
@@ -861,8 +891,6 @@ class ModifierOption extends Phaser.GameObjects.Container {
 
       if (!this.modifierTypeOption.cost) {
         this.pb.setTexture("pb", `${this.getPbAtlasKey(0)}_open`);
-        // (this.scene as BattleScene).playSound("se/pb_rel");
-
         this.scene.tweens.add({
           targets: this.pb,
           duration: 500,
@@ -907,7 +935,7 @@ class ModifierOption extends Phaser.GameObjects.Container {
   }
 
   getPbAtlasKey(tierOffset: integer = 0) {
-    return getPokeballAtlasKey((this.modifierTypeOption.type?.tier! + tierOffset) as integer as PokeballType); 
+    return getPokeballAtlasKey((this.modifierTypeOption.type?.tier! + tierOffset) as integer as PokeballType);
   }
 
   updateCostText(): void {

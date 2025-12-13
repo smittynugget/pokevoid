@@ -2,6 +2,7 @@
   "ModifierType": {
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
+      "statLabel": "精灵球物品",
       "description": "获得 {{pokeballName}} x{{modifierCount}} (已有：{{pokeballAmount}}) \n捕捉倍率：{{catchRate}}。"
     },
     "AddVoucherModifierType": {
@@ -707,6 +708,18 @@
       "description": "使用5个代替释放宝可梦来获得释放道具，或与收藏家交换奖励。",
       "statLabel": "精华"
     },
+    "PermaCollectedTypeModifierType": {
+      "name": "收集的精华",
+      "description": "存储收集的精华:"
+    },
+    "SKILL_POINTS": {
+      "name": "技能点×{{amount}}",
+      "description": "获得{{amount}}个技能点。用于在技能树中解锁技能。"
+    },
+    "SKILL_TOKENS": {
+      "name": "技能树代币×{{amount}}",
+      "description": "获得{{amount}}个技能树代币。用于升级你的技能树！"
+    },
     "SacrificeModifierType": {
       "description": "释放一只宝可梦来提升另一只宝可梦的{{stat}}15%。"
     },
@@ -1022,7 +1035,10 @@
     "waves": "波",
     "uses": "次",
     "glitchPieceCost": "*需要2个故障碎片",
+    "permaMoney": "Ω金币",
+    "permaItem": "Ω道具",
     "moreInfo": "(按住C键或Shift键查看更多信息)",
+    "morePokeInfo": "(按 P / Shift 查看信息)",
     "upgrade": "升级"
   }
 }

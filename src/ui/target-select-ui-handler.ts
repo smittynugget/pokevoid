@@ -72,12 +72,12 @@ export default class TargetSelectUiHandler extends UiHandler {
       switch (button) {
         case Button.UP:
           if (this.cursor < BattlerIndex.ENEMY && this.targets.findIndex(t => t >= BattlerIndex.ENEMY) > -1) {
-          success = this.setCursor(this.targets.find(t => t >= BattlerIndex.ENEMY)!); // TODO: is the bang correct here?
+          success = this.setCursor(this.targets.find(t => t >= BattlerIndex.ENEMY)!);
           }
           break;
         case Button.DOWN:
           if (this.cursor >= BattlerIndex.ENEMY && this.targets.findIndex(t => t < BattlerIndex.ENEMY) > -1) {
-          success = this.setCursor(this.targets.find(t => t < BattlerIndex.ENEMY)!); // TODO: is the bang correct here?
+          success = this.setCursor(this.targets.find(t => t < BattlerIndex.ENEMY)!);
           }
           break;
         case Button.LEFT:

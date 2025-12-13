@@ -141,6 +141,14 @@
       "statLabel": "Attacken-Upgrade-Gegenstand",
       "description": "Verbessert zufällig eine Attacke deines Teams"
     },
+    "SKILL_POINTS": {
+      "name": "Fertigkeitspunkte x{{amount}}",
+      "description": "Erhalte {{amount}} Fertigkeitspunkte. Werden verwendet, um Fähigkeiten im Fertigkeitenbaum freizuschalten."
+    },
+    "SKILL_TOKENS": {
+      "name": "Fertigkeitenbaum-Marken x{{amount}}",
+      "description": "Erhalte {{amount}} Fertigkeitenbaum-Marken. Werden verwendet, um deinen Fertigkeitenbaum aufzuleveln!"
+    },
     "RARE_CANDY": {
       "name": "Sonderbonbon"
     },
@@ -708,6 +716,10 @@
       "statLabel": "Essenz",
       "description": "Verwende 5 anstatt ein Pokémon für Freilassungsgegenstände freizulassen oder tausche gegen Belohnungen beim Sammler."
     },
+    "PermaCollectedTypeModifierType": {
+      "name": "Gesammelte Essenzen",
+      "description": "Speichert gesammelte Essenzen:"
+    },
     "SacrificeModifierType": {
       "description": "Setze ein Pokémon frei, um {{stat}} eines anderen Pokémon um 15% zu erhöhen."
     },
@@ -1023,7 +1035,10 @@
     "waves": "Wellen",
     "uses": "Verwendungen",
     "glitchPieceCost": "*KOSTET 2x Glitch-Stück",
+    "permaMoney": "ΩGOLD",
+    "permaItem": "ΩGEGENSTAND",
     "moreInfo": "(Halte C / Shift für Infos)",
+    "morePokeInfo": "(Drücke P / Shift für Infos)",
     "upgrade": "Verbesserung"
   }
 }

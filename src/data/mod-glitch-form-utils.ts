@@ -1,7 +1,8 @@
 import BattleScene from "../battle-scene";
 import { Species } from "../enums/species";
 import { FormChangeItem } from "../enums/form-change-items";
-import { getPokemonSpecies, isGlitchFormKey, PokemonForm, SpeciesFormKey } from "./pokemon-species";
+import { getPokemonSpecies, isGlitchFormKey, PokemonForm } from "./pokemon-species";
+import { SpeciesFormKey } from "#enums/species-form-key";
 import { addGlitchFormChange, addGlitchFormChangeAlt } from "./pokemon-forms";
 import { getModFormSystemName, ModGlitchFormData, modGlitchFormData } from "./mod-glitch-form-data";
 import { modStorage } from "../system/mod-storage";
@@ -25,13 +26,13 @@ export function findAvailableGlitchFormKey(species: ReturnType<typeof getPokemon
         SpeciesFormKey.GLITCH_D,
         SpeciesFormKey.GLITCH_E
     ];
-    
+
     for (const key of glitchFormKeys) {
         if (!usedFormKeys.includes(key)) {
             return key;
         }
     }
-    
+
     return SpeciesFormKey.GLITCH_E;
 }
 
@@ -95,31 +96,31 @@ export function calculateTotalIncrease(stats: number[]): number {
     const total = stats.reduce((sum, stat) => sum + stat, 0);
     let newTotal = total;
     let increase = 0;
-    
+
     do {
         const currentIncrease = Math.floor(newTotal * 0.2);
         increase += currentIncrease;
         newTotal += currentIncrease;
     } while (newTotal < 500);
-    
+
     return increase;
 }
 
 export function loadModPokemonIconFromData(
-    scene: BattleScene, 
-    formName: string, 
+    scene: BattleScene,
+    formName: string,
     iconData: ArrayBuffer | Blob | string
 ): Promise<void> {
     return new Promise((resolve, reject) => {
         const iconKey = `pokemon_icons_mod_${formName.toLowerCase()}`;
-        
+
         if (scene.textures.exists(iconKey)) {
             resolve();
             return;
         }
-        
+
         let objectUrl: string;
-        
+
         if (typeof iconData === 'string') {
             if (iconData.startsWith('data:')) {
                 objectUrl = iconData;
@@ -130,24 +131,24 @@ export function loadModPokemonIconFromData(
             const blob = iconData instanceof ArrayBuffer ? new Blob([iconData]) : iconData;
             objectUrl = URL.createObjectURL(blob);
         }
-        
+
         scene.load.image(iconKey, objectUrl);
-        
+
         scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
             if (!objectUrl.startsWith('data:')) {
                 URL.revokeObjectURL(objectUrl);
             }
-            
+
             resolve();
         });
-        
+
         scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, () => {
             if (!objectUrl.startsWith('data:')) {
                 URL.revokeObjectURL(objectUrl);
             }
             reject(new Error(`Failed to load icon for ${formName}`));
         });
-        
+
         if (!scene.load.isLoading()) {
             scene.load.start();
         }
@@ -159,7 +160,7 @@ export function getModPokemonName(speciesId: Species, formName: string): string 
     if (modGlitchFormData[systemName]) {
         if(modGlitchFormData[systemName]?.lang) {
             const currentLocale = localStorage.getItem("prLang") || "en";
-            return modGlitchFormData[systemName].lang[currentLocale] || 
+            return modGlitchFormData[systemName].lang[currentLocale] ||
                    modGlitchFormData[systemName].lang.en;
         }
         return formName.charAt(0).toUpperCase() + formName.slice(1).toLowerCase();
@@ -168,21 +169,21 @@ export function getModPokemonName(speciesId: Species, formName: string): string 
 }
 
 export function loadModGlitchSpriteFromData(
-    scene: BattleScene, 
-    formName: string, 
-    spriteData: ArrayBuffer | Blob | string, 
+    scene: BattleScene,
+    formName: string,
+    spriteData: ArrayBuffer | Blob | string,
     isBackSprite: boolean = false
 ): Promise<void> {
     return new Promise((resolve, reject) => {
         const spriteKey = `pkmn__glitch__${formName.toLowerCase()}${isBackSprite ? '_back' : ''}`;
-        
+
         if (scene.textures.exists(spriteKey)) {
             resolve();
             return;
         }
-        
+
         let objectUrl: string;
-        
+
         if (typeof spriteData === 'string') {
             if (spriteData.startsWith('data:')) {
                 objectUrl = spriteData;
@@ -193,14 +194,14 @@ export function loadModGlitchSpriteFromData(
             const blob = spriteData instanceof ArrayBuffer ? new Blob([spriteData]) : spriteData;
             objectUrl = URL.createObjectURL(blob);
         }
-        
+
         scene.load.image(spriteKey, objectUrl);
-        
+
         scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
             if (!objectUrl.startsWith('data:')) {
                 URL.revokeObjectURL(objectUrl);
             }
-            
+
             if (scene.anims && typeof scene.anims.create === 'function' && !scene.anims.exists(spriteKey)) {
                 scene.anims.create({
                     key: spriteKey,
@@ -209,17 +210,17 @@ export function loadModGlitchSpriteFromData(
                     repeat: -1
                 });
             }
-            
+
             resolve();
         });
-        
+
         scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, () => {
             if (!objectUrl.startsWith('data:')) {
                 URL.revokeObjectURL(objectUrl);
             }
             reject(new Error(`Failed to load sprite for ${formName}`));
         });
-        
+
         if (!scene.load.isLoading()) {
             scene.load.start();
         }
@@ -228,7 +229,7 @@ export function loadModGlitchSpriteFromData(
 
 export function registerModGlitchForm(formData: ModGlitchFormData): boolean {
     const { speciesId, formName, primaryType, secondaryType, abilities, stats } = formData;
-    
+
     const species = getPokemonSpecies(speciesId);
     if (!species) {
         console.error(`Failed to register mod glitch form: species ${speciesId} not found`);
@@ -262,18 +263,18 @@ export function registerModGlitchForm(formData: ModGlitchFormData): boolean {
         normalForm.generation = species.generation;
         species.forms.push(normalForm);
     }
-    
+
     const formKey =  findAvailableGlitchFormKey(species) || formData.formKey;
     if (!formKey || !isGlitchFormKey(formKey)) {
         console.error(`Failed to register mod glitch form: no available glitch form key for ${Species[speciesId]}`);
         return false;
     }
-    
+
     formData.formKey = formKey;
-    
+
     const baseStats = [...species.baseStats];
     const boostedStats = distributeStatIncrease(baseStats, stats.statsToBoost, stats.distributionType);
-    
+
     for (let i = 0; i < abilities.length; i++) {
         if (abilities[i] > 310) {
             abilities[i] = 128;
@@ -300,7 +301,7 @@ export function registerModGlitchForm(formData: ModGlitchFormData): boolean {
 
     const systemName = getModFormSystemName(speciesId, formName);
     modGlitchFormData[systemName] = formData;
-    
+
     const totalStats = boostedStats.reduce((a, b) => a + b, 0);
     const newForm = new PokemonForm(
         formName,
@@ -323,21 +324,21 @@ export function registerModGlitchForm(formData: ModGlitchFormData): boolean {
         species.baseFriendship,
         species.baseExp
     );
-    
+
     newForm.speciesId = species.speciesId;
     newForm.formIndex = species.forms.length;
     newForm.generation = species.generation;
-    
+
     species.forms.push(newForm);
-    
+
     if (formKey === SpeciesFormKey.GLITCH) {
         addGlitchFormChange(speciesId, systemName);
-    } 
+    }
     else {
         const formChangeItem = getFormChangeItemForGlitchForm(formKey);
         addGlitchFormChangeAlt(speciesId, formKey, formChangeItem, systemName);
     }
-    
+
     return true;
 }
 
@@ -391,12 +392,12 @@ export async function loadModGlitchFormFromJson(
             console.error("Invalid mod glitch form data: missing sprites");
             return false;
         }
-        
+
         if (!json.sprites.front) {
             console.error("Invalid mod glitch form data: missing front sprite data");
             return false;
         }
-        
+
         const formData: ModGlitchFormData = {
             speciesId: json.speciesId,
             formName: json.formName,
@@ -431,29 +432,29 @@ export async function loadModGlitchFormFromJson(
                 "zh-CN": json.lang["zh-CN"] || json.formName
             };
         }
-        
+
         const registered = registerModGlitchForm(formData);
         if (!registered) {
             return false;
         }
-        
+
         try {
             await loadModGlitchSpriteFromData(scene, formData.formName, formData.sprites.front, false);
-            
+
             if (formData.sprites.back) {
                 await loadModGlitchSpriteFromData(scene, formData.formName, formData.sprites.back, true);
             } else {
                 console.warn(`Back sprite missing for ${formData.formName}, using front sprite as fallback`);
                 await loadModGlitchSpriteFromData(scene, formData.formName, formData.sprites.front, true);
             }
-            
+
             if (formData.sprites.icon) {
                 await loadModPokemonIconFromData(scene, formData.formName, formData.sprites.icon);
             } else if (formData.sprites.front) {
                 console.warn(`Icon sprite missing for ${formData.formName}, using front sprite as fallback`);
                 await loadModPokemonIconFromData(scene, formData.formName, formData.sprites.front);
             }
-            
+
             return true;
         } catch (error) {
             console.error(`Error loading sprites for ${formData.formName}:`, error);
@@ -468,7 +469,7 @@ export async function loadModGlitchFormFromJson(
 export async function loadAndStoreMod(scene: BattleScene, jsonData: any): Promise<boolean> {
     try {
         const success = await loadModGlitchFormFromJson(scene, jsonData);
-        
+
         if (success) {
             try {
                 await modStorage.storeMod({

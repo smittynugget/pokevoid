@@ -101,7 +101,7 @@ export default class FightUiHandler extends UiHandler {
     this.moveInfoOverlay.setDepth(9999);
     ui.add(this.moveInfoOverlay);
     this.scene.addInfoToggle(this.moveInfoOverlay);
-    
+
     this.moveInfoOverlay.on('changedata', (gameObject: any, key: string, value: any) => {
       if (key === 'visible' && this.cursorObj) {
         this.cursorObj.setVisible(!value);
@@ -120,9 +120,9 @@ export default class FightUiHandler extends UiHandler {
     messageHandler.movesWindowContainer.setVisible(true);
     this.setCursor(this.getCursor());
     this.displayMoves();
-    
+
     this.moveInfoOverlay.active = true;
-    
+
     if (this.cursorObj) {
       this.cursorObj.setVisible(!this.moveInfoOverlay.visible);
     }
@@ -233,8 +233,6 @@ export default class FightUiHandler extends UiHandler {
       this.accuracyText.setText(`${accuracy >= 0 ? accuracy : "---"}`);
 
       const ppPercentLeft = pp / maxPP;
-
-      //** Determines TextStyle according to percentage of PP remaining */
       let ppColorStyle = TextStyle.MOVE_PP_FULL;
       if (ppPercentLeft > 0.25 && ppPercentLeft <= 0.5) {
         ppColorStyle = TextStyle.MOVE_PP_HALF_FULL;
@@ -243,8 +241,6 @@ export default class FightUiHandler extends UiHandler {
       } else if (ppPercentLeft === 0) {
         ppColorStyle = TextStyle.MOVE_PP_EMPTY;
       }
-
-      //** Changes the text color and shadow according to the determined TextStyle */
       this.ppText.setColor(this.getTextColor(ppColorStyle, false));
       this.ppText.setShadowColor(this.getTextColor(ppColorStyle, true));
 
@@ -275,11 +271,6 @@ export default class FightUiHandler extends UiHandler {
 
     return changed;
   }
-
-  /**
-   * Gets multiplier text for a pokemon's move against a specific opponent
-   * Returns undefined if it's a status move
-   */
   private getEffectivenessText(pokemon: Pokemon, opponent: Pokemon, pokemonMove: PokemonMove): string | undefined {
     const effectiveness = opponent.getMoveEffectiveness(pokemon, pokemonMove.getMove(), !opponent.battleData?.abilityRevealed);
     if (effectiveness === undefined) {
@@ -307,12 +298,6 @@ export default class FightUiHandler extends UiHandler {
       this.movesContainer.add(moveText);
     }
   }
-
-  /**
-   * Returns a specific move's color based on its type effectiveness against opponents
-   * If there are multiple opponents, the highest effectiveness' color is returned
-   * @returns A color or undefined if the default color should be used
-   */
   private getMoveColor(pokemon: Pokemon, pokemonMove: PokemonMove): string | undefined {
     if (!this.scene.typeHints) {
       return undefined;

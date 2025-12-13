@@ -57,11 +57,11 @@
         "count": "{{current}} / {{max}}"
       },
       "rewards": {
-        "stage1": "90% ∞金币 | 8% ∞道具 | 2% 两者",
-        "stage2": "75% ∞金币 | 15% ∞道具 | 10% 两者",
-        "stage3": "60% ∞金币 | 25% ∞道具 | 15% 两者",
-        "stage4": "40% ∞金币 | 40% ∞道具 | 20% 两者",
-        "stage5": "25% ∞金币 | 45% ∞道具 | 30% 两者"
+        "stage1": "90% Ω金币 | 8% Ω道具 | 2% 两者",
+        "stage2": "75% Ω金币 | 15% Ω道具 | 10% 两者",
+        "stage3": "60% Ω金币 | 25% Ω道具 | 15% 两者",
+        "stage4": "40% Ω金币 | 40% Ω道具 | 20% 两者",
+        "stage5": "25% Ω金币 | 45% Ω道具 | 30% 两者"
       }
     },
     "quest": {
@@ -72,7 +72,7 @@
         "cancel": "取消"
       },
       "rewards": {
-        "default": "50% ∞金币 | 35% ∞道具 | 15% 两者"
+        "default": "50% Ω金币 | 35% Ω道具 | 15% 两者"
       },
       "activeQuest": {
         "modalTitle": "任务！",
@@ -92,8 +92,8 @@
     "smitty": {
       "modalTitle": "宝可梦幽打悬赏",
       "rewards": {
-        "withSpecies": "70% ∞金币 | 20% ∞道具 | 10% 两者",
-        "withoutSpecies": "40% ∞金币 | 40% ∞道具 | 20% 两者"
+        "withSpecies": "70% Ω金币 | 20% Ω道具 | 10% 两者",
+        "withoutSpecies": "40% Ω金币 | 40% Ω道具 | 20% 两者"
       },
       "task": {
         "evolveAny": "将任意宝可梦进化为{{formName}}",
@@ -114,7 +114,7 @@
     "nuzlightModeRewardUpdatedInventory": "物品栏已更新！",
     "nuzlightModeRewardMoveRelease": "遗忘招式",
     "nuzlockeModeRewardRank2": "等级 2",
-    "accessShopInBattle": "在战斗中访问∞商店！",
+    "accessShopInBattle": "在战斗中访问Ω商店！",
     "accessQuestsInBattle": "在战斗中访问任务！"
   }
 } 

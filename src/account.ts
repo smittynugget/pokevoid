@@ -181,8 +181,6 @@ export async function transferLoad(username: string, password: string): Promise<
             const data = docSnap.data();
             let systemData = prepareDataForFirestore(data.systemData);
             let sessionData = data.sessionData.map((session: any) => prepareDataForFirestore(session));
-
-
             try {
             } catch (deleteError) {
                 console.error("Error deleting user account:", deleteError);

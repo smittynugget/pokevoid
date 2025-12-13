@@ -1,6 +1,8 @@
 {
   "brock": "Brock",
   "misty": "Misty",
+  "apollo": "Apolo",
+  "diana": "Diana",
   "lt_surge": "Tt. Surge",
   "erika": "Erika",
   "janine": "Sachiko",
@@ -146,6 +148,10 @@
   "ghetsis": "Ghetsis",
   "lysandre": "Lysandre",
   "lusamine": "Samina",
+  "guzma": "Guzma",
+  "rose": "Rose",
+  "oleana": "Oleana",
+  "plumeria": "Plumeria",
 
   "blue_red_double": "Azul y Rojo",
   "red_blue_double": "Rojo y Azul",

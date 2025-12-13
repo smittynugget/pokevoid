@@ -3,76 +3,82 @@ import TutorialUiHandler from "./tutorial-ui-handler";
 import { Mode } from "./ui";
 import { Tutorial } from "../tutorial";
 import { EnhancedTutorial, TutorialRegistry } from "./tutorial-registry";
-
-/**
- * Service for showing tutorials using the enum-based system
- */
+import Overrides from "../overrides";
 export class TutorialService {
     private scene: BattleScene;
     private registry: TutorialRegistry;
-    
+
     constructor(scene: BattleScene) {
         this.scene = scene;
         this.registry = TutorialRegistry.getInstance();
     }
-    
+
     public showNewTutorial(
+        tutorial: Tutorial | EnhancedTutorial,
+        saveCompletionFlag: boolean = true,
+        isFromMenu: boolean = false,
+        delay: number = 350
+    ): Promise<void> {
+        return new Promise<void>(resolve => {
+            const executeShow = () => {
+                if (isFromMenu && !this.isTutorialCompleted(tutorial)) {
+                    console.log(`Tutorial ${tutorial} not completed and trying to show from menu, skipping`);
+                    return resolve();
+                }
+
+                if (!isFromMenu && this.isTutorialCompleted(tutorial)) {
+                    console.log(`Tutorial ${tutorial} already completed, skipping`);
+                    return resolve();
+                }
+
+                this.showTutorial(tutorial, saveCompletionFlag, isFromMenu).then(resolve);
+            };
+
+            if (delay > 0) {
+                setTimeout(executeShow, delay);
+            } else {
+                executeShow();
+            }
+        });
+    }
+
+    public showTutorial(
         tutorial: Tutorial | EnhancedTutorial,
         saveCompletionFlag: boolean = true,
         isFromMenu: boolean = false
     ): Promise<void> {
         return new Promise<void>(resolve => {
-            if (isFromMenu && !this.isTutorialCompleted(tutorial)) {
-                console.log(`Tutorial ${tutorial} not completed and trying to show from menu, skipping`);
-                return resolve();
-            }
-           
-            if (!isFromMenu && this.isTutorialCompleted(tutorial)) {
-                console.log(`Tutorial ${tutorial} already completed, skipping`);
-                return resolve();
-            }
-            
-            this.showTutorial(tutorial, saveCompletionFlag, isFromMenu).then(resolve);
-        });
-    }
-
-    public showTutorial(
-        tutorial: Tutorial | EnhancedTutorial, 
-        saveCompletionFlag: boolean = true,
-        isFromMenu: boolean = false
-    ): Promise<void> {
-        return new Promise<void>(resolve => {
             console.log(`Attempting to show tutorial: ${tutorial}`);
-            
+
             this.ensureTutorialHandlerRegistered();
-            
+
             const tutorialConfig = this.registry.getTutorialConfig(tutorial);
             if (!tutorialConfig) {
                 console.error(`Tutorial config not found for: ${tutorial}`);
                 return resolve();
             }
-            
+
             console.log(`Found tutorial config with ${tutorialConfig.stages?.length || 0} stages`);
-            
+
             const onCompleteOriginal = tutorialConfig.onComplete;
             const enhancedConfig = {
                 ...tutorialConfig,
                 isFromMenu,
                 onComplete: () => {
                     console.log(`Tutorial ${tutorial} completed`);
-                    
+
                     if (onCompleteOriginal) {
                         onCompleteOriginal();
                     }
-                    
+
                     if (saveCompletionFlag) {
                         this.saveTutorialFlag(tutorial);
                     }
-                    
+
                     resolve();
                 }
             };
-            
+
             this.scene.ui.setOverlayMode(Mode.TUTORIAL, {
                 buttonActions: [
                     () => {
@@ -82,11 +88,11 @@ export class TutorialService {
                         console.log("Next/Complete button pressed");
                         const handler = this.scene.ui.getHandler() as TutorialUiHandler;
                         if (handler && handler instanceof TutorialUiHandler) {
-                           
+
                             const isLastStage = handler['currentStageIndex'] === enhancedConfig.stages.length - 1;
                             if (isLastStage && enhancedConfig.onComplete) {
                                 enhancedConfig.onComplete();
-                                
+
                                 if (!isFromMenu) {
                                     this.scene.ui.revertMode();
                                 }
@@ -95,7 +101,7 @@ export class TutorialService {
                     },
                     () => {
                         console.log("Cancel button pressed");
-                        
+
                         if (!isFromMenu) {
                             this.scene.ui.revertMode();
                         }
@@ -105,93 +111,103 @@ export class TutorialService {
             }, enhancedConfig);
         });
     }
-    
+
     public showCombinedTutorial(
         title: string,
         tutorials: (Tutorial | EnhancedTutorial)[],
         saveCompletionFlags: boolean = true,
         isFromMenu: boolean = false,
-        newOnly: boolean = false
+        newOnly: boolean = false,
+        delay: number = 350
     ): Promise<void> {
         return new Promise<void>(resolve => {
-            let filteredTutorials = [...tutorials];
-            if (isFromMenu) {
-                filteredTutorials = filteredTutorials.filter(t => this.isTutorialCompleted(t));
-                if (!filteredTutorials.length) {
-                    console.log(`No completed tutorials in "${title}" to show in hub/menu, skipping`);
-                    return resolve();
-                }
-            } else if (newOnly) {
-                filteredTutorials = filteredTutorials.filter(t => !this.isTutorialCompleted(t));
-                if (!filteredTutorials.length) {
-                    console.log(`No new tutorials in "${title}", skipping`);
-                    return resolve();
-                }
-            } else if (!isFromMenu && filteredTutorials.every(t => this.isTutorialCompleted(t))) {
-                console.log(`All tutorials in "${title}" already completed, skipping`);
-                return resolve();
-            }
-
-            console.log(`Attempting to show combined tutorial "${title}" with ${filteredTutorials.length} tutorials`);
-            this.ensureTutorialHandlerRegistered();
-            const displayTitle = title || "Tutorial";
-            
-            const combinedConfig = this.registry.combineTutorials(
-                displayTitle,
-                filteredTutorials,
-                () => {
-                    console.log(`Combined tutorial "${displayTitle}" completed`);
-                    
-                    if (saveCompletionFlags) {
-                        filteredTutorials.forEach(tutorial => this.saveTutorialFlag(tutorial));
+            const executeShow = () => {
+                let filteredTutorials = [...tutorials];
+                if (isFromMenu) {
+                    filteredTutorials = filteredTutorials.filter(t => this.isTutorialCompleted(t));
+                    if (!filteredTutorials.length) {
+                        console.log(`No completed tutorials in "${title}" to show in hub/menu, skipping`);
+                        return resolve();
                     }
-                    
-                    resolve();
-                },
-                true,
-                isFromMenu
-            );
-            
-            console.log(`Combined tutorial has ${combinedConfig.stages?.length || 0} total stages`);
-            console.log(`Setting tutorial title to: "${combinedConfig.title}"`);
-            const buttonActions = [
-                () => {
-                    console.log("Back button pressed");
-                },
-                () => {
-                    console.log("Next/Complete button pressed");
-                    
-                   
-                    const handler = this.scene.ui.getHandler() as TutorialUiHandler;
-                    if (handler && handler instanceof TutorialUiHandler) {
-                       
-                        const isLastStage = handler['currentStageIndex'] === combinedConfig.stages.length - 1;
-                        if (isLastStage && combinedConfig.onComplete) {
-                            combinedConfig.onComplete();
-                            
-                            if (!isFromMenu) {
-                                this.scene.ui.revertMode();
+                } else if (newOnly) {
+                    filteredTutorials = filteredTutorials.filter(t => !this.isTutorialCompleted(t));
+                    if (!filteredTutorials.length) {
+                        console.log(`No new tutorials in "${title}", skipping`);
+                        return resolve();
+                    }
+                } else if (!isFromMenu && filteredTutorials.every(t => this.isTutorialCompleted(t))) {
+                    console.log(`All tutorials in "${title}" already completed, skipping`);
+                    return resolve();
+                }
+
+                console.log(`Attempting to show combined tutorial "${title}" with ${filteredTutorials.length} tutorials`);
+                this.ensureTutorialHandlerRegistered();
+                const displayTitle = title || "Tutorial";
+
+                const combinedConfig = this.registry.combineTutorials(
+                    displayTitle,
+                    filteredTutorials,
+                    () => {
+                        console.log(`Combined tutorial "${displayTitle}" completed`);
+
+                        if (saveCompletionFlags) {
+                            filteredTutorials.forEach(tutorial => this.saveTutorialFlag(tutorial));
+                        }
+
+                        resolve();
+                    },
+                    true,
+                    isFromMenu
+                );
+
+                console.log(`Combined tutorial has ${combinedConfig.stages?.length || 0} total stages`);
+                console.log(`Setting tutorial title to: "${combinedConfig.title}"`);
+                const buttonActions = [
+                    () => {
+                        console.log("Back button pressed");
+                    },
+                    () => {
+                        console.log("Next/Complete button pressed");
+                        const handler = this.scene.ui.getHandler() as TutorialUiHandler;
+                        if (handler && handler instanceof TutorialUiHandler) {
+
+                            const isLastStage = handler['currentStageIndex'] === combinedConfig.stages.length - 1;
+                            if (isLastStage && combinedConfig.onComplete) {
+                                combinedConfig.onComplete();
+
+                                if (!isFromMenu) {
+                                    this.scene.ui.revertMode();
+                                }
                             }
                         }
+                    },
+                    () => {
+                        console.log("Cancel button pressed");
+
+                        if (!isFromMenu) {
+                            this.scene.ui.revertMode();
+                        }
+                        resolve();
                     }
-                },
-                () => {
-                    console.log("Cancel button pressed");
-                    
-                    if (!isFromMenu) {
-                        this.scene.ui.revertMode();
-                    }
-                    resolve();
-                }
-            ];
-            
-            this.scene.ui.setOverlayMode(Mode.TUTORIAL, {
-                buttonActions
-            }, combinedConfig);
+                ];
+
+                this.scene.ui.setOverlayMode(Mode.TUTORIAL, {
+                    buttonActions
+                }, combinedConfig);
+            };
+
+            if (delay > 0) {
+                setTimeout(executeShow, delay);
+            } else {
+                executeShow();
+            }
         });
     }
-    
+
     public isTutorialCompleted(tutorial: Tutorial | EnhancedTutorial): boolean {
+        if (Overrides.FORCE_TUTORIAL_SHOW_OVERRIDE) {
+            return false;
+        }
         const flags = this.getTutorialFlags();
         return !!flags[tutorial];
     }
@@ -200,9 +216,9 @@ export class TutorialService {
         const flags = this.getTutorialFlags();
         return tutorials.every(tutorial => !!flags[tutorial]);
     }
-    
+
     private sanitizeTutorialKey(key: string): string {
-       
+
         return key.replace(/^"+|"+$/g, '').trim();
     }
 
@@ -212,11 +228,9 @@ export class TutorialService {
         if (!raw) {
             return;
         }
-
-       
         let repairedRaw = raw;
         try {
-           
+
             repairedRaw = raw.replace(/{""([^"]+)"/g, '{"$1"');
             repairedRaw = repairedRaw.replace(/,""([^"]+)"/g, ',"$1"');
         } catch (e) {
@@ -227,7 +241,7 @@ export class TutorialService {
         try {
             tutorialFlags = JSON.parse(repairedRaw);
         } catch (e) {
-           
+
             console.warn('[TutorialService] Corrupted enhancedTutorials localStorage, removing:', raw, 'Error:', e);
             localStorage.removeItem(key);
             return;
@@ -238,58 +252,44 @@ export class TutorialService {
             const sanitized = this.sanitizeTutorialKey(k);
             cleanedFlags[sanitized] = tutorialFlags[k];
         }
-       
+
         localStorage.setItem(key, JSON.stringify(cleanedFlags));
     }
 
     public saveTutorialFlag(tutorial: Tutorial | EnhancedTutorial, resetTutorial: boolean = false): void {
-       
+
         if (Object.values(Tutorial).includes(tutorial as Tutorial)) {
             this.scene.gameData.saveTutorialFlag(tutorial as Tutorial, true);
             return;
         }
 
         this.cleanUpEnhancedTutorialFlags();
-
-       
         const key = this.getTutorialStorageKey();
         let tutorialFlags = {};
-
-       
         if (localStorage.hasOwnProperty(key)) {
             tutorialFlags = JSON.parse(localStorage.getItem(key));
         }
-
-       
         const sanitizedKey = this.sanitizeTutorialKey(String(tutorial));
         tutorialFlags[sanitizedKey] = !resetTutorial;
-
-       
         localStorage.setItem(key, JSON.stringify(tutorialFlags));
     }
-    
+
     private getTutorialFlags(): Record<string, boolean> {
         this.cleanUpEnhancedTutorialFlags();
-
-       
         const legacyFlags = this.scene.gameData.getTutorialFlags();
-
-       
         const key = this.getTutorialStorageKey();
         let enhancedFlags = {};
 
         if (localStorage.hasOwnProperty(key)) {
             enhancedFlags = JSON.parse(localStorage.getItem(key));
         }
-
-       
         return { ...legacyFlags, ...enhancedFlags };
     }
-    
+
     private getTutorialStorageKey(): string {
         return "enhancedTutorials";
     }
-    
+
     private ensureTutorialHandlerRegistered(): void {
         const tutorialHandlerIndex = this.scene.ui.handlers.findIndex(h => h instanceof TutorialUiHandler);
         if (tutorialHandlerIndex === -1) {
@@ -300,7 +300,7 @@ export class TutorialService {
     public showTutorialsByCategory(category: string, isFromMenu: boolean = false): Promise<void> {
         let tutorials: (Tutorial | EnhancedTutorial)[] = [];
         let title = "";
-        
+
         const categoryMap = {
             essentials: {
                 title: "Essentials",
@@ -404,6 +404,23 @@ export class TutorialService {
                     EnhancedTutorial.SMITTY_FORMS_1,
                     EnhancedTutorial.SMITTY_FORM_UNLOCKED_1
                 ]
+            },
+            v2Update: {
+                title: "V2 Update",
+                tutorials: [
+                    EnhancedTutorial.POKEVOID_V2_UPDATE,
+                    EnhancedTutorial.FTL_MODE_SELECT,
+                    EnhancedTutorial.CHAMPION_SELECT_ESSENCE,
+                    EnhancedTutorial.SPECIAL_ESSENCES_INTRO,
+                    EnhancedTutorial.SPECIAL_ESSENCES_GLITCH,
+                    EnhancedTutorial.SPECIAL_ESSENCES_SMITTY,
+                    EnhancedTutorial.SKILLTREE_APOLLO_DIANA_TYPES,
+                    EnhancedTutorial.SKILLTREE_SET_TYPES,
+                    EnhancedTutorial.SKILLTREE_PROGRESSION,
+                    EnhancedTutorial.STARTER_SELECT_CATCH_REQUIREMENTS,
+                    EnhancedTutorial.STARTER_SELECT_SIGNATURE,
+                    EnhancedTutorial.COMMAND_UI_NEW_COMMANDS
+                ]
             }
         };
 
@@ -418,28 +435,24 @@ export class TutorialService {
             console.log(`Unknown category: ${category}`);
             return Promise.resolve();
         }
-        
-       
         if (isFromMenu) {
-           
+
             const completedTutorials = tutorials.filter(tutorial => this.isTutorialCompleted(tutorial));
-            
-           
             if (completedTutorials.length === 0) {
                 console.log(`No completed tutorials to show for category: ${category}`);
                 return Promise.resolve();
             }
-            
+
             tutorials = completedTutorials;
         }
-        
+
         console.log(`Preparing to show ${tutorials.length} tutorials for category: ${category} with title: ${title}`);
-        
+
         if (tutorials.length === 0) {
             console.log("No tutorials defined for this category");
             return Promise.resolve();
         }
-        
+
         return this.showCombinedTutorial(title, tutorials, false, isFromMenu);
     }
-} 
+}

@@ -9,7 +9,7 @@ export class PostGameOverPhase extends Phase {
   constructor(scene: BattleScene, endCardPhase?: EndCardPhase) {
     super(scene);
 
-    this.endCardPhase = endCardPhase!; // TODO: is this bang correct?
+    this.endCardPhase = endCardPhase!;
   }
 
   start() {
@@ -19,9 +19,9 @@ export class PostGameOverPhase extends Phase {
       if (this.scene.gameMode.isTestMod) {
         this.scene.gameData.testSpeciesForMod = this.scene.gameData.testSpeciesForMod.slice(6);
       }
-      
+
       this.scene.gameData.resetBattlePathData();
-      
+
       this.scene.gameData.saveAll(this.scene, true, true, true).then(success => {
         if (!success) {
           return this.scene.reset(true);

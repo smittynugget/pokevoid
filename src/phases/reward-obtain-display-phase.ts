@@ -1,7 +1,7 @@
 import BattleScene from "#app/battle-scene.js";
 import { Phase } from "#app/phase.js";
 import { Mode } from "#app/ui/ui.js";
-import { RewardConfig } from "#app/ui/reward-obtained-ui-handler.js";
+import { RewardConfig, RewardObtainedType } from "#app/ui/reward-obtained-ui-handler.js";
 import {randSeedInt} from "../utils";
 
 export class RewardObtainDisplayPhase extends Phase {
@@ -25,7 +25,7 @@ export class RewardObtainDisplayPhase extends Phase {
         this.rewardConfig = rewardConfig;
 
         const actionsArray = typeof buttonActions === 'function' ? [buttonActions] : buttonActions;
-        
+
         this.buttonActions = actionsArray?.length ? actionsArray.map(action => () => {
             action();
             this.scene.ui.setMode(Mode.MESSAGE);
@@ -45,7 +45,7 @@ export class RewardObtainDisplayPhase extends Phase {
             const buttonAction = args[2];
 
             const actionsArray = typeof buttonAction === 'function' ? [buttonAction] : buttonAction;
-            
+
             this.buttonActions = actionsArray?.length ? actionsArray.map(action => () => {
                 action();
                 this.end();
@@ -68,7 +68,33 @@ export class RewardObtainDisplayPhase extends Phase {
             throw new Error('Scene is undefined in RewardObtainDisplayPhase start');
         }
 
-        this.scene.playSound("item_fanfare");
+        if (this.scene.finalBattleVictory) {
+            this.scene.playSound("battle_anims/PRSFX- Quiver Dance");
+            this.showRewardUI();
+            return;
+        }
+
+        if (this.rewardConfig.skillTreeRarity) {
+            const rarity = this.rewardConfig.skillTreeRarity;
+            const isHighRarity =
+                rarity === "rogue" ||
+                rarity === "master" ||
+                rarity === "legendary";
+
+            if (isHighRarity) {
+                this.scene.playSound("battle_anims/PRSFX- Oblivion Wing2");
+            } else {
+                this.scene.playSound("battle_anims/PRSFX- Bestow2");
+            }
+        } else {
+            if (this.rewardConfig.type === RewardObtainedType.SKILL_POINTS) {
+                this.scene.playSound("battle_anims/PRSFX- Bestow2");
+            } else if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_TOKENS) {
+                this.scene.playSound("battle_anims/PRSFX- Oblivion Wing2");
+            } else {
+                this.scene.playSound("item_fanfare");
+            }
+        }
         this.showRewardUI();
     }
 

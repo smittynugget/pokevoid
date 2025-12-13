@@ -708,6 +708,10 @@
       "statLabel": "Essence",
       "description": "Utilisez 5 au lieu de relâcher un Pokémon pour les Objets de Libération ou échangez contre des récompenses avec le Collectionneur."
     },
+    "PermaCollectedTypeModifierType": {
+      "name": "Essences Collectées",
+      "description": "Stocke les essences collectées :"
+    },
     "SacrificeModifierType": {
       "description": "Relâchez un Pokémon pour augmenter {{stat}} d'un autre Pokémon de 15%."
     },
@@ -745,6 +749,14 @@
       "name": "{{abilityName}}",
       "statLabel": "Objet de N'importe quel Talent",
       "description": "Donner {{abilityName}} à N'IMPORTE QUEL Pokémon\n(Maintenir C ou Shift pour plus d'infos)."
+    },
+    "SKILL_POINTS": {
+      "name": "Points de Compétence x{{amount}}",
+      "description": "Gagnez {{amount}} Points de Compétence. Utilisés pour débloquer des compétences dans l'Arbre de Compétences."
+    },
+    "SKILL_TOKENS": {
+      "name": "Jetons d'Arbre x{{amount}}",
+      "description": "Gagnez {{amount}} Jetons d'Arbre. Utilisés pour faire monter de niveau votre Arbre de Compétences !"
     },
     "glitchPieceCost": {
       "text": "[[COÛTE 1x Fragment de Bug]]"
@@ -1023,7 +1035,10 @@
     "waves": "vagues",
     "uses": "utilisations",
     "glitchPieceCost": "*COÛTE 2x Fragment de Bug",
+    "permaMoney": "ΩOR",
+    "permaItem": "ΩOBJET",
     "moreInfo": "(Maintenez C / Maj pour infos)",
+    "morePokeInfo": "(Appuyez sur P / Maj pour info)",
     "upgrade": "Amélioration"
   }
 }

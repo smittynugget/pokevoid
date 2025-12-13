@@ -1,9 +1,5 @@
 import {SettingGamepad} from "../../system/settings/settings-gamepad";
 import {Button} from "#app/enums/buttons";
-
-/**
- * 081f-e401 - UnlicensedSNES
- */
 const pad_unlicensedSNES = {
   padID: "081f-e401",
   padType: "xbox",

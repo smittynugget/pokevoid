@@ -42,10 +42,12 @@ uniform ivec4 baseVariantColors[32];
 uniform vec4 variantColors[32];
 uniform ivec4 spriteColors[32];
 uniform ivec4 fusionSpriteColors[32];
+uniform ivec4 altBuildSpriteColors[32];
+uniform ivec4 altBuildTargetColors[32];
+uniform int altBuildBlendMode;
+uniform float altBuildInversionFactor;
 uniform vec3 baseColor;
 uniform int hasBaseColor;
-
-
 const vec3 lumaF = vec3(.299, .587, .114);
 
 float blendOverlay(float base, float blend) {
@@ -79,7 +81,7 @@ float hue2rgb(float f1, float f2, float hue) {
 
 vec3 rgb2hsl(vec3 color) {
 	vec3 hsl;
-	
+
 	float fmin = min(min(color.r, color.g), color.b);
 	float fmax = max(max(color.r, color.g), color.b);
 	float delta = fmax - fmin;
@@ -94,7 +96,7 @@ vec3 rgb2hsl(vec3 color) {
 			hsl.y = delta / (fmax + fmin);
 		else
 			hsl.y = delta / (2.0 - fmax - fmin);
-		
+
 		float deltaR = (((fmax - color.r) / 6.0) + (delta / 2.0)) / delta;
 		float deltaG = (((fmax - color.g) / 6.0) + (delta / 2.0)) / delta;
 		float deltaB = (((fmax - color.b) / 6.0) + (delta / 2.0)) / delta;
@@ -117,24 +119,24 @@ vec3 rgb2hsl(vec3 color) {
 
 vec3 hsl2rgb(vec3 hsl) {
 	vec3 rgb;
-	
+
 	if (hsl.y == 0.0)
 		rgb = vec3(hsl.z);
 	else {
 		float f2;
-		
+
 		if (hsl.z < 0.5)
 			f2 = hsl.z * (1.0 + hsl.y);
 		else
 			f2 = (hsl.z + hsl.y) - (hsl.y * hsl.z);
-			
+
 		float f1 = 2.0 * hsl.z - f2;
-		
+
 		rgb.r = hue2rgb(f1, f2, hsl.x + (1.0/3.0));
 		rgb.g = hue2rgb(f1, f2, hsl.x);
 		rgb.b= hue2rgb(f1, f2, hsl.x - (1.0/3.0));
 	}
-	
+
 	return rgb;
 }
 
@@ -187,6 +189,35 @@ void main() {
         }
     }
 
+    for (int i = 0; i < 32; i++) {
+        if (altBuildSpriteColors[i][3] == 0)
+            break;
+        if (texture.a > 0.0 && colorInt.r == altBuildSpriteColors[i].r && colorInt.g == altBuildSpriteColors[i].g && colorInt.b == altBuildSpriteColors[i].b) {
+            vec3 targetColor = vec3(float(altBuildTargetColors[i].r) / 255.0, float(altBuildTargetColors[i].g) / 255.0, float(altBuildTargetColors[i].b) / 255.0);
+
+            if (altBuildBlendMode == 0) {
+                texture.rgb = targetColor;
+            } else if (altBuildBlendMode == 1) {
+                texture.rgb = blendOverlay(texture.rgb, targetColor);
+            } else if (altBuildBlendMode == 2) {
+                texture.rgb = texture.rgb * targetColor;
+        } else if (altBuildBlendMode == 3) {
+            vec3 originalColor = vec3(float(altBuildSpriteColors[i].r) / 255.0, float(altBuildSpriteColors[i].g) / 255.0, float(altBuildSpriteColors[i].b) / 255.0);
+
+            float gray = (originalColor.r + originalColor.g + originalColor.b) / 3.0;
+
+            if (altBuildInversionFactor > 0.0) {
+                gray = mix(gray, 1.0 - gray, altBuildInversionFactor);
+            }
+
+            vec3 bg = vec3(gray, gray, gray);
+            vec3 fg = targetColor;
+            texture.rgb = mix(1.0 - 2.0 * (1.0 - bg) * (1.0 - fg), 2.0 * bg * fg, step(bg, vec3(0.5)));
+        }
+            break;
+        }
+    }
+
     vec4 texel = vec4(outTint.bgr * outTint.a, outTint.a);
 
     vec4 color = texture * texel;
@@ -197,22 +228,22 @@ void main() {
         vec4 teraCol = texture2D(uMainSampler[1], teraTexCoord);
 
         vec3 finalBaseColor = (hasBaseColor == 1) ? baseColor : color.rgb;
-        
+
         float floorValue = 86.0 / 255.0;
         if (hasBaseColor == 1) {
             vec3 teraPatternHsv = rgb2hsv(teraCol.rgb);
 
-          float dynamicValue = (teraPatternHsv.b - floorValue) * 4.0 + 
-                              teraTexCoord.x * fieldScale / 2.0 + 
-                              teraTexCoord.y * fieldScale / 2.0 + 
+          float dynamicValue = (teraPatternHsv.b - floorValue) * 4.0 +
+                              teraTexCoord.x * fieldScale / 2.0 +
+                              teraTexCoord.y * fieldScale / 2.0 +
                               teraTime * 255.0;
-          
+
           teraCol.rgb = hsv2rgb(vec3(
               teraPatternHsv.r,
               teraPatternHsv.g,
               mod(dynamicValue, 0.8)
           ));
-            color.rgb = finalBaseColor; 
+            color.rgb = finalBaseColor;
             color.rgb = mix(color.rgb, teraCol.rgb, teraCol.a);
         } else {
             vec3 teraPatternHsv = rgb2hsv(teraCol.rgb);
@@ -404,7 +435,7 @@ export default class SpritePipeline extends FieldSpritePipeline {
     this.set2f("texSize", sprite.texture.source[0].width, sprite.texture.source[0].height);
     this.set1f("yOffset", sprite.height - sprite.frame.height * (isEntityObj ? sprite.parentContainer.scale : sprite.scale));
     this.set4fv("tone", tone);
-    this.bindTexture(this.game.textures.get("tera").source[0].glTexture!, 1); 
+    this.bindTexture(this.game.textures.get("tera").source[0].glTexture!, 1);
 
     if ((gameObject.scene as BattleScene).fusionPaletteSwaps) {
       const spriteColors = ((ignoreOverride && data["spriteColorsBase"]) || data["spriteColors"] || []) as number[][];
@@ -420,6 +451,37 @@ export default class SpritePipeline extends FieldSpritePipeline {
 
       this.set4iv("spriteColors", flatSpriteColors.flat());
       this.set4iv("fusionSpriteColors", flatFusionSpriteColors.flat());
+    }
+
+    if (data["altBuildSpriteColors"] && data["altBuildTargetColors"]) {
+
+      const altBuildSpriteColors = data["altBuildSpriteColors"] as number[][];
+      const altBuildTargetColors = data["altBuildTargetColors"] as number[][];
+      const blendMode = data["altBuildBlendMode"] === 'overlay' ? 1 : data["altBuildBlendMode"] === 'multiply' ? 2 : data["altBuildBlendMode"] === 'grayscale_overlay' ? 3 : 0;
+      const inversionFactor = (data["altBuildInversionFactor"] as number) || 0.0;
+
+      const emptyColors = [ 0, 0, 0, 0 ];
+      const flatAltBuildSpriteColors: integer[] = [];
+      const flatAltBuildTargetColors: integer[] = [];
+      for (let c = 0; c < 32; c++) {
+        flatAltBuildSpriteColors.splice(flatAltBuildSpriteColors.length, 0, ...(c < altBuildSpriteColors.length ? altBuildSpriteColors[c] : emptyColors));
+        flatAltBuildTargetColors.splice(flatAltBuildTargetColors.length, 0, ...(c < altBuildTargetColors.length ? altBuildTargetColors[c] : emptyColors));
+      }
+
+      this.set4iv("altBuildSpriteColors", flatAltBuildSpriteColors.flat());
+      this.set4iv("altBuildTargetColors", flatAltBuildTargetColors.flat());
+      this.set1i("altBuildBlendMode", blendMode);
+      this.set1f("altBuildInversionFactor", inversionFactor);
+    } else {
+      const empty = [ 0, 0, 0, 0 ];
+      const zeros: number[] = [];
+      for (let i = 0; i < 32; i++) {
+        zeros.push(...empty);
+      }
+      this.set4iv("altBuildSpriteColors", zeros);
+      this.set4iv("altBuildTargetColors", zeros);
+      this.set1i("altBuildBlendMode", 0);
+      this.set1f("altBuildInversionFactor", 0.0);
     }
   }
 
@@ -522,19 +584,19 @@ float random(vec2 st) {
 
 void main() {
     vec2 uv = vTextureCoord;
-    float t = time * 0.001;  
+    float t = time * 0.001;
     float r = random(vec2(glitchSeed + t, uv.y));
-    
+
     vec2 glitchOffset = vec2(
         (r - 0.5) * intensity / fieldScale,
         random(vec2(r, glitchSeed + t)) * intensity / fieldScale
     );
-    
+
     uv += glitchOffset;
-    
+
     vec4 texColor = texture2D(uMainSampler, uv);
     vec3 tinted = mix(texColor.rgb, glitchColor, intensity * 0.5);
-    
+
     gl_FragColor = vec4(
         clamp(tinted + tone.rgb, 0.0, 1.0),
         texColor.a * tone.a
@@ -560,15 +622,15 @@ export class GlitchPipeline extends FieldSpritePipeline {
             name: "Glitch",
             fragShader: glitchFrag
         });
-        
+
         this._intensity = 0.5;
-        this._glitchColor = [0.5, 0, 0.5]; 
+        this._glitchColor = [0.5, 0, 0.5];
         this._glitchSeed = Math.random();
     }
 
     onPreRender(): void {
         super.onPreRender();
-        
+
         this.set1f("intensity", this._intensity);
         this.set3fv("glitchColor", this._glitchColor);
         this.set1f("glitchSeed", this._glitchSeed);
@@ -576,10 +638,10 @@ export class GlitchPipeline extends FieldSpritePipeline {
 
     onBind(gameObject: Phaser.GameObjects.GameObject): void {
         super.onBind(gameObject);
-        
+
         const sprite = gameObject as Phaser.GameObjects.Sprite;
         const data = sprite.pipelineData as GlitchPipelineData;
-        
+
         this._intensity = data.glitchIntensity ?? this._intensity;
         this._glitchColor = data.glitchColor ?? this._glitchColor;
         this._glitchSeed = data.glitchSeed ?? this._glitchSeed;

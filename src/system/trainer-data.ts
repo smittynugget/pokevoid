@@ -20,7 +20,7 @@ export default class TrainerData {
   public rivalStage: number;
   public rivalConfig: TrainerConfig | undefined;
   public isCorrupted: boolean;
-  
+
   constructor(source: Trainer | any) {
     const sourceTrainer = source instanceof Trainer ? source as Trainer : null;
     this.trainerType = sourceTrainer ? sourceTrainer.config.trainerType : source.trainerType;
@@ -38,7 +38,7 @@ export default class TrainerData {
         const baseConfig = trainerConfigs[source.rivalConfig.trainerType];
         if (baseConfig) {
           const reconstructedConfig = new TrainerConfig(source.rivalConfig.trainerType);
-          
+
           reconstructedConfig.encounterMessages = source.rivalConfig.encounterMessages;
           reconstructedConfig.victoryMessages = source.rivalConfig.victoryMessages;
           reconstructedConfig.defeatMessages = source.rivalConfig.defeatMessages;

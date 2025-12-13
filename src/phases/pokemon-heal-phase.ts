@@ -62,7 +62,7 @@ export class PokemonHealPhase extends CommonAnimPhase {
         pokemon.damageAndUpdate(healAmount.value * -1, HitResult.HEAL as DamageResult);
         healAmount.value = 0;
       }
-      // Prevent healing to full if specified (in case of healing tokens so Sturdy doesn't cause a softlock)
+
       if (this.preventFullHeal && pokemon.hp + healAmount.value >= pokemon.getMaxHp()) {
         healAmount.value = (pokemon.getMaxHp() - pokemon.hp) - 1;
       }

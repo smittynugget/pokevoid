@@ -7,8 +7,6 @@ import i18next from "i18next";
 import * as Utils from "#app/utils.js";
 import { FieldPhase } from "./field-phase";
 import { CommonAnimPhase } from "./common-anim-phase";
-
-/** The phase after attacks where the pokemon eat berries */
 export class BerryPhase extends FieldPhase {
   start() {
     super.start();
@@ -37,7 +35,7 @@ export class BerryPhase extends FieldPhase {
                 berryModifier.consumed = false;
               }
             }
-            this.scene.eventTarget.dispatchEvent(new BerryUsedEvent(berryModifier)); // Announce a berry was used
+            this.scene.eventTarget.dispatchEvent(new BerryUsedEvent(berryModifier));
           }
 
           this.scene.updateModifiers(pokemon.isPlayer());

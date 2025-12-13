@@ -3,8 +3,6 @@ import AbstractOptionSelectUiHandler, { OptionSelectConfig } from "./abstact-opt
 import { Mode } from "./ui";
 import i18next from "i18next";
 import {Button} from "#enums/buttons";
-
-
 export default class ConfirmUiHandler extends AbstractOptionSelectUiHandler {
 
   public static readonly windowWidth: integer = 48;

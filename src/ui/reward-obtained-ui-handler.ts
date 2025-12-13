@@ -24,10 +24,14 @@ export enum RewardObtainedType {
     FUSION,
     MONEY,
     UNLOCK,
-    FORM, 
+    FORM,
     QUEST_UNLOCK,
     RIVAL_TO_VOID,
     NIGHTMARE_MODE_CHANGE,
+    SKILL_POINTS,
+    SKILL_TREE_TOKENS,
+    ESSENCE_BUNDLE,
+    LEGENDARY_CATCHABLE,
 }
 
 export enum UnlockModePokeSpriteType {
@@ -56,6 +60,9 @@ export interface RewardConfig {
     isLevelUp?: boolean;
     unlockableSpriteType?: UnlockModePokeSpriteType;
     isMaxStack?: boolean;
+    customAtlas?: string;
+    isInverted?: boolean;
+    skillTreeRarity?: string;
 }
 
 export default class RewardObtainedUiHandler extends ModalUiHandler {
@@ -85,7 +92,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             case RewardObtainedType.RIBBON_MODIFIER:
                 return i18next.t("rewardObtainedUi:titles.newRibbonItem");
             case RewardObtainedType.MONEY:
-                return this.rewardConfig.isMaxStack 
+                return this.rewardConfig.isMaxStack
                     ? i18next.t("rewardObtainedUi:titles.maxStackMoney")
                     : i18next.t("rewardObtainedUi:titles.moneyObtained");
             case RewardObtainedType.UNLOCK:
@@ -102,6 +109,12 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                 return i18next.t("rewardObtainedUi:titles.rivalLost");
             case RewardObtainedType.NIGHTMARE_MODE_CHANGE:
                 return i18next.t("rewardObtainedUi:titles.modeChange");
+            case RewardObtainedType.SKILL_POINTS:
+                return i18next.t("rewardObtainedUi:titles.skillPoints");
+            case RewardObtainedType.SKILL_TREE_TOKENS:
+                return i18next.t("rewardObtainedUi:titles.skillTreeTokens");
+            case RewardObtainedType.LEGENDARY_CATCHABLE:
+                return i18next.t("rewardObtainedUi:titles.legendaryPower");
             default:
                 return i18next.t("rewardObtainedUi:titles.rewardObtained");
         }
@@ -141,6 +154,10 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                 return this.loadQuestTexture();
         }
 
+        if (this.rewardConfig.type === RewardObtainedType.LEGENDARY_CATCHABLE && this.rewardConfig.questSpriteId) {
+            return this.loadQuestTexture();
+        }
+
         if (this.rewardConfig.type === RewardObtainedType.RIVAL_TO_VOID && this.rewardConfig.rivalType) {
             return this.loadRivalTexture();
         }
@@ -163,8 +180,11 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             this.rewardConfig.type === RewardObtainedType.MONEY ||
             this.rewardConfig.type === RewardObtainedType.UNLOCK ||
             this.rewardConfig.type === RewardObtainedType.QUEST_UNLOCK ||
+            this.rewardConfig.type === RewardObtainedType.LEGENDARY_CATCHABLE ||
             this.rewardConfig.type === RewardObtainedType.RIVAL_TO_VOID ||
-            this.rewardConfig.type === RewardObtainedType.NIGHTMARE_MODE_CHANGE);
+            this.rewardConfig.type === RewardObtainedType.NIGHTMARE_MODE_CHANGE ||
+            this.rewardConfig.type === RewardObtainedType.SKILL_POINTS ||
+            this.rewardConfig.type === RewardObtainedType.SKILL_TREE_TOKENS);
     }
 
     private async loadPokemonTexture(): Promise<void> {
@@ -284,22 +304,22 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
         if (this.rewardConfig.isMod) {
             spriteKey = `pkmn__glitch__${pokeName.toLowerCase()}`;
-            
+
             if (this.scene.textures.exists(spriteKey)) {
                 this.textureLoaded = true;
                 return;
             }
-            
+
             try {
                 const modId = `${this.rewardConfig.pokemon?.speciesId || ''}_${pokeName.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
                 const storedMod = await modStorage.getMod(modId);
-                
+
                 if (storedMod && storedMod.spriteData) {
-                    
+
                     return new Promise((resolve, reject) => {
                         let spriteData = storedMod.spriteData;
                         let objectUrl: string;
-                        
+
                         if (typeof spriteData === 'string') {
                             if (spriteData.startsWith('data:')) {
                                 objectUrl = spriteData;
@@ -307,9 +327,9 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                                 objectUrl = `data:image/png;base64,${spriteData}`;
                             }
                         }
-                        
+
                         this.scene.load.image(spriteKey, objectUrl);
-                        
+
                         this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
                             if (this.scene.anims && typeof this.scene.anims.create === 'function' && !this.scene.anims.exists(spriteKey)) {
                                 this.scene.anims.create({
@@ -319,15 +339,15 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                                     repeat: -1
                                 });
                             }
-                            
+
                             this.textureLoaded = true;
                             resolve();
                         });
-                        
+
                         this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (file: any) => {
                             reject(new Error(`Failed to load texture from mod storage: ${file.key}`));
                         });
-                        
+
                         if (!this.scene.load.isLoading()) {
                             this.scene.load.start();
                         }
@@ -342,7 +362,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             }
         } else {
             const spriteType = this.rewardConfig.unlockableSpriteType || UnlockModePokeSpriteType.GLITCH;
-            
+
             switch (spriteType) {
                 case UnlockModePokeSpriteType.NORMAL:
                 case UnlockModePokeSpriteType.NORMAL_INVERTED:
@@ -356,14 +376,12 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                     imagePath = `images/pokemon/glitch/${pokeName}.png`;
                     break;
             }
-            
+
             if (this.scene.textures.exists(spriteKey)) {
                 this.textureLoaded = true;
                 return;
             }
         }
-
-
         return new Promise((resolve, reject) => {
             this.scene.load.embeddedAtlas(
                 spriteKey,
@@ -476,11 +494,9 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             if (this.rewardSprite) {
                 this.rewardSprite.destroy();
             }
-
-
             if(this.rewardConfig.isInitialQuestUnlock){
-                this.rewardBG = this.scene.add.sprite(this.modalBg.width / 2, this.modalBg.height / 2, "smitems_192", "quest");
-                this.rewardBG.setScale(0.3);
+                this.rewardBG = this.scene.add.sprite(this.modalBg.width / 2, this.modalBg.height / 2, "smitems", "quest");
+                this.rewardBG.setScale(0.6);
                 this.uiContainer.add(this.rewardBG);
             }
 
@@ -496,8 +512,6 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
                 this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
             this.uiContainer.add(this.rewardSprite);
-
-
         } catch (error) {
             if (this.rewardSprite) {
                 this.rewardSprite.destroy();
@@ -509,6 +523,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
     protected setupSprite(): void {
         if (!this.textureLoaded) return;
+        if (!this.uiContainer) return;
 
         try {
             if (this.rewardSprite) {
@@ -516,9 +531,29 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                 this.rewardSprite = null;
             }
 
-            if (this.rewardConfig.pokemon) {
+            if (this.rewardConfig.type === RewardObtainedType.SKILL_POINTS) {
+                const position = this.getSpritePosition();
+                this.rewardSprite = this.scene.add.sprite(position.x, position.y, 'items');
+                this.rewardSprite.setFrame('ribbon_gen9');
+                this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
+            } else if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_TOKENS) {
+                const position = this.getSpritePosition();
+                this.rewardSprite = this.scene.add.sprite(position.x, position.y, 'smitems');
+                this.rewardSprite.setFrame('permaMoreRevive');
+                this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
+            } else if (this.rewardConfig.type === RewardObtainedType.ESSENCE_BUNDLE) {
+                const position = this.getSpritePosition();
+                this.rewardSprite = this.scene.add.sprite(position.x, position.y, 'smitems');
+                this.rewardSprite.setFrame('modSoulCollected');
+
+                if (this.rewardConfig.isInverted) {
+                    this.applyInversionEffect();
+                }
+            } else if (this.rewardConfig.pokemon) {
                 this.setupPokemonSprite();
             } else if (this.rewardConfig.type === RewardObtainedType.QUEST_UNLOCK && this.rewardConfig.questSpriteId) {
+                this.setupQuestSprite();
+            } else if (this.rewardConfig.type === RewardObtainedType.LEGENDARY_CATCHABLE && this.rewardConfig.questSpriteId) {
                 this.setupQuestSprite();
             } else if (this.rewardConfig.type === RewardObtainedType.RIVAL_TO_VOID && this.rewardConfig.rivalType) {
                 this.setupRivalSprite();
@@ -541,19 +576,37 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
             if (this.rewardSprite) {
                 this.uiContainer.add(this.rewardSprite);
+                this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
             }
         } catch (error) {
             throw error;
         }
     }
 
+    private applyInversionEffect(): void {
+        if (!this.rewardSprite) return;
+
+        try {
+            if (this.rewardSprite.postFX && typeof this.rewardSprite.postFX.addColorMatrix === 'function') {
+                const colorMatrix = this.rewardSprite.postFX.addColorMatrix();
+                colorMatrix.negative();
+            } else {
+                this.rewardSprite.setTint(0xFF00FF);
+                this.rewardSprite.setBlendMode(Phaser.BlendModes.SCREEN);
+            }
+        } catch (error) {
+            this.rewardSprite.setTint(0xFF00FF);
+            this.rewardSprite.setBlendMode(Phaser.BlendModes.NORMAL);
+        }
+    }
+
     private calculateSpriteScale(sprite: Phaser.GameObjects.Sprite): number {
         const width = this.getWidth();
         const height = this.getHeight();
-        
+
         const spriteWidth = sprite.width;
         const spriteHeight = sprite.height;
-        
+
         let scaleBy = 0.65;
         if(this.rewardConfig.type === RewardObtainedType.FORM || this.rewardConfig.gameMode === GameModes.NIGHTMARE) {
             scaleBy = 0.45;
@@ -566,9 +619,9 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         }
 
         const targetSize = Math.min(width, height) * scaleBy;
-        
+
         const scale = targetSize / Math.max(spriteWidth, spriteHeight);
-        
+
         return scale;
     }
 
@@ -614,22 +667,34 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         if (!this.rewardConfig.modifierType) return;
 
         const position = this.getSpritePosition();
-        let itemAtlas = this.rewardConfig.modifierType.group === "glitch" || this.rewardConfig.modifierType.group === "perma" ? "smitems_192" : "items"
-        this.rewardSprite = this.scene.add.sprite(position.x, position.y, itemAtlas);
-        this.rewardSprite.setFrame(this.rewardConfig.isLevelUp ? this.rewardConfig.sprite : this.rewardConfig.modifierType.iconImage);
-        this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
+        if (this.rewardConfig.modifierType.group === "trainer") {
+            this.rewardSprite = this.scene.add.sprite(position.x, position.y, this.rewardConfig.modifierType.iconImage);
+
+            this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
+        } else {
+
+            let itemAtlas = this.rewardConfig.modifierType.group === "glitch" || this.rewardConfig.modifierType.group === "perma" ? "smitems" : "items"
+            this.rewardSprite = this.scene.add.sprite(position.x, position.y, itemAtlas);
+            this.rewardSprite.setFrame(this.rewardConfig.isLevelUp ? this.rewardConfig.sprite : this.rewardConfig.modifierType.iconImage);
+            this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
+        }
+
+        if (this.rewardConfig.isInverted) {
+            this.applyInversionEffect();
+        }
     }
 
     private setupMoneySprite(): void {
         const position = this.getSpritePosition();
-        this.rewardSprite = this.scene.add.sprite(position.x, position.y, 'smitems_192');
+        this.rewardSprite = this.scene.add.sprite(position.x, position.y, 'smitems');
         this.rewardSprite.setFrame("battleMoney");
         this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
     }
 
     private setupUnlockSprite(): void {
         const position = this.getSpritePosition();
-        this.rewardSprite = this.scene.add.sprite(position.x, position.y, 'items');
+        const atlas = this.rewardConfig.customAtlas || 'items';
+        this.rewardSprite = this.scene.add.sprite(position.x, position.y, atlas);
         if(this.rewardConfig.sprite) {
             this.rewardSprite.setFrame(this.rewardConfig.sprite);
         }
@@ -637,14 +702,18 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             this.rewardSprite.setFrame(1);
         }
         this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
+
+        if (this.rewardConfig.isInverted) {
+            this.applyInversionEffect();
+        }
     }
 
     private setupFormSprite(): void {
         const pokeName = this.rewardConfig.isModeUnlock ? this.rewardConfig.sprite : this.rewardConfig.name;
         let spriteKey;
-        
+
         const spriteType = this.rewardConfig.unlockableSpriteType || UnlockModePokeSpriteType.GLITCH;
-        
+
         if (this.rewardConfig.isMod) {
             spriteKey = `pkmn__glitch__${pokeName.toLowerCase()}`;
         } else {
@@ -660,7 +729,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                     break;
             }
         }
-        
+
         const position = this.getSpritePosition(0, 0);
         this.rewardSprite = this.scene.addPokemonSprite(
             null,
@@ -680,8 +749,8 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         if (this.scene.spritePipeline) {
             this.rewardSprite.setPipeline(this.scene.spritePipeline);
         }
-        
-        if (spriteType === UnlockModePokeSpriteType.NORMAL_INVERTED || 
+
+        if (spriteType === UnlockModePokeSpriteType.NORMAL_INVERTED ||
             spriteType === UnlockModePokeSpriteType.GLITCH_INVERTED) {
             try {
                 if (this.rewardSprite.postFX && typeof this.rewardSprite.postFX.addColorMatrix === 'function') {
@@ -742,7 +811,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                 this.rewardSprite = this.scene.add.sprite(
                 position.x,
                 position.y - 5,
-                'smitems_192',
+                'smitems',
                 'draftMode'
                 );
                 this.rewardSprite.setOrigin(0.5, 0.5);
@@ -791,9 +860,9 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             this.rewardSprite.play(animConfig);
         }
 
-        if ((this.rewardConfig.gameMode === GameModes.NUZLOCKE || 
+        if ((this.rewardConfig.gameMode === GameModes.NUZLOCKE ||
              this.rewardConfig.gameMode === GameModes.NUZLIGHT ||
-             this.rewardConfig.gameMode === GameModes.NIGHTMARE) && 
+             this.rewardConfig.gameMode === GameModes.NIGHTMARE) &&
             this.scene.spritePipeline) {
             this.rewardSprite.setPipeline(this.scene.spritePipeline);
         }
@@ -823,6 +892,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
                 this.loadTexture()
                     .then(() => {
+                        if (!this.active || !this.uiContainer) return;
                         this.setupSprite();
                         this.setupUI();
                         this.fadeInUI();
@@ -839,6 +909,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
     }
 
     protected setupUI(): void {
+        if (!this.uiContainer || !this.modalContainer) return;
         const priorToGameover = this.scene.currentBattle ? this.scene.gameMode.isWaveFinal(this.scene.currentBattle.waveIndex) : false;
         this.modalBackground = this.scene.add.rectangle(
             0,
@@ -899,10 +970,34 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             );
             modeText.setOrigin(0.5);
             this.uiContainer.add(modeText);
+        } else if (this.rewardConfig.type === RewardObtainedType.SKILL_POINTS && this.rewardConfig.amount) {
+            const textPos = getTextPosition();
+            const spText = addTextObject(
+                this.scene,
+                textPos.x,
+                textPos.y,
+                i18next.t('skillTree:rewards.skillPoints', { amount: this.rewardConfig.amount }),
+                TextStyle.MONEY,
+                { fontSize: '50px' }
+            );
+            spText.setOrigin(0.5);
+            this.uiContainer.add(spText);
+        } else if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_TOKENS && this.rewardConfig.amount) {
+            const textPos = getTextPosition();
+            const tkText = addTextObject(
+                this.scene,
+                textPos.x,
+                textPos.y,
+                i18next.t('skillTree:rewards.tokens', { amount: this.rewardConfig.amount }),
+                TextStyle.MONEY,
+                { fontSize: '50px' }
+            );
+            tkText.setOrigin(0.5);
+            this.uiContainer.add(tkText);
         } else if (this.rewardConfig.type === RewardObtainedType.FORM) {
             const textPos = getTextPosition();
             let formName;
-            
+
             if (this.rewardConfig.isGlitch) {
                 formName = i18next.t(`glitchNames:${this.rewardConfig.name.toLowerCase()}.name`);
             } else if (this.rewardConfig.isMod) {
@@ -910,7 +1005,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             } else {
                 formName = i18next.t(`smittyNames:${this.rewardConfig.name.toLowerCase()}.name`);
             }
-            
+
             const nameText = addTextObject(
                 this.scene,
                 textPos.x,
@@ -946,6 +1041,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
     }
 
     protected handleUIError(): void {
+        if (!this.uiContainer) return;
         this.uiContainer.removeAll(true);
         const errorText = addTextObject(
             this.scene,
@@ -1031,7 +1127,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
         this.textureLoaded = false;
         this.buttonActions = null;
-        
+
         super.clear();
     }
 
@@ -1048,4 +1144,4 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             })
             .join(' ');
     }
-} 
+}

@@ -430,8 +430,6 @@ export class MoveUpgrade {
                 upgrades.push(moveGenerator.getType(moveId, powerChange, null, null, 0, i18next.t(nextStep.desc, { powerValue: nextStep.pBoost, statName: getBattleStatName(BattleStat.DEF), stages: 1 }), null, null, attrs));
             }
         }
-
-
         if (isPhysicalMove) {
             upgrades.push(moveGenerator.getType(moveId, 0, null, MoveCategory.SPECIAL, 0, i18next.t("moveUpgrade:description:category:changeToSpecial")));
         } else if (isSpecialMove) {
@@ -550,8 +548,6 @@ export class MoveUpgrade {
                 upgrades.push(moveGenerator.getType(moveId, -baseMovePower, null, null, 0, i18next.t("moveUpgrade:description:misc:fixedDamageTargetHalfHp"), null, null, [new TargetHalfHpDamageAttr()]));
             }
         }
-
-
         if (!isStatusMove && hasSecondaryEffect) {
             const currentStatusAttr = statusEffectAttrs[0] as StatusEffectAttr | undefined;
             const currentStatus = currentStatusAttr?.effect;

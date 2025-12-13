@@ -446,6 +446,18 @@
       "statLabel": "Essence",
       "description": "Use 5x instead of releasing a Pokémon for Release Items or exchange for rewards with the Collector."
     },
+    "PermaCollectedTypeModifierType": {
+      "name": "Collected Essences",
+      "description": "Stores collected essences:"
+    },
+    "SKILL_POINTS": {
+      "name": "{{amount}}x Skill Points",
+      "description": "Gain {{amount}} Skill Points. Used to unlock skills in the Skill Tree."
+    },
+    "SKILL_TOKENS": {
+      "name": "{{amount}}x Skill Tree Tokens",
+      "description": "Gain {{amount}} Skill Tree Tokens. Used to level up your Skill Tree!"
+    },
     "SacrificeModifierType": {
       "description": "Release a Pokémon to boost another pokemon's {{stat}} by 15%."
     },
@@ -873,8 +885,8 @@
     "waves": "waves",
     "uses": "uses",
     "glitchPieceCost": "*COSTS 2x Glitch Piece",
-    "permaMoney": "∞GOLD",
-    "permaItem": "∞ITEM",
+    "permaMoney": "ΩGOLD",
+    "permaItem": "ΩITEM",
     "moreInfo": "(Hold C / Shift for info)",
     "morePokeInfo": "(Press P / Shift for info)",
     "upgrade": "Upgrade"

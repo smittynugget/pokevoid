@@ -57,11 +57,11 @@
         "count": "{{current}} / {{max}}"
       },
       "rewards": {
-        "stage1": "90% ∞OR | 8% ∞OBJET | 2% Les deux",
-        "stage2": "75% ∞OR | 15% ∞OBJET | 10% Les deux",
-        "stage3": "60% ∞OR | 25% ∞OBJET | 15% Les deux",
-        "stage4": "40% ∞OR | 40% ∞OBJET | 20% Les deux",
-        "stage5": "25% ∞OR | 45% ∞OBJET | 30% Les deux"
+        "stage1": "90% ΩOR | 8% ΩOBJET | 2% Les deux",
+        "stage2": "75% ΩOR | 15% ΩOBJET | 10% Les deux",
+        "stage3": "60% ΩOR | 25% ΩOBJET | 15% Les deux",
+        "stage4": "40% ΩOR | 40% ΩOBJET | 20% Les deux",
+        "stage5": "25% ΩOR | 45% ΩOBJET | 30% Les deux"
       }
     },
     "quest": {
@@ -72,7 +72,7 @@
         "cancel": "Annuler"
       },
       "rewards": {
-        "default": "50% ∞OR | 35% ∞OBJET | 15% Les deux"
+        "default": "50% ΩOR | 35% ΩOBJET | 15% Les deux"
       },
       "activeQuest": {
         "modalTitle": "Quête !",
@@ -92,8 +92,8 @@
     "smitty": {
       "modalTitle": "Prime Pokémon Smitty",
       "rewards": {
-        "withSpecies": "70% ∞OR | 20% ∞OBJET | 10% Les deux",
-        "withoutSpecies": "40% ∞OR | 40% ∞OBJET | 20% Les deux"
+        "withSpecies": "70% ΩOR | 20% ΩOBJET | 10% Les deux",
+        "withoutSpecies": "40% ΩOR | 40% ΩOBJET | 20% Les deux"
       },
       "task": {
         "evolveAny": "Faire Évoluer N'IMPORTE QUEL Pokémon en {{formName}}",
@@ -114,7 +114,7 @@
     "nuzlightModeRewardUpdatedInventory": "Inventaire Mis à Jour !",
     "nuzlightModeRewardMoveRelease": "Oublier une Capacité",
     "nuzlockeModeRewardRank2": "RANG 2",
-    "accessShopInBattle": "Accéder à la ∞BOUTIQUE en COMBAT !",
+    "accessShopInBattle": "Accéder à la ΩBOUTIQUE en COMBAT !",
     "accessQuestsInBattle": "Accéder aux QUÊTES en COMBAT !"
   }
 } 

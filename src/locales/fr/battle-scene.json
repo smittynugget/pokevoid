@@ -1,3 +1,8 @@
 {
-  "moneyOwned": "{{formattedMoney}} ₽"
+  "moneyOwned": "{{formattedMoney}} ₽",
+  "permaMoneyOwned": "Ω{{formattedMoney}}",
+  "catch": "CAPTURE",
+  "togglePermaBar": "ΩObjets",
+  "togglePlayerBar": "Sac",
+  "toggleFoeBar": "Ennemi"
 }

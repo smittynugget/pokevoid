@@ -22,7 +22,7 @@
     "nuzlightModeRewardUpdatedInventory": "Updated Inventory!",
     "nuzlightModeRewardMoveRelease": "Move Release",
     "nuzlockeModeRewardRank2": "RANK 2",
-    "accessShopInBattle": "Access ∞SHOP in BATTLE!",
+    "accessShopInBattle": "Access ΩSHOP in BATTLE!",
     "accessQuestsInBattle": "Access QUESTS in BATTLE!"
   },
   "bounty": {
@@ -67,11 +67,11 @@
         "count": "{{current}} / {{max}}"
       },
       "rewards": {
-        "stage1": "90% ∞GOLD | 8% ∞ITEM | 2% Both",
-        "stage2": "75% ∞GOLD | 15% ∞ITEM | 10% Both",
-        "stage3": "60% ∞GOLD | 25% ∞ITEM | 15% Both",
-        "stage4": "40% ∞GOLD | 40% ∞ITEM | 20% Both",
-        "stage5": "25% ∞GOLD | 45% ∞ITEM | 30% Both"
+        "stage1": "90% ΩGOLD | 8% ΩITEM | 2% Both",
+        "stage2": "75% ΩGOLD | 15% ΩITEM | 10% Both",
+        "stage3": "60% ΩGOLD | 25% ΩITEM | 15% Both",
+        "stage4": "40% ΩGOLD | 40% ΩITEM | 20% Both",
+        "stage5": "25% ΩGOLD | 45% ΩITEM | 30% Both"
       }
     },
     "quest": {
@@ -82,7 +82,7 @@
         "cancel": "Cancel"
       },
       "rewards": {
-        "default": "50% ∞GOLD | 35% ∞ITEM | 15% Both"
+        "default": "50% ΩGOLD | 35% ΩITEM | 15% Both"
       },
       "activeQuest": {
         "modalTitle": "Quest!",
@@ -102,8 +102,8 @@
     "smitty": {
       "modalTitle": "Pokemon Smitty Bounty",
       "rewards": {
-        "withSpecies": "70% ∞GOLD | 20% ∞ITEM | 10% Both",
-        "withoutSpecies": "40% ∞GOLD | 40% ∞ITEM | 20% Both"
+        "withSpecies": "70% ΩGOLD | 20% ΩITEM | 10% Both",
+        "withoutSpecies": "40% ΩGOLD | 40% ΩITEM | 20% Both"
       },
       "task": {
         "evolveAny": "Evolve ANY Pokemon Into {{formName}}",

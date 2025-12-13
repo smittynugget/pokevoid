@@ -35,7 +35,7 @@ export class SelectBiomePhase extends BattlePhase {
       const biomes = [Biome.LABORATORY, Biome.END, Biome.ABYSS, Biome.RUINS, Biome.SPACE, Biome.GRAVEYARD];
       setNextBiome(biomes[Utils.randSeedInt(biomes.length)]);
     }
-    
+
     else if ((this.scene.gameMode.isClassic && this.scene.gameMode.isWaveFinal(this.scene.currentBattle.waveIndex + 9))
         || (this.scene.gameMode.isDaily && this.scene.gameMode.isWaveFinal(this.scene.currentBattle.waveIndex))
         || (this.scene.gameMode.hasShortBiomes && !(this.scene.currentBattle.waveIndex % 50))) {

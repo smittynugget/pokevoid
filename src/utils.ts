@@ -70,11 +70,21 @@ export function padInt(value: integer, length: integer, padWith?: string): strin
   return valueStr;
 }
 
-/**
- * Returns a random integer between min and min + range
- * @param range The amount of possible numbers
- * @param min The starting number
- */
+export function intToRoman(num: number): string {
+  const romanNumerals: [string, number][] = [
+    ['M', 1000], ['CM', 900], ['D', 500], ['CD', 400],
+    ['C', 100], ['XC', 90], ['L', 50], ['XL', 40],
+    ['X', 10], ['IX', 9], ['V', 5], ['IV', 4], ['I', 1]
+  ];
+  let result = '';
+  for (const [letter, value] of romanNumerals) {
+    while (num >= value) {
+      result += letter;
+      num -= value;
+    }
+  }
+  return result;
+}
 export function randInt(range: integer, min: integer = 0): integer {
   if (range === 1) {
     return min;
@@ -88,12 +98,6 @@ export function randSeedInt(range: integer, min: integer = 0): integer {
   }
   return Phaser.Math.RND.integerInRange(min, (range - 1) + min);
 }
-
-/**
- * Returns a random integer between min and max (non-inclusive)
- * @param min The lowest number
- * @param max The highest number
- */
 export function randIntRange(min: integer, max: integer): integer {
   return randInt(max - min, min);
 }
@@ -142,12 +146,6 @@ export function randSeedEasedWeightedItem<T>(items: T[], easingFunction: string 
   const easedValue = Phaser.Tweens.Builders.GetEaseFunction(easingFunction)(value);
   return items[Math.floor(easedValue * items.length)];
 }
-
-/**
- * Shuffle a list using the seeded rng. Utilises the Fisher-Yates algorithm.
- * @param {Array} items An array of items.
- * @returns {Array} A new shuffled array of items.
- */
 export function randSeedShuffle<T>(items: T[]): T[] {
   if (items.length <= 1) {
     return items;
@@ -179,13 +177,6 @@ export function getPlayTimeString(totalSeconds: integer): string {
 
   return `${days.padStart(2, "0")}:${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}:${seconds.padStart(2, "0")}`;
 }
-
-/**
- * Generates IVs from a given {@linkcode id} by extracting 5 bits at a time
- * starting from the least significant bit up to the 30th most significant bit.
- * @param id 32-bit number
- * @returns An array of six numbers corresponding to 5-bit chunks from {@linkcode id}
- */
 export function getIvsFromId(id: number): number[] {
   return [
     (id & 0x3E000000) >>> 25,
@@ -229,15 +220,13 @@ export function formatLargeNumber(count: integer, threshold: integer): string {
   }
   return `${ret.slice(0, digits)}${decimalNumber ? `.${decimalNumber}` : ""}${suffix}`;
 }
-
-// Abbreviations from 10^0 to 10^33
 const AbbreviationsLargeNumber: string[] = ["", "K", "M", "B", "t", "q", "Q", "s", "S", "o", "n", "d"];
 
 export function formatFancyLargeNumber(number: number, rounded: number = 3): string {
   if (typeof number !== 'number' || isNaN(number) || !isFinite(number)) {
     return "0";
   }
-  
+
   let exponent: number;
 
   if (number < 1000) {
@@ -280,8 +269,6 @@ export function executeIf<T>(condition: boolean, promiseFunc: () => Promise<T>):
 export const sessionIdKey = "pokerogue_sessionId";
 
 export const isLocal = false;
-
-
 export const localServerUrl = import.meta.env.VITE_SERVER_URL ?? `http://${window.location.hostname}:${window.location.port+1}`;
 
 export const apiUrl = localServerUrl;
@@ -291,17 +278,17 @@ export const isBeta = import.meta.env.MODE === "beta";
 
 export function setCookie(cName: string, cValue: string): void {
   const expiration = new Date();
-  expiration.setTime(new Date().getTime() + 3600000 * 24 * 30 * 3/*7*/);
+  expiration.setTime(new Date().getTime() + 3600000 * 24 * 30 * 3);
   document.cookie = `${cName}=${cValue};Secure;SameSite=Strict;Domain=${window.location.hostname};Path=/;Expires=${expiration.toUTCString()}`;
 }
 
 export function removeCookie(cName: string): void {
   if (isBeta) {
-    document.cookie = `${cName}=;Secure;SameSite=Strict;Domain=pokerogue.net;Path=/;Max-Age=-1`; // we need to remove the cookie from the main domain as well
+    document.cookie = `${cName}=;Secure;SameSite=Strict;Domain=pokerogue.net;Path=/;Max-Age=-1`;
   }
 
   document.cookie = `${cName}=;Secure;SameSite=Strict;Domain=${window.location.hostname};Path=/;Max-Age=-1`;
-  document.cookie = `${cName}=;Secure;SameSite=Strict;Path=/;Max-Age=-1`; // legacy cookie without domain, for older cookies to prevent a login loop
+  document.cookie = `${cName}=;Secure;SameSite=Strict;Path=/;Max-Age=-1`;
 }
 
 export function getCookie(cName: string): string {
@@ -322,12 +309,6 @@ export function getCookie(cName: string): string {
   }
   return "";
 }
-
-/**
- * When locally running the game, "pings" the local server
- * with a GET request to verify if a server is running,
- * sets isLocalServerConnected based on results
- */
 export function localPing() {
   if (isLocal) {
     apiFetch("game/titlestats")
@@ -446,8 +427,6 @@ export function isValidFullEmail(email: string): boolean {
 
   return true;
 }
-
-
 export function isValidUsername(username: string): boolean {
   const usernameRegex = /^[a-zA-Z0-9_]{3,16}$/;
   return usernameRegex.test(username);
@@ -457,8 +436,6 @@ export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
-
-
 export type Constructor<T> = new(...args: unknown[]) => T;
 
 export class BooleanHolder {
@@ -492,12 +469,6 @@ export class FixedInt extends IntegerHolder {
 export function fixedInt(value: integer): integer {
   return new FixedInt(value) as unknown as integer;
 }
-
-/**
- * Formats a string to title case
- * @param unformattedText Text to be formatted
- * @returns the formatted string
- */
 export function formatText(unformattedText: string): string {
   const text = unformattedText.split("_");
   for (let i = 0; i < text.length; i++) {
@@ -520,12 +491,6 @@ export function rgbToHsv(r: integer, g: integer, b: integer) {
   const h = c && ((v === r) ? (g - b) / c : ((v === g) ? 2 + (b - r) / c : 4 + (r - g) / c));
   return [ 60 * (h < 0 ? h + 6 : h), v && c / v, v];
 }
-
-/**
- * Compare color difference in RGB
- * @param {Array} rgb1 First RGB color in array
- * @param {Array} rgb2 Second RGB color in array
- */
 export function deltaRgb(rgb1: integer[], rgb2: integer[]): integer {
   const [ r1, g1, b1 ] = rgb1;
   const [ r2, g2, b2 ] = rgb2;
@@ -538,7 +503,7 @@ export function deltaRgb(rgb1: integer[], rgb2: integer[]): integer {
 }
 
 export function rgbHexToRgba(hex: string) {
-  const color = hex.match(/^([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i)!; // TODO: is this bang correct?
+  const color = hex.match(/^([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i)!;
   return {
     r: parseInt(color[1], 16),
     g: parseInt(color[2], 16),
@@ -550,15 +515,8 @@ export function rgbHexToRgba(hex: string) {
 export function rgbaToInt(rgba: integer[]): integer {
   return (rgba[0] << 24) + (rgba[1] << 16) + (rgba[2] << 8) + rgba[3];
 }
-
-/*This function returns true if the current lang is available for some functions
-If the lang is not in the function, it usually means that lang is going to use the default english version
-This function is used in:
-- summary-ui-handler.ts: If the lang is not available, it'll use types.json (english)
-English itself counts as not available
-*/
 export function verifyLang(lang?: string): boolean {
-  //IMPORTANT - ONLY ADD YOUR LANG HERE IF YOU'VE ALREADY ADDED ALL THE NECESSARY IMAGES
+
   if (!lang) {
     lang = i18next.resolvedLanguage;
   }
@@ -578,66 +536,28 @@ export function verifyLang(lang?: string): boolean {
       return false;
   }
 }
-
-/**
- * Prints the type and name of all game objects in a container for debuggin purposes
- * @param container container with game objects inside it
- */
 export function printContainerList(container: Phaser.GameObjects.Container): void {
   console.log(container.list.map(go => {
     return {type: go.type, name: go.name};
   }));
 }
-
-
-/**
- * Truncate a string to a specified maximum length and add an ellipsis if it exceeds that length.
- *
- * @param str - The string to be truncated.
- * @param maxLength - The maximum length of the truncated string, defaults to 10.
- * @returns The truncated string with an ellipsis if it was longer than maxLength.
- */
 export function truncateString(str: String, maxLength: number = 10) {
-  // Check if the string length exceeds the maximum length
+
   if (str.length > maxLength) {
-    // Truncate the string and add an ellipsis
-    return str.slice(0, maxLength - 3) + "..."; // Subtract 3 to accommodate the ellipsis
+
+    return str.slice(0, maxLength - 3) + "...";
   }
-  // Return the original string if it does not exceed the maximum length
+
   return str;
 }
-
-/**
- * Perform a deep copy of an object.
- *
- * @param values - The object to be deep copied.
- * @returns A new object that is a deep copy of the input.
- */
 export function deepCopy(values: object): object {
   return JSON.parse(JSON.stringify(values));
 }
-
-/**
- * Convert a space-separated string into a capitalized and underscored string.
- *
- * @param input - The string to be converted.
- * @returns The converted string with words capitalized and separated by underscores.
- */
 export function reverseValueToKeySetting(input) {
   const words = input.split(" ");
   const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
   return capitalizedWords.join("_");
 }
-
-/**
- * Capitalize a string.
- *
- * @param str - The string to be capitalized.
- * @param sep - The separator between the words of the string.
- * @param lowerFirstChar - Whether the first character of the string should be lowercase or not.
- * @param returnWithSpaces - Whether the returned string should have spaces between the words or not.
- * @returns The capitalized string.
- */
 export function capitalizeString(str: string, sep: string, lowerFirstChar: boolean = true, returnWithSpaces: boolean = false) {
   if (str) {
     const splitedStr = str.toLowerCase().split(sep);
@@ -650,39 +570,15 @@ export function capitalizeString(str: string, sep: string, lowerFirstChar: boole
   }
   return null;
 }
-
-/**
- * Returns if an object is null or undefined
- * @param object
- */
 export function isNullOrUndefined(object: any): boolean {
   return null === object || undefined === object;
 }
-
-/**
- * This function is used in the context of a Pokémon battle game to calculate the actual integer damage value from a float result.
- * Many damage calculation formulas involve various parameters and result in float values.
- * The actual damage applied to a Pokémon's HP must be an integer.
- * This function helps in ensuring that by flooring the float value and enforcing a minimum damage value.
- *
- * @param value - The float value to convert.
- * @param minValue - The minimum integer value to return. Defaults to 1.
- * @returns The converted value as an integer.
- */
 export function toDmgValue(value: number, minValue: number = 1) {
   return Math.max(Math.floor(value), minValue);
 }
-
-/**
- * Helper method to localize a sprite key (e.g. for types)
- * @param baseKey the base key of the sprite (e.g. `type`)
- * @returns the localized sprite key
- */
 export function getLocalizedSpriteKey(baseKey: string) {
   return `${baseKey}${verifyLang(i18next.resolvedLanguage) ? `_${i18next.resolvedLanguage}` : ""}`;
 }
-
-
 export function isLocalEnvironment(): boolean {
   return false;
   const hostname = window.location.hostname;
@@ -690,8 +586,6 @@ export function isLocalEnvironment(): boolean {
       hostname === "127.0.0.1" ||
       hostname.startsWith("192.168");
 }
-
-
 export function randSeedChance(chance: integer): boolean {
   const randomNumber = randSeedInt(100, 1);
 
@@ -714,8 +608,6 @@ export function getRandomUniqueIndices(max: number, count: number): number[] {
 export function randSeedFloat(min: number, max: number): number {
   return Phaser.Math.RND.realInRange(min, max);
 }
-
-
 export function hashCode(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -763,44 +655,104 @@ export function decompressData(compressedData: Uint8Array): string {
 function extractPngMetadata(data: Uint8Array): Record<string, string> {
   let pos = 8;
   const chunks: Record<string, string> = {};
-  
+
   while (pos < data.length) {
     const length = (data[pos] << 24) | (data[pos+1] << 16) | (data[pos+2] << 8) | data[pos+3];
     pos += 4;
-    
+
     const chunkType = String.fromCharCode(data[pos], data[pos+1], data[pos+2], data[pos+3]);
     pos += 4;
-    
+
     if (chunkType === 'tEXt') {
       let keywordEnd = pos;
       while (data[keywordEnd] !== 0 && keywordEnd < pos + length) {
         keywordEnd++;
       }
-      
+
       const keyword = Array.from(data.slice(pos, keywordEnd))
         .map(byte => String.fromCharCode(byte))
         .join('');
-      
+
       const textStart = keywordEnd + 1;
       const textEnd = pos + length;
-      
+
       const textValue = Array.from(data.slice(textStart, textEnd))
         .map(byte => String.fromCharCode(byte))
         .join('');
-      
+
       chunks[keyword] = textValue;
     }
-    
+
     pos += length + 4;
   }
-  
+
   return chunks;
+}
+
+export interface SporadicPatternConfig {
+  marginLeft?: number;
+  marginTop?: number;
+  horizontalSpacing?: number;
+  verticalSpacing?: number;
+  iconScale?: number;
+  iconAlpha?: number;
+  colCount?: number;
+  rowCount?: number;
+}
+
+export const DEFAULT_SPORADIC_PATTERN_CONFIG = {
+  marginLeft: 15,
+  marginTop: 15,
+  horizontalSpacing: 37,
+  verticalSpacing: 26,
+  iconScale: 0.175,
+  iconAlpha: 0.09,
+};
+
+export function createSporadicPattern(
+  scene: Phaser.Scene,
+  container: Phaser.GameObjects.Container,
+  config?: SporadicPatternConfig & { width?: number; height?: number }
+): void {
+  const c = {
+    ...DEFAULT_SPORADIC_PATTERN_CONFIG,
+    ...config,
+  };
+
+  let colCount: number;
+  let rowCount: number;
+
+  if (config?.width !== undefined && config?.height !== undefined) {
+    colCount = Math.max(1, Math.ceil(config.width / c.horizontalSpacing));
+    rowCount = Math.max(1, Math.floor(config.height / c.verticalSpacing));
+  } else {
+    colCount = config?.colCount ?? 10;
+    rowCount = config?.rowCount ?? 9;
+  }
+
+  for (let row = 0; row < rowCount; row++) {
+    const isOdd = row % 2 === 1;
+    const offsetX = !isOdd ? (c.horizontalSpacing / 2) : 0;
+    const adjustedColCount = !isOdd ? (colCount - 1) : colCount;
+
+    for (let col = 0; col < adjustedColCount; col++) {
+      const x = c.marginLeft + offsetX + (col * c.horizontalSpacing);
+      const y = c.marginTop + (row * c.verticalSpacing);
+
+      const icon = scene.add.image(x, y, "bg_icon");
+      icon.setOrigin(0.5, 0.5);
+      icon.setScale(c.iconScale);
+      icon.setAlpha(c.iconAlpha);
+
+      container.add(icon);
+    }
+  }
 }
 
 export default class EmbeddedAtlasFile extends Phaser.Loader.FileTypes.ImageFile {
   constructor(loader: Phaser.Loader.LoaderPlugin, key: string, url: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject) {
     super(loader, key, url, xhrSettings);
-    
+
     this.type = 'embeddedAtlas';
   }
 
@@ -820,41 +772,47 @@ export default class EmbeddedAtlasFile extends Phaser.Loader.FileTypes.ImageFile
       if (ctx) {
         ctx.drawImage(this, 0, 0);
       }
-      
+
       fetch(_this.src)
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => {
           const data = new Uint8Array(arrayBuffer);
-          
+
           const metadataChunks = extractPngMetadata(data);
           let jsonData = null;
-          
+
           if (metadataChunks && 'jsonData' in metadataChunks) {
             const isCompressed = metadataChunks['jsonDataCompressed'] === 'true';
-            
+
             if (isCompressed) {
               try {
                 const compressedData = base64ToUint8Array(metadataChunks['jsonData']);
-                
+
                 const jsonString = decompressData(compressedData);
-                
+
                 jsonData = JSON.parse(jsonString);
               } catch (error) {
                 console.error('Error processing JSON data:', error);
               }
             }
           }
-          
+
           if (jsonData) {
             if (_this.loader.textureManager) {
+              if (_this.loader.textureManager.exists(_this.key)) {
+                _this.loader.textureManager.remove(_this.key);
+              }
               _this.loader.textureManager.addAtlas(_this.key, _this.data, jsonData);
             }
-            
+
             const scene = _this.loader.scene;
             if (scene && scene.cache && scene.cache.json) {
+              if (scene.cache.json.exists(_this.key)) {
+                scene.cache.json.remove(_this.key);
+              }
               scene.cache.json.add(_this.key, jsonData);
             }
-            
+
             _this.onProcessComplete();
           } else {
             console.error('No JSON data found in PNG:', _this.key);
@@ -886,5 +844,8 @@ export default class EmbeddedAtlasFile extends Phaser.Loader.FileTypes.ImageFile
     if (this.loader) {
       this.loader.fileProcessComplete(this);
     }
+  }
+
+  addToCache(): void {
   }
 }

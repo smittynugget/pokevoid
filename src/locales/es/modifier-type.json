@@ -2,12 +2,13 @@
   "ModifierType": {
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
+      "statLabel": "Objeto Pokéball",
       "description": "Recibes {{modifierCount}}x {{pokeballName}} (En inventario: {{pokeballAmount}}) \nRatio de captura: {{catchRate}}."
     },
     "AddPokemonModifierType": {
       "name": "{{pokemonName}}",
-      "statLabel": "Objeto Pokémon Draft",
-      "description": "Adds {{pokemonName}} to the party."
+      "statLabel": "Pokémon de Draft:",
+      "description": "Añade {{pokemonName}} al equipo."
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
@@ -714,6 +715,10 @@
       "statLabel": "Esencia",
       "description": "Usa 5 en lugar de liberar un Pokémon para Objetos de Liberación o intercambia por recompensas con el Coleccionista."
     },
+    "PermaCollectedTypeModifierType": {
+      "name": "Esencias Recolectadas",
+      "description": "Almacena esencias recolectadas:"
+    },
     "SacrificeModifierType": {
       "description": "Libera un Pokémon para aumentar el {{stat}} de otro Pokémon en un 15%."
     },
@@ -752,6 +757,14 @@
       "statLabel": "Objeto de Cualquier Habilidad",
       "description": "Dar {{abilityName}} a CUALQUIER Pokémon\n(Mantén C o Shift para más información)."
     },
+    "SKILL_POINTS": {
+      "name": "Puntos de Habilidad x{{amount}}",
+      "description": "Gana {{amount}} Puntos de Habilidad. Usados para desbloquear habilidades en el Árbol de Habilidades."
+    },
+    "SKILL_TOKENS": {
+      "name": "Fichas de Árbol x{{amount}}",
+      "description": "Gana {{amount}} Fichas de Árbol. ¡Usadas para subir de nivel tu Árbol de Habilidades!"
+    },
     "glitchPieceCost": {
       "text": "[[CUESTA 1x Fragmento Glitch]]"
     },
@@ -759,6 +772,11 @@
       "name": "Alternar Objeto de Liberación",
       "description": "Activar/Desactivar Objetos de Liberación"
     }
+  },
+  "AddPokemonModifierType": {
+    "name": "{{pokemonName}}",
+    "statLabel": "Pokémon de Draft:",
+    "description": "Añade {{pokemonName}} al equipo."
   },
   "SpeciesBoosterItem": {
     "LIGHT_BALL": {
@@ -1024,7 +1042,10 @@
     "waves": "oleadas",
     "uses": "usos",
     "glitchPieceCost": "*CUESTA 2x Fragmento Glitch",
+    "permaMoney": "ΩORO",
+    "permaItem": "ΩOBJETO",
     "moreInfo": "(Mantén pulsado C o Shift para más info).",
+    "morePokeInfo": "(Presiona P / Shift para info)",
     "upgrade": "Mejora"
   }
 }

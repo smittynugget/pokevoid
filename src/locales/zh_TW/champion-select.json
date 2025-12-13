@@ -1,0 +1,99 @@
+{
+  "title": "選擇冠軍",
+  "confirmSelection": "使用 {{name}} 開始冒險？",
+  "subheader": "你將選擇誰一同踏入虛空？",
+  "levelUp": "升級！",
+  "characterUnlocked": "{{name}}\n已解鎖！",
+  "unlocked": "已解鎖",
+  "lockedGauge": "已投入：{{current}} / {{required}}",
+  "xp": "經驗值",
+  "potential": "潛力",
+  "level": "等級",
+  "locked": "鎖定",
+  "unlockRequired": "需要：{{requirement}}",
+  "essenceHint": "使用所需精華來升級！",
+  "essencesHeader": "精華：",
+  "skillsHeader": "技能",
+  "skillsSubheader": "技能將隨機出現在技能樹中。",
+  "rarity": {
+    "common": "普通",
+    "great": "優秀",
+    "ultra": "超級",
+    "master": "大師",
+    "rogue": "流氓",
+    "legendary": "傳說"
+  },
+  "unlockCharacter": "解鎖角色",
+  "unlockCharacterTooltip": "使用 {{current}}/{{required}} 精華來解鎖",
+  "tooltip": {
+    "lockedSkillTitle": "鎖定技能",
+    "levelRequired": "需要達到 {{level}} 級才能解鎖。",
+    "lockedPrefix": "鎖定",
+    "unlockWithEssence": "使用 {{current}}/{{required}} 精華來升級解鎖！",
+    "levelUpRequired": "升級以解鎖此技能。",
+    "defaultTm": "教導一隻寶可夢 {{types}} 屬性招式機",
+    "defaultXm": "教導一隻寶可夢 {{types}} 屬性特殊招式機",
+    "defaultEssence": "將 {{amount}} 個 {{types}} 屬性精華加入收藏",
+    "defaultBooster": "獲得 {{types}} 屬性強化道具",
+    "defaultTeraAbility": "使用 {{types}} 來啟動太晶特性",
+    "defaultEssenceWeight": "增加{{types}}精華掉落權重{{weight}}",
+    "defaultCatchRate": "增加{{types}}寶可夢捕獲率{{percent}}%",
+    "defaultFusionPriority": "增加{{types}}寶可夢融合優先度",
+    "defaultRevive": "增加{{types}}寶可夢復活機率{{percent}}%",
+    "defaultTokens": "獲得技能樹代幣以解鎖節點",
+    "defaultPoints": "獲得技能點以購買技能",
+    "typesFallback": "未知"
+  },
+  "skillList": {
+    "levelPrefix": "等級 {{level}}",
+    "unknownSkill": "???"
+  },
+  "defaultSkillLabels": {
+    "tms": "{{types}} 招式機",
+    "xms": "{{types}} XM",
+    "abilities": "{{types}} 特性",
+    "teraAbilities": "{{types}} 太晶特性",
+    "statBoosts": "{{types}} 能力值提升",
+    "tokens": "技能樹代幣",
+    "points": "技能點",
+    "boosters": "{{types}} 強化道具",
+    "essence": "{{types}} 精華",
+    "reviveBoost": "{{types}} 復活提升",
+    "essenceWeights": "{{types}} 精華權重",
+    "catchBonus": "{{types}} 捕獲加成",
+    "fusionPriority": "{{types}} 融合優先度"
+  },
+  "button": {
+    "useEssence": "使用精華"
+  },
+  "brock": { "description": "岩石冠軍" },
+  "misty": { "description": "水系冠軍" },
+  "apollo": {
+    "name": "阿波羅",
+    "description": "太陽冠軍"
+  },
+  "diana": {
+    "name": "黛安娜",
+    "description": "月亮冠軍"
+  },
+  "generic": { "description": "預設冠軍。" },
+  "champions": {
+  "title": "選擇你的冠軍",
+  "brock": {
+    "name": "小剛 - 岩石專家",
+    "description": "地面與岩石屬性大師",
+    "essenceRequirement": "需要 {{ground}} 地面 + {{rock}} 岩石精華"
+  },
+  "misty": {
+    "name": "小霞 - 水系專家",
+    "description": "水屬性大師",
+    "essenceRequirement": "需要 {{water}} 水屬性精華"
+  },
+  "generic": {
+    "name": "平衡冠軍",
+    "description": "無屬性專精",
+    "essenceRequirement": "無特殊需求"
+  }
+}
+}
+

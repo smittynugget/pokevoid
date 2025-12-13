@@ -16,7 +16,11 @@
     "rewardObtained": "Recompensa Obtida!",
     "voidOvertaken": "O VAZIO FOI DOMINADO!",
     "newShopItem": "Novo Item da Loja",
-    "manyMoreNuggets": "E Muitas Mais Pepitas Suculentas!"
+    "manyMoreNuggets": "E Muitas Mais Pepitas Suculentas!",
+    "skillPoints": "Pontos de Habilidade",
+    "skillTreeTokens": "Fichas de Árvore de Habilidades",
+    "legendaryPower": "Poder Lendário!",
+    "legendaryCatchable": "{{pokemon}} agora pode ser capturado!"
   },
   "gameModes": {
     "nuzlocke": {

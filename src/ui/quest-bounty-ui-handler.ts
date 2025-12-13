@@ -10,8 +10,6 @@ import i18next from "i18next";
 import {randSeedInt} from "../utils";
 import {Button} from "#enums/buttons";
 import {addWindow} from "#app/ui/ui-theme";
-
-
 export default class QuestBountyUiHandler extends BountyUiHandler {
     protected questSprite: Phaser.GameObjects.Sprite;
     protected replacementContainer: Phaser.GameObjects.Container;
@@ -112,10 +110,7 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
                 console.log('[QuestBountyUI] Cleaning up existing sprite');
                 this.questSprite.destroy();
             }
-
-        
-
-        const spriteKey = `pkmn__${spriteSource}`; 
+        const spriteKey = `pkmn__${spriteSource}`;
 
             console.log(`[QuestBountyUI] Attempting to create sprite with key: ${spriteKey}`);
 
@@ -158,7 +153,7 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
             throw error;
         }
     }
-    
+
     protected getRewardChances(): string {
         return i18next.t("questUi:bounty.quest.rewards.default");
     }
@@ -191,8 +186,6 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
             this.bountyTarget = null;
         }
     }
-
-
     protected setupSpecificUI(config: any): void {
     }
 
@@ -222,17 +215,15 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
 
         this.replacementContainer = this.scene.add.container(0, 0);
         this.modalContainer.add(this.replacementContainer);
-
-
         const bg = this.scene.add.rectangle(
-            0,  
-            0, 
+            0,
+            0,
                 this.scene.game.canvas.width,
                 this.scene.game.canvas.height,
             0x000000,
             0.6
         );
-        bg.setOrigin(0.5, 0.5); 
+        bg.setOrigin(0.5, 0.5);
         this.replacementContainer.add(bg);
 
     const bountyListContainer = this.scene.add.container(
@@ -257,7 +248,7 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
     );
     bountyListContainer.add(title);
 
-    let currentY = 18; 
+    let currentY = 18;
     this.bountyButtons = [];
 
         existingBounties.forEach((bounty) => {
@@ -271,13 +262,13 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
     bountyListContainer.add(this.cancelButton);
     this.bountyButtons.push(this.cancelButton);
 
-    const windowHeight = currentY + 20; 
-    const windowWidth = 65; 
+    const windowHeight = currentY + 20;
+    const windowWidth = 65;
 
     const bountyListBg = addWindow(
         this.scene,
-        0, 
-        0, 
+        0,
+        0,
         windowWidth,
         windowHeight
     );
@@ -376,9 +367,9 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
         const container = this.scene.add.container(0, yPosition);
 
         const bg = this.scene.add.rectangle(
-            32, 
+            32,
             3,
-            55, 
+            55,
             10,
             0x444444
         );
@@ -451,8 +442,6 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
         }
         this.selectedBountyToReplace = null;
     }
-
-
     clear(): void {
         if (this.questSprite) {
             console.log('[QuestBountyUI] Cleaning up sprite');

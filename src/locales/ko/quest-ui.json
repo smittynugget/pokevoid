@@ -57,11 +57,11 @@
         "count": "{{current}} / {{max}}"
       },
       "rewards": {
-        "stage1": "90% ∞골드 | 8% ∞아이템 | 2% 둘 다",
-        "stage2": "75% ∞골드 | 15% ∞아이템 | 10% 둘 다",
-        "stage3": "60% ∞골드 | 25% ∞아이템 | 15% 둘 다",
-        "stage4": "40% ∞골드 | 40% ∞아이템 | 20% 둘 다",
-        "stage5": "25% ∞골드 | 45% ∞아이템 | 30% 둘 다"
+        "stage1": "90% Ω골드 | 8% Ω아이템 | 2% 둘 다",
+        "stage2": "75% Ω골드 | 15% Ω아이템 | 10% 둘 다",
+        "stage3": "60% Ω골드 | 25% Ω아이템 | 15% 둘 다",
+        "stage4": "40% Ω골드 | 40% Ω아이템 | 20% 둘 다",
+        "stage5": "25% Ω골드 | 45% Ω아이템 | 30% 둘 다"
       }
     },
     "quest": {
@@ -72,7 +72,7 @@
         "cancel": "취소"
       },
       "rewards": {
-        "default": "50% ∞골드 | 35% ∞아이템 | 15% 둘 다"
+        "default": "50% Ω골드 | 35% Ω아이템 | 15% 둘 다"
       },
       "activeQuest": {
         "modalTitle": "퀘스트!",
@@ -92,8 +92,8 @@
     "smitty": {
       "modalTitle": "포켓몬 스미티 현상금",
       "rewards": {
-        "withSpecies": "70% ∞골드 | 20% ∞아이템 | 10% 둘 다",
-        "withoutSpecies": "40% ∞골드 | 40% ∞아이템 | 20% 둘 다"
+        "withSpecies": "70% Ω골드 | 20% Ω아이템 | 10% 둘 다",
+        "withoutSpecies": "40% Ω골드 | 40% Ω아이템 | 20% 둘 다"
       },
       "task": {
         "evolveAny": "아무 포켓몬을 {{formName}}(으)로 진화",
@@ -114,7 +114,7 @@
     "nuzlightModeRewardUpdatedInventory": "인벤토리 업데이트!",
     "nuzlightModeRewardMoveRelease": "기술 잊기",
     "nuzlockeModeRewardRank2": "랭크 2",
-    "accessShopInBattle": "배틀 중에 ∞상점 접속!",
+    "accessShopInBattle": "배틀 중에 Ω상점 접속!",
     "accessQuestsInBattle": "배틀 중에 퀘스트 접속!"
   }
 } 

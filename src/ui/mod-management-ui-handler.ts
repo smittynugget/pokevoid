@@ -15,30 +15,30 @@ export default class ModManagementUiHandler extends UiHandler {
     private isUploading: boolean = false;
     private mods: StoredMod[] = [];
     private isIOS: boolean;
-    
+
     constructor(scene: BattleScene) {
         super(scene, Mode.MOD_MANAGEMENT);
         this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     }
-    
+
     setup(): void {
     }
-    
+
     getWidth(): number {
         return 550;
     }
-    
+
     getHeight(): number {
         return 650;
     }
-    
+
     processInput(button: Button): boolean {
         return false;
     }
-    
+
     show(args: any[] = []): boolean {
         super.show(args);
-        
+
         const options: OptionSelectItem[] = [
             {
                 label: i18next.t("modGlitchCreateFormUi:browseUserMods"),
@@ -99,7 +99,7 @@ export default class ModManagementUiHandler extends UiHandler {
                 }
             }
         ];
-        
+
         modStorage.getAllMods().then(mods => {
             if (mods.length > 0) {
                 options.splice(6, 0, {
@@ -110,12 +110,12 @@ export default class ModManagementUiHandler extends UiHandler {
                     }
                 });
             }
-            
+
             const config: OptionSelectConfig = {
                 options: options,
                 supportHover: true
             };
-            
+
             this.scene.ui.setOverlayMode(Mode.OPTION_SELECT, config);
         }).catch(error => {
             console.error("Error fetching mods:", error);
@@ -125,14 +125,14 @@ export default class ModManagementUiHandler extends UiHandler {
             };
             this.scene.ui.setOverlayMode(Mode.OPTION_SELECT, config);
         });
-        
+
         return true;
     }
-    
+
     private handleUploadMods(): void {
         if (this.isUploading) return;
         this.isUploading = true;
-        
+
         if (this.isIOS) {
             try {
                 console.log("Attempting to load ImportDataFormUiHandler for iOS mod upload");
@@ -168,7 +168,7 @@ export default class ModManagementUiHandler extends UiHandler {
             this.scene.ui.setMode(Mode.TITLE);
         }
     }
-    
+
     private handleUploadModsFallback(): void {
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
@@ -176,28 +176,28 @@ export default class ModManagementUiHandler extends UiHandler {
         fileInput.multiple = true;
         fileInput.style.display = 'none';
         document.body.appendChild(fileInput);
-        
+
         fileInput.addEventListener('change', async (event) => {
             this.isUploading = true;
-            
+
             const files = fileInput.files;
             if (!files || files.length === 0) {
                 this.isUploading = false;
                 document.body.removeChild(fileInput);
                 this.clear();
-                this.scene.ui.setMode(Mode.TITLE); 
+                this.scene.ui.setMode(Mode.TITLE);
                 return;
             }
-            
+
             const successfulMods = [];
             const failedMods = [];
-            
+
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 try {
                     const jsonData = await this.readFileAsJson(file);
                     const success = await loadModGlitchFormFromJson(this.scene, jsonData);
-                    
+
                     if (success) {
                         try {
                             await modStorage.storeMod({
@@ -207,8 +207,6 @@ export default class ModManagementUiHandler extends UiHandler {
                                 spriteData: jsonData.sprites.front,
                                 iconData: jsonData.sprites.icon || jsonData.sprites.front
                             });
-                            
-                            
                             successfulMods.push(jsonData.formName);
                         } catch (storageError) {
                             console.error("Error storing mod:", storageError);
@@ -222,14 +220,11 @@ export default class ModManagementUiHandler extends UiHandler {
                     failedMods.push(`${file.name} (${error.message || "unknown error"})`);
                 }
             }
-            
+
             document.body.removeChild(fileInput);
             this.isUploading = false;
-
-            
-            
             await this.scene.gameData.saveAll(this.scene);
-            
+
             const message = this.generateUploadResultMessage(successfulMods, failedMods);
             this.scene.ui.showText(message, null, () => {
                 if (successfulMods.length > 0) {
@@ -240,10 +235,10 @@ export default class ModManagementUiHandler extends UiHandler {
                 }
             });
         });
-        
+
         fileInput.click();
     }
-    
+
     private async readFileAsJson(file: File): Promise<any> {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -259,10 +254,10 @@ export default class ModManagementUiHandler extends UiHandler {
             reader.readAsText(file);
         });
     }
-    
+
     private generateUploadResultMessage(successfulMods: string[], failedMods: string[]): string {
         let message = "";
-        
+
         if (successfulMods.length > 0) {
             message += i18next.t("modGlitchCreateFormUi:uploadSuccess", { count: successfulMods.length });
             if (successfulMods.length <= 5) {
@@ -270,34 +265,34 @@ export default class ModManagementUiHandler extends UiHandler {
             }
             message += "\n\n";
         }
-        
+
         if (failedMods.length > 0) {
             message += i18next.t("modGlitchCreateFormUi:uploadFailed", { count: failedMods.length });
             if (failedMods.length <= 5) {
                 message += "\n• " + failedMods.join("\n• ");
             }
         }
-        
+
         if (successfulMods.length > 0) {
             message += "\n\n" + i18next.t("modGlitchCreateFormUi:reloadRequired");
         }
-        
+
         return message;
     }
-    
+
     private async showRemoveModsOptions(): Promise<void> {
         try {
             this.mods = await modStorage.getAllMods();
-            
+
             if (this.mods.length === 0) {
-                this.scene.ui.showText(i18next.t("modGlitchCreateFormUi:noModsToRemove"), null, 
+                this.scene.ui.showText(i18next.t("modGlitchCreateFormUi:noModsToRemove"), null,
                     () => {
                         this.clear();
                         this.scene.ui.setMode(Mode.TITLE);
                     }, Utils.fixedInt(1500));
                 return;
             }
-            
+
             const modOptions = this.mods.map(mod => {
                 return {
                     label: mod.formName,
@@ -308,7 +303,7 @@ export default class ModManagementUiHandler extends UiHandler {
                     keepOpen: true
                 };
             });
-            
+
             modOptions.push({
                 label: i18next.t("menuUiHandler:cancel"),
                 handler: () => {
@@ -318,50 +313,50 @@ export default class ModManagementUiHandler extends UiHandler {
                 },
                 keepOpen: true
             });
-            
+
             this.scene.ui.setOverlayMode(Mode.MENU_OPTION_SELECT, {
                 xOffset: -1,
                 options: modOptions,
                 maxOptions: 10,
                 isRemoveItemsMenu: true
             });
-            
+
         } catch (error) {
             console.error("Error loading mods for removal:", error);
-            this.scene.ui.showText(i18next.t("modGlitchCreateFormUi:errorLoadingMods"), null, 
+            this.scene.ui.showText(i18next.t("modGlitchCreateFormUi:errorLoadingMods"), null,
                 () => {
                     this.clear();
                     this.scene.ui.setMode(Mode.TITLE);
                 });
         }
     }
-    
+
     private confirmRemoveMod(mod: StoredMod): void {
-        this.scene.ui.setOverlayMode(Mode.CONFIRM, 
+        this.scene.ui.setOverlayMode(Mode.CONFIRM,
             async () => {
                 try {
                     await modStorage.deleteMod(mod.id);
-                    
+
                     const index = this.scene.gameData.testSpeciesForMod.indexOf(mod.speciesId);
                     if (index !== -1) {
                         this.scene.gameData.testSpeciesForMod.splice(index, 1);
                         await this.scene.gameData.saveAll(this.scene, true);
                     }
-                    
-                    this.scene.ui.showText(i18next.t("modGlitchCreateFormUi:modRemoved", { name: mod.formName }), null, 
+
+                    this.scene.ui.showText(i18next.t("modGlitchCreateFormUi:modRemoved", { name: mod.formName }), null,
                         () => {
                             window.location.reload();
                         });
                 } catch (error) {
                     console.error("Error removing mod:", error);
-                    this.scene.ui.showText(i18next.t("modGlitchCreateFormUi:errorRemovingMod"), null, 
+                    this.scene.ui.showText(i18next.t("modGlitchCreateFormUi:errorRemovingMod"), null,
                         () => {
                             this.clear();
                             this.scene.ui.setMode(Mode.TITLE);
                         });
                 }
                 return true;
-            }, 
+            },
             () => {
                 this.clear();
                 this.scene.ui.setMode(Mode.TITLE);
@@ -378,4 +373,4 @@ export default class ModManagementUiHandler extends UiHandler {
         this.isUploading = false;
         super.clear();
     }
-} 
+}

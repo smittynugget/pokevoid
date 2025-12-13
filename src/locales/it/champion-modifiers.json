@@ -1,0 +1,48 @@
+{
+  "modifierType": {
+    "championStatBooster": {
+      "name": "Allenamento di {{champion}}: {{stats}}",
+      "description": "Potenzia {{stats}} del {{percent}}% per i Pokémon di {{champion}}",
+      "descriptionConditional": "Potenzia {{stats}} del {{percent}}% per Pokémon di tipo {{types}} o Pokémon firma. I Pokémon non-{{types}} non firma ottengono solo il potenziamento {{firstStat}}."
+    },
+    "championPokemonStatBooster": {
+      "name": "{{flavor}} di {{champion}} [{{stats}}]",
+      "description": "Aumenta permanentemente {{stats}} del {{percent}}% per il Pokémon selezionato. Infuso con i metodi di allenamento di {{champion}}.",
+      "descriptionConditional": "Aumenta permanentemente {{stats}} del {{percent}}% per Pokémon di tipo {{types}} o Pokémon firma. I Pokémon non-{{types}} non firma ottengono solo il potenziamento {{firstStat}}. Infuso con i metodi di allenamento di {{champion}}."
+    },
+    "trainerBondAbility": {
+      "name": "Limite Infranto di {{champion}}: {{ability}}",
+      "description": "{{chance}}% di probabilità di attivare {{ability}} per i Pokémon di {{champion}}. {{abilityDescription}}"
+    },
+    "teraAbility": {
+      "name": "Abilità Tera {{type}}: {{ability}}",
+      "description": "{{chance}}% di probabilità di attivare {{ability}} mentre Teracristallizzato come tipo {{type}}. {{abilityDescription}}"
+    },
+    "pokemonAltBuild": {
+      "name": "{{buildName}}",
+      "description": "{{description}} - Modifica le statistiche e le abilità di questo Pokémon",
+      "wrongSpecies": "Questa build alt è solo per {{species}}"
+    },
+    "championTm": {
+      "name": "MT di {{champion}}: {{move}}",
+      "description": "Insegna {{move}} a un Pokémon. Compatibile con lo stile di {{champion}}."
+    },
+    "championXm": {
+      "name": "XM di {{champion}}: {{move}}",
+      "description": "Insegna la potente mossa {{move}}. Padroneggiata da {{champion}}."
+    }
+  },
+  "modifier": {
+    "championStatBooster": {
+      "extra": {
+        "inoperable": "Questo Pokémon non è compatibile con l'allenamento di {{champion}}"
+      }
+    },
+    "trainerBondAbility": {
+      "extra": {
+        "activated": "Il Limite Infranto di {{champion}} ha attivato {{ability}}!"
+      }
+    }
+  }
+}
+

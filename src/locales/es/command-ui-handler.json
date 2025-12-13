@@ -3,5 +3,11 @@
   "ball": "Balls",
   "pokemon": "Pokémon",
   "run": "Huir",
+  "skillTree": "Árbol Hab.",
+  "team": "Equipo",
+  "check": "Datos",
+  "eggs": "Huevos",
+  "shop": "Tienda",
+  "map": "Mapa",
   "actionMessage": "¿Qué debería\nhacer {{pokemonName}}?"
 }

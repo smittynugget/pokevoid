@@ -1,0 +1,1826 @@
+{
+	"textures": [
+		{
+			"image": "smitems_192.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1920,
+				"h": 1728
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "battleMoney",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "draftMode",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 192,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "exclamationMark",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 384,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "glitchAbilitySwitch",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 576,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "glitchiGlitchiFruit",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 768,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "glitchModSoul",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 960,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "glitchMasterParts",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1152,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "glitchPiece",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1344,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "glitchCommandSeal",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1536,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "glitchShout",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1728,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "glitchStatSwitch",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 0,
+						"y": 192,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "glitchTm",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 192,
+						"y": 192,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "glitchTypeSwitch",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 384,
+						"y": 192,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "modPassiveAbility",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 576,
+						"y": 192,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "modPokeSacrifice",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 768,
+						"y": 192,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "modSoulCollected",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 960,
+						"y": 192,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaBetterLuck",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1152,
+						"y": 192,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaCatchRate",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1344,
+						"y": 192,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaCheaperFusions",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1536,
+						"y": 192,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaFreeReroll",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1728,
+						"y": 192,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaFusionIncrease",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 0,
+						"y": 384,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaGlitchPieceMaxPlus",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 192,
+						"y": 384,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaLongerStatBoosts",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 384,
+						"y": 384,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaLongerTera",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 576,
+						"y": 384,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaMetronomeLevelup",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 768,
+						"y": 384,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaMoney",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 960,
+						"y": 384,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaMoreGlitchPieces",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1152,
+						"y": 384,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaMoreRevive",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1344,
+						"y": 384,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaMoreRewardChoice",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1536,
+						"y": 384,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaNewNormal",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1728,
+						"y": 384,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaNewRoundTera",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 0,
+						"y": 576,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaPartyAbility",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 192,
+						"y": 576,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaPostBattleMoney",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 384,
+						"y": 576,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaRerollCost",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 576,
+						"y": 576,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaRunAnything",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 768,
+						"y": 576,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaShiny",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 960,
+						"y": 576,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaShowRewards",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1152,
+						"y": 576,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaStartBall",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1344,
+						"y": 576,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaStarterPointLimitInc",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1536,
+						"y": 576,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaStartGlitchPieces",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1728,
+						"y": 576,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaStartMoney",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 0,
+						"y": 768,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaTrainerSnatchCost",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 192,
+						"y": 768,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "permaTransferTera",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 384,
+						"y": 768,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "quest",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 576,
+						"y": 768,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyAura",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 768,
+						"y": 768,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyBrain",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 960,
+						"y": 768,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyChain",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1152,
+						"y": 768,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyChaos",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1344,
+						"y": 768,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyCircuit",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1536,
+						"y": 768,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyCore",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1728,
+						"y": 768,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyCrystal",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 0,
+						"y": 960,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyCube",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 192,
+						"y": 960,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyDark",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 384,
+						"y": 960,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyDreams",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 576,
+						"y": 960,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyEnergy",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 768,
+						"y": 960,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyError",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 960,
+						"y": 960,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyEssence",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1152,
+						"y": 960,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyFear",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1344,
+						"y": 960,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyFiber",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1536,
+						"y": 960,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyFire",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1728,
+						"y": 960,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyFlux",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 0,
+						"y": 1152,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyFuel",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 192,
+						"y": 1152,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyGlitch",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 384,
+						"y": 1152,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyHeart",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 576,
+						"y": 1152,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyHumor",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 768,
+						"y": 1152,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyJuice",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 960,
+						"y": 1152,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyLiquid",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1152,
+						"y": 1152,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyMask",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1344,
+						"y": 1152,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyMetal",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1536,
+						"y": 1152,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyMist",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1728,
+						"y": 1152,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyNebula",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 0,
+						"y": 1344,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyOrb",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 192,
+						"y": 1344,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyPlasma",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 384,
+						"y": 1344,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyPoison",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 576,
+						"y": 1344,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyPrism",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 768,
+						"y": 1344,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyPulse",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 960,
+						"y": 1344,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyRelic",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1152,
+						"y": 1344,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyShadow",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1344,
+						"y": 1344,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyShard",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1536,
+						"y": 1344,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittySlime",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 1728,
+						"y": 1344,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittySoul",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 0,
+						"y": 1536,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittySpirit",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 192,
+						"y": 1536,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittySurge",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 384,
+						"y": 1536,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyTouch",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 576,
+						"y": 1536,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyVoice",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 768,
+						"y": 1536,
+						"w": 192,
+						"h": 192
+					}
+				},
+				{
+					"filename": "smittyVoid",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 192,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 192,
+						"h": 192
+					},
+					"frame": {
+						"x": 960,
+						"y": 1536,
+						"w": 192,
+						"h": 192
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:ebac68b646b8ec53aeb318c59bd289b1:0334ee546f93c24a81e4ec9e87d5df5a:6ed285d93bd808ba03e8a7501c4049b4$"
+	}
+}

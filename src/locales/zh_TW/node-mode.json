@@ -1,6 +1,8 @@
 {
   "viewTitle": "戰鬥路徑地圖",
   "selectTitle": "選擇戰鬥路徑",
+  "chaosTitle": "混沌",
+  "chaosSubtitle": "在踏入黑暗之心的旅途中選擇你的道路",
   "noPathMessage": "沒有可用的戰鬥路徑。\n請先生成一個！",
   "unknownEncounter": "未知遭遇",
   "unknownNode": "未知",
@@ -22,8 +24,8 @@
     "smittyBattle": "史密蒂戰鬥",
     "evilGruntBattle": "邪惡團隊小兵",
     "evilAdminBattle": "邪惡團隊幹部",
-    "randPermaItem": "隨機∞道具",
-    "permaItems": "∞道具獎勵",
+    "randPermaItem": "隨機Ω道具",
+    "permaItems": "Ω道具獎勵",
     "goldenPokeball": "金色精靈球獎勵",
     "rogueBallItems": "流氓球獎勵",
     "masterBallItems": "大師球獎勵",
@@ -34,7 +36,7 @@
     "glitchPiece": "故障碎片獎勵",
     "dnaSplicers": "基因楔獎勵",
     "money": "金錢獎勵",
-    "permaMoney": "永久金錢加成",
+    "permaMoney": "Ω金幣加成",
     "releaseItems": "釋放獎勵",
     "mints": "薄荷獎勵",
     "eggVoucher": "蛋券獎勵",
@@ -64,7 +66,9 @@
     "collectedShop": "花費精華獲得獎勵",
     "vitamin": "通用屬性提升道具獎勵（蛋白質、鐵、鈣等）",
     "moveUpgrade": "寶可夢招式的招式升級",
-    "lowTierMoveUpgrade": "等級III上限的招式升級"
+    "lowTierMoveUpgrade": "等級III上限的招式升級",
+    "skillPoints": "用於在技能樹中解鎖技能的技能點。",
+    "skillToken": "技能樹代幣用於升級你的技能樹！"
   },
   "names": {
     "wildPokemon": "野生寶可夢",
@@ -84,8 +88,8 @@
     "smittyBattle": "史密蒂戰鬥",
     "evilGruntBattle": "邪惡小兵",
     "evilAdminBattle": "邪惡幹部",
-    "randPermaItem": "隨機∞道具",
-    "permaItems": "∞道具獎勵",
+    "randPermaItem": "隨機Ω道具",
+    "permaItems": "Ω道具獎勵",
     "goldenPokeball": "金色精靈球",
     "rogueBallItems": "流氓球獎勵",
     "masterBallItems": "大師球獎勵",
@@ -96,7 +100,7 @@
     "glitchPiece": "故障碎片",
     "dnaSplicers": "基因楔",
     "money": "金錢",
-    "permaMoney": "∞金幣",
+    "permaMoney": "Ω金幣",
     "releaseItems": "釋放獎勵",
     "mints": "薄荷獎勵",
     "eggVoucher": "蛋券",
@@ -126,7 +130,9 @@
     "collectedShop": "收藏家",
     "vitamin": "便宜維他命",
     "moveUpgrade": "招式升級",
-    "lowTierMoveUpgrade": "低等級招式升級"
+    "lowTierMoveUpgrade": "低等級招式升級",
+    "skillPoints": "技能點",
+    "skillToken": "技能代幣"
   },
   "challenge": {
     "chaosChallenge": "混沌挑戰啟動",
@@ -238,5 +244,7 @@
       "name": "寶可夢削弱",
       "description": "最強寶可夢造成一半傷害"
     }
-  }
+  },
+  "tooltipDetails": "詳情",
+  "tooltipBack": "返回"
 } 

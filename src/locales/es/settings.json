@@ -64,6 +64,7 @@
   "fieldVolume": "Volumen escenario",
   "seVolume": "Volumen efectos",
   "uiVolume": "Volumen sistema",
+  "skipFaintCry": "Omitir sonidos de debilitamiento",
   "musicPreference": "Preferencia musical",
   "mixed": "Mixta",
   "gamepadPleasePlug": "Conecta un mando o pulsa un botón",
@@ -104,5 +105,6 @@
   "items": "Objetos",
   "reroll": "Actualizar",
   "shop": "Tienda",
-  "checkTeam": "Ver equipo"
+  "checkTeam": "Ver equipo",
+  "lockedRewardSpeed": "Bloquear velocidad de recompensas"
 }

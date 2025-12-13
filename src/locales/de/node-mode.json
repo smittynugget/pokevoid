@@ -1,6 +1,8 @@
 {
   "viewTitle": "Kampfpfad-Karte",
   "selectTitle": "Kampfpfad auswählen",
+  "chaosTitle": "CHAOS",
+  "chaosSubtitle": "Wähle deinen Pfad, während du ins Herz der Dunkelheit vordringst",
   "noPathMessage": "Kein Kampfpfad verfügbar.\nErstelle zuerst einen!",
   "unknownEncounter": "Unbekannte Begegnung",
   "unknownNode": "Unbekannt",
@@ -22,8 +24,8 @@
     "smittyBattle": "Smitty-Kampf",
     "evilGruntBattle": "Böses Team Handlanger",
     "evilAdminBattle": "Böses Team Admin",
-    "randPermaItem": "Zufälliger ∞Gegenstand",
-    "permaItems": "∞Gegenstand Belohnungen",
+    "randPermaItem": "Zufälliger ΩGegenstand",
+    "permaItems": "ΩGegenstand Belohnungen",
     "goldenPokeball": "Goldener Pokéball-Belohnungen",
     "rogueBallItems": "Schurken-Ball Belohnungen",
     "masterBallItems": "Meisterball Belohnungen",
@@ -34,7 +36,7 @@
     "glitchPiece": "Glitch-Stück Belohnung",
     "dnaSplicers": "DNS-Spleißer Belohnung",
     "money": "Geld-Belohnung",
-    "permaMoney": "Permanenter Geld-Boost",
+    "permaMoney": "ΩGOLD",
     "releaseItems": "Freigabe-Belohnungen",
     "mints": "Wesen-Bonbon Belohnungen",
     "eggVoucher": "Ei-Gutschein Belohnung",
@@ -64,7 +66,9 @@
     "collectedShop": "Verwende Essenzen für Belohnungen",
     "vitamin": "Allgemeine Statusverstärker-Belohnungen (Protein, Eisen, Kalzium, etc.)",
     "moveUpgrade": "Attacken-Upgrades für Pokémon-Attacken",
-    "lowTierMoveUpgrade": "Attacken-Upgrades mit Stufe III-Begrenzung"
+    "lowTierMoveUpgrade": "Attacken-Upgrades mit Stufe III-Begrenzung",
+    "skillPoints": "Fertigkeitspunkte zum Freischalten von Fähigkeiten im Fertigkeitenbaum.",
+    "skillToken": "Fertigkeitenbaum-Marken leveln deinen Fertigkeitenbaum auf!"
   },
   "names": {
     "wildPokemon": "Wilde Pokémon",
@@ -84,8 +88,8 @@
     "smittyBattle": "Smitty-Kampf",
     "evilGruntBattle": "Böser Handlanger",
     "evilAdminBattle": "Böser Admin",
-    "randPermaItem": "Zufälliger ∞Gegenstand",
-    "permaItems": "∞Gegenstand Belohnungen",
+    "randPermaItem": "Zufälliger ΩGegenstand",
+    "permaItems": "ΩGegenstand Belohnungen",
     "goldenPokeball": "Goldener Pokéball",
     "rogueBallItems": "Schurken-Ball Belohnungen",
     "masterBallItems": "Meisterball Belohnungen",
@@ -96,7 +100,7 @@
     "glitchPiece": "Glitch-Stück",
     "dnaSplicers": "DNS-Spleißer",
     "money": "Geld",
-    "permaMoney": "∞GOLD",
+    "permaMoney": "ΩGOLD",
     "releaseItems": "Freigabe-Belohnungen",
     "mints": "Wesen-Bonbon Belohnungen",
     "eggVoucher": "Ei-Gutschein",
@@ -126,7 +130,9 @@
     "collectedShop": "Der Sammler",
     "vitamin": "Günstige Vitamine",
     "moveUpgrade": "Attacken-Upgrades",
-    "lowTierMoveUpgrade": "Niedrigstufige Attacken-Upgrades"
+    "lowTierMoveUpgrade": "Niedrigstufige Attacken-Upgrades",
+    "skillPoints": "Fertigkeitspunkte",
+    "skillToken": "Fertigkeits-Marke"
   },
   "challenge": {
     "chaosChallenge": "Chaos-Herausforderung aktiv",
@@ -238,5 +244,7 @@
       "name": "Pokémon-Schwächung",
       "description": "Stärkstes Pokémon verursacht halben Schaden"
     }
-  }
+  },
+  "tooltipDetails": "DETAILS",
+  "tooltipBack": "Zurück"
 } 

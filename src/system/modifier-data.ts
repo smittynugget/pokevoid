@@ -43,10 +43,10 @@ export default class ModifierData {
     this.stackCount = source.stackCount;
     this.className = sourceModifier ? sourceModifier.constructor.name : source.className;
 
-    if (source instanceof MoveUpgradeModifier || 
+    if (source instanceof MoveUpgradeModifier ||
         (source && source.className === 'MoveUpgradeModifier')) {
       this.args = processMoveUpgradeModifierArgsForSerialization(this.args);
-      
+
       if (Array.isArray(this.args)) {
         this.args = this.args.map(arg => {
           if (Array.isArray(arg)) {
@@ -71,22 +71,22 @@ export default class ModifierData {
         this.args = this.args.map((arg, i) => {
           if (Array.isArray(arg)) {
             return arg.map(item => {
-              
+
               if (item && item.className === 'Object' && item.properties) {
                 return item.properties;
               }
-              
+
               return item;
             });
           }
            else if (arg && arg.className === 'Object' && arg.properties) {
             return arg.properties;
           }
-          
+
           return arg;
         });
       }
-      
+
       this.args = processMoveUpgradeModifierArgsForDeserialization(this.args);
     }
 
@@ -122,9 +122,9 @@ export default class ModifierData {
       type.id = this.typeId;
 
       if (this.className === 'PermaPartyAbilityModifier' && this.typePregenArgs && this.typePregenArgs.length >= 1 && this.args.length >= 3) {
-        const abilityID = this.typePregenArgs[0].id; 
+        const abilityID = this.typePregenArgs[0].id;
         if (type.constructor.name === 'PermaPartyAbilityModifierTypeGenerator' && abilityID) {
-          this.args[2] = abilityID; 
+          this.args[2] = abilityID;
         }
       }
 
@@ -144,7 +144,7 @@ export default class ModifierData {
         if (type instanceof QuestModifierType) {
             const condition = type.getCondition();
             const args = [...this.args];
-        args[2] = condition; 
+        args[2] = condition;
             this.args = args;
         }
       }

@@ -1,0 +1,295 @@
+{
+  "onix_crystal_leviathan": {
+    "name": "Crystal Leviathan",
+    "description": "Defensive ice/rock Onix build with high HP and special defense"
+  },
+  "onix_stone_defender": {
+    "name": "Stone Defender",
+    "description": "Tank-focused defensive Onix build"
+  },
+  "geodude_tank_mode": {
+    "name": "Tank Mode",
+    "description": "Ultra-defensive Geodude build"
+  },
+  "geodude_speed_form": {
+    "name": "Speed Form",
+    "description": "High-speed electric Geodude build"
+  },
+  "rhyhorn_rampage": {
+    "name": "Rampage",
+    "description": "Aggressive fighting Rhyhorn build"
+  },
+  "onix_brock_signature": {
+    "name": "Brock's Partner",
+    "description": "Brock's trusted signature Rock-type companion"
+  },
+  "geodude_brock_signature": {
+    "name": "Brock's Partner",
+    "description": "Brock's faithful signature Rock-type companion"
+  },
+  "staryu_misty_signature": {
+    "name": "Misty's Partner",
+    "description": "Misty's graceful signature Water-type companion"
+  },
+  "psyduck_misty_signature": {
+    "name": "Misty's Partner",
+    "description": "Misty's quirky signature Water-type companion"
+  },
+  "voltorb_surge_signature": {
+    "name": "Lt. Surge's Partner",
+    "description": "Lt. Surge's electrifying signature Electric-type companion"
+  },
+  "pikachu_surge_signature": {
+    "name": "Lt. Surge's Partner",
+    "description": "Lt. Surge's powerful signature Electric-type companion"
+  },
+  "electabuzz_surge_signature": {
+    "name": "Lt. Surge's Partner",
+    "description": "Lt. Surge's shocking signature Electric-type companion"
+  },
+  "magikarp_misty_signature": {
+    "name": "Misty's Partner",
+    "description": "Misty's determined signature Water-type companion"
+  },
+  "poliwag_misty_signature": {
+    "name": "Misty's Partner",
+    "description": "Misty's spirited signature Water-type companion"
+  },
+  "azurill_misty_signature": {
+    "name": "Misty's Partner",
+    "description": "Misty's adorable signature Water-type companion"
+  },
+  "goldeen_misty_signature": {
+    "name": "Misty's Partner",
+    "description": "Misty's elegant signature Water-type companion"
+  },
+  "horsea_misty_signature": {
+    "name": "Misty's Partner",
+    "description": "Misty's loyal signature Water-type companion"
+  },
+  "togepi_misty_signature": {
+    "name": "Misty's Partner",
+    "description": "Misty's precious signature Fairy-type companion"
+  },
+  "corsola_misty_signature": {
+    "name": "Misty's Partner",
+    "description": "Misty's cheerful signature Water-type companion"
+  },
+  "luvdisc_misty_signature": {
+    "name": "Misty's Partner",
+    "description": "Misty's heartfelt signature Water-type companion"
+  },
+  "clauncher_misty_signature": {
+    "name": "Misty's Partner",
+    "description": "Misty's powerful signature Water-type companion"
+  },
+  "staryu_chronos_gear": {
+    "name": "Chronos Gear",
+    "description": "A Steel/Water Staryu infused with temporal energy, wielding defensive precision and rain-blessed resilience"
+  },
+  "magikarp_splash_tyrant": {
+    "name": "Splash Tyrant",
+    "description": "A Water/Fighting Magikarp that has transcended weakness, embodying scrappy determination and intimidating power"
+  },
+  "psyduck_kappa_quack": {
+    "name": "Kappa Quack",
+    "description": "A Water/Ghost Psyduck channeling mystical mischief with shadow-binding abilities and ethereal confusion"
+  },
+  "poliwag_lightning_drum": {
+    "name": "Lightning Drum",
+    "description": "An Electric/Water Poliwag pulsing with galvanized energy, swift currents, and regenerative vitality"
+  },
+  "azurill_bounce_champion": {
+    "name": "Bounce Champion",
+    "description": "A Flying/Fairy Azurill soaring with aerilate grace, pixilated power, and champion-level bouncing prowess"
+  },
+  "goldeen_piercing_stinger": {
+    "name": "Piercing Stinger",
+    "description": "A Water/Bug Goldeen equipped with penetrating attacks, technician precision, and sniper accuracy"
+  },
+  "horsea_fireball_seahorse": {
+    "name": "Fireball Seahorse",
+    "description": "A Fire/Water Horsea blazing with flash fire intensity, drought-bringing heat, and scorching determination"
+  },
+  "togepi_eggshell_fortress": {
+    "name": "Eggshell Fortress",
+    "description": "A Normal/Rock Togepi fortified with serene grace, solid rock defense, and battle-hardened armor"
+  },
+  "corsola_toxic_coral": {
+    "name": "Toxic Coral",
+    "description": "A Poison/Water Corsola thriving on poison heal, merciless strikes, and toxic debris protection"
+  },
+  "luvdisc_heartbreaker": {
+    "name": "Heartbreaker",
+    "description": "A Dark/Water Luvdisc dealing heartbreak with dark aura, prankster tricks, and swift swim evasion"
+  },
+  "clauncher_buster_dragon_blaster": {
+    "name": "Buster Dragon Blaster",
+    "description": "A Water/Dragon Clauncher armed with dragon's maw ferocity, mega launcher range, and sheer force devastation"
+  },
+  "vulpix_brock_signature": {
+    "name": "Brock's Partner",
+    "description": "Brock's mystical signature Fire-type companion"
+  },
+  "zubat_brock_signature": {
+    "name": "Brock's Partner",
+    "description": "Brock's swift signature Poison-type companion"
+  },
+  "bonsly_brock_signature": {
+    "name": "Brock's Partner",
+    "description": "Brock's resilient signature Rock-type companion"
+  },
+  "mudkip_brock_signature": {
+    "name": "Brock's Partner",
+    "description": "Brock's sturdy signature Water-type companion"
+  },
+  "pineco_brock_signature": {
+    "name": "Brock's Partner",
+    "description": "Brock's defensive signature Bug-type companion"
+  },
+  "croagunk_brock_signature": {
+    "name": "Brock's Partner",
+    "description": "Brock's tricky signature Poison-type companion"
+  },
+  "happiny_brock_signature": {
+    "name": "Brock's Partner",
+    "description": "Brock's caring signature Normal-type companion"
+  },
+  "lotad_brock_signature": {
+    "name": "Brock's Partner",
+    "description": "Brock's tranquil signature Water-type companion"
+  },
+  "comfey_brock_signature": {
+    "name": "Brock's Partner",
+    "description": "Brock's gentle signature Fairy-type companion"
+  },
+  "geodude_phantom_fist": {
+    "name": "Phantom Fist",
+    "description": "A Rock/Ghost Geodude wielding spectral shadow tag, tough claws, and iron fist techniques with levitating grace"
+  },
+  "vulpix_flaming_forest_spirit": {
+    "name": "Flaming Forest Spirit",
+    "description": "A Fire/Grass Vulpix embodying forest spirits with drought-summoning flames, grass pelt protection, and chlorophyll vitality"
+  },
+  "zubat_vampiric_fiend": {
+    "name": "Vampiric Fiend",
+    "description": "A Dark/Ghost Zubat channeling vampiric moxie, cursed body terror, and strong jaw ferocity"
+  },
+  "bonsly_tear_drop": {
+    "name": "Tear Drop",
+    "description": "A Rock/Water Bonsly flowing with skill link precision, water compaction resilience, and regenerative tears"
+  },
+  "mudkip_stone_skinned_salamander": {
+    "name": "Stone-Skinned Salamander",
+    "description": "A Water/Rock Mudkip armored with stone-skin defense, filter protection, and torrent power"
+  },
+  "pineco_iron_plated_grenade": {
+    "name": "Iron-Plated Grenade",
+    "description": "A Fire/Steel Pineco explosive with aftermath detonation, flame body intensity, and iron barbs retaliation"
+  },
+  "croagunk_jester_of_pestilence": {
+    "name": "Jester of Pestilence",
+    "description": "A Poison/Fairy Croagunk spreading pixilated corrosion, neutralizing gas, and tablets of ruin chaos"
+  },
+  "happiny_pink_fortress": {
+    "name": "Pink Fortress",
+    "description": "A Normal/Fairy Happiny fortified with friend guard support, healer compassion, and natural cure recovery"
+  },
+  "lotad_shadow_lily": {
+    "name": "Shadow Lily",
+    "description": "A Water/Ghost Lotad drifting with rain dish sustenance, shadow tag binding, and water absorb resilience"
+  },
+  "comfey_aqua_bloom": {
+    "name": "Aqua Bloom",
+    "description": "A Grass/Water Comfey blooming with drizzle nurturing, water bubble protection, and seed sower vitality"
+  },
+  "riolu_apollo_diana_signature": {
+    "name": "Apollo & Diana's Partner",
+    "description": "Apollo & Diana's brave signature Fighting-type companion"
+  },
+  "solrock_apollo_diana_signature": {
+    "name": "Apollo & Diana's Partner",
+    "description": "Apollo & Diana's radiant signature Rock-type companion"
+  },
+  "lunatone_apollo_diana_signature": {
+    "name": "Apollo & Diana's Partner",
+    "description": "Apollo & Diana's mystical signature Rock-type companion"
+  },
+  "larvesta_apollo_diana_signature": {
+    "name": "Apollo & Diana's Partner",
+    "description": "Apollo & Diana's blazing signature Bug-type companion"
+  },
+  "swablu_apollo_diana_signature": {
+    "name": "Apollo & Diana's Partner",
+    "description": "Apollo & Diana's fluffy signature Normal-type companion"
+  },
+  "castform_apollo_diana_signature": {
+    "name": "Apollo & Diana's Partner",
+    "description": "Apollo & Diana's adaptive signature Normal-type companion"
+  },
+  "litwick_apollo_diana_signature": {
+    "name": "Apollo & Diana's Partner",
+    "description": "Apollo & Diana's flickering signature Ghost-type companion"
+  },
+  "eevee_apollo_diana_signature": {
+    "name": "Apollo & Diana's Partner",
+    "description": "Apollo & Diana's versatile signature Normal-type companion"
+  },
+  "teddiursa_apollo_diana_signature": {
+    "name": "Apollo & Diana's Partner",
+    "description": "Apollo & Diana's cuddly signature Normal-type companion"
+  },
+  "cleffa_apollo_diana_signature": {
+    "name": "Apollo & Diana's Partner",
+    "description": "Apollo & Diana's starry signature Fairy-type companion"
+  },
+  "sunkern_apollo_diana_signature": {
+    "name": "Apollo & Diana's Partner",
+    "description": "Apollo & Diana's hopeful signature Grass-type companion"
+  },
+  "riolu_shadow_warrior": {
+    "name": "Shadow Warrior",
+    "description": "A Ghost/Fighting Riolu mastering shadow combat with moxie aggression, adaptability, and intimidating presence"
+  },
+  "solrock_void_constellation": {
+    "name": "Void Constellation",
+    "description": "A Rock/Dark Solrock radiating void energy with solar power intensity, levitate grace, and dark aura dominance"
+  },
+  "lunatone_dream_weaver": {
+    "name": "Dream Weaver",
+    "description": "A Rock/Psychic Lunatone weaving dreams with levitate mystery, moody temperament, and magic guard protection"
+  },
+  "larvesta_toxic_spinner": {
+    "name": "Toxic Spinner",
+    "description": "A Bug/Poison Larvesta spinning toxic webs with toxic chain affliction, rough skin defense, and corrosion mastery"
+  },
+  "swablu_frost_nimbus": {
+    "name": "Frost Nimbus",
+    "description": "An Ice/Flying Swablu drifting on frost-laden clouds with fluffy defense, refrigerate power, and snow warning dominion"
+  },
+  "castform_dust_devil": {
+    "name": "Dust Devil",
+    "description": "A Rock/Ground Castform whirling as a dust devil with sand stream chaos, storm drain absorption, and rough skin grit"
+  },
+  "litwick_wyrmflame": {
+    "name": "Wyrmflame",
+    "description": "A Fire/Dragon Litwick burning with wyrmflame fury, dragon's maw ferocity, flash fire intensity, and levitate mystique"
+  },
+  "eevee_untamed_spirit": {
+    "name": "Untamed Spirit",
+    "description": "A Normal/Normal Eevee embodying untamed potential with super luck fortune, serene grace, and prism armor protection"
+  },
+  "teddiursa_sweet_tooth": {
+    "name": "Sweet Tooth",
+    "description": "A Fairy/Fairy Teddiursa indulging in honey-sweet power with pure power strength, misty surge magic, and harvest bounty"
+  },
+  "cleffa_meteoric_core": {
+    "name": "Meteoric Core",
+    "description": "A Fairy/Steel Cleffa forged from meteoric essence with flame body heat, magic guard protection, and solid rock resilience"
+  },
+  "sunkern_plasma_sprout": {
+    "name": "Plasma Sprout",
+    "description": "An Electric/Grass Sunkern crackling with plasma energy, galvanize conversion, solar power intensity, and electric surge dominance"
+  },
+  "championPartner": "{{champion}}'s Partner"
+}

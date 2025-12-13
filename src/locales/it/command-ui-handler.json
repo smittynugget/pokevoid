@@ -3,5 +3,11 @@
   "ball": "Borsa",
   "pokemon": "Pokémon",
   "run": "Fuga",
-  "actionMessage": "Cosa deve fare {{pokemonName}}?"
+  "actionMessage": "Cosa deve fare {{pokemonName}}?",
+  "skillTree": "Albero Abilità",
+  "shop": "Negozio",
+  "eggs": "Uova",
+  "check": "Controlla",
+  "team": "Squadra",
+  "map": "Mappa"
 }

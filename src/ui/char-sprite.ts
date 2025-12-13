@@ -58,7 +58,7 @@ export default class CharSprite extends Phaser.GameObjects.Container {
         const numB = parseInt(b.match(/\d+/)?.[0] || "0");
         return numA - numB;
       });
-      
+
       if (frames.length > 1 && !key.includes('smitty_trainers')) {
         const lastFrameName = frames[frames.length - 1];
         this.sprite.setFrame(lastFrameName);
@@ -73,18 +73,16 @@ export default class CharSprite extends Phaser.GameObjects.Container {
 
       if ((scene.gameMode.isNightmare || scene.currentBattle?.trainer?.isCorrupted)  && !key.includes('smitty_trainers')) {
 
-        this.sprite.setPipeline(scene.spritePipeline, {tone: [0.0, 0.0, 0.0, 0.0], 
+        this.sprite.setPipeline(scene.spritePipeline, {tone: [0.0, 0.0, 0.0, 0.0],
     hasShadow: false});
 
-        const baseColor = [0, 0, 0]; 
+        const baseColor = [0, 0, 0];
         const teraColor = Utils.randSeedItem([
             getTypeRgb(Type.POISON),
             getTypeRgb(Type.DARK),
             [240, 48, 48],
             [50, 50, 50]
         ]);
-      
-          
           if (scene.currentBattle?.trainer?.isCorrupted) {
             this.sprite.pipelineData["teraColor"] = teraColor;
             this.sprite.pipelineData["baseColor"] = baseColor;
@@ -94,20 +92,18 @@ export default class CharSprite extends Phaser.GameObjects.Container {
             this.sprite.setPipelineData({ teraColor });
           }
     }
-    
-
     else {
       this.sprite.setPipeline(scene.spritePipeline, {tone: [0.0, 0.0, 0.0, 0.0], hasShadow: false});
     }
 
     if (scene.gameMode.isNightmare && (key.includes('smitty_trainers') || scene.currentBattle?.trainer?.isCorrupted)) {
       if(Utils.randSeedInt(0, 100) < 35) {
-        scene.getRandomSmittySound(); 
+        scene.getRandomSmittySound();
       }
     }
 
       this.setVisible(texture.key !== Utils.MissingTextureKey);
-      
+
       this.scene.tweens.add({
         targets: this.sprite,
         alpha: 1,
@@ -129,14 +125,14 @@ export default class CharSprite extends Phaser.GameObjects.Container {
       (this.scene as BattleScene).fieldUI.bringToTop(this);
 
       this.transitionSprite.setTexture(this.key, variant);
-      
+
       const texture = this.scene.textures.get(this.key);
       const frames = texture.getFrameNames().sort((a, b) => {
         const numA = parseInt(a.match(/\d+/)?.[0] || "0");
         const numB = parseInt(b.match(/\d+/)?.[0] || "0");
         return numA - numB;
       });
-      
+
       if (frames.length > 1) {
         const lastFrameName = frames[frames.length - 1];
         this.transitionSprite.setFrame(lastFrameName);
@@ -167,8 +163,6 @@ export default class CharSprite extends Phaser.GameObjects.Container {
       if (!this.shown) {
         return resolve();
       }
-
-
       this.scene.tweens.add({
         targets: this.sprite,
         alpha: 0,

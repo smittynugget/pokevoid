@@ -9,7 +9,7 @@
   "checkTeamDesc": "Überprüfe dein Team or nutze Formänderungsitems.",
   "rerollCost": "₽{{formattedMoney}}",
   "itemCost": "₽{{formattedMoney}}",
-  "rerollPermaCost": "∞{{formattedMoney}}",
-  "itemPermaCost": "∞{{formattedMoney}}",
+  "rerollPermaCost": "Ω{{formattedMoney}}",
+  "itemPermaCost": "Ω{{formattedMoney}}",
   "refreshTimer": "Aktualisiert in: {{minutes}}:{{seconds}}"
 }

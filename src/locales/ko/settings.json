@@ -64,6 +64,7 @@
   "fieldVolume": "전투효과 볼륨",
   "seVolume": "SE 볼륨",
   "uiVolume": "UI 볼륨",
+  "skipFaintCry": "기절 소리 건너뛰기",
   "musicPreference": "음악 설정",
   "mixed": "믹스",
   "gamepadPleasePlug": "게임패드를 연결하거나 버튼을 입력하세요",
@@ -104,5 +105,6 @@
   "items": "아이템",
   "reroll": "갱신",
   "shop": "상점",
-  "checkTeam": "파티 확인"
+  "checkTeam": "파티 확인",
+  "lockedRewardSpeed": "보상 속도 고정"
 }

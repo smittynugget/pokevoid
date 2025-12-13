@@ -64,14 +64,14 @@ export class TimedEventManager {
     let multiplier = 1;
     const shinyEvents = timedEvents.filter((te) => te.eventType === EventType.SHINY && this.isActive(te));
     shinyEvents.forEach((se) => {
-      multiplier *= se.shinyMultiplier!; // TODO: is this bang correct?
+      multiplier *= se.shinyMultiplier!;
     });
 
     return multiplier;
   }
 
   getEventBannerFilename(): string {
-    return timedEvents.find((te: TimedEvent) => this.isActive(te))?.bannerKey!; // TODO: is this bang correct?
+    return timedEvents.find((te: TimedEvent) => this.isActive(te))?.bannerKey!;
   }
 }
 
@@ -84,7 +84,7 @@ export class TimedEventDisplay extends Phaser.GameObjects.Container {
 
   constructor(scene: BattleScene, x: number, y: number, event?: TimedEvent) {
     super(scene, x, y);
-    this.event = event!; // TODO: is this bang correct?
+    this.event = event!;
     this.setVisible(false);
   }
 
@@ -138,24 +138,16 @@ export class TimedEventDisplay extends Phaser.GameObjects.Container {
   }
 
   private timeToGo(date: Date) {
-
-    // Utility to add leading zero
     function z(n) {
       return (n < 10? "0" : "") + n;
     }
     const now = new Date();
     let diff = Math.abs(date.getTime() - now.getTime());
-
-    // Allow for previous times
     diff = Math.abs(diff);
-
-    // Get time components
     const days = diff/8.64e7 | 0;
     const hours = diff%8.64e7 / 3.6e6 | 0;
     const mins  = diff%3.6e6 / 6e4 | 0;
     const secs  = Math.round(diff%6e4 / 1e3);
-
-    // Return formatted string
     return "Event Ends in : " + z(days) + "d " + z(hours) + "h " + z(mins) + "m " + z(secs)+ "s";
   }
 

@@ -13,11 +13,26 @@ import { Mode } from "#app/ui/ui.js";
 import SoundFade from "phaser3-rex-plugins/plugins/soundfade";
 import { TitlePhase } from "./title-phase";
 import Overrides from "#app/overrides";
+import { Species as SpeciesEnum } from "#enums/species";
+import { SkillTreeUtils } from "#app/system/skill-tree-utils";
+import { PokemonAltBuildId, POKEMON_ALT_BUILDS } from "#app/data/pokemon-alt-buid";
+import { PokemonAltBuildModifierType, modifierTypes } from "#app/modifier/modifier-type";
+import * as Modifiers from "#app/modifier/modifier";
+import { ChampionUtils } from "#app/system/champion-utils";
+
+export interface StarterSelectConfig {
+  availableStarters?: SpeciesEnum[];
+  championData?: any;
+  onStarterSelected?: (starters: Starter | Starter[]) => void;
+  onCancel?: () => void;
+}
 
 export class SelectStarterPhase extends Phase {
+  private config?: StarterSelectConfig;
 
-  constructor(scene: BattleScene) {
+  constructor(scene: BattleScene, config?: StarterSelectConfig) {
     super(scene);
+    this.config = config;
   }
 
   start() {
@@ -25,24 +40,75 @@ export class SelectStarterPhase extends Phase {
 
     this.scene.playBgm("menu");
 
-    this.scene.ui.setMode(Mode.STARTER_SELECT, (starters: Starter[]) => {
-      this.scene.ui.clearText();
-      this.scene.ui.setMode(Mode.SAVE_SLOT, SaveSlotUiMode.SAVE, (slotId: integer) => {
-        if (slotId === -1) {
-          this.scene.clearPhaseQueue();
-          this.scene.pushPhase(new TitlePhase(this.scene));
-          return this.end();
+    if (this.config && (this.config.availableStarters?.length || this.config.onStarterSelected)) {
+      if (this.config.availableStarters?.length && !this.config.onStarterSelected) {
+        this.scene.ui.setMode(Mode.STARTER_SELECT,
+          (starters: Starter[]) => this.handleLegacySaveAndStart(starters),
+          { availableStarters: this.config.availableStarters, championData: this.config.championData }
+        );
+        this.preGenerateSkillTreeNodes();
+        return;
+      }
+      this.scene.ui.setMode(Mode.STARTER_SELECT,
+        (starters: Starter[]) => {
+          console.log("[SelectStarterPhase] Callback invoked with", starters.length, "starters");
+          if (starters.length > 0 && this.config?.onStarterSelected) {
+            console.log("[SelectStarterPhase] onStarterSelected callback provided, clearing phase queue");
+            this.scene.clearPhaseQueue();
+            console.log("[SelectStarterPhase] Calling onStarterSelected callback");
+            this.config.onStarterSelected(starters);
+            console.log("[SelectStarterPhase] onStarterSelected callback returned, NOT ending phase (callback handles transition)");
+            return;
+          }
+          console.log("[SelectStarterPhase] No onStarterSelected callback, ending phase");
+          this.end();
+        },
+        {
+          availableStarters: this.config.availableStarters,
+          championData: this.config.championData
         }
-        this.scene.sessionSlotId = slotId;
-        this.initBattle(starters);
-      });
+      );
+      this.preGenerateSkillTreeNodes();
+      return;
+    }
+
+    this.scene.ui.setMode(Mode.STARTER_SELECT, (starters: Starter[]) => {
+      this.handleLegacySaveAndStart(starters);
     });
+    this.preGenerateSkillTreeNodes();
   }
 
-  /**
-   * Initialize starters before starting the first battle
-   * @param starters {@linkcode Pokemon} with which to start the first battle
-   */
+  private handleLegacySaveAndStart(starters: Starter[]) {
+    this.scene.ui.clearText();
+    this.scene.ui.setMode(Mode.SAVE_SLOT, SaveSlotUiMode.SAVE, (slotId: integer) => {
+      if (slotId === -1) {
+        this.scene.clearPhaseQueue();
+        this.scene.pushPhase(new TitlePhase(this.scene));
+        return this.end();
+      }
+      this.scene.sessionSlotId = slotId;
+      this.initBattle(starters);
+    });
+  }
+  private preGenerateSkillTreeNodes(): void {
+    try {
+      const activeSkillTree = this.scene.gameData.activeSkillTree;
+      if (!activeSkillTree) {
+        return;
+      }
+
+      const championId = activeSkillTree.championId || "apollo_diana";
+      const championData = (this.scene.gameData as any).championData?.[championId];
+      if (!championData) {
+        return;
+      }
+
+      const nodes = SkillTreeUtils.generateDepth1Nodes(activeSkillTree, championData);
+
+      (this.scene.gameData as any).tempSkillTreeNodes = nodes;
+    } catch (e) {
+    }
+  }
   initBattle(starters: Starter[]) {
     const party = this.scene.getParty();
     const loadPokemonAssets: Promise<void>[] = [];
@@ -80,14 +146,64 @@ export class SelectStarterPhase extends Phase {
         starterPokemon.nickname = starter.nickname;
       }
 
-      
+      console.log(`[SelectStarterPhase] initBattle: Processing starter - species=${starter.species.name} (${starter.species.speciesId})`);
+
+      const championId = this.scene.gameData.selectedChampionId;
+      let selectedIsSignature = false;
+      let altBuildId: PokemonAltBuildId | null = null;
+
+      if (championId) {
+        const championData = (this.scene.gameData as any).championData?.[championId];
+        if (championData) {
+
+          ChampionUtils.syncChampionUnlocks(championData);
+
+          const inBaseList = championData.signaturePokemon?.includes(starter.species.speciesId) || false;
+
+          const unlockedSignatures = (championData as any).unlockedSignaturePokemon as Species[] | undefined;
+          const inUnlockedList = unlockedSignatures?.includes(starter.species.speciesId) || false;
+
+          selectedIsSignature = inBaseList || inUnlockedList;
+
+          if (selectedIsSignature) {
+            altBuildId = ChampionUtils.getSignatureAltBuildId(starter.species.speciesId, championData);
+          }
+        }
+      }
+
+      console.log(`[SelectStarterPhase] initBattle: championId=${championId}, selectedIsSignature=${selectedIsSignature}, altBuildId=${altBuildId}`);
+
+      if (selectedIsSignature) {
+        console.log(`[SelectStarterPhase] initBattle: Setting isSignature=true on Pokemon ${starterPokemon.species.name} (ID: ${starterPokemon.id})`);
+        starterPokemon.isSignature = true;
+
+        if (altBuildId) {
+          console.log(`[SelectStarterPhase] initBattle: Looking up alt build: ${altBuildId}`);
+          const altBuild = POKEMON_ALT_BUILDS[altBuildId];
+
+          if (altBuild) {
+            console.log(`[SelectStarterPhase] initBattle: Found alt build ${altBuild.id}, creating modifier and applying...`);
+            const modifierType = new PokemonAltBuildModifierType(altBuild);
+            modifierType.withIdFromFunc(modifierTypes.POKEMON_ALT_BUILD);
+            const modifier = new Modifiers.PokemonAltBuildModifier(modifierType, starterPokemon.id, altBuild);
+            this.scene.addModifier(modifier, true, false, false, true);
+            console.log(`[SelectStarterPhase] initBattle: Alt build applied. Pokemon altBuildId=${starterPokemon.altBuildId}, altBuildRank=${starterPokemon.altBuildRank}`);
+          } else {
+            console.warn(`[SelectStarterPhase] initBattle: Alt build ${altBuildId} not found in POKEMON_ALT_BUILDS`);
+          }
+        } else {
+          console.log(`[SelectStarterPhase] initBattle: No altBuildId for this signature Pokemon`);
+        }
+      } else {
+        console.log(`[SelectStarterPhase] initBattle: NOT a signature starter, skipping signature logic`);
+      }
           if(starter.fusionIndex > -1) {
             starterPokemon.generateFusionViaSpeciesID(this.scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
           }
           else if (this.scene.gameMode.isSplicedOnly) {
         starterPokemon.generateFusionSpecies(true);
       }
-          
+
           starterPokemon.tryPopulateMoveset(starter.moveset);
       starterPokemon.setVisible(false);
       applyChallenges(this.scene.gameMode, ChallengeType.STARTER_MODIFY, starterPokemon);
@@ -108,7 +224,7 @@ export class SelectStarterPhase extends Phase {
       this.scene.arena.init();
       this.scene.sessionPlayTime = 0;
       this.scene.lastSavePlayTime = 0;
-      // Ensures Keldeo (or any future Pokemon that have this type of form change) starts in the correct form
+
       this.scene.getParty().forEach((p: PlayerPokemon) => {
         this.scene.triggerPokemonFormChange(p, SpeciesFormChangeMoveLearnedTrigger);
       });

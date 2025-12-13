@@ -39,15 +39,9 @@ export class Achv {
     this.conditionFunc = conditionFunc;
     this.localizationKey = localizationKey;
   }
-
-  /**
-   * Get the name of the achievement based on the gender of the player
-   * @param playerGender - the gender of the player (default: {@linkcode PlayerGender.UNSET})
-   * @returns the name of the achievement localized for the player gender
-   */
   getName(playerGender: PlayerGender = PlayerGender.UNSET): string {
     const genderStr = PlayerGender[playerGender].toLowerCase();
-    // Localization key is used to get the name of the achievement
+
     return i18next.t(`achv:${this.localizationKey}.name`, { context: genderStr });
   }
 
@@ -142,16 +136,9 @@ export class ChallengeAchv extends Achv {
     super(localizationKey, name, description, iconImage, score, (_scene: BattleScene, args: any[]) => challengeFunc(args[0] as Challenge, _scene));
   }
 }
-
-
-/**
- * Get the description of an achievement from the localization file with all the necessary variables filled in
- * @param localizationKey The localization key of the achievement
- * @returns The description of the achievement
- */
 export function getAchievementDescription(localizationKey: string): string {
-  // We need to get the player gender from the game data to add the correct prefix to the achievement name
-  const genderIndex = this?.scene?.gameData?.gender ?? PlayerGender.MALE; //TODO: why is `this` being used here!? We are not inside a scope (copied from original)
+
+  const genderIndex = this?.scene?.gameData?.gender ?? PlayerGender.MALE;
   const genderStr = PlayerGender[genderIndex].toLowerCase();
 
   switch (localizationKey) {

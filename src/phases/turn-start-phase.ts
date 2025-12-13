@@ -55,22 +55,20 @@ export class TurnStartPhase extends FieldPhase {
           return -1;
         }
       } else if (aCommand?.command === Command.FIGHT) {
-        // Get the Pokemon for each battler to access their upgraded moves
+
         const aPokemon = this.scene.getField().find(p => p?.isActive() && p.getBattlerIndex() === a)!;
         const bPokemon = this.scene.getField().find(p => p?.isActive() && p.getBattlerIndex() === b)!;
-        
-        // Use upgraded moves instead of base moves for priority calculation
         const aMove = this.scene.getUpgradedMove(allMoves[aCommand.move!.move], aPokemon.isPlayer());
         const bMove = this.scene.getUpgradedMove(allMoves[bCommand!.move!.move], bPokemon.isPlayer());
 
         const aPriority = new Utils.IntegerHolder(aMove.priority);
         const bPriority = new Utils.IntegerHolder(bMove.priority);
 
-        applyMoveAttrs(IncrementMovePriorityAttr, aPokemon, null, aMove, aPriority); //TODO: is the bang correct here?
-        applyMoveAttrs(IncrementMovePriorityAttr, bPokemon, null, bMove, bPriority); //TODO: is the bang correct here?
+        applyMoveAttrs(IncrementMovePriorityAttr, aPokemon, null, aMove, aPriority);
+        applyMoveAttrs(IncrementMovePriorityAttr, bPokemon, null, bMove, bPriority);
 
-        applyAbAttrs(ChangeMovePriorityAbAttr, aPokemon, null, false, aMove, aPriority); //TODO: is the bang correct here?
-        applyAbAttrs(ChangeMovePriorityAbAttr, bPokemon, null, false, bMove, bPriority); //TODO: is the bang correct here?
+        applyAbAttrs(ChangeMovePriorityAbAttr, aPokemon, null, false, aMove, aPriority);
+        applyAbAttrs(ChangeMovePriorityAbAttr, bPokemon, null, false, bMove, bPriority);
 
         if (aPriority.value !== bPriority.value) {
           const bracketDifference = Math.ceil(aPriority.value) - Math.ceil(bPriority.value);
@@ -116,20 +114,20 @@ export class TurnStartPhase extends FieldPhase {
         }
         if (pokemon.isPlayer()) {
           if (turnCommand.cursor === -1) {
-            this.scene.pushPhase(new MovePhase(this.scene, pokemon, turnCommand.targets || turnCommand.move!.targets, move));//TODO: is the bang correct here?
+            this.scene.pushPhase(new MovePhase(this.scene, pokemon, turnCommand.targets || turnCommand.move!.targets, move));
           } else {
-            const playerPhase = new MovePhase(this.scene, pokemon, turnCommand.targets || turnCommand.move!.targets, move, false, queuedMove.ignorePP);//TODO: is the bang correct here?
+            const playerPhase = new MovePhase(this.scene, pokemon, turnCommand.targets || turnCommand.move!.targets, move, false, queuedMove.ignorePP);
             this.scene.pushPhase(playerPhase);
           }
         } else {
-          this.scene.pushPhase(new MovePhase(this.scene, pokemon, turnCommand.targets || turnCommand.move!.targets, move, false, queuedMove.ignorePP));//TODO: is the bang correct here?
+          this.scene.pushPhase(new MovePhase(this.scene, pokemon, turnCommand.targets || turnCommand.move!.targets, move, false, queuedMove.ignorePP));
         }
         break;
       case Command.BALL:
-        this.scene.unshiftPhase(new AttemptCapturePhase(this.scene, turnCommand.targets![0] % 2, turnCommand.cursor!));//TODO: is the bang correct here?
+        this.scene.unshiftPhase(new AttemptCapturePhase(this.scene, turnCommand.targets![0] % 2, turnCommand.cursor!));
         break;
       case Command.POKEMON:
-        this.scene.unshiftPhase(new SwitchSummonPhase(this.scene, pokemon.getFieldIndex(), turnCommand.cursor!, true, turnCommand.args![0] as boolean, pokemon.isPlayer()));//TODO: is the bang correct here?
+        this.scene.unshiftPhase(new SwitchSummonPhase(this.scene, pokemon.getFieldIndex(), turnCommand.cursor!, true, turnCommand.args![0] as boolean, pokemon.isPlayer()));
         break;
       case Command.RUN:
         let runningPokemon = pokemon;
@@ -141,11 +139,11 @@ export class TurnStartPhase extends FieldPhase {
               return;
             }
           });
-          // if only one pokemon is alive, use that one
+
           if (playerActivePokemon.length > 1) {
-            // find which active pokemon has faster speed
+
             const fasterPokemon = playerActivePokemon[0].getStat(Stat.SPD) > playerActivePokemon[1].getStat(Stat.SPD) ? playerActivePokemon[0] : playerActivePokemon[1];
-            // check if either active pokemon has the ability "Run Away"
+
             const hasRunAway = playerActivePokemon.find(p => p.hasAbility(Abilities.RUN_AWAY));
             runningPokemon = hasRunAway !== undefined ? hasRunAway : fasterPokemon;
           }
@@ -154,8 +152,6 @@ export class TurnStartPhase extends FieldPhase {
         break;
       }
     }
-
-
     this.scene.pushPhase(new WeatherEffectPhase(this.scene));
 
     for (const o of order) {
@@ -166,12 +162,6 @@ export class TurnStartPhase extends FieldPhase {
 
     this.scene.pushPhase(new BerryPhase(this.scene));
     this.scene.pushPhase(new TurnEndPhase(this.scene));
-
-    /**
-       * this.end() will call shiftPhase(), which dumps everything from PrependQueue (aka everything that is unshifted()) to the front
-       * of the queue and dequeues to start the next phase
-       * this is important since stuff like SwitchSummon, AttemptRun, AttemptCapture Phases break the "flow" and should take precedence
-       */
     this.end();
   }
 }

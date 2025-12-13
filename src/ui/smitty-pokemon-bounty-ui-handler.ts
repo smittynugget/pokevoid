@@ -68,8 +68,6 @@ export default class SmittyPokemonBountyUIHandler extends BountyUiHandler {
 
             this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
                 console.log(`[PokemonBountyUI] Texture loaded successfully: ${spriteKey}`);
-
-
                 this.textureLoaded = true;
                 resolve();
             });
@@ -178,7 +176,7 @@ export default class SmittyPokemonBountyUIHandler extends BountyUiHandler {
 
     protected getRewardChances(): string {
         const hasSpecies = this.getBaseFormInfo() !== i18next.t("questUi:bounty.smitty.common.any");
-        return i18next.t(hasSpecies 
+        return i18next.t(hasSpecies
             ? "questUi:bounty.smitty.rewards.withSpecies"
             : "questUi:bounty.smitty.rewards.withoutSpecies"
         );
@@ -215,7 +213,7 @@ export default class SmittyPokemonBountyUIHandler extends BountyUiHandler {
         if (this.isLocked()) {
             return super.modifyButtonActions(config, ...args);
         }
-        
+
         const viewOnly = args[3] ?? false;
         this.originalSubmitAction = [...config.buttonActions][0];
 
@@ -292,8 +290,8 @@ export default class SmittyPokemonBountyUIHandler extends BountyUiHandler {
 
         const bountyListBg = addWindow(
             this.scene,
-            0, 
-            0, 
+            0,
+            0,
             windowWidth,
             windowHeight
         );
@@ -390,9 +388,9 @@ export default class SmittyPokemonBountyUIHandler extends BountyUiHandler {
         const container = this.scene.add.container(0, yPosition);
 
         const bg = this.scene.add.rectangle(
-            32, 
+            32,
             3,
-            55, 
+            55,
             10,
             0x444444
         );
@@ -516,4 +514,3 @@ export default class SmittyPokemonBountyUIHandler extends BountyUiHandler {
         super.clear();
     }
 }
-

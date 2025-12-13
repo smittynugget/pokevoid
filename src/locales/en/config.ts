@@ -35,6 +35,7 @@ import nature from "./nature.json";
 import partyUiHandler from "./party-ui-handler.json";
 import pokeball from "./pokeball.json";
 import pokemon from "./pokemon.json";
+import pokemonAltBuild from "./pokemon-alt-build.json";
 import pokemonForm from "./pokemon-form.json";
 import battlePokemonForm from "./pokemon-form-battle.json";
 import pokemonInfo from "./pokemon-info.json";
@@ -65,7 +66,12 @@ import eggStarterUi from "./egg-starter-ui.json";
 import modGlitchCreateFormUi from "./mod-glitch-create-form-ui.json";
 import pokedex from "./pokedex.json";
 import nodeMode from "./node-mode.json";
-import moveUpgradeAttrs from "./move-upgrade-attrs.json";
+
+import championSelect from "./champion-select.json";
+import skillTree from "./skill-tree.json";
+import championLevelUp from "./champion-level-up.json";
+import championSkills from "./champion-skills.json";
+import championModifiers from "./champion-modifiers.json";
 
 export const enConfig = {
   ability,
@@ -100,10 +106,10 @@ export const enConfig = {
   modifier,
   modifierType,
   move,
-  moveUpgradeAttrs,
   nature,
   pokeball,
   pokemon,
+  pokemonAltBuild,
   pokemonForm,
   pokemonInfo,
   pokemonInfoContainer,
@@ -135,5 +141,10 @@ export const enConfig = {
   modGlitchCreateFormUi,
   pokedex,
   nodeMode,
-  moveUpgradeAttrs
+  moveUpgradeAttrs,
+  skillTree,
+  championSelect,
+  championLevelUp,
+  championSkills,
+  championModifiers,
 };

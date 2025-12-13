@@ -1,0 +1,48 @@
+{
+  "modifierType": {
+    "championStatBooster": {
+      "name": "{{champion}} 訓練：{{stats}}",
+      "description": "為 {{champion}} 的寶可夢提升 {{stats}} {{percent}}%",
+      "descriptionConditional": "為 {{types}} 屬性寶可夢或招牌寶可夢提升 {{stats}} {{percent}}%。非 {{types}} 屬性非招牌寶可夢僅獲得 {{firstStat}} 提升。"
+    },
+    "championPokemonStatBooster": {
+      "name": "{{champion}} 的 {{flavor}} [{{stats}}]",
+      "description": "永久為選定寶可夢提升 {{stats}} {{percent}}%。融入了 {{champion}} 的訓練方法。",
+      "descriptionConditional": "永久為 {{types}} 屬性寶可夢或招牌寶可夢提升 {{stats}} {{percent}}%。非 {{types}} 屬性非招牌寶可夢僅獲得 {{firstStat}} 提升。融入了 {{champion}} 的訓練方法。"
+    },
+    "trainerBondAbility": {
+      "name": "{{champion}} 的極限突破：{{ability}}",
+      "description": "{{champion}} 的寶可夢有 {{chance}}% 機率啟動 {{ability}}。{{abilityDescription}}"
+    },
+    "teraAbility": {
+      "name": "{{type}} 太晶特性：{{ability}}",
+      "description": "太晶化為 {{type}} 屬性時有 {{chance}}% 機率啟動 {{ability}}。{{abilityDescription}}"
+    },
+    "pokemonAltBuild": {
+      "name": "{{buildName}}",
+      "description": "{{description}} - 修改此寶可夢的能力值和特性",
+      "wrongSpecies": "此替代構建僅適用於 {{species}}"
+    },
+    "championTm": {
+      "name": "{{champion}} 的招式機：{{move}}",
+      "description": "教導寶可夢 {{move}}。與 {{champion}} 的風格相容。"
+    },
+    "championXm": {
+      "name": "{{champion}} 的特殊招式機：{{move}}",
+      "description": "教導強力招式 {{move}}。由 {{champion}} 精通。"
+    }
+  },
+  "modifier": {
+    "championStatBooster": {
+      "extra": {
+        "inoperable": "此寶可夢與 {{champion}} 的訓練不相容"
+      }
+    },
+    "trainerBondAbility": {
+      "extra": {
+        "activated": "{{champion}} 的極限突破啟動了 {{ability}}！"
+      }
+    }
+  }
+}
+

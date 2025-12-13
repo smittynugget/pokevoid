@@ -1,3 +1,8 @@
 {
-  "moneyOwned": "{{formattedMoney}}円"
+  "moneyOwned": "{{formattedMoney}}円",
+  "permaMoneyOwned": "Ω{{formattedMoney}}",
+  "catch": "捕獲",
+  "togglePermaBar": "Ωどうぐ",
+  "togglePlayerBar": "バッグ",
+  "toggleFoeBar": "てき"
 }

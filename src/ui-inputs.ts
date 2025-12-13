@@ -21,6 +21,7 @@ import { QuestUnlockables, QuestState } from "./system/game-data";
 import { activateSmitomTalk } from "./ui/title-ui-handler";
 import ModifierSelectUiHandler from "./ui/modifier-select-ui-handler";
 import { AddPokemonModifierType } from "./modifier/modifier-type";
+import ChampionSelectUiHandler from "./ui/champion-select-ui-handler";
 
 type ActionKeys = Record<Button, () => void>;
 
@@ -42,7 +43,7 @@ export class UiInputs {
 
   detectInputMethod(evt): void {
     if (evt.controller_type === "keyboard") {
-      //if the touch property is present and defined, then this is a simulated keyboard event from the touch screen
+
       if (evt.hasOwnProperty("isTouch") && evt.isTouch) {
         this.scene.inputMethod = "touch";
       } else {
@@ -94,7 +95,7 @@ export class UiInputs {
       [Button.CYCLE_FORM]:      () => this.buttonCycleOption(Button.CYCLE_FORM),
       [Button.CYCLE_GENDER]:    () => this.buttonCycleOption(Button.CYCLE_GENDER),
       [Button.CYCLE_ABILITY]:   () => this.buttonCycleOption(Button.CYCLE_ABILITY),
-      
+
       [Button.CYCLE_FUSION]:   () => this.buttonCycleOption(Button.CYCLE_FUSION),
       [Button.CYCLE_NATURE]:    () => this.buttonCycleOption(Button.CYCLE_NATURE),
       [Button.CYCLE_VARIANT]:    () => this.buttonCycleOption(Button.CYCLE_VARIANT),
@@ -102,6 +103,9 @@ export class UiInputs {
       [Button.SLOW_DOWN]:       () => this.buttonSpeedChange(false),
       [Button.CONSOLE]: () => this.buttonConsole(),
       [Button.VOIDEX]: () => this.buttonVoidex(),
+      [Button.TOGGLE_PERMA_BAR]: () => this.buttonTogglePermaBar(),
+      [Button.TOGGLE_PLAYER_BAR]: () => this.buttonTogglePlayerBar(),
+      [Button.TOGGLE_FOE_BAR]: () => this.buttonToggleFoeBar(),
     };
     return actions;
   }
@@ -128,6 +132,9 @@ export class UiInputs {
       [Button.SLOW_DOWN]:       () => undefined,
       [Button.CONSOLE]: () => undefined,
       [Button.VOIDEX]: () => undefined,
+      [Button.TOGGLE_PERMA_BAR]: () => undefined,
+      [Button.TOGGLE_PLAYER_BAR]: () => undefined,
+      [Button.TOGGLE_FOE_BAR]: () => undefined,
     };
     return actions;
   }
@@ -145,16 +152,25 @@ export class UiInputs {
   buttonTouch(): void {
     this.scene.ui.processInput(Button.SUBMIT) || this.scene.ui.processInput(Button.ACTION);
   }
-
-  
   buttonStats(pressed: boolean = true): void {
     const uiHandler = this.scene.ui?.getHandler();
+    const currentMode = this.scene.ui?.getMode();
+
+    if (pressed && currentMode === Mode.SKILL_TREE) {
+      this.scene.ui.processInput(Button.STATS);
+      return;
+    }
+
     if (pressed && uiHandler instanceof ModifierSelectUiHandler) {
       const currentOption = uiHandler.getCurrentSelectedOption();
       if (currentOption?.modifierTypeOption?.type instanceof AddPokemonModifierType) {
         this.scene.ui.setOverlayMode(Mode.POKEDEX, currentOption.modifierTypeOption.type.getPokemon().species.speciesId);
         return;
       }
+    }
+
+    if (pressed && uiHandler instanceof ChampionSelectUiHandler) {
+      this.scene.ui.processInput(Button.STATS);
     }
 
     for (const t of this.scene.getInfoToggles(true)) {
@@ -191,7 +207,15 @@ export class UiInputs {
     if (this.scene.disableMenu) {
       return;
     }
-    switch (this.scene.ui?.getMode()) {
+
+    const currentMode = this.scene.ui?.getMode();
+
+    if (currentMode === Mode.SKILL_TREE) {
+      this.scene.ui.processInput(Button.MENU);
+      return;
+    }
+
+    switch (currentMode) {
     case Mode.MESSAGE:
       if (!(this.scene.ui.getHandler() as MessageUiHandler).pendingPrompt) {
         return;
@@ -228,6 +252,24 @@ export class UiInputs {
         }
       }
       this.scene.ui.setOverlayMode(Mode.POKEDEX);
+    }
+  }
+
+  buttonTogglePermaBar(): void {
+    this.scene.ui.handlePermaBarToggle(this.scene);
+  }
+
+  buttonTogglePlayerBar(): void {
+    const currentMode = this.scene.ui?.getMode();
+    if (currentMode !== Mode.TITLE && this.scene.currentBattle) {
+      this.scene.ui.handlePlayerBarToggle(this.scene);
+    }
+  }
+
+  buttonToggleFoeBar(): void {
+    const currentMode = this.scene.ui?.getMode();
+    if (currentMode !== Mode.TITLE && this.scene.currentBattle) {
+      this.scene.ui.handleFoeBarToggle(this.scene);
     }
   }
 
@@ -277,7 +319,7 @@ export class UiInputs {
     const whitelist = [StarterSelectUiHandler, SettingsUiHandler, RunInfoUiHandler, SettingsDisplayUiHandler, SettingsAudioUiHandler, SettingsGamepadUiHandler, SettingsKeyboardUiHandler];
     const uiHandler = this.scene.ui?.getHandler();
     const currentMode = this.scene.ui?.getMode();
-    
+
     if (whitelist.some(handler => uiHandler instanceof handler)) {
       this.scene.ui.processInput(button);
     } else if (button === Button.CYCLE_SHINY) {
@@ -291,7 +333,7 @@ export class UiInputs {
             break;
           }
           const slotId = this.scene.sessionSlotId;
-          
+
           (async () => {
             try {
               const sessionData = await this.scene.gameData.getSession(slotId);
@@ -313,7 +355,7 @@ export class UiInputs {
           this.scene.ui.processInput(button);
           break;
       }
-    } 
+    }
     else if (button === Button.CYCLE_ABILITY) {
       switch (currentMode) {
         case Mode.TITLE:
@@ -344,17 +386,28 @@ export class UiInputs {
           this.scene.shiftPhase();
           break;
         default:
-          return;
+          this.scene.ui.processInput(button);
+          break;
       }
-    } else if (button === Button.CYCLE_FORM && (currentMode === Mode.TITLE || currentMode === Mode.COMMAND)) {
-      this.scene.ui.handleSaveButtonClick(this.scene as BattleScene);
+    } else if (button === Button.CYCLE_FORM) {
+      if (currentMode === Mode.TITLE || currentMode === Mode.COMMAND) {
+        this.scene.ui.handleSaveButtonClick(this.scene as BattleScene);
+      } else {
+        this.scene.ui.processInput(button);
+      }
+    } else if (button === Button.CYCLE_GENDER) {
+      this.scene.ui.processInput(button);
     } else if (button === Button.CYCLE_NATURE) {
       if((currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.COMMAND) && this.scene.gameMode.isChaosMode) {
           this.scene.ui.setOverlayMode(Mode.BATTLE_PATH, { viewOnly: true });
       }
       else if (currentMode === Mode.TITLE) {
         activateSmitomTalk(this.scene);
+      } else {
+        this.scene.ui.processInput(button);
       }
+    } else {
+      this.scene.ui.processInput(button);
     }
   }
 

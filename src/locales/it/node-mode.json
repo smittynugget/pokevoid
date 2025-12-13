@@ -1,6 +1,8 @@
 {
   "viewTitle": "Mappa del Percorso di Battaglia",
   "selectTitle": "Seleziona Percorso di Battaglia",
+  "chaosTitle": "CAOS",
+  "chaosSubtitle": "Scegli il tuo percorso mentre ti avventuri nel cuore dell'oscurità",
   "noPathMessage": "Nessun percorso di battaglia disponibile.\nGenerane uno prima!",
   "unknownEncounter": "Incontro sconosciuto",
   "unknownNode": "Sconosciuto",
@@ -22,8 +24,8 @@
     "smittyBattle": "Battaglia Smitty",
     "evilGruntBattle": "Recluta Team Malvagio",
     "evilAdminBattle": "Admin Team Malvagio",
-    "randPermaItem": "Oggetto ∞ Casuale",
-    "permaItems": "Ricompense Oggetto ∞",
+    "randPermaItem": "ΩOggetto Casuale",
+    "permaItems": "Ricompense ΩOggetto",
     "goldenPokeball": "Ricompense Pokéball Dorata",
     "rogueBallItems": "Ricompense Rogue Ball",
     "masterBallItems": "Ricompense Master Ball",
@@ -34,7 +36,7 @@
     "glitchPiece": "Ricompensa Pezzo Glitch",
     "dnaSplicers": "Ricompensa Cuneo DNA",
     "money": "Ricompense Denaro",
-    "permaMoney": "Aumento Denaro Permanente",
+    "permaMoney": "ΩORO",
     "releaseItems": "Ricompense Rilascio",
     "mints": "Ricompense Mentine",
     "eggVoucher": "Ricompensa Buono Uovo",
@@ -64,7 +66,9 @@
     "collectedShop": "Spendi Essenze per ricompense",
     "vitamin": "Ricompense generiche di potenziatori statistiche (Proteina, Ferro, Calcio, ecc.)",
     "moveUpgrade": "Potenziamenti mosse per le mosse Pokémon",
-    "lowTierMoveUpgrade": "Potenziamenti mosse con limite livello III"
+    "lowTierMoveUpgrade": "Potenziamenti mosse con limite livello III",
+    "skillPoints": "Punti Abilità per sbloccare abilità nell'Albero delle Abilità.",
+    "skillToken": "I Token Albero Abilità fanno salire di livello il tuo Albero delle Abilità!"
   },
   "names": {
     "wildPokemon": "Pokémon Selvatico",
@@ -84,8 +88,8 @@
     "smittyBattle": "Battaglia Smitty",
     "evilGruntBattle": "Recluta Malvagio",
     "evilAdminBattle": "Admin Malvagio",
-    "randPermaItem": "Oggetto ∞ Casuale",
-    "permaItems": "Ricompense Oggetto ∞",
+    "randPermaItem": "ΩOggetto Casuale",
+    "permaItems": "Ricompense ΩOggetto",
     "goldenPokeball": "Pokéball Dorata",
     "rogueBallItems": "Ricompense Rogue Ball",
     "masterBallItems": "Ricompense Master Ball",
@@ -96,7 +100,7 @@
     "glitchPiece": "Pezzo Glitch",
     "dnaSplicers": "Cuneo DNA",
     "money": "Denaro",
-    "permaMoney": "∞ORO",
+    "permaMoney": "ΩORO",
     "releaseItems": "Ricompense Rilascio",
     "mints": "Ricompense Mentine",
     "eggVoucher": "Buono Uovo",
@@ -126,7 +130,9 @@
     "collectedShop": "Il Collezionista",
     "vitamin": "Vitamine Economiche",
     "moveUpgrade": "Potenziamenti Mosse",
-    "lowTierMoveUpgrade": "Potenziamenti Mosse di Basso Livello"
+    "lowTierMoveUpgrade": "Potenziamenti Mosse di Basso Livello",
+    "skillPoints": "Punti Abilità",
+    "skillToken": "Token Abilità"
   },
   "challenge": {
     "chaosChallenge": "Sfida Caos Attiva",
@@ -238,5 +244,7 @@
       "name": "Nerf Pokémon",
       "description": "Il Pokémon più forte infligge metà danno"
     }
-  }
+  },
+  "tooltipDetails": "DETTAGLI",
+  "tooltipBack": "Indietro"
 } 

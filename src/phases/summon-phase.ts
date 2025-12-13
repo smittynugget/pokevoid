@@ -12,6 +12,7 @@ import { PartyMemberPokemonPhase } from "./party-member-pokemon-phase";
 import { PostSummonPhase } from "./post-summon-phase";
 import { GameOverPhase } from "./game-over-phase";
 import { ShinySparklePhase } from "./shiny-sparkle-phase";
+import { ChampionUtils } from "#app/system/champion-utils.js";
 
 export class SummonPhase extends PartyMemberPokemonPhase {
   private loaded: boolean;
@@ -27,35 +28,23 @@ export class SummonPhase extends PartyMemberPokemonPhase {
 
     this.preSummon();
   }
-
-  /**
-    * Sends out a Pokemon before the battle begins and shows the appropriate messages
-    */
   preSummon(): void {
     const partyMember = this.getPokemon();
-    // If the Pokemon about to be sent out is fainted or illegal under a challenge, switch to the first non-fainted legal Pokemon
+
     if (!partyMember.isAllowedInBattle()) {
       console.warn("The Pokemon about to be sent out is fainted or illegal under a challenge. Attempting to resolve...");
-
-      // First check if they're somehow still in play, if so remove them.
       if (partyMember.isOnField()) {
         partyMember.leaveField();
       }
 
       const party = this.getParty();
-
-      // Find the first non-fainted Pokemon index above the current one
       const legalIndex = party.findIndex((p, i) => i > this.partyMemberIndex && p.isAllowedInBattle());
       if (legalIndex === -1) {
-        console.error("Party Details:\n", party);
-        console.error("All available Pokemon were fainted or illegal!");
         this.scene.clearPhaseQueue();
         this.scene.unshiftPhase(new GameOverPhase(this.scene));
         this.end();
         return;
       }
-
-      // Swaps the fainted Pokemon and the first non-fainted legal Pokemon in the party
       [party[this.partyMemberIndex], party[legalIndex]] = [party[legalIndex], party[this.partyMemberIndex]];
       console.warn("Swapped %s %O with %s %O", getPokemonNameWithAffix(partyMember), partyMember, getPokemonNameWithAffix(party[0]), party[0]);
     }
@@ -65,13 +54,23 @@ export class SummonPhase extends PartyMemberPokemonPhase {
       if (this.player) {
         this.scene.pbTray.hide();
       }
-      this.scene.trainer.setTexture(`trainer_${this.scene.gameData.gender === PlayerGender.FEMALE ? "f" : "m"}_back_pb`);
-      this.scene.time.delayedCall(562, () => {
-        this.scene.trainer.setFrame("2");
-        this.scene.time.delayedCall(64, () => {
-          this.scene.trainer.setFrame("3");
-        });
-      });
+
+      const championId = this.scene.gameData.selectedChampionId;
+      const backSpriteKey = ChampionUtils.getChampionBackSpriteKey(championId, this.scene.gameData.gender);
+
+      if (this.scene.textures.exists(backSpriteKey)) {
+        this.scene.trainer.setTexture(backSpriteKey);
+        this.scene.trainer.setVisible(true);
+      } else {
+        this.scene.trainer.setVisible(false);
+      }
+
+      const trainerScale = ChampionUtils.getChampionBackSpriteScale(championId);
+      this.scene.trainer.setScale(trainerScale);
+      const trainerYOffset = ChampionUtils.getChampionBackSpriteYOffset(championId);
+      const currentX = this.scene.trainer.x;
+      this.scene.trainer.setPosition(currentX, 186 + trainerYOffset);
+
       this.scene.tweens.add({
         targets: this.scene.trainer,
         x: -36,
@@ -91,7 +90,7 @@ export class SummonPhase extends PartyMemberPokemonPhase {
 
   summon(): void {
     const pokemon = this.getPokemon();
-    
+
     const pokeball = this.scene.addFieldSprite(this.player ? 36 : 248, this.player ? 80 : 44, "pb", getPokeballAtlasKey(pokemon.pokeball));
     pokeball.setVisible(false);
     pokeball.setOrigin(0.5, 0.625);
@@ -146,6 +145,8 @@ export class SummonPhase extends PartyMemberPokemonPhase {
             pokemon.playAnim();
             pokemon.setVisible(true);
             pokemon.getSprite().setVisible(true);
+            console.log(`[SUMMON_DIAG] visibility set: container=${pokemon.visible}, sprite=${pokemon.getSprite()?.visible}, x=${pokemon.x}, y=${pokemon.y}`);
+            console.log(`[SUMMON_DIAG] sprite texture: ${pokemon.getSprite()?.texture?.key}, frame=${pokemon.getSprite()?.frame?.name}`);
             pokemon.setScale(0.5);
             pokemon.tint(getPokeballTintColor(pokemon.pokeball));
             pokemon.untint(250, "Sine.easeIn");
@@ -156,6 +157,7 @@ export class SummonPhase extends PartyMemberPokemonPhase {
               ease: "Sine.easeIn",
               scale: pokemon.isGlitchOrSmittyForm() ? 0.4 : pokemon.getSpriteScale(),
               onComplete: () => {
+                console.log(`[SUMMON_DIAG] scale tween complete: player=${this.player}, scale=${pokemon.scale}, visible=${pokemon.visible}`);
                 pokemon.cry(pokemon.getHpRatio() > 0.25 ? undefined : { rate: 0.85 });
                 pokemon.getSprite().clearTint();
                 pokemon.resetSummonData();

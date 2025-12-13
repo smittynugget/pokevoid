@@ -16,7 +16,11 @@
     "rewardObtained": "보상 획득!",
     "voidOvertaken": "공허가 지배했다!",
     "newShopItem": "새로운 상점 아이템",
-    "manyMoreNuggets": "그리고 더 많은 황금 덩어리들!"
+    "manyMoreNuggets": "그리고 더 많은 황금 덩어리들!",
+    "skillPoints": "스킬 포인트",
+    "skillTreeTokens": "스킬 트리 토큰",
+    "legendaryPower": "전설의 힘!",
+    "legendaryCatchable": "{{pokemon}}을(를) 이제 포획할 수 있습니다!"
   },
   "gameModes": {
     "nuzlocke": {

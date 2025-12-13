@@ -1,0 +1,48 @@
+{
+  "modifierType": {
+    "championStatBooster": {
+      "name": "{{champion}}训练: {{stats}}",
+      "description": "为{{champion}}的宝可梦提升{{stats}} {{percent}}%",
+      "descriptionConditional": "为{{types}}属性或招牌宝可梦提升{{stats}} {{percent}}%。非{{types}}属性且非招牌宝可梦只获得{{firstStat}}提升。"
+    },
+    "championPokemonStatBooster": {
+      "name": "{{champion}}的{{flavor}} [{{stats}}]",
+      "description": "永久提升选定宝可梦的{{stats}} {{percent}}%。注入了{{champion}}的训练方法。",
+      "descriptionConditional": "永久提升{{types}}属性或招牌宝可梦的{{stats}} {{percent}}%。非{{types}}属性且非招牌宝可梦只获得{{firstStat}}提升。注入了{{champion}}的训练方法。"
+    },
+    "trainerBondAbility": {
+      "name": "{{champion}}的极限突破: {{ability}}",
+      "description": "{{champion}}的宝可梦有{{chance}}%几率激活{{ability}}。{{abilityDescription}}"
+    },
+    "teraAbility": {
+      "name": "{{type}}太晶特性: {{ability}}",
+      "description": "太晶化为{{type}}属性时有{{chance}}%几率激活{{ability}}。{{abilityDescription}}"
+    },
+    "pokemonAltBuild": {
+      "name": "{{buildName}}",
+      "description": "{{description}} - 修改此宝可梦的能力值和特性",
+      "wrongSpecies": "此异构仅适用于{{species}}"
+    },
+    "championTm": {
+      "name": "{{champion}}的招式机: {{move}}",
+      "description": "教给宝可梦{{move}}。与{{champion}}的风格兼容。"
+    },
+    "championXm": {
+      "name": "{{champion}}的XM: {{move}}",
+      "description": "教授强力招式{{move}}。由{{champion}}精通。"
+    }
+  },
+  "modifier": {
+    "championStatBooster": {
+      "extra": {
+        "inoperable": "此宝可梦与{{champion}}的训练不兼容"
+      }
+    },
+    "trainerBondAbility": {
+      "extra": {
+        "activated": "{{champion}}的极限突破激活了{{ability}}！"
+      }
+    }
+  }
+}
+

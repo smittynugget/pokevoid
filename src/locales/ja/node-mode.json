@@ -1,6 +1,8 @@
 {
   "viewTitle": "バトルパスマップ",
   "selectTitle": "バトルパスを選択",
+  "chaosTitle": "カオス",
+  "chaosSubtitle": "闘の中心へと冒険しながら自分の道を選べ",
   "noPathMessage": "利用可能なバトルパスがありません。\nまず生成してください！",
   "unknownEncounter": "不明なエンカウント",
   "unknownNode": "不明",
@@ -22,8 +24,8 @@
     "smittyBattle": "スミッティバトル",
     "evilGruntBattle": "悪の組織下っ端",
     "evilAdminBattle": "悪の組織幹部",
-    "randPermaItem": "ランダム∞アイテム",
-    "permaItems": "∞アイテム報酬",
+    "randPermaItem": "ランダムΩアイテム",
+    "permaItems": "Ωアイテム報酬",
     "goldenPokeball": "金のモンスターボール報酬",
     "rogueBallItems": "ローグボール報酬",
     "masterBallItems": "マスターボール報酬",
@@ -34,7 +36,7 @@
     "glitchPiece": "グリッチピース報酬",
     "dnaSplicers": "いでんしのくさび報酬",
     "money": "お金報酬",
-    "permaMoney": "永続お金ブースト",
+    "permaMoney": "Ωゴールド",
     "releaseItems": "リリース報酬",
     "mints": "ミント報酬",
     "eggVoucher": "タマゴ引換券報酬",
@@ -64,7 +66,9 @@
     "collectedShop": "エッセンスを使って報酬を得る",
     "vitamin": "汎用ステータス上昇アイテム報酬（タウリン、ブロムヘキシン、リゾチウムなど）",
     "moveUpgrade": "ポケモンのわざのためのわざアップグレード",
-    "lowTierMoveUpgrade": "レベルIII上限のわざアップグレード"
+    "lowTierMoveUpgrade": "レベルIII上限のわざアップグレード",
+    "skillPoints": "スキルツリーでスキルを解放するためのスキルポイント。",
+    "skillToken": "スキルツリートークンでスキルツリーをレベルアップ！"
   },
   "names": {
     "wildPokemon": "野生ポケモン",
@@ -84,8 +88,8 @@
     "smittyBattle": "スミッティバトル",
     "evilGruntBattle": "悪下っ端",
     "evilAdminBattle": "悪幹部",
-    "randPermaItem": "ランダム∞アイテム",
-    "permaItems": "∞アイテム報酬",
+    "randPermaItem": "ランダムΩアイテム",
+    "permaItems": "Ωアイテム報酬",
     "goldenPokeball": "金のモンスターボール",
     "rogueBallItems": "ローグボール報酬",
     "masterBallItems": "マスターボール報酬",
@@ -96,7 +100,7 @@
     "glitchPiece": "グリッチピース",
     "dnaSplicers": "いでんしのくさび",
     "money": "お金",
-    "permaMoney": "∞GOLD",
+    "permaMoney": "Ωゴールド",
     "releaseItems": "リリース報酬",
     "mints": "ミント報酬",
     "eggVoucher": "タマゴ引換券",
@@ -126,7 +130,9 @@
     "collectedShop": "コレクター",
     "vitamin": "安価なタウリン系",
     "moveUpgrade": "わざアップグレード",
-    "lowTierMoveUpgrade": "低レベルわざアップグレード"
+    "lowTierMoveUpgrade": "低レベルわざアップグレード",
+    "skillPoints": "スキルポイント",
+    "skillToken": "スキルトークン"
   },
   "challenge": {
     "chaosChallenge": "カオスチャレンジ有効",
@@ -238,5 +244,7 @@
       "name": "ポケモンナーフ",
       "description": "最強ポケモンは半分のダメージ"
     }
-  }
+  },
+  "tooltipDetails": "詳細",
+  "tooltipBack": "戻る"
 } 

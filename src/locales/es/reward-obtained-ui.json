@@ -13,8 +13,12 @@
     "newForm": "¡Nueva Forma!",
     "rivalLost": "RIVAL DERROTADO...",
     "modeChange": "¡CAMBIO DE MODO!",
+    "skillPoints": "Puntos de Habilidad",
+    "skillTreeTokens": "Fichas de Árbol de Habilidades",
     "rewardObtained": "¡Recompensa Obtenida!",
     "voidOvertaken": "¡EL VACÍO HA SIDO DOMINADO!",
+    "legendaryPower": "¡Poder Legendario!",
+    "legendaryCatchable": "¡{{pokemon}} es ahora Capturable!",
     "newShopItem": "Nuevo Objeto de Tienda",
     "manyMoreNuggets": "¡Y Muchas Más Pepitas Jugosas!"
   },

@@ -2,6 +2,7 @@ import { ModalConfig, ModalUiHandler } from "./modal-ui-handler";
 import { Mode } from "./ui";
 import BattleScene from "../battle-scene";
 import { addTextObject, TextStyle } from "./text";
+import { createSporadicPattern } from "../utils";
 import i18next from "i18next";
 import { Button } from "../enums/buttons";
 import { OptionSelectConfig, OptionSelectItem } from "./abstact-option-select-ui-handler";
@@ -10,13 +11,14 @@ import { TutorialRegistry, EnhancedTutorial } from "./tutorial-registry";
 import { Tutorial } from "../tutorial";
 import { getPokemonSpecies } from "../data/pokemon-species";
 import { Species } from "../enums/species";
+import { isIPhone } from "../loading-scene";
 
 export interface TutorialConfig {
     title: string;
     stages: TutorialStage[];
     onComplete?: () => void;
     isTipActive?: boolean;
-    isFromMenu?: boolean; 
+    isFromMenu?: boolean;
 }
 
 export interface TutorialStage {
@@ -42,6 +44,7 @@ export interface TutorialSprite {
     itemId?: string;
     eggStage?: number;
     flipX?: boolean;
+    inverted?: boolean;
 }
 
 export default class TutorialUiHandler extends ModalUiHandler {
@@ -55,7 +58,16 @@ export default class TutorialUiHandler extends ModalUiHandler {
     protected sprites: Phaser.GameObjects.Sprite[] = [];
     protected buttonIndex: number = 0;
     protected texturesLoaded: boolean = false;
-    
+
+    protected modalBackgroundImage: Phaser.GameObjects.Image;
+    protected modalPatternOverlay: Phaser.GameObjects.Container;
+    protected modalBackgroundCreated: boolean = false;
+    protected modalPatternCreated: boolean = false;
+    protected fullscreenBackdrop: Phaser.GameObjects.Rectangle;
+    protected fullscreenBackdropCreated: boolean = false;
+    protected modalBorder: Phaser.GameObjects.Graphics;
+    protected modalBorderCreated: boolean = false;
+
     protected nextAction: Function | null = null;
     protected backAction: Function | null = null;
     protected cancelAction: Function | null = null;
@@ -63,6 +75,9 @@ export default class TutorialUiHandler extends ModalUiHandler {
     protected hubContainer: Phaser.GameObjects.Container;
     protected tutorialContainer: Phaser.GameObjects.Container;
     protected isHubMode: boolean = false;
+    protected inputDelayTimer: Phaser.Time.TimerEvent | null = null;
+    protected inputBlocked: boolean = false;
+    protected readonly INPUT_DELAY_MS = 1000;
     protected selectedCategoryIndex: number = 0;
     protected categories: {id: string, name: string}[] = [];
     protected hubButtonIndex: number = 0;
@@ -165,6 +180,21 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 EnhancedTutorial.POKEROGUE_1,
                 EnhancedTutorial.THANK_YOU
             ]
+        },
+        v2Update: {
+            title: "V2 Update",
+            tutorials: [
+                EnhancedTutorial.POKEVOID_V2_UPDATE,
+                EnhancedTutorial.FTL_MODE_SELECT,
+                EnhancedTutorial.CHAMPION_SELECT_ESSENCE,
+                EnhancedTutorial.CHAMPION_SELECT_SPECIAL_ESSENCES,
+                EnhancedTutorial.SKILLTREE_APOLLO_DIANA_TYPES,
+                EnhancedTutorial.SKILLTREE_SET_TYPES,
+                EnhancedTutorial.SKILLTREE_PROGRESSION,
+                EnhancedTutorial.STARTER_SELECT_CATCH_REQUIREMENTS,
+                EnhancedTutorial.STARTER_SELECT_SIGNATURE,
+                EnhancedTutorial.COMMAND_UI_NEW_COMMANDS
+            ]
         }
     };
 
@@ -175,18 +205,12 @@ export default class TutorialUiHandler extends ModalUiHandler {
         this.currentStageIndex = 0;
         this.tutorialService = new TutorialService(scene);
     }
-
-    /**
-     * Gets only the completed tutorials for a specific category
-     * @param categoryId The category ID to filter tutorials for
-     * @returns Array of completed tutorials for the category
-     */
     protected getCategoryCompletedTutorials(categoryId: string): (Tutorial | EnhancedTutorial)[] {
         if (!this.categoryMap[categoryId]) {
             return [];
         }
-        
-        return this.categoryMap[categoryId].tutorials.filter(tutorial => 
+
+        return this.categoryMap[categoryId].tutorials.filter(tutorial =>
             this.tutorialService.isTutorialCompleted(tutorial)
         );
     }
@@ -195,10 +219,10 @@ export default class TutorialUiHandler extends ModalUiHandler {
         if (this.isHubMode && !this.tutorialConfig) {
             return i18next.t("tutorial:hubTitle", "Tutorial Hub");
         }
-        
-        if (this.tutorialConfig?.stages && 
-            Array.isArray(this.tutorialConfig.stages) && 
-            this.currentStageIndex >= 0 && 
+
+        if (this.tutorialConfig?.stages &&
+            Array.isArray(this.tutorialConfig.stages) &&
+            this.currentStageIndex >= 0 &&
             this.currentStageIndex < this.tutorialConfig.stages.length) {
             const currentStage = this.tutorialConfig.stages[this.currentStageIndex];
             if (currentStage.title) {
@@ -241,33 +265,49 @@ export default class TutorialUiHandler extends ModalUiHandler {
             return false;
         }
 
+        const eggStarterHandler = this.scene.ui.handlers[Mode.EGG_STARTER_SELECT] as any;
+        if (eggStarterHandler) {
+            eggStarterHandler.titleBg?.setVisible(false);
+            eggStarterHandler.newTitleBg?.setVisible(false);
+            eggStarterHandler.titleText?.setVisible(false);
+            eggStarterHandler.tipText?.setVisible(false);
+        }
+
         const tutorialConfig = args[args.length - 1] as TutorialConfig;
-        
+
         if (!tutorialConfig) {
             this.isHubMode = true;
             this.tutorialConfig = null;
-            
+
             if (super.show(args)) {
+                this.positionBackdropBehindModal();
                 this.setupHub();
+                try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Bloom Doom1"); } catch {}
+                this.inputBlocked = true;
+                this.inputDelayTimer = this.scene.time.delayedCall(this.INPUT_DELAY_MS, () => {
+                    this.inputBlocked = false;
+                    this.inputDelayTimer = null;
+                });
                 return true;
             }
             return false;
         }
-        
+
         if (!tutorialConfig || !tutorialConfig.stages || !Array.isArray(tutorialConfig.stages)) {
             console.error("Invalid tutorial configuration", tutorialConfig);
             return false;
         }
-        
+
         this.tutorialConfig = tutorialConfig;
         this.currentStageIndex = 0;
         this.isHubMode = tutorialConfig.isFromMenu === true;
 
         if (super.show(args)) {
+            this.positionBackdropBehindModal();
             if (this.titleText) {
                 this.titleText.setText(this.getModalTitle());
             }
-            
+
             this.uiContainer = this.scene.add.container(0, 0);
             this.modalContainer.add(this.uiContainer);
             this.uiContainer.setAlpha(0);
@@ -280,11 +320,17 @@ export default class TutorialUiHandler extends ModalUiHandler {
                     this.handleUIError();
                 });
             }
-            
+
             this.fadeInUI();
-            
+
             this.updateButtonsForStage();
             this.initializeButtonHighlight();
+            try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Bloom Doom1"); } catch {}
+            this.inputBlocked = true;
+            this.inputDelayTimer = this.scene.time.delayedCall(this.INPUT_DELAY_MS, () => {
+                this.inputBlocked = false;
+                this.inputDelayTimer = null;
+            });
             return true;
         }
         return false;
@@ -292,10 +338,10 @@ export default class TutorialUiHandler extends ModalUiHandler {
 
     protected initializeButtonHighlight(): void {
         if (!this.buttonContainers || !this.buttonBgs) return;
-        
+
         const currentStageLabels = this.getButtonLabels();
         const allPossibleLabels = this.getAllPossibleButtonLabels();
-        
+
         const visibleButtonIndices: number[] = [];
         currentStageLabels.forEach(label => {
             const index = allPossibleLabels.indexOf(label);
@@ -303,7 +349,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 visibleButtonIndices.push(index);
             }
         });
-        
+
         if (visibleButtonIndices.length > 0) {
             this.setButtonIndex(visibleButtonIndices[0]);
         }
@@ -350,7 +396,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
             0,
             "",
             TextStyle.WINDOW,
-            { 
+            {
                 fontSize: '50px',
                 wordWrap: { width: (this.getWidth() - 20) * 6, useAdvancedWrap: true },
                 align: 'center'
@@ -383,7 +429,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
 
         const currentStageLabels = this.getButtonLabels();
         const allPossibleLabels = this.getAllPossibleButtonLabels();
-        
+
         const visibleButtonIndices: number[] = [];
         currentStageLabels.forEach(label => {
             const index = allPossibleLabels.indexOf(label);
@@ -394,7 +440,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
 
         this.buttonContainers.forEach((container, index) => {
             if (!container) return;
-            
+
             const isVisible = visibleButtonIndices.includes(index);
             container.setVisible(isVisible);
             this.buttonBgs[index].setVisible(isVisible);
@@ -402,29 +448,29 @@ export default class TutorialUiHandler extends ModalUiHandler {
 
         const visibleContainers = visibleButtonIndices.map(index => this.buttonContainers[index])
             .filter(container => container && container.visible);
-        
+
         const width = this.getWidth();
-        
+
         if (visibleContainers.length === 0) return;
-        
+
         if (visibleContainers.length === 1) {
             const buttonContainer = visibleContainers[0];
             const buttonIndex = this.buttonContainers.indexOf(buttonContainer);
             buttonContainer.setPosition(
-                width / 2, 
+                width / 2,
                 this.modalBg.height - (this.buttonBgs[buttonIndex].height + 8)
             );
         } else {
-            const buttonPadding = 15; 
+            const buttonPadding = 15;
             const totalButtonWidth = visibleContainers.reduce((total, container, idx) => {
                 const buttonIndex = this.buttonContainers.indexOf(container);
                 return total + this.buttonBgs[buttonIndex].width;
             }, 0);
-            
+
             const totalSpacing = (visibleContainers.length - 1) * buttonPadding;
             const totalWidth = totalButtonWidth + totalSpacing;
             const startX = (width - totalWidth) / 2;
-            
+
             let currentX = startX;
             for (let i = 0; i < this.buttonContainers.length; i++) {
                 const container = this.buttonContainers[i];
@@ -444,24 +490,24 @@ export default class TutorialUiHandler extends ModalUiHandler {
         if (!this.tutorialConfig?.stages || !Array.isArray(this.tutorialConfig.stages)) {
             return;
         }
-        
+
         const newStageIndex = this.currentStageIndex + direction;
-        
+
         if (newStageIndex >= 0 && newStageIndex < this.tutorialConfig.stages.length) {
             this.currentStageIndex = newStageIndex;
-            
+
             const loadingIndicator = this.showLoadingIndicator();
-            
+
             try {
                 await this.updateStageContent();
                 this.updateStageNavigation();
                 this.updateButtonsForStage();
                 this.initializeButtonHighlight();
-                
+
                 if (this.titleText) {
                     this.titleText.setText(this.getModalTitle());
                 }
-                
+
                 this.scene.ui.playSelect();
             } catch (error) {
                 console.error('[TutorialUI] Error during stage navigation:', error);
@@ -475,42 +521,33 @@ export default class TutorialUiHandler extends ModalUiHandler {
             this.completeHandler();
         }
     }
-    
-    /**
-     * Shows a loading indicator while content is being loaded
-     */
     private showLoadingIndicator(): Phaser.GameObjects.Container | null {
         if (!this.spritesContainer) return null;
-        
+
         const container = this.scene.add.container(0, 0);
-        
+
         const bg = this.scene.add.rectangle(
-            0, 0, 
-            40, 40, 
+            0, 0,
+            40, 40,
             0x000000, 0.5
         );
-        
+
         const text = this.scene.add.text(
             0, 0,
             i18next.t('pokedex:loading'),
             { fontSize: '12px', color: '#ffffff' }
         );
         text.setOrigin(0.5);
-        
+
         container.add([bg, text]);
         container.setPosition(0, 0);
         this.spritesContainer.add(container);
-        
+
         return container;
     }
-
-    /**
-     * Loads all textures needed for the current stage sprites
-     * Returns a promise that resolves when all textures are loaded
-     */
     private async loadTexturesForStage(): Promise<void> {
-        if (!this.tutorialConfig?.stages || 
-            this.currentStageIndex < 0 || 
+        if (!this.tutorialConfig?.stages ||
+            this.currentStageIndex < 0 ||
             this.currentStageIndex >= this.tutorialConfig.stages.length) {
             return Promise.resolve();
         }
@@ -528,7 +565,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 if (!this.scene.textures.exists(spriteKey)) {
                     loadPromises.push(this.loadTexture(spriteKey, `images/pokemon/${spriteConfig.speciesId}.png`));
                 }
-            } 
+            }
             else if (spriteConfig.spriteType === 'glitch' && spriteConfig.glitchFormName) {
                 const spriteKey = `pkmn__glitch__${spriteConfig.glitchFormName}`;
                 if (!this.scene.textures.exists(spriteKey)) {
@@ -543,6 +580,16 @@ export default class TutorialUiHandler extends ModalUiHandler {
                     loadPromises.push(this.loadSmittyLogo(logoId));
                 }
             }
+            else if (isIPhone() && spriteConfig.key === 'smitty_trainers') {
+                if (!this.scene.textures.exists('smitty_trainers')) {
+                    loadPromises.push(this.loadSmittyTrainersAtlas());
+                }
+            }
+            else if (isIPhone() && spriteConfig.key && this.isTrainerAtlasKey(spriteConfig.key)) {
+                if (!this.scene.textures.exists(spriteConfig.key)) {
+                    loadPromises.push(this.loadTrainerAtlas(spriteConfig.key));
+                }
+            }
             else if (spriteConfig.spriteType === 'item') {
                 const itemKey = spriteConfig.itemId || spriteConfig.key;
                 if (itemKey && !this.scene.textures.exists(itemKey)) {
@@ -550,13 +597,13 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 }
             }
             else if (spriteConfig.spriteType === 'egg') {
-                const textureKey = "egg"; 
+                const textureKey = "egg";
                 if (!this.scene.textures.exists(textureKey)) {
                     loadPromises.push(this.loadTexture(textureKey, "images/egg.png"));
                 }
             }
             else if (spriteConfig.spriteType === 'save') {
-                const textureKey = "saving_icon"; 
+                const textureKey = "saving_icon";
                 if (!this.scene.textures.exists(textureKey)) {
                     loadPromises.push(this.loadTexture(textureKey, "images/saving_icon.png"));
                 }
@@ -579,20 +626,16 @@ export default class TutorialUiHandler extends ModalUiHandler {
             this.texturesLoaded = true;
         }
     }
-
-    /**
-     * Special method to load a Smitty logo
-     */
     private loadSmittyLogo(logoId: number): Promise<void> {
         return new Promise((resolve, reject) => {
             const textureKey = `smittyLogo_${logoId}`;
-            
+
             if (this.scene.textures.exists(textureKey)) {
                 console.log(`[TutorialUI] SmittyLogo ${logoId} already loaded as ${textureKey}`);
                 resolve();
                 return;
             }
-            
+
             this.scene.load.image(textureKey, `images/smitty_logos/${logoId}.png`);
 
             this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
@@ -611,16 +654,65 @@ export default class TutorialUiHandler extends ModalUiHandler {
         });
     }
 
-    /**
-     * Helper method to load a single texture
-     */
+    private loadTrainerAtlas(key: string): Promise<void> {
+        return new Promise((resolve) => {
+            if (this.scene.textures.exists(key)) {
+                resolve();
+                return;
+            }
+
+            (this.scene as BattleScene).loadAtlas(key, "trainer");
+
+            this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
+                resolve();
+            });
+
+            if (!this.scene.load.isLoading()) {
+                this.scene.load.start();
+            }
+        });
+    }
+
+    private loadSmittyTrainersAtlas(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this.scene.textures.exists("smitty_trainers")) {
+                resolve();
+                return;
+            }
+
+            (this.scene as BattleScene).loadAtlas("smitty_trainers", "smittytrainers");
+
+            this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
+                resolve();
+            });
+
+            if (!this.scene.load.isLoading()) {
+                this.scene.load.start();
+            }
+        });
+    }
+
+    private isTrainerAtlasKey(key: string): boolean {
+        const knownTrainerKeys = [
+            "red", "blue", "lance", "steven", "cynthia", "alder", "iris",
+            "giovanni", "cyrus", "ghetsis", "archie", "maxie", "lysandre",
+            "guzma", "rose", "lt_surge", "blaine", "sabrina", "roxie",
+            "allister", "norman", "unknown_m", "unknown_f", "rival_m", "rival_f",
+            "leon", "diantha", "geeta", "nemona", "kieran", "hau", "wallace",
+            "rocket_grunt_m", "rocket_grunt_f", "magma_grunt_m", "magma_grunt_f",
+            "aqua_grunt_m", "aqua_grunt_f", "galactic_grunt_m", "galactic_grunt_f",
+            "plasma_grunt_m", "plasma_grunt_f", "flare_grunt_m", "flare_grunt_f"
+        ];
+        return knownTrainerKeys.includes(key);
+    }
+
     private loadTexture(key: string, path: string): Promise<void> {
         return new Promise((resolve, reject) => {
             if (!key || typeof key !== 'string') {
                 console.error(`[TutorialUI] Invalid texture key: ${key}`);
                 return;
             }
-            
+
             if (!path || typeof path !== 'string') {
                 console.error(`[TutorialUI] Invalid texture path for key ${key}: ${path}`);
                 return;
@@ -652,27 +744,27 @@ export default class TutorialUiHandler extends ModalUiHandler {
     }
 
     private async updateStageContent(): Promise<void> {
-        if (!this.tutorialConfig?.stages || !Array.isArray(this.tutorialConfig.stages) || 
+        if (!this.tutorialConfig?.stages || !Array.isArray(this.tutorialConfig.stages) ||
             this.currentStageIndex < 0 || this.currentStageIndex >= this.tutorialConfig.stages.length) {
             this.textDisplay?.setText("Error: Invalid tutorial stage");
             return;
         }
 
         const stage = this.tutorialConfig.stages[this.currentStageIndex];
-        
+
         this.textDisplay.setText(stage.text || "");
-        
+
         if (this.tutorialConfig.isFromMenu) {
             this.textContainer.setPosition(this.textContainer.x, this.getHeight() - 55);
         } else {
             this.textContainer.setPosition(this.getWidth() / 2, this.getHeight() - 50);
         }
-        
+
         this.sprites.forEach(sprite => sprite.destroy());
         this.sprites = [];
-        
+
         this.texturesLoaded = false;
-        
+
         try {
             await this.loadTexturesForStage();
             this.setupSprites(stage);
@@ -681,26 +773,22 @@ export default class TutorialUiHandler extends ModalUiHandler {
             this.handleUIError();
         }
     }
-    
-    /**
-     * Create sprites for the current stage after textures are loaded
-     */
     private setupSprites(stage: TutorialStage): void {
         if (!stage.sprites || !stage.sprites.length || !this.texturesLoaded) {
             return;
         }
-        
+
         const spriteCount = stage.sprites.length;
-        const spacing = 40; 
+        const spacing = 40;
         const totalWidth = (spriteCount - 1) * spacing;
         const startX = -totalWidth / 2;
-        
+
         stage.sprites.forEach((spriteConfig, index) => {
             const x = spriteConfig.x !== undefined ? spriteConfig.x : (startX + (index * spacing));
             const y = spriteConfig.y !== undefined ? spriteConfig.y : 0;
-            
+
             let sprite: Phaser.GameObjects.Sprite;
-            
+
             try {
                 if (spriteConfig.spriteType === 'pokemon' && spriteConfig.speciesId) {
                     const spriteKey = `pkmn__${spriteConfig.speciesId}`;
@@ -713,7 +801,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
                         false,
                         true
                     );
-                    
+
                     if (this.scene.spritePipeline) {
                         if (spriteConfig.shiny) {
                             sprite.setPipelineData("shiny", true);
@@ -722,7 +810,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
                             sprite.setPipelineData("variant", spriteConfig.variant);
                         }
                     }
-                } 
+                }
                 else if (spriteConfig.spriteType === 'glitch' && spriteConfig.glitchFormName) {
                     const spriteKey = `pkmn__glitch__${spriteConfig.glitchFormName}`;
                     sprite = (this.scene as BattleScene).addPokemonSprite(
@@ -747,7 +835,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 else if (spriteConfig.spriteType === 'smitty_logo' && spriteConfig.smittyLogoId !== undefined) {
                     try {
                         const textureKey = `smittyLogo_${spriteConfig.smittyLogoId}`;
-                        
+
                         if (!this.scene.textures.exists(textureKey)) {
                             console.error(`[TutorialUI] SmittyLogo texture ${textureKey} not available`);
                             sprite = this.scene.add.sprite(x, y, "error_texture");
@@ -765,7 +853,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 }
                 else if (spriteConfig.spriteType === 'egg') {
                     const eggStage = spriteConfig.eggStage !== undefined ? spriteConfig.eggStage : 0;
-                    
+
                     if (this.scene.textures.exists("egg")) {
                         try {
                             sprite = this.scene.add.sprite(x, y, "egg", `egg_${eggStage}`);
@@ -794,30 +882,40 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 else {
                     sprite = this.scene.add.sprite(x, y, spriteConfig.key, spriteConfig.frame);
                 }
-                
+
                 if (spriteConfig.scale !== undefined) {
                     sprite.setScale(spriteConfig.scale);
                 } else {
-                    sprite.setScale(0.75); 
+                    sprite.setScale(0.75);
                 }
-                
+
                 if (spriteConfig.alpha !== undefined) {
                     sprite.setAlpha(spriteConfig.alpha);
                     if (Math.abs(spriteConfig.alpha - 0.85) < 0.01) {
                         sprite.setTint(0x000000);
                     }
                 }
-                
+
                 if (spriteConfig.flipX) {
                     sprite.setFlipX(true);
                 }
-                
+
+                if (spriteConfig.inverted) {
+                    try {
+                        if (sprite.postFX && typeof sprite.postFX.addColorMatrix === 'function') {
+                            const colorMatrix = sprite.postFX.addColorMatrix();
+                            colorMatrix.negative();
+                        }
+                    } catch (error) {
+                    }
+                }
+
                 if (spriteConfig.animation && sprite.anims.exists(spriteConfig.animation)) {
                     sprite.play(spriteConfig.animation);
                 } else if (sprite.texture.frameTotal > 1) {
                     sprite.play(sprite.texture.key);
                 }
-                
+
                 this.sprites.push(sprite);
                 this.spritesContainer.add(sprite);
             } catch (error) {
@@ -834,7 +932,19 @@ export default class TutorialUiHandler extends ModalUiHandler {
         const hubWidth = this.isHubMode ? this.getWidth() / 5 : 0;
         const tutorialWidth = this.isHubMode ? this.getWidth() - hubWidth : this.getWidth();
         const centerX = hubWidth + (tutorialWidth / 2);
-        const bottomY = this.getHeight() - 18; 
+        const bottomY = this.getHeight() - 18;
+
+        const rightX = hubWidth + tutorialWidth - 10;
+        const stageText = addTextObject(
+            this.scene,
+            rightX - 4,
+            bottomY,
+            `${this.currentStageIndex + 1}/${this.tutorialConfig.stages.length}`,
+            TextStyle.WINDOW,
+            { fontSize: "48px" }
+        );
+        stageText.setOrigin(1, 0.5);
+        this.stageNavigationContainer.add(stageText);
 
         if (this.currentStageIndex > 0 || (this.isHubMode && this.selectedCategoryIndex > 0)) {
             const backArrow = this.scene.add.sprite(centerX - 20, bottomY, 'cursor_reverse');
@@ -859,7 +969,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
             this.stageNavigationContainer.add(backArrow);
         }
 
-        if (this.currentStageIndex < this.tutorialConfig.stages.length - 1 || 
+        if (this.currentStageIndex < this.tutorialConfig.stages.length - 1 ||
             (this.isHubMode && this.selectedCategoryIndex < this.categories.length - 1) ||
             this.currentStageIndex === this.tutorialConfig.stages.length - 1) {
             const forwardArrow = this.scene.add.sprite(centerX + 20, bottomY, 'cursor');
@@ -888,7 +998,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
     protected async setupHub(): Promise<void> {
         this.uiContainer = this.scene.add.container(0, 0);
         this.modalContainer.add(this.uiContainer);
-        
+
         this.categories = Object.keys(this.categoryMap)
             .filter(id => {
                 return this.getCategoryCompletedTutorials(id).length > 0;
@@ -897,21 +1007,21 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 id,
                 name: this.categoryMap[id].title
             }));
-        
+
         this.setupHubUI();
         this.fadeInUI();
     }
-    
+
     protected setupHubUI(): void {
         this.hubContainer = this.scene.add.container(0, 0);
         this.uiContainer.add(this.hubContainer);
-        
+
         const width = this.getWidth();
         const height = this.getHeight();
-        
+
         const startY = 25;
         const lineHeight = 12;
-        
+
         this.categories.forEach((category, index) => {
             const textObj = addTextObject(
                 this.scene,
@@ -922,7 +1032,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 { fontSize: '45px' }
             );
             textObj.setOrigin(0.5, 0);
-            
+
             const highlight = this.scene.add.rectangle(
                 width / 2,
                 startY + (index * lineHeight) + 6,
@@ -932,12 +1042,12 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 0
             );
             highlight.setOrigin(0.5, 0.5);
-            
+
             textObj.setData('highlight', highlight);
-            
+
             this.hubContainer.add([highlight, textObj]);
         });
-        
+
         const instructionsText = addTextObject(
             this.scene,
             width / 2,
@@ -948,13 +1058,13 @@ export default class TutorialUiHandler extends ModalUiHandler {
         );
         instructionsText.setOrigin(0.5, 0.5);
         this.hubContainer.add(instructionsText);
-        
+
         this.updateHubSelection();
     }
-    
+
     protected updateHubSelection(): void {
         const textObjects = this.hubContainer.getAll().filter(obj => obj.type === 'Text');
-        
+
         textObjects.forEach((textObj, index) => {
             if (index < this.categories.length) {
                 const highlight = textObj.getData('highlight');
@@ -970,15 +1080,15 @@ export default class TutorialUiHandler extends ModalUiHandler {
             }
         });
     }
-    
+
     protected async setupHubWithTutorial(): Promise<void> {
         this.hubContainer = this.scene.add.container(0, 0);
         this.tutorialContainer = this.scene.add.container(0, 0);
-        
+
         this.uiContainer.add([this.hubContainer, this.tutorialContainer]);
-        
+
         const hubWidth = this.getWidth() / 5;
-        
+
         this.categories = Object.keys(this.categoryMap)
             .filter(id => {
                 return this.getCategoryCompletedTutorials(id).length > 0;
@@ -987,10 +1097,10 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 id,
                 name: this.categoryMap[id].title
             }));
-        
+
         const startY = 25;
-        const lineHeight = 10; 
-        
+        const lineHeight = 10;
+
         this.categories.forEach((category, index) => {
             const textObj = addTextObject(
                 this.scene,
@@ -998,25 +1108,25 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 startY + (index * lineHeight),
                 category.name,
                 TextStyle.WINDOW,
-                { fontSize: '42px' } 
+                { fontSize: '42px' }
             );
             textObj.setOrigin(0.5, 0);
-            
+
             const highlight = this.scene.add.rectangle(
                 hubWidth / 2,
                 startY + (index * lineHeight) + 5,
-                hubWidth - 6, 
+                hubWidth - 6,
                 lineHeight,
                 0xffff00,
                 0
             );
             highlight.setOrigin(0.5, 0.5);
-            
+
             textObj.setData('highlight', highlight);
-            
+
             this.hubContainer.add([highlight, textObj]);
         });
-        
+
         const divider = this.scene.add.graphics();
         divider.lineStyle(2, 0xffffff, 0.5);
         divider.beginPath();
@@ -1024,11 +1134,11 @@ export default class TutorialUiHandler extends ModalUiHandler {
         divider.lineTo(hubWidth + 2, this.getHeight() - 20);
         divider.closePath();
         divider.strokePath();
-        
+
         this.hubContainer.add(divider);
-        
+
         this.updateHubSelection();
-        
+
         if (this.categories.length > 0) {
             this.selectedCategoryIndex = 0;
             this.updateHubSelection();
@@ -1040,16 +1150,16 @@ export default class TutorialUiHandler extends ModalUiHandler {
             }
         }
     }
-    
+
     private async loadCategoryTutorial(categoryId: string): Promise<void> {
         if (this.tutorialContainer) {
             this.tutorialContainer.removeAll(true);
         }
-        
+
         const hubWidth = this.getWidth() / 5;
         const tutorialWidth = this.getWidth() - hubWidth;
         const tutorialCenterX = hubWidth + (tutorialWidth / 2);
-        
+
         const loadingText = addTextObject(
             this.scene,
             tutorialCenterX,
@@ -1060,36 +1170,36 @@ export default class TutorialUiHandler extends ModalUiHandler {
         );
         loadingText.setOrigin(0.5, 0.5);
         this.tutorialContainer.add(loadingText);
-        
+
         try {
             const registry = TutorialRegistry.getInstance();
-            
+
             if (this.categoryMap.hasOwnProperty(categoryId)) {
                 const categoryData = this.categoryMap[categoryId];
-                
+
                 const completedTutorials = this.getCategoryCompletedTutorials(categoryId);
-                
+
                 const combinedConfig = registry.combineTutorials(
-                    categoryData.title, 
+                    categoryData.title,
                     completedTutorials,
                     () => {
                         this.currentStageIndex = 0;
                     },
-                    false, 
-                    true 
+                    false,
+                    true
                 );
-                
+
                 this.tutorialConfig = combinedConfig;
                 this.currentStageIndex = 0;
-                
+
                 this.tutorialContainer.removeAll(true);
-                
+
                 await this.setupTutorialUI();
-                
+
                 if (this.titleText) {
                     this.titleText.setText(this.getModalTitle());
                 }
-                
+
                 this.updateButtonsForStage();
             } else {
                 this.tutorialContainer.removeAll(true);
@@ -1106,7 +1216,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
             }
         } catch (error) {
             console.error('[TutorialUI] Error loading category tutorial:', error);
-            
+
             this.tutorialContainer.removeAll(true);
             const errorText = addTextObject(
                 this.scene,
@@ -1120,11 +1230,11 @@ export default class TutorialUiHandler extends ModalUiHandler {
             this.tutorialContainer.add(errorText);
         }
     }
-    
+
     protected async setupTutorialUI(): Promise<void> {
         const hubWidth = this.getWidth() / 5;
         const tutorialWidth = this.getWidth() - hubWidth;
-        
+
         this.stageNavigationContainer = this.scene.add.container(0, 0);
         this.spritesContainer = this.scene.add.container(tutorialWidth / 2 + hubWidth, this.getHeight() / 2 - 20);
         this.textContainer = this.scene.add.container(tutorialWidth / 2 + hubWidth, this.getHeight() - 50);
@@ -1141,7 +1251,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
             0,
             "",
             TextStyle.WINDOW,
-            { 
+            {
                 fontSize: '46px',
                 wordWrap: { width: (tutorialWidth - 30) * 6, useAdvancedWrap: true },
                 align: 'center'
@@ -1168,8 +1278,12 @@ export default class TutorialUiHandler extends ModalUiHandler {
     }
 
     processInput(button: Button): boolean {
+        if (this.inputBlocked) {
+            return true;
+        }
+
         const ui = this.getUi();
-        
+
         const handleAsyncNavigation = (asyncFunc: () => Promise<void>) => {
             asyncFunc().catch(error => {
                 console.error('[TutorialUI] Navigation error:', error);
@@ -1185,32 +1299,32 @@ export default class TutorialUiHandler extends ModalUiHandler {
                     if (this.selectedCategoryIndex > 0) {
                         this.selectedCategoryIndex--;
                         this.updateHubSelection();
-                        
+
                         if (this.tutorialConfig) {
                             const selectedCategory = this.categories[this.selectedCategoryIndex];
                             return handleAsyncNavigation(() => this.loadCategoryTutorial(selectedCategory.id));
                         }
-                        
+
                         ui.playSelect();
                         return true;
                     }
                     break;
-                    
+
                 case Button.DOWN:
                     if (this.selectedCategoryIndex < this.categories.length - 1) {
                         this.selectedCategoryIndex++;
                         this.updateHubSelection();
-                        
+
                         if (this.tutorialConfig) {
                             const selectedCategory = this.categories[this.selectedCategoryIndex];
                             return handleAsyncNavigation(() => this.loadCategoryTutorial(selectedCategory.id));
                         }
-                        
+
                         ui.playSelect();
                         return true;
                     }
                     break;
-                    
+
                 case Button.SUBMIT:
                 case Button.ACTION:
                     const selectedCategory = this.categories[this.selectedCategoryIndex];
@@ -1219,7 +1333,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
                             return handleAsyncNavigation(() => this.loadCategoryTutorial(selectedCategory.id));
                         } else {
                             ui.revertMode();
-                            
+
                             setTimeout(() => {
                                 this.tutorialService.showTutorialsByCategory(selectedCategory.id, true)
                                     .then(() => {
@@ -1233,18 +1347,18 @@ export default class TutorialUiHandler extends ModalUiHandler {
                                         }, 300);
                                     });
                             }, 300);
-                            
+
                             ui.playSelect();
                             return true;
                         }
                     }
                     break;
-                    
+
                 case Button.CANCEL:
                     this.cancelInMenuMode();
                     ui.playSelect();
                     return true;
-                    
+
                 case Button.LEFT:
                     if (this.tutorialConfig && this.currentStageIndex > 0) {
                         return handleAsyncNavigation(() => this.navigateStage(-1));
@@ -1252,15 +1366,15 @@ export default class TutorialUiHandler extends ModalUiHandler {
                         this.selectedCategoryIndex--;
                         this.updateHubSelection();
                         const prevCategory = this.categories[this.selectedCategoryIndex];
-                        
+
                         return handleAsyncNavigation(async () => {
                             await this.loadCategoryTutorial(prevCategory.id);
-                            
+
                             if (this.tutorialConfig?.stages && this.tutorialConfig.stages.length > 0) {
                                 this.currentStageIndex = this.tutorialConfig.stages.length - 1;
                                 await this.updateStageContent();
                                 this.updateStageNavigation();
-                                
+
                                 if (this.titleText) {
                                     this.titleText.setText(this.getModalTitle());
                                 }
@@ -1268,7 +1382,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
                         });
                     }
                     break;
-                    
+
                 case Button.RIGHT:
                     if (this.tutorialConfig && this.currentStageIndex < this.tutorialConfig.stages.length - 1) {
                         return handleAsyncNavigation(() => this.navigateStage(1));
@@ -1302,16 +1416,6 @@ export default class TutorialUiHandler extends ModalUiHandler {
                         return true;
                     }
                     break;
-
-                // case Button.CANCEL:
-                //     if (this.tutorialConfig.isFromMenu) {
-                //         this.cancelInMenuMode();
-                //     } else {
-                //         this.cancelAction();
-                //     }
-                //     ui.playSelect();
-                //     return true;
-                //     break;
             }
         }
 
@@ -1322,7 +1426,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
         if (this.tutorialConfig.onComplete) {
             this.tutorialConfig.onComplete();
         }
-        
+
         if (this.isHubMode) {
             this.clear();
             this.scene.ui.revertMode();
@@ -1371,17 +1475,17 @@ export default class TutorialUiHandler extends ModalUiHandler {
             }
             return config;
         }
-        
+
         const currentStageLabels = this.getButtonLabels();
         const allPossibleLabels = this.getAllPossibleButtonLabels();
-        
+
         for (let i = 0; i < allPossibleLabels.length; i++) {
             const label = allPossibleLabels[i];
-            
+
             if (!currentStageLabels.includes(label) || i >= config.buttonActions.length) {
                 continue;
             }
-            
+
             if (label === i18next.t("menu:continue")) {
                 const isLastStage = this.currentStageIndex === this.tutorialConfig.stages.length - 1;
                 if (isLastStage && i > 0) {
@@ -1395,30 +1499,77 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 config.buttonActions[i] = () => this.cancelAction();
             }
         }
-        
+
         return config;
     }
 
+    private positionBackdropBehindModal(): void {
+        if (this.fullscreenBackdrop) {
+            const ui = this.getUi();
+            ui.moveBelow(this.fullscreenBackdrop, this.modalContainer);
+        }
+    }
+
     clear(): void {
+        if (this.inputDelayTimer) {
+            this.inputDelayTimer.remove(false);
+            this.inputDelayTimer = null;
+        }
+        this.inputBlocked = false;
+
+        const eggStarterHandler = this.scene.ui.handlers[Mode.EGG_STARTER_SELECT] as any;
+        if (eggStarterHandler?.active) {
+            eggStarterHandler.titleBg?.setVisible(true);
+            eggStarterHandler.newTitleBg?.setVisible(true);
+            eggStarterHandler.titleText?.setVisible(true);
+            eggStarterHandler.tipText?.setVisible(true);
+        }
+
+        if (this.fullscreenBackdrop) {
+            const ui = this.getUi();
+            ui.remove(this.fullscreenBackdrop);
+            this.fullscreenBackdrop.destroy();
+            this.fullscreenBackdrop = null!;
+            this.fullscreenBackdropCreated = false;
+        }
+        if (this.modalBackgroundImage) {
+            this.modalBackgroundImage.destroy();
+            this.modalBackgroundImage = null!;
+            this.modalBackgroundCreated = false;
+        }
+        if (this.modalPatternOverlay) {
+            this.modalPatternOverlay.destroy();
+            this.modalPatternOverlay = null!;
+            this.modalPatternCreated = false;
+        }
+        if (this.modalBorder) {
+            this.modalBorder.destroy();
+            this.modalBorder = null!;
+            this.modalBorderCreated = false;
+        }
+
         if (this.uiContainer) {
             this.sprites.forEach(sprite => sprite.destroy());
             this.sprites = [];
-            
+
             this.uiContainer.destroy();
             this.uiContainer = null;
         }
-        
+
         this.hubContainer = null;
         this.tutorialContainer = null;
         this.isHubMode = false;
         this.selectedCategoryIndex = 0;
         this.hubButtonIndex = 0;
-        
+
         this.nextAction = null;
         this.backAction = null;
         this.cancelAction = null;
-        
+
         super.clear();
+    }
+
+    protected createModalBackground(): void {
     }
 
     updateContainer(config?: ModalConfig): void {
@@ -1426,16 +1577,80 @@ export default class TutorialUiHandler extends ModalUiHandler {
 
         const [ width, height ] = [ this.getWidth(config), this.getHeight(config) ];
         this.modalContainer.setPosition(
-            (((this.scene.game.canvas.width / 6) - (width + (marginRight - marginLeft))) / 2), 
+            (((this.scene.game.canvas.width / 6) - (width + (marginRight - marginLeft))) / 2),
             (((-this.scene.game.canvas.height / 6) - (height + (marginBottom - marginTop))) / 2)
         );
+        this.modalContainer.setDepth(10000);
 
+        this.modalBg.setVisible(false);
         this.modalBg.setSize(width, height);
+
+        if (!this.fullscreenBackdropCreated) {
+            const ui = this.getUi();
+            this.fullscreenBackdrop = this.scene.add.rectangle(
+                0,
+                -this.scene.game.canvas.height / 6,
+                this.scene.game.canvas.width / 6,
+                this.scene.game.canvas.height / 6,
+                0x000000,
+                0.9
+            );
+            this.fullscreenBackdrop.setOrigin(0, 0);
+            this.fullscreenBackdrop.setDepth(9999);
+            ui.add(this.fullscreenBackdrop);
+            this.fullscreenBackdropCreated = true;
+        }
+
+        if (!this.modalBackgroundCreated) {
+            this.modalBackgroundImage = this.scene.add.image(0, 0, "tutorial_bg");
+            this.modalBackgroundImage.setOrigin(0, 0);
+            this.modalContainer.addAt(this.modalBackgroundImage, 1);
+            this.modalBackgroundCreated = true;
+        }
+
+        if (this.modalBackgroundImage) {
+            this.modalBackgroundImage.setPosition(this.modalBg.x, this.modalBg.y);
+            this.modalBackgroundImage.setDisplaySize(this.modalBg.width, this.modalBg.height);
+        }
+
+        if (!this.modalPatternCreated) {
+            this.modalPatternOverlay = this.scene.add.container(0, 0);
+            this.modalContainer.addAt(this.modalPatternOverlay, 2);
+            createSporadicPattern(this.scene, this.modalPatternOverlay, { width, height });
+            this.modalPatternCreated = true;
+        }
+
+        if (this.modalPatternOverlay) {
+            this.modalPatternOverlay.setPosition(this.modalBg.x, this.modalBg.y);
+        }
+
+        if (!this.modalBorderCreated) {
+            this.modalBorder = this.scene.add.graphics();
+            this.modalContainer.add(this.modalBorder);
+            this.modalBorderCreated = true;
+        }
+
+        if (this.modalBorder) {
+            this.modalBorder.clear();
+            this.modalBorder.lineStyle(.3, 0xffffff, 0.9);
+            this.modalBorder.strokeRoundedRect(
+                this.modalBg.x,
+                this.modalBg.y,
+                width,
+                height,
+                4
+            );
+        }
+
+        if (this.uiContainer && this.uiContainer.parentContainer === this.modalContainer) {
+            this.modalContainer.bringToTop(this.uiContainer);
+        }
 
         const title = this.getModalTitle(config);
 
         this.titleText.setText(title);
-        
+        this.titleText.setStyle({ fontSize: "56px" });
+
         if (this.isHubMode) {
             const hubWidth = width / 5;
             const tutorialWidth = width - hubWidth;
@@ -1443,8 +1658,8 @@ export default class TutorialUiHandler extends ModalUiHandler {
         } else {
             this.titleText.setX(width / 2);
         }
-        
+
         this.titleText.setVisible(!!title);
 
     }
-} 
+}

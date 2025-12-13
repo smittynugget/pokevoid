@@ -1,5 +1,3 @@
-/// <reference types="vite/client" />
-
 interface ImportMetaEnv {
     readonly VITE_PORT?: string;
     readonly VITE_BYPASS_LOGIN?: string;
@@ -9,6 +7,7 @@ interface ImportMetaEnv {
     readonly VITE_DISCORD_CLIENT_ID?: string;
     readonly VITE_GOOGLE_CLIENT_ID?: string;
     readonly VITE_I18N_DEBUG?: string;
+    readonly VITE_MODULE_LOADING_DEBUG?: string;
     readonly VITE_FIREBASE_API_KEY: string;
     readonly VITE_FIREBASE_AUTH_DOMAIN: string;
     readonly VITE_FIREBASE_PROJECT_ID: string;

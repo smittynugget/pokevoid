@@ -15,7 +15,7 @@ export class UnlockUniSmittyPhase extends Phase {
     constructor(scene: BattleScene, formName?: string, onComplete?: () => void) {
         super(scene);
         this.onComplete = onComplete || (() => this.end());
-        
+
         if (formName) {
             this.formName = formName;
         } else {
@@ -61,4 +61,4 @@ export class UnlockUniSmittyPhase extends Phase {
     end(): void {
         super.end();
     }
-} 
+}

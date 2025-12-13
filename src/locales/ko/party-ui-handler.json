@@ -13,6 +13,7 @@
   "TRADE": "₽{{value}}에 교환한다",
   "ALL": "전부",
   "PASS_BATON": "배턴터치한다",
+  "PAUSE_EVOLUTION": "진화 일시정지",
   "UNPAUSE_EVOLUTION": "진화 재개",
   "REVIVE": "되살린다",
   "RENAME": "닉네임 바꾸기",

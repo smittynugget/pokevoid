@@ -124,7 +124,7 @@ export default class MoveInfoOverlay extends Phaser.GameObjects.Container implem
 
   show(move : Move):boolean {
     if (!(this.scene as BattleScene).enableMoveInfo) {
-      return false; // move infos have been disabled // TODO:: is `false` correct? i used to be `undeefined`
+      return false;
     }
     this.move = move;
     this.pow.setText(move.power >= 0 ? move.power.toString() : "---");
@@ -134,18 +134,14 @@ export default class MoveInfoOverlay extends Phaser.GameObjects.Container implem
     this.cat.setFrame(MoveCategory[move.category].toLowerCase());
 
     this.desc.setText(move?.effect || "");
-
-    // stop previous scrolling effects and reset y position
     if (this.descScroll) {
       this.descScroll.remove();
       this.descScroll = null;
       this.desc.y = (this.options?.top ? EFF_HEIGHT : 0) + BORDER - 2;
     }
-
-    // determine if we need to add new scrolling effects
     const moveDescriptionLineCount = Math.floor(this.desc.displayHeight * (96 / 72) / 14.83);
     if (moveDescriptionLineCount > 3) {
-      // generate scrolling effects
+
       this.descScroll = this.scene.tweens.add({
         targets: this.desc,
         delay: Utils.fixedInt(2000),
@@ -175,13 +171,9 @@ export default class MoveInfoOverlay extends Phaser.GameObjects.Container implem
   isActive(): boolean {
     return this.active;
   }
-
-  // width of this element
   static getWidth(scale:number, scene: BattleScene):number {
     return scene.game.canvas.width / GLOBAL_SCALE / 2;
   }
-
-  // height of this element
   static getHeight(scale:number, onSide?: boolean):number {
     return (onSide ? Math.max(EFF_HEIGHT, DESC_HEIGHT) : (EFF_HEIGHT + DESC_HEIGHT)) * scale;
   }

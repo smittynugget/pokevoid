@@ -3,5 +3,11 @@
   "ball": "ボール",
   "pokemon": "ポケモン",
   "run": "にげる",
-  "actionMessage": "{{pokemonName}}は どうする？"
+  "actionMessage": "{{pokemonName}}は どうする？",
+  "skillTree": "スキルツリー",
+  "team": "チーム",
+  "check": "チェック",
+  "eggs": "タマゴ",
+  "shop": "ショップ",
+  "map": "マップ"
 }

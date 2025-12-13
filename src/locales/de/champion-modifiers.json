@@ -1,0 +1,47 @@
+{
+  "modifierType": {
+    "championStatBooster": {
+      "name": "{{champion}} Training: {{stats}}",
+      "description": "Erhöht {{stats}} um {{percent}}% für {{champion}}s Pokémon",
+      "descriptionConditional": "Erhöht {{stats}} um {{percent}}% für {{types}}-Typ Pokémon oder Signatur-Pokémon. Nicht-{{types}} Nicht-Signatur-Pokémon erhalten nur {{firstStat}} Boost."
+    },
+    "championPokemonStatBooster": {
+      "name": "{{champion}}s {{flavor}} [{{stats}}]",
+      "description": "Erhöht dauerhaft {{stats}} um {{percent}}% für das ausgewählte Pokémon. Mit {{champion}}s Trainingsmethoden durchdrungen.",
+      "descriptionConditional": "Erhöht dauerhaft {{stats}} um {{percent}}% für {{types}}-Typ Pokémon oder Signatur-Pokémon. Nicht-{{types}} Nicht-Signatur-Pokémon erhalten nur {{firstStat}} Boost. Mit {{champion}}s Trainingsmethoden durchdrungen."
+    },
+    "trainerBondAbility": {
+      "name": "{{champion}}s Limit Break: {{ability}}",
+      "description": "{{chance}}% Chance {{ability}} für {{champion}}s Pokémon zu aktivieren. {{abilityDescription}}"
+    },
+    "teraAbility": {
+      "name": "{{type}} Tera-Fähigkeit: {{ability}}",
+      "description": "{{chance}}% Chance {{ability}} zu aktivieren während als {{type}}-Typ terakristallisiert. {{abilityDescription}}"
+    },
+    "pokemonAltBuild": {
+      "name": "{{buildName}}",
+      "description": "{{description}} - Modifiziert die Werte und Fähigkeiten dieses Pokémon",
+      "wrongSpecies": "Dieser Alt-Build ist nur für {{species}}"
+    },
+    "championTm": {
+      "name": "{{champion}}s TM: {{move}}",
+      "description": "Lehrt {{move}} einem Pokémon. Kompatibel mit {{champion}}s Stil."
+    },
+    "championXm": {
+      "name": "{{champion}}s XM: {{move}}",
+      "description": "Lehrt die mächtige Attacke {{move}}. Von {{champion}} gemeistert."
+    }
+  },
+  "modifier": {
+    "championStatBooster": {
+      "extra": {
+        "inoperable": "Dieses Pokémon ist nicht kompatibel mit {{champion}}s Training"
+      }
+    },
+    "trainerBondAbility": {
+      "extra": {
+        "activated": "{{champion}}s Limit Break aktivierte {{ability}}!"
+      }
+    }
+  }
+}

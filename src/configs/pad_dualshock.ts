@@ -1,6 +1,4 @@
-/**
- * Dualshock mapping
- */
+
 const pad_dualshock = {
   padID: "Dualshock",
   padType: "Sony",
@@ -9,8 +7,8 @@ const pad_dualshock = {
     RC_E: 1,
     RC_W: 2,
     RC_N: 3,
-    START: 9, // Options
-    SELECT: 8, // Share
+    START: 9,
+    SELECT: 8,
     LB: 4,
     RB: 5,
     LT: 6,

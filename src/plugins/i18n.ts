@@ -1,8 +1,6 @@
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import processor, { KoreanPostpositionProcessor } from "i18next-korean-postposition-processor";
-
-// import { caEsConfig} from "#app/locales/ca_ES/config.js";
 import { deConfig } from "#app/locales/de/config.js";
 import { enConfig } from "#app/locales/en/config.js";
 import { esConfig } from "#app/locales/es/config.js";
@@ -26,7 +24,7 @@ const unicodeRanges = {
   kana: "U+3040-30FF",
   CJKCommon: "U+2E80-2EFF,U+3000-303F,U+31C0-31EF,U+3200-32FF,U+3400-4DBF,U+F900-FAFF,U+FE30-FE4F",
   CJKIdeograph: "U+4E00-9FFF",
-  specialCharacters: "U+266A,U+2605,U+2665,U+2663" //♪.★,♥,♣
+  specialCharacters: "U+266A,U+2605,U+2665,U+2663"
 };
 const rangesByLanguage = {
   korean: [unicodeRanges.CJKCommon, unicodeRanges.hangul].join(","),
@@ -35,7 +33,7 @@ const rangesByLanguage = {
 };
 
 const fonts: Array<LoadingFontFaceProperty> = [
-  // unicode (special character from PokePT)
+
   {
     face: new FontFace("emerald", "url(./fonts/PokePT_Wansung.woff2)", { unicodeRange: unicodeRanges.specialCharacters }),
   },
@@ -43,7 +41,7 @@ const fonts: Array<LoadingFontFaceProperty> = [
     face: new FontFace("pkmnems", "url(./fonts/PokePT_Wansung.woff2)", { unicodeRange: unicodeRanges.specialCharacters }),
     extraOptions: { sizeAdjust: "133%" },
   },
-  // unicode (korean)
+
   {
     face: new FontFace("emerald", "url(./fonts/PokePT_Wansung.woff2)", { unicodeRange: rangesByLanguage.korean }),
   },
@@ -51,7 +49,7 @@ const fonts: Array<LoadingFontFaceProperty> = [
     face: new FontFace("pkmnems", "url(./fonts/PokePT_Wansung.woff2)", { unicodeRange: rangesByLanguage.korean }),
     extraOptions: { sizeAdjust: "133%" },
   },
-  // unicode (chinese)
+
   {
     face: new FontFace("emerald", "url(./fonts/unifont-15.1.05.subset.woff2)", { unicodeRange: rangesByLanguage.chinese }),
     extraOptions: { sizeAdjust: "70%", format: "woff2" },
@@ -62,7 +60,7 @@ const fonts: Array<LoadingFontFaceProperty> = [
     extraOptions: { format: "woff2" },
     only: [ "en", "es", "fr", "it", "de", "zh", "pt", "ko"],
   },
-  // japanese
+
   {
     face: new FontFace("emerald", "url(./fonts/Galmuri11.subset.woff2)", { unicodeRange: rangesByLanguage.japanese }),
     extraOptions: { sizeAdjust: "66%" },
@@ -90,29 +88,11 @@ async function initFonts(language: string | undefined) {
 }
 
 export async function initI18n(): Promise<void> {
-  // Prevent reinitialization
+
   if (isInitialized) {
     return;
   }
   isInitialized = true;
-
-  /**
-   * i18next is a localization library for maintaining and using translation resources.
-   *
-   * Q: How do I add a new language?
-   * A: To add a new language, create a new folder in the locales directory with the language code.
-   *    Each language folder should contain a file for each namespace (ex. menu.ts) with the translations.
-   *    Don't forget to declare new language in `supportedLngs` i18next initializer
-   *
-   * Q: How do I add a new namespace?
-   * A: To add a new namespace, create a new file in each language folder with the translations.
-   *    Then update the config file for that language in its locale directory
-   *    and the CustomTypeOptions interface in the @types/i18next.d.ts file.
-   *
-   * Q: How do I make a language selectable in the settings?
-   * A: In src/system/settings.ts, add a new case to the Setting.Language switch statement.
-   */
-
   i18next.use(LanguageDetector);
   i18next.use(processor);
   i18next.use(new KoreanPostpositionProcessor());
@@ -162,12 +142,25 @@ export async function initI18n(): Promise<void> {
       ja: {
         ...jaConfig
       }
-      
+
     },
     postProcess: ["korean-postposition"],
   });
 
   await initFonts(localStorage.getItem("prLang") ?? undefined);
+
+  updateMobileButtonLabels();
+  i18next.on('languageChanged', updateMobileButtonLabels);
+}
+
+function updateMobileButtonLabels(): void {
+  document.querySelectorAll('[data-i18n]').forEach((element) => {
+    const key = element.getAttribute('data-i18n');
+    if (key) {
+      const translated = i18next.t(key);
+      element.textContent = translated.toUpperCase();
+    }
+  });
 }
 
 export default i18next;
@@ -177,4 +170,3 @@ export function getIsInitialized(): boolean {
 }
 
 let isInitialized = false;
-

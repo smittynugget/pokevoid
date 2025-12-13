@@ -7,30 +7,7 @@ interface TmSpecies {
     [key: integer]: Array<Species | Array<Species | string>>
 }
 
-export const reverseCompatibleTms: Moves[] = [];/*[
-    Moves.TAKE_DOWN,
-    Moves.TOXIC,
-    Moves.RAGE,
-    Moves.MIMIC,
-    Moves.DOUBLE_TEAM,
-    Moves.BIDE,
-    Moves.REST,
-    Moves.SUBSTITUTE,
-    Moves.SNORE,
-    Moves.PROTECT,
-    Moves.ENDURE,
-    Moves.SWAGGER,
-    Moves.ATTRACT,
-    Moves.SLEEP_TALK,
-    Moves.RETURN,
-    Moves.FRUSTRATION,
-    Moves.HIDDEN_POWER,
-    Moves.FACADE,
-    Moves.SECRET_POWER,
-    Moves.NATURAL_GIFT,
-    Moves.CAPTIVATE,
-    Moves.ROUND
-];*/
+export const reverseCompatibleTms: Moves[] = [];
 
 export const tmSpecies: TmSpecies = {
     [Moves.MEGA_PUNCH]: [
@@ -67583,14 +67560,14 @@ export const tmPoolTiers: TmPoolTiers = {
     [Moves.ICE_PUNCH]: ModifierTier.GREAT,
     [Moves.THUNDER_PUNCH]: ModifierTier.GREAT,
     [Moves.SWORDS_DANCE]: ModifierTier.COMMON,
-    // [Moves.CUT]: ModifierTier.COMMON,
+
     [Moves.FLY]: ModifierTier.COMMON,
     [Moves.MEGA_KICK]: ModifierTier.GREAT,
     [Moves.BODY_SLAM]: ModifierTier.GREAT,
     [Moves.TAKE_DOWN]: ModifierTier.GREAT,
     [Moves.DOUBLE_EDGE]: ModifierTier.ULTRA,
     [Moves.PIN_MISSILE]: ModifierTier.COMMON,
-    // [Moves.ROAR]: ModifierTier.COMMON,
+
     [Moves.FLAMETHROWER]: ModifierTier.ULTRA,
     [Moves.HYDRO_PUMP]: ModifierTier.ULTRA,
     [Moves.SURF]: ModifierTier.ULTRA,
@@ -67623,11 +67600,11 @@ export const tmPoolTiers: TmPoolTiers = {
     [Moves.SELF_DESTRUCT]: ModifierTier.GREAT,
     [Moves.FIRE_BLAST]: ModifierTier.ULTRA,
     [Moves.WATERFALL]: ModifierTier.GREAT,
-    // [Moves.SWIFT]: ModifierTier.COMMON,
+
     [Moves.AMNESIA]: ModifierTier.COMMON,
     [Moves.DREAM_EATER]: ModifierTier.MEH,
     [Moves.LEECH_LIFE]: ModifierTier.ULTRA,
-    // [Moves.FLASH]: ModifierTier.COMMON,
+
     [Moves.EXPLOSION]: ModifierTier.GREAT,
     [Moves.REST]: ModifierTier.COMMON,
     [Moves.ROCK_SLIDE]: ModifierTier.GREAT,
@@ -67657,7 +67634,7 @@ export const tmPoolTiers: TmPoolTiers = {
     [Moves.SLEEP_TALK]: ModifierTier.COMMON,
     [Moves.HEAL_BELL]: ModifierTier.COMMON,
     [Moves.RETURN]: ModifierTier.ULTRA,
-    // [Moves.FRUSTRATION]: ModifierTier.COMMON,
+
     [Moves.SAFEGUARD]: ModifierTier.COMMON,
     [Moves.PAIN_SPLIT]: ModifierTier.COMMON,
     [Moves.MEGAHORN]: ModifierTier.ULTRA,
@@ -67686,7 +67663,7 @@ export const tmPoolTiers: TmPoolTiers = {
     [Moves.NATURE_POWER]: ModifierTier.COMMON,
     [Moves.CHARGE]: ModifierTier.MEH,
     [Moves.TAUNT]: ModifierTier.COMMON,
-    // [Moves.HELPING_HAND]: ModifierTier.COMMON,
+
     [Moves.TRICK]: ModifierTier.COMMON,
     [Moves.SUPERPOWER]: ModifierTier.ULTRA,
     [Moves.RECYCLE]: ModifierTier.COMMON,
@@ -67804,7 +67781,7 @@ export const tmPoolTiers: TmPoolTiers = {
     [Moves.ROUND]: ModifierTier.COMMON,
     [Moves.ECHOED_VOICE]: ModifierTier.COMMON,
     [Moves.STORED_POWER]: ModifierTier.COMMON,
-    // [Moves.ALLY_SWITCH]: ModifierTier.COMMON,
+
     [Moves.SCALD]: ModifierTier.GREAT,
     [Moves.HEX]: ModifierTier.GREAT,
     [Moves.SKY_DROP]: ModifierTier.GREAT,
@@ -67875,7 +67852,7 @@ export const tmPoolTiers: TmPoolTiers = {
     [Moves.LASH_OUT]: ModifierTier.GREAT,
     [Moves.POLTERGEIST]: ModifierTier.ULTRA,
     [Moves.CORROSIVE_GAS]: ModifierTier.COMMON,
-    // [Moves.COACHING]: ModifierTier.COMMON,
+
     [Moves.FLIP_TURN]: ModifierTier.GREAT,
     [Moves.TRIPLE_AXEL]: ModifierTier.GREAT,
     [Moves.DUAL_WINGBEAT]: ModifierTier.GREAT,
@@ -68061,8 +68038,6 @@ export const tmPoolTiers: TmPoolTiers = {
     [Moves.HYDRO_STEAM]: ModifierTier.MASTER,
 
 };
-
-
 export function extendTmCompatibility() {
     for (const [speciesId, evolutions] of Object.entries(pokemonEvolutions)) {
         const preSpeciesId = parseInt(speciesId);

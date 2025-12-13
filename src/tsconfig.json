@@ -8,13 +8,12 @@
 		"strictNullChecks": false,
 		"sourceMap": false,
 		"strict": false,
-		"rootDir": "./src",
-		"baseUrl": "./src",
+		"baseUrl": "./",
 		"paths": {
-			"#enums/*": ["./enums/*.ts"],
-			"#app/*": ["*.ts"],
-			"#app": ["."],
-			"#test/*": ["./test/*.ts"]
+			"#enums/*": ["./src/enums/*.ts"],
+			"#app/*": ["./src/*.ts"],
+			"#app": ["./src"],
+			"#test/*": ["./src/test/*.ts"]
 		},
 		"outDir": "./build",
 		"noEmit": true

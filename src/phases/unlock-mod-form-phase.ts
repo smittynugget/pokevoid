@@ -21,20 +21,20 @@ export class UnlockModFormPhase extends Phase {
     async start(): Promise<void> {
         try {
             const allMods = await modStorage.getAllMods();
-            const matchingMod = allMods.find(mod => 
+            const matchingMod = allMods.find(mod =>
                 mod.formName.toLowerCase() === this.formName.toLowerCase()
             );
-            
+
             if (matchingMod) {
                 this.speciesId = matchingMod.speciesId;
-                
+
                 const modName = getModPokemonName(matchingMod.speciesId, matchingMod.formName);
                 this.formName = modName || matchingMod.formName;
-            } 
+            }
         } catch (error) {
             console.error(`Error looking up mod data for ${this.formName}:`, error);
         }
-        
+
         this.scene.time.delayedCall(2000, () => {
 
             const rewardConfig: RewardConfig = {
@@ -60,4 +60,4 @@ export class UnlockModFormPhase extends Phase {
     end(): void {
         super.end();
     }
-} 
+}

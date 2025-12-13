@@ -4,8 +4,6 @@ import { TextStyle, addTextObject } from "./text";
 import i18next from "i18next";
 import { getPokemonNameWithAffix } from "../messages";
 import { Ability } from "#app/data/ability.ts";
-
-
 const hiddenX = -118;
 const shownX = 0;
 const baseY = -116;
@@ -47,8 +45,6 @@ export default class AbilityBar extends Phaser.GameObjects.Container {
     }
 
     (this.scene as BattleScene).fieldUI.bringToTop(this);
-
-
     this.y = baseY + ((this.scene as BattleScene).currentBattle.double ? 14 : 0);
     this.tween = this.scene.tweens.add({
       targets: this,
@@ -63,7 +59,7 @@ export default class AbilityBar extends Phaser.GameObjects.Container {
 
     this.setVisible(true);
     this.shown = true;
-  }
+  }z
 
   hide(): void {
     if (!this.shown) {

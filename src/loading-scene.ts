@@ -10,8 +10,8 @@ import { initI18n } from "./plugins/i18n";
 import {initPokemonPrevolutions} from "#app/data/pokemon-evolutions";
 import {initBiomes} from "#app/data/biomes";
 import {initEggMoves} from "#app/data/egg-moves";
-import {initPokemonForms, initSmittyForms} from "#app/data/pokemon-forms";
 import {initSpecies} from "#app/data/pokemon-species";
+import {initPokemonForms, initSmittyForms} from "#app/data/pokemon-forms";
 import {initMoves} from "#app/data/move";
 import {initMoveRegistry} from "#app/data/move-registry";
 import {initAbilities} from "#app/data/ability";
@@ -26,6 +26,8 @@ import { TrainerType } from "#enums/trainer-type";
 import { modStorage } from "./system/mod-storage";
 import { loadModGlitchFormFromJson } from "./data/mod-glitch-form-utils";
 import { loadAndStoreMod } from "./data/mod-glitch-form-utils";
+import Overrides from "./overrides";
+import { AssetLoadProfiler } from "./system/asset-load-profiler";
 
 export class LoadingScene extends SceneBase {
   public static readonly KEY = "loading";
@@ -49,6 +51,11 @@ export class LoadingScene extends SceneBase {
 
   preload() {
     Utils.localPing();
+    const isIOS = isIPhone();
+
+    if (Overrides.DEBUG_IOS_MODE) {
+      AssetLoadProfiler.getInstance().enable();
+    }
 
     this.loadSe("logoSmittyNugget", "voice", "intro_smitty_nugget.mp3");
     this.loadImage("loading_bg", "arenas");
@@ -63,10 +70,20 @@ export class LoadingScene extends SceneBase {
     this.loadImage("cursor", "ui");
     this.loadImage("cursor_reverse", "ui");
     for (const wv of Utils.getEnumValues(WindowVariant)) {
-      for (let w = 1; w <= 5; w++) {
-        this.loadImage(`window_${w}${getWindowVariantSuffix(wv)}`, "ui/windows");
-      }
+      this.loadImage(`window_1${getWindowVariantSuffix(wv)}`, "ui/windows");
     }
+
+    this.loadImage(`window_1b`, "ui/windows");
+
+    this.loadImage("corner_tl", "ui/edges", "tl.png");
+    this.loadImage("corner_tr", "ui/edges", "tr.png");
+    this.loadImage("corner_bl", "ui/edges", "bl.png");
+    this.loadImage("corner_br", "ui/edges", "br.png");
+    this.loadImage("corner_tl_alt", "ui/edges", "tl_alt.png");
+    this.loadImage("corner_tr_alt", "ui/edges", "tr_alt.png");
+    this.loadImage("corner_bl_alt", "ui/edges", "bl_alt.png");
+    this.loadImage("corner_br_alt", "ui/edges", "br_alt.png");
+
     this.loadAtlas("namebox", "ui");
     this.loadImage("pbinfo_player", "ui");
     this.loadImage("pbinfo_player_stats", "ui");
@@ -142,23 +159,34 @@ export class LoadingScene extends SceneBase {
     this.loadAtlas("party_pb", "ui");
     this.loadAtlas("party_cancel", "ui");
 
-    this.loadImage("summary_bg", "ui");
-    this.loadImage("summary_overlay_shiny", "ui");
-    this.loadImage("summary_profile", "ui");
-    this.loadImage("summary_profile_prompt_z", "ui");      // The pixel Z button prompt
-    this.loadImage("summary_profile_prompt_a", "ui");     // The pixel A button prompt
-    this.loadImage("summary_profile_ability", "ui");      // Pixel text 'ABILITY'
-    this.loadImage("summary_profile_passive", "ui");      // Pixel text 'PASSIVE'
-    this.loadImage("summary_status", "ui");
-    this.loadImage("summary_stats", "ui");
-    this.loadImage("summary_stats_overlay_exp", "ui");
-    this.loadImage("summary_moves", "ui");
-    this.loadImage("summary_moves_effect", "ui");
-    this.loadImage("summary_moves_overlay_row", "ui");
-    this.loadImage("summary_moves_overlay_pp", "ui");
+    if (!isIOS) {
+      this.loadImage("summary_bg", "ui");
+      this.loadImage("summary_overlay_shiny", "ui");
+      this.loadImage("summary_profile", "ui");
+      this.loadImage("summary_profile_prompt_z", "ui");
+      this.loadImage("summary_profile_prompt_a", "ui");
+      this.loadImage("summary_status", "ui");
+      this.loadImage("summary_stats", "ui");
+      this.loadImage("summary_stats_overlay_exp", "ui");
+      this.loadImage("summary_stats_exp_bar", "ui");
+      this.loadImage("summary_moves", "ui");
+      this.loadImage("summary_moves_effect", "ui");
+      this.loadImage("summary_moves_overlay_row", "ui");
+      this.loadImage("summary_moves_overlay_pp", "ui");
+      for (let t = 1; t <= 3; t++) {
+        this.loadImage(`summary_tabs_${t}`, "ui");
+      }
+    }
     this.loadAtlas("summary_moves_cursor", "ui");
-    for (let t = 1; t <= 3; t++) {
-      this.loadImage(`summary_tabs_${t}`, "ui");
+    if (Overrides.DEBUG_IOS_MODE && isIOS) {
+      const profiler = AssetLoadProfiler.getInstance();
+      ["summary_bg", "summary_overlay_shiny", "summary_profile",
+       "summary_profile_prompt_z", "summary_profile_prompt_a",
+       "summary_status", "summary_stats", "summary_stats_overlay_exp",
+       "summary_stats_exp_bar", "summary_moves", "summary_moves_effect",
+       "summary_moves_overlay_row", "summary_moves_overlay_pp",
+       "summary_tabs_1", "summary_tabs_2", "summary_tabs_3"
+      ].forEach(key => profiler.trackDeferred(key));
     }
 
     this.loadImage("scroll_bar", "ui");
@@ -174,37 +202,51 @@ export class LoadingScene extends SceneBase {
 
     this.loadImage("saving_icon", "ui");
     this.loadImage("discord", "ui");
+    this.loadImage("modal_bg", "ui");
+    this.loadImage("bg_icon", "ui");
+    this.loadImage("battle_path_blur_bg", "ui");
+    this.loadImage("tutorial_bg", "ui");
 
     this.loadImage("default_bg", "arenas");
-    // Load arena images
-    Utils.getEnumValues(Biome).map(bt => {
-      const btKey = Biome[bt].toLowerCase();
-      const isBaseAnimated = btKey === "end";
-      const baseAKey = `${btKey}_a`;
-      const baseBKey = `${btKey}_b`;
-      this.loadImage(`${btKey}_bg`, "arenas");
-      if (!isBaseAnimated) {
-        this.loadImage(baseAKey, "arenas");
-      } else {
-        this.loadAtlas(baseAKey, "arenas");
-      }
-      if (!isBaseAnimated) {
-        this.loadImage(baseBKey, "arenas");
-      } else {
-        this.loadAtlas(baseBKey, "arenas");
-      }
-      if (getBiomeHasProps(bt)) {
-        for (let p = 1; p <= 3; p++) {
-          const isPropAnimated = p === 3 && [ "power_plant", "end" ].find(b => b === btKey);
-          const propKey = `${btKey}_b_${p}`;
-          if (!isPropAnimated) {
-            this.loadImage(propKey, "arenas");
-          } else {
-            this.loadAtlas(propKey, "arenas");
+    if (!isIOS) {
+      Utils.getEnumValues(Biome).map(bt => {
+        const btKey = Biome[bt].toLowerCase();
+        const isBaseAnimated = btKey === "end";
+        const baseAKey = `${btKey}_a`;
+        const baseBKey = `${btKey}_b`;
+        this.loadImage(`${btKey}_bg`, "arenas");
+        if (!isBaseAnimated) {
+          this.loadImage(baseAKey, "arenas");
+        } else {
+          this.loadAtlas(baseAKey, "arenas");
+        }
+        if (!isBaseAnimated) {
+          this.loadImage(baseBKey, "arenas");
+        } else {
+          this.loadAtlas(baseBKey, "arenas");
+        }
+        if (getBiomeHasProps(bt)) {
+          for (let p = 1; p <= 3; p++) {
+            const isPropAnimated = p === 3 && [ "power_plant", "end" ].find(b => b === btKey);
+            const propKey = `${btKey}_b_${p}`;
+            if (!isPropAnimated) {
+              this.loadImage(propKey, "arenas");
+            } else {
+              this.loadAtlas(propKey, "arenas");
+            }
           }
         }
-      }
-    });
+      });
+    }
+    if (Overrides.DEBUG_IOS_MODE && isIOS) {
+      const profiler = AssetLoadProfiler.getInstance();
+      Utils.getEnumValues(Biome).forEach(bt => {
+        const btKey = Biome[bt].toLowerCase();
+        profiler.trackDeferred(`${btKey}_bg`);
+        profiler.trackDeferred(`${btKey}_a`);
+        profiler.trackDeferred(`${btKey}_b`);
+      });
+    }
 
     this.load.bitmapFont("item-count", "fonts/item-count.png", "fonts/item-count.xml");
 
@@ -213,15 +255,36 @@ export class LoadingScene extends SceneBase {
     this.loadAtlas("trainer_f_back", "trainer");
     this.loadAtlas("trainer_f_back_pb", "trainer");
 
-    Utils.getEnumValues(TrainerType).map(tt => {
-      const config = trainerConfigs[tt];
-      try {
-        this.loadAtlas(config.getSpriteKey(), "trainer");
-      } catch (error) {
-        console.error(`Failed to load trainer sprite for TrainerType ${tt}:`, error);
-      }
-    });
+    this.loadAtlas("player_m", "trainer");
+    this.loadAtlas("player_f", "trainer");
 
+    this.loadAtlas("brock_back", "trainer");
+    this.loadAtlas("misty_back", "trainer");
+    this.loadAtlas("brock", "trainer");
+    this.loadAtlas("misty", "trainer");
+
+    if (!isIOS) {
+      Utils.getEnumValues(TrainerType).map(tt => {
+        if (tt === TrainerType.BROCK || tt === TrainerType.MISTY) {
+          return;
+        }
+        const config = trainerConfigs[tt];
+        try {
+          this.loadAtlas(config.getSpriteKey(), "trainer");
+        } catch (error) {
+          console.error(`Failed to load trainer sprite for TrainerType ${tt}:`, error);
+        }
+      });
+    }
+    if (Overrides.DEBUG_IOS_MODE && isIOS) {
+      const profiler = AssetLoadProfiler.getInstance();
+      Utils.getEnumValues(TrainerType).forEach(tt => {
+        const config = trainerConfigs[tt];
+        try {
+          profiler.trackDeferred(config.getSpriteKey());
+        } catch {}
+      });
+    }
 
     this.loadImage("pkmn__back__sub", "pokemon/back", "sub.png");
     this.loadImage("pkmn__sub", "pokemon", "sub.png");
@@ -277,11 +340,15 @@ export class LoadingScene extends SceneBase {
       }
     }
     this.loadAtlas(`pokemon_icons_glitch`, "");
-    this.loadAtlas(`smitty_trainers`, "smittytrainers");
+    if (!isIOS) {
+      this.loadAtlas(`smitty_trainers`, "smittytrainers");
+    }
+    if (Overrides.DEBUG_IOS_MODE && isIOS) {
+      AssetLoadProfiler.getInstance().trackDeferred("smitty_trainers");
+    }
 
-    this.loadAtlas(`smitems_32`, "smitems");
-    this.loadAtlas(`smitems_192`, "smitems");
-  
+    this.loadAtlas(`smitems`, "smitems");
+
     this.loadAtlas("dualshock", "inputs");
     this.loadAtlas("xbox", "inputs");
     this.loadAtlas("keyboard", "inputs");
@@ -328,27 +395,47 @@ export class LoadingScene extends SceneBase {
     this.loadSe("gacha_dispense");
 
     this.loadSe("PRSFX- Transform", "battle_anims");
+    this.loadSe("PRSFX- Healing Pulse", "battle_anims");
+    this.loadSe("PRSFX- Gear Up3", "battle_anims");
+    this.loadSe("PRSFX- Last Resort1", "battle_anims");
+    this.loadSe("PRSFX- Oblivion Wing2", "battle_anims");
+    this.loadSe("PRSFX- Bestow2", "battle_anims");
+    this.loadSe("PRSFX- Quiver Dance", "battle_anims");
+    this.loadSe("PRSFX- Bloom Doom1", "battle_anims");
 
     this.loadBgm("menu");
 
     this.loadSe("hellowelcome", "voice", "hellowelcome.mp3");
+    this.loadSe("champion_select", "voice", "champion_select.mp3");
 
-    if(!isIPhone()) {
+    if(!isIOS) {
       for (let i = 1; i <= 84; i++) {
         this.loadSe(`smitty_sound_${i}`, "voice", `smitty_sound_${i}.mp3`);
       }
     }
 
-    this.loadBgm("level_up_fanfare", "bw/level_up_fanfare.mp3");
-    this.loadBgm("item_fanfare", "bw/item_fanfare.mp3");
-    this.loadBgm("minor_fanfare", "bw/minor_fanfare.mp3");
     this.loadBgm("heal", "bw/heal.mp3");
-    this.loadBgm("victory_trainer", "bw/victory_trainer.mp3");
-    this.loadBgm("victory_team_plasma", "bw/victory_team_plasma.mp3");
-    this.loadBgm("victory_gym", "bw/victory_gym.mp3");
-    this.loadBgm("victory_champion", "bw/victory_champion.mp3");
-    this.loadBgm("evolution", "bw/evolution.mp3");
-    this.loadBgm("evolution_fanfare", "bw/evolution_fanfare.mp3");
+
+    if (!isIOS) {
+      this.loadBgm("level_up_fanfare", "bw/level_up_fanfare.mp3");
+      this.loadBgm("item_fanfare", "bw/item_fanfare.mp3");
+      this.loadBgm("minor_fanfare", "bw/minor_fanfare.mp3");
+      this.loadBgm("victory_trainer", "bw/victory_trainer.mp3");
+      this.loadBgm("victory_team_plasma", "bw/victory_team_plasma.mp3");
+      this.loadBgm("victory_gym", "bw/victory_gym.mp3");
+      this.loadBgm("victory_champion", "bw/victory_champion.mp3");
+      this.loadBgm("evolution", "bw/evolution.mp3");
+      this.loadBgm("evolution_fanfare", "bw/evolution_fanfare.mp3");
+      this.loadBgm("evolution_fanfare_rse", "rse/evolution_fanfare.mp3");
+    }
+    if (Overrides.DEBUG_IOS_MODE && isIOS) {
+      const profiler = AssetLoadProfiler.getInstance();
+      ["level_up_fanfare", "item_fanfare", "minor_fanfare", "heal",
+       "victory_trainer", "victory_team_plasma", "victory_gym",
+       "victory_champion", "evolution", "evolution_fanfare",
+       "evolution_fanfare_rse"
+      ].forEach(key => profiler.trackDeferred(key));
+    }
 
     this.load.plugin("rextexteditplugin", "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rextexteditplugin.min.js", true);
 
@@ -386,14 +473,20 @@ export class LoadingScene extends SceneBase {
 
     const progressBar = this.add.graphics();
     const progressBox = this.add.graphics();
-    progressBox.lineStyle(5, 0xff00ff, 1.0);
-    progressBox.fillStyle(0x222222, 0.8);
 
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
     const midWidth = width / 2;
     const midHeight = height / 2;
+    const barX = midWidth - 320;
+    const barY = 360;
+    const barWidth = 640;
+    const barHeight = 64;
+    progressBox.fillStyle(0x222222, 0.7);
+    progressBox.fillRect(barX, barY, barWidth, barHeight);
+    progressBox.lineStyle(3, 0xFFD700, 0.9);
+    progressBox.strokeRect(barX, barY, barWidth, barHeight);
 
     const logo = this.add.image(midWidth, 240, "");
     logo.setVisible(false);
@@ -404,7 +497,7 @@ export class LoadingScene extends SceneBase {
       text: "0%",
       style: {
         font: "72px emerald",
-        color: "#ffffff",
+        color: "#FFF200",
       },
     });
     percentText.setOrigin(0.5, 0.5);
@@ -415,7 +508,7 @@ export class LoadingScene extends SceneBase {
       text: "",
       style: {
         font: "48px emerald",
-        color: "#ffffff",
+        color: "#FFF200",
       },
     });
     assetText.setOrigin(0.5, 0.5);
@@ -425,8 +518,8 @@ export class LoadingScene extends SceneBase {
       y: assetText.y + 152,
       text: i18next.t("menu:disclaimer"),
       style: {
-        font: "72px emerald",
-        color: "#DA3838",
+        font: "65px emerald",
+        color: "#FF0000",
       },
     });
     disclaimerText.setOrigin(0.5, 0.5);
@@ -436,17 +529,29 @@ export class LoadingScene extends SceneBase {
       y: disclaimerText.y + 120,
       text: i18next.t("menu:disclaimerDescription"),
       style: {
-        font: "48px emerald",
-        color: "#ffffff",
+        font: "43px emerald",
+        color: "#FFFFFF",
         align: "center"
       },
     });
     disclaimerDescriptionText.setOrigin(0.5, 0.5);
 
-    loadingGraphics.push(bg, graphics, progressBar, progressBox, logo, percentText, assetText, disclaimerText, disclaimerDescriptionText);
+    const versionText = this.make.text({
+      x: width - 8,
+      y: height - 4,
+      text: i18next.t("menu:gameVersion"),
+      style: {
+        font: "28px emerald",
+        color: "#FFFFFF",
+      },
+    });
+    versionText.setOrigin(1, 1);
+    versionText.setAlpha(0.7);
+
+    loadingGraphics.push(bg, graphics, progressBar, progressBox, logo, percentText, assetText, disclaimerText, disclaimerDescriptionText, versionText);
 
     loadingGraphics.map(g => g.setVisible(false));
-    
+
     this.loadingGraphics = loadingGraphics;
     this.mainLoadingComplete = false;
 
@@ -456,7 +561,7 @@ export class LoadingScene extends SceneBase {
     smittyLogo.setScale(2.25);
     smittyLogo.setOrigin(0.5, 0.5);
     smittyLogo.setVisible(false);
-    
+
     let videoCheckHandler: () => void;
     let introSoundPlayed = false;
 
@@ -470,18 +575,18 @@ export class LoadingScene extends SceneBase {
             ease: "Sine.easeIn",
             onComplete: () => {
               intro.destroy();
-              
+
               smittyLogo.destroy();
               if (isIPhone() && this.textures.exists('smittyLogo')) {
                 this.textures.remove('smittyLogo');
                 console.log('[LoadingScene] Removed smittyLogo texture from cache');
               }
               this.events.off("update", videoCheckHandler);
-              
+
               if (this.loadingGraphics) {
                 this.loadingGraphics.forEach(g => {
                   if (g && g.scene) {
-                    g.setVisible(true); 
+                    g.setVisible(true);
                   }
                 });
                 console.log('[LoadingScene] Showing main loading screen elements');
@@ -534,8 +639,33 @@ export class LoadingScene extends SceneBase {
         }
         if (progressBar && progressBar.scene) {
           progressBar.clear();
-          progressBar.fillStyle(0xffffff, 0.8);
-          progressBar.fillRect(midWidth - 320, 360, 640 * progress, 64);
+          const steps = 12;
+          const barX = midWidth - 320;
+          const barY = 360;
+          const barWidth = 640 * progress;
+          const barHeight = 64;
+          const topGold = Phaser.Display.Color.ValueToColor(0xFFD700);
+          const bottomGold = Phaser.Display.Color.ValueToColor(0xB8860B);
+          for (let step = 0; step < steps; step++) {
+            const stepY = barY + (step / steps) * barHeight;
+            const stepHeight = barHeight / steps;
+            const ratio = step / (steps - 1);
+            const interpolatedColor = Phaser.Display.Color.Interpolate.ColorWithColor(
+              topGold,
+              bottomGold,
+              steps - 1,
+              step
+            );
+
+            const color = Phaser.Display.Color.GetColor(
+              interpolatedColor.r,
+              interpolatedColor.g,
+              interpolatedColor.b
+            );
+
+            progressBar.fillStyle(color, 0.8);
+            progressBar.fillRect(barX, stepY, barWidth, stepHeight);
+          }
         }
       } catch (error) {
         console.error("Error updating progress:", error);
@@ -544,6 +674,9 @@ export class LoadingScene extends SceneBase {
 
     this.load.on(this.LOAD_EVENTS.FILE_COMPLETE, (key: string) => {
       try {
+        if (Overrides.DEBUG_IOS_MODE) {
+          AssetLoadProfiler.getInstance().trackLoaded(key);
+        }
         if (assetText && assetText.scene) {
           assetText.setText(i18next.t("menu:loadingAsset", { assetName: key }));
         }
@@ -573,7 +706,11 @@ export class LoadingScene extends SceneBase {
     this.load.on(this.LOAD_EVENTS.COMPLETE, () => {
       this.mainLoadingComplete = true;
       console.log('[LoadingScene] Main loading complete');
-      
+
+      if (Overrides.DEBUG_IOS_MODE) {
+        AssetLoadProfiler.getInstance().printInitialLoadReport();
+      }
+
       this.events.emit('mainLoadingComplete');
     });
   }
@@ -592,16 +729,16 @@ export class LoadingScene extends SceneBase {
           }
         });
       }
-     
+
       let hasMods = false;
       try {
-        // await this.loadExampleGlitchMod();
+
         hasMods = await modStorage.hasMods();
       } catch (storageError) {
         console.error("Error checking for mods:", storageError);
         hasMods = false;
       }
-      
+
       if (this.loadingGraphics && this.loadingGraphics.length > 0) {
         if (hasMods) {
           console.log('[LoadingScene] Fading out loading graphics before loading mods');
@@ -623,7 +760,7 @@ export class LoadingScene extends SceneBase {
               }
             });
           });
-          
+
           await new Promise<void>(resolve => {
             this.loadCustomMods().then(() => {
               resolve();
@@ -664,13 +801,13 @@ export class LoadingScene extends SceneBase {
   private async loadCustomMods(): Promise<void> {
     try {
       console.log(i18next.t("menu:loadingModsFromStorage"));
-      
+
       this.createModLoadingScreen();
-      
+
       this.updateModLoadingScreen(0, 1, i18next.t("menu:checkingForMods"));
-      
+
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       let mods = [];
       try {
         mods = await modStorage.getAllMods();
@@ -681,80 +818,80 @@ export class LoadingScene extends SceneBase {
         this.hideModLoadingScreen();
         return;
       }
-      
+
       const totalSteps = mods.length > 0 ? mods.length + 2 : 2;
       let currentStep = 1;
-      
+
       if (mods.length > 0) {
         console.log(i18next.t("menu:modsFound", { count: mods.length, plural: mods.length > 1 ? "s" : "" }));
-        
+
         this.updateModLoadingScreen(
-          currentStep / totalSteps, 
-          1, 
+          currentStep / totalSteps,
+          1,
           i18next.t("menu:modsFound", { count: mods.length, plural: mods.length > 1 ? "s" : "" })
         );
-        
+
         await new Promise(resolve => setTimeout(resolve, 100));
         currentStep++;
-        
+
         for (let i = 0; i < mods.length; i++) {
           const mod = mods[i];
           try {
             this.updateModLoadingScreen(
-              currentStep / totalSteps, 
-              1, 
+              currentStep / totalSteps,
+              1,
               i18next.t("menu:loadingMod", { modName: mod.formName })
             );
-            
+
             await new Promise(resolve => setTimeout(resolve, 100));
-            
+
             const success = await loadModGlitchFormFromJson(this as any, mod.jsonData);
             if (success) {
               console.log(`Successfully loaded mod: ${mod.formName} for species ${mod.speciesId}`);
               this.updateModLoadingScreen(
-                (currentStep + 0.5) / totalSteps, 
-                1, 
+                (currentStep + 0.5) / totalSteps,
+                1,
                 i18next.t("menu:modLoaded", { modName: mod.formName })
               );
             } else {
               console.warn(`Failed to load mod: ${mod.formName} for species ${mod.speciesId}`);
               this.updateModLoadingScreen(
-                (currentStep + 0.5) / totalSteps, 
-                1, 
+                (currentStep + 0.5) / totalSteps,
+                1,
                 i18next.t("menu:modFailed", { modName: mod.formName })
               );
               await new Promise(resolve => setTimeout(resolve, 300));
             }
-            
+
             await new Promise(resolve => setTimeout(resolve, 100));
             currentStep++;
           } catch (error) {
             console.error(`Error loading mod ${mod.formName}:`, error);
             this.updateModLoadingScreen(
-              currentStep / totalSteps, 
-              1, 
+              currentStep / totalSteps,
+              1,
               i18next.t("menu:modError", { modName: mod.formName })
             );
             currentStep++;
           }
         }
-        
+
         this.updateModLoadingScreen(1, 1, i18next.t("menu:allModsLoaded"));
-        
+
         await new Promise(resolve => setTimeout(resolve, 200));
       } else {
         console.log(i18next.t("menu:noModsFoundInStorage"));
-        
+
         this.updateModLoadingScreen(
-          currentStep / totalSteps, 
-          1, 
+          currentStep / totalSteps,
+          1,
           i18next.t("menu:noModsFound")
         );
-        
+
         await new Promise(resolve => setTimeout(resolve, 500));
         currentStep++;
         this.updateModLoadingScreen(1, 1, i18next.t("menu:readyToStartGame"));
-        
+
         await new Promise(resolve => setTimeout(resolve, 5000));
       }
 
@@ -767,7 +904,7 @@ export class LoadingScene extends SceneBase {
       }
     }
   }
-  
+
   private hideModLoadingScreen(): Promise<void> {
     return new Promise<void>(resolve => {
       if (this.modLoadingGraphics.length > 0) {
@@ -795,11 +932,11 @@ export class LoadingScene extends SceneBase {
   private async ensureModSpriteAnimations(): Promise<void> {
     try {
       const textureKeys = this.textures.getTextureKeys();
-      
-      const modPokemonTextures = textureKeys.filter(key => 
+
+      const modPokemonTextures = textureKeys.filter(key =>
         key.startsWith('pkmn__glitch__')
       );
-      
+
       for (const textureKey of modPokemonTextures) {
         if (!this.anims.exists(textureKey)) {
           console.log(`Creating animation for mod texture: ${textureKey}`);
@@ -821,21 +958,21 @@ export class LoadingScene extends SceneBase {
   private modNameText: Phaser.GameObjects.Text | null = null;
   private modProgressBar: Phaser.GameObjects.Graphics | null = null;
   private modDoneBootGameText: Phaser.GameObjects.Text | null = null;
-  
+
   private createModLoadingScreen(): void {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
     const midWidth = width / 2;
     const midHeight = height / 2;
-    
+
     const bgOverlay = this.add.graphics();
     bgOverlay.fillStyle(0x220044, 0.85);
     bgOverlay.fillRect(0, 0, width, height);
-    
+
     const panelBorder = this.add.graphics();
     panelBorder.lineStyle(6, 0xff00ff, 1.0);
     panelBorder.strokeRect(midWidth - 350, midHeight - 150, 700, 300);
-    
+
     const titleText = this.make.text({
       x: midWidth,
       y: midHeight - 100,
@@ -848,7 +985,7 @@ export class LoadingScene extends SceneBase {
       },
     });
     titleText.setOrigin(0.5, 0.5);
-    
+
     const subTitleText = this.make.text({
       x: midWidth,
       y: midHeight - 50,
@@ -859,15 +996,15 @@ export class LoadingScene extends SceneBase {
       },
     });
     subTitleText.setOrigin(0.5, 0.5);
-    
+
     const progressBox = this.add.graphics();
     progressBox.lineStyle(5, 0xff00ff, 1.0);
     progressBox.fillStyle(0x330055, 0.8);
     progressBox.fillRect(midWidth - 320, midHeight, 640, 64);
     progressBox.strokeRect(midWidth - 320, midHeight, 640, 64);
-    
+
     const progressBar = this.add.graphics();
-    
+
     const percentText = this.make.text({
       x: midWidth,
       y: midHeight + 32,
@@ -880,7 +1017,7 @@ export class LoadingScene extends SceneBase {
       },
     });
     percentText.setOrigin(0.5, 0.5);
-    
+
     const modNameText = this.make.text({
       x: midWidth,
       y: midHeight + 100,
@@ -891,7 +1028,7 @@ export class LoadingScene extends SceneBase {
       },
     });
     modNameText.setOrigin(0.5, 0.5);
-    
+
     const modDoneBootGameText = this.make.text({
       x: midWidth,
       y: modNameText.y + 160,
@@ -912,35 +1049,35 @@ export class LoadingScene extends SceneBase {
     this.modProgressBar = progressBar;
     this.modDoneBootGameText = modDoneBootGameText;
   }
-  
+
   private updateModLoadingScreen(current: number, total: number, modName: string = ""): void {
     if (!this.modPercentText || !this.modNameText || !this.modProgressBar || !this.modDoneBootGameText) return;
-    
+
     let progress = total > 0 ? current / total : 0;
     if (total === 1 && current === 0) {
-      progress = 0.10; 
+      progress = 0.10;
     }
-    
+
     const percent = Math.floor(progress * 100);
-    
+
     this.modPercentText.setText(`${percent}%`);
-    
+
     if (modName) {
       this.modNameText.setText(modName);
     }
-    
+
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
     const midWidth = width / 2;
     const midHeight = height / 2;
-    
+
     this.modProgressBar.clear();
     this.modProgressBar.fillStyle(0xffffff, 0.8);
     this.modProgressBar.fillRect(midWidth - 320, midHeight, 640 * progress, 64);
 
     if (percent >= 100) {
       this.modDoneBootGameText.setVisible(true);
-    } 
+    }
   }
 
   get gameHeight() {
@@ -954,19 +1091,19 @@ export class LoadingScene extends SceneBase {
   private async loadExampleGlitchMod(): Promise<void> {
     try {
       console.log("Loading example glitch mod...");
-      
+
       try {
         const response = await fetch('docs/mod-glitch-form-example.json');
         if (!response.ok) {
           throw new Error(`Failed to fetch mod JSON: ${response.status}`);
         }
-        
+
         const exampleModJson = await response.json();
         if (!exampleModJson) {
           console.error("Empty example mod JSON");
           return;
         }
-        
+
         const success = await loadModGlitchFormFromJson(this as any, exampleModJson);
         if (success) {
           try {
@@ -988,7 +1125,7 @@ export class LoadingScene extends SceneBase {
       } catch (error) {
         console.error("Error loading example mod:", error);
       }
-      
+
       return Promise.resolve();
     } catch (error) {
       console.error("Error in loadExampleGlitchMod:", error);
@@ -998,17 +1135,19 @@ export class LoadingScene extends SceneBase {
 }
 
 export function isIPhone() {
-  
+  if (Overrides.DEBUG_IOS_MODE) {
+    return true;
+  }
   const isUA = /iPhone/i.test(navigator.userAgent) && !(window as any).MSStream;
-  
+
   const isPlatform = /iPhone/i.test(navigator.platform);
-  
+
   const hasIOSQuirks = (
-    'maxTouchPoints' in navigator && 
+    'maxTouchPoints' in navigator &&
     navigator.maxTouchPoints > 1 &&
-    /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
   ) && !(window as any).MSStream;
 
   return isUA || (isPlatform && hasIOSQuirks);
-} 
+}

@@ -48,9 +48,6 @@ export class LoginPhase extends Phase {
           }
 
           this.scene.playSound("menu_open");
-
-
-
           this.scene.ui.setMode(Mode.LOGIN_FORM, {
             buttonActions: [
               () => {

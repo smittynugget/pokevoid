@@ -10,6 +10,7 @@ import { SelectStarterPhase } from "#app/phases/select-starter-phase.ts";
 import { EggLapsePhase } from "#app/phases/egg-lapse-phase.ts";
 import { EggHatchPhase } from "#app/phases/egg-hatch-phase.ts";
 import { TitlePhase } from "#app/phases/title-phase.ts";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 import i18next from "i18next";
 
 export interface OptionSelectConfig {
@@ -54,6 +55,7 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
   protected scale: number = 0.1666666667;
 
   private cursorObj: Phaser.GameObjects.Image | null;
+  private _optionBgPattern?: ModalBackgroundHandle;
 
   constructor(scene: BattleScene, mode: Mode | null) {
     super(scene, mode);
@@ -61,13 +63,54 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
 
   abstract getWindowWidth(): integer;
 
-  getWindowHeight(): integer {
-    const isTitlePhaseOptionSelect = 
-        this.scene.getCurrentPhase() instanceof TitlePhase && 
+  protected getTitlePhaseScaleFactor(): number {
+    const isTitlePhaseOptionSelect =
+        this.scene.getCurrentPhase() instanceof TitlePhase &&
         this.mode === Mode.OPTION_SELECT;
 
-    const baseHeight = this.mode === Mode.TITLE || isTitlePhaseOptionSelect ? 65 : 96;
-    return (Math.min((this.config?.options || []).length, this.config?.maxOptions || 99) + 1) * baseHeight * this.scale;
+    if (!isTitlePhaseOptionSelect) {
+        return 1.0;
+    }
+
+    const optionCount = Math.min((this.config?.options || []).length, this.config?.maxOptions || 99);
+    const containerY = -48;
+    const topEdge = -this.scene.game.canvas.height / 6;
+    const availableHeight = Math.abs(containerY - topEdge) - 4;
+
+    const basePadding = 14;
+    const isJapanese = i18next.resolvedLanguage === 'ja';
+    const perOptionHeight = isJapanese ? 10 : 12;
+    const requiredHeight = basePadding + (optionCount * perOptionHeight);
+
+    if (requiredHeight <= availableHeight) {
+        return 1.0;
+    }
+
+    return Math.max(0.65, availableHeight / requiredHeight);
+  }
+
+  getWindowHeight(): integer {
+    const isTitlePhaseOptionSelect =
+        this.scene.getCurrentPhase() instanceof TitlePhase &&
+        this.mode === Mode.OPTION_SELECT;
+
+    const optionCount = Math.min((this.config?.options || []).length, this.config?.maxOptions || 99);
+
+    if (this.mode === Mode.TITLE) {
+        const baseHeight = 65;
+        return (optionCount + 1) * baseHeight * this.scale;
+    }
+
+    if (isTitlePhaseOptionSelect) {
+        const scaleFactor = this.getTitlePhaseScaleFactor();
+        const isJapanese = i18next.resolvedLanguage === 'ja';
+        const perOptionHeight = isJapanese ? 10 : 12;
+        const basePadding = 14;
+        return Math.floor((basePadding + (optionCount * perOptionHeight)) * scaleFactor);
+    }
+
+    const baseHeight = 96;
+    return (optionCount + 1) * baseHeight * this.scale;
   }
 
   setup() {
@@ -97,10 +140,6 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
     const configOptions = this.config?.options ?? [];
 
     let options: OptionSelectItem[];
-
-    // for performance reasons, this limits how many options we can see at once. Without this, it would try to make text options for every single options
-    // which makes the performance take a hit. If there's not enough options to do this (set to 10 at the moment) and the ui mode !== Mode.AUTO_COMPLETE,
-    // this is ignored and the original code is untouched, with the options array being all the options from the config
     if (configOptions.length >= 10 && this.scene.ui.getMode() === Mode.AUTO_COMPLETE) {
       const optionsScrollTotal = configOptions.length;
       const optionStartIndex = this.scrollCursor;
@@ -118,29 +157,30 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
       this.optionSelectIcons.splice(0, this.optionSelectIcons.length);
     }
 
-    const isTitlePhaseOptionSelect = 
-        this.scene.getCurrentPhase() instanceof TitlePhase && 
+    const isTitlePhaseOptionSelect =
+        this.scene.getCurrentPhase() instanceof TitlePhase &&
         this.mode === Mode.OPTION_SELECT;
 
-   
+    const scaleFactor = isTitlePhaseOptionSelect ? this.getTitlePhaseScaleFactor() : 1.0;
+    const scaledFontSize = isTitlePhaseOptionSelect ? Math.floor(65 * scaleFactor) : 65;
 
     this.optionSelectText = addTextObject(
-      this.scene, 
-      0, 
-      0, 
+      this.scene,
+      0,
+      0,
       options.map(o => o.label).join("\n"),
-      this.mode === Mode.TITLE ? TextStyle.TITLE_MESSAGE : TextStyle.WINDOW, 
-      { maxLines: options.length, ...(this.mode === Mode.TITLE || isTitlePhaseOptionSelect ? { fontSize: "65px"} : {}) }
+      this.mode === Mode.TITLE ? TextStyle.TITLE_MESSAGE : TextStyle.WINDOW,
+      { maxLines: options.length, ...(this.mode === Mode.TITLE || isTitlePhaseOptionSelect ? { fontSize: `${scaledFontSize}px`} : {}) }
     );
-    
-    const baseLineSpacing = this.mode === Mode.TITLE || isTitlePhaseOptionSelect ? 50 : 72;
-    const secondaryLineSpacing = this.mode === Mode.TITLE || isTitlePhaseOptionSelect ? 8 : 12;
-    
-    this.optionSelectText.setLineSpacing(this.scale * baseLineSpacing);
+
+    const baseLineSpacing = this.mode === Mode.TITLE || isTitlePhaseOptionSelect ? 8 : 12;
+    const secondaryLineSpacing = isTitlePhaseOptionSelect ? Math.floor(baseLineSpacing * scaleFactor) : baseLineSpacing;
+    const isCJK = ['ja', 'zh-CN', 'zh-TW', 'ko'].includes(i18next.resolvedLanguage ?? '');
+    const finalLineSpacing = isCJK ? secondaryLineSpacing * 1.5 : secondaryLineSpacing;
     this.optionSelectText.setName("text-option-select");
-    this.optionSelectText.setLineSpacing(secondaryLineSpacing);
+    this.optionSelectText.setLineSpacing(finalLineSpacing);
     this.optionSelectContainer.add(this.optionSelectText);
-    
+
     if (!this.config?.isRemoveItemsMenu) {
       this.optionSelectContainer.setPosition((this.scene.game.canvas.width / 6) - 1 - (this.config?.xOffset || 0), -48 + (this.config?.yOffset || 0));
     }
@@ -153,32 +193,34 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
 
     this.optionSelectBg.height = this.getWindowHeight();
 
+    this._optionBgPattern?.redraw();
+
     this.optionSelectText.setPositionRelative(this.optionSelectBg, 12+24*this.scale, 2+42*this.scale);
 
     options.forEach((option: OptionSelectItem, i: integer) => {
       if (option.item) {
-        const textureKey = option.item === 'exclamationMark' && option.itemArgs?.[0] === 'smitems_192' ? 
-                          'smitems_192' : 'items';
-        
+        const textureKey = option.item === 'exclamationMark' && option.itemArgs?.[0] === 'smitems' ?
+                          'smitems' : 'items';
+
         const itemIcon = this.scene.add.sprite(0, 0, textureKey, option.item);
-        
+
         let iconScale;
         if (option.item === 'exclamationMark') {
-          iconScale = option.itemArgs?.[0] === 'smitems_192' ? 0.08 : 0.04;
+          iconScale = option.itemArgs?.[0] === 'smitems' ? 0.18 : 0.10;
         } else {
-          iconScale = option.itemArgs?.[0] === 'smitems_192' ? 0.1 : 3 * this.scale;
+          iconScale = option.itemArgs?.[0] === 'smitems' ? 0.1 : 3 * this.scale;
         }
-        
+
         itemIcon.setScale(iconScale);
         itemIcon.setVisible(true);
-        
+
         this.optionSelectIcons.push(itemIcon);
         this.optionSelectContainer.add(itemIcon);
 
         let xOffset, yOffset;
-        
+
         if (option.item === 'exclamationMark') {
-          const isSmItems = option.itemArgs?.[0] === 'smitems_192';
+          const isSmItems = option.itemArgs?.[0] === 'smitems';
           const lang = i18next.resolvedLanguage;
           let langOffset = 0;
           if (lang === 'fr') {
@@ -202,7 +244,7 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
           xOffset = 36 * this.scale;
           yOffset = 7 + i * (96 * this.scale - 3);
         }
-        
+
         itemIcon.setPositionRelative(this.optionSelectText, xOffset, yOffset);
 
         if (option.item === "candy") {
@@ -244,7 +286,7 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
     super.show(args);
 
     this.config = args[0] as OptionSelectConfig;
-    
+
     this.setupOptions();
 
     const isTitleScreen = this.mode === Mode.TITLE;
@@ -254,15 +296,15 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
     } else if ((this.scene.getCurrentPhase() instanceof SelectStarterPhase) && this.mode === Mode.OPTION_SELECT) {
       this.optionSelectContainer.setPosition((this.scene.game.canvas.width / 6) - 1, -16);
       this.optionSelectBg.setVisible(true);
-    } 
+    }
     else if ((this.scene.getCurrentPhase() instanceof EggLapsePhase || this.scene.getCurrentPhase() instanceof EggHatchPhase) && this.mode === Mode.OPTION_SELECT) {
       this.optionSelectContainer.setPosition((this.scene.game.canvas.width / 6) - 1, 0);
       this.optionSelectBg.setVisible(true);
-    } 
+    }
     else if (this.config.isRemoveItemsMenu) {
         const canvasWidth = this.scene.game.canvas.width / 6;
         const fixedYPosition = 0;
-        
+
         this.optionSelectContainer.setPosition(
           canvasWidth / 2 + this.optionSelectBg.width / 2,
           fixedYPosition
@@ -274,6 +316,20 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
     }
 
     this.scene.ui.bringToTop(this.optionSelectContainer);
+
+    if(!isTitleScreen) {
+    this._optionBgPattern = attachModalBackground(
+      this.scene,
+      this.optionSelectContainer,
+      () => ({
+        bgX: this.optionSelectBg.x - this.optionSelectBg.width,
+        bgY: this.optionSelectBg.y - this.optionSelectBg.height,
+        bgWidth: this.optionSelectBg.width,
+        bgHeight: this.optionSelectBg.height,
+      }),
+      { mask: false, alphaMultiplier: 0.45, gridInc: -2 }
+    );
+    }
 
     this.optionSelectContainer.setVisible(true);
     this.scrollCursor = 0;
@@ -324,8 +380,6 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
         ui.playError();
       }
     } else if (button === Button.SUBMIT && ui.getMode() === Mode.AUTO_COMPLETE) {
-      // this is here to differentiate between a Button.SUBMIT vs Button.ACTION within the autocomplete handler
-      // this is here because Button.ACTION is picked up as z on the keyboard, meaning if you're typing and hit z, it'll select the option you've chosen
       success = true;
       const option = this.config?.options[this.cursor + (this.scrollCursor - (this.scrollCursor ? 1 : 0))];
       if (option?.handler()) {
@@ -354,7 +408,7 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
         break;
       }
       if (this.config?.supportHover) {
-        // handle hover code if the element supports hover-handlers and the option has the optional hover-handler set.
+
         this.config?.options[this.cursor + (this.scrollCursor - (this.scrollCursor ? 1 : 0))]?.onHover?.();
       }
     }
@@ -417,12 +471,12 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
     const options = this.getOptionsWithScroll();
     if (changed && this.config?.maxOptions && this.config.options.length > this.config.maxOptions) {
       if (Math.abs(cursor - this.cursor) === options.length - 1) {
-        // Wrap around the list
+
         const optionsScrollTotal = this.config.options.length;
         this.scrollCursor = cursor ? optionsScrollTotal - (this.config.maxOptions - 1) : 0;
         this.setupOptions();
       } else {
-        // Move the cursor up or down by 1
+
         const isDown = cursor && cursor > this.cursor;
         if (isDown) {
           if (options[cursor].label === scrollDownLabel) {
@@ -451,19 +505,22 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
       this.optionSelectContainer.add(this.cursorObj);
     }
 
-    const isTitlePhaseOptionSelect = 
-        this.scene.getCurrentPhase() instanceof TitlePhase && 
+    const isTitlePhaseOptionSelect =
+        this.scene.getCurrentPhase() instanceof TitlePhase &&
         this.mode === Mode.OPTION_SELECT;
 
     if (this.mode === Mode.TITLE || isTitlePhaseOptionSelect) {
+      const cursorScaleFactor = isTitlePhaseOptionSelect ? this.getTitlePhaseScaleFactor() : 1.0;
       this.cursorObj.setScale(this.scale * 4.5);
-      this.cursorObj.setPositionRelative(this.optionSelectBg, 12, 85*this.scale + this.cursor * (78 * this.scale - 2));
+      const baseY = 85 * this.scale * cursorScaleFactor;
+      const stepY = (78 * this.scale - 2) * cursorScaleFactor;
+      this.cursorObj.setPositionRelative(this.optionSelectBg, 12, baseY + this.cursor * stepY);
     } else if (this.config?.isRemoveItemsMenu && this.config.xOffset === -1) {
       this.cursorObj.setScale(this.scale * 6);
       this.cursorObj.setPositionRelative(
-        this.optionSelectBg, 
-        12,  
-        102 * this.scale + this.cursor * (96 * this.scale)  
+        this.optionSelectBg,
+        12,
+        102 * this.scale + this.cursor * (96 * this.scale)
       );
     } else {
       this.cursorObj.setScale(this.scale * 6);
@@ -476,7 +533,10 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
   clear() {
     this.exclamationTweens.forEach(tween => tween.stop());
     this.exclamationTweens = [];
-    
+
+    this._optionBgPattern?.clear();
+    this._optionBgPattern = undefined;
+
     super.clear();
     this.config = null;
     this.optionSelectContainer.setVisible(false);

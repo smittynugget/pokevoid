@@ -16,7 +16,11 @@
     "rewardObtained": "Ricompensa Ottenuta!",
     "voidOvertaken": "IL VUOTO È STATO SOPRAFFATTO!",
     "newShopItem": "Nuovo Oggetto del Negozio",
-    "manyMoreNuggets": "E Tante Altre Pepite Succose!"
+    "manyMoreNuggets": "E Tante Altre Pepite Succose!",
+    "skillPoints": "Punti Abilità",
+    "skillTreeTokens": "Token Albero Abilità",
+    "legendaryPower": "Potere Leggendario!",
+    "legendaryCatchable": "{{pokemon}} è ora Catturabile!"
   },
   "gameModes": {
     "nuzlocke": {

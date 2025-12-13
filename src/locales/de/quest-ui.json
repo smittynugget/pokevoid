@@ -57,11 +57,11 @@
         "count": "{{current}} / {{max}}"
       },
       "rewards": {
-        "stage1": "90% ∞GOLD | 8% ∞GEGENSTAND | 2% Beides",
-        "stage2": "75% ∞GOLD | 15% ∞GEGENSTAND | 10% Beides",
-        "stage3": "60% ∞GOLD | 25% ∞GEGENSTAND | 15% Beides",
-        "stage4": "40% ∞GOLD | 40% ∞GEGENSTAND | 20% Beides",
-        "stage5": "25% ∞GOLD | 45% ∞GEGENSTAND | 30% Beides"
+        "stage1": "90% ΩGOLD | 8% ΩGEGENSTAND | 2% Beides",
+        "stage2": "75% ΩGOLD | 15% ΩGEGENSTAND | 10% Beides",
+        "stage3": "60% ΩGOLD | 25% ΩGEGENSTAND | 15% Beides",
+        "stage4": "40% ΩGOLD | 40% ΩGEGENSTAND | 20% Beides",
+        "stage5": "25% ΩGOLD | 45% ΩGEGENSTAND | 30% Beides"
       }
     },
     "quest": {
@@ -72,7 +72,7 @@
         "cancel": "Abbrechen"
       },
       "rewards": {
-        "default": "50% ∞GOLD | 35% ∞GEGENSTAND | 15% Beides"
+        "default": "50% ΩGOLD | 35% ΩGEGENSTAND | 15% Beides"
       },
       "activeQuest": {
         "modalTitle": "Quest!",
@@ -92,8 +92,8 @@
     "smitty": {
       "modalTitle": "Pokemon Smitty-Kopfgeld",
       "rewards": {
-        "withSpecies": "70% ∞GOLD | 20% ∞GEGENSTAND | 10% Beides",
-        "withoutSpecies": "40% ∞GOLD | 40% ∞GEGENSTAND | 20% Beides"
+        "withSpecies": "70% ΩGOLD | 20% ΩGEGENSTAND | 10% Beides",
+        "withoutSpecies": "40% ΩGOLD | 40% ΩGEGENSTAND | 20% Beides"
       },
       "task": {
         "evolveAny": "Entwickle EIN BELIEBIGES Pokemon zu {{formName}}",
@@ -114,7 +114,7 @@
     "nuzlightModeRewardUpdatedInventory": "Inventar aktualisiert!",
     "nuzlightModeRewardMoveRelease": "Attacke verlernen",
     "nuzlockeModeRewardRank2": "RANG 2",
-    "accessShopInBattle": "Greife im KAMPF auf den ∞SHOP zu!",
+    "accessShopInBattle": "Greife im KAMPF auf den ΩSHOP zu!",
     "accessQuestsInBattle": "Greife im KAMPF auf QUESTS zu!"
   }
 } 

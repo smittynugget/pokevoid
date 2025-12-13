@@ -10,6 +10,8 @@ import MessageUiHandler from "./message-ui-handler";
 import { TextStyle, addTextObject } from "./text";
 import { Mode } from "./ui";
 import { addWindow } from "./ui-theme";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
+import { GameMechanicsVersion } from "#enums/gameMechanicsID";
 
 const sessionSlotCount = 5;
 
@@ -38,6 +40,7 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
   private sessionSlotsContainerInitialY: number;
 
   private isProcessingSave: boolean = false;
+  private _saveSlotPatterns?: { sessionSlots?: ModalBackgroundHandle[]; message?: ModalBackgroundHandle };
 
   constructor(scene: BattleScene) {
     super(scene, Mode.SAVE_SLOT);
@@ -50,8 +53,21 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
     this.saveSlotSelectContainer.setVisible(false);
     ui.add(this.saveSlotSelectContainer);
 
-    const loadSessionBg = this.scene.add.rectangle(0, 0, this.scene.game.canvas.width / 6, -this.scene.game.canvas.height / 6, 0x006860);
+    const loadSessionBg = this.scene.add.nineslice(0, 0, "default_bg", undefined, this.scene.game.canvas.width / 6, this.scene.game.canvas.height / 6, 0, 0, 16, 0);
     loadSessionBg.setOrigin(0, 0);
+    loadSessionBg.setY(-this.scene.game.canvas.height / 6);
+    try {
+        if (loadSessionBg.postFX && typeof loadSessionBg.postFX.addColorMatrix === 'function') {
+            const colorMatrix = loadSessionBg.postFX.addColorMatrix();
+            colorMatrix.negative();
+        } else {
+            loadSessionBg.setTint(0xFFFFFF);
+            loadSessionBg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
+        }
+    } catch (error) {
+        loadSessionBg.setTint(0x000000);
+        loadSessionBg.setBlendMode(Phaser.BlendModes.SCREEN);
+    }
     this.saveSlotSelectContainer.add(loadSessionBg);
 
     this.sessionSlotsContainerInitialY = -this.scene.game.canvas.height / 6 + 8;
@@ -83,11 +99,23 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
 
     this.uiMode = args[0] as SaveSlotUiMode;
     this.saveSlotSelectCallback = args[1] as SaveSlotSelectCallback;
+    this._saveSlotPatterns = this._saveSlotPatterns || {};
 
     this.saveSlotSelectContainer.setVisible(true);
     this.populateSessionSlots();
     this.setScrollCursor(0);
     this.setCursor(0);
+    this._saveSlotPatterns.sessionSlots = [];
+    this.sessionSlots.forEach((sessionSlot, index) => {
+      const handle = attachModalBackground(
+        this.scene,
+        this.saveSlotSelectContainer,
+        () => ({ bgX: sessionSlot.x + 8, bgY: sessionSlot.y + this.sessionSlotsContainerInitialY, bgWidth: 304, bgHeight: 52 }),
+        { mask: false, alphaMultiplier: 0.6, getTarget: () => sessionSlot }
+      );
+      this._saveSlotPatterns.sessionSlots!.push(handle);
+    });
+    this._saveSlotPatterns?.sessionSlots?.forEach(handle => handle.redraw());
 
     return true;
   }
@@ -114,11 +142,11 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
               const saveAndCallback = async () => {
                 const originalCallback = this.saveSlotSelectCallback;
                 this.saveSlotSelectCallback = null;
-                
+
                     await ui.revertMode();
                     ui.showText("", 0);
                     await ui.setMode(Mode.MESSAGE);
-                
+
                 originalCallback && originalCallback(cursor);
               };
               if (this.sessionSlots[cursor].hasData) {
@@ -199,7 +227,21 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
       this.message.setY(-37);
     }
 
-    this.saveSlotSelectMessageBoxContainer.setVisible(!!text?.length);
+    const isVisible = !!text?.length;
+    this.saveSlotSelectMessageBoxContainer.setVisible(isVisible);
+    if (isVisible && !this._saveSlotPatterns?.message) {
+      this._saveSlotPatterns = this._saveSlotPatterns || {};
+      this._saveSlotPatterns.message = attachModalBackground(
+        this.scene,
+        this.saveSlotSelectContainer,
+        () => ({ bgX: this.saveSlotSelectMessageBox.x, bgY: this.saveSlotSelectMessageBox.y - this.saveSlotSelectMessageBox.height, bgWidth: this.saveSlotSelectMessageBox.width, bgHeight: this.saveSlotSelectMessageBox.height }),
+        { mask: false, alphaMultiplier: 0.5, getTarget: () => this.saveSlotSelectMessageBox }
+      );
+      this._saveSlotPatterns.message.redraw();
+    } else if (!isVisible && this._saveSlotPatterns?.message) {
+      this._saveSlotPatterns.message.clear();
+      this._saveSlotPatterns.message = undefined;
+    }
   }
 
   setCursor(cursor: integer): boolean {
@@ -233,6 +275,11 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
   }
 
   clear() {
+
+    this._saveSlotPatterns?.sessionSlots?.forEach(handle => handle.clear());
+    this._saveSlotPatterns?.message?.clear();
+    this._saveSlotPatterns = undefined;
+
     super.clear();
     this.saveSlotSelectContainer.setVisible(false);
     this.eraseCursor();
@@ -278,7 +325,8 @@ class SessionSlot extends Phaser.GameObjects.Container {
   async setupWithData(data: SessionSaveData) {
     this.remove(this.loadingLabel, true);
 
-    const gameModeLabel = addTextObject(this.scene, 8, 5, `${GameMode.getModeName(data.gameMode) || i18next.t("gameMode:unkown")} - ${i18next.t("saveSlotSelectUiHandler:wave")} ${data.waveIndex}`, TextStyle.WINDOW);
+    const displayMode = this.getDisplayGameMode(data);
+    const gameModeLabel = addTextObject(this.scene, 8, 5, `${GameMode.getModeName(displayMode) || i18next.t("gameMode:unkown")} - ${i18next.t("saveSlotSelectUiHandler:wave")} ${data.waveIndex}`, TextStyle.WINDOW);
     this.add(gameModeLabel);
 
     const timestampLabel = addTextObject(this.scene, 8, 19, new Date(data.timestamp).toLocaleString(), TextStyle.WINDOW);
@@ -331,6 +379,84 @@ class SessionSlot extends Phaser.GameObjects.Container {
     }
 
     this.add(modifierIconsContainer);
+  }
+
+  private getDisplayGameMode(data: SessionSaveData): GameModes {
+    const rawMode = data.gameMode;
+
+    if (rawMode !== GameModes.SHOP) {
+        return rawMode;
+    }
+
+    const hasBattlePath = data.battlePath !== null && data.battlePath !== undefined;
+    const hasChaosRivals = (data as any).chaosAltRivals && (data as any).chaosAltRivals.length > 0;
+    const isChaosV2Save = data.gameMechanicTracking &&
+        Object.values(data.gameMechanicTracking).some(v =>
+            v === GameMechanicsVersion.CHAOS_V2 || v === "CHAOS_V2_BALANCE_IMPROVEMENTS"
+        );
+
+    const shouldDisplayAsChaos = hasBattlePath && (isChaosV2Save || hasChaosRivals);
+
+    if (shouldDisplayAsChaos) {
+        return this.inferChaosMode(data);
+    }
+
+    return rawMode;
+  }
+
+  private inferChaosMode(data: SessionSaveData): GameModes {
+    const totalWaves = data.battlePath?.totalWaves;
+    const waveIndex = data.waveIndex || 0;
+    const dynamicMode = data.dynamicMode as any;
+    const isDraft = dynamicMode?.isDraft === true;
+    const isNuzlocke = dynamicMode?.isNuzlocke === true;
+    const isNuzlight = dynamicMode?.isNuzlight === true;
+    const isVoid = dynamicMode?.isChaosVoid === true;
+
+    let effectiveWaves = totalWaves;
+
+    if (totalWaves !== undefined && waveIndex > totalWaves) {
+        effectiveWaves = undefined;
+    }
+
+    if (effectiveWaves === undefined && waveIndex > 0) {
+        if (waveIndex <= 100) {
+            effectiveWaves = 100;
+        } else if (waveIndex <= 200) {
+            effectiveWaves = 200;
+        } else if (waveIndex <= 500) {
+            effectiveWaves = 500;
+        } else if (waveIndex <= 1000) {
+            effectiveWaves = 1000;
+        } else {
+            effectiveWaves = 100000;
+        }
+    }
+
+    if (effectiveWaves !== undefined) {
+        if (effectiveWaves <= 100) {
+            if (isVoid) return isDraft ? GameModes.CHAOS_ROGUE_VOID_FTL : GameModes.CHAOS_VOID_FTL;
+            if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_FTL : GameModes.CHAOS_NUZLOCKE_FTL;
+            if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_FTL : GameModes.CHAOS_NUZLIGHT_FTL;
+            return isDraft ? GameModes.CHAOS_ROGUE_FTL : GameModes.CHAOS_JOURNEY_FTL;
+        }
+        if (effectiveWaves <= 200) {
+            if (isVoid) return isDraft ? GameModes.CHAOS_ROGUE_VOID_SHORT : GameModes.CHAOS_VOID_SHORT;
+            if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT : GameModes.CHAOS_NUZLOCKE_SHORT;
+            if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT : GameModes.CHAOS_NUZLIGHT_SHORT;
+            return isDraft ? GameModes.CHAOS_ROGUE_SHORT : GameModes.CHAOS_JOURNEY_SHORT;
+        }
+        if (effectiveWaves <= 500) {
+            if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT : GameModes.CHAOS_NUZLOCKE;
+            if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT : GameModes.CHAOS_NUZLIGHT;
+            return isDraft ? GameModes.CHAOS_ROGUE : GameModes.CHAOS_JOURNEY;
+        }
+        if (effectiveWaves <= 1000) {
+            return isDraft ? GameModes.CHAOS_ROGUE_VOID : GameModes.CHAOS_VOID;
+        }
+    }
+
+    return isDraft ? GameModes.CHAOS_INFINITE_ROGUE : GameModes.CHAOS_INFINITE;
   }
 
   load(): Promise<boolean> {

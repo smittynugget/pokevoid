@@ -12,6 +12,7 @@ import {PermaRunQuestModifier, PersistentModifier} from "#app/modifier/modifier"
 import * as Utils from "../utils";
 import {Button} from "#enums/buttons";
 import {QuestState, QuestUnlockables} from "#app/system/game-data";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 
 const DEBUG_UI = false;
 
@@ -67,6 +68,9 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
     };
 
     private toggleContainer: Phaser.GameObjects.Container;
+    private _consolePatterns?: { bounties?: ModalBackgroundHandle; quests?: ModalBackgroundHandle };
+    private bountyListBgRef?: Phaser.GameObjects.NineSlice;
+    private questListBgRef?: Phaser.GameObjects.NineSlice;
 
     constructor(scene: BattleScene, mode: Mode | null = null) {
         super(scene, mode);
@@ -143,6 +147,21 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
 
         super.setup();
 
+        this.buttonContainers.forEach((container, index) => {
+            const buttonBg = container.list[0] as Phaser.GameObjects.NineSlice;
+            const buttonLabel = container.list[1] as Phaser.GameObjects.Text;
+            if (buttonLabel && buttonLabel.setFontSize) {
+                buttonLabel.setFontSize(46);
+                const newWidth = buttonLabel.displayWidth + 16;
+                const newHeight = Math.ceil(buttonLabel.displayHeight) + 8;
+                if (buttonBg && buttonBg.setSize) {
+                    buttonBg.setSize(newWidth, newHeight);
+                }
+                buttonLabel.setY(newHeight / 2);
+            }
+            container.y += 3;
+        });
+
         if (DEBUG_UI) {
             console.log("Modal Container Hierarchy:", logGameObject(this.modalContainer));
             console.log("Form Elements:", {
@@ -173,7 +192,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                 this.deselectCurrentContainer();
                 this.inputs[0].setFocus();
             });
-            
+
             this.inputs[0].on('textchange', (inputElement: any) => {
                 if (inputElement.text) {
                     inputElement.setText(inputElement.text.toUpperCase());
@@ -185,7 +204,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                 }
             });
         }
-        
+
         this.modalContainer.setPosition(
             (this.scene.game.canvas.width / 3),
             this.scene.game.canvas.height / 2
@@ -204,7 +223,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         this.modalBackground.setDepth(9998);
         this.modalBackground.setVisible(false);
         this.modalContainer.addAt(this.modalBackground, 0);
-        
+
         this.bountyListContainer = new Phaser.GameObjects.Container(
             this.scene,
             this.getWidth() + 10,
@@ -351,13 +370,13 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                     try {
                         const party = this.scene.getParty() as Pokemon[];
                         const modifierType = questModifierGenerator.generateType(party);
-                        
+
                         const questModifier = modifierType.newModifier();
 
                         if (!questModifier) {
                             throw new Error("Failed to create quest modifier");
                         }
-                        
+
                         let bountyMode = Mode.SMITTY_POKEMON_BOUNTY;
                         if (QUEST_CONSOLE_CODES[consoleCode]) {
                             bountyMode = Mode.QUEST_BOUNTY;
@@ -365,7 +384,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                         } else if (rivalQuestModifiers[consoleCode]) {
                             bountyMode = Mode.RIVAL_BOUNTY;
                         }
-                        
+
                         this.scene.ui.setOverlayMode(bountyMode, {
                             buttonActions: [
                                 async () => {
@@ -408,7 +427,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                     }
                 }
             };
-            
+
             this.updateActiveBounties();
             this.updateActiveQuests();
 
@@ -422,10 +441,12 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
             this.bountyListContainer.setVisible(true);
             this.questListContainer.setVisible(true);
 
+            this.attachListBackgrounds();
+
             const isNuzlightQuestCompleted = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED);
-            
-            if (isNuzlightQuestCompleted) { 
-                
+
+            if (isNuzlightQuestCompleted) {
+
                 this.toggleContainer.removeAll(true);
                 const icon = this.scene.inputController?.getIconForLatestInputRecorded("BUTTON_CONSOLE");
                 const type = this.scene.inputController?.getLastSourceType() || "keyboard";
@@ -435,11 +456,11 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                 }
                 keySprite.setScale(.6);
                 const toggleText = addTextObject(
-                    this.scene, 
+                    this.scene,
                     keySprite.x + (keySprite.displayWidth * keySprite.scaleX + .5),
-                    0, 
-                    i18next.t("questUi:console.toggleInfo"), 
-                    TextStyle.PARTY, 
+                    0,
+                    i18next.t("questUi:console.toggleInfo"),
+                    TextStyle.PARTY,
                     {fontSize: "25px"}
                 );
                 toggleText.setOrigin(0, 0);
@@ -474,7 +495,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                 questList: logGameObject(this.questListContainer)
             });
         }
-        
+
         this.deselectCurrentContainer();
         this.currentBountyIndex = -1;
         this.currentQuestIndex = -1;
@@ -493,6 +514,12 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
 
         super.clear();
 
+        this._consolePatterns?.bounties?.clear();
+        this._consolePatterns?.quests?.clear();
+        this._consolePatterns = undefined;
+        this.bountyListBgRef = undefined;
+        this.questListBgRef = undefined;
+
         if (this.bountyListContainer) {
             this.bountyListContainer.setVisible(false);
             this.bountyListContainer.removeAll(true);
@@ -500,9 +527,9 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
 
         if (this.modalBackground) {
             this.modalBackground.setVisible(false);
-            this.modalBackground.setAlpha(0.8); 
+            this.modalBackground.setAlpha(0.8);
         }
-    
+
         this.bountyButtonContainers = [];
         this.activeBountyCount = 0;
 
@@ -529,6 +556,27 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                     })),
                 modalHierarchy: logGameObject(this.modalContainer)
             });
+        }
+    }
+
+    private attachListBackgrounds(): void {
+        if (this.bountyListBgRef && this.questListBgRef) {
+            this._consolePatterns = this._consolePatterns || {};
+            this._consolePatterns.bounties = attachModalBackground(
+                this.scene as BattleScene,
+                this.bountyListContainer,
+                () => ({ bgX: this.bountyListBgRef!.x, bgY: this.bountyListBgRef!.y, bgWidth: this.bountyListBgRef!.width, bgHeight: this.bountyListBgRef!.height }),
+                { mask: false, alphaMultiplier: 0.5, getTarget: () => this.bountyListBgRef!, gridInc: -3 }
+            );
+            this._consolePatterns.quests = attachModalBackground(
+                this.scene as BattleScene,
+                this.questListContainer,
+                () => ({ bgX: this.questListBgRef!.x, bgY: this.questListBgRef!.y, bgWidth: this.questListBgRef!.width, bgHeight: this.questListBgRef!.height }),
+                { mask: false, alphaMultiplier: 0.5, getTarget: () => this.questListBgRef!, gridInc: -3 }
+            );
+
+            this._consolePatterns?.bounties?.redraw();
+            this._consolePatterns?.quests?.redraw();
         }
     }
 
@@ -566,6 +614,10 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         };
 
         this.renderBountyList();
+
+        if (this.bountyListBgRef && this.questListBgRef) {
+            this.attachListBackgrounds();
+        }
     }
 
     private renderBountyList(): void {
@@ -582,7 +634,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         }
 
         this.bountyListContainer.removeAll(true)
-        
+
         const title = addTextObject(
             this.scene,
             3,
@@ -594,14 +646,14 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         this.bountyListContainer.add(title);
 
         let yOffset = 15;
-        
+
         yOffset = this.renderBountySection(
             i18next.t("questUi:console.rivalBounties"),
             this.activeBounties.rival,
             3,
             yOffset
         );
-        
+
         yOffset = this.renderBountySection(
             i18next.t("questUi:console.smittyBounties"),
             this.activeBounties.smitty,
@@ -620,7 +672,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
             this.activeBounties.smitty.length +
             this.activeBounties.quest.length;
         const calculatedHeight = Math.min(100, 40 + (totalBounties * 10) + 10);
-        
+
         const bountyListBg = addWindow(
             this.scene,
             -5,
@@ -628,8 +680,8 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
             65,
             calculatedHeight
         );
+        this.bountyListBgRef = bountyListBg;
         this.bountyListContainer.addAt(bountyListBg, 0);
-
     }
 
     private renderBountySection(
@@ -638,7 +690,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         maxCount: number,
         startY: number
     ): number {
-        
+
         const sectionTitle = addTextObject(
             this.scene,
             3,
@@ -654,8 +706,6 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         this.bountyListContainer.add(sectionTitle);
 
         let currentY = startY + 10;
-
-        
         bounties.forEach((bounty, index) => {
             const button = this.createBountyButton(
                 bounty,
@@ -677,8 +727,6 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         y: number
     ): Phaser.GameObjects.Container {
         const container = new Phaser.GameObjects.Container(this.scene, x, y);
-
-        
         const bg = new Phaser.GameObjects.Rectangle(
             this.scene,
             25,
@@ -688,8 +736,6 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
             0x444444
         );
         bg.setInteractive();
-
-        
         const text = addTextObject(
             this.scene,
             3,
@@ -700,11 +746,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         );
 
         container.add([bg, text]);
-
-        
         this.bountyButtonContainers.push(container);
-
-        
         bg.on('pointerup', () => this.showBountyUI(bounty));
 
         return container;
@@ -726,8 +768,6 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                 }
             });
         }
-
-        
         let bountyMode: Mode;
 
         if (this.scene.gameData.permaModifiers.isQuestBountyQuest(bounty.questUnlockData?.questId)) {
@@ -737,8 +777,6 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         } else {
             bountyMode = Mode.SMITTY_POKEMON_BOUNTY;
         }
-
-        
         this.scene.ui.setOverlayMode(bountyMode, {
             buttonActions: [
                 () => {
@@ -777,15 +815,11 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                 }
             });
         }
-
-        
         if (!this.bountyListContainer?.visible && !this.questListContainer?.visible) {
             return super.processInput(button);
         }
 
         let handled = false;
-
-        
         const hasBounties = this.bountyButtonContainers?.length > 0;
         const hasQuests = this.questButtonContainers?.length > 0;
 
@@ -837,30 +871,21 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
             case Button.RIGHT:
                 switch (this.activeContainer) {
                     case 'input':
-                        
-                        
-                        
                         const isEmptyInput = this.inputs[0]?.text?.length === 0;
                         const isCompleteInput = this.inputs[0]?.text?.length === 6;
-                        
+
                         if (isEmptyInput || isCompleteInput) {
                             this.activeContainer = 'console';
-                            
-                            
-                            
                             if (isCompleteInput && this.inputs[0]) {
                                 this.inputs[0].setBlur();
                             }
-                            
+
                             this.currentConsoleButtonIndex = 0;
                             this.highlightConsoleButton(this.currentConsoleButtonIndex);
-                            
-                            
-                            
                             if (isEmptyInput) {
                                 return false;
                             }
-                            
+
                             handled = true;
                         }
                         break;
@@ -900,7 +925,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                         handled = this.setQuestIndex(this.currentQuestIndex - 1);
                         break;
                     case 'console':
-                        
+
                         this.activeContainer = 'input';
                         this.deselectCurrentContainer();
                         if (this.inputs[0]) {
@@ -920,30 +945,21 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                         handled = this.setQuestIndex(this.currentQuestIndex + 1);
                         break;
                     case 'input':
-                        
-                        
-                        
                         const isEmptyInput = this.inputs[0]?.text?.length === 0;
                         const isCompleteInput = this.inputs[0]?.text?.length === 6;
-                        
+
                         if (isEmptyInput || isCompleteInput) {
                             this.activeContainer = 'console';
-                            
-                            
-                            
                             if (isCompleteInput && this.inputs[0]) {
                                 this.inputs[0].setBlur();
                             }
-                            
+
                             this.currentConsoleButtonIndex = 0;
                             this.selectCurrentContainer();
-                            
-                            
-                            
                             if (isEmptyInput) {
                                 return false;
                             }
-                            
+
                             handled = true;
                         }
                         break;
@@ -1016,27 +1032,21 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
     }
 
     private deselectCurrentContainer(): void {
-        
-        
         this.bountyButtonContainers.forEach(container => {
             const button = container.getAt(0) as Phaser.GameObjects.Rectangle;
             button?.setFillStyle(0x444444);
         });
-
-        
         this.questButtonContainers.forEach(container => {
             const button = container.getAt(0) as Phaser.GameObjects.Rectangle;
             button?.setFillStyle(0x444444);
         });
-
-        
         if (this.currentConsoleButtonIndex >= 0) {
             this.unhighlightConsoleButton(this.currentConsoleButtonIndex);
         }
     }
 
     private selectCurrentContainer(): void {
-        
+
         switch (this.activeContainer) {
             case 'bounty':
                 if (this.currentBountyIndex >= 0 && this.bountyButtonContainers[this.currentBountyIndex]) {
@@ -1056,7 +1066,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
                 }
                 break;
             case 'input':
-                
+
                 this.deselectCurrentContainer();
                 break;
         }
@@ -1080,16 +1090,12 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         if (index <= -1 || index >= this.activeBountyCount) {
             return false;
         }
-
-        
         if (this.currentBountyIndex >= 0) {
             const currentButton = this.bountyButtonContainers[this.currentBountyIndex].getAt(0) as Phaser.GameObjects.Rectangle;
             currentButton.setFillStyle(0x444444);
         }
 
         this.currentBountyIndex = index;
-
-        
         if (this.currentBountyIndex >= 0) {
             const newButton = this.bountyButtonContainers[this.currentBountyIndex].getAt(0) as Phaser.GameObjects.Rectangle;
             newButton.setFillStyle(0x666666);
@@ -1120,8 +1126,6 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         }
 
         const permaModifiers = this.scene.gameData.permaModifiers;
-
-        
         const activeQuests = permaModifiers.findModifiers(m =>
             m instanceof PermaRunQuestModifier &&
             !m.consoleCode &&
@@ -1129,12 +1133,14 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
         ) as PermaRunQuestModifier[];
 
         this.renderQuestList(activeQuests);
+
+        if (this.bountyListBgRef && this.questListBgRef) {
+            this.attachListBackgrounds();
+        }
     }
 
     private renderQuestList(quests: PermaRunQuestModifier[]): void {
         this.questListContainer.removeAll(true);
-
-        
         const title = addTextObject(
             this.scene,
             3,
@@ -1144,8 +1150,6 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
             { fontSize: "50px" }
         );
         this.questListContainer.add(title);
-
-        
         const countText = addTextObject(
             this.scene,
             3,
@@ -1173,8 +1177,6 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
             currentY += 10;
             this.activeQuestCount++;
         });
-
-        
         const questListBg = addWindow(
             this.scene,
             -5,
@@ -1182,6 +1184,7 @@ export default class ConsoleFormUiHandler extends FormModalUiHandler {
             65,
             Math.min(100, 20 + (quests.length * 10) + 10)
         );
+        this.questListBgRef = questListBg;
         this.questListContainer.addAt(questListBg, 0);
     }
 

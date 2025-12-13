@@ -1,6 +1,4 @@
-/**
- * 081f-e401 - UnlicensedSNES
- */
+
 const pad_unlicensedSNES = {
   padID: "081f-e401",
   padType: "snes",

@@ -4,19 +4,15 @@ import {Mode} from "../ui";
 import { getKeyWithKeycode} from "#app/configs/inputs/configHandler";
 import {Device} from "#enums/devices";
 import {addTextObject, TextStyle} from "#app/ui/text";
-
-
 export default class KeyboardBindingUiHandler extends AbstractBindingUiHandler {
 
   constructor(scene: BattleScene, mode: Mode | null = null) {
     super(scene, mode);
-    // Listen to gamepad button down events to initiate binding.
+
     scene.input.keyboard?.on("keydown", this.onKeyDown, this);
   }
   setup() {
     super.setup();
-
-    // New button icon setup.
     this.newButtonIcon = this.scene.add.sprite(0, 0, "keyboard");
     this.newButtonIcon.setPositionRelative(this.optionSelectBg, 78, 32);
     this.newButtonIcon.setOrigin(0.5);
@@ -46,7 +42,7 @@ export default class KeyboardBindingUiHandler extends AbstractBindingUiHandler {
       Phaser.Input.Keyboard.KeyCodes.DELETE,
     ];
     const key = event.keyCode;
-    // // Check conditions before processing the button press.
+
     if (!this.listening || this.buttonPressed !== null || blacklist.includes(key)) {
       return;
     }
@@ -57,7 +53,7 @@ export default class KeyboardBindingUiHandler extends AbstractBindingUiHandler {
       return;
     }
     this.buttonPressed = key;
-    // const assignedButtonIcon = getIconWithSettingName(activeConfig, this.target);
+
     this.onInputDown(buttonIcon, null, "keyboard");
   }
 

@@ -1,0 +1,96 @@
+{
+  "title": "Champion wählen",
+  "confirmSelection": "Lauf mit {{name}} starten?",
+  "subheader": "Wen wählst du für die Reise in die Leere?",
+  "levelUp": "LEVEL AUFSTIEG!",
+  "characterUnlocked": "{{name}}\nFREIGESCHALTET!",
+  "unlocked": "Freigeschaltet",
+  "lockedGauge": "Verpflichtet: {{current}} / {{required}}",
+  "xp": "EP",
+  "potential": "POTENZIAL",
+  "level": "LEVEL",
+  "locked": "GESPERRT",
+  "unlockRequired": "Benötigt: {{requirement}}",
+  "essenceHint": "Benutze benötigte Essenz zum Levelaufstieg!",
+  "essencesHeader": "Essenzen:",
+  "skillsHeader": "FÄHIGKEITEN",
+  "skillsSubheader": "Fähigkeiten erscheinen zufällig im Fertigkeitenbaum.",
+  "rarity": {
+    "common": "GEWÖHNLICH",
+    "great": "GROSSARTIG",
+    "ultra": "ULTRA",
+    "master": "MEISTER",
+    "rogue": "SCHURKE",
+    "legendary": "LEGENDÄR"
+  },
+  "unlockCharacter": "Charakter freischalten",
+  "unlockCharacterTooltip": "Freischalten durch Verwendung von {{current}}/{{required}} Essenzen",
+  "tooltip": {
+    "lockedSkillTitle": "Gesperrte Fähigkeit",
+    "levelRequired": "Muss Level {{level}} sein zum Freischalten.",
+    "lockedPrefix": "GESPERRT",
+    "unlockWithEssence": "Freischalten durch Verwendung von {{current}}/{{required}} Essenzen zum Levelaufstieg!",
+    "levelUpRequired": "Level aufsteigen um diese Fähigkeit freizuschalten.",
+    "defaultTm": "Lehre eine {{types}} TM einem Pokémon",
+    "defaultXm": "Lehre eine {{types}} XM einem Pokémon",
+    "defaultEssence": "Füge {{amount}} {{types}}-Typ Essenzen deiner Sammlung hinzu",
+    "defaultBooster": "Erhalte einen {{types}}-Typ Booster-Gegenstand",
+    "defaultTeraAbility": "Benutze {{types}} um Tera-Fähigkeiten zu aktivieren",
+    "defaultEssenceWeight": "Erhöhe {{types}} Essenz-Dropgewicht um {{weight}}",
+    "defaultCatchRate": "Erhöhe Fangrate für {{types}}-Pokémon um {{percent}}%",
+    "defaultFusionPriority": "Erhöhe Fusionspriorität für {{types}}-Pokémon",
+    "defaultRevive": "Erhöhe Wiederbelebungschance für {{types}}-Pokémon um {{percent}}%",
+    "defaultTokens": "Erhalte Fertigkeitenbaum-Marken zum Freischalten von Knoten",
+    "defaultPoints": "Erhalte Fertigkeitspunkte zum Kaufen von Fähigkeiten",
+    "typesFallback": "Unbekannt"
+  },
+  "skillList": {
+    "levelPrefix": "Lvl {{level}}",
+    "unknownSkill": "???"
+  },
+  "defaultSkillLabels": {
+    "tms": "{{types}} TMs",
+    "xms": "{{types}} XMs",
+    "abilities": "{{types}} Fähigkeiten",
+    "teraAbilities": "{{types}} Tera-Fähigkeiten",
+    "statBoosts": "{{types}} Statuswert-Boosts",
+    "tokens": "Fähigkeitenbaum-Token",
+    "points": "Fähigkeitenpunkte",
+    "boosters": "{{types}} Booster",
+    "essence": "{{types}} Essenz",
+    "reviveBoost": "{{types}} Wiederbelebungs-Boost",
+    "essenceWeights": "{{types}} Essenz-Gewichtung",
+    "catchBonus": "{{types}} Fangbonus",
+    "fusionPriority": "{{types}} Fusionspriorität"
+  },
+  "button": { "useEssence": "Essenz nutzen" },
+  "brock": { "description": "Champion des Gesteins" },
+  "misty": { "description": "Champion des Wassers" },
+  "apollo": {
+    "name": "Apollo",
+    "description": "Champion der Sonne"
+  },
+  "diana": {
+    "name": "Diana",
+    "description": "Champion des Mondes"
+  },
+  "generic": { "description": "Der Standard-Champion." },
+  "champions": {
+    "title": "Wähle deinen Champion",
+    "brock": {
+      "name": "Rocko - Gesteins-Spezialist",
+      "description": "Meister der Boden- und Gesteins-Typen",
+      "essenceRequirement": "Benötigt {{ground}} Boden + {{rock}} Gesteins-Essenzen"
+    },
+    "misty": {
+      "name": "Misty - Wasser-Spezialistin",
+      "description": "Meisterin der Wasser-Typen",
+      "essenceRequirement": "Benötigt {{water}} Wasser-Essenzen"
+    },
+    "generic": {
+      "name": "Ausgeglichener Champion",
+      "description": "Keine Typ-Spezialisierung",
+      "essenceRequirement": "Keine besonderen Anforderungen"
+    }
+  }
+}

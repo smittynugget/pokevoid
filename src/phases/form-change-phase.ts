@@ -1,6 +1,7 @@
+
 import BattleScene from "../battle-scene";
 import * as Utils from "../utils";
-import { SpeciesFormKey } from "../data/pokemon-species";
+import { SpeciesFormKey } from "#enums/species-form-key";
 import { achvs } from "../system/achv";
 import { SpeciesFormChange, getSpeciesFormChangeMessage } from "../data/pokemon-forms";
 import Pokemon, { PlayerPokemon } from "../field/pokemon";
@@ -43,6 +44,16 @@ export class FormChangePhase extends EvolutionPhase {
     const preName = getPokemonNameWithAffix(this.pokemon);
 
     this.pokemon.getPossibleForm(this.formChange).then(transformedPokemon => {
+      const gainingAltBuild = !this.pokemon.altBuildId && !!(transformedPokemon as any).altBuildId;
+      if (gainingAltBuild) {
+        [ this.pokemonSprite, this.pokemonTintSprite ].forEach(sprite => {
+          if (!sprite) return;
+          delete sprite.pipelineData["altBuildSpriteColors"];
+          delete sprite.pipelineData["altBuildTargetColors"];
+          delete sprite.pipelineData["altBuildBlendMode"];
+          delete sprite.pipelineData["altBuildInversionFactor"];
+        });
+      }
 
       [ this.pokemonEvoSprite, this.pokemonEvoTintSprite ].map(sprite => {
         try {
@@ -62,7 +73,7 @@ export class FormChangePhase extends EvolutionPhase {
               });
               sprite.play(spriteKey);
             } else {
-              // If animation creation fails, at least set the texture
+
               sprite.setTexture(spriteKey);
             }
           }
@@ -76,10 +87,24 @@ export class FormChangePhase extends EvolutionPhase {
             }
             sprite.pipelineData[k] = transformedPokemon.getSprite().pipelineData[k];
           });
+
+          if (transformedPokemon.altBuildSpriteColors && transformedPokemon.altBuildTargetColors) {
+            sprite.pipelineData["altBuildSpriteColors"] = transformedPokemon.altBuildSpriteColors;
+            sprite.pipelineData["altBuildTargetColors"] = transformedPokemon.altBuildTargetColors;
+            sprite.pipelineData["altBuildBlendMode"] = transformedPokemon.altBuildBlendMode || 'replace';
+            sprite.pipelineData["altBuildInversionFactor"] = transformedPokemon.altBuildInversionFactor || 0.0;
+
+            const spriteKey = transformedPokemon.getSpriteKey(true);
+            console.log(`🎨 Attempting to extract colors from animation sprite: ${spriteKey}`);
+            console.log(`🎨 FormChangePhase: Applied alt build to evo sprite: inversionFactor=${transformedPokemon.altBuildInversionFactor}, rank=${transformedPokemon.altBuildRank}, blendMode=${transformedPokemon.altBuildBlendMode}`);
+            const actualColors = transformedPokemon.extractActualSpriteColors(spriteKey);
+            console.log(`🎨 Animation sprite has ${actualColors.size} unique colors`);
+          }
+
           sprite.setScale(transformedPokemon.getSpriteScale());
         } catch (error) {
           console.error(`Error setting up sprite animation for ${transformedPokemon.getSpriteKey(true)}:`, error);
-          // Try to recover by setting the texture directly
+
           try {
             sprite.setTexture(transformedPokemon.getSpriteKey(true));
           } catch (e) {
@@ -134,7 +159,7 @@ export class FormChangePhase extends EvolutionPhase {
                           } else if (this.formChange.formKey.startsWith('smitty')) {
                             this.scene.gameData.gameStats.smittyEvolutions++;
                           }
-                          
+
                           if (this.formChange.formKey.startsWith('smitty') || this.formChange.formKey.startsWith('glitch')) {
                             this.removeSmittyModifiers(this.pokemon);
                             this.removeGlitchModifiers(this.pokemon);
@@ -143,22 +168,20 @@ export class FormChangePhase extends EvolutionPhase {
                           else if (this.formChange.formKey.includes('mega')) {
                             this.removeMegaModifiers(this.pokemon);
                           }
-                          else if (this.formChange.formKey.includes('dynamax') || 
+                          else if (this.formChange.formKey.includes('dynamax') ||
                                   this.formChange.formKey.includes('gigantamax')) {
                               this.removeDynamaxModifiers(this.pokemon);
                           }
-
-                          
                           this.scene.gameData.permaModifiers.findModifiers(m =>
                               m instanceof PermaFormChangeQuestModifier
                           ).forEach(modifier => {
                                       modifier.apply([this.scene, this.pokemon]);
                                   });
 
-                          const modifiers = this.pokemon.scene.findModifiers(m => 
-                              (m instanceof AbilitySwitcherModifier || 
+                          const modifiers = this.pokemon.scene.findModifiers(m =>
+                              (m instanceof AbilitySwitcherModifier ||
                               m instanceof TypeSwitcherModifier ||
-                              m instanceof AnyAbilityModifier ||          
+                              m instanceof AnyAbilityModifier ||
                               m instanceof TypeSacrificeModifier ||
                               m instanceof AbilitySacrificeModifier ||
                               m instanceof PassiveAbilitySacrificeModifier ||
@@ -167,7 +190,7 @@ export class FormChangePhase extends EvolutionPhase {
                             );
 
                             for (const modifier of modifiers) {
-                              modifier.apply([this.pokemon]);                
+                              modifier.apply([this.pokemon]);
                             }
 
                           if (!this.modal) {
@@ -234,8 +257,6 @@ export class FormChangePhase extends EvolutionPhase {
       });
     });
   }
-
-  
   private removeSmittyModifiers(pokemon: PlayerPokemon): void {
     const smittyModifiers = pokemon.scene.findModifiers(m =>
         m instanceof PokemonFormChangeItemModifier &&
@@ -261,15 +282,16 @@ export class FormChangePhase extends EvolutionPhase {
       pokemon.scene.removeModifier(modifier);
     });
   }
-  
+
   private removeMegaModifiers(pokemon: PlayerPokemon): void {
     const megaModifiers = pokemon.scene.findModifiers(m =>
-        m instanceof MegaEvolutionAccessModifier 
+        m instanceof MegaEvolutionAccessModifier
     ) as MegaEvolutionAccessModifier[];
 
-    megaModifiers.forEach(modifier => {
-        pokemon.scene.removeModifier(modifier);
-    });
+    if (megaModifiers.length > 0) {
+        pokemon.scene.removeModifier(megaModifiers[0]);
+        this.scene.updateModifiers(true);
+    }
 }
 
 private removeDynamaxModifiers(pokemon: PlayerPokemon): void {
@@ -277,9 +299,10 @@ private removeDynamaxModifiers(pokemon: PlayerPokemon): void {
         m instanceof GigantamaxAccessModifier
     ) as GigantamaxAccessModifier[];
 
-    dynamaxModifiers.forEach(modifier => {
-        pokemon.scene.removeModifier(modifier);
-    });
+    if (dynamaxModifiers.length > 0) {
+        pokemon.scene.removeModifier(dynamaxModifiers[0]);
+        this.scene.updateModifiers(true);
+    }
 }
 
   end(): void {

@@ -3,6 +3,7 @@
   "girl": "Ragazza",
   "general": "Generale",
   "uiVolume": "Volume UI ",
+  "skipFaintCry": "Salta suoni svenimento",
   "gamepadSupport": "Supporto Gamepad",
   "showBgmBar": "Mostra Nomi Musica",
   "moveTouchControls": "Move Touch Controls",
@@ -12,5 +13,6 @@
   "items": "Oggetti",
   "reroll": "Rerolla",
   "shop": "Negozio",
-  "checkTeam": "Squadra"
+  "checkTeam": "Squadra",
+  "lockedRewardSpeed": "Blocca velocità ricompense"
 }

@@ -3,5 +3,11 @@
   "ball": "볼",
   "pokemon": "포켓몬",
   "run": "도망간다",
-  "actionMessage": "{{pokemonName}}[[는]] 무엇을 할까?"
+  "actionMessage": "{{pokemonName}}[[는]] 무엇을 할까?",
+  "skillTree": "스킬 트리",
+  "team": "팀",
+  "check": "확인",
+  "eggs": "알",
+  "shop": "상점",
+  "map": "지도"
 }

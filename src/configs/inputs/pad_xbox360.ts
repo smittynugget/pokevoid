@@ -1,9 +1,5 @@
 import {SettingGamepad} from "../../system/settings/settings-gamepad";
 import {Button} from "#app/enums/buttons";
-
-/**
- * Generic pad mapping
- */
 const pad_xbox360 = {
   padID: "Xbox 360 controller (XInput STANDARD GAMEPAD)",
   padType: "xbox",

@@ -1,12 +1,6 @@
 import path from "path";
 import fs from "fs";
 import { type Plugin as VitePlugin } from "vite";
-
-/**
- * Crawl a directory (recursively if wanted) for json files and minifies found ones.
- * @param dir the directory to crawl
- * @param recursive if true, will crawl subdirectories
- */
 function applyToDir(dir: string, recursive?: boolean) {
   const files = fs.readdirSync(dir).filter((file) => !/^\..*/.test(file));
 
@@ -15,7 +9,7 @@ function applyToDir(dir: string, recursive?: boolean) {
     const stat = fs.lstatSync(filePath);
 
     if (stat.isDirectory() && recursive) {
-      applyToDir(filePath, recursive); // only if recursive is true
+      applyToDir(filePath, recursive);
     } else if (path.extname(file) === ".json") {
       const contents = fs.readFileSync(filePath, "utf8");
       const minifiedContent = JSON.stringify(JSON.parse(contents));
@@ -24,20 +18,14 @@ function applyToDir(dir: string, recursive?: boolean) {
     }
   }
 }
-
-/**
- * Plugin to mnify json files in the build folder after the bundling is done.
- * @param basePath base path/es starting inside the build dir (e.g. will always start with "/dist" if dist is the build dir)
- * @param recursive if true, will crawl subdirectories
- */
 export function minifyJsonPlugin(basePath: string | string[], recursive?: boolean): VitePlugin {
-  let buildDir = "dist"; // Default build dir
+  let buildDir = "dist";
 
   return {
     name: "flx-minify-json",
     apply: "build",
     configResolved(config) {
-      buildDir = config.build.outDir; // Read the build output directory from Vite config
+      buildDir = config.build.outDir;
     },
     async closeBundle() {
       console.log("Minifying JSON files...");

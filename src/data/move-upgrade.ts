@@ -14,6 +14,11 @@ import * as Utils from "../utils";
 import BattleScene from "../battle-scene";
 import { ModifierType, MoveUpgradeModifierType, MoveUpgradeModifierTypeGenerator, nuzlockeUnlockQuestModifier } from "../modifier/modifier-type";
 import i18next, { ParseKeys } from "i18next";
+export interface FilterUpgrades {
+    moveUpgrades?: UpgradePath[];
+    moveAttributes?: string[];
+    types?: Type[];
+}
 
 function getStatusEffectName(statusEffect: StatusEffect): string {
     const i18nKey = `${getStatusEffectMessageKey(statusEffect)}.name` as ParseKeys;
@@ -133,8 +138,6 @@ export class MoveUpgrade {
                 return { statCount, levels, tier: i };
             }
         }
-
-
         let bestTier = -1;
         let bestScore = -1;
 
@@ -343,10 +346,10 @@ export class MoveUpgrade {
         ];
 
         static RECOIL_DECREASE_PATH = [
-            { ratio: 1/3, pCost: 25 }, 
-            { ratio: 1/3, pCost: 20 }, 
-            { ratio: 1/3, pCost: 15 }, 
-            { ratio: 1/3, pCost: 10 }, 
+            { ratio: 1/3, pCost: 25 },
+            { ratio: 1/3, pCost: 20 },
+            { ratio: 1/3, pCost: 15 },
+            { ratio: 1/3, pCost: 10 },
             { ratio: 1/4, pCost: 25, accCost: 15 },
             { ratio: 1/4, pCost: 20, accCost: 15 },
             { ratio: 1/4, pCost: 15, accCost: 15 },
@@ -471,51 +474,51 @@ export class MoveUpgrade {
         ];
 
         static MULTI_HIT_PATH = [
-            { typeId: "2", pSet: 30, checkAll: true, accCost: 10, chance: 2 }, 
-            { typeId: "2", pSet: 35, checkAll: true, accCost: 10, chance: 2 }, 
-            { typeId: "2", pSet: 40, checkAll: true, accCost: 10, chance: 2, }, 
-            { typeId: "2", pSet: 45, checkAll: true, accCost: 10, chance: 2, }, 
-            { typeId: "2", pSet: 50, checkAll: true, accCost: 10, chance: 2, }, 
-            { typeId: "2", pSet: 55, checkAll: true, accCost: 10, chance: 2, }, 
-            { typeId: "2", pSet: 55, checkAll: true, accCost: 5, chance: 2, }, 
-            { typeId: "2", pSet: 55, accCost: 5, chance: 2, }, 
+            { typeId: "2", pSet: 30, checkAll: true, accCost: 10, chance: 2 },
+            { typeId: "2", pSet: 35, checkAll: true, accCost: 10, chance: 2 },
+            { typeId: "2", pSet: 40, checkAll: true, accCost: 10, chance: 2, },
+            { typeId: "2", pSet: 45, checkAll: true, accCost: 10, chance: 2, },
+            { typeId: "2", pSet: 50, checkAll: true, accCost: 10, chance: 2, },
+            { typeId: "2", pSet: 55, checkAll: true, accCost: 10, chance: 2, },
+            { typeId: "2", pSet: 55, checkAll: true, accCost: 5, chance: 2, },
+            { typeId: "2", pSet: 55, accCost: 5, chance: 2, },
             { typeId: "3", pSet: 20, checkAll: true, accCost: 10, chance: 2, },
             { typeId: "3", pSet: 25, checkAll: true, accCost: 10, chance: 2, },
             { typeId: "3", pSet: 30, checkAll: true, accCost: 10, chance: 2, },
-            { typeId: "2-5", pSet: 15, checkAll: true, accCost: 15, chance: 1, }, 
-            { typeId: "2-5", pSet: 15, checkAll: true, accCost: 10, chance: 1, }, 
-            { typeId: "2-5", pSet: 15, checkAll: true, accCost: 5, chance: 1, }, 
-            { typeId: "2-5", pSet: 15, accCost: 5, chance: 1, }, 
-            { typeId: "2-5", pSet: 20, checkAll: true, accCost: 20, chance: 1, }, 
-            { typeId: "2-5", pSet: 20, checkAll: true, accCost: 15, chance: 1, }, 
-            { typeId: "2-5", pSet: 20, checkAll: true, accCost: 10, chance: 1, }, 
-            { typeId: "2-5", pSet: 20, checkAll: true, accCost: 5, chance: 1, }, 
-            { typeId: "2-5", pSet: 20, accCost: 5, chance: 1, },  
-            { typeId: "2", pSet: 55, checkAll: true, accCost: 10, chance: 2, }, 
-            { typeId: "2", pSet: 55, checkAll: true, accCost: 5, chance: 2, }, 
-            { typeId: "2", pSet: 55, accCost: 5, chance: 2, }, 
-            { typeId: "2", pSet: 55, accCost: 5, chance: 3, }, 
-            { typeId: "2", pSet: 55, accCost: 5, chance: 4, }, 
-            { typeId: "2", pSet: 55, accCost: 5, chance: 5, }, 
+            { typeId: "2-5", pSet: 15, checkAll: true, accCost: 15, chance: 1, },
+            { typeId: "2-5", pSet: 15, checkAll: true, accCost: 10, chance: 1, },
+            { typeId: "2-5", pSet: 15, checkAll: true, accCost: 5, chance: 1, },
+            { typeId: "2-5", pSet: 15, accCost: 5, chance: 1, },
+            { typeId: "2-5", pSet: 20, checkAll: true, accCost: 20, chance: 1, },
+            { typeId: "2-5", pSet: 20, checkAll: true, accCost: 15, chance: 1, },
+            { typeId: "2-5", pSet: 20, checkAll: true, accCost: 10, chance: 1, },
+            { typeId: "2-5", pSet: 20, checkAll: true, accCost: 5, chance: 1, },
+            { typeId: "2-5", pSet: 20, accCost: 5, chance: 1, },
+            { typeId: "2", pSet: 55, checkAll: true, accCost: 10, chance: 2, },
+            { typeId: "2", pSet: 55, checkAll: true, accCost: 5, chance: 2, },
+            { typeId: "2", pSet: 55, accCost: 5, chance: 2, },
+            { typeId: "2", pSet: 55, accCost: 5, chance: 3, },
+            { typeId: "2", pSet: 55, accCost: 5, chance: 4, },
+            { typeId: "2", pSet: 55, accCost: 5, chance: 5, },
             { typeId: "3", pSet: 35, checkAll: true, accCost: 10, chance: 2, },
             { typeId: "3", pSet: 35, checkAll: true, accCost: 5, chance: 2, },
             { typeId: "3", pSet: 35, accCost: 5, chance: 2 },
             { typeId: "3", pSet: 35, accCost: 5, chance: 3 },
             { typeId: "3", pSet: 35, accCost: 5, chance: 4 },
-            { typeId: "2-5", pSet: 25, checkAll: true, accCost: 20, chance: 1, }, 
-            { typeId: "2-5", pSet: 25, checkAll: true, accCost: 15, chance: 1, }, 
-            { typeId: "2-5", pSet: 25, checkAll: true, accCost: 10, chance: 1, }, 
-            { typeId: "2-5", pSet: 25, checkAll: true, accCost: 5, chance: 1, }, 
-            { typeId: "2-5", pSet: 25, accCost: 5, chance: 1, },  
-            { typeId: "2-5", pSet: 25, chance: 1, }, 
-            { typeId: "2-5", pSet: 25, chance: 2, }, 
-            { typeId: "2-5", pSet: 25, chance: 3, }, 
-            { typeId: "2-5", pSet: 25, chance: 4, }, 
-            { typeId: "4-8", pSet: 15, checkAll: true, accCost: 20, chance: 1, }, 
-            { typeId: "4-8", pSet: 15, checkAll: true, accCost: 15, chance: 1, }, 
-            { typeId: "4-8", pSet: 15, checkAll: true, accCost: 10, chance: 1, }, 
-            { typeId: "4-8", pSet: 15, checkAll: true, accCost: 10, chance: 1, }, 
-            { typeId: "4-8", pSet: 15, checkAll: true, accCost: 10, chance: 2, }, 
+            { typeId: "2-5", pSet: 25, checkAll: true, accCost: 20, chance: 1, },
+            { typeId: "2-5", pSet: 25, checkAll: true, accCost: 15, chance: 1, },
+            { typeId: "2-5", pSet: 25, checkAll: true, accCost: 10, chance: 1, },
+            { typeId: "2-5", pSet: 25, checkAll: true, accCost: 5, chance: 1, },
+            { typeId: "2-5", pSet: 25, accCost: 5, chance: 1, },
+            { typeId: "2-5", pSet: 25, chance: 1, },
+            { typeId: "2-5", pSet: 25, chance: 2, },
+            { typeId: "2-5", pSet: 25, chance: 3, },
+            { typeId: "2-5", pSet: 25, chance: 4, },
+            { typeId: "4-8", pSet: 15, checkAll: true, accCost: 20, chance: 1, },
+            { typeId: "4-8", pSet: 15, checkAll: true, accCost: 15, chance: 1, },
+            { typeId: "4-8", pSet: 15, checkAll: true, accCost: 10, chance: 1, },
+            { typeId: "4-8", pSet: 15, checkAll: true, accCost: 10, chance: 1, },
+            { typeId: "4-8", pSet: 15, checkAll: true, accCost: 10, chance: 2, },
             { typeId: "4-8", pSet: 15, checkAll: true, accCost: 10, chance: 3, },
         ];
 
@@ -765,16 +768,35 @@ export class MoveUpgrade {
             { stats: 2, level: 1, chance: 45, pSetToRatio: .85 },
             { stats: 2, level: 1, chance: 50, pSetToRatio: .85, accCost: 10 },
         ];
-
-    
-
-    static generateMoveUpgradeOptions(moveId: Moves, scene: BattleScene, isPlayer: boolean = true, lowTierUpgrade: boolean = false): ModifierType[] {
+    static generateMoveUpgradeOptions(moveId: Moves, scene: BattleScene, isPlayer: boolean = true, lowTierUpgrade: boolean = false, filterUpgrades?: FilterUpgrades): ModifierType[] {
         const baseMove = allMoves[moveId];
         const upgradeMove = scene.getUpgradedMove(allMoves[moveId]);
         const moveGenerator = new MoveUpgradeModifierTypeGenerator();
         let upgrades: ModifierType[] = [];
 
-        
+        const getRandomTypeChangeOptions = (preferred?: Type[]): ModifierType[] => {
+            const results: ModifierType[] = [];
+            const allTypes = Object.values(Type).filter(t => typeof t === "number" && t > Type.UNKNOWN && t < Type.STELLAR) as Type[];
+            const preferredList = (preferred && preferred.length > 0) ? preferred : allTypes;
+            const currentMatchesPreferred = preferred && preferred.length > 0 ? preferred.includes(baseMove.type) : true;
+            const pool = currentMatchesPreferred ? allTypes : preferredList;
+            const availableTypes = pool.filter(type => type !== baseMove.type);
+            if (availableTypes.length > 0) {
+                const numTypesToOffer = Math.min(3, availableTypes.length);
+                const selectedTypes = MoveUpgrade.shuffleArray([...availableTypes]).slice(0, numTypesToOffer);
+                for (const newType of selectedTypes) {
+                    const typeName = getTypeName(newType);
+                    results.push(moveGenerator.getType(moveId, 0, newType, null, 0,
+                        i18next.t("moveUpgrade:description:type:directChange", { typeName }),
+                        null, null, [], [], 0, undefined));
+                }
+            }
+            return results;
+        };
+
+        if (filterUpgrades?.types && filterUpgrades.types.length > 0) {
+            return getRandomTypeChangeOptions(filterUpgrades.types);
+        }
 
         const getEffectChanceTierIndex = (baseMoveChance: number, upgradeTier: number): number => {
             for (let i = 0; i < this.EFFECT_CHANCE_PATH.length; i++) {
@@ -786,12 +808,12 @@ export class MoveUpgrade {
         };
 
         const getExistingUpgrades = () => scene.getUpgradesForMove(moveId, isPlayer);
-        
+
         const shouldOfferUpgradeCategory = (category: UpgradeCategory): boolean => {
             const existingUpgrades = getExistingUpgrades();
             return UpgradeCategoryUtils.canAddUpgradeCategory(category, existingUpgrades);
         };
-        
+
         const getNextUpgradeTier = (category: UpgradeCategory): number | null => {
             if (isPlayer) {
                 const existingUpgrades = getExistingUpgrades();
@@ -799,17 +821,17 @@ export class MoveUpgrade {
             } else {
                 const waveIndex = scene.currentBattle?.waveIndex || 1;
                 const pathLength = UpgradeCategoryUtils.getMoveUpgradeMaxTier(category);
-                
+
                 const segment = Math.ceil(waveIndex / 30);
-                
+
                 const maxSegments = Math.min(15, pathLength);
-                
+
                 const tiersPerSegment = Math.ceil(pathLength / maxSegments);
-                
+
                 const effectiveSegment = Math.min(segment, maxSegments);
-                
+
                 let availableTiers: number[] = [];
-                
+
                 if (effectiveSegment <= 8) {
                     if (effectiveSegment > 1) {
                         const prevSegmentStart = (effectiveSegment - 2) * tiersPerSegment + 1;
@@ -818,7 +840,7 @@ export class MoveUpgrade {
                             availableTiers.push(tier);
                         }
                     }
-                    
+
                     const currentSegmentStart = (effectiveSegment - 1) * tiersPerSegment + 1;
                     const currentSegmentEnd = Math.min(currentSegmentStart + tiersPerSegment - 1, pathLength);
                     for (let tier = currentSegmentStart; tier <= currentSegmentEnd; tier++) {
@@ -829,7 +851,7 @@ export class MoveUpgrade {
                     for (let seg = 7; seg <= effectiveSegment; seg++) {
                         segments.push(seg);
                     }
-                    
+
                     for (const seg of segments) {
                         const segmentStart = (seg - 1) * tiersPerSegment + 1;
                         const segmentEnd = Math.min(segmentStart + tiersPerSegment - 1, pathLength);
@@ -841,11 +863,11 @@ export class MoveUpgrade {
                     }
                 }
                 availableTiers = [...new Set(availableTiers)].sort((a, b) => a - b);
-                
+
                 if (availableTiers.length === 0) {
                     availableTiers = [1];
                 }
-                
+
                 const randomIndex = Math.floor(Math.random() * availableTiers.length);
                 return availableTiers[randomIndex];
             }
@@ -899,31 +921,24 @@ export class MoveUpgrade {
         const hasStatBoostSelf = selfBoostAttrs.length > 0;
         const hasStatLowerTarget = targetLowerAttrs.length > 0;
         const hasHealAttr = healAttr !== undefined;
-        const isVeryRare = Utils.randSeedInt(200) <= 1;
-        // const isVeryRare = Utils.randSeedInt(10) <= 1;
-        const isRare = Utils.randSeedInt(100) <= 1;
-        // const isRare = Utils.randSeedInt(10) <= 1;
-        const isMinorRare = Utils.randSeedInt(50) <= 1;
+        let isVeryRare = Utils.randSeedInt(200) <= 1;
+
+        let isRare = Utils.randSeedInt(100) <= 1;
+
+        let isMinorRare = Utils.randSeedInt(50) <= 1;
         const hasPathlessUpgrade = MoveUpgrade.doesPathlessUpgradeExist(moveId, scene, isPlayer);
-
-        //  if (!hasPathlessUpgrade && isStatusMove && !isMultiHit) {
-        // if (!baseMove.hasAttr(AddArenaTrapTagAttr)) {
-        //     const hazard = Utils.randSeedItem([ArenaTagType.STEALTH_ROCK, ArenaTagType.SPIKES, ArenaTagType.TOXIC_SPIKES, ArenaTagType.STICKY_WEB]);
-        //     upgrades.push(moveGenerator.getType(moveId, 0, null, null, -10,
-        //         "ARENA_TRAP_PATH 0: " + i18next.t("moveUpgrade:description:statusSpecific:addArenaTrap", { trapName: getHazardName(hazard) }),
-        //         null, null, [new AddArenaTrapTagUpgradeAttr(hazard, null, false, !isPlayer)]));
-        // }
-        // }
-
-        // return upgrades;
-
+        if (filterUpgrades) {
+            isVeryRare = true;
+            isRare = true;
+            isMinorRare = true;
+        }
         if (shouldOfferUpgradeCategory(UpgradeCategory.POSITIVE_PRIORITY) && !isStatusMove && baseMove.priority <= 0 && hasPower && !isMultiHit && upgradeMove.power < 100) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.POSITIVE_PRIORITY);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.POSITIVE_PRIORITY_PATH[tierIndex];
-                
+
                 if (nextStep) {
                     const priorityDelta = nextStep.prio - baseMove.priority;
                     let powerDelta = 0;
@@ -932,45 +947,42 @@ export class MoveUpgrade {
                     }
                     powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
                     const newPower = baseMovePower + powerDelta;
-                    
-                    const descriptionParams: any = { 
-                        value: nextStep.prio, 
+
+                    const descriptionParams: any = {
+                        value: nextStep.prio,
                         newPower: newPower
                     };
-                    
+
                     upgrades.push(moveGenerator.getType(moveId, powerDelta, null, null, null,
                         i18next.t("moveUpgrade:description:priority:increaseNoAccuracy", descriptionParams) as string,
                         null, null, [new ConditionalPriorityAttr(priorityDelta)], [], 0, UpgradeCategory.POSITIVE_PRIORITY, upgradeTier));
                 }
             }
         }
-
-       
-
         if (shouldOfferUpgradeCategory(UpgradeCategory.NEGATIVE_PRIORITY) && !isStatusMove && baseMove.priority >= 0 && hasPower && !isMultiHit) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.NEGATIVE_PRIORITY);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.NEGATIVE_PRIORITY_PATH[tierIndex];
-                
+
                 if (nextStep) {
                     const priorityDelta = nextStep.prio - baseMove.priority;
                     const accuracyDelta = -(nextStep.accCost || 0);
                     const cappedPBoost = MoveUpgrade.capPowerBoost(baseMovePower, nextStep.pBoost);
                     const newPower = baseMovePower + cappedPBoost;
                     const newAccuracy = baseMoveAccuracy === -1 ? (100 + accuracyDelta) : (baseMoveAccuracy + accuracyDelta);
-                    
+
                     const hasAccuracyCost = nextStep.accCost !== undefined;
                     const descriptionKey = hasAccuracyCost ? "moveUpgrade:description:priority:decrease" : "moveUpgrade:description:priority:decreaseNoAccuracy";
-                    const descriptionParams: any = { 
-                        value: nextStep.prio, 
+                    const descriptionParams: any = {
+                        value: nextStep.prio,
                         newPower: newPower
                     };
                     if (hasAccuracyCost) {
                         descriptionParams.newAccuracy = newAccuracy;
                     }
-                    
+
                     upgrades.push(moveGenerator.getType(moveId, cappedPBoost, null, null, accuracyDelta,
                         i18next.t(descriptionKey, descriptionParams) as string,
                         null, null, [new ConditionalPriorityAttr(priorityDelta)], [], 0, UpgradeCategory.NEGATIVE_PRIORITY, upgradeTier));
@@ -980,31 +992,31 @@ export class MoveUpgrade {
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.CRIT) && !isStatusMove && hasPower && !isMultiHit && !isCritOnly && !highCritAttr) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.CRIT);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.CRIT_PATH[tierIndex];
-                
+
                 if (nextStep) {
                     let powerDelta = 0;
                     if (nextStep.pSetToRatio !== undefined) {
                         powerDelta += Math.round(baseMovePower * nextStep.pSetToRatio) - baseMovePower;
                     }
                     powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-                    
+
                     const newPower = Math.round(baseMovePower + powerDelta);
                     const accuracyDelta = -(nextStep.accCost || 0);
                     const newAccuracy = baseMoveAccuracy === -1 ? (100 + accuracyDelta) : (baseMoveAccuracy + accuracyDelta);
-                    
+
                     const hasAccuracyCost = nextStep.accCost !== undefined;
-                    
+
                     if (nextStep.critOnly) {
                         const descriptionKey = hasAccuracyCost ? "moveUpgrade:description:crit:upgradeToCritOnly" : "moveUpgrade:description:crit:upgradeToCritOnlyNoAccuracy";
                         const descriptionParams: any = { newPower: newPower };
                         if (hasAccuracyCost) {
                             descriptionParams.newAccuracy = newAccuracy;
                         }
-                        
+
                         upgrades.push(moveGenerator.getType(moveId, powerDelta, null, null, accuracyDelta,
                             i18next.t(descriptionKey, descriptionParams) as string,
                             null, null, [new CritOnlyAttr()], [], 0, UpgradeCategory.CRIT, upgradeTier));
@@ -1014,7 +1026,7 @@ export class MoveUpgrade {
                         if (hasAccuracyCost) {
                             descriptionParams.newAccuracy = newAccuracy;
                         }
-                        
+
                         upgrades.push(moveGenerator.getType(moveId, powerDelta, null, null, accuracyDelta,
                             i18next.t(descriptionKey, descriptionParams) as string,
                             null, null, [new HighCritAttr()], [], 0, UpgradeCategory.CRIT, upgradeTier));
@@ -1025,7 +1037,7 @@ export class MoveUpgrade {
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.STAT_BOOST_SELF) && hasStatBoostSelf && selfBoostAttr && hasPower && !isMultiHit) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.STAT_BOOST_SELF);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.STAT_BOOST_SELF_PATH[tierIndex];
@@ -1043,17 +1055,17 @@ export class MoveUpgrade {
                     const powerValueForDesc = Math.abs(powerChange);
 
                     const attributes: MoveAttr[] = [];
-                    
+
                     if (nextStep.stats === currentStats.length && nextStep.level > selfBoostAttr.levels) {
                         attributes.push(new StatChangeAttr(selfBoostAttr.stats, nextStep.level, true));
                         if (nextStep.recoilCost !== undefined) {
                             attributes.push(new RecoilAttr(false, nextStep.recoilCost));
                         }
-                        
+
                         const hasExistingChance = baseMoveChance > 0;
                         const chanceIsChanging = hasExistingChance && chance !== baseMoveChance;
                         const chanceRemainsSame = hasExistingChance && chance === baseMoveChance;
-                        
+
                         let descriptionKey: string;
                         if (powerValueForDesc > 0) {
                             if (chanceIsChanging) {
@@ -1072,11 +1084,11 @@ export class MoveUpgrade {
                                 descriptionKey = "moveUpgrade:description:stat:increaseRaiseSelf";
                             }
                         }
-                        
+
                         const descriptionParams: any = {
-                            statName: currentStatNames, 
-                            stages: nextStep.level, 
-                            chance: chance, 
+                            statName: currentStatNames,
+                            stages: nextStep.level,
+                            chance: chance,
                             powerValue: powerValueForDesc,
                             newPower: baseMovePower + powerChange
                         };
@@ -1099,11 +1111,11 @@ export class MoveUpgrade {
                         if (nextStep.recoilCost !== undefined) {
                             attributes.push(new RecoilAttr(false, nextStep.recoilCost));
                         }
-                        
+
                         const hasExistingChance = baseMoveChance > 0;
                         const chanceIsChanging = hasExistingChance && chance !== baseMoveChance;
                         const chanceRemainsSame = hasExistingChance && chance === baseMoveChance;
-                        
+
                         let descriptionKey: string;
                         if (powerValueForDesc > 0) {
                             if (chanceIsChanging) {
@@ -1122,11 +1134,11 @@ export class MoveUpgrade {
                                 descriptionKey = "moveUpgrade:description:stat:addAnotherRaiseSelf";
                             }
                         }
-                        
+
                         const descriptionParams: any = {
-                            existingStats: currentStatNames, 
-                            newStatName: newStatName, 
-                            stages: nextStep.level, 
+                            existingStats: currentStatNames,
+                            newStatName: newStatName,
+                            stages: nextStep.level,
                             powerValue: powerValueForDesc,
                             newPower: baseMovePower + powerChange
                         };
@@ -1143,7 +1155,7 @@ export class MoveUpgrade {
                 }
             } else if (shouldOfferUpgradeCategory(UpgradeCategory.STAT_BOOST_SELF) && !hasStatBoostSelf && hasPower && !isMultiHit && !isSelfTarget) {
                 const upgradeTier = getNextUpgradeTier(UpgradeCategory.STAT_BOOST_SELF);
-                
+
                 if (upgradeTier !== null) {
                     const tierIndex = upgradeTier - 1;
                     const nextStep = this.STAT_BOOST_SELF_PATH[tierIndex];
@@ -1163,12 +1175,12 @@ export class MoveUpgrade {
                         if (nextStep.recoilCost !== undefined) {
                             attributes.push(new RecoilAttr(false, nextStep.recoilCost));
                         }
-                        
+
                         const recoilCost = nextStep.recoilCost;
                         const hasExistingChance = baseMoveChance > 0;
                         const chanceIsChanging = hasExistingChance && chance !== baseMoveChance;
                         const chanceRemainsSame = hasExistingChance && chance === baseMoveChance;
-                        
+
                         let descriptionKey: string;
                         if (recoilCost) {
                             if (chanceIsChanging) {
@@ -1187,11 +1199,11 @@ export class MoveUpgrade {
                                 descriptionKey = "moveUpgrade:description:stat:addRaiseSelfSingle";
                             }
                         }
-                        
+
                         const descriptionParams: any = {
-                            statName: statName, 
-                            stages: nextStep.level, 
-                            chance: chance, 
+                            statName: statName,
+                            stages: nextStep.level,
+                            chance: chance,
                             powerValue: powerValueForDesc,
                             newPower: baseMovePower + powerChange
                         };
@@ -1206,11 +1218,11 @@ export class MoveUpgrade {
 
             if (shouldOfferUpgradeCategory(UpgradeCategory.STAT_LOWER_TARGET) && hasStatLowerTarget && targetLowerAttr && !isStatusMove && hasPower && !isMultiHit && !isSelfTarget) {
                 const upgradeTier = getNextUpgradeTier(UpgradeCategory.STAT_LOWER_TARGET);
-                
+
                 if (upgradeTier !== null) {
                     const tierIndex = upgradeTier - 1;
                     const nextStep = this.STAT_LOWER_TARGET_PATH[tierIndex];
-                    
+
                     if (nextStep) {
                         const currentStats = Array.isArray(targetLowerAttr.stats) ? targetLowerAttr.stats : [targetLowerAttr.stats];
                         const currentStatNames = currentStats.map(s => getBattleStatName(s)).join(" & ");
@@ -1227,7 +1239,7 @@ export class MoveUpgrade {
                             const hasExistingChance = baseMoveChance > 0;
                             const chanceIsChanging = hasExistingChance && nextStep.chance !== baseMoveChance;
                             const chanceRemainsSame = hasExistingChance && nextStep.chance === baseMoveChance;
-                            
+
                             let descriptionKey: string;
                             if (accPenalty === 0) {
                                 if (chanceIsChanging) {
@@ -1247,8 +1259,8 @@ export class MoveUpgrade {
                                 }
                             }
                             const descriptionParams: any = {
-                                statName: currentStatNames, 
-                                stages: nextStep.level, 
+                                statName: currentStatNames,
+                                stages: nextStep.level,
                                 newPower: newPower
                             };
                             if (accPenalty !== 0) {
@@ -1269,7 +1281,7 @@ export class MoveUpgrade {
                             const hasExistingChance = baseMoveChance > 0;
                             const chanceIsChanging = hasExistingChance && nextStep.chance !== baseMoveChance;
                             const chanceRemainsSame = hasExistingChance && nextStep.chance === baseMoveChance;
-                            
+
                             let descriptionKey2: string;
                             if (accPenalty === 0) {
                                 if (chanceIsChanging) {
@@ -1289,9 +1301,9 @@ export class MoveUpgrade {
                                 }
                             }
                             let descriptionParams2: any = {
-                                existingStats: currentStatNames, 
-                                newStatName: newStatName, 
-                                stages: nextStep.level, 
+                                existingStats: currentStatNames,
+                                newStatName: newStatName,
+                                stages: nextStep.level,
                                 newPower: newPower
                             };
                             if (accPenalty !== 0) {
@@ -1307,7 +1319,7 @@ export class MoveUpgrade {
                 }
             } else if (shouldOfferUpgradeCategory(UpgradeCategory.STAT_LOWER_TARGET) && !hasStatLowerTarget && !isStatusMove && hasPower && !selfLowerAttrs.length && !isMultiHit) {
                 const upgradeTier = getNextUpgradeTier(UpgradeCategory.STAT_LOWER_TARGET);
-                
+
                 if (upgradeTier !== null) {
                     const tierIndex = upgradeTier - 1;
                     const nextStep = this.STAT_LOWER_TARGET_PATH[tierIndex];
@@ -1326,7 +1338,7 @@ export class MoveUpgrade {
                         const hasExistingChance = baseMoveChance > 0;
                         const chanceIsChanging = hasExistingChance && nextStep.chance !== baseMoveChance;
                         const chanceRemainsSame = hasExistingChance && nextStep.chance === baseMoveChance;
-                        
+
                         let descriptionKey: string;
                         if (accPenalty === 0) {
                             if (chanceIsChanging) {
@@ -1346,8 +1358,8 @@ export class MoveUpgrade {
                             }
                         }
                         const descriptionParams: any = {
-                            statName: statName, 
-                            stages: nextStep.level, 
+                            statName: statName,
+                            stages: nextStep.level,
                             newPower: newPower
                         };
                         if (accPenalty !== 0) {
@@ -1356,7 +1368,7 @@ export class MoveUpgrade {
                         if (nextStep.chance > 0) {
                             descriptionParams.chance = nextStep.chance;
                         }
-                        
+
                         upgrades.push(moveGenerator.getType(moveId, powerPenalty, null, null, accPenalty,
                             i18next.t(descriptionKey, descriptionParams) as string, nextStep.chance, null, [new StatChangeAttr(stat, -nextStep.level, false)], [], 0, UpgradeCategory.STAT_LOWER_TARGET, upgradeTier));
                     }
@@ -1365,9 +1377,9 @@ export class MoveUpgrade {
 
             if (!hasPathlessUpgrade && !isStatusMove && baseMove.type !== Type.GROUND && !baseMove.getAttrs(AddBattlerTagAttr).some((a: any) => a.tagType === BattlerTagType.IGNORE_FLYING) && hasPower && isRare) {
                     let attributes: MoveAttr[] = [];
-                    
+
                     attributes = [new AddBattlerTagAttr(BattlerTagType.IGNORE_FLYING), new RemoveBattlerTagAttr([BattlerTagType.FLYING, BattlerTagType.MAGNET_RISEN])];
-                    
+
                     upgrades.push(moveGenerator.getType(moveId, 5, null, null, 0,
                         i18next.t("moveUpgrade:description:misc:addGrounding"), null, null, attributes, [], 0));
             }
@@ -1403,7 +1415,7 @@ export class MoveUpgrade {
 
             if (shouldOfferUpgradeCategory(UpgradeCategory.POWER) && hasPower && !isStatusMove && !isMultiHit && upgradeMovePower < 180) {
                 const upgradeTier = getNextUpgradeTier(UpgradeCategory.POWER);
-                
+
                 if (upgradeTier !== null) {
                     const tierIndex = upgradeTier - 1;
                     const nextStep = this.POWER_PATH[tierIndex];
@@ -1415,7 +1427,7 @@ export class MoveUpgrade {
                     const effectiveAccCost = baseMoveAccuracy === -1 ? 0 : nextStep.accCost;
                     const newAccuracy = baseMoveAccuracy === -1 ? 100 : (baseMoveAccuracy - effectiveAccCost);
                     const descriptionKey = effectiveAccCost > 0 ? "moveUpgrade:description:power:increaseVsAccuracy" : "moveUpgrade:description:power:increaseOnly";
-                    const descriptionParams: any = { 
+                    const descriptionParams: any = {
                         newPower: newPower,
                         powerValue: cappedPBoost
                     };
@@ -1430,7 +1442,7 @@ export class MoveUpgrade {
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.ACCURACY) && hasAccuracy && upgradeMoveAccuracy < 100 && !isStatusMove && hasPower) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.ACCURACY);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.ACCURACY_PATH[tierIndex];
@@ -1458,7 +1470,7 @@ export class MoveUpgrade {
                         const newAccuracy = baseMoveAccuracy === -1 ? (100 + accuracyDelta) : (baseMoveAccuracy + accuracyDelta);
                         const descriptionKey = nextStep.accCost ? "moveUpgrade:description:recoil:addVsPower" : "moveUpgrade:description:recoil:addVsPowerOnly";
                         const descriptionParams: any = {
-                            percent: Math.round(nextStep.ratio * 100), 
+                            percent: Math.round(nextStep.ratio * 100),
                             newPower: newPower
                         };
                         if (nextStep.accCost) {
@@ -1471,7 +1483,7 @@ export class MoveUpgrade {
         }
         if (shouldOfferUpgradeCategory(UpgradeCategory.RECOIL_DECREASE) && !isStatusMove && hasPower && !isMultiHit && recoilAttr) {
                 const decreaseUpgradeTier = getNextUpgradeTier(UpgradeCategory.RECOIL_DECREASE);
-                
+
                 if (decreaseUpgradeTier !== null) {
                     const tierIndex = decreaseUpgradeTier - 1;
                     const nextDecreaseStep = this.RECOIL_DECREASE_PATH[tierIndex];
@@ -1479,20 +1491,20 @@ export class MoveUpgrade {
                         const newPower = baseMovePower - nextDecreaseStep.pCost;
                         const newAccuracy = baseMoveAccuracy === -1 ? (100 - (nextDecreaseStep.accCost || 0)) : (baseMoveAccuracy - (nextDecreaseStep.accCost || 0));
                         const accuracyDelta = -(nextDecreaseStep.accCost || 0);
-                        
+
                         const hasAccuracyCost = nextDecreaseStep.accCost !== undefined;
-                        const descKey = nextDecreaseStep.ratio === 0 ? 
+                        const descKey = nextDecreaseStep.ratio === 0 ?
                             (hasAccuracyCost ? "moveUpgrade:description:recoil:removeVsPower" : "moveUpgrade:description:recoil:removeVsPowerNoAccuracy") :
                             (hasAccuracyCost ? "moveUpgrade:description:recoil:decreaseVsPower" : "moveUpgrade:description:recoil:decreaseVsPowerNoAccuracy");
-                        
+
                         const descriptionParams: any = {
-                            percent: Math.round(nextDecreaseStep.ratio * 100), 
+                            percent: Math.round(nextDecreaseStep.ratio * 100),
                             newPower: newPower
                         };
                         if (hasAccuracyCost) {
                             descriptionParams.newAccuracy = newAccuracy;
                         }
-                        
+
                         upgrades.push(moveGenerator.getType(moveId, -nextDecreaseStep.pCost, null, null, accuracyDelta,
                             i18next.t(descKey, descriptionParams) as string, null, null, [new RecoilAttr(false, nextDecreaseStep.ratio)], [], 0, UpgradeCategory.RECOIL_DECREASE, decreaseUpgradeTier));
                     }
@@ -1501,7 +1513,7 @@ export class MoveUpgrade {
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.HIT_HEAL) && !isStatusMove && hasPower && !isMultiHit && !hitHealAttr) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.HIT_HEAL);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.HIT_HEAL_PATH[tierIndex];
@@ -1509,14 +1521,14 @@ export class MoveUpgrade {
                 if (nextStep) {
                     const currentRatio = hitHealAttr?.healRatio || 0;
                     const descKey = currentRatio === 0 ? "moveUpgrade:description:heal:addHitHealVsPower" : "moveUpgrade:description:heal:increaseHitHealVsPower";
-                    
+
                     let powerDelta = 0;
                     if (nextStep.pSetToRatio !== undefined) {
                         powerDelta += Math.round(baseMovePower * nextStep.pSetToRatio) - baseMovePower;
                     }
                     powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
                     const newPower = baseMovePower + powerDelta;
-                    
+
                     upgrades.push(moveGenerator.getType(moveId, powerDelta, null, null, 0,
                         i18next.t(descKey, {
                             percent: Math.round(nextStep.ratio * 100), newPower: newPower
@@ -1527,7 +1539,7 @@ export class MoveUpgrade {
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.EFFECT_CHANCE) && hasSecondaryEffect && baseMoveChance < 100 && !isStatusMove && hasPower && !isMultiHit && !selfLowerAttrs.length && (!hasFlinch || (hasFlinch && upgradeMove.chance < 30))) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.EFFECT_CHANCE);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = getEffectChanceTierIndex(baseMoveChance, upgradeTier);
                 const nextStep = tierIndex < this.EFFECT_CHANCE_PATH.length ? this.EFFECT_CHANCE_PATH[tierIndex] : null;
@@ -1538,15 +1550,15 @@ export class MoveUpgrade {
                         powerDelta += Math.round(baseMovePower * nextStep.pSetToRatio) - baseMovePower;
                     }
                     powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-                    
+
                     const newPower = baseMovePower + powerDelta;
-                    
+
                     const descriptionKey =  "moveUpgrade:description:effectChance:increaseToValueVsPowerNoAccuracy";
                     const descriptionParams: any = {
-                        value: nextStep.chance, 
+                        value: nextStep.chance,
                         newPower: newPower
                     };
-                    
+
                     upgrades.push(moveGenerator.getType(moveId, powerDelta, null, null, null,
                         i18next.t(descriptionKey, descriptionParams) as string, nextStep.chance, null, [], [], 0, UpgradeCategory.EFFECT_CHANCE, upgradeTier));
                 }
@@ -1555,14 +1567,14 @@ export class MoveUpgrade {
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.EFFECT_CHANCE) && hasPower && !isStatusMove && !hasSecondaryEffect && !isMultiHit && !selfLowerAttrs.length) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.EFFECT_CHANCE);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = getEffectChanceTierIndex(baseMoveChance, upgradeTier);
                 const nextStep = tierIndex < this.EFFECT_CHANCE_PATH.length ? this.EFFECT_CHANCE_PATH[tierIndex] : null;
-                
+
                 if (nextStep) {
                     const { chance } = nextStep;
-                    
+
                     let powerDelta = 0;
                     let newPower = 0;
                     if (nextStep.pSetToRatio !== undefined) {
@@ -1570,7 +1582,7 @@ export class MoveUpgrade {
                         powerDelta += newPower - baseMovePower;
                     }
                     powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-                    
+
                     let status = isVeryRare ? Utils.randSeedItem([StatusEffect.BURN, StatusEffect.PARALYSIS, StatusEffect.POISON]) : Utils.randSeedItem([StatusEffect.BURN, StatusEffect.PARALYSIS, StatusEffect.POISON, StatusEffect.SLEEP, StatusEffect.FREEZE, StatusEffect.TOXIC]);
                     const addables = isVeryRare ? [
                         { attr: [new FlinchAttr()], desc: "moveUpgrade:description:flinch:addChanceVsPower" },
@@ -1603,7 +1615,7 @@ export class MoveUpgrade {
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.MULTI_HIT) && !isStatusMove && hasPower && !isMultiHit) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.MULTI_HIT);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.MULTI_HIT_PATH[tierIndex];
@@ -1612,7 +1624,7 @@ export class MoveUpgrade {
                     const powerChange = -baseMovePower + nextStep.pSet;
                     const flags = nextStep.checkAll ? [MoveFlags.CHECK_ALL_HITS] : [];
                     const currentType = multiHitAttr?.getMultiHitType;
-                    const descKey = !currentType ? 
+                    const descKey = !currentType ?
                         (nextStep.checkAll ? "moveUpgrade:description:multiHit:addWithCheckAll" : "moveUpgrade:description:multiHit:addNoCheckAll") :
                         (nextStep.checkAll ? "moveUpgrade:description:multiHit:changeWithCheckAll" : "moveUpgrade:description:multiHit:changeNoCheckAll");
 
@@ -1620,7 +1632,7 @@ export class MoveUpgrade {
                     const accuracyDelta = -(nextStep.accCost || 0);
                     const newAccuracy = baseMoveAccuracy === -1 ? (100 + accuracyDelta) : (baseMoveAccuracy + accuracyDelta);
                     const descriptionParams: any = {
-                        hits: hitsDescription, 
+                        hits: hitsDescription,
                         newPower: nextStep.pSet,
                         chance: nextStep.chance || 100
                     };
@@ -1647,7 +1659,7 @@ export class MoveUpgrade {
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.ITEM_INTERACTION) && isPhysicalMove && !isStatusMove && hasPower && !isSelfTarget && isRare) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.ITEM_INTERACTION);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.ITEM_INTERACTION_PATH[tierIndex];
@@ -1662,7 +1674,7 @@ export class MoveUpgrade {
                     }
                     powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
                     const newPower = baseMovePower + powerDelta;
-                    
+
                     if (nextStep.type === 'remove') {
                         upgrades.push(moveGenerator.getType(moveId, powerDelta, null, null, 0,
                             i18next.t("moveUpgrade:description:misc:addRemoveItem", { newPower: newPower }), null, null, [new RemoveHeldItemAttr(false)], [], 0, UpgradeCategory.ITEM_INTERACTION, upgradeTier));
@@ -1677,7 +1689,7 @@ export class MoveUpgrade {
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.SACRIFICIAL) && !isStatusMove && !isMultiHit && hasPower && baseMove.id !== Moves.STRUGGLE && baseMovePower < 70) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.SACRIFICIAL);
-            
+
             if (upgradeTier !== null && (upgradeTier > 1 || isMinorRare)) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.SACRIFICIAL_PATH[tierIndex];
@@ -1686,14 +1698,14 @@ export class MoveUpgrade {
                     const powerChange = nextStep.pSet - baseMovePower;
                     const accuracyDelta = -(nextStep.accCost || 0);
                     const newAccuracy = baseMoveAccuracy === -1 ? (100 + accuracyDelta) : (baseMoveAccuracy + accuracyDelta);
-                    
+
                     let descriptionKey = nextStep.desc;
                     if (!nextStep.accCost) {
                         descriptionKey = nextStep.desc.replace(":addHalf", ":addHalfNoAccuracy")
                                                     .replace(":upgradeFull", ":upgradeFullNoAccuracy")
                                                     .replace(":upgradeOnHit", ":upgradeOnHitNoAccuracy");
                     }
-                    
+
                     const descriptionParams: any = { power: nextStep.pSet };
                     if (nextStep.accCost && baseMoveAccuracy !== -1) {
                         descriptionParams.newAccuracy = newAccuracy;
@@ -1717,7 +1729,7 @@ export class MoveUpgrade {
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.CHARGE_MOVE) && !isStatusMove && !isMultiHit && hasPower && baseMovePower <= 100 && !selfLowerAttrs.length) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.CHARGE_MOVE);
-            
+
             if (upgradeTier !== null && (upgradeTier > 1 || isRare)) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.CHARGE_MOVE_PATH[tierIndex];
@@ -1737,8 +1749,8 @@ export class MoveUpgrade {
                     const accuracyDelta = -(nextStep.accCost || 0);
                     const newAccuracy = baseMoveAccuracy === -1 ? (100 + accuracyDelta) : (baseMoveAccuracy + accuracyDelta);
                     const descriptionParams: any = {
-                        newPower: newPower, 
-                        statName: getBattleStatName(BattleStat.DEF), 
+                        newPower: newPower,
+                        statName: getBattleStatName(BattleStat.DEF),
                         stages: 1,
                         newAccuracy: newAccuracy
                     };
@@ -1801,23 +1813,8 @@ export class MoveUpgrade {
                     i18next.t("moveUpgrade:description:type:superEffectiveVsType", { targetTypeName: getTypeName(targetType) }),
                     null, null, [new AnyTypeSuperEffectTypeMultiplierAttr(targetType)], [], 0, undefined));
             }
-                
-            const allTypes = Object.values(Type).filter(t => typeof t === "number" && t > Type.UNKNOWN && t < Type.STELLAR) as Type[];
-            
-            const availableTypes = allTypes.filter(type => type !== baseMove.type);
-            
-            if (availableTypes.length > 0) {
-                const numTypesToOffer = Math.min(3, availableTypes.length);
-                const selectedTypes = MoveUpgrade.shuffleArray([...availableTypes]).slice(0, numTypesToOffer);
-                
-                for (const newType of selectedTypes) {
-                    const typeName = getTypeName(newType);
-                    
-                    upgrades.push(moveGenerator.getType(moveId, 0, newType, null, 0,
-                        i18next.t("moveUpgrade:description:type:directChange", { typeName: typeName }),
-                        null, null, [], [], 0, undefined));
-                }
-            }
+
+            upgrades.push(...getRandomTypeChangeOptions(filterUpgrades?.types));
         }
 
         if (!isStatusMove && !hitHealAttr && hasPower) {
@@ -1903,9 +1900,6 @@ export class MoveUpgrade {
                 i18next.t("moveUpgrade:description:priority:conditionalFirstTurn", { value: 2, powerValue: 20 }),
                 null, null, [new FirstTurnPriorityAttr(2)], [new FirstMoveCondition()], 0, undefined));
         }
-
-       
-
             if (!baseMove.hasAttr(ForceSwitchOutAttr) && !isMultiHit) {
                 upgrades.push(moveGenerator.getType(moveId, -25, null, null, 0,
                     i18next.t("moveUpgrade:description:misc:addSwitchOut", { powerValue: 25 }),
@@ -1918,7 +1912,7 @@ export class MoveUpgrade {
                     null, null, [new SurviveDamageAttr()], [], 0, undefined));
             }
 
-            if (!baseMove.hasAttr(TrapAttr)) {
+            if (!baseMove.hasAttr(TrapAttr) && !isSelfTarget) {
                 const trapType = Utils.randSeedItem([BattlerTagType.BIND, BattlerTagType.WRAP, BattlerTagType.FIRE_SPIN, BattlerTagType.WHIRLPOOL]);
                 upgrades.push(moveGenerator.getType(moveId, -25, null, null, 0,
                     i18next.t("moveUpgrade:description:misc:addTrap", { trapName: getTrapName(trapType), powerValue: 25 }),
@@ -2003,29 +1997,29 @@ export class MoveUpgrade {
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.STATUS_IMPROVE) && !isStatusMove && hasSecondaryEffect && hasPower && !isSelfTarget) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.STATUS_IMPROVE);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.STATUS_IMPROVE_PATH[tierIndex];
 
                 if (nextStep) {
                     let powerDelta = 0;
-                    
+
                     if (nextStep.pSetToRatio !== undefined) {
                         powerDelta += Math.round(baseMovePower * nextStep.pSetToRatio) - baseMovePower;
                     }
                     powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-                    
+
                     const accuracyDelta = nextStep.accCost ? -nextStep.accCost : 0;
                     const currentChance = baseMove.chance || 0;
                     const newPower = baseMovePower + powerDelta;
                     const newAccuracy = baseMoveAccuracy + accuracyDelta;
-                    
+
                     if (currentStatus) {
                         const accuracyCost = nextStep.accCost || 0;
                         const hasPowerChange = powerDelta !== 0;
                         const hasAccuracyChange = accuracyCost > 0;
-                        
+
                         if (currentChance >= 50) {
                             const descriptionKey = hasAccuracyChange ? "moveUpgrade:description:status:improveChanceCappedVsAccuracy" : "moveUpgrade:description:status:improveChanceCapped";
                             upgrades.push(moveGenerator.getType(moveId, powerDelta, null, null, accuracyDelta,
@@ -2037,7 +2031,7 @@ export class MoveUpgrade {
                         } else {
                             const addChanceValue = nextStep.addChance || 0;
                             const newChance = Math.min(50, currentChance + addChanceValue);
-                            
+
                             let descriptionKey = "moveUpgrade:description:status:improveChance";
                             if (hasPowerChange && hasAccuracyChange) {
                                 descriptionKey = "moveUpgrade:description:status:improveChanceVsPowerAndAccuracy";
@@ -2046,23 +2040,23 @@ export class MoveUpgrade {
                             } else if (hasAccuracyChange) {
                                 descriptionKey = "moveUpgrade:description:status:improveChanceVsAccuracy";
                             }
-                            
+
                             upgrades.push(moveGenerator.getType(moveId, powerDelta, null, null, accuracyDelta,
                                 i18next.t(descriptionKey, {
-                                    chance: newChance, 
-                                    statusName: getStatusEffectName(currentStatus), 
+                                    chance: newChance,
+                                    statusName: getStatusEffectName(currentStatus),
                                     newPower: newPower,
                                     newAccuracy: newAccuracy
                                 }), newChance, null, [], [], 0, UpgradeCategory.STATUS_IMPROVE, upgradeTier));
                         }
-                    } 
+                    }
                 }
             }
         }
 
         if (shouldOfferUpgradeCategory(UpgradeCategory.STATUS_DUAL) && !isStatusMove && hasSecondaryEffect && hasPower && !isSelfTarget) {
             const upgradeTier = getNextUpgradeTier(UpgradeCategory.STATUS_DUAL);
-            
+
             if (upgradeTier !== null) {
                 const tierIndex = upgradeTier - 1;
                 const nextStep = this.STATUS_DUAL_PATH[tierIndex];
@@ -2073,28 +2067,28 @@ export class MoveUpgrade {
                         powerDelta += Math.round(baseMovePower * nextStep.pSetToRatio) - baseMovePower;
                     }
                     powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-                    
+
                     const accuracyDelta = nextStep.accCost ? -nextStep.accCost : 0;
                     const currentChance = baseMove.chance || 0;
                     const statusChance = nextStep.chance || currentChance;
 
                     if (currentStatus && !baseMove.hasAttr(MultiStatusEffectAttr)) {
-                    
+
                     const existingStatusEffects: StatusEffect[] = [];
-                    
+
                     const singleStatusAttrs = baseMove.getAttrs(StatusEffectAttr).filter(attr => !(attr instanceof MultiStatusEffectAttr));
                     existingStatusEffects.push(...singleStatusAttrs.map(attr => (attr as StatusEffectAttr).effect));
-                    
+
                     const multiStatusAttrs = baseMove.getAttrs(MultiStatusEffectAttr);
                     if (multiStatusAttrs.length > 0) {
                         const multiAttr = multiStatusAttrs[0] as MultiStatusEffectAttr;
                         existingStatusEffects.push(...multiAttr.effects);
                     }
-                    
+
                     if (existingStatusEffects.length > 0 && existingStatusEffects.length < 4) {
                         const allPossibleStatuses = [StatusEffect.BURN, StatusEffect.PARALYSIS, StatusEffect.POISON, StatusEffect.FREEZE];
                         const availableStatuses = allPossibleStatuses.filter(s => !existingStatusEffects.includes(s));
-                        
+
                         if (availableStatuses.length > 0) {
                             const newStatus = Utils.randSeedItem(availableStatuses);
                             const combinedStatuses = [...existingStatusEffects, newStatus];
@@ -2105,7 +2099,7 @@ export class MoveUpgrade {
                             const hasAccuracyChange = accuracyCost > 0;
                             const newPower = baseMovePower + powerDelta;
                             const newAccuracy = baseMoveAccuracy + accuracyDelta;
-                            
+
                             let descriptionKey = "moveUpgrade:description:status:addSecondEffect";
                             if (hasPowerChange && hasAccuracyChange) {
                                 descriptionKey = "moveUpgrade:description:status:addSecondEffectVsPowerAndAccuracy";
@@ -2114,12 +2108,12 @@ export class MoveUpgrade {
                             } else if (hasAccuracyChange) {
                                 descriptionKey = "moveUpgrade:description:status:addSecondEffectVsAccuracy";
                             }
-                            
+
                             upgrades.push(moveGenerator.getType(moveId, powerDelta, null, null, accuracyDelta,
                                 i18next.t(descriptionKey, {
-                                    chance: statusChance, 
-                                    statusName1: statusName1, 
-                                    statusName2: statusName2, 
+                                    chance: statusChance,
+                                    statusName1: statusName1,
+                                    statusName2: statusName2,
                                     newPower: newPower,
                                     newAccuracy: newAccuracy
                                 }), statusChance, null, [new MultiStatusEffectAttr(combinedStatuses)], [], 0, UpgradeCategory.STATUS_DUAL, upgradeTier));
@@ -2143,7 +2137,7 @@ export class MoveUpgrade {
                 }), chance, null, [new StatusEffectAttr(newStatus)], [], 0, undefined));
         }
 
-        if (!hasPathlessUpgrade && !upgradeStatusAttr && !isStatusMove && !isSelfTarget && isRare) {
+        if (!hasPathlessUpgrade && !upgradeStatusAttr && !isStatusMove && !isSelfTarget && upgradeMove.chance >= 5 && isRare) {
             const statusesToAdd = [StatusEffect.PARALYSIS, StatusEffect.BURN, StatusEffect.POISON, StatusEffect.SLEEP, StatusEffect.TOXIC, StatusEffect.FREEZE];
             const status = Utils.randSeedItem(statusesToAdd);
             const statusName = getStatusEffectName(status);
@@ -2154,8 +2148,8 @@ export class MoveUpgrade {
                 }), statusChance, null, [new StatusEffectAttr(status)], [], 0, undefined));
         }
 
-        if (!hasPathlessUpgrade && isStatusMove && !upgradeStatusAttr && !hasStatBoostSelf && !hasStatLowerTarget && !hasHealAttr && !isSelfTarget && isRare) {
-                
+        if (!hasPathlessUpgrade && isStatusMove && !upgradeStatusAttr && !hasStatBoostSelf && !hasStatLowerTarget && !hasHealAttr && !isSelfTarget && upgradeMove.chance >= 5 && isRare) {
+
                 const statusesToAdd = [StatusEffect.PARALYSIS, StatusEffect.BURN, StatusEffect.POISON, StatusEffect.SLEEP, StatusEffect.TOXIC];
                 const status = Utils.randSeedItem(statusesToAdd);
                 const isSevereStatus = [StatusEffect.SLEEP, StatusEffect.TOXIC].includes(status);
@@ -2169,6 +2163,53 @@ export class MoveUpgrade {
                     i18next.t("moveUpgrade:description:status:addStatusViaStatusMove", {
                         statusName: statusName, accuracyValue: targetAcc
                     }), null, null, [new StatusEffectAttr(status)], [], 0, undefined));
+        }
+        if (filterUpgrades && upgrades.length > 0) {
+            const toCategories = (paths?: UpgradePath[]): UpgradeCategory[] => {
+                if (!paths || paths.length === 0) return [];
+                const typeToCategory: Record<string, UpgradeCategory | undefined> = {
+                    POWER: UpgradeCategory.POWER,
+                    ACCURACY: UpgradeCategory.ACCURACY,
+                    HIT_HEAL: UpgradeCategory.HIT_HEAL,
+                    EFFECT_CHANCE: UpgradeCategory.EFFECT_CHANCE,
+                    CRIT: UpgradeCategory.CRIT,
+                    RECOIL_ADD: UpgradeCategory.RECOIL_ADD,
+                    RECOIL_DECREASE: UpgradeCategory.RECOIL_DECREASE,
+                    SACRIFICIAL: UpgradeCategory.SACRIFICIAL,
+                    CHARGE_MOVE: UpgradeCategory.CHARGE_MOVE,
+                    MULTI_HIT: UpgradeCategory.MULTI_HIT,
+                    POSITIVE: UpgradeCategory.POSITIVE_PRIORITY,
+                    NEGATIVE: UpgradeCategory.NEGATIVE_PRIORITY,
+                    ITEM_INTERACTION: UpgradeCategory.ITEM_INTERACTION,
+                    STATUS: UpgradeCategory.STATUS_IMPROVE,
+                    STAT_BOOST_SELF: UpgradeCategory.STAT_BOOST_SELF,
+                    STAT_LOWER_TARGET: UpgradeCategory.STAT_LOWER_TARGET,
+                };
+                const result = new Set<UpgradeCategory>();
+                for (const p of paths) {
+                    const pathType = UpgradePathUtils.getPathType(p as any);
+                    const key = pathType;
+                    const cat = typeToCategory[key];
+                    if (cat) result.add(cat);
+                }
+                return Array.from(result);
+            };
+
+            const allowedCategories = toCategories(filterUpgrades.moveUpgrades);
+            const allowedAttrNames = new Set((filterUpgrades.moveAttributes || []).map(s => s.trim()).filter(Boolean));
+
+            upgrades = upgrades.filter(u => {
+                const anyU: any = u;
+                let ok = false;
+                if (allowedCategories.length > 0 && anyU.upgradeCategory) {
+                    ok = allowedCategories.includes(anyU.upgradeCategory);
+                }
+                if (!ok && allowedAttrNames.size > 0) {
+                    const attrs = (anyU.additionalAttrs || []) as any[];
+                    ok = Array.isArray(attrs) && attrs.some(a => a?.constructor?.name && allowedAttrNames.has(a.constructor.name));
+                }
+                return allowedCategories.length === 0 && allowedAttrNames.size === 0 ? true : ok;
+            });
         }
 
         const uniqueUpgrades = Array.from(new Map(upgrades.map(u => [(u).getDescription(scene), u])).values());

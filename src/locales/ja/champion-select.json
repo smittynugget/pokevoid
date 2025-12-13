@@ -1,0 +1,99 @@
+{
+  "title": "チャンピオン選択",
+  "confirmSelection": "{{name}}でランを開始しますか？",
+  "subheader": "ヴォイドに挑むチャンピオンを選んでください",
+  "levelUp": "レベルアップ！",
+  "characterUnlocked": "{{name}}\n解放！",
+  "unlocked": "解放済み",
+  "lockedGauge": "献身度: {{current}} / {{required}}",
+  "xp": "XP",
+  "potential": "ポテンシャル",
+  "level": "レベル",
+  "locked": "ロック中",
+  "unlockRequired": "必要条件: {{requirement}}",
+  "essenceHint": "必要なエッセンスを使ってレベルアップ！",
+  "essencesHeader": "エッセンス:",
+  "skillsHeader": "スキル",
+  "skillsSubheader": "スキルはスキルツリーにランダムで出現します。",
+  "rarity": {
+    "common": "コモン",
+    "great": "グレート", 
+    "ultra": "ウルトラ",
+    "master": "マスター",
+    "rogue": "ローグ",
+    "legendary": "レジェンダリー"
+  },
+  "unlockCharacter": "キャラクター解放",
+  "unlockCharacterTooltip": "{{current}}/{{required}}エッセンスを使って解放",
+  "tooltip": {
+    "lockedSkillTitle": "ロック中のスキル",
+    "levelRequired": "解放にはレベル{{level}}が必要です。",
+    "lockedPrefix": "ロック中",
+    "unlockWithEssence": "{{current}}/{{required}}エッセンスを使ってレベルアップで解放！",
+    "levelUpRequired": "このスキルを解放するにはレベルアップが必要です。",
+    "defaultTm": "{{types}}タイプのわざマシンをポケモンに教える",
+    "defaultXm": "{{types}}タイプのXMをポケモンに教える",
+    "defaultEssence": "{{amount}}個の{{types}}タイプエッセンスをコレクションに追加",
+    "defaultBooster": "{{types}}タイプブースターアイテムを受け取る",
+    "defaultTeraAbility": "{{types}}を使ってテラスタル特性を発動",
+    "defaultEssenceWeight": "{{types}}エッセンスのドロップ重みを{{weight}}増加",
+    "defaultCatchRate": "{{types}}ポケモンの捕獲率を{{percent}}%増加",
+    "defaultFusionPriority": "{{types}}ポケモンの融合優先度を増加",
+    "defaultRevive": "{{types}}ポケモンの復活確率を{{percent}}%増加",
+    "defaultTokens": "スキルツリートークンを受け取りノードを解放",
+    "defaultPoints": "スキルポイントを受け取りスキルを購入",
+    "typesFallback": "不明"
+  },
+  "skillList": {
+    "levelPrefix": "Lv {{level}}",
+    "unknownSkill": "???"
+  },
+  "defaultSkillLabels": {
+    "tms": "{{types}} わざマシン",
+    "xms": "{{types}} XM",
+    "abilities": "{{types}} 特性",
+    "teraAbilities": "{{types}} テラスタル特性",
+    "statBoosts": "{{types}} ステータスアップ",
+    "tokens": "スキルツリートークン",
+    "points": "スキルポイント",
+    "boosters": "{{types}} ブースター",
+    "essence": "{{types}} エッセンス",
+    "reviveBoost": "{{types}} 復活ブースト",
+    "essenceWeights": "{{types}} エッセンス重み",
+    "catchBonus": "{{types}} 捕獲ボーナス",
+    "fusionPriority": "{{types}} フュージョン優先度"
+  },
+  "button": {
+    "useEssence": "エッセンスを使う"
+  },
+  "brock": { "description": "岩のチャンピオン" },
+  "misty": { "description": "水のチャンピオン" },
+  "apollo": {
+    "name": "アポロ",
+    "description": "太陽のチャンピオン"
+  },
+  "diana": {
+    "name": "ダイアナ",
+    "description": "月のチャンピオン"
+  },
+  "generic": { "description": "デフォルトのチャンピオン。" },
+  "champions": {
+  "title": "チャンピオンを選んでください",
+  "brock": {
+    "name": "タケシ - いわタイプの専門家",
+    "description": "じめんといわタイプのマスター",
+    "essenceRequirement": "{{ground}}じめん + {{rock}}いわエッセンスが必要"
+  },
+  "misty": {
+    "name": "カスミ - みずタイプの専門家", 
+    "description": "みずタイプのマスター",
+    "essenceRequirement": "{{water}}みずエッセンスが必要"
+  },
+  "generic": {
+    "name": "バランス型チャンピオン",
+    "description": "タイプ特化なし",
+    "essenceRequirement": "特別な条件なし"
+  }
+}
+}
+

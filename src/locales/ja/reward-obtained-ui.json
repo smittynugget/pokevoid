@@ -16,7 +16,11 @@
     "rewardObtained": "報酬獲得！",
     "voidOvertaken": "虚無に飲み込まれた！",
     "newShopItem": "ショップに新しいアイテムが追加されました",
-    "manyMoreNuggets": "そしてもっとたくさんのキラキラ金塊！"
+    "manyMoreNuggets": "そしてもっとたくさんのキラキラ金塊！",
+    "skillPoints": "スキルポイント",
+    "skillTreeTokens": "スキルツリートークン",
+    "legendaryPower": "伝説の力！",
+    "legendaryCatchable": "{{pokemon}}が捕獲可能に！"
   },
   "gameModes": {
     "nuzlocke": {

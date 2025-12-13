@@ -1,0 +1,295 @@
+{
+  "onix_crystal_leviathan": {
+    "name": "攻击之蛇",
+    "description": "高速进攻型大岩蛇"
+  },
+  "onix_stone_defender": {
+    "name": "岩石防御者",
+    "description": "坦克防御型大岩蛇"
+  },
+  "geodude_tank_mode": {
+    "name": "坦克模式",
+    "description": "超防御型小拳石"
+  },
+  "geodude_speed_form": {
+    "name": "速度形态",
+    "description": "高速电气型小拳石"
+  },
+  "rhyhorn_rampage": {
+    "name": "暴走",
+    "description": "攻击性格斗型铁甲犀牛"
+  },
+  "onix_brock_signature": {
+    "name": "小刚的伙伴",
+    "description": "小刚值得信赖的岩石属性伙伴"
+  },
+  "geodude_brock_signature": {
+    "name": "小刚的伙伴",
+    "description": "小刚忠实的岩石属性伙伴"
+  },
+  "staryu_misty_signature": {
+    "name": "小霞的伙伴",
+    "description": "小霞优雅的水属性伙伴"
+  },
+  "psyduck_misty_signature": {
+    "name": "小霞的伙伴",
+    "description": "小霞古怪的水属性伙伴"
+  },
+  "voltorb_surge_signature": {
+    "name": "马志士的伙伴",
+    "description": "马志士电气的电属性伙伴"
+  },
+  "pikachu_surge_signature": {
+    "name": "马志士的伙伴",
+    "description": "马志士强力的电属性伙伴"
+  },
+  "electabuzz_surge_signature": {
+    "name": "马志士的伙伴",
+    "description": "马志士震撼的电属性伙伴"
+  },
+  "magikarp_misty_signature": {
+    "name": "小霞的伙伴",
+    "description": "小霞坚定的水属性伙伴"
+  },
+  "poliwag_misty_signature": {
+    "name": "小霞的伙伴",
+    "description": "小霞活泼的水属性伙伴"
+  },
+  "azurill_misty_signature": {
+    "name": "小霞的伙伴",
+    "description": "小霞可爱的水属性伙伴"
+  },
+  "goldeen_misty_signature": {
+    "name": "小霞的伙伴",
+    "description": "小霞优雅的水属性伙伴"
+  },
+  "horsea_misty_signature": {
+    "name": "小霞的伙伴",
+    "description": "小霞忠诚的水属性伙伴"
+  },
+  "togepi_misty_signature": {
+    "name": "小霞的伙伴",
+    "description": "小霞珍贵的妖精属性伙伴"
+  },
+  "corsola_misty_signature": {
+    "name": "小霞的伙伴",
+    "description": "小霞开朗的水属性伙伴"
+  },
+  "luvdisc_misty_signature": {
+    "name": "小霞的伙伴",
+    "description": "小霞真挚的水属性伙伴"
+  },
+  "clauncher_misty_signature": {
+    "name": "小霞的伙伴",
+    "description": "小霞强力的水属性伙伴"
+  },
+  "staryu_chronos_gear": {
+    "name": "时空齿轮",
+    "description": "注入时间能量的钢/水属性海星星，拥有防御精准和雨中恢复力"
+  },
+  "magikarp_splash_tyrant": {
+    "name": "溅跃暴君",
+    "description": "超越弱点的水/格斗属性鲤鱼王，体现坚毅决心和威慑力量"
+  },
+  "psyduck_kappa_quack": {
+    "name": "河童呱呱",
+    "description": "引导神秘恶作剧的水/幽灵属性可达鸭，拥有影缚能力和灵异混乱"
+  },
+  "poliwag_lightning_drum": {
+    "name": "雷电鼓",
+    "description": "脉动电化能量的电/水属性蚊香蝌蚪，拥有迅捷水流和再生活力"
+  },
+  "azurill_bounce_champion": {
+    "name": "弹跳冠军",
+    "description": "翱翔天际的飞行/妖精属性露力丽，拥有飞行化优雅、仙子化力量和冠军级弹跳能力"
+  },
+  "goldeen_piercing_stinger": {
+    "name": "穿刺毒针",
+    "description": "配备穿透攻击的水/虫属性角金鱼，拥有技术员精准和狙击手准确度"
+  },
+  "horsea_fireball_seahorse": {
+    "name": "火球海马",
+    "description": "燃烧引火激情的火/水属性墨海马，带来干旱热浪和灼热决心"
+  },
+  "togepi_eggshell_fortress": {
+    "name": "蛋壳堡垒",
+    "description": "以天恩强化的普通/岩石属性波克比，拥有坚硬岩石防御和战斗淬炼的护甲"
+  },
+  "corsola_toxic_coral": {
+    "name": "毒珊瑚",
+    "description": "以毒疗繁荣的毒/水属性太阳珊瑚，拥有无情打击和毒碎片保护"
+  },
+  "luvdisc_heartbreaker": {
+    "name": "心碎者",
+    "description": "以黑暗气场碎心的恶/水属性爱心鱼，拥有恶作剧心和悠游自如的闪避"
+  },
+  "clauncher_buster_dragon_blaster": {
+    "name": "龙爆破手",
+    "description": "以龙之颚凶猛武装的水/龙属性铁臂枪虾，拥有超级发射器射程和强行破坏力"
+  },
+  "vulpix_brock_signature": {
+    "name": "小刚的伙伴",
+    "description": "小刚神秘的火属性伙伴"
+  },
+  "zubat_brock_signature": {
+    "name": "小刚的伙伴",
+    "description": "小刚迅捷的毒属性伙伴"
+  },
+  "bonsly_brock_signature": {
+    "name": "小刚的伙伴",
+    "description": "小刚坚韧的岩石属性伙伴"
+  },
+  "mudkip_brock_signature": {
+    "name": "小刚的伙伴",
+    "description": "小刚稳固的水属性伙伴"
+  },
+  "pineco_brock_signature": {
+    "name": "小刚的伙伴",
+    "description": "小刚防御型的虫属性伙伴"
+  },
+  "croagunk_brock_signature": {
+    "name": "小刚的伙伴",
+    "description": "小刚狡猾的毒属性伙伴"
+  },
+  "happiny_brock_signature": {
+    "name": "小刚的伙伴",
+    "description": "小刚关爱的普通属性伙伴"
+  },
+  "lotad_brock_signature": {
+    "name": "小刚的伙伴",
+    "description": "小刚平静的水属性伙伴"
+  },
+  "comfey_brock_signature": {
+    "name": "小刚的伙伴",
+    "description": "小刚温柔的妖精属性伙伴"
+  },
+  "geodude_phantom_fist": {
+    "name": "幻影之拳",
+    "description": "挥舞幽灵影踪的岩石/幽灵属性小拳石，拥有坚硬爪子和铁拳技巧，浮游优雅"
+  },
+  "vulpix_flaming_forest_spirit": {
+    "name": "燃烧森林之灵",
+    "description": "体现森林精灵的火/草属性六尾，召唤干旱之火、草皮保护和叶绿素活力"
+  },
+  "zubat_vampiric_fiend": {
+    "name": "吸血恶魔",
+    "description": "引导吸血自信的恶/幽灵属性超音蝠，拥有诅咒之躯恐惧和强壮之颚凶猛"
+  },
+  "bonsly_tear_drop": {
+    "name": "泪珠",
+    "description": "以技能连结精准流动的岩石/水属性盆才怪，拥有蓄水恢复力和再生之泪"
+  },
+  "mudkip_stone_skinned_salamander": {
+    "name": "石皮蝾螈",
+    "description": "以石皮防御武装的水/岩石属性水跃鱼，拥有过滤器保护和激流力量"
+  },
+  "pineco_iron_plated_grenade": {
+    "name": "铁甲手榴弹",
+    "description": "以引爆爆发力的火/钢属性榛果球，拥有火焰之躯激情和铁刺报复"
+  },
+  "croagunk_jester_of_pestilence": {
+    "name": "瘟疫小丑",
+    "description": "散布仙子化腐蚀的毒/妖精属性不良蛙，拥有化学变化气体和灾厄之符混沌"
+  },
+  "happiny_pink_fortress": {
+    "name": "粉红堡垒",
+    "description": "以友情防守强化的普通/妖精属性小福蛋，拥有治愈之心关爱和自然恢复回复"
+  },
+  "lotad_shadow_lily": {
+    "name": "暗影莲叶",
+    "description": "以雨盘维持漂浮的水/幽灵属性莲叶童子，拥有影踪束缚和蓄水恢复力"
+  },
+  "comfey_aqua_bloom": {
+    "name": "水之绽放",
+    "description": "以降雨养育绽放的草/水属性花疗环环，拥有水泡保护和播种者活力"
+  },
+  "riolu_apollo_diana_signature": {
+    "name": "阿波罗与戴安娜的伙伴",
+    "description": "阿波罗与戴安娜勇敢的格斗属性伙伴"
+  },
+  "solrock_apollo_diana_signature": {
+    "name": "阿波罗与戴安娜的伙伴",
+    "description": "阿波罗与戴安娜光辉的岩石属性伙伴"
+  },
+  "lunatone_apollo_diana_signature": {
+    "name": "阿波罗与戴安娜的伙伴",
+    "description": "阿波罗与戴安娜神秘的岩石属性伙伴"
+  },
+  "larvesta_apollo_diana_signature": {
+    "name": "阿波罗与戴安娜的伙伴",
+    "description": "阿波罗与戴安娜燃烧的虫属性伙伴"
+  },
+  "swablu_apollo_diana_signature": {
+    "name": "阿波罗与戴安娜的伙伴",
+    "description": "阿波罗与戴安娜蓬松的普通属性伙伴"
+  },
+  "castform_apollo_diana_signature": {
+    "name": "阿波罗与戴安娜的伙伴",
+    "description": "阿波罗与戴安娜适应性的普通属性伙伴"
+  },
+  "litwick_apollo_diana_signature": {
+    "name": "阿波罗与戴安娜的伙伴",
+    "description": "阿波罗与戴安娜闪烁的幽灵属性伙伴"
+  },
+  "eevee_apollo_diana_signature": {
+    "name": "阿波罗与戴安娜的伙伴",
+    "description": "阿波罗与戴安娜多才的普通属性伙伴"
+  },
+  "teddiursa_apollo_diana_signature": {
+    "name": "阿波罗与戴安娜的伙伴",
+    "description": "阿波罗与戴安娜可爱的普通属性伙伴"
+  },
+  "cleffa_apollo_diana_signature": {
+    "name": "阿波罗与戴安娜的伙伴",
+    "description": "阿波罗与戴安娜星光的妖精属性伙伴"
+  },
+  "sunkern_apollo_diana_signature": {
+    "name": "阿波罗与戴安娜的伙伴",
+    "description": "阿波罗与戴安娜希望的草属性伙伴"
+  },
+  "riolu_shadow_warrior": {
+    "name": "暗影战士",
+    "description": "精通暗影战斗的幽灵/格斗属性利欧路，拥有自信攻击性、适应力和威吓存在感"
+  },
+  "solrock_void_constellation": {
+    "name": "虚空星座",
+    "description": "辐射虚空能量的岩石/恶属性太阳岩，拥有太阳之力激情、浮游优雅和黑暗气场支配"
+  },
+  "lunatone_dream_weaver": {
+    "name": "织梦者",
+    "description": "编织梦境的岩石/超能属性月石，拥有浮游神秘、喜怒无常气质和魔法防守保护"
+  },
+  "larvesta_toxic_spinner": {
+    "name": "毒丝纺织者",
+    "description": "纺织毒丝的虫/毒属性燃烧虫，拥有毒锁折磨、粗糙皮肤防御和腐蚀精通"
+  },
+  "swablu_frost_nimbus": {
+    "name": "霜云",
+    "description": "漂浮在霜云上的冰/飞行属性青绵鸟，拥有蓬松防御、冰冻皮肤力量和降雪支配"
+  },
+  "castform_dust_devil": {
+    "name": "沙尘恶魔",
+    "description": "作为沙尘恶魔旋转的岩石/地面属性飘浮泡泡，拥有扬沙混沌、引水吸收和粗糙皮肤坚毅"
+  },
+  "litwick_wyrmflame": {
+    "name": "龙焰",
+    "description": "燃烧龙焰怒火的火/龙属性烛光灵，拥有龙之颚凶猛、引火激情和浮游神秘"
+  },
+  "eevee_untamed_spirit": {
+    "name": "野性之魂",
+    "description": "体现野性潜力的普通/普通属性伊布，拥有超幸运好运、天恩和棱镜装甲保护"
+  },
+  "teddiursa_sweet_tooth": {
+    "name": "甜食爱好者",
+    "description": "沉溺蜜糖甜蜜力量的妖精/妖精属性熊宝宝，拥有大力士力量、薄雾制造者魔法和收获恩惠"
+  },
+  "cleffa_meteoric_core": {
+    "name": "陨石核心",
+    "description": "由陨石精华锻造的妖精/钢属性皮宝宝，拥有火焰之躯热量、魔法防守保护和坚硬岩石恢复力"
+  },
+  "sunkern_plasma_sprout": {
+    "name": "等离子嫩芽",
+    "description": "闪烁等离子能量的电/草属性向日种子，拥有电气皮肤转换、太阳之力激情和电气制造者支配"
+  },
+  "championPartner": "{{champion}}的伙伴"
+}

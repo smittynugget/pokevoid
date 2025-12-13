@@ -1,5 +1,3 @@
-
-
 export enum Type {
   UNKNOWN = -1,
   NORMAL = 0,
@@ -22,11 +20,11 @@ export enum Type {
   FAIRY,
   STELLAR,
   ALL,
+  SMITTY,
+  GLITCH,
 }
 
 export type TypeDamageMultiplier = 0 | 0.125 | 0.25 | 0.5 | 1 | 2 | 4 | 8;
-
-
 const normalEffectiveness: Type[] = [Type.BUG, Type.PSYCHIC, Type.ELECTRIC, Type.FAIRY, Type.DRAGON]
 export let changeNormalTyping = false;
 export function setChangeNormalTyping(value: boolean) {
@@ -47,7 +45,7 @@ export function getTypeDamageMultiplier(attackType: Type, defType: Type): TypeDa
   }
 
   switch (defType) {
-  
+
   case Type.NORMAL:
     if (normalEffectiveness.includes(attackType) && changeNormalTyping) {
     switch (attackType) {
@@ -344,11 +342,6 @@ export function getTypeDamageMultiplier(attackType: Type, defType: Type): TypeDa
 
   return 1;
 }
-
-/**
- * Retrieve the color corresponding to a specific damage multiplier
- * @returns A color or undefined if the default color should be used
- */
 export function getTypeDamageMultiplierColor(multiplier: TypeDamageMultiplier, side: "defense" | "offense"): string | undefined {
   if (side === "offense") {
     switch (multiplier) {
@@ -431,12 +424,14 @@ export function getTypeRgb(type: Type): [ integer, integer, integer ] {
     return [ 232, 136, 200 ];
   case Type.STELLAR:
     return [ 255, 255, 255 ];
+  case Type.SMITTY:
+    return [ 200, 60, 40 ];
+  case Type.GLITCH:
+    return [ 150, 200, 255 ];
   default:
     return [ 0, 0, 0 ];
   }
 }
-
-
 export type TypeInteractions = {
   strengths: Type[];
   weaknesses: Type[];
@@ -458,11 +453,11 @@ function calculateNightmareInteraction(attackType: Type, defType: Type): TypeDam
   if (nightmareTypeInteractions[defType]) {
     const interactions = nightmareTypeInteractions[defType];
     if (interactions.strengths && interactions.strengths.includes(attackType)) {
-      return 0.5; 
+      return 0.5;
     } else if (interactions.weaknesses && interactions.weaknesses.includes(attackType)) {
-      return 2; 
+      return 2;
     } else if (interactions.unaffectedByAtk && interactions.unaffectedByAtk.includes(attackType)) {
-      return 0; 
+      return 0;
     } else {
       return 1;
     }
@@ -471,11 +466,11 @@ function calculateNightmareInteraction(attackType: Type, defType: Type): TypeDam
   if (nightmareTypeInteractions[attackType]) {
     const interactions = nightmareTypeInteractions[attackType];
     if (interactions.strengths && interactions.strengths.includes(defType)) {
-      return 2; 
+      return 2;
     } else if (interactions.weaknesses && interactions.weaknesses.includes(defType)) {
-      return 0.5; 
+      return 0.5;
     } else if (interactions.unaffectedByAtk && interactions.unaffectedToDef.includes(defType)) {
-      return 0; 
+      return 0;
     } else {
       return 1;
     }

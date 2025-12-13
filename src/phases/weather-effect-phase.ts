@@ -16,7 +16,7 @@ export class WeatherEffectPhase extends CommonAnimPhase {
   }
 
   start() {
-    // Update weather state with any changes that occurred during the turn
+
     this.weather = this.scene?.arena?.weather;
 
     if (!this.weather) {
@@ -45,7 +45,7 @@ export class WeatherEffectPhase extends CommonAnimPhase {
 
           const damage = Math.ceil(pokemon.getMaxHp() / 16);
 
-          this.scene.queueMessage(getWeatherDamageMessage(this.weather?.weatherType!, pokemon)!); // TODO: are those bangs correct?
+          this.scene.queueMessage(getWeatherDamageMessage(this.weather?.weatherType!, pokemon)!);
           pokemon.damageAndUpdate(damage, HitResult.EFFECTIVE, false, false, true);
         };
 
@@ -58,7 +58,7 @@ export class WeatherEffectPhase extends CommonAnimPhase {
       }
     }
 
-    this.scene.ui.showText(getWeatherLapseMessage(this.weather.weatherType)!, null, () => { // TODO: is this bang correct?
+    this.scene.ui.showText(getWeatherLapseMessage(this.weather.weatherType)!, null, () => {
       this.executeForAll((pokemon: Pokemon) => applyPostWeatherLapseAbAttrs(PostWeatherLapseAbAttr, pokemon, this.weather));
 
       super.start();

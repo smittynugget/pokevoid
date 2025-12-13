@@ -9,17 +9,17 @@ import { CollectedTypeModifier } from "#app/modifier/modifier.js";
 function getTotalCollectedTypes(scene: BattleScene): number {
     const party = scene.getParty();
     let total = 0;
-    
+
     for (const pokemon of party) {
-        const modifiers = scene.findModifiers(m => 
+        const modifiers = scene.findModifiers(m =>
             m instanceof CollectedTypeModifier && m.pokemonId === pokemon.id
         ) as CollectedTypeModifier[];
-        
+
         for (const modifier of modifiers) {
             total += Object.values(modifier.collectedTypes).reduce((sum, count) => sum + count, 0);
         }
     }
-    
+
     return total;
 }
 
@@ -39,7 +39,11 @@ export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideCh
         chance = 18;
     }
 
-    let permaReduced = false; 
+    if(scene.gameMode.isChaosMode) {
+        chance -= 2;
+    }
+
+    let permaReduced = false;
 
     if (scene.currentBattle.waveIndex <= 1 ||
         Utils.randSeedInt(chance, 1) == 1 ||
@@ -61,8 +65,8 @@ export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideCh
 
     const chaosChance = chance * 3;
     const totalCollectedTypes = getTotalCollectedTypes(scene);
-    if (totalCollectedTypes > 10 && ((scene.currentBattle.waveIndex > 1) && 
-    scene.gameMode.isChaosMode && Utils.randSeedInt(chaosChance, 1) == 1 || 
+    if (totalCollectedTypes > 10 && ((scene.currentBattle.waveIndex > 1) &&
+    scene.gameMode.isChaosMode && Utils.randSeedInt(chaosChance, 1) == 1 ||
         (!scene.gameMode.isChaosMode && (scene.currentBattle.waveIndex % 26 == 0 || Utils.randSeedInt(chance, 1) == 1 )))) {
         if(unshiftRatherThanPush) {
             scene.unshiftPhase(new CollectedTypeShopPhase(scene, 1, undefined, false, undefined, undefined));
@@ -77,9 +81,9 @@ export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideCh
     }
 
     const easierChance = chance - 4;
-    if ((scene.currentBattle.waveIndex > 1) && 
+    if ((scene.currentBattle.waveIndex > 1) &&
     ((Utils.randSeedInt(easierChance, 1) == 1) || overrideChance) &&
-        (scene.currentBattle.waveIndex % 10 == 0 || 
+        (scene.currentBattle.waveIndex % 10 == 0 ||
         scene.dynamicMode)) {
         if(unshiftRatherThanPush) {
             scene.unshiftPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
@@ -98,9 +102,9 @@ export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideCh
         }
     }
 
-    if ((scene.currentBattle.waveIndex > 1) && 
+    if ((scene.currentBattle.waveIndex > 1) &&
     ((Utils.randSeedInt(easierChance, 1) == 1) || overrideChance) &&
-        (scene.currentBattle.waveIndex % 10 == 0 || 
+        (scene.currentBattle.waveIndex % 10 == 0 ||
         scene.dynamicMode)) {
         if(unshiftRatherThanPush) {
             scene.unshiftPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, PathNodeTypeFilter.VITAMIN));
@@ -118,4 +122,4 @@ export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideCh
             scene.gameData.reducePermaModifierByType([PermaType.PERMA_SHOW_REWARDS_1, PermaType.PERMA_SHOW_REWARDS_2, PermaType.PERMA_SHOW_REWARDS_3], scene);
         }
     }
-} 
+}

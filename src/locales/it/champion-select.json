@@ -1,0 +1,96 @@
+{
+  "title": "Seleziona Campione",
+  "confirmSelection": "Iniziare con {{name}}?",
+  "subheader": "Chi sceglierai per avventurarti nel Vuoto?",
+  "levelUp": "LIVELLO SU!",
+  "characterUnlocked": "{{name}}\nSBLOCCATO!",
+  "unlocked": "Sbloccato",
+  "lockedGauge": "Impegnato: {{current}} / {{required}}",
+  "xp": "EXP",
+  "potential": "POTENZIALE",
+  "level": "LIVELLO",
+  "locked": "BLOCCATO",
+  "unlockRequired": "Richiede: {{requirement}}",
+  "essenceHint": "Usa l'Essenza richiesta per salire di livello!",
+  "essencesHeader": "Essenze:",
+  "skillsHeader": "ABILITÀ",
+  "skillsSubheader": "Le abilità appariranno casualmente nell'Albero delle Abilità.",
+  "rarity": {
+    "common": "COMUNE",
+    "great": "GRANDE",
+    "ultra": "ULTRA",
+    "master": "MAESTRO",
+    "rogue": "ROGUE",
+    "legendary": "LEGGENDARIO"
+  },
+  "unlockCharacter": "Sblocca Personaggio",
+  "unlockCharacterTooltip": "Sblocca usando {{current}}/{{required}} Essenze",
+  "tooltip": {
+    "lockedSkillTitle": "Abilità Bloccata",
+    "levelRequired": "Devi essere Livello {{level}} per sbloccare.",
+    "lockedPrefix": "BLOCCATO",
+    "unlockWithEssence": "Sblocca usando {{current}}/{{required}} Essenze per salire di livello!",
+    "levelUpRequired": "Sali di livello per sbloccare questa abilità.",
+    "defaultTm": "Insegna una MT {{types}} a un Pokémon",
+    "defaultXm": "Insegna una XM {{types}} a un Pokémon",
+    "defaultEssence": "Aggiungi {{amount}} Essenze di tipo {{types}} alla tua collezione",
+    "defaultBooster": "Ricevi un oggetto potenziatore di tipo {{types}}",
+    "defaultTeraAbility": "Usa {{types}} per attivare le Tera Abilità",
+    "defaultEssenceWeight": "Aumenta il peso di drop dell'Essenza {{types}} di {{weight}}",
+    "defaultCatchRate": "Aumenta il tasso di cattura per Pokémon {{types}} del {{percent}}%",
+    "defaultFusionPriority": "Aumenta la priorità di fusione per Pokémon {{types}}",
+    "defaultRevive": "Aumenta la probabilità di rianimazione per Pokémon {{types}} del {{percent}}%",
+    "defaultTokens": "Ricevi Gettoni dell'Albero delle Abilità per sbloccare nodi",
+    "defaultPoints": "Ricevi Punti Abilità per acquistare abilità",
+    "typesFallback": "Sconosciuto"
+  },
+  "skillList": {
+    "levelPrefix": "Lv {{level}}",
+    "unknownSkill": "???"
+  },
+  "defaultSkillLabels": {
+    "tms": "MT {{types}}",
+    "xms": "XM {{types}}",
+    "abilities": "Abilità {{types}}",
+    "teraAbilities": "Abilità Tera {{types}}",
+    "statBoosts": "Potenziamenti Stat {{types}}",
+    "tokens": "Gettoni Albero Abilità",
+    "points": "Punti Abilità",
+    "boosters": "Potenziatori {{types}}",
+    "essence": "Essenza {{types}}",
+    "reviveBoost": "Boost Rianimazione {{types}}",
+    "essenceWeights": "Pesi Essenza {{types}}",
+    "catchBonus": "Bonus Cattura {{types}}",
+    "fusionPriority": "Priorità Fusione {{types}}"
+  },
+  "button": { "useEssence": "Usa Essenza" },
+  "brock": { "description": "Campione della Roccia" },
+  "misty": { "description": "Campione dell'Acqua" },
+  "apollo": {
+    "name": "Apollo",
+    "description": "Campione del Sole"
+  },
+  "diana": {
+    "name": "Diana",
+    "description": "Campione della Luna"
+  },
+  "generic": { "description": "Il campione predefinito." },
+  "champions": {
+    "title": "Scegli il tuo Campione",
+    "brock": {
+      "name": "Brock - Specialista Roccia",
+      "description": "Maestro dei tipi Terra e Roccia",
+      "essenceRequirement": "Richiede {{ground}} Terra + {{rock}} essenze Roccia"
+    },
+    "misty": {
+      "name": "Misty - Specialista Acqua",
+      "description": "Maestra dei tipi Acqua",
+      "essenceRequirement": "Richiede {{water}} essenze Acqua"
+    },
+    "generic": {
+      "name": "Campione Bilanciato",
+      "description": "Nessuna specializzazione di tipo",
+      "essenceRequirement": "Nessun requisito speciale"
+    }
+  }
+}

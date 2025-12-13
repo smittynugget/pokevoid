@@ -78,15 +78,11 @@ export default class AchvBar extends Phaser.GameObjects.Container {
     if (achv instanceof Achv) {
       this.scoreText.setText(`+${(achv as Achv).score}pt`);
     }
-
-    // Take the width of the default interface or the title if longest
     this.bg.width = Math.max(this.defaultWidth, this.icon.displayWidth + this.titleText.displayWidth + this.scoreText.displayWidth + 16);
 
     this.scoreText.x = this.bg.width - 2;
     this.descriptionText.width = this.bg.width - this.icon.displayWidth - 16;
     this.descriptionText.setWordWrapWidth(this.descriptionText.width * 6);
-
-    // Take the height of the default interface or the description if longest
     this.bg.height = Math.max(this.defaultHeight, this.titleText.displayHeight + this.descriptionText.displayHeight + 8);
     this.icon.y = (this.bg.height / 2) - (this.icon.height / 2);
 

@@ -12,7 +12,7 @@ export class Status {
   constructor(effect: StatusEffect, turnCount: integer = 0, cureTurn?: integer) {
     this.effect = effect;
     this.turnCount = turnCount === undefined ? 0 : turnCount;
-    this.cureTurn = cureTurn!; // TODO: is this bang correct?
+    this.cureTurn = cureTurn!;
   }
 
   incrementTurn(): void {
@@ -86,19 +86,9 @@ export function getStatusEffectCatchRateMultiplier(statusEffect: StatusEffect): 
 
   return 1;
 }
-
-/**
-* Returns a random non-volatile StatusEffect
-*/
 export function generateRandomStatusEffect(): StatusEffect {
   return Utils.randIntRange(1, 6);
 }
-
-/**
-* Returns a random non-volatile StatusEffect between the two provided
-* @param statusEffectA The first StatusEffect
-* @param statusEffectA The second StatusEffect
-*/
 export function getRandomStatusEffect(statusEffectA: StatusEffect, statusEffectB: StatusEffect): StatusEffect {
   if (statusEffectA === StatusEffect.NONE || statusEffectA === StatusEffect.FAINT) {
     return statusEffectB;
@@ -109,12 +99,6 @@ export function getRandomStatusEffect(statusEffectA: StatusEffect, statusEffectB
 
   return Utils.randIntRange(0, 2) ? statusEffectA : statusEffectB;
 }
-
-/**
-* Returns a random non-volatile StatusEffect between the two provided
-* @param statusA The first Status
-* @param statusB The second Status
-*/
 export function getRandomStatus(statusA: Status | null, statusB: Status | null): Status | null {
   if (!statusA || statusA.effect === StatusEffect.NONE || statusA.effect === StatusEffect.FAINT) {
     return statusB;
@@ -122,15 +106,8 @@ export function getRandomStatus(statusA: Status | null, statusB: Status | null):
   if (!statusB || statusB.effect === StatusEffect.NONE || statusB.effect === StatusEffect.FAINT) {
     return statusA;
   }
-
-
   return Utils.randIntRange(0, 2) ? statusA : statusB;
 }
-
-/**
- * Gets all non volatile status effects
- * @returns A list containing all non volatile status effects
- */
 export function getNonVolatileStatusEffects():Array<StatusEffect> {
   return [
     StatusEffect.POISON,
@@ -141,12 +118,6 @@ export function getNonVolatileStatusEffects():Array<StatusEffect> {
     StatusEffect.BURN
   ];
 }
-
-/**
- * Returns whether a statuss effect is non volatile.
- * Non-volatile status condition is a status that remains after being switched out.
- * @param status The status to check
- */
 export function isNonVolatileStatusEffect(status: StatusEffect): boolean {
   return getNonVolatileStatusEffects().includes(status);
 }

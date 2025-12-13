@@ -8,14 +8,12 @@ import SettingsUiHandler from "#app/ui/settings-ui-handler";
 
 export enum Setting {
   Game_Speed = "GAME_SPEED",
-  
+
   Master_Volume = "MASTER_VOLUME",
   BGM_Volume = "BGM_VOLUME",
   SE_Volume = "SE_VOLUME",
   Language = "LANGUAGE",
   Damage_Numbers = "DAMAGE_NUMBERS",
-  UI_Theme = "UI_THEME",
-  Window_Type = "WINDOW_TYPE",
   Tutorials = "TUTORIALS",
   Enable_Retries = "ENABLE_RETRIES",
   Sprite_Set = "SPRITE_SET",
@@ -27,7 +25,7 @@ export enum Setting {
   Fusion_Palette_Swaps = "FUSION_PALETTE_SWAPS",
   Player_Gender = "PLAYER_GENDER",
   Gamepad_Support = "GAMEPAD_SUPPORT",
-  Swap_A_and_B = "SWAP_A_B", // Swaps which gamepad button handles ACTION and CANCEL
+  Swap_A_and_B = "SWAP_A_B",
   Touch_Controls = "TOUCH_CONTROLS",
   Vibration = "VIBRATION"
 }
@@ -41,15 +39,13 @@ export interface SettingDefaults {
 }
 
 export const settingOptions: SettingOptions = {
-  
+
   [Setting.Game_Speed]: [ "1x", "1.5x", "2x", "2.5x", "3x", "3.5x", "4x", "5x" ],
   [Setting.Master_Volume]: new Array(11).fill(null).map((_, i) => i ? (i * 3).toString() : "Mute"),
   [Setting.BGM_Volume]: new Array(11).fill(null).map((_, i) => i ? (i * 10).toString() : "Mute"),
   [Setting.SE_Volume]: new Array(11).fill(null).map((_, i) => i ? (i * 10).toString() : "Mute"),
   [Setting.Language]: [ "English", "Change" ],
   [Setting.Damage_Numbers]: [ "Off", "Simple", "Fancy" ],
-  [Setting.UI_Theme]: [ "Default", "Legacy" ],
-  [Setting.Window_Type]: new Array(5).fill(null).map((_, i) => (i + 1).toString()),
   [Setting.Tutorials]: [ "Off", "On" ],
   [Setting.Enable_Retries]: [ "Off", "On" ],
   [Setting.Sprite_Set]: [ "Consistent", "Mixed Animated" ],
@@ -73,8 +69,6 @@ export const settingDefaults: SettingDefaults = {
   [Setting.SE_Volume]: 10,
   [Setting.Language]: 0,
   [Setting.Damage_Numbers]: 0,
-  [Setting.UI_Theme]: 0,
-  [Setting.Window_Type]: 0,
   [Setting.Tutorials]: 1,
   [Setting.Enable_Retries]: 0,
   [Setting.Sprite_Set]: 0,
@@ -86,12 +80,12 @@ export const settingDefaults: SettingDefaults = {
   [Setting.Fusion_Palette_Swaps]: 1,
   [Setting.Player_Gender]: 0,
   [Setting.Gamepad_Support]: 0,
-  [Setting.Swap_A_and_B]: 1, // Set to 'Disabled' by default
+  [Setting.Swap_A_and_B]: 1,
   [Setting.Touch_Controls]: 0,
   [Setting.Vibration]: 0
 };
 
-export const reloadSettings: Setting[] = [ Setting.UI_Theme, Setting.Language, Setting.Sprite_Set ];
+export const reloadSettings: Setting[] = [ Setting.Language, Setting.Sprite_Set ];
 
 export function setSetting(scene: BattleScene, setting: Setting, value: integer): boolean {
   switch (setting) {
@@ -112,12 +106,6 @@ export function setSetting(scene: BattleScene, setting: Setting, value: integer)
     break;
   case Setting.Damage_Numbers:
     scene.damageNumbersMode = value;
-    break;
-  case Setting.UI_Theme:
-    scene.uiTheme = value;
-    break;
-  case Setting.Window_Type:
-    updateWindowType(scene, parseInt(settingOptions[setting][value]));
     break;
   case Setting.Sprite_Set:
     scene.experimentalSprites = !!value;

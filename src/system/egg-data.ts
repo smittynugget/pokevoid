@@ -20,9 +20,9 @@ export default class EggData {
     const sourceEgg = source instanceof Egg ? source as Egg : null;
     this.id = sourceEgg ? sourceEgg.id : source.id;
     this.tier = sourceEgg ? sourceEgg.tier : (source.tier  ?? Math.floor(this.id / EGG_SEED));
-    // legacy egg
+
     if (source.species === 0) {
-      // check if it has a gachaType (deprecated)
+
       this.sourceType = source.gachaType ?? source.sourceType;
     } else {
       this.sourceType = sourceEgg ? sourceEgg.sourceType : source.sourceType;
@@ -37,7 +37,7 @@ export default class EggData {
   }
 
   toEgg(): Egg {
-    // Species will be 0 if an old legacy is loaded from DB
+
     if (!this.species) {
       return new Egg({ id: this.id, hatchWaves: this.hatchWaves, sourceType: this.sourceType, timestamp: this.timestamp, tier: Math.floor(this.id / EGG_SEED) });
     } else {

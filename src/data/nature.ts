@@ -9,7 +9,7 @@ export { Nature };
 
 export function getNatureName(nature: Nature, includeStatEffects: boolean = false, forStarterSelect: boolean = false, ignoreBBCode: boolean = false, uiTheme: UiTheme = UiTheme.DEFAULT): string {
   let ret = Utils.toReadableString(Nature[nature]);
-  //Translating nature
+
   if (i18next.exists("nature:" + ret)) {
     ret = i18next.t("nature:" + ret as any);
   }
@@ -25,7 +25,7 @@ export function getNatureName(nature: Nature, includeStatEffects: boolean = fals
         decreasedStat = stat;
       }
     }
-    const textStyle = forStarterSelect ? TextStyle.SUMMARY_ALT : TextStyle.WINDOW;
+    const textStyle = forStarterSelect ? TextStyle.SUMMARY : TextStyle.WINDOW;
     const getTextFrag = !ignoreBBCode ? (text: string, style: TextStyle) => getBBCodeFrag(text, style, uiTheme) : (text: string, style: TextStyle) => text;
     if (increasedStat && decreasedStat) {
       ret = `${getTextFrag(`${ret}${!forStarterSelect ? "\n" : " "}(`, textStyle)}${getTextFrag(`+${getStatName(increasedStat, true)}`, TextStyle.SUMMARY_PINK)}${getTextFrag("/", textStyle)}${getTextFrag(`-${getStatName(decreasedStat, true)}`, TextStyle.SUMMARY_BLUE)}${getTextFrag(")", textStyle)}`;

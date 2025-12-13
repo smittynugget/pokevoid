@@ -8,21 +8,13 @@ import {NavigationManager} from "#app/ui/settings/navigationMenu";
 import i18next from "i18next";
 
 type CancelFn = (succes?: boolean) => boolean;
-
-/**
- * Abstract class for handling UI elements related to button bindings.
- */
 export default abstract class AbstractBindingUiHandler extends UiHandler {
-  // Containers for different segments of the UI.
+
   protected optionSelectContainer: Phaser.GameObjects.Container;
   protected actionsContainer: Phaser.GameObjects.Container;
-
-  // Background elements for titles and action areas.
   protected titleBg: Phaser.GameObjects.NineSlice;
   protected actionBg: Phaser.GameObjects.NineSlice;
   protected optionSelectBg: Phaser.GameObjects.NineSlice;
-
-  // Text elements for displaying instructions and actions.
   protected unlockText: Phaser.GameObjects.Text;
   protected timerText: Phaser.GameObjects.Text;
   protected swapText: Phaser.GameObjects.Text;
@@ -31,47 +23,26 @@ export default abstract class AbstractBindingUiHandler extends UiHandler {
 
   protected listening: boolean = false;
   protected buttonPressed: number | null = null;
-
-  // Icons for displaying current and new button assignments.
   protected newButtonIcon: Phaser.GameObjects.Sprite;
   protected targetButtonIcon: Phaser.GameObjects.Sprite;
-
-  // Function to call on cancel or completion of binding.
   protected cancelFn: CancelFn | null;
   abstract swapAction(): boolean;
 
   protected timeLeftAutoClose: number = 5;
   protected countdownTimer;
-
-  // The specific setting being modified.
   protected target;
-
-  /**
-   * Constructor for the AbstractBindingUiHandler.
-   *
-   * @param scene - The BattleScene instance.
-   * @param mode - The UI mode.
-   */
   constructor(scene: BattleScene, mode: Mode | null = null) {
     super(scene, mode);
   }
-
-  /**
-   * Setup UI elements.
-   */
   setup() {
     const ui = this.getUi();
     this.optionSelectContainer = this.scene.add.container(0, 0);
     this.actionsContainer = this.scene.add.container(0, 0);
-    // Initially, containers are not visible.
+
     this.optionSelectContainer.setVisible(false);
     this.actionsContainer.setVisible(false);
-
-    // Add containers to the UI.
     ui.add(this.optionSelectContainer);
     ui.add(this.actionsContainer);
-
-    // Setup backgrounds and text objects for UI.
     this.titleBg = addWindow(this.scene, (this.scene.game.canvas.width / 6) - this.getWindowWidth(), -(this.scene.game.canvas.height / 6) + 28 + 21, this.getWindowWidth(), 24);
     this.titleBg.setOrigin(0.5);
     this.optionSelectContainer.add(this.titleBg);
@@ -79,8 +50,6 @@ export default abstract class AbstractBindingUiHandler extends UiHandler {
     this.actionBg = addWindow(this.scene, (this.scene.game.canvas.width / 6) - this.getWindowWidth(), -(this.scene.game.canvas.height / 6) + this.getWindowHeight() + 28 + 21 + 21, this.getWindowWidth(), 24);
     this.actionBg.setOrigin(0.5);
     this.actionsContainer.add(this.actionBg);
-
-    // Text prompts and instructions for the user.
     this.unlockText = addTextObject(this.scene, 0, 0, i18next.t("settings:pressButton"), TextStyle.WINDOW);
     this.unlockText.setOrigin(0, 0);
     this.unlockText.setPositionRelative(this.titleBg, 36, 4);
@@ -113,21 +82,12 @@ export default abstract class AbstractBindingUiHandler extends UiHandler {
       }
     }, 1000);
   }
-
-  /**
-   * Show the UI with the provided arguments.
-   *
-   * @param args - Arguments to be passed to the show method.
-   * @returns `true` if successful.
-   */
   show(args: any[]): boolean {
     super.show(args);
     this.buttonPressed = null;
     this.timeLeftAutoClose = 5;
     this.cancelFn = args[0].cancelHandler;
     this.target = args[0].target;
-
-    // Bring the option and action containers to the front of the UI.
     this.getUi().bringToTop(this.optionSelectContainer);
     this.getUi().bringToTop(this.actionsContainer);
 
@@ -138,46 +98,27 @@ export default abstract class AbstractBindingUiHandler extends UiHandler {
     }, 100);
     return true;
   }
-
-  /**
-   * Get the width of the window.
-   *
-   * @returns The window width.
-   */
   getWindowWidth(): number {
     return 160;
   }
-
-  /**
-   * Get the height of the window.
-   *
-   * @returns The window height.
-   */
   getWindowHeight(): number {
     return 64;
   }
-
-  /**
-   * Process the input for the given button.
-   *
-   * @param button - The button to process.
-   * @returns `true` if the input was processed successfully.
-   */
   processInput(button: Button): boolean {
     if (this.buttonPressed === null) {
-      return false; // TODO: is false correct as default? (previously was `undefined`)
+      return false;
     }
     const ui = this.getUi();
     let success = false;
     switch (button) {
       case Button.LEFT:
       case Button.RIGHT:
-        // Toggle between action and cancel options.
+
         const cursor = this.cursor ? 0 : 1;
         success = this.setCursor(cursor);
         break;
       case Button.ACTION:
-        // Process actions based on current cursor position.
+
         if (this.cursor === 0) {
         this.cancelFn && this.cancelFn();
         } else {
@@ -187,8 +128,6 @@ export default abstract class AbstractBindingUiHandler extends UiHandler {
         }
         break;
     }
-
-    // Plays a select sound effect if an action was successfully processed.
     if (success) {
       ui.playSelect();
     } else {
@@ -197,13 +136,6 @@ export default abstract class AbstractBindingUiHandler extends UiHandler {
 
     return success;
   }
-
-  /**
-   * Set the cursor to the specified position.
-   *
-   * @param cursor - The cursor position to set.
-   * @returns `true` if the cursor was set successfully.
-   */
   setCursor(cursor: integer): boolean {
     this.cursor = cursor;
     if (cursor === 1) {
@@ -219,10 +151,6 @@ export default abstract class AbstractBindingUiHandler extends UiHandler {
     this.cancelLabel.setShadowColor(this.getTextColor(TextStyle.SETTINGS_SELECTED, true));
     return true;
   }
-
-  /**
-   * Clear the UI elements and state.
-   */
   clear() {
     super.clear();
     clearTimeout(this.countdownTimer);
@@ -236,14 +164,6 @@ export default abstract class AbstractBindingUiHandler extends UiHandler {
     this.newButtonIcon.setVisible(false);
     this.buttonPressed = null;
   }
-
-  /**
-   * Handle input down events.
-   *
-   * @param buttonIcon - The icon of the button that was pressed.
-   * @param assignedButtonIcon - The icon of the button that is assigned.
-   * @param type - The type of button press.
-   */
   onInputDown(buttonIcon: string, assignedButtonIcon: string | null, type: string): void {
     clearTimeout(this.countdownTimer);
     this.timerText.setText("");

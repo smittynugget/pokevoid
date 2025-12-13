@@ -6,8 +6,10 @@ import { Abilities } from "../enums/abilities";
 import { Type } from "../data/type";
 import { Stat } from "../enums/stat";
 import { Button } from "../enums/buttons";
-import PokemonSpecies, { getPokemonSpecies, SpeciesFormKey } from "../data/pokemon-species";
+import PokemonSpecies, { getPokemonSpecies } from "../data/pokemon-species";
+import { SpeciesFormKey } from "#enums/species-form-key";
 import { pokemonSpeciesLevelMoves} from "../data/pokemon-level-moves";
+import { POKEMON_ALT_BUILDS } from "../data/pokemon-alt-buid";
 import { speciesEggMoves } from "../data/egg-moves";
 import { addWindow } from "./ui-theme";
 import { addTextObject, TextStyle } from "./text";
@@ -16,7 +18,7 @@ import { REMOVED_ABILITIES } from "../modifier/modifier-type";
 import { allMoves } from "../data/move";
 import { Moves } from "../enums/moves";
 import { ModalConfig, ModalUiHandler } from "./modal-ui-handler";
-import { RewardType } from "../system/game-data";
+import { RewardType } from "#enums/reward-type";
 import { getModPokemonName } from "../data/mod-glitch-form-utils";
 import { modGlitchFormData, getModFormSystemName } from "../data/mod-glitch-form-data";
 import Pokemon, { EnemyPokemon } from "#app/field/pokemon.js";
@@ -34,85 +36,91 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
     private infoContainer: Phaser.GameObjects.Container;
     private typingContainer: Phaser.GameObjects.Container;
     private statsContainer: Phaser.GameObjects.Container;
-    
+
     private abilitiesContainer: Phaser.GameObjects.Container;
     private movesContainer: Phaser.GameObjects.Container;
     private eggMovesContainer: Phaser.GameObjects.Container;
     private moveScrollContainer: Phaser.GameObjects.Container;
-    
+
     private selectionDropdown: HTMLSelectElement;
     private formSelectionDropdown: HTMLSelectElement;
+    private selectionDropdownClickHandler: ((event: MouseEvent) => void) | null = null;
+    private formDropdownClickHandler: ((event: MouseEvent) => void) | null = null;
     private pokemonSprite: Phaser.GameObjects.Sprite;
     private type1Icon: Phaser.GameObjects.Sprite;
     private type2Icon: Phaser.GameObjects.Sprite;
-    
+
     private navLeftButton: Phaser.GameObjects.Sprite;
     private navRightButton: Phaser.GameObjects.Sprite;
-    
+
     private currentDisplay: PokedexDisplayMode = PokedexDisplayMode.ABILITIES;
     private selectedSpeciesId: Species;
     private selectedFormIndex: number = 0;
+    private selectedSpeciesData: PokemonSpecies | null = null;
     private isModifierPokemon: boolean = false;
     private isModifierPhaseNoneSelected: boolean = false;
     private scrollPosition: number = 0;
+    private moveScrollTween: Phaser.Tweens.Tween | null = null;
+    private moveScrollMaskTimer: Phaser.Time.TimerEvent | null = null;
     private readonly MAX_VISIBLE_MOVES = 9;
-    
+
     private readonly CONTAINER_WIDTH = 300;
     private readonly CONTAINER_HEIGHT = 170;
     private readonly MARGIN_TOP = 5;
     private readonly MARGIN_LEFT = 0;
     private readonly TAB_HEIGHT = 50;
     private enemyPokemon: EnemyPokemon = null;
-    
+    private selectedPokemonInstance: Pokemon | EnemyPokemon | null = null;
+
     constructor(scene: BattleScene) {
         super(scene, Mode.POKEDEX);
     }
-    
+
     getModalTitle(): string {
         return i18next.t("pokedex:voidex");
     }
-    
+
     getWidth(): number {
         return this.CONTAINER_WIDTH;
     }
-    
+
     getHeight(): number {
         return this.CONTAINER_HEIGHT;
     }
-    
+
     getMargin(): [number, number, number, number] {
         return [this.MARGIN_TOP, 0, 0, this.MARGIN_LEFT];
     }
-    
+
     getButtonLabels(): string[] {
         return [i18next.t("menu:close")];
     }
-    
+
     setup(): void {
         super.setup();
-        
+
         this.setupContainers();
-        
+
     }
-    
+
     show(args: any[]): boolean {
         if (this.active) {
             return false;
         }
-        
+
         const config: ModalConfig = {
             buttonActions: [() => {
                 this.clear();
                 this.scene.ui.revertMode();
             }]
         };
-        
+
         const currentPhase = this.scene.getCurrentPhase();
         const isSelectModifierPhase = currentPhase?.constructor?.name === 'SelectModifierPhase';
-        
+
         const hasSpeciesArg = args.length > 0 && typeof args[0] === 'number';
         this.isModifierPhaseNoneSelected = isSelectModifierPhase && !hasSpeciesArg;
-        
+
         if (this.scene.currentBattle) {
             if (hasSpeciesArg && isSelectModifierPhase) {
                 this.selectedSpeciesId = args[0];
@@ -121,11 +129,11 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 const enemyPokemon = this.scene.getEnemyField();
                 if (hasSpeciesArg) {
                     this.selectedSpeciesId = args[0];
-                } 
+                }
                 else if (enemyPokemon && enemyPokemon.length > 0) {
                     this.enemyPokemon = enemyPokemon[0];
                     this.selectedSpeciesId = enemyPokemon[0].getSpeciesForm().speciesId;
-                } 
+                }
                 else {
                     const speciesValues = Object.values(Species).filter(value => typeof value === 'number') as number[];
                     const randomIndex = Math.floor(Math.random() * speciesValues.length);
@@ -139,11 +147,11 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             const randomIndex = Math.floor(Math.random() * speciesValues.length);
             this.selectedSpeciesId = speciesValues[randomIndex] as Species;
         }
-        
+
         if (super.show([config])) {
-            
+
             this.createPokemonDropdown();
-            
+
             if (this.selectionDropdown) {
                 if (!this.enemyPokemon && !this.isModifierPokemon) {
                     this.selectionDropdown.value = this.selectedSpeciesId.toString();
@@ -154,63 +162,70 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                  this.navLeftButton?.setVisible(false);
                  this.navRightButton?.setVisible(false);
             }
-            
-            this.loadPokemonData(this.selectedSpeciesId);
-            
-            
+
             return true;
         }
-        
+
         return false;
     }
-    
+
     clear(): void {
         if (this.selectionDropdown) {
             try {
+                if (this.selectionDropdownClickHandler) {
+                    document.removeEventListener('mousedown', this.selectionDropdownClickHandler);
+                    this.selectionDropdownClickHandler = null;
+                }
+
                 if (this.selectionDropdown.parentNode) {
                     this.selectionDropdown.parentNode.removeChild(this.selectionDropdown);
                 }
             } catch (e) {
-                
+
             }
             this.selectionDropdown = null;
         }
-        
+
         if (this.formSelectionDropdown) {
             try {
+                if (this.formDropdownClickHandler) {
+                    document.removeEventListener('mousedown', this.formDropdownClickHandler);
+                    this.formDropdownClickHandler = null;
+                }
+
                 if (this.formSelectionDropdown.parentNode) {
                     this.formSelectionDropdown.parentNode.removeChild(this.formSelectionDropdown);
                 }
             } catch (e) {
-                
+
             }
             this.formSelectionDropdown = null;
         }
-        
+
         if (this.navLeftButton) {
             this.navLeftButton.off('pointerup');
         }
-        
+
         if (this.navRightButton) {
             this.navRightButton.off('pointerup');
         }
-        
+
         if (this.spriteContainer) {
             this.spriteContainer.removeAll(true);
         }
-        
+
         if (this.typingContainer) {
             this.typingContainer.removeAll(true);
         }
-        
+
         if (this.statsContainer) {
             this.statsContainer.removeAll(true);
         }
-        
+
         if (this.abilitiesContainer) {
             this.abilitiesContainer.removeAll(true);
         }
-        
+
         if (this.movesContainer) {
             this.movesContainer.removeAll(true);
         }
@@ -219,13 +234,28 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             this.eggMovesContainer.removeAll(true);
         }
 
+        if (this.moveScrollContainer) {
+            this.moveScrollContainer.removeAll(true);
+            this.moveScrollContainer.setY(0);
+            this.scrollPosition = 0;
+            this.moveScrollContainer.clearMask();
+            if (this.moveScrollTween) {
+                this.moveScrollTween.stop();
+                this.moveScrollTween.remove();
+                this.moveScrollTween = null;
+            }
+            if (this.moveScrollMaskTimer) {
+                this.moveScrollMaskTimer.remove();
+                this.moveScrollMaskTimer = null;
+            }
+        }
+
         this.selectedFormIndex = 0;
-        
+        this.selectedSpeciesData = null;
+
         super.clear();
-        
+
     }
-    
-    
     private createPokemonDropdown(): void {
         const dropdown = document.createElement('select');
         dropdown.style.position = 'absolute';
@@ -329,7 +359,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             modifierOption.text = `${speciesKey ? i18next.t(`pokemon:${speciesKey.toLowerCase()}`) : `${i18next.t('pokemon:unknown')} (${speciesId})`}`;
             dropdown.add(modifierOption);
             addedBattleOptions = true;
-            
+
             if (this.selectedSpeciesId === speciesId && !initialSpeciesId) {
                 modifierOption.selected = true;
                 initialSpeciesId = speciesId;
@@ -377,9 +407,6 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                     }
                 });
             }
-
-
-
             if (addedBattleOptions) {
                 const separatorOption = document.createElement('option');
                 separatorOption.value = 'separator';
@@ -405,12 +432,10 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                      }
                      return false;
                 });
-
-
                 if (!isAlreadyAdded) {
                     try {
                         const option = document.createElement('option');
-                        option.value = speciesId.toString(); 
+                        option.value = speciesId.toString();
                         try {
                             option.text = i18next.t(`pokemon:${key.toLowerCase()}`);
                         } catch (e) {
@@ -462,7 +487,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                   } else if (selectedOption.value.startsWith('enemy:')) {
                       if (this.enemyPokemon) {
                           this.loadPokemonData(this.enemyPokemon);
-                      } 
+                      }
                   } else if (selectedOption.value.startsWith('party:')) {
                       const parts = selectedOption.value.split(':');
                       const partyIndex = parseInt(parts[1], 10);
@@ -477,18 +502,15 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                   }
               }
          }
-
-
         dropdown.addEventListener('change', () => {
             const selectedValue = dropdown.value;
+            dropdown.blur();
 
             if (this.formSelectionDropdown && this.formSelectionDropdown.parentNode) {
                 this.formSelectionDropdown.parentNode.removeChild(this.formSelectionDropdown);
                 this.formSelectionDropdown = null;
             }
             this.selectedFormIndex = 0;
-
-
             if (selectedValue.startsWith('modifier:')) {
                  const parts = selectedValue.split(':');
                  const modifierSpeciesId = parseInt(parts[1], 10) as Species;
@@ -516,6 +538,20 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             }
         });
 
+        this.selectionDropdownClickHandler = (event: MouseEvent) => {
+            if (event.target !== dropdown && !dropdown.contains(event.target as Node)) {
+                dropdown.blur();
+            }
+        };
+
+        document.addEventListener('mousedown', this.selectionDropdownClickHandler);
+
+        dropdown.addEventListener('keydown', (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                dropdown.blur();
+            }
+        });
+
         document.body.appendChild(dropdown);
         this.selectionDropdown = dropdown;
         this.navLeftButton?.setVisible(true);
@@ -523,7 +559,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
     }
 
     private createFormSelectionDropdown(speciesId: Species): void {
-        const speciesData = getPokemonSpecies(speciesId);
+        const speciesData = this.selectedSpeciesData || getPokemonSpecies(speciesId);
         if (!speciesData || !speciesData.forms || speciesData.forms.length <= 1) {
             return;
         }
@@ -596,20 +632,20 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         validFormsWithIndices.forEach(({ form, originalIndex }) => {
             const option = document.createElement('option');
             option.value = originalIndex.toString();
-            
+
             let localizedName = form.formName;
             const formKey = (form as any).formKey as SpeciesFormKey | undefined;
-            
+
             if (formKey) {
                 if (formKey.includes('glitch')) {
                     const modName = getModPokemonName(speciesId, form.formName);
                     localizedName = modName || i18next.t(`glitchNames:${form.formName.toLowerCase()}.name`);
                 } else if (formKey.includes('smitty')) {
                     localizedName = i18next.t(`smittyNames:${form.formName}.name`);
-                } else if (formKey === SpeciesFormKey.MEGA || 
-                           formKey === SpeciesFormKey.PRIMAL || 
-                           formKey === SpeciesFormKey.ETERNAMAX || 
-                           formKey === SpeciesFormKey.MEGA_X || 
+                } else if (formKey === SpeciesFormKey.MEGA ||
+                           formKey === SpeciesFormKey.PRIMAL ||
+                           formKey === SpeciesFormKey.ETERNAMAX ||
+                           formKey === SpeciesFormKey.MEGA_X ||
                            formKey === SpeciesFormKey.MEGA_Y ||
                            formKey.includes(SpeciesFormKey.GIGANTAMAX)) {
                     localizedName = i18next.t(`battlePokemonForm:${formKey}`, {pokemonName: speciesData.name});
@@ -628,14 +664,27 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
         dropdown.addEventListener('change', () => {
             this.selectedFormIndex = parseInt(dropdown.value, 10);
+            dropdown.blur();
             this.updatePokemonDisplay(speciesId, this.selectedFormIndex);
+        });
+
+        this.formDropdownClickHandler = (event: MouseEvent) => {
+            if (event.target !== dropdown && !dropdown.contains(event.target as Node)) {
+                dropdown.blur();
+            }
+        };
+
+        document.addEventListener('mousedown', this.formDropdownClickHandler);
+
+        dropdown.addEventListener('keydown', (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                dropdown.blur();
+            }
         });
 
         document.body.appendChild(dropdown);
         this.formSelectionDropdown = dropdown;
     }
-
-    
     private loadPokemonData(pokemonData: Species | Pokemon): void {
 
         let speciesData: PokemonSpecies;
@@ -645,11 +694,15 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             this.selectedSpeciesId = pokemonData.species.speciesId;
             speciesData = pokemonData.species;
             pokemonInstance = pokemonData;
+            this.selectedPokemonInstance = pokemonData;
         }
         else {
-            this.selectedSpeciesId = pokemonData;       
+            this.selectedSpeciesId = pokemonData;
             speciesData = getPokemonSpecies(this.selectedSpeciesId);
+            this.selectedPokemonInstance = null;
         }
+
+        this.selectedSpeciesData = speciesData;
 
         this.spriteContainer.removeAll(true);
         this.typingContainer.removeAll(true);
@@ -658,7 +711,21 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         this.movesContainer.removeAll(true);
         this.eggMovesContainer.removeAll(true);
 
-
+        if (this.moveScrollContainer) {
+            this.moveScrollContainer.removeAll(true);
+            this.moveScrollContainer.setY(0);
+            this.scrollPosition = 0;
+            this.moveScrollContainer.clearMask();
+            if (this.moveScrollTween) {
+                this.moveScrollTween.stop();
+                this.moveScrollTween.remove();
+                this.moveScrollTween = null;
+            }
+            if (this.moveScrollMaskTimer) {
+                this.moveScrollMaskTimer.remove();
+                this.moveScrollMaskTimer = null;
+            }
+        }
         if (!speciesData) {
             const errorText = addTextObject(
                 this.scene,
@@ -686,33 +753,43 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         } else {
             this.selectedFormIndex = 0;
             this.loadPokemonSprite(this.selectedSpeciesId, 0);
-            this.setTypeIcons(speciesData.type1, speciesData.type2);
-            this.displayStats(speciesData.baseStats);
-            this.displayAbilities(speciesData.ability1, speciesData.ability2, speciesData.abilityHidden);
+
+            const sourceForm = this.selectedPokemonInstance
+                ? this.selectedPokemonInstance.getSpeciesForm()
+                : speciesData;
+
+            this.setTypeIcons(sourceForm.type1, sourceForm.type2);
+            this.displayStats(sourceForm.baseStats);
+            this.displayAbilities(sourceForm.ability1, sourceForm.ability2, sourceForm.abilityHidden);
             this.displayLearnableMoves(this.selectedSpeciesId);
             this.displayEggMoves(this.selectedSpeciesId);
         }
     }
 
     private updatePokemonDisplay(speciesId: Species, formIndex: number): void {
-        const speciesData = getPokemonSpecies(speciesId);
+        const speciesData = this.selectedSpeciesData || getPokemonSpecies(speciesId);
         if (!speciesData) return;
 
         const form = formIndex < speciesData.forms.length ? speciesData.forms[formIndex] : speciesData;
 
         this.loadPokemonSprite(speciesId, formIndex);
-        this.setTypeIcons(form.type1, form.type2);
-        this.displayStats(form.baseStats);
-        this.displayAbilities(form.ability1, form.ability2, form.abilityHidden);
+
+        const sourceForm = this.selectedPokemonInstance
+            ? this.selectedPokemonInstance.getSpeciesForm()
+            : form;
+
+        this.setTypeIcons(sourceForm.type1, sourceForm.type2);
+        this.displayStats(sourceForm.baseStats);
+        this.displayAbilities(sourceForm.ability1, sourceForm.ability2, sourceForm.abilityHidden);
         this.displayLearnableMoves(speciesId);
         this.displayEggMoves(speciesId);
     }
-    
+
     private async loadPokemonSprite(speciesId: Species, formIndex: number = 0): Promise<void> {
 
         this.spriteContainer.removeAll(true);
 
-        const speciesData = getPokemonSpecies(speciesId);
+        const speciesData = this.selectedSpeciesData || getPokemonSpecies(speciesId);
 
         if (!speciesData) {
             const errorText = addTextObject(
@@ -737,8 +814,6 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
              formName = (form as any).formName as string;
              isGlitchOrSmittyForm = formKey?.includes('glitch') || formKey?.includes('smitty');
         }
-
-
         const loadingText = addTextObject(
             this.scene,
             0, 0,
@@ -748,8 +823,6 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         );
         loadingText.setOrigin(0.5, 0.5);
         this.spriteContainer.add(loadingText);
-
-
         try {
             let spriteKey;
             if (isGlitchOrSmittyForm && formName) {
@@ -769,8 +842,6 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 await speciesData.loadAssets(this.scene, false, formIndex, false, 0, true);
                 spriteKey = speciesData.getSpriteKey(false, formIndex, false, 0);
             }
-
-
             const pokemonSprite = (this.scene as BattleScene).addPokemonSprite(
                 null,
                 0,
@@ -803,6 +874,16 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 this.pokemonSprite.setPipeline(this.scene.spritePipeline);
                  this.pokemonSprite.setPipelineData("shiny", false);
                  this.pokemonSprite.setPipelineData("variant", 0);
+            }
+
+            if (this.selectedPokemonInstance && this.selectedPokemonInstance.getSprite()) {
+                const srcData = this.selectedPokemonInstance.getSprite().pipelineData as any;
+                if (srcData["altBuildSpriteColors"] && srcData["altBuildTargetColors"]) {
+                    this.pokemonSprite.setPipelineData("altBuildSpriteColors", srcData["altBuildSpriteColors"]);
+                    this.pokemonSprite.setPipelineData("altBuildTargetColors", srcData["altBuildTargetColors"]);
+                    this.pokemonSprite.setPipelineData("altBuildBlendMode", srcData["altBuildBlendMode"]);
+                    this.pokemonSprite.setPipelineData("altBuildInversionFactor", srcData["altBuildInversionFactor"] || 0.0);
+                }
             }
 
         } catch (e) {
@@ -878,7 +959,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
             return new Promise<void>((resolve, reject) => {
                 let objectUrl: string;
-                
+
                 if (typeof spriteData === 'string') {
                     if (spriteData.startsWith('data:')) {
                         objectUrl = spriteData;
@@ -889,9 +970,9 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                     reject(new Error('Invalid sprite data format'));
                     return;
                 }
-                
+
                 this.scene.load.image(spriteKey, objectUrl);
-                
+
                 this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
                     if (this.scene.anims && typeof this.scene.anims.create === 'function' && !this.scene.anims.exists(spriteKey)) {
                         this.scene.anims.create({
@@ -903,11 +984,11 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                     }
                     resolve();
                 });
-                
+
                 this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (file: any) => {
                     reject(new Error(`Failed to load glitch sprite: ${file.key}`));
                 });
-                
+
                 if (!this.scene.load.isLoading()) {
                     this.scene.load.start();
                 }
@@ -917,7 +998,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             throw error;
         }
     }
-    
+
     private setTypeIcons(type1: Type, type2: Type | null): void {
         this.typingContainer.removeAll(true);
         this.type1Icon = this.scene.add.sprite(3, 0, Utils.getLocalizedSpriteKey("types"));
@@ -925,21 +1006,21 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         this.type1Icon.setOrigin(0, 0.5);
         this.type1Icon.setScale(0.5);
         this.typingContainer.add(this.type1Icon);
-        
+
         if (type2 !== null) {
             this.type2Icon = this.scene.add.sprite(23, 0, Utils.getLocalizedSpriteKey("types"));
             this.type2Icon.setFrame(Type[type2].toLowerCase());
             this.type2Icon.setOrigin(0, 0.5);
             this.type2Icon.setScale(0.5);
             this.typingContainer.add(this.type2Icon);
-            
+
         } else if(this.type2Icon) {
             this.type2Icon.setVisible(false);
         }
     }
-    
+
     private displayStats(baseStats: number[]): void {
-        
+
         this.statsContainer.removeAll(true);
         const statNames = [i18next.t('pokemonInfo:Stat.HPStat'), i18next.t('pokemonInfo:Stat.ATKshortened'), i18next.t('pokemonInfo:Stat.DEFshortened'), i18next.t('pokemonInfo:Stat.SPATKshortened'), i18next.t('pokemonInfo:Stat.SPDEFshortened'), i18next.t('pokemonInfo:Stat.SPDshortened')];
         const statColors = [0x4a90e2, 0xff5555, 0xffaa33, 0xaa55ff, 0x55aa55, 0xff55aa];
@@ -954,7 +1035,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         for (let i = 0; i < baseStats.length; i++) {
             const statValue = baseStats[i];
             const y = startY + i * lineSpacing;
-            
+
             const label = addTextObject(
                 this.scene,
                 labelX,
@@ -964,7 +1045,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 { fontSize: '35px', fontStyle: 'bold' }
             );
             label.setOrigin(0, 0);
-            
+
             const valueText = addTextObject(
                 this.scene,
                 valueX,
@@ -974,16 +1055,14 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 { fontSize: '35px' }
             );
             valueText.setOrigin(1, 0);
-            
-            
             const maxWidth = 50;
             const barWidth = Math.max(3, Math.min(maxWidth, (statValue / 255) * maxWidth));
             const bar = this.scene.add.rectangle(barX, y + 1, barWidth, barHeight, statColors[i]);
             bar.setOrigin(0, 0);
-            
+
             this.statsContainer.add([label, valueText, bar]);
         }
-        
+
         const totalValue = baseStats.reduce((sum, val) => sum + val, 0);
         const totalY = startY + baseStats.length * lineSpacing + lineSpacing / 2;
         const totalLabel = addTextObject(
@@ -995,7 +1074,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             { fontSize: '35px' }
         );
         totalLabel.setOrigin(0, 0);
-        
+
         const totalValueText = addTextObject(
             this.scene,
             valueX,
@@ -1005,24 +1084,19 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             { fontSize: '35px' }
         );
         totalValueText.setOrigin(1, 0);
-        
+
         this.statsContainer.add([totalLabel, totalValueText]);
-        
+
     }
-    
+
     private displayAbilities(ability1: Abilities, ability2: Abilities, abilityHidden: Abilities): void {
-        
+
         this.abilitiesContainer.removeAll(true);
-        
-        
         const abilities = [
             { name: ability1, hidden: false },
             { name: ability2, hidden: false },
             { name: abilityHidden, hidden: true }
         ].filter(a => a.name !== Abilities.NONE);
-        
-        
-        
         const title = addTextObject(
             this.scene,
             -70,
@@ -1033,19 +1107,15 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         );
         title.setOrigin(0, 0);
         this.abilitiesContainer.add(title);
-        
-        
         let yOffset = 10;
         const abilitySpacing = 5;
-        
+
         abilities.forEach((ability, index) => {
-            
+
             const abilityKey = Object.keys(Abilities).find(key => Abilities[key] === ability.name);
             const abilityI18nKey = abilityKey.split("_").filter(f => f).map((f, i) =>
                 i ? `${f[0]}${f.slice(1).toLowerCase()}` : f.toLowerCase()
             ).join("");
-            
-            
             const namePrefix = ability.hidden ? "H: " : index + 1 + ": ";
             const nameText = addTextObject(
                 this.scene,
@@ -1056,35 +1126,39 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 { fontSize: '45px', fontStyle: 'bold' }
             );
             nameText.setOrigin(0, 0);
-            
-            
             const descText = addTextObject(
                 this.scene,
                 -70,
                 yOffset + 8,
                 i18next.t(`ability:${abilityI18nKey}.description`),
                 TextStyle.WINDOW,
-                { 
+                {
                     fontSize: '35px',
                     wordWrap: { width: 500 }
                 }
             );
             descText.setOrigin(0, 0);
-            
+
             this.abilitiesContainer.add([nameText, descText]);
-            
+
             yOffset += (descText.height / 6) + 8 + abilitySpacing;
         });
-        
-    }
-    
 
+    }
     private displayLearnableMoves(speciesId: Species): number {
-        
-        const levelMoves = pokemonSpeciesLevelMoves[speciesId] || [];
-        
+
+        let overlayedMoves: [number, Moves][];
+
+        const instance = this.selectedPokemonInstance as any;
+
+        if (instance && typeof instance.getLevelMoves === 'function') {
+            overlayedMoves = instance.getLevelMoves(1, true, false, true, true) as [number, Moves][];
+        } else {
+            overlayedMoves = (pokemonSpeciesLevelMoves[speciesId] || []) as [number, Moves][];
+        }
+
         const movesByLevel: { [level: number]: Moves[] } = {};
-        levelMoves.filter(move => move[0] >= -1).sort((a, b) => a[0] - b[0]).forEach(([level, moveId]) => {
+        overlayedMoves.filter(move => move[0] >= -1).sort((a, b) => a[0] - b[0]).forEach(([level, moveId]) => {
             if (!movesByLevel[level]) {
                 movesByLevel[level] = [];
             }
@@ -1093,65 +1167,115 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
         const levels = Object.keys(movesByLevel).map(Number).sort((a, b) => a - b);
 
-        const levelMovesTitle = addTextObject(
+    const levelMovesTitle = addTextObject(
+        this.scene,
+        -70,
+        0,
+        i18next.t("pokedex:learnableMoves"),
+        TextStyle.WINDOW,
+        { fontSize: '50px', fontStyle: 'bold' }
+    );
+    levelMovesTitle.setOrigin(0, 0);
+    this.movesContainer.add(levelMovesTitle);
+
+    if (!this.moveScrollContainer || !this.moveScrollContainer.parentContainer) {
+        this.moveScrollContainer = this.scene.add.container(0, 0);
+        this.moveScrollContainer.setName("moveScrollContainer");
+        this.movesContainer.add(this.moveScrollContainer);
+    }
+
+    this.moveScrollContainer.removeAll(true);
+    this.moveScrollContainer.setY(0);
+    this.scrollPosition = 0;
+
+    let yOffset = 10;
+    const moveStartX = -70;
+
+    levels.forEach(level => {
+        const moves = movesByLevel[level];
+        const moveNames = moves.map(moveId => this.getMoveName(moveId));
+        const movesText = moveNames.join(", ");
+
+        const levelText = addTextObject(
             this.scene,
-            -70,
-            0,
-            i18next.t("pokedex:learnableMoves"),
+            moveStartX,
+            yOffset,
+            `Lv ${level}: ${movesText}`,
             TextStyle.WINDOW,
-            { fontSize: '50px', fontStyle: 'bold' }
-        );
-        levelMovesTitle.setOrigin(0, 0);
-        this.movesContainer.add(levelMovesTitle);
-        
-        let yOffset = 10;
-        const moveSpacing = 7;
-        const moveStartX = -70;
-        const column2StartX = moveStartX + 160;
-        const MAX_LINES_PER_COLUMN = 16;
-        let currentColumn = 1;
-        let linesInCurrentColumn = 0;
-        let currentX = moveStartX;
-
-        levels.forEach(level => {
-            const moves = movesByLevel[level];
-            const moveNames = moves.map(moveId => this.getMoveName(moveId));
-            const movesText = moveNames.join(", ");
-
-            if (linesInCurrentColumn >= MAX_LINES_PER_COLUMN) {
-                currentColumn = 2;
-                currentX = column2StartX;
-                yOffset = 10;
-                linesInCurrentColumn = 0;
+            {
+                fontSize: '35px',
+                wordWrap: { width: 300 }
             }
-            
-            const levelText = addTextObject(
-                this.scene,
-                currentX,
-                yOffset,
-                `Lv ${level}: ${movesText}`,
-                TextStyle.WINDOW,
-                { 
-                    fontSize: '35px',
-                    wordWrap: { width: 300 }
-                }
-            );
-            levelText.setOrigin(0, 0);
-            this.movesContainer.add(levelText);
-            
-            const textHeight = levelText.height;
-            yOffset += textHeight / 6;
-            linesInCurrentColumn++;
+        );
+        levelText.setOrigin(0, 0);
+        this.moveScrollContainer.add(levelText);
+
+        const textHeight = levelText.height;
+        yOffset += textHeight / 6;
+    });
+    const viewportHeight = 100;
+
+    if (yOffset > viewportHeight) {
+        if (this.moveScrollMaskTimer) {
+            this.moveScrollMaskTimer.remove();
+            this.moveScrollMaskTimer = null;
+        }
+
+        this.moveScrollMaskTimer = this.scene.time.delayedCall(10, () => {
+            const bounds = this.moveScrollContainer.getBounds();
+
+            const expectedHeight = yOffset;
+            const actualHeight = bounds.height;
+            const scaleFactor = actualHeight / expectedHeight;
+            const scaledViewportHeight = viewportHeight * scaleFactor;
+
+            const maskRect = this.scene.make.graphics({});
+            maskRect.setScale(6);
+            maskRect.fillStyle(0xFFFFFF);
+            maskRect.beginPath();
+            const maskX = bounds.x / 6;
+            const maskY = bounds.y / 6;
+            const maskWidth = 300 / 6;
+            const maskHeight = scaledViewportHeight / 6;
+            maskRect.fillRect(maskX, maskY, maskWidth, maskHeight);
+
+            const moveScrollMask = maskRect.createGeometryMask();
+            this.moveScrollContainer.setMask(moveScrollMask);
+
+            this.moveScrollMaskTimer = null;
         });
-        
-        return yOffset;
+
+        if (this.moveScrollTween) {
+            this.moveScrollTween.stop();
+            this.moveScrollTween.remove();
+            this.moveScrollTween = null;
+        }
+
+        const scrollDistance = yOffset - viewportHeight;
+        const scrollDuration = scrollDistance * 400;
+
+        this.moveScrollContainer.setY(0);
+
+        this.moveScrollTween = this.scene.tweens.add({
+            targets: this.moveScrollContainer,
+            y: -scrollDistance,
+            duration: scrollDuration,
+            delay: 6000,
+            hold: 8000,
+            loop: -1,
+            ease: 'Linear',
+
+        });
+    }
+
+    return yOffset;
     }
 
     private displayEggMoves(speciesId: Species): number {
-        
+
         const speciesData = getPokemonSpecies(speciesId);
         const rootSpeciesId = speciesData.getRootSpeciesId(false);
-        
+
         const eggMoves = speciesEggMoves[rootSpeciesId] || [];
         const moveSpacing = 7;
         const eggMovesTitleY = 0;
@@ -1165,8 +1289,6 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         );
         eggMovesTitle.setOrigin(0, 0);
         this.eggMovesContainer.add(eggMovesTitle);
-
-        
         let yOffset = eggMovesTitleY + moveSpacing + 5;
         const moveStartX = -70;
 
@@ -1184,17 +1306,15 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             this.eggMovesContainer.add(moveText);
             yOffset += moveSpacing;
         });
-        
-
         return yOffset;
     }
-    
+
     private getMoveName(moveId: Moves): string {
         const move = allMoves[moveId];
         if (!move) return i18next.t('moves:unknown');
 
         return move.name;
-        
+
     }
 
     processInput(button: Button): boolean {
@@ -1299,11 +1419,11 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
         return false;
     }
-    
+
     private setupContainers(): void {
         const containerWidth = this.getWidth();
         const containerHeight = this.getHeight();
-        
+
         const halfHeight = containerHeight / 2;
         const spriteY = halfHeight * 0.55;
         const typingY = containerHeight * 0.45;
@@ -1312,52 +1432,40 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         const abilitiesMovesY = halfHeight * 0.35;
 
         const sectionWidth = containerWidth / 4;
-        
-        const section1X = containerWidth * 0.05; 
-        
+
+        const section1X = containerWidth * 0.05;
+
         const section2X = sectionWidth * 2.2;
-        
+
         const section3X = sectionWidth * 3.45;
 
         const section4X = sectionWidth * 4.25;
-        
+
         this.spriteContainer = this.scene.add.container(section1X + 30, spriteY);
         this.spriteContainer.setName("spriteContainer");
         this.modalContainer.add(this.spriteContainer);
-        
-        
         this.typingContainer = this.scene.add.container(section1X + 10, typingY);
         this.typingContainer.setName("typingContainer");
         this.modalContainer.add(this.typingContainer);
-        
-        
         this.infoContainer = this.scene.add.container(section1X, infoY);
         this.infoContainer.setName("infoContainer");
         this.modalContainer.add(this.infoContainer);
-        
-        
         this.statsContainer = this.scene.add.container(section1X, statsY);
         this.statsContainer.setName("statsContainer");
         this.modalContainer.add(this.statsContainer);
-        
-        
         this.abilitiesContainer = this.scene.add.container(section2X, abilitiesMovesY);
         this.abilitiesContainer.setName("abilitiesContainer");
         this.abilitiesContainer.setVisible(true);
         this.modalContainer.add(this.abilitiesContainer);
-        
-        
         this.movesContainer = this.scene.add.container(section3X, abilitiesMovesY);
         this.movesContainer.setName("movesContainer");
         this.movesContainer.setVisible(true);
         this.modalContainer.add(this.movesContainer);
-
-        
         this.eggMovesContainer = this.scene.add.container(section4X, abilitiesMovesY);
         this.eggMovesContainer.setName("eggMovesContainer");
         this.eggMovesContainer.setVisible(true);
         this.modalContainer.add(this.eggMovesContainer);
-        
+
         this.navLeftButton = this.scene.add.sprite(-4, halfHeight, 'cursor_reverse');
         this.navLeftButton.setScale(0.75);
         this.navLeftButton.setInteractive({ useHandCursor: true });
@@ -1379,5 +1487,9 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         this.navRightButton.on('pointerup', () => {
             this.processInput(Button.RIGHT);
         });
+
+        this.moveScrollContainer = this.scene.add.container(0, 0);
+        this.moveScrollContainer.setName("moveScrollContainer");
+        this.movesContainer.add(this.moveScrollContainer);
     }
-} 
+}

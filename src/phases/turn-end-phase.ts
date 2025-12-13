@@ -14,8 +14,6 @@ import { FieldPhase } from "./field-phase";
 import { MessagePhase } from "./message-phase";
 import { PokemonHealPhase } from "./pokemon-heal-phase";
 import * as Utils from "../utils";
-
-
 export class TurnEndPhase extends FieldPhase {
   constructor(scene: BattleScene) {
     super(scene);

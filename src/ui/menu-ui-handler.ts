@@ -14,12 +14,13 @@ import BgmBar from "#app/ui/bgm-bar";
 import AwaitableUiHandler from "./awaitable-ui-handler";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
 import { TutorialService } from "#app/ui/tutorial-service";
-import { PermaQuestModifier, PermaRunQuestModifier, PersistentModifier, PermaPartyAbilityModifier } from "../modifier/modifier";
+import { PermaQuestModifier, PermaRunQuestModifier, PersistentModifier, PermaPartyAbilityModifier, PermaCollectedTypeModifier } from "../modifier/modifier";
 import { TitlePhase } from "../phases/title-phase";
 
 import {signOut} from "firebase/auth";
 import {auth, db} from "#app/server/firebase";
 import {doc, updateDoc} from "firebase/firestore";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 
 enum MenuOptions {
   GAME_SETTINGS,
@@ -50,14 +51,13 @@ export default class MenuUiHandler extends MessageUiHandler {
   protected optionSelectText: Phaser.GameObjects.Text;
 
   private cursorObj: Phaser.GameObjects.Image | null;
+  private _menuPatterns?: { menu?: ModalBackgroundHandle };
 
   private excludedMenus: () => ConditionalMenu[];
   private menuOptions: MenuOptions[];
 
   protected manageDataConfig: OptionSelectConfig;
   protected communityConfig: OptionSelectConfig;
-
-  // Windows for the default message box and the message box for testing dialogue
   private menuMessageBox: Phaser.GameObjects.NineSlice;
   private dialogueMessageBox: Phaser.GameObjects.NineSlice;
 
@@ -82,7 +82,7 @@ export default class MenuUiHandler extends MessageUiHandler {
 
   setup(): void {
     const ui = this.getUi();
-    const lang = i18next.resolvedLanguage?.substring(0, 2)!; // TODO: is this bang correct?
+    const lang = i18next.resolvedLanguage?.substring(0, 2)!;
 
     this.bgmBar = new BgmBar(this.scene);
     this.bgmBar.setup();
@@ -103,8 +103,6 @@ export default class MenuUiHandler extends MessageUiHandler {
     this.menuContainer.setVisible(false);
 
   }
-
-
   render() {
     const ui = this.getUi();
     this.excludedMenus = () => [
@@ -148,13 +146,9 @@ export default class MenuUiHandler extends MessageUiHandler {
     this.menuMessageBoxContainer = this.scene.add.container(0, 130);
     this.menuMessageBoxContainer.setName("menu-message-box");
     this.menuMessageBoxContainer.setVisible(false);
-
-    // Window for general messages
     this.menuMessageBox = addWindow(this.scene, 0, 0, this.defaultMessageBoxWidth, 48);
     this.menuMessageBox.setOrigin(0, 0);
     this.menuMessageBoxContainer.add(this.menuMessageBox);
-
-    // Full-width window used for testing dialog messages in debug mode
     this.dialogueMessageBox = addWindow(this.scene, -this.textPadding, 0, this.scene.game.canvas.width / 6 + this.textPadding * 2, 49, false, false, 0, 0, WindowVariant.THIN);
     this.dialogueMessageBox.setOrigin(0, 0);
     this.menuMessageBoxContainer.add(this.dialogueMessageBox);
@@ -165,13 +159,11 @@ export default class MenuUiHandler extends MessageUiHandler {
     this.menuMessageBoxContainer.add(menuMessageText);
 
     this.message = menuMessageText;
-
-    // By default we use the general purpose message window
     this.setDialogTestMode(false);
 
     this.menuContainer.add(this.menuMessageBoxContainer);
 
-    const manageDataOptions: any[] = []; // TODO: proper type
+    const manageDataOptions: any[] = [];
 
     const confirmSlot = (message: string, slotFilter: (i: integer) => boolean, callback: (i: integer) => void) => {
       ui.revertMode();
@@ -206,10 +198,10 @@ export default class MenuUiHandler extends MessageUiHandler {
         label: i18next.t("menuUiHandler:importData"),
         handler: () => {
           ui.revertMode();
-          
+
           const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
           console.log("Import Data clicked, isIOS:", isIOS);
-          
+
           if (isIOS) {
             console.log("Setting mode to IMPORT_DATA_FORM for iOS");
             ui.setMode(Mode.IMPORT_DATA_FORM, GameDataType.COMBINED);
@@ -217,15 +209,12 @@ export default class MenuUiHandler extends MessageUiHandler {
             console.log("Using traditional import method");
             this.scene.gameData.importData(GameDataType.COMBINED);
           }
-          
+
           return true;
         },
         keepOpen: true
       });
     }
-    
-    
-    
     manageDataOptions.push(
         {
           label: i18next.t("menuUiHandler:exportData"),
@@ -239,41 +228,41 @@ export default class MenuUiHandler extends MessageUiHandler {
       label: i18next.t("menuUiHandler:removePermaItems", { defaultValue: "Remove ∞ITEMS" }),
       handler: () => {
         ui.revertMode();
-        
+
         const allModifiers = this.scene.gameData.permaModifiers.getModifiers();
-        
-        const nonQuestModifiers = allModifiers.filter(m => 
-          !(m instanceof PermaQuestModifier || m instanceof PermaRunQuestModifier)
+
+        const nonQuestModifiers = allModifiers.filter(m =>
+          !(m instanceof PermaQuestModifier || m instanceof PermaRunQuestModifier || m instanceof PermaCollectedTypeModifier)
         );
-        
+
         if (nonQuestModifiers.length === 0) {
           ui.showText(i18next.t("menuUiHandler:noPermaItems", { defaultValue: "No ∞ITEMS to remove." }), null, () => ui.showText(""), Utils.fixedInt(1500));
           return true;
         }
-        
+
         const permaModifierOptions = nonQuestModifiers.map(modifier => {
           return {
             label:  modifier instanceof PermaPartyAbilityModifier ? modifier.type.name + ": " + modifier.ability.name : modifier.type.name,
             handler: () => {
-              ui.setOverlayMode(Mode.CONFIRM, 
+              ui.setOverlayMode(Mode.CONFIRM,
                 () => {
                   this.scene.gameData.permaModifiers.removeModifier(modifier, false, this.scene);
                   this.scene.gameData.saveAll(this.scene, true);
-                  
+
                   this.scene.ui.updatePermaModifierBar(this.scene.gameData.permaModifiers);
-                  
+
                   ui.revertMode();
-                  
+
                   setTimeout(() => {
                     ui.revertMode();
-                    
+
                     setTimeout(() => {
                       ui.revertMode();
                     }, 50);
                   }, 50);
-                  
+
                   return true;
-                }, 
+                },
                 () => {
                   ui.revertMode();
                   return true;
@@ -288,7 +277,7 @@ export default class MenuUiHandler extends MessageUiHandler {
             keepOpen: true
           };
         });
-        
+
         permaModifierOptions.push({
           label: i18next.t("menuUiHandler:cancel"),
           handler: () => {
@@ -297,14 +286,14 @@ export default class MenuUiHandler extends MessageUiHandler {
           },
           keepOpen: true
         });
-        
+
         ui.setOverlayMode(Mode.MENU_OPTION_SELECT, {
           xOffset: -1,
           options: permaModifierOptions,
           maxOptions: 10,
           isRemoveItemsMenu: true
         });
-        
+
         return true;
       },
       keepOpen: true
@@ -317,8 +306,6 @@ export default class MenuUiHandler extends MessageUiHandler {
       },
       keepOpen: true
     });
-
-    //Thank you Vassiat
     this.manageDataConfig = {
       xOffset: 98,
       options: manageDataOptions,
@@ -395,6 +382,18 @@ export default class MenuUiHandler extends MessageUiHandler {
       .filter(m => {
         return !this.excludedMenus().some(exclusion => exclusion.condition && exclusion.options.includes(m));
       });
+    this._menuPatterns = this._menuPatterns || {};
+    this._menuPatterns.menu = attachModalBackground(
+      this.scene,
+      this.menuContainer,
+      () => ({ bgX: this.menuBg.x, bgY: this.menuBg.y, bgWidth: this.menuBg.width, bgHeight: this.menuBg.height }),
+      {
+        mask: false,
+        getTarget: () => this.menuBg,
+        alphaMultiplier: 0.7,
+        gridInc: -1
+      }
+    );
 
     this.menuContainer.setVisible(true);
     this.setCursor(0);
@@ -402,14 +401,13 @@ export default class MenuUiHandler extends MessageUiHandler {
     this.getUi().moveTo(this.menuContainer, this.getUi().length - 1);
 
     this.getUi().hideTooltip();
+    this._menuPatterns?.menu?.redraw();
 
     this.scene.playSound("ui/menu_open");
 
     handleTutorial(this.scene, Tutorial.Menu);
 
     this.bgmBar.toggleBgmBar(true);
-
-
     return true;
   }
 
@@ -525,17 +523,10 @@ export default class MenuUiHandler extends MessageUiHandler {
 
     return success || error;
   }
-
-  /**
-   * Switch the message window style and size when we are replaying dialog for debug purposes
-   * In "dialog test mode", the window takes the whole width of the screen and the text
-   * is set up to wrap around the same way as the dialogue during the game
-   * @param isDialogMode whether to use the dialog test
-   */
   setDialogTestMode(isDialogMode: boolean) {
     this.menuMessageBox.setVisible(!isDialogMode);
     this.dialogueMessageBox.setVisible(isDialogMode);
-    // If we're testing dialog, we use the same word wrapping as the battle message handler
+
     this.message.setWordWrapWidth(isDialogMode ? this.scene.ui.getMessageHandler().wordWrapWidth : this.defaultWordWrapWidth);
     this.message.setX(isDialogMode ? this.textPadding + 1 : this.textPadding);
     this.message.setY(isDialogMode ? this.textPadding + 0.4 : this.textPadding);
@@ -563,6 +554,9 @@ export default class MenuUiHandler extends MessageUiHandler {
   }
 
   clear() {
+    this._menuPatterns?.menu?.clear();
+    this._menuPatterns = undefined;
+
     super.clear();
     this.menuContainer.setVisible(false);
     this.bgmBar.toggleBgmBar(false);
@@ -648,7 +642,7 @@ export default class MenuUiHandler extends MessageUiHandler {
     };
 
     let captchaText = generateCaptchaText();
-    
+
     const canvas = document.createElement('canvas');
     canvas.width = 200;
     canvas.height = 60;
@@ -783,19 +777,19 @@ export default class MenuUiHandler extends MessageUiHandler {
             cancelButton.click();
         }
     };
-    
+
     dialog.addEventListener('keydown', handleKeyPress);
-    
+
     const cleanup = () => {
         dialog.removeEventListener('keydown', handleKeyPress);
     };
-    
+
     const originalSubmitClick = submitButton.onclick;
     submitButton.onclick = () => {
         cleanup();
         if (originalSubmitClick) originalSubmitClick.call(submitButton);
     };
-    
+
     const originalCancelClick = cancelButton.onclick;
     cancelButton.onclick = () => {
         cleanup();

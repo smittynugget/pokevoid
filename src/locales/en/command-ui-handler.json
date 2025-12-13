@@ -3,5 +3,11 @@
   "ball": "Ball",
   "pokemon": "Pokémon",
   "run": "Run",
-  "actionMessage": "What will\n{{pokemonName}} do?"
+  "actionMessage": "What will\n{{pokemonName}} do?",
+  "skillTree": "Skill Tree",
+  "team": "Team",
+  "check": "Check",
+  "eggs": "Eggs",
+  "shop": "Shop",
+  "map": "Map"
 }

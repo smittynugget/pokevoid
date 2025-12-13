@@ -1,0 +1,99 @@
+{
+  "title": "Choisir un Champion",
+  "confirmSelection": "Commencer avec {{name}} ?",
+  "subheader": "Qui choisirez-vous pour vous aventurer dans le Néant ?",
+  "levelUp": "NIVEAU SUPÉRIEUR !",
+  "characterUnlocked": "{{name}}\nDÉBLOQUÉ !",
+  "unlocked": "Débloqué",
+  "lockedGauge": "Engagé : {{current}} / {{required}}",
+  "xp": "EXP",
+  "potential": "POTENTIEL",
+  "level": "NIVEAU",
+  "locked": "VERROUILLÉ",
+  "unlockRequired": "Requiert : {{requirement}}",
+  "essenceHint": "Utilisez l'Essence requise pour monter de niveau !",
+  "essencesHeader": "Essences :",
+  "skillsHeader": "COMPÉTENCES",
+  "skillsSubheader": "Les compétences apparaîtront aléatoirement dans l'Arbre de Compétences.",
+  "rarity": {
+    "common": "COMMUN",
+    "great": "SUPER",
+    "ultra": "ULTRA",
+    "master": "MAÎTRE",
+    "rogue": "PÍCARO",
+    "legendary": "LÉGENDAIRE"
+  },
+  "unlockCharacter": "Débloquer le Personnage",
+  "unlockCharacterTooltip": "Débloquez en utilisant {{current}}/{{required}} Essences",
+  "tooltip": {
+    "lockedSkillTitle": "Compétence Verrouillée",
+    "levelRequired": "Doit être Niveau {{level}} pour débloquer.",
+    "lockedPrefix": "VERROUILLÉ",
+    "unlockWithEssence": "Débloquez en utilisant {{current}}/{{required}} Essences pour monter de niveau !",
+    "levelUpRequired": "Montez de niveau pour débloquer cette compétence.",
+    "defaultTm": "Enseigne une CT {{types}} à un Pokémon",
+    "defaultXm": "Enseigne une XM {{types}} à un Pokémon",
+    "defaultEssence": "Ajoute {{amount}} Essences de type {{types}} à votre collection",
+    "defaultBooster": "Reçoit un objet Booster de type {{types}}",
+    "defaultTeraAbility": "Utilise {{types}} pour activer les Talents Téra",
+    "defaultEssenceWeight": "Augmente le poids de drop d'Essence {{types}} de {{weight}}",
+    "defaultCatchRate": "Augmente le taux de capture des Pokémon {{types}} de {{percent}}%",
+    "defaultFusionPriority": "Augmente la priorité de fusion pour les Pokémon {{types}}",
+    "defaultRevive": "Augmente la chance de réanimation des Pokémon {{types}} de {{percent}}%",
+    "defaultTokens": "Reçoit des Jetons d'Arbre de Compétences pour débloquer des nœuds",
+    "defaultPoints": "Reçoit des Points de Compétence pour acheter des compétences",
+    "typesFallback": "Inconnu"
+  },
+  "skillList": {
+    "levelPrefix": "Niv {{level}}",
+    "unknownSkill": "???"
+  },
+  "defaultSkillLabels": {
+    "tms": "CT {{types}}",
+    "xms": "XM {{types}}",
+    "abilities": "Talents {{types}}",
+    "teraAbilities": "Talents Téracristal {{types}}",
+    "statBoosts": "Boosts de Stats {{types}}",
+    "tokens": "Jetons d'Arbre de Compétences",
+    "points": "Points de Compétence",
+    "boosters": "Boosters {{types}}",
+    "essence": "Essence {{types}}",
+    "reviveBoost": "Boost de Réanimation {{types}}",
+    "essenceWeights": "Poids d'Essence {{types}}",
+    "catchBonus": "Bonus de Capture {{types}}",
+    "fusionPriority": "Priorité de Fusion {{types}}"
+  },
+  "button": {
+    "useEssence": "Utiliser Essence"
+  },
+  "brock": { "description": "Champion de la Roche" },
+  "misty": { "description": "Championne de l'Eau" },
+  "apollo": {
+    "name": "Apollon",
+    "description": "Champion du Soleil"
+  },
+  "diana": {
+    "name": "Diane",
+    "description": "Championne de la Lune"
+  },
+  "generic": { "description": "Le champion par défaut." },
+  "champions": {
+    "title": "Choisissez votre Champion",
+    "brock": {
+      "name": "Pierre - Spécialiste Roche",
+      "description": "Maître des types Sol et Roche",
+      "essenceRequirement": "Requiert {{ground}} Sol + {{rock}} Roche essences"
+    },
+    "misty": {
+      "name": "Ondine - Spécialiste Eau",
+      "description": "Maître des types Eau",
+      "essenceRequirement": "Requiert {{water}} Eau essences"
+    },
+    "generic": {
+      "name": "Champion Équilibré",
+      "description": "Pas de spécialisation de type",
+      "essenceRequirement": "Aucune condition spéciale"
+    }
+  }
+}
+
