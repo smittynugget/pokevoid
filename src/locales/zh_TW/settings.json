@@ -108,5 +108,6 @@
   "items": "道具",
   "reroll": "重抽",
   "shop": "商店",
-  "checkTeam": "查看隊伍"
+  "checkTeam": "查看隊伍",
+  "showItemTextBg": "顯示獎勵稀有度背景"
 }

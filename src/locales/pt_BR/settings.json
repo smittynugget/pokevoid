@@ -108,5 +108,6 @@
   "shop": "Loja",
   "checkTeam": "Checar Time",
   "disableMoveUpgrades": "Desativar melhorias de golpes",
-  "disableCutscenes": "Desativar cutscenes"
+  "disableCutscenes": "Desativar cutscenes",
+  "showItemTextBg": "Mostrar Fundo de Raridade da Recompensa"
 }

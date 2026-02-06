@@ -1,29 +1,29 @@
 import BattleScene from "../battle-scene";
 import {
-  getPlayerShopModifierTypeOptionsForWave,
-  ModifierTypeOption,
-  TmModifierType,
-  AddPokemonModifierType,
-  PermaModifierType,
-  AnyTmModifierType, AnyAbilityModifierType, AnyPassiveAbilityModifierType, PermaPartyAbilityModifierType,
-  MoveUpgradeModifierType,
-  PokemonAltBuildModifierType,
-  TypeSwitcherModifierType,
-  AbilitySwitcherModifierType,
-  RandomStatSwitcherModifierType,
-  EvolutionItemModifierType,
-  FormChangeItemModifierType,
-  PokemonNatureChangeModifierType,
-  StatSacrificeModifierType,
-  MoveSacrificeModifierType,
-  PokemonBaseStatBoosterModifierType,
-  PlayerPokemonBaseStatBoosterModifierType,
-  ChampionPokemonStatBoosterModifierType,
-  TypeSacrificeModifierType,
-  AbilitySacrificeModifierType,
-  PassiveAbilitySacrificeModifierType,
-  FusePokemonModifierType,
-  ModifierType
+    getPlayerShopModifierTypeOptionsForWave,
+    ModifierTypeOption,
+    TmModifierType,
+    AddPokemonModifierType,
+    PermaModifierType,
+    AnyTmModifierType, AnyAbilityModifierType, AnyPassiveAbilityModifierType, PermaPartyAbilityModifierType,
+    MoveUpgradeModifierType,
+    PokemonAltBuildModifierType,
+    TypeSwitcherModifierType,
+    AbilitySwitcherModifierType,
+    RandomStatSwitcherModifierType,
+    EvolutionItemModifierType,
+    FormChangeItemModifierType,
+    PokemonNatureChangeModifierType,
+    StatSacrificeModifierType,
+    MoveSacrificeModifierType,
+    PokemonBaseStatBoosterModifierType,
+    PlayerPokemonBaseStatBoosterModifierType,
+    ChampionPokemonStatBoosterModifierType,
+    TypeSacrificeModifierType,
+    AbilitySacrificeModifierType,
+    PassiveAbilitySacrificeModifierType,
+    FusePokemonModifierType,
+    ModifierType
 } from "../modifier/modifier-type";
 import { getPokeballAtlasKey, PokeballType } from "../data/pokeball";
 import { addTextObject, getTextStyleOptions, getModifierTierTextTint, getTextColor, TextStyle, addBBCodeTextObject, getBBCodeFrag } from "./text";
@@ -323,7 +323,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     this.permaRerollButtonContainer.setPositionRelative(this.rerollButtonContainer, 70, 0);
 
-    if (typeof args[3] === "object" && args[3] !== null && "rerollCost" in args[3] && "permaRerollCost" in args[3]) {
+    if (typeof args[3] === 'object' && args[3] !== null && 'rerollCost' in args[3] && 'permaRerollCost' in args[3]) {
       this.rerollCost = args[3].rerollCost;
       this.permaRerollCost = args[3].permaRerollCost;
     } else {
@@ -387,6 +387,18 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     this.scene.showShopOverlay(750 * this.scene.gameSpeed);
     this.scene.updateBiomeWaveText();
     this.scene.updateMoneyText();
+
+    const shopOverlayRef = (this.scene as any).shopOverlay;
+    if (shopOverlayRef) {
+      const moneyText = (this.scene as any).moneyText;
+      if (moneyText) {
+        this.scene.fieldUI.moveAbove(moneyText, shopOverlayRef);
+      }
+      const biomeWaveText = (this.scene as any).biomeWaveText;
+      if (biomeWaveText) {
+        this.scene.fieldUI.moveAbove(biomeWaveText, shopOverlayRef);
+      }
+    }
 
     if (!this.patternCreated) {
       this.patternOverlay = this.scene.add.container(0, 0);
@@ -503,67 +515,67 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     if (this.moveUpgradeDetailsActive) {
       switch (button) {
-      case Button.LEFT:
-        if (this.moveUpgradePreviewTier > this.moveUpgradeCurrentTier) {
-          this.moveUpgradePreviewTier--;
-          this.showMoveUpgradeTierPreviewTooltip();
+        case Button.LEFT:
+          if (this.moveUpgradePreviewTier > this.moveUpgradeCurrentTier) {
+            this.moveUpgradePreviewTier--;
+            this.showMoveUpgradeTierPreviewTooltip();
+            ui.playSelect();
+          }
+          return true;
+        case Button.RIGHT:
+          if (this.moveUpgradePreviewTier < this.moveUpgradePreviewMaxTier) {
+            this.moveUpgradePreviewTier++;
+            this.showMoveUpgradeTierPreviewTooltip();
+            ui.playSelect();
+          }
+          return true;
+        case Button.CANCEL:
+        case Button.STATS:
+          this.exitMoveUpgradeDetailsMode();
           ui.playSelect();
-        }
-        return true;
-      case Button.RIGHT:
-        if (this.moveUpgradePreviewTier < this.moveUpgradePreviewMaxTier) {
-          this.moveUpgradePreviewTier++;
-          this.showMoveUpgradeTierPreviewTooltip();
-          ui.playSelect();
-        }
-        return true;
-      case Button.CANCEL:
-      case Button.STATS:
-        this.exitMoveUpgradeDetailsMode();
-        ui.playSelect();
-        return true;
-      default:
-        return true;
+          return true;
+        default:
+          return true;
       }
     }
 
     if (this.partyDetailsActive) {
       switch (button) {
-      case Button.UP:
-        if (this.partyDetailsIndex > 0) {
-          this.partyDetailsIndex--;
-          this.updatePartyDetails();
-          ui.playSelect();
-        }
-        return true;
-      case Button.DOWN:
-        if (this.partyDetailsIndex < this.partyDetailsParty.length - 1) {
-          this.partyDetailsIndex++;
-          this.updatePartyDetails();
-          ui.playSelect();
-        }
-        return true;
-      case Button.LEFT:
-        if (this.partyDetailsContext?.kind === "FUSION") {
-          if (this.shiftFusionPartner(-1)) {
+        case Button.UP:
+          if (this.partyDetailsIndex > 0) {
+            this.partyDetailsIndex--;
+            this.updatePartyDetails();
             ui.playSelect();
           }
-        }
-        return true;
-      case Button.RIGHT:
-        if (this.partyDetailsContext?.kind === "FUSION") {
-          if (this.shiftFusionPartner(1)) {
+          return true;
+        case Button.DOWN:
+          if (this.partyDetailsIndex < this.partyDetailsParty.length - 1) {
+            this.partyDetailsIndex++;
+            this.updatePartyDetails();
             ui.playSelect();
           }
-        }
-        return true;
-      case Button.CANCEL:
-      case Button.STATS:
-        this.exitPartyDetailsMode();
-        ui.playSelect();
-        return true;
-      default:
-        return true;
+          return true;
+        case Button.LEFT:
+          if (this.partyDetailsContext?.kind === "FUSION") {
+            if (this.shiftFusionPartner(-1)) {
+              ui.playSelect();
+            }
+          }
+          return true;
+        case Button.RIGHT:
+          if (this.partyDetailsContext?.kind === "FUSION") {
+            if (this.shiftFusionPartner(1)) {
+              ui.playSelect();
+            }
+          }
+          return true;
+        case Button.CANCEL:
+        case Button.STATS:
+          this.exitPartyDetailsMode();
+          ui.playSelect();
+          return true;
+        default:
+          return true;
       }
     }
 
@@ -606,6 +618,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const option = this.getCurrentSelectedOption();
       const type = option?.modifierTypeOption?.type;
       if (type && !(type instanceof MoveUpgradeModifierType)) {
+        const sessionsWon = ((this.scene as BattleScene).gameData?.gameStats?.sessionsWon || 0);
+        const tooltipLocked = !Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && sessionsWon <= 0;
+        if (tooltipLocked) {
+          return false;
+        }
         if (this.scene.modifierTooltipsEnabled) {
           if (this.upgradeTooltipContainer) {
             this.setModifierTooltipsEnabled(false);
@@ -638,42 +655,42 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
     } else {
       switch (button) {
-      case Button.UP:
-        if (this.rowCursor === 0 && this.lockRarityButtonContainer.visible && this.cursor === (this.getRowItems(0) - 1)) {
-          success = this.setCursor(0);
-        } else if (this.rowCursor < this.shopOptionsRows.length + 1) {
-          success = this.setRowCursor(this.rowCursor + 1);
-        }
-        break;
-      case Button.DOWN:
-        if (this.rowCursor) {
-          success = this.setRowCursor(this.rowCursor - 1);
-        } else if (this.lockRarityButtonContainer.visible && this.cursor === 0) {
-          success = this.setCursor(this.getRowItems(0) - 1);
-        }
-        break;
-      case Button.LEFT:
-        if (!this.rowCursor) {
-          if (this.cursor > 0) {
+        case Button.UP:
+          if (this.rowCursor === 0 && this.lockRarityButtonContainer.visible && this.cursor === (this.getRowItems(0) - 1)) {
+            success = this.setCursor(0);
+          } else if (this.rowCursor < this.shopOptionsRows.length + 1) {
+            success = this.setRowCursor(this.rowCursor + 1);
+          }
+          break;
+        case Button.DOWN:
+          if (this.rowCursor) {
+            success = this.setRowCursor(this.rowCursor - 1);
+          } else if (this.lockRarityButtonContainer.visible && this.cursor === 0) {
+            success = this.setCursor(this.getRowItems(0) - 1);
+          }
+          break;
+        case Button.LEFT:
+          if (!this.rowCursor) {
+            if (this.cursor > 0) {
+              success = this.setCursor(this.cursor - 1);
+            }
+          } else if (this.cursor) {
             success = this.setCursor(this.cursor - 1);
+          } else if (this.rowCursor === 1 && this.rerollButtonContainer.visible) {
+            success = this.setRowCursor(0);
           }
-        } else if (this.cursor) {
-          success = this.setCursor(this.cursor - 1);
-        } else if (this.rowCursor === 1 && this.rerollButtonContainer.visible) {
-          success = this.setRowCursor(0);
-        }
-        break;
-      case Button.RIGHT:
-        if (!this.rowCursor) {
-          if (this.cursor < this.getRowItems(this.rowCursor) - 1) {
+          break;
+        case Button.RIGHT:
+          if (!this.rowCursor) {
+            if (this.cursor < this.getRowItems(this.rowCursor) - 1) {
+              success = this.setCursor(this.cursor + 1);
+            }
+          } else if (this.cursor < this.getRowItems(this.rowCursor) - 1) {
             success = this.setCursor(this.cursor + 1);
+          } else if (this.rowCursor === 1 && this.transferButtonContainer.visible) {
+            success = this.setRowCursor(0);
           }
-        } else if (this.cursor < this.getRowItems(this.rowCursor) - 1) {
-          success = this.setCursor(this.cursor + 1);
-        } else if (this.rowCursor === 1 && this.transferButtonContainer.visible) {
-          success = this.setRowCursor(0);
-        }
-        break;
+          break;
       }
     }
 
@@ -779,7 +796,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
       const isMoveUpgrade = type instanceof MoveUpgradeModifierType;
       const canShowCustomTooltip = this.shouldRenderCustomTooltip(type);
-      const showHint = !this.scene.modifierTooltipsEnabled && !isMoveUpgrade;
+      const sessionsWon = ((this.scene as BattleScene).gameData?.gameStats?.sessionsWon || 0);
+      const tooltipLocked = !Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && sessionsWon <= 0;
+      const showHint = !this.scene.modifierTooltipsEnabled && !isMoveUpgrade && !tooltipLocked;
       this.updateShowDetailsHint(option, showHint);
 
       if (this.rowCursor === 1) {
@@ -789,9 +808,12 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           this.lastChipFocusedOption.setFocusLabelChip(null);
           this.lastChipFocusedOption = null;
         }
-        option.setFocusLabelChip(null);
+        const showChip = this.scene.showItemTextBg && !showHint;
+        const showDetailsBg = this.scene.showItemTextBg && showHint;
+        option.setFocusLabelChip(showChip ? colors : null);
+        this.lastChipFocusedOption = showChip ? option : null;
         this.redrawShowDetailsHintBg(null);
-        if (this.focusLabelDetailsBg) {
+        if (this.focusLabelDetailsBg && showDetailsBg) {
           this.focusLabelDetailsBg.clear();
           const sX = option.scaleX || 1;
           const sY = option.scaleY || 1;
@@ -816,6 +838,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           this.focusLabelDetailsBg.fillRoundedRect(r.x, r.y, r.width, r.height, 6);
           this.focusLabelDetailsBg.strokeRoundedRect(r.x, r.y, r.width, r.height, 6);
           this.modifierContainer.bringToTop(this.focusLabelDetailsBg);
+        }
+        if (!showDetailsBg && this.focusLabelDetailsBg) {
+          this.focusLabelDetailsBg.clear();
         }
         this.modifierContainer.bringToTop(option);
         this.modifierContainer.bringToTop(this.cursorObj);
@@ -845,7 +870,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         const isXM = type instanceof AnyTmModifierType;
         const body = this.generateTmXmTooltipBody(type.moveId, isXM);
         this.showModifierTooltip(title, subtitle, body, rarity);
-      } else if (type instanceof AnyAbilityModifierType || type instanceof AnyPassiveAbilityModifierType || type instanceof PermaPartyAbilityModifierType) {
+      }
+      else if(type instanceof AnyAbilityModifierType || type instanceof AnyPassiveAbilityModifierType || type instanceof PermaPartyAbilityModifierType) {
         this.moveInfoOverlay.show(type.ability.description);
         const rarity = this.getModifierRarity(type);
         const abilityName = allAbilities[type.ability.id]?.name || Abilities[type.ability.id];
@@ -854,10 +880,12 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         const subtitle = this.getRarityText(rarity);
         const body = this.generateAbilityItemTooltipBody(type.ability.id, isPassive);
         this.showModifierTooltip(title, subtitle, body, rarity);
-      } else if (type instanceof MoveUpgradeModifierType) {
+      }
+      else if(type instanceof MoveUpgradeModifierType) {
         this.moveInfoOverlay.show(type.getDescription(this.scene));
         this.showUpgradeTooltip(type);
-      } else if (type instanceof AddPokemonModifierType) {
+      }
+      else if (type instanceof AddPokemonModifierType) {
         const pokemon = type.getPokemon() as PlayerPokemon;
         const rarity = this.getModifierRarity(type);
         const lvLabel = i18next.t("saveSlotSelectUiHandler:lv");
@@ -865,13 +893,15 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         const subtitle = this.getRarityText(rarity);
         const body = this.generateAddPokemonTooltipBody(pokemon);
         this.showModifierTooltip(title, subtitle, body, rarity);
-      } else if (type instanceof AbilitySwitcherModifierType) {
+      }
+      else if (type instanceof AbilitySwitcherModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
         const body = this.generateAbilitySwitcherTooltipBody();
         this.showModifierTooltip(title, subtitle, body, rarity);
-      } else if (type instanceof RandomStatSwitcherModifierType) {
+      }
+      else if (type instanceof RandomStatSwitcherModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
@@ -908,25 +938,29 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           return `[color=#ffcc00]${pokemon.name}[/color]: [color=${c1}]${stat1Name} ${v1}[/color] <-> [color=${c2}]${stat2Name} ${v2}[/color]`;
         });
         this.showPartyDetailsTooltip(title, subtitle, rarity, headerLines, partyLines, party, { kind: "STAT_SWITCHER", stat1, stat2 });
-      } else if (type instanceof TypeSwitcherModifierType) {
+      }
+      else if (type instanceof TypeSwitcherModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
         const body = this.generateTypeSwitcherTooltipBody(type.newPrimaryType, type.newSecondaryType);
         this.showModifierTooltip(title, subtitle, body, rarity);
-      } else if (type instanceof EvolutionItemModifierType) {
+      }
+      else if (type instanceof EvolutionItemModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
         const body = this.generateEvolutionItemTooltipBody(type);
         this.showModifierTooltip(title, subtitle, body, rarity);
-      } else if (type instanceof FormChangeItemModifierType) {
+      }
+      else if (type instanceof FormChangeItemModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
         const body = this.generateFormChangeTooltipBody(type);
         this.showModifierTooltip(title, subtitle, body, rarity);
-      } else if (type instanceof PokemonNatureChangeModifierType) {
+      }
+      else if (type instanceof PokemonNatureChangeModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
@@ -960,7 +994,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           return `[color=#ffcc00]${pokemon.name}[/color]: [color=#78c850]${incName}: ${incValue}[/color] | [color=#e13d3d]${decName}: ${decValue}[/color]`;
         });
         this.showPartyDetailsTooltip(title, subtitle, rarity, headerLines, partyLines, party, { kind: "MINT", targetNature: type.nature });
-      } else if (type instanceof ChampionPokemonStatBoosterModifierType) {
+      }
+      else if (type instanceof ChampionPokemonStatBoosterModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
@@ -995,7 +1030,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         });
 
         this.showPartyDetailsTooltip(title, subtitle, rarity, headerLines, partyLines, party, { kind: "BASE_STAT_BOOST", stat: stats[0] ?? Stat.HP, multiplier: 1 + boostPercent });
-      } else if (type instanceof PokemonBaseStatBoosterModifierType || type instanceof PlayerPokemonBaseStatBoosterModifierType) {
+      }
+      else if (type instanceof PokemonBaseStatBoosterModifierType || type instanceof PlayerPokemonBaseStatBoosterModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
@@ -1021,7 +1057,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         } else {
           this.showModifierTooltip(title, subtitle, descText, rarity);
         }
-      } else if (type?.localeKey === "modifierType:ModifierType.SOUL_DEW") {
+      }
+      else if (type?.localeKey === "modifierType:ModifierType.SOUL_DEW") {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
@@ -1053,7 +1090,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           return `[color=#ffcc00]${pokemon.name}[/color]: [color=#78c850]${incName}: ${incPre} -> ${incPost}[/color] | [color=#e13d3d]${decName}: ${decPre} -> ${decPost}[/color]`;
         });
         this.showPartyDetailsTooltip(title, subtitle, rarity, headerLines, partyLines, party, { kind: "SOUL_DEW" });
-      } else if (type instanceof StatSacrificeModifierType) {
+      }
+      else if (type instanceof StatSacrificeModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
@@ -1079,7 +1117,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           return `[color=#ffcc00]${pokemon.name}[/color]: [color=#ffffff]${statName}:[/color] [color=#e13d3d]${pre}[/color] -> [color=#78c850]${post}[/color] (${essenceDisplay})`;
         });
         this.showPartyDetailsTooltip(title, subtitle, rarity, headerLines, partyLines, party, { kind: "STAT_SACRIFICE", stat });
-      } else if (type instanceof MoveSacrificeModifierType) {
+      }
+      else if (type instanceof MoveSacrificeModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
@@ -1100,25 +1139,29 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           return `[color=#ffcc00]${pokemon.name}[/color] (${essenceDisplay})`;
         });
         this.showPartyDetailsTooltip(title, subtitle, rarity, headerLines, partyLines, party, { kind: "MOVE_SACRIFICE" });
-      } else if (type instanceof TypeSacrificeModifierType) {
+      }
+      else if (type instanceof TypeSacrificeModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
-        const body = this.generateSacrificeTooltipBody("Type");
+        const body = this.generateSacrificeTooltipBody('Type');
         this.showModifierTooltip(title, subtitle, body, rarity);
-      } else if (type instanceof AbilitySacrificeModifierType) {
+      }
+      else if (type instanceof AbilitySacrificeModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
-        const body = this.generateSacrificeTooltipBody("Ability");
+        const body = this.generateSacrificeTooltipBody('Ability');
         this.showModifierTooltip(title, subtitle, body, rarity);
-      } else if (type instanceof PassiveAbilitySacrificeModifierType) {
+      }
+      else if (type instanceof PassiveAbilitySacrificeModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
-        const body = this.generateSacrificeTooltipBody("Passive");
+        const body = this.generateSacrificeTooltipBody('Passive');
         this.showModifierTooltip(title, subtitle, body, rarity);
-      } else if (type instanceof FusePokemonModifierType) {
+      }
+      else if (type instanceof FusePokemonModifierType) {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
@@ -1208,6 +1251,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   }
 
   private shouldRenderCustomTooltip(type: any): boolean {
+    if (type instanceof MoveUpgradeModifierType) {
+      return true;
+    }
     const sessionsWon = ((this.scene as BattleScene).gameData?.gameStats?.sessionsWon || 0);
     if (!Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && sessionsWon <= 0) {
       return false;
@@ -1323,6 +1369,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const option = this.getCurrentSelectedOption();
       const type = option?.modifierTypeOption?.type;
       if (!type) {
+        return;
+      }
+      const sessionsWon = ((this.scene as BattleScene).gameData?.gameStats?.sessionsWon || 0);
+      const tooltipLocked = !Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && sessionsWon <= 0;
+      if (tooltipLocked) {
         return;
       }
       if (!this.scene.modifierTooltipsEnabled) {
@@ -1534,7 +1585,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       return;
     }
     const headerLines = this.partyDetailsHeaderLines;
-    const marker = "[color=#ffffff]>[/color] ";
+    const marker = `[color=#ffffff]>[/color] `;
     const lines: string[] = [...headerLines];
     const maxIndex = Math.max(0, this.partyDetailsPartyLines.length - 1);
     if (this.partyDetailsIndex > maxIndex) {
@@ -1548,7 +1599,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         lines.push(`  ${line}`);
       }
     }
-    this.upgradeTooltipBody.setText(lines.join("\n"));
+    this.upgradeTooltipBody.setText(lines.join('\n'));
     this.applyBbCodeWordWrap(this.upgradeTooltipBody, this.TOOLTIP_WIDTH, 6);
   }
 
@@ -1849,12 +1900,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const afterLabel = i18next.t("modifierSelectUiHandler:after", { defaultValue: "After" });
     const statOrder = [Stat.HP, Stat.ATK, Stat.DEF, Stat.SPATK, Stat.SPDEF, Stat.SPD];
     const getColor = (stat: Stat): string => {
-      if (stat === firstPick) {
-        return "#00bfff";
-      }
-      if (stat === secondPick) {
-        return "#ffd700";
-      }
+      if (stat === firstPick) return "#00bfff";
+      if (stat === secondPick) return "#ffd700";
       return "#e8e8a8";
     };
     const beforeParts = statOrder.map(stat => {
@@ -1891,7 +1938,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const partnerMoves = partner.getMoveset().filter(m => m).map(m => m!.getName());
     const allMoveNames = Array.from(new Set([...baseMoves, ...partnerMoves]));
     lines.push(getBBCodeFrag(`${movesLabel} ${allMoveNames.join(", ")}`, TextStyle.WINDOW, uiTheme));
-    lines.push("[size=2] [/size]");
+    lines.push(`[size=2] [/size]`);
 
     const statsLabel = i18next.t("skillTree:descriptions.altBuildStats", { defaultValue: "Stats:" });
     lines.push(getBBCodeFrag(`${statsLabel}`, TextStyle.WINDOW, uiTheme));
@@ -1926,7 +1973,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     lines.push(pick2Line);
     lines.push(this.buildFusionBeforeAfterStatsBody(beforeStats, afterStats, fusionResult.pick1.stat, fusionResult.pick2.stat));
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private buildBeforeAfterStatsBody(beforeStats: Record<Stat, number>, afterStats: Record<Stat, number>): string {
@@ -2054,7 +2101,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     if (!moves.length) {
       return `[color=#888888]${noneLabel}[/color]`;
     }
-    return `${movesetLabel}:\n${moves.map(m => `  ${m}`).join("\n")}`;
+    return `${movesetLabel}:\n${moves.map(m => `  ${m}`).join('\n')}`;
   }
 
   private updatePartyDetailsTooltip(): void {
@@ -2252,25 +2299,25 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
   protected getRowItems(rowCursor: integer): integer {
     switch (rowCursor) {
-    case 0:
-      return this.getButtonLayout().length;
-    case 1:
-      return this.options.length;
-    default:
-      if (this.shopOptionsRows.length === 0) {
-        return 0;
-      }
-      const index = this.shopOptionsRows.length - (rowCursor - 1);
+      case 0:
+        return this.getButtonLayout().length;
+      case 1:
+        return this.options.length;
+      default:
+        if (this.shopOptionsRows.length === 0) {
+          return 0;
+        }
+        const index = this.shopOptionsRows.length - (rowCursor - 1);
 
-      if (index < 0 || index >= this.shopOptionsRows.length) {
-        return 0;
-      }
+        if (index < 0 || index >= this.shopOptionsRows.length) {
+          return 0;
+        }
 
-      return this.shopOptionsRows[index].length;
+        return this.shopOptionsRows[index].length;
     }
   }
 
-  setRerollCost(rerollCost: integer): void {
+   setRerollCost(rerollCost: integer): void {
     this.rerollCost = rerollCost;
   }
 
@@ -2330,9 +2377,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     }
 
     const comparisonText = this.generateComparisonText(modifierType);
-    if (!comparisonText) {
-      return;
-    }
+    if (!comparisonText) return;
 
     const tempModifier = modifierType.newModifier() as MoveUpgradeModifier;
     const category = tempModifier.upgradeCategory;
@@ -2549,42 +2594,42 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   private getMoveUpgradePathStep(category: UpgradeCategory, tier: number): any | null {
     const index = tier - 1;
     switch (category) {
-    case UpgradeCategory.POWER:
-      return MoveUpgrade.POWER_PATH[index] || null;
-    case UpgradeCategory.ACCURACY:
-      return MoveUpgrade.ACCURACY_PATH[index] || null;
-    case UpgradeCategory.HIT_HEAL:
-      return MoveUpgrade.HIT_HEAL_PATH[index] || null;
-    case UpgradeCategory.EFFECT_CHANCE:
-      return MoveUpgrade.EFFECT_CHANCE_PATH[index] || null;
-    case UpgradeCategory.CRIT:
-      return MoveUpgrade.CRIT_PATH[index] || null;
-    case UpgradeCategory.RECOIL_ADD:
-      return MoveUpgrade.RECOIL_ADD_PATH[index] || null;
-    case UpgradeCategory.RECOIL_DECREASE:
-      return MoveUpgrade.RECOIL_DECREASE_PATH[index] || null;
-    case UpgradeCategory.SACRIFICIAL:
-      return MoveUpgrade.SACRIFICIAL_PATH[index] || null;
-    case UpgradeCategory.CHARGE_MOVE:
-      return MoveUpgrade.CHARGE_MOVE_PATH[index] || null;
-    case UpgradeCategory.MULTI_HIT:
-      return MoveUpgrade.MULTI_HIT_PATH[index] || null;
-    case UpgradeCategory.POSITIVE_PRIORITY:
-      return MoveUpgrade.POSITIVE_PRIORITY_PATH[index] || null;
-    case UpgradeCategory.NEGATIVE_PRIORITY:
-      return MoveUpgrade.NEGATIVE_PRIORITY_PATH[index] || null;
-    case UpgradeCategory.ITEM_INTERACTION:
-      return MoveUpgrade.ITEM_INTERACTION_PATH[index] || null;
-    case UpgradeCategory.STATUS_IMPROVE:
-      return MoveUpgrade.STATUS_IMPROVE_PATH[index] || null;
-    case UpgradeCategory.STATUS_DUAL:
-      return MoveUpgrade.STATUS_DUAL_PATH[index] || null;
-    case UpgradeCategory.STAT_BOOST_SELF:
-      return MoveUpgrade.STAT_BOOST_SELF_PATH[index] || null;
-    case UpgradeCategory.STAT_LOWER_TARGET:
-      return MoveUpgrade.STAT_LOWER_TARGET_PATH[index] || null;
-    default:
-      return null;
+      case UpgradeCategory.POWER:
+        return MoveUpgrade.POWER_PATH[index] || null;
+      case UpgradeCategory.ACCURACY:
+        return MoveUpgrade.ACCURACY_PATH[index] || null;
+      case UpgradeCategory.HIT_HEAL:
+        return MoveUpgrade.HIT_HEAL_PATH[index] || null;
+      case UpgradeCategory.EFFECT_CHANCE:
+        return MoveUpgrade.EFFECT_CHANCE_PATH[index] || null;
+      case UpgradeCategory.CRIT:
+        return MoveUpgrade.CRIT_PATH[index] || null;
+      case UpgradeCategory.RECOIL_ADD:
+        return MoveUpgrade.RECOIL_ADD_PATH[index] || null;
+      case UpgradeCategory.RECOIL_DECREASE:
+        return MoveUpgrade.RECOIL_DECREASE_PATH[index] || null;
+      case UpgradeCategory.SACRIFICIAL:
+        return MoveUpgrade.SACRIFICIAL_PATH[index] || null;
+      case UpgradeCategory.CHARGE_MOVE:
+        return MoveUpgrade.CHARGE_MOVE_PATH[index] || null;
+      case UpgradeCategory.MULTI_HIT:
+        return MoveUpgrade.MULTI_HIT_PATH[index] || null;
+      case UpgradeCategory.POSITIVE_PRIORITY:
+        return MoveUpgrade.POSITIVE_PRIORITY_PATH[index] || null;
+      case UpgradeCategory.NEGATIVE_PRIORITY:
+        return MoveUpgrade.NEGATIVE_PRIORITY_PATH[index] || null;
+      case UpgradeCategory.ITEM_INTERACTION:
+        return MoveUpgrade.ITEM_INTERACTION_PATH[index] || null;
+      case UpgradeCategory.STATUS_IMPROVE:
+        return MoveUpgrade.STATUS_IMPROVE_PATH[index] || null;
+      case UpgradeCategory.STATUS_DUAL:
+        return MoveUpgrade.STATUS_DUAL_PATH[index] || null;
+      case UpgradeCategory.STAT_BOOST_SELF:
+        return MoveUpgrade.STAT_BOOST_SELF_PATH[index] || null;
+      case UpgradeCategory.STAT_LOWER_TARGET:
+        return MoveUpgrade.STAT_LOWER_TARGET_PATH[index] || null;
+      default:
+        return null;
     }
   }
 
@@ -2634,228 +2679,228 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     let flagsToAdd: number = 0;
 
     switch (category) {
-    case UpgradeCategory.POWER: {
-      const chanceToSet = step.setExistingChanceTo || null;
-      const cappedPBoost = MoveUpgrade.capPowerBoost(baseMovePower, step.pBoost);
-      const effectiveAccCost = baseMoveAccuracy === -1 ? 0 : step.accCost;
-      powerBoost = cappedPBoost;
-      accuracyBoost = -effectiveAccCost;
-      chanceChange = chanceToSet;
-      break;
-    }
-    case UpgradeCategory.ACCURACY: {
-      const accDelta = step.accBoost === 101 ? (101 - baseMoveAccuracy) : step.accBoost;
-      powerBoost = -step.pCost;
-      accuracyBoost = accDelta;
-      break;
-    }
-    case UpgradeCategory.HIT_HEAL: {
-      let powerDelta = 0;
-      if (step.pSetToRatio !== undefined) {
-        powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+      case UpgradeCategory.POWER: {
+        const chanceToSet = step.setExistingChanceTo || null;
+        const cappedPBoost = MoveUpgrade.capPowerBoost(baseMovePower, step.pBoost);
+        const effectiveAccCost = baseMoveAccuracy === -1 ? 0 : step.accCost;
+        powerBoost = cappedPBoost;
+        accuracyBoost = -effectiveAccCost;
+        chanceChange = chanceToSet;
+        break;
       }
-      powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-      powerBoost = powerDelta;
-      attrs = [new HitHealAttr(step.ratio)];
-      break;
-    }
-    case UpgradeCategory.EFFECT_CHANCE: {
-      let powerDelta = 0;
-      if (step.pSetToRatio !== undefined) {
-        powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+      case UpgradeCategory.ACCURACY: {
+        const accDelta = step.accBoost === 101 ? (101 - baseMoveAccuracy) : step.accBoost;
+        powerBoost = -step.pCost;
+        accuracyBoost = accDelta;
+        break;
       }
-      powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-      powerBoost = powerDelta;
-      chanceChange = step.chance || null;
-      attrs = [...(template.additionalAttrs || [])];
-      break;
-    }
-    case UpgradeCategory.CRIT: {
-      let powerDelta = 0;
-      if (step.pSetToRatio !== undefined) {
-        powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+      case UpgradeCategory.HIT_HEAL: {
+        let powerDelta = 0;
+        if (step.pSetToRatio !== undefined) {
+          powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+        }
+        powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
+        powerBoost = powerDelta;
+        attrs = [new HitHealAttr(step.ratio)];
+        break;
       }
-      powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-      const rawAccCost = step.accCost || 0;
-      const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
-      powerBoost = powerDelta;
-      accuracyBoost = accDelta;
-      attrs = [step.critOnly ? new CritOnlyAttr() : new HighCritAttr()];
-      break;
-    }
-    case UpgradeCategory.RECOIL_ADD: {
-      const cappedPBoost = MoveUpgrade.capPowerBoost(baseMovePower, step.pBoost);
-      const rawAccCost = step.accCost || 0;
-      const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
-      powerBoost = cappedPBoost;
-      accuracyBoost = accDelta;
-      attrs = [new RecoilAttr(false, step.ratio)];
-      break;
-    }
-    case UpgradeCategory.RECOIL_DECREASE: {
-      const rawAccCost = step.accCost || 0;
-      const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
-      powerBoost = -step.pCost;
-      accuracyBoost = accDelta;
-      attrs = [new RecoilAttr(false, step.ratio)];
-      break;
-    }
-    case UpgradeCategory.SACRIFICIAL: {
-      const rawAccCost = step.accCost || 0;
-      const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
-      powerBoost = step.pSet - baseMovePower;
-      accuracyBoost = accDelta;
-      if (step.attrId === "Half") {
-        attrs = [new HalfSacrificialAttr()];
-      } else if (step.attrId === "Full") {
-        attrs = [new SacrificialAttr()];
-      } else if (step.attrId === "FullOnHit") {
-        attrs = [new SacrificialAttrOnHit()];
+      case UpgradeCategory.EFFECT_CHANCE: {
+        let powerDelta = 0;
+        if (step.pSetToRatio !== undefined) {
+          powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+        }
+        powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
+        powerBoost = powerDelta;
+        chanceChange = step.chance || null;
+        attrs = [...(template.additionalAttrs || [])];
+        break;
       }
-      break;
-    }
-    case UpgradeCategory.CHARGE_MOVE: {
-      const chargeAnim = isPhysicalMove ? ChargeAnim.SKULL_BASH_CHARGING : ChargeAnim.SOLAR_BEAM_CHARGING;
-      const chargeTextKey = isPhysicalMove ? "moveUpgrade:moveTriggers:loweredItsHead" : "moveUpgrade:moveTriggers:tookInSunlight";
-      const chargeText = i18next.t(chargeTextKey, { pokemonName: "{USER}" });
-      attrs = [new ChargeAttr(chargeAnim, chargeText, null, !!step.addBoost)];
-      if (step.addBoost) {
-        attrs.push(new StatChangeAttr(BattleStat.DEF, 1, true));
+      case UpgradeCategory.CRIT: {
+        let powerDelta = 0;
+        if (step.pSetToRatio !== undefined) {
+          powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+        }
+        powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
+        const rawAccCost = step.accCost || 0;
+        const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
+        powerBoost = powerDelta;
+        accuracyBoost = accDelta;
+        attrs = [step.critOnly ? new CritOnlyAttr() : new HighCritAttr()];
+        break;
       }
-      const rawAccCost = step.accCost || 0;
-      const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
-      powerBoost = step.addBoost ? -10 : step.pBoost;
-      accuracyBoost = accDelta;
-      break;
-    }
-    case UpgradeCategory.MULTI_HIT: {
-      const rawAccCost = step.accCost || 0;
-      const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
-      powerBoost = -baseMovePower + step.pSet;
-      accuracyBoost = accDelta;
-      chanceChange = step.chance || null;
-      if (step.typeId === "2") {
-        attrs = [new MultiHitAttr(MultiHitType._2)];
-      } else if (step.typeId === "2-5") {
-        attrs = [new MultiHitAttr(MultiHitType._2_TO_5)];
-      } else if (step.typeId === "3") {
-        attrs = [new MultiHitAttr(MultiHitType._3)];
-      } else if (step.typeId === "4-8") {
-        attrs = [new MultiHitAttr(MultiHitType._4_TO_8)];
+      case UpgradeCategory.RECOIL_ADD: {
+        const cappedPBoost = MoveUpgrade.capPowerBoost(baseMovePower, step.pBoost);
+        const rawAccCost = step.accCost || 0;
+        const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
+        powerBoost = cappedPBoost;
+        accuracyBoost = accDelta;
+        attrs = [new RecoilAttr(false, step.ratio)];
+        break;
       }
-      flagsToAdd = 0;
-      break;
-    }
-    case UpgradeCategory.POSITIVE_PRIORITY: {
-      const priorityDelta = step.prio - baseMove.priority;
-      let powerDelta = 0;
-      if (step.pSetToRatio !== undefined) {
-        powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+      case UpgradeCategory.RECOIL_DECREASE: {
+        const rawAccCost = step.accCost || 0;
+        const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
+        powerBoost = -step.pCost;
+        accuracyBoost = accDelta;
+        attrs = [new RecoilAttr(false, step.ratio)];
+        break;
       }
-      powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-      powerBoost = powerDelta;
-      attrs = [new ConditionalPriorityAttr(priorityDelta)];
-      break;
-    }
-    case UpgradeCategory.NEGATIVE_PRIORITY: {
-      const priorityDelta = step.prio - baseMove.priority;
-      const rawAccCost = step.accCost || 0;
-      const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
-      const cappedPBoost = MoveUpgrade.capPowerBoost(baseMovePower, step.pBoost);
-      powerBoost = cappedPBoost;
-      accuracyBoost = accDelta;
-      attrs = [new ConditionalPriorityAttr(priorityDelta)];
-      break;
-    }
-    case UpgradeCategory.ITEM_INTERACTION: {
-      let powerDelta = step.pBoost || 0;
-      if (step.pCost !== undefined) {
-        powerDelta -= step.pCost;
+      case UpgradeCategory.SACRIFICIAL: {
+        const rawAccCost = step.accCost || 0;
+        const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
+        powerBoost = step.pSet - baseMovePower;
+        accuracyBoost = accDelta;
+        if (step.attrId === "Half") {
+          attrs = [new HalfSacrificialAttr()];
+        } else if (step.attrId === "Full") {
+          attrs = [new SacrificialAttr()];
+        } else if (step.attrId === "FullOnHit") {
+          attrs = [new SacrificialAttrOnHit()];
+        }
+        break;
       }
-      if (step.pSetToRatio !== undefined) {
-        powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+      case UpgradeCategory.CHARGE_MOVE: {
+        const chargeAnim = isPhysicalMove ? ChargeAnim.SKULL_BASH_CHARGING : ChargeAnim.SOLAR_BEAM_CHARGING;
+        const chargeTextKey = isPhysicalMove ? "moveUpgrade:moveTriggers:loweredItsHead" : "moveUpgrade:moveTriggers:tookInSunlight";
+        const chargeText = i18next.t(chargeTextKey, { pokemonName: "{USER}" });
+        attrs = [new ChargeAttr(chargeAnim, chargeText, null, !!step.addBoost)];
+        if (step.addBoost) {
+          attrs.push(new StatChangeAttr(BattleStat.DEF, 1, true));
+        }
+        const rawAccCost = step.accCost || 0;
+        const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
+        powerBoost = step.addBoost ? -10 : step.pBoost;
+        accuracyBoost = accDelta;
+        break;
       }
-      powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-      powerBoost = powerDelta;
-      if (step.type === "remove") {
-        attrs = [new RemoveHeldItemAttr(false)];
-      } else if (step.type === "steal") {
-        attrs = [new StealHeldItemChanceAttr((step.chance || 0) / 100)];
+      case UpgradeCategory.MULTI_HIT: {
+        const rawAccCost = step.accCost || 0;
+        const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
+        powerBoost = -baseMovePower + step.pSet;
+        accuracyBoost = accDelta;
+        chanceChange = step.chance || null;
+        if (step.typeId === "2") {
+          attrs = [new MultiHitAttr(MultiHitType._2)];
+        } else if (step.typeId === "2-5") {
+          attrs = [new MultiHitAttr(MultiHitType._2_TO_5)];
+        } else if (step.typeId === "3") {
+          attrs = [new MultiHitAttr(MultiHitType._3)];
+        } else if (step.typeId === "4-8") {
+          attrs = [new MultiHitAttr(MultiHitType._4_TO_8)];
+        }
+        flagsToAdd = 0;
+        break;
       }
-      break;
-    }
-    case UpgradeCategory.STATUS_IMPROVE: {
-      let powerDelta = 0;
-      if (step.pSetToRatio !== undefined) {
-        powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+      case UpgradeCategory.POSITIVE_PRIORITY: {
+        const priorityDelta = step.prio - baseMove.priority;
+        let powerDelta = 0;
+        if (step.pSetToRatio !== undefined) {
+          powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+        }
+        powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
+        powerBoost = powerDelta;
+        attrs = [new ConditionalPriorityAttr(priorityDelta)];
+        break;
       }
-      powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-      const rawAccCost = step.accCost || 0;
-      const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
-      const currentChance = baseMove.chance || 0;
-      const addChanceValue = step.addChance || 0;
-      const nextChance = currentChance >= 50 ? currentChance : Math.min(50, currentChance + addChanceValue);
-      powerBoost = powerDelta;
-      accuracyBoost = accDelta;
-      chanceChange = nextChance;
-      break;
-    }
-    case UpgradeCategory.STATUS_DUAL: {
-      let powerDelta = 0;
-      if (step.pSetToRatio !== undefined) {
-        powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+      case UpgradeCategory.NEGATIVE_PRIORITY: {
+        const priorityDelta = step.prio - baseMove.priority;
+        const rawAccCost = step.accCost || 0;
+        const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
+        const cappedPBoost = MoveUpgrade.capPowerBoost(baseMovePower, step.pBoost);
+        powerBoost = cappedPBoost;
+        accuracyBoost = accDelta;
+        attrs = [new ConditionalPriorityAttr(priorityDelta)];
+        break;
       }
-      powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-      const rawAccCost = step.accCost || 0;
-      const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
-      const currentChance = baseMove.chance || 0;
-      const statusChance = step.chance || currentChance;
-      powerBoost = powerDelta;
-      accuracyBoost = accDelta;
-      chanceChange = statusChance;
-      attrs = [...(template.additionalAttrs || [])];
-      break;
-    }
-    case UpgradeCategory.STAT_BOOST_SELF: {
-      let powerDelta = 0;
-      if (step.pSetToRatio !== undefined) {
-        powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+      case UpgradeCategory.ITEM_INTERACTION: {
+        let powerDelta = step.pBoost || 0;
+        if (step.pCost !== undefined) {
+          powerDelta -= step.pCost;
+        }
+        if (step.pSetToRatio !== undefined) {
+          powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+        }
+        powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
+        powerBoost = powerDelta;
+        if (step.type === "remove") {
+          attrs = [new RemoveHeldItemAttr(false)];
+        } else if (step.type === "steal") {
+          attrs = [new StealHeldItemChanceAttr((step.chance || 0) / 100)];
+        }
+        break;
       }
-      powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-      const chance = isStatusMove ? 100 : step.chance;
-      const templateStat = (template.additionalAttrs || []).find(a => a instanceof StatChangeAttr) as StatChangeAttr | undefined;
-      const templateStats = templateStat ? (Array.isArray(templateStat.stats) ? templateStat.stats : [templateStat.stats]) : [];
-      attrs = [];
-      if (templateStats.length > 0) {
-        attrs.push(new StatChangeAttr(templateStats, step.level, true));
+      case UpgradeCategory.STATUS_IMPROVE: {
+        let powerDelta = 0;
+        if (step.pSetToRatio !== undefined) {
+          powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+        }
+        powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
+        const rawAccCost = step.accCost || 0;
+        const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
+        const currentChance = baseMove.chance || 0;
+        const addChanceValue = step.addChance || 0;
+        const nextChance = currentChance >= 50 ? currentChance : Math.min(50, currentChance + addChanceValue);
+        powerBoost = powerDelta;
+        accuracyBoost = accDelta;
+        chanceChange = nextChance;
+        break;
       }
-      if (step.recoilCost !== undefined) {
-        attrs.push(new RecoilAttr(false, step.recoilCost));
+      case UpgradeCategory.STATUS_DUAL: {
+        let powerDelta = 0;
+        if (step.pSetToRatio !== undefined) {
+          powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+        }
+        powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
+        const rawAccCost = step.accCost || 0;
+        const accDelta = baseMoveAccuracy === -1 ? 0 : -rawAccCost;
+        const currentChance = baseMove.chance || 0;
+        const statusChance = step.chance || currentChance;
+        powerBoost = powerDelta;
+        accuracyBoost = accDelta;
+        chanceChange = statusChance;
+        attrs = [...(template.additionalAttrs || [])];
+        break;
       }
-      powerBoost = powerDelta;
-      chanceChange = chance;
-      break;
-    }
-    case UpgradeCategory.STAT_LOWER_TARGET: {
-      let powerDelta = 0;
-      if (step.pSetToRatio !== undefined) {
-        powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+      case UpgradeCategory.STAT_BOOST_SELF: {
+        let powerDelta = 0;
+        if (step.pSetToRatio !== undefined) {
+          powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+        }
+        powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
+        const chance = isStatusMove ? 100 : step.chance;
+        const templateStat = (template.additionalAttrs || []).find(a => a instanceof StatChangeAttr) as StatChangeAttr | undefined;
+        const templateStats = templateStat ? (Array.isArray(templateStat.stats) ? templateStat.stats : [templateStat.stats]) : [];
+        attrs = [];
+        if (templateStats.length > 0) {
+          attrs.push(new StatChangeAttr(templateStats, step.level, true));
+        }
+        if (step.recoilCost !== undefined) {
+          attrs.push(new RecoilAttr(false, step.recoilCost));
+        }
+        powerBoost = powerDelta;
+        chanceChange = chance;
+        break;
       }
-      powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
-      const templateStat = (template.additionalAttrs || []).find(a => a instanceof StatChangeAttr) as StatChangeAttr | undefined;
-      const templateStats = templateStat ? (Array.isArray(templateStat.stats) ? templateStat.stats : [templateStat.stats]) : [];
-      attrs = [];
-      if (templateStats.length > 0) {
-        attrs.push(new StatChangeAttr(templateStats, -step.level, false));
+      case UpgradeCategory.STAT_LOWER_TARGET: {
+        let powerDelta = 0;
+        if (step.pSetToRatio !== undefined) {
+          powerDelta += Math.round(baseMovePower * step.pSetToRatio) - baseMovePower;
+        }
+        powerDelta = MoveUpgrade.capPowerBoost(baseMovePower, powerDelta);
+        const templateStat = (template.additionalAttrs || []).find(a => a instanceof StatChangeAttr) as StatChangeAttr | undefined;
+        const templateStats = templateStat ? (Array.isArray(templateStat.stats) ? templateStat.stats : [templateStat.stats]) : [];
+        attrs = [];
+        if (templateStats.length > 0) {
+          attrs.push(new StatChangeAttr(templateStats, -step.level, false));
+        }
+        powerBoost = powerDelta;
+        chanceChange = step.chance || null;
+        break;
       }
-      powerBoost = powerDelta;
-      chanceChange = step.chance || null;
-      break;
-    }
-    default: {
-      attrs = [...(template.additionalAttrs || [])];
-      break;
-    }
+      default: {
+        attrs = [...(template.additionalAttrs || [])];
+        break;
+      }
     }
 
     return new MoveUpgradeModifierType(
@@ -2932,10 +2977,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       if (categoryUpgrade) {
         displayTier = categoryUpgrade.upgradeTier;
       }
-      displayCategory = i18next.t("moveUpgradeAttrs:extraEffectUpgrade");
-      shouldShowEX = true;
+        displayCategory = i18next.t("moveUpgradeAttrs:extraEffectUpgrade");
+        shouldShowEX = true;
     } else {
-      displayCategory = `${displayCategory} ${i18next.t("moveUpgradeAttrs:path")}`;
+      displayCategory = `${displayCategory} ${i18next.t(`moveUpgradeAttrs:path`)}`;
       const hasNonCategoryUpgrade = activeUpgrades.some(upgrade => !upgrade.upgradeCategory);
       if (hasNonCategoryUpgrade) {
         shouldShowEX = true;
@@ -2953,7 +2998,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     }
 
     this.multiHitWarning = false;
-    const isMultiHit = currentMove.attrs.some(attr => attr instanceof MultiHitAttr || attr.constructor.name.includes("MultiHit"));
+    const isMultiHit = currentMove.attrs.some(attr => attr instanceof MultiHitAttr || attr.constructor.name.includes('MultiHit'));
     if (isMultiHit) {
       const warningText = i18next.t("moveUpgradeAttrs:multiHitWarning");
       this.multiHitWarning = true;
@@ -2968,20 +3013,20 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       comparisonLines.push(getBBCodeFrag(warningText, TextStyle.SUMMARY_GRAY, uiTheme));
     }
 
-    comparisonLines.push("");
+    comparisonLines.push('');
 
     comparisonLines.push(...this.compareBasicStats(currentMove, upgradedMove));
 
     this.secondaryEffectNote = false;
     if (currentMove.chance > 0 || upgradedMove.chance > 0) {
-      comparisonLines.push("");
+      comparisonLines.push('');
       this.secondaryEffectNote = true;
       const chanceNoteText = i18next.t("moveUpgradeAttrs:secondaryEffectNote");
       comparisonLines.push(getBBCodeFrag(chanceNoteText, TextStyle.SUMMARY_GRAY, uiTheme));
     }
 
     this.lineCount = comparisonLines.length;
-    const result = comparisonLines.join("\n");
+    const result = comparisonLines.join('\n');
 
     return result;
   }
@@ -3155,9 +3200,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const upgradedHitHealAttr = upgradedMove.getAttrs(HitHealAttr)[0] as HitHealAttr | undefined;
 
     const currentHeal = currentHealAttr ? Math.round(currentHealAttr.healRatio * 100) :
-      currentHitHealAttr ? Math.round(currentHitHealAttr.healRatio * 100) : 0;
+                       currentHitHealAttr ? Math.round(currentHitHealAttr.healRatio * 100) : 0;
     const upgradedHeal = upgradedHealAttr ? Math.round(upgradedHealAttr.healRatio * 100) :
-      upgradedHitHealAttr ? Math.round(upgradedHitHealAttr.healRatio * 100) : 0;
+                        upgradedHitHealAttr ? Math.round(upgradedHitHealAttr.healRatio * 100) : 0;
 
     if (currentHeal !== upgradedHeal && upgradedHeal > 0) {
       const healLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:healAmount"), TextStyle.SUMMARY_GOLD, uiTheme);
@@ -3179,15 +3224,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const uiTheme = this.scene.uiTheme;
 
     const getSacrificeType = (move: Move): string => {
-      if (move.hasAttr(SacrificialAttr)) {
-        return i18next.t("moveUpgradeAttrs:sacrificialFull");
-      }
-      if (move.hasAttr(HalfSacrificialAttr)) {
-        return i18next.t("moveUpgradeAttrs:sacrificialHalf");
-      }
-      if (move.hasAttr(SacrificialAttrOnHit)) {
-        return i18next.t("moveUpgradeAttrs:sacrificialOnHit");
-      }
+      if (move.hasAttr(SacrificialAttr)) return i18next.t("moveUpgradeAttrs:sacrificialFull");
+      if (move.hasAttr(HalfSacrificialAttr)) return i18next.t("moveUpgradeAttrs:sacrificialHalf");
+      if (move.hasAttr(SacrificialAttrOnHit)) return i18next.t("moveUpgradeAttrs:sacrificialOnHit");
       return "";
     };
 
@@ -3223,11 +3262,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     const getMultiHitDescription = (multiHitType: MultiHitType): string => {
       switch (multiHitType) {
-      case MultiHitType._2: return "2";
-      case MultiHitType._3: return "3";
-      case MultiHitType._2_TO_5: return "2-5";
-      case MultiHitType._4_TO_8: return "4-8";
-      default: return "1";
+        case MultiHitType._2: return "2";
+        case MultiHitType._3: return "3";
+        case MultiHitType._2_TO_5: return "2-5";
+        case MultiHitType._4_TO_8: return "4-8";
+        default: return "1";
       }
     };
 
@@ -3264,22 +3303,14 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const upgradedCritOnly = upgradedMove.hasAttr(CritOnlyAttr);
 
     const getCurrentCritRate = (): string => {
-      if (currentCritOnly) {
-        return "100%";
-      }
-      if (currentHighCritAttr) {
-        return "10%";
-      }
+      if (currentCritOnly) return "100%";
+      if (currentHighCritAttr) return "10%";
       return "";
     };
 
     const getUpgradedCritRate = (): string => {
-      if (upgradedCritOnly) {
-        return "100%";
-      }
-      if (upgradedHighCritAttr) {
-        return "10%";
-      }
+      if (upgradedCritOnly) return "100%";
+      if (upgradedHighCritAttr) return "10%";
       return "";
     };
 
@@ -3320,16 +3351,12 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const upgradedHasStatBoost = upgradedChargeAttr && upgradedMove.getAttrs(StatChangeAttr).some((attr: StatChangeAttr) => attr.selfTarget);
 
     const getCurrentChargeText = (): string => {
-      if (!hasCurrentCharge) {
-        return "";
-      }
+      if (!hasCurrentCharge) return "";
       return i18next.t("moveUpgradeAttrs:chargeTurn");
     };
 
     const getUpgradedChargeText = (): string => {
-      if (!hasUpgradedCharge) {
-        return "";
-      }
+      if (!hasUpgradedCharge) return "";
       return i18next.t("moveUpgradeAttrs:chargeTurn");
     };
 
@@ -3362,9 +3389,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     const getStatusEffectDescription = (move: Move): string => {
       const statusAttrs = move.getAttrs(StatusEffectAttr);
-      if (statusAttrs.length === 0) {
-        return "";
-      }
+      if (statusAttrs.length === 0) return "";
 
       const statusNames: string[] = [];
 
@@ -3415,12 +3440,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const upgradedSelfBoostAttrs = upgradedMove.getAttrs(StatChangeAttr).filter((attr: StatChangeAttr) => attr.selfTarget && attr.levels > 0);
 
     const getSelfBoostText = (attrs: StatChangeAttr[]): string => {
-      if (attrs.length === 0) {
-        return "";
-      }
+      if (attrs.length === 0) return "";
       const boostTexts = attrs.map(attr => {
         const statNames = attr.stats.map(stat => getBattleStatName(stat)).join("/");
-        return `${statNames} ${attr.levels > 0 ? "+" : ""}${attr.levels}`;
+        return `${statNames} ${attr.levels > 0 ? '+' : ''}${attr.levels}`;
       });
       return boostTexts.join(", ");
     };
@@ -3456,9 +3479,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const upgradedFoeDebuffAttrs = upgradedMove.getAttrs(StatChangeAttr).filter((attr: StatChangeAttr) => !attr.selfTarget && attr.levels < 0);
 
     const getFoeDebuffText = (attrs: StatChangeAttr[]): string => {
-      if (attrs.length === 0) {
-        return "";
-      }
+      if (attrs.length === 0) return "";
       const debuffTexts = attrs.map(attr => {
         const statNames = attr.stats.map(stat => getBattleStatName(stat)).join("/");
         return `${statNames} ${attr.levels}`;
@@ -3499,22 +3520,14 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const upgradedSteal = upgradedMove.getAttrs(StealHeldItemChanceAttr)[0] as StealHeldItemChanceAttr | undefined;
 
     const getCurrentDesc = (): string => {
-      if (currentSteal) {
-        return `${Math.round(currentSteal.chance * 100)}%`;
-      }
-      if (currentRemove) {
-        return i18next.t("moveUpgradeAttrs:removeFoeItem");
-      }
+      if (currentSteal) return `${Math.round(currentSteal.chance * 100)}%`;
+      if (currentRemove) return i18next.t("moveUpgradeAttrs:removeFoeItem");
       return "";
     };
 
     const getUpgradedDesc = (): string => {
-      if (upgradedSteal) {
-        return `${Math.round(upgradedSteal.chance * 100)}%`;
-      }
-      if (upgradedRemove) {
-        return i18next.t("moveUpgradeAttrs:removeFoeItem");
-      }
+      if (upgradedSteal) return `${Math.round(upgradedSteal.chance * 100)}%`;
+      if (upgradedRemove) return i18next.t("moveUpgradeAttrs:removeFoeItem");
       return "";
     };
 
@@ -3523,7 +3536,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     if (currentDesc !== upgradedDesc && upgradedDesc) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelEffect"), TextStyle.SUMMARY_GOLD, uiTheme);
-      const value = getBBCodeFrag(upgradedDesc.includes("%") ? `${i18next.t("moveUpgradeAttrs:stealFoeItem")} (${upgradedDesc})` : upgradedDesc, TextStyle.SUMMARY_GREEN, uiTheme);
+      const value = getBBCodeFrag(upgradedDesc.includes('%') ? `${i18next.t("moveUpgradeAttrs:stealFoeItem")} (${upgradedDesc})` : upgradedDesc, TextStyle.SUMMARY_GREEN, uiTheme);
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
@@ -3597,22 +3610,14 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const upgradedClear = upgradedMove.hasAttr(ClearWeatherAttr);
 
     const getCurrentWeather = (): string => {
-      if (currentClear) {
-        return i18next.t("moveUpgradeAttrs:clearWeather");
-      }
-      if (currentWeatherAttr) {
-        return this.getWeatherName(currentWeatherAttr.weatherType);
-      }
+      if (currentClear) return i18next.t("moveUpgradeAttrs:clearWeather");
+      if (currentWeatherAttr) return this.getWeatherName(currentWeatherAttr.weatherType);
       return "";
     };
 
     const getUpgradedWeather = (): string => {
-      if (upgradedClear) {
-        return i18next.t("moveUpgradeAttrs:clearWeather");
-      }
-      if (upgradedWeatherAttr) {
-        return this.getWeatherName(upgradedWeatherAttr.weatherType);
-      }
+      if (upgradedClear) return i18next.t("moveUpgradeAttrs:clearWeather");
+      if (upgradedWeatherAttr) return this.getWeatherName(upgradedWeatherAttr.weatherType);
       return "";
     };
 
@@ -3640,22 +3645,14 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const upgradedClear = upgradedMove.hasAttr(ClearTerrainAttr);
 
     const getCurrentTerrain = (): string => {
-      if (currentClear) {
-        return i18next.t("moveUpgradeAttrs:clearTerrain");
-      }
-      if (currentTerrainAttr) {
-        return this.getTerrainName(currentTerrainAttr.terrainType);
-      }
+      if (currentClear) return i18next.t("moveUpgradeAttrs:clearTerrain");
+      if (currentTerrainAttr) return this.getTerrainName(currentTerrainAttr.terrainType);
       return "";
     };
 
     const getUpgradedTerrain = (): string => {
-      if (upgradedClear) {
-        return i18next.t("moveUpgradeAttrs:clearTerrain");
-      }
-      if (upgradedTerrainAttr) {
-        return this.getTerrainName(upgradedTerrainAttr.terrainType);
-      }
+      if (upgradedClear) return i18next.t("moveUpgradeAttrs:clearTerrain");
+      if (upgradedTerrainAttr) return this.getTerrainName(upgradedTerrainAttr.terrainType);
       return "";
     };
 
@@ -3749,23 +3746,15 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     const getCurrentHeal = (): string => {
       const attrs = currentMove.getAttrs(AddBattlerTagAttr);
-      if (attrs.some((a: any) => a.tagType === BattlerTagType.AQUA_RING)) {
-        return i18next.t("moveUpgradeAttrs:aquaRing");
-      }
-      if (attrs.some((a: any) => a.tagType === BattlerTagType.INGRAIN)) {
-        return i18next.t("moveUpgradeAttrs:ingrain");
-      }
+      if (attrs.some((a: any) => a.tagType === BattlerTagType.AQUA_RING)) return i18next.t("moveUpgradeAttrs:aquaRing");
+      if (attrs.some((a: any) => a.tagType === BattlerTagType.INGRAIN)) return i18next.t("moveUpgradeAttrs:ingrain");
       return "";
     };
 
     const getUpgradedHeal = (): string => {
       const attrs = upgradedMove.getAttrs(AddBattlerTagAttr);
-      if (attrs.some((a: any) => a.tagType === BattlerTagType.AQUA_RING)) {
-        return i18next.t("moveUpgradeAttrs:aquaRing");
-      }
-      if (attrs.some((a: any) => a.tagType === BattlerTagType.INGRAIN)) {
-        return i18next.t("moveUpgradeAttrs:ingrain");
-      }
+      if (attrs.some((a: any) => a.tagType === BattlerTagType.AQUA_RING)) return i18next.t("moveUpgradeAttrs:aquaRing");
+      if (attrs.some((a: any) => a.tagType === BattlerTagType.INGRAIN)) return i18next.t("moveUpgradeAttrs:ingrain");
       return "";
     };
 
@@ -3890,30 +3879,18 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const uiTheme = this.scene.uiTheme;
 
     const getCurrentFixedDamage = (): string => {
-      if (currentMove.hasAttr(LevelDamageAttr)) {
-        return i18next.t("moveUpgradeAttrs:levelDamage");
-      }
-      if (currentMove.hasAttr(TargetHalfHpDamageAttr)) {
-        return i18next.t("moveUpgradeAttrs:halfTargetHp");
-      }
+      if (currentMove.hasAttr(LevelDamageAttr)) return i18next.t("moveUpgradeAttrs:levelDamage");
+      if (currentMove.hasAttr(TargetHalfHpDamageAttr)) return i18next.t("moveUpgradeAttrs:halfTargetHp");
       const fixedAttr = currentMove.getAttrs(FixedDamageAttr)[0] as FixedDamageAttr | undefined;
-      if (fixedAttr) {
-        return `${fixedAttr.damage}`;
-      }
+      if (fixedAttr) return `${fixedAttr.damage}`;
       return "";
     };
 
     const getUpgradedFixedDamage = (): string => {
-      if (upgradedMove.hasAttr(LevelDamageAttr)) {
-        return i18next.t("moveUpgradeAttrs:levelDamage");
-      }
-      if (upgradedMove.hasAttr(TargetHalfHpDamageAttr)) {
-        return i18next.t("moveUpgradeAttrs:halfTargetHp");
-      }
+      if (upgradedMove.hasAttr(LevelDamageAttr)) return i18next.t("moveUpgradeAttrs:levelDamage");
+      if (upgradedMove.hasAttr(TargetHalfHpDamageAttr)) return i18next.t("moveUpgradeAttrs:halfTargetHp");
       const fixedAttr = upgradedMove.getAttrs(FixedDamageAttr)[0] as FixedDamageAttr | undefined;
-      if (fixedAttr) {
-        return `${fixedAttr.damage}`;
-      }
+      if (fixedAttr) return `${fixedAttr.damage}`;
       return "";
     };
 
@@ -3992,9 +3969,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   }
 
   private wrapTextToWidth(text: string, maxWidth: number): string[] {
-    const words = text.split(" ");
+    const words = text.split(' ');
     const lines: string[] = [];
-    let currentLine = "";
+    let currentLine = '';
 
     const avgCharWidth = 6;
     const maxCharsPerLine = Math.floor(maxWidth / avgCharWidth);
@@ -4088,21 +4065,21 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
   private mapModifierTierToRarity(tier: ModifierTier | null): SkillTreeRarity {
     switch (tier) {
-    case ModifierTier.MEH:
-    case ModifierTier.COMMON:
-      return SkillTreeRarity.COMMON;
-    case ModifierTier.GREAT:
-      return SkillTreeRarity.GREAT;
-    case ModifierTier.ULTRA:
-      return SkillTreeRarity.ULTRA;
-    case ModifierTier.ROGUE:
-      return SkillTreeRarity.ROGUE;
-    case ModifierTier.MASTER:
-      return SkillTreeRarity.MASTER;
-    case ModifierTier.LUXURY:
-      return SkillTreeRarity.LEGENDARY;
-    default:
-      return SkillTreeRarity.COMMON;
+      case ModifierTier.MEH:
+      case ModifierTier.COMMON:
+        return SkillTreeRarity.COMMON;
+      case ModifierTier.GREAT:
+        return SkillTreeRarity.GREAT;
+      case ModifierTier.ULTRA:
+        return SkillTreeRarity.ULTRA;
+      case ModifierTier.ROGUE:
+        return SkillTreeRarity.ROGUE;
+      case ModifierTier.MASTER:
+        return SkillTreeRarity.MASTER;
+      case ModifierTier.LUXURY:
+        return SkillTreeRarity.LEGENDARY;
+      default:
+        return SkillTreeRarity.COMMON;
     }
   }
 
@@ -4139,15 +4116,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       ? pokemon.fusionSpecies!.forms[pokemon.fusionFormIndex] || pokemon.fusionSpecies
       : pokemon.species.forms[pokemon.formIndex] || pokemon.species;
 
-    if ((currentForm as any).ability1) {
-      abilities.push((currentForm as any).ability1);
-    }
-    if ((currentForm as any).ability2) {
-      abilities.push((currentForm as any).ability2);
-    }
-    if ((currentForm as any).abilityHidden) {
-      abilities.push((currentForm as any).abilityHidden);
-    }
+    if ((currentForm as any).ability1) abilities.push((currentForm as any).ability1);
+    if ((currentForm as any).ability2) abilities.push((currentForm as any).ability2);
+    if ((currentForm as any).abilityHidden) abilities.push((currentForm as any).abilityHidden);
 
     const activeIndex = pokemon.isFusion() ? pokemon.fusionAbilityIndex : pokemon.abilityIndex;
     return { abilities, activeIndex };
@@ -4262,7 +4233,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     party: PlayerPokemon[],
     context: { kind: "STAT_SWITCHER"; stat1: Stat; stat2: Stat } | { kind: "MINT"; targetNature: Nature } | { kind: "STAT_SACRIFICE"; stat: Stat } | { kind: "MOVE_SACRIFICE" } | { kind: "FUSION" } | { kind: "BASE_STAT_BOOST"; stat: Stat; multiplier: number } | { kind: "SOUL_DEW" }
   ): void {
-    const bodyText = [...headerLines, ...partyLines.map(l => `  ${l}`)].join("\n");
+    const bodyText = [...headerLines, ...partyLines.map(l => `  ${l}`)].join('\n');
     this.showModifierTooltip(titleText, subtitleText, bodyText, rarity, true);
     this.partyDetailsActive = false;
     this.partyDetailsIndex = 0;
@@ -4309,7 +4280,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const movesLabel = i18next.t("pokemonInfoContainer:moveset", { defaultValue: "Moves" });
     const moves = pokemon.getMoveset().filter(m => m).map(m => m!.getName()).join(", ");
     lines.push(getBBCodeFrag(`${movesLabel}: ${moves}`, TextStyle.WINDOW, uiTheme));
-    lines.push("[size=2] [/size]");
+    lines.push(`[size=2] [/size]`);
 
     const nature = pokemon.getNature();
     const baseStats = pokemon.getSpeciesForm().baseStats;
@@ -4318,12 +4289,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const mult = getNatureStatMultiplier(nature, stat);
       const statName = getStatName(stat, true);
       const value = baseStats[stat];
-      if (mult > 1) {
-        return `[color=#78c850]${statName}: ${value}[/color]`;
-      }
-      if (mult < 1) {
-        return `[color=#f08030]${statName}: ${value}[/color]`;
-      }
+      if (mult > 1) return `[color=#78c850]${statName}: ${value}[/color]`;
+      if (mult < 1) return `[color=#f08030]${statName}: ${value}[/color]`;
       return `[color=#e8e8a8]${statName}: ${value}[/color]`;
     };
     const topStats = [Stat.HP, Stat.ATK, Stat.DEF].map(formatStat).join(" | ");
@@ -4335,7 +4302,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     lines.push(getBBCodeFrag(`${statsLabel} `, TextStyle.WINDOW, uiTheme) + `${topStats}`);
     lines.push(`${bottomStats} | ${totalLabel}: ${total}`);
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private generateTmXmTooltipBody(moveId: Moves, isXM: boolean = false): string {
@@ -4347,7 +4314,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       lines.push(moveDetails);
     }
 
-    lines.push("");
+    lines.push('');
     const partyLabel = i18next.t("pokemonInfoContainer:party", { defaultValue: "Party" });
     lines.push(getBBCodeFrag(`${partyLabel}:`, TextStyle.SUMMARY_GOLD, uiTheme));
 
@@ -4368,7 +4335,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       lines.push(`  [color=#ffcc00]${pokemon.name}[/color]: ${status}`);
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private generateAbilityItemTooltipBody(ability: Abilities, isPassive: boolean): string {
@@ -4376,12 +4343,12 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const lines: string[] = [];
 
     const abilityData = allAbilities[ability];
-    const desc = abilityData?.description || "";
+    const desc = abilityData?.description || '';
     if (desc) {
       lines.push(getBBCodeFrag(desc, TextStyle.WINDOW, uiTheme));
     }
 
-    lines.push("");
+    lines.push('');
     const partyLabel = i18next.t("pokemonInfoContainer:party", { defaultValue: "Party" });
     lines.push(getBBCodeFrag(`${partyLabel}:`, TextStyle.SUMMARY_GOLD, uiTheme));
 
@@ -4401,7 +4368,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private generateAbilitySwitcherTooltipBody(): string {
@@ -4411,7 +4378,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const descText = i18next.t("modifierType:ModifierType.AbilitySwitcherModifierType.description", { defaultValue: "Cycles through available abilities" });
     lines.push(getBBCodeFrag(descText, TextStyle.WINDOW, uiTheme));
 
-    lines.push("");
+    lines.push('');
     const partyLabel = i18next.t("pokemonInfoContainer:party", { defaultValue: "Party" });
     lines.push(getBBCodeFrag(`${partyLabel}:`, TextStyle.SUMMARY_GOLD, uiTheme));
 
@@ -4431,7 +4398,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       lines.push(line);
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private generateStatSwitcherTooltipBody(stat1: Stat, stat2: Stat): string {
@@ -4447,7 +4414,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     });
     lines.push(getBBCodeFrag(descText, TextStyle.WINDOW, uiTheme));
 
-    lines.push("");
+    lines.push('');
     const partyLabel = i18next.t("pokemonInfoContainer:party", { defaultValue: "Party" });
     lines.push(getBBCodeFrag(`${partyLabel}:`, TextStyle.SUMMARY_GOLD, uiTheme));
 
@@ -4474,39 +4441,39 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       lines.push(`  [color=#ffcc00]${pokemon.name}[/color]: ${statValues}`);
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private getSacrificePayload(pokemon: PlayerPokemon, sacrificeType: string): string {
     const noneLabel = i18next.t("modifierSelectUiHandler:none", { defaultValue: "None" });
     switch (sacrificeType) {
-    case "Move":
-      const moves = pokemon.getMoveset().filter(m => m).map(m => m!.getName()).join(", ");
-      const movesetLabel = i18next.t("pokemonInfoContainer:moveset", { defaultValue: "Moveset" });
-      return `${movesetLabel}: ${moves}`;
-    case "Ability":
-      const abilityLabel = i18next.t("pokemonInfoContainer:ability", { defaultValue: "Ability:" });
-      return `${abilityLabel} [color=#78c850]${pokemon.getAbility()?.name || noneLabel}[/color]`;
-    case "Passive":
-      const activeAbilityForPassive = pokemon.getAbility()?.name || noneLabel;
-      const passiveAbility = pokemon.passive ? (allAbilities[(pokemon as any).altPassiveForRun || pokemon.getPassiveAbility()?.id]?.name || noneLabel) : noneLabel;
-      const abilityLabelPassive = i18next.t("pokemonInfoContainer:ability", { defaultValue: "Ability:" });
-      const activeColor = activeAbilityForPassive === noneLabel ? "#888888" : "#78c850";
-      const passiveColor = passiveAbility === noneLabel ? "#888888" : "#78c850";
-      return `${abilityLabelPassive} [color=${activeColor}]${activeAbilityForPassive}[/color] | [color=${passiveColor}]${passiveAbility}[/color]`;
-    case "Type":
-      const pokemonTypes = pokemon.getTypes();
-      const types = pokemonTypes.filter(t => t !== Type.UNKNOWN).map(t => `[color=#00bfff]${this.getLocalizedTypeName(t)}[/color]`).join("/");
-      const typesLabel = i18next.t("skillTree:descriptions.altBuildTypes", { defaultValue: "Types:" });
-      return `${typesLabel} ${types}`;
-    case "Stat":
-      const baseStats = pokemon.getSpeciesForm().baseStats;
-      const statOrder = [Stat.HP, Stat.ATK, Stat.DEF, Stat.SPATK, Stat.SPDEF, Stat.SPD];
-      const statValues = statOrder.map(stat => `${getStatName(stat, true)}: ${baseStats[stat]}`).join(" | ");
-      const statsLabel = i18next.t("skillTree:descriptions.altBuildStats", { defaultValue: "Stats:" });
-      return `${statsLabel} ${statValues}`;
-    default:
-      return "";
+      case 'Move':
+        const moves = pokemon.getMoveset().filter(m => m).map(m => m!.getName()).join(", ");
+        const movesetLabel = i18next.t("pokemonInfoContainer:moveset", { defaultValue: "Moveset" });
+        return `${movesetLabel}: ${moves}`;
+      case 'Ability':
+        const abilityLabel = i18next.t("pokemonInfoContainer:ability", { defaultValue: "Ability:" });
+        return `${abilityLabel} [color=#78c850]${pokemon.getAbility()?.name || noneLabel}[/color]`;
+      case 'Passive':
+        const activeAbilityForPassive = pokemon.getAbility()?.name || noneLabel;
+        const passiveAbility = pokemon.passive ? (allAbilities[(pokemon as any).altPassiveForRun || pokemon.getPassiveAbility()?.id]?.name || noneLabel) : noneLabel;
+        const abilityLabelPassive = i18next.t("pokemonInfoContainer:ability", { defaultValue: "Ability:" });
+        const activeColor = activeAbilityForPassive === noneLabel ? '#888888' : '#78c850';
+        const passiveColor = passiveAbility === noneLabel ? '#888888' : '#78c850';
+        return `${abilityLabelPassive} [color=${activeColor}]${activeAbilityForPassive}[/color] | [color=${passiveColor}]${passiveAbility}[/color]`;
+      case 'Type':
+        const pokemonTypes = pokemon.getTypes();
+        const types = pokemonTypes.filter(t => t !== Type.UNKNOWN).map(t => `[color=#00bfff]${this.getLocalizedTypeName(t)}[/color]`).join("/");
+        const typesLabel = i18next.t("skillTree:descriptions.altBuildTypes", { defaultValue: "Types:" });
+        return `${typesLabel} ${types}`;
+      case 'Stat':
+        const baseStats = pokemon.getSpeciesForm().baseStats;
+        const statOrder = [Stat.HP, Stat.ATK, Stat.DEF, Stat.SPATK, Stat.SPDEF, Stat.SPD];
+        const statValues = statOrder.map(stat => `${getStatName(stat, true)}: ${baseStats[stat]}`).join(" | ");
+        const statsLabel = i18next.t("skillTree:descriptions.altBuildStats", { defaultValue: "Stats:" });
+        return `${statsLabel} ${statValues}`;
+      default:
+        return '';
     }
   }
 
@@ -4533,7 +4500,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     lines.push(getBBCodeFrag(descText, TextStyle.WINDOW, uiTheme));
     lines.push(getBBCodeFrag(i18next.t("modifierType:common.essenceAlternativeCost"), TextStyle.WINDOW, uiTheme));
 
-    lines.push("");
+    lines.push('');
     const candidatesLabel = i18next.t("modifierSelectUiHandler:sacrificeCandidates", { defaultValue: "Candidates" });
     lines.push(getBBCodeFrag(`${candidatesLabel}:`, TextStyle.SUMMARY_GOLD, uiTheme));
 
@@ -4573,7 +4540,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private generateEssenceTooltipBody(): string {
@@ -4585,7 +4552,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     });
     lines.push(getBBCodeFrag(descText, TextStyle.WINDOW, uiTheme));
 
-    lines.push("");
+    lines.push('');
     const partyLabel = i18next.t("pokemonInfoContainer:party", { defaultValue: "Party" });
     lines.push(getBBCodeFrag(`${partyLabel}:`, TextStyle.SUMMARY_GOLD, uiTheme));
 
@@ -4593,7 +4560,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     for (const pokemon of party) {
       const essenceData = this.getEssenceDataForPokemon(pokemon);
 
-      const essenceStr = `[color=#ffcc00]${pokemon.name}[/color]: ${essenceData.total} total`;
+      let essenceStr = `[color=#ffcc00]${pokemon.name}[/color]: ${essenceData.total} total`;
 
       if (essenceData.byType.size > 0) {
         const breakdown = Array.from(essenceData.byType.entries())
@@ -4611,7 +4578,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private generateEvolutionItemTooltipBody(type: EvolutionItemModifierType): string {
@@ -4621,7 +4588,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const descText = type.getDescription(this.scene);
     lines.push(getBBCodeFrag(descText, TextStyle.WINDOW, uiTheme));
 
-    lines.push("");
+    lines.push('');
     const partyLabel = i18next.t("pokemonInfoContainer:party", { defaultValue: "Party" });
     lines.push(getBBCodeFrag(`${partyLabel}:`, TextStyle.SUMMARY_GOLD, uiTheme));
 
@@ -4672,7 +4639,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private generateFormChangeTooltipBody(type: FormChangeItemModifierType): string {
@@ -4682,7 +4649,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const descText = type.getDescription(this.scene);
     lines.push(getBBCodeFrag(descText, TextStyle.WINDOW, uiTheme));
 
-    lines.push("");
+    lines.push('');
     const partyLabel = i18next.t("pokemonInfoContainer:party", { defaultValue: "Party" });
     lines.push(getBBCodeFrag(`${partyLabel}:`, TextStyle.SUMMARY_GOLD, uiTheme));
 
@@ -4703,21 +4670,21 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           fc.trigger instanceof SpeciesFormChangeItemTrigger &&
           (fc.trigger as SpeciesFormChangeItemTrigger).item === formChangeItem
         );
-        const formKey = targetForm?.formKey || "Unknown";
+        const formKey = targetForm?.formKey || 'Unknown';
         lines.push(`  [color=#ffcc00]${pokemon.name}[/color]: [color=#78c850]${applicableLabel}[/color] → ${formKey}`);
       } else {
         lines.push(`  [color=#ffcc00]${pokemon.name}[/color]: [color=#888888]${noEffectLabel}[/color]`);
       }
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private generateTypeSwitcherTooltipBody(newPrimaryType: Type | null, newSecondaryType: Type | null): string {
     const uiTheme = this.scene.uiTheme;
     const lines: string[] = [];
 
-    let descText = "";
+    let descText = '';
     if (newPrimaryType !== null && newSecondaryType !== null) {
       descText = `Changes typing to ${this.getLocalizedTypeName(newPrimaryType)}/${this.getLocalizedTypeName(newSecondaryType)}`;
     } else if (newPrimaryType !== null) {
@@ -4727,7 +4694,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     }
     lines.push(getBBCodeFrag(descText, TextStyle.WINDOW, uiTheme));
 
-    lines.push("");
+    lines.push('');
     const partyLabel = i18next.t("pokemonInfoContainer:party", { defaultValue: "Party" });
     lines.push(getBBCodeFrag(`${partyLabel}:`, TextStyle.SUMMARY_GOLD, uiTheme));
 
@@ -4753,7 +4720,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       lines.push(`  [color=#ffcc00]${pokemon.name}[/color]: ${currentStrColored} → ${newStrColored}`);
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private generateMintTooltipBody(targetNature: Nature): string {
@@ -4763,7 +4730,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const natureDesc = getNatureName(targetNature, true, true, true);
     lines.push(getBBCodeFrag(`${i18next.t("pokemonInfoContainer:nature", { defaultValue: "Nature" })}: ${natureDesc}`, TextStyle.WINDOW, uiTheme));
 
-    lines.push("");
+    lines.push('');
     const partyLabel = i18next.t("pokemonInfoContainer:party", { defaultValue: "Party" });
     lines.push(getBBCodeFrag(`${partyLabel}:`, TextStyle.SUMMARY_GOLD, uiTheme));
 
@@ -4803,7 +4770,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private getTooltipHeight(comparisonText: string): integer {
@@ -4833,12 +4800,12 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   }
 
   private parseUpgradeComparisonText(comparisonText: string): { titleText: string; subtitleText: string; bodyText: string } {
-    const lines = comparisonText.split("\n");
-    const stripBBCode = (text: string): string => text.replace(/\[.*?\]/g, "").trim();
-    const titleText = lines.length > 0 ? stripBBCode(lines[0]) : "";
-    const subtitleText = lines.length > 1 ? stripBBCode(lines[1]) : "";
-    const bodyStartIndex = lines.length > 2 && lines[2].trim() === "" ? 3 : 2;
-    const bodyText = lines.slice(bodyStartIndex).join("\n");
+    const lines = comparisonText.split('\n');
+    const stripBBCode = (text: string): string => text.replace(/\[.*?\]/g, '').trim();
+    const titleText = lines.length > 0 ? stripBBCode(lines[0]) : '';
+    const subtitleText = lines.length > 1 ? stripBBCode(lines[1]) : '';
+    const bodyStartIndex = lines.length > 2 && lines[2].trim() === '' ? 3 : 2;
+    const bodyText = lines.slice(bodyStartIndex).join('\n');
     return { titleText, subtitleText, bodyText };
   }
 
@@ -4886,10 +4853,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   }
 
   private toCamelCase(str: string): string {
-    return str.toLowerCase().replace(/[ _-]/g, " ").replace(/(?:^\w|\b\w|\s+)/g, (match, index) => {
-      if (+match === 0) {
-        return "";
-      }
+    return str.toLowerCase().replace(/[ _-]/g, ' ').replace(/(?:^\w|\b\w|\s+)/g, (match, index) => {
+      if (+match === 0) return '';
       return index === 0 ? match.toLowerCase() : match.toUpperCase();
     });
   }
@@ -5066,9 +5031,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   }
 
   private isModifierRemovable(modifier: PersistentModifier): boolean {
-    if (modifier instanceof MoveUpgradeModifier) {
-      return true;
-    }
+    if (modifier instanceof MoveUpgradeModifier) return true;
     return false;
   }
   private selectModifierForRemoval(modifier: PersistentModifier): void {
@@ -5084,7 +5047,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     for (let i = 1; i <= modifier.stackCount; i++) {
       quantityOptions.push({
-        label: `${i} ${modifier.type.name}${i > 1 ? "s" : ""}`,
+        label: `${i} ${modifier.type.name}${i > 1 ? 's' : ''}`,
         handler: () => {
           this.showRemovalConfirmation(modifier, i);
           return true;
@@ -5408,12 +5371,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     } catch {}
 
     for (const m of this.scene.modifiers) {
-      if (!(m instanceof PokemonHeldItemModifier)) {
-        continue;
-      }
-      if (m.pokemonId !== pokemonId) {
-        continue;
-      }
+      if (!(m instanceof PokemonHeldItemModifier)) continue;
+      if (m.pokemonId !== pokemonId) continue;
 
       if (m instanceof PokemonFormChangeItemModifier ||
           m instanceof TerastallizeModifier ||
@@ -5539,7 +5498,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
     let item = null;
 
     const getItem = () => {
-      if (!this.modifierTypeOption) {
+      if(!this.modifierTypeOption) {
         console.error("Modifier type option is null");
       }
       if (this.modifierTypeOption.type instanceof AddPokemonModifierType) {
@@ -5563,7 +5522,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
               item = this.scene.add.sprite(0, 0, pokemonSpecies.getIconAtlasKey());
               item.setFrame(pokemonSpecies.getIconId(false));
 
-              if (item.postFX && typeof item.postFX.addColorMatrix === "function") {
+              if (item.postFX && typeof item.postFX.addColorMatrix === 'function') {
                 const colorMatrix = item.postFX.addColorMatrix();
                 colorMatrix.negative();
               }
@@ -5590,13 +5549,13 @@ export class ModifierOption extends Phaser.GameObjects.Container {
         } catch {
           item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems" : "items", this.modifierTypeOption.type.iconImage);
         }
-        if (item.postFX && typeof item.postFX.addColorMatrix === "function") {
+        if (item.postFX && typeof item.postFX.addColorMatrix === 'function') {
           const colorMatrix = item.postFX.addColorMatrix();
           colorMatrix.negative();
         }
       } else if (this.modifierTypeOption.type?.group === "teraAbility") {
         item = this.scene.add.sprite(0, 0, "items", "stellar_tera_shard");
-        if (item.postFX && typeof item.postFX.addColorMatrix === "function") {
+        if (item.postFX && typeof item.postFX.addColorMatrix === 'function') {
           const colorMatrix = item.postFX.addColorMatrix();
           colorMatrix.negative();
         }
@@ -5955,27 +5914,27 @@ export class ModifierOption extends Phaser.GameObjects.Container {
   }
 }
 export class CollectedTypeModifierOption extends ModifierOption {
-  constructor(scene: BattleScene, x: number, y: number, modifierTypeOption: ModifierTypeOption, showCost: boolean = true) {
-    super(scene, x, y, modifierTypeOption, showCost);
-  }
-
-  updateCostText(): void {
-    if (this.showCost && this.itemCostText) {
-      const cost = this.modifierTypeOption.cost || 0;
-
-      if (this.itemCostText) {
-        this.itemCostText.destroy();
-      }
-
-      const costContainer = this.scene.add.container(0, 50);
-
-      const costIcon = this.scene.add.sprite(-10, 0, "smitems", "modSoulCollected");
-
-      const costText = addTextObject(this.scene, 10, 0, cost.toString(), TextStyle.MONEY);
-      costText.setOrigin(0, 0.5);
-
-      costContainer.add([costIcon, costText]);
-      this.add(costContainer);
+    constructor(scene: BattleScene, x: number, y: number, modifierTypeOption: ModifierTypeOption, showCost: boolean = true) {
+        super(scene, x, y, modifierTypeOption, showCost);
     }
-  }
+
+    updateCostText(): void {
+        if (this.showCost && this.itemCostText) {
+            const cost = this.modifierTypeOption.cost || 0;
+
+            if (this.itemCostText) {
+                this.itemCostText.destroy();
+            }
+
+            const costContainer = this.scene.add.container(0, 50);
+
+            const costIcon = this.scene.add.sprite(-10, 0, "smitems", "modSoulCollected");
+
+            const costText = addTextObject(this.scene, 10, 0, cost.toString(), TextStyle.MONEY);
+            costText.setOrigin(0, 0.5);
+
+            costContainer.add([costIcon, costText]);
+            this.add(costContainer);
+        }
+    }
 }

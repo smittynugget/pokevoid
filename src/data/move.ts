@@ -4284,12 +4284,14 @@ export class ForceSwitchOutAttr extends MoveEffectAttr {
         }
         return;
 	  } else if (user.scene.currentBattle.battleType !== BattleType.WILD) {
-
-        switchOutTarget.leaveField(!this.batonPass);
-
-	  	if (switchOutTarget.hp > 0) {
-
-          user.scene.prependToPhase(new SwitchSummonPhase(user.scene, switchOutTarget.getFieldIndex(), (user.scene.currentBattle.trainer ? user.scene.currentBattle.trainer.getNextSummonIndex((switchOutTarget as EnemyPokemon).trainerSlot) : 0), false, this.batonPass, false), MoveEndPhase);
+        const nextIndex = user.scene.currentBattle.trainer
+          ? user.scene.currentBattle.trainer.getNextSummonIndex((switchOutTarget as EnemyPokemon).trainerSlot)
+          : 0;
+        if (nextIndex >= 0) {
+          switchOutTarget.leaveField(!this.batonPass);
+          if (switchOutTarget.hp > 0) {
+            user.scene.prependToPhase(new SwitchSummonPhase(user.scene, switchOutTarget.getFieldIndex(), nextIndex, false, this.batonPass, false), MoveEndPhase);
+          }
         }
       } else {
 

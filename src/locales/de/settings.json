@@ -108,5 +108,6 @@
   "shop": "Shop",
   "checkTeam": "Team überprüfen",
   "disableMoveUpgrades": "Attacken-Upgrades deaktivieren",
-  "disableCutscenes": "Zwischensequenzen deaktivieren"
+  "disableCutscenes": "Zwischensequenzen deaktivieren",
+  "showItemTextBg": "Belohnungs-Seltenheits-Hintergrund anzeigen"
 }

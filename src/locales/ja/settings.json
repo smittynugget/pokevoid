@@ -108,5 +108,6 @@
   "mixedAnimated": "混在（アニメ）",
   "musicPreference": "音楽の優先設定",
   "mixed": "混在",
-  "items": "アイテム"
+  "items": "アイテム",
+  "showItemTextBg": "報酬レアリティ背景を表示"
 }

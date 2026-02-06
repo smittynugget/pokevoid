@@ -108,5 +108,6 @@
   "checkTeam": "检查队伍",
   "disableMoveUpgrades": "禁用招式强化",
   "disableCutscenes": "禁用过场动画",
-  "uiVolume": "界面音量"
+  "uiVolume": "界面音量",
+  "showItemTextBg": "显示奖励稀有度背景"
 }

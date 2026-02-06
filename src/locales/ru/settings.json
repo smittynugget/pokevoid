@@ -108,5 +108,6 @@
   "shop": "Магазин",
   "checkTeam": "Проверить команду",
   "disableMoveUpgrades": "Отключить улучшения приёмов",
-  "disableCutscenes": "Отключить катсцены"
+  "disableCutscenes": "Отключить катсцены",
+  "showItemTextBg": "Показать фон редкости награды"
 }

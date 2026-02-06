@@ -108,5 +108,6 @@
   "shop": "Shop",
   "checkTeam": "Check Team",
   "disableMoveUpgrades": "Disable Move Upgrades",
-  "disableCutscenes": "Disable Cutscenes"
+  "disableCutscenes": "Disable Cutscenes",
+  "showItemTextBg": "Show Reward Rarity BG"
 }

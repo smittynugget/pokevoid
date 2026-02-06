@@ -108,5 +108,6 @@
   "shop": "Tienda",
   "checkTeam": "Ver equipo",
   "disableMoveUpgrades": "Desactivar mejoras de movimientos",
-  "disableCutscenes": "Desactivar cinemáticas"
+  "disableCutscenes": "Desactivar cinemáticas",
+  "showItemTextBg": "Mostrar Fondo de Rareza de Recompensa"
 }

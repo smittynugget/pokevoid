@@ -42,15 +42,15 @@ class DefaultOverrides {
   readonly FREE_CANDY_UPGRADE_OVERRIDE: boolean = false;
   readonly BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE: boolean = true;
   readonly POKEBALL_OVERRIDE: { active: boolean; pokeballs: PokeballCounts } = {
-    active: false,
-    pokeballs: {
-      [PokeballType.POKEBALL]: 5,
-      [PokeballType.GREAT_BALL]: 0,
-      [PokeballType.ULTRA_BALL]: 0,
-      [PokeballType.ROGUE_BALL]: 0,
-      [PokeballType.MASTER_BALL]: 0,
+  active: false,
+  pokeballs: {
+    [PokeballType.POKEBALL]: 5,
+    [PokeballType.GREAT_BALL]: 0,
+    [PokeballType.ULTRA_BALL]: 0,
+    [PokeballType.ROGUE_BALL]: 0,
+    [PokeballType.MASTER_BALL]: 0,
     },
-  };
+};
   readonly STARTER_FORM_OVERRIDES: Partial<Record<Species, number>> = {};
   readonly STARTING_LEVEL_OVERRIDE: number = 0;
 
@@ -64,7 +64,7 @@ class DefaultOverrides {
   readonly VARIANT_OVERRIDE: Variant = 0;
   readonly OPP_SPECIES_OVERRIDE: Species | number = 0;
   readonly OPP_LEVEL_OVERRIDE: number = 0;
-  readonly OPP_ONE_POKEMON: boolean = true;
+  readonly OPP_ONE_POKEMON: boolean = false;
   readonly OPP_ABILITY_OVERRIDE: Abilities = Abilities.NONE;
   readonly OPP_PASSIVE_ABILITY_OVERRIDE: Abilities = Abilities.NONE;
   readonly OPP_STATUS_OVERRIDE: StatusEffect = StatusEffect.NONE;

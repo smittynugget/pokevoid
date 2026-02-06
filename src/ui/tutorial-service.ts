@@ -17,7 +17,8 @@ export class TutorialService {
         tutorial: Tutorial | EnhancedTutorial,
         saveCompletionFlag: boolean = true,
         isFromMenu: boolean = false,
-        delay: number = 350
+        delay: number = 350,
+        chance: number = 0.05
     ): Promise<void> {
         return new Promise<void>(resolve => {
             const executeShow = () => {
@@ -28,6 +29,10 @@ export class TutorialService {
 
                 if (!isFromMenu && this.isTutorialCompleted(tutorial)) {
                     console.log(`Tutorial ${tutorial} already completed, skipping`);
+                    return resolve();
+                }
+
+                if (!isFromMenu && chance < 1 && Math.random() > chance) {
                     return resolve();
                 }
 
@@ -118,7 +123,8 @@ export class TutorialService {
         saveCompletionFlags: boolean = true,
         isFromMenu: boolean = false,
         newOnly: boolean = false,
-        delay: number = 350
+        delay: number = 350,
+        chance: number = 0.05
     ): Promise<void> {
         return new Promise<void>(resolve => {
             const executeShow = () => {
@@ -137,6 +143,10 @@ export class TutorialService {
                     }
                 } else if (!isFromMenu && filteredTutorials.every(t => this.isTutorialCompleted(t))) {
                     console.log(`All tutorials in "${title}" already completed, skipping`);
+                    return resolve();
+                }
+
+                if (!isFromMenu && chance < 1 && Math.random() > chance) {
                     return resolve();
                 }
 
