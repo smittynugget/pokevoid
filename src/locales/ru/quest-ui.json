@@ -1,0 +1,120 @@
+{
+  "console": {
+    "activeBounties": "Активные баунти:",
+    "rivalBounties": "Баунти соперников",
+    "smittyBounties": "Баунти Смитти",
+    "questBounties": "Баунти квестов",
+    "bountiesCount": "{{title}} ({{current}}/{{max}})",
+    "activeQuests": "Активные квесты:",
+    "questsCount": "({{current}}/{{max}})",
+    "submit": "Подтвердить",
+    "cancel": "Отмена",
+    "invalidConsoleCode": "Неверный код консоли",
+    "consoleCodeAlreadyUsed": "Код консоли уже использован",
+    "consoleCodeAccepted": "Код консоли принят",
+    "toggleInfo": "чтобы открыть на экранах ТИТУЛ или БОЙ!",
+    "shopAndConsoleShortcut": "чтобы открыть на экранах ТИТУЛ или БОЙ!"
+  },
+  "modeRewards": {
+    "classicModeRewardFusion": "Использовать пойманных покемонов-слияний?!",
+    "commonModeRewardAbilities": "60+ новых талантов для предметов смены таланта",
+    "nuzlightModeRewardTypeSwitch": "Смена основного/вторичного типа",
+    "nuzlightModeRewardUpdatedInventory": "Обновлённый инвентарь!",
+    "nuzlightModeRewardMoveRelease": "Удаление приёма",
+    "nuzlockeModeRewardRank2": "РАНГ 2",
+    "accessShopInBattle": "Доступ к ΩSHOP в БОЮ!",
+    "accessQuestsInBattle": "Доступ к КВЕСТАМ в БОЮ!"
+  },
+  "bounty": {
+    "common": {
+      "status": {
+        "active": "АКТИВНО",
+        "inactive": "НЕАКТИВНО"
+      },
+      "baseReward": "Распределение базовой награды"
+    },
+    "modalTitle": "Баунти",
+    "status": {
+      "complete": "ЗАВЕРШЕНО",
+      "activeStage": "АКТИВНАЯ СТАДИЯ {{stage}}",
+      "active": "АКТИВНО"
+    },
+    "sections": {
+      "rewards": {
+        "title": "Награды:",
+        "unknown": "???"
+      },
+      "task": {
+        "title": "Задание:",
+        "singleRun": "ЗАДАНИЕ НА ОДИН ЗАБЕГ:",
+        "multiRun": "ЗАДАНИЕ НА НЕСКОЛЬКО ЗАБЕГОВ:",
+        "locked": "{{target}} сначала должен(на) быть открыт(а)"
+      }
+    },
+    "error": "Ошибка загрузки баунти",
+    "buttons": {
+      "swap": "Сменить баунти",
+      "activate": "Активировать баунти",
+      "back": "Назад",
+      "cancel": "Отмена"
+    },
+    "rival": {
+      "modalTitle": "Баунти соперника",
+      "invalidTrainer": "Неверный тренер",
+      "task": "Победи {{trainerName}} — стадия {{stage}}",
+      "progress": {
+        "title": "Прогресс стадии:",
+        "count": "{{current}} / {{max}}"
+      },
+      "rewards": {
+        "stage1": "90% ΩGOLD | 8% ΩITEM | 2% Оба",
+        "stage2": "75% ΩGOLD | 15% ΩITEM | 10% Оба",
+        "stage3": "60% ΩGOLD | 25% ΩITEM | 15% Оба",
+        "stage4": "40% ΩGOLD | 40% ΩITEM | 20% Оба",
+        "stage5": "25% ΩGOLD | 45% ΩITEM | 30% Оба"
+      }
+    },
+    "quest": {
+      "modalTitle": "Баунти квеста",
+      "invalidTask": "Неверное задание квеста",
+      "replacement": {
+        "title": "Выбери баунти для замены",
+        "cancel": "Отмена"
+      },
+      "rewards": {
+        "default": "50% ΩGOLD | 35% ΩITEM | 15% Оба"
+      },
+      "activeQuest": {
+        "modalTitle": "Квест!",
+        "buttons": {
+          "swap": "Сменить квест",
+          "activate": "Активировать квест"
+        },
+        "rewards": {
+          "unlockForm": "Открыть новую форму {{pokemonName}}!"
+        },
+        "progress": {
+          "title": "Прогресс стадии:",
+          "count": "{{current}} / {{max}}"
+        }
+      }
+    },
+    "smitty": {
+      "modalTitle": "Баунти Смитти-покемона",
+      "rewards": {
+        "withSpecies": "70% ΩGOLD | 20% ΩITEM | 10% Оба",
+        "withoutSpecies": "40% ΩGOLD | 40% ΩITEM | 20% Оба"
+      },
+      "task": {
+        "evolveAny": "Эволюционируй ЛЮБОГО покемона в {{formName}}",
+        "evolveSpecific": "Эволюционируй {{basePokemon}} в {{formName}}"
+      },
+      "items": {
+        "title": "Нужные предметы:"
+      },
+      "common": {
+        "any": "ЛЮБОЙ"
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "pp": "ОД",
+  "power": "Сила",
+  "accuracy": "Точность",
+  "abilityFlyInText": " {{pokemonName}} — {{passive}}{{abilityName}}",
+  "passive": "Пассив "
+}

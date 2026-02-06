@@ -1,0 +1,104 @@
+{
+  "title": "Выбор чемпиона",
+  "confirmSelection": "Начать забег с {{name}}?",
+  "subheader": "Кого ты выберешь, чтобы отправиться в Пустоту?",
+  "levelUp": "НОВЫЙ УРОВЕНЬ!",
+  "characterUnlocked": "{{name}}\nОТКРЫТ!",
+  "unlocked": "Открыто",
+  "lockedGauge": "Внесено: {{current}} / {{required}}",
+  "xp": "ОП",
+  "potential": "ПОТЕНЦИАЛ",
+  "level": "УРОВЕНЬ",
+  "locked": "ЗАКРЫТО",
+  "unlockRequired": "Нужно: {{requirement}}",
+  "essenceHint": "Используй нужную эссенцию, чтобы повысить уровень!",
+  "essencesHeader": "Эссенции:",
+  "skillsHeader": "НАВЫКИ",
+  "skillsSubheader": "Навыки будут случайно появляться в Дереве навыков.",
+  "rarity": {
+    "common": "ОБЫЧНЫЙ",
+    "great": "РЕДКИЙ",
+    "ultra": "УЛЬТРА",
+    "master": "МАСТЕР",
+    "rogue": "РОГ",
+    "legendary": "ЛЕГЕНДАРНЫЙ"
+  },
+  "unlockCharacter": "Открыть персонажа",
+  "unlockCharacterTooltip": "Открывается при использовании {{current}}/{{required}} эссенций",
+  "tooltip": {
+    "lockedSkillTitle": "Закрытый навык",
+    "levelRequired": "Нужен уровень {{level}}, чтобы открыть.",
+    "lockedPrefix": "ЗАКРЫТО",
+    "unlockWithEssence": "Открой, используя {{current}}/{{required}} эссенций, чтобы повысить уровень!",
+    "levelUpRequired": "Повысь уровень, чтобы открыть этот навык.",
+    "defaultTm": "Обучи покемона TM типа {{types}}",
+    "defaultXm": "Обучи покемона XM типа {{types}}",
+    "defaultEssence": "Добавь {{amount}} эссенции(й) типа {{types}} в коллекцию",
+    "defaultBooster": "Получи предмет «Усилитель {{types}}»",
+    "defaultTeraAbility": "Используй {{types}}, чтобы активировать тера-таланты",
+    "defaultEssenceWeight": "Увеличь вес выпадения эссенций {{types}} на {{weight}}",
+    "defaultCatchRate": "Увеличь шанс поимки покемонов {{types}} на {{percent}}%",
+    "defaultFusionPriority": "Увеличь приоритет слияний для покемонов {{types}}",
+    "defaultRevive": "Увеличь шанс возрождения покемонов {{types}} на {{percent}}%",
+    "defaultTokens": "Получай жетоны дерева навыков для открытия узлов",
+    "defaultPoints": "Получай очки навыков для покупки навыков",
+    "typesFallback": "Неизвестно"
+  },
+  "skillList": {
+    "levelPrefix": "Ур. {{level}}",
+    "unknownSkill": "???"
+  },
+  "defaultSkillLabels": {
+    "tms": "TM: {{types}}",
+    "xms": "XM: {{types}}",
+    "abilities": "Таланты: {{types}}",
+    "teraAbilities": "Тера-таланты: {{types}}",
+    "statBoosts": "Буст характеристик: {{types}}",
+    "tokens": "Жетоны дерева навыков",
+    "points": "Очки навыков",
+    "boosters": "Усилители: {{types}}",
+    "essence": "Эссенция: {{types}}",
+    "reviveBoost": "Бонус возрождения: {{types}}",
+    "essenceWeights": "Вес эссенций: {{types}}",
+    "catchBonus": "Бонус поимки: {{types}}",
+    "fusionPriority": "Приоритет слияний: {{types}}"
+  },
+  "button": {
+    "useEssence": "Использовать эссенцию"
+  },
+  "brock": {
+    "description": "Чемпион камня"
+  },
+  "misty": {
+    "description": "Чемпион воды"
+  },
+  "apollo": {
+    "name": "Аполлон",
+    "description": "Чемпион солнца"
+  },
+  "diana": {
+    "name": "Диана",
+    "description": "Чемпион луны"
+  },
+  "generic": {
+    "description": "Чемпион по умолчанию."
+  },
+  "champions": {
+    "title": "Выбери своего чемпиона",
+    "brock": {
+      "name": "Брок — специалист по камню",
+      "description": "Мастер Земли и Камня",
+      "essenceRequirement": "Нужно: {{ground}} эссенций Земли + {{rock}} эссенций Камня"
+    },
+    "misty": {
+      "name": "Мисти — специалист по воде",
+      "description": "Мастер Воды",
+      "essenceRequirement": "Нужно: {{water}} эссенций Воды"
+    },
+    "generic": {
+      "name": "Сбалансированный чемпион",
+      "description": "Без специализации по типу",
+      "essenceRequirement": "Нет особых требований"
+    }
+  }
+}

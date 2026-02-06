@@ -1,7 +1,7 @@
 {
 	"textures": [
 		{
-			"image": "smitems_32.png",
+			"image": "smitems.png",
 			"format": "RGBA8888",
 			"size": {
 				"w": 256,

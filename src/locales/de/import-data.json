@@ -1,0 +1,14 @@
+{
+  "importSaveData": "Speicherstand importieren",
+  "importModData": "Mod-Daten importieren",
+  "cancel": "Abbrechen",
+  "selectFile": "Datei auswählen",
+  "selectJsonModFiles": "JSON-Mod-Datei(en) zum Import auswählen",
+  "selectPrsvSaveFile": "Eine .prsv-Speicherdatei zum Import auswählen",
+  "importFailed": "Import fehlgeschlagen. Bitte versuche es erneut.",
+  "uploadSuccess": "{{count}} Mod erfolgreich importiert:",
+  "uploadSuccess_plural": "{{count}} Mods erfolgreich importiert:",
+  "uploadFailed": "Import von {{count}} Mod fehlgeschlagen:",
+  "uploadFailed_plural": "Import von {{count}} Mods fehlgeschlagen:",
+  "reloadRequired": "Das Spiel wird neu geladen, um die Änderungen anzuwenden."
+}

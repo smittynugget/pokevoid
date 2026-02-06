@@ -1,4 +1,6 @@
 {
   "generation": "第{{generation}}世代",
-  "glitchForm": "{{formName}}出现故障"
+  "glitchForm": "{{formName}}出现故障",
+  "fusionTooltipTitle": "融合",
+  "fusionTooltipBody": "{{primary}}/{{fusion}}\n\n融合能力值会同时使用两只宝可梦的种族值：\n1) 性格加成的能力（中性则为 HP）：取较高值\n2) 再取一个最佳能力：在剩余能力中取较高值\n3) 其他：取平均并向上取整\n性格修正在最后应用。"
 } 

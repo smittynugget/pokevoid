@@ -6,6 +6,7 @@ import { Type } from "#app/data/type";
 import { Stat } from "#enums/stat";
 import { allMoves } from "#app/data/move";
 import { allSpecies } from "#app/data/pokemon-species";
+import { allAbilities } from "#app/data/ability";
 import { FormChangeItem } from "#enums/form-change-items";
 import { PlayableChampionData, PokemonAltBuildId } from "#app/system/playable-champions";
 import { UpgradePath } from "#enums/upgrade-path";
@@ -24,10 +25,15 @@ export class SkillTreeSelectors {
     return (abilityId as number) >= SkillTreeSelectors.SMITTY_ABILITY_THRESHOLD;
   }
 
+  private static isImplementedAbility(abilityId: Abilities): boolean {
+    const ab: any = (allAbilities as any)?.[abilityId];
+    return !!ab && typeof ab.name === "string" && !ab.name.endsWith(" (N)");
+  }
+
   static getAllNonSmittyAbilities(): Abilities[] {
-    return Object.values(Abilities).filter(v =>
-      typeof v === "number" && !this.isSmittyAbility(v as Abilities)
-    ) as Abilities[];
+    return Object.values(Abilities)
+      .filter(v => typeof v === "number" && !this.isSmittyAbility(v as Abilities))
+      .filter(v => this.isImplementedAbility(v as Abilities)) as Abilities[];
   }
 
   static pickChampionTM(champion: PlayableChampionData): Moves {
@@ -59,7 +65,7 @@ export class SkillTreeSelectors {
 
     const allSpeciesArray = allSpecies.filter(s => s != null);
 
-    let pool = allSpeciesArray.filter((sd) => {
+    const pool = allSpeciesArray.filter((sd) => {
       if (sd.legendary || sd.mythical || (sd as any).subLegendary) {
         return false;
       }
@@ -81,7 +87,9 @@ export class SkillTreeSelectors {
     const selectedData = Utils.randSeedItem(pool);
     if (!selectedData) {
       const fallbackPool = allSpeciesArray.filter((sd) => {
-        if (sd.legendary || sd.mythical || (sd as any).subLegendary) return false;
+        if (sd.legendary || sd.mythical || (sd as any).subLegendary) {
+          return false;
+        }
         const hasPrevolution = pokemonPrevolutions[sd.speciesId] !== undefined;
         const isBaseForm = !hasPrevolution;
         const isEvolutionAllowed = isBaseForm || currentWave >= 20;
@@ -103,8 +111,10 @@ export class SkillTreeSelectors {
   }
 
   static pickConditionalAbility(champion: PlayableChampionData): Abilities | null {
-    const pool = (champion.unlockedConditionalAbilities || []) as Abilities[];
-    if (pool.length === 0) return null;
+    const pool = ((champion.unlockedConditionalAbilities || []) as Abilities[]).filter(a => this.isImplementedAbility(a));
+    if (pool.length === 0) {
+      return null;
+    }
     return Utils.randSeedItem(pool);
   }
 
@@ -151,7 +161,9 @@ export class SkillTreeSelectors {
 
   static pickTypeSwitcherTypes(champion: PlayableChampionData): Type[] {
     const types = [champion.type1, champion.type2].filter(Boolean) as Type[];
-    if (!types.length) return [];
+    if (!types.length) {
+      return [];
+    }
     const first = Utils.randSeedItem(types);
     if (types.length > 1 && Utils.randSeedInt(2) === 1) {
       const second = Utils.randSeedItem(types.filter((t) => t !== first));
@@ -183,15 +195,23 @@ export class SkillTreeSelectors {
     return { type: t, amount };
   }
 
-  static pickSkillPoints(): number { return 1; }
-  static pickSkillTreeTokens(): number { return (Utils.randSeedInt(2) + 1); }
+  static pickSkillPoints(): number {
+    return 1;
+  }
+  static pickSkillTreeTokens(): number {
+    return (Utils.randSeedInt(2) + 1);
+  }
 
   static pickTeraAbilityWithType(champion: PlayableChampionData): { type: Type; ability: Abilities } | null {
     const ability = this.pickConditionalAbility(champion);
-    if (!ability) return null;
+    if (!ability) {
+      return null;
+    }
 
     const types = [champion.type1, champion.type2].filter(Boolean) as Type[];
-    if (types.length === 0) return null;
+    if (types.length === 0) {
+      return null;
+    }
 
     const selectedType = Utils.randSeedItem(types);
     return { type: selectedType, ability };
@@ -203,13 +223,21 @@ export class SkillTreeSelectors {
 
   static pickSpecificMoveUpgrade(champion?: PlayableChampionData): { filterUpgrades: { moveUpgrades?: UpgradePath[]; moveAttributes?: string[]; types?: Type[] } } {
     const allowedGroups: Array<"path" | "attr" | "type"> = ["path"];
-    if (champion?.unlockedMoveAttrUpgrades?.length) allowedGroups.push("attr");
-    if (champion?.unlockedTypesMoveUpgrade?.length) allowedGroups.push("type");
+    if (champion?.unlockedMoveAttrUpgrades?.length) {
+      allowedGroups.push("attr");
+    }
+    if (champion?.unlockedTypesMoveUpgrade?.length) {
+      allowedGroups.push("type");
+    }
     const group = Utils.randSeedItem(allowedGroups);
-    if (group === "type") return { filterUpgrades: { types: (champion!.unlockedTypesMoveUpgrade || []).slice() } };
+    if (group === "type") {
+      return { filterUpgrades: { types: (champion!.unlockedTypesMoveUpgrade || []).slice() } };
+    }
     if (group === "attr") {
       const attrs = (champion!.unlockedMoveAttrUpgrades || []).slice();
-      if (attrs.length > 0) return { filterUpgrades: { moveAttributes: [Utils.randSeedItem(attrs)] } };
+      if (attrs.length > 0) {
+        return { filterUpgrades: { moveAttributes: [Utils.randSeedItem(attrs)] } };
+      }
     }
     const pool = (champion?.unlockedMoveUpgrades?.length ? champion.unlockedMoveUpgrades : (Object.values(UpgradePath) as UpgradePath[]));
     return { filterUpgrades: { moveUpgrades: [Utils.randSeedItem(pool)] } };
@@ -262,21 +290,27 @@ export class SkillTreeSelectors {
     return { types: selectedTypes.length ? selectedTypes : undefined } as any;
   }
 
-private static getChampionStatPreferences(championData: PlayableChampionData): Stat[] {
+  private static getChampionStatPreferences(championData: PlayableChampionData): Stat[] {
     switch (championData.id) {
-      case "brock": return [Stat.DEF, Stat.HP, Stat.ATK];
-      case "misty": return [Stat.SPD, Stat.SPATK, Stat.ATK];
-      case "apollo":
-      case "diana":
-        return getTypeStatPreferences(championData.type1, championData.type2);
-      default: return [Stat.HP, Stat.ATK, Stat.DEF, Stat.SPATK, Stat.SPDEF, Stat.SPD];
+    case "brock": return [Stat.DEF, Stat.HP, Stat.ATK];
+    case "misty": return [Stat.SPD, Stat.SPATK, Stat.ATK];
+    case "apollo":
+    case "diana":
+      return getTypeStatPreferences(championData.type1, championData.type2);
+    default: return [Stat.HP, Stat.ATK, Stat.DEF, Stat.SPATK, Stat.SPDEF, Stat.SPD];
     }
   }
 
   private static getChampionTypeAbilities(championTypes: Type[]): Abilities[] {
-    let abilities = getAbilitiesForTypes(championTypes);
-    if (abilities.length) return abilities;
-    const allAbilityIds = (Object.values(Abilities).filter((v) => typeof v === "number" && (v as number) < 311) as Abilities[]);
+    const abilities = getAbilitiesForTypes(championTypes).filter(a => this.isImplementedAbility(a));
+    if (abilities.length) {
+      return abilities;
+    }
+    const allAbilityIds = (Object.values(Abilities).filter((v) => typeof v === "number" && (v as number) < 311) as Abilities[])
+      .filter(a => this.isImplementedAbility(a));
+    if (!allAbilityIds.length) {
+      return [Abilities.OVERGROW];
+    }
     return [Utils.randSeedItem(allAbilityIds)];
   }
 }

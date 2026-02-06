@@ -1,4 +1,5 @@
 {
+  "options": "Options",
   "boy": "Garçon",
   "girl": "Fille",
   "general": "Général",
@@ -106,5 +107,6 @@
   "reroll": "Relance",
   "shop": "Boutique",
   "checkTeam": "Équipe",
-  "lockedRewardSpeed": "Verrouiller vitesse des récompenses"
+  "disableMoveUpgrades": "Désactiver les améliorations de capacités",
+  "disableCutscenes": "Désactiver les cinématiques"
 }

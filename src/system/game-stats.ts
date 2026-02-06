@@ -114,6 +114,7 @@ export class GameStats {
   public legendaryEggsPulled: integer;
   public manaphyEggsPulled: integer;
   public rivalsDefeated: integer;
+  public rivalVictoriesTotal: integer;
   public glitchFormsUnlocked: integer;
   public smittyFormsUnlocked: integer;
   public fusionsCaptured: integer;
@@ -154,6 +155,17 @@ export class GameStats {
   public typeOfDefeated: { [type: number]: integer };
   public typeOfMovesUsed: { [type: number]: integer };
   public playerKnockoutType: { [type: number]: integer };
+  public cutsceneTitleAShown: boolean;
+  public cutsceneTitleBShown: boolean;
+  public cutsceneTitleCShown: boolean;
+  public cutsceneTitleDShown: boolean;
+  public cutsceneRivalVictoryShown: { [rivalType: number]: boolean };
+  public cutsceneAllRivalsDefeatedShown: boolean;
+  public cutsceneTheVoidVictoryShown: boolean;
+  public cutsceneSmittyVictoryShown: boolean;
+  public cutsceneChampionUnlockShown: { [championId: string]: boolean };
+  public cutsceneFirstSmittyBattleShown: boolean;
+  public cutsceneAllSmittysCompleteVictoryShown: boolean;
 
   constructor(source?: any) {
     this.playTime = source?.playTime || 0;
@@ -271,6 +283,7 @@ export class GameStats {
     this.legendaryEggsPulled = source?.legendaryEggsPulled || 0;
     this.manaphyEggsPulled = source?.manaphyEggsPulled || 0;
     this.rivalsDefeated = source?.rivalsDefeated || 0;
+    this.rivalVictoriesTotal = source?.rivalVictoriesTotal ?? this.rivalsDefeated;
     this.glitchFormsUnlocked = source?.glitchFormsUnlocked || 0;
     this.smittyFormsUnlocked = source?.smittyFormsUnlocked || 0;
     this.fusionsCaptured = source?.fusionsCaptured || 0;
@@ -311,5 +324,16 @@ export class GameStats {
     this.typeOfDefeated = source?.typeOfDefeated || {};
     this.typeOfMovesUsed = source?.typeOfMovesUsed || {};
     this.playerKnockoutType = source?.playerKnockoutType || {};
+    this.cutsceneTitleAShown = source?.cutsceneTitleAShown || false;
+    this.cutsceneTitleBShown = source?.cutsceneTitleBShown || false;
+    this.cutsceneTitleCShown = source?.cutsceneTitleCShown || false;
+    this.cutsceneTitleDShown = source?.cutsceneTitleDShown || false;
+    this.cutsceneRivalVictoryShown = source?.cutsceneRivalVictoryShown || {};
+    this.cutsceneAllRivalsDefeatedShown = source?.cutsceneAllRivalsDefeatedShown || false;
+    this.cutsceneTheVoidVictoryShown = source?.cutsceneTheVoidVictoryShown || false;
+    this.cutsceneSmittyVictoryShown = source?.cutsceneSmittyVictoryShown || false;
+    this.cutsceneChampionUnlockShown = source?.cutsceneChampionUnlockShown || {};
+    this.cutsceneFirstSmittyBattleShown = source?.cutsceneFirstSmittyBattleShown || false;
+    this.cutsceneAllSmittysCompleteVictoryShown = source?.cutsceneAllSmittysCompleteVictoryShown || false;
   }
 }

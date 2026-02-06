@@ -6,6 +6,7 @@ import { getTypeRgb } from "#app/data/type.js";
 import { BattleSpec } from "#app/enums/battle-spec.js";
 import Pokemon, { EnemyPokemon } from "#app/field/pokemon.js";
 import { getPokemonNameWithAffix } from "#app/messages.js";
+import { AbilitySacrificeModifier, AbilitySwitcherModifier, AnyAbilityModifier, AnyPassiveAbilityModifier, PassiveAbilitySacrificeModifier, PokemonAltBuildModifier, TypeSacrificeModifier, TypeSwitcherModifier } from "#app/modifier/modifier.js";
 import { BattlePhase } from "./battle-phase";
 import { MovePhase } from "./move-phase";
 import { PokemonHealPhase } from "./pokemon-heal-phase";
@@ -20,6 +21,25 @@ export class QuietFormChangePhase extends BattlePhase {
     this.formChange = formChange;
   }
 
+  private reapplyFormDependentModifiers(): void {
+    const playerSide = this.pokemon.isPlayer();
+    const modifiers = this.scene.findModifiers(m =>
+      (m instanceof AbilitySwitcherModifier ||
+        m instanceof TypeSwitcherModifier ||
+        m instanceof AnyAbilityModifier ||
+        m instanceof TypeSacrificeModifier ||
+        m instanceof AbilitySacrificeModifier ||
+        m instanceof PassiveAbilitySacrificeModifier ||
+        m instanceof AnyPassiveAbilityModifier ||
+        m instanceof PokemonAltBuildModifier) &&
+      (m as any).pokemonId === this.pokemon.id,
+    playerSide
+    );
+    for (const modifier of modifiers) {
+      modifier.apply([this.pokemon]);
+    }
+  }
+
   start(): void {
     super.start();
 
@@ -31,6 +51,7 @@ export class QuietFormChangePhase extends BattlePhase {
 
     if (!this.pokemon.isOnField() || this.pokemon.getTag(SemiInvulnerableTag)) {
       this.pokemon.changeForm(this.formChange).then(() => {
+        this.reapplyFormDependentModifiers();
         this.scene.ui.showText(getSpeciesFormChangeMessage(this.pokemon, this.formChange, preName), null, () => this.end(), 1500);
       });
       return;
@@ -76,7 +97,8 @@ export class QuietFormChangePhase extends BattlePhase {
       onComplete: () => {
         this.pokemon.setVisible(false);
         this.pokemon.changeForm(this.formChange).then(() => {
-          if(this.pokemon.isGlitchOrSmittyForm()) {
+          this.reapplyFormDependentModifiers();
+          if (this.pokemon.isGlitchOrSmittyForm()) {
             this.pokemon.toggleShadow(false);
           }
           pokemonFormTintSprite.setScale(0.01);

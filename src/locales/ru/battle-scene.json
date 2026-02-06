@@ -1,0 +1,8 @@
+{
+  "moneyOwned": "₽{{formattedMoney}}",
+  "permaMoneyOwned": "Ω{{formattedMoney}}",
+  "catch": "ПОЙМАТЬ",
+  "togglePermaBar": "ΩПредметы",
+  "togglePlayerBar": "Сумка",
+  "toggleFoeBar": "Враг"
+}

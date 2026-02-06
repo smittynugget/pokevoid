@@ -43,5 +43,8 @@
     "rivalVoid": "{{name}}(이)가 공허 속으로 사라졌습니다...",
     "error": "보상 로딩 오류",
     "new": "신규"
+  },
+  "saveReward": {
+    "essenceBundle": "에센스 3개: {{types}}"
   }
 } 

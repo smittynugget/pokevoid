@@ -105,8 +105,13 @@ export class SpeciesEvolutionCondition {
 }
 
 export class SpeciesFriendshipEvolutionCondition extends SpeciesEvolutionCondition {
+  public friendshipAmount: integer;
+  public secondaryPredicate?: EvolutionConditionPredicate;
+
   constructor(friendshipAmount: integer, predicate?: EvolutionConditionPredicate, enforceFunc?: EvolutionConditionEnforceFunc) {
     super(p => p.friendship >= friendshipAmount && (!predicate || predicate(p)), enforceFunc);
+    this.friendshipAmount = friendshipAmount;
+    this.secondaryPredicate = predicate;
   }
 }
 
@@ -1050,7 +1055,7 @@ export const pokemonEvolutions: PokemonEvolutions = {
   ],
   [Species.TOXEL]: [
     new SpeciesFormEvolution(Species.TOXTRICITY, "", "lowkey", 30, null,
-        new SpeciesEvolutionCondition(p => [ Nature.LONELY, Nature.BOLD, Nature.RELAXED, Nature.TIMID, Nature.SERIOUS, Nature.MODEST, Nature.MILD, Nature.QUIET, Nature.BASHFUL, Nature.CALM, Nature.GENTLE, Nature.CAREFUL ].indexOf(p.getNature()) > -1)),
+      new SpeciesEvolutionCondition(p => [ Nature.LONELY, Nature.BOLD, Nature.RELAXED, Nature.TIMID, Nature.SERIOUS, Nature.MODEST, Nature.MILD, Nature.QUIET, Nature.BASHFUL, Nature.CALM, Nature.GENTLE, Nature.CAREFUL ].indexOf(p.getNature()) > -1)),
     new SpeciesFormEvolution(Species.TOXTRICITY, "", "amped", 30, null, null)
   ],
   [Species.SIZZLIPEDE]: [
@@ -1503,7 +1508,7 @@ export const pokemonEvolutions: PokemonEvolutions = {
   [Species.ONIX]: [
     new SpeciesEvolution(Species.STEELIX, 1, EvolutionItem.LINKING_CORD, new SpeciesEvolutionCondition(
       p => p.moveset.filter(m => m?.getMove().type === Type.STEEL).length > 0),
-        SpeciesWildEvolutionDelay.VERY_LONG)
+    SpeciesWildEvolutionDelay.VERY_LONG)
   ],
   [Species.RHYDON]: [
     new SpeciesEvolution(Species.RHYPERIOR, 1, EvolutionItem.LINKING_CORD, new SpeciesEvolutionCondition(p => true ), SpeciesWildEvolutionDelay.VERY_LONG)
@@ -1514,7 +1519,7 @@ export const pokemonEvolutions: PokemonEvolutions = {
   [Species.SCYTHER]: [
     new SpeciesEvolution(Species.SCIZOR, 1, EvolutionItem.LINKING_CORD, new SpeciesEvolutionCondition(
       p => true),
-        SpeciesWildEvolutionDelay.VERY_LONG),
+    SpeciesWildEvolutionDelay.VERY_LONG),
     new SpeciesEvolution(Species.KLEAVOR, 1, EvolutionItem.BLACK_AUGURITE, null, SpeciesWildEvolutionDelay.VERY_LONG)
   ],
   [Species.ELECTABUZZ]: [

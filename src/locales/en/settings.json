@@ -1,4 +1,5 @@
 {
+  "options": "Options",
   "boy": "Boy",
   "girl": "Girl",
   "general": "General",
@@ -106,5 +107,6 @@
   "reroll": "Reroll",
   "shop": "Shop",
   "checkTeam": "Check Team",
-  "lockedRewardSpeed": "Lock Reward Speed"
+  "disableMoveUpgrades": "Disable Move Upgrades",
+  "disableCutscenes": "Disable Cutscenes"
 }

@@ -21,6 +21,7 @@ export default class PokemonData {
   public species: Species;
   public nickname: string;
   public formIndex: integer;
+  public formKey?: string;
   public abilityIndex: integer;
   public passive: boolean;
   public shiny: boolean;
@@ -69,6 +70,10 @@ export default class PokemonData {
     this.species = sourcePokemon ? sourcePokemon.species.speciesId : source.species;
     this.nickname = sourcePokemon ? sourcePokemon.nickname : source.nickname;
     this.formIndex = source.formIndex;
+    this.formKey = sourcePokemon ? sourcePokemon.getFormKey() : source.formKey;
+    if (typeof this.formKey !== "string" || this.formKey.length === 0) {
+      this.formKey = undefined;
+    }
     this.abilityIndex = source.abilityIndex;
     this.passive = source.passive;
     this.shiny = source.shiny;
@@ -155,6 +160,22 @@ export default class PokemonData {
 
   toPokemon(scene: BattleScene, battleType?: BattleType, partyMemberIndex: integer = 0, double: boolean = false): Pokemon {
     const species = getPokemonSpecies(this.species);
+    const forms = species.forms && species.forms.length > 0 ? species.forms : null;
+    let resolvedFormIndex = this.formIndex;
+    if (this.formKey && forms) {
+      const idx = forms.findIndex(f => f.formKey === this.formKey);
+      if (idx >= 0) {
+        resolvedFormIndex = idx;
+      }
+    } else if (!this.formKey && forms && resolvedFormIndex >= 0 && resolvedFormIndex < forms.length) {
+      const currentKey = forms[resolvedFormIndex]?.formKey || "";
+      const isMega = typeof currentKey === "string" && currentKey.toLowerCase().includes("mega");
+      if (isMega) {
+        const glitchIdx = forms.findIndex(f => typeof f.formKey === "string" && f.formKey.includes("glitch"));
+        resolvedFormIndex = glitchIdx >= 0 ? glitchIdx : 0;
+      }
+    }
+    this.formIndex = resolvedFormIndex;
     const ret: Pokemon = this.player
       ? scene.addPlayerPokemon(species, this.level, this.abilityIndex, this.formIndex, this.gender, this.shiny, this.variant, this.ivs, this.nature, this, (playerPokemon) => {
         if (this.nickname) {

@@ -43,5 +43,8 @@
     "rivalVoid": "{{name}} è svanito nel vuoto...",
     "error": "Errore nel caricamento della ricompensa",
     "new": "NUOVO"
+  },
+  "saveReward": {
+    "essenceBundle": "3 Essenza: {{types}}"
   }
 } 

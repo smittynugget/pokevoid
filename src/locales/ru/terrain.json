@@ -1,0 +1,16 @@
+{
+  "misty": "Туманное",
+  "mistyStartMessage": "Туман заклубился над полем боя!",
+  "mistyClearMessage": "Туман рассеялся над полем боя.",
+  "mistyBlockMessage": "{{pokemonNameWithAffix}} окружает себя защитным туманом!",
+  "electric": "Электрическое",
+  "electricStartMessage": "По полю боя пробежал электрический ток!",
+  "electricClearMessage": "Электричество исчезло с поля боя.",
+  "grassy": "Травяное",
+  "grassyStartMessage": "Трава разрослась и покрыла поле боя!",
+  "grassyClearMessage": "Трава исчезла с поля боя.",
+  "psychic": "Психическое",
+  "psychicStartMessage": "Поле боя стало странным!",
+  "psychicClearMessage": "Странность исчезла с поля боя!",
+  "defaultBlockMessage": "{{pokemonNameWithAffix}} находится под защитой поля «{{terrainName}}»!"
+}

@@ -69,7 +69,7 @@
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "Günstig",
-      "description": "Erhöht den {{statName}} Basiswert des Trägers um 5%."
+      "description": "Erhöht den {{statName}} Basiswert des Trägers um 1%."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Stellt 100% der KP aller Pokémon her."
@@ -751,7 +751,7 @@
     "AnyPassiveAbilityModifierType": {
       "name": "PASSIV {{abilityName}}",
       "statLabel": "Beliebige Passive Fähigkeit-Gegenstand",
-      "description": "Gib Passive {{abilityName}} einem BELIEBIGEN Pokémon\n(C oder Shift halten für mehr Informationen)."
+      "description": "Setze Passive Fähigkeit {{abilityName}} bei BELIEBIGEM Pokémon\n(C oder Shift halten für mehr Informationen)."
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
@@ -918,6 +918,35 @@
     "SWAMPERTITE": "Sumpexnit",
     "TYRANITARITE": "Despotarnit",
     "VENUSAURITE": "Bisaflornit",
+
+    "CLEFABLITE": "Pixit",
+    "VICTREBELITE": "Sarzeniit",
+    "STARMITE": "Starmit",
+    "DRAGONITITE": "Dragorannit",
+    "MEGANIUMITE": "Meganiumnit",
+    "FERALIGATRITE": "Impoleonit",
+    "SKARMORYITE": "Panzaeronit",
+    "FROSLASSITE": "Frosdelassnit",
+    "EMBOARITE": "Flambirnit",
+    "EXCADRILLITE": "Stalobornit",
+    "SCOLIPEDITE": "Cerapendranit",
+    "SCRAFTITE": "Irokexnit",
+    "EELEKTROSSITE": "Zapplariknit",
+    "CHANDELURITE": "Skelabranit",
+    "CHESNAUGHTITE": "Brigarnit",
+    "DELPHOXITE": "Fennexisnit",
+    "GRENINJITE": "Quajutsunit",
+    "PYROARITE": "Pyroleonit",
+    "FLOETTITE": "Floettenit",
+    "MALAMARITE": "Calamanernit",
+    "BARBARACLITE": "Thanathoranit",
+    "DRAGALGITE": "Tandraknit",
+    "HAWLUCHITE": "Resladernit",
+    "ZYGARDITE": "Zygardenit",
+    "DRAMPITE": "Senganit",
+    "FALINKSITE": "Legionit",
+    "ZERAORITE": "Zeraoranit",
+
     "BLUE_ORB": "Blauer Edelstein",
     "RED_ORB": "Roter Edelstein",
     "SHARP_METEORITE": "Scharfer Meteorit",
@@ -1035,6 +1064,7 @@
     "waves": "Wellen",
     "uses": "Verwendungen",
     "glitchPieceCost": "*KOSTET 2x Glitch-Stück",
+    "essenceAlternativeCost": "Wenn das Pokémon 5+ Essenzen hat, kannst du stattdessen diese verwenden.",
     "permaMoney": "ΩGOLD",
     "permaItem": "ΩGEGENSTAND",
     "moreInfo": "(Halte C / Shift für Infos)",

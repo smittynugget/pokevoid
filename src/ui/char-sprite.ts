@@ -46,9 +46,11 @@ export default class CharSprite extends Phaser.GameObjects.Container {
 
       this.sprite.setTexture(key, variant);
 
-      if (key.includes('smitom'))  this.sprite.setScale(.7);
-      else if(key.includes('smitty_trainers')) this.sprite.setScale(1.65);
-      else {
+      if (key.includes("smitom"))  {
+        this.sprite.setScale(.7);
+      } else if (key.includes("smitty_trainers")) {
+        this.sprite.setScale(0.88);
+      } else {
         this.sprite.setScale(1.4);
       }
 
@@ -59,7 +61,7 @@ export default class CharSprite extends Phaser.GameObjects.Container {
         return numA - numB;
       });
 
-      if (frames.length > 1 && !key.includes('smitty_trainers')) {
+      if (frames.length > 1 && !key.includes("smitty_trainers")) {
         const lastFrameName = frames[frames.length - 1];
         this.sprite.setFrame(lastFrameName);
       }
@@ -71,36 +73,35 @@ export default class CharSprite extends Phaser.GameObjects.Container {
 
       scene.fieldUI.bringToTop(this);
 
-      if ((scene.gameMode.isNightmare || scene.currentBattle?.trainer?.isCorrupted)  && !key.includes('smitty_trainers')) {
+      if ((scene.gameMode.isNightmare || scene.currentBattle?.trainer?.isCorrupted)  && !key.includes("smitty_trainers")) {
 
         this.sprite.setPipeline(scene.spritePipeline, {tone: [0.0, 0.0, 0.0, 0.0],
-    hasShadow: false});
+          hasShadow: false});
 
         const baseColor = [0, 0, 0];
         const teraColor = Utils.randSeedItem([
-            getTypeRgb(Type.POISON),
-            getTypeRgb(Type.DARK),
-            [240, 48, 48],
-            [50, 50, 50]
+          getTypeRgb(Type.POISON),
+          getTypeRgb(Type.DARK),
+          [240, 48, 48],
+          [50, 50, 50]
         ]);
-          if (scene.currentBattle?.trainer?.isCorrupted) {
-            this.sprite.pipelineData["teraColor"] = teraColor;
-            this.sprite.pipelineData["baseColor"] = baseColor;
-            this.sprite.setPipelineData({ teraColor, baseColor });
-          } else if (scene.gameMode.isNightmare) {
-            this.sprite.pipelineData["teraColor"] = teraColor;
-            this.sprite.setPipelineData({ teraColor });
-          }
-    }
-    else {
-      this.sprite.setPipeline(scene.spritePipeline, {tone: [0.0, 0.0, 0.0, 0.0], hasShadow: false});
-    }
-
-    if (scene.gameMode.isNightmare && (key.includes('smitty_trainers') || scene.currentBattle?.trainer?.isCorrupted)) {
-      if(Utils.randSeedInt(0, 100) < 35) {
-        scene.getRandomSmittySound();
+        if (scene.currentBattle?.trainer?.isCorrupted) {
+          this.sprite.pipelineData["teraColor"] = teraColor;
+          this.sprite.pipelineData["baseColor"] = baseColor;
+          this.sprite.setPipelineData({ teraColor, baseColor });
+        } else if (scene.gameMode.isNightmare) {
+          this.sprite.pipelineData["teraColor"] = teraColor;
+          this.sprite.setPipelineData({ teraColor });
+        }
+      } else {
+        this.sprite.setPipeline(scene.spritePipeline, {tone: [0.0, 0.0, 0.0, 0.0], hasShadow: false});
       }
-    }
+
+      if (scene.gameMode.isNightmare && (key.includes("smitty_trainers") || scene.currentBattle?.trainer?.isCorrupted)) {
+        if (Utils.randSeedInt(0, 100) < 35) {
+          scene.getRandomSmittySound();
+        }
+      }
 
       this.setVisible(texture.key !== Utils.MissingTextureKey);
 

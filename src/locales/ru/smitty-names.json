@@ -1,0 +1,257 @@
+{
+  "tartauros": {
+    "name": "Тартаурос"
+  },
+  "zamowak": {
+    "name": "Замовак"
+  },
+  "greyokai": {
+    "name": "Грейокай"
+  },
+  "jormunza": {
+    "name": "Йормунза"
+  },
+  "licthulhu": {
+    "name": "Ликтулху"
+  },
+  "plasmist": {
+    "name": "Плазмист"
+  },
+  "plustra": {
+    "name": "Плустра"
+  },
+  "hellchar": {
+    "name": "Хеллчар"
+  },
+  "feareon": {
+    "name": "Фиареон"
+  },
+  "omninom": {
+    "name": "Омнином"
+  },
+  "necromew": {
+    "name": "Некромью"
+  },
+  "diablotar": {
+    "name": "Диаблотар"
+  },
+  "smitom": {
+    "name": "Смитом"
+  },
+  "genomander": {
+    "name": "Геномандер"
+  },
+  "tormentle": {
+    "name": "Торментл"
+  },
+  "terrorbulb": {
+    "name": "Террорбулб"
+  },
+  "dankitar": {
+    "name": "Данкитар"
+  },
+  "gastmoji": {
+    "name": "Гастмодзи"
+  },
+  "noxabis": {
+    "name": "Ноксабис"
+  },
+  "floravora": {
+    "name": "Флоравора"
+  },
+  "chimerdrio": {
+    "name": "Химердрио"
+  },
+  "clefangar": {
+    "name": "Клефангар"
+  },
+  "terroragon": {
+    "name": "Террорагон"
+  },
+  "godread": {
+    "name": "Годрид"
+  },
+  "duschmare": {
+    "name": "Душмэр"
+  },
+  "abyssuma": {
+    "name": "Абиссума"
+  },
+  "omnitto": {
+    "name": "Омнитто"
+  },
+  "umbraffe": {
+    "name": "Умбрафф"
+  },
+  "tartadra": {
+    "name": "Тартадра"
+  },
+  "tengale": {
+    "name": "Тэнгейл"
+  },
+  "hyplagus": {
+    "name": "Хиплагус"
+  },
+  "demonoth": {
+    "name": "Демоноз"
+  },
+  "despeko": {
+    "name": "Деспеко"
+  },
+  "zoomer": {
+    "name": "Зумер"
+  },
+  "voidash": {
+    "name": "Войдаш"
+  },
+  "wahcky": {
+    "name": "Вахки"
+  },
+  "wahzebub": {
+    "name": "Вахзебаб"
+  },
+  "fineferno": {
+    "name": "Файнеферно"
+  },
+  "sorbred": {
+    "name": "Сорбред"
+  },
+  "corpanzee": {
+    "name": "Корпанзи"
+  },
+  "plankling": {
+    "name": "Планклинг"
+  },
+  "timbrick": {
+    "name": "Тимбрик"
+  },
+  "plankult": {
+    "name": "Планкульт"
+  },
+  "sorbobo": {
+    "name": "Сорбред Призрак"
+  },
+  "hamtaro": {
+    "name": "Хамтаро"
+  },
+  "elmold": {
+    "name": "Элмолд"
+  },
+  "funghomp": {
+    "name": "Фангхомп"
+  },
+  "riddicus": {
+    "name": "Риддикус"
+  },
+  "boxecutive": {
+    "name": "Боксекьютив"
+  },
+  "patnius": {
+    "name": "Патниус"
+  },
+  "tentacrim": {
+    "name": "Тентакрим"
+  },
+  "undeadtunasmit": {
+    "name": "Андеадтунасмит"
+  },
+  "scarablanc": {
+    "name": "Скарабланк"
+  },
+  "batmare": {
+    "name": "Батмэр"
+  },
+  "smitward": {
+    "name": "Смитвард"
+  },
+  "niteknite": {
+    "name": "Найтнайт"
+  },
+  "dignitier": {
+    "name": "Дигнитир"
+  },
+  "cephaloom": {
+    "name": "Цефалум"
+  },
+  "smitshade": {
+    "name": "Смитшейд"
+  },
+  "smitspect": {
+    "name": "Смитспект"
+  },
+  "smitwraith": {
+    "name": "Смитрэйт"
+  },
+  "smiternal": {
+    "name": "Смитернал"
+  },
+  "smittyfish": {
+    "name": "Смиттифиш"
+  },
+  "smittellect": {
+    "name": "Смиттеллект"
+  },
+  "gallux": {
+    "name": "Галлукс"
+  },
+  "hostmitty": {
+    "name": "Хостмитти"
+  },
+  "smittynarie": {
+    "name": "Смиттинари"
+  },
+  "batboxbaba": {
+    "name": "Батбоксбаба"
+  },
+  "batboxbeyond": {
+    "name": "Батбоксбейонд"
+  },
+  "victainer": {
+    "name": "Виктэйнер"
+  },
+  "kakopier": {
+    "name": "Какопир"
+  },
+  "karasu-me": {
+    "name": "Карасу-ми"
+  },
+  "bullktopus": {
+    "name": "Булктопус"
+  },
+  "gumugumu": {
+    "name": "Гумугуму"
+  },
+  "santoryu": {
+    "name": "Санторю"
+  },
+  "roostace": {
+    "name": "Рустац"
+  },
+  "bogace": {
+    "name": "Богейс"
+  },
+  "milliant": {
+    "name": "Миллиант"
+  },
+  "churry": {
+    "name": "Чурри"
+  },
+  "gazorpsmitfield": {
+    "name": "Газорпсмитфилд"
+  },
+  "hologrick": {
+    "name": "Хологрик"
+  },
+  "seekling": {
+    "name": "Сиклинг"
+  },
+  "picklisk": {
+    "name": "Пиклиск"
+  },
+  "bravehound": {
+    "name": "Брэйвхаунд"
+  },
+  "missingno": {
+    "name": "МиссингНо"
+  }
+}

@@ -7,34 +7,36 @@ import BBCodeTextPlugin from "phaser3-rex-plugins/plugins/bbcodetext-plugin";
 import InputTextPlugin from "phaser3-rex-plugins/plugins/inputtext-plugin.js";
 import TransitionImagePackPlugin from "phaser3-rex-plugins/templates/transitionimagepack/transitionimagepack-plugin.js";
 import { LoadingScene } from "./loading-scene";
+import { clearCachesAndUnregisterServiceWorkers } from "./system/client-cache-utils";
+import { INTERNAL_BACKUP_VERSION } from "./system/game-data";
 
 window.onerror = function (message, source, lineno, colno, error) {
-  console.error('Global error:', error);
+  console.error("Global error:", error);
   const errorString = `Uncaught error: ${message}\nSource: ${source}\nLine: ${lineno}\nColumn: ${colno}\nStack: ${error?.stack}`;
   console.error(errorString);
   return true;
 };
 
 window.addEventListener("unhandledrejection", (event) => {
-  console.error('Unhandled promise rejection:', event.reason);
+  console.error("Unhandled promise rejection:", event.reason);
   const errorString = `Unhandled promise rejection: ${event.reason}\nStack: ${event.reason?.stack}`;
   console.error(errorString);
 });
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', (): void => {
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", (): void => {
     navigator.serviceWorker
-      .register('/service-worker.js')
+      .register("/service-worker.js")
       .then((registration: ServiceWorkerRegistration): void => {
-        console.log('ServiceWorker registration successful:', registration.scope);
+        console.log("ServiceWorker registration successful:", registration.scope);
       })
       .catch((error: Error): void => {
-        console.error('ServiceWorker registration failed:', error);
+        console.error("ServiceWorker registration failed:", error);
       });
   });
 }
 
-document.addEventListener('visibilitychange', (): void => {
+document.addEventListener("visibilitychange", (): void => {
   if (document.hidden) {
     if (game?.sound) {
       game.sound.pauseAll();
@@ -46,12 +48,12 @@ document.addEventListener('visibilitychange', (): void => {
   }
 });
 
-window.addEventListener('beforeunload', (event: BeforeUnloadEvent): void => {
+window.addEventListener("beforeunload", (event: BeforeUnloadEvent): void => {
   if (game?.scene?.scenes?.some((scene: Phaser.Scene): boolean =>
-    scene.scene.key === 'battle' && scene.scene.isActive()
+    scene.scene.key === "battle" && scene.scene.isActive()
   )) {
     event.preventDefault();
-    event.returnValue = '';
+    event.returnValue = "";
   }
 });
 
@@ -124,24 +126,56 @@ document.fonts.load("16px emerald").then(() => document.fonts.load("10px pkmnems
 
 let game: Phaser.Game;
 
+const VERSION_STORAGE_KEY = "last_seen_game_version";
+
+async function maybeClearCacheOnVersionChange(): Promise<boolean> {
+  try {
+    const currentVersion = `c2.0.${INTERNAL_BACKUP_VERSION}b`;
+    const lastSeen = localStorage.getItem(VERSION_STORAGE_KEY);
+    if (lastSeen && lastSeen !== currentVersion) {
+      localStorage.setItem(VERSION_STORAGE_KEY, currentVersion);
+      await clearCachesAndUnregisterServiceWorkers();
+      window.location.reload();
+      return true;
+    }
+    if (!lastSeen) {
+      localStorage.setItem(VERSION_STORAGE_KEY, currentVersion);
+    }
+  } catch (e) {
+    console.warn("[VersionCheck] Failed:", e);
+  }
+  return false;
+}
+
 const startGame = () => {
   try {
     game = new Phaser.Game(config);
     game.sound.pauseOnBlur = false;
   } catch (error) {
-    console.error('Error starting the game:', error);
-    alert('Failed to start the game. Please check the console for details and report this issue.');
+    console.error("Error starting the game:", error);
+    alert("Failed to start the game. Please check the console for details and report this issue.");
   }
 };
 
-fetch("/manifest.json")
-    .then(res => res.json())
-    .then(jsonResponse => {
-      startGame();
+const boot = async (): Promise<void> => {
+  const shouldReload = await maybeClearCacheOnVersionChange();
+  if (shouldReload) {
+    return;
+  }
+
+  try {
+    startGame();
+    if (import.meta.env.MODE === "production" || import.meta.env.VITE_LOAD_ASSET_MANIFEST === "1") {
+      const res = await fetch("/manifest.json");
+      if (!res.ok) {
+        return;
+      }
+      const jsonResponse = await res.json();
       game["manifest"] = jsonResponse.manifest;
-    })
-    .catch((error) => {
-      startGame();
-    });
+    }
+  } catch {}
+};
+
+void boot();
 
 export default game;

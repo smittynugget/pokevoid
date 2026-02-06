@@ -69,7 +69,7 @@
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "便宜",
-      "description": "增加持有者的{{statName}}5%。"
+      "description": "增加持有者的{{statName}}1%。"
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "所有寶可夢完全恢復HP。"
@@ -750,7 +750,7 @@
     },
     "AnyPassiveAbilityModifierType": {
       "name": "被動{{abilityName}}",
-      "description": "將被動技能{{abilityName}}賦予任意寶可夢\n(按住C鍵或Shift鍵查看更多資訊)。",
+      "description": "為任意寶可夢設定被動技能{{abilityName}}\n(按住C鍵或Shift鍵查看更多資訊)。",
       "statLabel": "任意被動特性道具"
     },
     "AnyAbilityModifierType": {
@@ -918,6 +918,35 @@
     "SWAMPERTITE": "巨沼怪進化石",
     "TYRANITARITE": "班基拉斯進化石",
     "VENUSAURITE": "妙蛙花進化石",
+
+    "CLEFABLITE": "皮可西進化石",
+    "VICTREBELITE": "大食花進化石",
+    "STARMITE": "寶石海星進化石",
+    "DRAGONITITE": "快龍進化石",
+    "MEGANIUMITE": "大竺葵進化石",
+    "FERALIGATRITE": "大力鱷進化石",
+    "SKARMORYITE": "盔甲鳥進化石",
+    "FROSLASSITE": "雪妖女進化石",
+    "EMBOARITE": "炎武王進化石",
+    "EXCADRILLITE": "龍頭地鼠進化石",
+    "SCOLIPEDITE": "蜈蚣王進化石",
+    "SCRAFTITE": "頭巾混混進化石",
+    "EELEKTROSSITE": "麻麻鰻魚王進化石",
+    "CHANDELURITE": "水晶燈火靈進化石",
+    "CHESNAUGHTITE": "布里卡隆進化石",
+    "DELPHOXITE": "妖火紅狐進化石",
+    "GRENINJITE": "甲賀忍蛙進化石",
+    "PYROARITE": "火炎獅進化石",
+    "FLOETTITE": "花葉蒂進化石",
+    "MALAMARITE": "烏賊王進化石",
+    "BARBARACLITE": "龜足巨鎧進化石",
+    "DRAGALGITE": "毒藻龍進化石",
+    "HAWLUCHITE": "摔角鷹人進化石",
+    "ZYGARDITE": "基格爾德進化石",
+    "DRAMPITE": "老翁龍進化石",
+    "FALINKSITE": "列陣兵進化石",
+    "ZERAORITE": "捷拉奧拉進化石",
+
     "BLUE_ORB": "靛藍色寶珠",
     "RED_ORB": "硃紅色寶珠",
     "SHARP_METEORITE": "銳利隕石",
@@ -1035,6 +1064,7 @@
     "waves": "波",
     "uses": "次",
     "glitchPieceCost": "*需要消耗2個故障碎片",
+    "essenceAlternativeCost": "如果該寶可夢擁有5個以上精華，則可改為消耗精華。",
     "permaMoney": "Ω金幣",
     "permaItem": "Ω道具",
     "moreInfo": "(按住C鍵或Shift鍵查看更多資訊)",

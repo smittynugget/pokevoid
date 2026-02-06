@@ -1,5 +1,5 @@
 import BattleScene from "../battle-scene";
-import { addTextObject, TextStyle } from "./text";
+import { addTextObject, getTextColor, TextStyle } from "./text";
 import PartyUiHandler, { PartyUiMode } from "./party-ui-handler";
 import { Mode } from "./ui";
 import UiHandler from "./ui-handler";
@@ -29,6 +29,15 @@ export default class CommandUiHandler extends UiHandler {
   private cursorObj: Phaser.GameObjects.Image | null;
   private newCommandPositions: { x: number; y: number }[] = [];
 
+  private baseCommandLabels: string[] = [];
+  private commandTextByCursor: Map<number, Phaser.GameObjects.Text> = new Map();
+
+  private lastCheckedEnemyId: number | null = null;
+  private lastKnownSkillPoints: number | null = null;
+  private hasUnseenSkillPoints: boolean = false;
+
+  private attentionUpdateEvent: Phaser.Time.TimerEvent | null = null;
+
   private static readonly NEW_COMMAND_DEFAULT_ALPHA = 0.35;
   private static readonly NEW_COMMAND_UNFOCUSED_ALPHA = 0.7;
   private static readonly NEW_COMMAND_FOCUSED_ALPHA = 1.0;
@@ -57,12 +66,18 @@ export default class CommandUiHandler extends UiHandler {
 
     const columns = [
       { row0Key: "commandUiHandler:shop", row1Key: "commandUiHandler:map" },
-      { row0Key: "commandUiHandler:team", row1Key: "commandUiHandler:check" },
+      { row0Key: "commandUiHandler:team", row1Key: "pokedex:voidex" },
       { row0Key: "commandUiHandler:skillTree", row1Key: "commandUiHandler:eggs" }
     ];
 
-    const measureTextWidth = (key: string): number => {
-      const text = i18next.t(key);
+    const attentionKeys = new Set<string>([
+      "commandUiHandler:shop",
+      "pokedex:voidex",
+      "commandUiHandler:skillTree"
+    ]);
+
+    const measureTextWidth = (key: string, reserveAttention: boolean): number => {
+      const text = i18next.t(key) + (reserveAttention ? "(!)" : "");
       const tempText = addTextObject(this.scene, 0, 0, text, TextStyle.WINDOW);
       const width = tempText.displayWidth;
       tempText.destroy();
@@ -71,8 +86,8 @@ export default class CommandUiHandler extends UiHandler {
 
     const columnWidths: number[] = [];
     for (let i = 0; i < columns.length; i++) {
-      const row0Width = measureTextWidth(columns[i].row0Key);
-      const row1Width = measureTextWidth(columns[i].row1Key);
+      const row0Width = measureTextWidth(columns[i].row0Key, attentionKeys.has(columns[i].row0Key));
+      const row1Width = measureTextWidth(columns[i].row1Key, attentionKeys.has(columns[i].row1Key));
       columnWidths[i] = Math.max(row0Width, row1Width);
     }
 
@@ -92,10 +107,17 @@ export default class CommandUiHandler extends UiHandler {
       }
     }
 
+    const isRussian = i18next.resolvedLanguage === "ru";
+    if (isRussian) {
+      for (let i = 0; i < columnLeftEdges.length; i++) {
+        columnLeftEdges[i] -= 5;
+      }
+    }
+
     const newCommands = [
       { text: i18next.t("commandUiHandler:team"), x: columnLeftEdges[1], y: 0 },
       { text: i18next.t("commandUiHandler:skillTree"), x: columnLeftEdges[2], y: 0 },
-      { text: i18next.t("commandUiHandler:check"), x: columnLeftEdges[1], y: 16 },
+      { text: i18next.t("pokedex:voidex"), x: columnLeftEdges[1], y: 16 },
       { text: i18next.t("commandUiHandler:eggs"), x: columnLeftEdges[2], y: 16 },
       { text: i18next.t("commandUiHandler:shop"), x: columnLeftEdges[0], y: 0 },
       { text: i18next.t("commandUiHandler:map"), x: columnLeftEdges[0], y: 16 }
@@ -109,11 +131,14 @@ export default class CommandUiHandler extends UiHandler {
     ui.add(this.commandsContainer);
 
     const allCommands = [...originalCommands, ...newCommands];
+    this.baseCommandLabels = allCommands.map(c => c.text);
     const isPtBR = i18next.resolvedLanguage === "pt-BR";
     allCommands.forEach((cmd, index) => {
       const fontSizeOverride = (index >= 4 && isPtBR) ? { fontSize: "93px" } : {};
       const commandText = addTextObject(this.scene, cmd.x, cmd.y, cmd.text, TextStyle.WINDOW, fontSizeOverride);
       commandText.setName(cmd.text);
+
+      this.commandTextByCursor.set(index, commandText);
 
       if (index >= 4) {
         commandText.setAlpha(CommandUiHandler.NEW_COMMAND_DEFAULT_ALPHA);
@@ -121,6 +146,85 @@ export default class CommandUiHandler extends UiHandler {
 
       this.commandsContainer.add(commandText);
     });
+  }
+
+  private getCurrentEnemyPokemonId(): number | null {
+    const enemy = (this.scene as BattleScene).getEnemyPokemon();
+    if (!enemy) {
+      return null;
+    }
+    return enemy.id;
+  }
+
+  private shouldShowCheckAttention(): boolean {
+    const enemy = (this.scene as BattleScene).getEnemyPokemon();
+    if (!enemy) {
+      return false;
+    }
+    if (!enemy.isGlitchOrSmittyForm()) {
+      return false;
+    }
+    if (this.lastCheckedEnemyId === enemy.id) {
+      return false;
+    }
+    return true;
+  }
+
+  private shouldShowShopAttention(): boolean {
+    const gameData = (this.scene as BattleScene).gameData as any;
+    const lastRefresh = gameData?.lastPermaShopRefreshTime || 0;
+    if (!lastRefresh) {
+      return false;
+    }
+    return Date.now() - lastRefresh >= 10 * 60 * 1000;
+  }
+
+  private updateSkillTreeUnseenState(): void {
+    const gameData = (this.scene as any).gameData as any;
+    const ast = gameData?.activeSkillTree;
+    if (!ast) {
+      this.lastKnownSkillPoints = null;
+      this.hasUnseenSkillPoints = false;
+      return;
+    }
+    const current = ast.skillPoints || 0;
+    if (this.lastKnownSkillPoints === null) {
+      this.lastKnownSkillPoints = current;
+      this.hasUnseenSkillPoints = current > 0;
+      return;
+    }
+    if (current > this.lastKnownSkillPoints) {
+      this.hasUnseenSkillPoints = true;
+    }
+    this.lastKnownSkillPoints = current;
+  }
+
+  private applyAttentionState(cursor: number, active: boolean): void {
+    const textObj = this.commandTextByCursor.get(cursor);
+    if (!textObj) {
+      return;
+    }
+    const baseLabel = this.baseCommandLabels[cursor] || textObj.text;
+    const label = active ? `${baseLabel}(!)` : baseLabel;
+    textObj.setText(label);
+    if (active) {
+      textObj.setColor(getTextColor(TextStyle.SUMMARY_GOLD, false, (this.scene as BattleScene).uiTheme));
+    } else {
+      textObj.setColor(getTextColor(TextStyle.WINDOW, false, (this.scene as BattleScene).uiTheme));
+    }
+  }
+
+  private updateAttentionIndicators(): void {
+    this.applyAttentionState(8, this.shouldShowShopAttention());
+    const enemy = (this.scene as BattleScene).getEnemyPokemon();
+    if (!enemy || !enemy.isGlitchOrSmittyForm()) {
+      this.lastCheckedEnemyId = null;
+      this.applyAttentionState(6, false);
+    } else {
+      this.applyAttentionState(6, this.lastCheckedEnemyId !== enemy.id);
+    }
+    this.updateSkillTreeUnseenState();
+    this.applyAttentionState(5, this.hasUnseenSkillPoints);
   }
 
   show(args: any[]): boolean {
@@ -153,6 +257,15 @@ export default class CommandUiHandler extends UiHandler {
     messageHandler.clearText();
     messageHandler.message.setVisible(false);
     this.setCursor(this.getCursor());
+
+    this.updateAttentionIndicators();
+    if (!this.attentionUpdateEvent) {
+      this.attentionUpdateEvent = this.scene.time.addEvent({
+        delay: 1000,
+        loop: true,
+        callback: () => this.updateAttentionIndicators()
+      });
+    }
 
     return true;
   }
@@ -191,15 +304,9 @@ export default class CommandUiHandler extends UiHandler {
           const scene = this.scene as BattleScene;
           const slotId = scene.sessionSlotId;
           if (slotId >= 0) {
-            (async () => {
-              try {
-                const sessionData = await scene.gameData.getSession(slotId);
-                if (sessionData) {
-                  const activeRunEntry = { entry: sessionData, isVictory: false, isFavorite: false, isActive: true };
-                  ui.setOverlayMode(Mode.RUN_INFO, activeRunEntry, true);
-                }
-              } catch {}
-            })();
+            const sessionData = scene.gameData.getSessionSaveData(scene);
+            const activeRunEntry = { entry: sessionData, isVictory: false, isFavorite: false, isActive: true };
+            ui.setOverlayMode(Mode.RUN_INFO, activeRunEntry, true);
             success = true;
           } else {
             ui.playError();
@@ -209,12 +316,15 @@ export default class CommandUiHandler extends UiHandler {
           const commandPhase = (this.scene.getCurrentPhase() as CommandPhase);
           const gameData: any = (this.scene as any).gameData;
           if (gameData?.activeSkillTree) {
+            this.lastKnownSkillPoints = gameData.activeSkillTree.skillPoints || 0;
+            this.hasUnseenSkillPoints = false;
             commandPhase.openSkillTreeFromCommand();
             success = true;
           }
           break; }
         case 6:
-          ui.setOverlayMode(Mode.POKEDEX);
+          this.lastCheckedEnemyId = this.getCurrentEnemyPokemonId();
+          ui.setOverlayMode(Mode.VOIDEX_PRELIST);
           success = true;
           break;
         case 7:
@@ -244,48 +354,88 @@ export default class CommandUiHandler extends UiHandler {
     } else {
       switch (button) {
       case Button.UP:
-        if (cursor >= 2 && cursor <= 3) success = this.setCursor(cursor - 2);
-        else if (cursor >= 6 && cursor <= 7) success = this.setCursor(cursor - 2);
-        else if (cursor === 8) success = this.setCursor(4);
-        else if (cursor === 9) success = this.setCursor(8);
-        else if (cursor === 0) success = this.setCursor(2);
-        else if (cursor === 1) success = this.setCursor(3);
-        else if (cursor === 4) success = this.setCursor(6);
-        else if (cursor === 5) success = this.setCursor(7);
+        if (cursor >= 2 && cursor <= 3) {
+          success = this.setCursor(cursor - 2);
+        } else if (cursor >= 6 && cursor <= 7) {
+          success = this.setCursor(cursor - 2);
+        } else if (cursor === 8) {
+          success = this.setCursor(4);
+        } else if (cursor === 9) {
+          success = this.setCursor(8);
+        } else if (cursor === 0) {
+          success = this.setCursor(2);
+        } else if (cursor === 1) {
+          success = this.setCursor(3);
+        } else if (cursor === 4) {
+          success = this.setCursor(6);
+        } else if (cursor === 5) {
+          success = this.setCursor(7);
+        }
         break;
       case Button.DOWN:
-        if (cursor <= 1) success = this.setCursor(cursor + 2);
-        else if (cursor >= 4 && cursor <= 5) success = this.setCursor(cursor + 2);
-        else if (cursor === 8) success = this.setCursor(9);
-        else if (cursor === 2) success = this.setCursor(0);
-        else if (cursor === 3) success = this.setCursor(1);
-        else if (cursor === 6) success = this.setCursor(4);
-        else if (cursor === 7) success = this.setCursor(5);
-        else if (cursor === 9) success = this.setCursor(8);
+        if (cursor <= 1) {
+          success = this.setCursor(cursor + 2);
+        } else if (cursor >= 4 && cursor <= 5) {
+          success = this.setCursor(cursor + 2);
+        } else if (cursor === 8) {
+          success = this.setCursor(9);
+        } else if (cursor === 2) {
+          success = this.setCursor(0);
+        } else if (cursor === 3) {
+          success = this.setCursor(1);
+        } else if (cursor === 6) {
+          success = this.setCursor(4);
+        } else if (cursor === 7) {
+          success = this.setCursor(5);
+        } else if (cursor === 9) {
+          success = this.setCursor(8);
+        }
         break;
       case Button.LEFT:
-        if (cursor === 1) success = this.setCursor(0);
-        else if (cursor === 3) success = this.setCursor(2);
-        else if (cursor === 0) success = this.setCursor(5);
-        else if (cursor === 2) success = this.setCursor(7);
-        else if (cursor === 5) success = this.setCursor(4);
-        else if (cursor === 7) success = this.setCursor(6);
-        else if (cursor === 4) success = this.setCursor(8);
-        else if (cursor === 6) success = this.setCursor(9);
-        else if (cursor === 8) success = this.setCursor(1);
-        else if (cursor === 9) success = this.setCursor(3);
+        if (cursor === 1) {
+          success = this.setCursor(0);
+        } else if (cursor === 3) {
+          success = this.setCursor(2);
+        } else if (cursor === 0) {
+          success = this.setCursor(5);
+        } else if (cursor === 2) {
+          success = this.setCursor(7);
+        } else if (cursor === 5) {
+          success = this.setCursor(4);
+        } else if (cursor === 7) {
+          success = this.setCursor(6);
+        } else if (cursor === 4) {
+          success = this.setCursor(8);
+        } else if (cursor === 6) {
+          success = this.setCursor(9);
+        } else if (cursor === 8) {
+          success = this.setCursor(1);
+        } else if (cursor === 9) {
+          success = this.setCursor(3);
+        }
         break;
       case Button.RIGHT:
-        if (cursor === 0) success = this.setCursor(1);
-        else if (cursor === 2) success = this.setCursor(3);
-        else if (cursor === 5) success = this.setCursor(0);
-        else if (cursor === 7) success = this.setCursor(2);
-        else if (cursor === 4) success = this.setCursor(5);
-        else if (cursor === 6) success = this.setCursor(7);
-        else if (cursor === 8) success = this.setCursor(4);
-        else if (cursor === 9) success = this.setCursor(6);
-        else if (cursor === 1) success = this.setCursor(8);
-        else if (cursor === 3) success = this.setCursor(9);
+        if (cursor === 0) {
+          success = this.setCursor(1);
+        } else if (cursor === 2) {
+          success = this.setCursor(3);
+        } else if (cursor === 5) {
+          success = this.setCursor(0);
+        } else if (cursor === 7) {
+          success = this.setCursor(2);
+        } else if (cursor === 4) {
+          success = this.setCursor(5);
+        } else if (cursor === 6) {
+          success = this.setCursor(7);
+        } else if (cursor === 8) {
+          success = this.setCursor(4);
+        } else if (cursor === 9) {
+          success = this.setCursor(6);
+        } else if (cursor === 1) {
+          success = this.setCursor(8);
+        } else if (cursor === 3) {
+          success = this.setCursor(9);
+        }
         break;
       }
     }
@@ -342,10 +492,10 @@ export default class CommandUiHandler extends UiHandler {
     this.cursorObj.setTint(0xffffff);
 
     if (changed && cursor >= 4 && cursor <= 9) {
-        const scene = this.scene as BattleScene;
-        if (!scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.COMMAND_UI_NEW_COMMANDS)) {
-            scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.COMMAND_UI_NEW_COMMANDS, true, false);
-        }
+      const scene = this.scene as BattleScene;
+      if (!scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.COMMAND_UI_NEW_COMMANDS)) {
+        scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.COMMAND_UI_NEW_COMMANDS, true, false);
+      }
     }
 
     return changed;
@@ -367,17 +517,24 @@ export default class CommandUiHandler extends UiHandler {
       const isTeamCommand = index === 4;
       const isFocused = index === focusedCursor;
 
+      let alpha: number;
       if (isMapCommand && !isChaosMode) {
-        commandText.setAlpha(CommandUiHandler.MAP_DISABLED_ALPHA);
+        alpha = CommandUiHandler.MAP_DISABLED_ALPHA;
       } else if (isTeamCommand && !isSessionSaved) {
-        commandText.setAlpha(CommandUiHandler.MAP_DISABLED_ALPHA);
+        alpha = CommandUiHandler.MAP_DISABLED_ALPHA;
       } else if (isFocused) {
-        commandText.setAlpha(CommandUiHandler.NEW_COMMAND_FOCUSED_ALPHA);
+        alpha = CommandUiHandler.NEW_COMMAND_FOCUSED_ALPHA;
       } else if (focusedCursor >= 4 && focusedCursor <= 9) {
-        commandText.setAlpha(CommandUiHandler.NEW_COMMAND_UNFOCUSED_ALPHA);
+        alpha = CommandUiHandler.NEW_COMMAND_UNFOCUSED_ALPHA;
       } else {
-        commandText.setAlpha(CommandUiHandler.NEW_COMMAND_DEFAULT_ALPHA);
+        alpha = CommandUiHandler.NEW_COMMAND_DEFAULT_ALPHA;
       }
+
+      if (commandText.text?.includes("(!)")) {
+        alpha *= 0.5;
+      }
+
+      commandText.setAlpha(alpha);
     });
   }
 
@@ -388,6 +545,10 @@ export default class CommandUiHandler extends UiHandler {
     this.getUi().getMessageHandler().clearText();
     this.getUi().getMessageHandler().message.setVisible(true);
     this.eraseCursor();
+    if (this.attentionUpdateEvent) {
+      this.attentionUpdateEvent.remove(false);
+      this.attentionUpdateEvent = null;
+    }
   }
 
   eraseCursor(): void {

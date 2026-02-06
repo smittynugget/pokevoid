@@ -87,6 +87,18 @@ export class EggHatchPhase extends Phase {
 
       this.eggHatchBg = this.scene.add.image(0, 0, "default_bg");
       this.eggHatchBg.setOrigin(0, 0);
+      try {
+        if (this.eggHatchBg.postFX && typeof this.eggHatchBg.postFX.addColorMatrix === "function") {
+          const colorMatrix = this.eggHatchBg.postFX.addColorMatrix();
+          colorMatrix.negative();
+        } else {
+          this.eggHatchBg.setTint(0xFFFFFF);
+          this.eggHatchBg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
+        }
+      } catch (error) {
+        this.eggHatchBg.setTint(0x000000);
+        this.eggHatchBg.setBlendMode(Phaser.BlendModes.SCREEN);
+      }
       this.eggHatchContainer.add(this.eggHatchBg);
 
       this.eggContainer = this.scene.add.container(this.eggHatchBg.displayWidth / 2, this.eggHatchBg.displayHeight / 2);
@@ -142,7 +154,7 @@ export class EggHatchPhase extends Phase {
       pokemon.loadAssets().then(() => {
         this.canSkip = true;
 
-        if(this.eggsToHatchCount > 100) {
+        if (this.eggsToHatchCount > 100) {
 
           this.eggCrackSprite.setVisible(true);
           this.eggCrackSprite.setFrame("4");
@@ -345,6 +357,7 @@ export class EggHatchPhase extends Phase {
         this.scene.ui.showText(i18next.t("egg:hatchFromTheEgg", { pokemonName: getPokemonNameWithAffix(this.pokemon) }), null, () => {
           this.scene.gameData.updateSpeciesDexIvs(this.pokemon.species.speciesId, this.pokemon.ivs);
           this.scene.gameData.setPokemonCaught(this.pokemon, true, true).then(() => {
+            this.scene.recordRunEndSummaryHatch(this.pokemon);
             this.scene.gameData.setEggMoveUnlocked(this.pokemon.species, this.eggMoveIndex).then(() => {
               this.scene.ui.showText("", 0);
 

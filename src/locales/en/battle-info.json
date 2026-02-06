@@ -1,4 +1,6 @@
   {
     "generation": "Generation {{generation}}",
-    "glitchForm": "{{formName}} HAS GLITCH"
+    "glitchForm": "{{formName}} HAS GLITCH",
+    "fusionTooltipTitle": "Fusion",
+    "fusionTooltipBody": "{{primary}}/{{fusion}}\n\nFusion stats use both Pokémon’s base stats:\n1) Nature-boosted stat (or HP if neutral): take the higher value\n2) One more best stat: take the stronger remaining stat\n3) Everything else: average and round up\nNature modifiers apply after."
   }

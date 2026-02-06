@@ -69,7 +69,7 @@
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "便宜",
-      "description": "增加5%持有者的{{statName}}。"
+      "description": "增加1%持有者的{{statName}}。"
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "所有宝可梦完全回复HP。"
@@ -750,7 +750,7 @@
     },
     "AnyPassiveAbilityModifierType": {
       "name": "被动特性{{abilityName}}",
-      "description": "将被动技能{{abilityName}}赋予任意宝可梦\n(按住C键或Shift键查看更多信息)。",
+      "description": "为任意宝可梦设置被动技能{{abilityName}}\n(按住C键或Shift键查看更多信息)。",
       "statLabel": "任意被动特性道具"
     },
     "AnyAbilityModifierType": {
@@ -918,6 +918,35 @@
     "SWAMPERTITE": "巨沼怪进化石",
     "TYRANITARITE": "班基拉斯进化石",
     "VENUSAURITE": "妙蛙花进化石",
+
+    "CLEFABLITE": "皮可西进化石",
+    "VICTREBELITE": "大食花进化石",
+    "STARMITE": "宝石海星进化石",
+    "DRAGONITITE": "快龙进化石",
+    "MEGANIUMITE": "大竺葵进化石",
+    "FERALIGATRITE": "大力鳄进化石",
+    "SKARMORYITE": "盔甲鸟进化石",
+    "FROSLASSITE": "雪妖女进化石",
+    "EMBOARITE": "炎武王进化石",
+    "EXCADRILLITE": "龙头地鼠进化石",
+    "SCOLIPEDITE": "蜈蚣王进化石",
+    "SCRAFTITE": "头巾混混进化石",
+    "EELEKTROSSITE": "麻麻鳗鱼王进化石",
+    "CHANDELURITE": "水晶灯火灵进化石",
+    "CHESNAUGHTITE": "布里卡隆进化石",
+    "DELPHOXITE": "妖火红狐进化石",
+    "GRENINJITE": "甲贺忍蛙进化石",
+    "PYROARITE": "火炎狮进化石",
+    "FLOETTITE": "花叶蒂进化石",
+    "MALAMARITE": "乌贼王进化石",
+    "BARBARACLITE": "龟足巨铠进化石",
+    "DRAGALGITE": "毒藻龙进化石",
+    "HAWLUCHITE": "摔角鹰人进化石",
+    "ZYGARDITE": "基格尔德进化石",
+    "DRAMPITE": "老翁龙进化石",
+    "FALINKSITE": "列阵兵进化石",
+    "ZERAORITE": "捷拉奥拉进化石",
+
     "BLUE_ORB": "靛蓝色宝珠",
     "RED_ORB": "朱红色宝珠",
     "SHARP_METEORITE": "锐利陨石",
@@ -1035,6 +1064,7 @@
     "waves": "波",
     "uses": "次",
     "glitchPieceCost": "*需要2个故障碎片",
+    "essenceAlternativeCost": "如果该宝可梦拥有5个及以上精华，则可改为消耗精华。",
     "permaMoney": "Ω金币",
     "permaItem": "Ω道具",
     "moreInfo": "(按住C键或Shift键查看更多信息)",

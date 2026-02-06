@@ -49,7 +49,8 @@
   "validation": {
     "requiredField": "この項目は必須です",
     "invalidImage": "無効な画像形式またはサイズです",
-    "imageSize": "画像は150-200pxにしてください"
+    "imageSize": "画像は150-200pxにしてください",
+    "uniqueStats": "各ステータスは一意でなければなりません"
   },
   "statusMessages": {
     "creatingMod": "モッド作成中...",

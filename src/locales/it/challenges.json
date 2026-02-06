@@ -25,5 +25,16 @@
     "desc": "Puoi usare solo gli starter originali, e come se avessi appena cominciato PokéVoid.",
     "value.0": "Off",
     "value.1": "On"
+  },
+  "inverseBattle": {
+    "name": "Battaglia invertita",
+    "shortName": "Invertita",
+    "desc": "I vantaggi di tipo sono invertiti e le immunità sono eliminate.\nDisabilita gli obiettivi per le altre sfide.",
+    "value.0": "No",
+    "value.1": "Sì",
+    "value": {
+      "0": "No",
+      "1": "Sì"
+    }
   }
 }

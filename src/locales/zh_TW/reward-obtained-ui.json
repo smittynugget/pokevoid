@@ -43,5 +43,8 @@
     "rivalVoid": "{{name}}消失在虛空中...",
     "error": "載入獎勵時出錯",
     "new": "新"
+  },
+  "saveReward": {
+    "essenceBundle": "3個精華: {{types}}"
   }
 } 

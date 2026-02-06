@@ -2,8 +2,14 @@ import { FormModalUiHandler } from "./form-modal-ui-handler";
 import { ModalConfig } from "./modal-ui-handler";
 import i18next from "i18next";
 import { PlayerPokemon } from "#app/field/pokemon.js";
+import InputText from "phaser3-rex-plugins/plugins/inputtext";
 
 export default class RenameFormUiHandler extends FormModalUiHandler {
+  protected override getInputConfig(field: string): InputText.IConfig {
+    const cfg = super.getInputConfig(field);
+    return { ...cfg, fontSize: "96px" };
+  }
+
   getModalTitle(config?: ModalConfig): string {
     return i18next.t("menu:renamePokemon");
   }

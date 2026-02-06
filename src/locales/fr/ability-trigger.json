@@ -4,7 +4,7 @@
   "costar": "{{pokemonName}} copie les changements de stats\nde {{allyName}} !",
   "iceFaceAvoidedDamage": "{{pokemonNameWithAffix}} évite les dégâts\navec {{abilityName}} !",
   "perishBody": "{{abilityName}} de {{pokemonName}}\nmettra les deux Pokémon K.O. dans trois tours !",
-  "poisonHeal": "{{pokemonNameWithAffix}} de {{pokemonName}}\nrestaure un peu ses PV !",
+  "poisonHeal": "{{abilityName}} de {{pokemonNameWithAffix}}\nrestaure un peu ses PV !",
   "trace": "{{pokemonName}} copie le talent {{abilityName}}\nde {{targetName}} !",
   "windPowerCharged": "{{pokemonName}} a été touché par la capacité {{moveName}} et se charge en électricité !",
   "quickDraw": "Tir Vif permet à {{pokemonName}}\nd'agir plus vite que d'habitude !",

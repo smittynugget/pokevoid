@@ -1,4 +1,5 @@
 {
+  "options": "옵션",
   "boy": "남자",
   "girl": "여자",
   "general": "일반",
@@ -106,5 +107,6 @@
   "reroll": "갱신",
   "shop": "상점",
   "checkTeam": "파티 확인",
-  "lockedRewardSpeed": "보상 속도 고정"
+  "disableMoveUpgrades": "기술 강화 비활성화",
+  "disableCutscenes": "컷신 비활성화"
 }

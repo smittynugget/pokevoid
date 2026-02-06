@@ -1,5 +1,6 @@
 {
   "title": "Árvore de Habilidades",
+  "unknownReward": "Recompensa Desconhecida",
   "subtitle": "Use pontos de habilidade para desbloquear habilidades poderosas",
   "skillPoints": "Pontos de Habilidade: {{points}}",
   "tokens": "Tokens da Árvore: {{tokens}}",
@@ -24,6 +25,10 @@
   "instructionsSelectBoth": "Selecione 1 Pokémon Assinatura e 1 Pokémon Normal",
   "instructionsSelectSignature": "Selecione 1 Pokémon Assinatura",
   "instructionsSelectGeneral": "Selecione 1 Pokémon Normal",
+  "instructionsPokemonSelection": "Escolha 2 Pokémon (máx. 1 Assinatura)",
+  "instructionsPokemonSelectionRemaining": "Escolha mais {{remaining}} Pokémon",
+  "instructionsPokemonSelectionSignatureAvailable": "Escolha mais {{remaining}} (Assinatura disponível)",
+  "instructionsPokemonSelectionComplete": "Seleção completa!",
   "tooltipSelectSignature": "Selecione este Pokémon Assinatura\n\n[color=#ffdd44]Pokémon Assinatura têm o potencial de se tornarem imensamente mais fortes, se seu treinador conseguir sobrescrever a realidade e desbloquear suas habilidades normalmente dormentes.[/color]",
   "tooltipReplaceSignature": "Substituir a seleção de Assinatura atual\n\n[color=#ffdd44]Pokémon Assinatura têm o potencial de se tornarem imensamente mais fortes, se seu treinador conseguir sobrescrever a realidade e desbloquear suas habilidades normalmente dormentes.[/color]",
   "tooltipSelectGeneral": "Selecione este Pokémon Normal",

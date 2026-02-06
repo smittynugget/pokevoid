@@ -1,4 +1,5 @@
 {
+  "options": "Optionen",
   "boy": "Junge",
   "girl": "Mädchen",
   "general": "Allgemein",
@@ -106,5 +107,6 @@
   "reroll": "Neu rollen",
   "shop": "Shop",
   "checkTeam": "Team überprüfen",
-  "lockedRewardSpeed": "Belohnungsgeschwindigkeit sperren"
+  "disableMoveUpgrades": "Attacken-Upgrades deaktivieren",
+  "disableCutscenes": "Zwischensequenzen deaktivieren"
 }

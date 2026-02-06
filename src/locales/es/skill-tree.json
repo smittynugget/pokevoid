@@ -1,5 +1,6 @@
 {
   "title": "Árbol de Habilidades",
+  "unknownReward": "Recompensa Desconocida",
   "subtitle": "Usa puntos de habilidad para desbloquear habilidades poderosas",
   "skillPoints": "Puntos de Habilidad: {{points}}",
   "tokens": "Fichas de Árbol: {{tokens}}",
@@ -24,6 +25,10 @@
   "instructionsSelectBoth": "Selecciona 1 Insignia y 1 Pokémon Regular",
   "instructionsSelectSignature": "Selecciona 1 Pokémon Insignia",
   "instructionsSelectGeneral": "Selecciona 1 Pokémon Regular",
+  "instructionsPokemonSelection": "Elige 2 Pokémon (máx. 1 Insignia)",
+  "instructionsPokemonSelectionRemaining": "Elige {{remaining}} Pokémon más",
+  "instructionsPokemonSelectionSignatureAvailable": "Elige {{remaining}} más (Insignia disponible)",
+  "instructionsPokemonSelectionComplete": "¡Selección completa!",
   "tooltipSelectSignature": "Selecciona este Pokémon Insignia\n\n[color=#ffdd44]Los Pokémon Insignia tienen el potencial de volverse inmensamente más fuertes, si su entrenador es capaz de anular la realidad y desbloquear sus habilidades normalmente latentes.[/color]",
   "tooltipReplaceSignature": "Reemplazar selección actual de Insignia\n\n[color=#ffdd44]Los Pokémon Insignia tienen el potencial de volverse inmensamente más fuertes, si su entrenador es capaz de anular la realidad y desbloquear sus habilidades normalmente latentes.[/color]",
   "tooltipSelectGeneral": "Selecciona este Pokémon Regular",

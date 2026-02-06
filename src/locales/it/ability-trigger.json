@@ -9,7 +9,7 @@
   "windPowerCharged": "Venire colpito da {{moveName}} ha caricato {{pokemonName}}!",
   "quickDraw": "{{pokemonName}} agisce più rapidamente del normale grazie a Colpolesto!",
   "blockItemTheft": "{{abilityName}} di {{pokemonNameWithAffix}}\nlo rende immune ai furti!",
-  "typeImmunityHeal": "{{pokemonName}} recupera alcuni PS\ncon {{abilityName}}!",
+  "typeImmunityHeal": "{{pokemonNameWithAffix}} recupera alcuni PS\ncon {{abilityName}}!",
   "nonSuperEffectiveImmunity": "{{pokemonNameWithAffix}} evita il colpo\ncon {{abilityName}}!",
   "disguiseAvoidedDamage": "{{pokemonNameWithAffix}} è stato smascherato!",
   "moveImmunity": "Non ha effetto su {{pokemonNameWithAffix}}!",

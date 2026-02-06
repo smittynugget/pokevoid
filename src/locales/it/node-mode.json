@@ -245,6 +245,7 @@
       "description": "Il Pokémon più forte infligge metà danno"
     }
   },
-  "tooltipDetails": "DETTAGLI",
+  "challengeHeader": "SFIDA!",
+  "tooltipDetails": "Più info",
   "tooltipBack": "Indietro"
 } 

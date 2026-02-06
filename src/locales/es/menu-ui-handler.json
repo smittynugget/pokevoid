@@ -14,8 +14,8 @@
   "importSlotSelect": "Selecciona una ranura para importar.",
   "exportSession": "Exportar Sesión",
   "exportSlotSelect": "Selecciona una ranura para exportar.",
-  "importRunHistory":"Importar Historial de partida",
-  "exportRunHistory":"Exportar Historial de partida",
+  "importRunHistory": "Importar Historial de partida",
+  "exportRunHistory": "Exportar Historial de partida",
   "importData": "Importar Datos",
   "exportData": "Exportar Datos",
   "removePermaItems": "Eliminar ΩOBJETOS",
@@ -31,5 +31,6 @@
   "losingProgressionWarning": "Perderás cualquier progreso desde el inicio de la batalla. ¿Continuar?",
   "dataOverrideWarning": "Tus datos serán sobrescritos y la página se recargará. ¿Continuar?",
   "importFailed": "Error al importar datos guardados. El archivo podría estar corrupto.",
-  "dataCorrupted": "No se pudieron cargar tus datos. Podrían estar corruptos."
+  "dataCorrupted": "No se pudieron cargar tus datos. Podrían estar corruptos.",
+  "noEggs": "¡No hay Huevos incubándose\nahora mismo!"
 }

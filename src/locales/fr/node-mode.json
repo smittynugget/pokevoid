@@ -245,6 +245,7 @@
       "description": "Le Pokémon le plus fort inflige la moitié des dégâts"
     }
   },
-  "tooltipDetails": "DÉTAILS",
+  "challengeHeader": "DÉFI!",
+  "tooltipDetails": "Plus d’infos",
   "tooltipBack": "Retour"
 } 

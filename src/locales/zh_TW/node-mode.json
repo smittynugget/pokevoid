@@ -245,6 +245,7 @@
       "description": "最強寶可夢造成一半傷害"
     }
   },
-  "tooltipDetails": "詳情",
+  "challengeHeader": "挑戰!",
+  "tooltipDetails": "更多資訊",
   "tooltipBack": "返回"
 } 

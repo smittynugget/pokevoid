@@ -1,0 +1,50 @@
+{
+  "titles": {
+    "newPokemon": "Новый покемон!",
+    "newFusion": "Новое слияние!",
+    "newItem": "Новый предмет!",
+    "newGameOverItem": "Награда за поражение!",
+    "newRibbonItem": "Награда за ленту!",
+    "moneyObtained": "Получены деньги!",
+    "maxStackMoney": "Стопка полна: взятка за молчание",
+    "newShopUnlock": "Новое открытие в магазине!",
+    "newUnlock": "Новая разблокировка!",
+    "newForm": "Новая форма!",
+    "newSmittyForm": "Новая форма SMITTY!",
+    "rivalLost": "СОПЕРНИК ПРОИГРАЛ...",
+    "modeChange": "СМЕНА РЕЖИМА!",
+    "skillPoints": "Очки навыков",
+    "skillTreeTokens": "Жетоны дерева навыков",
+    "legendaryPower": "Легендарная сила!",
+    "legendaryCatchable": "{{pokemon}} теперь можно поймать!",
+    "rewardObtained": "Награда получена!",
+    "voidOvertaken": "ПУСТОТА ПОГЛОТИЛА!",
+    "newShopItem": "Новый предмет в магазине",
+    "manyMoreNuggets": "И ещё много сочных самородков!"
+  },
+  "gameModes": {
+    "nuzlocke": {
+      "description": "Нузлок: покемоны, потерявшие сознание, удаляются из твоего отряда..."
+    },
+    "draft": {
+      "description": "Рог: выбери 2 случайных покемона..."
+    },
+    "nuzlight": {
+      "description": "Нузлайт: нет предметов восстановления..."
+    },
+    "nightmare": {
+      "description": "Нузмар: Нузлайт + Нузлок"
+    },
+    "default": {
+      "description": "Режим изменён!"
+    }
+  },
+  "ui": {
+    "rivalVoid": "{{name}} растворился(лась) в пустоте...",
+    "error": "Ошибка загрузки награды",
+    "new": "НОВОЕ"
+  },
+  "saveReward": {
+    "essenceBundle": "3 Эссенции: {{types}}"
+  }
+}

@@ -69,7 +69,7 @@
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "Bon Marché",
-      "description": "Augmente de 5% {{statName}} de base de son porteur."
+      "description": "Augmente de 1% {{statName}} de base de son porteur."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restaure tous les PV de toute l'équipe."
@@ -743,7 +743,7 @@
     "AnyPassiveAbilityModifierType": {
       "name": "PASSIF {{abilityName}}",
       "statLabel": "Objet de N'importe quel Talent Passif",
-      "description": "Donner la Passive {{abilityName}} à N'IMPORTE QUEL Pokémon\n(Maintenir C ou Shift pour plus d'infos)."
+      "description": "Définir la capacité passive {{abilityName}} sur N'IMPORTE QUEL Pokémon\n(Maintenir C ou Shift pour plus d'infos)."
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
@@ -918,6 +918,35 @@
     "SWAMPERTITE": "Laggronite",
     "TYRANITARITE": "Tyranocivite",
     "VENUSAURITE": "Florizarrite",
+
+    "CLEFABLITE": "Mélodelféite",
+    "VICTREBELITE": "Empiflite",
+    "STARMITE": "Starossite",
+    "DRAGONITITE": "Dracolosssite",
+    "MEGANIUMITE": "Méganiumite",
+    "FERALIGATRITE": "Aligatueurite",
+    "SKARMORYITE": "Airmureite",
+    "FROSLASSITE": "Momartikite",
+    "EMBOARITE": "Roitiflammite",
+    "EXCADRILLITE": "Minotaupite",
+    "SCOLIPEDITE": "Brutapodite",
+    "SCRAFTITE": "Baggaïdite",
+    "EELEKTROSSITE": "Ohmassacrite",
+    "CHANDELURITE": "Lugulabreite",
+    "CHESNAUGHTITE": "Blindépiquite",
+    "DELPHOXITE": "Goupelinnite",
+    "GRENINJITE": "Amphinobite",
+    "PYROARITE": "Néméliosite",
+    "FLOETTITE": "Floettite",
+    "MALAMARITE": "Sepiatroceite",
+    "BARBARACLITE": "Golgopatheite",
+    "DRAGALGITE": "Kravareckite",
+    "HAWLUCHITE": "Brutalibréite",
+    "ZYGARDITE": "Zygardite",
+    "DRAMPITE": "Draïeulite",
+    "FALINKSITE": "Hexadronite",
+    "ZERAORITE": "Zeraoraiite",
+
     "BLUE_ORB": "Gemme Bleue",
     "RED_ORB": "Gemme Rouge",
     "SHARP_METEORITE": "Méteorite Aiguisée",
@@ -1035,6 +1064,7 @@
     "waves": "vagues",
     "uses": "utilisations",
     "glitchPieceCost": "*COÛTE 2x Fragment de Bug",
+    "essenceAlternativeCost": "Si le Pokémon a 5 essences ou plus, vous pouvez les utiliser à la place.",
     "permaMoney": "ΩOR",
     "permaItem": "ΩOBJET",
     "moreInfo": "(Maintenez C / Maj pour infos)",

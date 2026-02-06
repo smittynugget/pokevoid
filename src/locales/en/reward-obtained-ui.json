@@ -43,5 +43,8 @@
     "rivalVoid": "{{name}} faded into the void...",
     "error": "Error loading reward",
     "new": "NEW"
+  },
+  "saveReward": {
+    "essenceBundle": "3 Essence: {{types}}"
   }
 } 

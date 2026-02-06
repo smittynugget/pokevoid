@@ -3,7 +3,7 @@ import BattleScene from "../battle-scene";
 import { Button } from "#enums/buttons";
 import {GameMode, GameModes} from "../game-mode";
 import { PokemonHeldItemModifier } from "../modifier/modifier";
-import { SessionSaveData } from "../system/game-data";
+import { QuestState, QuestUnlockables, SessionSaveData } from "../system/game-data";
 import PokemonData from "../system/pokemon-data";
 import * as Utils from "../utils";
 import MessageUiHandler from "./message-ui-handler";
@@ -57,16 +57,16 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
     loadSessionBg.setOrigin(0, 0);
     loadSessionBg.setY(-this.scene.game.canvas.height / 6);
     try {
-        if (loadSessionBg.postFX && typeof loadSessionBg.postFX.addColorMatrix === 'function') {
-            const colorMatrix = loadSessionBg.postFX.addColorMatrix();
-            colorMatrix.negative();
-        } else {
-            loadSessionBg.setTint(0xFFFFFF);
-            loadSessionBg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
-        }
+      if (loadSessionBg.postFX && typeof loadSessionBg.postFX.addColorMatrix === "function") {
+        const colorMatrix = loadSessionBg.postFX.addColorMatrix();
+        colorMatrix.negative();
+      } else {
+        loadSessionBg.setTint(0xFFFFFF);
+        loadSessionBg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
+      }
     } catch (error) {
-        loadSessionBg.setTint(0x000000);
-        loadSessionBg.setBlendMode(Phaser.BlendModes.SCREEN);
+      loadSessionBg.setTint(0x000000);
+      loadSessionBg.setBlendMode(Phaser.BlendModes.SCREEN);
     }
     this.saveSlotSelectContainer.add(loadSessionBg);
 
@@ -134,42 +134,42 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
           error = true;
         } else {
           switch (this.uiMode) {
-            case SaveSlotUiMode.LOAD:
-              this.saveSlotSelectCallback = null;
+          case SaveSlotUiMode.LOAD:
+            this.saveSlotSelectCallback = null;
             originalCallback && originalCallback(cursor);
-              break;
-            case SaveSlotUiMode.SAVE:
-              const saveAndCallback = async () => {
-                const originalCallback = this.saveSlotSelectCallback;
-                this.saveSlotSelectCallback = null;
+            break;
+          case SaveSlotUiMode.SAVE:
+            const saveAndCallback = async () => {
+              const originalCallback = this.saveSlotSelectCallback;
+              this.saveSlotSelectCallback = null;
 
-                    await ui.revertMode();
-                    ui.showText("", 0);
-                    await ui.setMode(Mode.MESSAGE);
+              await ui.revertMode();
+              ui.showText("", 0);
+              await ui.setMode(Mode.MESSAGE);
 
-                originalCallback && originalCallback(cursor);
-              };
-              if (this.sessionSlots[cursor].hasData) {
-                ui.showText(i18next.t("saveSlotSelectUiHandler:overwriteData"), null, () => {
+              originalCallback && originalCallback(cursor);
+            };
+            if (this.sessionSlots[cursor].hasData) {
+              ui.showText(i18next.t("saveSlotSelectUiHandler:overwriteData"), null, () => {
                 ui.setOverlayMode(Mode.CONFIRM, () => {
                   this.scene.gameData.deleteSession(cursor).then(response => {
                     if (response === false) {
                       this.scene.reset(true);
                     } else {
-                          saveAndCallback();
+                      saveAndCallback();
                     }
                   });
                 }, () => {
-                    ui.revertMode();
+                  ui.revertMode();
                   ui.showText("", 0);
-                  }, false, 0, 19, 2000);
-                });
-              } else if (this.sessionSlots[cursor].hasData === false) {
-                saveAndCallback();
-              } else {
-                return false;
-              }
-              break;
+                }, false, 0, 19, 2000);
+              });
+            } else if (this.sessionSlots[cursor].hasData === false) {
+              saveAndCallback();
+            } else {
+              return false;
+            }
+            break;
           }
           success = true;
         }
@@ -180,20 +180,20 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
       }
     } else {
       switch (button) {
-        case Button.UP:
-          if (this.cursor) {
-            success = this.setCursor(this.cursor - 1);
-          } else if (this.scrollCursor) {
-            success = this.setScrollCursor(this.scrollCursor - 1);
-          }
-          break;
-        case Button.DOWN:
-          if (this.cursor < 2) {
-            success = this.setCursor(this.cursor + 1);
-          } else if (this.scrollCursor < sessionSlotCount - 3) {
-            success = this.setScrollCursor(this.scrollCursor + 1);
-          }
-          break;
+      case Button.UP:
+        if (this.cursor) {
+          success = this.setCursor(this.cursor - 1);
+        } else if (this.scrollCursor) {
+          success = this.setScrollCursor(this.scrollCursor - 1);
+        }
+        break;
+      case Button.DOWN:
+        if (this.cursor < 2) {
+          success = this.setCursor(this.cursor + 1);
+        } else if (this.scrollCursor < sessionSlotCount - 3) {
+          success = this.setScrollCursor(this.scrollCursor + 1);
+        }
+        break;
       }
     }
 
@@ -370,8 +370,8 @@ class SessionSlot extends Phaser.GameObjects.Container {
       }
       const icon = modifier?.getIcon(this.scene, false);
       if (icon) {
-      icon.setPosition(24 * visibleModifierIndex, 0);
-      modifierIconsContainer.add(icon);
+        icon.setPosition(24 * visibleModifierIndex, 0);
+        modifierIconsContainer.add(icon);
       }
       if (++visibleModifierIndex === 12) {
         break;
@@ -381,27 +381,69 @@ class SessionSlot extends Phaser.GameObjects.Container {
     this.add(modifierIconsContainer);
   }
 
+  private sanitizeModeForUnlocks(mode: GameModes): GameModes {
+    const nuzlockeUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
+    if (nuzlockeUnlocked) {
+      return mode;
+    }
+    switch (mode) {
+    case GameModes.NUZLOCKE:
+      return GameModes.NUZLIGHT;
+    case GameModes.NUZLOCKE_DRAFT:
+      return GameModes.NUZLIGHT_DRAFT;
+    case GameModes.CHAOS_NUZLOCKE:
+      return GameModes.CHAOS_NUZLIGHT;
+    case GameModes.CHAOS_NUZLOCKE_DRAFT:
+      return GameModes.CHAOS_NUZLIGHT_DRAFT;
+    case GameModes.CHAOS_NUZLOCKE_SHORT:
+      return GameModes.CHAOS_NUZLIGHT_SHORT;
+    case GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT:
+      return GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT;
+    case GameModes.CHAOS_NUZLOCKE_FTL:
+      return GameModes.CHAOS_NUZLIGHT_FTL;
+    case GameModes.CHAOS_NUZLOCKE_DRAFT_FTL:
+      return GameModes.CHAOS_NUZLIGHT_DRAFT_FTL;
+    default:
+      return mode;
+    }
+  }
+
+  private inferGauntletMode(): GameModes {
+    const nuzlockeUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
+    if (nuzlockeUnlocked) {
+      return GameModes.NUZLOCKE;
+    }
+    const nuzlightUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED);
+    if (nuzlightUnlocked) {
+      return GameModes.NUZLIGHT;
+    }
+    return GameModes.CLASSIC;
+  }
+
   private getDisplayGameMode(data: SessionSaveData): GameModes {
-    const rawMode = data.gameMode;
+    const rawMode = this.sanitizeModeForUnlocks(data.gameMode);
 
     if (rawMode !== GameModes.SHOP) {
-        return rawMode;
+      return rawMode;
     }
 
     const hasBattlePath = data.battlePath !== null && data.battlePath !== undefined;
+    if (!hasBattlePath) {
+      return this.sanitizeModeForUnlocks(this.inferGauntletMode());
+    }
     const hasChaosRivals = (data as any).chaosAltRivals && (data as any).chaosAltRivals.length > 0;
     const isChaosV2Save = data.gameMechanicTracking &&
         Object.values(data.gameMechanicTracking).some(v =>
-            v === GameMechanicsVersion.CHAOS_V2 || v === "CHAOS_V2_BALANCE_IMPROVEMENTS"
+          v === GameMechanicsVersion.CHAOS_V2 || v === "CHAOS_V2_BALANCE_IMPROVEMENTS"
         );
 
-    const shouldDisplayAsChaos = hasBattlePath && (isChaosV2Save || hasChaosRivals);
+    const shouldDisplayAsChaos = isChaosV2Save || hasChaosRivals;
 
     if (shouldDisplayAsChaos) {
-        return this.inferChaosMode(data);
+      return this.sanitizeModeForUnlocks(this.inferChaosMode(data));
     }
 
-    return rawMode;
+    return this.sanitizeModeForUnlocks(this.inferGauntletMode());
   }
 
   private inferChaosMode(data: SessionSaveData): GameModes {
@@ -416,44 +458,60 @@ class SessionSlot extends Phaser.GameObjects.Container {
     let effectiveWaves = totalWaves;
 
     if (totalWaves !== undefined && waveIndex > totalWaves) {
-        effectiveWaves = undefined;
+      effectiveWaves = undefined;
     }
 
     if (effectiveWaves === undefined && waveIndex > 0) {
-        if (waveIndex <= 100) {
-            effectiveWaves = 100;
-        } else if (waveIndex <= 200) {
-            effectiveWaves = 200;
-        } else if (waveIndex <= 500) {
-            effectiveWaves = 500;
-        } else if (waveIndex <= 1000) {
-            effectiveWaves = 1000;
-        } else {
-            effectiveWaves = 100000;
-        }
+      if (waveIndex <= 100) {
+        effectiveWaves = 100;
+      } else if (waveIndex <= 200) {
+        effectiveWaves = 200;
+      } else if (waveIndex <= 500) {
+        effectiveWaves = 500;
+      } else if (waveIndex <= 1000) {
+        effectiveWaves = 1000;
+      } else {
+        effectiveWaves = 100000;
+      }
     }
 
     if (effectiveWaves !== undefined) {
-        if (effectiveWaves <= 100) {
-            if (isVoid) return isDraft ? GameModes.CHAOS_ROGUE_VOID_FTL : GameModes.CHAOS_VOID_FTL;
-            if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_FTL : GameModes.CHAOS_NUZLOCKE_FTL;
-            if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_FTL : GameModes.CHAOS_NUZLIGHT_FTL;
-            return isDraft ? GameModes.CHAOS_ROGUE_FTL : GameModes.CHAOS_JOURNEY_FTL;
+      if (effectiveWaves <= 100) {
+        if (isVoid) {
+          return isDraft ? GameModes.CHAOS_ROGUE_VOID_FTL : GameModes.CHAOS_VOID_FTL;
         }
-        if (effectiveWaves <= 200) {
-            if (isVoid) return isDraft ? GameModes.CHAOS_ROGUE_VOID_SHORT : GameModes.CHAOS_VOID_SHORT;
-            if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT : GameModes.CHAOS_NUZLOCKE_SHORT;
-            if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT : GameModes.CHAOS_NUZLIGHT_SHORT;
-            return isDraft ? GameModes.CHAOS_ROGUE_SHORT : GameModes.CHAOS_JOURNEY_SHORT;
+        if (isNuzlocke) {
+          return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_FTL : GameModes.CHAOS_NUZLOCKE_FTL;
         }
-        if (effectiveWaves <= 500) {
-            if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT : GameModes.CHAOS_NUZLOCKE;
-            if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT : GameModes.CHAOS_NUZLIGHT;
-            return isDraft ? GameModes.CHAOS_ROGUE : GameModes.CHAOS_JOURNEY;
+        if (isNuzlight) {
+          return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_FTL : GameModes.CHAOS_NUZLIGHT_FTL;
         }
-        if (effectiveWaves <= 1000) {
-            return isDraft ? GameModes.CHAOS_ROGUE_VOID : GameModes.CHAOS_VOID;
+        return isDraft ? GameModes.CHAOS_ROGUE_FTL : GameModes.CHAOS_JOURNEY_FTL;
+      }
+      if (effectiveWaves <= 200) {
+        if (isVoid) {
+          return isDraft ? GameModes.CHAOS_ROGUE_VOID_SHORT : GameModes.CHAOS_VOID_SHORT;
         }
+        if (isNuzlocke) {
+          return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT : GameModes.CHAOS_NUZLOCKE_SHORT;
+        }
+        if (isNuzlight) {
+          return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT : GameModes.CHAOS_NUZLIGHT_SHORT;
+        }
+        return isDraft ? GameModes.CHAOS_ROGUE_SHORT : GameModes.CHAOS_JOURNEY_SHORT;
+      }
+      if (effectiveWaves <= 500) {
+        if (isNuzlocke) {
+          return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT : GameModes.CHAOS_NUZLOCKE;
+        }
+        if (isNuzlight) {
+          return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT : GameModes.CHAOS_NUZLIGHT;
+        }
+        return isDraft ? GameModes.CHAOS_ROGUE : GameModes.CHAOS_JOURNEY;
+      }
+      if (effectiveWaves <= 1000) {
+        return isDraft ? GameModes.CHAOS_ROGUE_VOID : GameModes.CHAOS_VOID;
+      }
     }
 
     return isDraft ? GameModes.CHAOS_INFINITE_ROGUE : GameModes.CHAOS_INFINITE;

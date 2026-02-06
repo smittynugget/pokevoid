@@ -1,32 +1,58 @@
 type CacheUrls = readonly string[];
 
-const CACHE_NAME = 'pokerogue-cache-v1';
+const CACHE_NAME = "pokerogue-cache-v1";
 const URLS_TO_CACHE: CacheUrls = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/assets/**/*',
-  '/images/**/*'
+  "/",
+  "/index.html",
+  "/assets/**/*",
+  "/images/**/*"
 ];
 
-self.addEventListener('install', (event: ExtendableEvent) => {
+self.addEventListener("install", (event: ExtendableEvent) => {
   void event.waitUntil((async () => {
     try {
       const cache = await caches.open(CACHE_NAME);
       await cache.addAll(URLS_TO_CACHE);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('Cache installation failed:', error.message);
+        console.error("Cache installation failed:", error.message);
       } else {
-        console.error('Cache installation failed with unknown error');
+        console.error("Cache installation failed with unknown error");
       }
     }
   })());
 });
 
-self.addEventListener('fetch', (event: FetchEvent) => {
+self.addEventListener("fetch", (event: FetchEvent) => {
   void event.respondWith((async () => {
     try {
+      if (event.request.method === "GET" && event.request.mode === "navigate") {
+        try {
+          const networkResponse = await fetch(event.request);
+          if (networkResponse && networkResponse.status === 200 && networkResponse.type === "basic") {
+            try {
+              const cache = await caches.open(CACHE_NAME);
+              await cache.put(event.request, networkResponse.clone());
+            } catch (cacheError: unknown) {
+              if (cacheError instanceof Error) {
+                console.error("Cache update failed:", cacheError.message);
+              }
+            }
+          }
+          return networkResponse;
+        } catch (networkError: unknown) {
+          const cachedNav = await caches.match(event.request);
+          if (cachedNav) {
+            return cachedNav;
+          }
+          const cachedIndex = await caches.match("/index.html");
+          if (cachedIndex) {
+            return cachedIndex;
+          }
+          throw networkError;
+        }
+      }
+
       const cachedResponse = await caches.match(event.request);
       if (cachedResponse) {
         return cachedResponse;
@@ -34,7 +60,7 @@ self.addEventListener('fetch', (event: FetchEvent) => {
 
       const networkResponse = await fetch(event.request);
 
-      if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+      if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== "basic") {
         return networkResponse;
       }
 
@@ -44,21 +70,21 @@ self.addEventListener('fetch', (event: FetchEvent) => {
         await cache.put(event.request, responseToCache);
       } catch (cacheError: unknown) {
         if (cacheError instanceof Error) {
-          console.error('Cache update failed:', cacheError.message);
+          console.error("Cache update failed:", cacheError.message);
         }
       }
 
       return networkResponse;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('Network fetch failed:', error.message);
+        console.error("Network fetch failed:", error.message);
       }
       throw error;
     }
   })());
 });
 
-self.addEventListener('activate', (event: ExtendableEvent) => {
+self.addEventListener("activate", (event: ExtendableEvent) => {
   void event.waitUntil((async () => {
     try {
       const cacheNames = await caches.keys();
@@ -80,7 +106,7 @@ self.addEventListener('activate', (event: ExtendableEvent) => {
       );
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('Cache activation failed:', error.message);
+        console.error("Cache activation failed:", error.message);
       }
     }
   })());

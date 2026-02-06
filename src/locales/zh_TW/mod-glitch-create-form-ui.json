@@ -49,7 +49,8 @@
   "validation": {
     "requiredField": "此欄位為必填項",
     "invalidImage": "無效的圖片格式或大小",
-    "imageSize": "圖片應為 150-200 像素"
+    "imageSize": "圖片應為 150-200 像素",
+    "uniqueStats": "每個能力值必須是唯一的"
   },
   "statusMessages": {
     "creatingMod": "正在創建模組...",

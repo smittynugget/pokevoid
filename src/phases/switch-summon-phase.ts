@@ -8,6 +8,7 @@ import Pokemon from "#app/field/pokemon.js";
 import { getPokemonNameWithAffix } from "#app/messages.js";
 import { SwitchEffectTransferModifier } from "#app/modifier/modifier.js";
 import { Command } from "#app/ui/command-ui-handler.js";
+import { Mode } from "#app/ui/ui.js";
 import i18next from "i18next";
 import { SummonPhase } from "./summon-phase";
 import { PostSummonPhase } from "./post-summon-phase";
@@ -16,14 +17,16 @@ export class SwitchSummonPhase extends SummonPhase {
   private slotIndex: integer;
   private doReturn: boolean;
   private batonPass: boolean;
+  private releaseSwitchedOut: boolean;
 
   private lastPokemon: Pokemon;
-  constructor(scene: BattleScene, fieldIndex: integer, slotIndex: integer, doReturn: boolean, batonPass: boolean, player?: boolean) {
+  constructor(scene: BattleScene, fieldIndex: integer, slotIndex: integer, doReturn: boolean, batonPass: boolean, player?: boolean, releaseSwitchedOut: boolean = false) {
     super(scene, fieldIndex, player !== undefined ? player : true);
 
     this.slotIndex = slotIndex;
     this.doReturn = doReturn;
     this.batonPass = batonPass;
+    this.releaseSwitchedOut = releaseSwitchedOut;
   }
 
   start(): void {
@@ -31,51 +34,53 @@ export class SwitchSummonPhase extends SummonPhase {
   }
 
   preSummon(): void {
-    if (!this.player) {
-      if (this.slotIndex === -1) {
+    this.scene.ui.setMode(Mode.MESSAGE).then(() => {
+      if (!this.player) {
+        if (this.slotIndex === -1) {
 
-        this.slotIndex = this.scene.currentBattle.trainer?.getNextSummonIndex( TrainerSlot.TRAINER);
+          this.slotIndex = this.scene.currentBattle.trainer?.getNextSummonIndex( TrainerSlot.TRAINER);
+        }
+        if (this.slotIndex > -1) {
+          this.showEnemyTrainer(TrainerSlot.TRAINER);
+          this.scene.pbTrayEnemy.showPbTray(this.scene.getEnemyParty());
+        }
       }
-      if (this.slotIndex > -1) {
-        this.showEnemyTrainer(TrainerSlot.TRAINER);
-        this.scene.pbTrayEnemy.showPbTray(this.scene.getEnemyParty());
-      }
-    }
 
-    if (!this.doReturn || (this.slotIndex !== -1 && !(this.player ? this.scene.getParty() : this.scene.getEnemyParty())[this.slotIndex])) {
-      if (this.player) {
-        return this.switchAndSummon();
-      } else {
-        this.scene.time.delayedCall(750, () => this.switchAndSummon());
+      if (!this.doReturn || (this.slotIndex !== -1 && !(this.player ? this.scene.getParty() : this.scene.getEnemyParty())[this.slotIndex])) {
+        if (this.player) {
+          this.switchAndSummon();
+        } else {
+          this.scene.time.delayedCall(750, () => this.switchAndSummon());
+        }
         return;
       }
-    }
 
-    const pokemon = this.getPokemon();
+      const pokemon = this.getPokemon();
 
-    if (!this.batonPass) {
-      (this.player ? this.scene.getEnemyField() : this.scene.getPlayerField()).forEach(enemyPokemon => enemyPokemon.removeTagsBySourceId(pokemon.id));
-    }
-
-    this.scene.ui.showText(this.player ?
-      i18next.t("battle:playerComeBack", { pokemonName: getPokemonNameWithAffix(pokemon) }) :
-      i18next.t("battle:trainerComeBack", {
-        trainerName: this.scene.currentBattle.trainer?.getName(!(this.fieldIndex % 2) ? TrainerSlot.TRAINER : TrainerSlot.TRAINER_PARTNER),
-        pokemonName: getPokemonNameWithAffix(pokemon)
-      })
-    );
-    this.scene.playSound("se/pb_rel");
-    pokemon.hideInfo();
-    pokemon.tint(getPokeballTintColor(pokemon.pokeball), 1, 250, "Sine.easeIn");
-    this.scene.tweens.add({
-      targets: pokemon,
-      duration: 250,
-      ease: "Sine.easeIn",
-      scale: 0.5,
-      onComplete: () => {
-        pokemon.leaveField(!this.batonPass, false);
-        this.scene.time.delayedCall(750, () => this.switchAndSummon());
+      if (!this.batonPass) {
+        (this.player ? this.scene.getEnemyField() : this.scene.getPlayerField()).forEach(enemyPokemon => enemyPokemon.removeTagsBySourceId(pokemon.id));
       }
+
+      this.scene.ui.showText(this.player ?
+        i18next.t("battle:playerComeBack", { pokemonName: getPokemonNameWithAffix(pokemon) }) :
+        i18next.t("battle:trainerComeBack", {
+          trainerName: this.scene.currentBattle.trainer?.getName(!(this.fieldIndex % 2) ? TrainerSlot.TRAINER : TrainerSlot.TRAINER_PARTNER),
+          pokemonName: getPokemonNameWithAffix(pokemon)
+        })
+      );
+      this.scene.playSound("se/pb_rel");
+      pokemon.hideInfo();
+      pokemon.tint(getPokeballTintColor(pokemon.pokeball), 1, 250, "Sine.easeIn");
+      this.scene.tweens.add({
+        targets: pokemon,
+        duration: 250,
+        ease: "Sine.easeIn",
+        scale: 0.5,
+        onComplete: () => {
+          pokemon.leaveField(!this.batonPass, false);
+          this.scene.time.delayedCall(750, () => this.switchAndSummon());
+        }
+      });
     });
   }
 
@@ -83,7 +88,7 @@ export class SwitchSummonPhase extends SummonPhase {
     const party = this.player ? this.getParty() : this.scene.getEnemyParty();
     const switchedInPokemon = party[this.slotIndex];
     this.lastPokemon = this.getPokemon();
-    if(this.player) {
+    if (this.player) {
       this.scene.currentBattle.markPokemonAsSwitchedOut(this.lastPokemon.id);
       this.scene.gameData.gameStats.pokemonSwitched++;
     }
@@ -150,6 +155,17 @@ export class SwitchSummonPhase extends SummonPhase {
     }
 
     this.lastPokemon?.resetSummonData();
+
+    if (this.releaseSwitchedOut && this.player && this.lastPokemon) {
+      const party = this.scene.getParty();
+      const releaseIndex = party.findIndex(p => p.id === this.lastPokemon.id);
+      if (releaseIndex > -1) {
+        this.scene.currentBattle?.removeFaintedParticipant(this.lastPokemon as any);
+        this.scene.removePartyMemberModifiers(releaseIndex);
+        const releasedPokemon = party.splice(releaseIndex, 1)[0];
+        releasedPokemon.destroy();
+      }
+    }
 
     this.scene.triggerPokemonFormChange(pokemon, SpeciesFormChangeActiveTrigger, true);
     if (this.scene.gameMode.isNuzlockeActive(this.scene)) {

@@ -49,7 +49,8 @@
   "validation": {
     "requiredField": "Este campo é obrigatório",
     "invalidImage": "Formato ou tamanho de imagem inválido",
-    "imageSize": "A imagem deve ter 150-200px"
+    "imageSize": "A imagem deve ter 150-200px",
+    "uniqueStats": "Cada estatística deve ser única"
   },
   "statusMessages": {
     "creatingMod": "Criando mod...",

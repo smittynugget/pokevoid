@@ -38,6 +38,8 @@ export class SelectStarterPhase extends Phase {
   start() {
     super.start();
 
+    this.scene.moveUpgradesEnabledForRun = !this.scene.disableMoveUpgrades;
+
     this.scene.playBgm("menu");
 
     if (this.config && (this.config.availableStarters?.length || this.config.onStarterSelected)) {
@@ -103,7 +105,7 @@ export class SelectStarterPhase extends Phase {
         return;
       }
 
-      const nodes = SkillTreeUtils.generateDepth1Nodes(activeSkillTree, championData);
+      const nodes = SkillTreeUtils.generateDepth1Nodes(activeSkillTree, championData, this.scene);
 
       (this.scene.gameData as any).tempSkillTreeNodes = nodes;
     } catch (e) {
@@ -192,19 +194,18 @@ export class SelectStarterPhase extends Phase {
             console.warn(`[SelectStarterPhase] initBattle: Alt build ${altBuildId} not found in POKEMON_ALT_BUILDS`);
           }
         } else {
-          console.log(`[SelectStarterPhase] initBattle: No altBuildId for this signature Pokemon`);
+          console.log("[SelectStarterPhase] initBattle: No altBuildId for this signature Pokemon");
         }
       } else {
-        console.log(`[SelectStarterPhase] initBattle: NOT a signature starter, skipping signature logic`);
+        console.log("[SelectStarterPhase] initBattle: NOT a signature starter, skipping signature logic");
       }
-          if(starter.fusionIndex > -1) {
-            starterPokemon.generateFusionViaSpeciesID(this.scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
-          }
-          else if (this.scene.gameMode.isSplicedOnly) {
+      if (starter.fusionIndex > -1) {
+        starterPokemon.generateFusionViaSpeciesID(this.scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
+      } else if (this.scene.gameMode.isSplicedOnly) {
         starterPokemon.generateFusionSpecies(true);
       }
 
-          starterPokemon.tryPopulateMoveset(starter.moveset);
+      starterPokemon.tryPopulateMoveset(starter.moveset);
       starterPokemon.setVisible(false);
       applyChallenges(this.scene.gameMode, ChallengeType.STARTER_MODIFY, starterPokemon);
       party.push(starterPokemon);
@@ -224,6 +225,7 @@ export class SelectStarterPhase extends Phase {
       this.scene.arena.init();
       this.scene.sessionPlayTime = 0;
       this.scene.lastSavePlayTime = 0;
+      this.scene.resetRunEndSummaryRunData();
 
       this.scene.getParty().forEach((p: PlayerPokemon) => {
         this.scene.triggerPokemonFormChange(p, SpeciesFormChangeMoveLearnedTrigger);

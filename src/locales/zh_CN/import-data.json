@@ -1,0 +1,14 @@
+{
+  "importSaveData": "导入存档数据",
+  "importModData": "导入模组数据",
+  "cancel": "取消",
+  "selectFile": "选择文件",
+  "selectJsonModFiles": "选择要导入的 JSON 模组文件",
+  "selectPrsvSaveFile": "选择要导入的 .prsv 存档文件",
+  "importFailed": "导入失败。请重试。",
+  "uploadSuccess": "成功导入 {{count}} 个模组：",
+  "uploadSuccess_plural": "成功导入 {{count}} 个模组：",
+  "uploadFailed": "导入 {{count}} 个模组失败：",
+  "uploadFailed_plural": "导入 {{count}} 个模组失败：",
+  "reloadRequired": "游戏将重新加载以应用更改。"
+}

@@ -39,8 +39,7 @@ export interface SettingDefaults {
 }
 
 export const settingOptions: SettingOptions = {
-
-  [Setting.Game_Speed]: [ "1x", "1.5x", "2x", "2.5x", "3x", "3.5x", "4x", "5x" ],
+  [Setting.Game_Speed]: [ "1x", "3x", "6x", "10x", "12x", "15x", "20x" ],
   [Setting.Master_Volume]: new Array(11).fill(null).map((_, i) => i ? (i * 3).toString() : "Mute"),
   [Setting.BGM_Volume]: new Array(11).fill(null).map((_, i) => i ? (i * 10).toString() : "Mute"),
   [Setting.SE_Volume]: new Array(11).fill(null).map((_, i) => i ? (i * 10).toString() : "Mute"),
@@ -63,7 +62,8 @@ export const settingOptions: SettingOptions = {
 };
 
 export const settingDefaults: SettingDefaults = {
-  [Setting.Game_Speed]: 3,
+
+  [Setting.Game_Speed]: 1,
   [Setting.Master_Volume]: 5,
   [Setting.BGM_Volume]: 10,
   [Setting.SE_Volume]: 10,

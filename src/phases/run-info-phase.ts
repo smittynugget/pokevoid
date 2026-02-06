@@ -20,6 +20,6 @@ export class RunInfoPhase extends Phase {
       isActive: false,
       isFinalBattleContext: true
     };
-    this.scene.ui.setOverlayMode(Mode.RUN_INFO, runInfoEntry, true);
+    this.scene.ui.setOverlayMode(Mode.RUN_END_SUMMARY, { runInfoEntry, debug: false });
   }
 }

@@ -437,7 +437,6 @@
   "bronzor": "ドーミラー",
   "bronzong": "ドータクン",
   "bonsly": "ウソハチ",
-  "mime_jr.": "マネネ",
   "happiny": "ピンプク",
   "chatot": "ペラップ",
   "spiritomb": "ミカルゲ",
@@ -770,7 +769,6 @@
   "sandygast": "スナバァ",
   "palossand": "シロデスナ",
   "pyukumuku": "ナマコブシ",
-  "type:_null": "タイプ：ヌル",
   "silvally": "シルヴァディ",
   "minior": "メテノ",
   "komala": "ネッコアラ",
@@ -863,7 +861,6 @@
   "obstagoon": "タチフサグマ",
   "perrserker": "ニャイキング",
   "cursola": "サニゴーン",
-  "sirfetch_d": "ネギガナイト",
   "mr_rime": "バリコオル",
   "runerigus": "デスバーン",
   "milcery": "マホミル",
@@ -1080,5 +1077,8 @@
   "hisui_decidueye": "ジュナイパー",
   "paldea_tauros": "ケンタロス",
   "paldea_wooper": "ウパー",
-  "bloodmoon_ursaluna": "ガチグマ"
+  "bloodmoon_ursaluna": "ガチグマ",
+  "sirfetchd": "ネギガナイト",
+  "mime_jr": "マネネ",
+  "type_null": "タイプ：ヌル"
 }

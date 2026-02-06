@@ -19,6 +19,8 @@ import { GameOverPhase } from "./game-over-phase";
 import { RunInfoPhase } from "./run-info-phase";
 import { SwitchPhase } from "./switch-phase";
 import { VictoryPhase } from "./victory-phase";
+import { STORY_CUTSCENES, getLossWhiteoutHomebaseSlidesRandomized } from "#app/system/story-cutscenes.js";
+import { SlideshowCutscenePhase } from "#app/phases/slideshow-cutscene-phase.js";
 import { ShowRewards } from "#app/utils/show-rewards.js";
 import * as Utils from "#app/utils";
 import {PokemonReviveModifierType} from "#app/modifier/modifier-type";
@@ -48,8 +50,7 @@ export class FaintPhase extends PokemonPhase {
         }
         this.scene.updateModifiers(this.player);
         return this.end();
-      }
-      else if (this.player) {
+      } else if (this.player) {
         let baseReviveChance = 5.5;
         if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_MORE_REVIVE_3)) {
           baseReviveChance = 10.0;
@@ -134,8 +135,8 @@ export class FaintPhase extends PokemonPhase {
 
         if (pokemon instanceof EnemyPokemon) {
           this.scene.gameData.permaModifiers
-              .findModifiers(m => m instanceof PermaKnockoutQuestModifier)
-              .forEach(modifier => modifier.apply([this.scene, defeatSource, pokemon, allMoves[pokemon.turnData.attacksReceived[0].move]]));
+            .findModifiers(m => m instanceof PermaKnockoutQuestModifier)
+            .forEach(modifier => modifier.apply([this.scene, defeatSource, pokemon, allMoves[pokemon.turnData.attacksReceived[0].move]]));
 
           if (defeatSource && defeatSource.isPlayer() && Utils.randSeedChance(30) ) {
             const randomType = pokemon.isGlitchForm()
@@ -170,7 +171,21 @@ export class FaintPhase extends PokemonPhase {
 
       const legalPlayerPartyPokemon = legalPlayerPokemon.filter(p => !p.isActive(true));
       if (!legalPlayerPokemon.length) {
-        this.scene.unshiftPhase(new RunInfoPhase(this.scene, false));
+        if (!this.scene.disableCutscenes && !this.scene.lossWhiteoutPreSummaryQueued) {
+          this.scene.lossWhiteoutPreSummaryQueued = true;
+          const def = STORY_CUTSCENES.loss_whiteout_homebase;
+          const slides = getLossWhiteoutHomebaseSlidesRandomized();
+          this.scene.unshiftPhase(new SlideshowCutscenePhase(this.scene, {
+            slides,
+            bgmKey: def.bgmKey,
+            canSkip: true,
+            pauseAfterText: 1000,
+            resumeBgmOnEnd: false,
+          }));
+          this.scene.unshiftPhase(new RunInfoPhase(this.scene, false));
+        } else {
+          this.scene.unshiftPhase(new RunInfoPhase(this.scene, false));
+        }
       } else if (this.scene.currentBattle.double && legalPlayerPokemon.length === 1 && legalPlayerPartyPokemon.length === 0) {
 
         this.scene.unshiftPhase(new ToggleDoublePositionPhase(this.scene, true));
@@ -216,35 +231,35 @@ export class FaintPhase extends PokemonPhase {
           pokemon.trySetStatus(StatusEffect.FAINT);
           if (pokemon.isPlayer()) {
             this.scene.currentBattle.removeFaintedParticipant(pokemon as PlayerPokemon);
-                  } else {
-          this.scene.addFaintedEnemyScore(pokemon as EnemyPokemon);
-          this.scene.currentBattle.addPostBattleLoot(pokemon as EnemyPokemon);
+          } else {
+            this.scene.addFaintedEnemyScore(pokemon as EnemyPokemon);
+            this.scene.currentBattle.addPostBattleLoot(pokemon as EnemyPokemon);
 
-          if (!pokemon.isPlayer()) {
-            const enemyPokemon = pokemon as EnemyPokemon;
-            const enemyTypes = enemyPokemon.getTypes();
-            enemyTypes.forEach(type => {
-              if (!this.scene.gameData.gameStats.typeOfDefeated[type]) {
-                this.scene.gameData.gameStats.typeOfDefeated[type] = 0;
-              }
-              this.scene.gameData.gameStats.typeOfDefeated[type]++;
-            });
-          }
-
-          if (!pokemon.isPlayer() && pokemon.turnData?.attacksReceived?.length) {
-            const lastAttack = pokemon.turnData.attacksReceived[0];
-            const attackingPokemon = this.scene.getPokemonById(lastAttack.sourceId);
-            if (attackingPokemon && attackingPokemon.isPlayer()) {
-              const playerTypes = attackingPokemon.getTypes();
-              playerTypes.forEach(type => {
-                if (!this.scene.gameData.gameStats.playerKnockoutType[type]) {
-                  this.scene.gameData.gameStats.playerKnockoutType[type] = 0;
+            if (!pokemon.isPlayer()) {
+              const enemyPokemon = pokemon as EnemyPokemon;
+              const enemyTypes = enemyPokemon.getTypes();
+              enemyTypes.forEach(type => {
+                if (!this.scene.gameData.gameStats.typeOfDefeated[type]) {
+                  this.scene.gameData.gameStats.typeOfDefeated[type] = 0;
                 }
-                this.scene.gameData.gameStats.playerKnockoutType[type]++;
+                this.scene.gameData.gameStats.typeOfDefeated[type]++;
               });
             }
+
+            if (!pokemon.isPlayer() && pokemon.turnData?.attacksReceived?.length) {
+              const lastAttack = pokemon.turnData.attacksReceived[0];
+              const attackingPokemon = this.scene.getPokemonById(lastAttack.sourceId);
+              if (attackingPokemon && attackingPokemon.isPlayer()) {
+                const playerTypes = attackingPokemon.getTypes();
+                playerTypes.forEach(type => {
+                  if (!this.scene.gameData.gameStats.playerKnockoutType[type]) {
+                    this.scene.gameData.gameStats.playerKnockoutType[type] = 0;
+                  }
+                  this.scene.gameData.gameStats.playerKnockoutType[type]++;
+                });
+              }
+            }
           }
-        }
           this.scene.field.remove(pokemon);
           this.end();
         }
@@ -258,8 +273,7 @@ export class FaintPhase extends PokemonPhase {
         const enemy = this.getPokemon();
         if (enemy.is2ndStageBoss && enemy.hp === 0) {
           this.scene.ui.showDialogue(battleSpecDialogue[BattleSpec.FINAL_BOSS].secondStageWin, enemy.species.name, null, () => this.doFaint());
-        }
-        else {
+        } else {
           this.end();
         }
         return true;

@@ -43,5 +43,8 @@
     "rivalVoid": "{{name}} verschwand in der Leere...",
     "error": "Fehler beim Laden der Belohnung",
     "new": "NEU"
+  },
+  "saveReward": {
+    "essenceBundle": "3 Essenz: {{types}}"
   }
 } 

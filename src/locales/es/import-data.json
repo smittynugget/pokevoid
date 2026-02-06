@@ -1,0 +1,14 @@
+{
+  "importSaveData": "Importar datos de guardado",
+  "importModData": "Importar datos de mods",
+  "cancel": "Cancelar",
+  "selectFile": "Seleccionar archivo",
+  "selectJsonModFiles": "Selecciona archivos de mod JSON para importar",
+  "selectPrsvSaveFile": "Selecciona un archivo de guardado .prsv para importar",
+  "importFailed": "La importación falló. Inténtalo de nuevo.",
+  "uploadSuccess": "Se importó correctamente {{count}} mod:",
+  "uploadSuccess_plural": "Se importaron correctamente {{count}} mods:",
+  "uploadFailed": "No se pudo importar {{count}} mod:",
+  "uploadFailed_plural": "No se pudieron importar {{count}} mods:",
+  "reloadRequired": "El juego se recargará para aplicar los cambios."
+}

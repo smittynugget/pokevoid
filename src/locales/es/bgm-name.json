@@ -89,7 +89,6 @@
   "battle_galactic_boss": "BDSP Cyrus Battle",
   "battle_plasma_boss": "B2W2 Ghetsis Battle",
   "battle_flare_boss": "XY Lysandre Battle",
-
   "abyss": "PMD EoS - Cráter Oscuro",
   "badlands": "PMD EoS - Valle Desolado",
   "beach": "PMD EoS - Risco Calado",
@@ -141,5 +140,10 @@
   "encounter_youngster": "BW - Desafío Combate (Joven)",
   "heal": "BW - Cura Pokémon",
   "menu": "PMD EoS - ¡Bienvenidos al mundo de los Pokémon!",
-  "title": "PMD EoS - Tema del menú principal"
+  "title": "PMD EoS - Tema del menú principal",
+  "battle_legendary_origin_forme": "LA - ¡Vs. Dialga & Palkia, Forma Origen!",
+  "battle_legendary_riders": "SWSH - ¡Vs. Calyrex Jinete!",
+  "battle_aether_boss": "SM - ¡Vs. Samina!",
+  "battle_skull_boss": "SM - ¡Vs. Guzmán!",
+  "battle_macro_boss": "SWSH - ¡Vs. Rose!"
 }

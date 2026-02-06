@@ -21,7 +21,8 @@
     "name_female": "Millonaria"
   },
   "10M_MONEY": {
-    "name": "Elusión Fiscal"
+    "name": "Elusión Fiscal",
+    "name_female": null
   },
   "DamageAchv": {
     "description": "Inflige {{damageAmount}} daño en un solo golpe."
@@ -30,13 +31,16 @@
     "name": "Golpe Maestro"
   },
   "1000_DMG": {
-    "name": "Golpe Devastador"
+    "name": "Golpe Devastador",
+    "name_female": null
   },
   "2500_DMG": {
-    "name": "¡Eso es un montón de daño!"
+    "name": "¡Eso es un montón de daño!",
+    "name_female": null
   },
   "10000_DMG": {
-    "name": "One Punch Man"
+    "name": "One Punch Man",
+    "name_female": "One Punch Woman"
   },
   "HealAchv": {
     "description": "Cura {{healAmount}} {{HP}} de una, con un movimiento, habilidad o objeto equipado."
@@ -54,7 +58,8 @@
     "name_female": "Clériga"
   },
   "10000_HEAL": {
-    "name": "Centro Pokémon"
+    "name": "Centro Pokémon",
+    "name_female": null
   },
   "LevelAchv": {
     "description": "Sube a un Pokémon al nivel {{level}}."
@@ -63,7 +68,8 @@
     "name": "¡Pero espera, aún hay mas!"
   },
   "LV_250": {
-    "name": "Élite"
+    "name": "Élite",
+    "name_female": null
   },
   "LV_1000": {
     "name": "Supera tus límites"
@@ -141,7 +147,8 @@
   },
   "SHINY_PARTY": {
     "name": "Eso es dedicación",
-    "description": "Tener un equipo completo de Pokémon shiny."
+    "description": "Tener un equipo completo de Pokémon shiny.",
+    "name_female": null
   },
   "HATCH_MYTHICAL": {
     "name": "Huevo Singular",
@@ -169,10 +176,112 @@
   },
   "CLASSIC_VICTORY": {
     "name": "Imbatible",
-    "description": "Completa el juego en modo clásico."
+    "description": "Completa el juego en modo clásico.",
+    "name_female": null
   },
   "INVERSE_BATTLE": {
-    "name": "Espejo ojepsE",
-    "description": "Completa el reto de Combate Inverso.\n.osrevnI etabmoC ed oter le atelpmoC"
+    "name": "Espejo, espejo",
+    "description": "Completa el reto de Combate Inverso."
+  },
+  "UNEVOLVED_CLASSIC_VICTORY": {
+    "name": "Día de llevar a tu hijo al trabajo",
+    "description": "Gana el juego en Modo Clásico con al menos un miembro del equipo sin evolucionar."
+  },
+  "MONO_GEN_ONE": {
+    "name": "El rival original",
+    "description": "Completa el desafío solo de primera generación."
+  },
+  "MONO_GEN_TWO": {
+    "name": "Generación 1.5",
+    "description": "Completa el desafío solo de segunda generación."
+  },
+  "MONO_GEN_THREE": {
+    "name": "¿Demasiada agua?",
+    "description": "Completa el desafío solo de tercera generación."
+  },
+  "MONO_GEN_FOUR": {
+    "name": "¿De verdad es la más difícil?",
+    "description": "Completa el desafío solo de cuarta generación."
+  },
+  "MONO_GEN_FIVE": {
+    "name": "Todo original",
+    "description": "Completa el desafío solo de quinta generación."
+  },
+  "MONO_GEN_SIX": {
+    "name": "Casi realeza",
+    "description": "Completa el desafío solo de sexta generación."
+  },
+  "MONO_GEN_SEVEN": {
+    "name": "Solo técnicamente",
+    "description": "Completa el desafío solo de séptima generación."
+  },
+  "MONO_GEN_EIGHT": {
+    "name": "¡Hora de campeón!",
+    "description": "Completa el desafío solo de octava generación."
+  },
+  "MONO_GEN_NINE": {
+    "name": "Te lo puso fácil",
+    "description": "Completa el desafío solo de novena generación."
+  },
+  "MonoType": {
+    "description": "Completa el desafío monotipo de {{type}}."
+  },
+  "MONO_NORMAL": {
+    "name": "Extraordinario"
+  },
+  "MONO_FIGHTING": {
+    "name": "Sé kung fu"
+  },
+  "MONO_FLYING": {
+    "name": "Angry Birds"
+  },
+  "MONO_POISON": {
+    "name": "El favorito de Kanto"
+  },
+  "MONO_GROUND": {
+    "name": "Pronóstico: terremotos"
+  },
+  "MONO_ROCK": {
+    "name": "Duro como Brock"
+  },
+  "MONO_BUG": {
+    "name": "¿Te gusta el jazz?"
+  },
+  "MONO_GHOST": {
+    "name": "¿A quién vas a llamar?"
+  },
+  "MONO_STEEL": {
+    "name": "El gigante de hierro"
+  },
+  "MONO_FIRE": {
+    "name": "¡Lanzo bola de fuego!"
+  },
+  "MONO_WATER": {
+    "name": "Cuando llueve, diluvia"
+  },
+  "MONO_GRASS": {
+    "name": "No me toques"
+  },
+  "MONO_ELECTRIC": {
+    "name": "¡Apunta al cuerno!"
+  },
+  "MONO_PSYCHIC": {
+    "name": "Energía de gran mente"
+  },
+  "MONO_ICE": {
+    "name": "Caminando sobre hielo fino"
+  },
+  "MONO_DRAGON": {
+    "name": "Club pseudo-legendario"
+  },
+  "MONO_DARK": {
+    "name": "Solo es una fase"
+  },
+  "MONO_FAIRY": {
+    "name": "¡Oye! ¡Escucha!"
+  },
+  "FRESH_START": {
+    "name": "¡A la primera!",
+    "description": "Completa el desafío Nuevo Comienzo."
   }
 }

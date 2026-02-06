@@ -69,7 +69,7 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
         this.mode === Mode.OPTION_SELECT;
 
     if (!isTitlePhaseOptionSelect) {
-        return 1.0;
+      return 1.0;
     }
 
     const optionCount = Math.min((this.config?.options || []).length, this.config?.maxOptions || 99);
@@ -78,12 +78,12 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
     const availableHeight = Math.abs(containerY - topEdge) - 4;
 
     const basePadding = 14;
-    const isJapanese = i18next.resolvedLanguage === 'ja';
+    const isJapanese = i18next.resolvedLanguage === "ja";
     const perOptionHeight = isJapanese ? 10 : 12;
     const requiredHeight = basePadding + (optionCount * perOptionHeight);
 
     if (requiredHeight <= availableHeight) {
-        return 1.0;
+      return 1.0;
     }
 
     return Math.max(0.65, availableHeight / requiredHeight);
@@ -97,16 +97,16 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
     const optionCount = Math.min((this.config?.options || []).length, this.config?.maxOptions || 99);
 
     if (this.mode === Mode.TITLE) {
-        const baseHeight = 65;
-        return (optionCount + 1) * baseHeight * this.scale;
+      const baseHeight = 65;
+      return (optionCount + 1) * baseHeight * this.scale;
     }
 
     if (isTitlePhaseOptionSelect) {
-        const scaleFactor = this.getTitlePhaseScaleFactor();
-        const isJapanese = i18next.resolvedLanguage === 'ja';
-        const perOptionHeight = isJapanese ? 10 : 12;
-        const basePadding = 14;
-        return Math.floor((basePadding + (optionCount * perOptionHeight)) * scaleFactor);
+      const scaleFactor = this.getTitlePhaseScaleFactor();
+      const isJapanese = i18next.resolvedLanguage === "ja";
+      const perOptionHeight = isJapanese ? 10 : 12;
+      const basePadding = 14;
+      return Math.floor((basePadding + (optionCount * perOptionHeight)) * scaleFactor);
     }
 
     const baseHeight = 96;
@@ -138,16 +138,8 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
     this.exclamationTweens = [];
 
     const configOptions = this.config?.options ?? [];
-
-    let options: OptionSelectItem[];
-    if (configOptions.length >= 10 && this.scene.ui.getMode() === Mode.AUTO_COMPLETE) {
-      const optionsScrollTotal = configOptions.length;
-      const optionStartIndex = this.scrollCursor;
-      const optionEndIndex = Math.min(optionsScrollTotal, optionStartIndex + (!optionStartIndex || this.scrollCursor + (this.config?.maxOptions! - 1) >= optionsScrollTotal ? this.config?.maxOptions! - 1 : this.config?.maxOptions! - 2));
-      options = configOptions.slice(optionStartIndex, optionEndIndex + 2);
-    } else {
-      options = configOptions;
-    }
+    const shouldScroll = !!this.config?.maxOptions && configOptions.length > this.config.maxOptions;
+    const options: OptionSelectItem[] = shouldScroll ? this.getOptionsWithScroll() : configOptions;
 
     if (this.optionSelectText) {
       this.optionSelectText.destroy();
@@ -175,7 +167,7 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
 
     const baseLineSpacing = this.mode === Mode.TITLE || isTitlePhaseOptionSelect ? 8 : 12;
     const secondaryLineSpacing = isTitlePhaseOptionSelect ? Math.floor(baseLineSpacing * scaleFactor) : baseLineSpacing;
-    const isCJK = ['ja', 'zh-CN', 'zh-TW', 'ko'].includes(i18next.resolvedLanguage ?? '');
+    const isCJK = ["ja", "zh-CN", "zh-TW", "ko"].includes(i18next.resolvedLanguage ?? "");
     const finalLineSpacing = isCJK ? secondaryLineSpacing * 1.5 : secondaryLineSpacing;
     this.optionSelectText.setName("text-option-select");
     this.optionSelectText.setLineSpacing(finalLineSpacing);
@@ -187,10 +179,6 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
 
     this.optionSelectBg.width = Math.max(this.optionSelectText.displayWidth + 24, this.getWindowWidth());
 
-    if (this.config?.options && this.config?.options.length > (this.config?.maxOptions!)) {
-      this.optionSelectText.setText(this.getOptionsWithScroll().map(o => o.label).join("\n"));
-    }
-
     this.optionSelectBg.height = this.getWindowHeight();
 
     this._optionBgPattern?.redraw();
@@ -199,16 +187,16 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
 
     options.forEach((option: OptionSelectItem, i: integer) => {
       if (option.item) {
-        const textureKey = option.item === 'exclamationMark' && option.itemArgs?.[0] === 'smitems' ?
-                          'smitems' : 'items';
+        const textureKey = option.item === "exclamationMark" && option.itemArgs?.[0] === "smitems" ?
+          "smitems" : "items";
 
         const itemIcon = this.scene.add.sprite(0, 0, textureKey, option.item);
 
         let iconScale;
-        if (option.item === 'exclamationMark') {
-          iconScale = option.itemArgs?.[0] === 'smitems' ? 0.18 : 0.10;
+        if (option.item === "exclamationMark") {
+          iconScale = option.itemArgs?.[0] === "smitems" ? 0.18 : 0.10;
         } else {
-          iconScale = option.itemArgs?.[0] === 'smitems' ? 0.1 : 3 * this.scale;
+          iconScale = option.itemArgs?.[0] === "smitems" ? 0.1 : 3 * this.scale;
         }
 
         itemIcon.setScale(iconScale);
@@ -219,25 +207,24 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
 
         let xOffset, yOffset;
 
-        if (option.item === 'exclamationMark') {
-          const isSmItems = option.itemArgs?.[0] === 'smitems';
+        if (option.item === "exclamationMark") {
+          const isSmItems = option.itemArgs?.[0] === "smitems";
           const lang = i18next.resolvedLanguage;
           let langOffset = 0;
-          if (lang === 'fr') {
-            langOffset = 10
-          }
-          else if (lang === 'zh-CN' || lang === 'zh-TW') {
-            langOffset = 7
-          }
-          else if (lang === 'it' || lang === 'ja') {
-            langOffset = 13
-          }
-          else if (lang === 'pt-BR') {
-            langOffset = -5
+          if (lang === "fr") {
+            langOffset = 10;
+          } else if (lang === "zh-CN" || lang === "zh-TW") {
+            langOffset = 7;
+          } else if (lang === "it" || lang === "ja") {
+            langOffset = 13;
+          } else if (lang === "pt-BR") {
+            langOffset = -5;
+          } else if (lang === "ru") {
+            langOffset = 14;
           }
           xOffset = (this.optionSelectText.displayWidth / 3) + (isSmItems ? 14 * this.scale : 12 * this.scale) + langOffset;
           yOffset = (6 + i * (80 * this.scale - 2.5));
-        } else if (option.item === 'candy') {
+        } else if (option.item === "candy") {
           xOffset = -4;
           yOffset = 7 + i * (96 * this.scale - 3);
         } else {
@@ -262,7 +249,7 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
           }
         }
 
-        if (option.item === 'exclamationMark') {
+        if (option.item === "exclamationMark") {
           const tween = this.scene.add.tween({
             targets: itemIcon,
             scaleX: iconScale * 0.8,
@@ -270,7 +257,7 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
             duration: 3000,
             yoyo: true,
             repeat: -1,
-            ease: 'Sine.easeInOut'
+            ease: "Sine.easeInOut"
           });
           this.exclamationTweens.push(tween);
         }
@@ -296,19 +283,17 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
     } else if ((this.scene.getCurrentPhase() instanceof SelectStarterPhase) && this.mode === Mode.OPTION_SELECT) {
       this.optionSelectContainer.setPosition((this.scene.game.canvas.width / 6) - 1, -16);
       this.optionSelectBg.setVisible(true);
-    }
-    else if ((this.scene.getCurrentPhase() instanceof EggLapsePhase || this.scene.getCurrentPhase() instanceof EggHatchPhase) && this.mode === Mode.OPTION_SELECT) {
+    } else if ((this.scene.getCurrentPhase() instanceof EggLapsePhase || this.scene.getCurrentPhase() instanceof EggHatchPhase) && this.mode === Mode.OPTION_SELECT) {
       this.optionSelectContainer.setPosition((this.scene.game.canvas.width / 6) - 1, 0);
       this.optionSelectBg.setVisible(true);
-    }
-    else if (this.config.isRemoveItemsMenu) {
-        const canvasWidth = this.scene.game.canvas.width / 6;
-        const fixedYPosition = 0;
+    } else if (this.config.isRemoveItemsMenu) {
+      const canvasWidth = this.scene.game.canvas.width / 6;
+      const fixedYPosition = 0;
 
-        this.optionSelectContainer.setPosition(
-          canvasWidth / 2 + this.optionSelectBg.width / 2,
-          fixedYPosition
-        );
+      this.optionSelectContainer.setPosition(
+        canvasWidth / 2 + this.optionSelectBg.width / 2,
+        fixedYPosition
+      );
       this.optionSelectBg.setVisible(true);
     } else {
       this.optionSelectContainer.setPosition((this.scene.game.canvas.width / 6) - 1, -48);
@@ -317,18 +302,18 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
 
     this.scene.ui.bringToTop(this.optionSelectContainer);
 
-    if(!isTitleScreen) {
-    this._optionBgPattern = attachModalBackground(
-      this.scene,
-      this.optionSelectContainer,
-      () => ({
-        bgX: this.optionSelectBg.x - this.optionSelectBg.width,
-        bgY: this.optionSelectBg.y - this.optionSelectBg.height,
-        bgWidth: this.optionSelectBg.width,
-        bgHeight: this.optionSelectBg.height,
-      }),
-      { mask: false, alphaMultiplier: 0.45, gridInc: -2 }
-    );
+    if (!isTitleScreen) {
+      this._optionBgPattern = attachModalBackground(
+        this.scene,
+        this.optionSelectContainer,
+        () => ({
+          bgX: this.optionSelectBg.x - this.optionSelectBg.width,
+          bgY: this.optionSelectBg.y - this.optionSelectBg.height,
+          bgWidth: this.optionSelectBg.width,
+          bgHeight: this.optionSelectBg.height,
+        }),
+        { mask: false, alphaMultiplier: 0.45, gridInc: -2 }
+      );
     }
 
     this.optionSelectContainer.setVisible(true);
@@ -371,8 +356,11 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
         }
       }
       const option = this.config?.options[this.cursor + (this.scrollCursor - (this.scrollCursor ? 1 : 0))];
+      const beforeConfig = this.config;
       if (option?.handler()) {
-        if (!option.keepOpen) {
+        const modeChanged = ui.getMode() !== this.mode;
+        const configChanged = this.config !== beforeConfig;
+        if (!option.keepOpen && (modeChanged || !configChanged)) {
           this.clear();
         }
         playSound = !option.overrideSound;
@@ -382,8 +370,11 @@ export default abstract class AbstractOptionSelectUiHandler extends UiHandler {
     } else if (button === Button.SUBMIT && ui.getMode() === Mode.AUTO_COMPLETE) {
       success = true;
       const option = this.config?.options[this.cursor + (this.scrollCursor - (this.scrollCursor ? 1 : 0))];
+      const beforeConfig = this.config;
       if (option?.handler()) {
-        if (!option.keepOpen) {
+        const modeChanged = ui.getMode() !== this.mode;
+        const configChanged = this.config !== beforeConfig;
+        if (!option.keepOpen && (modeChanged || !configChanged)) {
           this.clear();
         }
         playSound = !option.overrideSound;

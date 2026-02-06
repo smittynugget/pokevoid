@@ -69,7 +69,7 @@
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "저렴한",
-      "description": "지니게 하면 {{statName}} 종족값을 5% 올려준다."
+      "description": "지니게 하면 {{statName}} 종족값을 1% 올려준다."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "자신의 포켓몬의 HP를 모두 회복한다."
@@ -755,7 +755,7 @@
     },
     "AnyPassiveAbilityModifierType": {
       "name": "패시브 {{abilityName}}",
-      "description": "아무 포켓몬에게 패시브 {{abilityName}} 부여\n(자세한 정보는 C키나 Shift키를 길게 누르세요).",
+      "description": "아무 포켓몬에게 패시브 특성 {{abilityName}} 설정\n(자세한 정보는 C키나 Shift키를 길게 누르세요).",
       "statLabel": "모든 패시브 특성 아이템"
     },
     "glitchPieceCost": {
@@ -918,6 +918,35 @@
     "SWAMPERTITE": "대짱이나이트",
     "TYRANITARITE": "마기라스나이트",
     "VENUSAURITE": "이상해꽃나이트",
+
+    "CLEFABLITE": "픽시나이트",
+    "VICTREBELITE": "우츠보트나이트",
+    "STARMITE": "아쿠스타나이트",
+    "DRAGONITITE": "망나뇽나이트",
+    "MEGANIUMITE": "메가니움나이트",
+    "FERALIGATRITE": "장크로다일나이트",
+    "SKARMORYITE": "무장조나이트",
+    "FROSLASSITE": "눈여아나이트",
+    "EMBOARITE": "염무왕나이트",
+    "EXCADRILLITE": "몰드류나이트",
+    "SCOLIPEDITE": "펜드라나이트",
+    "SCRAFTITE": "곤율거니나이트",
+    "EELEKTROSSITE": "저리더프나이트",
+    "CHANDELURITE": "샹델라나이트",
+    "CHESNAUGHTITE": "브리가론나이트",
+    "DELPHOXITE": "마폭시나이트",
+    "GRENINJITE": "개굴닌자나이트",
+    "PYROARITE": "화염레오나이트",
+    "FLOETTITE": "플라엣테나이트",
+    "MALAMARITE": "칼라마네로나이트",
+    "BARBARACLITE": "거북손데스나이트",
+    "DRAGALGITE": "드래캄나이트",
+    "HAWLUCHITE": "루차불나이트",
+    "ZYGARDITE": "지가르데나이트",
+    "DRAMPITE": "할비롱나이트",
+    "FALINKSITE": "대련군나이트",
+    "ZERAORITE": "제라오라나이트",
+
     "BLUE_ORB": "쪽빛구슬",
     "RED_ORB": "주홍구슬",
     "SHARP_METEORITE": "뾰족한운석",
@@ -1035,6 +1064,7 @@
     "waves": "웨이브",
     "uses": "사용",
     "glitchPieceCost": "*글리치 조각 2개 필요",
+    "essenceAlternativeCost": "포켓몬이 에센스를 5개 이상 가지고 있으면 대신 그것을 사용할 수 있습니다.",
     "permaMoney": "Ω골드",
     "permaItem": "Ω아이템",
     "moreInfo": "(자세한 정보는 C키나 Shift키를 길게 누르세요)",

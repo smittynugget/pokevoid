@@ -1,5 +1,6 @@
 import BattleScene from "../battle-scene";
 import { Egg } from "../data/egg";
+import { getLevelTotalExp } from "../data/exp";
 import { Phase } from "../phase";
 import i18next from "i18next";
 import Overrides from "../overrides";
@@ -36,7 +37,7 @@ export class EggLapsePhase extends Phase {
       return Overrides.EGG_IMMEDIATE_HATCH_OVERRIDE ? true : --egg.hatchWaves < 1;
     });
 
-    let eggCount: integer = eggsToHatch.length;
+    const eggCount: integer = eggsToHatch.length;
 
     if (eggCount) {
       this.scene.ui.showText(i18next.t("battle:eggHatching"), null, () => {
@@ -54,7 +55,7 @@ export class EggLapsePhase extends Phase {
   private showSkipConfirmation(eggsToHatch: Egg[], eggCount: integer): void {
     console.log("Showing skip confirmation dialog");
     this.scene.ui.showText(i18next.t("eggStarterUi:skipAnimationsPrompt",
-                    { defaultValue: "Skip all egg hatching animations?" }), null, () => {
+      { defaultValue: "Skip all egg hatching animations?" }), null, () => {
       console.log("Setting up confirmation dialog");
 
       const yesCallback = () => {
@@ -79,6 +80,11 @@ export class EggLapsePhase extends Phase {
     console.log(`Processing eggs with skipAll=${skipAll}`);
 
     const eggStarterCallback: EggStarterSelectCallback = (selectedStarter: any | null, releasedPokemon: Pokemon | null) => {
+      const finalize = () => {
+        delete this.scene.gameData.tempHatchedPokemon;
+        this.end();
+      };
+
       if (selectedStarter) {
         const hatchedPokemon: PlayerPokemon[] = this.scene.gameData.tempHatchedPokemon || [];
         const selectedPokemon = hatchedPokemon.find(p => p.species.speciesId === selectedStarter.species.speciesId);
@@ -87,6 +93,8 @@ export class EggLapsePhase extends Phase {
           const partyIndex = this.scene.getParty().findIndex(p => p === releasedPokemon);
           if (partyIndex >= 0) {
             selectedPokemon.level = releasedPokemon.level;
+            selectedPokemon.exp = getLevelTotalExp(selectedPokemon.level, selectedPokemon.species.growthRate);
+            selectedPokemon.levelExp = 0;
             if (selectedStarter.moveset) {
               selectedPokemon.tryPopulateMoveset(selectedStarter.moveset);
             }
@@ -108,12 +116,22 @@ export class EggLapsePhase extends Phase {
             if (selectedStarter.fusionIndex >= 0 && selectedPokemon.fusionSpecies) {
               selectedPokemon.fusionFormIndex = selectedStarter.fusionIndex;
             }
-            this.scene.replacePlayerPokemon(partyIndex, selectedPokemon);
+            selectedPokemon.calculateStats();
+            selectedPokemon.loadAssets().then(() => {
+              this.scene.replacePlayerPokemon(partyIndex, selectedPokemon);
+              finalize();
+            }).catch(() => {
+              this.scene.replacePlayerPokemon(partyIndex, selectedPokemon);
+              finalize();
+            });
+            return;
           }
         } else if (selectedPokemon && !releasedPokemon) {
           const currentParty = this.scene.getParty();
           const lowestLevel = Math.min(...currentParty.map(p => p.level));
           selectedPokemon.level = lowestLevel;
+          selectedPokemon.exp = getLevelTotalExp(selectedPokemon.level, selectedPokemon.species.growthRate);
+          selectedPokemon.levelExp = 0;
           selectedPokemon.calculateStats();
 
           if (selectedStarter.moveset) {
@@ -140,15 +158,16 @@ export class EggLapsePhase extends Phase {
 
           selectedPokemon.loadAssets().then(() => {
             this.scene.getParty().push(selectedPokemon);
-          }).catch(error => {
-            console.error('Failed to load assets for hatched pokemon:', error);
+            finalize();
+          }).catch(() => {
             this.scene.getParty().push(selectedPokemon);
+            finalize();
           });
+          return;
         }
       }
 
-      delete this.scene.gameData.tempHatchedPokemon;
-      this.end();
+      finalize();
     };
 
     if (skipAll) {
@@ -169,6 +188,9 @@ export class EggLapsePhase extends Phase {
         this.scene.gameData.updateSpeciesDexIvs(pokemon.species.speciesId, pokemon.ivs);
 
         catchPromises.push(this.scene.gameData.setPokemonCaught(pokemon, true, true, true));
+        try {
+          this.scene.recordRunEndSummaryHatch(pokemon);
+        } catch {}
 
         const eggIndex = this.scene.gameData.eggs.findIndex(e => e.id === egg.id);
         if (eggIndex !== -1) {
@@ -220,11 +242,9 @@ export class EggLapsePhase extends Phase {
           if (isLastEgg && !isLastEggProcessed) {
             isLastEggProcessed = true;
             this.scene.ui.setMode(Mode.EGG_STARTER_SELECT,
-                                  this.scene.gameData.tempHatchedPokemon,
-                                  eggStarterCallback);
-          }
-
-          else {
+              this.scene.gameData.tempHatchedPokemon,
+              eggStarterCallback);
+          } else {
             originalEnd();
           }
         };

@@ -1,4 +1,6 @@
 {
   "generation": "Geração {{generation}}",
-  "glitchForm": "{{formName}} TEM GLITCH"
+  "glitchForm": "{{formName}} TEM GLITCH",
+  "fusionTooltipTitle": "Fusão",
+  "fusionTooltipBody": "{{primary}}/{{fusion}}\n\nAs estatísticas de fusão usam os atributos base de ambos os Pokémon:\n1) Atributo aumentado pela Natureza (ou HP se neutro): pegue o maior valor\n2) Mais um melhor atributo: pegue o atributo restante mais alto\n3) Todo o resto: faça a média e arredonde para cima\nModificadores de Natureza se aplicam depois."
 } 

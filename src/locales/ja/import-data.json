@@ -1,0 +1,14 @@
+{
+  "importSaveData": "セーブデータをインポート",
+  "importModData": "MODデータをインポート",
+  "cancel": "キャンセル",
+  "selectFile": "ファイルを選択",
+  "selectJsonModFiles": "インポートするJSON MODファイルを選択",
+  "selectPrsvSaveFile": "インポートする.prsvセーブファイルを選択",
+  "importFailed": "インポートに失敗しました。もう一度お試しください。",
+  "uploadSuccess": "{{count}}件のMODをインポートしました：",
+  "uploadSuccess_plural": "{{count}}件のMODをインポートしました：",
+  "uploadFailed": "{{count}}件のMODのインポートに失敗しました：",
+  "uploadFailed_plural": "{{count}}件のMODのインポートに失敗しました：",
+  "reloadRequired": "変更を反映するためゲームを再読み込みします。"
+}

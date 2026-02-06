@@ -1,5 +1,5 @@
 import BattleScene from "../battle-scene";
-import { GameModes } from "../game-mode";
+import { GameMode, GameModes } from "../game-mode";
 import UiHandler from "./ui-handler";
 import { SessionSaveData } from "../system/game-data";
 import { TextStyle, addTextObject, addBBCodeTextObject, getTextColor } from "./text";
@@ -12,6 +12,7 @@ import {Button} from "../enums/buttons";
 import { BattleType } from "../battle";
 import { TrainerVariant } from "../field/trainer";
 import { Challenges } from "#enums/challenges";
+import { TrainerType } from "#enums/trainer-type";
 import RoundRectangle from "phaser3-rex-plugins/plugins/roundrectangle.js";
 import { Type, getTypeRgb } from "../data/type";
 import { getNatureStatMultiplier, getNatureName } from "../data/nature";
@@ -23,6 +24,7 @@ import { PlayerGender } from "#enums/player-gender";
 import { PlayerPokemon } from "../field/pokemon";
 import Pokemon from "#app/field/pokemon.js";
 import { GameOverPhase } from "#app/phases/game-over-phase.js";
+import { ModifierTooltipUtils } from "./modifier-tooltip-utils";
 enum RunInfoUiMode {
   MAIN,
   HALL_OF_FAME,
@@ -66,24 +68,27 @@ export default class RunInfoUiHandler extends UiHandler {
     const gameStatsBg = this.scene.add.nineslice(0, 0, "default_bg", undefined, this.scene.game.canvas.width / 6, this.scene.game.canvas.height / 6, 0, 0, 16, 0);
     gameStatsBg.setOrigin(0, 0);
     try {
-        if (gameStatsBg.postFX && typeof gameStatsBg.postFX.addColorMatrix === 'function') {
-            const colorMatrix = gameStatsBg.postFX.addColorMatrix();
-            colorMatrix.negative();
-        } else {
-            gameStatsBg.setTint(0xFFFFFF);
-            gameStatsBg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
-        }
+      if (gameStatsBg.postFX && typeof gameStatsBg.postFX.addColorMatrix === "function") {
+        const colorMatrix = gameStatsBg.postFX.addColorMatrix();
+        colorMatrix.negative();
+      } else {
+        gameStatsBg.setTint(0xFFFFFF);
+        gameStatsBg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
+      }
     } catch (error) {
-        gameStatsBg.setTint(0x000000);
-        gameStatsBg.setBlendMode(Phaser.BlendModes.SCREEN);
+      gameStatsBg.setTint(0x000000);
+      gameStatsBg.setBlendMode(Phaser.BlendModes.SCREEN);
     }
     this.runContainer.add(gameStatsBg);
 
     const run = args[0];
     this.runInfo = this.scene.gameData.parseSessionData(JSON.stringify(run.entry));
     this.isVictory = run.isVictory;
-    this.isActiveRun = 'isActive' in run && run.isActive === true;
-    this.isFinalBattleContext = 'isFinalBattleContext' in run && run.isFinalBattleContext === true;
+    this.isActiveRun = "isActive" in run && run.isActive === true;
+    this.isFinalBattleContext = "isFinalBattleContext" in run && run.isFinalBattleContext === true;
+    if (this.isFinalBattleContext) {
+      (this.scene as any).beginEndOfRunBattleVisualSuppression?.();
+    }
     this.pageMode = RunInfoUiMode.MAIN;
     this.addHeader();
 
@@ -227,21 +232,29 @@ export default class RunInfoUiHandler extends UiHandler {
 
     const tObj = this.runInfo.trainer.toTrainer(this.scene);
     const tObjSpriteKey = tObj.config.getSpriteKey(this.runInfo.trainer.variant === TrainerVariant.FEMALE, false);
-    const tObjSprite = this.scene.add.sprite(0, 5, tObjSpriteKey);
+    const isSmitty = tObj.config.trainerType === TrainerType.SMITTY;
+    const smittyScaleMult = 0.533;
+    const tObjSprite = isSmitty
+      ? this.scene.add.sprite(0, 5, "smitty_trainers", tObjSpriteKey)
+      : this.scene.add.sprite(0, 5, tObjSpriteKey);
     if (this.runInfo.trainer.variant === TrainerVariant.DOUBLE) {
       const doubleContainer = this.scene.add.container(5, 8);
       tObjSprite.setPosition(-3, -3);
       const tObjPartnerSpriteKey = tObj.config.getSpriteKey(true, true);
-      const tObjPartnerSprite = this.scene.add.sprite(5, -3, tObjPartnerSpriteKey);
+      const tObjPartnerSprite = isSmitty
+        ? this.scene.add.sprite(5, -3, "smitty_trainers", tObjPartnerSpriteKey)
+        : this.scene.add.sprite(5, -3, tObjPartnerSpriteKey);
 
-      tObjPartnerSprite.setScale(0.20);
-      tObjSprite.setScale(0.20);
+      tObjPartnerSprite.setScale(isSmitty ? 0.20 * smittyScaleMult : 0.20);
+      tObjSprite.setScale(isSmitty ? 0.20 * smittyScaleMult : 0.20);
       doubleContainer.add(tObjSprite);
       doubleContainer.add(tObjPartnerSprite);
       doubleContainer.setPosition(12, 38);
       enemyContainer.add(doubleContainer);
     } else {
-      tObjSprite.setScale(0.35, 0.35);
+      const base = 0.35;
+      const s = isSmitty ? base * smittyScaleMult : base;
+      tObjSprite.setScale(s, s);
       tObjSprite.setPosition(12, 28);
       enemyContainer.add(tObjSprite);
     }
@@ -292,19 +305,14 @@ export default class RunInfoUiHandler extends UiHandler {
     const modeText = addBBCodeTextObject(this.scene, 7, 0, "", TextStyle.WINDOW, {fontSize : "50px", lineSpacing:3});
     modeText.setPosition(7, 5);
     modeText.appendText(i18next.t("runHistory:mode")+": ", false);
-    switch (this.runInfo.gameMode) {
-    case GameModes.DAILY:
-      modeText.appendText(`${i18next.t("gameMode:dailyRun")}`, false);
-      break;
-    case GameModes.SPLICED_ENDLESS:
-      modeText.appendText(`${i18next.t("gameMode:endlessSpliced")}`, false);
+    modeText.appendText(GameMode.getModeName(this.runInfo.gameMode), false);
+    if (this.runInfo.gameMode === GameModes.ENDLESS || this.runInfo.gameMode === GameModes.SPLICED_ENDLESS) {
       if (this.runInfo.waveIndex === this.scene.gameData.gameStats.highestEndlessWave) {
         modeText.appendText(` [${i18next.t("runHistory:personalBest")}]`, false);
         modeText.setTint(0xffef5c, 0x47ff69, 0x6b6bff, 0xff6969);
       }
-      break;
-    case GameModes.CHALLENGE:
-      modeText.appendText(`${i18next.t("gameMode:challenge")}`, false);
+    }
+    if (this.runInfo.gameMode === GameModes.CHALLENGE) {
       modeText.appendText(`\t\t${i18next.t("runHistory:challengeRules")}: `);
       const rules: string[] = this.challengeParser();
       if (rules) {
@@ -316,18 +324,6 @@ export default class RunInfoUiHandler extends UiHandler {
           modeText.appendText(rules[i], newline);
         }
       }
-      break;
-    case GameModes.ENDLESS:
-      modeText.appendText(`${i18next.t("gameMode:endless")}`, false);
-
-      if (this.runInfo.waveIndex === this.scene.gameData.gameStats.highestEndlessWave) {
-        modeText.appendText(` [${i18next.t("runHistory:personalBest")}]`, false);
-        modeText.setTint(0xffef5c, 0x47ff69, 0x6b6bff, 0xff6969);
-      }
-      break;
-    case GameModes.CLASSIC:
-      modeText.appendText(`${i18next.t("gameMode:classic")}`, false);
-      break;
     }
 
     const runInfoTextContainer = this.scene.add.container(0, 0);
@@ -350,6 +346,12 @@ export default class RunInfoUiHandler extends UiHandler {
         }
         const icon = modifier?.getIcon(this.scene, false);
         if (icon) {
+          const hitTarget = icon.getAt(0) as any;
+          const hitW = hitTarget?.displayWidth ?? 24;
+          const hitH = hitTarget?.displayHeight ?? 24;
+          icon.setInteractive(new Phaser.Geom.Rectangle(0, 0, hitW, hitH), Phaser.Geom.Rectangle.Contains);
+          icon.on("pointerover", () => ModifierTooltipUtils.showForModifier(this.scene, modifier));
+          icon.on("pointerout", () => ModifierTooltipUtils.hideIfNotPinned(this.scene));
           const rowHeightModifier = Math.floor(visibleModifierIndex/7);
           icon.setPosition(24 * (visibleModifierIndex%7), 20 + (35 * rowHeightModifier));
           modifierIconsContainer.add(icon);
@@ -422,7 +424,7 @@ export default class RunInfoUiHandler extends UiHandler {
       this.getUi().bringToTop(icon);
       const pokeInfoTextContainer = this.scene.add.container(-85, 3.5);
       const textContainerFontSize = "34px";
-      const pNature = getNatureName(pokemon.nature);
+      const pNature = getNatureName(pokemon.getNature());
       const pName = pokemon.getNameToRender();
       const exemptedLanguages = ["ko", "zh_CN", "zh_TW"];
       let passiveLabel = i18next.t("starterSelectUiHandler:passive") ?? "-";
@@ -536,6 +538,12 @@ export default class RunInfoUiHandler extends UiHandler {
             const itemIcon = item?.getIcon(this.scene, true);
             itemIcon.setScale(heldItemsScale);
             itemIcon.setPosition((index%19) * 10, row * 10);
+            const itemHitTarget = itemIcon.getAt(0) as any;
+            const itemHitW = itemHitTarget?.displayWidth ?? 24;
+            const itemHitH = itemHitTarget?.displayHeight ?? 24;
+            itemIcon.setInteractive(new Phaser.Geom.Rectangle(0, 0, itemHitW, itemHitH), Phaser.Geom.Rectangle.Contains);
+            itemIcon.on("pointerover", () => ModifierTooltipUtils.showForModifier(this.scene, item));
+            itemIcon.on("pointerout", () => ModifierTooltipUtils.hideIfNotPinned(this.scene));
             heldItemsContainer.add(itemIcon);
             if (index !== 0 && index % 18 === 0) {
               row++;
@@ -663,6 +671,7 @@ export default class RunInfoUiHandler extends UiHandler {
         this.runContainer.setVisible(false);
         if (this.isFinalBattleContext) {
           ui.revertMode();
+          (this.scene as any).endEndOfRunBattleVisualSuppression?.();
           this.scene.pushPhase(new GameOverPhase(this.scene, this.isVictory));
           this.scene.shiftPhase();
         } else {

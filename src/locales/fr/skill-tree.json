@@ -1,5 +1,6 @@
 {
   "title": "Arbre de Compétences",
+  "unknownReward": "Récompense Inconnue",
   "subtitle": "Utilisez des points de compétence pour débloquer des capacités puissantes",
   "skillPoints": "Points de Compétence : {{points}}",
   "tokens": "Jetons d'Arbre : {{tokens}}",
@@ -24,6 +25,10 @@
   "instructionsSelectBoth": "Sélectionnez 1 Pokémon Signature & 1 Ordinaire",
   "instructionsSelectSignature": "Sélectionnez 1 Pokémon Signature",
   "instructionsSelectGeneral": "Sélectionnez 1 Pokémon Ordinaire",
+  "instructionsPokemonSelection": "Choisissez 2 Pokémon (max. 1 Signature)",
+  "instructionsPokemonSelectionRemaining": "Choisissez {{remaining}} Pokémon de plus",
+  "instructionsPokemonSelectionSignatureAvailable": "Choisissez {{remaining}} de plus (Signature disponible)",
+  "instructionsPokemonSelectionComplete": "Sélection terminée !",
   "tooltipSelectSignature": "Sélectionnez ce Pokémon Signature\n\n[color=#ffdd44]Les Pokémon Signature ont le potentiel de devenir immensément plus forts si leur dresseur est capable de contourner la réalité et de débloquer leurs capacités normalement dormantes.[/color]",
   "tooltipReplaceSignature": "Remplacer la sélection Signature actuelle\n\n[color=#ffdd44]Les Pokémon Signature ont le potentiel de devenir immensément plus forts si leur dresseur est capable de contourner la réalité et de débloquer leurs capacités normalement dormantes.[/color]",
   "tooltipSelectGeneral": "Sélectionnez ce Pokémon Ordinaire",

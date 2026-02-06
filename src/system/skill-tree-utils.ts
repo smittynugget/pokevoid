@@ -3,6 +3,7 @@ import { PlayableChampionData } from "#app/system/playable-champions";
 import { SkillTreeRewardType, SkillTreeRarity, SkillTreeNodeState } from "#app/system/skill-tree-data";
 import { SkillTreeNodeGenerator } from "#app/system/skill-tree-node-generator";
 import { Type } from "#app/data/type";
+import BattleScene from "#app/battle-scene";
 
 export enum SkillTreeVersion {
   V1_DEPTH_BASED = 1,
@@ -36,8 +37,12 @@ export class SkillTreeUtils {
 
   static getNodeCost(depth: number): number {
     const baseCost = depth;
-    if (depth <= 15) return Math.min(baseCost, 10);
-    if (depth <= 25) return Math.min(baseCost, 20);
+    if (depth <= 15) {
+      return Math.min(baseCost, 10);
+    }
+    if (depth <= 25) {
+      return Math.min(baseCost, 20);
+    }
     const capTier = Math.ceil(depth / 10) * 10;
     return Math.min(baseCost, capTier);
   }
@@ -45,20 +50,20 @@ export class SkillTreeUtils {
   static getNodeCostByRarity(rarity: SkillTreeRarity): number {
     return 1;
     switch (rarity) {
-      case SkillTreeRarity.COMMON:
-        return 1;
-      case SkillTreeRarity.GREAT:
-        return 2;
-      case SkillTreeRarity.ULTRA:
-        return 3;
-      case SkillTreeRarity.ROGUE:
-        return 4;
-      case SkillTreeRarity.MASTER:
-        return 5;
-      case SkillTreeRarity.LEGENDARY:
-        return 6;
-      default:
-        return 1;
+    case SkillTreeRarity.COMMON:
+      return 1;
+    case SkillTreeRarity.GREAT:
+      return 2;
+    case SkillTreeRarity.ULTRA:
+      return 3;
+    case SkillTreeRarity.ROGUE:
+      return 4;
+    case SkillTreeRarity.MASTER:
+      return 5;
+    case SkillTreeRarity.LEGENDARY:
+      return 6;
+    default:
+      return 1;
     }
   }
 
@@ -67,17 +72,23 @@ export class SkillTreeUtils {
   }
 
   static getMaxDepthForLevel(treeLevel: number): number {
-    if (treeLevel === 1) return 3;
+    if (treeLevel === 1) {
+      return 3;
+    }
     return treeLevel * 2;
   }
 
   static getRequiredTreeLevelForDepth(depth: number): number {
-    if (depth <= 2) return 1;
+    if (depth <= 2) {
+      return 1;
+    }
     return Math.ceil((depth - 1) / 2);
   }
 
   static getMaxPurchasableDepthForLevel(treeLevel: number): number {
-    if (treeLevel === 1) return 2;
+    if (treeLevel === 1) {
+      return 2;
+    }
     return treeLevel * 2;
   }
 
@@ -90,7 +101,9 @@ export class SkillTreeUtils {
   }
 
   static getBaseEssenceForSkillLevel(level: number): number {
-    if (level === 1) return 100;
+    if (level === 1) {
+      return 100;
+    }
     let total = 15 + 5 * level;
     if (total % 2 !== 0) {
       total += 1;
@@ -100,7 +113,7 @@ export class SkillTreeUtils {
 
   static getApolloDianaTypesForLevel(championId: string, level: number): { type1: Type; type2: Type } {
     const allTypes = Object.values(Type).filter(t =>
-      typeof t === 'number' &&
+      typeof t === "number" &&
       t >= Type.NORMAL &&
       t <= Type.FAIRY
     ) as Type[];
@@ -115,7 +128,7 @@ export class SkillTreeUtils {
     const type1Index = Math.abs(hash) % allTypes.length;
     const type2Index = Math.abs((hash * 31 + level * 7)) % allTypes.length;
 
-    let type1 = allTypes[type1Index];
+    const type1 = allTypes[type1Index];
     let type2 = allTypes[type2Index];
 
     if (type2 === type1) {
@@ -181,10 +194,10 @@ export class SkillTreeUtils {
 
     return requirements;
   }
-  static generateDepth1Nodes(activeSkillTree: any, championData: any): any[] {
+  static generateDepth1Nodes(activeSkillTree: any, championData: any, scene?: BattleScene): any[] {
     const upgrades = Math.max(0, Math.min(6, championData?.starterNodeUpgradesUnlocked ?? 0));
     const nodeCount = Math.min(10, 4 + upgrades);
-    const generator = new SkillTreeNodeGenerator(activeSkillTree.seed, activeSkillTree.championId);
+    const generator = new SkillTreeNodeGenerator(activeSkillTree.seed, activeSkillTree.championId, scene);
 
     const TIER_RADIUS = 150;
     const NODE_SIZE = 90;

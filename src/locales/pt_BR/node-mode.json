@@ -245,6 +245,7 @@
       "description": "Pokémon mais forte causa metade do dano"
     }
   },
-  "tooltipDetails": "DETALHES",
+  "challengeHeader": "DESAFIO!",
+  "tooltipDetails": "Mais info",
   "tooltipBack": "Voltar"
 } 

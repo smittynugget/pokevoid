@@ -5,11 +5,6 @@
       "statLabel": "Objeto Pokéball",
       "description": "Recibes {{modifierCount}}x {{pokeballName}} (En inventario: {{pokeballAmount}}) \nRatio de captura: {{catchRate}}."
     },
-    "AddPokemonModifierType": {
-      "name": "{{pokemonName}}",
-      "statLabel": "Pokémon de Draft:",
-      "description": "Añade {{pokemonName}} al equipo."
-    },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
       "statLabel": "Vale de Huevo",
@@ -74,7 +69,7 @@
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "Barato",
-      "description": "Aumenta la est. {{statName}} base del portador en un 5%."
+      "description": "Aumenta la est. {{statName}} base del portador en un 1%."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restaura el 100% de los PS de todos los Pokémon."
@@ -750,7 +745,7 @@
     "AnyPassiveAbilityModifierType": {
       "name": "PASIVA {{abilityName}}",
       "statLabel": "Objeto de Cualquier Habilidad Pasiva",
-      "description": "Dar Pasiva {{abilityName}} a CUALQUIER Pokémon\n(Mantén C o Shift para más información)."
+      "description": "Establecer Habilidad Pasiva {{abilityName}} en CUALQUIER Pokémon\n(Mantén C o Shift para más información)."
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
@@ -925,6 +920,35 @@
     "SWAMPERTITE": "Swampertita",
     "TYRANITARITE": "Tyranitarita",
     "VENUSAURITE": "Venusaurita",
+
+    "CLEFABLITE": "Clefablita",
+    "VICTREBELITE": "Victreebelita",
+    "STARMITE": "Starmita",
+    "DRAGONITITE": "Dragonitita",
+    "MEGANIUMITE": "Meganiumita",
+    "FERALIGATRITE": "Feraligatrita",
+    "SKARMORYITE": "Skarmoryita",
+    "FROSLASSITE": "Froslassita",
+    "EMBOARITE": "Emboarita",
+    "EXCADRILLITE": "Excadrillita",
+    "SCOLIPEDITE": "Scolipedita",
+    "SCRAFTITE": "Scraftita",
+    "EELEKTROSSITE": "Eelektrossita",
+    "CHANDELURITE": "Chandelurita",
+    "CHESNAUGHTITE": "Chesnaughtita",
+    "DELPHOXITE": "Delphoxita",
+    "GRENINJITE": "Greninjita",
+    "PYROARITE": "Pyroarita",
+    "FLOETTITE": "Floettita",
+    "MALAMARITE": "Malamarita",
+    "BARBARACLITE": "Barbaraclita",
+    "DRAGALGITE": "Dragalgita",
+    "HAWLUCHITE": "Hawluchita",
+    "ZYGARDITE": "Zygardita",
+    "DRAMPITE": "Drampita",
+    "FALINKSITE": "Falinksita",
+    "ZERAORITE": "Zeraorita",
+
     "BLUE_ORB": "Prisma azul",
     "RED_ORB": "Prisma rojo",
     "SHARP_METEORITE": "Meteorito afilado",
@@ -1042,6 +1066,7 @@
     "waves": "oleadas",
     "uses": "usos",
     "glitchPieceCost": "*CUESTA 2x Fragmento Glitch",
+    "essenceAlternativeCost": "Si el Pokémon tiene 5+ Esencias, puedes usarlas en su lugar.",
     "permaMoney": "ΩORO",
     "permaItem": "ΩOBJETO",
     "moreInfo": "(Mantén pulsado C o Shift para más info).",

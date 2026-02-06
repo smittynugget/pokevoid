@@ -245,6 +245,7 @@
       "description": "最強ポケモンは半分のダメージ"
     }
   },
-  "tooltipDetails": "詳細",
+  "challengeHeader": "チャレンジ!",
+  "tooltipDetails": "追加情報",
   "tooltipBack": "戻る"
 } 

@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Vite cache
+.vite/
+
+# Environment files
+.env
+.env.development
+.env.production
+.env.test
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temp/utility scripts
+find_md_py.ps1
+cleanup_folders*.ps1
+
+# Python cache
+__pycache__/
+*.pyc

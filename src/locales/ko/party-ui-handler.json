@@ -29,6 +29,7 @@
   "wasReverted": "{{fusionName}}은 {{pokemonName}}의 모습으로 돌아갔습니다!",
   "releaseConfirmation": "{{pokemonName}}[[를]]\n정말 놓아주겠습니까?",
   "releaseInBattle": "전투 중인 포켓몬은\n놓아줄 수 없습니다.",
+  "releaseLastPokemon": "마지막 포켓몬은\n놓아줄 수 없습니다.",
   "selectAMove": "기술을 선택해 주십시오",
   "changeQuantity": "건네줄 지닌 도구를 선택해 주십시오.\n< 와 > 로 수량을 변경할 수 있습니다.",
   "selectAnotherPokemonToSplice": "융합할 포켓몬을 선택해 주십시오.",
@@ -47,5 +48,6 @@
   "sayonara": "사요나라, {{pokemonName}}!",
   "smellYaLater": "또 보자, {{pokemonName}}!",
   "selectPokeToPowerUp": "강화할 포켓몬을 선택하세요.",
-  "selectPokeToRelease": "놓아줄 포켓몬을 선택하세요."
+  "selectPokeToRelease": "놓아줄 포켓몬을 선택하세요.",
+  "pausedEvolutions": "{{pokemonName}}[[가]] 진화하지 않도록 했다."
 }

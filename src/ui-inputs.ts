@@ -22,6 +22,8 @@ import { activateSmitomTalk } from "./ui/title-ui-handler";
 import ModifierSelectUiHandler from "./ui/modifier-select-ui-handler";
 import { AddPokemonModifierType } from "./modifier/modifier-type";
 import ChampionSelectUiHandler from "./ui/champion-select-ui-handler";
+import BattlePathUiHandler from "./ui/battle-path-ui-handler";
+import { ModifierTooltipUtils } from "#app/ui/modifier-tooltip-utils";
 
 type ActionKeys = Record<Button, () => void>;
 
@@ -153,6 +155,9 @@ export class UiInputs {
     this.scene.ui.processInput(Button.SUBMIT) || this.scene.ui.processInput(Button.ACTION);
   }
   buttonStats(pressed: boolean = true): void {
+    if (pressed && ModifierTooltipUtils.handleStatsPressed(this.scene)) {
+      return;
+    }
     const uiHandler = this.scene.ui?.getHandler();
     const currentMode = this.scene.ui?.getMode();
 
@@ -161,10 +166,18 @@ export class UiInputs {
       return;
     }
 
+    if (!pressed && uiHandler instanceof ModifierSelectUiHandler) {
+      return;
+    }
+
     if (pressed && uiHandler instanceof ModifierSelectUiHandler) {
+      if (uiHandler.wantsStatsForTooltipDetails()) {
+        this.scene.ui.processInput(Button.STATS);
+        return;
+      }
       const currentOption = uiHandler.getCurrentSelectedOption();
       if (currentOption?.modifierTypeOption?.type instanceof AddPokemonModifierType) {
-        this.scene.ui.setOverlayMode(Mode.POKEDEX, currentOption.modifierTypeOption.type.getPokemon().species.speciesId);
+        this.scene.ui.setOverlayMode(Mode.VOIDEX_PRELIST);
         return;
       }
     }
@@ -184,6 +197,11 @@ export class UiInputs {
   buttonGoToFilter(button: Button): void {
     const whitelist = [StarterSelectUiHandler];
     const uiHandler = this.scene.ui?.getHandler();
+    const currentMode = this.scene.ui?.getMode();
+    if (button === Button.STATS && currentMode === Mode.VOIDEX_PRELIST) {
+      this.scene.ui.processInput(button);
+      return;
+    }
     if (whitelist.some(handler => uiHandler instanceof handler)) {
       this.scene.ui.processInput(button);
     } else {
@@ -241,17 +259,17 @@ export class UiInputs {
     const currentMode = this.scene.ui?.getMode();
 
     if (currentMode === Mode.TITLE || currentMode === Mode.COMMAND || currentMode === Mode.MODIFIER_SELECT) {
-      if(currentMode === Mode.MODIFIER_SELECT) {
+      if (currentMode === Mode.MODIFIER_SELECT) {
         const uiHandler = this.scene.ui?.getHandler();
         if (uiHandler instanceof ModifierSelectUiHandler) {
           const currentOption = uiHandler.getCurrentSelectedOption();
           if (currentOption?.modifierTypeOption?.type instanceof AddPokemonModifierType) {
-            this.scene.ui.setOverlayMode(Mode.POKEDEX, currentOption.modifierTypeOption.type.getPokemon().species.speciesId);
-            return
+            this.scene.ui.setOverlayMode(Mode.VOIDEX_PRELIST);
+            return;
           }
         }
       }
-      this.scene.ui.setOverlayMode(Mode.POKEDEX);
+      this.scene.ui.setOverlayMode(Mode.VOIDEX_PRELIST);
     }
   }
 
@@ -292,31 +310,31 @@ export class UiInputs {
     }
 
     switch (currentMode) {
-      case Mode.SMITTY_CONSOLE:
-        this.scene.ui.revertMode();
-        this.scene.playSound("ui/select");
-        break;
+    case Mode.SMITTY_CONSOLE:
+      this.scene.ui.revertMode();
+      this.scene.playSound("ui/select");
+      break;
 
-      case Mode.TITLE:
-      case Mode.COMMAND:
-        this.scene.ui.setOverlayMode(Mode.SMITTY_CONSOLE, {
-          buttonActions: [
-            async () => {
-            },
-            () => {
-              this.scene.ui.revertMode();
-            }
-          ]
-        });
-        break;
+    case Mode.TITLE:
+    case Mode.COMMAND:
+      this.scene.ui.setOverlayMode(Mode.SMITTY_CONSOLE, {
+        buttonActions: [
+          async () => {
+          },
+          () => {
+            this.scene.ui.revertMode();
+          }
+        ]
+      });
+      break;
 
-      default:
-        return;
+    default:
+      return;
     }
   }
 
   buttonCycleOption(button: Button): void {
-    const whitelist = [StarterSelectUiHandler, SettingsUiHandler, RunInfoUiHandler, SettingsDisplayUiHandler, SettingsAudioUiHandler, SettingsGamepadUiHandler, SettingsKeyboardUiHandler];
+    const whitelist = [StarterSelectUiHandler, SettingsUiHandler, RunInfoUiHandler, SettingsDisplayUiHandler, SettingsAudioUiHandler, SettingsGamepadUiHandler, SettingsKeyboardUiHandler, BattlePathUiHandler];
     const uiHandler = this.scene.ui?.getHandler();
     const currentMode = this.scene.ui?.getMode();
 
@@ -324,70 +342,76 @@ export class UiInputs {
       this.scene.ui.processInput(button);
     } else if (button === Button.CYCLE_SHINY) {
       switch (currentMode) {
-        case Mode.TITLE:
-          this.scene.ui.setOverlayMode(Mode.RUN_HISTORY);
+      case Mode.TITLE:
+        this.scene.ui.setOverlayMode(Mode.RUN_HISTORY);
+        break;
+      case Mode.COMMAND:
+      case Mode.MODIFIER_SELECT:
+        if (this.scene.sessionSlotId < 0) {
           break;
-        case Mode.COMMAND:
-        case Mode.MODIFIER_SELECT:
-          if (this.scene.sessionSlotId < 0) {
-            break;
-          }
-          const slotId = this.scene.sessionSlotId;
+        }
+        const slotId = this.scene.sessionSlotId;
 
-          (async () => {
-            try {
-              const sessionData = await this.scene.gameData.getSession(slotId);
-              if (sessionData) {
-                const activeRunEntry = {
-                  entry: sessionData,
-                  isVictory: false,
-                  isFavorite: false,
-                  isActive: true
-                };
-                this.scene.ui.setOverlayMode(Mode.RUN_INFO, activeRunEntry, true);
-              }
-            } catch (error) {
-              console.error("Error loading session data:", error);
+        (async () => {
+          try {
+            const sessionData = await this.scene.gameData.getSession(slotId);
+            if (sessionData) {
+              const activeRunEntry = {
+                entry: sessionData,
+                isVictory: false,
+                isFavorite: false,
+                isActive: true
+              };
+              this.scene.ui.setOverlayMode(Mode.RUN_INFO, activeRunEntry, true);
             }
-          })();
-          break;
-        default:
-          this.scene.ui.processInput(button);
-          break;
+          } catch (error) {
+            console.error("Error loading session data:", error);
+          }
+        })();
+        break;
+      default:
+        this.scene.ui.processInput(button);
+        break;
       }
-    }
-    else if (button === Button.CYCLE_ABILITY) {
+    } else if (button === Button.CYCLE_ABILITY) {
       switch (currentMode) {
-        case Mode.TITLE:
-        case Mode.COMMAND:
-        case Mode.MODIFIER_SELECT:
-          this.scene.ui.setOverlayMode(Mode.EGG_GACHA);
-          break;
-        default:
+      case Mode.TITLE:
+      case Mode.COMMAND:
+        this.scene.ui.setOverlayMode(Mode.EGG_GACHA);
+        break;
+      case Mode.MODIFIER_SELECT: {
+        const handler = this.scene.ui?.getHandler();
+        if (handler instanceof ModifierSelectUiHandler && handler.wantsCycleAbilityForTooltip()) {
           this.scene.ui.processInput(button);
-          break;
+        } else {
+          this.scene.ui.setOverlayMode(Mode.EGG_GACHA);
+        }
+        break;
       }
-    }
-    else if (button === Button.CYCLE_VARIANT) {
+      default:
+        this.scene.ui.processInput(button);
+        break;
+      }
+    } else if (button === Button.CYCLE_VARIANT) {
       const shopUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
       if (!shopUnlocked && (currentMode === Mode.TITLE || currentMode === Mode.COMMAND)) {
         return;
       }
 
       switch (currentMode) {
-        case Mode.TITLE:
-        case Mode.COMMAND:
-          this.scene.ui.setMode(Mode.MESSAGE);
-          this.scene.unshiftPhase(new ShopModifierSelectPhase(this.scene));
-          const currentPhase = this.scene.getCurrentPhase();
-          if (currentPhase) {
-            this.scene.unshiftPhase(currentPhase);
-          }
-          this.scene.shiftPhase();
-          break;
-        default:
-          this.scene.ui.processInput(button);
-          break;
+      case Mode.TITLE:
+      case Mode.COMMAND:
+        this.scene.ui.setMode(Mode.MESSAGE);
+        this.scene.unshiftPhase(new ShopModifierSelectPhase(this.scene));
+        const currentPhase = this.scene.getCurrentPhase();
+        if (currentPhase) {
+          this.scene.unshiftPhase(currentPhase);
+        }
+        this.scene.shiftPhase();
+        break;
+      default:
+        this.scene.ui.processInput(button);
+        break;
       }
     } else if (button === Button.CYCLE_FORM) {
       if (currentMode === Mode.TITLE || currentMode === Mode.COMMAND) {
@@ -398,10 +422,9 @@ export class UiInputs {
     } else if (button === Button.CYCLE_GENDER) {
       this.scene.ui.processInput(button);
     } else if (button === Button.CYCLE_NATURE) {
-      if((currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.COMMAND) && this.scene.gameMode.isChaosMode) {
-          this.scene.ui.setOverlayMode(Mode.BATTLE_PATH, { viewOnly: true });
-      }
-      else if (currentMode === Mode.TITLE) {
+      if ((currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.COMMAND) && this.scene.gameMode.isChaosMode) {
+        this.scene.ui.setOverlayMode(Mode.BATTLE_PATH, { viewOnly: true });
+      } else if (currentMode === Mode.TITLE) {
         activateSmitomTalk(this.scene);
       } else {
         this.scene.ui.processInput(button);
@@ -413,16 +436,27 @@ export class UiInputs {
 
   buttonSpeedChange(up = true): void {
     const settingGameSpeed = settingIndex(SettingKeys.Game_Speed);
-    if (up && this.scene.gameSpeed < 5) {
-      this.scene.gameData.saveSetting(SettingKeys.Game_Speed, Setting[settingGameSpeed].options.findIndex((item) => item.label === `${this.scene.gameSpeed}x`) + 1);
-      if (this.scene.ui?.getMode() === Mode.SETTINGS) {
-        (this.scene.ui.getHandler() as SettingsUiHandler).show([]);
-      }
-    } else if (!up && this.scene.gameSpeed > 1) {
-      this.scene.gameData.saveSetting(SettingKeys.Game_Speed, Math.max(Setting[settingGameSpeed].options.findIndex((item) => item.label === `${this.scene.gameSpeed}x`) - 1, 0));
-      if (this.scene.ui?.getMode() === Mode.SETTINGS) {
-        (this.scene.ui.getHandler() as SettingsUiHandler).show([]);
-      }
+    if (settingGameSpeed < 0) {
+      return;
+    }
+
+    const options = Setting[settingGameSpeed].options;
+    const currentIdx = options.findIndex((item) => item.label === `${this.scene.gameSpeed}x`);
+    if (currentIdx < 0) {
+      return;
+    }
+
+    const nextIdx = up
+      ? Math.min(currentIdx + 1, options.length - 1)
+      : Math.max(currentIdx - 1, 0);
+
+    if (nextIdx === currentIdx) {
+      return;
+    }
+
+    this.scene.gameData.saveSetting(SettingKeys.Game_Speed, nextIdx);
+    if (this.scene.ui?.getMode() === Mode.SETTINGS) {
+      (this.scene.ui.getHandler() as SettingsUiHandler).show([]);
     }
   }
 

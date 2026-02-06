@@ -245,6 +245,7 @@
       "description": "El Pokémon más fuerte causa la mitad de daño"
     }
   },
-  "tooltipDetails": "DETALLES",
+  "challengeHeader": "¡DESAFÍO!",
+  "tooltipDetails": "Más info",
   "tooltipBack": "Volver"
 } 

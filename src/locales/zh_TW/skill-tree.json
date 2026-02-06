@@ -1,5 +1,6 @@
 {
   "title": "技能樹",
+  "unknownReward": "未知獎勵",
   "subtitle": "使用技能點解鎖強大的能力",
   "skillPoints": "技能點：{{points}}",
   "tokens": "樹代幣：{{tokens}}",
@@ -24,6 +25,10 @@
   "instructionsSelectBoth": "選擇1隻招牌寶可夢和1隻普通寶可夢",
   "instructionsSelectSignature": "選擇1隻招牌寶可夢",
   "instructionsSelectGeneral": "選擇1隻普通寶可夢",
+  "instructionsPokemonSelection": "選擇2隻寶可夢（招牌最多1隻）",
+  "instructionsPokemonSelectionRemaining": "還需選擇{{remaining}}隻寶可夢",
+  "instructionsPokemonSelectionSignatureAvailable": "還需選擇{{remaining}}隻（可選招牌）",
+  "instructionsPokemonSelectionComplete": "選擇完成！",
   "tooltipSelectSignature": "選擇此招牌寶可夢\n\n[color=#ffdd44]招牌寶可夢有潛力變得極其強大，如果訓練師能夠超越現實並解鎖其通常休眠的能力。[/color]",
   "tooltipReplaceSignature": "替換當前招牌選擇\n\n[color=#ffdd44]招牌寶可夢有潛力變得極其強大，如果訓練師能夠超越現實並解鎖其通常休眠的能力。[/color]",
   "tooltipSelectGeneral": "選擇此普通寶可夢",

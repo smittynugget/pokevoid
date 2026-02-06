@@ -1,0 +1,47 @@
+{
+  "modifierType": {
+    "championStatBooster": {
+      "name": "{{champion}}: тренировка — {{stats}}",
+      "description": "Повышает {{stats}} на {{percent}}% для покемонов {{champion}}",
+      "descriptionConditional": "Повышает {{stats}} на {{percent}}% для покемонов типа {{types}} или фирменных покемонов. Покемоны не-{{types}} и не фирменные получают только бонус {{firstStat}}."
+    },
+    "championPokemonStatBooster": {
+      "name": "{{champion}}: {{flavor}} [{{stats}}]",
+      "description": "Навсегда увеличивает {{stats}} на {{percent}}% для выбранного покемона. Пропитано методами тренировок {{champion}}.",
+      "descriptionConditional": "Навсегда увеличивает {{stats}} на {{percent}}% для покемонов типа {{types}} или фирменных покемонов. Покемоны не-{{types}} и не фирменные получают только бонус {{firstStat}}. Пропитано методами тренировок {{champion}}."
+    },
+    "trainerBondAbility": {
+      "name": "{{champion}}: лимит-брейк — {{ability}}",
+      "description": "{{chance}}% шанс активировать {{ability}} для покемонов {{champion}}. {{abilityDescription}}"
+    },
+    "teraAbility": {
+      "name": "Тера-талант {{type}}: {{ability}}",
+      "description": "{{chance}}% шанс активировать {{ability}}, когда терасталлизован(а) в тип {{type}}. {{abilityDescription}}"
+    },
+    "pokemonAltBuild": {
+      "name": "{{buildName}}",
+      "description": "{{description}} — изменяет характеристики и таланты этого покемона",
+      "wrongSpecies": "Эта альт-сборка только для {{species}}"
+    },
+    "championTm": {
+      "name": "{{champion}}: TM — {{move}}",
+      "description": "Обучает покемона приёму {{move}}. Совместимо со стилем {{champion}}."
+    },
+    "championXm": {
+      "name": "{{champion}}: XM — {{move}}",
+      "description": "Обучает мощному приёму {{move}}. Освоено {{champion}}."
+    }
+  },
+  "modifier": {
+    "championStatBooster": {
+      "extra": {
+        "inoperable": "Этот покемон несовместим с тренировками {{champion}}"
+      }
+    },
+    "trainerBondAbility": {
+      "extra": {
+        "activated": "Лимит-брейк {{champion}} активировал {{ability}}!"
+      }
+    }
+  }
+}

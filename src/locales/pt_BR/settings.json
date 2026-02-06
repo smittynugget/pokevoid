@@ -1,4 +1,5 @@
 {
+  "options": "Opções",
   "boy": "Menino",
   "girl": "Menina",
   "general": "Geral",
@@ -106,5 +107,6 @@
   "reroll": "Atualizar",
   "shop": "Loja",
   "checkTeam": "Checar Time",
-  "lockedRewardSpeed": "Bloquear Velocidade de Recompensas"
+  "disableMoveUpgrades": "Desativar melhorias de golpes",
+  "disableCutscenes": "Desativar cutscenes"
 }

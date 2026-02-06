@@ -9,16 +9,20 @@
     "description": "Accumula {{moneyAmount}} PokéDollari"
   },
   "10K_MONEY": {
-    "name": "Benestante"
+    "name": "Benestante",
+    "name_female": null
   },
   "100K_MONEY": {
-    "name": "Ricco"
+    "name": "Ricco",
+    "name_female": null
   },
   "1M_MONEY": {
-    "name": "Milionario"
+    "name": "Milionario",
+    "name_female": null
   },
   "10M_MONEY": {
-    "name": "La numero uno"
+    "name": "La numero uno",
+    "name_female": null
   },
   "DamageAchv": {
     "description": "Infliggi {{damageAmount}} danni in un colpo"
@@ -27,28 +31,35 @@
     "name": "Grandi danni!"
   },
   "1000_DMG": {
-    "name": "Incredibili danni"
+    "name": "Incredibili danni",
+    "name_female": null
   },
   "2500_DMG": {
-    "name": "Danni a palate!"
+    "name": "Danni a palate!",
+    "name_female": null
   },
   "10000_DMG": {
-    "name": "One Punch Man"
+    "name": "One Punch Man",
+    "name_female": "One Punch Woman"
   },
   "HealAchv": {
     "description": "Cura {{healAmount}} {{HP}} tramite mossa, abilità, o oggetto"
   },
   "250_HEAL": {
-    "name": "Paramedico"
+    "name": "Paramedico",
+    "name_female": null
   },
   "1000_HEAL": {
-    "name": "Dottore"
+    "name": "Dottore",
+    "name_female": null
   },
   "2500_HEAL": {
-    "name": "Chierico"
+    "name": "Chierico",
+    "name_female": null
   },
   "10000_HEAL": {
-    "name": "Mastro Curatore"
+    "name": "Mastro Curatore",
+    "name_female": null
   },
   "LevelAchv": {
     "description": "Porta un pokémon a Lv{{level}}"
@@ -57,7 +68,8 @@
     "name": "E Non Finisce Qui!"
   },
   "LV_250": {
-    "name": "Elite"
+    "name": "Elite",
+    "name_female": null
   },
   "LV_1000": {
     "name": "Verso l'Infinito ed Oltre!"
@@ -66,19 +78,24 @@
     "description": "Accumula un Totale di {{ribbonAmount}} Nastri"
   },
   "10_RIBBONS": {
-    "name": "Campione Lega Pokémon"
+    "name": "Campione Lega Pokémon",
+    "name_female": null
   },
   "25_RIBBONS": {
-    "name": "Campione Lega Estesa"
+    "name": "Campione Lega Estesa",
+    "name_female": null
   },
   "50_RIBBONS": {
-    "name": "Campione Lega Ultra"
+    "name": "Campione Lega Ultra",
+    "name_female": null
   },
   "75_RIBBONS": {
-    "name": "Campione Lega Rogue"
+    "name": "Campione Lega Rogue",
+    "name_female": null
   },
   "100_RIBBONS": {
-    "name": "Campione Lega Assoluta"
+    "name": "Campione Lega Assoluta",
+    "name_female": null
   },
   "TRANSFER_MAX_BATTLE_STAT": {
     "name": "Lavoro di Squadra",
@@ -130,7 +147,8 @@
   },
   "SHINY_PARTY": {
     "name": "Dedizione Totale",
-    "description": "Riempi la squadra di Pokémon shiny"
+    "description": "Riempi la squadra di Pokémon shiny",
+    "name_female": null
   },
   "HATCH_MYTHICAL": {
     "name": "Uovo Mitico",
@@ -158,7 +176,8 @@
   },
   "CLASSIC_VICTORY": {
     "name": "Imbattuto",
-    "description": "Vinci in modalità classica"
+    "description": "Vinci in modalità classica",
+    "name_female": null
   },
   "UNEVOLVED_CLASSIC_VICTORY": {
     "name": "Alternanza scuola-lavoro",
@@ -260,5 +279,9 @@
   "FRESH_START": {
     "name": "Buona la prima!",
     "description": "Completa la modalità sfida 'Un nuovo inizio'."
+  },
+  "INVERSE_BATTLE": {
+    "name": "Specchio, specchio",
+    "description": "Completa la sfida Battaglia Inversa."
   }
 }

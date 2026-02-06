@@ -245,6 +245,7 @@
       "description": "가장 강한 포켓몬이 절반 데미지를 입힘"
     }
   },
-  "tooltipDetails": "상세정보",
+  "challengeHeader": "도전!",
+  "tooltipDetails": "추가 정보",
   "tooltipBack": "뒤로"
 } 

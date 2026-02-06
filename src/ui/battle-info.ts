@@ -347,7 +347,16 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     this.splicedIcon.setPositionRelative(this.nameText, nameTextWidth + this.genderText.displayWidth + 1 + (this.teraIcon.visible ? this.teraIcon.displayWidth + 1 : 0), 2.5);
     this.splicedIcon.setVisible(isFusion);
     if (this.splicedIcon.visible) {
-      this.splicedIcon.on("pointerover", () => (this.scene as BattleScene).ui.showTooltip("", `${pokemon.species.getName(pokemon.formIndex)}/${pokemon.fusionSpecies?.getName(pokemon.fusionFormIndex)}`));
+      this.splicedIcon.off("pointerover");
+      this.splicedIcon.off("pointerout");
+      this.splicedIcon.on("pointerover", () => {
+        const primary = pokemon.species.getName(pokemon.formIndex);
+        const fusion = pokemon.fusionSpecies?.getName(pokemon.fusionFormIndex) || "";
+        (this.scene as BattleScene).ui.showTooltip(
+          i18next.t("battleInfo:fusionTooltipTitle"),
+          i18next.t("battleInfo:fusionTooltipBody", { primary, fusion }).split("\n\n")[0]
+        );
+      });
       this.splicedIcon.on("pointerout", () => (this.scene as BattleScene).ui.hideTooltip());
     }
 
@@ -361,7 +370,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     if (this.shinyIcon.visible) {
       const shinyDescriptor = doubleShiny || baseVariant ?
         `${baseVariant === 2 ? i18next.t("common:epicShiny") : baseVariant === 1 ? i18next.t("common:rareShiny") : i18next.t("common:commonShiny")}${doubleShiny ? `/${pokemon.fusionVariant === 2 ? i18next.t("common:epicShiny") : pokemon.fusionVariant === 1 ? i18next.t("common:rareShiny") : i18next.t("common:commonShiny")}` : ""}`
-          : "";
+        : "";
       this.shinyIcon.on("pointerover", () => (this.scene as BattleScene).ui.showTooltip("", `${i18next.t("common:shinyOnHover")}${shinyDescriptor ? ` (${shinyDescriptor})` : ""}`));
       this.shinyIcon.on("pointerout", () => (this.scene as BattleScene).ui.hideTooltip());
     }
@@ -438,7 +447,9 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     }
 
     if (this.player) {
-      this.expMaskRect.x = (pokemon.levelExp / getLevelTotalExp(pokemon.level, pokemon.species.growthRate)) * 510;
+      const relLevelExp = getLevelRelExp(pokemon.level + 1, pokemon.species.growthRate);
+      const ratio = relLevelExp ? (pokemon.levelExp / relLevelExp) : 0;
+      this.expMaskRect.x = Math.min(Math.max(ratio, 0), 1) * 510;
       this.lastExp = pokemon.exp;
       this.lastLevelExp = pokemon.levelExp;
 
@@ -576,7 +587,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
         this.shinyIcon.setPositionRelative(this.nameText, this.nameText.displayWidth + this.genderText.displayWidth + 1 + (this.teraIcon.visible ? this.teraIcon.displayWidth + 1 : 0) + (this.splicedIcon.visible ? this.splicedIcon.displayWidth + 1 : 0), 2.5);
       }
 
-      if(!pokemon.isGlitchOrSmittyForm()) {
+      if (!pokemon.isGlitchOrSmittyForm()) {
         const glitchFormName = pokemon.species.getGlitchFormName(false, this.scene as BattleScene);
         if (glitchFormName) {
           this.glitchFormText.setText(i18next.t("battleInfo:glitchForm", { formName: glitchFormName }));
@@ -693,7 +704,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
       }
 
       const battleStats = pokemon.summonData
-          ? pokemon.summonData.battleStats
+        ? pokemon.summonData.battleStats
         : this.battleStatOrder.map(() => 0);
       const battleStatsStr = battleStats.join("");
 
@@ -723,16 +734,18 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     nameTextWidth = nameSizeTest.displayWidth;
 
     try {
-        while (nameTextWidth > (this.player || !this.boss ? 60 : 98) - ((pokemon.gender !== Gender.GENDERLESS ? 6 : 0) + (pokemon.fusionSpecies ? 8 : 0) + (pokemon.isShiny() ? 8 : 0) + (Math.min(pokemon.level.toString().length, 3) - 3) * 8)) {
-            if (displayName.length <= 1) break;
-            displayName = `${displayName.slice(0, displayName.endsWith(".") ? -2 : -1).trimEnd()}.`;
-            nameSizeTest.setText(displayName);
-            nameTextWidth = nameSizeTest.displayWidth;
+      while (nameTextWidth > (this.player || !this.boss ? 60 : 98) - ((pokemon.gender !== Gender.GENDERLESS ? 6 : 0) + (pokemon.fusionSpecies ? 8 : 0) + (pokemon.isShiny() ? 8 : 0) + (Math.min(pokemon.level.toString().length, 3) - 3) * 8)) {
+        if (displayName.length <= 1) {
+          break;
         }
-    } catch (error) {
-        console.warn(`Error truncating Pokemon name: ${error}`);
-        displayName = displayName.slice(0, 3) + ".";
+        displayName = `${displayName.slice(0, displayName.endsWith(".") ? -2 : -1).trimEnd()}.`;
         nameSizeTest.setText(displayName);
+        nameTextWidth = nameSizeTest.displayWidth;
+      }
+    } catch (error) {
+      console.warn(`Error truncating Pokemon name: ${error}`);
+      displayName = displayName.slice(0, 3) + ".";
+      nameSizeTest.setText(displayName);
     }
 
     nameSizeTest.destroy();
@@ -741,7 +754,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     this.lastName = pokemon.getNameToRender();
 
     if (this.nameText.visible) {
-        this.nameText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.nameText.width, this.nameText.height), Phaser.Geom.Rectangle.Contains);
+      this.nameText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.nameText.width, this.nameText.height), Phaser.Geom.Rectangle.Contains);
     }
   }
 
@@ -801,7 +814,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
   setLevel(level: integer): void {
     const isCapped = level >= (this.scene as BattleScene).getMaxExpLevel();
     this.levelNumbersContainer.removeAll(true);
-    if(level === undefined) {
+    if (level === undefined) {
       console.log("level is undefined");
     }
     const levelStr = level.toString();
@@ -831,7 +844,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
   updateBattleStats(battleStats: integer[]): void {
     this.battleStatOrder.map((s, i) => {
       if (s !== BattleStat.HP) {
-      this.statNumbers[i].setFrame(battleStats[s].toString());
+        this.statNumbers[i].setFrame(battleStats[s].toString());
       }
     });
   }

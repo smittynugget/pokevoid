@@ -9,6 +9,7 @@ import { SkillTreePhase, SkillTreeMode } from "../phases/skill-tree-phase";
 import Battle, { setupFixedBattlePaths, setupFixedBattles, setupNightmareFixedBattles, BattleType } from "#app/battle";
 import { BattlePathPhase } from "#app/phases/battle-path-phase";
 import { EncounterPhase } from "#app/phases/encounter-phase";
+import { SlideshowCutscenePhase } from "#app/phases/slideshow-cutscene-phase.js";
 import { GameMechanicsID, GameMechanicsVersion } from "#enums/gameMechanicsID";
 import { Mode } from "#app/ui/ui";
 import { SaveSlotUiMode } from "#app/ui/save-slot-select-ui-handler";
@@ -22,7 +23,13 @@ import { PlayerGender } from "#enums/player-gender";
 import { PokemonAltBuildId, POKEMON_ALT_BUILDS } from "../data/pokemon-alt-buid";
 import { PokemonAltBuildModifierType } from "../modifier/modifier-type";
 import * as Modifiers from "../modifier/modifier";
+import { STORY_CUTSCENES } from "#app/system/story-cutscenes.js";
+import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays.js";
 export function setupBattleFlow(scene: BattleScene, loaded: boolean = false): void {
+  if (!loaded) {
+    scene.moveUpgradesEnabledForRun = !scene.disableMoveUpgrades;
+    scene.resetRunEndSummaryRunData();
+  }
 
   if (scene.gameMode.modeId !== GameModes.SHOP) {
     scene.newArena(scene.gameMode.getStartingBiome(scene));
@@ -79,14 +86,14 @@ function handleSaveSlotSelection(scene: BattleScene, onSlotSelected: (slotId: nu
   console.log("[STARTER] Setting overlay mode to SAVE_SLOT");
   scene.ui.setOverlayMode(Mode.SAVE_SLOT, SaveSlotUiMode.SAVE, (slotId: integer) => {
     console.log("[STARTER] Save slot callback invoked with slotId:", slotId);
+    console.log("[STARTER] Calling onSlotSelected callback");
     if (slotId === -1) {
-      console.log("[STARTER] Save slot cancelled, returning to title");
-      scene.clearPhaseQueue();
-      scene.pushPhase(new TitlePhase(scene));
+      onSlotSelected(-1);
       return;
     }
     scene.sessionSlotId = slotId;
-    console.log("[STARTER] Calling onSlotSelected callback");
+    scene.moveUpgradesEnabledForRun = !scene.disableMoveUpgrades;
+    scene.resetRunEndSummaryRunData();
     onSlotSelected(slotId);
   }).then(() => {
     console.log("[STARTER] setOverlayMode promise resolved, UI mode now:", scene.ui.getMode());
@@ -124,6 +131,13 @@ export class ChampionModeIntegration {
           scene.unshiftPhase(waitPhase);
 
           handleSaveSlotSelection(scene, (slotId) => {
+            if (slotId === -1) {
+              scene.ui.resetModeChain();
+              scene.clearAllPhaseQueues();
+              scene.pushPhase(new TitlePhase(scene));
+              waitPhase.end();
+              return;
+            }
             scene.unshiftPhase(new SkillTreePhase(scene as any, {
               mode: SkillTreeMode.POKEMON_SELECTION,
               requiredSelections: 2,
@@ -131,9 +145,10 @@ export class ChampionModeIntegration {
                 if (selections && selections.length) {
                   const active = (scene as any).gameData?.activeSkillTree;
                   if (active) {
-                    const sig = selections.find(s => s.isSignature)?.species;
-                    const gen = selections.find(s => !s.isSignature)?.species;
-                    active.selectedPokemon = { signature: sig as any, general: gen as any };
+                    active.selectedPokemonPicks = selections.map(s => ({
+                      species: s.species as any,
+                      isSignature: s.isSignature
+                    }));
                   }
                 }
 
@@ -173,6 +188,13 @@ export class ChampionModeIntegration {
               }
 
               handleSaveSlotSelection(scene, (slotId) => {
+                if (slotId === -1) {
+                  scene.ui.resetModeChain();
+                  scene.clearAllPhaseQueues();
+                  scene.pushPhase(new TitlePhase(scene));
+                  scene.getCurrentPhase()?.end();
+                  return;
+                }
                 console.log("[STARTER] Save slot selected:", slotId);
                 scene.sessionSlotId = slotId;
                 const party = scene.getParty();
@@ -258,37 +280,56 @@ export class ChampionModeIntegration {
 
                 console.log("[STARTER] Party size after adding all starters:", party.length);
                 console.log("[STARTER] Party contents:", party.map(p => p.species.name));
-                  console.log("[STARTER] Loading all starter assets...");
-                  Promise.all(loadPokemonAssets).then(() => {
-                    console.log("[STARTER] All assets loaded, queueing skill tree phase");
-                    console.log("[STARTER] Party size before skill tree:", scene.getParty().length);
-                    console.log("[STARTER] Party before skill tree:", scene.getParty().map(p => p.species.name));
-                    const skillTreeMode = DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE
-                      ? SkillTreeMode.DEBUG_ENHANCED
-                      : SkillTreeMode.INITIAL_ACCESS;
+                console.log("[STARTER] Loading all starter assets...");
+                Promise.all(loadPokemonAssets).then(() => {
+                  console.log("[STARTER] All assets loaded, queueing skill tree phase");
+                  console.log("[STARTER] Party size before skill tree:", scene.getParty().length);
+                  console.log("[STARTER] Party before skill tree:", scene.getParty().map(p => p.species.name));
+                  const skillTreeMode = DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE
+                    ? SkillTreeMode.DEBUG_ENHANCED
+                    : SkillTreeMode.INITIAL_ACCESS;
 
-                    console.log("[STARTER] Skill tree mode:", skillTreeMode, "| DEBUG_FORCE flag:", DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE);
+                  console.log("[STARTER] Skill tree mode:", skillTreeMode, "| DEBUG_FORCE flag:", DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE);
 
-                    console.log("[STARTER] Queuing SkillTreePhase via unshiftPhase");
-                    scene.unshiftPhase(new SkillTreePhase(scene as any, {
-                      mode: skillTreeMode,
-                      onComplete: () => {
-                        console.log("[STARTER] ===== SKILL TREE COMPLETED =====");
-                        console.log("[STARTER] Party size after skill tree:", scene.getParty().length);
-                        console.log("[STARTER] Party after skill tree:", scene.getParty().map(p => p.species.name));
-                        console.log("[STARTER] Calling setupBattleFlow...");
-                        setupBattleFlow(scene, false);
-                        opts?.onChampionReady?.(championId, []);
-                      }
-                    }));
+                  console.log("[STARTER] Queuing SkillTreePhase via unshiftPhase");
+                  scene.unshiftPhase(new SkillTreePhase(scene as any, {
+                    mode: skillTreeMode,
+                    onComplete: () => {
+                      console.log("[STARTER] ===== SKILL TREE COMPLETED =====");
+                      console.log("[STARTER] Party size after skill tree:", scene.getParty().length);
+                      console.log("[STARTER] Party after skill tree:", scene.getParty().map(p => p.species.name));
+                      console.log("[STARTER] Calling setupBattleFlow...");
+                      setupBattleFlow(scene, false);
+                      opts?.onChampionReady?.(championId, []);
+                    }
+                  }));
 
-                    console.log("[STARTER] Calling shiftPhase to advance to SkillTreePhase");
-                    scene.shiftPhase();
-                    console.log("[STARTER] ===== onStarterSelected callback END =====");
+                  console.log("[STARTER] Calling shiftPhase to advance to SkillTreePhase");
+                  scene.shiftPhase();
+                  console.log("[STARTER] ===== onStarterSelected callback END =====");
                 });
               });
             }
           }));
+          if (scene.gameMode.modeId === GameModes.NIGHTMARE && !scene.disableCutscenes) {
+            const def = STORY_CUTSCENES.nightmare_start;
+            let currentSlideKey: string | null = null;
+            scene.unshiftPhase(new SlideshowCutscenePhase(scene, {
+              slides: def.slides,
+              bgmKey: def.bgmKey,
+              canSkip: true,
+              pauseAfterText: 1000,
+              resumeBgmOnEnd: true,
+              onSlideChange: (index) => {
+                currentSlideKey = def.slides[index]?.imageKey;
+              },
+              onTextComplete: (controller) => {
+                if (currentSlideKey === "power") {
+                  runPowerUnlockOverlays(scene, controller);
+                }
+              },
+            }));
+          }
           return;
         }
       }

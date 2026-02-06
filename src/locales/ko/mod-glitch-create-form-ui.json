@@ -49,7 +49,8 @@
   "validation": {
     "requiredField": "이 필드는 필수입니다",
     "invalidImage": "유효하지 않은 이미지 형식 또는 크기",
-    "imageSize": "이미지는 150-200px이어야 합니다"
+    "imageSize": "이미지는 150-200px이어야 합니다",
+    "uniqueStats": "각 스탯은 고유해야 합니다"
   },
   "statusMessages": {
     "creatingMod": "모드 생성 중...",

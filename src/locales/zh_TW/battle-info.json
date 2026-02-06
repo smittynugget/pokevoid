@@ -1,4 +1,6 @@
 {
   "generation": "第{{generation}}世代",
-  "glitchForm": "{{formName}}出現故障"
+  "glitchForm": "{{formName}}出現故障",
+  "fusionTooltipTitle": "融合",
+  "fusionTooltipBody": "{{primary}}/{{fusion}}\n\n融合能力值使用兩隻寶可夢的種族值：\n1) 性格提升的能力（若中性則為HP）：取較高者\n2) 再取一項最佳能力：在剩餘中取較高者\n3) 其餘：取平均並向上取整\n性格修正在最後套用。"
 } 

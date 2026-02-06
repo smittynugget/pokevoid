@@ -50,13 +50,15 @@ import BgmBar from "#app/ui/bgm-bar";
 import RenameFormUiHandler from "./rename-form-ui-handler";
 import RunHistoryUiHandler from "./run-history-ui-handler";
 import RunInfoUiHandler from "./run-info-ui-handler";
+import RunEndSummaryUiHandler from "./run-end-summary-ui-handler";
 import TestDialogueUiHandler from "#app/ui/test-dialogue-ui-handler";
 import AutoCompleteUiHandler from "./autocomplete-ui-handler";
 import ShopSelectUiHandler from "./shop-select-ui-handler";
-import { GameObjects } from 'phaser';
+import { GameObjects } from "phaser";
 import {PermaModifiers} from "#app/modifier/perma-modifiers";
 import {ModifierBar, PermaCollectedTypeModifier} from "#app/modifier/modifier";
 import { Type } from "#app/data/type";
+import { ModifierTooltipUtils } from "./modifier-tooltip-utils";
 import ConsoleFormUiHandler from "#app/ui/console-form-ui-handler";
 import SmittyPokemonBountyUIHandler from "#app/ui/smitty-pokemon-bounty-ui-handler";
 import RivalBountyUiHandler from "#app/ui/rival-bounty-ui-handler";
@@ -78,8 +80,10 @@ import BackupRestoreFormUiHandler from "./backup-restore-form-ui-handler";
 import EggStarterUiHandler from "./egg-starter-ui-handler.js";
 import ModGlitchFormUiHandler from "./mod-glitch-form-ui-handler";
 import ModGlitchCreateFormUiHandler from "./mod-glitch-create-form-ui-handler";
+import SlideshowCutsceneUiHandler from "./slideshow-cutscene-ui-handler";
 import ModManagementUiHandler from "./mod-management-ui-handler";
 import PokedexModalUiHandler from "./pokedex-modal-ui-handler";
+import VoidexPrelistUiHandler from "./voidex-prelist-ui-handler";
 import SkillTreeUiHandler from "./skill-tree-ui-handler";
 import BattlePathUiHandler from "./battle-path-ui-handler";
 import { LoginPhase } from "#app/phases/login-phase.js";
@@ -126,6 +130,7 @@ export enum Mode {
   RENAME_POKEMON,
   RUN_HISTORY,
   RUN_INFO,
+  RUN_END_SUMMARY,
   TEST_DIALOGUE,
   AUTO_COMPLETE,
   SHOP_SELECT,
@@ -149,6 +154,8 @@ export enum Mode {
   CHAMPION_LEVEL_UP,
   BUG_REPORT_FORM,
   BACKUP_RESTORE_FORM,
+  SLIDESHOW_CUTSCENE,
+  VOIDEX_PRELIST,
 }
 
 const transitionModes = [
@@ -204,6 +211,7 @@ const noTransitionModes = [
   Mode.TRANSFER_SAVE_FORM,
   Mode.IMPORT_DATA_FORM,
   Mode.POKEDEX,
+  Mode.VOIDEX_PRELIST,
   Mode.BATTLE_PATH,
   Mode.CHAMPION_SELECT,
   Mode.SKILL_TREE,
@@ -323,6 +331,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.handlers[Mode.RENAME_POKEMON] = new RenameFormUiHandler(scene);
     this.handlers[Mode.RUN_HISTORY] = new RunHistoryUiHandler(scene);
     this.handlers[Mode.RUN_INFO] = new RunInfoUiHandler(scene);
+    this.handlers[Mode.RUN_END_SUMMARY] = new RunEndSummaryUiHandler(scene, Mode.RUN_END_SUMMARY);
     this.handlers[Mode.TEST_DIALOGUE] = new TestDialogueUiHandler(scene, Mode.TEST_DIALOGUE);
     this.handlers[Mode.AUTO_COMPLETE] = new AutoCompleteUiHandler(scene);
     this.handlers[Mode.SHOP_SELECT] = new ShopSelectUiHandler(scene);
@@ -339,6 +348,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.handlers[Mode.MOD_MANAGEMENT] = new ModManagementUiHandler(scene);
     this.handlers[Mode.TRANSFER_SAVE_FORM] = new TransferSaveFormUiHandler(scene);
     this.handlers[Mode.POKEDEX] = new PokedexModalUiHandler(scene);
+    this.handlers[Mode.VOIDEX_PRELIST] = new VoidexPrelistUiHandler(scene);
     this.handlers[Mode.BATTLE_PATH] = new BattlePathUiHandler(scene);
 
     this.handlers[Mode.CHAMPION_SELECT] = new ChampionSelectUiHandler(scene);
@@ -346,15 +356,13 @@ export default class UI extends Phaser.GameObjects.Container {
     this.handlers[Mode.CHAMPION_LEVEL_UP] = new ChampionLevelUpUiHandler(scene);
     this.handlers[Mode.BUG_REPORT_FORM] = new BugReportFormUiHandler(scene);
     this.handlers[Mode.BACKUP_RESTORE_FORM] = new BackupRestoreFormUiHandler(scene);
+    this.handlers[Mode.SLIDESHOW_CUTSCENE] = new SlideshowCutsceneUiHandler(scene);
 
     if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) {
-      console.log("Detected iOS device - preloading ImportDataFormUiHandler");
       import("./import-data-form-ui-handler").then(module => {
-        console.log("ImportDataFormUiHandler loaded successfully");
         try {
           const handler = new module.default(scene);
           this.handlers[Mode.IMPORT_DATA_FORM] = handler;
-          console.log("ImportDataFormUiHandler added to handlers array at index", Mode.IMPORT_DATA_FORM);
         } catch (e) {
           console.error("Error creating ImportDataFormUiHandler:", e);
         }
@@ -372,7 +380,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.saveButton.setScale(0.3);
     this.saveButton.setAlpha(0.5);
     this.saveButton.setInteractive({ useHandCursor: true });
-    this.saveButton.on('pointerdown', () => this.handleSaveButtonClick(this.scene as BattleScene));
+    this.saveButton.on("pointerdown", () => this.handleSaveButtonClick(this.scene as BattleScene));
 
     const saveIcon = scene.inputController?.getIconForLatestInputRecorded("BUTTON_CYCLE_FORM");
     const saveType = scene.inputController?.getLastSourceType() || "keyboard";
@@ -387,12 +395,12 @@ export default class UI extends Phaser.GameObjects.Container {
 
     this.permaMoneyContainer.add(this.saveContainer);
 
-    this.voidexButton = this.scene.add.sprite(0, 0, "items", "scanner");
+    this.voidexButton = this.scene.add.sprite(0, 0, "smitems", "modPassiveAbility");
     this.voidexButton.setName("voidex-button");
-    this.voidexButton.setScale(0.3);
+    this.voidexButton.setScale(0.14);
     this.voidexButton.setAlpha(1);
     this.voidexButton.setInteractive({ useHandCursor: true });
-    this.voidexButton.on('pointerdown', () => scene.ui.setOverlayMode(Mode.POKEDEX));
+    this.voidexButton.on("pointerdown", () => scene.ui.setOverlayMode(Mode.VOIDEX_PRELIST));
     const voidexIcon = scene.inputController?.getIconForLatestInputRecorded("BUTTON_VOIDEX");
     const voidexType = scene.inputController?.getLastSourceType() || "keyboard";
     const voidexKeySprite = this.scene.add.sprite(2, 2, voidexType);
@@ -410,7 +418,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.eggGachaButton.setScale(0.2);
     this.eggGachaButton.setAlpha(1);
     this.eggGachaButton.setInteractive({ useHandCursor: true });
-    this.eggGachaButton.on('pointerdown', () => scene.ui.setOverlayMode(Mode.EGG_GACHA));
+    this.eggGachaButton.on("pointerdown", () => scene.ui.setOverlayMode(Mode.EGG_GACHA));
 
     const eggGachaIcon = scene.inputController?.getIconForLatestInputRecorded("BUTTON_CYCLE_ABILITY");
     const eggGachaType = scene.inputController?.getLastSourceType() || "keyboard";
@@ -429,7 +437,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.battlePathButton.setScale(0.3);
     this.battlePathButton.setAlpha(1);
     this.battlePathButton.setInteractive({ useHandCursor: true });
-    this.battlePathButton.on('pointerdown', () => {
+    this.battlePathButton.on("pointerdown", () => {
       if (scene.gameMode?.isChaosMode) {
         scene.ui.setOverlayMode(Mode.BATTLE_PATH, { viewOnly: true });
       }
@@ -453,30 +461,20 @@ export default class UI extends Phaser.GameObjects.Container {
     this.runInfoButton.setScale(0.15);
     this.runInfoButton.setAlpha(1);
     this.runInfoButton.setInteractive({ useHandCursor: true });
-    this.runInfoButton.on('pointerdown', () => {
+    this.runInfoButton.on("pointerdown", () => {
       const currentMode = scene.ui?.getMode();
       if (currentMode === Mode.COMMAND || currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.COLLECTED_TYPE_SELECT) {
         if (scene.sessionSlotId < 0) {
           return;
         }
-        const slotId = scene.sessionSlotId;
-
-        (async () => {
-          try {
-            const sessionData = await scene.gameData.getSession(slotId);
-            if (sessionData) {
-              const activeRunEntry = {
-                entry: sessionData,
-                isVictory: false,
-                isFavorite: false,
-                isActive: true
-              };
-              scene.ui.setOverlayMode(Mode.RUN_INFO, activeRunEntry, true);
-            }
-          } catch (error) {
-            console.error("Error loading session data:", error);
-          }
-        })();
+        const sessionData = scene.gameData.getSessionSaveData(scene as BattleScene);
+        const activeRunEntry = {
+          entry: sessionData,
+          isVictory: false,
+          isFavorite: false,
+          isActive: true
+        };
+        scene.ui.setOverlayMode(Mode.RUN_INFO, activeRunEntry, true);
       }
       if (currentMode === Mode.TITLE) {
         scene.ui.setOverlayMode(Mode.RUN_HISTORY);
@@ -501,7 +499,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.permaBarToggleButton.setScale(this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE);
     this.permaBarToggleButton.setAlpha(1);
     this.permaBarToggleButton.setInteractive({ useHandCursor: true });
-    this.permaBarToggleButton.on('pointerdown', () => this.handlePermaBarToggle(scene as BattleScene));
+    this.permaBarToggleButton.on("pointerdown", () => this.handlePermaBarToggle(scene as BattleScene));
 
     let permaBarToggleIcon = scene.inputController?.getIconForLatestInputRecorded("BUTTON_TOGGLE_PERMA_BAR");
     if (!permaBarToggleIcon) {
@@ -527,7 +525,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.playerBarToggleButton.setScale(this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE);
     this.playerBarToggleButton.setAlpha(1);
     this.playerBarToggleButton.setInteractive({ useHandCursor: true });
-    this.playerBarToggleButton.on('pointerdown', () => this.handlePlayerBarToggle(scene as BattleScene));
+    this.playerBarToggleButton.on("pointerdown", () => this.handlePlayerBarToggle(scene as BattleScene));
 
     let playerBarToggleIcon = scene.inputController?.getIconForLatestInputRecorded("BUTTON_TOGGLE_PLAYER_BAR");
     if (!playerBarToggleIcon) {
@@ -553,7 +551,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.foeBarToggleButton.setScale(this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE);
     this.foeBarToggleButton.setAlpha(1);
     this.foeBarToggleButton.setInteractive({ useHandCursor: true });
-    this.foeBarToggleButton.on('pointerdown', () => this.handleFoeBarToggle(scene as BattleScene));
+    this.foeBarToggleButton.on("pointerdown", () => this.handleFoeBarToggle(scene as BattleScene));
 
     let foeBarToggleIcon = scene.inputController?.getIconForLatestInputRecorded("BUTTON_TOGGLE_FOE_BAR");
     if (!foeBarToggleIcon) {
@@ -579,8 +577,8 @@ export default class UI extends Phaser.GameObjects.Container {
     this.permaCollectedTypeIcon.setScale(this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE);
     this.permaCollectedTypeIcon.setAlpha(1);
     this.permaCollectedTypeIcon.setInteractive({ useHandCursor: true });
-    this.permaCollectedTypeIcon.on('pointerover', () => this.showPermaCollectedTypeTooltip(scene as BattleScene));
-    this.permaCollectedTypeIcon.on('pointerout', () => (scene as BattleScene).ui.hideTooltip());
+    this.permaCollectedTypeIcon.on("pointerover", () => this.showPermaCollectedTypeTooltip(scene as BattleScene));
+    this.permaCollectedTypeIcon.on("pointerout", () => ModifierTooltipUtils.hideIfNotPinned(scene as BattleScene));
 
     this.permaCollectedTypeContainer = this.scene.add.container(0, 0);
     this.permaCollectedTypeContainer.setName("perma-collected-type-container");
@@ -625,7 +623,7 @@ export default class UI extends Phaser.GameObjects.Container {
   private getBarXOffsetRightOfToggles(scene: BattleScene): number {
     const leftPadding = this.UI_CONSTANTS.LEFT_PADDING;
     const permaCollectedTypeWidth = this.permaCollectedTypeContainer.visible ?
-        (this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SIZE * this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE) + this.UI_CONSTANTS.PERMA_COLLECTED_TYPE_SPACING : 0;
+      (this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SIZE * this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE) + this.UI_CONSTANTS.PERMA_COLLECTED_TYPE_SPACING : 0;
 
     const isInBattle = scene.currentBattle !== null && scene.currentBattle !== undefined;
     const numToggles = isInBattle ? 3 : 1;
@@ -650,19 +648,19 @@ export default class UI extends Phaser.GameObjects.Container {
     const exportSuccess = await scene.gameData.tryExportData(GameDataType.COMBINED);
     if (exportSuccess && !isLoginPhase && scene.gameData.isSaveRewardTime()) {
       scene.unshiftPhase(new ModifierRewardPhase(
-          scene, null, true,
-          () => {
-            scene.gameData.localSaveAll(scene);
-            scene.gameData.updateSaveRewardTime()
-            scene.unshiftPhase(currentPhase);
-          }
+        scene, null, true,
+        () => {
+          scene.gameData.localSaveAll(scene);
+          scene.gameData.updateSaveRewardTime();
+          scene.unshiftPhase(currentPhase);
+        }
       ));
       scene.shiftPhase();
     }
   }
 
   public handleVoidexButtonClick(scene: BattleScene): void {
-    scene.ui.setOverlayMode(Mode.POKEDEX);
+    scene.ui.setOverlayMode(Mode.VOIDEX_PRELIST);
   }
 
   public handlePermaBarToggle(scene: BattleScene): void {
@@ -674,11 +672,9 @@ export default class UI extends Phaser.GameObjects.Container {
 
     if (this.permaBarVisible) {
       this.playerBarVisible = false;
-      this.foeBarVisible = false;
       this.permaModifierBar.setPosition(barXOffset, barYPosition);
       this.permaModifierBar.setVisible(true);
       scene.getModifierBar().setVisible(false);
-      scene.getModifierBar(true).setVisible(false);
     } else {
       this.permaModifierBar.setVisible(false);
     }
@@ -696,11 +692,9 @@ export default class UI extends Phaser.GameObjects.Container {
 
     if (this.playerBarVisible) {
       this.permaBarVisible = false;
-      this.foeBarVisible = false;
       scene.getModifierBar().setPosition(barXOffset, uiContainerBarY);
       scene.getModifierBar().setVisible(true);
       this.permaModifierBar.setVisible(false);
-      scene.getModifierBar(true).setVisible(false);
     } else {
       scene.getModifierBar().setVisible(false);
     }
@@ -711,15 +705,7 @@ export default class UI extends Phaser.GameObjects.Container {
   public handleFoeBarToggle(scene: BattleScene): void {
     this.foeBarVisible = !this.foeBarVisible;
 
-    if (this.foeBarVisible) {
-      this.permaBarVisible = false;
-      this.playerBarVisible = false;
-      scene.getModifierBar(true).setVisible(true);
-      this.permaModifierBar.setVisible(false);
-      scene.getModifierBar().setVisible(false);
-    } else {
-      scene.getModifierBar(true).setVisible(false);
-    }
+    scene.getModifierBar(true).setVisible(this.foeBarVisible);
 
     this.updateToggleButtonVisuals();
   }
@@ -770,7 +756,7 @@ export default class UI extends Phaser.GameObjects.Container {
 
   updatePermaModifierBar(permaModifiers: PermaModifiers): void {
     const visibleModifiers = permaModifiers.getModifiers().filter(
-        m => !(m instanceof PermaCollectedTypeModifier)
+      m => !(m instanceof PermaCollectedTypeModifier)
     );
 
     this.permaModifierBar.updateModifiers(visibleModifiers);
@@ -779,13 +765,13 @@ export default class UI extends Phaser.GameObjects.Container {
 
   public updatePermaCollectedTypeDisplay(scene: BattleScene): void {
     const permaModifier = scene.gameData.permaModifiers.getModifiers().find(
-        m => m instanceof PermaCollectedTypeModifier
+      m => m instanceof PermaCollectedTypeModifier
     ) as PermaCollectedTypeModifier | undefined;
 
     if (permaModifier && Object.keys(permaModifier.collectedTypes).length > 0) {
-        this.permaCollectedTypeContainer.setVisible(true);
+      this.permaCollectedTypeContainer.setVisible(true);
     } else {
-        this.permaCollectedTypeContainer.setVisible(false);
+      this.permaCollectedTypeContainer.setVisible(false);
     }
 
     this.updatePermaMoneyText(scene);
@@ -793,20 +779,13 @@ export default class UI extends Phaser.GameObjects.Container {
 
   private showPermaCollectedTypeTooltip(scene: BattleScene): void {
     const permaModifier = scene.gameData.permaModifiers.getModifiers().find(
-        m => m instanceof PermaCollectedTypeModifier
+      m => m instanceof PermaCollectedTypeModifier
     ) as PermaCollectedTypeModifier | undefined;
 
-    if (permaModifier && permaModifier.collectedTypes) {
-        const typeEntries = Object.entries(permaModifier.collectedTypes)
-            .filter(([, count]) => (count as number) > 0)
-            .map(([type, count]) => `${i18next.t(`pokemonInfo:Type.${Type[parseInt(type)]}`)} x${count}`)
-            .join(", ");
-
-        const title = i18next.t("modifierType:ModifierType.PermaCollectedTypeModifierType.name", { defaultValue: "Collected Essences" });
-        const description = typeEntries || "No essences collected";
-
-        scene.ui.showTooltip(title, description, true);
+    if (!permaModifier) {
+      return;
     }
+    ModifierTooltipUtils.showForModifier(scene, permaModifier);
   }
 
   setup(): void {
@@ -854,9 +833,9 @@ export default class UI extends Phaser.GameObjects.Container {
     this.tooltipBg.setName("window-tooltip-bg");
     this.tooltipBg.setOrigin(0, 0);
 
-    this.tooltipTitle = addTextObject(this.scene, 64, 4, "", TextStyle.TOOLTIP_TITLE);
+    this.tooltipTitle = addTextObject(this.scene, 6, 4, "", TextStyle.TOOLTIP_TITLE);
     this.tooltipTitle.setName("text-tooltip-title");
-    this.tooltipTitle.setOrigin(0.5, 0);
+    this.tooltipTitle.setOrigin(0, 0);
 
     this.tooltipContent = addTextObject(this.scene, 6, 16, "", TextStyle.TOOLTIP_CONTENT);
     this.tooltipContent.setName("text-tooltip-content");
@@ -906,6 +885,10 @@ export default class UI extends Phaser.GameObjects.Container {
       return false;
     }
 
+    if (ModifierTooltipUtils.handleUiInput(this.scene as BattleScene, button)) {
+      return true;
+    }
+
     const handler = this.getHandler();
 
     if (handler instanceof AwaitableUiHandler && handler.tutorialActive) {
@@ -951,7 +934,6 @@ export default class UI extends Phaser.GameObjects.Container {
       }
 
       if (battleScene.skipSeenDialogues && battleScene.gameData.getSeenDialogues()[i18nKey] === true) {
-        console.log(`Dialogue ${i18nKey} skipped`);
         callback();
         return;
       }
@@ -962,7 +944,7 @@ export default class UI extends Phaser.GameObjects.Container {
     };
 
     const lang = i18next.resolvedLanguage;
-    const isCJK = lang === 'ja' || lang === 'zh-CN' || lang === 'zh-TW';
+    const isCJK = lang === "ja" || lang === "zh-CN" || lang === "zh-TW";
     const maxPageLength = isCJK ? 53 : 108;
     const maxWordsPerPage = 19;
 
@@ -1063,7 +1045,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.tooltipBg.width = Math.min(Math.max(this.tooltipTitle.displayWidth, this.tooltipContent.displayWidth) + 12, 684);
 
     const lineCount = wrappedContent.split("\n").length;
-    const isJapanese = i18next.resolvedLanguage === 'ja';
+    const isJapanese = i18next.resolvedLanguage === "ja";
     const baseHeight = title ? (isJapanese ? 35 : 31) : (isJapanese ? 23 : 19);
     const perLineHeight = isJapanese ? 7.5 : 10.5;
     this.tooltipBg.height = baseHeight + perLineHeight * (lineCount - 1);
@@ -1172,20 +1154,37 @@ export default class UI extends Phaser.GameObjects.Container {
   private setModeInternal(mode: Mode, clear: boolean, forceTransition: boolean, chainMode: boolean, args: any[]): Promise<void> {
     return new Promise(resolve => {
 
-      if (this.mode === mode && !forceTransition) {
+      if (this.mode === mode) {
+        if (chainMode || forceTransition) {
+          ModifierTooltipUtils.hide(this.scene as BattleScene);
+          if (clear) {
+            this.getHandler().clear();
+          }
+          const handler = this.getHandler();
+          if (handler) {
+            handler.show(args);
+          }
+        }
         resolve();
         return;
       }
 
       const doSetMode = () => {
+        ModifierTooltipUtils.hide(this.scene as BattleScene);
         if (this.mode !== mode) {
           if (clear) {
             this.getHandler().clear();
           }
 
-          if (chainMode && this.mode && !clear) {
+          if (chainMode && this.mode !== null && this.mode !== undefined && !clear) {
             this.modeChain.push(this.mode);
             (this.scene as BattleScene).updateGameInfo();
+          }
+
+          if (mode === Mode.COMMAND) {
+            try {
+              this.getMessageHandler().clearText();
+            } catch {}
           }
 
           this.mode = mode;
@@ -1245,9 +1244,9 @@ export default class UI extends Phaser.GameObjects.Container {
     return this.setModeInternal(mode, false, false, true, args);
   }
 
-    setOverlayModeForceTransition(mode: Mode, ...args: any[]): Promise<void> {
-        return this.setModeInternal(mode, false, true, true, args);
-    }
+  setOverlayModeForceTransition(mode: Mode, ...args: any[]): Promise<void> {
+    return this.setModeInternal(mode, false, true, true, args);
+  }
 
   resetModeChain(): void {
     this.modeChain = [];
@@ -1264,7 +1263,7 @@ export default class UI extends Phaser.GameObjects.Container {
       const lastMode = this.mode;
 
       const doRevertMode = () => {
-        const prevMode = this.mode;
+        ModifierTooltipUtils.hide(this.scene as BattleScene);
         this.getHandler().clear();
         this.mode = this.modeChain.pop()!;
         (this.scene as BattleScene).updateGameInfo();
@@ -1307,7 +1306,7 @@ export default class UI extends Phaser.GameObjects.Container {
     if (!(currentPhase instanceof TitlePhase || currentPhase instanceof CommandPhase)) {
       this.saveContainer.setAlpha(0);
       if (this.saveExclamationWindow) {
-          this.saveExclamationWindow.setVisible(false);
+        this.saveExclamationWindow.setVisible(false);
       }
       const saveButton = document.getElementById("apadSave");
       if (saveButton) {
@@ -1320,7 +1319,7 @@ export default class UI extends Phaser.GameObjects.Container {
       if (!this.saveExclamationWindow) {
         this.setupSaveExclamation();
       } else {
-          this.saveExclamationWindow.setVisible(true);
+        this.saveExclamationWindow.setVisible(true);
       }
       const saveButton = document.getElementById("apadSave");
       if (saveButton) {
@@ -1328,7 +1327,7 @@ export default class UI extends Phaser.GameObjects.Container {
       }
       return;
     } else if (this.saveExclamationWindow) {
-        this.saveExclamationWindow.setVisible(false);
+      this.saveExclamationWindow.setVisible(false);
     }
     this.saveContainer.setAlpha(1);
     this.saveButton.setAlpha(0.5);
@@ -1384,7 +1383,7 @@ export default class UI extends Phaser.GameObjects.Container {
     const battlePathButtonWidth = this.battlePathContainer.displayWidth * this.battlePathContainer.scale;
 
     if (!isChaosMode || currentWave < 1 || !isValidPhase) {
-      if(this.battlePathContainer.alpha === 1) {
+      if (this.battlePathContainer.alpha === 1) {
         this.permaMoneyText.setX(this.permaMoneyText.x + battlePathButtonWidth + 9);
       }
       this.battlePathContainer.setAlpha(0);
@@ -1467,7 +1466,7 @@ export default class UI extends Phaser.GameObjects.Container {
     const containerYOffset = 5;
     const permaMoneyTextYOffset = 1;
 
-    let battlePathButtonWidth = 0;
+    const battlePathButtonWidth = 0;
     this.battlePathContainer.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - runInfoButtonWidth - padding - battlePathContainerXOffset, topEdge + containerYOffset);
     this.battlePathContainer.setAlpha(0);
     const permaMoneyTextXOffset = 33;
@@ -1478,7 +1477,7 @@ export default class UI extends Phaser.GameObjects.Container {
     this.runInfoContainer.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - padding - runInfoContainerXOffset, topEdge + containerYOffset);
 
     const permaCollectedTypeWidth = this.permaCollectedTypeContainer.visible ?
-        (this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SIZE * this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE) + this.UI_CONSTANTS.PERMA_COLLECTED_TYPE_SPACING : 0;
+      (this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SIZE * this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE) + this.UI_CONSTANTS.PERMA_COLLECTED_TYPE_SPACING : 0;
     this.permaCollectedTypeContainer.setPosition(leftPadding, topEdge + padding);
 
     const toggleStartX = leftPadding + permaCollectedTypeWidth;
@@ -1527,7 +1526,7 @@ export default class UI extends Phaser.GameObjects.Container {
         this.saveExclamationWindow = this.scene.add.container(relativeX, relativeY);
         this.saveExclamationWindow.setName("save-exclamation");
 
-        const exclamationSprite = this.scene.add.sprite(0, 0, 'smitems', 'exclamationMark');
+        const exclamationSprite = this.scene.add.sprite(0, 0, "smitems", "exclamationMark");
         exclamationSprite.setScale(0.075);
         exclamationSprite.setOrigin(0.5, 0.5);
 
@@ -1538,7 +1537,7 @@ export default class UI extends Phaser.GameObjects.Container {
           targets: this.saveExclamationWindow,
           y: relativeY + .5,
           duration: 2500,
-          ease: 'Sine.easeInOut',
+          ease: "Sine.easeInOut",
           yoyo: true,
           repeat: -1
         });

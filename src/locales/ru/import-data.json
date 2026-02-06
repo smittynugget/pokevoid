@@ -1,0 +1,14 @@
+{
+  "importSaveData": "Импортировать данные сохранения",
+  "importModData": "Импортировать данные модов",
+  "cancel": "Отмена",
+  "selectFile": "Выбрать файл",
+  "selectJsonModFiles": "Выберите JSON-файл(ы) мода для импорта",
+  "selectPrsvSaveFile": "Выберите файл сохранения .prsv для импорта",
+  "importFailed": "Импорт не удался. Пожалуйста, попробуйте снова.",
+  "uploadSuccess": "Успешно импортирован {{count}} мод:",
+  "uploadSuccess_plural": "Успешно импортировано {{count}} модов:",
+  "uploadFailed": "Не удалось импортировать {{count}} мод:",
+  "uploadFailed_plural": "Не удалось импортировать {{count}} модов:",
+  "reloadRequired": "Игра перезагрузится, чтобы применить изменения."
+}

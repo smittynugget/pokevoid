@@ -245,6 +245,7 @@
       "description": "最强宝可梦造成一半伤害"
     }
   },
-  "tooltipDetails": "详情",
+  "challengeHeader": "挑战!",
+  "tooltipDetails": "更多信息",
   "tooltipBack": "返回"
 } 

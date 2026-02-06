@@ -119,7 +119,7 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
 
     this.levelUpStatsIncrContent = levelUpStatsIncrContent;
 
-    const levelUpStatsValuesContent = addBBCodeTextObject(this.scene, (this.scene.game.canvas.width / 6) - 7, -94, "", TextStyle.WINDOW, { maxLines: 6 , lineSpacing: 5});
+    const levelUpStatsValuesContent = addBBCodeTextObject(this.scene, (this.scene.game.canvas.width / 6) - 7, -94, "", TextStyle.WINDOW, { maxLines: 6, lineSpacing: 5});
     levelUpStatsValuesContent.setOrigin(1, 0);
     levelUpStatsValuesContent.setAlign("right");
     levelUpStatsContainer.add(levelUpStatsValuesContent);
@@ -162,6 +162,9 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
 
   clear() {
     super.clear();
+    if (this.levelUpStatsContainer) {
+      this.levelUpStatsContainer.setVisible(false);
+    }
   }
 
   showText(text: string, delay?: integer | null, callback?: Function | null, callbackDelay?: integer | null, prompt?: boolean | null, promptDelay?: integer | null) {
@@ -171,7 +174,7 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
 
   showDialogue(text: string, name?: string, delay?: integer | null, callback?: Function, callbackDelay?: integer, prompt?: boolean, promptDelay?: integer) {
     if (name) {
-    this.showNameText(name);
+      this.showNameText(name);
     }
     super.showDialogue(text, name, delay, callback, callbackDelay, prompt, promptDelay);
   }
@@ -225,26 +228,26 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
 
   getTopIvs(ivs: integer[], shownIvsCount: integer): Stat[] {
     const stats = Utils.getEnumValues(Stat);
-        let shownStats: Stat[] = [];
-        if (shownIvsCount < 6) {
-          const statsPool = stats.slice(0);
-          for (let i = 0; i < shownIvsCount; i++) {
+    let shownStats: Stat[] = [];
+    if (shownIvsCount < 6) {
+      const statsPool = stats.slice(0);
+      for (let i = 0; i < shownIvsCount; i++) {
         let shownStat: Stat | null = null;
-            let highestIv = -1;
-            statsPool.map(s => {
-              if (ivs[s] > highestIv) {
-                shownStat = s as Stat;
-                highestIv = ivs[s];
-              }
-            });
-        if (shownStat !== null && shownStat !== undefined) {
-            shownStats.push(shownStat);
-            statsPool.splice(statsPool.indexOf(shownStat), 1);
+        let highestIv = -1;
+        statsPool.map(s => {
+          if (ivs[s] > highestIv) {
+            shownStat = s as Stat;
+            highestIv = ivs[s];
           }
-      }
-        } else {
-          shownStats = stats;
+        });
+        if (shownStat !== null && shownStat !== undefined) {
+          shownStats.push(shownStat);
+          statsPool.splice(statsPool.indexOf(shownStat), 1);
         }
+      }
+    } else {
+      shownStats = stats;
+    }
     return shownStats;
   }
 

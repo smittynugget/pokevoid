@@ -54,11 +54,13 @@ import terrain from "./terrain.json";
 import modifierSelectUiHandler from "./modifier-select-ui-handler.json";
 import moveTriggers from "./move-trigger.json";
 import runHistory from "./run-history.json";
+import runEndSummary from "./run-end-summary.json";
 import rewardObtainedUi from "./reward-obtained-ui.json";
 import smittyNames from "./smitty-names.json";
 import quests from "./quests.json";
 import questUi from "./quest-ui.json";
 import glitchNames from "./glitch-names.json";
+import importData from "./import-data.json";
 import questModifierInfo from "./quest-modifier-info.json";
 import moveUpgrade from "./move-upgrade.json";
 import eggStarterUi from "./egg-starter-ui.json";
@@ -71,6 +73,7 @@ import championLevelUp from "./champion-level-up.json";
 import championSkills from "./champion-skills.json";
 import championModifiers from "./champion-modifiers.json";
 import pokemonAltBuild from "./pokemon-alt-build.json";
+import cutscene from "./cutscene.json";
 
 export const zhCnConfig = {
   ability,
@@ -129,11 +132,13 @@ export const zhCnConfig = {
   modifierSelectUiHandler,
   moveTriggers,
   runHistory,
+  runEndSummary,
   rewardObtainedUi,
   smittyNames,
   quests,
   questUi,
   glitchNames,
+  importData,
   questModifierInfo,
   moveUpgrade,
   eggStarterUi,
@@ -146,5 +151,6 @@ export const zhCnConfig = {
   championLevelUp,
   championSkills,
   championModifiers,
-  pokemonAltBuild
+  pokemonAltBuild,
+  cutscene
 };

@@ -6,6 +6,7 @@ import { Mode } from "./ui";
 import UiHandler from "./ui-handler";
 import { addWindow } from "./ui-theme";
 import {Button} from "../enums/buttons";
+import i18next from "i18next";
 
 export default class SettingsUiHandler extends UiHandler {
   private settingsContainer: Phaser.GameObjects.Container;
@@ -42,7 +43,7 @@ export default class SettingsUiHandler extends UiHandler {
     const headerBg = addWindow(this.scene, 0, 0, (this.scene.game.canvas.width / 6) - 2, 24);
     headerBg.setOrigin(0, 0);
 
-    const headerText = addTextObject(this.scene, 0, 0, "Options", TextStyle.SETTINGS_LABEL);
+    const headerText = addTextObject(this.scene, 0, 0, i18next.t("settings:options"), TextStyle.SETTINGS_LABEL);
     headerText.setOrigin(0, 0);
     headerText.setPositionRelative(headerBg, 8, 4);
 
@@ -150,8 +151,7 @@ export default class SettingsUiHandler extends UiHandler {
         break;
       case Button.DOWN:
         if (cursor < this.optionValueLabels.length - 1) {
-          if (this.cursor < rowsToDisplay - 1)
-          {
+          if (this.cursor < rowsToDisplay - 1) {
             success = this.setCursor(this.cursor + 1);
           } else if (this.scrollCursor < this.optionValueLabels.length - rowsToDisplay) {
             success = this.setScrollCursor(this.scrollCursor + 1);
@@ -164,8 +164,7 @@ export default class SettingsUiHandler extends UiHandler {
         }
         break;
       case Button.LEFT:
-        if (this.optionCursors[cursor])
-        {
+        if (this.optionCursors[cursor]) {
           success = this.setOptionCursor(cursor, this.optionCursors[cursor] - 1, true);
         }
         break;

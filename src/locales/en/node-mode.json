@@ -245,6 +245,7 @@
       "description": "Strongest Pokémon deals half damage"
     }
   },
-  "tooltipDetails": "DETAILS",
+  "challengeHeader": "CHALLENGE!",
+  "tooltipDetails": "More Info",
   "tooltipBack": "Back"
 }

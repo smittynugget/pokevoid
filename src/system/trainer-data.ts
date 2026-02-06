@@ -6,9 +6,7 @@ import {
   scaleTrainerParty,
   TrainerConfig,
   trainerConfigs,
-  trainerPartyTemplates
 } from "../data/trainer-config";
-import { createSmittyBattle } from "#app/battle.ts";
 
 export default class TrainerData {
   public trainerType: TrainerType;
@@ -20,6 +18,7 @@ export default class TrainerData {
   public rivalStage: number;
   public rivalConfig: TrainerConfig | undefined;
   public isCorrupted: boolean;
+  public smittyVariantIndex?: number;
 
   constructor(source: Trainer | any) {
     const sourceTrainer = source instanceof Trainer ? source as Trainer : null;
@@ -31,6 +30,14 @@ export default class TrainerData {
     this.dynamicRivalType = sourceTrainer ? sourceTrainer.dynamicRivalType : source.dynamicRivalType;
     this.rivalStage = source.rivalStage || -1;
     this.isCorrupted = source.isCorrupted || false;
+    const smittyIdx =
+      sourceTrainer?.config?.smittyVariantIndex ??
+      (sourceTrainer as any)?.rivalConfig?.smittyVariantIndex ??
+      source?.smittyVariantIndex ??
+      source?.rivalConfig?.smittyVariantIndex;
+    if (typeof smittyIdx === "number" && Number.isFinite(smittyIdx)) {
+      this.smittyVariantIndex = smittyIdx;
+    }
     if (source.rivalConfig) {
       if (sourceTrainer?.rivalConfig instanceof TrainerConfig) {
         this.rivalConfig = sourceTrainer.rivalConfig;
@@ -54,7 +61,21 @@ export default class TrainerData {
     let trainer: Trainer;
 
     if (this.trainerType === TrainerType.SMITTY) {
-      trainer = createSmittyBattle(scene, scene.gameData.nightmareBattleSeeds.smittySeed).getTrainer(scene);
+      const cfg = new TrainerConfig(TrainerType.SMITTY);
+      const idx = typeof this.smittyVariantIndex === "number" && Number.isFinite(this.smittyVariantIndex) ? this.smittyVariantIndex : 0;
+      cfg.smittyVariantIndex = idx;
+      const stage = this.rivalStage >= 1 ? this.rivalStage : 6;
+      trainer = new Trainer(
+        scene,
+        TrainerType.SMITTY,
+        this.variant,
+        this.partyTemplateIndex,
+        this.name,
+        this.partnerName,
+        cfg,
+        stage,
+        false
+      );
     } else {
       trainer = new Trainer(
         scene,
@@ -62,7 +83,7 @@ export default class TrainerData {
         this.variant,
         this.partyTemplateIndex,
         this.name,
-      this.partnerName,
+        this.partnerName,
         this.rivalConfig = this.rivalConfig ? scaleTrainerParty(this.rivalConfig, this.rivalStage, this.rivalConfig.trainerType as RivalTrainerType, scene, true)  : undefined,
         this.rivalStage,
         this.isCorrupted

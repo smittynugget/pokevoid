@@ -1,5 +1,6 @@
 {
   "title": "Skill Tree",
+  "unknownReward": "Unknown Reward",
   "subtitle": "Use skill points to unlock powerful abilities",
   "skillPoints": "Skill Points: {{points}}",
   "tokens": "Tree Tokens: {{tokens}}",
@@ -24,6 +25,10 @@
     "instructionsSelectBoth": "Select 1 Signature & 1 Regular Pokemon",
     "instructionsSelectSignature": "Select 1 Signature Pokemon",
     "instructionsSelectGeneral": "Select 1 Regular Pokemon",
+    "instructionsPokemonSelection": "Choose 2 Pokemon (max 1 Signature)",
+    "instructionsPokemonSelectionRemaining": "Choose {{remaining}} more Pokemon",
+    "instructionsPokemonSelectionSignatureAvailable": "Choose {{remaining}} more (Signature available)",
+    "instructionsPokemonSelectionComplete": "Selection complete!",
     "tooltipSelectSignature": "Select this Signature Pokemon\n\n[color=#ffdd44]Signature Pokemon have the potential to grow immensely stronger, if their trainer is able to override reality and unlock their normally dormant abilities.[/color]",
     "tooltipReplaceSignature": "Replace current Signature selection\n\n[color=#ffdd44]Signature Pokemon have the potential to grow immensely stronger, if their trainer is able to override reality and unlock their normally dormant abilities.[/color]",
     "tooltipSelectGeneral": "Select this Regular Pokemon",

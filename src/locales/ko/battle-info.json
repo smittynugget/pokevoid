@@ -1,4 +1,6 @@
 {
   "generation": "제네레이션 {{generation}}",
-  "glitchForm": "{{formName}}의 글리치 형태"
+  "glitchForm": "{{formName}}의 글리치 형태",
+  "fusionTooltipTitle": "합체",
+  "fusionTooltipBody": "{{primary}}/{{fusion}}\n\n합체 스탯은 두 포켓몬의 기본 능력치를 모두 사용합니다:\n1) 성격으로 상승한 능력치(중립이면 HP): 더 높은 값을 사용\n2) 또 하나의 최고 능력치: 남은 능력치 중 더 높은 값을 사용\n3) 나머지: 평균을 내고 올림\n성격 보정은 이후에 적용됩니다."
 } 

@@ -1,5 +1,6 @@
 {
   "title": "技能树",
+  "unknownReward": "未知奖励",
   "subtitle": "使用技能点解锁强大的能力",
   "skillPoints": "技能点: {{points}}",
   "tokens": "树代币: {{tokens}}",
@@ -24,6 +25,10 @@
   "instructionsSelectBoth": "选择1只招牌和1只普通宝可梦",
   "instructionsSelectSignature": "选择1只招牌宝可梦",
   "instructionsSelectGeneral": "选择1只普通宝可梦",
+  "instructionsPokemonSelection": "选择2只宝可梦（招牌最多1只）",
+  "instructionsPokemonSelectionRemaining": "还需选择{{remaining}}只宝可梦",
+  "instructionsPokemonSelectionSignatureAvailable": "还需选择{{remaining}}只（可选招牌）",
+  "instructionsPokemonSelectionComplete": "选择完成！",
   "tooltipSelectSignature": "选择此招牌宝可梦\n\n[color=#ffdd44]招牌宝可梦拥有巨大的成长潜力，如果训练师能够超越现实，解锁它们通常沉睡的能力。[/color]",
   "tooltipReplaceSignature": "替换当前招牌选择\n\n[color=#ffdd44]招牌宝可梦拥有巨大的成长潜力，如果训练师能够超越现实，解锁它们通常沉睡的能力。[/color]",
   "tooltipSelectGeneral": "选择此普通宝可梦",

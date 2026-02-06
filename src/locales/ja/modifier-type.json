@@ -74,7 +74,7 @@
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "安価",
-      "description": "ポケモンの{{statName}}のきほんステータスを5パーセントあげる。"
+      "description": "ポケモンの{{statName}}のきほんステータスを1パーセントあげる。"
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "すべてのポケモンのHPを100パーセントかいふくする"
@@ -756,7 +756,7 @@
     "AnyPassiveAbilityModifierType": {
       "name": "パッシブ {{abilityName}}",
       "statLabel": "任意のパッシブ特性アイテム",
-      "description": "どのポケモンにも パッシブとくせい {{abilityName}} をあたえる\n(Hold C or Shift for more info)"
+      "description": "どのポケモンにも パッシブとくせい {{abilityName}} を設定する\n(Hold C or Shift for more info)"
     },
     "AnyAbilityModifierType": {
       "name": "{{abilityName}}",
@@ -923,6 +923,35 @@
     "SWAMPERTITE": "ラグラージナイト",
     "TYRANITARITE": "バンギラスナイト",
     "VENUSAURITE": "フシギバナイト",
+
+    "CLEFABLITE": "ピクシーナイト",
+    "VICTREBELITE": "ウツボットナイト",
+    "STARMITE": "スターミーナイト",
+    "DRAGONITITE": "カイリューナイト",
+    "MEGANIUMITE": "メガニウムナイト",
+    "FERALIGATRITE": "オーダイルナイト",
+    "SKARMORYITE": "エアームドナイト",
+    "FROSLASSITE": "ユキメノコナイト",
+    "EMBOARITE": "エンブオーナイト",
+    "EXCADRILLITE": "ドリュウズナイト",
+    "SCOLIPEDITE": "ペンドラーナイト",
+    "SCRAFTITE": "ズルズキンナイト",
+    "EELEKTROSSITE": "シビルドンナイト",
+    "CHANDELURITE": "シャンデラナイト",
+    "CHESNAUGHTITE": "ブリガロンナイト",
+    "DELPHOXITE": "マフォクシーナイト",
+    "GRENINJITE": "ゲッコウガナイト",
+    "PYROARITE": "カエンジシナイト",
+    "FLOETTITE": "フラエッテナイト",
+    "MALAMARITE": "カラマネロナイト",
+    "BARBARACLITE": "ガメノデスナイト",
+    "DRAGALGITE": "ドラミドロナイト",
+    "HAWLUCHITE": "ルチャブルナイト",
+    "ZYGARDITE": "ジガルデナイト",
+    "DRAMPITE": "ジジーロンナイト",
+    "FALINKSITE": "タイレーツナイト",
+    "ZERAORITE": "ゼラオラナイト",
+
     "BLUE_ORB": "あいいろのたま",
     "RED_ORB": "べにいろのたま",
     "SHARP_METEORITE": "シャープなうんせき",
@@ -1040,6 +1069,7 @@
     "waves": "ウェーブ",
     "uses": "回使用可能",
     "glitchPieceCost": "*グリッチピース2個が必要",
+    "essenceAlternativeCost": "ポケモンがエッセンスを5個以上持っている場合、代わりにそれらを使用できます。",
     "permaMoney": "Ωゴールド",
     "permaItem": "Ωアイテム",
     "moreInfo": "(Cキー/Shiftキー長押しで詳細表示)",

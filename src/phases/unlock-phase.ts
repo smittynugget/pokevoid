@@ -8,52 +8,62 @@ import i18next from "i18next";
 import { modifierTypes } from "#app/modifier/modifier-type.js";
 
 export class UnlockPhase extends Phase {
-    private unlockable: Unlockables;
-    private onComplete: () => void;
-    private sprite: string | null;
-    private isModeUnlock: boolean;
-    private unlockableSpriteType: UnlockModePokeSpriteType;
-    constructor(scene: BattleScene, unlockable: Unlockables, sprite: string | null, isModeUnlock: boolean = false, unlockableSpriteType: UnlockModePokeSpriteType = UnlockModePokeSpriteType.GLITCH, onComplete?: () => void) {
-        super(scene);
-        this.unlockable = unlockable;
-        this.onComplete = onComplete;
-        this.sprite = sprite;
-        this.isModeUnlock = isModeUnlock;
-        this.unlockableSpriteType = unlockableSpriteType;
+  private unlockable: Unlockables;
+  private onComplete: () => void;
+  private sprite: string | null;
+  private isModeUnlock: boolean;
+  private unlockableSpriteType: UnlockModePokeSpriteType;
+  constructor(scene: BattleScene, unlockable: Unlockables, sprite: string | null, isModeUnlock: boolean = false, unlockableSpriteType: UnlockModePokeSpriteType = UnlockModePokeSpriteType.GLITCH, onComplete?: () => void) {
+    super(scene);
+    this.unlockable = unlockable;
+    this.onComplete = onComplete;
+    this.sprite = sprite;
+    this.isModeUnlock = isModeUnlock;
+    this.unlockableSpriteType = unlockableSpriteType;
+  }
+
+  start(): void {
+    this.scene.gameData.unlocks[this.unlockable] = true;
+
+    const rewardConfig: RewardConfig = {
+      type: RewardObtainedType.UNLOCK,
+      name: getUnlockableName(this.unlockable),
+      unlockable: this.unlockable,
+      sprite: this.sprite || null,
+      isModeUnlock: this.isModeUnlock,
+      unlockableSpriteType: this.unlockableSpriteType,
+    };
+
+    if (this.unlockable === Unlockables.MANY_MORE_NUGGETS) {
+      rewardConfig.modifierType = modifierTypes.PERMA_SHOW_REWARDS_1().generateType([]);
     }
 
-    start(): void {
-            this.scene.gameData.unlocks[this.unlockable] = true;
-
-            const rewardConfig: RewardConfig = {
-                type: RewardObtainedType.UNLOCK,
-                name: getUnlockableName(this.unlockable),
-                unlockable: this.unlockable,
-                sprite: this.sprite || null,
-                isModeUnlock: this.isModeUnlock,
-                unlockableSpriteType: this.unlockableSpriteType,
-            };
-
-            if(this.unlockable === Unlockables.MANY_MORE_NUGGETS) {
-                rewardConfig.modifierType = modifierTypes.PERMA_SHOW_REWARDS_1().generateType([]);
-            }
-
-            const phase = new RewardObtainDisplayPhase(
-                this.scene,
-                rewardConfig,
-                [() => {
-                    this.scene.arenaBg.setVisible(true);
-                    if(this.onComplete) {
-                        this.onComplete();
-                    }
-                }]
-            );
-            phase.scene = this.scene;
-            this.scene.unshiftPhase(phase);
-            this.end();
+    this.scene.recordRunUnlockReward(rewardConfig);
+    if (!this.scene.disableCutscenes && this.scene.deferUnlockPopupsToPowerSlide && this.scene.shouldDeferPowerUnlockReward(rewardConfig)) {
+      this.scene.arenaBg.setVisible(true);
+      if (this.onComplete) {
+        this.onComplete();
+      }
+      this.end();
+      return;
     }
 
-    end(): void {
-        super.end();
-    }
+    const phase = new RewardObtainDisplayPhase(
+      this.scene,
+      rewardConfig,
+      [() => {
+        this.scene.arenaBg.setVisible(true);
+        if (this.onComplete) {
+          this.onComplete();
+        }
+      }]
+    );
+    phase.scene = this.scene;
+    this.scene.unshiftPhase(phase);
+    this.end();
+  }
+
+  end(): void {
+    super.end();
+  }
 }

@@ -9,6 +9,7 @@ import { itConfig } from "#app/locales/it/config.js";
 import { koConfig } from "#app/locales/ko/config.js";
 import { jaConfig } from "#app/locales/ja/config.js";
 import { ptBrConfig } from "#app/locales/pt_BR/config.js";
+import { ruConfig } from "#app/locales/ru/config.js";
 import { zhCnConfig } from "#app/locales/zh_CN/config.js";
 import { zhTwConfig } from "#app/locales/zh_TW/config.js";
 
@@ -24,6 +25,7 @@ const unicodeRanges = {
   kana: "U+3040-30FF",
   CJKCommon: "U+2E80-2EFF,U+3000-303F,U+31C0-31EF,U+3200-32FF,U+3400-4DBF,U+F900-FAFF,U+FE30-FE4F",
   CJKIdeograph: "U+4E00-9FFF",
+  cyrillic: "U+0400-04FF,U+0500-052F",
   specialCharacters: "U+266A,U+2605,U+2665,U+2663"
 };
 const rangesByLanguage = {
@@ -59,6 +61,16 @@ const fonts: Array<LoadingFontFaceProperty> = [
     face: new FontFace("pkmnems", "url(./fonts/unifont-15.1.05.subset.woff2)", { unicodeRange: rangesByLanguage.chinese }),
     extraOptions: { format: "woff2" },
     only: [ "en", "es", "fr", "it", "de", "zh", "pt", "ko"],
+  },
+  {
+    face: new FontFace("emerald", "url(./fonts/unifont-15.1.05.otf)", { unicodeRange: unicodeRanges.cyrillic }),
+    extraOptions: { sizeAdjust: "70%", format: "opentype" },
+    only: [ "ru" ],
+  },
+  {
+    face: new FontFace("pkmnems", "url(./fonts/unifont-15.1.05.otf)", { unicodeRange: unicodeRanges.cyrillic }),
+    extraOptions: { format: "opentype" },
+    only: [ "ru" ],
   },
 
   {
@@ -101,7 +113,7 @@ export async function initI18n(): Promise<void> {
     fallbackLng: "en",
     saveMissing: false,
     missingKeyHandler: () => {},
-    supportedLngs: ["en", "es", "fr", "it", "de", "zh", "pt", "ko", "ja"],
+    supportedLngs: ["en", "es", "fr", "it", "de", "ru", "zh", "pt", "ko", "ja"],
     defaultNS: "menu",
     ns: Object.keys(enConfig),
     detection: {
@@ -127,6 +139,9 @@ export async function initI18n(): Promise<void> {
       de: {
         ...deConfig
       },
+      ru: {
+        ...ruConfig
+      },
       "pt-BR": {
         ...ptBrConfig
       },
@@ -150,12 +165,12 @@ export async function initI18n(): Promise<void> {
   await initFonts(localStorage.getItem("prLang") ?? undefined);
 
   updateMobileButtonLabels();
-  i18next.on('languageChanged', updateMobileButtonLabels);
+  i18next.on("languageChanged", updateMobileButtonLabels);
 }
 
 function updateMobileButtonLabels(): void {
-  document.querySelectorAll('[data-i18n]').forEach((element) => {
-    const key = element.getAttribute('data-i18n');
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const key = element.getAttribute("data-i18n");
     if (key) {
       const translated = i18next.t(key);
       element.textContent = translated.toUpperCase();

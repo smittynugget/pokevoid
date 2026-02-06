@@ -55,7 +55,7 @@ export class HallOfFamePhase extends Phase {
       isActive: false,
       isFinalBattleContext: true
     };
-    this.scene.ui.setOverlayMode(Mode.RUN_INFO, victoryRunEntry, true);
+    this.scene.ui.setOverlayMode(Mode.RUN_END_SUMMARY, { runInfoEntry: victoryRunEntry, debug: false });
     this.end();
   }
 }

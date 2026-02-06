@@ -1,4 +1,5 @@
 {
+  "options": "选项",
   "boy": "男孩",
   "girl": "女孩",
   "general": "常规",
@@ -105,5 +106,7 @@
   "reroll": "刷新",
   "shop": "购买",
   "checkTeam": "检查队伍",
-  "lockedRewardSpeed": "锁定奖励动画速度"
+  "disableMoveUpgrades": "禁用招式强化",
+  "disableCutscenes": "禁用过场动画",
+  "uiVolume": "界面音量"
 }

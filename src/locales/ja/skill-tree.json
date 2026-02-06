@@ -1,5 +1,6 @@
 {
   "title": "スキルツリー",
+  "unknownReward": "不明な報酬",
   "subtitle": "スキルポイントを使って強力なアビリティを解放",
   "skillPoints": "スキルポイント: {{points}}",
   "tokens": "ツリートークン: {{tokens}}",
@@ -24,6 +25,10 @@
   "instructionsSelectBoth": "シグネチャー1体と通常ポケモン1体を選択",
   "instructionsSelectSignature": "シグネチャーポケモン1体を選択",
   "instructionsSelectGeneral": "通常ポケモン1体を選択",
+  "instructionsPokemonSelection": "ポケモンを2体選択（シグネチャーは最大1体）",
+  "instructionsPokemonSelectionRemaining": "あと{{remaining}}体選択してください",
+  "instructionsPokemonSelectionSignatureAvailable": "あと{{remaining}}体（シグネチャー選択可）",
+  "instructionsPokemonSelectionComplete": "選択完了！",
   "tooltipSelectSignature": "このシグネチャーポケモンを選択\n\n[color=#ffdd44]シグネチャーポケモンは、トレーナーが現実を超越して通常は眠っている能力を解放できれば、計り知れない強さに成長する可能性を秘めています。[/color]",
   "tooltipReplaceSignature": "現在のシグネチャー選択を置換\n\n[color=#ffdd44]シグネチャーポケモンは、トレーナーが現実を超越して通常は眠っている能力を解放できれば、計り知れない強さに成長する可能性を秘めています。[/color]",
   "tooltipSelectGeneral": "この通常ポケモンを選択",

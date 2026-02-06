@@ -17,6 +17,8 @@ import { ChampionLevelUpPhase } from "#app/phases/champion-level-up-phase";
 import { RewardObtainDisplayPhase } from "#app/phases/reward-obtain-display-phase";
 import { RewardObtainedType } from "#app/ui/reward-obtained-ui-handler";
 import { SkillCategory } from "#app/system/playable-champions";
+import { STORY_CUTSCENES, getLossWhiteoutHomebaseSlidesRandomized } from "#app/system/story-cutscenes.js";
+import { SlideshowCutscenePhase } from "#app/phases/slideshow-cutscene-phase.js";
 import {
   SessionSaveData,
 } from "../system/game-data";
@@ -38,14 +40,15 @@ export class GameOverPhase extends BattlePhase {
 
   start() {
     super.start();
-    if (this.scene.gameMode.isClassic && this.scene.currentBattle.waveIndex > 90 && !this.scene.gameMode.isChaosMode) {
+    const waveIndex = this.scene.currentBattle?.waveIndex ?? 0;
+    const finalWave = this.scene.gameMode.getFinalWave();
+    if (finalWave > 0 && waveIndex > finalWave && !this.scene.gameMode.isEndless && !this.scene.gameMode.isChaosMode) {
       this.victory = true;
     }
 
     if (this.victory && this.scene.gameMode.isEndless) {
       this.scene.ui.showDialogue(i18next.t("PGMmiscDialogue:ending_endless"), i18next.t("PGMmiscDialogue:ending_name"), 0, () => this.handleGameOver());
-    }
-    else {
+    } else {
       this.handleGameOver();
     }
   }
@@ -72,7 +75,7 @@ export class GameOverPhase extends BattlePhase {
             }
           } catch (_) {  }
         } catch (e) {
-          console.warn("Champion XP finalize failed:", e);
+          void e;
         }
 
         if (this.victory && newClear && this.scene.gameMode.isClassic) {
@@ -87,12 +90,12 @@ export class GameOverPhase extends BattlePhase {
         const activeBattlers = this.scene.getField().filter(p => p?.isActive(true));
         activeBattlers.map(p => p.hideInfo());
         this.scene.ui.fadeOut(fadeDuration).then(() => {
-            this.scene.ui.getMessageHandler().nameBoxContainer.setVisible(false);
-            if(this.scene.currentBattle.trainer) {
-              this.scene.currentBattle.trainer.destroy();
-            }
-            this.scene.gameData.playerRival = null;
-            activeBattlers.map(a => a.setVisible(false));
+          this.scene.ui.getMessageHandler().nameBoxContainer.setVisible(false);
+          if (this.scene.currentBattle?.trainer) {
+            this.scene.currentBattle.trainer.destroy();
+          }
+          this.scene.gameData.playerRival = null;
+          activeBattlers.map(a => a.setVisible(false));
           this.scene.setFieldScale(1, true);
           this.scene.clearPhaseQueue();
           this.scene.ui.clearText();
@@ -109,6 +112,26 @@ export class GameOverPhase extends BattlePhase {
             this.end();
           };
 
+          if (!this.victory && !this.scene.disableCutscenes) {
+            if (this.scene.lossWhiteoutPreSummaryQueued) {
+              clear();
+              return;
+            }
+            this.scene.lossWhiteoutPreSummaryQueued = true;
+            const def = STORY_CUTSCENES.loss_whiteout_homebase;
+            const slides = getLossWhiteoutHomebaseSlidesRandomized();
+            this.scene.pushPhase(new PostGameOverPhase(this.scene));
+            this.scene.unshiftPhase(new SlideshowCutscenePhase(this.scene, {
+              slides,
+              bgmKey: def.bgmKey,
+              canSkip: true,
+              pauseAfterText: 1000,
+              resumeBgmOnEnd: false,
+            }));
+            this.end();
+            return;
+          }
+
           clear();
         });
       });
@@ -123,24 +146,6 @@ export class GameOverPhase extends BattlePhase {
     }
   }
   private getFinalSessionData(): SessionSaveData {
-    return {
-      seed: this.scene.seed,
-      playTime: this.scene.sessionPlayTime,
-      gameMode: this.scene.gameMode.modeId,
-      party: this.scene.getParty().map(p => new PokemonData(p)),
-      enemyParty: this.scene.getEnemyParty().map(p => new PokemonData(p)),
-      modifiers: this.scene.findModifiers(() => true).map(m => new PersistentModifierData(m, true)),
-      enemyModifiers: this.scene.findModifiers(() => true, false).map(m => new PersistentModifierData(m, false)),
-      arena: new ArenaData(this.scene.arena),
-      pokeballCounts: this.scene.pokeballCounts,
-      money: this.scene.money,
-      score: this.scene.score,
-      waveIndex: this.scene.currentBattle.waveIndex,
-      battleType: this.scene.currentBattle.battleType,
-      trainer: this.scene.currentBattle.battleType === BattleType.TRAINER ? new TrainerData(this.scene.currentBattle.trainer) : null,
-      gameVersion: this.scene.game.config.gameVersion,
-      timestamp: new Date().getTime(),
-      challenges: this.scene.gameMode.challenges.map(c => new ChallengeData(c))
-    } as SessionSaveData;
+    return this.scene.gameData.getSessionSaveData(this.scene);
   }
 }

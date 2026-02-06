@@ -127,7 +127,7 @@ export class TurnStartPhase extends FieldPhase {
         this.scene.unshiftPhase(new AttemptCapturePhase(this.scene, turnCommand.targets![0] % 2, turnCommand.cursor!));
         break;
       case Command.POKEMON:
-        this.scene.unshiftPhase(new SwitchSummonPhase(this.scene, pokemon.getFieldIndex(), turnCommand.cursor!, true, turnCommand.args![0] as boolean, pokemon.isPlayer()));
+        this.scene.unshiftPhase(new SwitchSummonPhase(this.scene, pokemon.getFieldIndex(), turnCommand.cursor!, true, turnCommand.args![0] as boolean, pokemon.isPlayer(), turnCommand.args?.[1] === true));
         break;
       case Command.RUN:
         let runningPokemon = pokemon;

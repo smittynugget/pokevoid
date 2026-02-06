@@ -12,6 +12,7 @@ export interface ActiveSkillTreeData {
   skillEffects: Map<string, any>;
   seed: number;
   selectedPokemon: { signature?: Species; general?: Species };
+  selectedPokemonPicks?: Array<{ species: Species; isSignature: boolean }>;
   unlockedGlitchForms: string[];
   sessionQuestUnlockables?: Partial<Record<QuestUnlockables, { questUnlockData?: QuestUnlockData }>>;
   skillPoints: number;

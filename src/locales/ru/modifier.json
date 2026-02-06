@@ -1,0 +1,24 @@
+{
+  "surviveDamageApply": "{{pokemonNameWithAffix}} выстоял(а)\nблагодаря своему {{typeName}}!",
+  "turnHealApply": "{{pokemonNameWithAffix}} немного восстановил(а) ОЖ\nблагодаря своему {{typeName}}!",
+  "hitHealApply": "{{pokemonNameWithAffix}} немного восстановил(а) ОЖ\nблагодаря своему {{typeName}}!",
+  "pokemonInstantReviveApply": "{{pokemonNameWithAffix}} был(а) оживлён(а)\nблагодаря своему {{typeName}}!",
+  "pokemonResetNegativeStatStageApply": "Пониженные характеристики {{pokemonNameWithAffix}}\nвосстановились благодаря {{typeName}}!",
+  "moneyInterestApply": "Ты получил(а) проценты ₽{{moneyAmount}}\nот {{typeName}}!",
+  "turnHeldItemTransferApply": "{{typeName}} {{pokemonName}}\nпоглотил(а) {{itemName}} у {{pokemonNameWithAffix}}!",
+  "contactHeldItemTransferApply": "{{typeName}} {{pokemonName}}\nукрал(а) {{itemName}} у {{pokemonNameWithAffix}}!",
+  "enemyTurnHealApply": "{{pokemonNameWithAffix}}\nнемного восстановил(а) ОЖ!",
+  "bypassSpeedChanceApply": "{{pokemonName}} может действовать быстрее обычного благодаря {{itemName}}!",
+  "permaRunQuest": {
+    "stage": "Стадия ",
+    "collectRewards": "Забрать награды",
+    "stageProgress": "Прогресс стадии: {{current}}/{{total}}",
+    "questComplete": "Квест завершён!",
+    "stageComplete": "Стадия завершена!",
+    "rewardTypes": {
+      "permaMoney": "ΩGOLD",
+      "permaModifier": "ΩITEM",
+      "permaMoneyAndModifier": "ΩGOLD & ΩITEM"
+    }
+  }
+}

@@ -266,21 +266,21 @@ export class PostBattleInitStatChangeAbAttr extends PostBattleInitAbAttr {
     const statChangePhases: StatChangePhase[] = [];
 
     if (!simulated) {
-    if (this.selfTarget) {
-      statChangePhases.push(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, this.stats, this.levels));
-    } else {
-      for (const opponent of pokemon.getOpponents()) {
-        statChangePhases.push(new StatChangePhase(pokemon.scene, opponent.getBattlerIndex(), false, this.stats, this.levels));
-      }
-    }
-
-    for (const statChangePhase of statChangePhases) {
-        if (!this.selfTarget && !statChangePhase.getPokemon()?.summonData) {
-        pokemon.scene.pushPhase(statChangePhase);
+      if (this.selfTarget) {
+        statChangePhases.push(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, this.stats, this.levels));
       } else {
-        pokemon.scene.unshiftPhase(statChangePhase);
+        for (const opponent of pokemon.getOpponents()) {
+          statChangePhases.push(new StatChangePhase(pokemon.scene, opponent.getBattlerIndex(), false, this.stats, this.levels));
+        }
       }
-    }
+
+      for (const statChangePhase of statChangePhases) {
+        if (!this.selfTarget && !statChangePhase.getPokemon()?.summonData) {
+          pokemon.scene.pushPhase(statChangePhase);
+        } else {
+          pokemon.scene.unshiftPhase(statChangePhase);
+        }
+      }
     }
 
     return true;
@@ -303,8 +303,8 @@ export class PreDefendFullHpEndureAbAttr extends PreDefendAbAttr {
       return simulated || pokemon.addTag(BattlerTagType.STURDY, 1);
     }
 
-      return false;
-    }
+    return false;
+  }
 }
 
 export class BlockItemTheftAbAttr extends AbAttr {
@@ -411,8 +411,8 @@ export class TypeImmunityHealAbAttr extends TypeImmunityAbAttr {
 
     if (ret) {
       if (!pokemon.isFullHp() && !simulated) {
-          const abilityName = (!passive ? pokemon.getAbility() : pokemon.getPassiveAbility()).name;
-          pokemon.scene.unshiftPhase(new PokemonHealPhase(pokemon.scene, pokemon.getBattlerIndex(),
+        const abilityName = (!passive ? pokemon.getAbility() : pokemon.getPassiveAbility()).name;
+        pokemon.scene.unshiftPhase(new PokemonHealPhase(pokemon.scene, pokemon.getBattlerIndex(),
           Utils.toDmgValue(pokemon.getMaxHp() / 4), i18next.t("abilityTriggers:typeImmunityHeal", { pokemonNameWithAffix: getPokemonNameWithAffix(pokemon), abilityName }), true));
         cancelled.value = true;
       }
@@ -479,12 +479,18 @@ export class NonSuperEffectiveImmunityAbAttr extends TypeImmunityAbAttr {
   }
 
   applyPreDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, cancelled: Utils.BooleanHolder, args: any[]): boolean {
-    if (move instanceof AttackMove && pokemon.getAttackTypeEffectiveness(pokemon.getMoveType(move), attacker) < 2) {
+    if (move.category === MoveCategory.STATUS) {
+      return false;
+    }
+    const defenderMoveType = pokemon.getMoveType(move);
+    const attackerMoveType = attacker.getMoveType(move);
+    const effDefenderMoveType = pokemon.getAttackTypeEffectiveness(defenderMoveType, attacker);
+    const effAttackerMoveType = pokemon.getAttackTypeEffectiveness(attackerMoveType, attacker);
+    if (effDefenderMoveType < 2) {
       cancelled.value = true;
       (args[0] as Utils.NumberHolder).value = 0;
       return true;
     }
-
     return false;
   }
 
@@ -508,8 +514,8 @@ export class PostDefendGulpMissileAbAttr extends PostDefendAbAttr {
   applyPostDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean | Promise<boolean> {
     const battlerTag = pokemon.getTag(GulpMissileTag);
     if (!battlerTag || move.category === MoveCategory.STATUS || pokemon.getTag(SemiInvulnerableTag)) {
-        return false;
-      }
+      return false;
+    }
 
     if (simulated) {
       return true;
@@ -520,23 +526,23 @@ export class PostDefendGulpMissileAbAttr extends PostDefendAbAttr {
 
     if (!cancelled.value) {
       attacker.damageAndUpdate(Math.max(1, Math.floor(attacker.getMaxHp() / 4)), HitResult.OTHER);
-}
+    }
 
     if (battlerTag.tagType === BattlerTagType.GULP_MISSILE_ARROKUDA) {
       pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, attacker.getBattlerIndex(), false, [ BattleStat.DEF ], -1));
     } else {
       attacker.trySetStatus(StatusEffect.PARALYSIS, true, pokemon);
-  }
+    }
 
     pokemon.removeTag(battlerTag.tagType);
-      return true;
-    }
+    return true;
+  }
 }
 
 export class FieldPriorityMoveImmunityAbAttr extends PreDefendAbAttr {
   applyPreDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, cancelled: Utils.BooleanHolder, args: any[]): boolean {
     const attackPriority = new Utils.IntegerHolder(move.priority);
-    applyMoveAttrs(IncrementMovePriorityAttr,attacker,null,move,attackPriority);
+    applyMoveAttrs(IncrementMovePriorityAttr, attacker, null, move, attackPriority);
     applyAbAttrs(ChangeMovePriorityAbAttr, attacker, null, simulated, move, attackPriority);
 
     if (move.moveTarget===MoveTarget.USER || move.moveTarget===MoveTarget.NEAR_ALLY) {
@@ -689,7 +695,7 @@ export class PostDefendHpGatedStatChangeAbAttr extends PostDefendAbAttr {
 
     if (this.condition(pokemon, attacker, move) && (pokemon.hp <= hpGateFlat && (pokemon.hp + damageReceived) > hpGateFlat)) {
       if (!simulated) {
-      pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, (this.selfTarget ? pokemon : attacker).getBattlerIndex(), true, this.stats, this.levels));
+        pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, (this.selfTarget ? pokemon : attacker).getBattlerIndex(), true, this.stats, this.levels));
       }
       return true;
     }
@@ -714,7 +720,7 @@ export class PostDefendApplyArenaTrapTagAbAttr extends PostDefendAbAttr {
       const tag = pokemon.scene.arena.getTag(this.tagType) as ArenaTrapTag;
       if (!pokemon.scene.arena.getTag(this.tagType) || tag.layers < tag.maxLayers) {
         if (!simulated) {
-        pokemon.scene.arena.addTag(this.tagType, 0, undefined, pokemon.id, pokemon.isPlayer() ? ArenaTagSide.ENEMY : ArenaTagSide.PLAYER);
+          pokemon.scene.arena.addTag(this.tagType, 0, undefined, pokemon.id, pokemon.isPlayer() ? ArenaTagSide.ENEMY : ArenaTagSide.PLAYER);
         }
         return true;
       }
@@ -785,8 +791,8 @@ export class PostDefendTerrainChangeAbAttr extends PostDefendAbAttr {
       if (simulated) {
         return pokemon.scene.arena.terrain?.terrainType !== (this.terrainType || undefined);
       } else {
-      return pokemon.scene.arena.trySetTerrain(this.terrainType, true);
-    }
+        return pokemon.scene.arena.trySetTerrain(this.terrainType, true);
+      }
     }
 
     return false;
@@ -810,8 +816,8 @@ export class PostDefendContactApplyStatusEffectAbAttr extends PostDefendAbAttr {
       if (simulated) {
         return attacker.canSetStatus(effect, true, false, pokemon);
       } else {
-      return attacker.trySetStatus(effect, true, pokemon);
-    }
+        return attacker.trySetStatus(effect, true, pokemon);
+      }
     }
 
     return false;
@@ -849,8 +855,8 @@ export class PostDefendContactApplyTagChanceAbAttr extends PostDefendAbAttr {
       if (simulated) {
         return attacker.canAddTag(this.tagType);
       } else {
-      return attacker.addTag(this.tagType, this.turnCount, move.id, attacker.id);
-    }
+        return attacker.addTag(this.tagType, this.turnCount, move.id, attacker.id);
+      }
     }
 
     return false;
@@ -870,7 +876,7 @@ export class PostDefendCritStatChangeAbAttr extends PostDefendAbAttr {
 
   applyPostDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
     if (!simulated) {
-    pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, [ this.stat ], this.levels));
+      pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, [ this.stat ], this.levels));
     }
 
     return true;
@@ -923,8 +929,8 @@ export class PostDefendPerishSongAbAttr extends PostDefendAbAttr {
         return false;
       } else {
         if (!simulated) {
-        attacker.addTag(BattlerTagType.PERISH_SONG, this.turns);
-        pokemon.addTag(BattlerTagType.PERISH_SONG, this.turns);
+          attacker.addTag(BattlerTagType.PERISH_SONG, this.turns);
+          pokemon.addTag(BattlerTagType.PERISH_SONG, this.turns);
         }
         return true;
       }
@@ -971,9 +977,9 @@ export class PostDefendAbilitySwapAbAttr extends PostDefendAbAttr {
   applyPostDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
     if (move.checkFlag(MoveFlags.MAKES_CONTACT, attacker, pokemon) && !attacker.getAbility().hasAttr(UnswappableAbilityAbAttr)) {
       if (!simulated) {
-      const tempAbilityId = attacker.getAbility().id;
-      attacker.summonData.ability = pokemon.getAbility().id;
-      pokemon.summonData.ability = tempAbilityId;
+        const tempAbilityId = attacker.getAbility().id;
+        attacker.summonData.ability = pokemon.getAbility().id;
+        pokemon.summonData.ability = tempAbilityId;
       }
       return true;
     }
@@ -997,7 +1003,7 @@ export class PostDefendAbilityGiveAbAttr extends PostDefendAbAttr {
   applyPostDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
     if (move.checkFlag(MoveFlags.MAKES_CONTACT, attacker, pokemon) && !attacker.getAbility().hasAttr(UnsuppressableAbilityAbAttr) && !attacker.getAbility().hasAttr(PostDefendAbilityGiveAbAttr)) {
       if (!simulated) {
-      attacker.summonData.ability = this.ability;
+        attacker.summonData.ability = this.ability;
       }
 
       return true;
@@ -1067,7 +1073,7 @@ export class PostStatChangeStatChangeAbAttr extends PostStatChangeAbAttr {
   applyPostStatChange(pokemon: Pokemon, simulated: boolean, statsChanged: BattleStat[], levelsChanged: integer, selfTarget: boolean, args: any[]): boolean {
     if (this.condition(pokemon, statsChanged, levelsChanged) && !selfTarget) {
       if (!simulated) {
-      pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, (pokemon).getBattlerIndex(), true, this.statsToChange, this.levels));
+        pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, (pokemon).getBattlerIndex(), true, this.statsToChange, this.levels));
       }
       return true;
     }
@@ -1203,7 +1209,7 @@ export class PokemonTypeChangeAbAttr extends PreAttackAbAttr {
         if (!simulated) {
           this.moveType = moveType;
           pokemon.summonData.types = [moveType];
-        pokemon.updateInfo();
+          pokemon.updateInfo();
         }
 
         return true;
@@ -1408,9 +1414,9 @@ export class PostAttackAbAttr extends AbAttr {
     if (this.attackCondition(pokemon, defender, move)) {
       return this.applyPostAttackAfterMoveTypeCheck(pokemon, passive, simulated, defender, move, hitResult, args);
     } else {
-    return false;
+      return false;
+    }
   }
-}
   applyPostAttackAfterMoveTypeCheck(pokemon: Pokemon, passive: boolean, simulated: boolean, defender: Pokemon, move: Move, hitResult: HitResult | null, args: any[]): boolean | Promise<boolean> {
     return false;
   }
@@ -1558,7 +1564,7 @@ class PostVictoryStatChangeAbAttr extends PostVictoryAbAttr {
       ? this.stat(pokemon)
       : this.stat;
     if (!simulated) {
-    pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, [ stat ], this.levels));
+      pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, [ stat ], this.levels));
     }
     return true;
   }
@@ -1577,7 +1583,7 @@ export class PostVictoryFormChangeAbAttr extends PostVictoryAbAttr {
     const formIndex = this.formFunc(pokemon);
     if (formIndex !== pokemon.formIndex) {
       if (!simulated) {
-      pokemon.scene.triggerPokemonFormChange(pokemon, SpeciesFormChangeManualTrigger, false);
+        pokemon.scene.triggerPokemonFormChange(pokemon, SpeciesFormChangeManualTrigger, false);
       }
       return true;
     }
@@ -1605,7 +1611,7 @@ export class PostKnockOutStatChangeAbAttr extends PostKnockOutAbAttr {
 
   applyPostKnockOut(pokemon: Pokemon, passive: boolean, simulated: boolean, knockedOut: Pokemon, args: any[]): boolean | Promise<boolean> {
     if (knockoutConditionMet(this.condition, pokemon, knockedOut)) {
-      const statsToChange = typeof this.stats === "function" ? this.stats(pokemon) : this.stats
+      const statsToChange = typeof this.stats === "function" ? this.stats(pokemon) : this.stats;
       if (!simulated) {
         pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, statsToChange, this.levels));
       }
@@ -1619,18 +1625,18 @@ export class PrimaryTypeChangeAbAttr extends MoveTypeChangeAbAttr {
   constructor(powerMultiplier: number) {
 
     super(
-        Type.NORMAL,
-        powerMultiplier,
-        (user, target, move) => {
-          if (move.type === Type.NORMAL &&
+      Type.NORMAL,
+      powerMultiplier,
+      (user, target, move) => {
+        if (move.type === Type.NORMAL &&
               !move.hasAttr(VariableMoveTypeAttr) &&
               user?.getTypes().length > 0) {
 
-            this.newType = user.getTypes()[0];
-            return true;
-          }
-          return false;
+          this.newType = user.getTypes()[0];
+          return true;
         }
+        return false;
+      }
     );
   }
   applyPreAttack(pokemon: Pokemon, passive: boolean, simulated: boolean, defender: Pokemon, move: Move, args: any[]): boolean {
@@ -1648,7 +1654,7 @@ export class CopyFaintedAllyAbilityAbAttr extends PostKnockOutAbAttr {
   applyPostKnockOut(pokemon: Pokemon, passive: boolean, simulated: boolean, knockedOut: Pokemon, args: any[]): boolean | Promise<boolean> {
     if (pokemon.isPlayer() === knockedOut.isPlayer() && !knockedOut.getAbility().hasAttr(UncopiableAbilityAbAttr)) {
       if (!simulated) {
-      pokemon.summonData.ability = knockedOut.getAbility().id;
+        pokemon.summonData.ability = knockedOut.getAbility().id;
         pokemon.scene.queueMessage(i18next.t("abilityTriggers:copyFaintedAllyAbility", { pokemonNameWithAffix: getPokemonNameWithAffix(knockedOut), abilityName: allAbilities[knockedOut.getAbility().id].name }));
       }
       return true;
@@ -1714,7 +1720,7 @@ export class PostIntimidateStatChangeAbAttr extends AbAttr {
 
   apply(pokemon: Pokemon, passive: boolean, simulated: boolean, cancelled: Utils.BooleanHolder, args: any[]): boolean {
     if (!simulated) {
-    pokemon.scene.pushPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), false, this.stats, this.levels));
+      pokemon.scene.pushPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), false, this.stats, this.levels));
     }
     cancelled.value = this.overwrites;
     return true;
@@ -1737,9 +1743,9 @@ export class PostSummonRemoveArenaTagAbAttr extends PostSummonAbAttr {
 
   applyPostSummon(pokemon: Pokemon, passive: boolean, simulated: boolean, args: any[]): boolean | Promise<boolean> {
     if (!simulated) {
-    for (const arenaTag of this.arenaTags) {
-      pokemon.scene.arena.removeTag(arenaTag);
-    }
+      for (const arenaTag of this.arenaTags) {
+        pokemon.scene.arena.removeTag(arenaTag);
+      }
     }
     return true;
   }
@@ -1756,7 +1762,7 @@ export class PostSummonMessageAbAttr extends PostSummonAbAttr {
 
   applyPostSummon(pokemon: Pokemon, passive: boolean, simulated: boolean, args: any[]): boolean {
     if (!simulated) {
-    pokemon.scene.queueMessage(this.messageFunc(pokemon));
+      pokemon.scene.queueMessage(this.messageFunc(pokemon));
     }
 
     return true;
@@ -1775,7 +1781,7 @@ export class PostSummonUnnamedMessageAbAttr extends PostSummonAbAttr {
 
   applyPostSummon(pokemon: Pokemon, passive: boolean, simulated: boolean, args: any[]): boolean {
     if (!simulated) {
-    pokemon.scene.queueMessage(this.message);
+      pokemon.scene.queueMessage(this.message);
     }
 
     return true;
@@ -1797,9 +1803,9 @@ export class PostSummonAddBattlerTagAbAttr extends PostSummonAbAttr {
     if (simulated) {
       return pokemon.canAddTag(this.tagType);
     } else {
-    return pokemon.addTag(this.tagType, this.turnCount);
+      return pokemon.addTag(this.tagType, this.turnCount);
+    }
   }
-}
 }
 
 export class PostSummonStatChangeAbAttr extends PostSummonAbAttr {
@@ -1859,7 +1865,7 @@ export class PostSummonAllyHealAbAttr extends PostSummonAbAttr {
     const target = pokemon.getAlly();
     if (target?.isActive(true)) {
       if (!simulated) {
-      target.scene.unshiftPhase(new PokemonHealPhase(target.scene, target.getBattlerIndex(),
+        target.scene.unshiftPhase(new PokemonHealPhase(target.scene, target.getBattlerIndex(),
           Utils.toDmgValue(pokemon.getMaxHp() / this.healRatio), i18next.t("abilityTriggers:postSummonAllyHeal", { pokemonNameWithAffix: getPokemonNameWithAffix(target), pokemonName: pokemon.name }), true, !this.showAnim));
       }
 
@@ -1878,9 +1884,9 @@ export class PostSummonClearAllyStatsAbAttr extends PostSummonAbAttr {
     const target = pokemon.getAlly();
     if (target?.isActive(true)) {
       if (!simulated) {
-      for (let s = 0; s < target.summonData.battleStats.length; s++) {
-        target.summonData.battleStats[s] = 0;
-      }
+        for (let s = 0; s < target.summonData.battleStats.length; s++) {
+          target.summonData.battleStats[s] = 0;
+        }
 
         target.scene.queueMessage(i18next.t("abilityTriggers:postSummonClearAllyStats", { pokemonNameWithAffix: getPokemonNameWithAffix(target) }));
       }
@@ -1902,12 +1908,12 @@ export class DownloadAbAttr extends PostSummonAbAttr {
     this.enemyCountTally = 0;
 
     for (const opponent of pokemon.getOpponents()) {
-        this.enemyCountTally++;
-        this.enemyDef += opponent.getBattleStat(Stat.DEF);
-        this.enemySpDef += opponent.getBattleStat(Stat.SPDEF);
-      }
-      this.enemyDef = Math.round(this.enemyDef / this.enemyCountTally);
-      this.enemySpDef = Math.round(this.enemySpDef / this.enemyCountTally);
+      this.enemyCountTally++;
+      this.enemyDef += opponent.getBattleStat(Stat.DEF);
+      this.enemySpDef += opponent.getBattleStat(Stat.SPDEF);
+    }
+    this.enemyDef = Math.round(this.enemyDef / this.enemyCountTally);
+    this.enemySpDef = Math.round(this.enemySpDef / this.enemyCountTally);
 
     if (this.enemyDef < this.enemySpDef) {
       this.stats = [BattleStat.ATK];
@@ -1917,7 +1923,7 @@ export class DownloadAbAttr extends PostSummonAbAttr {
 
     if (this.enemyDef > 0 && this.enemySpDef > 0) {
       if (!simulated) {
-      pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), false, this.stats, 1));
+        pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), false, this.stats, 1));
       }
       return true;
     }
@@ -1942,8 +1948,8 @@ export class PostSummonWeatherChangeAbAttr extends PostSummonAbAttr {
       if (simulated) {
         return pokemon.scene.arena.weather?.weatherType !== this.weatherType;
       } else {
-      return pokemon.scene.arena.trySetWeather(this.weatherType, true);
-    }
+        return pokemon.scene.arena.trySetWeather(this.weatherType, true);
+      }
     }
 
     return false;
@@ -1963,9 +1969,9 @@ export class PostSummonTerrainChangeAbAttr extends PostSummonAbAttr {
     if (simulated) {
       return pokemon.scene.arena.terrain?.terrainType !== this.terrainType;
     } else {
-    return pokemon.scene.arena.trySetTerrain(this.terrainType, true);
+      return pokemon.scene.arena.trySetTerrain(this.terrainType, true);
+    }
   }
-}
 }
 
 export class PostSummonFormChangeAbAttr extends PostSummonAbAttr {
@@ -2175,8 +2181,8 @@ export class PreSwitchOutResetStatusAbAttr extends PreSwitchOutAbAttr {
   applyPreSwitchOut(pokemon: Pokemon, passive: boolean, simulated: boolean, args: any[]): boolean | Promise<boolean> {
     if (pokemon.status) {
       if (!simulated) {
-      pokemon.resetStatus();
-      pokemon.updateInfo();
+        pokemon.resetStatus();
+        pokemon.updateInfo();
       }
 
       return true;
@@ -2228,8 +2234,8 @@ export class PreSwitchOutHealAbAttr extends PreSwitchOutAbAttr {
     if (!pokemon.isFullHp()) {
       if (!simulated) {
         const healAmount = Utils.toDmgValue(pokemon.getMaxHp() * 0.33);
-      pokemon.heal(healAmount);
-      pokemon.updateInfo();
+        pokemon.heal(healAmount);
+        pokemon.updateInfo();
       }
 
       return true;
@@ -2250,7 +2256,7 @@ export class PreSwitchOutFormChangeAbAttr extends PreSwitchOutAbAttr {
     const formIndex = this.formFunc(pokemon);
     if (formIndex !== pokemon.formIndex) {
       if (!simulated) {
-      pokemon.scene.triggerPokemonFormChange(pokemon, SpeciesFormChangeManualTrigger, false);
+        pokemon.scene.triggerPokemonFormChange(pokemon, SpeciesFormChangeManualTrigger, false);
       }
       return true;
     }
@@ -2307,8 +2313,8 @@ export class ConfusionOnStatusEffectAbAttr extends PostAttackAbAttr {
       if (simulated) {
         return defender.canAddTag(BattlerTagType.CONFUSED);
       } else {
-      return defender.addTag(BattlerTagType.CONFUSED, pokemon.randSeedInt(3,2), move.id, defender.id);
-    }
+        return defender.addTag(BattlerTagType.CONFUSED, pokemon.randSeedInt(3, 2), move.id, defender.id);
+      }
     }
     return false;
   }
@@ -2433,7 +2439,7 @@ export class ConditionalCritAbAttr extends AbAttr {
   apply(pokemon: Pokemon, passive: boolean, simulated: boolean, cancelled: Utils.BooleanHolder, args: any[]): boolean {
     const target = (args[1] as Pokemon);
     const move = (args[2] as Move);
-    if (!this.condition(pokemon,target,move)) {
+    if (!this.condition(pokemon, target, move)) {
       return false;
     }
 
@@ -2537,7 +2543,7 @@ export class SuppressWeatherEffectAbAttr extends PreWeatherEffectAbAttr {
   }
 }
 function getSheerForceHitDisableAbCondition(): AbAttrCondition {
-return (pokemon: Pokemon) => {
+  return (pokemon: Pokemon) => {
     if (!pokemon.turnData) {
       return true;
     }
@@ -2659,10 +2665,10 @@ export class FriskAbAttr extends PostSummonAbAttr {
 
   applyPostSummon(pokemon: Pokemon, passive: boolean, simulated: boolean, args: any[]): boolean {
     if (!simulated) {
-    for (const opponent of pokemon.getOpponents()) {
+      for (const opponent of pokemon.getOpponents()) {
         pokemon.scene.queueMessage(i18next.t("abilityTriggers:frisk", { pokemonNameWithAffix: getPokemonNameWithAffix(pokemon), opponentName: opponent.name, opponentAbilityName: opponent.getAbility().name }));
-      setAbilityRevealed(opponent);
-    }
+        setAbilityRevealed(opponent);
+      }
     }
     return true;
   }
@@ -2723,9 +2729,9 @@ export class PostWeatherChangeAddBattlerTagAttr extends PostWeatherChangeAbAttr 
     if (simulated) {
       return pokemon.canAddTag(this.tagType);
     } else {
-    return pokemon.addTag(this.tagType, this.turnCount);
+      return pokemon.addTag(this.tagType, this.turnCount);
+    }
   }
-}
 }
 
 export class PostWeatherLapseAbAttr extends AbAttr {
@@ -2760,7 +2766,7 @@ export class PostWeatherLapseHealAbAttr extends PostWeatherLapseAbAttr {
       const scene = pokemon.scene;
       const abilityName = (!passive ? pokemon.getAbility() : pokemon.getPassiveAbility()).name;
       if (!simulated) {
-      scene.unshiftPhase(new PokemonHealPhase(scene, pokemon.getBattlerIndex(),
+        scene.unshiftPhase(new PokemonHealPhase(scene, pokemon.getBattlerIndex(),
           Utils.toDmgValue(pokemon.getMaxHp() / (16 / this.healFactor)), i18next.t("abilityTriggers:postWeatherLapseHeal", { pokemonNameWithAffix: getPokemonNameWithAffix(pokemon), abilityName }), true));
       }
       return true;
@@ -2780,7 +2786,7 @@ export class PostWeatherLapseDamageAbAttr extends PostWeatherLapseAbAttr {
   }
 
   applyPostWeatherLapse(pokemon: Pokemon, passive: boolean, simulated: boolean, weather: Weather, args: any[]): boolean {
-      const scene = pokemon.scene;
+    const scene = pokemon.scene;
     if (pokemon.hasAbilityWithAttr(BlockNonDirectDamageAbAttr)) {
       return false;
     }
@@ -2791,8 +2797,8 @@ export class PostWeatherLapseDamageAbAttr extends PostWeatherLapseAbAttr {
       pokemon.damageAndUpdate(Utils.toDmgValue(pokemon.getMaxHp() / (16 / this.damageFactor)), HitResult.OTHER);
     }
 
-      return true;
-    }
+    return true;
+  }
 }
 
 export class PostTerrainChangeAbAttr extends AbAttr {
@@ -2822,9 +2828,9 @@ export class PostTerrainChangeAddBattlerTagAttr extends PostTerrainChangeAbAttr 
     if (simulated) {
       return pokemon.canAddTag(this.tagType);
     } else {
-    return pokemon.addTag(this.tagType, this.turnCount);
+      return pokemon.addTag(this.tagType, this.turnCount);
+    }
   }
-}
 }
 
 function getTerrainCondition(...terrainTypes: TerrainType[]): AbAttrCondition {
@@ -2850,9 +2856,9 @@ export class PostTurnStatusHealAbAttr extends PostTurnAbAttr {
     if (pokemon.status && this.effects.includes(pokemon.status.effect)) {
       if (!pokemon.isFullHp()) {
         if (!simulated) {
-        const scene = pokemon.scene;
-        const abilityName = (!passive ? pokemon.getAbility() : pokemon.getPassiveAbility()).name;
-        scene.unshiftPhase(new PokemonHealPhase(scene, pokemon.getBattlerIndex(),
+          const scene = pokemon.scene;
+          const abilityName = (!passive ? pokemon.getAbility() : pokemon.getPassiveAbility()).name;
+          scene.unshiftPhase(new PokemonHealPhase(scene, pokemon.getBattlerIndex(),
             Utils.toDmgValue(pokemon.getMaxHp() / 8), i18next.t("abilityTriggers:poisonHeal", { pokemonNameWithAffix: getPokemonNameWithAffix(pokemon), abilityName }), true));
         }
         return true;
@@ -2879,8 +2885,8 @@ export class PostTurnResetStatusAbAttr extends PostTurnAbAttr {
     if (this.target?.status) {
       if (!simulated) {
         this.target.scene.queueMessage(getStatusEffectHealText(this.target.status?.effect, getPokemonNameWithAffix(this.target)));
-      this.target.resetStatus(false);
-      this.target.updateInfo();
+        this.target.resetStatus(false);
+        this.target.updateInfo();
       }
 
       return true;
@@ -3003,9 +3009,9 @@ export class PostTurnHealAbAttr extends PostTurnAbAttr {
   applyPostTurn(pokemon: Pokemon, passive: boolean, simulated: boolean, args: any[]): boolean {
     if (!pokemon.isFullHp()) {
       if (!simulated) {
-      const scene = pokemon.scene;
-      const abilityName = (!passive ? pokemon.getAbility() : pokemon.getPassiveAbility()).name;
-      scene.unshiftPhase(new PokemonHealPhase(scene, pokemon.getBattlerIndex(),
+        const scene = pokemon.scene;
+        const abilityName = (!passive ? pokemon.getAbility() : pokemon.getPassiveAbility()).name;
+        scene.unshiftPhase(new PokemonHealPhase(scene, pokemon.getBattlerIndex(),
           Utils.toDmgValue(pokemon.getMaxHp() / 16), i18next.t("abilityTriggers:postTurnHeal", { pokemonNameWithAffix: getPokemonNameWithAffix(pokemon), abilityName }), true));
       }
 
@@ -3029,7 +3035,7 @@ export class PostTurnFormChangeAbAttr extends PostTurnAbAttr {
     const formIndex = this.formFunc(pokemon);
     if (formIndex !== pokemon.formIndex) {
       if (!simulated) {
-      pokemon.scene.triggerPokemonFormChange(pokemon, SpeciesFormChangeManualTrigger, false);
+        pokemon.scene.triggerPokemonFormChange(pokemon, SpeciesFormChangeManualTrigger, false);
       }
 
       return true;
@@ -3045,7 +3051,7 @@ export class PostTurnHurtIfSleepingAbAttr extends PostTurnAbAttr {
       if ((opp.status?.effect === StatusEffect.SLEEP || opp.hasAbility(Abilities.COMATOSE)) && !opp.hasAbilityWithAttr(BlockNonDirectDamageAbAttr)) {
         if (!simulated) {
           opp.damageAndUpdate(Utils.toDmgValue(opp.getMaxHp() / 8), HitResult.OTHER);
-        pokemon.scene.queueMessage(i18next.t("abilityTriggers:badDreams", {pokemonName: getPokemonNameWithAffix(opp)}));
+          pokemon.scene.queueMessage(i18next.t("abilityTriggers:badDreams", {pokemonName: getPokemonNameWithAffix(opp)}));
         }
         hadEffect = true;
       }
@@ -3090,8 +3096,8 @@ export class PostBiomeChangeWeatherChangeAbAttr extends PostBiomeChangeAbAttr {
       if (simulated) {
         return pokemon.scene.arena.weather?.weatherType !== this.weatherType;
       } else {
-      return pokemon.scene.arena.trySetWeather(this.weatherType, true);
-    }
+        return pokemon.scene.arena.trySetWeather(this.weatherType, true);
+      }
     }
 
     return false;
@@ -3111,9 +3117,9 @@ export class PostBiomeChangeTerrainChangeAbAttr extends PostBiomeChangeAbAttr {
     if (simulated) {
       return pokemon.scene.arena.terrain?.terrainType !== this.terrainType;
     } else {
-    return pokemon.scene.arena.trySetTerrain(this.terrainType, true);
+      return pokemon.scene.arena.trySetTerrain(this.terrainType, true);
+    }
   }
-}
 }
 export class PostMoveUsedAbAttr extends AbAttr {
   applyPostMoveUsed(pokemon: Pokemon, move: PokemonMove, source: Pokemon, targets: BattlerIndex[], simulated: boolean, args: any[]): boolean | Promise<boolean> {
@@ -3131,16 +3137,16 @@ export class PostDancingMoveAbAttr extends PostMoveUsedAbAttr {
         && !dancer.summonData.tags.some(tag => forbiddenTags.includes(tag.tagType))) {
       if (!simulated) {
 
-      if (move.getMove() instanceof AttackMove || move.getMove() instanceof StatusMove) {
-        const target = this.getTarget(dancer, source, targets);
-        dancer.scene.unshiftPhase(new MovePhase(dancer.scene, dancer, target, move, true));
-      } else if (move.getMove() instanceof SelfStatusMove) {
+        if (move.getMove() instanceof AttackMove || move.getMove() instanceof StatusMove) {
+          const target = this.getTarget(dancer, source, targets);
+          dancer.scene.unshiftPhase(new MovePhase(dancer.scene, dancer, target, move, true));
+        } else if (move.getMove() instanceof SelfStatusMove) {
 
-        dancer.scene.unshiftPhase(new MovePhase(dancer.scene, dancer, [dancer.getBattlerIndex()], move, true));
+          dancer.scene.unshiftPhase(new MovePhase(dancer.scene, dancer, [dancer.getBattlerIndex()], move, true));
+        }
       }
-      }
-    return true;
-  }
+      return true;
+    }
     return false;
   }
   getTarget(dancer: Pokemon, source: Pokemon, targets: BattlerIndex[]) : BattlerIndex[] {
@@ -3170,7 +3176,7 @@ export class StatChangeMultiplierAbAttr extends AbAttr {
 export class StatChangeCopyAbAttr extends AbAttr {
   apply(pokemon: Pokemon, passive: boolean, simulated: boolean, cancelled: Utils.BooleanHolder, args: any[]): boolean | Promise<boolean> {
     if (!simulated) {
-    pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, (args[0] as BattleStat[]), (args[1] as integer), true, false, false));
+      pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, (args[0] as BattleStat[]), (args[1] as integer), true, false, false));
     }
     return true;
   }
@@ -3225,15 +3231,15 @@ export class HealFromBerryUseAbAttr extends AbAttr {
   apply(pokemon: Pokemon, passive: boolean, simulated: boolean, ...args: [Utils.BooleanHolder, any[]]): boolean {
     const { name: abilityName } = passive ? pokemon.getPassiveAbility() : pokemon.getAbility();
     if (!simulated) {
-    pokemon.scene.unshiftPhase(
-      new PokemonHealPhase(
-        pokemon.scene,
-        pokemon.getBattlerIndex(),
+      pokemon.scene.unshiftPhase(
+        new PokemonHealPhase(
+          pokemon.scene,
+          pokemon.getBattlerIndex(),
           Utils.toDmgValue(pokemon.getMaxHp() * this.healPercent),
           i18next.t("abilityTriggers:healFromBerryUse", { pokemonNameWithAffix: getPokemonNameWithAffix(pokemon), abilityName }),
-        true
-      )
-    );
+          true
+        )
+      );
     }
     return true;
   }
@@ -3270,9 +3276,9 @@ export class ArenaTrapAbAttr extends CheckTrappedAbAttr {
         trapped.value = false;
         return false;
       }
-    trapped.value = true;
-    return true;
-  }
+      trapped.value = true;
+      return true;
+    }
     trapped.value = false;
     return false;
   }
@@ -3334,8 +3340,8 @@ export class PostFaintUnsuppressedWeatherFormChangeAbAttr extends PostFaintAbAtt
     const pokemonToTransform = getPokemonWithWeatherBasedForms(pokemon.scene);
 
     if (pokemonToTransform.length < 1) {
-    return false;
-  }
+      return false;
+    }
 
     if (!simulated) {
       pokemon.scene.arena.triggerWeatherBasedFormChanges();
@@ -3419,9 +3425,9 @@ export class PostFaintHPDamageAbAttr extends PostFaintAbAttr {
 
   applyPostFaint(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
     if (!simulated) {
-    const damage = pokemon.turnData.attacksReceived[0].damage;
-    attacker.damageAndUpdate((damage), HitResult.OTHER);
-    attacker.turnData.damageTaken += damage;
+      const damage = pokemon.turnData.attacksReceived[0].damage;
+      attacker.damageAndUpdate((damage), HitResult.OTHER);
+      attacker.turnData.damageTaken += damage;
     }
     return true;
   }
@@ -3506,7 +3512,7 @@ export class FlinchStatChangeAbAttr extends FlinchEffectAbAttr {
 
   apply(pokemon: Pokemon, passive: boolean, simulated: boolean, cancelled: Utils.BooleanHolder, args: any[]): boolean {
     if (!simulated) {
-    pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, this.stats, this.levels));
+      pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, this.stats, this.levels));
     }
     return true;
   }
@@ -3675,7 +3681,7 @@ export class MoneyAbAttr extends PostBattleAbAttr {
   }
   applyPostBattle(pokemon: Pokemon, passive: boolean, simulated: boolean, args: any[]): boolean {
     if (!simulated) {
-    pokemon.scene.currentBattle.moneyScattered += pokemon.scene.getWaveMoneyAmount(0.2);
+      pokemon.scene.currentBattle.moneyScattered += pokemon.scene.getWaveMoneyAmount(0.2);
     }
     return true;
   }
@@ -3713,7 +3719,7 @@ export class FormBlockDamageAbAttr extends ReceivedMoveDamageMultiplierAbAttr {
   applyPreDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, cancelled: Utils.BooleanHolder, args: any[]): boolean {
     if (this.condition(pokemon, attacker, move)) {
       if (!simulated) {
-      (args[0] as Utils.NumberHolder).value = this.multiplier;
+        (args[0] as Utils.NumberHolder).value = this.multiplier;
         pokemon.removeTag(this.tagType);
         if (this.recoilDamageFunc) {
           pokemon.damageAndUpdate(this.recoilDamageFunc(pokemon), HitResult.OTHER, false, false, true, true);
@@ -3749,8 +3755,8 @@ export class BypassSpeedChanceAbAttr extends AbAttr {
 
       if (isCommandFight && isDamageMove) {
         bypassSpeed.value = true;
-      return true;
-    }
+        return true;
+      }
     }
 
     return false;
@@ -3765,7 +3771,7 @@ export class PreventBypassSpeedChanceAbAttr extends AbAttr {
   constructor(condition: (pokemon: Pokemon, move: Move) => boolean) {
     super(true);
     this.condition = condition;
-    }
+  }
   apply(pokemon: Pokemon, passive: boolean, simulated: boolean, cancelled: Utils.BooleanHolder, args: any[]): boolean {
     const bypassSpeed = args[0] as Utils.BooleanHolder;
     const canCheckHeldItems = args[1] as Utils.BooleanHolder;
@@ -3779,8 +3785,8 @@ export class PreventBypassSpeedChanceAbAttr extends AbAttr {
       return false;
     }
     return true;
-      }
-      }
+  }
+}
 
 async function applyAbAttrsInternal<TAttr extends AbAttr>(
   attrType: Constructor<TAttr>,
@@ -3801,7 +3807,7 @@ async function applyAbAttrsInternal<TAttr extends AbAttr>(
     { ability: pokemon?.getAbility(), passive: false, modifier: null },
     { ability: pokemon?.getPassiveAbility(), passive: true, modifier: null }
   ];
-  if(pokemon && pokemon instanceof PlayerPokemon) {
+  if (pokemon && pokemon instanceof PlayerPokemon) {
     const partyAbilityModifiers = scene.gameData.getPermaModifiersByType(PermaType.PERMA_PARTY_ABILITY) as PermaPartyAbilityModifier[];
     abilitiesToCheck.push(...partyAbilityModifiers.map(mod => ({ability: mod.ability, passive: true, modifier: mod})));
     const trainerBondModifiers = scene.findModifiers((m: any) => m instanceof TrainerBondAbilityModifier) as TrainerBondAbilityModifier[];
@@ -3860,21 +3866,21 @@ async function applyAbAttrsInternal<TAttr extends AbAttr>(
 
         if (pokemon instanceof PlayerPokemon) {
           scene.gameData.permaModifiers
-              .findModifiers(m => m instanceof PermaUseAbilityQuestModifier)
-              .forEach(questModifier => questModifier.apply([scene, pokemon, ability]));
+            .findModifiers(m => m instanceof PermaUseAbilityQuestModifier)
+            .forEach(questModifier => questModifier.apply([scene, pokemon, ability]));
         }
 
         const message = attr.getTriggerMessage(pokemon, ability.name, args);
         if (message) {
           if (!simulated) {
             scene.queueMessage(message);
-                  }
-                }
+          }
+        }
         messages.push(message!);
-              }
-                }
+      }
+    }
     scene.clearPhaseQueueSplice();
-              }
+  }
 }
 
 export function applyAbAttrs(attrType: Constructor<AbAttr>, pokemon: Pokemon, cancelled: Utils.BooleanHolder | null, simulated: boolean = false, ...args: any[]): Promise<void> {
@@ -4016,35 +4022,35 @@ function setAbilityRevealed(pokemon: Pokemon): void {
 }
 function getPokemonWithWeatherBasedForms(scene: BattleScene) {
   return scene.getField(true).filter(p =>
-      p.hasAbility(Abilities.FORECAST) && p.species.speciesId === Species.CASTFORM
-  )
+    p.hasAbility(Abilities.FORECAST) && p.species.speciesId === Species.CASTFORM
+  );
 }
 export function addTagToPokemonWithAbility(pokemon:Pokemon, tag:BattlerTagType, abilityUser:integer, moveId:Moves = Moves.NONE):void {
-  pokemon.addTag(tag, randIntRange(2,5), moveId, abilityUser);
+  pokemon.addTag(tag, randIntRange(2, 5), moveId, abilityUser);
 }
 
 export function defendConditionMet(condition: PokemonDefendCondition | boolean | number, pokemon: Pokemon, attacker: Pokemon, move: Move): boolean {
-  if (typeof condition === 'boolean') {
+  if (typeof condition === "boolean") {
     return condition;
-  } else if (typeof condition === 'number') {
+  } else if (typeof condition === "number") {
     return randSeedChance(condition);
   } else {
     return condition(pokemon, attacker, move);
   }
 }
 export function attackConditionMet(condition: PokemonAttackCondition | boolean | number, user: Pokemon, target: Pokemon, move: Move): boolean {
-  if (typeof condition === 'boolean') {
+  if (typeof condition === "boolean") {
     return condition;
-  } else if (typeof condition === 'number') {
+  } else if (typeof condition === "number") {
     return randSeedChance(condition);
   } else {
     return condition(user, target, move);
   }
 }
 export function faintConditionMet(condition: PokemonFaintCondition | boolean | number, fainted: Pokemon, attacker: Pokemon | null): boolean {
-  if (typeof condition === 'boolean') {
+  if (typeof condition === "boolean") {
     return condition;
-  } else if (typeof condition === 'number') {
+  } else if (typeof condition === "number") {
     return randSeedChance(condition);
   } else if (attacker != null) {
     return condition(fainted, attacker);
@@ -4052,27 +4058,27 @@ export function faintConditionMet(condition: PokemonFaintCondition | boolean | n
   return false;
 }
 export function knockoutConditionMet(condition: PokemonKnockoutCondition | boolean | number, knockedOut: Pokemon, attacker: Pokemon): boolean {
-  if (typeof condition === 'boolean') {
+  if (typeof condition === "boolean") {
     return condition;
-  } else if (typeof condition === 'number') {
+  } else if (typeof condition === "number") {
     return randSeedChance(condition);
   } else {
     return condition(knockedOut, attacker);
   }
 }
 export function fieldConditionMet(condition: PokemonFieldCondition | boolean | number, pokemon: Pokemon, opponent: Pokemon): boolean {
-  if (typeof condition === 'boolean') {
+  if (typeof condition === "boolean") {
     return condition;
-  } else if (typeof condition === 'number') {
+  } else if (typeof condition === "number") {
     return randSeedChance(condition);
   } else {
     return condition(pokemon, opponent);
   }
 }
 export function victoryConditionMet(condition: PokemonVictoryCondition | boolean | number, pokemon: Pokemon): boolean {
-  if (typeof condition === 'boolean') {
+  if (typeof condition === "boolean") {
     return condition;
-  } else if (typeof condition === 'number') {
+  } else if (typeof condition === "number") {
     return randSeedChance(condition);
   } else {
     return condition(pokemon);
@@ -4093,11 +4099,11 @@ export class SharedWeaknessPowerBoostAbAttr extends MovePowerBoostAbAttr {
   private checkTypeWeakness(moveType: Type, targetType: Type[]): boolean {
     let productMultiplier = 1;
     for (const defType of targetType) {
-    const multiplier = getTypeDamageMultiplier(moveType, defType);
-    if (multiplier === 0) {
-      return false;
-    }
-    productMultiplier *= multiplier;
+      const multiplier = getTypeDamageMultiplier(moveType, defType);
+      if (multiplier === 0) {
+        return false;
+      }
+      productMultiplier *= multiplier;
     }
     return productMultiplier >= 2;
   }
@@ -4114,10 +4120,10 @@ export class SharedWeaknessPowerBoostAbAttr extends MovePowerBoostAbAttr {
 export class HpGatedTypeChangeAbAttr extends MoveTypeChangeAbAttr {
 
   constructor(newType: Type,
-              powerMultiplier: number,
+    powerMultiplier: number,
               private hpThreshold: number,
               condition?: PokemonAttackCondition
-              ) {
+  ) {
     super(newType, powerMultiplier, condition);
   }
 
@@ -4141,7 +4147,7 @@ class TypeImmunityStatsChangeAbAttr extends TypeImmunityAbAttr {
   }
 
   applyPreDefend(pokemon: Pokemon, passive: boolean, simulated:boolean, attacker: Pokemon, move: Move, cancelled: Utils.BooleanHolder, args: any[]): boolean {
-    if(simulated) {
+    if (simulated) {
       return false;
     }
 
@@ -4210,7 +4216,7 @@ export class MovePowerNeutralAbAttr extends MovePowerBoostAbAttr {
     const effectiveness = defender.getAttackTypeEffectiveness(move.type, pokemon);
     if (!simulated && effectiveness >= 2 || effectiveness < 1) {
       this.powerMultiplier = 1 / effectiveness;
-      if(effectiveness < 1) {
+      if (effectiveness < 1) {
         this.powerMultiplier = 1;
       }
       return super.applyPreAttack(pokemon, passive, simulated, defender, move, args);
@@ -4298,9 +4304,9 @@ export class PostAttackApplyTagAbAttr extends PostAttackAbAttr {
 
   applyPostAttack(pokemon: Pokemon, passive: boolean, simulated: boolean, target: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
     if (!simulated && pokemon !== target && attackConditionMet(this.chance, pokemon, target, move) && (!this.contactRequired || move.checkFlag(MoveFlags.MAKES_CONTACT, pokemon, target))) {
-        const selectedTag = this.tags[Utils.randSeedInt(this.tags.length)];
-        addTagToPokemonWithAbility(target, selectedTag,pokemon.id, move.id);
-        return true;
+      const selectedTag = this.tags[Utils.randSeedInt(this.tags.length)];
+      addTagToPokemonWithAbility(target, selectedTag, pokemon.id, move.id);
+      return true;
     }
     return false;
   }
@@ -4342,7 +4348,7 @@ export class PostFaintTagAbAttr extends PostFaintAbAttr {
       const tag = this.tags[pokemon.randSeedInt(this.tags.length)];
       addTagToPokemonWithAbility(attacker, tag, pokemon.id,  move.id);
       return true;
-  }
+    }
     return false;
   }
 }
@@ -4353,7 +4359,7 @@ export class PostDefendTypeEffectAbAttr extends PostDefendAbAttr {
 
   applyPostDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
     const moveType = move.type;
-    if(simulated) {
+    if (simulated) {
       return false;
     }
 
@@ -4441,7 +4447,7 @@ export class PostSummonStatBoostAbAttr extends PostSummonAbAttr {
   }
 
   applyPostSummon(pokemon: Pokemon, passive: boolean, simulated: boolean, args: any[]): boolean {
-    if(simulated) {
+    if (simulated) {
       return false;
     }
     const stats = [BattleStat.ATK, BattleStat.DEF, BattleStat.SPATK, BattleStat.SPDEF, BattleStat.SPD];
@@ -4471,13 +4477,13 @@ export class HealAfterHitAbAttr extends PostDefendAbAttr {
 export class PostDefendTypeChangePlusAbAttr extends PostDefendTypeChangeAbAttr {
   applyPostDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
     const originalTypes = pokemon.getTypes(true);
-    if(simulated) {
+    if (simulated) {
       return false;
     }
     if (originalTypes.every(type => type !== move.type)) {
-        const healAmount = Math.floor(pokemon.getMaxHp() / 8);
-        pokemon.scene.unshiftPhase(new PokemonHealPhase(pokemon.scene, pokemon.getBattlerIndex(), healAmount, getPokemonMessage(pokemon, i18next.t("abilityTrigger:restoredHP", { abilityName: pokemon.getAbility().name })), true));
-      }
+      const healAmount = Math.floor(pokemon.getMaxHp() / 8);
+      pokemon.scene.unshiftPhase(new PokemonHealPhase(pokemon.scene, pokemon.getBattlerIndex(), healAmount, getPokemonMessage(pokemon, i18next.t("abilityTrigger:restoredHP", { abilityName: pokemon.getAbility().name })), true));
+    }
     return super.applyPostDefend(pokemon, passive, simulated, attacker, move, hitResult, args);
   }
 }
@@ -4499,7 +4505,7 @@ export class PostAttackStatChangeAbAttr extends PostAttackAbAttr {
   applyPostAttack(pokemon: Pokemon, passive: boolean, simulated: boolean, defender: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean | Promise<boolean> {
     if (!simulated && defender != pokemon && this.condition(pokemon, defender, move)) {
       const target = this.selfTarget ? pokemon : defender;
-       pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, target.getBattlerIndex(), this.selfTarget, this.stats, this.levels));
+      pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, target.getBattlerIndex(), this.selfTarget, this.stats, this.levels));
       return true;
     }
     return false;
@@ -4559,7 +4565,7 @@ export class PostAttackTypeStatusAndDamageAbAttr extends PostAttackAbAttr {
 
 export class PostDefendSpiritualBondAbAttr extends PostDefendAbAttr {
   applyPostDefend(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
-    if(!simulated && pokemon != attacker) {
+    if (!simulated && pokemon != attacker) {
       const damageDealt = pokemon.turnData.damageTaken;
       const damageToAttacker = Math.ceil(damageDealt / 2);
       attacker.damageAndUpdate(damageToAttacker, HitResult.OTHER);
@@ -4668,7 +4674,7 @@ export class PostDefendStatusDamageAbAttr extends PostDefendAbAttr {
     if (!simulated && pokemon != attacker && attacker.status?.effect === this.statusEffect) {
       const damage = Math.floor(attacker.getMaxHp() * this.damageRatio);
       attacker.damageAndUpdate(damage, HitResult.OTHER);
-      return true
+      return true;
     }
     return false;
   }
@@ -4732,7 +4738,7 @@ export class PostAttackChanceHealAbAttr extends PostAttackAbAttr {
   applyPostAttack(pokemon: Pokemon, passive: boolean, simulated: boolean, defender: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
     if (!simulated && pokemon != defender && this.condition(pokemon, defender, move)) {
       const healAmount = Math.floor(pokemon.getMaxHp() * this.healRatio);
-        pokemon.scene.unshiftPhase(new PokemonHealPhase(pokemon.scene, pokemon.getBattlerIndex(), healAmount, getPokemonMessage(pokemon, i18next.t("abilityTrigger:restoredHP", { abilityName: pokemon.getAbility().name })), true));
+      pokemon.scene.unshiftPhase(new PokemonHealPhase(pokemon.scene, pokemon.getBattlerIndex(), healAmount, getPokemonMessage(pokemon, i18next.t("abilityTrigger:restoredHP", { abilityName: pokemon.getAbility().name })), true));
       return true;
     }
     return false;
@@ -4740,27 +4746,27 @@ export class PostAttackChanceHealAbAttr extends PostAttackAbAttr {
 }
 
 export class PreAttackChangeMoveCategoryAbAttr extends PreAttackAbAttr {
-    constructor() {
-        super(true);
+  constructor() {
+    super(true);
+  }
+
+  applyPreAttack(pokemon: Pokemon, passive: boolean, simulated: boolean, defender: Pokemon, move: Move, args: any[]): boolean {
+    if (simulated || pokemon == defender || move.category == MoveCategory.STATUS) {
+      return false;
     }
 
-    applyPreAttack(pokemon: Pokemon, passive: boolean, simulated: boolean, defender: Pokemon, move: Move, args: any[]): boolean {
-        if (simulated || pokemon == defender || move.category == MoveCategory.STATUS) {
-            return false;
-        }
+    const effectiveCategory = defender.getStat(Stat.DEF) < defender.getStat(Stat.SPDEF) ? MoveCategory.PHYSICAL : MoveCategory.SPECIAL;
+    args.push({ effectiveCategory });
 
-        const effectiveCategory = defender.getStat(Stat.DEF) < defender.getStat(Stat.SPDEF) ? MoveCategory.PHYSICAL : MoveCategory.SPECIAL;
-        args.push({ effectiveCategory });
-
-        if ((effectiveCategory === MoveCategory.PHYSICAL && pokemon.getStat(Stat.SPATK) > pokemon.getStat(Stat.ATK)) ||
+    if ((effectiveCategory === MoveCategory.PHYSICAL && pokemon.getStat(Stat.SPATK) > pokemon.getStat(Stat.ATK)) ||
             (effectiveCategory === MoveCategory.SPECIAL && pokemon.getStat(Stat.ATK) > pokemon.getStat(Stat.SPATK))) {
-            const temp = pokemon.summonData.stats[Stat.ATK];
-            pokemon.summonData.stats[Stat.ATK] = pokemon.summonData.stats[Stat.SPATK];
-            pokemon.summonData.stats[Stat.SPATK] = temp;
-        }
-
-        return true;
+      const temp = pokemon.summonData.stats[Stat.ATK];
+      pokemon.summonData.stats[Stat.ATK] = pokemon.summonData.stats[Stat.SPATK];
+      pokemon.summonData.stats[Stat.SPATK] = temp;
     }
+
+    return true;
+  }
 }
 
 export class PreAttackBoostIfCollectedTypeMatchAbAttr extends PreAttackAbAttr {
@@ -4807,7 +4813,7 @@ export class PostAttackHealIfCollectedTypeMatchAbAttr extends PostAttackAbAttr {
     if (matchingTypes > 0) {
       const healFraction = Math.min(1 / (11 - matchingTypes), 1 / 4);
       const healAmount = Math.floor(pokemon.getMaxHp() * healFraction);
-        pokemon.scene.unshiftPhase(new PokemonHealPhase(pokemon.scene, pokemon.getBattlerIndex(), healAmount, getPokemonMessage(pokemon, i18next.t("abilityTrigger:devouredSoul", { abilityName: pokemon.getAbility().name })), true));
+      pokemon.scene.unshiftPhase(new PokemonHealPhase(pokemon.scene, pokemon.getBattlerIndex(), healAmount, getPokemonMessage(pokemon, i18next.t("abilityTrigger:devouredSoul", { abilityName: pokemon.getAbility().name })), true));
       return true;
     }
 
@@ -4825,12 +4831,12 @@ export class PostAttackCollectTypeMatchAbAttr extends PostAttackAbAttr {
 
   applyPostAttack(pokemon: Pokemon, passive: boolean, simulated: boolean, defender: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
     if (!simulated && pokemon !== defender && attackConditionMet(this.condition, pokemon, defender, move)) {
-    const randomType = Utils.randItem(defender.getTypes());
-    const modifierType = new CollectedTypeModifierType(randomType);
-    const newModifier = new CollectedTypeModifier(modifierType, pokemon.id, randomType);
-    pokemon.scene.addModifier(newModifier);
-    return true;
-  }
+      const randomType = Utils.randItem(defender.getTypes());
+      const modifierType = new CollectedTypeModifierType(randomType);
+      const newModifier = new CollectedTypeModifier(modifierType, pokemon.id, randomType);
+      pokemon.scene.addModifier(newModifier);
+      return true;
+    }
     return false;
   }
 }
@@ -4875,7 +4881,7 @@ export class PostAttackStatChangeIfCollectedTypeMatchAbAttr extends PostAttackAb
 
 export class PostKnockOutCollectAbAttr extends PostKnockOutAbAttr {
   applyPostKnockOut(pokemon: Pokemon, passive: boolean, simulated: boolean, knockedOut: Pokemon, args: any[]): boolean | Promise<boolean> {
-    if(simulated) {
+    if (simulated) {
       return false;
     }
     const randomType = Utils.randItem(knockedOut.getTypes());
@@ -4888,7 +4894,7 @@ export class PostKnockOutCollectAbAttr extends PostKnockOutAbAttr {
 
 export class PostFaintLoseCollectedTypeAbAttr extends PostFaintAbAttr {
   applyPostFaint(pokemon: Pokemon, passive: boolean, simulated: boolean, attacker: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
-    if(simulated) {
+    if (simulated) {
       return false;
     }
     const collectedTypeModifiers = pokemon.scene.findModifiers(m => m instanceof CollectedTypeModifier && m.pokemonId === pokemon.id);
@@ -4900,14 +4906,14 @@ export class PostFaintLoseCollectedTypeAbAttr extends PostFaintAbAttr {
 }
 
 export class PostStatChangeSyncHighestStatAbAttr extends StatChangeCopyAbAttr {
-    apply(pokemon: Pokemon, passive: boolean, simulated: boolean, cancelled: Utils.BooleanHolder, args: any[]): boolean | Promise<boolean> {
-      if(simulated) {
-        return false;
-      }
-      const highestStat = this.getHighestStat(pokemon);
-      pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, [highestStat], 1));
-      return true;
+  apply(pokemon: Pokemon, passive: boolean, simulated: boolean, cancelled: Utils.BooleanHolder, args: any[]): boolean | Promise<boolean> {
+    if (simulated) {
+      return false;
     }
+    const highestStat = this.getHighestStat(pokemon);
+    pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, [highestStat], 1));
+    return true;
+  }
 
   private getHighestStat(pokemon: Pokemon): BattleStat {
     const stats = pokemon.stats;
@@ -4915,7 +4921,7 @@ export class PostStatChangeSyncHighestStatAbAttr extends StatChangeCopyAbAttr {
     let maxValue = stats[BattleStat.ATK];
 
     for (const stat of Object.values(BattleStat)) {
-      if (typeof stat === 'number' && stat !== BattleStat.RAND && stats[stat] > maxValue) {
+      if (typeof stat === "number" && stat !== BattleStat.RAND && stats[stat] > maxValue) {
         highestStat = stat;
         maxValue = stats[stat];
       }
@@ -4941,7 +4947,7 @@ export class PostAttackAbilityGiveOrTagAbAttr extends PostAttackAbAttr {
 
   applyPostAttack(pokemon: Pokemon, passive: boolean, simulated: boolean, defender: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
     let success = false;
-    if(!simulated && pokemon != defender) {
+    if (!simulated && pokemon != defender) {
       if (!defender.getAbility().hasAttr(UnsuppressableAbilityAbAttr)) {
         if (!defender.getAbility().hasAttr(PostAttackAbilityGiveOrTagAbAttr)) {
           if (Utils.randSeedInt(100) < this.abilityChance) {
@@ -4949,8 +4955,7 @@ export class PostAttackAbilityGiveOrTagAbAttr extends PostAttackAbAttr {
             success = true;
           }
         }
-      }
-      else if (defender.getAbility().hasAttr(PostAttackAbilityGiveOrTagAbAttr) && randSeedChance(this.tagChance)) {
+      } else if (defender.getAbility().hasAttr(PostAttackAbilityGiveOrTagAbAttr) && randSeedChance(this.tagChance)) {
         addTagToPokemonWithAbility(defender, this.tag, pokemon.id,  move.id);
         success = true;
       }
@@ -4986,9 +4991,9 @@ export class PostKnockOutTypeStatsChangeAbAttr extends PostKnockOutAbAttr {
       return false;
     }
     const statsToChange = typeof this.stats === "function" ? this.stats(pokemon) : this.stats;
-      if (statsToChange.length === 0) {
-        return false;
-      }
+    if (statsToChange.length === 0) {
+      return false;
+    }
     pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, statsToChange, this.levels));
     return true;
   }
@@ -5079,11 +5084,11 @@ export class PokemonTypeChangeHealAbAttr extends PreAttackAbAttr {
 
   async applyPreAttack(pokemon: Pokemon, passive: boolean, simulated: boolean, defender: Pokemon, move: Move, args: any[]): Promise<boolean> {
     if (
-        !simulated &&
+      !simulated &&
         !pokemon.isTerastallized() &&
         move.id !== Moves.STRUGGLE &&
         !move.findAttr((attr) =>
-            attr instanceof RandomMovesetMoveAttr ||
+          attr instanceof RandomMovesetMoveAttr ||
             attr instanceof RandomMoveAttr ||
             attr instanceof NaturePowerAttr ||
             attr instanceof CopyMoveAttr
@@ -5121,7 +5126,7 @@ export class PostTurnHealPlusAbAttr extends PostTurnAbAttr {
       const scene = pokemon.scene;
       const abilityName = (!passive ? pokemon.getAbility() : pokemon.getPassiveAbility()).name;
       scene.unshiftPhase(new PokemonHealPhase(scene, pokemon.getBattlerIndex(),
-          Math.max(Math.floor(pokemon.getMaxHp() / 8), 1), getPokemonMessage(pokemon, i18next.t("abilityTrigger:restoredHPLittle", { abilityName: abilityName })), true));
+        Math.max(Math.floor(pokemon.getMaxHp() / 8), 1), getPokemonMessage(pokemon, i18next.t("abilityTrigger:restoredHPLittle", { abilityName: abilityName })), true));
       return true;
     }
 
@@ -5135,33 +5140,33 @@ export class MovePowerInverseAbAttr extends MovePowerBoostAbAttr {
       const effectiveness = defender.getAttackTypeEffectiveness(move.type, pokemon);
       let inverseMultiplier: number;
       switch (effectiveness) {
-        case 8:
-          inverseMultiplier = 0.125;
-          break;
-        case 4:
-          inverseMultiplier = 0.125;
-          break;
-        case 2:
-          inverseMultiplier = 0.25;
-          break;
-        case 1:
-          inverseMultiplier = 0.5;
-          break;
-        case 0.5:
-          inverseMultiplier = 1;
-          break;
-        case 0.25:
-          inverseMultiplier = 2;
-          break;
-        case 0.125:
-          inverseMultiplier = 4;
-          break;
-        case 0:
-          inverseMultiplier = 8;
-          break;
-        default:
-          inverseMultiplier = 1;
-          break;
+      case 8:
+        inverseMultiplier = 0.125;
+        break;
+      case 4:
+        inverseMultiplier = 0.125;
+        break;
+      case 2:
+        inverseMultiplier = 0.25;
+        break;
+      case 1:
+        inverseMultiplier = 0.5;
+        break;
+      case 0.5:
+        inverseMultiplier = 1;
+        break;
+      case 0.25:
+        inverseMultiplier = 2;
+        break;
+      case 0.125:
+        inverseMultiplier = 4;
+        break;
+      case 0:
+        inverseMultiplier = 8;
+        break;
+      default:
+        inverseMultiplier = 1;
+        break;
       }
       this.powerMultiplier *= inverseMultiplier;
       return super.applyPreAttack(pokemon, passive, simulated, defender, move, args);
@@ -5239,7 +5244,7 @@ export class PostVictoryStatsChangeAbAttr extends PostVictoryAbAttr {
   }
 
   applyPostVictory(pokemon: Pokemon, passive: boolean, simulated: boolean, args: any[]): boolean | Promise<boolean> {
-    if(simulated) {
+    if (simulated) {
       return false;
     }
     pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, this.stats, this.levels));
@@ -5326,10 +5331,10 @@ export class PostTurnChanceStatusAbAttr extends PostTurnAbAttr {
 
   applyPostTurn(pokemon: Pokemon, passive: boolean, simulated: boolean, args: any[]): boolean {
     if (!simulated && this.condition(pokemon)) {
-        const status = this.statuses[pokemon.randSeedInt(this.statuses.length)];
-        const target = this.selfTarget ? pokemon : pokemon.getOpponents()[0];
-        target.trySetStatus(status, true);
-        return true;
+      const status = this.statuses[pokemon.randSeedInt(this.statuses.length)];
+      const target = this.selfTarget ? pokemon : pokemon.getOpponents()[0];
+      target.trySetStatus(status, true);
+      return true;
     }
     return false;
   }
@@ -5347,13 +5352,13 @@ export class PostAttackChanceStatusRemoveAbAttr extends PostAttackAbAttr {
 
   applyPostAttack(pokemon: Pokemon, passive: boolean, simulated: boolean, defender: Pokemon, move: Move, hitResult: HitResult, args: any[]): boolean {
     if (!simulated && pokemon != defender && this.condition(pokemon, defender, move)) {
-        const target = this.selfTarget ? pokemon : defender;
-        if(target.status != undefined) {
-          target.scene.queueMessage(getPokemonMessage(target, getStatusEffectHealText(target.status?.effect, getPokemonNameWithAffix(target))));
-          target.resetStatus(false);
-          target.updateInfo();
-          return true;
-        }
+      const target = this.selfTarget ? pokemon : defender;
+      if (target.status != undefined) {
+        target.scene.queueMessage(getPokemonMessage(target, getStatusEffectHealText(target.status?.effect, getPokemonNameWithAffix(target))));
+        target.resetStatus(false);
+        target.updateInfo();
+        return true;
+      }
     }
     return false;
   }
@@ -5381,7 +5386,7 @@ export class PostAttackTagOrStatusAbAttr extends PostAttackAbAttr {
     if (!simulated && pokemon != defender && this.condition(pokemon, defender, move)) {
       if (randSeedChance(this.tagChance)) {
         const tag = this.tags[pokemon.randSeedInt(this.tags.length)];
-        addTagToPokemonWithAbility(defender, tag, pokemon.id, move.id)
+        addTagToPokemonWithAbility(defender, tag, pokemon.id, move.id);
       }
       if (randSeedChance(this.statusChance)) {
         const status = this.statuses[pokemon.randSeedInt(this.statuses.length)];
@@ -5451,7 +5456,7 @@ export class PostTurnHealConditionAbAttr extends PostTurnAbAttr {
       const scene = target.scene;
       const abilityName = (!passive ? target.getAbility() : target.getPassiveAbility()).name;
       scene.unshiftPhase(new PokemonHealPhase(scene, target.getBattlerIndex(),
-          Math.max(Math.floor(target.getMaxHp() * this.hpRatio), 1), getPokemonMessage(pokemon, i18next.t("abilityTrigger:restoredHPLittle", { abilityName: abilityName })), true));
+        Math.max(Math.floor(target.getMaxHp() * this.hpRatio), 1), getPokemonMessage(pokemon, i18next.t("abilityTrigger:restoredHPLittle", { abilityName: abilityName })), true));
       return true;
     }
 
@@ -5595,9 +5600,9 @@ export class PostDefendApplyArenaTrapTagsAbAttr extends PostDefendAbAttr {
         if (randomValue < accumulatedChance) {
           pokemon.scene.arena.addTag(tag.type, 0, undefined, pokemon.id, pokemon.isPlayer() ? ArenaTagSide.ENEMY : ArenaTagSide.PLAYER);
           return true;
-          }
         }
       }
+    }
     return false;
   }
 }
@@ -5677,11 +5682,11 @@ export class PostAttackStealAndStatChangeAbAttr extends PostAttackAbAttr {
   private selfTarget: boolean;
 
   constructor(
-      stealCondition: PokemonAttackCondition | boolean | number = true,
-      statCondition: PokemonAttackCondition | boolean | number = true,
-      stats: BattleStat | BattleStat[],
-      levels: integer,
-      selfTarget: boolean = true
+    stealCondition: PokemonAttackCondition | boolean | number = true,
+    statCondition: PokemonAttackCondition | boolean | number = true,
+    stats: BattleStat | BattleStat[],
+    levels: integer,
+    selfTarget: boolean = true
   ) {
     super();
     this.stealCondition = stealCondition;
@@ -5692,25 +5697,25 @@ export class PostAttackStealAndStatChangeAbAttr extends PostAttackAbAttr {
   }
 
   async applyPostAttack(pokemon: Pokemon, passive: boolean, simulated: boolean, defender: Pokemon, move: Move, hitResult: HitResult, args: any[]): Promise<boolean> {
-      let stealSuccess = false;
-      if (!simulated && pokemon != defender && attackConditionMet(this.stealCondition, pokemon, defender, move)) {
+    let stealSuccess = false;
+    if (!simulated && pokemon != defender && attackConditionMet(this.stealCondition, pokemon, defender, move)) {
       const heldItems = this.getTargetHeldItems(defender).filter(i => i.isTransferrable);
-        if (heldItems.length) {
-          const stolenItem = heldItems[pokemon.randSeedInt(heldItems.length)];
-          stealSuccess = await pokemon.scene.tryTransferHeldItemModifier(stolenItem, pokemon, false);
-          if (stealSuccess) {
-              pokemon.scene.queueMessage(i18next.t("abilityTriggers:postAttackStealHeldItem", { pokemonNameWithAffix: getPokemonNameWithAffix(pokemon), defenderName: defender.name, stolenItemType: stolenItem.type.name }));
-          }
+      if (heldItems.length) {
+        const stolenItem = heldItems[pokemon.randSeedInt(heldItems.length)];
+        stealSuccess = await pokemon.scene.tryTransferHeldItemModifier(stolenItem, pokemon, false);
+        if (stealSuccess) {
+          pokemon.scene.queueMessage(i18next.t("abilityTriggers:postAttackStealHeldItem", { pokemonNameWithAffix: getPokemonNameWithAffix(pokemon), defenderName: defender.name, stolenItemType: stolenItem.type.name }));
         }
       }
+    }
 
-      if (stealSuccess && attackConditionMet(this.statCondition, pokemon, defender, move)) {
-        const target = this.selfTarget ? pokemon : defender;
+    if (stealSuccess && attackConditionMet(this.statCondition, pokemon, defender, move)) {
+      const target = this.selfTarget ? pokemon : defender;
       await new Promise<void>((resolve) => {
         target.scene.unshiftPhase(new StatChangePhase(target.scene, target.getBattlerIndex(), this.selfTarget, this.stats, this.levels));
         resolve();
       });
-      }
+    }
 
     return stealSuccess;
   }
@@ -5723,7 +5728,7 @@ export class PostAttackStealAndStatChangeAbAttr extends PostAttackAbAttr {
 
 export class OctoHitMinMaxAbAttr extends AbAttr {
   apply(pokemon: Pokemon, passive: boolean, simulated: boolean, cancelled: Utils.BooleanHolder, args: any[]): boolean {
-    if(simulated) {
+    if (simulated) {
       return false;
     }
     (args[0] as Utils.IntegerHolder).value = MultiHitType._4_TO_8;
@@ -5774,7 +5779,7 @@ export class PostAttackRandStatChangeAbAttr extends PostAttackAbAttr {
     if (!simulated && pokemon != defender && this.condition(pokemon, defender, move)) {
       const randomStat = this.stats[pokemon.randSeedInt(this.stats.length)];
       const target = this.selfTarget ? pokemon : defender;
-       pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, target.getBattlerIndex(), this.selfTarget, [randomStat], this.levels));
+      pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, target.getBattlerIndex(), this.selfTarget, [randomStat], this.levels));
       return true;
     }
     return false;
@@ -6142,7 +6147,7 @@ export function initAbilities() {
       .attr(BonusCritAbAttr)
       .partial(),
     new Ability(Abilities.AFTERMATH, 4)
-      .attr(PostFaintContactDamageAbAttr,4)
+      .attr(PostFaintContactDamageAbAttr, 4)
       .bypassFaint(),
     new Ability(Abilities.ANTICIPATION, 4)
       .conditionalAttr(getAnticipationCondition(), PostSummonMessageAbAttr, (pokemon: Pokemon) => i18next.t("abilityTriggers:postSummonAnticipation", { pokemonNameWithAffix: getPokemonNameWithAffix(pokemon) })),
@@ -6155,7 +6160,7 @@ export function initAbilities() {
 
       .attr(DamageBoostAbAttr, 2, (user, target, move) => target.getAttackTypeEffectiveness(move.type, user) <= 0.5),
     new Ability(Abilities.FILTER, 4)
-      .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75)
       .ignorable(),
     new Ability(Abilities.SLOW_START, 4)
       .attr(PostSummonAddBattlerTagAbAttr, BattlerTagType.SLOW_START, 5),
@@ -6171,7 +6176,7 @@ export function initAbilities() {
       .attr(PostWeatherLapseHealAbAttr, 1, WeatherType.HAIL, WeatherType.SNOW)
       .partial(),
     new Ability(Abilities.SOLID_ROCK, 4)
-      .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75)
       .ignorable(),
     new Ability(Abilities.SNOW_WARNING, 4)
       .attr(PostSummonWeatherChangeAbAttr, WeatherType.SNOW)
@@ -6571,7 +6576,7 @@ export function initAbilities() {
     new Ability(Abilities.SHADOW_SHIELD, 7)
       .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.isFullHp(), 0.5),
     new Ability(Abilities.PRISM_ARMOR, 7)
-      .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75),
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75),
     new Ability(Abilities.NEUROFORCE, 7)
 
       .attr(MovePowerBoostAbAttr, (user, target, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 1.25),
@@ -6869,636 +6874,642 @@ export function initAbilities() {
     new Ability(Abilities.POISON_PUPPETEER, 9)
       .attr(UncopiableAbilityAbAttr)
       .attr(UnswappableAbilityAbAttr)
-        .conditionalAttr(pokemon => pokemon.species.speciesId===Species.PECHARUNT, ConfusionOnStatusEffectAbAttr, StatusEffect.POISON, StatusEffect.TOXIC),
+      .conditionalAttr(pokemon => pokemon.species.speciesId===Species.PECHARUNT, ConfusionOnStatusEffectAbAttr, StatusEffect.POISON, StatusEffect.TOXIC),
 
-      new Ability(Abilities.UNLEASHED, 9)
-          .attr(LowHpMoveTypePowerBoostAbAttr, Type.ALL),
-      new Ability(Abilities.HELL_FLAME, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIRE),
-      new Ability(Abilities.PSYCHO_LEAF, 9)
-          .attr(MoveTypeChangeAbAttr, Type.PSYCHIC, 1.2, (user, target, move) => move.type === Type.GRASS),
-      new Ability(Abilities.GROUND_FLAME, 9)
-          .attr(MoveTypeChangeAbAttr, Type.GROUND, 1.2, (user, target, move) => move.type === Type.FIRE),
-      new Ability(Abilities.MAGICAL_WATER, 9)
-          .attr(MoveTypeChangeAbAttr, Type.FAIRY, 1.2, (user, target, move) => move.type === Type.WATER),
-      new Ability(Abilities.NUCLEAR_ENERGY, 9)
-          .attr(MoveTypeChangeAbAttr, Type.ELECTRIC, 1.2, (user, target, move) => move.type === Type.POISON),
-      new Ability(Abilities.POISON_KING, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.POISON, 1.6),
-      new Ability(Abilities.SOLID_KONG, 4)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.5)
-          .ignorable(),
-      new Ability(Abilities.SCREEPY, 4)
-          .attr(IgnoreTypeImmunityAbAttr, Type.NORMAL, [Type.GHOST])
-          .attr(MoveTypePowerBoostAbAttr, Type.GHOST,1.3)
-          .attr(IntimidateImmunityAbAttr),
-      new Ability(Abilities.GOD_FIST, 4)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.PUNCHING_MOVE), 1.5),
-      new Ability(Abilities.PARENTAL_HAUNTING, 9)
-          .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type !== Type.NORMAL),
+    new Ability(Abilities.UNLEASHED, 9)
+      .attr(LowHpMoveTypePowerBoostAbAttr, Type.ALL),
+    new Ability(Abilities.HELL_FLAME, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIRE),
+    new Ability(Abilities.PSYCHO_LEAF, 9)
+      .attr(MoveTypeChangeAbAttr, Type.PSYCHIC, 1.2, (user, target, move) => move.type === Type.GRASS),
+    new Ability(Abilities.GROUND_FLAME, 9)
+      .attr(MoveTypeChangeAbAttr, Type.GROUND, 1.2, (user, target, move) => move.type === Type.FIRE),
+    new Ability(Abilities.MAGICAL_WATER, 9)
+      .attr(MoveTypeChangeAbAttr, Type.FAIRY, 1.2, (user, target, move) => move.type === Type.WATER),
+    new Ability(Abilities.NUCLEAR_ENERGY, 9)
+      .attr(MoveTypeChangeAbAttr, Type.ELECTRIC, 1.2, (user, target, move) => move.type === Type.POISON),
+    new Ability(Abilities.POISON_KING, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.POISON, 1.6),
+    new Ability(Abilities.SOLID_KONG, 4)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.5)
+      .ignorable(),
+    new Ability(Abilities.SCREEPY, 4)
+      .attr(IgnoreTypeImmunityAbAttr, Type.NORMAL, [Type.GHOST])
+      .attr(MoveTypePowerBoostAbAttr, Type.GHOST, 1.3)
+      .attr(IntimidateImmunityAbAttr),
+    new Ability(Abilities.GOD_FIST, 4)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.PUNCHING_MOVE), 1.5),
+    new Ability(Abilities.PARENTAL_HAUNTING, 9)
+      .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type !== Type.NORMAL),
 
-      new Ability(Abilities.NIGHTMARATE, 4)
-          .attr(PrimaryTypeChangeAbAttr, 1.2),
-      new Ability(Abilities.TERRIFY, 3)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.ATK, BattleStat.SPATK], -1, false, true),
-      new Ability(Abilities.THUNDER_AND_FIRE, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.ELECTRIC, 2),
-      new Ability(Abilities.ELECTAFIRE_ABSORB, 9)
-          .attr(TypeImmunityHealAbAttr, Type.FIRE)
-          .attr(TypeImmunityHealAbAttr, Type.ELECTRIC),
-      new Ability(Abilities.DIRT_THICK, 9)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 0.5)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.GROUND, 0.5),
-      new Ability(Abilities.ARCTIC_BLAZE, 9)
-          .attr(HpGatedTypeChangeAbAttr, Type.FIRE, 1.35, 0.65, (user, target, move) => move.type === Type.ICE, )
-          .attr(HpGatedTypeChangeAbAttr, Type.ICE, 1.35, 0.65, (user, target, move) => move.type === Type.FIRE,),
-      new Ability(Abilities.STEAMIFY, 9)
-          .attr(MoveTypeChangeAbAttr, Type.FIRE, 1.2, (user, target, move) => move.type === Type.WATER),
-      new Ability(Abilities.PREHISTORIC_HUNT, 9)
-          .attr(PostTurnWeatherChangeAbAttr, WeatherType.RAIN, (pokemon) => randSeedChance(30))
-          .conditionalAttr(getWeatherCondition(WeatherType.SUNNY, WeatherType.HARSH_SUN, WeatherType.HEAVY_RAIN, WeatherType.RAIN, WeatherType.HAIL, WeatherType.SNOW), BattleStatMultiplierAbAttr, BattleStat.SPD, 2),
-      new Ability(Abilities.POP_UP, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF], -1, false)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.SPD, 1, true),
-      new Ability(Abilities.EARTH_SPEEDER, 9)
-          .attr(TypeImmunityStatChangeAbAttr, Type.GROUND, BattleStat.SPD, 1),
+    new Ability(Abilities.NIGHTMARATE, 4)
+      .attr(PrimaryTypeChangeAbAttr, 1.2),
+    new Ability(Abilities.TERRIFY, 3)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.ATK, BattleStat.SPATK], -1, false, true),
+    new Ability(Abilities.THUNDER_AND_FIRE, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.ELECTRIC, 2),
+    new Ability(Abilities.ELECTAFIRE_ABSORB, 9)
+      .attr(TypeImmunityHealAbAttr, Type.FIRE)
+      .attr(TypeImmunityHealAbAttr, Type.ELECTRIC),
+    new Ability(Abilities.DIRT_THICK, 9)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 0.5)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.GROUND, 0.5),
+    new Ability(Abilities.ARCTIC_BLAZE, 9)
+      .attr(HpGatedTypeChangeAbAttr, Type.FIRE, 1.35, 0.65, (user, target, move) => move.type === Type.ICE, )
+      .attr(HpGatedTypeChangeAbAttr, Type.ICE, 1.35, 0.65, (user, target, move) => move.type === Type.FIRE,),
+    new Ability(Abilities.STEAMIFY, 9)
+      .attr(MoveTypeChangeAbAttr, Type.FIRE, 1.2, (user, target, move) => move.type === Type.WATER),
+    new Ability(Abilities.PREHISTORIC_HUNT, 9)
+      .attr(PostTurnWeatherChangeAbAttr, WeatherType.RAIN, (pokemon) => randSeedChance(30))
+      .conditionalAttr(getWeatherCondition(WeatherType.SUNNY, WeatherType.HARSH_SUN, WeatherType.HEAVY_RAIN, WeatherType.RAIN, WeatherType.HAIL, WeatherType.SNOW), BattleStatMultiplierAbAttr, BattleStat.SPD, 2),
+    new Ability(Abilities.POP_UP, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF], -1, false)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.SPD, 1, true),
+    new Ability(Abilities.EARTH_SPEEDER, 9)
+      .attr(TypeImmunityStatChangeAbAttr, Type.GROUND, BattleStat.SPD, 1),
 
-      new Ability(Abilities.KNOCKOUT, 9)
-          .attr(ConditionalCritAbAttr, (user, target, move) => user!.getHpRatio() <= 0.5 && randSeedChance(35)),
-      new Ability(Abilities.FINAL_ROUND, 9)
-          .attr(LowHpMoveTypePowerBoostAbAttr, Type.FIGHTING),
-      new Ability(Abilities.KICK_PUNCH, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("kick") || move.hasFlag(MoveFlags.PUNCHING_MOVE), 1.3),
-      new Ability(Abilities.STAB_NORMAL, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.NORMAL, 1.3),
-      new Ability(Abilities.ADAPTIVE_AI, 9)
-          .attr(OppDownloadAbAttr),
-      new Ability(Abilities.ELECTRIC, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ELECTRIC, 1.5)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 2)
-          .attr(MoveTypeChangeAbAttr, Type.ELECTRIC, 1.2, (user, target, move) => move.type === Type.NORMAL),
-      new Ability(Abilities.EXISTENCE, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ALL, 1.2)
-          .attr(ReceivedMoveDamageNeutralAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2)
-          .attr(MovePowerNeutralAbAttr, (target, user, move) => target!.getAttackTypeEffectiveness(move.type, user!) >= 2),
-      new Ability(Abilities.ALL_CONSUMING, 9)
-          .attr(AllConsumingAbAttr, 1/8, 1/8),
-      new Ability(Abilities.CORRUPT, 9)
-          .attr(PostAttackApplyStatusEffectAbAttr, false, 70, StatusEffect.TOXIC),
-      new Ability(Abilities.DRAGON_KING, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.DRAGON, 1.6),
-      new Ability(Abilities.SAND_CORRUPTION, 9)
-          .attr(PostDefendContactDamageAbAttr, 8)
-          .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), BattleStat.SPD, -1, false)
-          .bypassFaint(),
-      new Ability(Abilities.ORGANIC_TWIST, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.GRASS, Type.ROCK, 2),
-      new Ability(Abilities.HEALTHY_SOAK, 9)
-          .attr(TypeImmunityStatsChangeAbAttr, Type.WATER, [BattleStat.SPD, BattleStat.ATK], 1),
-      new Ability(Abilities.INK_BLINDNESS, 9)
-          .attr(PostAttackApplyTagAbAttr, false, 35, [BattlerTagType.CONFUSED], 1),
-      new Ability(Abilities.INK_FRY, 9)
-          .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.SPD, BattleStat.SPDEF], Type.WATER, 100),
-      new Ability(Abilities.MOO_TIME, 9)
-          .attr(BattleStatMultiplierAbAttr, BattleStat.DEF, 1.5, (pokemon) => pokemon!.getHpRatio() < 0.5 )
-          .attr(BattleStatMultiplierAbAttr, BattleStat.SPD, 1.5, (pokemon) => pokemon!.getHpRatio() < 0.5 ),
-      new Ability(Abilities.FUEL_EXCHANGE, 9)
-          .attr(PostDefendTypeEffectAbAttr),
-      new Ability(Abilities.SUN_AND_MOON, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.2),
-      new Ability(Abilities.NIGHT_AND_DAY, 9)
-          .attr(HpBasedContactStatusEffectAbAttr, 40, 35),
-      new Ability(Abilities.TWO_HALVES, 9)
-          .attr(SturdySpeedDropAbAttr)
-          .attr(HealAfterHitAbAttr),
-      new Ability(Abilities.ALIEN_ROCK, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.PSYCHIC, Type.ROCK, 2),
-      new Ability(Abilities.ROBOT, 9)
-          .attr(PostSummonStatBoostAbAttr, 1)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1),
-      new Ability(Abilities.GOLEM_PLUS, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.3)
-          .attr(BattleStatMultiplierAbAttr, BattleStat.DEF, 1.3),
-      new Ability(Abilities.NIGHTMARE_FUEL, 9)
-          .attr(PrimaryTypeChangeAbAttr, 1.2),
-      new Ability(Abilities.SMITTYXTV_VIRUS, 9)
-          .attr(PostVictoryTopStatChangeAbAttr, 1)
-          .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.RAND], Type.ALL, 50),
-      new Ability(Abilities.STATIC_CHARGE, 9)
-          .attr(PostDefendContactApplyTagChanceAbAttr, 100, BattlerTagType.CHARGED)
-          .attr(PostDefendContactApplyStatusEffectAbAttr, 30, StatusEffect.PARALYSIS)
-          .ignorable(),
-      new Ability(Abilities.DARK_STAMPEDE, 9)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => move.type === Type.DARK, 1, BattleStat.RAND),
-      new Ability(Abilities.COLOR_CHANGE_DEFENSE, 9)
-          .attr(PostDefendTypeChangePlusAbAttr),
+    new Ability(Abilities.KNOCKOUT, 9)
+      .attr(ConditionalCritAbAttr, (user, target, move) => user!.getHpRatio() <= 0.5 && randSeedChance(35)),
+    new Ability(Abilities.FINAL_ROUND, 9)
+      .attr(LowHpMoveTypePowerBoostAbAttr, Type.FIGHTING),
+    new Ability(Abilities.KICK_PUNCH, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("kick") || move.hasFlag(MoveFlags.PUNCHING_MOVE), 1.3),
+    new Ability(Abilities.STAB_NORMAL, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.NORMAL, 1.3),
+    new Ability(Abilities.ADAPTIVE_AI, 9)
+      .attr(OppDownloadAbAttr),
+    new Ability(Abilities.ELECTRIC, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ELECTRIC, 1.5)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 2)
+      .attr(MoveTypeChangeAbAttr, Type.ELECTRIC, 1.2, (user, target, move) => move.type === Type.NORMAL),
+    new Ability(Abilities.EXISTENCE, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ALL, 1.2)
+      .attr(ReceivedMoveDamageNeutralAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2)
+      .attr(MovePowerNeutralAbAttr, (target, user, move) => target!.getAttackTypeEffectiveness(move.type, user!) >= 2),
+    new Ability(Abilities.ALL_CONSUMING, 9)
+      .attr(AllConsumingAbAttr, 1/8, 1/8),
+    new Ability(Abilities.CORRUPT, 9)
+      .attr(PostAttackApplyStatusEffectAbAttr, false, 70, StatusEffect.TOXIC),
+    new Ability(Abilities.DRAGON_KING, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.DRAGON, 1.6),
+    new Ability(Abilities.SAND_CORRUPTION, 9)
+      .attr(PostDefendContactDamageAbAttr, 8)
+      .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), BattleStat.SPD, -1, false)
+      .bypassFaint(),
+    new Ability(Abilities.ORGANIC_TWIST, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.GRASS, Type.ROCK, 2),
+    new Ability(Abilities.HEALTHY_SOAK, 9)
+      .attr(TypeImmunityStatsChangeAbAttr, Type.WATER, [BattleStat.SPD, BattleStat.ATK], 1),
+    new Ability(Abilities.INK_BLINDNESS, 9)
+      .attr(PostAttackApplyTagAbAttr, false, 35, [BattlerTagType.CONFUSED], 1),
+    new Ability(Abilities.INK_FRY, 9)
+      .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.SPD, BattleStat.SPDEF], Type.WATER, 100),
+    new Ability(Abilities.MOO_TIME, 9)
+      .attr(BattleStatMultiplierAbAttr, BattleStat.DEF, 1.5, (pokemon) => pokemon!.getHpRatio() < 0.5 )
+      .attr(BattleStatMultiplierAbAttr, BattleStat.SPD, 1.5, (pokemon) => pokemon!.getHpRatio() < 0.5 ),
+    new Ability(Abilities.FUEL_EXCHANGE, 9)
+      .attr(PostDefendTypeEffectAbAttr),
+    new Ability(Abilities.SUN_AND_MOON, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.2),
+    new Ability(Abilities.NIGHT_AND_DAY, 9)
+      .attr(HpBasedContactStatusEffectAbAttr, 40, 35),
+    new Ability(Abilities.TWO_HALVES, 9)
+      .attr(SturdySpeedDropAbAttr)
+      .attr(HealAfterHitAbAttr),
+    new Ability(Abilities.ALIEN_ROCK, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.PSYCHIC, Type.ROCK, 2),
+    new Ability(Abilities.ROBOT, 9)
+      .attr(PostSummonStatBoostAbAttr, 1)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1),
+    new Ability(Abilities.GOLEM_PLUS, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.3)
+      .attr(BattleStatMultiplierAbAttr, BattleStat.DEF, 1.3),
+    new Ability(Abilities.NIGHTMARE_FUEL, 9)
+      .attr(PrimaryTypeChangeAbAttr, 1.2),
+    new Ability(Abilities.SMITTYXTV_VIRUS, 9)
+      .attr(PostVictoryTopStatChangeAbAttr, 1)
+      .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.RAND], Type.ALL, 50),
+    new Ability(Abilities.STATIC_CHARGE, 9)
+      .attr(PostDefendContactApplyTagChanceAbAttr, 100, BattlerTagType.CHARGED)
+      .attr(PostDefendContactApplyStatusEffectAbAttr, 30, StatusEffect.PARALYSIS)
+      .ignorable(),
+    new Ability(Abilities.DARK_STAMPEDE, 9)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => move.type === Type.DARK, 1, BattleStat.RAND),
+    new Ability(Abilities.COLOR_CHANGE_DEFENSE, 9)
+      .attr(PostDefendTypeChangePlusAbAttr),
 
-      new Ability(Abilities.COLOR_CHANGE_STEAL, 9)
-          .attr(PostDefendTypeChangeAbAttr)
-          .attr(PostAttackStealHeldItemAbAttr, (user, target, move) => user!.getTypes(true).includes(target!.getTypes(true)[0])),
-      new Ability(Abilities.HAUNTING_ECHO, 9)
-          .attr(PostAttackTypeStatusAndDamageAbAttr, Type.GHOST, StatusEffect.PARALYSIS, 30, 1/16),
-      new Ability(Abilities.MATERNAL_SHADE, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.randSeedInt(100) <= 50, 0.25)
-          .ignorable(),
-      new Ability(Abilities.SPIRITUAL_BOND, 9)
-          .attr(PostDefendSpiritualBondAbAttr),
-      new Ability(Abilities.GRAVE_POWER, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => user!.getHpRatio() <= .40, 2.5)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(30)),
-      new Ability(Abilities.UNDEAD, 9)
-          .attr(PreDefendSurviveAbAttr, 70),
-      new Ability(Abilities.SCALE_ARMOR, 9)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 0.75)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.ELECTRIC, 0.75)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.FIRE, 0.75)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.GRASS, 0.75),
-      new Ability(Abilities.PIXELATED_TONGUE, 9)
-          .attr(PostAttackDebuffAndRandStatusAbAttr, [StatusEffect.POISON, StatusEffect.TOXIC, StatusEffect.PARALYSIS, StatusEffect.BURN], 30, BattleStat.RAND, 30),
-      new Ability(Abilities.STATIC_TASTE, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => target?.status?.effect === StatusEffect.PARALYSIS, 1.5)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.PARALYSIS, 35),
-      new Ability(Abilities.ROCKY_HORROR_SHOW, 9)
-          .attr(ArenaTrapAbAttr, (user, target) => { return true})
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], 1, true),
-      new Ability(Abilities.HAUNTING_BROADCAST, 9)
-          .attr(PostFaintTagAbAttr, BattlerTagType.CURSED, 1, (fainted, target) => true)
-          .bypassFaint(),
-      new Ability(Abilities.ECTOPLASMIC_TOUCH, 9)
-          .attr(PostAttackContactDamageAbAttr, 12)
-          .attr(PostDefendContactDamageAbAttr, 12),
-      new Ability(Abilities.TOXIC_COMBUSTION, 9)
-          .attr(PostDefendStatusDamageAbAttr, StatusEffect.TOXIC, 1/8)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(30)),
-      new Ability(Abilities.FLAMING_EMISSION, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.POISON, 2),
-      new Ability(Abilities.BURNING_DISEASE, 9)
-          .attr(PostDefendStatusDamageAbAttr, StatusEffect.BURN, 1/8)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(30)),
-      new Ability(Abilities.STEADY_STANCE, 9)
-          .attr(BattleStatMultiplierAbAttr, BattleStat.DEF, 1.2)
-          .attr(BattleStatMultiplierAbAttr, BattleStat.ATK, 1.2)
-          .attr(BattleStatMultiplierAbAttr, BattleStat.SPDEF, 1.2)
-          .attr(BattleStatMultiplierAbAttr, BattleStat.SPATK, 1.2),
-      new Ability(Abilities.BALANCED_KICK, 9)
-          .attr(AlwaysHitAbAttr)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("kick"), 1.2),
-      new Ability(Abilities.PHANTOM_POUCH, 9)
-          .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(30),  1/8)
-          .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(30), 1/8)
-          .attr(PostBattleLootAbAttr),
-      new Ability(Abilities.HAUNTING_SCYTHE, 9)
-          .attr(PreAttackChangeMoveCategoryAbAttr),
-      new Ability(Abilities.SOUL_COLLECTOR, 9)
-          .attr(PreAttackBoostIfCollectedTypeMatchAbAttr)
-          .attr(PostKnockOutCollectAbAttr)
-          .attr(PostFaintLoseCollectedTypeAbAttr)
-          .bypassFaint(),
-      new Ability(Abilities.SHADOW_SYNC, 9)
-          .attr(PostStatChangeSyncHighestStatAbAttr)
-          .attr(MoveTypePowerBoostAbAttr, Type.ALL, 1.2),
-      new Ability(Abilities.FRIGHTFUL_CUTE, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => Utils.randSeedInt(3,1) == 1, 1.5)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => Utils.randSeedInt(3,1) == 1, 0.5),
-      new Ability(Abilities.GHOSTIFY, 9)
-          .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.4, (user, target, move) => move.type === Type.NORMAL),
-      new Ability(Abilities.FOREVER_PARTNER, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ALL, 1.3)
-          .attr(PreDefendSurviveAbAttr, 40),
-      new Ability(Abilities.NEW_ADAPTION, 9)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.FIRE, 0.5)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.GROUND, 0.5)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => (target!.getTypes().includes(Type.FIRE) || target!.getTypes().includes(Type.POISON) || target!.getTypes().includes(Type.WATER)) && move.type === Type.STEEL, 2),
-      new Ability(Abilities.STEEL_STEALER, 9)
-          .attr(TypeImmunityStatChangeAbAttr, Type.STEEL, BattleStat.ATK, 1),
-      new Ability(Abilities.TERA_FORCE, 9)
-          .attr(IgnoreTypeImmunityAbAttr, Type.FLYING, [Type.GROUND])
-          .attr(MoveTypePowerBoostAbAttr, Type.GROUND,1.3)
-          .attr(IntimidateImmunityAbAttr),
-      new Ability(Abilities.MUDIATE, 9)
-          .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.ACC], Type.ALL, 30)
-          .attr(MoveTypeChangeAbAttr, Type.GROUND, 1.2, (user, target, move) => move.type === Type.NORMAL),
-      new Ability(Abilities.GOTTA_GO_FAST, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => user!.scene.currentBattle.turnCommands[target!.getBattlerIndex()]!.command === Command.FIGHT && !target?.getLastXMoves(1).find(m => m.turn === target?.scene.currentBattle.turn), 2)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (user, target, move) => !!target.getLastXMoves(1).find(m => m.turn === target.scene.currentBattle.turn) || user.scene.currentBattle.turnCommands[target.getBattlerIndex()]!.command !== Command.FIGHT, 2),
-      new Ability(Abilities.IM_BLUE, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.WATER)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.FIRE, 0.5)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 0.5)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.STEEL, 0.5)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => (target!.getTypes().includes(Type.FIRE) || target!.getTypes().includes(Type.GROUND) || target!.getTypes().includes(Type.ROCK)), 1.5),
-      new Ability(Abilities.NOT_SHADOW, 9)
-          .attr(RedirectTypeMoveAbAttr, Type.DARK)
-          .attr(TypeImmunityStatChangeAbAttr, Type.DARK, BattleStat.ATK, 1)
-          .attr(RedirectTypeMoveAbAttr, Type.STEEL)
-          .attr(TypeImmunityStatChangeAbAttr, Type.STEEL, BattleStat.DEF, 1)
-          .attr(RedirectTypeMoveAbAttr, Type.GHOST)
-          .attr(TypeImmunityStatChangeAbAttr, Type.GHOST, BattleStat.SPD, 1),
-      new Ability(Abilities.ANIMIFIED, 9)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.NORMAL, 0.5)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.FIGHTING, 0.5)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.POISON, 2)
-          .attr(MoveTypeChangeAbAttr, Type.FAIRY, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PreDefendSurviveAbAttr, 30),
-      new Ability(Abilities.LONG_FORGOTTEN, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF, BattleStat.SPDEF], -1, false),
-      new Ability(Abilities.WAAAA, 9)
-          .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(25))
-          .attr(PostAttackApplyStatusEffectAbAttr, true, 10, StatusEffect.TOXIC),
-      new Ability(Abilities.TOO_LATE, 9)
-          .attr(ChangeMovePriorityAbAttr, (pokemon, move: Move) => true, -2)
-          .attr(PostAttackApplyTagAbAttr, false, 35, [BattlerTagType.CONFUSED, BattlerTagType.DROWSY, BattlerTagType.INFESTATION, BattlerTagType.CURSED], 1),
-      new Ability(Abilities.MEMORIES_OF_TENNIS, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("ball") || move.name.toLowerCase().includes("sphere") || move.name.toLowerCase().includes("orb") || move.name.toLowerCase().includes("circle") || move.name.toLowerCase().includes("bounce") || move.name.toLowerCase().includes("yellow"), 1.5)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.name.toLowerCase().includes("ball") || move.name.toLowerCase().includes("sphere") || move.name.toLowerCase().includes("orb") || move.name.toLowerCase().includes("circle") || move.name.toLowerCase().includes("bounce") || move.name.toLowerCase().includes("yellow") && randSeedChance(30), [BattlerTagType.FLINCHED], 0),
-      new Ability(Abilities.FIRE_RAF_RAF, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.5)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 2)
-          .attr(MoveTypeChangeAbAttr, Type.FIRE, 1.2, (user, target, move) => move.type === Type.NORMAL),
-      new Ability(Abilities.POSITIVITY, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ELECTRIC, 1.2)
-          .attr(PreDefendSurviveAbAttr, 30)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(33), 0.5),
-      new Ability(Abilities.UNFAZED, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.5)
-              .ignorable(),
-      new Ability(Abilities.NIGHTMARE_SAUCE, 9)
-          .attr(PostAttackAbilityGiveOrTagAbAttr, Abilities.COMATOSE, 50, BattlerTagType.NIGHTMARE, 30),
-      new Ability(Abilities.HASH_SLINGING_SLASHER, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SLICING_MOVE), 2),
-      new Ability(Abilities.LIFE_ADVICE, 9)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, 1, true)
-          .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(40),  1/8),
-      new Ability(Abilities.WOOD_CUTTER, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => target!.getTypes().includes(Type.GRASS), 2.5)
-          .attr(PostKnockOutTypeStatsChangeAbAttr, Type.GRASS, [BattleStat.ATK, BattleStat.SPD], 1),
-      new Ability(Abilities.AXE, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SLICING_MOVE), 1.5)
-          .attr(MoveTypePowerBoostAbAttr, Type.STEEL, 1.3),
-      new Ability(Abilities.RUBBER_MAN, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.category === MoveCategory.PHYSICAL || move.type == Type.STEEL, 0.5)
-          .attr(RedirectTypeMoveAbAttr, Type.ELECTRIC)
-          .attr(TypeImmunityStatChangeAbAttr, Type.ELECTRIC, BattleStat.ATK, 1)
-          .ignorable()
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 2)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.type == Type.NORMAL || move.type == Type.FIGHTING || move.type == Type.FLYING, 1.5),
-      new Ability(Abilities.CONQUEROR_HAKI, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(20) , 2)
-          .attr(PostAttackContactApplyStatusEffectAbAttr, 10, StatusEffect.SLEEP, StatusEffect.PARALYSIS)
-          .attr(PostDefendContactApplyStatusEffectAbAttr, 10, StatusEffect.SLEEP, StatusEffect.PARALYSIS),
-      new Ability(Abilities.STRETCHY, 9)
-          .attr(PostAttackApplyTagAbAttr, true, 50, [BattlerTagType.WRAP], 1),
-      new Ability(Abilities.DEMON_SWORDSMAN, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SLICING_MOVE), 1.5)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.STEEL, Type.GHOST, 2, true)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.STEEL, Type.DARK, 2, true),
-      new Ability(Abilities.CURSED_BLADES, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SLICING_MOVE), 1.5)
-          .attr(PostAttackApplyTagAbAttr, true, 20, [BattlerTagType.CURSED], 1),
-      new Ability(Abilities.STRAWHAT, 9)
-          .attr(PreDefendSurviveAbAttr, 15)
-          .attr(VariableMovePowerBoostAbAttr, (user, target, move) => 1 + 0.2 * Math.min(user.isPlayer() ? user.scene.currentBattle.playerFaints : user.scene.currentBattle.enemyFaints, 5)),
-      new Ability(Abilities.FAIRY_FEAR, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.FAIRY, 1.2)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1),
-      new Ability(Abilities.SHADOW_CHARM, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.ATK], -1, false)
-          .attr(ArenaTrapAbAttr, (user, target) => { return true}),
-      new Ability(Abilities.YIN_YANG, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.GHOST, Type.FAIRY, 2),
-      new Ability(Abilities.STUBBORN_STANCE, 9)
-          .attr(PreDefendSurviveAbAttr, 70),
-      new Ability(Abilities.MISERY_TOUCH, 9)
-          .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.RAND], Type.ALL, 100),
-      new Ability(Abilities.JUST_A_JERK, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF], -1, false)
-          .attr(MoveTypePowerBoostAbAttr, Type.DARK, 1.2),
-      new Ability(Abilities.BUGABUGABUGA, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF, BattleStat.ATK, BattleStat.SPDEF, BattleStat.SPATK, BattleStat.SPD], -1, false)
-          .attr(ArenaTrapAbAttr, (user, target) => { return true })
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => true, 1.2)
-          .ignorable(),
-      new Ability(Abilities.JUST_A_MASKED_JERK, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF, BattleStat.RAND], -1, false)
-          .attr(MoveTypePowerBoostAbAttr, Type.ALL, 1.2),
-      new Ability(Abilities.FLAME_SPIRIT, 9)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(10))
-          .attr(RedirectTypeMoveAbAttr, Type.FIRE)
-          .attr(TypeImmunityStatsChangeAbAttr, Type.FIRE, [BattleStat.RAND, BattleStat.RAND], 1),
-      new Ability(Abilities.SOUL_BURN, 9)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(30))
-          .attr(PostDefendStatusDamageAbAttr, StatusEffect.BURN, 1/8),
-      new Ability(Abilities.FALSE_SAFETY, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.SPDEF], -1, false)
-          .attr(PostDefendContactApplyStatusEffectAbAttr, 10, StatusEffect.BURN, StatusEffect.SLEEP, StatusEffect.PARALYSIS)
-        .bypassFaint(),
-      new Ability(Abilities.FOREST_FURY, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.type == Type.GRASS && user!.getHpRatio() <= 0.5, 2.5),
-      new Ability(Abilities.VINE_FIST, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.PUNCHING_MOVE), 1.3)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.hasFlag(MoveFlags.PUNCHING_MOVE) && randSeedChance(30), [BattlerTagType.SEEDED, BattlerTagType.BIND], 1),
-      new Ability(Abilities.THE_AVATAR, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.WATER, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.FLYING, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.GROUND, 1.2),
-      new Ability(Abilities.ENLIGHTENED, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.PSYCHIC, 1.2)
-          .attr(MovePowerNeutralAbAttr, (target, user, move) => target!.getAttackTypeEffectiveness(move.type, user!) < 1),
-      new Ability(Abilities.HAPPY_LITTLE_ACCIDENTS, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => {
-            const power = new Utils.NumberHolder(move.power);
-            applyMoveAttrs(VariablePowerAttr, user, target, move, power);
-            return power.value >= 65 && power.value <= 85;
-          }, 1.5)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => {
-            const power = new Utils.NumberHolder(move.power);
-            applyMoveAttrs(VariablePowerAttr, user, target, move, power);
-            return power.value <= 60;
-          }, 1.75),
-      new Ability(Abilities.ORIGINAL_ASMR, 9)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.SLEEP, (user, target, move) => randSeedChance(20))
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => true, 0.8)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SOUND_BASED), 1.3)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.hasFlag(MoveFlags.SOUND_BASED), 0.5),
-      new Ability(Abilities.AFROPOWER, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(30), 3),
-      new Ability(Abilities.INSECT_INFUSION, 9)
-          .attr(PostAttackApplyTagAbAttr, true, 50, [BattlerTagType.INFESTATION], 5),
-      new Ability(Abilities.SENTIENT_ANT, 9)
-          .attr(OppDownloadAbAttr),
-      new Ability(Abilities.ANT_REGEN, 9)
-          .attr(PostTurnHealPlusAbAttr),
-      new Ability(Abilities.V8_ENGINE, 9)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.SPD, 1),
-      new Ability(Abilities.SELF_DRIVING, 9)
-          .attr(MoveTypeChangeAbAttr, Type.PSYCHIC, 1.5, (user, target, move) => move.type === Type.NORMAL),
-      new Ability(Abilities.LIMITED_EDITION, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], 1, true)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => Utils.randSeedInt(3,1) === 1, 1.2),
-      new Ability(Abilities.FIERY_DISGUISE, 9)
-          .attr(ReceivedMoveDamageAltDisguiseAbAttr,(target, user, move) => target.getHpRatio() === 1 || target.findTag(tag => tag.tagType === BattlerTagType.FIRE_CHARGED) !== null && target.findTag(tag => tag.tagType === BattlerTagType.FIRE_CHARGED) !== undefined, 1, BattlerTagType.FIRE_CHARGED)
-          .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => move.type === Type.FIRE, BattlerTagType.FIRE_CHARGED),
-      new Ability(Abilities.PLAYFUL_BLAZE, 9)
-          .attr(LowHpMoveTypePowerBoostAbAttr, Type.FIRE)
-          .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.ATK], Type.FIRE, 30)
-          .attr(PostAttackTypeStatusAbAttr, (user, target, move) => move.type === Type.FAIRY && Utils.randSeedInt(100) < 10, StatusEffect.BURN),
-      new Ability(Abilities.AQUA_DISGUISE, 9)
-          .attr(ReceivedMoveDamageAltDisguiseAbAttr, (target, user, move) => target.getHpRatio() === 1 || target.findTag(tag => tag.tagType === BattlerTagType.WATER_CHARGED) !== null && target.findTag(tag => tag.tagType === BattlerTagType.WATER_CHARGED) !== undefined, 1, BattlerTagType.WATER_CHARGED)
-          .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => move.type === Type.WATER, BattlerTagType.WATER_CHARGED),
-      new Ability(Abilities.PHANTOM_TORRENT, 9)
-          .attr(LowHpMoveTypePowerBoostAbAttr, Type.WATER)
-          .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.SPATK], Type.WATER, 30)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.FAIRY && randSeedChance(10), [BattlerTagType.WHIRLPOOL], 1),
-      new Ability(Abilities.SILLY_PRESSURE, 9)
-          .attr(IncreasePpAbAttr)
-          .attr(PostSummonMessageAbAttr, (pokemon: Pokemon) => getPokemonMessage(pokemon, i18next.t("abilityTrigger:sillyPressure")))
-          .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.ATK], Type.PSYCHIC, 30)
-          .attr(PostAttackApplyTagAbAttr, false,(user, target, move) => move.type === Type.FAIRY && randSeedChance(10), [BattlerTagType.ENCORE], 1),
-      new Ability(Abilities.TELEKINETIC_DISGUISE, 9)
-          .attr(ReceivedMoveDamageAltDisguiseAbAttr, (target, user, move) => target.getHpRatio() === 1 || target.findTag(tag => tag.tagType === BattlerTagType.PSYCHIC_CHARGED) !== null && target.findTag(tag => tag.tagType === BattlerTagType.PSYCHIC_CHARGED) !== undefined, 1, BattlerTagType.PSYCHIC_CHARGED)
-          .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => move.type === Type.PSYCHIC, BattlerTagType.PSYCHIC_CHARGED),
-      new Ability(Abilities.ELECTRIC_DISGUISE, 9)
-          .attr(ReceivedMoveDamageAltDisguiseAbAttr, (target, user, move) => target.getHpRatio() === 1 || target.findTag(tag => tag.tagType === BattlerTagType.CHARGED) !== null && target.findTag(tag => tag.tagType === BattlerTagType.CHARGED) !== undefined, 1, BattlerTagType.CHARGED)
-          .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => move.type === Type.ELECTRIC, BattlerTagType.CHARGED),
-      new Ability(Abilities.LOVELY_STATIC, 9)
-          .attr(PostDefendContactApplyStatusEffectAbAttr, 30, StatusEffect.PARALYSIS)
-          .bypassFaint()
-          .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.SPATK], Type.ELECTRIC, 30)
-          .attr(PostAttackApplyTagAbAttr, false,(user, target, move) => move.type === Type.FAIRY && randSeedChance(20) && user?.gender != target?.gender, [BattlerTagType.INFATUATED], 1),
-      new Ability(Abilities.ANCIENT_DISGUISE, 9)
-          .attr(ReceivedMoveDamageAltDisguiseAbAttr, (target, user, move) => target.getHpRatio() === 1 || target.findTag(tag => tag.tagType === BattlerTagType.ROCK_CHARGED) !== null && target.findTag(tag => tag.tagType === BattlerTagType.ROCK_CHARGED) !== undefined, 1, BattlerTagType.ROCK_CHARGED)
-          .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => move.type === Type.ROCK, BattlerTagType.ROCK_CHARGED),
-      new Ability(Abilities.MADE_TO_LAST, 9)
-          .attr(PreDefendSurviveAbAttr, 40)
-          .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.SPD], Type.ROCK, 30)
-          .attr(PostAttackApplyTagAbAttr, false,(user, target, move) => move.type === Type.FAIRY && randSeedChance(10), [BattlerTagType.TRAPPED], 1),
-      new Ability(Abilities.MULTI_PIECE, 9)
-          .attr(SturdySpeedDropAbAttr)
-          .attr(HealAfterHitAbAttr),
-      new Ability(Abilities.ALIEN_TYPE, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ICE, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.ELECTRIC, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.GRASS, 1.2),
-      new Ability(Abilities.WATER_POWERED, 9)
-          .attr(MoveTypeChangeAbAttr, Type.WATER, 1.2, (user, target, move) => move.type !== Type.PSYCHIC && move.type !== Type.GROUND)
-          .attr(RedirectTypeMoveAbAttr, Type.WATER)
-          .attr(TypeImmunityStatsChangeAbAttr, Type.WATER, [BattleStat.RAND], 1),
-      new Ability(Abilities.MADE_OF_ICE, 9)
-          .attr(PostDefendContactApplyStatusEffectAbAttr, 30, StatusEffect.FREEZE)
-          .attr(MoveTypePowerBoostAbAttr, Type.ICE, 1.3)
-          .bypassFaint(),
-      new Ability(Abilities.SHREDDED, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(33), 2)
-          .attr(MoveTypeChangeAbAttr, Type.FIGHTING, 1.2, (user, target, move) => move.type === Type.WATER || move.type === Type.NORMAL),
-      new Ability(Abilities.SCULPTED_ICE, 9)
-          .attr(PostTurnRandStatChangeAbAttr, [BattleStat.SPD,BattleStat.DEF,BattleStat.ATK], 1),
-      new Ability(Abilities.QUAKER, 9)
-          .attr(IgnoreTypeImmunityAbAttr, Type.FLYING, [Type.GROUND])
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("quake") || move.name.toLowerCase().includes("magnitude"), 1.5),
-      new Ability(Abilities.ROCK_FORTRESS, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.5)
-          .ignorable(),
-      new Ability(Abilities.ROCK_CONTROL, 9)
-          .attr(PostDefendApplyArenaTrapTagAbAttr, (target, user, move) => move.category === MoveCategory.PHYSICAL, ArenaTagType.STEALTH_ROCK)
-          .bypassFaint()
-          .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.3),
-      new Ability(Abilities.UNSTOPPABLE_POISON, 9)
-          .attr(IgnoreTypeImmunityAbAttr, Type.STEEL, [Type.POISON])
-          .attr(MoveTypePowerBoostAbAttr, Type.POISON, 1.2)
-          .attr(PostAttackApplyStatusEffectAbAttr, true, 30, StatusEffect.TOXIC),
-      new Ability(Abilities.SWIFT_CLAWS, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1.3)
-          .attr(PostAttackRandStatChangeAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT) && randSeedChance(30), 1, [BattleStat.ACC, BattleStat.ATK, BattleStat.SPD]),
-      new Ability(Abilities.TRIPLE_THREAT, 9)
-          .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(10))
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1)
-          .attr(PostAttackContactApplyStatusEffectAbAttr, 10, StatusEffect.FREEZE, StatusEffect.PARALYSIS, StatusEffect.BURN),
-      new Ability(Abilities.DRAGON_WRATH, 9)
-          .attr(PostDefendDamageAbAttr, (target, user, move) => move.hasFlag(MoveFlags.MAKES_CONTACT) && randSeedChance(50), 1/6)
-          .bypassFaint(),
-      new Ability(Abilities.HYDRA_RESILIENCE, 9)
-          .attr(PreDefendFullHpEndureAbAttr)
-          .attr(BlockOneHitKOAbAttr)
-          .attr(PreDefendSurviveAbAttr, 25),
-      new Ability(Abilities.TOXIC_OVERLOAD, 9)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(15))
-          .attr(MovePowerBoostAbAttr, (user, target, move) => target?.status?.effect === StatusEffect.TOXIC || target?.status?.effect === StatusEffect.POISON, 1.75),
-      new Ability(Abilities.RECYCLE_ENERGY, 9)
-          .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(50),  1/8)
-          .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(50), 1/8),
-      new Ability(Abilities.NEET_PRODUCED, 9)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 2)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.NORMAL, 2)
-          .attr(PostBattleLootAbAttr)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => (target!.getTypes().includes(Type.NORMAL) || target!.getTypes().includes(Type.FAIRY) || target!.getTypes().includes(Type.FIGHTING)), 2),
-      new Ability(Abilities.ANCIENT_AUTOMATON, 9)
-          .attr(PostTurnRandStatChangeAbAttr, [BattleStat.SPD,BattleStat.DEF,BattleStat.ATK], 1),
-      new Ability(Abilities.SHADOW_OF_COLOSSUS, 9)
-          .attr(PreDefendSurviveAbAttr, 10)
-          .attr(MoveTypePowerBoostAbAttr, Type.GHOST, 1.3)
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => true, 0.85)
-          .ignorable(),
-      new Ability(Abilities.TRUE_FEAR, 9)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1, false),
-      new Ability(Abilities.SUMO_MASTER, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIGHTING, 1.3)
-          .attr(MoveTypeChangeAbAttr, Type.GROUND, 1.3, (user, target, move) => move.type === Type.NORMAL),
-      new Ability(Abilities.STEADFAST_BULK, 9)
-          .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => randSeedChance(30), BattlerTagType.FLINCHED)
-          .attr(FlinchStatChangeAbAttr, BattleStat.SPD, 2)
-          .attr(FlinchStatChangeAbAttr, [BattleStat.ATK, BattleStat.DEF], 1),
-      new Ability(Abilities.BIG_GUTS, 9)
-          .attr(BypassBurnDamageReductionAbAttr)
-          .conditionalAttr(pokemon => !!pokemon.status || pokemon.hasAbility(Abilities.COMATOSE), BattleStatMultiplierAbAttr, BattleStat.ATK, 2),
-      new Ability(Abilities.LUCHADORS_SPIRIT, 9)
-          .attr(MoveTypeChangeAbAttr, Type.FLYING, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PostVictoryTopStatChangeAbAttr, 1),
-      new Ability(Abilities.MASKED_MIGHT, 9)
-          .attr(BattleStatMultiplierAbAttr, BattleStat.ATK, 2)
-          .attr(BattleStatMultiplierAbAttr, BattleStat.SPATK, 2)
-          .condition((pokemon) => pokemon.getHpRatio() > 0.5),
-      new Ability(Abilities.NACHO_LIBRE, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIGHTING, 1.6),
-      new Ability(Abilities.PSEUDO_SCALE, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => target.getHpRatio() === 1, 0.5)
-          .attr(PostDefendContactDamageAbAttr, 8)
-          .bypassFaint(),
-      new Ability(Abilities.DRACO_FORM, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.DRAGON, 1.2)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.DRAGON, Type.NORMAL, 2),
-      new Ability(Abilities.DITTO_TYPE, 9)
-          .attr(PostDefendTypeChangePlusAbAttr),
-      new Ability(Abilities.MORPHING_BLAZE, 9)
-          .attr(LowHpMoveTypePowerBoostAbAttr, Type.FIRE)
-          .attr(MoveTypeChangeAbAttr, Type.ELECTRIC, 1.2, (user, target, move) => user!.getHpRatio() <= 0.5 && target!.getTypes().includes(Type.WATER) && move.type === Type.FIRE)
-          .attr(MoveTypeChangeAbAttr, Type.WATER, 1.2, (user, target, move) => user!.getHpRatio() <= 0.5 && target!.getTypes().includes(Type.GROUND) && move.type === Type.FIRE),
-      new Ability(Abilities.FLAME_FORM, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.2)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.NORMAL, 1.75),
-      new Ability(Abilities.ULTIMATE_ADAPTATION, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ALL, 1.2)
-          .attr(ReceivedMoveDamageNeutralAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2),
-      new Ability(Abilities.PSEUDO_PERFECTION, 9)
-          .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(10))
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => randSeedChance(10), 0.5)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(10), 2)
-          .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(10),  1/8)
-          .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(10), 1/8),
-      new Ability(Abilities.DNA_CHANGE, 9)
-          .attr(PokemonTypeChangeHealAbAttr, 50, 1/8),
-      new Ability(Abilities.REALISTIC_STATIC, 3)
-          .attr(PostDefendContactApplyStatusEffectAbAttr, 50, StatusEffect.PARALYSIS)
-          .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), BattleStat.RAND, -1, false)
-          .attr(PostDefendContactDamageAbAttr, 8)
-          .bypassFaint(),
-      new Ability(Abilities.MASCOT_FORM, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ELECTRIC, 1.2)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.ELECTRIC, Type.NORMAL, 1.75),
-      new Ability(Abilities.COPY_GUARD, 9)
-          .attr(AlwaysHitAbAttr)
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75),
-      new Ability(Abilities.MUSCLE_FORM, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIGHTING, 1.2)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FIGHTING, Type.NORMAL, 1.75),
-      new Ability(Abilities.UNREAL_PRESSURE, 9)
-          .attr(IncreasePpAbAttr)
-          .attr(PostSummonMessageAbAttr, (pokemon: Pokemon) => getPokemonMessage(pokemon, i18next.t("abilityTrigger:questionPressure")))
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.ACC], -1, false),
-      new Ability(Abilities.PSYCHO_FORM, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.PSYCHIC, 1.2)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.PSYCHIC, Type.NORMAL, 1.75),
-      new Ability(Abilities.CLUB_CLOBBER, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.2)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1.4),
-      new Ability(Abilities.YABA_DABA_DOO, 9)
-          .attr(PostSummonStatBoostAbAttr, 1)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1),
-      new Ability(Abilities.METEOR_PROOF, 9)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 0.75)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.ROCK, 0.75)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.FIRE, 0.75)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.ICE, 0.75),
-      new Ability(Abilities.SHARK_SHRED, 9)
-          .attr(PostAttackContactDamageAbAttr, 8)
-          .attr(PostAttackChanceHealAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1/8),
-      new Ability(Abilities.ATTACK_BOOST, 9)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.ATK, 1),
-      new Ability(Abilities.REVERSED_PSYCHOLOGY, 9)
-          .attr(StatChangeMultiplierAbAttr, -1)
-          .attr(MovePowerInverseAbAttr, (user, target, move) => true, 1),
-      new Ability(Abilities.TAIL_COMMAND, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("tail"), 1.75),
-      new Ability(Abilities.ABYSSAL_AQUA, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.WATER, Type.GHOST, 2, true)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.WATER, Type.DARK, 2, true)
-          .attr(PostAttackApplyTagAbAttr, false, 30, [BattlerTagType.WHIRLPOOL], 1),
-      new Ability(Abilities.OMNISCALE, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => randSeedChance(30), 0.5)
-          .attr(PostDefendStatChangeAbAttr, (target, user, move) => randSeedChance(30), BattleStat.RAND, 1),
-      new Ability(Abilities.BOUNCE_BACK, 9)
-          .attr(PreDefendSurviveAndDamageAbAttr, 30, 1/8),
-      new Ability(Abilities.COUNTER_COAT, 9)
-          .attr(PostAttackContactDamageAbAttr, 6)
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => true, 0.85),
-      new Ability(Abilities.SHINY_SCALE, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => randSeedChance(10), 0),
-      new Ability(Abilities.GOLDEN_LUCK, 9)
-          .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(30)),
-      new Ability(Abilities.ONE_IN_A_MILLION, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(5), 5),
-      new Ability(Abilities.APEX_PREDATOR, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF], -1, false)
-          .attr(PostVictoryTopStatChangeAbAttr,1),
-      new Ability(Abilities.TERROR_TUNNEL, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("dig"), 2),
-      new Ability(Abilities.LOOSE_THREADS, 9)
-          .attr(PostAttackApplyTagAbAttr, false, 30, [BattlerTagType.WRAP], 1)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("bind") || move.name.toLowerCase().includes("wrap"), 5),
-      new Ability(Abilities.STREET_SMART, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.STEEL, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.DARK, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.NORMAL, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIGHTING, 1.2),
-      new Ability(Abilities.BOOSHE_FUR_COAT, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.category === MoveCategory.PHYSICAL, 0.5)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.category === MoveCategory.SPECIAL && randSeedChance(40), 0.75),
-      new Ability(Abilities.CHAMPION, 9)
-          .attr(PostVictoryStatsChangeAbAttr, 1, BattleStat.ATK, BattleStat.DEF, BattleStat.SPATK, BattleStat.SPDEF, BattleStat.SPD)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => true, true),
-      new Ability(Abilities.SNAKE_SCALE, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(50), 0.75)
-          .attr(PostDefendContactApplyStatusEffectAbAttr, 30, StatusEffect.TOXIC),
-      new Ability(Abilities.DEATH_CLAWS, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1.5)
-          .attr(MovePowerNeutralAbAttr, (target, user, move) => target!.getAttackTypeEffectiveness(move.type, user!) < 1),
-      new Ability(Abilities.INDUSTRIAL_POWER, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ELECTRIC, 1.3)
-          .attr(MoveTypePowerBoostAbAttr, Type.STEEL, 1.3)
-          .attr(MoveTypePowerBoostAbAttr, Type.POISON, 1.3),
-      new Ability(Abilities.COG_OVERLOAD, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("gear"), 1.5)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("spin"), 1.5),
-      new Ability(Abilities.MULTI_GEAR, 9)
-          .attr(PostMoveStatChangeAbAttr, (user, target, move) => move.id === Moves.SHIFT_GEAR, 1, [BattleStat.SPD, BattleStat.RAND]),
-      new Ability(Abilities.SUGAR_RUSH, 9)
-          .attr(ChangeMovePriorityAbAttr, (pokemon, move) => pokemon.getHpRatio() > 0.5, 1)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => user!.getHpRatio() > 0.5, 1.2),
-      new Ability(Abilities.LIVING_DELICACY, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], 1, true)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => Utils.randSeedInt(3,1) === 1, 1.5)
-          .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(30), 1/8, false),
-      new Ability(Abilities.ABANDONED, 9)
-          .attr(PostDefendStatChangeAbAttr, (target, user, move) => true, [BattleStat.ATK, BattleStat.SPD], 1),
-      new Ability(Abilities.LAZY_MIGHT, 9)
-          .attr(LowHpMoveTypePowerBoostAbAttr, Type.ALL),
-      new Ability(Abilities.LASAGNA, 9)
-          .attr(PostDefendChanceHealAbAttr, (target, user, move) => target.getHpRatio() <= 0.5,  1/2)
-          .condition(getOncePerBattleCondition(Abilities.LASAGNA)),
-      new Ability(Abilities.ALIEN_CAT, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.PSYCHIC, 1.2)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => (
+    new Ability(Abilities.COLOR_CHANGE_STEAL, 9)
+      .attr(PostDefendTypeChangeAbAttr)
+      .attr(PostAttackStealHeldItemAbAttr, (user, target, move) => user!.getTypes(true).includes(target!.getTypes(true)[0])),
+    new Ability(Abilities.HAUNTING_ECHO, 9)
+      .attr(PostAttackTypeStatusAndDamageAbAttr, Type.GHOST, StatusEffect.PARALYSIS, 30, 1/16),
+    new Ability(Abilities.MATERNAL_SHADE, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.randSeedInt(100) <= 50, 0.25)
+      .ignorable(),
+    new Ability(Abilities.SPIRITUAL_BOND, 9)
+      .attr(PostDefendSpiritualBondAbAttr),
+    new Ability(Abilities.GRAVE_POWER, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => user!.getHpRatio() <= .40, 2.5)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(30)),
+    new Ability(Abilities.UNDEAD, 9)
+      .attr(PreDefendSurviveAbAttr, 70),
+    new Ability(Abilities.SCALE_ARMOR, 9)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 0.75)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.ELECTRIC, 0.75)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.FIRE, 0.75)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.GRASS, 0.75),
+    new Ability(Abilities.PIXELATED_TONGUE, 9)
+      .attr(PostAttackDebuffAndRandStatusAbAttr, [StatusEffect.POISON, StatusEffect.TOXIC, StatusEffect.PARALYSIS, StatusEffect.BURN], 30, BattleStat.RAND, 30),
+    new Ability(Abilities.STATIC_TASTE, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => target?.status?.effect === StatusEffect.PARALYSIS, 1.5)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.PARALYSIS, 35),
+    new Ability(Abilities.ROCKY_HORROR_SHOW, 9)
+      .attr(ArenaTrapAbAttr, (user, target) => {
+        return true;
+      })
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], 1, true),
+    new Ability(Abilities.HAUNTING_BROADCAST, 9)
+      .attr(PostFaintTagAbAttr, BattlerTagType.CURSED, 1, (fainted, target) => true)
+      .bypassFaint(),
+    new Ability(Abilities.ECTOPLASMIC_TOUCH, 9)
+      .attr(PostAttackContactDamageAbAttr, 12)
+      .attr(PostDefendContactDamageAbAttr, 12),
+    new Ability(Abilities.TOXIC_COMBUSTION, 9)
+      .attr(PostDefendStatusDamageAbAttr, StatusEffect.TOXIC, 1/8)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(30)),
+    new Ability(Abilities.FLAMING_EMISSION, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.POISON, 2),
+    new Ability(Abilities.BURNING_DISEASE, 9)
+      .attr(PostDefendStatusDamageAbAttr, StatusEffect.BURN, 1/8)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(30)),
+    new Ability(Abilities.STEADY_STANCE, 9)
+      .attr(BattleStatMultiplierAbAttr, BattleStat.DEF, 1.2)
+      .attr(BattleStatMultiplierAbAttr, BattleStat.ATK, 1.2)
+      .attr(BattleStatMultiplierAbAttr, BattleStat.SPDEF, 1.2)
+      .attr(BattleStatMultiplierAbAttr, BattleStat.SPATK, 1.2),
+    new Ability(Abilities.BALANCED_KICK, 9)
+      .attr(AlwaysHitAbAttr)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("kick"), 1.2),
+    new Ability(Abilities.PHANTOM_POUCH, 9)
+      .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(30),  1/8)
+      .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(30), 1/8)
+      .attr(PostBattleLootAbAttr),
+    new Ability(Abilities.HAUNTING_SCYTHE, 9)
+      .attr(PreAttackChangeMoveCategoryAbAttr),
+    new Ability(Abilities.SOUL_COLLECTOR, 9)
+      .attr(PreAttackBoostIfCollectedTypeMatchAbAttr)
+      .attr(PostKnockOutCollectAbAttr)
+      .attr(PostFaintLoseCollectedTypeAbAttr)
+      .bypassFaint(),
+    new Ability(Abilities.SHADOW_SYNC, 9)
+      .attr(PostStatChangeSyncHighestStatAbAttr)
+      .attr(MoveTypePowerBoostAbAttr, Type.ALL, 1.2),
+    new Ability(Abilities.FRIGHTFUL_CUTE, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => Utils.randSeedInt(3, 1) == 1, 1.5)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => Utils.randSeedInt(3, 1) == 1, 0.5),
+    new Ability(Abilities.GHOSTIFY, 9)
+      .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.4, (user, target, move) => move.type === Type.NORMAL),
+    new Ability(Abilities.FOREVER_PARTNER, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ALL, 1.3)
+      .attr(PreDefendSurviveAbAttr, 40),
+    new Ability(Abilities.NEW_ADAPTION, 9)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.FIRE, 0.5)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.GROUND, 0.5)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => (target!.getTypes().includes(Type.FIRE) || target!.getTypes().includes(Type.POISON) || target!.getTypes().includes(Type.WATER)) && move.type === Type.STEEL, 2),
+    new Ability(Abilities.STEEL_STEALER, 9)
+      .attr(TypeImmunityStatChangeAbAttr, Type.STEEL, BattleStat.ATK, 1),
+    new Ability(Abilities.TERA_FORCE, 9)
+      .attr(IgnoreTypeImmunityAbAttr, Type.FLYING, [Type.GROUND])
+      .attr(MoveTypePowerBoostAbAttr, Type.GROUND, 1.3)
+      .attr(IntimidateImmunityAbAttr),
+    new Ability(Abilities.MUDIATE, 9)
+      .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.ACC], Type.ALL, 30)
+      .attr(MoveTypeChangeAbAttr, Type.GROUND, 1.2, (user, target, move) => move.type === Type.NORMAL),
+    new Ability(Abilities.GOTTA_GO_FAST, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => user!.scene.currentBattle.turnCommands[target!.getBattlerIndex()]!.command === Command.FIGHT && !target?.getLastXMoves(1).find(m => m.turn === target?.scene.currentBattle.turn), 2)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (user, target, move) => !!target.getLastXMoves(1).find(m => m.turn === target.scene.currentBattle.turn) || user.scene.currentBattle.turnCommands[target.getBattlerIndex()]!.command !== Command.FIGHT, 2),
+    new Ability(Abilities.IM_BLUE, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.WATER)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.FIRE, 0.5)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 0.5)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.STEEL, 0.5)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => (target!.getTypes().includes(Type.FIRE) || target!.getTypes().includes(Type.GROUND) || target!.getTypes().includes(Type.ROCK)), 1.5),
+    new Ability(Abilities.NOT_SHADOW, 9)
+      .attr(RedirectTypeMoveAbAttr, Type.DARK)
+      .attr(TypeImmunityStatChangeAbAttr, Type.DARK, BattleStat.ATK, 1)
+      .attr(RedirectTypeMoveAbAttr, Type.STEEL)
+      .attr(TypeImmunityStatChangeAbAttr, Type.STEEL, BattleStat.DEF, 1)
+      .attr(RedirectTypeMoveAbAttr, Type.GHOST)
+      .attr(TypeImmunityStatChangeAbAttr, Type.GHOST, BattleStat.SPD, 1),
+    new Ability(Abilities.ANIMIFIED, 9)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.NORMAL, 0.5)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.FIGHTING, 0.5)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.POISON, 2)
+      .attr(MoveTypeChangeAbAttr, Type.FAIRY, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PreDefendSurviveAbAttr, 30),
+    new Ability(Abilities.LONG_FORGOTTEN, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF, BattleStat.SPDEF], -1, false),
+    new Ability(Abilities.WAAAA, 9)
+      .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(25))
+      .attr(PostAttackApplyStatusEffectAbAttr, true, 10, StatusEffect.TOXIC),
+    new Ability(Abilities.TOO_LATE, 9)
+      .attr(ChangeMovePriorityAbAttr, (pokemon, move: Move) => true, -2)
+      .attr(PostAttackApplyTagAbAttr, false, 35, [BattlerTagType.CONFUSED, BattlerTagType.DROWSY, BattlerTagType.INFESTATION, BattlerTagType.CURSED], 1),
+    new Ability(Abilities.MEMORIES_OF_TENNIS, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("ball") || move.name.toLowerCase().includes("sphere") || move.name.toLowerCase().includes("orb") || move.name.toLowerCase().includes("circle") || move.name.toLowerCase().includes("bounce") || move.name.toLowerCase().includes("yellow"), 1.5)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.name.toLowerCase().includes("ball") || move.name.toLowerCase().includes("sphere") || move.name.toLowerCase().includes("orb") || move.name.toLowerCase().includes("circle") || move.name.toLowerCase().includes("bounce") || move.name.toLowerCase().includes("yellow") && randSeedChance(30), [BattlerTagType.FLINCHED], 0),
+    new Ability(Abilities.FIRE_RAF_RAF, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.5)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 2)
+      .attr(MoveTypeChangeAbAttr, Type.FIRE, 1.2, (user, target, move) => move.type === Type.NORMAL),
+    new Ability(Abilities.POSITIVITY, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ELECTRIC, 1.2)
+      .attr(PreDefendSurviveAbAttr, 30)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(33), 0.5),
+    new Ability(Abilities.UNFAZED, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.5)
+      .ignorable(),
+    new Ability(Abilities.NIGHTMARE_SAUCE, 9)
+      .attr(PostAttackAbilityGiveOrTagAbAttr, Abilities.COMATOSE, 50, BattlerTagType.NIGHTMARE, 30),
+    new Ability(Abilities.HASH_SLINGING_SLASHER, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SLICING_MOVE), 2),
+    new Ability(Abilities.LIFE_ADVICE, 9)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, 1, true)
+      .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(40),  1/8),
+    new Ability(Abilities.WOOD_CUTTER, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => target!.getTypes().includes(Type.GRASS), 2.5)
+      .attr(PostKnockOutTypeStatsChangeAbAttr, Type.GRASS, [BattleStat.ATK, BattleStat.SPD], 1),
+    new Ability(Abilities.AXE, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SLICING_MOVE), 1.5)
+      .attr(MoveTypePowerBoostAbAttr, Type.STEEL, 1.3),
+    new Ability(Abilities.RUBBER_MAN, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.category === MoveCategory.PHYSICAL || move.type == Type.STEEL, 0.5)
+      .attr(RedirectTypeMoveAbAttr, Type.ELECTRIC)
+      .attr(TypeImmunityStatChangeAbAttr, Type.ELECTRIC, BattleStat.ATK, 1)
+      .ignorable()
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 2)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.type == Type.NORMAL || move.type == Type.FIGHTING || move.type == Type.FLYING, 1.5),
+    new Ability(Abilities.CONQUEROR_HAKI, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(20), 2)
+      .attr(PostAttackContactApplyStatusEffectAbAttr, 10, StatusEffect.SLEEP, StatusEffect.PARALYSIS)
+      .attr(PostDefendContactApplyStatusEffectAbAttr, 10, StatusEffect.SLEEP, StatusEffect.PARALYSIS),
+    new Ability(Abilities.STRETCHY, 9)
+      .attr(PostAttackApplyTagAbAttr, true, 50, [BattlerTagType.WRAP], 1),
+    new Ability(Abilities.DEMON_SWORDSMAN, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SLICING_MOVE), 1.5)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.STEEL, Type.GHOST, 2, true)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.STEEL, Type.DARK, 2, true),
+    new Ability(Abilities.CURSED_BLADES, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SLICING_MOVE), 1.5)
+      .attr(PostAttackApplyTagAbAttr, true, 20, [BattlerTagType.CURSED], 1),
+    new Ability(Abilities.STRAWHAT, 9)
+      .attr(PreDefendSurviveAbAttr, 15)
+      .attr(VariableMovePowerBoostAbAttr, (user, target, move) => 1 + 0.2 * Math.min(user.isPlayer() ? user.scene.currentBattle.playerFaints : user.scene.currentBattle.enemyFaints, 5)),
+    new Ability(Abilities.FAIRY_FEAR, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.FAIRY, 1.2)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1),
+    new Ability(Abilities.SHADOW_CHARM, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.ATK], -1, false)
+      .attr(ArenaTrapAbAttr, (user, target) => {
+        return true;
+      }),
+    new Ability(Abilities.YIN_YANG, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.GHOST, Type.FAIRY, 2),
+    new Ability(Abilities.STUBBORN_STANCE, 9)
+      .attr(PreDefendSurviveAbAttr, 70),
+    new Ability(Abilities.MISERY_TOUCH, 9)
+      .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.RAND], Type.ALL, 100),
+    new Ability(Abilities.JUST_A_JERK, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF], -1, false)
+      .attr(MoveTypePowerBoostAbAttr, Type.DARK, 1.2),
+    new Ability(Abilities.BUGABUGABUGA, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF, BattleStat.ATK, BattleStat.SPDEF, BattleStat.SPATK, BattleStat.SPD], -1, false)
+      .attr(ArenaTrapAbAttr, (user, target) => {
+        return true;
+      })
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => true, 1.2)
+      .ignorable(),
+    new Ability(Abilities.JUST_A_MASKED_JERK, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF, BattleStat.RAND], -1, false)
+      .attr(MoveTypePowerBoostAbAttr, Type.ALL, 1.2),
+    new Ability(Abilities.FLAME_SPIRIT, 9)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(10))
+      .attr(RedirectTypeMoveAbAttr, Type.FIRE)
+      .attr(TypeImmunityStatsChangeAbAttr, Type.FIRE, [BattleStat.RAND, BattleStat.RAND], 1),
+    new Ability(Abilities.SOUL_BURN, 9)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(30))
+      .attr(PostDefendStatusDamageAbAttr, StatusEffect.BURN, 1/8),
+    new Ability(Abilities.FALSE_SAFETY, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.SPDEF], -1, false)
+      .attr(PostDefendContactApplyStatusEffectAbAttr, 10, StatusEffect.BURN, StatusEffect.SLEEP, StatusEffect.PARALYSIS)
+      .bypassFaint(),
+    new Ability(Abilities.FOREST_FURY, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.type == Type.GRASS && user!.getHpRatio() <= 0.5, 2.5),
+    new Ability(Abilities.VINE_FIST, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.PUNCHING_MOVE), 1.3)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.hasFlag(MoveFlags.PUNCHING_MOVE) && randSeedChance(30), [BattlerTagType.SEEDED, BattlerTagType.BIND], 1),
+    new Ability(Abilities.THE_AVATAR, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.WATER, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.FLYING, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.GROUND, 1.2),
+    new Ability(Abilities.ENLIGHTENED, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.PSYCHIC, 1.2)
+      .attr(MovePowerNeutralAbAttr, (target, user, move) => target!.getAttackTypeEffectiveness(move.type, user!) < 1),
+    new Ability(Abilities.HAPPY_LITTLE_ACCIDENTS, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => {
+        const power = new Utils.NumberHolder(move.power);
+        applyMoveAttrs(VariablePowerAttr, user, target, move, power);
+        return power.value >= 65 && power.value <= 85;
+      }, 1.5)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => {
+        const power = new Utils.NumberHolder(move.power);
+        applyMoveAttrs(VariablePowerAttr, user, target, move, power);
+        return power.value <= 60;
+      }, 1.75),
+    new Ability(Abilities.ORIGINAL_ASMR, 9)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.SLEEP, (user, target, move) => randSeedChance(20))
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => true, 0.8)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SOUND_BASED), 1.3)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.hasFlag(MoveFlags.SOUND_BASED), 0.5),
+    new Ability(Abilities.AFROPOWER, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(30), 3),
+    new Ability(Abilities.INSECT_INFUSION, 9)
+      .attr(PostAttackApplyTagAbAttr, true, 50, [BattlerTagType.INFESTATION], 5),
+    new Ability(Abilities.SENTIENT_ANT, 9)
+      .attr(OppDownloadAbAttr),
+    new Ability(Abilities.ANT_REGEN, 9)
+      .attr(PostTurnHealPlusAbAttr),
+    new Ability(Abilities.V8_ENGINE, 9)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.SPD, 1),
+    new Ability(Abilities.SELF_DRIVING, 9)
+      .attr(MoveTypeChangeAbAttr, Type.PSYCHIC, 1.5, (user, target, move) => move.type === Type.NORMAL),
+    new Ability(Abilities.LIMITED_EDITION, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], 1, true)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => Utils.randSeedInt(3, 1) === 1, 1.2),
+    new Ability(Abilities.FIERY_DISGUISE, 9)
+      .attr(ReceivedMoveDamageAltDisguiseAbAttr, (target, user, move) => target.getHpRatio() === 1 || target.findTag(tag => tag.tagType === BattlerTagType.FIRE_CHARGED) !== null && target.findTag(tag => tag.tagType === BattlerTagType.FIRE_CHARGED) !== undefined, 1, BattlerTagType.FIRE_CHARGED)
+      .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => move.type === Type.FIRE, BattlerTagType.FIRE_CHARGED),
+    new Ability(Abilities.PLAYFUL_BLAZE, 9)
+      .attr(LowHpMoveTypePowerBoostAbAttr, Type.FIRE)
+      .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.ATK], Type.FIRE, 30)
+      .attr(PostAttackTypeStatusAbAttr, (user, target, move) => move.type === Type.FAIRY && Utils.randSeedInt(100) < 10, StatusEffect.BURN),
+    new Ability(Abilities.AQUA_DISGUISE, 9)
+      .attr(ReceivedMoveDamageAltDisguiseAbAttr, (target, user, move) => target.getHpRatio() === 1 || target.findTag(tag => tag.tagType === BattlerTagType.WATER_CHARGED) !== null && target.findTag(tag => tag.tagType === BattlerTagType.WATER_CHARGED) !== undefined, 1, BattlerTagType.WATER_CHARGED)
+      .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => move.type === Type.WATER, BattlerTagType.WATER_CHARGED),
+    new Ability(Abilities.PHANTOM_TORRENT, 9)
+      .attr(LowHpMoveTypePowerBoostAbAttr, Type.WATER)
+      .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.SPATK], Type.WATER, 30)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.FAIRY && randSeedChance(10), [BattlerTagType.WHIRLPOOL], 1),
+    new Ability(Abilities.SILLY_PRESSURE, 9)
+      .attr(IncreasePpAbAttr)
+      .attr(PostSummonMessageAbAttr, (pokemon: Pokemon) => getPokemonMessage(pokemon, i18next.t("abilityTrigger:sillyPressure")))
+      .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.ATK], Type.PSYCHIC, 30)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.FAIRY && randSeedChance(10), [BattlerTagType.ENCORE], 1),
+    new Ability(Abilities.TELEKINETIC_DISGUISE, 9)
+      .attr(ReceivedMoveDamageAltDisguiseAbAttr, (target, user, move) => target.getHpRatio() === 1 || target.findTag(tag => tag.tagType === BattlerTagType.PSYCHIC_CHARGED) !== null && target.findTag(tag => tag.tagType === BattlerTagType.PSYCHIC_CHARGED) !== undefined, 1, BattlerTagType.PSYCHIC_CHARGED)
+      .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => move.type === Type.PSYCHIC, BattlerTagType.PSYCHIC_CHARGED),
+    new Ability(Abilities.ELECTRIC_DISGUISE, 9)
+      .attr(ReceivedMoveDamageAltDisguiseAbAttr, (target, user, move) => target.getHpRatio() === 1 || target.findTag(tag => tag.tagType === BattlerTagType.CHARGED) !== null && target.findTag(tag => tag.tagType === BattlerTagType.CHARGED) !== undefined, 1, BattlerTagType.CHARGED)
+      .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => move.type === Type.ELECTRIC, BattlerTagType.CHARGED),
+    new Ability(Abilities.LOVELY_STATIC, 9)
+      .attr(PostDefendContactApplyStatusEffectAbAttr, 30, StatusEffect.PARALYSIS)
+      .bypassFaint()
+      .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.SPATK], Type.ELECTRIC, 30)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.FAIRY && randSeedChance(20) && user?.gender != target?.gender, [BattlerTagType.INFATUATED], 1),
+    new Ability(Abilities.ANCIENT_DISGUISE, 9)
+      .attr(ReceivedMoveDamageAltDisguiseAbAttr, (target, user, move) => target.getHpRatio() === 1 || target.findTag(tag => tag.tagType === BattlerTagType.ROCK_CHARGED) !== null && target.findTag(tag => tag.tagType === BattlerTagType.ROCK_CHARGED) !== undefined, 1, BattlerTagType.ROCK_CHARGED)
+      .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => move.type === Type.ROCK, BattlerTagType.ROCK_CHARGED),
+    new Ability(Abilities.MADE_TO_LAST, 9)
+      .attr(PreDefendSurviveAbAttr, 40)
+      .attr(PostAttackTypeStatChangeAbAttr, [BattleStat.SPD], Type.ROCK, 30)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.FAIRY && randSeedChance(10), [BattlerTagType.TRAPPED], 1),
+    new Ability(Abilities.MULTI_PIECE, 9)
+      .attr(SturdySpeedDropAbAttr)
+      .attr(HealAfterHitAbAttr),
+    new Ability(Abilities.ALIEN_TYPE, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ICE, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.ELECTRIC, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.GRASS, 1.2),
+    new Ability(Abilities.WATER_POWERED, 9)
+      .attr(MoveTypeChangeAbAttr, Type.WATER, 1.2, (user, target, move) => move.type !== Type.PSYCHIC && move.type !== Type.GROUND)
+      .attr(RedirectTypeMoveAbAttr, Type.WATER)
+      .attr(TypeImmunityStatsChangeAbAttr, Type.WATER, [BattleStat.RAND], 1),
+    new Ability(Abilities.MADE_OF_ICE, 9)
+      .attr(PostDefendContactApplyStatusEffectAbAttr, 30, StatusEffect.FREEZE)
+      .attr(MoveTypePowerBoostAbAttr, Type.ICE, 1.3)
+      .bypassFaint(),
+    new Ability(Abilities.SHREDDED, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(33), 2)
+      .attr(MoveTypeChangeAbAttr, Type.FIGHTING, 1.2, (user, target, move) => move.type === Type.WATER || move.type === Type.NORMAL),
+    new Ability(Abilities.SCULPTED_ICE, 9)
+      .attr(PostTurnRandStatChangeAbAttr, [BattleStat.SPD, BattleStat.DEF, BattleStat.ATK], 1),
+    new Ability(Abilities.QUAKER, 9)
+      .attr(IgnoreTypeImmunityAbAttr, Type.FLYING, [Type.GROUND])
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("quake") || move.name.toLowerCase().includes("magnitude"), 1.5),
+    new Ability(Abilities.ROCK_FORTRESS, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.5)
+      .ignorable(),
+    new Ability(Abilities.ROCK_CONTROL, 9)
+      .attr(PostDefendApplyArenaTrapTagAbAttr, (target, user, move) => move.category === MoveCategory.PHYSICAL, ArenaTagType.STEALTH_ROCK)
+      .bypassFaint()
+      .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.3),
+    new Ability(Abilities.UNSTOPPABLE_POISON, 9)
+      .attr(IgnoreTypeImmunityAbAttr, Type.STEEL, [Type.POISON])
+      .attr(MoveTypePowerBoostAbAttr, Type.POISON, 1.2)
+      .attr(PostAttackApplyStatusEffectAbAttr, true, 30, StatusEffect.TOXIC),
+    new Ability(Abilities.SWIFT_CLAWS, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1.3)
+      .attr(PostAttackRandStatChangeAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT) && randSeedChance(30), 1, [BattleStat.ACC, BattleStat.ATK, BattleStat.SPD]),
+    new Ability(Abilities.TRIPLE_THREAT, 9)
+      .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(10))
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1)
+      .attr(PostAttackContactApplyStatusEffectAbAttr, 10, StatusEffect.FREEZE, StatusEffect.PARALYSIS, StatusEffect.BURN),
+    new Ability(Abilities.DRAGON_WRATH, 9)
+      .attr(PostDefendDamageAbAttr, (target, user, move) => move.hasFlag(MoveFlags.MAKES_CONTACT) && randSeedChance(50), 1/6)
+      .bypassFaint(),
+    new Ability(Abilities.HYDRA_RESILIENCE, 9)
+      .attr(PreDefendFullHpEndureAbAttr)
+      .attr(BlockOneHitKOAbAttr)
+      .attr(PreDefendSurviveAbAttr, 25),
+    new Ability(Abilities.TOXIC_OVERLOAD, 9)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(15))
+      .attr(MovePowerBoostAbAttr, (user, target, move) => target?.status?.effect === StatusEffect.TOXIC || target?.status?.effect === StatusEffect.POISON, 1.75),
+    new Ability(Abilities.RECYCLE_ENERGY, 9)
+      .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(50),  1/8)
+      .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(50), 1/8),
+    new Ability(Abilities.NEET_PRODUCED, 9)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 2)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.NORMAL, 2)
+      .attr(PostBattleLootAbAttr)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => (target!.getTypes().includes(Type.NORMAL) || target!.getTypes().includes(Type.FAIRY) || target!.getTypes().includes(Type.FIGHTING)), 2),
+    new Ability(Abilities.ANCIENT_AUTOMATON, 9)
+      .attr(PostTurnRandStatChangeAbAttr, [BattleStat.SPD, BattleStat.DEF, BattleStat.ATK], 1),
+    new Ability(Abilities.SHADOW_OF_COLOSSUS, 9)
+      .attr(PreDefendSurviveAbAttr, 10)
+      .attr(MoveTypePowerBoostAbAttr, Type.GHOST, 1.3)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => true, 0.85)
+      .ignorable(),
+    new Ability(Abilities.TRUE_FEAR, 9)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1, false),
+    new Ability(Abilities.SUMO_MASTER, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIGHTING, 1.3)
+      .attr(MoveTypeChangeAbAttr, Type.GROUND, 1.3, (user, target, move) => move.type === Type.NORMAL),
+    new Ability(Abilities.STEADFAST_BULK, 9)
+      .attr(PostDefendApplyBattlerTagAbAttr, (target, user, move) => randSeedChance(30), BattlerTagType.FLINCHED)
+      .attr(FlinchStatChangeAbAttr, BattleStat.SPD, 2)
+      .attr(FlinchStatChangeAbAttr, [BattleStat.ATK, BattleStat.DEF], 1),
+    new Ability(Abilities.BIG_GUTS, 9)
+      .attr(BypassBurnDamageReductionAbAttr)
+      .conditionalAttr(pokemon => !!pokemon.status || pokemon.hasAbility(Abilities.COMATOSE), BattleStatMultiplierAbAttr, BattleStat.ATK, 2),
+    new Ability(Abilities.LUCHADORS_SPIRIT, 9)
+      .attr(MoveTypeChangeAbAttr, Type.FLYING, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PostVictoryTopStatChangeAbAttr, 1),
+    new Ability(Abilities.MASKED_MIGHT, 9)
+      .attr(BattleStatMultiplierAbAttr, BattleStat.ATK, 2)
+      .attr(BattleStatMultiplierAbAttr, BattleStat.SPATK, 2)
+      .condition((pokemon) => pokemon.getHpRatio() > 0.5),
+    new Ability(Abilities.NACHO_LIBRE, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIGHTING, 1.6),
+    new Ability(Abilities.PSEUDO_SCALE, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getHpRatio() === 1, 0.5)
+      .attr(PostDefendContactDamageAbAttr, 8)
+      .bypassFaint(),
+    new Ability(Abilities.DRACO_FORM, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.DRAGON, 1.2)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.DRAGON, Type.NORMAL, 2),
+    new Ability(Abilities.DITTO_TYPE, 9)
+      .attr(PostDefendTypeChangePlusAbAttr),
+    new Ability(Abilities.MORPHING_BLAZE, 9)
+      .attr(LowHpMoveTypePowerBoostAbAttr, Type.FIRE)
+      .attr(MoveTypeChangeAbAttr, Type.ELECTRIC, 1.2, (user, target, move) => user!.getHpRatio() <= 0.5 && target!.getTypes().includes(Type.WATER) && move.type === Type.FIRE)
+      .attr(MoveTypeChangeAbAttr, Type.WATER, 1.2, (user, target, move) => user!.getHpRatio() <= 0.5 && target!.getTypes().includes(Type.GROUND) && move.type === Type.FIRE),
+    new Ability(Abilities.FLAME_FORM, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.2)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.NORMAL, 1.75),
+    new Ability(Abilities.ULTIMATE_ADAPTATION, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ALL, 1.2)
+      .attr(ReceivedMoveDamageNeutralAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2),
+    new Ability(Abilities.PSEUDO_PERFECTION, 9)
+      .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(10))
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(10), 0.5)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(10), 2)
+      .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(10),  1/8)
+      .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(10), 1/8),
+    new Ability(Abilities.DNA_CHANGE, 9)
+      .attr(PokemonTypeChangeHealAbAttr, 50, 1/8),
+    new Ability(Abilities.REALISTIC_STATIC, 3)
+      .attr(PostDefendContactApplyStatusEffectAbAttr, 50, StatusEffect.PARALYSIS)
+      .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), BattleStat.RAND, -1, false)
+      .attr(PostDefendContactDamageAbAttr, 8)
+      .bypassFaint(),
+    new Ability(Abilities.MASCOT_FORM, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ELECTRIC, 1.2)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.ELECTRIC, Type.NORMAL, 1.75),
+    new Ability(Abilities.COPY_GUARD, 9)
+      .attr(AlwaysHitAbAttr)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75),
+    new Ability(Abilities.MUSCLE_FORM, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIGHTING, 1.2)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FIGHTING, Type.NORMAL, 1.75),
+    new Ability(Abilities.UNREAL_PRESSURE, 9)
+      .attr(IncreasePpAbAttr)
+      .attr(PostSummonMessageAbAttr, (pokemon: Pokemon) => getPokemonMessage(pokemon, i18next.t("abilityTrigger:questionPressure")))
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.ACC], -1, false),
+    new Ability(Abilities.PSYCHO_FORM, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.PSYCHIC, 1.2)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.PSYCHIC, Type.NORMAL, 1.75),
+    new Ability(Abilities.CLUB_CLOBBER, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.2)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1.4),
+    new Ability(Abilities.YABA_DABA_DOO, 9)
+      .attr(PostSummonStatBoostAbAttr, 1)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1),
+    new Ability(Abilities.METEOR_PROOF, 9)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.WATER, 0.75)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.ROCK, 0.75)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.FIRE, 0.75)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.ICE, 0.75),
+    new Ability(Abilities.SHARK_SHRED, 9)
+      .attr(PostAttackContactDamageAbAttr, 8)
+      .attr(PostAttackChanceHealAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1/8),
+    new Ability(Abilities.ATTACK_BOOST, 9)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.ATK, 1),
+    new Ability(Abilities.REVERSED_PSYCHOLOGY, 9)
+      .attr(StatChangeMultiplierAbAttr, -1)
+      .attr(MovePowerInverseAbAttr, (user, target, move) => true, 1),
+    new Ability(Abilities.TAIL_COMMAND, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("tail"), 1.75),
+    new Ability(Abilities.ABYSSAL_AQUA, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.WATER, Type.GHOST, 2, true)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.WATER, Type.DARK, 2, true)
+      .attr(PostAttackApplyTagAbAttr, false, 30, [BattlerTagType.WHIRLPOOL], 1),
+    new Ability(Abilities.OMNISCALE, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(30), 0.5)
+      .attr(PostDefendStatChangeAbAttr, (target, user, move) => randSeedChance(30), BattleStat.RAND, 1),
+    new Ability(Abilities.BOUNCE_BACK, 9)
+      .attr(PreDefendSurviveAndDamageAbAttr, 30, 1/8),
+    new Ability(Abilities.COUNTER_COAT, 9)
+      .attr(PostAttackContactDamageAbAttr, 6)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => true, 0.85),
+    new Ability(Abilities.SHINY_SCALE, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(10), 0),
+    new Ability(Abilities.GOLDEN_LUCK, 9)
+      .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(30)),
+    new Ability(Abilities.ONE_IN_A_MILLION, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(5), 5),
+    new Ability(Abilities.APEX_PREDATOR, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.DEF], -1, false)
+      .attr(PostVictoryTopStatChangeAbAttr, 1),
+    new Ability(Abilities.TERROR_TUNNEL, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("dig"), 2),
+    new Ability(Abilities.LOOSE_THREADS, 9)
+      .attr(PostAttackApplyTagAbAttr, false, 30, [BattlerTagType.WRAP], 1)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("bind") || move.name.toLowerCase().includes("wrap"), 5),
+    new Ability(Abilities.STREET_SMART, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.STEEL, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.DARK, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.NORMAL, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIGHTING, 1.2),
+    new Ability(Abilities.BOOSHE_FUR_COAT, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.category === MoveCategory.PHYSICAL, 0.5)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.category === MoveCategory.SPECIAL && randSeedChance(40), 0.75),
+    new Ability(Abilities.CHAMPION, 9)
+      .attr(PostVictoryStatsChangeAbAttr, 1, BattleStat.ATK, BattleStat.DEF, BattleStat.SPATK, BattleStat.SPDEF, BattleStat.SPD)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => true, true),
+    new Ability(Abilities.SNAKE_SCALE, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(50), 0.75)
+      .attr(PostDefendContactApplyStatusEffectAbAttr, 30, StatusEffect.TOXIC),
+    new Ability(Abilities.DEATH_CLAWS, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1.5)
+      .attr(MovePowerNeutralAbAttr, (target, user, move) => target!.getAttackTypeEffectiveness(move.type, user!) < 1),
+    new Ability(Abilities.INDUSTRIAL_POWER, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ELECTRIC, 1.3)
+      .attr(MoveTypePowerBoostAbAttr, Type.STEEL, 1.3)
+      .attr(MoveTypePowerBoostAbAttr, Type.POISON, 1.3),
+    new Ability(Abilities.COG_OVERLOAD, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("gear"), 1.5)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("spin"), 1.5),
+    new Ability(Abilities.MULTI_GEAR, 9)
+      .attr(PostMoveStatChangeAbAttr, (user, target, move) => move.id === Moves.SHIFT_GEAR, 1, [BattleStat.SPD, BattleStat.RAND]),
+    new Ability(Abilities.SUGAR_RUSH, 9)
+      .attr(ChangeMovePriorityAbAttr, (pokemon, move) => pokemon.getHpRatio() > 0.5, 1)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => user!.getHpRatio() > 0.5, 1.2),
+    new Ability(Abilities.LIVING_DELICACY, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], 1, true)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => Utils.randSeedInt(3, 1) === 1, 1.5)
+      .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(30), 1/8, false),
+    new Ability(Abilities.ABANDONED, 9)
+      .attr(PostDefendStatChangeAbAttr, (target, user, move) => true, [BattleStat.ATK, BattleStat.SPD], 1),
+    new Ability(Abilities.LAZY_MIGHT, 9)
+      .attr(LowHpMoveTypePowerBoostAbAttr, Type.ALL),
+    new Ability(Abilities.LASAGNA, 9)
+      .attr(PostDefendChanceHealAbAttr, (target, user, move) => target.getHpRatio() <= 0.5,  1/2)
+      .condition(getOncePerBattleCondition(Abilities.LASAGNA)),
+    new Ability(Abilities.ALIEN_CAT, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.PSYCHIC, 1.2)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => (
               target!.species.name.toLowerCase().includes("meowth") ||
               target!.species.name.toLowerCase().includes("persian") ||
               target!.species.name.toLowerCase().includes("skitty") ||
@@ -7522,590 +7533,590 @@ export function initAbilities() {
               target!.species.name.toLowerCase().includes("pyroar") ||
               target!.species.name.toLowerCase().includes("solgaleo") ||
               target!.species.name.toLowerCase().includes("zeraora")
-          ) && target?.gender != user?.gender, [BattlerTagType.INFATUATED], 1)
-          .attr(TypeImmunityAbAttr, Type.GROUND),
-      new Ability(Abilities.PHASER, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 0),
-      new Ability(Abilities.VIRTUAL_TACOS, 9)
-          .attr(PostTurnHealConditionAbAttr, (pokemon, opponent) => true, 1/8),
-      new Ability(Abilities.HEY_LOOK_AT_ME, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], -1, false)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, 1, true),
-      new Ability(Abilities.LIMITED_TIME, 9)
+      ) && target?.gender != user?.gender, [BattlerTagType.INFATUATED], 1)
+      .attr(TypeImmunityAbAttr, Type.GROUND),
+    new Ability(Abilities.PHASER, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 0),
+    new Ability(Abilities.VIRTUAL_TACOS, 9)
+      .attr(PostTurnHealConditionAbAttr, (pokemon, opponent) => true, 1/8),
+    new Ability(Abilities.HEY_LOOK_AT_ME, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], -1, false)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, 1, true),
+    new Ability(Abilities.LIMITED_TIME, 9)
 
-          .attr(PostSummonStatusEffectAbAttr, (pokemon, opponent) => true, StatusEffect.TOXIC, true)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(30), 3)
-          .attr(PostKnockOutStatChangeAbAttr, BattleStat.RAND, 1),
-      new Ability(Abilities.BOX_BORN, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("ball") || move.name.toLowerCase().includes("sphere") || move.name.toLowerCase().includes("orb"), 0.25)
-          .attr(MoveTypePowerBoostAbAttr, Type.STEEL, 1.2),
-      new Ability(Abilities.IM_A_PICKLE, 9)
-          .attr(TypeImmunityHealAbAttr, Type.WATER)
-          .attr(TypeImmunityStatChangeAbAttr, Type.GRASS, BattleStat.SPD, 1)
-          .attr(TypeImmunityStatChangeAbAttr, Type.STEEL, BattleStat.ATK, 1)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1),
-      new Ability(Abilities.RESOURCEFUL, 9)
-          .attr(PostAttackStealAndStatChangeAbAttr, 30, 30, BattleStat.ATK, 1, true)
-          .attr(PostBattleLootAbAttr, 30),
-      new Ability(Abilities.DEADLY_BRINE, 9)
-          .attr(MoveTypeChangeAbAttr, Type.WATER, 1, (user, target, move) => move.type === Type.NORMAL)
-          .attr(MoveTypePowerBoostAbAttr, Type.WATER, 1.3)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.WATER, Type.POISON, 2)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(10)),
-      new Ability(Abilities.THICC, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(30), 0.75),
-      new Ability(Abilities.ENFORCER, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.STEEL, 2)
-          .attr(PostKnockOutStatChangeAbAttr, BattleStat.ATK, 1),
-      new Ability(Abilities.SPOOKY_SENSE, 9)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.GHOST, 0.75)
-          .attr(ReceivedTypeDamageMultiplierAbAttr, Type.DARK, 0.75)
-          .conditionalAttr(getAnticipationCondition(), PostSummonStatChangeAbAttr, [BattleStat.ATK, BattleStat.SPD], 1, true),
-      new Ability(Abilities.UNYIELDING_COURAGE, 9)
-          .attr(PreDefendFullHpEndureAbAttr)
-          .attr(BlockOneHitKOAbAttr)
-          .attr(PreDefendSurviveAbAttr, 25),
-      new Ability(Abilities.LOVE_POWER, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(50), 2)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => target?.gender != user?.gender && randSeedChance(30), [BattlerTagType.INFATUATED], 1),
-      new Ability(Abilities.SPIRIT_WINDS, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.GHOST, Type.GRASS, 2)
-          .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type === Type.DARK)
-          .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type === Type.NORMAL),
-      new Ability(Abilities.LEAF_DANCER, 9)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => move.type === Type.DARK, 1, BattleStat.RAND)
-          .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.type === Type.GRASS, BattleStat.RAND, 1, true),
-      new Ability(Abilities.SLAYER_SENSEI, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => target!.getTypes().some(t => t === Type.GHOST || t === Type.DARK), 3)
-          .attr(PostKnockOutStatChangeAbAttr, BattleStat.RAND, 1),
-      new Ability(Abilities.BALANCED, 9)
-          .attr(BattlerTagImmunityAbAttr, BattlerTagType.CONFUSED)
-          .attr(AlwaysHitAbAttr)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(50), 0.75),
-      new Ability(Abilities.ENHANCED_FOCUS, 9)
-          .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(25)),
-      new Ability(Abilities.LUCKY_SEVEN, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.power === 70 && randSeedChance(70), 1.7)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(70), 1, BattleStat.RAND),
-      new Ability(Abilities.LAST_LAUGH, 9)
+      .attr(PostSummonStatusEffectAbAttr, (pokemon, opponent) => true, StatusEffect.TOXIC, true)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(30), 3)
+      .attr(PostKnockOutStatChangeAbAttr, BattleStat.RAND, 1),
+    new Ability(Abilities.BOX_BORN, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("ball") || move.name.toLowerCase().includes("sphere") || move.name.toLowerCase().includes("orb"), 0.25)
+      .attr(MoveTypePowerBoostAbAttr, Type.STEEL, 1.2),
+    new Ability(Abilities.IM_A_PICKLE, 9)
+      .attr(TypeImmunityHealAbAttr, Type.WATER)
+      .attr(TypeImmunityStatChangeAbAttr, Type.GRASS, BattleStat.SPD, 1)
+      .attr(TypeImmunityStatChangeAbAttr, Type.STEEL, BattleStat.ATK, 1)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1),
+    new Ability(Abilities.RESOURCEFUL, 9)
+      .attr(PostAttackStealAndStatChangeAbAttr, 30, 30, BattleStat.ATK, 1, true)
+      .attr(PostBattleLootAbAttr, 30),
+    new Ability(Abilities.DEADLY_BRINE, 9)
+      .attr(MoveTypeChangeAbAttr, Type.WATER, 1, (user, target, move) => move.type === Type.NORMAL)
+      .attr(MoveTypePowerBoostAbAttr, Type.WATER, 1.3)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.WATER, Type.POISON, 2)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(10)),
+    new Ability(Abilities.THICC, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(30), 0.75),
+    new Ability(Abilities.ENFORCER, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.STEEL, 2)
+      .attr(PostKnockOutStatChangeAbAttr, BattleStat.ATK, 1),
+    new Ability(Abilities.SPOOKY_SENSE, 9)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.GHOST, 0.75)
+      .attr(ReceivedTypeDamageMultiplierAbAttr, Type.DARK, 0.75)
+      .conditionalAttr(getAnticipationCondition(), PostSummonStatChangeAbAttr, [BattleStat.ATK, BattleStat.SPD], 1, true),
+    new Ability(Abilities.UNYIELDING_COURAGE, 9)
+      .attr(PreDefendFullHpEndureAbAttr)
+      .attr(BlockOneHitKOAbAttr)
+      .attr(PreDefendSurviveAbAttr, 25),
+    new Ability(Abilities.LOVE_POWER, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(50), 2)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => target?.gender != user?.gender && randSeedChance(30), [BattlerTagType.INFATUATED], 1),
+    new Ability(Abilities.SPIRIT_WINDS, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.GHOST, Type.GRASS, 2)
+      .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type === Type.DARK)
+      .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type === Type.NORMAL),
+    new Ability(Abilities.LEAF_DANCER, 9)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => move.type === Type.DARK, 1, BattleStat.RAND)
+      .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.type === Type.GRASS, BattleStat.RAND, 1, true),
+    new Ability(Abilities.SLAYER_SENSEI, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => target!.getTypes().some(t => t === Type.GHOST || t === Type.DARK), 3)
+      .attr(PostKnockOutStatChangeAbAttr, BattleStat.RAND, 1),
+    new Ability(Abilities.BALANCED, 9)
+      .attr(BattlerTagImmunityAbAttr, BattlerTagType.CONFUSED)
+      .attr(AlwaysHitAbAttr)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(50), 0.75),
+    new Ability(Abilities.ENHANCED_FOCUS, 9)
+      .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(25)),
+    new Ability(Abilities.LUCKY_SEVEN, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.power === 70 && randSeedChance(70), 1.7)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(70), 1, BattleStat.RAND),
+    new Ability(Abilities.LAST_LAUGH, 9)
 
-          .attr(PostFaintDamageAbAttr, (fainted, attacker) => true,1/4)
-          .bypassFaint(),
-      new Ability(Abilities.FOX_WISDOM, 9)
-          .attr(MoveTypeChangeAbAttr, Type.PSYCHIC, 1, (user, target, move) => move.type === Type.NORMAL)
-          .attr(MoveTypePowerBoostAbAttr, Type.PSYCHIC, 1.3)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.PSYCHIC, 2),
-      new Ability(Abilities.ETERNAL_YOUTH, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.FAIRY, 1.3)
-          .attr(MoveTypeChangeAbAttr, Type.FAIRY, 1, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PreDefendSurviveAbAttr, 10),
-      new Ability(Abilities.FLAMING_CHAKRA, 9)
-          .attr(MoveTypeChangeAbAttr, Type.FIRE, 1, (user, target, move) => move.type !== Type.PSYCHIC)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.5)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(10)),
-      new Ability(Abilities.ADAPTABUGILITY, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.BUG, 3),
-      new Ability(Abilities.SHELL_REPAIR, 9)
+      .attr(PostFaintDamageAbAttr, (fainted, attacker) => true, 1/4)
+      .bypassFaint(),
+    new Ability(Abilities.FOX_WISDOM, 9)
+      .attr(MoveTypeChangeAbAttr, Type.PSYCHIC, 1, (user, target, move) => move.type === Type.NORMAL)
+      .attr(MoveTypePowerBoostAbAttr, Type.PSYCHIC, 1.3)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.PSYCHIC, 2),
+    new Ability(Abilities.ETERNAL_YOUTH, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.FAIRY, 1.3)
+      .attr(MoveTypeChangeAbAttr, Type.FAIRY, 1, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PreDefendSurviveAbAttr, 10),
+    new Ability(Abilities.FLAMING_CHAKRA, 9)
+      .attr(MoveTypeChangeAbAttr, Type.FIRE, 1, (user, target, move) => move.type !== Type.PSYCHIC)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.5)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(10)),
+    new Ability(Abilities.ADAPTABUGILITY, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.BUG, 3),
+    new Ability(Abilities.SHELL_REPAIR, 9)
 
-          .attr(PostAttackHealAbAttr, (user, target, move) => move.id === Moves.SHELL_SMASH, 1/4)
-          .attr(PostMoveStatChangeAbAttr, (user, target, move) => move.id === Moves.SHELL_SMASH, 1, [BattleStat.DEF, BattleStat.SPDEF], true)
-          .condition(getOncePerBattleCondition(Abilities.SHELL_REPAIR)),
-      new Ability(Abilities.SQUEEZER, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.id === Moves.WRAP, 5)
-          .attr(PostAttackApplyTagAbAttr, false, 30, [BattlerTagType.WRAP], 1),
-      new Ability(Abilities.GREEN_SPAGHETTI_MONSTER, 9)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.GRASS && randSeedChance(15), [BattlerTagType.WRAP], 1)
-          .attr(MoveTypePowerBoostAbAttr, Type.GRASS, 1.2)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => move.type === Type.GRASS && randSeedChance(10), -1, BattleStat.SPD),
-      new Ability(Abilities.LEECH_VINES, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.id === Moves.VINE_WHIP, 2)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.id === Moves.VINE_WHIP && randSeedChance(30), [BattlerTagType.SEEDED, BattlerTagType.WRAP], 1),
-      new Ability(Abilities.REGENERATOR_PLUS, 9)
+      .attr(PostAttackHealAbAttr, (user, target, move) => move.id === Moves.SHELL_SMASH, 1/4)
+      .attr(PostMoveStatChangeAbAttr, (user, target, move) => move.id === Moves.SHELL_SMASH, 1, [BattleStat.DEF, BattleStat.SPDEF], true)
+      .condition(getOncePerBattleCondition(Abilities.SHELL_REPAIR)),
+    new Ability(Abilities.SQUEEZER, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.id === Moves.WRAP, 5)
+      .attr(PostAttackApplyTagAbAttr, false, 30, [BattlerTagType.WRAP], 1),
+    new Ability(Abilities.GREEN_SPAGHETTI_MONSTER, 9)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.GRASS && randSeedChance(15), [BattlerTagType.WRAP], 1)
+      .attr(MoveTypePowerBoostAbAttr, Type.GRASS, 1.2)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => move.type === Type.GRASS && randSeedChance(10), -1, BattleStat.SPD),
+    new Ability(Abilities.LEECH_VINES, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.id === Moves.VINE_WHIP, 2)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.id === Moves.VINE_WHIP && randSeedChance(30), [BattlerTagType.SEEDED, BattlerTagType.WRAP], 1),
+    new Ability(Abilities.REGENERATOR_PLUS, 9)
 
-          .attr(PreSwitchOutHealConditionAbAttr, (switcher, opponent) => true, 45),
-      new Ability(Abilities.PLAGUE_PSYCHE, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.POISON, Type.PSYCHIC, 2)
-          .attr(MoveTypeChangeAbAttr, Type.POISON, 1, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PreSwitchOutHealConditionAbAttr, (switcher, opponent) => true, 45),
+    new Ability(Abilities.PLAGUE_PSYCHE, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.POISON, Type.PSYCHIC, 2)
+      .attr(MoveTypeChangeAbAttr, Type.POISON, 1, (user, target, move) => move.type === Type.NORMAL)
 
-          .attr(PostAttackTagOrStatusAbAttr, (user, target, move) => true, [BattlerTagType.CONFUSED], 10, 1, [StatusEffect.POISON, StatusEffect.TOXIC], 10),
-      new Ability(Abilities.TOXIC_TRANCE, 9)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(30))
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.SLEEP, (user, target, move) => randSeedChance(30))
-          .attr(MovePowerBoostAbAttr, (user, target, move) => user?.status !== null, 1.5),
-      new Ability(Abilities.PERMAFROST_ARMOR, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => [Type.FIRE, Type.ICE, Type.ROCK].includes(move.type), 0.5),
-      new Ability(Abilities.GLACIAL_PACE, 9)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.SPD, -2, false)
-          .attr(MoveTypePowerBoostAbAttr, Type.ICE, 1.2),
-      new Ability(Abilities.ICE_KING, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ICE, 1.5)
-          .attr(MoveTypeChangeAbAttr, Type.ICE, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.FREEZE, (user, target, move) => randSeedChance(5)),
-      new Ability(Abilities.DESPAIR, 9)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1, false)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, 1, true),
-      new Ability(Abilities.OHAYOGOSUMASU, 9)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.ATK, BattleStat.DEF, BattleStat.SPATK, BattleStat.SPDEF, BattleStat.SPD], -1, false),
-      new Ability(Abilities.ABILITY_TEXT_HERE, 9)
-          .attr(PostSummonAbilityGiveAbAttr, (pokemon, opponent) => true, Abilities.ABILITY_TEXT_HERE)
-          .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], 1, true),
-      new Ability(Abilities.EXCEPTION_CAUGHT, 9)
-          .attr(SturdySpeedDropAbAttr)
-          .attr(HealAfterHitAbAttr),
-      new Ability(Abilities.FOUR_O_FOUR, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => randSeedChance(10), 0),
-      new Ability(Abilities.SHADOW_SLAYER, 9)
-          .attr(PostAttackChanceStatusAbAttr, [StatusEffect.BURN, StatusEffect.POISON, StatusEffect.PARALYSIS, StatusEffect.TOXIC], (user, target, move) => move.type === Type.GHOST || move.type === Type.STEEL && randSeedChance(30)),
-      new Ability(Abilities.NIGHTMARE_EMERALD, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.3)
-          .attr(MoveTypePowerBoostAbAttr, Type.DARK, 1.3)
-          .attr(PostAttackAbilityGiveOrTagAbAttr, Abilities.COMATOSE, 50, BattlerTagType.NIGHTMARE, 50),
-      new Ability(Abilities.IMAGINARY, 9)
-          .attr(MoveTypeChangeAbAttr, Type.FAIRY, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.category === MoveCategory.PHYSICAL && randSeedChance(30), 0.5),
-      new Ability(Abilities.SPLINTER_SKIN, 9)
-          .attr(PostDefendContactDamageAbAttr, 1/12)
-          .attr(PostAttackContactDamageAbAttr, 1/12),
-      new Ability(Abilities.JUJUTSU_SORCERER, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => user?.status !== undefined || target?.status !== undefined, 2.5)
-          .attr(PostAttackChanceStatusRemoveAbAttr, (pokemon, defender, move) => randSeedChance(20), true)
-          .attr(PostAttackChanceStatusRemoveAbAttr, (pokemon, defender, move) => randSeedChance(20), false)
-          .attr(PostAttackChanceStatusAbAttr, [StatusEffect.BURN, StatusEffect.POISON, StatusEffect.PARALYSIS, StatusEffect.TOXIC], 30)
-          .attr(BypassBurnDamageReductionAbAttr)
-            .attr(PostTurnChanceStatusAbAttr, (pokemon) => pokemon.status === undefined && randSeedChance(50), [StatusEffect.BURN, StatusEffect.POISON, StatusEffect.PARALYSIS, StatusEffect.TOXIC], true),
-      new Ability(Abilities.TOXIC_KING, 9)
-          .attr(PostAttackApplyStatusEffectAbAttr, true, 100, StatusEffect.TOXIC),
-      new Ability(Abilities.SWAMP_KING, 9)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.POISON, (user, target, move) => randSeedChance(30))
-          .attr(MoveTypeChangeAbAttr, Type.WATER, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.WATER, Type.POISON, 2),
-      new Ability(Abilities.RAGE_SOUL, 9)
-          .attr(VariableMovePowerBoostAbAttr, (user, target, move) => 1 + 0.3 * Math.min(user.isPlayer() ? user.scene.currentBattle.playerFaints : user.scene.currentBattle.enemyFaints, 5)),
-      new Ability(Abilities.DARK_SIDE, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.DARK, 2),
-      new Ability(Abilities.PUPPET_MASTER, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => target?.species.speciesId === Species.MIMIKYU || target?.species.speciesId === Species.SHUPPET || target?.species.speciesId === Species.BANETTE || target?.species.speciesId === Species.GOTHITA || target?.species.speciesId === Species.GOTHORITA || target?.species.speciesId === Species.GOTHITELLE || target?.species.speciesId === Species.HATENNA || target?.species.speciesId === Species.HATTREM || target?.species.speciesId === Species.HATTERENE, 3)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => target!.getTypes().some(t => t === Type.NORMAL || t === Type.FIGHTING) && randSeedChance(20), [BattlerTagType.CURSED, BattlerTagType.BIND], 1)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(10), 0.5),
-      new Ability(Abilities.BLACK_AND_RED, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.FIRE, 2)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(15))
-          .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL),
-      new Ability(Abilities.ZOMBIE_EXPERIENCE, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => target!.getTypes().some(t => t === Type.DARK || t === Type.GHOST || t === Type.GROUND), 2)
-          .attr(PostKnockOutStatChangeAbAttr, [BattleStat.ATK, BattleStat.DEF, BattleStat.SPATK, BattleStat.SPDEF, BattleStat.SPD], 1, (user, target) => target.getTypes().some(t => t === Type.DARK || t === Type.GHOST || t === Type.GROUND)),
-      new Ability(Abilities.LAST_HOPE, 9)
-          .attr(LowHpMoveTypePowerBoostAbAttr, Type.ALL),
-      new Ability(Abilities.UGLY, 9)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, -1, true)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1, false)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1),
-      new Ability(Abilities.BLAND_CARDBOARD_EATER, 9)
-          .attr(TypeImmunityStatChangeAbAttr, Type.GRASS, BattleStat.ATK, 1)
-          .attr(PostAttackHealAbAttr, (user, target, move) => move.type === Type.GRASS, 1/8),
-      new Ability(Abilities.BORING, 9)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, -1, true)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1, false)
-          .attr(MoveTypePowerBoostAbAttr, Type.NORMAL, 1.3),
-      new Ability(Abilities.MOLDY_TOUCH, 9)
+      .attr(PostAttackTagOrStatusAbAttr, (user, target, move) => true, [BattlerTagType.CONFUSED], 10, 1, [StatusEffect.POISON, StatusEffect.TOXIC], 10),
+    new Ability(Abilities.TOXIC_TRANCE, 9)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(30))
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.SLEEP, (user, target, move) => randSeedChance(30))
+      .attr(MovePowerBoostAbAttr, (user, target, move) => user?.status !== null, 1.5),
+    new Ability(Abilities.PERMAFROST_ARMOR, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => [Type.FIRE, Type.ICE, Type.ROCK].includes(move.type), 0.5),
+    new Ability(Abilities.GLACIAL_PACE, 9)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.SPD, -2, false)
+      .attr(MoveTypePowerBoostAbAttr, Type.ICE, 1.2),
+    new Ability(Abilities.ICE_KING, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ICE, 1.5)
+      .attr(MoveTypeChangeAbAttr, Type.ICE, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.FREEZE, (user, target, move) => randSeedChance(5)),
+    new Ability(Abilities.DESPAIR, 9)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1, false)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, 1, true),
+    new Ability(Abilities.OHAYOGOSUMASU, 9)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.ATK, BattleStat.DEF, BattleStat.SPATK, BattleStat.SPDEF, BattleStat.SPD], -1, false),
+    new Ability(Abilities.ABILITY_TEXT_HERE, 9)
+      .attr(PostSummonAbilityGiveAbAttr, (pokemon, opponent) => true, Abilities.ABILITY_TEXT_HERE)
+      .attr(PostSummonStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], 1, true),
+    new Ability(Abilities.EXCEPTION_CAUGHT, 9)
+      .attr(SturdySpeedDropAbAttr)
+      .attr(HealAfterHitAbAttr),
+    new Ability(Abilities.FOUR_O_FOUR, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(10), 0),
+    new Ability(Abilities.SHADOW_SLAYER, 9)
+      .attr(PostAttackChanceStatusAbAttr, [StatusEffect.BURN, StatusEffect.POISON, StatusEffect.PARALYSIS, StatusEffect.TOXIC], (user, target, move) => move.type === Type.GHOST || move.type === Type.STEEL && randSeedChance(30)),
+    new Ability(Abilities.NIGHTMARE_EMERALD, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.3)
+      .attr(MoveTypePowerBoostAbAttr, Type.DARK, 1.3)
+      .attr(PostAttackAbilityGiveOrTagAbAttr, Abilities.COMATOSE, 50, BattlerTagType.NIGHTMARE, 50),
+    new Ability(Abilities.IMAGINARY, 9)
+      .attr(MoveTypeChangeAbAttr, Type.FAIRY, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.category === MoveCategory.PHYSICAL && randSeedChance(30), 0.5),
+    new Ability(Abilities.SPLINTER_SKIN, 9)
+      .attr(PostDefendContactDamageAbAttr, 1/12)
+      .attr(PostAttackContactDamageAbAttr, 1/12),
+    new Ability(Abilities.JUJUTSU_SORCERER, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => user?.status !== undefined || target?.status !== undefined, 2.5)
+      .attr(PostAttackChanceStatusRemoveAbAttr, (pokemon, defender, move) => randSeedChance(20), true)
+      .attr(PostAttackChanceStatusRemoveAbAttr, (pokemon, defender, move) => randSeedChance(20), false)
+      .attr(PostAttackChanceStatusAbAttr, [StatusEffect.BURN, StatusEffect.POISON, StatusEffect.PARALYSIS, StatusEffect.TOXIC], 30)
+      .attr(BypassBurnDamageReductionAbAttr)
+      .attr(PostTurnChanceStatusAbAttr, (pokemon) => pokemon.status === undefined && randSeedChance(50), [StatusEffect.BURN, StatusEffect.POISON, StatusEffect.PARALYSIS, StatusEffect.TOXIC], true),
+    new Ability(Abilities.TOXIC_KING, 9)
+      .attr(PostAttackApplyStatusEffectAbAttr, true, 100, StatusEffect.TOXIC),
+    new Ability(Abilities.SWAMP_KING, 9)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.POISON, (user, target, move) => randSeedChance(30))
+      .attr(MoveTypeChangeAbAttr, Type.WATER, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.WATER, Type.POISON, 2),
+    new Ability(Abilities.RAGE_SOUL, 9)
+      .attr(VariableMovePowerBoostAbAttr, (user, target, move) => 1 + 0.3 * Math.min(user.isPlayer() ? user.scene.currentBattle.playerFaints : user.scene.currentBattle.enemyFaints, 5)),
+    new Ability(Abilities.DARK_SIDE, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.DARK, 2),
+    new Ability(Abilities.PUPPET_MASTER, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => target?.species.speciesId === Species.MIMIKYU || target?.species.speciesId === Species.SHUPPET || target?.species.speciesId === Species.BANETTE || target?.species.speciesId === Species.GOTHITA || target?.species.speciesId === Species.GOTHORITA || target?.species.speciesId === Species.GOTHITELLE || target?.species.speciesId === Species.HATENNA || target?.species.speciesId === Species.HATTREM || target?.species.speciesId === Species.HATTERENE, 3)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => target!.getTypes().some(t => t === Type.NORMAL || t === Type.FIGHTING) && randSeedChance(20), [BattlerTagType.CURSED, BattlerTagType.BIND], 1)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(10), 0.5),
+    new Ability(Abilities.BLACK_AND_RED, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.FIRE, 2)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(15))
+      .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL),
+    new Ability(Abilities.ZOMBIE_EXPERIENCE, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => target!.getTypes().some(t => t === Type.DARK || t === Type.GHOST || t === Type.GROUND), 2)
+      .attr(PostKnockOutStatChangeAbAttr, [BattleStat.ATK, BattleStat.DEF, BattleStat.SPATK, BattleStat.SPDEF, BattleStat.SPD], 1, (user, target) => target.getTypes().some(t => t === Type.DARK || t === Type.GHOST || t === Type.GROUND)),
+    new Ability(Abilities.LAST_HOPE, 9)
+      .attr(LowHpMoveTypePowerBoostAbAttr, Type.ALL),
+    new Ability(Abilities.UGLY, 9)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, -1, true)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1, false)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1),
+    new Ability(Abilities.BLAND_CARDBOARD_EATER, 9)
+      .attr(TypeImmunityStatChangeAbAttr, Type.GRASS, BattleStat.ATK, 1)
+      .attr(PostAttackHealAbAttr, (user, target, move) => move.type === Type.GRASS, 1/8),
+    new Ability(Abilities.BORING, 9)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, -1, true)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1, false)
+      .attr(MoveTypePowerBoostAbAttr, Type.NORMAL, 1.3),
+    new Ability(Abilities.MOLDY_TOUCH, 9)
 
-          .attr(PostAttackTagOrStatusAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), [BattlerTagType.INFESTATION], 10, 1, [StatusEffect.TOXIC, StatusEffect.PARALYSIS], 10)
-          .attr(MoveTypePowerBoostAbAttr, Type.POISON, 1.2)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.getAbility().id === Abilities.MOLD_BREAKER, 2),
-      new Ability(Abilities.ETERNAL_GIGGLE, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.getAbility().id === Abilities.MOLD_BREAKER, 2)
-          .attr(PostFaintTagAbAttr, [BattlerTagType.CONFUSED, BattlerTagType.FLINCHED], 1)
-          .bypassFaint(),
-      new Ability(Abilities.RED_MENACE, 9)
-          .attr(PostAttackTagOrStatusAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), [BattlerTagType.CURSED], 5, 3, [StatusEffect.BURN], 10)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.2)
-          .attr(TypeImmunityStatChangeAbAttr, Type.FIRE, BattleStat.SPD, 1)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.getAbility().id === Abilities.MOLD_BREAKER, 2),
-      new Ability(Abilities.GHOSTLY_MOLD, 9)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT) && randSeedChance(10))
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.POISON, Type.GHOST, 2)
-          .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.getAbility().id === Abilities.MOLD_BREAKER, 2),
-      new Ability(Abilities.PAC_FUNGUS, 9)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT) && randSeedChance(30), [BattlerTagType.INFESTATION], 1)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => target?.findTag(tag => tag.tagType === BattlerTagType.INFESTATION) !== null, 1, [BattleStat.SPD, BattleStat.ATK])
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.getAbility().id === Abilities.MOLD_BREAKER, 2),
-      new Ability(Abilities.SECRET_SAUCE, 9)
-          .attr(PostAttackChanceStatusAbAttr, [StatusEffect.PARALYSIS, StatusEffect.BURN, StatusEffect.POISON, StatusEffect.TOXIC], (user, target, move) => randSeedChance(10))
-          .attr(PostAttackChanceDamageAbAttr,  1/8, 10)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.ENCORE, BattlerTagType.DROWSY, BattlerTagType.TRAPPED, BattlerTagType.BIND, BattlerTagType.INFESTATION, BattlerTagType.CURSED, BattlerTagType.CONFUSED], 1)
-          .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(10), 1/8),
-      new Ability(Abilities.MCPUZZLE, 9)
-          .attr(PostAttackApplyTagAbAttr, false, 20, [BattlerTagType.CONFUSED], 1)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(20), 2.5)
-          .attr(PostFaintStatChangeAbAttr, BattleStat.RAND, 1, (pokemon, attacker) => true)
-          .bypassFaint(),
-      new Ability(Abilities.MAY_I_TAKE_YOUR_ORDER, 9)
-          .attr(ChangeMovePriorityAbAttr, (pokemon, move) => true, 1),
-      new Ability(Abilities.STEALTH_SHIPPING, 9)
-          .attr(PostDefendApplyArenaTrapTagsAbAttr, [
-            { type: ArenaTagType.SPIKES, chance: 50 },
-            { type: ArenaTagType.STEALTH_ROCK, chance: 20 },
-            { type: ArenaTagType.TOXIC_SPIKES, chance: 20 },
-            { type: ArenaTagType.STICKY_WEB, chance: 10 }
-          ], (pokemon, attacker, move) => move.hasFlag(MoveFlags.MAKES_CONTACT) && randSeedChance(50))
-          .bypassFaint(),
-      new Ability(Abilities.CARDBOARD_EMPIRE, 9)
-          .attr(PostKnockOutStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], 1)
-          .attr(PostKnockOutHealAbAttr, (pokemon, knockedOut) => true, 1/8),
-      new Ability(Abilities.A_WINNER, 9)
-          .attr(PostKnockOutStatChangeAbAttr, BattleStat.RAND, 1),
-      new Ability(Abilities.SMUG_AURA, 9)
-          .attr(MoveTypeChangeAbAttr, Type.POISON, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.PSYCHIC, Type.POISON, 2)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.POISON, 10),
-      new Ability(Abilities.DEEP_THOUGHTS, 9)
-          .attr(PostAttackApplyTagAbAttr, false, 30, [BattlerTagType.CONFUSED], 1),
-      new Ability(Abilities.INTELLY_LECT_ALLY, 9)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.SPATK, 1),
-      new Ability(Abilities.INSOMNIA_INK, 9)
-          .attr(PostAttackAbilityGiveOrTagAbAttr, Abilities.COMATOSE, 50, BattlerTagType.NIGHTMARE, 50),
-      new Ability(Abilities.NIGHTMARE_CLARINET, 9)
-          .attr(MoveFlagChangeAttr, MoveFlags.SOUND_BASED, 1.2, (user, target, move) => true)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SOUND_BASED), 1.5)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.CURSED], 1),
-      new Ability(Abilities.JELLYFISH_FEVER, 9)
-          .attr(MoveTypeChangeAbAttr, Type.FIRE, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => move.category === MoveCategory.SPECIAL && randSeedChance(10))
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => move.category === MoveCategory.PHYSICAL && randSeedChance(10))
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.POISON, Type.FIRE,2),
-      new Ability(Abilities.DEEP_SEA_VIRUS, 9)
-          .attr(PostDefendStatusDamageAbAttr, StatusEffect.TOXIC, 1/8)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(30)),
-      new Ability(Abilities.BUBBLING_BRAINS, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.WATER, 1.5)
-          .attr(PostAttackHealAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1/8),
-      new Ability(Abilities.CLOAK_OF_SHADOWS, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.GHOST, 1.2)
-          .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75),
-      new Ability(Abilities.ACID_WATER, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.POISON, Type.WATER, 2)
-          .attr(MoveTypeChangeAbAttr, Type.POISON, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => (target?.getTypes().includes(Type.NORMAL) || target?.getTypes().includes(Type.STEEL) || target?.getTypes().includes(Type.FIGHTING)) && move.type === Type.WATER || move.type === Type.POISON, 2),
-      new Ability(Abilities.EIGHT_BIT_BLAZE, 9)
-          .attr(LowHpMoveTypePowerBoostAbAttr, Type.FIRE)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FIRE_SPIN], 1)
-          .attr(MoveTypeChangeAbAttr, Type.FIRE, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (target, user, move) => randSeedChance(10)),
-      new Ability(Abilities.CHARRED_MEMORY, 9)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => move.type === Type.FIRE, -1, BattleStat.SPDEF, false)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.PSYCHIC, 2)
-          .attr(MoveTypeChangeAbAttr, Type.PSYCHIC, 1.2, (user, target, move) => move.type === Type.NORMAL),
-      new Ability(Abilities.BLACK_AND_WHITE, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.type !== Type.NORMAL && move.type !== Type.DARK, 0),
-      new Ability(Abilities.EIGHT_BIT_TERROR, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("nightmare"), 1.2)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.CURSED, BattlerTagType.FLINCHED], 1)
-          .attr(PostAttackChanceDamageAbAttr, 1/8, 10),
-      new Ability(Abilities.CORRUPTION_BLAZE, 9)
-          .attr(LowHpMoveTypePowerBoostAbAttr, Type.FIRE)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.FIRE, 2)
-          .attr(PostDefendMoveDisableAbAttr, 30)
-          .bypassFaint(),
-      new Ability(Abilities.OAKS_MISTAKE, 9)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, -1, false)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.SEEDED, BattlerTagType.WHIRLPOOL], 1)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (target, user, move) => randSeedChance(10))
-          .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(30), 1/8),
-      new Ability(Abilities.SHELL_SHOCK, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.WATER, Type.ELECTRIC, 2)
-          .attr(MoveTypeChangeAbAttr, Type.ELECTRIC, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.WATER || move.type === Type.NORMAL && randSeedChance(10), [BattlerTagType.FLINCHED], 1)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.PARALYSIS, (target, user, move) => randSeedChance(10) && move.type === Type.WATER || move.type === Type.NORMAL),
-      new Ability(Abilities.DARK_SEED, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.GRASS, Type.DARK, 2)
-          .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.GRASS || move.type === Type.NORMAL && randSeedChance(10), [BattlerTagType.FLINCHED, BattlerTagType.SEEDED], 1),
-      new Ability(Abilities.CURSED_SHELL, 9)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.CURSED], 1)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.category === MoveCategory.PHYSICAL, 0.75),
-      new Ability(Abilities.GOTHAMS_NIGHTMARE, 9)
-          .attr(ArenaTrapAbAttr, (user, target) => true)
-          .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(20)),
-      new Ability(Abilities.DOOM_GADGETS, 9)
-          .attr(MoveTypeChangeAbAttr, Type.STEEL, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(MoveTypePowerBoostAbAttr, Type.STEEL, 1.2)
-          .attr(PostAttackChanceStatusAbAttr, [StatusEffect.PARALYSIS, StatusEffect.BURN, StatusEffect.POISON, StatusEffect.TOXIC], (user, target, move) => randSeedChance(10)),
-          new Ability(Abilities.MEME_ARMOR, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(50), 0.5)
-          .attr(PostDefendStatChangeAbAttr, (target, user, move) => true, BattleStat.RAND, 1, true)
-          .attr(PostDefendStatChangeAbAttr, (target, user, move) => true, BattleStat.RAND, -1, true),
-      new Ability(Abilities.MEMEIFIED, 9)
-          .attr(PreDefendSurviveAbAttr, 10)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.category === MoveCategory.SPECIAL && randSeedChance(20), 2),
-      new Ability(Abilities.HUNGRY_TROLL, 9)
-          .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(50), 1/8)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(50), 1, BattleStat.RAND),
-      new Ability(Abilities.MONOTONE_MOOD, 9)
-          .attr(MoveTypeChangeAbAttr, Type.NORMAL, 1, (user, target, move) => true)
-          .attr(MoveTypePowerBoostAbAttr, Type.NORMAL, 1.2)
-          .attr(IgnoreTypeImmunityAbAttr, Type.GHOST, [Type.NORMAL])
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.DROWSY], 1),
-      new Ability(Abilities.BOREDOM_AURA, 9)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -2, false),
-      new Ability(Abilities.SQUIDLY_STEP, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SOUND_BASED) || move.name.toLowerCase().includes('kick'), 1.3)
-          .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.type === Type.GROUND || move.type === Type.WATER, BattleStat.SPD, 1),
-      new Ability(Abilities.NIGHTMARE_INK, 9)
-          .attr(PostAttackAbilityGiveOrTagAbAttr, Abilities.COMATOSE, 90, BattlerTagType.NIGHTMARE, 90),
-      new Ability(Abilities.ABYSSAL_MELODY, 9)
-          .attr(MoveFlagChangeAttr, MoveFlags.SOUND_BASED, 1.2, (user, target, move) => true)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SOUND_BASED), 1.5)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.CURSED], 1),
-      new Ability(Abilities.CHARMING_MIST, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.GHOST, Type.FAIRY, 2)
-          .attr(MoveTypeChangeAbAttr, Type.FAIRY, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.FAIRY || move.type === Type.GHOST && randSeedChance(20) && user?.gender != target?.gender, [BattlerTagType.INFATUATED], 1),
-      new Ability(Abilities.ECTOPLASMIC_CHARM, 9)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.GHOST && randSeedChance(20) && user?.gender != target?.gender, [BattlerTagType.INFATUATED], 1)
-          .attr(PostAttackChanceDamageAbAttr, 1/8, 50),
-      new Ability(Abilities.SUPER_HUNGRY, 9)
-          .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(50), 1/8)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(50), 1, BattleStat.RAND),
-      new Ability(Abilities.FOOLS_GOLD, 9)
-          .attr(MoveImmunityAbAttr, (pokemon, attacker, move) => pokemon !== attacker && move.category === MoveCategory.STATUS)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.STEEL, 2),
-      new Ability(Abilities.SHOW_AND_TELL, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => {
-            const lastMoves = user?.getLastXMoves(2);
-            return lastMoves != undefined && lastMoves.length >= 2 && lastMoves[1].move !== move.id;
-          }, 2),
-      new Ability(Abilities.KNIGHTS_SHOVEL, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.GROUND, Type.STEEL,2)
-          .attr(TypeImmunityAbAttr, Type.GROUND),
-      new Ability(Abilities.HEROIC_LEAP, 9)
-          .attr(TypeImmunityAbAttr, Type.GROUND)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.ATK, 1, true)
-          .attr(MoveTypeChangeAbAttr, Type.FLYING, 1.2, (user, target, move) => move.type === Type.NORMAL),
-      new Ability(Abilities.DIG_CHAMPION, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("dig"), 2),
-      new Ability(Abilities.EIGHT_BIT_HUNGER, 9)
-          .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(50), 1/8)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1),
-      new Ability(Abilities.ROCK_SOLID_MEME, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.NORMAL, Type.ROCK, 2)
-          .attr(ReceivedMoveDamageMultiplierAbAttr,(target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75),
-      new Ability(Abilities.ROCK_ROLL, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.2)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("roll") || move.name.toLowerCase().includes("spin"), 1.75)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => randSeedChance(20) && move.name.toLowerCase().includes("roll") || move.name.toLowerCase().includes("spin"), [BattlerTagType.FLINCHED], 1),
-      new Ability(Abilities.STATIC_SHOCK, 9)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.PARALYSIS, (user, target, move) => randSeedChance(30))
-          .attr(MovePowerBoostAbAttr, (user, target, move) => target?.status?.effect === StatusEffect.PARALYSIS, 1.5),
-      new Ability(Abilities.HORROR_SHOW, 9)
-          .attr(ArenaTrapAbAttr, (user, target) => true)
-          .attr(PostVictoryTopStatChangeAbAttr, 1),
-      new Ability(Abilities.SUNBATHER, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.WATER, 2)
-          .attr(MoveTypeChangeAbAttr, Type.WATER, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PostTurnHealConditionAbAttr, (pokemon) => pokemon.scene.arena.weather?.weatherType === WeatherType.SUNNY, 1/8)
-          .attr(PostTurnWeatherChangeAbAttr, WeatherType.SUNNY, (pokemon) => randSeedChance(30)),
-      new Ability(Abilities.SEED_EATER, 9)
-          .attr(TypeImmunityHealAbAttr, Type.GRASS)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => target!.getTypes().includes(Type.GRASS), 2)
-          .attr(PostAttackHealAbAttr, (user, target, move) => target!.getTypes().includes(Type.GRASS), 1/8)
-          .attr(PostDefendChanceHealAbAttr, (target, user, move) => move.name.toLowerCase().includes("seed"), 1/2),
-      new Ability(Abilities.VACAY_SOUL, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => true, 3)
-          .attr(PostSummonAddBattlerTagAbAttr, BattlerTagType.TRUANT, 1, false),
-      new Ability(Abilities.SCREEN_SWIM, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.STEEL, Type.WATER, 2)
-          .attr(PostTurnHealConditionAbAttr, (pokemon) => pokemon.scene.arena.weather?.weatherType === WeatherType.RAIN, 1/8)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1)
-          .attr(PostTurnWeatherChangeAbAttr, WeatherType.RAIN, (pokemon) => randSeedChance(30)),
-      new Ability(Abilities.DARK_WATERS, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.WATER, 2)
-          .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.WATER || move.type === Type.DARK && randSeedChance(10), [BattlerTagType.WHIRLPOOL], 1)
-          .attr(PostAttackChanceDamageAbAttr,  1/8, (user, target, move) => move.type === Type.WATER || move.type === Type.DARK && randSeedChance(10)),
-      new Ability(Abilities.EXPERIMENT_ERROR, 9)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, -1, false)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.SEEDED, BattlerTagType.WHIRLPOOL], 1)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(10))
-          .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(30), 1/8),
-      new Ability(Abilities.ROUNDING_ERROR, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.power % 5 === 0 && move.power % 10 !== 0, 0.5)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.power % 5 === 0 || move.power % 10 !== 0, 1.5),
-      new Ability(Abilities.IDEAL_FORM, 9)
-          .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(10))
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(10), 0.5)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(10), 2)
-          .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(10), 1/8)
-          .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(10), 1/8),
-      new Ability(Abilities.ELITE_STATIC, 9)
-          .attr(PostDefendContactApplyStatusEffectAbAttr, 50, StatusEffect.PARALYSIS)
-          .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), BattleStat.RAND, -1, false)
-          .attr(PostDefendContactDamageAbAttr, 8)
-          .bypassFaint(),
-      new Ability(Abilities.COCKADOODLE_YES, 9)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, 1, true)
-          .attr(PostVictoryTopStatChangeAbAttr, 1)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1.3),
-      new Ability(Abilities.CARNIVORE, 9)
-          .attr(PostAttackHealAbAttr, (user, target, move) => [Type.NORMAL, Type.FIGHTING, Type.FLYING, Type.BUG, Type.PSYCHIC, Type.DRAGON, Type.DARK, Type.FAIRY].some(type => target?.getTypes().includes(type)), 1/8)
-          .attr(PostKnockOutStatChangeAbAttr, BattleStat.ATK, 1)
-          .attr(PostKnockOutStatChangeAbAttr, BattleStat.SPD, 1),
-      new Ability(Abilities.NIGHT_SHOW, 9)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -2, false),
-      new Ability(Abilities.NIGHTMARE_HOST, 9)
-          .attr(ChangeMovePriorityAbAttr, (pokemon, move) => randSeedChance(50), 1)
-          .attr(PostAttackChanceStatusAbAttr, [StatusEffect.PARALYSIS, StatusEffect.POISON, StatusEffect.BURN], (user, target, move) => randSeedChance(10)),
-      new Ability(Abilities.PRESSURE_PLAY, 9)
-          .attr(IncreasePpTwoAbAttr)
-          .attr(PostSummonMessageAbAttr, (pokemon: Pokemon) => getPokemonMessage(pokemon, i18next.t("abilityTrigger:allOrNothingPressure")))
-          .attr(PostSummonStatChangeAbAttr, BattleStat.ATK, -1, false),
-      new Ability(Abilities.A_B_C_OR_D, 9)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(10), 1, BattleStat.ATK)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(10))
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => randSeedChance(10), [BattlerTagType.CONFUSED], 1)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => randSeedChance(10), [BattlerTagType.DROWSY], 1),
-      new Ability(Abilities.MIDNIGHT_COOKIES, 9)
-          .attr(PostTurnHealConditionAbAttr, (pokemon, opponent) => randSeedChance(30), 1/8)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, 1, false, 30),
-      new Ability(Abilities.HORRIBLE_CARDBOARD, 9)
-          .attr(MoveTypeChangeAbAttr, Type.NORMAL, 1.2, (user, target, move) => true)
-          .attr(IgnoreTypeImmunityAbAttr, Type.GHOST, [Type.NORMAL])
-          .attr(PostAttackChanceDamageAbAttr,  1/8, 30),
-      new Ability(Abilities.THE_ELDER_SHADOWS, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.GHOST, Type.DARK, 2)
-          .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PostTurnDamageAbAttr, 1/16, (pokemon, opponent) => randSeedChance(30))
-          .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(30), 2)
-          .attr(PostKnockOutStatChangeAbAttr, BattleStat.RAND, 1),
-      new Ability(Abilities.HORRIBLE_GHOST_CARDBOARD, 9)
-          .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(IgnoreTypeImmunityAbAttr, Type.NORMAL, [Type.GHOST])
-          .attr(PostAttackChanceDamageAbAttr,  1/8, 30),
-      new Ability(Abilities.MIDNIGHT_COOKIES_OF_DEATH, 9)
-          .attr(PostTurnDamageAbAttr,  1/8, (pokemon, opponent) => randSeedChance(30), false)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, 1, false, (pokemon) => randSeedChance(30)),
-      new Ability(Abilities.INFOMERCIAL_FAME, 9)
-          .attr(PostSummonStatBoostAbAttr, 1)
-          .attr(PostTurnDamageAbAttr, 1/8, (pokemon, opponent) => randSeedChance(30), true),
-      new Ability(Abilities.WINNERS_GRIN, 9)
-          .attr(PostVictoryTopStatChangeAbAttr, 1)
-          .attr(PostKnockOutStatChangeAbAttr, BattleStat.RAND, 1),
-      new Ability(Abilities.FANCY_CARDBOARD, 9)
-          .attr(MoveTypeChangeAbAttr, Type.NORMAL, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(IgnoreTypeImmunityAbAttr, Type.GHOST, [Type.NORMAL])
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.power <= 60, 1.5),
-      new Ability(Abilities.UNJUSTIFIED, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.NORMAL, Type.DARK, 2, true)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FIGHTING, Type.DARK, 2, true)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.type === Type.FAIRY, 0.5)
-          .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.type === Type.FAIRY, BattleStat.ATK, 1),
-      new Ability(Abilities.ABYSSAL_STANCE, 9)
-          .attr(PostDefendStatChangeAbAttr, (target, user, move) => randSeedChance(30), BattleStat.RAND, 1)
-          .attr(PostDefendDamageAbAttr, (target, user, move) => randSeedChance(30), 1/8, false)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(10), -1, BattleStat.RAND)
-          .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL),
-      new Ability(Abilities.LEAFY_LURE, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 0.5)
-          .attr(PostDefendDamageAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 1/4, false)
-          .attr(PostDefendHealAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 1/6),
-      new Ability(Abilities.VORACIOUS_VEGETATION, 9)
-          .attr(PostAttackHealAbAttr, (user, target, move) => [Type.NORMAL, Type.FIGHTING, Type.FLYING, Type.BUG, Type.PSYCHIC, Type.DRAGON, Type.DARK, Type.FAIRY].some(type => target?.getTypes().includes(type)), 1/8)
-          .attr(PostKnockOutStatChangeAbAttr, [BattleStat.ATK, BattleStat.SPD], 1, true),
-      new Ability(Abilities.SOLAR_POWER_PLUS, 9)
-          .attr(BattleStatMultiplierAbAttr, BattleStat.SPATK, 2)
-          .attr(PostTurnWeatherChangeAbAttr, WeatherType.SUNNY, 30),
-      new Ability(Abilities.TREASURE_GUARD, 9)
-          .attr(ReceivedMoveDamageRandMultiplierAbAttr, (target, user, move) => true, 0.5, 0.75)
-          .attr(PostDefendChanceHealAbAttr, 30, 1/8, false),
-      new Ability(Abilities.GOLDEN_SKILL_LINK, 9)
-          .attr(MaxMultiHitAbAttr)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(5), 1, BattleStat.RAND, true),
-      new Ability(Abilities.TREASURE_PRODUCER, 9)
-          .attr(PostAttackStealHeldItemAbAttr, 50)
-          .attr(PostBattleLootAbAttr)
-          .attr(ChangeMovePriorityAbAttr, (pokemon, move) => true, -2),
-      new Ability(Abilities.MULTI_MIND, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.PSYCHIC, 2)
-          .attr(MoveTypeChangeAbAttr, Type.PSYCHIC, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(PostAttackChanceDamageAbAttr, 10, 1/8),
-      new Ability(Abilities.WAKA_FLOCKA_FLAME, 9)
-          .attr(MoveTypeChangeAbAttr, Type.FIRE, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FLYING, Type.FIRE, 2)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, 10)
-          .attr(TypeImmunityAbAttr, Type.FIRE)
-          .attr(TypeImmunityHealAbAttr, Type.FIRE),
-      new Ability(Abilities.EERIE_LIGHT, 9)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.ELECTRIC, Type.DARK, 2)
-          .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.WATER)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.CONFUSED], 1)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.PARALYSIS, 10),
-      new Ability(Abilities.ABYSSAL_LURE, 9)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 0.5)
-          .attr(PostDefendDamageAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 1/4, false)
-          .attr(PostDefendHealAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 1/6),
-      new Ability(Abilities.NEMO_EATER, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => target!.getTypes().includes(Type.WATER), 2)
-          .attr(PostKnockOutHealAbAttr, (user, target) => target.getTypes().includes(Type.WATER), 1/8)
-          .attr(PostKnockoutTopStatChangeAbAttr, 1, (user, target) => target.getTypes().includes(Type.WATER)),
-      new Ability(Abilities.WOODEN_LIE, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => [Type.FIRE, Type.GRASS, Type.BUG, Type.POISON, Type.DRAGON, Type.FLYING, Type.STEEL].some(t => target?.getTypes().includes(t)), 2)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1, 0.75),
-      new Ability(Abilities.IM_A_REAL_BOY, 9)
-          .attr(MoveTypeChangeAbAttr, Type.NORMAL, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(MoveTypeChangeAbAttr, Type.NORMAL, 1.3, (user, target, move) => move.type !== Type.FAIRY && move.type !== Type.GRASS)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.ATK, -1, false)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, -1, false),
-      new Ability(Abilities.LIER_LYER, 9)
-          .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FAIRY, Type.DARK, 2)
-          .attr(PreDefendSurviveAbAttr, 10),
-      new Ability(Abilities.COPYCAT_NINJA, 9)
-          .attr(PostDefendTypeChangePlusAbAttr),
-      new Ability(Abilities.HOKAGE, 9)
-          .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.WATER, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.FLYING, 1.2)
-          .attr(MoveTypePowerBoostAbAttr, Type.GROUND, 1.2),
-      new Ability(Abilities.SHARINGAN_ACTIVATED, 9)
-          .attr(PokemonTypeChangeAbAttr),
-      new Ability(Abilities.CROW_CLONE, 9)
-          .attr(MoveTypeChangeAbAttr, Type.FLYING, 1.2, (user, target, move) => move.type === Type.NORMAL)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.FLYING, 2, true)
-          .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.FLYING, 2, true)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(30), 0.5)
-          .attr(PostDefendHealAbAttr, (target, user, move) => randSeedChance(30), 1/8),
-      new Ability(Abilities.SHARINGAN_MASTERY, 9)
-          .attr(PostAttackChanceDamageAbAttr, 15, 1/8)
-          .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(5), 0.25)
-          .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(15), 1, BattleStat.RAND, true),
-      new Ability(Abilities.FOREHEAD_TAP, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.power <= 60, 1.5)
-          .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.power <= 60 && randSeedChance(10), [BattlerTagType.FLINCHED], 1)
-          .attr(PostAttackChanceStatusAbAttr, StatusEffect.PARALYSIS, (user, target, move) => move.power <= 60 && randSeedChance(10)),
-      new Ability(Abilities.EIGHT_TAILS, 9)
-          .attr(OctoHitMinMaxAbAttr),
-      new Ability(Abilities.RAPPING_RAMPAGE, 9)
-          .attr(MoveFlagChangeAttr, MoveFlags.SOUND_BASED, 1.2, (user, target, move) => true)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SOUND_BASED), 1.5)
-          .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 0),
-      new Ability(Abilities.BEAST_MODE, 9)
-          .attr(MovePowerBoostAbAttr, (user, target, move) => user!.getHpRatio() <= .40, 2),
-      new Ability(Abilities.NIGHTMARE_SAND, 9)
-          .attr(PostTurnDamageAbAttr, 1/8, (pokemon, opponent) => pokemon.scene.arena.weather?.weatherType === WeatherType.SANDSTORM)
-          .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1, false, (pokemon, opponent) => pokemon.scene.arena.weather?.weatherType === WeatherType.SANDSTORM && randSeedChance(30))
-          .attr(PostTurnWeatherChangeAbAttr, WeatherType.SANDSTORM, 30),
-      new Ability(Abilities.SOUL_EATER, 9)
-          .attr(PostAttackHealIfCollectedTypeMatchAbAttr)
-          .attr(PostKnockOutCollectAbAttr)
-          .attr(PostFaintLoseCollectedTypeAbAttr)
-          .bypassFaint(),
-      new Ability(Abilities.SOUL_DRAIN, 9)
-          .attr(PostAttackCollectTypeMatchAbAttr, 10)
-          .attr(PostAttackStatChangeIfCollectedTypeMatchAbAttr, BattleStat.RAND, -2)
-          .attr(PostFaintLoseCollectedTypeAbAttr)
-          .bypassFaint()
+      .attr(PostAttackTagOrStatusAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), [BattlerTagType.INFESTATION], 10, 1, [StatusEffect.TOXIC, StatusEffect.PARALYSIS], 10)
+      .attr(MoveTypePowerBoostAbAttr, Type.POISON, 1.2)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.getAbility().id === Abilities.MOLD_BREAKER, 2),
+    new Ability(Abilities.ETERNAL_GIGGLE, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.getAbility().id === Abilities.MOLD_BREAKER, 2)
+      .attr(PostFaintTagAbAttr, [BattlerTagType.CONFUSED, BattlerTagType.FLINCHED], 1)
+      .bypassFaint(),
+    new Ability(Abilities.RED_MENACE, 9)
+      .attr(PostAttackTagOrStatusAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), [BattlerTagType.CURSED], 5, 3, [StatusEffect.BURN], 10)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.2)
+      .attr(TypeImmunityStatChangeAbAttr, Type.FIRE, BattleStat.SPD, 1)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.getAbility().id === Abilities.MOLD_BREAKER, 2),
+    new Ability(Abilities.GHOSTLY_MOLD, 9)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT) && randSeedChance(10))
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.POISON, Type.GHOST, 2)
+      .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.getAbility().id === Abilities.MOLD_BREAKER, 2),
+    new Ability(Abilities.PAC_FUNGUS, 9)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT) && randSeedChance(30), [BattlerTagType.INFESTATION], 1)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => target?.findTag(tag => tag.tagType === BattlerTagType.INFESTATION) !== null, 1, [BattleStat.SPD, BattleStat.ATK])
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => user.getAbility().id === Abilities.MOLD_BREAKER, 2),
+    new Ability(Abilities.SECRET_SAUCE, 9)
+      .attr(PostAttackChanceStatusAbAttr, [StatusEffect.PARALYSIS, StatusEffect.BURN, StatusEffect.POISON, StatusEffect.TOXIC], (user, target, move) => randSeedChance(10))
+      .attr(PostAttackChanceDamageAbAttr,  1/8, 10)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.ENCORE, BattlerTagType.DROWSY, BattlerTagType.TRAPPED, BattlerTagType.BIND, BattlerTagType.INFESTATION, BattlerTagType.CURSED, BattlerTagType.CONFUSED], 1)
+      .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(10), 1/8),
+    new Ability(Abilities.MCPUZZLE, 9)
+      .attr(PostAttackApplyTagAbAttr, false, 20, [BattlerTagType.CONFUSED], 1)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(20), 2.5)
+      .attr(PostFaintStatChangeAbAttr, BattleStat.RAND, 1, (pokemon, attacker) => true)
+      .bypassFaint(),
+    new Ability(Abilities.MAY_I_TAKE_YOUR_ORDER, 9)
+      .attr(ChangeMovePriorityAbAttr, (pokemon, move) => true, 1),
+    new Ability(Abilities.STEALTH_SHIPPING, 9)
+      .attr(PostDefendApplyArenaTrapTagsAbAttr, [
+        { type: ArenaTagType.SPIKES, chance: 50 },
+        { type: ArenaTagType.STEALTH_ROCK, chance: 20 },
+        { type: ArenaTagType.TOXIC_SPIKES, chance: 20 },
+        { type: ArenaTagType.STICKY_WEB, chance: 10 }
+      ], (pokemon, attacker, move) => move.hasFlag(MoveFlags.MAKES_CONTACT) && randSeedChance(50))
+      .bypassFaint(),
+    new Ability(Abilities.CARDBOARD_EMPIRE, 9)
+      .attr(PostKnockOutStatChangeAbAttr, [BattleStat.RAND, BattleStat.RAND], 1)
+      .attr(PostKnockOutHealAbAttr, (pokemon, knockedOut) => true, 1/8),
+    new Ability(Abilities.A_WINNER, 9)
+      .attr(PostKnockOutStatChangeAbAttr, BattleStat.RAND, 1),
+    new Ability(Abilities.SMUG_AURA, 9)
+      .attr(MoveTypeChangeAbAttr, Type.POISON, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.PSYCHIC, Type.POISON, 2)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.POISON, 10),
+    new Ability(Abilities.DEEP_THOUGHTS, 9)
+      .attr(PostAttackApplyTagAbAttr, false, 30, [BattlerTagType.CONFUSED], 1),
+    new Ability(Abilities.INTELLY_LECT_ALLY, 9)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.SPATK, 1),
+    new Ability(Abilities.INSOMNIA_INK, 9)
+      .attr(PostAttackAbilityGiveOrTagAbAttr, Abilities.COMATOSE, 50, BattlerTagType.NIGHTMARE, 50),
+    new Ability(Abilities.NIGHTMARE_CLARINET, 9)
+      .attr(MoveFlagChangeAttr, MoveFlags.SOUND_BASED, 1.2, (user, target, move) => true)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SOUND_BASED), 1.5)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.CURSED], 1),
+    new Ability(Abilities.JELLYFISH_FEVER, 9)
+      .attr(MoveTypeChangeAbAttr, Type.FIRE, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => move.category === MoveCategory.SPECIAL && randSeedChance(10))
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => move.category === MoveCategory.PHYSICAL && randSeedChance(10))
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.POISON, Type.FIRE, 2),
+    new Ability(Abilities.DEEP_SEA_VIRUS, 9)
+      .attr(PostDefendStatusDamageAbAttr, StatusEffect.TOXIC, 1/8)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.TOXIC, (user, target, move) => randSeedChance(30)),
+    new Ability(Abilities.BUBBLING_BRAINS, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.WATER, 1.5)
+      .attr(PostAttackHealAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1/8),
+    new Ability(Abilities.CLOAK_OF_SHADOWS, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.GHOST, 1.2)
+      .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75),
+    new Ability(Abilities.ACID_WATER, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.POISON, Type.WATER, 2)
+      .attr(MoveTypeChangeAbAttr, Type.POISON, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => (target?.getTypes().includes(Type.NORMAL) || target?.getTypes().includes(Type.STEEL) || target?.getTypes().includes(Type.FIGHTING)) && move.type === Type.WATER || move.type === Type.POISON, 2),
+    new Ability(Abilities.EIGHT_BIT_BLAZE, 9)
+      .attr(LowHpMoveTypePowerBoostAbAttr, Type.FIRE)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FIRE_SPIN], 1)
+      .attr(MoveTypeChangeAbAttr, Type.FIRE, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (target, user, move) => randSeedChance(10)),
+    new Ability(Abilities.CHARRED_MEMORY, 9)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => move.type === Type.FIRE, -1, BattleStat.SPDEF, false)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.PSYCHIC, 2)
+      .attr(MoveTypeChangeAbAttr, Type.PSYCHIC, 1.2, (user, target, move) => move.type === Type.NORMAL),
+    new Ability(Abilities.BLACK_AND_WHITE, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.type !== Type.NORMAL && move.type !== Type.DARK, 0),
+    new Ability(Abilities.EIGHT_BIT_TERROR, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("nightmare"), 1.2)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.CURSED, BattlerTagType.FLINCHED], 1)
+      .attr(PostAttackChanceDamageAbAttr, 1/8, 10),
+    new Ability(Abilities.CORRUPTION_BLAZE, 9)
+      .attr(LowHpMoveTypePowerBoostAbAttr, Type.FIRE)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.FIRE, 2)
+      .attr(PostDefendMoveDisableAbAttr, 30)
+      .bypassFaint(),
+    new Ability(Abilities.OAKS_MISTAKE, 9)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, -1, false)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.SEEDED, BattlerTagType.WHIRLPOOL], 1)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (target, user, move) => randSeedChance(10))
+      .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(30), 1/8),
+    new Ability(Abilities.SHELL_SHOCK, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.WATER, Type.ELECTRIC, 2)
+      .attr(MoveTypeChangeAbAttr, Type.ELECTRIC, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.WATER || move.type === Type.NORMAL && randSeedChance(10), [BattlerTagType.FLINCHED], 1)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.PARALYSIS, (target, user, move) => randSeedChance(10) && move.type === Type.WATER || move.type === Type.NORMAL),
+    new Ability(Abilities.DARK_SEED, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.GRASS, Type.DARK, 2)
+      .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.GRASS || move.type === Type.NORMAL && randSeedChance(10), [BattlerTagType.FLINCHED, BattlerTagType.SEEDED], 1),
+    new Ability(Abilities.CURSED_SHELL, 9)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.CURSED], 1)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.category === MoveCategory.PHYSICAL, 0.75),
+    new Ability(Abilities.GOTHAMS_NIGHTMARE, 9)
+      .attr(ArenaTrapAbAttr, (user, target) => true)
+      .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(20)),
+    new Ability(Abilities.DOOM_GADGETS, 9)
+      .attr(MoveTypeChangeAbAttr, Type.STEEL, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(MoveTypePowerBoostAbAttr, Type.STEEL, 1.2)
+      .attr(PostAttackChanceStatusAbAttr, [StatusEffect.PARALYSIS, StatusEffect.BURN, StatusEffect.POISON, StatusEffect.TOXIC], (user, target, move) => randSeedChance(10)),
+    new Ability(Abilities.MEME_ARMOR, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(50), 0.5)
+      .attr(PostDefendStatChangeAbAttr, (target, user, move) => true, BattleStat.RAND, 1, true)
+      .attr(PostDefendStatChangeAbAttr, (target, user, move) => true, BattleStat.RAND, -1, true),
+    new Ability(Abilities.MEMEIFIED, 9)
+      .attr(PreDefendSurviveAbAttr, 10)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.category === MoveCategory.SPECIAL && randSeedChance(20), 2),
+    new Ability(Abilities.HUNGRY_TROLL, 9)
+      .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(50), 1/8)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(50), 1, BattleStat.RAND),
+    new Ability(Abilities.MONOTONE_MOOD, 9)
+      .attr(MoveTypeChangeAbAttr, Type.NORMAL, 1, (user, target, move) => true)
+      .attr(MoveTypePowerBoostAbAttr, Type.NORMAL, 1.2)
+      .attr(IgnoreTypeImmunityAbAttr, Type.GHOST, [Type.NORMAL])
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.DROWSY], 1),
+    new Ability(Abilities.BOREDOM_AURA, 9)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -2, false),
+    new Ability(Abilities.SQUIDLY_STEP, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SOUND_BASED) || move.name.toLowerCase().includes("kick"), 1.3)
+      .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.type === Type.GROUND || move.type === Type.WATER, BattleStat.SPD, 1),
+    new Ability(Abilities.NIGHTMARE_INK, 9)
+      .attr(PostAttackAbilityGiveOrTagAbAttr, Abilities.COMATOSE, 90, BattlerTagType.NIGHTMARE, 90),
+    new Ability(Abilities.ABYSSAL_MELODY, 9)
+      .attr(MoveFlagChangeAttr, MoveFlags.SOUND_BASED, 1.2, (user, target, move) => true)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SOUND_BASED), 1.5)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.CURSED], 1),
+    new Ability(Abilities.CHARMING_MIST, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.GHOST, Type.FAIRY, 2)
+      .attr(MoveTypeChangeAbAttr, Type.FAIRY, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.FAIRY || move.type === Type.GHOST && randSeedChance(20) && user?.gender != target?.gender, [BattlerTagType.INFATUATED], 1),
+    new Ability(Abilities.ECTOPLASMIC_CHARM, 9)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.GHOST && randSeedChance(20) && user?.gender != target?.gender, [BattlerTagType.INFATUATED], 1)
+      .attr(PostAttackChanceDamageAbAttr, 1/8, 50),
+    new Ability(Abilities.SUPER_HUNGRY, 9)
+      .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(50), 1/8)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(50), 1, BattleStat.RAND),
+    new Ability(Abilities.FOOLS_GOLD, 9)
+      .attr(MoveImmunityAbAttr, (pokemon, attacker, move) => pokemon !== attacker && move.category === MoveCategory.STATUS)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.STEEL, 2),
+    new Ability(Abilities.SHOW_AND_TELL, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => {
+        const lastMoves = user?.getLastXMoves(2);
+        return lastMoves != undefined && lastMoves.length >= 2 && lastMoves[1].move !== move.id;
+      }, 2),
+    new Ability(Abilities.KNIGHTS_SHOVEL, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.GROUND, Type.STEEL, 2)
+      .attr(TypeImmunityAbAttr, Type.GROUND),
+    new Ability(Abilities.HEROIC_LEAP, 9)
+      .attr(TypeImmunityAbAttr, Type.GROUND)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.ATK, 1, true)
+      .attr(MoveTypeChangeAbAttr, Type.FLYING, 1.2, (user, target, move) => move.type === Type.NORMAL),
+    new Ability(Abilities.DIG_CHAMPION, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("dig"), 2),
+    new Ability(Abilities.EIGHT_BIT_HUNGER, 9)
+      .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(50), 1/8)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1),
+    new Ability(Abilities.ROCK_SOLID_MEME, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.NORMAL, Type.ROCK, 2)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) >= 2, 0.75),
+    new Ability(Abilities.ROCK_ROLL, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.ROCK, 1.2)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.name.toLowerCase().includes("roll") || move.name.toLowerCase().includes("spin"), 1.75)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => randSeedChance(20) && move.name.toLowerCase().includes("roll") || move.name.toLowerCase().includes("spin"), [BattlerTagType.FLINCHED], 1),
+    new Ability(Abilities.STATIC_SHOCK, 9)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.PARALYSIS, (user, target, move) => randSeedChance(30))
+      .attr(MovePowerBoostAbAttr, (user, target, move) => target?.status?.effect === StatusEffect.PARALYSIS, 1.5),
+    new Ability(Abilities.HORROR_SHOW, 9)
+      .attr(ArenaTrapAbAttr, (user, target) => true)
+      .attr(PostVictoryTopStatChangeAbAttr, 1),
+    new Ability(Abilities.SUNBATHER, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.WATER, 2)
+      .attr(MoveTypeChangeAbAttr, Type.WATER, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PostTurnHealConditionAbAttr, (pokemon) => pokemon.scene.arena.weather?.weatherType === WeatherType.SUNNY, 1/8)
+      .attr(PostTurnWeatherChangeAbAttr, WeatherType.SUNNY, (pokemon) => randSeedChance(30)),
+    new Ability(Abilities.SEED_EATER, 9)
+      .attr(TypeImmunityHealAbAttr, Type.GRASS)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => target!.getTypes().includes(Type.GRASS), 2)
+      .attr(PostAttackHealAbAttr, (user, target, move) => target!.getTypes().includes(Type.GRASS), 1/8)
+      .attr(PostDefendChanceHealAbAttr, (target, user, move) => move.name.toLowerCase().includes("seed"), 1/2),
+    new Ability(Abilities.VACAY_SOUL, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => true, 3)
+      .attr(PostSummonAddBattlerTagAbAttr, BattlerTagType.TRUANT, 1, false),
+    new Ability(Abilities.SCREEN_SWIM, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.STEEL, Type.WATER, 2)
+      .attr(PostTurnHealConditionAbAttr, (pokemon) => pokemon.scene.arena.weather?.weatherType === WeatherType.RAIN, 1/8)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 1)
+      .attr(PostTurnWeatherChangeAbAttr, WeatherType.RAIN, (pokemon) => randSeedChance(30)),
+    new Ability(Abilities.DARK_WATERS, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.WATER, 2)
+      .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.type === Type.WATER || move.type === Type.DARK && randSeedChance(10), [BattlerTagType.WHIRLPOOL], 1)
+      .attr(PostAttackChanceDamageAbAttr,  1/8, (user, target, move) => move.type === Type.WATER || move.type === Type.DARK && randSeedChance(10)),
+    new Ability(Abilities.EXPERIMENT_ERROR, 9)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, -1, false)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.SEEDED, BattlerTagType.WHIRLPOOL], 1)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(10))
+      .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(30), 1/8),
+    new Ability(Abilities.ROUNDING_ERROR, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.power % 5 === 0 && move.power % 10 !== 0, 0.5)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.power % 5 === 0 || move.power % 10 !== 0, 1.5),
+    new Ability(Abilities.IDEAL_FORM, 9)
+      .attr(ConditionalCritAbAttr, (user, target, move) => randSeedChance(10))
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(10), 0.5)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(10), 2)
+      .attr(PostDefendChanceHealAbAttr, (target, user, move) => randSeedChance(10), 1/8)
+      .attr(PostAttackChanceHealAbAttr, (user, target, move) => randSeedChance(10), 1/8),
+    new Ability(Abilities.ELITE_STATIC, 9)
+      .attr(PostDefendContactApplyStatusEffectAbAttr, 50, StatusEffect.PARALYSIS)
+      .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), BattleStat.RAND, -1, false)
+      .attr(PostDefendContactDamageAbAttr, 8)
+      .bypassFaint(),
+    new Ability(Abilities.COCKADOODLE_YES, 9)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, 1, true)
+      .attr(PostVictoryTopStatChangeAbAttr, 1)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.MAKES_CONTACT), 1.3),
+    new Ability(Abilities.CARNIVORE, 9)
+      .attr(PostAttackHealAbAttr, (user, target, move) => [Type.NORMAL, Type.FIGHTING, Type.FLYING, Type.BUG, Type.PSYCHIC, Type.DRAGON, Type.DARK, Type.FAIRY].some(type => target?.getTypes().includes(type)), 1/8)
+      .attr(PostKnockOutStatChangeAbAttr, BattleStat.ATK, 1)
+      .attr(PostKnockOutStatChangeAbAttr, BattleStat.SPD, 1),
+    new Ability(Abilities.NIGHT_SHOW, 9)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -2, false),
+    new Ability(Abilities.NIGHTMARE_HOST, 9)
+      .attr(ChangeMovePriorityAbAttr, (pokemon, move) => randSeedChance(50), 1)
+      .attr(PostAttackChanceStatusAbAttr, [StatusEffect.PARALYSIS, StatusEffect.POISON, StatusEffect.BURN], (user, target, move) => randSeedChance(10)),
+    new Ability(Abilities.PRESSURE_PLAY, 9)
+      .attr(IncreasePpTwoAbAttr)
+      .attr(PostSummonMessageAbAttr, (pokemon: Pokemon) => getPokemonMessage(pokemon, i18next.t("abilityTrigger:allOrNothingPressure")))
+      .attr(PostSummonStatChangeAbAttr, BattleStat.ATK, -1, false),
+    new Ability(Abilities.A_B_C_OR_D, 9)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(10), 1, BattleStat.ATK)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, (user, target, move) => randSeedChance(10))
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => randSeedChance(10), [BattlerTagType.CONFUSED], 1)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => randSeedChance(10), [BattlerTagType.DROWSY], 1),
+    new Ability(Abilities.MIDNIGHT_COOKIES, 9)
+      .attr(PostTurnHealConditionAbAttr, (pokemon, opponent) => randSeedChance(30), 1/8)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, 1, false, 30),
+    new Ability(Abilities.HORRIBLE_CARDBOARD, 9)
+      .attr(MoveTypeChangeAbAttr, Type.NORMAL, 1.2, (user, target, move) => true)
+      .attr(IgnoreTypeImmunityAbAttr, Type.GHOST, [Type.NORMAL])
+      .attr(PostAttackChanceDamageAbAttr,  1/8, 30),
+    new Ability(Abilities.THE_ELDER_SHADOWS, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.GHOST, Type.DARK, 2)
+      .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PostTurnDamageAbAttr, 1/16, (pokemon, opponent) => randSeedChance(30))
+      .attr(MovePowerBoostAbAttr, (user, target, move) => randSeedChance(30), 2)
+      .attr(PostKnockOutStatChangeAbAttr, BattleStat.RAND, 1),
+    new Ability(Abilities.HORRIBLE_GHOST_CARDBOARD, 9)
+      .attr(MoveTypeChangeAbAttr, Type.GHOST, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(IgnoreTypeImmunityAbAttr, Type.NORMAL, [Type.GHOST])
+      .attr(PostAttackChanceDamageAbAttr,  1/8, 30),
+    new Ability(Abilities.MIDNIGHT_COOKIES_OF_DEATH, 9)
+      .attr(PostTurnDamageAbAttr,  1/8, (pokemon, opponent) => randSeedChance(30), false)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, 1, false, (pokemon) => randSeedChance(30)),
+    new Ability(Abilities.INFOMERCIAL_FAME, 9)
+      .attr(PostSummonStatBoostAbAttr, 1)
+      .attr(PostTurnDamageAbAttr, 1/8, (pokemon, opponent) => randSeedChance(30), true),
+    new Ability(Abilities.WINNERS_GRIN, 9)
+      .attr(PostVictoryTopStatChangeAbAttr, 1)
+      .attr(PostKnockOutStatChangeAbAttr, BattleStat.RAND, 1),
+    new Ability(Abilities.FANCY_CARDBOARD, 9)
+      .attr(MoveTypeChangeAbAttr, Type.NORMAL, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(IgnoreTypeImmunityAbAttr, Type.GHOST, [Type.NORMAL])
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.power <= 60, 1.5),
+    new Ability(Abilities.UNJUSTIFIED, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.NORMAL, Type.DARK, 2, true)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FIGHTING, Type.DARK, 2, true)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => move.type === Type.FAIRY, 0.5)
+      .attr(PostDefendStatChangeAbAttr, (target, user, move) => move.type === Type.FAIRY, BattleStat.ATK, 1),
+    new Ability(Abilities.ABYSSAL_STANCE, 9)
+      .attr(PostDefendStatChangeAbAttr, (target, user, move) => randSeedChance(30), BattleStat.RAND, 1)
+      .attr(PostDefendDamageAbAttr, (target, user, move) => randSeedChance(30), 1/8, false)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(10), -1, BattleStat.RAND)
+      .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL),
+    new Ability(Abilities.LEAFY_LURE, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 0.5)
+      .attr(PostDefendDamageAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 1/4, false)
+      .attr(PostDefendHealAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 1/6),
+    new Ability(Abilities.VORACIOUS_VEGETATION, 9)
+      .attr(PostAttackHealAbAttr, (user, target, move) => [Type.NORMAL, Type.FIGHTING, Type.FLYING, Type.BUG, Type.PSYCHIC, Type.DRAGON, Type.DARK, Type.FAIRY].some(type => target?.getTypes().includes(type)), 1/8)
+      .attr(PostKnockOutStatChangeAbAttr, [BattleStat.ATK, BattleStat.SPD], 1, true),
+    new Ability(Abilities.SOLAR_POWER_PLUS, 9)
+      .attr(BattleStatMultiplierAbAttr, BattleStat.SPATK, 2)
+      .attr(PostTurnWeatherChangeAbAttr, WeatherType.SUNNY, 30),
+    new Ability(Abilities.TREASURE_GUARD, 9)
+      .attr(ReceivedMoveDamageRandMultiplierAbAttr, (target, user, move) => true, 0.5, 0.75)
+      .attr(PostDefendChanceHealAbAttr, 30, 1/8, false),
+    new Ability(Abilities.GOLDEN_SKILL_LINK, 9)
+      .attr(MaxMultiHitAbAttr)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(5), 1, BattleStat.RAND, true),
+    new Ability(Abilities.TREASURE_PRODUCER, 9)
+      .attr(PostAttackStealHeldItemAbAttr, 50)
+      .attr(PostBattleLootAbAttr)
+      .attr(ChangeMovePriorityAbAttr, (pokemon, move) => true, -2),
+    new Ability(Abilities.MULTI_MIND, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.PSYCHIC, 2)
+      .attr(MoveTypeChangeAbAttr, Type.PSYCHIC, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(PostAttackChanceDamageAbAttr, 10, 1/8),
+    new Ability(Abilities.WAKA_FLOCKA_FLAME, 9)
+      .attr(MoveTypeChangeAbAttr, Type.FIRE, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FLYING, Type.FIRE, 2)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.BURN, 10)
+      .attr(TypeImmunityAbAttr, Type.FIRE)
+      .attr(TypeImmunityHealAbAttr, Type.FIRE),
+    new Ability(Abilities.EERIE_LIGHT, 9)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.ELECTRIC, Type.DARK, 2)
+      .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.WATER)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.CONFUSED], 1)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.PARALYSIS, 10),
+    new Ability(Abilities.ABYSSAL_LURE, 9)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 0.5)
+      .attr(PostDefendDamageAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 1/4, false)
+      .attr(PostDefendHealAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1 && randSeedChance(50), 1/6),
+    new Ability(Abilities.NEMO_EATER, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => target!.getTypes().includes(Type.WATER), 2)
+      .attr(PostKnockOutHealAbAttr, (user, target) => target.getTypes().includes(Type.WATER), 1/8)
+      .attr(PostKnockoutTopStatChangeAbAttr, 1, (user, target) => target.getTypes().includes(Type.WATER)),
+    new Ability(Abilities.WOODEN_LIE, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => [Type.FIRE, Type.GRASS, Type.BUG, Type.POISON, Type.DRAGON, Type.FLYING, Type.STEEL].some(t => target?.getTypes().includes(t)), 2)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => target.getAttackTypeEffectiveness(move.type, user) > 1, 0.75),
+    new Ability(Abilities.IM_A_REAL_BOY, 9)
+      .attr(MoveTypeChangeAbAttr, Type.NORMAL, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(MoveTypeChangeAbAttr, Type.NORMAL, 1.3, (user, target, move) => move.type !== Type.FAIRY && move.type !== Type.GRASS)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.ATK, -1, false)
+      .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, -1, false),
+    new Ability(Abilities.LIER_LYER, 9)
+      .attr(MoveTypeChangeAbAttr, Type.DARK, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FAIRY, Type.DARK, 2)
+      .attr(PreDefendSurviveAbAttr, 10),
+    new Ability(Abilities.COPYCAT_NINJA, 9)
+      .attr(PostDefendTypeChangePlusAbAttr),
+    new Ability(Abilities.HOKAGE, 9)
+      .attr(MoveTypePowerBoostAbAttr, Type.FIRE, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.WATER, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.FLYING, 1.2)
+      .attr(MoveTypePowerBoostAbAttr, Type.GROUND, 1.2),
+    new Ability(Abilities.SHARINGAN_ACTIVATED, 9)
+      .attr(PokemonTypeChangeAbAttr),
+    new Ability(Abilities.CROW_CLONE, 9)
+      .attr(MoveTypeChangeAbAttr, Type.FLYING, 1.2, (user, target, move) => move.type === Type.NORMAL)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.DARK, Type.FLYING, 2, true)
+      .attr(SharedWeaknessPowerBoostAbAttr, Type.FIRE, Type.FLYING, 2, true)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(30), 0.5)
+      .attr(PostDefendHealAbAttr, (target, user, move) => randSeedChance(30), 1/8),
+    new Ability(Abilities.SHARINGAN_MASTERY, 9)
+      .attr(PostAttackChanceDamageAbAttr, 15, 1/8)
+      .attr(ReceivedMoveDamageMultiplierAbAttr, (target, user, move) => randSeedChance(5), 0.25)
+      .attr(PostAttackStatChangeAbAttr, (user, target, move) => randSeedChance(15), 1, BattleStat.RAND, true),
+    new Ability(Abilities.FOREHEAD_TAP, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.power <= 60, 1.5)
+      .attr(PostAttackApplyTagAbAttr, false, (user, target, move) => move.power <= 60 && randSeedChance(10), [BattlerTagType.FLINCHED], 1)
+      .attr(PostAttackChanceStatusAbAttr, StatusEffect.PARALYSIS, (user, target, move) => move.power <= 60 && randSeedChance(10)),
+    new Ability(Abilities.EIGHT_TAILS, 9)
+      .attr(OctoHitMinMaxAbAttr),
+    new Ability(Abilities.RAPPING_RAMPAGE, 9)
+      .attr(MoveFlagChangeAttr, MoveFlags.SOUND_BASED, 1.2, (user, target, move) => true)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => move.hasFlag(MoveFlags.SOUND_BASED), 1.5)
+      .attr(PostAttackApplyTagAbAttr, false, 10, [BattlerTagType.FLINCHED], 0),
+    new Ability(Abilities.BEAST_MODE, 9)
+      .attr(MovePowerBoostAbAttr, (user, target, move) => user!.getHpRatio() <= .40, 2),
+    new Ability(Abilities.NIGHTMARE_SAND, 9)
+      .attr(PostTurnDamageAbAttr, 1/8, (pokemon, opponent) => pokemon.scene.arena.weather?.weatherType === WeatherType.SANDSTORM)
+      .attr(PostTurnStatChangeAbAttr, BattleStat.RAND, -1, false, (pokemon, opponent) => pokemon.scene.arena.weather?.weatherType === WeatherType.SANDSTORM && randSeedChance(30))
+      .attr(PostTurnWeatherChangeAbAttr, WeatherType.SANDSTORM, 30),
+    new Ability(Abilities.SOUL_EATER, 9)
+      .attr(PostAttackHealIfCollectedTypeMatchAbAttr)
+      .attr(PostKnockOutCollectAbAttr)
+      .attr(PostFaintLoseCollectedTypeAbAttr)
+      .bypassFaint(),
+    new Ability(Abilities.SOUL_DRAIN, 9)
+      .attr(PostAttackCollectTypeMatchAbAttr, 10)
+      .attr(PostAttackStatChangeIfCollectedTypeMatchAbAttr, BattleStat.RAND, -2)
+      .attr(PostFaintLoseCollectedTypeAbAttr)
+      .bypassFaint()
   );
 }

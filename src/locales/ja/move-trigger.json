@@ -58,5 +58,8 @@
   "copyType": "{{pokemonName}}は　{{targetPokemonName}}と\n同じタイプに　なった！",
   "suppressAbilities": "{{pokemonName}}の　とくせいが　きかなくなった！",
   "revivalBlessing": "{{pokemonName}}は\n復活して　戦えるようになった！",
-  "swapArenaTags": "{{pokemonName}}は\nおたがいの　ばのこうかを　いれかえた！"
+  "swapArenaTags": "{{pokemonName}}は\nおたがいの　ばのこうかを　いれかえた！",
+  "isTighteningFocus": "{{pokemonName}}は\n集中力を　高めている！",
+  "statEliminated": "全ての　能力変化が　元に戻った！",
+  "exposedMove": "{{pokemonName}}は {{targetPokemonName}}の\n正体を　見破った！"
 }

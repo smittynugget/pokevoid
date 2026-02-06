@@ -21,6 +21,7 @@ import { Variant, getVariantTint } from "#app/data/variant";
 import {Button} from "#enums/buttons";
 import { Ability } from "../data/ability.js";
 import i18next from "i18next";
+import { ModifierTooltipUtils } from "./modifier-tooltip-utils";
 import {modifierSortFunc} from "../modifier/modifier";
 import { PlayerGender } from "#enums/player-gender";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
@@ -192,7 +193,7 @@ export default class SummaryUiHandler extends UiHandler {
 
     const isJapaneseLang = i18next.resolvedLanguage === "ja";
     const summaryLabelFontSize = isJapaneseLang ? "117px" : "96px";
-    const summaryLabelX = 2
+    const summaryLabelX = 2;
     const summaryLabel = addTextObject(this.scene, summaryLabelX, -165, "Pokémon Info", TextStyle.SUMMARY, { fontSize: summaryLabelFontSize });
     summaryLabel.setOrigin(0, 1);
     this.summaryContainer.add(summaryLabel);
@@ -310,7 +311,7 @@ export default class SummaryUiHandler extends UiHandler {
     this.moveEffectContainer.add(effectLabel);
 
     const isJapanese = i18next.resolvedLanguage === "ja";
-    const labels = i18next.t("pokemonSummary:powerAccuracyCategory").split('\n');
+    const labels = i18next.t("pokemonSummary:powerAccuracyCategory").split("\n");
 
     const baseY = 12;
     const lineHeight = 16;
@@ -395,7 +396,7 @@ export default class SummaryUiHandler extends UiHandler {
     this.playerParty = args[4] ?? true;
     this.scene.ui.bringToTop(this.summaryContainer);
 
-    this.summaryContainer.setVisible(true)
+    this.summaryContainer.setVisible(true);
     this.cursor = -1;
 
     this._summaryPattern?.redraw();
@@ -446,7 +447,17 @@ export default class SummaryUiHandler extends UiHandler {
     this.splicedIcon.setPositionRelative(this.nameText, this.nameText.displayWidth + 2, 3);
     this.splicedIcon.setVisible(isFusion);
     if (this.splicedIcon.visible) {
-      this.splicedIcon.on("pointerover", () => (this.scene as BattleScene).ui.showTooltip("", `${this.pokemon?.species.getName(this.pokemon.formIndex)}/${this.pokemon?.fusionSpecies?.getName(this.pokemon?.fusionFormIndex)}`, true));
+      this.splicedIcon.off("pointerover");
+      this.splicedIcon.off("pointerout");
+      this.splicedIcon.on("pointerover", () => {
+        const primary = this.pokemon?.species.getName(this.pokemon.formIndex) || "";
+        const fusion = this.pokemon?.fusionSpecies?.getName(this.pokemon?.fusionFormIndex) || "";
+        (this.scene as BattleScene).ui.showTooltip(
+          i18next.t("battleInfo:fusionTooltipTitle"),
+          i18next.t("battleInfo:fusionTooltipBody", { primary, fusion }),
+          true
+        );
+      });
       this.splicedIcon.on("pointerout", () => (this.scene as BattleScene).ui.hideTooltip());
     }
 
@@ -471,7 +482,7 @@ export default class SummaryUiHandler extends UiHandler {
 
     this.candyCountText.setText(`x${this.scene.gameData.starterData[this.pokemon.species.getRootSpeciesId()].candyCount}`);
 
-    this.candyShadow.setCrop(0,0,16, candyCropY);
+    this.candyShadow.setCrop(0, 0, 16, candyCropY);
 
     const doubleShiny = isFusion && this.pokemon.shiny && this.pokemon.fusionShiny;
     const baseVariant = !doubleShiny ? this.pokemon.getVariant() : this.pokemon.variant;
@@ -483,7 +494,7 @@ export default class SummaryUiHandler extends UiHandler {
     if (this.shinyIcon.visible) {
       const shinyDescriptor = doubleShiny || baseVariant ?
         `${baseVariant === 2 ? i18next.t("common:epicShiny") : baseVariant === 1 ? i18next.t("common:rareShiny") : i18next.t("common:commonShiny")}${doubleShiny ? `/${this.pokemon.fusionVariant === 2 ? i18next.t("common:epicShiny") : this.pokemon.fusionVariant === 1 ? i18next.t("common:rareShiny") : i18next.t("common:commonShiny")}` : ""}`
-          : "";
+        : "";
       this.shinyIcon.on("pointerover", () => (this.scene as BattleScene).ui.showTooltip("", `${i18next.t("common:shinyOnHover")}${shinyDescriptor ? ` (${shinyDescriptor})` : ""}`, true));
       this.shinyIcon.on("pointerout", () => (this.scene as BattleScene).ui.hideTooltip());
     }
@@ -501,22 +512,22 @@ export default class SummaryUiHandler extends UiHandler {
     this.genderText.setShadowColor(getGenderColor(this.pokemon.getGender(true), true));
 
     switch (this.summaryUiMode) {
-      case SummaryUiMode.DEFAULT:
-        const page = args.length < 2 ? Page.PROFILE : args[2] as Page;
-        this.hideMoveEffect(true);
-        this.setCursor(page);
+    case SummaryUiMode.DEFAULT:
+      const page = args.length < 2 ? Page.PROFILE : args[2] as Page;
+      this.hideMoveEffect(true);
+      this.setCursor(page);
       if (args.length > 3) {
         this.selectCallback = args[3];
       }
-        break;
-      case SummaryUiMode.LEARN_MOVE:
-        this.newMove = args[2] as Move;
-        this.moveSelectFunction = args[3] as Function;
+      break;
+    case SummaryUiMode.LEARN_MOVE:
+      this.newMove = args[2] as Move;
+      this.moveSelectFunction = args[3] as Function;
 
-        this.showMoveEffect(true);
-        this.setCursor(Page.MOVES);
-        this.showMoveSelect();
-        break;
+      this.showMoveEffect(true);
+      this.setCursor(Page.MOVES);
+      this.showMoveSelect();
+      break;
     }
 
     const fromSummary = args.length >= 2;
@@ -584,25 +595,25 @@ export default class SummaryUiHandler extends UiHandler {
         success = true;
       } else {
         switch (button) {
-          case Button.UP:
-            success = this.setCursor(this.moveCursor ? this.moveCursor - 1 : 4);
+        case Button.UP:
+          success = this.setCursor(this.moveCursor ? this.moveCursor - 1 : 4);
+          break;
+        case Button.DOWN:
+          success = this.setCursor(this.moveCursor < 4 ? this.moveCursor + 1 : 0);
+          break;
+        case Button.LEFT:
+          this.moveSelect = false;
+          this.setCursor(Page.STATS);
+          if (this.summaryUiMode === SummaryUiMode.LEARN_MOVE) {
+            this.hideMoveEffect();
+            this.destroyBlinkCursor();
+            success = true;
             break;
-          case Button.DOWN:
-            success = this.setCursor(this.moveCursor < 4 ? this.moveCursor + 1 : 0);
+          } else {
+            this.hideMoveSelect();
+            success = true;
             break;
-          case Button.LEFT:
-            this.moveSelect = false;
-            this.setCursor(Page.STATS);
-            if (this.summaryUiMode === SummaryUiMode.LEARN_MOVE) {
-              this.hideMoveEffect();
-              this.destroyBlinkCursor();
-              success = true;
-              break;
-            } else {
-              this.hideMoveSelect();
-              success = true;
-              break;
-            }
+          }
         }
       }
     } else {
@@ -632,42 +643,42 @@ export default class SummaryUiHandler extends UiHandler {
           if (!fromPartyMode) {
             ui.setMode(Mode.MESSAGE);
           } else {
-          ui.setMode(Mode.PARTY);
-        }
+            ui.setMode(Mode.PARTY);
+          }
         }
         success = true;
       } else {
         const pages = Utils.getEnumValues(Page);
         switch (button) {
-          case Button.UP:
-          case Button.DOWN:
-            if (this.summaryUiMode === SummaryUiMode.LEARN_MOVE) {
-              break;
+        case Button.UP:
+        case Button.DOWN:
+          if (this.summaryUiMode === SummaryUiMode.LEARN_MOVE) {
+            break;
           } else if (!fromPartyMode) {
             break;
-            }
-            const isDown = button === Button.DOWN;
-            const party = this.scene.getParty();
+          }
+          const isDown = button === Button.DOWN;
+          const party = this.scene.getParty();
           const partyMemberIndex = this.pokemon ? party.indexOf(this.pokemon) : -1;
-            if ((isDown && partyMemberIndex < party.length - 1) || (!isDown && partyMemberIndex)) {
-              const page = this.cursor;
-              this.clear();
-              this.show([ party[partyMemberIndex + (isDown ? 1 : -1)], this.summaryUiMode, page ]);
+          if ((isDown && partyMemberIndex < party.length - 1) || (!isDown && partyMemberIndex)) {
+            const page = this.cursor;
+            this.clear();
+            this.show([ party[partyMemberIndex + (isDown ? 1 : -1)], this.summaryUiMode, page ]);
+          }
+          break;
+        case Button.LEFT:
+          if (this.cursor) {
+            success = this.setCursor(this.cursor - 1);
+          }
+          break;
+        case Button.RIGHT:
+          if (this.cursor < pages.length - 1) {
+            success = this.setCursor(this.cursor + 1);
+            if (this.summaryUiMode === SummaryUiMode.LEARN_MOVE && this.cursor === Page.MOVES) {
+              this.moveSelect = true;
             }
-            break;
-          case Button.LEFT:
-            if (this.cursor) {
-              success = this.setCursor(this.cursor - 1);
-            }
-            break;
-          case Button.RIGHT:
-            if (this.cursor < pages.length - 1) {
-              success = this.setCursor(this.cursor + 1);
-              if (this.summaryUiMode === SummaryUiMode.LEARN_MOVE && this.cursor === Page.MOVES) {
-                this.moveSelect = true;
-              }
-            }
-            break;
+          }
+          break;
         }
       }
     }
@@ -824,142 +835,142 @@ export default class SummaryUiHandler extends UiHandler {
     }
 
     switch (page) {
-      case Page.PROFILE:
-        const profileContainer = this.scene.add.container(0, -pageBg.height);
-        pageContainer.add(profileContainer);
+    case Page.PROFILE:
+      const profileContainer = this.scene.add.container(0, -pageBg.height);
+      pageContainer.add(profileContainer);
 
-        const profileLabel = addTextObject(
-          this.scene,
-          LABEL_CONSTANTS.PROFILE.x,
-          LABEL_CONSTANTS.PROFILE.y,
-          i18next.t("pokemonSummary:profile"),
-          LABEL_CONSTANTS.PROFILE.style,
-          { fontSize: LABEL_CONSTANTS.PROFILE.fontSize }
-        );
-        profileLabel.setOrigin(0, 0);
-        profileContainer.add(profileLabel);
+      const profileLabel = addTextObject(
+        this.scene,
+        LABEL_CONSTANTS.PROFILE.x,
+        LABEL_CONSTANTS.PROFILE.y,
+        i18next.t("pokemonSummary:profile"),
+        LABEL_CONSTANTS.PROFILE.style,
+        { fontSize: LABEL_CONSTANTS.PROFILE.fontSize }
+      );
+      profileLabel.setOrigin(0, 0);
+      profileContainer.add(profileLabel);
 
       const trainerText = addBBCodeTextObject(this.scene, 7, 12, `${i18next.t("pokemonSummary:ot")}/${getBBCodeFrag(loggedInUser?.username || i18next.t("pokemonSummary:unknown"), this.scene.gameData.gender === PlayerGender.FEMALE ? TextStyle.SUMMARY_PINK : TextStyle.SUMMARY_BLUE)}`, TextStyle.SUMMARY_ALT);
-        trainerText.setOrigin(0, 0);
-        profileContainer.add(trainerText);
+      trainerText.setOrigin(0, 0);
+      profileContainer.add(trainerText);
 
-        const idNoLabel = addTextObject(
-          this.scene,
-          LABEL_CONSTANTS.ID_NO.x,
-          LABEL_CONSTANTS.ID_NO.y,
-          i18next.t("pokemonSummary:idNo"),
-          LABEL_CONSTANTS.ID_NO.style,
-          { fontSize: LABEL_CONSTANTS.ID_NO.fontSize }
-        );
-        idNoLabel.setOrigin(0, 0);
-        profileContainer.add(idNoLabel);
+      const idNoLabel = addTextObject(
+        this.scene,
+        LABEL_CONSTANTS.ID_NO.x,
+        LABEL_CONSTANTS.ID_NO.y,
+        i18next.t("pokemonSummary:idNo"),
+        LABEL_CONSTANTS.ID_NO.style,
+        { fontSize: LABEL_CONSTANTS.ID_NO.fontSize }
+      );
+      idNoLabel.setOrigin(0, 0);
+      profileContainer.add(idNoLabel);
 
-        const trainerIdText = addTextObject(this.scene, 174, 12, this.scene.gameData.trainerId.toString(), TextStyle.SUMMARY_ALT);
-        trainerIdText.setOrigin(0, 0);
-        profileContainer.add(trainerIdText);
+      const trainerIdText = addTextObject(this.scene, 174, 12, this.scene.gameData.trainerId.toString(), TextStyle.SUMMARY_ALT);
+      trainerIdText.setOrigin(0, 0);
+      profileContainer.add(trainerIdText);
 
       const typeLabel = addTextObject(this.scene, 7, 28, `${i18next.t("pokemonSummary:type")}/`, TextStyle.WINDOW_ALT);
-        typeLabel.setOrigin(0, 0);
-        profileContainer.add(typeLabel);
+      typeLabel.setOrigin(0, 0);
+      profileContainer.add(typeLabel);
 
-        const getTypeIcon = (index: integer, type: Type, tera: boolean = false) => {
+      const getTypeIcon = (index: integer, type: Type, tera: boolean = false) => {
         const xCoord = typeLabel.width * typeLabel.scale + 9 + 34 * index;
-          const typeIcon = !tera
+        const typeIcon = !tera
           ? this.scene.add.sprite(xCoord, 42, Utils.getLocalizedSpriteKey("types"), Type[type].toLowerCase())
           : this.scene.add.sprite(xCoord, 42, "type_tera");
-          if (tera) {
-            typeIcon.setScale(0.5);
-            const typeRgb = getTypeRgb(type);
-            typeIcon.setTint(Phaser.Display.Color.GetColor(typeRgb[0], typeRgb[1], typeRgb[2]));
-          }
-          typeIcon.setOrigin(0, 1);
-          return typeIcon;
-        };
+        if (tera) {
+          typeIcon.setScale(0.5);
+          const typeRgb = getTypeRgb(type);
+          typeIcon.setTint(Phaser.Display.Color.GetColor(typeRgb[0], typeRgb[1], typeRgb[2]));
+        }
+        typeIcon.setOrigin(0, 1);
+        return typeIcon;
+      };
 
       const types = this.pokemon?.getTypes(false, false, true)!;
-        profileContainer.add(getTypeIcon(0, types[0]));
-        if (types.length > 1) {
-          profileContainer.add(getTypeIcon(1, types[1]));
-        }
+      profileContainer.add(getTypeIcon(0, types[0]));
+      if (types.length > 1) {
+        profileContainer.add(getTypeIcon(1, types[1]));
+      }
       if (this.pokemon?.isTerastallized()) {
-          profileContainer.add(getTypeIcon(types.length, this.pokemon.getTeraType(), true));
-        }
+        profileContainer.add(getTypeIcon(types.length, this.pokemon.getTeraType(), true));
+      }
 
-        this.abilityContainer = {
+      this.abilityContainer = {
+        labelText: addTextObject(
+          this.scene,
+          LABEL_CONSTANTS.ABILITY.x,
+          LABEL_CONSTANTS.ABILITY.y,
+          i18next.t("pokemonSummary:ability"),
+          LABEL_CONSTANTS.ABILITY.style,
+          { fontSize: LABEL_CONSTANTS.ABILITY.fontSize }
+        ),
+        ability: this.pokemon?.getAbility(true)!,
+        nameText: null,
+        descriptionText: null};
+
+      this.abilityContainer.labelText.setOrigin(0, 0);
+
+      const allAbilityInfo = [this.abilityContainer];
+
+      if (this.pokemon?.hasPassive()) {
+        this.passiveContainer = {
           labelText: addTextObject(
             this.scene,
-            LABEL_CONSTANTS.ABILITY.x,
-            LABEL_CONSTANTS.ABILITY.y,
-            i18next.t("pokemonSummary:ability"),
-            LABEL_CONSTANTS.ABILITY.style,
-            { fontSize: LABEL_CONSTANTS.ABILITY.fontSize }
+            LABEL_CONSTANTS.PASSIVE.x,
+            LABEL_CONSTANTS.PASSIVE.y,
+            i18next.t("pokemonSummary:passive"),
+            LABEL_CONSTANTS.PASSIVE.style,
+            { fontSize: LABEL_CONSTANTS.PASSIVE.fontSize }
           ),
-        ability: this.pokemon?.getAbility(true)!,
+          ability: this.pokemon.getPassiveAbility(),
           nameText: null,
           descriptionText: null};
 
-        this.abilityContainer.labelText.setOrigin(0, 0);
+        this.passiveContainer.labelText.setOrigin(0, 0);
+        allAbilityInfo.push(this.passiveContainer);
+        this.abilityPrompt = this.scene.add.image(0, 0, !this.scene.inputController?.gamepadSupport ? "summary_profile_prompt_z" : "summary_profile_prompt_a");
+        this.abilityPrompt.setPosition(8, 43);
+        this.abilityPrompt.setVisible(true);
+        this.abilityPrompt.setOrigin(0, 0);
+        profileContainer.add(this.abilityPrompt);
+      }
 
-        const allAbilityInfo = [this.abilityContainer];
-
-      if (this.pokemon?.hasPassive()) {
-          this.passiveContainer = {
-            labelText: addTextObject(
-              this.scene,
-              LABEL_CONSTANTS.PASSIVE.x,
-              LABEL_CONSTANTS.PASSIVE.y,
-              i18next.t("pokemonSummary:passive"),
-              LABEL_CONSTANTS.PASSIVE.style,
-              { fontSize: LABEL_CONSTANTS.PASSIVE.fontSize }
-            ),
-            ability: this.pokemon.getPassiveAbility(),
-            nameText: null,
-            descriptionText: null};
-
-          this.passiveContainer.labelText.setOrigin(0, 0);
-          allAbilityInfo.push(this.passiveContainer);
-          this.abilityPrompt = this.scene.add.image(0, 0, !this.scene.inputController?.gamepadSupport ? "summary_profile_prompt_z" : "summary_profile_prompt_a");
-          this.abilityPrompt.setPosition(8, 43);
-          this.abilityPrompt.setVisible(true);
-          this.abilityPrompt.setOrigin(0, 0);
-          profileContainer.add(this.abilityPrompt);
-        }
-
-        allAbilityInfo.forEach(abilityInfo => {
-          profileContainer.add(abilityInfo.labelText);
+      allAbilityInfo.forEach(abilityInfo => {
+        profileContainer.add(abilityInfo.labelText);
 
         abilityInfo.nameText = addTextObject(this.scene, 7, 66, abilityInfo.ability?.name!, TextStyle.SUMMARY_ALT);
-          abilityInfo.nameText.setOrigin(0, 1);
-          profileContainer.add(abilityInfo.nameText);
+        abilityInfo.nameText.setOrigin(0, 1);
+        profileContainer.add(abilityInfo.nameText);
 
         abilityInfo.descriptionText = addTextObject(this.scene, 7, 69, abilityInfo.ability?.description!, TextStyle.WINDOW_ALT, { wordWrap: { width: 1224 } });
-          abilityInfo.descriptionText.setOrigin(0, 0);
-          profileContainer.add(abilityInfo.descriptionText);
-          const descriptionTextMaskRect = this.scene.make.graphics({});
-          descriptionTextMaskRect.setScale(6);
-          descriptionTextMaskRect.fillStyle(0xFFFFFF);
-          descriptionTextMaskRect.beginPath();
-          descriptionTextMaskRect.fillRect(110, 90.5, 206, 31);
+        abilityInfo.descriptionText.setOrigin(0, 0);
+        profileContainer.add(abilityInfo.descriptionText);
+        const descriptionTextMaskRect = this.scene.make.graphics({});
+        descriptionTextMaskRect.setScale(6);
+        descriptionTextMaskRect.fillStyle(0xFFFFFF);
+        descriptionTextMaskRect.beginPath();
+        descriptionTextMaskRect.fillRect(110, 90.5, 206, 31);
 
-          const abilityDescriptionTextMask = descriptionTextMaskRect.createGeometryMask();
+        const abilityDescriptionTextMask = descriptionTextMaskRect.createGeometryMask();
 
-          abilityInfo.descriptionText.setMask(abilityDescriptionTextMask);
+        abilityInfo.descriptionText.setMask(abilityDescriptionTextMask);
 
-          const abilityDescriptionLineCount = Math.floor(abilityInfo.descriptionText.displayHeight / 14.83);
-          if (abilityDescriptionLineCount > 2) {
-            abilityInfo.descriptionText.setY(69);
-            this.descriptionScrollTween = this.scene.tweens.add({
-              targets: abilityInfo.descriptionText,
-              delay: Utils.fixedInt(2000),
-              loop: -1,
-              hold: Utils.fixedInt(2000),
-              duration: Utils.fixedInt((abilityDescriptionLineCount - 2) * 2000),
-              y: `-=${14.83 * (abilityDescriptionLineCount - 2)}`
-            });
-          }
-        });
+        const abilityDescriptionLineCount = Math.floor(abilityInfo.descriptionText.displayHeight / 14.83);
+        if (abilityDescriptionLineCount > 2) {
+          abilityInfo.descriptionText.setY(69);
+          this.descriptionScrollTween = this.scene.tweens.add({
+            targets: abilityInfo.descriptionText,
+            delay: Utils.fixedInt(2000),
+            loop: -1,
+            hold: Utils.fixedInt(2000),
+            duration: Utils.fixedInt((abilityDescriptionLineCount - 2) * 2000),
+            y: `-=${14.83 * (abilityDescriptionLineCount - 2)}`
+          });
+        }
+      });
 
-        this.passiveContainer?.labelText.setVisible(false);
+      this.passiveContainer?.labelText.setVisible(false);
       this.passiveContainer?.nameText?.setVisible(false);
       this.passiveContainer?.descriptionText?.setVisible(false);
 
@@ -987,71 +998,71 @@ export default class SummaryUiHandler extends UiHandler {
       profileContainer.add(trainerMemoLabel);
 
       const memoText = addBBCodeTextObject(this.scene, 7, 115, String(memoString), TextStyle.WINDOW_ALT);
-        memoText.setOrigin(0, 0);
-        profileContainer.add(memoText);
-        break;
-      case Page.STATS:
-        const statsContainer = this.scene.add.container(0, -pageBg.height);
-        pageContainer.add(statsContainer);
+      memoText.setOrigin(0, 0);
+      profileContainer.add(memoText);
+      break;
+    case Page.STATS:
+      const statsContainer = this.scene.add.container(0, -pageBg.height);
+      pageContainer.add(statsContainer);
 
-        const statsLabel = addTextObject(
-          this.scene,
-          LABEL_CONSTANTS.STATS.x,
-          LABEL_CONSTANTS.STATS.y,
-          i18next.t("pokemonSummary:stats"),
-          LABEL_CONSTANTS.STATS.style,
-          { fontSize: LABEL_CONSTANTS.STATS.fontSize }
-        );
-        statsLabel.setOrigin(0, 0);
-        statsContainer.add(statsLabel);
+      const statsLabel = addTextObject(
+        this.scene,
+        LABEL_CONSTANTS.STATS.x,
+        LABEL_CONSTANTS.STATS.y,
+        i18next.t("pokemonSummary:stats"),
+        LABEL_CONSTANTS.STATS.style,
+        { fontSize: LABEL_CONSTANTS.STATS.fontSize }
+      );
+      statsLabel.setOrigin(0, 0);
+      statsContainer.add(statsLabel);
 
-        const stats = Utils.getEnumValues(Stat) as Stat[];
+      const stats = Utils.getEnumValues(Stat) as Stat[];
 
-        stats.forEach((stat, s) => {
+      stats.forEach((stat, s) => {
         const statName = getStatName(stat);
-          const rowIndex = s % 3;
-          const colIndex = Math.floor(s / 3);
+        const rowIndex = s % 3;
+        const colIndex = Math.floor(s / 3);
 
         const natureStatMultiplier = getNatureStatMultiplier(this.pokemon?.getNature()!, s);
 
-          const statLabel = addTextObject(this.scene, 27 + 115 * colIndex + (colIndex === 1 ?  5 : 0), 56 + 16 * rowIndex, statName, natureStatMultiplier === 1 ? TextStyle.SUMMARY : natureStatMultiplier > 1 ? TextStyle.SUMMARY_PINK : TextStyle.SUMMARY_BLUE);
-          statLabel.setOrigin(0.5, 0);
-          statsContainer.add(statLabel);
+        const statLabel = addTextObject(this.scene, 27 + 115 * colIndex + (colIndex === 1 ?  5 : 0), 56 + 16 * rowIndex, statName, natureStatMultiplier === 1 ? TextStyle.SUMMARY : natureStatMultiplier > 1 ? TextStyle.SUMMARY_PINK : TextStyle.SUMMARY_BLUE);
+        statLabel.setOrigin(0.5, 0);
+        statsContainer.add(statLabel);
 
-          const statValueText = stat !== Stat.HP
+        const statValueText = stat !== Stat.HP
           ? Utils.formatStat(this.pokemon?.stats[s]!)
           : `${Utils.formatStat(this.pokemon?.hp!, true)}/${Utils.formatStat(this.pokemon?.getMaxHp()!, true)}`;
 
-          const statValue = addTextObject(this.scene, 120 + 88 * colIndex, 56 + 16 * rowIndex, statValueText, TextStyle.WINDOW_ALT);
-          statValue.setOrigin(1, 0);
-          statsContainer.add(statValue);
-        });
+        const statValue = addTextObject(this.scene, 120 + 88 * colIndex, 56 + 16 * rowIndex, statValueText, TextStyle.WINDOW_ALT);
+        statValue.setOrigin(1, 0);
+        statsContainer.add(statValue);
+      });
 
-        const itemModifiers = (this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier
+      const itemModifiers = (this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier
           && m.pokemonId === this.pokemon?.id, this.playerParty) as PokemonHeldItemModifier[])
-            .sort(modifierSortFunc);
+        .sort(modifierSortFunc);
 
-        const itemsLabel = addTextObject(
-          this.scene,
-          LABEL_CONSTANTS.ITEMS.x,
-          LABEL_CONSTANTS.ITEMS.y,
-          i18next.t("pokemonSummary:items"),
-          LABEL_CONSTANTS.ITEMS.style,
-          { fontSize: LABEL_CONSTANTS.ITEMS.fontSize }
-        );
-        itemsLabel.setOrigin(0, 0);
-        statsContainer.add(itemsLabel);
+      const itemsLabel = addTextObject(
+        this.scene,
+        LABEL_CONSTANTS.ITEMS.x,
+        LABEL_CONSTANTS.ITEMS.y,
+        i18next.t("pokemonSummary:items"),
+        LABEL_CONSTANTS.ITEMS.style,
+        { fontSize: LABEL_CONSTANTS.ITEMS.fontSize }
+      );
+      itemsLabel.setOrigin(0, 0);
+      statsContainer.add(itemsLabel);
 
-        itemModifiers.forEach((item, i) => {
-          const icon = item.getIcon(this.scene, true);
+      itemModifiers.forEach((item, i) => {
+        const icon = item.getIcon(this.scene, true);
 
-          icon.setPosition((i % 17) * 12 + 3, 14 * Math.floor(i / 17) + 22);
-          statsContainer.add(icon);
+        icon.setPosition((i % 17) * 12 + 3, 14 * Math.floor(i / 17) + 22);
+        statsContainer.add(icon);
 
-          icon.setInteractive(new Phaser.Geom.Rectangle(0, 0, 32, 32), Phaser.Geom.Rectangle.Contains);
-          icon.on("pointerover", () => (this.scene as BattleScene).ui.showTooltip(item.type.name, item.type.getDescription(this.scene), true));
-          icon.on("pointerout", () => (this.scene as BattleScene).ui.hideTooltip());
-        });
+        icon.setInteractive(new Phaser.Geom.Rectangle(0, 0, 32, 32), Phaser.Geom.Rectangle.Contains);
+        icon.on("pointerover", () => ModifierTooltipUtils.showForModifier(this.scene as BattleScene, item));
+        icon.on("pointerout", () => ModifierTooltipUtils.hideIfNotPinned(this.scene as BattleScene));
+      });
 
       const pkmLvl = this.pokemon?.level!;
       const pkmLvlExp = this.pokemon?.levelExp!;
@@ -1068,8 +1079,8 @@ export default class SummaryUiHandler extends UiHandler {
         LABEL_CONSTANTS.EXP.style,
         { fontSize: LABEL_CONSTANTS.EXP.fontSize }
       );
-        expLabel.setOrigin(0, 0);
-        statsContainer.add(expLabel);
+      expLabel.setOrigin(0, 0);
+      statsContainer.add(expLabel);
       const expBarImage = this.scene.add.image(
         LABEL_CONSTANTS.EXP_BAR.x,
         LABEL_CONSTANTS.EXP_BAR.y + 2,
@@ -1080,64 +1091,64 @@ export default class SummaryUiHandler extends UiHandler {
       statsContainer.add(expBarImage);
 
       const nextLvExpLabel = addTextObject(this.scene, 6, 128, i18next.t("pokemonSummary:nextLv"), TextStyle.SUMMARY);
-        nextLvExpLabel.setOrigin(0, 0);
-        statsContainer.add(nextLvExpLabel);
+      nextLvExpLabel.setOrigin(0, 0);
+      statsContainer.add(nextLvExpLabel);
 
       const expText = addTextObject(this.scene, 208, 112, pkmExp.toString(), TextStyle.WINDOW_ALT);
-        expText.setOrigin(1, 0);
-        statsContainer.add(expText);
+      expText.setOrigin(1, 0);
+      statsContainer.add(expText);
 
       const nextLvExp = pkmLvl < this.scene.getMaxExpLevel()
         ? getLevelTotalExp(pkmLvl + 1, pkmSpeciesGrowthRate) - pkmExp
-            : 0;
-        const nextLvExpText = addTextObject(this.scene, 208, 128, nextLvExp.toString(), TextStyle.WINDOW_ALT);
-        nextLvExpText.setOrigin(1, 0);
-        statsContainer.add(nextLvExpText);
+        : 0;
+      const nextLvExpText = addTextObject(this.scene, 208, 128, nextLvExp.toString(), TextStyle.WINDOW_ALT);
+      nextLvExpText.setOrigin(1, 0);
+      statsContainer.add(nextLvExpText);
 
-        const expOverlay = this.scene.add.image(140, 148, "summary_stats_overlay_exp");
-        expOverlay.setOrigin(0, 0);
-        statsContainer.add(expOverlay);
+      const expOverlay = this.scene.add.image(140, 148, "summary_stats_overlay_exp");
+      expOverlay.setOrigin(0, 0);
+      statsContainer.add(expOverlay);
 
-        const expMaskRect = this.scene.make.graphics({});
-        expMaskRect.setScale(6);
-        expMaskRect.fillStyle(0xFFFFFF);
-        expMaskRect.beginPath();
-        expMaskRect.fillRect(140 + pageContainer.x, 148 + pageContainer.y + 21, Math.floor(expRatio * 64), 3);
+      const expMaskRect = this.scene.make.graphics({});
+      expMaskRect.setScale(6);
+      expMaskRect.fillStyle(0xFFFFFF);
+      expMaskRect.beginPath();
+      expMaskRect.fillRect(140 + pageContainer.x, 148 + pageContainer.y + 21, Math.floor(expRatio * 64), 3);
 
-        const expMask = expMaskRect.createGeometryMask();
+      const expMask = expMaskRect.createGeometryMask();
 
-        expOverlay.setMask(expMask);
-        break;
-      case Page.MOVES:
-        this.movesContainer = this.scene.add.container(5, -pageBg.height + 26);
-        pageContainer.add(this.movesContainer);
+      expOverlay.setMask(expMask);
+      break;
+    case Page.MOVES:
+      this.movesContainer = this.scene.add.container(5, -pageBg.height + 26);
+      pageContainer.add(this.movesContainer);
 
-        const movesLabel = addTextObject(
-          this.scene,
-          LABEL_CONSTANTS.MOVES.x,
-          LABEL_CONSTANTS.MOVES.y,
-          i18next.t("pokemonSummary:moves"),
-          LABEL_CONSTANTS.MOVES.style,
-          { fontSize: LABEL_CONSTANTS.MOVES.fontSize }
-        );
-        movesLabel.setOrigin(0, 0);
-        this.movesContainer.add(movesLabel);
+      const movesLabel = addTextObject(
+        this.scene,
+        LABEL_CONSTANTS.MOVES.x,
+        LABEL_CONSTANTS.MOVES.y,
+        i18next.t("pokemonSummary:moves"),
+        LABEL_CONSTANTS.MOVES.style,
+        { fontSize: LABEL_CONSTANTS.MOVES.fontSize }
+      );
+      movesLabel.setOrigin(0, 0);
+      this.movesContainer.add(movesLabel);
 
-        this.extraMoveRowContainer = this.scene.add.container(0, 64);
-        this.extraMoveRowContainer.setVisible(false);
-        this.movesContainer.add(this.extraMoveRowContainer);
+      this.extraMoveRowContainer = this.scene.add.container(0, 64);
+      this.extraMoveRowContainer.setVisible(false);
+      this.movesContainer.add(this.extraMoveRowContainer);
 
-        const extraRowOverlay = this.scene.add.image(-2, 1, "summary_moves_overlay_row");
-        extraRowOverlay.setOrigin(0, 1);
-        this.extraMoveRowContainer.add(extraRowOverlay);
+      const extraRowOverlay = this.scene.add.image(-2, 1, "summary_moves_overlay_row");
+      extraRowOverlay.setOrigin(0, 1);
+      this.extraMoveRowContainer.add(extraRowOverlay);
 
       const extraRowText = addTextObject(this.scene, 35, 0, this.summaryUiMode === SummaryUiMode.LEARN_MOVE && this.newMove ? this.newMove.name : i18next.t("pokemonSummary:cancel"),
-            this.summaryUiMode === SummaryUiMode.LEARN_MOVE ? TextStyle.SUMMARY_PINK : TextStyle.SUMMARY);
-        extraRowText.setOrigin(0, 1);
-        this.extraMoveRowContainer.add(extraRowText);
+        this.summaryUiMode === SummaryUiMode.LEARN_MOVE ? TextStyle.SUMMARY_PINK : TextStyle.SUMMARY);
+      extraRowText.setOrigin(0, 1);
+      this.extraMoveRowContainer.add(extraRowText);
 
-        if (this.summaryUiMode === SummaryUiMode.LEARN_MOVE) {
-          this.extraMoveRowContainer.setVisible(true);
+      if (this.summaryUiMode === SummaryUiMode.LEARN_MOVE) {
+        this.extraMoveRowContainer.setVisible(true);
 
         if (this.newMove && this.pokemon) {
           const spriteKey = Utils.getLocalizedSpriteKey("types");
@@ -1146,76 +1157,76 @@ export default class SummaryUiHandler extends UiHandler {
           newMoveTypeIcon.setOrigin(0, 1);
           this.extraMoveRowContainer.add(newMoveTypeIcon);
         }
-          const ppOverlay = this.scene.add.image(163, -1, "summary_moves_overlay_pp");
-          ppOverlay.setOrigin(0, 1);
-          this.extraMoveRowContainer.add(ppOverlay);
+        const ppOverlay = this.scene.add.image(163, -1, "summary_moves_overlay_pp");
+        ppOverlay.setOrigin(0, 1);
+        this.extraMoveRowContainer.add(ppOverlay);
 
         const pp = Utils.padInt(this.newMove?.pp!, 2, "  ");
-          const ppText = addTextObject(this.scene, 173, 1, `${pp}/${pp}`, TextStyle.WINDOW);
-          ppText.setOrigin(0, 1);
-          this.extraMoveRowContainer.add(ppText);
-        }
+        const ppText = addTextObject(this.scene, 173, 1, `${pp}/${pp}`, TextStyle.WINDOW);
+        ppText.setOrigin(0, 1);
+        this.extraMoveRowContainer.add(ppText);
+      }
 
-        this.moveRowsContainer = this.scene.add.container(0, 0);
-        this.movesContainer.add(this.moveRowsContainer);
+      this.moveRowsContainer = this.scene.add.container(0, 0);
+      this.movesContainer.add(this.moveRowsContainer);
 
-        for (let m = 0; m < 4; m++) {
+      for (let m = 0; m < 4; m++) {
         const move: PokemonMove | null = this.pokemon && this.pokemon.moveset.length > m ? this.pokemon?.moveset[m] : null;
-          const moveRowContainer = this.scene.add.container(0, 16 * m);
-          this.moveRowsContainer.add(moveRowContainer);
+        const moveRowContainer = this.scene.add.container(0, 16 * m);
+        this.moveRowsContainer.add(moveRowContainer);
 
         if (move && this.pokemon) {
           const spriteKey = Utils.getLocalizedSpriteKey("types");
           const moveType = this.pokemon.getMoveType(move.getMove());
           const typeIcon = this.scene.add.sprite(0, 0, spriteKey, Type[moveType].toLowerCase());
           typeIcon.setOrigin(0, 1);
-            moveRowContainer.add(typeIcon);
-          }
-
-          const moveText = addTextObject(this.scene, 35, 0, move ? move.getName() : "-", TextStyle.SUMMARY);
-          moveText.setOrigin(0, 1);
-          moveRowContainer.add(moveText);
-
-          const ppOverlay = this.scene.add.image(163, -1, "summary_moves_overlay_pp");
-          ppOverlay.setOrigin(0, 1);
-          moveRowContainer.add(ppOverlay);
-
-          const ppText = addTextObject(this.scene, 173, 1, "--/--", TextStyle.WINDOW);
-          ppText.setOrigin(0, 1);
-
-          if (move) {
-            const maxPP = move.getMovePp();
-            const pp = maxPP - move.ppUsed;
-            ppText.setText(`${Utils.padInt(pp, 2, "  ")}/${Utils.padInt(maxPP, 2, "  ")}`);
-          }
-
-          moveRowContainer.add(ppText);
+          moveRowContainer.add(typeIcon);
         }
 
-        const descriptionLabel = addTextObject(
-          this.scene,
-          LABEL_CONSTANTS.DESCRIPTION.x,
-          LABEL_CONSTANTS.DESCRIPTION.y,
-          i18next.t("pokemonSummary:description"),
-          LABEL_CONSTANTS.DESCRIPTION.style,
-          { fontSize: LABEL_CONSTANTS.DESCRIPTION.fontSize }
-        );
-        descriptionLabel.setOrigin(0, 0);
-        this.movesContainer.add(descriptionLabel);
+        const moveText = addTextObject(this.scene, 35, 0, move ? move.getName() : "-", TextStyle.SUMMARY);
+        moveText.setOrigin(0, 1);
+        moveRowContainer.add(moveText);
 
-        this.moveDescriptionText = addTextObject(this.scene, 2, 84, "", TextStyle.WINDOW_ALT, { wordWrap: { width: 1212 } });
-        this.movesContainer.add(this.moveDescriptionText);
+        const ppOverlay = this.scene.add.image(163, -1, "summary_moves_overlay_pp");
+        ppOverlay.setOrigin(0, 1);
+        moveRowContainer.add(ppOverlay);
 
-        const moveDescriptionTextMaskRect = this.scene.make.graphics({});
-        moveDescriptionTextMaskRect.setScale(6);
-        moveDescriptionTextMaskRect.fillStyle(0xFFFFFF);
-        moveDescriptionTextMaskRect.beginPath();
-        moveDescriptionTextMaskRect.fillRect(112, 130, 202, 46);
+        const ppText = addTextObject(this.scene, 173, 1, "--/--", TextStyle.WINDOW);
+        ppText.setOrigin(0, 1);
 
-        const moveDescriptionTextMask = moveDescriptionTextMaskRect.createGeometryMask();
+        if (move) {
+          const maxPP = move.getMovePp();
+          const pp = maxPP - move.ppUsed;
+          ppText.setText(`${Utils.padInt(pp, 2, "  ")}/${Utils.padInt(maxPP, 2, "  ")}`);
+        }
 
-        this.moveDescriptionText.setMask(moveDescriptionTextMask);
-        break;
+        moveRowContainer.add(ppText);
+      }
+
+      const descriptionLabel = addTextObject(
+        this.scene,
+        LABEL_CONSTANTS.DESCRIPTION.x,
+        LABEL_CONSTANTS.DESCRIPTION.y,
+        i18next.t("pokemonSummary:description"),
+        LABEL_CONSTANTS.DESCRIPTION.style,
+        { fontSize: LABEL_CONSTANTS.DESCRIPTION.fontSize }
+      );
+      descriptionLabel.setOrigin(0, 0);
+      this.movesContainer.add(descriptionLabel);
+
+      this.moveDescriptionText = addTextObject(this.scene, 2, 84, "", TextStyle.WINDOW_ALT, { wordWrap: { width: 1212 } });
+      this.movesContainer.add(this.moveDescriptionText);
+
+      const moveDescriptionTextMaskRect = this.scene.make.graphics({});
+      moveDescriptionTextMaskRect.setScale(6);
+      moveDescriptionTextMaskRect.fillStyle(0xFFFFFF);
+      moveDescriptionTextMaskRect.beginPath();
+      moveDescriptionTextMaskRect.fillRect(112, 130, 202, 46);
+
+      const moveDescriptionTextMask = moveDescriptionTextMaskRect.createGeometryMask();
+
+      this.moveDescriptionText.setMask(moveDescriptionTextMask);
+      break;
     }
   }
 

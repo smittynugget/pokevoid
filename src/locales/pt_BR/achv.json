@@ -9,16 +9,20 @@
     "description": "Acumule um total de ₽{{moneyAmount}}"
   },
   "10K_MONEY": {
-    "name": "Chuva de Dinheiro"
+    "name": "Chuva de Dinheiro",
+    "name_female": null
   },
   "100K_MONEY": {
-    "name": "Tô Rica!"
+    "name": "Tô Rica!",
+    "name_female": null
   },
   "1M_MONEY": {
-    "name": "Quem Quer Ser Um Milionário?"
+    "name": "Quem Quer Ser Um Milionário?",
+    "name_female": null
   },
   "10M_MONEY": {
-    "name": "Tio Patinhas"
+    "name": "Tio Patinhas",
+    "name_female": null
   },
   "DamageAchv": {
     "description": "Inflija {{damageAmount}} de dano em um único golpe"
@@ -27,19 +31,23 @@
     "name": "Essa Doeu!"
   },
   "1000_DMG": {
-    "name": "Essa Doeu Mais!"
+    "name": "Essa Doeu Mais!",
+    "name_female": null
   },
   "2500_DMG": {
-    "name": "Essa Doeu Muito!"
+    "name": "Essa Doeu Muito!",
+    "name_female": null
   },
   "10000_DMG": {
-    "name": "Essa Doeu Pra Caramba!"
+    "name": "Essa Doeu Pra Caramba!",
+    "name_female": "Essa Doeu Pra Caramba!"
   },
   "HealAchv": {
     "description": "Cure {{healAmount}} {{HP}} de uma vez só com um movimento, habilidade ou item segurado"
   },
   "250_HEAL": {
-    "name": "Residente"
+    "name": "Residente",
+    "name_female": null
   },
   "1000_HEAL": {
     "name": "Enfermeiro",
@@ -70,19 +78,24 @@
     "description": "Acumule um total de {{ribbonAmount}} Fitas"
   },
   "10_RIBBONS": {
-    "name": "Fita de Bronze"
+    "name": "Fita de Bronze",
+    "name_female": null
   },
   "25_RIBBONS": {
-    "name": "Fita de Prata"
+    "name": "Fita de Prata",
+    "name_female": null
   },
   "50_RIBBONS": {
-    "name": "Fita de Ouro"
+    "name": "Fita de Ouro",
+    "name_female": null
   },
   "75_RIBBONS": {
-    "name": "Fita de Platina"
+    "name": "Fita de Platina",
+    "name_female": null
   },
   "100_RIBBONS": {
-    "name": "Fita de Diamante"
+    "name": "Fita de Diamante",
+    "name_female": null
   },
   "TRANSFER_MAX_BATTLE_STAT": {
     "name": "Trabalho em Equipe",
@@ -134,7 +147,8 @@
   },
   "SHINY_PARTY": {
     "name": "Tá Todo Mundo Brilhando!",
-    "description": "Tenha uma equipe formada por 6 Pokémon Shiny"
+    "description": "Tenha uma equipe formada por 6 Pokémon Shiny",
+    "name_female": null
   },
   "HATCH_MYTHICAL": {
     "name": "Ovo Mítico",
@@ -162,7 +176,8 @@
   },
   "CLASSIC_VICTORY": {
     "name": "Invencível",
-    "description": "Vença o jogo no modo clássico"
+    "description": "Vença o jogo no modo clássico",
+    "name_female": null
   },
   "UNEVOLVED_CLASSIC_VICTORY": {
     "name": "Tire as Crianças da Sala",

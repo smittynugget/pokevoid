@@ -1,4 +1,5 @@
 {
+  "options": "選項",
   "boy": "男孩",
   "girl": "女孩",
   "general": "常規",
@@ -99,5 +100,13 @@
   "moveTouchControls": "移動觸控控制",
   "shopOverlayOpacity": "商店顯示不透明度",
   "rewardOverlayOpacity": "獎勵顯示不透明度",
-  "lockedRewardSpeed": "鎖定獎勵動畫速度"
+  "disableMoveUpgrades": "停用招式強化",
+  "disableCutscenes": "停用過場動畫",
+  "showBgmBar": "顯示音樂名稱",
+  "uiVolume": "UI音量",
+  "shopCursorTarget": "商店游標目標",
+  "items": "道具",
+  "reroll": "重抽",
+  "shop": "商店",
+  "checkTeam": "查看隊伍"
 }

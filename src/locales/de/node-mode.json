@@ -245,6 +245,7 @@
       "description": "Stärkstes Pokémon verursacht halben Schaden"
     }
   },
-  "tooltipDetails": "DETAILS",
+  "challengeHeader": "HERAUSFORDERUNG!",
+  "tooltipDetails": "Mehr Info",
   "tooltipBack": "Zurück"
 } 

@@ -3,7 +3,7 @@ import {ModifierTier} from "#app/modifier/modifier-tier.js";
 import {ModifierTypeOption, ModifierType, getShopModifierTypeOptions, PermaPartyAbilityModifierType} from "#app/modifier/modifier-type.js";
 import {Modifier, ReduceShopCostModifier} from "#app/modifier/modifier.js";
 import ShopSelectUiHandler, {SHOP_OPTIONS_ROW_LIMIT} from "#app/ui/shop-select-ui-handler.js";
-import {Mode} from "#app/ui/ui.js";
+import { Mode } from "#app/ui/ui.js";
 import i18next from "i18next";
 import * as Utils from "#app/utils.js";
 import {Phase} from "../phase";
@@ -15,357 +15,374 @@ import { CommandPhase } from "./command-phase";
 import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
 
 export class ShopModifierSelectPhase extends Phase {
-    private modifierTiers: ModifierTier[];
-    private onEndCallback: (() => void) | undefined;
-    private lastRefreshTime: number;
-    private selectionMade: boolean = false;
-    private currentOptions: ModifierTypeOption[] | null = null;
-    private refreshing: boolean = false;
+  private modifierTiers: ModifierTier[];
+  private onEndCallback: (() => void) | undefined;
+  private lastRefreshTime: number;
+  private selectionMade: boolean = false;
+  private currentOptions: ModifierTypeOption[] | null = null;
+  private refreshing: boolean = false;
 
-    constructor(
-        scene: BattleScene,
-        modifierTiers?: ModifierTier[],
-        onEndCallback?: () => void,
-        currentOptions?: ModifierTypeOption[] | null
-    ) {
-        super(scene);
+  constructor(
+    scene: BattleScene,
+    modifierTiers?: ModifierTier[],
+    onEndCallback?: () => void,
+    currentOptions?: ModifierTypeOption[] | null
+  ) {
+    super(scene);
 
-        this.modifierTiers = modifierTiers || [];
-        this.onEndCallback = onEndCallback;
-        this.lastRefreshTime = Date.now();
-        this.currentOptions = currentOptions || null;
+    this.modifierTiers = modifierTiers || [];
+    this.onEndCallback = onEndCallback;
+    this.lastRefreshTime = Date.now();
+    this.currentOptions = currentOptions || null;
+  }
+
+  public get rerollCount() :number {
+    return this.scene.gameData.permaShopRerollCount;
+  }
+  public set rerollCount(value:number) {
+    this.scene.gameData.permaShopRerollCount = value;
+  }
+
+  async start() {
+    super.start();
+
+    if (this.rerollCount > 0) {
+      this.scene.reroll = false;
     }
 
-    public get rerollCount() :number {
-        return this.scene.gameData.permaShopRerollCount;
+    this.scene.gameData.localSaveAll(this.scene);
+
+    const typeOptions: ModifierTypeOption[] = this.getAvailableModifierOptions();
+
+    await this.scene.ui.setMode(Mode.SHOP_SELECT, true, typeOptions, this.modifierSelectCallback, this.getRerollCost());
+
+    const uiHandler = this.scene.ui.getHandler() as ShopSelectUiHandler;
+    if (uiHandler && uiHandler instanceof ShopSelectUiHandler) {
+      uiHandler.setRefreshFunction(() => this.refreshPhase());
+      uiHandler.setRerollCost(this.getRerollCost());
+      uiHandler.updateRerollCostText();
+    } else {
+      console.error("ShopSelectUiHandler not found or is of incorrect type!");
     }
-    public set rerollCount(value:number) {
-        this.scene.gameData.permaShopRerollCount = value;
+
+    const permaTutorials = [EnhancedTutorial.SMITTY_ITEMS_1, EnhancedTutorial.PARTY_ABILITY_1, EnhancedTutorial.PERMA_MONEY_1];
+
+    if (!this.scene.gameData.tutorialService.allTutorialsCompleted(permaTutorials)) {
+      this.scene.gameData.tutorialService.showCombinedTutorial("", permaTutorials, true, false, true);
     }
 
-    async start() {
-        super.start();
+  }
 
-        if (this.rerollCount > 0) {
-            this.scene.reroll = false;
-        }
+  modifierSelectCallback = (rowCursor: integer, cursor: integer) => {
+    const typeOptions: ModifierTypeOption[] = this.getAvailableModifierOptions();
+    if (rowCursor < 0 || cursor < 0) {
+      this.scene.ui.showText(i18next.t("starterSelectUiHandler:confirmExit"), null, () => {
+        this.scene.ui.setOverlayMode(Mode.CONFIRM, () => {
+          this.scene.ui.revertMode();
+          this.scene.ui.setMode(Mode.MESSAGE);
+          this.end();
+        }, () => this.scene.ui.setMode(Mode.SHOP_SELECT, true, typeOptions, this.modifierSelectCallback, this.getRerollCost()));
+      });
+      return false;
+    }
 
-        this.scene.gameData.localSaveAll(this.scene);
+    let modifierType: ModifierType | undefined;
+    let cost: integer | undefined;
 
-        const typeOptions: ModifierTypeOption[] = this.getAvailableModifierOptions();
-
-        await this.scene.ui.setMode(Mode.SHOP_SELECT, true, typeOptions, this.modifierSelectCallback, this.getRerollCost());
-
-        const uiHandler = this.scene.ui.getHandler() as ShopSelectUiHandler;
-        if (uiHandler && uiHandler instanceof ShopSelectUiHandler) {
-            uiHandler.setRefreshFunction(() => this.refreshPhase());
-            uiHandler.setRerollCost(this.getRerollCost());
-            uiHandler.updateRerollCostText();
+    switch (rowCursor) {
+    case 0:
+      switch (cursor) {
+      case 0:
+        const rerollCost = this.getRerollCost();
+        if (this.scene.gameData.permaMoney < rerollCost) {
+          this.scene.ui.playError();
+          return false;
         } else {
-            console.error("ShopSelectUiHandler not found or is of incorrect type!");
+          this.reroll();
         }
-
-        let permaTutorials = [EnhancedTutorial.SMITTY_ITEMS_1, EnhancedTutorial.PARTY_ABILITY_1, EnhancedTutorial.PERMA_MONEY_1];
-
-        if(!this.scene.gameData.tutorialService.allTutorialsCompleted(permaTutorials)) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", permaTutorials, true, false, true);
-        }
-
+        break;
+      case 1:
+        break;
+      }
+      return true;
+    case 1:
+      if (typeOptions[cursor]?.type) {
+        modifierType = typeOptions[cursor].type;
+        cost = typeOptions[cursor].cost;
+      }
+      break;
+    default:
+      const shopOptions = getShopModifierTypeOptions(this.scene.gameData, false, this.scene);
+      const shopOption = shopOptions[rowCursor > 2 || shopOptions.length <= SHOP_OPTIONS_ROW_LIMIT ? cursor : cursor + SHOP_OPTIONS_ROW_LIMIT];
+      if (shopOption?.type) {
+        modifierType = shopOption.type;
+        cost = shopOption.cost;
+      }
+      break;
     }
 
-    modifierSelectCallback = (rowCursor: integer, cursor: integer) => {
-        const typeOptions: ModifierTypeOption[] = this.getAvailableModifierOptions();
-        if (rowCursor < 0 || cursor < 0) {
-            this.scene.ui.showText(i18next.t("starterSelectUiHandler:confirmExit"), null, () => {
-                this.scene.ui.setOverlayMode(Mode.CONFIRM, () => {
-                    this.scene.ui.revertMode();
-                    this.scene.ui.setMode(Mode.MESSAGE);
-                    this.end();
-                }, () => this.scene.ui.setMode(Mode.SHOP_SELECT, true, typeOptions, this.modifierSelectCallback, this.getRerollCost()));
-            });
-            return false;
-        }
+    if (cost && this.scene.gameData.permaMoney < cost) {
+      this.scene.ui.playError();
+      return false;
+    }
 
-        let modifierType: ModifierType | undefined;
-        let cost: integer | undefined;
+    const shopUiHandler = this.scene.ui.getHandler() as ShopSelectUiHandler;
 
-        switch (rowCursor) {
-            case 0:
-                switch (cursor) {
-                    case 0:
-                        const rerollCost = this.getRerollCost();
-                        if (this.scene.gameData.permaMoney < rerollCost) {
-                            this.scene.ui.playError();
-                            return false;
-                        } else {
-                            this.reroll();
-                        }
-                        break;
-                    case 1:
-                        break;
-                }
-                return true;
-            case 1:
-                if (typeOptions[cursor]?.type) {
-                    modifierType = typeOptions[cursor].type;
-                    cost = typeOptions[cursor].cost;
-                }
-                break;
-            default:
-                const shopOptions = getShopModifierTypeOptions(this.scene.gameData, false, this.scene);
-                const shopOption = shopOptions[rowCursor > 2 || shopOptions.length <= SHOP_OPTIONS_ROW_LIMIT ? cursor : cursor + SHOP_OPTIONS_ROW_LIMIT];
-                if (shopOption?.type) {
-                    modifierType = shopOption.type;
-                    cost = shopOption.cost;
-                }
-                break;
-        }
-
-        if (cost && this.scene.gameData.permaMoney < cost) {
-            this.scene.ui.playError();
-            return false;
-        }
-
-        const shopUiHandler = this.scene.ui.getHandler() as ShopSelectUiHandler;
-
-        const applyModifier = (modifier: Modifier, playSound: boolean = false) => {
-            const result = this.scene.addPermaModifier(modifier as PersistentModifier);
-            if (cost) {
-                result.then(success => {
-                    if (success) {
-                        if (!Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
-                            this.scene.addPermaMoney(-cost!);
-                            this.scene.updateUIPermaMoneyText();
-                            if (!(modifier instanceof RerollModifier)) {
-                                this.scene.gameData.gameStats.permaItemsBought++;
-                            }
-                            if (modifier instanceof RerollModifier) {
-                                this.refreshShopOptions();
-                                this.scene.unshiftPhase(new ShopModifierSelectPhase(this.scene, this.modifierTiers, this.onEndCallback));
-                                this.scene.ui.clearText();
-                                this.scene.ui.setMode(Mode.MESSAGE).then(() => this.end());
-                                return;
-                            }
-                        }
-                        this.scene.ui.updatePermaModifierBar(this.scene.gameData.permaModifiers);
-                        this.scene.playSound("se/buy");
-                        shopUiHandler.updateCostText();
-                        this.scene.gameData.localSaveAll(this.scene);
-                    } else {
-                        this.scene.ui.playError();
-                    }
-                });
-            }
-            const doEnd = () => {
+    const applyModifier = (modifier: Modifier, playSound: boolean = false) => {
+      const result = this.scene.addPermaModifier(modifier as PersistentModifier);
+      if (cost) {
+        result.then(success => {
+          if (success) {
+            if (!Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
+              this.scene.addPermaMoney(-cost!);
+              this.scene.updateUIPermaMoneyText();
+              if (!(modifier instanceof RerollModifier)) {
+                this.scene.gameData.gameStats.permaItemsBought++;
+              }
+              if (modifier instanceof RerollModifier) {
+                this.refreshShopOptions();
+                this.scene.unshiftPhase(new ShopModifierSelectPhase(this.scene, this.modifierTiers, this.onEndCallback));
                 this.scene.ui.clearText();
                 this.scene.ui.setMode(Mode.MESSAGE).then(() => this.end());
-            };
-            if (result instanceof Promise) {
-                result.then(() => doEnd());
-            } else {
-                doEnd();
+                return;
+              }
             }
-        };
-
-        if (modifierType) {
-            this.selectionMade = true;
-
-        shopUiHandler.setSelectedOption(typeOptions[cursor]);
-
-            const party = this.scene.getParty();
-
-            if (modifierType instanceof ModifierTypeGenerator) {
-                const generatedType = modifierType.generateType(party);
-                if (!generatedType) return false;
-                modifierType = generatedType;
-            }
-
-            const modifier = modifierType.newModifier();
-
-            if (modifier instanceof PermaRunQuestModifier &&
-                this.scene.gameData.permaModifiers.isQuestBountyQuest(modifier.questUnlockData?.questId)) {
-
-                const existingQuest = this.scene.gameData.permaModifiers.findModifier(m =>
-                    m instanceof PermaRunQuestModifier &&
-                    m.questUnlockData?.questId === modifier.questUnlockData?.questId &&
-                    m.consoleCode === modifier.consoleCode
-                ) as PermaRunQuestModifier;
-
-                if (existingQuest) {
-                    this.scene.ui.setOverlayMode(Mode.QUEST_ACTIVE, {
-                        buttonActions: [
-                            () => {
-                                this.selectionMade = false;
-                                this.scene.ui.revertMode();
-                            }
-                        ]
-                    }, null, existingQuest, true);
-                } else {
-
-                    this.scene.ui.setOverlayMode(Mode.QUEST_ACTIVE, {
-                        buttonActions: [
-                            () => {
-                                this.scene.ui.revertMode();
-                                applyModifier(modifier, true);
-                                shopUiHandler.removeSelectedOption();
-                                this.scene.ui.clearText();
-                            },
-                            () => {
-                                this.selectionMade = false;
-                                this.scene.ui.revertMode();
-                            }
-                        ]
-                    }, null, modifier, false);
-
-                    return !cost;
-                }
-            }
-
-            else {
-                applyModifier(modifier, true);
-        shopUiHandler.removeSelectedOption();
-                this.scene.ui.clearText();
-            }
-        }
-        return !cost;
+            this.scene.ui.updatePermaModifierBar(this.scene.gameData.permaModifiers);
+            this.scene.playSound("se/buy");
+            shopUiHandler.updateCostText();
+            this.scene.gameData.localSaveAll(this.scene);
+          } else {
+            this.scene.ui.playError();
+          }
+        });
+      }
+      const doEnd = () => {
+        this.scene.ui.clearText();
+        this.scene.ui.setMode(Mode.MESSAGE).then(() => this.end());
+      };
+      if (result instanceof Promise) {
+        result.then(() => doEnd());
+      } else {
+        doEnd();
+      }
     };
 
-    getAvailableModifierOptions(): ModifierTypeOption[] {
-        const currentTime = Date.now();
-        const refreshInterval = 10 * 60 * 1000;
+    if (modifierType) {
+      this.selectionMade = true;
 
-        if (!this.scene.gameData.currentPermaShopOptions ||
+      shopUiHandler.setSelectedOption(typeOptions[cursor]);
+
+      const party = this.scene.getParty();
+
+      if (modifierType instanceof ModifierTypeGenerator) {
+        const generatedType = modifierType.generateType(party);
+        if (!generatedType) {
+          return false;
+        }
+        modifierType = generatedType;
+      }
+
+      const modifier = modifierType.newModifier();
+
+      if (modifier instanceof PermaRunQuestModifier &&
+                this.scene.gameData.permaModifiers.isQuestBountyQuest(modifier.questUnlockData?.questId)) {
+
+        const existingQuest = this.scene.gameData.permaModifiers.findModifier(m =>
+          m instanceof PermaRunQuestModifier &&
+                    m.questUnlockData?.questId === modifier.questUnlockData?.questId &&
+                    m.consoleCode === modifier.consoleCode
+        ) as PermaRunQuestModifier;
+
+        if (existingQuest) {
+          this.scene.ui.setOverlayMode(Mode.QUEST_ACTIVE, {
+            buttonActions: [
+              () => {
+                this.selectionMade = false;
+                this.scene.ui.revertMode();
+              }
+            ]
+          }, null, existingQuest, true);
+        } else {
+
+          this.scene.ui.setOverlayMode(Mode.QUEST_ACTIVE, {
+            buttonActions: [
+              () => {
+                this.scene.ui.revertMode();
+                applyModifier(modifier, true);
+                shopUiHandler.removeSelectedOption();
+                this.scene.ui.clearText();
+              },
+              () => {
+                this.selectionMade = false;
+                this.scene.ui.revertMode();
+              }
+            ]
+          }, null, modifier, false);
+
+          return !cost;
+        }
+      } else {
+        applyModifier(modifier, true);
+        shopUiHandler.removeSelectedOption();
+        this.scene.ui.clearText();
+      }
+    }
+    return !cost;
+  };
+
+  getAvailableModifierOptions(): ModifierTypeOption[] {
+    const currentTime = Date.now();
+    const refreshInterval = 10 * 60 * 1000;
+
+    if (!this.scene.gameData.currentPermaShopOptions ||
             currentTime - this.scene.gameData.lastPermaShopRefreshTime >= refreshInterval) {
-            this.refreshShopOptions();
-            this.scene.gameData.resetPermaShopReroll();
-        }
-        return this.scene.gameData.currentPermaShopOptions!;
+      this.refreshShopOptions();
+      this.scene.gameData.resetPermaShopReroll();
+    }
+    return this.scene.gameData.currentPermaShopOptions!;
+  }
+
+  refreshShopOptions(refreshTime: boolean = true): void {
+    const allOptions = getShopModifierTypeOptions(this.scene.gameData, false, this.scene);
+
+    const isQuestOption = (option: ModifierTypeOption): boolean => {
+      return option.type.constructor.name.includes("Quest") ||
+                   (option.type.id && option.type.id.includes("QUEST"));
+    };
+
+    const isPartyAbilityOption = (option: ModifierTypeOption): boolean => {
+      return option.type instanceof PermaPartyAbilityModifierType;
+    };
+
+    const questOptions = allOptions.filter(isQuestOption);
+    const partyAbilityOptions = allOptions.filter(isPartyAbilityOption);
+
+    const guaranteedOptions: ModifierTypeOption[] = [];
+    const usedOptions = new Set<ModifierTypeOption>();
+
+    if (questOptions.length > 0) {
+      const randomQuestOption = Utils.randSeedShuffle(questOptions)[0];
+      guaranteedOptions.push(randomQuestOption);
+      usedOptions.add(randomQuestOption);
     }
 
-    refreshShopOptions(refreshTime: boolean = true): void {
-        const allOptions = getShopModifierTypeOptions(this.scene.gameData, false, this.scene);
-
-        const isQuestOption = (option: ModifierTypeOption): boolean => {
-            return option.type.constructor.name.includes('Quest') ||
-                   (option.type.id && option.type.id.includes('QUEST'));
-        };
-
-        const isPartyAbilityOption = (option: ModifierTypeOption): boolean => {
-            return option.type instanceof PermaPartyAbilityModifierType;
-        };
-
-        const questOptions = allOptions.filter(isQuestOption);
-        const partyAbilityOptions = allOptions.filter(isPartyAbilityOption);
-
-        const guaranteedOptions: ModifierTypeOption[] = [];
-        const usedOptions = new Set<ModifierTypeOption>();
-
-        if (questOptions.length > 0) {
-            const randomQuestOption = Utils.randSeedShuffle(questOptions)[0];
-            guaranteedOptions.push(randomQuestOption);
-            usedOptions.add(randomQuestOption);
-        }
-
-        if (partyAbilityOptions.length > 0 && (guaranteedOptions.length === 0 || Utils.randSeedInt(10) < 5)) {
-            const availablePartyOptions = partyAbilityOptions.filter(option => !usedOptions.has(option));
-            if (availablePartyOptions.length > 0) {
-                const randomPartyOption = Utils.randSeedShuffle(availablePartyOptions)[0];
-                guaranteedOptions.push(randomPartyOption);
-                usedOptions.add(randomPartyOption);
-            }
-        }
-
-        const remainingOptions = allOptions.filter(option => !usedOptions.has(option));
-        const additionalOptions = Utils.randSeedShuffle(remainingOptions)
-            .slice(0, 4 - guaranteedOptions.length);
-
-        const newOptions = [...guaranteedOptions, ...additionalOptions];
-
-        this.scene.gameData.updatePermaShopOptions(newOptions);
-        if (refreshTime) {
-            this.scene.gameData.lastPermaShopRefreshTime = Date.now();
-        }
+    if (partyAbilityOptions.length > 0) {
+      const availablePartyOptions = partyAbilityOptions.filter(option => !usedOptions.has(option));
+      const selectedPartyOptions = Utils.randSeedShuffle(availablePartyOptions).slice(0, 2);
+      for (const partyOption of selectedPartyOptions) {
+        guaranteedOptions.push(partyOption);
+        usedOptions.add(partyOption);
+      }
     }
 
-    calculateModifierCost(option: ModifierTypeOption): number {
-        const baseCost = 100;
-        const rarityMultiplier = option.type.tier ? Math.pow(2, option.type.tier - 1) : 1;
-        let cost = Math.round(baseCost * rarityMultiplier);
+    const remainingOptions = allOptions.filter(option => !usedOptions.has(option));
+    const remainingSlots = Math.max(0, 5 - guaranteedOptions.length);
+    const additionalOptions = Utils.randSeedShuffle(remainingOptions).slice(0, remainingSlots);
 
-        const reduceShopCostModifier = this.scene.findModifier(m => m instanceof ReduceShopCostModifier) as ReduceShopCostModifier;
-        if (reduceShopCostModifier) {
-            const costHolder = new Utils.NumberHolder(cost);
-            reduceShopCostModifier.apply([costHolder]);
-            cost = costHolder.value;
-        }
+    const newOptions = [...guaranteedOptions, ...additionalOptions];
 
-        return cost;
+    const partyAbilityIndices: number[] = [];
+    for (let i = 0; i < newOptions.length; i++) {
+      if (isPartyAbilityOption(newOptions[i])) {
+        partyAbilityIndices.push(i);
+      }
+    }
+    if (partyAbilityIndices.length >= 2) {
+      const secondIndex = partyAbilityIndices[1];
+      const optionToMove = newOptions.splice(secondIndex, 1)[0];
+      const firstIndex = partyAbilityIndices[0];
+      let newIndex = Utils.randSeedInt(newOptions.length + 1);
+      if (newIndex === firstIndex + 1) {
+        newIndex = (newIndex + 1) % (newOptions.length + 1);
+      }
+      newOptions.splice(newIndex, 0, optionToMove);
     }
 
-    reroll(): void {
-        this.scene.reroll = true;
-        this.scene.addPermaMoney(-(this.getRerollCost())!);
-        this.scene.updateUIPermaMoneyText();
-        this.scene.playSound("se/buy");
-        this.refreshPhase(true);
+    this.scene.gameData.updatePermaShopOptions(newOptions);
+    if (refreshTime) {
+      this.scene.gameData.lastPermaShopRefreshTime = Date.now();
+    }
+  }
+
+  calculateModifierCost(option: ModifierTypeOption): number {
+    const baseCost = 100;
+    const rarityMultiplier = option.type.tier ? Math.pow(2, option.type.tier - 1) : 1;
+    let cost = Math.round(baseCost * rarityMultiplier);
+
+    const reduceShopCostModifier = this.scene.findModifier(m => m instanceof ReduceShopCostModifier) as ReduceShopCostModifier;
+    if (reduceShopCostModifier) {
+      const costHolder = new Utils.NumberHolder(cost);
+      reduceShopCostModifier.apply([costHolder]);
+      cost = costHolder.value;
     }
 
-    refreshPhase(isReroll: boolean = false): void {
-        this.refreshShopOptions(!isReroll);
+    return cost;
+  }
 
-        if (this.scene.getCurrentPhase() instanceof ShopModifierSelectPhase) {
+  reroll(): void {
+    this.scene.reroll = true;
+    this.scene.addPermaMoney(-(this.getRerollCost())!);
+    this.scene.updateUIPermaMoneyText();
+    this.scene.playSound("se/buy");
+    this.refreshPhase(true);
+  }
 
-            this.refreshing = true;
+  refreshPhase(isReroll: boolean = false): void {
+    this.refreshShopOptions(!isReroll);
 
-            this.scene.ui.clearText();
+    if (this.scene.getCurrentPhase() instanceof ShopModifierSelectPhase) {
 
-            this.rerollCount = isReroll ? this.rerollCount + 1 : 0;
+      this.refreshing = true;
 
-            const newPhase = new ShopModifierSelectPhase(
-                this.scene,
-                this.modifierTiers,
-                this.onEndCallback,
-                !isReroll ? this.scene.gameData.currentPermaShopOptions : null
-            );
+      this.scene.ui.clearText();
 
-            this.scene.ui.setMode(Mode.MESSAGE).then(() => {
-                this.scene.unshiftPhase(newPhase);
-                this.end();
-            });
-        }
+      this.rerollCount = isReroll ? this.rerollCount + 1 : 0;
+
+      const newPhase = new ShopModifierSelectPhase(
+        this.scene,
+        this.modifierTiers,
+        this.onEndCallback,
+        !isReroll ? this.scene.gameData.currentPermaShopOptions : null
+      );
+
+      this.scene.ui.setMode(Mode.MESSAGE).then(() => {
+        this.scene.unshiftPhase(newPhase);
+        this.end();
+      });
+    }
+  }
+
+  updateSeed(): void {
+    this.scene.resetSeed();
+  }
+
+  getRerollCost(): number {
+    if (Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
+      return 0;
+    }
+    const baseValue = 500;
+    return Math.min(Math.ceil(baseValue * Math.pow(2, this.rerollCount)), Number.MAX_SAFE_INTEGER);
+  }
+
+  end() {
+    if (this.onEndCallback && !this.selectionMade && !this.refreshing) {
+      this.onEndCallback();
+    }
+    if (this.selectionMade) {
+      this.scene.ui.clearText();
+      this.scene.unshiftPhase(new ShopModifierSelectPhase(
+        this.scene,
+        this.modifierTiers,
+        this.onEndCallback,
+        this.currentOptions
+      ));
+    } else if (!this.refreshing && !this.scene.currentBattle && !(this.scene.getNextPhase() instanceof TitlePhase)) {
+      this.scene.clearPhaseQueue();
+      this.scene.unshiftPhase(new TitlePhase(this.scene, true));
     }
 
-    updateSeed(): void {
-        this.scene.resetSeed();
-    }
+    this.scene.gameData.localSaveAll(this.scene);
 
-    getRerollCost(): number {
-        if (Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
-            return 0;
-        }
-        const baseValue = 500;
-        return Math.min(Math.ceil(baseValue * Math.pow(2, this.rerollCount)), Number.MAX_SAFE_INTEGER);
-    }
-
-    end() {
-        if (this.onEndCallback && !this.selectionMade && !this.refreshing) {
-            this.onEndCallback();
-        }
-        if (this.selectionMade) {
-            this.scene.ui.clearText();
-            this.scene.unshiftPhase(new ShopModifierSelectPhase(
-                this.scene,
-                this.modifierTiers,
-                this.onEndCallback,
-                this.currentOptions
-            ));
-        } else if (!this.refreshing && !this.scene.currentBattle && !(this.scene.getNextPhase() instanceof TitlePhase)) {
-            this.scene.clearPhaseQueue();
-            this.scene.unshiftPhase(new TitlePhase(this.scene, true));
-        }
-
-        this.scene.gameData.localSaveAll(this.scene);
-
-        super.end();
-    }
+    super.end();
+  }
 }

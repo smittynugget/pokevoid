@@ -1,0 +1,14 @@
+{
+  "importSaveData": "匯入存檔資料",
+  "importModData": "匯入模組資料",
+  "cancel": "取消",
+  "selectFile": "選擇檔案",
+  "selectJsonModFiles": "選擇要匯入的JSON模組檔案",
+  "selectPrsvSaveFile": "選擇要匯入的.prsv存檔檔案",
+  "importFailed": "匯入失敗。請再試一次。",
+  "uploadSuccess": "成功匯入{{count}}個模組：",
+  "uploadSuccess_plural": "成功匯入{{count}}個模組：",
+  "uploadFailed": "匯入{{count}}個模組失敗：",
+  "uploadFailed_plural": "匯入{{count}}個模組失敗：",
+  "reloadRequired": "遊戲將重新載入以套用變更。"
+}

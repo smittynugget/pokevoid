@@ -1,0 +1,251 @@
+{
+  "viewTitle": "Карта боевого пути",
+  "selectTitle": "Выбери боевой путь",
+  "chaosTitle": "ХАОС",
+  "chaosSubtitle": "Выбирай путь, пока пробираешься в сердце тьмы",
+  "noPathMessage": "Нет доступного боевого пути.\nСначала сгенерируй его!",
+  "unknownEncounter": "Неизвестная встреча",
+  "unknownNode": "Неизвестно",
+  "descriptions": {
+    "wildPokemon": "Встреча с диким покемоном",
+    "trainerBattle": "Битва с тренером",
+    "rivalBattle": "Битва с соперником",
+    "majorBossBattle": "Битва с крупным боссом",
+    "recoveryBoss": "Босс восстановления",
+    "evilBossBattle": "Босс злодейской команды",
+    "eliteFour": "Член Элитной четвёрки",
+    "champion": "Битва чемпиона",
+    "itemGeneral": "Обычные награды",
+    "addPokemon": "Награды: выбор покемона",
+    "itemTm": "Награды: ТМ",
+    "itemBerry": "Награды: ягоды",
+    "mysteryNode": "Тайна!",
+    "convergencePoint": "Схождение путей",
+    "smittyBattle": "Битва со Смитти",
+    "evilGruntBattle": "Боец злодейской команды",
+    "evilAdminBattle": "Администратор злодейской команды",
+    "randPermaItem": "Случайный Ωпредмет",
+    "permaItems": "Награды: Ωпредметы",
+    "goldenPokeball": "Награды: золотой покебол",
+    "rogueBallItems": "Награды: Рогбол",
+    "masterBallItems": "Награды: Мастербол",
+    "greatBallItems": "Награды: Супербол",
+    "ultraBallItems": "Награды: Гипербол",
+    "abilitySwitchers": "Награды: смена таланта",
+    "statSwitchers": "Награды: смена характеристик",
+    "glitchPiece": "Награда: осколок Глитча",
+    "dnaSplicers": "Награда: ДНК-сплайсер",
+    "money": "Деньги",
+    "permaMoney": "ΩGOLD",
+    "releaseItems": "Награды: удаление",
+    "mints": "Награды: мята",
+    "eggVoucher": "Награда: ваучер яйца",
+    "ppMax": "Награда: PP Max",
+    "collectedType": "Награда: эссенция",
+    "collectedShop": "Трать эссенции на награды",
+    "expShare": "Награда: EXP Share",
+    "typeSwitcher": "Награды: смена типа",
+    "passiveAbility": "Награды: пассивные таланты",
+    "anyTms": "Награды: любые ТМ",
+    "anyTmsMaster": "Награды: любые ТМ (мастер)",
+    "teraShards": "Награды: тера-осколки",
+    "challengeBoss": "Босс испытания с повышенной сложностью",
+    "challengeRival": "Соперник испытания с повышенной сложностью",
+    "challengeEvilBoss": "Злодей-босс испытания с повышенной сложностью",
+    "challengeChampion": "Чемпион испытания с повышенной сложностью",
+    "challengeReward": "Редкая награда за прохождение пути испытания",
+    "potion": "Награды: лечение",
+    "reviverSeed": "Авто-возрождение при нокауте",
+    "sacredAsh": "Полностью лечит всех нокаутированных покемонов",
+    "shellBell": "Лечение от нанесённого урона",
+    "leftovers": "Лечение каждый ход",
+    "quickClaw": "Шанс сходить первым",
+    "wideLens": "Повышает точность приёмов",
+    "gripClaw": "Кража предметов при контакте",
+    "eviolite": "Защитный бонус неэволюционировавшему покемону",
+    "scopeLens": "Повышает шанс крит. удара",
+    "vitamin": "Награды: дешёвые витамины (Protein, Iron, Calcium и т. д.)",
+    "moveUpgrade": "Улучшения приёмов для покемонов",
+    "lowTierMoveUpgrade": "Улучшения приёмов с лимитом тира III",
+    "skillPoints": "Очки навыков для разблокировки в дереве навыков.",
+    "skillToken": "Токены дерева навыков повышают уровень твоего дерева навыков!"
+  },
+  "names": {
+    "wildPokemon": "Дикий покемон",
+    "trainerBattle": "Битва с тренером",
+    "rivalBattle": "Битва с соперником",
+    "majorBossBattle": "Главный босс",
+    "recoveryBoss": "Босс восстановления",
+    "evilBossBattle": "Злодей-босс",
+    "eliteFour": "Элитная четвёрка",
+    "champion": "Чемпион",
+    "itemGeneral": "Обычные награды",
+    "addPokemon": "Выбор покемона",
+    "itemTm": "Награды: ТМ",
+    "itemBerry": "Награды: ягоды",
+    "mysteryNode": "Тайная нода",
+    "convergencePoint": "Схождение",
+    "smittyBattle": "Битва со Смитти",
+    "evilGruntBattle": "Злодей-боец",
+    "evilAdminBattle": "Злодей-админ",
+    "randPermaItem": "Случайный Ωпредмет",
+    "permaItems": "Награды: Ωпредметы",
+    "goldenPokeball": "Золотой покебол",
+    "rogueBallItems": "Награды: Рогбол",
+    "masterBallItems": "Награды: Мастербол",
+    "greatBallItems": "Награды: Супербол",
+    "ultraBallItems": "Награды: Гипербол",
+    "abilitySwitchers": "Смена таланта",
+    "statSwitchers": "Смена характеристик",
+    "glitchPiece": "Осколок Глитча",
+    "dnaSplicers": "ДНК-сплайсер",
+    "money": "Деньги",
+    "permaMoney": "ΩGOLD",
+    "releaseItems": "Награды: удаление",
+    "mints": "Награды: мята",
+    "eggVoucher": "Ваучер яйца",
+    "ppMax": "PP Max",
+    "collectedType": "Награда: эссенция",
+    "collectedShop": "Коллекционер",
+    "expShare": "EXP Share",
+    "typeSwitcher": "Смена типа",
+    "passiveAbility": "Пассивные таланты",
+    "anyTms": "Награды: любые ТМ",
+    "anyTmsMaster": "Любые ТМ (мастер)",
+    "teraShards": "Награды: тера-осколки",
+    "challengeBoss": "Босс испытания",
+    "challengeRival": "Соперник испытания",
+    "challengeEvilBoss": "Злодей-босс испытания",
+    "challengeChampion": "Чемпион испытания",
+    "challengeReward": "Награда испытания",
+    "potion": "Награды: лечение",
+    "reviverSeed": "Оживляющее семя",
+    "sacredAsh": "Священный пепел",
+    "shellBell": "Ракушка-колокольчик",
+    "leftovers": "Остатки",
+    "quickClaw": "Быстрый коготь",
+    "wideLens": "Широкий объектив",
+    "gripClaw": "Цепкий коготь",
+    "eviolite": "Эвиолит",
+    "scopeLens": "Прицельная линза",
+    "vitamin": "Дешёвые витамины",
+    "moveUpgrade": "Улучшения приёмов",
+    "lowTierMoveUpgrade": "Улучшения приёмов (низкий тир)",
+    "skillPoints": "Очки навыков",
+    "skillToken": "Токен навыка"
+  },
+  "challenge": {
+    "chaosChallenge": "Испытание «Хаос» активно",
+    "isNuzlocke": {
+      "name": "Назлок",
+      "description": "ВСЕ НОКАУТИРОВАННЫЕ покемоны удаляются из команды! (включая уже нокаутированных)"
+    },
+    "isNuzlight": {
+      "name": "Назлайт",
+      "description": "В магазине нельзя покупать лечащие предметы"
+    },
+    "isNightmare": {
+      "name": "Назмар",
+      "description": "В магазине нельзя покупать лечение + \nВСЕ НОКАУТИРОВАННЫЕ покемоны удаляются из команды! (включая уже нокаутированных)"
+    },
+    "noExpGain": {
+      "name": "Без опыта",
+      "description": "Покемоны не получают опыт"
+    },
+    "noCatch": {
+      "name": "Без поимки",
+      "description": "Нельзя ловить покемонов"
+    },
+    "hasPassiveAbility": {
+      "name": "Пассивный талант",
+      "description": "У врагов активен пассивный талант"
+    },
+    "invertedTypes": {
+      "name": "Инверсия типов",
+      "description": "Эффективность типов инвертирована"
+    },
+    "boostedTrainer": {
+      "name": "Тренер хаоса",
+      "description": "Команда тренера по уровню выше твоего самого высокоуровневого покемона"
+    },
+    "multiLegendaries": {
+      "name": "Мульти-легенды",
+      "description": "Команда соперника получает +1 легендарного покемона"
+    },
+    "multiBoss": {
+      "name": "Босс хаоса",
+      "description": "Команда тренера получает +1 босса-покемона"
+    },
+    "noInitialSwitch": {
+      "name": "Без стартовой замены",
+      "description": "Нельзя менять покемона в начале боя"
+    },
+    "autoPressured": {
+      "name": "Авто-напряжение",
+      "description": "Твои покемоны автоматически находятся под давлением"
+    },
+    "noStatBoosts": {
+      "name": "Без усилений",
+      "description": "Нельзя повышать характеристики"
+    },
+    "noStatusMoves": {
+      "name": "Без статусных приёмов",
+      "description": "Нельзя использовать статусные приёмы"
+    },
+    "noPhysicalMoves": {
+      "name": "Без физических приёмов",
+      "description": "Нельзя использовать физические приёмы"
+    },
+    "noSpecialMoves": {
+      "name": "Без спец. приёмов",
+      "description": "Нельзя использовать специальные приёмы"
+    },
+    "statSwap": {
+      "name": "Обмен статов",
+      "description": "У твоих покемонов АТК <-> СП.ЗЩ и СП.АТК <-> ЗЩ поменяны местами."
+    },
+    "extraDamageToTypes": {
+      "name": "Доп. урон по типам",
+      "description": "Некоторые типы получают дополнительный урон"
+    },
+    "noStab": {
+      "name": "Без STAB",
+      "description": "Бонус STAB (атака того же типа) отключён."
+    },
+    "trickRoom": {
+      "name": "Trick Room",
+      "description": "Приоритет по скорости обращён"
+    },
+    "noSwitch": {
+      "name": "Без замены",
+      "description": "Нельзя менять покемонов во время боя"
+    },
+    "noResistances": {
+      "name": "Без сопротивлений",
+      "description": "Сопротивления типов у твоих покемонов отключены."
+    },
+    "noHealingItems": {
+      "name": "Без лечащих предметов",
+      "description": "Твои лечащие предметы не срабатывают (Остатки, Ракушка-колокольчик и т. д.)"
+    },
+    "autoTorment": {
+      "name": "Авто-мучение",
+      "description": "Нельзя использовать один и тот же приём подряд!"
+    },
+    "legendaryNerf": {
+      "name": "Нерф легенд",
+      "description": "Твои легендарные покемоны наносят половину урона"
+    },
+    "typeExtraDamage": {
+      "name": "Тип наносит больше",
+      "description": "Самый сильный тип наносит 1.5× урона"
+    },
+    "pokemonNerf": {
+      "name": "Нерф покемона",
+      "description": "Сильнейший покемон наносит половину урона"
+    }
+  },
+  "challengeHeader": "ИСПЫТАНИЕ!",
+  "tooltipDetails": "Подробнее",
+  "tooltipBack": "Назад"
+}

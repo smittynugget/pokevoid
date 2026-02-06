@@ -1,4 +1,6 @@
 {
   "generation": "Generación {{generation}}",
-  "glitchForm": "{{formName}} TIENE GLITCH"
+  "glitchForm": "{{formName}} TIENE GLITCH",
+  "fusionTooltipTitle": "Fusión",
+  "fusionTooltipBody": "{{primary}}/{{fusion}}\n\nLas estadísticas de fusión usan las estadísticas base de ambos Pokémon:\n1) Estadística aumentada por la Naturaleza (o PS si es neutra): toma el valor más alto\n2) Otra mejor estadística: toma la mejor estadística restante\n3) Todo lo demás: promedia y redondea hacia arriba\nLos modificadores de Naturaleza se aplican después."
 } 

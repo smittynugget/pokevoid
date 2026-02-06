@@ -1,5 +1,6 @@
 {
   "title": "Albero delle Abilità",
+  "unknownReward": "Ricompensa Sconosciuta",
   "subtitle": "Usa punti abilità per sbloccare abilità potenti",
   "skillPoints": "Punti Abilità: {{points}}",
   "tokens": "Token Albero: {{tokens}}",
@@ -24,6 +25,10 @@
   "instructionsSelectBoth": "Seleziona 1 Pokémon Firma e 1 Pokémon Normale",
   "instructionsSelectSignature": "Seleziona 1 Pokémon Firma",
   "instructionsSelectGeneral": "Seleziona 1 Pokémon Normale",
+  "instructionsPokemonSelection": "Scegli 2 Pokémon (max. 1 Firma)",
+  "instructionsPokemonSelectionRemaining": "Scegli altri {{remaining}} Pokémon",
+  "instructionsPokemonSelectionSignatureAvailable": "Scegli altri {{remaining}} (Firma disponibile)",
+  "instructionsPokemonSelectionComplete": "Selezione completata!",
   "tooltipSelectSignature": "Seleziona questo Pokémon Firma\n\n[color=#ffdd44]I Pokémon Firma hanno il potenziale di diventare immensamente più forti, se il loro allenatore riesce a sovrascrivere la realtà e sbloccare le loro abilità normalmente dormienti.[/color]",
   "tooltipReplaceSignature": "Sostituisci la selezione Firma attuale\n\n[color=#ffdd44]I Pokémon Firma hanno il potenziale di diventare immensamente più forti, se il loro allenatore riesce a sovrascrivere la realtà e sbloccare le loro abilità normalmente dormienti.[/color]",
   "tooltipSelectGeneral": "Seleziona questo Pokémon Normale",

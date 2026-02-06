@@ -1,4 +1,6 @@
 {
   "generation": "第{{generation}}世代",
-  "glitchForm": "{{formName}}がグリッチ化"
+  "glitchForm": "{{formName}}がグリッチ化",
+  "fusionTooltipTitle": "融合",
+  "fusionTooltipBody": "{{primary}}/{{fusion}}\n\n融合ステータスは2匹の種族値を使用します:\n1) 性格補正のかかる能力(無補正ならHP): 高い方を採用\n2) もう1つの高い能力: 残りの中で高い方を採用\n3) それ以外: 平均を取り切り上げ\n性格補正はその後に適用されます。"
 } 

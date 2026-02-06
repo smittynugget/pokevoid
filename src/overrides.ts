@@ -17,9 +17,13 @@ import { SkillTreeRewardType } from "./system/skill-tree-data";
 
 export const DEBUG_BYPASS_CHAMPION_UNLOCK = false;
 export const DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE = false;
+export const DEBUG_TEST_SLIDESHOW_CUTSCENE = false;
+export const DEBUG_TEST_RUN_END_SUMMARY = false;
 
 export const DEBUG_SKILL_TREE_FORCE_REWARD_TYPE: SkillTreeRewardType | undefined = undefined;
-const overrides = {} satisfies Partial<InstanceType<typeof DefaultOverrides>>;
+const overrides = {
+  DEBUG_GRANT_ALL_ESSENCE: false,
+} satisfies Partial<InstanceType<typeof DefaultOverrides>>;
 class DefaultOverrides {
   readonly SEED_OVERRIDE: string = "";
   readonly WEATHER_OVERRIDE: WeatherType = WeatherType.NONE;
@@ -27,6 +31,7 @@ class DefaultOverrides {
   readonly STARTING_WAVE_OVERRIDE: number = 0;
   readonly STARTING_BATTLE_PATH_WAVE_OVERRIDE: number = 0;
   readonly STARTING_SELECTED_PATH_OVERRIDE: string = "";
+  readonly WAIVE_ROLL_FEE_OVERRIDE: boolean = false;
   readonly STARTING_BIOME_OVERRIDE: Biome = Biome.TOWN;
   readonly BOSS_WAVE_OVERRIDE: number = 0;
   readonly ARENA_TINT_OVERRIDE: TimeOfDay | null = null;
@@ -34,18 +39,18 @@ class DefaultOverrides {
   readonly NEVER_CRIT_OVERRIDE: boolean = false;
   readonly STARTING_MONEY_OVERRIDE: number = 0;
   readonly WAIVE_SHOP_FEES_OVERRIDE: boolean = false;
-  readonly WAIVE_ROLL_FEE_OVERRIDE: boolean = false;
   readonly FREE_CANDY_UPGRADE_OVERRIDE: boolean = false;
+  readonly BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE: boolean = true;
   readonly POKEBALL_OVERRIDE: { active: boolean; pokeballs: PokeballCounts } = {
-  active: false,
-  pokeballs: {
-    [PokeballType.POKEBALL]: 5,
-    [PokeballType.GREAT_BALL]: 0,
-    [PokeballType.ULTRA_BALL]: 0,
-    [PokeballType.ROGUE_BALL]: 0,
-    [PokeballType.MASTER_BALL]: 0,
+    active: false,
+    pokeballs: {
+      [PokeballType.POKEBALL]: 5,
+      [PokeballType.GREAT_BALL]: 0,
+      [PokeballType.ULTRA_BALL]: 0,
+      [PokeballType.ROGUE_BALL]: 0,
+      [PokeballType.MASTER_BALL]: 0,
     },
-};
+  };
   readonly STARTER_FORM_OVERRIDES: Partial<Record<Species, number>> = {};
   readonly STARTING_LEVEL_OVERRIDE: number = 0;
 
@@ -59,7 +64,7 @@ class DefaultOverrides {
   readonly VARIANT_OVERRIDE: Variant = 0;
   readonly OPP_SPECIES_OVERRIDE: Species | number = 0;
   readonly OPP_LEVEL_OVERRIDE: number = 0;
-  readonly OPP_ONE_POKEMON: boolean = false;
+  readonly OPP_ONE_POKEMON: boolean = true;
   readonly OPP_ABILITY_OVERRIDE: Abilities = Abilities.NONE;
   readonly OPP_PASSIVE_ABILITY_OVERRIDE: Abilities = Abilities.NONE;
   readonly OPP_STATUS_OVERRIDE: StatusEffect = StatusEffect.NONE;
@@ -87,7 +92,7 @@ class DefaultOverrides {
   readonly SMITTY_FINAL_BATTLE_CHANCE_OVERRIDE: number | null = null;
   readonly SKILL_TREE_DEFAULT_SKILL_POINTS_OVERRIDE: number | null = null;
 
-  readonly BATTLE_PATH_BYPASS_NODE_VALIDATION_OVERRIDE: boolean = false;
+  readonly BATTLE_PATH_BYPASS_NODE_VALIDATION_OVERRIDE: boolean = true;
 
   readonly FORCE_CHALLENGE_PATH_WAVE_OVERRIDE: number | null = null;
 
@@ -101,7 +106,10 @@ class DefaultOverrides {
   readonly SKILL_TREE_DEBUG_CONTROLS_OVERRIDE: boolean = false;
   readonly SKILL_TREE_ZOOM_UI_OVERRIDE: boolean = false;
   readonly DEBUG_IOS_MODE: boolean = false;
+  readonly DEBUG_GRANT_ALL_ESSENCE: boolean = false;
+  readonly DEBUG_GRANT_ALL_ESSENCE_AMOUNT: number = 0;
 
+  readonly FORCE_UNISMITTY_UNLOCK_ON_SMITTY_VICTORY: boolean = false;
 }
 
 export const defaultOverrides = new DefaultOverrides();

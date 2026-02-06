@@ -1,1 +1,84 @@
-{}
+{
+  "blue_red_double": {
+    "encounter": {
+      "1": "Azul: ¡Oye Rojo, vamos a enseñarles de que estamos hechos!$Rojo: …$Azul: ¡Este es el poder del Pueblo Paleta!"
+    },
+    "victory": {
+      "1": "Blue: ¡Qué buena batalla!$Red: ..."
+    }
+  },
+  "red_blue_double": {
+    "encounter": {
+      "1": "Red: ...!$Blue: No suele hablar mucho.$Blue: Pero, ¡Que no te confunda! ¡Es un campeón después de todo!"
+    },
+    "victory": {
+      "1": "Red: ...!$Blue: ¡La próxima ganaremos!"
+    }
+  },
+  "tate_liza_double": {
+    "encounter": {
+      "1": "Tate: ¿Te sorprende?\n$Liza: ¡Somos dos líderes de gimnasio a la vez!\n$Tate: ¡Somos gemelos!\n$Liza: ¡No necesitamos hablar para entendernos!\n$Tate: Doble poder...\n$Liza: ¿Puedes con ello?"
+    },
+    "victory": {
+      "1": "Tate: ¿Qué? ¡Nuestra combinación era perfecta!\n$Liza: Parece que necesitamos entrenar más..."
+    }
+  },
+  "liza_tate_double": {
+    "encounter": {
+      "1": "Liza: Jijiji... ¿Te sorprende?\n$Tate: Sí, ¡de verdad somos dos líderes de gimnasio a la vez!\n$Liza: ¡Este es mi hermano gemelo Tate!\n$Tate: ¡Y esta es mi hermana gemela Liza!\n$Liza: ¿No crees que hacemos una combinación perfecta?"
+    },
+    "victory": {
+      "1": "Liza: ¿Acaso...?\n$Tate: ...¿no somos tan fuertes como creíamos?"
+    }
+  },
+  "wallace_steven_double": {
+    "encounter": {
+      "1": "Steven: Wallace, ¡mostrémosles el poder de los campeones!\n$Wallace: ¡Te mostraremos el poder de Hoenn!\n$Steven: ¡Vamos!"
+    },
+    "victory": {
+      "1": "Steven: ¡Fue una gran batalla!\n$Wallace: ¡La próxima vez ganaremos!"
+    }
+  },
+  "steven_wallace_double": {
+    "encounter": {
+      "1": "Steven: ¿Tienes algún Pokémon raro?\n$Wallace: Steven... Estamos aquí para luchar, no para presumir de nuestros Pokémon.\n$Steven: Oh... ya veo... ¡Entonces vamos!"
+    },
+    "victory": {
+      "1": "Steven: Ahora que terminamos la batalla, ¡presumamos de nuestros Pokémon!\n$Wallace: Steven..."
+    }
+  },
+  "alder_iris_double": {
+    "encounter": {
+      "1": "Alder: ¡Somos los entrenadores más fuertes de Teselia!\n$Iris: ¡Los combates contra entrenadores fuertes son los mejores!"
+    },
+    "victory": {
+      "1": "Alder: ¡Guau! ¡Eres súper fuerte!\n$Iris: ¡La próxima vez ganaremos!"
+    }
+  },
+  "iris_alder_double": {
+    "encounter": {
+      "1": "Iris: ¡Bienvenido, retador! ¡Soy LA Campeona de Teselia!\n$Alder: Iris, ¿no estás un poco demasiado emocionada?",
+      "1_female": null
+    },
+    "victory": {
+      "1": "Iris: Una derrota así no es fácil de aceptar...\n$Alder: ¡Pero nos haremos más fuertes con cada derrota!"
+    }
+  },
+  "piers_marnie_double": {
+    "encounter": {
+      "1": "Marnie: Hermano, ¡mostrémosles el poder de Spikemuth!\n$Piers: ¡Traemos la oscuridad!"
+    },
+    "victory": {
+      "1": "Marnie: ¡Has traído luz a nuestra oscuridad!\n$Piers: Es demasiado brillante..."
+    }
+  },
+  "marnie_piers_double": {
+    "encounter": {
+      "1": "Piers: ¿Listo para un concierto?\n$Marnie: Hermano... Están aquí para luchar, no para cantar...",
+      "1_female": null
+    },
+    "victory": {
+      "1": "Piers: ¡Vaya, eso sí fue un gran concierto!\n$Marnie: Hermano..."
+    }
+  }
+}

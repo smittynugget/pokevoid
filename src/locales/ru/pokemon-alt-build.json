@@ -1,0 +1,295 @@
+{
+  "onix_crystal_leviathan": {
+    "name": "Кристальный левиафан",
+    "description": "Защитная ледяно-каменная сборка Оникса с высоким ОЖ и спецзащитой"
+  },
+  "onix_stone_defender": {
+    "name": "Каменный защитник",
+    "description": "Танковая оборонительная сборка Оникса"
+  },
+  "geodude_tank_mode": {
+    "name": "Танковый режим",
+    "description": "Супер-оборонительная сборка Геодуда"
+  },
+  "geodude_speed_form": {
+    "name": "Скоростная форма",
+    "description": "Высокоскоростная электрическая сборка Геодуда"
+  },
+  "rhyhorn_rampage": {
+    "name": "Буйство",
+    "description": "Агрессивная боевая сборка Райхорна"
+  },
+  "onix_brock_signature": {
+    "name": "Напарник Брока",
+    "description": "Надёжный фирменный напарник Брока каменного типа"
+  },
+  "geodude_brock_signature": {
+    "name": "Напарник Брока",
+    "description": "Верный фирменный напарник Брока каменного типа"
+  },
+  "staryu_misty_signature": {
+    "name": "Напарник Мисти",
+    "description": "Грациозный фирменный напарник Мисти водного типа"
+  },
+  "psyduck_misty_signature": {
+    "name": "Напарник Мисти",
+    "description": "Чудаковатый фирменный напарник Мисти водного типа"
+  },
+  "voltorb_surge_signature": {
+    "name": "Напарник Лт. Сёрджа",
+    "description": "Искрящийся фирменный напарник Лт. Сёрджа электрического типа"
+  },
+  "pikachu_surge_signature": {
+    "name": "Напарник Лт. Сёрджа",
+    "description": "Мощный фирменный напарник Лт. Сёрджа электрического типа"
+  },
+  "electabuzz_surge_signature": {
+    "name": "Напарник Лт. Сёрджа",
+    "description": "Шокирующий фирменный напарник Лт. Сёрджа электрического типа"
+  },
+  "magikarp_misty_signature": {
+    "name": "Напарник Мисти",
+    "description": "Решительный фирменный напарник Мисти водного типа"
+  },
+  "poliwag_misty_signature": {
+    "name": "Напарник Мисти",
+    "description": "Бодрый фирменный напарник Мисти водного типа"
+  },
+  "azurill_misty_signature": {
+    "name": "Напарник Мисти",
+    "description": "Очаровательный фирменный напарник Мисти водного типа"
+  },
+  "goldeen_misty_signature": {
+    "name": "Напарник Мисти",
+    "description": "Элегантный фирменный напарник Мисти водного типа"
+  },
+  "horsea_misty_signature": {
+    "name": "Напарник Мисти",
+    "description": "Преданный фирменный напарник Мисти водного типа"
+  },
+  "togepi_misty_signature": {
+    "name": "Напарник Мисти",
+    "description": "Драгоценный фирменный напарник Мисти фейского типа"
+  },
+  "corsola_misty_signature": {
+    "name": "Напарник Мисти",
+    "description": "Весёлый фирменный напарник Мисти водного типа"
+  },
+  "luvdisc_misty_signature": {
+    "name": "Напарник Мисти",
+    "description": "Сердечный фирменный напарник Мисти водного типа"
+  },
+  "clauncher_misty_signature": {
+    "name": "Напарник Мисти",
+    "description": "Мощный фирменный напарник Мисти водного типа"
+  },
+  "staryu_chronos_gear": {
+    "name": "Шестерня Хроноса",
+    "description": "Старью типа Сталь/Вода, пропитанный временной энергией: защитная точность и стойкость, благословлённая дождём"
+  },
+  "magikarp_splash_tyrant": {
+    "name": "Тиран Плюха",
+    "description": "Мэджикарп типа Вода/Бой, превзошедший слабость: упрямая решимость и пугающая сила"
+  },
+  "psyduck_kappa_quack": {
+    "name": "Каппа-кряк",
+    "description": "Псидак типа Вода/Призрак, творящий мистические проделки: связывание тенью и эфирная путаница"
+  },
+  "poliwag_lightning_drum": {
+    "name": "Громовой барабан",
+    "description": "Поливаг типа Электро/Вода, пульсирующий наэлектризованной энергией: быстрые потоки и восстанавливающая жизненная сила"
+  },
+  "azurill_bounce_champion": {
+    "name": "Чемпион по прыжкам",
+    "description": "Азурилл типа Летающий/Фея, парящий с грацией Aerilate, пиксельной мощью и прыжковой доблестью чемпионского уровня"
+  },
+  "goldeen_piercing_stinger": {
+    "name": "Пронзающее жало",
+    "description": "Голдин типа Вода/Жук: пробивные атаки, точность Технаря и снайперская меткость"
+  },
+  "horsea_fireball_seahorse": {
+    "name": "Огненный морской конёк",
+    "description": "Хорси типа Огонь/Вода, пылающий яростью Flash Fire, жаром Drought и обжигающей решимостью"
+  },
+  "togepi_eggshell_fortress": {
+    "name": "Крепость-скорлупа",
+    "description": "Тогепи типа Нормальный/Камень: спокойная грация, защита Solid Rock и закалённая в бою броня"
+  },
+  "corsola_toxic_coral": {
+    "name": "Токсичный коралл",
+    "description": "Корсола типа Яд/Вода: Poison Heal, беспощадные удары и защита Toxic Debris"
+  },
+  "luvdisc_heartbreaker": {
+    "name": "Разбиватель сердец",
+    "description": "Лавдиск типа Тьма/Вода: Dark Aura, проделки Prankster и уклонение Swift Swim"
+  },
+  "clauncher_buster_dragon_blaster": {
+    "name": "Драконий бластер-разрушитель",
+    "description": "Клаунчер типа Вода/Дракон: свирепость Dragon's Maw, дальность Mega Launcher и разрушительная мощь Sheer Force"
+  },
+  "vulpix_brock_signature": {
+    "name": "Напарник Брока",
+    "description": "Мистический фирменный напарник Брока огненного типа"
+  },
+  "zubat_brock_signature": {
+    "name": "Напарник Брока",
+    "description": "Быстрый фирменный напарник Брока ядовитого типа"
+  },
+  "bonsly_brock_signature": {
+    "name": "Напарник Брока",
+    "description": "Стойкий фирменный напарник Брока каменного типа"
+  },
+  "mudkip_brock_signature": {
+    "name": "Напарник Брока",
+    "description": "Крепкий фирменный напарник Брока водного типа"
+  },
+  "pineco_brock_signature": {
+    "name": "Напарник Брока",
+    "description": "Оборонительный фирменный напарник Брока жучьего типа"
+  },
+  "croagunk_brock_signature": {
+    "name": "Напарник Брока",
+    "description": "Хитрый фирменный напарник Брока ядовитого типа"
+  },
+  "happiny_brock_signature": {
+    "name": "Напарник Брока",
+    "description": "Заботливый фирменный напарник Брока нормального типа"
+  },
+  "lotad_brock_signature": {
+    "name": "Напарник Брока",
+    "description": "Спокойный фирменный напарник Брока водного типа"
+  },
+  "comfey_brock_signature": {
+    "name": "Напарник Брока",
+    "description": "Нежный фирменный напарник Брока фейского типа"
+  },
+  "geodude_phantom_fist": {
+    "name": "Призрачный кулак",
+    "description": "Геодуд типа Камень/Призрак: Shadow Tag, Tough Claws и приёмы Iron Fist с грацией Levitate"
+  },
+  "vulpix_flaming_forest_spirit": {
+    "name": "Пылающий лесной дух",
+    "description": "Вульпикс типа Огонь/Трава: пламя Drought, защита Grass Pelt и жизненная сила Chlorophyll"
+  },
+  "zubat_vampiric_fiend": {
+    "name": "Вампирский демон",
+    "description": "Зубат типа Тьма/Призрак: вампирская дерзость Moxie, ужас Cursed Body и свирепость Strong Jaw"
+  },
+  "bonsly_tear_drop": {
+    "name": "Слёзная капля",
+    "description": "Бонсли типа Камень/Вода: точность Skill Link, стойкость Water Compaction и регенеративные слёзы"
+  },
+  "mudkip_stone_skinned_salamander": {
+    "name": "Саламандра с каменной кожей",
+    "description": "Мадкип типа Вода/Камень: броня каменной кожи, защита Filter и мощь Torrent"
+  },
+  "pineco_iron_plated_grenade": {
+    "name": "Железобронная граната",
+    "description": "Пайнеко типа Огонь/Сталь: взрывной Aftermath, жар Flame Body и ответ Iron Barbs"
+  },
+  "croagunk_jester_of_pestilence": {
+    "name": "Шут чумы",
+    "description": "Кроганк типа Яд/Фея: пиксельная коррозия, Neutralizing Gas и хаос Tablets of Ruin"
+  },
+  "happiny_pink_fortress": {
+    "name": "Розовая крепость",
+    "description": "Хаппини типа Нормальный/Фея: поддержка Friend Guard, сочувствие Healer и восстановление Natural Cure"
+  },
+  "lotad_shadow_lily": {
+    "name": "Теневая лилия",
+    "description": "Лотад типа Вода/Призрак: подпитка Rain Dish, связывание Shadow Tag и стойкость Water Absorb"
+  },
+  "comfey_aqua_bloom": {
+    "name": "Водное цветение",
+    "description": "Комфей типа Трава/Вода: забота Drizzle, защита Water Bubble и жизненная сила Seed Sower"
+  },
+  "riolu_apollo_diana_signature": {
+    "name": "Напарник Аполлона и Дианы",
+    "description": "Храбрый фирменный напарник Аполлона и Дианы боевого типа"
+  },
+  "solrock_apollo_diana_signature": {
+    "name": "Напарник Аполлона и Дианы",
+    "description": "Сияющий фирменный напарник Аполлона и Дианы каменного типа"
+  },
+  "lunatone_apollo_diana_signature": {
+    "name": "Напарник Аполлона и Дианы",
+    "description": "Мистический фирменный напарник Аполлона и Дианы каменного типа"
+  },
+  "larvesta_apollo_diana_signature": {
+    "name": "Напарник Аполлона и Дианы",
+    "description": "Пылающий фирменный напарник Аполлона и Дианы жучьего типа"
+  },
+  "swablu_apollo_diana_signature": {
+    "name": "Напарник Аполлона и Дианы",
+    "description": "Пушистый фирменный напарник Аполлона и Дианы нормального типа"
+  },
+  "castform_apollo_diana_signature": {
+    "name": "Напарник Аполлона и Дианы",
+    "description": "Адаптивный фирменный напарник Аполлона и Дианы нормального типа"
+  },
+  "litwick_apollo_diana_signature": {
+    "name": "Напарник Аполлона и Дианы",
+    "description": "Мерцающий фирменный напарник Аполлона и Дианы призрачного типа"
+  },
+  "eevee_apollo_diana_signature": {
+    "name": "Напарник Аполлона и Дианы",
+    "description": "Универсальный фирменный напарник Аполлона и Дианы нормального типа"
+  },
+  "teddiursa_apollo_diana_signature": {
+    "name": "Напарник Аполлона и Дианы",
+    "description": "Ласковый фирменный напарник Аполлона и Дианы нормального типа"
+  },
+  "cleffa_apollo_diana_signature": {
+    "name": "Напарник Аполлона и Дианы",
+    "description": "Звёздный фирменный напарник Аполлона и Дианы фейского типа"
+  },
+  "sunkern_apollo_diana_signature": {
+    "name": "Напарник Аполлона и Дианы",
+    "description": "Полный надежды фирменный напарник Аполлона и Дианы травяного типа"
+  },
+  "riolu_shadow_warrior": {
+    "name": "Теневой воин",
+    "description": "Риолу типа Призрак/Бой: мастер теневого боя с агрессией Moxie, Adaptability и устрашающим присутствием"
+  },
+  "solrock_void_constellation": {
+    "name": "Созвездие Бездны",
+    "description": "Солрок типа Камень/Тьма: энергия Бездны, жар Solar Power, грация Levitate и доминирование Dark Aura"
+  },
+  "lunatone_dream_weaver": {
+    "name": "Ткач снов",
+    "description": "Лунатон типа Камень/Психо: плетёт сны с загадкой Levitate, капризом Moody и защитой Magic Guard"
+  },
+  "larvesta_toxic_spinner": {
+    "name": "Токсичный прядильщик",
+    "description": "Ларвеста типа Жук/Яд: токсичные сети, Toxic Chain, защита Rough Skin и мастерство Corrosion"
+  },
+  "swablu_frost_nimbus": {
+    "name": "Морозный нимб",
+    "description": "Сваблу типа Лёд/Летающий: облака с инеем, защита Fluffy, сила Refrigerate и господство Snow Warning"
+  },
+  "castform_dust_devil": {
+    "name": "Пыльный смерч",
+    "description": "Кастформ типа Камень/Земля: хаос Sand Stream, поглощение Storm Drain и стойкость Rough Skin"
+  },
+  "litwick_wyrmflame": {
+    "name": "Змеиное пламя",
+    "description": "Литвик типа Огонь/Дракон: ярость Wyrmflame, свирепость Dragon's Maw, жар Flash Fire и мистицизм Levitate"
+  },
+  "eevee_untamed_spirit": {
+    "name": "Неукротимый дух",
+    "description": "Иви типа Нормальный/Нормальный: неукротимый потенциал, удача Super Luck, грация Serene Grace и защита Prism Armor"
+  },
+  "teddiursa_sweet_tooth": {
+    "name": "Сладкоежка",
+    "description": "Теддиурса типа Фея/Фея: медовая мощь Pure Power, магия Misty Surge и урожай Harvest"
+  },
+  "cleffa_meteoric_core": {
+    "name": "Метеоритное ядро",
+    "description": "Клеффа типа Фея/Сталь: жар Flame Body, защита Magic Guard и стойкость Solid Rock"
+  },
+  "sunkern_plasma_sprout": {
+    "name": "Плазменный росток",
+    "description": "Санкерн типа Электро/Трава: энергия плазмы, Galvanize, жар Solar Power и доминирование Electric Surge"
+  },
+  "championPartner": "Напарник {{champion}}"
+}

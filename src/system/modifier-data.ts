@@ -18,6 +18,7 @@ export default class ModifierData {
   private args: any[];
   private stackCount: integer;
   private consoleCode?: string;
+  private skillTreeTooltip?: any;
 
   public className: string;
 
@@ -26,10 +27,16 @@ export default class ModifierData {
     this.player = player;
     this.typeId = sourceModifier ? sourceModifier.type.id : source.typeId;
 
-    if (sourceModifier && 'consoleCode' in sourceModifier) {
+    if (sourceModifier && "consoleCode" in sourceModifier) {
       this.consoleCode = (sourceModifier as any).consoleCode;
     } else if (source.consoleCode) {
       this.consoleCode = source.consoleCode;
+    }
+
+    if (sourceModifier && "skillTreeTooltip" in sourceModifier) {
+      this.skillTreeTooltip = (sourceModifier as any).skillTreeTooltip;
+    } else if (source.skillTreeTooltip) {
+      this.skillTreeTooltip = source.skillTreeTooltip;
     }
 
     if (sourceModifier) {
@@ -44,19 +51,19 @@ export default class ModifierData {
     this.className = sourceModifier ? sourceModifier.constructor.name : source.className;
 
     if (source instanceof MoveUpgradeModifier ||
-        (source && source.className === 'MoveUpgradeModifier')) {
+        (source && source.className === "MoveUpgradeModifier")) {
       this.args = processMoveUpgradeModifierArgsForSerialization(this.args);
 
       if (Array.isArray(this.args)) {
         this.args = this.args.map(arg => {
           if (Array.isArray(arg)) {
             return arg.map(item => {
-              if (item && item.className === 'Object' && item.properties) {
+              if (item && item.className === "Object" && item.properties) {
                 return item.properties;
               }
               return item;
             });
-          } else if (arg && arg.className === 'Object' && arg.properties) {
+          } else if (arg && arg.className === "Object" && arg.properties) {
             return arg.properties;
           }
           return arg;
@@ -66,20 +73,19 @@ export default class ModifierData {
   }
 
   toModifier(scene: BattleScene, constructor: any): PersistentModifier | null {
-    if (this.className === 'MoveUpgradeModifier') {
+    if (this.className === "MoveUpgradeModifier") {
       if (Array.isArray(this.args)) {
         this.args = this.args.map((arg, i) => {
           if (Array.isArray(arg)) {
             return arg.map(item => {
 
-              if (item && item.className === 'Object' && item.properties) {
+              if (item && item.className === "Object" && item.properties) {
                 return item.properties;
               }
 
               return item;
             });
-          }
-           else if (arg && arg.className === 'Object' && arg.properties) {
+          } else if (arg && arg.className === "Object" && arg.properties) {
             return arg.properties;
           }
 
@@ -121,31 +127,30 @@ export default class ModifierData {
       let type: ModifierType | null = typeFunc();
       type.id = this.typeId;
 
-      if (this.className === 'PermaPartyAbilityModifier' && this.typePregenArgs && this.typePregenArgs.length >= 1 && this.args.length >= 3) {
+      if (this.className === "PermaPartyAbilityModifier" && this.typePregenArgs && this.typePregenArgs.length >= 1 && this.args.length >= 3) {
         const abilityID = this.typePregenArgs[0].id;
-        if (type.constructor.name === 'PermaPartyAbilityModifierTypeGenerator' && abilityID) {
+        if (type.constructor.name === "PermaPartyAbilityModifierTypeGenerator" && abilityID) {
           this.args[2] = abilityID;
         }
       }
 
       if (type instanceof ModifierTypeGenerator) {
-        if(this.typePregenArgs) {
+        if (this.typePregenArgs) {
           type = (type as ModifierTypeGenerator).generateType(
-                this.player ? scene.getParty() : scene.getEnemyField(),
-                this.typePregenArgs
-            );
-          }
-          else if(this.args && this.args.length > 1) {
-            type = (type as ModifierTypeGenerator).generateType(
-                  this.player ? scene.getParty() : scene.getEnemyField(),
-                  GeneratorInstanceCheck(type) ? this.args.slice(1) : this.args
-              );
-          }
+            this.player ? scene.getParty() : scene.getEnemyField(),
+            this.typePregenArgs
+          );
+        } else if (this.args && this.args.length > 1) {
+          type = (type as ModifierTypeGenerator).generateType(
+            this.player ? scene.getParty() : scene.getEnemyField(),
+            GeneratorInstanceCheck(type) ? this.args.slice(1) : this.args
+          );
+        }
         if (type instanceof QuestModifierType) {
-            const condition = type.getCondition();
-            const args = [...this.args];
-        args[2] = condition;
-            this.args = args;
+          const condition = type.getCondition();
+          const args = [...this.args];
+          args[2] = condition;
+          this.args = args;
         }
       }
 
@@ -153,6 +158,10 @@ export default class ModifierData {
 
       if (ret.stackCount > ret.getMaxStackCount(scene)) {
         ret.stackCount = ret.getMaxStackCount(scene);
+      }
+
+      if (this.skillTreeTooltip) {
+        (ret as any).skillTreeTooltip = this.skillTreeTooltip;
       }
 
       return ret;

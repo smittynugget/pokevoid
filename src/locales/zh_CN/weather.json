@@ -27,5 +27,6 @@
   "harshSunClearMessage": "日照复原了。",
   "strongWindsStartMessage": "吹起了神秘的乱流！",
   "strongWindsLapseMessage": "神秘的乱流势头不减。",
-  "strongWindsClearMessage": "神秘的乱流停止了。"
+  "strongWindsClearMessage": "神秘的乱流停止了。",
+  "strongWindsEffectMessage": "神秘的乱流减弱了攻击！"
 }

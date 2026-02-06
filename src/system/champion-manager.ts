@@ -98,7 +98,9 @@ export class ChampionManager {
 
   private populateSkillEssenceRequirements(championData: PlayableChampionData): void {
     for (const [skillId, skillDef] of Object.entries(championData.lockedSkills)) {
-      if (skillDef.requiredEssenceWeights) continue;
+      if (skillDef.requiredEssenceWeights) {
+        continue;
+      }
 
       const rarities = getRaritiesForRewardType(skillDef.rewardType);
       const rarity = rarities[0] || SkillTreeRarity.COMMON;
@@ -123,8 +125,13 @@ export class ChampionManager {
     if (DEBUG_BYPASS_CHAMPION_UNLOCK) {
       return true;
     }
+    return this.isChampionUnlockedInData(championId);
+  }
 
-    if (championId === "apollo_diana" || championId === "apollo" || championId === "diana") return true;
+  isChampionUnlockedInData(championId: string): boolean {
+    if (championId === "apollo_diana" || championId === "apollo" || championId === "diana") {
+      return true;
+    }
     const data = (this.gameData.championData?.[championId] as any) || null;
     const isUnlocked = data?.isUnlocked === true;
     return isUnlocked;

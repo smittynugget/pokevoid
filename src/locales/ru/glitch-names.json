@@ -1,0 +1,239 @@
+{
+  "noxious": {
+    "name": "Ноксиус"
+  },
+  "voltaurus": {
+    "name": "Вольтаурус"
+  },
+  "kingleon": {
+    "name": "Кинглеон"
+  },
+  "glicula": {
+    "name": "Гликула"
+  },
+  "mamawak": {
+    "name": "Мамавак"
+  },
+  "infernus": {
+    "name": "Инфернус"
+  },
+  "fangdrake": {
+    "name": "Фэнгдрейк"
+  },
+  "gigilick": {
+    "name": "Гигилик"
+  },
+  "cybeex": {
+    "name": "Сайбикс"
+  },
+  "charisand": {
+    "name": "Харисэнд"
+  },
+  "mentasaur": {
+    "name": "Ментасаур"
+  },
+  "enchantoise": {
+    "name": "Энчантуаз"
+  },
+  "nidorath": {
+    "name": "Нидорат"
+  },
+  "generagar": {
+    "name": "Дженерагар"
+  },
+  "fuming": {
+    "name": "Фуминг"
+  },
+  "hitmonnorm": {
+    "name": "Хитмоннорм"
+  },
+  "onehitchan": {
+    "name": "Ванхитчан"
+  },
+  "chanmonlee": {
+    "name": "Чанмонли"
+  },
+  "kangasgone": {
+    "name": "Кангасгон"
+  },
+  "thanator": {
+    "name": "Танатор"
+  },
+  "magnovire": {
+    "name": "Магновайр"
+  },
+  "dunerados": {
+    "name": "Дюнерадос"
+  },
+  "lavaras": {
+    "name": "Лаварас"
+  },
+  "porygonω": {
+    "name": "ПоригонΩ"
+  },
+  "dragonking": {
+    "name": "Драгонкинг"
+  },
+  "sudolem": {
+    "name": "Судоволем"
+  },
+  "yonipom": {
+    "name": "Йонипом"
+  },
+  "alnowning": {
+    "name": "Алноунинг"
+  },
+  "krakken": {
+    "name": "Краккен"
+  },
+  "metalker": {
+    "name": "Металкер"
+  },
+  "slothunter": {
+    "name": "Слотхантер"
+  },
+  "solunolith": {
+    "name": "Солунолит"
+  },
+  "regimeteor": {
+    "name": "Региметеор"
+  },
+  "omnigigas": {
+    "name": "Омнигигас"
+  },
+  "wispeeon": {
+    "name": "Виспион"
+  },
+  "cybeon": {
+    "name": "Сайбеон"
+  },
+  "teraeon": {
+    "name": "Тераэон"
+  },
+  "pikura": {
+    "name": "Пикура"
+  },
+  "frogotten": {
+    "name": "Фроготтен"
+  },
+  "determizard": {
+    "name": "Детермайзард"
+  },
+  "melonax": {
+    "name": "Мелонакс"
+  },
+  "rokachubo": {
+    "name": "Рокачубо"
+  },
+  "treashelter": {
+    "name": "Тризелтер"
+  },
+  "grimjaw": {
+    "name": "Гримджоу"
+  },
+  "fibark": {
+    "name": "Фибарк"
+  },
+  "bonfyrite": {
+    "name": "Бонфайрит"
+  },
+  "silvaback": {
+    "name": "Сильвабек"
+  },
+  "simizen": {
+    "name": "Симайзен"
+  },
+  "paletto": {
+    "name": "Палетто"
+  },
+  "extavaroom": {
+    "name": "Экставарум"
+  },
+  "mimizado": {
+    "name": "Мимизадо"
+  },
+  "ninjukyu": {
+    "name": "Нинджукью"
+  },
+  "mewmewni": {
+    "name": "Мьюмьюни"
+  },
+  "ririkyu": {
+    "name": "Ририкью"
+  },
+  "regirokuy": {
+    "name": "Регирокуй"
+  },
+  "ectonaut": {
+    "name": "Эктонавт"
+  },
+  "dr.eiscicle": {
+    "name": "Др. Айсайкл"
+  },
+  "moltem": {
+    "name": "Молтем"
+  },
+  "zandux": {
+    "name": "Зандукс"
+  },
+  "nucleash": {
+    "name": "Нуклэш"
+  },
+  "plumaestro": {
+    "name": "Плумаэстро"
+  },
+  "dragomime": {
+    "name": "Драгомайм"
+  },
+  "chamelezard": {
+    "name": "Шамелезард"
+  },
+  "pikatto": {
+    "name": "Пикатто"
+  },
+  "machitto": {
+    "name": "Мачитто"
+  },
+  "mewtate": {
+    "name": "Мьютейт"
+  },
+  "yabbagatr": {
+    "name": "Яббагатр"
+  },
+  "savagark": {
+    "name": "Савагарк"
+  },
+  "wonstrous": {
+    "name": "Вонструс"
+  },
+  "imperiuno": {
+    "name": "Империуно"
+  },
+  "molestrosity": {
+    "name": "Молестросити"
+  },
+  "swaggart": {
+    "name": "Сваггарт"
+  },
+  "viperex": {
+    "name": "Вайперекс"
+  },
+  "cognarok": {
+    "name": "Когнарок"
+  },
+  "harmonda": {
+    "name": "Хармонда"
+  },
+  "felester": {
+    "name": "Фелестер"
+  },
+  "tamamo": {
+    "name": "Тамамо"
+  },
+  "tentuckle": {
+    "name": "Тентакл"
+  },
+  "tanguish": {
+    "name": "Тэнгиш"
+  }
+}

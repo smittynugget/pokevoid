@@ -25,5 +25,21 @@
     "desc": "La efectividad de los tipos es invertida. No hay inmunidades entre tipos.\nEste reto deshabilita logros de otros retos.",
     "value.0": "Desactivado",
     "value.1": "Activado"
+  },
+  "illegalEvolution": "¡{{pokemon}} ha evolucionado!\n¡No puede ser parte del desafío!",
+  "freshStart": {
+    "name": "Nuevo Comienzo",
+    "desc": {
+      "0": "Revive el desafío de usar iniciales recién obtenidos sin desbloqueables.",
+      "1": "Sólo puedes usar Pokémon iniciales originales, como si acabases de empezar PokéRogue.",
+      "2": "Puedes usar cualquier Pokémon inicial sin desbloqueables, como si los acabaras de conseguir."
+    },
+    "value.0": "Desactivado",
+    "value.1": "Activado",
+    "value": {
+      "0": "Desact.",
+      "1": "Reinicio Completo",
+      "2": "Todos los iniciales"
+    }
   }
 }

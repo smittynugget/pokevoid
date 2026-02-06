@@ -1,0 +1,210 @@
+{
+  "rewardTitle": "LEVEL UP {{count}}!",
+  "level": "Уровень",
+  "description": {
+    "power": {
+      "increaseVsAccuracy": "Базовая сила становится {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "increaseOnly": "Увеличить силу на {{powerValue}}."
+    },
+    "accuracy": {
+      "perfectAccuracy": "Базовая точность становится идеальной (100%), базовая сила — {{newPower}}.",
+      "increaseVsPower": "Базовая точность становится {{newAccuracy}}%, базовая сила — {{newPower}}."
+    },
+    "effectChance": {
+      "increaseToValueVsPower": "Базовый шанс эффекта становится {{value}}%, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "increaseToValueVsPowerNoAccuracy": "Базовый шанс эффекта становится {{value}}%, базовая сила — {{newPower}}."
+    },
+    "status": {
+      "addChanceVsPower": "Добавить {{chance}}% шанс наложить {{statusName}}, базовая сила — {{powerValue}}.",
+      "addChanceOnly": "Добавить {{chance}}% шанс наложить {{statusName}}.",
+      "addLeechSeedVsPower": "Добавить эффект Семени-пиявки (против не-Травяных), базовая сила — {{powerValue}}.",
+      "addLeechSeedOnly": "Добавить эффект Семени-пиявки (против не-Травяных).",
+      "changeEffect": "Заменить вторичный эффект на {{chance}}% шанс наложить {{statusName}}.",
+      "addSecondEffect": "Шанс эффекта приёма становится {{chance}}%: наложить {{statusName1}} ИЛИ {{statusName2}}.",
+      "addSecondEffectVsPower": "Шанс эффекта приёма становится {{chance}}%: наложить {{statusName1}} ИЛИ {{statusName2}}, базовая сила — {{newPower}}.",
+      "addSecondEffectVsAccuracy": "Шанс эффекта приёма становится {{chance}}%: наложить {{statusName1}} ИЛИ {{statusName2}}, базовая точность — {{newAccuracy}}%.",
+      "addSecondEffectVsPowerAndAccuracy": "Шанс эффекта приёма становится {{chance}}%: наложить {{statusName1}} ИЛИ {{statusName2}}, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "guaranteeEffect": "Гарантировать вторичный эффект.",
+      "guaranteeEffectVsPower": "Гарантировать вторичный эффект, базовая сила — {{powerValue}}.",
+      "guaranteeEffectVsAccuracy": "Гарантировать вторичный эффект и изменить точность на {{accuracyValue}}%.",
+      "guaranteeEffectVsPowerAndAccuracy": "Гарантировать вторичный эффект, базовая сила — {{powerValue}} и точность {{accuracyValue}}%.",
+      "addStatusViaStatusMove": "Наложить {{statusName}} (меняет точность на {{accuracyValue}}%).",
+      "addStatus": "Добавить {{chance}}% шанс наложить {{statusName}}.",
+      "improveChance": "Улучшить шанс статуса: базовый шанс становится {{chance}}% для {{statusName}}.",
+      "improveChanceNoAccuracy": "Улучшить шанс статуса: базовый шанс становится {{chance}}% для {{statusName}}, базовая сила — {{newPower}}.",
+      "improveChanceVsPower": "Улучшить шанс статуса: базовый шанс становится {{chance}}% для {{statusName}}, базовая сила — {{newPower}}.",
+      "improveChanceVsAccuracy": "Улучшить шанс статуса: базовый шанс становится {{chance}}% для {{statusName}}, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "improveChanceVsPowerAndAccuracy": "Улучшить шанс статуса: базовый шанс становится {{chance}}% для {{statusName}}, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "improveChanceCapped": "Шанс статуса уже на максимуме ({{chance}}%), базовая сила — {{newPower}}.",
+      "improveChanceCappedVsAccuracy": "Шанс статуса уже на максимуме ({{chance}}%), базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%."
+    },
+    "flinch": {
+      "addChanceVsPower": "Добавить {{chance}}% шанс заставить цель вздрогнуть, базовая сила — {{powerValue}}.",
+      "addChanceOnly": "Добавить {{chance}}% шанс заставить цель вздрогнуть."
+    },
+    "stat": {
+      "addRaiseSelfSingle": "Повысить {{statName}} пользователя на {{stages}} стад. Шанс становится {{chance}}%, базовая сила — {{newPower}}.",
+      "addRaiseSelfSingleSameChance": "Повысить {{statName}} пользователя на {{stages}} стад. Базовый шанс остаётся {{chance}}%, базовая сила — {{newPower}}.",
+      "addRaiseSelfSingleEffectChanceBecomes": "Повысить {{statName}} пользователя на {{stages}} стад. Базовый шанс становится {{chance}}%, базовая сила — {{newPower}}.",
+      "addRaiseSelfSingleWithRecoil": "Повысить {{statName}} пользователя на {{stages}} стад. Шанс становится {{chance}}%, пользователь получает {{recoilCost}}% урона отдачей, базовая сила — {{newPower}}.",
+      "addRaiseSelfSingleWithRecoilSameChance": "Повысить {{statName}} пользователя на {{stages}} стад. Базовый шанс остаётся {{chance}}%, но пользователь получает {{recoilCost}}% урона отдачей, базовая сила — {{newPower}}.",
+      "addRaiseSelfSingleWithRecoilEffectChanceBecomes": "Повысить {{statName}} пользователя на {{stages}} стад. Базовый шанс становится {{chance}}%, но пользователь получает {{recoilCost}}% урона отдачей, базовая сила — {{newPower}}.",
+      "increaseRaiseSelf": "Увеличить бонус себе: повышать {{statName}} на {{stages}} стад.",
+      "increaseRaiseSelfSameChance": "Увеличить бонус себе: повышать {{statName}} на {{stages}} стад. Базовый шанс остаётся {{chance}}%.",
+      "increaseRaiseSelfEffectChanceBecomes": "Увеличить бонус себе: повышать {{statName}} на {{stages}} стад. Базовый шанс становится {{chance}}%.",
+      "increaseRaiseSelfVsPower": "Увеличить бонус себе: повышать {{statName}} на {{stages}} стад., базовая сила — {{newPower}}.",
+      "increaseRaiseSelfVsPowerSameChance": "Увеличить бонус себе: повышать {{statName}} на {{stages}} стад., базовая сила — {{newPower}}. Базовый шанс остаётся {{chance}}%.",
+      "increaseRaiseSelfVsPowerEffectChanceBecomes": "Увеличить бонус себе: повышать {{statName}} на {{stages}} стад., базовая сила — {{newPower}}. Базовый шанс становится {{chance}}%.",
+      "addAnotherRaiseSelf": "Также повышать {{newStatName}} пользователя на {{stages}} стад. в дополнение к {{existingStats}}.",
+      "addAnotherRaiseSelfSameChance": "Также повышать {{newStatName}} пользователя на {{stages}} стад. в дополнение к {{existingStats}}. Базовый шанс остаётся {{chance}}%.",
+      "addAnotherRaiseSelfEffectChanceBecomes": "Также повышать {{newStatName}} пользователя на {{stages}} стад. в дополнение к {{existingStats}}. Базовый шанс становится {{chance}}%.",
+      "addAnotherRaiseSelfVsPower": "Также повышать {{newStatName}} пользователя на {{stages}} стад. в дополнение к {{existingStats}}, но уменьшить силу на {{powerValue}}.",
+      "addAnotherRaiseSelfVsPowerSameChance": "Также повышать {{newStatName}} пользователя на {{stages}} стад. в дополнение к {{existingStats}}, но уменьшить силу на {{powerValue}}. Базовый шанс остаётся {{chance}}%.",
+      "addAnotherRaiseSelfVsPowerEffectChanceBecomes": "Также повышать {{newStatName}} пользователя на {{stages}} стад. в дополнение к {{existingStats}}, но уменьшить силу на {{powerValue}}. Базовый шанс становится {{chance}}%.",
+      "addLowerTargetSingle": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "addLowerTargetSingleNoAccuracy": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}.",
+      "addLowerTargetSingleWithChance": "Понижать {{statName}} цели на {{stages}} стад. с шансом {{chance}}%, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "addLowerTargetSingleNoAccuracyWithChance": "Понижать {{statName}} цели на {{stages}} стад. с шансом {{chance}}%, базовая сила — {{newPower}}.",
+      "addLowerTargetSingleSameChance": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%. Базовый шанс остаётся {{chance}}%.",
+      "addLowerTargetSingleNoAccuracySameChance": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}. Базовый шанс остаётся {{chance}}%.",
+      "addLowerTargetSingleEffectChanceBecomes": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%. Базовый шанс становится {{chance}}%.",
+      "addLowerTargetSingleNoAccuracyEffectChanceBecomes": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}. Базовый шанс становится {{chance}}%.",
+      "increaseLowerTarget": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "increaseLowerTargetNoAccuracy": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}.",
+      "increaseLowerTargetWithChance": "Понижать {{statName}} цели на {{stages}} стад. с шансом {{chance}}%, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "increaseLowerTargetNoAccuracyWithChance": "Понижать {{statName}} цели на {{stages}} стад. с шансом {{chance}}%, базовая сила — {{newPower}}.",
+      "increaseLowerTargetSameChance": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%. Базовый шанс остаётся {{chance}}%.",
+      "increaseLowerTargetNoAccuracySameChance": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}. Базовый шанс остаётся {{chance}}%.",
+      "increaseLowerTargetEffectChanceBecomes": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%. Базовый шанс становится {{chance}}%.",
+      "increaseLowerTargetNoAccuracyEffectChanceBecomes": "Понижать {{statName}} цели на {{stages}} стад., базовая сила — {{newPower}}. Базовый шанс становится {{chance}}%.",
+      "addAnotherLowerTarget": "Также понижать {{newStatName}} цели на {{stages}} стад., базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "addAnotherLowerTargetNoAccuracy": "Также понижать {{newStatName}} цели на {{stages}} стад., базовая сила — {{newPower}}.",
+      "addAnotherLowerTargetWithChance": "Также понижать {{newStatName}} цели на {{stages}} стад. с шансом {{chance}}%, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "addAnotherLowerTargetNoAccuracyWithChance": "Также понижать {{newStatName}} цели на {{stages}} стад. с шансом {{chance}}%, базовая сила — {{newPower}}.",
+      "addAnotherLowerTargetSameChance": "Также понижать {{newStatName}} цели на {{stages}} стад., базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%. Базовый шанс остаётся {{chance}}%.",
+      "addAnotherLowerTargetNoAccuracySameChance": "Также понижать {{newStatName}} цели на {{stages}} стад., базовая сила — {{newPower}}. Базовый шанс остаётся {{chance}}%.",
+      "addAnotherLowerTargetEffectChanceBecomes": "Также понижать {{newStatName}} цели на {{stages}} стад., базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%. Базовый шанс становится {{chance}}%.",
+      "addAnotherLowerTargetNoAccuracyEffectChanceBecomes": "Также понижать {{newStatName}} цели на {{stages}} стад., базовая сила — {{newPower}}. Базовый шанс становится {{chance}}%."
+    },
+    "type": {
+      "matchUserType": "Тип приёма всегда совпадает с основным типом пользователя.",
+      "weatherBall": "Тип приёма меняется в зависимости от погоды (как Weather Ball).",
+      "terrainPulse": "Тип приёма меняется в зависимости от поля (как Terrain Pulse).",
+      "hiddenPower": "Тип приёма меняется в зависимости от характеристик пользователя (как Hidden Power).",
+      "becomeTypeless": "Стать без типа (всегда нейтральный урон) и увеличить силу на {{powerValue}}.",
+      "superEffectiveVsType": "Всегда наносить суперэффективный урон по покемонам типа {{targetTypeName}}.",
+      "directChange": "Сменить тип приёма на {{typeName}}."
+    },
+    "multiHit": {
+      "addWithCheckAll": "Приём становится мультиударом на {{hits}} ударов, базовая сила — {{newPower}}, базовая точность — {{accuracyCost}}%, базовый шанс — {{chance}}% (влияет на ВСЕ удары).",
+      "addNoCheckAll": "Приём становится мультиударом на {{hits}} ударов, базовая сила — {{newPower}}, базовая точность — {{accuracyCost}}%, базовый шанс — {{chance}}%.",
+      "changeWithCheckAll": "Сменить на {{hits}} ударов, базовая сила — {{newPower}}, базовая точность — {{accuracyCost}}%, базовый шанс — {{chance}}% (влияет на ВСЕ удары)",
+      "changeNoCheckAll": "Сменить на {{hits}} ударов, базовая сила — {{newPower}}, базовая точность — {{accuracyCost}}%, базовый шанс — {{chance}}%."
+    },
+    "heal": {
+      "addHitHealVsPower": "Лечит на {{percent}}% от нанесённого урона, базовая сила — {{newPower}}.",
+      "increaseHitHealVsPower": "Увеличить высасывание до {{percent}}% от нанесённого урона, базовая сила — {{newPower}}.",
+      "addINGRAINVsPower": "Пользователь восстанавливает 1/16 макс. ОЖ за ход 5 ходов и не может быть заменён (эффект Укоренения), но уменьшить силу на {{powerValue}}.",
+      "addINGRAINOnly": "Пользователь восстанавливает 1/16 макс. ОЖ за ход 5 ходов и не может быть заменён (эффект Укоренения).",
+      "addAQUA_RINGVsPower": "Пользователь восстанавливает 1/16 макс. ОЖ за ход 5 ходов (эффект Водного кольца), но уменьшить силу на {{powerValue}}.",
+      "addAQUA_RINGOnly": "Пользователь восстанавливает 1/16 макс. ОЖ за ход 5 ходов (эффект Водного кольца).",
+      "addPlantHeal": "Пользователь восстанавливает ОЖ, если активно Травяное поле. Проваливается, если Травяное поле не активно.",
+      "addSandHeal": "Пользователь восстанавливает ОЖ, если активна песчаная буря. Проваливается, если песчаная буря не активна."
+    },
+    "recoil": {
+      "addVsPower": "Отдача {{percent}}%, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "addVsPowerOnly": "Отдача {{percent}}%, базовая сила — {{newPower}}.",
+      "increaseVsPower": "Отдача становится {{percent}}%, базовая сила — {{newPower}}.",
+      "increaseVsPowerOnly": "Отдача становится {{percent}}%, базовая сила — {{newPower}}.",
+      "increaseVsPowerAndAccuracy": "Отдача становится {{percent}}%, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "decreaseVsPower": "Отдача становится {{percent}}%, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "decreaseVsPowerNoAccuracy": "Отдача становится {{percent}}%, базовая сила — {{newPower}}.",
+      "removeVsPower": "Убрать отдачу, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "removeVsPowerNoAccuracy": "Убрать отдачу, базовая сила — {{newPower}}."
+    },
+    "sacrificial": {
+      "addHalf": "После использования жертвует половиной ОЖ, базовая сила — {{power}}, базовая точность — {{newAccuracy}}%.",
+      "addHalfNoAccuracy": "После использования жертвует половиной ОЖ, базовая сила — {{power}}.",
+      "upgradeFull": "После использования жертвует всеми ОЖ, базовая сила — {{power}}, базовая точность — {{newAccuracy}}%.",
+      "upgradeFullNoAccuracy": "После использования жертвует всеми ОЖ, базовая сила — {{power}}.",
+      "upgradeOnHit": "Жертвует ОЖ только при попадании, базовая сила — {{power}}, базовая точность — {{newAccuracy}}%.",
+      "upgradeOnHitNoAccuracy": "Жертвует ОЖ только при попадании, базовая сила — {{power}}."
+    },
+    "crit": {
+      "increaseRatio": "Повышенный шанс крит. удара, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "increaseRatioNoAccuracy": "Повышенный шанс крит. удара, базовая сила — {{newPower}}.",
+      "upgradeToCritOnly": "Только крит. удары, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "upgradeToCritOnlyNoAccuracy": "Только крит. удары, базовая сила — {{newPower}}."
+    },
+    "confusion": {
+      "addChanceVsPower": "Добавить {{chance}}% шанс замешательства цели, но уменьшить силу на {{powerValue}}."
+    },
+    "curse": {
+      "addChanceVsPower": "Добавить {{chance}}% шанс наложить проклятие на цель (теряет 1/4 макс. ОЖ за ход), но уменьшить силу на {{powerValue}}."
+    },
+    "flags": {
+      "ignoreProtect": "Приём теперь проходит через Protect/Detect, но уменьшить силу на {{powerValue}}.",
+      "ignoreAbilities": "Приём теперь игнорирует таланты цели и увеличивает силу на {{powerValue}}.",
+      "soundBased": "Приём становится звуковым (проходит через Substitute) и увеличивает силу на {{powerValue}}.",
+      "punchingMove": "Приём становится ударным (усиливается Iron Fist) и увеличивает силу на {{powerValue}}.",
+      "slicingMove": "Приём становится режущим (усиливается Sharpness) и увеличивает силу на {{powerValue}}.",
+      "pulseMove": "Приём становится пульсовым (усиливается Mega Launcher) и увеличивает силу на {{powerValue}}.",
+      "bitingMove": "Приём становится кусающим (усиливается Strong Jaw) и увеличивает силу на {{powerValue}}.",
+      "windMove": "Приём становится ветровым (влияют Wind Rider/Power) и увеличивает силу на {{powerValue}}.",
+      "ballBombMove": "Приём становится шар/бомба и увеличивает силу на {{powerValue}}.",
+      "powderMove": "Приём становится порошковым и увеличивает силу на {{powerValue}}.",
+      "danceMove": "Приём становится танцевальным и увеличивает силу на {{powerValue}}.",
+      "disableContact": "Приём больше не делает контакт и увеличивает силу на {{powerValue}}.",
+      "enableContact": "Приём теперь делает контакт и увеличивает силу на {{powerValue}}.",
+      "ignoreStatChanges": "Приём теперь игнорирует защитные изменения статов цели и уклонение, и увеличивает силу на {{powerValue}}.",
+      "removeScreens": "Приём теперь снимает Reflect/Light Screen/Aurora Veil и увеличивает силу на {{powerValue}}."
+    },
+    "priority": {
+      "increase": "Приоритет становится +{{value}}, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "increaseNoAccuracy": "Приоритет становится +{{value}}, базовая сила — {{newPower}}.",
+      "decrease": "Приоритет становится {{value}}, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "decreaseNoAccuracy": "Приоритет становится {{value}}, базовая сила — {{newPower}}.",
+      "conditionalTerrain": "Повысить приоритет до {{value}}, если активно поле {{terrain}}, и увеличить силу на {{powerValue}}.",
+      "conditionalFirstTurn": "Проваливается, если не первый ход: повысить приоритет до {{value}} и увеличить силу на {{powerValue}}."
+    },
+    "category": {
+      "changeToSpecial": "Сменить категорию на Специальную.",
+      "changeToPhysical": "Сменить категорию на Физическую."
+    },
+    "misc": {
+      "addTrap": "Ловит цель приёмом {{trapName}} на несколько ходов, но уменьшить силу на {{powerValue}}.",
+      "addSwitchOut": "Пользователь уходит после использования, но уменьшить силу на {{powerValue}} (как U-Turn).",
+      "addGrounding": "Приземляет летающие цели (убирает иммунитет летающего типа).",
+      "fixedDamageLevel": "Сменить расчёт урона: урон равен уровню пользователя (заменяет базовую силу).",
+      "fixedDamageValue": "Сменить расчёт урона: фиксированный урон {{value}} ОЖ.",
+      "fixedDamageTargetHalfHp": "Сменить расчёт урона: урон равен половине текущих ОЖ цели (заменяет базовую силу).",
+      "addSurviveDamage": "Всегда оставляет цели минимум 1 ОЖ (как False Swipe) и увеличивает силу на {{powerValue}}.",
+      "addWeightPowerTarget": "Сила растёт в зависимости от веса цели (как Low Kick).",
+      "addWeightPowerCompare": "Сила растёт, чем тяжелее пользователь по сравнению с целью (как Heavy Slam).",
+      "addSpeedPowerSlower": "Сила растёт, чем медленнее пользователь по сравнению с целью (как Gyro Ball).",
+      "addSpeedPowerFaster": "Сила растёт, чем быстрее пользователь по сравнению с целью (как Electro Ball).",
+      "addHpPowerHighHp": "Сила растёт, чем выше текущие ОЖ пользователя.",
+      "addHpPowerLowHp": "Сила растёт, чем ниже текущие ОЖ пользователя (как Reversal).",
+      "addChargeTurn": "Добавить ход зарядки перед атакой, базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "addChargeTurnWithBoost": "Добавить ход зарядки (повышает {{statName}} пользователя на {{stages}} стад.), базовая сила — {{newPower}}, базовая точность — {{newAccuracy}}%.",
+      "addStealItemChance": "Шанс {{chance}}% украсть удерживаемый предмет цели, базовая сила — {{newPower}}.",
+      "addStealItemGuaranteed": "Украсть удерживаемый предмет цели (100%), базовая сила — {{newPower}}.",
+      "addRemoveItem": "Убрать удерживаемый предмет цели, базовая сила — {{newPower}}.",
+      "powerBoostWeather": "Сила удваивается, если активна погода {{weather}}.",
+      "powerBoostTerrain": "Сила удваивается, если активно поле {{terrain}} и цель на земле.",
+      "powerBoostConsecutive": "Сила удваивается при каждом успешном подряд использовании (макс. 4×).",
+      "powerBoostTurnDamaged": "Сила удваивается, если пользователь получил урон от цели в этот ход."
+    },
+    "statusSpecific": {
+      "setWeather": "Меняет погоду на {{weather}}. Проваливается, если {{weather}} уже активна.",
+      "setTerrain": "Меняет поле на {{terrain}}. Проваливается, если поле {{terrain}} уже активно.",
+      "clearWeather": "Снимает текущую погоду.",
+      "clearTerrain": "Снимает текущее поле.",
+      "addArenaTrap": "Устанавливает ловушку {{trapName}} на стороне противника. Проваливается, если {{trapName}} уже активна."
+    }
+  },
+  "moveTriggers": {
+    "loweredItsHead": "{{pokemonName}}\nопустил(а) голову!",
+    "tookInSunlight": "{{pokemonName}}\nвпитал(а) солнечный свет!"
+  }
+}

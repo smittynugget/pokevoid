@@ -2,9 +2,8 @@
   "blockRecoilDamage": "{{pokemonName}}は　{{abilityName}}で　反動ダメージを　受けない！",
   "badDreams": "{{pokemonName}}は　ナイトメアに うなされている！",
   "costar": "{{pokemonName}}は　{{allyName}}の\n能力変化を　コピーした！",
-  "iceFaceAvoidedDamage": "{{pokemonName}}は\n{{abilityName}}で　ダメージを　受けない！",
+  "iceFaceAvoidedDamage": "{{pokemonNameWithAffix}}は\n{{abilityName}}で　ダメージを　受けない！",
   "perishBody": "{{pokemonName}}の {{abilityName}}で\nおたがいは　3ターン後に　ほろびいてしまう！",
-  "pokemonNameWithAffix": "{{pokemonName}}は　{{abilityName}}で　回復した！",
   "trace": "{{pokemonName}}は　相手の　{{targetName}}の\n{{abilityName}}を　トレースした！",
   "windPowerCharged": "{{pokemonName}}は\n{{moveName}}を　受けて　じゅうでんした！",
   "quickDraw": "{{pokemonName}}は　クイックドロウで\n行動が　はやくなった！",
@@ -12,7 +11,6 @@
   "blockItemTheft": "{{pokemonNameWithAffix}}の　{{abilityName}}で\n道具を　うばわれない！",
   "typeImmunityHeal": "{{pokemonNameWithAffix}}は　{{abilityName}}で\n体力を　回復した！",
   "nonSuperEffectiveImmunity": "{{pokemonNameWithAffix}}は　{{abilityName}}で\nダメージを　受けない。",
-  "postDefendDisguise": "{{pokemonNameWithAffix}}の\nばけのかわが　はがれた！",
   "moveImmunity": "{{pokemonNameWithAffix}}には\n効果が　ないようだ…",
   "reverseDrain": "{{pokemonNameWithAffix}}は\nヘドロえきを　吸い取った！",
   "postDefendTypeChange": "{{pokemonNameWithAffix}}は　{{abilityName}}で\n{{typeName}}タイプに　なった！",
@@ -79,5 +77,6 @@
   "stoleItem": "は\n{{defenderName}}の　{{stolenItemType}}を　盗んだ！",
   "sillyPressure": "は　おかしなプレッシャーを　放っている！",
   "questionPressure": "は　プレッシャーを　放っている？",
-  "allOrNothingPressure": "は　オールオアナッシングの　プレッシャーだ！"
+  "allOrNothingPressure": "は　オールオアナッシングの　プレッシャーだ！",
+  "poisonHeal": "{{pokemonNameWithAffix}}は\n{{abilityName}}で　回復した！"
 }

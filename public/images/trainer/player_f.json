@@ -4,7 +4,7 @@
 			"image": "player_f.png",
 			"format": "RGBA8888",
 			"size": {
-				"w": 150,
+				"w": 74,
 				"h": 150
 			},
 			"scale": 1,
@@ -14,19 +14,19 @@
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 150,
+						"w": 74,
 						"h": 150
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 150,
+						"w": 74,
 						"h": 150
 					},
 					"frame": {
 						"x": 0,
 						"y": 0,
-						"w": 150,
+						"w": 74,
 						"h": 150
 					}
 				}
@@ -36,6 +36,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:0e30e04a108dbcbcc6455e7f2adaf00a:30b46f18ce6dc2b96b9949c7dddca304:4707104d267c3cfbc14151504c4c121a9$"
+		"smartupdate": ""
 	}
 }

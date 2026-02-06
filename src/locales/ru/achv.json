@@ -1,0 +1,287 @@
+{
+  "Achievements": {
+    "name": "Достижения"
+  },
+  "Locked": {
+    "name": "Заблокировано"
+  },
+  "MoneyAchv": {
+    "description": "Накопи всего ₽{{moneyAmount}}"
+  },
+  "10K_MONEY": {
+    "name": "Денежный мешок",
+    "name_female": null
+  },
+  "100K_MONEY": {
+    "name": "Богач",
+    "name_female": null
+  },
+  "1M_MONEY": {
+    "name": "Миллионер",
+    "name_female": null
+  },
+  "10M_MONEY": {
+    "name": "Один процент",
+    "name_female": null
+  },
+  "DamageAchv": {
+    "description": "Нанеси {{damageAmount}} урона одним ударом"
+  },
+  "250_DMG": {
+    "name": "Сильный удар"
+  },
+  "1000_DMG": {
+    "name": "Очень сильный удар",
+    "name_female": null
+  },
+  "2500_DMG": {
+    "name": "Вот это урон!",
+    "name_female": null
+  },
+  "10000_DMG": {
+    "name": "Ванпанчмен",
+    "name_female": "Ванпанчвумен"
+  },
+  "HealAchv": {
+    "description": "Восстанови {{healAmount}} {{HP}} за раз приёмом, талантом или удерживаемым предметом"
+  },
+  "250_HEAL": {
+    "name": "Начинающий целитель",
+    "name_female": null
+  },
+  "1000_HEAL": {
+    "name": "Целитель",
+    "name_female": null
+  },
+  "2500_HEAL": {
+    "name": "Клирик",
+    "name_female": null
+  },
+  "10000_HEAL": {
+    "name": "Мастер восстановления",
+    "name_female": null
+  },
+  "LevelAchv": {
+    "description": "Подними уровень покемона до ур.{{level}}"
+  },
+  "LV_100": {
+    "name": "А дальше — больше!"
+  },
+  "LV_250": {
+    "name": "Элита",
+    "name_female": null
+  },
+  "LV_1000": {
+    "name": "Ещё дальше за пределы"
+  },
+  "RibbonAchv": {
+    "description": "Накопи всего {{ribbonAmount}} лент"
+  },
+  "10_RIBBONS": {
+    "name": "Чемпион Лиги Покемонов",
+    "name_female": null
+  },
+  "25_RIBBONS": {
+    "name": "Чемпион Великой Лиги",
+    "name_female": null
+  },
+  "50_RIBBONS": {
+    "name": "Чемпион Ультра Лиги",
+    "name_female": null
+  },
+  "75_RIBBONS": {
+    "name": "Чемпион Рог-Лиги",
+    "name_female": null
+  },
+  "100_RIBBONS": {
+    "name": "Чемпион Мастер Лиги",
+    "name_female": null
+  },
+  "TRANSFER_MAX_BATTLE_STAT": {
+    "name": "Командная работа",
+    "description": "Передай Эстафету другому члену отряда, имея хотя бы одну характеристику на максимуме"
+  },
+  "MAX_FRIENDSHIP": {
+    "name": "Макс. дружба",
+    "description": "Достигни максимальной дружбы с покемоном"
+  },
+  "MEGA_EVOLVE": {
+    "name": "Мегаморф",
+    "description": "Мега-эволюционируй покемона"
+  },
+  "GIGANTAMAX": {
+    "name": "Абсолютная махина",
+    "description": "Гигантамаксируй покемона"
+  },
+  "TERASTALLIZE": {
+    "name": "Любитель СТАБ",
+    "description": "Терасталлизуй покемона"
+  },
+  "STELLAR_TERASTALLIZE": {
+    "name": "Скрытый тип",
+    "description": "Звёздно терасталлизуй покемона"
+  },
+  "SPLICE": {
+    "name": "Бесконечное слияние",
+    "description": "Соедини двух покемонов с помощью ДНК-сплайсеров"
+  },
+  "MINI_BLACK_HOLE": {
+    "name": "Дыра предметов",
+    "description": "Получи Мини-чёрную дыру"
+  },
+  "CATCH_MYTHICAL": {
+    "name": "Мифический",
+    "description": "Поймай мифического покемона"
+  },
+  "CATCH_SUB_LEGENDARY": {
+    "name": "(Псевдо)легендарный",
+    "description": "Поймай псевдолегендарного покемона"
+  },
+  "CATCH_LEGENDARY": {
+    "name": "Легендарный",
+    "description": "Поймай легендарного покемона"
+  },
+  "SEE_SHINY": {
+    "name": "Сияющий",
+    "description": "Найди сияющего покемона в дикой природе"
+  },
+  "SHINY_PARTY": {
+    "name": "Вот это преданность!",
+    "name_female": null,
+    "description": "Собери полный отряд сияющих покемонов"
+  },
+  "HATCH_MYTHICAL": {
+    "name": "Мифическое яйцо",
+    "description": "Вылупи мифического покемона из яйца"
+  },
+  "HATCH_SUB_LEGENDARY": {
+    "name": "Псевдолегендарное яйцо",
+    "description": "Вылупи псевдолегендарного покемона из яйца"
+  },
+  "HATCH_LEGENDARY": {
+    "name": "Легендарное яйцо",
+    "description": "Вылупи легендарного покемона из яйца"
+  },
+  "HATCH_SHINY": {
+    "name": "Сияющее яйцо",
+    "description": "Вылупи сияющего покемона из яйца"
+  },
+  "HIDDEN_ABILITY": {
+    "name": "Скрытый потенциал",
+    "description": "Поймай покемона со скрытым талантом"
+  },
+  "PERFECT_IVS": {
+    "name": "Сертификат подлинности",
+    "description": "Получи идеальные IV у покемона"
+  },
+  "CLASSIC_VICTORY": {
+    "name": "Непобедим",
+    "name_female": null,
+    "description": "Пройди игру в классическом режиме"
+  },
+  "UNEVOLVED_CLASSIC_VICTORY": {
+    "name": "Приведи ребёнка на работу",
+    "description": "Пройди игру в классическом режиме, имея хотя бы одного неэволюционировавшего члена отряда."
+  },
+  "MONO_GEN_ONE": {
+    "name": "Оригинальный соперник",
+    "description": "Пройди испытание только для первого поколения."
+  },
+  "MONO_GEN_TWO": {
+    "name": "Поколение 1.5",
+    "description": "Пройди испытание только для второго поколения."
+  },
+  "MONO_GEN_THREE": {
+    "name": "Слишком много воды?",
+    "description": "Пройди испытание только для третьего поколения."
+  },
+  "MONO_GEN_FOUR": {
+    "name": "Она правда самая сложная?",
+    "description": "Пройди испытание только для четвёртого поколения."
+  },
+  "MONO_GEN_FIVE": {
+    "name": "Всё оригинальное",
+    "description": "Пройди испытание только для пятого поколения."
+  },
+  "MONO_GEN_SIX": {
+    "name": "Почти королевская особа",
+    "description": "Пройди испытание только для шестого поколения."
+  },
+  "MONO_GEN_SEVEN": {
+    "name": "Технически",
+    "description": "Пройди испытание только для седьмого поколения."
+  },
+  "MONO_GEN_EIGHT": {
+    "name": "Чемпионское время!",
+    "description": "Пройди испытание только для восьмого поколения."
+  },
+  "MONO_GEN_NINE": {
+    "name": "Она тебя щадила",
+    "description": "Пройди испытание только для девятого поколения."
+  },
+  "MonoType": {
+    "description": "Пройди монотипное испытание {{type}}."
+  },
+  "MONO_NORMAL": {
+    "name": "Необыкновенный"
+  },
+  "MONO_FIGHTING": {
+    "name": "Я знаю кунг-фу!"
+  },
+  "MONO_FLYING": {
+    "name": "Злые птицы"
+  },
+  "MONO_POISON": {
+    "name": "Любимец Канто"
+  },
+  "MONO_GROUND": {
+    "name": "Прогноз: землетрясения"
+  },
+  "MONO_ROCK": {
+    "name": "Каменно твёрдо"
+  },
+  "MONO_BUG": {
+    "name": "Любишь джаз?"
+  },
+  "MONO_GHOST": {
+    "name": "Кого будешь звать?"
+  },
+  "MONO_STEEL": {
+    "name": "Железный гигант"
+  },
+  "MONO_FIRE": {
+    "name": "Кидаю огненный шар!"
+  },
+  "MONO_WATER": {
+    "name": "Когда дождь — так ливень"
+  },
+  "MONO_GRASS": {
+    "name": "Не тронь!"
+  },
+  "MONO_ELECTRIC": {
+    "name": "Целься в рог!"
+  },
+  "MONO_PSYCHIC": {
+    "name": "Энергия большого мозга"
+  },
+  "MONO_ICE": {
+    "name": "По тонкому льду"
+  },
+  "MONO_DRAGON": {
+    "name": "Клуб псевдолегенд"
+  },
+  "MONO_DARK": {
+    "name": "Это просто фаза"
+  },
+  "MONO_FAIRY": {
+    "name": "Эй! Слушай!"
+  },
+  "FRESH_START": {
+    "name": "С первого раза!",
+    "description": "Пройди испытание «Свежий старт»."
+  },
+  "INVERSE_BATTLE": {
+    "name": "Зеркало олэкриЗ",
+    "description": "Пройди испытание «Инверсная битва».\n.»автьиб яансревнИ« еинавтсыпи идйорП"
+  }
+}

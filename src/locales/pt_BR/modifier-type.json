@@ -70,7 +70,7 @@
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "Barato",
-      "description": "Aumenta o atributo base de {{statName}} em 5%."
+      "description": "Aumenta o atributo base de {{statName}} em 1%."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restaura totalmente os PS de todos os Pokémon."
@@ -751,7 +751,7 @@
     },
     "AnyPassiveAbilityModifierType": {
       "name": "PASSIVA {{abilityName}}",
-      "description": "Dar Passiva {{abilityName}} para QUALQUER Pokémon\n(Segure C ou Shift para mais informações).",
+      "description": "Definir Habilidade Passiva {{abilityName}} para QUALQUER Pokémon\n(Segure C ou Shift para mais informações).",
       "statLabel": "Item de Qualquer Habilidade Passiva"
     },
     "AnyAbilityModifierType": {
@@ -919,6 +919,35 @@
     "SWAMPERTITE": "Swampertita",
     "TYRANITARITE": "Tyranitarita",
     "VENUSAURITE": "Venusaurita",
+
+    "CLEFABLITE": "Clefablite",
+    "VICTREBELITE": "Victrebelite",
+    "STARMITE": "Starmite",
+    "DRAGONITITE": "Dragonitite",
+    "MEGANIUMITE": "Meganiumite",
+    "FERALIGATRITE": "Feraligatrite",
+    "SKARMORYITE": "Skarmoryite",
+    "FROSLASSITE": "Froslassite",
+    "EMBOARITE": "Emboarite",
+    "EXCADRILLITE": "Excadrillite",
+    "SCOLIPEDITE": "Scolipedite",
+    "SCRAFTITE": "Scraftite",
+    "EELEKTROSSITE": "Eelektrossite",
+    "CHANDELURITE": "Chandelurite",
+    "CHESNAUGHTITE": "Chesnaughtite",
+    "DELPHOXITE": "Delphoxite",
+    "GRENINJITE": "Greninjite",
+    "PYROARITE": "Pyroarite",
+    "FLOETTITE": "Floettite",
+    "MALAMARITE": "Malamarite",
+    "BARBARACLITE": "Barbaraclite",
+    "DRAGALGITE": "Dragalgite",
+    "HAWLUCHITE": "Hawluchite",
+    "ZYGARDITE": "Zygardite",
+    "DRAMPITE": "Drampite",
+    "FALINKSITE": "Falinksite",
+    "ZERAORITE": "Zeraorite",
+
     "BLUE_ORB": "Orbe Azul",
     "RED_ORB": "Orbe Vermelha",
     "SHARP_METEORITE": "Meteorito Afiado",
@@ -1036,6 +1065,7 @@
     "waves": "ondas",
     "uses": "usos",
     "glitchPieceCost": "*CUSTA 2x Peça Glitch",
+    "essenceAlternativeCost": "Se o Pokémon tiver 5+ Essências, você pode usá-las em vez disso.",
     "permaMoney": "ΩOURO",
     "permaItem": "ΩITEM",
     "moreInfo": "(Segure C / Shift para informações)",

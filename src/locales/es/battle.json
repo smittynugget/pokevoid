@@ -86,5 +86,15 @@
   "statSeverelyFell_one": "¡El {{stats}} de {{pokemonNameWithAffix}} ha bajado muchísimo!",
   "statSeverelyFell_other": "¡{{stats}} de\n{{pokemonNameWithAffix}} han bajado muchísimo!",
   "statWontGoAnyLower_one": "¡El {{stats}} de {{pokemonNameWithAffix}} no puede bajar más!",
-  "statWontGoAnyLower_other": "¡{{stats}} de\n{{pokemonNameWithAffix}} no pueden bajar más!"
+  "statWontGoAnyLower_other": "¡{{stats}} de\n{{pokemonNameWithAffix}} no pueden bajar más!",
+  "trainerAppearedDouble": "¡{{trainerName}}\nte desafían!",
+  "moneyPickedUp": "¡Has recogido {{moneyAmount}} ₽!",
+  "ppHealBerry": "¡{{pokemonNameWithAffix}} recuperó algunos PP de {{moveName}}\ngracias a su {{berryName}}!",
+  "hpHealBerry": "¡{{pokemonNameWithAffix}} recuperó sus PS gracias a su {{berryName}}!",
+  "transformedIntoType": "¡{{pokemonName}} ha cambiado a tipo {{type}}!",
+  "retryBattle": "¿Quieres reintentar este combate?",
+  "unlockedSomething": "¡Has desbloqueado {{unlockedThing}}!",
+  "congratulations": "¡Enhorabuena!",
+  "beatModeFirstTime": "¡{{speciesName}} ha completado el modo {{gameMode}} por primera vez!\n¡Has conseguido {{newModifier}}!",
+  "ppReduced": "¡El movimiento {{moveName}} de {{targetName}} ha perdido {{reduction}} PP!"
 }

@@ -1,5 +1,6 @@
 {
   "title": "Fertigkeitenbaum",
+  "unknownReward": "Unbekannte Belohnung",
   "subtitle": "Nutze Fertigkeitspunkte um mächtige Fähigkeiten freizuschalten",
   "skillPoints": "Fertigkeitspunkte: {{points}}",
   "tokens": "Baum-Marken: {{tokens}}",
@@ -24,6 +25,10 @@
   "instructionsSelectBoth": "Wähle 1 Signatur- & 1 reguläres Pokémon",
   "instructionsSelectSignature": "Wähle 1 Signatur-Pokémon",
   "instructionsSelectGeneral": "Wähle 1 reguläres Pokémon",
+  "instructionsPokemonSelection": "Wähle 2 Pokémon (max. 1 Signatur)",
+  "instructionsPokemonSelectionRemaining": "Wähle noch {{remaining}} Pokémon",
+  "instructionsPokemonSelectionSignatureAvailable": "Wähle noch {{remaining}} (Signatur verfügbar)",
+  "instructionsPokemonSelectionComplete": "Auswahl abgeschlossen!",
   "tooltipSelectSignature": "Wähle dieses Signatur-Pokémon\n\n[color=#ffdd44]Signatur-Pokémon haben das Potenzial, immens stärker zu werden, wenn ihr Trainer in der Lage ist, die Realität zu überschreiben und ihre normalerweise schlummernden Fähigkeiten freizuschalten.[/color]",
   "tooltipReplaceSignature": "Aktuelle Signatur-Auswahl ersetzen\n\n[color=#ffdd44]Signatur-Pokémon haben das Potenzial, immens stärker zu werden, wenn ihr Trainer in der Lage ist, die Realität zu überschreiben und ihre normalerweise schlummernden Fähigkeiten freizuschalten.[/color]",
   "tooltipSelectGeneral": "Wähle dieses reguläre Pokémon",

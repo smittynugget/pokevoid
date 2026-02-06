@@ -1,4 +1,6 @@
 {
   "generation": "Generation {{generation}}",
-  "glitchForm": "{{formName}} HAT EINEN GLITCH"
+  "glitchForm": "{{formName}} HAT EINEN GLITCH",
+  "fusionTooltipTitle": "Fusion",
+  "fusionTooltipBody": "{{primary}}/{{fusion}}\n\nFusionswerte nutzen die Basiswerte beider Pokémon:\n1) Durch das Wesen verstärkter Wert (oder KP bei neutral): nimm den höheren Wert\n2) Ein weiterer bester Wert: nimm den stärkeren verbleibenden Wert\n3) Alles andere: mitteln und aufrunden\nWesen-Modifikatoren werden danach angewendet."
 } 

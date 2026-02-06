@@ -59,11 +59,13 @@ import terrain from "./terrain.json";
 import modifierSelectUiHandler from "./modifier-select-ui-handler.json";
 import moveTriggers from "./move-trigger.json";
 import runHistory from "./run-history.json";
+import runEndSummary from "./run-end-summary.json";
 import rewardObtainedUi from "./reward-obtained-ui.json";
 import smittyNames from "./smitty-names.json";
 import quests from "./quests.json";
 import questUi from "./quest-ui.json";
 import glitchNames from "./glitch-names.json";
+import importData from "./import-data.json";
 import questModifierInfo from "./quest-modifier-info.json";
 import moveUpgrade from "./move-upgrade.json";
 import eggStarterUi from "./egg-starter-ui.json";
@@ -71,6 +73,7 @@ import modGlitchCreateFormUi from "./mod-glitch-create-form-ui.json";
 import pokedex from "./pokedex.json";
 import nodeMode from "./node-mode.json";
 import moveUpgradeAttrs from "./move-upgrade-attrs.json";
+import cutscene from "./cutscene.json";
 export const deConfig = {
   ability,
   abilityTriggers,
@@ -133,16 +136,19 @@ export const deConfig = {
   modifierSelectUiHandler,
   moveTriggers,
   runHistory,
+  runEndSummary,
   rewardObtainedUi,
   smittyNames,
   quests,
   questUi,
   glitchNames,
+  importData,
   questModifierInfo,
   moveUpgrade,
   eggStarterUi,
   modGlitchCreateFormUi,
   pokedex,
   nodeMode,
-  moveUpgradeAttrs
+  moveUpgradeAttrs,
+  cutscene
 };

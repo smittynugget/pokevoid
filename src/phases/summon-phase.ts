@@ -145,8 +145,6 @@ export class SummonPhase extends PartyMemberPokemonPhase {
             pokemon.playAnim();
             pokemon.setVisible(true);
             pokemon.getSprite().setVisible(true);
-            console.log(`[SUMMON_DIAG] visibility set: container=${pokemon.visible}, sprite=${pokemon.getSprite()?.visible}, x=${pokemon.x}, y=${pokemon.y}`);
-            console.log(`[SUMMON_DIAG] sprite texture: ${pokemon.getSprite()?.texture?.key}, frame=${pokemon.getSprite()?.frame?.name}`);
             pokemon.setScale(0.5);
             pokemon.tint(getPokeballTintColor(pokemon.pokeball));
             pokemon.untint(250, "Sine.easeIn");
@@ -157,7 +155,6 @@ export class SummonPhase extends PartyMemberPokemonPhase {
               ease: "Sine.easeIn",
               scale: pokemon.isGlitchOrSmittyForm() ? 0.4 : pokemon.getSpriteScale(),
               onComplete: () => {
-                console.log(`[SUMMON_DIAG] scale tween complete: player=${this.player}, scale=${pokemon.scale}, visible=${pokemon.visible}`);
                 pokemon.cry(pokemon.getHpRatio() > 0.25 ? undefined : { rate: 0.85 });
                 pokemon.getSprite().clearTint();
                 pokemon.resetSummonData();

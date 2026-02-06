@@ -1,1 +1,6 @@
-{}
+{
+  "ending_name": "Desarrolladores",
+  "ending": "@c{smile}¿Oh? ¿Ganaste?@d{96} @c{smile_eclosed}Supongo que debería haberlo sabido.\nPero ya estás de vuelta.\n$@c{smile}Se acabó.@d{64} Terminaste el bucle.\n$@c{serious_smile_fists}También cumpliste tu sueño, ¿verdad?\nNo perdiste ni una sola vez.\n$@c{neutral}Seré el único que recordará lo que hiciste.@d{96}\nSupongo que está bien, ¿no?\n$@c{serious_smile_fists}Tu leyenda vivirá siempre en nuestros corazones.\n$@c{smile_eclosed}En fin, ya he tenido bastante de este lugar, ¿no? Volvamos a casa.\n$@c{serious_smile_fists}Quizá cuando regresemos, podamos tener otra batalla?\nSi te apetece.",
+  "ending_female": "@c{shock}¿Has vuelto?@d{32} ¿Eso significa…@d{96} que ganaste?!\n@c{smile_ehalf}Debí haber sabido que lo llevabas dentro.\n$@c{smile_eclosed}Claro… Siempre tuve ese presentimiento.\n@c{smile}Ya se acabó, ¿verdad? Terminaste el bucle.\n$@c{smile_ehalf}También cumpliste tu sueño, ¿verdad?\nNo perdiste ni una sola vez.\n$Solo yo recordaré lo que hiciste.\n@c{angry_mopen}¡Intentaré no olvidarlo!\n$@c{smile_wave_wink}Es broma.@d{64} @c{smile}Nunca lo olvidaría.@d{32}\nTu leyenda vivirá en nuestros corazones.\n$@c{smile_wave}En fin,@d{64} se hace tarde…@d{96} ¿creo?\nEs difícil saberlo en este lugar.\n$Vamos a casa. @c{smile_wave_wink}Quizá mañana podamos tener otra batalla, por los viejos tiempos.",
+  "ending_endless": "¡Felicidades por llegar al final actual!\nMás contenido llegará pronto."
+}

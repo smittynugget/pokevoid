@@ -9,16 +9,20 @@
     "description": "누적 소지금 ₽{{moneyAmount}} 달성"
   },
   "10K_MONEY": {
-    "name": "돈 좀 있나?"
+    "name": "돈 좀 있나?",
+    "name_female": null
   },
   "100K_MONEY": {
-    "name": "부자"
+    "name": "부자",
+    "name_female": null
   },
   "1M_MONEY": {
-    "name": "백만장자"
+    "name": "백만장자",
+    "name_female": null
   },
   "10M_MONEY": {
-    "name": "상위 1프로"
+    "name": "상위 1프로",
+    "name_female": null
   },
   "DamageAchv": {
     "description": "한 번의 공격만으로 {{damageAmount}} 데미지"
@@ -27,28 +31,35 @@
     "name": "강타자"
   },
   "1000_DMG": {
-    "name": "최강타자"
+    "name": "최강타자",
+    "name_female": null
   },
   "2500_DMG": {
-    "name": "때릴 줄 아시는군요!"
+    "name": "때릴 줄 아시는군요!",
+    "name_female": null
   },
   "10000_DMG": {
-    "name": "원펀맨"
+    "name": "원펀맨",
+    "name_female": "원펀치 우먼"
   },
   "HealAchv": {
     "description": "기술이나 특성, 지닌 도구로 한 번에 {{healAmount}} {{HP}} 회복"
   },
   "250_HEAL": {
-    "name": "견습 힐러"
+    "name": "견습 힐러",
+    "name_female": null
   },
   "1000_HEAL": {
-    "name": "상급 힐러"
+    "name": "상급 힐러",
+    "name_female": null
   },
   "2500_HEAL": {
-    "name": "클레릭"
+    "name": "클레릭",
+    "name_female": null
   },
   "10000_HEAL": {
-    "name": "회복 마스터"
+    "name": "회복 마스터",
+    "name_female": null
   },
   "LevelAchv": {
     "description": "포켓몬 Lv{{level}} 달성"
@@ -57,7 +68,8 @@
     "name": "잠깐, 여기가 끝이 아니라구!"
   },
   "LV_250": {
-    "name": "엘리트"
+    "name": "엘리트",
+    "name_female": null
   },
   "LV_1000": {
     "name": "더 먼 곳을 향해"
@@ -66,19 +78,24 @@
     "description": "총 {{ribbonAmount}}개의 리본 획득"
   },
   "10_RIBBONS": {
-    "name": "포켓몬 리그 챔피언"
+    "name": "포켓몬 리그 챔피언",
+    "name_female": null
   },
   "25_RIBBONS": {
-    "name": "슈퍼 리그 챔피언"
+    "name": "슈퍼 리그 챔피언",
+    "name_female": null
   },
   "50_RIBBONS": {
-    "name": "하이퍼 리그 챔피언"
+    "name": "하이퍼 리그 챔피언",
+    "name_female": null
   },
   "75_RIBBONS": {
-    "name": "로그 리그 챔피언"
+    "name": "로그 리그 챔피언",
+    "name_female": null
   },
   "100_RIBBONS": {
-    "name": "마스터 리그 챔피언"
+    "name": "마스터 리그 챔피언",
+    "name_female": null
   },
   "TRANSFER_MAX_BATTLE_STAT": {
     "name": "팀워크",
@@ -130,7 +147,8 @@
   },
   "SHINY_PARTY": {
     "name": "찐사랑",
-    "description": "색이 다른 포켓몬만으로 파티 구성"
+    "description": "색이 다른 포켓몬만으로 파티 구성",
+    "name_female": null
   },
   "HATCH_MYTHICAL": {
     "name": "환상의 알",
@@ -158,7 +176,8 @@
   },
   "CLASSIC_VICTORY": {
     "name": "무패",
-    "description": "클래식 모드 클리어"
+    "description": "클래식 모드 클리어",
+    "name_female": null
   },
   "UNEVOLVED_CLASSIC_VICTORY": {
     "name": "우리집 꿈나무",

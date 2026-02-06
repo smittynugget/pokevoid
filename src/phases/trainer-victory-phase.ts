@@ -9,8 +9,14 @@ import * as Utils from "#app/utils.js";
 import { BattlePhase } from "./battle-phase";
 import { ModifierRewardPhase } from "./modifier-reward-phase";
 import { MoneyRewardPhase } from "./money-reward-phase";
-import { TrainerSlot } from "#app/data/trainer-config";
-import { TRAINER_TYPES } from "#app/battle.js";
+import { TrainerSlot } from "#app/data/trainer-config.js";
+import { TRAINER_TYPES, PathNodeType } from "#app/battle.js";
+import { STORY_CUTSCENES } from "#app/system/story-cutscenes.js";
+import { SlideshowCutscenePhase } from "#app/phases/slideshow-cutscene-phase.js";
+import { UnlockUniSmittyPhase } from "./unlock-unismitty-phase";
+import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays.js";
+import { universalSmittyForms } from "#app/data/pokemon-species.js";
+import Overrides from "#app/overrides.js";
 
 export class TrainerVictoryPhase extends BattlePhase {
   constructor(scene: BattleScene) {
@@ -26,16 +32,87 @@ export class TrainerVictoryPhase extends BattlePhase {
     } else {
       this.scene.playBgm(this.scene.currentBattle.trainer?.config.victoryBgm);
     }
+    const trainerType = this.scene.currentBattle.trainer?.config.trainerType!;
+
+    const shouldQueueMysteryCutscene = trainerType === TrainerType.SMITTY && !isFinalBattle && !this.scene.disableCutscenes;
+    let shouldQueueUniSmittyUnlock = false;
+    let shouldQueueMergedMysteryThenPowerCutscene = false;
+
+    if (trainerType === TrainerType.SMITTY && !isFinalBattle && this.scene.gameMode.isChaosMode) {
+      const wave = this.scene.currentBattle.waveIndex;
+      const isMilestoneWave = wave > 200 && wave % 100 === 0;
+
+      if (isMilestoneWave || Overrides.FORCE_UNISMITTY_UNLOCK_ON_SMITTY_VICTORY) {
+        const uniTotal = universalSmittyForms.length;
+        const uniUnlocked = new Set<string>((this.scene.gameData.uniSmittyUnlocks ?? []) as string[]).size;
+        shouldQueueUniSmittyUnlock = uniTotal > 0 && uniUnlocked < uniTotal;
+        shouldQueueMergedMysteryThenPowerCutscene = shouldQueueUniSmittyUnlock && !this.scene.disableCutscenes;
+      }
+    }
+
+    if (shouldQueueMergedMysteryThenPowerCutscene) {
+      const def = STORY_CUTSCENES.smitty_post_battle;
+      let currentImageKey: string | null = null;
+
+      this.scene.beginPowerUnlockDeferral();
+      this.scene.unshiftPhase(new UnlockUniSmittyPhase(this.scene));
+      this.scene.unshiftPhase(new SlideshowCutscenePhase(this.scene, {
+        slides: def.slides,
+        bgmKey: def.bgmKey,
+        canSkip: true,
+        pauseAfterText: 1000,
+        resumeBgmOnEnd: true,
+        onSlideChange: (index) => {
+          currentImageKey = def.slides[index]?.imageKey ?? null;
+        },
+        onTextComplete: (controller) => {
+          if (currentImageKey === "power") {
+            runPowerUnlockOverlays(this.scene, controller);
+          }
+        },
+        onComplete: () => {
+          this.scene.endPowerUnlockDeferral();
+        },
+      }));
+    } else if (shouldQueueUniSmittyUnlock) {
+      this.scene.unshiftPhase(new UnlockUniSmittyPhase(this.scene));
+    } else if (shouldQueueMysteryCutscene) {
+      const def = STORY_CUTSCENES.smitty_post_battle;
+      this.scene.unshiftPhase(new SlideshowCutscenePhase(this.scene, {
+        slides: def.slides,
+        bgmKey: def.bgmKey,
+        canSkip: true,
+        pauseAfterText: 1000,
+        resumeBgmOnEnd: true,
+      }));
+    }
+
     const modifierRewardFuncs = this.scene.currentBattle.trainer?.config.modifierRewardFuncs ?? [];
     for (const modifierRewardFunc of modifierRewardFuncs) {
       this.scene.unshiftPhase(new ModifierRewardPhase(this.scene, modifierRewardFunc));
     }
 
-    const trainerType = this.scene.currentBattle.trainer?.config.trainerType!;
-
     this.incrementTrainerTypeStats(trainerType);
 
+    const nodeType = this.scene.selectedNodeType;
+    const isRivalNode = nodeType === PathNodeType.RIVAL_BATTLE || nodeType === PathNodeType.CHALLENGE_RIVAL;
+    const waveIndex = this.scene.currentBattle.waveIndex;
+    const isWaveBoundary = waveIndex % 100 === 0;
+    const rivalStage = this.scene.currentBattle.trainer?.rivalStage ?? -1;
+    if (isRivalNode && rivalStage === 6 && isWaveBoundary) {
+      this.scene.recordRunEndSummaryRivalDefeat(trainerType);
+    }
+
     if (trainerType === TrainerType.SMITTY) {
+      const trainer = this.scene.currentBattle.trainer;
+      const idx = trainer?.config?.smittyVariantIndex;
+      if (typeof idx === "number" && Number.isFinite(idx)) {
+        const frame = String(idx + 1);
+        if (!this.scene.gameData.defeatedSmittyFoes.includes(frame)) {
+          this.scene.gameData.defeatedSmittyFoes.push(frame);
+        }
+        this.scene.recordRunEndSummarySmittyDefeat(frame);
+      }
       this.scene.unshiftPhase(new ModifierRewardPhase(
         this.scene,
         () => new CollectedTypeModifierType(Type.SMITTY)
@@ -66,11 +143,10 @@ export class TrainerVictoryPhase extends BattlePhase {
           const originalFunc = showMessageOrEnd;
           showMessageOrEnd = () => this.scene.charSprite.hide().then(() => this.scene.hideFieldOverlay(250).then(() => originalFunc()));
           const trainer = this.scene.currentBattle.trainer;
-          if(trainer?.config.trainerType == TrainerType.SMITTY) {
+          if (trainer?.config.trainerType == TrainerType.SMITTY) {
             this.scene.showFieldOverlay(500).then(() => this.scene.charSprite.showCharacter("smitty_trainers", `${trainer?.config.smittyVariantIndex+1}`).then(() => showMessage()));
-          }
-          else {
-          this.scene.showFieldOverlay(500).then(() => this.scene.charSprite.showCharacter(this.scene.currentBattle.trainer?.getKey()!, getCharVariantFromDialogue(victoryMessages[0])).then(() => showMessage()));
+          } else {
+            this.scene.showFieldOverlay(500).then(() => this.scene.charSprite.showCharacter(this.scene.currentBattle.trainer?.getKey()!, getCharVariantFromDialogue(victoryMessages[0])).then(() => showMessage()));
           }
         } else {
           showMessage();
@@ -89,22 +165,17 @@ export class TrainerVictoryPhase extends BattlePhase {
         TRAINER_TYPES.ELITE_FOUR.THIRD.includes(trainerType) ||
         TRAINER_TYPES.ELITE_FOUR.FOURTH.includes(trainerType)) {
       this.scene.gameData.gameStats.elite4Defeated++;
-    }
-    else if (TRAINER_TYPES.ELITE_FOUR.CHAMPION.includes(trainerType)) {
+    } else if (TRAINER_TYPES.ELITE_FOUR.CHAMPION.includes(trainerType)) {
       this.scene.gameData.gameStats.championsDefeated++;
-    }
-    else if (TRAINER_TYPES.EVIL_TEAM_GRUNTS.includes(trainerType)) {
+    } else if (TRAINER_TYPES.EVIL_TEAM_GRUNTS.includes(trainerType)) {
       this.scene.gameData.gameStats.gruntsDefeated++;
-    }
-    else if (TRAINER_TYPES.EVIL_TEAM_ADMINS.some(admins =>
-               Array.isArray(admins) ? admins.includes(trainerType) : admins === trainerType)) {
+    } else if (TRAINER_TYPES.EVIL_TEAM_ADMINS.some(admins =>
+      Array.isArray(admins) ? admins.includes(trainerType) : admins === trainerType)) {
       this.scene.gameData.gameStats.evilAdminsDefeated++;
-    }
-    else if (TRAINER_TYPES.EVIL_TEAM_BOSSES.FIRST.includes(trainerType) ||
+    } else if (TRAINER_TYPES.EVIL_TEAM_BOSSES.FIRST.includes(trainerType) ||
                TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND.includes(trainerType)) {
       this.scene.gameData.gameStats.evilBossesDefeated++;
-    }
-    else if (trainerType === TrainerType.SMITTY) {
+    } else if (trainerType === TrainerType.SMITTY) {
       this.scene.gameData.gameStats.smittysDefeated++;
     }
   }

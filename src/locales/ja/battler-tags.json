@@ -59,5 +59,13 @@
   "saltCuredLapse": "{{pokemonNameWithAffix}}は　{{moveName}}の\n　ダメージを　受けている",
   "cursedOnAdd": "{{pokemonNameWithAffix}}は　自分の　体力を　削って\n{{pokemonName}}に　のろいを　かけた!",
   "cursedLapse": "{{pokemonNameWithAffix}}は　のろわれている！",
-  "stockpilingOnAdd": "{{pokemonNameWithAffix}}は　{{stockpiledCount}}つ　たくわえた!"
+  "stockpilingOnAdd": "{{pokemonNameWithAffix}}は　{{stockpiledCount}}つ　たくわえた!",
+  "trappedDesc": "捕らわれること",
+  "flinchedDesc": "ひるむこと",
+  "confusedDesc": "混乱",
+  "infatuatedDesc": "メロメロ",
+  "seedDesc": "種を植えつくこと",
+  "nightmareDesc": "あくむ",
+  "ingrainDesc": "根",
+  "drowsyDesc": "ねむけ"
 }

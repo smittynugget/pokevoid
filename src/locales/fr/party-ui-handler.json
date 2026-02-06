@@ -29,6 +29,7 @@
   "wasReverted": "{{fusionName}} est redevenu {{pokemonName}}.",
   "releaseConfirmation": "Voulez-vous relâcher {{pokemonName}} ?",
   "releaseInBattle": "Vous ne pouvez pas relâcher un Pokémon en combat !",
+  "releaseLastPokemon": "Vous ne pouvez pas relâcher votre dernier Pokémon !",
   "selectAMove": "Sélectionnez une capacité.",
   "changeQuantity": "Sélect. un objet à transférer.\nChangez la quantité avec < et >.",
   "selectAnotherPokemonToSplice": "Sélectionnez un autre Pokémon à séparer.",
@@ -47,5 +48,6 @@
   "sayonara": "Sayonara, {{pokemonName}} !",
   "smellYaLater": "À la revoyure, {{pokemonName}} !",
   "selectPokeToPowerUp": "Sélectionnez un Pokémon à renforcer.",
-  "selectPokeToRelease": "Sélectionnez un Pokémon à relâcher."
+  "selectPokeToRelease": "Sélectionnez un Pokémon à relâcher.",
+  "pausedEvolutions": "{{pokemonName}} ne peut plus évoluer."
 }

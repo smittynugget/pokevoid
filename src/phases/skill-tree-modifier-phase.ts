@@ -26,7 +26,9 @@ import { SkillTreeConfig } from "#app/ui/skill-tree-ui-handler";
 import { PermaType } from "#app/modifier/perma-modifiers";
 import { RewardObtainedType } from "#app/ui/reward-obtained-ui-handler";
 
-interface SkillTreeNodeLike { rewardData: { type: SkillTreeRewardType, data?: any }; name?: string }
+interface SkillTreeNodeLike {
+ rewardData: { type: SkillTreeRewardType, data?: any }; name?: string
+}
 
 export class SkillTreeModifierPhase extends Phase {
   private node: SkillTreeNode;
@@ -133,24 +135,24 @@ export class SkillTreeModifierPhase extends Phase {
       return;
     }
 
-     this.scene.unshiftPhase(new SelectModifierPhase(
-       this.scene,
-       0,
-       undefined,
-       false,
-       () => this.returnToSkillTree(),
-       PathNodeTypeFilter.NONE,
-       0,
-       modifierOptions,
-       this.node,
-       this.championData
-     ));
+    this.scene.unshiftPhase(new SelectModifierPhase(
+      this.scene,
+      0,
+      undefined,
+      false,
+      () => this.returnToSkillTree(),
+      PathNodeTypeFilter.NONE,
+      0,
+      modifierOptions,
+      this.node,
+      this.championData
+    ));
 
     this.end();
   }
 
   private calculateNodeSeedOffset(): number {
-    const nodeHash = this.node.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const nodeHash = this.node.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
     const offset = nodeHash * 1000;
     return offset;
   }
@@ -159,172 +161,206 @@ export class SkillTreeModifierPhase extends Phase {
     const options: ModifierTypeOption[] = [];
 
     switch (this.node.rewardData.type) {
-      case SkillTreeRewardType.PP_MAX_ITEM:
-        options.push(...this.createPPMaxOption());
-        break;
+    case SkillTreeRewardType.PP_MAX_ITEM:
+      options.push(...this.createPPMaxOption());
+      break;
 
-      case SkillTreeRewardType.TM_FILTERED:
-        const tmOption = this.createTmModifierOption();
-        if (tmOption) {
-          options.push(tmOption);
-        } else {
-          const opt = this.getIncompatibleNodeFallbackOption();
-          if (opt) options.push(opt);
+    case SkillTreeRewardType.TM_FILTERED:
+      const tmOption = this.createTmModifierOption();
+      if (tmOption) {
+        options.push(tmOption);
+      } else {
+        const opt = this.getIncompatibleNodeFallbackOption();
+        if (opt) {
+          options.push(opt);
         }
-        break;
+      }
+      break;
 
-      case SkillTreeRewardType.XM_FILTERED:
-        const xmOption = this.createXmModifierOption();
-        if (xmOption) options.push(xmOption);
-        break;
+    case SkillTreeRewardType.XM_FILTERED:
+      const xmOption = this.createXmModifierOption();
+      if (xmOption) {
+        options.push(xmOption);
+      }
+      break;
 
-      case SkillTreeRewardType.SIGNATURE_POKEMON:
-        const signaturePokemonOptions = this.createMultiplePokemonOptions(() => this.createSignaturePokemonOption(), 4);
-        options.push(...signaturePokemonOptions);
-        break;
+    case SkillTreeRewardType.SIGNATURE_POKEMON:
+      const signaturePokemonOptions = this.createMultiplePokemonOptions(() => this.createSignaturePokemonOption(), 4);
+      options.push(...signaturePokemonOptions);
+      break;
 
-      case SkillTreeRewardType.GENERAL_POKEMON:
-        const generalPokemonOptions = this.createMultiplePokemonOptions(() => this.createGeneralPokemonOption(), 3);
-        options.push(...generalPokemonOptions);
-        break;
+    case SkillTreeRewardType.GENERAL_POKEMON:
+      const generalPokemonOptions = this.createMultiplePokemonOptions(() => this.createGeneralPokemonOption(), 3);
+      options.push(...generalPokemonOptions);
+      break;
 
-      case SkillTreeRewardType.LEGENDARY_POKEMON:
-        const legendaryPokemonOption = this.createLegendaryPokemonOption();
-        if (legendaryPokemonOption) options.push(legendaryPokemonOption);
-        break;
+    case SkillTreeRewardType.LEGENDARY_POKEMON:
+      const legendaryPokemonOption = this.createLegendaryPokemonOption();
+      if (legendaryPokemonOption) {
+        options.push(legendaryPokemonOption);
+      }
+      break;
 
-      case SkillTreeRewardType.ABILITY_GRANT:
-        const abilityOption = this.createAbilityModifierOption();
-        if (abilityOption) options.push(abilityOption);
-        break;
-      case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
-        const passiveAbilityOption = this.createPassiveAbilityOption();
-        if (passiveAbilityOption) options.push(passiveAbilityOption);
-        break;
+    case SkillTreeRewardType.ABILITY_GRANT:
+      const abilityOption = this.createAbilityModifierOption();
+      if (abilityOption) {
+        options.push(abilityOption);
+      }
+      break;
+    case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
+      const passiveAbilityOption = this.createPassiveAbilityOption();
+      if (passiveAbilityOption) {
+        options.push(passiveAbilityOption);
+      }
+      break;
 
-      case SkillTreeRewardType.TRAINER_BOND_ABILITY:
-        const trainerBondOption = this.createTrainerBondAbilityOption();
-        if (trainerBondOption) options.push(trainerBondOption);
-        break;
+    case SkillTreeRewardType.TRAINER_BOND_ABILITY:
+      const trainerBondOption = this.createTrainerBondAbilityOption();
+      if (trainerBondOption) {
+        options.push(trainerBondOption);
+      }
+      break;
 
-      case SkillTreeRewardType.STAT_BOOST:
-        const statBoostOption = this.createStatBoostModifierOption();
-        if (statBoostOption) options.push(statBoostOption);
-        break;
+    case SkillTreeRewardType.STAT_BOOST:
+      const statBoostOption = this.createStatBoostModifierOption();
+      if (statBoostOption) {
+        options.push(statBoostOption);
+      }
+      break;
 
-      case SkillTreeRewardType.MOVE_UPGRADE:
-        const moveUpgradeOption = this.createMoveUpgradeOption();
-        if (moveUpgradeOption) {
-          options.push(moveUpgradeOption);
-        } else {
-          const moveUpgradeFallback = this.getIncompatibleNodeFallbackOption();
-          if (moveUpgradeFallback) options.push(moveUpgradeFallback);
+    case SkillTreeRewardType.MOVE_UPGRADE:
+      const moveUpgradeOption = this.createMoveUpgradeOption();
+      if (moveUpgradeOption) {
+        options.push(moveUpgradeOption);
+      } else {
+        const moveUpgradeFallback = this.getIncompatibleNodeFallbackOption();
+        if (moveUpgradeFallback) {
+          options.push(moveUpgradeFallback);
         }
-        break;
-      case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
-        const moveUpgradeSpecificOption = this.createMoveUpgradeSpecificOption();
-        if (moveUpgradeSpecificOption) {
-          options.push(moveUpgradeSpecificOption);
-        } else {
-          const moveUpgradeSpecificFallback = this.getIncompatibleNodeFallbackOption();
-          if (moveUpgradeSpecificFallback) options.push(moveUpgradeSpecificFallback);
+      }
+      break;
+    case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
+      const moveUpgradeSpecificOption = this.createMoveUpgradeSpecificOption();
+      if (moveUpgradeSpecificOption) {
+        options.push(moveUpgradeSpecificOption);
+      } else {
+        const moveUpgradeSpecificFallback = this.getIncompatibleNodeFallbackOption();
+        if (moveUpgradeSpecificFallback) {
+          options.push(moveUpgradeSpecificFallback);
         }
-        break;
-
-      case SkillTreeRewardType.MEGA_STONE:
-        const megaStoneOption = this.createMegaStoneOption();
-        if (megaStoneOption) options.push(megaStoneOption);
-        break;
-      case SkillTreeRewardType.DYNA_MUSHROOM:
-        const dynamaxOption = this.createDynamaxOption();
-        if (dynamaxOption) options.push(dynamaxOption);
-        break;
-      case SkillTreeRewardType.GLITCH_CHANGE:
-        const glitchChangeOption = this.createGlitchChangeOption();
-        if (glitchChangeOption) options.push(glitchChangeOption);
-        break;
-
-      case SkillTreeRewardType.POKEMON_ALT_BUILD:
-        const altBuildOption = this.createAltBuildOption();
-        if (altBuildOption) options.push(altBuildOption);
-        break;
-
-      case SkillTreeRewardType.PERMA_ITEM:
-        const permaItemOption = this.createPermaItemOption();
-        if (permaItemOption) options.push(permaItemOption);
-        break;
-      case SkillTreeRewardType.PERMA_MONEY:
-        options.push(...this.createPermaMoneyOption());
-        break;
-      case SkillTreeRewardType.MONEY_REWARD:
-        options.push(...this.createMoneyRewardOption());
-        break;
-
-      case SkillTreeRewardType.TERA_ABILITY: {
-        const opt = this.createTeraAbilityOption();
-        if (opt) options.push(opt);
-        break;
       }
+      break;
 
-      case SkillTreeRewardType.SMITTY_ABILITY: {
-        const opt = this.createSmittyAbilityOption();
-        if (opt) options.push(opt);
-        break;
+    case SkillTreeRewardType.MEGA_STONE:
+      const megaStoneOption = this.createMegaStoneOption();
+      if (megaStoneOption) {
+        options.push(megaStoneOption);
       }
-
-      case SkillTreeRewardType.TYPE_SWITCHER: {
-        const opt = this.createTypeSwitcherOption();
-        if (opt) options.push(opt);
-        break;
+      break;
+    case SkillTreeRewardType.DYNA_MUSHROOM:
+      const dynamaxOption = this.createDynamaxOption();
+      if (dynamaxOption) {
+        options.push(dynamaxOption);
       }
-
-      case SkillTreeRewardType.GLITCH_FORM_UNLOCK: {
-        this.grantGlitchFormUnlockImmediate();
-        break;
+      break;
+    case SkillTreeRewardType.GLITCH_CHANGE:
+      const glitchChangeOption = this.createGlitchChangeOption();
+      if (glitchChangeOption) {
+        options.push(glitchChangeOption);
       }
+      break;
 
-      case SkillTreeRewardType.ESSENCE_BUNDLE: {
-        this.grantEssenceBundleImmediate();
-        break;
+    case SkillTreeRewardType.POKEMON_ALT_BUILD:
+      const altBuildOption = this.createAltBuildOption();
+      if (altBuildOption) {
+        options.push(altBuildOption);
       }
+      break;
 
-      case SkillTreeRewardType.SKILL_POINTS: {
-        this.grantSkillPointsImmediate();
-        break;
+    case SkillTreeRewardType.PERMA_ITEM:
+      const permaItemOption = this.createPermaItemOption();
+      if (permaItemOption) {
+        options.push(permaItemOption);
       }
+      break;
+    case SkillTreeRewardType.PERMA_MONEY:
+      options.push(...this.createPermaMoneyOption());
+      break;
+    case SkillTreeRewardType.MONEY_REWARD:
+      options.push(...this.createMoneyRewardOption());
+      break;
 
-      case SkillTreeRewardType.SKILL_TREE_TOKENS: {
-        this.grantSkillTreeTokensImmediate();
-        break;
+    case SkillTreeRewardType.TERA_ABILITY: {
+      const opt = this.createTeraAbilityOption();
+      if (opt) {
+        options.push(opt);
       }
+      break;
+    }
 
-      case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
-        options.push(...this.createTypeBoosterOption());
-        break;
-      case SkillTreeRewardType.GOLDEN_POKEBALL:
-        options.push(...this.createGoldenPokeballOption());
-        break;
-      case SkillTreeRewardType.MASTER_BALL:
-        options.push(...this.createMasterBallOption());
-        break;
-      case SkillTreeRewardType.EGG_VOUCHER:
-        options.push(...this.createEggVoucherOption());
-        break;
-      case SkillTreeRewardType.TERA_TYPE:
-        options.push(...this.createTeraTypeOption());
-        break;
+    case SkillTreeRewardType.SMITTY_ABILITY: {
+      const opt = this.createSmittyAbilityOption();
+      if (opt) {
+        options.push(opt);
+      }
+      break;
+    }
 
-      case SkillTreeRewardType.MEMORY_MUSHROOM:
-        options.push(...this.createMemoryMushroomOption());
-        break;
+    case SkillTreeRewardType.TYPE_SWITCHER: {
+      const opt = this.createTypeSwitcherOption();
+      if (opt) {
+        options.push(opt);
+      }
+      break;
+    }
 
-      case SkillTreeRewardType.BATON_ITEM:
-        options.push(...this.createBatonOption());
-        break;
+    case SkillTreeRewardType.GLITCH_FORM_UNLOCK: {
+      this.grantGlitchFormUnlockImmediate();
+      break;
+    }
 
-      case SkillTreeRewardType.ROGUE_BALL:
-        options.push(...this.createRogueBallOption());
-        break;
+    case SkillTreeRewardType.ESSENCE_BUNDLE: {
+      this.grantEssenceBundleImmediate();
+      break;
+    }
+
+    case SkillTreeRewardType.SKILL_POINTS: {
+      this.grantSkillPointsImmediate();
+      break;
+    }
+
+    case SkillTreeRewardType.SKILL_TREE_TOKENS: {
+      this.grantSkillTreeTokensImmediate();
+      break;
+    }
+
+    case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
+      options.push(...this.createTypeBoosterOption());
+      break;
+    case SkillTreeRewardType.GOLDEN_POKEBALL:
+      options.push(...this.createGoldenPokeballOption());
+      break;
+    case SkillTreeRewardType.MASTER_BALL:
+      options.push(...this.createMasterBallOption());
+      break;
+    case SkillTreeRewardType.EGG_VOUCHER:
+      options.push(...this.createEggVoucherOption());
+      break;
+    case SkillTreeRewardType.TERA_TYPE:
+      options.push(...this.createTeraTypeOption());
+      break;
+
+    case SkillTreeRewardType.MEMORY_MUSHROOM:
+      options.push(...this.createMemoryMushroomOption());
+      break;
+
+    case SkillTreeRewardType.BATON_ITEM:
+      options.push(...this.createBatonOption());
+      break;
+
+    case SkillTreeRewardType.ROGUE_BALL:
+      options.push(...this.createRogueBallOption());
+      break;
     }
 
     return options;
@@ -335,9 +371,15 @@ export class SkillTreeModifierPhase extends Phase {
     const party = this.scene.getParty();
 
     const canAnyPokemonLearn = party.some(pokemon => {
-      if (!pokemon) return false;
-      if (!pokemon.compatibleTms || pokemon.compatibleTms.indexOf(moveId) === -1) return false;
-      if (pokemon.getMoveset().some(m => m?.moveId === moveId)) return false;
+      if (!pokemon) {
+        return false;
+      }
+      if (!pokemon.compatibleTms || pokemon.compatibleTms.indexOf(moveId) === -1) {
+        return false;
+      }
+      if (pokemon.getMoveset().some(m => m?.moveId === moveId)) {
+        return false;
+      }
       return true;
     });
 
@@ -360,13 +402,17 @@ export class SkillTreeModifierPhase extends Phase {
       if (typeof anyTmGen === "function") {
         const gen = anyTmGen();
         const xmType = gen.generateType(this.scene.getParty(), [this.node.rewardData?.data?.moveId]);
-        if (xmType) return new ModifierTypeOption(xmType, 0, 0);
+        if (xmType) {
+          return new ModifierTypeOption(xmType, 0, 0);
+        }
       }
     } catch {}
     try {
       const generator = modifierTypes.CHAMPION_XM(this.championData);
       const xmModifierType = generator.generateType(this.scene.getParty(), [this.node.rewardData?.data?.moveId]);
-      if (xmModifierType) return new ModifierTypeOption(xmModifierType, 0, 0);
+      if (xmModifierType) {
+        return new ModifierTypeOption(xmModifierType, 0, 0);
+      }
     } catch {}
     return null;
   }
@@ -406,7 +452,7 @@ export class SkillTreeModifierPhase extends Phase {
         option = createOptionFn();
         if (option && option.type) {
           const pokemonType = option.type as any;
-          if (pokemonType.getPokemon && typeof pokemonType.getPokemon === 'function') {
+          if (pokemonType.getPokemon && typeof pokemonType.getPokemon === "function") {
             const pokemon = pokemonType.getPokemon();
             if (pokemon) {
             }
@@ -436,7 +482,9 @@ export class SkillTreeModifierPhase extends Phase {
     const provided = this.node.rewardData?.data?.abilityId as Abilities | undefined;
     const chosen = provided ?? SkillTreeSelectors.pickPassiveAbility(this.championData);
     const gen = (modifierTypes as any).ANY_PASSIVE_ABILITY?.();
-    if (!gen) return null;
+    if (!gen) {
+      return null;
+    }
     const type = gen.generateType(this.scene.getParty(), chosen != null ? [allAbilities[chosen]] : undefined);
     if (type) {
       if (!type.id) {
@@ -457,7 +505,9 @@ export class SkillTreeModifierPhase extends Phase {
   }
   private createTypeBoosterOption(): ModifierTypeOption[] {
     const gen = (modifierTypes as any).ATTACK_TYPE_BOOSTER?.();
-    if (!gen) return [];
+    if (!gen) {
+      return [];
+    }
     const providedType = this.node.rewardData?.data?.type as Type | undefined;
     const selectedType = providedType ?? SkillTreeSelectors.pickTypeBoosterType(this.championData);
     const t = gen.generateType(this.scene.getParty(), [selectedType]);
@@ -478,15 +528,21 @@ export class SkillTreeModifierPhase extends Phase {
   }
   private createEggVoucherOption(): ModifierTypeOption[] {
     const tier = this.node.rewardData.data.tier;
-    let key: keyof typeof modifierTypes = 'VOUCHER';
-    if (tier === VoucherType.PLUS) key = 'VOUCHER_PLUS' as any;
-    if (tier === VoucherType.PREMIUM) key = 'VOUCHER_PREMIUM' as any;
+    let key: keyof typeof modifierTypes = "VOUCHER";
+    if (tier === VoucherType.PLUS) {
+      key = "VOUCHER_PLUS" as any;
+    }
+    if (tier === VoucherType.PREMIUM) {
+      key = "VOUCHER_PREMIUM" as any;
+    }
     const t = (modifierTypes as any)[key]?.();
     return t ? [new ModifierTypeOption(t, 0, 0)] : [];
   }
   private createTeraTypeOption(): ModifierTypeOption[] {
     const gen = (modifierTypes as any).TERA_SHARD?.();
-    if (!gen?.generateType) return [];
+    if (!gen?.generateType) {
+      return [];
+    }
     const providedType = this.node.rewardData?.data?.type as Type | undefined;
     const selectedType = providedType ?? (this.championData.preferredTeraTypes?.[0] ?? this.championData.type1);
     const t = gen.generateType(this.scene.getParty(), [selectedType]);
@@ -559,8 +615,13 @@ export class SkillTreeModifierPhase extends Phase {
   }
 
   private createMoveUpgradeOption(): ModifierTypeOption | null {
+    if (!this.scene.moveUpgradesEnabledForRun) {
+      return null;
+    }
     const filterUpgrades = this.node.rewardData.data.filterUpgrades;
-    if (!filterUpgrades) return null;
+    if (!filterUpgrades) {
+      return null;
+    }
     const gen = modifierTypes.MOVE_UPGRADE();
     const type = gen.generateType(this.scene.getParty());
     if (type) {
@@ -573,9 +634,14 @@ export class SkillTreeModifierPhase extends Phase {
   }
 
   private createMoveUpgradeSpecificOption(): ModifierTypeOption | null {
+    if (!this.scene.moveUpgradesEnabledForRun) {
+      return null;
+    }
     const data = this.node.rewardData?.data;
     const filterUpgrades = data?.filterUpgrades ?? data;
-    if (!filterUpgrades) return null;
+    if (!filterUpgrades) {
+      return null;
+    }
     const gen = modifierTypes.MOVE_UPGRADE();
     const type = gen.generateType(this.scene.getParty());
     if (type) {
@@ -677,11 +743,11 @@ export class SkillTreeModifierPhase extends Phase {
 
   private resolvePermaFactoryName(permaType: PermaType): string {
     switch (permaType) {
-      case PermaType.PERMA_NEW_NORMAL: return "PERMA_NEW_NORMAL";
-      case PermaType.PERMA_PARTY_ABILITY: return "PERMA_PARTY_ABILITY";
-      case PermaType.PERMA_REROLL_COST_1: return "PERMA_REROLL_COST_1";
-      case PermaType.PERMA_SHOW_REWARDS_1: return "PERMA_SHOW_REWARDS_1";
-      default: return "PERMA_NEW_NORMAL";
+    case PermaType.PERMA_NEW_NORMAL: return "PERMA_NEW_NORMAL";
+    case PermaType.PERMA_PARTY_ABILITY: return "PERMA_PARTY_ABILITY";
+    case PermaType.PERMA_REROLL_COST_1: return "PERMA_REROLL_COST_1";
+    case PermaType.PERMA_SHOW_REWARDS_1: return "PERMA_SHOW_REWARDS_1";
+    default: return "PERMA_NEW_NORMAL";
     }
   }
 
@@ -702,16 +768,21 @@ export class SkillTreeModifierPhase extends Phase {
       return false;
     }
 
-    const hasSignature = nodes.some((n: any) =>
-      activeSkillTree.unlockedNodes.has(n.id) &&
-      n.rewardData.type === SkillTreeRewardType.SIGNATURE_POKEMON
-    );
-    const hasGeneral = nodes.some((n: any) =>
-      activeSkillTree.unlockedNodes.has(n.id) &&
-      n.rewardData.type === SkillTreeRewardType.GENERAL_POKEMON
-    );
-
-    return hasSignature && hasGeneral;
+    let signatureCount = 0;
+    let generalCount = 0;
+    for (const n of nodes) {
+      if (!activeSkillTree.unlockedNodes.has(n.id)) {
+        continue;
+      }
+      if (n.rewardData.type === SkillTreeRewardType.SIGNATURE_POKEMON) {
+        signatureCount++;
+      }
+      if (n.rewardData.type === SkillTreeRewardType.GENERAL_POKEMON) {
+        generalCount++;
+      }
+    }
+    const total = signatureCount + generalCount;
+    return total >= 2 && generalCount >= 1 && signatureCount <= 1;
   }
 
   private returnToSkillTree(): void {
@@ -749,8 +820,8 @@ export class SkillTreeModifierPhase extends Phase {
       const phaseConfig: SkillTreePhaseConfig = {
         mode: (originalConfig.mode === SkillTreeMode.POKEMON_SELECTION || originalConfig.mode === "POKEMON_SELECTION")
           ? (isPokemonSelectionComplete
-              ? SkillTreeMode.INITIAL_ACCESS
-              : SkillTreeMode.POKEMON_SELECTION)
+            ? SkillTreeMode.INITIAL_ACCESS
+            : SkillTreeMode.POKEMON_SELECTION)
           : originalConfig.mode,
         requiredSelections: originalConfig.requiredSelections,
         onComplete: (selections?: PokemonSelection[]) => {
@@ -892,23 +963,23 @@ export class SkillTreeModifierPhase extends Phase {
     const questId = this.node.rewardData?.data?.unlockableId as QuestUnlockables;
 
     if (questId && questId in QuestUnlockables) {
-        const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(questId);
+      const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(questId);
 
-        if (!this.scene.gameData.activeSkillTree.sessionQuestUnlockables) {
-            this.scene.gameData.activeSkillTree.sessionQuestUnlockables = {};
-        }
-        this.scene.gameData.activeSkillTree.sessionQuestUnlockables[questId] = {
-            questUnlockData: questUnlockData
-        };
+      if (!this.scene.gameData.activeSkillTree.sessionQuestUnlockables) {
+        this.scene.gameData.activeSkillTree.sessionQuestUnlockables = {};
+      }
+      this.scene.gameData.activeSkillTree.sessionQuestUnlockables[questId] = {
+        questUnlockData: questUnlockData
+      };
 
-        const species = getPokemonSpecies(questUnlockData.rewardId as Species);
-        const formName = species.getGlitchFormName(true, undefined, questUnlockData.rewardType)?.toLowerCase();
+      const species = getPokemonSpecies(questUnlockData.rewardId as Species);
+      const formName = species.getGlitchFormName(true, undefined, questUnlockData.rewardType)?.toLowerCase();
 
-        this.scene.ui.setMode(Mode.REWARD_OBTAINED, {
-            type: RewardObtainedType.FORM,
-            name: formName,
-            isGlitch: true
-        });
+      this.scene.ui.setMode(Mode.REWARD_OBTAINED, {
+        type: RewardObtainedType.FORM,
+        name: formName,
+        isGlitch: true
+      });
     }
   }
 

@@ -1,0 +1,9 @@
+{
+  "vouchers": "Ваучеры",
+  "eggVoucher": "Ваучер на яйцо",
+  "eggVoucherPlus": "Ваучер на яйцо +",
+  "eggVoucherPremium": "Премиум-ваучер на яйцо",
+  "eggVoucherGold": "Золотой ваучер на яйцо",
+  "locked": "Заблокировано",
+  "defeatTrainer": "Победи {{trainerName}}"
+}

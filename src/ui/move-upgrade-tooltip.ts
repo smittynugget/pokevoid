@@ -26,24 +26,86 @@ import { ArenaTagType } from "../enums/arena-tag-type";
 import { WeatherType } from "../data/weather";
 import { TerrainType } from "../data/terrain";
 import * as Utils from "../utils";
+import { getUpgradeRarityFromTier, getUpgradeRarityColors } from "../utils";
+import { UpgradeCategory, UpgradeCategoryUtils } from "../enums/upgrade-category";
+import { SkillTreeRarity } from "../system/skill-tree-data";
 import i18next from "i18next";
-import { getBBCodeFrag, TextStyle, addBBCodeTextObject } from "./text";
-import { addWindow } from "./ui-theme";
+import Overrides from "../overrides";
+import { getBBCodeFrag, TextStyle, addBBCodeTextObject, addTextObject } from "./text";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 import BBCodeText from "phaser3-rex-plugins/plugins/gameobjects/tagtext/bbcodetext/BBCodeText";
+import { MoveUpgrade } from "../data/move-upgrade";
 
 export class MoveUpgradeTooltipUtils {
 
   private static tooltipContainer: Phaser.GameObjects.Container | null = null;
-  private static tooltipBg: Phaser.GameObjects.NineSlice | null = null;
-  private static tooltipText: BBCodeText | null = null;
+  private static tooltipBg: Phaser.GameObjects.Graphics | null = null;
+  private static tooltipTitleBarBg: Phaser.GameObjects.Graphics | null = null;
+  private static tooltipRarityBarBg: Phaser.GameObjects.Graphics | null = null;
+  private static tooltipTitle: Phaser.GameObjects.Text | null = null;
+  private static tooltipSubtitle: Phaser.GameObjects.Text | null = null;
+  private static tooltipBody: BBCodeText | null = null;
+  private static detailsButton: Phaser.GameObjects.Container | null = null;
+  private static backButton: Phaser.GameObjects.Container | null = null;
+  private static navContainer: Phaser.GameObjects.Container | null = null;
   private static _tooltipPattern: ModalBackgroundHandle | null = null;
+  private static detailsActive: boolean = false;
+  private static previewTier: number = 1;
+  private static currentTier: number = 1;
+  private static previewMaxTier: number = 1;
+  private static previewCategory: UpgradeCategory | null = null;
+  private static previewMoveId: number | null = null;
+  private static previewMoveName: string | null = null;
+  private static lastTooltipX: number = 0;
+  private static lastTooltipY: number = 0;
+  private static sourceModifierType: MoveUpgradeModifierType | null = null;
+  private static sourceScene: BattleScene | null = null;
+  private static sourceIconPosition: { x: number; y: number } | null = null;
+  private static sourceIsPlayer: boolean = true;
+  private static keyLeftHandler: ((event: KeyboardEvent) => void) | null = null;
+  private static keyRightHandler: ((event: KeyboardEvent) => void) | null = null;
+  private static keyEscapeHandler: ((event: KeyboardEvent) => void) | null = null;
+  private static readonly TOOLTIP_CONSTANTS = {
+    MIN_WIDTH: 70,
+    MAX_WIDTH: 120,
+    TITLE_BAR_HEIGHT: 12,
+    TITLE_BAR_Y: 0,
+    RARITY_BAR_HEIGHT: 6,
+    RARITY_BAR_Y: 12,
+    CONTENT_Y: 23,
+    TITLE_TEXT_Y: 6,
+    RARITY_TEXT_Y: 15,
+    TITLE_FONT_SIZE: "40px",
+    BODY_FONT_SIZE: "40px",
+    RADIUS: 0,
+    BORDER_THICKNESS: 0.5,
+    BORDER_COLOR: 0xffffff,
+    BORDER_ALPHA: 0.5,
+    PADDING: 6,
+    LINE_HEIGHT: 8,
+    TITLE_BAR_COLOR: 0xFFD700,
+    TITLE_BAR_ALPHA: 0.7,
+    SUBHEADER_BAR_COLOR: 0x00BFFF,
+    SUBHEADER_BAR_ALPHA: 0.7,
+  };
+
   private static readonly TOOLTIP_WIDTH = 550 / 6;
   private static readonly TOOLTIP_BASE_HEIGHT = 375 / 6;
   private static multiHitWarning: boolean = false;
   private static flinchWarning: boolean = false;
   private static secondaryEffectNote: boolean = false;
   private static lineCount: number = 0;
+
+  private static applyBbCodeWordWrap(textObj: BBCodeText, tooltipWidth: number, padding: number): void {
+    const scaleX = textObj.scaleX || 1;
+    const wrapWidthPreScale = Math.max(0, (tooltipWidth - padding * 2) / scaleX);
+    const lineSpacing = textObj.lineSpacing;
+    textObj.setStyle({
+      ...(textObj.style as any),
+      wordWrap: { width: wrapWidthPreScale, useAdvancedWrap: true }
+    } as any);
+    textObj.setLineSpacing(lineSpacing);
+  }
 
   static generateComparison(scene: BattleScene, modifierType: MoveUpgradeModifierType, isPlayerMove: boolean): string {
     this.multiHitWarning = false;
@@ -71,10 +133,10 @@ export class MoveUpgradeTooltipUtils {
       if (categoryUpgrade) {
         displayTier = categoryUpgrade.upgradeTier;
       }
-        displayCategory = i18next.t("moveUpgradeAttrs:extraEffectUpgrade");
-        shouldShowEX = true;
+      displayCategory = i18next.t("moveUpgradeAttrs:extraEffectUpgrade");
+      shouldShowEX = true;
     } else {
-      displayCategory = `${displayCategory} ${i18next.t(`moveUpgradeAttrs:path`)}`;
+      displayCategory = `${displayCategory} ${i18next.t("moveUpgradeAttrs:path")}`;
       const hasNonCategoryUpgrade = activeUpgrades.some(upgrade => !upgrade.upgradeCategory);
       if (hasNonCategoryUpgrade) {
         shouldShowEX = true;
@@ -91,105 +153,71 @@ export class MoveUpgradeTooltipUtils {
       lines.push(categoryInfo);
     }
 
-    const isMultiHit = currentMove.attrs.some(attr => attr instanceof MultiHitAttr || attr.constructor.name.includes('MultiHit'));
+    const isMultiHit = currentMove.attrs.some(attr => attr instanceof MultiHitAttr || attr.constructor.name.includes("MultiHit"));
     if (isMultiHit) {
       const warningText = `${i18next.t("moveUpgradeAttrs:multiHitWarning")}`;
       this.multiHitWarning = true;
-      const wrappedWarning = this.wrapTextToWidth(warningText, this.TOOLTIP_WIDTH * 2);
-      wrappedWarning.forEach(line => {
-        const warningLine = getBBCodeFrag(line, TextStyle.SUMMARY_GRAY, {fontSize: "30px"});
-        lines.push(warningLine);
-      });
+      lines.push(getBBCodeFrag(warningText, TextStyle.SUMMARY_GRAY, uiTheme));
     }
 
     const isFlinch = currentMove.attrs.some(attr => attr instanceof FlinchAttr);
     if (isFlinch) {
       const warningText = `${i18next.t("moveUpgradeAttrs:flinchWarning")}`;
       this.flinchWarning = true;
-      const wrappedWarning = this.wrapTextToWidth(warningText, this.TOOLTIP_WIDTH * 2);
-      wrappedWarning.forEach(line => {
-        const warningLine = getBBCodeFrag(line, TextStyle.SUMMARY_GRAY, {fontSize: "30px"});
-        lines.push(warningLine);
-      });
+      lines.push(getBBCodeFrag(warningText, TextStyle.SUMMARY_GRAY, uiTheme));
     }
 
-    lines.push('');
+    lines.push("");
 
     lines.push(...this.compareBasicStats(scene, currentMove, upgradedMove));
     if (currentMove.chance > 0 || upgradedMove.chance > 0) {
-      lines.push('');
+      lines.push("");
       this.secondaryEffectNote = true;
       const chanceNoteText = `*${i18next.t("moveUpgradeAttrs:secondaryEffectNote")}`;
-      const wrappedChanceNote = this.wrapTextToWidth(chanceNoteText, this.TOOLTIP_WIDTH * 1.7);
-      wrappedChanceNote.forEach(line => {
-        const chanceNoteLine = getBBCodeFrag(line, TextStyle.SUMMARY_GRAY, {fontSize: "25px"});
-        lines.push(chanceNoteLine);
-      });
+      lines.push(getBBCodeFrag(chanceNoteText, TextStyle.SUMMARY_GRAY, uiTheme));
     }
 
     this.lineCount = lines.filter(line => line !== undefined).length;
-    return lines.filter(line => line !== undefined).join('\n');
+    return lines.filter(line => line !== undefined).join("\n");
   }
 
   static generateMoveDetails(scene: BattleScene, moveId: number): string {
     const move = allMoves[moveId];
-    if (!move) return "";
+    if (!move) {
+      return "";
+    }
 
     const uiTheme = scene.uiTheme;
     const lines: string[] = [];
 
-    const moveName = getBBCodeFrag(move.name, TextStyle.SUMMARY_GOLD, uiTheme);
-    lines.push(moveName);
-    lines.push('');
+    if (move.effect) {
+      const desc = getBBCodeFrag(`[size=37]${move.effect}[/size]`, TextStyle.WINDOW, uiTheme);
+      lines.push(desc);
+      lines.push("");
+    }
 
+    const powerAccuracyParts: string[] = [];
     if (move.power > 0) {
       const powerLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:power"), TextStyle.SUMMARY_GOLD, uiTheme);
       const power = getBBCodeFrag(move.power.toString(), TextStyle.WINDOW, uiTheme);
-      lines.push(`${powerLabel}: ${power}`);
+      powerAccuracyParts.push(`${powerLabel}: ${power}`);
     }
-
     if (move.accuracy > 0) {
       const accuracyLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:accuracy"), TextStyle.SUMMARY_GOLD, uiTheme);
       const accuracy = getBBCodeFrag(`${move.accuracy}%`, TextStyle.WINDOW, uiTheme);
-      lines.push(`${accuracyLabel}: ${accuracy}`);
+      powerAccuracyParts.push(`${accuracyLabel}: ${accuracy}`);
     }
-
-    if (move.chance > 0) {
-      const chanceLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:chance"), TextStyle.SUMMARY_GOLD, uiTheme);
-      const chance = getBBCodeFrag(`${move.chance}%`, TextStyle.WINDOW, uiTheme);
-      lines.push(`${chanceLabel}: ${chance}*`);
-    }
-
-    const effectivePriority = this.calculateEffectivePriority(move);
-    if (effectivePriority !== 0) {
-      const priorityLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:priority"), TextStyle.SUMMARY_GOLD, uiTheme);
-      const priority = getBBCodeFrag(effectivePriority.toString(), TextStyle.WINDOW, uiTheme);
-      lines.push(`${priorityLabel}: ${priority}`);
+    if (powerAccuracyParts.length > 0) {
+      lines.push(powerAccuracyParts.join(" | "));
     }
 
     const categoryLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:category"), TextStyle.SUMMARY_GOLD, uiTheme);
-    const category = getBBCodeFrag(MoveCategory[move.category], TextStyle.WINDOW, uiTheme);
-    lines.push(`${categoryLabel}: ${category}`);
-
     const typeLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:type"), TextStyle.SUMMARY_GOLD, uiTheme);
+    const category = getBBCodeFrag(MoveCategory[move.category], TextStyle.WINDOW, uiTheme);
     const type = getBBCodeFrag(Type[move.type], TextStyle.WINDOW, uiTheme);
-    lines.push(`${typeLabel}: ${type}`);
+    lines.push(`${categoryLabel}: ${category} | ${typeLabel}: ${type}`);
 
-    lines.push(...this.extractSingleMoveDetails(scene, move));
-
-    if (move.description) {
-      lines.push('');
-      const desc = getBBCodeFrag(move.description, TextStyle.WINDOW, uiTheme);
-      lines.push(desc);
-    }
-
-    if (move.chance > 0) {
-      lines.push('');
-      const note = getBBCodeFrag(`*${i18next.t("moveUpgradeAttrs:secondaryEffectNote")}`, TextStyle.SUMMARY_GRAY, {fontSize: "25px"});
-      lines.push(note);
-    }
-
-    return lines.filter(line => line !== undefined && line !== '').join('\n');
+    return lines.filter(line => line !== undefined && line !== "").join("\n");
   }
 
   private static extractSingleMoveDetails(scene: BattleScene, move: Move): string[] {
@@ -207,7 +235,7 @@ export class MoveUpgradeTooltipUtils {
     const healAttr = move.getAttrs(HealAttr)[0] as HealAttr | undefined;
     const hitHealAttr = move.getAttrs(HitHealAttr)[0] as HitHealAttr | undefined;
     const heal = healAttr ? Math.round(healAttr.healRatio * 100) :
-                hitHealAttr ? Math.round(hitHealAttr.healRatio * 100) : 0;
+      hitHealAttr ? Math.round(hitHealAttr.healRatio * 100) : 0;
     if (heal > 0) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:healAmount"), TextStyle.SUMMARY_GOLD, uiTheme);
       const value = getBBCodeFrag(`${heal}%`, TextStyle.WINDOW, uiTheme);
@@ -215,9 +243,15 @@ export class MoveUpgradeTooltipUtils {
     }
 
     const getSacrificeType = (): string => {
-      if (move.hasAttr(SacrificialAttr)) return i18next.t("moveUpgradeAttrs:sacrificialFull");
-      if (move.hasAttr(HalfSacrificialAttr)) return i18next.t("moveUpgradeAttrs:sacrificialHalf");
-      if (move.hasAttr(SacrificialAttrOnHit)) return i18next.t("moveUpgradeAttrs:sacrificialOnHit");
+      if (move.hasAttr(SacrificialAttr)) {
+        return i18next.t("moveUpgradeAttrs:sacrificialFull");
+      }
+      if (move.hasAttr(HalfSacrificialAttr)) {
+        return i18next.t("moveUpgradeAttrs:sacrificialHalf");
+      }
+      if (move.hasAttr(SacrificialAttrOnHit)) {
+        return i18next.t("moveUpgradeAttrs:sacrificialOnHit");
+      }
       return "";
     };
     const sacrifice = getSacrificeType();
@@ -231,11 +265,11 @@ export class MoveUpgradeTooltipUtils {
     if (multiHitAttr) {
       const getMultiHitDescription = (type: MultiHitType): string => {
         switch (type) {
-          case MultiHitType._2: return "2";
-          case MultiHitType._3: return "3";
-          case MultiHitType._2_TO_5: return "2-5";
-          case MultiHitType._4_TO_8: return "4-8";
-          default: return "1";
+        case MultiHitType._2: return "2";
+        case MultiHitType._3: return "3";
+        case MultiHitType._2_TO_5: return "2-5";
+        case MultiHitType._4_TO_8: return "4-8";
+        default: return "1";
         }
       };
       const hits = getMultiHitDescription(multiHitAttr.getMultiHitType);
@@ -377,7 +411,7 @@ export class MoveUpgradeTooltipUtils {
     lines.push(...this.compareMoveFlags(scene, currentMove, upgradedMove));
     lines.push(...this.compareBattleMechanicsEffects(scene, currentMove, upgradedMove));
 
-    return lines.filter(line => line !== undefined && line !== '');
+    return lines.filter(line => line !== undefined && line !== "");
   }
 
   private static calculateEffectivePriority(move: Move): number {
@@ -430,9 +464,15 @@ export class MoveUpgradeTooltipUtils {
     const uiTheme = scene.uiTheme;
 
     const getSacrificeType = (move: Move): string => {
-      if (move.hasAttr(SacrificialAttr)) return i18next.t("moveUpgradeAttrs:sacrificialFull");
-      if (move.hasAttr(HalfSacrificialAttr)) return i18next.t("moveUpgradeAttrs:sacrificialHalf");
-      if (move.hasAttr(SacrificialAttrOnHit)) return i18next.t("moveUpgradeAttrs:sacrificialOnHit");
+      if (move.hasAttr(SacrificialAttr)) {
+        return i18next.t("moveUpgradeAttrs:sacrificialFull");
+      }
+      if (move.hasAttr(HalfSacrificialAttr)) {
+        return i18next.t("moveUpgradeAttrs:sacrificialHalf");
+      }
+      if (move.hasAttr(SacrificialAttrOnHit)) {
+        return i18next.t("moveUpgradeAttrs:sacrificialOnHit");
+      }
       return "";
     };
 
@@ -469,9 +509,9 @@ export class MoveUpgradeTooltipUtils {
     const upgradedHitHealAttr = upgradedMove.getAttrs(HitHealAttr)[0] as HitHealAttr | undefined;
 
     const currentHeal = currentHealAttr ? Math.round(currentHealAttr.healRatio * 100) :
-                       currentHitHealAttr ? Math.round(currentHitHealAttr.healRatio * 100) : 0;
+      currentHitHealAttr ? Math.round(currentHitHealAttr.healRatio * 100) : 0;
     const upgradedHeal = upgradedHealAttr ? Math.round(upgradedHealAttr.healRatio * 100) :
-                        upgradedHitHealAttr ? Math.round(upgradedHitHealAttr.healRatio * 100) : 0;
+      upgradedHitHealAttr ? Math.round(upgradedHitHealAttr.healRatio * 100) : 0;
 
     if (currentHeal !== upgradedHeal && upgradedHeal > 0) {
       const healLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:healAmount"), TextStyle.SUMMARY_GOLD, uiTheme);
@@ -497,11 +537,11 @@ export class MoveUpgradeTooltipUtils {
 
     const getMultiHitDescription = (multiHitType: MultiHitType): string => {
       switch (multiHitType) {
-        case MultiHitType._2: return "2";
-        case MultiHitType._3: return "3";
-        case MultiHitType._2_TO_5: return "2-5";
-        case MultiHitType._4_TO_8: return "4-8";
-        default: return "1";
+      case MultiHitType._2: return "2";
+      case MultiHitType._3: return "3";
+      case MultiHitType._2_TO_5: return "2-5";
+      case MultiHitType._4_TO_8: return "4-8";
+      default: return "1";
       }
     };
 
@@ -538,14 +578,22 @@ export class MoveUpgradeTooltipUtils {
     const upgradedCritOnly = upgradedMove.hasAttr(CritOnlyAttr);
 
     const getCurrentCritRate = (): string => {
-      if (currentCritOnly) return "100%";
-      if (currentHighCritAttr) return "10%";
+      if (currentCritOnly) {
+        return "100%";
+      }
+      if (currentHighCritAttr) {
+        return "10%";
+      }
       return "";
     };
 
     const getUpgradedCritRate = (): string => {
-      if (upgradedCritOnly) return "100%";
-      if (upgradedHighCritAttr) return "10%";
+      if (upgradedCritOnly) {
+        return "100%";
+      }
+      if (upgradedHighCritAttr) {
+        return "10%";
+      }
       return "";
     };
 
@@ -599,9 +647,11 @@ export class MoveUpgradeTooltipUtils {
     const lines: string[] = [];
     const uiTheme = scene.uiTheme;
 
-     const getStatusEffectDescription = (move: Move): string => {
+    const getStatusEffectDescription = (move: Move): string => {
       const statusAttrs = move.getAttrs(StatusEffectAttr);
-      if (statusAttrs.length === 0) return "";
+      if (statusAttrs.length === 0) {
+        return "";
+      }
 
       const statusNames: string[] = [];
 
@@ -652,10 +702,12 @@ export class MoveUpgradeTooltipUtils {
     const upgradedSelfBoostAttrs = upgradedMove.getAttrs(StatChangeAttr).filter((attr: StatChangeAttr) => attr.selfTarget && attr.levels > 0);
 
     const getSelfBoostText = (attrs: StatChangeAttr[]): string => {
-      if (attrs.length === 0) return "";
+      if (attrs.length === 0) {
+        return "";
+      }
       const boostTexts = attrs.map(attr => {
         const statNames = attr.stats.map(stat => getBattleStatName(stat)).join("/");
-        return `${statNames} ${attr.levels > 0 ? '+' : ''}${attr.levels}`;
+        return `${statNames} ${attr.levels > 0 ? "+" : ""}${attr.levels}`;
       });
       return boostTexts.join(", ");
     };
@@ -691,7 +743,9 @@ export class MoveUpgradeTooltipUtils {
     const upgradedFoeDebuffAttrs = upgradedMove.getAttrs(StatChangeAttr).filter((attr: StatChangeAttr) => !attr.selfTarget && attr.levels < 0);
 
     const getFoeDebuffText = (attrs: StatChangeAttr[]): string => {
-      if (attrs.length === 0) return "";
+      if (attrs.length === 0) {
+        return "";
+      }
       const debuffTexts = attrs.map(attr => {
         const statNames = attr.stats.map(stat => getBattleStatName(stat)).join("/");
         return `${statNames} ${attr.levels}`;
@@ -732,14 +786,22 @@ export class MoveUpgradeTooltipUtils {
     const upgradedSteal = upgradedMove.getAttrs(StealHeldItemChanceAttr)[0] as StealHeldItemChanceAttr | undefined;
 
     const getCurrentDesc = (): string => {
-      if (currentSteal) return `${Math.round(currentSteal.chance * 100)}%`;
-      if (currentRemove) return i18next.t("moveUpgradeAttrs:removeFoeItem");
+      if (currentSteal) {
+        return `${Math.round(currentSteal.chance * 100)}%`;
+      }
+      if (currentRemove) {
+        return i18next.t("moveUpgradeAttrs:removeFoeItem");
+      }
       return "";
     };
 
     const getUpgradedDesc = (): string => {
-      if (upgradedSteal) return `${Math.round(upgradedSteal.chance * 100)}%`;
-      if (upgradedRemove) return i18next.t("moveUpgradeAttrs:removeFoeItem");
+      if (upgradedSteal) {
+        return `${Math.round(upgradedSteal.chance * 100)}%`;
+      }
+      if (upgradedRemove) {
+        return i18next.t("moveUpgradeAttrs:removeFoeItem");
+      }
       return "";
     };
 
@@ -748,7 +810,7 @@ export class MoveUpgradeTooltipUtils {
 
     if (currentDesc !== upgradedDesc && upgradedDesc) {
       const label = getBBCodeFrag(i18next.t("moveUpgradeAttrs:labelEffect"), TextStyle.SUMMARY_GOLD, uiTheme);
-      const value = getBBCodeFrag(upgradedDesc.includes('%') ? `${i18next.t("moveUpgradeAttrs:stealFoeItem")} (${upgradedDesc})` : upgradedDesc, TextStyle.SUMMARY_GREEN, uiTheme);
+      const value = getBBCodeFrag(upgradedDesc.includes("%") ? `${i18next.t("moveUpgradeAttrs:stealFoeItem")} (${upgradedDesc})` : upgradedDesc, TextStyle.SUMMARY_GREEN, uiTheme);
       const colon = getBBCodeFrag(": ", TextStyle.WINDOW, uiTheme);
       lines.push(`${label}${colon}${value}`);
     }
@@ -822,14 +884,22 @@ export class MoveUpgradeTooltipUtils {
     const upgradedClear = upgradedMove.hasAttr(ClearWeatherAttr);
 
     const getCurrentWeather = (): string => {
-      if (currentClear) return i18next.t("moveUpgradeAttrs:clearWeather");
-      if (currentWeatherAttr) return this.getWeatherName(currentWeatherAttr.weatherType);
+      if (currentClear) {
+        return i18next.t("moveUpgradeAttrs:clearWeather");
+      }
+      if (currentWeatherAttr) {
+        return this.getWeatherName(currentWeatherAttr.weatherType);
+      }
       return "";
     };
 
     const getUpgradedWeather = (): string => {
-      if (upgradedClear) return i18next.t("moveUpgradeAttrs:clearWeather");
-      if (upgradedWeatherAttr) return this.getWeatherName(upgradedWeatherAttr.weatherType);
+      if (upgradedClear) {
+        return i18next.t("moveUpgradeAttrs:clearWeather");
+      }
+      if (upgradedWeatherAttr) {
+        return this.getWeatherName(upgradedWeatherAttr.weatherType);
+      }
       return "";
     };
 
@@ -857,14 +927,22 @@ export class MoveUpgradeTooltipUtils {
     const upgradedClear = upgradedMove.hasAttr(ClearTerrainAttr);
 
     const getCurrentTerrain = (): string => {
-      if (currentClear) return i18next.t("moveUpgradeAttrs:clearTerrain");
-      if (currentTerrainAttr) return this.getTerrainName(currentTerrainAttr.terrainType);
+      if (currentClear) {
+        return i18next.t("moveUpgradeAttrs:clearTerrain");
+      }
+      if (currentTerrainAttr) {
+        return this.getTerrainName(currentTerrainAttr.terrainType);
+      }
       return "";
     };
 
     const getUpgradedTerrain = (): string => {
-      if (upgradedClear) return i18next.t("moveUpgradeAttrs:clearTerrain");
-      if (upgradedTerrainAttr) return this.getTerrainName(upgradedTerrainAttr.terrainType);
+      if (upgradedClear) {
+        return i18next.t("moveUpgradeAttrs:clearTerrain");
+      }
+      if (upgradedTerrainAttr) {
+        return this.getTerrainName(upgradedTerrainAttr.terrainType);
+      }
       return "";
     };
 
@@ -957,15 +1035,23 @@ export class MoveUpgradeTooltipUtils {
 
     const getCurrentHeal = (): string => {
       const attrs = currentMove.getAttrs(AddBattlerTagAttr);
-      if (attrs.some((a: any) => a.tagType === BattlerTagType.AQUA_RING)) return i18next.t("moveUpgradeAttrs:aquaRing");
-      if (attrs.some((a: any) => a.tagType === BattlerTagType.INGRAIN)) return i18next.t("moveUpgradeAttrs:ingrain");
+      if (attrs.some((a: any) => a.tagType === BattlerTagType.AQUA_RING)) {
+        return i18next.t("moveUpgradeAttrs:aquaRing");
+      }
+      if (attrs.some((a: any) => a.tagType === BattlerTagType.INGRAIN)) {
+        return i18next.t("moveUpgradeAttrs:ingrain");
+      }
       return "";
     };
 
     const getUpgradedHeal = (): string => {
       const attrs = upgradedMove.getAttrs(AddBattlerTagAttr);
-      if (attrs.some((a: any) => a.tagType === BattlerTagType.AQUA_RING)) return i18next.t("moveUpgradeAttrs:aquaRing");
-      if (attrs.some((a: any) => a.tagType === BattlerTagType.INGRAIN)) return i18next.t("moveUpgradeAttrs:ingrain");
+      if (attrs.some((a: any) => a.tagType === BattlerTagType.AQUA_RING)) {
+        return i18next.t("moveUpgradeAttrs:aquaRing");
+      }
+      if (attrs.some((a: any) => a.tagType === BattlerTagType.INGRAIN)) {
+        return i18next.t("moveUpgradeAttrs:ingrain");
+      }
       return "";
     };
 
@@ -1089,18 +1175,30 @@ export class MoveUpgradeTooltipUtils {
     const uiTheme = scene.uiTheme;
 
     const getCurrentFixedDamage = (): string => {
-      if (currentMove.hasAttr(LevelDamageAttr)) return i18next.t("moveUpgradeAttrs:levelDamage");
-      if (currentMove.hasAttr(TargetHalfHpDamageAttr)) return i18next.t("moveUpgradeAttrs:halfTargetHp");
+      if (currentMove.hasAttr(LevelDamageAttr)) {
+        return i18next.t("moveUpgradeAttrs:levelDamage");
+      }
+      if (currentMove.hasAttr(TargetHalfHpDamageAttr)) {
+        return i18next.t("moveUpgradeAttrs:halfTargetHp");
+      }
       const fixedAttr = currentMove.getAttrs(FixedDamageAttr)[0] as FixedDamageAttr | undefined;
-      if (fixedAttr) return `${fixedAttr.damage}`;
+      if (fixedAttr) {
+        return `${fixedAttr.damage}`;
+      }
       return "";
     };
 
     const getUpgradedFixedDamage = (): string => {
-      if (upgradedMove.hasAttr(LevelDamageAttr)) return i18next.t("moveUpgradeAttrs:levelDamage");
-      if (upgradedMove.hasAttr(TargetHalfHpDamageAttr)) return i18next.t("moveUpgradeAttrs:halfTargetHp");
+      if (upgradedMove.hasAttr(LevelDamageAttr)) {
+        return i18next.t("moveUpgradeAttrs:levelDamage");
+      }
+      if (upgradedMove.hasAttr(TargetHalfHpDamageAttr)) {
+        return i18next.t("moveUpgradeAttrs:halfTargetHp");
+      }
       const fixedAttr = upgradedMove.getAttrs(FixedDamageAttr)[0] as FixedDamageAttr | undefined;
-      if (fixedAttr) return `${fixedAttr.damage}`;
+      if (fixedAttr) {
+        return `${fixedAttr.damage}`;
+      }
       return "";
     };
 
@@ -1194,16 +1292,18 @@ export class MoveUpgradeTooltipUtils {
   }
 
   private static toCamelCase(str: string): string {
-    return str.toLowerCase().replace(/[ _-]/g, ' ').replace(/(?:^\w|\b\w|\s+)/g, (match, index) => {
-      if (+match === 0) return '';
+    return str.toLowerCase().replace(/[ _-]/g, " ").replace(/(?:^\w|\b\w|\s+)/g, (match, index) => {
+      if (+match === 0) {
+        return "";
+      }
       return index === 0 ? match.toLowerCase() : match.toUpperCase();
     });
   }
 
   private static wrapTextToWidth(text: string, maxWidth: number): string[] {
-    const words = text.split(' ');
+    const words = text.split(" ");
     const lines: string[] = [];
-    let currentLine = '';
+    let currentLine = "";
     const avgCharWidth = 6;
     const maxCharsPerLine = Math.floor(maxWidth / avgCharWidth);
 
@@ -1231,48 +1331,61 @@ export class MoveUpgradeTooltipUtils {
   }
 
   static showTooltip(scene: BattleScene, modifierType: MoveUpgradeModifierType, iconPosition: { x: number, y: number }, isPlayer: boolean = true): void {
+    const sessionsWon = (scene.gameData?.gameStats?.sessionsWon || 0);
+    if (!Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && sessionsWon <= 0) {
+      return;
+    }
     this.hideTooltip(scene);
 
-    const comparisonText = this.generateComparison(scene, modifierType, isPlayer);
-    if (!comparisonText) return;
-    this.tooltipContainer = scene.add.container(0, 0);
-    this.tooltipContainer.setDepth(10000000000);
-    this.tooltipBg = addWindow(scene, 0, 0, this.TOOLTIP_WIDTH, this.getTooltipHeight(comparisonText));
-    this.tooltipText = this.createColoredComparisonText(scene, comparisonText);
+    this.sourceScene = scene;
+    this.sourceModifierType = modifierType;
+    this.sourceIconPosition = iconPosition;
+    this.sourceIsPlayer = isPlayer;
 
-    this._tooltipPattern = attachModalBackground(
-      scene,
-      scene.uiContainer,
-      () => ({ bgX: this.tooltipBg!.x, bgY: this.tooltipBg!.y, bgWidth: this.TOOLTIP_WIDTH, bgHeight: this.getTooltipHeight(comparisonText) }),
-      { mask: false, alphaMultiplier: 0.6, getTarget: () => this.tooltipBg as unknown as Phaser.GameObjects.GameObject }
-    );
+    const tempModifier = modifierType.newModifier() as MoveUpgradeModifier;
+    const category = tempModifier.upgradeCategory;
+    const tier = tempModifier.upgradeTier || 1;
+    const maxTier = category ? UpgradeCategoryUtils.getMoveUpgradeMaxTier(category) : 1;
+    this.detailsActive = false;
+    this.previewTier = tier;
+    this.currentTier = tier;
+    this.previewMaxTier = maxTier;
+    this.previewCategory = category || null;
+    this.previewMoveId = tempModifier.moveId;
+    this.previewMoveName = allMoves[tempModifier.moveId]?.name || "";
 
-    const screenWidth = scene.game.canvas.width / 6;
-    let tooltipX: number;
-    const tooltipY = (iconPosition.y / 6) + 25;
-
-    if (isPlayer) {
-
-      tooltipX = (iconPosition.x / 6);
+    const ptr = scene.game.input.mousePointer;
+    if (ptr) {
+      const reverse = ptr.x >= scene.game.canvas.width - (this.TOOLTIP_WIDTH * 6) - 12;
+      this.lastTooltipX = !reverse ? (ptr.x / 6 + 2) : (ptr.x / 6 - this.TOOLTIP_WIDTH - 2);
+      this.lastTooltipY = ptr.y / 6 + 2;
     } else {
-
-      tooltipX = screenWidth + (iconPosition.x / 6) - this.TOOLTIP_WIDTH;
+      const screenWidth = scene.game.canvas.width / 6;
+      this.lastTooltipY = (iconPosition.y / 6) + 25;
+      this.lastTooltipX = isPlayer ? (iconPosition.x / 6) : (screenWidth + (iconPosition.x / 6) - this.TOOLTIP_WIDTH);
     }
 
-    this.tooltipContainer.setPosition(tooltipX, tooltipY);
-
-    this.tooltipContainer.add([this.tooltipBg, this.tooltipText]);
-    scene.uiContainer.add(this.tooltipContainer);
-
-    this._tooltipPattern?.redraw({ bgX: this.tooltipBg!.x, bgY: this.tooltipBg!.y, bgWidth: this.TOOLTIP_WIDTH, bgHeight: this.getTooltipHeight(comparisonText) });
+    this.rebuildComparisonTooltip();
   }
 
   static hideTooltip(scene: BattleScene): void {
+    this.destroyTooltipContainerOnly();
+    this.unregisterKeyboardHandlers(scene);
+  }
+
+  private static destroyTooltipContainerOnly(): void {
     if (this.tooltipContainer) {
       this.tooltipContainer.destroy();
       this.tooltipContainer = null;
       this.tooltipBg = null;
-      this.tooltipText = null;
+      this.tooltipTitleBarBg = null;
+      this.tooltipRarityBarBg = null;
+      this.tooltipTitle = null;
+      this.tooltipSubtitle = null;
+      this.tooltipBody = null;
+      this.detailsButton = null;
+      this.backButton = null;
+      this.navContainer = null;
       if (this._tooltipPattern) {
         this._tooltipPattern.clear();
         this._tooltipPattern = null;
@@ -1280,10 +1393,340 @@ export class MoveUpgradeTooltipUtils {
     }
   }
 
-  private static createColoredComparisonText(scene: BattleScene, comparisonText: string): BBCodeText {
+  private static rebuildComparisonTooltip(): void {
+    const scene = this.sourceScene;
+    const modifierType = this.sourceModifierType;
+    if (!scene || !modifierType) {
+      return;
+    }
+    const comparisonText = this.generateComparison(scene, modifierType, this.sourceIsPlayer);
+    if (!comparisonText) {
+      return;
+    }
+    const { titleText, subtitleText, bodyText } = this.parseComparisonText(comparisonText);
+    const category = this.previewCategory;
+    const tier = this.currentTier;
+    const maxTier = this.previewMaxTier;
+    const rarity = (tier && category) ? getUpgradeRarityFromTier(tier, maxTier) : SkillTreeRarity.LEGENDARY;
+    const rarityColors = getUpgradeRarityColors(rarity);
+    this.detailsActive = false;
+    this.unregisterKeyboardHandlers(scene);
+    this.buildTooltip(scene, titleText, subtitleText, bodyText, rarityColors);
+  }
 
-    const textObj = addBBCodeTextObject(scene, 8, 8, comparisonText, TextStyle.WINDOW, {fontSize: "45px"});
-    return textObj;
+  private static rebuildTierPreviewTooltip(): void {
+    const scene = this.sourceScene;
+    if (!scene || !this.previewCategory || this.previewMoveId === null) {
+      return;
+    }
+    const category = this.previewCategory;
+    const tier = this.previewTier;
+    const maxTier = this.previewMaxTier;
+    const rarity = getUpgradeRarityFromTier(tier, maxTier);
+    const rarityColors = getUpgradeRarityColors(rarity);
+    const moveName = this.previewMoveName || allMoves[this.previewMoveId]?.name || "";
+    const titleText = `${moveName} ${Utils.intToRoman(tier)}`;
+    const subtitleText = `${i18next.t(`moveUpgradeAttrs:${category}`)} ${i18next.t("moveUpgradeAttrs:path")}`;
+    const bodyText = this.getTierPreviewBody(category, tier, maxTier);
+    this.detailsActive = true;
+    this.registerKeyboardHandlers(scene);
+    this.buildTooltip(scene, titleText, subtitleText, bodyText, rarityColors);
+  }
+
+  private static buildTooltip(scene: BattleScene, titleText: string, subtitleText: string, bodyText: string, rarityColors: { border: number; bg: number }): void {
+    this.destroyTooltipContainerOnly();
+    const c = this.TOOLTIP_CONSTANTS;
+    const tooltipWidth = this.TOOLTIP_WIDTH;
+    const padding = c.PADDING;
+    const buttonRowHeight = 10;
+    const enableDetails = this.previewCategory !== null && this.previewMaxTier > 1;
+    const buttonRowCount = enableDetails ? (this.detailsActive ? 2 : 1) : 0;
+
+    this.tooltipContainer = scene.add.container(0, 0);
+    this.tooltipContainer.setDepth(10000000000);
+
+    this.tooltipTitle = addTextObject(scene, tooltipWidth / 2, c.TITLE_TEXT_Y, titleText, TextStyle.SUMMARY_GOLD, {
+      fontSize: c.TITLE_FONT_SIZE, fontStyle: "bold"
+    });
+    this.tooltipTitle.setOrigin(0.5, 0.5);
+
+    this.tooltipSubtitle = addTextObject(scene, tooltipWidth / 2, c.RARITY_TEXT_Y, subtitleText, TextStyle.WINDOW, {
+      fontSize: "35px"
+    });
+    this.tooltipSubtitle.setOrigin(0.5, 0.5);
+    this.tooltipSubtitle.setTint(rarityColors.border);
+
+    this.tooltipBody = addBBCodeTextObject(scene, c.PADDING, c.CONTENT_Y, bodyText, TextStyle.WINDOW, { fontSize: c.BODY_FONT_SIZE });
+    this.applyBbCodeWordWrap(this.tooltipBody, tooltipWidth, padding);
+
+    const contentBottom = this.tooltipBody.y + this.tooltipBody.displayHeight;
+    const tooltipHeight = buttonRowCount > 0
+      ? contentBottom + padding + (buttonRowHeight * buttonRowCount) + padding
+      : contentBottom + padding;
+
+    this.tooltipBg = scene.add.graphics();
+    this.drawTooltipGradientBackground(this.tooltipBg, 0, 0, tooltipWidth, tooltipHeight, c.RADIUS);
+    this.tooltipBg.lineStyle(c.BORDER_THICKNESS, c.BORDER_COLOR, c.BORDER_ALPHA);
+    this.tooltipBg.strokeRoundedRect(0, 0, tooltipWidth, tooltipHeight, c.RADIUS);
+
+    this.tooltipTitleBarBg = scene.add.graphics();
+    this.tooltipTitleBarBg.fillStyle(rarityColors.border, c.TITLE_BAR_ALPHA);
+    this.tooltipTitleBarBg.fillRect(0, c.TITLE_BAR_Y, tooltipWidth, c.TITLE_BAR_HEIGHT);
+
+    this.tooltipRarityBarBg = scene.add.graphics();
+    this.tooltipRarityBarBg.fillStyle(rarityColors.bg, c.SUBHEADER_BAR_ALPHA);
+    this.tooltipRarityBarBg.fillRect(0, c.RARITY_BAR_Y, tooltipWidth, c.RARITY_BAR_HEIGHT);
+
+    if (enableDetails) {
+      if (this.detailsActive) {
+        this.navContainer = this.createNavRow(scene, tooltipWidth, tooltipHeight, padding, buttonRowHeight);
+        this.backButton = this.createBackButton(scene, tooltipWidth, tooltipHeight, padding, buttonRowHeight);
+      } else {
+        this.detailsButton = this.createDetailsButton(scene, tooltipWidth, tooltipHeight, padding, buttonRowHeight);
+      }
+    }
+
+    const children: Phaser.GameObjects.GameObject[] = [
+      this.tooltipBg,
+      this.tooltipTitleBarBg,
+      this.tooltipRarityBarBg,
+      this.tooltipTitle,
+      this.tooltipSubtitle,
+      this.tooltipBody
+    ];
+    if (this.detailsButton) {
+      children.push(this.detailsButton);
+    }
+    if (this.navContainer) {
+      children.push(this.navContainer);
+    }
+    if (this.backButton) {
+      children.push(this.backButton);
+    }
+    this.tooltipContainer.add(children);
+    this.tooltipContainer.setPosition(this.lastTooltipX, this.lastTooltipY);
+    scene.uiContainer.add(this.tooltipContainer);
+  }
+
+  private static createDetailsButton(scene: BattleScene, tooltipWidth: number, tooltipHeight: number, padding: number, buttonRowHeight: number): Phaser.GameObjects.Container {
+    const buttonY = tooltipHeight - padding - (buttonRowHeight / 2);
+    const container = scene.add.container(tooltipWidth / 2, buttonY);
+    const label = addTextObject(scene, 0, 0, i18next.t("nodeMode:tooltipDetails", { defaultValue: "More Info" }), TextStyle.WINDOW, { fontSize: "35px" });
+    label.setOrigin(0.5, 0.5);
+    container.add([label]);
+    container.setInteractive(new Phaser.Geom.Rectangle(-80, -8, 160, 16), Phaser.Geom.Rectangle.Contains);
+    container.on("pointerdown", () => this.rebuildTierPreviewTooltip());
+    return container;
+  }
+
+  private static createBackButton(scene: BattleScene, tooltipWidth: number, tooltipHeight: number, padding: number, buttonRowHeight: number): Phaser.GameObjects.Container {
+    const buttonY = tooltipHeight - padding - (buttonRowHeight / 2);
+    const container = scene.add.container(tooltipWidth / 2, buttonY);
+    const label = addTextObject(scene, 0, 0, i18next.t("nodeMode:tooltipBack", { defaultValue: "Back" }), TextStyle.WINDOW, { fontSize: "35px" });
+    label.setOrigin(0.5, 0.5);
+    container.add([label]);
+    container.setInteractive(new Phaser.Geom.Rectangle(-80, -8, 160, 16), Phaser.Geom.Rectangle.Contains);
+    container.on("pointerdown", () => this.rebuildComparisonTooltip());
+    return container;
+  }
+
+  private static createNavRow(scene: BattleScene, tooltipWidth: number, tooltipHeight: number, padding: number, buttonRowHeight: number): Phaser.GameObjects.Container {
+    const buttonY = tooltipHeight - padding - (buttonRowHeight * 1.5);
+    const container = scene.add.container(tooltipWidth / 2, buttonY);
+    const left = scene.add.image(-18, 0, "cursor_reverse");
+    left.setScale(0.5);
+    left.setOrigin(0.5, 0.5);
+    left.setInteractive({ useHandCursor: true });
+    left.on("pointerdown", () => {
+      if (this.previewTier > this.currentTier) {
+        this.previewTier--;
+        this.rebuildTierPreviewTooltip();
+      }
+    });
+    const right = scene.add.image(18, 0, "cursor");
+    right.setScale(0.5);
+    right.setOrigin(0.5, 0.5);
+    right.setInteractive({ useHandCursor: true });
+    right.on("pointerdown", () => {
+      if (this.previewTier < this.previewMaxTier) {
+        this.previewTier++;
+        this.rebuildTierPreviewTooltip();
+      }
+    });
+    const label = addTextObject(scene, 0, 0, `${Utils.intToRoman(this.previewTier)}/${Utils.intToRoman(this.previewMaxTier)}`, TextStyle.WINDOW, { fontSize: "35px" });
+    label.setOrigin(0.5, 0.5);
+    container.add([left, label, right]);
+    return container;
+  }
+
+  private static getMoveUpgradePathStep(category: UpgradeCategory, tier: number): any | null {
+    const index = tier - 1;
+    switch (category) {
+    case UpgradeCategory.POWER:
+      return MoveUpgrade.POWER_PATH[index] || null;
+    case UpgradeCategory.ACCURACY:
+      return MoveUpgrade.ACCURACY_PATH[index] || null;
+    case UpgradeCategory.HIT_HEAL:
+      return MoveUpgrade.HIT_HEAL_PATH[index] || null;
+    case UpgradeCategory.EFFECT_CHANCE:
+      return MoveUpgrade.EFFECT_CHANCE_PATH[index] || null;
+    case UpgradeCategory.CRIT:
+      return MoveUpgrade.CRIT_PATH[index] || null;
+    case UpgradeCategory.RECOIL_ADD:
+      return MoveUpgrade.RECOIL_ADD_PATH[index] || null;
+    case UpgradeCategory.RECOIL_DECREASE:
+      return MoveUpgrade.RECOIL_DECREASE_PATH[index] || null;
+    case UpgradeCategory.SACRIFICIAL:
+      return MoveUpgrade.SACRIFICIAL_PATH[index] || null;
+    case UpgradeCategory.CHARGE_MOVE:
+      return MoveUpgrade.CHARGE_MOVE_PATH[index] || null;
+    case UpgradeCategory.MULTI_HIT:
+      return MoveUpgrade.MULTI_HIT_PATH[index] || null;
+    case UpgradeCategory.POSITIVE_PRIORITY:
+      return MoveUpgrade.POSITIVE_PRIORITY_PATH[index] || null;
+    case UpgradeCategory.NEGATIVE_PRIORITY:
+      return MoveUpgrade.NEGATIVE_PRIORITY_PATH[index] || null;
+    case UpgradeCategory.ITEM_INTERACTION:
+      return MoveUpgrade.ITEM_INTERACTION_PATH[index] || null;
+    case UpgradeCategory.STATUS_IMPROVE:
+      return MoveUpgrade.STATUS_IMPROVE_PATH[index] || null;
+    case UpgradeCategory.STATUS_DUAL:
+      return MoveUpgrade.STATUS_DUAL_PATH[index] || null;
+    case UpgradeCategory.STAT_BOOST_SELF:
+      return MoveUpgrade.STAT_BOOST_SELF_PATH[index] || null;
+    case UpgradeCategory.STAT_LOWER_TARGET:
+      return MoveUpgrade.STAT_LOWER_TARGET_PATH[index] || null;
+    default:
+      return null;
+    }
+  }
+
+  private static formatPreviewValue(value: any): string {
+    if (typeof value === "number") {
+      if (!Number.isInteger(value) && value > 0 && value < 1) {
+        return `${Math.round(value * 1000) / 10}%`;
+      }
+      return value.toString();
+    }
+    if (typeof value === "string") {
+      return value;
+    }
+    if (typeof value === "boolean") {
+      return value ? "true" : "false";
+    }
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  }
+
+  private static getTierPreviewBody(category: UpgradeCategory, tier: number, maxTier: number): string {
+    const step = this.getMoveUpgradePathStep(category, tier);
+    if (!step) {
+      return "";
+    }
+    const lines: string[] = [];
+    lines.push(`${i18next.t(`moveUpgradeAttrs:${category}`)} ${i18next.t("moveUpgradeAttrs:path")} ${tier}/${maxTier}`);
+    lines.push("");
+    for (const [k, v] of Object.entries(step)) {
+      lines.push(`${k}: ${this.formatPreviewValue(v)}`);
+    }
+    return lines.join("\n");
+  }
+
+  private static registerKeyboardHandlers(scene: BattleScene): void {
+    if (!scene.input.keyboard) {
+      return;
+    }
+    if (!this.keyLeftHandler) {
+      this.keyLeftHandler = (event: KeyboardEvent) => {
+        if (this.detailsActive && this.previewTier > this.currentTier) {
+          event.preventDefault();
+          this.previewTier--;
+          this.rebuildTierPreviewTooltip();
+        }
+      };
+      scene.input.keyboard.on("keydown-LEFT", this.keyLeftHandler);
+    }
+    if (!this.keyRightHandler) {
+      this.keyRightHandler = (event: KeyboardEvent) => {
+        if (this.detailsActive && this.previewTier < this.previewMaxTier) {
+          event.preventDefault();
+          this.previewTier++;
+          this.rebuildTierPreviewTooltip();
+        }
+      };
+      scene.input.keyboard.on("keydown-RIGHT", this.keyRightHandler);
+    }
+    if (!this.keyEscapeHandler) {
+      this.keyEscapeHandler = (event: KeyboardEvent) => {
+        if (this.detailsActive) {
+          event.preventDefault();
+          this.rebuildComparisonTooltip();
+        }
+      };
+      scene.input.keyboard.on("keydown-ESC", this.keyEscapeHandler);
+    }
+  }
+
+  private static unregisterKeyboardHandlers(scene: BattleScene): void {
+    if (!scene.input.keyboard) {
+      return;
+    }
+    if (this.keyLeftHandler) {
+      scene.input.keyboard.off("keydown-LEFT", this.keyLeftHandler);
+      this.keyLeftHandler = null;
+    }
+    if (this.keyRightHandler) {
+      scene.input.keyboard.off("keydown-RIGHT", this.keyRightHandler);
+      this.keyRightHandler = null;
+    }
+    if (this.keyEscapeHandler) {
+      scene.input.keyboard.off("keydown-ESC", this.keyEscapeHandler);
+      this.keyEscapeHandler = null;
+    }
+  }
+
+  private static parseComparisonText(comparisonText: string): { titleText: string; subtitleText: string; bodyText: string } {
+
+    const lines = comparisonText.split("\n");
+    const stripBBCode = (text: string): string => {
+      return text.replace(/\[.*?\]/g, "").trim();
+    };
+
+    const titleText = lines.length > 0 ? stripBBCode(lines[0]) : "";
+    const subtitleText = lines.length > 1 ? stripBBCode(lines[1]) : "";
+    const bodyStartIndex = lines.length > 2 && lines[2].trim() === "" ? 3 : 2;
+    const bodyText = lines.slice(bodyStartIndex).join("\n");
+
+    return { titleText, subtitleText, bodyText };
+  }
+
+  private static drawTooltipGradientBackground(graphics: Phaser.GameObjects.Graphics, x: number, y: number, width: number, height: number, radius: number): void {
+
+    const topColor = { r: 106, g: 15, b: 58 };
+    const bottomColor = { r: 0, g: 0, b: 0 };
+    const gradientSteps = 48;
+
+    for (let step = 0; step < gradientSteps; step++) {
+      const stepY = y + (step / gradientSteps) * height;
+      const stepHeight = height / gradientSteps;
+      const rawFactor = step / (gradientSteps - 1);
+
+      const factor = Math.pow(rawFactor, 2.5);
+      const r = Math.floor(topColor.r * (1 - factor) + bottomColor.r * factor);
+      const g = Math.floor(topColor.g * (1 - factor) + bottomColor.g * factor);
+      const b = Math.floor(topColor.b * (1 - factor) + bottomColor.b * factor);
+      const color = (r << 16) | (g << 8) | b;
+
+      const remainingHeight = (y + height) - stepY;
+      if (remainingHeight <= 0) {
+        continue;
+      }
+      graphics.fillStyle(color, 1.0);
+      graphics.fillRect(x, stepY, width, Math.min(stepHeight, remainingHeight));
+    }
   }
 
   private static getTooltipHeight(comparisonText: string): number {

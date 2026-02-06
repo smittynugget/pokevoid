@@ -8,6 +8,7 @@ import * as Utils from "../utils";
 import { createSporadicPattern } from "../utils";
 import { ModalConfig, ModalUiHandler } from "./modal-ui-handler";
 import { getCurrentBattlePath, PathNodeType, getAvailablePathsFromWave, setupFixedBattlePaths, getDynamicModeLocalizedString, DynamicModes } from "../battle";
+import { PathNodeContext } from "../phases/battle-path-phase";
 import { Type } from "../data/type";
 import Overrides from "#app/overrides.js";
 import { isIPhone } from "../loading-scene";
@@ -49,7 +50,7 @@ function findNodeByPattern(battlePath: any, selectedPath: string): any | null {
     return null;
   }
 
-  const wave = parseInt(selectedPattern.split('_')[0], 10);
+  const wave = parseInt(selectedPattern.split("_")[0], 10);
   if (isNaN(wave)) {
     return null;
   }
@@ -110,6 +111,55 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     ALPHA: 0.8,
   };
 
+  private readonly CHALLENGE_ITEM = {
+    WIDTH: 52,
+    HEIGHT: 8,
+    SPACING: 1,
+    COLUMN_GAP: 2,
+    FONT_SIZE: "44px",
+    COLOR_RED: 0xff4444,
+    BORDER_FOCUSED_COLOR: 0xff4444,
+    BORDER_FOCUSED_ALPHA: 1.0,
+    BORDER_FOCUSED_THICKNESS: 1,
+    BORDER_UNFOCUSED_COLOR: 0x993333,
+    BORDER_UNFOCUSED_ALPHA: 0.7,
+    BORDER_UNFOCUSED_THICKNESS: 0.5,
+    BORDER_MARGIN_H: 2,
+    OUTER_COLUMN_MARGIN: 2,
+  };
+
+  private readonly CHALLENGE_DESC_TOOLTIP = {
+    WIDTH: 80,
+    PADDING: 6,
+    TITLE_BAR_Y: 0,
+    TITLE_BAR_HEIGHT: 12,
+    TITLE_BAR_COLOR: 0xff4444,
+    TITLE_BAR_ALPHA: 0.3,
+    RARITY_BAR_Y: 12,
+    RARITY_BAR_HEIGHT: 6,
+    RARITY_BAR_COLOR: 0x4d0000,
+    RARITY_BAR_ALPHA: 0.6,
+    CONTENT_Y: 20,
+    TITLE_FONT_SIZE: "40px",
+    RARITY_FONT_SIZE: "30px",
+    DESC_FONT_SIZE: "36px",
+    TITLE_TEXT_Y: 6,
+    RARITY_TEXT_Y: 15,
+    TEXT_SPACING: 4,
+    BORDER_COLOR: 0xffffff,
+    BORDER_ALPHA: 0.5,
+    BORDER_THICKNESS: 0.5,
+    GRADIENT_TOP: { r: 106, g: 15, b: 58 },
+    GRADIENT_BOTTOM: { r: 0, g: 0, b: 0 },
+  };
+
+  private readonly CHALLENGE_TOOLTIP_HEADER = {
+    HEIGHT: 8,
+    FONT_SIZE: "50px",
+    COLOR: 0xff4444,
+    PADDING_BOTTOM: 1,
+  };
+
   private isDragging: boolean = false;
   private dragStartY: number = 0;
   private dragStartScrollPosition: number = 0;
@@ -136,12 +186,27 @@ export default class BattlePathUiHandler extends ModalUiHandler {
   private tooltipScrollTween: Phaser.Tweens.Tween | null = null;
   private tooltipMaskGraphics: Phaser.GameObjects.Graphics | null = null;
 
-  private tooltipDetailsMode: boolean = false;
   private tooltipChallenges: Array<{name: string, description: string}> = [];
   private tooltipSelectedIndex: number = 0;
-  private tooltipChallengeTexts: Phaser.GameObjects.Text[] = [];
+  private tooltipSelectedColumn: number = 0;
+  private tooltipSelectedRow: number = 0;
+  private tooltipColumnItemCounts: number[] = [];
+  private tooltipColumnCount: number = 1;
   private tooltipDetailsButton: Phaser.GameObjects.Container | null = null;
   private tooltipBackButton: Phaser.GameObjects.Container | null = null;
+
+  private challengeItemContainers: Phaser.GameObjects.Container[] = [];
+  private challengeItemBgs: Phaser.GameObjects.Graphics[] = [];
+  private challengeDescTooltipContainer: Phaser.GameObjects.Container | null = null;
+  private challengeDescTooltipBg: Phaser.GameObjects.Graphics | null = null;
+  private challengeDescTooltipTitleBar: Phaser.GameObjects.Graphics | null = null;
+  private challengeDescTooltipRarityBar: Phaser.GameObjects.Graphics | null = null;
+  private challengeDescTooltipTitle: Phaser.GameObjects.Text | null = null;
+  private challengeDescTooltipRarity: Phaser.GameObjects.Text | null = null;
+  private challengeDescTooltipDesc: Phaser.GameObjects.Text | null = null;
+  private challengeNavigationActive: boolean = false;
+  private challengeHeaderText: Phaser.GameObjects.Text | null = null;
+  private mainTooltipHeight: number = 0;
 
   private modalBackgroundImage: Phaser.GameObjects.Image | null = null;
   private modalBackgroundCreated: boolean = false;
@@ -213,7 +278,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     this.viewOnlyMode = false;
 
     if (args && args.length > 0 && args[0]) {
-      if (typeof args[0].onNodeSelected === 'function') {
+      if (typeof args[0].onNodeSelected === "function") {
         this.onNodeSelected = args[0].onNodeSelected;
       }
       if (args[0].viewOnly === true) {
@@ -289,12 +354,12 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     this.hideCustomTooltip();
 
     if (this.pointermoveHandler) {
-      this.scene.input.off('pointermove', this.pointermoveHandler);
+      this.scene.input.off("pointermove", this.pointermoveHandler);
       this.pointermoveHandler = null;
     }
 
     if (this.pointerupHandler) {
-      this.scene.input.off('pointerup', this.pointerupHandler);
+      this.scene.input.off("pointerup", this.pointerupHandler);
       this.pointerupHandler = null;
     }
 
@@ -450,12 +515,12 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       if (this.pathContainer) {
         this.pathContainer.destroy();
       }
-    this.pathContainer = this.scene.add.container(this.PATH_CONTAINER_OFFSET.X, this.PATH_CONTAINER_OFFSET.Y);
-    this.pathContainer.setName("pathContainer");
-    this.modalContainer.add(this.pathContainer);
-  }
+      this.pathContainer = this.scene.add.container(this.PATH_CONTAINER_OFFSET.X, this.PATH_CONTAINER_OFFSET.Y);
+      this.pathContainer.setName("pathContainer");
+      this.modalContainer.add(this.pathContainer);
+    }
 
-  if (!this.connectionsContainer || !this.connectionsContainer.parentContainer) {
+    if (!this.connectionsContainer || !this.connectionsContainer.parentContainer) {
       if (this.connectionsContainer) {
         this.connectionsContainer.destroy();
       }
@@ -478,12 +543,12 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       if (this.legendContainer) {
         this.legendContainer.destroy();
       }
-    this.legendContainer = this.scene.add.container(this.PATH_CONTAINER_OFFSET.X, legendY);
-    this.legendContainer.setName("legendContainer");
-    this.modalContainer.add(this.legendContainer);
-  }
+      this.legendContainer = this.scene.add.container(this.PATH_CONTAINER_OFFSET.X, legendY);
+      this.legendContainer.setName("legendContainer");
+      this.modalContainer.add(this.legendContainer);
+    }
 
-  this.setupMouseDrag();
+    this.setupMouseDrag();
   }
 
   private async loadBattlePath(): Promise<void> {
@@ -538,7 +603,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       yOffset + this.WAVE_HEIGHT / 2,
       `${wave}`,
       TextStyle.WINDOW,
-      { fontSize: '40px', fontStyle: 'bold' }
+      { fontSize: "40px", fontStyle: "bold" }
     );
     waveLabel.setOrigin(0, 0.5);
     this.scrollContainer.add(waveLabel);
@@ -574,7 +639,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
     if (positions.length !== uniquePositions.size) {
       const duplicates = positions.filter((pos, index) => positions.indexOf(pos) !== index);
-      console.warn(`🎮 UI: Duplicate positions detected at wave ${wave}: [${duplicates.join(', ')}]`);
+      console.warn(`🎮 UI: Duplicate positions detected at wave ${wave}: [${duplicates.join(", ")}]`);
 
       const duplicateGroups = new Map<number, any[]>();
       nodes.forEach(node => {
@@ -586,7 +651,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
       duplicateGroups.forEach((group, position) => {
         if (group.length > 1) {
-          console.warn(`  Position ${position}: ${group.map(n => PathNodeType[n.nodeType]).join(', ')}`);
+          console.warn(`  Position ${position}: ${group.map(n => PathNodeType[n.nodeType]).join(", ")}`);
         }
       });
 
@@ -624,9 +689,9 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     const isActiveWave = wave === this.currentWave;
     const isAvailable = this.availableNodeIds.has(node.id);
     const nodeSize = isActiveWave ? this.NODE_SIZE : this.NODE_SIZE * 0.6;
-    const iconSize = isActiveWave ? '40px' : '30px';
-    const textSize = isActiveWave ? '50px' : '40px';
-    const subtitleSize = isActiveWave ? '32px' : '24px';
+    const iconSize = isActiveWave ? "40px" : "30px";
+    const textSize = isActiveWave ? "50px" : "40px";
+    const subtitleSize = isActiveWave ? "32px" : "24px";
 
     const previouslySelectedNode = this.getPreviouslySelectedNode();
     let nodeAlpha = 1.0;
@@ -729,7 +794,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       Phaser.Geom.Circle.Contains
     );
 
-    nodeContainer.on('pointerover', () => {
+    nodeContainer.on("pointerover", () => {
       this.hoveredNode = node.id;
       this.showTooltip(node, x, y);
 
@@ -744,7 +809,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       }
     });
 
-    nodeContainer.on('pointerout', () => {
+    nodeContainer.on("pointerout", () => {
       this.hoveredNode = null;
       this.scene.ui.hideTooltip();
       this.hideCustomTooltip();
@@ -760,7 +825,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       }
     });
 
-    nodeContainer.on('pointerup', () => {
+    nodeContainer.on("pointerup", () => {
       if (this.viewOnlyMode) {
         return;
       }
@@ -780,19 +845,21 @@ export default class BattlePathUiHandler extends ModalUiHandler {
         }
       }
       this.updateSelection();
-      try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3"); } catch {}
+      try {
+        (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3");
+      } catch {}
       this.selectNode(node);
     });
 
     nodeContainer.setAlpha(nodeAlpha);
 
-    nodeContainer.setData('isActiveWave', isActiveWave);
-    nodeContainer.setData('wave', wave);
-    nodeContainer.setData('nodeId', node.id);
-    nodeContainer.setData('hasSubtitle', !!subtitleText);
-    nodeContainer.setData('hasDynamicMode', !!(node.dynamicMode && Object.values(node.dynamicMode).some(value => value)));
-    nodeContainer.setData('shouldHideText', shouldHideText);
-    nodeContainer.setData('baseAlpha', nodeAlpha);
+    nodeContainer.setData("isActiveWave", isActiveWave);
+    nodeContainer.setData("wave", wave);
+    nodeContainer.setData("nodeId", node.id);
+    nodeContainer.setData("hasSubtitle", !!subtitleText);
+    nodeContainer.setData("hasDynamicMode", !!(node.dynamicMode && Object.values(node.dynamicMode).some(value => value)));
+    nodeContainer.setData("shouldHideText", shouldHideText);
+    nodeContainer.setData("baseAlpha", nodeAlpha);
 
     this.scrollContainer.add(nodeContainer);
     this.nodeButtons.set(node.id, nodeContainer);
@@ -917,7 +984,9 @@ export default class BattlePathUiHandler extends ModalUiHandler {
         const t1 = (i * (dashLength + gapLength)) / totalDistance;
         const t2 = ((i * (dashLength + gapLength)) + dashLength) / totalDistance;
 
-        if (t2 > 1) break;
+        if (t2 > 1) {
+          break;
+        }
 
         const x1 = startX + (endX - startX) * t1;
         const y1 = startY + (endY - startY) * t1;
@@ -942,7 +1011,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     let tooltipText = this.getNodeDescription(node.nodeType);
 
     if (node.dynamicMode) {
-      let modeDescriptions = this.getDynamicModeDescriptions(node.dynamicMode);
+      const modeDescriptions = this.getDynamicModeDescriptions(node.dynamicMode);
       if (modeDescriptions.length > 0) {
         modeDescriptions.forEach(mode => {
           tooltipText += `\n• ${mode.name}: `;
@@ -965,16 +1034,16 @@ export default class BattlePathUiHandler extends ModalUiHandler {
               const primaryType = strongestPokemon.getTypes()[0];
               node.dynamicMode.typeExtraDamage = primaryType;
               const localizationResult = getDynamicModeLocalizedString(DynamicModes.TYPE_EXTRA_DAMAGE);
-              tooltipText += `\n• ${localizationResult?.name || 'Type Extra Damage'}: 1.5x DMG to ${Type[primaryType]}\n`;
+              tooltipText += `\n• ${localizationResult?.name || "Type Extra Damage"}: 1.5x DMG to ${Type[primaryType]}\n`;
             }
 
             if (node.dynamicMode.pokemonNerf) {
               node.dynamicMode.pokemonNerf = strongestPokemon.species.speciesId;
               const localizationResult = getDynamicModeLocalizedString(DynamicModes.POKEMON_NERF);
-              tooltipText += `\n• ${localizationResult?.name || 'Pokemon Nerf'}: ${strongestPokemon.name} will deal half damage`;
+              tooltipText += `\n• ${localizationResult?.name || "Pokemon Nerf"}: ${strongestPokemon.name} will deal half damage`;
             }
           } else {
-            tooltipText += `\n\nNo available Pokemon to target`;
+            tooltipText += "\n\nNo available Pokemon to target";
           }
         }
       }
@@ -989,36 +1058,36 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     const modeDescriptions: Array<{name: string, description: string}> = [];
 
     const modeMap: { [key: string]: DynamicModes } = {
-      'isNuzlocke': DynamicModes.IS_NUZLOCKE,
-      'isNuzlight': DynamicModes.IS_NUZLIGHT,
-      'isNightmare': DynamicModes.IS_NIGHTMARE,
-      'noExpGain': DynamicModes.NO_EXP_GAIN,
-      'noCatch': DynamicModes.NO_CATCH,
-      'hasPassiveAbility': DynamicModes.HAS_PASSIVE_ABILITY,
-      'invertedTypes': DynamicModes.INVERTED_TYPES,
-      'boostedTrainer': DynamicModes.BOOSTED_TRAINER,
-      'multiLegendaries': DynamicModes.MULTI_LEGENDARIES,
-      'multiBoss': DynamicModes.MULTI_BOSS,
-      'noInitialSwitch': DynamicModes.NO_INITIAL_SWITCH,
-      'autoPressured': DynamicModes.AUTO_PRESSURED,
-      'noStatBoosts': DynamicModes.NO_STAT_BOOSTS,
-      'noStatusMoves': DynamicModes.NO_STATUS_MOVES,
-      'noPhysicalMoves': DynamicModes.NO_PHYSICAL_MOVES,
-      'noSpecialMoves': DynamicModes.NO_SPECIAL_MOVES,
-      'statSwap': DynamicModes.STAT_SWAP,
-      'noSTAB': DynamicModes.NO_STAB,
-      'trickRoom': DynamicModes.TRICK_ROOM,
-      'noSwitch': DynamicModes.NO_SWITCH,
-      'noResistances': DynamicModes.NO_RESISTANCES,
-      'noHealingItems': DynamicModes.NO_HEALING_ITEMS,
-      'autoTorment': DynamicModes.AUTO_TORMENT,
-      'legendaryNerf': DynamicModes.LEGENDARY_NERF,
-      'typeExtraDamage': DynamicModes.TYPE_EXTRA_DAMAGE,
-      'pokemonNerf': DynamicModes.POKEMON_NERF
+      "isNuzlocke": DynamicModes.IS_NUZLOCKE,
+      "isNuzlight": DynamicModes.IS_NUZLIGHT,
+      "isNightmare": DynamicModes.IS_NIGHTMARE,
+      "noExpGain": DynamicModes.NO_EXP_GAIN,
+      "noCatch": DynamicModes.NO_CATCH,
+      "hasPassiveAbility": DynamicModes.HAS_PASSIVE_ABILITY,
+      "invertedTypes": DynamicModes.INVERTED_TYPES,
+      "boostedTrainer": DynamicModes.BOOSTED_TRAINER,
+      "multiLegendaries": DynamicModes.MULTI_LEGENDARIES,
+      "multiBoss": DynamicModes.MULTI_BOSS,
+      "noInitialSwitch": DynamicModes.NO_INITIAL_SWITCH,
+      "autoPressured": DynamicModes.AUTO_PRESSURED,
+      "noStatBoosts": DynamicModes.NO_STAT_BOOSTS,
+      "noStatusMoves": DynamicModes.NO_STATUS_MOVES,
+      "noPhysicalMoves": DynamicModes.NO_PHYSICAL_MOVES,
+      "noSpecialMoves": DynamicModes.NO_SPECIAL_MOVES,
+      "statSwap": DynamicModes.STAT_SWAP,
+      "noSTAB": DynamicModes.NO_STAB,
+      "trickRoom": DynamicModes.TRICK_ROOM,
+      "noSwitch": DynamicModes.NO_SWITCH,
+      "noResistances": DynamicModes.NO_RESISTANCES,
+      "noHealingItems": DynamicModes.NO_HEALING_ITEMS,
+      "autoTorment": DynamicModes.AUTO_TORMENT,
+      "legendaryNerf": DynamicModes.LEGENDARY_NERF,
+      "typeExtraDamage": DynamicModes.TYPE_EXTRA_DAMAGE,
+      "pokemonNerf": DynamicModes.POKEMON_NERF
     };
 
     for (const [modeKey, value] of Object.entries(dynamicMode)) {
-      if (value && modeMap[modeKey] && modeKey !== 'typeExtraDamage' && modeKey !== 'pokemonNerf') {
+      if (value && modeMap[modeKey] && modeKey !== "typeExtraDamage" && modeKey !== "pokemonNerf") {
         const localizationResult = getDynamicModeLocalizedString(modeMap[modeKey]);
         if (localizationResult) {
           modeDescriptions.push({
@@ -1028,8 +1097,43 @@ export default class BattlePathUiHandler extends ModalUiHandler {
         }
       }
     }
-    true
+    true;
     return modeDescriptions;
+  }
+
+  private calculateColumnLayout(itemCount: number): { columns: number, itemsPerColumn: number[] } {
+    if (itemCount <= 14) {
+      return { columns: 1, itemsPerColumn: [itemCount] };
+    } else if (itemCount <= 20) {
+      const col1 = Math.ceil(itemCount / 2);
+      const col2 = itemCount - col1;
+      return { columns: 2, itemsPerColumn: [col1, col2] };
+    } else {
+      const cappedCount = Math.min(itemCount, 30);
+      const col1 = Math.ceil(cappedCount / 3);
+      const col2 = Math.ceil((cappedCount - col1) / 2);
+      const col3 = cappedCount - col1 - col2;
+      return { columns: 3, itemsPerColumn: [col1, col2, col3] };
+    }
+  }
+
+  private getLinearIndexFromColumnRow(column: number, row: number): number {
+    let index = 0;
+    for (let c = 0; c < column; c++) {
+      index += this.tooltipColumnItemCounts[c];
+    }
+    return index + row;
+  }
+
+  private getColumnRowFromLinearIndex(linearIndex: number): { column: number, row: number } {
+    let remaining = linearIndex;
+    for (let c = 0; c < this.tooltipColumnItemCounts.length; c++) {
+      if (remaining < this.tooltipColumnItemCounts[c]) {
+        return { column: c, row: remaining };
+      }
+      remaining -= this.tooltipColumnItemCounts[c];
+    }
+    return { column: 0, row: 0 };
   }
 
   private showCustomTooltip(tooltipText: string, x: number, y: number, challengeCount: number, challenges?: Array<{name: string, description: string}>): void {
@@ -1037,112 +1141,367 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
     this.tooltipChallenges = challenges || [];
     this.tooltipSelectedIndex = 0;
-    this.tooltipDetailsMode = false;
+    this.tooltipSelectedColumn = 0;
+    this.tooltipSelectedRow = 0;
+    this.challengeNavigationActive = false;
+    this.challengeItemContainers = [];
+    this.challengeItemBgs = [];
 
-    let displayText = tooltipText;
-    if (this.tooltipChallenges.length > 0) {
-      displayText = "";
-      this.tooltipChallenges.forEach((challenge) => {
-        const truncated = challenge.description.length > 40
-          ? challenge.description.substring(0, 40) + '...'
-          : challenge.description;
-        displayText += `• ${challenge.name}: ${truncated}\n`;
-      });
-    }
+    const padding = 4;
+    const c = this.CHALLENGE_ITEM;
+    const h = this.CHALLENGE_TOOLTIP_HEADER;
 
-    const tooltipWidth = 1200;
-    const tooltipHeight = challengeCount > 6 ? 1000 : 500;
-    const showManyLines = challengeCount > 6;
-    const padding = 16;
+    const itemCount = this.tooltipChallenges.length;
+    const { columns, itemsPerColumn } = this.calculateColumnLayout(itemCount);
+    this.tooltipColumnCount = columns;
+    this.tooltipColumnItemCounts = itemsPerColumn;
 
-    const screenWidth = this.scene.cameras.main.width;
-    const nodeScreenX = x + this.pathContainer.x + this.modalContainer.x;
+    const maxItemsInColumn = Math.max(...itemsPerColumn, 0);
+    const headerHeight = itemCount > 0 ? h.HEIGHT + h.PADDING_BOTTOM : 0;
+    const contentHeight = itemCount > 0
+      ? maxItemsInColumn * (c.HEIGHT + c.SPACING) - c.SPACING
+      : 0;
+    const buttonHeight = 10;
+    const outerMargin = columns > 1 ? c.OUTER_COLUMN_MARGIN * 2 : 0;
+    const tooltipWidth = columns * c.WIDTH + (columns - 1) * c.COLUMN_GAP + padding * 2 + outerMargin;
+    const tooltipHeight = headerHeight + contentHeight + buttonHeight + padding * 2;
+    this.mainTooltipHeight = tooltipHeight;
+
+    const nodeLocalX = x + this.pathContainer.x;
+    const nodeLocalY = y + this.pathContainer.y;
+    const modalWidth = this.getWidth();
+    const modalHeight = this.getHeight();
 
     let tooltipX: number;
     let tooltipY: number;
 
-    if (nodeScreenX > screenWidth / 2) {
-      tooltipX = nodeScreenX - tooltipWidth - 20;
+    if (nodeLocalX > modalWidth / 2) {
+      tooltipX = nodeLocalX - tooltipWidth - 10;
     } else {
-      tooltipX = nodeScreenX + 50;
+      tooltipX = nodeLocalX + 20;
     }
 
-    tooltipY = Math.max(20, Math.min(this.scene.cameras.main.height - tooltipHeight - 20, y + this.pathContainer.y + this.modalContainer.y - tooltipHeight / 2));
-    let tooltipYPosition = showManyLines ? tooltipY + tooltipHeight / 2 : this.scene.cameras.main.height / 2;
+    tooltipX = Math.max(5, Math.min(modalWidth - tooltipWidth - 5, tooltipX));
 
-    this.customTooltipContainer = this.scene.add.container(tooltipX + tooltipWidth / 2, tooltipYPosition);
-    this.customTooltipContainer.setDepth(1000);
+    tooltipY = Math.max(10, Math.min(
+      modalHeight - tooltipHeight - 10,
+      nodeLocalY - tooltipHeight / 2
+    ));
 
-    const tooltipBg = addWindow(this.scene, -tooltipWidth / 2, -tooltipHeight / 2, tooltipWidth, tooltipHeight);
+    this.customTooltipContainer = this.scene.add.container(tooltipX, tooltipY);
+    this.modalContainer.add(this.customTooltipContainer);
+    this.modalContainer.bringToTop(this.customTooltipContainer);
+
+    const tooltipBg = addWindow(this.scene, 0, 0, tooltipWidth, tooltipHeight);
     tooltipBg.setAlpha(0.9);
     this.customTooltipContainer.add(tooltipBg);
-    this.customTooltipText = addTextObject(
-      this.scene,
-      -tooltipWidth / 2 + padding,
-      -tooltipHeight / 2 + padding,
-      displayText,
-      TextStyle.WINDOW,
-      {
-        fontSize: '300px'
-      }
-    );
-    this.customTooltipText.setOrigin(0, 0);
-    this.customTooltipContainer.add(this.customTooltipText);
-
-    const textMaskRect = this.scene.make.graphics({});
-    this.tooltipMaskGraphics = textMaskRect;
-    textMaskRect.fillStyle(0xFFFFFF);
-    textMaskRect.beginPath();
-    textMaskRect.fillRect(
-      this.customTooltipContainer.x - tooltipWidth / 2 + padding,
-      this.customTooltipContainer.y - tooltipHeight / 2 + padding,
-      tooltipWidth - padding * 2,
-      tooltipHeight - padding * 2
-    );
-
-    const textMask = textMaskRect.createGeometryMask();
-    this.customTooltipText.setMask(textMask);
-
-    const textLineHeight = 16;
-    const visibleLines = Math.floor((tooltipHeight - padding * 2) / textLineHeight);
-    const totalLines = Math.ceil(this.customTooltipText.displayHeight / textLineHeight);
-
-    if (totalLines > visibleLines && this.tooltipChallenges.length === 0) {
-      this.startTooltipScrolling(totalLines, visibleLines, textLineHeight, showManyLines);
-    }
 
     if (this.tooltipChallenges.length > 0) {
+      this.challengeHeaderText = addTextObject(
+        this.scene,
+        tooltipWidth / 2,
+        padding + h.HEIGHT / 2,
+        i18next.t("nodeMode:challengeHeader", { defaultValue: "CHALLENGE!" }),
+        TextStyle.WINDOW,
+        { fontSize: h.FONT_SIZE, fontStyle: "bold" }
+      );
+      this.challengeHeaderText.setOrigin(0.5, 0.5);
+      this.challengeHeaderText.setTint(h.COLOR);
+      this.customTooltipContainer.add(this.challengeHeaderText);
+
+      let linearIndex = 0;
+      for (let col = 0; col < columns; col++) {
+        const outerOffset = columns > 1 ? c.OUTER_COLUMN_MARGIN : 0;
+        const columnX = padding + outerOffset + c.WIDTH / 2 + col * (c.WIDTH + c.COLUMN_GAP);
+        let yOffset = padding + headerHeight;
+
+        for (let row = 0; row < itemsPerColumn[col]; row++) {
+          const challenge = this.tooltipChallenges[linearIndex];
+          if (!challenge) {
+            break;
+          }
+
+          const { container, bg } = this.createChallengeItemElement(
+            challenge.name,
+            columnX,
+            yOffset + c.HEIGHT / 2,
+            false
+          );
+          this.customTooltipContainer!.add(container);
+          this.challengeItemContainers.push(container);
+          this.challengeItemBgs.push(bg);
+
+          yOffset += c.HEIGHT + c.SPACING;
+          linearIndex++;
+        }
+      }
+
+      this.createChallengeDescTooltip();
       this.createDetailsButton(tooltipWidth, tooltipHeight, padding);
+    } else {
+      this.customTooltipText = addTextObject(
+        this.scene,
+        -tooltipWidth / 2 + padding,
+        -tooltipHeight / 2 + padding,
+        tooltipText,
+        TextStyle.WINDOW,
+        { fontSize: "300px" }
+      );
+      this.customTooltipText.setOrigin(0, 0);
+      this.customTooltipContainer.add(this.customTooltipText);
+
+      const textMaskRect = this.scene.make.graphics({});
+      this.tooltipMaskGraphics = textMaskRect;
+      textMaskRect.fillStyle(0xFFFFFF);
+      textMaskRect.beginPath();
+      textMaskRect.fillRect(
+        this.customTooltipContainer.x - tooltipWidth / 2 + padding,
+        this.customTooltipContainer.y - tooltipHeight / 2 + padding,
+        tooltipWidth - padding * 2,
+        tooltipHeight - padding * 2
+      );
+
+      const textMask = textMaskRect.createGeometryMask();
+      this.customTooltipText.setMask(textMask);
+
+      const textLineHeight = 16;
+      const visibleLines = Math.floor((tooltipHeight - padding * 2) / textLineHeight);
+      const totalLines = Math.ceil(this.customTooltipText.displayHeight / textLineHeight);
+
+      if (totalLines > visibleLines) {
+        this.startTooltipScrolling(totalLines, visibleLines, textLineHeight, showManyLines);
+      }
     }
   }
 
-  private startTooltipScrolling(totalLines: number, visibleLines: number, lineHeight: number, showManyLines: boolean = false): void {
-    if (this.tooltipScrollTween) {
-      this.tooltipScrollTween.remove();
-      this.tooltipScrollTween = null;
-    }
+  private createChallengeItemElement(
+    name: string,
+    x: number,
+    y: number,
+    isSelected: boolean
+  ): { container: Phaser.GameObjects.Container; bg: Phaser.GameObjects.Graphics } {
+    const c = this.CHALLENGE_ITEM;
+    const container = this.scene.add.container(x, y);
 
-    if (!this.customTooltipText) {
+    const bg = this.scene.add.graphics();
+
+    const borderColor = isSelected ? c.BORDER_FOCUSED_COLOR : c.BORDER_UNFOCUSED_COLOR;
+    const borderAlpha = isSelected ? c.BORDER_FOCUSED_ALPHA : c.BORDER_UNFOCUSED_ALPHA;
+    const borderThickness = isSelected ? c.BORDER_FOCUSED_THICKNESS : c.BORDER_UNFOCUSED_THICKNESS;
+
+    const borderWidth = c.WIDTH - c.BORDER_MARGIN_H * 2;
+    bg.lineStyle(borderThickness, borderColor, borderAlpha);
+    bg.strokeRect(-borderWidth / 2, -c.HEIGHT / 2, borderWidth, c.HEIGHT);
+
+    const text = addTextObject(
+      this.scene,
+      0,
+      0,
+      name,
+      TextStyle.WINDOW,
+      { fontSize: c.FONT_SIZE }
+    );
+    text.setOrigin(0.5, 0.5);
+
+    container.add(bg);
+    container.add(text);
+
+    return { container, bg };
+  }
+
+  private createChallengeDescTooltip(): void {
+    if (!this.customTooltipContainer) {
       return;
     }
 
-    const scrollDistance = (totalLines - visibleLines) * lineHeight;
-    const initialY = this.customTooltipText.y;
+    const c = this.CHALLENGE_DESC_TOOLTIP;
 
-    this.tooltipScrollTween = this.scene.tweens.add({
-      targets: this.customTooltipText,
-      delay: Utils.fixedInt(showManyLines ? 7000 : 3500),
-      loop: -1,
-      hold: Utils.fixedInt(showManyLines ? 10000 : 5000),
-      duration: Utils.fixedInt(scrollDistance * 15),
-      y: initialY - scrollDistance,
-      ease: 'Linear',
-      yoyo: false,
-      onComplete: () => {
-        if (this.customTooltipText) {
-          this.customTooltipText.setY(initialY);
-        }
+    this.challengeDescTooltipContainer = this.scene.add.container(0, 0);
+    this.challengeDescTooltipContainer.setVisible(false);
+
+    this.challengeDescTooltipBg = this.scene.add.graphics();
+    this.challengeDescTooltipTitleBar = this.scene.add.graphics();
+    this.challengeDescTooltipRarityBar = this.scene.add.graphics();
+
+    this.challengeDescTooltipTitle = addTextObject(
+      this.scene,
+      c.WIDTH / 2,
+      c.TITLE_TEXT_Y,
+      "",
+      TextStyle.WINDOW,
+      { fontSize: c.TITLE_FONT_SIZE, fontStyle: "bold" }
+    );
+    this.challengeDescTooltipTitle.setOrigin(0.5, 0.5);
+
+    this.challengeDescTooltipRarity = addTextObject(
+      this.scene,
+      c.WIDTH / 2,
+      c.RARITY_TEXT_Y,
+      i18next.t("nodeMode:challengeHeader", { defaultValue: "CHALLENGE!" }),
+      TextStyle.WINDOW,
+      { fontSize: c.RARITY_FONT_SIZE }
+    );
+    this.challengeDescTooltipRarity.setOrigin(0.5, 0.5);
+    this.challengeDescTooltipRarity.setTint(0xff4444);
+
+    this.challengeDescTooltipDesc = addTextObject(
+      this.scene,
+      c.PADDING,
+      c.CONTENT_Y + 2,
+      "",
+      TextStyle.WINDOW,
+      { fontSize: c.DESC_FONT_SIZE }
+    );
+    this.challengeDescTooltipDesc.setOrigin(0, 0);
+    this.challengeDescTooltipDesc.setWordWrapWidth((c.WIDTH - c.PADDING * 2) * 6);
+
+    this.challengeDescTooltipContainer.add(this.challengeDescTooltipBg);
+    this.challengeDescTooltipContainer.add(this.challengeDescTooltipTitleBar);
+    this.challengeDescTooltipContainer.add(this.challengeDescTooltipRarityBar);
+    this.challengeDescTooltipContainer.add(this.challengeDescTooltipTitle);
+    this.challengeDescTooltipContainer.add(this.challengeDescTooltipRarity);
+    this.challengeDescTooltipContainer.add(this.challengeDescTooltipDesc);
+
+    this.customTooltipContainer.add(this.challengeDescTooltipContainer);
+  }
+
+  private drawChallengeTooltipGradient(
+    graphics: Phaser.GameObjects.Graphics,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): void {
+    const c = this.CHALLENGE_DESC_TOOLTIP;
+    const topColor = c.GRADIENT_TOP;
+    const bottomColor = c.GRADIENT_BOTTOM;
+
+    const gradientSteps = 24;
+
+    for (let step = 0; step < gradientSteps; step++) {
+      const stepY = y + (step / gradientSteps) * height;
+      const stepHeight = height / gradientSteps;
+
+      const rawFactor = step / (gradientSteps - 1);
+      const factor = Math.pow(rawFactor, 2.5);
+
+      const r = Math.floor(topColor.r * (1 - factor) + bottomColor.r * factor);
+      const g = Math.floor(topColor.g * (1 - factor) + bottomColor.g * factor);
+      const b = Math.floor(topColor.b * (1 - factor) + bottomColor.b * factor);
+      const color = (r << 16) | (g << 8) | b;
+
+      graphics.fillStyle(color, 1.0);
+      graphics.fillRect(x, stepY, width, stepHeight + (step < gradientSteps - 1 ? 1 : 0));
+    }
+  }
+
+  private updateChallengeDescTooltip(): void {
+    if (!this.challengeDescTooltipContainer ||
+        !this.challengeDescTooltipBg ||
+        !this.challengeDescTooltipTitle ||
+        !this.challengeDescTooltipDesc ||
+        !this.challengeDescTooltipTitleBar ||
+        !this.challengeDescTooltipRarityBar) {
+      return;
+    }
+
+    const challenge = this.tooltipChallenges[this.tooltipSelectedIndex];
+    if (!challenge) {
+      this.challengeDescTooltipContainer.setVisible(false);
+      return;
+    }
+
+    const c = this.CHALLENGE_DESC_TOOLTIP;
+
+    this.challengeDescTooltipTitle.setText(challenge.name);
+    this.challengeDescTooltipDesc.setText(challenge.description);
+
+    const descHeight = this.challengeDescTooltipDesc.displayHeight;
+    const barsHeight = c.TITLE_BAR_HEIGHT + c.RARITY_BAR_HEIGHT;
+    const contentHeight = descHeight + c.TEXT_SPACING;
+    const tooltipHeight = barsHeight + contentHeight + c.PADDING * 2;
+
+    this.challengeDescTooltipBg.clear();
+    this.drawChallengeTooltipGradient(
+      this.challengeDescTooltipBg,
+      0, 0,
+      c.WIDTH,
+      tooltipHeight
+    );
+    this.challengeDescTooltipBg.lineStyle(c.BORDER_THICKNESS, c.BORDER_COLOR, c.BORDER_ALPHA);
+    this.challengeDescTooltipBg.strokeRect(0, 0, c.WIDTH, tooltipHeight);
+
+    this.challengeDescTooltipTitleBar.clear();
+    this.challengeDescTooltipTitleBar.fillStyle(c.TITLE_BAR_COLOR, c.TITLE_BAR_ALPHA);
+    this.challengeDescTooltipTitleBar.fillRect(0, c.TITLE_BAR_Y, c.WIDTH, c.TITLE_BAR_HEIGHT);
+
+    this.challengeDescTooltipRarityBar.clear();
+    this.challengeDescTooltipRarityBar.fillStyle(c.RARITY_BAR_COLOR, c.RARITY_BAR_ALPHA);
+    this.challengeDescTooltipRarityBar.fillRect(0, c.RARITY_BAR_Y, c.WIDTH, c.RARITY_BAR_HEIGHT);
+
+    const selectedItem = this.challengeItemContainers[this.tooltipSelectedIndex];
+    if (selectedItem) {
+      const itemCenterY = selectedItem.y;
+      const minY = 0;
+      const maxY = Math.max(0, this.mainTooltipHeight - tooltipHeight);
+      const rawTooltipY = itemCenterY - tooltipHeight / 2;
+      const clampedTooltipY = Math.max(minY, Math.min(maxY, rawTooltipY));
+      this.challengeDescTooltipContainer.setY(clampedTooltipY);
+
+      const mainTooltipX = this.customTooltipContainer?.x || 0;
+      const mainTooltipWidth = this.tooltipColumnCount * this.CHALLENGE_ITEM.WIDTH +
+                               (this.tooltipColumnCount - 1) * this.CHALLENGE_ITEM.COLUMN_GAP + 8;
+      const modalWidth = this.getWidth();
+
+      const spaceOnLeft = mainTooltipX;
+      const spaceOnRight = modalWidth - (mainTooltipX + mainTooltipWidth);
+
+      if (spaceOnLeft > spaceOnRight && spaceOnLeft >= c.WIDTH + 7) {
+        this.challengeDescTooltipContainer.setX(-c.WIDTH - 7);
+      } else {
+        this.challengeDescTooltipContainer.setX(mainTooltipWidth + 7);
       }
+    }
+
+    this.challengeDescTooltipContainer.setVisible(true);
+  }
+
+  private updateChallengeSelection(): void {
+    if (this.challengeItemContainers.length === 0 || this.challengeItemBgs.length === 0) {
+      return;
+    }
+
+    const c = this.CHALLENGE_ITEM;
+    const borderWidth = c.WIDTH - c.BORDER_MARGIN_H * 2;
+
+    this.challengeItemBgs.forEach((bg, index) => {
+      const isSelected = index === this.tooltipSelectedIndex;
+
+      bg.clear();
+
+      const borderColor = isSelected ? c.BORDER_FOCUSED_COLOR : c.BORDER_UNFOCUSED_COLOR;
+      const borderAlpha = isSelected ? c.BORDER_FOCUSED_ALPHA : c.BORDER_UNFOCUSED_ALPHA;
+      const borderThickness = isSelected ? c.BORDER_FOCUSED_THICKNESS : c.BORDER_UNFOCUSED_THICKNESS;
+
+      bg.lineStyle(borderThickness, borderColor, borderAlpha);
+      bg.strokeRect(-borderWidth / 2, -c.HEIGHT / 2, borderWidth, c.HEIGHT);
+    });
+
+    this.updateChallengeDescTooltip();
+  }
+
+  private clearChallengeSelectionHighlight(): void {
+    if (this.challengeItemBgs.length === 0) {
+      return;
+    }
+
+    const c = this.CHALLENGE_ITEM;
+    const borderWidth = c.WIDTH - c.BORDER_MARGIN_H * 2;
+
+    this.challengeItemBgs.forEach((bg) => {
+      bg.clear();
+      bg.lineStyle(c.BORDER_UNFOCUSED_THICKNESS, c.BORDER_UNFOCUSED_COLOR, c.BORDER_UNFOCUSED_ALPHA);
+      bg.strokeRect(-borderWidth / 2, -c.HEIGHT / 2, borderWidth, c.HEIGHT);
     });
   }
 
@@ -1153,6 +1512,9 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     }
 
     if (this.customTooltipContainer) {
+      if (this.customTooltipContainer.parentContainer) {
+        this.customTooltipContainer.parentContainer.remove(this.customTooltipContainer);
+      }
       this.customTooltipContainer.destroy();
       this.customTooltipContainer = null;
     }
@@ -1162,36 +1524,52 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       this.tooltipMaskGraphics = null;
     }
 
-    this.tooltipDetailsMode = false;
+    this.challengeNavigationActive = false;
     this.tooltipChallenges = [];
     this.tooltipSelectedIndex = 0;
-    this.tooltipChallengeTexts = [];
+    this.tooltipSelectedColumn = 0;
+    this.tooltipSelectedRow = 0;
+    this.tooltipColumnItemCounts = [];
+    this.tooltipColumnCount = 1;
+    this.challengeItemContainers = [];
+    this.challengeItemBgs = [];
     this.tooltipDetailsButton = null;
     this.tooltipBackButton = null;
+    this.challengeHeaderText = null;
+
+    this.challengeDescTooltipContainer = null;
+    this.challengeDescTooltipBg = null;
+    this.challengeDescTooltipTitleBar = null;
+    this.challengeDescTooltipRarityBar = null;
+    this.challengeDescTooltipTitle = null;
+    this.challengeDescTooltipRarity = null;
+    this.challengeDescTooltipDesc = null;
 
     this.customTooltipText = null;
+    this.mainTooltipHeight = 0;
   }
 
-  private enterTooltipDetailsMode(): void {
-    this.tooltipDetailsMode = true;
+  private enterChallengeNavigationMode(): void {
+    this.challengeNavigationActive = true;
     this.tooltipSelectedIndex = 0;
-
-    if (this.tooltipScrollTween) {
-      this.tooltipScrollTween.remove();
-      this.tooltipScrollTween = null;
-    }
+    this.tooltipSelectedColumn = 0;
+    this.tooltipSelectedRow = 0;
 
     if (this.tooltipDetailsButton) {
       this.tooltipDetailsButton.setVisible(false);
     }
 
-    this.updateTooltipDetailsDisplay();
+    if (this.tooltipBackButton) {
+      this.tooltipBackButton.setVisible(true);
+    }
+
+    this.updateChallengeSelection();
 
     this.scene.ui.playSelect();
   }
 
-  private exitTooltipDetailsMode(): void {
-    this.tooltipDetailsMode = false;
+  private exitChallengeNavigationMode(): void {
+    this.challengeNavigationActive = false;
 
     if (this.tooltipDetailsButton) {
       this.tooltipDetailsButton.setVisible(true);
@@ -1200,60 +1578,24 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       this.tooltipBackButton.setVisible(false);
     }
 
-    this.updateTooltipTruncatedDisplay();
+    if (this.challengeDescTooltipContainer) {
+      this.challengeDescTooltipContainer.setVisible(false);
+    }
+
+    this.clearChallengeSelectionHighlight();
 
     this.scene.ui.playSelect();
   }
 
-  private updateTooltipDetailsDisplay(): void {
-    if (!this.customTooltipContainer || !this.customTooltipText || this.tooltipChallenges.length === 0) {
-      return;
-    }
-
-    let displayText = "";
-    this.tooltipChallenges.forEach((challenge, index) => {
-      const isSelected = index === this.tooltipSelectedIndex;
-
-      if (isSelected) {
-        displayText += `► ${challenge.name}:\n  ${challenge.description}\n\n`;
-      } else {
-        const truncated = challenge.description.length > 30
-          ? challenge.description.substring(0, 30) + '...'
-          : challenge.description;
-        displayText += `• ${challenge.name}: ${truncated}\n`;
-      }
-    });
-
-    this.customTooltipText.setText(displayText);
-    this.customTooltipText.setY(-this.customTooltipText.displayHeight / 2 + 16);
-
-    if (this.tooltipBackButton) {
-      this.tooltipBackButton.setVisible(true);
-    }
-  }
-
-  private updateTooltipTruncatedDisplay(): void {
-    if (!this.customTooltipContainer || !this.customTooltipText || this.tooltipChallenges.length === 0) {
-      return;
-    }
-
-    let displayText = "";
-    this.tooltipChallenges.forEach((challenge) => {
-      const truncated = challenge.description.length > 40
-        ? challenge.description.substring(0, 40) + '...'
-        : challenge.description;
-      displayText += `• ${challenge.name}: ${truncated}\n`;
-    });
-
-    this.customTooltipText.setText(displayText);
-  }
-
   private createDetailsButton(tooltipWidth: number, tooltipHeight: number, padding: number): void {
-    if (!this.customTooltipContainer) return;
+    if (!this.customTooltipContainer) {
+      return;
+    }
 
-    const buttonY = tooltipHeight / 2 - padding - 30;
+    const buttonY = tooltipHeight - padding - 4;
+    const buttonX = tooltipWidth / 2;
 
-    this.tooltipDetailsButton = this.scene.add.container(0, buttonY);
+    this.tooltipDetailsButton = this.scene.add.container(buttonX, buttonY);
 
     let gamepadType: string;
     if (this.scene.inputMethod === "gamepad") {
@@ -1269,42 +1611,50 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     let iconPath: string;
     const isGamepad = gamepadType !== "keyboard" && this.scene.inputMethod !== "touch";
     if (!isGamepad) {
-      iconPath = "C.png";
+      iconPath = "E.png";
     } else {
-      iconPath = this.scene.inputController?.getIconForLatestInputRecorded("BUTTON_CYCLE_ABILITY") || "C.png";
+      iconPath = this.scene.inputController?.getIconForLatestInputRecorded("BUTTON_CYCLE_ABILITY") || "E.png";
     }
 
-    const keySprite = this.scene.add.sprite(-70, 0, gamepadType);
+    const keySprite = this.scene.add.sprite(-12, 0, gamepadType);
     keySprite.setFrame(iconPath);
-    keySprite.setScale(isGamepad ? 0.8 : 0.7);
+    keySprite.setScale(isGamepad ? 0.62 : 0.5);
     keySprite.setOrigin(0.5, 0.5);
 
     const detailsLabel = addTextObject(
       this.scene,
-      -35,
+      0,
       0,
       i18next.t("nodeMode:tooltipDetails", { defaultValue: "DETAILS" }),
       TextStyle.WINDOW,
-      { fontSize: '200px' }
+      { fontSize: "35px" }
     );
-    detailsLabel.setOrigin(0, 0.5);
+    detailsLabel.setOrigin(0.5, 0.5);
 
     this.tooltipDetailsButton.add([keySprite, detailsLabel]);
     this.customTooltipContainer.add(this.tooltipDetailsButton);
 
-    this.tooltipBackButton = this.scene.add.container(0, buttonY);
+    this.tooltipBackButton = this.scene.add.container(buttonX, buttonY);
+
+    const backIconPath = this.scene.inputController?.getIconForLatestInputRecorded("BUTTON_CANCEL") || "BACK.png";
+
+    const backKeySprite = this.scene.add.sprite(-10, 0, gamepadType);
+    backKeySprite.setFrame(backIconPath);
+    backKeySprite.setScale(isGamepad ? 0.62 : 0.5);
+    backKeySprite.setOrigin(0.5, 0.5);
 
     const backLabel = addTextObject(
       this.scene,
       0,
       0,
-      i18next.t("nodeMode:tooltipBack", { defaultValue: "Back" }) + " (B)",
+      i18next.t("nodeMode:tooltipBack", { defaultValue: "Back" }),
       TextStyle.WINDOW,
-      { fontSize: '200px' }
+      { fontSize: "35px" }
     );
-    backLabel.setOrigin(0.5, 0.5);
+    backLabel.setOrigin(0, 0.5);
+    backLabel.x = backKeySprite.x + (backKeySprite.displayWidth / 2) + 1;
 
-    this.tooltipBackButton.add(backLabel);
+    this.tooltipBackButton.add([backKeySprite, backLabel]);
     this.tooltipBackButton.setVisible(false);
     this.customTooltipContainer.add(this.tooltipBackButton);
   }
@@ -1444,11 +1794,11 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
     this.nodeButtons.forEach((container, nodeId) => {
       const isSelected = nodeId === this.selectedNodeId;
-      const isActiveWave = container.getData('isActiveWave');
-      const hasSubtitle = container.getData('hasSubtitle');
-      const hasDynamicMode = container.getData('hasDynamicMode');
-      const shouldHideText = container.getData('shouldHideText') || false;
-      const baseAlpha = container.getData('baseAlpha') || 1.0;
+      const isActiveWave = container.getData("isActiveWave");
+      const hasSubtitle = container.getData("hasSubtitle");
+      const hasDynamicMode = container.getData("hasDynamicMode");
+      const shouldHideText = container.getData("shouldHideText") || false;
+      const baseAlpha = container.getData("baseAlpha") || 1.0;
       const isAvailable = this.availableNodeIds.has(nodeId);
 
       const icon = container.list[0] as Phaser.GameObjects.Sprite;
@@ -1506,8 +1856,8 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       i18next.t("nodeMode:noPathMessage"),
       TextStyle.WINDOW,
       {
-        fontSize: '12px',
-        align: 'center'
+        fontSize: "12px",
+        align: "center"
       }
     );
     messageText.setOrigin(0.5, 0.5);
@@ -1516,69 +1866,69 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
   private getNodeIcon(nodeType: PathNodeType, node?: any): NodeSprite {
     switch (nodeType) {
-      case PathNodeType.WILD_POKEMON: return { key: "pokemon_icons_1", frame: "25", scale: 0.35 };
-      case PathNodeType.TRAINER_BATTLE: return { key: "unknown_m", frame: "0001", scale: 0.15 };
-      case PathNodeType.RIVAL_BATTLE: return { key: "smitems", frame: "permaPostBattleMoney", scale: 0.20 };
-      case PathNodeType.MAJOR_BOSS_BATTLE: return { key: "items", frame: "cornerstone_mask", scale: 0.35 };
-      case PathNodeType.RECOVERY_BOSS: return { key: "items", frame: "hearthflame_mask", scale: 0.35 };
-      case PathNodeType.EVIL_BOSS_BATTLE: return { key: "smitems", frame: "smittyMask", scale: 0.15 };
-      case PathNodeType.ELITE_FOUR: return { key: "items", frame: "muscle_band", scale: 0.35 };
-      case PathNodeType.CHAMPION: return { key: "items", frame: "kings_rock", scale: 0.35 };
-      case PathNodeType.ITEM_GENERAL: return { key: "smitems", frame: "permaShowRewards", scale: 0.20 };
-      case PathNodeType.ADD_POKEMON: return { key: "smitems", frame: "draftMode", scale: 0.20 };
-      case PathNodeType.ITEM_TM: return { key: "items", frame: "tm_normal", scale: 0.32 };
-      case PathNodeType.ITEM_BERRY: return { key: "items", frame: "sitrus_berry", scale: 0.35 };
-      case PathNodeType.MYSTERY_NODE: return { key: "smitems", frame: "permaMoreRewardChoice", scale: 0.15 };
-      case PathNodeType.CONVERGENCE_POINT: return { key: "smitems", frame: "permaMoreRewardChoice", scale: 0.15 };
-      case PathNodeType.SMITTY_BATTLE: return this.getSmittyTrainerSprite(node);
-      case PathNodeType.EVIL_GRUNT_BATTLE: return { key: "items", frame: "thick_club", scale: 0.35 };
-      case PathNodeType.EVIL_ADMIN_BATTLE: return { key: "items", frame: "malicious_armor", scale: 0.35 };
-      case PathNodeType.RAND_PERMA_ITEM: return { key: "smitems", frame: "glitchModSoul", scale: 0.15 };
-      case PathNodeType.PERMA_ITEMS: return { key: "smitems", frame: "permaMetronomeLevelup", scale: 0.15 };
-      case PathNodeType.GOLDEN_POKEBALL: return { key: "items", frame: "pb_gold", scale: 0.35 };
-      case PathNodeType.ROGUE_BALL_ITEMS: return { key: "items", frame: "rb", scale: 0.35 };
-      case PathNodeType.GREAT_BALL_ITEMS: return { key: "items", frame: "gb", scale: 0.35 };
-      case PathNodeType.ULTRA_BALL_ITEMS: return { key: "items", frame: "ub", scale: 0.35 };
-      case PathNodeType.MASTER_BALL_ITEMS: return { key: "items", frame: "mb", scale: 0.35 };
-      case PathNodeType.ABILITY_SWITCHERS: return { key: "smitems", frame: "glitchAbilitySwitch", scale: 0.15 };
-      case PathNodeType.STAT_SWITCHERS: return { key: "smitems", frame: "glitchStatSwitch", scale: 0.20 };
-      case PathNodeType.GLITCH_PIECE: return { key: "smitems", frame: "glitchPiece", scale: 0.15 };
-      case PathNodeType.DNA_SPLICERS: return { key: "items", frame: "dna_splicers", scale: 0.4 };
-      case PathNodeType.MONEY: return { key: "smitems", frame: "battleMoney", scale: 0.15 };
-      case PathNodeType.PERMA_MONEY: return { key: "smitems", frame: "permaMoney", scale: 0.15 };
-      case PathNodeType.RELEASE_ITEMS: return { key: "smitems", frame: "modPokeSacrifice", scale: 0.15 };
-      case PathNodeType.MINTS: return { key: "items", frame: "mint_neutral", scale: 0.35 };
-      case PathNodeType.EGG_VOUCHER: return { key: "items", frame: "coupon", scale: 0.35 };
-      case PathNodeType.PP_MAX: return { key: "items", frame: "pp_max", scale: 0.35 };
-      case PathNodeType.COLLECTED_TYPE: return { key: "smitems", frame: "modSoulCollected", scale: 0.15 };
-      case PathNodeType.COLLECTED_SHOP: return { key: "smitems", frame: "permaTrainerSnatchCost", scale: 0.15 };
-      case PathNodeType.EXP_SHARE: return { key: "items", frame: "exp_share", scale: 0.35 };
-      case PathNodeType.TYPE_SWITCHER: return { key: "smitems", frame: "glitchTypeSwitch", scale: 0.15 };
-      case PathNodeType.PASSIVE_ABILITY: return { key: "smitems", frame: "modPassiveAbility", scale: 0.15 };
-      case PathNodeType.ANY_TMS: return { key: "smitems", frame: "glitchTm", scale: 0.15 };
+    case PathNodeType.WILD_POKEMON: return { key: "pokemon_icons_1", frame: "25", scale: 0.35 };
+    case PathNodeType.TRAINER_BATTLE: return { key: "unknown_m", frame: "0001", scale: 0.15 };
+    case PathNodeType.RIVAL_BATTLE: return { key: "smitems", frame: "permaPostBattleMoney", scale: 0.20 };
+    case PathNodeType.MAJOR_BOSS_BATTLE: return { key: "items", frame: "cornerstone_mask", scale: 0.35 };
+    case PathNodeType.RECOVERY_BOSS: return { key: "items", frame: "hearthflame_mask", scale: 0.35 };
+    case PathNodeType.EVIL_BOSS_BATTLE: return { key: "smitems", frame: "smittyMask", scale: 0.15 };
+    case PathNodeType.ELITE_FOUR: return { key: "items", frame: "muscle_band", scale: 0.35 };
+    case PathNodeType.CHAMPION: return { key: "items", frame: "kings_rock", scale: 0.35 };
+    case PathNodeType.ITEM_GENERAL: return { key: "smitems", frame: "permaShowRewards", scale: 0.20 };
+    case PathNodeType.ADD_POKEMON: return { key: "smitems", frame: "draftMode", scale: 0.20 };
+    case PathNodeType.ITEM_TM: return { key: "items", frame: "tm_normal", scale: 0.32 };
+    case PathNodeType.ITEM_BERRY: return { key: "items", frame: "sitrus_berry", scale: 0.35 };
+    case PathNodeType.MYSTERY_NODE: return { key: "smitems", frame: "permaMoreRewardChoice", scale: 0.15 };
+    case PathNodeType.CONVERGENCE_POINT: return { key: "smitems", frame: "permaMoreRewardChoice", scale: 0.15 };
+    case PathNodeType.SMITTY_BATTLE: return this.getSmittyTrainerSprite(node);
+    case PathNodeType.EVIL_GRUNT_BATTLE: return { key: "items", frame: "thick_club", scale: 0.35 };
+    case PathNodeType.EVIL_ADMIN_BATTLE: return { key: "items", frame: "malicious_armor", scale: 0.35 };
+    case PathNodeType.RAND_PERMA_ITEM: return { key: "smitems", frame: "glitchModSoul", scale: 0.15 };
+    case PathNodeType.PERMA_ITEMS: return { key: "smitems", frame: "permaMetronomeLevelup", scale: 0.15 };
+    case PathNodeType.GOLDEN_POKEBALL: return { key: "items", frame: "pb_gold", scale: 0.35 };
+    case PathNodeType.ROGUE_BALL_ITEMS: return { key: "items", frame: "rb", scale: 0.35 };
+    case PathNodeType.GREAT_BALL_ITEMS: return { key: "items", frame: "gb", scale: 0.35 };
+    case PathNodeType.ULTRA_BALL_ITEMS: return { key: "items", frame: "ub", scale: 0.35 };
+    case PathNodeType.MASTER_BALL_ITEMS: return { key: "items", frame: "mb", scale: 0.35 };
+    case PathNodeType.ABILITY_SWITCHERS: return { key: "smitems", frame: "glitchAbilitySwitch", scale: 0.15 };
+    case PathNodeType.STAT_SWITCHERS: return { key: "smitems", frame: "glitchStatSwitch", scale: 0.20 };
+    case PathNodeType.GLITCH_PIECE: return { key: "smitems", frame: "glitchPiece", scale: 0.15 };
+    case PathNodeType.DNA_SPLICERS: return { key: "items", frame: "dna_splicers", scale: 0.4 };
+    case PathNodeType.MONEY: return { key: "smitems", frame: "battleMoney", scale: 0.15 };
+    case PathNodeType.PERMA_MONEY: return { key: "smitems", frame: "permaMoney", scale: 0.15 };
+    case PathNodeType.RELEASE_ITEMS: return { key: "smitems", frame: "modPokeSacrifice", scale: 0.15 };
+    case PathNodeType.MINTS: return { key: "items", frame: "mint_neutral", scale: 0.35 };
+    case PathNodeType.EGG_VOUCHER: return { key: "items", frame: "coupon", scale: 0.35 };
+    case PathNodeType.PP_MAX: return { key: "items", frame: "pp_max", scale: 0.35 };
+    case PathNodeType.COLLECTED_TYPE: return { key: "smitems", frame: "modSoulCollected", scale: 0.15 };
+    case PathNodeType.COLLECTED_SHOP: return { key: "smitems", frame: "permaTrainerSnatchCost", scale: 0.15 };
+    case PathNodeType.EXP_SHARE: return { key: "items", frame: "exp_share", scale: 0.35 };
+    case PathNodeType.TYPE_SWITCHER: return { key: "smitems", frame: "glitchTypeSwitch", scale: 0.15 };
+    case PathNodeType.PASSIVE_ABILITY: return { key: "smitems", frame: "modPassiveAbility", scale: 0.15 };
+    case PathNodeType.ANY_TMS: return { key: "smitems", frame: "glitchTm", scale: 0.15 };
 
-      case PathNodeType.TERA_SHARDS: return { key: "items", frame: "stellar_tera_shard", scale: 0.35 };
-      case PathNodeType.CHALLENGE_BOSS: return { key: "smitems", frame: "glitchCommandSeal", scale: 0.15 };
-      case PathNodeType.CHALLENGE_RIVAL: return { key: "smitems", frame: "glitchCommandSeal", scale: 0.15 };
-      case PathNodeType.CHALLENGE_EVIL_BOSS: return { key: "smitems", frame: "glitchCommandSeal", scale: 0.15 };
-      case PathNodeType.CHALLENGE_CHAMPION: return { key: "smitems", frame: "glitchCommandSeal", scale: 0.15 };
-      case PathNodeType.CHALLENGE_REWARD: return { key: "items", frame: "master_ribbon", scale: 0.35 };
-      case PathNodeType.HEAL_ITEMS: return { key: "items", frame: "potion", scale: 0.35 };
-      case PathNodeType.REVIVER_SEED: return { key: "items", frame: "reviver_seed", scale: 0.35 };
-      case PathNodeType.SACRED_ASH: return { key: "items", frame: "sacred_ash", scale: 0.35 };
-      case PathNodeType.SHELL_BELL: return { key: "items", frame: "shell_bell", scale: 0.35 };
-      case PathNodeType.LEFTOVERS: return { key: "items", frame: "leftovers", scale: 0.35 };
-      case PathNodeType.QUICK_CLAW: return { key: "items", frame: "quick_claw", scale: 0.35 };
-      case PathNodeType.WIDE_LENS: return { key: "items", frame: "wide_lens", scale: 0.35 };
-      case PathNodeType.GRIP_CLAW: return { key: "items", frame: "grip_claw", scale: 0.35 };
-      case PathNodeType.EVIOLITE: return { key: "items", frame: "eviolite", scale: 0.35 };
-      case PathNodeType.SCOPE_LENS: return { key: "items", frame: "scope_lens", scale: 0.35 };
-      case PathNodeType.VITAMIN: return { key: "items", frame: "protein", scale: 0.35 };
-      case PathNodeType.MOVE_UPGRADE: return { key: "smitems", frame: "smittyShard", scale: 0.15 };
-      case PathNodeType.LOW_TIER_MOVE_UPGRADE: return { key: "smitems", frame: "smittyVoid", scale: 0.15 };
-      case PathNodeType.SKILL_POINT: return { key: "items", frame: "ribbon_gen9", scale: 0.35 };
-      case PathNodeType.SKILL_TOKEN: return { key: "smitems", frame: "permaMoreRevive", scale: 0.20 };
-      default: return { key: "smitems", frame: "permaMoreRewardChoice", scale: 0.15 };
+    case PathNodeType.TERA_SHARDS: return { key: "items", frame: "stellar_tera_shard", scale: 0.35 };
+    case PathNodeType.CHALLENGE_BOSS: return { key: "smitems", frame: "glitchCommandSeal", scale: 0.15 };
+    case PathNodeType.CHALLENGE_RIVAL: return { key: "smitems", frame: "glitchCommandSeal", scale: 0.15 };
+    case PathNodeType.CHALLENGE_EVIL_BOSS: return { key: "smitems", frame: "glitchCommandSeal", scale: 0.15 };
+    case PathNodeType.CHALLENGE_CHAMPION: return { key: "smitems", frame: "glitchCommandSeal", scale: 0.15 };
+    case PathNodeType.CHALLENGE_REWARD: return { key: "items", frame: "master_ribbon", scale: 0.35 };
+    case PathNodeType.HEAL_ITEMS: return { key: "items", frame: "potion", scale: 0.35 };
+    case PathNodeType.REVIVER_SEED: return { key: "items", frame: "reviver_seed", scale: 0.35 };
+    case PathNodeType.SACRED_ASH: return { key: "items", frame: "sacred_ash", scale: 0.35 };
+    case PathNodeType.SHELL_BELL: return { key: "items", frame: "shell_bell", scale: 0.35 };
+    case PathNodeType.LEFTOVERS: return { key: "items", frame: "leftovers", scale: 0.35 };
+    case PathNodeType.QUICK_CLAW: return { key: "items", frame: "quick_claw", scale: 0.35 };
+    case PathNodeType.WIDE_LENS: return { key: "items", frame: "wide_lens", scale: 0.35 };
+    case PathNodeType.GRIP_CLAW: return { key: "items", frame: "grip_claw", scale: 0.35 };
+    case PathNodeType.EVIOLITE: return { key: "items", frame: "eviolite", scale: 0.35 };
+    case PathNodeType.SCOPE_LENS: return { key: "items", frame: "scope_lens", scale: 0.35 };
+    case PathNodeType.VITAMIN: return { key: "items", frame: "protein", scale: 0.35 };
+    case PathNodeType.MOVE_UPGRADE: return { key: "smitems", frame: "smittyShard", scale: 0.15 };
+    case PathNodeType.LOW_TIER_MOVE_UPGRADE: return { key: "smitems", frame: "smittyVoid", scale: 0.15 };
+    case PathNodeType.SKILL_POINT: return { key: "items", frame: "ribbon_gen9", scale: 0.35 };
+    case PathNodeType.SKILL_TOKEN: return { key: "smitems", frame: "permaMoreRevive", scale: 0.20 };
+    default: return { key: "smitems", frame: "permaMoreRewardChoice", scale: 0.15 };
     }
   }
 
@@ -1590,7 +1940,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
     const frameNumber = (variantIndex + 1).toString();
 
-    return { key: "smitty_trainers", frame: frameNumber, scale: 0.15 };
+    return { key: "smitty_trainers", frame: frameNumber, scale: 0.08 };
   }
 
   private async ensureSmittyTrainersLoaded(): Promise<void> {
@@ -1718,68 +2068,88 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
     const ui = this.getUi();
 
-    if (this.tooltipDetailsMode) {
+    if (this.challengeNavigationActive) {
       switch (button) {
-        case Button.UP:
-          if (this.tooltipSelectedIndex > 0) {
-            this.tooltipSelectedIndex--;
-            this.updateTooltipDetailsDisplay();
-            this.scene.ui.playSelect();
-          }
-          return true;
-        case Button.DOWN:
-          if (this.tooltipSelectedIndex < this.tooltipChallenges.length - 1) {
-            this.tooltipSelectedIndex++;
-            this.updateTooltipDetailsDisplay();
-            this.scene.ui.playSelect();
-          }
-          return true;
-        case Button.CANCEL:
-          this.exitTooltipDetailsMode();
-          return true;
-        case Button.ACTION:
-          return true;
+      case Button.UP:
+        if (this.tooltipSelectedRow > 0) {
+          this.tooltipSelectedRow--;
+          this.tooltipSelectedIndex = this.getLinearIndexFromColumnRow(this.tooltipSelectedColumn, this.tooltipSelectedRow);
+          this.updateChallengeSelection();
+          this.scene.ui.playSelect();
+        }
+        return true;
+      case Button.DOWN:
+        if (this.tooltipSelectedRow < this.tooltipColumnItemCounts[this.tooltipSelectedColumn] - 1) {
+          this.tooltipSelectedRow++;
+          this.tooltipSelectedIndex = this.getLinearIndexFromColumnRow(this.tooltipSelectedColumn, this.tooltipSelectedRow);
+          this.updateChallengeSelection();
+          this.scene.ui.playSelect();
+        }
+        return true;
+      case Button.LEFT:
+        if (this.tooltipColumnCount > 1 && this.tooltipSelectedColumn > 0) {
+          this.tooltipSelectedColumn--;
+          this.tooltipSelectedRow = Math.min(this.tooltipSelectedRow, this.tooltipColumnItemCounts[this.tooltipSelectedColumn] - 1);
+          this.tooltipSelectedIndex = this.getLinearIndexFromColumnRow(this.tooltipSelectedColumn, this.tooltipSelectedRow);
+          this.updateChallengeSelection();
+          this.scene.ui.playSelect();
+        }
+        return true;
+      case Button.RIGHT:
+        if (this.tooltipColumnCount > 1 && this.tooltipSelectedColumn < this.tooltipColumnCount - 1) {
+          this.tooltipSelectedColumn++;
+          this.tooltipSelectedRow = Math.min(this.tooltipSelectedRow, this.tooltipColumnItemCounts[this.tooltipSelectedColumn] - 1);
+          this.tooltipSelectedIndex = this.getLinearIndexFromColumnRow(this.tooltipSelectedColumn, this.tooltipSelectedRow);
+          this.updateChallengeSelection();
+          this.scene.ui.playSelect();
+        }
+        return true;
+      case Button.CANCEL:
+        this.exitChallengeNavigationMode();
+        return true;
+      case Button.ACTION:
+        return true;
       }
       return true;
     }
 
     switch (button) {
-      case Button.ACTION:
-        if (this.selectedNodeId) {
-          if (this.viewOnlyMode) {
-            return true;
-          }
+    case Button.ACTION:
+      if (this.selectedNodeId) {
+        if (this.viewOnlyMode) {
+          return true;
+        }
 
-          const nodePos = this.nodePositions.get(this.selectedNodeId);
-          if (!nodePos || !this.isNodeSelectable(nodePos.node)) {
-            return true;
-          }
+        const nodePos = this.nodePositions.get(this.selectedNodeId);
+        if (!nodePos || !this.isNodeSelectable(nodePos.node)) {
+          return true;
+        }
 
-          this.selectNode(nodePos.node);
-          return true;
-        }
-        break;
-      case Button.CYCLE_ABILITY:
-        if (this.customTooltipContainer && this.tooltipChallenges.length > 0) {
-          this.enterTooltipDetailsMode();
-          return true;
-        }
-        break;
-      case Button.UP:
-        return this.navigateUp();
-      case Button.DOWN:
-        return this.navigateDown();
-      case Button.LEFT:
-        return this.navigateLeft();
-      case Button.RIGHT:
-        return this.navigateRight();
-      case Button.CANCEL:
-        if (this.onNodeSelected) {
-          return true;
-        }
-        this.clear();
-        this.scene.ui.revertMode();
+        this.selectNode(nodePos.node);
         return true;
+      }
+      break;
+    case Button.CYCLE_ABILITY:
+      if (this.customTooltipContainer && this.tooltipChallenges.length > 0) {
+        this.enterChallengeNavigationMode();
+        return true;
+      }
+      break;
+    case Button.UP:
+      return this.navigateUp();
+    case Button.DOWN:
+      return this.navigateDown();
+    case Button.LEFT:
+      return this.navigateLeft();
+    case Button.RIGHT:
+      return this.navigateRight();
+    case Button.CANCEL:
+      if (this.onNodeSelected) {
+        return true;
+      }
+      this.clear();
+      this.scene.ui.revertMode();
+      return true;
     }
 
     return false;
@@ -1865,7 +2235,9 @@ export default class BattlePathUiHandler extends ModalUiHandler {
         this.currentColIndex = targetNodeIndex;
         this.selectedNodeId = targetWave.nodes[this.currentColIndex].id;
         this.updateSelection();
-        try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3"); } catch {}
+        try {
+          (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3");
+        } catch {}
         return true;
       }
     } else {
@@ -1972,7 +2344,9 @@ export default class BattlePathUiHandler extends ModalUiHandler {
         this.currentColIndex = targetNodeIndex;
         this.selectedNodeId = targetWave.nodes[this.currentColIndex].id;
         this.updateSelection();
-        try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3"); } catch {}
+        try {
+          (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3");
+        } catch {}
         return true;
       }
     } else {
@@ -1995,7 +2369,9 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       const currentWave = this.visibleWaves[this.currentRowIndex];
       this.selectedNodeId = currentWave.nodes[this.currentColIndex].id;
       this.updateSelection();
-      try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3"); } catch {}
+      try {
+        (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3");
+      } catch {}
       return true;
     }
     return false;
@@ -2007,7 +2383,9 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       this.currentColIndex++;
       this.selectedNodeId = currentWave.nodes[this.currentColIndex].id;
       this.updateSelection();
-      try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3"); } catch {}
+      try {
+        (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3");
+      } catch {}
       return true;
     }
     return false;
@@ -2025,7 +2403,9 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
   private scroll(direction: number): void {
     const battlePath = getCurrentBattlePath();
-    if (!battlePath) return;
+    if (!battlePath) {
+      return;
+    }
 
     const scrollAmount = direction * this.WAVE_HEIGHT * 5;
     const newScrollPosition = Math.max(0, this.scrollPosition + scrollAmount);
@@ -2063,7 +2443,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       Phaser.Geom.Rectangle.Contains
     );
 
-    this.pathContainer.on('pointerdown', (pointer) => {
+    this.pathContainer.on("pointerdown", (pointer) => {
       this.isDragging = true;
       this.dragStartY = pointer.y;
       this.dragStartScrollPosition = this.scrollPosition;
@@ -2091,20 +2471,22 @@ export default class BattlePathUiHandler extends ModalUiHandler {
           }
         }
       };
-      this.scene.input.on('pointermove', this.pointermoveHandler);
+      this.scene.input.on("pointermove", this.pointermoveHandler);
     }
 
     if (!this.pointerupHandler) {
       this.pointerupHandler = () => {
         this.isDragging = false;
       };
-      this.scene.input.on('pointerup', this.pointerupHandler);
+      this.scene.input.on("pointerup", this.pointerupHandler);
     }
   }
 
   private smoothScrollTo(targetPosition: number): void {
     const battlePath = getCurrentBattlePath();
-    if (!battlePath) return;
+    if (!battlePath) {
+      return;
+    }
 
     const maxViewableWave = this.getMaxViewableWave();
 
@@ -2136,7 +2518,9 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
       for (const currentNode of currentNodes) {
         const currentPos = this.nodePositions.get(currentNode.id);
-        if (!currentPos) continue;
+        if (!currentPos) {
+          continue;
+        }
 
         const currentPosition = currentNode.position.x;
         const validTargets = nextNodes.filter(node => {
@@ -2179,10 +2563,10 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     }
 
     const readableModes = activeModes.map(mode => {
-      return mode.replace(/([A-Z])/g, ' $1').trim();
+      return mode.replace(/([A-Z])/g, " $1").trim();
     });
 
-    return readableModes.join('\n');
+    return readableModes.join("\n");
   }
 
   private getAvailableNodesForCurrentWave(): string[] {
@@ -2229,7 +2613,31 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       }
     }
 
+    const currentBattleWave = this.scene.currentBattle?.waveIndex ?? 0;
+    if (currentBattleWave < previouslySelectedNode.wave) {
+      const pendingWave = previouslySelectedNode.wave;
+      if (this.scene.battlePathWave !== pendingWave) {
+        this.scene.battlePathWave = pendingWave;
+        this.scene.gameData.localSaveAll(this.scene);
+      }
+      return [previouslySelectedNode.id];
+    }
+
+    const pathContext = (this.scene as any).pathNodeContext as PathNodeContext | null | undefined;
+    if (this.scene.battlePathWave === previouslySelectedNode.wave && pathContext !== null && pathContext !== undefined && pathContext !== PathNodeContext.BATTLE_NODE) {
+      return [previouslySelectedNode.id];
+    }
+
     const expectedWave = previouslySelectedNode.wave + 1;
+
+    if (expectedWave > battlePath.totalWaves) {
+      const pendingWave = previouslySelectedNode.wave;
+      if (this.scene.battlePathWave !== pendingWave) {
+        this.scene.battlePathWave = pendingWave;
+        this.scene.gameData.localSaveAll(this.scene);
+      }
+      return [previouslySelectedNode.id];
+    }
 
     if (this.scene.battlePathWave !== expectedWave) {
       this.scene.battlePathWave = expectedWave;

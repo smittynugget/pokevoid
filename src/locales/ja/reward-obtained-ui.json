@@ -43,5 +43,8 @@
     "rivalVoid": "{{name}}は虚無の中に消えていった...",
     "error": "報酬データの読み込みエラー",
     "new": "新規"
+  },
+  "saveReward": {
+    "essenceBundle": "エッセンス3個: {{types}}"
   }
 } 

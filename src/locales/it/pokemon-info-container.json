@@ -1,6 +1,7 @@
 {
-  "moveset": "Set di mosse",
+  "moveset": "Mosse",
   "gender": "Genere:",
   "ability": "Abilità:",
-  "nature": "Natura:"
+  "nature": "Natura:",
+  "form": "Forma:"
 }

@@ -7,57 +7,65 @@ import { modStorage } from "../system/mod-storage";
 import { getModPokemonName } from "../data/mod-glitch-form-utils";
 
 export class UnlockModFormPhase extends Phase {
-    private onComplete: () => void;
-    private formName: string;
-    private speciesId: Species;
+  private onComplete: () => void;
+  private formName: string;
+  private speciesId: Species;
 
-    constructor(scene: BattleScene, formName: string, onComplete?: () => void) {
-        super(scene);
-        this.onComplete = onComplete || (() => this.end());
-        this.speciesId = Species.NONE;
-        this.formName = formName;
+  constructor(scene: BattleScene, formName: string, onComplete?: () => void) {
+    super(scene);
+    this.onComplete = onComplete || (() => {});
+    this.speciesId = Species.NONE;
+    this.formName = formName;
+  }
+
+  async start(): Promise<void> {
+    try {
+      const allMods = await modStorage.getAllMods();
+      const matchingMod = allMods.find(mod =>
+        mod.formName.toLowerCase() === this.formName.toLowerCase()
+      );
+
+      if (matchingMod) {
+        this.speciesId = matchingMod.speciesId;
+
+        const modName = getModPokemonName(matchingMod.speciesId, matchingMod.formName);
+        this.formName = modName || matchingMod.formName;
+      }
+    } catch (error) {
+      console.error(`Error looking up mod data for ${this.formName}:`, error);
     }
 
-    async start(): Promise<void> {
-        try {
-            const allMods = await modStorage.getAllMods();
-            const matchingMod = allMods.find(mod =>
-                mod.formName.toLowerCase() === this.formName.toLowerCase()
-            );
+    this.scene.time.delayedCall(2000, () => {
 
-            if (matchingMod) {
-                this.speciesId = matchingMod.speciesId;
+      const rewardConfig: RewardConfig = {
+        type: RewardObtainedType.FORM,
+        name: this.formName,
+        isGlitch: false,
+        isMod: true
+      };
 
-                const modName = getModPokemonName(matchingMod.speciesId, matchingMod.formName);
-                this.formName = modName || matchingMod.formName;
-            }
-        } catch (error) {
-            console.error(`Error looking up mod data for ${this.formName}:`, error);
-        }
+      this.scene.recordRunUnlockReward(rewardConfig);
+      if (!this.scene.disableCutscenes && this.scene.deferUnlockPopupsToPowerSlide && this.scene.shouldDeferPowerUnlockReward(rewardConfig)) {
+        this.scene.arenaBg.setVisible(true);
+        this.onComplete();
+        this.end();
+        return;
+      }
 
-        this.scene.time.delayedCall(2000, () => {
-
-            const rewardConfig: RewardConfig = {
-                type: RewardObtainedType.FORM,
-                name: this.formName,
-                isGlitch: false,
-                isMod: true
-            };
-
-            const phase = new RewardObtainDisplayPhase(
-                this.scene,
-                rewardConfig,
-                [() => {
-                    this.scene.arenaBg.setVisible(true);
-                    this.onComplete();
-                }]
-            );
-            phase.scene = this.scene;
-            this.scene.unshiftPhase(phase);
-            this.end();
-        });
-    }
-    end(): void {
-        super.end();
-    }
+      const phase = new RewardObtainDisplayPhase(
+        this.scene,
+        rewardConfig,
+        [() => {
+          this.scene.arenaBg.setVisible(true);
+          this.onComplete();
+        }]
+      );
+      phase.scene = this.scene;
+      this.scene.unshiftPhase(phase);
+      this.end();
+    });
+  }
+  end(): void {
+    super.end();
+  }
 }

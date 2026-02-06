@@ -6,7 +6,7 @@ import {
   PokemonForm,
   UniversalSmittyForm,
   universalSmittyForms,
-    pokemonSmittyForms,
+  pokemonSmittyForms,
 } from "./pokemon-species";
 import { SpeciesFormKey } from "#enums/species-form-key";
 import { StatusEffect } from "./status-effect";
@@ -87,16 +87,16 @@ export class SpeciesFormChange {
     return trigger;
   }
 
-    hasMatchingItemTrigger(item: FormChangeItem): boolean {
-        if (this.trigger instanceof SpeciesFormChangeItemTrigger) {
-            return this.trigger.item === item;
-        } else if (this.trigger instanceof SpeciesFormChangeCompoundTrigger) {
-            return this.trigger.triggers.some(t =>
-                t instanceof SpeciesFormChangeItemTrigger && t.item === item
-            );
-        }
-        return false;
+  hasMatchingItemTrigger(item: FormChangeItem): boolean {
+    if (this.trigger instanceof SpeciesFormChangeItemTrigger) {
+      return this.trigger.item === item;
+    } else if (this.trigger instanceof SpeciesFormChangeCompoundTrigger) {
+      return this.trigger.triggers.some(t =>
+        t instanceof SpeciesFormChangeItemTrigger && t.item === item
+      );
     }
+    return false;
+  }
 
   isModForm(): boolean {
     return this.modFormName !== "";
@@ -185,7 +185,7 @@ export class SmittyFormTrigger extends SpeciesFormChangeTrigger {
   public requiredItems: FormChangeItem[];
   public name: string;
 
-  constructor(requiredItems: FormChangeItem[], name: string = '') {
+  constructor(requiredItems: FormChangeItem[], name: string = "") {
     super();
     this.requiredItems = requiredItems;
     this.name = name;
@@ -202,13 +202,13 @@ export class SmittyFormTrigger extends SpeciesFormChangeTrigger {
 
   canChange(pokemon: Pokemon): boolean {
     const currentModifiers = pokemon.scene.findModifiers(m =>
-        m instanceof PokemonFormChangeItemModifier &&
+      m instanceof PokemonFormChangeItemModifier &&
         m.pokemonId === pokemon.id
     ) as PokemonFormChangeItemModifier[];
 
     const currentItems = currentModifiers.map(m => m.formChangeItem);
     return this.requiredItems.every(requiredItem =>
-        currentItems.includes(requiredItem)
+      currentItems.includes(requiredItem)
     );
   }
 }
@@ -670,6 +670,87 @@ export const pokemonFormChanges: PokemonFormChanges = {
   [Species.DIANCIE]: [
     new SpeciesFormChange(Species.DIANCIE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.DIANCITE))
   ],
+  [Species.CLEFABLE]: [
+    new SpeciesFormChange(Species.CLEFABLE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.CLEFABLITE))
+  ],
+  [Species.VICTREEBEL]: [
+    new SpeciesFormChange(Species.VICTREEBEL, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.VICTREBELITE))
+  ],
+  [Species.STARMIE]: [
+    new SpeciesFormChange(Species.STARMIE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.STARMITE))
+  ],
+  [Species.DRAGONITE]: [
+    new SpeciesFormChange(Species.DRAGONITE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.DRAGONITITE))
+  ],
+  [Species.MEGANIUM]: [
+    new SpeciesFormChange(Species.MEGANIUM, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.MEGANIUMITE))
+  ],
+  [Species.FERALIGATR]: [
+    new SpeciesFormChange(Species.FERALIGATR, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.FERALIGATRITE))
+  ],
+  [Species.SKARMORY]: [
+    new SpeciesFormChange(Species.SKARMORY, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.SKARMORYITE))
+  ],
+  [Species.FROSLASS]: [
+    new SpeciesFormChange(Species.FROSLASS, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.FROSLASSITE))
+  ],
+  [Species.EMBOAR]: [
+    new SpeciesFormChange(Species.EMBOAR, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.EMBOARITE))
+  ],
+  [Species.EXCADRILL]: [
+    new SpeciesFormChange(Species.EXCADRILL, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.EXCADRILLITE))
+  ],
+  [Species.SCOLIPEDE]: [
+    new SpeciesFormChange(Species.SCOLIPEDE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.SCOLIPEDITE))
+  ],
+  [Species.SCRAFTY]: [
+    new SpeciesFormChange(Species.SCRAFTY, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.SCRAFTITE))
+  ],
+  [Species.EELEKTROSS]: [
+    new SpeciesFormChange(Species.EELEKTROSS, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.EELEKTROSSITE))
+  ],
+  [Species.CHANDELURE]: [
+    new SpeciesFormChange(Species.CHANDELURE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.CHANDELURITE))
+  ],
+  [Species.CHESNAUGHT]: [
+    new SpeciesFormChange(Species.CHESNAUGHT, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.CHESNAUGHTITE))
+  ],
+  [Species.DELPHOX]: [
+    new SpeciesFormChange(Species.DELPHOX, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.DELPHOXITE))
+  ],
+  [Species.GRENINJA]: [
+    new SpeciesFormChange(Species.GRENINJA, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.GRENINJITE))
+  ],
+  [Species.PYROAR]: [
+    new SpeciesFormChange(Species.PYROAR, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.PYROARITE))
+  ],
+  [Species.FLOETTE]: [
+    new SpeciesFormChange(Species.FLOETTE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.FLOETTITE))
+  ],
+  [Species.MALAMAR]: [
+    new SpeciesFormChange(Species.MALAMAR, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.MALAMARITE))
+  ],
+  [Species.BARBARACLE]: [
+    new SpeciesFormChange(Species.BARBARACLE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.BARBARACLITE))
+  ],
+  [Species.DRAGALGE]: [
+    new SpeciesFormChange(Species.DRAGALGE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.DRAGALGITE))
+  ],
+  [Species.HAWLUCHA]: [
+    new SpeciesFormChange(Species.HAWLUCHA, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.HAWLUCHITE))
+  ],
+  [Species.ZYGARDE]: [
+    new SpeciesFormChange(Species.ZYGARDE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ZYGARDITE))
+  ],
+  [Species.DRAMPA]: [
+    new SpeciesFormChange(Species.DRAMPA, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.DRAMPITE))
+  ],
+  [Species.FALINKS]: [
+    new SpeciesFormChange(Species.FALINKS, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.FALINKSITE))
+  ],
+  [Species.ZERAORA]: [
+    new SpeciesFormChange(Species.ZERAORA, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ZERAORITE))
+  ],
   [Species.HOOPA]: [
     new SpeciesFormChange(Species.HOOPA, "", "unbound", new SpeciesFormChangeItemTrigger(FormChangeItem.PRISON_BOTTLE))
   ],
@@ -867,544 +948,544 @@ export const pokemonFormChanges: PokemonFormChanges = {
 
 export const SMITTY_FORM_ITEMS = {
 
-  'tartauros': [
+  "tartauros": [
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_TOUCH
   ],
-  'zamowak': [
+  "zamowak": [
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_GLITCH
   ],
-  'greyokai': [
+  "greyokai": [
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_SHARD,
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_CUBE
   ],
-  'jormunza': [
+  "jormunza": [
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_CRYSTAL
   ],
-  'licthulhu': [
+  "licthulhu": [
     FormChangeItem.SMITTY_SHARD,
     FormChangeItem.SMITTY_SURGE,
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_ORB
   ],
-  'plasmist': [
+  "plasmist": [
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_FLUX,
     FormChangeItem.SMITTY_DARK,
     FormChangeItem.SMITTY_CORE
   ],
-  'plustra': [
+  "plustra": [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_CRYSTAL
   ],
-  'hellchar': [
+  "hellchar": [
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_SURGE,
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_FIBER
   ],
-  'feareon': [
+  "feareon": [
     FormChangeItem.SMITTY_PULSE,
     FormChangeItem.SMITTY_RELIC,
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_SHARD
   ],
-  'omninom': [
+  "omninom": [
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_ORB,
     FormChangeItem.SMITTY_NEBULA
   ],
-  'necromew': [
+  "necromew": [
     FormChangeItem.SMITTY_CORE,
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_DREAMS
   ],
-  'diablotar': [
+  "diablotar": [
     FormChangeItem.SMITTY_PLASMA,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_MASK
   ],
-  'smitom': [
+  "smitom": [
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_FUEL
   ],
 
-  'zoomer': [
+  "zoomer": [
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_CRYSTAL,
     FormChangeItem.SMITTY_FLUX
   ],
-  'voidash': [
+  "voidash": [
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_MASK,
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_PRISM
   ],
-  'wahcky': [
+  "wahcky": [
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_CRYSTAL,
     FormChangeItem.SMITTY_POISON
   ],
-  'wahzebub': [
+  "wahzebub": [
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_RELIC
   ],
-  'fineferno': [
+  "fineferno": [
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_HEART
   ],
-  'sorbred': [
+  "sorbred": [
     FormChangeItem.SMITTY_FUEL,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_CRYSTAL
   ],
-  'corpanzee': [
+  "corpanzee": [
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_HEART,
     FormChangeItem.SMITTY_FEAR
   ],
-  'plankling': [
+  "plankling": [
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_PULSE
   ],
-  'timbrick': [
+  "timbrick": [
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_DREAMS,
     FormChangeItem.SMITTY_PULSE
   ],
-  'plankult': [
+  "plankult": [
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_PULSE,
     FormChangeItem.SMITTY_ORB
   ],
-  'sorbobo': [
+  "sorbobo": [
     FormChangeItem.SMITTY_FLUX,
     FormChangeItem.SMITTY_SHARD,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_PLASMA
   ],
-  'hamtaro': [
+  "hamtaro": [
     FormChangeItem.SMITTY_ERROR,
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_JUICE
   ],
 
-  'elmold': [
+  "elmold": [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_FLUX,
     FormChangeItem.SMITTY_ORB,
     FormChangeItem.SMITTY_DREAMS
   ],
 
-  'funghomp': [
+  "funghomp": [
     FormChangeItem.SMITTY_MASK,
     FormChangeItem.SMITTY_ORB,
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_SOUL
   ],
-  'riddicus': [
+  "riddicus": [
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_RELIC,
     FormChangeItem.SMITTY_AURA
   ],
-  'boxecutive': [
+  "boxecutive": [
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_DREAMS
   ],
-  'patnius': [
+  "patnius": [
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_RELIC
   ],
-  'tentacrim': [
+  "tentacrim": [
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_FLUX,
     FormChangeItem.SMITTY_NEBULA
   ],
-  'undeadtunasmit': [
+  "undeadtunasmit": [
     FormChangeItem.SMITTY_CORE,
     FormChangeItem.SMITTY_MASK,
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_NEBULA
   ],
-  'genomander': [
+  "genomander": [
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_ERROR,
     FormChangeItem.SMITTY_SHARD,
     FormChangeItem.SMITTY_FIBER
   ],
-  'tormentle': [
+  "tormentle": [
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_PLASMA
   ],
-  'terrorbulb': [
+  "terrorbulb": [
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_CORE,
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_CIRCUIT
   ],
-  'scarablanc': [
+  "scarablanc": [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_JUICE
   ],
-  'batmare': [
+  "batmare": [
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_ERROR
   ],
-  'dankitar': [
+  "dankitar": [
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_SHARD,
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_ERROR
   ],
 
-  'cephaloom': [
+  "cephaloom": [
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_FUEL,
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_AURA
   ],
-  'smitward': [
+  "smitward": [
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_CORE
   ],
-  'gastmoji': [
+  "gastmoji": [
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_TOUCH,
     FormChangeItem.SMITTY_HUMOR
   ],
-  'niteknite': [
+  "niteknite": [
     FormChangeItem.SMITTY_DREAMS,
     FormChangeItem.SMITTY_PLASMA,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_CRYSTAL
   ],
-  'dignitier': [
+  "dignitier": [
     FormChangeItem.SMITTY_DREAMS,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_PLASMA,
     FormChangeItem.SMITTY_HEART
   ],
-  'smitshade': [
+  "smitshade": [
     FormChangeItem.SMITTY_HEART,
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_DARK
   ],
 
-  'smitspect': [
+  "smitspect": [
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_SLIME
   ],
 
-  'smitwraith': [
+  "smitwraith": [
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_DREAMS,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_SOUL
   ],
 
-  'smiternal': [
+  "smiternal": [
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_ERROR
   ],
-  'smittyfish': [
+  "smittyfish": [
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_ERROR,
     FormChangeItem.SMITTY_MASK,
     FormChangeItem.SMITTY_LIQUID
   ],
-  'smittellect': [
+  "smittellect": [
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_SURGE,
     FormChangeItem.SMITTY_CRYSTAL
   ],
-  'gallux': [
+  "gallux": [
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_HEART
   ],
-  'hostmitty': [
+  "hostmitty": [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_DREAMS,
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_DARK
   ],
-  'smittynarie': [
+  "smittynarie": [
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_ERROR
   ],
-  'batboxbaba': [
+  "batboxbaba": [
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_CORE
   ],
 
-  'batboxbeyond': [
+  "batboxbeyond": [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_VOICE,
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_CHAIN
   ],
-  'victainer': [
+  "victainer": [
     FormChangeItem.SMITTY_RELIC,
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_ORB,
     FormChangeItem.SMITTY_PLASMA
   ],
-  'noxabis': [
+  "noxabis": [
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_DARK,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_FLUX
   ],
-  'floravora': [
+  "floravora": [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_POISON,
     FormChangeItem.SMITTY_SHARD
   ],
-  'chimerdrio': [
+  "chimerdrio": [
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_VOICE
   ],
-  'kakopier': [
+  "kakopier": [
     FormChangeItem.SMITTY_PULSE,
     FormChangeItem.SMITTY_DREAMS,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_AURA
   ],
-  'karasu-me': [
+  "karasu-me": [
     FormChangeItem.SMITTY_DARK,
     FormChangeItem.SMITTY_FIRE,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_HEART
   ],
-  'bullktopus': [
+  "bullktopus": [
     FormChangeItem.SMITTY_SURGE,
     FormChangeItem.SMITTY_CRYSTAL,
     FormChangeItem.SMITTY_ORB,
     FormChangeItem.SMITTY_FLUX
   ],
-  'gumugumu': [
+  "gumugumu": [
     FormChangeItem.SMITTY_HEART,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_DARK,
     FormChangeItem.SMITTY_CUBE
   ],
-  'santoryu': [
+  "santoryu": [
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_CORE,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_MASK
   ],
-  'roostace': [
+  "roostace": [
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_CHAIN,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_FUEL
   ],
-  'bogace': [
+  "bogace": [
     FormChangeItem.SMITTY_PLASMA,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_ESSENCE
   ],
-  'milliant': [
+  "milliant": [
     FormChangeItem.SMITTY_MIST,
     FormChangeItem.SMITTY_ESSENCE,
     FormChangeItem.SMITTY_VOID,
     FormChangeItem.SMITTY_DARK
   ],
-  'terroragon': [
+  "terroragon": [
     FormChangeItem.SMITTY_METAL,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_MIST
   ],
-  'godread': [
+  "godread": [
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_PULSE,
     FormChangeItem.SMITTY_TOUCH
   ],
-  'duschmare': [
+  "duschmare": [
     FormChangeItem.SMITTY_PLASMA,
     FormChangeItem.SMITTY_ENERGY,
     FormChangeItem.SMITTY_PULSE,
     FormChangeItem.SMITTY_SLIME
   ],
-  'abyssuma': [
+  "abyssuma": [
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_SURGE,
     FormChangeItem.SMITTY_CORE,
     FormChangeItem.SMITTY_FUEL
   ],
 
-  'clefangar': [
+  "clefangar": [
     FormChangeItem.SMITTY_SURGE,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_HUMOR,
     FormChangeItem.SMITTY_FUEL
   ],
-  'omnitto': [
+  "omnitto": [
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_CUBE,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_MIST
   ],
-  'umbraffe': [
+  "umbraffe": [
     FormChangeItem.SMITTY_RELIC,
     FormChangeItem.SMITTY_SHADOW,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_MASK
   ],
-  'tartadra': [
+  "tartadra": [
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_MASK,
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_SURGE
   ],
-  'churry': [
+  "churry": [
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_HEART,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_SURGE
   ],
-  'gazorpsmitfield': [
+  "gazorpsmitfield": [
     FormChangeItem.SMITTY_ORB,
     FormChangeItem.SMITTY_DARK,
     FormChangeItem.SMITTY_MIST,
     FormChangeItem.SMITTY_ERROR
   ],
-  'hologrick': [
+  "hologrick": [
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_MIST,
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_RELIC
   ],
-  'seekling': [
+  "seekling": [
     FormChangeItem.SMITTY_FUEL,
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_AURA,
     FormChangeItem.SMITTY_MIST
   ],
-  'picklisk': [
+  "picklisk": [
     FormChangeItem.SMITTY_FEAR,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_LIQUID,
     FormChangeItem.SMITTY_MIST
   ],
-  'bravehound': [
+  "bravehound": [
     FormChangeItem.SMITTY_HEART,
     FormChangeItem.SMITTY_FLUX,
     FormChangeItem.SMITTY_MIST,
     FormChangeItem.SMITTY_VOID
   ],
-  'tengale': [
+  "tengale": [
     FormChangeItem.SMITTY_SLIME,
     FormChangeItem.SMITTY_GLITCH,
     FormChangeItem.SMITTY_FIBER,
     FormChangeItem.SMITTY_FUEL
   ],
-  'hyplagus': [
+  "hyplagus": [
     FormChangeItem.SMITTY_BRAIN,
     FormChangeItem.SMITTY_NEBULA,
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_DARK
   ],
-  'demonoth': [
+  "demonoth": [
     FormChangeItem.SMITTY_SOUL,
     FormChangeItem.SMITTY_CIRCUIT,
     FormChangeItem.SMITTY_PRISM,
     FormChangeItem.SMITTY_PULSE
   ],
 
-  'despeko': [
+  "despeko": [
     FormChangeItem.SMITTY_JUICE,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_ERROR,
     FormChangeItem.SMITTY_SHARD
   ],
-  'missingno': [
+  "missingno": [
     FormChangeItem.SMITTY_MIST,
     FormChangeItem.SMITTY_RELIC,
     FormChangeItem.SMITTY_CHAOS,
     FormChangeItem.SMITTY_SHADOW
   ]
-}
+};
 
 export function getSmittyItems(formName: string): FormChangeItem[] {
-    const items = SMITTY_FORM_ITEMS[formName];
-    if (!items) {
-        console.error(`No predefined items found for form: ${formName}`);
-        return [];
-    }
-    return items;
+  const items = SMITTY_FORM_ITEMS[formName];
+  if (!items) {
+    console.error(`No predefined items found for form: ${formName}`);
+    return [];
+  }
+  return items;
 }
 
-export function addSmittyFormChange(speciesId: Species | null, formKey: SpeciesFormKey, requiredItems: FormChangeItem[], name: string = '') {
+export function addSmittyFormChange(speciesId: Species | null, formKey: SpeciesFormKey, requiredItems: FormChangeItem[], name: string = "") {
   const smittyFormChange = new SpeciesFormChange(
-      speciesId ?? Species.NONE,
-      "",
-      formKey,
-      new SmittyFormTrigger(requiredItems, name),
-      false
+    speciesId ?? Species.NONE,
+    "",
+    formKey,
+    new SmittyFormTrigger(requiredItems, name),
+    false
   );
 
   if (speciesId !== null) {
@@ -1428,16 +1509,20 @@ export function applyUniversalSmittyForm(formName: string, pokemon: Pokemon, lim
 }
 
 export function checkAndAddUniversalSmittyForms(pokemon: Pokemon): SpeciesFormChange | null {
-  if (!pokemonFormChanges[Species.NONE]) return null;
+  if (!pokemonFormChanges[Species.NONE]) {
+    return null;
+  }
 
   const smittyModifiers = pokemon.scene.findModifiers(m =>
-      m instanceof PokemonFormChangeItemModifier &&
+    m instanceof PokemonFormChangeItemModifier &&
       m.pokemonId === pokemon.id &&
       m.formChangeItem >= FormChangeItem.SMITTY_AURA &&
       m.formChangeItem <= FormChangeItem.SMITTY_VOID
   );
 
-  if (smittyModifiers.length < 4) return null;
+  if (smittyModifiers.length < 4) {
+    return null;
+  }
 
   for (const universalFormChange of pokemonFormChanges[Species.NONE]) {
     const trigger = universalFormChange.findTrigger(SmittyFormTrigger) as SmittyFormTrigger;
@@ -1458,25 +1543,25 @@ function addSmittyForm(speciesEnum: Species | Species[], formName: string, formK
     if (species) {
       if (species.forms.length === 0) {
         const normalForm = new PokemonForm(
-            "Normal",
-            "",
-            species.type1,
-            species.type2,
-            species.height,
-            species.weight,
-            species.ability1,
-            species.ability2,
-            species.abilityHidden,
-            species.baseTotal,
-            species.baseStats[0],
-            species.baseStats[1],
-            species.baseStats[2],
-            species.baseStats[3],
-            species.baseStats[4],
-            species.baseStats[5],
-            species.catchRate,
-            species.baseFriendship,
-            species.baseExp,
+          "Normal",
+          "",
+          species.type1,
+          species.type2,
+          species.height,
+          species.weight,
+          species.ability1,
+          species.ability2,
+          species.abilityHidden,
+          species.baseTotal,
+          species.baseStats[0],
+          species.baseStats[1],
+          species.baseStats[2],
+          species.baseStats[3],
+          species.baseStats[4],
+          species.baseStats[5],
+          species.catchRate,
+          species.baseFriendship,
+          species.baseExp,
         );
         normalForm.speciesId = species.speciesId;
         normalForm.formIndex = 0;
@@ -1484,30 +1569,30 @@ function addSmittyForm(speciesEnum: Species | Species[], formName: string, formK
         species.forms.push(normalForm);
       }
       const baseForm = species;
-      if(secondaryType == null && baseForm == undefined) {
+      if (secondaryType == null && baseForm == undefined) {
         console.log(0);
       }
       const newForm = new PokemonForm(
-          formName,
-          formKey,
-          primaryType !== null ? primaryType : baseForm.type1,
+        formName,
+        formKey,
+        primaryType !== null ? primaryType : baseForm.type1,
 
-          secondaryType !== null ? secondaryType : baseForm.type2,
-          height ?? species.height,
-          weight ?? species.weight,
-          ability1,
-          ability2,
-          abilityHidden,
-          totalStats,
-          hp,
-          attack,
-          defense,
-          spAttack,
-          spDefense,
-          speed,
-          catchRate ?? species.catchRate,
-          baseFriendship ?? species.baseFriendship,
-          baseExp ?? species.baseExp
+        secondaryType !== null ? secondaryType : baseForm.type2,
+        height ?? species.height,
+        weight ?? species.weight,
+        ability1,
+        ability2,
+        abilityHidden,
+        totalStats,
+        hp,
+        attack,
+        defense,
+        spAttack,
+        spDefense,
+        speed,
+        catchRate ?? species.catchRate,
+        baseFriendship ?? species.baseFriendship,
+        baseExp ?? species.baseExp
       );
       newForm.speciesId = species.speciesId;
       newForm.formIndex = species.forms.length;
@@ -1631,13 +1716,13 @@ export function initSmittyForms() {
 
 export function addGlitchFormChange(speciesId: Species, modFormName: string = "")  {
   const glitchFormChange = new SpeciesFormChange(
-      speciesId,
-      "",
-      SpeciesFormKey.GLITCH,
-      new SpeciesFormChangeCompoundTrigger(
-          new GlitchPieceTrigger(5),
-          new SpeciesFormChangeItemTrigger(FormChangeItem.GLITCHI_GLITCHI_FRUIT)
-      )
+    speciesId,
+    "",
+    SpeciesFormKey.GLITCH,
+    new SpeciesFormChangeCompoundTrigger(
+      new GlitchPieceTrigger(5),
+      new SpeciesFormChangeItemTrigger(FormChangeItem.GLITCHI_GLITCHI_FRUIT)
+    )
   );
 
   glitchFormChange.modFormName = modFormName;
@@ -1650,13 +1735,13 @@ export function addGlitchFormChange(speciesId: Species, modFormName: string = ""
 }
 export function addGlitchFormChangeAlt(speciesId: Species, formKey: SpeciesFormKey, formChangeItem: FormChangeItem, modFormName: string = "") {
   const glitchFormChange = new SpeciesFormChange(
-      speciesId,
-      "",
-      formKey,
-      new SpeciesFormChangeCompoundTrigger(
-          new GlitchPieceTrigger(5),
-          new SpeciesFormChangeItemTrigger(formChangeItem)
-      )
+    speciesId,
+    "",
+    formKey,
+    new SpeciesFormChangeCompoundTrigger(
+      new GlitchPieceTrigger(5),
+      new SpeciesFormChangeItemTrigger(formChangeItem)
+    )
   );
 
   glitchFormChange.modFormName = modFormName;
