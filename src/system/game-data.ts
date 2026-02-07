@@ -1175,7 +1175,7 @@ export class GameData {
 
         try {
             if (bypassLogin && !this.getLocalStorageItem(`data_${loggedInUser?.username}`)) {
-                this.updatePermaMoney(this.scene, 12500);
+                this.updatePermaMoney(this.scene, 22500);
                 this.dataLoaded = true;
                 return false;
             }
