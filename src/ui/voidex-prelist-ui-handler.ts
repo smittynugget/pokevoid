@@ -3,7 +3,7 @@ import RoundRectangle from "phaser3-rex-plugins/plugins/roundrectangle.js";
 import BattleScene from "../battle-scene";
 import { allAbilities } from "../data/ability";
 import { speciesEggMoves } from "../data/egg-moves";
-import { pokemonEvolutions } from "../data/pokemon-evolutions";
+import { pokemonEvolutions, pokemonPrevolutions } from "../data/pokemon-evolutions";
 import { SMITTY_FORM_ITEMS } from "../data/pokemon-forms";
 import { getModPokemonName } from "../data/mod-glitch-form-utils";
 import { getAllRivalTrainerTypes, trainerConfigs, trainerPokemonPools } from "../data/trainer-config";
@@ -561,23 +561,14 @@ export default class VoidexPrelistUiHandler extends UiHandler {
   private applyViewFromCompletionCategory(resetCursor: boolean): void {
     const active = this.completionAvailableCategories[this.completionCategoryIndex] || "caught";
     let nextMode: ViewMode = "pokemonAll";
-    if (active === "glitch") {
-      nextMode = "pokemonGlitch";
-    } else if (active === "smitty") {
-      nextMode = "pokemonSmitty";
-    } else if (active === "rivals") {
-      nextMode = "rivals";
-    } else if (active === "smittyFoes") {
-      nextMode = "smittyFoes";
-    } else if (active === "fusions") {
-      nextMode = "fusions";
-    } else if (active === "shiniesV1") {
-      nextMode = "shiniesV1";
-    } else if (active === "shiniesV2") {
-      nextMode = "shiniesV2";
-    } else if (active === "shiniesV3") {
-      nextMode = "shiniesV3";
-    }
+    if (active === "glitch") nextMode = "pokemonGlitch";
+    else if (active === "smitty") nextMode = "pokemonSmitty";
+    else if (active === "rivals") nextMode = "rivals";
+    else if (active === "smittyFoes") nextMode = "smittyFoes";
+    else if (active === "fusions") nextMode = "fusions";
+    else if (active === "shiniesV1") nextMode = "shiniesV1";
+    else if (active === "shiniesV2") nextMode = "shiniesV2";
+    else if (active === "shiniesV3") nextMode = "shiniesV3";
 
     const prevMode = this.viewMode;
     this.viewMode = nextMode;
@@ -588,25 +579,16 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     this.sortRightArrow?.setVisible(showSort);
     this.sortDirKeySprite?.setVisible(showSort);
     if (this.sortLeftArrow) {
-      if (showSort) {
-        this.sortLeftArrow.setInteractive({ useHandCursor: true });
-      } else {
-        this.sortLeftArrow.disableInteractive();
-      }
+      if (showSort) this.sortLeftArrow.setInteractive({ useHandCursor: true });
+      else this.sortLeftArrow.disableInteractive();
     }
     if (this.sortRightArrow) {
-      if (showSort) {
-        this.sortRightArrow.setInteractive({ useHandCursor: true });
-      } else {
-        this.sortRightArrow.disableInteractive();
-      }
+      if (showSort) this.sortRightArrow.setInteractive({ useHandCursor: true });
+      else this.sortRightArrow.disableInteractive();
     }
     if (this.sortDirKeySprite) {
-      if (showSort) {
-        this.sortDirKeySprite.setInteractive({ useHandCursor: true });
-      } else {
-        this.sortDirKeySprite.disableInteractive();
-      }
+      if (showSort) this.sortDirKeySprite.setInteractive({ useHandCursor: true });
+      else this.sortDirKeySprite.disableInteractive();
     }
 
     if (prevMode !== this.viewMode) {
@@ -643,12 +625,12 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     const width = this.viewWidth;
     const key =
       this.viewMode === "rivals" ? "pokedex:prelistTaglineRivals" :
-        this.viewMode === "smittyFoes" ? "pokedex:prelistTaglineSmittyFoes" :
-          this.viewMode === "fusions" ? "pokedex:prelistTaglineFusions" :
-            this.viewMode === "shiniesV1" ? "pokedex:prelistTaglineShiniesV1" :
-              this.viewMode === "shiniesV2" ? "pokedex:prelistTaglineShiniesV2" :
-                this.viewMode === "shiniesV3" ? "pokedex:prelistTaglineShiniesV3" :
-                  "pokedex:prelistTagline";
+      this.viewMode === "smittyFoes" ? "pokedex:prelistTaglineSmittyFoes" :
+      this.viewMode === "fusions" ? "pokedex:prelistTaglineFusions" :
+      this.viewMode === "shiniesV1" ? "pokedex:prelistTaglineShiniesV1" :
+      this.viewMode === "shiniesV2" ? "pokedex:prelistTaglineShiniesV2" :
+      this.viewMode === "shiniesV3" ? "pokedex:prelistTaglineShiniesV3" :
+      "pokedex:prelistTagline";
     const full = i18next.t(key);
     this.subtitleText.setText(full);
     const rightLimit = showSort ? (this.sortText?.x ?? (width - 10)) : (width - 10);
@@ -745,15 +727,9 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       if (!hasShiny) {
         continue;
       }
-      if (attr & DexAttr.DEFAULT_VARIANT) {
-        shiniesV1Unlocked++;
-      }
-      if (attr & DexAttr.VARIANT_2) {
-        shiniesV2Unlocked++;
-      }
-      if (attr & DexAttr.VARIANT_3) {
-        shiniesV3Unlocked++;
-      }
+      if (attr & DexAttr.DEFAULT_VARIANT) shiniesV1Unlocked++;
+      if (attr & DexAttr.VARIANT_2) shiniesV2Unlocked++;
+      if (attr & DexAttr.VARIANT_3) shiniesV3Unlocked++;
     }
 
     const available: CompletionCategory[] = [];
@@ -853,9 +829,9 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     const pctRaw = total > 0 ? (unlocked / total) * 100 : 0;
     const decimals =
       pctRaw === 0 ? 0 :
-        pctRaw < 0.1 ? 3 :
-          pctRaw < 1 ? 2 :
-            1;
+      pctRaw < 0.1 ? 3 :
+      pctRaw < 1 ? 2 :
+      1;
     const pctText = decimals === 0
       ? String(Math.round(pctRaw))
       : String(Number(pctRaw.toFixed(decimals)));
@@ -1084,7 +1060,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
           success = true;
         }
       } else {
-        success = this.cycleSortKey(-1);
+      success = this.cycleSortKey(-1);
       }
       break;
     case Button.RIGHT:
@@ -1117,15 +1093,15 @@ export default class VoidexPrelistUiHandler extends UiHandler {
           success = true;
         }
       } else {
-        success = this.cycleSortKey(1);
+      success = this.cycleSortKey(1);
       }
       break;
     case Button.CYCLE_ABILITY:
       if (this.viewMode !== "rivals" && this.viewMode !== "smittyFoes" && !isShiniesView) {
-        this.sortDir = this.sortDir === "desc" ? "asc" : "desc";
-        this.applyFilterAndSort(false);
-        this.updateSortText();
-        this.refreshViews();
+      this.sortDir = this.sortDir === "desc" ? "asc" : "desc";
+      this.applyFilterAndSort(false);
+      this.updateSortText();
+      this.refreshViews();
         success = true;
       }
       break;
@@ -1233,14 +1209,10 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     offers.sort((a, b) => {
       const au = a.unlocked ? 1 : 0;
       const bu = b.unlocked ? 1 : 0;
-      if (au !== bu) {
-        return bu - au;
-      }
+      if (au !== bu) return bu - au;
       const av = a.displaySpeciesId as number;
       const bv = b.displaySpeciesId as number;
-      if (av !== bv) {
-        return av - bv;
-      }
+      if (av !== bv) return av - bv;
       return (a.rewardSpeciesId as number) - (b.rewardSpeciesId as number);
     });
     return offers;
@@ -1688,12 +1660,8 @@ export default class VoidexPrelistUiHandler extends UiHandler {
         tile.label.setVisible(false);
         tile.icon.setVisible(false);
       }
-      for (const c of view.statLabelCells) {
-        c.setVisible(false);
-      }
-      for (const c of view.statValueCells) {
-        c.setVisible(false);
-      }
+      for (const c of view.statLabelCells) c.setVisible(false);
+      for (const c of view.statValueCells) c.setVisible(false);
 
       view.bg.setFillStyle(0x223344);
       view.bg.setStrokeStyle(selected ? 2 : 1, 0xffffff, selected ? 1 : 0.2);
@@ -1757,12 +1725,8 @@ export default class VoidexPrelistUiHandler extends UiHandler {
         tile.label.setVisible(false);
         tile.icon.setVisible(false);
       }
-      for (const c of view.statLabelCells) {
-        c.setVisible(false);
-      }
-      for (const c of view.statValueCells) {
-        c.setVisible(false);
-      }
+      for (const c of view.statLabelCells) c.setVisible(false);
+      for (const c of view.statValueCells) c.setVisible(false);
 
       const type1Rgb = getTypeRgb(row.signatureType);
       const type1Color = new Phaser.Display.Color(type1Rgb[0], type1Rgb[1], type1Rgb[2]);
@@ -1865,18 +1829,10 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       view.nameText.setVisible(true);
       view.type1Icon.setVisible(true);
       view.abilityText.setVisible(true);
-      for (const c of view.statLabelCells) {
-        c.setVisible(true);
-      }
-      for (const c of view.statValueCells) {
-        c.setVisible(true);
-      }
-      if (view.statLabelCells.length >= 1) {
-        view.statLabelCells[0].setVisible(false);
-      }
-      if (view.statValueCells.length >= 1) {
-        view.statValueCells[0].setVisible(false);
-      }
+      for (const c of view.statLabelCells) c.setVisible(true);
+      for (const c of view.statValueCells) c.setVisible(true);
+      if (view.statLabelCells.length >= 1) view.statLabelCells[0].setVisible(false);
+      if (view.statValueCells.length >= 1) view.statValueCells[0].setVisible(false);
       view.eggLabel.setVisible(true);
       for (const tile of view.eggTiles) {
         tile.bg.setVisible(true);
@@ -1997,7 +1953,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
         } else {
           view.eggTiles[i].icon.setVisible(false);
           view.eggTiles[i].label.setVisible(true);
-          view.eggTiles[i].label.setText("-");
+        view.eggTiles[i].label.setText("-");
         }
       }
 
@@ -2010,12 +1966,8 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       view.nameText.setVisible(true);
       view.type1Icon.setVisible(true);
       view.abilityText.setVisible(true);
-      for (const c of view.statLabelCells) {
-        c.setVisible(true);
-      }
-      for (const c of view.statValueCells) {
-        c.setVisible(true);
-      }
+      for (const c of view.statLabelCells) c.setVisible(true);
+      for (const c of view.statValueCells) c.setVisible(true);
       view.eggLabel.setVisible(true);
       for (const tile of view.eggTiles) {
         tile.bg.setVisible(true);
@@ -2197,12 +2149,8 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     view.nameText.setVisible(true);
     view.type1Icon.setVisible(true);
     view.abilityText.setVisible(true);
-    for (const c of view.statLabelCells) {
-      c.setVisible(true);
-    }
-    for (const c of view.statValueCells) {
-      c.setVisible(true);
-    }
+    for (const c of view.statLabelCells) c.setVisible(true);
+    for (const c of view.statValueCells) c.setVisible(true);
     view.eggLabel.setVisible(true);
     for (const tile of view.eggTiles) {
       tile.bg.setVisible(true);
@@ -2396,16 +2344,16 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       view.eggLabel.setText(i18next.t("pokedex:eggMoves"));
       view.eggLabel.setTint(0xffffff);
       view.eggLabel.setStyle({ ...(view.eggLabel.style as any), fontStyle: "normal" });
-      const eggRoot = species.getRootSpeciesId(false);
-      const eggMoveIds = (speciesEggMoves[eggRoot] || []) as Moves[];
-      for (let i = 0; i < view.eggTiles.length; i++) {
-        const moveId = eggMoveIds[i];
-        const move = moveId !== undefined ? allMoves[moveId] : undefined;
-        const typeFrame = Type[move ? move.type : Type.UNKNOWN].toString().toLowerCase();
-        view.eggTiles[i].bg.setFrame(typeFrame);
+    const eggRoot = species.getRootSpeciesId(false);
+    const eggMoveIds = (speciesEggMoves[eggRoot] || []) as Moves[];
+    for (let i = 0; i < view.eggTiles.length; i++) {
+      const moveId = eggMoveIds[i];
+      const move = moveId !== undefined ? allMoves[moveId] : undefined;
+      const typeFrame = Type[move ? move.type : Type.UNKNOWN].toString().toLowerCase();
+      view.eggTiles[i].bg.setFrame(typeFrame);
         view.eggTiles[i].icon.setVisible(false);
         view.eggTiles[i].label.setVisible(true);
-        view.eggTiles[i].label.setText(move ? move.name : "-");
+      view.eggTiles[i].label.setText(move ? move.name : "-");
       }
     }
 
@@ -2430,9 +2378,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
 
     for (const t of targets) {
       const species = getPokemonSpecies(t.speciesId);
-      if (!species) {
-        continue;
-      }
+      if (!species) continue;
       const forms = species.forms && species.forms.length > 0 ? species.forms.length : 1;
       for (let f = 0; f < forms; f++) {
         const form = species.forms && species.forms.length > 0 ? species.forms[f] : species;
@@ -2915,18 +2861,10 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     if (passiveId !== undefined) {
       parts.push(allAbilities[passiveId]?.name ?? "");
     }
-    if (target.bucket === "party") {
-      parts.push("party");
-    }
-    if (target.bucket === "enemy") {
-      parts.push("enemy");
-    }
-    if (target.bucket === "modifier") {
-      parts.push("modifier");
-    }
-    if (target.kind === "evolution") {
-      parts.push("evolution");
-    }
+    if (target.bucket === "party") parts.push("party");
+    if (target.bucket === "enemy") parts.push("enemy");
+    if (target.bucket === "modifier") parts.push("modifier");
+    if (target.kind === "evolution") parts.push("evolution");
     parts.push(String(stats.cost));
     parts.push(String(stats.bst));
     return parts.join(" ").toLowerCase();
@@ -2988,21 +2926,11 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       fusionRows.sort((a, b) => {
         const av = getVal(a);
         const bv = getVal(b);
-        if (av !== bv) {
-          return (av < bv ? -1 : 1) * sortMultiplier;
-        }
-        if (a.primarySpeciesId !== b.primarySpeciesId) {
-          return (a.primarySpeciesId as number) - (b.primarySpeciesId as number);
-        }
-        if (a.primaryFormIndex !== b.primaryFormIndex) {
-          return a.primaryFormIndex - b.primaryFormIndex;
-        }
-        if (a.fusionSpeciesId !== b.fusionSpeciesId) {
-          return (a.fusionSpeciesId as number) - (b.fusionSpeciesId as number);
-        }
-        if (a.fusionFormIndex !== b.fusionFormIndex) {
-          return a.fusionFormIndex - b.fusionFormIndex;
-        }
+        if (av !== bv) return (av < bv ? -1 : 1) * sortMultiplier;
+        if (a.primarySpeciesId !== b.primarySpeciesId) return (a.primarySpeciesId as number) - (b.primarySpeciesId as number);
+        if (a.primaryFormIndex !== b.primaryFormIndex) return a.primaryFormIndex - b.primaryFormIndex;
+        if (a.fusionSpeciesId !== b.fusionSpeciesId) return (a.fusionSpeciesId as number) - (b.fusionSpeciesId as number);
+        if (a.fusionFormIndex !== b.fusionFormIndex) return a.fusionFormIndex - b.fusionFormIndex;
         return 0;
       });
 
@@ -3082,41 +3010,44 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       if (isGlitchSmittyView) {
         const au = getUnlockedRankForGlitchSmittyView(a);
         const bu = getUnlockedRankForGlitchSmittyView(b);
-        if (au !== bu) {
-          return bu - au;
-        }
+        if (au !== bu) return bu - au;
       }
       if (isCategoryKey) {
         const av = getCategoryRank(a);
         const bv = getCategoryRank(b);
-        if (av !== bv) {
-          return (av < bv ? -1 : 1) * sortMultiplier;
-        }
+        if (av !== bv) return (av < bv ? -1 : 1) * sortMultiplier;
       } else {
-        const av = a.stats[sortKey as keyof RowStats];
-        const bv = b.stats[sortKey as keyof RowStats];
-        if (av !== bv) {
-          return (av < bv ? -1 : 1) * sortMultiplier;
+        if (sortKey === "id" && a.kind === "speciesForm" && b.kind === "speciesForm") {
+          const aRoot = a.species.getRootSpeciesId(false) as number;
+          const aFirstEvo = pokemonEvolutions[aRoot]?.[0]?.speciesId as number | undefined;
+          const aGroupKey = aFirstEvo !== undefined ? Math.min(aRoot, aFirstEvo) : aRoot;
+          const bRoot = b.species.getRootSpeciesId(false) as number;
+          const bFirstEvo = pokemonEvolutions[bRoot]?.[0]?.speciesId as number | undefined;
+          const bGroupKey = bFirstEvo !== undefined ? Math.min(bRoot, bFirstEvo) : bRoot;
+          if (aGroupKey !== bGroupKey) return (aGroupKey < bGroupKey ? -1 : 1) * sortMultiplier;
+          let aDepth = 0;
+          let aCur = a.species.speciesId as number;
+          while (pokemonPrevolutions.hasOwnProperty(aCur)) { aCur = pokemonPrevolutions[aCur]; aDepth++; }
+          let bDepth = 0;
+          let bCur = b.species.speciesId as number;
+          while (pokemonPrevolutions.hasOwnProperty(bCur)) { bCur = pokemonPrevolutions[bCur]; bDepth++; }
+          if (aDepth !== bDepth) return (aDepth - bDepth) * sortMultiplier;
+        } else {
+          const av = a.stats[sortKey as keyof RowStats];
+          const bv = b.stats[sortKey as keyof RowStats];
+          if (av !== bv) return (av < bv ? -1 : 1) * sortMultiplier;
         }
       }
       if (a.kind === "speciesForm" && b.kind === "speciesForm") {
-        if (a.species.speciesId !== b.species.speciesId) {
-          return a.species.speciesId - b.species.speciesId;
-        }
-        if (a.formIndex !== b.formIndex) {
-          return a.formIndex - b.formIndex;
-        }
+        if (a.species.speciesId !== b.species.speciesId) return a.species.speciesId - b.species.speciesId;
+        if (a.formIndex !== b.formIndex) return a.formIndex - b.formIndex;
         const an = a.species.getName(a.formIndex);
         const bn = b.species.getName(b.formIndex);
-        if (an !== bn) {
-          return an.localeCompare(bn);
-        }
+        if (an !== bn) return an.localeCompare(bn);
       } else if (a.kind === "universalSmitty" && b.kind === "universalSmitty") {
         const an = a.formName;
         const bn = b.formName;
-        if (an !== bn) {
-          return an.localeCompare(bn);
-        }
+        if (an !== bn) return an.localeCompare(bn);
       } else {
         return a.kind === "speciesForm" ? -1 : 1;
       }
@@ -3187,9 +3118,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     const frames = texture.getFrameNames()
       .filter(f => {
         const m = f.match(/\d+/);
-        if (!m) {
-          return false;
-        }
+        if (!m) return false;
         const n = parseInt(m[0], 10);
         return Number.isFinite(n) && n > 0;
       })
@@ -3215,9 +3144,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     frames.sort((a, b) => {
       const da = defeated.has(a) ? 1 : 0;
       const db = defeated.has(b) ? 1 : 0;
-      if (da !== db) {
-        return db - da;
-      }
+      if (da !== db) return db - da;
       const na = parseInt(a.match(/\d+/)?.[0] || "0", 10);
       const nb = parseInt(b.match(/\d+/)?.[0] || "0", 10);
       return na - nb;
@@ -3325,12 +3252,8 @@ export default class VoidexPrelistUiHandler extends UiHandler {
   }
 
   private getShinyVariantForViewMode(): number {
-    if (this.viewMode === "shiniesV2") {
-      return 1;
-    }
-    if (this.viewMode === "shiniesV3") {
-      return 2;
-    }
+    if (this.viewMode === "shiniesV2") return 1;
+    if (this.viewMode === "shiniesV3") return 2;
     return 0;
   }
 
@@ -3393,9 +3316,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     entries.sort((a, b) => {
       const ac = a.caught ? 1 : 0;
       const bc = b.caught ? 1 : 0;
-      if (ac !== bc) {
-        return bc - ac;
-      }
+      if (ac !== bc) return bc - ac;
       return (a.speciesId as number) - (b.speciesId as number);
     });
     this.shiniesGridEntries = entries;
@@ -3622,9 +3543,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     offers.sort((a, b) => {
       const au = a.unlocked ? 1 : 0;
       const bu = b.unlocked ? 1 : 0;
-      if (au !== bu) {
-        return bu - au;
-      }
+      if (au !== bu) return bu - au;
       return (a.displaySpeciesId as number) - (b.displaySpeciesId as number);
     });
     return offers;
@@ -3638,9 +3557,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     const toLoad: string[] = [];
     for (const rt of rivalTypes) {
       const config: any = (trainerConfigs as any)[rt];
-      if (!config) {
-        continue;
-      }
+      if (!config) continue;
       const spriteKey = config.getSpriteKey(false, false);
       if (spriteKey && !this.scene.textures.exists(spriteKey)) {
         toLoad.push(spriteKey);
@@ -3687,14 +3604,10 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       });
     }
     rows.sort((a, b) => {
-      if (a.kind !== "rival" || b.kind !== "rival") {
-        return 0;
-      }
+      if (a.kind !== "rival" || b.kind !== "rival") return 0;
       const ad = a.defeated ? 1 : 0;
       const bd = b.defeated ? 1 : 0;
-      if (ad !== bd) {
-        return bd - ad;
-      }
+      if (ad !== bd) return bd - ad;
       return (a.rivalType as number) - (b.rivalType as number);
     });
     return rows;
@@ -3730,9 +3643,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     if (this.scene.currentBattle) {
       const party = this.scene.getParty();
       party?.forEach((p, idx) => {
-        if (!p) {
-          return;
-        }
+        if (!p) return;
         const s = p.getSpeciesForm().speciesId;
         targets.push({ bucket: "party", kind: "species", speciesId: s, partyIndex: idx });
         addedSpecies.add(s);
@@ -3745,9 +3656,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       .sort((a, b) => (a[1] as number) - (b[1] as number))
       .forEach(([, v]) => {
         const s = v as Species;
-        if (addedSpecies.has(s)) {
-          return;
-        }
+        if (addedSpecies.has(s)) return;
         targets.push({ bucket: "other", kind: "species", speciesId: s });
       });
 
@@ -3758,9 +3667,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     const evolutions = pokemonEvolutions[speciesId] || [];
     for (const evo of evolutions) {
       const es = evo.speciesId as Species;
-      if (addedEvos.has(es)) {
-        continue;
-      }
+      if (addedEvos.has(es)) continue;
       addedEvos.add(es);
       targets.push({ bucket, kind: "evolution", speciesId: es });
       addedSpecies.add(es);
@@ -3781,9 +3688,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
           if (opt.type instanceof AddPokemonModifierType) {
             const pokemon = opt.type.getPokemon();
             const s = pokemon.species.speciesId as Species;
-            if (!ret.includes(s)) {
-              ret.push(s);
-            }
+            if (!ret.includes(s)) ret.push(s);
           }
         });
       }
@@ -3794,15 +3699,11 @@ export default class VoidexPrelistUiHandler extends UiHandler {
           if (opt.type instanceof AddPokemonModifierType) {
             const pokemon = opt.type.getPokemon();
             const s = pokemon.species.speciesId as Species;
-            if (!ret.includes(s)) {
-              ret.push(s);
-            }
+            if (!ret.includes(s)) ret.push(s);
           }
         });
       }
-    } catch (e) {
-      console.warn("[VoidexPrelist] getModifierSpecies error:", e);
-    }
+    } catch (e) { console.warn("[VoidexPrelist] getModifierSpecies error:", e); }
     return ret;
   }
 
@@ -3848,9 +3749,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
           }
         });
       }
-    } catch (e) {
-      console.warn("[VoidexPrelist] getModifierFusions error:", e);
-    }
+    } catch (e) { console.warn("[VoidexPrelist] getModifierFusions error:", e); }
     return ret;
   }
 

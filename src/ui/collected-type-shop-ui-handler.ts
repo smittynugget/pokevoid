@@ -190,6 +190,10 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
             return false;
         }
 
+        if (button === Button.CYCLE_ABILITY || button === Button.STATS) {
+            return super.processInput(button);
+        }
+
         const ui = this.getUi();
         let success = false;
 

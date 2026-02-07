@@ -110,7 +110,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { addRivalSilhouetteOverlay } from "#app/utils/story-cutscene-overlays.js";
 export const defaultStarterSpecies: Species[] = [];
 
-export const INTERNAL_BACKUP_VERSION = 0;
+export const INTERNAL_BACKUP_VERSION = 1;
 
 export const VERSIONS_REQUIRING_BACKUP: string[] = [
     "v2.0b [The Colossal Update]"
@@ -2309,7 +2309,7 @@ export class GameData {
             seed: this.scene.seed,
             selectedPokemon: {},
             unlockedGlitchForms: [],
-            skillPoints: Overrides.SKILL_TREE_DEFAULT_SKILL_POINTS_OVERRIDE ?? 2,
+            skillPoints: Overrides.SKILL_TREE_DEFAULT_SKILL_POINTS_OVERRIDE ?? 6,
             tokens: 0,
             catchRateBonusByType: {},
             reviveChanceByType: {},

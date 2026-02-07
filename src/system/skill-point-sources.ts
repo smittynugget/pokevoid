@@ -16,8 +16,8 @@ export class SkillPointSources {
 
 	checkBattleVictoryReward(): void {
 		if (!this.scene.gameData.activeSkillTree) return;
-		if (Utils.randSeedInt(100) < 20) {
-			this.awardSkillPoints(1, "battle_victory");
+		if (Utils.randSeedInt(100) < 25) {
+			this.awardSkillPoints(Utils.randSeedInt(2) + 1, "battle_victory");
 		}
 		if (Utils.randSeedInt(100) < 20) {
 			this.awardTokens(1, "battle_victory");
@@ -41,10 +41,10 @@ export class SkillPointSources {
         if (resolvedNodeType === undefined || resolvedNodeType === null) return;
         switch (resolvedNodeType) {
 			case PathNodeType.ITEM_GENERAL:
-				if (Utils.randSeedInt(100) < 10) this.awardSkillPoints(1, "rare_item_node");
+				if (Utils.randSeedInt(100) < 20) this.awardSkillPoints(Utils.randSeedInt(2) + 1, "rare_item_node");
 				break;
 			case PathNodeType.ITEM_TM:
-				if (Utils.randSeedInt(100) < 15) this.awardSkillPoints(1, "tm_node");
+				if (Utils.randSeedInt(100) < 25) this.awardSkillPoints(Utils.randSeedInt(2) + 1, "tm_node");
 				break;
 			case PathNodeType.ADD_POKEMON:
 				if (Utils.randSeedInt(100) < 20) this.awardTokens(1, "pokemon_node");

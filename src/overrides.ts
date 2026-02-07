@@ -40,7 +40,8 @@ class DefaultOverrides {
   readonly STARTING_MONEY_OVERRIDE: number = 0;
   readonly WAIVE_SHOP_FEES_OVERRIDE: boolean = false;
   readonly FREE_CANDY_UPGRADE_OVERRIDE: boolean = false;
-  readonly BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE: boolean = true;
+  readonly BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE: boolean = false;
+  readonly FORCE_COLLECTOR_SHOP_OVERRIDE: boolean = false;
   readonly POKEBALL_OVERRIDE: { active: boolean; pokeballs: PokeballCounts } = {
   active: false,
   pokeballs: {

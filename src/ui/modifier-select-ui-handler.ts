@@ -850,6 +850,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
 
       if (!this.scene.modifierTooltipsEnabled && !isMoveUpgrade) {
+        if (type instanceof TmModifierType || type instanceof AnyTmModifierType) {
+          this.moveInfoOverlay.show(this.scene.getUpgradedMove(allMoves[type.moveId]));
+        } else if (type instanceof AnyAbilityModifierType || type instanceof AnyPassiveAbilityModifierType || type instanceof PermaPartyAbilityModifierType) {
+          this.moveInfoOverlay.show(type.ability.description);
+        }
         return ret;
       }
 

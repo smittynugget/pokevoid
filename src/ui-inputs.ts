@@ -166,10 +166,6 @@ export class UiInputs {
       return;
     }
 
-    if (!pressed && uiHandler instanceof ModifierSelectUiHandler) {
-      return;
-    }
-
     if (pressed && uiHandler instanceof ModifierSelectUiHandler) {
       if (uiHandler.wantsStatsForTooltipDetails()) {
         this.scene.ui.processInput(Button.STATS);
@@ -189,8 +185,10 @@ export class UiInputs {
     for (const t of this.scene.getInfoToggles(true)) {
       t.toggleInfo(pressed);
     }
-    for (const p of this.scene.getField().filter(p => p?.isActive(true))) {
-      p.toggleStats(pressed);
+    if (!(uiHandler instanceof ModifierSelectUiHandler)) {
+      for (const p of this.scene.getField().filter(p => p?.isActive(true))) {
+        p.toggleStats(pressed);
+      }
     }
   }
 
@@ -259,13 +257,13 @@ export class UiInputs {
     const currentMode = this.scene.ui?.getMode();
 
     if (currentMode === Mode.TITLE || currentMode === Mode.COMMAND || currentMode === Mode.MODIFIER_SELECT) {
-      if (currentMode === Mode.MODIFIER_SELECT) {
+      if(currentMode === Mode.MODIFIER_SELECT) {
         const uiHandler = this.scene.ui?.getHandler();
         if (uiHandler instanceof ModifierSelectUiHandler) {
           const currentOption = uiHandler.getCurrentSelectedOption();
           if (currentOption?.modifierTypeOption?.type instanceof AddPokemonModifierType) {
             this.scene.ui.setOverlayMode(Mode.VOIDEX_PRELIST);
-            return;
+            return
           }
         }
       }
@@ -310,26 +308,26 @@ export class UiInputs {
     }
 
     switch (currentMode) {
-    case Mode.SMITTY_CONSOLE:
-      this.scene.ui.revertMode();
-      this.scene.playSound("ui/select");
-      break;
+      case Mode.SMITTY_CONSOLE:
+        this.scene.ui.revertMode();
+        this.scene.playSound("ui/select");
+        break;
 
-    case Mode.TITLE:
-    case Mode.COMMAND:
-      this.scene.ui.setOverlayMode(Mode.SMITTY_CONSOLE, {
-        buttonActions: [
-          async () => {
-          },
-          () => {
-            this.scene.ui.revertMode();
-          }
-        ]
-      });
-      break;
+      case Mode.TITLE:
+      case Mode.COMMAND:
+        this.scene.ui.setOverlayMode(Mode.SMITTY_CONSOLE, {
+          buttonActions: [
+            async () => {
+            },
+            () => {
+              this.scene.ui.revertMode();
+            }
+          ]
+        });
+        break;
 
-    default:
-      return;
+      default:
+        return;
     }
   }
 
@@ -342,76 +340,85 @@ export class UiInputs {
       this.scene.ui.processInput(button);
     } else if (button === Button.CYCLE_SHINY) {
       switch (currentMode) {
-      case Mode.TITLE:
-        this.scene.ui.setOverlayMode(Mode.RUN_HISTORY);
-        break;
-      case Mode.COMMAND:
-      case Mode.MODIFIER_SELECT:
-        if (this.scene.sessionSlotId < 0) {
+        case Mode.TITLE:
+          this.scene.ui.setOverlayMode(Mode.RUN_HISTORY);
+          break;
+        case Mode.COMMAND:
+        case Mode.MODIFIER_SELECT:
+          if (this.scene.sessionSlotId < 0) {
+            break;
+          }
+          const slotId = this.scene.sessionSlotId;
+
+          (async () => {
+            try {
+              const sessionData = await this.scene.gameData.getSession(slotId);
+              if (sessionData) {
+                const activeRunEntry = {
+                  entry: sessionData,
+                  isVictory: false,
+                  isFavorite: false,
+                  isActive: true
+                };
+                this.scene.ui.setOverlayMode(Mode.RUN_INFO, activeRunEntry, true);
+              }
+            } catch (error) {
+              console.error("Error loading session data:", error);
+            }
+          })();
+          break;
+        default:
+          this.scene.ui.processInput(button);
+          break;
+      }
+    }
+    else if (button === Button.CYCLE_ABILITY) {
+      switch (currentMode) {
+        case Mode.TITLE:
+        case Mode.COMMAND:
+          this.scene.ui.setOverlayMode(Mode.EGG_GACHA);
+          break;
+        case Mode.MODIFIER_SELECT: {
+          const handler = this.scene.ui?.getHandler();
+          if (handler instanceof ModifierSelectUiHandler && handler.wantsCycleAbilityForTooltip()) {
+            this.scene.ui.processInput(button);
+          } else {
+            this.scene.ui.setOverlayMode(Mode.EGG_GACHA);
+          }
           break;
         }
-        const slotId = this.scene.sessionSlotId;
-
-        (async () => {
-          try {
-            const sessionData = await this.scene.gameData.getSession(slotId);
-            if (sessionData) {
-              const activeRunEntry = {
-                entry: sessionData,
-                isVictory: false,
-                isFavorite: false,
-                isActive: true
-              };
-              this.scene.ui.setOverlayMode(Mode.RUN_INFO, activeRunEntry, true);
-            }
-          } catch (error) {
-            console.error("Error loading session data:", error);
+        case Mode.COLLECTED_TYPE_SELECT: {
+          const handler = this.scene.ui?.getHandler();
+          if (handler instanceof ModifierSelectUiHandler && handler.wantsCycleAbilityForTooltip()) {
+            this.scene.ui.processInput(button);
           }
-        })();
-        break;
-      default:
-        this.scene.ui.processInput(button);
-        break;
-      }
-    } else if (button === Button.CYCLE_ABILITY) {
-      switch (currentMode) {
-      case Mode.TITLE:
-      case Mode.COMMAND:
-        this.scene.ui.setOverlayMode(Mode.EGG_GACHA);
-        break;
-      case Mode.MODIFIER_SELECT: {
-        const handler = this.scene.ui?.getHandler();
-        if (handler instanceof ModifierSelectUiHandler && handler.wantsCycleAbilityForTooltip()) {
-          this.scene.ui.processInput(button);
-        } else {
-          this.scene.ui.setOverlayMode(Mode.EGG_GACHA);
+          break;
         }
-        break;
+        default:
+          this.scene.ui.processInput(button);
+          break;
       }
-      default:
-        this.scene.ui.processInput(button);
-        break;
-      }
-    } else if (button === Button.CYCLE_VARIANT) {
+    }
+    else if (button === Button.CYCLE_VARIANT) {
       const shopUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
       if (!shopUnlocked && (currentMode === Mode.TITLE || currentMode === Mode.COMMAND)) {
         return;
       }
 
       switch (currentMode) {
-      case Mode.TITLE:
-      case Mode.COMMAND:
-        this.scene.ui.setMode(Mode.MESSAGE);
-        this.scene.unshiftPhase(new ShopModifierSelectPhase(this.scene));
-        const currentPhase = this.scene.getCurrentPhase();
-        if (currentPhase) {
-          this.scene.unshiftPhase(currentPhase);
-        }
-        this.scene.shiftPhase();
-        break;
-      default:
-        this.scene.ui.processInput(button);
-        break;
+        case Mode.TITLE:
+        case Mode.COMMAND:
+          this.scene.ui.setMode(Mode.MESSAGE);
+          this.scene.unshiftPhase(new ShopModifierSelectPhase(this.scene));
+          const currentPhase = this.scene.getCurrentPhase();
+          if (currentPhase) {
+            this.scene.unshiftPhase(currentPhase);
+          }
+          this.scene.shiftPhase();
+          break;
+        default:
+          this.scene.ui.processInput(button);
+          break;
       }
     } else if (button === Button.CYCLE_FORM) {
       if (currentMode === Mode.TITLE || currentMode === Mode.COMMAND) {
@@ -422,9 +429,10 @@ export class UiInputs {
     } else if (button === Button.CYCLE_GENDER) {
       this.scene.ui.processInput(button);
     } else if (button === Button.CYCLE_NATURE) {
-      if ((currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.COMMAND) && this.scene.gameMode.isChaosMode) {
-        this.scene.ui.setOverlayMode(Mode.BATTLE_PATH, { viewOnly: true });
-      } else if (currentMode === Mode.TITLE) {
+      if((currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.COMMAND) && this.scene.gameMode.isChaosMode) {
+          this.scene.ui.setOverlayMode(Mode.BATTLE_PATH, { viewOnly: true });
+      }
+      else if (currentMode === Mode.TITLE) {
         activateSmitomTalk(this.scene);
       } else {
         this.scene.ui.processInput(button);
