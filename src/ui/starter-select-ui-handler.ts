@@ -4207,11 +4207,15 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
             props += DexAttr.NON_SHINY;
             props += DexAttr.DEFAULT_VARIANT;
         }
-        if (this.starterPreferences[speciesId]?.form) {
+        if (this.starterPreferences[speciesId]?.form !== undefined) {
             props += BigInt(Math.pow(2, this.starterPreferences[speciesId]?.form)) * DexAttr.DEFAULT_FORM;
         } else {
-
-            props += this.scene.gameData.getFormAttr(this.scene.gameData.getFormIndex(caughtAttr));
+            let resolvedFormIndex = this.scene.gameData.getFormIndex(caughtAttr);
+            const speciesData = getPokemonSpecies(speciesId);
+            if (speciesData?.forms?.length && speciesData.forms[resolvedFormIndex] && !speciesData.forms[resolvedFormIndex].isStarterSelectable) {
+                resolvedFormIndex = 0;
+            }
+            props += this.scene.gameData.getFormAttr(resolvedFormIndex);
         }
 
         return props;
