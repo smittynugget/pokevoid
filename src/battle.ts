@@ -6047,9 +6047,7 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
     else if (node.nodeType === PathNodeType.MAJOR_BOSS_BATTLE) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
 
-      node.battleConfig = new FixedBattleConfig()
-        .setBattleType(BattleType.TRAINER)
-        .setSeedOffsetWave(node.wave);
+      node.battleConfig = undefined;
 
       node.metadata = {
         ...node.metadata,
@@ -6062,9 +6060,7 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
     else if (node.nodeType === PathNodeType.RECOVERY_BOSS) {
       const dynamicMode = node.dynamicMode || generateDynamicModeForWave(node.wave, scene, seeds);
 
-      node.battleConfig = new FixedBattleConfig()
-        .setBattleType(BattleType.TRAINER)
-        .setSeedOffsetWave(node.wave);
+      node.battleConfig = undefined;
 
       node.metadata = {
         ...node.metadata,
