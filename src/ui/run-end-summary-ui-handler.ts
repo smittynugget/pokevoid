@@ -93,21 +93,11 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
     super(scene, mode);
   }
 
-  getModalTitle(): string {
-    return "";
-  }
-  getWidth(): number {
-    return Math.floor(this.scene.game.canvas.width / 6) + 8;
-  }
-  getHeight(): number {
-    return Math.floor(this.scene.game.canvas.height / 6) + 6;
-  }
-  getMargin(): [number, number, number, number] {
-    return [4, 4, 4, 4];
-  }
-  getButtonLabels(): string[] {
-    return [];
-  }
+  getModalTitle(): string { return ""; }
+  getWidth(): number { return Math.floor(this.scene.game.canvas.width / 6) + 8; }
+  getHeight(): number { return Math.floor(this.scene.game.canvas.height / 6) + 6; }
+  getMargin(): [number, number, number, number] { return [4, 4, 4, 4]; }
+  getButtonLabels(): string[] { return []; }
 
   protected createModalBackground(): void {
   }
@@ -180,9 +170,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
 
   show(args: any[]): boolean {
     const modalConfig: ModalConfig = { buttonActions: [] };
-    if (!super.show([modalConfig])) {
-      return false;
-    }
+    if (!super.show([modalConfig])) return false;
 
     if (!this.cappedGameSpeedActive) {
       this.prevGameSpeed = this.scene.gameSpeed;
@@ -225,9 +213,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   }
 
   processInput(button: Button): boolean {
-    if (!this.active) {
-      return false;
-    }
+    if (!this.active) return false;
 
     if (button === Button.UP || button === Button.DOWN) {
       this.manualScroll = true;
@@ -400,9 +386,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   }
 
   private finishAndExit(): void {
-    if (!this.active) {
-      return;
-    }
+    if (!this.active) return;
     this.applyEssenceAwards();
     const ui = this.getUi();
     ui.revertMode().then(() => {
@@ -413,9 +397,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   }
 
   private startRevealSequence(): void {
-    if (!this.titleTextObj || !this.subtitleTextObj) {
-      return;
-    }
+    if (!this.titleTextObj || !this.subtitleTextObj) return;
     this.titleTextObj.setText(i18next.t("runEndSummary:title", { defaultValue: "VOID EXPLOIT SUMMARY" }));
     const subtitleKey = this.selectedSubtitleKey ?? "runEndSummary:subtitle";
     this.subtitleTextObj.setText(i18next.t(subtitleKey, { defaultValue: "The resistance is nothing without your efforts" }));
@@ -432,9 +414,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
     for (const sc of this.sectionContainers) {
       const sectionRevealDelay = delay;
       const revealSectionTimer = this.scene.time.delayedCall(sectionRevealDelay, () => {
-        if (this.skipRequested) {
-          return;
-        }
+        if (this.skipRequested) return;
         this.scene.tweens.add({
           targets: sc,
           alpha: 1,
@@ -449,13 +429,9 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
       const iconSprites = (sc.getData("iconSprites") as RevealableIcon[] | undefined) || [];
       for (const icon of iconSprites) {
         const t = this.scene.time.delayedCall(delay, () => {
-          if (this.skipRequested) {
-            return;
-          }
+          if (this.skipRequested) return;
           const revealSound = (icon as any).getData?.("revealSound") || "battle_anims/PRSFX- Healing Pulse";
-          try {
-            (this.scene as BattleScene).playSound(revealSound);
-          } catch {}
+          try { (this.scene as BattleScene).playSound(revealSound); } catch {}
           const targetAlpha = (icon as any).getData?.("targetAlpha");
           const finalAlpha = typeof targetAlpha === "number" ? targetAlpha : 1;
           icon.setAlpha(0);
@@ -476,9 +452,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
     }
 
     const endTimer = this.scene.time.delayedCall(delay + 250, () => {
-      if (this.skipRequested) {
-        return;
-      }
+      if (this.skipRequested) return;
       this.completed = true;
       this.isAnimating = false;
       this.updateScrollToBottom(true);
@@ -500,12 +474,8 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   }
 
   private updateScrollToBottom(tween: boolean): void {
-    if (!this.scrollContainer || !this.contentContainer) {
-      return;
-    }
-    if (this.manualScroll) {
-      return;
-    }
+    if (!this.scrollContainer || !this.contentContainer) return;
+    if (this.manualScroll) return;
     const h = this.getHeight();
     const padding = 12;
     const contentTop = this.getContentTop();
@@ -525,9 +495,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   }
 
   private scrollBy(delta: number): void {
-    if (!this.contentContainer) {
-      return;
-    }
+    if (!this.contentContainer) return;
     const h = this.getHeight();
     const padding = 12;
     const contentTop = this.getContentTop();
@@ -547,9 +515,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   }
 
   private computeContentHeight(): number {
-    if (!this.contentContainer) {
-      return 0;
-    }
+    if (!this.contentContainer) return 0;
     const bounds = this.contentContainer.getBounds();
     return bounds.height / 6 + 10 + (50 / 6);
   }
@@ -557,9 +523,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   private computeRevealedContentHeight(): number {
     let maxBottom = 0;
     for (const sc of this.sectionContainers) {
-      if (sc.alpha <= 0) {
-        continue;
-      }
+      if (sc.alpha <= 0) continue;
       const h = sc.getData("sectionHeight") as number | undefined;
       if (typeof h === "number") {
         maxBottom = Math.max(maxBottom, sc.y + h);
@@ -580,9 +544,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
       for (const [k, v] of Object.entries(s.essence)) {
         const t = Number(k) as Type;
         const amt = v || 0;
-        if (amt <= 0) {
-          continue;
-        }
+        if (amt <= 0) continue;
         this.totalEssence[t] = (this.totalEssence[t] || 0) + amt;
       }
     }
@@ -590,9 +552,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   }
 
   private renderSections(): void {
-    if (!this.contentContainer) {
-      return;
-    }
+    if (!this.contentContainer) return;
     const w = this.getWidth();
     const sectionW = w - 24;
     let y = 0;
@@ -950,9 +910,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
       const typeIcon = this.scene.add.sprite(0, typeIconY, atlasKey, frameKey as any);
       typeIcon.setOrigin(0.5, 0.5);
       typeIcon.setScale(useCategories ? 0.425 : 0.35);
-      if (isSmitty) {
-        typeIcon.setTint(0xFF0000);
-      }
+      if (isSmitty) typeIcon.setTint(0xFF0000);
       if (isGlitch) {
         try {
           if (typeIcon.postFX && typeof typeIcon.postFX.addColorMatrix === "function") {
@@ -990,12 +948,8 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
     const toLoad: { key: string; folder: string }[] = [];
     for (const section of this.sections) {
       for (const icon of section.icons) {
-        if (icon.kind !== "item") {
-          continue;
-        }
-        if (this.scene.textures.exists(icon.key)) {
-          continue;
-        }
+        if (icon.kind !== "item") continue;
+        if (this.scene.textures.exists(icon.key)) continue;
         const folder = icon.key === "smitty_trainers" ? "smittytrainers" : "trainer";
         toLoad.push({ key: icon.key, folder });
       }
@@ -1008,9 +962,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
       this.scene.loadAtlas(i.key, i.folder);
     }
     loader.once(Phaser.Loader.Events.COMPLETE, () => {
-      if (!this.active) {
-        return;
-      }
+      if (!this.active) return;
       this.applyPendingTextures();
       this.layout();
     });
@@ -1023,16 +975,10 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
       const iconSprites = (sc.getData("iconSprites") as RevealableIcon[] | undefined) || [];
       for (const icon of iconSprites) {
         const spr: any = icon as any;
-        if (!spr || typeof spr.getData !== "function") {
-          continue;
-        }
+        if (!spr || typeof spr.getData !== "function") continue;
         const pendingKey = spr.getData("pendingTextureKey") as string | null | undefined;
-        if (!pendingKey) {
-          continue;
-        }
-        if (!this.scene.textures.exists(pendingKey)) {
-          continue;
-        }
+        if (!pendingKey) continue;
+        if (!this.scene.textures.exists(pendingKey)) continue;
         spr.setTexture(pendingKey);
         let pendingFrame = spr.getData("pendingFrame") as any;
         if (pendingFrame === null || pendingFrame === undefined) {
@@ -1066,9 +1012,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
     const frames = texture.getFrameNames()
       .filter(f => {
         const m = f.match(/\d+/);
-        if (!m) {
-          return false;
-        }
+        if (!m) return false;
         const n = parseInt(m[0], 10);
         return Number.isFinite(n) && n > 0;
       })
@@ -1391,9 +1335,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   private essenceFromFusionIcons(icons: SectionIcon[]): EssenceTotals {
     const counts: Partial<Record<Type, number>> = {};
     for (const icon of icons) {
-      if (icon.kind !== "fusion") {
-        continue;
-      }
+      if (icon.kind !== "fusion") continue;
       const chosen = Utils.randSeedInt(2) === 0
         ? getPokemonSpecies(icon.primarySpeciesId as any).type1
         : getPokemonSpecies(icon.fusionSpeciesId as any).type1;
@@ -1403,9 +1345,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
     for (const [k, v] of Object.entries(counts)) {
       const t = Number(k) as Type;
       const amt = Math.floor((v || 0) / 15);
-      if (amt > 0) {
-        essence[t] = amt;
-      }
+      if (amt > 0) essence[t] = amt;
     }
     if (Object.keys(essence).length === 0) {
       let bestType: Type | null = null;
@@ -1490,8 +1430,8 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
           .sort((a, b) => (a.depth - b.depth) || a.id.localeCompare(b.id));
         const pickIcons: SectionIcon[] = Array.isArray(ast?.selectedPokemonPicks)
           ? ast.selectedPokemonPicks
-            .filter(p => p && typeof p.species === "number")
-            .map(p => ({ kind: "pokemon", speciesId: p.species, formIndex: 0, shiny: false, variant: 0, female: false }))
+              .filter(p => p && typeof p.species === "number")
+              .map(p => ({ kind: "pokemon", speciesId: p.species, formIndex: 0, shiny: false, variant: 0, female: false }))
           : [];
         const nodeIcons = unlockedNodes.map(n => this.skillNodeToSectionIcon(n));
         return [...pickIcons, ...nodeIcons].slice(0, maxIcons);
@@ -1503,9 +1443,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   private getTrackedSkillsObtainedIcons(maxIcons: number): SectionIcon[] {
     const rd: any = (this.scene as any).runEndSummaryRunData;
     const entries = Array.isArray(rd?.skillNodesObtained) ? rd.skillNodesObtained : [];
-    if (!entries.length) {
-      return [];
-    }
+    if (!entries.length) return [];
     return entries.slice(0, maxIcons).map((e: any) => {
       const node = { rewardData: { type: e?.rewardType, data: e?.rewardData } } as any as SkillTreeNode;
       return this.skillNodeToSectionIcon(node);
@@ -1519,9 +1457,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
       const generator = new SkillTreeGenerator(this.scene as BattleScene, seed, championId);
       const nodes = generator.generateCompleteTree(6).filter(n => n && n.id !== "root_0");
       const icons: SectionIcon[] = [];
-      if (!nodes.length) {
-        return icons;
-      }
+      if (!nodes.length) return icons;
       for (let i = 0; i < count; i++) {
         const n = Utils.randSeedItem(nodes) as SkillTreeNode;
         icons.push(this.skillNodeToSectionIcon(n));
@@ -1536,61 +1472,62 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
     const itemScale = 0.35;
     const smitemsScale = 0.175;
     switch (reward?.type) {
-    case SkillTreeRewardType.SIGNATURE_POKEMON:
-    case SkillTreeRewardType.LEGENDARY_POKEMON:
-    case SkillTreeRewardType.POKEMON_ALT_BUILD: {
-      const species = reward?.data?.species;
-      if (species && typeof species === "number") {
-        return { kind: "pokemon", speciesId: species, formIndex: 0, shiny: false, variant: 0, female: false };
+      case SkillTreeRewardType.SIGNATURE_POKEMON:
+      case SkillTreeRewardType.LEGENDARY_POKEMON:
+      case SkillTreeRewardType.POKEMON_ALT_BUILD: {
+        const species = reward?.data?.species;
+        if (species && typeof species === "number") {
+          return { kind: "pokemon", speciesId: species, formIndex: 0, shiny: false, variant: 0, female: false };
+        }
+        return { kind: "item", key: "items", frame: "mb", scale: itemScale };
       }
-      return { kind: "item", key: "items", frame: "mb", scale: itemScale };
-    }
-    case SkillTreeRewardType.TM_FILTERED: return { kind: "item", key: "items", frame: "tm_normal", scale: itemScale };
-    case SkillTreeRewardType.XM_FILTERED: return { kind: "item", key: "smitems", frame: "glitchTm", scale: smitemsScale };
-    case SkillTreeRewardType.ABILITY_GRANT: return { kind: "item", key: "smitems", frame: "glitchAbilitySwitch", scale: smitemsScale };
-    case SkillTreeRewardType.PASSIVE_ABILITY_GRANT: return { kind: "item", key: "smitems", frame: "modPassiveAbility", scale: smitemsScale };
-    case SkillTreeRewardType.TERA_ABILITY: return { kind: "item", key: "items", frame: "stellar_tera_shard", scale: itemScale };
-    case SkillTreeRewardType.SMITTY_ABILITY: return { kind: "item", key: "smitems", frame: "smittyMask", scale: smitemsScale };
-    case SkillTreeRewardType.GENERAL_POKEMON: {
-      const species = reward?.data?.species;
-      if (species && typeof species === "number") {
-        return { kind: "pokemon", speciesId: species, formIndex: 0, shiny: false, variant: 0, female: false };
+      case SkillTreeRewardType.TM_FILTERED: return { kind: "item", key: "items", frame: "tm_normal", scale: itemScale };
+      case SkillTreeRewardType.XM_FILTERED: return { kind: "item", key: "smitems", frame: "glitchTm", scale: smitemsScale };
+      case SkillTreeRewardType.ABILITY_GRANT: return { kind: "item", key: "smitems", frame: "glitchAbilitySwitch", scale: smitemsScale };
+      case SkillTreeRewardType.PASSIVE_ABILITY_GRANT: return { kind: "item", key: "smitems", frame: "modPassiveAbility", scale: smitemsScale };
+      case SkillTreeRewardType.TERA_ABILITY: return { kind: "item", key: "items", frame: "stellar_tera_shard", scale: itemScale };
+      case SkillTreeRewardType.SMITTY_ABILITY: return { kind: "item", key: "smitems", frame: "smittyMask", scale: smitemsScale };
+      case SkillTreeRewardType.GENERAL_POKEMON: {
+        const species = reward?.data?.species;
+        if (species && typeof species === "number") {
+          return { kind: "pokemon", speciesId: species, formIndex: 0, shiny: false, variant: 0, female: false };
+        }
+        return { kind: "item", key: "smitems", frame: "draftMode", scale: smitemsScale };
       }
-      return { kind: "item", key: "smitems", frame: "draftMode", scale: smitemsScale };
-    }
-    case SkillTreeRewardType.STAT_BOOST: return { kind: "item", key: "items", frame: "protein", scale: itemScale };
-    case SkillTreeRewardType.MOVE_UPGRADE: return { kind: "item", key: "smitems", frame: "smittyShard", scale: smitemsScale };
-    case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC: return { kind: "item", key: "smitems", frame: "smittyHumor", scale: smitemsScale };
-    case SkillTreeRewardType.ESSENCE_BUNDLE: return { kind: "item", key: "smitems", frame: "modSoulCollected", scale: smitemsScale };
-    case SkillTreeRewardType.PERMA_MONEY: return { kind: "item", key: "smitems", frame: "permaMoney", scale: smitemsScale };
-    case SkillTreeRewardType.MONEY_REWARD: return { kind: "item", key: "items", frame: "relic_gold", scale: itemScale };
-    case SkillTreeRewardType.SKILL_POINTS: return { kind: "item", key: "items", frame: "ribbon_gen9", scale: itemScale };
-    case SkillTreeRewardType.SKILL_TREE_TOKENS: return { kind: "item", key: "smitems", frame: "permaMoreRevive", scale: smitemsScale };
-    case SkillTreeRewardType.TYPE_BOOSTER_ITEM: return { kind: "item", key: "items", frame: "silk_scarf", scale: itemScale };
-    case SkillTreeRewardType.GOLDEN_POKEBALL: return { kind: "item", key: "items", frame: "pb_gold", scale: itemScale };
-    case SkillTreeRewardType.MASTER_BALL: return { kind: "item", key: "items", frame: "mb", scale: itemScale };
-    case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT: return { kind: "item", key: "items", frame: "rb", scale: itemScale };
-    case SkillTreeRewardType.MASTERBALL_RARITY_SELECT: return { kind: "item", key: "items", frame: "mb", scale: itemScale };
-    case SkillTreeRewardType.EGG_VOUCHER: return { kind: "item", key: "items", frame: "coupon", scale: itemScale };
-    case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT: return { kind: "item", key: "smitems", frame: "modSoulCollected", scale: smitemsScale };
-    case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY: return { kind: "item", key: "items", frame: "dna_splicers", scale: itemScale };
-    case SkillTreeRewardType.CATCH_RATE_BONUS: return { kind: "item", key: "smitems", frame: "permaCatchRate", scale: smitemsScale };
-    case SkillTreeRewardType.REVIVE_BOOST: return { kind: "item", key: "items", frame: "revive", scale: itemScale };
-    case SkillTreeRewardType.TERA_TYPE: return { kind: "item", key: "items", frame: "stellar_tera_shard", scale: itemScale };
-    case SkillTreeRewardType.GLITCH_CHANGE: return { kind: "item", key: "smitems", frame: "glitchiGlitchiFruit", scale: smitemsScale };
-    case SkillTreeRewardType.MEGA_STONE: return { kind: "item", key: "items", frame: "pinsirite", scale: itemScale };
-    case SkillTreeRewardType.DYNA_MUSHROOM: return { kind: "item", key: "items", frame: "max_mushrooms", scale: itemScale };
-    case SkillTreeRewardType.TYPE_SWITCHER: return { kind: "item", key: "smitems", frame: "glitchTypeSwitch", scale: smitemsScale };
-    case SkillTreeRewardType.HEALING_ITEMS: return { kind: "item", key: "items", frame: "max_potion", scale: itemScale };
-    case SkillTreeRewardType.MEMORY_MUSHROOM: return { kind: "item", key: "items", frame: "big_mushroom", scale: itemScale };
-    case SkillTreeRewardType.BERRY_ITEMS: return { kind: "item", key: "items", frame: "sitrus_berry", scale: itemScale };
-    case SkillTreeRewardType.ABILITY_SWITCHER: return { kind: "item", key: "smitems", frame: "glitchAbilitySwitch", scale: smitemsScale };
-    case SkillTreeRewardType.GENERAL_ITEMS: return { kind: "item", key: "smitems", frame: "permaShowRewards", scale: smitemsScale };
-    case SkillTreeRewardType.BATON_ITEM: return { kind: "item", key: "items", frame: "baton", scale: itemScale };
-    case SkillTreeRewardType.PP_MAX_ITEM: return { kind: "item", key: "items", frame: "pp_max", scale: itemScale };
-    case SkillTreeRewardType.ROGUE_BALL: return { kind: "item", key: "items", frame: "rb", scale: itemScale };
-    default:
-      return { kind: "item", key: "smitems", frame: "permaMoreRewardChoice", scale: smitemsScale };
+      case SkillTreeRewardType.STAT_BOOST: return { kind: "item", key: "items", frame: "protein", scale: itemScale };
+      case SkillTreeRewardType.MOVE_UPGRADE: return { kind: "item", key: "smitems", frame: "smittyShard", scale: smitemsScale };
+      case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC: return { kind: "item", key: "smitems", frame: "smittyHumor", scale: smitemsScale };
+      case SkillTreeRewardType.ESSENCE_BUNDLE: return { kind: "item", key: "smitems", frame: "modSoulCollected", scale: smitemsScale };
+      case SkillTreeRewardType.PERMA_MONEY: return { kind: "item", key: "smitems", frame: "permaMoney", scale: smitemsScale };
+      case SkillTreeRewardType.MONEY_REWARD: return { kind: "item", key: "items", frame: "relic_gold", scale: itemScale };
+      case SkillTreeRewardType.SKILL_POINTS: return { kind: "item", key: "items", frame: "ribbon_gen9", scale: itemScale };
+      case SkillTreeRewardType.SKILL_TREE_TOKENS: return { kind: "item", key: "smitems", frame: "permaMoreRevive", scale: smitemsScale };
+      case SkillTreeRewardType.TYPE_BOOSTER_ITEM: return { kind: "item", key: "items", frame: "silk_scarf", scale: itemScale };
+      case SkillTreeRewardType.GOLDEN_POKEBALL: return { kind: "item", key: "items", frame: "pb_gold", scale: itemScale };
+      case SkillTreeRewardType.MASTER_BALL: return { kind: "item", key: "items", frame: "mb", scale: itemScale };
+      case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT: return { kind: "item", key: "items", frame: "rb", scale: itemScale };
+      case SkillTreeRewardType.MASTERBALL_RARITY_SELECT: return { kind: "item", key: "items", frame: "mb", scale: itemScale };
+      case SkillTreeRewardType.EGG_VOUCHER: return { kind: "item", key: "items", frame: "coupon", scale: itemScale };
+      case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT: return { kind: "item", key: "smitems", frame: "modSoulCollected", scale: smitemsScale };
+      case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY: return { kind: "item", key: "items", frame: "dna_splicers", scale: itemScale };
+      case SkillTreeRewardType.CATCH_RATE_BONUS: return { kind: "item", key: "smitems", frame: "permaCatchRate", scale: smitemsScale };
+      case SkillTreeRewardType.REVIVE_BOOST: return { kind: "item", key: "items", frame: "revive", scale: itemScale };
+      case SkillTreeRewardType.TERA_TYPE: return { kind: "item", key: "items", frame: "stellar_tera_shard", scale: itemScale };
+      case SkillTreeRewardType.GLITCH_CHANGE: return { kind: "item", key: "smitems", frame: "glitchFruit", scale: smitemsScale };
+      case SkillTreeRewardType.MEGA_STONE: return { kind: "item", key: "items", frame: "pinsirite", scale: itemScale };
+      case SkillTreeRewardType.DYNA_MUSHROOM: return { kind: "item", key: "items", frame: "max_mushrooms", scale: itemScale };
+      case SkillTreeRewardType.TYPE_SWITCHER: return { kind: "item", key: "smitems", frame: "glitchTypeSwitch", scale: smitemsScale };
+      case SkillTreeRewardType.HEALING_ITEMS: return { kind: "item", key: "items", frame: "max_potion", scale: itemScale };
+      case SkillTreeRewardType.MEMORY_MUSHROOM: return { kind: "item", key: "items", frame: "big_mushroom", scale: itemScale };
+      case SkillTreeRewardType.BERRY_ITEMS: return { kind: "item", key: "items", frame: "sitrus_berry", scale: itemScale };
+      case SkillTreeRewardType.ABILITY_SWITCHER: return { kind: "item", key: "smitems", frame: "glitchAbilitySwitch", scale: smitemsScale };
+      case SkillTreeRewardType.GENERAL_ITEMS: return { kind: "item", key: "smitems", frame: "permaShowRewards", scale: smitemsScale };
+      case SkillTreeRewardType.BATON_ITEM: return { kind: "item", key: "items", frame: "baton", scale: itemScale };
+      case SkillTreeRewardType.PP_MAX_ITEM: return { kind: "item", key: "items", frame: "pp_max", scale: itemScale };
+      case SkillTreeRewardType.ROGUE_BALL: return { kind: "item", key: "items", frame: "rb", scale: itemScale };
+      case SkillTreeRewardType.PARTY_ABILITY_GRANT: return { kind: "item", key: "smitems", frame: "permaPartyAbility", scale: smitemsScale };
+      default:
+        return { kind: "item", key: "smitems", frame: "permaMoreRewardChoice", scale: smitemsScale };
     }
   }
 
@@ -1611,9 +1548,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
     for (const [k, v] of Object.entries(counts)) {
       const t = Number(k) as Type;
       const amt = Math.floor((v || 0) / 15);
-      if (amt > 0) {
-        essence[t] = amt;
-      }
+      if (amt > 0) essence[t] = amt;
     }
     if (Object.keys(essence).length === 0) {
       let bestType: Type | null = null;
@@ -1625,9 +1560,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
           bestType = Number(k) as Type;
         }
       }
-      if (bestType !== null) {
-        essence[bestType] = 1;
-      }
+      if (bestType !== null) essence[bestType] = 1;
     }
     return { icons, essence };
   }
@@ -1666,9 +1599,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   private essenceFromPokemonIcons(icons: SectionIcon[], divisor: number, minOneIfEmpty: boolean = false): EssenceTotals {
     const counts: Partial<Record<Type, number>> = {};
     for (const icon of icons) {
-      if (icon.kind !== "pokemon") {
-        continue;
-      }
+      if (icon.kind !== "pokemon") continue;
       const species = getPokemonSpecies(icon.speciesId as any);
       const t = species.type1;
       counts[t] = (counts[t] || 0) + 1;
@@ -1677,9 +1608,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
     for (const [k, v] of Object.entries(counts)) {
       const t = Number(k) as Type;
       const amt = Math.floor((v || 0) / divisor);
-      if (amt > 0) {
-        essence[t] = amt;
-      }
+      if (amt > 0) essence[t] = amt;
     }
     if (minOneIfEmpty && Object.keys(essence).length === 0) {
       let bestType: Type | null = null;
@@ -1728,9 +1657,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   }
 
   private applyEssenceAwards(): void {
-    if (this.scene.runEndSummaryRunData.essenceApplied) {
-      return;
-    }
+    if (this.scene.runEndSummaryRunData.essenceApplied) return;
     for (const [k, v] of Object.entries(this.totalEssence)) {
       const t = Number(k) as Type;
       const amt = v || 0;

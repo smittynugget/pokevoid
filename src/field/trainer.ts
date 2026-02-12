@@ -296,6 +296,10 @@ export default class Trainer extends Phaser.GameObjects.Container {
 
     }
 
+    if (this.scene.gameMode.isChaosMode && this.scene.lastBattleNodeWave > 0 && this.scene.lastBattleNodeWave < waveIndex) {
+      waveIndex = Math.ceil((this.scene.lastBattleNodeWave + waveIndex) / 2);
+    }
+
     const difficultyWaveIndex = this.scene.gameMode.getWaveForDifficulty(waveIndex);
     const baseLevel = 1 + difficultyWaveIndex / 2 + Math.pow(difficultyWaveIndex / 25, 2);
 

@@ -68,24 +68,24 @@ export default class RunInfoUiHandler extends UiHandler {
     const gameStatsBg = this.scene.add.nineslice(0, 0, "default_bg", undefined, this.scene.game.canvas.width / 6, this.scene.game.canvas.height / 6, 0, 0, 16, 0);
     gameStatsBg.setOrigin(0, 0);
     try {
-      if (gameStatsBg.postFX && typeof gameStatsBg.postFX.addColorMatrix === "function") {
-        const colorMatrix = gameStatsBg.postFX.addColorMatrix();
-        colorMatrix.negative();
-      } else {
-        gameStatsBg.setTint(0xFFFFFF);
-        gameStatsBg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
-      }
+        if (gameStatsBg.postFX && typeof gameStatsBg.postFX.addColorMatrix === 'function') {
+            const colorMatrix = gameStatsBg.postFX.addColorMatrix();
+            colorMatrix.negative();
+        } else {
+            gameStatsBg.setTint(0xFFFFFF);
+            gameStatsBg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
+        }
     } catch (error) {
-      gameStatsBg.setTint(0x000000);
-      gameStatsBg.setBlendMode(Phaser.BlendModes.SCREEN);
+        gameStatsBg.setTint(0x000000);
+        gameStatsBg.setBlendMode(Phaser.BlendModes.SCREEN);
     }
     this.runContainer.add(gameStatsBg);
 
     const run = args[0];
     this.runInfo = this.scene.gameData.parseSessionData(JSON.stringify(run.entry));
     this.isVictory = run.isVictory;
-    this.isActiveRun = "isActive" in run && run.isActive === true;
-    this.isFinalBattleContext = "isFinalBattleContext" in run && run.isFinalBattleContext === true;
+    this.isActiveRun = 'isActive' in run && run.isActive === true;
+    this.isFinalBattleContext = 'isFinalBattleContext' in run && run.isFinalBattleContext === true;
     if (this.isFinalBattleContext) {
       (this.scene as any).beginEndOfRunBattleVisualSuppression?.();
     }
@@ -620,12 +620,14 @@ export default class RunInfoUiHandler extends UiHandler {
       const formIndex = pkmn.formIndex;
       const variant = pkmn.variant;
       const species = pkmn.getSpeciesForm();
+      const spriteScale = pkmn.getSpriteScale(false);
       const pokemonSprite = scene.add.sprite(60 + 40 * i, 40 + row * 80, "pkmn__sub");
       pokemonSprite.setPipeline(scene.spritePipeline, { tone: [0.0, 0.0, 0.0, 0.0], ignoreTimeTint: true });
       container.add(pokemonSprite);
       const female = pkmn.gender === 1;
       species.loadAssets(scene, female, formIndex, shiny, variant, true).then(() => {
         pokemonSprite.play(species.getSpriteKey(female, formIndex, shiny, variant));
+        pokemonSprite.setScale(spriteScale);
         pokemonSprite.setPipelineData("shiny", shiny);
         pokemonSprite.setPipelineData("variant", variant);
         pokemonSprite.setPipelineData("spriteKey", species.getSpriteKey(female, formIndex, shiny, variant));

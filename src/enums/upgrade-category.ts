@@ -1,6 +1,6 @@
-
 import { Moves } from "./moves";
 import { MoveUpgrade } from "../data/move-upgrade";
+import * as Utils from "../utils";
 export enum UpgradeCategory {
   POWER = "POWER",
   ACCURACY = "ACCURACY",
@@ -27,7 +27,9 @@ export class UpgradeCategoryUtils {
   }
   static getNextTier(category: UpgradeCategory, currentTier: number, lowTierUpgrade: boolean = false): number | null {
     const availableTiers: number[] = [];
-    for (let i = 2; i <= 4; i++) {
+    const minJump = lowTierUpgrade ? 2 : 3;
+    const maxJump = lowTierUpgrade ? 4 : 5;
+    for (let i = minJump; i <= maxJump; i++) {
       const nextTier = currentTier + i;
       if (this.isValidTier(category, nextTier, lowTierUpgrade)) {
         availableTiers.push(nextTier);
@@ -38,17 +40,14 @@ export class UpgradeCategoryUtils {
       return null;
     }
 
-    const random = Math.random();
-
-    if (availableTiers.length === 1) {
-      return availableTiers[0];
-    } else if (availableTiers.length === 2) {
-      return random < 0.5 ? availableTiers[0] : availableTiers[1];
-    } else {
-      if (random < 0.48) return availableTiers[0];
-      if (random < 0.96) return availableTiers[1];
-      return availableTiers[2];
+    if (availableTiers.length === 1) return availableTiers[0];
+    if (availableTiers.length === 2) {
+      return Utils.randSeedInt(2) === 0 ? availableTiers[0] : availableTiers[1];
     }
+    const r = Utils.randSeedInt(100);
+    if (r < 48) return availableTiers[0];
+    if (r < 96) return availableTiers[1];
+    return availableTiers[2];
   }
 
   static getMoveUpgradeMaxTier(category: UpgradeCategory): number {
@@ -119,44 +118,19 @@ export class UpgradeCategoryUtils {
 
   private static getFirstUpgradeTier(category: UpgradeCategory, lowTierUpgrade: boolean = false): number {
     const pathLength = this.getMoveUpgradeMaxTier(category);
-
-    const maxFirstTier = lowTierUpgrade ? Math.min(6, pathLength) : Math.min(6, pathLength);
+    const minFirstTier = lowTierUpgrade ? 1 : 4;
+    const maxFirstTier = Math.min(6, pathLength);
     const availableTiers: number[] = [];
 
-    for (let tier = 1; tier <= maxFirstTier; tier++) {
-      if (!lowTierUpgrade || tier <= 6) {
-        availableTiers.push(tier);
-      }
+    for (let tier = minFirstTier; tier <= maxFirstTier; tier++) {
+      availableTiers.push(tier);
     }
 
-    const random = Math.random();
-
-    if (availableTiers.length === 1) {
-      return availableTiers[0];
-    } else if (availableTiers.length === 2) {
-      return random < 0.5 ? 1 : 2;
-    } else if (availableTiers.length === 3) {
-      if (random < 0.333) return 1;
-      if (random < 0.666) return 2;
-      return 3;
-    } else if (availableTiers.length === 4) {
-      if (random < 0.25) return 1;
-      if (random < 0.5) return 2;
-      if (random < 0.75) return 3;
-      return 4;
-    } else if (availableTiers.length === 5) {
-      if (random < 0.2) return 1;
-      if (random < 0.4) return 2;
-      if (random < 0.6) return 3;
-      if (random < 0.8) return 4;
-      return 5;
-    } else {
-      if (random < 0.192) return 1;
-      if (random < 0.384) return 2;
-      if (random < 0.576) return 3;
-      if (random < 0.768) return 4;
-      if (random < 0.96) return 5;
-      return 6;
+    if (availableTiers.length === 0) {
+      return Math.min(minFirstTier, pathLength);
     }
+
+    const index = Utils.randSeedInt(availableTiers.length);
+    return availableTiers[index];
   }
 }

@@ -1,0 +1,24 @@
+appId: com.pokevoid.desktop
+productName: PokéVoid
+directories:
+  output: release
+win:
+  icon: web/logo512.png
+  target:
+    - target: nsis
+      arch:
+        - x64
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
+extraResources:
+  - from: web
+    to: web
+    filter:
+      - "**/*"
+files:
+  - dist/**/*
+  - "!src"
+  - "!web"
+  - "!node_modules/.cache"

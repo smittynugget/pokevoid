@@ -85,6 +85,7 @@ export class GameStats {
   public highestEndlessWave: integer;
   public highestInfiniteWave: integer;
   public highestInfiniteRogueWave: integer;
+  public highestWaveReached: integer;
   public highestLevel: integer;
   public highestMoney: integer;
   public highestPermaMoney: integer;
@@ -254,6 +255,14 @@ export class GameStats {
     this.highestEndlessWave = source?.highestEndlessWave || 0;
     this.highestInfiniteWave = source?.highestInfiniteWave || 0;
     this.highestInfiniteRogueWave = source?.highestInfiniteRogueWave || 0;
+    this.highestWaveReached = source?.highestWaveReached || 0;
+    if (this.highestWaveReached === 0) {
+        this.highestWaveReached = Math.max(
+            this.highestEndlessWave || 0,
+            this.highestInfiniteWave || 0,
+            this.highestInfiniteRogueWave || 0
+        );
+    }
     this.highestLevel = source?.highestLevel || 0;
     this.highestMoney = source?.highestMoney || 0;
     this.highestPermaMoney = source?.highestPermaMoney || 0;

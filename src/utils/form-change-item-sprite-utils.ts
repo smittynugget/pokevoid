@@ -27,7 +27,6 @@ const MEGA_STONE_SPRITE_MAP: Partial<Record<FormChangeItem, FormChangeItem>> = {
   [FormChangeItem.ZYGARDITE]: FormChangeItem.RAYQUAZITE,
   [FormChangeItem.DRAMPITE]: FormChangeItem.AMPHAROSITE,
   [FormChangeItem.FALINKSITE]: FormChangeItem.MEDICHAMITE,
-  [FormChangeItem.ZERAORITE]: FormChangeItem.MANECTITE,
 };
 
 export function getFormChangeItemSpriteFrame(item: FormChangeItem): string {

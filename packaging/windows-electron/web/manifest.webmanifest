@@ -1,0 +1,22 @@
+{
+  "name": "PokéVoid",
+  "short_name": "PokéVoid",
+  "description": "PokéVoid — where ANY Pokémon can be LEGENDARY!",
+  "scope": "/",
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "#8c8c8c",
+  "theme_color": "#da3838",
+  "icons": [
+    {
+      "src": "logo128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "logo512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

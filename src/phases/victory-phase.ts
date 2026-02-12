@@ -37,8 +37,9 @@ import {achvs} from "#app/system/achv";
 import {RibbonModifierRewardPhase} from "#app/phases/ribbon-modifier-reward-phase";
 import Pokemon from "#app/field/pokemon";
 import PokemonSpecies, {getPokemonSpecies, universalSmittyForms} from "#app/data/pokemon-species";
-import {PathNodeTypeFilter} from "#app/modifier/modifier-type";
+import {PathNodeTypeFilter, PermaPartyAbilityModifierType} from "#app/modifier/modifier-type";
 import { BattlePathPhase } from "./battle-path-phase";
+import { ShopModifierSelectPhase } from "./shop-modifier-select-phase";
 import { PathNodeContext } from "./battle-path-phase";
 import { SkillPointSources } from "#app/system/skill-point-sources";
 import { HallOfFamePhase } from "./hall-of-fame-phase";
@@ -170,10 +171,10 @@ export class VictoryPhase extends PokemonPhase {
       if (this.scene.currentBattle.battleType === BattleType.TRAINER) {
         this.scene.unshiftPhase(new TrainerVictoryPhase(this.scene));
       }
-      const trainerIsRival = this.scene.currentBattle.trainer != undefined ? this.scene.currentBattle.trainer.isDynamicRival : false;
+      let trainerIsRival = this.scene.currentBattle.trainer != undefined ? this.scene.currentBattle.trainer.isDynamicRival : false;
       if (trainerIsRival) {
         this.scene.gameData.permaModifiers.findModifiers(m =>
-          m instanceof PermaBeatTrainerQuestModifier
+            m instanceof PermaBeatTrainerQuestModifier
         ).forEach(modifier => {
           modifier.apply([this.scene, this.scene]);
         });
@@ -182,7 +183,9 @@ export class VictoryPhase extends PokemonPhase {
           this.scene.gameData.setQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.UNLOCKED);
           const nuzlightQuestData = nuzlightUnlockQuestModifier.config.questUnlockData;
           this.scene.pushPhase(new QuestUnlockPhase(this.scene, nuzlightQuestData, true));
-        } else if (this.scene.gameMode.isNuzlight && this.scene.gameData.getQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST) == undefined && this.scene.currentBattle.waveIndex >= BATTLE_WAVES.RIVAL.FOURTH ) {
+        }
+
+        else if (this.scene.gameMode.isNuzlight && this.scene.gameData.getQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST) == undefined && this.scene.currentBattle.waveIndex >= BATTLE_WAVES.RIVAL.FOURTH ) {
           this.scene.gameData.setQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.UNLOCKED);
           const nuzlockeQuestData = nuzlockeUnlockQuestModifier.config.questUnlockData;
           this.scene.pushPhase(new QuestUnlockPhase(this.scene, nuzlockeQuestData, true));
@@ -195,14 +198,14 @@ export class VictoryPhase extends PokemonPhase {
         this.scene.pushPhase(new SelectModifierPhase(this.scene, 0, undefined, false, undefined, PathNodeTypeFilter.NONE));
         ShowRewards(this.scene, 20, false, false);
         if ((this.scene.currentBattle.waveIndex % 10 === 0 && !this.scene.gameMode.isChaosMode) || trainerIsRival || this.scene.recoveryBossMode === RecoveryBossMode.FACING_BOSS) {
-          if (this.scene.recoveryBossMode === RecoveryBossMode.FACING_BOSS) {
+          if(this.scene.recoveryBossMode === RecoveryBossMode.FACING_BOSS) {
             this.scene.recoveryBossMode = RecoveryBossMode.RECOVERY_OBTAINED;
           }
           this.scene.pushPhase(new SelectModifierPhase(this.scene, 1, undefined, false, undefined, PathNodeTypeFilter.NONE));
 
-          if (this.scene.moveUpgradesEnabledForRun && (this.scene.dynamicMode || trainerIsRival)) {
-            this.scene.pushPhase(new SelectModifierPhase(this.scene, 0, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
-          }
+        if (this.scene.moveUpgradesEnabledForRun && (this.scene.dynamicMode || trainerIsRival)) {
+          this.scene.pushPhase(new SelectModifierPhase(this.scene, 0, undefined, false, undefined, PathNodeTypeFilter.MOVE_UPGRADE));
+        }
         }
         if (this.scene.currentBattle.waveIndex % 100 === 1) {
           this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.EXP_SHARE, false));
@@ -215,11 +218,13 @@ export class VictoryPhase extends PokemonPhase {
         } else {
           const superExpWave = !this.scene.gameMode.isEndless ? (this.scene.offsetGym ? 0 : 20) : 10;
 
-          if (Utils.randSeedInt(100, 1) <= 2) {
+          if(Utils.randSeedInt(100, 1) <= 2) {
             this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.GLITCH_PIECE, false));
-          } else if (Utils.randSeedInt(100, 1) <= 1) {
+          }
+          else if(Utils.randSeedInt(100, 1) <= 1) {
             this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.RELIC_GOLD, false));
-          } else if (Utils.randSeedInt(100, 1) <= 2) {
+          }
+          else if(Utils.randSeedInt(100, 1) <= 2) {
             this.scene.pushPhase(new ModifierRewardPhase(this.scene, modifierTypes.BIG_NUGGET, false));
           }
           if (this.scene.gameMode.isEndless && this.scene.currentBattle.waveIndex === 10) {
@@ -245,13 +250,13 @@ export class VictoryPhase extends PokemonPhase {
           if (!(this.scene.currentBattle.waveIndex % 50)) {
             const rand = Utils.randSeedInt(100);
             let voucherType;
-            if (rand < 95) {
-              voucherType = modifierTypes.VOUCHER;
-            } else if (rand < 99) {
-              voucherType = modifierTypes.VOUCHER_PLUS;
-            } else {
-              voucherType = modifierTypes.VOUCHER_PREMIUM;
-            }
+              if (rand < 95) {
+                voucherType = modifierTypes.VOUCHER;
+              } else if (rand < 99) {
+                voucherType = modifierTypes.VOUCHER_PLUS;
+              } else {
+                voucherType = modifierTypes.VOUCHER_PREMIUM;
+              }
             this.scene.pushPhase(new ModifierRewardPhase(this.scene, voucherType, false));
           }
         }
@@ -262,7 +267,22 @@ export class VictoryPhase extends PokemonPhase {
             this.scene.gameData.selectedPath = undefined;
             setupFixedBattlePaths(this.scene, this.scene.currentBattle.waveIndex + 1);
           }
-          this.scene.pushPhase(new BattlePathPhase(this.scene));
+        if (this.scene.gameMode.isChaosMode
+            && !this.scene.gameData.hasSeenCurrentShopItems
+            && this.scene.gameData.currentPermaShopOptions
+            && this.scene.gameData.lastPermaShopRefreshTime > 0) {
+            const partyAbilityOptions = this.scene.gameData.currentPermaShopOptions.filter(
+                (opt: any) => opt.type instanceof PermaPartyAbilityModifierType
+            );
+            const cheapest = partyAbilityOptions.reduce(
+                (min: number, opt: any) => Math.min(min, opt.cost || Infinity), Infinity
+            );
+            if (this.scene.gameData.permaMoney >= cheapest) {
+                this.scene.pushPhase(new ShopModifierSelectPhase(this.scene, undefined, undefined));
+                this.scene.gameData.hasSeenCurrentShopItems = true;
+            }
+        }
+            this.scene.pushPhase(new BattlePathPhase(this.scene));
         } else {
           this.scene.pushPhase(new NewBattlePhase(this.scene));
         }
@@ -301,7 +321,7 @@ export class VictoryPhase extends PokemonPhase {
 
             if (!this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) {
               const userKey = `pokevoid_void_overtaken_${loggedInUser?.username ?? "guest"}`;
-              localStorage.setItem(userKey, "true");
+              localStorage.setItem(userKey, 'true');
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.THE_VOID_OVERTAKEN, "smitom", true));
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.SMITTY_NUGGET, "tm_electric"));
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.NUGGET_OF_SMITTY, "tm_ice"));
@@ -342,7 +362,7 @@ export class VictoryPhase extends PokemonPhase {
           } else {
             if (!this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) {
               const userKey = `pokevoid_void_overtaken_${loggedInUser?.username ?? "guest"}`;
-              localStorage.setItem(userKey, "true");
+              localStorage.setItem(userKey, 'true');
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.THE_VOID_OVERTAKEN, "smitom", true));
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.SMITTY_NUGGET, "tm_electric"));
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.NUGGET_OF_SMITTY, "tm_ice"));
@@ -355,7 +375,8 @@ export class VictoryPhase extends PokemonPhase {
               this.scene.unshiftPhase(new UnlockUniSmittyPhase(this.scene));
             }
           }
-        } else {
+        }
+        else {
           const isSmittyBattle = this.scene.currentBattle.trainer?.config.trainerType === TrainerType.SMITTY;
           if (shouldPlayAllSmittysCompleteVictory) {
             if (!this.scene.disableCutscenes) {
@@ -418,18 +439,18 @@ export class VictoryPhase extends PokemonPhase {
             }
           } else {
             const t = this.scene.currentBattle?.trainer;
-            this.handleUnlocks();
             if (t?.isDynamicRival && t.dynamicRivalType) {
               this.scene.gameData.handleQuestUnlocks(this.scene, t.dynamicRivalType, false, true);
             } else {
               this.scene.gameData.handleQuestUnlocks(this.scene);
             }
+            this.handleUnlocks();
           }
         }
 
-        this.scene.gameData.permaModifiers
-          .findModifiers(m => m instanceof PermaWinQuestModifier)
-          .forEach(modifier => modifier.apply([this.scene, this.scene]));
+         this.scene.gameData.permaModifiers
+            .findModifiers(m => m instanceof PermaWinQuestModifier)
+            .forEach(modifier => modifier.apply([this.scene, this.scene]));
         for (const pokemon of this.scene.getParty()) {
           this.awardRibbon(pokemon);
 
@@ -437,7 +458,7 @@ export class VictoryPhase extends PokemonPhase {
             this.awardRibbon(pokemon, true);
           }
         }
-        if (this.scene.gameMode.isClassic && !this.scene.validateAchv(achvs.CLASSIC_VICTORY)) {
+        if(this.scene.gameMode.isClassic && !this.scene.validateAchv(achvs.CLASSIC_VICTORY)) {
           this.scene.unshiftPhase(new GameOverModifierRewardPhase(this.scene, modifierTypes.VOUCHER_PREMIUM));
         }
 
@@ -448,114 +469,114 @@ export class VictoryPhase extends PokemonPhase {
         this.scene.gameData.gameStats.majorBossesDefeated++;
         this.scene.recordRunEndSummaryMajorBossDefeat(this.scene.currentBattle.waveIndex, defeatedPokemon.species.speciesId);
         this.scene.unshiftPhase(new SelectPermaModifierPhase(this.scene));
-      }
+    }
 
       if (this.scene.gameMode.isNightmare) {
-        const currentWave = this.scene.currentBattle.waveIndex;
-        const isCenturyWave = currentWave % 100 === 0 && currentWave < 500;
-        const isMajorBossWave = majorBossWaves.includes(currentWave);
+          const currentWave = this.scene.currentBattle.waveIndex;
+          const isCenturyWave = currentWave % 100 === 0 && currentWave < 500;
+          const isMajorBossWave = majorBossWaves.includes(currentWave);
 
-        if (isMajorBossWave) {
-          this.scene.gameData.gameStats.majorBossesDefeated++;
-          this.scene.recordRunEndSummaryMajorBossDefeat(this.scene.currentBattle.waveIndex, defeatedPokemon.species.speciesId);
-        }
-
-        if (isCenturyWave || isMajorBossWave) {
-          this.scene.unshiftPhase(new SelectPermaModifierPhase(this.scene));
-        }
-
-        const isNuzlight = !(this.scene.gameMode.hasShopCheck(this.scene));
-        const isNuzlocke = this.scene.gameMode.isNuzlockeActive(this.scene);
-
-        if (isCenturyWave) {
-          this.scene.beginPowerUnlockDeferral();
-
-          let targetMode: GameModes | null = null;
-          if (isNuzlight || isNuzlocke) {
-            targetMode = GameModes.CLASSIC;
-            if (isNuzlight && isNuzlocke) {
-              targetMode = GameModes.NIGHTMARE;
-            } else if (isNuzlight) {
-              targetMode = GameModes.NUZLIGHT;
-            } else if (isNuzlocke) {
-              targetMode = GameModes.NUZLOCKE;
-            }
+          if (isMajorBossWave) {
+            this.scene.gameData.gameStats.majorBossesDefeated++;
+            this.scene.recordRunEndSummaryMajorBossDefeat(this.scene.currentBattle.waveIndex, defeatedPokemon.species.speciesId);
           }
-          this.scene.recordRunUnlockReward({
-            type: RewardObtainedType.NIGHTMARE_MODE_CHANGE,
-            gameMode: GameModes.DRAFT
-          });
-          if (targetMode) {
+
+          if (isCenturyWave || isMajorBossWave) {
+              this.scene.unshiftPhase(new SelectPermaModifierPhase(this.scene));
+          }
+
+          const isNuzlight = !(this.scene.gameMode.hasShopCheck(this.scene));
+          const isNuzlocke = this.scene.gameMode.isNuzlockeActive(this.scene);
+
+          if(isCenturyWave) {
+            this.scene.beginPowerUnlockDeferral();
+
+            let targetMode: GameModes | null = null;
+            if (isNuzlight || isNuzlocke) {
+              targetMode = GameModes.CLASSIC;
+              if (isNuzlight && isNuzlocke) {
+                targetMode = GameModes.NIGHTMARE;
+              } else if (isNuzlight) {
+                targetMode = GameModes.NUZLIGHT;
+              } else if (isNuzlocke) {
+                targetMode = GameModes.NUZLOCKE;
+              }
+            }
             this.scene.recordRunUnlockReward({
               type: RewardObtainedType.NIGHTMARE_MODE_CHANGE,
-              gameMode: targetMode
+              gameMode: GameModes.DRAFT
             });
-          }
-
-          if (!this.scene.disableCutscenes) {
-            const def = currentWave === 400 ? STORY_CUTSCENES.nightmare_wave_400 : STORY_CUTSCENES.nightmare_century;
-            let currentSlideKey: string | null = null;
-            this.scene.pushPhase(new SlideshowCutscenePhase(this.scene, {
-              slides: def.slides,
-              bgmKey: def.bgmKey,
-              canSkip: true,
-              pauseAfterText: 1000,
-              resumeBgmOnEnd: true,
-              onSlideChange: (index) => {
-                currentSlideKey = def.slides[index]?.imageKey;
-              },
-              onTextComplete: (controller) => {
-                if (currentSlideKey === "choose") {
-                  runPowerUnlockOverlays(this.scene, controller);
-                }
-              },
-              onComplete: () => {
-                this.scene.endPowerUnlockDeferral();
-              }
-            }));
-          } else {
-            this.scene.endPowerUnlockDeferral();
-          }
-
-          const modifiersToRemove = this.scene.modifiers.slice();
-          for (const m of modifiersToRemove) {
-            this.scene.removeModifier(m);
-          }
-          this.scene.updateModifiers(true).then(() => this.scene.updateUIPositions());
-
-          if (currentWave >= 200) {
-            if (currentWave >= 300 && Utils.randSeedFloat(0, 1) < 0.05) {
-              this.scene.unshiftPhase(new UnlockUniSmittyPhase(this.scene));
-            } else {
-              this.scene.gameData.handleQuestUnlocks(this.scene, this.scene.currentBattle.trainer.dynamicRivalType);
+            if (targetMode) {
+              this.scene.recordRunUnlockReward({
+                type: RewardObtainedType.NIGHTMARE_MODE_CHANGE,
+                gameMode: targetMode
+              });
             }
-          }
 
-          this.scene.pushPhase(new SelectNightmareDraftPhase(this.scene));
-        }
+            if (!this.scene.disableCutscenes) {
+              const def = currentWave === 400 ? STORY_CUTSCENES.nightmare_wave_400 : STORY_CUTSCENES.nightmare_century;
+              let currentSlideKey: string | null = null;
+              this.scene.pushPhase(new SlideshowCutscenePhase(this.scene, {
+                slides: def.slides,
+                bgmKey: def.bgmKey,
+                canSkip: true,
+                pauseAfterText: 1000,
+                resumeBgmOnEnd: true,
+                onSlideChange: (index) => {
+                  currentSlideKey = def.slides[index]?.imageKey;
+                },
+                onTextComplete: (controller) => {
+                  if (currentSlideKey === "choose") {
+                    runPowerUnlockOverlays(this.scene, controller);
+                  }
+                },
+                onComplete: () => {
+                  this.scene.endPowerUnlockDeferral();
+                }
+              }));
+            } else {
+              this.scene.endPowerUnlockDeferral();
+            }
+
+            const modifiersToRemove = this.scene.modifiers.slice();
+            for (const m of modifiersToRemove) {
+              this.scene.removeModifier(m);
+            }
+            this.scene.updateModifiers(true).then(() => this.scene.updateUIPositions());
+
+            if(currentWave >= 200) {
+              if (currentWave >= 300 && Utils.randSeedFloat(0, 1) < 0.05) {
+                this.scene.unshiftPhase(new UnlockUniSmittyPhase(this.scene));
+              } else {
+                this.scene.gameData.handleQuestUnlocks(this.scene, this.scene.currentBattle.trainer.dynamicRivalType);
+              }
+            }
+
+            this.scene.pushPhase(new SelectNightmareDraftPhase(this.scene));
+          }
       }
 
       const isSmittyBattle = this.scene.currentBattle.trainer?.config.trainerType === TrainerType.SMITTY;
-      if (this.scene.gameMode.isChaosMode && this.scene.currentBattle.isStage6RivalWave() && this.scene.currentBattle.trainer?.isDynamicRival && !isSmittyBattle) {
+      if(this.scene.gameMode.isChaosMode && this.scene.currentBattle.isStage6RivalWave() && this.scene.currentBattle.trainer?.isDynamicRival && !isSmittyBattle) {
         const dynamicRivalType = this.scene.currentBattle.trainer.dynamicRivalType;
         this.scene.gameData.handleQuestUnlocks(this.scene, dynamicRivalType);
-        if (!this.scene.gameMode.isChaosShort && !this.scene.gameMode.isChaosFTL) {
-          const eligibleRivals = this.scene.gameData.chaosAltRivals.filter(r => r !== dynamicRivalType);
+        if(!this.scene.gameMode.isChaosShort && !this.scene.gameMode.isChaosFTL) {
+        const eligibleRivals = this.scene.gameData.chaosAltRivals.filter(r => r !== dynamicRivalType);
 
-          if (eligibleRivals.length > 0) {
+        if (eligibleRivals.length > 0) {
             const randomRival1 = Utils.randSeedItem(eligibleRivals);
             this.scene.gameData.handleQuestUnlocks(this.scene, randomRival1);
 
             if (this.scene.gameData.chaosAltRivals.length > 2) {
-              const remainingEligible = eligibleRivals.filter(r => r !== randomRival1);
-              if (remainingEligible.length > 0) {
-                const randomRival2 = Utils.randSeedItem(remainingEligible);
-                this.scene.gameData.handleQuestUnlocks(this.scene, randomRival2);
-              }
+                const remainingEligible = eligibleRivals.filter(r => r !== randomRival1);
+                if (remainingEligible.length > 0) {
+                    const randomRival2 = Utils.randSeedItem(remainingEligible);
+                    this.scene.gameData.handleQuestUnlocks(this.scene, randomRival2);
+                }
             }
-          }
         }
-        this.handleUnlocks();
+        }
+          this.handleUnlocks();
       }
     }
 
@@ -608,9 +629,7 @@ export class VictoryPhase extends PokemonPhase {
       .getFrameNames()
       .filter(f => {
         const m = f.match(/\d+/);
-        if (!m) {
-          return false;
-        }
+        if (!m) return false;
         const n = parseInt(m[0], 10);
         return Number.isFinite(n) && n > 0;
       });
@@ -653,6 +672,7 @@ export class VictoryPhase extends PokemonPhase {
             resumeBgmOnEnd: true,
             onComplete: () => {
               this.scene.gameData.gameStats.cutsceneAllRivalsDefeatedShown = true;
+              this.scene.gameData.gameStats.cutsceneTitleBShown = true;
             }
           }));
         }

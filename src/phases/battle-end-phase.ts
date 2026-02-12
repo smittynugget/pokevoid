@@ -67,6 +67,10 @@ export class BattleEndPhase extends BattlePhase {
     if (this.scene.currentBattle.trainer) {
       this.scene.gameData.gameStats.trainersDefeated++;
     }
+    const currentWave = this.scene.currentBattle.waveIndex;
+    if (currentWave > this.scene.gameData.gameStats.highestWaveReached) {
+      this.scene.gameData.gameStats.highestWaveReached = currentWave;
+    }
     if (this.scene.gameMode.isInfinite) {
       if(this.scene.gameMode.isDraft && this.scene.currentBattle.waveIndex + 1 > this.scene.gameData.gameStats.highestInfiniteRogueWave) {
         this.scene.gameData.gameStats.highestInfiniteRogueWave = this.scene.currentBattle.waveIndex + 1;

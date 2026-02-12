@@ -1,0 +1,83 @@
+name: Release Web Update
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build native bundle (without PWA)
+        run: npm run build
+        env:
+          VITE_NATIVE_WRAPPER: "1"
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Create Electron web update zip
+        run: |
+          cd dist
+          zip -r ../pokevoid-web-${{ steps.version.outputs.version }}.zip .
+          cd ..
+
+      - name: Create Capacitor bundle
+        run: |
+          cd dist
+          zip -r ../pokevoid-capacitor-${{ steps.version.outputs.version }}.zip .
+          cd ..
+
+      - name: Compute checksums
+        id: checksums
+        run: |
+          echo "electron_sha=$(sha256sum pokevoid-web-${{ steps.version.outputs.version }}.zip | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+          echo "electron_size=$(stat -c%s pokevoid-web-${{ steps.version.outputs.version }}.zip)" >> "$GITHUB_OUTPUT"
+          echo "capacitor_sha=$(sha256sum pokevoid-capacitor-${{ steps.version.outputs.version }}.zip | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Generate update manifests
+        run: |
+          mkdir -p gh-pages-update
+          cat > gh-pages-update/electron-update.json << EOF
+          {
+            "version": "${{ steps.version.outputs.version }}",
+            "url": "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/pokevoid-web-${{ steps.version.outputs.version }}.zip",
+            "sha256": "${{ steps.checksums.outputs.electron_sha }}",
+            "size": ${{ steps.checksums.outputs.electron_size }}
+          }
+          EOF
+          cat > gh-pages-update/capacitor-update.json << EOF
+          {
+            "version": "${{ steps.version.outputs.version }}",
+            "url": "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/pokevoid-capacitor-${{ steps.version.outputs.version }}.zip",
+            "checksum": "${{ steps.checksums.outputs.capacitor_sha }}"
+          }
+          EOF
+
+      - name: Upload to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            pokevoid-web-${{ steps.version.outputs.version }}.zip
+            pokevoid-capacitor-${{ steps.version.outputs.version }}.zip
+
+      - name: Deploy manifests to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: gh-pages-update
+          publish_branch: gh-pages
+          keep_files: true

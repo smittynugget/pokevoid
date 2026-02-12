@@ -1,0 +1,25 @@
+{
+  "name": "pokevoid-desktop",
+  "version": "2.2.1",
+  "description": "PokéVoid Desktop",
+  "main": "dist/main.js",
+  "scripts": {
+    "build:ts": "tsc -p tsconfig.json",
+    "build:electron": "electron-builder --win",
+    "package": "npm run build:ts && npm run build:electron",
+    "dev": "tsc -p tsconfig.json && electron dist/main.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "get-port": "5.1.1",
+    "adm-zip": "^0.5.16"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.0",
+    "typescript": "^5.5.0",
+    "@types/express": "^5.0.0",
+    "@types/adm-zip": "^0.5.0",
+    "@types/node": "^22.0.0"
+  }
+}

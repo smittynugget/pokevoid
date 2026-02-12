@@ -44,6 +44,12 @@ export class FormChangePhase extends EvolutionPhase {
     const preName = getPokemonNameWithAffix(this.pokemon);
 
     this.pokemon.getPossibleForm(this.formChange).then(transformedPokemon => {
+      if (!transformedPokemon) {
+        console.error(`[FORM_CHANGE] getPossibleForm returned null for ${this.pokemon.species.speciesId}`);
+        this.end();
+        return;
+      }
+      console.log(`[FORM_CHANGE] species=${transformedPokemon.species.speciesId} formIndex=${transformedPokemon.formIndex} spriteKey=${transformedPokemon.getSpriteKey(true)} textureExists=${this.scene.textures.exists(transformedPokemon.getSpriteKey(true))}`);
       const gainingAltBuild = !this.pokemon.altBuildId && !!(transformedPokemon as any).altBuildId;
       if (gainingAltBuild) {
         [ this.pokemonSprite, this.pokemonTintSprite ].forEach(sprite => {
@@ -153,7 +159,10 @@ export class FormChangePhase extends EvolutionPhase {
                       this.doCircleInward();
                       this.scene.time.delayedCall(900, () => {
                         this.pokemon.changeForm(this.formChange).then(() => {
-
+                          if (!this.pokemon) {
+                            this.end();
+                            return;
+                          }
                           if (this.formChange.formKey.startsWith('glitch')) {
                             this.scene.gameData.gameStats.glitchEvolutions++;
                           } else if (this.formChange.formKey.startsWith('smitty')) {
@@ -245,6 +254,9 @@ export class FormChangePhase extends EvolutionPhase {
                               });
                             }
                           });
+                        }).catch((err) => {
+                          console.error(`[FORM_CHANGE] changeForm failed for ${this.pokemon.species.speciesId}:`, err);
+                          this.end();
                         });
                       });
                     });
@@ -255,6 +267,9 @@ export class FormChangePhase extends EvolutionPhase {
           }
         });
       });
+    }).catch((err) => {
+      console.error(`[FORM_CHANGE] Failed to load form assets for ${this.pokemon.species.speciesId}:`, err);
+      this.end();
     });
   }
   private removeSmittyModifiers(pokemon: PlayerPokemon): void {
@@ -306,17 +321,20 @@ private removeDynamaxModifiers(pokemon: PlayerPokemon): void {
 }
 
   end(): void {
+    const refreshPartyIfVisible = () => {
+      if (this.scene.ui.getMode() === Mode.PARTY) {
+        const partyUiHandler = this.scene.ui.getHandler() as PartyUiHandler;
+        partyUiHandler.clearPartySlots();
+        partyUiHandler.populatePartySlots();
+      }
+    };
     if (this.modal) {
       this.scene.ui.revertMode().then(() => {
-        if (this.scene.ui.getMode() === Mode.PARTY) {
-          const partyUiHandler = this.scene.ui.getHandler() as PartyUiHandler;
-          partyUiHandler.clearPartySlots();
-          partyUiHandler.populatePartySlots();
-        }
-
+        refreshPartyIfVisible();
         super.end();
       });
     } else {
+      refreshPartyIfVisible();
       super.end();
     }
   }

@@ -124,8 +124,9 @@ export class ModifierBar extends Phaser.GameObjects.Container {
                     clearTimeout(thisArg.overflowHideTimeout);
                     thisArg.overflowHideTimeout = null;
                 }
+                const highestWave = ((this.scene as BattleScene).gameData?.gameStats?.highestWaveReached || 0);
                 const sessionsWon = ((this.scene as BattleScene).gameData?.gameStats?.sessionsWon || 0);
-                if (!Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && sessionsWon <= 0 && !(modifier instanceof MoveUpgradeModifier)) {
+                if (!Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && highestWave < 25 && sessionsWon <= 0 && !(modifier instanceof MoveUpgradeModifier)) {
                     if (this.modifierCache && this.modifierCache.length > iconOverflowIndex) {
                         thisArg.updateModifierOverflowVisibility(true);
                     }
@@ -3262,7 +3263,7 @@ export class AbilitySwitcherModifier extends PokemonHeldItemModifier {
             return true;
         }
 
-        const currentAbility = pokemon.getAbility().id;
+        const currentAbility = pokemon.getAbility(true).id;
         const abilities: Abilities[] = [];
 
         const currentForm = pokemon.isFusion()
@@ -3287,7 +3288,7 @@ export class AbilitySwitcherModifier extends PokemonHeldItemModifier {
                 } else {
                     pokemon.abilityIndex = newIndex;
                 }
-            } while ((pokemon.getAbility().id === currentAbility && abilities.length > 1) && !(abilities.length == 2 && abilities[0] === abilities[1]) && !(abilities.length == 3 && abilities[0] === abilities[1] && abilities[1] === abilities[2]));
+            } while ((pokemon.getAbility(true).id === currentAbility && abilities.length > 1) && !(abilities.length == 2 && abilities[0] === abilities[1]) && !(abilities.length == 3 && abilities[0] === abilities[1] && abilities[1] === abilities[2]));
 
         this.assignedAbilityIndex = pokemon.isFusion()
             ? pokemon.fusionAbilityIndex

@@ -104,7 +104,8 @@ export enum SkillTreeRewardType {
   SKILL_TREE_TOKENS = "skill_tree_tokens",
   CATCH_RATE_BONUS = "catch_rate_bonus",
   REVIVE_BOOST = "revive_boost",
-  TERA_TYPE = "tera_type"
+  TERA_TYPE = "tera_type",
+  PARTY_ABILITY_GRANT = "party_ability_grant"
 }
 
 export interface SkillTreeReward {

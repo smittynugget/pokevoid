@@ -49,9 +49,9 @@ export class LoadingScene extends SceneBase {
     super(LoadingScene.KEY);
 
     Phaser.Plugins.PluginCache.register("Loader", CacheBustedLoaderPlugin, "load");
-    Phaser.Loader.FileTypesManager.register("embeddedAtlas", function(key, url, xhrSettings) {
-      this.addFile(new EmbeddedAtlasFile(this, key, url, xhrSettings));
-    });
+    Phaser.Loader.FileTypesManager.register('embeddedAtlas', function(key, url, xhrSettings) {
+     this.addFile(new EmbeddedAtlasFile(this, key, url, xhrSettings));
+   });
     initI18n();
 
   }
@@ -80,7 +80,7 @@ export class LoadingScene extends SceneBase {
       this.loadImage(`window_1${getWindowVariantSuffix(wv)}`, "ui/windows");
     }
 
-    this.loadImage("window_1b", "ui/windows");
+    this.loadImage(`window_1b`, "ui/windows");
 
     this.loadAtlas("namebox", "ui");
     this.loadImage("pbinfo_player", "ui");
@@ -179,11 +179,11 @@ export class LoadingScene extends SceneBase {
     if (Overrides.DEBUG_IOS_MODE && isIOS) {
       const profiler = AssetLoadProfiler.getInstance();
       ["summary_bg", "summary_overlay_shiny", "summary_profile",
-        "summary_profile_prompt_z", "summary_profile_prompt_a",
-        "summary_status", "summary_stats", "summary_stats_overlay_exp",
-        "summary_stats_exp_bar", "summary_moves", "summary_moves_effect",
-        "summary_moves_overlay_row", "summary_moves_overlay_pp",
-        "summary_tabs_1", "summary_tabs_2", "summary_tabs_3"
+       "summary_profile_prompt_z", "summary_profile_prompt_a",
+       "summary_status", "summary_stats", "summary_stats_overlay_exp",
+       "summary_stats_exp_bar", "summary_moves", "summary_moves_effect",
+       "summary_moves_overlay_row", "summary_moves_overlay_pp",
+       "summary_tabs_1", "summary_tabs_2", "summary_tabs_3"
       ].forEach(key => profiler.trackDeferred(key));
     }
 
@@ -337,16 +337,16 @@ export class LoadingScene extends SceneBase {
         this.loadAtlas(`pokemon_icons_${i}v`, "");
       }
     }
-    this.loadAtlas("pokemon_icons_glitch", "");
-    this.loadAtlas("pokemon_icons_za_1", "");
+    this.loadAtlas(`pokemon_icons_glitch`, "");
+    this.loadAtlas(`pokemon_icons_za_1`, "");
     if (!isIOS) {
-      this.loadAtlas("smitty_trainers", "smittytrainers");
+      this.loadAtlas(`smitty_trainers`, "smittytrainers");
     }
     if (Overrides.DEBUG_IOS_MODE && isIOS) {
       AssetLoadProfiler.getInstance().trackDeferred("smitty_trainers");
     }
 
-    this.loadAtlas("smitems", "smitems");
+    this.loadAtlas(`smitems`, "smitems");
 
     this.loadAtlas("dualshock", "inputs");
     this.loadAtlas("xbox", "inputs");
@@ -407,7 +407,7 @@ export class LoadingScene extends SceneBase {
     this.loadSe("hellowelcome", "voice", "hellowelcome.mp3");
     this.loadSe("champion_select", "voice", "champion_select.mp3");
 
-    if (!isIOS) {
+    if(!isIOS) {
       for (let i = 1; i <= 84; i++) {
         this.loadSe(`smitty_sound_${i}`, "voice", `smitty_sound_${i}.mp3`);
       }
@@ -430,13 +430,13 @@ export class LoadingScene extends SceneBase {
     if (Overrides.DEBUG_IOS_MODE && isIOS) {
       const profiler = AssetLoadProfiler.getInstance();
       ["level_up_fanfare", "item_fanfare", "minor_fanfare", "heal",
-        "victory_trainer", "victory_team_plasma", "victory_gym",
-        "victory_champion", "evolution", "evolution_fanfare",
-        "evolution_fanfare_rse"
+       "victory_trainer", "victory_team_plasma", "victory_gym",
+       "victory_champion", "evolution", "evolution_fanfare",
+       "evolution_fanfare_rse"
       ].forEach(key => profiler.trackDeferred(key));
     }
 
-    this.load.plugin("rextexteditplugin", "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rextexteditplugin.min.js", true);
+    this.load.plugin("rextexteditplugin", "./vendor/rextexteditplugin.min.js", true);
 
     this.loadLoadingScreen();
 
@@ -582,8 +582,8 @@ export class LoadingScene extends SceneBase {
           smittyLogo.destroy();
         }
       } catch {}
-      if (isIPhone() && this.textures.exists("smittyLogo")) {
-        this.textures.remove("smittyLogo");
+      if (isIPhone() && this.textures.exists('smittyLogo')) {
+        this.textures.remove('smittyLogo');
       }
       this.events.off("update", videoCheckHandler);
       this.introVideoDone = true;
@@ -591,8 +591,8 @@ export class LoadingScene extends SceneBase {
     };
 
     videoCheckHandler = () => {
-      if (intro.isPlaying()) {
-        if (intro.getCurrentTime() >= 4.8 && smittyLogo.visible && !this.introFadeStarted) {
+      if(intro.isPlaying()) {
+        if(intro.getCurrentTime() >= 4.8 && smittyLogo.visible && !this.introFadeStarted) {
           this.introFadeStarted = true;
           this.tweens.add({
             targets: [intro, smittyLogo],
@@ -603,10 +603,14 @@ export class LoadingScene extends SceneBase {
               completeIntroVideo();
             },
           });
-        } else if (intro.getCurrentTime() >= 1.5 && !smittyLogo.visible) {
-          smittyLogo.setTexture("smittyLogo");
-          smittyLogo.setVisible(true);
-        } else if (intro.getCurrentTime() >= 1.7 && smittyLogo.visible && !introSoundPlayed) {
+        }
+        else if (intro.getCurrentTime() >= 1.5 && !smittyLogo.visible) {
+          if (this.textures.exists("smittyLogo")) {
+            smittyLogo.setTexture("smittyLogo");
+            smittyLogo.setVisible(true);
+          }
+        }
+        else if(intro.getCurrentTime() >= 1.7 && smittyLogo.visible && !introSoundPlayed) {
           try {
             const soundConfig = {
               loop: false,
@@ -614,17 +618,18 @@ export class LoadingScene extends SceneBase {
               volume: .2
             };
 
-            if (this.cache.audio.exists("voice/logoSmittyNugget")) {
-              this.sound.play("voice/logoSmittyNugget", soundConfig);
+            if (this.cache.audio.exists('voice/logoSmittyNugget')) {
+              this.sound.play('voice/logoSmittyNugget', soundConfig);
               introSoundPlayed = true;
             } else {
-              console.warn("logoSmittyNugget sound not found in cache");
+              console.warn('logoSmittyNugget sound not found in cache');
             }
           } catch (error) {
-            console.error("Failed to play logoSmittyNugget sound:", error);
+            console.error('Failed to play logoSmittyNugget sound:', error);
           }
         }
-      } else {
+      }
+      else {
         if (this.introVideoDone) {
           return;
         }
@@ -655,7 +660,7 @@ export class LoadingScene extends SceneBase {
       intro.play();
     });
 
-    this.load.on(this.LOAD_EVENTS.PROGRESS, (progress: number) => {
+    this.load.on(this.LOAD_EVENTS.PROGRESS , (progress: number) => {
       try {
         if (percentText && percentText.scene) {
           percentText.setText(`${Math.floor(progress * 100)}%`);
@@ -720,7 +725,14 @@ export class LoadingScene extends SceneBase {
             }
           }
           break;
-        }
+        case "smittyLogo":
+          if (intro && intro.isPlaying && intro.isPlaying() &&
+              intro.getCurrentTime() >= 1.5 && smittyLogo && !smittyLogo.visible) {
+            smittyLogo.setTexture("smittyLogo");
+            smittyLogo.setVisible(true);
+          }
+          break;
+      }
       } catch (error) {
         console.error("Error handling file complete:", error);
       }
@@ -733,7 +745,7 @@ export class LoadingScene extends SceneBase {
         AssetLoadProfiler.getInstance().printInitialLoadReport();
       }
 
-      this.events.emit("mainLoadingComplete");
+      this.events.emit('mainLoadingComplete');
     });
   }
 
@@ -746,7 +758,7 @@ export class LoadingScene extends SceneBase {
           if (this.mainLoadingComplete) {
             resolve();
           } else {
-            this.events.once("mainLoadingComplete", resolve);
+            this.events.once('mainLoadingComplete', resolve);
           }
         });
       }
@@ -797,7 +809,7 @@ export class LoadingScene extends SceneBase {
               targets: this.loadingGraphics,
               alpha: 0,
               duration: 500,
-              ease: "Power2",
+              ease: 'Power2',
               onComplete: () => {
                 this.loadingGraphics.forEach(g => {
                   if (g && g.scene) {
@@ -817,7 +829,7 @@ export class LoadingScene extends SceneBase {
           });
           this.scene.start("battle");
           this.hideModLoadingScreen();
-        } else {
+          } else {
           await new Promise(resolve => setTimeout(resolve, 1000));
           this.scene.start("battle");
           this.loadingGraphics.forEach(g => {
@@ -840,10 +852,10 @@ export class LoadingScene extends SceneBase {
     return `${baseKey}_${loggedInUser?.username ?? "guest"}`;
   }
 
-  private getIntroVariant(): "A" | "B" {
-    const key = this.getUserScopedKey("pokevoid_void_overtaken");
-    const voidBeaten = localStorage.getItem(key) === "true";
-    return voidBeaten ? "B" : "A";
+  private getIntroVariant(): 'A' | 'B' {
+    const key = this.getUserScopedKey('pokevoid_void_overtaken');
+    const voidBeaten = localStorage.getItem(key) === 'true';
+    return voidBeaten ? 'B' : 'A';
   }
 
   private launchIntroCutscene(): void {
@@ -879,7 +891,7 @@ export class LoadingScene extends SceneBase {
     }
 
     this.introCutsceneDone = false;
-    this.game.events.once("introCutsceneComplete", () => {
+    this.game.events.once('introCutsceneComplete', () => {
       this.introCutsceneDone = true;
       showLoadingGraphics();
     });
@@ -1011,7 +1023,7 @@ export class LoadingScene extends SceneBase {
           targets: this.modLoadingGraphics,
           alpha: 0,
           duration: 500,
-          ease: "Power2",
+          ease: 'Power2',
           onComplete: () => {
             this.modLoadingGraphics.forEach(g => g.destroy());
             this.modLoadingGraphics = [];
@@ -1033,7 +1045,7 @@ export class LoadingScene extends SceneBase {
       const textureKeys = this.textures.getTextureKeys();
 
       const modPokemonTextures = textureKeys.filter(key =>
-        key.startsWith("pkmn__glitch__")
+        key.startsWith('pkmn__glitch__')
       );
 
       for (const textureKey of modPokemonTextures) {
@@ -1150,9 +1162,7 @@ export class LoadingScene extends SceneBase {
   }
 
   private updateModLoadingScreen(current: number, total: number, modName: string = ""): void {
-    if (!this.modPercentText || !this.modNameText || !this.modProgressBar || !this.modDoneBootGameText) {
-      return;
-    }
+    if (!this.modPercentText || !this.modNameText || !this.modProgressBar || !this.modDoneBootGameText) return;
 
     let progress = total > 0 ? current / total : 0;
     if (total === 1 && current === 0) {
@@ -1194,7 +1204,7 @@ export class LoadingScene extends SceneBase {
       console.log("Loading example glitch mod...");
 
       try {
-        const response = await fetch("docs/mod-glitch-form-example.json");
+        const response = await fetch('docs/mod-glitch-form-example.json');
         if (!response.ok) {
           throw new Error(`Failed to fetch mod JSON: ${response.status}`);
         }
@@ -1244,10 +1254,10 @@ export function isIPhone() {
   const isPlatform = /iPhone/i.test(navigator.platform);
 
   const hasIOSQuirks = (
-    "maxTouchPoints" in navigator &&
+    'maxTouchPoints' in navigator &&
     navigator.maxTouchPoints > 1 &&
     /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
   ) && !(window as any).MSStream;
 
   return isUA || (isPlatform && hasIOSQuirks);

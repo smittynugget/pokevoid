@@ -34,3 +34,17 @@ cleanup_folders*.ps1
 # Python cache
 __pycache__/
 *.pyc
+
+# Android/Capacitor build artifacts
+android/app/build/
+android/.gradle/
+android/build/
+android/local.properties
+
+# Electron packaging artifacts
+packaging/windows-electron/release/
+packaging/windows-electron/node_modules/
+packaging/windows-electron/dist/
+
+# Logs
+*.log

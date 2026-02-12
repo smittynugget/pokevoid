@@ -182,25 +182,30 @@ export class SkillTreeGenerator {
 	}
 
 	private calculateNodeRarity(depth: number, _tier: number): SkillTreeRarity {
-		const rarityRoll = Utils.randSeedInt(1000);
-		if (depth >= 15) {
-			if (rarityRoll < 20) return SkillTreeRarity.LEGENDARY;
-			if (rarityRoll < 50) return SkillTreeRarity.MASTER;
-			if (rarityRoll < 120) return SkillTreeRarity.ROGUE;
-			if (rarityRoll < 370) return SkillTreeRarity.ULTRA;
-			return this.getRandomCommonOrGreat();
-		} else if (depth >= 10) {
-			if (rarityRoll < 10) return SkillTreeRarity.LEGENDARY;
-			if (rarityRoll < 30) return SkillTreeRarity.MASTER;
-			if (rarityRoll < 80) return SkillTreeRarity.ROGUE;
-			if (rarityRoll < 280) return SkillTreeRarity.ULTRA;
+		const rarityRoll = Utils.randSeedInt(100000);
+		if (depth >= 7) {
+			if (rarityRoll < 1000) return SkillTreeRarity.LEGENDARY;
+			if (rarityRoll < 3000) return SkillTreeRarity.MASTER;
+			if (rarityRoll < 10000) return SkillTreeRarity.ROGUE;
+			if (rarityRoll < 35000) return SkillTreeRarity.ULTRA;
 			return this.getRandomCommonOrGreat();
 		} else if (depth >= 5) {
-			if (rarityRoll < 50) return SkillTreeRarity.ROGUE;
-			if (rarityRoll < 250) return SkillTreeRarity.ULTRA;
+			if (rarityRoll < 100) return SkillTreeRarity.LEGENDARY;
+			if (rarityRoll < 300) return SkillTreeRarity.MASTER;
+			if (rarityRoll < 5300) return SkillTreeRarity.ROGUE;
+			if (rarityRoll < 25300) return SkillTreeRarity.ULTRA;
+			return this.getRandomCommonOrGreat();
+		} else if (depth >= 3) {
+			if (rarityRoll < 10) return SkillTreeRarity.LEGENDARY;
+			if (rarityRoll < 30) return SkillTreeRarity.MASTER;
+			if (rarityRoll < 5030) return SkillTreeRarity.ROGUE;
+			if (rarityRoll < 25030) return SkillTreeRarity.ULTRA;
 			return this.getRandomCommonOrGreat();
 		} else {
-			if (rarityRoll < 200) return SkillTreeRarity.ULTRA;
+			if (rarityRoll < 2) return SkillTreeRarity.LEGENDARY;
+			if (rarityRoll < 12) return SkillTreeRarity.MASTER;
+			if (rarityRoll < 1862) return SkillTreeRarity.ROGUE;
+			if (rarityRoll < 19862) return SkillTreeRarity.ULTRA;
 			return this.getRandomCommonOrGreat();
 		}
 	}
