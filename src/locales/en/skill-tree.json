@@ -80,7 +80,7 @@
     "masterBall": "Master Ball (x1)",
     "eggVoucher": "Egg Voucher ({{tier}})",
     "relicGold": "Relic Gold",
-    "permaMoney": "Perma Money: {{amount}}",
+    "permaMoney": "Omega Gold: {{amount}}",
     "catchBonus": "{{types}} +{{percent}}% Catch Rate",
     "essenceTypeWeight": "Essence Weight: {{type}} x{{weight}}",
     "fusionSecondaryPriority": "More {{types}} Fusions",
@@ -105,7 +105,8 @@
     "ppMaxItem": "PP Max",
     "rogueBall": "Rogue Ball (x5)",
     "rogueballRarity": "Rogue Rarity Items",
-    "masterballRarity": "Master Rarity Items"
+    "masterballRarity": "Master Rarity Items",
+    "partyAbilityGrant": "Party Abilities"
   },
   "descriptions": {
     "statFocusLabel": "Stat Focus:",
@@ -195,7 +196,8 @@
     "default": "Reward",
     "tmLearn": "Learn the move {{move}}",
     "glitchFormDesc": "Glitch Form: {{form}}",
-    "teraTypeDesc": "Offer a Tera type reward: {{type}}"
+    "teraTypeDesc": "Offer a Tera type reward: {{type}}",
+    "partyAbilityGrant": "Choose a free party ability to add to your team."
   },
   "fallback": {
     "unknownPokemon": "Unknown Pokémon",

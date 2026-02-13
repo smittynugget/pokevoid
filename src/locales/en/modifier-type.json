@@ -181,14 +181,14 @@
     },
     "GlitchPieceModifierType": {
       "name": "Glitch Piece",
-      "description": "A mysterious piece of glitch. \nGives access to very powerful glitch items."
+      "description": "A mysterious piece of glitch. (Owned: {{glitchPieceAmount}})\nGives access to very powerful glitch items."
     },
     "FormChangeItemModifierSmittyItem": {
       "description": "FORBIDDEN: Giving a pokemon a specific combination of 4 SMITTY items..."
     },
     "PermaModifierType": {
       "PERMA_PARTY_ABILITY": {
-        "name": "SMITTY Party Ability",
+        "name": "Smitty Party: {{abilityName}}",
         "description": "Give {{abilityName}} to ALL Party Pokémon"
       },
       "PERMA_NEW_NORMAL": {

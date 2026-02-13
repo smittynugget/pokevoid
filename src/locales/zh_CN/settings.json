@@ -109,5 +109,8 @@
   "disableMoveUpgrades": "禁用招式强化",
   "disableCutscenes": "禁用过场动画",
   "uiVolume": "界面音量",
-  "showItemTextBg": "显示奖励稀有度背景"
+  "showItemTextBg": "显示奖励稀有度背景",
+  "autoSave": "自动保存",
+  "autoSavePerTurn": "每回合",
+  "autoSavePerBattle": "每场战斗"
 }

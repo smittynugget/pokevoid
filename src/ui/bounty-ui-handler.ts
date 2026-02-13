@@ -498,7 +498,7 @@ export default abstract class BountyUiHandler extends ModalUiHandler {
             0,
             this.isLocked() ?
                 i18next.t("questUi:bounty.sections.task.title") :
-                (this.questModifier?.runDuration === RunDuration.SINGLE_RUN ?
+                ((this.questModifier as any)?.duration === RunDuration.SINGLE_RUN ?
                     i18next.t("questUi:bounty.sections.task.singleRun") :
                     i18next.t("questUi:bounty.sections.task.multiRun")),
             TextStyle.WINDOW,

@@ -619,8 +619,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const type = option?.modifierTypeOption?.type;
       if (type && !(type instanceof MoveUpgradeModifierType)) {
         const highestWave = ((this.scene as BattleScene).gameData?.gameStats?.highestWaveReached || 0);
-        const sessionsWon = ((this.scene as BattleScene).gameData?.gameStats?.sessionsWon || 0);
-        const tooltipLocked = !Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && highestWave < 25 && sessionsWon <= 0;
+        const tooltipLocked = !Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && highestWave < 25;
         if (tooltipLocked) {
           return false;
         }
@@ -798,8 +797,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const isMoveUpgrade = type instanceof MoveUpgradeModifierType;
       const canShowCustomTooltip = this.shouldRenderCustomTooltip(type);
       const highestWave = ((this.scene as BattleScene).gameData?.gameStats?.highestWaveReached || 0);
-      const sessionsWon = ((this.scene as BattleScene).gameData?.gameStats?.sessionsWon || 0);
-      const tooltipLocked = !Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && highestWave < 25 && sessionsWon <= 0;
+      const tooltipLocked = !Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && highestWave < 25;
+      const effectiveTooltipsEnabled = this.scene.modifierTooltipsEnabled && !tooltipLocked;
       const showHint = !this.scene.modifierTooltipsEnabled && !isMoveUpgrade && !tooltipLocked;
       this.updateShowDetailsHint(option, showHint);
 
@@ -851,7 +850,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         }
       }
 
-      if (!this.scene.modifierTooltipsEnabled && !isMoveUpgrade) {
+      if (!effectiveTooltipsEnabled && !isMoveUpgrade) {
         if (type instanceof TmModifierType || type instanceof AnyTmModifierType) {
           this.moveInfoOverlay.show(this.scene.getUpgradedMove(allMoves[type.moveId]));
         } else if (type instanceof AnyAbilityModifierType || type instanceof AnyPassiveAbilityModifierType || type instanceof PermaPartyAbilityModifierType) {
@@ -1262,8 +1261,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       return true;
     }
     const highestWave = ((this.scene as BattleScene).gameData?.gameStats?.highestWaveReached || 0);
-    const sessionsWon = ((this.scene as BattleScene).gameData?.gameStats?.sessionsWon || 0);
-    if (!Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && highestWave < 25 && sessionsWon <= 0) {
+    if (!Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && highestWave < 25) {
       return false;
     }
     return type instanceof TmModifierType ||
@@ -1380,8 +1378,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         return;
       }
       const highestWave = ((this.scene as BattleScene).gameData?.gameStats?.highestWaveReached || 0);
-      const sessionsWon = ((this.scene as BattleScene).gameData?.gameStats?.sessionsWon || 0);
-      const tooltipLocked = !Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && highestWave < 25 && sessionsWon <= 0;
+      const tooltipLocked = !Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && highestWave < 25;
       if (tooltipLocked) {
         return;
       }

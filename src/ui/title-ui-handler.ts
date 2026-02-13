@@ -54,7 +54,7 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
     const taglineText = addTextObject(this.scene, logo.x, logo.y + logo.displayHeight + 3, i18next.t("menu:tagline"), TextStyle.TITLE_MESSAGE, { fontSize: "40px" });
     taglineText.setOrigin(0.5, 0);
     taglineText.setInteractive({ useHandCursor: true });
-    taglineText.on("pointerdown", () => {
+    taglineText.on('pointerdown', () => {
       this.handleTaglineClick();
     });
     this.titleContainer.add(taglineText);
@@ -80,17 +80,17 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
     this.versionText.setAlpha(0.7);
     this.titleContainer.add(this.versionText);
     this.versionText.setInteractive({ useHandCursor: true });
-    this.versionText.on("pointerdown", () => {
-      this.handleVersionClick();
+    this.versionText.on('pointerdown', () => {
+        this.handleVersionClick();
     });
 
     this.loadSmittyTexture()
-      .then(() => {
-        this.setupSmittySprite();
-      })
-      .catch(error => {
-        console.error("[TitleUiHandler] Error loading Smitty texture:", error);
-      });
+        .then(() => {
+          this.setupSmittySprite();
+        })
+        .catch(error => {
+          console.error('[TitleUiHandler] Error loading Smitty texture:', error);
+        });
   }
 
   private async loadSmittyTexture(): Promise<void> {
@@ -104,8 +104,8 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
 
     return new Promise((resolve, reject) => {
       this.scene.load.embeddedAtlas(
-        spriteKey,
-        `images/pokemon/glitch/${smittyForm}.png`
+          spriteKey,
+          `images/pokemon/glitch/${smittyForm}.png`
       );
 
       this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
@@ -125,198 +125,195 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
 
   private setupSmittySprite(): void {
     if (!this.textureLoaded) {
-      console.error("[TitleUiHandler] Smitty texture not loaded.");
-      return;
+        console.error("[TitleUiHandler] Smitty texture not loaded.");
+        return;
     }
-    const spriteKey = "pkmn__glitch__smitom";
+    const spriteKey = `pkmn__glitch__smitom`;
     const x = (this.scene.game.canvas.width / 6) - 25;
     const y = this.scene.game.canvas.height / 6 - 10;
     this.smittySprite = this.scene.addPokemonSprite(
-      null,
-      x,
-      y,
-      spriteKey,
-      undefined,
-      false,
-      true
+        null,
+        x,
+        y,
+        spriteKey,
+        undefined,
+        false,
+        true
     );
 
     this.smittySprite.setOrigin(0.5, 1);
     this.smittySprite.setScale(0.2);
 
     this.scene.tweens.add({
-      targets: this.smittySprite,
-      angle: { from: -2, to: 2 },
-      duration: 3500,
-      ease: "Sine.easeInOut",
-      yoyo: true,
-      repeat: -1
+        targets: this.smittySprite,
+        angle: { from: -2, to: 2 },
+        duration: 3500,
+        ease: 'Sine.easeInOut',
+        yoyo: true,
+        repeat: -1
     });
     if (this.smittySprite.texture.frameTotal > 1) {
-      this.smittySprite.play(spriteKey);
+        this.smittySprite.play(spriteKey);
     }
 
     if (this.scene.spritePipeline) {
-      this.smittySprite.setPipeline(this.scene.spritePipeline);
+        this.smittySprite.setPipeline(this.scene.spritePipeline);
     }
 
     this.titleContainer.add(this.smittySprite);
 
     this.smittySprite.setInteractive({ useHandCursor: true });
-    this.smittySprite.on("pointerdown", () => {
-      this.activateSmitomTalk();
+    this.smittySprite.on('pointerdown', () => {
+        this.activateSmitomTalk();
     });
   }
 
-  private handleTaglineClick(): void {
-    this.taglineClickCount++;
+private handleTaglineClick(): void {
+  this.taglineClickCount++;
 
-    if (this.taglineClickTimer) {
-      clearTimeout(this.taglineClickTimer);
-    }
-
-    this.taglineClickTimer = setTimeout(() => {
-      this.taglineClickCount = 0;
-    }, 2000);
-
-    if (this.taglineClickCount >= 3) {
-      this.taglineClickCount = 0;
-      if (this.taglineClickTimer) {
-        clearTimeout(this.taglineClickTimer);
-        this.taglineClickTimer = null;
-      }
-      this.scene.ui.setOverlayMode(Mode.BUG_REPORT_FORM, {
-        buttonActions: [
-          () => {},
-          () => {
-            this.scene.ui.revertMode();
-          }
-        ]
-      });
-    }
+  if (this.taglineClickTimer) {
+    clearTimeout(this.taglineClickTimer);
   }
 
-  private handleVersionClick(): void {
+  this.taglineClickTimer = setTimeout(() => {
+    this.taglineClickCount = 0;
+  }, 2000);
+
+  if (this.taglineClickCount >= 3) {
+    this.taglineClickCount = 0;
+    if (this.taglineClickTimer) {
+      clearTimeout(this.taglineClickTimer);
+      this.taglineClickTimer = null;
+    }
+    this.scene.ui.setOverlayMode(Mode.BUG_REPORT_FORM, {
+      buttonActions: [
+        () => {},
+        () => {
+          this.scene.ui.revertMode();
+        }
+      ]
+    });
+  }
+}
+
+private handleVersionClick(): void {
     this.versionClickCount++;
 
     if (this.versionClickTimer) {
-      clearTimeout(this.versionClickTimer);
+        clearTimeout(this.versionClickTimer);
     }
 
     this.versionClickTimer = setTimeout(() => {
-      this.versionClickCount = 0;
+        this.versionClickCount = 0;
     }, 3000);
 
     if (this.versionClickCount >= 10) {
-      this.versionClickCount = 0;
-      if (this.versionClickTimer) {
-        clearTimeout(this.versionClickTimer);
-        this.versionClickTimer = null;
-      }
-      this.scene.ui.setOverlayMode(Mode.BACKUP_RESTORE_FORM, {
-        buttonActions: [
-          () => {},
-          () => {
-            this.scene.ui.revertMode();
-          }
-        ]
-      });
+        this.versionClickCount = 0;
+        if (this.versionClickTimer) {
+            clearTimeout(this.versionClickTimer);
+            this.versionClickTimer = null;
+        }
+        this.scene.ui.setOverlayMode(Mode.BACKUP_RESTORE_FORM, {
+            buttonActions: [
+                () => {},
+                () => { this.scene.ui.revertMode(); }
+            ]
+        });
     }
-  }
+}
 
-  public activateSmitomTalk(initialTalk: boolean = false): void {
-    this.scene.getRandomSmittySound(undefined, true);
-    const dialogueKey = getSmitomDialogue(this.scene);
-    this.scene.unshiftPhase(new CustomDialoguePhase(
-      this.scene,
-      "pkmn__glitch__smitom",
-      dialogueKey,
-      "Smitom",
-      () => {
-        if (initialTalk == true || this.scene.gameData.isSmitomRewardTime()) {
-          this.scene.pushPhase(new ModifierRewardPhase(
-            this.scene, null, true
-          ));
-          if (initialTalk == false) {
-            this.scene.gameData.updateSmitomRewardTime();
-          }
-        }
-        this.scene.gameData.localSaveAll(this.scene);
-        this.scene.pushPhase(new TitlePhase(this.scene));
-      }
-    ));
-    this.scene.shiftPhase();
-  }
+public activateSmitomTalk(initialTalk: boolean = false): void {
+  this.scene.getRandomSmittySound(undefined, true);
+        const dialogueKey = getSmitomDialogue(this.scene);
+        this.scene.unshiftPhase(new CustomDialoguePhase(
+            this.scene,
+            "pkmn__glitch__smitom",
+            dialogueKey,
+            "Smitom",
+            () => {
+                if(initialTalk == true || this.scene.gameData.isSmitomRewardTime()) {
+                    this.scene.pushPhase(new ModifierRewardPhase(
+                        this.scene, null, true
+                    ));
+                    if(initialTalk == false) {
+                        this.scene.gameData.updateSmitomRewardTime();
+                    }
+                }
+                this.scene.gameData.localSaveAll(this.scene);
+                this.scene.pushPhase(new TitlePhase(this.scene)) }
+        ));
+        this.scene.shiftPhase();
+}
 
-  private setupExclamationWindow(x: number, y: number): void {
+private setupExclamationWindow(x: number, y: number): void {
     this.exclamationTimeEvent = this.scene.time.addEvent({
-      delay: 0,
-      callback: () => {
-        if (!this.smittySprite) {
-          return;
-        }
+        delay: 0,
+        callback: () => {
+            if (!this.smittySprite) {
+                return;
+            }
 
-        const smitomWidth = this.smittySprite.displayWidth;
-        const smitomHeight = this.smittySprite.displayHeight;
+            const smitomWidth = this.smittySprite.displayWidth;
+            const smitomHeight = this.smittySprite.displayHeight;
 
-        const relativeX = this.smittySprite.x;
-        const relativeY = this.smittySprite.y - smitomHeight - 4;
+            const relativeX = this.smittySprite.x;
+            const relativeY = this.smittySprite.y - smitomHeight - 4;
 
-        this.exclamationWindow = this.scene.add.container(relativeX, relativeY);
+            this.exclamationWindow = this.scene.add.container(relativeX, relativeY);
 
-        const exclamationSprite = this.scene.add.sprite(0, 0, "smitems", "exclamationMark");
-        exclamationSprite.setScale(0.20);
-        exclamationSprite.setOrigin(0.5, 0.5);
+            const exclamationSprite = this.scene.add.sprite(0, 0, 'smitems', 'exclamationMark');
+            exclamationSprite.setScale(0.20);
+            exclamationSprite.setOrigin(0.5, 0.5);
 
-        this.exclamationWindow.add(exclamationSprite);
+            this.exclamationWindow.add(exclamationSprite);
 
-        this.titleContainer.add(this.exclamationWindow);
+            this.titleContainer.add(this.exclamationWindow);
 
-        this.scene.tweens.add({
-          targets: this.exclamationWindow,
-          y: relativeY - 2,
-          duration: 2500,
-          ease: "Sine.easeInOut",
-          yoyo: true,
-          repeat: -1
-        });
+            this.scene.tweens.add({
+                targets: this.exclamationWindow,
+                y: relativeY - 2,
+                duration: 2500,
+                ease: 'Sine.easeInOut',
+                yoyo: true,
+                repeat: -1
+            });
 
-        exclamationSprite.on("error", () => {
-          console.error("[TitleUiHandler] Failed to load exclamation mark sprite frame. Falling back to text version.");
-          exclamationSprite.destroy();
+            exclamationSprite.on('error', () => {
+                console.error('[TitleUiHandler] Failed to load exclamation mark sprite frame. Falling back to text version.');
+                exclamationSprite.destroy();
 
-          const baseSize = Math.max(smitomWidth, smitomHeight) / 5;
-          const windowSize = baseSize * 1.2;
+                const baseSize = Math.max(smitomWidth, smitomHeight) / 5;
+                const windowSize = baseSize * 1.2;
 
-          const windowBg = addWindow(
-            this.scene,
-            -windowSize/2,
-            -windowSize/2,
-            windowSize,
-            windowSize,
-            false,
-            false,
-            0,
-            0,
-            WindowVariant.XTHIN
-          );
+                const windowBg = addWindow(
+                    this.scene,
+                    -windowSize/2,
+                    -windowSize/2,
+                    windowSize,
+                    windowSize,
+                    false,
+                    false,
+                    0,
+                    0,
+                    WindowVariant.XTHIN
+                );
 
-          const exclamationText = addTextObject(
-            this.scene,
-            0,
-            -windowSize/12,
-            "!",
-            TextStyle.MONEY,
-            { fontSize: "45px" }
-          );
-          exclamationText.setOrigin(0.5);
+                const exclamationText = addTextObject(
+                    this.scene,
+                    0,
+                    -windowSize/12,
+                    "!",
+                    TextStyle.MONEY,
+                    { fontSize: `45px` }
+                );
+                exclamationText.setOrigin(0.5);
 
-          this.exclamationWindow.add([windowBg, exclamationText]);
-        });
-      },
-      callbackScope: this
+                this.exclamationWindow.add([windowBg, exclamationText]);
+            });
+        },
+        callbackScope: this
     });
-  }
+}
 
   show(args: any[]): boolean {
     const ret = super.show(args);
@@ -326,77 +323,84 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
     }
 
     if (ret) {
-      this.splashMessage = Utils.randItem(getSplashMessages());
-      this.splashMessageText.setText(this.splashMessage.replace("{COUNT}", "?"));
+        this.splashMessage = Utils.randItem(getSplashMessages());
+        this.splashMessageText.setText(this.splashMessage.replace("{COUNT}", "?"));
 
-      const ui = this.getUi();
+        const ui = this.getUi();
 
-      if (this.scene.eventManager.isEventActive()) {
-        this.eventDisplay.show();
-      }
-
-      this.titleContainer.setAlpha(0);
-      this.titleContainer.setVisible(true);
-
-      if (this.optionSelectContainer) {
-        let xPos = 85;
-        let yPos = -6;
-        const lang = i18next.resolvedLanguage;
-        if (lang === "en") {
-          xPos = 85;
-        } else if (lang === "es" || lang === "pt-BR") {
-          xPos = 105;
-        } else if (lang === "it") {
-          xPos = 80;
-        } else if (lang === "de") {
-          xPos = 95;
-        } else if (lang === "zh-CN" || lang === "zh-TW") {
-          xPos = 65;
-        } else if (lang === "ja") {
-          xPos = 82;
-          yPos = -9;
-        } else if (lang === "ko") {
-          xPos = 75;
-        } else if (lang === "ru") {
-          xPos = 75;
+        if (this.scene.eventManager.isEventActive()) {
+            this.eventDisplay.show();
         }
-        this.optionSelectContainer.setPosition(xPos, yPos);
-        this.optionSelectBg.setVisible(false);
-      }
 
-      this.scene.tweens.add({
-        targets: [ this.titleContainer, ui.getMessageHandler().bg ],
-        duration: Utils.fixedInt(325),
-        alpha: (target: any) => target === this.titleContainer ? 1 : 0,
-        ease: "Sine.easeInOut",
-        onStart: () => {
-        },
-        onComplete: () => {
-        }
-      });
+        this.titleContainer.setAlpha(0);
+        this.titleContainer.setVisible(true);
 
-      const smitomButton = document.getElementById("apadSmitom");
-      if (smitomButton) {
-        smitomButton.dataset.activeState = this.scene.gameData.isSmitomRewardTime() ? "true" : "false";
-      }
-
-      if (!this.smittySprite) {
-        this.loadSmittyTexture()
-          .then(() => {
-            this.setupSmittySprite();
-            if (!this.exclamationWindow && this.scene.gameData.isSmitomRewardTime()) {
-              this.setupExclamationWindow(this.smittySprite.x - 60, this.smittySprite.y - 80);
+        if (this.optionSelectContainer) {
+            let xPos = 85;
+            let yPos = -6;
+            const lang = i18next.resolvedLanguage;
+            if (lang === 'en') {
+                xPos = 85;
+            } else if (lang === 'es' || lang === 'pt-BR') {
+                xPos = 105;
             }
-          })
-          .catch(error => {
-            console.error("[TitleUiHandler] Error loading Smitty texture:", error);
-          });
-      } else {
-        this.smittySprite.setVisible(true);
-        if (!this.exclamationWindow && this.scene.gameData.isSmitomRewardTime()) {
-          this.setupExclamationWindow(this.smittySprite.x - 60, this.smittySprite.y - 80);
+            else if (lang === 'it') {
+                xPos = 80;
+            }
+            else if (lang === 'de') {
+                xPos = 95;
+            }
+            else if (lang === 'zh-CN' || lang === 'zh-TW') {
+                xPos = 65;
+            }
+            else if (lang === 'ja') {
+                xPos = 82;
+                yPos = -9;
+            }
+            else if (lang === 'ko') {
+                xPos = 75;
+            }
+            else if (lang === 'ru') {
+                xPos = 75;
+            }
+            this.optionSelectContainer.setPosition(xPos, yPos);
+            this.optionSelectBg.setVisible(false);
         }
-      }
+
+        this.scene.tweens.add({
+            targets: [ this.titleContainer, ui.getMessageHandler().bg ],
+            duration: Utils.fixedInt(325),
+            alpha: (target: any) => target === this.titleContainer ? 1 : 0,
+            ease: "Sine.easeInOut",
+            onStart: () => {
+            },
+            onComplete: () => {
+            }
+        });
+
+        const smitomButton = document.getElementById("apadSmitom");
+        if (smitomButton) {
+            smitomButton.dataset.activeState = this.scene.gameData.isSmitomRewardTime() ? "true" : "false";
+        }
+
+        if (!this.smittySprite) {
+            this.loadSmittyTexture()
+                .then(() => {
+                    this.setupSmittySprite();
+                    if(!this.exclamationWindow && this.scene.gameData.isSmitomRewardTime()) {
+                        this.setupExclamationWindow(this.smittySprite.x - 60, this.smittySprite.y - 80);
+                    }
+                })
+                .catch(error => {
+                    console.error('[TitleUiHandler] Error loading Smitty texture:', error);
+                });
+        }
+        else {
+            this.smittySprite.setVisible(true);
+            if(!this.exclamationWindow && this.scene.gameData.isSmitomRewardTime()) {
+                this.setupExclamationWindow(this.smittySprite.x - 60, this.smittySprite.y - 80);
+            }
+        }
     }
 
     return ret;
@@ -413,31 +417,31 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
     this.titleStatsTimer = null;
 
     this.scene.tweens.add({
-      targets: [ this.titleContainer, ui.getMessageHandler().bg ],
-      duration: Utils.fixedInt(325),
-      alpha: (target: any) => target === this.titleContainer ? 0 : 1,
-      ease: "Sine.easeInOut"
+        targets: [ this.titleContainer, ui.getMessageHandler().bg ],
+        duration: Utils.fixedInt(325),
+        alpha: (target: any) => target === this.titleContainer ? 0 : 1,
+        ease: "Sine.easeInOut"
     });
 
     const smitomButton = document.getElementById("apadSmitom");
     if (smitomButton) {
-      smitomButton.dataset.activeState = "false";
+        smitomButton.dataset.activeState = "false";
     }
 
     if (this.exclamationTimeEvent) {
-      this.exclamationTimeEvent.remove();
-      this.exclamationTimeEvent = null;
+        this.exclamationTimeEvent.remove();
+        this.exclamationTimeEvent = null;
     }
 
     if (this.smittySprite) {
-      this.smittySprite.destroy();
-      this.smittySprite = null;
-      this.textureLoaded = false;
+        this.smittySprite.destroy();
+        this.smittySprite = null;
+        this.textureLoaded = false;
     }
 
     if (this.exclamationWindow) {
-      this.exclamationWindow.destroy();
-      this.exclamationWindow = null;
+        this.exclamationWindow.destroy();
+        this.exclamationWindow = null;
     }
   }
 }
@@ -450,11 +454,11 @@ export function activateSmitomTalk(scene: BattleScene, initialTalk: boolean = fa
     dialogueKey,
     "Smitom",
     () => {
-      if (initialTalk == true || scene.gameData.isSmitomRewardTime()) {
+      if(initialTalk == true || scene.gameData.isSmitomRewardTime()) {
         scene.pushPhase(new ModifierRewardPhase(
           scene, null, true
         ));
-        if (initialTalk == false) {
+        if(initialTalk == false) {
           scene.gameData.updateSmitomRewardTime();
         }
       }

@@ -17,6 +17,7 @@ import { Command } from "#app/ui/command-ui-handler.js";
 import { Mode } from "#app/ui/ui.js";
 import i18next from "i18next";
 import * as Utils from "#app/utils.js";
+import Overrides from "#app/overrides";
 import { FieldPhase } from "./field-phase";
 import { SelectTargetPhase } from "./select-target-phase";
 import {TrainerType} from "#enums/trainer-type";
@@ -40,6 +41,34 @@ export class CommandPhase extends FieldPhase {
 
   start() {
     super.start();
+
+    if (this.fieldIndex === 0 && this.scene.currentBattle) {
+      this.scene.encounterInitComplete = true;
+      if (Overrides.DEBUG_SAVE_TRACE) {
+        console.debug("[SAVE_TRACE] CommandPhase set encounterInitComplete", {
+          autoSaveMode: this.scene.autoSaveMode,
+          waveIndex: this.scene.currentBattle?.waveIndex,
+          battleTurn: this.scene.currentBattle?.turn
+        });
+      }
+    }
+
+    if (this.fieldIndex === 0 && this.scene.autoSaveMode === 0 && this.scene.currentBattle && this.scene.gameData?.dataLoaded) {
+        const now = Date.now();
+        if (!this.scene._lastCommandPhaseSaveTime || (now - this.scene._lastCommandPhaseSaveTime) > 5000) {
+            this.scene._lastCommandPhaseSaveTime = now;
+            if (Overrides.DEBUG_SAVE_TRACE) {
+              console.debug("[SAVE_TRACE] CommandPhase localSaveAll", {
+                autoSaveMode: this.scene.autoSaveMode,
+                waveIndex: this.scene.currentBattle?.waveIndex,
+                battleTurn: this.scene.currentBattle?.turn,
+                encounterInitComplete: this.scene.encounterInitComplete
+              });
+            }
+            this.scene.gameData.localSaveAll(this.scene);
+        }
+    }
+
     if (this.fieldIndex) {
       if (this.scene.getPlayerField().filter(p => p.isActive()).length === 1) {
         this.fieldIndex = FieldPosition.CENTER;

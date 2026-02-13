@@ -159,7 +159,25 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
     }
 
     protected getTaskText(): string {
-        return this.questModifier?.task || i18next.t("questUi:bounty.quest.invalidTask");
+        if (!this.questModifier) return i18next.t("questUi:bounty.quest.invalidTask");
+        let text = this.questModifier.task || i18next.t("questUi:bounty.quest.invalidTask");
+        try {
+            const goalCount = (this.questModifier as any).goalCount;
+            let currentCount: number | undefined = undefined;
+            if (typeof (this.questModifier as any).getCurrentCount === "function") {
+                try {
+                    currentCount = (this.questModifier as any).getCurrentCount(this.scene);
+                } catch {
+                    currentCount = (this.questModifier as any).currentCount;
+                }
+            } else {
+                currentCount = (this.questModifier as any).currentCount;
+            }
+            if (typeof currentCount === "number" && typeof goalCount === "number" && goalCount > 1) {
+                text = `${text} (${currentCount}/${goalCount})`;
+            }
+        } catch {}
+        return text;
     }
 
     show(args: any[]): boolean {

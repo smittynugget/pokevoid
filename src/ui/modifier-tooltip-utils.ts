@@ -6,6 +6,8 @@ import { getUpgradeRarityColors } from "#app/utils";
 import { SkillTreeRarity } from "#app/system/skill-tree-data";
 import type { ModifierType } from "#app/modifier/modifier-type";
 import type { PersistentModifier } from "#app/modifier/modifier";
+import { PermaRunQuestModifier } from "#app/modifier/modifier";
+import { PermaPartyAbilityModifierType } from "#app/modifier/modifier-type";
 import { getPermaModifierRarity } from "#app/phases/modifier-reward-phase";
 import { Button } from "#enums/buttons";
 import { Device } from "#enums/devices";
@@ -47,28 +49,20 @@ export class ModifierTooltipUtils {
   }
 
   static hideIfNotPinned(scene: BattleScene): void {
-    if (this.pinned) {
-      return;
-    }
+    if (this.pinned) return;
     this.hide(scene);
   }
 
   static handleStatsPressed(scene: BattleScene): boolean {
-    if (!this.container || !this.container.visible) {
-      return false;
-    }
-    if (!this.currentData?.hasDetails) {
-      return false;
-    }
+    if (!this.container || !this.container.visible) return false;
+    if (!this.currentData?.hasDetails) return false;
     this.pinned = true;
     this.rebuild(scene);
     return true;
   }
 
   static handleUiInput(scene: BattleScene, button: Button): boolean {
-    if (!this.pinned) {
-      return false;
-    }
+    if (!this.pinned) return false;
     if (button === Button.CANCEL) {
       this.hide(scene);
       return true;
@@ -87,10 +81,16 @@ export class ModifierTooltipUtils {
 
   static showForModifier(scene: BattleScene, modifier: PersistentModifier, _anchor?: { x: number; y: number }, opts?: { context?: string }): void {
     const meta = (modifier as any)?.skillTreeTooltip;
-    if (meta?.title && meta?.body && meta?.rarity) {
+    if (meta?.title && meta?.body && meta?.rarity && !(modifier instanceof PermaRunQuestModifier)) {
       const rarity = meta.rarity as SkillTreeRarity;
       const subtitle = this.getRarityText(rarity);
-      const data: ModifierTooltipData = { title: String(meta.title), subtitle, body: String(meta.body), rarity, hasDetails: false };
+      const isPartyAbility = modifier.type instanceof PermaPartyAbilityModifierType;
+      const title = isPartyAbility ? String(modifier.type.name) : String(meta.title);
+      const typeAny: any = modifier.type as any;
+      const body = isPartyAbility
+        ? (typeof typeAny.getTooltipDescription === "function" ? String(typeAny.getTooltipDescription(scene)) : String(modifier.type.getDescription(scene)))
+        : String(meta.body);
+      const data: ModifierTooltipData = { title, subtitle, body, rarity, hasDetails: false };
       this.show(scene, data);
       return;
     }
@@ -153,9 +153,7 @@ export class ModifierTooltipUtils {
   }
 
   private static rebuild(scene: BattleScene): void {
-    if (!this.currentData) {
-      return;
-    }
+    if (!this.currentData) return;
     this.buildTooltip(scene, this.currentData);
   }
 
@@ -220,12 +218,8 @@ export class ModifierTooltipUtils {
       this.subtitleText,
       this.bodyText
     ];
-    if (this.detailsButton) {
-      children.push(this.detailsButton);
-    }
-    if (this.backButton) {
-      children.push(this.backButton);
-    }
+    if (this.detailsButton) children.push(this.detailsButton);
+    if (this.backButton) children.push(this.backButton);
     this.container.add(children);
 
     const { x, y } = this.resolveTooltipPosition(scene, tooltipWidth, tooltipHeight);
@@ -332,9 +326,7 @@ export class ModifierTooltipUtils {
       const b = Math.floor(topColor.b * (1 - factor) + bottomColor.b * factor);
       const color = (r << 16) | (g << 8) | b;
       const remainingHeight = (y + height) - stepY;
-      if (remainingHeight <= 0) {
-        continue;
-      }
+      if (remainingHeight <= 0) continue;
       graphics.fillStyle(color, 0.98);
       graphics.fillRect(x, stepY, width, Math.min(stepHeight, remainingHeight));
     }
@@ -343,40 +335,32 @@ export class ModifierTooltipUtils {
   private static getTooltipRarityForModifierType(type: ModifierType): SkillTreeRarity {
     const id = (type as any)?.id as string | undefined;
     const iconImage = (type as any)?.iconImage as string | undefined;
-    if (iconImage === "quest_icon" || (id && id.endsWith("_QUEST"))) {
-      return SkillTreeRarity.MASTER;
-    }
-    if (id === "PERMA_COLLECTED_TYPE") {
-      return SkillTreeRarity.LEGENDARY;
-    }
+    if (iconImage === "quest_icon" || (id && id.endsWith("_QUEST"))) return SkillTreeRarity.MASTER;
+    if (id === "PERMA_COLLECTED_TYPE") return SkillTreeRarity.LEGENDARY;
     if (id && id.startsWith("PERMA_")) {
       const rank = getPermaModifierRarity(id);
-      if (rank <= 1) {
-        return SkillTreeRarity.ULTRA;
-      }
-      if (rank === 2) {
-        return SkillTreeRarity.ROGUE;
-      }
+      if (rank <= 1) return SkillTreeRarity.ULTRA;
+      if (rank === 2) return SkillTreeRarity.ROGUE;
       return SkillTreeRarity.MASTER;
     }
 
     const tier: ModifierTier | null = (type as any)?.tier ?? (typeof (type as any)?.getOrInferTier === "function" ? (type as any).getOrInferTier() : null);
     switch (tier) {
-    case ModifierTier.MEH:
-    case ModifierTier.COMMON:
-      return SkillTreeRarity.COMMON;
-    case ModifierTier.GREAT:
-      return SkillTreeRarity.GREAT;
-    case ModifierTier.ULTRA:
-      return SkillTreeRarity.ULTRA;
-    case ModifierTier.ROGUE:
-      return SkillTreeRarity.ROGUE;
-    case ModifierTier.MASTER:
-      return SkillTreeRarity.MASTER;
-    case ModifierTier.LUXURY:
-      return SkillTreeRarity.LEGENDARY;
-    default:
-      return SkillTreeRarity.COMMON;
+      case ModifierTier.MEH:
+      case ModifierTier.COMMON:
+        return SkillTreeRarity.COMMON;
+      case ModifierTier.GREAT:
+        return SkillTreeRarity.GREAT;
+      case ModifierTier.ULTRA:
+        return SkillTreeRarity.ULTRA;
+      case ModifierTier.ROGUE:
+        return SkillTreeRarity.ROGUE;
+      case ModifierTier.MASTER:
+        return SkillTreeRarity.MASTER;
+      case ModifierTier.LUXURY:
+        return SkillTreeRarity.LEGENDARY;
+      default:
+        return SkillTreeRarity.COMMON;
     }
   }
 

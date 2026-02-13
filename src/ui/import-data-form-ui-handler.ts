@@ -234,7 +234,6 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
                     const encryptedData = event.target?.result?.toString() || "";
                     this.scene.gameData.processImportedData(encryptedData, this.dataType, this.slotId);
                     this.clear();
-                    this.getUi().setMode(Mode.MESSAGE);
                 } catch (ex) {
                     console.error("Import error:", ex);
                     this.scene.ui.showText(

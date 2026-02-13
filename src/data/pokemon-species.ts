@@ -1084,13 +1084,22 @@ export default class PokemonSpecies extends PokemonSpeciesForm implements Locali
         return null;
     }
 
-    getSmittyFormName(getSmittyFormName: boolean = false, scene: BattleScene): string | null {
+    getSmittyFormName(getSmittyFormName: boolean = false, scene?: BattleScene): string | null {
         const smittyForm = this.forms.find(form => isSmittyFormKey(form.formKey));
         if (smittyForm) {
             if (!getSmittyFormName && scene) {
                 return scene.gameData.canUseGlitchOrSmittyForm(this.speciesId) ? this.name : null;
             }
             return getSmittyFormName ? smittyForm.formName : this.name;
+        }
+
+        const evolutions = pokemonEvolutions[this.speciesId] || [];
+        for (const evolution of evolutions) {
+            const evolutionSpecies = getPokemonSpecies(evolution.speciesId);
+            const smittyFormName = evolutionSpecies.getSmittyFormName(getSmittyFormName, scene);
+            if (smittyFormName) {
+                return smittyFormName;
+            }
         }
 
         return null;

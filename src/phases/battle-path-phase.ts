@@ -97,12 +97,15 @@ export class BattlePathPhase extends BattlePhase {
       }
       if (previousNode) {
         const pathContext = this.scene.pathNodeContext;
+
         if (this.battlePathWave === previousNode.wave && pathContext !== null && pathContext !== PathNodeContext.BATTLE_NODE) {
           this.shouldIncrementWave = false;
+
         }
         const currentBattleWave = this.scene.currentBattle?.waveIndex ?? 0;
         if (currentBattleWave < previousNode.wave) {
           this.shouldIncrementWave = false;
+
           const pendingWave = previousNode.wave;
           if (this.battlePathWave !== pendingWave) {
             this.battlePathWave = pendingWave;
@@ -111,13 +114,20 @@ export class BattlePathPhase extends BattlePhase {
           }
         } else if (this.battlePathWave >= previousNode.wave + 1) {
           this.shouldIncrementWave = false;
+
         }
+      } else {
+
       }
     }
 
-    if (this.shouldIncrementWave) {
+    if (this.shouldIncrementWave && selectedPath) {
+
       this.incrementBathPathWave();
+
       this.scene.gameData.localSaveAll(this.scene);
+    } else {
+
     }
 
     if (this.scene.gameMode.isChaosMode && this.battlePathWave === 1) {
@@ -150,6 +160,9 @@ export class BattlePathPhase extends BattlePhase {
     if (this.scene.gameMode.isChaosMode) {
       this.battlePathWave++;
       this.scene.battlePathWave = this.battlePathWave;
+      if (this.battlePathWave > this.scene.gameData.gameStats.highestWaveReached) {
+        this.scene.gameData.gameStats.highestWaveReached = this.battlePathWave;
+      }
 
       if(this.battlePathWave === 2) {
         this.scene.gameData.updateGameModeStats(this.scene.gameMode.modeId);
@@ -241,25 +254,46 @@ export class BattlePathPhase extends BattlePhase {
     return [];
   }
 
+  if (Overrides.BATTLE_PATH_BYPASS_NODE_VALIDATION_OVERRIDE) {
+    const allNodes: PathNode[] = [];
+    battlePath.waveToNodeMap.forEach((nodes) => {
+      nodes.forEach(node => allNodes.push(node));
+    });
+    return allNodes;
+  }
+
   const selectedPath = this.scene.gameData?.selectedPath;
 
   if (!selectedPath) {
     const currentWave = this.battlePathWave || 1;
-
     if (currentWave === 1) {
       return battlePath.waveToNodeMap.get(1) || [];
     }
 
-    if ((currentWave - 1) % 1000 === 0) {
-      const nodesAtCurrentWave = battlePath.waveToNodeMap.get(currentWave) || [];
-      return nodesAtCurrentWave;
+    const battlePathStartWave = Math.min(...Array.from(battlePath.waveToNodeMap.keys()));
+    if (currentWave === battlePathStartWave && currentWave > 1) {
+      return battlePath.waveToNodeMap.get(battlePathStartWave) || [];
     }
 
-    if (Overrides.BATTLE_PATH_BYPASS_NODE_VALIDATION_OVERRIDE) {
-      const nodesAtCurrentWave = battlePath.waveToNodeMap.get(currentWave) || [];
-      return nodesAtCurrentWave;
+    if ((currentWave - 1) % 1000 === 0) {
+      return battlePath.waveToNodeMap.get(currentWave) || [];
     }
-    console.warn(`No previously selected path found for wave validation at wave ${currentWave}`);
+    const lastBattleNodeWave = this.scene.lastBattleNodeWave || 0;
+    if (lastBattleNodeWave > 0) {
+      const bpStartWave = Math.min(...Array.from(battlePath.waveToNodeMap.keys()));
+      const expectedWave = Math.max(lastBattleNodeWave + 1, bpStartWave);
+      const nodesAtExpectedWave = battlePath.waveToNodeMap.get(expectedWave) || [];
+
+      if (nodesAtExpectedWave.length > 0) {
+        if (this.battlePathWave !== expectedWave) {
+
+          this.battlePathWave = expectedWave;
+          this.scene.battlePathWave = expectedWave;
+          this.scene.gameData.localSaveAll(this.scene);
+        }
+        return nodesAtExpectedWave;
+      }
+    }
     return [];
   }
 
@@ -336,34 +370,30 @@ export class BattlePathPhase extends BattlePhase {
   private validateNodeSelection(node: PathNode): boolean {
     const battlePath = getCurrentBattlePath();
     if (!battlePath) {
-      console.warn("No battle path available for validation");
+      console.warn("[BattlePathPhase] validateNodeSelection: No battle path available for validation");
       return false;
     }
-
     const availableNodes = this.getAvailableNodesForCurrentWave();
     const isAvailable = availableNodes.some(availableNode => availableNode.id === node.id);
 
     if (!isAvailable) {
       const currentWave = this.battlePathWave || 1;
-      console.warn(`🚫 Node ${node.id} at wave ${node.wave} is not available from current wave ${currentWave}`);
-      console.log(`Available nodes:`, availableNodes.map(n => `${n.id} (wave ${n.wave})`));
       return false;
     }
-
     return true;
   }
 
   private handleNodeSelection(node: PathNode): void {
+
     if (!this.validateNodeSelection(node)) {
-      console.warn(`❌ Invalid node selection: ${node.id}`);
+
       return;
     }
 
     if (!selectPath(this.scene, node.id)) {
-      console.warn(`Failed to select path node: ${node.id}`);
+
       return;
     }
-
     if (node.dynamicMode && (node.dynamicMode.typeExtraDamage !== undefined || node.dynamicMode.pokemonNerf !== undefined)) {
       this.assignDynamicModeTargets(node.dynamicMode);
 
@@ -384,6 +414,17 @@ export class BattlePathPhase extends BattlePhase {
   }
 
   private routeToPhase(node: PathNode): void {
+    const battleNodeTypes = [
+      PathNodeType.WILD_POKEMON, PathNodeType.TRAINER_BATTLE, PathNodeType.RIVAL_BATTLE,
+      PathNodeType.MAJOR_BOSS_BATTLE, PathNodeType.RECOVERY_BOSS, PathNodeType.EVIL_BOSS_BATTLE,
+      PathNodeType.ELITE_FOUR, PathNodeType.CHAMPION, PathNodeType.SMITTY_BATTLE,
+      PathNodeType.EVIL_GRUNT_BATTLE, PathNodeType.EVIL_ADMIN_BATTLE,
+      PathNodeType.CHALLENGE_BOSS, PathNodeType.CHALLENGE_RIVAL,
+      PathNodeType.CHALLENGE_EVIL_BOSS, PathNodeType.CHALLENGE_CHAMPION
+    ];
+    if (battleNodeTypes.includes(node.nodeType)) {
+      this.scene.lastBattleNodeWave = node.wave;
+    }
     if(this.battlePathWave % 30 === 0) {
         this.scene.recoveryBossMode = RecoveryBossMode.FACING_BOSS;
     }
@@ -1188,6 +1229,13 @@ export class BattlePathPhase extends BattlePhase {
       },
       () => {
         this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["SKILL_POINTS_7"]));
+      },
+      () => {
+        this.scene.unshiftPhase(new SelectModifierPhase(
+          this.scene, 1, undefined, false,
+          this.createReturnToBattlePathCallback(),
+          PathNodeTypeFilter.PARTY_ABILITY
+        ));
       }
     ];
 
@@ -1201,6 +1249,8 @@ export class BattlePathPhase extends BattlePhase {
       const rand = Utils.randSeedInt(100);
       if (rand < 5 && !isAtMaxGoldenPokeball) {
         selectedOutcome = outcomes[3];
+      } else if (rand >= 5 && rand < 15) {
+        selectedOutcome = outcomes[5];
       } else {
         const nonGoldenIndices = [0, 1, 2, 4];
         selectedOutcome = outcomes[nonGoldenIndices[Utils.randSeedInt(4)]];

@@ -32,6 +32,7 @@ import { Mode } from "#app/ui/ui";
 import i18next from "i18next";
 import { BattlePhase } from "./battle-phase";
 import * as Utils from "#app/utils";
+import Overrides from "#app/overrides";
 import { CheckSwitchPhase } from "./check-switch-phase";
 import { GameOverPhase } from "./game-over-phase";
 import { PostSummonPhase } from "./post-summon-phase";
@@ -66,6 +67,7 @@ export class EncounterPhase extends BattlePhase {
 
     let battle = this.scene.currentBattle;
     if (!this.scene.disableCutscenes &&
+      !this.loaded &&
       battle?.battleType === BattleType.TRAINER &&
       battle?.trainer?.config?.trainerType === TrainerType.SMITTY) {
       const wave = battle.waveIndex;
@@ -125,31 +127,71 @@ export class EncounterPhase extends BattlePhase {
 
     let totalBst = 0;
 
-    if (this.loaded) {
+    if(this.loaded) {
       this.scene.ui.updatePermaModifierBar(this.scene.gameData.permaModifiers);
       this.scene.currentBattle.initBattleSpec();
-    } else {
+      if (this.scene.gameData.resumeInBattle) {
+        if (Overrides.DEBUG_SAVE_TRACE) {
+          console.debug("[SAVE_TRACE] EncounterPhase loaded resumeInBattle short-circuit", {
+            autoSaveMode: this.scene.autoSaveMode,
+            waveIndex: battle?.waveIndex,
+            battleTurn: battle?.turn,
+            encounterInitComplete: this.scene.encounterInitComplete
+          });
+        }
+        this.scene.gameData.resumeInBattle = false;
+        this.scene.currentBattle.started = true;
+        this.scene.playBgm(undefined);
+        this.scene.pbTray.hide();
+        this.scene.pbTrayEnemy.hide();
+        if (this.scene.arenaPlayer.x !== 0) {
+          this.scene.arenaPlayer.setX(0);
+        }
+        if (this.scene.arenaEnemy.x !== 20) {
+          this.scene.arenaEnemy.setX(20);
+        }
+        if (this.scene.currentBattle.battleType === BattleType.TRAINER && this.scene.currentBattle.trainer) {
+          if (this.scene.currentBattle.trainer.x < 0) {
+            this.scene.currentBattle.trainer.setX(this.scene.currentBattle.trainer.x + 300);
+          }
+          this.hideEnemyTrainer();
+        }
+        this.hydrateActiveBattlersToField();
+        super.end();
+        return;
+      }
+      if (Overrides.DEBUG_SAVE_TRACE) {
+        console.debug("[SAVE_TRACE] EncounterPhase loaded continue (resumeInBattle false)", {
+          autoSaveMode: this.scene.autoSaveMode,
+          waveIndex: battle?.waveIndex,
+          battleTurn: battle?.turn,
+          encounterInitComplete: this.scene.encounterInitComplete
+        });
+      }
+    }
+    else {
       if (battle.waveIndex > 1) {
         this.scene.gameData.permaModifiers
-          .findModifiers(m => m instanceof PermaWaveCheckQuestModifier && !(m instanceof PermaCountdownWaveCheckQuestModifier))
-          .forEach(modifier => modifier.apply([this.scene, this.scene]));
+            .findModifiers(m => m instanceof PermaWaveCheckQuestModifier && !(m instanceof PermaCountdownWaveCheckQuestModifier))
+            .forEach(modifier => modifier.apply([this.scene, this.scene]));
 
         this.scene.gameData.permaModifiers
-          .findModifiers(m => m instanceof PermaCountdownWaveCheckQuestModifier)
-          .forEach(modifier => {
-            if (battle.waveIndex >= this.scene.gameMode.getFinalWave() - (modifier as PermaCountdownWaveCheckQuestModifier).startWave) {
-              modifier.apply([this.scene, this.scene]);
-            }
-          });
+            .findModifiers(m => m instanceof PermaCountdownWaveCheckQuestModifier)
+            .forEach(modifier => {
+              if (battle.waveIndex >= this.scene.gameMode.getFinalWave() - (modifier as PermaCountdownWaveCheckQuestModifier).startWave) {
+                modifier.apply([this.scene, this.scene]);
+              }
+            });
 
-        if (this.scene.currentBattle.waveIndex >= 50) {
+        if(this.scene.currentBattle.waveIndex >= 50) {
           this.scene.gameData.reducePermaWaveModifiers(this.scene);
         }
 
-        if (battle.waveIndex === 2 && !this.scene.gameMode.isChaosMode) {
+        if(battle.waveIndex === 2 && !this.scene.gameMode.isChaosMode) {
           this.scene.gameData.updateGameModeStats(this.scene.gameMode.modeId);
         }
-      } else if (!this.scene.gameMode.isTestMod) {
+      }
+      else if (!this.scene.gameMode.isTestMod) {
         let glitchPieces = 0;
 
         if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_START_GLITCH_PIECES_3)) {
@@ -160,7 +202,7 @@ export class EncounterPhase extends BattlePhase {
           glitchPieces = 2;
         }
 
-        if (glitchPieces) {
+        if(glitchPieces) {
           this.scene.unshiftPhase(new ModifierRewardPhase(this.scene, () => new GlitchPieceModifierType(glitchPieces)));
         }
 
@@ -211,10 +253,10 @@ export class EncounterPhase extends BattlePhase {
                   const speciesId = parseInt(speciesIdStr, 10);
                   const chance = encounterChanceMap[speciesId];
 
-                  if (chance > 0 && Utils.randSeedInt(100) < chance) {
-                    enemySpecies = getPokemonSpecies(speciesId);
-                    break;
-                  }
+                if (chance > 0 && Utils.randSeedInt(100) < chance) {
+                  enemySpecies = getPokemonSpecies(speciesId);
+                  break;
+                }
                 }
               }
             }
@@ -268,35 +310,38 @@ export class EncounterPhase extends BattlePhase {
       if (!this.loaded) {
         this.scene.gameData.setPokemonSeen(enemyPokemon, true, battle.battleType === BattleType.TRAINER);
       }
-      if (battle.battleSpec === BattleSpec.FINAL_BOSS || this.scene.gameMode.isWavePreFinal(this.scene)) {
+        if (!this.loaded) {
+        if (battle.battleSpec === BattleSpec.FINAL_BOSS || this.scene.gameMode.isWavePreFinal(this.scene)) {
 
-        if (this.scene.gameMode.isNightmare && battle.waveIndex >= 300) {
-          const universalSmittyForms = pokemonFormChanges[Species.NONE] || [];
+            if (this.scene.gameMode.isNightmare && battle.waveIndex >= 300) {
+              const universalSmittyForms = pokemonFormChanges[Species.NONE] || [];
 
-          if (universalSmittyForms.length > 0) {
-            const randomUniversalForm = universalSmittyForms[Utils.randSeedInt(universalSmittyForms.length)];
+              if (universalSmittyForms.length > 0) {
+                const randomUniversalForm = universalSmittyForms[Utils.randSeedInt(universalSmittyForms.length)];
 
-            const trigger = randomUniversalForm.findTrigger(SmittyFormTrigger) as SmittyFormTrigger;
-            if (trigger) {
-              applyUniversalSmittyForm(trigger.name, enemyPokemon);
-              enemyPokemon.updateScale();
-              enemyPokemon.generateName();
-              enemyPokemon.toggleShadow(false);
-            }
+                const trigger = randomUniversalForm.findTrigger(SmittyFormTrigger) as SmittyFormTrigger;
+                if (trigger) {
+                  applyUniversalSmittyForm(trigger.name, enemyPokemon);
+                  enemyPokemon.updateScale();
+                  enemyPokemon.generateName();
+                  enemyPokemon.toggleShadow(false);
+                }
+              }
+            enemyPokemon.updateScale();
           }
-          enemyPokemon.updateScale();
+          enemyPokemon.setBoss();
+          enemyPokemon.initBattleInfo();
         }
-        enemyPokemon.setBoss();
-        enemyPokemon.initBattleInfo();
-      } else if (!(battle.waveIndex % 1000)) {
-        const bossMBH = this.scene.findModifier(m => m instanceof TurnHeldItemTransferModifier && m.pokemonId === enemyPokemon.id, false) as TurnHeldItemTransferModifier;
-        this.scene.removeModifier(bossMBH!);
-        bossMBH?.setTransferrableFalse();
-        this.scene.addEnemyModifier(bossMBH!);
-      }
+        else if (!(battle.waveIndex % 1000)) {
+          const bossMBH = this.scene.findModifier(m => m instanceof TurnHeldItemTransferModifier && m.pokemonId === enemyPokemon.id, false) as TurnHeldItemTransferModifier;
+          this.scene.removeModifier(bossMBH!);
+          bossMBH?.setTransferrableFalse();
+          this.scene.addEnemyModifier(bossMBH!);
+        }
+        }
       totalBst += enemyPokemon.getSpeciesForm().baseTotal;
 
-      if (!battle.trainer?.isDynamicRival) {
+      if(!battle.trainer?.isDynamicRival) {
         loadEnemyAssets.push(enemyPokemon.loadAssets());
       }
 
@@ -324,7 +369,7 @@ export class EncounterPhase extends BattlePhase {
           if (enemyPokemon.isBoss() && (!enemyPokemon.isPopulatedFromDataSource && !battle.trainer?.isDynamicRival)) {
             enemyPokemon.setBoss(true, enemyPokemon.bossSegments);
           }
-          enemyPokemon.initBattleInfo();
+            enemyPokemon.initBattleInfo();
         }
       }
     }
@@ -371,6 +416,14 @@ export class EncounterPhase extends BattlePhase {
 
       this.scene.ui.setMode(Mode.MESSAGE).then(() => {
         if (!this.loaded) {
+          if (Overrides.DEBUG_SAVE_TRACE) {
+            console.debug("[SAVE_TRACE] EncounterPhase battle-start saveAll", {
+              autoSaveMode: this.scene.autoSaveMode,
+              waveIndex: this.scene.currentBattle?.waveIndex,
+              battleTurn: this.scene.currentBattle?.turn,
+              encounterInitComplete: this.scene.encounterInitComplete
+            });
+          }
 
           this.scene.gameData.saveAll(this.scene, true, this.scene.lastSavePlayTime >= 300).then(success => {
             this.scene.disableMenu = false;
@@ -385,6 +438,61 @@ export class EncounterPhase extends BattlePhase {
         }
       });
     });
+  }
+
+  private hydrateActiveBattlersToField(): void {
+    const place = (pokemon: Pokemon, player: boolean, fieldIndex: integer, availableCount: integer) => {
+      if (pokemon.isOnField()) {
+        pokemon.setVisible(true);
+        pokemon.getSprite().setVisible(true);
+        return;
+      }
+      if (fieldIndex === 1) {
+        pokemon.setFieldPosition(FieldPosition.RIGHT, 0);
+      } else {
+        const position = !this.scene.currentBattle.double || availableCount === 1 ? FieldPosition.CENTER : FieldPosition.LEFT;
+        pokemon.setFieldPosition(position, 0);
+      }
+      this.scene.add.existing(pokemon);
+      this.scene.field.add(pokemon);
+      if (!player) {
+        const playerPokemon = this.scene.getPlayerPokemon();
+        if (playerPokemon?.visible && this.scene.field.getIndex(playerPokemon) > -1) {
+          this.scene.field.moveBelow(pokemon as Pokemon, playerPokemon);
+        }
+        this.scene.currentBattle.seenEnemyPartyMemberIds.add(pokemon.id);
+      }
+      this.scene.updateModifiers(player);
+      this.scene.updateFieldScale();
+      pokemon.showInfo();
+      pokemon.playAnim();
+      pokemon.setVisible(true);
+      pokemon.getSprite().setVisible(true);
+      pokemon.setScale(pokemon.isGlitchOrSmittyForm() ? 0.4 : pokemon.getSpriteScale());
+      this.scene.updateFieldScale();
+      pokemon.resetSummonData();
+      pokemon.resetTurnData();
+    };
+
+    const battle = this.scene.currentBattle;
+    const battlerCount = battle?.getBattlerCount?.() ?? (battle?.double ? 2 : 1);
+    const party = this.scene.getParty();
+    const enemyParty = this.scene.getEnemyParty();
+    const availablePartyMembers = party.filter(p => p.isAllowedInBattle()).length;
+    const availableEnemyMembers = enemyParty.filter(p => !p.isFainted()).length;
+
+    for (let i = 0; i < Math.min(battlerCount, party.length); i++) {
+      const pokemon = party[i];
+      if (pokemon) {
+        place(pokemon, true, i, availablePartyMembers);
+      }
+    }
+    for (let i = 0; i < Math.min(battlerCount, enemyParty.length); i++) {
+      const pokemon = enemyParty[i];
+      if (pokemon) {
+        place(pokemon, false, i, availableEnemyMembers);
+      }
+    }
   }
 
   doEncounter() {
@@ -405,7 +513,7 @@ export class EncounterPhase extends BattlePhase {
     this.scene.tweens.add({
       targets: [this.scene.arenaEnemy, this.scene.currentBattle.trainer, enemyField, this.scene.arenaPlayer, this.scene.trainer].flat(),
       x: (_target, _key, value, fieldIndex: integer) => fieldIndex < 2 + (enemyField.length) ? value + 300 : value - 300,
-      duration: 2000,
+      duration: this.loaded ? 100 : 2000,
       onComplete: () => {
         if (!this.tryOverrideForBattleSpec()) {
           this.doEncounterCommon();
@@ -448,7 +556,7 @@ export class EncounterPhase extends BattlePhase {
         }
       });
       this.scene.updateFieldScale();
-      if (showEncounterMessage) {
+      if (showEncounterMessage && !this.loaded) {
         this.scene.ui.showText(this.getEncounterMessage(), null, () => this.end(), 1500);
       } else {
         this.end();
@@ -474,12 +582,17 @@ export class EncounterPhase extends BattlePhase {
           }
           this.end();
         };
-        if (showEncounterMessage) {
+        if (showEncounterMessage && !this.loaded) {
           this.scene.ui.showText(this.getEncounterMessage(), null, doTrainerSummon, 1500, true);
         } else {
           doTrainerSummon();
         }
       };
+
+      if (this.loaded) {
+        doSummon();
+        return;
+      }
 
       const encounterMessages = this.scene.currentBattle.trainer?.getEncounterMessages();
 
@@ -503,11 +616,12 @@ export class EncounterPhase extends BattlePhase {
             }
             this.scene.showFieldOverlay(500)
               .then(() => {
-                if (trainer.config.trainerType == TrainerType.SMITTY) {
-                  this.scene.charSprite.showCharacter("smitty_trainers", `${trainer?.config.smittyVariantIndex+1}`);
-                } else {
-                  this.scene.charSprite.showCharacter(trainer?.getKey()!, getCharVariantFromDialogue(encounterMessages[0]));
-                }
+                  if(trainer.config.trainerType == TrainerType.SMITTY) {
+                    this.scene.charSprite.showCharacter("smitty_trainers", `${trainer?.config.smittyVariantIndex+1}`);
+                  }
+                  else {
+                    this.scene.charSprite.showCharacter(trainer?.getKey()!, getCharVariantFromDialogue(encounterMessages[0]));
+                  }
               }).then(() => showDialogueAndSummon());
           })();
         } else {
@@ -585,13 +699,18 @@ export class EncounterPhase extends BattlePhase {
       ShowRewards(this.scene);
       ShowRewards(this.scene);
       ShowRewards(this.scene);
-    } else {
+    }
+    else {
       ShowRewards(this.scene, 20, false);
     }
   }
 
   tryOverrideForBattleSpec(): boolean {
     if (this.scene.gameMode.isWavePreFinal(this.scene, this.scene.currentBattle.waveIndex)) {
+      if (this.loaded) {
+        this.doEncounterCommon(false);
+        return true;
+      }
       const enemy = this.scene.getEnemyPokemon();
       this.scene.ui.showText(this.getEncounterMessage(), null, () => {
         const localizationKey = "battleSpecDialogue:encounter";
@@ -620,25 +739,21 @@ export class EncounterPhase extends BattlePhase {
 
   addRandomTeraModifierToPlayer(): boolean {
     const party = this.scene.getParty();
-    if (party.length === 0) {
-      return false;
-    }
+  if (party.length === 0) return false;
 
-    const nonTerastallizedPokemon = party.filter(pokemon => !pokemon.isTerastallized());
+  const nonTerastallizedPokemon = party.filter(pokemon => !pokemon.isTerastallized());
 
-    if (nonTerastallizedPokemon.length === 0) {
-      return false;
-    }
+  if (nonTerastallizedPokemon.length === 0) return false;
 
-    const randomPokemon = Utils.randSeedItem(nonTerastallizedPokemon);
+  const randomPokemon = Utils.randSeedItem(nonTerastallizedPokemon);
     const pokemonTypes = randomPokemon.getTypes();
     const randomType = Utils.randSeedItem(pokemonTypes);
 
     const teraModifier = modifierTypes.TERA_SHARD().generateType([], [randomType])!
-      .withIdFromFunc(modifierTypes.TERA_SHARD)
-      .newModifier(randomPokemon) as PersistentModifier;
+        .withIdFromFunc(modifierTypes.TERA_SHARD)
+        .newModifier(randomPokemon) as PersistentModifier;
 
     this.scene.addModifier(teraModifier);
-    return true;
+  return true;
   }
 }

@@ -53,16 +53,11 @@ export class SelectStarterPhase extends Phase {
       }
       this.scene.ui.setMode(Mode.STARTER_SELECT,
         (starters: Starter[]) => {
-          console.log("[SelectStarterPhase] Callback invoked with", starters.length, "starters");
           if (starters.length > 0 && this.config?.onStarterSelected) {
-            console.log("[SelectStarterPhase] onStarterSelected callback provided, clearing phase queue");
             this.scene.clearPhaseQueue();
-            console.log("[SelectStarterPhase] Calling onStarterSelected callback");
             this.config.onStarterSelected(starters);
-            console.log("[SelectStarterPhase] onStarterSelected callback returned, NOT ending phase (callback handles transition)");
             return;
           }
-          console.log("[SelectStarterPhase] No onStarterSelected callback, ending phase");
           this.end();
         },
         {
@@ -148,8 +143,6 @@ export class SelectStarterPhase extends Phase {
         starterPokemon.nickname = starter.nickname;
       }
 
-      console.log(`[SelectStarterPhase] initBattle: Processing starter - species=${starter.species.name} (${starter.species.speciesId})`);
-
       const championId = this.scene.gameData.selectedChampionId;
       let selectedIsSignature = false;
       let altBuildId: PokemonAltBuildId | null = null;
@@ -173,39 +166,30 @@ export class SelectStarterPhase extends Phase {
         }
       }
 
-      console.log(`[SelectStarterPhase] initBattle: championId=${championId}, selectedIsSignature=${selectedIsSignature}, altBuildId=${altBuildId}`);
-
       if (selectedIsSignature) {
-        console.log(`[SelectStarterPhase] initBattle: Setting isSignature=true on Pokemon ${starterPokemon.species.name} (ID: ${starterPokemon.id})`);
         starterPokemon.isSignature = true;
 
         if (altBuildId) {
-          console.log(`[SelectStarterPhase] initBattle: Looking up alt build: ${altBuildId}`);
           const altBuild = POKEMON_ALT_BUILDS[altBuildId];
 
           if (altBuild) {
-            console.log(`[SelectStarterPhase] initBattle: Found alt build ${altBuild.id}, creating modifier and applying...`);
             const modifierType = new PokemonAltBuildModifierType(altBuild);
             modifierType.withIdFromFunc(modifierTypes.POKEMON_ALT_BUILD);
             const modifier = new Modifiers.PokemonAltBuildModifier(modifierType, starterPokemon.id, altBuild);
             this.scene.addModifier(modifier, true, false, false, true);
-            console.log(`[SelectStarterPhase] initBattle: Alt build applied. Pokemon altBuildId=${starterPokemon.altBuildId}, altBuildRank=${starterPokemon.altBuildRank}`);
           } else {
             console.warn(`[SelectStarterPhase] initBattle: Alt build ${altBuildId} not found in POKEMON_ALT_BUILDS`);
           }
-        } else {
-          console.log("[SelectStarterPhase] initBattle: No altBuildId for this signature Pokemon");
         }
-      } else {
-        console.log("[SelectStarterPhase] initBattle: NOT a signature starter, skipping signature logic");
       }
-      if (starter.fusionIndex > -1) {
-        starterPokemon.generateFusionViaSpeciesID(this.scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
-      } else if (this.scene.gameMode.isSplicedOnly) {
+          if(starter.fusionIndex > -1) {
+            starterPokemon.generateFusionViaSpeciesID(this.scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
+          }
+          else if (this.scene.gameMode.isSplicedOnly) {
         starterPokemon.generateFusionSpecies(true);
       }
 
-      starterPokemon.tryPopulateMoveset(starter.moveset);
+          starterPokemon.tryPopulateMoveset(starter.moveset);
       starterPokemon.setVisible(false);
       applyChallenges(this.scene.gameMode, ChallengeType.STARTER_MODIFY, starterPokemon);
       party.push(starterPokemon);

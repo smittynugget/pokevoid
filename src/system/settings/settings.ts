@@ -129,6 +129,7 @@ export const SettingKeys = {
   Disable_Move_Upgrades: "DISABLE_MOVE_UPGRADES",
   Disable_Cutscenes: "DISABLE_CUTSCENES",
   Show_Item_Text_BG: "SHOW_ITEM_TEXT_BG",
+  Auto_Save: "AUTO_SAVE",
 };
 export const Setting: Array<Setting> = [
   {
@@ -149,9 +150,25 @@ export const Setting: Array<Setting> = [
     type: SettingType.GENERAL
   },
   {
-    key: SettingKeys.Disable_Move_Upgrades,
-    label: i18next.t("settings:disableMoveUpgrades"),
-    options: OFF_ON,
+    key: SettingKeys.Touch_Controls,
+    label: i18next.t("settings:touchControls"),
+    options: AUTO_DISABLED,
+    default: 0,
+    type: SettingType.GENERAL
+  },
+  {
+    key: SettingKeys.Auto_Save,
+    label: i18next.t("settings:autoSave"),
+    options: [
+      {
+        value: "Per Turn",
+        label: i18next.t("settings:autoSavePerTurn")
+      },
+      {
+        value: "Per Battle",
+        label: i18next.t("settings:autoSavePerBattle")
+      }
+    ],
     default: 0,
     type: SettingType.GENERAL
   },
@@ -163,9 +180,9 @@ export const Setting: Array<Setting> = [
     type: SettingType.GENERAL
   },
   {
-    key: SettingKeys.Touch_Controls,
-    label: i18next.t("settings:touchControls"),
-    options: AUTO_DISABLED,
+    key: SettingKeys.Disable_Move_Upgrades,
+    label: i18next.t("settings:disableMoveUpgrades"),
+    options: OFF_ON,
     default: 0,
     type: SettingType.GENERAL
   },
@@ -677,6 +694,9 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
       break;
     case SettingKeys.Show_Item_Text_BG:
       scene.showItemTextBg = Setting[index].options[value].value === "On";
+      break;
+    case SettingKeys.Auto_Save:
+      scene.autoSaveMode = value;
       break;
     case SettingKeys.Battle_Style:
       scene.battleStyle = value;

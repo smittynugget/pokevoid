@@ -125,8 +125,7 @@ export class ModifierBar extends Phaser.GameObjects.Container {
                     thisArg.overflowHideTimeout = null;
                 }
                 const highestWave = ((this.scene as BattleScene).gameData?.gameStats?.highestWaveReached || 0);
-                const sessionsWon = ((this.scene as BattleScene).gameData?.gameStats?.sessionsWon || 0);
-                if (!Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && highestWave < 25 && sessionsWon <= 0 && !(modifier instanceof MoveUpgradeModifier)) {
+                if (!Overrides.BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE && highestWave < 25 && !(modifier instanceof MoveUpgradeModifier)) {
                     if (this.modifierCache && this.modifierCache.length > iconOverflowIndex) {
                         thisArg.updateModifierOverflowVisibility(true);
                     }
@@ -3969,7 +3968,7 @@ export abstract class PermaQuestModifier extends PersistentModifier {
             if (this.count <= 0) {
                 const scene = args.pop() as BattleScene;
                 scene.gameData.setQuestState(this.questUnlockData.questId, QuestState.COMPLETED, this.questUnlockData);
-                scene.unshiftPhase(new QuestUnlockPhase(scene, this.questUnlockData.questId));
+                scene.unshiftPhase(new QuestUnlockPhase(scene, this.questUnlockData));
                 return true;
             }
         }

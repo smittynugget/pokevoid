@@ -2393,6 +2393,9 @@ export default class BattlePathUiHandler extends ModalUiHandler {
   }
 
   private getMaxViewableWave(): number {
+    if (Overrides.BATTLE_PATH_SHOW_ALL_WAVES_OVERRIDE) {
+      return Infinity;
+    }
     const effectiveWave = Math.max(this.currentWave, this.scene.battlePathWave || 1);
     const current500Segment = Math.floor((effectiveWave - 1) / 500);
     const segmentStart = current500Segment * 500 + 1;
@@ -2553,6 +2556,14 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       return [];
     }
 
+    if (Overrides.BATTLE_PATH_BYPASS_NODE_VALIDATION_OVERRIDE) {
+      const allNodeIds: string[] = [];
+      battlePath.waveToNodeMap.forEach((nodes) => {
+        nodes.forEach(node => allNodeIds.push(node.id));
+      });
+      return allNodeIds;
+    }
+
     const selectedPath = this.scene.gameData?.selectedPath;
 
     if (!selectedPath) {
@@ -2574,10 +2585,17 @@ export default class BattlePathUiHandler extends ModalUiHandler {
         return nodesAtCurrentWave.map(node => node.id);
       }
 
-      if (Overrides.BATTLE_PATH_BYPASS_NODE_VALIDATION_OVERRIDE) {
-        const nodesAtCurrentWave = battlePath.waveToNodeMap.get(currentWave) || [];
-        return nodesAtCurrentWave.map(node => node.id);
+      const lastBattleNodeWave = this.scene.lastBattleNodeWave || 0;
+      const expectedWave = Math.max(lastBattleNodeWave + 1, battlePathStartWave);
+      const nodesAtExpectedWave = battlePath.waveToNodeMap.get(expectedWave) || [];
+      if (nodesAtExpectedWave.length > 0) {
+        if (this.scene.battlePathWave !== expectedWave) {
+          this.scene.battlePathWave = expectedWave;
+          this.scene.gameData.localSaveAll(this.scene);
+        }
+        return nodesAtExpectedWave.map(node => node.id);
       }
+
       console.warn("No previously selected path found for wave validation");
       return [];
     }

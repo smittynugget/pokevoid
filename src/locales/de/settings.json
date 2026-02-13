@@ -109,5 +109,8 @@
   "checkTeam": "Team überprüfen",
   "disableMoveUpgrades": "Attacken-Upgrades deaktivieren",
   "disableCutscenes": "Zwischensequenzen deaktivieren",
-  "showItemTextBg": "Belohnungs-Seltenheits-Hintergrund anzeigen"
+  "showItemTextBg": "Belohnungs-Seltenheits-Hintergrund anzeigen",
+  "autoSave": "Automatisches Speichern",
+  "autoSavePerTurn": "Pro Zug",
+  "autoSavePerBattle": "Pro Kampf"
 }

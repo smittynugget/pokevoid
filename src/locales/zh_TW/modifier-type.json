@@ -443,14 +443,14 @@
     },
     "GlitchPieceModifierType": {
       "name": "故障碎片",
-      "description": "神秘的故障碎片。\n可以獲得非常強大的故障道具。"
+      "description": "神秘的故障碎片。（擁有：{{glitchPieceAmount}}）\n可以獲得非常強大的故障道具。"
     },
     "FormChangeItemModifierSmittyItem": {
       "description": "禁止：給寶可夢使用特定的4個SMITTY道具組合..."
     },
     "PermaModifierType": {
       "PERMA_PARTY_ABILITY": {
-        "name": "SMITTY隊伍特性",
+        "name": "Smitty隊伍: {{abilityName}}",
         "description": "將{{abilityName}}賦予隊伍中所有寶可夢"
       },
       "PERMA_NEW_NORMAL": {

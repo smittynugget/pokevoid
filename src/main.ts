@@ -11,32 +11,19 @@ import { clearCachesAndUnregisterServiceWorkers } from "./system/client-cache-ut
 import { INTERNAL_BACKUP_VERSION } from "./system/game-data";
 
 window.onerror = function (message, source, lineno, colno, error) {
-  console.error("Global error:", error);
+  console.error('Global error:', error);
   const errorString = `Uncaught error: ${message}\nSource: ${source}\nLine: ${lineno}\nColumn: ${colno}\nStack: ${error?.stack}`;
   console.error(errorString);
   return true;
 };
 
 window.addEventListener("unhandledrejection", (event) => {
-  console.error("Unhandled promise rejection:", event.reason);
+  console.error('Unhandled promise rejection:', event.reason);
   const errorString = `Unhandled promise rejection: ${event.reason}\nStack: ${event.reason?.stack}`;
   console.error(errorString);
 });
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", (): void => {
-    navigator.serviceWorker
-      .register("/service-worker.js")
-      .then((registration: ServiceWorkerRegistration): void => {
-        console.log("ServiceWorker registration successful:", registration.scope);
-      })
-      .catch((error: Error): void => {
-        console.error("ServiceWorker registration failed:", error);
-      });
-  });
-}
-
-document.addEventListener("visibilitychange", (): void => {
+document.addEventListener('visibilitychange', (): void => {
   if (document.hidden) {
     if (game?.sound) {
       game.sound.pauseAll();
@@ -48,12 +35,13 @@ document.addEventListener("visibilitychange", (): void => {
   }
 });
 
-window.addEventListener("beforeunload", (event: BeforeUnloadEvent): void => {
-  if (game?.scene?.scenes?.some((scene: Phaser.Scene): boolean =>
-    scene.scene.key === "battle" && scene.scene.isActive()
-  )) {
+window.addEventListener('beforeunload', (event: BeforeUnloadEvent): void => {
+  const battleScene = game?.scene?.scenes?.find(
+    (scene: Phaser.Scene): boolean => scene.scene.key === 'battle'
+  ) as any;
+  if (battleScene?.currentBattle) {
     event.preventDefault();
-    event.returnValue = "";
+    event.returnValue = '';
   }
 });
 
@@ -130,7 +118,7 @@ const VERSION_STORAGE_KEY = "last_seen_game_version";
 
 async function maybeClearCacheOnVersionChange(): Promise<boolean> {
   try {
-    const currentVersion = `c2.0.${INTERNAL_BACKUP_VERSION}b`;
+    const currentVersion = `v2.2.${INTERNAL_BACKUP_VERSION}`;
     const lastSeen = localStorage.getItem(VERSION_STORAGE_KEY);
     if (lastSeen && lastSeen !== currentVersion) {
       localStorage.setItem(VERSION_STORAGE_KEY, currentVersion);
@@ -152,8 +140,8 @@ const startGame = () => {
     game = new Phaser.Game(config);
     game.sound.pauseOnBlur = false;
   } catch (error) {
-    console.error("Error starting the game:", error);
-    alert("Failed to start the game. Please check the console for details and report this issue.");
+    console.error('Error starting the game:', error);
+    alert('Failed to start the game. Please check the console for details and report this issue.');
   }
 };
 
@@ -172,10 +160,20 @@ const boot = async (): Promise<void> => {
       }
       const jsonResponse = await res.json();
       game["manifest"] = jsonResponse.manifest;
+      const loadingScene = game.scene.getScene("loading");
+      if (loadingScene?.load?.manifest !== undefined) {
+        loadingScene.load.manifest = jsonResponse.manifest;
+      }
     }
   } catch {}
 };
 
 void boot();
+
+if (typeof (window as any).Capacitor !== "undefined") {
+  import("@capgo/capacitor-updater").then(({ CapacitorUpdater }) => {
+    CapacitorUpdater.notifyAppReady();
+  }).catch(() => {});
+}
 
 export default game;

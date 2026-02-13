@@ -299,6 +299,9 @@ export default class BattleScene extends SceneBase {
   public damageNumbersMode: integer = 0;
   public reroll: boolean = false;
   public shopCursorTarget: number = ShopCursorTarget.CHECK_TEAM;
+  public _lastCommandPhaseSaveTime: number = 0;
+  public autoSaveMode: integer = 0;
+  public encounterInitComplete: boolean = false;
   public showMovesetFlyout: boolean = true;
   public showArenaFlyout: boolean = true;
   public showTimeOfDayWidget: boolean = true;
@@ -446,6 +449,7 @@ export default class BattleScene extends SceneBase {
 
   public majorBossWave: integer = 0;
   public battlePathWave: integer = 1;
+  public lastBattleNodeWave: integer = 0;
   public recoveryBossMode: RecoveryBossMode = RecoveryBossMode.NONE;
 
   public pathNodeContext: PathNodeContext | null = null;
@@ -826,41 +830,48 @@ export default class BattleScene extends SceneBase {
     if (expSpriteKeys.length) {
       return;
     }
-    this.cachedFetch("./exp-sprites.json").then(res => res.json()).then(keys => {
+    try {
+      const res = await this.cachedFetch("./exp-sprites.json");
+      if (!res.ok) {
+        return;
+      }
+      const keys = await res.json();
       if (Array.isArray(keys)) {
         expSpriteKeys.push(...keys);
       }
-      Promise.resolve();
-    });
+    } catch {}
   }
 
   async initVariantData(): Promise<void> {
     Object.keys(variantData).forEach(key => delete variantData[key]);
-    await this.cachedFetch("./images/pokemon/variant/_masterlist.json").then(res => res.json())
-      .then(v => {
-        Object.keys(v).forEach(k => variantData[k] = v[k]);
-        if (this.experimentalSprites) {
-          const expVariantData = variantData["exp"];
-          const traverseVariantData = (keys: string[]) => {
-            let variantTree = variantData;
-            let expTree = expVariantData;
-            keys.map((k: string, i: integer) => {
-              if (i < keys.length - 1) {
-                variantTree = variantTree[k];
-                expTree = expTree[k];
-              } else if (variantTree.hasOwnProperty(k) && expTree.hasOwnProperty(k)) {
-                if ([ "back", "female" ].includes(k)) {
-                  traverseVariantData(keys.concat(k));
-                } else {
-                  variantTree[k] = expTree[k];
-                }
+    try {
+      const res = await this.cachedFetch("./images/pokemon/variant/_masterlist.json");
+      if (!res.ok) {
+        return;
+      }
+      const v = await res.json();
+      Object.keys(v).forEach(k => variantData[k] = v[k]);
+      if (this.experimentalSprites) {
+        const expVariantData = variantData["exp"];
+        const traverseVariantData = (keys: string[]) => {
+          let variantTree = variantData;
+          let expTree = expVariantData;
+          keys.map((k: string, i: integer) => {
+            if (i < keys.length - 1) {
+              variantTree = variantTree[k];
+              expTree = expTree[k];
+            } else if (variantTree.hasOwnProperty(k) && expTree.hasOwnProperty(k)) {
+              if ([ "back", "female" ].includes(k)) {
+                traverseVariantData(keys.concat(k));
+              } else {
+                variantTree[k] = expTree[k];
               }
-            });
-          };
-          Object.keys(expVariantData).forEach(ek => traverseVariantData([ ek ]));
-        }
-        Promise.resolve();
-      });
+            }
+          });
+        };
+        Object.keys(expVariantData).forEach(ek => traverseVariantData([ ek ]));
+      }
+    } catch {}
   }
 
   cachedFetch(url: string, init?: RequestInit): Promise<Response> {
@@ -871,13 +882,10 @@ export default class BattleScene extends SceneBase {
         url += `?t=${timestamp}`;
       }
     }
-        return fetch(url, init);
-    return caches.match(url).then(cachedResponse => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(url, init).catch(() => new Response(null, { status: 404 }));
-    });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const mergedInit = { ...(init || {}), signal: controller.signal };
+    return fetch(url, mergedInit).finally(() => clearTimeout(timeoutId));
   }
 
   initStarterColors(): Promise<void> {
@@ -886,14 +894,25 @@ export default class BattleScene extends SceneBase {
         return resolve();
       }
 
-      this.cachedFetch("./starter-colors.json").then(res => res.json()).then(sc => {
-        starterColors = {};
-        Object.keys(sc).forEach(key => {
-          starterColors[key] = sc[key];
-        });
-
-        resolve();
-      });
+      this.cachedFetch("./starter-colors.json")
+        .then(res => {
+          if (!res.ok) {
+            return null;
+          }
+          return res.json();
+        })
+        .then(sc => {
+          if (!sc) {
+            resolve();
+            return;
+          }
+          starterColors = {};
+          Object.keys(sc).forEach(key => {
+            starterColors[key] = sc[key];
+          });
+          resolve();
+        })
+        .catch(() => resolve());
     });
   }
 
@@ -1181,6 +1200,7 @@ export default class BattleScene extends SceneBase {
     }
 
     this.battlePathWave = Overrides.STARTING_BATTLE_PATH_WAVE_OVERRIDE || 1;
+    this.lastBattleNodeWave = 0;
     this.pathNodeContext = null;
     this.selectedNodeType = null;
     this.finalBattleVictory = false;
@@ -1372,6 +1392,14 @@ export default class BattleScene extends SceneBase {
       this.currentBattle = new Battle(this.gameMode, newWaveIndex, newBattleType, newTrainer, newDouble, this);
     }, newWaveIndex << 3, this.waveSeed);
     this.currentBattle.incrementTurn(this);
+    this.encounterInitComplete = false;
+    if (Overrides.DEBUG_SAVE_TRACE) {
+      console.debug("[SAVE_TRACE] newBattle reset encounterInitComplete", {
+        autoSaveMode: this.autoSaveMode,
+        waveIndex: this.currentBattle?.waveIndex,
+        battleTurn: this.currentBattle?.turn
+      });
+    }
 
     if ((!waveIndex && !this.gameMode.isChaosMode) && lastBattle) {
       this.handleBiomeChange(newWaveIndex, lastBattle);
@@ -2816,7 +2844,15 @@ export default class BattleScene extends SceneBase {
     }
 
     if (this.currentPhase) {
-      this.currentPhase.start();
+      try {
+        this.currentPhase.start();
+      } catch (error) {
+        console.error(`[PHASE ERROR] ${this.currentPhase?.constructor?.name}:`, error);
+        try {
+          this.gameData.localSaveSystemOnly(this);
+        } catch {}
+        throw error;
+      }
     }
   }
 
@@ -2955,7 +2991,12 @@ export default class BattleScene extends SceneBase {
         if ((modifier as PersistentModifier).add(this.modifiers, !!virtual, this)) {
 
           if (modifier instanceof PokemonFormChangeItemModifier || modifier instanceof TerastallizeModifier || modifier instanceof CollectedTypeModifier || modifier instanceof AbilitySwitcherModifier || modifier instanceof TypeSwitcherModifier || modifier instanceof AnyAbilityModifier || modifier instanceof TypeSacrificeModifier || modifier instanceof AbilitySacrificeModifier || modifier instanceof PassiveAbilitySacrificeModifier || modifier instanceof AnyPassiveAbilityModifier || modifier instanceof MoveSacrificeModifier || modifier instanceof PokemonAltBuildModifier) {
-            success = modifier.apply([ this.getPokemonById(modifier.pokemonId), true ]) || (modifier instanceof PokemonFormChangeItemModifier && modifier.formChangeItem >= FormChangeItem.SMITTY_AURA && modifier.formChangeItem <= FormChangeItem.SMITTY_VOID);
+            const pokemon = this.getPokemonById(modifier.pokemonId);
+            if (pokemon) {
+              success = modifier.apply([ pokemon, true ]) || (modifier instanceof PokemonFormChangeItemModifier && modifier.formChangeItem >= FormChangeItem.SMITTY_AURA && modifier.formChangeItem <= FormChangeItem.SMITTY_VOID);
+            } else {
+              success = (modifier instanceof PokemonFormChangeItemModifier && modifier.formChangeItem >= FormChangeItem.SMITTY_AURA && modifier.formChangeItem <= FormChangeItem.SMITTY_VOID);
+            }
 
             if (modifier instanceof CollectedTypeModifier && !virtual) {
               const collectedMod = modifier as CollectedTypeModifier;
@@ -3051,7 +3092,10 @@ export default class BattleScene extends SceneBase {
       }
       if ((modifier as PersistentModifier).add(this.enemyModifiers, false, this)) {
         if (modifier instanceof PokemonFormChangeItemModifier || modifier instanceof TerastallizeModifier || modifier instanceof TypeSwitcherModifier || modifier instanceof AnyAbilityModifier  || modifier instanceof AnyPassiveAbilityModifier) {
-          modifier.apply([ this.getPokemonById(modifier.pokemonId), true ]);
+          const pokemon = this.getPokemonById(modifier.pokemonId);
+          if (pokemon) {
+            modifier.apply([ pokemon, true ]);
+          }
         }
         for (const rm of modifiersToRemove) {
           this.removeModifier(rm, true);

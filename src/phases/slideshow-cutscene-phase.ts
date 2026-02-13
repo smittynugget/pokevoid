@@ -97,14 +97,9 @@ export class SlideshowCutscenePhase extends Phase {
     }
 
     const useSceneBgm = this.config.useSceneBgm ?? true;
-    if (this.config.bgmKey && useSceneBgm) {
-      this.scene.playBgm(this.config.bgmKey, true);
-    } else {
-      this.scene.fadeOutBgm(Utils.fixedInt(500), false);
-    }
 
-    this.scene.ui.setModeForceTransition(Mode.SLIDESHOW_CUTSCENE).then(async () => {
-      const imageKeys = this.config.slides.flatMap(s => [s.imageKey, ...(s.imageSequenceKeys ?? [])]);
+    const imageKeys = this.config.slides.flatMap(s => [s.imageKey, ...(s.imageSequenceKeys ?? [])]);
+    (async () => {
       try {
         await ensureCutsceneImagesLoaded(this.scene, imageKeys);
       } catch {
@@ -112,6 +107,14 @@ export class SlideshowCutscenePhase extends Phase {
         this.end();
         return;
       }
+
+      if (this.config.bgmKey && useSceneBgm) {
+        this.scene.playBgm(this.config.bgmKey, true);
+      } else {
+        this.scene.fadeOutBgm(Utils.fixedInt(500), false);
+      }
+
+      await this.scene.ui.setModeForceTransition(Mode.SLIDESHOW_CUTSCENE);
       const sceneAdapter: SlideshowSceneAdapter = {
         add: this.scene.add,
         tweens: this.scene.tweens,
@@ -185,7 +188,11 @@ export class SlideshowCutscenePhase extends Phase {
       });
 
       this.slideshowController.start();
-    });
+
+      if (this.skipRequested) {
+        this.slideshowController.skip();
+      }
+    })();
   }
 
   end(): void {

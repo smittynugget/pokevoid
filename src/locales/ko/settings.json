@@ -109,5 +109,8 @@
   "checkTeam": "파티 확인",
   "disableMoveUpgrades": "기술 강화 비활성화",
   "disableCutscenes": "컷신 비활성화",
-  "showItemTextBg": "보상 희귀도 배경 표시"
+  "showItemTextBg": "보상 희귀도 배경 표시",
+  "autoSave": "자동 저장",
+  "autoSavePerTurn": "턴마다",
+  "autoSavePerBattle": "전투마다"
 }

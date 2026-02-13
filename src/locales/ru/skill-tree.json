@@ -78,7 +78,7 @@
     "masterBall": "Мастербол (x1)",
     "eggVoucher": "Ваучер яйца ({{tier}})",
     "relicGold": "Реликтовое золото",
-    "permaMoney": "Перма-деньги: {{amount}}",
+    "permaMoney": "ΩGOLD: {{amount}}",
     "catchBonus": "{{types}} +{{percent}}% к шансу поимки",
     "essenceTypeWeight": "Вес эссенции: {{type}} x{{weight}}",
     "fusionSecondaryPriority": "Больше слияний {{types}}",
@@ -101,7 +101,8 @@
     "generalItems": "Обычные предметы",
     "batonItem": "Батон",
     "ppMaxItem": "PP Max",
-    "rogueBall": "Рогбол (x5)"
+    "rogueBall": "Рогбол (x5)",
+    "partyAbilityGrant": "Талант отряда"
   },
   "descriptions": {
     "statFocusLabel": "Фокус характеристик:",
@@ -190,7 +191,8 @@
     "default": "Награда",
     "tmLearn": "Выучить приём {{move}}",
     "glitchFormDesc": "Глитч-форма: {{form}}",
-    "teraTypeDesc": "Предложить награду тера-типа: {{type}}"
+    "teraTypeDesc": "Предложить награду тера-типа: {{type}}",
+    "partyAbilityGrant": "Выберите бесплатный талант отряда для вашей команды."
   },
   "fallback": {
     "unknownPokemon": "Неизвестный покемон",

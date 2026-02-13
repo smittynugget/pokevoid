@@ -451,14 +451,14 @@
     },
     "GlitchPieceModifierType": {
       "name": "글리치 조각",
-      "description": "수수께끼의 글리치 조각. \\n매우 강력한 글리치 아이템에 접근할 수 있게 해줍니다."
+      "description": "수수께끼의 글리치 조각. (보유: {{glitchPieceAmount}})\\n매우 강력한 글리치 아이템에 접근할 수 있게 해줍니다."
     },
     "FormChangeItemModifierSmittyItem": {
       "description": "금지됨: 포켓몬에게 4개의 특정 SMITTY 아이템 조합을 주면..."
     },
     "PermaModifierType": {
       "PERMA_PARTY_ABILITY": {
-        "name": "SMITTY 파티 특성",
+        "name": "Smitty 파티: {{abilityName}}",
         "description": "파티의 모든 포켓몬에게 {{abilityName}} 부여"
       },
       "PERMA_NEW_NORMAL": {

@@ -150,7 +150,8 @@ export enum PathNodeTypeFilter {
     SCOPE_LENS,
     VITAMIN,
     MOVE_UPGRADE,
-    LOW_TIER_MOVE_UPGRADE
+    LOW_TIER_MOVE_UPGRADE,
+    PARTY_ABILITY
 }
 
 type NewModifierFunc = (type: ModifierType, args: any[]) => Modifier;
@@ -1185,7 +1186,7 @@ export function getShopModifierTypeOptions(gameData: GameData, permaReward: bool
             .map(([key, factory]) => createModifierTypeOption(factory, 0, cost, scene));
     };
 
-    const partyCost = permaReward || Utils.randSeedInt(100) < 3 ? 5000 : 10000;
+    const partyCost = (permaReward || Utils.randSeedInt(100) < 10) ? 5000 : 10000;
 
     const baseOptions = getPermaModifiersByRarity(1);
     const partyAbilityOption1 = createModifierTypeOption(modifierTypes.PERMA_PARTY_ABILITY, 0, partyCost, scene);
@@ -1806,7 +1807,7 @@ export class PermaPartyAbilityModifierType extends ModifierType {
     }
 
     get name(): string {
-        return i18next.t("modifierType:ModifierType.PermaModifierType.PERMA_PARTY_ABILITY.name")
+        return i18next.t("modifierType:ModifierType.PermaModifierType.PERMA_PARTY_ABILITY.name", { abilityName: this.ability.name })
     }
 
     getDescription(scene: BattleScene): string {
@@ -1834,19 +1835,22 @@ export class PermaPartyAbilityModifierTypeGenerator extends ModifierTypeGenerato
     private scene: BattleScene;
     constructor() {
         super((party: Pokemon[], pregenArgs?: any[]) => {
-            if (pregenArgs.length > 0 && pregenArgs[0]?.id >= 0) {
+            if (pregenArgs?.length && pregenArgs[0]?.id >= 0) {
                 return new PermaPartyAbilityModifierType(pregenArgs[0].id as Abilities);
             }
 
             let maxAbilityIndex = 62;
 
-            if (this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
+            const scene = this.scene ?? party[0]?.scene;
+            if (!scene) return null;
+
+            if (scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
                 maxAbilityIndex = 310;
-            } else if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            } else if (scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
                 maxAbilityIndex = 248;
-            } else if (this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
+            } else if (scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
                 maxAbilityIndex = 186;
-            } else if (this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED)) {
+            } else if (scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED)) {
                 maxAbilityIndex = 124;
             }
 
@@ -1857,7 +1861,7 @@ export class PermaPartyAbilityModifierTypeGenerator extends ModifierTypeGenerato
                     ability.id <= maxAbilityIndex &&
                     !REMOVED_ABILITIES.includes(ability.id) &&
                     !OP_ABILITIES.includes(ability.id) &&
-                    (!PARTY_OP_ABILITIES.includes(ability.id) || this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN])
+                    (!PARTY_OP_ABILITIES.includes(ability.id) || scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN])
                 )
                 .map(ability => ability.id);
 
@@ -1970,6 +1974,12 @@ export class GlitchPieceModifierType extends ModifierType {
     constructor(stackCount?:integer) {
         super("modifierType:ModifierType.GlitchPieceModifierType", "glitchPiece", (type, _args) => new Modifiers.GlitchPieceModifier(type, stackCount), "glitch");
         this.id = "GLITCH_PIECE";
+    }
+
+    getDescription(scene: BattleScene): string {
+        const existing = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
+        const currentAmount = existing ? existing.stackCount : 0;
+        return i18next.t(`${this.localeKey}.description` as any, { glitchPieceAmount: currentAmount });
     }
 }
 
@@ -2959,6 +2969,10 @@ class FormChangeItemModifierTypeGenerator extends ModifierTypeGenerator {
         super((party: Pokemon[], pregenArgs?: any[]) => {
             if (pregenArgs && (pregenArgs.length === 1) && (pregenArgs[0] in FormChangeItem)) {
                 return new FormChangeItemModifierType(pregenArgs[0] as FormChangeItem);
+            }
+
+            if (!party?.length || !party[0]) {
+                return null;
             }
 
             let formChangeItemPool = [];
@@ -4494,8 +4508,6 @@ const modifierPool: ModifierPool = {
         new WeightedModifierType(modifierTypes.ANYTM_ULTRA, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 7), 7),
         new WeightedModifierType(modifierTypes.FORM_CHANGE_ITEM, 8),
         new WeightedModifierType(modifierTypes.ANY_ABILITY, glitchPieceWeightAdjustment, 3),
-        new WeightedModifierType(modifierTypes.ABILITY_SWITCHER, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 12), 12),
-        new WeightedModifierType(modifierTypes.ADD_POKEMON, glitchPiecePermaMidWeightAdjustment ? 8 : 0, 8),
         new WeightedModifierType(modifierTypes.PRIMARY_TYPE_SWITCHER, glitchUnlockWeightAdjustment, 3),
         new WeightedModifierType(modifierTypes.SECONDARY_TYPE_SWITCHER, glitchUnlockWeightAdjustment, 3),
         new WeightedModifierType(modifierTypes.ANY_PASSIVE_ABILITY, glitchPieceWeightAdjustment, 3),
@@ -4542,6 +4554,7 @@ const modifierPool: ModifierPool = {
         new WeightedModifierType(modifierTypes.MINI_BLACK_HOLE, (party: Pokemon[]) => (!party[0].scene.gameMode.isFreshStartChallenge() && party[0].scene.gameData.unlocks[Unlockables.MINI_BLACK_HOLE]) ? 1 : 0, 1),
         new WeightedModifierType(modifierTypes.ANYTM_LUXURY, (party: Pokemon[]) => (glitchPieceWeightAdjustment(party) && party[0].scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) ? 14: 0, 14),
         new WeightedModifierType(modifierTypes.ANYTM_MASTER, (party: Pokemon[]) => (glitchPieceWeightAdjustment(party)) ? 18 : 0, 14),
+        new WeightedModifierType(modifierTypes.PERMA_PARTY_ABILITY, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 1), 1),
     ].map(m => {
         m.setTier(ModifierTier.MASTER);
         return m;
@@ -5831,6 +5844,9 @@ function getPathNodeModifiers(pathNodeFilter: PathNodeTypeFilter, _tier: Modifie
         case PathNodeTypeFilter.LOW_TIER_MOVE_UPGRADE:
             modifiers.push(new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, 1));
             break;
+        case PathNodeTypeFilter.PARTY_ABILITY:
+            modifiers.push(new WeightedModifierType(modifierTypes.PERMA_PARTY_ABILITY, 1));
+            break;
     }
 
     return modifiers;
@@ -6017,6 +6033,9 @@ function getNewModifierTypeOption(party: Pokemon[], poolType: ModifierPoolType, 
 
         let modifierType: ModifierType | null = pathNodeModifiers[index].modifierType;
         if (modifierType instanceof ModifierTypeGenerator) {
+            if (modifierType instanceof PermaPartyAbilityModifierTypeGenerator && scene) {
+                (modifierType as PermaPartyAbilityModifierTypeGenerator).assignScene(scene);
+            }
             modifierType = (modifierType as ModifierTypeGenerator).generateType(party);
             if (modifierType === null) {
                 if (pathNodeFilter === PathNodeTypeFilter.LOW_TIER_MOVE_UPGRADE) {

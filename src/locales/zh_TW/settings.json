@@ -109,5 +109,8 @@
   "reroll": "重抽",
   "shop": "商店",
   "checkTeam": "查看隊伍",
-  "showItemTextBg": "顯示獎勵稀有度背景"
+  "showItemTextBg": "顯示獎勵稀有度背景",
+  "autoSave": "自動儲存",
+  "autoSavePerTurn": "每回合",
+  "autoSavePerBattle": "每場戰鬥"
 }

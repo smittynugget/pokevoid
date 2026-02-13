@@ -27,9 +27,7 @@ export enum SkillTreeMode {
   DEBUG_ENHANCED = "DEBUG_ENHANCED",
 }
 
-export interface PokemonSelection {
- species: number; isSignature: boolean
-}
+export interface PokemonSelection { species: number; isSignature: boolean }
 
 export interface SkillTreePhaseConfig {
   mode: SkillTreeMode;
@@ -64,9 +62,7 @@ export class SkillTreePhase extends Phase {
 
     const gameData = this.scene.gameData as any;
     const activeSkillTree = gameData.activeSkillTree as ActiveSkillTreeData | undefined;
-    if (!activeSkillTree) {
-      this.handleError(); return;
-    }
+    if (!activeSkillTree) { this.handleError(); return; }
 
     if (this.config.showLoading) {
       this.scene.ui.setMode(Mode.LOADING, { buttonActions: [] });
@@ -89,19 +85,19 @@ export class SkillTreePhase extends Phase {
     const championData = ChampionManager.getInstance().getChampionData(championId);
 
     switch (this.config.mode) {
-    case SkillTreeMode.POKEMON_SELECTION:
-      this.initializePokemonSelectionMode(activeSkillTree, championData);
-      break;
-    case SkillTreeMode.INITIAL_ACCESS:
-      this.initializeInitialAccessMode(activeSkillTree, championData);
-      break;
-    case SkillTreeMode.DEBUG_ENHANCED:
-      this.initializeEnhancedDebugMode(activeSkillTree, championData);
-      break;
-    case SkillTreeMode.BATTLE_ACCESS:
-    default:
-      this.initializeBattleAccessMode(activeSkillTree, championData);
-      break;
+      case SkillTreeMode.POKEMON_SELECTION:
+        this.initializePokemonSelectionMode(activeSkillTree, championData);
+        break;
+      case SkillTreeMode.INITIAL_ACCESS:
+        this.initializeInitialAccessMode(activeSkillTree, championData);
+        break;
+      case SkillTreeMode.DEBUG_ENHANCED:
+        this.initializeEnhancedDebugMode(activeSkillTree, championData);
+        break;
+      case SkillTreeMode.BATTLE_ACCESS:
+      default:
+        this.initializeBattleAccessMode(activeSkillTree, championData);
+        break;
     }
   }
 
@@ -164,96 +160,91 @@ export class SkillTreePhase extends Phase {
     });
   }
   private mergeLockedSkillsIntoPools(target: any, locked: Record<string, any>): void {
-    const push = (arr: any[], v: any) => {
-      if (v !== undefined && !arr.includes(v)) {
-        arr.push(v);
-      }
-    };
+    const push = (arr: any[], v: any) => { if (v !== undefined && !arr.includes(v)) arr.push(v); };
     for (const [, s] of Object.entries(locked || {})) {
       switch (s.rewardType as SkillTreeRewardType) {
-      case SkillTreeRewardType.TM_FILTERED:
-        target.unlockedTMs ||= [];
-        push(target.unlockedTMs, s.unlockableId);
-        break;
-      case SkillTreeRewardType.XM_FILTERED:
-        target.unlockedXMs ||= [];
-        push(target.unlockedXMs, s.unlockableId);
-        break;
-      case SkillTreeRewardType.ABILITY_GRANT:
-      case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
-        target.unlockedAbilities ||= [];
-        push(target.unlockedAbilities, s.unlockableId);
-        break;
-      case SkillTreeRewardType.TRAINER_BOND_ABILITY:
-        target.unlockedConditionalAbilities ||= [];
-        push(target.unlockedConditionalAbilities, s.unlockableId);
-        break;
-      case SkillTreeRewardType.MEGA_STONE:
-        target.unlockedMegaStones ||= [];
-        push(target.unlockedMegaStones, s.unlockableId);
-        break;
-      case SkillTreeRewardType.POKEMON_ALT_BUILD:
-        target.unlockedAltBuilds ||= [];
-        push(target.unlockedAltBuilds, s.unlockableId);
-        break;
-      case SkillTreeRewardType.MOVE_UPGRADE:
-        target.unlockedMoveUpgrades ||= [];
-        push(target.unlockedMoveUpgrades, s.unlockableId);
-        break;
-      case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
+        case SkillTreeRewardType.TM_FILTERED:
+          target.unlockedTMs ||= [];
+          push(target.unlockedTMs, s.unlockableId);
+          break;
+        case SkillTreeRewardType.XM_FILTERED:
+          target.unlockedXMs ||= [];
+          push(target.unlockedXMs, s.unlockableId);
+          break;
+        case SkillTreeRewardType.ABILITY_GRANT:
+        case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
+          target.unlockedAbilities ||= [];
+          push(target.unlockedAbilities, s.unlockableId);
+          break;
+        case SkillTreeRewardType.TRAINER_BOND_ABILITY:
+          target.unlockedConditionalAbilities ||= [];
+          push(target.unlockedConditionalAbilities, s.unlockableId);
+          break;
+        case SkillTreeRewardType.MEGA_STONE:
+          target.unlockedMegaStones ||= [];
+          push(target.unlockedMegaStones, s.unlockableId);
+          break;
+        case SkillTreeRewardType.POKEMON_ALT_BUILD:
+          target.unlockedAltBuilds ||= [];
+          push(target.unlockedAltBuilds, s.unlockableId);
+          break;
+        case SkillTreeRewardType.MOVE_UPGRADE:
+          target.unlockedMoveUpgrades ||= [];
+          push(target.unlockedMoveUpgrades, s.unlockableId);
+          break;
+        case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
 
-        target.unlockedMoveAttrUpgrades ||= [];
+          target.unlockedMoveAttrUpgrades ||= [];
 
-        break;
-      case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
-        target.unlockedTypeBoosters ||= [];
-        push(target.unlockedTypeBoosters, s.unlockableId);
-        break;
-      case SkillTreeRewardType.SMITTY_ABILITY:
-        target.unlockedSmittyAbilities ||= [];
-        push(target.unlockedSmittyAbilities, s.unlockableId);
-        break;
-      case SkillTreeRewardType.GLITCH_FORM_UNLOCK:
-        try {
-          const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(s.unlockableId as QuestUnlockables);
-          const species = getPokemonSpecies(questUnlockData.rewardId as Species);
-          const formName = species.getGlitchFormName(true, undefined, questUnlockData.rewardType);
-          if (formName) {
-            target.unlockedGlitchForms ||= [];
-            push(target.unlockedGlitchForms, formName.toLowerCase());
-            target.glitchFormUnlockableIds ||= {};
-            target.glitchFormUnlockableIds[formName.toLowerCase()] = s.unlockableId;
+          break;
+        case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
+          target.unlockedTypeBoosters ||= [];
+          push(target.unlockedTypeBoosters, s.unlockableId);
+          break;
+        case SkillTreeRewardType.SMITTY_ABILITY:
+          target.unlockedSmittyAbilities ||= [];
+          push(target.unlockedSmittyAbilities, s.unlockableId);
+          break;
+        case SkillTreeRewardType.GLITCH_FORM_UNLOCK:
+          try {
+            const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(s.unlockableId as QuestUnlockables);
+            const species = getPokemonSpecies(questUnlockData.rewardId as Species);
+            const formName = species.getGlitchFormName(true, undefined, questUnlockData.rewardType);
+            if (formName) {
+              target.unlockedGlitchForms ||= [];
+              push(target.unlockedGlitchForms, formName.toLowerCase());
+              target.glitchFormUnlockableIds ||= {};
+              target.glitchFormUnlockableIds[formName.toLowerCase()] = s.unlockableId;
+            }
+          } catch (error) {
           }
-        } catch (error) {
-          console.warn("Failed to process glitch form unlock:", error);
-        }
-        break;
-      case SkillTreeRewardType.HEALING_ITEMS:
-        target.unlockedHealingItems = true;
-        break;
-      case SkillTreeRewardType.MEMORY_MUSHROOM:
-        target.unlockedMemoryMushroom = true;
-        break;
-      case SkillTreeRewardType.BERRY_ITEMS:
-        target.unlockedBerries = true;
-        break;
-      case SkillTreeRewardType.ABILITY_SWITCHER:
-        target.unlockedAbilitySwitchers = true;
-        break;
-      case SkillTreeRewardType.GENERAL_ITEMS:
-        target.unlockedGeneralItems = true;
-        break;
-      case SkillTreeRewardType.BATON_ITEM:
-        target.unlockedBaton = true;
-        break;
-      case SkillTreeRewardType.PP_MAX_ITEM:
-        target.unlockedPPMax = true;
-        break;
-      case SkillTreeRewardType.ROGUE_BALL:
-        target.unlockedRogueBall = true;
-        break;
-      default:
-        break;
+          break;
+        case SkillTreeRewardType.HEALING_ITEMS:
+          target.unlockedHealingItems = true;
+          break;
+        case SkillTreeRewardType.MEMORY_MUSHROOM:
+          target.unlockedMemoryMushroom = true;
+          break;
+        case SkillTreeRewardType.BERRY_ITEMS:
+          target.unlockedBerries = true;
+          break;
+        case SkillTreeRewardType.ABILITY_SWITCHER:
+          target.unlockedAbilitySwitchers = true;
+          break;
+        case SkillTreeRewardType.GENERAL_ITEMS:
+          target.unlockedGeneralItems = true;
+          break;
+        case SkillTreeRewardType.BATON_ITEM:
+          target.unlockedBaton = true;
+          break;
+        case SkillTreeRewardType.PP_MAX_ITEM:
+          target.unlockedPPMax = true;
+          break;
+        case SkillTreeRewardType.ROGUE_BALL:
+          target.unlockedRogueBall = true;
+          break;
+        default:
+          break;
       }
     }
   }
@@ -291,9 +282,7 @@ export class SkillTreePhase extends Phase {
     } finally {
 
       champStore[championId] = prev;
-      try {
-        delete (this.scene as any).skillTreeEligibilityBypass;
-      } catch {}
+      try { delete (this.scene as any).skillTreeEligibilityBypass; } catch {}
     }
   }
 
@@ -315,9 +304,7 @@ export class SkillTreePhase extends Phase {
   }
 
   private handleCancel(): void {
-    try {
-      (this.scene.gameData as any).tempSkillTreeNodes = undefined;
-    } catch {}
+    try { (this.scene.gameData as any).tempSkillTreeNodes = undefined; } catch {}
     const isBattleAccess = this.config.mode === SkillTreeMode.BATTLE_ACCESS || this.config.mode === "BATTLE_ACCESS";
     if (isBattleAccess) {
       const nextPhase = this.scene.getNextPhase();
@@ -358,11 +345,7 @@ export class SkillTreePhase extends Phase {
         let signatureCount = Math.floor(total / 2);
         let generalCount = total - signatureCount;
         if (total % 2 !== 0) {
-          if (Utils.randSeedInt(2) === 0) {
-            signatureCount += 1;
-          } else {
-            generalCount += 1;
-          }
+          if (Utils.randSeedInt(2) === 0) signatureCount += 1; else generalCount += 1;
         }
 
         const filteredTree = fullTree.filter(node => node.depth !== 1);
@@ -392,10 +375,13 @@ export class SkillTreePhase extends Phase {
           });
         }
 
+        const nodeGen = new SkillTreeNodeGenerator(activeSkillTree.seed, activeSkillTree.championId, this.scene as BattleScene);
         for (let i = 0; i < generalCount; i++, placed++) {
           const angle = (placed * 2 * Math.PI) / nodeCount;
           const species = SkillTreeSelectors.pickGeneralPokemon(championData, this.scene as BattleScene) as unknown as number;
           const nodeId = `depth1_general_${i}`;
+          const rewardData = { type: SkillTreeRewardType.GENERAL_POKEMON, data: { species }, immediate: false };
+          const generatedDescription = nodeGen.getRewardDescription(rewardData);
           filteredTree.push({
             id: nodeId,
             depth: 1,
@@ -403,9 +389,9 @@ export class SkillTreePhase extends Phase {
             dependencies: ["root_0"],
             rarity: SkillTreeRarity.GREAT,
             state: SkillTreeNodeState.LOCKED_DETAILS,
-            rewardData: { type: SkillTreeRewardType.GENERAL_POKEMON, data: { species }, immediate: false },
+            rewardData,
             name: allSpecies?.[species]?.name ?? i18next.t("skillTree:descriptions.generalPokemon", { champion: ChampionUtils.getChampionDisplayName(championData.id) }),
-            description: i18next.t("skillTree:descriptions.generalPokemon", { champion: ChampionUtils.getChampionDisplayName(championData.id) }),
+            description: generatedDescription,
             cost: 1,
             isLegendary: false,
             unlocked: false,
@@ -445,21 +431,18 @@ export class SkillTreePhase extends Phase {
         (this.scene.gameData as any).tempSkillTreeNodes = filteredTree;
       }, 0, activeSkillTree.seed.toString());
     } catch (e) {
-      console.warn("generateStarterSelectionNodes failed", e);
     }
   }
   private generateRandomDepth1Nodes(activeSkillTree: ActiveSkillTreeData, championData: any): void {
     try {
-
       const gd = (this.scene.gameData as any);
       if (gd.tempSkillTreeNodes && Array.isArray(gd.tempSkillTreeNodes) && gd.tempSkillTreeNodes.length > 0) {
-        console.log("[SkillTreePhase] Using pre-generated nodes, skipping generation");
         return;
       }
+
       const nodes = SkillTreeUtils.generateDepth1Nodes(activeSkillTree, championData, this.scene);
       gd.tempSkillTreeNodes = nodes;
     } catch (e) {
-      console.warn("generateRandomDepth1Nodes failed", e);
     }
   }
 

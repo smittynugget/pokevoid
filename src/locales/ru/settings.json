@@ -109,5 +109,8 @@
   "checkTeam": "Проверить команду",
   "disableMoveUpgrades": "Отключить улучшения приёмов",
   "disableCutscenes": "Отключить катсцены",
-  "showItemTextBg": "Показать фон редкости награды"
+  "showItemTextBg": "Показать фон редкости награды",
+  "autoSave": "Автосохранение",
+  "autoSavePerTurn": "Каждый ход",
+  "autoSavePerBattle": "Каждый бой"
 }

@@ -78,7 +78,7 @@
     "masterBall": "Master Ball (x1)",
     "eggVoucher": "Ticket Œuf ({{tier}})",
     "relicGold": "Or Relique",
-    "permaMoney": "Argent Permanent : {{amount}}",
+    "permaMoney": "ΩOR : {{amount}}",
     "catchBonus": "{{types}} +{{percent}}% Taux de Capture",
     "essenceTypeWeight": "Poids Essence : {{type}} x{{weight}}",
     "fusionSecondaryPriority": "Plus de Fusions {{types}}",
@@ -101,7 +101,8 @@
     "generalItems": "Objets Généraux",
     "batonItem": "Relais",
     "ppMaxItem": "PP Max",
-    "rogueBall": "Rogue Ball (x5)"
+    "rogueBall": "Rogue Ball (x5)",
+    "partyAbilityGrant": "Capacité d'Équipe"
   },
   "descriptions": {
     "statFocusLabel": "Focus Stat :",
@@ -190,7 +191,8 @@
     "default": "Récompense",
     "tmLearn": "Apprendre la capacité {{move}}",
     "glitchFormDesc": "Forme Glitch : {{form}}",
-    "teraTypeDesc": "Offre une récompense de type Téra : {{type}}"
+    "teraTypeDesc": "Offre une récompense de type Téra : {{type}}",
+    "partyAbilityGrant": "Choisissez une capacité d'équipe gratuite pour votre équipe."
   },
   "fallback": {
     "unknownPokemon": "Pokémon Inconnu",

@@ -11,13 +11,6 @@ export class SceneBase extends Phaser.Scene {
   }
 
   getCachedUrl(url: string): string {
-    const manifest = this.game["manifest"];
-    if (manifest) {
-      const timestamp = manifest[`/${url}`];
-      if (timestamp) {
-        url += `?t=${timestamp}`;
-      }
-    }
     return url;
   }
 
@@ -25,14 +18,16 @@ export class SceneBase extends Phaser.Scene {
     if (!filename) {
       filename = `${key}.png`;
     }
-    this.load.image(key, this.getCachedUrl(`images/${folder}/${filename}`));
+    const path = folder ? `images/${folder}/${filename}` : `images/${filename}`;
+    this.load.image(key, this.getCachedUrl(path));
   }
 
   loadSpritesheet(key: string, folder: string, size: integer, filename?: string) {
     if (!filename) {
       filename = `${key}.png`;
     }
-    this.load.spritesheet(key, this.getCachedUrl(`images/${folder}/${filename}`), { frameWidth: size, frameHeight: size });
+    const path = folder ? `images/${folder}/${filename}` : `images/${filename}`;
+    this.load.spritesheet(key, this.getCachedUrl(path), { frameWidth: size, frameHeight: size });
   }
 
   loadAtlas(key: string, folder: string, filenameRoot?: string) {

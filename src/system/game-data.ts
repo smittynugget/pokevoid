@@ -110,7 +110,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { addRivalSilhouetteOverlay } from "#app/utils/story-cutscene-overlays.js";
 export const defaultStarterSpecies: Species[] = [];
 
-export const INTERNAL_BACKUP_VERSION = 1;
+export const INTERNAL_BACKUP_VERSION = 3;
 
 export const VERSIONS_REQUIRING_BACKUP: string[] = [
     "v2.0b [The Colossal Update]"
@@ -235,6 +235,9 @@ export interface SessionSaveData {
     waveIndex: integer;
     battleType: BattleType;
     trainer: TrainerData;
+    battleStarted?: boolean;
+    battleTurn?: integer;
+    encounterInitComplete?: boolean;
     gameVersion: string;
     timestamp: integer;
     challenges: ChallengeData[];
@@ -256,7 +259,9 @@ export interface SessionSaveData {
     battlePath?: any;
     selectedPath?: string;
     battlePathWave?: integer;
+    lastBattleNodeWave?: integer;
     dynamicMode?: DynamicMode;
+    hasSeenCurrentShopItems?: boolean;
     rivalWave?: integer;
     gameMechanicTracking?: Record<string, string>;
     activeSkillTree?: ActiveSkillTreeDataSerialized;
@@ -512,6 +517,7 @@ export class GameData {
     public pendingChampionLevelUps?: Record<string, ChampionLevelUpData[]>;
     public championSkillVersion: number = ChampionSkillVersion.INITIAL;
     private migrationOccurred: boolean = false;
+    public resumeInBattle: boolean = false;
     public activeSkillTree?: ActiveSkillTreeData;
     public tempSkillTreeConfig?: any;
 
@@ -539,6 +545,7 @@ export class GameData {
     public nightmareBattleSeeds: NightmareBattleSeeds | null = null;
     public fixedBattleSeeds: FixedBattleSeeds | null = null;
     public sacrificeToggleOn: boolean = false;
+    public hasSeenCurrentShopItems: boolean = false;
     public preargsForShop: Record<number, PreargsForShop> = {};
 
     public smitomTalks: number[] = [];
@@ -1229,7 +1236,7 @@ export class GameData {
                         let dataStr = "";
 
                         try {
-                            dataStr = AES.decrypt(encryptedData, saveKey).toString(enc.Utf8);
+                            dataStr = AES.decrypt(encryptedData.trim(), saveKey).toString(enc.Utf8);
                         } catch (decryptError) {
                             console.error("Standard decryption failed:", decryptError);
                         }
@@ -1243,7 +1250,7 @@ export class GameData {
 
                                 try {
                                     const altKey = "PokemonRogueSaveKey";
-                                    dataStr = AES.decrypt(encryptedData, altKey).toString(enc.Utf8);
+                                    dataStr = AES.decrypt(encryptedData.trim(), altKey).toString(enc.Utf8);
                                 } catch (altDecryptError) {
                                     console.error("Alternate key decryption failed:", altDecryptError);
                                 }
@@ -1442,6 +1449,16 @@ export class GameData {
                     this.pendingChampionLevelUps = (systemData as any).pendingChampionLevelUps || {};
                     this.championSkillVersion = (systemData as any).championSkillVersion ?? ChampionSkillVersion.INITIAL;
                     this.ensureChampionDataIntegrity();
+                    if (!this.activeSkillTree) {
+                        const pendingSkillTreeStr = this.getLocalStorageItem(`activeSkillTree_${loggedInUser?.username}`);
+                        if (pendingSkillTreeStr) {
+                            try {
+                                const decrypted = decrypt(pendingSkillTreeStr, bypassLogin);
+                                const parsed = JSON.parse(decrypted);
+                                this.activeSkillTree = this.deserializeActiveSkillTree(parsed);
+                            } catch {}
+                        }
+                    }
                     if (this.championData) {
                         Object.keys(this.championData).forEach(id => {
                             this.applyChampionLevelUnlocks(id);
@@ -1453,8 +1470,8 @@ export class GameData {
                     if (systemData.gameStats.legendaryPokemonCaught !== undefined && systemData.gameStats.subLegendaryPokemonCaught === undefined) {
                         this.fixLegendaryStats(systemData);
                     }
-                    this.gameStats = systemData.gameStats;
                     this.addNewStats(systemData);
+                    this.gameStats = new GameStats(systemData.gameStats);
                 }
 
                 if (systemData.unlocks) {
@@ -1971,6 +1988,9 @@ export class GameData {
         }
 
         setSetting(this.scene, setting, valueIndex);
+        if (Overrides.DEBUG_SAVE_TRACE && setting === SettingKeys.Auto_Save) {
+            console.debug("[SAVE_TRACE] saveSetting AUTO_SAVE", { valueIndex, sceneAutoSaveMode: this.scene.autoSaveMode });
+        }
 
         settings[setting] = valueIndex;
 
@@ -2086,6 +2106,9 @@ export class GameData {
         for (const setting of Object.keys(settings)) {
             setSetting(this.scene, setting, settings[setting]);
         }
+        if (Overrides.DEBUG_SAVE_TRACE) {
+            console.debug("[SAVE_TRACE] loadSettings applied", { storedAutoSave: settings?.[SettingKeys.Auto_Save], sceneAutoSaveMode: this.scene.autoSaveMode });
+        }
 
         return true;
     }
@@ -2187,6 +2210,9 @@ export class GameData {
             waveIndex: scene.currentBattle?.waveIndex ?? 0,
             battleType: scene.currentBattle?.battleType ?? "",
             trainer: scene.currentBattle?.battleType === BattleType.TRAINER ? new TrainerData(scene.currentBattle.trainer) : null,
+            battleStarted: !!scene.getParty()[0]?.isOnField() && !!scene.getEnemyParty()[0]?.isOnField(),
+            battleTurn: scene.currentBattle?.turn ?? 0,
+            encounterInitComplete: !!scene.encounterInitComplete,
             gameVersion: this.getDisplayVersion(),
             timestamp: new Date().getTime(),
             challenges: scene.gameMode.challenges.map(c => new ChallengeData(c)),
@@ -2208,7 +2234,9 @@ export class GameData {
             battlePath: this.battlePath,
             selectedPath: this.selectedPath,
             battlePathWave: scene.battlePathWave,
+            lastBattleNodeWave: scene.lastBattleNodeWave,
             dynamicMode: scene.dynamicMode,
+            hasSeenCurrentShopItems: scene.gameData.hasSeenCurrentShopItems,
             rivalWave: scene.rivalWave,
             gameMechanicTracking: scene.gameMechanicTracking,
             activeSkillTree: this.activeSkillTree ? this.serializeActiveSkillTree() : undefined,
@@ -2225,6 +2253,8 @@ export class GameData {
         if (!this.activeSkillTree) return undefined;
         return {
             championId: this.activeSkillTree.championId,
+            runtimeType1: this.activeSkillTree.runtimeType1,
+            runtimeType2: this.activeSkillTree.runtimeType2,
             treeLevel: this.activeSkillTree.treeLevel,
             maxVisibleDepth: this.activeSkillTree.maxVisibleDepth,
             unlockedNodes: Array.from(this.activeSkillTree.unlockedNodes),
@@ -2249,6 +2279,8 @@ export class GameData {
     private deserializeActiveSkillTree(data: ActiveSkillTreeDataSerialized): ActiveSkillTreeData {
         return {
             championId: data.championId,
+            runtimeType1: data.runtimeType1,
+            runtimeType2: data.runtimeType2,
             treeLevel: data.treeLevel,
             maxVisibleDepth: data.maxVisibleDepth,
             unlockedNodes: new Set(data.unlockedNodes || []),
@@ -2437,7 +2469,9 @@ export class GameData {
 
                     this.selectedPath = Overrides.STARTING_SELECTED_PATH_OVERRIDE || _sessionData.selectedPath || "";
                     scene.battlePathWave = Overrides.STARTING_BATTLE_PATH_WAVE_OVERRIDE || _sessionData.battlePathWave || 1;
+                    scene.lastBattleNodeWave = _sessionData.lastBattleNodeWave || 0;
                     scene.dynamicMode = _sessionData.dynamicMode || undefined;
+                    scene.gameData.hasSeenCurrentShopItems = _sessionData.hasSeenCurrentShopItems || false;
                     scene.rivalWave = _sessionData.rivalWave || 0;
                     const loadPokemonAssets: Promise<void>[] = [];
 
@@ -2471,6 +2505,29 @@ export class GameData {
                     const battleType = _sessionData.battleType || 0;
                     const trainerConfig = _sessionData.trainer ? _sessionData.trainer.rivalConfig ? _sessionData.trainer.rivalConfig : trainerConfigs[_sessionData.trainer.trainerType] : null;
                     const battle = scene.newBattle(waveDebug, battleType, _sessionData.trainer, battleType === BattleType.TRAINER ? trainerConfig?.doubleOnly || _sessionData.trainer?.variant === TrainerVariant.DOUBLE : _sessionData.enemyParty.length > 1);
+                    scene.encounterInitComplete = !!_sessionData.encounterInitComplete;
+                    if (_sessionData.encounterInitComplete !== undefined) {
+                        this.resumeInBattle = !!_sessionData.encounterInitComplete;
+                    } else {
+                        this.resumeInBattle = !!_sessionData.battleStarted;
+                        if (_sessionData.battleStarted === undefined && typeof _sessionData.battleTurn === "number" && _sessionData.battleTurn > 0) {
+                            this.resumeInBattle = true;
+                        }
+                        scene.encounterInitComplete = this.resumeInBattle;
+                    }
+                    if (typeof _sessionData.battleTurn === "number" && _sessionData.battleTurn > 0) {
+                        battle.turn = _sessionData.battleTurn;
+                    }
+                    if (Overrides.DEBUG_SAVE_TRACE) {
+                        console.debug("[SAVE_TRACE] loadSession decision", {
+                            slotId,
+                            autoSaveMode: scene.autoSaveMode,
+                            battleTurn: _sessionData.battleTurn,
+                            battleStarted: _sessionData.battleStarted,
+                            encounterInitComplete: _sessionData.encounterInitComplete,
+                            derivedResumeInBattle: this.resumeInBattle
+                        });
+                    }
 
                     battle.enemyLevels = _sessionData.enemyParty.map(p => p.level);
 
@@ -2481,6 +2538,17 @@ export class GameData {
 
                             if (isInBattlePathSelection) {
                                 battle.enemyParty = [];
+                            } else if (_sessionData.enemyParty?.length > 0) {
+                                _sessionData.enemyParty.forEach((enemyData, e) => {
+                                    if (enemyData.universalSmittyForm != null) {
+                                        const enemyPokemon = enemyData.toPokemon(scene, battleType, e, _sessionData.trainer?.variant === TrainerVariant.DOUBLE) as EnemyPokemon;
+                                        battle.enemyParty[e] = enemyPokemon;
+                                        loadPokemonAssets.push(enemyPokemon.loadAssets());
+                                    } else {
+                                        battle.enemyParty[e] = battle.trainer?.genPartyMember(e)!;
+                                        loadPokemonAssets.push(battle.enemyParty[e].loadAssets());
+                                    }
+                                });
                             } else {
                                 battle.enemyLevels?.forEach((level, e) => {
                                     battle.enemyParty[e] = battle.trainer?.genPartyMember(e)!;
@@ -2550,7 +2618,7 @@ export class GameData {
                     this.chaosAltRivals = _sessionData.chaosAltRivals || []
                     this.sessionQuestModifierData = _sessionData.sessionQuestModifierData || {};
                     this.activeConsoleCodeQuests = _sessionData.activeConsoleCodeQuests || [];
-                    Promise.all(loadPokemonAssets).then(() => resolve(true));
+                    await Promise.all(loadPokemonAssets);
                 };
                 if(this.combinedData.sessionData?.length) {
                     await initSessionFromData(this.parseSessionData(this.combinedData.sessionData[slotId]));
@@ -3349,7 +3417,7 @@ export class GameData {
             throw error;
         }
     }
-    saveAll(scene: BattleScene, skipVerification: boolean = false, sync: boolean = false, useCachedSession: boolean = false, useCachedSystem: boolean = false): Promise<boolean> {
+    saveAll(scene: BattleScene, skipVerification: boolean = false, sync: boolean = false, useCachedSession: boolean = false, useCachedSystem: boolean = false, systemOnly: boolean = false): Promise<boolean> {
         return new Promise<boolean>(async (resolve) => {
             try {
             if (!this.dataLoaded) {
@@ -3357,6 +3425,22 @@ export class GameData {
                 return;
             }
             await updateUserInfo();
+            if (Overrides.DEBUG_SAVE_TRACE) {
+                const phaseName = scene.getCurrentPhase()?.constructor?.name;
+                console.debug("[SAVE_TRACE] saveAll enter", {
+                    phaseName,
+                    skipVerification,
+                    sync,
+                    useCachedSession,
+                    useCachedSystem,
+                    sessionSlotId: scene.sessionSlotId,
+                    autoSaveMode: scene.autoSaveMode,
+                    waveIndex: scene.currentBattle?.waveIndex,
+                    battleTurn: scene.currentBattle?.turn,
+                    battleStarted: scene.currentBattle?.started,
+                    encounterInitComplete: scene.encounterInitComplete
+                });
+            }
 
             let systemData = useCachedSystem
                 ? this.parseSystemData(decrypt(this.getLocalStorageItem(`data_${loggedInUser?.username}`)!, bypassLogin)) || this.getSystemSaveData()
@@ -3378,9 +3462,37 @@ export class GameData {
 
             const shouldSaveSessionData = !scene.gameMode.isTestMod
                 && scene.sessionSlotId >= 0
-                && ((sessionData.playTime && sessionData.party.length > 0 && sessionData.waveIndex > 0) || !!sessionData.activeSkillTree);
+                && (sessionData.party.length > 0 && sessionData.waveIndex > 0);
+            const battleStarted = !!scene.currentBattle?.started;
+            const preventMidBattleSessionWrite = scene.autoSaveMode === 1 && !!scene.encounterInitComplete && battleStarted;
+            const effectiveShouldSaveSessionData = shouldSaveSessionData && !preventMidBattleSessionWrite;
+            if (Overrides.DEBUG_SAVE_TRACE) {
+                console.debug("[SAVE_TRACE] saveAll session decision", {
+                    shouldSaveSessionData,
+                    preventMidBattleSessionWrite,
+                    effectiveShouldSaveSessionData,
+                    sessionSlotId: scene.sessionSlotId,
+                    autoSaveMode: scene.autoSaveMode,
+                    encounterInitComplete: scene.encounterInitComplete,
+                    battleStarted,
+                    waveIndex: sessionData.waveIndex,
+                    battleTurn: sessionData.battleTurn,
+                    sessionEncounterInitComplete: sessionData.encounterInitComplete
+                });
+            }
 
-            if (shouldSaveSessionData) {
+            const pendingSkillTreeKey = `activeSkillTree_${loggedInUser?.username}`;
+            if (!effectiveShouldSaveSessionData) {
+                if (sessionData.activeSkillTree) {
+                    this.setLocalStorageItem(pendingSkillTreeKey, encrypt(JSON.stringify(sessionData.activeSkillTree), bypassLogin));
+                }
+            } else {
+                try {
+                    localStorage.removeItem(pendingSkillTreeKey);
+                } catch {}
+            }
+
+            if (effectiveShouldSaveSessionData && !systemOnly) {
                 let serializedSessionData = this.serializeBigInt(sessionData);
 
                 if (!serializedSessionData || serializedSessionData === 'undefined') {
@@ -3389,7 +3501,19 @@ export class GameData {
                     return;
                 }
 
-                this.setLocalStorageItem(`sessionData${scene.sessionSlotId ? scene.sessionSlotId : ""}_${loggedInUser?.username}`, encrypt(serializedSessionData, bypassLogin));
+                const sessionKey = `sessionData${scene.sessionSlotId ? scene.sessionSlotId : ""}_${loggedInUser?.username}`;
+                this.setLocalStorageItem(sessionKey, encrypt(serializedSessionData, bypassLogin));
+                if (Overrides.DEBUG_SAVE_TRACE) {
+                    const stack = new Error().stack?.split("\n").slice(0, 8).join("\n");
+                    console.debug("[SAVE_TRACE] saveAll wrote sessionData", {
+                        sessionKey,
+                        waveIndex: sessionData.waveIndex,
+                        battleTurn: sessionData.battleTurn,
+                        encounterInitComplete: sessionData.encounterInitComplete,
+                        timestamp: sessionData.timestamp,
+                        stack
+                    });
+                }
             }
             this.setLocalStorageItem(`data_${loggedInUser?.username}`, encrypt(serializedSystemData, bypassLogin));
 
@@ -3407,6 +3531,16 @@ export class GameData {
         this.saveAll(scene).then(() => {
         }).catch(error => {
             alert('[SAVE ERROR] localSaveAll failed: ' + error.message);
+        });
+    }
+
+    public localSaveSystemOnly(scene: BattleScene): void {
+        if (!this.dataLoaded) {
+            return;
+        }
+        this.saveAll(scene, false, false, false, false, true).then(() => {
+        }).catch(error => {
+            alert('[SAVE ERROR] localSaveSystemOnly failed: ' + error.message);
         });
     }
 
@@ -3594,7 +3728,7 @@ export class GameData {
             reader.onload = async (event) => {
                 try {
                     const encryptedData = event.target?.result?.toString() || "";
-                    const dataStr = AES.decrypt(encryptedData, saveKey).toString(enc.Utf8);
+                    const dataStr = AES.decrypt(encryptedData.trim(), saveKey).toString(enc.Utf8);
 
                     let valid = false;
                     let dataName: string;
@@ -5322,7 +5456,7 @@ public getRandomBountyCode(): string {
 
     public processImportedData(encryptedData: string, dataType: GameDataType, slotId: integer = 0): void {
         try {
-            const dataStr = AES.decrypt(encryptedData, saveKey).toString(enc.Utf8);
+            const dataStr = AES.decrypt(encryptedData.trim(), saveKey).toString(enc.Utf8);
 
             let valid = false;
             let dataName: string;
@@ -5523,7 +5657,7 @@ public getRandomBountyCode(): string {
         if (this.shouldCreateVersionChangeBackup()) {
             this.createVersionChangeBackup();
         }
-        this.localSaveAll(this.scene);
+        this.saveSystem();
     }
 
     public getAvailableBackups(): BackupInfo[] {

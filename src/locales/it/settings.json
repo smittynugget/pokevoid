@@ -109,5 +109,8 @@
   "mixedAnimated": "Misto animato",
   "musicPreference": "Preferenza musica",
   "mixed": "Misto",
-  "showItemTextBg": "Mostra Sfondo Rarità Ricompensa"
+  "showItemTextBg": "Mostra Sfondo Rarità Ricompensa",
+  "autoSave": "Salvataggio automatico",
+  "autoSavePerTurn": "Per turno",
+  "autoSavePerBattle": "Per battaglia"
 }

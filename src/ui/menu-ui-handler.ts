@@ -16,6 +16,7 @@ import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
 import { TutorialService } from "#app/ui/tutorial-service";
 import { PermaQuestModifier, PermaRunQuestModifier, PersistentModifier, PermaPartyAbilityModifier, PermaCollectedTypeModifier } from "../modifier/modifier";
 import { TitlePhase } from "../phases/title-phase";
+import Overrides from "#app/overrides";
 
 import {signOut} from "firebase/auth";
 import {auth, db} from "#app/server/firebase";
@@ -474,15 +475,26 @@ export default class MenuUiHandler extends MessageUiHandler {
         case MenuOptions.SAVE_AND_QUIT:
           if (this.scene.currentBattle) {
             success = true;
+            if (Overrides.DEBUG_SAVE_TRACE) {
+              console.debug("[SAVE_TRACE] Menu Save & Quit", {
+                autoSaveMode: this.scene.autoSaveMode,
+                waveIndex: this.scene.currentBattle?.waveIndex,
+                battleTurn: this.scene.currentBattle?.turn,
+                encounterInitComplete: this.scene.encounterInitComplete
+              });
+            }
             if (this.scene.currentBattle.turn > 1) {
-              ui.showText(i18next.t("menuUiHandler:losingProgressionWarning"), null, () => {
-                ui.setOverlayMode(Mode.CONFIRM, () => this.scene.gameData.saveAll(this.scene, true, true, true, true).then(() => this.scene.reset(true)), () => {
+              const warningKey = this.scene.autoSaveMode === 0
+                ? "menuUiHandler:losingProgressionWarningPerTurn"
+                : "menuUiHandler:losingProgressionWarning";
+              ui.showText(i18next.t(warningKey), null, () => {
+                ui.setOverlayMode(Mode.CONFIRM, () => this.scene.gameData.saveAll(this.scene, true, true, false, false).then(() => this.scene.reset(true)), () => {
                   ui.revertMode();
-                ui.showText("", 0);
+                  ui.showText("", 0);
                 }, false, -98);
               });
             } else {
-              this.scene.gameData.saveAll(this.scene, true, true, true, true).then(() => this.scene.reset(true));
+              this.scene.gameData.saveAll(this.scene, true, true, false, false).then(() => this.scene.reset(true));
             }
           } else {
             error = true;

@@ -19,7 +19,6 @@ export const DEBUG_BYPASS_CHAMPION_UNLOCK = false;
 export const DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE = false;
 export const DEBUG_TEST_SLIDESHOW_CUTSCENE = false;
 export const DEBUG_TEST_RUN_END_SUMMARY = false;
-
 export const DEBUG_SKILL_TREE_FORCE_REWARD_TYPE: SkillTreeRewardType | undefined = undefined;
 const overrides = {
   DEBUG_GRANT_ALL_ESSENCE: false,
@@ -32,13 +31,13 @@ class DefaultOverrides {
   readonly STARTING_BATTLE_PATH_WAVE_OVERRIDE: number = 0;
   readonly STARTING_SELECTED_PATH_OVERRIDE: string = "";
   readonly WAIVE_ROLL_FEE_OVERRIDE: boolean = false;
+  readonly WAIVE_SHOP_FEES_OVERRIDE: boolean = false;
   readonly STARTING_BIOME_OVERRIDE: Biome = Biome.TOWN;
   readonly BOSS_WAVE_OVERRIDE: number = 0;
   readonly ARENA_TINT_OVERRIDE: TimeOfDay | null = null;
   readonly XP_MULTIPLIER_OVERRIDE: number | null = null;
   readonly NEVER_CRIT_OVERRIDE: boolean = false;
   readonly STARTING_MONEY_OVERRIDE: number = 0;
-  readonly WAIVE_SHOP_FEES_OVERRIDE: boolean = false;
   readonly FREE_CANDY_UPGRADE_OVERRIDE: boolean = false;
   readonly BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE: boolean = false;
   readonly FORCE_COLLECTOR_SHOP_OVERRIDE: boolean = false;
@@ -90,10 +89,12 @@ class DefaultOverrides {
   readonly OPP_HELD_ITEMS_OVERRIDE: ModifierOverride[] = [];
 
   readonly ITEM_REWARD_OVERRIDE: ModifierOverride[] = [];
+
   readonly SMITTY_FINAL_BATTLE_CHANCE_OVERRIDE: number | null = null;
   readonly SKILL_TREE_DEFAULT_SKILL_POINTS_OVERRIDE: number | null = null;
 
-  readonly BATTLE_PATH_BYPASS_NODE_VALIDATION_OVERRIDE: boolean = true;
+  readonly BATTLE_PATH_BYPASS_NODE_VALIDATION_OVERRIDE: boolean = false;
+  readonly BATTLE_PATH_SHOW_ALL_WAVES_OVERRIDE: boolean = false;
 
   readonly FORCE_CHALLENGE_PATH_WAVE_OVERRIDE: number | null = null;
 
@@ -107,6 +108,7 @@ class DefaultOverrides {
   readonly SKILL_TREE_DEBUG_CONTROLS_OVERRIDE: boolean = false;
   readonly SKILL_TREE_ZOOM_UI_OVERRIDE: boolean = false;
   readonly DEBUG_IOS_MODE: boolean = false;
+  readonly DEBUG_SAVE_TRACE: boolean = false;
   readonly DEBUG_GRANT_ALL_ESSENCE: boolean = false;
   readonly DEBUG_GRANT_ALL_ESSENCE_AMOUNT: number = 0;
 

@@ -78,7 +78,7 @@
     "masterBall": "마스터볼 (x1)",
     "eggVoucher": "알 바우처 ({{tier}})",
     "relicGold": "유물 골드",
-    "permaMoney": "영구 자금: {{amount}}",
+    "permaMoney": "Ω골드: {{amount}}",
     "catchBonus": "{{types}} +{{percent}}% 포획률",
     "essenceTypeWeight": "에센스 가중치: {{type}} x{{weight}}",
     "fusionSecondaryPriority": "더 많은 {{types}} 퓨전",
@@ -101,7 +101,8 @@
     "generalItems": "일반 아이템",
     "batonItem": "바톤",
     "ppMaxItem": "PP맥스",
-    "rogueBall": "로그볼 (x5)"
+    "rogueBall": "로그볼 (x5)",
+    "partyAbilityGrant": "파티 특성"
   },
   "descriptions": {
     "statFocusLabel": "능력치 집중:",
@@ -190,7 +191,8 @@
     "default": "보상",
     "tmLearn": "기술 {{move}} 배우기",
     "glitchFormDesc": "글리치 형태: {{form}}",
-    "teraTypeDesc": "테라 타입 보상 제공: {{type}}"
+    "teraTypeDesc": "테라 타입 보상 제공: {{type}}",
+    "partyAbilityGrant": "팀에 무료 파티 특성을 추가하세요."
   },
   "fallback": {
     "unknownPokemon": "알 수 없는 포켓몬",

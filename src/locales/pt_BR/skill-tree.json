@@ -78,7 +78,7 @@
     "masterBall": "Master Ball (x1)",
     "eggVoucher": "Voucher de Ovo ({{tier}})",
     "relicGold": "Ouro Relíquia",
-    "permaMoney": "Dinheiro Permanente: {{amount}}",
+    "permaMoney": "ΩOURO: {{amount}}",
     "catchBonus": "{{types}} +{{percent}}% Taxa de Captura",
     "essenceTypeWeight": "Peso de Essência: {{type}} x{{weight}}",
     "fusionSecondaryPriority": "Mais Fusões {{types}}",
@@ -101,7 +101,8 @@
     "generalItems": "Itens Gerais",
     "batonItem": "Bastão",
     "ppMaxItem": "PP Máx",
-    "rogueBall": "Rogue Ball (x5)"
+    "rogueBall": "Rogue Ball (x5)",
+    "partyAbilityGrant": "Habilidade de Grupo"
   },
   "descriptions": {
     "statFocusLabel": "Foco de Estatísticas:",
@@ -190,7 +191,8 @@
     "default": "Recompensa",
     "tmLearn": "Aprenda o movimento {{move}}",
     "glitchFormDesc": "Forma Glitch: {{form}}",
-    "teraTypeDesc": "Ofereça uma recompensa de tipo Tera: {{type}}"
+    "teraTypeDesc": "Ofereça uma recompensa de tipo Tera: {{type}}",
+    "partyAbilityGrant": "Escolha uma habilidade de grupo gratuita para sua equipe."
   },
   "fallback": {
     "unknownPokemon": "Pokémon Desconhecido",

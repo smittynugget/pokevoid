@@ -24,6 +24,7 @@
   "consentPreferences": "同意偏好",
   "cancel": "取消",
   "losingProgressionWarning": "你將失去自戰鬥開始以來的所有進度。是否\n繼續？",
+  "losingProgressionWarningPerTurn": "為防止意外的戰鬥重啟，\n遊戲每回合自動儲存。",
   "dataOverrideWarning": "您的資料將被覆蓋，頁面將重新載入。是否繼續？",
   "importFailed": "匯入存檔資料失敗。檔案可能已損壞。",
   "dataCorrupted": "無法載入您的資料。資料可能已損壞。",

@@ -109,5 +109,8 @@
   "musicPreference": "音楽の優先設定",
   "mixed": "混在",
   "items": "アイテム",
-  "showItemTextBg": "報酬レアリティ背景を表示"
+  "showItemTextBg": "報酬レアリティ背景を表示",
+  "autoSave": "自動セーブ",
+  "autoSavePerTurn": "ターンごと",
+  "autoSavePerBattle": "バトルごと"
 }

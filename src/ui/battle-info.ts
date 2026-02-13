@@ -231,7 +231,10 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
 
     this.statValuesContainer = this.scene.add.container(0, 0);
     this.statsContainer.add(this.statValuesContainer);
-    const startingX = this.player ? -this.statsBox.width + 8 : -this.statsBox.width + 5;
+    const startingX = this.player ? -this.statsBox.width + 8 : -this.statsBox.width;
+    if (!this.player) {
+      console.log(`[BattleInfo-Stats] enemy statsBox.width=${this.statsBox.width} statsBox.height=${this.statsBox.height} startingX=${startingX} BattleInfo.x=${this.x} BattleInfo.y=${this.y} statValuesContainer.x=${this.statValuesContainer.x} statValuesContainer.y=${this.statValuesContainer.y} statsContainer.x=${this.statsContainer.x} statsContainer.y=${this.statsContainer.y}`);
+    }
     const paddingX = this.player ? 4 : 2;
     const statOverflow = this.player ? 1 : 0;
     this.battleStatOrder = this.player ? this.battleStatOrderPlayer : this.battleStatOrderEnemy;
@@ -354,7 +357,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
         const fusion = pokemon.fusionSpecies?.getName(pokemon.fusionFormIndex) || "";
         (this.scene as BattleScene).ui.showTooltip(
           i18next.t("battleInfo:fusionTooltipTitle"),
-          i18next.t("battleInfo:fusionTooltipBody", { primary, fusion }).split("\n\n")[0]
+            i18next.t("battleInfo:fusionTooltipBody", { primary, fusion }).split("\n\n")[0]
         );
       });
       this.splicedIcon.on("pointerout", () => (this.scene as BattleScene).ui.hideTooltip());
@@ -370,7 +373,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     if (this.shinyIcon.visible) {
       const shinyDescriptor = doubleShiny || baseVariant ?
         `${baseVariant === 2 ? i18next.t("common:epicShiny") : baseVariant === 1 ? i18next.t("common:rareShiny") : i18next.t("common:commonShiny")}${doubleShiny ? `/${pokemon.fusionVariant === 2 ? i18next.t("common:epicShiny") : pokemon.fusionVariant === 1 ? i18next.t("common:rareShiny") : i18next.t("common:commonShiny")}` : ""}`
-        : "";
+          : "";
       this.shinyIcon.on("pointerover", () => (this.scene as BattleScene).ui.showTooltip("", `${i18next.t("common:shinyOnHover")}${shinyDescriptor ? ` (${shinyDescriptor})` : ""}`));
       this.shinyIcon.on("pointerout", () => (this.scene as BattleScene).ui.hideTooltip());
     }
@@ -497,6 +500,12 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
   }
 
   toggleStats(visible: boolean): void {
+    if (visible && !this.player) {
+      console.log("[BattleInfo-Stats-Toggle] enemy boss=" + this.boss + " BattleInfo.x=" + this.x + " BattleInfo.y=" + this.y + " statsContainer.x=" + this.statsContainer.x + " statsContainer.y=" + this.statsContainer.y + " statValuesContainer.x=" + this.statValuesContainer.x + " statValuesContainer.y=" + this.statValuesContainer.y);
+      if (this.statNumbers && this.statNumbers.length > 0) {
+        console.log("[BattleInfo-Stats-Toggle] first stat label x=" + this.statNumbers[0].x + " last stat label x=" + this.statNumbers[this.statNumbers.length - 1].x);
+      }
+    }
     this.scene.tweens.add({
       targets: this.statsContainer,
       duration: Utils.fixedInt(125),
@@ -506,9 +515,12 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
   }
   updateBossSegments(pokemon: EnemyPokemon): void {
     const boss = !!pokemon.bossSegments;
+    this.statsContainer.x = boss ? 0 : -20;
+    this.statsBox.x = boss ? 0 : 20;
 
     if (boss !== this.boss) {
       this.boss = boss;
+      console.log("[BattleInfo-Boss] switching boss=" + boss + " statValuesContainer.x before=" + this.statValuesContainer.x);
 
       [ this.nameText, this.genderText, this.teraIcon, this.splicedIcon, this.shinyIcon, this.ownedIcon, this.championRibbon, this.statusIndicator, this.levelContainer, this.statValuesContainer ].map(e => e.x += 48 * (boss ? -1 : 1));
       this.hpBar.x += 38 * (boss ? -1 : 1);
@@ -587,7 +599,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
         this.shinyIcon.setPositionRelative(this.nameText, this.nameText.displayWidth + this.genderText.displayWidth + 1 + (this.teraIcon.visible ? this.teraIcon.displayWidth + 1 : 0) + (this.splicedIcon.visible ? this.splicedIcon.displayWidth + 1 : 0), 2.5);
       }
 
-      if (!pokemon.isGlitchOrSmittyForm()) {
+      if(!pokemon.isGlitchOrSmittyForm()) {
         const glitchFormName = pokemon.species.getGlitchFormName(false, this.scene as BattleScene);
         if (glitchFormName) {
           this.glitchFormText.setText(i18next.t("battleInfo:glitchForm", { formName: glitchFormName }));
@@ -704,7 +716,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
       }
 
       const battleStats = pokemon.summonData
-        ? pokemon.summonData.battleStats
+          ? pokemon.summonData.battleStats
         : this.battleStatOrder.map(() => 0);
       const battleStatsStr = battleStats.join("");
 
@@ -734,18 +746,16 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     nameTextWidth = nameSizeTest.displayWidth;
 
     try {
-      while (nameTextWidth > (this.player || !this.boss ? 60 : 98) - ((pokemon.gender !== Gender.GENDERLESS ? 6 : 0) + (pokemon.fusionSpecies ? 8 : 0) + (pokemon.isShiny() ? 8 : 0) + (Math.min(pokemon.level.toString().length, 3) - 3) * 8)) {
-        if (displayName.length <= 1) {
-          break;
+        while (nameTextWidth > (this.player || !this.boss ? 60 : 98) - ((pokemon.gender !== Gender.GENDERLESS ? 6 : 0) + (pokemon.fusionSpecies ? 8 : 0) + (pokemon.isShiny() ? 8 : 0) + (Math.min(pokemon.level.toString().length, 3) - 3) * 8)) {
+            if (displayName.length <= 1) break;
+            displayName = `${displayName.slice(0, displayName.endsWith(".") ? -2 : -1).trimEnd()}.`;
+            nameSizeTest.setText(displayName);
+            nameTextWidth = nameSizeTest.displayWidth;
         }
-        displayName = `${displayName.slice(0, displayName.endsWith(".") ? -2 : -1).trimEnd()}.`;
-        nameSizeTest.setText(displayName);
-        nameTextWidth = nameSizeTest.displayWidth;
-      }
     } catch (error) {
-      console.warn(`Error truncating Pokemon name: ${error}`);
-      displayName = displayName.slice(0, 3) + ".";
-      nameSizeTest.setText(displayName);
+        console.warn(`Error truncating Pokemon name: ${error}`);
+        displayName = displayName.slice(0, 3) + ".";
+        nameSizeTest.setText(displayName);
     }
 
     nameSizeTest.destroy();
@@ -754,7 +764,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     this.lastName = pokemon.getNameToRender();
 
     if (this.nameText.visible) {
-      this.nameText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.nameText.width, this.nameText.height), Phaser.Geom.Rectangle.Contains);
+        this.nameText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.nameText.width, this.nameText.height), Phaser.Geom.Rectangle.Contains);
     }
   }
 
@@ -814,7 +824,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
   setLevel(level: integer): void {
     const isCapped = level >= (this.scene as BattleScene).getMaxExpLevel();
     this.levelNumbersContainer.removeAll(true);
-    if (level === undefined) {
+    if(level === undefined) {
       console.log("level is undefined");
     }
     const levelStr = level.toString();
@@ -844,7 +854,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
   updateBattleStats(battleStats: integer[]): void {
     this.battleStatOrder.map((s, i) => {
       if (s !== BattleStat.HP) {
-        this.statNumbers[i].setFrame(battleStats[s].toString());
+      this.statNumbers[i].setFrame(battleStats[s].toString());
       }
     });
   }

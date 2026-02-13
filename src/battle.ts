@@ -170,6 +170,10 @@ export default class Battle {
       waveIndex = remainder === 0 ? 100 : remainder;
     }
 
+    if (this.scene.gameMode.isChaosMode && this.scene.lastBattleNodeWave > 0 && this.scene.lastBattleNodeWave < waveIndex) {
+      waveIndex = Math.ceil((this.scene.lastBattleNodeWave + waveIndex) / 2);
+    }
+
     const levelWaveIndex = this.gameMode.getWaveForDifficulty(waveIndex);
 
     const baseLevel = 1 + levelWaveIndex / 2 + Math.pow(levelWaveIndex / 25, 2);
@@ -2143,7 +2147,8 @@ function fixConnectivityIssues(battlePath: BattlePath): void {
            node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
            node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
            node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
-           node.nodeType === PathNodeType.CHALLENGE_REWARD;
+           node.nodeType === PathNodeType.CHALLENGE_REWARD ||
+           (node.nodeType === PathNodeType.SMITTY_BATTLE && typeof node.metadata?.challengeNodeIndex === "number");
   };
 
   const isFirstChallengeNode = (node: PathNode): boolean => {
@@ -2278,7 +2283,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
   };
 
   const RIVAL_COUNTS = {
-    SMALL_RUN: Math.ceil(5 * modeFactor),
+    SMALL_RUN: scene.gameMode.isChaosFTL ? 1 : Math.ceil(5 * modeFactor),
     MEDIUM_RUN: Math.ceil(10 * modeFactor),
     LARGE_RUN: Math.ceil(10 * modeFactor)
   };
@@ -2307,12 +2312,12 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
   };
 
   const ELITE_FOUR_RANGES = scene.gameMode.isChaosFTL ? {
-    FIRST_MIN: 0.20,
-    FIRST_MAX: 0.42,
-    SECOND_MIN: 0.52,
-    SECOND_MAX: 0.72,
-    THIRD_MIN: 0.75,
-    THIRD_MAX: 0.90
+    FIRST_MIN: 0.50,
+    FIRST_MAX: 0.85,
+    SECOND_MIN: 0.95,
+    SECOND_MAX: 0.99,
+    THIRD_MIN: 0.99,
+    THIRD_MAX: 0.99
   } : scene.gameMode.isChaosShort ? {
     FIRST_MIN: 0.10,
     FIRST_MAX: 0.28,
@@ -2337,9 +2342,9 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
     BOSS_END: 0.50,
     FALLBACK_BOSS_START: 0.52,
     SECOND_MIN: 0.55,
-    SECOND_MAX: 0.75,
-    THIRD_MIN: 0.78,
-    THIRD_MAX: 0.95
+    SECOND_MAX: 0.95,
+    THIRD_MIN: 0.99,
+    THIRD_MAX: 0.99
   } : scene.gameMode.isChaosShort ? {
     FIRST_START: 0.02,
     FIRST_END: 0.15,
@@ -2365,9 +2370,9 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
   };
 
   const MAJOR_BOSS_CONFIG = scene.gameMode.isChaosFTL ? {
-    WAVE_INTERVAL: 8,
-    MIN_WAVE_PERCENTAGE: 0.45,
-    MAX_WAVE_PERCENTAGE: 0.95,
+    WAVE_INTERVAL: 12,
+    MIN_WAVE_PERCENTAGE: 0.55,
+    MAX_WAVE_PERCENTAGE: 0.92,
     MIN_SEPARATION_PERCENTAGE: 0.15,
     FINAL_WAVE_THRESHOLD: 100
   } : scene.gameMode.isChaosShort ? {
@@ -2385,8 +2390,8 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
   };
 
   const RECOVERY_BOSS_CONFIG = scene.gameMode.isChaosFTL ? {
-    WAVE_INTERVAL: 20,
-    MIN_WAVE_PERCENTAGE: 0.25,
+    WAVE_INTERVAL: 25,
+    MIN_WAVE_PERCENTAGE: 0.30,
     MAX_WAVE_PERCENTAGE: 0.90,
     MIN_SEPARATION_PERCENTAGE: 0.15,
     FINAL_WAVE_THRESHOLD: 100
@@ -2435,18 +2440,28 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
 
   const generateSegmentSpecialWaves = (segmentIndex: number, segmentStart: number, segmentEnd: number, segmentSize: number) => {
     const segmentWaveOffset = segmentStart - 1 + waveOffset;
+    const hundred = Math.min(Math.floor(segmentWaveOffset / 100) * 100, 400);
     const generatedWaves = new Set<number>();
 
     const evilTeamThirdMinWave = Math.floor(segmentSize * EVIL_TEAM_RANGES.THIRD_MIN) + segmentWaveOffset;
     const evilTeamThirdMaxWave = Math.floor(segmentSize * EVIL_TEAM_RANGES.THIRD_MAX) + segmentWaveOffset;
 
-    scene.resetSeed(seeds.evilTeam.rangeSelection + segmentWaveOffset + 2000);
+    if (!scene.gameMode.isChaosFTL) {
+    scene.resetSeed(seeds.evilTeam.rangeSelection[hundred] + segmentWaveOffset + 2000);
     let [evilTeamThirdRangeStart, evilTeamThirdAvailableWaves] = findEliteFourRange(evilTeamThirdMinWave, evilTeamThirdMaxWave, generatedWaves);
 
     if (evilTeamThirdRangeStart !== -1 && evilTeamThirdAvailableWaves.length >= 10) {
-      scene.resetSeed(seeds.evilTeam.gruntPlacement + segmentWaveOffset + 2000);
+      scene.resetSeed(seeds.evilTeam.gruntPlacement[hundred] + segmentWaveOffset + 2000);
 
-      const evilTeamThirdSelectedWaves = evilTeamThirdAvailableWaves.slice(0, 10);
+      const evilTeamThirdWavesCopy = [...evilTeamThirdAvailableWaves];
+      const evilTeamThirdSelectedWaves: number[] = [];
+      const neededCount = Math.min(10, evilTeamThirdWavesCopy.length);
+      for (let i = 0; i < neededCount; i++) {
+        const index = Utils.randSeedInt(evilTeamThirdWavesCopy.length);
+        evilTeamThirdSelectedWaves.push(evilTeamThirdWavesCopy[index]);
+        evilTeamThirdWavesCopy.splice(index, 1);
+      }
+      evilTeamThirdSelectedWaves.sort((a, b) => a - b);
 
       specialWaves.evilTeamWaves.grunts.push(evilTeamThirdSelectedWaves[0]);
       specialWaves.evilTeamWaves.grunts.push(evilTeamThirdSelectedWaves[1]);
@@ -2464,14 +2479,15 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
         globalGeneratedWaves.add(wave);
       });
     }
+    }
     const eliteFourMinWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.FIRST_MIN) + segmentWaveOffset;
     const eliteFourMaxWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.FIRST_MAX) + segmentWaveOffset;
 
-    scene.resetSeed(seeds.eliteFour.rangeSelection + segmentWaveOffset);
+    scene.resetSeed(seeds.eliteFour.rangeSelection[hundred] + segmentWaveOffset);
     let [eliteFourRangeStart, eliteFourAvailableWaves] = findEliteFourRange(eliteFourMinWave, eliteFourMaxWave, generatedWaves);
 
     if (eliteFourRangeStart !== -1 && eliteFourAvailableWaves.length >= 5) {
-      scene.resetSeed(seeds.eliteFour.wavePlacement + segmentWaveOffset);
+      scene.resetSeed(seeds.eliteFour.wavePlacement[hundred] + segmentWaveOffset);
       const eliteFourSelectedWaves: number[] = [];
       const eliteFourWavesCopy = [...eliteFourAvailableWaves];
 
@@ -2493,14 +2509,15 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       globalGeneratedWaves.add(eliteFourSelectedWaves[4]);
     }
 
+    if (!scene.gameMode.isChaosFTL) {
     const secondEliteFourMinWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.SECOND_MIN) + segmentWaveOffset;
     const secondEliteFourMaxWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.SECOND_MAX) + segmentWaveOffset;
 
-    scene.resetSeed(seeds.eliteFour.rangeSelection + segmentWaveOffset + 1000);
+    scene.resetSeed(seeds.eliteFour.rangeSelection[hundred] + segmentWaveOffset + 1000);
     let [secondEliteFourRangeStart, secondEliteFourAvailableWaves] = findEliteFourRange(secondEliteFourMinWave, secondEliteFourMaxWave, generatedWaves);
 
     if (secondEliteFourRangeStart !== -1 && secondEliteFourAvailableWaves.length >= 5) {
-      scene.resetSeed(seeds.eliteFour.wavePlacement + segmentWaveOffset + 1000);
+      scene.resetSeed(seeds.eliteFour.wavePlacement[hundred] + segmentWaveOffset + 1000);
       const secondEliteFourSelectedWaves: number[] = [];
       const secondEliteFourWavesCopy = [...secondEliteFourAvailableWaves];
 
@@ -2521,16 +2538,17 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       generatedWaves.add(secondEliteFourSelectedWaves[4]);
       globalGeneratedWaves.add(secondEliteFourSelectedWaves[4]);
     }
+    }
 
     if (totalWaves >= 150) {
       const thirdEliteFourMinWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.THIRD_MIN) + segmentWaveOffset;
       const thirdEliteFourMaxWave = Math.floor(segmentSize * ELITE_FOUR_RANGES.THIRD_MAX) + segmentWaveOffset;
 
-      scene.resetSeed(seeds.eliteFour.rangeSelection + segmentWaveOffset + 2000);
+      scene.resetSeed(seeds.eliteFour.rangeSelection[hundred] + segmentWaveOffset + 2000);
       let [thirdEliteFourRangeStart, thirdEliteFourAvailableWaves] = findEliteFourRange(thirdEliteFourMinWave, thirdEliteFourMaxWave, generatedWaves);
 
       if (thirdEliteFourRangeStart !== -1 && thirdEliteFourAvailableWaves.length >= 5) {
-        scene.resetSeed(seeds.eliteFour.wavePlacement + segmentWaveOffset + 2000);
+        scene.resetSeed(seeds.eliteFour.wavePlacement[hundred] + segmentWaveOffset + 2000);
         const thirdEliteFourSelectedWaves: number[] = [];
         const thirdEliteFourWavesCopy = [...thirdEliteFourAvailableWaves];
 
@@ -2581,7 +2599,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
 
     const firstRoundGrunts: number[] = [];
     for (let i = 0; i < 3; i++) {
-      const wave = placeEvilBattle(scene, seeds.evilTeam.gruntPlacement + segmentWaveOffset + i, evilFirstStart, evilFirstEnd, generatedWaves);
+      const wave = placeEvilBattle(scene, seeds.evilTeam.gruntPlacement[hundred] + segmentWaveOffset + i, evilFirstStart, evilFirstEnd, generatedWaves);
       if (wave !== -1) {
         specialWaves.evilTeamWaves.grunts.push(wave);
         firstRoundGrunts.push(wave);
@@ -2594,7 +2612,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       Math.max(...firstRoundGrunts) + 1 :
       Math.floor(segmentSize * EVIL_TEAM_RANGES.ADMIN_START) + segmentWaveOffset;
     const adminEnd = Math.floor(segmentSize * EVIL_TEAM_RANGES.ADMIN_END) + segmentWaveOffset;
-    const adminWave = placeEvilBattle(scene, seeds.evilTeam.adminPlacement + segmentWaveOffset, adminStart, adminEnd, generatedWaves);
+    const adminWave = placeEvilBattle(scene, seeds.evilTeam.adminPlacement[hundred] + segmentWaveOffset, adminStart, adminEnd, generatedWaves);
 
     if (adminWave !== -1) {
       specialWaves.evilTeamWaves.admins.push(adminWave);
@@ -2603,7 +2621,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
 
       const bossStart = adminWave + 1;
       const bossEnd = Math.floor(segmentSize * EVIL_TEAM_RANGES.BOSS_END) + segmentWaveOffset;
-      const bossWave = placeEvilBattle(scene, seeds.evilTeam.bossPlacement + segmentWaveOffset, bossStart, bossEnd, generatedWaves);
+      const bossWave = placeEvilBattle(scene, seeds.evilTeam.bossPlacement[hundred] + segmentWaveOffset, bossStart, bossEnd, generatedWaves);
 
       if (bossWave !== -1) {
         specialWaves.evilTeamWaves.bosses.push(bossWave);
@@ -2613,7 +2631,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
     } else {
       const fallbackBossStart = Math.floor(segmentSize * EVIL_TEAM_RANGES.FALLBACK_BOSS_START) + segmentWaveOffset;
       const fallbackBossEnd = Math.floor(segmentSize * EVIL_TEAM_RANGES.BOSS_END) + segmentWaveOffset;
-      const fallbackBossWave = placeEvilBattle(scene, seeds.evilTeam.bossPlacement + segmentWaveOffset + 100, fallbackBossStart, fallbackBossEnd, generatedWaves);
+      const fallbackBossWave = placeEvilBattle(scene, seeds.evilTeam.bossPlacement[hundred] + segmentWaveOffset + 100, fallbackBossStart, fallbackBossEnd, generatedWaves);
 
       if (fallbackBossWave !== -1) {
         specialWaves.evilTeamWaves.bosses.push(fallbackBossWave);
@@ -2677,7 +2695,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       allRivalTypes.splice(randomIndex, 1);
     }
 
-    scene.resetSeed(seeds.rivalPokemon + segmentWaveOffset);
+    scene.resetSeed(seeds.rivalPokemon[hundred] + segmentWaveOffset);
 
     for (let stage = 1; stage <= 6; stage++) {
       for (let rivalIndex = 0; rivalIndex < numRivals; rivalIndex++) {
@@ -2709,7 +2727,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
       }
     }
 
-    scene.resetSeed(seeds.majorBoss.wavePlacement + segmentWaveOffset);
+    scene.resetSeed(seeds.majorBoss.wavePlacement[hundred] + segmentWaveOffset);
     const majorBossMinWave = Math.floor(segmentSize * MAJOR_BOSS_CONFIG.MIN_WAVE_PERCENTAGE) + segmentWaveOffset;
     const majorBossMaxWave = Math.floor(segmentSize * MAJOR_BOSS_CONFIG.MAX_WAVE_PERCENTAGE) + segmentWaveOffset;
     const availableBossWaves: number[] = [];
@@ -2721,7 +2739,7 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
     }
 
     if (availableBossWaves.length >= 1) {
-      scene.resetSeed(seeds.majorBoss.bossGeneration + segmentWaveOffset);
+      scene.resetSeed(seeds.majorBoss.bossGeneration[hundred] + segmentWaveOffset);
       const firstBossIndex = Utils.randSeedInt(availableBossWaves.length);
       const firstBossWave = availableBossWaves[firstBossIndex];
       specialWaves.majorBossWaves.push(firstBossWave);
@@ -2789,7 +2807,15 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
 
     if (segmentSize >= MAJOR_BOSS_CONFIG.FINAL_WAVE_THRESHOLD && segmentWaveOffset === waveOffset) {
       const finalWave = segmentEnd + waveOffset;
-      if (!specialWaves.rivalWaves.includes(finalWave)) {
+      const finalWaveIsUsed =
+        specialWaves.rivalWaves.includes(finalWave) ||
+        specialWaves.eliteFourWaves.includes(finalWave) ||
+        specialWaves.championWaves.includes(finalWave) ||
+        specialWaves.evilTeamWaves.grunts.includes(finalWave) ||
+        specialWaves.evilTeamWaves.admins.includes(finalWave) ||
+        specialWaves.evilTeamWaves.bosses.includes(finalWave) ||
+        specialWaves.recoveryBossWaves.includes(finalWave);
+      if (!finalWaveIsUsed) {
         specialWaves.majorBossWaves.push(finalWave);
         globalGeneratedWaves.add(finalWave);
       }
@@ -2798,11 +2824,44 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
     const evilTeamSecondMinWave = Math.floor(segmentSize * EVIL_TEAM_RANGES.SECOND_MIN) + segmentWaveOffset;
     const evilTeamSecondMaxWave = Math.floor(segmentSize * EVIL_TEAM_RANGES.SECOND_MAX) + segmentWaveOffset;
 
-    scene.resetSeed(seeds.evilTeam.rangeSelection + segmentWaveOffset);
+    if (scene.gameMode.isChaosFTL) {
+      const ftlSecondWaves: number[] = [];
+      for (let i = 0; i < 5; i++) {
+        const wave = placeEvilBattle(scene, seeds.evilTeam.gruntPlacement[hundred] + segmentWaveOffset + 1000 + i, evilTeamSecondMinWave, evilTeamSecondMaxWave, generatedWaves);
+        if (wave !== -1) {
+          ftlSecondWaves.push(wave);
+          generatedWaves.add(wave);
+          globalGeneratedWaves.add(wave);
+        }
+      }
+      const ftlAdminWave = placeEvilBattle(scene, seeds.evilTeam.adminPlacement[hundred] + segmentWaveOffset + 1000, evilTeamSecondMinWave, evilTeamSecondMaxWave, generatedWaves);
+      if (ftlAdminWave !== -1) {
+        ftlSecondWaves.push(ftlAdminWave);
+        generatedWaves.add(ftlAdminWave);
+        globalGeneratedWaves.add(ftlAdminWave);
+      }
+      const ftlBossWave = placeEvilBattle(scene, seeds.evilTeam.bossPlacement[hundred] + segmentWaveOffset + 1000, evilTeamSecondMinWave, evilTeamSecondMaxWave, generatedWaves);
+      if (ftlBossWave !== -1) {
+        ftlSecondWaves.push(ftlBossWave);
+        generatedWaves.add(ftlBossWave);
+        globalGeneratedWaves.add(ftlBossWave);
+      }
+      ftlSecondWaves.sort((a, b) => a - b);
+      for (let i = 0; i < Math.min(5, ftlSecondWaves.length); i++) {
+        specialWaves.evilTeamWaves.grunts.push(ftlSecondWaves[i]);
+      }
+      if (ftlSecondWaves.length >= 6) {
+        specialWaves.evilTeamWaves.admins.push(ftlSecondWaves[5]);
+      }
+      if (ftlSecondWaves.length >= 7) {
+        specialWaves.evilTeamWaves.bosses.push(ftlSecondWaves[6]);
+      }
+    } else {
+    scene.resetSeed(seeds.evilTeam.rangeSelection[hundred] + segmentWaveOffset);
     let [evilTeamRangeStart, evilTeamAvailableWaves] = findEliteFourRange(evilTeamSecondMinWave, evilTeamSecondMaxWave, generatedWaves);
 
     if (evilTeamRangeStart !== -1 && evilTeamAvailableWaves.length >= 5) {
-      scene.resetSeed(seeds.evilTeam.gruntPlacement + segmentWaveOffset);
+      scene.resetSeed(seeds.evilTeam.gruntPlacement[hundred] + segmentWaveOffset);
       const evilTeamSelectedWaves: number[] = [];
       const evilTeamWavesCopy = [...evilTeamAvailableWaves];
 
@@ -2825,7 +2884,14 @@ function generateSpecialBattleWaves(scene: BattleScene, seeds: any, totalWaves: 
         globalGeneratedWaves.add(wave);
       });
     }
-    for (let wave = RECOVERY_BOSS_CONFIG.WAVE_INTERVAL + segmentWaveOffset; wave <= segmentEnd + waveOffset; wave += RECOVERY_BOSS_CONFIG.WAVE_INTERVAL) {
+    }
+
+    const recoveryStart = Math.max(
+      Math.floor(segmentSize * RECOVERY_BOSS_CONFIG.MIN_WAVE_PERCENTAGE) + segmentWaveOffset,
+      RECOVERY_BOSS_CONFIG.WAVE_INTERVAL + segmentWaveOffset
+    );
+    const recoveryEnd = Math.floor(segmentSize * RECOVERY_BOSS_CONFIG.MAX_WAVE_PERCENTAGE) + segmentWaveOffset;
+    for (let wave = recoveryStart; wave <= recoveryEnd; wave += RECOVERY_BOSS_CONFIG.WAVE_INTERVAL) {
       if (wave % RECOVERY_BOSS_CONFIG.WAVE_INTERVAL === 0 && !generatedWaves.has(wave) && !globalGeneratedWaves.has(wave)) {
         specialWaves.recoveryBossWaves.push(wave);
         generatedWaves.add(wave);
@@ -2904,7 +2970,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 80,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -2957,7 +3023,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 80,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -3010,7 +3076,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 80,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -3064,7 +3130,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 80,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -3119,7 +3185,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 100,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -3173,7 +3239,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 100,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 150,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -3689,7 +3755,8 @@ function createPathLayer(
         n.nodeType === PathNodeType.CHALLENGE_RIVAL ||
         n.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
         n.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
-        n.nodeType === PathNodeType.CHALLENGE_REWARD
+        n.nodeType === PathNodeType.CHALLENGE_REWARD ||
+        (n.nodeType === PathNodeType.SMITTY_BATTLE && typeof n.metadata?.challengeNodeIndex === "number")
       );
 
       if (challengeNodes.length > 0) {
@@ -3849,7 +3916,8 @@ function processWaveConnections(currentNodes: PathNode[], nodesByWave: Map<numbe
            node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
            node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
            node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
-           (includeReward && node.nodeType === PathNodeType.CHALLENGE_REWARD);
+           (includeReward && node.nodeType === PathNodeType.CHALLENGE_REWARD) ||
+           (node.nodeType === PathNodeType.SMITTY_BATTLE && typeof node.metadata?.challengeNodeIndex === "number");
   };
 
   const isFirstChallengeNode = (node: PathNode): boolean => {
@@ -4024,7 +4092,8 @@ function ensureAllNodesConnected(nodesByWave: Map<number, PathNode[]>, convergen
            node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
            node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
            node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
-           node.nodeType === PathNodeType.CHALLENGE_REWARD;
+           node.nodeType === PathNodeType.CHALLENGE_REWARD ||
+           (node.nodeType === PathNodeType.SMITTY_BATTLE && typeof node.metadata?.challengeNodeIndex === "number");
   };
 
   const isFirstChallengeNode = (node: PathNode): boolean => {
@@ -4277,7 +4346,8 @@ function ensurePathConnectivity(layer: PathLayer, nextLayer?: PathLayer, seeds?:
            node.nodeType === PathNodeType.CHALLENGE_RIVAL ||
            node.nodeType === PathNodeType.CHALLENGE_EVIL_BOSS ||
            node.nodeType === PathNodeType.CHALLENGE_CHAMPION ||
-           node.nodeType === PathNodeType.CHALLENGE_REWARD;
+           node.nodeType === PathNodeType.CHALLENGE_REWARD ||
+           (node.nodeType === PathNodeType.SMITTY_BATTLE && typeof node.metadata?.challengeNodeIndex === "number");
   };
 
   const isFirstChallengeNode = (node: PathNode): boolean => {
@@ -5821,12 +5891,11 @@ function constructChallengePathNodes(
     let nodeType: PathNodeType;
 
     const smittyChance = Overrides.SMITTY_FINAL_BATTLE_CHANCE_OVERRIDE;
-    if (smittyChance !== null && Utils.randSeedInt(100) < smittyChance) {
+    const effectiveSmittyChance = smittyChance ?? 10;
+    if (Utils.randSeedInt(100) < effectiveSmittyChance) {
       nodeType = PathNodeType.SMITTY_BATTLE;
     } else {
-      const availableTypes = smittyChance !== null
-        ? challengeNodeTypes.filter(t => t !== PathNodeType.SMITTY_BATTLE)
-        : challengeNodeTypes;
+      const availableTypes = challengeNodeTypes.filter(t => t !== PathNodeType.SMITTY_BATTLE);
       nodeType = availableTypes[Utils.randSeedInt(availableTypes.length)];
     }
 
@@ -5904,7 +5973,7 @@ function constructChallengePathNodes(
   const rewardNode = createPathNode(
     rewardWave,
     PathNodeType.CHALLENGE_REWARD,
-    4,
+    3,
     undefined,
     {
       challengeReward: true,

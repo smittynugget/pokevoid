@@ -249,6 +249,11 @@ const displayStats: DisplayStats = {
     sourceFunc: gameData => Utils.formatFancyLargeNumber(gameData.gameStats.highestPermaMoney || 0),
     hidden: true
   },
+  highestWaveReached: {
+    label_key: "highestWaveReached",
+    sourceFunc: gameData => (gameData.gameStats.highestWaveReached || 0).toString(),
+    hidden: true
+  },
   moneySpentFromSnatching: {
     label_key: "moneySpentFromSnatching",
     sourceFunc: gameData => Utils.formatFancyLargeNumber(gameData.gameStats.moneySpentFromSnatching),

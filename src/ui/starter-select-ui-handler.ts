@@ -917,6 +917,12 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         this.moveInfoOverlay.clear();
         this.pokerusSpecies = getPokerusStarters(this.scene);
 
+        if (!args?.length) {
+            super.show(args);
+            this.starterSelectContainer.setVisible(true);
+            return true;
+        }
+
         this.championAvailableSpecies = undefined;
         this.filteredStarters = undefined;
         this.championFilterConfig = undefined;
@@ -1043,9 +1049,6 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
 		const poolSize = this.filteredStarters?.size ?? 0;
 		if (poolSize) {
 			this.championAvailableSpecies = new Set(this.filteredStarters);
-		}
-		if (this.championFilterConfig) {
-			console.log("[STARTER] championAvailableSpecies size:", poolSize);
 		}
 	}
 
@@ -1926,6 +1929,16 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
                 const idx = this.cursor ?? 0;
                 const container = this.filteredStarterContainers[idx];
 				if (container?.species?.speciesId !== undefined) {
+                    const championAllowedSpecies = this.championFilterConfig?.availableStarters?.length
+                        ? new Set(this.championFilterConfig.availableStarters as Species[])
+                        : (this.championAvailableSpecies?.size ? this.championAvailableSpecies : null);
+                    if (this.championFilterConfig) {
+                        if (!championAllowedSpecies || !championAllowedSpecies.has(container.species.speciesId as unknown as Species)) {
+                            this.scene.ui.playError();
+                            return false;
+                        }
+                        this.championAvailableSpecies = championAllowedSpecies;
+                    }
 					if (this.championOnStarterSelected) {
 						this.championOnStarterSelected(container.species.speciesId as unknown as Species);
 					} else if (this.championFilterConfig?.onStarterSelected) {
@@ -2401,8 +2414,9 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
     }
     addToParty(species: PokemonSpecies, dexAttr: bigint, abilityIndex: integer, nature: Nature, moveset: StarterMoveset, fusionIndex: number) {
         const props = this.scene.gameData.getSpeciesDexAttrProps(species, dexAttr);
-        this.starterIcons[this.starterSpecies.length].setTexture(species.getIconAtlasKey(props.formIndex, props.shiny, props.variant));
-        this.starterIcons[this.starterSpecies.length].setFrame(species.getIconId(props.female, props.formIndex, props.shiny, props.variant));
+        const formSource = (species.forms.length > 0 && props.formIndex !== undefined && species.forms[props.formIndex]) ? species.forms[props.formIndex] : species;
+        this.starterIcons[this.starterSpecies.length].setTexture(formSource.getIconAtlasKey(props.formIndex, props.shiny, props.variant));
+        this.starterIcons[this.starterSpecies.length].setFrame(formSource.getIconId(props.female, props.formIndex, props.shiny, props.variant));
         this.checkIconId(this.starterIcons[this.starterSpecies.length], species, props.female, props.formIndex, props.shiny, props.variant);
 
         const isSignature = this.isSignaturePokemon(species.speciesId as unknown as Species);
@@ -2443,8 +2457,9 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
 
     updatePartyIcon(species: PokemonSpecies, index: number) {
         const props = this.scene.gameData.getSpeciesDexAttrProps(species, this.getCurrentDexProps(species.speciesId));
-        this.starterIcons[index].setTexture(species.getIconAtlasKey(props.formIndex, props.shiny, props.variant));
-        this.starterIcons[index].setFrame(species.getIconId(props.female, props.formIndex, props.shiny, props.variant));
+        const formSource = (species.forms.length > 0 && props.formIndex !== undefined && species.forms[props.formIndex]) ? species.forms[props.formIndex] : species;
+        this.starterIcons[index].setTexture(formSource.getIconAtlasKey(props.formIndex, props.shiny, props.variant));
+        this.starterIcons[index].setFrame(formSource.getIconId(props.female, props.formIndex, props.shiny, props.variant));
         this.checkIconId(this.starterIcons[index], species, props.female, props.formIndex, props.shiny, props.variant);
     }
 
@@ -2665,8 +2680,14 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
             this.validStarterContainers = this.starterContainers;
         }
 
-        if (this.championAvailableSpecies?.size) {
-            this.validStarterContainers = this.validStarterContainers.filter(c => this.championAvailableSpecies!.has(c.species.speciesId as unknown as Species));
+        const championAllowedSpecies = this.championFilterConfig?.availableStarters?.length
+            ? new Set(this.championFilterConfig.availableStarters as Species[])
+            : (this.championAvailableSpecies?.size ? this.championAvailableSpecies : null);
+        if (championAllowedSpecies) {
+            this.championAvailableSpecies = championAllowedSpecies;
+            this.validStarterContainers = this.validStarterContainers.filter(c => championAllowedSpecies.has(c.species.speciesId as unknown as Species));
+        } else if (this.championFilterConfig) {
+            this.validStarterContainers = [];
         }
         for (let i = 0; i < this.validStarterContainers.length; i++) {
             const currentFilteredContainer = this.validStarterContainers[i];
@@ -2675,7 +2696,8 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
             const currentDexAttr = this.getCurrentDexProps(currentFilteredContainer.species.speciesId);
             const props = this.scene.gameData.getSpeciesDexAttrProps(currentFilteredContainer.species, currentDexAttr);
 
-            starterSprite.setTexture(currentFilteredContainer.species.getIconAtlasKey(props.formIndex, props.shiny, props.variant), currentFilteredContainer.species.getIconId(props.female!, props.formIndex, props.shiny, props.variant));
+            const formSource = (currentFilteredContainer.species.forms.length > 0 && props.formIndex !== undefined && currentFilteredContainer.species.forms[props.formIndex]) ? currentFilteredContainer.species.forms[props.formIndex] : currentFilteredContainer.species;
+            starterSprite.setTexture(formSource.getIconAtlasKey(props.formIndex, props.shiny, props.variant), formSource.getIconId(props.female!, props.formIndex, props.shiny, props.variant));
             currentFilteredContainer.checkIconId(props.female, props.formIndex, props.shiny, props.variant);
         }
         this.validStarterContainers.forEach(container => {
@@ -2889,8 +2911,6 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
                 const isEggStarterMode = this.getMode() === Mode.EGG_STARTER_SELECT;
                 const isSignature = !isEggStarterMode && this.isSignaturePokemon(speciesId as unknown as Species);
                 if (isSignature) {
-                    const altBuildId = this.getSignatureAltBuildId(speciesId as unknown as Species);
-                    console.log(`[StarterSelectUI] updateScroll: species=${speciesId} has altBuildId=${altBuildId}, applying icon inversion`);
                     if (container.icon.postFX && typeof container.icon.postFX.addColorMatrix === 'function') {
                         container.icon.postFX.clear();
                         const colorMatrix = container.icon.postFX.addColorMatrix();
@@ -3068,16 +3088,13 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
             } else {
                 const isSignature = this.isSignaturePokemon(species.speciesId as unknown as Species);
                 if (isSignature) {
-                    console.log(`[StarterSelectUI] setSpecies: isInitialCursorSet=${this.isInitialCursorSet}, species=${species?.speciesId}, isSignature=${isSignature}`);
                     if (!this.isInitialCursorSet && !this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.STARTER_SELECT_SIGNATURE)) {
-                        console.log(`[StarterSelectUI] setSpecies: Triggering STARTER_SELECT_SIGNATURE tutorial`);
                         this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.STARTER_SELECT_SIGNATURE, true, false);
                     }
                     const altBuildId = this.getSignatureAltBuildId(species.speciesId as unknown as Species);
                     const signatureName = altBuildId
                         ? `${species.name} (${i18next.t(`pokemonAltBuild:${altBuildId}.name`)})`
                         : `${species.name} (Signature)`;
-                    console.log(`[StarterSelectUI] setSpecies: species=${species.speciesId} has altBuildId=${altBuildId}, showing signature name: ${signatureName}`);
                     this.pokemonNameText.setText(signatureName);
                 } else {
                     this.pokemonNameText.setText(species.name);
@@ -3876,8 +3893,9 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
             const species = this.starterSpecies[s];
             const currentDexAttr = this.getCurrentDexProps(species.speciesId);
             const props = this.scene.gameData.getSpeciesDexAttrProps(species, currentDexAttr);
-            this.starterIcons[s].setTexture(species.getIconAtlasKey(props.formIndex, props.shiny, props.variant));
-            this.starterIcons[s].setFrame(species.getIconId(props.female, props.formIndex, props.shiny, props.variant));
+            const formSource = (species.forms.length > 0 && props.formIndex !== undefined && species.forms[props.formIndex]) ? species.forms[props.formIndex] : species;
+            this.starterIcons[s].setTexture(formSource.getIconAtlasKey(props.formIndex, props.shiny, props.variant));
+            this.starterIcons[s].setFrame(formSource.getIconId(props.female, props.formIndex, props.shiny, props.variant));
             this.checkIconId(this.starterIcons[s], species, props.female, props.formIndex, props.shiny, props.variant);
 
             if (this.starterIcons[s].postFX) {
@@ -3931,11 +3949,6 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
 
         const isSignature = this.isSignaturePokemon(speciesId as unknown as Species);
         const starterValue = isSignature ? 9 : this.scene.gameData.getSpeciesStarterValue(speciesId);
-
-        if (isSignature) {
-            const altBuildId = this.getSignatureAltBuildId(speciesId as unknown as Species);
-            console.log(`[StarterSelectUI] updateStarterValueLabel: species=${speciesId}, altBuildId=${altBuildId}, overriding cost to 9`);
-        }
 
         starter.cost = starterValue;
         let valueStr = starterValue.toString();
@@ -4020,6 +4033,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         ui.setMode(this.getMode());
         this.clearText();
         this.scene.clearPhaseQueue();
+        this.scene.sessionSlotId = -1;
         if (this.scene.gameMode.isChallenge) {
             this.scene.pushPhase(new SelectChallengePhase(this.scene));
         }
@@ -4286,12 +4300,21 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         if (this.statsMode) {
             this.toggleStatsMode(false);
         }
+
+        this.championAvailableSpecies = undefined;
+        this.championFilterConfig = undefined;
+        this.championOnStarterSelected = undefined;
+        this.championOnCancel = undefined;
     }
 
     checkIconId(icon: Phaser.GameObjects.Sprite, species: PokemonSpecies, female: boolean, formIndex: number, shiny: boolean, variant: number) {
         if (icon.frame.name !== species.getIconId(female, formIndex, shiny, variant)) {
             icon.setTexture(species.getIconAtlasKey(formIndex, false, variant));
             icon.setFrame(species.getIconId(female, formIndex, false, variant));
+        }
+        if (icon.frame.name !== species.getIconId(female, formIndex, false, variant)) {
+            icon.setTexture("pokemon_icons_0");
+            icon.setFrame("unknown");
         }
     }
 }

@@ -78,7 +78,7 @@
     "masterBall": "大師球 (x1)",
     "eggVoucher": "蛋券 ({{tier}})",
     "relicGold": "遺跡金幣",
-    "permaMoney": "永久金幣：{{amount}}",
+    "permaMoney": "Ω金幣：{{amount}}",
     "catchBonus": "{{types}} +{{percent}}% 捕獲率",
     "essenceTypeWeight": "精華權重：{{type}} x{{weight}}",
     "fusionSecondaryPriority": "更多 {{types}} 融合",
@@ -101,7 +101,8 @@
     "generalItems": "一般道具",
     "batonItem": "接力棒",
     "ppMaxItem": "PP極限提升",
-    "rogueBall": "流氓球 (x5)"
+    "rogueBall": "流氓球 (x5)",
+    "partyAbilityGrant": "隊伍特性"
   },
   "descriptions": {
     "statFocusLabel": "能力值重點：",
@@ -190,7 +191,8 @@
     "default": "獎勵",
     "tmLearn": "學習招式 {{move}}",
     "glitchFormDesc": "故障形態：{{form}}",
-    "teraTypeDesc": "提供太晶屬性獎勵：{{type}}"
+    "teraTypeDesc": "提供太晶屬性獎勵：{{type}}",
+    "partyAbilityGrant": "為你的隊伍選擇一個免費的隊伍特性。"
   },
   "fallback": {
     "unknownPokemon": "未知寶可夢",

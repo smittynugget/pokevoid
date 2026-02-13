@@ -78,7 +78,7 @@
     "masterBall": "Meisterball (x1)",
     "eggVoucher": "Ei-Gutschein ({{tier}})",
     "relicGold": "Relikt-Gold",
-    "permaMoney": "Permanentes Geld: {{amount}}",
+    "permaMoney": "ΩGOLD: {{amount}}",
     "catchBonus": "{{types}} +{{percent}}% Fangrate",
     "essenceTypeWeight": "Essenz-Gewichtung: {{type}} x{{weight}}",
     "fusionSecondaryPriority": "Mehr {{types}}-Fusionen",
@@ -101,7 +101,8 @@
     "generalItems": "Allgemeine Items",
     "batonItem": "Stab",
     "ppMaxItem": "AP-Top",
-    "rogueBall": "Schurkenball (x5)"
+    "rogueBall": "Schurkenball (x5)",
+    "partyAbilityGrant": "Team-Fähigkeit"
   },
   "descriptions": {
     "statFocusLabel": "Statuswert-Fokus:",
@@ -190,7 +191,8 @@
     "default": "Belohnung",
     "tmLearn": "Lerne die Attacke {{move}}",
     "glitchFormDesc": "Glitch-Form: {{form}}",
-    "teraTypeDesc": "Biete eine Tera-Typ-Belohnung an: {{type}}"
+    "teraTypeDesc": "Biete eine Tera-Typ-Belohnung an: {{type}}",
+    "partyAbilityGrant": "Wähle eine kostenlose Team-Fähigkeit für dein Team."
   },
   "fallback": {
     "unknownPokemon": "Unbekanntes Pokémon",

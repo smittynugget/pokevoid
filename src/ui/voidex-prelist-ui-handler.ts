@@ -3801,8 +3801,17 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     if (node && typeof node.addEventListener === "function") {
       this.searchKeydownHandler = (event: KeyboardEvent) => {
         const c = event.code;
-        if (c === "KeyW" || c === "KeyA" || c === "KeyS" || c === "KeyD") {
+        if (c === "KeyW" || c === "KeyA" || c === "KeyS" || c === "KeyD" || c === "KeyZ") {
           event.stopPropagation();
+        }
+        if (c === "Space" || c === "Enter") {
+          event.preventDefault();
+          event.stopPropagation();
+          const el: any = this.inputEl as any;
+          if (el && typeof el.setBlur === "function") {
+            el.setBlur();
+          }
+          this.getUi().playSelect();
         }
       };
       node.addEventListener("keydown", this.searchKeydownHandler);

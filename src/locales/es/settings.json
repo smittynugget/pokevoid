@@ -109,5 +109,8 @@
   "checkTeam": "Ver equipo",
   "disableMoveUpgrades": "Desactivar mejoras de movimientos",
   "disableCutscenes": "Desactivar cinemáticas",
-  "showItemTextBg": "Mostrar Fondo de Rareza de Recompensa"
+  "showItemTextBg": "Mostrar Fondo de Rareza de Recompensa",
+  "autoSave": "Guardado automático",
+  "autoSavePerTurn": "Por turno",
+  "autoSavePerBattle": "Por combate"
 }

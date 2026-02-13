@@ -451,14 +451,14 @@
     },
     "GlitchPieceModifierType": {
       "name": "Glitch-Stück",
-      "description": "Ein mysteriöses Glitch-Fragment. \nGewährt Zugang zu sehr mächtigen Glitch-Gegenständen."
+      "description": "Ein mysteriöses Glitch-Fragment. (Besitz: {{glitchPieceAmount}})\nGewährt Zugang zu sehr mächtigen Glitch-Gegenständen."
     },
     "FormChangeItemModifierSmittyItem": {
       "description": "VERBOTEN: Einem Pokémon eine bestimmte\n Kombination von 4 SMITTY-Gegenständen geben..."
     },
     "PermaModifierType": {
       "PERMA_PARTY_ABILITY": {
-        "name": "SMITTY Team-Fähigkeit",
+        "name": "Smitty Team: {{abilityName}}",
         "description": "Gib {{abilityName}} ALLEN Team-Pokémon"
       },
       "PERMA_NEW_NORMAL": {

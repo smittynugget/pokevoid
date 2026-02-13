@@ -29,6 +29,7 @@
   "unlinkGoogle": "Délier Google",
   "cancel": "Retour",
   "losingProgressionWarning": "Vous allez perdre votre progression depuis le début du combat. Continuer ?",
+  "losingProgressionWarningPerTurn": "Pour éviter les redémarrages non souhaités, le jeu sauvegarde automatiquement à chaque tour.",
   "noEggs": "Vous ne faites actuellement\néclore aucun Œuf !",
   "dataOverrideWarning": "Vos données seront écrasées et la page sera rechargée. Continuer ?",
   "importFailed": "Échec de l'importation des données sauvegardées. Le fichier pourrait être corrompu.",

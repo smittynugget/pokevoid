@@ -177,14 +177,14 @@
     },
     "GlitchPieceModifierType": {
       "name": "Кусок глитча",
-      "description": "Таинственный фрагмент глитча.\nОткрывает доступ к очень мощным глитч-предметам."
+      "description": "Таинственный фрагмент глитча. (В наличии: {{glitchPieceAmount}})\nОткрывает доступ к очень мощным глитч-предметам."
     },
     "FormChangeItemModifierSmittyItem": {
       "description": "ЗАПРЕЩЕНО: дать покемону конкретную комбинацию из 4 предметов SMITTY..."
     },
     "PermaModifierType": {
       "PERMA_PARTY_ABILITY": {
-        "name": "SMITTY: талант отряда",
+        "name": "Smitty отряд: {{abilityName}}",
         "description": "Дать {{abilityName}} ВСЕМ покемонам в отряде"
       },
       "PERMA_NEW_NORMAL": {

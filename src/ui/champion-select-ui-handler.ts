@@ -481,17 +481,13 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
         .map(r => ({ types: Array.isArray(r.type) ? r.type : [r.type], amount: Math.max(1, Math.floor(r.amount || 0)) }))
         .map(r => ({ types: r.types.filter(t => typeof t === "number") as Type[], amount: r.amount }))
         .filter(r => r.types.length > 0);
-      if (segments.length > 0) {
-        return segments;
-      }
+      if (segments.length > 0) return segments;
     }
     const total = Math.max(1, Math.floor((def?.unlockRequirements?.totalEssenceRequirement as number) || 0));
     const types = [def?.type1, def?.type2].filter(t => typeof t === "number") as Type[];
-    if (types.length === 0) {
-      return [{ types: [Type.NORMAL], amount: total }];
-    }
+    if (types.length === 0) return [{ types: [Type.NORMAL], amount: total }];
     const base = Math.floor(total / types.length);
-    const remainder = total - base * types.length;
+    let remainder = total - base * types.length;
     return types.map((t, i) => ({ types: [t], amount: base + (i < remainder ? 1 : 0) }));
   }
   private renderSegments(
@@ -537,18 +533,10 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       const aHasSmitty = a.types.includes((Type as any).SMITTY);
       const bHasGlitch = b.types.includes((Type as any).GLITCH);
       const bHasSmitty = b.types.includes((Type as any).SMITTY);
-      if (aHasSmitty && !bHasSmitty) {
-        return 1;
-      }
-      if (!aHasSmitty && bHasSmitty) {
-        return -1;
-      }
-      if (aHasGlitch && !bHasGlitch && !bHasSmitty) {
-        return 1;
-      }
-      if (!aHasGlitch && bHasGlitch && !aHasSmitty) {
-        return -1;
-      }
+      if (aHasSmitty && !bHasSmitty) return 1;
+      if (!aHasSmitty && bHasSmitty) return -1;
+      if (aHasGlitch && !bHasGlitch && !bHasSmitty) return 1;
+      if (!aHasGlitch && bHasGlitch && !aHasSmitty) return -1;
       return 0;
     });
 
@@ -558,7 +546,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     const barH = ChampionSelectUiHandler.UI_CONSTANTS.XP_BAR.FILL_HEIGHT;
     const n = Math.max(1, sortedSegments.length);
     const base = Math.floor(barW / n);
-    const rem = barW - base * n;
+    let rem = barW - base * n;
     const widths = new Array(n).fill(base).map((w, i) => (i < rem ? w + 1 : w));
 
     let cursor = barX;
@@ -620,9 +608,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
           spr.setDepth(ChampionSelectUiHandler.UI_CONSTANTS.XP_BAR.TYPE_ICON_DEPTH);
           const scale = isSpecial ? ChampionSelectUiHandler.UI_CONSTANTS.XP_BAR.TYPE_ICONS_SPECIAL_SCALE : ChampionSelectUiHandler.UI_CONSTANTS.XP_BAR.TYPE_ICONS_SCALE;
           spr.setScale(scale);
-          if (isSpecial) {
-            this.decorateSpecialIcon(type, spr);
-          }
+          if (isSpecial) this.decorateSpecialIcon(type, spr);
           this.xpBarContainer?.add(spr);
           this.xpBarTypeIcons.push(spr);
 
@@ -649,9 +635,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     super(scene, Mode.CHAMPION_SELECT);
   }
   private getSkillRarityFromDef(s: any): SkillTreeRarity {
-    if (!s) {
-      return SkillTreeRarity.COMMON;
-    }
+    if (!s) return SkillTreeRarity.COMMON;
 
     const rewardType: SkillTreeRewardType | undefined = (s as any)?.rewardType;
     if (rewardType !== undefined) {
@@ -664,40 +648,36 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
     const cat = (s as any)?.category;
     switch (cat) {
-    case (SkillCategory as any).TMS: return SkillTreeRarity.COMMON;
-    case (SkillCategory as any).XMS: return SkillTreeRarity.ULTRA;
-    case (SkillCategory as any).ABILITY_POOL: return SkillTreeRarity.GREAT;
-    case (SkillCategory as any).SIGNATURE_POKEMON: return SkillTreeRarity.ULTRA;
-    case (SkillCategory as any).MOVE_UPGRADES: return SkillTreeRarity.ULTRA;
-    case (SkillCategory as any).MEGA_STONES: return SkillTreeRarity.ROGUE;
-    case (SkillCategory as any).TRAINER_BOND_ABILITIES: return SkillTreeRarity.ULTRA;
-    case (SkillCategory as any).LEGENDARY_POKEMON: return SkillTreeRarity.LEGENDARY;
-    case (SkillCategory as any).STAT_BOOSTS: return SkillTreeRarity.GREAT;
-    default: return SkillTreeRarity.COMMON;
+      case (SkillCategory as any).TMS: return SkillTreeRarity.COMMON;
+      case (SkillCategory as any).XMS: return SkillTreeRarity.ULTRA;
+      case (SkillCategory as any).ABILITY_POOL: return SkillTreeRarity.GREAT;
+      case (SkillCategory as any).SIGNATURE_POKEMON: return SkillTreeRarity.ULTRA;
+      case (SkillCategory as any).MOVE_UPGRADES: return SkillTreeRarity.ULTRA;
+      case (SkillCategory as any).MEGA_STONES: return SkillTreeRarity.ROGUE;
+      case (SkillCategory as any).TRAINER_BOND_ABILITIES: return SkillTreeRarity.ULTRA;
+      case (SkillCategory as any).LEGENDARY_POKEMON: return SkillTreeRarity.LEGENDARY;
+      case (SkillCategory as any).STAT_BOOSTS: return SkillTreeRarity.GREAT;
+      default: return SkillTreeRarity.COMMON;
     }
   }
 
   private getRarityColors(rarity: SkillTreeRarity): { border: number; bg: number } {
     const c = ChampionSelectUiHandler.UI_CONSTANTS.RARITY_COLORS;
     switch (rarity) {
-    case SkillTreeRarity.GREAT: return c.GREAT;
-    case SkillTreeRarity.ULTRA: return c.ULTRA;
-    case SkillTreeRarity.MASTER: return c.MASTER;
-    case SkillTreeRarity.ROGUE: return c.ROGUE;
-    case SkillTreeRarity.LEGENDARY: return c.LEGENDARY;
-    case SkillTreeRarity.COMMON:
-    default: return c.COMMON;
+      case SkillTreeRarity.GREAT: return c.GREAT;
+      case SkillTreeRarity.ULTRA: return c.ULTRA;
+      case SkillTreeRarity.MASTER: return c.MASTER;
+      case SkillTreeRarity.ROGUE: return c.ROGUE;
+      case SkillTreeRarity.LEGENDARY: return c.LEGENDARY;
+      case SkillTreeRarity.COMMON:
+      default: return c.COMMON;
     }
   }
 
   private decorateSpecialIcon(type: Type, spr: Phaser.GameObjects.Sprite): void {
-    if (!this.specialTypeSprites.has(type)) {
-      this.specialTypeSprites.set(type, new Set());
-    }
+    if (!this.specialTypeSprites.has(type)) this.specialTypeSprites.set(type, new Set());
     this.specialTypeSprites.get(type)!.add(spr);
-    if ((spr as any)._specialDecorated) {
-      return;
-    }
+    if ((spr as any)._specialDecorated) return;
     if (type === (Type as any).SMITTY) {
       spr.setTint(0xFF0000);
       (spr as any)._specialDecorated = true;
@@ -705,7 +685,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     }
     if (type === (Type as any).GLITCH) {
       try {
-        if (spr.postFX && typeof spr.postFX.addColorMatrix === "function") {
+        if (spr.postFX && typeof spr.postFX.addColorMatrix === 'function') {
           const cm = spr.postFX.addColorMatrix();
           cm.negative();
           (spr as any)._specialDecorated = true;
@@ -731,9 +711,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   private createLavaLampAnimation(segments: Array<{ types: Type[]; amount: number }>): void {
     this.cleanupLavaLampAnimation();
 
-    if (!this.xpBarContainer || segments.length === 0) {
-      return;
-    }
+    if (!this.xpBarContainer || segments.length === 0) return;
     this.lavaAnimationTime = 0;
     this.lavaAnimationTimer = this.scene.time.addEvent({
       delay: 1000 / ChampionSelectUiHandler.UI_CONSTANTS.XP_BAR.LAVA_ANIMATION.UPDATE_FREQUENCY,
@@ -742,9 +720,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     });
   }
   private updateLavaLampAnimation(segments: Array<{ types: Type[]; amount: number }>): void {
-    if (!this.xpBarContainer || this.xpBarFillSegments.length === 0) {
-      return;
-    }
+    if (!this.xpBarContainer || this.xpBarFillSegments.length === 0) return;
 
     this.lavaAnimationTime += ChampionSelectUiHandler.UI_CONSTANTS.XP_BAR.LAVA_ANIMATION.WAVE_SPEED;
     const lavaConfig = ChampionSelectUiHandler.UI_CONSTANTS.XP_BAR.LAVA_ANIMATION;
@@ -759,24 +735,16 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       const bHasGlitch = b.types.includes((Type as any).GLITCH);
       const bHasSmitty = b.types.includes((Type as any).SMITTY);
 
-      if (aHasSmitty && !bHasSmitty) {
-        return 1;
-      }
-      if (!aHasSmitty && bHasSmitty) {
-        return -1;
-      }
-      if (aHasGlitch && !bHasGlitch && !bHasSmitty) {
-        return 1;
-      }
-      if (!aHasGlitch && bHasGlitch && !aHasSmitty) {
-        return -1;
-      }
+      if (aHasSmitty && !bHasSmitty) return 1;
+      if (!aHasSmitty && bHasSmitty) return -1;
+      if (aHasGlitch && !bHasGlitch && !bHasSmitty) return 1;
+      if (!aHasGlitch && bHasGlitch && !aHasSmitty) return -1;
       return 0;
     });
 
     const n = Math.max(1, sortedSegments.length);
     const base = Math.floor(barW / n);
-    const rem = barW - base * n;
+    let rem = barW - base * n;
     const widths = new Array(n).fill(base).map((w, i) => (i < rem ? w + 1 : w));
 
     let cursor = barX;
@@ -799,9 +767,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     });
   }
   private drawEnhancedSegmentFill(graphics: Phaser.GameObjects.Graphics, x: number, y: number, width: number, height: number, type: Type, segmentIndex: number): void {
-    if (width <= 0 || height <= 0) {
-      return;
-    }
+    if (width <= 0 || height <= 0) return;
 
     const lavaConfig = ChampionSelectUiHandler.UI_CONSTANTS.XP_BAR.LAVA_ANIMATION;
     const baseColor = this.getTypeBasedColor(type);
@@ -873,34 +839,32 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   private getTypeBasedColor(type: Type): number {
 
     switch (type) {
-    case Type.NORMAL: return 0xA8A878;
-    case Type.FIRE: return 0xF08030;
-    case Type.WATER: return 0x6890F0;
-    case Type.ELECTRIC: return 0xF8D030;
-    case Type.GRASS: return 0x78C850;
-    case Type.ICE: return 0x98D8D8;
-    case Type.FIGHTING: return 0xC03028;
-    case Type.POISON: return 0xA040A0;
-    case Type.GROUND: return 0xE0C068;
-    case Type.FLYING: return 0xA890F0;
-    case Type.PSYCHIC: return 0xF85888;
-    case Type.BUG: return 0xA8B820;
-    case Type.ROCK: return 0xB8A038;
-    case Type.GHOST: return 0x705898;
-    case Type.DRAGON: return 0x7038F8;
-    case Type.DARK: return 0x705848;
-    case Type.STEEL: return 0xB8B8D0;
-    case Type.FAIRY: return 0xEE99AC;
-    case (Type as any).GLITCH: return 0xFF00FF;
-    case (Type as any).SMITTY: return 0xFF4444;
-    default: return 0xFFD700;
+      case Type.NORMAL: return 0xA8A878;
+      case Type.FIRE: return 0xF08030;
+      case Type.WATER: return 0x6890F0;
+      case Type.ELECTRIC: return 0xF8D030;
+      case Type.GRASS: return 0x78C850;
+      case Type.ICE: return 0x98D8D8;
+      case Type.FIGHTING: return 0xC03028;
+      case Type.POISON: return 0xA040A0;
+      case Type.GROUND: return 0xE0C068;
+      case Type.FLYING: return 0xA890F0;
+      case Type.PSYCHIC: return 0xF85888;
+      case Type.BUG: return 0xA8B820;
+      case Type.ROCK: return 0xB8A038;
+      case Type.GHOST: return 0x705898;
+      case Type.DRAGON: return 0x7038F8;
+      case Type.DARK: return 0x705848;
+      case Type.STEEL: return 0xB8B8D0;
+      case Type.FAIRY: return 0xEE99AC;
+      case (Type as any).GLITCH: return 0xFF00FF;
+      case (Type as any).SMITTY: return 0xFF4444;
+      default: return 0xFFD700;
     }
   }
   private getCurrentForSegment(segment: { types: Type[]; amount: number }): number {
     const selectedChampionId = this.availableChampions[this.selectedChampionIndex];
-    if (!selectedChampionId) {
-      return 0;
-    }
+    if (!selectedChampionId) return 0;
 
     const isUnlocked = this.championManager.isChampionUnlockedInData(selectedChampionId);
 
@@ -1007,27 +971,15 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       this.isLevelUpAnimationActive = false;
       this.lockInput(500);
       this.renderSkillList(championId);
-      try {
-        (this.scene as BattleScene).gameData.saveSystem();
-      } catch {}
+      try { (this.scene as BattleScene).gameData.saveSystem(); } catch {}
     }
   }
 
-  getModalTitle(): string {
-    return i18next.t("championSelect:title", { defaultValue: "Select Champion" });
-  }
-  getWidth(): number {
-    return Math.floor(this.scene.game.canvas.width / 6) + 8;
-  }
-  getHeight(): number {
-    return Math.floor(this.scene.game.canvas.height / 6) + 6;
-  }
-  getMargin(): [number, number, number, number] {
-    return [4, 4, 8, 4];
-  }
-  getButtonLabels(): string[] {
-    return [];
-  }
+  getModalTitle(): string { return i18next.t("championSelect:title", { defaultValue: "Select Champion" }); }
+  getWidth(): number { return Math.floor(this.scene.game.canvas.width / 6) + 8; }
+  getHeight(): number { return Math.floor(this.scene.game.canvas.height / 6) + 6; }
+  getMargin(): [number, number, number, number] { return [4, 4, 8, 4]; }
+  getButtonLabels(): string[] { return []; }
 
   protected createModalBackground(): void {
   }
@@ -1226,10 +1178,8 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
     while (currentFontSize >= minFontSize) {
       const wrappedText = this.skillsSubheaderText.runWordWrap(this.skillsSubheaderText.text);
-      const lineCount = wrappedText.split("\n").length;
-      if (lineCount <= 2) {
-        break;
-      }
+      const lineCount = wrappedText.split('\n').length;
+      if (lineCount <= 2) break;
       currentFontSize -= 2;
       this.skillsSubheaderText.setStyle({
         ...this.skillsSubheaderText.style,
@@ -1241,21 +1191,21 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     this.skillListPanelContainer.add(this.skillsSubheaderText);
     this.skillListContainer = this.scene.add.container(0, ChampionSelectUiHandler.UI_CONSTANTS.SKILL_LIST_PANEL.LIST_Y);
     this.skillListPanelContainer.add(this.skillListContainer);
-    this.skillArrowUp = this.scene.add.sprite(0, ChampionSelectUiHandler.UI_CONSTANTS.SKILL_LIST_PANEL.ARROW_UP_Y, "cursor_reverse");
+    this.skillArrowUp = this.scene.add.sprite(0, ChampionSelectUiHandler.UI_CONSTANTS.SKILL_LIST_PANEL.ARROW_UP_Y, 'cursor_reverse');
     this.skillArrowUp.setScale(ChampionSelectUiHandler.UI_CONSTANTS.SKILL_LIST_PANEL.ARROW_SCALE);
     this.skillArrowUp.setAngle(-90);
     this.skillArrowUp.setVisible(false);
-    if ((this.skillArrowUp as any)?.anims?.exists && (this.skillArrowUp as any).anims.exists("cursor_reverse")) {
-      (this.skillArrowUp as any).play("cursor_reverse");
+    if ((this.skillArrowUp as any)?.anims?.exists && (this.skillArrowUp as any).anims.exists('cursor_reverse')) {
+      (this.skillArrowUp as any).play('cursor_reverse');
     }
     this.skillListPanelContainer.add(this.skillArrowUp);
 
-    this.skillArrowDown = this.scene.add.sprite(0, ChampionSelectUiHandler.UI_CONSTANTS.SKILL_LIST_PANEL.ARROW_DOWN_Y, "cursor");
+    this.skillArrowDown = this.scene.add.sprite(0, ChampionSelectUiHandler.UI_CONSTANTS.SKILL_LIST_PANEL.ARROW_DOWN_Y, 'cursor');
     this.skillArrowDown.setScale(ChampionSelectUiHandler.UI_CONSTANTS.SKILL_LIST_PANEL.ARROW_SCALE);
     this.skillArrowDown.setAngle(90);
     this.skillArrowDown.setVisible(false);
-    if ((this.skillArrowDown as any)?.anims?.exists && (this.skillArrowDown as any).anims.exists("cursor")) {
-      (this.skillArrowDown as any).play("cursor");
+    if ((this.skillArrowDown as any)?.anims?.exists && (this.skillArrowDown as any).anims.exists('cursor')) {
+      (this.skillArrowDown as any).play('cursor');
     }
     this.skillListPanelContainer.add(this.skillArrowDown);
     this.skillTooltipContainer = this.scene.add.container(0, 0);
@@ -1374,9 +1324,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   }
 
   private updateEssenceButtonIcon(): void {
-    if (!this.useEssenceButtonIcon) {
-      return;
-    }
+    if (!this.useEssenceButtonIcon) return;
 
     let gamepadType: string;
     if (this.scene.inputMethod === "gamepad") {
@@ -1425,7 +1373,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     this.updateChampionInfo();
 
     if (!(this.scene as BattleScene).gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.CHAMPION_SELECT_ESSENCE)) {
-      (this.scene as BattleScene).gameData.tutorialService.showNewTutorial(EnhancedTutorial.CHAMPION_SELECT_ESSENCE, true, false, 650);
+        (this.scene as BattleScene).gameData.tutorialService.showNewTutorial(EnhancedTutorial.CHAMPION_SELECT_ESSENCE, true, false, 650);
     }
 
     if (this.skillsHeaderText) {
@@ -1436,15 +1384,9 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
         i18next.t("championSelect:skillsSubheader", { defaultValue: "Unlocked skills will randomly appear in Skill Tree." })
       );
     }
-    if (this.subtitleText) {
-      this.subtitleText.setVisible(true);
-    }
-    if (this.gridBgGraphics) {
-      this.gridBgGraphics.setVisible(true);
-    }
-    if (this.skillListPanelContainer) {
-      this.skillListPanelContainer.setVisible(true);
-    }
+    if (this.subtitleText) { this.subtitleText.setVisible(true); }
+    if (this.gridBgGraphics) { this.gridBgGraphics.setVisible(true); }
+    if (this.skillListPanelContainer) { this.skillListPanelContainer.setVisible(true); }
     this.layoutSkillListPanel();
     this.updateEssenceButtonIcon();
     try {
@@ -1516,9 +1458,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     this.cleanupChampionUnlockHoldToSkip();
 
     if (scene.disableCutscenes) {
-      if (!gd.gameStats.cutsceneChampionUnlockShown) {
-        gd.gameStats.cutsceneChampionUnlockShown = {};
-      }
+      if (!gd.gameStats.cutsceneChampionUnlockShown) gd.gameStats.cutsceneChampionUnlockShown = {};
       gd.gameStats.cutsceneChampionUnlockShown[effectiveId] = true;
       this.playUnlockAnimationAfterCutscene(effectiveId);
       return;
@@ -1541,33 +1481,15 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     const prevNameBoxVisible = typeof messageHandler?.nameBoxContainer?.visible === "boolean" ? messageHandler.nameBoxContainer.visible : null;
     const prevModalVisible = this.modalContainer?.visible;
     this.rootContainer?.setVisible(false);
-    try {
-      this.modalContainer?.setVisible(false);
-    } catch {}
-    try {
-      fieldUi?.setVisible?.(false);
-    } catch {}
-    try {
-      permaMoney?.setVisible?.(false);
-    } catch {}
-    try {
-      permaBar?.setVisible?.(false);
-    } catch {}
-    try {
-      playerBar?.setVisible?.(false);
-    } catch {}
-    try {
-      enemyBar?.setVisible?.(false);
-    } catch {}
-    try {
-      messageHandler?.bg?.setVisible?.(false);
-    } catch {}
-    try {
-      messageHandler?.nameBoxContainer?.setVisible?.(false);
-    } catch {}
-    try {
-      scene.ui.clearText();
-    } catch {}
+    try { this.modalContainer?.setVisible(false); } catch {}
+    try { fieldUi?.setVisible?.(false); } catch {}
+    try { permaMoney?.setVisible?.(false); } catch {}
+    try { permaBar?.setVisible?.(false); } catch {}
+    try { playerBar?.setVisible?.(false); } catch {}
+    try { enemyBar?.setVisible?.(false); } catch {}
+    try { messageHandler?.bg?.setVisible?.(false); } catch {}
+    try { messageHandler?.nameBoxContainer?.setVisible?.(false); } catch {}
+    try { scene.ui.clearText(); } catch {}
 
     const def = STORY_CUTSCENES.champion_unlock;
     let currentSlideKey: string | null = null;
@@ -1653,9 +1575,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
         },
         onComplete: () => {
           this.cleanupChampionUnlockHoldToSkip();
-          if (!gd.gameStats.cutsceneChampionUnlockShown) {
-            gd.gameStats.cutsceneChampionUnlockShown = {};
-          }
+          if (!gd.gameStats.cutsceneChampionUnlockShown) gd.gameStats.cutsceneChampionUnlockShown = {};
           gd.gameStats.cutsceneChampionUnlockShown[effectiveId] = true;
 
           if (unlockedRewardTimer) {
@@ -1666,46 +1586,14 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
           controller.destroy();
           unloadCutsceneImages(scene, def.slides.map(s => s.imageKey));
 
-          try {
-            if (prevFieldUiVisible !== null) {
-              fieldUi?.setVisible?.(prevFieldUiVisible);
-            }
-          } catch {}
-          try {
-            if (prevPermaMoneyVisible !== null) {
-              permaMoney?.setVisible?.(prevPermaMoneyVisible);
-            }
-          } catch {}
-          try {
-            if (prevPermaBarVisible !== null) {
-              permaBar?.setVisible?.(prevPermaBarVisible);
-            }
-          } catch {}
-          try {
-            if (prevPlayerBarVisible !== null) {
-              playerBar?.setVisible?.(prevPlayerBarVisible);
-            }
-          } catch {}
-          try {
-            if (prevEnemyBarVisible !== null) {
-              enemyBar?.setVisible?.(prevEnemyBarVisible);
-            }
-          } catch {}
-          try {
-            if (prevMsgBgVisible !== null) {
-              messageHandler?.bg?.setVisible?.(prevMsgBgVisible);
-            }
-          } catch {}
-          try {
-            if (prevNameBoxVisible !== null) {
-              messageHandler?.nameBoxContainer?.setVisible?.(prevNameBoxVisible);
-            }
-          } catch {}
-          try {
-            if (typeof prevModalVisible === "boolean") {
-              this.modalContainer?.setVisible(prevModalVisible);
-            }
-          } catch {}
+          try { if (prevFieldUiVisible !== null) fieldUi?.setVisible?.(prevFieldUiVisible); } catch {}
+          try { if (prevPermaMoneyVisible !== null) permaMoney?.setVisible?.(prevPermaMoneyVisible); } catch {}
+          try { if (prevPermaBarVisible !== null) permaBar?.setVisible?.(prevPermaBarVisible); } catch {}
+          try { if (prevPlayerBarVisible !== null) playerBar?.setVisible?.(prevPlayerBarVisible); } catch {}
+          try { if (prevEnemyBarVisible !== null) enemyBar?.setVisible?.(prevEnemyBarVisible); } catch {}
+          try { if (prevMsgBgVisible !== null) messageHandler?.bg?.setVisible?.(prevMsgBgVisible); } catch {}
+          try { if (prevNameBoxVisible !== null) messageHandler?.nameBoxContainer?.setVisible?.(prevNameBoxVisible); } catch {}
+          try { if (typeof prevModalVisible === "boolean") this.modalContainer?.setVisible(prevModalVisible); } catch {}
           this.rootContainer?.setVisible(true);
           this.isChampionUnlockCutsceneActive = false;
 
@@ -1843,65 +1731,23 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
       controller.start();
     }).catch(() => {
+      try { if (prevFieldUiVisible !== null) fieldUi?.setVisible?.(prevFieldUiVisible); } catch {}
+      try { if (prevPermaMoneyVisible !== null) permaMoney?.setVisible?.(prevPermaMoneyVisible); } catch {}
+      try { if (prevPermaBarVisible !== null) permaBar?.setVisible?.(prevPermaBarVisible); } catch {}
+      try { if (prevPlayerBarVisible !== null) playerBar?.setVisible?.(prevPlayerBarVisible); } catch {}
+      try { if (prevEnemyBarVisible !== null) enemyBar?.setVisible?.(prevEnemyBarVisible); } catch {}
+      try { if (prevMsgBgVisible !== null) messageHandler?.bg?.setVisible?.(prevMsgBgVisible); } catch {}
+      try { if (prevNameBoxVisible !== null) messageHandler?.nameBoxContainer?.setVisible?.(prevNameBoxVisible); } catch {}
+      try { if (typeof prevModalVisible === "boolean") this.modalContainer?.setVisible(prevModalVisible); } catch {}
+      try { this.rootContainer?.setVisible(true); } catch {}
+      try { scene.playBgm(); } catch {}
+      try { this.cleanupChampionUnlockHoldToSkip(); } catch {}
       try {
-        if (prevFieldUiVisible !== null) {
-          fieldUi?.setVisible?.(prevFieldUiVisible);
-        }
-      } catch {}
-      try {
-        if (prevPermaMoneyVisible !== null) {
-          permaMoney?.setVisible?.(prevPermaMoneyVisible);
-        }
-      } catch {}
-      try {
-        if (prevPermaBarVisible !== null) {
-          permaBar?.setVisible?.(prevPermaBarVisible);
-        }
-      } catch {}
-      try {
-        if (prevPlayerBarVisible !== null) {
-          playerBar?.setVisible?.(prevPlayerBarVisible);
-        }
-      } catch {}
-      try {
-        if (prevEnemyBarVisible !== null) {
-          enemyBar?.setVisible?.(prevEnemyBarVisible);
-        }
-      } catch {}
-      try {
-        if (prevMsgBgVisible !== null) {
-          messageHandler?.bg?.setVisible?.(prevMsgBgVisible);
-        }
-      } catch {}
-      try {
-        if (prevNameBoxVisible !== null) {
-          messageHandler?.nameBoxContainer?.setVisible?.(prevNameBoxVisible);
-        }
-      } catch {}
-      try {
-        if (typeof prevModalVisible === "boolean") {
-          this.modalContainer?.setVisible(prevModalVisible);
-        }
-      } catch {}
-      try {
-        this.rootContainer?.setVisible(true);
-      } catch {}
-      try {
-        scene.playBgm();
-      } catch {}
-      try {
-        this.cleanupChampionUnlockHoldToSkip();
-      } catch {}
-      try {
-        if (!gd.gameStats.cutsceneChampionUnlockShown) {
-          gd.gameStats.cutsceneChampionUnlockShown = {};
-        }
+        if (!gd.gameStats.cutsceneChampionUnlockShown) gd.gameStats.cutsceneChampionUnlockShown = {};
         gd.gameStats.cutsceneChampionUnlockShown[effectiveId] = true;
       } catch {}
       this.isChampionUnlockCutsceneActive = false;
-      try {
-        this.playUnlockAnimationAfterCutscene(effectiveId);
-      } catch {}
+      try { this.playUnlockAnimationAfterCutscene(effectiveId); } catch {}
     });
   }
 
@@ -1940,21 +1786,11 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     this.championNameTexts = [];
     this.championDescTexts = [];
     this.unlockStatusTexts = [];
-    if (this.fullChampionSprite) {
-      this.fullChampionSprite.destroy(); this.fullChampionSprite = null;
-    }
-    if (this.fullChampionTintSprite) {
-      this.fullChampionTintSprite.destroy(); this.fullChampionTintSprite = null;
-    }
-    if (this.subtitleText) {
-      this.subtitleText.setVisible(false);
-    }
-    if (this.gridBgGraphics) {
-      this.gridBgGraphics.setVisible(false);
-    }
-    if (this.skillListPanelContainer) {
-      this.skillListPanelContainer.setVisible(false);
-    }
+        if (this.fullChampionSprite) { this.fullChampionSprite.destroy(); this.fullChampionSprite = null; }
+    if (this.fullChampionTintSprite) { this.fullChampionTintSprite.destroy(); this.fullChampionTintSprite = null; }
+    if (this.subtitleText) { this.subtitleText.setVisible(false); }
+    if (this.gridBgGraphics) { this.gridBgGraphics.setVisible(false); }
+    if (this.skillListPanelContainer) { this.skillListPanelContainer.setVisible(false); }
     this.stopEssenceHold();
     this.cleanupLavaLampAnimation();
     this.stopHealingPulseSound();
@@ -1997,76 +1833,95 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     const def = CHAMPION_DEFINITIONS[selectedChampionId] as any;
 
     switch (button) {
-    case Button.RIGHT:
+      case Button.RIGHT:
 
-      if (this.skillTooltipActive) {
-        this.skillTooltipActive = false;
-        this.skillTooltipContainer?.setVisible(false);
-      }
-
-      this.stopEssenceHold();
-      if (this.availableChampions.length > 0) {
-        if (this.selectedChampionIndex < this.availableChampions.length - 1) {
-          this.selectedChampionIndex++;
-        } else {
-          this.selectedChampionIndex = 0;
+        if (this.skillTooltipActive) {
+          this.skillTooltipActive = false;
+          this.skillTooltipContainer?.setVisible(false);
         }
-        this.updateChampionInfo();
-        try {
-          (this.scene as BattleScene).ui.playSelect();
-        } catch {}
-        return true;
-      }
-      break;
-    case Button.LEFT:
 
-      if (this.skillTooltipActive) {
-        this.skillTooltipActive = false;
-        this.skillTooltipContainer?.setVisible(false);
-      }
-
-      this.stopEssenceHold();
-      if (this.availableChampions.length > 0) {
-        if (this.selectedChampionIndex > 0) {
-          this.selectedChampionIndex--;
-        } else {
-          this.selectedChampionIndex = this.availableChampions.length - 1;
+        this.stopEssenceHold();
+        if (this.availableChampions.length > 0) {
+          if (this.selectedChampionIndex < this.availableChampions.length - 1) {
+            this.selectedChampionIndex++;
+          } else {
+            this.selectedChampionIndex = 0;
+          }
+          this.updateChampionInfo();
+          try { (this.scene as BattleScene).ui.playSelect(); } catch {}
+          return true;
         }
-        this.updateChampionInfo();
-        try {
-          (this.scene as BattleScene).ui.playSelect();
-        } catch {}
-        return true;
-      }
-      break;
-    case Button.UP:
+        break;
+      case Button.LEFT:
 
-      this.hasInteractedWithSkillList = true;
-      this.skillTooltipActive = true;
-      if (this.updateSkillSelection(-1)) {
-        try {
-          (this.scene as BattleScene).ui.playSelect();
-        } catch {}
-        return true;
-      }
-      break;
-    case Button.DOWN:
-      this.hasInteractedWithSkillList = true;
-      this.skillTooltipActive = true;
-      if (this.updateSkillSelection(1)) {
-        try {
-          (this.scene as BattleScene).ui.playSelect();
-        } catch {}
-        return true;
-      }
-      break;
-    case Button.STATS:
+        if (this.skillTooltipActive) {
+          this.skillTooltipActive = false;
+          this.skillTooltipContainer?.setVisible(false);
+        }
 
-      if (this.skillTooltipActive) {
-        this.skillTooltipActive = false;
-        this.skillTooltipContainer?.setVisible(false);
-      }
-      if (!isUnlocked) {
+        this.stopEssenceHold();
+        if (this.availableChampions.length > 0) {
+          if (this.selectedChampionIndex > 0) {
+            this.selectedChampionIndex--;
+          } else {
+            this.selectedChampionIndex = this.availableChampions.length - 1;
+          }
+          this.updateChampionInfo();
+          try { (this.scene as BattleScene).ui.playSelect(); } catch {}
+          return true;
+        }
+        break;
+      case Button.UP:
+
+        this.hasInteractedWithSkillList = true;
+        this.skillTooltipActive = true;
+        if (this.updateSkillSelection(-1)) {
+          try { (this.scene as BattleScene).ui.playSelect(); } catch {}
+          return true;
+        }
+        break;
+      case Button.DOWN:
+        this.hasInteractedWithSkillList = true;
+        this.skillTooltipActive = true;
+        if (this.updateSkillSelection(1)) {
+          try { (this.scene as BattleScene).ui.playSelect(); } catch {}
+          return true;
+        }
+        break;
+      case Button.STATS:
+
+        if (this.skillTooltipActive) {
+          this.skillTooltipActive = false;
+          this.skillTooltipContainer?.setVisible(false);
+        }
+        if (!isUnlocked) {
+          if (primaryType !== undefined) {
+            const before = this.championManager.getChampionData(selectedChampionId)?.level || 1;
+            const commitResult = this.attemptCommitEssenceOnce(selectedChampionId, primaryType);
+            if (commitResult.success) {
+
+              this.onCommitBegin();
+              const { current: progCurrent, required: progRequired } = this.getUnifiedEssenceProgressForChampion(selectedChampionId);
+              if (!this.xpLabelTicker) {
+
+                const target = Math.max(0, Math.floor(progCurrent));
+                const seed = Math.max(0, target - commitResult.amount);
+                this.visualCurrentEssence = seed;
+              }
+              this.ensureXpLabelTicker(Math.floor(progCurrent));
+
+              this.onEssenceCommitted(selectedChampionId, before);
+
+              this.onCommitEnd();
+              return true;
+            }
+
+            this.startEssenceHold(selectedChampionId, primaryType);
+            return true;
+          }
+          return false;
+        }
+
         if (primaryType !== undefined) {
           const before = this.championManager.getChampionData(selectedChampionId)?.level || 1;
           const commitResult = this.attemptCommitEssenceOnce(selectedChampionId, primaryType);
@@ -2092,69 +1947,38 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
           return true;
         }
         return false;
-      }
+      case Button.ACTION:
+      case Button.SUBMIT:
 
-      if (primaryType !== undefined) {
-        const before = this.championManager.getChampionData(selectedChampionId)?.level || 1;
-        const commitResult = this.attemptCommitEssenceOnce(selectedChampionId, primaryType);
-        if (commitResult.success) {
+        if (this.skillTooltipActive) {
+          this.skillTooltipActive = false;
+          this.skillTooltipContainer?.setVisible(false);
+        }
+        return this.confirmChampionSelection();
+      case Button.CANCEL:
+        this.stopEssenceHold();
 
-          this.onCommitBegin();
-          const { current: progCurrent, required: progRequired } = this.getUnifiedEssenceProgressForChampion(selectedChampionId);
-          if (!this.xpLabelTicker) {
-
-            const target = Math.max(0, Math.floor(progCurrent));
-            const seed = Math.max(0, target - commitResult.amount);
-            this.visualCurrentEssence = seed;
-          }
-          this.ensureXpLabelTicker(Math.floor(progCurrent));
-
-          this.onEssenceCommitted(selectedChampionId, before);
-
-          this.onCommitEnd();
+        if (this.skillTooltipActive) {
+          this.skillTooltipActive = false;
+          this.skillTooltipContainer?.setVisible(false);
           return true;
         }
 
-        this.startEssenceHold(selectedChampionId, primaryType);
+        try { (this.scene as BattleScene).gameData.saveSystem(); } catch {}
+
+        if (this.config?.onCancel) {
+          try { this.config.onCancel(); } catch {}
+        } else {
+          const scene = this.scene as BattleScene;
+          scene.ui.clearText();
+          scene.ui.setMode(Mode.MESSAGE).then(() => {
+
+            (scene as any).clearAllPhaseQueues?.();
+            scene.pushPhase(new TitlePhase(scene as any));
+            scene.getCurrentPhase()?.end();
+          });
+        }
         return true;
-      }
-      return false;
-    case Button.ACTION:
-    case Button.SUBMIT:
-
-      if (this.skillTooltipActive) {
-        this.skillTooltipActive = false;
-        this.skillTooltipContainer?.setVisible(false);
-      }
-      return this.confirmChampionSelection();
-    case Button.CANCEL:
-      this.stopEssenceHold();
-
-      if (this.skillTooltipActive) {
-        this.skillTooltipActive = false;
-        this.skillTooltipContainer?.setVisible(false);
-        return true;
-      }
-
-      try {
-        (this.scene as BattleScene).gameData.saveSystem();
-      } catch {}
-
-      if (this.config?.onCancel) {
-        try {
-          this.config.onCancel();
-        } catch {}
-      } else {
-        const scene = this.scene as BattleScene;
-        scene.ui.clearText();
-        scene.ui.setMode(Mode.MESSAGE).then(() => {
-
-          (scene as any).clearAllPhaseQueues?.();
-          scene.pushPhase(new TitlePhase(scene as any));
-          scene.getCurrentPhase()?.end();
-        });
-      }
-      return true;
     }
     return false;
   }
@@ -2170,9 +1994,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       this.availableChampions = ["apollo_diana"];
     }
 
-    try {
-      (this.scene as BattleScene).gameData.saveSystem();
-    } catch {}
+    try { (this.scene as BattleScene).gameData.saveSystem(); } catch {}
   }
 
   private displayChampionGrid(): void {
@@ -2185,9 +2007,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     this.gridXpBarFills.forEach(g => g.destroy());
     this.gridLevelLabels.forEach(t => t.destroy());
     this.gridCellBackgrounds.forEach(g => g.destroy());
-    if (this.gridBordersGraphics) {
-      this.gridBordersGraphics.destroy(); this.gridBordersGraphics = null;
-    }
+    if (this.gridBordersGraphics) { this.gridBordersGraphics.destroy(); this.gridBordersGraphics = null; }
     this.championSprites = [];
     this.championNameTexts = [];
     this.championDescTexts = [];
@@ -2235,9 +2055,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   }
   private updateGridXpGauge(championId: string): void {
     const index = this.availableChampions.findIndex(id => id === championId);
-    if (index === -1 || index >= this.gridXpContainers.length) {
-      return;
-    }
+    if (index === -1 || index >= this.gridXpContainers.length) return;
 
     const { current, required, level, isUnlocked } = this.getUnifiedEssenceProgressForChampion(championId);
     const pct = Math.max(0, Math.min(1, required > 0 ? current / required : 0));
@@ -2346,18 +2164,16 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     }
 
     switch (resolvedId) {
-    case "brock": return i18next.t("championSelect:brock.description", { defaultValue: "A rock-solid leader." });
-    case "misty": return i18next.t("championSelect:misty.description", { defaultValue: "The tomboyish mermaid." });
-    default: return "";
+      case "brock": return i18next.t("championSelect:brock.description", { defaultValue: "A rock-solid leader." });
+      case "misty": return i18next.t("championSelect:misty.description", { defaultValue: "The tomboyish mermaid." });
+      default: return "";
     }
   }
 
   private getChampionTrainerSpriteKey(championId: string): string {
     try {
       const key = ChampionUtils.getChampionSpriteKey(championId, (this.scene as BattleScene).gameData.gender);
-      if (this.scene.textures.exists(key)) {
-        return key;
-      }
+      if (this.scene.textures.exists(key)) return key;
       const def = CHAMPION_DEFINITIONS[championId];
       const trainerType = (def?.trainerType as unknown as TrainerType) ?? TrainerType.RIVAL;
       const cfg = trainerConfigs[trainerType];
@@ -2412,9 +2228,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   }
 
   private renderSkillsPanel(championId: string): void {
-    if (!this.skillsContainer) {
-      return;
-    }
+    if (!this.skillsContainer) return;
     if (!this.unlocksContainer) {
       this.unlocksContainer = this.scene.add.container(0, 0);
       this.skillsContainer.add(this.unlocksContainer);
@@ -2427,238 +2241,200 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   }
 
   private isSkillDefaultUnlocked(def: any, skill: any): boolean {
-    if (!def || !skill) {
-      return false;
-    }
+    if (!def || !skill) return false;
     const id = skill.unlockableId;
-    if (id === undefined) {
-      return false;
-    }
+    if (id === undefined) return false;
 
     switch (skill.rewardType) {
-    case SkillTreeRewardType.TM_FILTERED:
-      return def.unlockedTMs?.includes(id);
-    case SkillTreeRewardType.XM_FILTERED:
-      return def.unlockedXMs?.includes(id);
-    case SkillTreeRewardType.ABILITY_GRANT:
-    case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
-      return def.unlockedAbilities?.includes(id);
-    case SkillTreeRewardType.SMITTY_ABILITY:
-      return def.unlockedSmittyAbilities?.includes(id);
-    case SkillTreeRewardType.TRAINER_BOND_ABILITY:
-      return def.unlockedConditionalAbilities?.includes(id);
-    case SkillTreeRewardType.MEGA_STONE:
-      return def.unlockedMegaStones?.includes(id);
-    case SkillTreeRewardType.GLITCH_FORM_UNLOCK:
-      return def.unlockedGlitchForms?.some((form: string) =>
-        def.glitchFormUnlockableIds?.[form] === id || form === id
-      );
-    case SkillTreeRewardType.PERMA_ITEM:
-      return def.unlockedPermaItems?.includes(id);
-    case SkillTreeRewardType.STAT_BOOST:
-      return def.unlockedStatBoosts?.includes(id);
-    case SkillTreeRewardType.POKEMON_ALT_BUILD:
-      return def.unlockedAltBuilds?.includes(id);
-    case SkillTreeRewardType.EGG_VOUCHER:
-      return def.unlockedVoucherTiers?.includes(id);
-    case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
-      return def.unlockedSpecificPermaModifiers?.includes(id);
-    case SkillTreeRewardType.MOVE_UPGRADE:
-      return def.unlockedMoveUpgrades?.includes(id);
-    case SkillTreeRewardType.TYPE_SWITCHER:
-      return def.unlockedTypeSwitchers?.includes(id);
-    case SkillTreeRewardType.ESSENCE_BUNDLE:
-      return def.unlockedEssenceBundles?.includes(id);
-    case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
-      return def.unlockedTypeBoosters?.includes(id);
-    case SkillTreeRewardType.TERA_ABILITY:
-      return def.unlockedTeraTypes?.includes(id);
-    case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
-      return def.unlockedBallRaritySelect?.rogue === true;
-    case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
-      return def.unlockedBallRaritySelect?.master === true;
-    case SkillTreeRewardType.MONEY_REWARD:
-      return def.unlockedMoneyReward === true;
-    case SkillTreeRewardType.PERMA_MONEY:
-      return def.unlockedPermaMoney === true;
-    default:
-      return false;
+      case SkillTreeRewardType.TM_FILTERED:
+        return def.unlockedTMs?.includes(id);
+      case SkillTreeRewardType.XM_FILTERED:
+        return def.unlockedXMs?.includes(id);
+      case SkillTreeRewardType.ABILITY_GRANT:
+      case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
+        return def.unlockedAbilities?.includes(id);
+      case SkillTreeRewardType.SMITTY_ABILITY:
+        return def.unlockedSmittyAbilities?.includes(id);
+      case SkillTreeRewardType.TRAINER_BOND_ABILITY:
+        return def.unlockedConditionalAbilities?.includes(id);
+      case SkillTreeRewardType.MEGA_STONE:
+        return def.unlockedMegaStones?.includes(id);
+      case SkillTreeRewardType.GLITCH_FORM_UNLOCK:
+        return def.unlockedGlitchForms?.some((form: string) =>
+          def.glitchFormUnlockableIds?.[form] === id || form === id
+        );
+      case SkillTreeRewardType.PERMA_ITEM:
+        return def.unlockedPermaItems?.includes(id);
+      case SkillTreeRewardType.STAT_BOOST:
+        return def.unlockedStatBoosts?.includes(id);
+      case SkillTreeRewardType.POKEMON_ALT_BUILD:
+        return def.unlockedAltBuilds?.includes(id);
+      case SkillTreeRewardType.EGG_VOUCHER:
+        return def.unlockedVoucherTiers?.includes(id);
+      case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
+        return def.unlockedSpecificPermaModifiers?.includes(id);
+      case SkillTreeRewardType.MOVE_UPGRADE:
+        return def.unlockedMoveUpgrades?.includes(id);
+      case SkillTreeRewardType.TYPE_SWITCHER:
+        return def.unlockedTypeSwitchers?.includes(id);
+      case SkillTreeRewardType.ESSENCE_BUNDLE:
+        return def.unlockedEssenceBundles?.includes(id);
+      case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
+        return def.unlockedTypeBoosters?.includes(id);
+      case SkillTreeRewardType.TERA_ABILITY:
+        return def.unlockedTeraTypes?.includes(id);
+      case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
+        return def.unlockedBallRaritySelect?.rogue === true;
+      case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
+        return def.unlockedBallRaritySelect?.master === true;
+      case SkillTreeRewardType.MONEY_REWARD:
+        return def.unlockedMoneyReward === true;
+      case SkillTreeRewardType.PERMA_MONEY:
+        return def.unlockedPermaMoney === true;
+      default:
+        return false;
     }
   }
 
   private generateDefaultUnlockedSkills(def: any, data?: any): Array<[string, any]> {
     const skills: Array<[string, any]> = [];
-    if (!def) {
-      return skills;
-    }
+    if (!def) return skills;
 
     const nodeGen = new SkillTreeNodeGenerator(0, def.id, this.scene as BattleScene);
     const getTypeName = (t: Type) => {
-      if (t === Type.UNKNOWN) {
-        return "???";
-      }
+      if (t === Type.UNKNOWN) return "???";
       return i18next.t(`pokemonInfo:Type.${Type[t]}`);
     };
     const pushSkill = (type: SkillTreeRewardType, id: string, data: any = {}, label?: string) => {
-      skills.push([id, {
-        rewardType: type,
-        unlockLevel: 0,
-        isDefault: true,
-        data: data,
-        customLabel: label
-      }]);
+        skills.push([id, {
+            rewardType: type,
+            unlockLevel: 0,
+            isDefault: true,
+            data: data,
+            customLabel: label
+        }]);
     };
     const typesList = [def.type1, def.type2].filter((t: any) => t !== undefined);
     const typesLabel = typesList.map(t => getTypeName(t)).join(" / ");
     const hasTypes = typesList.length > 0;
 
     if (def.unlockedTMs?.length) {
-      def.unlockedTMs.forEach((id: any, i: number) => pushSkill(SkillTreeRewardType.TM_FILTERED, `def_tm_${i}`, { moveId: id }));
+        def.unlockedTMs.forEach((id: any, i: number) => pushSkill(SkillTreeRewardType.TM_FILTERED, `def_tm_${i}`, { moveId: id }));
     } else if (hasTypes) {
-      pushSkill(SkillTreeRewardType.TM_FILTERED, "def_tm_gen", { types: typesList }, i18next.t("championSelect:defaultSkillLabels.tms", { types: typesLabel }));
+        pushSkill(SkillTreeRewardType.TM_FILTERED, `def_tm_gen`, { types: typesList }, i18next.t("championSelect:defaultSkillLabels.tms", { types: typesLabel }));
     }
 
     if (def.unlockedXMs?.length) {
-      def.unlockedXMs.forEach((id: any, i: number) => pushSkill(SkillTreeRewardType.XM_FILTERED, `def_xm_${i}`, { moveId: id }));
+        def.unlockedXMs.forEach((id: any, i: number) => pushSkill(SkillTreeRewardType.XM_FILTERED, `def_xm_${i}`, { moveId: id }));
     } else if (hasTypes) {
-      pushSkill(SkillTreeRewardType.XM_FILTERED, "def_xm_gen", { types: typesList }, i18next.t("championSelect:defaultSkillLabels.xms", { types: typesLabel }));
+        pushSkill(SkillTreeRewardType.XM_FILTERED, `def_xm_gen`, { types: typesList }, i18next.t("championSelect:defaultSkillLabels.xms", { types: typesLabel }));
     }
 
     if (hasTypes) {
-      pushSkill(SkillTreeRewardType.ABILITY_GRANT, "def_ability_gen", {}, i18next.t("championSelect:defaultSkillLabels.abilities", { types: typesLabel }));
+      pushSkill(SkillTreeRewardType.ABILITY_GRANT, `def_ability_gen`, {}, i18next.t("championSelect:defaultSkillLabels.abilities", { types: typesLabel }));
     }
 
     def.unlockedAbilities?.forEach((id: any, i: number) => pushSkill(SkillTreeRewardType.PASSIVE_ABILITY_GRANT, `def_pass_${i}`, { abilityId: id }));
     def.unlockedSmittyAbilities?.forEach((id: any, i: number) => pushSkill(SkillTreeRewardType.SMITTY_ABILITY, `def_smit_${i}`, { abilityId: id }));
     def.unlockedConditionalAbilities?.forEach((id: any, i: number) => pushSkill(SkillTreeRewardType.TRAINER_BOND_ABILITY, `def_bond_${i}`, { abilityId: id }));
     if (hasTypes && def.unlockedConditionalAbilities?.length) {
-      pushSkill(SkillTreeRewardType.TERA_ABILITY, "def_tera", {}, i18next.t("championSelect:defaultSkillLabels.teraAbilities", { types: typesLabel }));
+      pushSkill(SkillTreeRewardType.TERA_ABILITY, `def_tera`, {}, i18next.t("championSelect:defaultSkillLabels.teraAbilities", { types: typesLabel }));
     }
 
     if (def.unlockedStatBoosts?.length) {
-      def.unlockedStatBoosts.forEach((id: any, i: number) => {
-        const stats = nodeGen.getChampionStatPreferences(def);
-        const statData = { stats, boostPercent: 0.10 };
-        pushSkill(SkillTreeRewardType.STAT_BOOST, `def_stat_${i}`, statData);
-      });
+         def.unlockedStatBoosts.forEach((id: any, i: number) => {
+             const stats = nodeGen.getChampionStatPreferences(def);
+             const statData = { stats, boostPercent: 0.10 };
+             pushSkill(SkillTreeRewardType.STAT_BOOST, `def_stat_${i}`, statData);
+         });
     } else if (hasTypes) {
-      let prefs: any[] = [];
-      try {
-        prefs = nodeGen.getChampionStatPreferences(def);
-      } catch (e) {}
-      pushSkill(SkillTreeRewardType.STAT_BOOST, "def_stat_gen", { stats: prefs, boostPercent: 0.10 }, i18next.t("championSelect:defaultSkillLabels.statBoosts", { types: typesLabel }));
+         let prefs: any[] = [];
+         try { prefs = nodeGen.getChampionStatPreferences(def); } catch (e) {}
+         pushSkill(SkillTreeRewardType.STAT_BOOST, `def_stat_gen`, { stats: prefs, boostPercent: 0.10 }, i18next.t("championSelect:defaultSkillLabels.statBoosts", { types: typesLabel }));
     }
     const allUnlockedAltBuilds = new Set<string>();
     def.unlockedAltBuilds?.forEach((id: any) => allUnlockedAltBuilds.add(id));
     if (data?.unlockedAltBuilds) {
-      data.unlockedAltBuilds.forEach((id: any) => allUnlockedAltBuilds.add(id));
+        data.unlockedAltBuilds.forEach((id: any) => allUnlockedAltBuilds.add(id));
     }
 
     def.signaturePokemon?.forEach((speciesId: any, i: number) => {
 
-      pushSkill(SkillTreeRewardType.SIGNATURE_POKEMON, `def_sig_${i}`, { species: speciesId });
-      const matchingBuilds = Array.from(allUnlockedAltBuilds).filter(buildId => {
-        const buildDef = POKEMON_ALT_BUILDS[buildId as any];
-        return buildDef && buildDef.species === speciesId;
-      });
-
-      matchingBuilds.forEach((buildId, j) => {
-        const buildDef = POKEMON_ALT_BUILDS[buildId as any];
-        pushSkill(SkillTreeRewardType.POKEMON_ALT_BUILD, `sig_alt_${i}_${j}`, {
-          altBuildId: buildId,
-          species: buildDef?.species,
-          stats: buildDef?.stats,
-          formKey: buildDef?.formKey
+        pushSkill(SkillTreeRewardType.SIGNATURE_POKEMON, `def_sig_${i}`, { species: speciesId });
+        const matchingBuilds = Array.from(allUnlockedAltBuilds).filter(buildId => {
+            const buildDef = POKEMON_ALT_BUILDS[buildId as any];
+            return buildDef && buildDef.species === speciesId;
         });
-        allUnlockedAltBuilds.delete(buildId);
-      });
+
+        matchingBuilds.forEach((buildId, j) => {
+            const buildDef = POKEMON_ALT_BUILDS[buildId as any];
+            pushSkill(SkillTreeRewardType.POKEMON_ALT_BUILD, `sig_alt_${i}_${j}`, {
+                altBuildId: buildId,
+                species: buildDef?.species,
+                stats: buildDef?.stats,
+                formKey: buildDef?.formKey
+            });
+            allUnlockedAltBuilds.delete(buildId);
+        });
     });
     let remIdx = 0;
     allUnlockedAltBuilds.forEach((buildId) => {
-      const buildDef = POKEMON_ALT_BUILDS[buildId as any];
-      pushSkill(SkillTreeRewardType.POKEMON_ALT_BUILD, `rem_alt_${remIdx++}`, {
-        altBuildId: buildId,
-        species: buildDef?.species,
-        stats: buildDef?.stats,
-        formKey: buildDef?.formKey
-      });
+        const buildDef = POKEMON_ALT_BUILDS[buildId as any];
+        pushSkill(SkillTreeRewardType.POKEMON_ALT_BUILD, `rem_alt_${remIdx++}`, {
+            altBuildId: buildId,
+            species: buildDef?.species,
+            stats: buildDef?.stats,
+            formKey: buildDef?.formKey
+        });
     });
 
     def.legendaryPokemon?.forEach((id: any, i: number) => pushSkill(SkillTreeRewardType.LEGENDARY_POKEMON, `def_leg_${i}`, { species: id }));
     if (hasTypes) {
-      pushSkill(SkillTreeRewardType.GENERAL_POKEMON, "def_gen_poke", {});
+        pushSkill(SkillTreeRewardType.GENERAL_POKEMON, `def_gen_poke`, {});
     }
     def.unlockedMegaStones?.forEach((id: any, i: number) => pushSkill(SkillTreeRewardType.MEGA_STONE, `def_mega_${i}`, { megaStone: id }));
     def.unlockedPermaItems?.forEach((id: any, i: number) => pushSkill(SkillTreeRewardType.PERMA_ITEM, `def_perma_${i}`, { permaType: id }));
     def.unlockedMoveUpgrades?.forEach((id: any, i: number) => pushSkill(SkillTreeRewardType.MOVE_UPGRADE, `def_upg_${i}`, { upgradePath: id }));
 
     if (def.unlockedGlitchForms) {
-      def.unlockedGlitchForms.forEach((form: string, i: number) => {
-        pushSkill(SkillTreeRewardType.GLITCH_FORM_UNLOCK, `def_glitch_${i}`, {
-          formKey: form,
-          unlockableId: def.glitchFormUnlockableIds?.[form]
-        });
-      });
+       def.unlockedGlitchForms.forEach((form: string, i: number) => {
+         pushSkill(SkillTreeRewardType.GLITCH_FORM_UNLOCK, `def_glitch_${i}`, {
+             formKey: form,
+             unlockableId: def.glitchFormUnlockableIds?.[form]
+         });
+       });
     }
-    if (def.unlockedHealingItems) {
-      pushSkill(SkillTreeRewardType.HEALING_ITEMS, "def_heal");
-    }
-    if (def.unlockedBerries) {
-      pushSkill(SkillTreeRewardType.BERRY_ITEMS, "def_berry");
-    }
-    if (def.unlockedMemoryMushroom) {
-      pushSkill(SkillTreeRewardType.MEMORY_MUSHROOM, "def_mem");
-    }
-    if (def.unlockedAbilitySwitchers) {
-      pushSkill(SkillTreeRewardType.ABILITY_SWITCHER, "def_absw");
-    }
-    if (def.unlockedGeneralItems) {
-      pushSkill(SkillTreeRewardType.GENERAL_ITEMS, "def_gitem");
-    }
-    if (def.unlockedBaton) {
-      pushSkill(SkillTreeRewardType.BATON_ITEM, "def_baton");
-    }
-    if (def.unlockedPPMax) {
-      pushSkill(SkillTreeRewardType.PP_MAX_ITEM, "def_ppmax");
-    }
-    if (def.unlockedRogueBall) {
-      pushSkill(SkillTreeRewardType.ROGUE_BALL, "def_rball");
-    }
-    if (def.unlockedGoldenPokeball) {
-      pushSkill(SkillTreeRewardType.GOLDEN_POKEBALL, "def_gpball");
-    }
-    if (def.unlockedMasterBall) {
-      pushSkill(SkillTreeRewardType.MASTER_BALL, "def_mball");
-    }
+    if (def.unlockedHealingItems) pushSkill(SkillTreeRewardType.HEALING_ITEMS, `def_heal`);
+    if (def.unlockedBerries) pushSkill(SkillTreeRewardType.BERRY_ITEMS, `def_berry`);
+    if (def.unlockedMemoryMushroom) pushSkill(SkillTreeRewardType.MEMORY_MUSHROOM, `def_mem`);
+    if (def.unlockedAbilitySwitchers) pushSkill(SkillTreeRewardType.ABILITY_SWITCHER, `def_absw`);
+    if (def.unlockedGeneralItems) pushSkill(SkillTreeRewardType.GENERAL_ITEMS, `def_gitem`);
+    if (def.unlockedBaton) pushSkill(SkillTreeRewardType.BATON_ITEM, `def_baton`);
+    if (def.unlockedPPMax) pushSkill(SkillTreeRewardType.PP_MAX_ITEM, `def_ppmax`);
+    if (def.unlockedRogueBall) pushSkill(SkillTreeRewardType.ROGUE_BALL, `def_rball`);
+    if (def.unlockedGoldenPokeball) pushSkill(SkillTreeRewardType.GOLDEN_POKEBALL, `def_gpball`);
+    if (def.unlockedMasterBall) pushSkill(SkillTreeRewardType.MASTER_BALL, `def_mball`);
 
-    if (def.unlockedMoneyReward) {
-      pushSkill(SkillTreeRewardType.MONEY_REWARD, "def_money");
-    }
-    if (def.unlockedPermaMoney) {
-      pushSkill(SkillTreeRewardType.PERMA_MONEY, "def_pmoney", { amount: 3000 });
-    }
-    pushSkill(SkillTreeRewardType.SKILL_TREE_TOKENS, "def_tokens", {}, i18next.t("championSelect:defaultSkillLabels.tokens"));
-    pushSkill(SkillTreeRewardType.SKILL_POINTS, "def_points", {}, i18next.t("championSelect:defaultSkillLabels.points"));
-    if (def.unlockedBallRaritySelect?.master) {
-      pushSkill(SkillTreeRewardType.MASTERBALL_RARITY_SELECT, "def_mball_sel");
-    }
-    if (def.unlockedBallRaritySelect?.rogue) {
-      pushSkill(SkillTreeRewardType.ROGUEBALL_RARITY_SELECT, "def_rball_sel");
-    }
+    if (def.unlockedMoneyReward) pushSkill(SkillTreeRewardType.MONEY_REWARD, `def_money`);
+    if (def.unlockedPermaMoney) pushSkill(SkillTreeRewardType.PERMA_MONEY, `def_pmoney`, { amount: 3000 });
+    pushSkill(SkillTreeRewardType.SKILL_TREE_TOKENS, `def_tokens`, {}, i18next.t("championSelect:defaultSkillLabels.tokens"));
+    pushSkill(SkillTreeRewardType.SKILL_POINTS, `def_points`, {}, i18next.t("championSelect:defaultSkillLabels.points"));
+    if (def.unlockedBallRaritySelect?.master) pushSkill(SkillTreeRewardType.MASTERBALL_RARITY_SELECT, `def_mball_sel`);
+    if (def.unlockedBallRaritySelect?.rogue) pushSkill(SkillTreeRewardType.ROGUEBALL_RARITY_SELECT, `def_rball_sel`);
 
     if (def.unlockedVoucherTiers?.length) {
-      def.unlockedVoucherTiers.forEach((tier: any, i: number) => {
-        pushSkill(SkillTreeRewardType.EGG_VOUCHER, `def_voucher_${i}`, { tier });
-      });
+        def.unlockedVoucherTiers.forEach((tier: any, i: number) => {
+          pushSkill(SkillTreeRewardType.EGG_VOUCHER, `def_voucher_${i}`, { tier });
+        });
     }
 
     if (hasTypes) {
-      pushSkill(SkillTreeRewardType.TYPE_BOOSTER_ITEM, "def_type_boost", {}, i18next.t("championSelect:defaultSkillLabels.boosters", { types: typesLabel }));
-      pushSkill(SkillTreeRewardType.ESSENCE_BUNDLE, "def_essence", {}, i18next.t("championSelect:defaultSkillLabels.essence", { types: typesLabel }));
-      pushSkill(SkillTreeRewardType.REVIVE_BOOST, "def_revive", {}, i18next.t("championSelect:defaultSkillLabels.reviveBoost", { types: typesLabel }));
-      pushSkill(SkillTreeRewardType.ESSENCE_TYPE_WEIGHT, "def_ess_weight", {}, i18next.t("championSelect:defaultSkillLabels.essenceWeights", { types: typesLabel }));
-      pushSkill(SkillTreeRewardType.CATCH_RATE_BONUS, "def_catch", {}, i18next.t("championSelect:defaultSkillLabels.catchBonus", { types: typesLabel }));
-      pushSkill(SkillTreeRewardType.FUSION_SECONDARY_PRIORITY, "def_fusion", {}, i18next.t("championSelect:defaultSkillLabels.fusionPriority", { types: typesLabel }));
+      pushSkill(SkillTreeRewardType.TYPE_BOOSTER_ITEM, `def_type_boost`, {}, i18next.t("championSelect:defaultSkillLabels.boosters", { types: typesLabel }));
+      pushSkill(SkillTreeRewardType.ESSENCE_BUNDLE, `def_essence`, {}, i18next.t("championSelect:defaultSkillLabels.essence", { types: typesLabel }));
+      pushSkill(SkillTreeRewardType.REVIVE_BOOST, `def_revive`, {}, i18next.t("championSelect:defaultSkillLabels.reviveBoost", { types: typesLabel }));
+      pushSkill(SkillTreeRewardType.ESSENCE_TYPE_WEIGHT, `def_ess_weight`, {}, i18next.t("championSelect:defaultSkillLabels.essenceWeights", { types: typesLabel }));
+      pushSkill(SkillTreeRewardType.CATCH_RATE_BONUS, `def_catch`, {}, i18next.t("championSelect:defaultSkillLabels.catchBonus", { types: typesLabel }));
+      pushSkill(SkillTreeRewardType.FUSION_SECONDARY_PRIORITY, `def_fusion`, {}, i18next.t("championSelect:defaultSkillLabels.fusionPriority", { types: typesLabel }));
     }
 
     return skills;
@@ -2675,17 +2451,15 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     const buildsBySpecies = new Map<any, Array<[string, any]>>();
 
     sortedUnlockedSkills.forEach(item => {
-      const [, s] = item;
-      if (s.rewardType === SkillTreeRewardType.POKEMON_ALT_BUILD) {
-        const altBuildId = s.data?.altBuildId || s.unlockableId;
-        const def = POKEMON_ALT_BUILDS[altBuildId as any];
-        if (def?.species) {
-          if (!buildsBySpecies.has(def.species)) {
-            buildsBySpecies.set(def.species, []);
-          }
+        const [, s] = item;
+        if (s.rewardType === SkillTreeRewardType.POKEMON_ALT_BUILD) {
+            const altBuildId = s.data?.altBuildId || s.unlockableId;
+            const def = POKEMON_ALT_BUILDS[altBuildId as any];
+            if (def?.species) {
+                 if (!buildsBySpecies.has(def.species)) buildsBySpecies.set(def.species, []);
                  buildsBySpecies.get(def.species)!.push(item);
+            }
         }
-      }
     });
 
     const finalUnlockedSkills: Array<[string, any]> = [];
@@ -2693,55 +2467,51 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     const placedRealAltBuildIds = new Set<string>();
 
     sortedUnlockedSkills.forEach(item => {
-      const [id, s] = item;
+        const [id, s] = item;
 
-      if (s.rewardType === SkillTreeRewardType.POKEMON_ALT_BUILD) {
-        if (placedAltBuildIds.has(id)) {
-          return;
-        }
+        if (s.rewardType === SkillTreeRewardType.POKEMON_ALT_BUILD) {
+            if (placedAltBuildIds.has(id)) return;
 
-        const altBuildId = s.data?.altBuildId || s.unlockableId;
+            const altBuildId = s.data?.altBuildId || s.unlockableId;
 
-        if (placedRealAltBuildIds.has(altBuildId)) {
-          placedAltBuildIds.add(id);
-          return;
-        }
-
-        const def = POKEMON_ALT_BUILDS[altBuildId as any];
-        const parentExists = sortedUnlockedSkills.some(([, k]) =>
-          k.rewardType === SkillTreeRewardType.SIGNATURE_POKEMON &&
-                (k.data?.species === def?.species || k.unlockableId === def?.species)
-        );
-        if (parentExists) {
-          return;
-        }
-        finalUnlockedSkills.push(item);
-        placedAltBuildIds.add(id);
-        placedRealAltBuildIds.add(altBuildId);
-        return;
-      }
-
-      finalUnlockedSkills.push(item);
-
-      if (s.rewardType === SkillTreeRewardType.SIGNATURE_POKEMON) {
-        const species = s.data?.species || s.unlockableId;
-        const children = buildsBySpecies.get(species);
-        if (children) {
-          children.forEach(child => {
-            const [childId, childS] = child;
-            if (!placedAltBuildIds.has(childId)) {
-              const realId = childS.data?.altBuildId || childS.unlockableId;
-              if (!placedRealAltBuildIds.has(realId)) {
-                finalUnlockedSkills.push(child);
-                placedAltBuildIds.add(childId);
-                placedRealAltBuildIds.add(realId);
-              } else {
-                placedAltBuildIds.add(childId);
-              }
+            if (placedRealAltBuildIds.has(altBuildId)) {
+                placedAltBuildIds.add(id);
+                return;
             }
-          });
+
+            const def = POKEMON_ALT_BUILDS[altBuildId as any];
+            const parentExists = sortedUnlockedSkills.some(([, k]) =>
+                k.rewardType === SkillTreeRewardType.SIGNATURE_POKEMON &&
+                (k.data?.species === def?.species || k.unlockableId === def?.species)
+            );
+            if (parentExists) return;
+            finalUnlockedSkills.push(item);
+            placedAltBuildIds.add(id);
+            placedRealAltBuildIds.add(altBuildId);
+            return;
         }
-      }
+
+        finalUnlockedSkills.push(item);
+
+        if (s.rewardType === SkillTreeRewardType.SIGNATURE_POKEMON) {
+             const species = s.data?.species || s.unlockableId;
+             const children = buildsBySpecies.get(species);
+             if (children) {
+                 children.forEach(child => {
+                     const [childId, childS] = child;
+                     if (!placedAltBuildIds.has(childId)) {
+                         const realId = childS.data?.altBuildId || childS.unlockableId;
+                         if (!placedRealAltBuildIds.has(realId)) {
+                             finalUnlockedSkills.push(child);
+                             placedAltBuildIds.add(childId);
+                             placedRealAltBuildIds.add(realId);
+                         } else {
+                             placedAltBuildIds.add(childId);
+                         }
+                     }
+                 });
+             }
+        }
     });
 
     const lockedSkills = allSkills.filter(([skillId, s]) => !isUnlockedCheck(skillId, s))
@@ -2751,12 +2521,8 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   }
 
   private renderSkillList(championId: string): void {
-    if (!this.skillsContainer) {
-      return;
-    }
-    if (!this.skillListContainer) {
-      return;
-    }
+    if (!this.skillsContainer) return;
+    if (!this.skillListContainer) return;
 
     this.skillItemContainers.forEach(c => c.destroy());
     this.skillItemBgs.forEach(g => g.destroy());
@@ -2880,12 +2646,8 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       this.skillItemContainers.push(container);
       this.skillItemBgs.push(bg);
     }
-    if (this.skillArrowUp) {
-      this.skillArrowUp.setVisible(false);
-    }
-    if (this.skillArrowDown) {
-      this.skillArrowDown.setVisible(this.skillScrollOffset + ChampionSelectUiHandler.UI_CONSTANTS.SKILL_LIST_PANEL.MAX_VISIBLE_SKILLS < skills.length);
-    }
+    if (this.skillArrowUp) this.skillArrowUp.setVisible(false);
+    if (this.skillArrowDown) this.skillArrowDown.setVisible(this.skillScrollOffset + ChampionSelectUiHandler.UI_CONSTANTS.SKILL_LIST_PANEL.MAX_VISIBLE_SKILLS < skills.length);
     if (this.skillTooltipActive) {
       this.updateSkillTooltip(championId);
     } else {
@@ -2894,39 +2656,37 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   }
 
   private getSkillNameOnly(championId: string, s: any): string {
-    if (s.customLabel) {
-      return s.customLabel;
-    }
+    if (s.customLabel) return s.customLabel;
 
     let name: string | undefined;
     const data = s.data || {};
     if (!s.data && s.unlockableId) {
       switch (s.rewardType) {
-      case SkillTreeRewardType.MEGA_STONE:
-        data.megaStone = s.unlockableId;
-        break;
-      case SkillTreeRewardType.TRAINER_BOND_ABILITY:
-      case SkillTreeRewardType.SMITTY_ABILITY:
-      case SkillTreeRewardType.ABILITY_GRANT:
-      case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
-      case SkillTreeRewardType.TERA_ABILITY:
-        data.abilityId = s.unlockableId;
-        break;
-      case SkillTreeRewardType.SIGNATURE_POKEMON:
-      case SkillTreeRewardType.LEGENDARY_POKEMON:
-      case SkillTreeRewardType.GENERAL_POKEMON:
-        data.species = s.unlockableId;
-        break;
-      case SkillTreeRewardType.GLITCH_FORM_UNLOCK:
-        data.unlockableId = s.unlockableId;
-        break;
-      case SkillTreeRewardType.TM_FILTERED:
-      case SkillTreeRewardType.XM_FILTERED:
-        data.moveId = s.unlockableId;
-        break;
-      case SkillTreeRewardType.POKEMON_ALT_BUILD:
-        data.altBuildId = s.unlockableId;
-        break;
+        case SkillTreeRewardType.MEGA_STONE:
+          data.megaStone = s.unlockableId;
+          break;
+        case SkillTreeRewardType.TRAINER_BOND_ABILITY:
+        case SkillTreeRewardType.SMITTY_ABILITY:
+        case SkillTreeRewardType.ABILITY_GRANT:
+        case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
+        case SkillTreeRewardType.TERA_ABILITY:
+          data.abilityId = s.unlockableId;
+          break;
+        case SkillTreeRewardType.SIGNATURE_POKEMON:
+        case SkillTreeRewardType.LEGENDARY_POKEMON:
+        case SkillTreeRewardType.GENERAL_POKEMON:
+          data.species = s.unlockableId;
+          break;
+        case SkillTreeRewardType.GLITCH_FORM_UNLOCK:
+          data.unlockableId = s.unlockableId;
+          break;
+        case SkillTreeRewardType.TM_FILTERED:
+        case SkillTreeRewardType.XM_FILTERED:
+          data.moveId = s.unlockableId;
+          break;
+        case SkillTreeRewardType.POKEMON_ALT_BUILD:
+          data.altBuildId = s.unlockableId;
+          break;
       }
     }
 
@@ -2955,9 +2715,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
   private getDynamicEssenceText(data: any): string | null {
     const reqs = ChampionXPManager.getPerTypeRequiredForLevel(data);
-    if (!reqs || reqs.length === 0) {
-      return null;
-    }
+    if (!reqs || reqs.length === 0) return null;
 
     const parts = reqs.map(req => {
       const current = req.types.reduce((sum, t) => sum + (data.levelEssence?.[t] || 0), 0);
@@ -3017,18 +2775,14 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
     const skills = this.getOrderedSkillList(def, data, allSkills, championUnlocked);
 
-    if (skills.length === 0) {
-      return false;
-    }
+    if (skills.length === 0) return false;
     if (this.selectedSkillIndex < 0) {
       this.selectedSkillIndex = 0;
       this.renderSkillList(selectedChampionId);
       return true;
     }
     const newIndex = (this.selectedSkillIndex + delta + skills.length) % skills.length;
-    if (newIndex === this.selectedSkillIndex) {
-      return false;
-    }
+    if (newIndex === this.selectedSkillIndex) return false;
     this.selectedSkillIndex = newIndex;
     if (this.selectedSkillIndex < this.skillScrollOffset) {
       this.skillScrollOffset = this.selectedSkillIndex;
@@ -3048,17 +2802,13 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     const championUnlocked = this.championManager.isChampionUnlocked(def?.id) || (data?.isUnlocked === true);
     const skills = this.getOrderedSkillList(def, data, allSkills, championUnlocked);
 
-    if (this.selectedSkillIndex < 0 || this.selectedSkillIndex >= skills.length) {
-      return;
-    }
+    if (this.selectedSkillIndex < 0 || this.selectedSkillIndex >= skills.length) return;
 
     const [skillId, skillDef] = skills[this.selectedSkillIndex];
 
     const isUnlockedCheck = (sId: string, s: any) => !!data?.unlockedSkills?.[sId] || (championUnlocked && ((s as any).isDefault || this.isSkillDefaultUnlocked(def, s)));
     const isUnlocked = isUnlockedCheck(skillId, skillDef);
-    if (isUnlocked) {
-      return;
-    }
+    if (isUnlocked) return;
 
     const unlockLevel = (skillDef as any)?.unlockLevel ?? 0;
     const currentLevel = data?.level ?? 1;
@@ -3066,27 +2816,19 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     const canCurrentlyUnlock = currentLevel >= unlockLevel;
     const isImmediatelyUnlockable = championUnlocked ? (isNextLevelUnlock || canCurrentlyUnlock) : (unlockLevel === 1);
 
-    if (!isImmediatelyUnlockable) {
-      return;
-    }
+    if (!isImmediatelyUnlockable) return;
 
     const skillDefWithWeights = data?.lockedSkills?.[skillId];
-    if (!skillDefWithWeights) {
-      return;
-    }
+    if (!skillDefWithWeights) return;
 
     const weights = skillDefWithWeights.requiredEssenceWeights as Array<{ type: Type | Type[] }> | undefined;
-    if (!weights || !weights.length) {
-      return;
-    }
+    if (!weights || !weights.length) return;
 
     const types = weights.flatMap(w => Array.isArray(w.type) ? w.type : [w.type]);
     const hasGlitch = types.includes(Type.GLITCH);
     const hasSmitty = types.includes(Type.SMITTY);
 
-    if (!hasGlitch && !hasSmitty) {
-      return;
-    }
+    if (!hasGlitch && !hasSmitty) return;
 
     const tutorialsToShow: EnhancedTutorial[] = [];
     const tutorialService = (this.scene as BattleScene).gameData.tutorialService;
@@ -3132,9 +2874,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   }
 
   private updateSkillTooltip(championId: string): void {
-    if (!this.skillTooltipContainer || !this.skillTooltipBg || !this.skillTooltipTitle || !this.skillTooltipRarity || !this.skillTooltipDesc) {
-      return;
-    }
+    if (!this.skillTooltipContainer || !this.skillTooltipBg || !this.skillTooltipTitle || !this.skillTooltipRarity || !this.skillTooltipDesc) return;
 
     const viewChampionId = this.resolveChampionId(championId);
     const def = CHAMPION_DEFINITIONS[viewChampionId] as any;
@@ -3146,9 +2886,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
     const skills = this.getOrderedSkillList(def, data, allSkills, championUnlocked);
 
-    if (skills.length === 0) {
-      this.skillTooltipContainer.setVisible(false); return;
-    }
+    if (skills.length === 0) { this.skillTooltipContainer.setVisible(false); return; }
     const [skillId, s] = skills[this.selectedSkillIndex];
     const isUnlocked = isUnlockedCheck(skillId, s);
     const unlockLevel = (s as any)?.unlockLevel ?? 0;
@@ -3184,9 +2922,9 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
         try {
           const dynamicText = this.getDynamicEssenceText(data);
           if (dynamicText) {
-            const header = i18next.t("championSelect:unlockRequired", { requirement: "", defaultValue: "Requires:" }).trim();
-            this.skillTooltipCost.setText(`${header}\n${dynamicText}`);
-            this.skillTooltipCost.setColor("#ffffff");
+             const header = i18next.t("championSelect:unlockRequired", { requirement: "", defaultValue: "Requires:" }).trim();
+             this.skillTooltipCost.setText(`${header}\n${dynamicText}`);
+             this.skillTooltipCost.setColor("#ffffff");
           } else {
             const essenceProgress = ChampionXPManager.getEssenceProgress(data);
             const current = Math.floor(essenceProgress.current);
@@ -3345,15 +3083,19 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       };
 
       if (skillDef.rewardType === SkillTreeRewardType.POKEMON_ALT_BUILD) {
-        const altBuildId = rewardData.data.altBuildId;
-        if (altBuildId && (!rewardData.data.species || rewardData.data.species === altBuildId)) {
-          const def = POKEMON_ALT_BUILDS[altBuildId as any];
-          if (def) {
-            rewardData.data.species = def.species;
-            rewardData.data.stats = def.statFocus;
-            rewardData.data.formKey = def.spriteVariant;
+          const altBuildId = rewardData.data.altBuildId;
+          if (altBuildId && (!rewardData.data.species || rewardData.data.species === altBuildId)) {
+               const def = POKEMON_ALT_BUILDS[altBuildId as any];
+               if (def) {
+                   rewardData.data.species = def.species;
+                   rewardData.data.stats = def.statFocus;
+                   rewardData.data.formKey = def.spriteVariant;
+               }
           }
-        }
+      }
+
+      if (rewardData.type === SkillTreeRewardType.GENERAL_POKEMON && rewardData.data && rewardData.data.unlockLevel === undefined) {
+        rewardData.data.unlockLevel = unlockLevel;
       }
 
       return nodeGen.getRewardDescription(rewardData);
@@ -3376,139 +3118,135 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       : i18next.t("championSelect:tooltip.typesFallback", { defaultValue: "Unknown" });
 
     switch (skillDef.rewardType) {
-    case SkillTreeRewardType.TM_FILTERED: {
-      if (skillDef.data?.moveId !== undefined) {
-        return {};
+      case SkillTreeRewardType.TM_FILTERED: {
+        if (skillDef.data?.moveId !== undefined) return {};
+        const defaultValue = `Teach a ${typeLabel} TM to a Pokémon`;
+        return {
+          overrideDesc: i18next.t("championSelect:tooltip.defaultTm", { types: typeLabel, defaultValue })
+        };
       }
-      const defaultValue = `Teach a ${typeLabel} TM to a Pokémon`;
-      return {
-        overrideDesc: i18next.t("championSelect:tooltip.defaultTm", { types: typeLabel, defaultValue })
-      };
-    }
-    case SkillTreeRewardType.XM_FILTERED: {
-      if (skillDef.data?.moveId !== undefined) {
-        return {};
+      case SkillTreeRewardType.XM_FILTERED: {
+        if (skillDef.data?.moveId !== undefined) return {};
+        const defaultValue = `Teach a ${typeLabel} XM to a Pokémon`;
+        return {
+          overrideDesc: i18next.t("championSelect:tooltip.defaultXm", { types: typeLabel, defaultValue })
+        };
       }
-      const defaultValue = `Teach a ${typeLabel} XM to a Pokémon`;
-      return {
-        overrideDesc: i18next.t("championSelect:tooltip.defaultXm", { types: typeLabel, defaultValue })
-      };
-    }
-    case SkillTreeRewardType.ESSENCE_BUNDLE: {
-      const amount = skillDef.data?.amount ?? 5;
-      const normalizedData = {
-        ...(skillDef.data || {}),
-        type: types[0] ?? Type.UNKNOWN,
-        amount
-      };
-      const defaultValue = `Add ${amount} ${typeLabel} Type Essences to your collection`;
-      return {
-        overrideDesc: i18next.t("championSelect:tooltip.defaultEssence", { types: typeLabel, amount, defaultValue }),
-        normalizedData
-      };
-    }
-    case SkillTreeRewardType.TYPE_BOOSTER_ITEM: {
-      const normalizedData = {
-        ...(skillDef.data || {}),
-        type: types[0] ?? Type.UNKNOWN
-      };
-      const defaultValue = `Receive a ${typeLabel} Type Booster item`;
-      return {
-        overrideDesc: i18next.t("championSelect:tooltip.defaultBooster", { types: typeLabel, defaultValue }),
-        normalizedData
-      };
-    }
-    case SkillTreeRewardType.REVIVE_BOOST: {
-      const amount = skillDef.data?.amount ?? 0.15;
-      const normalizedData = {
-        ...(skillDef.data || {}),
-        types: types.length ? types : [Type.UNKNOWN],
-        amount
-      };
-      const percent = Math.round(amount * 100);
-      const defaultValue = `Increase revive chance for ${typeLabel} Pokémon by ${percent}%`;
-      return {
-        overrideDesc: i18next.t("championSelect:tooltip.defaultRevive", { types: typeLabel, percent, defaultValue }),
-        normalizedData
-      };
-    }
-    case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT: {
-      const weight = skillDef.data?.weight ?? 1;
-      const normalizedData = {
-        ...(skillDef.data || {}),
-        type: types[0] ?? Type.UNKNOWN,
-        weight
-      };
-      const defaultValue = `Increase ${typeLabel} Essence drop weight by ${weight}`;
-      return {
-        overrideDesc: i18next.t("championSelect:tooltip.defaultEssenceWeight", { types: typeLabel, weight, defaultValue }),
-        normalizedData
-      };
-    }
-    case SkillTreeRewardType.CATCH_RATE_BONUS: {
-      const amount = skillDef.data?.amount ?? 0.1;
-      const normalizedData = {
-        ...(skillDef.data || {}),
-        types: types.length ? types : [Type.UNKNOWN],
-        amount
-      };
-      const percent = Math.round(amount * 100);
-      const defaultValue = `Increase catch rate for ${typeLabel} Pokémon by ${percent}%`;
-      return {
-        overrideDesc: i18next.t("championSelect:tooltip.defaultCatchRate", { types: typeLabel, percent, defaultValue }),
-        normalizedData
-      };
-    }
-    case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY: {
-      const normalizedData = {
-        ...(skillDef.data || {}),
-        types: types.length ? types : [Type.UNKNOWN]
-      };
-      const defaultValue = `Increase fusion priority for ${typeLabel} Pokémon`;
-      return {
-        overrideDesc: i18next.t("championSelect:tooltip.defaultFusionPriority", { types: typeLabel, defaultValue }),
-        normalizedData
-      };
-    }
-    case SkillTreeRewardType.TERA_ABILITY: {
-      const normalizedData = {
-        ...(skillDef.data || {}),
-        types: types.length ? types : [Type.UNKNOWN]
-      };
-      const defaultValue = `Use ${typeLabel} to activate Tera Abilities`;
-      return {
-        overrideDesc: i18next.t("championSelect:tooltip.defaultTeraAbility", { types: typeLabel, defaultValue }),
-        normalizedData
-      };
-    }
-    case SkillTreeRewardType.SKILL_TREE_TOKENS: {
-      const defaultValue = "Receive X Skill Tree Tokens to unlock nodes";
-      return {
-        overrideDesc: i18next.t("championSelect:tooltip.defaultTokens", { defaultValue })
-      };
-    }
-    case SkillTreeRewardType.SKILL_POINTS: {
-      const defaultValue = "Receive X Skill Points to purchase skills";
-      return {
-        overrideDesc: i18next.t("championSelect:tooltip.defaultPoints", { defaultValue })
-      };
-    }
-    case SkillTreeRewardType.MOVE_UPGRADE: {
-      const upgradePath = skillDef.data?.upgradePath;
-      if (upgradePath === undefined) {
-        return {};
+      case SkillTreeRewardType.ESSENCE_BUNDLE: {
+        const amount = skillDef.data?.amount ?? 5;
+        const normalizedData = {
+          ...(skillDef.data || {}),
+          type: types[0] ?? Type.UNKNOWN,
+          amount
+        };
+        const defaultValue = `Add ${amount} ${typeLabel} Type Essences to your collection`;
+        return {
+          overrideDesc: i18next.t("championSelect:tooltip.defaultEssence", { types: typeLabel, amount, defaultValue }),
+          normalizedData
+        };
       }
-      const normalizedData = {
-        ...(skillDef.data || {}),
-        filterUpgrades: {
-          ...(skillDef.data?.filterUpgrades || {}),
-          moveUpgrades: [upgradePath]
+      case SkillTreeRewardType.TYPE_BOOSTER_ITEM: {
+        const normalizedData = {
+          ...(skillDef.data || {}),
+          type: types[0] ?? Type.UNKNOWN
+        };
+        const defaultValue = `Receive a ${typeLabel} Type Booster item`;
+        return {
+          overrideDesc: i18next.t("championSelect:tooltip.defaultBooster", { types: typeLabel, defaultValue }),
+          normalizedData
+        };
+      }
+      case SkillTreeRewardType.REVIVE_BOOST: {
+        const amount = skillDef.data?.amount ?? 0.15;
+        const normalizedData = {
+          ...(skillDef.data || {}),
+          types: types.length ? types : [Type.UNKNOWN],
+          amount
+        };
+        const percent = Math.round(amount * 100);
+        const defaultValue = `Increase revive chance for ${typeLabel} Pokémon by ${percent}%`;
+        return {
+          overrideDesc: i18next.t("championSelect:tooltip.defaultRevive", { types: typeLabel, percent, defaultValue }),
+          normalizedData
+        };
+      }
+      case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT: {
+        const weight = skillDef.data?.weight ?? 1;
+        const normalizedData = {
+          ...(skillDef.data || {}),
+          type: types[0] ?? Type.UNKNOWN,
+          weight
+        };
+        const defaultValue = `Increase ${typeLabel} Essence drop weight by ${weight}`;
+        return {
+          overrideDesc: i18next.t("championSelect:tooltip.defaultEssenceWeight", { types: typeLabel, weight, defaultValue }),
+          normalizedData
+        };
+      }
+      case SkillTreeRewardType.CATCH_RATE_BONUS: {
+        const amount = skillDef.data?.amount ?? 0.1;
+        const normalizedData = {
+          ...(skillDef.data || {}),
+          types: types.length ? types : [Type.UNKNOWN],
+          amount
+        };
+        const percent = Math.round(amount * 100);
+        const defaultValue = `Increase catch rate for ${typeLabel} Pokémon by ${percent}%`;
+        return {
+          overrideDesc: i18next.t("championSelect:tooltip.defaultCatchRate", { types: typeLabel, percent, defaultValue }),
+          normalizedData
+        };
+      }
+      case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY: {
+        const normalizedData = {
+          ...(skillDef.data || {}),
+          types: types.length ? types : [Type.UNKNOWN]
+        };
+        const defaultValue = `Increase fusion priority for ${typeLabel} Pokémon`;
+        return {
+          overrideDesc: i18next.t("championSelect:tooltip.defaultFusionPriority", { types: typeLabel, defaultValue }),
+          normalizedData
+        };
+      }
+      case SkillTreeRewardType.TERA_ABILITY: {
+        const normalizedData = {
+          ...(skillDef.data || {}),
+          types: types.length ? types : [Type.UNKNOWN]
+        };
+        const defaultValue = `Use ${typeLabel} to activate Tera Abilities`;
+        return {
+          overrideDesc: i18next.t("championSelect:tooltip.defaultTeraAbility", { types: typeLabel, defaultValue }),
+          normalizedData
+        };
+      }
+      case SkillTreeRewardType.SKILL_TREE_TOKENS: {
+        const defaultValue = `Receive X Skill Tree Tokens to unlock nodes`;
+        return {
+          overrideDesc: i18next.t("championSelect:tooltip.defaultTokens", { defaultValue })
+        };
+      }
+      case SkillTreeRewardType.SKILL_POINTS: {
+        const defaultValue = `Receive X Skill Points to purchase skills`;
+        return {
+          overrideDesc: i18next.t("championSelect:tooltip.defaultPoints", { defaultValue })
+        };
+      }
+      case SkillTreeRewardType.MOVE_UPGRADE: {
+        const upgradePath = skillDef.data?.upgradePath;
+        if (upgradePath === undefined) {
+          return {};
         }
-      };
-      return { normalizedData };
-    }
-    default:
-      return {};
+        const normalizedData = {
+          ...(skillDef.data || {}),
+          filterUpgrades: {
+            ...(skillDef.data?.filterUpgrades || {}),
+            moveUpgrades: [upgradePath]
+          }
+        };
+        return { normalizedData };
+      }
+      default:
+        return {};
     }
   }
 
@@ -3576,18 +3314,18 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
           this.applyLockedSpriteEffect(sprite, true);
         } else {
 
-          sprite.resetPipeline();
-          sprite.setTint(0xffcc00);
-          sprite.setAlpha(1.0);
-          sprite.setBlendMode(Phaser.BlendModes.NORMAL);
+        sprite.resetPipeline();
+        sprite.setTint(0xffcc00);
+        sprite.setAlpha(1.0);
+        sprite.setBlendMode(Phaser.BlendModes.NORMAL);
         }
       } else {
 
         const baseScale = this.getGridScaleForChampion(id);
         sprite.setScale(baseScale);
         if (isUnlocked) {
-          sprite.resetPipeline();
-          sprite.clearTint();
+        sprite.resetPipeline();
+        sprite.clearTint();
           sprite.setAlpha(1.0);
           sprite.setBlendMode(Phaser.BlendModes.NORMAL);
         } else {
@@ -3598,9 +3336,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   }
 
   private layoutSkillListPanel(): void {
-    if (!this.skillListPanelContainer || !this.skillListPanelBg) {
-      return;
-    }
+    if (!this.skillListPanelContainer || !this.skillListPanelBg) return;
 
     const halfWidth = Math.floor(ChampionSelectUiHandler.UI_CONSTANTS.SKILL_LIST_PANEL.WIDTH / 2);
     const radius = ChampionSelectUiHandler.UI_CONSTANTS.SKILL_LIST_PANEL.RADIUS;
@@ -3659,12 +3395,8 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   }
 
   private displayFullChampionSprite(championId: string): void {
-    if (this.fullChampionSprite) {
-      this.fullChampionSprite.destroy(); this.fullChampionSprite = null;
-    }
-    if (this.fullChampionTintSprite) {
-      this.fullChampionTintSprite.destroy(); this.fullChampionTintSprite = null;
-    }
+    if (this.fullChampionSprite) { this.fullChampionSprite.destroy(); this.fullChampionSprite = null; }
+    if (this.fullChampionTintSprite) { this.fullChampionTintSprite.destroy(); this.fullChampionTintSprite = null; }
 
     const key = this.getChampionTrainerSpriteKey(championId);
     const isUnlocked = this.championManager.isChampionUnlocked(championId) || (this.championManager.getChampionData(championId)?.isUnlocked === true);
@@ -3689,9 +3421,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     try {
       const def = CHAMPION_DEFINITIONS[championId] as any;
       const offset = def?.ui?.previewOffsetY;
-      if (typeof offset === "number") {
-        return offset;
-      }
+      if (typeof offset === "number") return offset;
     } catch {}
     return ChampionSelectUiHandler.UI_CONSTANTS.PREVIEW.SPRITE_Y;
   }
@@ -3700,9 +3430,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     try {
       const def = CHAMPION_DEFINITIONS[championId] as any;
       const offset = def?.ui?.gridOffsetY;
-      if (typeof offset === "number") {
-        return offset;
-      }
+      if (typeof offset === "number") return offset;
     } catch {}
     return 0;
   }
@@ -3711,9 +3439,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     try {
       const def = CHAMPION_DEFINITIONS[championId] as any;
       const scale = def?.ui?.gridScale;
-      if (typeof scale === "number") {
-        return scale;
-      }
+      if (typeof scale === "number") return scale;
     } catch {}
     return ChampionSelectUiHandler.UI_CONSTANTS.GRID.SPRITE_SCALE;
   }
@@ -3722,9 +3448,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     try {
       const def = CHAMPION_DEFINITIONS[championId] as any;
       const scale = def?.ui?.previewScale;
-      if (typeof scale === "number") {
-        return scale;
-      }
+      if (typeof scale === "number") return scale;
     } catch {}
     return ChampionSelectUiHandler.UI_CONSTANTS.PREVIEW.SPRITE_SCALE;
   }
@@ -3800,9 +3524,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     this.updateEssenceListPanel(championId);
   }
   private updateEssenceListPanel(championId: string): void {
-    if (!this.essenceListContainer) {
-      return;
-    }
+    if (!this.essenceListContainer) return;
 
     const gd = (this.scene as BattleScene).gameData;
     const isUnlocked = this.championManager.isChampionUnlockedInData(championId);
@@ -3811,16 +3533,10 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       const data = this.championManager.getChampionData(championId);
       const perTypeReq = (ChampionXPManager as any).getPerTypeRequiredForLevel?.(data) as Array<{ types: Type[]; amount: number }> | null;
       if (perTypeReq && perTypeReq.length) {
-        for (const seg of perTypeReq) {
-          (seg.types || []).forEach(t => {
-            if (typeof t === "number") {
-              requiredTypesSet.add(t);
-            }
-          });
-        }
+        for (const seg of perTypeReq) (seg.types || []).forEach(t => { if (typeof t === 'number') requiredTypesSet.add(t); });
       } else {
         const def = CHAMPION_DEFINITIONS[championId] as any;
-        [def?.type1, def?.type2].filter((t: any) => typeof t === "number").forEach((t: Type) => requiredTypesSet.add(t));
+        [def?.type1, def?.type2].filter((t: any) => typeof t === 'number').forEach((t: Type) => requiredTypesSet.add(t));
       }
     } else {
       const segments = this.buildLockedSegments(championId);
@@ -3840,17 +3556,13 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       rows.push({ type: (Type as any).SMITTY, count: smittyCount, isSpecial: true });
     }
     rows.sort((a, b) => {
-      if (a.isSpecial && !b.isSpecial) {
-        return 1;
-      }
-      if (!a.isSpecial && b.isSpecial) {
-        return -1;
-      }
+      if (a.isSpecial && !b.isSpecial) return 1;
+      if (!a.isSpecial && b.isSpecial) return -1;
       return b.count - a.count;
     });
     const currentSignature = this.getEssenceListSignature(rows);
     const onlyCountsChanged = this.lastEssenceListSignature !== null &&
-      this.lastEssenceListSignature.replace(/(:\d+:)/g, ":0:") === currentSignature.replace(/(:\d+:)/g, ":0:");
+      this.lastEssenceListSignature.replace(/(:\d+:)/g, ':0:') === currentSignature.replace(/(:\d+:)/g, ':0:');
     this.lastEssenceListSignature = currentSignature;
     if (onlyCountsChanged && this.essenceListItems.length > 0) {
 
@@ -3869,12 +3581,10 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       }
       return;
     }
-    this.essenceListItems.forEach(i => {
-      i.icon.destroy(); i.text.destroy();
-    });
+    this.essenceListItems.forEach(i => { i.icon.destroy(); i.text.destroy(); });
     this.essenceListItems = [];
     let y = ChampionSelectUiHandler.UI_CONSTANTS.ESSENCE_LIST.START_Y;
-    const x = ChampionSelectUiHandler.UI_CONSTANTS.ESSENCE_LIST.START_X;
+    let x = ChampionSelectUiHandler.UI_CONSTANTS.ESSENCE_LIST.START_X;
     for (const r of rows) {
       const t = r.type;
       const isGlitch = (t === (Type as any).GLITCH);
@@ -3956,7 +3666,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     this.onCommitBegin();
 
     const isUnlocked = this.championManager.isChampionUnlockedInData(championId);
-    const previousLevel = data?.level || 1;
+    let previousLevel = data?.level || 1;
 
     this.essenceHoldTimer = this.scene.time.addEvent({ delay: TICK_MS, loop: true, callback: () => {
 
@@ -3970,20 +3680,14 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       while (batches < MAX_BATCHES_PER_FRAME) {
         const currentData = this.championManager.getChampionData(championId);
         const currentLvl = currentData?.level || 1;
-        if (currentLvl > previousLevel) {
-          break;
-        }
+        if (currentLvl > previousLevel) break;
 
         const curProg = ChampionXPManager.getEssenceProgress(currentData);
         const curRemaining = Math.max(0, curProg.required - curProg.current);
-        if (curRemaining <= 0 && isUnlocked) {
-          break;
-        }
+        if (curRemaining <= 0 && isUnlocked) break;
 
         let amount = isUnlocked ? Math.min(baseBatch, Math.floor(curRemaining)) : baseBatch;
-        if (amount < 1) {
-          amount = 1;
-        }
+        if (amount < 1) amount = 1;
 
         let consumed = false;
 
@@ -3991,30 +3695,22 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
           const ok = isUnlocked
             ? ChampionXPManager.tryConsumeEssenceForLevel(this.scene as any, championId, essenceType, amount)
             : this.tryConsumeEssenceForChampion(championId, essenceType, amount);
-          if (ok) {
-            consumed = true; break;
-          }
+          if (ok) { consumed = true; break; }
           amount = Math.floor(amount / 2);
         }
         if (!consumed) {
 
           essenceType = nextType();
           let amount2 = isUnlocked ? Math.min(baseBatch, Math.floor(curRemaining)) : baseBatch;
-          if (amount2 < 1) {
-            amount2 = 1;
-          }
+          if (amount2 < 1) amount2 = 1;
           while (amount2 >= 1) {
             const retry = isUnlocked
               ? ChampionXPManager.tryConsumeEssenceForLevel(this.scene as any, championId, essenceType, amount2)
               : this.tryConsumeEssenceForChampion(championId, essenceType, amount2);
-            if (retry) {
-              consumed = true; break;
-            }
+            if (retry) { consumed = true; break; }
             amount2 = Math.floor(amount2 / 2);
           }
-          if (!consumed) {
-            break;
-          }
+          if (!consumed) break;
         }
         batches++;
       }
@@ -4058,18 +3754,18 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
         const reqs = ChampionXPManager.getPerTypeRequiredForLevel(data);
         if (reqs && reqs.length > 0) {
 
-          required = reqs.reduce((sum, req) => sum + req.amount, 0);
-          current = reqs.reduce((sum, req) => {
+           required = reqs.reduce((sum, req) => sum + req.amount, 0);
+           current = reqs.reduce((sum, req) => {
 
-            const segmentContribution = req.types.reduce((tSum, t) => tSum + ((data as any).levelEssence?.[t] || 0), 0);
+               const segmentContribution = req.types.reduce((tSum, t) => tSum + ((data as any).levelEssence?.[t] || 0), 0);
 
-            return sum + Math.min(segmentContribution, req.amount);
-          }, 0);
+               return sum + Math.min(segmentContribution, req.amount);
+           }, 0);
         } else {
 
-          const essenceProgress = ChampionXPManager.getEssenceProgress(data);
-          current = Math.floor(essenceProgress.current);
-          required = Math.floor(essenceProgress.required);
+           const essenceProgress = ChampionXPManager.getEssenceProgress(data);
+           current = Math.floor(essenceProgress.current);
+           required = Math.floor(essenceProgress.required);
         }
         return { current, required, level, isUnlocked };
       }
@@ -4134,19 +3830,15 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
     );
 
     if (isUnlocked) {
-      perTryAmount = Math.min(perTryAmount, Math.floor(remaining));
-      if (perTryAmount < 1) {
-        perTryAmount = 1;
-      }
+        perTryAmount = Math.min(perTryAmount, Math.floor(remaining));
+        if (perTryAmount < 1) perTryAmount = 1;
     }
 
     for (const t of finalTryTypes) {
       const ok = isUnlocked
         ? ChampionXPManager.tryConsumeEssenceForLevel(this.scene as any, championId, t, perTryAmount)
         : this.tryConsumeEssenceForChampion(championId, t, perTryAmount);
-      if (ok) {
-        return { success: true, amount: perTryAmount };
-      }
+      if (ok) return { success: true, amount: perTryAmount };
     }
     return { success: false, amount: 0 };
   }
@@ -4158,20 +3850,14 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
     let missingForType = 0;
     for (const seg of segments) {
-      if (!seg.types.includes(essenceType)) {
-        continue;
-      }
+      if (!seg.types.includes(essenceType)) continue;
       const segCurrent = seg.types.reduce((sum, t) => sum + (committed[t] || 0), 0);
       missingForType += Math.max(0, seg.amount - segCurrent);
     }
     const amountToConsume = Math.min(amount, missingForType);
-    if (amountToConsume <= 0) {
-      return false;
-    }
+    if (amountToConsume <= 0) return false;
     const ok = gd.tryConsumeEssence(essenceType, amountToConsume);
-    if (!ok) {
-      return false;
-    }
+    if (!ok) return false;
 
     gd.championData = gd.championData || {};
     gd.championData[championId] = gd.championData[championId] || {};
@@ -4188,12 +3874,8 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
       this.showUnlockAnimation(championId);
 
-      try {
-        this.updateChampionInfo();
-      } catch {}
-      try {
-        (this.scene as BattleScene).gameData.saveSystem?.();
-      } catch {}
+      try { this.updateChampionInfo(); } catch {}
+      try { (this.scene as BattleScene).gameData.saveSystem?.(); } catch {}
     }
     return true;
   }
@@ -4246,15 +3928,13 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
   private tweenVisualPctTo(target: number): void {
     const start = this.visualEssencePct || 0;
-    if (Math.abs(target - start) < 0.001) {
-      return;
-    }
+    if (Math.abs(target - start) < 0.001) return;
     const o = { t: 0 };
     this.scene.tweens.add({
       targets: o,
       t: 1,
       duration: 200,
-      ease: "Quad.easeOut",
+      ease: 'Quad.easeOut',
       onUpdate: () => {
         this.visualEssencePct = Phaser.Math.Linear(start, target, o.t);
       }
@@ -4263,9 +3943,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
   private animateSegmentFills(): void {
     const selectedChampionId = this.availableChampions[this.selectedChampionIndex];
-    if (!selectedChampionId) {
-      return;
-    }
+    if (!selectedChampionId) return;
     this.segmentFillFactor = 1.0;
     this.updateEssenceGauge(selectedChampionId);
   }
@@ -4284,24 +3962,16 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       const aHasSmitty = a.types.includes((Type as any).SMITTY);
       const bHasGlitch = b.types.includes((Type as any).GLITCH);
       const bHasSmitty = b.types.includes((Type as any).SMITTY);
-      if (aHasSmitty && !bHasSmitty) {
-        return 1;
-      }
-      if (!aHasSmitty && bHasSmitty) {
-        return -1;
-      }
-      if (aHasGlitch && !bHasGlitch && !bHasSmitty) {
-        return 1;
-      }
-      if (!aHasGlitch && bHasGlitch && !aHasSmitty) {
-        return -1;
-      }
+      if (aHasSmitty && !bHasSmitty) return 1;
+      if (!aHasSmitty && bHasSmitty) return -1;
+      if (aHasGlitch && !bHasGlitch && !bHasSmitty) return 1;
+      if (!aHasGlitch && bHasGlitch && !aHasSmitty) return -1;
       return 0;
     });
 
     const n = Math.max(1, sortedSegments.length);
     const base = Math.floor(barW / n);
-    const rem = barW - base * n;
+    let rem = barW - base * n;
     const widths = new Array(n).fill(base).map((w, i) => (i < rem ? w + 1 : w));
 
     let cursor = barX;
@@ -4310,9 +3980,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
       const progress = Math.min(getCurrentForTypes(seg.types), seg.amount);
       const targetW = Math.min(segW, Math.floor(segW * (seg.amount > 0 ? progress / seg.amount : 0)));
       const g = this.xpBarFillSegments[i];
-      if (!g) {
-        cursor += segW; return;
-      }
+      if (!g) { cursor += segW; return; }
       const segmentStartX = cursor;
       const state = { w: (g as any)._currentWidth || 0 };
       const textLabel = this.xpBarSegmentTexts[i];
@@ -4321,11 +3989,9 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
         targets: state,
         w: targetW,
         duration: 300,
-        ease: "Cubic.easeOut",
+        ease: 'Cubic.easeOut',
         onUpdate: () => {
-          if (!g || !g.active) {
-            return;
-          }
+          if (!g || !g.active) return;
 
           g.clear();
           if (state.w > 0) {
@@ -4345,9 +4011,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
             }
           }
         },
-        onComplete: () => {
-          (g as any)._currentWidth = targetW;
-        }
+        onComplete: () => { (g as any)._currentWidth = targetW; }
       });
       this.xpBarSegmentTweens.push(tween);
 
@@ -4357,9 +4021,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
   private updateSegmentFillsOnly(segments: Array<{ types: Type[]; amount: number }>, getCurrentForTypes: (types: Type[]) => number): void {
 
-    if (this.xpBarFillSegments.length !== segments.length) {
-      return;
-    }
+    if (this.xpBarFillSegments.length !== segments.length) return;
 
     const barX = -ChampionSelectUiHandler.UI_CONSTANTS.XP_BAR.FILL_WIDTH / 2;
     const barY = ChampionSelectUiHandler.UI_CONSTANTS.XP_BAR.FILL_Y;
@@ -4368,7 +4030,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
     const n = Math.max(1, segments.length);
     const base = Math.floor(barW / n);
-    const rem = barW - base * n;
+    let rem = barW - base * n;
     const widths = new Array(n).fill(base).map((w, i) => (i < rem ? w + 1 : w));
 
     let cursor = barX;
@@ -4395,9 +4057,7 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
   }
 
   private ensureXpLabelTicker(targetCurrent: number): void {
-    if (this.xpLabelTicker) {
-      return;
-    }
+    if (this.xpLabelTicker) return;
     this.xpLabelTicker = this.scene.time.addEvent({ delay: 16, loop: true, callback: () => {
       if (this.visualCurrentEssence >= targetCurrent) {
         this.xpLabelTicker?.remove(false);

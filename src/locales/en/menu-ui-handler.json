@@ -29,6 +29,7 @@
   "unlinkGoogle": "Unlink Google",
   "cancel": "Cancel",
   "losingProgressionWarning": "You will lose any progress since the beginning of the battle. Proceed?",
+  "losingProgressionWarningPerTurn": "To prevent unintended battle restarts, the game auto saves each turn.",
   "noEggs": "You are not hatching\nany eggs at the moment!",
   "dataOverrideWarning": "Your data will be overridden and the page will reload. Proceed?",
   "importFailed": "Failed to import save data. The file may be corrupted.",

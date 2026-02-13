@@ -448,14 +448,14 @@
     },
     "GlitchPieceModifierType": {
       "name": "グリッチピース",
-      "description": "不思議なグリッチのかけら。\n非常に強力なグリッチアイテムにアクセスできます。"
+      "description": "不思議なグリッチのかけら。（所持: {{glitchPieceAmount}}）\n非常に強力なグリッチアイテムにアクセスできます。"
     },
     "FormChangeItemModifierSmittyItem": {
       "description": "禁止：ポケモンに特定の4つのSMITTYアイテムの組み合わせを与えると..."
     },
     "PermaModifierType": {
       "PERMA_PARTY_ABILITY": {
-        "name": "SMITTY パーティ特性",
+        "name": "Smitty パーティ: {{abilityName}}",
         "description": "パーティの全ポケモンに{{abilityName}}を付与"
       },
       "PERMA_NEW_NORMAL": {

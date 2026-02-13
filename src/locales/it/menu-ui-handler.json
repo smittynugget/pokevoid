@@ -29,6 +29,7 @@
   "unlinkGoogle": "Scollega Google",
   "cancel": "Annulla",
   "losingProgressionWarning": "Perderai tutti i progressi dall'inizio della battaglia. Confermi?",
+  "losingProgressionWarningPerTurn": "Per evitare riavvii indesiderati, il gioco salva automaticamente ogni turno.",
   "noEggs": "Non stai schiudendo\nuova al momento!",
   "dataOverrideWarning": "I tuoi dati verranno sovrascritti e la pagina verrà ricaricata. Procedere?",
   "importFailed": "Impossibile importare i dati di salvataggio. Il file potrebbe essere corrotto.",

@@ -29,6 +29,7 @@
   "unlinkGoogle": "Desconectar Google",
   "cancel": "Cancelar",
   "losingProgressionWarning": "Perderás cualquier progreso desde el inicio de la batalla. ¿Continuar?",
+  "losingProgressionWarningPerTurn": "Para evitar reinicios no deseados, el juego guarda automáticamente cada turno.",
   "dataOverrideWarning": "Tus datos serán sobrescritos y la página se recargará. ¿Continuar?",
   "importFailed": "Error al importar datos guardados. El archivo podría estar corrupto.",
   "dataCorrupted": "No se pudieron cargar tus datos. Podrían estar corruptos.",

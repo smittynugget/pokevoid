@@ -78,7 +78,7 @@
     "masterBall": "Master Ball (x1)",
     "eggVoucher": "Buono Uovo ({{tier}})",
     "relicGold": "Oro Reliquia",
-    "permaMoney": "Denaro Permanente: {{amount}}",
+    "permaMoney": "ΩORO: {{amount}}",
     "catchBonus": "{{types}} +{{percent}}% Tasso Cattura",
     "essenceTypeWeight": "Peso Essenza: {{type}} x{{weight}}",
     "fusionSecondaryPriority": "Più Fusioni {{types}}",
@@ -101,7 +101,8 @@
     "generalItems": "Oggetti Generali",
     "batonItem": "Staffetta",
     "ppMaxItem": "PP Max",
-    "rogueBall": "Rogue Ball (x5)"
+    "rogueBall": "Rogue Ball (x5)",
+    "partyAbilityGrant": "Abilità di Squadra"
   },
   "descriptions": {
     "statFocusLabel": "Focus Statistiche:",

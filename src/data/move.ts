@@ -67,6 +67,7 @@ import { BattleEndPhase } from "#app/phases/battle-end-phase";
 import { MoveEndPhase } from "#app/phases/move-end-phase";
 import { MovePhase } from "#app/phases/move-phase";
 import { NewBattlePhase } from "#app/phases/new-battle-phase";
+import { BattlePathPhase } from "#app/phases/battle-path-phase";
 import { PokemonHealPhase } from "#app/phases/pokemon-heal-phase";
 import { StatChangePhase } from "#app/phases/stat-change-phase";
 import { SwitchPhase } from "#app/phases/switch-phase";
@@ -4273,6 +4274,9 @@ export class ForceSwitchOutAttr extends MoveEffectAttr {
         return resolve(false);
       }
       const switchOutTarget = this.user ? user : target;
+      if (!switchOutTarget.hp || switchOutTarget.isFainted()) {
+        return resolve(false);
+      }
       if (switchOutTarget instanceof PlayerPokemon) {
         switchOutTarget.leaveField(!this.batonPass);
 
@@ -4311,7 +4315,11 @@ export class ForceSwitchOutAttr extends MoveEffectAttr {
 
           if (switchOutTarget.hp) {
             user.scene.pushPhase(new BattleEndPhase(user.scene));
-            user.scene.pushPhase(new NewBattlePhase(user.scene));
+            if (!user.scene.gameMode.isChaosMode) {
+              user.scene.pushPhase(new NewBattlePhase(user.scene));
+            } else {
+              user.scene.pushPhase(new BattlePathPhase(user.scene));
+            }
           }
         }
       }
@@ -5557,7 +5565,6 @@ export function initMoves() {
       new StatusMove(Moves.WHIRLWIND, Type.NORMAL, -1, 20, -1, -6, 1)
           .attr(ForceSwitchOutAttr)
           .attr(HitsTagAttr, BattlerTagType.FLYING, false)
-          .hidesTarget()
           .windMove(),
       new AttackMove(Moves.FLY, Type.FLYING, MoveCategory.PHYSICAL, 90, 95, 15, -1, 0, 1)
       .attr(ChargeAttr, ChargeAnim.FLY_CHARGING, i18next.t("moveTriggers:flewUpHigh", {pokemonName: "{USER}"}), BattlerTagType.FLYING)
@@ -5634,8 +5641,7 @@ export function initMoves() {
           .target(MoveTarget.ALL_NEAR_ENEMIES),
       new StatusMove(Moves.ROAR, Type.NORMAL, -1, 20, -1, -6, 1)
           .attr(ForceSwitchOutAttr)
-          .soundBased()
-          .hidesTarget(),
+          .soundBased(),
       new StatusMove(Moves.SING, Type.NORMAL, 55, 15, -1, 0, 1)
           .attr(StatusEffectAttr, StatusEffect.SLEEP)
           .soundBased(),
@@ -5777,8 +5783,7 @@ export function initMoves() {
       new AttackMove(Moves.RAGE, Type.NORMAL, MoveCategory.PHYSICAL, 20, 100, 20, -1, 0, 1)
           .partial(),
       new SelfStatusMove(Moves.TELEPORT, Type.PSYCHIC, -1, 20, -1, -6, 1)
-          .attr(ForceSwitchOutAttr, true)
-          .hidesUser(),
+          .attr(ForceSwitchOutAttr, true),
       new AttackMove(Moves.NIGHT_SHADE, Type.GHOST, MoveCategory.SPECIAL, -1, 100, 15, -1, 0, 1)
           .attr(LevelDamageAttr),
       new StatusMove(Moves.MIMIC, Type.NORMAL, -1, 10, -1, 0, 1)
@@ -6138,8 +6143,7 @@ export function initMoves() {
       new AttackMove(Moves.DRAGON_BREATH, Type.DRAGON, MoveCategory.SPECIAL, 60, 100, 20, 30, 0, 2)
           .attr(StatusEffectAttr, StatusEffect.PARALYSIS),
       new SelfStatusMove(Moves.BATON_PASS, Type.NORMAL, -1, 40, -1, 0, 2)
-          .attr(ForceSwitchOutAttr, true, true)
-          .hidesUser(),
+          .attr(ForceSwitchOutAttr, true, true),
       new StatusMove(Moves.ENCORE, Type.NORMAL, 100, 5, -1, 0, 2)
           .attr(AddBattlerTagAttr, BattlerTagType.ENCORE, false, true)
           .condition((user, target, move) => new EncoreTag(user.id).canAdd(target)),
@@ -6973,8 +6977,7 @@ export function initMoves() {
       new AttackMove(Moves.FROST_BREATH, Type.ICE, MoveCategory.SPECIAL, 60, 90, 10, 100, 0, 5)
           .attr(CritOnlyAttr),
       new AttackMove(Moves.DRAGON_TAIL, Type.DRAGON, MoveCategory.PHYSICAL, 60, 90, 10, -1, -6, 5)
-      .attr(ForceSwitchOutAttr)
-      .hidesTarget(),
+      .attr(ForceSwitchOutAttr),
       new SelfStatusMove(Moves.WORK_UP, Type.NORMAL, -1, 30, -1, 0, 5)
           .attr(StatChangeAttr, [ BattleStat.ATK, BattleStat.SPATK ], 1, true),
       new AttackMove(Moves.ELECTROWEB, Type.ELECTRIC, MoveCategory.SPECIAL, 55, 95, 15, 100, 0, 5)

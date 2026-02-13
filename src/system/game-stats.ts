@@ -260,7 +260,16 @@ export class GameStats {
         this.highestWaveReached = Math.max(
             this.highestEndlessWave || 0,
             this.highestInfiniteWave || 0,
-            this.highestInfiniteRogueWave || 0
+            this.highestInfiniteRogueWave || 0,
+            (this.classicSessionsWon || 0) > 0 ? 200 : 0,
+            (this.nightmareSessionsWon || 0) > 0 ? 500 : 0,
+            (this.nuzlightSessionsWon || 0) > 0 ? 200 : 0,
+            (this.nuzlockeSessionsWon || 0) > 0 ? 200 : 0,
+            (this.draftSessionsWon || 0) > 0 ? 200 : 0,
+            (this.chaosRogueSessionsWon || 0) > 0 ? 500 : 0,
+            (this.chaosJourneySessionsWon || 0) > 0 ? 500 : 0,
+            (this.chaosVoidSessionsWon || 0) > 0 ? 1000 : 0,
+            (this.chaosRogueVoidSessionsWon || 0) > 0 ? 1000 : 0
         );
     }
     this.highestLevel = source?.highestLevel || 0;

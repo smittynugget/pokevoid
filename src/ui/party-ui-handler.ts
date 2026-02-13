@@ -261,18 +261,18 @@ export default class PartyUiHandler extends MessageUiHandler {
 
     this.partyUiMode = args[0] as PartyUiMode;
 
-    switch (this.partyUiMode) {
-    case PartyUiMode.SACRIFICE:
-      if (!this.transferMode) {
-        this.message.text = i18next.t("partyUiHandler:selectPokeToPowerUp");
-      } else {
+    switch(this.partyUiMode) {
+      case PartyUiMode.SACRIFICE:
+        if (!this.transferMode) {
+          this.message.text = i18next.t("partyUiHandler:selectPokeToPowerUp");
+        } else {
+          this.message.text = i18next.t("partyUiHandler:selectPokeToRelease");
+        }
+        break;
+      case PartyUiMode.RELEASE:
+      case PartyUiMode.ADDPOKEMON:
         this.message.text = i18next.t("partyUiHandler:selectPokeToRelease");
-      }
-      break;
-    case PartyUiMode.RELEASE:
-    case PartyUiMode.ADDPOKEMON:
-      this.message.text = i18next.t("partyUiHandler:selectPokeToRelease");
-      break;
+        break;
     }
 
     this.fieldIndex = args.length > 1 ? args[1] as integer : -1;
@@ -355,7 +355,8 @@ export default class PartyUiHandler extends MessageUiHandler {
           this.clearOptions();
           ui.playSelect();
           return true;
-        } else if (this.partyUiMode === PartyUiMode.REMEMBER_MOVE_MODIFIER && option !== PartyOption.CANCEL) {
+        }
+        else if (this.partyUiMode === PartyUiMode.REMEMBER_MOVE_MODIFIER && option !== PartyOption.CANCEL) {
 
           this.moveInfoOverlay.clear();
           const filterResult = (this.selectFilter as PokemonSelectFilter)(pokemon);
@@ -369,12 +370,16 @@ export default class PartyUiHandler extends MessageUiHandler {
           ui.playSelect();
           return true;
 
-        } else if ((option !== PartyOption.SUMMARY && option !== PartyOption.UNPAUSE_EVOLUTION && option !== PartyOption.UNSPLICE && option !== PartyOption.RELEASE && option !== PartyOption.CANCEL && option !== PartyOption.RENAME && option !== PartyOption.PAUSE_EVOLUTION)
+        }
+          else if ((option !== PartyOption.SUMMARY && option !== PartyOption.UNPAUSE_EVOLUTION && option !== PartyOption.UNSPLICE && option !== PartyOption.RELEASE && option !== PartyOption.CANCEL && option !== PartyOption.RENAME && option !== PartyOption.PAUSE_EVOLUTION)
             || (option === PartyOption.RELEASE && this.partyUiMode === PartyUiMode.RELEASE || this.partyUiMode === PartyUiMode.ADDPOKEMON && option === PartyOption.ADDPOKEMON)) {
           let filterResult: string | null;
           const getTransferrableItemsFromPokemon = (pokemon: PlayerPokemon) =>
             this.scene.findModifiers(m => m instanceof PokemonHeldItemModifier && m.isTransferrable && m.pokemonId === pokemon.id) as PokemonHeldItemModifier[];
-          if (option !== PartyOption.TRANSFER && option !== PartyOption.SPLICE && option !== PartyOption.SACRIFICE) {
+          if (this.partyUiMode === PartyUiMode.SACRIFICE && this.transferMode && option === PartyOption.SACRIFICE) {
+            const boostedPokemon = this.scene.getParty()[this.transferCursor] || pokemon;
+            filterResult = (this.selectFilter as PokemonSelectFilter)(boostedPokemon);
+          } else if (option !== PartyOption.TRANSFER && option !== PartyOption.SPLICE && option !== PartyOption.SACRIFICE) {
             filterResult = (this.selectFilter as PokemonSelectFilter)(pokemon);
             if (filterResult === null && (option === PartyOption.SEND_OUT || option === PartyOption.PASS_BATON)) {
               filterResult = this.FilterChallengeLegal(pokemon);
@@ -425,9 +430,9 @@ export default class PartyUiHandler extends MessageUiHandler {
             } else {
               if (this.partyUiMode === PartyUiMode.CHECK) {
                 if (option === PartyOption.TRADE) {
-                  this.doRelease(this.cursor, true);
+                   this.doRelease(this.cursor, true);
                 }
-                if (option >= PartyOption.FORM_CHANGE_ITEM && this.scene.getCurrentPhase() instanceof SelectModifierPhase) {
+              if (option >= PartyOption.FORM_CHANGE_ITEM && this.scene.getCurrentPhase() instanceof SelectModifierPhase) {
                   const formChangeItemModifiers = this.getFormChangeItemsModifiers(pokemon);
                   if (formChangeItemModifiers.length > 0) {
                     const modifier = formChangeItemModifiers[option - PartyOption.FORM_CHANGE_ITEM];
@@ -447,11 +452,13 @@ export default class PartyUiHandler extends MessageUiHandler {
             this.clearOptions();
             this.showText(filterResult as string, undefined, () => this.showText("", 0), undefined, true);
           }
-        } else if (option === PartyOption.SUMMARY) {
+        }
+          else if (option === PartyOption.SUMMARY) {
           ui.playSelect();
           ui.setModeWithoutClear(Mode.SUMMARY, pokemon).then(() =>  this.clearOptions());
           return true;
-        } else if (option === PartyOption.UNPAUSE_EVOLUTION) {
+        }
+          else if (option === PartyOption.UNPAUSE_EVOLUTION) {
           this.clearOptions();
           ui.playSelect();
           pokemon.pauseEvolutions = false;
@@ -459,7 +466,8 @@ export default class PartyUiHandler extends MessageUiHandler {
             this.showText("", 0);
             this.updateOptions();
           }, null, true);
-        } else if (option === PartyOption.PAUSE_EVOLUTION) {
+        }
+          else if (option === PartyOption.PAUSE_EVOLUTION) {
           this.clearOptions();
           ui.playSelect();
           pokemon.pauseEvolutions = true;
@@ -467,7 +475,8 @@ export default class PartyUiHandler extends MessageUiHandler {
             this.showText("", 0);
             this.updateOptions();
           }, null, true);
-        } else if (option === PartyOption.UNSPLICE) {
+        }
+          else if (option === PartyOption.UNSPLICE) {
           this.clearOptions();
           ui.playSelect();
           this.showText(i18next.t("partyUiHandler:unspliceConfirmation", { fusionName: pokemon.fusionSpecies?.name, pokemonName: pokemon.name }), null, () => {
@@ -487,7 +496,8 @@ export default class PartyUiHandler extends MessageUiHandler {
               this.showText("", 0);
             });
           });
-        } else if (option === PartyOption.RELEASE) {
+        }
+          else if (option === PartyOption.RELEASE) {
           this.clearOptions();
           ui.playSelect();
           const battlerCount = this.scene.currentBattle.getBattlerCount();
@@ -509,7 +519,8 @@ export default class PartyUiHandler extends MessageUiHandler {
             });
           });
           return true;
-        } else if (option === PartyOption.RENAME) {
+        }
+          else if (option === PartyOption.RENAME) {
           this.clearOptions();
           ui.playSelect();
           ui.setModeWithoutClear(Mode.RENAME_POKEMON, {
@@ -528,7 +539,8 @@ export default class PartyUiHandler extends MessageUiHandler {
             ]
           }, pokemon);
           return true;
-        } else if (option === PartyOption.CANCEL) {
+        }
+          else if (option === PartyOption.CANCEL) {
           return this.processInput(Button.CANCEL);
         }
       } else if (button === Button.CANCEL) {
@@ -557,7 +569,7 @@ export default class PartyUiHandler extends MessageUiHandler {
 
           if (this.partyUiMode === PartyUiMode.MODIFIER_TRANSFER) {
             if (option !== PartyOption.ALL) {
-              this.transferQuantities[option] = this.transferQuantitiesMax[option];
+            this.transferQuantities[option] = this.transferQuantitiesMax[option];
             }
             this.updateOptions();
           }
@@ -567,7 +579,7 @@ export default class PartyUiHandler extends MessageUiHandler {
 
           if (this.partyUiMode === PartyUiMode.MODIFIER_TRANSFER) {
             if (option !== PartyOption.ALL) {
-              this.transferQuantities[option] = this.transferQuantitiesMax[option];
+            this.transferQuantities[option] = this.transferQuantitiesMax[option];
             }
             this.updateOptions();
           }
@@ -787,11 +799,11 @@ export default class PartyUiHandler extends MessageUiHandler {
         optionsMessage = i18next.t("partyUiHandler:selectPokeToRelease");
       }
       break;
-    case PartyUiMode.RELEASE:
-    case PartyUiMode.ADDPOKEMON:
+  case PartyUiMode.RELEASE:
+  case PartyUiMode.ADDPOKEMON:
       optionsMessage = i18next.t("partyUiHandler:selectPokeToRelease");
-      break;
-    }
+    break;
+  }
 
     this.showText(optionsMessage, 0);
 
@@ -880,7 +892,7 @@ export default class PartyUiHandler extends MessageUiHandler {
         }
         break;
       case PartyUiMode.RELEASE:
-        this.showReleaseOption();
+           this.showReleaseOption();
         break;
       case PartyUiMode.SACRIFICE:
         if (this.transferMode) {
@@ -910,10 +922,10 @@ export default class PartyUiHandler extends MessageUiHandler {
           }
           addTradeOptionFunction = () => {
             this.options.push(PartyOption.TRADE);
-          };
+          }
           addReleaseOptionFunction = () => {
             this.showReleaseOption();
-          };
+          }
         }
         break;
       }
@@ -1014,11 +1026,13 @@ export default class PartyUiHandler extends MessageUiHandler {
             optionName = `${modifier.active ? i18next.t("partyUiHandler:DEACTIVATE") : i18next.t("partyUiHandler:ACTIVATE")} ${modifier.type.name}`;
           } else {
             const sacrificeOption = option === PartyOption.SACRIFICE ? PartyOption.RELEASE : null;
-            if (sacrificeOption && this.hasEnoughCollectedTypeModifiers(pokemon)) {
+            if(sacrificeOption && this.hasEnoughCollectedTypeModifiers(pokemon)) {
               optionName = i18next.t(`partyUiHandler:${PartyOption[sacrificeOption]}`) + " 5 " + i18next.t("modifierType:ModifierType.CollectedTypeModifierType.name", { type: "" }).replace(": ", "");
-            } else if (option === PartyOption.TRADE) {
+            }
+            else if (option === PartyOption.TRADE) {
               optionName = i18next.t(`partyUiHandler:${PartyOption[option]}`, { value: this.getPokemonTradeValue(pokemon) });
-            } else {
+            }
+            else {
               optionName = i18next.t(`partyUiHandler:${PartyOption[sacrificeOption ? sacrificeOption : option]}`);
             }
 
@@ -1030,8 +1044,8 @@ export default class PartyUiHandler extends MessageUiHandler {
         optionName = allMoves[move].name;
         altText = !pokemon.getSpeciesForm().getLevelMoves().find(plm => plm[1] === move);
       } else if (option === PartyOption.ALL) {
-        optionName = i18next.t("partyUiHandler:ALL");
-      } else {
+          optionName = i18next.t("partyUiHandler:ALL");
+        } else {
         const itemModifier = itemModifiers[option];
         optionName = itemModifier.type.name;
       }

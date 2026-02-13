@@ -349,16 +349,16 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private currentInputMethod: string = "keyboard";
 
   private static readonly SKILL_POINTS_LABEL_OFFSETS: Record<string, { x: number; y: number }> = {
-    "en": { x: 0, y: 0 },
-    "ko": { x: 0, y: 0 },
-    "ja": { x: 1.5, y: 0 },
-    "zh-CN": { x: 1, y: 0 },
-    "zh-TW": { x: 1, y: 0 },
-    "fr": { x: -6, y: 12 },
-    "de": { x: -6.5, y: 12 },
-    "es": { x: -6.5, y: 12 },
-    "pt-BR": { x: -6.5, y: 12 },
-    "it": { x: 1.5, y: 0 },
+    'en': { x: 0, y: 0 },
+    'ko': { x: 0, y: 0 },
+    'ja': { x: 1.5, y: 0 },
+    'zh-CN': { x: 1, y: 0 },
+    'zh-TW': { x: 1, y: 0 },
+    'fr': { x: -6, y: 12 },
+    'de': { x: -6.5, y: 12 },
+    'es': { x: -6.5, y: 12 },
+    'pt-BR': { x: -6.5, y: 12 },
+    'it': { x: 1.5, y: 0 },
   };
 
   private tooltipTargetNodeId: string | null = null;
@@ -395,13 +395,13 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private saveZoomPreference(zoom: number): void {
     try {
-      localStorage.setItem("skillTreeZoom", zoom.toString());
+      localStorage.setItem('skillTreeZoom', zoom.toString());
     } catch {}
   }
 
   private loadZoomPreference(): number | null {
     try {
-      const saved = localStorage.getItem("skillTreeZoom");
+      const saved = localStorage.getItem('skillTreeZoom');
       if (saved) {
         const zoom = parseFloat(saved);
         const c = SkillTreeUiHandler.UI_CONSTANTS.ZOOM;
@@ -417,21 +417,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     super(scene, Mode.SKILL_TREE);
     this.gridInc = SkillTreeUiHandler.UI_CONSTANTS.GRID_INC;
   }
-  getModalTitle(): string {
-    return i18next.t("skillTree:title", { defaultValue: "Skill Tree" });
-  }
-  getWidth(): number {
-    return Math.floor(this.scene.game.canvas.width / 6) + 8;
-  }
-  getHeight(): number {
-    return Math.floor(this.scene.game.canvas.height / 6) + 6;
-  }
-  getMargin(): [number, number, number, number] {
-    return [4, 4, 4, 4];
-  }
-  getButtonLabels(): string[] {
-    return [];
-  }
+  getModalTitle(): string { return i18next.t("skillTree:title", { defaultValue: "Skill Tree" }); }
+  getWidth(): number { return Math.floor(this.scene.game.canvas.width / 6) + 8; }
+  getHeight(): number { return Math.floor(this.scene.game.canvas.height / 6) + 6; }
+  getMargin(): [number, number, number, number] { return [4, 4, 4, 4]; }
+  getButtonLabels(): string[] { return []; }
 
   setup(): void {
 
@@ -617,7 +607,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.skillPointsText.setTint(c.HUD.SKILL_POINTS.COLOR);
     this.hud.add(this.skillPointsText);
 
-    const currentLocale = i18next.resolvedLanguage ?? "en";
+    const currentLocale = i18next.resolvedLanguage ?? 'en';
     const localeOffsets = SkillTreeUiHandler.SKILL_POINTS_LABEL_OFFSETS[currentLocale] ?? { x: 0, y: 0 };
 
     this.skillPointsLabel = addTextObject(this.scene,
@@ -752,7 +742,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     this.cleanupControls();
     this.skillTreeContent.setInteractive(new Phaser.Geom.Rectangle(-10000, -10000, 20000, 20000), Phaser.Geom.Rectangle.Contains);
-    this.skillTreeContent.on("pointerdown", (p: Phaser.Input.Pointer) => {
+    this.skillTreeContent.on('pointerdown', (p: Phaser.Input.Pointer) => {
       if (p.leftButtonDown()) {
 
         this.hideTooltip();
@@ -763,9 +753,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     });
 
     this.pointermoveHandler = (p: Phaser.Input.Pointer) => {
-      if (!this.isPanning) {
-        return;
-      }
+      if (!this.isPanning) return;
       const deltaX = (p.x - this.startX) * SkillTreeUiHandler.UI_CONSTANTS.PAN.DRAG_SENSITIVITY;
       const deltaY = (p.y - this.startY) * SkillTreeUiHandler.UI_CONSTANTS.PAN.DRAG_SENSITIVITY;
       this.transform.tx += deltaX;
@@ -774,19 +762,15 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.startY = p.y;
       this.applyTransform();
     };
-    this.pointerupHandler = () => {
-      this.isPanning = false;
-    };
+    this.pointerupHandler = () => { this.isPanning = false; };
 
-    this.scene.input.on("pointermove", this.pointermoveHandler);
-    this.scene.input.on("pointerup", this.pointerupHandler);
-    this.scene.input.on("wheel", (p: Phaser.Input.Pointer, _g: any, _dx: number, dy: number) => {
+    this.scene.input.on('pointermove', this.pointermoveHandler);
+    this.scene.input.on('pointerup', this.pointerupHandler);
+    this.scene.input.on('wheel', (p: Phaser.Input.Pointer, _g: any, _dx: number, dy: number) => {
       this.hideTooltip();
       const c = SkillTreeUiHandler.UI_CONSTANTS.ZOOM;
       const dir = Math.sign(dy);
-      if (dir === 0) {
-        return;
-      }
+      if (dir === 0) return;
       const step = dir > 0 ? 1 - c.WHEEL_STEP : 1 + c.WHEEL_STEP;
       const newScale = Math.min(Math.max(c.MIN, this.transform.scale * step), c.MAX);
       const ratio = newScale / this.transform.scale;
@@ -800,38 +784,34 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private cleanupControls(): void {
     if (this.pointermoveHandler) {
-      this.scene.input.off("pointermove", this.pointermoveHandler);
+      this.scene.input.off('pointermove', this.pointermoveHandler);
       this.pointermoveHandler = undefined;
     }
     if (this.pointerupHandler) {
-      this.scene.input.off("pointerup", this.pointerupHandler);
+      this.scene.input.off('pointerup', this.pointerupHandler);
       this.pointerupHandler = undefined;
     }
   }
 
   show(args: any[]): boolean {
     const modalConfig: ModalConfig = { buttonActions: [] };
-    if (!super.show([modalConfig])) {
-      return false;
-    }
+    if (!super.show([modalConfig])) return false;
 
     this.fixTitlePositioning();
     this.config = args?.[0] as SkillTreeConfig;
-    if (!this.config) {
-      return true;
-    }
+    if (!this.config) { return true; }
 
     const skillTreeTutorials: EnhancedTutorial[] = [];
     const championId = this.config.activeSkillTree?.championId;
 
     if (championId && championId !== "apollo" && championId !== "diana") {
-      if (!(this.scene as BattleScene).gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SKILLTREE_SET_TYPES)) {
-        skillTreeTutorials.push(EnhancedTutorial.SKILLTREE_SET_TYPES);
-      }
+        if (!(this.scene as BattleScene).gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SKILLTREE_SET_TYPES)) {
+            skillTreeTutorials.push(EnhancedTutorial.SKILLTREE_SET_TYPES);
+        }
     }
 
     if (skillTreeTutorials.length > 0) {
-      (this.scene as BattleScene).gameData.tutorialService.showCombinedTutorial("", skillTreeTutorials, true, false, true);
+        (this.scene as BattleScene).gameData.tutorialService.showCombinedTutorial("", skillTreeTutorials, true, false, true);
     }
 
     this.isEnhancedDebugMode = this.config.mode === SkillTreeMode.DEBUG_ENHANCED;
@@ -886,9 +866,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.selections = [];
     this.generateSkillTree();
     this.renderTree();
-    if (!hadSaved) {
-      this.fitViewToVisibleNodes();
-    }
+    if (!hadSaved) this.fitViewToVisibleNodes();
     this.updateHUD();
     this.updateInstructionsOpacity();
     this.startWaveAnimation();
@@ -929,7 +907,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       delete gd.tempSkillTreeTransform.purchasedNodeId;
 
       if (!(this.scene as BattleScene).gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SKILLTREE_PROGRESSION)) {
-        (this.scene as BattleScene).gameData.tutorialService.showNewTutorial(EnhancedTutorial.SKILLTREE_PROGRESSION, true, false);
+          (this.scene as BattleScene).gameData.tutorialService.showNewTutorial(EnhancedTutorial.SKILLTREE_PROGRESSION, true, false);
       }
     }
 
@@ -1002,32 +980,26 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
 
     switch (button) {
-    case Button.LEFT: return this.handleNavigation("left");
-    case Button.RIGHT: return this.handleNavigation("right");
-    case Button.UP: return this.handleNavigation("up");
-    case Button.DOWN: return this.handleNavigation("down");
-    case Button.ACTION: return this.handleAction();
-    case Button.CANCEL: return this.handleCancel();
-    case Button.SUBMIT: return this.handleComplete();
-    case Button.MENU: return Overrides.SKILL_TREE_DEBUG_CONTROLS_OVERRIDE ? this.handleMenu() : false;
-    case Button.STATS: return Overrides.SKILL_TREE_DEBUG_CONTROLS_OVERRIDE ? this.handleStatsTest() : false;
-    case Button.CYCLE_SHINY: return this.handleZoomIn();
-    case Button.CYCLE_FORM: return this.handleZoomOut();
-    default: return false;
+      case Button.LEFT: return this.handleNavigation('left');
+      case Button.RIGHT: return this.handleNavigation('right');
+      case Button.UP: return this.handleNavigation('up');
+      case Button.DOWN: return this.handleNavigation('down');
+      case Button.ACTION: return this.handleAction();
+      case Button.CANCEL: return this.handleCancel();
+      case Button.SUBMIT: return this.handleComplete();
+      case Button.MENU: return Overrides.SKILL_TREE_DEBUG_CONTROLS_OVERRIDE ? this.handleMenu() : false;
+      case Button.STATS: return Overrides.SKILL_TREE_DEBUG_CONTROLS_OVERRIDE ? this.handleStatsTest() : false;
+      case Button.CYCLE_SHINY: return this.handleZoomIn();
+      case Button.CYCLE_FORM: return this.handleZoomOut();
+      default: return false;
     }
   }
 
   private handleAction(): boolean {
-    if (!this.selectedNodeId) {
-      return false;
-    }
+    if (!this.selectedNodeId) return false;
     const node = this.nodes.find(n => n.id === this.selectedNodeId);
-    if (!node) {
-      return false;
-    }
-    if (this.config?.mode === SkillTreeMode.POKEMON_SELECTION) {
-      return this.handlePokemonSelection(node);
-    }
+    if (!node) return false;
+    if (this.config?.mode === SkillTreeMode.POKEMON_SELECTION) { return this.handlePokemonSelection(node); }
     return this.handleNodePurchase(node);
   }
 
@@ -1046,9 +1018,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     const c = SkillTreeUiHandler.UI_CONSTANTS.ZOOM;
     const step = 1 + c.BUTTON_STEP;
     const newScale = Math.min(c.MAX, this.transform.scale * step);
-    if (newScale === this.transform.scale) {
-      return false;
-    }
+    if (newScale === this.transform.scale) return false;
     const ratio = newScale / this.transform.scale;
     this.transform.tx *= ratio;
     this.transform.ty *= ratio;
@@ -1063,9 +1033,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     const c = SkillTreeUiHandler.UI_CONSTANTS.ZOOM;
     const step = 1 - c.BUTTON_STEP;
     const newScale = Math.max(c.MIN, this.transform.scale * step);
-    if (newScale === this.transform.scale) {
-      return false;
-    }
+    if (newScale === this.transform.scale) return false;
     const ratio = newScale / this.transform.scale;
     this.transform.tx *= ratio;
     this.transform.ty *= ratio;
@@ -1103,9 +1071,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.transform.tx = 0;
       this.transform.ty = 0;
       this.applyTransform();
-      if (root) {
-        this.panToNode(root, 300);
-      }
+      if (root) this.panToNode(root, 300);
 
       try {
         (this.scene as BattleScene).gameData.tempSkillTreeTransform = undefined;
@@ -1123,41 +1089,35 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     });
   }
 
-  private handleNavigation(direction: "left" | "right" | "up" | "down"): boolean {
+  private handleNavigation(direction: 'left' | 'right' | 'up' | 'down'): boolean {
     const visibleNodes = this.getVisibleNodes();
-    if (visibleNodes.length === 0) {
-      return false;
-    }
+    if (visibleNodes.length === 0) return false;
 
     if (!this.selectedNodeId) {
 
       const rootNode = visibleNodes.find(n => n.id === "root_0" || n.depth === 0);
       const startNode = rootNode || visibleNodes[0];
+      this.modalMessage?.clear();
       this.selectedNodeId = startNode.id;
       this.updateNodeStatesAndRender();
 
       this.showTooltipFor(startNode);
-      try {
-        (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3", { volumeGroup: "ui" });
-      } catch {}
+      try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3", { volumeGroup: "ui" }); } catch {}
       return true;
     }
 
     const currentNode = visibleNodes.find(n => n.id === this.selectedNodeId);
-    if (!currentNode) {
-      return false;
-    }
+    if (!currentNode) return false;
 
     const neighbor = this.findConnectedNeighborInDirection(currentNode, visibleNodes, direction);
     if (neighbor) {
+      this.modalMessage?.clear();
       this.selectedNodeId = neighbor.id;
       this.updateNodeStatesAndRender();
       this.highlightDependencyChain(neighbor.id);
       this.panToNode(neighbor, 700, true);
       this.showTooltipFor(neighbor);
-      try {
-        (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3", { volumeGroup: "ui" });
-      } catch {}
+      try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3", { volumeGroup: "ui" }); } catch {}
       this.checkApolloDianaTutorial(neighbor);
       return true;
     }
@@ -1167,33 +1127,27 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private checkApolloDianaTutorial(node: SkillTreeNode): void {
     const championId = this.config?.activeSkillTree?.championId;
-    if (championId !== "apollo" && championId !== "diana") {
-      return;
-    }
-    if ((this.scene as BattleScene).gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SKILLTREE_APOLLO_DIANA_TYPES)) {
-      return;
-    }
+    if (championId !== "apollo" && championId !== "diana") return;
+    if ((this.scene as BattleScene).gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SKILLTREE_APOLLO_DIANA_TYPES)) return;
     const triggerTypes = [
-      SkillTreeRewardType.TM_FILTERED,
-      SkillTreeRewardType.XM_FILTERED,
-      SkillTreeRewardType.ABILITY_GRANT,
-      SkillTreeRewardType.PASSIVE_ABILITY_GRANT,
-      SkillTreeRewardType.TYPE_SWITCHER,
-      SkillTreeRewardType.TYPE_BOOSTER_ITEM,
-      SkillTreeRewardType.GENERAL_POKEMON,
-      SkillTreeRewardType.TERA_TYPE
+        SkillTreeRewardType.TM_FILTERED,
+        SkillTreeRewardType.XM_FILTERED,
+        SkillTreeRewardType.ABILITY_GRANT,
+        SkillTreeRewardType.PASSIVE_ABILITY_GRANT,
+        SkillTreeRewardType.TYPE_SWITCHER,
+        SkillTreeRewardType.TYPE_BOOSTER_ITEM,
+        SkillTreeRewardType.GENERAL_POKEMON,
+        SkillTreeRewardType.TERA_TYPE
     ];
     const isRootNode = node.depth === 0;
     const isTriggerType = node.rewardData?.type && triggerTypes.includes(node.rewardData.type);
     if (isRootNode || isTriggerType) {
-      (this.scene as BattleScene).gameData.tutorialService.showNewTutorial(EnhancedTutorial.SKILLTREE_APOLLO_DIANA_TYPES, true, false);
+        (this.scene as BattleScene).gameData.tutorialService.showNewTutorial(EnhancedTutorial.SKILLTREE_APOLLO_DIANA_TYPES, true, false);
     }
   }
 
   private getVisibleNodes(): SkillTreeNode[] {
-    if (!this.config) {
-      return [];
-    }
+    if (!this.config) return [];
     if (this.isEnhancedDebugMode) {
       return this.nodes.filter(n => n.state !== SkillTreeNodeState.LOCKED_HIDDEN);
     }
@@ -1223,9 +1177,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     });
     this.nodes.forEach(node => {
       const nodeConnections = this.nodeConnectionMap.get(node.id);
-      if (!nodeConnections) {
-        return;
-      }
+      if (!nodeConnections) return;
 
       node.dependencies.forEach(parentId => {
         const parentConnections = this.nodeConnectionMap.get(parentId);
@@ -1243,12 +1195,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private findConnectedNeighborInDirection(
     currentNode: SkillTreeNode,
     candidates: SkillTreeNode[],
-    direction: "left" | "right" | "up" | "down"
+    direction: 'left' | 'right' | 'up' | 'down'
   ): SkillTreeNode | null {
     const connections = this.nodeConnectionMap.get(currentNode.id);
-    if (!connections) {
-      return this.findNeighborInDirection(currentNode, candidates, direction);
-    }
+    if (!connections) return this.findNeighborInDirection(currentNode, candidates, direction);
     const connectedNodeIds = new Set([
       ...connections.parents,
       ...connections.children,
@@ -1274,10 +1224,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     const { x: currentX, y: currentY } = currentNode.position;
     const nodesByZone = this.categorizeNodesByZone(currentNode, connectedNodes);
     const directionToZones = {
-      "up": ["top"],
-      "down": ["bottom"],
-      "left": ["left"],
-      "right": ["right"]
+      'up': ['top'],
+      'down': ['bottom'],
+      'left': ['left'],
+      'right': ['right']
     };
 
     const preferredZones = directionToZones[direction] || [];
@@ -1288,10 +1238,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       }
     }
     const diagonalZones = {
-      "up": ["top-left", "top-right"],
-      "down": ["bottom-left", "bottom-right"],
-      "left": ["top-left", "bottom-left"],
-      "right": ["top-right", "bottom-right"]
+      'up': ['top-left', 'top-right'],
+      'down': ['bottom-left', 'bottom-right'],
+      'left': ['top-left', 'bottom-left'],
+      'right': ['top-right', 'bottom-right']
     };
 
     const diagonalOptions = diagonalZones[direction] || [];
@@ -1311,24 +1261,22 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     const { x: currentX, y: currentY } = currentNode.position;
 
     const zones = {
-      "top": [] as SkillTreeNode[],
-      "top-right": [] as SkillTreeNode[],
-      "right": [] as SkillTreeNode[],
-      "bottom-right": [] as SkillTreeNode[],
-      "bottom": [] as SkillTreeNode[],
-      "bottom-left": [] as SkillTreeNode[],
-      "left": [] as SkillTreeNode[],
-      "top-left": [] as SkillTreeNode[]
+      'top': [] as SkillTreeNode[],
+      'top-right': [] as SkillTreeNode[],
+      'right': [] as SkillTreeNode[],
+      'bottom-right': [] as SkillTreeNode[],
+      'bottom': [] as SkillTreeNode[],
+      'bottom-left': [] as SkillTreeNode[],
+      'left': [] as SkillTreeNode[],
+      'top-left': [] as SkillTreeNode[]
     };
 
     connectedNodes.forEach(node => {
       const deltaX = node.position.x - currentX;
       const deltaY = node.position.y - currentY;
-      if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) {
-        return;
-      }
+      if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) return;
       const angle = Math.atan2(-deltaY, deltaX);
-      const degrees = (angle * 180 / Math.PI + 360) % 360;
+      let degrees = (angle * 180 / Math.PI + 360) % 360;
       const zone = this.getZoneFromAngle(degrees);
       zones[zone].push(node);
     });
@@ -1337,41 +1285,21 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private getZoneFromAngle(degrees: number): string {
-    if (degrees >= 337.5 || degrees < 22.5) {
-      return "right";
-    }
-    if (degrees >= 22.5 && degrees < 67.5) {
-      return "top-right";
-    }
-    if (degrees >= 67.5 && degrees < 112.5) {
-      return "top";
-    }
-    if (degrees >= 112.5 && degrees < 157.5) {
-      return "top-left";
-    }
-    if (degrees >= 157.5 && degrees < 202.5) {
-      return "left";
-    }
-    if (degrees >= 202.5 && degrees < 247.5) {
-      return "bottom-left";
-    }
-    if (degrees >= 247.5 && degrees < 292.5) {
-      return "bottom";
-    }
-    if (degrees >= 292.5 && degrees < 337.5) {
-      return "bottom-right";
-    }
+    if (degrees >= 337.5 || degrees < 22.5) return 'right';
+    if (degrees >= 22.5 && degrees < 67.5) return 'top-right';
+    if (degrees >= 67.5 && degrees < 112.5) return 'top';
+    if (degrees >= 112.5 && degrees < 157.5) return 'top-left';
+    if (degrees >= 157.5 && degrees < 202.5) return 'left';
+    if (degrees >= 202.5 && degrees < 247.5) return 'bottom-left';
+    if (degrees >= 247.5 && degrees < 292.5) return 'bottom';
+    if (degrees >= 292.5 && degrees < 337.5) return 'bottom-right';
 
-    return "right";
+    return 'right';
   }
 
   private getClosestNode(currentNode: SkillTreeNode, candidates: SkillTreeNode[]): SkillTreeNode | null {
-    if (candidates.length === 0) {
-      return null;
-    }
-    if (candidates.length === 1) {
-      return candidates[0];
-    }
+    if (candidates.length === 0) return null;
+    if (candidates.length === 1) return candidates[0];
 
     const { x: currentX, y: currentY } = currentNode.position;
 
@@ -1394,38 +1322,30 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     let targetAngle: number;
     switch (direction) {
-    case "right": targetAngle = 0; break;
-    case "up": targetAngle = Math.PI / 2; break;
-    case "left": targetAngle = Math.PI; break;
-    case "down": targetAngle = -Math.PI / 2; break;
-    default: return null;
+      case 'right': targetAngle = 0; break;
+      case 'up': targetAngle = Math.PI / 2; break;
+      case 'left': targetAngle = Math.PI; break;
+      case 'down': targetAngle = -Math.PI / 2; break;
+      default: return null;
     }
 
     let bestNode: SkillTreeNode | null = null;
     let bestScore = Infinity;
 
     for (const candidate of candidates) {
-      if (candidate.id === currentNode.id) {
-        continue;
-      }
+      if (candidate.id === currentNode.id) continue;
 
       const { x: candidateX, y: candidateY } = candidate.position;
       const dx = candidateX - currentX;
       const dy = candidateY - currentY;
 
-      if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
-        continue;
-      }
+      if (Math.abs(dx) < 1 && Math.abs(dy) < 1) continue;
 
       const distance = Math.sqrt(dx * dx + dy * dy);
       const angle = Math.atan2(-dy, dx);
       let angleDiff = Math.abs(angle - targetAngle);
-      if (angleDiff > Math.PI) {
-        angleDiff = 2 * Math.PI - angleDiff;
-      }
-      if (angleDiff > Math.PI / 2) {
-        continue;
-      }
+      if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
+      if (angleDiff > Math.PI / 2) continue;
       const score = angleDiff * 10 + distance / 100;
 
       if (score < bestScore) {
@@ -1437,9 +1357,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     return bestNode;
   }
   private generateSkillTree(): void {
-    if (!this.config) {
-      return;
-    }
+    if (!this.config) return;
     const gd = (this.scene as BattleScene).gameData as any;
     const cached: SkillTreeNode[] | undefined = gd.tempSkillTreeNodes as SkillTreeNode[] | undefined;
     const isSelection = this.config.mode === SkillTreeMode.POKEMON_SELECTION;
@@ -1475,11 +1393,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       let signatureCount = Math.floor(total / 2);
       let generalCount = total - signatureCount;
       if (total % 2 !== 0) {
-        if (Utils.randSeedInt(2) === 0) {
-          signatureCount += 1;
-        } else {
-          generalCount += 1;
-        }
+        if (Utils.randSeedInt(2) === 0) signatureCount += 1; else generalCount += 1;
       }
       const filteredTree = fullTree.filter(node => node.depth !== 1);
       const originalDepth1NodeIds = fullTree.filter(n => n.depth === 1).map(n => n.id);
@@ -1505,10 +1419,13 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           unlocked: false,
         } as any);
       }
+      const nodeGen = new SkillTreeNodeGenerator(ast.seed, ast.championId, this.scene as BattleScene);
       for (let i = 0; i < generalCount; i++, placed++) {
         const angle = (placed * 2 * Math.PI) / nodeCount;
         const species = SkillTreeSelectors.pickGeneralPokemon(championData as any, this.scene as BattleScene) as unknown as number;
         const nodeId = `depth1_general_${i}`;
+        const rewardData = { type: SkillTreeRewardType.GENERAL_POKEMON, data: { species }, immediate: false };
+        const generatedDescription = nodeGen.getRewardDescription(rewardData);
         filteredTree.push({
           id: nodeId,
           depth: 1,
@@ -1516,9 +1433,9 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           dependencies: ["root_0"],
           rarity: SkillTreeRarity.GREAT,
           state: SkillTreeNodeState.LOCKED_DETAILS,
-          rewardData: { type: SkillTreeRewardType.GENERAL_POKEMON, data: { species }, immediate: false },
+          rewardData,
           name: (allSpecies as any)?.[species]?.name ?? i18next.t("skillTree:descriptions.generalPokemon", { champion: ChampionUtils.getChampionDisplayName((championData as any).id) }),
-          description: i18next.t("skillTree:descriptions.generalPokemon", { champion: ChampionUtils.getChampionDisplayName((championData as any).id) }),
+          description: generatedDescription,
           cost: 1,
           isLegendary: false,
           unlocked: false,
@@ -1590,14 +1507,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.nodeSprites.clear();
     this.buildConnectionMap();
     this.nodes.forEach(node => {
-      if (!node.dependencies?.length) {
-        return;
-      }
+      if (!node.dependencies?.length) return;
       node.dependencies.forEach(depId => {
         const dep = this.nodes.find(n => n.id === depId);
-        if (!dep) {
-          return;
-        }
+        if (!dep) return;
         const g = this.scene.add.graphics();
 
         g.lineStyle(4, 0xaaaaaa, 0.9);
@@ -1633,7 +1546,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     icon.setScale(iconCfg.scale);
     if (iconCfg.inverted) {
       try {
-        if (icon.postFX && typeof icon.postFX.addColorMatrix === "function") {
+        if (icon.postFX && typeof icon.postFX.addColorMatrix === 'function') {
           const colorMatrix = icon.postFX.addColorMatrix();
           colorMatrix.negative();
         }
@@ -1644,24 +1557,25 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     c.add(icon);
     c.setInteractive(new Phaser.Geom.Circle(0, 0, this.NODE_SIZE / 2), Phaser.Geom.Circle.Contains);
-    c.on("pointerover", () => this.showTooltipFor(node));
-    c.on("pointerout", () => this.hideTooltip());
-    c.on("pointerdown", () => this.selectNode(node));
+    c.on('pointerover', () => this.showTooltipFor(node));
+    c.on('pointerout', () => this.hideTooltip());
+    c.on('pointerdown', () => this.selectNode(node));
     this.nodesContainer.add(c);
     this.nodeSprites.set(node.id, c);
     this.updateNodeVisual(node);
   }
 
   private selectNode(node: SkillTreeNode): void {
+    if (this.selectedNodeId !== node.id) {
+      this.modalMessage?.clear();
+    }
     this.selectedNodeId = node.id;
     this.updateNodeStatesAndRender();
     this.highlightDependencyChain(node.id);
     this.hideTooltip();
 
     this.panToNode(node, 700, true);
-    try {
-      (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3", { volumeGroup: "ui" });
-    } catch {}
+    try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3", { volumeGroup: "ui" }); } catch {}
   }
   private getChampionIconConfig(): { key: string; frame: string; scale: number; xOffset: number; yOffset: number } {
     try {
@@ -1707,9 +1621,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     try {
       const def = CHAMPION_DEFINITIONS[championId] as any;
       const offset = def?.ui?.skillTreeRootOffsetX;
-      if (typeof offset === "number") {
-        return offset;
-      }
+      if (typeof offset === "number") return offset;
     } catch {}
     return 0;
   }
@@ -1718,9 +1630,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     try {
       const def = CHAMPION_DEFINITIONS[championId] as any;
       const offset = def?.ui?.skillTreeRootOffsetY;
-      if (typeof offset === "number") {
-        return offset;
-      }
+      if (typeof offset === "number") return offset;
     } catch {}
     return 0;
   }
@@ -1729,9 +1639,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     try {
       const def = CHAMPION_DEFINITIONS[championId] as any;
       const scale = def?.ui?.skillTreeTrainerBondScale;
-      if (typeof scale === "number") {
-        return scale;
-      }
+      if (typeof scale === "number") return scale;
     } catch {}
     return 1.0;
   }
@@ -1740,9 +1648,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     try {
       const def = CHAMPION_DEFINITIONS[championId] as any;
       const offset = def?.ui?.skillTreeTrainerBondOffsetX;
-      if (typeof offset === "number") {
-        return offset;
-      }
+      if (typeof offset === "number") return offset;
     } catch {}
     return 0;
   }
@@ -1751,21 +1657,19 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     try {
       const def = CHAMPION_DEFINITIONS[championId] as any;
       const offset = def?.ui?.skillTreeTrainerBondOffsetY;
-      if (typeof offset === "number") {
-        return offset;
-      }
+      if (typeof offset === "number") return offset;
     } catch {}
     return 0;
   }
   private getRarityColors(rarity: SkillTreeRarity): { border: number; bg: number } {
     switch (rarity) {
-    case SkillTreeRarity.GREAT: return SkillTreeUiHandler.RARITY_COLORS.GREAT;
-    case SkillTreeRarity.ULTRA: return SkillTreeUiHandler.RARITY_COLORS.ULTRA;
-    case SkillTreeRarity.MASTER: return SkillTreeUiHandler.RARITY_COLORS.MASTER;
-    case SkillTreeRarity.ROGUE: return SkillTreeUiHandler.RARITY_COLORS.ROGUE;
-    case SkillTreeRarity.LEGENDARY: return SkillTreeUiHandler.RARITY_COLORS.LEGENDARY;
-    case SkillTreeRarity.COMMON:
-    default: return SkillTreeUiHandler.RARITY_COLORS.COMMON;
+      case SkillTreeRarity.GREAT: return SkillTreeUiHandler.RARITY_COLORS.GREAT;
+      case SkillTreeRarity.ULTRA: return SkillTreeUiHandler.RARITY_COLORS.ULTRA;
+      case SkillTreeRarity.MASTER: return SkillTreeUiHandler.RARITY_COLORS.MASTER;
+      case SkillTreeRarity.ROGUE: return SkillTreeUiHandler.RARITY_COLORS.ROGUE;
+      case SkillTreeRarity.LEGENDARY: return SkillTreeUiHandler.RARITY_COLORS.LEGENDARY;
+      case SkillTreeRarity.COMMON:
+      default: return SkillTreeUiHandler.RARITY_COLORS.COMMON;
     }
   }
 
@@ -1895,229 +1799,229 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
 
     switch (node.rewardData?.type) {
-    case SkillTreeRewardType.TM_FILTERED:
-      return { key: "items", frame: "tm_normal", scale: 2.0 };
-    case SkillTreeRewardType.XM_FILTERED:
-      return { key: "smitems", frame: "glitchTm", scale: 1.0 };
-    case SkillTreeRewardType.ABILITY_GRANT:
-      return { key: "smitems", frame: "glitchAbilitySwitch", scale: 1.0 };
-    case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
-      return { key: "smitems", frame: "modPassiveAbility", scale: 1.0 };
-    case SkillTreeRewardType.TRAINER_BOND_ABILITY: {
-      const championId = this.config?.activeSkillTree?.championId;
-      const key = ChampionUtils.getChampionSpriteKey(championId, (this.scene as BattleScene).gameData.gender);
-      const scale = this.getSkillTreeTrainerBondScale(championId);
-      const xOffset = this.getSkillTreeTrainerBondOffsetX(championId);
-      const yOffset = this.getSkillTreeTrainerBondOffsetY(championId);
-      return { key: key, frame: "", scale: scale, xOffset: xOffset, yOffset: yOffset, inverted: true };
-    }
-    case SkillTreeRewardType.TERA_ABILITY:
-      return { key: "items", frame: "stellar_tera_shard", scale: 2.0, inverted: true };
-    case SkillTreeRewardType.SMITTY_ABILITY:
-      return { key: "smitems", frame: "smittyMask", scale: 1.0 };
-    case SkillTreeRewardType.SIGNATURE_POKEMON:
-      try {
-        const species = node.rewardData?.data?.species;
-        if (species && typeof species === "number") {
-          const pokemonSpecies = getPokemonSpecies(species);
-          if (pokemonSpecies) {
-            return {
-              key: pokemonSpecies.getIconAtlasKey(),
-              frame: pokemonSpecies.getIconId(false),
-              scale: 2.0
-            };
+      case SkillTreeRewardType.TM_FILTERED:
+        return { key: "items", frame: "tm_normal", scale: 2.0 };
+      case SkillTreeRewardType.XM_FILTERED:
+        return { key: "smitems", frame: "glitchTm", scale: 1.0 };
+      case SkillTreeRewardType.ABILITY_GRANT:
+        return { key: "smitems", frame: "glitchAbilitySwitch", scale: 1.0 };
+      case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
+        return { key: "smitems", frame: "modPassiveAbility", scale: 1.0 };
+      case SkillTreeRewardType.TRAINER_BOND_ABILITY: {
+        const championId = this.config?.activeSkillTree?.championId;
+        const key = ChampionUtils.getChampionSpriteKey(championId, (this.scene as BattleScene).gameData.gender);
+        const scale = this.getSkillTreeTrainerBondScale(championId);
+        const xOffset = this.getSkillTreeTrainerBondOffsetX(championId);
+        const yOffset = this.getSkillTreeTrainerBondOffsetY(championId);
+        return { key: key, frame: "", scale: scale, xOffset: xOffset, yOffset: yOffset, inverted: true };
+      }
+      case SkillTreeRewardType.TERA_ABILITY:
+        return { key: "items", frame: "stellar_tera_shard", scale: 2.0, inverted: true };
+      case SkillTreeRewardType.SMITTY_ABILITY:
+        return { key: "smitems", frame: "smittyMask", scale: 1.0 };
+      case SkillTreeRewardType.SIGNATURE_POKEMON:
+        try {
+          const species = node.rewardData?.data?.species;
+          if (species && typeof species === "number") {
+            const pokemonSpecies = getPokemonSpecies(species);
+            if (pokemonSpecies) {
+              return {
+                key: pokemonSpecies.getIconAtlasKey(),
+                frame: pokemonSpecies.getIconId(false),
+                scale: 2.0
+              };
+            }
           }
+        } catch (error) {
+
         }
-      } catch (error) {
+      case SkillTreeRewardType.GENERAL_POKEMON:
+        return { key: "smitems", frame: "draftMode", scale: 1.0 };
 
-      }
-    case SkillTreeRewardType.GENERAL_POKEMON:
-      return { key: "smitems", frame: "draftMode", scale: 1.0 };
-
-    case SkillTreeRewardType.LEGENDARY_POKEMON:
-      try {
-        const species = node.rewardData?.data?.species;
-        if (species && typeof species === "number") {
-          const pokemonSpecies = getPokemonSpecies(species);
-          if (pokemonSpecies) {
-            return {
-              key: pokemonSpecies.getIconAtlasKey(),
-              frame: pokemonSpecies.getIconId(false),
-              scale: 2.0
-            };
+      case SkillTreeRewardType.LEGENDARY_POKEMON:
+        try {
+          const species = node.rewardData?.data?.species;
+          if (species && typeof species === "number") {
+            const pokemonSpecies = getPokemonSpecies(species);
+            if (pokemonSpecies) {
+              return {
+                key: pokemonSpecies.getIconAtlasKey(),
+                frame: pokemonSpecies.getIconId(false),
+                scale: 2.0
+              };
+            }
           }
+        } catch (error) {
+
         }
-      } catch (error) {
-
-      }
-      return { key: "items", frame: "mb", scale: 2.0 };
-    case SkillTreeRewardType.STAT_BOOST:
-      return { key: "items", frame: "protein", scale: 2.0 };
-    case SkillTreeRewardType.MOVE_UPGRADE:
-      return { key: "smitems", frame: "smittyShard", scale: 1.0 };
-    case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
-      return { key: "smitems", frame: "smittyHumor", scale: 1.0 };
-    case SkillTreeRewardType.ESSENCE_BUNDLE:
-      return { key: "smitems", frame: "modSoulCollected", scale: 1.0 };
-    case SkillTreeRewardType.PERMA_ITEM:
-      try {
-        const permaType = node.rewardData?.data?.permaType;
-        if (permaType !== undefined && permaType !== null && typeof permaType === "string") {
-          const iconKey = permaType.toLowerCase()
-            .split("_")
-            .map((word, index) => index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1))
-            .join("")
-            .replace(/\d+$/, "");
-          return { key: "smitems", frame: iconKey, scale: 1.0 };
-        }
-      } catch (error) {
-
-      }
-      return { key: "smitems", frame: "permaMetronomeLevelup", scale: 1.0 };
-    case SkillTreeRewardType.PERMA_MONEY:
-      return { key: "smitems", frame: "permaMoney", scale: 1.0 };
-    case SkillTreeRewardType.MONEY_REWARD:
-      return { key: "items", frame: "relic_gold", scale: 2.0 };
-    case SkillTreeRewardType.GLITCH_FORM_UNLOCK:
-      try {
-        const formKey = node.rewardData?.data?.formKey;
-        const questId = node.rewardData?.data?.unlockableId as QuestUnlockables;
-        if (formKey && typeof formKey === "string" && questId) {
-
-          const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(questId);
-          const species = getPokemonSpecies(questUnlockData.rewardId as Species);
-          const form = species.forms?.find(f => f.formName?.toLowerCase() === formKey.toLowerCase());
-
-          if (form) {
-            return {
-              key: form.getIconAtlasKey(),
-              frame: form.getIconId(false),
-              scale: 2.0
-            };
+        return { key: "items", frame: "mb", scale: 2.0 };
+      case SkillTreeRewardType.STAT_BOOST:
+        return { key: "items", frame: "protein", scale: 2.0 };
+      case SkillTreeRewardType.MOVE_UPGRADE:
+        return { key: "smitems", frame: "smittyShard", scale: 1.0 };
+      case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
+        return { key: "smitems", frame: "smittyHumor", scale: 1.0 };
+      case SkillTreeRewardType.ESSENCE_BUNDLE:
+        return { key: "smitems", frame: "modSoulCollected", scale: 1.0 };
+      case SkillTreeRewardType.PERMA_ITEM:
+        try {
+          const permaType = node.rewardData?.data?.permaType;
+          if (permaType !== undefined && permaType !== null && typeof permaType === 'string') {
+            const iconKey = permaType.toLowerCase()
+              .split('_')
+              .map((word, index) => index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1))
+              .join('')
+              .replace(/\d+$/, '');
+            return { key: "smitems", frame: iconKey, scale: 1.0 };
           }
-        }
-      } catch (error) {
+        } catch (error) {
 
-      }
-      return { key: "smitems", frame: "glitchModSoul", scale: 1.0 };
-    case SkillTreeRewardType.SKILL_POINTS:
-      return { key: "items", frame: "ribbon_gen9", scale: 2.0 };
-    case SkillTreeRewardType.SKILL_TREE_TOKENS:
-      return { key: "smitems", frame: "permaMoreRevive", scale: 1.0 };
-    case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
-      try {
-        const type = node.rewardData?.data?.type;
-        if (type !== undefined && typeof type === "number") {
-          const itemName = getAttackTypeBoosterItemName(type as Type);
-          if (itemName) {
-            const frame = itemName.replace(/[ \-]/g, "_").toLowerCase();
+        }
+        return { key: "smitems", frame: "permaMetronomeLevelup", scale: 1.0 };
+      case SkillTreeRewardType.PERMA_MONEY:
+        return { key: "smitems", frame: "permaMoney", scale: 1.0 };
+      case SkillTreeRewardType.MONEY_REWARD:
+        return { key: "items", frame: "relic_gold", scale: 2.0 };
+      case SkillTreeRewardType.GLITCH_FORM_UNLOCK:
+        try {
+          const formKey = node.rewardData?.data?.formKey;
+          const questId = node.rewardData?.data?.unlockableId as QuestUnlockables;
+          if (formKey && typeof formKey === "string" && questId) {
+
+            const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(questId);
+            const species = getPokemonSpecies(questUnlockData.rewardId as Species);
+            const form = species.forms?.find(f => f.formName?.toLowerCase() === formKey.toLowerCase());
+
+            if (form) {
+              return {
+                key: form.getIconAtlasKey(),
+                frame: form.getIconId(false),
+                scale: 2.0
+              };
+            }
+          }
+        } catch (error) {
+
+        }
+        return { key: "smitems", frame: "glitchModSoul", scale: 1.0 };
+      case SkillTreeRewardType.SKILL_POINTS:
+        return { key: "items", frame: "ribbon_gen9", scale: 2.0 };
+      case SkillTreeRewardType.SKILL_TREE_TOKENS:
+        return { key: "smitems", frame: "permaMoreRevive", scale: 1.0 };
+      case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
+        try {
+          const type = node.rewardData?.data?.type;
+          if (type !== undefined && typeof type === "number") {
+            const itemName = getAttackTypeBoosterItemName(type as Type);
+            if (itemName) {
+              const frame = itemName.replace(/[ \-]/g, "_").toLowerCase();
+              return { key: "items", frame, scale: 2.0 };
+            }
+          }
+        } catch (error) {
+
+        }
+        return { key: "items", frame: "silk_scarf", scale: 2.0 };
+      case SkillTreeRewardType.GOLDEN_POKEBALL:
+        return { key: "items", frame: "pb_gold", scale: 2.0 };
+      case SkillTreeRewardType.MASTER_BALL:
+        return { key: "items", frame: "mb", scale: 2.0 };
+      case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
+        return { key: "items", frame: "rb", scale: 2.0 };
+      case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
+        return { key: "items", frame: "mb", scale: 2.0 };
+      case SkillTreeRewardType.EGG_VOUCHER:
+        try {
+          const tier = node.rewardData?.data?.tier;
+          if (tier !== undefined) {
+            const frame = getVoucherTypeIcon(tier as VoucherType);
             return { key: "items", frame, scale: 2.0 };
           }
+        } catch (error) {
+          console.warn("Failed to get voucher tier icon:", error);
         }
-      } catch (error) {
+        return { key: "items", frame: "coupon", scale: 2.0 };
+      case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT:
 
-      }
-      return { key: "items", frame: "silk_scarf", scale: 2.0 };
-    case SkillTreeRewardType.GOLDEN_POKEBALL:
-      return { key: "items", frame: "pb_gold", scale: 2.0 };
-    case SkillTreeRewardType.MASTER_BALL:
-      return { key: "items", frame: "mb", scale: 2.0 };
-    case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
-      return { key: "items", frame: "rb", scale: 2.0 };
-    case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
-      return { key: "items", frame: "mb", scale: 2.0 };
-    case SkillTreeRewardType.EGG_VOUCHER:
-      try {
-        const tier = node.rewardData?.data?.tier;
-        if (tier !== undefined) {
-          const frame = getVoucherTypeIcon(tier as VoucherType);
-          return { key: "items", frame, scale: 2.0 };
+        return { key: "smitems", frame: "modSoulCollected", scale: 1.0, inverted: true };
+      case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY:
+        return { key: "items", frame: "dna_splicers", scale: 2.0 };
+      case SkillTreeRewardType.CATCH_RATE_BONUS:
+        return { key: "smitems", frame: "permaCatchRate", scale: 1.0 };
+      case SkillTreeRewardType.REVIVE_BOOST:
+        return { key: "items", frame: "revive", scale: 2.0 };
+      case SkillTreeRewardType.TERA_TYPE:
+        try {
+          const teraType = node.rewardData?.data?.type;
+          if (teraType !== undefined && typeof teraType === "number") {
+            const typeName = Type[teraType]?.toLowerCase();
+            if (typeName) {
+              return { key: "items", frame: `${typeName}_tera_shard`, scale: 2.0 };
+            }
+          }
+        } catch (error) {
+          console.warn("Failed to get tera type icon:", error);
         }
-      } catch (error) {
-        console.warn("Failed to get voucher tier icon:", error);
-      }
-      return { key: "items", frame: "coupon", scale: 2.0 };
-    case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT:
-
-      return { key: "smitems", frame: "modSoulCollected", scale: 1.0, inverted: true };
-    case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY:
-      return { key: "items", frame: "dna_splicers", scale: 2.0 };
-    case SkillTreeRewardType.CATCH_RATE_BONUS:
-      return { key: "smitems", frame: "permaCatchRate", scale: 1.0 };
-    case SkillTreeRewardType.REVIVE_BOOST:
-      return { key: "items", frame: "revive", scale: 2.0 };
-    case SkillTreeRewardType.TERA_TYPE:
-      try {
-        const teraType = node.rewardData?.data?.type;
-        if (teraType !== undefined && typeof teraType === "number") {
-          const typeName = Type[teraType]?.toLowerCase();
-          if (typeName) {
-            return { key: "items", frame: `${typeName}_tera_shard`, scale: 2.0 };
+        return { key: "items", frame: "stellar_tera_shard", scale: 2.0 };
+      case SkillTreeRewardType.GLITCH_CHANGE:
+        return { key: "smitems", frame: "glitchFruit", scale: 1.0};
+      case SkillTreeRewardType.MEGA_STONE:
+        const megaStone = node.rewardData?.data?.megaStone || node.rewardData?.data?.formChangeItem;
+        if (megaStone && typeof megaStone === "number") {
+          const megaStoneName = getFormChangeItemSpriteFrame(megaStone);
+          if (megaStoneName) {
+            return { key: "items", frame: megaStoneName, scale: 2.0 };
           }
         }
-      } catch (error) {
-        console.warn("Failed to get tera type icon:", error);
-      }
-      return { key: "items", frame: "stellar_tera_shard", scale: 2.0 };
-    case SkillTreeRewardType.GLITCH_CHANGE:
-      return { key: "smitems", frame: "glitchiGlitchiFruit", scale: 1.0};
-    case SkillTreeRewardType.MEGA_STONE:
-      const megaStone = node.rewardData?.data?.megaStone || node.rewardData?.data?.formChangeItem;
-      if (megaStone && typeof megaStone === "number") {
-        const megaStoneName = getFormChangeItemSpriteFrame(megaStone);
-        if (megaStoneName) {
-          return { key: "items", frame: megaStoneName, scale: 2.0 };
-        }
-      }
-      return { key: "items", frame: "pinsirite", scale: 2.0 };
-    case SkillTreeRewardType.POKEMON_ALT_BUILD:
-      try {
-        const species = node.rewardData?.data?.species;
-        if (species && typeof species === "number") {
-          const pokemonSpecies = getPokemonSpecies(species);
-          if (pokemonSpecies) {
-            return {
-              key: pokemonSpecies.getIconAtlasKey(),
-              frame: pokemonSpecies.getIconId(false),
-              scale: 2.0,
-              inverted: true
-            };
+        return { key: "items", frame: "pinsirite", scale: 2.0 };
+      case SkillTreeRewardType.POKEMON_ALT_BUILD:
+        try {
+          const species = node.rewardData?.data?.species;
+          if (species && typeof species === "number") {
+            const pokemonSpecies = getPokemonSpecies(species);
+            if (pokemonSpecies) {
+              return {
+                key: pokemonSpecies.getIconAtlasKey(),
+                frame: pokemonSpecies.getIconId(false),
+                scale: 2.0,
+                inverted: true
+              };
+            }
           }
+        } catch (error) {
+          console.warn("Failed to get alt build pokemon icon:", error);
         }
-      } catch (error) {
-        console.warn("Failed to get alt build pokemon icon:", error);
-      }
-      return { key: "smitems", frame: "draftMode", scale: 1.0, inverted: true };
-    case SkillTreeRewardType.DYNA_MUSHROOM:
-      return { key: "items", frame: "max_mushrooms", scale: 2.0 };
-    case SkillTreeRewardType.TYPE_SWITCHER:
+        return { key: "smitems", frame: "draftMode", scale: 1.0, inverted: true };
+      case SkillTreeRewardType.DYNA_MUSHROOM:
+        return { key: "items", frame: "max_mushrooms", scale: 2.0 };
+      case SkillTreeRewardType.TYPE_SWITCHER:
 
-      return { key: "smitems", frame: "glitchTypeSwitch", scale: 1.0 };
-    case SkillTreeRewardType.HEALING_ITEMS:
-      return { key: "items", frame: "max_potion", scale: 2.0 };
-    case SkillTreeRewardType.MEMORY_MUSHROOM:
-      return { key: "items", frame: "big_mushroom", scale: 2.0 };
-    case SkillTreeRewardType.BERRY_ITEMS:
-      return { key: "items", frame: "sitrus_berry", scale: 2.0 };
-    case SkillTreeRewardType.ABILITY_SWITCHER:
-      return { key: "smitems", frame: "glitchAbilitySwitch", scale: 1.0 };
-    case SkillTreeRewardType.GENERAL_ITEMS:
-      return { key: "smitems", frame: "permaShowRewards", scale: 1.0 };
-    case SkillTreeRewardType.BATON_ITEM:
-      return { key: "items", frame: "baton", scale: 2.15 };
-    case SkillTreeRewardType.PP_MAX_ITEM:
-      return { key: "items", frame: "pp_max", scale: 2.0 };
-    case SkillTreeRewardType.ROGUE_BALL:
-      return { key: "items", frame: "rb", scale: 2.0 };
-    default:
-      return { key: "smitems", frame: "permaMoreRevive", scale: 1.0 };
+        return { key: "smitems", frame: "glitchTypeSwitch", scale: 1.0 };
+      case SkillTreeRewardType.HEALING_ITEMS:
+        return { key: "items", frame: "max_potion", scale: 2.0 };
+      case SkillTreeRewardType.MEMORY_MUSHROOM:
+        return { key: "items", frame: "big_mushroom", scale: 2.0 };
+      case SkillTreeRewardType.BERRY_ITEMS:
+        return { key: "items", frame: "sitrus_berry", scale: 2.0 };
+      case SkillTreeRewardType.ABILITY_SWITCHER:
+        return { key: "smitems", frame: "glitchAbilitySwitch", scale: 1.0 };
+      case SkillTreeRewardType.GENERAL_ITEMS:
+        return { key: "smitems", frame: "permaShowRewards", scale: 1.0 };
+      case SkillTreeRewardType.BATON_ITEM:
+        return { key: "items", frame: "baton", scale: 2.15 };
+      case SkillTreeRewardType.PP_MAX_ITEM:
+        return { key: "items", frame: "pp_max", scale: 2.0 };
+      case SkillTreeRewardType.ROGUE_BALL:
+        return { key: "items", frame: "rb", scale: 2.0 };
+      case SkillTreeRewardType.PARTY_ABILITY_GRANT:
+        return { key: "smitems", frame: "permaPartyAbility", scale: 1.0 };
+      default:
+        return { key: "smitems", frame: "permaMoreRevive", scale: 1.0 };
     }
   }
 
   private updateNodeVisual(node: SkillTreeNode): void {
-    const c = this.nodeSprites.get(node.id); if (!c) {
-      return;
-    }
+    const c = this.nodeSprites.get(node.id); if (!c) return;
     const previousState = (node as any).__previousState as SkillTreeNodeState;
 
     const bg = c.list[0] as Phaser.GameObjects.Graphics;
@@ -2127,53 +2031,19 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     bg.clear();
     switch (node.state) {
-    case SkillTreeNodeState.UNLOCKED:
+      case SkillTreeNodeState.UNLOCKED:
 
-      const unlockedIconCfg = this.getNodeIconConfig(node);
-      try {
-        if (unlockedIconCfg.frame) {
-          icon.setTexture(unlockedIconCfg.key, unlockedIconCfg.frame as any);
-        } else {
-          icon.setTexture(unlockedIconCfg.key);
-        }
-        icon.setScale(unlockedIconCfg.scale);
-        icon.setPosition(unlockedIconCfg.xOffset ?? 0, unlockedIconCfg.yOffset ?? 0);
-        if (unlockedIconCfg.inverted) {
-          if (icon.postFX && typeof icon.postFX.addColorMatrix === "function") {
-
-            icon.postFX.clear();
-            const colorMatrix = icon.postFX.addColorMatrix();
-            colorMatrix.negative();
-          }
-        } else {
-
-          if (icon.postFX) {
-            icon.postFX.clear();
-          }
-        }
-      } catch (error) {
-        console.warn("Failed to restore unlocked icon:", error);
-      }
-      bg.fillStyle(rarityColors.border);
-      bg.lineStyle(3, this.brightenColor(rarityColors.border, 1.3));
-      icon.clearTint();
-      break;
-    case SkillTreeNodeState.LOCKED_DETAILS:
-
-      const dependenciesMet = this.areNodeDependenciesMet(node);
-      if (dependenciesMet) {
-
-        const detailsIconCfg = this.getNodeIconConfig(node);
+        const unlockedIconCfg = this.getNodeIconConfig(node);
         try {
-          if (detailsIconCfg.frame) {
-            icon.setTexture(detailsIconCfg.key, detailsIconCfg.frame as any);
+          if (unlockedIconCfg.frame) {
+            icon.setTexture(unlockedIconCfg.key, unlockedIconCfg.frame as any);
           } else {
-            icon.setTexture(detailsIconCfg.key);
+            icon.setTexture(unlockedIconCfg.key);
           }
-          icon.setScale(detailsIconCfg.scale);
-          icon.setPosition(detailsIconCfg.xOffset ?? 0, detailsIconCfg.yOffset ?? 0);
-          if (detailsIconCfg.inverted) {
-            if (icon.postFX && typeof icon.postFX.addColorMatrix === "function") {
+          icon.setScale(unlockedIconCfg.scale);
+          icon.setPosition(unlockedIconCfg.xOffset ?? 0, unlockedIconCfg.yOffset ?? 0);
+          if (unlockedIconCfg.inverted) {
+            if (icon.postFX && typeof icon.postFX.addColorMatrix === 'function') {
 
               icon.postFX.clear();
               const colorMatrix = icon.postFX.addColorMatrix();
@@ -2186,88 +2056,120 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
             }
           }
         } catch (error) {
-          console.warn("Failed to restore details icon:", error);
+          console.warn("Failed to restore unlocked icon:", error);
         }
-        if (nodeRarity > SkillTreeRarity.GREAT) {
+        bg.fillStyle(rarityColors.border);
+        bg.lineStyle(3, this.brightenColor(rarityColors.border, 1.3));
+        icon.clearTint();
+        break;
+      case SkillTreeNodeState.LOCKED_DETAILS:
 
-          bg.fillStyle(this.dimColor(rarityColors.border, 0.5));
-          bg.lineStyle(3, rarityColors.border);
+        const dependenciesMet = this.areNodeDependenciesMet(node);
+        if (dependenciesMet) {
+
+          const detailsIconCfg = this.getNodeIconConfig(node);
+          try {
+            if (detailsIconCfg.frame) {
+              icon.setTexture(detailsIconCfg.key, detailsIconCfg.frame as any);
+            } else {
+              icon.setTexture(detailsIconCfg.key);
+            }
+            icon.setScale(detailsIconCfg.scale);
+            icon.setPosition(detailsIconCfg.xOffset ?? 0, detailsIconCfg.yOffset ?? 0);
+            if (detailsIconCfg.inverted) {
+              if (icon.postFX && typeof icon.postFX.addColorMatrix === 'function') {
+
+                icon.postFX.clear();
+                const colorMatrix = icon.postFX.addColorMatrix();
+                colorMatrix.negative();
+              }
+            } else {
+
+              if (icon.postFX) {
+                icon.postFX.clear();
+              }
+            }
+          } catch (error) {
+            console.warn("Failed to restore details icon:", error);
+          }
+          if (nodeRarity > SkillTreeRarity.GREAT) {
+
+            bg.fillStyle(this.dimColor(rarityColors.border, 0.5));
+            bg.lineStyle(3, rarityColors.border);
+          } else {
+
+            bg.fillStyle(0x665200);
+            bg.lineStyle(3, 0xFFCB05);
+          }
+          icon.setTint(0xcccccc);
         } else {
 
-          bg.fillStyle(0x665200);
-          bg.lineStyle(3, 0xFFCB05);
+          bg.fillStyle(0x444444);
+          bg.lineStyle(3, 0x666666);
+          icon.setTint(0x888888);
         }
-        icon.setTint(0xcccccc);
-      } else {
-
+        break;
+      case SkillTreeNodeState.LOCKED_VISIBLE:
+        if (isSkillTreeV2()) {
+          const iconCfg = this.getNodeIconConfig(node);
+          try {
+            if (iconCfg.frame) {
+              icon.setTexture(iconCfg.key, iconCfg.frame as any);
+            } else {
+              icon.setTexture(iconCfg.key);
+            }
+            icon.setScale(iconCfg.scale);
+            icon.setPosition(iconCfg.xOffset ?? 0, iconCfg.yOffset ?? 0);
+            if (iconCfg.inverted) {
+              if (icon.postFX && typeof icon.postFX.addColorMatrix === 'function') {
+                icon.postFX.clear();
+                const colorMatrix = icon.postFX.addColorMatrix();
+                colorMatrix.negative();
+              }
+            } else {
+              if (icon.postFX) {
+                icon.postFX.clear();
+              }
+            }
+          } catch (error) {
+          }
+          bg.fillStyle(0x333333);
+          bg.lineStyle(3, 0x555555);
+          icon.setTint(0x666666);
+        } else {
+          bg.fillStyle(0x444444);
+          bg.lineStyle(3, 0x666666);
+          try {
+            icon.setTexture("smitems", "permaMoreRewardChoice");
+            icon.setScale(1.0);
+            icon.setTint(0x888888);
+            icon.setPosition(0, 0);
+            if (icon.postFX) {
+              icon.postFX.clear();
+            }
+          } catch {
+            icon.setTint(0x888888);
+          }
+        }
+        break;
+      case SkillTreeNodeState.LOCKED_HIDDEN:
         bg.fillStyle(0x444444);
         bg.lineStyle(3, 0x666666);
+        try {
+          if (this.scene.textures.exists("ui")) {
+            icon.setTexture("ui", "lock" as any);
+            icon.setScale(0.5);
+          } else {
+            icon.setTexture("smitems", "glitchPiece");
+            icon.setScale(0.045);
+          }
+        } catch { icon.setTexture("smitems", "glitchPiece"); icon.setScale(0.045); }
         icon.setTint(0x888888);
-      }
-      break;
-    case SkillTreeNodeState.LOCKED_VISIBLE:
-      if (isSkillTreeV2()) {
-        const iconCfg = this.getNodeIconConfig(node);
-        try {
-          if (iconCfg.frame) {
-            icon.setTexture(iconCfg.key, iconCfg.frame as any);
-          } else {
-            icon.setTexture(iconCfg.key);
-          }
-          icon.setScale(iconCfg.scale);
-          icon.setPosition(iconCfg.xOffset ?? 0, iconCfg.yOffset ?? 0);
-          if (iconCfg.inverted) {
-            if (icon.postFX && typeof icon.postFX.addColorMatrix === "function") {
-              icon.postFX.clear();
-              const colorMatrix = icon.postFX.addColorMatrix();
-              colorMatrix.negative();
-            }
-          } else {
-            if (icon.postFX) {
-              icon.postFX.clear();
-            }
-          }
-        } catch (error) {
+        icon.setPosition(0, 0);
+        if (icon.postFX) {
+          icon.postFX.clear();
         }
-        bg.fillStyle(0x333333);
-        bg.lineStyle(3, 0x555555);
-        icon.setTint(0x666666);
-      } else {
-        bg.fillStyle(0x444444);
-        bg.lineStyle(3, 0x666666);
-        try {
-          icon.setTexture("smitems", "permaMoreRewardChoice");
-          icon.setScale(1.0);
-          icon.setTint(0x888888);
-          icon.setPosition(0, 0);
-          if (icon.postFX) {
-            icon.postFX.clear();
-          }
-        } catch {
-          icon.setTint(0x888888);
-        }
-      }
-      break;
-    case SkillTreeNodeState.LOCKED_HIDDEN:
-      bg.fillStyle(0x444444);
-      bg.lineStyle(3, 0x666666);
-      try {
-        if (this.scene.textures.exists("ui")) {
-          icon.setTexture("ui", "lock" as any);
-          icon.setScale(0.5);
-        } else {
-          icon.setTexture("smitems", "glitchPiece");
-          icon.setScale(0.045);
-        }
-      } catch {
-        icon.setTexture("smitems", "glitchPiece"); icon.setScale(0.045);
-      }
-      icon.setTint(0x888888);
-      icon.setPosition(0, 0);
-      if (icon.postFX) {
-        icon.postFX.clear();
-      }
-      break;
+        break;
     }
     bg.fillCircle(0, 0, this.NODE_SIZE / 2);
     bg.strokeCircle(0, 0, this.NODE_SIZE / 2);
@@ -2294,9 +2196,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private updateNodeStatesAndRender(): void {
-    if (!this.config) {
-      return;
-    }
+    if (!this.config) return;
     const ast = this.config.activeSkillTree;
 
     if (this.isEnhancedDebugMode) {
@@ -2393,13 +2293,17 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
           if (node.depth === 0) {
             dependenciesMet = true;
-          } else if (node.depth === 1) {
+          }
+
+          else if (node.depth === 1) {
             const hasOnlyRootDependency = node.dependencies.length === 1 &&
               this.nodes.some(n => n.depth === 0 && node.dependencies.includes(n.id));
             if (hasOnlyRootDependency) {
               dependenciesMet = true;
             }
-          } else if (node.depth === 2) {
+          }
+
+          else if (node.depth === 2) {
             const allDepsAreInitial = node.dependencies.every(depId => {
               const depNode = this.nodes.find(n => n.id === depId);
               return depNode && (depNode.depth === 0 || depNode.depth === 1);
@@ -2460,9 +2364,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       const currentId = queue.shift()!;
       const children = childrenMap.get(currentId) || [];
       children.forEach(childId => {
-        if (visited.has(childId)) {
-          return;
-        }
+        if (visited.has(childId)) return;
         visited.add(childId);
         const childNode = this.nodes.find(n => n.id === childId);
         if (childNode && childNode.depth <= maxDepth) {
@@ -2476,9 +2378,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private setFinalNodeStatesV2(ast: ActiveSkillTreeData, revealedNodes: Set<string>): void {
     this.nodes.forEach(node => {
-      if (node.state === SkillTreeNodeState.UNLOCKED) {
-        return;
-      }
+      if (node.state === SkillTreeNodeState.UNLOCKED) return;
       if (revealedNodes.has(node.id)) {
         const dependenciesMet = this.checkDependenciesMetV2(node, ast);
         const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
@@ -2495,18 +2395,12 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private checkDependenciesMetV2(node: SkillTreeNode, ast: ActiveSkillTreeData): boolean {
-    if (node.dependencies.length === 0) {
-      return true;
-    }
-    if (node.depth === 0) {
-      return true;
-    }
+    if (node.dependencies.length === 0) return true;
+    if (node.depth === 0) return true;
     if (node.depth === 1) {
       const hasOnlyRootDependency = node.dependencies.length === 1 &&
         this.nodes.some(n => n.depth === 0 && node.dependencies.includes(n.id));
-      if (hasOnlyRootDependency) {
-        return true;
-      }
+      if (hasOnlyRootDependency) return true;
     }
     if ((node as any).requiresAllDependencies) {
       return node.dependencies.every(depId => ast.unlockedNodes?.has(depId));
@@ -2516,9 +2410,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private applyDepthFilter(): void {
-    if (!this.config) {
-      return;
-    }
+    if (!this.config) return;
     const ast = this.config.activeSkillTree;
     this.nodes.forEach(node => {
       const c = this.nodeSprites.get(node.id);
@@ -2557,103 +2449,101 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private showTooltipFor(node: SkillTreeNode): void {
     this.tooltipTargetNodeId = node.id;
     switch (node.state) {
-    case SkillTreeNodeState.LOCKED_HIDDEN:
-      this.tooltipTitle.setText(node.name);
-      this.tooltipDesc.setText(i18next.t("skillTree:nodeStates.hidden"));
-      this.tooltipCost.setText("");
-      this.tooltipPrereq.setText("");
-      this.tooltipRarity.setVisible(false);
-      break;
-
-    case SkillTreeNodeState.LOCKED_VISIBLE:
-      if (isSkillTreeV2()) {
-        const displayNameV2 = this.getRewardDisplayName(node);
-        this.tooltipTitle.setText(displayNameV2 || node.name);
-        const descriptionV2 = this.getEnhancedDescription(node);
-        this.tooltipDesc.setStroke("", 0);
-        const requirementsV2: string[] = [];
-        const requiredLevelV2 = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
-        const currentLevelV2 = this.config?.activeSkillTree.treeLevel || 1;
-        if (currentLevelV2 < requiredLevelV2) {
-          requirementsV2.push(i18next.t("skillTree:prereq.treeLevelRequired", { level: requiredLevelV2 }));
-        }
-        const unmetDepsV2 = node.dependencies.filter(depId => !this.config?.activeSkillTree.unlockedNodes.has(depId));
-        if (unmetDepsV2.length > 0) {
-          const depNamesV2 = unmetDepsV2.map(depId => {
-            const depNode = this.nodes.find(n => n.id === depId);
-            if (!depNode || depNode.state === SkillTreeNodeState.LOCKED_HIDDEN) {
-              return "???";
-            }
-            return this.getRewardDisplayName(depNode) || depNode.name;
-          });
-          if ((node as any).requiresAllDependencies) {
-            requirementsV2.push(i18next.t("skillTree:prereq.unlockAllPrior", { skills: depNamesV2.join(", ") }));
-          } else {
-            requirementsV2.push(i18next.t("skillTree:prereq.unlockOnePrior", { skills: depNamesV2.join(", ") }));
-          }
-        }
-        const nodeCostV2 = this.getNodeCost(node);
-        this.tooltipCost.setText(i18next.t("skillTree:nodeCost", { cost: nodeCostV2 }));
-        this.tooltipCost.setColor("#888888");
-        if (requirementsV2.length > 0) {
-          const requirementsLine = `[color=#ff6b6b]${i18next.t("skillTree:prereq.header")}[/color] [color=#ffdd44]${requirementsV2.join(", ")}[/color]`;
-          this.tooltipDesc.setText(`${descriptionV2}\n\n${requirementsLine}`);
-        } else {
-          this.tooltipDesc.setText(descriptionV2);
-        }
-        this.tooltipPrereq.setText("");
-      } else {
-        this.tooltipTitle.setText(i18next.t("skillTree:nodeStates.locked"));
+      case SkillTreeNodeState.LOCKED_HIDDEN:
+        this.tooltipTitle.setText(node.name);
+        this.tooltipDesc.setText(i18next.t("skillTree:nodeStates.hidden"));
         this.tooltipCost.setText("");
-        const unmetDeps = node.dependencies.filter(depId =>
-          !this.config?.activeSkillTree.unlockedNodes.has(depId)
-        );
-        if (unmetDeps.length > 0) {
-          const depNames = unmetDeps.map(depId => {
-            const depNode = this.nodes.find(n => n.id === depId);
-            if (!depNode ||
-                  depNode.state === SkillTreeNodeState.LOCKED_HIDDEN ||
-                  depNode.state === SkillTreeNodeState.LOCKED_VISIBLE) {
-              return "???";
-            }
-            return this.getRewardDisplayName(depNode) || depNode.name;
-          });
-          const headerLine = i18next.t("skillTree:prereq.dependencies", { dependencies: "" }).split("\n")[0];
-          const dependenciesList = depNames.map((name, i) => {
-            if (i < depNames.length - 1) {
-              const or = i18next.t("skillTree:prereq.or");
-              return `- ${name}\n${or}`;
-            }
-            return `- ${name}`;
-          }).join("\n");
-          this.tooltipDesc.setText(`[color=#ff6b6b]${headerLine}[/color]\n${dependenciesList}`);
-        } else {
-          this.tooltipDesc.setText("");
-        }
         this.tooltipPrereq.setText("");
-      }
-      break;
+        this.tooltipRarity.setVisible(false);
+        break;
 
-    case SkillTreeNodeState.LOCKED_DETAILS:
-
-      const dependenciesMet = this.areNodeDependenciesMet(node);
-
-      if (!dependenciesMet) {
-
-        this.tooltipTitle.setText(i18next.t("skillTree:nodeStates.locked"));
-        if (node.depth >= 2) {
+      case SkillTreeNodeState.LOCKED_VISIBLE:
+        if (isSkillTreeV2()) {
+          const displayNameV2 = this.getRewardDisplayName(node);
+          this.tooltipTitle.setText(displayNameV2 || node.name);
+          const descriptionV2 = this.getEnhancedDescription(node);
+          this.tooltipDesc.setStroke("", 0);
+          const requirementsV2: string[] = [];
+          const requiredLevelV2 = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
+          const currentLevelV2 = this.config?.activeSkillTree.treeLevel || 1;
+          if (currentLevelV2 < requiredLevelV2) {
+            requirementsV2.push(i18next.t("skillTree:prereq.treeLevelRequired", { level: requiredLevelV2 }));
+          }
+          const unmetDepsV2 = node.dependencies.filter(depId => !this.config?.activeSkillTree.unlockedNodes.has(depId));
+          if (unmetDepsV2.length > 0) {
+            const depNamesV2 = unmetDepsV2.map(depId => {
+              const depNode = this.nodes.find(n => n.id === depId);
+              if (!depNode || depNode.state === SkillTreeNodeState.LOCKED_HIDDEN) return "???";
+              return this.getRewardDisplayName(depNode) || depNode.name;
+            });
+            if ((node as any).requiresAllDependencies) {
+              requirementsV2.push(i18next.t("skillTree:prereq.unlockAllPrior", { skills: depNamesV2.join(", ") }));
+            } else {
+              requirementsV2.push(i18next.t("skillTree:prereq.unlockOnePrior", { skills: depNamesV2.join(", ") }));
+            }
+          }
+          const nodeCostV2 = this.getNodeCost(node);
+          this.tooltipCost.setText(i18next.t("skillTree:nodeCost", { cost: nodeCostV2 }));
+          this.tooltipCost.setColor("#888888");
+          if (requirementsV2.length > 0) {
+            const requirementsLine = `[color=#ff6b6b]${i18next.t("skillTree:prereq.header")}[/color] [color=#ffdd44]${requirementsV2.join(", ")}[/color]`;
+            this.tooltipDesc.setText(`${descriptionV2}\n\n${requirementsLine}`);
+          } else {
+            this.tooltipDesc.setText(descriptionV2);
+          }
+          this.tooltipPrereq.setText("");
+        } else {
+          this.tooltipTitle.setText(i18next.t("skillTree:nodeStates.locked"));
+          this.tooltipCost.setText("");
           const unmetDeps = node.dependencies.filter(depId =>
             !this.config?.activeSkillTree.unlockedNodes.has(depId)
           );
-
           if (unmetDeps.length > 0) {
             const depNames = unmetDeps.map(depId => {
               const depNode = this.nodes.find(n => n.id === depId);
               if (!depNode ||
-                    depNode.state === SkillTreeNodeState.LOCKED_HIDDEN ||
-                    depNode.state === SkillTreeNodeState.LOCKED_VISIBLE) {
+                  depNode.state === SkillTreeNodeState.LOCKED_HIDDEN ||
+                  depNode.state === SkillTreeNodeState.LOCKED_VISIBLE) {
                 return "???";
               }
+              return this.getRewardDisplayName(depNode) || depNode.name;
+            });
+            const headerLine = i18next.t("skillTree:prereq.dependencies", { dependencies: "" }).split("\n")[0];
+            const dependenciesList = depNames.map((name, i) => {
+              if (i < depNames.length - 1) {
+                const or = i18next.t("skillTree:prereq.or");
+                return `- ${name}\n${or}`;
+              }
+              return `- ${name}`;
+            }).join("\n");
+            this.tooltipDesc.setText(`[color=#ff6b6b]${headerLine}[/color]\n${dependenciesList}`);
+          } else {
+            this.tooltipDesc.setText("");
+          }
+          this.tooltipPrereq.setText("");
+        }
+        break;
+
+      case SkillTreeNodeState.LOCKED_DETAILS:
+
+        const dependenciesMet = this.areNodeDependenciesMet(node);
+
+        if (!dependenciesMet) {
+
+          this.tooltipTitle.setText(i18next.t("skillTree:nodeStates.locked"));
+          if (node.depth >= 2) {
+            const unmetDeps = node.dependencies.filter(depId =>
+              !this.config?.activeSkillTree.unlockedNodes.has(depId)
+            );
+
+            if (unmetDeps.length > 0) {
+              const depNames = unmetDeps.map(depId => {
+                const depNode = this.nodes.find(n => n.id === depId);
+                if (!depNode ||
+                    depNode.state === SkillTreeNodeState.LOCKED_HIDDEN ||
+                    depNode.state === SkillTreeNodeState.LOCKED_VISIBLE) {
+                  return "???";
+                }
               return this.getRewardDisplayName(depNode) || depNode.name;
             });
 
@@ -2672,44 +2562,44 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         } else {
           this.tooltipDesc.setText(i18next.t("skillTree:unmetDependencies"));
         }
-        this.tooltipCost.setText("");
-        this.tooltipPrereq.setText("");
-        this.updateInstructionsForDependencies(node);
-      } else {
+          this.tooltipCost.setText("");
+          this.tooltipPrereq.setText("");
+          this.updateInstructionsForDependencies(node);
+        } else {
         this.restoreNormalInstructions();
         const displayName = this.getRewardDisplayName(node);
         this.tooltipTitle.setText(displayName || node.name);
 
-        const description = this.getEnhancedDescription(node);
-        this.tooltipDesc.setText(description);
-        this.tooltipDesc.setStroke("", 0);
+          const description = this.getEnhancedDescription(node);
+          this.tooltipDesc.setText(description);
+          this.tooltipDesc.setStroke("", 0);
 
-        const nodeCost = this.getNodeCost(node);
-        const canAfford = (this.config?.activeSkillTree.skillPoints || 0) >= nodeCost;
-        if (nodeCost === 0) {
-          this.tooltipCost.setText(i18next.t("skillTree:nodeCostFree"));
-        } else {
-          this.tooltipCost.setText(i18next.t("skillTree:nodeCost", { cost: nodeCost }));
+          const nodeCost = this.getNodeCost(node);
+          const canAfford = (this.config?.activeSkillTree.skillPoints || 0) >= nodeCost;
+          if (nodeCost === 0) {
+            this.tooltipCost.setText(i18next.t("skillTree:nodeCostFree"));
+          } else {
+            this.tooltipCost.setText(i18next.t("skillTree:nodeCost", { cost: nodeCost }));
+          }
+          this.tooltipCost.setColor(canAfford ? "#00ff00" : "#ff0000");
+
+          const prereq = this.evaluateNodePrerequisites(node, true);
+          this.tooltipPrereq.setText(prereq.messages.length ? [i18next.t("skillTree:prereq.header"), ...prereq.messages].join(" ") : "");
         }
-        this.tooltipCost.setColor(canAfford ? "#00ff00" : "#ff0000");
+        break;
 
-        const prereq = this.evaluateNodePrerequisites(node, true);
-        this.tooltipPrereq.setText(prereq.messages.length ? [i18next.t("skillTree:prereq.header"), ...prereq.messages].join(" ") : "");
-      }
-      break;
+      case SkillTreeNodeState.UNLOCKED:
 
-    case SkillTreeNodeState.UNLOCKED:
+        this.restoreNormalInstructions();
+        const displayName = this.getRewardDisplayName(node);
+        this.tooltipTitle.setText(displayName || node.name);
 
-      this.restoreNormalInstructions();
-      const displayName = this.getRewardDisplayName(node);
-      this.tooltipTitle.setText(displayName || node.name);
-
-      this.tooltipDesc.setText(this.getEnhancedDescription(node));
-      this.tooltipDesc.setStroke("", 0);
-      this.tooltipCost.setText(i18next.t("skillTree:nodeStates.unlocked"));
-      this.tooltipCost.setColor("#00ff00");
-      this.tooltipPrereq.setText("");
-      break;
+        this.tooltipDesc.setText(this.getEnhancedDescription(node));
+        this.tooltipDesc.setStroke("", 0);
+        this.tooltipCost.setText(i18next.t("skillTree:nodeStates.unlocked"));
+        this.tooltipCost.setColor("#00ff00");
+        this.tooltipPrereq.setText("");
+        break;
     }
     const rarity = this.getSkillRarityFromNode(node);
     const rarityText = this.getRarityText(rarity);
@@ -2786,9 +2676,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private updateInstructionsForDependencies(node: SkillTreeNode): void {
-    if (!this.config) {
-      return;
-    }
+    if (!this.config) return;
 
     const unmetDeps = node.dependencies.filter(depId =>
       !this.config.activeSkillTree.unlockedNodes.has(depId)
@@ -2815,9 +2703,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private restoreNormalInstructions(): void {
-    if (!this.config) {
-      return;
-    }
+    if (!this.config) return;
 
     try {
       if (this.config.mode === SkillTreeMode.POKEMON_SELECTION) {
@@ -2859,15 +2745,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private updateInstructionsForInputMethod(): void {
-    if (!this.instructionsText) {
-      return;
-    }
+    if (!this.instructionsText) return;
 
     const newInputMethod = this.scene.inputMethod || "keyboard";
 
-    if (newInputMethod === this.currentInputMethod) {
-      return;
-    }
+    if (newInputMethod === this.currentInputMethod) return;
 
     this.currentInputMethod = newInputMethod;
 
@@ -2907,15 +2789,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private getDependencyChain(nodeId: string, visited: Set<string> = new Set()): string[] {
-    if (visited.has(nodeId)) {
-      return [];
-    }
+    if (visited.has(nodeId)) return [];
     visited.add(nodeId);
 
     const node = this.nodes.find(n => n.id === nodeId);
-    if (!node || !this.config) {
-      return [];
-    }
+    if (!node || !this.config) return [];
 
     const chain: string[] = [];
     const ast = this.config.activeSkillTree;
@@ -2934,26 +2812,18 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.clearDependencyHighlights();
 
     const node = this.nodes.find(n => n.id === nodeId);
-    if (!node || node.state === SkillTreeNodeState.UNLOCKED) {
-      return;
-    }
+    if (!node || node.state === SkillTreeNodeState.UNLOCKED) return;
     const dependenciesMet = this.areNodeDependenciesMet(node);
-    if (dependenciesMet) {
-      return;
-    }
+    if (dependenciesMet) return;
 
     const dependencyChain = this.getDependencyChain(nodeId);
-    if (dependencyChain.length === 0) {
-      return;
-    }
+    if (dependencyChain.length === 0) return;
 
     const c = SkillTreeUiHandler.UI_CONSTANTS.DEPENDENCY_HIGHLIGHT;
     const dependencySet = new Set([nodeId, ...dependencyChain]);
     this.nodes.forEach(n => {
       const nodeContainer = this.nodeSprites.get(n.id);
-      if (!nodeContainer) {
-        return;
-      }
+      if (!nodeContainer) return;
 
       if (dependencySet.has(n.id)) {
 
@@ -2975,14 +2845,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private applyPurpleBackground(node: SkillTreeNode): void {
     const nodeContainer = this.nodeSprites.get(node.id);
-    if (!nodeContainer) {
-      return;
-    }
+    if (!nodeContainer) return;
     this.purpleBackgroundNodes.add(node.id);
     const bg = nodeContainer.list[0] as Phaser.GameObjects.Graphics;
-    if (!bg) {
-      return;
-    }
+    if (!bg) return;
     bg.clear();
     bg.fillStyle(SkillTreeUiHandler.UI_CONSTANTS.DEPENDENCY_HIGHLIGHT.COLOR, 1.0);
     bg.lineStyle(3, SkillTreeUiHandler.UI_CONSTANTS.DEPENDENCY_HIGHLIGHT.COLOR);
@@ -3021,7 +2887,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
             targets: connectionHighlight,
             alpha: c.PULSE_ALPHA_MIN,
             duration: c.PULSE_DURATION / 2,
-            ease: "Sine.easeInOut",
+            ease: 'Sine.easeInOut',
             yoyo: true,
             repeat: -1
           });
@@ -3056,9 +2922,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private playUnlockEffect(node: SkillTreeNode): void {
     const nodeContainer = this.nodeSprites.get(node.id);
-    if (!nodeContainer) {
-      return;
-    }
+    if (!nodeContainer) return;
 
     const c = SkillTreeUiHandler.UI_CONSTANTS.ANIMATIONS.UNLOCK_EFFECT;
     this.scene.time.delayedCall(c.DELAY, () => {
@@ -3073,7 +2937,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         scaleX: c.PULSE_SCALE,
         scaleY: c.PULSE_SCALE,
         duration: c.DURATION * 0.3,
-        ease: "Back.easeOut",
+        ease: 'Back.easeOut',
         yoyo: true,
         onComplete: () => {
 
@@ -3105,7 +2969,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         x: targetX,
         y: targetY,
         duration: c.DURATION * 1.5,
-        ease: "Cubic.easeOut",
+        ease: 'Cubic.easeOut',
         onComplete: () => {
           particle.destroy();
         }
@@ -3115,7 +2979,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         alpha: 0.3,
         duration: c.DURATION * 0.8,
         delay: c.DURATION * 0.2,
-        ease: "Cubic.easeIn"
+        ease: 'Cubic.easeIn'
       });
     }
   }
@@ -3126,9 +2990,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     newNodes.forEach((node, index) => {
       const nodeContainer = this.nodeSprites.get(node.id);
-      if (!nodeContainer) {
-        return;
-      }
+      if (!nodeContainer) return;
       nodeContainer.setScale(c.SCALE_FROM);
       nodeContainer.setAlpha(c.ALPHA_FROM);
       const delay = index * c.FADE_IN_DELAY;
@@ -3139,7 +3001,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         alpha: 1,
         duration: c.DURATION,
         delay: delay,
-        ease: "Back.easeOut",
+        ease: 'Back.easeOut',
         onComplete: () => {
 
           this.playSecondaryRevealEffect(node, index * 100);
@@ -3153,9 +3015,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private playSecondaryRevealEffect(node: SkillTreeNode, delay: number = 0): void {
     const nodeContainer = this.nodeSprites.get(node.id);
-    if (!nodeContainer) {
-      return;
-    }
+    if (!nodeContainer) return;
 
     const c = SkillTreeUiHandler.UI_CONSTANTS.ANIMATIONS.UNLOCK_EFFECT;
     this.scene.time.delayedCall(delay, () => {
@@ -3170,7 +3030,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         scaleX: 1.1,
         scaleY: 1.1,
         duration: 400,
-        ease: "Sine.easeOut",
+        ease: 'Sine.easeOut',
         yoyo: true,
         onComplete: () => {
 
@@ -3199,7 +3059,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         y: targetY,
         alpha: 0,
         duration: 600,
-        ease: "Cubic.easeOut",
+        ease: 'Cubic.easeOut',
         onComplete: () => particle.destroy()
       });
     }
@@ -3207,9 +3067,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private playStateTransitionEffect(node: SkillTreeNode, fromState: SkillTreeNodeState, toState: SkillTreeNodeState): void {
     const nodeContainer = this.nodeSprites.get(node.id);
-    if (!nodeContainer) {
-      return;
-    }
+    if (!nodeContainer) return;
 
     const c = SkillTreeUiHandler.UI_CONSTANTS.ANIMATIONS.STATE_TRANSITION;
     this.scene.tweens.add({
@@ -3217,7 +3075,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       scaleX: c.SCALE_BOUNCE,
       scaleY: c.SCALE_BOUNCE,
       duration: c.DURATION * 0.5,
-      ease: "Back.easeOut",
+      ease: 'Back.easeOut',
       yoyo: true
     });
     if (toState === SkillTreeNodeState.UNLOCKED ||
@@ -3251,14 +3109,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private fitViewToVisibleNodes(): void {
-    if (!this.config || !this.nodes || !this.nodes.length) {
-      return;
-    }
+    if (!this.config || !this.nodes || !this.nodes.length) return;
     const ast = this.config.activeSkillTree;
     const visible = this.nodes.filter(n => n.depth <= (ast.maxVisibleDepth || 0));
-    if (!visible.length) {
-      return;
-    }
+    if (!visible.length) return;
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     for (const n of visible) {
       minX = Math.min(minX, n.position.x);
@@ -3271,9 +3125,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     const h = (maxY - minY) + padding;
     const vw = this.getWidth();
     const vh = this.getHeight();
-    if (vw <= 0 || vh <= 0) {
-      return;
-    }
+    if (vw <= 0 || vh <= 0) return;
     const scale = Math.max(0.1, Math.min(3, Math.min(vw / w, vh / h)));
     this.transform.scale = scale;
     const cx = (minX + maxX) / 2;
@@ -3283,7 +3135,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.applyTransform();
   }
 
-  private panToNode(node: SkillTreeNode, durationMs: number = 1000, skipZoom: boolean = false, customZoom?: number, ease: string = "Sine.easeInOut"): void {
+  private panToNode(node: SkillTreeNode, durationMs: number = 1000, skipZoom: boolean = false, customZoom?: number, ease: string = 'Sine.easeInOut'): void {
     const targetScale = skipZoom ? this.transform.scale : (customZoom !== undefined ? customZoom : this.DEFAULT_ZOOM);
     const targetX = -node.position.x * targetScale;
     const targetY = -node.position.y * targetScale;
@@ -3291,9 +3143,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     if (durationMs <= 0) {
       this.transform.tx = targetX;
       this.transform.ty = targetY;
-      if (!skipZoom) {
-        this.transform.scale = targetScale;
-      }
+      if (!skipZoom) this.transform.scale = targetScale;
       this.applyTransform();
       return;
     }
@@ -3329,29 +3179,17 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     let signatureCount = 0;
     let generalCount = 0;
     for (const n of nodes) {
-      if (!activeSkillTree.unlockedNodes.has(n.id)) {
-        continue;
-      }
-      if (n.rewardData.type === SkillTreeRewardType.SIGNATURE_POKEMON) {
-        signatureCount++;
-      }
-      if (n.rewardData.type === SkillTreeRewardType.GENERAL_POKEMON) {
-        generalCount++;
-      }
+      if (!activeSkillTree.unlockedNodes.has(n.id)) continue;
+      if (n.rewardData.type === SkillTreeRewardType.SIGNATURE_POKEMON) signatureCount++;
+      if (n.rewardData.type === SkillTreeRewardType.GENERAL_POKEMON) generalCount++;
     }
     return { signatureCount, generalCount, total: signatureCount + generalCount };
   }
 
   private handleSelection(node: SkillTreeNode): boolean {
-    if (node.state !== SkillTreeNodeState.LOCKED_DETAILS) {
-      return false;
-    }
-    if (![SkillTreeRewardType.SIGNATURE_POKEMON, SkillTreeRewardType.GENERAL_POKEMON].includes(node.rewardData.type)) {
-      return false;
-    }
-    const species = node.rewardData.data?.species as Species | undefined; if (species === undefined) {
-      return false;
-    }
+    if (node.state !== SkillTreeNodeState.LOCKED_DETAILS) return false;
+    if (![SkillTreeRewardType.SIGNATURE_POKEMON, SkillTreeRewardType.GENERAL_POKEMON].includes(node.rewardData.type)) return false;
+    const species = node.rewardData.data?.species as Species | undefined; if (species === undefined) return false;
 
     const isSignature = node.rewardData.type === SkillTreeRewardType.SIGNATURE_POKEMON;
 
@@ -3404,31 +3242,21 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private canPurchase(node: SkillTreeNode): boolean {
-    const ast = this.config?.activeSkillTree; if (!ast) {
-      return false;
-    }
+    const ast = this.config?.activeSkillTree; if (!ast) return false;
 
     if (this.isEnhancedDebugMode) {
       return true;
     }
 
-    if (node.state !== SkillTreeNodeState.LOCKED_DETAILS) {
-      return false;
-    }
+    if (node.state !== SkillTreeNodeState.LOCKED_DETAILS) return false;
 
     const nodeCost = this.getNodeCost(node);
-    if ((ast.skillPoints || 0) < nodeCost) {
-      return false;
-    }
+    if ((ast.skillPoints || 0) < nodeCost) return false;
 
-    if (!this.areNodeDependenciesMet(node)) {
-      return false;
-    }
+    if (!this.areNodeDependenciesMet(node)) return false;
 
     const prereq = this.evaluateNodePrerequisites(node);
-    if (!prereq.ok) {
-      return false;
-    }
+    if (!prereq.ok) return false;
 
     if (isSkillTreeV2()) {
       const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
@@ -3438,6 +3266,75 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
 
     return true;
+  }
+
+  private getPurchaseBlockedMessage(node: SkillTreeNode): string | null {
+    const ast = this.config?.activeSkillTree;
+    if (!ast) {
+      return i18next.t("skillTree:prereq.notMet", { defaultValue: "Cannot purchase" });
+    }
+
+    if (this.isEnhancedDebugMode) {
+      return null;
+    }
+
+    if (node.state !== SkillTreeNodeState.LOCKED_DETAILS) {
+      if (node.state === SkillTreeNodeState.UNLOCKED) {
+        return i18next.t("skillTree:nodeStates.unlocked");
+      }
+      if (node.state === SkillTreeNodeState.LOCKED_HIDDEN) {
+        return i18next.t("skillTree:nodeStates.hidden");
+      }
+      return i18next.t("skillTree:nodeStates.locked");
+    }
+
+    const nodeCost = this.getNodeCost(node);
+    if ((ast.skillPoints || 0) < nodeCost) {
+      return i18next.t("skillTree:cannotAfford", { cost: nodeCost, current: ast.skillPoints || 0, defaultValue: "Cannot purchase" });
+    }
+
+    const requirements: string[] = [];
+
+    if (!this.areNodeDependenciesMet(node)) {
+      const depNames = node.dependencies
+        .map(depId => {
+          const depNode = this.nodes.find(n => n.id === depId);
+          if (!depNode) return depId;
+          return this.getRewardDisplayName(depNode) || depNode.name || depId;
+        })
+        .filter((n): n is string => !!n);
+
+      if (depNames.length > 0) {
+        const key = (node as any).requiresAllDependencies
+          ? "skillTree:prereq.unlockAllPrior"
+          : "skillTree:prereq.unlockOnePrior";
+        requirements.push(i18next.t(key, { skills: depNames.join(", ") }));
+      } else {
+        requirements.push(i18next.t("skillTree:unmetDependencies"));
+      }
+    }
+
+    const prereq = this.evaluateNodePrerequisites(node);
+    if (!prereq.ok) {
+      if (prereq.messages.length) {
+        requirements.push(...prereq.messages);
+      } else {
+        requirements.push(i18next.t("skillTree:prereq.notMet"));
+      }
+    }
+
+    if (isSkillTreeV2()) {
+      const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
+      if ((ast.treeLevel || 1) < requiredLevel) {
+        requirements.push(i18next.t("skillTree:prereq.treeLevelRequired", { level: requiredLevel }));
+      }
+    }
+
+    if (requirements.length > 0) {
+      return [i18next.t("skillTree:prereq.header"), ...requirements].join("\n");
+    }
+
+    return null;
   }
 
   private isGlitchFormUnlocked(node: SkillTreeNode): boolean {
@@ -3477,9 +3374,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private areNodeDependenciesMet(node: SkillTreeNode): boolean {
-    const ast = this.config?.activeSkillTree; if (!ast) {
-      return false;
-    }
+    const ast = this.config?.activeSkillTree; if (!ast) return false;
 
     if (this.isEnhancedDebugMode) {
       return true;
@@ -3497,9 +3392,9 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private handlePurchase(node: SkillTreeNode): boolean {
-    if (!this.canPurchase(node)) {
-      const nodeCost = this.getNodeCost(node);
-      this.modalMessage?.showText(i18next.t("skillTree:cannotAfford", { cost: nodeCost, current: this.config?.activeSkillTree.skillPoints || 0, defaultValue: "Cannot purchase" }), 0);
+    const blockedMessage = this.getPurchaseBlockedMessage(node);
+    if (blockedMessage) {
+      this.modalMessage?.showText(blockedMessage, 0);
       (this.scene as BattleScene).ui.playError();
       return false;
     }
@@ -3675,11 +3570,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       try {
         const amt = node.rewardData?.data?.amount || 0;
         let factory = modifierTypes?.SELECTABLE_PMONEY_3;
-        if (amt >= 5000 && modifierTypes?.SELECTABLE_PMONEY_5) {
-          factory = modifierTypes.SELECTABLE_PMONEY_5;
-        } else if (amt >= 2500 && modifierTypes?.SELECTABLE_PMONEY_4) {
-          factory = modifierTypes.SELECTABLE_PMONEY_4;
-        }
+        if (amt >= 5000 && modifierTypes?.SELECTABLE_PMONEY_5) factory = modifierTypes.SELECTABLE_PMONEY_5;
+        else if (amt >= 2500 && modifierTypes?.SELECTABLE_PMONEY_4) factory = modifierTypes.SELECTABLE_PMONEY_4;
         if (factory && typeof factory === "function") {
           this.executeModifierRewardWithReturn(factory, true, node.rarity);
           return;
@@ -3747,6 +3639,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         SkillTreeRewardType.GENERAL_POKEMON,
         SkillTreeRewardType.ABILITY_GRANT,
         SkillTreeRewardType.PASSIVE_ABILITY_GRANT,
+        SkillTreeRewardType.PARTY_ABILITY_GRANT,
         SkillTreeRewardType.STAT_BOOST,
         SkillTreeRewardType.MOVE_UPGRADE,
         SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC,
@@ -3796,9 +3689,9 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
       if (t === SkillTreeRewardType.PERMA_ITEM) {
         const permaType = node.rewardData?.data?.permaType;
-        if (permaType !== undefined && permaType !== null && typeof permaType === "string") {
+        if (permaType !== undefined && permaType !== null && typeof permaType === 'string') {
           const permaModifierFunc = (modifierTypes as any)[permaType];
-          if (permaModifierFunc && typeof permaModifierFunc === "function") {
+          if (permaModifierFunc && typeof permaModifierFunc === 'function') {
             this.executeModifierRewardWithReturn(permaModifierFunc, true, node.rarity);
             return;
           }
@@ -3882,7 +3775,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       }
     }
 
-    const reward: RewardConfig = {
+    let reward: RewardConfig = {
       type: RewardObtainedType.UNLOCK,
       name: this.getRewardDisplayName(node),
       skillTreeRarity: node.rarity
@@ -3897,70 +3790,70 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private resolvePermaFactoryName(permaType: PermaType): string {
     switch (permaType) {
-    case PermaType.PERMA_PARTY_ABILITY: return "PERMA_PARTY_ABILITY";
-    case PermaType.PERMA_NEW_NORMAL: return "PERMA_NEW_NORMAL";
-    case PermaType.PERMA_REROLL_COST_1: return "PERMA_REROLL_COST_1";
-    case PermaType.PERMA_REROLL_COST_2: return "PERMA_REROLL_COST_2";
-    case PermaType.PERMA_REROLL_COST_3: return "PERMA_REROLL_COST_3";
-    case PermaType.PERMA_SHOW_REWARDS_1: return "PERMA_SHOW_REWARDS_1";
-    case PermaType.PERMA_SHOW_REWARDS_2: return "PERMA_SHOW_REWARDS_2";
-    case PermaType.PERMA_SHOW_REWARDS_3: return "PERMA_SHOW_REWARDS_3";
-    case PermaType.PERMA_FUSION_INCREASE_1: return "PERMA_FUSION_INCREASE_1";
-    case PermaType.PERMA_FUSION_INCREASE_2: return "PERMA_FUSION_INCREASE_2";
-    case PermaType.PERMA_FUSION_INCREASE_3: return "PERMA_FUSION_INCREASE_3";
-    case PermaType.PERMA_CATCH_RATE_1: return "PERMA_CATCH_RATE_1";
-    case PermaType.PERMA_CATCH_RATE_2: return "PERMA_CATCH_RATE_2";
-    case PermaType.PERMA_CATCH_RATE_3: return "PERMA_CATCH_RATE_3";
-    case PermaType.PERMA_TRAINER_SNATCH_COST_1: return "PERMA_TRAINER_SNATCH_COST_1";
-    case PermaType.PERMA_TRAINER_SNATCH_COST_2: return "PERMA_TRAINER_SNATCH_COST_2";
-    case PermaType.PERMA_TRAINER_SNATCH_COST_3: return "PERMA_TRAINER_SNATCH_COST_3";
-    case PermaType.PERMA_MORE_REVIVE_1: return "PERMA_MORE_REVIVE_1";
-    case PermaType.PERMA_MORE_REVIVE_2: return "PERMA_MORE_REVIVE_2";
-    case PermaType.PERMA_MORE_REVIVE_3: return "PERMA_MORE_REVIVE_3";
-    case PermaType.PERMA_FREE_REROLL: return "PERMA_FREE_REROLL";
-    case PermaType.PERMA_BETTER_LUCK_2: return "PERMA_BETTER_LUCK_2";
-    case PermaType.PERMA_BETTER_LUCK_3: return "PERMA_BETTER_LUCK_3";
-    case PermaType.PERMA_MORE_REWARD_CHOICE_1: return "PERMA_MORE_REWARD_CHOICE_1";
-    case PermaType.PERMA_MORE_REWARD_CHOICE_2: return "PERMA_MORE_REWARD_CHOICE_2";
-    case PermaType.PERMA_MORE_REWARD_CHOICE_3: return "PERMA_MORE_REWARD_CHOICE_3";
-    case PermaType.PERMA_POST_BATTLE_MONEY_1: return "PERMA_POST_BATTLE_MONEY_1";
-    case PermaType.PERMA_POST_BATTLE_MONEY_2: return "PERMA_POST_BATTLE_MONEY_2";
-    case PermaType.PERMA_POST_BATTLE_MONEY_3: return "PERMA_POST_BATTLE_MONEY_3";
-    case PermaType.PERMA_START_BALL_1: return "PERMA_START_BALL_1";
-    case PermaType.PERMA_START_BALL_2: return "PERMA_START_BALL_2";
-    case PermaType.PERMA_START_BALL_3: return "PERMA_START_BALL_3";
-    case PermaType.PERMA_START_MONEY_1: return "PERMA_START_MONEY_1";
-    case PermaType.PERMA_START_MONEY_2: return "PERMA_START_MONEY_2";
-    case PermaType.PERMA_START_MONEY_3: return "PERMA_START_MONEY_3";
-    case PermaType.PERMA_START_GLITCH_PIECES_1: return "PERMA_START_GLITCH_PIECES_1";
-    case PermaType.PERMA_START_GLITCH_PIECES_2: return "PERMA_START_GLITCH_PIECES_2";
-    case PermaType.PERMA_START_GLITCH_PIECES_3: return "PERMA_START_GLITCH_PIECES_3";
-    case PermaType.PERMA_METRONOME_LEVELUP: return "PERMA_METRONOME_LEVELUP";
-    case PermaType.PERMA_NEW_ROUND_TERA: return "PERMA_NEW_ROUND_TERA";
-    case PermaType.PERMA_RUN_ANYTHING_2: return "PERMA_RUN_ANYTHING_2";
-    case PermaType.PERMA_SHINY_1: return "PERMA_SHINY_1";
-    case PermaType.PERMA_SHINY_2: return "PERMA_SHINY_2";
-    case PermaType.PERMA_SHINY_3: return "PERMA_SHINY_3";
-    case PermaType.PERMA_CHEAPER_FUSIONS_1: return "PERMA_CHEAPER_FUSIONS_1";
-    case PermaType.PERMA_CHEAPER_FUSIONS_2: return "PERMA_CHEAPER_FUSIONS_2";
-    case PermaType.PERMA_CHEAPER_FUSIONS_3: return "PERMA_CHEAPER_FUSIONS_3";
-    case PermaType.PERMA_STARTER_POINT_LIMIT_INC_1: return "PERMA_STARTER_POINT_LIMIT_INC_1";
-    case PermaType.PERMA_STARTER_POINT_LIMIT_INC_2: return "PERMA_STARTER_POINT_LIMIT_INC_2";
-    case PermaType.PERMA_STARTER_POINT_LIMIT_INC_3: return "PERMA_STARTER_POINT_LIMIT_INC_3";
-    case PermaType.PERMA_LONGER_TERA_1: return "PERMA_LONGER_TERA_1";
-    case PermaType.PERMA_LONGER_TERA_2: return "PERMA_LONGER_TERA_2";
-    case PermaType.PERMA_LONGER_TERA_3: return "PERMA_LONGER_TERA_3";
-    case PermaType.PERMA_LONGER_STAT_BOOSTS_1: return "PERMA_LONGER_STAT_BOOSTS_1";
-    case PermaType.PERMA_LONGER_STAT_BOOSTS_2: return "PERMA_LONGER_STAT_BOOSTS_2";
-    case PermaType.PERMA_LONGER_STAT_BOOSTS_3: return "PERMA_LONGER_STAT_BOOSTS_3";
-    case PermaType.PERMA_MORE_GLITCH_PIECES_1: return "PERMA_MORE_GLITCH_PIECES_1";
-    case PermaType.PERMA_MORE_GLITCH_PIECES_2: return "PERMA_MORE_GLITCH_PIECES_2";
-    case PermaType.PERMA_MORE_GLITCH_PIECES_3: return "PERMA_MORE_GLITCH_PIECES_3";
-    case PermaType.PERMA_GLITCH_PIECE_MAX_PLUS_1: return "PERMA_GLITCH_PIECE_MAX_PLUS_1";
-    case PermaType.PERMA_GLITCH_PIECE_MAX_PLUS_2: return "PERMA_GLITCH_PIECE_MAX_PLUS_2";
-    case PermaType.PERMA_GLITCH_PIECE_MAX_PLUS_3: return "PERMA_GLITCH_PIECE_MAX_PLUS_3";
-    case PermaType.PERMA_TRANSFER_TERA: return "PERMA_TRANSFER_TERA";
-    default: return "PERMA_NEW_NORMAL";
+      case PermaType.PERMA_PARTY_ABILITY: return "PERMA_PARTY_ABILITY";
+      case PermaType.PERMA_NEW_NORMAL: return "PERMA_NEW_NORMAL";
+      case PermaType.PERMA_REROLL_COST_1: return "PERMA_REROLL_COST_1";
+      case PermaType.PERMA_REROLL_COST_2: return "PERMA_REROLL_COST_2";
+      case PermaType.PERMA_REROLL_COST_3: return "PERMA_REROLL_COST_3";
+      case PermaType.PERMA_SHOW_REWARDS_1: return "PERMA_SHOW_REWARDS_1";
+      case PermaType.PERMA_SHOW_REWARDS_2: return "PERMA_SHOW_REWARDS_2";
+      case PermaType.PERMA_SHOW_REWARDS_3: return "PERMA_SHOW_REWARDS_3";
+      case PermaType.PERMA_FUSION_INCREASE_1: return "PERMA_FUSION_INCREASE_1";
+      case PermaType.PERMA_FUSION_INCREASE_2: return "PERMA_FUSION_INCREASE_2";
+      case PermaType.PERMA_FUSION_INCREASE_3: return "PERMA_FUSION_INCREASE_3";
+      case PermaType.PERMA_CATCH_RATE_1: return "PERMA_CATCH_RATE_1";
+      case PermaType.PERMA_CATCH_RATE_2: return "PERMA_CATCH_RATE_2";
+      case PermaType.PERMA_CATCH_RATE_3: return "PERMA_CATCH_RATE_3";
+      case PermaType.PERMA_TRAINER_SNATCH_COST_1: return "PERMA_TRAINER_SNATCH_COST_1";
+      case PermaType.PERMA_TRAINER_SNATCH_COST_2: return "PERMA_TRAINER_SNATCH_COST_2";
+      case PermaType.PERMA_TRAINER_SNATCH_COST_3: return "PERMA_TRAINER_SNATCH_COST_3";
+      case PermaType.PERMA_MORE_REVIVE_1: return "PERMA_MORE_REVIVE_1";
+      case PermaType.PERMA_MORE_REVIVE_2: return "PERMA_MORE_REVIVE_2";
+      case PermaType.PERMA_MORE_REVIVE_3: return "PERMA_MORE_REVIVE_3";
+      case PermaType.PERMA_FREE_REROLL: return "PERMA_FREE_REROLL";
+      case PermaType.PERMA_BETTER_LUCK_2: return "PERMA_BETTER_LUCK_2";
+      case PermaType.PERMA_BETTER_LUCK_3: return "PERMA_BETTER_LUCK_3";
+      case PermaType.PERMA_MORE_REWARD_CHOICE_1: return "PERMA_MORE_REWARD_CHOICE_1";
+      case PermaType.PERMA_MORE_REWARD_CHOICE_2: return "PERMA_MORE_REWARD_CHOICE_2";
+      case PermaType.PERMA_MORE_REWARD_CHOICE_3: return "PERMA_MORE_REWARD_CHOICE_3";
+      case PermaType.PERMA_POST_BATTLE_MONEY_1: return "PERMA_POST_BATTLE_MONEY_1";
+      case PermaType.PERMA_POST_BATTLE_MONEY_2: return "PERMA_POST_BATTLE_MONEY_2";
+      case PermaType.PERMA_POST_BATTLE_MONEY_3: return "PERMA_POST_BATTLE_MONEY_3";
+      case PermaType.PERMA_START_BALL_1: return "PERMA_START_BALL_1";
+      case PermaType.PERMA_START_BALL_2: return "PERMA_START_BALL_2";
+      case PermaType.PERMA_START_BALL_3: return "PERMA_START_BALL_3";
+      case PermaType.PERMA_START_MONEY_1: return "PERMA_START_MONEY_1";
+      case PermaType.PERMA_START_MONEY_2: return "PERMA_START_MONEY_2";
+      case PermaType.PERMA_START_MONEY_3: return "PERMA_START_MONEY_3";
+      case PermaType.PERMA_START_GLITCH_PIECES_1: return "PERMA_START_GLITCH_PIECES_1";
+      case PermaType.PERMA_START_GLITCH_PIECES_2: return "PERMA_START_GLITCH_PIECES_2";
+      case PermaType.PERMA_START_GLITCH_PIECES_3: return "PERMA_START_GLITCH_PIECES_3";
+      case PermaType.PERMA_METRONOME_LEVELUP: return "PERMA_METRONOME_LEVELUP";
+      case PermaType.PERMA_NEW_ROUND_TERA: return "PERMA_NEW_ROUND_TERA";
+      case PermaType.PERMA_RUN_ANYTHING_2: return "PERMA_RUN_ANYTHING_2";
+      case PermaType.PERMA_SHINY_1: return "PERMA_SHINY_1";
+      case PermaType.PERMA_SHINY_2: return "PERMA_SHINY_2";
+      case PermaType.PERMA_SHINY_3: return "PERMA_SHINY_3";
+      case PermaType.PERMA_CHEAPER_FUSIONS_1: return "PERMA_CHEAPER_FUSIONS_1";
+      case PermaType.PERMA_CHEAPER_FUSIONS_2: return "PERMA_CHEAPER_FUSIONS_2";
+      case PermaType.PERMA_CHEAPER_FUSIONS_3: return "PERMA_CHEAPER_FUSIONS_3";
+      case PermaType.PERMA_STARTER_POINT_LIMIT_INC_1: return "PERMA_STARTER_POINT_LIMIT_INC_1";
+      case PermaType.PERMA_STARTER_POINT_LIMIT_INC_2: return "PERMA_STARTER_POINT_LIMIT_INC_2";
+      case PermaType.PERMA_STARTER_POINT_LIMIT_INC_3: return "PERMA_STARTER_POINT_LIMIT_INC_3";
+      case PermaType.PERMA_LONGER_TERA_1: return "PERMA_LONGER_TERA_1";
+      case PermaType.PERMA_LONGER_TERA_2: return "PERMA_LONGER_TERA_2";
+      case PermaType.PERMA_LONGER_TERA_3: return "PERMA_LONGER_TERA_3";
+      case PermaType.PERMA_LONGER_STAT_BOOSTS_1: return "PERMA_LONGER_STAT_BOOSTS_1";
+      case PermaType.PERMA_LONGER_STAT_BOOSTS_2: return "PERMA_LONGER_STAT_BOOSTS_2";
+      case PermaType.PERMA_LONGER_STAT_BOOSTS_3: return "PERMA_LONGER_STAT_BOOSTS_3";
+      case PermaType.PERMA_MORE_GLITCH_PIECES_1: return "PERMA_MORE_GLITCH_PIECES_1";
+      case PermaType.PERMA_MORE_GLITCH_PIECES_2: return "PERMA_MORE_GLITCH_PIECES_2";
+      case PermaType.PERMA_MORE_GLITCH_PIECES_3: return "PERMA_MORE_GLITCH_PIECES_3";
+      case PermaType.PERMA_GLITCH_PIECE_MAX_PLUS_1: return "PERMA_GLITCH_PIECE_MAX_PLUS_1";
+      case PermaType.PERMA_GLITCH_PIECE_MAX_PLUS_2: return "PERMA_GLITCH_PIECE_MAX_PLUS_2";
+      case PermaType.PERMA_GLITCH_PIECE_MAX_PLUS_3: return "PERMA_GLITCH_PIECE_MAX_PLUS_3";
+      case PermaType.PERMA_TRANSFER_TERA: return "PERMA_TRANSFER_TERA";
+      default: return "PERMA_NEW_NORMAL";
     }
   }
 
@@ -3970,160 +3863,156 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
     const ast = this.config.activeSkillTree;
     switch (node.rewardData?.type) {
-    case SkillTreeRewardType.SKILL_POINTS: {
-      const oldSp = ast.skillPoints || 0;
-      const amount = node.rewardData.data?.amount || 0;
-      ast.skillPoints += amount;
-      break;
-    }
-    case SkillTreeRewardType.SKILL_TREE_TOKENS: {
-      const oldTk = ast.tokens || 0;
-      const amount = node.rewardData.data?.amount || 0;
-      ast.tokens += amount;
-      break;
-    }
-    case SkillTreeRewardType.ESSENCE_BUNDLE: {
-      const data = node.rewardData.data || {};
-      const type = data.type;
-      const amount = data.amount || 0;
-      const gameData = (this.scene as BattleScene).gameData as any;
-      if (typeof type !== "undefined") {
-        gameData.addEssence(type, amount);
+      case SkillTreeRewardType.SKILL_POINTS: {
+        const oldSp = ast.skillPoints || 0;
+        const amount = node.rewardData.data?.amount || 0;
+        ast.skillPoints += amount;
+        break;
       }
-      break;
-    }
-    case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT: {
-      const data = node.rewardData.data || {};
-      const type = data.type;
-      const weight = data.weight || 0;
-      ast.essenceTypeWeights = ast.essenceTypeWeights || {} as any;
-      if (typeof type !== "undefined") {
-        (ast.essenceTypeWeights as any)[type] = ((ast.essenceTypeWeights as any)[type] || 0) + weight;
+      case SkillTreeRewardType.SKILL_TREE_TOKENS: {
+        const oldTk = ast.tokens || 0;
+        const amount = node.rewardData.data?.amount || 0;
+        ast.tokens += amount;
+        break;
       }
-      break;
-    }
-    case SkillTreeRewardType.CATCH_RATE_BONUS: {
-      const data = node.rewardData.data || {};
-      const amount = data.amount || 0;
-      const types = Array.isArray(data.types) ? data.types : [];
-      ast.catchRateBonusByType = ast.catchRateBonusByType || {} as any;
-      if (types.length > 0) {
-        for (const t of types) {
-          (ast.catchRateBonusByType as any)[t] = ((ast.catchRateBonusByType as any)[t] || 0) + amount;
+      case SkillTreeRewardType.ESSENCE_BUNDLE: {
+        const data = node.rewardData.data || {};
+        const type = data.type;
+        const amount = data.amount || 0;
+        const gameData = (this.scene as BattleScene).gameData as any;
+        if (typeof type !== "undefined") {
+          gameData.addEssence(type, amount);
         }
-      } else {
-        try {
-          const cm = ChampionManager.getInstance();
-          const champId = (this.scene as BattleScene).gameData.selectedChampionId || ast.championId || "apollo_diana";
-          const c = cm.getChampionData(champId) as any;
-          [c.type1, c.type2].filter(Boolean).forEach((t: number) => {
+        break;
+      }
+      case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT: {
+        const data = node.rewardData.data || {};
+        const type = data.type;
+        const weight = data.weight || 0;
+        ast.essenceTypeWeights = ast.essenceTypeWeights || {} as any;
+        if (typeof type !== "undefined") {
+          (ast.essenceTypeWeights as any)[type] = ((ast.essenceTypeWeights as any)[type] || 0) + weight;
+        }
+        break;
+      }
+      case SkillTreeRewardType.CATCH_RATE_BONUS: {
+        const data = node.rewardData.data || {};
+        const amount = data.amount || 0;
+        const types = Array.isArray(data.types) ? data.types : [];
+        ast.catchRateBonusByType = ast.catchRateBonusByType || {} as any;
+        if (types.length > 0) {
+          for (const t of types) {
             (ast.catchRateBonusByType as any)[t] = ((ast.catchRateBonusByType as any)[t] || 0) + amount;
-          });
-        } catch {}
-      }
-      break;
-    }
-    case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY: {
-      const data = node.rewardData.data || {};
-      const types = data.types || [];
-      const species = data.species || [];
-      const increment = data.chanceIncrement || 10;
-
-      if (!ast.fusionPriorityChanceByType) {
-        ast.fusionPriorityChanceByType = {};
-      }
-      if (!ast.fusionPriorityChanceBySpecies) {
-        ast.fusionPriorityChanceBySpecies = {};
-      }
-
-      for (const type of types) {
-        const currentChance = ast.fusionPriorityChanceByType[type] || 0;
-        ast.fusionPriorityChanceByType[type] = Math.min(currentChance + increment, 100);
-      }
-
-      for (const spec of species) {
-        const currentChance = ast.fusionPriorityChanceBySpecies[spec] || 0;
-        ast.fusionPriorityChanceBySpecies[spec] = Math.min(currentChance + increment, 100);
-      }
-      break;
-    }
-    case SkillTreeRewardType.REVIVE_BOOST: {
-      const data = node.rewardData.data || {};
-      const types = data.types || [];
-      const species = data.species || [];
-      const increment = data.chanceIncrement || 5;
-
-      if (!ast.reviveChanceByType) {
-        ast.reviveChanceByType = {};
-      }
-      if (!ast.reviveChanceBySpecies) {
-        ast.reviveChanceBySpecies = {};
-      }
-
-      for (const type of types) {
-        const currentChance = ast.reviveChanceByType[type] || 0;
-        ast.reviveChanceByType[type] = Math.min(currentChance + increment, 30);
-      }
-
-      for (const spec of species) {
-        const currentChance = ast.reviveChanceBySpecies[spec] || 0;
-        ast.reviveChanceBySpecies[spec] = Math.min(currentChance + increment, 30);
-      }
-      break;
-    }
-    case SkillTreeRewardType.GLITCH_FORM_UNLOCK: {
-      const data = node.rewardData.data || {};
-      const formKey = data.formKey || data.form || data.key;
-      const questId = data.unlockableId as QuestUnlockables;
-
-      if (formKey) {
-        if (!Array.isArray(ast.unlockedGlitchForms)) {
-          ast.unlockedGlitchForms = [];
+          }
+        } else {
+          try {
+		const cm = ChampionManager.getInstance();
+            const champId = (this.scene as BattleScene).gameData.selectedChampionId || ast.championId || "apollo_diana";
+            const c = cm.getChampionData(champId) as any;
+            [c.type1, c.type2].filter(Boolean).forEach((t: number) => {
+              (ast.catchRateBonusByType as any)[t] = ((ast.catchRateBonusByType as any)[t] || 0) + amount;
+            });
+          } catch {}
         }
-        if (!ast.unlockedGlitchForms.includes(formKey)) {
-          ast.unlockedGlitchForms.push(formKey);
-        }
+        break;
       }
+      case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY: {
+        const data = node.rewardData.data || {};
+        const types = data.types || [];
+        const species = data.species || [];
+        const increment = data.chanceIncrement || 10;
 
-      if (questId && questId in QuestUnlockables) {
-        const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(questId);
-
-        if (!ast.sessionQuestUnlockables) {
-          ast.sessionQuestUnlockables = {};
+        if (!ast.fusionPriorityChanceByType) {
+          ast.fusionPriorityChanceByType = {};
+        }
+        if (!ast.fusionPriorityChanceBySpecies) {
+          ast.fusionPriorityChanceBySpecies = {};
         }
 
-        ast.sessionQuestUnlockables[questId] = { questUnlockData };
-      }
-      break;
-    }
-    case SkillTreeRewardType.PERMA_MONEY: {
-      const data = node.rewardData.data || {};
-      const amount = data.amount || 0;
-      (this.scene as BattleScene).gameData.permaMoney = ((this.scene as BattleScene).gameData.permaMoney || 0) + amount;
-      break;
-    }
-    case SkillTreeRewardType.LEGENDARY_POKEMON: {
-      const data = node.rewardData.data || {};
-      const species = data.species;
-      const prioritize = !!data.prioritize;
-      if (prioritize && typeof species === "number") {
-        if (!ast.legendaryEncounterChanceBySpecies) {
-          ast.legendaryEncounterChanceBySpecies = {};
+        for (const type of types) {
+          const currentChance = ast.fusionPriorityChanceByType[type] || 0;
+          ast.fusionPriorityChanceByType[type] = Math.min(currentChance + increment, 100);
         }
-        const currentChance = ast.legendaryEncounterChanceBySpecies[species] || 0;
-        ast.legendaryEncounterChanceBySpecies[species] = currentChance + 15;
+
+        for (const spec of species) {
+          const currentChance = ast.fusionPriorityChanceBySpecies[spec] || 0;
+          ast.fusionPriorityChanceBySpecies[spec] = Math.min(currentChance + increment, 100);
+        }
+        break;
       }
-      break;
-    }
-    default:
-      break;
+      case SkillTreeRewardType.REVIVE_BOOST: {
+        const data = node.rewardData.data || {};
+        const types = data.types || [];
+        const species = data.species || [];
+        const increment = data.chanceIncrement || 5;
+
+        if (!ast.reviveChanceByType) {
+          ast.reviveChanceByType = {};
+        }
+        if (!ast.reviveChanceBySpecies) {
+          ast.reviveChanceBySpecies = {};
+        }
+
+        for (const type of types) {
+          const currentChance = ast.reviveChanceByType[type] || 0;
+          ast.reviveChanceByType[type] = Math.min(currentChance + increment, 30);
+        }
+
+        for (const spec of species) {
+          const currentChance = ast.reviveChanceBySpecies[spec] || 0;
+          ast.reviveChanceBySpecies[spec] = Math.min(currentChance + increment, 30);
+        }
+        break;
+      }
+      case SkillTreeRewardType.GLITCH_FORM_UNLOCK: {
+        const data = node.rewardData.data || {};
+        const formKey = data.formKey || data.form || data.key;
+        const questId = data.unlockableId as QuestUnlockables;
+
+        if (formKey) {
+          if (!Array.isArray(ast.unlockedGlitchForms)) ast.unlockedGlitchForms = [];
+          if (!ast.unlockedGlitchForms.includes(formKey)) {
+            ast.unlockedGlitchForms.push(formKey);
+          }
+        }
+
+        if (questId && questId in QuestUnlockables) {
+          const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(questId);
+
+          if (!ast.sessionQuestUnlockables) {
+            ast.sessionQuestUnlockables = {};
+          }
+
+          ast.sessionQuestUnlockables[questId] = { questUnlockData };
+        }
+        break;
+      }
+      case SkillTreeRewardType.PERMA_MONEY: {
+        const data = node.rewardData.data || {};
+        const amount = data.amount || 0;
+        (this.scene as BattleScene).gameData.permaMoney = ((this.scene as BattleScene).gameData.permaMoney || 0) + amount;
+        break;
+      }
+      case SkillTreeRewardType.LEGENDARY_POKEMON: {
+        const data = node.rewardData.data || {};
+        const species = data.species;
+        const prioritize = !!data.prioritize;
+        if (prioritize && typeof species === "number") {
+          if (!ast.legendaryEncounterChanceBySpecies) {
+            ast.legendaryEncounterChanceBySpecies = {};
+          }
+          const currentChance = ast.legendaryEncounterChanceBySpecies[species] || 0;
+          ast.legendaryEncounterChanceBySpecies[species] = currentChance + 15;
+        }
+        break;
+      }
+      default:
+        break;
     }
   }
 
   private updateHUD(): void {
-    if (!this.config) {
-      return;
-    }
+    if (!this.config) return;
     const ast = this.config.activeSkillTree;
     this.skillPointsText.setText(`x ${ast.skillPoints}`);
     this.treeLevelText.setText(i18next.t("skillTree:treeLevelShort", { level: ast.treeLevel, defaultValue: `Tree Lv ${ast.treeLevel}` }));
@@ -4192,189 +4081,183 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private getRewardDisplayName(node: SkillTreeNode): string {
     try {
       switch (node.rewardData?.type) {
-      case SkillTreeRewardType.SKILL_POINTS:
+        case SkillTreeRewardType.SKILL_POINTS:
 
-        if (node.depth === 0) {
-          return node.name;
+          if (node.depth === 0) return node.name;
+          return i18next.t("skillTree:rewards.skillPoints", { amount: node.rewardData.data?.amount });
+        case SkillTreeRewardType.SKILL_TREE_TOKENS:
+          return i18next.t("skillTree:rewards.tokens", { amount: node.rewardData.data?.amount });
+        case SkillTreeRewardType.TM_FILTERED:
+          return i18next.t("skillTree:rewards.tm", { move: allMoves?.[node.rewardData.data?.moveId]?.name });
+        case SkillTreeRewardType.XM_FILTERED:
+          return i18next.t("skillTree:rewards.xm", { move: allMoves?.[node.rewardData.data?.moveId]?.name });
+        case SkillTreeRewardType.ESSENCE_BUNDLE:
+          return i18next.t("skillTree:rewards.essenceBundle", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type], amount: node.rewardData.data?.amount });
+        case SkillTreeRewardType.STAT_BOOST: {
+          const stats = (node.rewardData.data?.stats || []);
+          const statNames = stats.map((s: any) => {
+            const Stat = (require as any)("#enums/stat").Stat;
+            return (Stat as any)[s] || "?";
+          }).join(", ");
+
+          try {
+            const championId = this.config?.activeSkillTree?.championData?.id || this.config?.championData?.id;
+            if (!championId) return node.name;
+
+            const ChampionUtils = (require as any)("#app/system/champion-utils").ChampionUtils;
+            const championName = ChampionUtils.getChampionDisplayName(championId);
+            const flavorKey = `skillTree:rewards.statBoostFlavor_${championId}`;
+            const flavorText = i18next.t(flavorKey, { defaultValue: "Training" });
+
+            return i18next.t("skillTree:rewards.statBoostVitamin", {
+              champion: championName,
+              flavor: flavorText,
+              stats: statNames
+            });
+          } catch {
+            return node.name;
+          }
         }
-        return i18next.t("skillTree:rewards.skillPoints", { amount: node.rewardData.data?.amount });
-      case SkillTreeRewardType.SKILL_TREE_TOKENS:
-        return i18next.t("skillTree:rewards.tokens", { amount: node.rewardData.data?.amount });
-      case SkillTreeRewardType.TM_FILTERED:
-        return i18next.t("skillTree:rewards.tm", { move: allMoves?.[node.rewardData.data?.moveId]?.name });
-      case SkillTreeRewardType.XM_FILTERED:
-        return i18next.t("skillTree:rewards.xm", { move: allMoves?.[node.rewardData.data?.moveId]?.name });
-      case SkillTreeRewardType.ESSENCE_BUNDLE:
-        return i18next.t("skillTree:rewards.essenceBundle", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type], amount: node.rewardData.data?.amount });
-      case SkillTreeRewardType.STAT_BOOST: {
-        const stats = (node.rewardData.data?.stats || []);
-        const statNames = stats.map((s: any) => {
-          const Stat = (require as any)("#enums/stat").Stat;
-          return (Stat as any)[s] || "?";
-        }).join(", ");
+        case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
+          return i18next.t("skillTree:rewards.typeBooster", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type] });
+        case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
+          return node.name;
+        case SkillTreeRewardType.MOVE_UPGRADE: {
+          const filterUpgrades = node.rewardData?.data?.filterUpgrades;
+          if (filterUpgrades?.moveUpgrades?.length > 0) {
+            const UpgradePathUtils = (require as any)("#app/enums/upgrade-path").UpgradePathUtils;
+            const upgradePath = filterUpgrades.moveUpgrades[0];
+            const pathType = UpgradePathUtils.getPathType(upgradePath);
+            const flavorText = i18next.t(`moveUpgradeAttrs:${pathType}`, { defaultValue: pathType });
+            return flavorText;
+          }
+          return i18next.t("skillTree:unknownReward");
+        }
+        case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
+          return (require as any)("#app/data/ability").allAbilities?.[node.rewardData.data?.abilityId]?.name || i18next.t("skillTree:unknownReward");
+        case SkillTreeRewardType.TERA_ABILITY:
+          return (require as any)("#app/data/ability").allAbilities?.[node.rewardData.data?.abilityId]?.name || i18next.t("skillTree:unknownReward");
+        case SkillTreeRewardType.GOLDEN_POKEBALL:
+          return i18next.t("skillTree:rewards.goldenPokeball");
+        case SkillTreeRewardType.MASTER_BALL:
+          return i18next.t("skillTree:rewards.masterBall");
+        case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
+          return i18next.t("skillTree:rewards.rogueballRarity");
+        case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
+          return i18next.t("skillTree:rewards.masterballRarity");
+        case SkillTreeRewardType.EGG_VOUCHER:
+          return i18next.t("skillTree:rewards.eggVoucher", { tier: (require as any)("#app/data/voucher").VoucherType?.[node.rewardData.data?.tier] });
+        case SkillTreeRewardType.MONEY_REWARD:
+          return i18next.t("skillTree:rewards.relicGold");
+        case SkillTreeRewardType.PERMA_MONEY:
+          return i18next.t("skillTree:rewards.permaMoney", { amount: node.rewardData.data?.amount });
+        case SkillTreeRewardType.CATCH_RATE_BONUS:
+          return node.name;
+        case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT:
+          const typeValue = node.rewardData.data?.type;
+          const Type = (require as any)("#app/data/type").Type;
+          const typeName = typeof typeValue === 'string' ? typeValue : Type[typeValue];
+          return i18next.t("skillTree:rewards.essenceTypeWeight", {
+            type: typeName || "Unknown",
+            weight: node.rewardData.data?.weight || 1
+          });
+        case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY:
+          return node.name;
+        case SkillTreeRewardType.REVIVE_BOOST:
+          return node.name;
+        case SkillTreeRewardType.TERA_TYPE:
+          return i18next.t("skillTree:rewards.teraType", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type] });
+        case SkillTreeRewardType.MEGA_STONE: {
+          const megaStoneId = node.rewardData.data?.megaStone || node.rewardData.data?.formChangeItem;
+          const megaStoneKey = (require as any)("#enums/form-change-items").FormChangeItem?.[megaStoneId];
+          const megaStoneName = megaStoneKey ? i18next.t(`modifierType:FormChangeItem.${megaStoneKey}`) : "?";
+          return i18next.t("skillTree:rewards.megaStone", { item: megaStoneName });
+        }
+        case SkillTreeRewardType.DYNA_MUSHROOM:
+          return i18next.t("skillTree:rewards.dynaMushroom");
+        case SkillTreeRewardType.GLITCH_CHANGE:
+          return i18next.t("skillTree:rewards.glitchChange");
+        case SkillTreeRewardType.TYPE_SWITCHER:
+          return i18next.t("skillTree:rewards.typeSwitcher", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type] });
+        case SkillTreeRewardType.POKEMON_ALT_BUILD: {
 
-        try {
-          const championId = this.config?.activeSkillTree?.championData?.id || this.config?.championData?.id;
-          if (!championId) {
+          if (node.state === SkillTreeNodeState.UNLOCKED) {
             return node.name;
           }
 
-          const ChampionUtils = (require as any)("#app/system/champion-utils").ChampionUtils;
-          const championName = ChampionUtils.getChampionDisplayName(championId);
-          const flavorKey = `skillTree:rewards.statBoostFlavor_${championId}`;
-          const flavorText = i18next.t(flavorKey, { defaultValue: "Training" });
+          const altBuildId = node.rewardData.data?.altBuildId;
+          if (!altBuildId) {
+            return node.name;
+          }
 
-          return i18next.t("skillTree:rewards.statBoostVitamin", {
-            champion: championName,
-            flavor: flavorText,
-            stats: statNames
-          });
-        } catch {
-          return node.name;
-        }
-      }
-      case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
-        return i18next.t("skillTree:rewards.typeBooster", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type] });
-      case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
-        return node.name;
-      case SkillTreeRewardType.MOVE_UPGRADE: {
-        const filterUpgrades = node.rewardData?.data?.filterUpgrades;
-        if (filterUpgrades?.moveUpgrades?.length > 0) {
-          const UpgradePathUtils = (require as any)("#app/enums/upgrade-path").UpgradePathUtils;
-          const upgradePath = filterUpgrades.moveUpgrades[0];
-          const pathType = UpgradePathUtils.getPathType(upgradePath);
-          const flavorText = i18next.t(`moveUpgradeAttrs:${pathType}`, { defaultValue: pathType });
-          return flavorText;
-        }
-        return i18next.t("skillTree:unknownReward");
-      }
-      case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
-        return (require as any)("#app/data/ability").allAbilities?.[node.rewardData.data?.abilityId]?.name || i18next.t("skillTree:unknownReward");
-      case SkillTreeRewardType.TERA_ABILITY:
-        return (require as any)("#app/data/ability").allAbilities?.[node.rewardData.data?.abilityId]?.name || i18next.t("skillTree:unknownReward");
-      case SkillTreeRewardType.GOLDEN_POKEBALL:
-        return i18next.t("skillTree:rewards.goldenPokeball");
-      case SkillTreeRewardType.MASTER_BALL:
-        return i18next.t("skillTree:rewards.masterBall");
-      case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
-        return i18next.t("skillTree:rewards.rogueballRarity");
-      case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
-        return i18next.t("skillTree:rewards.masterballRarity");
-      case SkillTreeRewardType.EGG_VOUCHER:
-        return i18next.t("skillTree:rewards.eggVoucher", { tier: (require as any)("#app/data/voucher").VoucherType?.[node.rewardData.data?.tier] });
-      case SkillTreeRewardType.MONEY_REWARD:
-        return i18next.t("skillTree:rewards.relicGold");
-      case SkillTreeRewardType.PERMA_MONEY:
-        return i18next.t("skillTree:rewards.permaMoney", { amount: node.rewardData.data?.amount });
-      case SkillTreeRewardType.CATCH_RATE_BONUS:
-        return node.name;
-      case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT:
-        const typeValue = node.rewardData.data?.type;
-        const Type = (require as any)("#app/data/type").Type;
-        const typeName = typeof typeValue === "string" ? typeValue : Type[typeValue];
-        return i18next.t("skillTree:rewards.essenceTypeWeight", {
-          type: typeName || "Unknown",
-          weight: node.rewardData.data?.weight || 1
-        });
-      case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY:
-        return node.name;
-      case SkillTreeRewardType.REVIVE_BOOST:
-        return node.name;
-      case SkillTreeRewardType.TERA_TYPE:
-        return i18next.t("skillTree:rewards.teraType", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type] });
-      case SkillTreeRewardType.MEGA_STONE: {
-        const megaStoneId = node.rewardData.data?.megaStone || node.rewardData.data?.formChangeItem;
-        const megaStoneKey = (require as any)("#enums/form-change-items").FormChangeItem?.[megaStoneId];
-        const megaStoneName = megaStoneKey ? i18next.t(`modifierType:FormChangeItem.${megaStoneKey}`) : "?";
-        return i18next.t("skillTree:rewards.megaStone", { item: megaStoneName });
-      }
-      case SkillTreeRewardType.DYNA_MUSHROOM:
-        return i18next.t("skillTree:rewards.dynaMushroom");
-      case SkillTreeRewardType.GLITCH_CHANGE:
-        return i18next.t("skillTree:rewards.glitchChange");
-      case SkillTreeRewardType.TYPE_SWITCHER:
-        return i18next.t("skillTree:rewards.typeSwitcher", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type] });
-      case SkillTreeRewardType.POKEMON_ALT_BUILD: {
+          const storedRank = node.rewardData.data?.rank || 1;
+          const party = (this.scene as BattleScene).getParty();
+          const matchingPokemon = party.find(p => p.altBuildId === (altBuildId as PokemonAltBuildId));
+          const currentRank = matchingPokemon?.altBuildRank ?? 0;
+          const effectiveRank = this.getEffectiveAltBuildRank(altBuildId as PokemonAltBuildId, storedRank);
 
-        if (node.state === SkillTreeNodeState.UNLOCKED) {
-          return node.name;
+          const buildName = i18next.t(`pokemonAltBuild:${altBuildId}.name`);
+          const showMax = currentRank >= 10 || effectiveRank === 10;
+          const rankLabel = showMax
+            ? `${Utils.intToRoman(10)}:${i18next.t("skillTree:rankMax")}`
+            : Utils.intToRoman(effectiveRank);
+          const dynamicName = `${buildName} ${rankLabel}`;
+          return dynamicName;
         }
+        case SkillTreeRewardType.PERMA_ITEM:
+          const permaType = (node as any)?.rewardData?.data?.permaType;
+          if (permaType !== undefined && permaType !== null && typeof permaType === 'string') {
+            const localeKey = `modifierType:ModifierType.PermaModifierType.${permaType}.name`;
+            const localizedName = i18next.t(localeKey);
+            return i18next.t("skillTree:rewards.permaItem", { item: localizedName });
+          }
+          return i18next.t("skillTree:rewards.permaItem", { item: "Unknown" });
+        case SkillTreeRewardType.SIGNATURE_POKEMON: {
+          const s = node.rewardData.data?.species;
+          const pokemonName = s ? allSpecies[s - 1]?.name : "Unknown";
+          try {
+            const championId = this.config?.activeSkillTree?.championData?.id || this.config?.championData?.id;
+            if (!championId) {
+              return pokemonName;
+            }
 
-        const altBuildId = node.rewardData.data?.altBuildId;
-        if (!altBuildId) {
-          return node.name;
-        }
+            const championName = ChampionUtils.getChampionDisplayName(championId);
 
-        const storedRank = node.rewardData.data?.rank || 1;
-        const party = (this.scene as BattleScene).getParty();
-        const matchingPokemon = party.find(p => p.altBuildId === (altBuildId as PokemonAltBuildId));
-        const currentRank = matchingPokemon?.altBuildRank ?? 0;
-        const effectiveRank = this.getEffectiveAltBuildRank(altBuildId as PokemonAltBuildId, storedRank);
-
-        const buildName = i18next.t(`pokemonAltBuild:${altBuildId}.name`);
-        const showMax = currentRank >= 10 || effectiveRank === 10;
-        const rankLabel = showMax
-          ? `${Utils.intToRoman(10)}:${i18next.t("skillTree:rankMax")}`
-          : Utils.intToRoman(effectiveRank);
-        const dynamicName = `${buildName} ${rankLabel}`;
-        return dynamicName;
-      }
-      case SkillTreeRewardType.PERMA_ITEM:
-        const permaType = (node as any)?.rewardData?.data?.permaType;
-        if (permaType !== undefined && permaType !== null && typeof permaType === "string") {
-          const localeKey = `modifierType:ModifierType.PermaModifierType.${permaType}.name`;
-          const localizedName = i18next.t(localeKey);
-          return i18next.t("skillTree:rewards.permaItem", { item: localizedName });
-        }
-        return i18next.t("skillTree:rewards.permaItem", { item: "Unknown" });
-      case SkillTreeRewardType.SIGNATURE_POKEMON: {
-        const s = node.rewardData.data?.species;
-        const pokemonName = s ? allSpecies[s - 1]?.name : "Unknown";
-        try {
-          const championId = this.config?.activeSkillTree?.championData?.id || this.config?.championData?.id;
-          if (!championId) {
+            const result = i18next.t("skillTree:rewards.signaturePokemonName", {
+              champion: championName,
+              pokemon: pokemonName
+            });
+            return result;
+          } catch (error) {
             return pokemonName;
           }
-
-          const championName = ChampionUtils.getChampionDisplayName(championId);
-
-          const result = i18next.t("skillTree:rewards.signaturePokemonName", {
-            champion: championName,
-            pokemon: pokemonName
-          });
-          return result;
-        } catch (error) {
-          return pokemonName;
         }
-      }
 
-      case SkillTreeRewardType.GENERAL_POKEMON: {
-        try {
-          const championId = this.config?.activeSkillTree?.championData?.id || this.config?.championData?.id;
-          if (!championId) {
+        case SkillTreeRewardType.GENERAL_POKEMON: {
+          try {
+            const championId = this.config?.activeSkillTree?.championData?.id || this.config?.championData?.id;
+            if (!championId) return node.name;
+
+            const championName = ChampionUtils.getChampionDisplayName(championId);
+
+            return i18next.t("skillTree:rewards.generalPokemon", {
+              champion: championName
+            });
+          } catch {
             return node.name;
           }
-
-          const championName = ChampionUtils.getChampionDisplayName(championId);
-
-          return i18next.t("skillTree:rewards.generalPokemon", {
-            champion: championName
-          });
-        } catch {
-          return node.name;
         }
-      }
 
-      case SkillTreeRewardType.LEGENDARY_POKEMON: {
-        const s = node.rewardData.data?.species;
-        const pokemonName = s ? allSpecies[s - 1]?.name : undefined;
-        if (!pokemonName) {
-          return node.name;
+        case SkillTreeRewardType.LEGENDARY_POKEMON: {
+          const s = node.rewardData.data?.species;
+          const pokemonName = s ? allSpecies[s - 1]?.name : undefined;
+          if (!pokemonName) {
+            return node.name;
+          }
+          return i18next.t("skillTree:rewards.legendaryPokemon", { pokemon: pokemonName });
         }
-        return i18next.t("skillTree:rewards.legendaryPokemon", { pokemon: pokemonName });
-      }
-      default:
-        return node.name;
+        default:
+          return node.name;
       }
     } catch {
       return node.name;
@@ -4388,110 +4271,106 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private mergeLockedSkillsForDebug(target: any, locked: Record<string, any>): void {
-    const push = (arr: any[], v: any) => {
-      if (v !== undefined && !arr.includes(v)) {
-        arr.push(v);
-      }
-    };
+    const push = (arr: any[], v: any) => { if (v !== undefined && !arr.includes(v)) arr.push(v); };
     for (const [, s] of Object.entries(locked || {})) {
       switch (s.rewardType as SkillTreeRewardType) {
-      case SkillTreeRewardType.TM_FILTERED:
-        target.unlockedTMs ||= [];
-        push(target.unlockedTMs, s.unlockableId);
-        break;
-      case SkillTreeRewardType.XM_FILTERED:
-        target.unlockedXMs ||= [];
-        push(target.unlockedXMs, s.unlockableId);
-        break;
-      case SkillTreeRewardType.ABILITY_GRANT:
-      case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
-        target.unlockedAbilities ||= [];
-        push(target.unlockedAbilities, s.unlockableId);
-        break;
-      case SkillTreeRewardType.TRAINER_BOND_ABILITY:
-        target.unlockedConditionalAbilities ||= [];
-        push(target.unlockedConditionalAbilities, s.unlockableId);
-        break;
-      case SkillTreeRewardType.MEGA_STONE:
-        target.unlockedMegaStones ||= [];
-        push(target.unlockedMegaStones, s.unlockableId);
-        break;
-      case SkillTreeRewardType.POKEMON_ALT_BUILD:
-        target.unlockedAltBuilds ||= [];
-        push(target.unlockedAltBuilds, s.unlockableId);
-        break;
-      case SkillTreeRewardType.MOVE_UPGRADE:
-        target.unlockedMoveUpgrades ||= [];
-        push(target.unlockedMoveUpgrades, s.unlockableId);
-        break;
-      case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
-        target.unlockedMoveAttrUpgrades ||= [];
-        break;
-      case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
-        target.unlockedTypeBoosters ||= [];
-        push(target.unlockedTypeBoosters, s.unlockableId);
-        break;
-      case SkillTreeRewardType.TERA_ABILITY:
-        if (typeof s.unlockableId === "object" && s.unlockableId &&
+        case SkillTreeRewardType.TM_FILTERED:
+          target.unlockedTMs ||= [];
+          push(target.unlockedTMs, s.unlockableId);
+          break;
+        case SkillTreeRewardType.XM_FILTERED:
+          target.unlockedXMs ||= [];
+          push(target.unlockedXMs, s.unlockableId);
+          break;
+        case SkillTreeRewardType.ABILITY_GRANT:
+        case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
+          target.unlockedAbilities ||= [];
+          push(target.unlockedAbilities, s.unlockableId);
+          break;
+        case SkillTreeRewardType.TRAINER_BOND_ABILITY:
+          target.unlockedConditionalAbilities ||= [];
+          push(target.unlockedConditionalAbilities, s.unlockableId);
+          break;
+        case SkillTreeRewardType.MEGA_STONE:
+          target.unlockedMegaStones ||= [];
+          push(target.unlockedMegaStones, s.unlockableId);
+          break;
+        case SkillTreeRewardType.POKEMON_ALT_BUILD:
+          target.unlockedAltBuilds ||= [];
+          push(target.unlockedAltBuilds, s.unlockableId);
+          break;
+        case SkillTreeRewardType.MOVE_UPGRADE:
+          target.unlockedMoveUpgrades ||= [];
+          push(target.unlockedMoveUpgrades, s.unlockableId);
+          break;
+        case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
+          target.unlockedMoveAttrUpgrades ||= [];
+          break;
+        case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
+          target.unlockedTypeBoosters ||= [];
+          push(target.unlockedTypeBoosters, s.unlockableId);
+          break;
+        case SkillTreeRewardType.TERA_ABILITY:
+          if (typeof s.unlockableId === "object" && s.unlockableId &&
               (s.unlockableId as any).type !== undefined &&
               (s.unlockableId as any).ability !== undefined) {
-          target.unlockedTeraAbilities ||= {};
-          const t = (s.unlockableId as any).type;
-          const a = (s.unlockableId as any).ability;
-          if (target.unlockedTeraAbilities[t] === undefined) {
-            target.unlockedTeraAbilities[t] = a;
-          }
-        }
-        break;
-      case SkillTreeRewardType.SMITTY_ABILITY:
-        target.unlockedSmittyAbilities ||= [];
-        push(target.unlockedSmittyAbilities, s.unlockableId);
-        break;
-      case SkillTreeRewardType.GLITCH_FORM_UNLOCK:
-        try {
-          const questUnlockData = (this.scene as BattleScene).gameData.getQuestUnlockDataFromModifierTypes(s.unlockableId as QuestUnlockables);
-          if (questUnlockData && questUnlockData.rewardId) {
-            const species = getPokemonSpecies(questUnlockData.rewardId as Species);
-            if (species) {
-              const formName = species.getGlitchFormName(true, undefined, questUnlockData.rewardType);
-              if (formName) {
-                target.unlockedGlitchForms ||= [];
-                push(target.unlockedGlitchForms, formName.toLowerCase());
-                target.glitchFormUnlockableIds ||= {};
-                target.glitchFormUnlockableIds[formName.toLowerCase()] = s.unlockableId;
-              }
+            target.unlockedTeraAbilities ||= {};
+            const t = (s.unlockableId as any).type;
+            const a = (s.unlockableId as any).ability;
+            if (target.unlockedTeraAbilities[t] === undefined) {
+              target.unlockedTeraAbilities[t] = a;
             }
           }
-        } catch (error) {
-          console.warn("Failed to process glitch form unlock:", error);
-        }
-        break;
-      case SkillTreeRewardType.HEALING_ITEMS:
-        target.unlockedHealingItems = true;
-        break;
-      case SkillTreeRewardType.MEMORY_MUSHROOM:
-        target.unlockedMemoryMushroom = true;
-        break;
-      case SkillTreeRewardType.BERRY_ITEMS:
-        target.unlockedBerries = true;
-        break;
-      case SkillTreeRewardType.ABILITY_SWITCHER:
-        target.unlockedAbilitySwitchers = true;
-        break;
-      case SkillTreeRewardType.GENERAL_ITEMS:
-        target.unlockedGeneralItems = true;
-        break;
-      case SkillTreeRewardType.BATON_ITEM:
-        target.unlockedBaton = true;
-        break;
-      case SkillTreeRewardType.PP_MAX_ITEM:
-        target.unlockedPPMax = true;
-        break;
-      case SkillTreeRewardType.ROGUE_BALL:
-        target.unlockedRogueBall = true;
-        break;
-      default:
-        break;
+          break;
+        case SkillTreeRewardType.SMITTY_ABILITY:
+          target.unlockedSmittyAbilities ||= [];
+          push(target.unlockedSmittyAbilities, s.unlockableId);
+          break;
+        case SkillTreeRewardType.GLITCH_FORM_UNLOCK:
+          try {
+            const questUnlockData = (this.scene as BattleScene).gameData.getQuestUnlockDataFromModifierTypes(s.unlockableId as QuestUnlockables);
+            if (questUnlockData && questUnlockData.rewardId) {
+              const species = getPokemonSpecies(questUnlockData.rewardId as Species);
+              if (species) {
+                const formName = species.getGlitchFormName(true, undefined, questUnlockData.rewardType);
+                if (formName) {
+                  target.unlockedGlitchForms ||= [];
+                  push(target.unlockedGlitchForms, formName.toLowerCase());
+                  target.glitchFormUnlockableIds ||= {};
+                  target.glitchFormUnlockableIds[formName.toLowerCase()] = s.unlockableId;
+                }
+              }
+            }
+          } catch (error) {
+            console.warn("Failed to process glitch form unlock:", error);
+          }
+          break;
+        case SkillTreeRewardType.HEALING_ITEMS:
+          target.unlockedHealingItems = true;
+          break;
+        case SkillTreeRewardType.MEMORY_MUSHROOM:
+          target.unlockedMemoryMushroom = true;
+          break;
+        case SkillTreeRewardType.BERRY_ITEMS:
+          target.unlockedBerries = true;
+          break;
+        case SkillTreeRewardType.ABILITY_SWITCHER:
+          target.unlockedAbilitySwitchers = true;
+          break;
+        case SkillTreeRewardType.GENERAL_ITEMS:
+          target.unlockedGeneralItems = true;
+          break;
+        case SkillTreeRewardType.BATON_ITEM:
+          target.unlockedBaton = true;
+          break;
+        case SkillTreeRewardType.PP_MAX_ITEM:
+          target.unlockedPPMax = true;
+          break;
+        case SkillTreeRewardType.ROGUE_BALL:
+          target.unlockedRogueBall = true;
+          break;
+        default:
+          break;
       }
     }
   }
@@ -4578,9 +4457,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private handleStatsTest(): boolean {
-    if (!this.config) {
-      return false;
-    }
+    if (!this.config) return false;
     const ast = this.config.activeSkillTree;
     ast.tokens += 1;
 
@@ -4595,9 +4472,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private showTreeLevelUpDialog(): void {
-    if (!this.config) {
-      return;
-    }
+    if (!this.config) return;
     const ast = this.config.activeSkillTree;
     const cost = SkillTreeUtils.getTokenCostForNextLevel(ast.treeLevel);
 
@@ -4613,14 +4488,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private levelUpSkillTree(): void {
-    if (!this.config) {
-      return;
-    }
+    if (!this.config) return;
     const ast = this.config.activeSkillTree;
     const cost = SkillTreeUtils.getTokenCostForNextLevel(ast.treeLevel);
-    if (ast.tokens < cost) {
-      return;
-    }
+    if (ast.tokens < cost) return;
     ast.tokens -= cost;
     ast.treeLevel += 1;
     if (!isSkillTreeV2()) {
@@ -4632,7 +4503,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       type: RewardObtainedType.UNLOCK,
       name: isSkillTreeV2()
         ? i18next.t("skillTree:treeLeveledUpV2", { level: ast.treeLevel, maxDepth: SkillTreeUtils.getMaxPurchasableDepthForLevel(ast.treeLevel), defaultValue: `Tree Level ${ast.treeLevel}! Can purchase nodes up to depth ${SkillTreeUtils.getMaxPurchasableDepthForLevel(ast.treeLevel)}.` })
-        : i18next.t("skillTree:treeLeveledUp", { level: ast.treeLevel, maxDepth: ast.maxVisibleDepth, defaultValue: "Tree leveled up!" })
+        : i18next.t("skillTree:treeLeveledUp", { level: ast.treeLevel, maxDepth: ast.maxVisibleDepth, defaultValue: `Tree leveled up!` })
     };
     this.executeRewardPhaseWithReturn(new RewardObtainDisplayPhase(this.scene as BattleScene, reward));
   }
@@ -4641,107 +4512,89 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     let ok = true;
     try {
       switch (node.rewardData?.type) {
-      case SkillTreeRewardType.POKEMON_ALT_BUILD: {
-        const altBuildId = node.rewardData.data?.altBuildId as string | undefined;
-        if (altBuildId) {
-          const altBuild = POKEMON_ALT_BUILDS[altBuildId as PokemonAltBuildId];
-          if (altBuild) {
-            const storedRank = node.rewardData.data?.rank || 1;
-            const effectiveRank = this.getEffectiveAltBuildRank(altBuildId as PokemonAltBuildId, storedRank);
-            const nodeRank = effectiveRank;
+        case SkillTreeRewardType.POKEMON_ALT_BUILD: {
+          const altBuildId = node.rewardData.data?.altBuildId as string | undefined;
+          if (altBuildId) {
+            const altBuild = POKEMON_ALT_BUILDS[altBuildId as PokemonAltBuildId];
+            if (altBuild) {
+              const storedRank = node.rewardData.data?.rank || 1;
+              const effectiveRank = this.getEffectiveAltBuildRank(altBuildId as PokemonAltBuildId, storedRank);
+              const nodeRank = effectiveRank;
 
-            if (altBuild.prerequisiteBuilds && altBuild.prerequisiteBuilds.length > 0) {
-              if (nodeRank === 1) {
-                const prereqBuild = POKEMON_ALT_BUILDS[altBuild.prerequisiteBuilds[0]];
-                if (prereqBuild && prereqBuild.species) {
-                  const hasPrereq = (this.scene as BattleScene).getParty().some(p =>
-                    (p.species.speciesId === prereqBuild.species && p.altBuildId === altBuild.prerequisiteBuilds![0]) ||
+              if (altBuild.prerequisiteBuilds && altBuild.prerequisiteBuilds.length > 0) {
+                if (nodeRank === 1) {
+                  const prereqBuild = POKEMON_ALT_BUILDS[altBuild.prerequisiteBuilds[0]];
+                  if (prereqBuild && prereqBuild.species) {
+                    const hasPrereq = (this.scene as BattleScene).getParty().some(p =>
+                      (p.species.speciesId === prereqBuild.species && p.altBuildId === altBuild.prerequisiteBuilds![0]) ||
                       (p.isFusion() && p.fusionSpecies?.speciesId === prereqBuild.species && p.altBuildId === altBuild.prerequisiteBuilds![0])
+                    );
+                    const prereqName = i18next.t(`pokemonAltBuild:${altBuild.prerequisiteBuilds[0]}.name`);
+                    const line = i18next.t("skillTree:prereq.altBuildPrereq", { species: getPokemonSpecies(prereqBuild.species).name, build: prereqName });
+                    if (forDisplay) messages.push(line);
+                    if (!hasPrereq) { if (!forDisplay) messages.push(line); ok = false; }
+                  }
+                } else {
+                  const requiredPreviousRank = nodeRank - 1;
+                  const hasPrereq = (this.scene as BattleScene).getParty().some(p =>
+                    (p.altBuildId === altBuildId && p.altBuildRank && p.altBuildRank >= requiredPreviousRank)
                   );
-                  const prereqName = i18next.t(`pokemonAltBuild:${altBuild.prerequisiteBuilds[0]}.name`);
-                  const line = i18next.t("skillTree:prereq.altBuildPrereq", { species: getPokemonSpecies(prereqBuild.species).name, build: prereqName });
-                  if (forDisplay) {
-                    messages.push(line);
-                  }
-                  if (!hasPrereq) {
-                    if (!forDisplay) {
-                      messages.push(line);
-                    } ok = false;
-                  }
+                  const buildName = i18next.t(`pokemonAltBuild:${altBuildId}.name`);
+                  const rankRoman = Utils.intToRoman(requiredPreviousRank);
+                  const line = i18next.t("skillTree:prereq.altBuildRankPrereq", {
+                    species: getPokemonSpecies(altBuild.species!).name,
+                    build: buildName,
+                    rank: rankRoman
+                  });
+                  if (forDisplay) messages.push(line);
+                  if (!hasPrereq) { if (!forDisplay) messages.push(line); ok = false; }
                 }
-              } else {
-                const requiredPreviousRank = nodeRank - 1;
-                const hasPrereq = (this.scene as BattleScene).getParty().some(p =>
-                  (p.altBuildId === altBuildId && p.altBuildRank && p.altBuildRank >= requiredPreviousRank)
-                );
-                const buildName = i18next.t(`pokemonAltBuild:${altBuildId}.name`);
-                const rankRoman = Utils.intToRoman(requiredPreviousRank);
-                const line = i18next.t("skillTree:prereq.altBuildRankPrereq", {
-                  species: getPokemonSpecies(altBuild.species!).name,
-                  build: buildName,
-                  rank: rankRoman
-                });
-                if (forDisplay) {
-                  messages.push(line);
-                }
-                if (!hasPrereq) {
-                  if (!forDisplay) {
-                    messages.push(line);
-                  } ok = false;
-                }
-              }
-            } else if (altBuild.species) {
-              const has = (this.scene as BattleScene).getParty().some(p => p.species.speciesId === altBuild.species || (p.isFusion() && p.fusionSpecies?.speciesId === altBuild.species));
-              const line = i18next.t("skillTree:prereq.altBuild", { species: getPokemonSpecies(altBuild.species).name });
-              if (forDisplay) {
-                messages.push(line);
-              }
-              if (!has) {
-                if (!forDisplay) {
-                  messages.push(line);
-                } ok = false;
+              } else if (altBuild.species) {
+                const has = (this.scene as BattleScene).getParty().some(p => p.species.speciesId === altBuild.species || (p.isFusion() && p.fusionSpecies?.speciesId === altBuild.species));
+                const line = i18next.t("skillTree:prereq.altBuild", { species: getPokemonSpecies(altBuild.species).name });
+                if (forDisplay) messages.push(line);
+                if (!has) { if (!forDisplay) messages.push(line); ok = false; }
               }
             }
           }
+          break;
         }
-        break;
-      }
-      case SkillTreeRewardType.MEGA_STONE: {
-        const item: FormChangeItem | undefined = node.rewardData.data?.megaStone ?? node.rewardData.data?.formChangeItem;
-        if (typeof item !== "undefined") {
-          const speciesList = this.getSpeciesForFormChangeItem(item);
+        case SkillTreeRewardType.MEGA_STONE: {
+          const item: FormChangeItem | undefined = node.rewardData.data?.megaStone ?? node.rewardData.data?.formChangeItem;
+          if (typeof item !== "undefined") {
+            const speciesList = this.getSpeciesForFormChangeItem(item);
+            const has = (this.scene as BattleScene).getParty().some(p => speciesList.includes(p.species.speciesId) || (p.isFusion() && !!p.fusionSpecies && speciesList.includes(p.fusionSpecies.speciesId)));
+            if (!has) {
+              const itemName = (FormChangeItem as any)[item];
+              if (speciesList.length === 1) {
+                messages.push(i18next.t("skillTree:prereq.megaStone", { item: itemName, species: getPokemonSpecies(speciesList[0]).name }));
+              } else {
+                messages.push(i18next.t("skillTree:prereq.megaStoneAny", { item: itemName }));
+              }
+              ok = false;
+            }
+          }
+          break;
+        }
+        case SkillTreeRewardType.DYNA_MUSHROOM: {
+          const speciesList = this.getSpeciesForFormChangeItem(FormChangeItem.MAX_MUSHROOMS as any);
           const has = (this.scene as BattleScene).getParty().some(p => speciesList.includes(p.species.speciesId) || (p.isFusion() && !!p.fusionSpecies && speciesList.includes(p.fusionSpecies.speciesId)));
           if (!has) {
-            const itemName = (FormChangeItem as any)[item];
-            if (speciesList.length === 1) {
-              messages.push(i18next.t("skillTree:prereq.megaStone", { item: itemName, species: getPokemonSpecies(speciesList[0]).name }));
-            } else {
-              messages.push(i18next.t("skillTree:prereq.megaStoneAny", { item: itemName }));
-            }
+            messages.push(i18next.t("skillTree:prereq.maxMushrooms"));
             ok = false;
           }
+          break;
         }
-        break;
-      }
-      case SkillTreeRewardType.DYNA_MUSHROOM: {
-        const speciesList = this.getSpeciesForFormChangeItem(FormChangeItem.MAX_MUSHROOMS as any);
-        const has = (this.scene as BattleScene).getParty().some(p => speciesList.includes(p.species.speciesId) || (p.isFusion() && !!p.fusionSpecies && speciesList.includes(p.fusionSpecies.speciesId)));
-        if (!has) {
-          messages.push(i18next.t("skillTree:prereq.maxMushrooms"));
-          ok = false;
+        case SkillTreeRewardType.GLITCH_CHANGE: {
+          const hasEligible = (this.scene as BattleScene).getParty().some(p => (this.scene as BattleScene).gameData.canUseGlitchOrSmittyForm(p.species.speciesId, RewardType.GLITCH_FORM_A));
+          if (!hasEligible) {
+            messages.push(i18next.t("skillTree:prereq.glitchChange"));
+            ok = false;
+          }
+          break;
         }
-        break;
-      }
-      case SkillTreeRewardType.GLITCH_CHANGE: {
-        const hasEligible = (this.scene as BattleScene).getParty().some(p => (this.scene as BattleScene).gameData.canUseGlitchOrSmittyForm(p.species.speciesId, RewardType.GLITCH_FORM_A));
-        if (!hasEligible) {
-          messages.push(i18next.t("skillTree:prereq.glitchChange"));
-          ok = false;
-        }
-        break;
-      }
-      default:
-        break;
+        default:
+          break;
       }
     } catch (_e) {  }
     return { ok, messages };
@@ -4754,7 +4607,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       for (const k of keys) {
         const s = parseInt(k) as Species;
         const changes = (pokemonFormChanges as any)[k] as SpeciesFormChange[];
-        if (changes?.some(fc => typeof (fc as any).hasMatchingItemTrigger === "function"
+        if (changes?.some(fc => typeof (fc as any).hasMatchingItemTrigger === 'function'
           ? (fc as any).hasMatchingItemTrigger(item)
           : ((fc.findTrigger(SpeciesFormChangeItemTrigger as any) as any)?.item === item))) {
           speciesIds.push(s);
@@ -4788,12 +4641,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         const champData = this.config.championData;
         const types: Type[] = [];
 
-        if (typeof champData.type1 === "number") {
-          types.push(champData.type1);
-        }
-        if (typeof champData.type2 === "number") {
-          types.push(champData.type2);
-        }
+        if (typeof champData.type1 === 'number') types.push(champData.type1);
+        if (typeof champData.type2 === 'number') types.push(champData.type2);
 
         if (types.length > 0) {
           return types;
@@ -4806,12 +4655,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
         if (champDef) {
           const types: Type[] = [];
-          if (typeof champDef.type1 === "number") {
-            types.push(champDef.type1);
-          }
-          if (typeof champDef.type2 === "number") {
-            types.push(champDef.type2);
-          }
+          if (typeof champDef.type1 === 'number') types.push(champDef.type1);
+          if (typeof champDef.type2 === 'number') types.push(champDef.type2);
 
           if (types.length > 0) {
             return types;
@@ -4826,9 +4671,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private animateGaugeFill(targetWidth: number): void {
-    if (targetWidth === this.currentGaugeFillWidth) {
-      return;
-    }
+    if (targetWidth === this.currentGaugeFillWidth) return;
 
     const state = { w: this.currentGaugeFillWidth };
 
@@ -4836,7 +4679,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       targets: state,
       w: targetWidth,
       duration: 300,
-      ease: "Cubic.easeOut",
+      ease: 'Cubic.easeOut',
       onUpdate: () => {
         this.updateGaugeFillVisual(Math.floor(state.w));
       },
@@ -4891,9 +4734,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private drawGaugeWaveEffects(graphics: Phaser.GameObjects.Graphics, x: number, y: number, width: number, height: number, type: Type): void {
-    if (width <= 0 || height <= 0) {
-      return;
-    }
+    if (width <= 0 || height <= 0) return;
 
     const c = SkillTreeUiHandler.UI_CONSTANTS.HUD.LEVEL_GAUGE;
     const waveConfig = c.WAVE_ANIMATION;
@@ -4937,9 +4778,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
   }
   private drawGaugeBaseFill(graphics: Phaser.GameObjects.Graphics, x: number, y: number, width: number, height: number, type: Type): void {
-    if (width <= 0 || height <= 0) {
-      return;
-    }
+    if (width <= 0 || height <= 0) return;
 
     const c = SkillTreeUiHandler.UI_CONSTANTS.HUD.LEVEL_GAUGE;
     const typeRgb = getTypeRgb(type);
@@ -4970,9 +4809,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.waveAnimationTimer = undefined;
     }
     this.waveAnimationTime = 0;
-    if (this.treeLevelGaugeWaveOverlay) {
-      this.treeLevelGaugeWaveOverlay.clear();
-    }
+    if (this.treeLevelGaugeWaveOverlay) this.treeLevelGaugeWaveOverlay.clear();
 
     const c = SkillTreeUiHandler.UI_CONSTANTS.HUD.LEVEL_GAUGE.WAVE_ANIMATION;
     this.waveAnimationTimer = this.scene.time.addEvent({
@@ -5017,12 +4854,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     let remaining = ast.tokens;
     while (true) {
       const cost = SkillTreeUtils.getTokenCostForNextLevel(levelCursor);
-      if (cost <= 0) {
-        break;
-      }
-      if (remaining < cost) {
-        break;
-      }
+      if (cost <= 0) break;
+      if (remaining < cost) break;
       remaining -= cost;
       totalCost += cost;
       levelCursor += 1;
@@ -5032,17 +4865,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private async batchAutoLevelUpIfAffordable(): Promise<void> {
-    if (!this.config) {
-      return;
-    }
-    if (this.autoBatchLevelUpInProgress) {
-      return;
-    }
+    if (!this.config) return;
+    if (this.autoBatchLevelUpInProgress) return;
     const ast = this.config.activeSkillTree;
     const plan = this.computeAffordableLevelUps(ast);
-    if (plan.levels <= 0) {
-      return;
-    }
+    if (plan.levels <= 0) return;
     this.autoBatchLevelUpInProgress = true;
     try {
       const label = plan.levels > 1
@@ -5077,9 +4904,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       let tokens = ast.tokens;
       for (let i = 0; i < plan.levels; i++) {
         const cost = SkillTreeUtils.getTokenCostForNextLevel(levelCursor);
-        if (cost <= 0 || tokens < cost) {
-          break;
-        }
+        if (cost <= 0 || tokens < cost) break;
         tokens -= cost;
         levelCursor += 1;
       }
@@ -5112,9 +4937,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       if (newlyVisibleNodes.length > 0) {
         this.playDepthRevealEffect(newlyVisibleNodes);
       }
-      try {
-        (this.scene as BattleScene).gameData.saveSystem();
-      } catch {}
+      try { (this.scene as BattleScene).gameData.saveSystem(); } catch {}
     } finally {
       this.autoBatchLevelUpInProgress = false;
       this.isLevelUpAnimationActive = false;
@@ -5140,7 +4963,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     try {
       await this.loadGlitchSpriteFromFile(formName, spriteKey);
     } catch (fileLoadError) {
-      console.warn(`Failed to load glitch sprite for ${formName}:`, fileLoadError);
+        console.warn(`Failed to load glitch sprite for ${formName}:`, fileLoadError);
 
     }
   }
@@ -5153,7 +4976,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       );
 
       this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
-        if (this.scene.anims && typeof this.scene.anims.create === "function" && !this.scene.anims.exists(spriteKey)) {
+        if (this.scene.anims && typeof this.scene.anims.create === 'function' && !this.scene.anims.exists(spriteKey)) {
           if (this.scene.textures.get(spriteKey).getFrameNames().length > 1) {
             this.scene.anims.create({
               key: spriteKey,
@@ -5305,21 +5128,15 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
 
     const learnablePokemon = party.filter(pokemon => {
-      if (!pokemon) {
-        return false;
-      }
-      if (!pokemon.compatibleTms || pokemon.compatibleTms.indexOf(moveId) === -1) {
-        return false;
-      }
-      if (pokemon.getMoveset().some(m => m?.moveId === moveId)) {
-        return false;
-      }
+      if (!pokemon) return false;
+      if (!pokemon.compatibleTms || pokemon.compatibleTms.indexOf(moveId) === -1) return false;
+      if (pokemon.getMoveset().some(m => m?.moveId === moveId)) return false;
       return true;
     });
 
     const lines: string[] = [];
-    lines.push("");
-    lines.push("");
+    lines.push('');
+    lines.push('');
 
     if (learnablePokemon.length === 0) {
       const noneText = getBBCodeFrag(
@@ -5338,12 +5155,12 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       const pokemonNames = learnablePokemon.map(p => {
         const name = p.name;
         return getBBCodeFrag(name, TextStyle.WINDOW, this.scene.uiTheme);
-      }).join(", ");
+      }).join(', ');
 
       lines.push(`${labelText} ${pokemonNames}`);
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   private getDynamicAltBuildDescription(node: SkillTreeNode): string {

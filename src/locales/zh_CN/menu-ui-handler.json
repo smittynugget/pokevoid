@@ -29,6 +29,7 @@
   "unlinkGoogle": "解除关联Google",
   "cancel": "取消",
   "losingProgressionWarning": "你将失去自战斗开始以来的所有进度。\n是否继续？",
+  "losingProgressionWarningPerTurn": "为防止意外的战斗重启，\n游戏每回合自动保存。",
   "noEggs": "当前没有任何蛋\n正在孵化中！",
   "dataOverrideWarning": "您的数据将被覆盖，页面将重新加载。是否继续？",
   "importFailed": "导入存档数据失败。文件可能已损坏。",

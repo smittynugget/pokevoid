@@ -109,5 +109,8 @@
   "checkTeam": "Checar Time",
   "disableMoveUpgrades": "Desativar melhorias de golpes",
   "disableCutscenes": "Desativar cutscenes",
-  "showItemTextBg": "Mostrar Fundo de Raridade da Recompensa"
+  "showItemTextBg": "Mostrar Fundo de Raridade da Recompensa",
+  "autoSave": "Salvamento automático",
+  "autoSavePerTurn": "Por turno",
+  "autoSavePerBattle": "Por batalha"
 }

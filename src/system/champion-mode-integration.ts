@@ -82,11 +82,7 @@ export function setupBattleFlow(scene: BattleScene, loaded: boolean = false): vo
   }
 }
 function handleSaveSlotSelection(scene: BattleScene, onSlotSelected: (slotId: number) => void): void {
-  console.log("[STARTER] handleSaveSlotSelection called, current UI mode:", scene.ui.getMode());
-  console.log("[STARTER] Setting overlay mode to SAVE_SLOT");
   scene.ui.setOverlayMode(Mode.SAVE_SLOT, SaveSlotUiMode.SAVE, (slotId: integer) => {
-    console.log("[STARTER] Save slot callback invoked with slotId:", slotId);
-    console.log("[STARTER] Calling onSlotSelected callback");
     if (slotId === -1) {
       onSlotSelected(-1);
       return;
@@ -95,8 +91,6 @@ function handleSaveSlotSelection(scene: BattleScene, onSlotSelected: (slotId: nu
     scene.moveUpgradesEnabledForRun = !scene.disableMoveUpgrades;
     scene.resetRunEndSummaryRunData();
     onSlotSelected(slotId);
-  }).then(() => {
-    console.log("[STARTER] setOverlayMode promise resolved, UI mode now:", scene.ui.getMode());
   }).catch((err) => {
     console.error("[STARTER] setOverlayMode error:", err);
   });
@@ -108,18 +102,13 @@ export class ChampionModeIntegration {
     gameMode: GameModes,
     opts?: { onChampionReady?: (championId: string, availableStarters: Species[]) => void }
   ): void {
-    console.log("[STARTER] ChampionModeIntegration.initializeChampionSelection called, gameMode:", gameMode);
     scene.unshiftPhase(new ChampionSelectPhase(scene, gameMode, {
       allowCancel: true,
       onChampionSelected: (championId: string) => {
-        console.log("[STARTER] ChampionModeIntegration onChampionSelected callback, original championId:", championId);
-
         let effectiveChampionId = championId;
         if (championId === "apollo_diana") {
           effectiveChampionId = scene.gameData.gender === PlayerGender.FEMALE ? "diana" : "apollo";
         }
-
-        console.log("[STARTER] Effective championId after gender conversion:", effectiveChampionId);
         scene.gameData.selectedChampionId = effectiveChampionId;
         scene.gameData.initializeSkillTree(effectiveChampionId);
 
@@ -162,28 +151,18 @@ export class ChampionModeIntegration {
         } else {
           const result = ChampionUtils.filterStartersByChampion(scene, championData, gm);
           const availableStarters = result.allStarters;
-          console.log("[STARTER] champion-mode-integration creating SelectStarterPhase with availableStarters:", availableStarters?.length, "first 5:", availableStarters?.slice(0, 5));
 
           scene.unshiftPhase(new SelectStarterPhase(scene, {
             availableStarters: availableStarters,
             onStarterSelected: (starterInput: Starter | Starter[]) => {
 
               const starters = Array.isArray(starterInput) ? starterInput : [starterInput];
-
-              console.log("[STARTER] ===== onStarterSelected callback START =====");
-              console.log("[STARTER] Received", starters.length, "starters");
-              starters.forEach((s, i) => {
-                console.log(`[STARTER] Starter ${i + 1}:`, s.species.name, "ID:", s.species.speciesId);
-              });
-              console.log("[STARTER] Current party size BEFORE adding:", scene.getParty().length);
               if (scene.gameData.activeSkillTree) {
                 scene.gameData.activeSkillTree.starterPokemon = starters[0].species.speciesId;
-                console.log("[STARTER] Stored first starter in activeSkillTree.starterPokemon");
               }
 
               const starterHandler = scene.ui.getHandler() as any;
               if (starterHandler?.starterSelectContainer) {
-                console.log("[STARTER] Hiding starter select container");
                 starterHandler.starterSelectContainer.setVisible(false);
               }
 
@@ -195,7 +174,6 @@ export class ChampionModeIntegration {
                   scene.getCurrentPhase()?.end();
                   return;
                 }
-                console.log("[STARTER] Save slot selected:", slotId);
                 scene.sessionSlotId = slotId;
                 const party = scene.getParty();
                 const loadPokemonAssets: Promise<void>[] = [];
@@ -206,8 +184,6 @@ export class ChampionModeIntegration {
                     ? !starterProps.female ? Gender.MALE : Gender.FEMALE
                     : Gender.GENDERLESS;
                   const starterIvs = scene.gameData.dexData[starter.species.speciesId].ivs.slice(0);
-
-                  console.log(`[ChampionIntegration] Processing starter ${index}: species=${starter.species.name} (${starter.species.speciesId})`);
 
                   const starterPokemon = scene.addPlayerPokemon(
                     starter.species,
@@ -236,9 +212,6 @@ export class ChampionModeIntegration {
                   if (starter.fusionIndex > -1) {
                     starterPokemon.generateFusionViaSpeciesID(scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
                   }
-
-                  console.log(`[ChampionIntegration] Checking signature status for starter ${index}...`);
-
                   const currentChampionId = scene.gameData.selectedChampionId;
                   let selectedIsSignature = false;
                   let altBuildId: PokemonAltBuildId | null = null;
@@ -262,51 +235,30 @@ export class ChampionModeIntegration {
                             const modifierType = new PokemonAltBuildModifierType(altBuild);
                             const modifier = new Modifiers.PokemonAltBuildModifier(modifierType, starterPokemon.id, altBuild);
                             modifier.applyAltBuildToPokemon(starterPokemon);
-                            console.log(`[ChampionIntegration] Applied base signature alt build ${altBuildId} (Rank ${altBuild.rank})`);
                           }
                         }
                       }
                     }
                   }
-
-                  console.log(`[ChampionIntegration] championId=${currentChampionId}, selectedIsSignature=${selectedIsSignature}, altBuildId=${altBuildId}`);
                   starterPokemon.setVisible(false);
                   party.push(starterPokemon);
                   loadPokemonAssets.push(starterPokemon.loadAssets());
-
-                  console.log(`[STARTER] ===== STARTER ${index + 1} ADDED TO PARTY =====`);
-                  console.log(`[STARTER] Added starter ${index + 1}:`, starter.species.name, "ID:", starter.species.speciesId);
                 });
+                  Promise.all(loadPokemonAssets).then(() => {
 
-                console.log("[STARTER] Party size after adding all starters:", party.length);
-                console.log("[STARTER] Party contents:", party.map(p => p.species.name));
-                console.log("[STARTER] Loading all starter assets...");
-                Promise.all(loadPokemonAssets).then(() => {
-                  console.log("[STARTER] All assets loaded, queueing skill tree phase");
-                  console.log("[STARTER] Party size before skill tree:", scene.getParty().length);
-                  console.log("[STARTER] Party before skill tree:", scene.getParty().map(p => p.species.name));
-                  const skillTreeMode = DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE
-                    ? SkillTreeMode.DEBUG_ENHANCED
-                    : SkillTreeMode.INITIAL_ACCESS;
+                    const skillTreeMode = DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE
+                      ? SkillTreeMode.DEBUG_ENHANCED
+                      : SkillTreeMode.INITIAL_ACCESS;
 
-                  console.log("[STARTER] Skill tree mode:", skillTreeMode, "| DEBUG_FORCE flag:", DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE);
-
-                  console.log("[STARTER] Queuing SkillTreePhase via unshiftPhase");
-                  scene.unshiftPhase(new SkillTreePhase(scene as any, {
-                    mode: skillTreeMode,
-                    onComplete: () => {
-                      console.log("[STARTER] ===== SKILL TREE COMPLETED =====");
-                      console.log("[STARTER] Party size after skill tree:", scene.getParty().length);
-                      console.log("[STARTER] Party after skill tree:", scene.getParty().map(p => p.species.name));
-                      console.log("[STARTER] Calling setupBattleFlow...");
+                    scene.unshiftPhase(new SkillTreePhase(scene as any, {
+                      mode: skillTreeMode,
+                      onComplete: () => {
                       setupBattleFlow(scene, false);
-                      opts?.onChampionReady?.(championId, []);
-                    }
-                  }));
+                        opts?.onChampionReady?.(championId, []);
+                      }
+                    }));
 
-                  console.log("[STARTER] Calling shiftPhase to advance to SkillTreePhase");
-                  scene.shiftPhase();
-                  console.log("[STARTER] ===== onStarterSelected callback END =====");
+                    scene.shiftPhase();
                 });
               });
             }

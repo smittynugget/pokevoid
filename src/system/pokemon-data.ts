@@ -60,6 +60,7 @@ export default class PokemonData {
 
   public boss: boolean;
   public bossSegments?: integer;
+  public bossSegmentIndex: integer;
 
   public summonData: PokemonSummonData;
 
@@ -118,15 +119,14 @@ export default class PokemonData {
     if (!forHistory) {
       this.boss = (source instanceof EnemyPokemon && !!source.bossSegments) || (!this.player && !!source.boss);
       this.bossSegments = source.bossSegments;
+      this.bossSegmentIndex = (source as any).bossSegmentIndex ?? (this.bossSegments ? this.bossSegments - 1 : 0);
     }
 
     if (sourcePokemon) {
       this.moveset = sourcePokemon.moveset;
       if (!forHistory) {
         this.status = sourcePokemon.status;
-        if (this.player) {
-          this.summonData = sourcePokemon.summonData;
-        }
+        this.summonData = sourcePokemon.summonData;
       }
     } else {
       this.moveset = (source.moveset || [ new PokemonMove(Moves.TACKLE), new PokemonMove(Moves.GROWL) ]).filter(m => m).map((m: any) => new PokemonMove(m.moveId, m.ppUsed, m.ppUp));

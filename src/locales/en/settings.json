@@ -109,5 +109,8 @@
   "checkTeam": "Check Team",
   "disableMoveUpgrades": "Disable Move Upgrades",
   "disableCutscenes": "Disable Cutscenes",
-  "showItemTextBg": "Show Reward Rarity BG"
+  "showItemTextBg": "Show Reward Rarity BG",
+  "autoSave": "Auto Save",
+  "autoSavePerTurn": "Per Turn",
+  "autoSavePerBattle": "Per Battle"
 }

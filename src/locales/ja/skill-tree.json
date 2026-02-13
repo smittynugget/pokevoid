@@ -78,7 +78,7 @@
     "masterBall": "マスターボール (x1)",
     "eggVoucher": "タマゴ引換券 ({{tier}})",
     "relicGold": "こだいのきんか",
-    "permaMoney": "永続マネー: {{amount}}",
+    "permaMoney": "Ωゴールド: {{amount}}",
     "catchBonus": "{{types}} +{{percent}}%捕獲率",
     "essenceTypeWeight": "エッセンス重み: {{type}} x{{weight}}",
     "fusionSecondaryPriority": "{{types}}フュージョン増加",
@@ -101,7 +101,8 @@
     "generalItems": "汎用アイテム",
     "batonItem": "バトン",
     "ppMaxItem": "ポイントマックス",
-    "rogueBall": "ローグボール (x5)"
+    "rogueBall": "ローグボール (x5)",
+    "partyAbilityGrant": "パーティ特性"
   },
   "descriptions": {
     "statFocusLabel": "ステータス重視:",
@@ -190,7 +191,8 @@
     "default": "報酬",
     "tmLearn": "わざ{{move}}を習得",
     "glitchFormDesc": "グリッチフォーム: {{form}}",
-    "teraTypeDesc": "テラスタイプ報酬を提供: {{type}}"
+    "teraTypeDesc": "テラスタイプ報酬を提供: {{type}}",
+    "partyAbilityGrant": "チームに無料のパーティ特性を追加しましょう。"
   },
   "fallback": {
     "unknownPokemon": "不明なポケモン",
