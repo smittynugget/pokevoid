@@ -7,6 +7,7 @@ import { Device } from "../enums/devices";
 import * as Utils from "../utils";
 import { createSporadicPattern } from "../utils";
 import { Type } from "../data/type";
+import { applyTypeBallRecolor, applyVoidBallRecolor } from "../data/pokeball";
 import { getPokemonSpecies, allSpecies } from "../data/pokemon-species";
 import { getAllRivalTrainerTypes, trainerConfigs, trainerPokemonPools, RivalTrainerType } from "../data/trainer-config";
 import { SkillTreeGenerator } from "../system/skill-tree-generator";
@@ -36,7 +37,7 @@ type SectionKind =
 type SectionIcon =
   | { kind: "pokemon"; speciesId: number; formIndex?: number; shiny?: boolean; variant?: number; female?: boolean }
   | { kind: "fusion"; primarySpeciesId: number; fusionSpeciesId: number; primaryFormIndex?: number; fusionFormIndex?: number }
-  | { kind: "item"; key: string; frame?: string | number; scale?: number; type?: Type }
+  | { kind: "item"; key: string; frame?: string | number; scale?: number; type?: Type; voidBall?: boolean }
   | { kind: "type"; type: Type };
 
 interface SectionData {
@@ -735,6 +736,14 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
         : this.scene.add.sprite(x, y, "items", "master_ribbon");
       spr.setOrigin(0.5, 0);
       spr.setScale(icon.scale ?? scale);
+      try {
+        if (icon.voidBall) {
+          applyVoidBallRecolor(this.scene as BattleScene, spr, true);
+          spr.setAlpha(0.85);
+        } else if (icon.type !== undefined && icon.frame === "gb") {
+          applyTypeBallRecolor(this.scene as BattleScene, spr, icon.type, true);
+        }
+      } catch {}
       if (!this.scene.textures.exists(icon.key)) {
         spr.setData("pendingTextureKey", icon.key);
         spr.setData("pendingFrame", icon.frame ?? null);
@@ -1505,6 +1514,14 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
       case SkillTreeRewardType.TYPE_BOOSTER_ITEM: return { kind: "item", key: "items", frame: "silk_scarf", scale: itemScale };
       case SkillTreeRewardType.GOLDEN_POKEBALL: return { kind: "item", key: "items", frame: "pb_gold", scale: itemScale };
       case SkillTreeRewardType.MASTER_BALL: return { kind: "item", key: "items", frame: "mb", scale: itemScale };
+      case SkillTreeRewardType.VOID_BALL: return { kind: "item", key: "items", frame: "mb", scale: itemScale, voidBall: true };
+      case SkillTreeRewardType.TYPE_BALL_FILTERED: {
+        const ballType = reward?.data?.ballType;
+        if (typeof ballType === "number") {
+          return { kind: "item", key: "items", frame: "gb", scale: itemScale, type: ballType as Type };
+        }
+        return { kind: "item", key: "items", frame: "gb", scale: itemScale };
+      }
       case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT: return { kind: "item", key: "items", frame: "rb", scale: itemScale };
       case SkillTreeRewardType.MASTERBALL_RARITY_SELECT: return { kind: "item", key: "items", frame: "mb", scale: itemScale };
       case SkillTreeRewardType.EGG_VOUCHER: return { kind: "item", key: "items", frame: "coupon", scale: itemScale };

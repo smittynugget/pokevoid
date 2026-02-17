@@ -23,9 +23,12 @@ import {
     AbilitySacrificeModifierType,
     PassiveAbilitySacrificeModifierType,
     FusePokemonModifierType,
-    ModifierType
+    ModifierType,
+    AddPokeballModifierType,
+    AddTypeBallModifierType
 } from "../modifier/modifier-type";
-import { getPokeballAtlasKey, PokeballType } from "../data/pokeball";
+import { applyTypeBallRecolor, applyVoidBallRecolor, getPokeballAtlasKey, PokeballType } from "../data/pokeball";
+import { getTypeRgb } from "../data/type";
 import { addTextObject, getTextStyleOptions, getModifierTierTextTint, getTextColor, TextStyle, addBBCodeTextObject, getBBCodeFrag } from "./text";
 import { addWindow } from "./ui-theme";
 import AwaitableUiHandler from "./awaitable-ui-handler";
@@ -4488,7 +4491,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const freeLabel = i18next.t("skillTree:nodeCostFree", { defaultValue: "FREE!" });
 
     let essenceStr = `Essence ${essenceData.total}`;
-    if (essenceData.total >= 5) {
+    if (essenceData.total >= 4) {
       essenceStr += ` [color=#78c850]${freeLabel}[/color]`;
     }
 
@@ -5571,6 +5574,9 @@ export class ModifierOption extends Phaser.GameObjects.Container {
         const atlasKey = useItemsAtlas ? "items" : "smitems";
         const frame = isChampionGroup ? "protein" : this.modifierTypeOption.type.iconImage;
         item = this.scene.add.sprite(0, 0, atlasKey, frame);
+        if (item.frame && item.frame.name !== frame && frame) {
+          item.setFrame("pb");
+        }
         if (!useItemsAtlas) {
           item.setScale(!this.modifierTypeOption.cost ? 0.4: 0.35);
         } else if (this.modifierTypeOption.cost) {
@@ -5581,6 +5587,16 @@ export class ModifierOption extends Phaser.GameObjects.Container {
     };
 
     this.item = getItem();
+    if (this.modifierTypeOption.type instanceof AddTypeBallModifierType) {
+      const targetType = (this.modifierTypeOption.type as AddTypeBallModifierType).targetType;
+      applyTypeBallRecolor(this.scene as BattleScene, this.item, targetType, true);
+    } else if (this.modifierTypeOption.type instanceof AddPokeballModifierType) {
+      const pbType = (this.modifierTypeOption.type as AddPokeballModifierType).pokeballType;
+      if (pbType === PokeballType.VOID_BALL) {
+        applyVoidBallRecolor(this.scene as BattleScene, this.item, true);
+        this.item.setAlpha(0.85);
+      }
+    }
     this.itemContainer.add(this.item);
 
     if (!this.modifierTypeOption.cost) {

@@ -1,12 +1,12 @@
 import BattleScene from "../battle-scene";
 import {
-  getPlayerShopModifierTypeOptionsForWave,
-  ModifierTypeOption,
-  TmModifierType,
-  AddPokemonModifierType,
-  PermaModifierType,
-  getShopModifierTypeOptions, modifierTypes, PermaModifierTypeGenerator, QuestModifierType, QuestModifierTypeGenerator,
-  PermaPartyAbilityModifierType
+    getPlayerShopModifierTypeOptionsForWave,
+    ModifierTypeOption,
+    TmModifierType,
+    AddPokemonModifierType,
+    PermaModifierType,
+    getShopModifierTypeOptions, modifierTypes, PermaModifierTypeGenerator, QuestModifierType, QuestModifierTypeGenerator,
+    PermaPartyAbilityModifierType
 } from "../modifier/modifier-type";
 import { getPokeballAtlasKey, PokeballType } from "../data/pokeball";
 import { addTextObject, getTextStyleOptions, getModifierTierTextTint, getTextColor, TextStyle } from "./text";
@@ -331,7 +331,7 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
         } else {
           this.moveInfoOverlayActive = this.moveInfoOverlay.active;
           this.moveInfoOverlay.setVisible(false);
-          this.moveInfoOverlay.active = false;
+        this.moveInfoOverlay.active = false;
         }
       }
     } else if (button === Button.CANCEL) {
@@ -349,32 +349,32 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
       }
     } else {
       switch (button) {
-      case Button.UP:
+        case Button.UP:
         if (this.rowCursor === 0 && this.cursor === 0) {
           success = this.setRowCursor(this.shopOptionsRows.length + 1);
-        } else if (this.rowCursor < this.shopOptionsRows.length + 1) {
-          success = this.setRowCursor(this.rowCursor + 1);
-        }
-        break;
-      case Button.DOWN:
-        if (this.rowCursor > 0) {
-          success = this.setRowCursor(this.rowCursor - 1);
-        }
-        break;
-      case Button.LEFT:
+          } else if (this.rowCursor < this.shopOptionsRows.length + 1) {
+            success = this.setRowCursor(this.rowCursor + 1);
+          }
+          break;
+        case Button.DOWN:
+          if (this.rowCursor > 0) {
+            success = this.setRowCursor(this.rowCursor - 1);
+          }
+          break;
+        case Button.LEFT:
         if (this.rowCursor === 0) {
           success = false;
         } else if (this.cursor > 0) {
-          success = this.setCursor(this.cursor - 1);
-        }
-        break;
-      case Button.RIGHT:
+            success = this.setCursor(this.cursor - 1);
+          }
+          break;
+        case Button.RIGHT:
         if (this.rowCursor === 0) {
           success = false;
-        } else if (this.cursor < this.getRowItems(this.rowCursor) - 1) {
-          success = this.setCursor(this.cursor + 1);
-        }
-        break;
+          } else if (this.cursor < this.getRowItems(this.rowCursor) - 1) {
+            success = this.setCursor(this.cursor + 1);
+          }
+          break;
       }
     }
 
@@ -435,11 +435,13 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
       }
 
       const type = option.modifierTypeOption.type;
-      type && ui.showText(type.getDescription(this.scene));
+      const description = type?.getDescription(this.scene);
+      if (description != null) ui.showText(description);
       if (type instanceof TmModifierType) {
         this.moveInfoOverlay.show(allMoves[type.moveId]);
-      } else if (type instanceof PermaPartyAbilityModifierType) {
-        this.moveInfoOverlay.show(type.ability.description);
+      }
+      else if(type instanceof PermaPartyAbilityModifierType) {
+          this.moveInfoOverlay.show(type.ability.description);
       }
     } else if (cursor === 0) {
       this.cursorObj.setPosition(6, this.lockRarityButtonContainer.visible ? -72 : -60);
@@ -467,9 +469,9 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
         this.rowCursor = 1;
         this.setCursor(this.row1CursorPosition);
       } else {
-        this.rowCursor = rowCursor;
-        const newCursor = Math.min(this.cursor, this.getRowItems(rowCursor) - 1);
-        this.setCursor(newCursor);
+      this.rowCursor = rowCursor;
+        let newCursor = Math.min(this.cursor, this.getRowItems(rowCursor) - 1);
+      this.setCursor(newCursor);
       }
       return true;
     }
@@ -479,17 +481,17 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
 
   private getRowItems(rowCursor: integer): integer {
     switch (rowCursor) {
-    case 0:
-      return 3;
-    case 1:
-      return this.options.length;
-    default:
-      const shopRowIndex = this.shopOptionsRows.length - (rowCursor - 1);
-      if (shopRowIndex >= 0 && shopRowIndex < this.shopOptionsRows.length) {
-        return this.shopOptionsRows[shopRowIndex].length;
-      } else {
-        return 0;
-      }
+      case 0:
+        return 3;
+      case 1:
+        return this.options.length;
+      default:
+        const shopRowIndex = this.shopOptionsRows.length - (rowCursor - 1);
+        if (shopRowIndex >= 0 && shopRowIndex < this.shopOptionsRows.length) {
+          return this.shopOptionsRows[shopRowIndex].length;
+        } else {
+          return 0;
+        }
     }
   }
 
@@ -524,7 +526,7 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
 
   clear() {
     if (this.clearing) {
-      return;
+        return;
     }
     this.clearing = true;
 
@@ -563,39 +565,39 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
     const animationPromises: Promise<void>[] = [];
 
     if (options.length > 0) {
-      animationPromises.push(new Promise((resolve) => {
-        this.scene.tweens.add({
-          targets: options,
-          scale: 0.01,
-          duration: 250,
-          ease: "Cubic.easeIn",
-          onComplete: () => {
-            options.forEach(o => o.destroy());
-            resolve();
-          }
-        });
-      }));
+        animationPromises.push(new Promise((resolve) => {
+            this.scene.tweens.add({
+                targets: options,
+                scale: 0.01,
+                duration: 250,
+                ease: "Cubic.easeIn",
+                onComplete: () => {
+                    options.forEach(o => o.destroy());
+                    resolve();
+                }
+            });
+        }));
     }
 
     [ this.rerollButtonContainer, this.lockRarityButtonContainer, this.refreshTimerText, this.toggleContainer ].forEach(container => {
-      if (container.visible) {
-        animationPromises.push(new Promise((resolve) => {
-          this.scene.tweens.add({
-            targets: container,
-            alpha: 0,
-            duration: 250,
-            ease: "Cubic.easeIn",
-            onComplete: () => {
-              container.setVisible(false);
-              resolve();
-            }
-          });
-        }));
-      }
+        if (container.visible) {
+            animationPromises.push(new Promise((resolve) => {
+                this.scene.tweens.add({
+                    targets: container,
+                    alpha: 0,
+                    duration: 250,
+                    ease: "Cubic.easeIn",
+                    onComplete: () => {
+                        container.setVisible(false);
+                        resolve();
+                    }
+                });
+            }));
+        }
     });
 
     Promise.all(animationPromises).finally(() => {
-      this.clearing = false;
+        this.clearing = false;
     });
   }
 
@@ -627,7 +629,7 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
       const rerollModifier = new RerollModifier(rerollModifierType);
 
       this.scene.gameData.currentPermaShopOptions.push({
-        id: "reroll",
+        id: 'reroll',
         type: rerollModifierType,
         upgradeCount: 0,
         cost: this.rerollCost
@@ -655,7 +657,7 @@ export default class ShopSelectUiHandler extends AwaitableUiHandler {
 
     this.refreshTimerText.setText(i18next.t("modifierSelectUiHandler:refreshTimer", {
       minutes,
-      seconds: seconds.toString().padStart(2, "0")
+      seconds: seconds.toString().padStart(2, '0')
     }));
   }
 }
@@ -704,8 +706,8 @@ class ModifierOption extends Phaser.GameObjects.Container {
     this.itemContainer.setAlpha(0);
     this.add(this.itemContainer);
 
-    let item = null;
-    this.itemBG = null;
+    let item = null
+    this.itemBG = null
 
     const getItem = () => {
       if (this.modifierTypeOption.type instanceof AddPokemonModifierType) {
@@ -726,29 +728,31 @@ class ModifierOption extends Phaser.GameObjects.Container {
 
         if (questData.questSpriteId) {
           speciesId = questData.questSpriteId;
-        } else if (Array.isArray(questData.rewardId) && questData.rewardId.length > 0 && typeof questData.rewardId[0] === "number") {
+        }
+        else if (Array.isArray(questData.rewardId) && questData.rewardId.length > 0 && typeof questData.rewardId[0] === 'number') {
           speciesId = questData.rewardId[0];
-        } else if (typeof questData.rewardId === "number") {
+        }
+        else if (typeof questData.rewardId === 'number') {
           speciesId = questData.rewardId;
         }
         if (speciesId) {
           const pokemon = getPokemonSpecies(speciesId);
           item = this.scene.add.sprite(0, 0, pokemon.getIconAtlasKey());
           item.setFrame(pokemon.getIconId(false));
-          item.setScale(0.75);
+          item.setScale(0.75)
 
           this.itemBG = this.scene.add.sprite(0, 0, "smitems", "quest");
           this.itemBG.setScale(0.5);
 
         } else {
           item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems" : "items", this.modifierTypeOption.type.iconImage);
-          if (this.useSmitemsAtlas()) {
+          if(this.useSmitemsAtlas()) {
             item.setScale(0.5);
           }
         }
       } else {
         item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems" : "items", this.modifierTypeOption.type.iconImage);
-        if (this.useSmitemsAtlas()) {
+        if(this.useSmitemsAtlas()) {
           item.setScale(0.5);
         }
       }
@@ -756,7 +760,7 @@ class ModifierOption extends Phaser.GameObjects.Container {
     };
 
     this.item = getItem();
-    if (this.itemBG) {
+    if(this.itemBG) {
       this.itemContainer.add(this.itemBG);
     }
     this.itemContainer.add(this.item);

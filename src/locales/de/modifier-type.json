@@ -3,7 +3,9 @@
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
       "statLabel": "Pokeball-Gegenstand",
-      "description": "Erhalte {{pokeballName}} x{{modifierCount}}. (Inventar: {{pokeballAmount}}) \nFangrate: {{catchRate}}"
+      "description": "Erhalte {{pokeballName}} x{{modifierCount}}. (Inventar: {{pokeballAmount}}) \nFangrate: {{catchRate}}",
+      "typeBallExtra": "\nÄndert den Typ des gefangenen Pokémon zu {{typeName}} und bringt ihm 2 {{typeName}}-Attacken bei.",
+      "voidBallExtra": "\nKann jedes Pokémon fangen, wenn seine KP im roten Bereich sind."
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
@@ -714,7 +716,7 @@
       "name": "Essenzen",
       "shopName": "{{type}}-Essenz",
       "statLabel": "Essenz",
-      "description": "Verwende 5 anstatt ein Pokémon für Freilassungsgegenstände freizulassen oder tausche gegen Belohnungen beim Sammler."
+      "description": "Verwende 4 anstatt ein Pokémon für Freilassungsgegenstände freizulassen oder tausche gegen Belohnungen beim Sammler."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Gesammelte Essenzen",
@@ -1063,8 +1065,8 @@
   "common": {
     "waves": "Wellen",
     "uses": "Verwendungen",
-    "glitchPieceCost": "*KOSTET 2x Glitch-Stück",
-    "essenceAlternativeCost": "Wenn das Pokémon 5+ Essenzen hat, kannst du stattdessen diese verwenden.",
+    "glitchPieceCost": "*KOSTET 1x Glitch-Stück",
+    "essenceAlternativeCost": "Wenn das Pokémon 4+ Essenzen hat, kannst du stattdessen diese verwenden.",
     "permaMoney": "ΩGOLD",
     "permaItem": "ΩGEGENSTAND",
     "moreInfo": "(Halte C / Shift für Infos)",

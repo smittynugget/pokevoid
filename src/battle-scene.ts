@@ -395,6 +395,7 @@ export default class BattleScene extends SceneBase {
   public lastEnemyTrainer: Trainer | null;
   public currentBattle: Battle;
   public pokeballCounts: PokeballCounts;
+  public typeBallCounts: { [typeId: number]: number } = {};
   public money: integer;
   public pokemonInfoContainer: PokemonInfoContainer;
   private party: PlayerPokemon[];
@@ -1070,7 +1071,7 @@ export default class BattleScene extends SceneBase {
     container.setName(`${pokemon.name}-icon`);
 
     const iconAtlasKey = pokemon.getIconAtlasKey(ignoreOverride);
-    const iconID = pokemon.getIconId(false);
+    const iconID = pokemon.getIconId(ignoreOverride);
 
     const icon = this.add.sprite(0, 0, iconAtlasKey);
     icon.setName(`sprite-${pokemon.name}-icon`);
@@ -1080,11 +1081,18 @@ export default class BattleScene extends SceneBase {
     } else {
       icon.setFrame(iconID);
       if (icon.frame.name !== iconID) {
-        console.log(`${pokemon.name}'s variant icon does not exist. Replacing with default.`);
         const temp = pokemon.shiny;
         pokemon.shiny = false;
-        icon.setTexture(pokemon.getIconAtlasKey(ignoreOverride));
-        icon.setFrame(pokemon.getIconId(false));
+        const fallbackAtlasKey = pokemon.getIconAtlasKey(ignoreOverride);
+        const fallbackIconId = pokemon.getIconId(ignoreOverride);
+        icon.setTexture(fallbackAtlasKey);
+        icon.setFrame(fallbackIconId);
+        if (icon.frame.name !== fallbackIconId) {
+          const baseAtlasKey = pokemon.species.getIconAtlasKey(0, false, 0);
+          const baseIconId = pokemon.species.getIconId(false, 0, false, 0);
+          icon.setTexture(baseAtlasKey);
+          icon.setFrame(baseIconId);
+        }
         pokemon.shiny = temp;
       }
       icon.setOrigin(0.5, 0);
@@ -1219,11 +1227,21 @@ export default class BattleScene extends SceneBase {
 
     this.lockModifierTiers = false;
 
-    this.pokeballCounts = Object.fromEntries(Utils.getEnumValues(PokeballType).filter(p => p <= PokeballType.MASTER_BALL).map(t => [ t, 0 ]));
-    this.pokeballCounts[PokeballType.POKEBALL] += 5;
+    const trackedBalls = [
+      PokeballType.POKEBALL,
+      PokeballType.GREAT_BALL,
+      PokeballType.ULTRA_BALL,
+      PokeballType.TYPE_BALL,
+      PokeballType.ROGUE_BALL,
+      PokeballType.MASTER_BALL,
+      PokeballType.VOID_BALL,
+    ];
+    this.pokeballCounts = Object.fromEntries(trackedBalls.map(t => [t, 0]));
+    this.pokeballCounts[PokeballType.ULTRA_BALL] += 5;
+    this.typeBallCounts = {};
 
     if (Overrides.POKEBALL_OVERRIDE.active) {
-      this.pokeballCounts = Overrides.POKEBALL_OVERRIDE.pokeballs;
+      this.pokeballCounts = { ...Overrides.POKEBALL_OVERRIDE.pokeballs };
     }
 
     this.modifiers = [];
@@ -1329,7 +1347,7 @@ export default class BattleScene extends SceneBase {
 
     const playerField = this.getPlayerField();
 
-    if ((this.gameMode.isChaosMode && this.gameMode.chaosBattleConfig) || (this.gameMode.isFixedBattle(newWaveIndex) && trainerData === undefined)) {
+    if ((this.gameMode.isChaosMode && this.gameMode.chaosBattleConfig && trainerData === undefined) || (this.gameMode.isFixedBattle(newWaveIndex) && trainerData === undefined)) {
       battleConfig = this.gameMode.getFixedBattle(newWaveIndex, this.gameMode.isChaosMode);
       newDouble = battleConfig.double;
       newBattleType = battleConfig.battleType;
@@ -3639,7 +3657,10 @@ export default class BattleScene extends SceneBase {
         this.addEnemyModifier(finalBossMBH, false, true);
         pokemon.generateAndPopulateMoveset(1);
         this.setFieldScale(0.75);
-        this.triggerPokemonFormChange(pokemon, SpeciesFormChangeManualTrigger, false);
+        const formChangeTriggered = this.triggerPokemonFormChange(pokemon, SpeciesFormChangeManualTrigger, false);
+        if (!formChangeTriggered) {
+          pokemon.is2ndStageBoss = true;
+        }
         this.shiftPhase();
       });
       return;

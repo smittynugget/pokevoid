@@ -11,7 +11,7 @@ import { PokemonAltBuildId } from "#app/data/pokemon-alt-buid";
 import { SkillTreeRewardType } from "#app/system/skill-tree-data";
 import { QuestUnlockables } from "#app/system/game-data.js";
 import { VoucherType } from "#app/system/voucher";
-export const CHAMPION_DEFINITIONS: Record<string, Partial<PlayableChampionData>> = new Proxy({} as Record<string, Partial<PlayableChampionData>>, {
+export let CHAMPION_DEFINITIONS: Record<string, Partial<PlayableChampionData>> = new Proxy({} as Record<string, Partial<PlayableChampionData>>, {
   get(target, prop: string | symbol) {
     const propKey = prop as string;
 
@@ -24,13 +24,11 @@ export const CHAMPION_DEFINITIONS: Record<string, Partial<PlayableChampionData>>
         target[baseKey] = _CHAMPION_DEFINITIONS[baseKey];
       }
       const baseDefinition = target[baseKey];
-      if (!baseDefinition) {
-        return undefined;
-      }
+      if (!baseDefinition) return undefined;
 
       const uiOverrides = propKey === "apollo"
-        ? { skillTreeRootOffsetX: -5, skillTreeRootOffsetY: -7 }
-        : { skillTreeRootOffsetX: 0, skillTreeRootOffsetY: -1, skillTreeTrainerBondOffsetX: 0 };
+          ? { skillTreeRootOffsetX: -5, skillTreeRootOffsetY: -7 }
+          : { skillTreeRootOffsetX: 0, skillTreeRootOffsetY: -1, skillTreeTrainerBondOffsetX: 0 };
 
       return {
         ...baseDefinition,
@@ -55,9 +53,7 @@ export const CHAMPION_DEFINITIONS: Record<string, Partial<PlayableChampionData>>
 let _CHAMPION_DEFINITIONS: Record<string, Partial<PlayableChampionData>> | null = null;
 
 export function initializeChampionDefinitions(): Record<string, Partial<PlayableChampionData>> {
-  if (_CHAMPION_DEFINITIONS !== null) {
-    return _CHAMPION_DEFINITIONS;
-  }
+  if (_CHAMPION_DEFINITIONS !== null) return _CHAMPION_DEFINITIONS;
   _CHAMPION_DEFINITIONS = {
     apollo_diana: {
       id: "apollo_diana",
@@ -109,6 +105,7 @@ export function initializeChampionDefinitions(): Record<string, Partial<Playable
       unlockedRogueBall: true,
       unlockedGoldenPokeball: true,
       unlockedMasterBall: true,
+      unlockedVoidBall: true,
 
       unlockRequirements: {
         essenceRequirements: [],
@@ -940,6 +937,7 @@ export function initializeChampionDefinitions(): Record<string, Partial<Playable
       unlockedRogueBall: true,
       unlockedGoldenPokeball: true,
       unlockedMasterBall: true,
+      unlockedVoidBall: true,
 
       unlockRequirements: {
         essenceRequirements: [
@@ -1638,6 +1636,7 @@ export function initializeChampionDefinitions(): Record<string, Partial<Playable
       unlockedRogueBall: true,
       unlockedGoldenPokeball: true,
       unlockedMasterBall: true,
+      unlockedVoidBall: true,
 
       unlockRequirements: {
         essenceRequirements: [

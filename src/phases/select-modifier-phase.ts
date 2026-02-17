@@ -558,13 +558,13 @@ export class SelectModifierPhase extends BattlePhase {
             }
         } else {
             if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_REROLL_COST_3)) {
-                baseValue *= .25;
+                baseValue *= .19;
             } else if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_REROLL_COST_2)) {
-                baseValue *= .40;
+                baseValue *= .30;
             } else if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_REROLL_COST_1)) {
-                baseValue *= .60;
+                baseValue *= .45;
             } else {
-                baseValue *= .80;
+                baseValue *= .60;
             }
         }
 

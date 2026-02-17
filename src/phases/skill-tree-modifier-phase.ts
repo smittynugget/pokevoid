@@ -4,7 +4,7 @@ import { PokemonAltBuildModifier } from "#app/modifier/modifier";
 import { Mode } from "#app/ui/ui";
 import { SkillTreeRewardType, SkillTreeNodeState } from "#app/system/skill-tree-data";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
-import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator } from "#app/modifier/modifier-type";
+import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, AddTypeBallModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator } from "#app/modifier/modifier-type";
 import * as Utils from "#app/utils";
 import { Abilities } from "#enums/abilities";
 import { allAbilities } from "#app/data/ability";
@@ -335,6 +335,16 @@ export class SkillTreeModifierPhase extends Phase {
       case SkillTreeRewardType.ROGUE_BALL:
         options.push(...this.createRogueBallOption());
         break;
+
+      case SkillTreeRewardType.VOID_BALL:
+        options.push(...this.createVoidBallOption());
+        break;
+
+      case SkillTreeRewardType.TYPE_BALL_FILTERED: {
+        const opt = this.createTypeBallOption();
+        if (opt) options.push(opt);
+        break;
+      }
     }
 
     return options;
@@ -486,6 +496,10 @@ export class SkillTreeModifierPhase extends Phase {
     }
     return t ? [new ModifierTypeOption(t, 0, 0)] : [];
   }
+  private createMasterBallOption(): ModifierTypeOption[] {
+    const t = (modifierTypes as any).MASTER_BALL?.();
+    return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+  }
   private createEggVoucherOption(): ModifierTypeOption[] {
     const tier = this.node.rewardData.data.tier;
     let key: keyof typeof modifierTypes = 'VOUCHER';
@@ -525,6 +539,19 @@ export class SkillTreeModifierPhase extends Phase {
   private createRogueBallOption(): ModifierTypeOption[] {
     const t = modifierTypes.ROGUE_BALL?.();
     return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+  }
+
+  private createVoidBallOption(): ModifierTypeOption[] {
+    const t = (modifierTypes as any).VOID_BALL?.();
+    return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+  }
+
+  private createTypeBallOption(): ModifierTypeOption | null {
+    const data = this.node.rewardData.data || {};
+    const selectedType = data.ballType as Type | undefined;
+    if (selectedType === undefined) return null;
+    const t = new AddTypeBallModifierType(selectedType, 3);
+    return new ModifierTypeOption(t, 0, 0);
   }
 
   private createPPMaxOption(): ModifierTypeOption[] {

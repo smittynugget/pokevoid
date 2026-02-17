@@ -29,6 +29,7 @@ import { Abilities } from "#enums/abilities";
 import { Species } from "#enums/species";
 import { Type } from "#app/data/type";
 import { getTypeRgb } from "#app/data/type";
+import { applyVoidBallRecolor, applyTypeBallRecolor } from "#app/data/pokeball";
 import { getPokemonSpecies, allSpecies } from "#app/data/pokemon-species";
 import { RewardType } from "#enums/reward-type";
 import { QuestUnlockables } from "#app/system/game-data";
@@ -37,7 +38,7 @@ import { SkillTreeGenerator } from "#app/system/skill-tree-generator";
 import { SkillTreeMode, PokemonSelection, SkillTreePhase } from "#app/phases/skill-tree-phase";
 import { PlayableChampionData } from "#app/system/playable-champions";
 import { SkillTreeModifierPhase } from "#app/phases/skill-tree-modifier-phase";
-import { modifierTypes, getAttackTypeBoosterItemName, AddVoucherModifierType, ModifierTypeGenerator, PermaModifierType, TrainerBondAbilityModifierType, TeraAbilityModifierType } from "#app/modifier/modifier-type";
+import { modifierTypes, getAttackTypeBoosterItemName, AddVoucherModifierType, AddTypeBallModifierType, ModifierTypeGenerator, PermaModifierType, TrainerBondAbilityModifierType, TeraAbilityModifierType } from "#app/modifier/modifier-type";
 import type { ModifierTypeFunc } from "#app/modifier/modifier-type";
 import { playGenericLevelUpAnimation, skipCurrentLevelUpAnimation } from "./level-up-animation";
 import { VoucherType, getVoucherTypeIcon } from "#app/system/voucher";
@@ -741,7 +742,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private setupControls(): void {
 
     this.cleanupControls();
-    this.skillTreeContent.setInteractive(new Phaser.Geom.Rectangle(-10000, -10000, 20000, 20000), Phaser.Geom.Rectangle.Contains);
+    this.skillTreeContent.setInteractive(new Phaser.Geom.Rectangle(-5000, -5000, 10000, 10000), Phaser.Geom.Rectangle.Contains);
     this.skillTreeContent.on('pointerdown', (p: Phaser.Input.Pointer) => {
       if (p.leftButtonDown()) {
 
@@ -1505,20 +1506,37 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.connectionLines = [];
     this.nodesContainer.removeAll(true);
     this.nodeSprites.clear();
+
     this.buildConnectionMap();
-    this.nodes.forEach(node => {
+
+    const ast = this.config?.activeSkillTree;
+    let maxRenderDepth: number;
+    if (this.isEnhancedDebugMode) {
+      maxRenderDepth = Number.MAX_SAFE_INTEGER;
+    } else {
+      let deepestUnlocked = 0;
+      if (ast?.unlockedNodes) {
+        this.nodes.forEach(n => {
+          if (ast.unlockedNodes.has(n.id) && n.depth > deepestUnlocked) {
+            deepestUnlocked = n.depth;
+          }
+        });
+      }
+      maxRenderDepth = Math.max(ast?.maxVisibleDepth || 0, deepestUnlocked) + 2;
+    }
+    const renderableNodes = this.nodes.filter(n => n.depth <= maxRenderDepth);
+
+    renderableNodes.forEach(node => {
       if (!node.dependencies?.length) return;
       node.dependencies.forEach(depId => {
-        const dep = this.nodes.find(n => n.id === depId);
+        const dep = renderableNodes.find(n => n.id === depId);
         if (!dep) return;
         const g = this.scene.add.graphics();
-
         g.lineStyle(4, 0xaaaaaa, 0.9);
         g.beginPath();
         g.moveTo(dep.position.x, dep.position.y);
         g.lineTo(node.position.x, node.position.y);
         g.strokePath();
-
         g.lineStyle(2, 0xffffff, 0.3);
         g.beginPath();
         g.moveTo(dep.position.x, dep.position.y);
@@ -1528,7 +1546,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         this.connectionLines.push({ childId: node.id, parentId: depId, g });
       });
     });
-    this.nodes.forEach(node => this.renderNode(node));
+
+    renderableNodes.forEach(node => this.renderNode(node));
     this.updateNodeStatesAndRender();
   }
 
@@ -1926,6 +1945,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         return { key: "items", frame: "pb_gold", scale: 2.0 };
       case SkillTreeRewardType.MASTER_BALL:
         return { key: "items", frame: "mb", scale: 2.0 };
+      case SkillTreeRewardType.VOID_BALL:
+        return { key: "items", frame: "mb", scale: 2.0 };
+      case SkillTreeRewardType.TYPE_BALL_FILTERED:
+        return { key: "items", frame: "gb", scale: 2.0 };
       case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
         return { key: "items", frame: "rb", scale: 2.0 };
       case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
@@ -2061,6 +2084,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         bg.fillStyle(rarityColors.border);
         bg.lineStyle(3, this.brightenColor(rarityColors.border, 1.3));
         icon.clearTint();
+        if (node.rewardData?.type === SkillTreeRewardType.VOID_BALL) {
+          applyVoidBallRecolor(this.scene as BattleScene, icon, true);
+        } else if (node.rewardData?.type === SkillTreeRewardType.TYPE_BALL_FILTERED && node.rewardData?.data?.ballType !== undefined) {
+          applyTypeBallRecolor(this.scene as BattleScene, icon, node.rewardData.data.ballType as Type, true);
+        }
         break;
       case SkillTreeNodeState.LOCKED_DETAILS:
 
@@ -2102,8 +2130,12 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
             bg.lineStyle(3, 0xFFCB05);
           }
           icon.setTint(0xcccccc);
+          if (node.rewardData?.type === SkillTreeRewardType.VOID_BALL) {
+            applyVoidBallRecolor(this.scene as BattleScene, icon, true);
+          } else if (node.rewardData?.type === SkillTreeRewardType.TYPE_BALL_FILTERED && node.rewardData?.data?.ballType !== undefined) {
+            applyTypeBallRecolor(this.scene as BattleScene, icon, node.rewardData.data.ballType as Type, true);
+          }
         } else {
-
           bg.fillStyle(0x444444);
           bg.lineStyle(3, 0x666666);
           icon.setTint(0x888888);
@@ -2136,6 +2168,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           bg.fillStyle(0x333333);
           bg.lineStyle(3, 0x555555);
           icon.setTint(0x666666);
+          if (node.rewardData?.type === SkillTreeRewardType.VOID_BALL) {
+            applyVoidBallRecolor(this.scene as BattleScene, icon, true);
+          } else if (node.rewardData?.type === SkillTreeRewardType.TYPE_BALL_FILTERED && node.rewardData?.data?.ballType !== undefined) {
+            applyTypeBallRecolor(this.scene as BattleScene, icon, node.rewardData.data.ballType as Type, true);
+          }
         } else {
           bg.fillStyle(0x444444);
           bg.lineStyle(3, 0x666666);
@@ -3369,7 +3406,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         return 0;
       }
     }
-
+    if (node.rewardData.type === SkillTreeRewardType.TYPE_SWITCHER
+        || node.rewardData.type === SkillTreeRewardType.CATCH_RATE_BONUS
+        || node.rewardData.type === SkillTreeRewardType.FUSION_SECONDARY_PRIORITY) {
+      return 0;
+    }
     return node.cost;
   }
 
@@ -3526,6 +3567,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           if (typeof species === "number") {
             recordData = { species };
           }
+        } else if (rt === SkillTreeRewardType.TYPE_BALL_FILTERED) {
+          const ballType = node.rewardData?.data?.ballType;
+          if (typeof ballType === "number") {
+            recordData = { ballType };
+          }
         }
         scene.recordRunEndSummarySkillNodeObtained(nodeId, rt, recordData);
       }
@@ -3632,6 +3678,15 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         }
       }
 
+      if (t === SkillTreeRewardType.TYPE_BALL_FILTERED) {
+        const ballType = node.rewardData.data?.ballType;
+        if (typeof ballType === "number") {
+          const typeBallModifierFunc = () => new AddTypeBallModifierType(ballType as Type, 3);
+          this.executeModifierRewardWithReturn(typeBallModifierFunc, false, node.rarity);
+          return;
+        }
+      }
+
       const selectionTypes = new Set<SkillTreeRewardType>([
         SkillTreeRewardType.TM_FILTERED,
         SkillTreeRewardType.XM_FILTERED,
@@ -3715,6 +3770,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
       if (t === SkillTreeRewardType.MASTER_BALL) {
         this.executeModifierRewardWithReturn(modifierTypes.MASTER_BALL, false, node.rarity);
+        return;
+      }
+
+      if (t === SkillTreeRewardType.VOID_BALL) {
+        this.executeModifierRewardWithReturn(modifierTypes.VOID_BALL, false, node.rarity);
         return;
       }
 
@@ -4141,6 +4201,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           return i18next.t("skillTree:rewards.goldenPokeball");
         case SkillTreeRewardType.MASTER_BALL:
           return i18next.t("skillTree:rewards.masterBall");
+        case SkillTreeRewardType.VOID_BALL:
+          return i18next.t("skillTree:rewards.voidBall");
         case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
           return i18next.t("skillTree:rewards.rogueballRarity");
         case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:

@@ -1,5 +1,6 @@
 import BattleScene from "#app/battle-scene";
 import { BattleType, BattlerIndex } from "#app/battle";
+import { FaintPhase } from "./faint-phase";
 import { applyAbAttrs, SyncEncounterNatureAbAttr } from "#app/data/ability";
 import { getCharVariantFromDialogue } from "#app/data/dialogue";
 import { getPokemonSpecies } from "#app/data/pokemon-species";
@@ -48,6 +49,8 @@ import {randSeedInt} from "#app/utils";
 import {ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
 import {PermaType} from "#app/modifier/perma-modifiers";
 import {PokeballType} from "#enums/pokeball";
+import { getActiveChampionData } from "#app/data/pokeball";
+import { Type } from "#app/data/type";
 import {isNonQuestBountyModifier, QuestUnlockables} from "#app/system/game-data";
 import {RewardObtainedType} from "#app/ui/reward-obtained-ui-handler";
 import {applyUniversalSmittyForm, pokemonFormChanges, SmittyFormTrigger} from "#app/data/pokemon-forms";
@@ -224,6 +227,18 @@ export class EncounterPhase extends BattlePhase {
           PermaType.PERMA_START_BALL_2,
           PermaType.PERMA_START_BALL_3
         ], this.scene);
+
+        const championData = getActiveChampionData(this.scene);
+        if (championData) {
+          const hasType1 = championData.type1 !== undefined && championData.type1 !== Type.UNKNOWN;
+          const hasType2 = championData.type2 !== undefined && championData.type2 !== Type.UNKNOWN;
+          if (hasType1 && hasType2) {
+            this.scene.typeBallCounts[championData.type1!] = (this.scene.typeBallCounts[championData.type1!] || 0) + 3;
+            this.scene.typeBallCounts[championData.type2!] = (this.scene.typeBallCounts[championData.type2!] || 0) + 3;
+          } else if (hasType1) {
+            this.scene.typeBallCounts[championData.type1!] = (this.scene.typeBallCounts[championData.type1!] || 0) + 6;
+          }
+        }
       }
     }
     if (battle.waveIndex === 1 || battle.waveIndex % 10 === 1) {
@@ -491,6 +506,15 @@ export class EncounterPhase extends BattlePhase {
       const pokemon = enemyParty[i];
       if (pokemon) {
         place(pokemon, false, i, availableEnemyMembers);
+      }
+    }
+
+    for (let i = 0; i < Math.min(battlerCount, enemyParty.length); i++) {
+      const enemy = enemyParty[i];
+      if (enemy && enemy.isFainted() && enemy.isOnField()) {
+        this.scene.unshiftPhase(
+          new FaintPhase(this.scene, enemy.getBattlerIndex())
+        );
       }
     }
   }

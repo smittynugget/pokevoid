@@ -15,6 +15,6 @@ export default class ArenaData {
     this.biome = sourceArena ? sourceArena.biomeType : source.biome;
     this.weather = sourceArena ? sourceArena.weather : source.weather ? new Weather(source.weather.weatherType, source.weather.turnsLeft) : null;
     this.terrain = sourceArena ? sourceArena.terrain : source.terrain ? new Terrain(source.terrain.terrainType, source.terrain.turnsLeft) : null;
-    this.tags = sourceArena ? sourceArena.tags : [];
+    this.tags = sourceArena ? sourceArena.tags : (source.tags || []);
   }
 }

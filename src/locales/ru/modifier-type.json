@@ -3,7 +3,9 @@
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
       "statLabel": "Предмет: Покебол",
-      "description": "Получить {{pokeballName}} x{{modifierCount}} (в инвентаре: {{pokeballAmount}})\nШанс поимки: {{catchRate}}"
+      "description": "Получить {{pokeballName}} x{{modifierCount}} (в инвентаре: {{pokeballAmount}})\nШанс поимки: {{catchRate}}",
+      "typeBallExtra": "\nМеняет тип пойманного покемона на {{typeName}} и обучает 2 приёмам типа {{typeName}}.",
+      "voidBallExtra": "\nМожет поймать любого покемона, когда его HP в красной зоне."
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
@@ -440,7 +442,7 @@
       "name": "Эссенции",
       "shopName": "Эссенция {{type}}",
       "statLabel": "Эссенция",
-      "description": "Используй 5 шт. вместо выпуска покемона ради предметов выпуска, или обменяй на награды у Коллекционера."
+      "description": "Используй 4 шт. вместо выпуска покемона ради предметов выпуска, или обменяй на награды у Коллекционера."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Собранные эссенции",
@@ -1061,8 +1063,8 @@
   "common": {
     "waves": "волны",
     "uses": "исп.",
-    "glitchPieceCost": "*СТОИТ 2x Кусок глитча",
-    "essenceAlternativeCost": "Если у покемона 5+ эссенций, можешь использовать их вместо этого.",
+    "glitchPieceCost": "*СТОИТ 1x Кусок глитча",
+    "essenceAlternativeCost": "Если у покемона 4+ эссенций, можешь использовать их вместо этого.",
     "permaMoney": "ΩGOLD",
     "permaItem": "ΩITEM",
     "moreInfo": "(Удерживай C / Shift для информации)",

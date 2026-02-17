@@ -1093,7 +1093,6 @@ export default class BattlePathUiHandler extends ModalUiHandler {
         }
       }
     }
-    true
     return modeDescriptions;
   }
 
@@ -1239,7 +1238,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
         -tooltipHeight / 2 + padding,
         tooltipText,
         TextStyle.WINDOW,
-        { fontSize: '300px' }
+        { fontSize: '56px' }
       );
       this.customTooltipText.setOrigin(0, 0);
       this.customTooltipContainer.add(this.customTooltipText);
@@ -1258,13 +1257,6 @@ export default class BattlePathUiHandler extends ModalUiHandler {
       const textMask = textMaskRect.createGeometryMask();
       this.customTooltipText.setMask(textMask);
 
-      const textLineHeight = 16;
-      const visibleLines = Math.floor((tooltipHeight - padding * 2) / textLineHeight);
-      const totalLines = Math.ceil(this.customTooltipText.displayHeight / textLineHeight);
-
-      if (totalLines > visibleLines) {
-        this.startTooltipScrolling(totalLines, visibleLines, textLineHeight, showManyLines);
-      }
     }
   }
 

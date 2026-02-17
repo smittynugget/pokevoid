@@ -2955,7 +2955,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
         [PathNodeType.EXP_SHARE]: 20,
-        [PathNodeType.DNA_SPLICERS]: 5,
+        [PathNodeType.DNA_SPLICERS]: 2,
         [PathNodeType.ANY_TMS]: 35,
         [PathNodeType.ADD_POKEMON]: 30,
         [PathNodeType.STAT_SWITCHERS]: 35,
@@ -2970,7 +2970,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 80,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 0,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -3005,7 +3005,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
         [PathNodeType.EXP_SHARE]: 20,
-        [PathNodeType.DNA_SPLICERS]: 5,
+        [PathNodeType.DNA_SPLICERS]: 2,
         [PathNodeType.ANY_TMS]: 35,
         [PathNodeType.ADD_POKEMON]: 30,
         [PathNodeType.STAT_SWITCHERS]: 35,
@@ -3023,7 +3023,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 80,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 0,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -3058,7 +3058,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
         [PathNodeType.EXP_SHARE]: 20,
-        [PathNodeType.DNA_SPLICERS]: 5,
+        [PathNodeType.DNA_SPLICERS]: 2,
         [PathNodeType.ANY_TMS]: 35,
         [PathNodeType.ADD_POKEMON]: 30,
         [PathNodeType.STAT_SWITCHERS]: 35,
@@ -3076,7 +3076,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 80,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 0,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -3112,7 +3112,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
         [PathNodeType.EXP_SHARE]: 10,
-        [PathNodeType.DNA_SPLICERS]: 5,
+        [PathNodeType.DNA_SPLICERS]: 2,
         [PathNodeType.ANY_TMS]: 35,
         [PathNodeType.ADD_POKEMON]: 45,
         [PathNodeType.STAT_SWITCHERS]: 35,
@@ -3130,7 +3130,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 80,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 0,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -3167,7 +3167,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
         [PathNodeType.EXP_SHARE]: 5,
-        [PathNodeType.DNA_SPLICERS]: 5,
+        [PathNodeType.DNA_SPLICERS]: 2,
         [PathNodeType.ANY_TMS]: 35,
         [PathNodeType.ADD_POKEMON]: 45,
         [PathNodeType.STAT_SWITCHERS]: 35,
@@ -3185,7 +3185,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 100,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 0,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -3221,7 +3221,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.GOLDEN_POKEBALL]: 1,
         [PathNodeType.MASTER_BALL_ITEMS]: 1,
         [PathNodeType.GLITCH_PIECE]: 70,
-        [PathNodeType.DNA_SPLICERS]: 5,
+        [PathNodeType.DNA_SPLICERS]: 2,
         [PathNodeType.ANY_TMS]: 35,
         [PathNodeType.ADD_POKEMON]: 55,
         [PathNodeType.STAT_SWITCHERS]: 35,
@@ -3239,7 +3239,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.SCOPE_LENS]: 3,
         [PathNodeType.VITAMIN]: 150,
         [PathNodeType.MOVE_UPGRADE]: 100,
-        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 100,
+        [PathNodeType.LOW_TIER_MOVE_UPGRADE]: 0,
         [PathNodeType.SKILL_POINT]: 20,
         [PathNodeType.SKILL_TOKEN]: 25,
       }
@@ -3409,17 +3409,17 @@ function createPathLayer(
         TRAINER_TYPES.ELITE_FOUR.THIRD,
         TRAINER_TYPES.ELITE_FOUR.FOURTH
       ];
-      const trainerType = eliteFourTypes[eliteFourCounter % 4];
+      const globalEliteFourIndex = specialWaves.eliteFourWaves.indexOf(wave);
+      const trainerType = eliteFourTypes[globalEliteFourIndex % 4];
       const dynamicMode = generateDynamicModeForWave(wave, scene, seeds);
       const dynamicModeCount = dynamicMode ? Object.keys(dynamicMode).length : 0;
-      const globalEliteFourIndex = specialWaves.eliteFourWaves.indexOf(wave);
       const isLastEliteFour = globalEliteFourIndex === totalEliteFourWaves - 1;
 
       allSpecialWaves.set(wave, {
         type: PathNodeType.ELITE_FOUR,
         config: createEliteFourBattle(trainerType, false, seeds.baseSeed),
         metadata: {
-          eliteType: ['first', 'second', 'third', 'fourth'][eliteFourCounter % 4],
+          eliteType: ['first', 'second', 'third', 'fourth'][globalEliteFourIndex % 4],
           dynamicModeCount: (dynamicModeCount > 0 && isLastEliteFour) ? dynamicModeCount : undefined
         },
         dynamicMode
@@ -4581,36 +4581,49 @@ export function setupFixedBattlePaths(scene: BattleScene, startWave: number = 1)
     const sortedRivalWaves = [...combinedSpecialWaves.rivalWaves].sort((a, b) => a - b);
 
     scene.resetSeed(seeds.rivalSelection);
-    const allRivalTypes = getAllRivalTrainerTypes ? getAllRivalTrainerTypes() : [];
-    const selectedRivals: any[] = [];
-    while (selectedRivals.length < Math.min(6, allRivalTypes.length)) {
-      const randomIndex = Utils.randSeedInt(allRivalTypes.length);
-      const randomRival = allRivalTypes[randomIndex];
-      if (!selectedRivals.includes(randomRival)) {
-        selectedRivals.push(randomRival);
-        scene.gameData.chaosAltRivals.push(randomRival);
+    if (scene.gameMode.isChaosFTL) {
+      const ftlRival = getDynamicRivalType(1, scene.gameData, false);
+      scene.gameData.chaosAltRivals.push(ftlRival);
+      for (let i = 0; i < sortedRivalWaves.length; i++) {
+        const wave = sortedRivalWaves[i];
+        const stage = startWave > 1000 ? 6 : Math.min(i + 1, 6);
+        globalRivalAssignments.set(wave, {
+          stage: stage,
+          rival: ftlRival
+        });
       }
-    }
-
-    const rivalsPerStage = Math.ceil(sortedRivalWaves.length / 6);
-    for (let i = 0; i < sortedRivalWaves.length; i++) {
-      const wave = sortedRivalWaves[i];
-      const stage = startWave > 1000 ? 6 : Math.min(Math.floor(i / rivalsPerStage) + 1, 6);
-      const rivalIndex = i % rivalsPerStage;
-
-      const shuffledRivals = [...selectedRivals];
-      scene.resetSeed(seeds.rivalSelection + stage * 1000);
-      for (let j = shuffledRivals.length - 1; j > 0; j--) {
-        const k = Utils.randSeedInt(j + 1);
-        [shuffledRivals[j], shuffledRivals[k]] = [shuffledRivals[k], shuffledRivals[j]];
+    } else {
+      const allRivalTypes = getAllRivalTrainerTypes ? getAllRivalTrainerTypes() : [];
+      const selectedRivals: any[] = [];
+      while (selectedRivals.length < Math.min(6, allRivalTypes.length)) {
+        const randomIndex = Utils.randSeedInt(allRivalTypes.length);
+        const randomRival = allRivalTypes[randomIndex];
+        if (!selectedRivals.includes(randomRival)) {
+          selectedRivals.push(randomRival);
+          scene.gameData.chaosAltRivals.push(randomRival);
+        }
       }
 
-      const selectedRival = shuffledRivals[rivalIndex % shuffledRivals.length];
+      const rivalsPerStage = Math.ceil(sortedRivalWaves.length / 6);
+      for (let i = 0; i < sortedRivalWaves.length; i++) {
+        const wave = sortedRivalWaves[i];
+        const stage = startWave > 1000 ? 6 : Math.min(Math.floor(i / rivalsPerStage) + 1, 6);
+        const rivalIndex = i % rivalsPerStage;
 
-      globalRivalAssignments.set(wave, {
-        stage: stage,
-        rival: selectedRival
-      });
+        const shuffledRivals = [...selectedRivals];
+        scene.resetSeed(seeds.rivalSelection + stage * 1000);
+        for (let j = shuffledRivals.length - 1; j > 0; j--) {
+          const k = Utils.randSeedInt(j + 1);
+          [shuffledRivals[j], shuffledRivals[k]] = [shuffledRivals[k], shuffledRivals[j]];
+        }
+
+        const selectedRival = shuffledRivals[rivalIndex % shuffledRivals.length];
+
+        globalRivalAssignments.set(wave, {
+          stage: stage,
+          rival: selectedRival
+        });
+      }
     }
 
     const layerSize = 20;

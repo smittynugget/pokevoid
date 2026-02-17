@@ -470,11 +470,15 @@ export function initMoveAnim(scene: BattleScene, move: Moves): Promise<void> {
             if (!response.ok || contentType?.indexOf("application/json") === -1) {
               console.error(`Could not load animation file for move '${moveName}'`, response.status, response.statusText);
               populateMoveAnim(move, moveAnims.get(defaultMoveAnim));
-              return resolve();
+              resolve();
+              return null;
             }
             return response.json();
           })
           .then(ba => {
+            if (ba === null || ba === undefined) {
+              return;
+            }
             if (Array.isArray(ba)) {
               populateMoveAnim(move, ba[0]);
               populateMoveAnim(move, ba[1]);
@@ -729,10 +733,12 @@ export abstract class BattleAnim {
 
       const userInitialX = user!.x;
       const userInitialY = user!.y;
-      const userHalfHeight = user!.getSprite().displayHeight! / 2; // TODO: is this bang correct?
-      const targetInitialX = target!.x; // TODO: is this bang correct?
-      const targetInitialY = target!.y; // TODO: is this bang correct?
-      const targetHalfHeight = target!.getSprite().displayHeight! / 2;
+      const userSprite = user!.getSprite();
+      const userHalfHeight = (userSprite.height * userSprite.parentContainer.scale) / 2;
+      const targetInitialX = target!.x;
+      const targetInitialY = target!.y;
+      const targetSprite = target!.getSprite();
+      const targetHalfHeight = (targetSprite.height * targetSprite.parentContainer.scale) / 2;
 
       let g = 0;
       let u = 0;
@@ -878,7 +884,7 @@ export abstract class BattleAnim {
               const spriteIndex = isUser ? u++ : t++;
               const pokemonSprite = sprites[spriteIndex];
               const graphicFrameData = frameData.get(frame.target)!.get(spriteIndex)!;
-              pokemonSprite.setPosition(graphicFrameData.x, graphicFrameData.y - ((spriteSource.height / 2) * (spriteSource.parentContainer.scale - 1)));
+              pokemonSprite.setPosition(graphicFrameData.x, graphicFrameData.y);
 
               pokemonSprite.setAngle(graphicFrameData.angle);
               pokemonSprite.setScale(graphicFrameData.scaleX * spriteSource.parentContainer.scale,  graphicFrameData.scaleY * spriteSource.parentContainer.scale);
@@ -947,29 +953,10 @@ export abstract class BattleAnim {
                 setSpritePriority(frame.priority);
               }
 
-              const isUser = frame.target === AnimFrameTarget.USER;
-
               moveSprite.setFrame(frame.graphicFrame);
 
               const graphicFrameData = frameData.get(frame.target)!.get(graphicIndex)!;
-
-              if (!isUser && this.target?.isGlitchOrSmittyForm && this.target.isGlitchOrSmittyForm()) {
-                const targetSprite = this.target.getSprite();
-                const originYOffset = targetSprite.height * 0.4;
-                moveSprite.setPosition(
-                  graphicFrameData.x,
-                  graphicFrameData.y + originYOffset / 2
-                );
-              } else if (isUser && this.user?.isGlitchOrSmittyForm && this.user.isGlitchOrSmittyForm()) {
-                const userSprite = this.user.getSprite();
-                const originYOffset = userSprite.height * 0.4;
-                moveSprite.setPosition(
-                  graphicFrameData.x,
-                  graphicFrameData.y + originYOffset / 2
-                );
-              } else {
-                moveSprite.setPosition(graphicFrameData.x, graphicFrameData.y);
-              }
+              moveSprite.setPosition(graphicFrameData.x, graphicFrameData.y);
 
               moveSprite.setAngle(graphicFrameData.angle);
               moveSprite.setScale(graphicFrameData.scaleX,  graphicFrameData.scaleY);
@@ -1050,10 +1037,23 @@ export class MoveAnim extends BattleAnim {
     this.move = move;
   }
 
-  getAnim(): AnimConfig {
-    return moveAnims.get(this.move) instanceof AnimConfig
-      ? moveAnims.get(this.move) as AnimConfig
-      : moveAnims.get(this.move)![this.user?.isPlayer() ? 0 : 1] as AnimConfig;
+  getAnim(): AnimConfig | null {
+    const anim = moveAnims.get(this.move);
+    if (!anim) {
+      if (this.user?.scene) {
+        initMoveAnim(this.user.scene, this.move).then(() => {
+          loadMoveAnimAssets(this.user!.scene, [this.move], true);
+        });
+      }
+      return null;
+    }
+    if (anim instanceof AnimConfig) {
+      return anim;
+    }
+    if (Array.isArray(anim)) {
+      return anim[this.user?.isPlayer() ? 0 : 1] ?? null;
+    }
+    return null;
   }
 
   isOppAnim(): boolean {

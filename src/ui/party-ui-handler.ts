@@ -1027,7 +1027,7 @@ export default class PartyUiHandler extends MessageUiHandler {
           } else {
             const sacrificeOption = option === PartyOption.SACRIFICE ? PartyOption.RELEASE : null;
             if(sacrificeOption && this.hasEnoughCollectedTypeModifiers(pokemon)) {
-              optionName = i18next.t(`partyUiHandler:${PartyOption[sacrificeOption]}`) + " 5 " + i18next.t("modifierType:ModifierType.CollectedTypeModifierType.name", { type: "" }).replace(": ", "");
+              optionName = i18next.t(`partyUiHandler:${PartyOption[sacrificeOption]}`) + " 4 " + i18next.t("modifierType:ModifierType.CollectedTypeModifierType.name", { type: "" }).replace(": ", "");
             }
             else if (option === PartyOption.TRADE) {
               optionName = i18next.t(`partyUiHandler:${PartyOption[option]}`, { value: this.getPokemonTradeValue(pokemon) });
@@ -1092,7 +1092,7 @@ export default class PartyUiHandler extends MessageUiHandler {
       m.pokemonId === pokemon.id
     ) as CollectedTypeModifier[];
 
-    const hasEnough = collectedTypeModifiers.some(modifier => modifier.hasEnoughCollected(5));
+    const hasEnough = collectedTypeModifiers.some(modifier => modifier.hasEnoughCollected(4));
 
     this.currentSacrifice.pokemonId = pokemon.id;
     this.currentSacrifice.hasEnough = hasEnough;

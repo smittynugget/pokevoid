@@ -44,13 +44,11 @@ export default class TrainerData {
       } else {
         const baseConfig = trainerConfigs[source.rivalConfig.trainerType];
         if (baseConfig) {
-          const reconstructedConfig = new TrainerConfig(source.rivalConfig.trainerType);
-
-          reconstructedConfig.encounterMessages = source.rivalConfig.encounterMessages;
-          reconstructedConfig.victoryMessages = source.rivalConfig.victoryMessages;
-          reconstructedConfig.defeatMessages = source.rivalConfig.defeatMessages;
+          const reconstructedConfig = Object.create(baseConfig);
+          if (source.rivalConfig.encounterMessages) reconstructedConfig.encounterMessages = source.rivalConfig.encounterMessages;
+          if (source.rivalConfig.victoryMessages) reconstructedConfig.victoryMessages = source.rivalConfig.victoryMessages;
+          if (source.rivalConfig.defeatMessages) reconstructedConfig.defeatMessages = source.rivalConfig.defeatMessages;
           this.rivalConfig = reconstructedConfig;
-
         }
       }
     }
@@ -83,7 +81,7 @@ export default class TrainerData {
         this.variant,
         this.partyTemplateIndex,
         this.name,
-        this.partnerName,
+      this.partnerName,
         this.rivalConfig = this.rivalConfig ? scaleTrainerParty(this.rivalConfig, this.rivalStage, this.rivalConfig.trainerType as RivalTrainerType, scene, true)  : undefined,
         this.rivalStage,
         this.isCorrupted

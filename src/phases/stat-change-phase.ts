@@ -36,6 +36,10 @@ export class StatChangePhase extends PokemonPhase {
   start() {
     const pokemon = this.getPokemon();
 
+    if (!pokemon) {
+      return this.end();
+    }
+
     if (this.scene.dynamicMode?.noStatBoosts && this.player && this.levels > 0) {
       this.end();
       return;

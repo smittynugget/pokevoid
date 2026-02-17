@@ -362,7 +362,7 @@ export class ShopModifierSelectPhase extends Phase {
         if (Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
             return 0;
         }
-        const baseValue = 500;
+        const baseValue = 375;
         return Math.min(Math.ceil(baseValue * Math.pow(2, this.rerollCount)), Number.MAX_SAFE_INTEGER);
     }
 

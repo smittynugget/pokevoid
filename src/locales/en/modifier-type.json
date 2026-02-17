@@ -4,7 +4,9 @@
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
       "statLabel": "Pokeball Item",
-      "description": "Receive {{pokeballName}} x{{modifierCount}} (Inventory: {{pokeballAmount}}) \nCatch Rate: {{catchRate}}"
+      "description": "Receive {{pokeballName}} x{{modifierCount}} (Inventory: {{pokeballAmount}}) \nCatch Rate: {{catchRate}}",
+      "typeBallExtra": "\nChanges caught Pokémon's type to {{typeName}} and teaches it 2 {{typeName}}-type moves.",
+      "voidBallExtra": "\nCan catch any Pokémon when its HP is in the red."
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
@@ -444,7 +446,7 @@
       "name": "Essences",
       "shopName": "{{type}} Essence",
       "statLabel": "Essence",
-      "description": "Use 5x instead of releasing a Pokémon for Release Items or exchange for rewards with the Collector."
+      "description": "Use 4x instead of releasing a Pokémon for Release Items or exchange for rewards with the Collector."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Collected Essences",
@@ -912,8 +914,8 @@
   "common": {
     "waves": "waves",
     "uses": "uses",
-    "glitchPieceCost": "*COSTS 2x Glitch Piece",
-    "essenceAlternativeCost": "If the Pokémon has 5+ Essences, you can use those instead.",
+    "glitchPieceCost": "*COSTS 1x Glitch Piece",
+    "essenceAlternativeCost": "If the Pokémon has 4+ Essences, you can use those instead.",
     "permaMoney": "ΩGOLD",
     "permaItem": "ΩITEM",
     "moreInfo": "(Hold C / Shift for info)",

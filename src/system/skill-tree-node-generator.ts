@@ -67,6 +67,7 @@ export function getRaritiesForRewardType(rewardType: SkillTreeRewardType): Skill
     case SkillTreeRewardType.TRAINER_BOND_ABILITY:
     case SkillTreeRewardType.PERMA_MONEY:
     case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY:
+    case SkillTreeRewardType.TYPE_BALL_FILTERED:
       return [SkillTreeRarity.ULTRA];
 
     case SkillTreeRewardType.MEGA_STONE:
@@ -94,6 +95,7 @@ export function getRaritiesForRewardType(rewardType: SkillTreeRewardType): Skill
     case SkillTreeRewardType.LEGENDARY_POKEMON:
     case SkillTreeRewardType.SMITTY_ABILITY:
     case SkillTreeRewardType.GOLDEN_POKEBALL:
+    case SkillTreeRewardType.VOID_BALL:
       return [SkillTreeRarity.LEGENDARY];
 
     default:
@@ -206,6 +208,7 @@ export class SkillTreeNodeGenerator {
       SkillTreeRewardType.DYNA_MUSHROOM,
       SkillTreeRewardType.GLITCH_CHANGE,
       SkillTreeRewardType.TYPE_SWITCHER,
+      SkillTreeRewardType.TYPE_BALL_FILTERED,
       SkillTreeRewardType.TYPE_BOOSTER_ITEM,
       SkillTreeRewardType.POKEMON_ALT_BUILD,
       SkillTreeRewardType.GLITCH_FORM_UNLOCK,
@@ -219,6 +222,7 @@ export class SkillTreeNodeGenerator {
       SkillTreeRewardType.TERA_TYPE,
       SkillTreeRewardType.GOLDEN_POKEBALL,
       SkillTreeRewardType.MASTER_BALL,
+      SkillTreeRewardType.VOID_BALL,
       SkillTreeRewardType.EGG_VOUCHER,
       SkillTreeRewardType.HEALING_ITEMS,
       SkillTreeRewardType.MEMORY_MUSHROOM,
@@ -317,10 +321,14 @@ export class SkillTreeNodeGenerator {
 
       case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
         return this.generateTypeBooster(championData);
+      case SkillTreeRewardType.TYPE_BALL_FILTERED:
+        return this.generateChampionTypeBall(championData);
       case SkillTreeRewardType.GOLDEN_POKEBALL:
         return this.generateGoldenPokeball();
       case SkillTreeRewardType.MASTER_BALL:
         return this.generateMasterBall();
+      case SkillTreeRewardType.VOID_BALL:
+        return this.generateVoidBall();
       case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
         return this.generateRogueballRaritySelect();
       case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
@@ -383,6 +391,7 @@ export class SkillTreeNodeGenerator {
       case SkillTreeRewardType.DYNA_MUSHROOM: return !!c.unlockedMaxMushrooms;
       case SkillTreeRewardType.GLITCH_CHANGE: return this.getAvailableGlitchForms(c).length > 0;
       case SkillTreeRewardType.TYPE_SWITCHER: return true;
+      case SkillTreeRewardType.TYPE_BALL_FILTERED: return true;
       case SkillTreeRewardType.GLITCH_FORM_UNLOCK: return this.getAvailableGlitchForms(c).length > 0;
       case SkillTreeRewardType.PERMA_ITEM: return true;
       case SkillTreeRewardType.ESSENCE_BUNDLE: {
@@ -404,6 +413,7 @@ export class SkillTreeNodeGenerator {
 
       case SkillTreeRewardType.GOLDEN_POKEBALL: return !!c.unlockedGoldenPokeball;
       case SkillTreeRewardType.MASTER_BALL: return !!c.unlockedMasterBall;
+      case SkillTreeRewardType.VOID_BALL: return !!c.unlockedVoidBall;
       case SkillTreeRewardType.MONEY_REWARD: return !!c.unlockedMoneyReward;
       case SkillTreeRewardType.PERMA_MONEY: return !!c.unlockedPermaMoney;
       case SkillTreeRewardType.TYPE_BOOSTER_ITEM: return true;
@@ -570,6 +580,15 @@ export class SkillTreeNodeGenerator {
     };
   }
 
+  private generateChampionTypeBall(championData: PlayableChampionData): SkillTreeReward {
+    const selectedType = SkillTreeSelectors.pickChampionTypeBallType(championData);
+    return {
+      type: SkillTreeRewardType.TYPE_BALL_FILTERED,
+      data: { ballType: selectedType },
+      immediate: false
+    };
+  }
+
   private getEffectiveRankForNode(altBuildId: PokemonAltBuildId, nodeStoredRank: number): number {
     if (!this.scene) return nodeStoredRank;
 
@@ -732,6 +751,9 @@ export class SkillTreeNodeGenerator {
   }
   private generateMasterBall(): SkillTreeReward {
     return { type: SkillTreeRewardType.MASTER_BALL, data: {}, immediate: false };
+  }
+  private generateVoidBall(): SkillTreeReward {
+    return { type: SkillTreeRewardType.VOID_BALL, data: {}, immediate: false };
   }
   private generateRogueballRaritySelect(): SkillTreeReward {
     return { type: SkillTreeRewardType.ROGUEBALL_RARITY_SELECT, data: {}, immediate: false };
@@ -1098,6 +1120,13 @@ export class SkillTreeNodeGenerator {
         return i18next.t("skillTree:rewards.goldenPokeball");
       case SkillTreeRewardType.MASTER_BALL:
         return i18next.t("skillTree:rewards.masterBall");
+      case SkillTreeRewardType.VOID_BALL:
+        return i18next.t("skillTree:rewards.voidBall");
+      case SkillTreeRewardType.TYPE_BALL_FILTERED: {
+        const ballTypeId = rewardData.data?.ballType;
+        const typeName = ballTypeId !== undefined ? i18next.t(`pokemonInfo:Type.${Type[ballTypeId]}`) : "?";
+        return i18next.t("skillTree:rewards.typeBall", { type: typeName });
+      }
       case SkillTreeRewardType.EGG_VOUCHER:
         return i18next.t("skillTree:rewards.eggVoucher", { tier: (VoucherType as any)[rewardData.data?.tier] || "?" });
       case SkillTreeRewardType.MONEY_REWARD:
@@ -1713,6 +1742,13 @@ export class SkillTreeNodeGenerator {
         return i18next.t("skillTree:descriptions.permaMoney");
       case SkillTreeRewardType.MASTER_BALL:
         return i18next.t("skillTree:descriptions.masterBall");
+      case SkillTreeRewardType.VOID_BALL:
+        return i18next.t("skillTree:descriptions.voidBall");
+      case SkillTreeRewardType.TYPE_BALL_FILTERED: {
+        const descBallType = rewardData.data?.ballType;
+        const descTypeName = descBallType !== undefined ? i18next.t(`pokemonInfo:Type.${Type[descBallType]}`) : "?";
+        return i18next.t("skillTree:descriptions.typeBall", { type: descTypeName });
+      }
       case SkillTreeRewardType.EGG_VOUCHER: {
         const tier = rewardData.data?.tier;
         const voucherTypeName = tier !== undefined ? getVoucherTypeName(tier) : i18next.t("skillTree:fallback.unknownVoucher");

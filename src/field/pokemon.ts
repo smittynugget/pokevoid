@@ -268,6 +268,7 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
   public shiny: boolean;
   public variant: Variant;
   public pokeball: PokeballType;
+  public typeBallType?: Type;
   protected battleInfo: BattleInfo;
   public level: integer;
   public exp: integer;
@@ -342,6 +343,7 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
 
     this.species = species;
     this.pokeball = dataSource?.pokeball || PokeballType.POKEBALL;
+    this.typeBallType = dataSource?.typeBallType;
     this.level = level;
     this.wildFlee = false;
     if (abilityIndex !== undefined) {
@@ -712,6 +714,10 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
                     inversionFactor: inversionFactor
                   });
                 }
+              }
+              if ((this as any)._pendingTypeSwitcherPalette && !this.altBuildSpriteColors) {
+                  this.updateAltBuildPalette((this as any)._pendingTypeSwitcherPalette);
+                  delete (this as any)._pendingTypeSwitcherPalette;
               }
               resolve();
             };
@@ -4995,12 +5001,13 @@ export class EnemyPokemon extends Pokemon {
     return BattlerIndex.ENEMY + this.getFieldIndex();
   }
 
-  addToParty(pokeballType: PokeballType) {
+  addToParty(pokeballType: PokeballType, typeBallType?: Type) {
     const party = this.scene.getParty();
     let ret: PlayerPokemon | null = null;
 
     if (party.length < 6) {
       this.pokeball = pokeballType;
+      this.typeBallType = typeBallType;
       this.metLevel = this.level;
       this.metBiome = this.scene.arena.biomeType;
       this.metSpecies = this.species.speciesId;

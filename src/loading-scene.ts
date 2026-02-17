@@ -46,7 +46,7 @@ export class LoadingScene extends SceneBase {
   private introCutsceneLaunched: boolean = false;
 
   constructor() {
-    super(LoadingScene.KEY);
+    super({ key: LoadingScene.KEY, input: { gamepad: false } });
 
     Phaser.Plugins.PluginCache.register("Loader", CacheBustedLoaderPlugin, "load");
     Phaser.Loader.FileTypesManager.register('embeddedAtlas', function(key, url, xhrSettings) {

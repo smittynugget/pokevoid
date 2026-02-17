@@ -63,7 +63,7 @@ export class SkillTreeUtils {
   }
 
   static getTokenCostForNextLevel(currentLevel: number): number {
-    return currentLevel + (currentLevel - 1);
+    return currentLevel === 1 ? 1 : Math.max(3, currentLevel);
   }
 
   static getMaxDepthForLevel(treeLevel: number): number {

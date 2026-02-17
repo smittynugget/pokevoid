@@ -241,8 +241,9 @@ export class CommandPhase extends FieldPhase {
       const encounterChanceMap = activeTree?.legendaryEncounterChanceBySpecies || {};
       const isLegendaryPriorityTarget = !!(encounterChanceMap[enemy?.species.speciesId] !== undefined);
       const legendaryOverride = !isRivalBattle && isLegendaryPriorityTarget;
+      const canBypassNoPokeballForce = cursor === PokeballType.VOID_BALL && enemy && enemy.getHpRatio(true) <= 0.25;
 
-      if (!legendaryOverride && !(Utils.randSeedInt(10000, 1) <= 1) &&
+      if (!canBypassNoPokeballForce && !legendaryOverride && !(Utils.randSeedInt(10000, 1) <= 1) &&
       (this.scene.arena.biomeType === Biome.END ||
       (this.scene.gameMode.isWavePreFinal(this.scene)) ||
       this.scene.getEnemyField().some(p => p.isActive(true) && (p.species.isLegendSubOrMystical() && notChaosBeyondWaves)) ||
@@ -253,14 +254,14 @@ export class CommandPhase extends FieldPhase {
           this.scene.ui.showText("", 0);
           this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         }, null, true);
-      } else if (this.scene.currentBattle.battleType === BattleType.TRAINER && this.scene.gameMode.checkIfRival(this.scene)) {
+      } else if (!canBypassNoPokeballForce && this.scene.currentBattle.battleType === BattleType.TRAINER && this.scene.gameMode.checkIfRival(this.scene)) {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         this.scene.ui.setMode(Mode.MESSAGE);
         this.scene.ui.showText(i18next.t("battle:noPokeballRival"), null, () => {
           this.scene.ui.showText("", 0);
           this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         }, null, true);
-      } else if (this.scene.currentBattle.battleType === BattleType.TRAINER && this.scene.money < requiredMoney) {
+      } else if (!canBypassNoPokeballForce && this.scene.currentBattle.battleType === BattleType.TRAINER && this.scene.money < requiredMoney) {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         this.scene.ui.setMode(Mode.MESSAGE);
 
@@ -279,17 +280,25 @@ export class CommandPhase extends FieldPhase {
             this.scene.ui.showText("", 0);
             this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
           }, null, true);
-        } else if (cursor < 5) {
+        } else if (cursor in this.scene.pokeballCounts || (args.length > 0 && typeof args[0] === 'number')) {
           const targetPokemon = this.scene.getEnemyField().find(p => p.isActive(true));
-          if (targetPokemon?.isBoss() && targetPokemon?.bossSegmentIndex >= 1 && !targetPokemon?.hasAbility(Abilities.WONDER_GUARD, false, true) && cursor < PokeballType.MASTER_BALL) {
+          const isStrongBall = cursor === PokeballType.MASTER_BALL || cursor === PokeballType.VOID_BALL;
+          if (targetPokemon?.isBoss() && targetPokemon?.bossSegmentIndex >= 1 && !targetPokemon?.hasAbility(Abilities.WONDER_GUARD, false, true) && !isStrongBall) {
             this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
             this.scene.ui.setMode(Mode.MESSAGE);
             this.scene.ui.showText(i18next.t("battle:noPokeballStrong"), null, () => {
               this.scene.ui.showText("", 0);
               this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
             }, null, true);
+          } else if (cursor === PokeballType.VOID_BALL && targetPokemon && targetPokemon.getHpRatio(true) > 0.25) {
+            this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
+            this.scene.ui.setMode(Mode.MESSAGE);
+            this.scene.ui.showText(i18next.t("battle:voidBallHpTooHigh"), null, () => {
+              this.scene.ui.showText("", 0);
+              this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
+            }, null, true);
           } else {
-            this.scene.currentBattle.turnCommands[this.fieldIndex] = { command: Command.BALL, cursor: cursor };
+            this.scene.currentBattle.turnCommands[this.fieldIndex] = { command: Command.BALL, cursor: cursor, args: args.length > 0 ? [...args] : undefined };
               this.scene.currentBattle.turnCommands[this.fieldIndex]!.targets = targets;
               if (this.fieldIndex) {
                 this.scene.currentBattle.turnCommands[this.fieldIndex - 1]!.skip = true;

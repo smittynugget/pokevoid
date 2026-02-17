@@ -44,13 +44,19 @@ class DefaultOverrides {
   readonly POKEBALL_OVERRIDE: { active: boolean; pokeballs: PokeballCounts } = {
   active: false,
   pokeballs: {
-    [PokeballType.POKEBALL]: 5,
+    [PokeballType.POKEBALL]: 0,
     [PokeballType.GREAT_BALL]: 0,
     [PokeballType.ULTRA_BALL]: 0,
+    [PokeballType.TYPE_BALL]: 0,
     [PokeballType.ROGUE_BALL]: 0,
     [PokeballType.MASTER_BALL]: 0,
+    [PokeballType.VOID_BALL]: 0,
     },
 };
+  readonly TYPE_BALL_OVERRIDE: { active: boolean; typeBalls: { [typeId: number]: number } } = {
+    active: false,
+    typeBalls: {},
+  };
   readonly STARTER_FORM_OVERRIDES: Partial<Record<Species, number>> = {};
   readonly STARTING_LEVEL_OVERRIDE: number = 0;
 

@@ -96,5 +96,6 @@
   "retryBattle": "Möchtest du vom Beginn des Kampfes neustarten?",
   "unlockedSomething": "{{unlockedThing}} wurde freigeschaltet.",
   "congratulations": "Glückwunsch!",
-  "beatModeFirstTime": "{{speciesName}} hat den {{gameMode}} Modus zum ersten Mal beendet! Du erhältst {{newModifier}}!"
+  "beatModeFirstTime": "{{speciesName}} hat den {{gameMode}} Modus zum ersten Mal beendet! Du erhältst {{newModifier}}!",
+  "voidBallHpTooHigh": "Der Void-Ball kann nur Pokémon in kritischem Zustand fangen!"
 }

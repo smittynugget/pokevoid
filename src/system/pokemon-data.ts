@@ -27,6 +27,7 @@ export default class PokemonData {
   public shiny: boolean;
   public variant: Variant;
   public pokeball: PokeballType;
+  public typeBallType?: number;
   public level: integer;
   public exp: integer;
   public levelExp: integer;
@@ -80,6 +81,7 @@ export default class PokemonData {
     this.shiny = source.shiny;
     this.variant = source.variant;
     this.pokeball = source.pokeball;
+    this.typeBallType = source.typeBallType;
     this.level = source.level;
     this.exp = source.exp;
     if (!forHistory) {

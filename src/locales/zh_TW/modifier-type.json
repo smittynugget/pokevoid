@@ -3,7 +3,9 @@
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
       "description": "獲得 {{pokeballName}} x{{modifierCount}} (已有：{{pokeballAmount}}) \n捕捉倍率：{{catchRate}}。",
-      "statLabel": "選秀寶可夢道具"
+      "statLabel": "選秀寶可夢道具",
+      "typeBallExtra": "\n將捕獲的寶可夢屬性更改為{{typeName}}，並教會牠2個{{typeName}}屬性的招式。",
+      "voidBallExtra": "\n當寶可夢HP處於紅色時可以捕獲任何寶可夢。"
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
@@ -705,7 +707,7 @@
     "CollectedTypeModifierType": {
       "name": "精華",
       "shopName": "{{type}}精華",
-      "description": "使用5個代替釋放寶可夢來獲得釋放道具，或與收藏家交換獎勵。",
+      "description": "使用4個代替釋放寶可夢來獲得釋放道具，或與收藏家交換獎勵。",
       "statLabel": "精華"
     },
     "PermaCollectedTypeModifierType": {
@@ -1063,8 +1065,8 @@
   "common": {
     "waves": "波",
     "uses": "次",
-    "glitchPieceCost": "*需要消耗2個故障碎片",
-    "essenceAlternativeCost": "如果該寶可夢擁有5個以上精華，則可改為消耗精華。",
+    "glitchPieceCost": "*需要消耗1個故障碎片",
+    "essenceAlternativeCost": "如果該寶可夢擁有4個以上精華，則可改為消耗精華。",
     "permaMoney": "Ω金幣",
     "permaItem": "Ω道具",
     "moreInfo": "(按住C鍵或Shift鍵查看更多資訊)",

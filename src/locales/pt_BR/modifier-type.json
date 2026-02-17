@@ -3,7 +3,9 @@
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
       "description": "Ganhe {{modifierCount}}x {{pokeballName}} (Mochila: {{pokeballAmount}}) \nChance de captura: {{catchRate}}.",
-      "statLabel": "Item Pokémon de Draft"
+      "statLabel": "Item Pokémon de Draft",
+      "typeBallExtra": "\nMuda o tipo do Pokémon capturado para {{typeName}} e ensina 2 golpes do tipo {{typeName}}.",
+      "voidBallExtra": "\nPode capturar qualquer Pokémon quando seu HP estiver no vermelho."
     },
     
     "AddVoucherModifierType": {
@@ -706,7 +708,7 @@
     "CollectedTypeModifierType": {
       "name": "Essências",
       "shopName": "Essência {{type}}",
-      "description": "Use 5 em vez de liberar um Pokémon para Itens de Liberação ou troque por recompensas com o Colecionador.",
+      "description": "Use 4 em vez de liberar um Pokémon para Itens de Liberação ou troque por recompensas com o Colecionador.",
       "statLabel": "Essência"
     },
     "PermaCollectedTypeModifierType": {
@@ -1064,8 +1066,8 @@
   "common": {
     "waves": "ondas",
     "uses": "usos",
-    "glitchPieceCost": "*CUSTA 2x Peça Glitch",
-    "essenceAlternativeCost": "Se o Pokémon tiver 5+ Essências, você pode usá-las em vez disso.",
+    "glitchPieceCost": "*CUSTA 1x Peça Glitch",
+    "essenceAlternativeCost": "Se o Pokémon tiver 4+ Essências, você pode usá-las em vez disso.",
     "permaMoney": "ΩOURO",
     "permaItem": "ΩITEM",
     "moreInfo": "(Segure C / Shift para informações)",

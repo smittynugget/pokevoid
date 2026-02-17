@@ -28,6 +28,10 @@ export default abstract class MessageUiHandler extends AwaitableUiHandler {
   }
 
   private showTextInternal(text: string, delay?: integer | null, callback?: Function | null, callbackDelay?: integer | null, prompt?: boolean | null, promptDelay?: integer | null) {
+    if (text === undefined || text === null) {
+      text = "";
+    }
+
     if (delay === null || delay === undefined) {
       delay = 20;
     }

@@ -3,7 +3,9 @@
     "AddPokeballModifierType": {
       "name": "{{pokeballName}} x{{modifierCount}}",
       "statLabel": "Objet Pokeball",
-      "description": "Recevez {{modifierCount}} {{pokeballName}}·s. (Inventaire : {{pokeballAmount}})\nTaux de capture : {{catchRate}}"
+      "description": "Recevez {{modifierCount}} {{pokeballName}}·s. (Inventaire : {{pokeballAmount}})\nTaux de capture : {{catchRate}}",
+      "typeBallExtra": "\nChange le type du Pokémon capturé en {{typeName}} et lui apprend 2 capacités de type {{typeName}}.",
+      "voidBallExtra": "\nPermet de capturer n'importe quel Pokémon quand ses PV sont dans le rouge."
     },
     "AddVoucherModifierType": {
       "name": "{{voucherTypeName}} x{{modifierCount}}",
@@ -706,7 +708,7 @@
       "name": "Essences",
       "shopName": "Essence {{type}}",
       "statLabel": "Essence",
-      "description": "Utilisez 5 au lieu de relâcher un Pokémon pour les Objets de Libération ou échangez contre des récompenses avec le Collectionneur."
+      "description": "Utilisez 4 au lieu de relâcher un Pokémon pour les Objets de Libération ou échangez contre des récompenses avec le Collectionneur."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Essences Collectées",
@@ -1063,8 +1065,8 @@
   "common": {
     "waves": "vagues",
     "uses": "utilisations",
-    "glitchPieceCost": "*COÛTE 2x Fragment de Bug",
-    "essenceAlternativeCost": "Si le Pokémon a 5 essences ou plus, vous pouvez les utiliser à la place.",
+    "glitchPieceCost": "*COÛTE 1x Fragment de Bug",
+    "essenceAlternativeCost": "Si le Pokémon a 4 essences ou plus, vous pouvez les utiliser à la place.",
     "permaMoney": "ΩOR",
     "permaItem": "ΩOBJET",
     "moreInfo": "(Maintenez C / Maj pour infos)",

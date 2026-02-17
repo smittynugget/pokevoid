@@ -16,7 +16,8 @@ import {
     MAX_PER_TYPE_POKEBALLS,
     PokeballType,
     getPokeballCatchMultiplier,
-    getPokeballName
+    getPokeballName,
+    getActiveChampionData
 } from "../data/pokeball";
 import Pokemon, {EnemyPokemon, PlayerPokemon, PokemonMove} from "../field/pokemon";
 import {EvolutionItem, pokemonEvolutions, pokemonPrevolutions} from "../data/pokemon-evolutions";
@@ -81,7 +82,8 @@ import {
     QuestModifierTypes
 } from "#app/modifier/modifier-quest-config";
 import {TrainerType} from "#enums/trainer-type";
-import {GameData, QuestState, QuestUnlockables} from "#app/system/game-data";
+import {GameData} from "#app/system/game-data";
+import {QuestState, QuestUnlockables} from "#enums/quest-unlockables";
 import {RewardType} from "#enums/reward-type";
 import {Unlockables} from "#app/system/unlockables";
 import {GameModes} from "#app/game-mode";
@@ -319,8 +321,8 @@ export interface GeneratedPersistentModifierType {
     getPregenArgs(): any[];
 }
 
-class AddPokeballModifierType extends ModifierType {
-    private pokeballType: PokeballType;
+export class AddPokeballModifierType extends ModifierType {
+    public pokeballType: PokeballType;
     private count: integer;
 
     constructor(iconImage: string, pokeballType: PokeballType, count: integer) {
@@ -337,11 +339,79 @@ class AddPokeballModifierType extends ModifierType {
     }
 
     getDescription(scene: BattleScene): string {
-        return i18next.t("modifierType:ModifierType.AddPokeballModifierType.description", {
+        let desc = i18next.t("modifierType:ModifierType.AddPokeballModifierType.description", {
             "modifierCount": this.count,
-            "pokeballName": getPokeballName(this.pokeballType),
-            "catchRate": getPokeballCatchMultiplier(this.pokeballType) > -1 ? `${getPokeballCatchMultiplier(this.pokeballType)}x` : "100%",
+            "pokeballName": getPokeballName(this.pokeballType, scene),
+            "catchRate": getPokeballCatchMultiplier(this.pokeballType) > -1
+                ? `${getPokeballCatchMultiplier(this.pokeballType)}x`
+                : getPokeballCatchMultiplier(this.pokeballType) === -2
+                    ? i18next.t("pokeball:voidBallCatchRate")
+                    : "100%",
             "pokeballAmount": `${scene.pokeballCounts[this.pokeballType]}`,
+        });
+        if (this.pokeballType === PokeballType.VOID_BALL) {
+            desc += i18next.t("modifierType:ModifierType.AddPokeballModifierType.voidBallExtra");
+        }
+        return desc;
+    }
+}
+
+export class AddTypeBallModifierType extends ModifierType {
+    public targetType: Type;
+    private count: integer;
+
+    constructor(targetType: Type, count: integer) {
+        super("", "gb", (_type, _args) => new Modifiers.AddTypeBallModifier(this, targetType, count), "pb", "se/pb_bounce_1");
+        this.targetType = targetType;
+        this.count = count;
+    }
+
+    get name(): string {
+        const typeName = Type[this.targetType];
+        const displayName = typeName.charAt(0) + typeName.slice(1).toLowerCase();
+        return i18next.t("modifierType:ModifierType.AddPokeballModifierType.name", {
+            "modifierCount": this.count,
+            "pokeballName": i18next.t("pokeball:typeBall", { typeName: displayName }),
+        });
+    }
+
+    getDescription(scene: BattleScene): string {
+        const typeName = Type[this.targetType];
+        const displayName = typeName.charAt(0) + typeName.slice(1).toLowerCase();
+        const currentCount = scene.typeBallCounts[this.targetType] || 0;
+        let desc = i18next.t("modifierType:ModifierType.AddPokeballModifierType.description", {
+            "modifierCount": this.count,
+            "pokeballName": i18next.t("pokeball:typeBall", { typeName: displayName }),
+            "catchRate": "2x",
+            "pokeballAmount": `${currentCount}`,
+        });
+        desc += i18next.t("modifierType:ModifierType.AddPokeballModifierType.typeBallExtra", { typeName: displayName });
+        return desc;
+    }
+}
+
+export class TypeBallModifierTypeGenerator extends ModifierTypeGenerator {
+    constructor(mode: "champion" | "random" = "champion") {
+        super((party: Pokemon[]) => {
+            const scene = party[0]?.scene;
+            if (!scene) return null;
+            let targetType: Type;
+            if (mode === "champion") {
+                const championData = getActiveChampionData(scene);
+                if (!championData) return null;
+                const hasType1 = championData.type1 !== undefined && championData.type1 !== Type.UNKNOWN;
+                const hasType2 = championData.type2 !== undefined && championData.type2 !== Type.UNKNOWN;
+                if (!hasType1) return null;
+                targetType = (hasType2 && Utils.randSeedInt(2) === 1)
+                    ? championData.type2!
+                    : championData.type1!;
+            } else {
+                const validTypes = Utils.getEnumValues(Type).filter(
+                    (t: Type) => t >= Type.NORMAL && t <= Type.FAIRY
+                ) as Type[];
+                targetType = validTypes[Utils.randSeedInt(validTypes.length)];
+            }
+            return new AddTypeBallModifierType(targetType, 3);
         });
     }
 }
@@ -401,7 +471,7 @@ export class PokemonHeldItemModifierType extends PokemonModifierType {
         return super.newModifier(...args) as Modifiers.PokemonHeldItemModifier;
     }
 }
-export class TypeSwitcherModifierType extends PokemonModifierType {
+export class TypeSwitcherModifierType extends PokemonModifierType implements GeneratedPersistentModifierType {
     newPrimaryType: Type | null;
     newSecondaryType: Type | null;
 
@@ -459,6 +529,10 @@ export class TypeSwitcherModifierType extends PokemonModifierType {
                 type2: "X"
             })} ${i18next.t("modifierType:common.glitchPieceCost")}`;
         }
+    }
+
+    getPregenArgs(): any[] {
+        return [this.newPrimaryType, this.newSecondaryType];
     }
 }
 export class AbilitySwitcherModifierType extends PokemonHeldItemModifierType {
@@ -1186,7 +1260,21 @@ export function getShopModifierTypeOptions(gameData: GameData, permaReward: bool
             .map(([key, factory]) => createModifierTypeOption(factory, 0, cost, scene));
     };
 
-    const partyCost = (permaReward || Utils.randSeedInt(100) < 10) ? 5000 : 10000;
+    let partyCost: number;
+    if (permaReward) {
+        partyCost = 5000;
+    } else {
+        const r = Utils.randSeedInt(100);
+        if (r < 5) {
+            partyCost = 0;
+        } else if (r < 15) {
+            partyCost = 5000;
+        } else if (r < 45) {
+            partyCost = 7000;
+        } else {
+            partyCost = 10000;
+        }
+    }
 
     const baseOptions = getPermaModifiersByRarity(1);
     const partyAbilityOption1 = createModifierTypeOption(modifierTypes.PERMA_PARTY_ABILITY, 0, partyCost, scene);
@@ -1740,14 +1828,14 @@ function glitchPieceWeightAdjustment(party: Pokemon[]): integer {
     const scene = party[0]?.scene;
     if (!scene) return 0;
     const glitchModifier = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
-    return glitchModifier && glitchModifier.getStackCount() >= 2 ? 6 : 0;
+    return glitchModifier && glitchModifier.getStackCount() >= 1 ? 6 : 0;
 }
 
 function glitchChaosGauntletWeightAdjustment(party: Pokemon[], gauntletValue: integer, chaosValue: integer): integer {
     const scene = party[0]?.scene;
     if (!scene) return 0;
     const glitchModifier = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
-    if (glitchModifier && glitchModifier.getStackCount() >= 2) {
+    if (glitchModifier && glitchModifier.getStackCount() >= 1) {
         return scene.gameMode.isChaosMode ? chaosValue : gauntletValue;
     }
     return 0;
@@ -1757,7 +1845,7 @@ function glitchPieceWeightValAdjustment(party: Pokemon[], value: integer): integ
     const scene = party[0]?.scene;
     if (!scene) return 0;
     const glitchModifier = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
-    return glitchModifier && glitchModifier.getStackCount() >= 2 ? value : 0;
+    return glitchModifier && glitchModifier.getStackCount() >= 1 ? value : 0;
 }
 
 function glitchSacrificeWeightAdjustment(party: Pokemon[]): integer {
@@ -1765,7 +1853,7 @@ function glitchSacrificeWeightAdjustment(party: Pokemon[]): integer {
     if (!scene) return 0;
     const glitchModifier = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
     const sacrificeToggle = scene.findModifier(m => m instanceof Modifiers.SacrificeToggleModifier) as Modifiers.SacrificeToggleModifier;
-    return glitchModifier && glitchModifier.getStackCount() >= 2 && !sacrificeToggle ? 6 : 0;
+    return glitchModifier && glitchModifier.getStackCount() >= 1 && !sacrificeToggle ? 6 : 0;
 }
 
 function glitchUnlockWeightAdjustment(party: Pokemon[]): integer {
@@ -1776,7 +1864,7 @@ function glitchUnlockWeightAdjustment(party: Pokemon[]): integer {
 
     const isNuzlightQuestCompleted = scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED);
 
-    return isNuzlightQuestCompleted && glitchModifier && glitchModifier.getStackCount() >= 2 ? 6 : 0;
+    return isNuzlightQuestCompleted && glitchModifier && glitchModifier.getStackCount() >= 1 ? 6 : 0;
 }
 
 function glitchPiecePermaMoneyWeightAdjustment(party: Pokemon[]): integer {
@@ -1919,6 +2007,10 @@ export class PermaModifierType extends ModifierType {
 
     get name(): string {
         return `${i18next.t(`modifierType:ModifierType.PermaModifierType.${this.permaTypeKey}.name`)} x${this.count}` ;
+    }
+
+    getPregenArgs(): any[] {
+        return [this.permaType, this.count, this.permaDuration];
     }
 }
 
@@ -3778,6 +3870,7 @@ export const modifierTypes = {
     ULTRA_BALL: () => new AddPokeballModifierType("ub", PokeballType.ULTRA_BALL, 5),
     ROGUE_BALL: () => new AddPokeballModifierType("rb", PokeballType.ROGUE_BALL, 5),
     MASTER_BALL: () => new AddPokeballModifierType("mb", PokeballType.MASTER_BALL, 1),
+    VOID_BALL: () => new AddPokeballModifierType("mb", PokeballType.VOID_BALL, 1),
 
     RARE_CANDY: () => new PokemonLevelIncrementModifierType("modifierType:ModifierType.RARE_CANDY", "rare_candy"),
     RARER_CANDY: () => new AllPokemonLevelIncrementModifierType("modifierType:ModifierType.RARER_CANDY", "rarer_candy"),
@@ -3997,7 +4090,14 @@ export const modifierTypes = {
         if (pregenArgs && (pregenArgs.length === 1) && (pregenArgs[0] in Nature)) {
             return new PokemonNatureChangeModifierType(pregenArgs[0] as Nature);
         }
-        return new PokemonNatureChangeModifierType(Utils.randSeedInt(Utils.getEnumValues(Nature).length) as Nature);
+        let nature = Utils.randSeedInt(Utils.getEnumValues(Nature).length) as Nature;
+        if ([Nature.HARDY, Nature.DOCILE, Nature.SERIOUS, Nature.BASHFUL, Nature.QUIRKY].includes(nature)) {
+            if (Utils.randSeedInt(100) < 95) {
+                const nonNeutral = Utils.getEnumValues(Nature).filter(n => ![Nature.HARDY, Nature.DOCILE, Nature.SERIOUS, Nature.BASHFUL, Nature.QUIRKY].includes(n));
+                nature = Utils.randSeedItem(nonNeutral);
+            }
+        }
+        return new PokemonNatureChangeModifierType(nature);
     }),
 
     TERA_SHARD: () => new ModifierTypeGenerator((party: Pokemon[], pregenArgs?: any[]) => {
@@ -4123,17 +4223,17 @@ export const modifierTypes = {
     ENEMY_STATUS_EFFECT_HEAL_CHANCE: () => new ModifierType("modifierType:ModifierType.ENEMY_STATUS_EFFECT_HEAL_CHANCE", "wl_full_heal", (type, _args) => new Modifiers.EnemyStatusEffectHealChanceModifier(type, 2.5, 10)),
     ENEMY_ENDURE_CHANCE: () => new EnemyEndureChanceModifierType("modifierType:ModifierType.ENEMY_ENDURE_CHANCE", "wl_reset_urge", 2),
     ENEMY_FUSED_CHANCE: () => new ModifierType("modifierType:ModifierType.ENEMY_FUSED_CHANCE", "wl_custom_spliced", (type, _args) => new Modifiers.EnemyFusionChanceModifier(type, 1)),
-    PERMA_MONEY_1: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 250),
-    PERMA_MONEY_2: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 500),
-    PERMA_MONEY_3: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 1000),
-    PERMA_MONEY_4: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 2500),
-    PERMA_MONEY_5: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 5000),
+    PERMA_MONEY_1: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 750),
+    PERMA_MONEY_2: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 1500),
+    PERMA_MONEY_3: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 3000),
+    PERMA_MONEY_4: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 5000),
+    PERMA_MONEY_5: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 10000),
 
-    SELECTABLE_PMONEY_1: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 250, true),
-    SELECTABLE_PMONEY_2: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 500, true),
-    SELECTABLE_PMONEY_3: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 1000, true),
-    SELECTABLE_PMONEY_4: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 2500, true),
-    SELECTABLE_PMONEY_5: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 5000, true),
+    SELECTABLE_PMONEY_1: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 750, true),
+    SELECTABLE_PMONEY_2: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 1500, true),
+    SELECTABLE_PMONEY_3: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 3000, true),
+    SELECTABLE_PMONEY_4: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 5000, true),
+    SELECTABLE_PMONEY_5: () => new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", 10000, true),
 
     SELECTABLE_PMONEY_4OR5: () => new ModifierTypeGenerator((party: Pokemon[], pregenArgs?: any[]) => {
         const moneyRand = Utils.randSeedInt(100);
@@ -4304,8 +4404,8 @@ const modifierPool: ModifierPool = {
         new WeightedModifierType(modifierTypes.ANY_PASSIVE_ABILITY, glitchPieceWeightAdjustment, 6),
         new WeightedModifierType(modifierTypes.ULTRA_BALL, (party: Pokemon[]) => (hasMaximumBalls(party, PokeballType.ULTRA_BALL) || party[0].scene.pokeballCounts[PokeballType.ULTRA_BALL] >= 10) ? 0 : 2, 2),
         new WeightedModifierType(modifierTypes.TM_GREAT, 6),
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 12, 12), 12),
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 10, 10), 12),
+        new WeightedModifierType(modifierTypes.MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 12, 12), 12),
+        new WeightedModifierType(modifierTypes.MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 10, 10), 12),
         new WeightedModifierType(modifierTypes.TM_COMMON, 2),
         new WeightedModifierType(modifierTypes.SUPER_POTION, (party: Pokemon[]) => {
              if (shouldHideHealingModifier(party)) return 0;
@@ -4318,8 +4418,8 @@ const modifierPool: ModifierPool = {
         return m;
     }),
     [ModifierTier.GREAT]: [
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 14, 12), 12),
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 16), 16),
+        new WeightedModifierType(modifierTypes.MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 14, 12), 12),
+        new WeightedModifierType(modifierTypes.MOVE_UPGRADE, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 16), 16),
         new WeightedModifierType(modifierTypes.MOVE_UPGRADE,  (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 8, 8), 8),
         new WeightedModifierType(modifierTypes.ANYTM_GREAT, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 16), 16),
         new WeightedModifierType(modifierTypes.ANYTM_GREAT, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 8), 8),
@@ -4415,7 +4515,7 @@ const modifierPool: ModifierPool = {
         return m;
     }),
     [ModifierTier.ULTRA]: [
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 10, 10), 12),
+        new WeightedModifierType(modifierTypes.MOVE_UPGRADE, (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 10, 10), 12),
          new WeightedModifierType(modifierTypes.MOVE_UPGRADE,  (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 14, 8), 14),
         new WeightedModifierType(modifierTypes.ANYTM_GREAT, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 8), 8),
         new WeightedModifierType(modifierTypes.ANYTM_ULTRA, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 8), 8),
@@ -4484,6 +4584,15 @@ const modifierPool: ModifierPool = {
         new WeightedModifierType(modifierTypes.SELECTABLE_PMONEY_2, glitchPiecePermaMoneyWeightAdjustment, 4),
         new WeightedModifierType(modifierTypes.PLAYER_BASE_STAT_BOOSTER, (party: Pokemon[]) => party[0].scene.gameMode.isChaosMode ? 3 : 0, 3),
         new WeightedModifierType(modifierTypes.STAT_SACRIFICE, (party: Pokemon[]) => !party[0].scene.gameMode.isChaosMode && party.length > 1 ? glitchSacrificeWeightAdjustment(party) : 0, 1),
+        new WeightedModifierType(() => new TypeBallModifierTypeGenerator("champion"),
+            (party: Pokemon[]) => {
+                const scene = party[0]?.scene;
+                if (!scene) return 0;
+                const championData = getActiveChampionData(scene);
+                if (!championData?.type1 || championData.type1 === Type.UNKNOWN) return 0;
+                const totalTypeBalls = Object.values(scene.typeBallCounts).reduce((sum, c) => sum + c, 0);
+                return totalTypeBalls >= 30 ? 0 : 8;
+            }, 8),
 
     ].map(m => {
         m.setTier(ModifierTier.ULTRA);
@@ -4492,22 +4601,43 @@ const modifierPool: ModifierPool = {
     [ModifierTier.ROGUE]: [
          new WeightedModifierType(modifierTypes.MOVE_UPGRADE,  (party: Pokemon[]) => glitchChaosGauntletWeightAdjustment(party, 12, 7), 12),
         new WeightedModifierType(modifierTypes.ROGUE_BALL, (party: Pokemon[]) => (hasMaximumBalls(party, PokeballType.ROGUE_BALL) || party[0].scene.pokeballCounts[PokeballType.ROGUE_BALL] >= 10) ? 0 : 8, 8),
+        new WeightedModifierType(() => new TypeBallModifierTypeGenerator("random"),
+            (party: Pokemon[]) => {
+                const scene = party[0]?.scene;
+                if (!scene) return 0;
+                const totalTypeBalls = Object.values(scene.typeBallCounts).reduce((sum, c) => sum + c, 0);
+                return totalTypeBalls >= 30 ? 0 : 1;
+            }, 1),
         new WeightedModifierType(modifierTypes.RELIC_GOLD, skipInLastClassicWaveOrDefault(4)),
-        new WeightedModifierType(modifierTypes.LEFTOVERS, (party: Pokemon[]) => !party[0].scene.gameMode.isChaosMode ? 1 : 0, 1),
-        new WeightedModifierType(modifierTypes.SHELL_BELL, (party: Pokemon[]) => !party[0].scene.gameMode.isChaosMode ? 1 : 0, 1),
-        new WeightedModifierType(modifierTypes.DNA_SPLICERS, (party: Pokemon[]) => !party[0].scene.gameMode.isSplicedOnly && party.filter(p => !p.fusionSpecies).length > 1 ? 3 : 0, 1),
+        new WeightedModifierType(modifierTypes.LEFTOVERS, (party: Pokemon[]) => {
+            const scene = party[0]?.scene;
+            if (!scene) return 0;
+            return scene.findModifiers(m => m instanceof Modifiers.TurnHealModifier).length === 0 && Utils.randSeedInt(8) === 0 ? 1 : 0;
+        }, 1),
+        new WeightedModifierType(modifierTypes.SHELL_BELL, (party: Pokemon[]) => {
+            const scene = party[0]?.scene;
+            if (!scene) return 0;
+            return scene.findModifiers(m => m instanceof Modifiers.HitHealModifier).length === 0 && Utils.randSeedInt(8) === 0 ? 1 : 0;
+        }, 1),
+        new WeightedModifierType(modifierTypes.DNA_SPLICERS, (party: Pokemon[]) => !party[0].scene.gameMode.isSplicedOnly && party.filter(p => !p.fusionSpecies).length > 1 ? 1 : 0, 1),
         new WeightedModifierType(modifierTypes.SKILL_POINTS, 1),
         new WeightedModifierType(modifierTypes.BERRY_POUCH, 2),
         new WeightedModifierType(modifierTypes.GRIP_CLAW, 2),
         new WeightedModifierType(modifierTypes.SCOPE_LENS, 3),
         new WeightedModifierType(modifierTypes.BATON, 1),
-        new WeightedModifierType(modifierTypes.BASE_STAT_BOOSTER, (party: Pokemon[]) => !party[0].scene.gameMode.isChaosMode ? 3 : 0, 3),
+        new WeightedModifierType(modifierTypes.BASE_STAT_BOOSTER, 1),
         new WeightedModifierType(modifierTypes.ANYTM_MASTER, (party: Pokemon[]) => (glitchPieceWeightAdjustment(party)) ? 1 : 0, 1),
         new WeightedModifierType(modifierTypes.FOCUS_BAND, 1),
         new WeightedModifierType(modifierTypes.KINGS_ROCK, 1),
         new WeightedModifierType(modifierTypes.ANYTM_ULTRA, (party: Pokemon[]) => glitchPieceWeightValAdjustment(party, 7), 7),
         new WeightedModifierType(modifierTypes.FORM_CHANGE_ITEM, 8),
         new WeightedModifierType(modifierTypes.ANY_ABILITY, glitchPieceWeightAdjustment, 3),
+        new WeightedModifierType(modifierTypes.PERMA_PARTY_ABILITY, (party: Pokemon[]) => {
+            const scene = party[0]?.scene;
+            if (!scene) return 0;
+            const glitchModifier = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
+            return glitchModifier && glitchModifier.getStackCount() >= 2 && Utils.randSeedInt(8) === 0 ? 1 : 0;
+        }, 1),
         new WeightedModifierType(modifierTypes.PRIMARY_TYPE_SWITCHER, glitchUnlockWeightAdjustment, 3),
         new WeightedModifierType(modifierTypes.SECONDARY_TYPE_SWITCHER, glitchUnlockWeightAdjustment, 3),
         new WeightedModifierType(modifierTypes.ANY_PASSIVE_ABILITY, glitchPieceWeightAdjustment, 3),
@@ -4568,8 +4698,8 @@ const collectorModifierPool: ModifierPool = {
         new WeightedModifierType(modifierTypes.ADD_POKEMON, 3),
         new WeightedModifierType(modifierTypes.ANY_ABILITY, 6),
         new WeightedModifierType(modifierTypes.ANY_PASSIVE_ABILITY, 6),
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, 12),
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, 6),
+        new WeightedModifierType(modifierTypes.MOVE_UPGRADE, 12),
+        new WeightedModifierType(modifierTypes.MOVE_UPGRADE, 6),
         new WeightedModifierType(modifierTypes.PLAYER_BASE_STAT_BOOSTER, 6),
         new WeightedModifierType(modifierTypes.PLAYER_BASE_STAT_BOOSTER, 6),
         new WeightedModifierType(modifierTypes.MEMORY_MUSHROOM, (party: Pokemon[]) => {
@@ -4584,8 +4714,8 @@ const collectorModifierPool: ModifierPool = {
         return m;
     }),
     [ModifierTier.GREAT]: [
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, 12),
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, 6),
+        new WeightedModifierType(modifierTypes.MOVE_UPGRADE, 12),
+        new WeightedModifierType(modifierTypes.MOVE_UPGRADE, 6),
         new WeightedModifierType(modifierTypes.PLAYER_BASE_STAT_BOOSTER, 6),
         new WeightedModifierType(modifierTypes.ADD_POKEMON, 3),
         new WeightedModifierType(modifierTypes.ANYTM_ULTRA, 12),
@@ -4600,7 +4730,7 @@ const collectorModifierPool: ModifierPool = {
         return m;
     }),
     [ModifierTier.ULTRA]: [
-        new WeightedModifierType(modifierTypes.LOW_TIER_MOVE_UPGRADE, 6),
+        new WeightedModifierType(modifierTypes.MOVE_UPGRADE, 6),
         new WeightedModifierType(modifierTypes.PLAYER_BASE_STAT_BOOSTER, 6),
         new WeightedModifierType(modifierTypes.MOVE_UPGRADE, 14),
         new WeightedModifierType(modifierTypes.ADD_POKEMON, 3),
@@ -4661,6 +4791,7 @@ const collectorModifierPool: ModifierPool = {
         new WeightedModifierType(modifierTypes.MINI_BLACK_HOLE, (party: Pokemon[]) => (!party[0].scene.gameMode.isFreshStartChallenge() && party[0].scene.gameData.unlocks[Unlockables.MINI_BLACK_HOLE]) ? 8 : 0, 8),
         new WeightedModifierType(modifierTypes.ANYTM_LUXURY, (party: Pokemon[]) => (glitchPieceWeightAdjustment(party) && party[0].scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) ? 14: 0, 14),
         new WeightedModifierType(modifierTypes.ANYTM_MASTER, (party: Pokemon[]) => (glitchPieceWeightAdjustment(party)) ? 18 : 0, 14),
+        new WeightedModifierType(modifierTypes.VOID_BALL, (party: Pokemon[]) => (hasMaximumBalls(party, PokeballType.VOID_BALL) || party[0].scene.pokeballCounts[PokeballType.VOID_BALL] >= 5) ? 0 : 1, 1),
     ].map(m => {
         m.setTier(ModifierTier.MASTER);
         return m;
@@ -5519,15 +5650,15 @@ export function getPlayerShopModifierTypeOptionsForWave(scene: BattleScene, base
                     return option ? [option] : [];
                 })()
                 : []),
-            ...(Utils.randSeedInt(100) < 15 ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_2(), 0, baseCost * 3)] : []),
+            ...(Utils.randSeedInt(100) < 20 ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_2(), 0, baseCost * 3)] : []),
             ...(Utils.randSeedInt(500) < 5 ? [new ModifierTypeOption(modifierTypes.RELIC_GOLD(), 0, 0)] : []),
             ...((Utils.randSeedInt(1000) < 1 && (() => {
                 const glitchModifier = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
-                return glitchModifier && glitchModifier.getStackCount() >= 2;
+                return glitchModifier && glitchModifier.getStackCount() >= 1;
             })()) ? [new ModifierTypeOption(modifierTypes.SKILL_POINTS(), 0, 0)] : []),
             ...(Utils.randSeedInt(1000) < 1 && (() => {
                 const glitchModifier = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
-                return glitchModifier && glitchModifier.getStackCount() >= 2;
+                return glitchModifier && glitchModifier.getStackCount() >= 1;
             })() ? [new ModifierTypeOption(modifierTypes.SKILL_TOKENS(), 0, 0)] : []),
             ...(Utils.randSeedInt(100) <= 1 ? [new ModifierTypeOption(modifierTypes.RARER_CANDY(), 0, baseCost * 6)] : []),
              ...(Utils.randSeedInt(100) <= 10 && isNuzlightQuestCompleted && (!scene.gameMode.hasShopCheck(scene) || scene.gameMode.isNuzlockeActive(scene)) && scene.getParty().length < 6 ? [createOptionForGenerator(modifierTypes.DRAFT_POKEMON, 0, baseCost * 3)] : []),
@@ -5546,7 +5677,7 @@ export function getPlayerShopModifierTypeOptionsForWave(scene: BattleScene, base
                 ...(Utils.randSeedInt(250) < 3 ? [new ModifierTypeOption(modifierTypes.MEGA_BRACELET(), 0, baseCost * 8)] : []),
                 ...(Utils.randSeedInt(250) < 3 ? [new ModifierTypeOption(modifierTypes.TERA_ORB(), 0, baseCost * 8)] : [])
             ] : []),
-            ...(Utils.randSeedInt(100) < 10 ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_3(), 0, baseCost * 4)] : []),
+            ...(Utils.randSeedInt(100) < 15 ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_3(), 0, baseCost * 4)] : []),
         ],
         [
             ...(hasShop ? [
@@ -5554,7 +5685,7 @@ export function getPlayerShopModifierTypeOptionsForWave(scene: BattleScene, base
                 new ModifierTypeOption(modifierTypes.FULL_RESTORE(), 0, baseCost * 2.25),
                 new ModifierTypeOption(modifierTypes.SACRED_ASH(), 0, baseCost * 10),
             ] : []),
-            ...(Utils.randSeedInt(100) < 5 ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_4(), 0, baseCost * 10)] : []),
+            ...(Utils.randSeedInt(100) < 10 ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_4(), 0, baseCost * 10)] : []),
         ]
     ];
     return options.slice(0, Math.floor(waveIndex / 20) + 1).flat().filter(option => option !== null && option !== undefined);
@@ -5719,7 +5850,7 @@ function getPathNodeModifiers(pathNodeFilter: PathNodeTypeFilter, _tier: Modifie
             break;
 
         case PathNodeTypeFilter.DNA_SPLICERS:
-            modifiers.push(new WeightedModifierType(modifierTypes.DNA_SPLICERS, 4));
+            modifiers.push(new WeightedModifierType(modifierTypes.DNA_SPLICERS, 1));
             break;
 
         case PathNodeTypeFilter.RELEASE_ITEMS:
@@ -6169,23 +6300,32 @@ export class QuestModifierType extends ModifierType {
     }
 
     get name(): string {
-        return this.config.name;
+        const key = `quests:${this.id}.name`;
+        if (i18next.exists(key)) return i18next.t(key) as string;
+
+        const fallback = this.config?.name;
+        return fallback || this.id;
     }
 
     get task(): string | undefined {
-        return this.config.task;
+        const key = `quests:${this.id}.task`;
+        if (i18next.exists(key)) {
+            const resolved = i18next.t(key) as string;
+            if (this.config.runType === RunType.NON_CLASSIC) {
+                return `${resolved} ${i18next.t("gameMode:notClassic")}`;
+            }
+            return resolved;
+        }
+
+        return this.config?.task;
     }
 
     getDescription(scene: BattleScene): string {
-        if (this.config.task) {
-            return `${this.config.task}`;
+        const task = this.task;
+        if (task) {
+            return task;
         }
-        return this.config.name;
-        return i18next.t("modifierType:ModifierType.QuestModifierType.description", {
-            questName: this.config.name,
-            goalCount: this.config.goalCount,
-            currentCount: (this.modifierFactory as any).currentCount || 0
-        });
+        return this.name;
     }
 
     getCondition(): (...args: any[]) => boolean {

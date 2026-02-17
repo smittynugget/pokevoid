@@ -3,7 +3,9 @@
     "AddPokeballModifierType": {
       "name": "{{pokeballName}} {{modifierCount}}개",
       "description": "{{pokeballName}} {{modifierCount}}개 (현재: {{pokeballAmount}}개)를 획득한다.\n포획률: {{catchRate}}",
-      "statLabel": "포켓몬볼"
+      "statLabel": "포켓몬볼",
+      "typeBallExtra": "\n잡은 포켓몬의 타입을 {{typeName}}(으)로 변경하고 {{typeName}} 타입 기술 2개를 가르칩니다.",
+      "voidBallExtra": "\nHP가 빨간색일 때 어떤 포켓몬이든 잡을 수 있습니다."
     },
     "AddVoucherModifierType": {
       "name": "{{voucherTypeName}} {{modifierCount}}장",
@@ -713,7 +715,7 @@
     "CollectedTypeModifierType": {
       "name": "에센스",
       "shopName": "{{type}} 에센스",
-      "description": "포켓몬을 방출하는 대신 5개를 사용하여 방출 아이템을 얻거나 수집가와 보상을 교환하세요.",
+      "description": "포켓몬을 방출하는 대신 4개를 사용하여 방출 아이템을 얻거나 수집가와 보상을 교환하세요.",
       "statLabel": "에센스"
     },
     "PermaCollectedTypeModifierType": {
@@ -1063,8 +1065,8 @@
   "common": {
     "waves": "웨이브",
     "uses": "사용",
-    "glitchPieceCost": "*글리치 조각 2개 필요",
-    "essenceAlternativeCost": "포켓몬이 에센스를 5개 이상 가지고 있으면 대신 그것을 사용할 수 있습니다.",
+    "glitchPieceCost": "*글리치 조각 1개 필요",
+    "essenceAlternativeCost": "포켓몬이 에센스를 4개 이상 가지고 있으면 대신 그것을 사용할 수 있습니다.",
     "permaMoney": "Ω골드",
     "permaItem": "Ω아이템",
     "moreInfo": "(자세한 정보는 C키나 Shift키를 길게 누르세요)",

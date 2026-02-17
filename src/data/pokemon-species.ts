@@ -432,6 +432,9 @@ export abstract class PokemonSpeciesForm {
             ret += "s";
         }
 
+        let formSpriteKey = this.getFormSpriteKey(formIndex);
+        const showGenderDiffs = female && ![SpeciesFormKey.MEGA, SpeciesFormKey.GIGANTAMAX].find(k => formSpriteKey === k);
+
         switch (this.speciesId) {
             case Species.HIPPOPOTAS:
             case Species.HIPPOWDON:
@@ -439,11 +442,10 @@ export abstract class PokemonSpeciesForm {
             case Species.FRILLISH:
             case Species.JELLICENT:
             case Species.PYROAR:
-                ret += female ? "-f" : "";
+                ret += showGenderDiffs ? "-f" : "";
                 break;
         }
 
-        let formSpriteKey = this.getFormSpriteKey(formIndex);
         if (formSpriteKey) {
             switch (this.speciesId) {
                 case Species.DUDUNSPARCE:

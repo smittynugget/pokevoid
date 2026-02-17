@@ -5,10 +5,11 @@ import { initI18n } from "./plugins/i18n";
 export class IntroCutsceneScene extends Phaser.Scene {
   public static readonly KEY = "intro-cutscene";
   private slideshowController: SlideshowController | null = null;
-  private variant: "A" | "B" = "A";
+  private variant: 'A' | 'B' = 'A';
+  private gamepadSkipped: boolean = false;
 
   constructor() {
-    super(IntroCutsceneScene.KEY);
+    super({ key: IntroCutsceneScene.KEY, input: { gamepad: false } });
     initI18n();
   }
 
@@ -31,14 +32,14 @@ export class IntroCutsceneScene extends Phaser.Scene {
     }
   }
 
-  init(data: { variant?: "A" | "B" }): void {
-    this.variant = data?.variant || "A";
+  init(data: { variant?: 'A' | 'B' }): void {
+    this.variant = data?.variant || 'A';
   }
 
   preload(): void {
     this.load.setPath("images/");
     const ext = (this.game as any)?.device?.features?.webp ? "webp" : "png";
-    if (this.variant === "A") {
+    if (this.variant === 'A') {
       if (!this.textures.exists("intro_slide_1")) {
         this.load.image("intro_slide_1", `cutscenes/peace.${ext}`);
       }
@@ -87,24 +88,24 @@ export class IntroCutsceneScene extends Phaser.Scene {
   }
 
   create(): void {
-    const slides = (this.variant === "A")
+    const slides = (this.variant === 'A')
       ? [
-        { imageKey: "intro_slide_1", textKey: "cutscene:title_a_peace", fadeDuration: 200, transitionCadenceMs: 1350 },
-        { imageKey: "intro_slide_2", textKey: "cutscene:title_a_voidbreak", fadeDuration: 200, transitionCadenceMs: 1350 },
-        { imageKey: "intro_slide_3", textKey: "cutscene:title_a_voidbreak2", fadeDuration: 200, transitionCadenceMs: 1350 },
-        { imageKey: "intro_slide_4", textKey: "cutscene:title_a_locked" },
-        { imageKey: "intro_slide_5", textKey: "cutscene:title_a_shadows" },
-        { imageKey: "intro_slide_6", textKey: "cutscene:title_a_you" },
-        { imageKey: "intro_slide_7", textKey: "cutscene:title_a_choose" },
-        { imageKey: "intro_slide_8", textKey: "cutscene:title_a_journey" },
-      ]
+          { imageKey: "intro_slide_1", textKey: "cutscene:title_a_peace", fadeDuration: 200, transitionCadenceMs: 1350 },
+          { imageKey: "intro_slide_2", textKey: "cutscene:title_a_voidbreak", fadeDuration: 200, transitionCadenceMs: 1350 },
+          { imageKey: "intro_slide_3", textKey: "cutscene:title_a_voidbreak2", fadeDuration: 200, transitionCadenceMs: 1350 },
+          { imageKey: "intro_slide_4", textKey: "cutscene:title_a_locked" },
+          { imageKey: "intro_slide_5", textKey: "cutscene:title_a_shadows" },
+          { imageKey: "intro_slide_6", textKey: "cutscene:title_a_you" },
+          { imageKey: "intro_slide_7", textKey: "cutscene:title_a_choose" },
+          { imageKey: "intro_slide_8", textKey: "cutscene:title_a_journey" },
+        ]
       : [
-        { imageKey: "intro_slide_1", textKey: "cutscene:title_b_shadows", fadeDuration: 200, transitionCadenceMs: 1350 },
-        { imageKey: "intro_slide_2", textKey: "cutscene:title_b_shadowPower", fadeDuration: 200, transitionCadenceMs: 1350 },
-        { imageKey: "intro_slide_3", textKey: "cutscene:title_b_power", fadeDuration: 200, transitionCadenceMs: 1350 },
-        { imageKey: "intro_slide_4", textKey: "cutscene:title_b_journey" },
-        { imageKey: "intro_slide_5", textKey: "cutscene:title_b_thronemystery" },
-      ];
+          { imageKey: "intro_slide_1", textKey: "cutscene:title_b_shadows", fadeDuration: 200, transitionCadenceMs: 1350 },
+          { imageKey: "intro_slide_2", textKey: "cutscene:title_b_shadowPower", fadeDuration: 200, transitionCadenceMs: 1350 },
+          { imageKey: "intro_slide_3", textKey: "cutscene:title_b_power", fadeDuration: 200, transitionCadenceMs: 1350 },
+          { imageKey: "intro_slide_4", textKey: "cutscene:title_b_journey" },
+          { imageKey: "intro_slide_5", textKey: "cutscene:title_b_thronemystery" },
+        ];
 
     this.slideshowController = new SlideshowController(this, {
       slides,
@@ -129,6 +130,31 @@ export class IntroCutsceneScene extends Phaser.Scene {
         this.slideshowController.skip();
       }
     });
+  }
+
+  update(): void {
+    if (this.gamepadSkipped || !this.slideshowController) {
+      return;
+    }
+    try {
+      const gamepads = navigator.getGamepads();
+      if (!gamepads) {
+        return;
+      }
+      for (let i = 0; i < gamepads.length; i++) {
+        const gp = gamepads[i];
+        if (!gp || !gp.connected) {
+          continue;
+        }
+        for (let b = 0; b < gp.buttons.length; b++) {
+          if (gp.buttons[b].pressed) {
+            this.gamepadSkipped = true;
+            this.slideshowController.skip();
+            return;
+          }
+        }
+      }
+    } catch {}
   }
 
   private fadeOutAndComplete(): void {

@@ -6,7 +6,7 @@ import {MAX_PER_TYPE_POKEBALLS, PokeballType} from "../data/pokeball";
 import Pokemon, {PlayerPokemon} from "../field/pokemon";
 import {Stat} from "../data/pokemon-stat";
 import {addTextObject, TextStyle} from "../ui/text";
-import {setChangeNormalTyping, Type} from "../data/type";
+import {setChangeNormalTyping, Type, getTypeRgb} from "../data/type";
 import {EvolutionPhase} from "../phases/evolution-phase";
 import {FusionSpeciesFormEvolution, pokemonEvolutions, pokemonPrevolutions} from "../data/pokemon-evolutions";
 import {getPokemonNameWithAffix} from "../messages";
@@ -69,8 +69,10 @@ export type ModifierPredicate = (modifier: Modifier) => boolean;
 const iconOverflowIndex = 40;
 
 export const modifierSortFunc = (a: Modifier, b: Modifier): number => {
-    const itemNameMatch = a.type.name.localeCompare(b.type.name);
-    const typeNameMatch = a.constructor.name.localeCompare(b.constructor.name);
+    const aName = a.type?.name ?? "";
+    const bName = b.type?.name ?? "";
+    const itemNameMatch = aName.localeCompare(bName);
+    const typeNameMatch = (a.constructor?.name ?? "").localeCompare(b.constructor?.name ?? "");
     const aId = a instanceof PokemonHeldItemModifier && a.pokemonId ? a.pokemonId : 4294967295;
     const bId = b instanceof PokemonHeldItemModifier && b.pokemonId ? b.pokemonId : 4294967295;
 
@@ -370,6 +372,26 @@ export class AddPokeballModifier extends ConsumableModifier {
         const pokeballCounts = (args[0] as BattleScene).pokeballCounts;
         pokeballCounts[this.pokeballType] = Math.min(pokeballCounts[this.pokeballType] + this.count, MAX_PER_TYPE_POKEBALLS);
 
+        return true;
+    }
+}
+
+export class AddTypeBallModifier extends ConsumableModifier {
+    private targetType: Type;
+    private count: integer;
+
+    constructor(type: ModifierTypes.ModifierType, targetType: Type, count: integer) {
+        super(type);
+        this.targetType = targetType;
+        this.count = count;
+    }
+
+    apply(args: any[]): boolean {
+        const scene = args[0] as BattleScene;
+        scene.typeBallCounts[this.targetType] = Math.min(
+            (scene.typeBallCounts[this.targetType] || 0) + this.count,
+            MAX_PER_TYPE_POKEBALLS
+        );
         return true;
     }
 }
@@ -3084,8 +3106,8 @@ export function overrideHeldItems(scene: BattleScene, pokemon: Pokemon, isPlayer
         }
     })
 }
-export function reduceGlitchPieceModifier(pokemon: Pokemon, count:number = 2): void {
-    const reduceChance = Utils.randSeedInt(100) <= 90;
+export function reduceGlitchPieceModifier(pokemon: Pokemon, count:number = 1): void {
+    const reduceChance = Utils.randSeedInt(100) <= 50;
     if(pokemon && pokemon.isPlayer() && reduceChance && (!pokemon.scene.gameMode.isChaosMode || pokemon.scene?.pathNodeContext === PathNodeContext.BATTLE_NODE)) {
         const glitchModifier = pokemon.scene.findModifier(m => m instanceof GlitchPieceModifier) as GlitchPieceModifier;
         if (glitchModifier) {
@@ -3357,7 +3379,52 @@ export class TypeSwitcherModifier extends PokemonHeldItemModifier {
         }
 
         reduceGlitchPieceModifier(pokemon);
+
+        this.applyTypeColorEffect(pokemon);
+
+        if (pokemon.pokeball === PokeballType.TYPE_BALL) {
+            const newBallType = this.newPrimaryType ?? this.newSecondaryType;
+            if (newBallType !== null && newBallType !== undefined && newBallType >= 0) {
+                pokemon.typeBallType = newBallType;
+            }
+        }
+
         return true;
+    }
+
+    private applyTypeColorEffect(pokemon: Pokemon): void {
+        const targetType = this.newPrimaryType ?? this.newSecondaryType;
+        if (targetType === null || targetType === undefined || targetType < 0) return;
+        const rgb = getTypeRgb(targetType);
+        if (!rgb) return;
+
+        const toHex = (r: number, g: number, b: number) =>
+            `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        const targetPalette = [
+            toHex(Math.round(rgb[0] * 0.25), Math.round(rgb[1] * 0.25), Math.round(rgb[2] * 0.25)),
+            toHex(Math.round(rgb[0] * 0.50), Math.round(rgb[1] * 0.50), Math.round(rgb[2] * 0.50)),
+            toHex(Math.round(rgb[0] * 0.78), Math.round(rgb[1] * 0.78), Math.round(rgb[2] * 0.78)),
+            toHex(rgb[0], rgb[1], rgb[2]),
+        ];
+
+        const syntheticAltBuild = {
+            spriteColorPalette: {
+                targetPalette: targetPalette,
+                blendMode: 'grayscale_overlay',
+            },
+            inversionFactor: 0.0,
+        };
+
+        const realSpriteKey = pokemon.getSpriteKey();
+        const realTextureLoaded = pokemon.scene.textures.exists(realSpriteKey)
+            && pokemon.scene.textures.get(realSpriteKey).key !== '__MISSING';
+        if (realTextureLoaded) {
+            pokemon.updateAltBuildPalette(syntheticAltBuild);
+        } else {
+            pokemon.altBuildBlendMode = 'grayscale_overlay';
+            pokemon.altBuildInversionFactor = 0.0;
+            (pokemon as any)._pendingTypeSwitcherPalette = syntheticAltBuild;
+        }
     }
 
     clone(): TypeSwitcherModifier {
@@ -3750,8 +3817,8 @@ export function reduceCollectedTypeModifiers(scene: BattleScene, pokemon: Player
   }
 
   for (const modifier of collectedTypeModifiers) {
-    if (modifier.hasEnoughCollected(5)) {
-      return modifier.reduceCollected(5);
+    if (modifier.hasEnoughCollected(4)) {
+      return modifier.reduceCollected(4);
     }
   }
 
@@ -3802,12 +3869,12 @@ export class CollectedTypeModifier extends PokemonHeldItemModifier {
         return this.collectedTypes[type] || 0;
     }
 
-    public hasEnoughCollected(threshold: number = 5): boolean {
+    public hasEnoughCollected(threshold: number = 4): boolean {
         const totalCount = Object.values(this.collectedTypes).reduce((sum, count) => sum + count, 0);
         return totalCount >= threshold;
     }
 
-    public reduceCollected(amountToReduce: number = 5): boolean {
+    public reduceCollected(amountToReduce: number = 4): boolean {
         if (!this.hasEnoughCollected(amountToReduce)) {
             return false;
         }

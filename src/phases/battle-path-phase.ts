@@ -20,6 +20,7 @@ import { ShowTrainerPhase } from "./show-trainer-phase.js";
 import BattleScene, { RecoveryBossMode } from "#app/battle-scene.js";
 import { SkillPointSources } from "../system/skill-point-sources";
 import Overrides from "#app/overrides.js";
+import { PokeballType } from "#enums/pokeball";
 
 export enum PathNodeContext {
   BATTLE_NODE,
@@ -657,7 +658,7 @@ export class BattlePathPhase extends BattlePhase {
       case PathNodeType.MOVE_UPGRADE:
         return PathNodeTypeFilter.MOVE_UPGRADE;
       case PathNodeType.LOW_TIER_MOVE_UPGRADE:
-        return PathNodeTypeFilter.LOW_TIER_MOVE_UPGRADE;
+        return PathNodeTypeFilter.MOVE_UPGRADE;
       default:
         return PathNodeTypeFilter.NONE;
     }
@@ -674,13 +675,13 @@ export class BattlePathPhase extends BattlePhase {
     }
 
     const pathNodeFilter = this.getPathNodeTypeFilter(node.nodeType);
-    let chance = 20;
+    let chance = 19;
     if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_SHOW_REWARDS_3)) {
-      chance = 14;
+      chance = 13;
     } else if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_SHOW_REWARDS_2)) {
-      chance = 16;
+      chance = 15;
     } else if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_SHOW_REWARDS_1)) {
-      chance = 18;
+      chance = 17;
     }
 
     this.scene.gameData.reducePermaModifierByType([PermaType.PERMA_SHOW_REWARDS_1, PermaType.PERMA_SHOW_REWARDS_2, PermaType.PERMA_SHOW_REWARDS_3], this.scene);
@@ -848,10 +849,10 @@ export class BattlePathPhase extends BattlePhase {
       { weight: 12, outcome: 'ANY_TMS' },
 
       { weight: 8, outcome: 'TERA_SHARDS' },
-      { weight: 3, outcome: 'DNA_SPLICERS' },
+      { weight: 1, outcome: 'DNA_SPLICERS' },
       { weight: 10, outcome: 'VITAMIN' },
       ...(this.scene.moveUpgradesEnabledForRun
-        ? [{ weight: 3, outcome: 'MOVE_UPGRADE' }, { weight: 10, outcome: 'LOW_TIER_MOVE_UPGRADE' }]
+        ? [{ weight: 3, outcome: 'MOVE_UPGRADE' }, { weight: 10, outcome: 'MOVE_UPGRADE' }]
         : []),
       { weight: 4, outcome: 'QUICK_CLAW' },
       { weight: 4, outcome: 'WIDE_LENS' },
@@ -1236,6 +1237,9 @@ export class BattlePathPhase extends BattlePhase {
           this.createReturnToBattlePathCallback(),
           PathNodeTypeFilter.PARTY_ABILITY
         ));
+      },
+      () => {
+        this.scene.unshiftPhase(this.createModifierRewardPhaseWithCallback(modifierTypes["VOID_BALL"]));
       }
     ];
 
@@ -1245,9 +1249,12 @@ export class BattlePathPhase extends BattlePhase {
     } else {
       const goldenPokeballModifier = this.scene.findModifier(m => m instanceof ExtraModifierModifier) as ExtraModifierModifier;
       const isAtMaxGoldenPokeball = goldenPokeballModifier && goldenPokeballModifier.stackCount >= (goldenPokeballModifier.getMaxStackCount(this.scene) ?? 3);
+      const isAtMaxVoidBall = this.scene.pokeballCounts[PokeballType.VOID_BALL] >= 5;
 
       const rand = Utils.randSeedInt(100);
-      if (rand < 5 && !isAtMaxGoldenPokeball) {
+      if (rand < 2 && !isAtMaxVoidBall) {
+        selectedOutcome = outcomes[6];
+      } else if (rand < 5 && !isAtMaxGoldenPokeball) {
         selectedOutcome = outcomes[3];
       } else if (rand >= 5 && rand < 15) {
         selectedOutcome = outcomes[5];

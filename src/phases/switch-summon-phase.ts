@@ -2,6 +2,8 @@ import BattleScene from "#app/battle-scene.js";
 import { applyPreSwitchOutAbAttrs, PreSwitchOutAbAttr } from "#app/data/ability.js";
 import { allMoves, ForceSwitchOutAttr } from "#app/data/move.js";
 import { getPokeballTintColor } from "#app/data/pokeball.js";
+import { getTypeRgb } from "#app/data/type.js";
+import { PokeballType } from "#enums/pokeball";
 import { SpeciesFormChangeActiveTrigger } from "#app/data/pokemon-forms.js";
 import { TrainerSlot } from "#app/data/trainer-config.js";
 import Pokemon from "#app/field/pokemon.js";
@@ -70,7 +72,10 @@ export class SwitchSummonPhase extends SummonPhase {
       );
       this.scene.playSound("se/pb_rel");
       pokemon.hideInfo();
-      pokemon.tint(getPokeballTintColor(pokemon.pokeball), 1, 250, "Sine.easeIn");
+      const switchTint = pokemon.typeBallType !== undefined
+        ? Phaser.Display.Color.GetColor(...getTypeRgb(pokemon.typeBallType))
+        : (pokemon.pokeball === PokeballType.VOID_BALL ? 0x2d1450 : getPokeballTintColor(pokemon.pokeball));
+      pokemon.tint(switchTint, 1, 250, "Sine.easeIn");
       this.scene.tweens.add({
         targets: pokemon,
         duration: 250,
@@ -88,7 +93,7 @@ export class SwitchSummonPhase extends SummonPhase {
     const party = this.player ? this.getParty() : this.scene.getEnemyParty();
     const switchedInPokemon = party[this.slotIndex];
     this.lastPokemon = this.getPokemon();
-    if (this.player) {
+    if(this.player) {
       this.scene.currentBattle.markPokemonAsSwitchedOut(this.lastPokemon.id);
       this.scene.gameData.gameStats.pokemonSwitched++;
     }

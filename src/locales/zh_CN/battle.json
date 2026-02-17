@@ -96,5 +96,6 @@
   "statFell_one": "{{pokemonNameWithAffix}}的{{stats}}降低了！",
   "statHarshlyFell_one": "{{pokemonNameWithAffix}}的{{stats}}大幅降低了！",
   "statSeverelyFell_one": "{{pokemonNameWithAffix}}的{{stats}}极大幅降低了！",
-  "statWontGoAnyLower_one": "{{pokemonNameWithAffix}}的{{stats}}已经无法再降低了！"
+  "statWontGoAnyLower_one": "{{pokemonNameWithAffix}}的{{stats}}已经无法再降低了！",
+  "voidBallHpTooHigh": "虚空球只能捕捉处于濒死状态的宝可梦！"
 }

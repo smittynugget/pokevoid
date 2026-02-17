@@ -1,7 +1,8 @@
 import {ModifierType, QuestModifierTypeGenerator} from "./modifier-type";
 import { RunType, RunDuration } from "../enums/quest-type-conditions";
 import { Unlockables } from "../system/unlockables";
-import {QuestUnlockables, QuestUnlockData} from "#app/system/game-data";
+import {QuestUnlockables} from "#enums/quest-unlockables";
+import {QuestUnlockData} from "#app/system/game-data";
 export interface QuestStage {
     runType: RunType;
     duration: RunDuration;

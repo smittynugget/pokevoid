@@ -144,6 +144,7 @@ export interface PlayableChampionData {
   unlockedBallRaritySelect?: { rogue?: boolean; master?: boolean };
   unlockedGoldenPokeball?: boolean;
   unlockedMasterBall?: boolean;
+  unlockedVoidBall?: boolean;
   unlockedMoneyReward?: boolean;
   unlockedPermaMoney?: boolean;
   unlockedCatchRateTypes?: Type[];

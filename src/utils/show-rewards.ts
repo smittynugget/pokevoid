@@ -24,7 +24,7 @@ function getTotalCollectedTypes(scene: BattleScene): number {
     return total;
 }
 
-export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideChance: boolean = true, unshiftRatherThanPush: boolean = true, pathNodeFilter: PathNodeTypeFilter = PathNodeTypeFilter.NONE) {
+export function ShowRewards(scene: BattleScene, chance: integer = 19, overrideChance: boolean = true, unshiftRatherThanPush: boolean = true, pathNodeFilter: PathNodeTypeFilter = PathNodeTypeFilter.NONE) {
     if (scene.gameMode.isTestMod) {
         for (const species of scene.gameData.testSpeciesForMod) {
             scene.unshiftPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, pathNodeFilter));
@@ -33,11 +33,11 @@ export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideCh
     }
 
     if (scene.gameData.hasPermaModifierByType(PermaType.PERMA_SHOW_REWARDS_3)) {
-        chance = 14;
+        chance = 13;
     } else if (scene.gameData.hasPermaModifierByType(PermaType.PERMA_SHOW_REWARDS_2)) {
-        chance = 16;
+        chance = 15;
     } else if (scene.gameData.hasPermaModifierByType(PermaType.PERMA_SHOW_REWARDS_1)) {
-        chance = 18;
+        chance = 17;
     }
 
     if(scene.gameMode.isChaosMode) {
@@ -123,4 +123,5 @@ export function ShowRewards(scene: BattleScene, chance: integer = 20, overrideCh
             scene.gameData.reducePermaModifierByType([PermaType.PERMA_SHOW_REWARDS_1, PermaType.PERMA_SHOW_REWARDS_2, PermaType.PERMA_SHOW_REWARDS_3], scene);
         }
     }
+
 }

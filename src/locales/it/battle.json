@@ -96,5 +96,6 @@
   "unlockedSomething": "{{unlockedThing}}\nè stato/a sbloccato/a.",
   "congratulations": "Congratulazioni!",
   "beatModeFirstTime": "{{speciesName}} ha completato la modalità {{gameMode}} per la prima volta!\nHai ricevuto {{newModifier}}!",
-  "ppReduced": "I PP della mossa {{moveName}} di\n{{targetName}} sono stati ridotti di {{reduction}}!"
+  "ppReduced": "I PP della mossa {{moveName}} di\n{{targetName}} sono stati ridotti di {{reduction}}!",
+  "voidBallHpTooHigh": "La Void Ball può catturare solo Pokémon in condizioni critiche!"
 }

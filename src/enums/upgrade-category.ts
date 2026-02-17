@@ -118,7 +118,7 @@ export class UpgradeCategoryUtils {
 
   private static getFirstUpgradeTier(category: UpgradeCategory, lowTierUpgrade: boolean = false): number {
     const pathLength = this.getMoveUpgradeMaxTier(category);
-    const minFirstTier = lowTierUpgrade ? 1 : 4;
+    const minFirstTier = lowTierUpgrade ? 1 : 6;
     const maxFirstTier = Math.min(6, pathLength);
     const availableTiers: number[] = [];
 

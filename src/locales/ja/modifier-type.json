@@ -3,7 +3,9 @@
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
       "statLabel": "ポケボールアイテム",
-      "description": "{{pokeballName}} x{{modifierCount}}こ てにいれる (インベントリ: {{pokeballAmount}}) \nほそくりつ: {{catchRate}}"
+      "description": "{{pokeballName}} x{{modifierCount}}こ てにいれる (インベントリ: {{pokeballAmount}}) \nほそくりつ: {{catchRate}}",
+      "typeBallExtra": "\n捕獲したポケモンのタイプを{{typeName}}に変更し、{{typeName}}タイプの技を2つ覚えさせる。",
+      "voidBallExtra": "\nHPが赤い時、どんなポケモンでも捕獲できる。"
     },
     "AddPokemonModifierType": {
       "name": "{{pokemonName}}",
@@ -711,7 +713,7 @@
       "name": "エッセンス",
       "shopName": "{{type}}エッセンス",
       "statLabel": "エッセンス",
-      "description": "リリースアイテムのためにポケモンを逃がす代わりに5個使うか、コレクターと報酬を交換します。"
+      "description": "リリースアイテムのためにポケモンを逃がす代わりに4個使うか、コレクターと報酬を交換します。"
     },
     "PermaCollectedTypeModifierType": {
       "name": "収集エッセンス",
@@ -1068,8 +1070,8 @@
   "common": {
     "waves": "ウェーブ",
     "uses": "回使用可能",
-    "glitchPieceCost": "*グリッチピース2個が必要",
-    "essenceAlternativeCost": "ポケモンがエッセンスを5個以上持っている場合、代わりにそれらを使用できます。",
+    "glitchPieceCost": "*グリッチピース1個が必要",
+    "essenceAlternativeCost": "ポケモンがエッセンスを4個以上持っている場合、代わりにそれらを使用できます。",
     "permaMoney": "Ωゴールド",
     "permaItem": "Ωアイテム",
     "moreInfo": "(Cキー/Shiftキー長押しで詳細表示)",

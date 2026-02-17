@@ -3,7 +3,9 @@
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
       "statLabel": "精灵球物品",
-      "description": "获得 {{pokeballName}} x{{modifierCount}} (已有：{{pokeballAmount}}) \n捕捉倍率：{{catchRate}}。"
+      "description": "获得 {{pokeballName}} x{{modifierCount}} (已有：{{pokeballAmount}}) \n捕捉倍率：{{catchRate}}。",
+      "typeBallExtra": "\n将捕获的宝可梦类型更改为{{typeName}}，并教会它2个{{typeName}}属性的招式。",
+      "voidBallExtra": "\n当宝可梦HP处于红色时可以捕获任何宝可梦。"
     },
     "AddVoucherModifierType": {
       "name": "{{modifierCount}}x {{voucherTypeName}}",
@@ -705,7 +707,7 @@
     "CollectedTypeModifierType": {
       "name": "精华",
       "shopName": "{{type}}精华",
-      "description": "使用5个代替释放宝可梦来获得释放道具，或与收藏家交换奖励。",
+      "description": "使用4个代替释放宝可梦来获得释放道具，或与收藏家交换奖励。",
       "statLabel": "精华"
     },
     "PermaCollectedTypeModifierType": {
@@ -1063,8 +1065,8 @@
   "common": {
     "waves": "波",
     "uses": "次",
-    "glitchPieceCost": "*需要2个故障碎片",
-    "essenceAlternativeCost": "如果该宝可梦拥有5个及以上精华，则可改为消耗精华。",
+    "glitchPieceCost": "*需要1个故障碎片",
+    "essenceAlternativeCost": "如果该宝可梦拥有4个及以上精华，则可改为消耗精华。",
     "permaMoney": "Ω金币",
     "permaItem": "Ω道具",
     "moreInfo": "(按住C键或Shift键查看更多信息)",

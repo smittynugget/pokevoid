@@ -1537,8 +1537,8 @@ export class MultiStatusEffectAttr extends StatusEffectAttr {
   public effects: StatusEffect[];
 
   constructor(effects: StatusEffect[], selfTarget?: boolean, cureTurn?: integer, overrideStatus?: boolean) {
-    super(effects[0], selfTarget, cureTurn, overrideStatus);
-    this.effects = effects;
+    super(effects?.[0], selfTarget, cureTurn, overrideStatus);
+    this.effects = effects ?? [];
   }
 
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {

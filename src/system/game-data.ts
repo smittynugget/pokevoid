@@ -1,4 +1,5 @@
 import i18next from "i18next";
+import { QuestUnlockables, QuestState } from "#enums/quest-unlockables";
 import BattleScene, {PokeballCounts, RecoveryBossMode, bypassLogin, RunEndSummaryRunData} from "../battle-scene";
 import Pokemon, {EnemyPokemon, PlayerPokemon, PokemonMove, PokemonSummonData} from "../field/pokemon";
 import {pokemonEvolutions, pokemonPrevolutions} from "../data/pokemon-evolutions";
@@ -45,7 +46,7 @@ import {
 import {StatusEffect} from "#app/data/status-effect.js";
 import ChallengeData from "./challenge-data";
 import {randSeedInt} from "../utils";
-import {PokeballType} from "#app/data/pokeball";
+import {PokeballType, getActiveChampionData} from "#app/data/pokeball";
 import {Device} from "#enums/devices";
 import {GameDataType} from "#enums/game-data-type";
 import {Moves} from "#enums/moves";
@@ -230,6 +231,7 @@ export interface SessionSaveData {
     enemyModifiers: PersistentModifierData[];
     arena: ArenaData;
     pokeballCounts: PokeballCounts;
+    typeBallCounts?: { [typeId: number]: number };
     money: integer;
     score: integer;
     waveIndex: integer;
@@ -1163,6 +1165,7 @@ export class GameData {
                 const serializedData = this.serializeBigInt(data);
 
                 if (!serializedData || serializedData === 'undefined' || serializedData === 'null') {
+                    console.error('[SAVE ERROR] Serialization produced invalid data. Save aborted.');
                     alert('[SAVE ERROR] Serialization produced invalid data. Save aborted.');
                     resolve(false);
                     return;
@@ -1172,6 +1175,7 @@ export class GameData {
                 this.scene.ui.savingIcon.hide();
                 resolve(true);
             } catch (error) {
+                console.error('[SAVE ERROR]', error);
                 alert('[SAVE ERROR] ' + (error as Error).message);
                 resolve(false);
             }
@@ -1191,6 +1195,7 @@ export class GameData {
                 const systemDataStr = decrypt(this.getLocalStorageItem(`data_${loggedInUser?.username}`)!, bypassLogin);
 
                 if (!systemDataStr || systemDataStr === 'null' || systemDataStr === 'undefined') {
+                    console.error('[LOAD ERROR] System data is corrupted or missing');
                     alert('[LOAD ERROR] System data is corrupted or missing');
                     this.dataLoaded = true;
                     return false;
@@ -1211,6 +1216,7 @@ export class GameData {
                 return false;
             }
         } catch (error) {
+            console.error('[LOAD ERROR]', error);
             alert('[LOAD ERROR] ' + (error as Error).message);
             this.dataLoaded = true;
             return false;
@@ -1333,6 +1339,7 @@ export class GameData {
 
             return await this.initSystem(systemData, sessionDataArray);
         } catch (error) {
+            console.error('[LOAD ERROR] initSystemWithStr failed:', error);
             alert('[LOAD ERROR] initSystemWithStr failed: ' + (error as Error).message);
             return false;
         }
@@ -1627,9 +1634,11 @@ export class GameData {
                             if (modifier) {
                                 this.permaModifiers.addModifier(this.scene, modifier);
                             } else {
+                                console.error('[LOAD WARNING] Modifier returned null:', modifierData.className, modifierDataPlain);
                                 alert('[LOAD WARNING] Modifier returned null: ' + modifierData.className);
                             }
                         } catch (modError) {
+                            console.error('[LOAD WARNING] Failed to load modifier:', modifierDataPlain?.className, modError);
                             alert('[LOAD WARNING] Failed to load modifier: ' + modifierDataPlain?.className);
                         }
                     }
@@ -1692,6 +1701,7 @@ export class GameData {
 
                 resolve(true);
             } catch (err) {
+                console.error('[LOAD ERROR] initSystem failed:', err);
                 alert('[LOAD ERROR] initSystem failed: ' + (err as Error).message);
                 resolve(false);
             }
@@ -1756,6 +1766,7 @@ export class GameData {
                 try {
                     return new GameStats(v);
                 } catch (gsError) {
+                    console.error('[PARSE ERROR] Failed to parse game stats:', gsError);
                     alert('[PARSE ERROR] Failed to parse game stats');
                     return new GameStats({});
                 }
@@ -1848,6 +1859,7 @@ export class GameData {
                     try {
                         return new PersistentModifierData(modifierData, true);
                     } catch (pmError) {
+                        console.error('[PARSE ERROR] Failed to parse perma modifier:', modifierData?.className, pmError);
                         alert('[PARSE ERROR] Failed to parse perma modifier: ' + modifierData?.className);
                         return null;
                     }
@@ -1857,6 +1869,7 @@ export class GameData {
             return k.endsWith("Attr") && !["natureAttr", "abilityAttr", "passiveAttr"].includes(k) ? BigInt(v) : v;
         }) as SystemSaveData;
         } catch (error) {
+            console.error('[PARSE ERROR] System data parsing failed:', error);
             alert('[PARSE ERROR] System data parsing failed: ' + (error as Error).message);
             throw error;
         }
@@ -2205,6 +2218,7 @@ export class GameData {
             enemyModifiers: scene.findModifiers(() => true, false).map(m => new PersistentModifierData(m, false)),
             arena: new ArenaData(scene.arena),
             pokeballCounts: scene.pokeballCounts,
+            typeBallCounts: scene.typeBallCounts,
             money: scene.money,
             score: scene.score,
             waveIndex: scene.currentBattle?.waveIndex ?? 0,
@@ -2487,7 +2501,27 @@ export class GameData {
                         scene.pokeballCounts[key] = _sessionData.pokeballCounts[key] || 0;
                     });
                     if (Overrides.POKEBALL_OVERRIDE.active) {
-                        scene.pokeballCounts = Overrides.POKEBALL_OVERRIDE.pokeballs;
+                        scene.pokeballCounts = { ...Overrides.POKEBALL_OVERRIDE.pokeballs };
+                    }
+
+                    scene.typeBallCounts = _sessionData.typeBallCounts || {};
+                    if (!_sessionData.typeBallCounts) {
+                        const championData = getActiveChampionData(scene);
+                        if (championData) {
+                            const oldCount1 = scene.pokeballCounts[6] || 0;
+                            const oldCount2 = scene.pokeballCounts[7] || 0;
+                            if (oldCount1 > 0 && championData.type1 !== undefined) {
+                                scene.typeBallCounts[championData.type1] = (scene.typeBallCounts[championData.type1] || 0) + oldCount1;
+                            }
+                            if (oldCount2 > 0 && championData.type2 !== undefined) {
+                                scene.typeBallCounts[championData.type2] = (scene.typeBallCounts[championData.type2] || 0) + oldCount2;
+                            }
+                        }
+                        delete scene.pokeballCounts[6];
+                        delete scene.pokeballCounts[7];
+                    }
+                    if (Overrides.TYPE_BALL_OVERRIDE?.active) {
+                        scene.typeBallCounts = { ...Overrides.TYPE_BALL_OVERRIDE.typeBalls };
                     }
 
                     scene.money = _sessionData.money || 0;
@@ -2574,6 +2608,10 @@ export class GameData {
 
                     scene.arena.terrain = _sessionData.arena.terrain;
                     scene.arena.eventTarget.dispatchEvent(new TerrainChangedEvent(TerrainType.NONE, scene.arena.terrain?.terrainType!, scene.arena.terrain?.turnsLeft!));
+
+                    if (_sessionData.arena.tags) {
+                        scene.arena.tags = _sessionData.arena.tags;
+                    }
 
                     const modifiersModule = await import("../modifier/modifier");
 
@@ -3395,6 +3433,7 @@ export class GameData {
             return value;
         });
         } catch (error) {
+            console.error('[SERIALIZE ERROR]', error);
             alert('[SERIALIZE ERROR] ' + (error as Error).message);
             throw error;
         }
@@ -3413,6 +3452,7 @@ export class GameData {
             return value;
         });
         } catch (error) {
+            console.error('[DESERIALIZE ERROR]', error);
             alert('[DESERIALIZE ERROR] ' + (error as Error).message);
             throw error;
         }
@@ -3455,6 +3495,7 @@ export class GameData {
             let serializedSystemData = this.serializeBigInt(systemData);
 
             if (!serializedSystemData || serializedSystemData === 'undefined') {
+                console.error('[SAVE ERROR] System data serialization failed');
                 alert('[SAVE ERROR] System data serialization failed');
                 resolve(false);
                 return;
@@ -3496,6 +3537,7 @@ export class GameData {
                 let serializedSessionData = this.serializeBigInt(sessionData);
 
                 if (!serializedSessionData || serializedSessionData === 'undefined') {
+                    console.error('[SAVE ERROR] Session data serialization failed');
                     alert('[SAVE ERROR] Session data serialization failed');
                     resolve(false);
                     return;
@@ -3519,6 +3561,7 @@ export class GameData {
 
                 resolve(true);
             } catch (error) {
+                console.error('[SAVE ERROR] saveAll failed:', error);
                 alert('[SAVE ERROR] saveAll failed: ' + (error as Error).message);
                 resolve(false);
             }
@@ -3530,6 +3573,7 @@ export class GameData {
         }
         this.saveAll(scene).then(() => {
         }).catch(error => {
+            console.error('[SAVE ERROR] localSaveAll failed:', error);
             alert('[SAVE ERROR] localSaveAll failed: ' + error.message);
         });
     }
@@ -3540,6 +3584,7 @@ export class GameData {
         }
         this.saveAll(scene, false, false, false, false, true).then(() => {
         }).catch(error => {
+            console.error('[SAVE ERROR] localSaveSystemOnly failed:', error);
             alert('[SAVE ERROR] localSaveSystemOnly failed: ' + error.message);
         });
     }
@@ -5508,18 +5553,18 @@ public getRandomBountyCode(): string {
     }
 
     private checkAndUnlockGameModes(): void {
-        if ((this.gameStats.nuzlightSessionsWon >= 2 || this.gameStats.chaosNuzlightSessionsWon >= 2 || this.gameStats.chaosNuzlightShortSessionsWon >= 2) && !this.unlocks[Unlockables.NUZLIGHT_DRAFT_MODE]) {
+        if ((this.gameStats.nuzlightSessionsWon >= 2 || this.gameStats.chaosNuzlightSessionsWon >= 2 || this.gameStats.chaosNuzlightShortSessionsWon >= 2 || this.gameStats.chaosNuzlightFTLSessionsWon >= 2) && !this.unlocks[Unlockables.NUZLIGHT_DRAFT_MODE]) {
             this.unlocks[Unlockables.NUZLIGHT_DRAFT_MODE] = true;
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.NUZLIGHT_DRAFT_MODE, Species.NUZLEAF.toString(), true, UnlockModePokeSpriteType.NORMAL_INVERTED));
         }
 
-        if ((this.gameStats.nuzlockeSessionsWon >= 2 || this.gameStats.chaosNuzlockeSessionsWon >= 2 || this.gameStats.chaosNuzlockeShortSessionsWon >= 2) && !this.unlocks[Unlockables.NUZLOCKE_DRAFT_MODE]) {
+        if ((this.gameStats.nuzlockeSessionsWon >= 2 || this.gameStats.chaosNuzlockeSessionsWon >= 2 || this.gameStats.chaosNuzlockeShortSessionsWon >= 2 || this.gameStats.chaosNuzlockeFTLSessionsWon >= 2) && !this.unlocks[Unlockables.NUZLOCKE_DRAFT_MODE]) {
             this.unlocks[Unlockables.NUZLOCKE_DRAFT_MODE] = true;
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.NUZLOCKE_DRAFT_MODE, Species.SHIFTRY.toString(), true, UnlockModePokeSpriteType.NORMAL_INVERTED));
         }
 
         const journeyUnlocked = this.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED);
-        const chaosRogueBeaten = this.gameStats.chaosRogueSessionsWon >= 1 || this.gameStats.chaosRogueShortSessionsWon >= 1;
+        const chaosRogueBeaten = this.gameStats.chaosRogueSessionsWon >= 1 || this.gameStats.chaosRogueShortSessionsWon >= 1 || this.gameStats.chaosRogueFTLSessionsWon >= 1;
         const draftSessionsCondition = this.gameStats.sessionsWon >= 3;
 
         if (journeyUnlocked && (chaosRogueBeaten || draftSessionsCondition) && !this.unlocks[Unlockables.CHAOS_JOURNEY_MODE]) {
@@ -5532,7 +5577,7 @@ public getRandomBountyCode(): string {
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.CHAOS_VOID_MODE, Species.DARKRAI.toString(), true, UnlockModePokeSpriteType.NORMAL));
         }
 
-        if (this.gameStats.chaosVoidSessionsWon >= 1 && !this.unlocks[Unlockables.CHAOS_ROGUE_VOID_MODE]) {
+        if ((this.gameStats.chaosVoidSessionsWon >= 1 || this.gameStats.chaosVoidShortSessionsWon >= 1 || this.gameStats.chaosVoidFTLSessionsWon >= 1) && !this.unlocks[Unlockables.CHAOS_ROGUE_VOID_MODE]) {
             this.unlocks[Unlockables.CHAOS_ROGUE_VOID_MODE] = true;
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.CHAOS_ROGUE_VOID_MODE, Species.DARKRAI.toString(), true, UnlockModePokeSpriteType.NORMAL_INVERTED));
         }
@@ -5643,6 +5688,7 @@ public getRandomBountyCode(): string {
             localStorage.setItem(backupKey, JSON.stringify(backupData));
         } catch (e) {
             if (e instanceof DOMException && e.name === 'QuotaExceededError') {
+                console.error("Version backup failed: Storage quota exceeded.", e);
                 alert("Version backup failed: Storage quota exceeded. Consider exporting your save data manually.");
                 return;
             }
@@ -5956,240 +6002,7 @@ export interface QuestUnlockData {
     questSpriteId?: string | Species | TrainerType;
     cloned?: boolean;
 }
-export enum QuestUnlockables {
-    TAUROS_ELECTRIC_HIT_QUEST,
-    KECLEON_COLOR_CHANGE_QUEST,
-    GLISCOR_DARK_MOVE_KNOCKOUT_QUEST,
-    MAROWAK_CUBONE_FAINT_QUEST,
-    NOIVERN_DRAGON_MOVE_KNOCKOUT_QUEST,
-    FERALIGATR_DRAGON_DEFEAT_QUEST,
-    CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST,
-    VENUSAUR_PSYCHIC_MOVE_USE_QUEST,
-    BLASTOISE_FAIRY_DEFEAT_QUEST,
-    NIDOKING_DEFEAT_QUEST,
-    GENGAR_SPECIAL_WAVE_QUEST,
-    WEEZING_FIRE_MOVE_KNOCKOUT_QUEST,
-    HITMONLEE_NORMAL_WAVE_QUEST,
-    HITMONCHAN_STAT_INCREASE_QUEST,
-    HITMON_DUO_WIN_QUEST,
-    KANGASKHAN_GHOST_MOVE_QUEST,
-    SCYTHER_TRIO_WIN_QUEST,
-    GRENINJA_TRIO_WIN_QUEST,
-    SIMISAGE_TRIO_WIN_QUEST,
-    ELEMENTAL_MONKEY_WIN_QUEST,
-    ELECTIVIREMAGMORTAR_WIN_QUEST,
-    GYARADOS_GROUND_SWITCH_QUEST,
-    LAPRAS_FIRE_MOVE_QUEST,
-    PORYGON_Z_ANALYTIC_USE_QUEST,
-    DRAGONITE_LANCE_DEFEAT_QUEST,
-    SUDOWOODO_WOOD_HAMMER_QUEST,
-    AMBIPOM_GIGA_IMPACT_QUEST,
-    MILTANK_STEEL_MOVE_KNOCKOUT_QUEST,
-    SLAKING_RIVAL_DEFEAT_QUEST,
-    SOLROCK_LUNATONE_WIN_QUEST,
-    REGIGIGAS_REGI_DEFEAT_QUEST,
-    PIKACHU_RED_BLUE_WIN_QUEST,
-    SNORLAX_GRASS_KNOCKOUT_QUEST,
-    CLOYSTER_PRESENT_QUEST,
-    NUZLEAF_NOSEPASS_DEFEAT_QUEST,
-    CHANDELURE_REST_QUEST,
-    SMEARGLE_DEFEAT_QUEST,
-    MIMIKYU_CHARIZARD_KNOCKOUT_QUEST,
-    MIMIKYU_GRENINJA_KNOCKOUT_QUEST,
-    MIMIKYU_RAICHU_KNOCKOUT_QUEST,
-    MIMIKYU_MEWTWO_KNOCKOUT_QUEST,
-    MIMIKYU_REGIROCK_KNOCKOUT_QUEST,
-    EISCUE_ROCK_KNOCKOUT_QUEST,
-    ZANGOOSE_SEVIPER_KNOCKOUT_QUEST,
-    SEVIPER_ZANGOOSE_KNOCKOUT_QUEST,
-    TRUBBISH_POISON_DEFEAT_QUEST,
-    HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST,
-    DITTO_DRAGONITE_TRANSFORM_QUEST,
-    DITTO_CHARIZARD_TRANSFORM_QUEST,
-    DITTO_PIKACHU_TRANSFORM_QUEST,
-    DITTO_MACHAMP_TRANSFORM_QUEST,
-    DITTO_MEWTWO_TRANSFORM_QUEST,
-    FERALIGATOR_ROCK_MOVE_KNOCKOUT_QUEST,
-    WOBBUFFET_RIVAL_DEFEAT_QUEST,
-    MAGIKARP_DEFEAT_QUEST,
-    KLINKLANG_GEAR_MOVE_QUEST,
-    SPINDA_CONFUSION_RECOVERY_QUEST,
-    NINETALES_STORED_POWER_KNOCKOUT_QUEST,
-    MUK_RED_DEFEAT_QUEST,
-    SHUCKLE_DEFEAT_QUEST,
-    TANGELA_RIVAL_DEFEAT_QUEST,
-    LICKITUNG_GIGGLE_KNOCKOUT_QUEST,
-    MAGICAL_PIKACHU_QUEST,
-    CHARMANDER_UNDERTALE_QUEST,
-    MEOWTH_JESTER_QUEST,
-    SHIFTRY_TENGU_QUEST,
-    CLAYDOL_POISON_QUEST,
-    STARTER_CATCH_QUEST,
-    NUZLIGHT_UNLOCK_QUEST,
-    NUZLOCKE_UNLOCK_QUEST,
-    REVAROOM_EXTRA_QUEST,
-    NORMAL_EFFECTIVENESS_QUEST,
-    MAGIKARP_NEW_MOVES_QUEST,
-    DITTO_NEW_MOVES_QUEST,
-    WOBBUFFET_NEW_MOVES_QUEST,
-    SMEARGLE_NEW_MOVES_QUEST,
-    UNOWN_NEW_MOVES_QUEST,
-    TYROGUE_NEW_MOVES_QUEST,
-    METAPOD_NEW_MOVES_QUEST,
-    TAUROS_DARK_WAVE_QUEST,
-    DITTO_SPECIAL_WIN_QUEST,
-    MAROWAK_ZOMBIE_KNOCKOUT_QUEST,
-    GRENINJA_YOKAI_WAVE_QUEST,
-    RAYQUAZA_SPECIAL_WIN_QUEST,
-    LICKITUNG_HYPER_WAVE_QUEST,
-    CHARMANDER_NIGHTMARE_WIN_QUEST,
-    GASTLY_NIGHTMARE_WAVE_QUEST,
-    PIKACHU_PLUS_ULTRA_QUEST,
-    CHARIZARD_HELLFLAME_QUEST,
-    EEVEE_NIGHTMARE_QUEST,
-    SNORLAX_NIGHTMARE_QUEST,
-    MEWTWO_NIGHTMARE_QUEST,
-    TYRANITAR_NIGHTMARE_QUEST,
-    OCTILLERY_NIGHTMARE_QUEST,
-    REGIROCK_NIGHTMARE_QUEST,
-    EEVEE_GHOST_QUEST,
-    EEVEE_STEEL_QUEST,
-    EEVEE_GROUND_QUEST,
-    SQUIRTLE_TORMENT_QUEST,
-    BULBASAUR_TERROR_QUEST,
-    HYPNO_NIGHTMARE_QUEST,
-    MAMOSWINE_NIGHTMARE_QUEST,
-    MORPEKO_NIGHTMARE_QUEST,
-    CLEFABLE_GENGAR_QUEST,
-    GOLEM_FIRE_QUEST,
-    DEINO_NIGHTMARE_QUEST,
-    GOLURK_DREAD_QUEST,
-    DUSCLOPS_NIGHTMARE_QUEST,
-    HARIYAMA_NIGHTMARE_QUEST,
-    SHARPEDO_NIGHTMARE_QUEST,
-    FARIGIRAF_NIGHTMARE_QUEST,
-    KINGDRA_NIGHTMARE_QUEST,
-    EXCADRILL_NIGHTMARE_QUEST,
-    PIKACHU_ROBO_NIGHTMARE_QUEST,
-    LUCARIO_NIGHTMARE_QUEST,
-    SUNFLORA_NIGHTMARE_QUEST,
-    DODRIO_NIGHTMARE_QUEST,
-    LANTURN_NIGHTMARE_QUEST,
-    BLUE_BOUNTY_QUEST,
-    LANCE_BOUNTY_QUEST,
-    CYNTHIA_BOUNTY_QUEST,
-    GIOVANNI_BOUNTY_QUEST,
-    RED_BOUNTY_QUEST,
-    BROCK_BOUNTY_QUEST,
-    STEVEN_BOUNTY_QUEST,
-    CYRUS_BOUNTY_QUEST,
-    LT_SURGE_BOUNTY_QUEST,
-    HAU_BOUNTY_QUEST,
-    LARRY_BOUNTY_QUEST,
-    WALLACE_BOUNTY_QUEST,
-    ALDER_BOUNTY_QUEST,
-    MISTY_BOUNTY_QUEST,
-    BLAINE_BOUNTY_QUEST,
-    ARCHIE_BOUNTY_QUEST,
-    MAXIE_BOUNTY_QUEST,
-    GHETSIS_BOUNTY_QUEST,
-    LYSANDRE_BOUNTY_QUEST,
-    ROSE_BOUNTY_QUEST,
-    GUZMA_BOUNTY_QUEST,
-    LUSAMINE_BOUNTY_QUEST,
-    NEMONA_BOUNTY_QUEST,
-
-    NORMAN_BOUNTY_QUEST,
-    ALLISTER_BOUNTY_QUEST,
-    IRIS_BOUNTY_QUEST,
-    ROXIE_BOUNTY_QUEST,
-    SABRINA_BOUNTY_QUEST,
-    TARTAUROS_SMITTY_QUEST,
-    ZAMOWAK_SMITTY_QUEST,
-    GREYOKAI_SMITTY_QUEST,
-    JORMUNZA_SMITTY_QUEST,
-    LICTHULHU_SMITTY_QUEST,
-    PLASMIST_SMITTY_QUEST,
-    PLUSTRA_SMITTY_QUEST,
-    HELLCHAR_SMITTY_QUEST,
-    FEAREON_SMITTY_QUEST,
-    OMNINOM_SMITTY_QUEST,
-    NECROMEW_SMITTY_QUEST,
-    DIABLOTAR_SMITTY_QUEST,
-    SMITOM_SMITTY_QUEST,
-    GENOMANDER_SMITTY_QUEST,
-    TORMENTLE_SMITTY_QUEST,
-    TERRORBULB_SMITTY_QUEST,
-    DANKITAR_SMITTY_QUEST,
-    GASTMOJI_SMITTY_QUEST,
-    NOXABIS_SMITTY_QUEST,
-    FLORAVORA_SMITTY_QUEST,
-    CHIMERDRIO_SMITTY_QUEST,
-    CLEFANGAR_SMITTY_QUEST,
-    TERRORAGON_SMITTY_QUEST,
-    GODREAD_SMITTY_QUEST,
-    DUSCHMARE_SMITTY_QUEST,
-    ABYSSUMA_SMITTY_QUEST,
-    OMNITTO_SMITTY_QUEST,
-    UMBRAFFE_SMITTY_QUEST,
-    TARTADRA_SMITTY_QUEST,
-    TENGALE_SMITTY_QUEST,
-    HYPLAGUS_SMITTY_QUEST,
-    DEMONOTH_SMITTY_QUEST,
-    DESPEKO_SMITTY_QUEST,
-    ZOOMER_SMITTY_QUEST,
-    VOIDASH_SMITTY_QUEST,
-    WAHCKY_SMITTY_QUEST,
-    WAHZEBUB_SMITTY_QUEST,
-    FINEFERNO_SMITTY_QUEST,
-    SORBRED_SMITTY_QUEST,
-    CORPANZEE_SMITTY_QUEST,
-    PLANKLING_SMITTY_QUEST,
-    TIMBRICK_SMITTY_QUEST,
-    PLANKULT_SMITTY_QUEST,
-    SORBOBO_SMITTY_QUEST,
-    HAMTARO_SMITTY_QUEST,
-    ELMOLD_SMITTY_QUEST,
-    FUNGHOMP_SMITTY_QUEST,
-    RIDDICUS_SMITTY_QUEST,
-    BOXECUTIVE_SMITTY_QUEST,
-    PATNIUS_SMITTY_QUEST,
-    TENTACRIM_SMITTY_QUEST,
-    UNDEADTUNASMIT_SMITTY_QUEST,
-    SCARABLANC_SMITTY_QUEST,
-    BATMARE_SMITTY_QUEST,
-    SMITWARD_SMITTY_QUEST,
-    NITEKNITE_SMITTY_QUEST,
-    DIGNITIER_SMITTY_QUEST,
-    CEPHALOOM_SMITTY_QUEST,
-    SMITSHADE_SMITTY_QUEST,
-    SMITSPECT_SMITTY_QUEST,
-    SMITWRAITH_SMITTY_QUEST,
-    SMITERNAL_SMITTY_QUEST,
-    SMITTYFISH_SMITTY_QUEST,
-    SMITTELLECT_SMITTY_QUEST,
-    GALLUX_SMITTY_QUEST,
-    HOSTMITTY_SMITTY_QUEST,
-    SMITTYNARIE_SMITTY_QUEST,
-    BATBOXBABA_SMITTY_QUEST,
-    BATBOXBEYOND_SMITTY_QUEST,
-    VICTAINER_SMITTY_QUEST,
-    KAKOPIER_SMITTY_QUEST,
-    KARASU_ME_SMITTY_QUEST,
-    BULLKTOPUS_SMITTY_QUEST,
-    GUMUGUMU_SMITTY_QUEST,
-    SANTORYU_SMITTY_QUEST,
-    ROOSTACE_SMITTY_QUEST,
-    BOGACE_SMITTY_QUEST,
-    MILLIANT_SMITTY_QUEST,
-    CHURRY_SMITTY_QUEST,
-    GAZORPSMITFIELD_SMITTY_QUEST,
-    HOLOGRICK_SMITTY_QUEST,
-    SEEKLING_SMITTY_QUEST,
-    PICKLISK_SMITTY_QUEST,
-    BRAVEHOUND_SMITTY_QUEST,
-    MISSINGNO_SMITTY_QUEST,
-}
+export { QuestUnlockables } from "#enums/quest-unlockables";
 
 export function isNonQuestBountyModifier(modifier : PermaRunQuestModifier): boolean {
     if ((modifier instanceof PermaRunQuestModifier) && modifier.consoleCode) {
@@ -6200,11 +6013,7 @@ export function isNonQuestBountyModifier(modifier : PermaRunQuestModifier): bool
     }
 }
 
-export enum QuestState {
-    UNLOCKED,
-    ACTIVE,
-    COMPLETED
-}
+export { QuestState } from "#enums/quest-unlockables";
 
 export const rivalQuestMap: Partial<Record<RivalTrainerType, QuestUnlockables[]>> = {
     [TrainerType.BLUE]: [

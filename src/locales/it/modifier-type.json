@@ -3,7 +3,9 @@
     "AddPokeballModifierType": {
       "name": "{{modifierCount}}x {{pokeballName}}",
       "statLabel": "Oggetto Poké Ball",
-      "description": "Ricevi {{pokeballName}} x{{modifierCount}} (Inventario: {{pokeballAmount}}) \nTasso di cattura: {{catchRate}}."
+      "description": "Ricevi {{pokeballName}} x{{modifierCount}} (Inventario: {{pokeballAmount}}) \nTasso di cattura: {{catchRate}}.",
+      "typeBallExtra": "\nCambia il tipo del Pokémon catturato in {{typeName}} e gli insegna 2 mosse di tipo {{typeName}}.",
+      "voidBallExtra": "\nPuò catturare qualsiasi Pokémon quando i suoi PS sono in rosso."
     },
     "AddPokemonModifierType": {
       "name": "{{pokemonName}}",
@@ -719,7 +721,7 @@
       "name": "Essenze",
       "shopName": "Essenza {{type}}",
       "statLabel": "Essenza",
-      "description": "Usa 5 invece di liberare un Pokémon per Oggetti di Liberazione o scambia per ricompense con il Collezionista."
+      "description": "Usa 4 invece di liberare un Pokémon per Oggetti di Liberazione o scambia per ricompense con il Collezionista."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Essenze Raccolte",
@@ -1068,8 +1070,8 @@
   "common": {
     "waves": "ondate",
     "uses": "usi",
-    "glitchPieceCost": "*COSTA 2x Frammento Glitch",
-    "essenceAlternativeCost": "Se il Pokémon ha 5+ Essenze, puoi usare quelle al suo posto.",
+    "glitchPieceCost": "*COSTA 1x Frammento Glitch",
+    "essenceAlternativeCost": "Se il Pokémon ha 4+ Essenze, puoi usare quelle al suo posto.",
     "permaMoney": "ΩORO",
     "permaItem": "ΩOGGETTO",
     "moreInfo": "(Tieni premuto C / Shift per informazioni)",

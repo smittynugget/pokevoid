@@ -1,6 +1,8 @@
 import BattleScene from "#app/battle-scene.js";
 import { BattleType } from "#app/battle.js";
-import { getPokeballAtlasKey, getPokeballTintColor } from "#app/data/pokeball.js";
+import { applyTypeBallRecolor, applyVoidBallRecolor, getPokeballAtlasKey, getPokeballTintColor } from "#app/data/pokeball.js";
+import { getTypeRgb } from "#app/data/type.js";
+import { PokeballType } from "#enums/pokeball";
 import { SpeciesFormChangeActiveTrigger } from "#app/data/pokemon-forms.js";
 import { TrainerSlot } from "#app/data/trainer-config.js";
 import { PlayerGender } from "#app/enums/player-gender.js";
@@ -94,6 +96,12 @@ export class SummonPhase extends PartyMemberPokemonPhase {
     const pokeball = this.scene.addFieldSprite(this.player ? 36 : 248, this.player ? 80 : 44, "pb", getPokeballAtlasKey(pokemon.pokeball));
     pokeball.setVisible(false);
     pokeball.setOrigin(0.5, 0.625);
+    if (pokemon.typeBallType !== undefined) {
+      applyTypeBallRecolor(this.scene, pokeball, pokemon.typeBallType);
+    } else if (pokemon.pokeball === PokeballType.VOID_BALL) {
+      applyVoidBallRecolor(this.scene, pokeball);
+      pokeball.setAlpha(0.85);
+    }
     this.scene.field.add(pokeball);
 
     if (this.fieldIndex === 1) {
@@ -146,7 +154,10 @@ export class SummonPhase extends PartyMemberPokemonPhase {
             pokemon.setVisible(true);
             pokemon.getSprite().setVisible(true);
             pokemon.setScale(0.5);
-            pokemon.tint(getPokeballTintColor(pokemon.pokeball));
+            const summonTint = pokemon.typeBallType !== undefined
+              ? Phaser.Display.Color.GetColor(...getTypeRgb(pokemon.typeBallType))
+              : (pokemon.pokeball === PokeballType.VOID_BALL ? 0x2d1450 : getPokeballTintColor(pokemon.pokeball));
+            pokemon.tint(summonTint);
             pokemon.untint(250, "Sine.easeIn");
             this.scene.updateFieldScale();
             this.scene.tweens.add({

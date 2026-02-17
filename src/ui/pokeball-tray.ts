@@ -1,5 +1,7 @@
 import BattleScene from "../battle-scene";
 import Pokemon from "../field/pokemon";
+import { PokeballType } from "../enums/pokeball";
+import { getTypeRgb } from "../data/type";
 
 export default class PokeballTray extends Phaser.GameObjects.Container {
   private player: boolean;
@@ -55,6 +57,16 @@ export default class PokeballTray extends Phaser.GameObjects.Container {
           ballFrame = "status";
         }
         ball.setFrame(ballFrame);
+        if (b < party.length) {
+          if (party[b].typeBallType !== undefined) {
+            const rgb = getTypeRgb(party[b].typeBallType);
+            ball.setTint(Phaser.Display.Color.GetColor(rgb[0], rgb[1], rgb[2]));
+          } else if (party[b].pokeball === PokeballType.VOID_BALL) {
+            ball.setTint(0x2d1450);
+          } else {
+            ball.clearTint();
+          }
+        }
       });
 
       (this.scene as BattleScene).playSound("se/pb_tray_enter");
