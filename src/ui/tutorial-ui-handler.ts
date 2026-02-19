@@ -188,6 +188,9 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 EnhancedTutorial.FTL_MODE_SELECT,
                 EnhancedTutorial.CHAMPION_SELECT_ESSENCE,
                 EnhancedTutorial.CHAMPION_SELECT_SPECIAL_ESSENCES,
+                EnhancedTutorial.SPECIAL_ESSENCES_INTRO,
+                EnhancedTutorial.SPECIAL_ESSENCES_GLITCH,
+                EnhancedTutorial.SPECIAL_ESSENCES_SMITTY,
                 EnhancedTutorial.SKILLTREE_APOLLO_DIANA_TYPES,
                 EnhancedTutorial.SKILLTREE_SET_TYPES,
                 EnhancedTutorial.SKILLTREE_PROGRESSION,
@@ -1000,9 +1003,6 @@ export default class TutorialUiHandler extends ModalUiHandler {
         this.modalContainer.add(this.uiContainer);
 
         this.categories = Object.keys(this.categoryMap)
-            .filter(id => {
-                return this.getCategoryCompletedTutorials(id).length > 0;
-            })
             .map(id => ({
                 id,
                 name: this.categoryMap[id].title
@@ -1090,9 +1090,6 @@ export default class TutorialUiHandler extends ModalUiHandler {
         const hubWidth = this.getWidth() / 5;
 
         this.categories = Object.keys(this.categoryMap)
-            .filter(id => {
-                return this.getCategoryCompletedTutorials(id).length > 0;
-            })
             .map(id => ({
                 id,
                 name: this.categoryMap[id].title
@@ -1177,11 +1174,25 @@ export default class TutorialUiHandler extends ModalUiHandler {
             if (this.categoryMap.hasOwnProperty(categoryId)) {
                 const categoryData = this.categoryMap[categoryId];
 
-                const completedTutorials = this.getCategoryCompletedTutorials(categoryId);
+                const menuExcludedTutorials = new Set([
+                    EnhancedTutorial.THANK_YOU,
+                    EnhancedTutorial.THE_VOID_UNLOCKED,
+                    EnhancedTutorial.THE_VOID_OVERTAKEN,
+                    EnhancedTutorial.FIRST_VICTORY,
+                    EnhancedTutorial.SMITTY_FORM_UNLOCKED_1,
+                    EnhancedTutorial.ENDGAME,
+                    EnhancedTutorial.NEW_QUESTS
+                ]);
+                const visibleTutorials = categoryData.tutorials.filter(tutorial => {
+                    if (menuExcludedTutorials.has(tutorial as EnhancedTutorial)) {
+                        return this.tutorialService.isTutorialCompleted(tutorial);
+                    }
+                    return true;
+                });
 
                 const combinedConfig = registry.combineTutorials(
                     categoryData.title,
-                    completedTutorials,
+                    visibleTutorials,
                     () => {
                         this.currentStageIndex = 0;
                     },

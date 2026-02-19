@@ -325,7 +325,8 @@ export abstract class PokemonSpeciesForm {
     }
 
     private static readonly GLITCH_FORM_ASSET_ALIASES: Record<string, string> = {
-        "porygonω": "porygon-q"
+        "porygonω": "porygon-q",
+        "karasu-me": "karasume"
     };
 
     private getGlitchOrSmittySpriteId(back?: boolean): string | null {

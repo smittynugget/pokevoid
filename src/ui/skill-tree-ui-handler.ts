@@ -262,8 +262,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       MIN: 0.02,
       MAX: 3.0,
       WHEEL_SENSITIVITY: 0.0005,
-      WHEEL_STEP: 0.02,
-      BUTTON_STEP: 0.04,
+      WHEEL_STEP: 0.06,
+      BUTTON_STEP: 0.12,
     },
 
     PAN: {
@@ -806,9 +806,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     const championId = this.config.activeSkillTree?.championId;
 
     if (championId && championId !== "apollo" && championId !== "diana") {
-        if (!(this.scene as BattleScene).gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SKILLTREE_SET_TYPES)) {
-            skillTreeTutorials.push(EnhancedTutorial.SKILLTREE_SET_TYPES);
-        }
     }
 
     if (skillTreeTutorials.length > 0) {
@@ -906,10 +903,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       }
 
       delete gd.tempSkillTreeTransform.purchasedNodeId;
-
-      if (!(this.scene as BattleScene).gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SKILLTREE_PROGRESSION)) {
-          (this.scene as BattleScene).gameData.tutorialService.showNewTutorial(EnhancedTutorial.SKILLTREE_PROGRESSION, true, false);
-      }
     }
 
     if (gd?.tempSkillTreeTransform?.treeLeveledUp && args[0]?.shouldPlayPurchaseAnimation) {
@@ -1142,9 +1135,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     ];
     const isRootNode = node.depth === 0;
     const isTriggerType = node.rewardData?.type && triggerTypes.includes(node.rewardData.type);
-    if (isRootNode || isTriggerType) {
-        (this.scene as BattleScene).gameData.tutorialService.showNewTutorial(EnhancedTutorial.SKILLTREE_APOLLO_DIANA_TYPES, true, false);
-    }
   }
 
   private getVisibleNodes(): SkillTreeNode[] {
@@ -3163,7 +3153,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     const vw = this.getWidth();
     const vh = this.getHeight();
     if (vw <= 0 || vh <= 0) return;
-    const scale = Math.max(0.1, Math.min(3, Math.min(vw / w, vh / h)));
+    const scale = Math.max(0.03, Math.min(0.12, Math.min(vw / w, vh / h)));
     this.transform.scale = scale;
     const cx = (minX + maxX) / 2;
     const cy = (minY + maxY) / 2;

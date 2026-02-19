@@ -33,7 +33,7 @@ export class QuietFormChangePhase extends BattlePhase {
         m instanceof AnyPassiveAbilityModifier ||
         m instanceof PokemonAltBuildModifier) &&
       (m as any).pokemonId === this.pokemon.id,
-    playerSide
+      playerSide
     );
     for (const modifier of modifiers) {
       modifier.apply([this.pokemon]);
@@ -60,7 +60,11 @@ export class QuietFormChangePhase extends BattlePhase {
     const getPokemonSprite = () => {
       const sprite = this.scene.addPokemonSprite(this.pokemon, this.pokemon.x + this.pokemon.getSprite().x, this.pokemon.y + this.pokemon.getSprite().y, "pkmn__sub");
       sprite.setOrigin(0.5, 1);
-      sprite.play(this.pokemon.getBattleSpriteKey()).stop();
+      try {
+        sprite.play(this.pokemon.getBattleSpriteKey()).stop();
+      } catch (e) {
+        sprite.setFrame(0);
+      }
       sprite.setPipeline(this.scene.spritePipeline, { tone: [ 0.0, 0.0, 0.0, 0.0 ], hasShadow: false, teraColor: getTypeRgb(this.pokemon.getTeraType()) });
       [ "spriteColors", "fusionSpriteColors" ].map(k => {
         if (this.pokemon.summonData?.speciesForm) {
@@ -98,11 +102,16 @@ export class QuietFormChangePhase extends BattlePhase {
         this.pokemon.setVisible(false);
         this.pokemon.changeForm(this.formChange).then(() => {
           this.reapplyFormDependentModifiers();
-          if (this.pokemon.isGlitchOrSmittyForm()) {
+          if(this.pokemon.isGlitchOrSmittyForm()) {
             this.pokemon.toggleShadow(false);
           }
+          const newBattleSpriteKey = this.pokemon.getBattleSpriteKey();
           pokemonFormTintSprite.setScale(0.01);
-          pokemonFormTintSprite.play(this.pokemon.getBattleSpriteKey()).stop();
+          try {
+            pokemonFormTintSprite.play(newBattleSpriteKey).stop();
+          } catch (e) {
+            pokemonFormTintSprite.setFrame(0);
+          }
           pokemonFormTintSprite.setVisible(true);
           this.scene.tweens.add({
             targets: pokemonTintSprite,

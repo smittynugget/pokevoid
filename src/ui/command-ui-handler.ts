@@ -107,11 +107,11 @@ export default class CommandUiHandler extends UiHandler {
       }
     }
 
-    const isRussian = i18next.resolvedLanguage === "ru";
+    const isRussian = i18next.resolvedLanguage === 'ru';
     if (isRussian) {
-      for (let i = 0; i < columnLeftEdges.length; i++) {
-        columnLeftEdges[i] -= 5;
-      }
+        for (let i = 0; i < columnLeftEdges.length; i++) {
+            columnLeftEdges[i] -= 5;
+        }
     }
 
     const newCommands = [
@@ -354,88 +354,48 @@ export default class CommandUiHandler extends UiHandler {
     } else {
       switch (button) {
       case Button.UP:
-        if (cursor >= 2 && cursor <= 3) {
-          success = this.setCursor(cursor - 2);
-        } else if (cursor >= 6 && cursor <= 7) {
-          success = this.setCursor(cursor - 2);
-        } else if (cursor === 8) {
-          success = this.setCursor(4);
-        } else if (cursor === 9) {
-          success = this.setCursor(8);
-        } else if (cursor === 0) {
-          success = this.setCursor(2);
-        } else if (cursor === 1) {
-          success = this.setCursor(3);
-        } else if (cursor === 4) {
-          success = this.setCursor(6);
-        } else if (cursor === 5) {
-          success = this.setCursor(7);
-        }
+        if (cursor >= 2 && cursor <= 3) success = this.setCursor(cursor - 2);
+        else if (cursor >= 6 && cursor <= 7) success = this.setCursor(cursor - 2);
+        else if (cursor === 8) success = this.setCursor(4);
+        else if (cursor === 9) success = this.setCursor(8);
+        else if (cursor === 0) success = this.setCursor(2);
+        else if (cursor === 1) success = this.setCursor(3);
+        else if (cursor === 4) success = this.setCursor(6);
+        else if (cursor === 5) success = this.setCursor(7);
         break;
       case Button.DOWN:
-        if (cursor <= 1) {
-          success = this.setCursor(cursor + 2);
-        } else if (cursor >= 4 && cursor <= 5) {
-          success = this.setCursor(cursor + 2);
-        } else if (cursor === 8) {
-          success = this.setCursor(9);
-        } else if (cursor === 2) {
-          success = this.setCursor(0);
-        } else if (cursor === 3) {
-          success = this.setCursor(1);
-        } else if (cursor === 6) {
-          success = this.setCursor(4);
-        } else if (cursor === 7) {
-          success = this.setCursor(5);
-        } else if (cursor === 9) {
-          success = this.setCursor(8);
-        }
+        if (cursor <= 1) success = this.setCursor(cursor + 2);
+        else if (cursor >= 4 && cursor <= 5) success = this.setCursor(cursor + 2);
+        else if (cursor === 8) success = this.setCursor(9);
+        else if (cursor === 2) success = this.setCursor(0);
+        else if (cursor === 3) success = this.setCursor(1);
+        else if (cursor === 6) success = this.setCursor(4);
+        else if (cursor === 7) success = this.setCursor(5);
+        else if (cursor === 9) success = this.setCursor(8);
         break;
       case Button.LEFT:
-        if (cursor === 1) {
-          success = this.setCursor(0);
-        } else if (cursor === 3) {
-          success = this.setCursor(2);
-        } else if (cursor === 0) {
-          success = this.setCursor(5);
-        } else if (cursor === 2) {
-          success = this.setCursor(7);
-        } else if (cursor === 5) {
-          success = this.setCursor(4);
-        } else if (cursor === 7) {
-          success = this.setCursor(6);
-        } else if (cursor === 4) {
-          success = this.setCursor(8);
-        } else if (cursor === 6) {
-          success = this.setCursor(9);
-        } else if (cursor === 8) {
-          success = this.setCursor(1);
-        } else if (cursor === 9) {
-          success = this.setCursor(3);
-        }
+        if (cursor === 1) success = this.setCursor(0);
+        else if (cursor === 3) success = this.setCursor(2);
+        else if (cursor === 0) success = this.setCursor(5);
+        else if (cursor === 2) success = this.setCursor(7);
+        else if (cursor === 5) success = this.setCursor(4);
+        else if (cursor === 7) success = this.setCursor(6);
+        else if (cursor === 4) success = this.setCursor(8);
+        else if (cursor === 6) success = this.setCursor(9);
+        else if (cursor === 8) success = this.setCursor(1);
+        else if (cursor === 9) success = this.setCursor(3);
         break;
       case Button.RIGHT:
-        if (cursor === 0) {
-          success = this.setCursor(1);
-        } else if (cursor === 2) {
-          success = this.setCursor(3);
-        } else if (cursor === 5) {
-          success = this.setCursor(0);
-        } else if (cursor === 7) {
-          success = this.setCursor(2);
-        } else if (cursor === 4) {
-          success = this.setCursor(5);
-        } else if (cursor === 6) {
-          success = this.setCursor(7);
-        } else if (cursor === 8) {
-          success = this.setCursor(4);
-        } else if (cursor === 9) {
-          success = this.setCursor(6);
-        } else if (cursor === 1) {
-          success = this.setCursor(8);
-        } else if (cursor === 3) {
-          success = this.setCursor(9);
-        }
+        if (cursor === 0) success = this.setCursor(1);
+        else if (cursor === 2) success = this.setCursor(3);
+        else if (cursor === 5) success = this.setCursor(0);
+        else if (cursor === 7) success = this.setCursor(2);
+        else if (cursor === 4) success = this.setCursor(5);
+        else if (cursor === 6) success = this.setCursor(7);
+        else if (cursor === 8) success = this.setCursor(4);
+        else if (cursor === 9) success = this.setCursor(6);
+        else if (cursor === 1) success = this.setCursor(8);
+        else if (cursor === 3) success = this.setCursor(9);
         break;
       }
     }
@@ -490,14 +450,6 @@ export default class CommandUiHandler extends UiHandler {
 
     this.cursorObj.setAlpha(1.0);
     this.cursorObj.setTint(0xffffff);
-
-    if (changed && cursor >= 4 && cursor <= 9) {
-      const scene = this.scene as BattleScene;
-      if (!scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.COMMAND_UI_NEW_COMMANDS)) {
-        scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.COMMAND_UI_NEW_COMMANDS, true, false);
-      }
-    }
-
     return changed;
   }
 

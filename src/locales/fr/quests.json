@@ -481,5 +481,45 @@
     "name": "Nouvelles Attaques de Chrysacier",
     "task": "Vaincre 200 Pokémon avec Chrysacier",
     "rewardText": "Chrysacier aura un plus grand choix d'attaques !"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "Force Normale !",
+    "task": "Vaincre 250 Pokémon en utilisant des Pokémon de type Normal sur plusieurs parties",
+    "rewardText": "Débloque un ObjetPerma qui change les Résistances et Forces des types Normal !"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Magicarpe",
+    "task": "Vaincre 200 Pokémon avec Magicarpe",
+    "rewardText": "Magicarpe aura un plus grand choix d'attaques !"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Métamorph",
+    "task": "Vaincre 200 Pokémon avec Métamorph",
+    "rewardText": "Métamorph aura un plus grand choix d'attaques !"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Qulbutoké",
+    "task": "Vaincre 200 Pokémon avec Qulbutoké",
+    "rewardText": "Qulbutoké aura un plus grand choix d'attaques !"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Queulorior",
+    "task": "Vaincre 200 Pokémon avec Queulorior",
+    "rewardText": "Queulorior aura un plus grand choix d'attaques !"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Zarbi",
+    "task": "Vaincre 200 Pokémon avec Zarbi",
+    "rewardText": "Zarbi aura un plus grand choix d'attaques !"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Debugant",
+    "task": "Vaincre 200 Pokémon avec Debugant",
+    "rewardText": "Debugant aura un plus grand choix d'attaques !"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "Nouvelles Attaques de Chrysacier",
+    "task": "Vaincre 200 Pokémon avec Chrysacier",
+    "rewardText": "Chrysacier aura un plus grand choix d'attaques !"
   }
 }

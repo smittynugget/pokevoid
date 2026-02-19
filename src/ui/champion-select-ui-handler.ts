@@ -1371,11 +1371,6 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
     this.displayChampionGrid();
     this.updateChampionInfo();
-
-    if (!(this.scene as BattleScene).gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.CHAMPION_SELECT_ESSENCE)) {
-        (this.scene as BattleScene).gameData.tutorialService.showNewTutorial(EnhancedTutorial.CHAMPION_SELECT_ESSENCE, true, false, 650);
-    }
-
     if (this.skillsHeaderText) {
       this.skillsHeaderText.setText(i18next.t("championSelect:skillsHeader", { defaultValue: "SKILLS" }));
     }
@@ -2832,19 +2827,6 @@ export default class ChampionSelectUiHandler extends ModalUiHandler {
 
     const tutorialsToShow: EnhancedTutorial[] = [];
     const tutorialService = (this.scene as BattleScene).gameData.tutorialService;
-
-    if (!tutorialService.isTutorialCompleted(EnhancedTutorial.SPECIAL_ESSENCES_INTRO)) {
-      tutorialsToShow.push(EnhancedTutorial.SPECIAL_ESSENCES_INTRO);
-    }
-
-    if (hasGlitch && !tutorialService.isTutorialCompleted(EnhancedTutorial.SPECIAL_ESSENCES_GLITCH)) {
-      tutorialsToShow.push(EnhancedTutorial.SPECIAL_ESSENCES_GLITCH);
-    }
-
-    if (hasSmitty && !tutorialService.isTutorialCompleted(EnhancedTutorial.SPECIAL_ESSENCES_SMITTY)) {
-      tutorialsToShow.push(EnhancedTutorial.SPECIAL_ESSENCES_SMITTY);
-    }
-
     if (tutorialsToShow.length > 0) {
       tutorialService.showCombinedTutorial("", tutorialsToShow, true, false, true, 450);
     }

@@ -481,5 +481,45 @@
     "name": "トランセルの新技",
     "task": "トランセルで200匹のポケモンを倒す",
     "rewardText": "トランセルが覚える技が増える！"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "ノーマルの力！",
+    "task": "複数のプレイを通じてノーマルタイプのポケモンで250匹のポケモンを倒す",
+    "rewardText": "ノーマルタイプの耐性と弱点を変更する永続アイテムが解放される！"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "コイキングの新技",
+    "task": "コイキングで200匹のポケモンを倒す",
+    "rewardText": "コイキングが覚える技が増える！"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "メタモンの新技",
+    "task": "メタモンで200匹のポケモンを倒す",
+    "rewardText": "メタモンが覚える技が増える！"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "ソーナンスの新技",
+    "task": "ソーナンスで200匹のポケモンを倒す",
+    "rewardText": "ソーナンスが覚える技が増える！"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "ドーブルの新技",
+    "task": "ドーブルで200匹のポケモンを倒す",
+    "rewardText": "ドーブルが覚える技が増える！"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "アンノーンの新技",
+    "task": "アンノーンで200匹のポケモンを倒す",
+    "rewardText": "アンノーンが覚える技が増える！"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "バルキーの新技",
+    "task": "バルキーで200匹のポケモンを倒す",
+    "rewardText": "バルキーが覚える技が増える！"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "トランセルの新技",
+    "task": "トランセルで200匹のポケモンを倒す",
+    "rewardText": "トランセルが覚える技が増える！"
   }
 }

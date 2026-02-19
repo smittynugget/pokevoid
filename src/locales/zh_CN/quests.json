@@ -480,6 +480,46 @@
   "METAPOD_NEW_MOVES": {
     "name": "铁甲蛹的新招式",
     "task": "用铁甲蛹击败200只宝可梦",
-    "rewardText": "铁��蛹将获得更多可学习的招式！"
+    "rewardText": "铁甲蛹将获得更多可学习的招式！"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "一般的力量！",
+    "task": "在多次对战中用一般属性宝可梦击败250只宝可梦",
+    "rewardText": "解锁改变一般属性宝可梦抗性和优势的永久道具！"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "鲤鱼王的新招式",
+    "task": "用鲤鱼王击败200只宝可梦",
+    "rewardText": "鲤鱼王将获得更多可学习的招式！"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "百变怪的新招式",
+    "task": "用百变怪击败200只宝可梦",
+    "rewardText": "百变怪将获得更多可学习的招式！"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "果然翁的新招式",
+    "task": "用果然翁击败200只宝可梦",
+    "rewardText": "果然翁将获得更多可学习的招式！"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "图图犬的新招式",
+    "task": "用图图犬击败200只宝可梦",
+    "rewardText": "图图犬将获得更多可学习的招式！"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "未知图腾的新招式",
+    "task": "用未知图腾击败200只宝可梦",
+    "rewardText": "未知图腾将获得更多可学习的招式！"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "无畏小子的新招式",
+    "task": "用无畏小子击败200只宝可梦",
+    "rewardText": "无畏小子将获得更多可学习的招式！"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "铁甲蛹的新招式",
+    "task": "用铁甲蛹击败200只宝可梦",
+    "rewardText": "铁甲蛹将获得更多可学习的招式！"
   }
 }

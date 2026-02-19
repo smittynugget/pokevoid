@@ -450,10 +450,10 @@ export class SelectModifierPhase extends BattlePhase {
         const uiHandler = this.scene.ui.getHandler() as ModifierSelectUiHandler;
         uiHandler.setPermaRerollCost(costs.permaRerollCost);
         uiHandler.updatePermaRerollCostText();
-
-        let introTutorials: EnhancedTutorial[] = [EnhancedTutorial.ROGUE_MODE];
+        let introTutorials: EnhancedTutorial[] = [];
         if(this.draftOnly) {
-            introTutorials = [EnhancedTutorial.ROGUE_MODE];
+
+            introTutorials = [];
         }
         else {
             introTutorials = [EnhancedTutorial.GLITCH_ITEMS_1];
@@ -462,43 +462,8 @@ export class SelectModifierPhase extends BattlePhase {
 
             for (const option of typeOptions) {
                 const modifierTypeName = option.type?.constructor?.name;
-
-                if(modifierTypeName === 'MoveUpgradeModifierType') {
-                    tutorialSet.add(EnhancedTutorial.MOVE_UPGRADES_EX);
-                }
-
-                if (modifierTypeName === 'AbilitySwitcherModifierType' || modifierTypeName === 'AnyAbilityModifierType') {
-                    tutorialSet.add(EnhancedTutorial.ABILITY_SWITCHER);
-                }
-                if(modifierTypeName === 'AddVoucherModifierType') {
-                    tutorialSet.add(EnhancedTutorial.EGGS_1);
-                }
                 if(modifierTypeName === 'AnyPassiveAbilityModifierType') {
                     tutorialSet.add(EnhancedTutorial.PASSIVE_ABILITIES_1);
-                }
-                 if (modifierTypeName === 'TypeSwitcherModifierType') {
-                    tutorialSet.add(EnhancedTutorial.TYPE_SWITCHER);
-                } if (modifierTypeName === 'PrimaryTypeSwitcherModifierType') {
-                    tutorialSet.add(EnhancedTutorial.PRIMARY_SWITCHER);
-                } if (modifierTypeName === 'SecondaryTypeSwitcherModifierType') {
-                    tutorialSet.add(EnhancedTutorial.SECONDARY_SWITCHER);
-                } if (modifierTypeName === 'StatSacrificeModifierType' ||
-                           modifierTypeName === 'TypeSacrificeModifierType' ||
-                           modifierTypeName === 'AbilitySacrificeModifierType' ||
-                           modifierTypeName === 'PassiveAbilitySacrificeModifierType' ||
-                           modifierTypeName === 'MoveSacrificeModifierType') {
-                    tutorialSet.add(EnhancedTutorial.RELEASE_ITEMS_1);
-                } if (modifierTypeName === 'AnyTMModifierType') {
-                    tutorialSet.add(EnhancedTutorial.ANY_TMS);
-                } if (modifierTypeName === 'AnyAbilityModifierType') {
-                    tutorialSet.add(EnhancedTutorial.ANY_ABILITIES);
-                } if (modifierTypeName === 'StatSwitcherModifierType') {
-                    tutorialSet.add(EnhancedTutorial.STAT_SWITCHERS);
-                }
-
-                if (option.type?.id === "modifierType:ModifierType.MEGA_BRACELET" ||
-                    option.type?.id === "modifierType:ModifierType.DYNAMAX_BAND") {
-                    tutorialSet.add(EnhancedTutorial.MEGA_DYNAMAX_1);
                 }
             }
 

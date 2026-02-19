@@ -145,11 +145,6 @@ export default class eggStarterUi extends StarterSelectUiHandler {
             this.displayPartyInStarterIcons(partyPokemon);
 
             this.populateHatchedPokemon();
-
-            if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.EGG_SWAP_1)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.EGG_SWAP_1, true, false);
-            }
-
             return result;
         }
 

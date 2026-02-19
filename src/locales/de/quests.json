@@ -481,5 +481,45 @@
     "name": "Safcons neue Attacken",
     "task": "Besiege 200 Pokémon mit Safcon",
     "rewardText": "Safcon wird ein größeres Attacken-Set haben!"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "Normal-Stärke!",
+    "task": "Besiege 250 Pokémon mit Normal-Pokémon über mehrere Durchläufe hinweg",
+    "rewardText": "Schaltet ein PermaItem frei, das die Resistenzen und Stärken von Normal-Typen verändert!"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "Karpadors neue Attacken",
+    "task": "Besiege 200 Pokémon mit Karpador",
+    "rewardText": "Karpador wird ein größeres Attacken-Set haben!"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "Dittos neue Attacken",
+    "task": "Besiege 200 Pokémon mit Ditto",
+    "rewardText": "Ditto wird ein größeres Attacken-Set haben!"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "Woingenaus neue Attacken",
+    "task": "Besiege 200 Pokémon mit Woingenau",
+    "rewardText": "Woingenau wird ein größeres Attacken-Set haben!"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "Farbeagles neue Attacken",
+    "task": "Besiege 200 Pokémon mit Farbeagle",
+    "rewardText": "Farbeagle wird ein größeres Attacken-Set haben!"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "Unowns neue Attacken",
+    "task": "Besiege 200 Pokémon mit Unown",
+    "rewardText": "Unown wird ein größeres Attacken-Set haben!"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "Tyrogues neue Attacken",
+    "task": "Besiege 200 Pokémon mit Tyrogue",
+    "rewardText": "Tyrogue wird ein größeres Attacken-Set haben!"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "Safcons neue Attacken",
+    "task": "Besiege 200 Pokémon mit Safcon",
+    "rewardText": "Safcon wird ein größeres Attacken-Set haben!"
   }
 }

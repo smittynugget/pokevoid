@@ -481,5 +481,45 @@
     "name": "Nuove Mosse di Magikarp",
     "task": "Sconfiggi 200 Pokemon con Magikarp",
     "rewardText": "Magikarp avrà un set di mosse più ampio!"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "Forza Normale!",
+    "task": "Sconfiggi 250 Pokemon usando Pokemon di tipo Normale in più run",
+    "rewardText": "Sblocca un PermaItem che cambia le Resistenze e i Punti di Forza dei tipi Normali!"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "Nuove Mosse di Magikarp",
+    "task": "Sconfiggi 200 Pokemon con Magikarp",
+    "rewardText": "Magikarp avrà un set di mosse più ampio!"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "Nuove mosse di Ditto",
+    "task": "Sconfiggi 200 Pokémon con Ditto",
+    "rewardText": "Ditto avrà un set di mosse più ampio!"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "Nuove mosse di Wobbuffet",
+    "task": "Sconfiggi 200 Pokémon con Wobbuffet",
+    "rewardText": "Wobbuffet avrà un set di mosse più ampio!"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "Nuove mosse di Smeargle",
+    "task": "Sconfiggi 200 Pokémon con Smeargle",
+    "rewardText": "Smeargle avrà un set di mosse più ampio!"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "Nuove mosse di Unown",
+    "task": "Sconfiggi 200 Pokémon con Unown",
+    "rewardText": "Unown avrà un set di mosse più ampio!"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "Nuove mosse di Tyrogue",
+    "task": "Sconfiggi 200 Pokémon con Tyrogue",
+    "rewardText": "Tyrogue avrà un set di mosse più ampio!"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "Nuove mosse di Metapod",
+    "task": "Sconfiggi 200 Pokémon con Metapod",
+    "rewardText": "Metapod avrà un set di mosse più ampio!"
   }
 }

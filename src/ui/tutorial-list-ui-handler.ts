@@ -91,6 +91,7 @@ export default class TutorialListUiHandler extends UiHandler {
                     EnhancedTutorial.SAVING_1,
                     EnhancedTutorial.STATS,
                     EnhancedTutorial.RUN_HISTORY_1,
+                    EnhancedTutorial.STARTER_CATCH_QUEST,
                     EnhancedTutorial.RUN_DETAILS_1,
                     EnhancedTutorial.INTRASHOP_1
                 ]
@@ -101,8 +102,10 @@ export default class TutorialListUiHandler extends UiHandler {
                 tutorials: [
                     EnhancedTutorial.JOURNEY_1,
                     EnhancedTutorial.ROGUE_MODE,
+                    EnhancedTutorial.UNLOCK_JOURNEY,
                     EnhancedTutorial.NUZLOCKE,
                     EnhancedTutorial.NUZLIGHT,
+                    EnhancedTutorial.MODE_UNLOCKS,
                     EnhancedTutorial.ENDGAME,
                     EnhancedTutorial.CHAOS_AND_GAUNTLET_MODES
                 ]
@@ -126,6 +129,8 @@ export default class TutorialListUiHandler extends UiHandler {
                     EnhancedTutorial.RIVAL_QUESTS,
                     EnhancedTutorial.FIRST_VICTORY,
                     EnhancedTutorial.THE_VOID_UNLOCKED,
+                    EnhancedTutorial.THE_VOID_OVERTAKEN,
+                    EnhancedTutorial.NEW_QUESTS,
                     EnhancedTutorial.MOVE_UPGRADES_EX,
                     EnhancedTutorial.FIRST_MOVE_UPGRADE_1
                 ]
@@ -149,6 +154,9 @@ export default class TutorialListUiHandler extends UiHandler {
                     EnhancedTutorial.ANY_ABILITIES,
                     EnhancedTutorial.ABILITY_SWITCHER,
                     EnhancedTutorial.TYPE_SWITCHER,
+                    EnhancedTutorial.PRIMARY_SWITCHER,
+                    EnhancedTutorial.SECONDARY_SWITCHER,
+                    EnhancedTutorial.RELEASE_ITEMS_1,
                     EnhancedTutorial.STAT_SWITCHERS,
                     EnhancedTutorial.GLITCH_RIVALS_1
                 ]
@@ -159,7 +167,8 @@ export default class TutorialListUiHandler extends UiHandler {
                 tutorials: [
                     EnhancedTutorial.ABILITIES_1,
                     EnhancedTutorial.PASSIVE_ABILITIES_1,
-                    EnhancedTutorial.PARTY_ABILITY_1
+                    EnhancedTutorial.PARTY_ABILITY_1,
+                    EnhancedTutorial.BUG_TYPES_1
                 ]
             },
             {
@@ -168,6 +177,7 @@ export default class TutorialListUiHandler extends UiHandler {
                 tutorials: [
                     EnhancedTutorial.NEW_FORMS_1,
                     EnhancedTutorial.SMITTY_FORMS_1,
+                    EnhancedTutorial.SMITTY_FORM_UNLOCKED_1,
                     EnhancedTutorial.MEGA_DYNAMAX_1
                 ]
             },
@@ -188,6 +198,7 @@ export default class TutorialListUiHandler extends UiHandler {
                     EnhancedTutorial.POKEVOID_V2_UPDATE,
                     EnhancedTutorial.FTL_MODE_SELECT,
                     EnhancedTutorial.CHAMPION_SELECT_ESSENCE,
+                    EnhancedTutorial.CHAMPION_SELECT_SPECIAL_ESSENCES,
                     EnhancedTutorial.SPECIAL_ESSENCES_INTRO,
                     EnhancedTutorial.SPECIAL_ESSENCES_GLITCH,
                     EnhancedTutorial.SPECIAL_ESSENCES_SMITTY,

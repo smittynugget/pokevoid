@@ -481,5 +481,45 @@
     "name": "鐵甲蛹的新招式",
     "task": "使用鐵甲蛹擊敗200隻寶可夢",
     "rewardText": "鐵甲蛹將擁有更多招式！"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "一般的力量！",
+    "task": "在多場對戰中使用一般屬性寶可夢擊敗250隻寶可夢",
+    "rewardText": "解鎖永久道具，改變一般屬性的抗性和優勢！"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "鯉魚王的新招式",
+    "task": "使用鯉魚王擊敗200隻寶可夢",
+    "rewardText": "鯉魚王將擁有更多招式！"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "百變怪的新招式",
+    "task": "使用百變怪擊敗200隻寶可夢",
+    "rewardText": "百變怪將擁有更多招式！"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "果然翁的新招式",
+    "task": "使用果然翁擊敗200隻寶可夢",
+    "rewardText": "果然翁將擁有更多招式！"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "畫家狗的新招式",
+    "task": "使用畫家狗擊敗200隻寶可夢",
+    "rewardText": "畫家狗將擁有更多招式！"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "未知圖騰的新招式",
+    "task": "使用未知圖騰擊敗200隻寶可夢",
+    "rewardText": "未知圖騰將擁有更多招式！"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "巴爾郎的新招式",
+    "task": "使用巴爾郎擊敗200隻寶可夢",
+    "rewardText": "巴爾郎將擁有更多招式！"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "鐵甲蛹的新招式",
+    "task": "使用鐵甲蛹擊敗200隻寶可夢",
+    "rewardText": "鐵甲蛹將擁有更多招式！"
   }
 }

@@ -111,7 +111,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { addRivalSilhouetteOverlay } from "#app/utils/story-cutscene-overlays.js";
 export const defaultStarterSpecies: Species[] = [];
 
-export const INTERNAL_BACKUP_VERSION = 4;
+export const INTERNAL_BACKUP_VERSION = 5;
 
 export const VERSIONS_REQUIRING_BACKUP: string[] = [
     "v2.0b [The Colossal Update]"
@@ -4963,7 +4963,7 @@ export class GameData {
     }
 
     public isDailyBountyTime() : boolean {
-        return this.lastDailyBountyTime + 2 * 60 * 60 * 1000 < Date.now();
+        return this.lastDailyBountyTime + 1 * 60 * 60 * 1000 < Date.now();
     }
 
     public updateDailyBountyTime(): void {
@@ -5587,7 +5587,7 @@ public getRandomBountyCode(): string {
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.CHAOS_INFINITE_MODE, Species.ARCEUS.toString(), true, UnlockModePokeSpriteType.NORMAL));
         }
 
-        if (this.gameStats.highestEndlessWave >= 10000 && !this.unlocks[Unlockables.CHAOS_INFINITE_ROGUE_MODE]) {
+        if (this.gameStats.highestEndlessWave >= 5000 && !this.unlocks[Unlockables.CHAOS_INFINITE_ROGUE_MODE]) {
             this.unlocks[Unlockables.CHAOS_INFINITE_ROGUE_MODE] = true;
             this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.CHAOS_INFINITE_ROGUE_MODE, Species.ARCEUS.toString(), true, UnlockModePokeSpriteType.NORMAL_INVERTED));
         }

@@ -481,5 +481,45 @@
     "name": "Novos Movimentos do Metapod",
     "task": "Derrote 200 Pokémon com Metapod",
     "rewardText": "Metapod terá um conjunto maior de movimentos!"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "Força Normal!",
+    "task": "Derrote 250 Pokémon usando Pokémon do tipo Normal em várias partidas",
+    "rewardText": "Desbloqueia PermaItem que muda as Resistências e Forças dos tipos Normais!"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Magikarp",
+    "task": "Derrote 200 Pokémon com Magikarp",
+    "rewardText": "Magikarp terá um conjunto maior de movimentos!"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Ditto",
+    "task": "Derrote 200 Pokémon com Ditto",
+    "rewardText": "Ditto terá um conjunto maior de movimentos!"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Wobbuffet",
+    "task": "Derrote 200 Pokémon com Wobbuffet",
+    "rewardText": "Wobbuffet terá um conjunto maior de movimentos!"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Smeargle",
+    "task": "Derrote 200 Pokémon com Smeargle",
+    "rewardText": "Smeargle terá um conjunto maior de movimentos!"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Unown",
+    "task": "Derrote 200 Pokémon com Unown",
+    "rewardText": "Unown terá um conjunto maior de movimentos!"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Tyrogue",
+    "task": "Derrote 200 Pokémon com Tyrogue",
+    "rewardText": "Tyrogue terá um conjunto maior de movimentos!"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "Novos Movimentos do Metapod",
+    "task": "Derrote 200 Pokémon com Metapod",
+    "rewardText": "Metapod terá um conjunto maior de movimentos!"
   }
 }

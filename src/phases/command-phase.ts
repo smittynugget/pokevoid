@@ -129,7 +129,7 @@ export class CommandPhase extends FieldPhase {
 
       if(this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.UNLOCKED)
       && !this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.STARTER_CATCH_QUEST)) {
-            this.scene.gameData.tutorialService.showTutorial(EnhancedTutorial.NEW_QUESTS, false, false);
+
             this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.STARTER_CATCH_QUEST);
       }
       else if(this.scene.getEnemyField().some(p => p.isActive(true) && p.isFusion())) {
@@ -138,13 +138,6 @@ export class CommandPhase extends FieldPhase {
           }
       }
       else if(Utils.randSeedInt(100, 1) <= 10) {
-        introTutorials = [EnhancedTutorial.UNLOCK_JOURNEY, EnhancedTutorial.MODE_UNLOCKS];
-        if(!this.scene.gameData.tutorialService.allTutorialsCompleted(introTutorials)) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", introTutorials, true, false, true);
-        }
-        else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.RUN_DETAILS_1)) {
-              this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.RUN_DETAILS_1, true, false);
-          }
       }
     }
     else if(this.scene.gameMode.isWavePreFinal(this.scene)) {

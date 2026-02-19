@@ -146,10 +146,6 @@ export class SelectMoveUpgradeModifierPhase extends SelectModifierPhase {
             this.getRerollCost(),
             true
         );
-
-        if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.FIRST_MOVE_UPGRADE_1)) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.FIRST_MOVE_UPGRADE_1, true, false);
-        }
     }
 
     private shuffleArray<T>(array: T[]): T[] {

@@ -17,22 +17,27 @@ export class TutorialService {
         tutorial: Tutorial | EnhancedTutorial,
         saveCompletionFlag: boolean = true,
         isFromMenu: boolean = false,
-        delay: number = 350,
-        chance: number = 0.05
+        delay: number = 350
     ): Promise<void> {
         return new Promise<void>(resolve => {
             const executeShow = () => {
-                if (isFromMenu && !this.isTutorialCompleted(tutorial)) {
-                    console.log(`Tutorial ${tutorial} not completed and trying to show from menu, skipping`);
-                    return resolve();
+                if (isFromMenu) {
+                    const menuExcludedTutorials = new Set([
+                        EnhancedTutorial.THANK_YOU,
+                        EnhancedTutorial.THE_VOID_UNLOCKED,
+                        EnhancedTutorial.THE_VOID_OVERTAKEN,
+                        EnhancedTutorial.FIRST_VICTORY,
+                        EnhancedTutorial.SMITTY_FORM_UNLOCKED_1,
+                        EnhancedTutorial.ENDGAME,
+                        EnhancedTutorial.NEW_QUESTS
+                    ]);
+                    if (menuExcludedTutorials.has(tutorial as EnhancedTutorial) && !this.isTutorialCompleted(tutorial)) {
+                        return resolve();
+                    }
                 }
 
                 if (!isFromMenu && this.isTutorialCompleted(tutorial)) {
                     console.log(`Tutorial ${tutorial} already completed, skipping`);
-                    return resolve();
-                }
-
-                if (!isFromMenu && chance < 1 && Math.random() > chance) {
                     return resolve();
                 }
 
@@ -129,13 +134,7 @@ export class TutorialService {
         return new Promise<void>(resolve => {
             const executeShow = () => {
                 let filteredTutorials = [...tutorials];
-                if (isFromMenu) {
-                    filteredTutorials = filteredTutorials.filter(t => this.isTutorialCompleted(t));
-                    if (!filteredTutorials.length) {
-                        console.log(`No completed tutorials in "${title}" to show in hub/menu, skipping`);
-                        return resolve();
-                    }
-                } else if (newOnly) {
+                if (!isFromMenu && newOnly) {
                     filteredTutorials = filteredTutorials.filter(t => !this.isTutorialCompleted(t));
                     if (!filteredTutorials.length) {
                         console.log(`No new tutorials in "${title}", skipping`);
@@ -446,14 +445,24 @@ export class TutorialService {
             return Promise.resolve();
         }
         if (isFromMenu) {
-
-            const completedTutorials = tutorials.filter(tutorial => this.isTutorialCompleted(tutorial));
-            if (completedTutorials.length === 0) {
-                console.log(`No completed tutorials to show for category: ${category}`);
+            const menuExcludedTutorials = new Set([
+                EnhancedTutorial.THANK_YOU,
+                EnhancedTutorial.THE_VOID_UNLOCKED,
+                EnhancedTutorial.THE_VOID_OVERTAKEN,
+                EnhancedTutorial.FIRST_VICTORY,
+                EnhancedTutorial.SMITTY_FORM_UNLOCKED_1,
+                EnhancedTutorial.ENDGAME,
+                EnhancedTutorial.NEW_QUESTS
+            ]);
+            tutorials = tutorials.filter(tutorial => {
+                if (menuExcludedTutorials.has(tutorial as EnhancedTutorial)) {
+                    return this.isTutorialCompleted(tutorial);
+                }
+                return true;
+            });
+            if (tutorials.length === 0) {
                 return Promise.resolve();
             }
-
-            tutorials = completedTutorials;
         }
 
         console.log(`Preparing to show ${tutorials.length} tutorials for category: ${category} with title: ${title}`);

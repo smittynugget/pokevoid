@@ -603,10 +603,6 @@ export class TitlePhase extends Phase {
             EnhancedTutorial.STARTER_SELECT_SIGNATURE,
             EnhancedTutorial.COMMAND_UI_NEW_COMMANDS
         ];
-
-        if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.POKEVOID_V2_UPDATE)) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.POKEVOID_V2_UPDATE, true, false, 0, 1);
-        }
         if(!this.fromShop) {
         if(!this.scene.gameData.tutorialService.allTutorialsCompleted(introTutorials)) {
             if(this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED)) {
@@ -633,11 +629,6 @@ export class TitlePhase extends Phase {
             this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.NEW_QUESTS);
             this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1);
         }
-
-        else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.MOVE_UPGRADES_EX)) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.MOVE_UPGRADES_EX, true, false, 0);
-        }
-
          else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.POKEROGUE_1)) {
             this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.POKEROGUE_1, true, false, 0);
         }
@@ -645,18 +636,6 @@ export class TitlePhase extends Phase {
         else if(!this.scene.gameData.tutorialService.allTutorialsCompleted(firstVictoryTutorials) && this.scene.gameData.defeatedRivals.length > 0) {
             this.scene.gameData.tutorialService.showCombinedTutorial("", firstVictoryTutorials, true, false, true, 0);
         }
-
-        else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.JOURNEY_1) && this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED)) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.JOURNEY_1, true, false, 0);
-        }
-
-       else if (!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.NUZLIGHT) && this.scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.NUZLIGHT, EnhancedTutorial.NEW_QUESTS], true, false, true, 0);
-        }
-        else if (!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.NUZLOCKE) && this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED)) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.NUZLOCKE, EnhancedTutorial.NEW_QUESTS], true, false, true, 0);
-        }
-
         else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.THE_VOID_UNLOCKED) && this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
             this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.THE_VOID_UNLOCKED, EnhancedTutorial.NEW_QUESTS], true, false, true, 0);
         }
@@ -664,11 +643,6 @@ export class TitlePhase extends Phase {
         else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.THE_VOID_OVERTAKEN) && this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) {
             this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.THE_VOID_OVERTAKEN, EnhancedTutorial.NEW_QUESTS, EnhancedTutorial.SMITTY_FORM_UNLOCKED_1], true, false, true, 0);
         }
-
-        else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.NEW_QUESTS) && this.scene.gameData.defeatedRivals.length > 0) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.NEW_QUESTS, true, false, 0);
-        }
-
         else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1)) {
             if(this.scene.gameData.uniSmittyUnlocks.length > 0) {
                 this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1, true, false, 0);
@@ -682,8 +656,8 @@ export class TitlePhase extends Phase {
             if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.BOUNTIES_1)) {
                 this.scene.gameData.tutorialService.showCombinedTutorial("", bountiesTutorials, true, false, true, 0);
             }
-            else {
-            this.scene.gameData.tutorialService.showTutorial(EnhancedTutorial.DAILY_BOUNTY, false, false);
+            else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.DAILY_BOUNTY)) {
+                this.scene.gameData.tutorialService.showTutorial(EnhancedTutorial.DAILY_BOUNTY, true, false);
             }
             this.scene.gameData.updateDailyBountyCode();
             this.scene.gameData.localSaveAll(this.scene);
@@ -1040,12 +1014,6 @@ export class TitlePhase extends Phase {
             proceed();
             return;
         }
-
-        if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.FTL_MODE_SELECT)) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.FTL_MODE_SELECT, true, false, 0).then(proceed);
-            return;
-        }
-
         proceed();
     }
 

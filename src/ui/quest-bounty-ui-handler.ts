@@ -160,7 +160,12 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
 
     protected getTaskText(): string {
         if (!this.questModifier) return i18next.t("questUi:bounty.quest.invalidTask");
-        let text = this.questModifier.task || i18next.t("questUi:bounty.quest.invalidTask");
+        let text: string;
+        try {
+            text = this.questModifier.type?.getDescription?.(this.scene) || this.questModifier.task || i18next.t("questUi:bounty.quest.invalidTask");
+        } catch {
+            text = this.questModifier.task || i18next.t("questUi:bounty.quest.invalidTask");
+        }
         try {
             const goalCount = (this.questModifier as any).goalCount;
             let currentCount: number | undefined = undefined;

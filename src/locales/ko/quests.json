@@ -481,5 +481,45 @@
     "name": "단데기 새로운 기술",
     "task": "단데기로 200마리 격파하기",
     "rewardText": "단데기가 더 많은 기술을 배울 수 있게 됩니다!"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "노말의 힘!",
+    "task": "여러 런에 걸쳐 노말타입 포켓몬으로 250마리 격파하기",
+    "rewardText": "노말타입의 저항과 강점을 변경하는 영구 아이템 해금!"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "잉어킹 새로운 기술",
+    "task": "잉어킹으로 200마리 격파하기",
+    "rewardText": "잉어킹이 더 많은 기술을 배울 수 있게 됩니다!"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "메타몽 새로운 기술",
+    "task": "메타몽으로 200마리 격파하기",
+    "rewardText": "메타몽이 더 많은 기술을 배울 수 있게 됩니다!"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "마자용 새로운 기술",
+    "task": "마자용으로 200마리 격파하기",
+    "rewardText": "마자용이 더 많은 기술을 배울 수 있게 됩니다!"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "스케치 새로운 기술",
+    "task": "스케치로 200마리 격파하기",
+    "rewardText": "스케치가 더 많은 기술을 배울 수 있게 됩니다!"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "안농 새로운 기술",
+    "task": "안농으로 200마리 격파하기",
+    "rewardText": "안농이 더 많은 기술을 배울 수 있게 됩니다!"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "괴력몬 새로운 기술",
+    "task": "괴력몬으로 200마리 격파하기",
+    "rewardText": "괴력몬이 더 많은 기술을 배울 수 있게 됩니다!"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "단데기 새로운 기술",
+    "task": "단데기로 200마리 격파하기",
+    "rewardText": "단데기가 더 많은 기술을 배울 수 있게 됩니다!"
   }
 }

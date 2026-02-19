@@ -481,5 +481,45 @@
     "name": "Metapod New Moves",
     "task": "Defeat 200 Pokemon with Metapod",
     "rewardText": "Metapod will have a bigger moveset!"
+  },
+  "NORMAL_EFFECTIVENESS_QUEST": {
+    "name": "Normal Strength!",
+    "task": "Defeat 250 Pokemon using Normal-type Pokemon across multiple runs",
+    "rewardText": "Unlocks PermaItem that changes Normal-Types Resistances and Strengths!"
+  },
+  "MAGIKARP_NEW_MOVES_QUEST": {
+    "name": "Magikarp New Moves",
+    "task": "Defeat 200 Pokemon with Magikarp",
+    "rewardText": "Magikarp will have a bigger moveset!"
+  },
+  "DITTO_NEW_MOVES_QUEST": {
+    "name": "Ditto New Moves",
+    "task": "Defeat 200 Pokemon with Ditto",
+    "rewardText": "Ditto will have a bigger moveset!"
+  },
+  "WOBBUFFET_NEW_MOVES_QUEST": {
+    "name": "Wobbuffet New Moves",
+    "task": "Defeat 200 Pokemon with Wobbuffet",
+    "rewardText": "Wobbuffet will have a bigger moveset!"
+  },
+  "SMEARGLE_NEW_MOVES_QUEST": {
+    "name": "Smeargle New Moves",
+    "task": "Defeat 200 Pokemon with Smeargle",
+    "rewardText": "Smeargle will have a bigger moveset!"
+  },
+  "UNOWN_NEW_MOVES_QUEST": {
+    "name": "Unown New Moves",
+    "task": "Defeat 200 Pokemon with Unown",
+    "rewardText": "Unown will have a bigger moveset!"
+  },
+  "TYROGUE_NEW_MOVES_QUEST": {
+    "name": "Tyrogue New Moves",
+    "task": "Defeat 200 Pokemon with Tyrogue",
+    "rewardText": "Tyrogue will have a bigger moveset!"
+  },
+  "METAPOD_NEW_MOVES_QUEST": {
+    "name": "Metapod New Moves",
+    "task": "Defeat 200 Pokemon with Metapod",
+    "rewardText": "Metapod will have a bigger moveset!"
   }
 }
