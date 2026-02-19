@@ -2743,8 +2743,13 @@ export class FormChangeItemModifierType extends PokemonModifierType implements G
             return str.toLowerCase().replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
         };
 
+        const GLITCH_ICON_OVERRIDES: Record<string, string> = {
+            "GLITCHI_GLITCHI_FRUIT": "glitchFruit",
+            "GLITCH_MASTER_PARTS": "glitchParts"
+        };
+
         const iconKey = isSmittyGlitchItem
-            ? toCamelCase(FormChangeItem[currentItem])
+            ? (GLITCH_ICON_OVERRIDES[FormChangeItem[currentItem]] ?? toCamelCase(FormChangeItem[currentItem]))
             : getFormChangeItemSpriteFrame(currentItem);
 
         super("", iconKey,

@@ -4311,10 +4311,10 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         if (icon.frame.name !== species.getIconId(female, formIndex, shiny, variant)) {
             icon.setTexture(species.getIconAtlasKey(formIndex, false, variant));
             icon.setFrame(species.getIconId(female, formIndex, false, variant));
-        }
-        if (icon.frame.name !== species.getIconId(female, formIndex, false, variant)) {
-            icon.setTexture("pokemon_icons_0");
-            icon.setFrame("unknown");
+            if (icon.frame.name !== species.getIconId(female, formIndex, false, variant)) {
+                icon.setTexture("pokemon_icons_0");
+                icon.setFrame("unknown");
+            }
         }
     }
 }
