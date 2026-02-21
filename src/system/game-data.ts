@@ -111,7 +111,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { addRivalSilhouetteOverlay } from "#app/utils/story-cutscene-overlays.js";
 export const defaultStarterSpecies: Species[] = [];
 
-export const INTERNAL_BACKUP_VERSION = 5;
+export const INTERNAL_BACKUP_VERSION = 6;
 
 export const VERSIONS_REQUIRING_BACKUP: string[] = [
     "v2.0b [The Colossal Update]"
@@ -5344,7 +5344,11 @@ public getRandomBountyCode(): string {
           const uniqueRemaining = targetTotal - defeatedAfter.size;
           const totalVictories = this.gameStats.rivalVictoriesTotal ?? this.gameStats.rivalsDefeated ?? 0;
           const displayRemaining = uniqueRemaining > 0 ? uniqueRemaining : (targetTotal - totalVictories);
-          const replacement = String(displayRemaining);
+          const replacement = displayRemaining > 25 ? "XXXXX" :
+                    displayRemaining > 20 ? "XXXX" :
+                    displayRemaining > 15 ? "XXX" :
+                    displayRemaining > 10 ? "XX" :
+                    String(displayRemaining);
           let currentSlideKey: string | null = null;
           let flameOverlay: Phaser.GameObjects.Sprite | null = null;
           let flameFadeDone: boolean = false;

@@ -29,6 +29,7 @@ import { QuestState, QuestUnlockables } from "#app/system/game-data.js";
 import { MoveUpgradePhase } from "./move-upgrade-phase.js";
 import { getDynamicModeLocalizedString } from "#app/battle.js";
 import { SkillTreePhase } from "#app/phases/skill-tree-phase";
+import { Species } from "#app/enums/species.js";
 
 export class CommandPhase extends FieldPhase {
   protected fieldIndex: integer;
@@ -234,7 +235,7 @@ export class CommandPhase extends FieldPhase {
       const encounterChanceMap = activeTree?.legendaryEncounterChanceBySpecies || {};
       const isLegendaryPriorityTarget = !!(encounterChanceMap[enemy?.species.speciesId] !== undefined);
       const legendaryOverride = !isRivalBattle && isLegendaryPriorityTarget;
-      const canBypassNoPokeballForce = cursor === PokeballType.VOID_BALL && enemy && enemy.getHpRatio(true) <= 0.25;
+      const canBypassNoPokeballForce = cursor === PokeballType.VOID_BALL && enemy && enemy.getHpRatio(true) <= 0.25 && enemy.species.speciesId != Species.ETERNATUS;
 
       if (!canBypassNoPokeballForce && !legendaryOverride && !(Utils.randSeedInt(10000, 1) <= 1) &&
       (this.scene.arena.biomeType === Biome.END ||

@@ -613,13 +613,6 @@ export class VictoryPhase extends PokemonPhase {
     if (this.scene.gameData.gameStats.cutsceneAllSmittysCompleteVictoryShown) {
       return false;
     }
-
-    const uniTotal = universalSmittyForms.length;
-    const uniUnlocked = new Set<string>((this.scene.gameData.uniSmittyUnlocks ?? []) as string[]).size;
-    if (uniTotal <= 0 || uniUnlocked < uniTotal) {
-      return false;
-    }
-
     if (!this.scene.textures.exists("smitty_trainers")) {
       return false;
     }
