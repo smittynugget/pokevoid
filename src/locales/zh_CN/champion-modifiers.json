@@ -11,8 +11,8 @@
       "descriptionConditional": "永久提升{{types}}属性或招牌宝可梦的{{stats}} {{percent}}%。非{{types}}属性且非招牌宝可梦只获得{{firstStat}}提升。注入了{{champion}}的训练方法。"
     },
     "trainerBondAbility": {
-      "name": "{{champion}}的极限突破: {{ability}}",
-      "description": "{{champion}}的宝可梦有{{chance}}%几率激活{{ability}}。{{abilityDescription}}"
+      "name": "{{ability}}",
+      "description": "每叠加一层相同特性，{{champion}}的宝可梦有{{chance}}%几率激活{{ability}}。{{abilityDescription}}"
     },
     "teraAbility": {
       "name": "{{type}}太晶特性: {{ability}}",

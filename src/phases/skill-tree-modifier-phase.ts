@@ -4,7 +4,7 @@ import { PokemonAltBuildModifier } from "#app/modifier/modifier";
 import { Mode } from "#app/ui/ui";
 import { SkillTreeRewardType, SkillTreeNodeState } from "#app/system/skill-tree-data";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
-import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, AddTypeBallModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator } from "#app/modifier/modifier-type";
+import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, AddTypeBallModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator, TypeSwitcherModifierType } from "#app/modifier/modifier-type";
 import * as Utils from "#app/utils";
 import { Abilities } from "#enums/abilities";
 import { allAbilities } from "#app/data/ability";
@@ -129,6 +129,32 @@ export class SkillTreeModifierPhase extends Phase {
       this.end();
       return;
     }
+    if (this.node.rewardData.type === SkillTreeRewardType.MOVE_UPGRADE) {
+      if (!this.scene.moveUpgradesEnabledForRun) {
+        const fallback = this.getIncompatibleNodeFallbackOption();
+        if (fallback) {
+          this.scene.unshiftPhase(new SelectModifierPhase(
+            this.scene, 0, undefined, false,
+            () => this.returnToSkillTree(),
+            PathNodeTypeFilter.NONE, 0,
+            [fallback], this.node, this.championData
+          ));
+        } else {
+          this.removePlaceholderPokemon();
+          this.returnToSkillTree();
+        }
+        this.end();
+        return;
+      }
+      this.scene.unshiftPhase(new SelectModifierPhase(
+        this.scene, 0, undefined, false,
+        () => this.returnToSkillTree(),
+        PathNodeTypeFilter.MOVE_UPGRADE,
+        0, undefined, this.node, this.championData
+      ));
+      this.end();
+      return;
+    }
 
     let modifierOptions: ModifierTypeOption[] = [];
     const nodeOffset = this.calculateNodeSeedOffset();
@@ -213,8 +239,9 @@ export class SkillTreeModifierPhase extends Phase {
         break;
 
       case SkillTreeRewardType.TRAINER_BOND_ABILITY:
-        const trainerBondOption = this.createTrainerBondAbilityOption();
-        if (trainerBondOption) options.push(trainerBondOption);
+        const trainerBondCount = Utils.randSeedInt(100) < 85 ? 4 : 5;
+        const trainerBondOptions = this.createMultipleTrainerBondOptions(trainerBondCount);
+        options.push(...trainerBondOptions);
         break;
 
       case SkillTreeRewardType.STAT_BOOST:
@@ -222,15 +249,6 @@ export class SkillTreeModifierPhase extends Phase {
         if (statBoostOption) options.push(statBoostOption);
         break;
 
-      case SkillTreeRewardType.MOVE_UPGRADE:
-        const moveUpgradeOption = this.createMoveUpgradeOption();
-        if (moveUpgradeOption) {
-          options.push(moveUpgradeOption);
-        } else {
-          const moveUpgradeFallback = this.getIncompatibleNodeFallbackOption();
-          if (moveUpgradeFallback) options.push(moveUpgradeFallback);
-        }
-        break;
       case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
         const moveUpgradeSpecificOption = this.createMoveUpgradeSpecificOption();
         if (moveUpgradeSpecificOption) {
@@ -271,8 +289,9 @@ export class SkillTreeModifierPhase extends Phase {
         break;
 
       case SkillTreeRewardType.TERA_ABILITY: {
-        const opt = this.createTeraAbilityOption();
-        if (opt) options.push(opt);
+        const teraAbilityCount = Utils.randSeedInt(100) < 85 ? 3 : 4;
+        const teraAbilityOptions = this.createMultipleTeraAbilityOptions(teraAbilityCount);
+        options.push(...teraAbilityOptions);
         break;
       }
 
@@ -283,8 +302,9 @@ export class SkillTreeModifierPhase extends Phase {
       }
 
       case SkillTreeRewardType.TYPE_SWITCHER: {
-        const opt = this.createTypeSwitcherOption();
-        if (opt) options.push(opt);
+        const typeSwitcherCount = Utils.randSeedInt(100) < 85 ? 4 : 5;
+        const typeSwitcherOpts = this.createMultipleTypeSwitcherOptions(typeSwitcherCount);
+        options.push(...typeSwitcherOpts);
         break;
       }
 
@@ -468,7 +488,9 @@ export class SkillTreeModifierPhase extends Phase {
   }
 
   private createPermaMoneyOption(): ModifierTypeOption[] {
-    const t = (modifierTypes as any).SELECTABLE_PMONEY_3?.();
+    const amount = this.node.rewardData?.data?.amount ?? 3000;
+    const { PermaMoneyModifierType } = require("#app/modifier/modifier-type");
+    const t = new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", amount, true);
     return t ? [new ModifierTypeOption(t, 0, 0)] : [];
   }
   private createMoneyRewardOption(): ModifierTypeOption[] {
@@ -577,9 +599,45 @@ export class SkillTreeModifierPhase extends Phase {
     return null;
   }
 
+  private createMultipleTrainerBondOptions(count: number = 3): ModifierTypeOption[] {
+    const results: ModifierTypeOption[] = [];
+    const baseOffset = (this.scene as any).rngOffset || 0;
+    const usedAbilities = new Set<Abilities>();
+    const gender = this.scene.gameData?.gender;
+    const maxAttempts = count * 3;
+
+    for (let i = 0; i < maxAttempts && results.length < count; i++) {
+      let option: ModifierTypeOption | null = null;
+      this.scene.executeWithSeedOffset(() => {
+        const ability = SkillTreeSelectors.pickTrainerBondAbility(this.championData);
+        if (usedAbilities.has(ability)) return;
+        usedAbilities.add(ability);
+        const gen = modifierTypes.TRAINER_BOND_ABILITY();
+        const type = gen.generateType(this.scene.getParty(), [
+          this.championData.id,
+          ability,
+          this.node.rewardData.data?.activationChance || 0.15,
+          gender
+        ]);
+        if (type) {
+          if (!type.id) type.withIdFromFunc(modifierTypes.TRAINER_BOND_ABILITY);
+          option = new ModifierTypeOption(type, 0, 0);
+        }
+      }, baseOffset + i * 100);
+      if (option) results.push(option);
+    }
+
+    if (results.length === 0) {
+      const fallback = this.createTrainerBondAbilityOption();
+      if (fallback) results.push(fallback);
+    }
+
+    return results;
+  }
+
   private createStatBoostModifierOption(): ModifierTypeOption | null {
     const gen = modifierTypes.CHAMPION_POKEMON_STAT_BOOST();
-    const championTypes = [this.championData.type1, this.championData.type2].filter(Boolean) as Type[];
+    const championTypes = [this.championData.type1, this.championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
     const type = gen.generateType(this.scene.getParty(), [
       this.championData.id,
       this.node.rewardData.data.stats,
@@ -832,9 +890,12 @@ export class SkillTreeModifierPhase extends Phase {
 
   private createDummyBattle(): void {
     if (!this.scene.currentBattle) {
+      const effectiveWave = this.scene.battlePathWave
+        || this.scene.gameData?.gameStats?.highestWaveReached
+        || 1;
       this.scene.currentBattle = new Battle(
         getGameMode(GameModes.CLASSIC),
-        1,
+        effectiveWave,
         BattleType.WILD,
         null,
         false,
@@ -894,6 +955,43 @@ export class SkillTreeModifierPhase extends Phase {
     return null;
   }
 
+  private createMultipleTeraAbilityOptions(count: number = 3): ModifierTypeOption[] {
+    const results: ModifierTypeOption[] = [];
+    const baseOffset = (this.scene as any).rngOffset || 0;
+    const usedAbilities = new Set<Abilities>();
+    const championTypes = [this.championData.type1, this.championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+    const maxAttempts = count * 3;
+
+    for (let i = 0; i < maxAttempts && results.length < count; i++) {
+      let option: ModifierTypeOption | null = null;
+      this.scene.executeWithSeedOffset(() => {
+        const ability = SkillTreeSelectors.pickTrainerBondAbility(this.championData);
+        if (usedAbilities.has(ability)) return;
+        usedAbilities.add(ability);
+        const teraType = championTypes.length > 0 ? Utils.randSeedItem(championTypes) : Type.NORMAL;
+        const gen = modifierTypes.TERA_ABILITY();
+        const type = gen.generateType(this.scene.getParty(), [
+          this.championData.id,
+          ability,
+          teraType,
+          this.node.rewardData.data?.activationChance || 0.10
+        ]);
+        if (type) {
+          if (!type.id) type.withIdFromFunc(modifierTypes.TERA_ABILITY);
+          option = new ModifierTypeOption(type, 0, 0);
+        }
+      }, baseOffset + i * 100);
+      if (option) results.push(option);
+    }
+
+    if (results.length === 0) {
+      const fallback = this.createTeraAbilityOption();
+      if (fallback) results.push(fallback);
+    }
+
+    return results;
+  }
+
   private createSmittyAbilityOption(): ModifierTypeOption | null {
     const provided = this.node.rewardData?.data?.abilityId as Abilities | undefined;
     const gen = modifierTypes.CHAMPION_SMITTY_ABILITY(this.championData);
@@ -924,6 +1022,68 @@ export class SkillTreeModifierPhase extends Phase {
       return new ModifierTypeOption(type, 0, 0);
     }
     return null;
+  }
+
+  private createMultipleTypeSwitcherOptions(count: number = 3): ModifierTypeOption[] {
+    const results: ModifierTypeOption[] = [];
+    const baseOffset = (this.scene as any).rngOffset || 0;
+    const t1 = this.championData.type1;
+    const t2 = this.championData.type2;
+    const hasT1 = t1 !== undefined && t1 !== null && t1 !== Type.UNKNOWN;
+    const hasT2 = t2 !== undefined && t2 !== null && t2 !== Type.UNKNOWN;
+    const allTypes = Utils.getEnumValues(Type).filter((v: number) => v >= Type.NORMAL && v <= Type.FAIRY) as Type[];
+
+    type ComboSpec = { primary: Type | null; secondary: Type | null; needsRandom: "primary" | "secondary" | null };
+    const comboPool: ComboSpec[] = [];
+    if (hasT1) {
+      comboPool.push({ primary: t1!, secondary: null, needsRandom: null });
+      comboPool.push({ primary: null, secondary: t1!, needsRandom: null });
+      comboPool.push({ primary: t1!, secondary: null, needsRandom: "secondary" });
+      comboPool.push({ primary: null, secondary: t1!, needsRandom: "primary" });
+    }
+    if (hasT2) {
+      comboPool.push({ primary: t2!, secondary: null, needsRandom: null });
+      comboPool.push({ primary: null, secondary: t2!, needsRandom: null });
+      comboPool.push({ primary: t2!, secondary: null, needsRandom: "secondary" });
+      comboPool.push({ primary: null, secondary: t2!, needsRandom: "primary" });
+    }
+    if (hasT1 && hasT2) {
+      comboPool.push({ primary: t1!, secondary: t2!, needsRandom: null });
+    }
+
+    for (let i = 0; i < count; i++) {
+      let option: ModifierTypeOption | null = null;
+      this.scene.executeWithSeedOffset(() => {
+        if (comboPool.length === 0) return;
+        const combo = Utils.randSeedItem(comboPool);
+        let primary = combo.primary;
+        let secondary = combo.secondary;
+
+        if (combo.needsRandom === "primary") {
+          const exclude = secondary != null ? [secondary] : [];
+          const pool = allTypes.filter(t => !exclude.includes(t));
+          primary = Utils.randSeedItem(pool);
+        } else if (combo.needsRandom === "secondary") {
+          const exclude = primary != null ? [primary] : [];
+          const pool = allTypes.filter(t => !exclude.includes(t));
+          secondary = Utils.randSeedItem(pool);
+        }
+
+        const type = new TypeSwitcherModifierType(primary, secondary);
+        if (type) {
+          if (!type.id) type.withIdFromFunc((modifierTypes as any).TYPE_SWITCHER);
+          option = new ModifierTypeOption(type, 0, 0);
+        }
+      }, baseOffset + i * 100);
+      if (option) results.push(option);
+    }
+
+    if (results.length === 0) {
+      const fallback = this.createTypeSwitcherOption();
+      if (fallback) results.push(fallback);
+    }
+
+    return results;
   }
 
   private grantGlitchFormUnlockImmediate(): void {

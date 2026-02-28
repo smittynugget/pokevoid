@@ -242,6 +242,7 @@ export class ChampionModeIntegration {
                   }
                   starterPokemon.setVisible(false);
                   party.push(starterPokemon);
+                  Modifiers.applySignatureTypeSwitcher(scene as any, starterPokemon);
                   loadPokemonAssets.push(starterPokemon.loadAssets());
                 });
                   Promise.all(loadPokemonAssets).then(() => {

@@ -11,8 +11,8 @@
       "descriptionConditional": "Augmente de façon permanente {{stats}} de {{percent}}% pour les Pokémon de type {{types}} ou signature. Les Pokémon non-signature non-{{types}} gagnent seulement un boost de {{firstStat}}. Imprégné des méthodes d'entraînement de {{champion}}."
     },
     "trainerBondAbility": {
-      "name": "Dépassement de Limite de {{champion}} : {{ability}}",
-      "description": "{{chance}}% de chance d'activer {{ability}} pour les Pokémon de {{champion}}. {{abilityDescription}}"
+      "name": "{{ability}}",
+      "description": "{{chance}}% de chance par cumul d'activer {{ability}} pour les Pokémon de {{champion}}. Se cumule avec le même talent. {{abilityDescription}}"
     },
     "teraAbility": {
       "name": "Talent Téra {{type}} : {{ability}}",

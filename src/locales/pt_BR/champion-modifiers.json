@@ -11,8 +11,8 @@
       "descriptionConditional": "Aumenta permanentemente {{stats}} em {{percent}}% para Pokémon de tipo {{types}} ou Pokémon assinatura. Pokémon não-{{types}} e não-assinatura só ganham o aumento de {{firstStat}}. Infundido com os métodos de treinamento de {{champion}}."
     },
     "trainerBondAbility": {
-      "name": "Limite Quebrado de {{champion}}: {{ability}}",
-      "description": "{{chance}}% de chance de ativar {{ability}} para os Pokémon de {{champion}}. {{abilityDescription}}"
+      "name": "{{ability}}",
+      "description": "{{chance}}% de chance por stack de ativar {{ability}} para os Pokémon de {{champion}}. Acumula com a mesma habilidade. {{abilityDescription}}"
     },
     "teraAbility": {
       "name": "Habilidade Tera {{type}}: {{ability}}",

@@ -129,7 +129,7 @@
     "TerastallizeModifierType": {
       "name": "{{teraType}} Tera Shard",
       "statLabel": "テラピース",
-      "description": "ポケモンを{{teraType}}タイプにテラスタル（10かいのバトルまで）。テラスタルオーブを持っていれば20かいのバトルまで。"
+      "description": "ポケモンを{{teraType}}タイプにテラスタル（25かいのバトルまで）。テラスタルオーブを持っていれば35かいのバトルまで。"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "こうげきするとき あいてがもっているアイテムを {{chancePercent}}パーセントのかくりつでぬすむ"
@@ -164,7 +164,7 @@
     },
     "TERA_ORB": {
       "name": "テラスタルオーブ",
-      "description": "テラピースの効果が10ターン延長される"
+      "description": "テラピースの効果が10バトル延長される"
     },
     "MAP": {
       "name": "ちず",

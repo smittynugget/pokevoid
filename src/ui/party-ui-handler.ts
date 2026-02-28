@@ -935,9 +935,9 @@ export default class PartyUiHandler extends MessageUiHandler {
       addReleaseOptionFunction();
       this.options.push(PartyOption.RENAME);
 
-      if (pokemon.pauseEvolutions && pokemonEvolutions.hasOwnProperty(pokemon.species.speciesId)) {
+      if (!pokemon.isEvolutionLocked() && pokemon.pauseEvolutions && pokemonEvolutions.hasOwnProperty(pokemon.species.speciesId)) {
         this.options.push(PartyOption.UNPAUSE_EVOLUTION);
-      } else if (!pokemon.pauseEvolutions && pokemonEvolutions.hasOwnProperty(pokemon.species.speciesId)) {
+      } else if (!pokemon.isEvolutionLocked() && !pokemon.pauseEvolutions && pokemonEvolutions.hasOwnProperty(pokemon.species.speciesId)) {
         this.options.push(PartyOption.PAUSE_EVOLUTION);
       }
 

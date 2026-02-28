@@ -11,8 +11,8 @@
       "descriptionConditional": "Erhöht dauerhaft {{stats}} um {{percent}}% für {{types}}-Typ Pokémon oder Signatur-Pokémon. Nicht-{{types}} Nicht-Signatur-Pokémon erhalten nur {{firstStat}} Boost. Mit {{champion}}s Trainingsmethoden durchdrungen."
     },
     "trainerBondAbility": {
-      "name": "{{champion}}s Limit Break: {{ability}}",
-      "description": "{{chance}}% Chance {{ability}} für {{champion}}s Pokémon zu aktivieren. {{abilityDescription}}"
+      "name": "{{ability}}",
+      "description": "{{chance}}% Chance pro Stapel, {{ability}} für {{champion}}s Pokémon zu aktivieren. Stapelt sich mit gleicher Fähigkeit. {{abilityDescription}}"
     },
     "teraAbility": {
       "name": "{{type}} Tera-Fähigkeit: {{ability}}",

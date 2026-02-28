@@ -124,7 +124,7 @@
     },
     "TerastallizeModifierType": {
       "name": "Fragmento Tera {{teraType}}",
-      "description": "Terastalize um Pokémon para o tipo {{teraType}} por até 10 batalhas. 20 batalhas se tiver o Orbe Tera.",
+      "description": "Terastalize um Pokémon para o tipo {{teraType}} por até 25 batalhas. 35 batalhas se tiver o Orbe Tera.",
       "statLabel": "Fragmento Tera"
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -155,7 +155,7 @@
     },
     "TERA_ORB": {
       "name": "Orbe Tera",
-      "description": "Fragmentos Tera duram por mais 10 turnos."
+      "description": "Fragmentos Tera duram por mais 10 batalhas."
     },
     "MAP": {
       "name": "Mapa",

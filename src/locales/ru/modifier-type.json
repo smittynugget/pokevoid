@@ -134,7 +134,7 @@
     "TerastallizeModifierType": {
       "name": "{{teraType}} Тера-осколок",
       "statLabel": "Тера-осколок",
-      "description": "Терасталлизирует носителя в {{teraType}} на срок до 10 боёв. 20 боёв, если есть Тера-Сфера"
+      "description": "Терасталлизирует носителя в {{teraType}} на срок до 25 боёв. 35 боёв, если есть Тера-Сфера"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "При атаке есть {{chancePercent}}% шанс украсть удерживаемый предмет противника."
@@ -517,7 +517,7 @@
     },
     "TERA_ORB": {
       "name": "Тера-Сфера",
-      "description": "Тера-осколки действуют на 10 ходов дольше."
+      "description": "Тера-осколки действуют на 10 боёв дольше."
     },
     "MAP": {
       "name": "Карта",

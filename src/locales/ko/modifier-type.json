@@ -123,7 +123,7 @@
     },
     "TerastallizeModifierType": {
       "name": "테라피스 {{teraType}}",
-      "description": "지니게 하면 10번의 배틀 동안 {{teraType}} 테라스탈타입으로 테라스탈한다. 테라스탈오브가 있다면 20번의 배틀 동안 지속된다.",
+      "description": "지니게 하면 25번의 배틀 동안 {{teraType}} 테라스탈타입으로 테라스탈한다. 테라스탈오브가 있다면 35번의 배틀 동안 지속된다.",
       "statLabel": "테라피스"
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -162,7 +162,7 @@
     },
     "TERA_ORB": {
       "name": "테라스탈오브",
-      "description": "테라피스가 10턴 더 지속된다."
+      "description": "테라피스가 10배틀 더 지속된다."
     },
     "MAP": {
       "name": "지도",

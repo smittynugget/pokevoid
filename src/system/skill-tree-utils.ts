@@ -23,7 +23,7 @@ export class SkillTreeUtils {
   }
 
   static getRandomSkillType(championData: PlayableChampionData): SkillTreeRewardType {
-    const championTypes = [championData.type1, championData.type2].filter(Boolean);
+    const championTypes = [championData.type1, championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
 
     if (championTypes.length === 0) {
       const allTypes = Object.values(SkillTreeRewardType) as SkillTreeRewardType[];

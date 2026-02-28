@@ -1,15 +1,15 @@
 {
   "TAUROS_ELECTRIC_HIT_QUEST": {
     "name": "Tauros sous Tension",
-    "task": "Faire subir à Tauros 15 attaques de type Électrik"
+    "task": "Faire subir à Tauros 8 attaques de type Électrik"
   },
   "KECLEON_COLOR_CHANGE_QUEST": {
     "name": "Changement de Couleur de Kecleon",
-    "task": "Activer la capacité Changement de Couleur de Kecleon 25 fois"
+    "task": "Activer la capacité Changement de Couleur de Kecleon 13 fois"
   },
   "GLISCOR_DARK_MOVE_KNOCKOUT_QUEST": {
     "name": "K.O. Ténèbres de Scorvol",
-    "task": "Vaincre 50 Pokémon avec Scorvol en utilisant des attaques de type Ténèbres"
+    "task": "Vaincre 25 Pokémon avec Scorvol en utilisant des attaques de type Ténèbres"
   },
   "MAROWAK_CUBONE_FAINT_QUEST": {
     "name": "K.O. d'Ossatueur et Osselait",
@@ -17,27 +17,27 @@
   },
   "NOIVERN_DRAGON_MOVE_KNOCKOUT_QUEST": {
     "name": "K.O. Dragon de Bruyverne",
-    "task": "Vaincre 50 Pokémon avec Bruyverne en utilisant des attaques de type Dragon"
+    "task": "Vaincre 25 Pokémon avec Bruyverne en utilisant des attaques de type Dragon"
   },
   "FERALIGATR_DRAGON_DEFEAT_QUEST": {
     "name": "Aligatueur contre Dragons",
-    "task": "Vaincre 25 Pokémon de type Dragon avec Aligatueur"
+    "task": "Vaincre 13 Pokémon de type Dragon avec Aligatueur"
   },
   "CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST": {
     "name": "K.O. Sol de Dracaufeu",
-    "task": "Vaincre 30 Pokémon avec Dracaufeu en utilisant des attaques de type Sol"
+    "task": "Vaincre 15 Pokémon avec Dracaufeu en utilisant des attaques de type Sol"
   },
   "VENUSAUR_PSYCHIC_MOVE_USE_QUEST": {
     "name": "Attaques Psy de Florizarre",
-    "task": "Utiliser des attaques de type Psy 60 fois avec Florizarre"
+    "task": "Utiliser des attaques de type Psy 30 fois avec Florizarre"
   },
   "BLASTOISE_FAIRY_DEFEAT_QUEST": {
     "name": "Tortank contre Fées",
-    "task": "Vaincre 25 Pokémon de type Fée avec Tortank"
+    "task": "Vaincre 13 Pokémon de type Fée avec Tortank"
   },
   "NIDOKING_DEFEAT_QUEST": {
     "name": "Duel de Nidoking",
-    "task": "Vaincre 5 Nidoking avec votre Nidoking"
+    "task": "Vaincre 3 Nidoking avec votre Nidoking"
   },
   "GENGAR_SPECIAL_WAVE_QUEST": {
     "name": "Vagues Spéciales d'Ectoplasma",
@@ -45,7 +45,7 @@
   },
   "WEEZING_FIRE_MOVE_KNOCKOUT_QUEST": {
     "name": "K.O. Feu de Smogogo",
-    "task": "Vaincre 40 Pokémon avec Smogogo en utilisant des attaques de type Feu"
+    "task": "Vaincre 20 Pokémon avec Smogogo en utilisant des attaques de type Feu"
   },
   "HITMONLEE_NORMAL_WAVE_QUEST": {
     "name": "Vagues Normales de Kicklee",
@@ -53,7 +53,7 @@
   },
   "HITMONCHAN_STAT_INCREASE_QUEST": {
     "name": "Boost de Stats de Tygnon",
-    "task": "Utiliser des attaques augmentant les statistiques 25 fois avec Tygnon"
+    "task": "Utiliser des attaques augmentant les statistiques 13 fois avec Tygnon"
   },
   "HITMON_DUO_WIN_QUEST": {
     "name": "Victoire du Duo Hitmon",
@@ -61,7 +61,7 @@
   },
   "KANGASKHAN_GHOST_MOVE_QUEST": {
     "name": "Attaques Spectre de Kangourex",
-    "task": "Utiliser des attaques de type Spectre 25 fois avec Kangourex"
+    "task": "Utiliser des attaques de type Spectre 13 fois avec Kangourex"
   },
   "SCYTHER_TRIO_WIN_QUEST": {
     "name": "Victoire en Trio d'Insécateur",
@@ -85,15 +85,15 @@
   },
   "GYARADOS_GROUND_SWITCH_QUEST": {
     "name": "Léviator face au Sol",
-    "task": "Faire subir 10 attaques de type Sol à votre Léviator"
+    "task": "Faire subir 5 attaques de type Sol à votre Léviator"
   },
   "LAPRAS_FIRE_MOVE_QUEST": {
     "name": "Attaques Feu de Lokhlass",
-    "task": "Utiliser des attaques de type Feu 25 fois avec Lokhlass"
+    "task": "Utiliser des attaques de type Feu 13 fois avec Lokhlass"
   },
   "PORYGON_Z_ANALYTIC_USE_QUEST": {
     "name": "Analyste de Porygon-Z",
-    "task": "Activer la capacité Analyste de Porygon-Z 20 fois"
+    "task": "Activer la capacité Analyste de Porygon-Z 10 fois"
   },
   "MEOWTH_JESTER_QUEST": {
     "name": "Victoire en Trio de Miaouss",
@@ -105,15 +105,15 @@
   },
   "SUDOWOODO_WOOD_HAMMER_QUEST": {
     "name": "Martobois de Simularbre",
-    "task": "Utiliser Martobois 40 fois avec Simularbre"
+    "task": "Utiliser Martobois 20 fois avec Simularbre"
   },
   "AMBIPOM_GIGA_IMPACT_QUEST": {
     "name": "Giga Impact de Capidextre",
-    "task": "Utiliser Giga Impact 5 fois avec Capidextre en une partie"
+    "task": "Utiliser Giga Impact 3 fois avec Capidextre en une partie"
   },
   "MILTANK_STEEL_MOVE_KNOCKOUT_QUEST": {
     "name": "K.O. Acier d'Écrémeuh",
-    "task": "Vaincre 25 Pokémon avec Écrémeuh en utilisant des attaques de type Acier"
+    "task": "Vaincre 13 Pokémon avec Écrémeuh en utilisant des attaques de type Acier"
   },
   "SLAKING_RIVAL_DEFEAT_QUEST": {
     "name": "Monaflémit contre Rival",
@@ -125,7 +125,7 @@
   },
   "REGIGIGAS_REGI_DEFEAT_QUEST": {
     "name": "Regigigas contre Regis",
-    "task": "Vaincre 3 Pokémon Regi avec Regigigas"
+    "task": "Vaincre 2 Pokémon Regi avec Regigigas"
   },
   "PIKACHU_RED_BLUE_WIN_QUEST": {
     "name": "Pikachu contre Red et Blue",
@@ -133,39 +133,39 @@
   },
   "SNORLAX_GRASS_KNOCKOUT_QUEST": {
     "name": "K.O. Plante de Ronflex",
-    "task": "Vaincre 10 Pokémon avec Ronflex en utilisant des attaques de type Plante"
+    "task": "Vaincre 5 Pokémon avec Ronflex en utilisant des attaques de type Plante"
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "Cadeau de Crustabri",
-    "task": "Utiliser Cadeau 20 fois avec Crustabri en mode Nuzlocke"
+    "task": "Utiliser Cadeau 10 fois avec Crustabri en mode Nuzlocke"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "Pifeuil contre Tarinor",
-    "task": "Vaincre 10 Tarinor ou Tarinorme avec Pifeuil"
+    "task": "Vaincre 5 Tarinor ou Tarinorme avec Pifeuil"
   },
   "CHANDELURE_REST_QUEST": {
     "name": "Repos de Lugulabre",
-    "task": "Utiliser Repos 5 fois avec Lugulabre en une partie"
+    "task": "Utiliser Repos 3 fois avec Lugulabre en une partie"
   },
   "SMEARGLE_DEFEAT_QUEST": {
     "name": "Victoires de Queulorior",
-    "task": "Vaincre 40 Pokémon avec Queulorior"
+    "task": "Vaincre 20 Pokémon avec Queulorior"
   },
   "MIMIKYU_CHARIZARD_KNOCKOUT_QUEST": {
     "name": "Mimiqui contre Dracaufeu",
-    "task": "Vaincre 2 Dracaufeu avec Mimiqui"
+    "task": "Vaincre 1 Dracaufeu avec Mimiqui"
   },
   "MIMIKYU_GRENINJA_KNOCKOUT_QUEST": {
     "name": "Mimiqui contre Amphinobi",
-    "task": "Vaincre 2 Amphinobi avec Mimiqui"
+    "task": "Vaincre 1 Amphinobi avec Mimiqui"
   },
   "MIMIKYU_RAICHU_KNOCKOUT_QUEST": {
     "name": "Mimiqui contre Raichu",
-    "task": "Vaincre 2 Raichu avec Mimiqui"
+    "task": "Vaincre 1 Raichu avec Mimiqui"
   },
   "MIMIKYU_MEWTWO_KNOCKOUT_QUEST": {
     "name": "Mimiqui contre Mewtwo",
-    "task": "Vaincre 2 Mewtwo avec Mimiqui"
+    "task": "Vaincre 1 Mewtwo avec Mimiqui"
   },
   "MIMIKYU_REGIROCK_KNOCKOUT_QUEST": {
     "name": "Mimiqui contre Regirock",
@@ -173,19 +173,19 @@
   },
   "EISCUE_ROCK_KNOCKOUT_QUEST": {
     "name": "Bekaglaçon contre Roche",
-    "task": "Vaincre 20 Pokémon de type Roche avec Bekaglaçon"
+    "task": "Vaincre 10 Pokémon de type Roche avec Bekaglaçon"
   },
   "ZANGOOSE_SEVIPER_KNOCKOUT_QUEST": {
     "name": "Mangriff contre Séviper",
-    "task": "Vaincre 5 Séviper avec Mangriff"
+    "task": "Vaincre 3 Séviper avec Mangriff"
   },
   "SEVIPER_ZANGOOSE_KNOCKOUT_QUEST": {
     "name": "Séviper contre Mangriff",
-    "task": "Vaincre 5 Mangriff avec Séviper"
+    "task": "Vaincre 3 Mangriff avec Séviper"
   },
   "TRUBBISH_POISON_DEFEAT_QUEST": {
     "name": "Poubébé contre Poison",
-    "task": "Vaincre 20 Pokémon de type Poison avec Poubébé"
+    "task": "Vaincre 10 Pokémon de type Poison avec Poubébé"
   },
   "HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST": {
     "name": "Brutalibré contre Rivaux et Champions",
@@ -193,19 +193,19 @@
   },
   "DITTO_DRAGONITE_TRANSFORM_QUEST": {
     "name": "Métamorph en Dracolosse",
-    "task": "Se transformer en Dracolosse 2 fois avec Métamorph"
+    "task": "Se transformer en Dracolosse 1 fois avec Métamorph"
   },
   "DITTO_CHARIZARD_TRANSFORM_QUEST": {
     "name": "Métamorph en Dracaufeu",
-    "task": "Se transformer en Dracaufeu 2 fois avec Métamorph"
+    "task": "Se transformer en Dracaufeu 1 fois avec Métamorph"
   },
   "DITTO_PIKACHU_TRANSFORM_QUEST": {
     "name": "Métamorph en Pikachu",
-    "task": "Se transformer en Pikachu 2 fois avec Métamorph"
+    "task": "Se transformer en Pikachu 1 fois avec Métamorph"
   },
   "DITTO_MACHAMP_TRANSFORM_QUEST": {
     "name": "Métamorph en Mackogneur",
-    "task": "Se transformer en Mackogneur 2 fois avec Métamorph"
+    "task": "Se transformer en Mackogneur 1 fois avec Métamorph"
   },
   "DITTO_MEWTWO_TRANSFORM_QUEST": {
     "name": "Métamorph en Mewtwo",
@@ -213,7 +213,7 @@
   },
   "FERALIGATOR_ROCK_MOVE_KNOCKOUT_QUEST": {
     "name": "K.O. Roche d'Aligatueur",
-    "task": "Vaincre 25 Pokémon avec Aligatueur en utilisant des attaques de type Roche"
+    "task": "Vaincre 13 Pokémon avec Aligatueur en utilisant des attaques de type Roche"
   },
   "WOBBUFFET_RIVAL_DEFEAT_QUEST": {
     "name": "Qulbutoké contre Rival",
@@ -221,23 +221,23 @@
   },
   "MAGIKARP_DEFEAT_QUEST": {
     "name": "Victoires de Magicarpe",
-    "task": "Vaincre 100 Pokémon avec Magicarpe"
+    "task": "Vaincre 50 Pokémon avec Magicarpe"
   },
   "KLINKLANG_GEAR_MOVE_QUEST": {
     "name": "Engrenages de Cliticlic",
-    "task": "Utiliser Engrenage et/ou Engrenage Plus 30 fois avec Cliticlic"
+    "task": "Utiliser Engrenage et/ou Engrenage Plus 15 fois avec Cliticlic"
   },
   "SPINDA_CONFUSION_RECOVERY_QUEST": {
     "name": "Récupération de Spinda",
-    "task": "Récupérer de la confusion 5 fois avec Spinda"
+    "task": "Récupérer de la confusion 3 fois avec Spinda"
   },
   "NINETALES_STORED_POWER_KNOCKOUT_QUEST": {
     "name": "Force Ajoutée de Feunard",
-    "task": "Vaincre 20 Pokémon avec Feunard en utilisant Force Ajoutée"
+    "task": "Vaincre 10 Pokémon avec Feunard en utilisant Force Ajoutée"
   },
   "SHUCKLE_DEFEAT_QUEST": {
     "name": "Victoires de Caratroc",
-    "task": "Vaincre 15 Pokémon avec Caratroc"
+    "task": "Vaincre 8 Pokémon avec Caratroc"
   },
   "TANGELA_RIVAL_DEFEAT_QUEST": {
     "name": "Saquedeneu contre Rival",
@@ -245,7 +245,7 @@
   },
   "CLAYDOL_POISON_QUEST": {
     "name": "Attaques Poison de Symbios",
-    "task": "Utiliser des attaques de type Poison 80 fois avec Symbios"
+    "task": "Utiliser des attaques de type Poison 40 fois avec Symbios"
   },
   "TAUROS_DARK_WAVE_QUEST": {
     "name": "Vagues Ténèbres de Tauros",
@@ -257,7 +257,7 @@
   },
   "MAROWAK_ZOMBIE_KNOCKOUT_QUEST": {
     "name": "K.O. Zombie d'Ossatueur",
-    "task": "Vaincre 50 Pokémon avec Ossatueur en utilisant Vent Maléfique, Poing Fureur, Rancune, Malédiction ou Dernier Recours"
+    "task": "Vaincre 25 Pokémon avec Ossatueur en utilisant Vent Maléfique, Poing Fureur, Rancune, Malédiction ou Dernier Recours"
   },
   "GRENINJA_YOKAI_WAVE_QUEST": {
     "name": "Vagues Yokai d'Amphinobi",
@@ -269,7 +269,7 @@
   },
   "LICKITUNG_GIGGLE_KNOCKOUT_QUEST": {
     "name": "K.O. Léchouille d'Excelangue",
-    "task": "Vaincre 75 Pokémon avec Excelangue en utilisant Léchouille"
+    "task": "Vaincre 38 Pokémon avec Excelangue en utilisant Léchouille"
   },
   "LICKITUNG_HYPER_WAVE_QUEST": {
     "name": "Vagues Hyper d'Excelangue",
@@ -293,7 +293,7 @@
   },
   "CHARIZARD_HELLFLAME_QUEST": {
     "name": "Flamme Infernale de Dracaufeu",
-    "task": "Utiliser Rafale Feu 25 fois avec Dracaufeu en mode Cauchemar"
+    "task": "Utiliser Rafale Feu 13 fois avec Dracaufeu en mode Cauchemar"
   },
   "EEVEE_NIGHTMARE_QUEST": {
     "name": "Cauchemar d'Évoli",
@@ -333,7 +333,7 @@
   },
   "MAGICAL_PIKACHU_QUEST": {
     "name": "Pikachu Magique",
-    "task": "Gagner 2 parties avec Pikachu connaissant au moins 2 attaques de type Fée"
+    "task": "Gagner 1 parties avec Pikachu connaissant au moins 2 attaques de type Fée"
   },
   "CHARMANDER_UNDERTALE_QUEST": {
     "name": "Undertale de Salamèche",
@@ -341,7 +341,7 @@
   },
   "SQUIRTLE_TORMENT_QUEST": {
     "name": "Tourment de Carapuce",
-    "task": "Faire assister Carapuce à 3 K.O. de Tortank dans votre équipe"
+    "task": "Faire assister Carapuce à 2 K.O. de Tortank dans votre équipe"
   },
   "BULBASAUR_TERROR_QUEST": {
     "name": "Terreur de Bulbizarre",
@@ -361,17 +361,17 @@
   },
   "STARTER_CATCH_QUEST": {
     "name": "Quête de Capture des Starters",
-    "task": "Capturer 10 Pokémon ?!",
+    "task": "Capturer 5 Pokémon ?!",
     "rewardText": "Débloque le Mode Aventure !"
   },
   "NUZLIGHT_UNLOCK_QUEST": {
     "name": "Quête de Déblocage Nuzlight",
-    "task": "Gagner 2 parties pour débloquer le Mode Nuzlight !",
+    "task": "Gagner 1 parties pour débloquer le Mode Nuzlight !",
     "rewardText": "Débloque le Mode Nuzlight !"
   },
   "NUZLOCKE_UNLOCK_QUEST": {
     "name": "Quête de Déblocage Nuzlocke",
-    "task": "Gagner 3 parties en mode Nuzlight pour débloquer le Mode Nuzlocke !",
+    "task": "Gagner 2 parties en mode Nuzlight pour débloquer le Mode Nuzlocke !",
     "rewardText": "Débloque le Mode Nuzlocke !"
   },
   "MORPEKO_NIGHTMARE_QUEST": {
@@ -388,7 +388,7 @@
   },
   "GOLEM_FIRE_QUEST": {
     "name": "Golem de Feu",
-    "task": "Faire subir 50 attaques de type Feu à votre Golem"
+    "task": "Faire subir 25 attaques de type Feu à votre Golem"
   },
   "DEINO_NIGHTMARE_QUEST": {
     "name": "Cauchemar de Solochi",
@@ -396,7 +396,7 @@
   },
   "GOLURK_DREAD_QUEST": {
     "name": "Terreur de Golemastoc",
-    "task": "Faire tomber K.O. 15 de vos Pokémon (autres que Golemastoc) en ayant Golemastoc dans votre équipe en mode Cauchemar"
+    "task": "Faire tomber K.O. 8 de vos Pokémon (autres que Golemastoc) en ayant Golemastoc dans votre équipe en mode Cauchemar"
   },
   "DUSCLOPS_NIGHTMARE_QUEST": {
     "name": "Cauchemar de Téraclope",
@@ -444,82 +444,82 @@
   },
   "NORMAL_STRENGTH": {
     "name": "Force Normale !",
-    "task": "Vaincre 250 Pokémon en utilisant des Pokémon de type Normal sur plusieurs parties",
+    "task": "Vaincre 125 Pokémon en utilisant des Pokémon de type Normal sur plusieurs parties",
     "rewardText": "Débloque un ObjetPerma qui change les Résistances et Forces des types Normal !"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "Nouvelles Attaques de Magicarpe",
-    "task": "Vaincre 200 Pokémon avec Magicarpe",
+    "task": "Vaincre 50 Pokémon avec Magicarpe",
     "rewardText": "Magicarpe aura un plus grand choix d'attaques !"
   },
   "DITTO_NEW_MOVES": {
     "name": "Nouvelles Attaques de Métamorph",
-    "task": "Vaincre 200 Pokémon avec Métamorph",
+    "task": "Vaincre 50 Pokémon avec Métamorph",
     "rewardText": "Métamorph aura un plus grand choix d'attaques !"
   },
   "WOBBUFFET_NEW_MOVES": {
     "name": "Nouvelles Attaques de Qulbutoké",
-    "task": "Vaincre 200 Pokémon avec Qulbutoké",
+    "task": "Vaincre 50 Pokémon avec Qulbutoké",
     "rewardText": "Qulbutoké aura un plus grand choix d'attaques !"
   },
   "SMEARGLE_NEW_MOVES": {
     "name": "Nouvelles Attaques de Queulorior",
-    "task": "Vaincre 200 Pokémon avec Queulorior",
+    "task": "Vaincre 50 Pokémon avec Queulorior",
     "rewardText": "Queulorior aura un plus grand choix d'attaques !"
   },
   "UNOWN_NEW_MOVES": {
     "name": "Nouvelles Attaques de Zarbi",
-    "task": "Vaincre 200 Pokémon avec Zarbi",
+    "task": "Vaincre 50 Pokémon avec Zarbi",
     "rewardText": "Zarbi aura un plus grand choix d'attaques !"
   },
   "TYROGUE_NEW_MOVES": {
     "name": "Nouvelles Attaques de Debugant",
-    "task": "Vaincre 200 Pokémon avec Debugant",
+    "task": "Vaincre 50 Pokémon avec Debugant",
     "rewardText": "Debugant aura un plus grand choix d'attaques !"
   },
   "METAPOD_NEW_MOVES": {
     "name": "Nouvelles Attaques de Chrysacier",
-    "task": "Vaincre 200 Pokémon avec Chrysacier",
+    "task": "Vaincre 50 Pokémon avec Chrysacier",
     "rewardText": "Chrysacier aura un plus grand choix d'attaques !"
   },
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "Force Normale !",
-    "task": "Vaincre 250 Pokémon en utilisant des Pokémon de type Normal sur plusieurs parties",
+    "task": "Vaincre 125 Pokémon en utilisant des Pokémon de type Normal sur plusieurs parties",
     "rewardText": "Débloque un ObjetPerma qui change les Résistances et Forces des types Normal !"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Magicarpe",
-    "task": "Vaincre 200 Pokémon avec Magicarpe",
+    "task": "Vaincre 50 Pokémon avec Magicarpe",
     "rewardText": "Magicarpe aura un plus grand choix d'attaques !"
   },
   "DITTO_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Métamorph",
-    "task": "Vaincre 200 Pokémon avec Métamorph",
+    "task": "Vaincre 50 Pokémon avec Métamorph",
     "rewardText": "Métamorph aura un plus grand choix d'attaques !"
   },
   "WOBBUFFET_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Qulbutoké",
-    "task": "Vaincre 200 Pokémon avec Qulbutoké",
+    "task": "Vaincre 50 Pokémon avec Qulbutoké",
     "rewardText": "Qulbutoké aura un plus grand choix d'attaques !"
   },
   "SMEARGLE_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Queulorior",
-    "task": "Vaincre 200 Pokémon avec Queulorior",
+    "task": "Vaincre 50 Pokémon avec Queulorior",
     "rewardText": "Queulorior aura un plus grand choix d'attaques !"
   },
   "UNOWN_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Zarbi",
-    "task": "Vaincre 200 Pokémon avec Zarbi",
+    "task": "Vaincre 50 Pokémon avec Zarbi",
     "rewardText": "Zarbi aura un plus grand choix d'attaques !"
   },
   "TYROGUE_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Debugant",
-    "task": "Vaincre 200 Pokémon avec Debugant",
+    "task": "Vaincre 50 Pokémon avec Debugant",
     "rewardText": "Debugant aura un plus grand choix d'attaques !"
   },
   "METAPOD_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Chrysacier",
-    "task": "Vaincre 200 Pokémon avec Chrysacier",
+    "task": "Vaincre 50 Pokémon avec Chrysacier",
     "rewardText": "Chrysacier aura un plus grand choix d'attaques !"
   }
 }

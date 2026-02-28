@@ -3075,22 +3075,38 @@ export default class VoidexPrelistUiHandler extends UiHandler {
         const party = this.scene.getParty();
         party?.forEach((p) => {
           if (p && p.isFusion() && p.fusionSpecies) {
-            addFusionToBucket("party", p.species.getRootSpeciesId(true) as Species, p.fusionSpecies.getRootSpeciesId(true) as Species);
+            const rootPrimary = p.species.getRootSpeciesId(true) as Species;
+            const rootFusion = p.fusionSpecies.getRootSpeciesId(true) as Species;
+            const pairs = this.expandFusionEvolutionPairs(rootPrimary, rootFusion);
+            for (const [pId, fId] of pairs) {
+                addFusionToBucket("party", pId, fId);
+            }
           }
         });
 
         const currentPhase = this.scene.getCurrentPhase();
         if (currentPhase?.constructor?.name === "CommandPhase") {
           const enemy = this.scene.getEnemyField();
-          const first = enemy?.[0];
-          if (first && first.isFusion() && first.fusionSpecies) {
-            addFusionToBucket("enemy", first.species.getRootSpeciesId(true) as Species, first.fusionSpecies.getRootSpeciesId(true) as Species);
-          }
+          enemy?.forEach((e) => {
+            if (e && e.isFusion() && e.fusionSpecies) {
+              const rootPrimary = e.species.getRootSpeciesId(true) as Species;
+              const rootFusion = e.fusionSpecies.getRootSpeciesId(true) as Species;
+              const pairs = this.expandFusionEvolutionPairs(rootPrimary, rootFusion);
+              for (const [pId, fId] of pairs) {
+                addFusionToBucket("enemy", pId, fId);
+              }
+            }
+          });
         }
       }
 
       const modifierFusions = this.getModifierFusions();
-      modifierFusions.forEach(f => addFusionToBucket("modifier", f.primarySpeciesId, f.fusionSpeciesId));
+      modifierFusions.forEach(f => {
+        const pairs = this.expandFusionEvolutionPairs(f.primarySpeciesId, f.fusionSpeciesId);
+        for (const [pId, fId] of pairs) {
+          addFusionToBucket("modifier", pId, fId);
+        }
+      });
     }
 
     const currentPhase = this.scene.getCurrentPhase();

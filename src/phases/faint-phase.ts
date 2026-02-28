@@ -31,6 +31,7 @@ import { CollectedTypeModifierType } from "#app/modifier/modifier-type.ts";
 
 export class FaintPhase extends PokemonPhase {
   private preventEndure: boolean;
+  private hasEnded: boolean = false;
 
   constructor(scene: BattleScene, battlerIndex: BattlerIndex, preventEndure?: boolean) {
     super(scene, battlerIndex);
@@ -50,7 +51,8 @@ export class FaintPhase extends PokemonPhase {
         }
         this.scene.updateModifiers(this.player);
         return this.end();
-      } else if (this.player) {
+      }
+      else if (this.player) {
         let baseReviveChance = 5.5;
         if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_MORE_REVIVE_3)) {
           baseReviveChance = 10.0;
@@ -135,8 +137,8 @@ export class FaintPhase extends PokemonPhase {
 
         if (pokemon instanceof EnemyPokemon) {
           this.scene.gameData.permaModifiers
-            .findModifiers(m => m instanceof PermaKnockoutQuestModifier)
-            .forEach(modifier => modifier.apply([this.scene, defeatSource, pokemon, allMoves[pokemon.turnData.attacksReceived[0].move]]));
+              .findModifiers(m => m instanceof PermaKnockoutQuestModifier)
+              .forEach(modifier => modifier.apply([this.scene, defeatSource, pokemon, allMoves[pokemon.turnData.attacksReceived[0].move]]));
 
           if (defeatSource && defeatSource.isPlayer() && Utils.randSeedChance(30) ) {
             const randomType = pokemon.isGlitchForm()
@@ -212,7 +214,19 @@ export class FaintPhase extends PokemonPhase {
     pokemon.lapseTags(BattlerTagLapseType.FAINT);
     this.scene.getField(true).filter(p => p !== pokemon).forEach(p => p.removeTagsBySourceId(pokemon.id));
 
+    const faintSafetyTimeout = setTimeout(() => {
+      if (!this.hasEnded) {
+        console.warn(`FaintPhase: faintCry callback timeout for battlerIndex ${this.battlerIndex}, forcing end`);
+        pokemon.setVisible(false);
+        this.scene.field.remove(pokemon);
+        this.hasEnded = true;
+        this.end();
+      }
+    }, 5000);
+
     pokemon.faintCry(() => {
+      clearTimeout(faintSafetyTimeout);
+      if (this.hasEnded) return;
       if (pokemon instanceof PlayerPokemon) {
         pokemon.addFriendship(-3);
       }
@@ -226,41 +240,43 @@ export class FaintPhase extends PokemonPhase {
         y: pokemon.y + 150,
         ease: "Sine.easeIn",
         onComplete: () => {
+          if (this.hasEnded) return;
           pokemon.setVisible(false);
           pokemon.y -= 150;
           pokemon.trySetStatus(StatusEffect.FAINT);
           if (pokemon.isPlayer()) {
             this.scene.currentBattle.removeFaintedParticipant(pokemon as PlayerPokemon);
-          } else {
-            this.scene.addFaintedEnemyScore(pokemon as EnemyPokemon);
-            this.scene.currentBattle.addPostBattleLoot(pokemon as EnemyPokemon);
+                  } else {
+          this.scene.addFaintedEnemyScore(pokemon as EnemyPokemon);
+          this.scene.currentBattle.addPostBattleLoot(pokemon as EnemyPokemon);
 
-            if (!pokemon.isPlayer()) {
-              const enemyPokemon = pokemon as EnemyPokemon;
-              const enemyTypes = enemyPokemon.getTypes();
-              enemyTypes.forEach(type => {
-                if (!this.scene.gameData.gameStats.typeOfDefeated[type]) {
-                  this.scene.gameData.gameStats.typeOfDefeated[type] = 0;
+          if (!pokemon.isPlayer()) {
+            const enemyPokemon = pokemon as EnemyPokemon;
+            const enemyTypes = enemyPokemon.getTypes();
+            enemyTypes.forEach(type => {
+              if (!this.scene.gameData.gameStats.typeOfDefeated[type]) {
+                this.scene.gameData.gameStats.typeOfDefeated[type] = 0;
+              }
+              this.scene.gameData.gameStats.typeOfDefeated[type]++;
+            });
+          }
+
+          if (!pokemon.isPlayer() && pokemon.turnData?.attacksReceived?.length) {
+            const lastAttack = pokemon.turnData.attacksReceived[0];
+            const attackingPokemon = this.scene.getPokemonById(lastAttack.sourceId);
+            if (attackingPokemon && attackingPokemon.isPlayer()) {
+              const playerTypes = attackingPokemon.getTypes();
+              playerTypes.forEach(type => {
+                if (!this.scene.gameData.gameStats.playerKnockoutType[type]) {
+                  this.scene.gameData.gameStats.playerKnockoutType[type] = 0;
                 }
-                this.scene.gameData.gameStats.typeOfDefeated[type]++;
+                this.scene.gameData.gameStats.playerKnockoutType[type]++;
               });
             }
-
-            if (!pokemon.isPlayer() && pokemon.turnData?.attacksReceived?.length) {
-              const lastAttack = pokemon.turnData.attacksReceived[0];
-              const attackingPokemon = this.scene.getPokemonById(lastAttack.sourceId);
-              if (attackingPokemon && attackingPokemon.isPlayer()) {
-                const playerTypes = attackingPokemon.getTypes();
-                playerTypes.forEach(type => {
-                  if (!this.scene.gameData.gameStats.playerKnockoutType[type]) {
-                    this.scene.gameData.gameStats.playerKnockoutType[type] = 0;
-                  }
-                  this.scene.gameData.gameStats.playerKnockoutType[type]++;
-                });
-              }
-            }
           }
+        }
           this.scene.field.remove(pokemon);
+          this.hasEnded = true;
           this.end();
         }
       });
@@ -273,7 +289,8 @@ export class FaintPhase extends PokemonPhase {
         const enemy = this.getPokemon();
         if (enemy.is2ndStageBoss && enemy.hp === 0) {
           this.scene.ui.showDialogue(battleSpecDialogue[BattleSpec.FINAL_BOSS].secondStageWin, enemy.species.name, null, () => this.doFaint());
-        } else {
+        }
+        else {
           this.end();
         }
         return true;

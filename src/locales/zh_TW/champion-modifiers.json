@@ -11,8 +11,8 @@
       "descriptionConditional": "永久為 {{types}} 屬性寶可夢或招牌寶可夢提升 {{stats}} {{percent}}%。非 {{types}} 屬性非招牌寶可夢僅獲得 {{firstStat}} 提升。融入了 {{champion}} 的訓練方法。"
     },
     "trainerBondAbility": {
-      "name": "{{champion}} 的極限突破：{{ability}}",
-      "description": "{{champion}} 的寶可夢有 {{chance}}% 機率啟動 {{ability}}。{{abilityDescription}}"
+      "name": "{{ability}}",
+      "description": "每層相同特性，{{champion}} 的寶可夢有 {{chance}}% 機率啟動 {{ability}}。{{abilityDescription}}"
     },
     "teraAbility": {
       "name": "{{type}} 太晶特性：{{ability}}",

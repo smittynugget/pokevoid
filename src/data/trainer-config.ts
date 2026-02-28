@@ -2181,9 +2181,9 @@ export const trainerPokemonPools: Record<RivalTrainerType, Species[][]> = {
         [Species.DRATINI, Species.BAGON, Species.GIBLE, Species.AXEW, Species.GOOMY, Species.JANGMO_O, Species.APPLIN, Species.DREEPY, Species.NOIBAT, Species.DRUDDIGON, Species.DRAMPA, Species.TURTONATOR],
         [Species.PATRAT, Species.WOOBAT, Species.TRUBBISH, Species.YAMASK, Species.FRILLISH, Species.ELGYEM, Species.CUBCHOO, Species.STUNFISK, Species.MIENFOO, Species.DRUDDIGON, Species.GOLURK, Species.BOUFFALANT],
         [Species.PURRLOIN, Species.SANDILE, Species.SCRAGGY, Species.VENIPEDE, Species.TIMBURR, Species.TYMPOLE],
-        [Species.VICTINI, Species.COBALION, Species.TERRAKION, Species.VIRIZION, Species.TORNADUS, Species.THUNDURUS],
         [Species.ZORUA, Species.YAMASK, Species.COFAGRIGUS, Species.GOTHITA, Species.SOLOSIS, Species.LITWICK],
-        [Species.KYUREM, Species.ZEKROM, Species.RESHIRAM, Species.GIRATINA, Species.YVELTAL, Species.GUZZLORD, Species.NAGANADEL, Species.RAYQUAZA, Species.DIALGA, Species.PALKIA, Species.NECROZMA],
+        [Species.CROAGUNK, Species.SPIRITOMB, Species.ABSOL, Species.SABLEYE, Species.SKORUPI, Species.SIGILYPH, Species.PHANTUMP, Species.IMPIDIMP, Species.NATU, Species.LARVITAR, Species.STUNKY, Species.GASTLY],
+        [Species.KYUREM, Species.ZEKROM, Species.RESHIRAM, Species.GIRATINA, Species.YVELTAL, Species.GUZZLORD, Species.NAGANADEL, Species.RAYQUAZA, Species.DIALGA, Species.PALKIA, Species.NECROZMA, Species.VICTINI, Species.COBALION, Species.TERRAKION, Species.VIRIZION, Species.TORNADUS, Species.THUNDURUS],
     ],
     [TrainerType.LYSANDRE]: [
         [Species.LITLEO],

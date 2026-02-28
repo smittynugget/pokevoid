@@ -124,7 +124,7 @@
     "TerastallizeModifierType": {
       "name": "Téra-Éclat {{teraType}}",
       "statLabel": "Téra-Éclat",
-      "description": "{{teraType}} Téracristallise son porteur pendant 10 combats. 20 combats si vous avez l'Orbe Téracristal"
+      "description": "{{teraType}} Téracristallise son porteur pendant 25 combats. 35 combats si vous avez l'Orbe Téracristal"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "{{chancePercent}}% de chances de voler un objet de l'adversaire en l'attaquant."
@@ -159,7 +159,7 @@
     },
     "TERA_ORB": {
       "name": "Orbe Téracristal",
-      "description": "Les Téra-Éclats durent 10 tours de plus."
+      "description": "Les Téra-Éclats durent 10 combats de plus."
     },
     "MAP": {
       "name": "Carte",

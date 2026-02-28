@@ -11,8 +11,8 @@
       "descriptionConditional": "Aumenta permanentemente {{stats}} en un {{percent}}% para Pokémon de tipo {{types}} o Pokémon insignia. Los Pokémon no insignia que no sean {{types}} solo obtienen aumento de {{firstStat}}. Infundido con los métodos de entrenamiento de {{champion}}."
     },
     "trainerBondAbility": {
-      "name": "Límite Roto de {{champion}}: {{ability}}",
-      "description": "{{chance}}% de probabilidad de activar {{ability}} para los Pokémon de {{champion}}. {{abilityDescription}}"
+      "name": "{{ability}}",
+      "description": "{{chance}}% de probabilidad por acumulación de activar {{ability}} para los Pokémon de {{champion}}. Se acumula con la misma habilidad. {{abilityDescription}}"
     },
     "teraAbility": {
       "name": "Habilidad Tera {{type}}: {{ability}}",

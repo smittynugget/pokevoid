@@ -67802,6 +67802,7 @@ export const tmPoolTiers: TmPoolTiers = {
     [Moves.WILD_CHARGE]: ModifierTier.GREAT,
     [Moves.DRILL_RUN]: ModifierTier.GREAT,
     [Moves.SACRED_SWORD]: ModifierTier.ULTRA,
+    [Moves.POWER_TRIP]: ModifierTier.ULTRA,
     [Moves.RAZOR_SHELL]: ModifierTier.GREAT,
     [Moves.HEAT_CRASH]: ModifierTier.GREAT,
     [Moves.TAIL_SLAP]: ModifierTier.GREAT,
@@ -67869,7 +67870,7 @@ export const tmPoolTiers: TmPoolTiers = {
     [Moves.TEMPER_FLARE]: ModifierTier.GREAT,
     [Moves.SUPERCELL_SLAM]: ModifierTier.GREAT,
     [Moves.PSYCHIC_NOISE]: ModifierTier.GREAT,
-    [Moves.UPPER_HAND]: ModifierTier.COMMON,
+
     [Moves.SMITTY_NUGGETS]: ModifierTier.LUXURY,
     [Moves.NUGGET_OF_SMITTY]: ModifierTier.LUXURY,
     [Moves.TORCH_SONG]: ModifierTier.MASTER,

@@ -1748,8 +1748,15 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     return (atkScore + defScore) * hpDiffRatio;
   }
 
+  isEvolutionLocked(): boolean {
+    return this.isSignature || !!this.altBuildId;
+  }
+
   getEvolution(): SpeciesFormEvolution | null {
     if (this.isGlitchOrSmittyForm()) {
+      return null;
+    }
+    if (this.isEvolutionLocked()) {
       return null;
     }
     if (pokemonEvolutions.hasOwnProperty(this.species.speciesId)) {
@@ -3050,9 +3057,17 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
 
     const cry = this.scene.playSound(key, { rate: rate }) as AnySound;
     let i = 0;
-    const sprite = this.getSprite();
-    const tintSprite = this.getTintSprite();
-    const delay = Math.max(this.scene.sound.get(key).totalDuration * 50, 25);
+    let sprite: Phaser.GameObjects.Sprite;
+    let tintSprite: Phaser.GameObjects.Sprite | undefined;
+    try {
+      sprite = this.getSprite();
+      tintSprite = this.getTintSprite();
+    } catch {
+      if (callback) callback();
+      return;
+    }
+    const soundObj = this.scene.sound.get(key);
+    const delay = soundObj ? Math.max(soundObj.totalDuration * 50, 25) : 100;
 
     let frameProgress = 0;
     let frameThreshold: number;

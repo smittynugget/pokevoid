@@ -82,7 +82,7 @@ export class EvolutionPhase extends Phase {
       this.evolutionBaseBg = this.scene.add.image(0, 0, "default_bg");
       this.evolutionBaseBg.setOrigin(0, 0);
       try {
-        if (this.evolutionBaseBg.postFX && typeof this.evolutionBaseBg.postFX.addColorMatrix === "function") {
+        if (this.evolutionBaseBg.postFX && typeof this.evolutionBaseBg.postFX.addColorMatrix === 'function') {
           const colorMatrix = this.evolutionBaseBg.postFX.addColorMatrix();
           colorMatrix.negative();
         } else {
@@ -123,6 +123,13 @@ export class EvolutionPhase extends Phase {
       this.pokemonEvoTintSprite.setVisible(false);
       this.pokemonEvoTintSprite.setTintFill(0xFFFFFF);
 
+      const tsModifier = this.scene.findModifier(m =>
+          m instanceof TypeSwitcherModifier && (m as TypeSwitcherModifier).pokemonId === this.pokemon.id
+      ) as TypeSwitcherModifier | undefined;
+      if (tsModifier) {
+          tsModifier.apply([this.pokemon]);
+      }
+
       this.evolutionOverlay = this.scene.add.rectangle(0, -this.scene.game.canvas.height / 6, this.scene.game.canvas.width / 6, (this.scene.game.canvas.height / 6) - 48, 0xFFFFFF);
       this.evolutionOverlay.setOrigin(0, 0);
       this.evolutionOverlay.setAlpha(0);
@@ -135,14 +142,14 @@ export class EvolutionPhase extends Phase {
         sprite.setPipelineData("spriteKey", this.pokemon.getSpriteKey());
         sprite.setPipelineData("shiny", this.pokemon.shiny);
         sprite.setPipelineData("variant", this.pokemon.variant);
-        [ "spriteColors", "fusionSpriteColors" ].map(k => {
-          if (this.pokemon.summonData?.speciesForm) {
-            k += "Base";
-          }
-          sprite.pipelineData[k] = this.pokemon.getSprite().pipelineData[k];
-        });
+      [ "spriteColors", "fusionSpriteColors" ].map(k => {
+        if (this.pokemon.summonData?.speciesForm) {
+          k += "Base";
+        }
+        sprite.pipelineData[k] = this.pokemon.getSprite().pipelineData[k];
+      });
 
-        sprite.setScale(this.pokemon.getSpriteScale());
+      sprite.setScale(this.pokemon.getSpriteScale());
       });
 
       const isAltBuildFormChange = (this as any)?.formChange?.formKey === SpeciesFormKey.ALT_BUILD;
@@ -165,7 +172,7 @@ export class EvolutionPhase extends Phase {
         [ this.pokemonEvoSprite, this.pokemonEvoTintSprite ].forEach(sprite => {
           sprite.pipelineData["altBuildSpriteColors"] = this.pokemon.altBuildSpriteColors;
           sprite.pipelineData["altBuildTargetColors"] = this.pokemon.altBuildTargetColors;
-          sprite.pipelineData["altBuildBlendMode"] = this.pokemon.altBuildBlendMode || "replace";
+          sprite.pipelineData["altBuildBlendMode"] = this.pokemon.altBuildBlendMode || 'replace';
           sprite.pipelineData["altBuildInversionFactor"] = this.pokemon.altBuildInversionFactor || 0.0;
         });
 
@@ -173,7 +180,7 @@ export class EvolutionPhase extends Phase {
           const preData = preSnapshot && preSnapshot.altBuildSpriteColors ? preSnapshot : {
             altBuildSpriteColors: this.pokemon.altBuildSpriteColors,
             altBuildTargetColors: this.pokemon.altBuildTargetColors,
-            altBuildBlendMode: this.pokemon.altBuildBlendMode || "replace",
+            altBuildBlendMode: this.pokemon.altBuildBlendMode || 'replace',
             altBuildInversionFactor: this.pokemon.altBuildInversionFactor || 0.0
           };
 

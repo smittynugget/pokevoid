@@ -38,7 +38,7 @@ import { SkillTreeGenerator } from "#app/system/skill-tree-generator";
 import { SkillTreeMode, PokemonSelection, SkillTreePhase } from "#app/phases/skill-tree-phase";
 import { PlayableChampionData } from "#app/system/playable-champions";
 import { SkillTreeModifierPhase } from "#app/phases/skill-tree-modifier-phase";
-import { modifierTypes, getAttackTypeBoosterItemName, AddVoucherModifierType, AddTypeBallModifierType, ModifierTypeGenerator, PermaModifierType, TrainerBondAbilityModifierType, TeraAbilityModifierType } from "#app/modifier/modifier-type";
+import { modifierTypes, getAttackTypeBoosterItemName, AddVoucherModifierType, AddTypeBallModifierType, ModifierTypeGenerator, PermaModifierType, TrainerBondAbilityModifierType, TeraAbilityModifierType, PermaMoneyModifierType } from "#app/modifier/modifier-type";
 import type { ModifierTypeFunc } from "#app/modifier/modifier-type";
 import { playGenericLevelUpAnimation, skipCurrentLevelUpAnimation } from "./level-up-animation";
 import { VoucherType, getVoucherTypeIcon } from "#app/system/voucher";
@@ -394,6 +394,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private modalPatternOverlay: Phaser.GameObjects.Container | null = null;
   private modalPatternCreated: boolean = false;
 
+  private championTypingContainer: Phaser.GameObjects.Container | null = null;
+  private championTypeIcon1: Phaser.GameObjects.Sprite | null = null;
+  private championTypeIcon2: Phaser.GameObjects.Sprite | null = null;
+
   private saveZoomPreference(zoom: number): void {
     try {
       localStorage.setItem('skillTreeZoom', zoom.toString());
@@ -433,10 +437,26 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     this.setupTitleContainer();
 
+    this.championTypingContainer = this.scene.add.container(0, 0);
+    this.championTypingContainer.setDepth(1001);
+    this.championTypeIcon1 = this.scene.add.sprite(3, 0, Utils.getLocalizedSpriteKey("types"));
+    this.championTypeIcon1.setOrigin(0, 0.5);
+    this.championTypeIcon1.setScale(0.42);
+    this.championTypingContainer.add(this.championTypeIcon1);
+    this.championTypeIcon2 = this.scene.add.sprite(20, 0, Utils.getLocalizedSpriteKey("types"));
+    this.championTypeIcon2.setOrigin(0, 0.5);
+    this.championTypeIcon2.setScale(0.42);
+    this.championTypeIcon2.setVisible(false);
+    this.championTypingContainer.add(this.championTypeIcon2);
+    this.skillTreeContainer.add(this.championTypingContainer);
+
     this.skillTreeContent = this.scene.add.container(this.getWidth() / 2, this.getHeight() / 2);
     this.skillTreeContainer.add(this.skillTreeContent);
 
     this.skillTreeContainer.bringToTop(this.titleContainer);
+    if (this.championTypingContainer) {
+      this.skillTreeContainer.bringToTop(this.championTypingContainer);
+    }
 
     this.connectionsLayer = this.scene.add.container(0, 0);
     this.connectionGraphics = this.scene.add.graphics();
@@ -496,6 +516,45 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         this.modalBg.y
       );
     }
+
+    if (this.championTypingContainer) {
+      this.championTypingContainer.setPosition(
+        8,
+        this.getHeight() - 38
+      );
+    }
+
+    this.applyChampionTypingToModalBackground();
+  }
+
+  private applyChampionTypingToModalBackground(): void {
+    if (!this.modalBackgroundImage) return;
+
+    const t1 = this.config?.championData?.type1;
+    const t2 = this.config?.championData?.type2;
+    const types = [t1, t2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+    if (types.length === 0) {
+      this.modalBackgroundImage.clearTint();
+      return;
+    }
+
+    const rgb1 = getTypeRgb(types[0]);
+    if (!rgb1) {
+      this.modalBackgroundImage.clearTint();
+      return;
+    }
+
+    let r = rgb1[0], g = rgb1[1], b = rgb1[2];
+    if (types.length > 1) {
+      const rgb2 = getTypeRgb(types[1]);
+      if (rgb2) {
+        r = Math.round((r + rgb2[0]) / 2);
+        g = Math.round((g + rgb2[1]) / 2);
+        b = Math.round((b + rgb2[2]) / 2);
+      }
+    }
+
+    this.modalBackgroundImage.setTint(Phaser.Display.Color.GetColor(r, g, b));
   }
 
   protected createModalBackground(): void {
@@ -796,11 +855,30 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   show(args: any[]): boolean {
     const modalConfig: ModalConfig = { buttonActions: [] };
+    if (!this.championTypingContainer) {
+      this.championTypingContainer = this.scene.add.container(0, 0);
+      this.championTypingContainer.setDepth(1001);
+      this.championTypeIcon1 = this.scene.add.sprite(3, 0, Utils.getLocalizedSpriteKey("types"));
+      this.championTypeIcon1.setOrigin(0, 0.5);
+      this.championTypeIcon1.setScale(0.42);
+      this.championTypingContainer.add(this.championTypeIcon1);
+      this.championTypeIcon2 = this.scene.add.sprite(20, 0, Utils.getLocalizedSpriteKey("types"));
+      this.championTypeIcon2.setOrigin(0, 0.5);
+      this.championTypeIcon2.setScale(0.42);
+      this.championTypeIcon2.setVisible(false);
+      this.championTypingContainer.add(this.championTypeIcon2);
+      this.skillTreeContainer.add(this.championTypingContainer);
+      this.skillTreeContainer.bringToTop(this.titleContainer);
+      this.skillTreeContainer.bringToTop(this.championTypingContainer);
+    }
     if (!super.show([modalConfig])) return false;
 
     this.fixTitlePositioning();
     this.config = args?.[0] as SkillTreeConfig;
     if (!this.config) { return true; }
+
+    this.applyChampionTypingToModalBackground();
+    this.updateChampionTypingIcons();
 
     const skillTreeTutorials: EnhancedTutorial[] = [];
     const championId = this.config.activeSkillTree?.championId;
@@ -922,6 +1000,31 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     return true;
   }
 
+  private updateChampionTypingIcons(): void {
+    if (!this.championTypingContainer || !this.championTypeIcon1 || !this.championTypeIcon2) return;
+
+    const t1 = this.config?.championData?.type1;
+    const t2 = this.config?.championData?.type2;
+    const types = [t1, t2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+
+    if (types.length === 0) {
+      this.championTypingContainer.setVisible(false);
+      return;
+    }
+
+    this.championTypingContainer.setVisible(true);
+    try {
+      this.championTypeIcon1.setFrame(Type[types[0]].toLowerCase());
+      this.championTypeIcon1.setVisible(true);
+      if (types.length > 1) {
+        this.championTypeIcon2.setFrame(Type[types[1]].toLowerCase());
+        this.championTypeIcon2.setVisible(true);
+      } else {
+        this.championTypeIcon2.setVisible(false);
+      }
+    } catch {}
+  }
+
   clear(): void {
     this.cleanupControls();
 
@@ -929,6 +1032,13 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.modalBackgroundImage.destroy();
       this.modalBackgroundImage = null;
       this.modalBackgroundCreated = false;
+    }
+
+    if (this.championTypingContainer) {
+      this.championTypingContainer.destroy(true);
+      this.championTypingContainer = null;
+      this.championTypeIcon1 = null;
+      this.championTypeIcon2 = null;
     }
     if (this.isEnhancedDebugMode) {
       try {
@@ -1390,11 +1500,14 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       const originalDepth1NodeIds = fullTree.filter(n => n.depth === 1).map(n => n.id);
       const nodeCount = Math.max(1, signatureCount + generalCount);
       let placed = 0;
+      const nodeGen = new SkillTreeNodeGenerator(ast.seed, ast.championId, this.scene as BattleScene);
       for (let i = 0; i < signatureCount; i++, placed++) {
         const angle = (placed * 2 * Math.PI) / nodeCount;
         const species = ChampionUtils.getRandomChampionSignaturePokemon(championData as any, this.scene as BattleScene) as unknown as number;
-        const pokemonName = (allSpecies as any)?.[species - 1]?.name;
         const nodeId = `depth1_signature_${i}`;
+        const resolvedAltBuildId = ChampionUtils.getSignatureAltBuildId(species as any, championData as any) as PokemonAltBuildId | null;
+        const resolvedAltBuild = resolvedAltBuildId ? POKEMON_ALT_BUILDS[resolvedAltBuildId] : undefined;
+        const rewardData = { type: SkillTreeRewardType.SIGNATURE_POKEMON, data: { species, altBuildId: resolvedAltBuildId, altBuild: resolvedAltBuild }, immediate: false };
         filteredTree.push({
           id: nodeId,
           depth: 1,
@@ -1402,15 +1515,14 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           dependencies: ["root_0"],
           rarity: SkillTreeRarity.GREAT,
           state: SkillTreeNodeState.LOCKED_DETAILS,
-          rewardData: { type: SkillTreeRewardType.SIGNATURE_POKEMON, data: { species }, immediate: false },
-          name: pokemonName ?? i18next.t("skillTree:descriptions.signaturePokemon", { champion: ChampionUtils.getChampionDisplayName((championData as any).id), pokemon: pokemonName }),
-          description: i18next.t("skillTree:descriptions.signaturePokemon", { champion: ChampionUtils.getChampionDisplayName((championData as any).id), pokemon: pokemonName }),
+          rewardData,
+          name: nodeGen.getRewardName(rewardData),
+          description: nodeGen.getRewardDescription(rewardData),
           cost: 1,
           isLegendary: false,
           unlocked: false,
         } as any);
       }
-      const nodeGen = new SkillTreeNodeGenerator(ast.seed, ast.championId, this.scene as BattleScene);
       for (let i = 0; i < generalCount; i++, placed++) {
         const angle = (placed * 2 * Math.PI) / nodeCount;
         const species = SkillTreeSelectors.pickGeneralPokemon(championData as any, this.scene as BattleScene) as unknown as number;
@@ -1705,7 +1817,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     return (brightenedR << 16) | (brightenedG << 8) | brightenedB;
   }
-
   private getRarityText(rarity: SkillTreeRarity): string {
     if (!rarity) {
       return i18next.t("skillTree:rarityUnknown");
@@ -2079,6 +2190,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         } else if (node.rewardData?.type === SkillTreeRewardType.TYPE_BALL_FILTERED && node.rewardData?.data?.ballType !== undefined) {
           applyTypeBallRecolor(this.scene as BattleScene, icon, node.rewardData.data.ballType as Type, true);
         }
+
         break;
       case SkillTreeNodeState.LOCKED_DETAILS:
 
@@ -3398,7 +3510,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
     if (node.rewardData.type === SkillTreeRewardType.TYPE_SWITCHER
         || node.rewardData.type === SkillTreeRewardType.CATCH_RATE_BONUS
-        || node.rewardData.type === SkillTreeRewardType.FUSION_SECONDARY_PRIORITY) {
+        || node.rewardData.type === SkillTreeRewardType.FUSION_SECONDARY_PRIORITY
+        || node.rewardData.type === SkillTreeRewardType.TM_FILTERED) {
       return 0;
     }
     return node.cost;
@@ -3604,35 +3717,16 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
     if (node.rewardData?.type === SkillTreeRewardType.PERMA_MONEY) {
       try {
-        const amt = node.rewardData?.data?.amount || 0;
-        let factory = modifierTypes?.SELECTABLE_PMONEY_3;
-        if (amt >= 5000 && modifierTypes?.SELECTABLE_PMONEY_5) factory = modifierTypes.SELECTABLE_PMONEY_5;
-        else if (amt >= 2500 && modifierTypes?.SELECTABLE_PMONEY_4) factory = modifierTypes.SELECTABLE_PMONEY_4;
-        if (factory && typeof factory === "function") {
-          this.executeModifierRewardWithReturn(factory, true, node.rarity);
+        const amt = node.rewardData?.data?.amount || 3000;
+        const directType = new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", amt, true);
+        if (directType) {
+          this.executeModifierRewardWithReturn(() => directType, true, node.rarity);
           return;
         }
       } catch {  }
     }
     if (node.rewardData) {
       const t = node.rewardData.type;
-
-      if (t === SkillTreeRewardType.TRAINER_BOND_ABILITY) {
-        const abilityId = node.rewardData.data?.abilityId as Abilities;
-        const championId = this.config.activeSkillTree.championId;
-        const activationChance = node.rewardData.data?.activationChance ?? 0.05;
-        const gender = (this.scene as BattleScene).gameData.gender;
-
-        if (abilityId !== undefined && championId) {
-          const modifierTypeFunc = () => {
-            const type = new TrainerBondAbilityModifierType(championId, abilityId, activationChance, gender);
-            type.id = "TRAINER_BOND_ABILITY";
-            return type;
-          };
-          this.executeModifierRewardWithReturn(modifierTypeFunc, false, node.rarity);
-          return;
-        }
-      }
 
       if (t === SkillTreeRewardType.ESSENCE_BUNDLE) {
         const type = node.rewardData.data?.type;
@@ -3705,6 +3799,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         SkillTreeRewardType.GENERAL_ITEMS,
         SkillTreeRewardType.ABILITY_SWITCHER,
         SkillTreeRewardType.BATON_ITEM,
+        SkillTreeRewardType.TRAINER_BOND_ABILITY,
+        SkillTreeRewardType.TERA_ABILITY,
       ]);
       if (selectionTypes.has(t)) {
         (this.scene.gameData as any).tempSkillTreeConfig = this.config;
@@ -3721,7 +3817,20 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       }
 
       if (t === SkillTreeRewardType.MONEY_REWARD) {
-        const amount = node.rewardData?.data?.amount ?? 1000;
+        let amount = node.rewardData?.data?.amount;
+        if (!amount) {
+          const scene = this.scene as BattleScene;
+          const effectiveWave = scene.battlePathWave
+            || scene.gameData?.gameStats?.highestWaveReached
+            || 1;
+          const waveSetIndex = Math.ceil(effectiveWave / 10) - 1;
+          const moneyValue = Math.pow(
+            (waveSetIndex + 1 + (0.75 + (((effectiveWave - 1) % 10) + 1) / 10)) * 100,
+            1 + 0.005 * waveSetIndex
+          ) * 10;
+          amount = Math.floor(moneyValue / 10) * 10;
+        }
+        (this.scene as BattleScene).addMoney(amount);
         const reward: RewardConfig = {
           type: RewardObtainedType.MONEY,
           name: this.getRewardDisplayName(node),
@@ -3772,24 +3881,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         this.executeModifierRewardWithReturn(modifierTypes.ROGUE_BALL, false, node.rarity);
         return;
       }
-
-      if (t === SkillTreeRewardType.TERA_ABILITY) {
-        const abilityId = node.rewardData.data?.abilityId as Abilities;
-        const teraType = node.rewardData.data?.type as Type;
-        const championId = this.config.activeSkillTree.championId;
-        const activationChance = node.rewardData.data?.activationChance ?? 0.10;
-
-        if (abilityId !== undefined && teraType !== undefined && championId) {
-          const teraModifierFunc = () => {
-            const type = new TeraAbilityModifierType(championId, abilityId, teraType, activationChance);
-            type.id = "TERA_ABILITY";
-            return type;
-          };
-          this.executeModifierRewardWithReturn(teraModifierFunc, false, node.rarity);
-          return;
-        }
-      }
-
       if (t === SkillTreeRewardType.ESSENCE_TYPE_WEIGHT) {
         const reward: RewardConfig = {
           type: RewardObtainedType.ESSENCE_BUNDLE,
@@ -3959,7 +4050,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 		const cm = ChampionManager.getInstance();
             const champId = (this.scene as BattleScene).gameData.selectedChampionId || ast.championId || "apollo_diana";
             const c = cm.getChampionData(champId) as any;
-            [c.type1, c.type2].filter(Boolean).forEach((t: number) => {
+            [c.type1, c.type2].filter((t: any) => t !== undefined && t !== null && t !== Type.UNKNOWN).forEach((t: number) => {
               (ast.catchRateBonusByType as any)[t] = ((ast.catchRateBonusByType as any)[t] || 0) + amount;
             });
           } catch {}
@@ -4172,17 +4263,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           return i18next.t("skillTree:rewards.typeBooster", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type] });
         case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
           return node.name;
-        case SkillTreeRewardType.MOVE_UPGRADE: {
-          const filterUpgrades = node.rewardData?.data?.filterUpgrades;
-          if (filterUpgrades?.moveUpgrades?.length > 0) {
-            const UpgradePathUtils = (require as any)("#app/enums/upgrade-path").UpgradePathUtils;
-            const upgradePath = filterUpgrades.moveUpgrades[0];
-            const pathType = UpgradePathUtils.getPathType(upgradePath);
-            const flavorText = i18next.t(`moveUpgradeAttrs:${pathType}`, { defaultValue: pathType });
-            return flavorText;
-          }
-          return i18next.t("skillTree:unknownReward");
-        }
+        case SkillTreeRewardType.MOVE_UPGRADE:
+          return i18next.t("skillTree:rewards.moveUpgrade");
         case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
           return (require as any)("#app/data/ability").allAbilities?.[node.rewardData.data?.abilityId]?.name || i18next.t("skillTree:unknownReward");
         case SkillTreeRewardType.TERA_ABILITY:
@@ -4230,7 +4312,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         case SkillTreeRewardType.GLITCH_CHANGE:
           return i18next.t("skillTree:rewards.glitchChange");
         case SkillTreeRewardType.TYPE_SWITCHER:
-          return i18next.t("skillTree:rewards.typeSwitcher", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type] });
+          return i18next.t("skillTree:rewards.typeSwitcherGeneric");
         case SkillTreeRewardType.POKEMON_ALT_BUILD: {
 
           if (node.state === SkillTreeNodeState.UNLOCKED) {
@@ -4308,6 +4390,13 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           }
           return i18next.t("skillTree:rewards.legendaryPokemon", { pokemon: pokemonName });
         }
+        case SkillTreeRewardType.TRAINER_BOND_ABILITY: {
+          const ChampionUtilsRef = (require as any)("#app/system/champion-utils").ChampionUtils;
+          const championName = ChampionUtilsRef.getChampionDisplayName(this.config?.activeSkillTree?.championId);
+          return i18next.t("skillTree:rewards.trainerBondGeneric", { champion: championName });
+        }
+        case SkillTreeRewardType.TERA_ABILITY:
+          return i18next.t("skillTree:rewards.teraAbilityGeneric");
         default:
           return node.name;
       }

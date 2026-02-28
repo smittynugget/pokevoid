@@ -1,45 +1,45 @@
 {
   "TAUROS_ELECTRIC_HIT_QUEST": {
     "name": "Colpo Elettrico di Tauros",
-    "task": "Fai colpire Tauros da 15 mosse di tipo Elettro"
+    "task": "Fai colpire Tauros da 8 mosse di tipo Elettro"
   },
   "DITTO_NEW_MOVES": {
     "name": "Nuove mosse di Ditto",
-    "task": "Sconfiggi 200 Pokémon con Ditto",
+    "task": "Sconfiggi 50 Pokémon con Ditto",
     "rewardText": "Ditto avrà un set di mosse più ampio!"
   },
   "WOBBUFFET_NEW_MOVES": {
     "name": "Nuove mosse di Wobbuffet",
-    "task": "Sconfiggi 200 Pokémon con Wobbuffet",
+    "task": "Sconfiggi 50 Pokémon con Wobbuffet",
     "rewardText": "Wobbuffet avrà un set di mosse più ampio!"
   },
   "SMEARGLE_NEW_MOVES": {
     "name": "Nuove mosse di Smeargle",
-    "task": "Sconfiggi 200 Pokémon con Smeargle",
+    "task": "Sconfiggi 50 Pokémon con Smeargle",
     "rewardText": "Smeargle avrà un set di mosse più ampio!"
   },
   "UNOWN_NEW_MOVES": {
     "name": "Nuove mosse di Unown",
-    "task": "Sconfiggi 200 Pokémon con Unown",
+    "task": "Sconfiggi 50 Pokémon con Unown",
     "rewardText": "Unown avrà un set di mosse più ampio!"
   },
   "TYROGUE_NEW_MOVES": {
     "name": "Nuove mosse di Tyrogue",
-    "task": "Sconfiggi 200 Pokémon con Tyrogue",
+    "task": "Sconfiggi 50 Pokémon con Tyrogue",
     "rewardText": "Tyrogue avrà un set di mosse più ampio!"
   },
   "METAPOD_NEW_MOVES": {
     "name": "Nuove mosse di Metapod",
-    "task": "Sconfiggi 200 Pokémon con Metapod",
+    "task": "Sconfiggi 50 Pokémon con Metapod",
     "rewardText": "Metapod avrà un set di mosse più ampio!"
   },
   "KECLEON_COLOR_CHANGE_QUEST": {
     "name": "Cambiacolore di Kecleon",
-    "task": "Attiva l'abilità Cambiacolore di Kecleon 25 volte"
+    "task": "Attiva l'abilità Cambiacolore di Kecleon 13 volte"
   },
   "GLISCOR_DARK_MOVE_KNOCKOUT_QUEST": {
     "name": "KO Buio di Gliscor",
-    "task": "Sconfiggi 50 Pokemon con Gliscor usando mosse di tipo Buio"
+    "task": "Sconfiggi 25 Pokemon con Gliscor usando mosse di tipo Buio"
   },
   "MAROWAK_CUBONE_FAINT_QUEST": {
     "name": "Svenimento Marowak Cubone",
@@ -47,27 +47,27 @@
   },
   "NOIVERN_DRAGON_MOVE_KNOCKOUT_QUEST": {
     "name": "KO Drago di Noivern",
-    "task": "Sconfiggi 50 Pokemon con Noivern usando mosse di tipo Drago"
+    "task": "Sconfiggi 25 Pokemon con Noivern usando mosse di tipo Drago"
   },
   "FERALIGATR_DRAGON_DEFEAT_QUEST": {
     "name": "Sconfitta Drago di Feraligatr",
-    "task": "Sconfiggi 25 Pokemon di tipo Drago con Feraligatr"
+    "task": "Sconfiggi 13 Pokemon di tipo Drago con Feraligatr"
   },
   "CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST": {
     "name": "KO Terra di Charizard",
-    "task": "Sconfiggi 30 Pokemon con Charizard usando mosse di tipo Terra"
+    "task": "Sconfiggi 15 Pokemon con Charizard usando mosse di tipo Terra"
   },
   "VENUSAUR_PSYCHIC_MOVE_USE_QUEST": {
     "name": "Uso Psico di Venusaur",
-    "task": "Usa mosse di tipo Psico 60 volte con Venusaur"
+    "task": "Usa mosse di tipo Psico 30 volte con Venusaur"
   },
   "BLASTOISE_FAIRY_DEFEAT_QUEST": {
     "name": "Sconfitta Folletto di Blastoise",
-    "task": "Sconfiggi 25 Pokemon di tipo Folletto con Blastoise"
+    "task": "Sconfiggi 13 Pokemon di tipo Folletto con Blastoise"
   },
   "NIDOKING_DEFEAT_QUEST": {
     "name": "Sconfitta di Nidoking",
-    "task": "Sconfiggi 5 Nidoking con il tuo Nidoking"
+    "task": "Sconfiggi 3 Nidoking con il tuo Nidoking"
   },
   "GENGAR_SPECIAL_WAVE_QUEST": {
     "name": "Ondata Speciale di Gengar",
@@ -75,7 +75,7 @@
   },
   "WEEZING_FIRE_MOVE_KNOCKOUT_QUEST": {
     "name": "KO Fuoco di Weezing",
-    "task": "Sconfiggi 40 Pokemon con Weezing usando mosse di tipo Fuoco"
+    "task": "Sconfiggi 20 Pokemon con Weezing usando mosse di tipo Fuoco"
   },
   "HITMONLEE_NORMAL_WAVE_QUEST": {
     "name": "Ondata Normale di Hitmonlee",
@@ -83,7 +83,7 @@
   },
   "HITMONCHAN_STAT_INCREASE_QUEST": {
     "name": "Aumento Statistiche di Hitmonchan",
-    "task": "Usa mosse che aumentano le statistiche 25 volte con Hitmonchan"
+    "task": "Usa mosse che aumentano le statistiche 13 volte con Hitmonchan"
   },
   "HITMON_DUO_WIN_QUEST": {
     "name": "Vittoria Duo Hitmon",
@@ -91,7 +91,7 @@
   },
   "KANGASKHAN_GHOST_MOVE_QUEST": {
     "name": "Mossa Spettro di Kangaskhan",
-    "task": "Usa mosse di tipo Spettro 25 volte con Kangaskhan"
+    "task": "Usa mosse di tipo Spettro 13 volte con Kangaskhan"
   },
   "SCYTHER_TRIO_WIN_QUEST": {
     "name": "Vittoria Trio di Scyther",
@@ -115,15 +115,15 @@
   },
   "GYARADOS_GROUND_SWITCH_QUEST": {
     "name": "Cambio Terra di Gyarados",
-    "task": "Fai usare 10 mosse di tipo Terra contro il tuo Gyarados"
+    "task": "Fai usare 5 mosse di tipo Terra contro il tuo Gyarados"
   },
   "LAPRAS_FIRE_MOVE_QUEST": {
     "name": "Mossa Fuoco di Lapras",
-    "task": "Usa mosse di tipo Fuoco 25 volte con Lapras"
+    "task": "Usa mosse di tipo Fuoco 13 volte con Lapras"
   },
   "PORYGON_Z_ANALYTIC_USE_QUEST": {
     "name": "Uso Analitico di Porygon-Z",
-    "task": "Attiva l'abilità Analitico di Porygon-Z 20 volte"
+    "task": "Attiva l'abilità Analitico di Porygon-Z 10 volte"
   },
   "MEOWTH_JESTER_QUEST": {
     "name": "Vittoria Trio di Meowth",
@@ -135,15 +135,15 @@
   },
   "SUDOWOODO_WOOD_HAMMER_QUEST": {
     "name": "Martelmasso di Sudowoodo",
-    "task": "Usa Martelmasso 40 volte con Sudowoodo"
+    "task": "Usa Martelmasso 20 volte con Sudowoodo"
   },
   "AMBIPOM_GIGA_IMPACT_QUEST": {
     "name": "Gigaimpatto di Ambipom",
-    "task": "Usa Gigaimpatto 5 volte con Ambipom in una run"
+    "task": "Usa Gigaimpatto 3 volte con Ambipom in una run"
   },
   "MILTANK_STEEL_MOVE_KNOCKOUT_QUEST": {
     "name": "KO Acciaio di Miltank",
-    "task": "Sconfiggi 25 Pokemon con Miltank usando mosse di tipo Acciaio"
+    "task": "Sconfiggi 13 Pokemon con Miltank usando mosse di tipo Acciaio"
   },
   "SLAKING_RIVAL_DEFEAT_QUEST": {
     "name": "Sconfitta Rivale di Slaking",
@@ -155,7 +155,7 @@
   },
   "REGIGIGAS_REGI_DEFEAT_QUEST": {
     "name": "Sconfitta Regi di Regigigas",
-    "task": "Sconfiggi 3 Pokemon Regi usando Regigigas"
+    "task": "Sconfiggi 2 Pokemon Regi usando Regigigas"
   },
   "PIKACHU_RED_BLUE_WIN_QUEST": {
     "name": "Vittoria Red Blue di Pikachu",
@@ -163,39 +163,39 @@
   },
   "SNORLAX_GRASS_KNOCKOUT_QUEST": {
     "name": "KO Erba di Snorlax",
-    "task": "Sconfiggi 10 Pokemon con Snorlax usando mosse di tipo Erba"
+    "task": "Sconfiggi 5 Pokemon con Snorlax usando mosse di tipo Erba"
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "Regalino di Cloyster",
-    "task": "Usa Regalino 20 volte con Cloyster in modalità Nuzlocke"
+    "task": "Usa Regalino 10 volte con Cloyster in modalità Nuzlocke"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "Sconfitta Nosepass di Nuzleaf",
-    "task": "Sconfiggi 10 Nosepass o Probopass con Nuzleaf"
+    "task": "Sconfiggi 5 Nosepass o Probopass con Nuzleaf"
   },
   "CHANDELURE_REST_QUEST": {
     "name": "Riposo di Chandelure",
-    "task": "Usa Riposo 5 volte con Chandelure in una run"
+    "task": "Usa Riposo 3 volte con Chandelure in una run"
   },
   "SMEARGLE_DEFEAT_QUEST": {
     "name": "Sconfitta di Smeargle",
-    "task": "Sconfiggi 40 Pokemon con Smeargle"
+    "task": "Sconfiggi 20 Pokemon con Smeargle"
   },
   "MIMIKYU_CHARIZARD_KNOCKOUT_QUEST": {
     "name": "KO Charizard di Mimikyu",
-    "task": "Sconfiggi 2 Charizard con Mimikyu"
+    "task": "Sconfiggi 1 Charizard con Mimikyu"
   },
   "MIMIKYU_GRENINJA_KNOCKOUT_QUEST": {
     "name": "KO Greninja di Mimikyu",
-    "task": "Sconfiggi 2 Greninja con Mimikyu"
+    "task": "Sconfiggi 1 Greninja con Mimikyu"
   },
   "MIMIKYU_RAICHU_KNOCKOUT_QUEST": {
     "name": "KO Raichu di Mimikyu",
-    "task": "Sconfiggi 2 Raichu con Mimikyu"
+    "task": "Sconfiggi 1 Raichu con Mimikyu"
   },
   "MIMIKYU_MEWTWO_KNOCKOUT_QUEST": {
     "name": "KO Mewtwo di Mimikyu",
-    "task": "Sconfiggi 2 Mewtwo con Mimikyu"
+    "task": "Sconfiggi 1 Mewtwo con Mimikyu"
   },
   "MIMIKYU_REGIROCK_KNOCKOUT_QUEST": {
     "name": "KO Regirock di Mimikyu",
@@ -203,19 +203,19 @@
   },
   "EISCUE_ROCK_KNOCKOUT_QUEST": {
     "name": "KO Roccia di Eiscue",
-    "task": "Sconfiggi 20 Pokemon di tipo Roccia con Eiscue"
+    "task": "Sconfiggi 10 Pokemon di tipo Roccia con Eiscue"
   },
   "ZANGOOSE_SEVIPER_KNOCKOUT_QUEST": {
     "name": "KO Seviper di Zangoose",
-    "task": "Sconfiggi 5 Seviper con Zangoose"
+    "task": "Sconfiggi 3 Seviper con Zangoose"
   },
   "SEVIPER_ZANGOOSE_KNOCKOUT_QUEST": {
     "name": "KO Zangoose di Seviper",
-    "task": "Sconfiggi 5 Zangoose con Seviper"
+    "task": "Sconfiggi 3 Zangoose con Seviper"
   },
   "TRUBBISH_POISON_DEFEAT_QUEST": {
     "name": "Sconfitta Veleno di Trubbish",
-    "task": "Sconfiggi 20 Pokemon di tipo Veleno con Trubbish"
+    "task": "Sconfiggi 10 Pokemon di tipo Veleno con Trubbish"
   },
   "HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST": {
     "name": "Sconfitta Rivale Campione di Hawlucha",
@@ -223,19 +223,19 @@
   },
   "DITTO_DRAGONITE_TRANSFORM_QUEST": {
     "name": "Trasformazione Dragonite di Ditto",
-    "task": "Trasformati in Dragonite 2 volte con Ditto"
+    "task": "Trasformati in Dragonite 1 volte con Ditto"
   },
   "DITTO_CHARIZARD_TRANSFORM_QUEST": {
     "name": "Trasformazione Charizard di Ditto",
-    "task": "Trasformati in Charizard 2 volte con Ditto"
+    "task": "Trasformati in Charizard 1 volte con Ditto"
   },
   "DITTO_PIKACHU_TRANSFORM_QUEST": {
     "name": "Trasformazione Pikachu di Ditto",
-    "task": "Trasformati in Pikachu 2 volte con Ditto"
+    "task": "Trasformati in Pikachu 1 volte con Ditto"
   },
   "DITTO_MACHAMP_TRANSFORM_QUEST": {
     "name": "Trasformazione Machamp di Ditto",
-    "task": "Trasformati in Machamp 2 volte con Ditto"
+    "task": "Trasformati in Machamp 1 volte con Ditto"
   },
   "DITTO_MEWTWO_TRANSFORM_QUEST": {
     "name": "Trasformazione Mewtwo di Ditto",
@@ -243,7 +243,7 @@
   },
   "FERALIGATOR_ROCK_MOVE_KNOCKOUT_QUEST": {
     "name": "KO Roccia di Feraligatr",
-    "task": "Sconfiggi 25 Pokemon con Feraligatr usando mosse di tipo Roccia"
+    "task": "Sconfiggi 13 Pokemon con Feraligatr usando mosse di tipo Roccia"
   },
   "WOBBUFFET_RIVAL_DEFEAT_QUEST": {
     "name": "Sconfitta Rivale di Wobbuffet",
@@ -251,23 +251,23 @@
   },
   "MAGIKARP_DEFEAT_QUEST": {
     "name": "Sconfitta di Magikarp",
-    "task": "Sconfiggi 100 Pokemon con Magikarp"
+    "task": "Sconfiggi 50 Pokemon con Magikarp"
   },
   "KLINKLANG_GEAR_MOVE_QUEST": {
     "name": "Mosse Ingranaggio di Klinklang",
-    "task": "Usa Cambiomarcia e/o Marciaingranagg 30 volte con Klinklang"
+    "task": "Usa Cambiomarcia e/o Marciaingranagg 15 volte con Klinklang"
   },
   "SPINDA_CONFUSION_RECOVERY_QUEST": {
     "name": "Recupero Confusione di Spinda",
-    "task": "Recupera dalla confusione 5 volte con Spinda"
+    "task": "Recupera dalla confusione 3 volte con Spinda"
   },
   "NINETALES_STORED_POWER_KNOCKOUT_QUEST": {
     "name": "KO Psicopotenza di Ninetales",
-    "task": "Sconfiggi 20 Pokemon con Ninetales usando Psicopotenza"
+    "task": "Sconfiggi 10 Pokemon con Ninetales usando Psicopotenza"
   },
   "SHUCKLE_DEFEAT_QUEST": {
     "name": "Sconfitta di Shuckle",
-    "task": "Sconfiggi 15 Pokemon con Shuckle"
+    "task": "Sconfiggi 8 Pokemon con Shuckle"
   },
   "TANGELA_RIVAL_DEFEAT_QUEST": {
     "name": "Sconfitta Rivale di Tangela",
@@ -275,7 +275,7 @@
   },
   "CLAYDOL_POISON_QUEST": {
     "name": "Uso Mosse Veleno di Claydol",
-    "task": "Usa mosse di tipo Veleno 80 volte con Claydol"
+    "task": "Usa mosse di tipo Veleno 40 volte con Claydol"
   },
   "TAUROS_DARK_WAVE_QUEST": {
     "name": "Ondata Buio di Tauros",
@@ -287,7 +287,7 @@
   },
   "MAROWAK_ZOMBIE_KNOCKOUT_QUEST": {
     "name": "KO Zombie di Marowak",
-    "task": "Sconfiggi 50 Pokemon con Marowak usando Ventotetro, Pugnorabbia, Rancore, Maledizione o Ultimi Onori"
+    "task": "Sconfiggi 25 Pokemon con Marowak usando Ventotetro, Pugnorabbia, Rancore, Maledizione o Ultimi Onori"
   },
   "GRENINJA_YOKAI_WAVE_QUEST": {
     "name": "Ondata Yokai di Greninja",
@@ -299,7 +299,7 @@
   },
   "LICKITUNG_GIGGLE_KNOCKOUT_QUEST": {
     "name": "KO Leccata di Lickitung",
-    "task": "Sconfiggi 75 Pokemon con Lickitung usando Leccata"
+    "task": "Sconfiggi 38 Pokemon con Lickitung usando Leccata"
   },
   "LICKITUNG_HYPER_WAVE_QUEST": {
     "name": "Ondata Hyper di Lickitung",
@@ -323,7 +323,7 @@
   },
   "CHARIZARD_HELLFLAME_QUEST": {
     "name": "Fiamme Infernali di Charizard",
-    "task": "Usa Incrofiamma 25 volte con Charizard in modalità Incubo"
+    "task": "Usa Incrofiamma 13 volte con Charizard in modalità Incubo"
   },
   "EEVEE_NIGHTMARE_QUEST": {
     "name": "Incubo di Eevee",
@@ -363,7 +363,7 @@
   },
   "MAGICAL_PIKACHU_QUEST": {
     "name": "Pikachu Magico",
-    "task": "Vinci 2 run con Pikachu che conosce almeno 2 mosse di tipo Folletto"
+    "task": "Vinci 1 run con Pikachu che conosce almeno 2 mosse di tipo Folletto"
   },
   "CHARMANDER_UNDERTALE_QUEST": {
     "name": "Undertale di Charmander",
@@ -371,7 +371,7 @@
   },
   "SQUIRTLE_TORMENT_QUEST": {
     "name": "Tormento di Squirtle",
-    "task": "Fai assistere Squirtle allo svenimento di Blastoise 3 volte nella tua squadra"
+    "task": "Fai assistere Squirtle allo svenimento di Blastoise 2 volte nella tua squadra"
   },
   "BULBASAUR_TERROR_QUEST": {
     "name": "Terrore di Bulbasaur",
@@ -391,17 +391,17 @@
   },
   "STARTER_CATCH_QUEST": {
     "name": "Missione Cattura Starter",
-    "task": "Cattura 10 Pokemon?!",
+    "task": "Cattura 5 Pokemon?!",
     "rewardText": "Sblocca la Modalità Viaggio!"
   },
   "NUZLIGHT_UNLOCK_QUEST": {
     "name": "Missione Sblocco Nuzlight",
-    "task": "Vinci 2 run per sbloccare la Modalità Nuzlight!",
+    "task": "Vinci 1 run per sbloccare la Modalità Nuzlight!",
     "rewardText": "Sblocca la Modalità Nuzlight!"
   },
   "NUZLOCKE_UNLOCK_QUEST": {
     "name": "Missione Sblocco Nuzlocke",
-    "task": "Vinci 3 run Nuzlight per sbloccare la Modalità Nuzlocke!",
+    "task": "Vinci 2 run Nuzlight per sbloccare la Modalità Nuzlocke!",
     "rewardText": "Sblocca la Modalità Nuzlocke!"
   },
   "MORPEKO_NIGHTMARE_QUEST": {
@@ -418,7 +418,7 @@
   },
   "GOLEM_FIRE_QUEST": {
     "name": "Fuoco di Golem",
-    "task": "Fai colpire il tuo Golem con mosse di tipo Fuoco 50 volte"
+    "task": "Fai colpire il tuo Golem con mosse di tipo Fuoco 25 volte"
   },
   "DEINO_NIGHTMARE_QUEST": {
     "name": "Incubo di Deino",
@@ -426,7 +426,7 @@
   },
   "GOLURK_DREAD_QUEST": {
     "name": "Terrore di Golurk",
-    "task": "Fai svenire 15 dei tuoi Pokemon (escluso Golurk) mentre hai Golurk nella tua squadra in modalità Incubo"
+    "task": "Fai svenire 8 dei tuoi Pokemon (escluso Golurk) mentre hai Golurk nella tua squadra in modalità Incubo"
   },
   "DUSCLOPS_NIGHTMARE_QUEST": {
     "name": "Incubo di Dusclops",
@@ -474,52 +474,52 @@
   },
   "NORMAL_STRENGTH": {
     "name": "Forza Normale!",
-    "task": "Sconfiggi 250 Pokemon usando Pokemon di tipo Normale in più run",
+    "task": "Sconfiggi 125 Pokemon usando Pokemon di tipo Normale in più run",
     "rewardText": "Sblocca un PermaItem che cambia le Resistenze e i Punti di Forza dei tipi Normali!"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "Nuove Mosse di Magikarp",
-    "task": "Sconfiggi 200 Pokemon con Magikarp",
+    "task": "Sconfiggi 50 Pokemon con Magikarp",
     "rewardText": "Magikarp avrà un set di mosse più ampio!"
   },
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "Forza Normale!",
-    "task": "Sconfiggi 250 Pokemon usando Pokemon di tipo Normale in più run",
+    "task": "Sconfiggi 125 Pokemon usando Pokemon di tipo Normale in più run",
     "rewardText": "Sblocca un PermaItem che cambia le Resistenze e i Punti di Forza dei tipi Normali!"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "Nuove Mosse di Magikarp",
-    "task": "Sconfiggi 200 Pokemon con Magikarp",
+    "task": "Sconfiggi 50 Pokemon con Magikarp",
     "rewardText": "Magikarp avrà un set di mosse più ampio!"
   },
   "DITTO_NEW_MOVES_QUEST": {
     "name": "Nuove mosse di Ditto",
-    "task": "Sconfiggi 200 Pokémon con Ditto",
+    "task": "Sconfiggi 50 Pokémon con Ditto",
     "rewardText": "Ditto avrà un set di mosse più ampio!"
   },
   "WOBBUFFET_NEW_MOVES_QUEST": {
     "name": "Nuove mosse di Wobbuffet",
-    "task": "Sconfiggi 200 Pokémon con Wobbuffet",
+    "task": "Sconfiggi 50 Pokémon con Wobbuffet",
     "rewardText": "Wobbuffet avrà un set di mosse più ampio!"
   },
   "SMEARGLE_NEW_MOVES_QUEST": {
     "name": "Nuove mosse di Smeargle",
-    "task": "Sconfiggi 200 Pokémon con Smeargle",
+    "task": "Sconfiggi 50 Pokémon con Smeargle",
     "rewardText": "Smeargle avrà un set di mosse più ampio!"
   },
   "UNOWN_NEW_MOVES_QUEST": {
     "name": "Nuove mosse di Unown",
-    "task": "Sconfiggi 200 Pokémon con Unown",
+    "task": "Sconfiggi 50 Pokémon con Unown",
     "rewardText": "Unown avrà un set di mosse più ampio!"
   },
   "TYROGUE_NEW_MOVES_QUEST": {
     "name": "Nuove mosse di Tyrogue",
-    "task": "Sconfiggi 200 Pokémon con Tyrogue",
+    "task": "Sconfiggi 50 Pokémon con Tyrogue",
     "rewardText": "Tyrogue avrà un set di mosse più ampio!"
   },
   "METAPOD_NEW_MOVES_QUEST": {
     "name": "Nuove mosse di Metapod",
-    "task": "Sconfiggi 200 Pokémon con Metapod",
+    "task": "Sconfiggi 50 Pokémon con Metapod",
     "rewardText": "Metapod avrà un set di mosse più ampio!"
   }
 }

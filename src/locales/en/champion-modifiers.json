@@ -11,8 +11,8 @@
       "descriptionConditional": "Permanently increases {{stats}} by {{percent}}% for {{types}}-type Pokemon or signature Pokemon. Non-{{types}} non-signature Pokemon only gain {{firstStat}} boost. Infused with {{champion}}'s training methods."
     },
     "trainerBondAbility": {
-      "name": "{{champion}}'s Limit Break: {{ability}}",
-      "description": "{{chance}}% chance to activate {{ability}} for {{champion}}'s Pokemon. {{abilityDescription}}"
+      "name": "{{ability}}",
+      "description": "{{chance}}% chance per stack to activate {{ability}} for {{champion}}'s Pokemon. Stacks with same ability. {{abilityDescription}}"
     },
     "teraAbility": {
       "name": "{{type}} Tera Ability: {{ability}}",

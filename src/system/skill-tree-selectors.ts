@@ -30,6 +30,10 @@ export class SkillTreeSelectors {
     return !!ab && typeof ab.name === "string" && !ab.name.endsWith(" (N)");
   }
 
+  private static getChampionTypes(champion: PlayableChampionData): Type[] {
+    return [champion.type1, champion.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+  }
+
   static getAllNonSmittyAbilities(): Abilities[] {
     return Object.values(Abilities)
       .filter(v => typeof v === "number" && !this.isSmittyAbility(v as Abilities))
@@ -37,7 +41,7 @@ export class SkillTreeSelectors {
   }
 
   static pickChampionTM(champion: PlayableChampionData): Moves {
-    const types = [champion.type1, champion.type2].filter(Boolean) as Type[];
+    const types = this.getChampionTypes(champion);
     const pool = (Object.values(Moves) as Moves[]).filter((m) => {
       const md: any = (allMoves as any)[m];
       if (!md || !types.includes(md.type) || (md.name as string)?.endsWith(" (N)")) {
@@ -58,7 +62,7 @@ export class SkillTreeSelectors {
   }
 
   static pickGeneralPokemon(champion: PlayableChampionData, scene?: BattleScene): Species {
-    const types = [champion.type1, champion.type2].filter(Boolean) as Type[];
+    const types = this.getChampionTypes(champion);
 
     const currentWave = scene?.currentBattle?.waveIndex ?? 1;
     const bstLimit = currentWave < 30 ? 500 : 550;
@@ -115,7 +119,7 @@ export class SkillTreeSelectors {
   }
 
   static pickStandardAbility(champion: PlayableChampionData): Abilities {
-    const types = [champion.type1, champion.type2].filter(Boolean) as Type[];
+    const types = this.getChampionTypes(champion);
 
     let pool: Abilities[] = [];
 
@@ -131,7 +135,24 @@ export class SkillTreeSelectors {
   }
 
   static pickTrainerBondAbility(champion: PlayableChampionData): Abilities {
-    return this.pickConditionalAbility(champion);
+    const pool = ((champion.unlockedConditionalAbilities || []) as Abilities[]).filter(a => this.isImplementedAbility(a));
+    if (pool.length === 0) {
+      return this.pickStandardAbility(champion);
+    }
+
+    const isApolloDiana = champion.id === "apollo" || champion.id === "diana" || champion.id === "apollo_diana";
+    if (!isApolloDiana) {
+      return Utils.randSeedItem(pool);
+    }
+
+    const types = this.getChampionTypes(champion);
+    const typeAbilities = getAbilitiesForTypes(types).filter(a => this.isImplementedAbility(a));
+
+    if (typeAbilities.length > 0 && Utils.randSeedInt(100) < 90) {
+      return Utils.randSeedItem(typeAbilities);
+    }
+
+    return Utils.randSeedItem(pool);
   }
 
   static pickStatBoostStats(champion: PlayableChampionData): [Stat[], number] {
@@ -156,10 +177,10 @@ export class SkillTreeSelectors {
   }
 
   static pickTypeSwitcherTypes(champion: PlayableChampionData): Type[] {
-    const types = [champion.type1, champion.type2].filter(Boolean) as Type[];
+    const types = this.getChampionTypes(champion);
     if (!types.length) return [];
     const first = Utils.randSeedItem(types);
-    if (types.length > 1 && Utils.randSeedInt(2) === 1) {
+    if (types.length > 1 && Utils.randSeedInt(100) < 10) {
       const second = Utils.randSeedItem(types.filter((t) => t !== first));
       return [first, second];
     }
@@ -167,7 +188,7 @@ export class SkillTreeSelectors {
   }
 
   static pickChampionTypeBallType(champion: PlayableChampionData): Type {
-    const types = [champion.type1, champion.type2].filter(Boolean) as Type[];
+    const types = this.getChampionTypes(champion);
     if (!types.length) return Type.NORMAL;
     return Utils.randSeedItem(types);
   }
@@ -187,7 +208,7 @@ export class SkillTreeSelectors {
   }
 
   static pickEssenceBundle(champion: PlayableChampionData): { type: Type, amount: number } {
-    const types = [champion.type1, champion.type2].filter(Boolean) as Type[];
+    const types = this.getChampionTypes(champion);
     const pool = types.length ? types : (Object.values(Type) as Type[]);
     const t = Utils.randSeedItem(pool);
     const roll = Utils.randSeedInt(100);
@@ -202,7 +223,7 @@ export class SkillTreeSelectors {
     const ability = this.pickConditionalAbility(champion);
     if (!ability) return null;
 
-    const types = [champion.type1, champion.type2].filter(Boolean) as Type[];
+    const types = this.getChampionTypes(champion);
     if (types.length === 0) return null;
 
     const selectedType = Utils.randSeedItem(types);
@@ -232,13 +253,13 @@ export class SkillTreeSelectors {
   }
 
   static pickTypeBoosterType(champion: PlayableChampionData): Type {
-    const types = champion.unlockedTypeBoosters?.length ? champion.unlockedTypeBoosters : [champion.type1, champion.type2].filter(Boolean) as Type[];
+    const types = champion.unlockedTypeBoosters?.length ? champion.unlockedTypeBoosters : this.getChampionTypes(champion);
     const fallback = (Object.values(Type) as Type[]);
     return Utils.randSeedItem(types && types.length ? types : fallback);
   }
   static pickEssenceWeight(champion: PlayableChampionData): { type: Type; weight: number } {
 
-    const championTypes = [champion.type1, champion.type2].filter(Boolean) as Type[];
+    const championTypes = this.getChampionTypes(champion);
     const keys = (champion as any).preferredEssenceWeights
       ? Object.keys((champion as any).preferredEssenceWeights).map(k => parseInt(k) as unknown as Type)
       : championTypes.length > 0 ? championTypes : (Object.values(Type) as Type[]);

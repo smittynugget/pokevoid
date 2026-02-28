@@ -111,7 +111,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { addRivalSilhouetteOverlay } from "#app/utils/story-cutscene-overlays.js";
 export const defaultStarterSpecies: Species[] = [];
 
-export const INTERNAL_BACKUP_VERSION = 6;
+export const INTERNAL_BACKUP_VERSION = 0;
 
 export const VERSIONS_REQUIRING_BACKUP: string[] = [
     "v2.0b [The Colossal Update]"
@@ -2491,7 +2491,10 @@ export class GameData {
 
                     let waveDebug = _sessionData.waveIndex;
                     const party = scene.getParty();
+                    const seenIds = new Set<number>();
                     for (const p of _sessionData.party) {
+                        if (seenIds.has(p.id) || party.length >= 6) continue;
+                        seenIds.add(p.id);
                         const pokemon = p.toPokemon(scene) as PlayerPokemon;
                         pokemon.setVisible(false);
                         loadPokemonAssets.push(pokemon.loadAssets());
@@ -5995,6 +5998,15 @@ public getRandomBountyCode(): string {
         }
 
         return isDraft ? GameModes.CHAOS_INFINITE_ROGUE : GameModes.CHAOS_INFINITE;
+    }
+
+    areAllSmittysDefeated(scene: BattleScene): boolean {
+        if (!scene.textures.exists("smitty_trainers")) return false;
+        const frames = scene.textures.get("smitty_trainers").getFrameNames()
+            .filter(f => { const m = f.match(/\d+/); return m && parseInt(m[0], 10) > 0; });
+        if (!frames.length) return false;
+        const defeated = new Set<string>(this.defeatedSmittyFoes ?? []);
+        return frames.every(f => defeated.has(f));
     }
 }
 export interface QuestUnlockData {

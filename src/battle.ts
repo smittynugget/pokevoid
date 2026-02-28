@@ -6162,7 +6162,10 @@ export function regenerateSpecialNodeProperties(scene: BattleScene, battlePath: 
         TRAINER_TYPES.ELITE_FOUR.THIRD,
         TRAINER_TYPES.ELITE_FOUR.FOURTH
       ];
-      const eliteFourCounter = Math.floor((node.wave - 1) / 100) % 4;
+      const processedE4Count = Array.from(battlePath.nodeMap.values())
+          .filter(n => n.nodeType === PathNodeType.ELITE_FOUR && n.wave < node.wave)
+          .length;
+      const eliteFourCounter = processedE4Count % 4;
       const trainerType = eliteFourTypes[eliteFourCounter];
 
       node.battleConfig = createEliteFourBattle(trainerType, false, seeds.baseSeed);

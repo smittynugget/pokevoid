@@ -1,15 +1,15 @@
 {
   "TAUROS_ELECTRIC_HIT_QUEST": {
     "name": "Tauros' Elektro-Treffer",
-    "task": "Lass Tauros von 15 Elektro-Attacken getroffen werden"
+    "task": "Lass Tauros von 8 Elektro-Attacken getroffen werden"
   },
   "KECLEON_COLOR_CHANGE_QUEST": {
     "name": "Kecleons Farbwechsel",
-    "task": "Aktiviere Kecleons Fähigkeit Farbwechsel 25 Mal"
+    "task": "Aktiviere Kecleons Fähigkeit Farbwechsel 13 Mal"
   },
   "GLISCOR_DARK_MOVE_KNOCKOUT_QUEST": {
     "name": "Gliscors Unlicht-K.O.",
-    "task": "Besiege 50 Pokémon mit Gliscor unter Verwendung von Unlicht-Attacken"
+    "task": "Besiege 25 Pokémon mit Gliscor unter Verwendung von Unlicht-Attacken"
   },
   "MAROWAK_CUBONE_FAINT_QUEST": {
     "name": "Marowak-Tragabon-Niederlage",
@@ -17,27 +17,27 @@
   },
   "NOIVERN_DRAGON_MOVE_KNOCKOUT_QUEST": {
     "name": "UHafdras Drachen-K.O.",
-    "task": "Besiege 50 Pokémon mit UHafra unter Verwendung von Drachen-Attacken"
+    "task": "Besiege 25 Pokémon mit UHafra unter Verwendung von Drachen-Attacken"
   },
   "FERALIGATR_DRAGON_DEFEAT_QUEST": {
     "name": "Impergators Drachen-Siege",
-    "task": "Besiege 25 Drachen-Pokémon mit Impergator"
+    "task": "Besiege 13 Drachen-Pokémon mit Impergator"
   },
   "CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST": {
     "name": "Gluraks Boden-K.O.",
-    "task": "Besiege 30 Pokémon mit Glurak unter Verwendung von Boden-Attacken"
+    "task": "Besiege 15 Pokémon mit Glurak unter Verwendung von Boden-Attacken"
   },
   "VENUSAUR_PSYCHIC_MOVE_USE_QUEST": {
     "name": "Bisaflors Psycho-Attacken",
-    "task": "Setze 60 Mal Psycho-Attacken mit Bisaflor ein"
+    "task": "Setze 30 Mal Psycho-Attacken mit Bisaflor ein"
   },
   "BLASTOISE_FAIRY_DEFEAT_QUEST": {
     "name": "Turtoks Fee-Siege",
-    "task": "Besiege 25 Fee-Pokémon mit Turtok"
+    "task": "Besiege 13 Fee-Pokémon mit Turtok"
   },
   "NIDOKING_DEFEAT_QUEST": {
     "name": "Nidokings Duell",
-    "task": "Besiege 5 Nidoking mit deinem Nidoking"
+    "task": "Besiege 3 Nidoking mit deinem Nidoking"
   },
   "GENGAR_SPECIAL_WAVE_QUEST": {
     "name": "Gengars Spezialwelle",
@@ -45,7 +45,7 @@
   },
   "WEEZING_FIRE_MOVE_KNOCKOUT_QUEST": {
     "name": "Smogmogs Feuer-K.O.",
-    "task": "Besiege 40 Pokémon mit Smogmog unter Verwendung von Feuer-Attacken"
+    "task": "Besiege 20 Pokémon mit Smogmog unter Verwendung von Feuer-Attacken"
   },
   "HITMONLEE_NORMAL_WAVE_QUEST": {
     "name": "Kicklees Normal-Welle",
@@ -53,7 +53,7 @@
   },
   "HITMONCHAN_STAT_INCREASE_QUEST": {
     "name": "Nockchans Statuswerte",
-    "task": "Setze 25 Mal statuswertsteigernde Attacken mit Nockchan ein"
+    "task": "Setze 13 Mal statuswertsteigernde Attacken mit Nockchan ein"
   },
   "HITMON_DUO_WIN_QUEST": {
     "name": "Hitmon-Duo Sieg",
@@ -61,7 +61,7 @@
   },
   "KANGASKHAN_GHOST_MOVE_QUEST": {
     "name": "Kangamas Geister-Attacken",
-    "task": "Setze 25 Mal Geister-Attacken mit Kangama ein"
+    "task": "Setze 13 Mal Geister-Attacken mit Kangama ein"
   },
   "SCYTHER_TRIO_WIN_QUEST": {
     "name": "Sichlors Trio-Sieg",
@@ -85,15 +85,15 @@
   },
   "GYARADOS_GROUND_SWITCH_QUEST": {
     "name": "Garados' Boden-Wechsel",
-    "task": "Lass 10 Boden-Attacken gegen dein Garados einsetzen"
+    "task": "Lass 5 Boden-Attacken gegen dein Garados einsetzen"
   },
   "LAPRAS_FIRE_MOVE_QUEST": {
     "name": "Lapras' Feuer-Attacken",
-    "task": "Setze 25 Mal Feuer-Attacken mit Lapras ein"
+    "task": "Setze 13 Mal Feuer-Attacken mit Lapras ein"
   },
   "PORYGON_Z_ANALYTIC_USE_QUEST": {
     "name": "Porygon-Z Analyse",
-    "task": "Aktiviere Porygon-Zs Fähigkeit Analyse 20 Mal"
+    "task": "Aktiviere Porygon-Zs Fähigkeit Analyse 10 Mal"
   },
   "MEOWTH_JESTER_QUEST": {
     "name": "Mauzis Trio-Sieg",
@@ -105,15 +105,15 @@
   },
   "SUDOWOODO_WOOD_HAMMER_QUEST": {
     "name": "Mogelbaums Holzhammer",
-    "task": "Setze 40 Mal Holzhammer mit Mogelbaum ein"
+    "task": "Setze 20 Mal Holzhammer mit Mogelbaum ein"
   },
   "AMBIPOM_GIGA_IMPACT_QUEST": {
     "name": "Ambipoms Gigastoß",
-    "task": "Setze 5 Mal Gigastoß mit Ambipom in einem Durchlauf ein"
+    "task": "Setze 3 Mal Gigastoß mit Ambipom in einem Durchlauf ein"
   },
   "MILTANK_STEEL_MOVE_KNOCKOUT_QUEST": {
     "name": "Miltanks Stahl-K.O.",
-    "task": "Besiege 25 Pokémon mit Miltank unter Verwendung von Stahl-Attacken"
+    "task": "Besiege 13 Pokémon mit Miltank unter Verwendung von Stahl-Attacken"
   },
   "SLAKING_RIVAL_DEFEAT_QUEST": {
     "name": "Letarking vs. Rivalen",
@@ -125,7 +125,7 @@
   },
   "REGIGIGAS_REGI_DEFEAT_QUEST": {
     "name": "Regigigas vs. Regis",
-    "task": "Besiege 3 Regi-Pokémon mit Regigigas"
+    "task": "Besiege 2 Regi-Pokémon mit Regigigas"
   },
   "PIKACHU_RED_BLUE_WIN_QUEST": {
     "name": "Pikachu vs. Rot & Blau",
@@ -133,39 +133,39 @@
   },
   "SNORLAX_GRASS_KNOCKOUT_QUEST": {
     "name": "Relaxos Pflanzen-K.O.",
-    "task": "Besiege 10 Pokémon mit Relaxo unter Verwendung von Pflanzen-Attacken"
+    "task": "Besiege 5 Pokémon mit Relaxo unter Verwendung von Pflanzen-Attacken"
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "Austos' Geschenk",
-    "task": "Setze 20 Mal Geschenk mit Austos im Nuzlocke-Modus ein"
+    "task": "Setze 10 Mal Geschenk mit Austos im Nuzlocke-Modus ein"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "Blanas vs. Nasgnet",
-    "task": "Besiege 10 Nasgnet oder Voluminas mit Blanas"
+    "task": "Besiege 5 Nasgnet oder Voluminas mit Blanas"
   },
   "CHANDELURE_REST_QUEST": {
     "name": "Skelabras Erholung",
-    "task": "Setze 5 Mal Erholung mit Skelabra in einem Durchlauf ein"
+    "task": "Setze 3 Mal Erholung mit Skelabra in einem Durchlauf ein"
   },
   "SMEARGLE_DEFEAT_QUEST": {
     "name": "Farbeagle-Siege",
-    "task": "Besiege 40 Pokémon mit Farbeagle"
+    "task": "Besiege 20 Pokémon mit Farbeagle"
   },
   "MIMIKYU_CHARIZARD_KNOCKOUT_QUEST": {
     "name": "Mimigma vs. Glurak",
-    "task": "Besiege 2 Glurak mit Mimigma"
+    "task": "Besiege 1 Glurak mit Mimigma"
   },
   "MIMIKYU_GRENINJA_KNOCKOUT_QUEST": {
     "name": "Mimigma vs. Quajutsu",
-    "task": "Besiege 2 Quajutsu mit Mimigma"
+    "task": "Besiege 1 Quajutsu mit Mimigma"
   },
   "MIMIKYU_RAICHU_KNOCKOUT_QUEST": {
     "name": "Mimigma vs. Raichu",
-    "task": "Besiege 2 Raichu mit Mimigma"
+    "task": "Besiege 1 Raichu mit Mimigma"
   },
   "MIMIKYU_MEWTWO_KNOCKOUT_QUEST": {
     "name": "Mimigma vs. Mewtu",
-    "task": "Besiege 2 Mewtu mit Mimigma"
+    "task": "Besiege 1 Mewtu mit Mimigma"
   },
   "MIMIKYU_REGIROCK_KNOCKOUT_QUEST": {
     "name": "Mimigma vs. Regirock",
@@ -173,19 +173,19 @@
   },
   "EISCUE_ROCK_KNOCKOUT_QUEST": {
     "name": "Kubuin vs. Gestein",
-    "task": "Besiege 20 Gestein-Pokémon mit Kubuin"
+    "task": "Besiege 10 Gestein-Pokémon mit Kubuin"
   },
   "ZANGOOSE_SEVIPER_KNOCKOUT_QUEST": {
     "name": "Sengo vs. Vipitis",
-    "task": "Besiege 5 Vipitis mit Sengo"
+    "task": "Besiege 3 Vipitis mit Sengo"
   },
   "SEVIPER_ZANGOOSE_KNOCKOUT_QUEST": {
     "name": "Vipitis vs. Sengo",
-    "task": "Besiege 5 Sengo mit Vipitis"
+    "task": "Besiege 3 Sengo mit Vipitis"
   },
   "TRUBBISH_POISON_DEFEAT_QUEST": {
     "name": "Unratütox vs. Gift",
-    "task": "Besiege 20 Gift-Pokémon mit Unratütox"
+    "task": "Besiege 10 Gift-Pokémon mit Unratütox"
   },
   "HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST": {
     "name": "Resladero vs. Rivalen & Champions",
@@ -193,19 +193,19 @@
   },
   "DITTO_DRAGONITE_TRANSFORM_QUEST": {
     "name": "Ditto zu Dragoran",
-    "task": "Verwandle dich 2 Mal mit Ditto in Dragoran"
+    "task": "Verwandle dich 1 Mal mit Ditto in Dragoran"
   },
   "DITTO_CHARIZARD_TRANSFORM_QUEST": {
     "name": "Ditto zu Glurak",
-    "task": "Verwandle dich 2 Mal mit Ditto in Glurak"
+    "task": "Verwandle dich 1 Mal mit Ditto in Glurak"
   },
   "DITTO_PIKACHU_TRANSFORM_QUEST": {
     "name": "Ditto zu Pikachu",
-    "task": "Verwandle dich 2 Mal mit Ditto in Pikachu"
+    "task": "Verwandle dich 1 Mal mit Ditto in Pikachu"
   },
   "DITTO_MACHAMP_TRANSFORM_QUEST": {
     "name": "Ditto zu Machomei",
-    "task": "Verwandle dich 2 Mal mit Ditto in Machomei"
+    "task": "Verwandle dich 1 Mal mit Ditto in Machomei"
   },
   "DITTO_MEWTWO_TRANSFORM_QUEST": {
     "name": "Ditto zu Mewtu",
@@ -213,7 +213,7 @@
   },
   "FERALIGATOR_ROCK_MOVE_KNOCKOUT_QUEST": {
     "name": "Impergators Gestein-K.O.",
-    "task": "Besiege 25 Pokémon mit Impergator unter Verwendung von Gestein-Attacken"
+    "task": "Besiege 13 Pokémon mit Impergator unter Verwendung von Gestein-Attacken"
   },
   "WOBBUFFET_RIVAL_DEFEAT_QUEST": {
     "name": "Woingenau vs. Rivalen",
@@ -221,23 +221,23 @@
   },
   "MAGIKARP_DEFEAT_QUEST": {
     "name": "Karpadors Siege",
-    "task": "Besiege 100 Pokémon mit Karpador"
+    "task": "Besiege 50 Pokémon mit Karpador"
   },
   "KLINKLANG_GEAR_MOVE_QUEST": {
     "name": "Klingklangs Zahnräder",
-    "task": "Setze 30 Mal Gangwechsel und/oder Zahnradboost mit Klingklang ein"
+    "task": "Setze 15 Mal Gangwechsel und/oder Zahnradboost mit Klingklang ein"
   },
   "SPINDA_CONFUSION_RECOVERY_QUEST": {
     "name": "Pandirs Verwirrungsüberwindung",
-    "task": "Überwinde 5 Mal die Verwirrung mit Pandir"
+    "task": "Überwinde 3 Mal die Verwirrung mit Pandir"
   },
   "NINETALES_STORED_POWER_KNOCKOUT_QUEST": {
     "name": "Vulnonas Kraftreserve",
-    "task": "Besiege 20 Pokémon mit Vulnona unter Verwendung von Kraftreserve"
+    "task": "Besiege 10 Pokémon mit Vulnona unter Verwendung von Kraftreserve"
   },
   "SHUCKLE_DEFEAT_QUEST": {
     "name": "Pottrott-Siege",
-    "task": "Besiege 15 Pokémon mit Pottrott"
+    "task": "Besiege 8 Pokémon mit Pottrott"
   },
   "TANGELA_RIVAL_DEFEAT_QUEST": {
     "name": "Tangela vs. Rivalen",
@@ -245,7 +245,7 @@
   },
   "CLAYDOL_POISON_QUEST": {
     "name": "Lepumentas Gift-Attacken",
-    "task": "Setze 80 Mal Gift-Attacken mit Lepumentas ein"
+    "task": "Setze 40 Mal Gift-Attacken mit Lepumentas ein"
   },
   "TAUROS_DARK_WAVE_QUEST": {
     "name": "Tauros' Unlicht-Welle",
@@ -257,7 +257,7 @@
   },
   "MAROWAK_ZOMBIE_KNOCKOUT_QUEST": {
     "name": "Marowaks Zombie-K.O.",
-    "task": "Besiege 50 Pokémon mit Marowak unter Verwendung von Unheilböe, Wutfaust, Nachspiel, Hex oder Letzter Respekt"
+    "task": "Besiege 25 Pokémon mit Marowak unter Verwendung von Unheilböe, Wutfaust, Nachspiel, Hex oder Letzter Respekt"
   },
   "GRENINJA_YOKAI_WAVE_QUEST": {
     "name": "Quajutsus Yokai-Welle",
@@ -269,7 +269,7 @@
   },
   "LICKITUNG_GIGGLE_KNOCKOUT_QUEST": {
     "name": "Schlurps Schlecker-K.O.",
-    "task": "Besiege 75 Pokémon mit Schlurp unter Verwendung von Schlecker"
+    "task": "Besiege 38 Pokémon mit Schlurp unter Verwendung von Schlecker"
   },
   "LICKITUNG_HYPER_WAVE_QUEST": {
     "name": "Schlurps Hyper-Welle",
@@ -293,7 +293,7 @@
   },
   "CHARIZARD_HELLFLAME_QUEST": {
     "name": "Gluraks Höllenfeuer",
-    "task": "Setze 25 Mal Lohekanonade mit Glurak im Albtraum-Modus ein"
+    "task": "Setze 13 Mal Lohekanonade mit Glurak im Albtraum-Modus ein"
   },
   "EEVEE_NIGHTMARE_QUEST": {
     "name": "Evolis Albtraum",
@@ -333,7 +333,7 @@
   },
   "MAGICAL_PIKACHU_QUEST": {
     "name": "Magisches Pikachu",
-    "task": "Gewinne 2 Durchläufe mit Pikachu, das mindestens 2 Fee-Attacken kennt"
+    "task": "Gewinne 1 Durchläufe mit Pikachu, das mindestens 2 Fee-Attacken kennt"
   },
   "CHARMANDER_UNDERTALE_QUEST": {
     "name": "Glumandas Undertale",
@@ -341,7 +341,7 @@
   },
   "SQUIRTLE_TORMENT_QUEST": {
     "name": "Schiggys Qual",
-    "task": "Lass Schiggy 3 Mal miterleben, wie Turtok in deinem Team besiegt wird"
+    "task": "Lass Schiggy 2 Mal miterleben, wie Turtok in deinem Team besiegt wird"
   },
   "BULBASAUR_TERROR_QUEST": {
     "name": "Bisasams Terror",
@@ -361,17 +361,17 @@
   },
   "STARTER_CATCH_QUEST": {
     "name": "Starter-Fang-Quest",
-    "task": "Fange 10 Pokémon?!",
+    "task": "Fange 5 Pokémon?!",
     "rewardText": "Schaltet den Reisemodus frei!"
   },
   "NUZLIGHT_UNLOCK_QUEST": {
     "name": "Nuzlight-Freischaltungs-Quest",
-    "task": "Gewinne 2 Durchläufe, um den Nuzlight-Modus freizuschalten!",
+    "task": "Gewinne 1 Durchläufe, um den Nuzlight-Modus freizuschalten!",
     "rewardText": "Schaltet den Nuzlight-Modus frei!"
   },
   "NUZLOCKE_UNLOCK_QUEST": {
     "name": "Nuzlocke-Freischaltungs-Quest",
-    "task": "Gewinne 3 Nuzlight-Durchläufe, um den Nuzlocke-Modus freizuschalten!",
+    "task": "Gewinne 2 Nuzlight-Durchläufe, um den Nuzlocke-Modus freizuschalten!",
     "rewardText": "Schaltet den Nuzlocke-Modus frei!"
   },
   "MORPEKO_NIGHTMARE_QUEST": {
@@ -388,7 +388,7 @@
   },
   "GOLEM_FIRE_QUEST": {
     "name": "Golems Feuer",
-    "task": "Lass dein Golem 50 Mal von Feuer-Attacken getroffen werden"
+    "task": "Lass dein Golem 25 Mal von Feuer-Attacken getroffen werden"
   },
   "DEINO_NIGHTMARE_QUEST": {
     "name": "Kapunos Albtraum",
@@ -396,7 +396,7 @@
   },
   "GOLURK_DREAD_QUEST": {
     "name": "Golurkus Schrecken",
-    "task": "Lass 15 deiner Pokémon (außer Golurk) besiegt werden, während Golurk in deinem Team ist, im Albtraum-Modus"
+    "task": "Lass 8 deiner Pokémon (außer Golurk) besiegt werden, während Golurk in deinem Team ist, im Albtraum-Modus"
   },
   "DUSCLOPS_NIGHTMARE_QUEST": {
     "name": "Zwirrklops' Albtraum",
@@ -444,82 +444,82 @@
   },
   "NORMAL_STRENGTH": {
     "name": "Normal-Stärke!",
-    "task": "Besiege 250 Pokémon mit Normal-Pokémon über mehrere Durchläufe hinweg",
+    "task": "Besiege 125 Pokémon mit Normal-Pokémon über mehrere Durchläufe hinweg",
     "rewardText": "Schaltet ein PermaItem frei, das die Resistenzen und Stärken von Normal-Typen verändert!"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "Karpadors neue Attacken",
-    "task": "Besiege 200 Pokémon mit Karpador",
+    "task": "Besiege 50 Pokémon mit Karpador",
     "rewardText": "Karpador wird ein größeres Attacken-Set haben!"
   },
   "DITTO_NEW_MOVES": {
     "name": "Dittos neue Attacken",
-    "task": "Besiege 200 Pokémon mit Ditto",
+    "task": "Besiege 50 Pokémon mit Ditto",
     "rewardText": "Ditto wird ein größeres Attacken-Set haben!"
   },
   "WOBBUFFET_NEW_MOVES": {
     "name": "Woingenaus neue Attacken",
-    "task": "Besiege 200 Pokémon mit Woingenau",
+    "task": "Besiege 50 Pokémon mit Woingenau",
     "rewardText": "Woingenau wird ein größeres Attacken-Set haben!"
   },
   "SMEARGLE_NEW_MOVES": {
     "name": "Farbeagles neue Attacken",
-    "task": "Besiege 200 Pokémon mit Farbeagle",
+    "task": "Besiege 50 Pokémon mit Farbeagle",
     "rewardText": "Farbeagle wird ein größeres Attacken-Set haben!"
   },
   "UNOWN_NEW_MOVES": {
     "name": "Unowns neue Attacken",
-    "task": "Besiege 200 Pokémon mit Unown",
+    "task": "Besiege 50 Pokémon mit Unown",
     "rewardText": "Unown wird ein größeres Attacken-Set haben!"
   },
   "TYROGUE_NEW_MOVES": {
     "name": "Tyrogues neue Attacken",
-    "task": "Besiege 200 Pokémon mit Tyrogue",
+    "task": "Besiege 50 Pokémon mit Tyrogue",
     "rewardText": "Tyrogue wird ein größeres Attacken-Set haben!"
   },
   "METAPOD_NEW_MOVES": {
     "name": "Safcons neue Attacken",
-    "task": "Besiege 200 Pokémon mit Safcon",
+    "task": "Besiege 50 Pokémon mit Safcon",
     "rewardText": "Safcon wird ein größeres Attacken-Set haben!"
   },
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "Normal-Stärke!",
-    "task": "Besiege 250 Pokémon mit Normal-Pokémon über mehrere Durchläufe hinweg",
+    "task": "Besiege 125 Pokémon mit Normal-Pokémon über mehrere Durchläufe hinweg",
     "rewardText": "Schaltet ein PermaItem frei, das die Resistenzen und Stärken von Normal-Typen verändert!"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "Karpadors neue Attacken",
-    "task": "Besiege 200 Pokémon mit Karpador",
+    "task": "Besiege 50 Pokémon mit Karpador",
     "rewardText": "Karpador wird ein größeres Attacken-Set haben!"
   },
   "DITTO_NEW_MOVES_QUEST": {
     "name": "Dittos neue Attacken",
-    "task": "Besiege 200 Pokémon mit Ditto",
+    "task": "Besiege 50 Pokémon mit Ditto",
     "rewardText": "Ditto wird ein größeres Attacken-Set haben!"
   },
   "WOBBUFFET_NEW_MOVES_QUEST": {
     "name": "Woingenaus neue Attacken",
-    "task": "Besiege 200 Pokémon mit Woingenau",
+    "task": "Besiege 50 Pokémon mit Woingenau",
     "rewardText": "Woingenau wird ein größeres Attacken-Set haben!"
   },
   "SMEARGLE_NEW_MOVES_QUEST": {
     "name": "Farbeagles neue Attacken",
-    "task": "Besiege 200 Pokémon mit Farbeagle",
+    "task": "Besiege 50 Pokémon mit Farbeagle",
     "rewardText": "Farbeagle wird ein größeres Attacken-Set haben!"
   },
   "UNOWN_NEW_MOVES_QUEST": {
     "name": "Unowns neue Attacken",
-    "task": "Besiege 200 Pokémon mit Unown",
+    "task": "Besiege 50 Pokémon mit Unown",
     "rewardText": "Unown wird ein größeres Attacken-Set haben!"
   },
   "TYROGUE_NEW_MOVES_QUEST": {
     "name": "Tyrogues neue Attacken",
-    "task": "Besiege 200 Pokémon mit Tyrogue",
+    "task": "Besiege 50 Pokémon mit Tyrogue",
     "rewardText": "Tyrogue wird ein größeres Attacken-Set haben!"
   },
   "METAPOD_NEW_MOVES_QUEST": {
     "name": "Safcons neue Attacken",
-    "task": "Besiege 200 Pokémon mit Safcon",
+    "task": "Besiege 50 Pokémon mit Safcon",
     "rewardText": "Safcon wird ein größeres Attacken-Set haben!"
   }
 }

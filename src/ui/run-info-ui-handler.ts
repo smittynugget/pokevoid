@@ -17,7 +17,7 @@ import RoundRectangle from "phaser3-rex-plugins/plugins/roundrectangle.js";
 import { Type, getTypeRgb } from "../data/type";
 import { getNatureStatMultiplier, getNatureName } from "../data/nature";
 import { getVariantTint } from "#app/data/variant";
-import { PokemonHeldItemModifier, TerastallizeModifier } from "../modifier/modifier";
+import { PokemonHeldItemModifier, TerastallizeModifier, TypeSwitcherModifier } from "../modifier/modifier";
 import {modifierSortFunc} from "../modifier/modifier";
 import { Species } from "#enums/species";
 import { PlayerGender } from "#enums/player-gender";
@@ -632,6 +632,12 @@ export default class RunInfoUiHandler extends UiHandler {
         pokemonSprite.setPipelineData("variant", variant);
         pokemonSprite.setPipelineData("spriteKey", species.getSpriteKey(female, formIndex, shiny, variant));
         pokemonSprite.setVisible(true);
+        const tsModifier = scene.findModifier(m =>
+            m instanceof TypeSwitcherModifier && (m as any).pokemonId === pkmn.id
+        ) as TypeSwitcherModifier | undefined;
+        if (tsModifier) {
+            tsModifier.apply([pkmn]);
+        }
       });
       if (pkmn.isFusion()) {
         const fusionIcon = scene.add.sprite(80 + 40 * i, 50 + row * 80, pkmn.getFusionIconAtlasKey());

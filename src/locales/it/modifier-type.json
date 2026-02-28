@@ -129,7 +129,7 @@
     "TerastallizeModifierType": {
       "name": "Teralite {{teraType}}",
       "statLabel": "Teralite",
-      "description": "Teracristallizza in {{teraType}} il possessore per massimo 10 battaglie. 20 battaglie se si ha la Terasfera"
+      "description": "Teracristallizza in {{teraType}} il possessore per massimo 25 battaglie. 35 battaglie se si ha la Terasfera"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "Quando il possessore attacca, c'è una probabilità del {{chancePercent}}% che l'oggetto in possesso del nemico gli venga rubato."
@@ -159,7 +159,7 @@
     },
     "TERA_ORB": {
       "name": "Terasfera",
-      "description": "I teraliti durano 10 turni in più."
+      "description": "I teraliti durano 10 battaglie in più."
     },
     "MAP": {
       "name": "Mappa",

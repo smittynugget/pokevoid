@@ -5551,13 +5551,17 @@ export class ModifierOption extends Phaser.GameObjects.Container {
           const key = ChampionUtils.getChampionSpriteKey(championId, (this.scene as BattleScene).gameData.gender);
           if (this.scene.textures.exists(key)) {
             item = this.scene.add.sprite(0, 0, key);
-            item.setScale(0.6);
+            const frame = item.frame;
+            const maxDim = Math.max(frame.width, frame.height);
+            const targetSize = 32;
+            item.setScale(targetSize / maxDim);
           } else {
             item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems" : "items", this.modifierTypeOption.type.iconImage);
           }
         } catch {
           item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems" : "items", this.modifierTypeOption.type.iconImage);
         }
+        item.setFlipX(true);
         if (item.postFX && typeof item.postFX.addColorMatrix === 'function') {
           const colorMatrix = item.postFX.addColorMatrix();
           colorMatrix.negative();

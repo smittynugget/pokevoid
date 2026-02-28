@@ -5,15 +5,15 @@
   },
   "TAUROS_ELECTRIC_HIT_QUEST": {
     "name": "ケンタロスの帯電",
-    "task": "ケンタロスが電気タイプの技を30回受ける"
+    "task": "ケンタロスが電気タイプの技を15回受ける"
   },
   "KECLEON_COLOR_CHANGE_QUEST": {
     "name": "カクレオンの擬態",
-    "task": "カクレオンの特性「へんしょく」を50回発動させる"
+    "task": "カクレオンの特性「へんしょく」を25回発動させる"
   },
   "GLISCOR_DARK_MOVE_KNOCKOUT_QUEST": {
     "name": "グライオンの闇討ち",
-    "task": "グライオンであくタイプの技を使って100体のポケモンを倒す"
+    "task": "グライオンであくタイプの技を使って50体のポケモンを倒す"
   },
   "MAROWAK_CUBONE_FAINT_QUEST": {
     "name": "カラカラとガラガラの絆",
@@ -21,27 +21,27 @@
   },
   "NOIVERN_DRAGON_MOVE_KNOCKOUT_QUEST": {
     "name": "オンバーンの竜の力",
-    "task": "オンバーンでドラゴンタイプの技を使って100体のポケモンを倒す"
+    "task": "オンバーンでドラゴンタイプの技を使って50体のポケモンを倒す"
   },
   "FERALIGATR_DRAGON_DEFEAT_QUEST": {
     "name": "オーダイルの竜狩り",
-    "task": "オーダイルでドラゴンタイプのポケモンを50体倒す"
+    "task": "オーダイルでドラゴンタイプのポケモンを25体倒す"
   },
   "CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST": {
     "name": "リザードンの大地の力",
-    "task": "リザードンでじめんタイプの技を使って100体のポケモンを倒す"
+    "task": "リザードンでじめんタイプの技を使って50体のポケモンを倒す"
   },
   "VENUSAUR_PSYCHIC_MOVE_USE_QUEST": {
     "name": "フシギバナの超能力",
-    "task": "フシギバナでエスパータイプの技を200回使用する"
+    "task": "フシギバナでエスパータイプの技を100回使用する"
   },
   "BLASTOISE_FAIRY_DEFEAT_QUEST": {
     "name": "カメックスの妖精狩り",
-    "task": "カメックスでフェアリータイプのポケモンを50体倒す"
+    "task": "カメックスでフェアリータイプのポケモンを25体倒す"
   },
   "NIDOKING_DEFEAT_QUEST": {
     "name": "ニドキングの対決",
-    "task": "自分のニドキングで相手のニドキングを10体倒す"
+    "task": "自分のニドキングで相手のニドキングを5体倒す"
   },
   "GENGAR_SPECIAL_WAVE_QUEST": {
     "name": "ゲンガーの特殊チャレンジ",
@@ -49,7 +49,7 @@
   },
   "WEEZING_FIRE_MOVE_KNOCKOUT_QUEST": {
     "name": "マタドガスの炎",
-    "task": "マタドガスでほのおタイプの技を使って100体のポケモンを倒す"
+    "task": "マタドガスでほのおタイプの技を使って50体のポケモンを倒す"
   },
   "HITMONLEE_NORMAL_WAVE_QUEST": {
     "name": "サワムラーのノーマルチャレンジ",
@@ -57,7 +57,7 @@
   },
   "HITMONCHAN_STAT_INCREASE_QUEST": {
     "name": "エビワラーの能力上昇",
-    "task": "エビワラーで能力上昇技を50回使用する"
+    "task": "エビワラーで能力上昇技を25回使用する"
   },
   "HITMON_DUO_WIN_QUEST": {
     "name": "格闘コンビの勝利",
@@ -65,7 +65,7 @@
   },
   "KANGASKHAN_GHOST_MOVE_QUEST": {
     "name": "ガルーラの霊技",
-    "task": "ガルーラでゴーストタイプの技を50回使用する"
+    "task": "ガルーラでゴーストタイプの技を25回使用する"
   },
   "SCYTHER_TRIO_WIN_QUEST": {
     "name": "ストライクのトリオ勝利",
@@ -89,15 +89,15 @@
   },
   "GYARADOS_GROUND_SWITCH_QUEST": {
     "name": "ギャラドスの大地耐性",
-    "task": "ギャラドスがじめんタイプの技を20回受ける"
+    "task": "ギャラドスがじめんタイプの技を10回受ける"
   },
   "LAPRAS_FIRE_MOVE_QUEST": {
     "name": "ラプラスの炎",
-    "task": "ラプラスでほのおタイプの技を50回使用する"
+    "task": "ラプラスでほのおタイプの技を25回使用する"
   },
   "PORYGON_Z_ANALYTIC_USE_QUEST": {
     "name": "ポリゴンZの分析",
-    "task": "ポリゴンZの特性「アナライズ」を50回発動させる"
+    "task": "ポリゴンZの特性「アナライズ」を25回発動させる"
   },
   "MEOWTH_JESTER_QUEST": {
     "name": "ニャースのトリオ勝利",
@@ -109,15 +109,15 @@
   },
   "SUDOWOODO_WOOD_HAMMER_QUEST": {
     "name": "ウソッキーの木槌",
-    "task": "ウソッキーでウッドハンマーを100回使用する"
+    "task": "ウソッキーでウッドハンマーを50回使用する"
   },
   "AMBIPOM_GIGA_IMPACT_QUEST": {
     "name": "エテボースの全力",
-    "task": "1回のプレイでエテボースのギガインパクトを10回使用する"
+    "task": "1回のプレイでエテボースのギガインパクトを5回使用する"
   },
   "MILTANK_STEEL_MOVE_KNOCKOUT_QUEST": {
     "name": "ミルタンクの鋼鉄",
-    "task": "ミルタンクではがねタイプの技を使って50体のポケモンを倒す"
+    "task": "ミルタンクではがねタイプの技を使って25体のポケモンを倒す"
   },
   "SLAKING_RIVAL_DEFEAT_QUEST": {
     "name": "ケッキングの連勝",
@@ -129,7 +129,7 @@
   },
   "REGIGIGAS_REGI_DEFEAT_QUEST": {
     "name": "レジギガスの統率",
-    "task": "レジギガスでレジ系のポケモンを5体倒す"
+    "task": "レジギガスでレジ系のポケモンを3体倒す"
   },
   "PIKACHU_RED_BLUE_WIN_QUEST": {
     "name": "ピカチュウの伝説対決",
@@ -137,59 +137,59 @@
   },
   "SNORLAX_GRASS_KNOCKOUT_QUEST": {
     "name": "カビゴンの草技",
-    "task": "カビゴンでくさタイプの技を使って20体のポケモンを倒す"
+    "task": "カビゴンでくさタイプの技を使って10体のポケモンを倒す"
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "パルシェンのプレゼント",
-    "task": "ヌズロックモードでパルシェンのプレゼントを50回使用する"
+    "task": "ヌズロックモードでパルシェンのプレゼントを25回使用する"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "コノハナVSノーズパス",
-    "task": "コノハナでノーズパスまたはダイノーズを20体倒す"
+    "task": "コノハナでノーズパスまたはダイノーズを10体倒す"
   },
   "CHANDELURE_REST_QUEST": {
     "name": "シャンデラの休息",
-    "task": "1回のプレイでシャンデラのねむるを10回使用する"
+    "task": "1回のプレイでシャンデラのねむるを5回使用する"
   },
   "SMEARGLE_DEFEAT_QUEST": {
     "name": "ドーブルの戦績",
-    "task": "ドーブルで100体のポケモンを倒す"
+    "task": "ドーブルで50体のポケモンを倒す"
   },
   "MIMIKYU_CHARIZARD_KNOCKOUT_QUEST": {
     "name": "ミミッキュVSリザードン",
-    "task": "ミミッキュでリザードンを3体倒す"
+    "task": "ミミッキュでリザードンを2体倒す"
   },
   "MIMIKYU_GRENINJA_KNOCKOUT_QUEST": {
     "name": "ミミッキュVSゲッコウガ",
-    "task": "ミミッキュでゲッコウガを3体倒す"
+    "task": "ミミッキュでゲッコウガを2体倒す"
   },
   "MIMIKYU_RAICHU_KNOCKOUT_QUEST": {
     "name": "ミミッキュVSライチュウ",
-    "task": "ミミッキュでライチュウを3体倒す"
+    "task": "ミミッキュでライチュウを2体倒す"
   },
   "MIMIKYU_MEWTWO_KNOCKOUT_QUEST": {
     "name": "ミミッキュVSミュウツー",
-    "task": "ミミッキュでミュウツーを2体倒す"
+    "task": "ミミッキュでミュウツーを1体倒す"
   },
   "MIMIKYU_REGIROCK_KNOCKOUT_QUEST": {
     "name": "ミミッキュVSレジロック",
-    "task": "ミミッキュでレジロックを2体倒す"
+    "task": "ミミッキュでレジロックを1体倒す"
   },
   "EISCUE_ROCK_KNOCKOUT_QUEST": {
     "name": "コオリッポの岩砕き",
-    "task": "コオリッポでいわタイプのポケモンを50体倒す"
+    "task": "コオリッポでいわタイプのポケモンを25体倒す"
   },
   "ZANGOOSE_SEVIPER_KNOCKOUT_QUEST": {
     "name": "ザングースの宿敵",
-    "task": "ザングースでハブネークを10体倒す"
+    "task": "ザングースでハブネークを5体倒す"
   },
   "SEVIPER_ZANGOOSE_KNOCKOUT_QUEST": {
     "name": "ハブネークの宿敵",
-    "task": "ハブネークでザングースを10体倒す"
+    "task": "ハブネークでザングースを5体倒す"
   },
   "TRUBBISH_POISON_DEFEAT_QUEST": {
     "name": "ヤブクロンの毒狩り",
-    "task": "ヤブクロンでどくタイプのポケモンを50体倒す"
+    "task": "ヤブクロンでどくタイプのポケモンを25体倒す"
   },
   "HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST": {
     "name": "ルチャブルの挑戦者",
@@ -197,27 +197,27 @@
   },
   "DITTO_DRAGONITE_TRANSFORM_QUEST": {
     "name": "メタモンのカイリュー変身",
-    "task": "メタモンでカイリューに5回変身する"
+    "task": "メタモンでカイリューに3回変身する"
   },
   "DITTO_CHARIZARD_TRANSFORM_QUEST": {
     "name": "メタモンのリザードン変身",
-    "task": "メタモンでリザードンに5回変身する"
+    "task": "メタモンでリザードンに3回変身する"
   },
   "DITTO_PIKACHU_TRANSFORM_QUEST": {
     "name": "メタモンのピカチュウ変身",
-    "task": "メタモンでピカチュウに5回変身する"
+    "task": "メタモンでピカチュウに3回変身する"
   },
   "DITTO_MACHAMP_TRANSFORM_QUEST": {
     "name": "メタモンのカイリキー変身",
-    "task": "メタモンでカイリキーに5回変身する"
+    "task": "メタモンでカイリキーに3回変身する"
   },
   "DITTO_MEWTWO_TRANSFORM_QUEST": {
     "name": "メタモンのミュウツー変身",
-    "task": "メタモンでミュウツーに5回変身する"
+    "task": "メタモンでミュウツーに3回変身する"
   },
   "FERALIGATOR_ROCK_MOVE_KNOCKOUT_QUEST": {
     "name": "オーダイルの岩砕き",
-    "task": "オーダイルでいわタイプの技を使って50体のポケモンを倒す"
+    "task": "オーダイルでいわタイプの技を使って25体のポケモンを倒す"
   },
   "WOBBUFFET_RIVAL_DEFEAT_QUEST": {
     "name": "ソーナンスの反撃",
@@ -225,23 +225,23 @@
   },
   "MAGIKARP_DEFEAT_QUEST": {
     "name": "コイキングの奮闘",
-    "task": "コイキングで50体のポケモンを倒す"
+    "task": "コイキングで25体のポケモンを倒す"
   },
   "KLINKLANG_GEAR_MOVE_QUEST": {
     "name": "ギギギアルの歯車回転",
-    "task": "ギギギアルでギアチェンジまたはギアチャージを100回使用する"
+    "task": "ギギギアルでギアチェンジまたはギアチャージを50回使用する"
   },
   "SPINDA_CONFUSION_RECOVERY_QUEST": {
     "name": "パッチールの混乱克服",
-    "task": "パッチールで混乱状態から10回回復する"
+    "task": "パッチールで混乱状態から5回回復する"
   },
   "NINETALES_STORED_POWER_KNOCKOUT_QUEST": {
     "name": "キュウコンのアシストパワー",
-    "task": "キュウコンでアシストパワーを使って50体のポケモンを倒す"
+    "task": "キュウコンでアシストパワーを使って25体のポケモンを倒す"
   },
   "SHUCKLE_DEFEAT_QUEST": {
     "name": "ツボツボの勝利",
-    "task": "ツボツボで30体のポケモンを倒す"
+    "task": "ツボツボで15体のポケモンを倒す"
   },
   "TANGELA_RIVAL_DEFEAT_QUEST": {
     "name": "モンジャラの挑戦",
@@ -249,7 +249,7 @@
   },
   "CLAYDOL_POISON_QUEST": {
     "name": "ネンドールの毒技",
-    "task": "ネンドールでどくタイプの技を200回使用する"
+    "task": "ネンドールでどくタイプの技を100回使用する"
   },
   "TAUROS_DARK_WAVE_QUEST": {
     "name": "ケンタロスの闇の波",
@@ -261,7 +261,7 @@
   },
   "MAROWAK_ZOMBIE_KNOCKOUT_QUEST": {
     "name": "ガラガラの怨霊",
-    "task": "ガラガラでおんねん、れいふうじん、おんねん、たたりめ、またはおわりのだいもんじを使って100体のポケモンを倒す"
+    "task": "ガラガラでおんねん、れいふうじん、おんねん、たたりめ、またはおわりのだいもんじを使って50体のポケモンを倒す"
   },
   "GRENINJA_YOKAI_WAVE_QUEST": {
     "name": "ゲッコウガの妖怪",
@@ -285,7 +285,7 @@
   },
   "CHARIZARD_HELLFLAME_QUEST": {
     "name": "リザードンの業火",
-    "task": "ナイトメアモードでリザードンのブラストバーンを100回使用する"
+    "task": "ナイトメアモードでリザードンのブラストバーンを50回使用する"
   },
   "EEVEE_NIGHTMARE_QUEST": {
     "name": "イーブイの悪夢",
@@ -325,7 +325,7 @@
   },
   "MAGICAL_PIKACHU_QUEST": {
     "name": "魔法のピカチュウ",
-    "task": "フェアリータイプの技を2つ以上覚えたピカチュウでゲームを3回クリアする"
+    "task": "フェアリータイプの技を2つ以上覚えたピカチュウでゲームを2回クリアする"
   },
   "CHARMANDER_UNDERTALE_QUEST": {
     "name": "ヒトカゲの決意",
@@ -333,7 +333,7 @@
   },
   "SQUIRTLE_TORMENT_QUEST": {
     "name": "ゼニガメの苦悩",
-    "task": "パーティにいるゼニガメがカメックスの敗北を5回目撃する"
+    "task": "パーティにいるゼニガメがカメックスの敗北を3回目撃する"
   },
   "BULBASAUR_TERROR_QUEST": {
     "name": "フシギダネの恐怖",
@@ -365,7 +365,7 @@
   },
   "GOLEM_FIRE_QUEST": {
     "name": "ゴローニャの耐火",
-    "task": "ゴローニャがほのおタイプの技を500回受ける"
+    "task": "ゴローニャがほのおタイプの技を250回受ける"
   },
   "DEINO_NIGHTMARE_QUEST": {
     "name": "モノズの悪夢",
@@ -373,7 +373,7 @@
   },
   "GOLURK_DREAD_QUEST": {
     "name": "ゴルーグの恐怖",
-    "task": "ナイトメアモードでゴルーグがパーティにいる状態で、ゴルーグ以外のポケモンが100回倒れる"
+    "task": "ナイトメアモードでゴルーグがパーティにいる状態で、ゴルーグ以外のポケモンが50回倒れる"
   },
   "HARIYAMA_NIGHTMARE_QUEST": {
     "name": "ハリテヤマの悪夢",
@@ -417,34 +417,34 @@
   },
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "ノーマルの力！",
-    "task": "複数のプレイを通じてノーマルタイプのポケモンで500体のポケモンを倒す"
+    "task": "複数のプレイを通じてノーマルタイプのポケモンで250体のポケモンを倒す"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "コイキングの新技",
-    "task": "コイキングで500体のポケモンを倒す"
+    "task": "コイキングで100体のポケモンを倒す"
   },
   "DITTO_NEW_MOVES_QUEST": {
     "name": "メタモンの新技",
-    "task": "メタモンで500体のポケモンを倒す"
+    "task": "メタモンで100体のポケモンを倒す"
   },
   "WOBBUFFET_NEW_MOVES_QUEST": {
     "name": "ソーナンスの新技",
-    "task": "ソーナンスで500体のポケモンを倒す"
+    "task": "ソーナンスで100体のポケモンを倒す"
   },
   "SMEARGLE_NEW_MOVES_QUEST": {
     "name": "ドーブルの新技",
-    "task": "ドーブルで500体のポケモンを倒す"
+    "task": "ドーブルで100体のポケモンを倒す"
   },
   "UNOWN_NEW_MOVES_QUEST": {
     "name": "アンノーンの新技",
-    "task": "アンノーンで500体のポケモンを倒す"
+    "task": "アンノーンで100体のポケモンを倒す"
   },
   "TYROGUE_NEW_MOVES_QUEST": {
     "name": "バルキーの新技",
-    "task": "バルキーで500体のポケモンを倒す"
+    "task": "バルキーで100体のポケモンを倒す"
   },
   "METAPOD_NEW_MOVES_QUEST": {
     "name": "トランセルの新技",
-    "task": "トランセルで500体のポケモンを倒す"
+    "task": "トランセルで100体のポケモンを倒す"
   }
 }

@@ -11,8 +11,8 @@
       "descriptionConditional": "Aumenta permanentemente {{stats}} del {{percent}}% per Pokémon di tipo {{types}} o Pokémon firma. I Pokémon non-{{types}} non firma ottengono solo il potenziamento {{firstStat}}. Infuso con i metodi di allenamento di {{champion}}."
     },
     "trainerBondAbility": {
-      "name": "Limite Infranto di {{champion}}: {{ability}}",
-      "description": "{{chance}}% di probabilità di attivare {{ability}} per i Pokémon di {{champion}}. {{abilityDescription}}"
+      "name": "{{ability}}",
+      "description": "{{chance}}% di probabilità per stack di attivare {{ability}} per i Pokémon di {{champion}}. Si accumula con la stessa abilità. {{abilityDescription}}"
     },
     "teraAbility": {
       "name": "Abilità Tera {{type}}: {{ability}}",

@@ -235,7 +235,7 @@ export class CommandPhase extends FieldPhase {
       const encounterChanceMap = activeTree?.legendaryEncounterChanceBySpecies || {};
       const isLegendaryPriorityTarget = !!(encounterChanceMap[enemy?.species.speciesId] !== undefined);
       const legendaryOverride = !isRivalBattle && isLegendaryPriorityTarget;
-      const canBypassNoPokeballForce = cursor === PokeballType.VOID_BALL && enemy && enemy.getHpRatio(true) <= 0.25 && enemy.species.speciesId != Species.ETERNATUS;
+      const canBypassNoPokeballForce = cursor === PokeballType.VOID_BALL && enemy && enemy.getHpRatio(true) <= 0.25 && (enemy.species.speciesId !== Species.ETERNATUS || this.scene.gameData.areAllSmittysDefeated(this.scene));
 
       if (!canBypassNoPokeballForce && !legendaryOverride && !(Utils.randSeedInt(10000, 1) <= 1) &&
       (this.scene.arena.biomeType === Biome.END ||

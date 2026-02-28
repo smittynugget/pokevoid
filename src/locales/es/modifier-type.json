@@ -124,7 +124,7 @@
     "TerastallizeModifierType": {
       "name": "Teralito {{teraType}}",
       "statLabel": "Teralito",
-      "description": "Teracristaliza al portador al tipo {{teraType}} durante 10 combates. 20 combates si tienes Orbe Teracristal"
+      "description": "Teracristaliza al portador al tipo {{teraType}} durante 25 combates. 35 combates si tienes Orbe Teracristal"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "Al atacar, hay un {{chancePercent}}% de posibilidades de que robes el objeto que tiene el enemigo."
@@ -154,7 +154,7 @@
     },
     "TERA_ORB": {
       "name": "Orbe Teracristal",
-      "description": "Los Teralitos duran 10 turnos más."
+      "description": "Los Teralitos duran 10 combates más."
     },
     "MAP": {
       "name": "Mapa",

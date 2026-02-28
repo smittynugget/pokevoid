@@ -512,7 +512,8 @@ export class SelectModifierPhase extends BattlePhase {
         if (this.constructor.name === 'CollectedTypeShopPhase') {
             baseValue = 1500;
         } else if (this.pathNodeFilter !== PathNodeTypeFilter.NONE) {
-            baseValue = this.pathNodeFilter === PathNodeTypeFilter.MASTER_BALL_ITEMS ? 1500 : 1000;
+            const isHighTier = this.pathNodeFilter === PathNodeTypeFilter.MASTER_BALL_ITEMS || this.pathNodeFilter === PathNodeTypeFilter.ROGUE_BALL_ITEMS;
+            baseValue = isHighTier ? 1500 : 300;
         }
         if (Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
             this.cachedRerollCost = baseValue;
@@ -549,7 +550,8 @@ export class SelectModifierPhase extends BattlePhase {
         if (this.constructor.name === 'CollectedTypeShopPhase') {
             permaBaseValue = 1250;
         } else if (hasFilter) {
-            permaBaseValue = this.pathNodeFilter === PathNodeTypeFilter.MASTER_BALL_ITEMS ? 1250 : 750;
+            const isHighTierPerma = this.pathNodeFilter === PathNodeTypeFilter.MASTER_BALL_ITEMS || this.pathNodeFilter === PathNodeTypeFilter.ROGUE_BALL_ITEMS;
+            permaBaseValue = isHighTierPerma ? 1250 : 900;
         }
 
         if (Overrides.WAIVE_ROLL_FEE_OVERRIDE) {

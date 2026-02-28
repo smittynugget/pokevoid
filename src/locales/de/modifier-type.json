@@ -124,7 +124,7 @@
     "TerastallizeModifierType": {
       "name": "{{teraType}} Terra-Stück",
       "statLabel": "Tera-Splitter",
-      "description": "{{teraType}} Terakristallisiert den Träger für bis zu 10 Kämpfe. 20 Kämpfe mit Terakristall-Orb"
+      "description": "{{teraType}} Terakristallisiert den Träger für bis zu 25 Kämpfe. 35 Kämpfe mit Terakristall-Orb"
     },
     "ContactHeldItemTransferChanceModifierType": {
       "description": "Beim Angriff besteht eine {{chancePercent}}%ige Chance, dass das getragene Item des Gegners gestohlen wird."
@@ -167,7 +167,7 @@
     },
     "TERA_ORB": {
       "name": "Terakristall-Orb",
-      "description": "Tera-Stücke halten 10 Runden länger."
+      "description": "Tera-Stücke halten 10 Kämpfe länger."
     },
     "MAP": {
       "name": "Karte",

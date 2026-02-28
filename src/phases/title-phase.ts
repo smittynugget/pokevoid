@@ -22,7 +22,7 @@ import {SaveSlotUiMode} from "#app/ui/save-slot-select-ui-handler.js";
 import { Mode } from "#app/ui/ui.js";
 import i18next from "i18next";
 import * as Utils from "#app/utils.js";
-import {Modifier} from "#app/modifier/modifier.js";
+import {Modifier, applySignatureTypeSwitcher} from "#app/modifier/modifier.js";
 import {CheckSwitchPhase} from "./check-switch-phase";
 import {EncounterPhase} from "./encounter-phase";
 import {SelectChallengePhase} from "./select-challenge-phase";
@@ -1770,6 +1770,7 @@ export class TitlePhase extends Phase {
 
                                 starterPokemon.setVisible(false);
                                 party.push(starterPokemon);
+                                applySignatureTypeSwitcher(this.scene, starterPokemon);
                                 loadPokemonAssets.push(starterPokemon.loadAssets());
 
                             });

@@ -11,6 +11,7 @@ import { SkillTreeSelectors } from "#app/system/skill-tree-selectors";
 import { ActiveSkillTreeData, SkillTreeNodeState, SkillTreeRarity, SkillTreeRewardType } from "#app/system/skill-tree-data";
 import { SkillTreeUtils } from "#app/system/skill-tree-utils";
 import { allSpecies, getPokemonSpecies } from "#app/data/pokemon-species";
+import { POKEMON_ALT_BUILDS } from "#app/data/pokemon-alt-buid";
 import { RewardObtainDisplayPhase } from "#app/phases/reward-obtain-display-phase";
 import { RewardObtainedType } from "#app/ui/reward-obtained-ui-handler";
 import { SkillTreeNode } from "#app/system/skill-tree-data.js";
@@ -354,11 +355,16 @@ export class SkillTreePhase extends Phase {
         const nodeCount = Math.max(1, signatureCount + generalCount);
         let placed = 0;
 
+        const nodeGen = new SkillTreeNodeGenerator(activeSkillTree.seed, activeSkillTree.championId, this.scene as BattleScene);
+
         for (let i = 0; i < signatureCount; i++, placed++) {
           const angle = (placed * 2 * Math.PI) / nodeCount;
           const species = ChampionUtils.getRandomChampionSignaturePokemon(championData, this.scene as BattleScene) as unknown as number;
           const pokemonName = allSpecies?.[species - 1]?.name;
           const nodeId = `depth1_signature_${i}`;
+          const resolvedAltBuildId = ChampionUtils.getSignatureAltBuildId(species as any, championData as any);
+          const resolvedAltBuild = resolvedAltBuildId ? POKEMON_ALT_BUILDS[resolvedAltBuildId] : undefined;
+          const rewardData = { type: SkillTreeRewardType.SIGNATURE_POKEMON, data: { species, altBuildId: resolvedAltBuildId, altBuild: resolvedAltBuild }, immediate: false };
           filteredTree.push({
             id: nodeId,
             depth: 1,
@@ -366,16 +372,15 @@ export class SkillTreePhase extends Phase {
             dependencies: ["root_0"],
             rarity: SkillTreeRarity.GREAT,
             state: SkillTreeNodeState.LOCKED_DETAILS,
-            rewardData: { type: SkillTreeRewardType.SIGNATURE_POKEMON, data: { species }, immediate: false },
+            rewardData,
             name: pokemonName ?? i18next.t("skillTree:descriptions.signaturePokemon", { champion: ChampionUtils.getChampionDisplayName(championData.id), pokemon: pokemonName }),
-            description: i18next.t("skillTree:descriptions.signaturePokemon", { champion: ChampionUtils.getChampionDisplayName(championData.id), pokemon: pokemonName }),
+            description: nodeGen.getRewardDescription(rewardData),
             cost: 1,
             isLegendary: false,
             unlocked: false,
           });
         }
 
-        const nodeGen = new SkillTreeNodeGenerator(activeSkillTree.seed, activeSkillTree.championId, this.scene as BattleScene);
         for (let i = 0; i < generalCount; i++, placed++) {
           const angle = (placed * 2 * Math.PI) / nodeCount;
           const species = SkillTreeSelectors.pickGeneralPokemon(championData, this.scene as BattleScene) as unknown as number;

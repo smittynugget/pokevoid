@@ -10,6 +10,7 @@ import { VariantTier } from "#enums/variant-tiers";
 import { WeatherType } from "#enums/weather-type";
 import { type PokeballCounts } from "./battle-scene";
 import { Gender } from "./data/gender";
+import { Type } from "./data/type";
 import { allSpecies } from "./data/pokemon-species";
 import { Variant } from "./data/variant";
 import { type ModifierOverride, modifierTypes } from "./modifier/modifier-type";
@@ -113,6 +114,11 @@ class DefaultOverrides {
   readonly ALWAYS_SAVE_REWARD_OVERRIDE: boolean = false;
   readonly SKILL_TREE_DEBUG_CONTROLS_OVERRIDE: boolean = false;
   readonly SKILL_TREE_ZOOM_UI_OVERRIDE: boolean = false;
+  readonly CHAMP_RECOLOR_FORCE_TYPES_OVERRIDE: { active: boolean; t1: Type; t2?: Type } = {
+    active: false,
+    t1: Type.STEEL,
+    t2: Type.GHOST,
+  };
   readonly DEBUG_IOS_MODE: boolean = false;
   readonly DEBUG_SAVE_TRACE: boolean = false;
   readonly DEBUG_GRANT_ALL_ESSENCE: boolean = false;

@@ -123,7 +123,7 @@
     },
     "TerastallizeModifierType": {
       "name": "{{teraType}}太晶碎塊",
-      "description": "持有者獲得{{teraType}}太晶化10場戰鬥。若有太晶珠則可持續20場戰鬥。",
+      "description": "持有者獲得{{teraType}}太晶化25場戰鬥。若有太晶珠則可持續35場戰鬥。",
       "statLabel": "太晶碎片"
     },
     "ContactHeldItemTransferChanceModifierType": {
@@ -154,7 +154,7 @@
     },
     "TERA_ORB": {
       "name": "太晶珠",
-      "description": "太晶碎塊的效果可以再持續10回合。"
+      "description": "太晶碎塊的效果可以再持續10場戰鬥。"
     },
     "MAP": {
       "name": "地圖",

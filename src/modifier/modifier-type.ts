@@ -2698,6 +2698,9 @@ export class EvolutionItemModifierType extends PokemonModifierType implements Ge
     constructor(evolutionItem: EvolutionItem) {
         super("", EvolutionItem[evolutionItem].toLowerCase(),         (_type, args) => new Modifiers.EvolutionItemModifier(this, (args[0] as PlayerPokemon).id),
             (pokemon: PlayerPokemon) => {
+                if (pokemon.isEvolutionLocked?.() === true || pokemon.isSignature === true || !!pokemon.altBuildId) {
+                    return PartyUiHandler.NoEffectMessage;
+                }
                 if (pokemon.pauseEvolutions) {
                     return PartyUiHandler.NoEffectMessage;
                 }
@@ -2773,8 +2776,13 @@ export class FormChangeItemModifierType extends PokemonModifierType implements G
                 );
             },
             (pokemon: PlayerPokemon) => {
+                if (!isSmittyGlitchItem && pokemon.isEvolutionLocked?.()) {
+                    return PartyUiHandler.NoEffectMessage;
+                }
+
                 const currentForm = pokemon.species.forms[pokemon.formIndex];
                 const isSmittyForm = currentForm && (currentForm.formKey === SpeciesFormKey.SMITTY || currentForm.formKey === SpeciesFormKey.SMITTY_B);
+
                 if (isSmittyForm && isSmittyItem) {
                     return PartyUiHandler.NoEffectMessage;
                 }
@@ -3391,7 +3399,7 @@ export class TrainerBondAbilityModifierType extends ModifierType {
   constructor(championId: string, ability: Abilities, bonusChance: number = 0.05, gender?: PlayerGender) {
     const effectiveGender = gender ?? PlayerGender.UNSET;
     const iconKey = ChampionUtils.getChampionSpriteKey(championId, effectiveGender) || "player_m";
-    super("modifierType:trainerBondAbility", iconKey, (type: ModifierType) => new Modifiers.TrainerBondAbilityModifier(type, championId, ability, bonusChance), "trainer", undefined, true);
+    super("modifierType:trainerBondAbility", iconKey, (type: ModifierType) => new Modifiers.TrainerBondAbilityModifier(type, championId, ability, bonusChance), "trainerBondAbility", undefined, true);
     this.championId = championId;
     this.ability = ability;
     this.bonusChance = bonusChance;
@@ -3554,6 +3562,7 @@ export class ChampionPokemonModifierTypeGenerator extends ModifierTypeGenerator 
       const newPokemon = scene.addPlayerPokemon(adjustedPokemonSpecies, level, undefined, undefined, undefined, false);
 
       if (this.isSignature) {
+        newPokemon.isSignature = true;
         const signatureAltBuildId = ChampionUtils.getSignatureAltBuildId(adjustedPokemonSpecies.speciesId, this.championData);
         if (signatureAltBuildId) {
           const altBuild = POKEMON_ALT_BUILDS[signatureAltBuildId];
@@ -3785,7 +3794,7 @@ export class ChampionPokemonStatBoosterModifierTypeGenerator extends ModifierTyp
       const champData = (scene as any)?.gameData?.activeSkillTree?.championData as PlayableChampionData | undefined;
       if (!championId || !champData) return null;
       const picked = SkillTreeSelectors.pickStatBoostStats(champData);
-      const championTypes = [champData.type1, champData.type2].filter(Boolean) as Type[];
+      const championTypes = [champData.type1, champData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
       return new ChampionPokemonStatBoosterModifierType(championId, picked[0], picked[1], championTypes);
     });
   }
@@ -6457,7 +6466,7 @@ export const taurosElectricHitModifier = questModifierTypes.PERMA_HIT_QUEST("TAU
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         defender.species.speciesId === Species.TAUROS && move.type === Type.ELECTRIC,
-    goalCount: 15,
+    goalCount: 8,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.TAUROS,
@@ -6471,7 +6480,7 @@ export const kecleonColorChangeModifier = questModifierTypes.PERMA_USE_ABILITY_Q
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, ability: Ability) =>
         pokemon.species.speciesId === Species.KECLEON && ability.id === Abilities.COLOR_CHANGE,
-    goalCount: 25,
+    goalCount: 13,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.KECLEON,
@@ -6485,7 +6494,7 @@ export const gliscorDarkMoveKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.GLISCOR && move.type === Type.DARK,
-    goalCount: 50,
+    goalCount: 25,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.GLISCOR,
@@ -6514,7 +6523,7 @@ export const noivernDragonMoveKnockoutModifier = questModifierTypes.PERMA_KNOCKO
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.NOIVERN && move.type === Type.DRAGON,
-    goalCount: 50,
+    goalCount: 25,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.NOIVERN,
@@ -6528,7 +6537,7 @@ export const feraligatrDragonDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.FERALIGATR && defender.isOfType(Type.DRAGON),
-    goalCount: 25,
+    goalCount: 13,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.FERALIGATR,
@@ -6542,7 +6551,7 @@ export const charizardGroundMoveKnockoutModifier = questModifierTypes.PERMA_KNOC
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.CHARIZARD && move.type === Type.GROUND,
-    goalCount: 30,
+    goalCount: 15,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.CHARIZARD,
@@ -6556,7 +6565,7 @@ export const venusaurPsychicMoveUseModifier = questModifierTypes.PERMA_MOVE_QUES
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.VENUSAUR && move.type === Type.PSYCHIC,
-    goalCount: 60,
+    goalCount: 30,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.VENUSAUR,
@@ -6570,7 +6579,7 @@ export const blastoiseFairyDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QU
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.BLASTOISE && defender.isOfType(Type.FAIRY),
-    goalCount: 25,
+    goalCount: 13,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.BLASTOISE,
@@ -6584,7 +6593,7 @@ export const nidokingDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("N
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.NIDOKING && defender.species.speciesId === Species.NIDOKING,
-    goalCount: 5,
+    goalCount: 3,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.NIDOKING,
@@ -6616,7 +6625,7 @@ export const weezingFireMoveKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.WEEZING && move.type === Type.FIRE,
-    goalCount: 40,
+    goalCount: 20,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.WEEZING,
@@ -6648,7 +6657,7 @@ export const hitmonchanStatIncreaseModifier = questModifierTypes.PERMA_MOVE_QUES
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.HITMONCHAN && move.hasAttr(StatChangeAttr),
-    goalCount: 25,
+    goalCount: 13,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.HITMONCHAN,
@@ -6677,7 +6686,7 @@ export const kangaskhanGhostMoveModifier = questModifierTypes.PERMA_MOVE_QUEST("
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.KANGASKHAN && move.type === Type.GHOST,
-    goalCount: 25,
+    goalCount: 13,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.KANGASKHAN,
@@ -6780,7 +6789,7 @@ export const gyaradosGroundSwitchModifier = questModifierTypes.PERMA_HIT_QUEST("
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         defender.species.speciesId === Species.GYARADOS &&
         move.type === Type.GROUND,
-    goalCount: 10,
+    goalCount: 5,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.GYARADOS,
@@ -6794,7 +6803,7 @@ export const laprasFireMoveModifier = questModifierTypes.PERMA_MOVE_QUEST("LAPRA
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.LAPRAS && move.type === Type.FIRE,
-    goalCount: 25,
+    goalCount: 13,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.LAPRAS,
@@ -6808,7 +6817,7 @@ export const porygonZAnalyticUseModifier = questModifierTypes.PERMA_USE_ABILITY_
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, ability: Ability) =>
         pokemon.species.speciesId === Species.PORYGON_Z && ability.id === Abilities.ANALYTIC,
-    goalCount: 20,
+    goalCount: 10,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.PORYGON_Z,
@@ -6855,7 +6864,7 @@ export const sudowoodoWoodHammerModifier = questModifierTypes.PERMA_MOVE_QUEST("
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.SUDOWOODO && move.id === Moves.WOOD_HAMMER,
-    goalCount: 40,
+    goalCount: 20,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.SUDOWOODO,
@@ -6869,7 +6878,7 @@ export const ambipomGigaImpactModifier = questModifierTypes.PERMA_MOVE_QUEST("AM
     duration: RunDuration.SINGLE_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.AMBIPOM && move.id === Moves.GIGA_IMPACT,
-    goalCount: 5,
+    goalCount: 3,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.AMBIPOM,
@@ -6883,7 +6892,7 @@ export const miltankSteelMoveKnockoutModifier = questModifierTypes.PERMA_KNOCKOU
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.MILTANK && move.type === Type.STEEL,
-    goalCount: 25,
+    goalCount: 13,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.MILTANK,
@@ -6930,7 +6939,7 @@ export const regigigasRegiDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QUE
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.REGIGIGAS &&
         [Species.REGIROCK, Species.REGICE, Species.REGISTEEL, Species.REGIELEKI, Species.REGIDRAGO].includes(defender.species.speciesId),
-    goalCount: 3,
+    goalCount: 2,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.REGIGIGAS,
@@ -6960,7 +6969,7 @@ export const snorlaxGrassKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_QU
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.SNORLAX && move.type === Type.GRASS,
-    goalCount: 10,
+    goalCount: 5,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.SNORLAX,
@@ -6974,7 +6983,7 @@ export const cloysterPresentModifier = questModifierTypes.PERMA_MOVE_QUEST("CLOY
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.CLOYSTER && move.id === Moves.PRESENT,
-    goalCount: 20,
+    goalCount: 10,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.CLOYSTER,
@@ -6989,7 +6998,7 @@ export const nuzleafNosepassDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_Q
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.NUZLEAF &&
         (defender.species.speciesId === Species.NOSEPASS || defender.species.speciesId === Species.PROBOPASS),
-    goalCount: 10,
+    goalCount: 5,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.NUZLEAF,
@@ -7003,7 +7012,7 @@ export const chandelureRestModifier = questModifierTypes.PERMA_MOVE_QUEST("CHAND
     duration: RunDuration.SINGLE_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.CHANDELURE && move.id === Moves.REST,
-    goalCount: 5,
+    goalCount: 3,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.CHANDELURE,
@@ -7017,7 +7026,7 @@ export const smeargleDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("S
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.SMEARGLE,
-    goalCount: 40,
+    goalCount: 20,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.SMEARGLE,
@@ -7031,7 +7040,7 @@ export const mimikyuCharizardKnockoutModifier = questModifierTypes.PERMA_KNOCKOU
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.MIMIKYU && defender.species.speciesId === Species.CHARIZARD,
-    goalCount: 2,
+    goalCount: 1,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.MIMIKYU,
@@ -7045,7 +7054,7 @@ export const mimikyuGreninjaKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.MIMIKYU && defender.species.speciesId === Species.GRENINJA,
-    goalCount: 2,
+    goalCount: 1,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_B,
         rewardId: Species.MIMIKYU,
@@ -7059,7 +7068,7 @@ export const mimikyuRaichuKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_Q
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.MIMIKYU && defender.species.speciesId === Species.RAICHU,
-    goalCount: 2,
+    goalCount: 1,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_C,
         rewardId: Species.MIMIKYU,
@@ -7073,7 +7082,7 @@ export const mimikyuMewtwoKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_Q
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.MIMIKYU && defender.species.speciesId === Species.MEWTWO,
-    goalCount: 2,
+    goalCount: 1,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_D,
         rewardId: Species.MIMIKYU,
@@ -7101,7 +7110,7 @@ export const eiscueRockKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_QUES
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.EISCUE && defender.isOfType(Type.ROCK),
-    goalCount: 20,
+    goalCount: 10,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.EISCUE,
@@ -7115,7 +7124,7 @@ export const zangooseSeviperKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.ZANGOOSE && defender.species.speciesId === Species.SEVIPER,
-    goalCount: 5,
+    goalCount: 3,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.ZANGOOSE,
@@ -7129,7 +7138,7 @@ export const seviperZangooseKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.SEVIPER && defender.species.speciesId === Species.ZANGOOSE,
-    goalCount: 5,
+    goalCount: 3,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.SEVIPER,
@@ -7143,7 +7152,7 @@ export const trubbishPoisonDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QU
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.TRUBBISH && defender.isOfType(Type.POISON),
-    goalCount: 20,
+    goalCount: 10,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.TRUBBISH,
@@ -7176,7 +7185,7 @@ export const dittoDragoniteTransformModifier = questModifierTypes.PERMA_MOVE_QUE
         pokemon.species.speciesId === Species.DITTO &&
         move.id === Moves.TRANSFORM &&
         pokemon.scene.getEnemyParty().some(enemyPokemon => enemyPokemon.species.speciesId === Species.DRAGONITE),
-    goalCount: 2,
+    goalCount: 1,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.DITTO,
@@ -7192,7 +7201,7 @@ export const dittoCharizardTransformModifier = questModifierTypes.PERMA_MOVE_QUE
         pokemon.species.speciesId === Species.DITTO &&
         move.id === Moves.TRANSFORM &&
         pokemon.scene.getEnemyParty().some(enemyPokemon => enemyPokemon.species.speciesId === Species.CHARIZARD),
-    goalCount: 2,
+    goalCount: 1,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_B,
         rewardId: Species.DITTO,
@@ -7208,7 +7217,7 @@ export const dittoPikachuTransformModifier = questModifierTypes.PERMA_MOVE_QUEST
         pokemon.species.speciesId === Species.DITTO &&
         move.id === Moves.TRANSFORM &&
         pokemon.scene.getEnemyParty().some(enemyPokemon => enemyPokemon.species.speciesId === Species.PIKACHU),
-    goalCount: 2,
+    goalCount: 1,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_C,
         rewardId: Species.DITTO,
@@ -7224,7 +7233,7 @@ export const dittoMachampTransformModifier = questModifierTypes.PERMA_MOVE_QUEST
         pokemon.species.speciesId === Species.DITTO &&
         move.id === Moves.TRANSFORM &&
         pokemon.scene.getEnemyParty().some(enemyPokemon => enemyPokemon.species.speciesId === Species.MACHAMP),
-    goalCount: 2,
+    goalCount: 1,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_D,
         rewardId: Species.DITTO,
@@ -7254,7 +7263,7 @@ export const feraligatrRockMoveKnockoutModifier = questModifierTypes.PERMA_KNOCK
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.FERALIGATR && move.type === Type.ROCK,
-    goalCount: 25,
+    goalCount: 13,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_B,
         rewardId: Species.FERALIGATR,
@@ -7283,7 +7292,7 @@ export const magikarpDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("M
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.MAGIKARP,
-    goalCount: 100,
+    goalCount: 50,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.MAGIKARP,
@@ -7298,7 +7307,7 @@ export const klinklangGearMoveModifier = questModifierTypes.PERMA_MOVE_QUEST("KL
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.KLINKLANG &&
         (move.id === Moves.SHIFT_GEAR || move.id === Moves.GEAR_UP),
-    goalCount: 30,
+    goalCount: 15,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.KLINKLANG,
@@ -7312,7 +7321,7 @@ export const spindaConfusionRecoveryModifier = questModifierTypes.PERMA_TAG_REMO
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, tag: BattlerTagType) =>
         pokemon.species.speciesId === Species.SPINDA && tag === BattlerTagType.CONFUSED,
-    goalCount: 5,
+    goalCount: 3,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.SPINDA,
@@ -7326,7 +7335,7 @@ export const ninetalesStoredPowerKnockoutModifier = questModifierTypes.PERMA_KNO
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.NINETALES && move.id === Moves.STORED_POWER,
-    goalCount: 20,
+    goalCount: 10,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.NINETALES,
@@ -7340,7 +7349,7 @@ export const shuckleDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("SH
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.SHUCKLE,
-    goalCount: 15,
+    goalCount: 8,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.SHUCKLE,
@@ -7369,7 +7378,7 @@ export const claydolPoisonMoveUseModifier = questModifierTypes.PERMA_MOVE_QUEST(
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.CLAYDOL && move.type === Type.POISON,
-    goalCount: 80,
+    goalCount: 40,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.CLAYDOL,
@@ -7421,7 +7430,7 @@ export const marowakZombieKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_Q
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.MAROWAK &&
         [Moves.OMINOUS_WIND, Moves.RAGE_FIST, Moves.GRUDGE, Moves.HEX, Moves.LAST_RESPECTS].includes(move.id),
-    goalCount: 50,
+    goalCount: 25,
     questUnlockData: {
         rewardType: RewardType.SMITTY_FORM,
         rewardId: Species.MAROWAK,
@@ -7475,7 +7484,7 @@ export const lickitungGiggleKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.LICKITUNG && move.id === Moves.LICK,
-    goalCount: 75,
+    goalCount: 38,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.LICKITUNG,
@@ -7575,7 +7584,7 @@ export const charizardHellflameModifier = questModifierTypes.PERMA_MOVE_QUEST("C
     condition: (attacker: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.CHARIZARD &&
         move.id === Moves.BLAST_BURN,
-    goalCount: 25,
+    goalCount: 13,
     questUnlockData: {
         rewardType: RewardType.SMITTY_FORM,
         rewardId: Species.CHARIZARD,
@@ -7742,7 +7751,7 @@ export const pikachuMagicalModifier = questModifierTypes.PERMA_WIN_QUEST("MAGICA
         return pikachu &&
             pikachu.moveset.filter(m => m.getMove().type === Type.FAIRY).length >= 2;
     },
-    goalCount: 2,
+    goalCount: 1,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.PIKACHU,
@@ -7776,7 +7785,7 @@ export const squirtleTormentModifier = questModifierTypes.PERMA_FAINT_QUEST("SQU
         return pokemon.species.speciesId === Species.BLASTOISE &&
             party.some(p => p.species.speciesId === Species.SQUIRTLE);
     },
-    goalCount: 3,
+    goalCount: 2,
     questUnlockData: {
         rewardType: RewardType.SMITTY_FORM,
         rewardId: Species.SQUIRTLE,
@@ -7861,7 +7870,7 @@ export const starterCatchQuestModifier = questModifierTypes.PERMA_CATCH_QUEST("S
     runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (scene: BattleScene) => true,
-    goalCount: 10,
+    goalCount: 5,
     questUnlockData: {
         rewardType: RewardType.GAME_MODE,
         rewardId: GameModes.CLASSIC,
@@ -7876,7 +7885,7 @@ export const nuzlightUnlockQuestModifier = questModifierTypes.PERMA_WIN_QUEST("N
     runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (scene: BattleScene) => true,
-    goalCount: 2,
+    goalCount: 1,
     questUnlockData: {
         rewardType: RewardType.GAME_MODE,
         rewardId: GameModes.NUZLIGHT,
@@ -7891,7 +7900,7 @@ export const nuzlockeUnlockQuestModifier = questModifierTypes.PERMA_WIN_QUEST("N
     runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (scene: BattleScene) => scene.gameMode.isNuzlight,
-    goalCount: 3,
+    goalCount: 2,
     questUnlockData: {
         rewardType: RewardType.GAME_MODE,
         rewardId: GameModes.NUZLOCKE,
@@ -7966,7 +7975,7 @@ export const golemFireModifier = questModifierTypes.PERMA_HIT_QUEST("GOLEM_FIRE_
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         defender.species.speciesId === Species.GOLEM && move.type === Type.FIRE,
-    goalCount: 50,
+    goalCount: 25,
     questUnlockData: {
         rewardType: RewardType.GLITCH_FORM_A,
         rewardId: Species.GOLEM,
@@ -7999,7 +8008,7 @@ export const golurkDreadModifier = questModifierTypes.PERMA_FAINT_QUEST("GOLURK_
         return pokemon.scene.getParty().some(p => p.species.speciesId === Species.GOLURK) &&
             pokemon.species.speciesId !== Species.GOLURK;
     },
-    goalCount: 15,
+    goalCount: 8,
     questUnlockData: {
         rewardType: RewardType.SMITTY_FORM,
         rewardId: Species.GOLURK,
@@ -8204,7 +8213,7 @@ export const normalEffectivenessModifier = questModifierTypes.PERMA_KNOCKOUT_QUE
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.isOfType(Type.NORMAL),
-    goalCount: 250,
+    goalCount: 125,
     questUnlockData: {
         rewardType: RewardType.UNLOCKABLE,
         rewardId: QuestUnlockables.NORMAL_EFFECTIVENESS_QUEST,
@@ -8220,7 +8229,7 @@ export const magikarpNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.MAGIKARP,
-    goalCount: 200,
+    goalCount: 50,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.MAGIKARP,
@@ -8235,7 +8244,7 @@ export const dittoNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("DI
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.DITTO,
-    goalCount: 200,
+    goalCount: 50,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.DITTO,
@@ -8250,7 +8259,7 @@ export const wobbuffetNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.WOBBUFFET,
-    goalCount: 200,
+    goalCount: 50,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.WOBBUFFET,
@@ -8265,7 +8274,7 @@ export const smeargleNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.SMEARGLE,
-    goalCount: 200,
+    goalCount: 50,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.SMEARGLE,
@@ -8280,7 +8289,7 @@ export const unownNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("UN
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.UNOWN,
-    goalCount: 200,
+    goalCount: 50,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.UNOWN,
@@ -8295,7 +8304,7 @@ export const tyrogueNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.TYROGUE,
-    goalCount: 200,
+    goalCount: 50,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.TYROGUE,
@@ -8310,7 +8319,7 @@ export const metapodNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.METAPOD,
-    goalCount: 200,
+    goalCount: 50,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.METAPOD,

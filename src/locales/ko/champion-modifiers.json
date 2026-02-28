@@ -11,8 +11,8 @@
       "descriptionConditional": "{{types}} 타입 또는 시그니처 포켓몬의 {{stats}}을(를) {{percent}}% 영구 증가. 비{{types}} 비시그니처 포켓몬은 {{firstStat}} 증가만 받습니다. {{champion}}의 훈련 방법이 담겨 있습니다."
     },
     "trainerBondAbility": {
-      "name": "{{champion}}의 리밋 브레이크: {{ability}}",
-      "description": "{{champion}}의 포켓몬에게 {{chance}}% 확률로 {{ability}} 활성화. {{abilityDescription}}"
+      "name": "{{ability}}",
+      "description": "같은 특성 스택당 {{champion}}의 포켓몬에게 {{chance}}% 확률로 {{ability}} 활성화. {{abilityDescription}}"
     },
     "teraAbility": {
       "name": "{{type}} 테라 어빌리티: {{ability}}",

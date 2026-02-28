@@ -599,7 +599,7 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
         this.shinyIcon.setPositionRelative(this.nameText, this.nameText.displayWidth + this.genderText.displayWidth + 1 + (this.teraIcon.visible ? this.teraIcon.displayWidth + 1 : 0) + (this.splicedIcon.visible ? this.splicedIcon.displayWidth + 1 : 0), 2.5);
       }
 
-      if(!pokemon.isGlitchOrSmittyForm()) {
+      if(!pokemon.isGlitchOrSmittyForm() && !pokemon.isSignature && !pokemon.altBuildId) {
         const glitchFormName = pokemon.species.getGlitchFormName(false, this.scene as BattleScene);
         if (glitchFormName) {
           this.glitchFormText.setText(i18next.t("battleInfo:glitchForm", { formName: glitchFormName }));

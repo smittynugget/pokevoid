@@ -5,7 +5,7 @@ import { SpeciesFormChangeMoveLearnedTrigger } from "#app/data/pokemon-forms.js"
 import { getPokemonSpecies } from "#app/data/pokemon-species.js";
 import { Species } from "#app/enums/species.js";
 import { PlayerPokemon } from "#app/field/pokemon.js";
-import { overrideModifiers, overrideHeldItems } from "#app/modifier/modifier.js";
+import { overrideModifiers, overrideHeldItems, applySignatureTypeSwitcher } from "#app/modifier/modifier.js";
 import { Phase } from "#app/phase.js";
 import { SaveSlotUiMode } from "#app/ui/save-slot-select-ui-handler.js";
 import { Starter } from "#app/ui/starter-select-ui-handler.js";
@@ -193,6 +193,7 @@ export class SelectStarterPhase extends Phase {
       starterPokemon.setVisible(false);
       applyChallenges(this.scene.gameMode, ChallengeType.STARTER_MODIFY, starterPokemon);
       party.push(starterPokemon);
+      applySignatureTypeSwitcher(this.scene, starterPokemon);
       loadPokemonAssets.push(starterPokemon.loadAssets());
     });
     overrideModifiers(this.scene);

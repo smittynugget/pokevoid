@@ -266,6 +266,7 @@ export class GameMode implements GameModeConfig {
       case GameModes.CHAOS_ROGUE:
       case GameModes.CHAOS_JOURNEY:
       case GameModes.CHAOS_NUZLIGHT:
+      case GameModes.CHAOS_NUZLOCKE:
       case GameModes.CHAOS_NUZLIGHT_DRAFT:
       case GameModes.CHAOS_NUZLOCKE_DRAFT:
         return waveIndex === 500;

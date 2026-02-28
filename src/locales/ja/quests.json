@@ -1,15 +1,15 @@
 {
   "TAUROS_ELECTRIC_HIT_QUEST": {
     "name": "ケンタロスの電撃耐性",
-    "task": "ケンタロスが電気タイプの技を15回受ける"
+    "task": "ケンタロスが電気タイプの技を8回受ける"
   },
   "KECLEON_COLOR_CHANGE_QUEST": {
     "name": "カクレオンの色彩変化",
-    "task": "カクレオンの特性「へんしょく」を25回発動させる"
+    "task": "カクレオンの特性「へんしょく」を13回発動させる"
   },
   "GLISCOR_DARK_MOVE_KNOCKOUT_QUEST": {
     "name": "グライオンの闇討ち",
-    "task": "グライオンであくタイプの技を使って50匹のポケモンを倒す"
+    "task": "グライオンであくタイプの技を使って25匹のポケモンを倒す"
   },
   "MAROWAK_CUBONE_FAINT_QUEST": {
     "name": "カラカラとガラガラの親子の絆",
@@ -17,27 +17,27 @@
   },
   "NOIVERN_DRAGON_MOVE_KNOCKOUT_QUEST": {
     "name": "オンバーンの竜の力",
-    "task": "オンバーンでドラゴンタイプの技を使って50匹のポケモンを倒す"
+    "task": "オンバーンでドラゴンタイプの技を使って25匹のポケモンを倒す"
   },
   "FERALIGATR_DRAGON_DEFEAT_QUEST": {
     "name": "オーダイルの竜狩り",
-    "task": "オーダイルでドラゴンタイプのポケモンを25匹倒す"
+    "task": "オーダイルでドラゴンタイプのポケモンを13匹倒す"
   },
   "CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST": {
     "name": "リザードンの大地の力",
-    "task": "リザードンでじめんタイプの技を使って30匹のポケモンを倒す"
+    "task": "リザードンでじめんタイプの技を使って15匹のポケモンを倒す"
   },
   "VENUSAUR_PSYCHIC_MOVE_USE_QUEST": {
     "name": "フシギバナの超能力",
-    "task": "フシギバナでエスパータイプの技を60回使用する"
+    "task": "フシギバナでエスパータイプの技を30回使用する"
   },
   "BLASTOISE_FAIRY_DEFEAT_QUEST": {
     "name": "カメックスの妖精退治",
-    "task": "カメックスでフェアリータイプのポケモンを25匹倒す"
+    "task": "カメックスでフェアリータイプのポケモンを13匹倒す"
   },
   "NIDOKING_DEFEAT_QUEST": {
     "name": "ニドキングの覇権争い",
-    "task": "自分のニドキングで相手のニドキングを5匹倒す"
+    "task": "自分のニドキングで相手のニドキングを3匹倒す"
   },
   "GENGAR_SPECIAL_WAVE_QUEST": {
     "name": "ゲンガーの異能の波",
@@ -45,7 +45,7 @@
   },
   "WEEZING_FIRE_MOVE_KNOCKOUT_QUEST": {
     "name": "マタドガスの炎の息",
-    "task": "マタドガスでほのおタイプの技を使って40匹のポケモンを倒す"
+    "task": "マタドガスでほのおタイプの技を使って20匹のポケモンを倒す"
   },
   "HITMONLEE_NORMAL_WAVE_QUEST": {
     "name": "サワムラーのノーマルチャレンジ",
@@ -53,7 +53,7 @@
   },
   "HITMONCHAN_STAT_INCREASE_QUEST": {
     "name": "エビワラーの能力強化",
-    "task": "エビワラーで能力上昇技を25回使用する"
+    "task": "エビワラーで能力上昇技を13回使用する"
   },
   "HITMON_DUO_WIN_QUEST": {
     "name": "格闘コンビの勝利",
@@ -61,7 +61,7 @@
   },
   "KANGASKHAN_GHOST_MOVE_QUEST": {
     "name": "ガルーラの霊技",
-    "task": "ガルーラでゴーストタイプの技を25回使用する"
+    "task": "ガルーラでゴーストタイプの技を13回使用する"
   },
   "SCYTHER_TRIO_WIN_QUEST": {
     "name": "ストライクの三人衆",
@@ -85,15 +85,15 @@
   },
   "GYARADOS_GROUND_SWITCH_QUEST": {
     "name": "ギャラドスの大地への挑戦",
-    "task": "ギャラドスがじめんタイプの技を10回受ける"
+    "task": "ギャラドスがじめんタイプの技を5回受ける"
   },
   "LAPRAS_FIRE_MOVE_QUEST": {
     "name": "ラプラスの炎技",
-    "task": "ラプラスでほのおタイプの技を25回使用する"
+    "task": "ラプラスでほのおタイプの技を13回使用する"
   },
   "PORYGON_Z_ANALYTIC_USE_QUEST": {
     "name": "ポリゴンZの分析力",
-    "task": "ポリゴンZの特性「アナライズ」を20回発動させる"
+    "task": "ポリゴンZの特性「アナライズ」を10回発動させる"
   },
   "MEOWTH_JESTER_QUEST": {
     "name": "ニャースの三人衆",
@@ -105,15 +105,15 @@
   },
   "SUDOWOODO_WOOD_HAMMER_QUEST": {
     "name": "ウソッキーの木槌打撃",
-    "task": "ウソッキーでウッドハンマーを40回使用する"
+    "task": "ウソッキーでウッドハンマーを20回使用する"
   },
   "AMBIPOM_GIGA_IMPACT_QUEST": {
     "name": "エテボースの全力突撃",
-    "task": "1回のプレイでエテボースのギガインパクトを5回使用する"
+    "task": "1回のプレイでエテボースのギガインパクトを3回使用する"
   },
   "MILTANK_STEEL_MOVE_KNOCKOUT_QUEST": {
     "name": "ミルタンクの鋼鉄の力",
-    "task": "ミルタンクではがねタイプの技を使って25匹のポケモンを倒す"
+    "task": "ミルタンクではがねタイプの技を使って13匹のポケモンを倒す"
   },
   "SLAKING_RIVAL_DEFEAT_QUEST": {
     "name": "ケッキングの連続撃破",
@@ -125,7 +125,7 @@
   },
   "REGIGIGAS_REGI_DEFEAT_QUEST": {
     "name": "レジギガスの同胞討伐",
-    "task": "レジギガスでレジ系のポケモンを3匹倒す"
+    "task": "レジギガスでレジ系のポケモンを2匹倒す"
   },
   "PIKACHU_RED_BLUE_WIN_QUEST": {
     "name": "ピカチュウの伝説の対決",
@@ -133,39 +133,39 @@
   },
   "SNORLAX_GRASS_KNOCKOUT_QUEST": {
     "name": "カビゴンの草技",
-    "task": "カビゴンでくさタイプの技を使って10匹のポケモンを倒す"
+    "task": "カビゴンでくさタイプの技を使って5匹のポケモンを倒す"
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "パルシェンのプレゼント配布",
-    "task": "ヌズロックモードでパルシェンのプレゼントを20回使用する"
+    "task": "ヌズロックモードでパルシェンのプレゼントを10回使用する"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "コノハナVSノズパス",
-    "task": "コノハナでノズパスまたはダイノーズを10匹倒す"
+    "task": "コノハナでノズパスまたはダイノーズを5匹倒す"
   },
   "CHANDELURE_REST_QUEST": {
     "name": "シャンデラの休息",
-    "task": "1回のプレイでシャンデラのねむるを5回使用する"
+    "task": "1回のプレイでシャンデラのねむるを3回使用する"
   },
   "SMEARGLE_DEFEAT_QUEST": {
     "name": "ドーブルの百戦錬磨",
-    "task": "ドーブルで40匹のポケモンを倒す"
+    "task": "ドーブルで20匹のポケモンを倒す"
   },
   "MIMIKYU_CHARIZARD_KNOCKOUT_QUEST": {
     "name": "ミミッキュVSリザードン",
-    "task": "ミミッキュでリザードンを2匹倒す"
+    "task": "ミミッキュでリザードンを1匹倒す"
   },
   "MIMIKYU_GRENINJA_KNOCKOUT_QUEST": {
     "name": "ミミッキュVSゲッコウガ",
-    "task": "ミミッキュでゲッコウガを2匹倒す"
+    "task": "ミミッキュでゲッコウガを1匹倒す"
   },
   "MIMIKYU_RAICHU_KNOCKOUT_QUEST": {
     "name": "ミミッキュVSライチュウ",
-    "task": "ミミッキュでライチュウを2匹倒す"
+    "task": "ミミッキュでライチュウを1匹倒す"
   },
   "MIMIKYU_MEWTWO_KNOCKOUT_QUEST": {
     "name": "ミミッキュVSミュウツー",
-    "task": "ミミッキュでミュウツーを2匹倒す"
+    "task": "ミミッキュでミュウツーを1匹倒す"
   },
   "MIMIKYU_REGIROCK_KNOCKOUT_QUEST": {
     "name": "ミミッキュVSレジロック",
@@ -173,19 +173,19 @@
   },
   "EISCUE_ROCK_KNOCKOUT_QUEST": {
     "name": "コオリッポの岩石退治",
-    "task": "コオリッポでいわタイプのポケモンを20匹倒す"
+    "task": "コオリッポでいわタイプのポケモンを10匹倒す"
   },
   "ZANGOOSE_SEVIPER_KNOCKOUT_QUEST": {
     "name": "ザングースの宿敵討伐",
-    "task": "ザングースでハブネークを5匹倒す"
+    "task": "ザングースでハブネークを3匹倒す"
   },
   "SEVIPER_ZANGOOSE_KNOCKOUT_QUEST": {
     "name": "ハブネークの宿敵討伐",
-    "task": "ハブネークでザングースを5匹倒す"
+    "task": "ハブネークでザングースを3匹倒す"
   },
   "TRUBBISH_POISON_DEFEAT_QUEST": {
     "name": "ヤブクロンの毒物退治",
-    "task": "ヤブクロンでどくタイプのポケモンを20匹倒す"
+    "task": "ヤブクロンでどくタイプのポケモンを10匹倒す"
   },
   "HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST": {
     "name": "ルチャブルの強豪撃破",
@@ -193,19 +193,19 @@
   },
   "DITTO_DRAGONITE_TRANSFORM_QUEST": {
     "name": "メタモンのカイリュー変身",
-    "task": "メタモンでカイリューに2回変身する"
+    "task": "メタモンでカイリューに1回変身する"
   },
   "DITTO_CHARIZARD_TRANSFORM_QUEST": {
     "name": "メタモンのリザードン変身",
-    "task": "メタモンでリザードンに2回変身する"
+    "task": "メタモンでリザードンに1回変身する"
   },
   "DITTO_PIKACHU_TRANSFORM_QUEST": {
     "name": "メタモンのピカチュウ変身",
-    "task": "メタモンでピカチュウに2回変身する"
+    "task": "メタモンでピカチュウに1回変身する"
   },
   "DITTO_MACHAMP_TRANSFORM_QUEST": {
     "name": "メタモンのカイリキー変身",
-    "task": "メタモンでカイリキーに2回変身する"
+    "task": "メタモンでカイリキーに1回変身する"
   },
   "DITTO_MEWTWO_TRANSFORM_QUEST": {
     "name": "メタモンのミュウツー変身",
@@ -213,7 +213,7 @@
   },
   "FERALIGATOR_ROCK_MOVE_KNOCKOUT_QUEST": {
     "name": "オーダイルの岩石の力",
-    "task": "オーダイルでいわタイプの技を使って25匹のポケモンを倒す"
+    "task": "オーダイルでいわタイプの技を使って13匹のポケモンを倒す"
   },
   "WOBBUFFET_RIVAL_DEFEAT_QUEST": {
     "name": "ソーナンスの反撃",
@@ -221,23 +221,23 @@
   },
   "MAGIKARP_DEFEAT_QUEST": {
     "name": "コイキングの奮闘",
-    "task": "コイキングで100匹のポケモンを倒す"
+    "task": "コイキングで50匹のポケモンを倒す"
   },
   "KLINKLANG_GEAR_MOVE_QUEST": {
     "name": "ギギギアルの歯車操作",
-    "task": "ギギギアルでギアチェンジまたはギアソーサーを30回使用する"
+    "task": "ギギギアルでギアチェンジまたはギアソーサーを15回使用する"
   },
   "SPINDA_CONFUSION_RECOVERY_QUEST": {
     "name": "パッチールの混乱克服",
-    "task": "パッチールが混乱状態から5回回復する"
+    "task": "パッチールが混乱状態から3回回復する"
   },
   "NINETALES_STORED_POWER_KNOCKOUT_QUEST": {
     "name": "キュウコンのアシストパワー",
-    "task": "キュウコンでアシストパワーを使って20匹のポケモンを倒す"
+    "task": "キュウコンでアシストパワーを使って10匹のポケモンを倒す"
   },
   "SHUCKLE_DEFEAT_QUEST": {
     "name": "ツボツボの奮闘",
-    "task": "ツボツボで15匹のポケモンを倒す"
+    "task": "ツボツボで8匹のポケモンを倒す"
   },
   "TANGELA_RIVAL_DEFEAT_QUEST": {
     "name": "モンジャラの対決",
@@ -245,7 +245,7 @@
   },
   "CLAYDOL_POISON_QUEST": {
     "name": "ネンドールの毒技",
-    "task": "ネンドールでどくタイプの技を80回使用する"
+    "task": "ネンドールでどくタイプの技を40回使用する"
   },
   "TAUROS_DARK_WAVE_QUEST": {
     "name": "ケンタロスの闇の波",
@@ -257,7 +257,7 @@
   },
   "MAROWAK_ZOMBIE_KNOCKOUT_QUEST": {
     "name": "ガラガラの怨霊の力",
-    "task": "ガラガラでおんねん、いかりのまえば、おんねん、たたりめ、またはおわりのあいさつを使って50匹のポケモンを倒す"
+    "task": "ガラガラでおんねん、いかりのまえば、おんねん、たたりめ、またはおわりのあいさつを使って25匹のポケモンを倒す"
   },
   "GRENINJA_YOKAI_WAVE_QUEST": {
     "name": "ゲッコウガの妖怪の波",
@@ -269,7 +269,7 @@
   },
   "LICKITUNG_GIGGLE_KNOCKOUT_QUEST": {
     "name": "ベロリンガの舌技",
-    "task": "ベロリンガでしたでなめるを使って75匹のポケモンを倒す"
+    "task": "ベロリンガでしたでなめるを使って38匹のポケモンを倒す"
   },
   "LICKITUNG_HYPER_WAVE_QUEST": {
     "name": "ベロリンガの狂気の波",
@@ -293,7 +293,7 @@
   },
   "CHARIZARD_HELLFLAME_QUEST": {
     "name": "リザードンの業火",
-    "task": "ナイトメアモードでリザードンのブラストバーンを25回使用する"
+    "task": "ナイトメアモードでリザードンのブラストバーンを13回使用する"
   },
   "EEVEE_NIGHTMARE_QUEST": {
     "name": "イーブイの悪夢",
@@ -333,7 +333,7 @@
   },
   "MAGICAL_PIKACHU_QUEST": {
     "name": "魔法のピカチュウ",
-    "task": "フェアリータイプの技を2つ以上覚えたピカチュウで2回クリアする"
+    "task": "フェアリータイプの技を1つ以上覚えたピカチュウで2回クリアする"
   },
   "CHARMANDER_UNDERTALE_QUEST": {
     "name": "ヒトカゲの決意",
@@ -341,7 +341,7 @@
   },
   "SQUIRTLE_TORMENT_QUEST": {
     "name": "ゼニガメの苦悩",
-    "task": "パーティ内でゼニガメがカメックスの敗北を3回目撃する"
+    "task": "パーティ内でゼニガメがカメックスの敗北を2回目撃する"
   },
   "BULBASAUR_TERROR_QUEST": {
     "name": "フシギダネの恐怖",
@@ -361,17 +361,17 @@
   },
   "STARTER_CATCH_QUEST": {
     "name": "スターター捕獲クエスト",
-    "task": "10匹のポケモンを捕まえる？！",
+    "task": "5匹のポケモンを捕まえる？！",
     "rewardText": "ジャーニーモードを解除します！"
   },
   "NUZLIGHT_UNLOCK_QUEST": {
     "name": "ヌズライト解放クエスト",
-    "task": "2回クリアしてヌズライトモードを解放する！",
+    "task": "1回クリアしてヌズライトモードを解放する！",
     "rewardText": "ヌズライトモードを解除します！"
   },
   "NUZLOCKE_UNLOCK_QUEST": {
     "name": "ヌズロック解放クエスト",
-    "task": "ヌズライトモードを3回クリアしてヌズロックモードを解放する！",
+    "task": "ヌズライトモードを2回クリアしてヌズロックモードを解放する！",
     "rewardText": "ヌズロックモードを解除します！"
   },
   "MORPEKO_NIGHTMARE_QUEST": {
@@ -388,7 +388,7 @@
   },
   "GOLEM_FIRE_QUEST": {
     "name": "ゴローニャの炎耐性",
-    "task": "ゴローニャがほのおタイプの技を50回受ける"
+    "task": "ゴローニャがほのおタイプの技を25回受ける"
   },
   "DEINO_NIGHTMARE_QUEST": {
     "name": "モノズの悪夢",
@@ -396,7 +396,7 @@
   },
   "GOLURK_DREAD_QUEST": {
     "name": "ゴルーグの恐怖",
-    "task": "ナイトメアモードで、ゴルーグをパーティに入れた状態で他のポケモンが15回倒れる"
+    "task": "ナイトメアモードで、ゴルーグをパーティに入れた状態で他のポケモンが8回倒れる"
   },
   "DUSCLOPS_NIGHTMARE_QUEST": {
     "name": "サマヨールの悪夢",
@@ -444,82 +444,82 @@
   },
   "NORMAL_STRENGTH": {
     "name": "ノーマルの力！",
-    "task": "複数のプレイを通じてノーマルタイプのポケモンで250匹のポケモンを倒す",
+    "task": "複数のプレイを通じてノーマルタイプのポケモンで125匹のポケモンを倒す",
     "rewardText": "ノーマルタイプの耐性と弱点を変更する永続アイテムが解放される！"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "コイキングの新技",
-    "task": "コイキングで200匹のポケモンを倒す",
+    "task": "コイキングで50匹のポケモンを倒す",
     "rewardText": "コイキングが覚える技が増える！"
   },
   "DITTO_NEW_MOVES": {
     "name": "メタモンの新技",
-    "task": "メタモンで200匹のポケモンを倒す",
+    "task": "メタモンで50匹のポケモンを倒す",
     "rewardText": "メタモンが覚える技が増える！"
   },
   "WOBBUFFET_NEW_MOVES": {
     "name": "ソーナンスの新技",
-    "task": "ソーナンスで200匹のポケモンを倒す",
+    "task": "ソーナンスで50匹のポケモンを倒す",
     "rewardText": "ソーナンスが覚える技が増える！"
   },
   "SMEARGLE_NEW_MOVES": {
     "name": "ドーブルの新技",
-    "task": "ドーブルで200匹のポケモンを倒す",
+    "task": "ドーブルで50匹のポケモンを倒す",
     "rewardText": "ドーブルが覚える技が増える！"
   },
   "UNOWN_NEW_MOVES": {
     "name": "アンノーンの新技",
-    "task": "アンノーンで200匹のポケモンを倒す",
+    "task": "アンノーンで50匹のポケモンを倒す",
     "rewardText": "アンノーンが覚える技が増える！"
   },
   "TYROGUE_NEW_MOVES": {
     "name": "バルキーの新技",
-    "task": "バルキーで200匹のポケモンを倒す",
+    "task": "バルキーで50匹のポケモンを倒す",
     "rewardText": "バルキーが覚える技が増える！"
   },
   "METAPOD_NEW_MOVES": {
     "name": "トランセルの新技",
-    "task": "トランセルで200匹のポケモンを倒す",
+    "task": "トランセルで50匹のポケモンを倒す",
     "rewardText": "トランセルが覚える技が増える！"
   },
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "ノーマルの力！",
-    "task": "複数のプレイを通じてノーマルタイプのポケモンで250匹のポケモンを倒す",
+    "task": "複数のプレイを通じてノーマルタイプのポケモンで125匹のポケモンを倒す",
     "rewardText": "ノーマルタイプの耐性と弱点を変更する永続アイテムが解放される！"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "コイキングの新技",
-    "task": "コイキングで200匹のポケモンを倒す",
+    "task": "コイキングで50匹のポケモンを倒す",
     "rewardText": "コイキングが覚える技が増える！"
   },
   "DITTO_NEW_MOVES_QUEST": {
     "name": "メタモンの新技",
-    "task": "メタモンで200匹のポケモンを倒す",
+    "task": "メタモンで50匹のポケモンを倒す",
     "rewardText": "メタモンが覚える技が増える！"
   },
   "WOBBUFFET_NEW_MOVES_QUEST": {
     "name": "ソーナンスの新技",
-    "task": "ソーナンスで200匹のポケモンを倒す",
+    "task": "ソーナンスで50匹のポケモンを倒す",
     "rewardText": "ソーナンスが覚える技が増える！"
   },
   "SMEARGLE_NEW_MOVES_QUEST": {
     "name": "ドーブルの新技",
-    "task": "ドーブルで200匹のポケモンを倒す",
+    "task": "ドーブルで50匹のポケモンを倒す",
     "rewardText": "ドーブルが覚える技が増える！"
   },
   "UNOWN_NEW_MOVES_QUEST": {
     "name": "アンノーンの新技",
-    "task": "アンノーンで200匹のポケモンを倒す",
+    "task": "アンノーンで50匹のポケモンを倒す",
     "rewardText": "アンノーンが覚える技が増える！"
   },
   "TYROGUE_NEW_MOVES_QUEST": {
     "name": "バルキーの新技",
-    "task": "バルキーで200匹のポケモンを倒す",
+    "task": "バルキーで50匹のポケモンを倒す",
     "rewardText": "バルキーが覚える技が増える！"
   },
   "METAPOD_NEW_MOVES_QUEST": {
     "name": "トランセルの新技",
-    "task": "トランセルで200匹のポケモンを倒す",
+    "task": "トランセルで50匹のポケモンを倒す",
     "rewardText": "トランセルが覚える技が増える！"
   }
 }

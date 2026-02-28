@@ -11,8 +11,8 @@
       "descriptionConditional": "{{types}}タイプまたはシグネチャーポケモンの{{stats}}を永続的に{{percent}}%アップ。{{types}}タイプでもシグネチャーでもないポケモンは{{firstStat}}のみアップ。{{champion}}のトレーニング法が込められています。"
     },
     "trainerBondAbility": {
-      "name": "{{champion}}のリミットブレイク: {{ability}}",
-      "description": "{{champion}}のポケモンが{{chance}}%の確率で{{ability}}を発動。{{abilityDescription}}"
+      "name": "{{ability}}",
+      "description": "同じ特性のスタックごとに{{champion}}のポケモンが{{chance}}%の確率で{{ability}}を発動。{{abilityDescription}}"
     },
     "teraAbility": {
       "name": "{{type}}テラスタル特性: {{ability}}",

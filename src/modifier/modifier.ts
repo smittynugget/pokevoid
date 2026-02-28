@@ -2,7 +2,7 @@ import * as ModifierTypes from "./modifier-type";
 import BattleScene from "../battle-scene";
 import { SkillPointSources } from "../system/skill-point-sources";
 import {getLevelTotalExp} from "../data/exp";
-import {MAX_PER_TYPE_POKEBALLS, PokeballType} from "../data/pokeball";
+import {MAX_PER_TYPE_POKEBALLS, PokeballType, getActiveChampionData} from "../data/pokeball";
 import Pokemon, {PlayerPokemon} from "../field/pokemon";
 import {Stat} from "../data/pokemon-stat";
 import {addTextObject, TextStyle} from "../ui/text";
@@ -64,6 +64,7 @@ import { ModifierTooltipUtils } from "../ui/modifier-tooltip-utils";
 import { PathNodeContext } from "#app/phases/battle-path-phase";
 import { PokemonAltBuildDefinition, AltBuildColorPalette } from "#app/data/pokemon-alt-buid.js";
 import { ChampionUtils } from "#app/system/champion-utils";
+import { assignTypeThemedMoves } from "../system/type-move-utils";
 export type ModifierPredicate = (modifier: Modifier) => boolean;
 
 const iconOverflowIndex = 40;
@@ -859,9 +860,9 @@ export class TerastallizeModifier extends LapsingPokemonHeldItemModifier {
     public teraType: Type;
     isTransferrable: boolean = false;
     constructor(type: ModifierTypes.TerastallizeModifierType, pokemonId: integer, teraType: Type, battlesLeft?: integer, stackCount?: integer) {
-        let duration = 10;
+        let duration = 25;
         if (hasTerastallizeAccess()) {
-            duration = 20;
+            duration = 35;
         }
         if (hasPermaModifierByType(PermaType.PERMA_LONGER_TERA_3)) {
             duration += 30;
@@ -1866,6 +1867,10 @@ export class EvolutionItemModifier extends ConsumablePokemonModifier {
     apply(args: any[]): boolean {
         const pokemon = args[0] as PlayerPokemon;
 
+        if (pokemon.isEvolutionLocked()) {
+            return false;
+        }
+
         let matchingEvolution = pokemonEvolutions.hasOwnProperty(pokemon.species.speciesId)
             ? pokemonEvolutions[pokemon.species.speciesId].find(e => e.item === (this.type as ModifierTypes.EvolutionItemModifierType).evolutionItem
                 && (e.evoFormKey === null || (e.preFormKey || "") === pokemon.getFormKey())
@@ -2243,6 +2248,10 @@ export class PokemonFormChangeItemModifier extends PokemonHeldItemModifier {
         const active = args[1] as boolean;
 
         const isSmittyItem = this.formChangeItem >= FormChangeItem.SMITTY_AURA && this.formChangeItem <= FormChangeItem.SMITTY_VOID;
+
+        if (!this.isGlitchOrSmittyItem() && pokemon.isEvolutionLocked?.()) {
+            return false;
+        }
 
         let formChange: SpeciesFormChange | null = null;
         if (isSmittyItem) {
@@ -3370,10 +3379,10 @@ export class TypeSwitcherModifier extends PokemonHeldItemModifier {
 
         if (pokemon.isFusion()) {
             const fusionForm = getForm(pokemon.fusionSpecies!, pokemon.fusionFormIndex);
-            if (this.newPrimaryType) {
+            if (this.newPrimaryType !== null && this.newPrimaryType >= 0) {
                 fusionForm.type1 = this.newPrimaryType;
             }
-            if (this.newSecondaryType) {
+            if (this.newSecondaryType !== null && this.newSecondaryType >= 0) {
                 fusionForm.type2 = this.newSecondaryType;
             }
         }
@@ -3825,6 +3834,30 @@ export function reduceCollectedTypeModifiers(scene: BattleScene, pokemon: Player
   return false;
 }
 
+export function applySignatureTypeSwitcher(scene: BattleScene, pokemon: PlayerPokemon): void {
+  if (!pokemon?.isSignature) return;
+
+  const existing = scene.findModifier(m => m instanceof TypeSwitcherModifier && m.pokemonId === pokemon.id) as TypeSwitcherModifier | undefined;
+  if (existing) return;
+
+  const championData = getActiveChampionData(scene);
+  if (!championData) return;
+
+  const types = [championData.type1, championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+  if (types.length === 0) return;
+
+  scene.executeWithSeedOffset(() => {
+    const modType = new ModifierTypes.TypeSwitcherModifierType(types[0] ?? null, types.length > 1 ? types[1] : null);
+    modType.id = "TYPE_SWITCHER";
+    const modifier = modType.newModifier(pokemon) as TypeSwitcherModifier;
+    scene.addModifier(modifier, false);
+
+    if (scene.gameMode?.isDraft) {
+      assignTypeThemedMoves(scene, pokemon, types);
+    }
+  }, 0, `${scene.seed}_sig_types_${pokemon.id}`);
+}
+
 export class AddPokemonModifier extends ConsumableModifier {
     private scene: BattleScene;
     private newPokemon: PlayerPokemon;
@@ -3837,13 +3870,40 @@ export class AddPokemonModifier extends ConsumableModifier {
 
     apply(args: any[]): boolean {
         const scene = args[0] as BattleScene;
-        scene.getParty().push(this.newPokemon);
+        const party = scene.getParty();
+        if (party.length >= 6) return false;
+        if (party.some(p => p.id === this.newPokemon.id)) return false;
+        party.push(this.newPokemon);
         this.newPokemon.setVisible(false);
         this.newPokemon.loadAssets();
         reduceGlitchPieceModifier(this.newPokemon, 3);
+        applySignatureTypeSwitcher(scene, this.newPokemon);
+        applyGeneralPokemonTypeMoves(scene, this.newPokemon);
         return true;
     }
 }
+
+export function applyGeneralPokemonTypeMoves(scene: BattleScene, pokemon: PlayerPokemon): void {
+  if (!pokemon || pokemon.isSignature) return;
+
+  const championData = getActiveChampionData(scene);
+  if (!championData) return;
+
+  const championTypes = [championData.type1, championData.type2]
+    .filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+  if (championTypes.length === 0) return;
+
+  const pokemonTypes = [pokemon.species.type1, pokemon.species.type2]
+    .filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+
+  const matchingTypes = championTypes.filter(ct => pokemonTypes.includes(ct));
+  if (matchingTypes.length === 0) return;
+
+  scene.executeWithSeedOffset(() => {
+    assignTypeThemedMoves(scene, pokemon, matchingTypes, true);
+  }, 0, `${scene.seed}_general_types_${pokemon.id}`);
+}
+
 export class CollectedTypeModifier extends PokemonHeldItemModifier {
     public collectedTypes: Record<Type, number>;
     readonly isTransferrable: boolean = false;
@@ -5153,7 +5213,7 @@ export class TrainerBondAbilityModifier extends PersistentModifier {
 
     const championSpriteKey = this.type.iconImage;
     const championScale = ChampionUtils.getChampionTrainerBondScale(this.championId);
-    const iconScale = 0.45 * championScale;
+    const iconScale = Math.min(0.35, 0.45 * championScale);
 
     try {
       if (scene.textures.exists(championSpriteKey)) {

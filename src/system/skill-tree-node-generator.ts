@@ -173,7 +173,7 @@ export class SkillTreeNodeGenerator {
   }
 
   private getChampionRewardPool(championData: PlayableChampionData): SkillTreeRewardType[] {
-    const championTypes = [championData.type1, championData.type2].filter(Boolean);
+    const championTypes = [championData.type1, championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
     const moveUpgradesEnabledForRun = this.scene?.moveUpgradesEnabledForRun !== false;
 
     if (championTypes.length === 0) {
@@ -374,14 +374,14 @@ export class SkillTreeNodeGenerator {
       return true;
     }
     switch (type) {
-      case SkillTreeRewardType.TM_FILTERED: return this.getChampionCompatibleTMs([c.type1, c.type2].filter(Boolean)).length > 0;
-      case SkillTreeRewardType.XM_FILTERED: return this.getChampionCompatibleXMs([c.type1, c.type2].filter(Boolean)).length > 0;
+      case SkillTreeRewardType.TM_FILTERED: return this.getChampionCompatibleTMs([c.type1, c.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[]).length > 0;
+      case SkillTreeRewardType.XM_FILTERED: return this.getChampionCompatibleXMs([c.type1, c.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[]).length > 0;
       case SkillTreeRewardType.ABILITY_GRANT: {
-        const pool = this.getChampionTypeAbilities([c.type1, c.type2].filter(Boolean));
+        const pool = this.getChampionTypeAbilities([c.type1, c.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[]);
         return pool.length > 0 || Object.values(Abilities).some(v => typeof v === 'number');
       }
       case SkillTreeRewardType.SIGNATURE_POKEMON: return (c.signaturePokemon?.length ?? 0) > 0;
-      case SkillTreeRewardType.GENERAL_POKEMON: return this.getTypeCompatiblePokemon([c.type1, c.type2].filter(Boolean), c.pokemonGenerationFilter).length > 0;
+      case SkillTreeRewardType.GENERAL_POKEMON: return this.getTypeCompatiblePokemon([c.type1, c.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[], c.pokemonGenerationFilter).length > 0;
       case SkillTreeRewardType.LEGENDARY_POKEMON: return (c.legendaryPokemon?.length ?? 0) > 0;
       case SkillTreeRewardType.POKEMON_ALT_BUILD: return (c.unlockedAltBuilds?.length ?? 0) > 0;
       case SkillTreeRewardType.TRAINER_BOND_ABILITY: return (c.unlockedConditionalAbilities || []).some(a => !allAbilities[a]?.name?.endsWith(" (N)"));
@@ -395,7 +395,7 @@ export class SkillTreeNodeGenerator {
       case SkillTreeRewardType.GLITCH_FORM_UNLOCK: return this.getAvailableGlitchForms(c).length > 0;
       case SkillTreeRewardType.PERMA_ITEM: return true;
       case SkillTreeRewardType.ESSENCE_BUNDLE: {
-        const types = [c.type1, c.type2].filter(Boolean);
+        const types = [c.type1, c.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
         return types.length > 0 || Object.values(Type).some(v => typeof v === 'number');
       }
       case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT: return true;
@@ -653,7 +653,38 @@ export class SkillTreeNodeGenerator {
       }
     }
 
-    const selectedBuild = SkillTreeSelectors.pickAltBuildId(championData);
+    let selectedBuild: PokemonAltBuildId | undefined;
+
+    if (this.scene) {
+      const party = this.scene.getParty();
+      const partySpeciesIds = party.map(p => p.species.speciesId);
+      const signatureSpeciesIds = party
+        .filter(p => p.isSignature)
+        .map(p => p.species.speciesId);
+
+      const unlockedBuilds = (championData.unlockedAltBuilds || []) as PokemonAltBuildId[];
+
+      const signatureMatches = unlockedBuilds.filter(id => {
+        const def = POKEMON_ALT_BUILDS[id];
+        return def?.species && signatureSpeciesIds.includes(def.species);
+      });
+
+      if (signatureMatches.length > 0) {
+        selectedBuild = Utils.randSeedItem(signatureMatches);
+      } else {
+        const partyMatches = unlockedBuilds.filter(id => {
+          const def = POKEMON_ALT_BUILDS[id];
+          return def?.species && partySpeciesIds.includes(def.species);
+        });
+        if (partyMatches.length > 0) {
+          selectedBuild = Utils.randSeedItem(partyMatches);
+        }
+      }
+    }
+
+    if (!selectedBuild) {
+      selectedBuild = SkillTreeSelectors.pickAltBuildId(championData);
+    }
     const buildDefinition = POKEMON_ALT_BUILDS[selectedBuild];
 
     return {
@@ -822,7 +853,7 @@ export class SkillTreeNodeGenerator {
   }
   private generateTeraType(championData: PlayableChampionData): SkillTreeReward {
 
-    const championTypes = [championData.type1, championData.type2].filter(Boolean) as Type[];
+    const championTypes = [championData.type1, championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
     const preferredTeraTypes = championData.preferredTeraTypes;
     if (preferredTeraTypes && preferredTeraTypes.length > 0) {
       return {
@@ -1005,15 +1036,12 @@ export class SkillTreeNodeGenerator {
       }
 
       case SkillTreeRewardType.TRAINER_BOND_ABILITY: {
-        const abilityName = (allAbilities as any)?.[rewardData.data?.abilityId]?.name || i18next.t("skillTree:unknownReward");
-        return i18next.t("skillTree:rewards.trainerBondAbility", { ability: abilityName });
+        const championDisplayName = ChampionUtils.getChampionDisplayName(this.championId);
+        return i18next.t("skillTree:rewards.trainerBondGeneric", { champion: championDisplayName });
       }
 
-      case SkillTreeRewardType.TERA_ABILITY: {
-        const teraTypeName = rewardData.data?.type !== undefined ? i18next.t(`pokemonInfo:Type.${Type[rewardData.data.type]}`) : i18next.t("skillTree:fallback.unknownType");
-        const teraAbilityName = (allAbilities as any)?.[rewardData.data?.abilityId]?.name || i18next.t("skillTree:unknownReward");
-        return i18next.t("skillTree:rewards.teraAbility", { type: teraTypeName, ability: teraAbilityName });
-      }
+      case SkillTreeRewardType.TERA_ABILITY:
+        return i18next.t("skillTree:rewards.teraAbilityGeneric");
 
       case SkillTreeRewardType.STAT_BOOST: {
         const stats = (rewardData.data?.stats || []);
@@ -1046,11 +1074,8 @@ export class SkillTreeNodeGenerator {
         return i18next.t("skillTree:rewards.dynaMushroom");
       case SkillTreeRewardType.GLITCH_CHANGE:
         return i18next.t("skillTree:rewards.glitchChange");
-      case SkillTreeRewardType.TYPE_SWITCHER: {
-        const types = (rewardData.data?.types as Type[] | undefined) || [];
-        const label = types.length ? types.map(t => (Type as any)[t] || "?").join("/") : i18next.t("skillTree:unknownReward");
-        return i18next.t("skillTree:rewards.typeSwitcher", { type: label });
-      }
+      case SkillTreeRewardType.TYPE_SWITCHER:
+        return i18next.t("skillTree:rewards.typeSwitcherGeneric");
       case SkillTreeRewardType.POKEMON_ALT_BUILD: {
         const altBuildId = rewardData.data?.altBuildId;
         const altBuildDef = altBuildId ? POKEMON_ALT_BUILDS[altBuildId] : undefined;
@@ -1265,6 +1290,41 @@ export class SkillTreeNodeGenerator {
           }
         }
 
+        const maxRank = 10;
+        let currentRank = 0;
+        const offeredBuildRank = rewardData.data?.altBuild?.rank;
+        if (offeredBuildRank !== undefined && offeredBuildRank !== null) {
+            currentRank = offeredBuildRank;
+        } else {
+            try {
+                if (species) {
+                    const manager = ChampionManager.getInstance();
+                    const champ = manager.getChampionData(this.championId);
+                    const speciesId = species as Species;
+                    const rewardAltBuildId = rewardData.data?.altBuildId as PokemonAltBuildId | undefined;
+                    const baseSigId = rewardAltBuildId ?? ChampionUtils.getSignatureAltBuildId(speciesId, champ);
+
+                    if (baseSigId) {
+                        const unlocked = (champ.unlockedAltBuilds || [])
+                            .map(id => POKEMON_ALT_BUILDS[id as PokemonAltBuildId])
+                            .filter(def => !!def && (def.id === baseSigId || (def.prerequisiteBuilds || []).includes(baseSigId)));
+
+                        const unlockedMax = unlocked.reduce((m, def) => Math.max(m, def.rank ?? 0), 0);
+                        currentRank = unlockedMax;
+
+                        const party = this.scene?.getParty?.() || [];
+                        const partyMatch = party.find(p => p.altBuildId === baseSigId);
+                        if (typeof partyMatch?.altBuildRank === "number") {
+                            currentRank = Math.max(currentRank, partyMatch.altBuildRank);
+                        }
+                    }
+                }
+            } catch {}
+        }
+
+        currentRank = Math.max(0, Math.min(maxRank, currentRank));
+        description += `\n\n${i18next.t("skillTree:descriptions.signaturePokemonRankInfo", { rank: currentRank })}`;
+
         return description;
       }
 
@@ -1323,21 +1383,11 @@ export class SkillTreeNodeGenerator {
           championId = "apollo_diana";
         }
 
-        const ability = (allAbilities as any)?.[rewardData.data?.abilityId];
-        const abilityName = ability?.name || i18next.t("skillTree:unknownReward");
-        const abilityDesc = ability?.description || "";
-
         const flavorKey = `skillTree:descriptions.trainerBondFlavorText_${championId}`;
         const championFlavorText = i18next.t(flavorKey, { champion: championDisplayName });
+        const genericDesc = i18next.t("skillTree:descriptions.trainerBondGeneric", { champion: championDisplayName });
 
-        const firstLine = i18next.t("skillTree:descriptions.trainerBondAbility", {
-          ability: abilityName
-        });
-        const technicalDesc = abilityDesc
-          ? `[color=#ffdd44]${firstLine}\n${abilityName}: ${abilityDesc}[/color]`
-          : firstLine;
-
-        return `${championFlavorText}\n\n${technicalDesc}`;
+        return `${championFlavorText}\n\n[color=#ffdd44]${genericDesc}[/color]`;
       }
 
       case SkillTreeRewardType.ABILITY_GRANT: {
@@ -1357,7 +1407,7 @@ export class SkillTreeNodeGenerator {
         try {
           const manager = ChampionManager.getInstance();
           const championData = manager.getChampionData(this.championId);
-          const championTypes = [championData.type1, championData.type2].filter(Boolean);
+          const championTypes = [championData.type1, championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
 
           if (championTypes.length > 0 && stats.length > 1) {
             const typeNames = championTypes.map(t => i18next.t(`pokemonInfo:Type.${Type[t]}`)).join("/");
@@ -1383,19 +1433,10 @@ export class SkillTreeNodeGenerator {
         return i18next.t("modifierType:ModifierType.FormChangeItemModifierType.description");
       case SkillTreeRewardType.GLITCH_CHANGE:
         return i18next.t("modifierType:ModifierType.FormChangeItemModifierType.description");
-      case SkillTreeRewardType.TYPE_SWITCHER: {
-        const types = (rewardData.data?.types as Type[] | undefined) || [];
-        const label = types.length ? types.map(t => (Type as any)[t] || "?").join("/") : "-";
-        return i18next.t("skillTree:descriptions.typeSwitcher", { type: label });
-      }
-      case SkillTreeRewardType.TERA_ABILITY: {
-        const teraType = rewardData.data?.type !== undefined ? (Type as any)[rewardData.data.type] : i18next.t("skillTree:fallback.unknownType");
-        const ability = (allAbilities as any)?.[rewardData.data?.abilityId];
-        const teraAbilityName = ability?.name || i18next.t("skillTree:unknownReward");
-        const abilityDesc = ability?.description || "";
-        const firstLine = i18next.t("skillTree:descriptions.teraAbility", { type: teraType, ability: teraAbilityName });
-        return abilityDesc ? `${firstLine}\n${teraAbilityName}: ${abilityDesc}` : firstLine;
-      }
+      case SkillTreeRewardType.TYPE_SWITCHER:
+        return i18next.t("skillTree:descriptions.typeSwitcherGeneric");
+      case SkillTreeRewardType.TERA_ABILITY:
+        return i18next.t("skillTree:descriptions.teraAbilityGeneric");
       case SkillTreeRewardType.SMITTY_ABILITY: {
         const ability = (allAbilities as any)?.[rewardData.data?.abilityId];
         const abilityName = ability?.name || i18next.t("skillTree:unknownReward");
@@ -1642,16 +1683,8 @@ export class SkillTreeNodeGenerator {
         }
         return i18next.t("skillTree:descriptions.permaItem", { item: i18next.t("skillTree:fallback.unknownItem") });
       }
-      case SkillTreeRewardType.MOVE_UPGRADE: {
-        const filterUpgrades = rewardData.data?.filterUpgrades;
-        if (filterUpgrades?.moveUpgrades?.length > 0) {
-          const upgradePath = filterUpgrades.moveUpgrades[0];
-          const pathType = UpgradePathUtils.getPathType(upgradePath);
-          const flavorText = i18next.t(`moveUpgradeAttrs:${pathType}`, { defaultValue: pathType });
-          return i18next.t("skillTree:descriptions.moveUpgrade", { category: flavorText });
-        }
-        return i18next.t("skillTree:descriptions.moveUpgrade", { category: i18next.t("skillTree:fallback.unknownCategory") });
-      }
+      case SkillTreeRewardType.MOVE_UPGRADE:
+        return i18next.t("skillTree:descriptions.moveUpgradeGeneric");
       case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
         return this.getSpecificMoveUpgradeDescription(rewardData.data);
       case SkillTreeRewardType.PASSIVE_ABILITY_GRANT: {

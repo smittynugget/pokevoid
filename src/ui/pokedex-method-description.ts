@@ -95,7 +95,7 @@ function parseFormChangeTrigger(formChange: SpeciesFormChange): string {
   return i18next.t("pokedex:useItem", { item: "Special Item" });
 }
 
-function getEvolutionToThisPokemon(speciesId: Species): SpeciesFormEvolution | null {
+function getEvolutionToThisPokemon(speciesId: Species, evoFormKey?: string): SpeciesFormEvolution | null {
   const preEvoSpecies = pokemonPrevolutions[speciesId];
   if (!preEvoSpecies) {
     return null;
@@ -103,6 +103,10 @@ function getEvolutionToThisPokemon(speciesId: Species): SpeciesFormEvolution | n
   const evolutions = pokemonEvolutions[preEvoSpecies];
   if (!evolutions) {
     return null;
+  }
+  if (evoFormKey) {
+    const formMatch = evolutions.find(ev => ev.speciesId === speciesId && ev.evoFormKey === evoFormKey);
+    if (formMatch) return formMatch;
   }
   return evolutions.find(ev => ev.speciesId === speciesId) || null;
 }
@@ -147,11 +151,8 @@ function parseEvolutionCondition(condition: SpeciesEvolutionCondition, level: nu
 
   if (predicateStr.includes("stats[Stat.ATK]") && predicateStr.includes("stats[Stat.DEF]")) {
     let comparison = "=";
-    if (/ATK\]\s*>\s*p/.test(predicateStr)) {
-      comparison = ">";
-    } else if (/ATK\]\s*<\s*p/.test(predicateStr)) {
-      comparison = "<";
-    }
+    if (/ATK\]\s*>\s*p/.test(predicateStr)) comparison = ">";
+    else if (/ATK\]\s*<\s*p/.test(predicateStr)) comparison = "<";
     return i18next.t("pokedex:statComparison", { stat1: "ATK", comparison, stat2: "DEF" });
   }
 
@@ -252,7 +253,7 @@ export function getPokedexMethodDescription(speciesId: Species, formKey?: string
     }
   }
   if (!description) {
-    const evolution = getEvolutionToThisPokemon(speciesId);
+    const evolution = getEvolutionToThisPokemon(speciesId, formKey);
     if (evolution) {
       description = getEvolutionDescription(evolution);
     }

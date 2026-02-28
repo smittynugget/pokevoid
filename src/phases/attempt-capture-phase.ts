@@ -520,7 +520,7 @@ export class AttemptCapturePhase extends PokemonPhase {
 
         let remainingPool = [...weightedPool];
         const selectedMoves: Moves[] = [];
-        for (let i = 0; i < 2 && remainingPool.length > 0; i++) {
+        for (let i = 0; i < 3 && remainingPool.length > 0; i++) {
             const move = selectWeightedMove(remainingPool);
             selectedMoves.push(move);
             remainingPool = remainingPool.filter(([m]) => m !== move);
@@ -532,7 +532,7 @@ export class AttemptCapturePhase extends PokemonPhase {
             slotsToReplace.push(i);
         }
 
-        if (slotsToReplace.length < 2) {
+        if (slotsToReplace.length < 3) {
             const nonTypeSlots = moveset
                 .map((m, i) => ({ move: m, index: i }))
                 .filter(({ move, index }) =>
@@ -543,7 +543,7 @@ export class AttemptCapturePhase extends PokemonPhase {
             slotsToReplace.push(...nonTypeSlots);
         }
 
-        if (slotsToReplace.length < 2) {
+        if (slotsToReplace.length < 3) {
             const remainingSlots = moveset
                 .map((_, i) => i)
                 .filter(i => !slotsToReplace.includes(i));

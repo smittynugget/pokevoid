@@ -118,7 +118,7 @@ const VERSION_STORAGE_KEY = "last_seen_game_version";
 
 async function maybeClearCacheOnVersionChange(): Promise<boolean> {
   try {
-    const currentVersion = `v2.2.${INTERNAL_BACKUP_VERSION}`;
+    const currentVersion = `v2.3.${INTERNAL_BACKUP_VERSION}`;
     const lastSeen = localStorage.getItem(VERSION_STORAGE_KEY);
     if (lastSeen && lastSeen !== currentVersion) {
       localStorage.setItem(VERSION_STORAGE_KEY, currentVersion);

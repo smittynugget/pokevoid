@@ -7,6 +7,8 @@ import { Nature } from "../data/nature";
 import { PlayerPokemon } from "../field/pokemon";
 import { StarterMoveset, StarterAttributes } from "../system/game-data";
 import { PokemonIconAnimMode } from "./pokemon-icon-anim-handler";
+import { TypeSwitcherModifier } from "../modifier/modifier";
+import { getTypeRgb } from "../data/type";
 import { Gender } from "../data/gender";
 import { EnhancedTutorial } from "./tutorial-registry";
 import { Button } from "#enums/buttons";
@@ -136,7 +138,7 @@ export default class eggStarterUi extends StarterSelectUiHandler {
             const partyPokemon = this.scene.getParty();
             this.currentParty = partyPokemon;
 
-            this.legendaryEnabled = [...partyPokemon].slice(1).some(pokemon => pokemon.species.isLegendSubOrMystical() || pokemon.isMax() || pokemon.isMega());
+            this.legendaryEnabled = [...partyPokemon].some(pokemon => pokemon.species.isLegendSubOrMystical() || pokemon.isMax() || pokemon.isMega());
 
             this.customizeUIForEggSelection();
 
@@ -199,7 +201,19 @@ export default class eggStarterUi extends StarterSelectUiHandler {
                 this.starterIcons[i].setFrame(speciesForm.getIconId(isFemale, formIndex, shiny, variant));
                 this.checkIconId(this.starterIcons[i], speciesForm as any, isFemale, formIndex, shiny, variant);
                 this.starterIcons[i].setVisible(true);
-                                if (this.iconAnimHandler) {
+                const tsModifier = this.scene.findModifier(m =>
+                    m instanceof TypeSwitcherModifier && (m as any).pokemonId === pokemon.id
+                ) as TypeSwitcherModifier | undefined;
+                if (tsModifier) {
+                    const targetType = (tsModifier as any).newPrimaryType ?? (tsModifier as any).newSecondaryType;
+                    if (targetType !== null && targetType !== undefined && targetType >= 0) {
+                        const rgb = getTypeRgb(targetType);
+                        if (rgb) {
+                            this.starterIcons[i].setTint(Phaser.Display.Color.GetColor(rgb[0], rgb[1], rgb[2]));
+                        }
+                    }
+                }
+                if (this.iconAnimHandler) {
                     this.iconAnimHandler.addOrUpdate(this.starterIcons[i], PokemonIconAnimMode.PASSIVE);
                 }
             }

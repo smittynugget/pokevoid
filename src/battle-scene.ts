@@ -43,7 +43,7 @@ import {
   reduceGlitchPieceModifier,
   PokemonAltBuildModifier
 } from "./modifier/modifier";
-import { PokeballType } from "./data/pokeball";
+import { PokeballType, applyTypeBallRecolor } from "./data/pokeball";
 import {
   initCommonAnims,
   initMoveAnim,
@@ -117,7 +117,8 @@ import {
   SpeciesFormChangeTrigger,
   pokemonFormChanges,
   SpeciesFormChange,
-  SmittyFormTrigger
+  SmittyFormTrigger,
+  GlitchPieceTrigger
 } from "./data/pokemon-forms";
 import {FormChangeItem} from "#enums/form-change-items";
 import { FormChangePhase } from "./phases/form-change-phase";
@@ -751,7 +752,6 @@ export default class BattleScene extends SceneBase {
     field.add(trainer);
 
     this.trainer = trainer;
-
     this.anims.create({
       key: "prompt",
       frames: this.anims.generateFrameNumbers("prompt", { start: 1, end: 4 }),
@@ -884,9 +884,15 @@ export default class BattleScene extends SceneBase {
       }
     }
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const timeoutId = setTimeout(() => controller.abort(new DOMException("Fetch timeout after 15s", "TimeoutError")), 15000);
     const mergedInit = { ...(init || {}), signal: controller.signal };
-    return fetch(url, mergedInit).finally(() => clearTimeout(timeoutId));
+    return fetch(url, mergedInit).catch(err => {
+      if (err.name === "AbortError" || err.name === "TimeoutError") {
+        console.warn(`cachedFetch timeout for ${url}`);
+        return new Response(null, { status: 408 });
+      }
+      throw err;
+    }).finally(() => clearTimeout(timeoutId));
   }
 
   initStarterColors(): Promise<void> {
@@ -3536,7 +3542,21 @@ export default class BattleScene extends SceneBase {
       return false;
     }
 
+    if (pokemon instanceof PlayerPokemon && pokemon.isEvolutionLocked?.()) {
+        let isGlitchSmittyTrigger = false;
+        if (triggerTypeOrFormChange instanceof SpeciesFormChange) {
+            const fk = triggerTypeOrFormChange.formKey || '';
+            isGlitchSmittyTrigger = fk.includes('glitch') || fk.includes('smitty');
+        } else if (triggerTypeOrFormChange === SmittyFormTrigger || triggerTypeOrFormChange === GlitchPieceTrigger) {
+            isGlitchSmittyTrigger = true;
+        }
+        if (!isGlitchSmittyTrigger) {
+            return false;
+        }
+    }
+
     let matchingFormChange: SpeciesFormChange | null = null;
+
     if (triggerTypeOrFormChange instanceof SpeciesFormChange) {
       matchingFormChange = triggerTypeOrFormChange;
     }

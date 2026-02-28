@@ -49,7 +49,15 @@ export class FormChangePhase extends EvolutionPhase {
         this.end();
         return;
       }
-      console.log(`[FORM_CHANGE] species=${transformedPokemon.species.speciesId} formIndex=${transformedPokemon.formIndex} spriteKey=${transformedPokemon.getSpriteKey(true)} textureExists=${this.scene.textures.exists(transformedPokemon.getSpriteKey(true))}`);
+      const previewSpriteKey = transformedPokemon.getSpriteKey(true);
+      const textureOk = this.scene.textures.exists(previewSpriteKey) && this.scene.textures.get(previewSpriteKey).key !== "__MISSING";
+      if (!textureOk) {
+        console.error(`[FORM_CHANGE] Missing texture for preview spriteKey=${previewSpriteKey} species=${transformedPokemon.species.speciesId} formIndex=${transformedPokemon.formIndex}`);
+        transformedPokemon.destroy();
+        this.end();
+        return;
+      }
+      console.log(`[FORM_CHANGE] species=${transformedPokemon.species.speciesId} formIndex=${transformedPokemon.formIndex} spriteKey=${previewSpriteKey} textureOk=${textureOk}`);
       const gainingAltBuild = !this.pokemon.altBuildId && !!(transformedPokemon as any).altBuildId;
       if (gainingAltBuild) {
         [ this.pokemonSprite, this.pokemonTintSprite ].forEach(sprite => {
@@ -118,6 +126,8 @@ export class FormChangePhase extends EvolutionPhase {
           }
         }
       });
+
+      transformedPokemon.destroy();
 
       this.scene.time.delayedCall(250, () => {
         this.scene.tweens.add({
@@ -243,7 +253,6 @@ export class FormChangePhase extends EvolutionPhase {
                                           const delay = playEvolutionFanfare ? 4000 : 1750;
                                           this.scene.playSoundWithoutBgm(playEvolutionFanfare ? "evolution_fanfare" : "minor_fanfare");
 
-                                          transformedPokemon.destroy();
                                           this.scene.ui.showText(getSpeciesFormChangeMessage(this.pokemon, this.formChange, preName), null, () => this.end(), null, true, Utils.fixedInt(delay));
                                           this.scene.time.delayedCall(Utils.fixedInt(delay + 250), () => this.scene.playBgm());
                                         });
