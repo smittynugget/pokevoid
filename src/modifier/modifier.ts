@@ -3398,6 +3398,10 @@ export class TypeSwitcherModifier extends PokemonHeldItemModifier {
             }
         }
 
+        if ((pokemon as any).generateCompatibleTms) {
+            (pokemon as any).generateCompatibleTms();
+        }
+
         return true;
     }
 

@@ -27,16 +27,9 @@ export class HallOfFamePhase extends Phase {
     this.hallOfFameContainer.setDepth(10);
     this.scene.ui.clearText();
     this.scene.ui.fadeIn(1000).then(() => {
-      const messageHandler = this.scene.ui.getMessageHandler();
-
       this.scene.ui.showText("", 0, () => {
         this.openRunInfo();
       }, null, true);
-
-      if (messageHandler.prompt) {
-        messageHandler.prompt.anims.stop();
-        messageHandler.prompt.setVisible(false);
-      }
     });
   }
 

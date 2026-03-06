@@ -52,6 +52,11 @@ export class SpeciesFormChange {
     }
 
     const formKeys = pokemon.species.forms.map(f => f.formKey);
+
+    if (isGlitchFormKey(this.formKey) && pokemon.species.getGlitchFormName(false, pokemon.scene) == null) {
+      return false;
+    }
+
     if ((formKeys[pokemon.formIndex] !== this.preFormKey && pokemon.species.getGlitchFormName(false, pokemon.scene) == null) || isGlitchFormKey(pokemon.species.forms[pokemon.formIndex].formKey)) {
       return false;
     }

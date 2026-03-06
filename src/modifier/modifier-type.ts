@@ -2846,9 +2846,9 @@ export class FormChangeItemModifierType extends PokemonModifierType implements G
                     }
 
                     if (pokemon.species.speciesId !== Species.NONE &&
-                        (relevantFormChange.isModForm() && (!pokemon.scene.gameMode.isTestMod && !pokemon.scene.gameData.isModFormUnlocked(relevantFormChange.modFormName))) &&
-                        !pokemon.scene.gameData.canUseGlitchOrSmittyForm(pokemon.species.speciesId, rewardTypeMap[formKey])
-                        ) {
+                        !pokemon.scene.gameData.canUseGlitchOrSmittyForm(pokemon.species.speciesId, rewardTypeMap[formKey]) &&
+                        (!relevantFormChange.isModForm() || !pokemon.scene.gameMode.isTestMod && !pokemon.scene.gameData.isModFormUnlocked(relevantFormChange.modFormName))
+                    ) {
                         return PartyUiHandler.NoEffectMessage;
                     }
                 }

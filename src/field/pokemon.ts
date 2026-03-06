@@ -4186,19 +4186,29 @@ export class PlayerPokemon extends Pokemon {
   generateCompatibleTms(): void {
     this.compatibleTms = [];
 
-    const tms = Object.keys(tmSpecies);
-    for (const tm of tms) {
+    const allTmKeys = new Set([...Object.keys(tmSpecies), ...Object.keys(tmPoolTiers)]);
+    for (const tm of allTmKeys) {
       const moveId = parseInt(tm) as Moves;
       let compatible = false;
-      for (const p of tmSpecies[tm]) {
-        if (Array.isArray(p)) {
-          if (p[0] === this.species.speciesId || (this.fusionSpecies && p[0] === this.fusionSpecies.speciesId) && p.slice(1).indexOf(this.species.forms[this.formIndex]) > -1) {
+      if (tmSpecies[tm]) {
+        for (const p of tmSpecies[tm]) {
+          if (Array.isArray(p)) {
+            if (p[0] === this.species.speciesId || (this.fusionSpecies && p[0] === this.fusionSpecies.speciesId) && p.slice(1).indexOf(this.species.forms[this.formIndex]) > -1) {
+              compatible = true;
+              break;
+            }
+          } else if (p === this.species.speciesId || (this.fusionSpecies && p === this.fusionSpecies.speciesId)) {
             compatible = true;
             break;
           }
-        } else if (p === this.species.speciesId || (this.fusionSpecies && p === this.fusionSpecies.speciesId)) {
-          compatible = true;
-          break;
+        }
+      }
+      if (!compatible) {
+        const moveType = allMoves[moveId]?.type;
+        if (moveType !== undefined && moveType !== Type.UNKNOWN) {
+          if (this.isOfType(moveType, false, false, true)) {
+            compatible = true;
+          }
         }
       }
       if (reverseCompatibleTms.indexOf(moveId) > -1) {
