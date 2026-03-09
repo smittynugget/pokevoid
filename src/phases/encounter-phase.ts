@@ -7,6 +7,7 @@ import { getPokemonSpecies } from "#app/data/pokemon-species";
 import { TrainerSlot } from "#app/data/trainer-config";
 import { getRandomWeatherType } from "#app/data/weather";
 import { BattleSpec } from "#app/enums/battle-spec";
+import { StatusEffect } from "#app/enums/status-effect";
 import { PlayerGender } from "#app/enums/player-gender";
 import { Species } from "#app/enums/species";
 import { EncounterPhaseEvent } from "#app/events/battle-scene";
@@ -515,6 +516,12 @@ export class EncounterPhase extends BattlePhase {
         this.scene.unshiftPhase(
           new FaintPhase(this.scene, enemy.getBattlerIndex())
         );
+      }
+    }
+
+    for (const p of [...party, ...enemyParty]) {
+      if (p && !p.hp && (!p.status || p.status.effect !== StatusEffect.FAINT)) {
+        p.trySetStatus(StatusEffect.FAINT);
       }
     }
   }
