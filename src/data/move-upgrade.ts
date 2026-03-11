@@ -931,6 +931,7 @@ export class MoveUpgrade {
 
         let isMinorRare = Utils.randSeedInt(50) <= 1;
         let isPathlessRare = Utils.randSeedInt(20) <= 0;
+        let isPathlessMediumRare = Utils.randSeedInt(10) <= 0;
         let isPathlessVeryRare = Utils.randSeedInt(100) <= 0;
         const hasPathlessUpgrade = MoveUpgrade.doesPathlessUpgradeExist(moveId, scene, isPlayer);
         if (filterUpgrades) {
@@ -938,6 +939,7 @@ export class MoveUpgrade {
             isRare = true;
             isMinorRare = true;
             isPathlessRare = true;
+            isPathlessMediumRare = true;
             isPathlessVeryRare = true;
         }
         if (shouldOfferUpgradeCategory(UpgradeCategory.POSITIVE_PRIORITY) && !isStatusMove && baseMove.priority <= 0 && hasPower && !isMultiHit && upgradeMove.power < 100) {
@@ -1780,15 +1782,29 @@ export class MoveUpgrade {
             }
         }
 
-        if(!hasPathlessUpgrade && isPathlessRare) {
+        if(!hasPathlessUpgrade && isPathlessMediumRare) {
 
-        if (isPhysicalMove) {
-            upgrades.push(moveGenerator.getType(moveId, 0, null, MoveCategory.SPECIAL, 0,
-                i18next.t("moveUpgrade:description:category:changeToSpecial"), null, null, [], [], 0, undefined));
-        } else if (isSpecialMove) {
-            upgrades.push(moveGenerator.getType(moveId, 0, null, MoveCategory.PHYSICAL, 0,
-                i18next.t("moveUpgrade:description:category:changeToPhysical"), null, null, [], [], 0, undefined));
+            if (isPhysicalMove) {
+                upgrades.push(moveGenerator.getType(moveId, 0, null, MoveCategory.SPECIAL, 0,
+                    i18next.t("moveUpgrade:description:category:changeToSpecial"), null, null, [], [], 0, undefined));
+            } else if (isSpecialMove) {
+                upgrades.push(moveGenerator.getType(moveId, 0, null, MoveCategory.PHYSICAL, 0,
+                    i18next.t("moveUpgrade:description:category:changeToPhysical"), null, null, [], [], 0, undefined));
+            }
+
+            if (!isStatusMove) {
+                if (!baseMove.hasAttr(AnyTypeSuperEffectTypeMultiplierAttr)) {
+                    const targetType = Utils.randSeedItem(Object.values(Type).filter(t => typeof t === "number" && t > Type.UNKNOWN && t < Type.STELLAR) as Type[]);
+                    upgrades.push(moveGenerator.getType(moveId, 0, null, null, 0,
+                        i18next.t("moveUpgrade:description:type:superEffectiveVsType", { targetTypeName: getTypeName(targetType) }),
+                        null, null, [new AnyTypeSuperEffectTypeMultiplierAttr(targetType)], [], 0, undefined));
+                }
+
+                upgrades.push(...getRandomTypeChangeOptions(filterUpgrades?.types));
+            }
         }
+
+        if(!hasPathlessUpgrade && isPathlessRare) {
 
         if (!isStatusMove) {
             if (!baseMove.hasAttr(MatchUserTypeAttr) && !baseMove.hasAttr(WeatherBallTypeAttr) &&
@@ -1826,15 +1842,6 @@ export class MoveUpgrade {
                     i18next.t("moveUpgrade:description:type:becomeTypeless", { powerValue: 10 }),
                     null, null, [new TypelessAttr()], [], 0, undefined));
             }
-
-            if (!baseMove.hasAttr(AnyTypeSuperEffectTypeMultiplierAttr)) {
-                const targetType = Utils.randSeedItem(Object.values(Type).filter(t => typeof t === "number" && t > Type.UNKNOWN && t < Type.STELLAR) as Type[]);
-                upgrades.push(moveGenerator.getType(moveId, 0, null, null, 0,
-                    i18next.t("moveUpgrade:description:type:superEffectiveVsType", { targetTypeName: getTypeName(targetType) }),
-                    null, null, [new AnyTypeSuperEffectTypeMultiplierAttr(targetType)], [], 0, undefined));
-            }
-
-            upgrades.push(...getRandomTypeChangeOptions(filterUpgrades?.types));
         }
 
         if (isPathlessVeryRare && !isStatusMove && !hitHealAttr && hasPower) {

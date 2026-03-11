@@ -1174,8 +1174,8 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         const caughtDropDown: DropDown = this.filterBar.getFilter(DropDownColumn.CAUGHT);
 
         this.filterBar.setValsToDefault();
-        for (let i = 0; i < caughtDropDown.options.length; i++) {
 
+        for (let i = 0; i < caughtDropDown.options.length; i++) {
             if (caughtDropDown.options[i].val !== "ALL" && caughtDropDown.options[i].val !== "UNCAUGHT") {
                 caughtDropDown.toggleOptionState(i);
             }
@@ -1924,7 +1924,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
 
         let success = false;
         let error = false;
-		if ((this.championOnStarterSelected || this.championOnCancel) || (this.championFilterConfig?.onStarterSelected || this.championFilterConfig?.onCancel)) {
+		if (!this.filterMode && ((this.championOnStarterSelected || this.championOnCancel) || (this.championFilterConfig?.onStarterSelected || this.championFilterConfig?.onCancel))) {
             if (button === Button.ACTION || button === Button.SUBMIT) {
                 const idx = this.cursor ?? 0;
                 const container = this.filteredStarterContainers[idx];
@@ -2644,6 +2644,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
     }
 
     updateStarters = () => {
+        const caughtValsDebug = this.filterBar.getVals(DropDownColumn.CAUGHT);
         this.scrollCursor = 0;
         this.filteredStarterContainers = [];
         this.validStarterContainers = [];
@@ -2719,11 +2720,6 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
             const caughtFilterValues = this.filterBar.getVals(DropDownColumn.CAUGHT);
 
             const fitsCaught = caughtFilterValues.some(caught => {
-
-                if (isChampionAvailable) {
-                    return true;
-                }
-
                 if (caught === "SHINY3") {
                     return isVariant3Caught;
                 } else if (caught === "SHINY2") {
@@ -2731,9 +2727,9 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
                 } else if (caught === "SHINY") {
                     return isVariant1Caught && !isVariant2Caught && !isVariant3Caught;
                 } else if (caught === "NORMAL") {
-                    return isNonShinyCaught && !isVariant1Caught && !isVariant2Caught && !isVariant3Caught;
+                    return (isNonShinyCaught && !isVariant1Caught && !isVariant2Caught && !isVariant3Caught) || isChampionAvailable;
                 } else if (caught === "UNCAUGHT") {
-                    return isUncaught;
+                    return isUncaught && !isChampionAvailable;
                 } else if (caught === "ALL") {
                     return true;
                 }
@@ -3014,7 +3010,6 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
     }
 
     moveStarterIconsCursor(index: number): void {
-
         if (index < 0 || index >= this.starterIcons.length) {
             console.warn("Invalid starterIcons index:", index);
             this.starterIconsCursorObj.setVisible(false);

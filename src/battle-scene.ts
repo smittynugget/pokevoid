@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import UI, { Mode } from "./ui/ui";
 import { RewardObtainedType, type RewardConfig } from "./ui/reward-obtained-ui-handler";
 import Pokemon, { PlayerPokemon, EnemyPokemon } from "./field/pokemon";
-import PokemonSpecies, { PokemonSpeciesFilter, allSpecies, getPokemonSpecies } from "./data/pokemon-species";
+import PokemonSpecies, { PokemonSpeciesFilter, allSpecies, getPokemonSpecies, isGlitchFormKey, isSmittyFormKey } from "./data/pokemon-species";
 import {Constructor, randSeedInt} from "#app/utils";
 import * as Utils from "./utils";
 import {
@@ -1598,9 +1598,11 @@ export default class BattleScene extends SceneBase {
       return 0;
     }
 
+    const baseFormCount = species.forms.filter(f => !isGlitchFormKey(f.formKey) && !isSmittyFormKey(f.formKey)).length || 1;
+
     switch (species.speciesId) {
     case Species.UNOWN:
-      return Utils.randSeedInt(species.forms.length - 1);
+      return Utils.randSeedInt(Math.max(baseFormCount - 1, 1));
     case Species.SHELLOS:
     case Species.GASTRODON:
     case Species.BASCULIN:
@@ -1624,7 +1626,7 @@ export default class BattleScene extends SceneBase {
     case Species.TATSUGIRI:
     case Species.GIMMIGHOUL:
     case Species.PALDEA_TAUROS:
-      return Utils.randSeedInt(species.forms.length);
+      return Utils.randSeedInt(baseFormCount);
     case Species.PIKACHU:
       return Utils.randSeedInt(8);
     case Species.EEVEE:
@@ -1656,7 +1658,7 @@ export default class BattleScene extends SceneBase {
       case Species.WORMADAM:
       case Species.ROTOM:
       case Species.LYCANROC:
-        return Utils.randSeedInt(species.forms.length);
+        return Utils.randSeedInt(baseFormCount);
       }
       return 0;
     }
@@ -2028,6 +2030,9 @@ export default class BattleScene extends SceneBase {
   }
 
   updateBiomeWaveText(forceWaveIndex: integer = undefined): void {
+    if (!this.currentBattle && !forceWaveIndex) {
+      return;
+    }
     const isBoss = !(forceWaveIndex || this.currentBattle.waveIndex % 10);
     const biomeString: string = getBiomeName(this.arena.biomeType);
     this.fieldUI.moveAbove(this.biomeWaveText, this.scoreText);

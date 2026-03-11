@@ -851,6 +851,18 @@ export class TitlePhase extends Phase {
             return;
         }
 
+        if (this.gameMode === GameModes.TEST_MOD) {
+            this.scene.gameMode = getGameMode(this.gameMode);
+            this.scene.sessionSlotId = -1;
+            this.scene.newArena(this.scene.gameMode.getStartingBiome(this.scene));
+            setupFixedBattles(this.scene);
+            this.scene.money = this.scene.gameMode.getStartingMoney();
+            this.scene.pushPhase(new SelectDraftPhase(this.scene, true));
+            this.scene.pushPhase(new EncounterPhase(this.scene, false));
+            super.end();
+            return;
+        }
+
         if (!this.loaded && !this.scene.gameMode.isDaily && !this.scene.gameData.selectedChampionId) {
             this.scene.arena.preloadBgm();
             this.scene.gameMode = getGameMode(this.gameMode);

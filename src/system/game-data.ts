@@ -1038,7 +1038,55 @@ export class GameData {
     }
 
     setLocalStorageItem(key: string, value: any): void {
-        localStorage.setItem(key, value);
+        try {
+            localStorage.setItem(key, value);
+        } catch (e) {
+            if (e instanceof DOMException && e.name === 'QuotaExceededError') {
+                console.error(`[STORAGE QUOTA] Failed to write key "${key}" (${typeof value === 'string' ? (value.length / 1024).toFixed(1) + 'KB' : 'unknown size'})`);
+                this.emergencyStorageCleanup();
+                localStorage.setItem(key, value);
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    private emergencyStorageCleanup(): void {
+        const username = loggedInUser?.username;
+        if (!username) return;
+
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+            const key = localStorage.key(i);
+            if (!key) continue;
+            if (key.startsWith('data_backup_') && key.endsWith(`_${username}`)) {
+                const isCurrentVersion = key.includes(`VERSION_${INTERNAL_BACKUP_VERSION}_`);
+                if (!isCurrentVersion) {
+                    localStorage.removeItem(key);
+                }
+            }
+        }
+
+        const runHistoryKey = `runHistoryData_${username}`;
+        const runHistoryStr = localStorage.getItem(runHistoryKey);
+        if (runHistoryStr && runHistoryStr.length > 50000) {
+            try {
+                const runHistory = JSON.parse(runHistoryStr);
+                const timestamps = Object.keys(runHistory).map(Number).sort((a: number, b: number) => b - a);
+                const keepCount = Math.min(timestamps.length, 5);
+                for (let i = keepCount; i < timestamps.length; i++) {
+                    delete runHistory[timestamps[i].toString()];
+                }
+                for (let i = 0; i < keepCount; i++) {
+                    const entry = runHistory[timestamps[i].toString()]?.entry;
+                    if (entry) {
+                        delete entry.battlePath;
+                        delete entry.nightmareBattleSeeds;
+                        delete entry.fixedBattleSeeds;
+                    }
+                }
+                localStorage.setItem(runHistoryKey, JSON.stringify(runHistory));
+            } catch (_) {}
+        }
     }
 
     getLocalStorageItem(key: string): any {
@@ -1104,7 +1152,15 @@ export class GameData {
             version: savedVersion,
             isCombined: true
         };
-        localStorage.setItem(backupKey, JSON.stringify(backupData));
+        try {
+            localStorage.setItem(backupKey, JSON.stringify(backupData));
+        } catch (e) {
+            if (e instanceof DOMException && e.name === 'QuotaExceededError') {
+                console.error("Version backup failed: Storage quota exceeded.", e);
+                return;
+            }
+            throw e;
+        }
     }
 
     public getSystemSaveData(): SystemSaveData {
@@ -1749,8 +1805,12 @@ export class GameData {
         }
 
         const timestamp = (runEntry.timestamp).toString();
+        const trimmedEntry = { ...runEntry };
+        delete (trimmedEntry as any).battlePath;
+        delete (trimmedEntry as any).nightmareBattleSeeds;
+        delete (trimmedEntry as any).fixedBattleSeeds;
         runHistoryData[timestamp] = {
-            entry: runEntry,
+            entry: trimmedEntry,
             isVictory: isVictory,
             isFavorite: false,
         };

@@ -40,6 +40,7 @@ export class SpeciesFormChange {
     this.trigger = trigger;
     this.quiet = quiet;
     this.conditions = conditions;
+    this.modFormName = "";
   }
 
   canChange(pokemon: Pokemon): boolean {
@@ -53,12 +54,26 @@ export class SpeciesFormChange {
 
     const formKeys = pokemon.species.forms.map(f => f.formKey);
 
-    if (isGlitchFormKey(this.formKey) && pokemon.species.getGlitchFormName(false, pokemon.scene) == null) {
+    if (isGlitchFormKey(this.formKey)) {
+      if (this.isModForm()) {
+        if (!pokemon.scene.gameMode.isTestMod && !pokemon.scene.gameData.isModFormUnlocked(this.modFormName)) {
+          return false;
+        }
+      } else if (pokemon.species.getGlitchFormName(false, pokemon.scene) == null) {
+        return false;
+      }
+    }
+
+    if (isGlitchFormKey(pokemon.species.forms[pokemon.formIndex]?.formKey)) {
       return false;
     }
 
-    if ((formKeys[pokemon.formIndex] !== this.preFormKey && pokemon.species.getGlitchFormName(false, pokemon.scene) == null) || isGlitchFormKey(pokemon.species.forms[pokemon.formIndex].formKey)) {
-      return false;
+    if (formKeys[pokemon.formIndex] !== this.preFormKey) {
+      if (isGlitchFormKey(this.formKey)) {
+
+      } else if (pokemon.species.getGlitchFormName(false, pokemon.scene) == null) {
+        return false;
+      }
     }
 
     if (formKeys[pokemon.formIndex] === this.formKey) {

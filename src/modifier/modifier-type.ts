@@ -30,7 +30,7 @@ import * as Utils from "../utils";
 import {TempBattleStat, getTempBattleStatBoosterItemName, getTempBattleStatName} from "../data/temp-battle-stat";
 import {getBerryEffectDescription, getBerryName} from "../data/berry";
 import {StatusEffect, getStatusEffectDescriptor} from "../data/status-effect";
-import {allSpecies, getPokemonSpecies, universalSmittyForms} from "../data/pokemon-species";
+import {allSpecies, getPokemonSpecies, universalSmittyForms, isGlitchFormKey} from "../data/pokemon-species";
 import { SpeciesFormKey } from "#enums/species-form-key";
 import BattleScene from "../battle-scene";
 import {VoucherType, getVoucherTypeIcon, getVoucherTypeName} from "../system/voucher";
@@ -3126,7 +3126,7 @@ class FormChangeItemModifierTypeGenerator extends ModifierTypeGenerator {
                         const megaPrimalCondition = (fc.formKey.indexOf(SpeciesFormKey.MEGA) === -1 && fc.formKey.indexOf(SpeciesFormKey.PRIMAL) === -1) || party[0].scene.getModifiers(Modifiers.MegaEvolutionAccessModifier).length;
                         const gigantamaxEternamaxCondition = (fc.formKey.indexOf(SpeciesFormKey.GIGANTAMAX) === -1 && fc.formKey.indexOf(SpeciesFormKey.ETERNAMAX) === -1) || party[0].scene.getModifiers(Modifiers.GigantamaxAccessModifier).length;
                         const conditionsCheck = !fc.conditions.length || fc.conditions.filter(cond => cond instanceof SpeciesFormChangeCondition && cond.predicate(p)).length;
-                        const formKeyCheck = fc.preFormKey === p.getFormKey();
+                        const formKeyCheck = fc.preFormKey === p.getFormKey() || isGlitchFormKey(fc.formKey);
 
                         const rewardTypeMap: { [key: string]: RewardType } = {
                             [SpeciesFormKey.GLITCH]: RewardType.GLITCH_FORM_A,

@@ -4669,16 +4669,16 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     for (const pokemon of party) {
       const formChanges = pokemonFormChanges[pokemon.species.speciesId] || [];
       const formChangeItem = type.formChangeItems?.[0];
-      const applicable = formChanges.some(fc =>
-        fc.trigger instanceof SpeciesFormChangeItemTrigger &&
-        (fc.trigger as SpeciesFormChangeItemTrigger).item === formChangeItem
-      );
+      const applicable = formChanges.some(fc => {
+        const itemTrigger = fc.findTrigger(SpeciesFormChangeItemTrigger) as SpeciesFormChangeItemTrigger;
+        return itemTrigger && itemTrigger.item === formChangeItem;
+      });
 
       if (applicable) {
-        const targetForm = formChanges.find(fc =>
-          fc.trigger instanceof SpeciesFormChangeItemTrigger &&
-          (fc.trigger as SpeciesFormChangeItemTrigger).item === formChangeItem
-        );
+        const targetForm = formChanges.find(fc => {
+          const itemTrigger = fc.findTrigger(SpeciesFormChangeItemTrigger) as SpeciesFormChangeItemTrigger;
+          return itemTrigger && itemTrigger.item === formChangeItem;
+        });
         const formKey = targetForm?.formKey || 'Unknown';
         lines.push(`  [color=#ffcc00]${pokemon.name}[/color]: [color=#78c850]${applicableLabel}[/color] → ${formKey}`);
       } else {
