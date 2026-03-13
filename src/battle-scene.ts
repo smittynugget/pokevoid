@@ -3747,7 +3747,14 @@ export default class BattleScene extends SceneBase {
           }
         }
         else if (!upgradeCategory && !modifier.upgradeCategory) {
-          modifiersToRemove.push(modifier);
+          const existingPathlessCount = modifiersToCheck.filter(m =>
+              m instanceof MoveUpgradeModifier &&
+              (m as MoveUpgradeModifier).moveId === moveId &&
+              !(m as MoveUpgradeModifier).upgradeCategory
+          ).length;
+          if (existingPathlessCount >= 2) {
+              modifiersToRemove.push(modifier);
+          }
         }
       }
     }

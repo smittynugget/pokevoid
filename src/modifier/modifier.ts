@@ -5022,7 +5022,7 @@ export class MoveUpgradeModifier extends PersistentModifier {
         }
 
         if (!this.upgradeCategory && !other.upgradeCategory) {
-            return this.moveId === other.moveId;
+            return this.moveId === other.moveId && this.effectChange === other.effectChange;
         }
 
         return false;

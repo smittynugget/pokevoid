@@ -167,9 +167,41 @@ export class MoveUpgrade {
         return array;
     }
 
-    static doesPathlessUpgradeExist(moveId: Moves, scene: BattleScene, isPlayer: boolean = true): boolean {
+    static countPathlessUpgrades(moveId: Moves, scene: BattleScene, isPlayer: boolean = true): number {
         const existingUpgrades = scene.getUpgradesForMove(moveId, isPlayer);
-        return existingUpgrades.some(upgrade => !upgrade.upgradeCategory);
+        return existingUpgrades.filter(upgrade => !upgrade.upgradeCategory).length;
+    }
+
+    static getPathlessUpgradeEffects(moveId: Moves, scene: BattleScene, isPlayer: boolean = true): string[] {
+        const existingUpgrades = scene.getUpgradesForMove(moveId, isPlayer);
+        return existingUpgrades
+            .filter(upgrade => !upgrade.upgradeCategory)
+            .map(upgrade => upgrade.effectChange || "")
+            .filter(e => e.length > 0);
+    }
+
+    static getPathlessUpgradeTraits(moveId: Moves, scene: BattleScene, isPlayer: boolean = true): { hasTypeChange: boolean; hasCategoryChange: boolean; hasStatusEffect: boolean; attrClassNames: Set<string>; flagsUsed: number } {
+        const existingUpgrades = scene.getUpgradesForMove(moveId, isPlayer);
+        const pathless = existingUpgrades.filter(upgrade => !upgrade.upgradeCategory);
+        const traits = {
+            hasTypeChange: false,
+            hasCategoryChange: false,
+            hasStatusEffect: false,
+            attrClassNames: new Set<string>(),
+            flagsUsed: 0,
+        };
+        for (const u of pathless) {
+            if (u.typeChange !== null && u.typeChange !== undefined) traits.hasTypeChange = true;
+            if (u.categoryChange !== null && u.categoryChange !== undefined) traits.hasCategoryChange = true;
+            if (u.flagsToAdd) traits.flagsUsed |= u.flagsToAdd;
+            if (u.additionalAttrs) {
+                for (const attr of u.additionalAttrs) {
+                    if (attr?.constructor?.name) traits.attrClassNames.add(attr.constructor.name);
+                    if (attr?.constructor?.name === "StatusEffectAttr") traits.hasStatusEffect = true;
+                }
+            }
+        }
+        return traits;
     }
 
     static POWER_PATH = [
@@ -933,7 +965,9 @@ export class MoveUpgrade {
         let isPathlessRare = Utils.randSeedInt(20) <= 0;
         let isPathlessMediumRare = Utils.randSeedInt(10) <= 0;
         let isPathlessVeryRare = Utils.randSeedInt(100) <= 0;
-        const hasPathlessUpgrade = MoveUpgrade.doesPathlessUpgradeExist(moveId, scene, isPlayer);
+        const pathlessUpgradeCount = MoveUpgrade.countPathlessUpgrades(moveId, scene, isPlayer);
+        const existingPathlessEffects = MoveUpgrade.getPathlessUpgradeEffects(moveId, scene, isPlayer);
+        const existingPathlessTraits = MoveUpgrade.getPathlessUpgradeTraits(moveId, scene, isPlayer);
         if (filterUpgrades) {
             isVeryRare = true;
             isRare = true;
@@ -1387,7 +1421,7 @@ export class MoveUpgrade {
                 }
             }
 
-            if (!hasPathlessUpgrade && !isStatusMove && baseMove.type !== Type.GROUND && !baseMove.getAttrs(AddBattlerTagAttr).some((a: any) => a.tagType === BattlerTagType.IGNORE_FLYING) && hasPower && isPathlessVeryRare) {
+            if (pathlessUpgradeCount < 2 && !isStatusMove && baseMove.type !== Type.GROUND && !baseMove.getAttrs(AddBattlerTagAttr).some((a: any) => a.tagType === BattlerTagType.IGNORE_FLYING) && hasPower && isPathlessVeryRare) {
                     let attributes: MoveAttr[] = [];
 
                     attributes = [new AddBattlerTagAttr(BattlerTagType.IGNORE_FLYING), new RemoveBattlerTagAttr([BattlerTagType.FLYING, BattlerTagType.MAGNET_RISEN])];
@@ -1396,7 +1430,7 @@ export class MoveUpgrade {
                         i18next.t("moveUpgrade:description:misc:addGrounding"), null, null, attributes, [], 0));
             }
 
-            if (!hasPathlessUpgrade && isStatusMove && !isMultiHit && isPathlessVeryRare) {
+            if (pathlessUpgradeCount < 2 && isStatusMove && !isMultiHit && isPathlessVeryRare) {
                 if (!baseMove.hasAttr(WeatherChangeAttr) && !baseMove.hasAttr(ClearWeatherAttr)) {
                     const weather = Utils.randSeedItem([WeatherType.SUNNY, WeatherType.RAIN, WeatherType.SANDSTORM, WeatherType.SNOW]);
                     upgrades.push(moveGenerator.getType(moveId, 0, null, null, 0,
@@ -1782,7 +1816,7 @@ export class MoveUpgrade {
             }
         }
 
-        if(!hasPathlessUpgrade && isPathlessMediumRare) {
+        if(pathlessUpgradeCount < 2 && isPathlessMediumRare) {
 
             if (isPhysicalMove) {
                 upgrades.push(moveGenerator.getType(moveId, 0, null, MoveCategory.SPECIAL, 0,
@@ -1804,7 +1838,7 @@ export class MoveUpgrade {
             }
         }
 
-        if(!hasPathlessUpgrade && isPathlessRare) {
+        if(pathlessUpgradeCount < 2 && isPathlessRare) {
 
         if (!isStatusMove) {
             if (!baseMove.hasAttr(MatchUserTypeAttr) && !baseMove.hasAttr(WeatherBallTypeAttr) &&
@@ -1960,7 +1994,7 @@ export class MoveUpgrade {
             }
         }
 
-        if(!hasPathlessUpgrade && isPathlessVeryRare) {
+        if(pathlessUpgradeCount < 2 && isPathlessVeryRare) {
              const allFlags = [
             { flag: MoveFlags.IGNORE_ABILITIES, pBoost: 5, desc: "moveUpgrade:description:flags:ignoreAbilities" },
             { flag: MoveFlags.SOUND_BASED, pBoost: 5, desc: "moveUpgrade:description:flags:soundBased" },
@@ -2177,7 +2211,7 @@ export class MoveUpgrade {
             }
         }
 
-        if (!hasPathlessUpgrade && upgradeStatusAttr && !isStatusMove && upgradeMove.chance >= 5 && !isSelfTarget && isPathlessRare) {
+        if (pathlessUpgradeCount < 2 && upgradeStatusAttr && !isStatusMove && upgradeMove.chance >= 5 && !isSelfTarget && isPathlessRare) {
             const otherStatuses = [StatusEffect.BURN, StatusEffect.PARALYSIS, StatusEffect.POISON, StatusEffect.FREEZE, StatusEffect.SLEEP, StatusEffect.TOXIC]
                 .filter(s => s !== upgradeStatus);
             const newStatus = Utils.randSeedItem(otherStatuses);
@@ -2190,7 +2224,7 @@ export class MoveUpgrade {
                 }), chance, null, [new StatusEffectAttr(newStatus)], [], 0, undefined));
         }
 
-        if (!hasPathlessUpgrade && !upgradeStatusAttr && !isStatusMove && !isSelfTarget && upgradeMove.chance >= 5 && isPathlessRare) {
+        if (pathlessUpgradeCount < 2 && !upgradeStatusAttr && !isStatusMove && !isSelfTarget && upgradeMove.chance >= 5 && isPathlessRare) {
             const statusesToAdd = [StatusEffect.PARALYSIS, StatusEffect.BURN, StatusEffect.POISON, StatusEffect.SLEEP, StatusEffect.TOXIC, StatusEffect.FREEZE];
             const status = Utils.randSeedItem(statusesToAdd);
             const statusName = getStatusEffectName(status);
@@ -2201,7 +2235,7 @@ export class MoveUpgrade {
                 }), statusChance, null, [new StatusEffectAttr(status)], [], 0, undefined));
         }
 
-        if (!hasPathlessUpgrade && isStatusMove && !upgradeStatusAttr && !hasStatBoostSelf && !hasStatLowerTarget && !hasHealAttr && !isSelfTarget && upgradeMove.chance >= 5 && isPathlessVeryRare) {
+        if (pathlessUpgradeCount < 2 && isStatusMove && !upgradeStatusAttr && !hasStatBoostSelf && !hasStatLowerTarget && !hasHealAttr && !isSelfTarget && upgradeMove.chance >= 5 && isPathlessVeryRare) {
 
                 const statusesToAdd = [StatusEffect.PARALYSIS, StatusEffect.BURN, StatusEffect.POISON, StatusEffect.SLEEP, StatusEffect.TOXIC];
                 const status = Utils.randSeedItem(statusesToAdd);
@@ -2262,6 +2296,34 @@ export class MoveUpgrade {
                     ok = Array.isArray(attrs) && attrs.some(a => a?.constructor?.name && allowedAttrNames.has(a.constructor.name));
                 }
                 return allowedCategories.length === 0 && allowedAttrNames.size === 0 ? true : ok;
+            });
+        }
+
+        if (pathlessUpgradeCount > 0) {
+            upgrades = upgrades.filter(u => {
+                const anyU = u as any;
+                if (anyU.upgradeCategory) return true;
+
+                const desc = anyU.getDescription ? anyU.getDescription(scene) : null;
+                if (desc && existingPathlessEffects.includes(desc)) return false;
+
+                if (existingPathlessTraits.hasTypeChange && anyU.typeChange !== null && anyU.typeChange !== undefined) return false;
+                if (existingPathlessTraits.hasCategoryChange && anyU.categoryChange !== null && anyU.categoryChange !== undefined) return false;
+                if (existingPathlessTraits.hasStatusEffect) {
+                    const candidateAttrs = (anyU.additionalAttrs || []) as any[];
+                    if (candidateAttrs.some((a: any) => a?.constructor?.name === "StatusEffectAttr")) return false;
+                }
+                if (existingPathlessTraits.flagsUsed && anyU.flagsToAdd) {
+                    if (anyU.flagsToAdd & existingPathlessTraits.flagsUsed) return false;
+                }
+                const candidateAttrNames = ((anyU.additionalAttrs || []) as any[])
+                    .map((a: any) => a?.constructor?.name)
+                    .filter(Boolean);
+                for (const name of candidateAttrNames) {
+                    if (existingPathlessTraits.attrClassNames.has(name)) return false;
+                }
+
+                return true;
             });
         }
 
