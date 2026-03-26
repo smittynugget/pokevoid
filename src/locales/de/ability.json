@@ -2690,5 +2690,13 @@
   "soulDrain": {
     "name": "Seelen-Entzug",
     "description": "10% Chance, den Typ der verwendeten Attacke zu sammeln. Senkt zwei zufällige Werte des Ziels um 2 Stufen, wenn der Attacken-Typ einem Essenz-Typ entspricht. Verliert Essenz-Typen beim Besiegt-Werden."
+  },
+  "megaSol": {
+    "name": "Mega-Sol",
+    "description": "Das Pokémon setzt seine Attacken ein, als ob das Sonnenlicht sehr stark wäre."
+  },
+  "dragonize": {
+    "name": "Drachenisierung",
+    "description": "Verwandelt Normal-Attacken in Drachen-Attacken und erhöht ihre Kraft um 20%."
   }
 }

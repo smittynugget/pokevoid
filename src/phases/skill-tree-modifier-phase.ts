@@ -4,7 +4,7 @@ import { PokemonAltBuildModifier } from "#app/modifier/modifier";
 import { Mode } from "#app/ui/ui";
 import { SkillTreeRewardType, SkillTreeNodeState } from "#app/system/skill-tree-data";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
-import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, AddTypeBallModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator, TypeSwitcherModifierType } from "#app/modifier/modifier-type";
+import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, AddTypeBallModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator, TypeSwitcherModifierType, PermaMoneyModifierType } from "#app/modifier/modifier-type";
 import * as Utils from "#app/utils";
 import { Abilities } from "#enums/abilities";
 import { allAbilities } from "#app/data/ability";
@@ -13,6 +13,7 @@ import { Type } from "#app/data/type";
 import { VoucherType } from "#app/system/voucher";
 import { FormChangeItem } from "#enums/form-change-items";
 import { SkillTreeSelectors } from "#app/system/skill-tree-selectors";
+import { ChampionUtils } from "#app/system/champion-utils";
 import { getPokemonSpecies } from "#app/data/pokemon-species";
 import { QuestUnlockables, QuestState } from "#app/system/game-data.js";
 import { PokemonAltBuildDefinition, POKEMON_ALT_BUILDS, PokemonAltBuildId } from "#app/data/pokemon-alt-buid";
@@ -27,6 +28,30 @@ import { PermaType } from "#app/modifier/perma-modifiers";
 import { RewardObtainedType } from "#app/ui/reward-obtained-ui-handler";
 
 interface SkillTreeNodeLike { rewardData: { type: SkillTreeRewardType, data?: any }; name?: string }
+
+export function isPokemonSelectionComplete(activeSkillTree: any, nodes: any[]): boolean {
+  if (!activeSkillTree?.unlockedNodes || !nodes) {
+    return false;
+  }
+  let signatureCount = 0;
+  let generalCount = 0;
+  let mysteryExists = false;
+  let mysteryPurchased = false;
+  for (const n of nodes) {
+    const unlocked = activeSkillTree.unlockedNodes.has(n.id);
+    const isMystery = !!n?.rewardData?.data?.starterMysteryNode;
+    if (isMystery) {
+      mysteryExists = true;
+      if (unlocked) mysteryPurchased = true;
+    }
+    if (!unlocked) continue;
+    if (n.rewardData.type === SkillTreeRewardType.SIGNATURE_POKEMON) signatureCount++;
+    if (n.rewardData.type === SkillTreeRewardType.GENERAL_POKEMON) generalCount++;
+  }
+  const total = signatureCount + generalCount;
+  const mysteryOk = !mysteryExists || mysteryPurchased;
+  return total >= 2 && generalCount >= 1 && signatureCount <= 1 && mysteryOk;
+}
 
 export class SkillTreeModifierPhase extends Phase {
   private node: SkillTreeNode;
@@ -158,9 +183,13 @@ export class SkillTreeModifierPhase extends Phase {
 
     let modifierOptions: ModifierTypeOption[] = [];
     const nodeOffset = this.calculateNodeSeedOffset();
-    this.scene.executeWithSeedOffset(() => {
-      modifierOptions = this.createSkillTreeModifierOptions();
-    }, nodeOffset);
+    try {
+      this.scene.executeWithSeedOffset(() => {
+        modifierOptions = this.createSkillTreeModifierOptions();
+      }, nodeOffset);
+    } catch {
+      modifierOptions = [];
+    }
 
     if (modifierOptions.length === 0) {
       this.removePlaceholderPokemon();
@@ -215,8 +244,7 @@ export class SkillTreeModifierPhase extends Phase {
         break;
 
       case SkillTreeRewardType.SIGNATURE_POKEMON:
-        const signaturePokemonOptions = this.createMultiplePokemonOptions(() => this.createSignaturePokemonOption(), 4);
-        options.push(...signaturePokemonOptions);
+        options.push(...this.createSignaturePokemonOptions(4));
         break;
 
       case SkillTreeRewardType.GENERAL_POKEMON:
@@ -282,7 +310,7 @@ export class SkillTreeModifierPhase extends Phase {
         if (permaItemOption) options.push(permaItemOption);
         break;
       case SkillTreeRewardType.PERMA_MONEY:
-        options.push(...this.createPermaMoneyOption());
+        this.grantPermaMoneyImmediate();
         break;
       case SkillTreeRewardType.MONEY_REWARD:
         options.push(...this.createMoneyRewardOption());
@@ -411,14 +439,55 @@ export class SkillTreeModifierPhase extends Phase {
     return null;
   }
 
-  private createSignaturePokemonOption(): ModifierTypeOption | null {
+  private createSignaturePokemonOption(species: Species): ModifierTypeOption | null {
     const generator = modifierTypes.CHAMPION_SIGNATURE_POKEMON(this.championData);
-    const pokemonModifierType = generator.generateType(this.scene.getParty(), [this.node.rewardData.data.species]);
+    const pokemonModifierType = generator.generateType(this.scene.getParty(), [species]);
 
     if (pokemonModifierType) {
       return new ModifierTypeOption(pokemonModifierType, 0, 0);
     }
     return null;
+  }
+
+  private createSignaturePokemonOptions(count: number = 4): ModifierTypeOption[] {
+    ChampionUtils.syncChampionUnlocks(this.championData);
+    const base = (this.championData.signaturePokemon || []) as Species[];
+    const unlocked = ((this.championData as any).unlockedSignaturePokemon || []) as Species[];
+    const combined = Array.from(new Set([...(unlocked || []), ...(base || [])]));
+
+    let pool = combined;
+    try {
+      const genFilter = (this.championData as any)?.pokemonGenerationFilter as number[] | undefined;
+      if (Array.isArray(genFilter) && genFilter.length > 0) {
+        pool = combined.filter((s) => {
+          try {
+            const speciesData: any = getPokemonSpecies(s);
+            const gen = speciesData?.generation;
+            return typeof gen === "number" ? genFilter.includes(gen) : true;
+          } catch {
+            return true;
+          }
+        });
+      }
+    } catch {
+      pool = combined;
+    }
+
+    const shuffledPool = Utils.randSeedShuffle(pool.length > 0 ? [...pool] : [...combined]);
+    const fallbackSpecies = (this.node.rewardData as any)?.data?.species as Species | undefined;
+    const finalPool = shuffledPool.length > 0
+      ? shuffledPool
+      : (fallbackSpecies ? [fallbackSpecies] : (base.length > 0 ? [Utils.randSeedItem(base)] : []));
+
+    const options: ModifierTypeOption[] = [];
+    if (finalPool.length === 0) return options;
+
+    for (let i = 0; i < count; i++) {
+      const species = finalPool[i % finalPool.length];
+      const opt = this.createSignaturePokemonOption(species);
+      if (opt) options.push(opt);
+    }
+    return options;
   }
 
   private createGeneralPokemonOption(): ModifierTypeOption | null {
@@ -488,10 +557,13 @@ export class SkillTreeModifierPhase extends Phase {
   }
 
   private createPermaMoneyOption(): ModifierTypeOption[] {
-    const amount = this.node.rewardData?.data?.amount ?? 3000;
-    const { PermaMoneyModifierType } = require("#app/modifier/modifier-type");
-    const t = new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", amount, true);
-    return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+    try {
+      const amount = this.node.rewardData?.data?.amount ?? 3000;
+      const t = new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", amount, true);
+      return t ? [new ModifierTypeOption(t, 0, 0)] : [];
+    } catch {
+      return [];
+    }
   }
   private createMoneyRewardOption(): ModifierTypeOption[] {
     const t = (modifierTypes as any).RELIC_GOLD?.();
@@ -755,9 +827,9 @@ export class SkillTreeModifierPhase extends Phase {
   }
 
   private createPermaItemOption(): ModifierTypeOption | null {
-    const permaType = this.node.rewardData.data.permaType as PermaType;
-    const permaFactoryName = this.resolvePermaFactoryName(permaType);
-    const permaFactory = (modifierTypes as any)[permaFactoryName] as (() => any) | undefined;
+    const permaTypeRaw = (this.node.rewardData.data as any)?.permaType;
+    const permaTypeKey = typeof permaTypeRaw === "string" ? permaTypeRaw : PermaType[permaTypeRaw as PermaType];
+    const permaFactory = permaTypeKey ? ((modifierTypes as any)[permaTypeKey] as (() => any) | undefined) : undefined;
     if (permaFactory) {
       const gen = permaFactory();
       if (gen && gen.generateType) {
@@ -795,19 +867,7 @@ export class SkillTreeModifierPhase extends Phase {
     const activeSkillTree = config.activeSkillTree;
     const nodes = config.nodes;
 
-    if (!activeSkillTree?.unlockedNodes || !nodes) {
-      return false;
-    }
-
-    let signatureCount = 0;
-    let generalCount = 0;
-    for (const n of nodes) {
-      if (!activeSkillTree.unlockedNodes.has(n.id)) continue;
-      if (n.rewardData.type === SkillTreeRewardType.SIGNATURE_POKEMON) signatureCount++;
-      if (n.rewardData.type === SkillTreeRewardType.GENERAL_POKEMON) generalCount++;
-    }
-    const total = signatureCount + generalCount;
-    return total >= 2 && generalCount >= 1 && signatureCount <= 1;
+    return isPokemonSelectionComplete(activeSkillTree, nodes);
   }
 
   private returnToSkillTree(): void {
@@ -1116,6 +1176,12 @@ export class SkillTreeModifierPhase extends Phase {
       ? { type: provided.type as Type, amount: provided.amount as number }
       : SkillTreeSelectors.pickEssenceBundle(this.championData);
     this.scene.ui.setMode(Mode.REWARD_OBTAINED, { type: RewardObtainedType.ESSENCE_BUNDLE, amount: picked.amount });
+  }
+
+  private grantPermaMoneyImmediate(): void {
+    const amount = this.node.rewardData?.data?.amount ?? 3000;
+    const t = new PermaMoneyModifierType("modifierType:common:permaMoney", "coin", amount, true);
+    this.scene.ui.setMode(Mode.REWARD_OBTAINED, { type: RewardObtainedType.MODIFIER, name: t.name, modifierType: t, isInverted: t.isInverted, skillTreeRarity: this.node.rarity } as any);
   }
 
   private grantSkillPointsImmediate(): void {

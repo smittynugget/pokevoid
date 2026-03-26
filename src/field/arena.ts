@@ -441,8 +441,33 @@ export class Arena {
     return true;
   }
 
-  isMoveWeatherCancelled(move: Move) {
-    return this.weather && !this.weather.isEffectSuppressed(this.scene) && this.weather.isMoveWeatherCancelled(move);
+  getMoveWeatherType(user: Pokemon): WeatherType {
+    if (user.hasAbility(Abilities.MEGA_SOL)) {
+      return WeatherType.HARSH_SUN;
+    }
+
+    if (this.weather && !this.weather.isEffectSuppressed(this.scene)) {
+      return this.weather.weatherType;
+    }
+
+    return WeatherType.NONE;
+  }
+
+  isMoveWeatherCancelled(move: Move): boolean;
+  isMoveWeatherCancelled(user: Pokemon, move: Move): boolean;
+  isMoveWeatherCancelled(userOrMove: Pokemon | Move, move?: Move): boolean {
+    if (!move) {
+      const actualMove = userOrMove as Move;
+      return this.weather && !this.weather.isEffectSuppressed(this.scene) && this.weather.isMoveWeatherCancelled(actualMove);
+    }
+
+    const user = userOrMove as Pokemon;
+    const weatherType = this.getMoveWeatherType(user);
+    if (weatherType === WeatherType.HARSH_SUN || weatherType === WeatherType.HEAVY_RAIN) {
+      const effectiveType = user.getMoveType(move, true) as Type;
+      return new Weather(weatherType).isMoveWeatherCancelled(move, effectiveType);
+    }
+    return false;
   }
 
   isMoveTerrainCancelled(user: Pokemon, targets: BattlerIndex[], move: Move) {
@@ -453,11 +478,9 @@ export class Arena {
     return this.terrain?.terrainType || TerrainType.NONE;
   }
 
-  getAttackTypeMultiplier(attackType: Type, grounded: boolean): number {
-    let weatherMultiplier = 1;
-    if (this.weather && !this.weather.isEffectSuppressed(this.scene)) {
-      weatherMultiplier = this.weather.getAttackTypeMultiplier(attackType);
-    }
+  getAttackTypeMultiplier(attackType: Type, grounded: boolean, source?: Pokemon): number {
+    const weatherType = source ? this.getMoveWeatherType(source) : (this.weather && !this.weather.isEffectSuppressed(this.scene) ? this.weather.weatherType : WeatherType.NONE);
+    const weatherMultiplier = new Weather(weatherType).getAttackTypeMultiplier(attackType);
 
     let terrainMultiplier = 1;
     if (this.terrain && grounded) {

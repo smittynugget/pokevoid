@@ -97,5 +97,5 @@
   "unlockedSomething": "{{unlockedThing}}\na été débloqué.",
   "congratulations": "Félicitations !",
   "beatModeFirstTime": "{{speciesName}} a battu le mode {{gameMode}} pour la première fois !\nVous avez reçu {{newModifier}} !",
-  "voidBallHpTooHigh": "La Void Ball ne peut capturer que les Pokémon en état critique !"
+  "voidBallHpTooHigh": "La Void Ball ne peut capturer que les Pokémon à 25% de PV ou moins !"
 }

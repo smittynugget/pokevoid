@@ -97,5 +97,5 @@
   "unlockedSomething": "{{unlockedThing}} wurde freigeschaltet.",
   "congratulations": "Glückwunsch!",
   "beatModeFirstTime": "{{speciesName}} hat den {{gameMode}} Modus zum ersten Mal beendet! Du erhältst {{newModifier}}!",
-  "voidBallHpTooHigh": "Der Void-Ball kann nur Pokémon in kritischem Zustand fangen!"
+  "voidBallHpTooHigh": "Der Void-Ball kann nur Pokémon mit 25% KP oder weniger fangen!"
 }

@@ -201,19 +201,22 @@ export class MovePhase extends BattlePhase {
       if (!allMoves[this.move.moveId].hasAttr(CopyMoveAttr)) {
         this.scene.currentBattle.lastMove = this.move.moveId;
       }
-      let success = this.move.getMove(this.playerMove).applyConditions(this.pokemon, targets[0], this.move.getMove(this.playerMove));
+
+      const resolvedMove = this.move.getMove(this.playerMove);
+
+      let success = resolvedMove.applyConditions(this.pokemon, targets[0], resolvedMove);
       const cancelled = new Utils.BooleanHolder(false);
-      let failedText = this.move.getMove(this.playerMove).getFailedText(this.pokemon, targets[0], this.move.getMove(this.playerMove), cancelled);
-      if (success && this.scene.arena.isMoveWeatherCancelled(this.move.getMove(this.playerMove))) {
+      let failedText = resolvedMove.getFailedText(this.pokemon, targets[0], resolvedMove, cancelled);
+      if (success && this.scene.arena.isMoveWeatherCancelled(this.pokemon, resolvedMove)) {
         success = false;
-      } else if (success && this.scene.arena.isMoveTerrainCancelled(this.pokemon, this.targets, this.move.getMove(this.playerMove))) {
+      } else if (success && this.scene.arena.isMoveTerrainCancelled(this.pokemon, this.targets, resolvedMove)) {
         success = false;
         if (failedText === null) {
           failedText = getTerrainBlockMessage(targets[0], this.scene.arena.terrain?.terrainType!);
         }
       }
       if (success || [Moves.ROAR, Moves.WHIRLWIND, Moves.TRICK_OR_TREAT, Moves.FORESTS_CURSE].includes(this.move.moveId)) {
-        applyPreAttackAbAttrs(PokemonTypeChangeAbAttr, this.pokemon, null, this.move.getMove(this.playerMove));
+        applyPreAttackAbAttrs(PokemonTypeChangeAbAttr, this.pokemon, null, resolvedMove);
       }
 
       if (success) {
@@ -225,7 +228,7 @@ export class MovePhase extends BattlePhase {
         }
       }
 
-      if (this.move.getMove(this.playerMove).hasFlag(MoveFlags.DANCE_MOVE) && !this.followUp) {
+      if (resolvedMove.hasFlag(MoveFlags.DANCE_MOVE) && !this.followUp) {
 
         this.scene.getPlayerField().forEach(pokemon => {
           applyPostMoveUsedAbAttrs(PostMoveUsedAbAttr, pokemon, this.move, this.pokemon, this.targets);

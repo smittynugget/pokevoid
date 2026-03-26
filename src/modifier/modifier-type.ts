@@ -33,6 +33,8 @@ import {StatusEffect, getStatusEffectDescriptor} from "../data/status-effect";
 import {allSpecies, getPokemonSpecies, universalSmittyForms, isGlitchFormKey} from "../data/pokemon-species";
 import { SpeciesFormKey } from "#enums/species-form-key";
 import BattleScene from "../battle-scene";
+import { SkillTreeNodeGenerator } from "../system/skill-tree-node-generator";
+import { SkillTreeRarity, SkillTreeRewardType } from "../system/skill-tree-data";
 import {VoucherType, getVoucherTypeIcon, getVoucherTypeName} from "../system/voucher";
 import {
     SpeciesFormChangeCondition,
@@ -1914,6 +1916,10 @@ export class PermaPartyAbilityModifierType extends ModifierType {
         ].join("\n");
     }
 
+    getTooltipRarity(scene: BattleScene): SkillTreeRarity {
+        return (scene as any)?.skillTreeModifierContext === true ? SkillTreeRarity.ROGUE : SkillTreeRarity.COMMON;
+    }
+
     getPregenArgs(): any[] {
         return [this.ability];
     }
@@ -2011,6 +2017,10 @@ export class PermaModifierType extends ModifierType {
 
     getPregenArgs(): any[] {
         return [this.permaType, this.count, this.permaDuration];
+    }
+
+    getTooltipRarity(scene: BattleScene): SkillTreeRarity {
+        return (scene as any)?.skillTreeModifierContext === true ? SkillTreeRarity.ROGUE : SkillTreeRarity.COMMON;
     }
 }
 
@@ -3633,6 +3643,21 @@ export class PokemonAltBuildModifierType extends PokemonModifierType {
       buildName,
       description
     });
+  }
+
+  getTooltipDescription(scene: BattleScene): string {
+    const championId = (scene.gameData as any)?.selectedChampionId || (scene.gameData as any)?.activeSkillTree?.championId || "brock";
+    const nodeGen = new SkillTreeNodeGenerator(0, championId, scene);
+    const rewardData = {
+      type: SkillTreeRewardType.POKEMON_ALT_BUILD,
+      data: { altBuildId: this.altBuild.id, species: this.altBuild.species, rank: this.targetRank },
+      immediate: false
+    } as any;
+    return nodeGen.getRewardDescription(rewardData);
+  }
+
+  getTooltipRarity(scene: BattleScene): SkillTreeRarity {
+    return (scene as any)?.skillTreeModifierContext === true ? SkillTreeRarity.ROGUE : SkillTreeRarity.COMMON;
   }
 
   getPregenArgs(): any[] { return [this.altBuild.id, this.targetRank]; }

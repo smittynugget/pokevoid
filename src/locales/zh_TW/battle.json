@@ -97,5 +97,5 @@
   "unlockedSomething": "{{unlockedThing}}\n已解鎖。",
   "congratulations": "恭喜！",
   "beatModeFirstTime": "{{speciesName}}首次擊敗了{{gameMode}}！\n你獲得了{{newModifier}}！",
-  "voidBallHpTooHigh": "虛空球只能捕捉處於瀕死狀態的寶可夢！"
+  "voidBallHpTooHigh": "虛空球只能捕捉HP為25%或更低的寶可夢！"
 }

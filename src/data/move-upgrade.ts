@@ -1791,8 +1791,9 @@ export class MoveUpgrade {
 
                 if (nextStep) {
                     const chargeAnim = isPhysicalMove ? ChargeAnim.SKULL_BASH_CHARGING : ChargeAnim.SOLAR_BEAM_CHARGING;
-                    const chargeTextKey = isPhysicalMove ? "moveUpgrade:moveTriggers:loweredItsHead" : "moveUpgrade:moveTriggers:tookInSunlight";
-                    const chargeText = i18next.t(chargeTextKey, { pokemonName: "{USER}" });
+                    const chargeText = isPhysicalMove
+                        ? i18next.t("moveUpgrade:moveTriggers:loweredItsHead", { pokemonName: "{USER}" })
+                        : i18next.t("moveTriggers:isGlowing", { pokemonName: "{USER}" });
                     let attrs: MoveAttr[] = [new ChargeAttr(chargeAnim, chargeText, null, !!nextStep.addBoost)];
 
                     if (nextStep.addBoost) {
@@ -1838,10 +1839,10 @@ export class MoveUpgrade {
             }
         }
 
-        if(pathlessUpgradeCount < 2 && isPathlessRare) {
+        if(pathlessUpgradeCount < 2) {
 
         if (!isStatusMove) {
-            if (!baseMove.hasAttr(MatchUserTypeAttr) && !baseMove.hasAttr(WeatherBallTypeAttr) &&
+            if (isPathlessRare && !baseMove.hasAttr(MatchUserTypeAttr) && !baseMove.hasAttr(WeatherBallTypeAttr) &&
                 !baseMove.hasAttr(TerrainPulseTypeAttr) && !baseMove.hasAttr(HiddenPowerTypeAttr)) {
                 upgrades.push(moveGenerator.getType(moveId, 0, null, null, 0,
                     i18next.t("moveUpgrade:description:type:matchUserType"),
@@ -1869,7 +1870,7 @@ export class MoveUpgrade {
                     null, null, [new HiddenPowerTypeAttr()], [], 0, undefined));
             }
 
-            if (!baseMove.hasAttr(TypelessAttr) && !baseMove.hasAttr(MatchUserTypeAttr) &&
+            if (isPathlessRare && !baseMove.hasAttr(TypelessAttr) && !baseMove.hasAttr(MatchUserTypeAttr) &&
                 !baseMove.hasAttr(WeatherBallTypeAttr) && !baseMove.hasAttr(TerrainPulseTypeAttr) &&
                 !baseMove.hasAttr(HiddenPowerTypeAttr)) {
                 upgrades.push(moveGenerator.getType(moveId, 0, null, null, 0,
@@ -1951,7 +1952,7 @@ export class MoveUpgrade {
                 null, null, [new TerrainPowerBoostAttr(terrain)], [], 0, undefined));
         }
 
-        if (upgradeMove.priority <= 0 && !isStatusMove && !upgradeMove.hasAttr(TerrainMovePriorityAttr) && !upgradeMove.hasAttr(FirstTurnPriorityAttr) && hasPower) {
+        if (isPathlessRare && upgradeMove.priority <= 0 && !isStatusMove && !upgradeMove.hasAttr(TerrainMovePriorityAttr) && !upgradeMove.hasAttr(FirstTurnPriorityAttr) && hasPower) {
             const terrain = Utils.randSeedItem([TerrainType.GRASSY, TerrainType.ELECTRIC]);
             upgrades.push(moveGenerator.getType(moveId, 10, null, null, 0,
                 i18next.t("moveUpgrade:description:priority:conditionalTerrain", {
@@ -1961,7 +1962,7 @@ export class MoveUpgrade {
                 i18next.t("moveUpgrade:description:priority:conditionalFirstTurn", { value: 2, powerValue: 20 }),
                 null, null, [new FirstTurnPriorityAttr(2)], [new FirstMoveCondition()], 0, undefined));
         }
-            if (!baseMove.hasAttr(ForceSwitchOutAttr) && !isMultiHit) {
+            if (isPathlessRare && !baseMove.hasAttr(ForceSwitchOutAttr) && !isMultiHit) {
                 upgrades.push(moveGenerator.getType(moveId, -25, null, null, 0,
                     i18next.t("moveUpgrade:description:misc:addSwitchOut", { powerValue: 25 }),
                     null, null, [new ForceSwitchOutAttr(true)], [], 0, undefined));

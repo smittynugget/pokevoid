@@ -1085,7 +1085,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
 	private getActualStarterValue(speciesId: Species): number {
 		const isSignature = this.isSignaturePokemon(speciesId);
 		if (isSignature) {
-			return 9;
+			return 6;
 		}
 		return this.scene.gameData.getSpeciesStarterValue(speciesId);
 	}
@@ -2704,7 +2704,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         this.validStarterContainers.forEach(container => {
             container.setVisible(false);
 
-            container.cost = this.scene.gameData.getSpeciesStarterValue(container.species.speciesId);
+            container.cost = this.getActualStarterValue(container.species.speciesId as unknown as Species);
             const caughtAttr = this.scene.gameData.dexData[container.species.speciesId]?.caughtAttr || BigInt(0);
             const starterData = this.scene.gameData.starterData[container.species.speciesId];
             const fitsGen = this.filterBar.getVals(DropDownColumn.GEN).includes(container.species.generation);
@@ -3942,8 +3942,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         const speciesId = starter.species.speciesId;
         const baseStarterValue = speciesStarters[speciesId];
 
-        const isSignature = this.isSignaturePokemon(speciesId as unknown as Species);
-        const starterValue = isSignature ? 9 : this.scene.gameData.getSpeciesStarterValue(speciesId);
+        const starterValue = this.getActualStarterValue(speciesId as unknown as Species);
 
         starter.cost = starterValue;
         let valueStr = starterValue.toString();
@@ -3997,7 +3996,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         this.canAddParty = false;
         const remainValue = valueLimit - newValue;
         for (let s = 0; s < this.allSpecies.length; s++) {
-            const speciesStarterValue = this.scene.gameData.getSpeciesStarterValue(this.allSpecies[s].speciesId);
+            const speciesStarterValue = this.getActualStarterValue(this.allSpecies[s].speciesId as unknown as Species);
             const speciesStarterDexEntry = this.scene.gameData.dexData[this.allSpecies[s].speciesId];
 
             const speciesSprite = this.starterContainers[s].icon;

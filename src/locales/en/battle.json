@@ -97,5 +97,5 @@
   "congratulations": "Congratulations!",
   "beatModeFirstTime": "{{speciesName}} beat {{gameMode}} Mode for the first time!\nYou received {{newModifier}}!",
   "ppReduced": "It reduced the PP of {{targetName}}'s\n{{moveName}} by {{reduction}}!",
-  "voidBallHpTooHigh": "The Void Ball can only capture Pokémon in critical condition!"
+  "voidBallHpTooHigh": "The Void Ball can only capture Pokémon at 25% HP or lower!"
 }

@@ -863,10 +863,15 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       }
 
       if (!canShowCustomTooltip) {
-        const rarity = this.getModifierRarity(type);
+        const typeAny: any = type as any;
+        const rarity = (typeof typeAny.getTooltipRarity === "function")
+          ? typeAny.getTooltipRarity(this.scene)
+          : this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
-        const body = type.getDescription(this.scene);
+        const body = (typeof typeAny.getTooltipDescription === "function")
+          ? String(typeAny.getTooltipDescription(this.scene))
+          : type.getDescription(this.scene);
         this.showModifierTooltip(title, subtitle, body, rarity);
         return ret;
       }

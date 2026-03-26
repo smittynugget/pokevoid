@@ -5,6 +5,7 @@ import { SpeciesFormKey } from "#enums/species-form-key";
 import { achvs } from "../system/achv";
 import { SpeciesFormChange, getSpeciesFormChangeMessage } from "../data/pokemon-forms";
 import Pokemon, { PlayerPokemon } from "../field/pokemon";
+import { Gender } from "#app/data/gender";
 import { Mode } from "../ui/ui";
 import PartyUiHandler from "../ui/party-ui-handler";
 import { getPokemonNameWithAffix } from "../messages";
@@ -50,7 +51,20 @@ export class FormChangePhase extends EvolutionPhase {
         return;
       }
       const previewSpriteKey = transformedPokemon.getSpriteKey(true);
-      const textureOk = this.scene.textures.exists(previewSpriteKey) && this.scene.textures.get(previewSpriteKey).key !== "__MISSING";
+      let textureOk = this.scene.textures.exists(previewSpriteKey) && this.scene.textures.get(previewSpriteKey).key !== "__MISSING";
+      if (!textureOk) {
+        const isMegaLike = this.formChange?.formKey?.includes("mega") || this.formChange?.formKey === "mega";
+        const canFallbackVariant = isMegaLike && transformedPokemon.shiny && (transformedPokemon.variant ?? 0) > 0;
+        if (canFallbackVariant) {
+          const female = transformedPokemon.getGender(true) === Gender.FEMALE;
+          const fallbackKey = transformedPokemon.getSpeciesForm(true).getSpriteKey(female, transformedPokemon.formIndex, transformedPokemon.shiny, 0);
+          const fallbackOk = this.scene.textures.exists(fallbackKey) && this.scene.textures.get(fallbackKey).key !== "__MISSING";
+          if (fallbackOk) {
+            transformedPokemon.variant = 0;
+            textureOk = true;
+          }
+        }
+      }
       if (!textureOk) {
         console.error(`[FORM_CHANGE] Missing texture for preview spriteKey=${previewSpriteKey} species=${transformedPokemon.species.speciesId} formIndex=${transformedPokemon.formIndex}`);
         transformedPokemon.destroy();

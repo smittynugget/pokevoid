@@ -6,6 +6,8 @@ import { ChampionManager } from "./champion-manager";
 import { Species } from "../enums/species";
 import { Phase } from "../phase";
 import { SkillTreePhase, SkillTreeMode } from "../phases/skill-tree-phase";
+import { SkillTreeGenerator } from "./skill-tree-generator";
+import { SkillTreeNode, SkillTreeRewardType } from "./skill-tree-data";
 import Battle, { setupFixedBattlePaths, setupFixedBattles, setupNightmareFixedBattles, BattleType } from "#app/battle";
 import { BattlePathPhase } from "#app/phases/battle-path-phase";
 import { EncounterPhase } from "#app/phases/encounter-phase";
@@ -17,8 +19,9 @@ import { TitlePhase } from "#app/phases/title-phase";
 import { SelectStarterPhase } from "#app/phases/select-starter-phase";
 import { PokemonSummonData } from "../field/pokemon";
 import { Gender } from "../data/gender";
+import { getPokemonSpecies } from "../data/pokemon-species";
 import { Starter } from "../ui/starter-select-ui-handler";
-import { DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE } from "#app/overrides";
+import Overrides, { DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE } from "#app/overrides";
 import { PlayerGender } from "#enums/player-gender";
 import { PokemonAltBuildId, POKEMON_ALT_BUILDS } from "../data/pokemon-alt-buid";
 import { PokemonAltBuildModifierType } from "../modifier/modifier-type";
@@ -142,6 +145,69 @@ export class ChampionModeIntegration {
                 }
 
                 setupBattleFlow(scene, false);
+
+                try {
+                  const gd: any = (scene as any).gameData;
+                  const ast: any = gd?.activeSkillTree;
+                  const seed = ast?.seed;
+                  const champId = ast?.championId;
+                  if (ast && typeof seed === "number" && typeof champId === "string") {
+                    const cachedNodes = gd.tempSkillTreeNodes as SkillTreeNode[] | undefined;
+                    const selectionDepth1 = Array.isArray(cachedNodes) ? cachedNodes.filter(n => n && n.depth === 1) : [];
+                    const hasDepth2Plus = Array.isArray(cachedNodes) ? cachedNodes.some(n => n && typeof n.depth === "number" && n.depth >= 2) : false;
+                    if (!hasDepth2Plus) {
+                      const gen = new SkillTreeGenerator(scene as any, seed, champId);
+                      const calculateDistance = (pos1: { x: number; y: number }, pos2: { x: number; y: number }): number => {
+                        const dx = pos1.x - pos2.x;
+                        const dy = pos1.y - pos2.y;
+                        return Math.sqrt(dx * dx + dy * dy);
+                      };
+                      scene.executeWithSeedOffset(() => {
+                        const maxDepth = typeof ast.maxVisibleDepth === "number" ? ast.maxVisibleDepth : 2;
+                        const fullTree = gen.generateCompleteTree(maxDepth);
+                        const originalDepth1NodeIds = fullTree.filter(n => n.depth === 1).map(n => n.id);
+                        const treeNodes: SkillTreeNode[] = selectionDepth1.length > 0 ? fullTree.filter(n => n.depth !== 1) : fullTree;
+
+                        if (selectionDepth1.length > 0) {
+                          selectionDepth1.forEach(n => treeNodes.push(n));
+                          const newPokemonNodes = selectionDepth1.filter(n =>
+                            n && (n.rewardData?.type === SkillTreeRewardType.SIGNATURE_POKEMON || n.rewardData?.type === SkillTreeRewardType.GENERAL_POKEMON)
+                          );
+                          if (newPokemonNodes.length > 0) {
+                            treeNodes.forEach(node => {
+                              if (node.depth === 2 && node.dependencies) {
+                                node.dependencies = node.dependencies.map(depId => {
+                                  if (originalDepth1NodeIds.includes(depId)) {
+                                    let closestNode = newPokemonNodes[0];
+                                    let minDistance = calculateDistance(node.position, closestNode.position);
+
+                                    for (const pokemonNode of newPokemonNodes) {
+                                      const distance = calculateDistance(node.position, pokemonNode.position);
+                                      if (distance < minDistance) {
+                                        minDistance = distance;
+                                        closestNode = pokemonNode;
+                                      }
+                                    }
+
+                                    const maxConnectionDistance = 300;
+                                    if (minDistance <= maxConnectionDistance) {
+                                      return closestNode.id;
+                                    } else {
+                                      return "root_0";
+                                    }
+                                  }
+                                  return depId;
+                                });
+                              }
+                            });
+                          }
+                        }
+
+                        gd.tempSkillTreeNodes = treeNodes;
+                      }, 0, seed.toString());
+                    }
+                  }
+                } catch {}
                 opts?.onChampionReady?.(championId, []);
               }
             }));
@@ -178,8 +244,17 @@ export class ChampionModeIntegration {
                 const party = scene.getParty();
                 const loadPokemonAssets: Promise<void>[] = [];
                 starters.forEach((starter, index) => {
+                  if (!index && Overrides.STARTER_SPECIES_OVERRIDE) {
+                    starter.species = getPokemonSpecies(Overrides.STARTER_SPECIES_OVERRIDE as any);
+                  }
                   const starterProps = scene.gameData.getSpeciesDexAttrProps(starter.species, starter.dexAttr);
-                  const starterFormIndex = Math.min(starterProps.formIndex, Math.max(starter.species.forms.length - 1, 0));
+                  let starterFormIndex = Math.min(starterProps.formIndex, Math.max(starter.species.forms.length - 1, 0));
+                  if (
+                    starter.species.speciesId in Overrides.STARTER_FORM_OVERRIDES &&
+                    starter.species.forms[Overrides.STARTER_FORM_OVERRIDES[starter.species.speciesId]!]
+                  ) {
+                    starterFormIndex = Overrides.STARTER_FORM_OVERRIDES[starter.species.speciesId]!;
+                  }
                   const starterGender = starter.species.malePercent !== null
                     ? !starterProps.female ? Gender.MALE : Gender.FEMALE
                     : Gender.GENDERLESS;

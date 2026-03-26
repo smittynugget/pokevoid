@@ -350,12 +350,18 @@ export class ChampionUtils {
     return null;
   }
 
-  static getRandomChampionSignaturePokemon(
+  static getAvailableChampionSignaturePokemon(
     championData: PlayableChampionData,
     scene: BattleScene
-  ): Species {
-    const availablePokemon = championData.signaturePokemon.filter((species) => {
-      const speciesData = (allSpecies as any)[species] as PokemonSpecies | undefined;
+  ): Species[] {
+    const base = (championData.signaturePokemon || []) as Species[];
+    const unlocked = ((championData as any).unlockedSignaturePokemon || []) as Species[];
+    const combined = Array.from(new Set([...(unlocked || []), ...(base || [])]));
+
+    return combined.filter((species) => {
+      const speciesData = (species >= 2000)
+        ? (allSpecies.find(s => s.speciesId === species) as PokemonSpecies | undefined)
+        : (allSpecies[species - 1] as PokemonSpecies | undefined);
       if (!speciesData) return false;
       if (championData.pokemonGenerationFilter && championData.pokemonGenerationFilter.length > 0) {
         if (!(championData.pokemonGenerationFilter as number[]).includes((speciesData as any).generation)) return false;
@@ -363,7 +369,17 @@ export class ChampionUtils {
       const caughtAttr = (scene.gameData.dexData as any)[species]?.caughtAttr;
       return caughtAttr && BigInt(caughtAttr) !== BigInt(0);
     });
-    return Utils.randSeedItem(availablePokemon.length > 0 ? availablePokemon : championData.signaturePokemon);
+  }
+
+  static getRandomChampionSignaturePokemon(
+    championData: PlayableChampionData,
+    scene: BattleScene
+  ): Species {
+    const availablePokemon = this.getAvailableChampionSignaturePokemon(championData, scene);
+    const base = (championData.signaturePokemon || []) as Species[];
+    const unlocked = ((championData as any).unlockedSignaturePokemon || []) as Species[];
+    const combined = Array.from(new Set([...(unlocked || []), ...(base || [])]));
+    return Utils.randSeedItem(availablePokemon.length > 0 ? availablePokemon : (combined.length > 0 ? combined : base));
   }
 
   static getRandomChampionGeneralPokemon(

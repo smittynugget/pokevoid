@@ -85,7 +85,6 @@ export function getRaritiesForRewardType(rewardType: SkillTreeRewardType): Skill
     case SkillTreeRewardType.TERA_ABILITY:
       return [SkillTreeRarity.ROGUE];
 
-    case SkillTreeRewardType.POKEMON_ALT_BUILD:
     case SkillTreeRewardType.HEALING_ITEMS:
     case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
     case SkillTreeRewardType.MASTER_BALL:
@@ -136,7 +135,25 @@ export class SkillTreeNodeGenerator {
       };
     }
 
-    const rewardPool = this.getChampionRewardPool(championData);
+    const rewardPool = this.getChampionRewardPool(championData).filter(r => r !== SkillTreeRewardType.POKEMON_ALT_BUILD);
+
+    let altBuildChanceBps = 0;
+    if (depth >= 7) altBuildChanceBps = 1300;
+    else if (depth >= 4) altBuildChanceBps = 800;
+    else if (depth >= 2) altBuildChanceBps = 500;
+    else if (depth === 1) altBuildChanceBps = 300;
+
+    if (altBuildChanceBps > 0 && this.isRewardEligibleForChampion(SkillTreeRewardType.POKEMON_ALT_BUILD, championData)) {
+      if (Utils.randSeedInt(10000) < altBuildChanceBps) {
+        const rewardData = this.generateSpecificReward(SkillTreeRewardType.POKEMON_ALT_BUILD, championData);
+        return {
+          rarity: SkillTreeRarity.ROGUE,
+          rewardData,
+          name: this.getRewardName(rewardData),
+          description: this.getRewardDescription(rewardData)
+        };
+      }
+    }
 
     const fallbackOrder: SkillTreeRarity[] = [
       SkillTreeRarity.LEGENDARY,
@@ -380,7 +397,10 @@ export class SkillTreeNodeGenerator {
         const pool = this.getChampionTypeAbilities([c.type1, c.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[]);
         return pool.length > 0 || Object.values(Abilities).some(v => typeof v === 'number');
       }
-      case SkillTreeRewardType.SIGNATURE_POKEMON: return (c.signaturePokemon?.length ?? 0) > 0;
+      case SkillTreeRewardType.SIGNATURE_POKEMON: {
+        const unlocked = ((c as any).unlockedSignaturePokemon as Species[] | undefined) || [];
+        return (c.signaturePokemon?.length ?? 0) > 0 || unlocked.length > 0;
+      }
       case SkillTreeRewardType.GENERAL_POKEMON: return this.getTypeCompatiblePokemon([c.type1, c.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[], c.pokemonGenerationFilter).length > 0;
       case SkillTreeRewardType.LEGENDARY_POKEMON: return (c.legendaryPokemon?.length ?? 0) > 0;
       case SkillTreeRewardType.POKEMON_ALT_BUILD: return (c.unlockedAltBuilds?.length ?? 0) > 0;
@@ -996,22 +1016,9 @@ export class SkillTreeNodeGenerator {
         return i18next.t("skillTree:rewards.xm", { move: (allMoves as any)?.[rewardData.data?.moveId]?.name || i18next.t("skillTree:unknownReward") });
 
       case SkillTreeRewardType.SIGNATURE_POKEMON: {
-        const species = rewardData.data?.species;
-        const pokemonName = (allSpecies as any)?.[species - 1]?.name || i18next.t("skillTree:fallback.unknownPokemon");
-        const altBuild = rewardData.data?.altBuild as PokemonAltBuildDefinition | undefined;
         const championDisplayName = ChampionUtils.getChampionDisplayName(this.championId);
-
-        if (altBuild && altBuild.rank === 0) {
-          const altBuildName = i18next.t(`pokemonAltBuild:${altBuild.id}.name`);
-          return i18next.t("skillTree:rewards.signaturePokemonName", {
-            champion: championDisplayName,
-            pokemon: `${pokemonName} [${altBuildName}]`
-          });
-        }
-
-        return i18next.t("skillTree:rewards.signaturePokemonName", {
-          champion: championDisplayName,
-          pokemon: pokemonName
+        return i18next.t("skillTree:rewards.signaturePokemonMysteryName", {
+          champion: championDisplayName
         });
       }
 
@@ -1240,91 +1247,11 @@ export class SkillTreeNodeGenerator {
       }
 
       case SkillTreeRewardType.SIGNATURE_POKEMON: {
-        const species = rewardData.data?.species;
-        const pokemonName = (allSpecies as any)?.[species - 1]?.name || i18next.t("skillTree:fallback.unknownPokemon");
-        const altBuild = rewardData.data?.altBuild as PokemonAltBuildDefinition | undefined;
         const championDisplayName = ChampionUtils.getChampionDisplayName(this.championId);
-
-        let description = i18next.t("skillTree:descriptions.signaturePokemon", {
-          champion: championDisplayName,
-          pokemon: pokemonName
+        let description = i18next.t("skillTree:descriptions.signaturePokemonMystery", {
+          champion: championDisplayName
         });
-
-        if (altBuild) {
-          const changes: string[] = [];
-
-        if (altBuild.statFocus && altBuild.statFocus.length > 0) {
-          const focusStatNames = altBuild.statFocus
-            .map(stat => Stat[stat])
-            .join(", ");
-          const label = i18next.t("skillTree:descriptions.statFocusLabel");
-          changes.push(`${label} ${focusStatNames}`);
-        }
-
-        if (altBuild.abilityChanges) {
-          const [a1, a2, ah] = altBuild.abilityChanges;
-          const abilities = [a1, a2, ah]
-            .filter(a => a !== undefined)
-            .map(a => (allAbilities as any)?.[a]?.name || i18next.t("skillTree:fallback.unknownAbility"))
-            .join(" / ");
-          if (abilities) {
-            const label = i18next.t("skillTree:descriptions.abilitiesLabel");
-            changes.push(`${label} ${abilities}`);
-          }
-        }
-
-        if (altBuild.typeChanges) {
-          const [t1, t2] = altBuild.typeChanges;
-          const types = [t1, t2]
-            .filter(t => t !== undefined)
-            .map(t => Type[t])
-            .join(" / ");
-          if (types) {
-            const label = i18next.t("skillTree:descriptions.typesLabel");
-            changes.push(`${label} ${types}`);
-          }
-        }
-
-          if (changes.length > 0) {
-            description += "\n\n" + changes.join("\n");
-          }
-        }
-
-        const maxRank = 10;
-        let currentRank = 0;
-        const offeredBuildRank = rewardData.data?.altBuild?.rank;
-        if (offeredBuildRank !== undefined && offeredBuildRank !== null) {
-            currentRank = offeredBuildRank;
-        } else {
-            try {
-                if (species) {
-                    const manager = ChampionManager.getInstance();
-                    const champ = manager.getChampionData(this.championId);
-                    const speciesId = species as Species;
-                    const rewardAltBuildId = rewardData.data?.altBuildId as PokemonAltBuildId | undefined;
-                    const baseSigId = rewardAltBuildId ?? ChampionUtils.getSignatureAltBuildId(speciesId, champ);
-
-                    if (baseSigId) {
-                        const unlocked = (champ.unlockedAltBuilds || [])
-                            .map(id => POKEMON_ALT_BUILDS[id as PokemonAltBuildId])
-                            .filter(def => !!def && (def.id === baseSigId || (def.prerequisiteBuilds || []).includes(baseSigId)));
-
-                        const unlockedMax = unlocked.reduce((m, def) => Math.max(m, def.rank ?? 0), 0);
-                        currentRank = unlockedMax;
-
-                        const party = this.scene?.getParty?.() || [];
-                        const partyMatch = party.find(p => p.altBuildId === baseSigId);
-                        if (typeof partyMatch?.altBuildRank === "number") {
-                            currentRank = Math.max(currentRank, partyMatch.altBuildRank);
-                        }
-                    }
-                }
-            } catch {}
-        }
-
-        currentRank = Math.max(0, Math.min(maxRank, currentRank));
-        description += `\n\n${i18next.t("skillTree:descriptions.signaturePokemonRankInfo", { rank: currentRank })}`;
-
+        description += `\n\n${i18next.t("skillTree:descriptions.signaturePokemonRankInfoGeneric")}`;
         return description;
       }
 

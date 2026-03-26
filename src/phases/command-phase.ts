@@ -236,6 +236,7 @@ export class CommandPhase extends FieldPhase {
       const isLegendaryPriorityTarget = !!(encounterChanceMap[enemy?.species.speciesId] !== undefined);
       const legendaryOverride = !isRivalBattle && isLegendaryPriorityTarget;
       const canBypassNoPokeballForce = cursor === PokeballType.VOID_BALL && enemy && enemy.getHpRatio(true) <= 0.25 && (enemy.species.speciesId !== Species.ETERNATUS || this.scene.gameData.areAllSmittysDefeated(this.scene));
+      const voidBallHpTooHigh = cursor === PokeballType.VOID_BALL && enemy && enemy.getHpRatio(true) > 0.25;
 
       if (!canBypassNoPokeballForce && !legendaryOverride && !(Utils.randSeedInt(10000, 1) <= 1) &&
       (this.scene.arena.biomeType === Biome.END ||
@@ -244,14 +245,14 @@ export class CommandPhase extends FieldPhase {
       (hasRestrictedForm && notChaosBeyondWaves))) {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         this.scene.ui.setMode(Mode.MESSAGE);
-        this.scene.ui.showText(i18next.t("battle:noPokeballForce"), null, () => {
+        this.scene.ui.showText(i18next.t(voidBallHpTooHigh ? "battle:voidBallHpTooHigh" : "battle:noPokeballForce"), null, () => {
           this.scene.ui.showText("", 0);
           this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         }, null, true);
       } else if (!canBypassNoPokeballForce && this.scene.currentBattle.battleType === BattleType.TRAINER && this.scene.gameMode.checkIfRival(this.scene)) {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         this.scene.ui.setMode(Mode.MESSAGE);
-        this.scene.ui.showText(i18next.t("battle:noPokeballRival"), null, () => {
+        this.scene.ui.showText(i18next.t(voidBallHpTooHigh ? "battle:voidBallHpTooHigh" : "battle:noPokeballRival"), null, () => {
           this.scene.ui.showText("", 0);
           this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         }, null, true);
@@ -259,12 +260,19 @@ export class CommandPhase extends FieldPhase {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         this.scene.ui.setMode(Mode.MESSAGE);
 
-        this.scene.ui.showText(i18next.t("battle:noPokeballBuy", {
-          requiredMoney: requiredMoney
-        }), null, () => {
-          this.scene.ui.showText("", 0);
-          this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
-        }, null, true);
+        if (voidBallHpTooHigh) {
+          this.scene.ui.showText(i18next.t("battle:voidBallHpTooHigh"), null, () => {
+            this.scene.ui.showText("", 0);
+            this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
+          }, null, true);
+        } else {
+          this.scene.ui.showText(i18next.t("battle:noPokeballBuy", {
+            requiredMoney: requiredMoney
+          }), null, () => {
+            this.scene.ui.showText("", 0);
+            this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
+          }, null, true);
+        }
       } else {
         const targets = this.scene.getEnemyField().filter(p => p.isActive(true)).map(p => p.getBattlerIndex());
         if (targets.length > 1) {
@@ -275,7 +283,7 @@ export class CommandPhase extends FieldPhase {
             this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
           }, null, true);
         } else if (cursor in this.scene.pokeballCounts || (args.length > 0 && typeof args[0] === 'number')) {
-          const targetPokemon = this.scene.getEnemyField().find(p => p.isActive(true));
+          const targetPokemon = enemy;
           const isStrongBall = cursor === PokeballType.MASTER_BALL || cursor === PokeballType.VOID_BALL;
           if (targetPokemon?.isBoss() && targetPokemon?.bossSegmentIndex >= 1 && !targetPokemon?.hasAbility(Abilities.WONDER_GUARD, false, true) && !isStrongBall) {
             this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
@@ -284,7 +292,7 @@ export class CommandPhase extends FieldPhase {
               this.scene.ui.showText("", 0);
               this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
             }, null, true);
-          } else if (cursor === PokeballType.VOID_BALL && targetPokemon && targetPokemon.getHpRatio(true) > 0.25) {
+          } else if (voidBallHpTooHigh) {
             this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
             this.scene.ui.setMode(Mode.MESSAGE);
             this.scene.ui.showText(i18next.t("battle:voidBallHpTooHigh"), null, () => {

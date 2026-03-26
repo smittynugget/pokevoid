@@ -2690,5 +2690,13 @@
   "soulDrain": {
     "name": "Drenaje de Alma",
     "description": "10% de probabilidad de recolectar el tipo del movimiento usado. Baja dos estadísticas aleatorias del objetivo en 2 niveles si el tipo del movimiento coincide con un tipo de esencia. Pierde tipos de esencia al debilitarse."
+  },
+  "megaSol": {
+    "name": "Mega Sol",
+    "description": "El Pokémon usa sus movimientos como si el clima fuera sol abrasador."
+  },
+  "dragonize": {
+    "name": "Dragonizar",
+    "description": "Convierte los movimientos de tipo Normal en tipo Dragón y aumenta su potencia en un 20%."
   }
 }

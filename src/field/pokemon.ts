@@ -2480,7 +2480,7 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
         if (typeBoost?.oneUse) {
             source.removeTag(typeBoost.tagType);
           }
-        const arenaAttackTypeMultiplier = new Utils.NumberHolder(this.scene.arena.getAttackTypeMultiplier(moveType, source.isGrounded()));
+        const arenaAttackTypeMultiplier = new Utils.NumberHolder(this.scene.arena.getAttackTypeMultiplier(moveType, source.isGrounded(), source));
         applyMoveAttrs(IgnoreWeatherTypeDebuffAttr, source, this, move, arenaAttackTypeMultiplier);
         const isTypeImmune = (typeMultiplier * arenaAttackTypeMultiplier.value) === 0;
         if (isTypeImmune) {

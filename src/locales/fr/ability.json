@@ -2690,5 +2690,13 @@
   "soulDrain": {
     "name": "Drainage d'Âmes",
     "description": "10% de chance de collecter le type de la capacité utilisée. Réduit deux stats aléatoires de la cible de 2 niveaux si le type de la capacité correspond à un type d'essence. Perd les types d'essence en tombant K.O."
+  },
+  "megaSol": {
+    "name": "Méga Sol",
+    "description": "Le Pokémon utilise ses capacités comme si les rayons du soleil étaient brulants."
+  },
+  "dragonize": {
+    "name": "Dragonisation",
+    "description": "Transforme les capacités de type Normal en type Dragon et augmente leur puissance de 20%."
   }
 }

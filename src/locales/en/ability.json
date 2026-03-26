@@ -2690,5 +2690,13 @@
   "soulDrain": {
     "name": "Soul Drain",
     "description": "10% chance to collect the type of the move used. Lowers two random stats of the target by 2 stages if the move type matches a essence type. Loses essence types when fainting."
+  },
+  "megaSol": {
+    "name": "Mega Sol",
+    "description": "The Pokémon uses its moves as if the weather were harsh sunlight."
+  },
+  "dragonize": {
+    "name": "Dragonize",
+    "description": "Turns Normal-type moves into Dragon-type moves and boosts their power by 20%."
   }
 }

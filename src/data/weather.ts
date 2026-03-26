@@ -88,12 +88,14 @@ export class Weather {
     return 1;
   }
 
-  isMoveWeatherCancelled(move: Move): boolean {
+  isMoveWeatherCancelled(move: Move, effectiveMoveType?: Type): boolean {
+    if (!(move instanceof AttackMove)) return false;
+    const t = (effectiveMoveType ?? move.type) as Type;
     switch (this.weatherType) {
       case WeatherType.HARSH_SUN:
-        return move instanceof AttackMove && move.type === Type.WATER;
+        return t === Type.WATER;
       case WeatherType.HEAVY_RAIN:
-        return move instanceof AttackMove && move.type === Type.FIRE;
+        return t === Type.FIRE;
     }
 
     return false;

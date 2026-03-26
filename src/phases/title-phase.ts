@@ -875,7 +875,7 @@ export class TitlePhase extends Phase {
             this.scene.playBgm();
             if (this.scene.gameMode.isChaosMode) {
 
-                if (this.scene.battlePathWave === 1) {
+                if (!this.loaded && this.scene.battlePathWave === 1) {
                     this.scene.gameData.resetBattlePathData();
                     resetBattlePathGlobalState();
                 }

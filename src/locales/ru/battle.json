@@ -97,5 +97,5 @@
   "congratulations": "Поздравляем!",
   "beatModeFirstTime": "{{speciesName}} впервые прошёл(ла) режим {{gameMode}}!\nТы получил(а) {{newModifier}}!",
   "ppReduced": "Это снизило ОД приёма {{moveName}} у {{targetName}}\nна {{reduction}}!",
-  "voidBallHpTooHigh": "Войд-Болл может поймать только покемона в критическом состоянии!"
+  "voidBallHpTooHigh": "Войд-Болл может поймать только покемона с 25% HP или меньше!"
 }

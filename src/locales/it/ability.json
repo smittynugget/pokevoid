@@ -2690,5 +2690,13 @@
   "soulDrain": {
     "name": "Risucchio dell'Anima",
     "description": "10% di possibilità di raccogliere il tipo della mossa usata. Riduce due statistiche casuali del bersaglio di 2 livelli se il tipo della mossa corrisponde a un tipo di essenza. Perde i tipi di essenza se va esausto."
+  },
+  "megaSol": {
+    "name": "Mega Sol",
+    "description": "Il Pokémon usa le sue mosse come se la luce solare fosse molto intensa."
+  },
+  "dragonize": {
+    "name": "Dragonizzazione",
+    "description": "Trasforma le mosse di tipo Normale in tipo Drago e aumenta la loro potenza del 20%."
   }
 }

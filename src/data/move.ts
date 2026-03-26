@@ -547,7 +547,7 @@ export default class Move implements Localizable {
       user.scene.applyModifiers(PokemonMoveAccuracyBoosterModifier, user.isPlayer(), user, moveAccuracy);
     }
 
-    if (user.scene.arena.weather?.weatherType === WeatherType.FOG) {
+    if (user.scene.arena.getMoveWeatherType(user) === WeatherType.FOG) {
 
       moveAccuracy.value = Math.floor(moveAccuracy.value * 0.9);
     }
@@ -1246,7 +1246,10 @@ export class IgnoreWeatherTypeDebuffAttr extends MoveAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
     const weatherModifier=args[0] as Utils.NumberHolder;
 
-    if (user.scene.arena.weather?.weatherType === this.weather) {
+    const weatherType = user.scene.arena.getMoveWeatherType(user);
+    const isSun = (w: WeatherType) => w === WeatherType.SUNNY || w === WeatherType.HARSH_SUN;
+    const isRain = (w: WeatherType) => w === WeatherType.RAIN || w === WeatherType.HEAVY_RAIN;
+    if (weatherType === this.weather || (isSun(weatherType) && isSun(this.weather)) || (isRain(weatherType) && isRain(this.weather))) {
       weatherModifier.value = Math.max(weatherModifier.value, 1);
     }
     return true;
@@ -1259,11 +1262,8 @@ export abstract class WeatherHealAttr extends HealAttr {
   }
 
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    let healRatio = 0.5;
-    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
-      const weatherType = user.scene.arena.weather?.weatherType || WeatherType.NONE;
-      healRatio = this.getWeatherHealRatio(weatherType);
-    }
+    const weatherType = user.scene.arena.getMoveWeatherType(user);
+    const healRatio = this.getWeatherHealRatio(weatherType);
     this.addHealPhase(user, healRatio);
     return true;
   }
@@ -1968,8 +1968,8 @@ export class SunlightChargeAttr extends ChargeAttr {
 
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): Promise<boolean> {
     return new Promise(resolve => {
-      const weatherType = user.scene.arena.weather?.weatherType;
-      if (!user.scene.arena.weather?.isEffectSuppressed(user.scene) && (weatherType === WeatherType.SUNNY || weatherType === WeatherType.HARSH_SUN)) {
+      const weatherType = user.scene.arena.getMoveWeatherType(user);
+      if (weatherType === WeatherType.SUNNY || weatherType === WeatherType.HARSH_SUN) {
         resolve(false);
       } else {
         super.apply(user, target, move, args).then(result => resolve(result));
@@ -1988,8 +1988,8 @@ export class ElectroShotChargeAttr extends ChargeAttr {
 
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): Promise<boolean> {
     return new Promise(resolve => {
-      const weatherType = user.scene.arena.weather?.weatherType;
-      if (!user.scene.arena.weather?.isEffectSuppressed(user.scene) && (weatherType === WeatherType.RAIN || weatherType === WeatherType.HEAVY_RAIN)) {
+      const weatherType = user.scene.arena.getMoveWeatherType(user);
+      if (weatherType === WeatherType.RAIN || weatherType === WeatherType.HEAVY_RAIN) {
 
         const statChangeAttr = new StatChangeAttr(BattleStat.SPATK, 1, true);
         statChangeAttr.apply(user, target, move, args);
@@ -2170,11 +2170,9 @@ export class GrowthStatChangeAttr extends StatChangeAttr {
   }
 
   getLevels(user: Pokemon): number {
-    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
-      const weatherType = user.scene.arena.weather?.weatherType;
-      if (weatherType === WeatherType.SUNNY || weatherType === WeatherType.HARSH_SUN) {
-        return this.levels + 1;
-      }
+    const weatherType = user.scene.arena.getMoveWeatherType(user);
+    if (weatherType === WeatherType.SUNNY || weatherType === WeatherType.HARSH_SUN) {
+      return this.levels + 1;
     }
     return this.levels;
   }
@@ -2692,18 +2690,16 @@ export class MagnitudePowerAttr extends VariablePowerAttr {
 
 export class AntiSunlightPowerDecreaseAttr extends VariablePowerAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
-      const power = args[0] as Utils.NumberHolder;
-      const weatherType = user.scene.arena.weather?.weatherType || WeatherType.NONE;
-      switch (weatherType) {
-        case WeatherType.RAIN:
-        case WeatherType.SANDSTORM:
-        case WeatherType.HAIL:
-        case WeatherType.SNOW:
-        case WeatherType.HEAVY_RAIN:
-          power.value *= 0.5;
-          return true;
-      }
+    const power = args[0] as Utils.NumberHolder;
+    const weatherType = user.scene.arena.getMoveWeatherType(user);
+    switch (weatherType) {
+      case WeatherType.RAIN:
+      case WeatherType.SANDSTORM:
+      case WeatherType.HAIL:
+      case WeatherType.SNOW:
+      case WeatherType.HEAVY_RAIN:
+        power.value *= 0.5;
+        return true;
     }
 
     return false;
@@ -2970,19 +2966,17 @@ export class VariableAccuracyAttr extends MoveAttr {
 }
 export class ThunderAccuracyAttr extends VariableAccuracyAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
-      const accuracy = args[0] as Utils.NumberHolder;
-      const weatherType = user.scene.arena.weather?.weatherType || WeatherType.NONE;
-      switch (weatherType) {
-        case WeatherType.SUNNY:
-        case WeatherType.HARSH_SUN:
-          accuracy.value = 50;
-          return true;
-        case WeatherType.RAIN:
-        case WeatherType.HEAVY_RAIN:
-          accuracy.value = -1;
-          return true;
-      }
+    const accuracy = args[0] as Utils.NumberHolder;
+    const weatherType = user.scene.arena.getMoveWeatherType(user);
+    switch (weatherType) {
+      case WeatherType.SUNNY:
+      case WeatherType.HARSH_SUN:
+        accuracy.value = 50;
+        return true;
+      case WeatherType.RAIN:
+      case WeatherType.HEAVY_RAIN:
+        accuracy.value = -1;
+        return true;
     }
 
     return false;
@@ -2990,15 +2984,13 @@ export class ThunderAccuracyAttr extends VariableAccuracyAttr {
 }
 export class StormAccuracyAttr extends VariableAccuracyAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
-      const accuracy = args[0] as Utils.NumberHolder;
-      const weatherType = user.scene.arena.weather?.weatherType || WeatherType.NONE;
-      switch (weatherType) {
-      case WeatherType.RAIN:
-      case WeatherType.HEAVY_RAIN:
-        accuracy.value = -1;
-        return true;
-      }
+    const accuracy = args[0] as Utils.NumberHolder;
+    const weatherType = user.scene.arena.getMoveWeatherType(user);
+    switch (weatherType) {
+    case WeatherType.RAIN:
+    case WeatherType.HEAVY_RAIN:
+      accuracy.value = -1;
+      return true;
     }
 
     return false;
@@ -3032,13 +3024,11 @@ export class ToxicAccuracyAttr extends VariableAccuracyAttr {
 
 export class BlizzardAccuracyAttr extends VariableAccuracyAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
-      const accuracy = args[0] as Utils.NumberHolder;
-      const weatherType = user.scene.arena.weather?.weatherType || WeatherType.NONE;
-      if (weatherType === WeatherType.HAIL || weatherType === WeatherType.SNOW) {
-        accuracy.value = -1;
-        return true;
-      }
+    const accuracy = args[0] as Utils.NumberHolder;
+    const weatherType = user.scene.arena.getMoveWeatherType(user);
+    if (weatherType === WeatherType.HAIL || weatherType === WeatherType.SNOW) {
+      accuracy.value = -1;
+      return true;
     }
 
     return false;
@@ -3272,30 +3262,27 @@ export class WeatherBallTypeAttr extends VariableMoveTypeAttr {
       return false;
     }
 
-    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
-      switch (user.scene.arena.weather?.weatherType) {
-        case WeatherType.SUNNY:
-        case WeatherType.HARSH_SUN:
-        moveType.value = Type.FIRE;
-          break;
-        case WeatherType.RAIN:
-        case WeatherType.HEAVY_RAIN:
-        moveType.value = Type.WATER;
-          break;
-        case WeatherType.SANDSTORM:
-        moveType.value = Type.ROCK;
-          break;
-        case WeatherType.HAIL:
-        case WeatherType.SNOW:
-        moveType.value = Type.ICE;
-          break;
-        default:
-          return false;
-      }
-      return true;
+    const weatherType = user.scene.arena.getMoveWeatherType(user);
+    switch (weatherType) {
+      case WeatherType.SUNNY:
+      case WeatherType.HARSH_SUN:
+      moveType.value = Type.FIRE;
+        break;
+      case WeatherType.RAIN:
+      case WeatherType.HEAVY_RAIN:
+      moveType.value = Type.WATER;
+        break;
+      case WeatherType.SANDSTORM:
+      moveType.value = Type.ROCK;
+        break;
+      case WeatherType.HAIL:
+      case WeatherType.SNOW:
+      moveType.value = Type.ICE;
+        break;
+      default:
+        return false;
     }
-
-    return false;
+    return true;
   }
 }
 export class TerrainPulseTypeAttr extends VariableMoveTypeAttr {
@@ -5253,8 +5240,15 @@ export class WeatherPowerBoostAttr extends MovePowerMultiplierAttr {
   private weather: WeatherType;
   constructor(weather: WeatherType) {
     super(
-      (user: Pokemon, _target: Pokemon, _move: Move) =>
-        user.scene.arena.weather?.weatherType === weather ? 2 : 1
+      (user: Pokemon, _target: Pokemon, _move: Move) => {
+        const weatherType = user.scene.arena.getMoveWeatherType(user);
+        const isSun = (w: WeatherType) => w === WeatherType.SUNNY || w === WeatherType.HARSH_SUN;
+        const isRain = (w: WeatherType) => w === WeatherType.RAIN || w === WeatherType.HEAVY_RAIN;
+        if (weatherType === weather || (isSun(weatherType) && isSun(weather)) || (isRain(weatherType) && isRain(weather))) {
+          return 2;
+        }
+        return 1;
+      }
     );
     this.weather = weather;
   }
@@ -6390,7 +6384,7 @@ export function initMoves() {
           .attr(FlinchAttr),
       new AttackMove(Moves.WEATHER_BALL, Type.NORMAL, MoveCategory.SPECIAL, 50, 100, 10, -1, 0, 3)
           .attr(WeatherBallTypeAttr)
-      .attr(MovePowerMultiplierAttr, (user, target, move) => [WeatherType.SUNNY, WeatherType.RAIN, WeatherType.SANDSTORM, WeatherType.HAIL, WeatherType.SNOW, WeatherType.FOG, WeatherType.HEAVY_RAIN, WeatherType.HARSH_SUN].includes(user.scene.arena.weather?.weatherType!) && !user.scene.arena.weather?.isEffectSuppressed(user.scene) ? 2 : 1)
+      .attr(MovePowerMultiplierAttr, (user, target, move) => [WeatherType.SUNNY, WeatherType.RAIN, WeatherType.SANDSTORM, WeatherType.HAIL, WeatherType.SNOW, WeatherType.FOG, WeatherType.HEAVY_RAIN, WeatherType.HARSH_SUN].includes(user.scene.arena.getMoveWeatherType(user)) ? 2 : 1)
           .ballBombMove(),
       new StatusMove(Moves.AROMATHERAPY, Type.GRASS, -1, 5, -1, 0, 3)
       .attr(PartyStatusCureAttr, i18next.t("moveTriggers:soothingAromaWaftedThroughArea"), Abilities.SAP_SIPPER)
@@ -7481,7 +7475,10 @@ export function initMoves() {
       new AttackMove(Moves.BRUTAL_SWING, Type.DARK, MoveCategory.PHYSICAL, 60, 100, 20, -1, 0, 7)
           .target(MoveTarget.ALL_NEAR_OTHERS),
       new StatusMove(Moves.AURORA_VEIL, Type.ICE, -1, 20, -1, 0, 7)
-          .condition((user, target, move) => (user.scene.arena.weather?.weatherType === WeatherType.HAIL || user.scene.arena.weather?.weatherType === WeatherType.SNOW) && !user.scene.arena.weather?.isEffectSuppressed(user.scene))
+          .condition((user, target, move) => {
+            const weatherType = user.scene.arena.getMoveWeatherType(user);
+            return weatherType === WeatherType.HAIL || weatherType === WeatherType.SNOW;
+          })
           .attr(AddArenaTagAttr, ArenaTagType.AURORA_VEIL, 5, true)
           .target(MoveTarget.USER_SIDE),
 
@@ -8079,7 +8076,7 @@ export function initMoves() {
           .slicingMove(),
       new AttackMove(Moves.HYDRO_STEAM, Type.WATER, MoveCategory.SPECIAL, 80, 100, 15, -1, 0, 9)
           .attr(IgnoreWeatherTypeDebuffAttr, WeatherType.SUNNY)
-      .attr(MovePowerMultiplierAttr, (user, target, move) => [WeatherType.SUNNY, WeatherType.HARSH_SUN].includes(user.scene.arena.weather?.weatherType!) && !user.scene.arena.weather?.isEffectSuppressed(user.scene) ? 1.5 : 1),
+      .attr(MovePowerMultiplierAttr, (user, target, move) => [WeatherType.SUNNY, WeatherType.HARSH_SUN].includes(user.scene.arena.getMoveWeatherType(user)) ? 1.5 : 1),
       new AttackMove(Moves.RUINATION, Type.DARK, MoveCategory.SPECIAL, -1, 90, 10, -1, 0, 9)
           .attr(TargetHalfHpDamageAttr),
       new AttackMove(Moves.COLLISION_COURSE, Type.FIGHTING, MoveCategory.PHYSICAL, 100, 100, 5, -1, 0, 9)

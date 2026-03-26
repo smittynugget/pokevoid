@@ -2690,5 +2690,13 @@
   "soulDrain": {
     "name": "Dreno de Alma",
     "description": "10% de chance de coletar o tipo do movimento usado. Reduz dois status aleatórios do alvo em 2 estágios se o tipo do movimento corresponder a um tipo de essência. Perde tipos de essência ao desmaiar."
+  },
+  "megaSol": {
+    "name": "Mega Sol",
+    "description": "O Pokémon usa seus golpes como se a luz do sol estivesse escaldante."
+  },
+  "dragonize": {
+    "name": "Dragonizar",
+    "description": "Transforma golpes do tipo Normal em tipo Dragão e aumenta seu poder em 20%."
   }
 }
