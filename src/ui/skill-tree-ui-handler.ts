@@ -2285,23 +2285,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         }
         return { key: "items", frame: "pinsirite", scale: 2.0 };
       case SkillTreeRewardType.POKEMON_ALT_BUILD:
-        try {
-          const species = node.rewardData?.data?.species;
-          if (species && typeof species === "number") {
-            const pokemonSpecies = getPokemonSpecies(species);
-            if (pokemonSpecies) {
-              return {
-                key: pokemonSpecies.getIconAtlasKey(),
-                frame: pokemonSpecies.getIconId(false),
-                scale: 2.0,
-                inverted: true
-              };
-            }
-          }
-        } catch (error) {
-          console.warn("Failed to get alt build pokemon icon:", error);
-        }
-        return { key: "smitems", frame: "draftMode", scale: 1.0, inverted: true };
+        return { key: "smitems", frame: "permaCheaperFusions", scale: 1.0, inverted: true };
       case SkillTreeRewardType.DYNA_MUSHROOM:
         return { key: "items", frame: "max_mushrooms", scale: 2.0 };
       case SkillTreeRewardType.TYPE_SWITCHER:
@@ -4888,6 +4872,40 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       switch (node.rewardData?.type) {
         case SkillTreeRewardType.POKEMON_ALT_BUILD: {
           const altBuildId = node.rewardData.data?.altBuildId as string | undefined;
+          const isSignatureAltBuild = node.rewardData.data?.signatureAltBuild === true || !altBuildId;
+          if (isSignatureAltBuild) {
+            const party = (this.scene as BattleScene).getParty();
+            const sigSpeciesIds = party.filter(p => p.isSignature).map(p => p.species.speciesId);
+            const champData = (this.config as any)?.championData || (this.config as any)?.activeSkillTree?.championData;
+            const unlocked = (champData?.unlockedAltBuilds || []) as PokemonAltBuildId[];
+            const hasEligible = unlocked.some((id) => {
+              const def = POKEMON_ALT_BUILDS[id];
+              const species = def?.species;
+              if (!species || !sigSpeciesIds.includes(species)) return false;
+              const currentRank = party.find(p => p.altBuildId === id)?.altBuildRank ?? 0;
+              if (currentRank >= 10) return false;
+              const nextRank = currentRank + 1;
+              if (def?.prerequisiteBuilds?.length && nextRank === 1) {
+                const prereqId = def.prerequisiteBuilds[0];
+                const prereqDef = POKEMON_ALT_BUILDS[prereqId];
+                const prereqSpecies = prereqDef?.species;
+                if (prereqSpecies) {
+                  return party.some(p =>
+                    (p.species.speciesId === prereqSpecies && p.altBuildId === prereqId) ||
+                    (p.isFusion() && p.fusionSpecies?.speciesId === prereqSpecies && p.altBuildId === prereqId)
+                  );
+                }
+                return party.some(p => p.altBuildId === prereqId);
+              }
+              return true;
+            });
+            const line = i18next.t("skillTree:prereq.signatureAltBuild", {
+              defaultValue: "Have a Signature Pokémon eligible for an Alt Build upgrade"
+            });
+            if (forDisplay) messages.push(line);
+            if (!hasEligible) { if (!forDisplay) messages.push(line); ok = false; }
+            break;
+          }
           if (altBuildId) {
             const altBuild = POKEMON_ALT_BUILDS[altBuildId as PokemonAltBuildId];
             if (altBuild) {

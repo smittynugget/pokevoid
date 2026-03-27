@@ -5268,6 +5268,7 @@ export class TrainerBondAbilityModifier extends PersistentModifier {
 }
 
 export class PokemonAltBuildModifier extends PokemonHeldItemModifier {
+  readonly isTransferrable: boolean = false;
   private altBuild: PokemonAltBuildDefinition;
 
   matchType(modifier: Modifier): boolean {

@@ -631,88 +631,14 @@ export class SkillTreeNodeGenerator {
   }
 
   private generatePokemonAltBuild(championData: PlayableChampionData): SkillTreeReward {
-
-    if (this.scene) {
-      const party = this.scene.getParty();
-
-      const eligibleForRankUp: Array<{ buildId: PokemonAltBuildId, species: Species, currentRank: number }> = [];
-
-      for (const pokemon of party) {
-        if (pokemon.altBuildId && pokemon.altBuildRank) {
-          if (pokemon.altBuildRank === 0) {
-            continue;
-          }
-
-          const currentRank = pokemon.altBuildRank;
-
-          if (currentRank < 10) {
-            eligibleForRankUp.push({
-              buildId: pokemon.altBuildId,
-              species: pokemon.species.speciesId,
-              currentRank
-            });
-          }
-        }
-      }
-
-      if (eligibleForRankUp.length > 0) {
-        const selected = Utils.randSeedItem(eligibleForRankUp);
-        const nextRank = selected.currentRank + 1;
-
-        const buildDefinition = POKEMON_ALT_BUILDS[selected.buildId];
-
-        return {
-          type: SkillTreeRewardType.POKEMON_ALT_BUILD,
-          data: {
-            altBuildId: selected.buildId,
-            species: selected.species,
-            rank: nextRank
-          },
-          immediate: false
-        };
-      }
-    }
-
-    let selectedBuild: PokemonAltBuildId | undefined;
-
-    if (this.scene) {
-      const party = this.scene.getParty();
-      const partySpeciesIds = party.map(p => p.species.speciesId);
-      const signatureSpeciesIds = party
-        .filter(p => p.isSignature)
-        .map(p => p.species.speciesId);
-
-      const unlockedBuilds = (championData.unlockedAltBuilds || []) as PokemonAltBuildId[];
-
-      const signatureMatches = unlockedBuilds.filter(id => {
-        const def = POKEMON_ALT_BUILDS[id];
-        return def?.species && signatureSpeciesIds.includes(def.species);
-      });
-
-      if (signatureMatches.length > 0) {
-        selectedBuild = Utils.randSeedItem(signatureMatches);
-      } else {
-        const partyMatches = unlockedBuilds.filter(id => {
-          const def = POKEMON_ALT_BUILDS[id];
-          return def?.species && partySpeciesIds.includes(def.species);
-        });
-        if (partyMatches.length > 0) {
-          selectedBuild = Utils.randSeedItem(partyMatches);
-        }
-      }
-    }
-
-    if (!selectedBuild) {
-      selectedBuild = SkillTreeSelectors.pickAltBuildId(championData);
-    }
-    const buildDefinition = POKEMON_ALT_BUILDS[selectedBuild];
-
+    const displaySpecies = Array.isArray(championData.signaturePokemon) && championData.signaturePokemon.length > 0
+      ? championData.signaturePokemon[0]
+      : undefined;
     return {
       type: SkillTreeRewardType.POKEMON_ALT_BUILD,
       data: {
-        altBuildId: selectedBuild,
-        species: buildDefinition?.species,
-        rank: 1
+        signatureAltBuild: true,
+        species: displaySpecies
       },
       immediate: false
     };
@@ -1084,6 +1010,10 @@ export class SkillTreeNodeGenerator {
       case SkillTreeRewardType.TYPE_SWITCHER:
         return i18next.t("skillTree:rewards.typeSwitcherGeneric");
       case SkillTreeRewardType.POKEMON_ALT_BUILD: {
+        const isSignatureAltBuild = rewardData.data?.signatureAltBuild === true || !rewardData.data?.altBuildId;
+        if (isSignatureAltBuild) {
+          return i18next.t("skillTree:rewards.signatureAltBuild", { defaultValue: "Signature Alt Build" });
+        }
         const altBuildId = rewardData.data?.altBuildId;
         const altBuildDef = altBuildId ? POKEMON_ALT_BUILDS[altBuildId] : undefined;
         const speciesId = rewardData.data?.species || altBuildDef?.species;
@@ -1372,6 +1302,12 @@ export class SkillTreeNodeGenerator {
         return abilityDesc ? `${warningText}\n${abilityName}: ${abilityDesc}` : warningText;
       }
       case SkillTreeRewardType.POKEMON_ALT_BUILD: {
+        const isSignatureAltBuild = rewardData.data?.signatureAltBuild === true || !rewardData.data?.altBuildId;
+        if (isSignatureAltBuild) {
+          return i18next.t("skillTree:descriptions.signatureAltBuild", {
+            defaultValue: "A unique alternate form for your Signature Pokémon - unlocked by the strength of you and your pokemon's BOND!"
+          });
+        }
         const altBuildId = rewardData.data?.altBuildId;
         const altBuildDef = altBuildId ? POKEMON_ALT_BUILDS[altBuildId] : undefined;
         const speciesId = rewardData.data?.species || altBuildDef?.species;

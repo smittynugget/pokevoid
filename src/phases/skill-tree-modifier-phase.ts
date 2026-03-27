@@ -799,24 +799,59 @@ export class SkillTreeModifierPhase extends Phase {
   }
 
   private createAltBuildOption(): ModifierTypeOption | null {
-    const altBuildData = this.createAltBuildDefinition();
-    const altBuildId = this.node.rewardData.data.altBuildId as PokemonAltBuildId;
-    const storedRank = this.node.rewardData.data.rank || 1;
-
-    let proposedRank = storedRank;
     const party = this.scene.getParty();
-    const matchingPokemon = party.find(p => p.altBuildId === altBuildId);
-
-    if (matchingPokemon && matchingPokemon.altBuildRank) {
-      const currentRank = matchingPokemon.altBuildRank;
-      proposedRank = Math.max(currentRank + 1, storedRank);
+    const data = this.node.rewardData?.data || {};
+    const isSignatureAltBuild = data.signatureAltBuild === true || !data.altBuildId;
+    if (isSignatureAltBuild) {
+      const sigSpeciesIds = party.filter(p => p.isSignature).map(p => p.species.speciesId);
+      const unlocked = (this.championData.unlockedAltBuilds || []) as PokemonAltBuildId[];
+      const eligible = unlocked
+        .map((id) => ({ id, def: POKEMON_ALT_BUILDS[id] }))
+        .filter(x => x.def?.species && sigSpeciesIds.includes(x.def.species))
+        .map((x) => {
+          const matchingPokemon = party.find(p => p.altBuildId === x.id);
+          const currentRank = matchingPokemon?.altBuildRank ?? 0;
+          const nextRank = currentRank + 1;
+          return { id: x.id, def: x.def as PokemonAltBuildDefinition, nextRank };
+        })
+        .filter(x => x.nextRank >= 1 && x.nextRank <= 10)
+        .filter(x => {
+          const prereqs = x.def?.prerequisiteBuilds || [];
+          if (!prereqs.length) return true;
+          if (x.nextRank !== 1) return true;
+          const prereqId = prereqs[0];
+          const prereqDef = POKEMON_ALT_BUILDS[prereqId];
+          const prereqSpecies = prereqDef?.species;
+          if (prereqSpecies) {
+            return party.some(p =>
+              (p.species.speciesId === prereqSpecies && p.altBuildId === prereqId) ||
+              (p.isFusion() && p.fusionSpecies?.speciesId === prereqSpecies && p.altBuildId === prereqId)
+            );
+          }
+          return party.some(p => p.altBuildId === prereqId);
+        });
+      if (eligible.length === 0) {
+        return null;
+      }
+      const picked = Utils.randSeedItem(eligible);
+      const gen = modifierTypes.POKEMON_ALT_BUILD();
+      const type = gen.generateType(party, [picked.id, picked.nextRank]);
+      if (type && !type.id) {
+        type.withIdFromFunc(modifierTypes.POKEMON_ALT_BUILD);
+      }
+      return type ? new ModifierTypeOption(type, 0, 0) : null;
     }
-
+    const altBuildId = data.altBuildId as PokemonAltBuildId;
+    const storedRank = data.rank || 1;
+    let proposedRank = storedRank;
+    const matchingPokemon = party.find(p => p.altBuildId === altBuildId);
+    if (matchingPokemon && matchingPokemon.altBuildRank) {
+      proposedRank = Math.max((matchingPokemon.altBuildRank || 0) + 1, storedRank);
+    }
     if (proposedRank > 10) {
       const rarerCandyType = modifierTypes.RARER_CANDY?.();
       return rarerCandyType ? new ModifierTypeOption(rarerCandyType, 0, 0) : null;
     }
-
     const effectiveRank = Math.min(10, proposedRank);
     const gen = modifierTypes.POKEMON_ALT_BUILD();
     const type = gen.generateType(party, [altBuildId, effectiveRank]);
