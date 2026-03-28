@@ -249,7 +249,7 @@
   },
   "TAUROS_DARK_WAVE_QUEST": {
     "name": "Onda Sombria do Tauros",
-    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Tauros com pelo menos 1 movimento do tipo Sombrio e 1 do tipo Fantasma (não pode ter movimentos do tipo Normal) no Modo Pesadelo."
+    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Tauros com pelo menos 1 movimento do tipo Sombrio e 1 do tipo Fantasma (não pode ter movimentos do tipo Normal) no Vazio."
   },
   "DITTO_SPECIAL_WIN_QUEST": {
     "name": "Vitória Especial do Ditto",
@@ -261,7 +261,7 @@
   },
   "GRENINJA_YOKAI_WAVE_QUEST": {
     "name": "Onda Yokai do Greninja",
-    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Greninja com pelo menos 1 movimento do tipo Fantasma e 1 do tipo Sombrio (não pode ter movimentos do tipo Água) no Modo Pesadelo."
+    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Greninja com pelo menos 1 movimento do tipo Fantasma e 1 do tipo Sombrio (não pode ter movimentos do tipo Água) no Vazio."
   },
   "RAYQUAZA_SPECIAL_WIN_QUEST": {
     "name": "Vitória Especial do Rayquaza",
@@ -273,51 +273,51 @@
   },
   "LICKITUNG_HYPER_WAVE_QUEST": {
     "name": "Onda Hiper do Lickitung",
-    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Lickitung com pelo menos 1 movimento do tipo Venenoso e 1 do tipo Sombrio (não pode ter movimentos do tipo Normal) no Modo Pesadelo."
+    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Lickitung com pelo menos 1 movimento do tipo Venenoso e 1 do tipo Sombrio (não pode ter movimentos do tipo Normal) no Vazio."
   },
   "MUK_RED_DEFEAT_QUEST": {
     "name": "Derrota do Red pelo Muk",
     "task": "Derrote 3 Pokémon do Red com Muk"
   },
   "CHARMANDER_NIGHTMARE_WIN_QUEST": {
-    "name": "Vitória Pesadelo do Charmander",
-    "task": "Vença uma partida no Modo Pesadelo com um Determizard (Charmander Forma Glitch) no seu grupo"
+    "name": "Vitória Vazio do Charmander",
+    "task": "Vença uma partida no Vazio com um Determizard (Charmander Forma Glitch) no seu grupo"
   },
   "GASTLY_NIGHTMARE_WAVE_QUEST": {
-    "name": "Onda Pesadelo do Gastly",
-    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Gastly em um grupo de 3 ou menos Pokémon, no Modo Pesadelo."
+    "name": "Onda Vazio do Gastly",
+    "task": "Sobreviva a quaisquer 50 ondas consecutivas após a onda 299 com um grupo que inclua um Gastly em um grupo de 3 ou menos Pokémon, no Vazio."
   },
   "PIKACHU_PLUS_ULTRA_QUEST": {
     "name": "Plus Ultra do Pikachu",
-    "task": "Vença uma partida no Modo Pesadelo com Pikachu no seu grupo"
+    "task": "Vença uma partida no Vazio com Pikachu no seu grupo"
   },
   "CHARIZARD_HELLFLAME_QUEST": {
     "name": "Chama Infernal do Charizard",
-    "task": "Use Blast Burn 13 vezes com Charizard no Modo Pesadelo"
+    "task": "Use Blast Burn 13 vezes com Charizard no Vazio"
   },
   "EEVEE_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Eevee",
-    "task": "Derrote 2 Pokémon do Blue consecutivamente com Eevee durante as ondas 100, 200, 300, 400 ou 500, no Modo Pesadelo."
+    "name": "Vazio do Eevee",
+    "task": "Derrote 2 Pokémon do Blue consecutivamente com Eevee durante as ondas 100, 200, 300, 400 ou 500, no Vazio."
   },
   "SNORLAX_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Snorlax",
-    "task": "Derrote 2 Pokémon do Red consecutivamente com Snorlax durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Snorlax",
+    "task": "Derrote 2 Pokémon do Red consecutivamente com Snorlax durante as ondas 100, 200, 300, 400 ou 500 no Vazio"
   },
   "MEWTWO_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Mewtwo",
-    "task": "Derrote 3 Pokémon do Giovanni consecutivamente com Mewtwo durante as ondas 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Mewtwo",
+    "task": "Derrote 3 Pokémon do Giovanni consecutivamente com Mewtwo durante as ondas 400 ou 500 no Vazio"
   },
   "TYRANITAR_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Tyranitar",
-    "task": "Derrote 2 Pokémon do Maxie consecutivamente com Tyranitar durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Tyranitar",
+    "task": "Derrote 2 Pokémon do Maxie consecutivamente com Tyranitar durante as ondas 300, 400 ou 500 no Vazio"
   },
   "OCTILLERY_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Octillery",
-    "task": "Derrote 2 Pokémon do Wallace consecutivamente com Octillery durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Octillery",
+    "task": "Derrote 2 Pokémon do Wallace consecutivamente com Octillery durante as ondas 100, 200, 300, 400 ou 500 no Vazio"
   },
   "REGIROCK_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Regirock",
-    "task": "Derrote 2 Pokémon do Steven consecutivamente com Regirock durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Regirock",
+    "task": "Derrote 2 Pokémon do Steven consecutivamente com Regirock durante as ondas 300, 400 ou 500 no Vazio"
   },
   "EEVEE_GHOST_QUEST": {
     "name": "Eevee Fantasma",
@@ -352,12 +352,12 @@
     "task": "Sobreviva às últimas 30 ondas apenas com Shiftry no seu grupo"
   },
   "HYPNO_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Hypno",
-    "task": "Derrote 2 Pokémon consecutivos com Hypno durante as ondas da Sabrina (100, 200, 300, 400 ou 500) no Modo Pesadelo"
+    "name": "Vazio do Hypno",
+    "task": "Derrote 2 Pokémon consecutivos com Hypno durante as ondas da Sabrina (100, 200, 300, 400 ou 500) no Vazio"
   },
   "MAMOSWINE_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Mamoswine",
-    "task": "Derrote 50 Pokémon rivais com Mamoswine durante as ondas 50-100, 150-200, 250-300, 350-400 ou 450-500 no Modo Pesadelo"
+    "name": "Vazio do Mamoswine",
+    "task": "Derrote 50 Pokémon rivais com Mamoswine durante as ondas 50-100, 150-200, 250-300, 350-400 ou 450-500 no Vazio"
   },
   "STARTER_CATCH_QUEST": {
     "name": "Missão de Captura Inicial",
@@ -375,8 +375,8 @@
     "rewardText": "Desbloqueia o Modo Nuzlocke!"
   },
   "MORPEKO_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Morpeko",
-    "task": "Derrote 2 Pokémon consecutivos com Morpeko durante as ondas da Lusamine (100, 200 ou 300) no Modo Pesadelo"
+    "name": "Vazio do Morpeko",
+    "task": "Derrote 2 Pokémon consecutivos com Morpeko durante as ondas da Lusamine (100, 200 ou 300) no Vazio"
   },
   "CLEFABLE_GENGAR_QUEST": {
     "name": "Clefable e Gengar",
@@ -391,56 +391,56 @@
     "task": "Faça seu Golem ser atingido por movimentos do tipo Fogo 25 vezes"
   },
   "DEINO_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Deino",
-    "task": "Derrote 2 Pokémon do Ghetsis consecutivamente com Deino durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Deino",
+    "task": "Derrote 2 Pokémon do Ghetsis consecutivamente com Deino durante as ondas 100, 200, 300, 400 ou 500 no Vazio"
   },
   "GOLURK_DREAD_QUEST": {
     "name": "Pavor do Golurk",
-    "task": "Faça 8 dos seus Pokémon (exceto Golurk) desmaiarem enquanto tem Golurk no seu grupo no Modo Pesadelo"
+    "task": "Faça 8 dos seus Pokémon (exceto Golurk) desmaiarem enquanto tem Golurk no seu grupo no Vazio"
   },
   "DUSCLOPS_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Dusclops",
-    "task": "Derrote 2 Pokémon do Allister consecutivamente com Dusclops durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Dusclops",
+    "task": "Derrote 2 Pokémon do Allister consecutivamente com Dusclops durante as ondas 100, 200, 300, 400 ou 500 no Vazio"
   },
   "HARIYAMA_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Hariyama",
-    "task": "Derrote 2 Pokémon do Lysandre consecutivamente com Hariyama durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Hariyama",
+    "task": "Derrote 2 Pokémon do Lysandre consecutivamente com Hariyama durante as ondas 100, 200, 300, 400 ou 500 no Vazio"
   },
   "SHARPEDO_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Sharpedo",
-    "task": "Derrote 3 Pokémon do Archie consecutivamente com Sharpedo durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Sharpedo",
+    "task": "Derrote 3 Pokémon do Archie consecutivamente com Sharpedo durante as ondas 300, 400 ou 500 no Vazio"
   },
   "FARIGIRAF_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Farigiraf",
-    "task": "Derrote 2 Pokémon do Cyrus consecutivamente com Farigiraf durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Farigiraf",
+    "task": "Derrote 2 Pokémon do Cyrus consecutivamente com Farigiraf durante as ondas 100, 200, 300, 400 ou 500 no Vazio"
   },
   "KINGDRA_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Kingdra",
-    "task": "Derrote 2 Pokémon da Misty consecutivamente com Kingdra durante as ondas 100, 200, 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Kingdra",
+    "task": "Derrote 2 Pokémon da Misty consecutivamente com Kingdra durante as ondas 100, 200, 300, 400 ou 500 no Vazio"
   },
   "EXCADRILL_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Excadrill",
-    "task": "Derrote 3 Pokémon do Brock consecutivamente com Excadrill durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Excadrill",
+    "task": "Derrote 3 Pokémon do Brock consecutivamente com Excadrill durante as ondas 300, 400 ou 500 no Vazio"
   },
   "LANTURN_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Lanturn",
-    "task": "Derrote 3 Pokémon do Brock consecutivamente com Lanturn durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Lanturn",
+    "task": "Derrote 3 Pokémon do Brock consecutivamente com Lanturn durante as ondas 300, 400 ou 500 no Vazio"
   },
   "PIKACHU_ROBO_NIGHTMARE_QUEST": {
-    "name": "Pesadelo Robô do Pikachu",
-    "task": "Derrote 3 Pokémon do Lt. Surge consecutivamente com Pikachu durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio Robô do Pikachu",
+    "task": "Derrote 3 Pokémon do Lt. Surge consecutivamente com Pikachu durante as ondas 300, 400 ou 500 no Vazio"
   },
   "DODRIO_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Dodrio",
-    "task": "Derrote 3 Pokémon do Larry consecutivamente com Dodrio durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Dodrio",
+    "task": "Derrote 3 Pokémon do Larry consecutivamente com Dodrio durante as ondas 300, 400 ou 500 no Vazio"
   },
   "SUNFLORA_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Sunflora",
-    "task": "Derrote 3 Pokémon do Rose consecutivamente com Sunflora durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Sunflora",
+    "task": "Derrote 3 Pokémon do Rose consecutivamente com Sunflora durante as ondas 300, 400 ou 500 no Vazio"
   },
   "LUCARIO_NIGHTMARE_QUEST": {
-    "name": "Pesadelo do Lucario",
-    "task": "Derrote 3 Pokémon da Cynthia consecutivamente com Lucario durante as ondas 300, 400 ou 500 no Modo Pesadelo"
+    "name": "Vazio do Lucario",
+    "task": "Derrote 3 Pokémon da Cynthia consecutivamente com Lucario durante as ondas 300, 400 ou 500 no Vazio"
   },
   "NORMAL_STRENGTH": {
     "name": "Força Normal!",

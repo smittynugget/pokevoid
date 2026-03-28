@@ -3561,6 +3561,13 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     return true;
   }
 
+  private shouldUseIncompatibleFallback(node: SkillTreeNode): boolean {
+    const t = node.rewardData?.type;
+    return t === SkillTreeRewardType.POKEMON_ALT_BUILD
+      || t === SkillTreeRewardType.GLITCH_CHANGE
+      || t === SkillTreeRewardType.GLITCH_FORM_UNLOCK;
+  }
+
   private canPurchase(node: SkillTreeNode): boolean {
     const ast = this.config?.activeSkillTree; if (!ast) return false;
 
@@ -3576,7 +3583,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     if (!this.areNodeDependenciesMet(node)) return false;
 
     const prereq = this.evaluateNodePrerequisites(node);
-    if (!prereq.ok) return false;
+    if (!prereq.ok && !this.shouldUseIncompatibleFallback(node)) return false;
 
     if (isSkillTreeV2()) {
       const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
@@ -3635,7 +3642,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
 
     const prereq = this.evaluateNodePrerequisites(node);
-    if (!prereq.ok) {
+    if (!prereq.ok && !this.shouldUseIncompatibleFallback(node)) {
       if (prereq.messages.length) {
         requirements.push(...prereq.messages);
       } else {

@@ -4171,6 +4171,23 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
             const currentCount = this.getCurrentCount(scene);
 
             if (currentCount >= this.goalCount) {
+                if (!this.consoleCode && !this.stages?.length && this.questUnlockData.rewardType === RewardType.GAME_MODE) {
+                    if (!scene.gameData.checkQuestState(this.questUnlockData.questId, QuestState.COMPLETED)) {
+                        scene.gameData.gameStats.questsCompleted++;
+                        scene.gameData.setQuestState(
+                            this.questUnlockData.questId,
+                            QuestState.COMPLETED,
+                            this.questUnlockData
+                        );
+                        this.handleRewardPhase(scene, QuestUnlockPhase, [scene, this.questUnlockData, false]);
+                    } else if (!this.isActiveStageQuest()) {
+                        scene.gameData.permaModifiers.removeModifier(this as PersistentModifier);
+                        scene.updateModifiers(true);
+                        scene.ui.setMode(this.currentMode);
+                    }
+                    scene.ui.updatePermaModifierBar(scene.gameData.permaModifiers);
+                    return true;
+                }
                 this.completeQuest(scene);
             }
             scene.ui.updatePermaModifierBar(scene.gameData.permaModifiers);
@@ -4390,6 +4407,21 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
         } else {
             this.currentCount = 0;
         }
+    }
+
+    reconcileGoalMetGameModeQuest(scene: BattleScene): boolean {
+        if (this.consoleCode) return false;
+        if (this.stages?.length) return false;
+        if (this.questUnlockData.rewardType !== RewardType.GAME_MODE) return false;
+        if (scene.gameData.checkQuestState(this.questUnlockData.questId, QuestState.COMPLETED)) return false;
+        if (this.getCurrentCount(scene) < this.goalCount) return false;
+        scene.gameData.setQuestState(
+            this.questUnlockData.questId,
+            QuestState.COMPLETED,
+            this.questUnlockData
+        );
+        scene.gameData.permaModifiers.removeModifier(this as PersistentModifier);
+        return true;
     }
 
     private getCurrentCount(scene: BattleScene): number {

@@ -249,7 +249,7 @@
   },
   "TAUROS_DARK_WAVE_QUEST": {
     "name": "Tauros' Unlicht-Welle",
-    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team, das ein Tauros mit mindestens 1 Unlicht- und 1 Geist-Attacke enthält (es darf keine Normal-Attacken haben) im Albtraum-Modus"
+    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team, das ein Tauros mit mindestens 1 Unlicht- und 1 Geist-Attacke enthält (es darf keine Normal-Attacken haben) in der Leere"
   },
   "DITTO_SPECIAL_WIN_QUEST": {
     "name": "Dittos Spezial-Sieg",
@@ -261,7 +261,7 @@
   },
   "GRENINJA_YOKAI_WAVE_QUEST": {
     "name": "Quajutsus Yokai-Welle",
-    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team, das ein Quajutsu mit mindestens 1 Geist- und 1 Unlicht-Attacke enthält (es darf keine Wasser-Attacken haben) im Albtraum-Modus"
+    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team, das ein Quajutsu mit mindestens 1 Geist- und 1 Unlicht-Attacke enthält (es darf keine Wasser-Attacken haben) in der Leere"
   },
   "RAYQUAZA_SPECIAL_WIN_QUEST": {
     "name": "Rayquazas Spezial-Sieg",
@@ -273,51 +273,51 @@
   },
   "LICKITUNG_HYPER_WAVE_QUEST": {
     "name": "Schlurps Hyper-Welle",
-    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team, das ein Schlurp mit mindestens 1 Gift- und 1 Unlicht-Attacke enthält (es darf keine Normal-Attacken haben) im Albtraum-Modus"
+    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team, das ein Schlurp mit mindestens 1 Gift- und 1 Unlicht-Attacke enthält (es darf keine Normal-Attacken haben) in der Leere"
   },
   "MUK_RED_DEFEAT_QUEST": {
     "name": "Sleima vs. Rot",
     "task": "Besiege 3 von Rots Pokémon mit Sleima"
   },
   "CHARMANDER_NIGHTMARE_WIN_QUEST": {
-    "name": "Glumandas Albtraum-Sieg",
-    "task": "Gewinne einen Albtraum-Durchlauf mit einem Determizard (Glitch-Form Glumanda) in deinem Team"
+    "name": "Glumandas Leere-Sieg",
+    "task": "Gewinne einen Leere-Durchlauf mit einem Determizard (Glitch-Form Glumanda) in deinem Team"
   },
   "GASTLY_NIGHTMARE_WAVE_QUEST": {
-    "name": "Nebulaks Albtraum-Welle",
-    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team von 3 oder weniger Pokémon, das Nebulak enthält, natürlich im Albtraum-Modus"
+    "name": "Nebulaks Leere-Welle",
+    "task": "Überlebe 50 aufeinanderfolgende Wellen nach Welle 299 mit einem Team von 3 oder weniger Pokémon, das Nebulak enthält, natürlich in der Leere"
   },
   "PIKACHU_PLUS_ULTRA_QUEST": {
     "name": "Pikachu Plus Ultra",
-    "task": "Gewinne einen Albtraum-Durchlauf mit Pikachu in deinem Team"
+    "task": "Gewinne einen Leere-Durchlauf mit Pikachu in deinem Team"
   },
   "CHARIZARD_HELLFLAME_QUEST": {
     "name": "Gluraks Höllenfeuer",
-    "task": "Setze 13 Mal Lohekanonade mit Glurak im Albtraum-Modus ein"
+    "task": "Setze 13 Mal Lohekanonade mit Glurak in der Leere ein"
   },
   "EEVEE_NIGHTMARE_QUEST": {
-    "name": "Evolis Albtraum",
-    "task": "Besiege 2 von Blaus Pokémon nacheinander mit Evoli während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Evolis Leere",
+    "task": "Besiege 2 von Blaus Pokémon nacheinander mit Evoli während der Wellen 100, 200, 300, 400 oder 500 in der Leere"
   },
   "SNORLAX_NIGHTMARE_QUEST": {
-    "name": "Relaxos Albtraum",
-    "task": "Besiege 2 von Rots Pokémon nacheinander mit Relaxo während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Relaxos Leere",
+    "task": "Besiege 2 von Rots Pokémon nacheinander mit Relaxo während der Wellen 100, 200, 300, 400 oder 500 in der Leere"
   },
   "MEWTWO_NIGHTMARE_QUEST": {
-    "name": "Mewtus Albtraum",
-    "task": "Besiege 3 von Giovannis Pokémon nacheinander mit Mewtu während der Wellen 400 oder 500 im Albtraum-Modus"
+    "name": "Mewtus Leere",
+    "task": "Besiege 3 von Giovannis Pokémon nacheinander mit Mewtu während der Wellen 400 oder 500 in der Leere"
   },
   "TYRANITAR_NIGHTMARE_QUEST": {
-    "name": "Despotars Albtraum",
-    "task": "Besiege 2 von Maxies Pokémon nacheinander mit Despotar während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Despotars Leere",
+    "task": "Besiege 2 von Maxies Pokémon nacheinander mit Despotar während der Wellen 300, 400 oder 500 in der Leere"
   },
   "OCTILLERY_NIGHTMARE_QUEST": {
-    "name": "Octillerys Albtraum",
-    "task": "Besiege 2 von Wallaces Pokémon nacheinander mit Octillery während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Octillerys Leere",
+    "task": "Besiege 2 von Wallaces Pokémon nacheinander mit Octillery während der Wellen 100, 200, 300, 400 oder 500 in der Leere"
   },
   "REGIROCK_NIGHTMARE_QUEST": {
-    "name": "Regirocks Albtraum",
-    "task": "Besiege 2 von Troys Pokémon nacheinander mit Regirock während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Regirocks Leere",
+    "task": "Besiege 2 von Troys Pokémon nacheinander mit Regirock während der Wellen 300, 400 oder 500 in der Leere"
   },
   "EEVEE_GHOST_QUEST": {
     "name": "Evolis Geister",
@@ -352,12 +352,12 @@
     "task": "Überlebe die letzten 30 Wellen nur mit Tengulist in deinem Team"
   },
   "HYPNO_NIGHTMARE_QUEST": {
-    "name": "Hypnos Albtraum",
-    "task": "Besiege 2 aufeinanderfolgende Pokémon mit Hypno während Sabrinas Wellen (100, 200, 300, 400 oder 500) im Albtraum-Modus"
+    "name": "Hypnos Leere",
+    "task": "Besiege 2 aufeinanderfolgende Pokémon mit Hypno während Sabrinas Wellen (100, 200, 300, 400 oder 500) in der Leere"
   },
   "MAMOSWINE_NIGHTMARE_QUEST": {
-    "name": "Mamutels Albtraum",
-    "task": "Besiege 50 Rivalen-Pokémon mit Mamutel während der Wellen 50-100, 150-200, 250-300, 350-400 oder 450-500 im Albtraum-Modus"
+    "name": "Mamutels Leere",
+    "task": "Besiege 50 Rivalen-Pokémon mit Mamutel während der Wellen 50-100, 150-200, 250-300, 350-400 oder 450-500 in der Leere"
   },
   "STARTER_CATCH_QUEST": {
     "name": "Starter-Fang-Quest",
@@ -375,8 +375,8 @@
     "rewardText": "Schaltet den Nuzlocke-Modus frei!"
   },
   "MORPEKO_NIGHTMARE_QUEST": {
-    "name": "Morpekos Albtraum",
-    "task": "Besiege 2 aufeinanderfolgende Pokémon mit Morpeko während Lusamins Wellen (100, 200 oder 300) im Albtraum-Modus"
+    "name": "Morpekos Leere",
+    "task": "Besiege 2 aufeinanderfolgende Pokémon mit Morpeko während Lusamins Wellen (100, 200 oder 300) in der Leere"
   },
   "CLEFABLE_GENGAR_QUEST": {
     "name": "Piepi & Gengar",
@@ -391,56 +391,56 @@
     "task": "Lass dein Golem 25 Mal von Feuer-Attacken getroffen werden"
   },
   "DEINO_NIGHTMARE_QUEST": {
-    "name": "Kapunos Albtraum",
-    "task": "Besiege 2 von G-Cis' Pokémon nacheinander mit Kapuno während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Kapunos Leere",
+    "task": "Besiege 2 von G-Cis' Pokémon nacheinander mit Kapuno während der Wellen 100, 200, 300, 400 oder 500 in der Leere"
   },
   "GOLURK_DREAD_QUEST": {
     "name": "Golurkus Schrecken",
-    "task": "Lass 8 deiner Pokémon (außer Golurk) besiegt werden, während Golurk in deinem Team ist, im Albtraum-Modus"
+    "task": "Lass 8 deiner Pokémon (außer Golurk) besiegt werden, während Golurk in deinem Team ist, in der Leere"
   },
   "DUSCLOPS_NIGHTMARE_QUEST": {
-    "name": "Zwirrklops' Albtraum",
-    "task": "Besiege 2 von Allisters Pokémon nacheinander mit Zwirrklops während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Zwirrklops' Leere",
+    "task": "Besiege 2 von Allisters Pokémon nacheinander mit Zwirrklops während der Wellen 100, 200, 300, 400 oder 500 in der Leere"
   },
   "HARIYAMA_NIGHTMARE_QUEST": {
-    "name": "Hariyamas Albtraum",
-    "task": "Besiege 2 von Lysandres Pokémon nacheinander mit Hariyama während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Hariyamas Leere",
+    "task": "Besiege 2 von Lysandres Pokémon nacheinander mit Hariyama während der Wellen 100, 200, 300, 400 oder 500 in der Leere"
   },
   "SHARPEDO_NIGHTMARE_QUEST": {
-    "name": "Tohaidos Albtraum",
-    "task": "Besiege 3 von Archies Pokémon nacheinander mit Tohaido während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Tohaidos Leere",
+    "task": "Besiege 3 von Archies Pokémon nacheinander mit Tohaido während der Wellen 300, 400 oder 500 in der Leere"
   },
   "FARIGIRAF_NIGHTMARE_QUEST": {
-    "name": "Farigiraf's Albtraum",
-    "task": "Besiege 2 von Cyrus' Pokémon nacheinander mit Farigiraf während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Farigiraf's Leere",
+    "task": "Besiege 2 von Cyrus' Pokémon nacheinander mit Farigiraf während der Wellen 100, 200, 300, 400 oder 500 in der Leere"
   },
   "KINGDRA_NIGHTMARE_QUEST": {
-    "name": "Kingdras Albtraum",
-    "task": "Besiege 2 von Mistys Pokémon nacheinander mit Kingdra während der Wellen 100, 200, 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Kingdras Leere",
+    "task": "Besiege 2 von Mistys Pokémon nacheinander mit Kingdra während der Wellen 100, 200, 300, 400 oder 500 in der Leere"
   },
   "EXCADRILL_NIGHTMARE_QUEST": {
-    "name": "Stalobors Albtraum",
-    "task": "Besiege 3 von Rockos Pokémon nacheinander mit Stalobor während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Stalobors Leere",
+    "task": "Besiege 3 von Rockos Pokémon nacheinander mit Stalobor während der Wellen 300, 400 oder 500 in der Leere"
   },
   "LANTURN_NIGHTMARE_QUEST": {
-    "name": "Lanturns Albtraum",
-    "task": "Besiege 3 von Rockos Pokémon nacheinander mit Lanturn während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Lanturns Leere",
+    "task": "Besiege 3 von Rockos Pokémon nacheinander mit Lanturn während der Wellen 300, 400 oder 500 in der Leere"
   },
   "PIKACHU_ROBO_NIGHTMARE_QUEST": {
-    "name": "Robo-Pikachus Albtraum",
-    "task": "Besiege 3 von Major Bobs Pokémon nacheinander mit Pikachu während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Robo-Pikachus Leere",
+    "task": "Besiege 3 von Major Bobs Pokémon nacheinander mit Pikachu während der Wellen 300, 400 oder 500 in der Leere"
   },
   "DODRIO_NIGHTMARE_QUEST": {
-    "name": "Dodris Albtraum",
-    "task": "Besiege 3 von Larrys Pokémon nacheinander mit Dodri während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Dodris Leere",
+    "task": "Besiege 3 von Larrys Pokémon nacheinander mit Dodri während der Wellen 300, 400 oder 500 in der Leere"
   },
   "SUNFLORA_NIGHTMARE_QUEST": {
-    "name": "Sonnfloras Albtraum",
-    "task": "Besiege 3 von Roses Pokémon nacheinander mit Sonnflora während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Sonnfloras Leere",
+    "task": "Besiege 3 von Roses Pokémon nacheinander mit Sonnflora während der Wellen 300, 400 oder 500 in der Leere"
   },
   "LUCARIO_NIGHTMARE_QUEST": {
-    "name": "Lucarios Albtraum",
-    "task": "Besiege 3 von Cynthias Pokémon nacheinander mit Lucario während der Wellen 300, 400 oder 500 im Albtraum-Modus"
+    "name": "Lucarios Leere",
+    "task": "Besiege 3 von Cynthias Pokémon nacheinander mit Lucario während der Wellen 300, 400 oder 500 in der Leere"
   },
   "NORMAL_STRENGTH": {
     "name": "Normal-Stärke!",

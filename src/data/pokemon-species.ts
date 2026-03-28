@@ -784,6 +784,9 @@ export default class PokemonSpecies extends PokemonSpeciesForm implements Locali
     getName(formIndex?: integer): string {
         if (formIndex !== undefined && this.forms.length) {
             const form = this.forms[formIndex];
+            if (!form) {
+                return this.name;
+            }
             let key: string | null;
             if (this.isGlitchForm(form.formKey)) {
                 const systemName = getModFormSystemName(this.speciesId, form.formName);

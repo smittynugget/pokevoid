@@ -1553,9 +1553,11 @@ export class TitlePhase extends Phase {
                 case "CHAOS_JOURNEY":
                     return i18next.t("menu:unlockHintChaosJourney");
                 case "CHAOS_VOID":
+                    return i18next.t("menu:unlockHintChaosVoid");
                 case "CHAOS_ROGUE_VOID":
+                    return i18next.t("menu:unlockHintChaosRogueVoid");
                 case "CHAOS_INFINITE":
-                    return i18next.t("menu:unlockHintDraftMode");
+                    return i18next.t("menu:unlockHintChaosInfinite");
                 case "CHAOS_INFINITE_ROGUE":
                     return i18next.t("menu:unlockHintChaosInfiniteRogue");
                 default:

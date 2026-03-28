@@ -249,7 +249,7 @@
   },
   "TAUROS_DARK_WAVE_QUEST": {
     "name": "Vagues Ténèbres de Tauros",
-    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Tauros avec au moins 1 attaque Ténèbres et 1 attaque Spectre (il ne peut pas avoir d'attaques de type Normal) en mode Cauchemar"
+    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Tauros avec au moins 1 attaque Ténèbres et 1 attaque Spectre (il ne peut pas avoir d'attaques de type Normal) dans le Néant"
   },
   "DITTO_SPECIAL_WIN_QUEST": {
     "name": "Victoire Spéciale de Métamorph",
@@ -261,7 +261,7 @@
   },
   "GRENINJA_YOKAI_WAVE_QUEST": {
     "name": "Vagues Yokai d'Amphinobi",
-    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Amphinobi avec au moins 1 attaque Spectre et 1 attaque Ténèbres (il ne peut pas avoir d'attaques de type Eau) en mode Cauchemar"
+    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Amphinobi avec au moins 1 attaque Spectre et 1 attaque Ténèbres (il ne peut pas avoir d'attaques de type Eau) dans le Néant"
   },
   "RAYQUAZA_SPECIAL_WIN_QUEST": {
     "name": "Victoire Spéciale de Rayquaza",
@@ -273,51 +273,51 @@
   },
   "LICKITUNG_HYPER_WAVE_QUEST": {
     "name": "Vagues Hyper d'Excelangue",
-    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Excelangue avec au moins 1 attaque Poison et 1 attaque Ténèbres (il ne peut pas avoir d'attaques de type Normal) en mode Cauchemar"
+    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Excelangue avec au moins 1 attaque Poison et 1 attaque Ténèbres (il ne peut pas avoir d'attaques de type Normal) dans le Néant"
   },
   "MUK_RED_DEFEAT_QUEST": {
     "name": "Grotadmorv contre Red",
     "task": "Vaincre 3 Pokémon de Red avec Grotadmorv"
   },
   "CHARMANDER_NIGHTMARE_WIN_QUEST": {
-    "name": "Victoire Cauchemar de Salamèche",
-    "task": "Gagner une partie en mode Cauchemar avec un Determizard (Salamèche Forme Glitch) dans votre équipe"
+    "name": "Victoire Néant de Salamèche",
+    "task": "Gagner une partie dans le Néant avec un Determizard (Salamèche Forme Glitch) dans votre équipe"
   },
   "GASTLY_NIGHTMARE_WAVE_QUEST": {
-    "name": "Vagues Cauchemar de Fantominus",
-    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Fantominus dans une équipe de 3 Pokémon ou moins, en mode Cauchemar bien sûr"
+    "name": "Vagues Néant de Fantominus",
+    "task": "Survivre à 50 vagues consécutives après la vague 299 avec une équipe incluant un Fantominus dans une équipe de 3 Pokémon ou moins, dans le Néant bien sûr"
   },
   "PIKACHU_PLUS_ULTRA_QUEST": {
     "name": "Plus Ultra de Pikachu",
-    "task": "Gagner une partie en mode Cauchemar avec Pikachu dans votre équipe"
+    "task": "Gagner une partie dans le Néant avec Pikachu dans votre équipe"
   },
   "CHARIZARD_HELLFLAME_QUEST": {
     "name": "Flamme Infernale de Dracaufeu",
-    "task": "Utiliser Rafale Feu 13 fois avec Dracaufeu en mode Cauchemar"
+    "task": "Utiliser Rafale Feu 13 fois avec Dracaufeu dans le Néant"
   },
   "EEVEE_NIGHTMARE_QUEST": {
-    "name": "Cauchemar d'Évoli",
-    "task": "Vaincre 2 Pokémon de Blue consécutivement avec Évoli pendant les vagues 100, 200, 300, 400 ou 500, en mode Cauchemar"
+    "name": "Néant d'Évoli",
+    "task": "Vaincre 2 Pokémon de Blue consécutivement avec Évoli pendant les vagues 100, 200, 300, 400 ou 500, dans le Néant"
   },
   "SNORLAX_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Ronflex",
-    "task": "Vaincre 2 Pokémon de Red consécutivement avec Ronflex pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant de Ronflex",
+    "task": "Vaincre 2 Pokémon de Red consécutivement avec Ronflex pendant les vagues 100, 200, 300, 400 ou 500 dans le Néant"
   },
   "MEWTWO_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Mewtwo",
-    "task": "Vaincre 3 Pokémon de Giovanni consécutivement avec Mewtwo pendant les vagues 400 ou 500 en mode Cauchemar"
+    "name": "Néant de Mewtwo",
+    "task": "Vaincre 3 Pokémon de Giovanni consécutivement avec Mewtwo pendant les vagues 400 ou 500 dans le Néant"
   },
   "TYRANITAR_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Tyranocif",
-    "task": "Vaincre 2 Pokémon de Maxie consécutivement avec Tyranocif pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant de Tyranocif",
+    "task": "Vaincre 2 Pokémon de Maxie consécutivement avec Tyranocif pendant les vagues 300, 400 ou 500 dans le Néant"
   },
   "OCTILLERY_NIGHTMARE_QUEST": {
-    "name": "Cauchemar d'Octillery",
-    "task": "Vaincre 2 Pokémon de Marc consécutivement avec Octillery pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant d'Octillery",
+    "task": "Vaincre 2 Pokémon de Marc consécutivement avec Octillery pendant les vagues 100, 200, 300, 400 ou 500 dans le Néant"
   },
   "REGIROCK_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Regirock",
-    "task": "Vaincre 2 Pokémon de Pierre consécutivement avec Regirock pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant de Regirock",
+    "task": "Vaincre 2 Pokémon de Pierre consécutivement avec Regirock pendant les vagues 300, 400 ou 500 dans le Néant"
   },
   "EEVEE_GHOST_QUEST": {
     "name": "Évoli Spectre",
@@ -352,12 +352,12 @@
     "task": "Survivre aux 30 dernières vagues avec uniquement Tengalice dans votre équipe"
   },
   "HYPNO_NIGHTMARE_QUEST": {
-    "name": "Cauchemar d'Hypnomade",
-    "task": "Vaincre 2 Pokémon consécutifs avec Hypnomade pendant les vagues de Morgane (100, 200, 300, 400 ou 500) en mode Cauchemar"
+    "name": "Néant d'Hypnomade",
+    "task": "Vaincre 2 Pokémon consécutifs avec Hypnomade pendant les vagues de Morgane (100, 200, 300, 400 ou 500) dans le Néant"
   },
   "MAMOSWINE_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Mammochon",
-    "task": "Vaincre 50 Pokémon de rival avec Mammochon pendant les vagues 50-100, 150-200, 250-300, 350-400 ou 450-500 en mode Cauchemar"
+    "name": "Néant de Mammochon",
+    "task": "Vaincre 50 Pokémon de rival avec Mammochon pendant les vagues 50-100, 150-200, 250-300, 350-400 ou 450-500 dans le Néant"
   },
   "STARTER_CATCH_QUEST": {
     "name": "Quête de Capture des Starters",
@@ -375,8 +375,8 @@
     "rewardText": "Débloque le Mode Nuzlocke !"
   },
   "MORPEKO_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Morpeko",
-    "task": "Vaincre 2 Pokémon consécutifs avec Morpeko pendant les vagues de Lusamine (100, 200 ou 300) en mode Cauchemar"
+    "name": "Néant de Morpeko",
+    "task": "Vaincre 2 Pokémon consécutifs avec Morpeko pendant les vagues de Lusamine (100, 200 ou 300) dans le Néant"
   },
   "CLEFABLE_GENGAR_QUEST": {
     "name": "Mélodelfe et Ectoplasma",
@@ -391,56 +391,56 @@
     "task": "Faire subir 25 attaques de type Feu à votre Golem"
   },
   "DEINO_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Solochi",
-    "task": "Vaincre 2 Pokémon de Ghetis consécutivement avec Solochi pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant de Solochi",
+    "task": "Vaincre 2 Pokémon de Ghetis consécutivement avec Solochi pendant les vagues 100, 200, 300, 400 ou 500 dans le Néant"
   },
   "GOLURK_DREAD_QUEST": {
     "name": "Terreur de Golemastoc",
-    "task": "Faire tomber K.O. 8 de vos Pokémon (autres que Golemastoc) en ayant Golemastoc dans votre équipe en mode Cauchemar"
+    "task": "Faire tomber K.O. 8 de vos Pokémon (autres que Golemastoc) en ayant Golemastoc dans votre équipe dans le Néant"
   },
   "DUSCLOPS_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Téraclope",
-    "task": "Vaincre 2 Pokémon d'Allister consécutivement avec Téraclope pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant de Téraclope",
+    "task": "Vaincre 2 Pokémon d'Allister consécutivement avec Téraclope pendant les vagues 100, 200, 300, 400 ou 500 dans le Néant"
   },
   "HARIYAMA_NIGHTMARE_QUEST": {
-    "name": "Cauchemar d'Hariyama",
-    "task": "Vaincre 2 Pokémon de Lysandre consécutivement avec Hariyama pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant d'Hariyama",
+    "task": "Vaincre 2 Pokémon de Lysandre consécutivement avec Hariyama pendant les vagues 100, 200, 300, 400 ou 500 dans le Néant"
   },
   "SHARPEDO_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Sharpedo",
-    "task": "Vaincre 3 Pokémon d'Arthur consécutivement avec Sharpedo pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant de Sharpedo",
+    "task": "Vaincre 3 Pokémon d'Arthur consécutivement avec Sharpedo pendant les vagues 300, 400 ou 500 dans le Néant"
   },
   "FARIGIRAF_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Farigiraf",
-    "task": "Vaincre 2 Pokémon de Cyrus consécutivement avec Farigiraf pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant de Farigiraf",
+    "task": "Vaincre 2 Pokémon de Cyrus consécutivement avec Farigiraf pendant les vagues 100, 200, 300, 400 ou 500 dans le Néant"
   },
   "KINGDRA_NIGHTMARE_QUEST": {
-    "name": "Cauchemar d'Hyporoi",
-    "task": "Vaincre 2 Pokémon d'Ondine consécutivement avec Hyporoi pendant les vagues 100, 200, 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant d'Hyporoi",
+    "task": "Vaincre 2 Pokémon d'Ondine consécutivement avec Hyporoi pendant les vagues 100, 200, 300, 400 ou 500 dans le Néant"
   },
   "EXCADRILL_NIGHTMARE_QUEST": {
-    "name": "Cauchemar d'Excavarenne",
-    "task": "Vaincre 3 Pokémon de Pierre consécutivement avec Excavarenne pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant d'Excavarenne",
+    "task": "Vaincre 3 Pokémon de Pierre consécutivement avec Excavarenne pendant les vagues 300, 400 ou 500 dans le Néant"
   },
   "LANTURN_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Lanturn",
-    "task": "Vaincre 3 Pokémon de Pierre consécutivement avec Lanturn pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant de Lanturn",
+    "task": "Vaincre 3 Pokémon de Pierre consécutivement avec Lanturn pendant les vagues 300, 400 ou 500 dans le Néant"
   },
   "PIKACHU_ROBO_NIGHTMARE_QUEST": {
-    "name": "Cauchemar Robo de Pikachu",
-    "task": "Vaincre 3 Pokémon du Major Bob consécutivement avec Pikachu pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant Robo de Pikachu",
+    "task": "Vaincre 3 Pokémon du Major Bob consécutivement avec Pikachu pendant les vagues 300, 400 ou 500 dans le Néant"
   },
   "DODRIO_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Dodrio",
-    "task": "Vaincre 3 Pokémon de Larry consécutivement avec Dodrio pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant de Dodrio",
+    "task": "Vaincre 3 Pokémon de Larry consécutivement avec Dodrio pendant les vagues 300, 400 ou 500 dans le Néant"
   },
   "SUNFLORA_NIGHTMARE_QUEST": {
-    "name": "Cauchemar d'Héliatronc",
-    "task": "Vaincre 3 Pokémon de Rose consécutivement avec Héliatronc pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant d'Héliatronc",
+    "task": "Vaincre 3 Pokémon de Rose consécutivement avec Héliatronc pendant les vagues 300, 400 ou 500 dans le Néant"
   },
   "LUCARIO_NIGHTMARE_QUEST": {
-    "name": "Cauchemar de Lucario",
-    "task": "Vaincre 3 Pokémon de Cynthia consécutivement avec Lucario pendant les vagues 300, 400 ou 500 en mode Cauchemar"
+    "name": "Néant de Lucario",
+    "task": "Vaincre 3 Pokémon de Cynthia consécutivement avec Lucario pendant les vagues 300, 400 ou 500 dans le Néant"
   },
   "NORMAL_STRENGTH": {
     "name": "Force Normale !",

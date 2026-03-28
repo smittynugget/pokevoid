@@ -143,7 +143,9 @@ export class PermaModifiers {
                     }
                 }
                 else if (quest.questId in QuestUnlockables) {
-                    scene.gameData.setQuestState(quest.questId, QuestState.ACTIVE, quest);
+                    if (!scene.gameData.checkQuestState(quest.questId, QuestState.COMPLETED)) {
+                        scene.gameData.setQuestState(quest.questId, QuestState.ACTIVE, quest);
+                    }
                 }
             }
         }

@@ -7,7 +7,7 @@ import { SkillTreeRarity } from "#app/system/skill-tree-data";
 import type { ModifierType } from "#app/modifier/modifier-type";
 import type { PersistentModifier } from "#app/modifier/modifier";
 import { PermaRunQuestModifier } from "#app/modifier/modifier";
-import { PermaPartyAbilityModifierType, TeraAbilityModifierType, TrainerBondAbilityModifierType } from "#app/modifier/modifier-type";
+import { PermaPartyAbilityModifierType, PokemonAltBuildModifierType, TeraAbilityModifierType, TrainerBondAbilityModifierType } from "#app/modifier/modifier-type";
 import { getPermaModifierRarity } from "#app/phases/modifier-reward-phase";
 import { Button } from "#enums/buttons";
 import { Device } from "#enums/devices";
@@ -86,6 +86,7 @@ export class ModifierTooltipUtils {
       const subtitle = this.getRarityText(rarity);
       const isPartyAbility = modifier.type instanceof PermaPartyAbilityModifierType;
       const useModifierTypeInfo = isPartyAbility
+        || modifier.type instanceof PokemonAltBuildModifierType
         || modifier.type instanceof TeraAbilityModifierType
         || modifier.type instanceof TrainerBondAbilityModifierType;
       const title = useModifierTypeInfo ? String(modifier.type.name) : String(meta.title);

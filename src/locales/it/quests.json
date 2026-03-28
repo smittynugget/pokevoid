@@ -279,7 +279,7 @@
   },
   "TAUROS_DARK_WAVE_QUEST": {
     "name": "Ondata Buio di Tauros",
-    "task": "Sopravvivi a 50 ondate consecutive dopo l'ondata 299 con una squadra che include un Tauros con almeno 1 mossa Buio e 1 mossa Spettro (non può avere mosse di tipo Normale) in modalità Incubo."
+    "task": "Sopravvivi a 50 ondate consecutive dopo l'ondata 299 con una squadra che include un Tauros con almeno 1 mossa Buio e 1 mossa Spettro (non può avere mosse di tipo Normale) nel Vuoto."
   },
   "DITTO_SPECIAL_WIN_QUEST": {
     "name": "Vittoria Speciale di Ditto",
@@ -291,7 +291,7 @@
   },
   "GRENINJA_YOKAI_WAVE_QUEST": {
     "name": "Ondata Yokai di Greninja",
-    "task": "Sopravvivi a 50 ondate consecutive dopo l'ondata 299 con una squadra che include un Greninja con almeno 1 mossa Spettro e 1 mossa Buio (non può avere mosse di tipo Acqua) in modalità Incubo."
+    "task": "Sopravvivi a 50 ondate consecutive dopo l'ondata 299 con una squadra che include un Greninja con almeno 1 mossa Spettro e 1 mossa Buio (non può avere mosse di tipo Acqua) nel Vuoto."
   },
   "RAYQUAZA_SPECIAL_WIN_QUEST": {
     "name": "Vittoria Speciale di Rayquaza",
@@ -303,51 +303,51 @@
   },
   "LICKITUNG_HYPER_WAVE_QUEST": {
     "name": "Ondata Hyper di Lickitung",
-    "task": "Sopravvivi a 50 ondate consecutive dopo l'ondata 299 con una squadra che include un Lickitung con almeno 1 mossa Veleno e 1 mossa Buio (non può avere mosse di tipo Normale) in modalità Incubo."
+    "task": "Sopravvivi a 50 ondate consecutive dopo l'ondata 299 con una squadra che include un Lickitung con almeno 1 mossa Veleno e 1 mossa Buio (non può avere mosse di tipo Normale) nel Vuoto."
   },
   "MUK_RED_DEFEAT_QUEST": {
     "name": "Sconfitta Red di Muk",
     "task": "Sconfiggi 3 Pokemon di Red con Muk"
   },
   "CHARMANDER_NIGHTMARE_WIN_QUEST": {
-    "name": "Vittoria Incubo di Charmander",
-    "task": "Vinci una run in modalità Incubo con un Determizard (Charmander Forma Glitch) nella tua squadra"
+    "name": "Vittoria Vuoto di Charmander",
+    "task": "Vinci una run nel Vuoto con un Determizard (Charmander Forma Glitch) nella tua squadra"
   },
   "GASTLY_NIGHTMARE_WAVE_QUEST": {
-    "name": "Ondata Incubo di Gastly",
-    "task": "Sopravvivi a 50 ondate consecutive dopo l'ondata 299 con una squadra che include un Gastly in una squadra di 3 o meno Pokemon, ovviamente in modalità Incubo."
+    "name": "Ondata Vuoto di Gastly",
+    "task": "Sopravvivi a 50 ondate consecutive dopo l'ondata 299 con una squadra che include un Gastly in una squadra di 3 o meno Pokemon, ovviamente nel Vuoto."
   },
   "PIKACHU_PLUS_ULTRA_QUEST": {
     "name": "Plus Ultra di Pikachu",
-    "task": "Vinci una run in modalità Incubo con Pikachu nella tua squadra"
+    "task": "Vinci una run nel Vuoto con Pikachu nella tua squadra"
   },
   "CHARIZARD_HELLFLAME_QUEST": {
     "name": "Fiamme Infernali di Charizard",
-    "task": "Usa Incrofiamma 13 volte con Charizard in modalità Incubo"
+    "task": "Usa Incrofiamma 13 volte con Charizard nel Vuoto"
   },
   "EEVEE_NIGHTMARE_QUEST": {
-    "name": "Incubo di Eevee",
-    "task": "Sconfiggi 2 Pokemon di Blue consecutivamente con Eevee durante le ondate 100, 200, 300, 400 o 500, in modalità Incubo."
+    "name": "Vuoto di Eevee",
+    "task": "Sconfiggi 2 Pokemon di Blue consecutivamente con Eevee durante le ondate 100, 200, 300, 400 o 500, nel Vuoto."
   },
   "SNORLAX_NIGHTMARE_QUEST": {
-    "name": "Incubo di Snorlax",
-    "task": "Sconfiggi 2 Pokemon di Red consecutivamente con Snorlax durante le ondate 100, 200, 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Snorlax",
+    "task": "Sconfiggi 2 Pokemon di Red consecutivamente con Snorlax durante le ondate 100, 200, 300, 400 o 500 nel Vuoto"
   },
   "MEWTWO_NIGHTMARE_QUEST": {
-    "name": "Incubo di Mewtwo",
-    "task": "Sconfiggi 3 Pokemon di Giovanni consecutivamente con Mewtwo durante le ondate 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Mewtwo",
+    "task": "Sconfiggi 3 Pokemon di Giovanni consecutivamente con Mewtwo durante le ondate 400 o 500 nel Vuoto"
   },
   "TYRANITAR_NIGHTMARE_QUEST": {
-    "name": "Incubo di Tyranitar",
-    "task": "Sconfiggi 2 Pokemon di Maxie consecutivamente con Tyranitar durante le ondate 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Tyranitar",
+    "task": "Sconfiggi 2 Pokemon di Maxie consecutivamente con Tyranitar durante le ondate 300, 400 o 500 nel Vuoto"
   },
   "OCTILLERY_NIGHTMARE_QUEST": {
-    "name": "Incubo di Octillery",
-    "task": "Sconfiggi 2 Pokemon di Wallace consecutivamente con Octillery durante le ondate 100, 200, 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Octillery",
+    "task": "Sconfiggi 2 Pokemon di Wallace consecutivamente con Octillery durante le ondate 100, 200, 300, 400 o 500 nel Vuoto"
   },
   "REGIROCK_NIGHTMARE_QUEST": {
-    "name": "Incubo di Regirock",
-    "task": "Sconfiggi 2 Pokemon di Steven consecutivamente con Regirock durante le ondate 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Regirock",
+    "task": "Sconfiggi 2 Pokemon di Steven consecutivamente con Regirock durante le ondate 300, 400 o 500 nel Vuoto"
   },
   "EEVEE_GHOST_QUEST": {
     "name": "Eevee Spettro",
@@ -382,12 +382,12 @@
     "task": "Sopravvivi alle ultime 30 ondate con solo Shiftry nella tua squadra"
   },
   "HYPNO_NIGHTMARE_QUEST": {
-    "name": "Incubo di Hypno",
-    "task": "Sconfiggi 2 Pokemon consecutivi con Hypno durante le ondate di Sabrina (100, 200, 300, 400 o 500) in modalità Incubo"
+    "name": "Vuoto di Hypno",
+    "task": "Sconfiggi 2 Pokemon consecutivi con Hypno durante le ondate di Sabrina (100, 200, 300, 400 o 500) nel Vuoto"
   },
   "MAMOSWINE_NIGHTMARE_QUEST": {
-    "name": "Incubo di Mamoswine",
-    "task": "Sconfiggi 50 Pokemon rivali con Mamoswine durante le ondate 50-100, 150-200, 250-300, 350-400 o 450-500 in modalità Incubo"
+    "name": "Vuoto di Mamoswine",
+    "task": "Sconfiggi 50 Pokemon rivali con Mamoswine durante le ondate 50-100, 150-200, 250-300, 350-400 o 450-500 nel Vuoto"
   },
   "STARTER_CATCH_QUEST": {
     "name": "Missione Cattura Starter",
@@ -405,8 +405,8 @@
     "rewardText": "Sblocca la Modalità Nuzlocke!"
   },
   "MORPEKO_NIGHTMARE_QUEST": {
-    "name": "Incubo di Morpeko",
-    "task": "Sconfiggi 2 Pokemon consecutivi con Morpeko durante le ondate di Lusamine (100, 200 o 300) in modalità Incubo"
+    "name": "Vuoto di Morpeko",
+    "task": "Sconfiggi 2 Pokemon consecutivi con Morpeko durante le ondate di Lusamine (100, 200 o 300) nel Vuoto"
   },
   "CLEFABLE_GENGAR_QUEST": {
     "name": "Clefable Gengar",
@@ -421,56 +421,56 @@
     "task": "Fai colpire il tuo Golem con mosse di tipo Fuoco 25 volte"
   },
   "DEINO_NIGHTMARE_QUEST": {
-    "name": "Incubo di Deino",
-    "task": "Sconfiggi 2 Pokemon di Ghetsis consecutivamente con Deino durante le ondate 100, 200, 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Deino",
+    "task": "Sconfiggi 2 Pokemon di Ghetsis consecutivamente con Deino durante le ondate 100, 200, 300, 400 o 500 nel Vuoto"
   },
   "GOLURK_DREAD_QUEST": {
     "name": "Terrore di Golurk",
-    "task": "Fai svenire 8 dei tuoi Pokemon (escluso Golurk) mentre hai Golurk nella tua squadra in modalità Incubo"
+    "task": "Fai svenire 8 dei tuoi Pokemon (escluso Golurk) mentre hai Golurk nella tua squadra nel Vuoto"
   },
   "DUSCLOPS_NIGHTMARE_QUEST": {
-    "name": "Incubo di Dusclops",
-    "task": "Sconfiggi 2 Pokemon di Onion consecutivamente con Dusclops durante le ondate 100, 200, 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Dusclops",
+    "task": "Sconfiggi 2 Pokemon di Onion consecutivamente con Dusclops durante le ondate 100, 200, 300, 400 o 500 nel Vuoto"
   },
   "HARIYAMA_NIGHTMARE_QUEST": {
-    "name": "Incubo di Hariyama",
-    "task": "Sconfiggi 2 Pokemon di Lysandre consecutivamente con Hariyama durante le ondate 100, 200, 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Hariyama",
+    "task": "Sconfiggi 2 Pokemon di Lysandre consecutivamente con Hariyama durante le ondate 100, 200, 300, 400 o 500 nel Vuoto"
   },
   "SHARPEDO_NIGHTMARE_QUEST": {
-    "name": "Incubo di Sharpedo",
-    "task": "Sconfiggi 3 Pokemon di Archie consecutivamente con Sharpedo durante le ondate 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Sharpedo",
+    "task": "Sconfiggi 3 Pokemon di Archie consecutivamente con Sharpedo durante le ondate 300, 400 o 500 nel Vuoto"
   },
   "FARIGIRAF_NIGHTMARE_QUEST": {
-    "name": "Incubo di Farigiraf",
-    "task": "Sconfiggi 2 Pokemon di Cyrus consecutivamente con Farigiraf durante le ondate 100, 200, 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Farigiraf",
+    "task": "Sconfiggi 2 Pokemon di Cyrus consecutivamente con Farigiraf durante le ondate 100, 200, 300, 400 o 500 nel Vuoto"
   },
   "KINGDRA_NIGHTMARE_QUEST": {
-    "name": "Incubo di Kingdra",
-    "task": "Sconfiggi 2 Pokemon di Misty consecutivamente con Kingdra durante le ondate 100, 200, 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Kingdra",
+    "task": "Sconfiggi 2 Pokemon di Misty consecutivamente con Kingdra durante le ondate 100, 200, 300, 400 o 500 nel Vuoto"
   },
   "EXCADRILL_NIGHTMARE_QUEST": {
-    "name": "Incubo di Excadrill",
-    "task": "Sconfiggi 3 Pokemon di Brock consecutivamente con Excadrill durante le ondate 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Excadrill",
+    "task": "Sconfiggi 3 Pokemon di Brock consecutivamente con Excadrill durante le ondate 300, 400 o 500 nel Vuoto"
   },
   "LANTURN_NIGHTMARE_QUEST": {
-    "name": "Incubo di Lanturn",
-    "task": "Sconfiggi 3 Pokemon di Brock consecutivamente con LANTURN durante le ondate 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Lanturn",
+    "task": "Sconfiggi 3 Pokemon di Brock consecutivamente con LANTURN durante le ondate 300, 400 o 500 nel Vuoto"
   },
   "PIKACHU_ROBO_NIGHTMARE_QUEST": {
-    "name": "Incubo Robo di Pikachu",
-    "task": "Sconfiggi 3 Pokemon del Ten. Surge consecutivamente con PIKACHU durante le ondate 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto Robo di Pikachu",
+    "task": "Sconfiggi 3 Pokemon del Ten. Surge consecutivamente con PIKACHU durante le ondate 300, 400 o 500 nel Vuoto"
   },
   "DODRIO_NIGHTMARE_QUEST": {
-    "name": "Incubo di Dodrio",
-    "task": "Sconfiggi 3 Pokemon di Larry consecutivamente con DODRIO durante le ondate 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Dodrio",
+    "task": "Sconfiggi 3 Pokemon di Larry consecutivamente con DODRIO durante le ondate 300, 400 o 500 nel Vuoto"
   },
   "SUNFLORA_NIGHTMARE_QUEST": {
-    "name": "Incubo di Sunflora",
-    "task": "Sconfiggi 3 Pokemon di Rose consecutivamente con SUNFLORA durante le ondate 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Sunflora",
+    "task": "Sconfiggi 3 Pokemon di Rose consecutivamente con SUNFLORA durante le ondate 300, 400 o 500 nel Vuoto"
   },
   "LUCARIO_NIGHTMARE_QUEST": {
-    "name": "Incubo di Lucario",
-    "task": "Sconfiggi 3 Pokemon di Cynthia consecutivamente con LUCARIO durante le ondate 300, 400 o 500 in modalità Incubo"
+    "name": "Vuoto di Lucario",
+    "task": "Sconfiggi 3 Pokemon di Cynthia consecutivamente con LUCARIO durante le ondate 300, 400 o 500 nel Vuoto"
   },
   "NORMAL_STRENGTH": {
     "name": "Forza Normale!",

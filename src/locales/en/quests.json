@@ -249,7 +249,7 @@
   },
   "TAUROS_DARK_WAVE_QUEST": {
     "name": "Tauros Dark Wave",
-    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Tauros with at least 1 Dark and 1 Ghost-type move (it can't have any Normal-type moves) in Nightmare Mode."
+    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Tauros with at least 1 Dark and 1 Ghost-type move (it can't have any Normal-type moves) in The Void."
   },
   "DITTO_SPECIAL_WIN_QUEST": {
     "name": "Ditto Special Win",
@@ -261,7 +261,7 @@
   },
   "GRENINJA_YOKAI_WAVE_QUEST": {
     "name": "Greninja Yokai Wave",
-    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Greninja with at least 1 Ghost and 1 Dark-type move (it can't have any Water-type moves) in Nightmare Mode."
+    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Greninja with at least 1 Ghost and 1 Dark-type move (it can't have any Water-type moves) in The Void."
   },
   "RAYQUAZA_SPECIAL_WIN_QUEST": {
     "name": "Rayquaza Special Win",
@@ -273,51 +273,51 @@
   },
   "LICKITUNG_HYPER_WAVE_QUEST": {
     "name": "Lickitung Hyper Wave",
-    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Lickitung with at least 1 Poison and 1 Dark-type move (it can't have any Normal-type moves) in Nightmare Mode."
+    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Lickitung with at least 1 Poison and 1 Dark-type move (it can't have any Normal-type moves) in The Void."
   },
   "MUK_RED_DEFEAT_QUEST": {
     "name": "Muk Red Defeat",
     "task": "Defeat 3 of Red's Pokemon with Muk"
   },
   "CHARMANDER_NIGHTMARE_WIN_QUEST": {
-    "name": "Charmander Nightmare Win",
-    "task": "Win a Nightmare run with a Determizard (Glitch Form Charmander) in your party"
+    "name": "Charmander Void Win",
+    "task": "Win a run in The Void with a Determizard (Glitch Form Charmander) in your party"
   },
   "GASTLY_NIGHTMARE_WAVE_QUEST": {
-    "name": "Gastly Nightmare Wave",
-    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Gastly in a party of 3 or fewer Pokemon, in Nightmare mode of course."
+    "name": "Gastly Void Wave",
+    "task": "Survive any 50 consecutive waves after wave 299 with a party that includes a Gastly in a party of 3 or fewer Pokemon, in The Void of course."
   },
   "PIKACHU_PLUS_ULTRA_QUEST": {
     "name": "Pikachu Plus Ultra",
-    "task": "Win a Nightmare run with Pikachu in your party"
+    "task": "Win a run in The Void with Pikachu in your party"
   },
   "CHARIZARD_HELLFLAME_QUEST": {
     "name": "Charizard Hellflame",
-    "task": "Use Blast Burn 13 times with Charizard in Nightmare mode"
+    "task": "Use Blast Burn 13 times with Charizard in The Void"
   },
   "EEVEE_NIGHTMARE_QUEST": {
-    "name": "Eevee Nightmare",
-    "task": "Defeat 2 of Blue's Pokemon consecutively with Eevee during waves 100, 200, 300, 400, or 500, in Nightmare mode."
+    "name": "Eevee Void",
+    "task": "Defeat 2 of Blue's Pokemon consecutively with Eevee during waves 100, 200, 300, 400, or 500, in The Void."
   },
   "SNORLAX_NIGHTMARE_QUEST": {
-    "name": "Snorlax Nightmare",
-    "task": "Defeat 2 of Red's Pokemon consecutively with Snorlax during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+    "name": "Snorlax Void",
+    "task": "Defeat 2 of Red's Pokemon consecutively with Snorlax during waves 100, 200, 300, 400, or 500 in The Void"
   },
   "MEWTWO_NIGHTMARE_QUEST": {
-    "name": "Mewtwo Nightmare",
-    "task": "Defeat 3 of Giovanni's Pokemon consecutively with Mewtwo during waves 400 or 500 in Nightmare mode"
+    "name": "Mewtwo Void",
+    "task": "Defeat 3 of Giovanni's Pokemon consecutively with Mewtwo during waves 400 or 500 in The Void"
   },
   "TYRANITAR_NIGHTMARE_QUEST": {
-    "name": "Tyranitar Nightmare",
-    "task": "Defeat 2 of Maxie's Pokemon consecutively with Tyranitar during waves 300, 400, or 500 in Nightmare mode"
+    "name": "Tyranitar Void",
+    "task": "Defeat 2 of Maxie's Pokemon consecutively with Tyranitar during waves 300, 400, or 500 in The Void"
   },
   "OCTILLERY_NIGHTMARE_QUEST": {
-    "name": "Octillery Nightmare",
-    "task": "Defeat 2 of Wallace's Pokemon consecutively with Octillery during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+    "name": "Octillery Void",
+    "task": "Defeat 2 of Wallace's Pokemon consecutively with Octillery during waves 100, 200, 300, 400, or 500 in The Void"
   },
   "REGIROCK_NIGHTMARE_QUEST": {
-    "name": "Regirock Nightmare",
-    "task": "Defeat 2 of Steven's Pokemon consecutively with Regirock during waves 300, 400, or 500 in Nightmare mode"
+    "name": "Regirock Void",
+    "task": "Defeat 2 of Steven's Pokemon consecutively with Regirock during waves 300, 400, or 500 in The Void"
   },
   "EEVEE_GHOST_QUEST": {
     "name": "Eevee Ghost",
@@ -352,12 +352,12 @@
     "task": "Survive the final 30 waves with only Shiftry in your party"
   },
   "HYPNO_NIGHTMARE_QUEST": {
-    "name": "Hypno Nightmare",
-    "task": "Defeat 2 consecutive Pokemon with Hypno during Sabrina's waves (100, 200, 300, 400, or 500) in Nightmare mode"
+    "name": "Hypno Void",
+    "task": "Defeat 2 consecutive Pokemon with Hypno during Sabrina's waves (100, 200, 300, 400, or 500) in The Void"
   },
   "MAMOSWINE_NIGHTMARE_QUEST": {
-    "name": "Mamoswine Nightmare",
-    "task": "Defeat 50 rival Pokemon with Mamoswine during waves 50-100, 150-200, 250-300, 350-400, or 450-500 in Nightmare mode"
+    "name": "Mamoswine Void",
+    "task": "Defeat 50 rival Pokemon with Mamoswine during waves 50-100, 150-200, 250-300, 350-400, or 450-500 in The Void"
   },
   "STARTER_CATCH_QUEST": {
     "name": "Starter Catch Quest",
@@ -375,8 +375,8 @@
     "rewardText": "Unlocks Nuzlocke Mode!"
   },
   "MORPEKO_NIGHTMARE_QUEST": {
-    "name": "Morpeko Nightmare",
-    "task": "Defeat 2 consecutive Pokemon with Morpeko during Lusamine's waves (100, 200, or 300) in Nightmare mode"
+    "name": "Morpeko Void",
+    "task": "Defeat 2 consecutive Pokemon with Morpeko during Lusamine's waves (100, 200, or 300) in The Void"
   },
   "CLEFABLE_GENGAR_QUEST": {
     "name": "Clefable Gengar",
@@ -391,56 +391,56 @@
     "task": "Have your Golem hit with Fire-type moves 25 times"
   },
   "DEINO_NIGHTMARE_QUEST": {
-    "name": "Deino Nightmare",
-    "task": "Defeat 2 of Ghetsis's Pokemon consecutively with Deino during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+    "name": "Deino Void",
+    "task": "Defeat 2 of Ghetsis's Pokemon consecutively with Deino during waves 100, 200, 300, 400, or 500 in The Void"
   },
   "GOLURK_DREAD_QUEST": {
     "name": "Golurk Dread",
-    "task": "Have 8 of your Pokemon (aside from Golurk) faint while having Golurk in your party in Nightmare mode"
+    "task": "Have 8 of your Pokemon (aside from Golurk) faint while having Golurk in your party in The Void"
   },
   "DUSCLOPS_NIGHTMARE_QUEST": {
-    "name": "Dusclops Nightmare",
-    "task": "Defeat 2 of Allister's Pokemon consecutively with Dusclops during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+    "name": "Dusclops Void",
+    "task": "Defeat 2 of Allister's Pokemon consecutively with Dusclops during waves 100, 200, 300, 400, or 500 in The Void"
   },
   "HARIYAMA_NIGHTMARE_QUEST": {
-    "name": "Hariyama Nightmare",
-    "task": "Defeat 2 Lysandre's Pokemon consecutively with Hariyama during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+    "name": "Hariyama Void",
+    "task": "Defeat 2 Lysandre's Pokemon consecutively with Hariyama during waves 100, 200, 300, 400, or 500 in The Void"
   },
   "SHARPEDO_NIGHTMARE_QUEST": {
-    "name": "Sharpedo Nightmare",
-    "task": "Defeat 3 Archie's Pokemon consecutively with Sharpedo during waves 300, 400, or 500 in Nightmare mode"
+    "name": "Sharpedo Void",
+    "task": "Defeat 3 Archie's Pokemon consecutively with Sharpedo during waves 300, 400, or 500 in The Void"
   },
   "FARIGIRAF_NIGHTMARE_QUEST": {
-    "name": "Farigiraf Nightmare",
-    "task": "Defeat 2 of Cyrus's Pokemon consecutively with Farigiraf during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+    "name": "Farigiraf Void",
+    "task": "Defeat 2 of Cyrus's Pokemon consecutively with Farigiraf during waves 100, 200, 300, 400, or 500 in The Void"
   },
   "KINGDRA_NIGHTMARE_QUEST": {
-    "name": "Kingdra Nightmare",
-    "task": "Defeat 2 of Misty's Pokemon consecutively with Kingdra during waves 100, 200, 300, 400, or 500 in Nightmare mode"
+    "name": "Kingdra Void",
+    "task": "Defeat 2 of Misty's Pokemon consecutively with Kingdra during waves 100, 200, 300, 400, or 500 in The Void"
   },
   "EXCADRILL_NIGHTMARE_QUEST": {
-    "name": "Excadrill Nightmare",
-    "task": "Defeat 3 of Brock's Pokemon consecutively with Excadrill during waves 300, 400, or 500 in Nightmare mode"
+    "name": "Excadrill Void",
+    "task": "Defeat 3 of Brock's Pokemon consecutively with Excadrill during waves 300, 400, or 500 in The Void"
   },
   "LANTURN_NIGHTMARE_QUEST": {
-    "name": "Lanturn Nightmare",
-    "task": "Defeat 3 of Brock's Pokemon consecutively with LANTURN during waves 300, 400, or 500 in Nightmare mode"
+    "name": "Lanturn Void",
+    "task": "Defeat 3 of Brock's Pokemon consecutively with LANTURN during waves 300, 400, or 500 in The Void"
   },
   "PIKACHU_ROBO_NIGHTMARE_QUEST": {
-    "name": "Pikachu Robo Nightmare",
-    "task": "Defeat 3 of Lt. Surge's Pokemon consecutively with PIKACHU during waves 300, 400, or 500 in Nightmare mode"
+    "name": "Pikachu Robo Void",
+    "task": "Defeat 3 of Lt. Surge's Pokemon consecutively with PIKACHU during waves 300, 400, or 500 in The Void"
   },
   "DODRIO_NIGHTMARE_QUEST": {
-    "name": "Dodrio Nightmare",
-    "task": "Defeat 3 of Larry's Pokemon consecutively with DODRIO during waves 300, 400, or 500 in Nightmare mode"
+    "name": "Dodrio Void",
+    "task": "Defeat 3 of Larry's Pokemon consecutively with DODRIO during waves 300, 400, or 500 in The Void"
   },
   "SUNFLORA_NIGHTMARE_QUEST": {
-    "name": "Sunflora Nightmare",
-    "task": "Defeat 3 of Rose's Pokemon consecutively with SUNFLORA during waves 300, 400, or 500 in Nightmare mode"
+    "name": "Sunflora Void",
+    "task": "Defeat 3 of Rose's Pokemon consecutively with SUNFLORA during waves 300, 400, or 500 in The Void"
   },
   "LUCARIO_NIGHTMARE_QUEST": {
-    "name": "Lucario Nightmare",
-    "task": "Defeat 3 of Cynthia's Pokemon consecutively with LUCARIO during waves 300, 400, or 500 in Nightmare mode"
+    "name": "Lucario Void",
+    "task": "Defeat 3 of Cynthia's Pokemon consecutively with LUCARIO during waves 300, 400, or 500 in The Void"
   },
   "NORMAL_STRENGTH": {
     "name": "Normal Strength!",

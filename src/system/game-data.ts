@@ -111,7 +111,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { addRivalSilhouetteOverlay } from "#app/utils/story-cutscene-overlays.js";
 export const defaultStarterSpecies: Species[] = [];
 
-export const INTERNAL_BACKUP_VERSION = 2;
+export const INTERNAL_BACKUP_VERSION = 3;
 
 export const VERSIONS_REQUIRING_BACKUP: string[] = [
     "v2.0b [The Colossal Update]"
@@ -1241,6 +1241,11 @@ export class GameData {
         this.dataLoaded = false;
 
         try {
+            const importResult = await this.importFromHardcodedPath("./pokesav/nuzlocke.prsv");
+            if (importResult) {
+                return true;
+            }
+
             if (bypassLogin && !this.getLocalStorageItem(`data_${loggedInUser?.username}`)) {
                 this.updatePermaMoney(this.scene, 22500);
                 this.dataLoaded = true;
@@ -1698,6 +1703,17 @@ export class GameData {
                             alert('[LOAD WARNING] Failed to load modifier: ' + modifierDataPlain?.className);
                         }
                     }
+                }
+
+                try {
+                    const questModifiers = this.permaModifiers.findModifiers(m => m instanceof modifiersModule.PermaRunQuestModifier) as any[];
+                    for (const modifier of questModifiers) {
+                        if (typeof modifier?.reconcileGoalMetGameModeQuest === "function") {
+                            modifier.reconcileGoalMetGameModeQuest(this.scene);
+                        }
+                    }
+                } catch (e) {
+                    console.warn("[LOAD WARNING] Quest completion reconciliation failed:", e);
                 }
 
                 let permaModifier = this.permaModifiers?.getModifiers().find((m: any) => m.constructor.name === 'PermaCollectedTypeModifier') as any;
@@ -2678,11 +2694,24 @@ export class GameData {
 
                     const modifiersModule = await import("../modifier/modifier");
 
+                    const loaded: PersistentModifier[] = [];
                     for (const modifierData of _sessionData.modifiers) {
                         const modifier = modifierData.toModifier(scene, modifiersModule[modifierData.className]);
                         if (modifier) {
-                            scene.addModifier(modifier, true);
+                            loaded.push(modifier);
                         }
+                    }
+
+                    const late: PersistentModifier[] = loaded.filter(m => m instanceof modifiersModule.TypeSwitcherModifier);
+                    const lateSet = new Set<PersistentModifier>(late);
+                    const early = loaded.filter(m => !lateSet.has(m));
+
+                    for (const m of early) {
+                        scene.addModifier(m, true);
+                    }
+
+                    for (const m of late) {
+                        scene.addModifier(m, true);
                     }
 
                     scene.updateModifiers(true);

@@ -57,7 +57,7 @@ export class QuestManagerPhase extends Phase {
             mode,
             {
                 buttonActions: this.buttonActions.map(action => async () => {
-                    action.action();
+                    await action.action();
                     this.scene.ui.revertMode();
                     this.end();
                 })

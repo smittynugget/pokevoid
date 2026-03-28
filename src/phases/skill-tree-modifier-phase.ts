@@ -295,15 +295,49 @@ export class SkillTreeModifierPhase extends Phase {
         const dynamaxOption = this.createDynamaxOption();
         if (dynamaxOption) options.push(dynamaxOption);
         break;
-      case SkillTreeRewardType.GLITCH_CHANGE:
+      case SkillTreeRewardType.GLITCH_CHANGE: {
         const glitchChangeOption = this.createGlitchChangeOption();
-        if (glitchChangeOption) options.push(glitchChangeOption);
+        if (glitchChangeOption?.type) {
+          const tAny: any = glitchChangeOption.type as any;
+          const sf = tAny.selectFilter;
+          if (typeof sf === "function") {
+            const party = this.scene.getParty();
+            const hasEligible = party.some(p => sf(p) === null);
+            if (!hasEligible) {
+              const fallbackOpt = this.getIncompatibleNodeFallbackOption();
+              if (fallbackOpt) options.push(fallbackOpt);
+              break;
+            }
+          }
+          options.push(glitchChangeOption);
+        } else {
+          const fallbackOpt = this.getIncompatibleNodeFallbackOption();
+          if (fallbackOpt) options.push(fallbackOpt);
+        }
         break;
+      }
 
-      case SkillTreeRewardType.POKEMON_ALT_BUILD:
+      case SkillTreeRewardType.POKEMON_ALT_BUILD: {
         const altBuildOption = this.createAltBuildOption();
-        if (altBuildOption) options.push(altBuildOption);
+        if (altBuildOption?.type) {
+          const tAny: any = altBuildOption.type as any;
+          const sf = tAny.selectFilter;
+          if (typeof sf === "function") {
+            const party = this.scene.getParty();
+            const hasEligible = party.some(p => sf(p) === null);
+            if (!hasEligible) {
+              const fallbackOpt = this.getIncompatibleNodeFallbackOption();
+              if (fallbackOpt) options.push(fallbackOpt);
+              break;
+            }
+          }
+          options.push(altBuildOption);
+        } else {
+          const fallbackOpt = this.getIncompatibleNodeFallbackOption();
+          if (fallbackOpt) options.push(fallbackOpt);
+        }
         break;
+      }
 
       case SkillTreeRewardType.PERMA_ITEM:
         const permaItemOption = this.createPermaItemOption();
@@ -337,7 +371,24 @@ export class SkillTreeModifierPhase extends Phase {
       }
 
       case SkillTreeRewardType.GLITCH_FORM_UNLOCK: {
-        this.grantGlitchFormUnlockImmediate();
+        let alreadyUnlocked = false;
+        try {
+          const questId = this.node.rewardData?.data?.unlockableId as QuestUnlockables;
+          const questUnlockData = questId ? this.scene.gameData.getQuestUnlockDataFromModifierTypes(questId) : undefined;
+          const rewardIdAny: any = questUnlockData?.rewardId;
+          const rewardTypeAny: any = questUnlockData?.rewardType;
+          if (rewardIdAny != null && rewardTypeAny != null) {
+            const ids = Array.isArray(rewardIdAny) ? rewardIdAny : [rewardIdAny];
+            alreadyUnlocked = ids.some((id: any) => this.scene.gameData.canUseGlitchOrSmittyForm(id as Species, rewardTypeAny));
+          }
+        } catch {}
+
+        if (alreadyUnlocked) {
+          const fallbackOpt = this.getIncompatibleNodeFallbackOption();
+          if (fallbackOpt) options.push(fallbackOpt);
+        } else {
+          this.grantGlitchFormUnlockImmediate();
+        }
         break;
       }
 
@@ -853,6 +904,41 @@ export class SkillTreeModifierPhase extends Phase {
       return rarerCandyType ? new ModifierTypeOption(rarerCandyType, 0, 0) : null;
     }
     const effectiveRank = Math.min(10, proposedRank);
+    const altBuildDef = POKEMON_ALT_BUILDS[altBuildId];
+    if (!altBuildDef) {
+      return null;
+    }
+    if (altBuildDef.prerequisiteBuilds && altBuildDef.prerequisiteBuilds.length > 0) {
+      if (effectiveRank === 1) {
+        const prereqId = altBuildDef.prerequisiteBuilds[0];
+        const prereqDef = POKEMON_ALT_BUILDS[prereqId];
+        const prereqSpecies = prereqDef?.species;
+        let hasPrereq = false;
+        if (prereqSpecies) {
+          hasPrereq = party.some(p =>
+            (p.species.speciesId === prereqSpecies && p.altBuildId === prereqId) ||
+            (p.isFusion() && p.fusionSpecies?.speciesId === prereqSpecies && p.altBuildId === prereqId)
+          );
+        } else {
+          hasPrereq = party.some(p => p.altBuildId === prereqId);
+        }
+        if (!hasPrereq) {
+          return null;
+        }
+      } else {
+        const requiredPreviousRank = effectiveRank - 1;
+        const hasPrereq = party.some(p => p.altBuildId === altBuildId && (p.altBuildRank || 0) >= requiredPreviousRank);
+        if (!hasPrereq) {
+          return null;
+        }
+      }
+    } else if (altBuildDef.species) {
+      const s = altBuildDef.species;
+      const has = party.some(p => p.species.speciesId === s || (p.isFusion() && p.fusionSpecies?.speciesId === s));
+      if (!has) {
+        return null;
+      }
+    }
     const gen = modifierTypes.POKEMON_ALT_BUILD();
     const type = gen.generateType(party, [altBuildId, effectiveRank]);
     if (type && !type.id) {

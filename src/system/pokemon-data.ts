@@ -58,6 +58,7 @@ export default class PokemonData {
   public altBuildId?: PokemonAltBuildId;
   public altBuildRank?: number;
   public altPassiveForRun?: Abilities;
+  public isSignature?: boolean;
 
   public boss: boolean;
   public bossSegments?: integer;
@@ -117,6 +118,7 @@ export default class PokemonData {
     this.altBuildId = source.altBuildId;
     this.altBuildRank = source.altBuildRank;
     this.altPassiveForRun = source.altPassiveForRun;
+    this.isSignature = sourcePokemon ? sourcePokemon.isSignature : source.isSignature;
 
     if (!forHistory) {
       this.boss = (source instanceof EnemyPokemon && !!source.bossSegments) || (!this.player && !!source.boss);
@@ -176,6 +178,9 @@ export default class PokemonData {
         const glitchIdx = forms.findIndex(f => typeof f.formKey === "string" && f.formKey.includes("glitch"));
         resolvedFormIndex = glitchIdx >= 0 ? glitchIdx : 0;
       }
+    }
+    if (forms && (resolvedFormIndex < 0 || resolvedFormIndex >= forms.length || !forms[resolvedFormIndex])) {
+      resolvedFormIndex = 0;
     }
     this.formIndex = resolvedFormIndex;
     const ret: Pokemon = this.player

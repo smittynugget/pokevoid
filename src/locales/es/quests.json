@@ -249,7 +249,7 @@
   },
   "TAUROS_DARK_WAVE_QUEST": {
     "name": "Oleada Siniestra de Tauros",
-    "task": "Sobrevive 50 oleadas consecutivas después de la oleada 299 con un equipo que incluya un Tauros con al menos 1 movimiento Siniestro y 1 Fantasma (no puede tener movimientos de tipo Normal) en modo Pesadilla"
+    "task": "Sobrevive 50 oleadas consecutivas después de la oleada 299 con un equipo que incluya un Tauros con al menos 1 movimiento Siniestro y 1 Fantasma (no puede tener movimientos de tipo Normal) en modo El Vacío"
   },
   "DITTO_SPECIAL_WIN_QUEST": {
     "name": "Victoria Especial de Ditto",
@@ -261,7 +261,7 @@
   },
   "GRENINJA_YOKAI_WAVE_QUEST": {
     "name": "Oleada Yokai de Greninja",
-    "task": "Sobrevive 50 oleadas consecutivas después de la oleada 299 con un equipo que incluya un Greninja con al menos 1 movimiento Fantasma y 1 Siniestro (no puede tener movimientos de tipo Agua) en modo Pesadilla"
+    "task": "Sobrevive 50 oleadas consecutivas después de la oleada 299 con un equipo que incluya un Greninja con al menos 1 movimiento Fantasma y 1 Siniestro (no puede tener movimientos de tipo Agua) en modo El Vacío"
   },
   "RAYQUAZA_SPECIAL_WIN_QUEST": {
     "name": "Victoria Especial de Rayquaza",
@@ -273,51 +273,51 @@
   },
   "LICKITUNG_HYPER_WAVE_QUEST": {
     "name": "Oleada Híper de Lickitung",
-    "task": "Sobrevive 50 oleadas consecutivas después de la oleada 299 con un equipo que incluya un Lickitung con al menos 1 movimiento Veneno y 1 Siniestro (no puede tener movimientos de tipo Normal) en modo Pesadilla"
+    "task": "Sobrevive 50 oleadas consecutivas después de la oleada 299 con un equipo que incluya un Lickitung con al menos 1 movimiento Veneno y 1 Siniestro (no puede tener movimientos de tipo Normal) en modo El Vacío"
   },
   "MUK_RED_DEFEAT_QUEST": {
     "name": "Derrota Rojo con Muk",
     "task": "Derrota 3 Pokémon de Rojo con Muk"
   },
   "CHARMANDER_NIGHTMARE_WIN_QUEST": {
-    "name": "Victoria Pesadilla de Charmander",
-    "task": "Gana una partida en modo Pesadilla con un Determizard (Charmander Forma Glitch) en tu equipo"
+    "name": "Victoria Vacío de Charmander",
+    "task": "Gana una partida en modo El Vacío con un Determizard (Charmander Forma Glitch) en tu equipo"
   },
   "GASTLY_NIGHTMARE_WAVE_QUEST": {
-    "name": "Oleada Pesadilla de Gastly",
-    "task": "Sobrevive 50 oleadas consecutivas después de la oleada 299 con un equipo que incluya a Gastly en un grupo de 3 o menos Pokémon, en modo Pesadilla por supuesto"
+    "name": "Oleada Vacío de Gastly",
+    "task": "Sobrevive 50 oleadas consecutivas después de la oleada 299 con un equipo que incluya a Gastly en un grupo de 3 o menos Pokémon, en modo El Vacío por supuesto"
   },
   "PIKACHU_PLUS_ULTRA_QUEST": {
     "name": "Plus Ultra de Pikachu",
-    "task": "Gana una partida en modo Pesadilla con Pikachu en tu equipo"
+    "task": "Gana una partida en modo El Vacío con Pikachu en tu equipo"
   },
   "CHARIZARD_HELLFLAME_QUEST": {
     "name": "Llama Infernal de Charizard",
-    "task": "Usa Anillo Ígneo 13 veces con Charizard en modo Pesadilla"
+    "task": "Usa Anillo Ígneo 13 veces con Charizard en modo El Vacío"
   },
   "EEVEE_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Eevee",
-    "task": "Derrota 2 Pokémon de Azul consecutivamente con Eevee durante las oleadas 100, 200, 300, 400 o 500, en modo Pesadilla"
+    "name": "Vacío de Eevee",
+    "task": "Derrota 2 Pokémon de Azul consecutivamente con Eevee durante las oleadas 100, 200, 300, 400 o 500, en modo El Vacío"
   },
   "SNORLAX_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Snorlax",
-    "task": "Derrota 2 Pokémon de Rojo consecutivamente con Snorlax durante las oleadas 100, 200, 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Snorlax",
+    "task": "Derrota 2 Pokémon de Rojo consecutivamente con Snorlax durante las oleadas 100, 200, 300, 400 o 500 en modo El Vacío"
   },
   "MEWTWO_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Mewtwo",
-    "task": "Derrota 3 Pokémon de Giovanni consecutivamente con Mewtwo durante las oleadas 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Mewtwo",
+    "task": "Derrota 3 Pokémon de Giovanni consecutivamente con Mewtwo durante las oleadas 400 o 500 en modo El Vacío"
   },
   "TYRANITAR_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Tyranitar",
-    "task": "Derrota 2 Pokémon de Maxie consecutivamente con Tyranitar durante las oleadas 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Tyranitar",
+    "task": "Derrota 2 Pokémon de Maxie consecutivamente con Tyranitar durante las oleadas 300, 400 o 500 en modo El Vacío"
   },
   "OCTILLERY_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Octillery",
-    "task": "Derrota 2 Pokémon de Wallace consecutivamente con Octillery durante las oleadas 100, 200, 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Octillery",
+    "task": "Derrota 2 Pokémon de Wallace consecutivamente con Octillery durante las oleadas 100, 200, 300, 400 o 500 en modo El Vacío"
   },
   "REGIROCK_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Regirock",
-    "task": "Derrota 2 Pokémon de Steven consecutivamente con Regirock durante las oleadas 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Regirock",
+    "task": "Derrota 2 Pokémon de Steven consecutivamente con Regirock durante las oleadas 300, 400 o 500 en modo El Vacío"
   },
   "EEVEE_GHOST_QUEST": {
     "name": "Fantasma de Eevee",
@@ -352,12 +352,12 @@
     "task": "Sobrevive las últimas 30 oleadas con solo Shiftry en tu equipo"
   },
   "HYPNO_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Hypno",
-    "task": "Derrota 2 Pokémon consecutivos con Hypno durante las oleadas de Sabrina (100, 200, 300, 400 o 500) en modo Pesadilla"
+    "name": "Vacío de Hypno",
+    "task": "Derrota 2 Pokémon consecutivos con Hypno durante las oleadas de Sabrina (100, 200, 300, 400 o 500) en modo El Vacío"
   },
   "MAMOSWINE_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Mamoswine",
-    "task": "Derrota 50 Pokémon de rival con Mamoswine durante las oleadas 50-100, 150-200, 250-300, 350-400 o 450-500 en modo Pesadilla"
+    "name": "Vacío de Mamoswine",
+    "task": "Derrota 50 Pokémon de rival con Mamoswine durante las oleadas 50-100, 150-200, 250-300, 350-400 o 450-500 en modo El Vacío"
   },
   "STARTER_CATCH_QUEST": {
     "name": "Misión de Captura Inicial",
@@ -375,8 +375,8 @@
     "rewardText": "¡Desbloquea el Modo Nuzlocke!"
   },
   "MORPEKO_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Morpeko",
-    "task": "Derrota 2 Pokémon consecutivos con Morpeko durante las oleadas de Lusamine (100, 200 o 300) en modo Pesadilla"
+    "name": "Vacío de Morpeko",
+    "task": "Derrota 2 Pokémon consecutivos con Morpeko durante las oleadas de Lusamine (100, 200 o 300) en modo El Vacío"
   },
   "CLEFABLE_GENGAR_QUEST": {
     "name": "Clefable y Gengar",
@@ -391,56 +391,56 @@
     "task": "Haz que tu Golem reciba movimientos de tipo Fuego 25 veces"
   },
   "DEINO_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Deino",
-    "task": "Derrota 2 Pokémon de Ghetsis consecutivamente con Deino durante las oleadas 100, 200, 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Deino",
+    "task": "Derrota 2 Pokémon de Ghetsis consecutivamente con Deino durante las oleadas 100, 200, 300, 400 o 500 en modo El Vacío"
   },
   "GOLURK_DREAD_QUEST": {
     "name": "Pavor de Golurk",
-    "task": "Haz que 8 de tus Pokémon (aparte de Golurk) se debiliten mientras tienes a Golurk en tu equipo en modo Pesadilla"
+    "task": "Haz que 8 de tus Pokémon (aparte de Golurk) se debiliten mientras tienes a Golurk en tu equipo en modo El Vacío"
   },
   "DUSCLOPS_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Dusclops",
-    "task": "Derrota 2 Pokémon de Allister consecutivamente con Dusclops durante las oleadas 100, 200, 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Dusclops",
+    "task": "Derrota 2 Pokémon de Allister consecutivamente con Dusclops durante las oleadas 100, 200, 300, 400 o 500 en modo El Vacío"
   },
   "HARIYAMA_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Hariyama",
-    "task": "Derrota 2 Pokémon de Lysandre consecutivamente con Hariyama durante las oleadas 100, 200, 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Hariyama",
+    "task": "Derrota 2 Pokémon de Lysandre consecutivamente con Hariyama durante las oleadas 100, 200, 300, 400 o 500 en modo El Vacío"
   },
   "SHARPEDO_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Sharpedo",
-    "task": "Derrota 3 Pokémon de Archie consecutivamente con Sharpedo durante las oleadas 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Sharpedo",
+    "task": "Derrota 3 Pokémon de Archie consecutivamente con Sharpedo durante las oleadas 300, 400 o 500 en modo El Vacío"
   },
   "FARIGIRAF_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Farigiraf",
-    "task": "Derrota 2 Pokémon de Cyrus consecutivamente con Farigiraf durante las oleadas 100, 200, 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Farigiraf",
+    "task": "Derrota 2 Pokémon de Cyrus consecutivamente con Farigiraf durante las oleadas 100, 200, 300, 400 o 500 en modo El Vacío"
   },
   "KINGDRA_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Kingdra",
-    "task": "Derrota 2 Pokémon de Misty consecutivamente con Kingdra durante las oleadas 100, 200, 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Kingdra",
+    "task": "Derrota 2 Pokémon de Misty consecutivamente con Kingdra durante las oleadas 100, 200, 300, 400 o 500 en modo El Vacío"
   },
   "EXCADRILL_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Excadrill",
-    "task": "Derrota 3 Pokémon de Brock consecutivamente con Excadrill durante las oleadas 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Excadrill",
+    "task": "Derrota 3 Pokémon de Brock consecutivamente con Excadrill durante las oleadas 300, 400 o 500 en modo El Vacío"
   },
   "LANTURN_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Lanturn",
-    "task": "Derrota 3 Pokémon de Brock consecutivamente con Lanturn durante las oleadas 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Lanturn",
+    "task": "Derrota 3 Pokémon de Brock consecutivamente con Lanturn durante las oleadas 300, 400 o 500 en modo El Vacío"
   },
   "PIKACHU_ROBO_NIGHTMARE_QUEST": {
-    "name": "Pesadilla Robo de Pikachu",
-    "task": "Derrota 3 Pokémon del Teniente Surge consecutivamente con Pikachu durante las oleadas 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío Robo de Pikachu",
+    "task": "Derrota 3 Pokémon del Teniente Surge consecutivamente con Pikachu durante las oleadas 300, 400 o 500 en modo El Vacío"
   },
   "DODRIO_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Dodrio",
-    "task": "Derrota 3 Pokémon de Larry consecutivamente con Dodrio durante las oleadas 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Dodrio",
+    "task": "Derrota 3 Pokémon de Larry consecutivamente con Dodrio durante las oleadas 300, 400 o 500 en modo El Vacío"
   },
   "SUNFLORA_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Sunflora",
-    "task": "Derrota 3 Pokémon de Rose consecutivamente con Sunflora durante las oleadas 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Sunflora",
+    "task": "Derrota 3 Pokémon de Rose consecutivamente con Sunflora durante las oleadas 300, 400 o 500 en modo El Vacío"
   },
   "LUCARIO_NIGHTMARE_QUEST": {
-    "name": "Pesadilla de Lucario",
-    "task": "Derrota 3 Pokémon de Cynthia consecutivamente con Lucario durante las oleadas 300, 400 o 500 en modo Pesadilla"
+    "name": "Vacío de Lucario",
+    "task": "Derrota 3 Pokémon de Cynthia consecutivamente con Lucario durante las oleadas 300, 400 o 500 en modo El Vacío"
   },
   "NORMAL_STRENGTH": {
     "name": "¡Fuerza Normal!",

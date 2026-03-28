@@ -406,6 +406,19 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
       this.altBuildId = dataSource.altBuildId;
       this.altBuildRank = dataSource.altBuildRank;
       this.altPassiveForRun = dataSource.altPassiveForRun ?? null;
+      const dsSig = (dataSource as any).isSignature;
+      if (typeof dsSig === "boolean") {
+        this.isSignature = dsSig;
+      } else if (this.isPlayer()) {
+        const championId = (this.scene.gameData as any).selectedChampionId as string | undefined;
+        const champData = championId ? (this.scene.gameData as any).championData?.[championId] : null;
+        const speciesId = this.species.speciesId;
+        const baseList = champData?.signaturePokemon;
+        const inBaseList = Array.isArray(baseList) ? baseList.includes(speciesId) : false;
+        const unlockedList = (champData as any)?.unlockedSignaturePokemon;
+        const inUnlockedList = Array.isArray(unlockedList) ? unlockedList.includes(speciesId) : false;
+        this.isSignature = inBaseList || inUnlockedList;
+      }
 
       if (dataSource instanceof Pokemon) {
         if ((dataSource as any).altBuildSpriteColors) {
