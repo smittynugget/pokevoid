@@ -7,7 +7,7 @@ import { pokemonEvolutions, pokemonPrevolutions } from "../data/pokemon-evolutio
 import { SMITTY_FORM_ITEMS } from "../data/pokemon-forms";
 import { getModPokemonName } from "../data/mod-glitch-form-utils";
 import { getAllRivalTrainerTypes, trainerConfigs, trainerPokemonPools } from "../data/trainer-config";
-import PokemonSpecies, { UniversalSmittyForm, getFusedSpeciesName, getPokemonSpecies, pokemonSmittyForms, starterPassiveAbilities, universalSmittyForms } from "../data/pokemon-species";
+import PokemonSpecies, { UniversalSmittyForm, getFusedSpeciesName, getPokemonSpecies, pokemonSmittyForms, speciesStarters, starterPassiveAbilities, universalSmittyForms } from "../data/pokemon-species";
 import { Type, getTypeRgb } from "../data/type";
 import { Abilities } from "../enums/abilities";
 import { Button } from "../enums/buttons";
@@ -139,11 +139,16 @@ type RowView = {
   hintLabelText: Phaser.GameObjects.Text;
   hintBodyText: Phaser.GameObjects.Text;
   hintMaxWidth: number;
+  abilityMaxWidth: number;
   rivalOfferTiles: SquareTileView[];
   smittyFoeTiles: SquareTileView[];
+  hitZone?: Phaser.GameObjects.Zone;
 };
 
 export default class VoidexPrelistUiHandler extends UiHandler {
+  private static readonly NAME_DEFAULT_SCALE = 0.1666666667;
+  private static readonly NAME_MAX_WIDTH = 44;
+
   private root: Phaser.GameObjects.Container;
   private list: Phaser.GameObjects.Container;
   private sortText: Phaser.GameObjects.Text;
@@ -175,6 +180,8 @@ export default class VoidexPrelistUiHandler extends UiHandler {
   private sortDirKeySprite: Phaser.GameObjects.Sprite | null = null;
   private searchBlurHandler: ((event: MouseEvent) => void) | null = null;
   private searchKeydownHandler: ((event: KeyboardEvent) => void) | null = null;
+  private searchContextMenuHandler: ((event: Event) => void) | null = null;
+  private searchMouseDownHandler: ((event: MouseEvent) => void) | null = null;
   private rowHeight: number = 36;
   private visibleRows: number = 10;
 
@@ -182,6 +189,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
   private inputEl: any | null = null;
   private searchQuery: string = "";
   private viewWidth: number = 0;
+  private _wheelHandler: ((...args: any[]) => void) | null = null;
   private unlockHintMap: Map<string, { questId: QuestUnlockables; rivalType: number | null }> = new Map();
 
   private allRows: ListRow[] = [];
@@ -189,6 +197,13 @@ export default class VoidexPrelistUiHandler extends UiHandler {
   private views: RowView[] = [];
   private cursorIndex: number = 0;
   private scrollOffset: number = 0;
+  private restrictedSpeciesIds: Set<Species> | null = null;
+  private focusSpeciesId: Species | null = null;
+  private focusFormIndex: number | null = null;
+  private focusFusionSpeciesId: Species | null = null;
+  private focusFusionPrimaryFormIndex: number | null = null;
+  private focusFusionFormIndex: number | null = null;
+  private initialViewMode: ViewMode | null = null;
   private viewMode: ViewMode = "pokemonAll";
   private rivalOfferIndex: number = 0;
   private smittyFoeColIndex: number = 0;
@@ -211,6 +226,35 @@ export default class VoidexPrelistUiHandler extends UiHandler {
 
   override show(_args: any[] = []): boolean {
     super.show(_args);
+
+    this.restrictedSpeciesIds = null;
+    this.focusSpeciesId = null;
+    this.focusFormIndex = null;
+    this.focusFusionSpeciesId = null;
+    this.focusFusionPrimaryFormIndex = null;
+    this.focusFusionFormIndex = null;
+    this.initialViewMode = null;
+    if (typeof _args[0] === "number") {
+      this.focusSpeciesId = _args[0] as Species;
+    }
+    if (Array.isArray(_args[1]) && _args[1].length > 0) {
+      this.restrictedSpeciesIds = new Set(_args[1].filter((s: any): s is Species => typeof s === "number"));
+    }
+    if (typeof _args[2] === "number" && _args[2] >= 0) {
+      this.focusFormIndex = _args[2];
+    }
+    if (typeof _args[3] === "number" && Number.isFinite(_args[3])) {
+      this.focusFusionSpeciesId = _args[3] as Species;
+    }
+    if (typeof _args[4] === "number" && Number.isFinite(_args[4]) && _args[4] >= 0 && Number.isInteger(_args[4])) {
+      this.focusFusionPrimaryFormIndex = _args[4];
+    }
+    if (typeof _args[5] === "number" && Number.isFinite(_args[5]) && _args[5] >= 0 && Number.isInteger(_args[5])) {
+      this.focusFusionFormIndex = _args[5];
+    }
+    if (_args[6] === "pokemonAll" || _args[6] === "fusions") {
+      this.initialViewMode = _args[6] as ViewMode;
+    }
 
     const width = this.scene.game.canvas.width / 6;
     const height = this.scene.game.canvas.height / 6;
@@ -242,7 +286,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     this.completionBarFill = null;
     this.completionAvailableCategories = [];
     this.completionCategoryIndex = 0;
-    this.viewMode = "pokemonAll";
+    this.viewMode = this.initialViewMode ?? "pokemonAll";
     this.rivalOfferIndex = 0;
     this.smittyFoeColIndex = 0;
     this.root.setPosition(0, -this.scene.game.canvas.height / 6);
@@ -348,6 +392,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     this.root.add(titleContainer);
 
     this.updateSortText();
+    this.updateSubtitleText(true);
     this.createSearchInput(width);
     this.createCompletionWidget(titleContainer, width);
 
@@ -363,17 +408,103 @@ export default class VoidexPrelistUiHandler extends UiHandler {
 
     this.allRows = this.buildAllRows();
     this.applyFilterAndSort(true);
+    if (this.viewMode === "fusions" && this.rows.length === 0) {
+      this.viewMode = "pokemonAll";
+      this.applyFilterAndSort(true);
+      this.updateSortText();
+      this.updateSubtitleText(true);
+    }
     this.buildUnlockHintMap();
     this.updateCompletionWidget();
+    if (this.viewMode === "fusions" && this.completionAvailableCategories.includes("fusions")) {
+      const idx = this.completionAvailableCategories.indexOf("fusions");
+      if (idx >= 0 && this.completionCategoryIndex !== idx) {
+        this.completionCategoryIndex = idx;
+        this.updateCompletionWidget();
+      }
+    }
 
     const availableHeight = height - listY - 2;
     this.visibleRows = Math.max(1, Math.floor(availableHeight / this.rowHeight));
     this.buildViews(width);
+    if (this.focusSpeciesId != null && this.focusFusionSpeciesId != null) {
+      const primaryId = this.focusSpeciesId;
+      const fusionId = this.focusFusionSpeciesId;
+
+      const shouldTryFormMatch =
+        this.viewMode === "fusions" &&
+        this.focusFusionPrimaryFormIndex != null &&
+        this.focusFusionFormIndex != null;
+
+      let idx = -1;
+      if (shouldTryFormMatch) {
+        idx = this.rows.findIndex(r =>
+          r.kind === "fusion" &&
+          r.primarySpeciesId === primaryId &&
+          r.fusionSpeciesId === fusionId &&
+          r.primaryFormIndex === this.focusFusionPrimaryFormIndex &&
+          r.fusionFormIndex === this.focusFusionFormIndex
+        );
+      }
+      if (idx < 0) {
+        idx = this.rows.findIndex(r =>
+          r.kind === "fusion" &&
+          r.primarySpeciesId === primaryId &&
+          r.fusionSpeciesId === fusionId
+        );
+      }
+      if (idx < 0) {
+        const expanded = this.expandFusionEvolutionPairs(primaryId, fusionId);
+        const expandedSet = new Set(expanded.map(([p, f]) => `${p as unknown as number}:${f as unknown as number}`));
+        idx = this.rows.findIndex(r =>
+          r.kind === "fusion" &&
+          expandedSet.has(`${r.primarySpeciesId as unknown as number}:${r.fusionSpeciesId as unknown as number}`)
+        );
+      }
+      if (idx < 0) {
+        idx = this.rows.findIndex(r =>
+          r.kind === "fusion" && r.primarySpeciesId === primaryId
+        );
+      }
+      if (idx >= 0) {
+        this.cursorIndex = idx;
+      }
+    } else if (this.focusSpeciesId != null && this.viewMode !== "fusions") {
+      const focusId = this.focusSpeciesId;
+      const idx = this.rows.findIndex(r =>
+        r.kind === "speciesForm" &&
+        r.species.speciesId === focusId &&
+        (this.focusFormIndex == null || r.formIndex === this.focusFormIndex)
+      );
+      if (idx >= 0) {
+        this.cursorIndex = idx;
+      } else {
+        const fallback = this.rows.findIndex(r =>
+          r.kind === "speciesForm" && r.species.speciesId === focusId
+        );
+        if (fallback >= 0) {
+          this.cursorIndex = fallback;
+        }
+      }
+    }
     this.refreshViews();
 
     this.root.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
     this.getUi().bringToTop(this.root);
     this.getUi().add(this.root);
+
+    this._wheelHandler = (_p: any, _g: any, _dx: number, dy: number) => {
+      const maxScroll = Math.max(0, this.rows.length - this.visibleRows);
+      if (dy > 0 && this.scrollOffset < maxScroll) {
+        this.scrollOffset = Math.min(this.scrollOffset + 1, maxScroll);
+        this.refreshViews();
+      } else if (dy < 0 && this.scrollOffset > 0) {
+        this.scrollOffset = Math.max(this.scrollOffset - 1, 0);
+        this.refreshViews();
+      }
+    };
+    this.scene.input.on("wheel", this._wheelHandler);
+
     return true;
   }
 
@@ -886,6 +1017,17 @@ export default class VoidexPrelistUiHandler extends UiHandler {
   }
 
   override clear(): void {
+    if (this._wheelHandler) {
+      this.scene.input.off("wheel", this._wheelHandler);
+      this._wheelHandler = null;
+    }
+    this.restrictedSpeciesIds = null;
+    this.focusSpeciesId = null;
+    this.focusFormIndex = null;
+    this.focusFusionSpeciesId = null;
+    this.focusFusionPrimaryFormIndex = null;
+    this.focusFusionFormIndex = null;
+    this.initialViewMode = null;
     this.searchQuery = "";
     this.destroySearchInput();
     this.root.removeAll(true);
@@ -907,7 +1049,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
         ui.playSelect();
         return true;
       }
-      if (button !== Button.MENU && button !== Button.VOIDEX && button !== Button.UP && button !== Button.DOWN && button !== Button.LEFT && button !== Button.RIGHT) {
+      if (button !== Button.CANCEL && button !== Button.MENU && button !== Button.VOIDEX && button !== Button.UP && button !== Button.DOWN && button !== Button.LEFT && button !== Button.RIGHT) {
         return false;
       }
     }
@@ -1224,8 +1366,10 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       return false;
     }
     const onClose = () => {
+      this.resumeInteractivity();
       this.applySearchVisibilityAndLayout();
     };
+    this.suspendInteractivity();
     if (row.kind === "rival") {
       const offers = this.getRivalCombinedOffers(row).slice(0, 8);
       const offer = offers[this.rivalOfferIndex];
@@ -1317,8 +1461,10 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       return false;
     }
     const onClose = () => {
+      this.resumeInteractivity();
       this.applySearchVisibilityAndLayout();
     };
+    this.suspendInteractivity();
     const variant = this.viewMode === "shiniesV2" ? 1 : (this.viewMode === "shiniesV3" ? 2 : 0);
     const caughtEntries = this.shiniesGridEntries.filter(e => e.caught);
     const nav = caughtEntries.map(e => ({
@@ -1333,6 +1479,34 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     this.setSearchVisible(false);
     this.scene.ui.setOverlayMode(Mode.POKEDEX, entry.speciesId, entry.formIndex, { nav, navIndex, shiny: true, variant, onClose });
     return true;
+  }
+
+  private suspendInteractivity(): void {
+    for (const v of this.views) {
+      if (v.hitZone) v.hitZone.disableInteractive();
+    }
+    if (this._wheelHandler) {
+      this.scene.input.off("wheel", this._wheelHandler);
+    }
+    if (this.sortLeftArrow) this.sortLeftArrow.disableInteractive();
+    if (this.sortRightArrow) this.sortRightArrow.disableInteractive();
+    if (this.sortDirKeySprite) this.sortDirKeySprite.disableInteractive();
+    if (this.completionKeySprite) this.completionKeySprite.disableInteractive();
+    if (this.root) this.root.disableInteractive();
+  }
+
+  private resumeInteractivity(): void {
+    for (const v of this.views) {
+      if (v.hitZone) v.hitZone.setInteractive({ useHandCursor: true });
+    }
+    if (this._wheelHandler) {
+      this.scene.input.on("wheel", this._wheelHandler);
+    }
+    if (this.sortLeftArrow) this.sortLeftArrow.setInteractive({ useHandCursor: true });
+    if (this.sortRightArrow) this.sortRightArrow.setInteractive({ useHandCursor: true });
+    if (this.sortDirKeySprite) this.sortDirKeySprite.setInteractive({ useHandCursor: true });
+    if (this.completionKeySprite) this.completionKeySprite.setInteractive({ useHandCursor: true });
+    if (this.root) this.root.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.viewWidth, this.scene.game.canvas.height / 6), Phaser.Geom.Rectangle.Contains);
   }
 
   private isCurrentEnemyForm(row: Extract<VoidexRow, { kind: "speciesForm" }>): boolean {
@@ -1471,12 +1645,20 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       type2Icon.setOrigin(0.5, 0.5);
       type2Icon.setScale(0.45);
 
+      const statsBaseX = -65;
+
       const abilityText = addBBCodeTextObject(this.scene, -width / 2 + 45, -this.rowHeight / 2 + 4, "-", TextStyle.SUMMARY, { fontSize: "43px", lineSpacing: 1 });
       abilityText.setOrigin(0, 0);
+      const abilityMaxWidth = Math.max(0, (statsBaseX) - (-width / 2 + 45) - 4);
+      if (abilityText.scaleX) {
+        abilityText.setStyle({
+          ...(abilityText.style as any),
+          wordWrap: { width: abilityMaxWidth / abilityText.scaleX, useAdvancedWrap: true }
+        } as any);
+      }
 
       const statLabelCells: Phaser.GameObjects.Text[] = [];
       const statValueCells: Phaser.GameObjects.Text[] = [];
-      const statsBaseX = -65;
       const labelY = -this.rowHeight / 2 + 5;
       const valueY = -this.rowHeight / 2 + 13;
       const colX = [0, 22, 38, 54, 70, 86, 102, 118];
@@ -1595,9 +1777,37 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       }
 
       c.add([bg, icon, fusionIcon, caughtIcon, nameText, type1Icon, type2Icon, abilityText, eggContainer, hintLabelText, hintBodyText, ...statLabelCells, ...statValueCells, ...rivalOfferObjects, ...smittyFoeObjects]);
+
+      const slotIndex = i;
+      const hitZone = this.scene.add.zone(0, 0, width - 8, this.rowHeight);
+      hitZone.setOrigin(0.5, 0.5);
+      hitZone.setInteractive({ useHandCursor: true });
+      hitZone.on("pointerover", () => {
+        const rowIndex = this.scrollOffset + slotIndex;
+        if (rowIndex >= this.rows.length) return;
+        if (this.cursorIndex !== rowIndex) {
+          this.cursorIndex = rowIndex;
+          this.refreshViews();
+        }
+      });
+      hitZone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (!pointer.leftButtonDown()) {
+          return;
+        }
+        const rowIndex = this.scrollOffset + slotIndex;
+        if (rowIndex >= this.rows.length) return;
+        if (this.cursorIndex === rowIndex) {
+          this.processInput(Button.ACTION);
+        } else {
+          this.cursorIndex = rowIndex;
+          this.refreshViews();
+        }
+      });
+      c.add(hitZone);
+
       this.list.add(c);
 
-      this.views.push({ container: c, bg, icon, fusionIcon, caughtIcon, nameText, type1Icon, type2Icon, abilityText, statLabelCells, statValueCells, eggLabel, eggTiles, hintLabelText, hintBodyText, hintMaxWidth: unlockMaxWidth, rivalOfferTiles, smittyFoeTiles });
+      this.views.push({ container: c, bg, icon, fusionIcon, caughtIcon, nameText, type1Icon, type2Icon, abilityText, statLabelCells, statValueCells, eggLabel, eggTiles, hintLabelText, hintBodyText, hintMaxWidth: unlockMaxWidth, abilityMaxWidth, rivalOfferTiles, smittyFoeTiles, hitZone });
     }
   }
 
@@ -1641,6 +1851,12 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     view.nameText.setTint(0xffffff);
     if (typeof (view.abilityText as any).setStyle === "function") {
       (view.abilityText as any).setStyle({ ...((view.abilityText as any).style ?? {}), fontSize: "43px", lineSpacing: 1 });
+    }
+    if (view.abilityText.scaleX) {
+      view.abilityText.setStyle({
+        ...(view.abilityText.style as any),
+        wordWrap: { width: view.abilityMaxWidth / view.abilityText.scaleX, useAdvancedWrap: true }
+      } as any);
     }
     view.abilityText.setY(-this.rowHeight / 2 + 4);
 
@@ -1766,13 +1982,7 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       view.type1Icon.setX(view.icon.x);
 
       const rivalName = i18next.t(`trainerNames:${TrainerType[row.rivalType as any].toLowerCase()}`);
-      view.nameText.setText(rivalName);
-      let truncated = rivalName;
-      const maxNameWidth = 78;
-      while (view.nameText.displayWidth > maxNameWidth && truncated.length > 1) {
-        truncated = truncated.slice(0, -1);
-        view.nameText.setText(truncated + "…");
-      }
+      this.condenseVoidexName(view.nameText, rivalName);
       view.nameText.setTint(whiteSilhouette ? 0xffd700 : 0xffffff);
 
       const offers = this.getRivalCombinedOffers(row).slice(0, view.rivalOfferTiles.length);
@@ -1880,24 +2090,28 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       }
 
       const displayName = row.formName ? (row.formName.charAt(0).toUpperCase() + row.formName.slice(1)) : "-";
-      view.nameText.setText(displayName);
-      const maxNameWidth = 78;
-      let truncated = displayName;
-      while (view.nameText.displayWidth > maxNameWidth && truncated.length > 1) {
-        truncated = truncated.slice(0, -1);
-        view.nameText.setText(truncated + "…");
-      }
+      this.condenseVoidexName(view.nameText, displayName);
+      view.nameText.setTint(0xffd700);
 
       const a1 = form.ability1 !== Abilities.NONE ? allAbilities[form.ability1]?.name : "-";
-      const a2 = form.ability2 !== Abilities.NONE ? allAbilities[form.ability2]?.name : "-";
+      const hasAbility2 = form.ability2 !== Abilities.NONE && form.ability2 !== form.ability1;
+      const a2 = hasAbility2 ? allAbilities[form.ability2]?.name : "-";
       const a3 = form.abilityHidden !== Abilities.NONE ? allAbilities[form.abilityHidden]?.name : "-";
       if (typeof (view.abilityText as any).setStyle === "function") {
         (view.abilityText as any).setStyle({ ...((view.abilityText as any).style ?? {}), fontSize: "47px", lineSpacing: 6 });
       }
+      if (view.abilityText.scaleX) {
+        view.abilityText.setStyle({
+          ...(view.abilityText.style as any),
+          wordWrap: { width: view.abilityMaxWidth / view.abilityText.scaleX, useAdvancedWrap: true }
+        } as any);
+      }
       view.abilityText.setY(-this.rowHeight / 2 + 12);
       view.abilityText.setText("");
       view.abilityText.appendText(`A1: ${a1}`, false);
-      view.abilityText.appendText(`A2: ${a2}`, true);
+      if (hasAbility2) {
+        view.abilityText.appendText(`A2: ${a2}`, true);
+      }
       view.abilityText.appendText(`H: ${a3}`, true);
 
       if (view.statValueCells.length >= 8) {
@@ -2070,27 +2284,28 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       }
 
       const fusedName = getFusedSpeciesName(primarySpecies.getName(row.primaryFormIndex), fusionSpecies.getName(row.fusionFormIndex));
-      view.nameText.setText(fusedName);
-      const maxNameWidth = 78;
-      let truncated = fusedName;
-      while (view.nameText.displayWidth > maxNameWidth && truncated.length > 1) {
-        truncated = truncated.slice(0, -1);
-        view.nameText.setText(truncated + "…");
-      }
+      this.condenseVoidexName(view.nameText, fusedName);
+      view.nameText.setTint(0xffd700);
 
       const a1 = fusionForm.ability1 !== Abilities.NONE ? allAbilities[fusionForm.ability1]?.name : "-";
-      const a2 = fusionForm.ability2 !== Abilities.NONE ? allAbilities[fusionForm.ability2]?.name : "-";
+      const hasAbility2 = fusionForm.ability2 !== Abilities.NONE && fusionForm.ability2 !== fusionForm.ability1;
+      const a2 = hasAbility2 ? allAbilities[fusionForm.ability2]?.name : "-";
       const a3 = fusionForm.abilityHidden !== Abilities.NONE ? allAbilities[fusionForm.abilityHidden]?.name : "-";
       const primaryRootPassiveSpecies = primarySpecies.getRootSpeciesId(false);
       const passiveId = starterPassiveAbilities[primaryRootPassiveSpecies];
-      const passiveName = passiveId !== undefined ? allAbilities[passiveId]?.name : "-";
 
       view.abilityText.setText("");
       const active = row.activeFusionAbilityName || "-";
       view.abilityText.appendText(`A1${a1 === active ? "*" : ""}: ${a1}`, false);
-      view.abilityText.appendText(`A2${a2 === active ? "*" : ""}: ${a2}`, true);
-      view.abilityText.appendText(`H${a3 === active ? "*" : ""}: ${a3}`, true);
-      view.abilityText.appendText(`P: ${passiveName}`, true);
+      if (hasAbility2) {
+        view.abilityText.appendText(`A2${a2 === active ? "*" : ""}: ${a2}`, true);
+      }
+      if (primarySpecies.generation !== 20) {
+        view.abilityText.appendText(`H${a3 === active ? "*" : ""}: ${a3}`, true);
+      }
+      if (passiveId !== undefined) {
+        view.abilityText.appendText(`P: ${allAbilities[passiveId]?.name ?? "-"}`, true);
+      }
 
       if (view.statValueCells.length >= 8) {
         view.statValueCells[0].setText(String(row.stats.cost));
@@ -2157,6 +2372,11 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     }
 
     const species = row.species;
+    const costRoot = species.getRootSpeciesId(true);
+    if (!speciesStarters.hasOwnProperty(costRoot)) {
+      if (view.statLabelCells.length >= 1) view.statLabelCells[0].setVisible(false);
+      if (view.statValueCells.length >= 1) view.statValueCells[0].setVisible(false);
+    }
     const form = species.forms && species.forms.length > 0 ? species.forms[row.formIndex] : species;
     const types = [form.type1, form.type2].filter(t => t !== null) as Type[];
 
@@ -2217,27 +2437,31 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     const prefix = this.getRowPrefix(row.target);
     const name = species.getName(row.formIndex);
     const displayName = prefix ? `${prefix} ${name}` : name;
-    view.nameText.setText(displayName);
-    const maxNameWidth = 78;
-    let truncated = displayName;
-    while (view.nameText.displayWidth > maxNameWidth && truncated.length > 1) {
-      truncated = truncated.slice(0, -1);
-      view.nameText.setText(truncated + "…");
+    this.condenseVoidexName(view.nameText, displayName);
+    const formKey = (form as any).getFormKey?.() ?? (form as any).formKey ?? "";
+    if (species.generation === 20 || form.isGlitchOrSmittyForm(formKey)) {
+      view.nameText.setTint(0xffd700);
     }
 
     const a1 = form.ability1 !== Abilities.NONE ? allAbilities[form.ability1]?.name : "-";
-    const a2 = form.ability2 !== Abilities.NONE ? allAbilities[form.ability2]?.name : "-";
+    const hasAbility2 = form.ability2 !== Abilities.NONE && form.ability2 !== form.ability1;
+    const a2 = hasAbility2 ? allAbilities[form.ability2]?.name : "-";
     const a3 = form.abilityHidden !== Abilities.NONE ? allAbilities[form.abilityHidden]?.name : "-";
 
     const rootPassiveSpecies = species.getRootSpeciesId(false);
     const passiveId = starterPassiveAbilities[rootPassiveSpecies];
-    const passiveName = passiveId !== undefined ? allAbilities[passiveId]?.name : "-";
 
     view.abilityText.setText("");
     view.abilityText.appendText(`A1: ${a1}`, false);
-    view.abilityText.appendText(`A2: ${a2}`, true);
-    view.abilityText.appendText(`H: ${a3}`, true);
-    view.abilityText.appendText(`P: ${passiveName}`, true);
+    if (hasAbility2) {
+      view.abilityText.appendText(`A2: ${a2}`, true);
+    }
+    if (species.generation !== 20) {
+      view.abilityText.appendText(`H: ${a3}`, true);
+    }
+    if (passiveId !== undefined) {
+      view.abilityText.appendText(`P: ${allAbilities[passiveId]?.name ?? "-"}`, true);
+    }
 
     if (view.statValueCells.length >= 8) {
       view.statValueCells[0].setText(String(row.stats.cost));
@@ -2359,6 +2583,18 @@ export default class VoidexPrelistUiHandler extends UiHandler {
 
   }
 
+  private condenseVoidexName(text: Phaser.GameObjects.Text, name: string): void {
+    text.setScale(VoidexPrelistUiHandler.NAME_DEFAULT_SCALE);
+    text.setText(name);
+    const trigger = name.length > 16
+      ? VoidexPrelistUiHandler.NAME_MAX_WIDTH * 0.82
+      : VoidexPrelistUiHandler.NAME_MAX_WIDTH;
+    if (text.displayWidth > trigger) {
+      const ratio = trigger / text.displayWidth;
+      text.setScale(text.scaleX * ratio, text.scaleY);
+    }
+  }
+
   private getRowPrefix(target: VoidexTarget): string {
     if (target.bucket === "party") {
       return "";
@@ -2377,8 +2613,12 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     const rows: ListRow[] = [];
 
     for (const t of targets) {
-      const species = getPokemonSpecies(t.speciesId);
-      if (!species) continue;
+      let species: PokemonSpecies;
+      try {
+        species = getPokemonSpecies(t.speciesId);
+      } catch {
+        continue;
+      }
       const forms = species.forms && species.forms.length > 0 ? species.forms.length : 1;
       for (let f = 0; f < forms; f++) {
         const form = species.forms && species.forms.length > 0 ? species.forms[f] : species;
@@ -2388,47 +2628,49 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       }
     }
 
-    const enemyUniversalSmittyForm = this.getCurrentEnemyUniversalSmittyForm();
-    const enemyUniversalSmittyFormName = enemyUniversalSmittyForm?.formName ?? null;
-    const hasAnyUniversalSmittyUnlocked =
-      !!this.scene.gameData &&
-      universalSmittyForms.some(uf => this.scene.gameData.isUniSmittyFormUnlocked(uf.formName));
-    for (const uf of universalSmittyForms) {
-      const isUnlocked = !!this.scene.gameData && this.scene.gameData.isUniSmittyFormUnlocked(uf.formName);
-      const isEnemyForm = !!enemyUniversalSmittyFormName && uf.formName === enemyUniversalSmittyFormName;
-      if (!isEnemyForm && !hasAnyUniversalSmittyUnlocked && !isUnlocked) {
-        continue;
+    if (!this.restrictedSpeciesIds) {
+      const enemyUniversalSmittyForm = this.getCurrentEnemyUniversalSmittyForm();
+      const enemyUniversalSmittyFormName = enemyUniversalSmittyForm?.formName ?? null;
+      const hasAnyUniversalSmittyUnlocked =
+        !!this.scene.gameData &&
+        universalSmittyForms.some(uf => this.scene.gameData.isUniSmittyFormUnlocked(uf.formName));
+      for (const uf of universalSmittyForms) {
+        const isUnlocked = !!this.scene.gameData && this.scene.gameData.isUniSmittyFormUnlocked(uf.formName);
+        const isEnemyForm = !!enemyUniversalSmittyFormName && uf.formName === enemyUniversalSmittyFormName;
+        if (!isEnemyForm && !hasAnyUniversalSmittyUnlocked && !isUnlocked) {
+          continue;
+        }
+        const stats: RowStats = {
+          id: 999999,
+          bst: uf.totalStats,
+          hp: uf.hp,
+          atk: uf.attack,
+          def: uf.defense,
+          spa: uf.spAttack,
+          spd: uf.spDefense,
+          spe: uf.speed,
+          cost: 0
+        };
+        const search = this.getUniversalSearchBlob(uf, stats);
+        rows.push({ kind: "universalSmitty", formName: uf.formName, form: uf, stats, search });
       }
-      const stats: RowStats = {
-        id: 999999,
-        bst: uf.totalStats,
-        hp: uf.hp,
-        atk: uf.attack,
-        def: uf.defense,
-        spa: uf.spAttack,
-        spd: uf.spDefense,
-        spe: uf.speed,
-        cost: 0
-      };
-      const search = this.getUniversalSearchBlob(uf, stats);
-      rows.push({ kind: "universalSmitty", formName: uf.formName, form: uf, stats, search });
-    }
 
-    if (enemyUniversalSmittyForm && !rows.some(r => r.kind === "universalSmitty" && r.formName === enemyUniversalSmittyForm.formName)) {
-      const uf = enemyUniversalSmittyForm;
-      const stats: RowStats = {
-        id: 999999,
-        bst: uf.totalStats,
-        hp: uf.hp,
-        atk: uf.attack,
-        def: uf.defense,
-        spa: uf.spAttack,
-        spd: uf.spDefense,
-        spe: uf.speed,
-        cost: 0
-      };
-      const search = this.getUniversalSearchBlob(uf, stats);
-      rows.push({ kind: "universalSmitty", formName: uf.formName, form: uf, stats, search });
+      if (enemyUniversalSmittyForm && !rows.some(r => r.kind === "universalSmitty" && r.formName === enemyUniversalSmittyForm.formName)) {
+        const uf = enemyUniversalSmittyForm;
+        const stats: RowStats = {
+          id: 999999,
+          bst: uf.totalStats,
+          hp: uf.hp,
+          atk: uf.attack,
+          def: uf.defense,
+          spa: uf.spAttack,
+          spd: uf.spDefense,
+          spe: uf.speed,
+          cost: 0
+        };
+        const search = this.getUniversalSearchBlob(uf, stats);
+        rows.push({ kind: "universalSmitty", formName: uf.formName, form: uf, stats, search });
+      }
     }
 
     return rows;
@@ -2750,6 +2992,9 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       .filter(n => Number.isFinite(n)) as Species[];
 
     for (const primaryId of primaryIds) {
+      if (this.restrictedSpeciesIds && !this.restrictedSpeciesIds.has(primaryId)) {
+        continue;
+      }
       const starterEntry: any = (gameData.starterData as any)[primaryId];
       const obtained = starterEntry?.obtainedFusions as any;
       if (!Array.isArray(obtained) || obtained.length === 0) {
@@ -3057,7 +3302,9 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     buckets.modifier.sort(cmp);
     buckets.party.sort(cmp);
     buckets.enemy.sort(cmp);
-    buckets.other.sort(cmp);
+    if (!this.restrictedSpeciesIds) {
+      buckets.other.sort(cmp);
+    }
 
     if (this.viewMode === "pokemonAll") {
       const addFusionToBucket = (bucket: Bucket, primarySpeciesId: Species, fusionSpeciesId: Species) => {
@@ -3071,42 +3318,57 @@ export default class VoidexPrelistUiHandler extends UiHandler {
         buckets[bucket].unshift(row);
       };
 
-      if (this.scene.currentBattle) {
-        const party = this.scene.getParty();
-        party?.forEach((p) => {
-          if (p && p.isFusion() && p.fusionSpecies) {
-            const rootPrimary = p.species.getRootSpeciesId(true) as Species;
-            const rootFusion = p.fusionSpecies.getRootSpeciesId(true) as Species;
-            const pairs = this.expandFusionEvolutionPairs(rootPrimary, rootFusion);
+      if (this.restrictedSpeciesIds) {
+        const gameData = this.scene.gameData;
+        for (const primaryId of this.restrictedSpeciesIds) {
+          const obtained = gameData?.starterData?.[primaryId]?.obtainedFusions;
+          if (!Array.isArray(obtained) || obtained.length === 0) continue;
+          for (const fusionIdRaw of obtained) {
+            if (typeof fusionIdRaw !== "number") continue;
+            const pairs = this.expandFusionEvolutionPairs(primaryId, fusionIdRaw as Species);
             for (const [pId, fId] of pairs) {
-                addFusionToBucket("party", pId, fId);
+              addFusionToBucket("other", pId, fId);
             }
           }
-        });
-
-        const currentPhase = this.scene.getCurrentPhase();
-        if (currentPhase?.constructor?.name === "CommandPhase") {
-          const enemy = this.scene.getEnemyField();
-          enemy?.forEach((e) => {
-            if (e && e.isFusion() && e.fusionSpecies) {
-              const rootPrimary = e.species.getRootSpeciesId(true) as Species;
-              const rootFusion = e.fusionSpecies.getRootSpeciesId(true) as Species;
+        }
+      } else {
+        if (this.scene.currentBattle) {
+          const party = this.scene.getParty();
+          party?.forEach((p) => {
+            if (p && p.isFusion() && p.fusionSpecies) {
+              const rootPrimary = p.species.getRootSpeciesId(true) as Species;
+              const rootFusion = p.fusionSpecies.getRootSpeciesId(true) as Species;
               const pairs = this.expandFusionEvolutionPairs(rootPrimary, rootFusion);
               for (const [pId, fId] of pairs) {
-                addFusionToBucket("enemy", pId, fId);
+                  addFusionToBucket("party", pId, fId);
               }
             }
           });
-        }
-      }
 
-      const modifierFusions = this.getModifierFusions();
-      modifierFusions.forEach(f => {
-        const pairs = this.expandFusionEvolutionPairs(f.primarySpeciesId, f.fusionSpeciesId);
-        for (const [pId, fId] of pairs) {
-          addFusionToBucket("modifier", pId, fId);
+          const currentPhase = this.scene.getCurrentPhase();
+          if (currentPhase?.constructor?.name === "CommandPhase") {
+            const enemy = this.scene.getEnemyField();
+            enemy?.forEach((e) => {
+              if (e && e.isFusion() && e.fusionSpecies) {
+                const rootPrimary = e.species.getRootSpeciesId(true) as Species;
+                const rootFusion = e.fusionSpecies.getRootSpeciesId(true) as Species;
+                const pairs = this.expandFusionEvolutionPairs(rootPrimary, rootFusion);
+                for (const [pId, fId] of pairs) {
+                  addFusionToBucket("enemy", pId, fId);
+                }
+              }
+            });
+          }
         }
-      });
+
+        const modifierFusions = this.getModifierFusions();
+        modifierFusions.forEach(f => {
+          const pairs = this.expandFusionEvolutionPairs(f.primarySpeciesId, f.fusionSpeciesId);
+          for (const [pId, fId] of pairs) {
+            addFusionToBucket("modifier", pId, fId);
+          }
+        });
+      }
     }
 
     const currentPhase = this.scene.getCurrentPhase();
@@ -3634,47 +3896,55 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     const addedSpecies = new Set<Species>();
     const addedEvos = new Set<Species>();
 
-    const modifierSpecies = this.getModifierSpecies();
-    for (const s of modifierSpecies) {
-      targets.push({ bucket: "modifier", kind: "species", speciesId: s });
-      addedSpecies.add(s);
-      this.addEvolutionsToTargets("modifier", s, targets, addedSpecies, addedEvos);
-    }
+    if (this.restrictedSpeciesIds) {
+      for (const s of this.restrictedSpeciesIds) {
+        if (addedSpecies.has(s)) continue;
+        targets.push({ bucket: "other", kind: "species", speciesId: s });
+        addedSpecies.add(s);
+      }
+    } else {
+      const modifierSpecies = this.getModifierSpecies();
+      for (const s of modifierSpecies) {
+        targets.push({ bucket: "modifier", kind: "species", speciesId: s });
+        addedSpecies.add(s);
+        this.addEvolutionsToTargets("modifier", s, targets, addedSpecies, addedEvos);
+      }
 
-    if (this.scene.currentBattle) {
-      const currentPhase = this.scene.getCurrentPhase();
-      const isCommandPhase = currentPhase?.constructor?.name === "CommandPhase";
-      if (isCommandPhase) {
-        const enemy = this.scene.getEnemyField();
-        const first = enemy?.[0];
-        if (first) {
-          const s = first.getSpeciesForm().speciesId;
-          targets.push({ bucket: "enemy", kind: "species", speciesId: s });
-          addedSpecies.add(s);
-          this.addEvolutionsToTargets("enemy", s, targets, addedSpecies, addedEvos);
+      if (this.scene.currentBattle) {
+        const currentPhase = this.scene.getCurrentPhase();
+        const isCommandPhase = currentPhase?.constructor?.name === "CommandPhase";
+        if (isCommandPhase) {
+          const enemy = this.scene.getEnemyField();
+          const first = enemy?.[0];
+          if (first) {
+            const s = first.getSpeciesForm().speciesId;
+            targets.push({ bucket: "enemy", kind: "species", speciesId: s });
+            addedSpecies.add(s);
+            this.addEvolutionsToTargets("enemy", s, targets, addedSpecies, addedEvos);
+          }
         }
       }
-    }
 
-    if (this.scene.currentBattle) {
-      const party = this.scene.getParty();
-      party?.forEach((p, idx) => {
-        if (!p) return;
-        const s = p.getSpeciesForm().speciesId;
-        targets.push({ bucket: "party", kind: "species", speciesId: s, partyIndex: idx });
-        addedSpecies.add(s);
-        this.addEvolutionsToTargets("party", s, targets, addedSpecies, addedEvos);
-      });
-    }
+      if (this.scene.currentBattle) {
+        const party = this.scene.getParty();
+        party?.forEach((p, idx) => {
+          if (!p) return;
+          const s = p.getSpeciesForm().speciesId;
+          targets.push({ bucket: "party", kind: "species", speciesId: s, partyIndex: idx });
+          addedSpecies.add(s);
+          this.addEvolutionsToTargets("party", s, targets, addedSpecies, addedEvos);
+        });
+      }
 
-    Object.entries(Species)
-      .filter(([k, v]) => typeof v === "number" && (v as number) > 0 && isNaN(Number(k)))
-      .sort((a, b) => (a[1] as number) - (b[1] as number))
-      .forEach(([, v]) => {
-        const s = v as Species;
-        if (addedSpecies.has(s)) return;
-        targets.push({ bucket: "other", kind: "species", speciesId: s });
-      });
+      Object.entries(Species)
+        .filter(([k, v]) => typeof v === "number" && (v as number) > 0 && isNaN(Number(k)))
+        .sort((a, b) => (a[1] as number) - (b[1] as number))
+        .forEach(([, v]) => {
+          const s = v as Species;
+          if (addedSpecies.has(s)) return;
+          targets.push({ bucket: "other", kind: "species", speciesId: s });
+        });
+    }
 
     return targets;
   }
@@ -3708,8 +3978,10 @@ export default class VoidexPrelistUiHandler extends UiHandler {
           }
         });
       }
-      const handler = this.scene.ui.handlers[Mode.MODIFIER_SELECT] as ModifierSelectUiHandler;
-      const shopOptions = (handler as any)?.getCurrentShopOptions?.();
+      const lootHandler = this.scene.ui.handlers[Mode.LOOT_REWARD_SELECT] as ModifierSelectUiHandler;
+      const baseHandler = this.scene.ui.handlers[Mode.MODIFIER_SELECT] as ModifierSelectUiHandler;
+      const lootShopOpts = (lootHandler as any)?.getCurrentShopOptions?.();
+      const shopOptions = (lootShopOpts?.length ? lootShopOpts : (baseHandler as any)?.getCurrentShopOptions?.());
       if (shopOptions) {
         shopOptions.forEach((opt: any) => {
           if (opt.type instanceof AddPokemonModifierType) {
@@ -3756,8 +4028,10 @@ export default class VoidexPrelistUiHandler extends UiHandler {
           }
         });
       }
-      const handler = this.scene.ui.handlers[Mode.MODIFIER_SELECT] as ModifierSelectUiHandler;
-      const shopOptions = (handler as any)?.getCurrentShopOptions?.();
+      const lootHandler = this.scene.ui.handlers[Mode.LOOT_REWARD_SELECT] as ModifierSelectUiHandler;
+      const baseHandler = this.scene.ui.handlers[Mode.MODIFIER_SELECT] as ModifierSelectUiHandler;
+      const lootShopOpts = (lootHandler as any)?.getCurrentShopOptions?.();
+      const shopOptions = (lootShopOpts?.length ? lootShopOpts : (baseHandler as any)?.getCurrentShopOptions?.());
       if (shopOptions) {
         shopOptions.forEach((opt: any) => {
           if (opt.type instanceof AddPokemonModifierType) {
@@ -3815,6 +4089,18 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     }
     styleEl.textContent = css;
     if (node && typeof node.addEventListener === "function") {
+      this.searchContextMenuHandler = (e: Event) => {
+        e.preventDefault();
+      };
+      this.searchMouseDownHandler = (e: MouseEvent) => {
+        if (e.button === 2) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.getUi().processInput(Button.CANCEL);
+        }
+      };
+      node.addEventListener("contextmenu", this.searchContextMenuHandler);
+      node.addEventListener("mousedown", this.searchMouseDownHandler);
       this.searchKeydownHandler = (event: KeyboardEvent) => {
         const c = event.code;
         if (c === "KeyW" || c === "KeyA" || c === "KeyS" || c === "KeyD" || c === "KeyZ") {
@@ -3859,7 +4145,10 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     clearBg.setInteractive({ useHandCursor: true });
     const clearText = addTextObject(this.scene, clearX, clearY, "X", TextStyle.WINDOW, { fontSize: "34px", align: "center" });
     clearText.setOrigin(0.5, 0.5);
-    clearBg.on("pointerdown", () => {
+    clearBg.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (!pointer.leftButtonDown()) {
+        return;
+      }
       this.searchQuery = "";
       input.setText("");
       if (typeof input.setBlur === "function") {
@@ -3879,13 +4168,21 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       document.removeEventListener("mousedown", this.searchBlurHandler);
       this.searchBlurHandler = null;
     }
-    if (this.searchKeydownHandler) {
-      const node: any = (this.inputEl as any)?.node;
-      if (node && typeof node.removeEventListener === "function") {
+    const node: any = (this.inputEl as any)?.node;
+    if (node && typeof node.removeEventListener === "function") {
+      if (this.searchKeydownHandler) {
         node.removeEventListener("keydown", this.searchKeydownHandler);
       }
-      this.searchKeydownHandler = null;
+      if (this.searchContextMenuHandler) {
+        node.removeEventListener("contextmenu", this.searchContextMenuHandler);
+      }
+      if (this.searchMouseDownHandler) {
+        node.removeEventListener("mousedown", this.searchMouseDownHandler);
+      }
     }
+    this.searchKeydownHandler = null;
+    this.searchContextMenuHandler = null;
+    this.searchMouseDownHandler = null;
     if (this.inputEl && typeof this.inputEl.destroy === "function") {
       this.inputEl.destroy();
     }

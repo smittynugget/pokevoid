@@ -35,6 +35,7 @@ import { ShowRewards } from "#app/utils/show-rewards.js";
 import {ShopModifierSelectPhase} from "./shop-modifier-select-phase";
 import {SkillTreePhase, SkillTreeMode} from "./skill-tree-phase";
 import ModifierSelectUiHandler from "#app/ui/modifier-select-ui-handler.js";
+import Overrides from "#app/overrides";
 import {checkQuestState, QuestState, QuestUnlockables} from "#app/system/game-data.js";
 import {TitleSummarySystem} from "#app/system/title-summary-system.js";
 import {RewardObtainedType, UnlockModePokeSpriteType} from "#app/ui/reward-obtained-ui-handler.js";
@@ -55,8 +56,8 @@ import { getAllRivalTrainerTypes } from "#app/data/trainer-config.js";
 import { logNext30DaysLegendaryGachaSpecies } from "#app/data/egg.js";
 import PokedexUiHandler from "#app/ui/pokedex-ui-handler.js";
 import { BattlePathPhase } from "./battle-path-phase";
-import { ChaosEncounterPhase } from "./chaos-encounter-phase";
-import { outputPokemonData } from "#app/data/extract_data.js";
+import MenuUiHandler from "#app/ui/menu-ui-handler.js";
+
 import { GameMechanicsID, GameMechanicsVersion } from "#app/enums/gameMechanicsID.js";
 import { ChampionModeIntegration, setupBattleFlow } from "#app/system/champion-mode-integration.js";
 import { ChampionSelectPhase } from "#app/phases/champion-select-phase.js";
@@ -66,9 +67,11 @@ import { POKEMON_ALT_BUILDS, PokemonAltBuildId } from "#app/data/pokemon-alt-bui
 import { PokemonAltBuildModifier } from "#app/modifier/modifier.js";
 import { PokemonAltBuildModifierType } from "#app/modifier/modifier-type.js";
 import { SlideshowCutscenePhase } from "./slideshow-cutscene-phase";
-import { DEBUG_TEST_RUN_END_SUMMARY, DEBUG_TEST_SLIDESHOW_CUTSCENE } from "#app/overrides.js";
-import { addRivalSilhouetteOverlay } from "#app/utils/story-cutscene-overlays.js";
+import { DEBUG_TEST_RUN_END_SUMMARY, DEBUG_TEST_SLIDESHOW_CUTSCENE, DEBUG_FORCE_SMITOM_TUTORIAL } from "#app/overrides.js";
+import { addCorruptedRivalOverlay, playCutsceneFaintAnim } from "#app/utils/story-cutscene-overlays.js";
 import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays.js";
+import { SmitomTutorialPhase } from "#app/phases/smitom-tutorial-phase.js";
+import { TutorialBattlePhase } from "#app/phases/tutorial-battle-phase.js";
 
 export class TitlePhase extends Phase {
     private loaded: boolean;
@@ -76,18 +79,25 @@ export class TitlePhase extends Phase {
     public gameMode: GameModes;
     private titleSummarySystem: TitleSummarySystem | null = null;
     private fromShop: boolean = false;
+    private skipReturnCondense: boolean = false;
+    private fromVictoryRun: boolean = false;
     private debugModeActive: boolean = false;
     private static debugCutsceneShown: boolean = false;
     private static debugRunEndSummaryShown: boolean = false;
     private static titleStoryCutsceneTriggered: boolean = false;
     private static debugCutsceneMenuDisabled: boolean = false;
+    private static firstTimeFtlAutoStartPending: boolean = false;
+    public static tutorialBattlePending: boolean = false;
+    public static debugTutorialFlowActive: boolean = false;
 
-    constructor(scene: BattleScene, fromShop: boolean = false) {
+    constructor(scene: BattleScene, fromShop: boolean = false, skipReturnCondense: boolean = false, fromVictoryRun: boolean = false) {
         super(scene);
 
         this.loaded = false;
         this.titleSummarySystem = new TitleSummarySystem(scene);
         this.fromShop = fromShop;
+        this.skipReturnCondense = skipReturnCondense;
+        this.fromVictoryRun = fromVictoryRun;
     }
 
     start(): void {
@@ -104,10 +114,40 @@ export class TitlePhase extends Phase {
             return;
         }
 
-        if (!TitlePhase.titleStoryCutsceneTriggered && this.shouldShowTitleCutscene()) {
-            TitlePhase.titleStoryCutsceneTriggered = true;
-            this.triggerTitleCutscene();
+        if (TitlePhase.tutorialBattlePending) {
+            if (!this.scene._bootGateResolvers) {
+                this.beginTutorialBattleFlow();
+                return;
+            }
+            const pollGate = () => {
+                if (!this.scene._bootGateResolvers) {
+                    if (TitlePhase.tutorialBattlePending) {
+                        this.beginTutorialBattleFlow();
+                    }
+                } else {
+                    this.scene.time.delayedCall(100, pollGate);
+                }
+            };
+            this.scene.time.delayedCall(100, pollGate);
             return;
+        }
+
+        if (!this.scene.gameData.gameStats.onboardingTutorialComplete
+            && this.scene.gameData.gameStats.cutsceneTitleAShown === true
+            && this.scene.gameData.isFirstTimeFtlAutoStartEligible()
+            && !this.scene._bootGateResolvers) {
+            this.scene.gameData.gameStats.cutsceneTitleAShown = false;
+            this.scene.gameData.isNewPlayer = true;
+            this.scene.gameData.saveSystem();
+        }
+
+        this.scene.ui.resetModeChain();
+        this.scene.ui.setMode(Mode.MESSAGE);
+        const isReturnToTitle = !this.fromShop && !this.skipReturnCondense && !this.scene._bootGateResolvers && !this.scene.scene.isActive("loading");
+        if (isReturnToTitle) {
+            this.scene.playReturnCondense();
+        } else {
+            this.scene.showTitleBG();
         }
 
         this.scene.ui.clearText();
@@ -131,17 +171,178 @@ export class TitlePhase extends Phase {
         }
 
         this.scene.gameData.getSession(loggedInUser?.lastSessionSlot ?? -1).then(sessionData => {
-            this.scene.showTitleBG();
             this.showOptions();
             if (DEBUG_TEST_RUN_END_SUMMARY && !TitlePhase.debugRunEndSummaryShown) {
                 TitlePhase.debugRunEndSummaryShown = true;
                 this.scene.ui.setOverlayMode(Mode.RUN_END_SUMMARY, { debug: true });
             }
-
         }).catch(err => {
             console.error(err);
             this.showOptions();
         });
+    }
+
+    private beginAutoStartToStarterSelect(): void {
+        const scene = this.scene;
+
+        scene.ui.clearText();
+        scene.ui.fadeIn(250);
+        scene.playBgm("menu", true);
+
+        this.gameMode = GameModes.CHAOS_JOURNEY_FTL;
+        scene.gameMode = getGameMode(GameModes.CHAOS_JOURNEY_FTL);
+        scene.gameData.selectedChampionId = undefined;
+
+        scene.gameMechanicTracking[GameMechanicsID.CHAMPION_MODE] = GameMechanicsVersion.CHAMPION_V1;
+
+        scene.arena.preloadBgm();
+
+        ChampionModeIntegration.initializeChampionSelection(scene, GameModes.CHAOS_JOURNEY_FTL, {
+            onChampionReady: () => {},
+            skipToChampionId: "apollo"
+        });
+
+        super.end();
+    }
+
+    private beginFirstTimeFtlAutoStartFlow(): void {
+        TitlePhase.firstTimeFtlAutoStartPending = false;
+
+        const scene = this.scene;
+
+        scene.clearAllPhaseQueues();
+        scene.ui.resetModeChain();
+        scene.ui.clearText();
+        scene.ui.fadeIn(250);
+        scene.playBgm("laboratory", true);
+
+        scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE_FTL);
+        scene.sessionSlotId = 0;
+
+        const championId = scene.gameData.gender === PlayerGender.FEMALE ? "diana" : "apollo";
+        scene.gameData.selectedChampionId = championId;
+        scene.gameData.initializeSkillTree(championId);
+
+        scene.unshiftPhase(new SkillTreePhase(scene as any, {
+            mode: SkillTreeMode.POKEMON_SELECTION,
+            requiredSelections: 2,
+            onComplete: (selections?: Array<{ species: number; isSignature: boolean }>) => {
+                if (selections && selections.length) {
+                    const active = (scene as any).gameData?.activeSkillTree;
+                    if (active) {
+                        active.selectedPokemonPicks = selections.map(s => ({
+                            species: s.species as any,
+                            isSignature: s.isSignature
+                        }));
+                    }
+                }
+                setupBattleFlow(scene, false);
+            }
+        }));
+
+        super.end();
+        scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.FIRST_TIME_FTL_SKILLTREE_SELECTION, true, false, 350);
+    }
+
+    private beginTutorialBattleFlow(): void {
+        TitlePhase.tutorialBattlePending = false;
+
+        const scene = this.scene;
+
+        scene.clearAllPhaseQueues();
+        scene.ui.resetModeChain();
+        scene.ui.clearText();
+        scene.ui.fadeIn(250);
+
+        scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE_FTL);
+        scene.sessionSlotId = -1;
+        scene.skillTreeEnabledForRun = false;
+
+        scene.gameData.tutorialOnboardActive = true;
+        scene.gameData.tutorialBattleScript = {
+            step: "pending_hp_trigger",
+            turnsSinceLastReward: 0,
+            rewardSubstep: "idle",
+            tutorialGlitchTriggered: false,
+            wakeUpTriggered: false,
+            voidCaptureTipTriggered: false,
+            reviverSeedPendingTrigger: false,
+            playerStarterSpecies: null,
+            foeSpecies: null
+        };
+
+        if (scene.gameData.gender === PlayerGender.UNSET) {
+            scene.gameData.gender = PlayerGender.MALE;
+        }
+
+        scene.gameData.selectedChampionId = null;
+
+        const championId = scene.gameData.gender === PlayerGender.FEMALE ? "diana" : "apollo";
+        scene.gameData.initializeSkillTree(championId);
+
+        scene.unshiftPhase(new TutorialBattlePhase(scene));
+
+        super.end();
+    }
+
+    private static deferredCutsceneConsumed = false;
+
+    private onTitleFullyComposed(): void {
+        this.scene.runDeferredBootTutorials();
+
+        if (TitlePhase.deferredCutsceneConsumed) return;
+        if (!this.shouldShowTitleCutscene()) return;
+        TitlePhase.deferredCutsceneConsumed = true;
+        this.scene.time.delayedCall(500, () => {
+            TitlePhase.titleStoryCutsceneTriggered = true;
+            this.triggerTitleCutscene();
+        });
+    }
+
+    private static smitomDebugShown = false;
+
+    private triggerSmitomTipIfNeeded(): boolean {
+        const flags = this.scene.gameData.smitomTutorialFlags;
+        if (DEBUG_FORCE_SMITOM_TUTORIAL && !TitlePhase.smitomDebugShown) {
+            TitlePhase.smitomDebugShown = true;
+            flags["title_welcome"] = false;
+        }
+        if (!flags["title_welcome"]) {
+            this.scene.unshiftPhase(new SmitomTutorialPhase(
+                this.scene,
+                "title_welcome",
+                i18next.t("tutorial:smitomTip.skillTree.title"),
+                [
+                    i18next.t("tutorial:smitomTip.skillTree.1"),
+                    i18next.t("tutorial:smitomTip.skillTree.2"),
+                ],
+                true
+            ));
+            this.scene.pushPhase(new TitlePhase(this.scene, this.fromShop, true));
+            this.scene.shiftPhase();
+            return true;
+        }
+        return false;
+    }
+
+    private triggerSmitomTalks4Tip(
+        tutorialKey: string,
+        titleKey: string,
+        textKeys: string[],
+        offerReplay = true
+    ): boolean {
+        const flags = this.scene.gameData.smitomTutorialFlags;
+        if (flags[tutorialKey]) return false;
+        this.scene.unshiftPhase(new SmitomTutorialPhase(
+            this.scene,
+            tutorialKey,
+            i18next.t(titleKey),
+            textKeys.map(k => i18next.t(k)),
+            offerReplay
+        ));
+        this.scene.pushPhase(new TitlePhase(this.scene, this.fromShop, true));
+        this.scene.shiftPhase();
+        return true;
     }
 
     private showDebugCutsceneMenu(): void {
@@ -229,7 +430,7 @@ export class TitlePhase extends Phase {
                 scene.beginPowerUnlockDeferral();
             }
 
-            scene.pushPhase(new TitlePhase(scene, this.fromShop));
+            scene.pushPhase(new TitlePhase(scene, this.fromShop, true));
             scene.unshiftPhase(new SlideshowCutscenePhase(scene, {
                 slides: finalSlides,
                 bgmKey: bgmKey,
@@ -266,33 +467,27 @@ export class TitlePhase extends Phase {
                         flameTextDone = false;
                         flameMinPauseDone = false;
                         flameDidAdvance = false;
-                        overlay = addRivalSilhouetteOverlay(scene, container, TrainerType.BLUE);
+                        overlay = addCorruptedRivalOverlay(scene, container, TrainerType.BLUE);
                         if (overlay) {
                             overlay.setAlpha(1);
-                            scene.tweens.add({
-                                targets: overlay,
-                                alpha: 0,
-                                duration: Utils.fixedInt(5500) as any,
-                                ease: "Power2",
-                                onComplete: () => {
+                            playCutsceneFaintAnim(scene, container, overlay).then(() => {
+                                if (mode !== "rival" || currentSlideKey !== "flame") {
+                                    return;
+                                }
+                                flameFadeDone = true;
+                                if (flameMinPauseTimer) {
+                                    flameMinPauseTimer.remove();
+                                    flameMinPauseTimer = null;
+                                }
+                                flameMinPauseDone = false;
+                                flameMinPauseTimer = scene.time.delayedCall(Utils.fixedInt(150) as any, () => {
                                     if (mode !== "rival" || currentSlideKey !== "flame") {
                                         return;
                                     }
-                                    flameFadeDone = true;
-                                    if (flameMinPauseTimer) {
-                                        flameMinPauseTimer.remove();
-                                        flameMinPauseTimer = null;
-                                    }
-                                    flameMinPauseDone = false;
-                                    flameMinPauseTimer = scene.time.delayedCall(Utils.fixedInt(150) as any, () => {
-                                        if (mode !== "rival" || currentSlideKey !== "flame") {
-                                            return;
-                                        }
-                                        flameMinPauseDone = true;
-                                        maybeAdvanceFlame(controller);
-                                    });
+                                    flameMinPauseDone = true;
                                     maybeAdvanceFlame(controller);
-                                },
+                                });
+                                maybeAdvanceFlame(controller);
                             });
                         } else {
                             flameFadeDone = true;
@@ -448,6 +643,7 @@ export class TitlePhase extends Phase {
 
         const setModeAndEnd = (gameMode: GameModes) => {
             this.gameMode = gameMode;
+            this.scene.ui.resetModeChain();
             this.scene.ui.setMode(Mode.MESSAGE);
             this.scene.ui.clearText();
             this.end();
@@ -457,7 +653,11 @@ export class TitlePhase extends Phase {
             options.push({
                 label: i18next.t("menu:continue"),
                 handler: () => {
-                    this.loadSaveSlot(lastSessionSlot);
+                    if (Overrides.SKIP_TO_STARTER_SELECT_OVERRIDE) {
+                        this.beginAutoStartToStarterSelect();
+                        return true;
+                    }
+                    this.promptRestorePointThenLoad(lastSessionSlot);
                     return true;
                 }
             });
@@ -513,7 +713,7 @@ export class TitlePhase extends Phase {
                                 this.scene.ui.clearText();
                                 return this.showOptions();
                             }
-                            this.loadSaveSlot(slotId);
+                            this.promptRestorePointThenLoad(slotId);
                         });
                     return true;
                 }
@@ -526,22 +726,6 @@ export class TitlePhase extends Phase {
                 },
                 item: shopNeedsRefresh ? 'exclamationMark' : undefined,
                 itemArgs: ['smitems']
-            },
-            {
-                label: i18next.t("menu:questsAndBounties"),
-                handler: () => {
-                    this.scene.ui.setOverlayMode(Mode.SMITTY_CONSOLE, {
-                        buttonActions: [
-                            async () => {
-                            },
-                            () => {
-                                this.scene.ui.revertMode();
-                            }
-                        ]
-                    });
-                    return true;
-                },
-                keepOpen: true
             },
             {
                 label: "Discord",
@@ -580,13 +764,15 @@ export class TitlePhase extends Phase {
         const config: OptionSelectConfig = {
             options: options,
             noCancel: true,
-            yOffset: 60
+            yOffset: 60,
+            postComposeCallback: () => this.onTitleFullyComposed(),
         };
         this.scene.ui.setMode(Mode.TITLE, config);
 
+        if (this.shouldShowTitleCutscene()) return;
+
         let introTutorials = [EnhancedTutorial.LEGENDARY_POKEMON_1, EnhancedTutorial.BUG_TYPES_1];
         let firstVictoryTutorials = [EnhancedTutorial.FIRST_VICTORY, EnhancedTutorial.NEW_QUESTS];
-        let bountiesTutorials = [EnhancedTutorial.DAILY_BOUNTY, EnhancedTutorial.BOUNTIES_1];
         let menuAccess = [EnhancedTutorial.MENU_ACCESS, EnhancedTutorial.STATS, EnhancedTutorial.RUN_HISTORY_1];
         let testDetails = [EnhancedTutorial.EGG_SWAP_1, EnhancedTutorial.EGGS_1, EnhancedTutorial.UNLOCK_JOURNEY];
         let v2UpdateTutorials = [
@@ -604,7 +790,12 @@ export class TitlePhase extends Phase {
             EnhancedTutorial.COMMAND_UI_NEW_COMMANDS
         ];
         if(!this.fromShop) {
-        if(!this.scene.gameData.tutorialService.allTutorialsCompleted(introTutorials)) {
+        if(this.fromVictoryRun && this.triggerSmitomTalks4Tip(
+            "post_run_win",
+            "tutorial:smitomTip.postRunWin.title",
+            ["tutorial:smitomTip.postRunWin.1", "tutorial:smitomTip.postRunWin.2"]
+        )) {}
+        else if(!this.scene.gameData.tutorialService.allTutorialsCompleted(introTutorials)) {
             if(this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED)) {
                 this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.JOURNEY_1);
                 this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.TYPE_SWITCHER);
@@ -629,20 +820,35 @@ export class TitlePhase extends Phase {
             this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.NEW_QUESTS);
             this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1);
         }
-         else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.POKEROGUE_1)) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.POKEROGUE_1, true, false, 0);
-        }
 
-        else if(!this.scene.gameData.tutorialService.allTutorialsCompleted(firstVictoryTutorials) && this.scene.gameData.defeatedRivals.length > 0) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", firstVictoryTutorials, true, false, true, 0);
-        }
-        else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.THE_VOID_UNLOCKED) && this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE]) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.THE_VOID_UNLOCKED, EnhancedTutorial.NEW_QUESTS], true, false, true, 0);
-        }
+        else if(this.triggerSmitomTalks4Tip(
+            "pokerogue",
+            "tutorial:smitomTip.pokerogue.title",
+            ["tutorial:smitomTip.pokerogue.1"]
+        )) {}
 
-        else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.THE_VOID_OVERTAKEN) && this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", [EnhancedTutorial.THE_VOID_OVERTAKEN, EnhancedTutorial.NEW_QUESTS, EnhancedTutorial.SMITTY_FORM_UNLOCKED_1], true, false, true, 0);
-        }
+        else if(this.scene.gameData.defeatedRivals.length > 0 && this.triggerSmitomTalks4Tip(
+            "first_victory",
+            "tutorial:smitomTip.firstVictory.title",
+            ["tutorial:smitomTip.firstVictory.1"]
+        )) {}
+
+        else if(this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED) && this.triggerSmitomTalks4Tip(
+            "unlock_journey",
+            "tutorial:smitomTip.unlockJourney.title",
+            ["tutorial:smitomTip.unlockJourney.1", "tutorial:smitomTip.unlockJourney.2"]
+        )) {}
+        else if(this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE] && this.triggerSmitomTalks4Tip(
+            "the_void_unlocked",
+            "tutorial:smitomTip.theVoidUnlocked.title",
+            ["tutorial:smitomTip.theVoidUnlocked.1"]
+        )) {}
+
+        else if(this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN] && this.triggerSmitomTalks4Tip(
+            "the_void_overtaken",
+            "tutorial:smitomTip.theVoidOvertaken.title",
+            ["tutorial:smitomTip.theVoidOvertaken.1"]
+        )) {}
         else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1)) {
             if(this.scene.gameData.uniSmittyUnlocks.length > 0) {
                 this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1, true, false, 0);
@@ -652,34 +858,42 @@ export class TitlePhase extends Phase {
             }
         }
 
-        else if(this.scene.gameData.isDailyBountyTime()) {
-            if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.BOUNTIES_1)) {
-                this.scene.gameData.tutorialService.showCombinedTutorial("", bountiesTutorials, true, false, true, 0);
-            }
-            else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.DAILY_BOUNTY)) {
-                this.scene.gameData.tutorialService.showTutorial(EnhancedTutorial.DAILY_BOUNTY, true, false);
-            }
-            this.scene.gameData.updateDailyBountyCode();
-            this.scene.gameData.localSaveAll(this.scene);
-        }
         else if(Utils.randSeedInt(100, 1) <= 1) {
-            if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SAVING_1)) {
+            if(this.triggerSmitomTalks4Tip(
+                "smitom",
+                "tutorial:smitomTip.smitom.title",
+                ["tutorial:smitomTip.smitom.1", "tutorial:smitomTip.smitom.2"]
+            )) {}
+            else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SAVING_1)) {
                 this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SAVING_1, true, false, 0);
             }
-            else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SMITOM)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SMITOM, true, false, 0);
-            }
-            else if(!this.scene.gameData.tutorialService.allTutorialsCompleted(menuAccess)) {
-                this.scene.gameData.tutorialService.showCombinedTutorial("", menuAccess, true, false, true, 0);
-            }
-            else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.RIVAL_QUESTS)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.RIVAL_QUESTS, true, false, 0);
-            }
+            else if(this.triggerSmitomTalks4Tip(
+                "access_menu",
+                "tutorial:smitomTip.accessMenu.title",
+                ["tutorial:smitomTip.accessMenu.1"]
+            )) {}
+            else if(this.triggerSmitomTalks4Tip(
+                "stats",
+                "tutorial:smitomTip.stats.title",
+                ["tutorial:smitomTip.stats.1"]
+            )) {}
+            else if(this.triggerSmitomTalks4Tip(
+                "run_history",
+                "tutorial:smitomTip.runHistory.title",
+                ["tutorial:smitomTip.runHistory.1", "tutorial:smitomTip.runHistory.2"]
+            )) {}
+            else if(this.triggerSmitomTalks4Tip(
+                "rival_quests",
+                "tutorial:smitomTip.rivalQuests.title",
+                ["tutorial:smitomTip.rivalQuests.1"]
+            )) {}
+            else if(this.triggerSmitomTalks4Tip(
+                "new_forms",
+                "tutorial:smitomTip.newForms.title",
+                ["tutorial:smitomTip.newForms.1", "tutorial:smitomTip.newForms.2", "tutorial:smitomTip.newForms.3", "tutorial:smitomTip.newForms.4"]
+            )) {}
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.ABILITIES_1)) {
                 this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.ABILITIES_1, true, false, 0);
-            }
-            else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.NEW_FORMS_1)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.NEW_FORMS_1, true, false, 0);
             }
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.GLITCH_FORMS_1)) {
                 this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.GLITCH_FORMS_1, true, false, 0);
@@ -687,15 +901,25 @@ export class TitlePhase extends Phase {
             else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.SMITTY_FORMS_1) && this.scene.gameData.uniSmittyUnlocks.length > 0) {
                 this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.SMITTY_FORMS_1, true, false, 0);
             }
-            else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.THANK_YOU)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.THANK_YOU, true, false, 0);
-            }
-            else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.DISCORD)) {
-                this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.DISCORD, true, false, 0);
-            }
+            else if(this.scene.gameData.gameStats.playTime >= 30 * 3600 && this.triggerSmitomTalks4Tip(
+                "thank_you",
+                "tutorial:smitomTip.thankYou.title",
+                ["tutorial:smitomTip.thankYou.1", "tutorial:smitomTip.thankYou.2"]
+            )) {}
+            else if(this.triggerSmitomTalks4Tip(
+                "discord",
+                "tutorial:smitomTip.discord.title",
+                ["tutorial:smitomTip.discord.1"]
+            )) {}
         }
 
         }
+    }
+
+    private openManageData(): void {
+        const menuHandler = this.scene.ui.handlers[Mode.MENU] as MenuUiHandler;
+        const config = menuHandler.getManageDataConfig();
+        this.scene.ui.setOverlayMode(Mode.MENU_OPTION_SELECT, config);
     }
 
     private showGameModeSelection(): void {
@@ -723,10 +947,22 @@ export class TitlePhase extends Phase {
                 }
             },
             {
+                label: i18next.t("menu:manageSaves"),
+                handler: () => {
+                    this.openManageData();
+                    return true;
+                },
+                keepOpen: true,
+                onHover: () => {
+                    this.scene.ui.showText(i18next.t("menu:manageSavesDescription"));
+                }
+            },
+            {
                 label: i18next.t("menu:cancel"),
                 handler: () => {
+                    this.scene.ui.hideMessageChrome();
                     this.scene.clearPhaseQueue();
-                    this.scene.pushPhase(new TitlePhase(this.scene));
+                    this.scene.pushPhase(new TitlePhase(this.scene, false, true));
                     super.end();
                     return true;
                 },
@@ -736,6 +972,7 @@ export class TitlePhase extends Phase {
             }
         ];
 
+        this.scene.ui.ensureMessageVisibleForOverlay();
         this.scene.ui.showText(i18next.t("menu:choosePath"), null, () =>
             this.scene.ui.setOverlayMode(Mode.OPTION_SELECT, {
                 options: startTypeOptions,
@@ -762,11 +999,98 @@ export class TitlePhase extends Phase {
         });
     }
 
+    promptRestorePointThenLoad(slotId: integer): void {
+        const gd = this.scene.gameData;
+        const hasPrimary = gd.checkSessionExists(slotId);
+        const hasBattle = gd.hasBattleCheckpoint(slotId);
+
+        if (hasPrimary && hasBattle) {
+            if (this.scene.loadBattleFromMode === 1) {
+                this.loadSaveSlot(slotId);
+                return;
+            }
+            const ui = this.scene.ui;
+            ui.setMode(Mode.MESSAGE);
+            ui.resetModeChain();
+            ui.showText(i18next.t("menu:selectSavePoint"), null, () =>
+                ui.setOverlayMode(Mode.OPTION_SELECT, {
+                    options: [
+                        {
+                            label: i18next.t("settings:atTurnStart"),
+                            handler: () => {
+                                ui.revertMode();
+                                ui.clearText();
+                                this.loadSaveSlot(slotId);
+                                return true;
+                            }
+                        },
+                        {
+                            label: i18next.t("settings:atBattleStart"),
+                            handler: () => {
+                                ui.revertMode();
+                                ui.clearText();
+                                this.loadBattleCheckpoint(slotId);
+                                return true;
+                            }
+                        },
+                        {
+                            label: i18next.t("menu:manageSaves"),
+                            handler: () => {
+                                this.openManageData();
+                                return true;
+                            },
+                            keepOpen: true
+                        },
+                        {
+                            label: i18next.t("menu:cancel"),
+                            handler: () => {
+                                ui.clearText();
+                                this.showOptions();
+                                return true;
+                            }
+                        }
+                    ],
+                    supportHover: true
+                })
+            );
+            return;
+        }
+
+        if (hasPrimary) {
+            this.loadSaveSlot(slotId);
+        } else if (hasBattle) {
+            this.loadBattleCheckpoint(slotId);
+        }
+    }
+
+    loadBattleCheckpoint(slotId: integer): void {
+        const data = this.scene.gameData.getBattleCheckpointData(slotId);
+        if (!data) {
+            this.loadSaveSlot(slotId);
+            return;
+        }
+        this.scene.sessionSlotId = slotId;
+        this.scene.ui.setMode(Mode.MESSAGE);
+        this.scene.ui.resetModeChain();
+        this.scene.gameData.loadSession(this.scene, slotId, data).then((success: boolean) => {
+            if (success) {
+                this.loaded = true;
+                this.scene.gameData.ensureActiveSkillTreeOnLegacyLoad(this.scene);
+                this.scene.ui.showText(i18next.t("menu:sessionSuccess"), null, () => this.end());
+            } else {
+                this.end();
+            }
+        }).catch(err => {
+            console.error(err);
+            this.scene.ui.showText(i18next.t("menu:failedToLoadSession"), null);
+        });
+    }
+
     initDailyRun(): void {
         this.scene.ui.setMode(Mode.SAVE_SLOT, SaveSlotUiMode.SAVE, (slotId: integer) => {
             this.scene.clearPhaseQueue();
             if (slotId === -1) {
-                this.scene.pushPhase(new TitlePhase(this.scene));
+                this.scene.pushPhase(new TitlePhase(this.scene, false, true));
                 return super.end();
             }
             this.scene.sessionSlotId = slotId;
@@ -817,6 +1141,11 @@ export class TitlePhase extends Phase {
                     this.scene.sessionPlayTime = 0;
                     this.scene.lastSavePlayTime = 0;
                     this.scene.moveUpgradesEnabledForRun = !this.scene.disableMoveUpgrades;
+                    this.scene.statSwitchersEnabledForRun = !this.scene.disableStatSwitchers;
+                    this.scene.releaseItemsEnabledForRun = !this.scene.disableReleaseItems;
+                    this.scene.ivScannerEnabledForRun = !this.scene.disableIvScanner;
+                    this.scene.mapEnabledForRun = !this.scene.disableMap;
+                    this.scene.wave35UnlockedThisRun = false;
                     this.scene.resetRunEndSummaryRunData();
                     this.end();
                 });
@@ -961,6 +1290,7 @@ export class TitlePhase extends Phase {
 
         const setModeAndEnd = (gameMode: GameModes) => {
             this.gameMode = gameMode;
+            this.scene.ui.resetModeChain();
             this.scene.ui.setMode(Mode.MESSAGE);
             this.scene.ui.clearText();
             this.end();
@@ -1067,9 +1397,11 @@ export class TitlePhase extends Phase {
             this.showMidnightAbyssFTLChoice(baseModeKey);
         } else {
             this.gameMode = this.getFTLVariant(baseModeKey);
+            this.scene.ui.resetModeChain();
             this.scene.ui.setMode(Mode.MESSAGE);
             this.scene.ui.clearText();
             this.end();
+
         }
     }
 
@@ -1090,6 +1422,7 @@ export class TitlePhase extends Phase {
                             this.showMidnightAbyssFTLChoice(baseModeKey);
                         } else {
                             this.gameMode = this.getFTLVariant(baseModeKey);
+                            this.scene.ui.resetModeChain();
                             this.scene.ui.setMode(Mode.MESSAGE);
                             this.scene.ui.clearText();
                             this.end();
@@ -1126,6 +1459,7 @@ export class TitlePhase extends Phase {
                 label: i18next.t("menu:ftl", { mode: modeName }),
                 handler: () => {
                     this.gameMode = ftlMode;
+                    this.scene.ui.resetModeChain();
                     this.scene.ui.setMode(Mode.MESSAGE);
                     this.scene.ui.clearText();
                     this.end();
@@ -1139,6 +1473,7 @@ export class TitlePhase extends Phase {
                 label: i18next.t("menu:midnight", { mode: modeName }),
                 handler: () => {
                     this.gameMode = shortMode;
+                    this.scene.ui.resetModeChain();
                     this.scene.ui.setMode(Mode.MESSAGE);
                     this.scene.ui.clearText();
                     this.end();
@@ -1155,6 +1490,7 @@ export class TitlePhase extends Phase {
                 label: i18next.t("menu:abyss", { mode: modeName }),
                 handler: () => {
                     this.gameMode = longMode;
+                    this.scene.ui.resetModeChain();
                     this.scene.ui.setMode(Mode.MESSAGE);
                     this.scene.ui.clearText();
                     this.end();
@@ -1390,6 +1726,7 @@ export class TitlePhase extends Phase {
         options.push({
             label: i18next.t("menu:cancel"),
             handler: () => {
+                this.scene.ui.hideMessageChrome();
                 this.scene.ui.clearText();
                 this.showOptions();
                 return true;
@@ -1400,6 +1737,7 @@ export class TitlePhase extends Phase {
         });
 
         this.scene.ui.revertMode().then(() => {
+            this.scene.ui.ensureMessageVisibleForOverlay();
             this.scene.ui.showText(headerText, null, () =>
                 this.scene.ui.setOverlayMode(Mode.OPTION_SELECT, {
                     options: options,
@@ -1674,7 +2012,7 @@ export class TitlePhase extends Phase {
                         showLoading: true,
                         onCancel: () => {
                             this.scene.clearPhaseQueue();
-                            this.scene.pushPhase(new TitlePhase(this.scene));
+                            this.scene.pushPhase(new TitlePhase(this.scene, false, true));
                         }
                     }));
 
@@ -1741,10 +2079,6 @@ export class TitlePhase extends Phase {
                                 if (starter.nickname) {
                                     starterPokemon.nickname = starter.nickname;
                                 }
-                                if (starter.fusionIndex > -1) {
-                                    starterPokemon.generateFusionViaSpeciesID(this.scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
-                                }
-
                                 const championId = this.scene.gameData.selectedChampionId;
                                 let selectedIsSignature = false;
                                 let altBuildId: PokemonAltBuildId | null = null;
@@ -1757,7 +2091,7 @@ export class TitlePhase extends Phase {
                                         const unlockedSignatures = (championData as any).unlockedSignaturePokemon as Species[] | undefined;
                                         const inUnlockedList = unlockedSignatures?.includes(starter.species.speciesId) || false;
 
-                                        selectedIsSignature = inBaseList || inUnlockedList;
+                                        selectedIsSignature = (inBaseList || inUnlockedList) && starter.isSignature !== false;
 
                                         if (selectedIsSignature) {
                                             altBuildId = ChampionUtils.getSignatureAltBuildId(starter.species.speciesId, championData);
@@ -1767,24 +2101,28 @@ export class TitlePhase extends Phase {
 
                                 if (selectedIsSignature) {
                                     starterPokemon.isSignature = true;
+                                }
 
-                                    if (altBuildId) {
-                                        const altBuild = POKEMON_ALT_BUILDS[altBuildId];
-
-                                        if (altBuild) {
-                                            const modifierType = new PokemonAltBuildModifierType(altBuild);
-                                            const modifier = new PokemonAltBuildModifier(modifierType, starterPokemon.id, altBuild);
-                                            modifier.applyAltBuildToPokemon(starterPokemon);
-                                        } else {
-                                        }
-                                    } else {
+                                if (!selectedIsSignature) {
+                                    if (Overrides.STARTER_FUSION_SPECIES_OVERRIDE) {
+                                        starterPokemon.generateFusionViaSpeciesID(Overrides.STARTER_FUSION_SPECIES_OVERRIDE as Species, true);
+                                    } else if (starter.fusionIndex > -1) {
+                                        starterPokemon.generateFusionViaSpeciesID(this.scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
                                     }
-                                } else {
                                 }
 
                                 starterPokemon.setVisible(false);
                                 party.push(starterPokemon);
                                 applySignatureTypeSwitcher(this.scene, starterPokemon);
+                                if (starterPokemon.isSignature && altBuildId) {
+                                    const def = POKEMON_ALT_BUILDS[altBuildId];
+                                    if (def) {
+                                        const rank = starterPokemon.altBuildRank ?? def.rank ?? 1;
+                                        const modType = new PokemonAltBuildModifierType(def, rank);
+                                        modType.id = "POKEMON_ALT_BUILD";
+                                        this.scene.addModifier(modType.newModifier(starterPokemon), true);
+                                    }
+                                }
                                 loadPokemonAssets.push(starterPokemon.loadAssets());
 
                             });
@@ -1899,11 +2237,11 @@ export class TitlePhase extends Phase {
 
         const slides = def.slides;
 
-        this.scene.pushPhase(new TitlePhase(this.scene, this.fromShop));
+        this.scene.pushPhase(new TitlePhase(this.scene, this.fromShop, true));
         this.scene.unshiftPhase(new SlideshowCutscenePhase(this.scene, {
             slides,
             bgmKey: def.bgmKey,
-            canSkip: true,
+            canSkip: false,
             pauseAfterText: 1000,
             defaultCharSound: "ui/select",
             resumeBgmOnEnd: false,
@@ -1911,6 +2249,13 @@ export class TitlePhase extends Phase {
                 if (!this.scene.disableCutscenes) {
                     flagSetter();
                 }
+
+                const gd = this.scene.gameData;
+                if (gd.isFirstTimeFtlAutoStartEligible()) {
+                    TitlePhase.tutorialBattlePending = true;
+                    gd.saveSystem();
+                }
+
                 TitlePhase.titleStoryCutsceneTriggered = false;
             }
         }));

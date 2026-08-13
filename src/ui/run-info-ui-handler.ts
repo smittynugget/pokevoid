@@ -25,6 +25,9 @@ import { PlayerPokemon } from "../field/pokemon";
 import Pokemon from "#app/field/pokemon.js";
 import { GameOverPhase } from "#app/phases/game-over-phase.js";
 import { ModifierTooltipUtils } from "./modifier-tooltip-utils";
+import { isPrimaryPointer } from "./pointer-utils";
+import { adjustDuelmonIconScale } from "../data/pokemon-species";
+import { getCachedIconPalette } from "../utils/type-switcher-icon-recolor";
 enum RunInfoUiMode {
   MAIN,
   HALL_OF_FAME,
@@ -134,6 +137,14 @@ export default class RunInfoUiHandler extends UiHandler {
       const abilityButtonElement = new Phaser.GameObjects.Sprite(this.scene, 0, 2, "keyboard", "E.png");
       abilityButtonContainer.add([abilityButtonText, abilityButtonElement]);
       abilityButtonContainer.setPosition(headerBgCoords.x - abilityButtonText.displayWidth - abilityButtonElement.displayWidth - 8, 10);
+      abilityButtonContainer.setInteractive(
+        new Phaser.Geom.Rectangle(0, 0, abilityButtonText.displayWidth + abilityButtonElement.displayWidth + 8, 20),
+        Phaser.Geom.Rectangle.Contains
+      );
+      abilityButtonContainer.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (pointer.button !== 0) return;
+        this.processInput(Button.CYCLE_ABILITY);
+      });
       this.runContainer.add(abilityButtonContainer);
     }
     const headerText = addTextObject(this.scene, 0, 0, i18next.t("runHistory:runInfo"), TextStyle.SETTINGS_LABEL);
@@ -258,6 +269,18 @@ export default class RunInfoUiHandler extends UiHandler {
       tObjSprite.setPosition(12, 28);
       enemyContainer.add(tObjSprite);
     }
+
+    if (this.runInfo.trainer.isCorrupted) {
+      const tObjSprites = tObj.getSprites();
+      const srcData = tObjSprites.length > 0 ? tObjSprites[0].pipelineData : null;
+      if (srcData?.["altBuildBlendMode"] === "duelmon_cluster4") {
+        tObjSprite.setPipeline((this.scene as BattleScene).spritePipeline, { tone: [0, 0, 0, 0], hasShadow: false });
+        tObjSprite.pipelineData["altBuildSpriteColors"] = srcData["altBuildSpriteColors"];
+        tObjSprite.pipelineData["altBuildTargetColors"] = srcData["altBuildTargetColors"];
+        tObjSprite.pipelineData["altBuildBlendMode"] = "duelmon_cluster4";
+        tObjSprite.pipelineData["altBuildInversionFactor"] = 0.7;
+      }
+    }
     const teraPokemon = {};
     this.runInfo.enemyModifiers.forEach((m) => {
       const modifier = m.toModifier(this.scene, this.modifiersModule[m.className]);
@@ -279,6 +302,34 @@ export default class RunInfoUiHandler extends UiHandler {
       const enemyIcon = this.scene.addPokemonIcon(enemy, 0, 0, 0, 0);
       const enemySprite1 = enemyIcon.list[0] as Phaser.GameObjects.Sprite;
       const enemySprite2 = (enemyIcon.list.length > 1) ? enemyIcon.list[1] as Phaser.GameObjects.Sprite : undefined;
+      if (this.runInfo.trainer?.isCorrupted) {
+        const corruptedTargets = [
+          ["#0C0C0C", "#5A1BB2", "#000000", "#330066"],
+          ["#000000", "#4B0082", "#0C0C0C", "#6340AB"],
+          ["#0C0C0C", "#6A0DAD", "#000000", "#371B58"],
+        ];
+        const chosen = Utils.randSeedItem(corruptedTargets);
+        const targetColors = chosen.map((hex: string) => {
+          const r = parseInt(hex.slice(1, 3), 16);
+          const g = parseInt(hex.slice(3, 5), 16);
+          const b = parseInt(hex.slice(5, 7), 16);
+          return [r, g, b, 255];
+        });
+        const bScene = this.scene as BattleScene;
+        [enemySprite1, enemySprite2].filter(Boolean).forEach(sp => {
+          const paletteInfo = getCachedIconPalette(bScene, sp!);
+          if (paletteInfo) {
+            sp!.clearTint();
+            sp!.setPipeline(bScene.spritePipeline, { tone: [0, 0, 0, 0], hasShadow: false, ignoreFieldPos: true, ignoreTimeTint: true });
+            sp!.pipelineData["altBuildSpriteColors"] = paletteInfo.cluster4.slice(0, 4);
+            sp!.pipelineData["altBuildTargetColors"] = targetColors;
+            sp!.pipelineData["altBuildBlendMode"] = "duelmon_cluster4";
+            sp!.pipelineData["altBuildInversionFactor"] = 0.7;
+          } else {
+            sp!.setTintFill(0x5A1BB2);
+          }
+        });
+      }
       if (teraPokemon[enemyData.id]) {
         const teraTint = getTypeRgb(teraPokemon[enemyData.id]);
         const teraColor = new Phaser.Display.Color(teraTint[0], teraTint[1], teraTint[2]);
@@ -352,6 +403,11 @@ export default class RunInfoUiHandler extends UiHandler {
           icon.setInteractive(new Phaser.Geom.Rectangle(0, 0, hitW, hitH), Phaser.Geom.Rectangle.Contains);
           icon.on("pointerover", () => ModifierTooltipUtils.showForModifier(this.scene, modifier));
           icon.on("pointerout", () => ModifierTooltipUtils.hideIfNotPinned(this.scene));
+          icon.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+            if (!isPrimaryPointer(pointer)) return;
+            ModifierTooltipUtils.showForModifier(this.scene, modifier);
+            ModifierTooltipUtils.setPinned(true);
+          });
           const rowHeightModifier = Math.floor(visibleModifierIndex/7);
           icon.setPosition(24 * (visibleModifierIndex%7), 20 + (35 * rowHeightModifier));
           modifierIconsContainer.add(icon);
@@ -415,7 +471,7 @@ export default class RunInfoUiHandler extends UiHandler {
 
       const iconContainer = this.scene.add.container(0, 0);
       const icon = this.scene.addPokemonIcon(pokemon, 0, 0, 0, 0);
-      icon.setScale(0.75);
+      icon.setScale(adjustDuelmonIconScale(0.75, pokemon.species.generation, pokemon.isGlitchOrSmittyForm?.()));
       icon.setPosition(-99, 1);
       const type2 = types[1] ? getTypeRgb(types[1]) : undefined;
       const type2Color = type2 ? new Phaser.Display.Color(type2[0], type2[1], type2[2]) : undefined;
@@ -435,7 +491,14 @@ export default class RunInfoUiHandler extends UiHandler {
       }
       const pPassiveInfo = pokemon.passive ? passiveLabel+": "+pokemon.getPassiveAbility().name : "";
       const pAbilityInfo = abilityLabel + ": " + pokemon.getAbility().name;
-      const pokeInfoText = addBBCodeTextObject(this.scene, 0, 0, pName, TextStyle.SUMMARY, {fontSize: textContainerFontSize, lineSpacing: 3});
+      const isDuelmonRI = pokemon.species?.generation === 20;
+      const isFusionRI = pokemon.isFusion();
+      const isShinyRI = pokemon.isShiny();
+      const isGlitchSmittyRI = pokemon.isGlitchOrSmittyForm?.() ?? false;
+      const pNameStyled = (isDuelmonRI || isFusionRI || isShinyRI || isGlitchSmittyRI)
+          ? `[color=${getTextColor(TextStyle.SUMMARY_GOLD)}]${pName}[/color]`
+          : pName;
+      const pokeInfoText = addBBCodeTextObject(this.scene, 0, 0, pNameStyled, TextStyle.SUMMARY, {fontSize: textContainerFontSize, lineSpacing: 3});
       pokeInfoText.appendText(`${i18next.t("saveSlotSelectUiHandler:lv")}${Utils.formatFancyLargeNumber(pokemon.level, 1)} - ${pNature}`);
       pokeInfoText.appendText(pAbilityInfo);
       pokeInfoText.appendText(pPassiveInfo);
@@ -544,6 +607,11 @@ export default class RunInfoUiHandler extends UiHandler {
             itemIcon.setInteractive(new Phaser.Geom.Rectangle(0, 0, itemHitW, itemHitH), Phaser.Geom.Rectangle.Contains);
             itemIcon.on("pointerover", () => ModifierTooltipUtils.showForModifier(this.scene, item));
             itemIcon.on("pointerout", () => ModifierTooltipUtils.hideIfNotPinned(this.scene));
+            itemIcon.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+              if (!isPrimaryPointer(pointer)) return;
+              ModifierTooltipUtils.showForModifier(this.scene, item);
+              ModifierTooltipUtils.setPinned(true);
+            });
             heldItemsContainer.add(itemIcon);
             if (index !== 0 && index % 18 === 0) {
               row++;
@@ -637,6 +705,18 @@ export default class RunInfoUiHandler extends UiHandler {
         ) as TypeSwitcherModifier | undefined;
         if (tsModifier) {
             tsModifier.apply([pkmn]);
+        }
+        const anyPkmn = pkmn as any;
+        if (anyPkmn.altBuildSpriteColors && anyPkmn.altBuildTargetColors) {
+          pokemonSprite.setPipelineData("altBuildSpriteColors", anyPkmn.altBuildSpriteColors);
+          pokemonSprite.setPipelineData("altBuildTargetColors", anyPkmn.altBuildTargetColors);
+          pokemonSprite.setPipelineData("altBuildBlendMode", anyPkmn.altBuildBlendMode);
+          pokemonSprite.setPipelineData("altBuildInversionFactor", anyPkmn.altBuildInversionFactor || 0.0);
+        } else {
+          delete (pokemonSprite.pipelineData as any)["altBuildSpriteColors"];
+          delete (pokemonSprite.pipelineData as any)["altBuildTargetColors"];
+          delete (pokemonSprite.pipelineData as any)["altBuildBlendMode"];
+          delete (pokemonSprite.pipelineData as any)["altBuildInversionFactor"];
         }
       });
       if (pkmn.isFusion()) {

@@ -236,10 +236,20 @@ export default class PokemonInfoContainer extends Phaser.GameObjects.Container {
         }
 
         const formName = pokemon.species.forms?.[pokemon.formIndex]?.formName;
-        this.pokemonFormText.setText(formName.length > this.numCharsBeforeCutoff ? formName.substring(0, this.numCharsBeforeCutoff - 3) + "..." : formName);
-        if (formName.length > this.numCharsBeforeCutoff) {
+        this.pokemonFormText.setScale(0.1666666667);
+        this.pokemonFormText.setText(formName);
+        const formTextStyle = (pokemon.species?.generation === 20 || pokemon.isFusion() || pokemon.isShiny() || pokemon.isGlitchOrSmittyForm()) ? TextStyle.SUMMARY_GOLD : TextStyle.WINDOW;
+        this.pokemonFormText.setColor(getTextColor(formTextStyle, false, this.scene.uiTheme));
+        this.pokemonFormText.setShadowColor(getTextColor(formTextStyle, true, this.scene.uiTheme));
+        const formMaxWidth = 72;
+        const formCondenseTrigger = formName.length > 16 ? formMaxWidth * 0.82 : formMaxWidth;
+        if (this.pokemonFormText.displayWidth > formCondenseTrigger) {
+          const ratio = formCondenseTrigger / this.pokemonFormText.displayWidth;
+          this.pokemonFormText.setScale(this.pokemonFormText.scaleX * ratio, this.pokemonFormText.scaleY);
+        }
+        if (this.pokemonFormText.displayWidth > formMaxWidth) {
           this.pokemonFormText.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.pokemonFormText.width, this.pokemonFormText.height), Phaser.Geom.Rectangle.Contains);
-          this.pokemonFormText.on("pointerover", () => (this.scene as BattleScene).ui.showTooltip("", pokemon.species.forms?.[pokemon.formIndex]?.formName, true));
+          this.pokemonFormText.on("pointerover", () => (this.scene as BattleScene).ui.showTooltip("", formName, true));
           this.pokemonFormText.on("pointerout", () => (this.scene as BattleScene).ui.hideTooltip());
         } else {
           this.pokemonFormText.disableInteractive();
@@ -258,7 +268,8 @@ export default class PokemonInfoContainer extends Phaser.GameObjects.Container {
       const opponentPokemonAbilityIndex = (opponentPokemonOneNormalAbility && pokemon.abilityIndex === 1) ? 2 : pokemon.abilityIndex;
       const opponentPokemonAbilityAttr = 1 << opponentPokemonAbilityIndex;
 
-      const rootFormHasHiddenAbility = pokemon.scene.gameData.starterData[pokemon.species.getRootSpeciesId()].abilityAttr & opponentPokemonAbilityAttr;
+      const infoStarterEntry = pokemon.scene.gameData.starterData[pokemon.species.getRootSpeciesId()];
+      const rootFormHasHiddenAbility = (infoStarterEntry?.abilityAttr ?? 0) & opponentPokemonAbilityAttr;
 
       if (!rootFormHasHiddenAbility) {
         this.pokemonAbilityLabelText.setColor(getTextColor(TextStyle.SUMMARY_BLUE, false, this.scene.uiTheme));

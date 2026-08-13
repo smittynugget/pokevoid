@@ -1,13 +1,17 @@
 import BattleScene, { AnySound } from "#app/battle-scene.js";
 import { Egg, EGG_SEED } from "#app/data/egg.js";
+import { getLevelTotalExp } from "#app/data/exp.js";
 import { EggCountChangedEvent } from "#app/events/egg.js";
-import { PlayerPokemon } from "#app/field/pokemon.js";
+import Pokemon, { PlayerPokemon, YU_BATTLE_FIT, YU_PLAYER_FIT_MULT, YU_SPECIES_PORTAL_OFFSETS } from "#app/field/pokemon.js";
+import { playEggPortalSummonAnim } from "#app/field/portal-anim.js";
 import { getPokemonNameWithAffix } from "#app/messages.js";
 import { Phase } from "#app/phase.js";
 import { achvs } from "#app/system/achv.js";
+import { Gender } from "#app/data/gender.js";
 import EggCounterContainer from "#app/ui/egg-counter-container.js";
 import EggHatchSceneHandler from "#app/ui/egg-hatch-scene-handler.js";
 import PokemonInfoContainer from "#app/ui/pokemon-info-container.js";
+import { EggStarterSelectCallback } from "#app/ui/egg-starter-ui-handler.js";
 import { Mode } from "#app/ui/ui.js";
 import i18next from "i18next";
 import SoundFade from "phaser3-rex-plugins/plugins/soundfade";
@@ -35,9 +39,8 @@ export class EggHatchPhase extends Phase {
   private eggCrackSprite: Phaser.GameObjects.Sprite;
 
   private eggLightraysOverlay: Phaser.GameObjects.Sprite;
-
   private pokemonSprite: Phaser.GameObjects.Sprite;
-
+  private eggPortalSprite: Phaser.GameObjects.Sprite;
   private pokemonShinySparkle: Phaser.GameObjects.Sprite;
   private infoContainer: PokemonInfoContainer;
   public pokemon: PlayerPokemon;
@@ -116,6 +119,21 @@ export class EggHatchPhase extends Phase {
       this.eggContainer.add(this.eggLightraysOverlay);
       this.eggHatchContainer.add(this.eggContainer);
 
+      if (this.eggSprite.postFX && typeof this.eggSprite.postFX.addPixelate === "function") {
+        const pixFx = this.eggSprite.postFX.addPixelate(20);
+        this.scene.tweens.add({
+          targets: pixFx,
+          amount: -1,
+          duration: Utils.fixedInt(750),
+          ease: "Linear",
+          onComplete: () => {
+            if (this.eggSprite?.postFX) {
+              this.eggSprite.postFX.remove(pixFx);
+            }
+          }
+        });
+      }
+
       this.eggCounterContainer = new EggCounterContainer(this.scene, this.eggsToHatchCount);
       this.eggHatchContainer.add(this.eggCounterContainer);
 
@@ -124,6 +142,15 @@ export class EggHatchPhase extends Phase {
         ret.setPipeline(this.scene.spritePipeline, { tone: [ 0.0, 0.0, 0.0, 0.0 ], ignoreTimeTint: true });
         return ret;
       };
+
+      this.eggPortalSprite = this.scene.add.sprite(
+        this.eggHatchBg.displayWidth / 2,
+        this.eggHatchBg.displayHeight / 2,
+        "yu_portal_7"
+      );
+      this.eggPortalSprite.setOrigin(0.5, 1);
+      this.eggPortalSprite.setVisible(false);
+      this.eggHatchContainer.add(this.eggPortalSprite);
 
       this.eggHatchContainer.add((this.pokemonSprite = getPokemonSprite()));
 
@@ -154,7 +181,7 @@ export class EggHatchPhase extends Phase {
       pokemon.loadAssets().then(() => {
         this.canSkip = true;
 
-        if (this.eggsToHatchCount > 100) {
+        if(this.eggsToHatchCount > 100) {
 
           this.eggCrackSprite.setVisible(true);
           this.eggCrackSprite.setFrame("4");
@@ -318,6 +345,58 @@ export class EggHatchPhase extends Phase {
       }
     });
   }
+  private applyEggPortal(): void {
+    if (!this.eggPortalSprite || !this.pokemon) return;
+    if (this.pokemon.getSpeciesForm().generation !== 20) {
+      this.eggPortalSprite.setVisible(false);
+      return;
+    }
+    const state = this.pokemon.getSpriteState();
+    if (!state?.portal) {
+      this.eggPortalSprite.setVisible(false);
+      return;
+    }
+    const stem = state.portal.replace(/\.png$/i, "");
+    const textureKey = `yu_portal_${stem}`;
+    if (!this.scene.textures.exists(textureKey)) {
+      this.eggPortalSprite.setVisible(false);
+      return;
+    }
+    this.eggPortalSprite.setTexture(textureKey);
+    const stateScale = state.scale ?? 1;
+    const _portalFit = YU_BATTLE_FIT * YU_PLAYER_FIT_MULT;
+    const posScale = stateScale * _portalFit;
+    const basis = this.pokemonSprite.frame?.width;
+    if (!basis || basis <= 1) return;
+    const frameH = this.pokemonSprite.frame?.height || 1;
+    const portalNativeW = this.eggPortalSprite.frame?.width || 195;
+    const portalNativeH = this.eggPortalSprite.frame?.height || 50;
+    const portalSorterW = (state.portalScale ?? 1) * basis;
+    const portalSorterX = (state.portalX ?? 0) * basis;
+    const portalSorterY = (state.portalY ?? 0) * basis;
+    const portalSorterH = portalSorterW * (portalNativeH / portalNativeW);
+    const sorterX = (state.x ?? 0) * basis;
+    const sorterY = (state.y ?? 0) * basis;
+    const displayW = stateScale * basis;
+    const displayH = stateScale * frameH;
+    const centerDeltaX = ((portalSorterX - portalSorterW / 2) - (sorterX - displayW / 2)) / stateScale;
+    const feetDeltaY = ((portalSorterY + portalSorterH) - (sorterY + displayH)) / stateScale;
+    const portalChildScale = portalSorterW / (portalNativeW * stateScale);
+    let finalScale = portalChildScale * posScale;
+    let portalX = this.pokemonSprite.x + centerDeltaX * posScale;
+    let portalY = this.pokemonSprite.y + feetDeltaY * posScale - 2 * posScale;
+    const _portalOffsets = YU_SPECIES_PORTAL_OFFSETS[this.pokemon.species.speciesId];
+    if (_portalOffsets) {
+      portalX += _portalOffsets.portalDeltaX ?? 0;
+      portalY += _portalOffsets.portalDeltaY ?? 0;
+      finalScale += _portalOffsets.portalScaleOffset ?? 0;
+    }
+    this.eggPortalSprite.setScale(finalScale);
+    this.eggPortalSprite.setPosition(portalX, portalY);
+    this.eggPortalSprite.setFlipX(!(state.portalFlipped ?? false));
+    this.eggPortalSprite.setVisible(true);
+  }
+
   doReveal(): void {
     const isShiny = this.pokemon.isShiny();
     if (this.pokemon.species.subLegendary) {
@@ -338,7 +417,56 @@ export class EggHatchPhase extends Phase {
     this.pokemonSprite.setPipelineData("spriteKey", this.pokemon.getSpriteKey());
     this.pokemonSprite.setPipelineData("shiny", this.pokemon.shiny);
     this.pokemonSprite.setPipelineData("variant", this.pokemon.variant);
+    this.pokemonSprite.setScale(this.pokemon.getEffectiveVisualScale());
+    if (this.pokemon.getSpeciesForm().generation === 20) {
+      this.pokemonSprite.setOrigin(0.5, 1);
+      const effectiveScale = this.pokemon.getEffectiveVisualScale();
+      const halfH = (this.pokemonSprite.frame?.height || 1) * effectiveScale / 2;
+      this.pokemonSprite.y += halfH;
+      this.applyEggPortal();
+
+      this.pokemonSprite.setVisible(false);
+
+      let portalStarted = false;
+      const startPortal = () => {
+        if (portalStarted) return;
+        portalStarted = true;
+        playEggPortalSummonAnim(
+          this.scene,
+          this.eggHatchContainer,
+          this.eggPortalSprite,
+          this.pokemonSprite,
+          this.pokemonSprite.x,
+          this.pokemonSprite.y,
+          effectiveScale
+        ).then(() => {
+          this.pokemonSprite.setVisible(true);
+          this.doPostReveal(isShiny);
+        });
+      };
+
+      if (this.skipped) {
+        startPortal();
+      }
+
+      this.scene.tweens.add({
+        duration: Utils.fixedInt(this.skipped ? 500 : 3000),
+        targets: this.eggHatchOverlay,
+        alpha: 0,
+        ease: "Cubic.easeOut",
+        onUpdate: () => {
+          if (!portalStarted && this.eggHatchOverlay.alpha <= 0.3) {
+            startPortal();
+          }
+        },
+        onComplete: () => {
+          if (!portalStarted) startPortal();
+        }
+      });
+      return;
+    }
     this.pokemonSprite.setVisible(true);
+    this.applyEggPortal();
     this.scene.time.delayedCall(Utils.fixedInt(250), () => {
       this.eggsToHatchCount--;
       this.eggHatchHandler.eventTarget.dispatchEvent(new EggCountChangedEvent(this.eggsToHatchCount));
@@ -386,7 +514,119 @@ export class EggHatchPhase extends Phase {
                     }
                   }
 
-                  this.scene.ui.setMode(Mode.EGG_STARTER_SELECT, hatchedPokemon);
+                  const eggStarterCallback: EggStarterSelectCallback = (selectedStarter: any | null, releasedPokemon: Pokemon | null) => {
+                    const finalize = () => {
+                      this.scene.ui.setMode(Mode.MESSAGE);
+                    };
+
+                    if (selectedStarter) {
+                      const selectedPokemon = hatchedPokemon.find(p => p.species.speciesId === selectedStarter.species.speciesId);
+
+                      const applyDexAttrIfPresent = () => {
+                        if (!selectedPokemon || selectedStarter?.dexAttr === undefined) {
+                          return;
+                        }
+
+                        const props = this.scene.gameData.getSpeciesDexAttrProps(selectedPokemon.species, BigInt(selectedStarter.dexAttr));
+
+                        const maxFormIndex = Math.max(0, selectedPokemon.species.forms.length - 1);
+                        const nextFormIndex = Math.min(props.formIndex, maxFormIndex);
+                        if (nextFormIndex !== selectedPokemon.formIndex) {
+                          selectedPokemon.formIndex = nextFormIndex;
+                          selectedPokemon.generateName();
+                        }
+
+                        const mp = selectedPokemon.species.malePercent;
+                        if (mp !== null && mp > 0 && mp < 100) {
+                          selectedPokemon.gender = props.female ? Gender.FEMALE : Gender.MALE;
+                        }
+                      };
+
+                      if (selectedPokemon && releasedPokemon) {
+                        const partyIndex = this.scene.getParty().findIndex(p => p === releasedPokemon);
+                        if (partyIndex >= 0) {
+                          selectedPokemon.level = releasedPokemon.level;
+                          selectedPokemon.exp = getLevelTotalExp(selectedPokemon.level, selectedPokemon.species.growthRate);
+                          selectedPokemon.levelExp = 0;
+                          if (selectedStarter.moveset) {
+                            selectedPokemon.tryPopulateMoveset(selectedStarter.moveset);
+                          }
+                          if (selectedStarter.abilityIndex !== undefined) {
+                            selectedPokemon.abilityIndex = selectedStarter.abilityIndex;
+                          }
+                          if (selectedStarter.nature !== undefined) {
+                            selectedPokemon.nature = selectedStarter.nature;
+                          }
+                          if (selectedStarter.passive !== undefined) {
+                            selectedPokemon.passive = selectedStarter.passive;
+                          }
+                          if (selectedStarter.pokerus !== undefined) {
+                            selectedPokemon.pokerus = selectedStarter.pokerus;
+                          }
+                          if (selectedStarter.nickname) {
+                            selectedPokemon.nickname = selectedStarter.nickname;
+                          }
+                          if (selectedStarter.fusionIndex >= 0 && selectedPokemon.fusionSpecies) {
+                            selectedPokemon.fusionFormIndex = selectedStarter.fusionIndex;
+                          }
+                          applyDexAttrIfPresent();
+                          selectedPokemon.calculateStats();
+                          selectedPokemon.loadAssets().then(() => {
+                            this.scene.replacePlayerPokemon(partyIndex, selectedPokemon);
+                            finalize();
+                          }).catch(() => {
+                            this.scene.replacePlayerPokemon(partyIndex, selectedPokemon);
+                            finalize();
+                          });
+                          return;
+                        }
+                      } else if (selectedPokemon && !releasedPokemon) {
+                        const currentParty = this.scene.getParty();
+                        const lowestLevel = Math.min(...currentParty.map(p => p.level));
+                        selectedPokemon.level = lowestLevel;
+                        selectedPokemon.exp = getLevelTotalExp(selectedPokemon.level, selectedPokemon.species.growthRate);
+                        selectedPokemon.levelExp = 0;
+
+                        if (selectedStarter.moveset) {
+                          selectedPokemon.tryPopulateMoveset(selectedStarter.moveset);
+                        }
+                        if (selectedStarter.abilityIndex !== undefined) {
+                          selectedPokemon.abilityIndex = selectedStarter.abilityIndex;
+                        }
+                        if (selectedStarter.nature !== undefined) {
+                          selectedPokemon.nature = selectedStarter.nature;
+                        }
+                        if (selectedStarter.passive !== undefined) {
+                          selectedPokemon.passive = selectedStarter.passive;
+                        }
+                        if (selectedStarter.pokerus !== undefined) {
+                          selectedPokemon.pokerus = selectedStarter.pokerus;
+                        }
+                        if (selectedStarter.nickname) {
+                          selectedPokemon.nickname = selectedStarter.nickname;
+                        }
+                        if (selectedStarter.fusionIndex >= 0 && selectedPokemon.fusionSpecies) {
+                          selectedPokemon.fusionFormIndex = selectedStarter.fusionIndex;
+                        }
+
+                        applyDexAttrIfPresent();
+                        selectedPokemon.calculateStats();
+
+                        selectedPokemon.loadAssets().then(() => {
+                          this.scene.getParty().push(selectedPokemon);
+                          finalize();
+                        }).catch(() => {
+                          this.scene.getParty().push(selectedPokemon);
+                          finalize();
+                        });
+                        return;
+                      }
+                    }
+
+                    finalize();
+                  };
+
+                  this.scene.ui.setMode(Mode.EGG_STARTER_SELECT, hatchedPokemon, eggStarterCallback);
                 }
               }
 
@@ -403,6 +643,100 @@ export class EggHatchPhase extends Phase {
       ease: "Cubic.easeOut"
     });
   }
+
+  private doPostReveal(isShiny: boolean): void {
+    this.scene.time.delayedCall(Utils.fixedInt(250), () => {
+      this.eggsToHatchCount--;
+      this.eggHatchHandler.eventTarget.dispatchEvent(new EggCountChangedEvent(this.eggsToHatchCount));
+      this.pokemon.cry();
+      if (isShiny) {
+        this.scene.time.delayedCall(Utils.fixedInt(500), () => {
+          this.pokemonShinySparkle.play(`sparkle${this.pokemon.variant ? `_${this.pokemon.variant + 1}` : ""}`);
+          this.scene.playSound("se/sparkle");
+        });
+      }
+      this.scene.time.delayedCall(Utils.fixedInt(!this.skipped ? !isShiny ? 1250 : 1750 : !isShiny ? 250 : 750), () => {
+        this.infoContainer.show(this.pokemon, false, this.skipped ? 2 : 1);
+
+        this.scene.playSoundWithoutBgm("evolution_fanfare");
+
+        this.scene.ui.showText(i18next.t("egg:hatchFromTheEgg", { pokemonName: getPokemonNameWithAffix(this.pokemon) }), null, () => {
+          this.scene.gameData.updateSpeciesDexIvs(this.pokemon.species.speciesId, this.pokemon.ivs);
+          this.scene.gameData.setPokemonCaught(this.pokemon, true, true).then(() => {
+            this.scene.recordRunEndSummaryHatch(this.pokemon);
+            this.scene.gameData.setEggMoveUnlocked(this.pokemon.species, this.eggMoveIndex).then(() => {
+              this.scene.ui.showText("", 0);
+
+              if (this.scene.gameData.tempHatchedPokemon) {
+                this.scene.gameData.tempHatchedPokemon.push(this.pokemon);
+              }
+
+              const isLastEgg = !this.scene.findPhase((p) => p instanceof EggHatchPhase && p !== this);
+
+              if (isLastEgg) {
+                const hatchedPokemon = this.scene.gameData.tempHatchedPokemon || [this.pokemon];
+
+                const finalize = () => {
+                  this.scene.gameData.tempHatchedPokemon = null;
+                  this.end();
+                };
+
+                if (hatchedPokemon.length > 0) {
+                  const eggStarterCallback: EggStarterSelectCallback = (selectedPokemon: PlayerPokemon | null, cancelled: boolean) => {
+                    if (selectedPokemon && !cancelled) {
+                      const party = this.scene.getParty();
+                      if (party.length < 6) {
+                        party.push(selectedPokemon);
+                        this.scene.updateModifiers(true);
+                        finalize();
+                      } else {
+                        const swapTarget = party.find(p => !p.isAllowedInBattle());
+                        if (swapTarget) {
+                          const swapIndex = party.indexOf(swapTarget);
+                          if (swapIndex > -1) {
+                            party[swapIndex] = selectedPokemon;
+                            this.scene.updateModifiers(true);
+                            finalize();
+                          } else {
+                            finalize();
+                          }
+                        } else {
+                          this.scene.ui.setOverlayMode(Mode.CONFIRM,
+                            () => {
+                              this.scene.ui.setMode(Mode.PARTY, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+                                (slotIndex: number) => {
+                                  if (slotIndex >= 0 && slotIndex < party.length) {
+                                    party[slotIndex] = selectedPokemon;
+                                    this.scene.updateModifiers(true);
+                                  }
+                                  finalize();
+                                }
+                              );
+                            },
+                            () => {
+                              finalize();
+                            }
+                          );
+                          return;
+                        }
+                      }
+                    } else {
+                      finalize();
+                    }
+                  };
+
+                  this.scene.ui.setMode(Mode.EGG_STARTER_SELECT, hatchedPokemon, eggStarterCallback);
+                }
+              }
+
+              this.end();
+            });
+          });
+        }, null, true, 3000);
+      });
+    });
+  }
+
   sin(index: integer, amplitude: integer): number {
     return amplitude * Math.sin(index * (Math.PI / 128));
   }

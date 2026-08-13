@@ -1,10 +1,14 @@
 import Phaser from "phaser";
+import { initYuVisualTuning, registerYuTuningReapply, getYuTuning } from "./yu-visual-tuning";
 import UI, { Mode } from "./ui/ui";
+import BattleInfo from "./ui/battle-info";
 import { RewardObtainedType, type RewardConfig } from "./ui/reward-obtained-ui-handler";
-import Pokemon, { PlayerPokemon, EnemyPokemon } from "./field/pokemon";
-import PokemonSpecies, { PokemonSpeciesFilter, allSpecies, getPokemonSpecies, isGlitchFormKey, isSmittyFormKey } from "./data/pokemon-species";
+import Pokemon, { PlayerPokemon, EnemyPokemon, YU_BATTLE_FIT, YU_PLAYER_FIT_MULT } from "./field/pokemon";
+import PokemonSpecies, { PokemonSpeciesFilter, allSpecies, getPokemonSpecies, isGlitchFormKey, isSmittyFormKey, DUELMON_ICON_ATLAS_FALLBACK_KEY, DUELMON_ICON_SCALE_OFFSET } from "./data/pokemon-species";
 import {Constructor, randSeedInt} from "#app/utils";
 import * as Utils from "./utils";
+import { CondenseTrailHandle, playCondenseTrailTransition, getEffectCount } from "./field/condense-trail-transition";
+import { applyTypeSwitcherIconRecolor, getCachedIconPalette } from "./utils/type-switcher-icon-recolor";
 import {
   Modifier,
   ModifierBar,
@@ -41,7 +45,8 @@ import {
   CollectedTypeModifier,
   MoveUpgradeModifier,
   reduceGlitchPieceModifier,
-  PokemonAltBuildModifier
+  PokemonAltBuildModifier,
+  StatSwitcherModifier
 } from "./modifier/modifier";
 import { PokeballType, applyTypeBallRecolor } from "./data/pokeball";
 import {
@@ -64,7 +69,6 @@ import {
   ModifierPoolType,
   getDefaultModifierTypeForTier,
   getEnemyModifierTypesForWave,
-  getModifierPoolForType,
   getModifierType,
   getPartyLuckValue,
   modifierTypes
@@ -132,10 +136,15 @@ import { SceneBase } from "./scene-base";
 import CandyBar from "./ui/candy-bar";
 import { Variant, variantData } from "./data/variant";
 import { Localizable } from "#app/interfaces/locales";
-import Overrides from "#app/overrides";
+import Overrides, { DEBUG_YU_VISUAL_TUNING } from "#app/overrides";
+import { YuSpriteTweakController } from "./ui/tweak/yu-sprite-tweak-controller";
+import { PokemonBattleTooltipUtils } from "./ui/pokemon-battle-tooltip-utils";
+import { Button } from "#app/enums/buttons";
+import { DUELMON_SPECIES } from "./data/duelmon-rankups";
+import { getDuelmonBstLimitForWave, getEligibleDuelmonSpeciesForWave } from "./data/duelmon-bst-utils";
 import { InputsController } from "./inputs-controller";
 import { UiInputs } from "./ui-inputs";
-import { NewArenaEvent } from "./events/battle-scene";
+import { NewArenaEvent, MoveUsedEvent, BattleSceneEventType } from "./events/battle-scene";
 import { ArenaFlyout } from "./ui/arena-flyout";
 import { EaseType } from "#enums/ease-type";
 import { BattleSpec } from "#enums/battle-spec";
@@ -151,21 +160,23 @@ import { UiTheme } from "#enums/ui-theme";
 import { GameMechanicsID, GameMechanicsVersion } from "#enums/gameMechanicsID";
 import { TimedEventManager } from "#app/timed-event-manager.js";
 import i18next from "i18next";
+import { ModifierTooltipUtils, type ModifierTooltipData } from "./ui/modifier-tooltip-utils";
+import { SkillTreeRarity } from "./system/skill-tree-data";
 import { TrainerType } from "#enums/trainer-type";
 import { battleSpecDialogue } from "./data/dialogue";
-import { isIPhone, LoadingScene } from "./loading-scene";
+import { isIPhone } from "./loading-scene";
 import { LevelCapPhase } from "./phases/level-cap-phase";
 import { LoginPhase } from "./phases/login-phase";
 import { MessagePhase } from "./phases/message-phase";
 import { MovePhase } from "./phases/move-phase";
-import { NewBiomeEncounterPhase } from "./phases/new-biome-encounter-phase";
-import { NextEncounterPhase } from "./phases/next-encounter-phase";
 import { QuietFormChangePhase } from "./phases/quiet-form-change-phase";
-import { ReturnPhase } from "./phases/return-phase";
+import { getReturnPhase } from "./phases/encounter-phase-cache";
 import { SelectBiomePhase } from "./phases/select-biome-phase";
+import { SelectModifierPhase } from "./phases/select-modifier-phase";
 import { ShowTrainerPhase } from "./phases/show-trainer-phase";
 import { SummonPhase } from "./phases/summon-phase";
-import { SummonMissingPhase } from "#app/phases/summon-missing-phase.js";
+import { SmitomTutorialPhase } from "./phases/smitom-tutorial-phase";
+import { getSummonMissingPhase } from "./phases/encounter-phase-cache";
 import { SwitchPhase } from "./phases/switch-phase";
 import { TitlePhase } from "./phases/title-phase";
 import { ToggleDoublePositionPhase } from "./phases/toggle-double-position-phase";
@@ -175,10 +186,10 @@ import {PermaType} from "#app/modifier/perma-modifiers";
 import { VictoryPhase } from "./phases/victory-phase";
 import { BattlerIndex } from "./battle";
 import {FaintPhase} from "#app/phases/faint-phase";
-import { DynamicMode, DynamicModes, PathNodeType } from "./battle";
-import { PathNodeContext } from "./phases/battle-path-phase";
+import { DynamicMode, DynamicModes, PathNodeType, PathNodeContext } from "./battle";
 import { UpgradePath } from "#enums/upgrade-path";
 import { UpgradeCategory } from "#enums/upgrade-category";
+import { getNextEncounterPhase, getNewBiomeEncounterPhase } from "./phases/encounter-phase-cache";
 export const bypassLogin = true;
 
 const DEBUG_RNG = false;
@@ -204,6 +215,8 @@ const OPP_IVS_OVERRIDE_VALIDATED : integer[] = (
 ).map(iv => isNaN(iv) || iv === null || iv > 31 ? -1 : iv);
 
 export const startingWave = Overrides.STARTING_WAVE_OVERRIDE || 1;
+
+export const FIELD_X_OFFSET = 0;
 
 const expSpriteKeys: string[] = [];
 
@@ -297,11 +310,18 @@ export default class BattleScene extends SceneBase {
   public uiVolume: number = 1;
   public skipFaintCry: boolean = false;
   public gameSpeed: integer = 3;
+  public battleSpeed: number = 0;
+  public _battleAnimDepth: number = 0;
+  public _inBattleTurn: boolean = false;
   public damageNumbersMode: integer = 0;
   public reroll: boolean = false;
   public shopCursorTarget: number = ShopCursorTarget.CHECK_TEAM;
   public _lastCommandPhaseSaveTime: number = 0;
   public autoSaveMode: integer = 0;
+  public loadBattleFromMode: integer = 0;
+  public cloudSaveEnabled: boolean = false;
+  public cloudSaveIntervalMs: number = 3600000;
+  public _lastDriveSyncTime: number = 0;
   public encounterInitComplete: boolean = false;
   public showMovesetFlyout: boolean = true;
   public showArenaFlyout: boolean = true;
@@ -325,16 +345,60 @@ export default class BattleScene extends SceneBase {
   public moveAnimations: boolean = true;
   public expGainsSpeed: integer = 0;
   public skipSeenDialogues: boolean = false;
+  public replayMode: boolean = false;
+  public replaySandboxActive: boolean = false;
+  public replayAwaitingStep: boolean = false;
+  public battleReplayRecorder: any = null;
+  public replayPlayer: any = null;
   public expParty: ExpNotification = 0;
   public hpBarSpeed: integer = 0;
   public fusionPaletteSwaps: boolean = true;
   public enableTouchControls: boolean = false;
   public enableVibration: boolean = false;
   public showBgmBar: boolean = true;
+  public showPermaBar: boolean = true;
   public disableMoveUpgrades: boolean = false;
+  public disableStatSwitchers: boolean = false;
+  public disableReleaseItems: boolean = false;
+  public disableIvScanner: boolean = false;
+  public disableMap: boolean = false;
   public disableCutscenes: boolean = false;
+  public disableShinyPower: boolean = false;
   public lossWhiteoutPreSummaryQueued: boolean = false;
   public moveUpgradesEnabledForRun: boolean = true;
+  public statSwitchersEnabledForRun: boolean = true;
+  public releaseItemsEnabledForRun: boolean = true;
+  public ivScannerEnabledForRun: boolean = true;
+  public mapEnabledForRun: boolean = true;
+  public skillTreeEnabledForRun: boolean = true;
+  public trainerDualColorRecolorEnabledForRun: boolean = false;
+  public trainerDualColorAForRun: number[] | null = null;
+  public trainerDualColorBForRun: number[] | null = null;
+
+  public uiEditModeActive: boolean = false;
+  refreshUiEditModeActive(): void {
+    if (this.commandUiTweak?.tweakActive) { this.uiEditModeActive = true; return; }
+    if (this.fieldSpriteTweak?.tweakActive) { this.uiEditModeActive = true; return; }
+    try {
+      const playerBi = this.getPlayerField()[0]?.getBattleInfo() as any;
+      const enemyBi = this.getEnemyField()[0]?.getBattleInfo() as any;
+      if (playerBi?.biTweakActive || enemyBi?.biTweakActive) { this.uiEditModeActive = true; return; }
+    } catch {}
+    try {
+      const handler = this.ui?.getHandler();
+      if (handler && typeof (handler as any).sumIconTweakActive === "boolean" && (handler as any).sumIconTweakActive) { this.uiEditModeActive = true; return; }
+      if (handler && typeof (handler as any).partyTweakActive === "boolean" && (handler as any).partyTweakActive) { this.uiEditModeActive = true; return; }
+    } catch {}
+    this.uiEditModeActive = false;
+  }
+  public yuTuneHudText: Phaser.GameObjects.Text | null = null;
+  public fieldSpriteTweak: YuSpriteTweakController | null = null;
+  public commandUiTweak: any | null = null;
+  public pegasusDebugBattleActive: boolean = false;
+  public smittyDebugBattleActive: boolean = false;
+  public wave35SmitomDebugActive: boolean = false;
+  public wave100DebugActive: boolean = false;
+  public wave35UnlockedThisRun: boolean = false;
   public battleStyle: integer = BattleStyle.SWITCH;
   public typeHints: boolean = false;
 
@@ -403,6 +467,7 @@ export default class BattleScene extends SceneBase {
 
   private biomeWaveText: Phaser.GameObjects.Text;
   private moneyText: Phaser.GameObjects.Text;
+  private moneyHoverZone: Phaser.GameObjects.Zone;
   public costToSnatchText: Phaser.GameObjects.Text;
   public costToSnatchContainer: Phaser.GameObjects.Container;
   public costToSnatchIcon: Phaser.GameObjects.Sprite;
@@ -412,7 +477,26 @@ export default class BattleScene extends SceneBase {
   private enemyModifierBar: ModifierBar;
   public arenaFlyout: ArenaFlyout;
 
+  public _condenseTrailHandle: CondenseTrailHandle | null = null;
+  public _commonAnimsReady: Promise<void> | null = null;
+  private _firstBoot: boolean = true;
+  private _returnCondenseActive: boolean = false;
+  private _returnLoadingOverlay: Phaser.GameObjects.Image | null = null;
+  private _returnSmitom: Phaser.GameObjects.Sprite | null = null;
+  private _returnSmitomRoot: Phaser.GameObjects.Container | null = null;
+  private _returnSmitomZone: Phaser.GameObjects.Zone | null = null;
+  private _returnSmitomTimers: Phaser.Time.TimerEvent[] = [];
+  private _returnSmitomClaimed: boolean = false;
+  private _returnSmitomDismissing: boolean = false;
+  private _returnSmitomRewardValue: number = 100;
+  public _bootGateResolvers: {
+    resolveDataReady: () => void;
+    resolveTitleComposed: () => void;
+  } | null = null;
+  private _deferredBootTutorials: (() => void) | null = null;
+
   private fieldOverlay: Phaser.GameObjects.Rectangle;
+  private _dialogueBgImage: Phaser.GameObjects.Image | null = null;
   private shopOverlay: Phaser.GameObjects.Rectangle;
   private shopOverlayShown: boolean = false;
   private shopOverlayOpacity: number = .8;
@@ -436,6 +520,7 @@ export default class BattleScene extends SceneBase {
   private bgm: AnySound;
   private bgmResumeTimer: Phaser.Time.TimerEvent | null;
   private bgmCache: Set<string> = new Set();
+  private lastExplicitBgmKey: string | null = null;
   private playTimeTimer: Phaser.Time.TimerEvent;
 
   public rngCounter: integer = 0;
@@ -510,14 +595,160 @@ export default class BattleScene extends SceneBase {
     await this.initVariantData();
   }
 
+  private _bootInProgress = false;
+
+  private _prewarmGlowPostFX(): void {
+    try {
+      const dummy = this.add.image(-9999, -9999, "__WHITE");
+      dummy.setVisible(false);
+      if (dummy.postFX && typeof dummy.postFX.addGlow === "function") {
+        dummy.postFX.addGlow(0x7828c8, 4, 0, false, 0.6, 8);
+      }
+      dummy.destroy();
+    } catch (e) { }
+  }
+
+  _yieldFrame(): Promise<void> {
+    return new Promise<void>(r => this.game.events.once("postrender", r));
+  }
+
+  private static CONDENSE_TRAIL_ANIMATION_ENABLED = true;
+
   create() {
-    this.scene.remove(LoadingScene.KEY);
+
+    if (BattleScene.CONDENSE_TRAIL_ANIMATION_ENABLED) {
+      let resolveTitle!: () => void;
+      const titleComposed = new Promise<void>(r => { resolveTitle = r; });
+
+      this._bootGateResolvers = {
+        resolveDataReady: () => {},
+        resolveTitleComposed: resolveTitle,
+      };
+
+      this.game.events.once("_condenseHandleReady", () => {
+        this._condenseTrailHandle = this.game.registry.get("_condenseTrailHandle") as CondenseTrailHandle | null;
+
+        if (this._condenseTrailHandle) {
+          this.wireCondenseSpeedUpInput();
+
+          Promise.all([
+            this._condenseTrailHandle.animationDone,
+            titleComposed,
+          ]).then(() => {
+            this.releaseCondenseTrailOverlay();
+            this._bootGateResolvers = null;
+          });
+        }
+      });
+    }
+
+    const _createDoneTs = performance.now();
+    this.game.events.once("postrender", () => {
+      void this._deferredBoot();
+    });
+  }
+
+  private async _deferredBoot(): Promise<void> {
+    if (this._bootInProgress) return;
+    this._bootInProgress = true;
+
+    try {
+
     initGameSpeed.apply(this);
+    this.events.once("shutdown", () => {
+      this._battleAnimDepth = 0;
+      this._inBattleTurn = false;
+    });
     this.inputController = new InputsController(this);
     this.uiInputs = new UiInputs(this, this.inputController);
+    initYuVisualTuning(this);
+    registerYuTuningReapply(() => {
+      try {
+        const allField = [...this.getPlayerField(), ...this.getEnemyField()];
+        for (const pkmn of allField) {
+          if (pkmn?.isActive() && pkmn.species?.generation === 20) {
+            pkmn.applySpriteState?.();
+          }
+        }
+      } catch {}
+      try {
+        const mode = this.ui?.getMode();
+        const handler = this.ui?.getHandler();
+        if (mode === Mode.STARTER_SELECT && handler?.["applyStarterPortal"] && handler?.["lastSpecies"]) {
+          const species = handler["lastSpecies"];
+          if (species?.generation === 20 && handler["pokemonSprite"]) {
+            const _tuning = getYuTuning();
+            const _baseScale = handler["_stBaseCreatureScale"] ?? 1;
+            const _baseX = handler["_stBaseCreatureX"] ?? 53;
+            const _baseY = handler["_stBaseCreatureY"] ?? 96;
+            handler["pokemonSprite"].setScale(_baseScale + _tuning.creatureScaleOffset);
+            handler["pokemonSprite"].setPosition(_baseX + _tuning.creatureXOffset, _baseY + _tuning.yOffset + _tuning.creatureYOffset);
+          }
+          handler["applyStarterPortal"](handler["lastSpecies"]);
+        }
+        if (mode === Mode.SUMMARY && handler?.["applySummaryPortal"] && handler?.["pokemon"]) {
+          const pokemon = handler["pokemon"];
+          if (pokemon?.species?.generation === 20 && handler["pokemonSprite"]) {
+            if (handler["computeAndApplySummaryCreatureLayout"]) {
+              handler["computeAndApplySummaryCreatureLayout"]("reapply");
+            }
+          }
+          handler["applySummaryPortal"]();
+        }
+        if (mode === Mode.POKEDEX && handler?.["spriteContainer"] && handler?.["pokemonSprite"]) {
+          const pSprite = handler["pokemonSprite"];
+          if (pSprite?.texture?.key && pSprite.scene) {
+            const spriteKey = pSprite.texture.key;
+            const _ss = this.cache.json.exists(spriteKey) ? this.cache.json.get(spriteKey)?.spriteState ?? null : null;
+            if (_ss) {
+              const _tuning = getYuTuning();
+              const _vStateScale = _ss.scale ?? 1;
+              const VOIDEX_CREATURE_FIT = 0.21;
+              const VOIDEX_PORTAL_DAMPEN = 0.75;
+              pSprite.setScale(_vStateScale * VOIDEX_CREATURE_FIT + 0.050 + _tuning.creatureScaleOffset);
+              const _baseCreatureX = handler["_voidexBaseCreatureX"] ?? 0;
+              const _baseCreatureY = handler["_voidexBaseCreatureY"] ?? 22;
+              pSprite.setPosition(_baseCreatureX + _tuning.creatureXOffset, _baseCreatureY + _tuning.yOffset + _tuning.creatureYOffset);
+              const vPortal = handler["voidexPortalSprite"];
+              if (vPortal?.visible) {
+                const _bpX = handler["_voidexBasePortalX"] ?? 0;
+                const _bpY = handler["_voidexBasePortalY"] ?? 22;
+                const _bpScale = handler["_voidexBasePortalScale"] ?? 0;
+                let _vpX = _bpX + _tuning.xOffset;
+                const _vpY = _bpY + _tuning.yOffset;
+                const _vpScale = _bpScale + _tuning.portalScaleOffset;
+                const _portalNativeW = vPortal.frame?.width || 195;
+                const _vpHalfW = (_portalNativeW * _vpScale) / 2;
+                const _vpModalLeft = -(96 / 2);
+                if (_vpX - _vpHalfW < _vpModalLeft) {
+                  const _shift = (_vpModalLeft - (_vpX - _vpHalfW)) + 2;
+                  _vpX += _shift;
+                  pSprite.x = _baseCreatureX + _tuning.creatureXOffset + _shift;
+                }
+                vPortal.setScale(_vpScale);
+                vPortal.setPosition(_vpX, _vpY);
+              }
+            }
+          }
+        }
+      } catch {}
+    });
 
+    this.eventTarget.addEventListener(BattleSceneEventType.MOVE_USED, ((event: MoveUsedEvent) => {
+      const pokemon = this.getPokemonById(event.pokemonId);
+      if (pokemon && !pokemon.isPlayer() && pokemon.battleData) {
+        pokemon.battleData.revealedMoves.add(event.move.id);
+      }
+    }) as EventListener);
+
+    this.replayMode = false;
     this.gameData = new GameData(this);
     ChampionManager.initialize(this.gameData);
+
+    import("./system/drive-sync-service").then(({ driveSyncService }) => {
+      this.gameData.registerSaveCompleteCallback((scene, meta) => driveSyncService.onSaveComplete(scene, meta));
+      driveSyncService.init(this);
+    }).catch(() => {});
 
     if (import.meta.env.DEV) {
       (window as any).__phaser_battle_scene = this;
@@ -528,14 +759,29 @@ export default class BattleScene extends SceneBase {
 
     this.load.setBaseURL();
 
-    this.spritePipeline = new SpritePipeline(this.game);
-    (this.renderer as Phaser.Renderer.WebGL.WebGLRenderer).pipelines.add("Sprite", this.spritePipeline);
-
-    this.fieldSpritePipeline = new FieldSpritePipeline(this.game);
-    (this.renderer as Phaser.Renderer.WebGL.WebGLRenderer).pipelines.add("FieldSprite", this.fieldSpritePipeline);
+    const renderer = this.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
+    if (renderer.pipelines.has("Sprite")) {
+      this.spritePipeline = renderer.pipelines.get("Sprite") as SpritePipeline;
+    } else {
+      this.spritePipeline = new SpritePipeline(this.game);
+      renderer.pipelines.add("Sprite", this.spritePipeline);
+    }
+    if (renderer.pipelines.has("FieldSprite")) {
+      this.fieldSpritePipeline = renderer.pipelines.get("FieldSprite") as FieldSpritePipeline;
+    } else {
+      this.fieldSpritePipeline = new FieldSpritePipeline(this.game);
+      renderer.pipelines.add("FieldSprite", this.fieldSpritePipeline);
+    }
+    this._prewarmGlowPostFX();
     this.eventManager = new TimedEventManager();
 
-    this.launchBattle();
+    const _c1YieldStart = performance.now();
+    await this._yieldFrame();
+
+    await this.launchBattle();
+    } finally {
+      this._bootInProgress = false;
+    }
   }
 
   update() {
@@ -554,11 +800,11 @@ export default class BattleScene extends SceneBase {
     }
   }
 
-  launchBattle() {
+  async launchBattle() {
     BattleScene.currentScene = this;
-    this.arenaBg = this.add.sprite(0, 0, "plains_bg");
+    this.arenaBg = this.add.sprite(FIELD_X_OFFSET, 0, "plains_bg");
     this.arenaBg.setName("sprite-arena-bg");
-    this.arenaBgTransition = this.add.sprite(0, 0, "plains_bg");
+    this.arenaBgTransition = this.add.sprite(FIELD_X_OFFSET, 0, "plains_bg");
     this.arenaBgTransition.setName("sprite-arena-bg-transition");
 
     [ this.arenaBgTransition, this.arenaBg ].forEach(a => {
@@ -566,38 +812,27 @@ export default class BattleScene extends SceneBase {
       a.setScale(6);
       a.setOrigin(0);
       a.setSize(320, 240);
+      a.setVisible(false);
     });
+
+    if (this.game.registry.get("_returnToTitlePending")) {
+      this.ensureReturnLoadingOverlay();
+    }
 
     const field = this.add.container(0, 0);
     field.setName("field");
     field.setScale(6);
+    field.setVisible(false);
 
     this.field = field;
 
-    const fieldUI = this.add.container(0, this.game.canvas.height);
+    const fieldUI = this.add.container(FIELD_X_OFFSET, this.game.canvas.height);
     fieldUI.setName("field-ui");
     fieldUI.setDepth(1);
     fieldUI.setScale(6);
+    fieldUI.setVisible(false);
 
     this.fieldUI = fieldUI;
-
-    const transition = this.make.rexTransitionImagePack({
-      x: 0,
-      y: 0,
-      scale: 6,
-      key: "loading_bg",
-      origin: { x: 0, y: 0 }
-    }, true);
-    transition.transit({
-      mode: "blinds",
-      ease: "Cubic.easeInOut",
-      duration: 1250,
-    });
-    transition.once("complete", () => {
-      transition.destroy();
-    });
-
-    this.add.existing(transition);
 
     const uiContainer = this.add.container(0, 0);
     uiContainer.setName("ui");
@@ -676,6 +911,27 @@ export default class BattleScene extends SceneBase {
     this.moneyText.setOrigin(1, 0.5);
     this.fieldUI.add(this.moneyText);
 
+    this.moneyHoverZone = this.add.zone(0, 0, 1, 1);
+    this.moneyHoverZone.setOrigin(0, 0);
+    this.uiContainer.add(this.moneyHoverZone);
+    this.moneyHoverZone.setInteractive(
+      new Phaser.Geom.Rectangle(0, 0, 1, 1),
+      Phaser.Geom.Rectangle.Contains
+    );
+    this.moneyHoverZone.on("pointerover", () => {
+      if (this.uiEditModeActive) return;
+      const data: ModifierTooltipData = {
+        title: i18next.t("battleScene:tooltipMoney"),
+        subtitle: "",
+        body: i18next.t("battleScene:tooltipMoneyDesc"),
+        rarity: SkillTreeRarity.LEGENDARY,
+        hasDetails: false
+      };
+      const wm = this.moneyText.getWorldTransformMatrix();
+      ModifierTooltipUtils.show(this, data, { x: wm.tx, y: wm.ty });
+    });
+    this.moneyHoverZone.on("pointerout", () => { if (!this.uiEditModeActive) ModifierTooltipUtils.hideIfNotPinned(this); });
+
     this.costToSnatchContainer = this.add.container((this.game.canvas.width / 6) - 2, 0);
     this.costToSnatchContainer.setName("container-buypokemon-cost");
 
@@ -693,6 +949,15 @@ export default class BattleScene extends SceneBase {
     this.costToSnatchLabel.setFontStyle("italic");
 
     this.costToSnatchContainer.add([this.costToSnatchIcon, this.costToSnatchText, this.costToSnatchLabel]);
+    this.costToSnatchContainer.setSize(this.costToSnatchIcon.width + this.costToSnatchText.width + 4, 16);
+    this.costToSnatchContainer.setInteractive({ useHandCursor: true });
+    this.costToSnatchContainer.on("pointerover", () => {
+      if (this.uiEditModeActive) return;
+      const data: ModifierTooltipData = { title: i18next.t("battleScene:tooltipCatch"), subtitle: "", body: i18next.t("battleScene:tooltipCatchDesc"), rarity: SkillTreeRarity.LEGENDARY, hasDetails: false };
+      const wm = this.costToSnatchContainer.getWorldTransformMatrix();
+      ModifierTooltipUtils.show(this, data, { x: wm.tx, y: wm.ty });
+    });
+    this.costToSnatchContainer.on("pointerout", () => { if (!this.uiEditModeActive) ModifierTooltipUtils.hideIfNotPinned(this); });
     this.fieldUI.add(this.costToSnatchContainer);
 
     this.scoreText = addTextObject(this, (this.game.canvas.width / 6) - 2, 0, "", TextStyle.PARTY, { fontSize: "54px" });
@@ -718,8 +983,6 @@ export default class BattleScene extends SceneBase {
 
     this.party = [];
 
-    const loadPokemonAssets = [];
-
     this.arenaPlayer = new ArenaBase(this, true);
     this.arenaPlayer.setName("arena-player");
     this.arenaPlayerTransition = new ArenaBase(this, true);
@@ -740,7 +1003,7 @@ export default class BattleScene extends SceneBase {
       field.add(a);
     });
 
-    const championId = this.gameData.selectedChampionId;
+    const championId = ChampionUtils.resolveActiveChampionId(this);
     const backSpriteKey = ChampionUtils.getChampionBackSpriteKey(championId, this.gameData.gender);
     const trainerYOffset = ChampionUtils.getChampionBackSpriteYOffset(championId);
     const trainer = this.addFieldSprite(0, 0 + trainerYOffset, backSpriteKey);
@@ -752,6 +1015,10 @@ export default class BattleScene extends SceneBase {
     field.add(trainer);
 
     this.trainer = trainer;
+
+    const _sgYieldStart = performance.now();
+    await this._yieldFrame();
+
     this.anims.create({
       key: "prompt",
       frames: this.anims.generateFrameNumbers("prompt", { start: 1, end: 4 }),
@@ -769,9 +1036,15 @@ export default class BattleScene extends SceneBase {
       hideOnComplete: true
     });
 
-    this.reset(false, false, true);
+    const skipI18nOnFirstBoot = this._firstBoot;
+    this.reset(false, false, !skipI18nOnFirstBoot);
+    if (this._firstBoot) {
+      this._firstBoot = false;
+    }
     this.showTitleBG();
-
+    const visibleChildren = this.children.list.filter((c: any) => c.visible).map((c: any) => `${c.name || c.type}(x=${Math.round(c.x)},y=${Math.round(c.y)},a=${(c.alpha ?? 1).toFixed(2)})`);
+    const _bgYieldStart = performance.now();
+    await this._yieldFrame();
     const ui = new UI(this);
     this.uiContainer.add(ui);
 
@@ -779,19 +1052,202 @@ export default class BattleScene extends SceneBase {
 
     ui.setup();
 
+    const titleHandler = ui.handlers[Mode.TITLE];
+    if (titleHandler && typeof (titleHandler as any).preShowForAnimation === "function") {
+      (titleHandler as any).preShowForAnimation();
+    }
+
+    const uiVisibleChildren = this.uiContainer?.list?.filter((c: any) => c.visible).map((c: any) => `${c.name || c.type}(a=${(c.alpha ?? 1).toFixed(2)})`) || [];
+    const _uiYieldStart = performance.now();
+    await this._yieldFrame();
+
+    this.pushPhase(new LoginPhase(this));
+    this.shiftPhase();
+
+    if (DEBUG_YU_VISUAL_TUNING) {
+      this.yuTuneHudText = addTextObject(this, Math.floor(this.game.canvas.width / 12), 2, "", TextStyle.WINDOW, { fontSize: "28px", color: "#00FF00", align: "center" });
+      this.yuTuneHudText.setOrigin(0.5, 0);
+      this.yuTuneHudText.setDepth(9999);
+      this.yuTuneHudText.setVisible(false);
+      this.uiContainer.add(this.yuTuneHudText);
+      this.fieldSpriteTweak = new YuSpriteTweakController({
+        scene: this,
+        logTag: "BTL-TWEAK",
+        modes: ["portalScale", "creatureScale", "position", "size", "scale", "alpha", "fontSize"],
+        assets: [
+          "PlayerDuelmon", "PlayerPortal", "PlayerBoth", "PlayerHoverBox",
+          "EnemyDuelmon", "EnemyPortal", "EnemyBoth", "EnemyHoverBox",
+          "P_TeraIcon", "P_SplicedIcon", "P_FusionSpeciesIcon", "P_FusionBoth",
+          "P_ShinyIcon", "P_FusionShinyIcon",
+          "P_RankText", "P_GlitchFormText",
+          "P_SoulIcon", "P_SoulText", "P_GlitchSpeciesIcon", "P_GlitchItemIcon",
+          "P_SoulBoth", "P_GlitchBoth",
+          "E_TeraIcon", "E_SplicedIcon", "E_FusionSpeciesIcon", "E_FusionBoth",
+          "E_ShinyIcon", "E_FusionShinyIcon",
+          "E_RankText", "E_GlitchFormText",
+          "E_SoulIcon", "E_SoulText", "E_GlitchSpeciesIcon", "E_GlitchItemIcon",
+          "E_SoulBoth", "E_GlitchBoth",
+        ],
+        hudTextObject: this.yuTuneHudText,
+        applyOffsets: () => {},
+        onHydrate: () => {
+          const g = getYuTuning();
+          return {
+            player: {
+              portalScaleOffset: g.portalScaleOffset,
+              creatureScaleOffset: g.creatureScaleOffset,
+              yOffset: g.yOffset,
+              xOffset: g.xOffset,
+              creatureYOffset: g.creatureYOffset,
+              creatureXOffset: g.creatureXOffset,
+            },
+            enemy: {
+              portalScaleOffset: g.enemyPortalScaleOffset,
+              creatureScaleOffset: g.enemyCreatureScaleOffset,
+              yOffset: g.enemyYOffset,
+              xOffset: g.enemyXOffset,
+              creatureYOffset: g.enemyCreatureYOffset,
+              creatureXOffset: g.enemyCreatureXOffset,
+            },
+          };
+        },
+        onRectAdjust: ({ assetName, modeName, button, delta }) => {
+          if (assetName.startsWith("P_") || assetName.startsWith("E_")) {
+            const isPlayer = assetName.startsWith("P_");
+            const iconName = assetName.substring(2);
+            const pkmn = isPlayer ? this.getPlayerField()[0] : this.getEnemyField()[0];
+            const bi = pkmn?.getBattleInfo() as BattleInfo | undefined;
+            const target = bi?.getIconByName(iconName);
+            if (!target) return;
+
+            bi?.ensureBiTweakBaselines();
+
+            const isText = target instanceof Phaser.GameObjects.Text;
+            const isSprite = target instanceof Phaser.GameObjects.Sprite || target instanceof Phaser.GameObjects.Image;
+
+            if (modeName === "position" && (isSprite || isText)) {
+              if (button === Button.LEFT || button === Button.RIGHT) target.x += delta;
+              else target.y += delta;
+            } else if (modeName === "scale" && isSprite) {
+              target.setScale(Math.max(0.01, (target.scaleX ?? 1) + delta), Math.max(0.01, (target.scaleY ?? 1) + delta));
+            } else if (modeName === "alpha" && (isSprite || isText)) {
+              target.setAlpha(Math.max(0, Math.min(1, (target.alpha ?? 1) + delta * 0.1)));
+            } else if (modeName === "fontSize" && isText) {
+              const current = parseInt((target as Phaser.GameObjects.Text).style.fontSize as string) || 49;
+              (target as Phaser.GameObjects.Text).setFontSize(Math.max(8, current + delta * 2));
+            }
+
+            const mirrorMap: Record<string, string> = { "FusionBoth": "FusionSpeciesIcon", "SoulBoth": "SoulText", "GlitchBoth": "GlitchItemIcon" };
+            const mirrorTarget = mirrorMap[iconName];
+            if (mirrorTarget) {
+              const secondary = bi?.getIconByName(mirrorTarget);
+              if (secondary) {
+                if (modeName === "position") {
+                  if (button === Button.LEFT || button === Button.RIGHT) secondary.x += delta;
+                  else secondary.y += delta;
+                } else if (modeName === "scale") {
+                  const sec = secondary as any;
+                  if (sec.setScale) sec.setScale(Math.max(0.01, (sec.scaleX ?? 1) + delta));
+                } else if (modeName === "alpha") {
+                  const sec = secondary as any;
+                  if (sec.setAlpha) sec.setAlpha(Math.max(0, Math.min(1, (sec.alpha ?? 1) + delta * 0.1)));
+                } else if (modeName === "fontSize" && secondary instanceof Phaser.GameObjects.Text) {
+                  const current = parseInt(secondary.style.fontSize as string, 10) || 31;
+                  secondary.setFontSize(Math.max(8, current + delta * 2));
+                }
+              }
+            }
+
+            console.log(`[BTL-TWEAK] Icon adjust: ${assetName} ${modeName} delta=${delta}`);
+            return;
+          }
+          PokemonBattleTooltipUtils.setActiveHoverBox(assetName.includes("Player") ? "player" : "enemy");
+          const dirMap: Record<number, string> = {
+            [Button.LEFT]: "left", [Button.RIGHT]: "right",
+            [Button.UP]: "up", [Button.DOWN]: "down",
+          };
+          const dir = dirMap[button];
+          if (dir) {
+            PokemonBattleTooltipUtils.setTweakMode(modeName === "size" ? "size" : "position");
+            PokemonBattleTooltipUtils.applyTweakInput(dir);
+          }
+        },
+        onRectSnapshot: (assetName: string) => {
+          PokemonBattleTooltipUtils.setActiveHoverBox(assetName.includes("Player") ? "player" : "enemy");
+          PokemonBattleTooltipUtils.snapshotTweak();
+        },
+        onIconSnapshot: (assetName: string) => {
+          const isPlayer = assetName.startsWith("P_");
+          const pkmn = isPlayer ? this.getPlayerField()[0] : this.getEnemyField()[0];
+          const bi = pkmn?.getBattleInfo() as BattleInfo | undefined;
+          if (bi) {
+            bi.ensureBiTweakBaselines();
+            bi.outputAllBiTweakStates();
+          }
+        },
+        onRectReset: (assetName: string) => {
+          PokemonBattleTooltipUtils.setActiveHoverBox(assetName.includes("Player") ? "player" : "enemy");
+          PokemonBattleTooltipUtils.resetTweakRect();
+        },
+        onAssetChanged: (assetName: string) => {
+          if (assetName.toLowerCase().includes("hoverbox")) {
+            PokemonBattleTooltipUtils.setActiveHoverBox(assetName.includes("Player") ? "player" : "enemy");
+            PokemonBattleTooltipUtils.showHoverTweak(this);
+          } else {
+            PokemonBattleTooltipUtils.hideHoverTweak();
+          }
+          if (assetName.startsWith("P_") || assetName.startsWith("E_")) {
+            const isPlayer = assetName.startsWith("P_");
+            const iconName = assetName.substring(2);
+            const pkmn = isPlayer ? this.getPlayerField()[0] : this.getEnemyField()[0];
+            const bi = pkmn?.getBattleInfo() as BattleInfo | undefined;
+            const target = bi?.getIconByName(iconName);
+            if (target) {
+              console.log(`[BTL-TWEAK] Icon selected: ${assetName} → ${iconName} (${isPlayer ? "player" : "enemy"})`);
+            }
+          }
+        },
+        applySideOffsets: ({ player, enemy }) => {
+          const g = getYuTuning();
+          g.portalScaleOffset = player.portalScaleOffset;
+          g.creatureScaleOffset = player.creatureScaleOffset;
+          g.yOffset = player.yOffset;
+          g.xOffset = player.xOffset;
+          g.creatureYOffset = player.creatureYOffset;
+          g.enemyPortalScaleOffset = enemy.portalScaleOffset;
+          g.enemyCreatureScaleOffset = enemy.creatureScaleOffset;
+          g.enemyYOffset = enemy.yOffset;
+          g.enemyXOffset = enemy.xOffset;
+          g.enemyCreatureYOffset = enemy.creatureYOffset;
+          g.creatureXOffset = player.creatureXOffset;
+          g.enemyCreatureXOffset = enemy.creatureXOffset;
+          for (const pkmn of [...this.getPlayerField(), ...this.getEnemyField()]) {
+            if (pkmn?.species?.generation === 20) {
+              const texKey = pkmn.getSprite()?.texture?.key;
+              if (texKey !== "pkmn__sub" && texKey !== "pkmn__back__sub") {
+                pkmn.applySpriteState();
+              }
+            }
+          }
+        },
+        getDropdownAnchor: () => ({ x: 10, y: 20 }),
+      });
+    }
+
     const defaultMoves = [ Moves.TACKLE, Moves.TAIL_WHIP, Moves.FOCUS_ENERGY, Moves.STRUGGLE ];
 
-    Promise.all([
-      Promise.all(loadPokemonAssets),
-      initCommonAnims(this).then(() => loadCommonAnimAssets(this, true)),
-      Promise.all([ Moves.TACKLE, Moves.TAIL_WHIP, Moves.FOCUS_ENERGY, Moves.STRUGGLE ].map(m => initMoveAnim(this, m))).then(() => loadMoveAnimAssets(this, defaultMoves, true)),
-      this.initStarterColors()
-    ]).then(() => {
-      this.pushPhase(new LoginPhase(this));
-      this.pushPhase(new TitlePhase(this));
+    this.pushPhase(new TitlePhase(this));
+    if (!this.currentPhase) {
       this.shiftPhase();
+    }
 
+    this.initStarterColors().then(() => {
     });
+
+    this._commonAnimsReady = initCommonAnims(this)
+      .then(() => loadCommonAnimAssets(this, true));
+
+    Promise.all([ Moves.TACKLE, Moves.TAIL_WHIP, Moves.FOCUS_ENERGY, Moves.STRUGGLE ].map(m => initMoveAnim(this, m))).then(() => loadMoveAnimAssets(this, defaultMoves, true));
   }
 
   initSession(): void {
@@ -909,17 +1365,17 @@ export default class BattleScene extends SceneBase {
           return res.json();
         })
         .then(sc => {
+          starterColors = starterColors ?? {};
           if (!sc) {
             resolve();
             return;
           }
-          starterColors = {};
           Object.keys(sc).forEach(key => {
             starterColors[key] = sc[key];
           });
           resolve();
         })
-        .catch(() => resolve());
+        .catch(() => { starterColors = starterColors ?? {}; resolve(); });
     });
   }
 
@@ -948,8 +1404,8 @@ export default class BattleScene extends SceneBase {
     return true;
   }
 
-  getParty(): PlayerPokemon[] {
-    return this.party;
+  getParty(forPlayer: boolean = true): PlayerPokemon[] | EnemyPokemon[] {
+    return forPlayer ? this.party : this.getEnemyParty();
   }
 
   replacePlayerPokemon(partyIndex: integer, newPokemon: PlayerPokemon): PlayerPokemon | null {
@@ -1039,8 +1495,18 @@ export default class BattleScene extends SceneBase {
   }
 
   addEnemyPokemon(species: PokemonSpecies, level: integer, trainerSlot: TrainerSlot, boss: boolean = false, dataSource?: PokemonData, postProcess?: (enemyPokemon: EnemyPokemon) => void): EnemyPokemon {
-    if (Overrides.OPP_SPECIES_OVERRIDE) {
-      species = getPokemonSpecies(Overrides.OPP_SPECIES_OVERRIDE);
+    if (!this.gameData.tutorialOnboardActive) {
+      if (Overrides.OPP_SPECIES_OVERRIDE) {
+        species = getPokemonSpecies(Overrides.OPP_SPECIES_OVERRIDE);
+      } else if (Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE && species.generation !== 20) {
+        species = getPokemonSpecies(DUELMON_SPECIES[Utils.randSeedInt(DUELMON_SPECIES.length)]);
+      }
+    }
+
+    const isBossTrainerSlot = trainerSlot === TrainerSlot.TRAINER && this.currentBattle?.trainer?.config?.isBoss;
+    if (!isBossTrainerSlot && species.generation === 20 && species.baseTotal > getDuelmonBstLimitForWave(this.currentBattle?.waveIndex ?? 1)) {
+      const eligible = getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, this.currentBattle?.waveIndex ?? 1);
+      species = getPokemonSpecies(eligible[Utils.randSeedInt(eligible.length)]);
     }
 
     if (Overrides.OPP_LEVEL_OVERRIDE !== 0) {
@@ -1084,6 +1550,7 @@ export default class BattleScene extends SceneBase {
 
     if (iconAtlasKey.startsWith("pokemon_icons_mod_")) {
       icon.setOrigin(0.5, 0);
+      applyTypeSwitcherIconRecolor(this, pokemon, icon, ignoreOverride);
     } else {
       icon.setFrame(iconID);
       if (icon.frame.name !== iconID) {
@@ -1098,10 +1565,15 @@ export default class BattleScene extends SceneBase {
           const baseIconId = pokemon.species.getIconId(false, 0, false, 0);
           icon.setTexture(baseAtlasKey);
           icon.setFrame(baseIconId);
+          if (icon.frame.name !== baseIconId && pokemon.species.generation === 20) {
+            icon.setTexture(DUELMON_ICON_ATLAS_FALLBACK_KEY);
+            icon.setFrame(baseIconId);
+          }
         }
         pokemon.shiny = temp;
       }
       icon.setOrigin(0.5, 0);
+      applyTypeSwitcherIconRecolor(this, pokemon, icon, ignoreOverride);
     }
 
     if (pokemon.altBuildId) {
@@ -1115,6 +1587,47 @@ export default class BattleScene extends SceneBase {
       }
     }
 
+    const iconPipelineRecolored = icon.pipeline === this.spritePipeline;
+
+    if (
+      pokemon.reshapeSourceSpeciesId
+      && pokemon.altBuildTargetColors?.length >= 4
+      && !pokemon.isFusion()
+      && !iconPipelineRecolored
+    ) {
+      const paletteInfo = getCachedIconPalette(this, icon);
+      if (paletteInfo) {
+        icon.clearTint();
+        icon.setPipeline(this.spritePipeline, {
+          tone: [0.0, 0.0, 0.0, 0.0],
+          hasShadow: false,
+          ignoreFieldPos: true,
+          ignoreTimeTint: true,
+        });
+        icon.pipelineData["altBuildSpriteColors"] = paletteInfo.cluster4.slice(0, 4);
+        icon.pipelineData["altBuildTargetColors"] = pokemon.altBuildTargetColors;
+        icon.pipelineData["altBuildBlendMode"] = pokemon.altBuildBlendMode || "duelmon_cluster4";
+        icon.pipelineData["altBuildInversionFactor"] = pokemon.altBuildInversionFactor ?? 0.0;
+      }
+    } else if (!pokemon.isPlayer() && this.currentBattle?.trainer?.isCorrupted && pokemon.altBuildTargetColors?.length >= 4) {
+      const paletteInfo = getCachedIconPalette(this, icon);
+      if (paletteInfo) {
+        icon.clearTint();
+        icon.setPipeline(this.spritePipeline, {
+          tone: [0.0, 0.0, 0.0, 0.0],
+          hasShadow: false,
+          ignoreFieldPos: true,
+          ignoreTimeTint: true,
+        });
+        icon.pipelineData["altBuildSpriteColors"] = paletteInfo.cluster4.slice(0, 4);
+        icon.pipelineData["altBuildTargetColors"] = pokemon.altBuildTargetColors;
+        icon.pipelineData["altBuildBlendMode"] = "duelmon_cluster4";
+        icon.pipelineData["altBuildInversionFactor"] = 0.7;
+      } else {
+        icon.setTintFill(0x5A1BB2);
+      }
+    }
+
     container.add(icon);
 
     if (pokemon.isFusion()) {
@@ -1122,6 +1635,7 @@ export default class BattleScene extends SceneBase {
       fusionIcon.setName("sprite-fusion-icon");
       fusionIcon.setOrigin(0.5, 0);
       fusionIcon.setFrame(pokemon.getFusionIconId(true));
+      applyTypeSwitcherIconRecolor(this, pokemon, fusionIcon, ignoreOverride);
 
       if (pokemon.altBuildId) {
         try {
@@ -1180,6 +1694,12 @@ export default class BattleScene extends SceneBase {
       }
     }
 
+    if (pokemon.species.generation === 20) {
+      container.setScale(container.scaleX + DUELMON_ICON_SCALE_OFFSET, container.scaleY + DUELMON_ICON_SCALE_OFFSET);
+    } else if (pokemon.isGlitchOrSmittyForm?.()) {
+      container.setScale(container.scaleX + DUELMON_ICON_SCALE_OFFSET, container.scaleY + DUELMON_ICON_SCALE_OFFSET);
+    }
+
     return container;
   }
 
@@ -1189,6 +1709,33 @@ export default class BattleScene extends SceneBase {
     this.waveCycleOffset = this.getGeneratedWaveCycleOffset();
     this.offsetGym = this.gameMode.isClassic && this.getGeneratedOffsetGym();
 
+  }
+
+  initTrainerDualColorRecolorForRun(): void {
+    const palette: number[][] = [
+      [255, 255, 255],
+      [128, 0, 128],
+      [0, 0, 0],
+      [255, 215, 0],
+    ];
+
+    this.executeWithSeedOffset(() => {
+      this.trainerDualColorRecolorEnabledForRun = Utils.randSeedInt(100) < 30;
+      if (!this.trainerDualColorRecolorEnabledForRun) {
+        this.trainerDualColorAForRun = null;
+        this.trainerDualColorBForRun = null;
+        return;
+      }
+
+      const a = Utils.randSeedInt(palette.length);
+      let b = Utils.randSeedInt(palette.length - 1);
+      if (b >= a) {
+        b++;
+      }
+
+      this.trainerDualColorAForRun = [...palette[a]];
+      this.trainerDualColorBForRun = [...palette[b]];
+    }, 0x5452, this.seed);
   }
 
   randBattleSeedInt(range: integer, min: integer = 0): integer {
@@ -1202,8 +1749,304 @@ export default class BattleScene extends SceneBase {
     this.arenaBg.setSize(1920, 1080);
     this.arenaBg.setPosition(0, 0);
     this.arenaBg.setTint(0xFFFFFF);
-    this.arenaBg.setPipeline('INVERT');
+    this.arenaBg.resetPipeline(true);
+    this.arenaBg.setVisible(true);
+
+    this.field.setVisible(false);
+    this.fieldUI.setVisible(false);
+
+    this.arenaPlayer.setVisible(false);
+    this.arenaPlayerTransition.setVisible(false);
+    this.arenaEnemy.setVisible(false);
+    this.arenaNextEnemy.setVisible(false);
+    this.arenaBgTransition.setVisible(false);
+
+    this.ui?.hideMessageChrome?.();
+    this.ui?.getPermaMoneyContainer?.()?.setVisible?.(true);
+    this.ui?.permaModifierBar?.setVisible?.(this.showPermaBar);
   }
+
+  restoreBattleField(): void {
+    this.field.setVisible(true);
+    this.fieldUI.setVisible(true);
+    this.arenaPlayer.setVisible(true);
+    this.arenaEnemy.setVisible(true);
+    this.arenaBg.setPipeline(this.fieldSpritePipeline);
+    this.arenaBg.setScale(6);
+    this.arenaBg.setSize(320, 240);
+    this.arenaBg.setPosition(FIELD_X_OFFSET, 0);
+    this.arenaBg.setOrigin(0, 0);
+    this.arenaBg.setVisible(true);
+    if (this.battleVisualSuppressionDepth > 0) {
+      this.battleVisualSuppressionDepth = 0;
+      this.endOfRunBattleVisualSuppressionActive = false;
+    }
+  }
+
+  releaseCondenseTrailOverlay(): void {
+    if (this._condenseTrailHandle) {
+      this._condenseTrailHandle.release();
+      this._condenseTrailHandle = null;
+      this.game.registry.remove("_condenseTrailHandle");
+    }
+    if (this.scene.isActive("loading")) {
+      this.scene.stop("loading");
+    }
+  }
+
+  signalDataReady(): void {
+    this.applyLoadingSmitomRewards();
+    this.game.events.emit("_condenseStart");
+    this._bootGateResolvers?.resolveDataReady();
+  }
+
+  applyLoadingSmitomRewards(): void {
+    const total = this.game.registry.get("_loadingSmitomRewardGold") as number ?? 0;
+    if (total <= 0) return;
+    this.gameData.updatePermaMoney(this, total, true);
+    this.gameData.updateLoadingSmitomRewardTime();
+    this.gameData.localSaveAll(this);
+    this.game.registry.set("_loadingSmitomRewardGold", 0);
+  }
+
+  signalTitleComposed(): void {
+    this._bootGateResolvers?.resolveTitleComposed();
+  }
+
+  setDeferredBootTutorials(fn: () => void): void {
+    this._deferredBootTutorials = fn;
+  }
+
+  runDeferredBootTutorials(): void {
+    if (this._deferredBootTutorials) {
+      const fn = this._deferredBootTutorials;
+      this._deferredBootTutorials = null;
+      fn();
+    }
+  }
+
+  ensureReturnLoadingOverlay(): void {
+    if (this._returnLoadingOverlay && this.children.exists(this._returnLoadingOverlay)) return;
+    if (this._returnLoadingOverlay) {
+      this._returnLoadingOverlay.destroy();
+      this._returnLoadingOverlay = null;
+    }
+    this._returnLoadingOverlay = this.add.image(0, 0, "loading_bg");
+    this._returnLoadingOverlay.setOrigin(0, 0);
+    this._returnLoadingOverlay.setDisplaySize(this.game.canvas.width, this.game.canvas.height);
+    this._returnLoadingOverlay.setDepth(9998);
+  }
+
+  destroyReturnLoadingOverlay(): void {
+    if (this._returnLoadingOverlay && this._returnLoadingOverlay.scene) {
+      this._returnLoadingOverlay.destroy();
+    }
+    this._returnLoadingOverlay = null;
+  }
+
+  playReturnCondense(): void {
+    if (this._returnCondenseActive) return;
+    this._returnCondenseActive = true;
+
+    this.game.registry.remove("_returnToTitlePending");
+    this.showTitleBG();
+    this.ensureReturnLoadingOverlay();
+
+    const effectId = Math.floor(Math.random() * getEffectCount());
+    const handle = playCondenseTrailTransition(this, effectId, 1400, "loading_bg");
+    this._condenseTrailHandle = handle;
+
+    this.spawnReturnSmitom();
+
+    handle.animationDone.then(() => {
+      this.dismissReturnSmitom();
+      this.applyLoadingSmitomRewards();
+      this.destroyReturnLoadingOverlay();
+      this.releaseCondenseTrailOverlay();
+      this._returnCondenseActive = false;
+    });
+
+    this.wireCondenseSpeedUpInput();
+  }
+
+  private wireCondenseSpeedUpInput(): void {
+    if (!this._condenseTrailHandle) return;
+
+    const handle = this._condenseTrailHandle;
+    const doSpeedUp = () => {
+      handle.speedUp(9);
+      this.input.off("pointerdown", doSpeedUp);
+      this.inputController?.events.off("input_down", doSpeedUp);
+    };
+
+    this.input.on("pointerdown", doSpeedUp);
+    this.inputController?.events.on("input_down", doSpeedUp);
+
+    handle.animationDone.then(() => {
+      this.input.off("pointerdown", doSpeedUp);
+      this.inputController?.events.off("input_down", doSpeedUp);
+    });
+  }
+
+  private spawnReturnSmitom(): void {
+    return;
+    if (this._returnSmitom || this._returnSmitomRoot) return;
+    if (!this.textures.exists("pokemon_icons_glitch")) return;
+
+    const w = this.game.canvas.width;
+    const h = this.game.canvas.height;
+    const centerX = w / 2;
+    const centerY = h / 2;
+    const excludeW = w * 0.25;
+    const excludeH = h * 0.25;
+
+    let x: number;
+    do {
+      x = Phaser.Math.Between(80, w - 80);
+    } while (x > centerX - excludeW && x < centerX + excludeW);
+
+    let y: number;
+    do {
+      y = Phaser.Math.Between(60, h - 60);
+    } while (y > centerY - excludeH && y < centerY + excludeH);
+
+    this._returnSmitomRewardValue = Phaser.Math.Between(1, 100) <= 10 ? 500 : 100;
+    const isRare = this._returnSmitomRewardValue >= 500;
+    const targetScale = isRare ? 3.5 : 3;
+
+    const root = this.add.container(x, y);
+    root.setDepth(9999);
+
+    const smitom = this.add.sprite(0, 0, "pokemon_icons_glitch", "smitom");
+    smitom.setScale(0);
+    smitom.setAlpha(0);
+    if (isRare) {
+      smitom.setTint(0xFFD700);
+    }
+
+    const hitZone = this.add.zone(0, 0, 96, 96);
+    hitZone.setInteractive({ useHandCursor: true });
+
+    root.add([smitom, hitZone]);
+
+    this._returnSmitomRoot = root;
+    this._returnSmitom = smitom;
+    this._returnSmitomZone = hitZone;
+    this._returnSmitomClaimed = false;
+    this._returnSmitomDismissing = false;
+
+    this.tweens.add({
+      targets: smitom,
+      scaleX: targetScale, scaleY: targetScale, alpha: 1,
+      duration: 450, ease: "Back.easeOut",
+      onComplete: () => {
+        if (!root.scene) return;
+        this.tweens.add({
+          targets: root,
+          y: root.y - 3,
+          duration: 800, ease: "Sine.easeInOut",
+          yoyo: true, repeat: -1
+        });
+      }
+    });
+
+    hitZone.on("pointerdown", (p: Phaser.Input.Pointer) => {
+      if (p.button !== 0 || this._returnSmitomClaimed || this._returnSmitomDismissing) return;
+      p.event?.stopPropagation();
+      this._returnSmitomClaimed = true;
+      this._returnSmitomDismissing = true;
+
+      hitZone.disableInteractive();
+      smitom.setVisible(false);
+
+      const pending = (this.game.registry.get("_loadingSmitomRewardGold") as number) || 0;
+      this.game.registry.set("_loadingSmitomRewardGold", pending + this._returnSmitomRewardValue);
+
+      try {
+        this.getRandomSmittySound(undefined, true);
+      } catch (e) {
+        console.warn("[return-smitom] sound failed", e);
+      }
+
+      const popupColor = this._returnSmitomRewardValue >= 500 ? "#FF6600" : "#FFD700";
+      const popupSize = this._returnSmitomRewardValue >= 500 ? "40px" : "32px";
+      const popup = this.add.text(root.x, root.y - 10, `+${this._returnSmitomRewardValue} \u03A9GOLD`, {
+        fontFamily: "emerald",
+        fontSize: popupSize,
+        color: popupColor,
+        stroke: "#000000",
+        strokeThickness: 4,
+        align: "center"
+      });
+      popup.setOrigin(0.5, 1);
+      popup.setDepth(10000);
+
+      this.tweens.add({
+        targets: popup,
+        y: root.y - 60,
+        alpha: 0,
+        duration: 900,
+        ease: "Cubic.easeOut",
+        onComplete: () => {
+          if (popup.scene) popup.destroy();
+        }
+      });
+
+      this.tweens.killTweensOf(root);
+      this.tweens.killTweensOf(smitom);
+      this.tweens.add({
+        targets: smitom,
+        scaleX: 0, scaleY: 0, alpha: 0,
+        duration: 250, ease: "Sine.easeOut",
+        onComplete: () => {
+          this.teardownReturnSmitom();
+        }
+      });
+    });
+
+    const autoHide = this.time.delayedCall(4000, () => {
+      if (this._returnSmitomClaimed || this._returnSmitomDismissing || !this._returnSmitom) return;
+      this._returnSmitomDismissing = true;
+      hitZone.disableInteractive();
+      this.tweens.killTweensOf(root);
+      this.tweens.add({
+        targets: smitom,
+        scaleX: 0, scaleY: 0, alpha: 0,
+        duration: 350, ease: "Sine.easeOut",
+        onComplete: () => {
+          this.teardownReturnSmitom();
+        }
+      });
+    });
+    this._returnSmitomTimers.push(autoHide);
+  }
+
+  private teardownReturnSmitom(): void {
+    if (this._returnSmitomZone) {
+      this._returnSmitomZone.off("pointerdown");
+      this._returnSmitomZone.disableInteractive();
+      this._returnSmitomZone = null;
+    }
+    if (this._returnSmitom) {
+      this.tweens.killTweensOf(this._returnSmitom);
+      this._returnSmitom = null;
+    }
+    if (this._returnSmitomRoot) {
+      this.tweens.killTweensOf(this._returnSmitomRoot);
+      this._returnSmitomRoot.destroy();
+      this._returnSmitomRoot = null;
+    }
+    this._returnSmitomClaimed = false;
+    this._returnSmitomDismissing = false;
+  }
+
+  private dismissReturnSmitom(): void {
+    this._returnSmitomTimers.forEach(t => t.destroy());
+    this._returnSmitomTimers = [];
+    this._returnSmitomDismissing = true;
+    this.teardownReturnSmitom();
+  }
+
   reset(clearScene: boolean = false, clearData: boolean = false, reloadI18n: boolean = false): void {
     if (clearData) {
       this.gameData = new GameData(this);
@@ -1218,6 +2061,8 @@ export default class BattleScene extends SceneBase {
     this.pathNodeContext = null;
     this.selectedNodeType = null;
     this.finalBattleVictory = false;
+    this._inBattleTurn = false;
+    this._battleAnimDepth = 0;
     this.skillTreeModifierContext = false;
     this.dynamicMode = null;
     this.lossWhiteoutPreSummaryQueued = false;
@@ -1225,6 +2070,7 @@ export default class BattleScene extends SceneBase {
     this.gameMode = getGameMode(GameModes.CLASSIC);
 
     this.setSeed(Overrides.SEED_OVERRIDE || Utils.randomString(24));
+    this.initTrainerDualColorRecolorForRun();
 
     this.disableMenu = false;
 
@@ -1263,6 +2109,7 @@ export default class BattleScene extends SceneBase {
       p.destroy();
     }
     this.currentBattle = null;
+    this.conditionalQueue = [];
     this.majorBossWave = 0;
 
     this.biomeWaveText.setText(startingWave.toString());
@@ -1277,9 +2124,15 @@ export default class BattleScene extends SceneBase {
 
     this.newArena(Overrides.STARTING_BIOME_OVERRIDE || Biome.TOWN);
 
-    this.field.setVisible(true);
+    if (!clearScene) {
+      this.arenaBg.setVisible(true);
+      this.field.setVisible(true);
+      this.fieldUI.setVisible(true);
+      this.arenaPlayer.setVisible(true);
+      this.arenaEnemy.setVisible(true);
+    }
 
-    this.arenaBgTransition.setPosition(0, 0);
+    this.arenaBgTransition.setPosition(FIELD_X_OFFSET, 0);
     this.arenaPlayer.setPosition(300, 0);
     this.arenaPlayerTransition.setPosition(0, 0);
     [ this.arenaEnemy, this.arenaNextEnemy ].forEach(a => a.setPosition(-280, 0));
@@ -1287,7 +2140,7 @@ export default class BattleScene extends SceneBase {
 
     this.arena.init();
 
-    const championId = this.gameData.selectedChampionId;
+    const championId = ChampionUtils.resolveActiveChampionId(this);
     const backSpriteKey = ChampionUtils.getChampionBackSpriteKey(championId, this.gameData.gender);
     this.trainer.setTexture(backSpriteKey);
     const trainerScale = ChampionUtils.getChampionBackSpriteScale(championId);
@@ -1299,12 +2152,30 @@ export default class BattleScene extends SceneBase {
 
     this.updateGameInfo();
 
+    if (this.battleVisualSuppressionDepth > 0 || this.endOfRunBattleVisualSuppressionActive) {
+      this.ui?.getPermaMoneyContainer?.()?.setVisible?.(true);
+      this.ui?.permaModifierBar?.setVisible?.(this.showPermaBar);
+      this.modifierBar?.setVisible?.(true);
+      this.enemyModifierBar?.setVisible?.(true);
+      this.battleVisualSuppressionDepth = 0;
+      this.endOfRunBattleVisualSuppressionActive = false;
+      this.prevSuppressedFieldVisible = null;
+      this.prevSuppressedFieldUIVisible = null;
+      this.prevSuppressedArenaBgVisible = null;
+      this.prevSuppressedArenaBgTransitionVisible = null;
+      this.prevSuppressedModifierBarVisible = null;
+      this.prevSuppressedEnemyModifierBarVisible = null;
+      this.prevSuppressedPermaMoneyVisible = null;
+      this.prevSuppressedPermaModifierBarVisible = null;
+      this.prevSuppressedMessageBgVisible = null;
+      this.prevSuppressedMessageContainerVisible = null;
+    }
+
     if (reloadI18n) {
       const localizable: Localizable[] = [
-        ...allSpecies,
-        ...allMoves,
-        ...allAbilities,
-        ...Utils.getEnumValues(ModifierPoolType).map(mpt => getModifierPoolForType(mpt)).map(mp => Object.values(mp).flat().map(mt => mt.modifierType).filter(mt => "localize" in mt).map(lpb => lpb as unknown as Localizable)).flat()
+        ...allSpecies.filter(Boolean),
+        ...allMoves.filter(Boolean),
+        ...allAbilities.filter(Boolean),
       ];
       for (const item of localizable) {
         item.localize();
@@ -1312,8 +2183,10 @@ export default class BattleScene extends SceneBase {
     }
 
     if (clearScene) {
-
       this.initVariantData();
+
+      this.ensureReturnLoadingOverlay();
+      this.game.registry.set("_returnToTitlePending", true);
 
       this.fadeOutBgm(250, false);
       this.tweens.add({
@@ -1324,8 +2197,18 @@ export default class BattleScene extends SceneBase {
         onComplete: () => {
           this.clearPhaseQueue();
 
+          const overlay = this._returnLoadingOverlay;
+          if (overlay) {
+            overlay.removeFromDisplayList();
+          }
+
           this.children.removeAll(true);
           this.game.domContainer.innerHTML = "";
+
+          if (overlay) {
+            this.add.existing(overlay);
+          }
+
           this.launchBattle();
         }
       });
@@ -1345,10 +2228,7 @@ export default class BattleScene extends SceneBase {
   this.resetSeed(newWaveIndex);
 
     if (isFirstBattle) {
-      this.arenaBg.setScale(6);
-      this.arenaBg.setSize(320, 240);
-      this.arenaBg.setPosition(0, 0);
-      this.arenaBg.setOrigin(0, 0);
+      this.restoreBattleField();
     }
 
     const playerField = this.getPlayerField();
@@ -1417,6 +2297,7 @@ export default class BattleScene extends SceneBase {
     }, newWaveIndex << 3, this.waveSeed);
     this.currentBattle.incrementTurn(this);
     this.encounterInitComplete = false;
+    this.battleReplayRecorder = null;
     if (Overrides.DEBUG_SAVE_TRACE) {
       console.debug("[SAVE_TRACE] newBattle reset encounterInitComplete", {
         autoSaveMode: this.autoSaveMode,
@@ -1518,6 +2399,7 @@ export default class BattleScene extends SceneBase {
     if (resetArenaState) {
       this.arena.resetArenaEffects();
       const playerField = this.getPlayerField();
+      const ReturnPhase = getReturnPhase();
       playerField.forEach((_, p) => this.pushPhase(new ReturnPhase(this, p)));
 
       for (const pokemon of this.getParty()) {
@@ -1533,11 +2415,13 @@ export default class BattleScene extends SceneBase {
 
     if (!this.gameMode.hasRandomBiomes && !isNewBiome) {
       if(!isChaosMode) {
+        const NextEncounterPhase = getNextEncounterPhase();
         this.pushPhase(new NextEncounterPhase(this));
       }
     } else {
       this.pushPhase(new SelectBiomePhase(this));
       if(!isChaosMode) {
+        const NewBiomeEncounterPhase = getNewBiomeEncounterPhase();
         this.pushPhase(new NewBiomeEncounterPhase(this));
       const newMaxExpLevel = this.getMaxExpLevel();
         if (newMaxExpLevel > maxExpLevel || this.gameMode.isNightmare) {
@@ -1580,11 +2464,12 @@ export default class BattleScene extends SceneBase {
       const defaultHeight = 132 * 6;
       const scaledWidth = this.arenaBg.width * scale;
       const scaledHeight = 132 * scale;
+      const targetX = (defaultWidth - scaledWidth) / 2 + FIELD_X_OFFSET;
 
       this.tweens.add({
         targets: this.field,
         scale: scale,
-        x: (defaultWidth - scaledWidth) / 2,
+        x: targetX,
         y: defaultHeight - scaledHeight,
         duration: !instant ? Utils.fixedInt(Math.abs(this.field.scale - scale) * 200) : 0,
         ease: "Sine.easeInOut",
@@ -1950,8 +2835,8 @@ export default class BattleScene extends SceneBase {
   }
 
   initPokemonSprite(sprite: Phaser.GameObjects.Sprite, pokemon?: Pokemon, hasShadow: boolean = false, ignoreOverride: boolean = false): Phaser.GameObjects.Sprite {
-    const shouldHaveShadow = !!hasShadow && !pokemon?.isGlitchOrSmittyForm() && !pokemon?.isShadowlessMegaForm();
-    sprite.setPipeline(this.spritePipeline, { tone: [ 0.0, 0.0, 0.0, 0.0 ], hasShadow: shouldHaveShadow, ignoreOverride: ignoreOverride, teraColor: pokemon ? getTypeRgb(pokemon.getTeraType()) : undefined });
+    const shouldHaveShadow = !!hasShadow && !pokemon?.isGlitchOrSmittyForm() && !pokemon?.isShadowlessMegaForm() && pokemon?.species?.generation !== 20;
+    sprite.setPipeline(this.spritePipeline, { tone: [ 0.0, 0.0, 0.0, 0.0 ], hasShadow: shouldHaveShadow, ignoreOverride: ignoreOverride, teraColor: pokemon ? getTypeRgb(pokemon.getTeraType()) : undefined, ignoreFieldPos: pokemon?.species?.generation === 20 || pokemon?.isGlitchOrSmittyForm() });
     this.spriteSparkleHandler.add(sprite);
     return sprite;
   }
@@ -1963,11 +2848,14 @@ export default class BattleScene extends SceneBase {
     this.arenaFlyout.toggleFlyout(pressed);
   }
 
-  showFieldOverlay(duration: integer): Promise<void> {
+  showFieldOverlay(duration: integer, options?: { withDialogueBg?: boolean; bgTextureKey?: string }): Promise<void> {
+    if (options?.withDialogueBg) {
+      this.createDialogueLoadingBg(options.bgTextureKey);
+    }
     return new Promise(resolve => {
       this.tweens.add({
         targets: this.fieldOverlay,
-        alpha: 0.85,
+        alpha: options?.withDialogueBg ? 0 : 0.85,
         ease: "Sine.easeOut",
         duration: duration,
         onComplete: () => resolve()
@@ -1977,6 +2865,28 @@ export default class BattleScene extends SceneBase {
 
   hideFieldOverlay(duration: integer): Promise<void> {
     return new Promise(resolve => {
+      if (this._dialogueBgImage) {
+        if (this._dialogueBgImage.postFX && typeof this._dialogueBgImage.postFX.addPixelate === "function") {
+          const bgPixFx = this._dialogueBgImage.postFX.addPixelate(0);
+          this.tweens.add({
+            targets: bgPixFx,
+            amount: 80,
+            duration: Utils.fixedInt(duration),
+            ease: "Linear"
+          });
+        }
+        this.tweens.add({
+          targets: this._dialogueBgImage,
+          alpha: 0,
+          duration: Utils.fixedInt(duration),
+          ease: "Cubic.easeIn",
+          onComplete: () => {
+            this.destroyDialogueLoadingBg();
+          }
+        });
+      } else {
+        this.destroyDialogueLoadingBg();
+      }
       this.tweens.add({
         targets: this.fieldOverlay,
         alpha: 0,
@@ -1985,6 +2895,27 @@ export default class BattleScene extends SceneBase {
         onComplete: () => resolve()
       });
     });
+  }
+
+  private createDialogueLoadingBg(textureKey?: string): void {
+    if (this._dialogueBgImage) return;
+    const key = textureKey || "loading_bg";
+    if (!this.textures.exists(key)) return;
+    const logicalW = this.game.canvas.width / 6;
+    const logicalH = this.game.canvas.height / 6;
+    this._dialogueBgImage = this.add.image(0, -logicalH, key);
+    this._dialogueBgImage.setOrigin(0, 0);
+    this._dialogueBgImage.setDisplaySize(logicalW, logicalH);
+    this._dialogueBgImage.setAlpha(1);
+    this.fieldUI.add(this._dialogueBgImage);
+    this.fieldUI.moveAbove(this._dialogueBgImage, this.fieldOverlay);
+  }
+
+  private destroyDialogueLoadingBg(): void {
+    if (this._dialogueBgImage) {
+      this._dialogueBgImage.destroy();
+      this._dialogueBgImage = null;
+    }
   }
 
   updateShopOverlayOpacity(value: number): void {
@@ -2048,6 +2979,21 @@ export default class BattleScene extends SceneBase {
     }
     const formattedMoney = Utils.formatMoney(this.moneyFormat, this.money);
     this.moneyText.setText(i18next.t("battleScene:moneyOwned", { formattedMoney }));
+    if (this.moneyHoverZone) {
+      const wm = this.moneyText.getWorldTransformMatrix();
+      const scaledW = this.moneyText.width * Math.abs(wm.scaleX);
+      const scaledH = this.moneyText.height * Math.abs(wm.scaleY);
+      const zw = scaledW / 6 + 4;
+      const zh = scaledH / 6 + 4;
+      const zoneX = (wm.tx / 6) - zw;
+      const zoneY = (wm.ty / 6) - zh / 2;
+      this.moneyHoverZone.setPosition(zoneX, zoneY);
+      this.moneyHoverZone.setSize(zw, zh);
+      if (this.moneyHoverZone.input) {
+        const hitRect = this.moneyHoverZone.input.hitArea as Phaser.Geom.Rectangle;
+        hitRect.setTo(0, 0, zw, zh);
+      }
+    }
     this.fieldUI.moveAbove(this.moneyText, this.scoreText);
     if (forceVisible) {
       this.moneyText.setVisible(true);
@@ -2151,6 +3097,10 @@ export default class BattleScene extends SceneBase {
     if (fromArenaPool) {
       return this.arena.randomSpecies(waveIndex, level, undefined, getPartyLuckValue(this.party));
     }
+    if (Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE) {
+      const eligible = getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, waveIndex);
+      return getPokemonSpecies(eligible[Utils.randSeedInt(eligible.length)]);
+    }
     const filteredSpecies = speciesFilter ? [...new Set(allSpecies.filter(s => s.isCatchable()).filter(speciesFilter).map(s => {
       if (!filterAllEvolutions) {
         while (pokemonPrevolutions.hasOwnProperty(s.speciesId)) {
@@ -2192,7 +3142,10 @@ export default class BattleScene extends SceneBase {
 
   playBgm(bgmName?: string, fadeOut?: boolean): void {
     if (bgmName === undefined) {
-      bgmName = this.currentBattle?.getBgmOverride(this) || this.arena?.bgm;
+      const battleBgm = this.currentBattle?.getBgmOverride(this) || this.arena?.bgm;
+      bgmName = (this.currentBattle?.started) ? battleBgm : (this.lastExplicitBgmKey || battleBgm);
+    } else {
+      this.lastExplicitBgmKey = bgmName;
     }
     if (this.bgm && !this.bgm.pendingRemove && bgmName === this.bgm.key) {
       if (!this.bgm.isPlaying) {
@@ -2222,7 +3175,8 @@ export default class BattleScene extends SceneBase {
     loopPoint = bgmName === this.arena.bgm
       ? this.arena.getBgmLoopPoint()
       : this.getBgmLoopPoint(bgmName);
-    let loaded = false;
+    const isCached = this.cache.audio.exists(bgmName);
+    let loaded = isCached;
     const playNewBgm = () => {
       this.ui.bgmBar.setBgmToBgmBar(bgmName);
       if (bgmName === null && this.bgm && !this.bgm.pendingRemove) {
@@ -2251,21 +3205,25 @@ export default class BattleScene extends SceneBase {
         });
       }
     };
-    this.load.once(Phaser.Loader.Events.COMPLETE, () => {
-      loaded = true;
-      if (!fadeOut || !this.bgm.isPlaying) {
-        playNewBgm();
-      }
-    });
+    if (!isCached) {
+      this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+        loaded = true;
+        if (!fadeOut || !this.bgm?.isPlaying) {
+          playNewBgm();
+        }
+      });
+    }
     if (fadeOut) {
       const onBgmFaded = () => {
-        if (loaded && (!this.bgm.isPlaying || this.bgm.pendingRemove)) {
+        if (loaded) {
           playNewBgm();
         }
       };
       this.time.delayedCall(this.fadeOutBgm(500, true) ? 750 : 250, onBgmFaded);
+    } else if (isCached) {
+      playNewBgm();
     }
-    if (!this.load.isLoading()) {
+    if (!isCached && !this.load.isLoading()) {
       this.load.start();
     }
   }
@@ -2784,9 +3742,11 @@ export default class BattleScene extends SceneBase {
     }
   }
   clearPhaseQueue(): void {
+    this._inBattleTurn = false;
     this.phaseQueue.splice(0, this.phaseQueue.length);
   }
   clearAllPhaseQueues(): void {
+    this._inBattleTurn = false;
     try {
       this.phaseQueue.splice(0, this.phaseQueue.length);
     } catch {}
@@ -2809,8 +3769,7 @@ export default class BattleScene extends SceneBase {
     this.phaseQueuePrependSpliceIndex = -1;
   }
   shiftPhase(): void {
-    const currentPhaseName = this.currentPhase?.constructor.name || 'No Phase';
-    const standbyPhaseName = this.standbyPhase?.constructor.name || 'No Standby Phase';
+    const prevPhase = this.currentPhase;
 
     if (this.standbyPhase) {
       this.currentPhase = this.standbyPhase;
@@ -2833,12 +3792,17 @@ export default class BattleScene extends SceneBase {
 
     }
 
+    console.log(`[PHASE] shiftPhase: queue=${this.phaseQueue.map(p => p.constructor.name).join(', ')}`);
+    console.log(`[PHASE] shiftPhase: currentPhase=${this.currentPhase?.constructor.name || 'None'}`);
+    console.log(`[PHASE] shiftPhase: standbyPhase=${this.standbyPhase?.constructor.name || 'None'}`);
+
     if (!this.phaseQueue.length) {
       this.populatePhaseQueue();
       this.conditionalQueue = [];
     }
 
-    const nextPhase = this.phaseQueue.shift();
+    let nextPhase = this.phaseQueue.shift();
+    console.log(`[PHASE] shiftPhase: nextPhase=${nextPhase?.constructor.name || 'None'}`);
     this.currentPhase = nextPhase ?? null;
 
     if (this.conditionalQueue?.length) {
@@ -2856,14 +3820,18 @@ export default class BattleScene extends SceneBase {
       }
     }
 
-    if (this.currentBattle?.started && this.currentPhase && !(this.currentPhase instanceof SummonMissingPhase)) {
+    const SummonMissingPhase = getSummonMissingPhase();
+    if (this.currentBattle?.started && this.currentPhase
+        && !(this.currentPhase instanceof SummonPhase)
+        && !(this.currentPhase instanceof SelectModifierPhase)
+        && !(this.currentPhase instanceof SmitomTutorialPhase)) {
       const battlerCount = this.currentBattle?.getBattlerCount?.() ?? (this.currentBattle?.double ? 2 : 1);
       const party = this.getParty();
       const maxIndex = Math.min(battlerCount, party.length);
       for (let i = 0; i < maxIndex; i++) {
         const p = party[i];
         if (!p) continue;
-        if (p.isAllowedInBattle() && !p.summonData) {
+        if (p.isAllowedInBattle() && p.isOnField() && !p.summonData) {
           this.phaseQueue.unshift(this.currentPhase);
           this.currentPhase = new SummonMissingPhase(this, i);
           this.ui.setMode(Mode.MESSAGE);
@@ -2880,9 +3848,26 @@ export default class BattleScene extends SceneBase {
         try {
           this.gameData.localSaveSystemOnly(this);
         } catch {}
-        throw error;
+        this.recoverFromPhaseFailure(this.currentPhase, error);
       }
     }
+  }
+
+  recoverFromPhaseFailure(failedPhase: Phase, error: any): void {
+    console.warn(`[PHASE RECOVERY] Recovering from ${failedPhase?.constructor?.name}:`, error);
+    this.clearPhaseQueueSplice();
+    if (this.currentBattle) {
+      const field = this.getField(true);
+      for (const pokemon of field) {
+        if (pokemon.turnData) {
+          pokemon.turnData.acted = true;
+        }
+      }
+    }
+    try {
+      this.ui.setMode(Mode.MESSAGE);
+    } catch {}
+    this.shiftPhase();
   }
 
   overridePhase(phase: Phase): boolean {
@@ -2985,7 +3970,7 @@ export default class BattleScene extends SceneBase {
   }
 
   getWaveMoneyAmount(moneyMultiplier: number = 0.55): integer {
-    const waveIndex = this.currentBattle.waveIndex;
+    const waveIndex = this.currentBattle?.waveIndex ?? 1;
     const waveSetIndex = Math.ceil(waveIndex / 10) - 1;
     const moneyValue = Math.pow((waveSetIndex + 1 + (0.75 + (((waveIndex - 1) % 10) + 1) / 10)) * 100, 1 + 0.005 * waveSetIndex) * moneyMultiplier;
     return Math.floor(moneyValue / 10) * 10;
@@ -3218,6 +4203,7 @@ export default class BattleScene extends SceneBase {
       const releasedPokemon = party.splice(replacementIndex, 1)[0];
       this.currentBattle?.removeFaintedParticipant(releasedPokemon);
       releasedPokemon.destroy();
+      const SummonMissingPhase = getSummonMissingPhase();
       this.unshiftPhase(new SummonMissingPhase(this, partyMemberIndex));
       this.ui.setMode(Mode.MESSAGE);
       return true;
@@ -3249,6 +4235,12 @@ export default class BattleScene extends SceneBase {
         if (!this.moveUpgradesEnabledForRun) {
           modifiers = modifiers.filter(m => !(m instanceof MoveUpgradeModifier));
         }
+        if (!this.statSwitchersEnabledForRun) {
+          modifiers = modifiers.filter(m => !(m instanceof StatSwitcherModifier));
+        }
+        if (!this.releaseItemsEnabledForRun) {
+          modifiers = modifiers.filter(m => !(m instanceof StatSacrificeModifier));
+        }
         for (const modifier of modifiers) {
           this.addEnemyModifier(modifier, true, true);
         }
@@ -3279,6 +4271,12 @@ export default class BattleScene extends SceneBase {
         let types = getEnemyModifierTypesForWave(difficultyWaveIndex, count, [ enemyPokemon ], this.currentBattle.battleType === BattleType.TRAINER ? ModifierPoolType.TRAINER : ModifierPoolType.WILD, upgradeChance);
         if (!this.moveUpgradesEnabledForRun) {
           types = types.filter(t => !!t && t.id !== "MOVE_UPGRADE" && t.id !== "LOW_TIER_MOVE_UPGRADE");
+        }
+        if (!this.statSwitchersEnabledForRun) {
+          types = types.filter(t => !!t && t.id !== "STAT_SWITCHER");
+        }
+        if (!this.releaseItemsEnabledForRun) {
+          types = types.filter(t => !!t && t.id !== "STAT_SACRIFICE" && t.id !== "TYPE_SACRIFICE" && t.id !== "MOVE_SACRIFICE" && t.id !== "ABILITY_SACRIFICE" && t.id !== "PASSIVE_ABILITY_SACRIFICE" && t.id !== "SACRIFICE_TOGGLE");
         }
         types.map(mt => this.addEnemyModifier(mt.newModifier(enemyPokemon), true, true));
       });
@@ -3379,7 +4377,7 @@ export default class BattleScene extends SceneBase {
         }
       }
 
-      if (modifier instanceof AnyPassiveAbilityModifier || modifier instanceof PassiveAbilitySacrificeModifier) {
+      if (modifier instanceof AnyPassiveAbilityModifier || modifier instanceof PassiveAbilitySacrificeModifier || modifier instanceof PokemonAltBuildModifier) {
         const pokemon = this.getPokemonById(modifier.pokemonId);
         if (pokemon) {
           this.recomputePassiveStateAfterModifierRemoval(pokemon, modifiers);
