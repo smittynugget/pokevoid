@@ -1100,6 +1100,7 @@ export class UiInputs {
     }
 
     TitlePhase.debugTutorialFlowActive = true;
+    TitlePhase.tutorialBattleAttempted = false;
 
     const def = STORY_CUTSCENES.title_intro_a;
 

@@ -43,11 +43,13 @@ import { setSetting, SettingKeys } from "#app/system/settings/settings";
 
 export class CommandPhase extends FieldPhase {
   protected fieldIndex: integer;
+  private skipRandomSmitomTips: boolean;
 
-  constructor(scene: BattleScene, fieldIndex: integer) {
+  constructor(scene: BattleScene, fieldIndex: integer, skipRandomSmitomTips: boolean = false) {
     super(scene);
 
     this.fieldIndex = fieldIndex;
+    this.skipRandomSmitomTips = skipRandomSmitomTips;
   }
 
   start() {
@@ -111,7 +113,7 @@ export class CommandPhase extends FieldPhase {
       moveQueue.shift();
     }
 
-    if (this.fieldIndex === 0) {
+    if (this.fieldIndex === 0 && !this.skipRandomSmitomTips) {
       if (this.scene.currentBattle.battleType === BattleType.TRAINER) {
         if (this.scene.gameMode.checkIfRival(this.scene)) {
           const flags = this.scene.gameData.smitomTutorialFlags;
@@ -123,7 +125,7 @@ export class CommandPhase extends FieldPhase {
               [i18next.t("tutorial:smitomTip.rivals.1"), i18next.t("tutorial:smitomTip.rivals.2")],
               false
             ));
-            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex, true));
             this.end();
             return;
           }
@@ -138,7 +140,7 @@ export class CommandPhase extends FieldPhase {
               [i18next.t("tutorial:smitomTip.glitchRivals.1")],
               false
             ));
-            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex, true));
             this.end();
             return;
           }
@@ -155,7 +157,7 @@ export class CommandPhase extends FieldPhase {
               [i18next.t("tutorial:smitomTip.fusionPokemon.1"), i18next.t("tutorial:smitomTip.fusionPokemon.2")],
               false
             ));
-            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex, true));
             this.end();
             return;
           }
@@ -170,7 +172,7 @@ export class CommandPhase extends FieldPhase {
               [i18next.t("tutorial:smitomTip.runDetails.1")],
               false
             ));
-            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex, true));
             this.end();
             return;
           }
@@ -294,7 +296,7 @@ export class CommandPhase extends FieldPhase {
         this.scene.unshiftPhase(unlockPhase);
       }
 
-      this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+      this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex, true));
       this.end();
       return true;
     }
@@ -329,7 +331,7 @@ export class CommandPhase extends FieldPhase {
           tutScript.rewardSubstep = "idle";
         }
       );
-      this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+      this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex, true));
       this.end();
       return true;
     }
@@ -388,7 +390,7 @@ export class CommandPhase extends FieldPhase {
       () => { this.scene.gameData.saveSystem(); }
     );
 
-    this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+    this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex, true));
     this.end();
     return true;
   }
@@ -434,7 +436,7 @@ export class CommandPhase extends FieldPhase {
       this.scene.gameData.saveSystem();
     });
 
-    this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+    this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex, true));
     this.end();
   }
 

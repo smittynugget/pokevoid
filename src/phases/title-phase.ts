@@ -88,6 +88,7 @@ export class TitlePhase extends Phase {
     private static firstTimeFtlAutoStartPending: boolean = false;
     public static tutorialBattlePending: boolean = false;
     public static debugTutorialFlowActive: boolean = false;
+    public static tutorialBattleAttempted: boolean = false;
     public smitomTipShownThisVisit: boolean = false;
 
     constructor(scene: BattleScene, fromShop: boolean = false, skipReturnCondense: boolean = false, fromVictoryRun: boolean = false) {
@@ -114,14 +115,14 @@ export class TitlePhase extends Phase {
             return;
         }
 
-        if (TitlePhase.tutorialBattlePending) {
+        if (TitlePhase.tutorialBattlePending && !TitlePhase.tutorialBattleAttempted) {
             if (!this.scene._bootGateResolvers) {
                 this.beginTutorialBattleFlow();
                 return;
             }
             const pollGate = () => {
                 if (!this.scene._bootGateResolvers) {
-                    if (TitlePhase.tutorialBattlePending) {
+                    if (TitlePhase.tutorialBattlePending && !TitlePhase.tutorialBattleAttempted) {
                         this.beginTutorialBattleFlow();
                     }
                 } else {
@@ -132,11 +133,14 @@ export class TitlePhase extends Phase {
             return;
         }
 
-        if (!this.scene.gameData.gameStats.onboardingTutorialComplete
+        if (!TitlePhase.tutorialBattleAttempted
+            && !this.scene.gameData.gameStats.onboardingTutorialComplete
             && this.scene.gameData.gameStats.cutsceneTitleAShown === true
             && !TitlePhase.tutorialBattlePending
             && !this.scene._bootGateResolvers) {
-            TitlePhase.tutorialBattlePending = true;
+            TitlePhase.tutorialBattleAttempted = true;
+            this.beginTutorialBattleFlow();
+            return;
         }
 
         this.scene.ui.resetModeChain();
@@ -244,6 +248,7 @@ export class TitlePhase extends Phase {
 
     private beginTutorialBattleFlow(): void {
         TitlePhase.tutorialBattlePending = false;
+        TitlePhase.tutorialBattleAttempted = true;
 
         const scene = this.scene;
 
