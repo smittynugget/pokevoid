@@ -17,6 +17,7 @@ export class TurnInitPhase extends FieldPhase {
 
   start() {
     super.start();
+    this.scene._inBattleTurn = false;
 
     this.scene.getPlayerField().forEach(p => {
 
@@ -40,6 +41,7 @@ export class TurnInitPhase extends FieldPhase {
         }
       }
     });
+
     this.scene.eventTarget.dispatchEvent(new TurnInitEvent());
 
     this.scene.getField().forEach((pokemon, i) => {

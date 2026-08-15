@@ -1,0 +1,12 @@
+{
+  "quickSummary": "Краткая сводка",
+  "itemsMoves": "Предметы и Атаки",
+  "currentParty": "Текущая Команда",
+  "enemyInfo": "Информация о Противнике",
+  "teamTitle": "Команда",
+  "noOpponent": "Нет противника",
+  "notApplicable": "---",
+  "pageIndicator": "{{current}}/{{total}}",
+  "foeTag": "ВРАГ",
+  "youTag": "ВЫ"
+}

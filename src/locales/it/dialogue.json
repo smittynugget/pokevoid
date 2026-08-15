@@ -2681,7 +2681,8 @@
       "2": "…Abbiamo perso il controllo. La prossima volta vorrei sfidarti a una gara di ricerca di fossili in miniera.",
       "2_female": "…Abbiamo perso il controllo. La prossima volta vorrei sfidarti a una gara di ricerca di fossili in miniera.",
       "3": "Con abilità come le tue, è naturale che tu vinca.",
-      "4": "Co-cosa?! Non è possibile! Nemmeno questo è stato abbastanza?"
+      "4": "Co-cosa?! Non è possibile! Nemmeno questo è stato abbastanza?",
+      "5": "Ho combinato un disastro."
     },
     "defeat": {
       "1": "Vedi? Sono fiero del mio stile di battaglia roccioso!",
@@ -4343,6 +4344,35 @@
       "1": "Immagino che sembri che io stia facendo qualcosa di terribile. Non mi aspetto che tu capisca.$Ma io devo fornire alla regione di Galar energia illimitata per assicurarle prosperità eterna."
     }
   },
+  "pegasus_boss_1": {
+    "encounter": {
+      "1": "Ah, un nuovo sfidante si avvicina al mio castello...$Che delizia. Mi annoiavo così tanto dal Regno dei Duellanti.$Vedi, il mio Occhio del Millennio mi permette di scrutare le profondità della tua strategia...$Ogni carta che tieni, ogni mossa che pianifichi — ho già visto tutto.$Dunque... iniziamo questo Gioco delle Ombre?",
+      "2": "Benvenuto, benvenuto nel mio mondo di illusioni!$Devo dire, sei arrivato piuttosto lontano per qualcuno senza un Oggetto del Millennio.$Ma dimmi... credi davvero di poter sconfiggere qualcuno che vede tutto?$Il mio Mondo Toon ti aspetta, e le mie creature muoiono dalla voglia di giocare.$Vediamo se sei degno della mia attenzione, hmm?",
+      "3": "Oh, che ospite inatteso!$Mi ricordi un ragazzo che conoscevo... sciocco, coraggioso e completamente prevedibile.$L'Occhio del Millennio mi ha mostrato innumerevoli futuri, e in ognuno di essi...$...la tua sconfitta è assoluta. Ma cerca almeno di renderlo divertente, vuoi?"
+    },
+    "victory": {
+      "1": "Im...possibile! L'Occhio del Millennio non ha mostrato alcun percorso verso questo risultato!$Come hai potuto... le mie strategie perfette... il mio Mondo Toon...$Forse ho sottovalutato il potere che scorre attraverso di te.$Va bene. Ti sei guadagnato questa vittoria... ma ricorda — nel Reame delle Ombre, nulla è mai veramente finito.",
+      "2": "No! Questo non può essere!$Le mie visioni... erano così chiare... così assolute...$Hai frantumato le mie illusioni con nient'altro che pura determinazione.$Mi arrendo... per ora. Ma le ombre hanno lunga memoria, caro sfidante."
+    },
+    "defeat": {
+      "1": "Come avevo previsto... la tua mente era un libro aperto dalla tua primissima mossa.$Ogni pensiero, ogni esitazione — l'Occhio del Millennio ha rivelato tutto.$Ora, il tuo gioco di penalità ti attende...$Vogliamo giocare un'altra partita? Mi piace tanto guardare la speranza svanire dagli occhi di uno sfidante.",
+      "2": "Ooh, che delizia! La tua disperazione è assolutamente squisita!$Hai davvero creduto di poter sfidare il creatore dei Mostri da Duello in persona?$Il Reame delle Ombre ti accoglie a braccia aperte...$Non preoccuparti — il tempo scorre diversamente laggiù. Noterai appena l'eternità."
+    }
+  },
+  "pegasus_boss_2": {
+    "encounter": {
+      "1": "Ah, sei tornato! Che persistenza da parte tua.$Devo confessare, il nostro ultimo incontro ha lasciato un'impressione notevole...$Questa volta, ho preparato qualcosa di veramente speciale. I miei Toon si sono allenati, sai.$E ho sbloccato segreti dell'Occhio del Millennio che non avevo mai osato usare.$Il vuoto tra i nostri mondi si assottiglia... lo senti? Questa sarà la nostra partita finale.",
+      "2": "Bene, bene... colui che ha sfidato le mie visioni ritorna.$Non commetterò lo stesso errore due volte, te lo assicuro.$Il mio Restrizione dei Mille Occhi vede tutto, lega tutto, consuma tutto...$Le ombre stesse si inchinano davanti al suo sguardo.$Vieni — finiamo ciò che abbiamo iniziato nel Regno dei Duellanti!"
+    },
+    "victory": {
+      "1": "Hai superato persino le mie visioni più impossibili...$L'Occhio del Millennio... piange per ciò che non può comprendere.$Forse il vuoto ha scelto con più saggezza di quanto io potrei mai fare.$Prendi la tua vittoria, campione. Hai guadagnato qualcosa oltre il mero potere — hai guadagnato il mio rispetto.",
+      "2": "Impossibile... due volte ormai... DUE VOLTE!$Le ombre arretrano... l'Occhio si oscura...$Sei qualcosa che gli Oggetti del Millennio non hanno mai predetto.$Vai avanti. Qualunque destino ti attenda... ti teme più di quanto io potrei mai."
+    },
+    "defeat": {
+      "1": "L'Occhio del Millennio vede tutte le fini, caro sfidante.$E la tua è stata scritta nell'ombra molto prima che tu pesassi la tua prima mano.$Riposa ora nel mio Mondo Toon... è piuttosto confortevole una volta che smetti di urlare.$Forse in un'altra linea temporale, un altro ciclo... ma non in questo. Mai in questo.",
+      "2": "Hai davvero creduto che il risultato sarebbe stato diverso la seconda volta?$L'Occhio si rafforza con ogni anima che reclama...$La tua energia alimenterà le mie visioni per eoni a venire.$Addio, piccolo duellante. Le ombre ti abbracciano ora."
+    }
+  },
   "star_boss_penny_1": {
     "encounter": {
       "1": "Io sono il grande capo del Team Star. Il mio nome è Cassiopea. $Ora, inchinati davanti all’enorme potenza della fondatrice del Team Star!"
@@ -4726,6 +4756,18 @@
     },
     "victory": {
       "1": "@c{smile_ehalf}Io… Io credo di aver raggiunto il mio scopo…$@c{smile_eclosed}Promettimi… Dopo che avrai salvato il mondo… Per favore… torna a casa sano e salvo.$@c{smile_ehalf}…Grazie."
+    }
+  },
+  "tutorial_blue": {
+    "encounter": {
+      "1": "Il mondo sta finendo, Red.\nNon c'è più niente che possiamo fare."
+    },
+    "void_power": {
+      "1": "Lascia che ti mostri il vero potere del Void!"
+    },
+    "defeat": {
+      "1": "Mi hai battuto, Red... Vorrei solo che fossi riuscito a farlo quando contava davvero...",
+      "2": "Questo posto non è reale. Il Void ti ha intrappolato qui così non avresti mai dovuto affrontare ciò che sta arrivando. Non lasciarlo vincere. Svegliati. SVEGLIATI!"
     }
   }
 }

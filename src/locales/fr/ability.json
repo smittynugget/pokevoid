@@ -532,11 +532,11 @@
     "description": "Quand le Pokémon est touché par une capacité physique, sa Défense baisse mais sa Vitesse augmente beaucoup."
   },
   "heavyMetal": {
-    "name": "Heavy Metal",
+    "name": "Métal Lourd",
     "description": "Double le poids du Pokémon."
   },
   "lightMetal": {
-    "name": "Light Metal",
+    "name": "Métal Léger",
     "description": "Divise par deux le poids du Pokémon."
   },
   "multiscale": {
@@ -2167,6 +2167,10 @@
     "name": "Lianes Vampiriques",
     "description": "Double la puissance de Fouet Lianes. 30% de chances de parasiter ou de lier la cible en utilisant Fouet Lianes."
   },
+  "leftoversPower": {
+    "name": "Leftovers Power",
+    "description": "Restaure passivement 1/8 des PV max à la fin de chaque tour."
+  },
   "regeneratorPlus": {
     "name": "Régé-Force Plus",
     "description": "Restaure 45% des PV max en changeant de Pokémon."
@@ -2698,5 +2702,1041 @@
   "dragonize": {
     "name": "Dragonisation",
     "description": "Transforme les capacités de type Normal en type Dragon et augmente leur puissance de 20%."
+  },
+  "nightmares": {
+    "name": "Cauchemars",
+    "description": "Réduit les PV des Pokémon adverses endormis de 1/4 à la fin de chaque tour."
+  },
+  "piercingDrill": {
+    "name": "Foreuse Perçante",
+    "description": "Les capacités de contact traversent la protection de la cible et infligent 1/4 des dégâts prévus."
+  },
+  "spicySpray": {
+    "name": "Jet Épicé",
+    "description": "Brûle l'attaquant lorsque le Pokémon subit des dégâts."
+  },
+  "aCounterInfector": {
+    "name": "A-Compteur Infecteur",
+    "description": "Lorsque touché par une attaque physique, l'utilisateur a 30% de chances d'infliger un statut aléatoire à l'attaquant. Si l'attaquant est affecté d'un statut, au contact, l'utilisateur vole 1/16 des PV de l'attaquant."
+  },
+  "aParasiticOffspring": {
+    "name": "A-Progéniture Parasite",
+    "description": "Les attaques physiques de l'utilisateur ont 30% de chances d'infliger un statut aléatoire à la cible. Si la cible est affectée d'un statut, les attaques de contact contre l'utilisateur soignent 1/16 de ses PV max au lieu d'infliger des dégâts."
+  },
+  "aSuppression": {
+    "name": "A-Suppression",
+    "description": "Les Pokémon adverses affectés d'un statut subissent 30% de dégâts supplémentaires et ne peuvent pas utiliser leurs talents."
+  },
+  "abominableProtection": {
+    "name": "Protection Abominable",
+    "description": "Lorsque l'utilisateur entre en combat, il met en place Voile Aurore sans nécessiter Grêle ou Neige, mais perd 25% de ses PV max. Cet effet ne peut se produire qu'une fois par combat."
+  },
+  "absoluteLightning": {
+    "name": "Foudre Absolue",
+    "description": "Le premier coup infligeant des dégâts reçu à chaque combat est annulé, et l'attaquant perd 1/8 de ses PV max à la place. Les capacités de type Normal deviennent de type Électrik et infligent 1,2× les dégâts."
+  },
+  "absoluteVoidMagic": {
+    "name": "Magie du Vide Absolu",
+    "description": "Les attaques de l'utilisateur ont 50% de chances d'infliger à la cible un statut aléatoire, un statut temporaire, un piège ou un danger de terrain."
+  },
+  "absoluteZero": {
+    "name": "Zéro Absolu",
+    "description": "Tant que la Grêle ou la Neige est active, les capacités de type Normal, Vol et Dragon de l'utilisateur deviennent de type Glace, infligent 1,2× les dégâts et ont 20% de chances de geler."
+  },
+  "abyssalFlame": {
+    "name": "Flamme Abyssale",
+    "description": "Les capacités de type Normal deviennent de type Feu. Les capacités de type Feu et Ténèbres partagent les avantages de faiblesse de type et ont 30% de chances de brûler."
+  },
+  "abyssalGrasp": {
+    "name": "Emprise Abyssale",
+    "description": "Les capacités de type Normal deviennent de type Eau. Les capacités de type Eau ont 30% de chances d'infliger Siphon à la cible."
+  },
+  "acidRain": {
+    "name": "Pluie Acide",
+    "description": "Lorsque l'utilisateur entre en combat, il active la Pluie. Les capacités de type Poison infligent 1,3× les dégâts tant que la Pluie est active. Les capacités de type Normal deviennent de type Poison."
+  },
+  "adventureStart": {
+    "name": "Aventure Début !",
+    "description": "Les capacités de l'utilisateur ont 50% de chances de gagner la priorité. Toutes les capacités de l'utilisateur gagnent +1 niveau de coup critique."
+  },
+  "almightyGalaxy": {
+    "name": "Galaxie Toute-Puissante",
+    "description": "À la fin de chaque tour, l'utilisateur change pour un type aléatoire et restaure 1/8 de ses PV max. Les attaques sans effets secondaires infligent 1,3× les dégâts."
+  },
+  "alternativeBurst": {
+    "name": "Explosion Alternative",
+    "description": "Les capacités de statut de l'utilisateur infligent des dégâts égaux à 1/8 des PV max de la cible. Les capacités de type Électrik et Dragon ont 30% de chances de paralyser."
+  },
+  "ancientBehemoth": {
+    "name": "Béhémoth Ancien",
+    "description": "Les capacités de contact de l'utilisateur ignorent les résistances de type et infligent 1,3× les dégâts."
+  },
+  "ancientDrill": {
+    "name": "Foreuse Ancienne",
+    "description": "Les attaques de l'utilisateur ont 50% de chances de retirer l'objet tenu par la cible et d'infliger des dégâts supplémentaires égaux à 1/8 des PV max de la cible."
+  },
+  "ancientDualCore": {
+    "name": "Double Noyau Ancien",
+    "description": "Au tour 1, l'utilisateur est de type Normal. Au tour 2, il devient de type Acier et Combat. Les capacités de type Normal deviennent de type Acier, sont aussi traitées comme type Combat et infligent 1,2× les dégâts."
+  },
+  "ancientKnowledge": {
+    "name": "Savoir Ancien",
+    "description": "Les capacités de type Psy et Fée de l'utilisateur infligent 1,2× les dégâts et partagent les mêmes avantages de faiblesse de type."
+  },
+  "ancientSummon": {
+    "name": "Invocation Ancienne",
+    "description": "En entrant en combat, l'utilisateur gagne +1 niveau à une statistique aléatoire pour chaque autre Pokémon de l'équipe ayant une capacité Gadget. Chaque augmentation est choisie au hasard."
+  },
+  "ancientSupplies": {
+    "name": "Provisions Anciennes",
+    "description": "Lorsque l'utilisateur est retiré, le Pokémon entrant récupère 25% de ses PV max et gagne +1 en Défense."
+  },
+  "aquaticRitual": {
+    "name": "Rituel Aquatique",
+    "description": "Si la Pluie est active, l'utilisateur augmente deux statistiques aléatoires à la fin de chaque tour."
+  },
+  "beastOfRagnarok": {
+    "name": "Bête de Ragnarök",
+    "description": "En Neige ou Grêle, la Vitesse de l'utilisateur est doublée, et les capacités de morsure ont 10% de chances de geler la cible ou 10% de chances de la faire tressaillir."
+  },
+  "beaststar": {
+    "name": "Étoile Bestiale",
+    "description": "Les attaques de l'utilisateur infligent 1,5× les dégâts. Si une attaque ne peut pas faire tressaillir, elle a 30% de chances de faire tressaillir la cible. La Défense et la Défense Spéciale de l'utilisateur baissent d'un niveau après l'attaque."
+  },
+  "blackFlameSpark": {
+    "name": "Étincelle de Flamme Noire",
+    "description": "Après avoir été touché par une attaque, l'utilisateur gagne une charge. Si l'utilisateur est retiré en étant chargé, la cible est brûlée et le Pokémon entrant gagne +1 en Vitesse et +1 en une statistique aléatoire."
+  },
+  "blazingCitrine": {
+    "name": "Citrine Flamboyante",
+    "description": "Les capacités de type Normal de l'utilisateur deviennent de type Feu ou Roche selon le type qui infligerait le plus de dégâts à la cible. Si neutre, le type est choisi au hasard. Les capacités de type Feu et Roche ont 30% de chances de brûler la cible. Les cibles brûlées ne peuvent pas utiliser leurs talents et les effets secondaires de leurs capacités sont désactivés."
+  },
+  "blazingTimber": {
+    "name": "Bois Flamboyant",
+    "description": "Les capacités de type Normal et Plante de l'utilisateur deviennent de type Feu, ont 30% de chances de brûler la cible et infligent 1,3× les dégâts."
+  },
+  "blindRage": {
+    "name": "Rage Aveugle",
+    "description": "Tant que l'utilisateur est confus, ses capacités infligent 2× les dégâts et ont +1 niveau de coup critique. Les capacités de type Normal partagent les avantages de type des capacités de type Combat."
+  },
+  "bloodScent": {
+    "name": "Flair du Sang",
+    "description": "Les attaques de l'utilisateur sont automatiquement des coups critiques contre les cibles en dessous de 40% PV."
+  },
+  "blowbackRoulette": {
+    "name": "Roulette de Riposte",
+    "description": "Les capacités de type Ténèbres et Acier de l'utilisateur ont 30% de chances de baisser aléatoirement trois statistiques de la cible d'un niveau chacune."
+  },
+  "bullRush": {
+    "name": "Charge du Taureau",
+    "description": "Les capacités de type Normal de l'utilisateur deviennent de type Combat et gagnent +1 en priorité."
+  },
+  "carnivorousVines": {
+    "name": "Lianes Carnivores",
+    "description": "Les capacités de contact de l'utilisateur ont 50% de chances de piéger la cible pendant trois tours, infligeant des dégâts égaux à 1/8 de ses PV max à chaque tour."
+  },
+  "chainsOfInfinity": {
+    "name": "Chaînes de l'Infini",
+    "description": "Les capacités infligeant 60 dégâts ou moins ont 1% de chances de mettre K.O. la cible instantanément."
+  },
+  "chaosEnd": {
+    "name": "Fin du Chaos",
+    "description": "Si l'équipe a un Pokémon Ténèbres K.O., après avoir mis K.O. la cible, le prochain Pokémon entrant subit des dégâts égaux à 1/6 de ses PV max. Si l'équipe a un Pokémon Fée K.O., les capacités Normal deviennent Ténèbres avec 1,2× les dégâts. Si l'équipe a un Ténèbres, un Fée et un Ténèbres/Fée K.O. (trois alliés), quand l'utilisateur tombe, l'adversaire subit 50% de ses PV max en dégâts."
+  },
+  "chaosOrder": {
+    "name": "Ordre du Chaos",
+    "description": "L'utilisateur subit 50% de dégâts en moins des adversaires avec 600 ou plus de stats de base totales. Les capacités Normal deviennent Fée ou Ténèbres selon le type infligeant le plus de dégâts. Si neutre, choix aléatoire. En mettant K.O. avec une capacité Fée, il récupère 1/4 de ses PV. Avec une capacité Ténèbres, il gagne +1 en Attaque ou Vitesse au hasard."
+  },
+  "chaosSorcerer": {
+    "name": "Sorcier du Chaos",
+    "description": "L'utilisateur bénéficie des effets de Lunatique. Les capacités spéciales de l'utilisateur ont 30% de chances de rendre la cible confuse."
+  },
+  "chaosWarrior": {
+    "name": "Guerrier du Chaos",
+    "description": "Les capacités Normal de l'utilisateur deviennent Ténèbres ou Fée selon le type infligeant le plus de dégâts à la cible. Si neutre, choix aléatoire. Les capacités Ténèbres ont 30% de chances d'endormir la cible. Les capacités Fée ont 30% de chances de baisser l'Attaque et l'Attaque Spéciale de la cible."
+  },
+  "chargeChampion": {
+    "name": "Champion de Charge",
+    "description": "Les capacités de chargement de l'utilisateur infligent 50% des dégâts au premier tour et augmentent deux statistiques aléatoires."
+  },
+  "clayColossus": {
+    "name": "Colosse d'Argile",
+    "description": "L'utilisateur ne subit aucun dégât des capacités peu efficaces. Les capacités de type Normal deviennent de type Sol. Les capacités de type Sol ont 30% de chances de baisser la Vitesse de la cible."
+  },
+  "climateChange": {
+    "name": "Changement Climatique",
+    "description": "Par temps ensoleillé, les capacités Normal et Eau de l'utilisateur deviennent Feu avec 30% de chances de brûler. Sous la Pluie, les capacités Normal et Feu deviennent Eau avec 10% de chances de piéger la cible dans Siphon."
+  },
+  "clusterBurst": {
+    "name": "Explosion en Grappe",
+    "description": "Les capacités Normal de l'utilisateur deviennent Eau. Sous la Pluie ou la Pluie Battante, les capacités Eau de l'utilisateur ont 50% de chances de frapper deux fois."
+  },
+  "contagion": {
+    "name": "Contagion",
+    "description": "Les capacités Normal de l'utilisateur deviennent Poison et infligent 1,2× les dégâts. Les capacités Poison empoisonnent gravement la cible."
+  },
+  "cornfieldGuardian": {
+    "name": "Gardien du Champ",
+    "description": "Tant que le Champ Herbu est actif, l'utilisateur gagne +1 en Attaque et soigne son statut à la fin de chaque tour."
+  },
+  "corpseParty": {
+    "name": "Fête des Cadavres",
+    "description": "Les capacités Spectre de l'utilisateur gagnent 5 de puissance de base par Pokémon Spectre dans l'équipe. Les capacités Normal deviennent Spectre."
+  },
+  "corruptElephant": {
+    "name": "Éléphant Corrompu",
+    "description": "Les capacités Normal deviennent Fée ou Ténèbres selon le type le plus fort contre la cible (au hasard si neutre). Quand touché, l'utilisateur restaure 1/8 de ses PV max et son Attaque monte d'un niveau. S'il tient un objet, il en perd un aléatoirement."
+  },
+  "corruptedPower": {
+    "name": "Pouvoir Corrompu",
+    "description": "Utiliser la même capacité consécutivement augmente sa puissance de 40% à chaque fois, mais l'utilisateur subit 33% de dégâts de recul."
+  },
+  "cottonTokens": {
+    "name": "Jetons de Coton",
+    "description": "Lorsque l'utilisateur subit une attaque infligeant 70% ou plus de ses PV max sans le mettre K.O., il crée un Clone avec 25% de ses PV max."
+  },
+  "creepySurprise": {
+    "name": "Surprise Effrayante",
+    "description": "Si ce Pokémon a moins de 50% de ses PV, il paralyse la cible en entrant. Ce Pokémon ne peut pas être retiré après avoir utilisé ce talent."
+  },
+  "crimsonGear": {
+    "name": "Engrenage Cramoisi",
+    "description": "Les capacités Feu et Acier partagent leurs avantages de faiblesse de type. Les capacités Normal deviennent Feu avec 1,2× les dégâts. Si au moins 2 autres Pokémon de l'équipe ont une capacité Gadget, Électrik partage aussi ses avantages avec Feu et Acier."
+  },
+  "cripplingIllusions": {
+    "name": "Illusions Paralysantes",
+    "description": "À la fin de chaque tour, la Défense ou la Défense Spéciale de l'utilisateur augmente aléatoirement d'un niveau. Quand le total des deux niveaux atteint 6 ou plus, les deux sont remis à 0 et la cible est maudite."
+  },
+  "criticalPredator": {
+    "name": "Prédateur Critique",
+    "description": "Les capacités physiques de l'utilisateur infligent 2,5× les dégâts quand la Défense de la cible est supérieure ou égale à son Attaque."
+  },
+  "crystalLuster": {
+    "name": "Éclat Cristallin",
+    "description": "Les capacités Normal et Dragon deviennent Glace ou Roche selon le type infligeant le plus de dégâts à la cible (au hasard si neutre). Les capacités Glace ont 10% de chances de geler. Les capacités Roche ont 10% de chances d'infliger Salaison."
+  },
+  "cursedFlamesV2": {
+    "name": "Flammes Maudites",
+    "description": "Les capacités Normal deviennent Feu ou Spectre (selon le plus fort contre l'adversaire - au hasard si neutre). Les capacités Feu ont 30% de chances de brûler, les Spectre 5% de maudire."
+  },
+  "cursedFlamesYu": {
+    "name": "Flammes Maudites",
+    "description": "Les capacités Normal deviennent Feu. Les capacités Feu ont 10% de chances de brûler l'attaquant et de le piéger dans Danse Flammes."
+  },
+  "cursedPossession": {
+    "name": "Possession Maudite",
+    "description": "Lorsque l'utilisateur est touché par une capacité super efficace, l'attaquant est maudit."
+  },
+  "cursedPotential": {
+    "name": "Potentiel Maudit",
+    "description": "En entrant, toutes les statistiques de l'utilisateur montent d'un niveau, l'Attaque montant de deux niveaux supplémentaires (trois au total). À la fin de chaque tour, une à trois statistiques baissent aléatoirement d'un niveau ou l'utilisateur perd 1/4 de ses PV max. L'utilisateur ne peut pas être retiré."
+  },
+  "cyberneticControl": {
+    "name": "Contrôle Cybernétique",
+    "description": "Les Pokémon adverses ne peuvent pas utiliser leurs capacités de statut ni leurs talents."
+  },
+  "cyberneticDiscard": {
+    "name": "Rejet Cybernétique",
+    "description": "L'utilisateur se débarrasse d'un objet tenu au hasard pour augmenter la puissance d'Attaque de 1,2× et restaurer 25% des dégâts infligés."
+  },
+  "cyberneticPredator": {
+    "name": "Prédateur Cybernétique",
+    "description": "Les attaques de l'utilisateur infligent le double de dégâts à la cible qui entre. Quand la cible entre, l'utilisateur gagne +1 en Vitesse."
+  },
+  "cycloneFist": {
+    "name": "Poing Cyclone",
+    "description": "Lorsque l'utilisateur entre en combat, il déclenche Vent Arrière. Les capacités Combat et Vol partagent les avantages de faiblesse de type."
+  },
+  "cycloneWrath": {
+    "name": "Courroux du Cyclone",
+    "description": "En entrant, l'utilisateur devient immédiatement Chargé de Vent. S'il est touché dans cet état, il ne subit aucun dégât et l'attaquant perd 1/8 de ses PV max. Les deux effets ne se produisent qu'une fois par combat. Les capacités Normal deviennent Vol avec 1,2× les dégâts."
+  },
+  "cyclonicShift": {
+    "name": "Décalage Cyclonique",
+    "description": "Chaque fois que l'utilisateur attaque, la Défense et l'Attaque de la cible sont échangées, ainsi que son Attaque Spéciale et sa Défense Spéciale."
+  },
+  "damBuilder": {
+    "name": "Bâtisseur de Barrage",
+    "description": "Lorsque l'utilisateur entre, il crée un Clone. Quand le Clone se brise, l'utilisateur gagne Anneau Hydro."
+  },
+  "dangerDiscard": {
+    "name": "Danger ! Rejet",
+    "description": "Les capacités de statut de l'utilisateur augmentent aléatoirement une statistique et en baissent aléatoirement une autre."
+  },
+  "darkSoundwave": {
+    "name": "Onde Sonore Sombre",
+    "description": "Les capacités Normal et Ténèbres deviennent des capacités Son, et les capacités Son deviennent Ténèbres, infligent 1,1× les dégâts et ont 10% de chances d'endormir, confondre ou faire tressaillir la cible."
+  },
+  "darkworldTactics": {
+    "name": "Tactiques du Monde Sombre",
+    "description": "À la fin du tour, si l'utilisateur a des niveaux de statistiques négatifs, il les réinitialise, soigne 1/6 de ses PV max et augmente une statistique aléatoire d'un niveau."
+  },
+  "debilitatingRocket": {
+    "name": "Fusée Débilitante",
+    "description": "Les capacités Normal deviennent Acier ou Vol, selon le type infligeant le plus de dégâts (au hasard si neutre). Les capacités Acier et Vol ont 30% de chances de baisser l'Attaque de l'adversaire de 2 niveaux."
+  },
+  "deepRoots": {
+    "name": "Racines Profondes",
+    "description": "À la fin de chaque tour, l'utilisateur restaure 1/16 de ses PV max et échange son Attaque Spéciale et sa Défense Spéciale."
+  },
+  "deflectionHide": {
+    "name": "Peau Déflectrice",
+    "description": "L'utilisateur subit 30% de dégâts en moins des capacités. Lorsque touché par une capacité de contact, il inflige des dégâts égaux à 1/16 des PV max de l'attaquant."
+  },
+  "demonicEdge": {
+    "name": "Lame Démoniaque",
+    "description": "Les capacités Normal deviennent Acier et infligent 1,2× les dégâts. Les coups critiques infligent 2,5× les dégâts."
+  },
+  "dimensionSlash": {
+    "name": "Tranche Dimensionnelle",
+    "description": "Les capacités tranchantes infligent 1,2× les dégâts, deviennent Ténèbres et ont 10% de chances de forcer la cible à changer."
+  },
+  "dracoLance": {
+    "name": "Lance Draco",
+    "description": "Les capacités Normal deviennent Dragon. Les capacités Dragon infligent 1,5× les dégâts si la Défense de la cible est supérieure à son Attaque."
+  },
+  "dracoNegation": {
+    "name": "Négation Draco",
+    "description": "30% de chances d'annuler les capacités de statut de l'adversaire. Quand une capacité de statut est annulée, l'adversaire subit 1/16 de dégâts et une statistique aléatoire de l'utilisateur monte."
+  },
+  "draconicFlute": {
+    "name": "Flûte Draconique",
+    "description": "Les capacités Normal et Dragon de l'utilisateur deviennent des capacités Son et infligent 1,2× les dégâts. Les capacités Son ont 10% de chances d'endormir la cible."
+  },
+  "dragonbaneSword": {
+    "name": "Épée Tue-Dragon",
+    "description": "Les capacités tranchantes infligent 2,5× les dégâts aux Pokémon Dragon. Quand l'utilisateur met K.O. un Pokémon Dragon, il gagne +1 en Vitesse et restaure 1/8 de ses PV max."
+  },
+  "dragonbaneWrath": {
+    "name": "Courroux Tue-Dragon",
+    "description": "Tant que ce talent est actif, la cible perd 1/8 de ses PV max à la fin de chaque tour si elle est de type Dragon. Les capacités Dragon infligent 0,5× les dégâts à l'utilisateur."
+  },
+  "drawThree": {
+    "name": "Piocher Trois",
+    "description": "À la fin de chaque tour, trois statistiques aléatoires sont indépendamment augmentées ou baissées au hasard."
+  },
+  "drawTime": {
+    "name": "Heure de Piocher !",
+    "description": "Lorsque l'utilisateur met K.O. une cible, il y a 5% de chances de déclencher la sélection de récompense."
+  },
+  "dualBoneBlade": {
+    "name": "Double Lame d'Os",
+    "description": "Les attaques de l'utilisateur frappent deux fois, le second coup inflige 50% des dégâts. Les attaques utilisent la Défense la plus basse de l'adversaire."
+  },
+  "earthboundCurse": {
+    "name": "Malédiction Terrestre",
+    "description": "Sous la Pluie, les capacités Eau et Sol ont 30% de chances de brûler la cible et baisser sa Vitesse d'un niveau. Les capacités Normal deviennent Eau ou Sol selon le type infligeant le plus de dégâts (au hasard si neutre)."
+  },
+  "electroBoogey": {
+    "name": "Électro Boogey",
+    "description": "Les capacités Normal deviennent Électrik. Les capacités Électrik ont 30% de chances d'infliger 2,5× les dégâts et 10% de chances de paralyser."
+  },
+  "electromagneticMaster": {
+    "name": "Maître Électromagnétique",
+    "description": "Les capacités Électrik, Roche et Acier partagent leurs avantages de type. Les capacités Normal deviennent Électrik, Roche ou Acier selon le type infligeant le plus de dégâts (au hasard si neutre). Les capacités Électrik ont 10% de chances de gagner +1 priorité. Les Roche 5% d'infliger Salaison. Les Acier 10% de coup critique."
+  },
+  "elementalBypass": {
+    "name": "Contournement Élémentaire",
+    "description": "Si l'adversaire est de type Eau, Sol ou Feu, les attaques de l'utilisateur infligent 1,5× les dégâts."
+  },
+  "elementalHavoc": {
+    "name": "Chaos Élémentaire",
+    "description": "Les capacités Eau, Électrik et Vol de la cible infligent 0,5× les dégâts. Les capacités Normal deviennent Eau, Vol ou Électrik selon le type infligeant le plus de dégâts (au hasard si neutre). Les capacités Eau, Électrik et Vol infligent 1,2× les dégâts."
+  },
+  "emeraldGear": {
+    "name": "Engrenage Émeraude",
+    "description": "Les capacités Plante et Acier de l'utilisateur partagent les avantages de faiblesse de type. Les capacités Normal deviennent Plante avec 1,2× les dégâts. Si au moins 2 autres Pokémon de l'équipe ont une capacité Gadget, les capacités Feu partagent aussi les avantages avec Plante et Acier."
+  },
+  "emeraldStance": {
+    "name": "Posture Émeraude",
+    "description": "Lors d'une attaque, l'utilisateur utilise sa statistique de Défense au lieu de son Attaque ou Attaque Spéciale."
+  },
+  "emperorsCoin": {
+    "name": "Pièce de l'Empereur",
+    "description": "Chaque tour, l'utilisateur a 50% de chances d'augmenter deux statistiques aléatoires uniques d'un niveau."
+  },
+  "eradicatorsDomain": {
+    "name": "Domaine de l'Éradicateur",
+    "description": "Chaque fois que la cible utilise une capacité spéciale, elle a 30% de chances de recevoir un statut aléatoire. Chaque fois qu'elle utilise une capacité de statut, elle subit des dégâts égaux à 1/8 de ses PV max."
+  },
+  "etherealLight": {
+    "name": "Lumière Éthérée",
+    "description": "L'utilisateur a Intimidation. En entrant, il élimine tous les pièges posés par la cible et supprime tous les boosts de statistiques de la cible."
+  },
+  "evolutionPill": {
+    "name": "Pilule d'Évolution",
+    "description": "Lorsque l'utilisateur tombe K.O., le prochain Pokémon envoyé gagne +1 niveau à sa statistique la plus haute et restaure 33% de ses PV max."
+  },
+  "expandingMass": {
+    "name": "Masse Expansive",
+    "description": "Les capacités de l'utilisateur gagnent +10 de puissance de base par tour sur le terrain (max. +50), mais il perd 1/8 de ses PV max chaque tour."
+  },
+  "experienceBoost": {
+    "name": "Boost d'Expérience",
+    "description": "À la fin de chaque tour, l'utilisateur augmente aléatoirement sa Défense, Attaque ou Vitesse d'un niveau."
+  },
+  "explosiveAir": {
+    "name": "Air Explosif",
+    "description": "Les capacités Normal de l'utilisateur deviennent Vol avec 1,2× les dégâts. Les capacités Vol contre les Pokémon Feu sont toujours des coups critiques."
+  },
+  "fastFood": {
+    "name": "Restauration Rapide",
+    "description": "La Vitesse de l'utilisateur augmente à la fin de chaque tour. Les capacités de morsure reçoivent un bonus de 1,2×."
+  },
+  "fatedRevival": {
+    "name": "Résurrection du Destin",
+    "description": "Lorsque l'utilisateur tombe K.O., il ressuscite un Pokémon Fée K.O. aléatoire de son équipe avec 50% de PV."
+  },
+  "finalBlade": {
+    "name": "Lame Finale",
+    "description": "Les attaques ne provoquant pas de tressaillement gagnent 10% de chances de faire tressaillir la cible par allié K.O."
+  },
+  "fireAndIce": {
+    "name": "Feu & Glace",
+    "description": "Les capacités Normal de l'utilisateur deviennent Glace ou Feu selon le type plus efficace contre la cible (au hasard si neutre). Les capacités Feu ont 10% de chances de geler, et les Glace 30% de chances de brûler."
+  },
+  "fistOfFate": {
+    "name": "Poing du Destin",
+    "description": "Les capacités de contact de l'utilisateur ignorent les résistances et les talents. Quand l'utilisateur met K.O. une cible, le prochain Pokémon entrant subit des dégâts égaux à 1/4 de ses PV max."
+  },
+  "flamingOblivion": {
+    "name": "Oubli Flamboyant",
+    "description": "Les capacités Normal deviennent Feu. Les capacités Feu ignorent les résistances de type et ont 30% de chances de brûler la cible et déclencher Danse Flammes. Quand l'utilisateur met K.O. une cible brûlée, le prochain Pokémon perd 25% de ses PV max."
+  },
+  "fogBody": {
+    "name": "Corps de Brume",
+    "description": "Quand l'utilisateur rate une attaque avec 50% ou plus de précision, son Attaque monte d'un niveau et il récupère 1/8 de ses PV."
+  },
+  "fogBreath": {
+    "name": "Souffle de Brume",
+    "description": "Les capacités Normal deviennent Eau, infligent 1,3× les dégâts et ont 30% de chances de baisser l'Esquive de la cible."
+  },
+  "foolsCoin": {
+    "name": "Pièce du Fou",
+    "description": "Ce Pokémon a 50% de chances d'activer Garde Mystik."
+  },
+  "forScience": {
+    "name": "Pour la Science !",
+    "description": "À la fin de chaque tour, une statistique de l'utilisateur monte aléatoirement de 2 niveaux et une baisse de 1. Une statistique de la cible monte de 1 et une baisse de 1."
+  },
+  "forbiddenPower": {
+    "name": "Pouvoir Interdit",
+    "description": "La puissance de base de toutes les capacités de l'utilisateur augmente de 20 à chaque attaque consécutive sans changement."
+  },
+  "forestGuardian": {
+    "name": "Gardien de la Forêt",
+    "description": "En Champ Herbu, la Vitesse de l'utilisateur est doublée et ses capacités physiques infligent 1,2× les dégâts. Les capacités tranchantes ont un taux de coup critique élevé."
+  },
+  "forestTrickery": {
+    "name": "Ruse de la Forêt",
+    "description": "Les capacités Normal deviennent Plante ou Fée selon le type le plus fort (au hasard si neutre), avec 1,2× les dégâts. Les capacités Plante ont 30% de chances d'activer le Champ Herbu. Les Fée 30% d'activer le Champ Brumeux."
+  },
+  "fossilBarrier": {
+    "name": "Barrière Fossile",
+    "description": "La cible ne peut pas utiliser de capacités prioritaires ni de capacités augmentant les statistiques. Les capacités Normal deviennent Roche avec 1,2× les dégâts."
+  },
+  "frostyAbomination": {
+    "name": "Abomination Givrée",
+    "description": "Quand les PV de l'utilisateur passent sous 50%, la cible subit des dégâts égaux à 1/8 de ses PV max. Les capacités Normal deviennent Glace. Les capacités Glace deviennent des morsures, infligent 1,2× les dégâts et ont 10% de chances de geler."
+  },
+  "galacticAwakening": {
+    "name": "Éveil Galactique",
+    "description": "Quand ses PV passent sous 50%, ce Pokémon devient de type Stellaire. Sous 50% PV, à la fin de chaque tour, une statistique aléatoire monte d'un niveau."
+  },
+  "gemSiphon": {
+    "name": "Siphon de Gemme",
+    "description": "Les capacités Fée soignent l'utilisateur de 50% des dégâts infligés. Si les PV sont pleins, il crée un Clone prenant 25% de ses PV."
+  },
+  "gemstoneTrample": {
+    "name": "Piétinement de Gemme",
+    "description": "Les capacités Normal deviennent Sol, ignorent les boosts de Défense et infligent 20% de dégâts en plus."
+  },
+  "genieMagic": {
+    "name": "Magie du Génie",
+    "description": "Les capacités Normal deviennent Feu ou Ténèbres selon le type plus efficace contre la cible (au hasard si neutre). Les capacités Feu et Ténèbres ont 30% de chances de déclencher un effet Vœu au tour suivant."
+  },
+  "giantImpact": {
+    "name": "Impact Géant",
+    "description": "Les capacités Feu, Plante, Eau et Électrik deviennent Normal. Les capacités Normal infligent 1,3× les dégâts et ont 30% de chances de paralyser ou faire tressaillir la cible."
+  },
+  "goldenClutch": {
+    "name": "Emprise Dorée",
+    "description": "Les capacités Normal et Combat deviennent des capacités tranchantes. Les tranchantes ignorent les résistances. Celles qui ne font pas tressaillir gagnent +1 priorité et +1 niveau de coup critique."
+  },
+  "goldenGaze": {
+    "name": "Regard Doré",
+    "description": "Les capacités Normal de l'utilisateur deviennent Psy avec 1,2× les dégâts. Les capacités Psy ont 30% de chances de neutraliser la dernière capacité de la cible. Quand neutralisée, elles infligent 1,3× les dégâts."
+  },
+  "goldenGear": {
+    "name": "Engrenage Doré",
+    "description": "Les capacités Électrik et Acier de l'utilisateur partagent les avantages de faiblesse de type. Les capacités Normal deviennent Électrik avec 1,2× les dégâts. Si au moins 2 autres Pokémon de l'équipe ont une capacité Gadget, Plante partage aussi les avantages avec Électrik et Acier."
+  },
+  "goldenRadiance": {
+    "name": "Radiance Dorée",
+    "description": "Quand les PV de l'utilisateur passent sous 10%, toutes les statistiques montent d'un niveau."
+  },
+  "gravityAxe": {
+    "name": "Hache de Gravité",
+    "description": "L'utilisateur piège tous les Pokémon adverses, supprime les immunités de type Vol et bénéficie des effets de Lunatique."
+  },
+  "hammerKnockback": {
+    "name": "Recul du Marteau",
+    "description": "Les capacités de contact de l'utilisateur ont 30% de chances de forcer la cible à changer."
+  },
+  "handReset": {
+    "name": "Réinitialisation de Main",
+    "description": "Quand les PV de l'utilisateur passent sous 50%, il soigne les statuts de ses alliés et les siens, et réinitialise tous les changements de statistiques des deux Pokémon."
+  },
+  "harpieBoost": {
+    "name": "Boost Harpie",
+    "description": "Les capacités de l'utilisateur gagnent 15 de puissance de base par autre Pokémon Vol non K.O. dans l'équipe."
+  },
+  "heavenPiercer": {
+    "name": "Transperceur Céleste",
+    "description": "Les capacités Acier de l'utilisateur infligent 2× les dégâts aux Pokémon Sol et Roche. Les capacités Normal deviennent Acier avec 1,2× les dégâts."
+  },
+  "heavensJudgment": {
+    "name": "Jugement Céleste",
+    "description": "Baisse l'Attaque de l'adversaire en entrant et à chaque entrée adverse. Les attaques gagnent 10 de puissance de base par Pokémon de l'équipe connaissant une capacité Serviteur."
+  },
+  "heavyweightHopper": {
+    "name": "Sauteur Poids Lourd",
+    "description": "Les capacités Normal deviennent Vol ou Combat selon le type le plus fort contre la cible (au hasard si neutre). Les Vol ont 30% de chances de faire tressaillir. Les Combat 5% de coup critique."
+  },
+  "hydroClone": {
+    "name": "Hydro Clone",
+    "description": "Lorsque l'utilisateur met K.O. la cible, il crée un Clone avec 25% de ses PV max."
+  },
+  "hydroSurge": {
+    "name": "Hydro Surge",
+    "description": "Toutes les capacités de l'utilisateur sont super efficaces contre les Pokémon Feu."
+  },
+  "iceAge": {
+    "name": "Ère Glaciaire",
+    "description": "L'utilisateur invoque la Neige ou la Grêle. À la fin de chaque tour, si Neige/Grêle est active, il baisse aléatoirement la Vitesse, la plus haute Défense ou la plus haute Attaque de la cible."
+  },
+  "illusionWeaver": {
+    "name": "Tisseur d'Illusions",
+    "description": "Lorsque la cible utilise une capacité de statut, le lanceur a 10% de chances de créer un Clone en utilisant 25% de ses PV."
+  },
+  "illusionist": {
+    "name": "Illusionniste",
+    "description": "Le lanceur a 30% de chances d'esquiver les attaques physiques."
+  },
+  "immortalSlime": {
+    "name": "Mucus Immortel",
+    "description": "Le lanceur est immunisé contre les altérations de statut et les coups critiques. Les dégâts physiques infligés au lanceur sont réduits de 50%."
+  },
+  "infinityStones": {
+    "name": "Pierres d'Infinité",
+    "description": "Les capacités de type Normal deviennent de type Roche. Les capacités de type Roche ont 10% de chances d'infliger un coup critique, 10% de chances d'infliger une altération de statut aléatoire, et soignent le lanceur de 25% des dégâts infligés."
+  },
+  "ironGiant": {
+    "name": "Géant de Fer",
+    "description": "Les capacités de type Acier et Combat infligent 1,3× dégâts et ont 30% de chances de baisser la Défense de la cible d'un niveau."
+  },
+  "ironJaws": {
+    "name": "Mâchoires de Fer",
+    "description": "Les capacités de morsure soignent le lanceur de 50% des dégâts infligés et partagent les avantages de type Acier."
+  },
+  "junkToTreasure": {
+    "name": "Ferraille en Trésor",
+    "description": "Les capacités avec une puissance de base de 45 ou moins infligent 3× dégâts."
+  },
+  "jurassicJaws": {
+    "name": "Mâchoires Jurassiques",
+    "description": "Les capacités de type Normal deviennent de type Sol. Les capacités de type Sol deviennent des capacités de morsure. Les capacités de morsure frappent deux fois, et le deuxième coup inflige 80% des dégâts."
+  },
+  "kingsRoar": {
+    "name": "Rugissement Royal",
+    "description": "Lorsque le lanceur entre en jeu normalement, il baisse l'Attaque et la Vitesse de la cible d'un niveau. S'il entre après la mise K.O. d'un coéquipier, il baisse toutes les stats de la cible d'un niveau."
+  },
+  "laserBusterCannon": {
+    "name": "Canon Laser Destructeur",
+    "description": "Les capacités de type pulse et aura gagnent +1 en priorité et infligent 1,3× dégâts."
+  },
+  "lastSamufrog": {
+    "name": "Dernier Samugrenouille",
+    "description": "Les capacités de type Normal deviennent des capacités tranchantes avec un taux de coups critiques élevé. Possède l'effet de Fermeté."
+  },
+  "leviathansDomain": {
+    "name": "Domaine du Léviathan",
+    "description": "Les capacités de type Eau et Dragon invoquent toujours la Pluie en touchant. Pour chaque tour consécutif de Pluie, les capacités de type Eau et Dragon de ce Pokémon gagnent +10 en puissance de base, jusqu'à un maximum de +50."
+  },
+  "leviathansWrath": {
+    "name": "Courroux du Léviathan",
+    "description": "Les capacités de type Eau infligent toujours un coup critique sous la Pluie. Après un coup critique de ce Pokémon, la météo actuelle est annulée."
+  },
+  "lifeExchange": {
+    "name": "Échange Vital",
+    "description": "Une fois par combat, après avoir mis K.O. un Pokémon adverse, il ranime un coéquipier K.O. aléatoire avec 50% de ses PV maximum."
+  },
+  "looneyDragon": {
+    "name": "Dragon Dingue",
+    "description": "Les capacités de type Dragon ont 30% de chances de rendre la cible confuse. Les capacités de type Fée ont 30% de chances de baisser une stat aléatoire de la cible. Ce Pokémon gagne +1 Esquive en entrant en combat."
+  },
+  "loversCoin": {
+    "name": "Pièce des Amants",
+    "description": "Les attaques ont 50% de chances de rendre le Pokémon adverse genré amoureux. Si une cible amoureuse attaque, il y a 50% de chances de renvoyer la moitié des dégâts subis."
+  },
+  "lusterGenesis": {
+    "name": "Genèse Lustrée",
+    "description": "Si l'équipe a un Pokémon Ténèbres K.O., les attaques frappent deux fois (le deuxième coup inflige 50% des dégâts). Si l'équipe a un Pokémon Fée K.O., les capacités avec 60 de puissance de base infligent 1,5× dégâts. Si l'équipe a un Ténèbres, un Fée et un Ténèbres/Fée K.O. (trois au total), les attaques ont 30% de chances d'infliger une altération de statut aléatoire. Chaque Pokémon K.O. n'est compté qu'une seule fois."
+  },
+  "machSpeed": {
+    "name": "Vitesse Mach",
+    "description": "Pendant le premier tour en jeu, sa Vitesse et son Attaque sont doublées."
+  },
+  "magicalInheritance": {
+    "name": "Héritage Magique",
+    "description": "Le lanceur gagne 10% d'Attaque Spéciale par coéquipier connaissant une capacité de Magie Noire. Les capacités de type Fée soignent le lanceur de 10% des dégâts infligés, multiplié par le nombre de Pokémon Fée K.O. dans l'équipe."
+  },
+  "magiciansCoin": {
+    "name": "Pièce du Magicien",
+    "description": "Lorsqu'un Pokémon utilise une capacité de statut, ce Pokémon a 50% de chances d'augmenter son Attaque Spéciale ou de restaurer 1/8 de ses PV maximum."
+  },
+  "magnetizeBeta": {
+    "name": "Magnétiser Bêta",
+    "description": "Les capacités de type Électrik soignent le lanceur de 25% des dégâts infligés. Les capacités de type Acier infligent 1,2× dégâts. Si au moins deux autres coéquipiers connaissent une capacité Magnétique, ce Pokémon gagne +1 Attaque et +1 Attaque Spéciale en sortant du combat."
+  },
+  "maskOfRemnants": {
+    "name": "Masque des Vestiges",
+    "description": "Lorsque ce Pokémon est mis K.O., il piège et maudit l'attaquant."
+  },
+  "maskedGod": {
+    "name": "Dieu Masqué",
+    "description": "Selon les capacités Masque de l'équipe, le lanceur gagne des effets. 1+ : les capacités Normal deviennent Ténèbres, Spectre ou Psy (type le plus fort ; aléatoire si neutre). 2+ : les capacités Ténèbres, Spectre et Psy soignent de 25% des dégâts. 3+ : le lanceur prend 25% de dégâts en moins. 5+ : Ténèbres a 10% d'endormir, Spectre 5% de maudire, Psy 10% de baisser Défense et Déf. Spé. d'un niveau. 10+ : Ténèbres, Spectre et Psy partagent leurs avantages de type."
+  },
+  "masterOfIllusions": {
+    "name": "Maître des Illusions",
+    "description": "À la fin de chaque tour, le lanceur a 20% de chances de créer un Clone."
+  },
+  "masterOfTheDarkArts": {
+    "name": "Maître des Arts Sombres",
+    "description": "Les capacités de type Ténèbres ont 30% de chances d'infliger des dégâts résiduels égaux à 1/8 des PV max de la cible (Ligotage). Les capacités de type Normal deviennent Ténèbres quand ce type serait super efficace contre la cible."
+  },
+  "mastersBlade": {
+    "name": "Lame du Maître",
+    "description": "Toutes les capacités de type Normal sont des capacités tranchantes. Les capacités tranchantes infligent 1,5× dégâts et ont +1 ratio de coups critiques."
+  },
+  "maxDestruction": {
+    "name": "Destruction MAX",
+    "description": "Le lanceur est immédiatement soigné de ses altérations de statut. Les capacités du lanceur frappent deux fois ; le deuxième coup inflige 50% des dégâts. Cependant, si la Défense de la cible est supérieure à son Attaque, le deuxième coup inflige des dégâts complets."
+  },
+  "meteorShower": {
+    "name": "Pluie de Météores",
+    "description": "Les capacités de type Normal, Feu et Roche frappent trois fois à 40% de puissance de base, chaque coup devenant aléatoirement de type Feu ou Roche."
+  },
+  "millEngine": {
+    "name": "Moteur du Moulin",
+    "description": "À la fin de chaque tour, si le Pokémon tient une Baie, il consomme une Baie aléatoire et augmente son Attaque d'un niveau. Si son Attaque est à +3 niveaux en fin de tour, son Attaque est réinitialisée à 0 et il restaure 30% de ses PV maximum."
+  },
+  "millennialWeapon": {
+    "name": "Arme Millénaire",
+    "description": "La Défense du lanceur est multipliée par 1,5. Les capacités de type Normal deviennent de type Fée ou Roche, selon ce qui infligerait plus de dégâts (aléatoire si neutre). Les capacités de type Fée et Roche utilisent la Défense du lanceur au lieu de l'Attaque ou l'Attaque Spéciale."
+  },
+  "millenniumAbsorption": {
+    "name": "Absorption Millénaire",
+    "description": "Lorsque le lanceur est touché par une capacité de contact, l'attaquant perd des PV égaux à 50% des dégâts subis. Lorsque le lanceur met K.O. la cible, il restaure 25% de ses PV et copie le talent de la cible en passif, remplaçant son passif existant pour le combat."
+  },
+  "millenniumStalker": {
+    "name": "Traqueur Millénaire",
+    "description": "Lorsque le lanceur met K.O. la cible, son Attaque et une stat aléatoire augmentent d'un niveau, et son altération de statut est guérie."
+  },
+  "mindTrance": {
+    "name": "Transe Mentale",
+    "description": "Si la cible a une altération de statut ou un état volatile (comme la confusion ou l'attraction), les capacités du lanceur gagnent en priorité, et les capacités qui ne font normalement pas tressaillir ont 10% de chances de faire tressaillir la cible."
+  },
+  "mindWarp": {
+    "name": "Distorsion Mentale",
+    "description": "Les capacités de type Normal deviennent Ténèbres ou Psy selon ce qui est plus efficace (aléatoire si neutre). Les capacités Psy ont 30% de chances de rendre confus, et les capacités Ténèbres 30% de chances de paralyser la cible."
+  },
+  "mindlessRampage": {
+    "name": "Furie Aveugle",
+    "description": "Les effets de Sans Limite s'appliquent. Quand le lanceur inflige des dégâts, sa Vitesse ou son Attaque augmente d'un niveau. Cependant, il ne peut pas utiliser de capacités de statut. En fin de tour, il subit des dégâts égaux à 1/8 de ses PV max."
+  },
+  "mirrorKing": {
+    "name": "Roi Miroir",
+    "description": "En entrant en jeu, le lanceur copie le talent de la cible. En se retirant, il restaure 33% de ses PV."
+  },
+  "moltenShackles": {
+    "name": "Chaînes en Fusion",
+    "description": "Le lanceur piège la cible et inflige des dégâts égaux à 1/8 de ses PV max à la fin de chaque tour."
+  },
+  "moonlitMischief": {
+    "name": "Malice Lunaire",
+    "description": "Dans les biomes nocturnes, lorsque ce Pokémon entre en jeu, toutes ses stats augmentent d'un niveau."
+  },
+  "moonsCoin": {
+    "name": "Pièce de la Lune",
+    "description": "En entrant en jeu, le lanceur active la Gravité pour 5 tours. Sous l'effet de la Gravité, les capacités Ténèbres ont 50% de chances d'endormir la cible, et les capacités Psy 50% de chances de créer un Clone."
+  },
+  "multiply": {
+    "name": "Multiplication",
+    "description": "Les capacités de type Normal du lanceur ont 30% de chances de créer un Clone et d'augmenter deux stats aléatoires d'un niveau."
+  },
+  "necroDrain": {
+    "name": "Drain Nécro",
+    "description": "Lorsque le lanceur met K.O. la cible, un coéquipier non K.O. aléatoire restaure 25% de ses PV."
+  },
+  "necroSurge": {
+    "name": "Vague Nécro",
+    "description": "Les capacités du lanceur gagnent 5 de puissance de base par coéquipier K.O."
+  },
+  "nightStalker": {
+    "name": "Traqueur Nocturne",
+    "description": "Dans les biomes nocturnes, les capacités du lanceur gagnent +1 en priorité."
+  },
+  "ojamaLockdown": {
+    "name": "Verrouillage Ojama",
+    "description": "Empêche l'adversaire de changer ou d'utiliser des capacités de statut. Si au moins trois coéquipiers connaissent des capacités Ojama, une stat de la cible est réduite de 2 niveaux en fin de tour."
+  },
+  "ojamaMagic": {
+    "name": "Magie Ojama",
+    "description": "Si au moins trois coéquipiers connaissent des capacités Ojama, les capacités Normal et Ojama de ce Pokémon ont 30% de chances de provoquer, tourmenter et rendre confuse la cible simultanément."
+  },
+  "ojamaSolidarity": {
+    "name": "Solidarité Ojama",
+    "description": "En entrant en jeu, désactive une capacité de la cible. Si au moins 3 coéquipiers connaissent des capacités Ojama, les capacités Normal et Ojama de ce Pokémon gagnent en priorité et +1 ratio de coups critiques."
+  },
+  "originalSkyKing": {
+    "name": "Roi Originel du Ciel",
+    "description": "Les capacités Normal deviennent des capacités de morsure. Les capacités de morsure et tranchantes deviennent Acier ou Vol (plus efficace contre la cible ; aléatoire si neutre) et infligent 1,2× dégâts. Le lanceur se soigne de 20% des dégâts infligés."
+  },
+  "parallelWorld": {
+    "name": "Monde Parallèle",
+    "description": "En entrant en jeu, échange l'Attaque et l'Attaque Spéciale de la cible."
+  },
+  "phantomArmor": {
+    "name": "Armure Fantôme",
+    "description": "Le Pokémon est immunisé contre les capacités de contact."
+  },
+  "phantomArsenal": {
+    "name": "Arsenal Fantôme",
+    "description": "Les capacités Ténèbres ont 10% de chances de poser des Picots sur le terrain adverse. Les capacités Roche ont 10% de chances de poser des Piège de Roc. Les capacités Spectre ont 5% de chances d'infliger Malédiction."
+  },
+  "phantomBeast": {
+    "name": "Bête Fantôme",
+    "description": "L'Esquive du lanceur augmente d'un niveau à la fin de chaque tour. Tant que l'Esquive est supérieure à 1, ses capacités gagnent +1 en priorité. Quand la cible rate et que l'Esquive est supérieure à 1, l'Esquive est réinitialisée et une stat augmente d'un niveau."
+  },
+  "piercingSpiral": {
+    "name": "Spirale Perçante",
+    "description": "Les capacités Normal deviennent Dragon ou Combat, selon ce qui inflige plus de dégâts (aléatoire si neutre). Les capacités Dragon et Combat ont 30% de chances de baisser la Défense de la cible."
+  },
+  "plagueBreathe": {
+    "name": "Souffle de Peste",
+    "description": "Si ce Pokémon a moins de 70% de PV en se retirant, il empoisonne la cible, avec 30% de chances de gravement empoisonner."
+  },
+  "plasmasDomain": {
+    "name": "Domaine de Plasma",
+    "description": "Annule tous les talents et effets de capacité des Pokémon adverses. En entrant en jeu, augmente jusqu'à deux stats aléatoires qui sont inférieures à celles du Pokémon adverse."
+  },
+  "polarizeAlpha": {
+    "name": "Polariser Alpha",
+    "description": "Les capacités de type Électrik deviennent de type Roche avec 1,2× puissance. Si au moins deux autres coéquipiers connaissent une capacité Magnétique, ce Pokémon gagne +1 Défense et +1 Déf. Spé. en sortant."
+  },
+  "portalBeast": {
+    "name": "Bête Portail",
+    "description": "Chaque fois qu'un Pokémon adverse entre en jeu, ce Pokémon gagne +1 à trois stats aléatoires. En se retirant, il restaure 25% de ses PV maximum."
+  },
+  "powderKing": {
+    "name": "Roi de la Poudre",
+    "description": "Les capacités Normal deviennent Insecte ou Poison (le plus fort ; aléatoire si neutre) et infligent 1,2× dégâts. Les capacités Insecte et Poison ont 50% de chances à chaque coup d'infliger aléatoirement Poison, Sommeil, Brûlure ou Paralysie."
+  },
+  "prideOfWeak": {
+    "name": "Fierté du Faible",
+    "description": "Mettre K.O. un adversaire accorde +1 Vitesse et +1 à la stat d'Attaque la plus élevée du lanceur. Les capacités avec 60 de puissance de base ou moins infligent 1,5× dégâts."
+  },
+  "pyroBullet": {
+    "name": "Balle Pyro",
+    "description": "Les capacités de type Normal deviennent de type Feu. Les capacités de type Feu gagnent +1 en priorité."
+  },
+  "quickDrawV2": {
+    "name": "Dégainement",
+    "description": "Les capacités de Balle, Aura, Boule et Pulse du lanceur gagnent +1 en priorité et ont 1,2× puissance."
+  },
+  "quickHarvest": {
+    "name": "Récolte Rapide",
+    "description": "À la fin de chaque tour, il y a 30% de chances de restaurer une Baie utilisée. À la fin du combat, il y a 50% de chances de générer une Baie aléatoire (Ramassage de Baies)."
+  },
+  "radiatingGamma": {
+    "name": "Gamma Radiant",
+    "description": "Les capacités Normal deviennent Acier avec 1,2× dégâts. Les attaques du lanceur utilisent sa Défense pour le calcul des dégâts. Si au moins deux autres coéquipiers connaissent une capacité Magnétique, la cible perd 1/8 de ses PV en fin de tour."
+  },
+  "ragingAxe": {
+    "name": "Hache Furieuse",
+    "description": "Les capacités tranchantes infligent 1,5× dégâts, deviennent de type Combat, ignorent les hausses de Défense et ont 30% de chances de faire tressaillir la cible."
+  },
+  "rapidFire": {
+    "name": "Feu Rapide",
+    "description": "Les capacités Normal deviennent Acier ou Feu (plus dégâts ; aléatoire si neutre) avec 1,2× dégâts. Les capacités Acier et Feu ont 30% de chances de gagner +1 en priorité."
+  },
+  "reboundingHurricane": {
+    "name": "Ouragan Rebondissant",
+    "description": "En entrant, l'Esquive augmente d'un niveau. Si le lanceur esquive une attaque, il gagne Charge de Vent. Utiliser une capacité Normal ou Vol avec Charge de Vent active force la cible à se retirer après le coup et épuise la Charge de Vent."
+  },
+  "rocketImpact": {
+    "name": "Impact Fusée",
+    "description": "Les capacités Normal deviennent de type Feu. Les capacités Feu gagnent +1 ratio de coups critiques, et les coups critiques brûlent la cible."
+  },
+  "roseGarden": {
+    "name": "Jardin de Roses",
+    "description": "En entrant, supprime les pièges et écrans adverses. Active le Champ Herbu. Les capacités Plante ont 30% de chances de baisser l'Attaque et l'Attaque Spéciale de la cible d'un niveau."
+  },
+  "roundTrip": {
+    "name": "Aller-Retour",
+    "description": "En se retirant, le lanceur restaure 20% de ses PV max, et le Pokémon qui entre restaure également 20% de ses PV max."
+  },
+  "ruin": {
+    "name": "Ruine",
+    "description": "Les capacités Normal deviennent de type Ténèbres. Les capacités Ténèbres ont 30% de chances d'inverser les modifications de stats de la cible et 10% de chances d'infliger un coup critique."
+  },
+  "sAndMummy": {
+    "name": "S&Momie",
+    "description": "Les capacités de contact ont 30% de chances d'infliger Ligotage à la cible. Le lanceur restaure 1/16 de ses PV max chaque tour."
+  },
+  "scalesOfJustice": {
+    "name": "Balance de la Justice",
+    "description": "Les attaques infligent 2,5× dégâts contre les Pokémon de type Ténèbres."
+  },
+  "scorchedEarth": {
+    "name": "Terre Brûlée",
+    "description": "Si un terrain est actif, les dégâts d'attaque sont augmentés de 1,5×. A 30% de chances de détruire le terrain, d'augmenter la Vitesse d'un niveau et de brûler la cible."
+  },
+  "scorchingBurster": {
+    "name": "Détonateur Brûlant",
+    "description": "Les capacités Normal deviennent de type Feu. Les capacités Feu ont 30% de chances de brûler et +1 ratio de coups critiques. Les capacités Eau et Glace n'affectent pas le lanceur."
+  },
+  "scorchingJustice": {
+    "name": "Justice Brûlante",
+    "description": "Les capacités offensives du lanceur ont 30% de chances de brûler la cible. Les cibles brûlées subissent 1,5× dégâts."
+  },
+  "shadowFlame": {
+    "name": "Flamme des Ombres",
+    "description": "Les capacités de type Feu et Ténèbres du lanceur partagent leurs avantages de type. Les capacités Normal deviennent Ténèbres avec 1,2× dégâts."
+  },
+  "shadowMartyr": {
+    "name": "Martyr de l'Ombre",
+    "description": "Lorsque le lanceur est mis K.O., le Pokémon qui le remplace restaure 33% de ses PV max et gagne +1 niveau à sa stat la plus haute et une stat aléatoire."
+  },
+  "shadowReach": {
+    "name": "Portée de l'Ombre",
+    "description": "Les capacités de piégeage du lanceur infligent des dégâts égaux à 1/6 des PV max de la cible à la fin de chaque tour."
+  },
+  "silentAssassin": {
+    "name": "Assassin Silencieux",
+    "description": "À la fin de chaque tour, l'Esquive du lanceur augmente d'un niveau, jusqu'à un maximum de 3. Quand l'Esquive atteint 3, elle se réinitialise à 0 et toutes les stats augmentent d'un niveau."
+  },
+  "silentBlade": {
+    "name": "Lame Silencieuse",
+    "description": "En attaquant, utilise la Vitesse de l'adversaire comme base pour le calcul de la défense."
+  },
+  "slimeAbsorb": {
+    "name": "Absorption de Mucus",
+    "description": "Lorsque le lanceur met K.O. la cible, il restaure 1/4 de ses PV max et augmente une stat aléatoire."
+  },
+  "smash22": {
+    "name": "Fracas 22",
+    "description": "Les capacités Normal deviennent Combat ou Spectre (plus de dégâts ; aléatoire si neutre). Les capacités Combat ont 10% de chances d'échanger la Défense et Déf. Spé. de la cible. Les capacités Spectre ont 10% de chances d'échanger l'Attaque et Atq. Spé. de la cible."
+  },
+  "soulTax": {
+    "name": "Taxe d'Âme",
+    "description": "À la fin de chaque tour, le Pokémon adverse perd 1/16 de ses PV max."
+  },
+  "spectralMist": {
+    "name": "Brume Spectrale",
+    "description": "Les capacités Spectre ont 30% de chances de maudire la cible. À la fin de chaque tour, le lanceur a 25% de chances de restaurer 1/8 de ses PV max."
+  },
+  "spellDrain": {
+    "name": "Drain de Sort",
+    "description": "Le lanceur a 30% de chances d'annuler les capacités de statut de la cible. Quand une capacité est annulée, le lanceur restaure 15% de ses PV max et augmente une stat aléatoire d'un niveau."
+  },
+  "spellbreakerBlade": {
+    "name": "Lame Briseuse de Sort",
+    "description": "En entrant en combat, le lanceur gagne une altération de statut aléatoire (sauf Sommeil et Gel). En attaquant sous une altération, ses attaques sont toujours critiques et l'altération est guérie."
+  },
+  "spellcastersFluff": {
+    "name": "Duvet du Sorcier",
+    "description": "Le lanceur ne subit pas de dégâts de la première attaque qu'il reçoit à chaque entrée en combat."
+  },
+  "spikedShell": {
+    "name": "Coquille à Pointes",
+    "description": "Lorsque le lanceur est touché par une capacité de contact, l'attaquant subit des dégâts égaux à 1/6 de ses PV max. Le lanceur subit 50% de dégâts en moins des capacités physiques."
+  },
+  "theGrimMiller": {
+    "name": "Le Sinistre Meunier",
+    "description": "Les capacités Spectre retirent 2 PP de la dernière capacité utilisée par la cible. Les capacités Normal deviennent de type Spectre."
+  },
+  "theUndeadKing": {
+    "name": "Le Roi Mort-Vivant",
+    "description": "Lorsque ce Pokémon est mis K.O., il met K.O. un coéquipier aléatoire connaissant une capacité Serviteur (si existant), restaure 50% de ses PV et augmente deux stats aléatoires."
+  },
+  "thousandEyesLock": {
+    "name": "Verrou aux Mille Yeux",
+    "description": "Tant que ce talent est actif, la cible ne peut ni changer ni utiliser la même capacité deux tours de suite. Chaque tour, une stat aléatoire de la cible baisse d'un niveau et la même stat du lanceur augmente d'un niveau."
+  },
+  "thousandSouls": {
+    "name": "Mille Âmes",
+    "description": "En entrant, ce Pokémon copie le talent d'un coéquipier K.O. aléatoire et restaure 1/8 de ses PV."
+  },
+  "thousandYears": {
+    "name": "Mille Ans",
+    "description": "Chaque tour, une stat aléatoire de la cible baisse d'un niveau. Si au moins deux autres coéquipiers connaissent une capacité Temporelle, deux stats aléatoires baissent d'un niveau."
+  },
+  "threeHeadedBite": {
+    "name": "Morsure à Trois Têtes",
+    "description": "Les capacités Normal deviennent Ténèbres ou Feu (le plus fort ; aléatoire si neutre). Les capacités Ténèbres et Feu deviennent des capacités de morsure et frappent trois fois à 40% de puissance."
+  },
+  "timeRoulette": {
+    "name": "Roulette Temporelle !",
+    "description": "En attaquant, il y a 50% de chances que l'attaque inflige le triple des dégâts. Sinon, le lanceur subit des dégâts de recul égaux à 50% des dégâts infligés."
+  },
+  "timeWizardsBlessing": {
+    "name": "Bénédiction du Mage du Temps",
+    "description": "À la fin de chaque tour, une stat aléatoire augmente. Si au moins deux autres coéquipiers connaissent une capacité Temporelle, le lanceur restaure aussi 1/8 de ses PV max et augmente une autre stat."
+  },
+  "timelineMagic": {
+    "name": "Magie Temporelle",
+    "description": "En recevant des dégâts, le lanceur utilise la stat de Défense la plus haute. En infligeant des dégâts, la cible utilise la stat la plus basse."
+  },
+  "tombRaider": {
+    "name": "Pilleur de Tombes",
+    "description": "Les capacités Normal deviennent Ténèbres avec 1,2× dégâts. Les capacités Ténèbres ont 30% de chances de voler l'objet de la cible. Avec un objet, le lanceur gagne +1 Vitesse en entrant et ses capacités Ténèbres infligent 1,3× dégâts."
+  },
+  "toonChaos": {
+    "name": "Chaos Toon",
+    "description": "Les capacités Normal deviennent Fée ou Ténèbres (le plus fort ; aléatoire si neutre). Les capacités Fée et Ténèbres infligent 1,2× dégâts et ont 30% de chances de forcer la cible à se retirer."
+  },
+  "toonElectricArchfiend": {
+    "name": "Archdémon Électrique Toon",
+    "description": "Les capacités Normal deviennent Électrik ou Ténèbres (le plus fort ; aléatoire si neutre). Les capacités Électrik ont 30% de chances de gagner +1 en priorité. Les capacités Ténèbres ont 10% de chances de coup critique."
+  },
+  "toonGunslinger": {
+    "name": "Tireur Toon",
+    "description": "Les capacités Normal, Dragon, Ténèbres et Fée du lanceur ont 50% de chances de gagner +1 en priorité et 10% de chances de coup critique."
+  },
+  "toonIllusion": {
+    "name": "Illusion Toon",
+    "description": "Quand la cible rate une attaque, le lanceur a 30% de chances de créer un Clone avec 25% de ses PV max. En entrant, son Esquive augmente d'un niveau."
+  },
+  "toonPlotArmor": {
+    "name": "Armure Scénaristique Toon",
+    "description": "Les capacités Normal deviennent de type Eau. Les capacités Eau ont 10% de chances de déclencher un effet Abri."
+  },
+  "toonPounding": {
+    "name": "Martèlement Toon",
+    "description": "Au lieu de la Défense de la cible, les attaques Acier et Fée utilisent la stat la plus basse de la cible pour le calcul des dégâts."
+  },
+  "toonSynergy": {
+    "name": "Synergie Toon",
+    "description": "Les capacités Normal deviennent Psy ou Fée (le plus fort ; aléatoire si neutre). Les attaques Psy et Fée ont 10% de chances par Pokémon avec capacités Toon d'augmenter toutes les stats du lanceur."
+  },
+  "topazLifeorb": {
+    "name": "Orbe Vie Topaze",
+    "description": "Les attaques du lanceur infligent 1,3× dégâts et ont 10% de chances d'augmenter l'Attaque, mais le lanceur perd 15% de PV à chaque attaque."
+  },
+  "torrentialTribute": {
+    "name": "Tribut Torrentiel",
+    "description": "En entrant, le lanceur devient Chargé d'Eau. S'il est touché en étant chargé, il ne subit pas de dégâts et l'attaquant perd 1/8 de ses PV max ; les deux effets ne se produisent qu'une fois par combat. Les capacités Normal deviennent Eau avec 1,2× dégâts."
+  },
+  "travelBuddiesBlue": {
+    "name": "Compagnons de Route Bleu",
+    "description": "Les capacités Normal deviennent de type Vol. Les capacités Vol gagnent +1 en priorité. Si au moins deux autres coéquipiers connaissent des capacités Union, les capacités Vol soignent aussi le lanceur de 50% des dégâts infligés."
+  },
+  "travelBuddiesRed": {
+    "name": "Compagnons de Route Rouge",
+    "description": "Les capacités Normal deviennent de type Vol avec +1 en priorité. Si au moins deux autres coéquipiers connaissent des capacités Union, les capacités de ce Pokémon gagnent aussi 1,5× puissance."
+  },
+  "tripleBurst": {
+    "name": "Triple Salve",
+    "description": "Les attaques non multi-coups frappent trois fois à 55% de puissance chacune."
+  },
+  "tripleCoreEngine": {
+    "name": "Moteur Triple Cœur",
+    "description": "Toutes les capacités multi-coups agissent comme Triple Axel (3 coups avec puissance croissante, précision décroissante). Les capacités à un seul coup infligent 1,2× dégâts."
+  },
+  "twinBlessings": {
+    "name": "Bénédictions Jumelles",
+    "description": "Les chances d'effets secondaires sont doublées. Les capacités Normal deviennent Fée avec 1,2× dégâts. Les capacités Fée ont 30% de chances de soigner 50% des dégâts infligés."
+  },
+  "twinCoreBurst": {
+    "name": "Explosion Double Cœur",
+    "description": "Si le lanceur a une altération de statut, les capacités ont 30% de chances de frapper deux fois et de guérir l'altération."
+  },
+  "twistedLove": {
+    "name": "Amour Tordu",
+    "description": "Le lanceur ne prend des dégâts que des capacités super efficaces. Il ne peut pas être soigné (Baies, capacités et objets n'ont aucun effet). Après avoir attaqué, il inflige 1/8 de ses PV max à la cible. Chaque tour, il perd 1/4 de ses PV max."
+  },
+  "tyrantsCoin": {
+    "name": "Pièce du Tyran",
+    "description": "Les capacités offensives non multi-coups ont 50% de chances de frapper deux fois ou 50% de chances d'infliger un recul de 20% des PV max au lanceur."
+  },
+  "ultimateDefense": {
+    "name": "Défense Ultime",
+    "description": "Toutes les capacités infligent 50% de dégâts en moins, mais ce Pokémon ne peut pas utiliser de capacités de statut."
+  },
+  "uncontrollablePower": {
+    "name": "Puissance Incontrôlable",
+    "description": "Possède Fermeté. Si les PV du lanceur sont exactement à 1, toutes ses capacités gagnent +3 en priorité, infligent le double de dégâts et soignent de 50% des dégâts infligés."
+  },
+  "undeadArchfiend": {
+    "name": "Archdémon Mort-Vivant",
+    "description": "Ce Pokémon n'est pas affecté par les capacités de statut ou effets secondaires de la cible. Les capacités Normal deviennent Spectre avec 1,2× dégâts."
+  },
+  "undeadAvenger": {
+    "name": "Vengeur Mort-Vivant",
+    "description": "Gagne +10% d'Attaque et de Vitesse par coéquipier K.O."
+  },
+  "underworldThicket": {
+    "name": "Fourré Infernal",
+    "description": "Lorsqu'un Pokémon adverse fait contact, il subit un recul de 1/8 de ses PV max et a 10% de chances d'être piégé par Ligotage."
+  },
+  "undyingSoul": {
+    "name": "Âme Immortelle",
+    "description": "Le lanceur gagne +1 à une stat aléatoire par Pokémon Normal ou Combat dans l'équipe. S'il est mis K.O., il ranime un Pokémon Normal ou Combat aléatoire de l'équipe. Cet effet ne peut être utilisé qu'une fois par combat."
+  },
+  "unitedJungle": {
+    "name": "Jungle Unie",
+    "description": "Soigne 25% des PV en remplaçant un coéquipier K.O. Gagne +10 en puissance de base par Pokémon Plante K.O. dans l'équipe."
+  },
+  "unstoppableTitan": {
+    "name": "Titan Imparable",
+    "description": "Les capacités de contact du lanceur ignorent les résistances de type et infligent 1,2× dégâts. Les dégâts sont calculés contre la stat la plus basse de la cible au lieu de la Défense ou Déf. Spé."
+  },
+  "vileOvergrowth": {
+    "name": "Croissance Infâme",
+    "description": "Les capacités Plante et Ténèbres partagent leurs avantages de type. Les capacités Plante ont 30% de chances de semer la cible, et les capacités Ténèbres 10% de chances d'endormir."
+  },
+  "voidBanishment": {
+    "name": "Bannissement du Vide",
+    "description": "Si le lanceur entre après un K.O. allié, il force la cible à se retirer. Si la cible est de type Ténèbres, elle subit d'abord 1/6 de ses PV max. Les capacités Normal deviennent Ténèbres avec 1,2× dégâts et 20% de chances de retirer l'objet de la cible."
+  },
+  "volcanicCore": {
+    "name": "Cœur Volcanique",
+    "description": "Les capacités Normal deviennent de type Feu avec 1,2× dégâts. Quand le lanceur utilise une capacité de statut, il inflige des dégâts égaux à 1/8 des PV max de la cible."
+  },
+  "whirlwindAxe": {
+    "name": "Hache Tourbillon",
+    "description": "Les capacités Normal deviennent de type Vol. Les capacités Vol ont 30% de chances de forcer la cible à se retirer. Si la cible est forcée de sortir, le lanceur restaure 1/8 de ses PV max."
+  },
+  "whiteLightning": {
+    "name": "Éclair Blanc",
+    "description": "Les capacités Normal deviennent Électrik avec 1,2× puissance. Les capacités Dragon gagnent +1 ratio de coups critiques. Les capacités Dragon et Électrik ont 30% de chances de paralyser la cible."
+  },
+  "windboltDiscard": {
+    "name": "Rejet Éclair de Vent",
+    "description": "Quand le lanceur utilise une capacité de statut, il consomme une Baie aléatoire et inflige des dégâts égaux à 20% des PV max de la cible."
+  },
+  "windstormDiscard": {
+    "name": "Rejet Tempête",
+    "description": "Les attaques du lanceur ont 30% de chances de se débarrasser d'un objet tenu aléatoire. Si c'est le cas, l'attaque inflige 2,5× dégâts."
+  },
+  "zanySplasher": {
+    "name": "Éclabousseur Farfelu",
+    "description": "Les capacités Normal deviennent Fée ou Eau (le plus fort ; aléatoire si égaux). Les capacités Fée ont 5% de chances de coup critique. Les capacités Eau ont 5% de chances d'infliger Siphon. L'Esquive augmente d'un niveau en entrant."
+  },
+  "zombieColossus": {
+    "name": "Colosse Zombie",
+    "description": "Une fois par combat, lorsque ce Pokémon est mis K.O., il revient avec 50% de ses PV max."
   }
 }

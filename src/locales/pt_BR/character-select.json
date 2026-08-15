@@ -1,0 +1,10 @@
+{
+  "title": "SELEÇÃO DE CAMPEÃO",
+  "instruction": "Selecione seu Campeão",
+  "locked": "BLOQUEADO",
+  "essenceNeeded": "{{amount}} Essência {{typeName}}",
+  "mysteryChampion": "???",
+  "mysterySubtitle": "O Vazio decide?!",
+  "randomDescription": "Campeão Aleatório",
+  "tooltip.essenceRequiredDesc": "Gaste essência para desbloquear este campeão. Para ganhar essências, derrote Pokémon para obter seu tipo."
+}

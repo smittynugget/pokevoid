@@ -16,6 +16,7 @@
   "enableRetries": "リトライを有効にする",
   "tutorials": "チュートリアル",
   "touchControls": "タッチコントロールを表示",
+  "disableMouse": "マウスを無効にする",
   "vibrations": "振動",
   "normal": "普通",
   "fast": "早い",

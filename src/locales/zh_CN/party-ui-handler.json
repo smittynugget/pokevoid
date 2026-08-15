@@ -49,5 +49,6 @@
   "smellYaLater": "拜拜了您嘞，{{pokemonName}}！",
   "selectPokeToPowerUp": "选择要强化的宝可梦。",
   "selectPokeToRelease": "选择要释放的宝可梦。",
-  "pausedEvolutions": "{{pokemonName}} 的进化停止了。"
+  "pausedEvolutions": "{{pokemonName}} 的进化停止了。",
+  "quickInfo": "快速信息"
 }

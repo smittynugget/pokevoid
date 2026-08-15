@@ -2167,6 +2167,10 @@
     "name": "Schlingranken",
     "description": "Verdoppelt die Kraft von Rankenhieb. 30% Chance, das Ziel mit Egelsamen zu belegen oder zu fesseln bei Verwendung von Rankenhieb."
   },
+  "leftoversPower": {
+    "name": "Leftovers Power",
+    "description": "Stellt am Ende jeder Runde 1/8 der maximalen KP wieder her."
+  },
   "regeneratorPlus": {
     "name": "Regenerator Plus",
     "description": "Stellt 45% der maximalen KP beim Austausch wieder her."
@@ -2698,5 +2702,1041 @@
   "dragonize": {
     "name": "Drachenisierung",
     "description": "Verwandelt Normal-Attacken in Drachen-Attacken und erhöht ihre Kraft um 20%."
+  },
+  "nightmares": {
+    "name": "Albträume",
+    "description": "Reduziert die KP schlafender gegnerischer Pokémon am Ende jeder Runde um 1/4."
+  },
+  "piercingDrill": {
+    "name": "Durchbohrender Bohrer",
+    "description": "Kontaktattacken durchdringen den Schutz des Ziels und verursachen 1/4 des erwarteten Schadens."
+  },
+  "spicySpray": {
+    "name": "Scharfes Spray",
+    "description": "Verbrennt den Angreifer, wenn das Pokémon Schaden erleidet."
+  },
+  "aCounterInfector": {
+    "name": "A-Zähler-Infektor",
+    "description": "Wenn der Nutzer von einer physischen Attacke getroffen wird, besteht eine 30%ige Chance, dem Angreifer eine zufällige Statusveränderung zuzufügen. Ist der Angreifer bereits statusverändert, stiehlt der Nutzer bei Kontakt 1/16 der KP des Angreifers."
+  },
+  "aParasiticOffspring": {
+    "name": "A-Parasitärer Nachwuchs",
+    "description": "Die physischen Attacken des Nutzers haben eine 30%ige Chance, dem Ziel eine zufällige Statusveränderung zuzufügen. Ist das Ziel statusverändert, heilen Kontaktattacken gegen den Nutzer 1/16 seiner maximalen KP, statt Schaden zu verursachen."
+  },
+  "aSuppression": {
+    "name": "A-Unterdrückung",
+    "description": "Gegnerische Pokémon mit Statusveränderungen erleiden 30% mehr Schaden durch Attacken und können ihre Fähigkeiten nicht einsetzen."
+  },
+  "abominableProtection": {
+    "name": "Abscheulicher Schutz",
+    "description": "Wenn der Nutzer eingewechselt wird, errichtet er Auroraschleier ohne Hagel oder Schnee zu benötigen, verliert aber 25% seiner maximalen KP. Dieser Effekt kann nur einmal pro Kampf auftreten."
+  },
+  "absoluteLightning": {
+    "name": "Absoluter Blitz",
+    "description": "Der erste erlittene Schadensangriff pro Kampf wird negiert, und der Angreifer verliert stattdessen 1/8 seiner maximalen KP. Normal-Attacken werden zu Elektro-Attacken und verursachen 1,2× Schaden."
+  },
+  "absoluteVoidMagic": {
+    "name": "Absolute Leerenmagie",
+    "description": "Die Attacken des Nutzers haben eine 50%ige Chance, dem Ziel eine zufällige Statusveränderung, temporäre Statusveränderung, Falle oder ein Hazard zuzufügen."
+  },
+  "absoluteZero": {
+    "name": "Absoluter Nullpunkt",
+    "description": "Während Hagel oder Schnee aktiv ist, werden Normal-, Flug- und Drachen-Attacken des Nutzers zu Eis-Attacken, verursachen 1,2× Schaden und haben eine 20%ige Chance einzufrieren."
+  },
+  "abyssalFlame": {
+    "name": "Abgrundfeuer",
+    "description": "Normal-Attacken werden zu Feuer-Attacken. Feuer- und Unlicht-Attacken teilen Typenschwächen und haben eine 30%ige Chance, zu verbrennen."
+  },
+  "abyssalGrasp": {
+    "name": "Abgrundgriff",
+    "description": "Normal-Attacken werden zu Wasser-Attacken. Wasser-Attacken haben eine 30%ige Chance, das Ziel in einem Whirlpool einzuschließen."
+  },
+  "acidRain": {
+    "name": "Saurer Regen",
+    "description": "Wenn der Nutzer den Kampf betritt, setzt er Regen. Gift-Attacken verursachen 1,3× Schaden, solange Regen aktiv ist. Normal-Attacken werden zu Gift-Attacken."
+  },
+  "adventureStart": {
+    "name": "Abenteuer Start!",
+    "description": "Die Attacken des Nutzers haben eine 50%ige Chance, Priorität zu erhalten. Alle Attacken des Nutzers erhalten +1 Volltreffer-Stufe."
+  },
+  "almightyGalaxy": {
+    "name": "Allmächtige Galaxie",
+    "description": "Am Ende jeder Runde wechselt der Nutzer zu einem zufälligen Typ und stellt 1/8 seiner maximalen KP wieder her. Attacken ohne Zusatzeffekte verursachen 1,3× Schaden."
+  },
+  "alternativeBurst": {
+    "name": "Alternativer Ausbruch",
+    "description": "Die Statusattacken des Nutzers fügen dem Ziel Schaden in Höhe von 1/8 seiner maximalen KP zu. Elektro- und Drachen-Attacken haben eine 30%ige Chance, zu paralysieren."
+  },
+  "ancientBehemoth": {
+    "name": "Uraltes Behemoth",
+    "description": "Die Kontaktattacken des Nutzers ignorieren Typenresistenzen und verursachen 1,3× Schaden."
+  },
+  "ancientDrill": {
+    "name": "Antiker Bohrer",
+    "description": "Die Attacken des Nutzers haben eine 50%ige Chance, das getragene Item des Ziels zu entfernen und zusätzlichen Schaden in Höhe von 1/8 seiner maximalen KP zu verursachen."
+  },
+  "ancientDualCore": {
+    "name": "Antiker Doppelkern",
+    "description": "In Runde 1 ist der Nutzer vom Typ Normal. In Runde 2 wird er zum Stahl- und Kampf-Typ. Normal-Attacken werden zu Stahl-Attacken, gelten auch als Kampf-Attacken und verursachen 1,2× Schaden."
+  },
+  "ancientKnowledge": {
+    "name": "Uraltes Wissen",
+    "description": "Die Psycho- und Feen-Attacken des Nutzers verursachen 1,2× Schaden und teilen dieselben Typenschwächen-Vorteile."
+  },
+  "ancientSummon": {
+    "name": "Antike Beschwörung",
+    "description": "Beim Einwechseln erhält der Nutzer +1 Stufe auf einen zufälligen Wert für jedes andere Team-Pokémon mit einer Gadget-Attacke. Jede Wertsteigerung wird zufällig gewählt."
+  },
+  "ancientSupplies": {
+    "name": "Antike Vorräte",
+    "description": "Wenn der Nutzer ausgewechselt wird, heilt das eingewechselte Pokémon 25% seiner maximalen KP und erhält +1 Verteidigung."
+  },
+  "aquaticRitual": {
+    "name": "Aquatisches Ritual",
+    "description": "Wenn Regen aktiv ist, erhöht der Nutzer am Ende jeder Runde zwei zufällige Werte um eine Stufe."
+  },
+  "beastOfRagnarok": {
+    "name": "Bestie von Ragnarök",
+    "description": "Bei Schnee oder Hagel wird die Initiative des Nutzers verdoppelt, und Biss-Attacken haben eine 10%ige Chance, das Ziel einzufrieren, oder eine 10%ige Chance, es zurückschrecken zu lassen."
+  },
+  "beaststar": {
+    "name": "Bestienstern",
+    "description": "Die Attacken des Nutzers verursachen 1,5× Schaden. Kann eine Attacke kein Zurückschrecken verursachen, hat sie eine 30%ige Chance, das Ziel zurückschrecken zu lassen. Verteidigung und Spezial-Verteidigung des Nutzers sinken nach dem Angriff um eine Stufe."
+  },
+  "blackFlameSpark": {
+    "name": "Schwarzer Flammenfunke",
+    "description": "Nachdem der Nutzer von einer Attacke getroffen wird, erhält er eine Ladung. Wechselt der Nutzer mit Ladung aus, wird das Ziel verbrannt und das eingewechselte Pokémon erhält +1 Initiative und +1 zufälligen Wert."
+  },
+  "blazingCitrine": {
+    "name": "Lodernder Citrin",
+    "description": "Normal-Attacken des Nutzers werden zu Feuer- oder Gestein-Attacken, je nachdem, welcher Typ dem Ziel mehr Schaden zufügt. Bei Gleichstand wird zufällig gewählt. Feuer- und Gestein-Attacken haben eine 30%ige Chance, das Ziel zu verbrennen. Verbrannte Ziele können ihre Fähigkeiten nicht nutzen und die Zusatzeffekte ihrer Attacken sind deaktiviert."
+  },
+  "blazingTimber": {
+    "name": "Loderndes Holz",
+    "description": "Die Normal- und Pflanzen-Attacken des Nutzers werden zu Feuer-Attacken, haben eine 30%ige Chance, das Ziel zu verbrennen, und verursachen 1,3× Schaden."
+  },
+  "blindRage": {
+    "name": "Blinde Wut",
+    "description": "Während der Nutzer verwirrt ist, verursachen seine Attacken 2× Schaden und haben +1 Volltreffer-Stufe. Normal-Attacken teilen die Typenvorteile von Kampf-Attacken."
+  },
+  "bloodScent": {
+    "name": "Blutwitterung",
+    "description": "Die Attacken des Nutzers landen automatisch als Volltreffer gegen Ziele unter 40% KP."
+  },
+  "blowbackRoulette": {
+    "name": "Rückschlag-Roulette",
+    "description": "Die Unlicht- und Stahl-Attacken des Nutzers haben eine 30%ige Chance, drei zufällige Werte des Ziels um jeweils eine Stufe zu senken."
+  },
+  "bullRush": {
+    "name": "Bullenansturm",
+    "description": "Die Normal-Attacken des Nutzers werden zu Kampf-Attacken und erhalten +1 Priorität."
+  },
+  "carnivorousVines": {
+    "name": "Fleischfressende Ranken",
+    "description": "Die Kontaktattacken des Nutzers haben eine 50%ige Chance, das Ziel für drei Runden zu fangen und ihm dabei pro Runde Schaden in Höhe von 1/8 seiner maximalen KP zuzufügen."
+  },
+  "chainsOfInfinity": {
+    "name": "Ketten der Unendlichkeit",
+    "description": "Attacken, die 60 oder weniger Schaden verursachen, haben eine 1%ige Chance, das Ziel sofort zu besiegen."
+  },
+  "chaosEnd": {
+    "name": "Chaos-Ende",
+    "description": "Hat das Team ein besiegtes Unlicht-Pokémon, erleidet das nächste eingewechselte Pokémon nach einem KO durch den Nutzer Schaden in Höhe von 1/6 seiner max. KP. Hat das Team ein besiegtes Feen-Pokémon, werden Normal-Attacken zu Unlicht-Attacken mit 1,2× Schaden. Sind ein Unlicht-, ein Feen- und ein Unlicht/Feen-Pokémon besiegt (insgesamt drei, ohne dieses Pokémon), erleidet beim Besiegen des Nutzers der Gegner Schaden in Höhe von 50% seiner max. KP."
+  },
+  "chaosOrder": {
+    "name": "Chaos-Ordnung",
+    "description": "Der Nutzer erleidet 50% weniger Schaden von Gegnern mit 600 oder höherem Basiswert. Normal-Attacken werden zu Feen- oder Unlicht-Attacken, je nachdem, welcher Typ mehr Schaden verursacht. Bei Gleichstand wird zufällig gewählt. Bei KO mit einer Feen-Attacke heilt der Nutzer 1/4 seiner KP. Bei KO mit einer Unlicht-Attacke erhält er +1 Angriff oder Initiative zufällig."
+  },
+  "chaosSorcerer": {
+    "name": "Chaos-Zauberer",
+    "description": "Der Nutzer hat die Effekte von Launisch. Die Spezialattacken des Nutzers haben eine 30%ige Chance, das Ziel zu verwirren."
+  },
+  "chaosWarrior": {
+    "name": "Chaos-Krieger",
+    "description": "Normal-Attacken des Nutzers werden zu Unlicht- oder Feen-Attacken, je nachdem welcher Typ dem Ziel mehr Schaden zufügt. Bei Gleichstand wird zufällig gewählt. Unlicht-Attacken haben eine 30%ige Chance, das Ziel einzuschläfern. Feen-Attacken haben eine 30%ige Chance, Angriff und Spezial-Angriff des Ziels zu senken."
+  },
+  "chargeChampion": {
+    "name": "Lademeister",
+    "description": "Die Ladeattacken des Nutzers verursachen in der ersten Runde 50% Schaden und erhöhen zwei zufällige Werte."
+  },
+  "clayColossus": {
+    "name": "Lehmkoloss",
+    "description": "Der Nutzer erleidet keinen Schaden durch nicht sehr effektive Attacken. Normal-Attacken des Nutzers werden zu Boden-Attacken. Boden-Attacken haben eine 30%ige Chance, die Initiative des Ziels zu senken."
+  },
+  "climateChange": {
+    "name": "Klimawandel",
+    "description": "Bei Sonne werden Normal- und Wasser-Attacken des Nutzers zu Feuer-Attacken mit 30%iger Chance, das Ziel zu verbrennen. Bei Regen werden Normal- und Feuer-Attacken zu Wasser-Attacken mit 10%iger Chance, das Ziel in einem Whirlpool einzuschließen."
+  },
+  "clusterBurst": {
+    "name": "Cluster-Explosion",
+    "description": "Normal-Attacken des Nutzers werden zu Wasser-Attacken. Bei Regen oder Starkregen haben Wasser-Attacken des Nutzers eine 50%ige Chance, zweimal zu treffen."
+  },
+  "contagion": {
+    "name": "Ansteckung",
+    "description": "Normal-Attacken des Nutzers werden zu Gift-Attacken und verursachen 1,2× Schaden. Gift-Attacken vergiften das Ziel schwer."
+  },
+  "cornfieldGuardian": {
+    "name": "Maisfeld-Wächter",
+    "description": "Während Grasfeld aktiv ist, erhält der Nutzer am Ende jeder Runde +1 Angriff und wird von Statusveränderungen geheilt."
+  },
+  "corpseParty": {
+    "name": "Leichenfeier",
+    "description": "Die Geist-Attacken des Nutzers erhalten +5 Basisstärke für jedes Geist-Pokémon im Team. Normal-Attacken werden zu Geist-Attacken."
+  },
+  "corruptElephant": {
+    "name": "Korrupter Elefant",
+    "description": "Normal-Attacken werden zu Feen- oder Unlicht-Attacken, je nachdem welcher Typ stärker gegen das Ziel ist (zufällig bei Gleichstand). Wenn der Nutzer getroffen wird, stellt er 1/8 seiner max. KP wieder her und sein Angriff steigt um eine Stufe. Trägt er ein Item, verliert er zufällig ein getragenes Item."
+  },
+  "corruptedPower": {
+    "name": "Korrumpierte Kraft",
+    "description": "Wird dieselbe Attacke aufeinanderfolgend eingesetzt, steigt ihre Stärke um jeweils 40%, aber der Nutzer erleidet 33% Rückstoßschaden."
+  },
+  "cottonTokens": {
+    "name": "Baumwoll-Marken",
+    "description": "Wenn der Nutzer einen Angriff einsteckt, der 70% oder mehr seiner max. KP verursacht, ohne ihn zu besiegen, erstellt er ein Delegator mit 25% seiner max. KP."
+  },
+  "creepySurprise": {
+    "name": "Gruselige Überraschung",
+    "description": "Hat dieses Pokémon weniger als 50% KP, paralysiert es das Ziel beim Einwechseln. Dieses Pokémon kann nach Einsatz dieser Fähigkeit nicht ausgewechselt werden."
+  },
+  "crimsonGear": {
+    "name": "Purpurrotes Getriebe",
+    "description": "Feuer- und Stahl-Attacken teilen Typenschwächen-Vorteile. Normal-Attacken werden zu Feuer-Attacken mit 1,2× Schaden. Haben mindestens 2 andere Team-Pokémon eine Gadget-Attacke, teilt auch Elektro seine Typenschwächen-Vorteile mit Feuer und Stahl."
+  },
+  "cripplingIllusions": {
+    "name": "Lähmende Illusionen",
+    "description": "Am Ende jeder Runde wird die Verteidigung oder Spezial-Verteidigung des Nutzers zufällig um eine Stufe erhöht. Erreicht die Summe beider Stufen 6 oder mehr, werden beide auf 0 zurückgesetzt und das Ziel wird verflucht."
+  },
+  "criticalPredator": {
+    "name": "Kritischer Jäger",
+    "description": "Die physischen Attacken des Nutzers verursachen 2,5× Schaden, wenn der Verteidigungswert des Ziels größer oder gleich seinem Angriffswert ist."
+  },
+  "crystalLuster": {
+    "name": "Kristallglanz",
+    "description": "Normal- und Drachen-Attacken werden zu Eis- oder Gestein-Attacken, je nachdem welcher Typ dem Ziel mehr Schaden zufügt (zufällig bei Gleichstand). Eis-Attacken haben 10% Chance einzufrieren. Gestein-Attacken haben 10% Chance, Salzkur zuzufügen."
+  },
+  "cursedFlamesV2": {
+    "name": "Verfluchte Flammen",
+    "description": "Normal-Attacken werden zu Feuer oder Geist (je nach Stärke gegen das Ziel – zufällig bei Gleichstand). Feuer-Attacken haben 30% Chance zu verbrennen, Geist-Attacken 5% Chance zu verfluchen."
+  },
+  "cursedFlamesYu": {
+    "name": "Verfluchte Flammen",
+    "description": "Normal-Attacken werden zu Feuer-Attacken. Feuer-Attacken haben eine 10%ige Chance, den Angreifer zu verbrennen und in Feuerwirbel einzuschließen."
+  },
+  "cursedPossession": {
+    "name": "Verfluchte Besessenheit",
+    "description": "Wird der Nutzer von einer sehr effektiven Attacke getroffen, wird der Angreifer verflucht."
+  },
+  "cursedPotential": {
+    "name": "Verfluchtes Potential",
+    "description": "Beim Einwechseln steigen alle Werte des Nutzers um eine Stufe, Angriff um zwei zusätzliche Stufen (insgesamt drei). Am Ende jeder Runde sinken zufällig ein bis drei Werte um eine Stufe oder der Nutzer verliert 1/4 seiner max. KP. Der Nutzer kann nicht ausgewechselt werden."
+  },
+  "cyberneticControl": {
+    "name": "Kybernetische Kontrolle",
+    "description": "Gegnerische Pokémon können weder Statusattacken noch ihre Fähigkeiten einsetzen."
+  },
+  "cyberneticDiscard": {
+    "name": "Kybernetisches Ablegen",
+    "description": "Der Nutzer wirft ein zufälliges getragenes Item ab, um seine Angriffskraft um 1,2× zu erhöhen und 25% des verursachten Schadens zu heilen."
+  },
+  "cyberneticPredator": {
+    "name": "Kybernetischer Jäger",
+    "description": "Die Attacken des Nutzers verursachen doppelten Schaden gegen das eingewechselte Ziel. Wechselt das Ziel ein, erhält der Nutzer +1 Initiative."
+  },
+  "cycloneFist": {
+    "name": "Zyklon-Faust",
+    "description": "Wenn der Nutzer den Kampf betritt, löst er Rückenwind aus. Kampf- und Flug-Attacken teilen Typenschwächen-Vorteile."
+  },
+  "cycloneWrath": {
+    "name": "Zyklonzorn",
+    "description": "Beim Einwechseln wird der Nutzer sofort aufgeladen (Wind Charged). Wird er in diesem Zustand getroffen, erleidet er 0 Schaden und der Angreifer verliert stattdessen 1/8 seiner max. KP. Beide Effekte treten nur einmal pro Kampf auf. Normal-Attacken werden Flug-Attacken mit 1,2× Schaden."
+  },
+  "cyclonicShift": {
+    "name": "Zyklonische Verschiebung",
+    "description": "Immer wenn der Nutzer angreift, werden Verteidigung und Angriff des Ziels getauscht sowie Spezial-Angriff und Spezial-Verteidigung."
+  },
+  "damBuilder": {
+    "name": "Dammbauer",
+    "description": "Wenn der Nutzer eingewechselt wird, erstellt er ein Delegator. Wird das Delegator zerstört, erhält der Nutzer Wasserring."
+  },
+  "dangerDiscard": {
+    "name": "Gefahr! Ablegen",
+    "description": "Die Statusattacken des Nutzers erhöhen zufällig einen Wert und senken zufällig einen anderen."
+  },
+  "darkSoundwave": {
+    "name": "Dunkle Schallwelle",
+    "description": "Normal- und Unlicht-Attacken werden zu Schallattacken, und Schallattacken werden zu Unlicht-Attacken, verursachen 1,1× Schaden und haben 10% Chance, das Ziel einzuschläfern, zu verwirren oder zurückschrecken zu lassen."
+  },
+  "darkworldTactics": {
+    "name": "Dunkelwelt-Taktik",
+    "description": "Am Ende der Runde, wenn der Nutzer negative Wertstufen hat, werden diese zurückgesetzt, er heilt 1/6 seiner max. KP und ein zufälliger Wert steigt um eine Stufe."
+  },
+  "debilitatingRocket": {
+    "name": "Schwächende Rakete",
+    "description": "Normal-Attacken werden zu Stahl oder Flug, je nachdem welcher Typ mehr Schaden verursacht (zufällig bei Gleichstand). Stahl- und Flug-Attacken haben 30% Chance, den Angriff des Gegners um 2 Stufen zu senken."
+  },
+  "deepRoots": {
+    "name": "Tiefe Wurzeln",
+    "description": "Am Ende jeder Runde stellt der Nutzer 1/16 seiner maximalen KP wieder her und tauscht Spezial-Angriff und Spezial-Verteidigung."
+  },
+  "deflectionHide": {
+    "name": "Ablenkungs-Haut",
+    "description": "Der Nutzer erleidet 30% weniger Schaden durch Attacken. Bei Kontaktattacken erleidet der Angreifer Schaden in Höhe von 1/16 seiner max. KP."
+  },
+  "demonicEdge": {
+    "name": "Dämonische Klinge",
+    "description": "Normal-Attacken werden zu Stahl-Attacken und verursachen 1,2× Schaden. Volltreffer verursachen 2,5× Schaden."
+  },
+  "dimensionSlash": {
+    "name": "Dimensionsschnitt",
+    "description": "Hieb-Attacken verursachen 1,2× Schaden, werden zu Unlicht-Attacken und haben 10% Chance, das Ziel zum Wechsel zu zwingen."
+  },
+  "dracoLance": {
+    "name": "Drakolanze",
+    "description": "Normal-Attacken werden zu Drachen-Attacken. Drachen-Attacken verursachen 1,5× Schaden, wenn die Verteidigung des Ziels größer ist als sein Angriff."
+  },
+  "dracoNegation": {
+    "name": "Draco-Negation",
+    "description": "30%ige Chance, die Statusattacken des Gegners aufzuheben. Wird eine Statusattacke negiert, erleidet der Gegner 1/16 Schaden und ein zufälliger Wert des Nutzers steigt."
+  },
+  "draconicFlute": {
+    "name": "Drachenflöte",
+    "description": "Normal- und Drachen-Attacken des Nutzers werden zu Schallattacken und verursachen 1,2× Schaden. Schallattacken haben 10% Chance, das Ziel einzuschläfern."
+  },
+  "dragonbaneSword": {
+    "name": "Drachentöter-Schwert",
+    "description": "Hieb-Attacken verursachen 2,5× Schaden gegen Drachen-Pokémon. Besiegt der Nutzer ein Drachen-Pokémon, erhält er +1 Initiative und stellt 1/8 seiner max. KP wieder her."
+  },
+  "dragonbaneWrath": {
+    "name": "Drachentöter-Zorn",
+    "description": "Solange diese Fähigkeit aktiv ist, verliert das Ziel am Ende jeder Runde 1/8 seiner max. KP, wenn es vom Drachen-Typ ist. Drachen-Attacken verursachen 0,5× Schaden am Nutzer."
+  },
+  "drawThree": {
+    "name": "Drei Ziehen",
+    "description": "Am Ende jeder Runde werden drei zufällige Werte jeweils unabhängig voneinander zufällig erhöht oder gesenkt."
+  },
+  "drawTime": {
+    "name": "Zieh-Zeit!",
+    "description": "Wenn der Nutzer ein Ziel besiegt, besteht eine 5%ige Chance, die Belohnungsauswahl auszulösen."
+  },
+  "dualBoneBlade": {
+    "name": "Doppel-Knochenklinge",
+    "description": "Die Attacken des Nutzers treffen zweimal, der zweite Treffer verursacht 50% Schaden. Die Attacken nutzen den niedrigeren Verteidigungswert des Gegners."
+  },
+  "earthboundCurse": {
+    "name": "Erdgebundener Fluch",
+    "description": "Bei Regen haben Wasser- und Boden-Attacken eine 30%ige Chance, das Ziel zu verbrennen und seine Initiative um eine Stufe zu senken. Normal-Attacken werden zu Wasser oder Boden, je nachdem was mehr Schaden verursacht (zufällig bei Gleichstand)."
+  },
+  "electroBoogey": {
+    "name": "Elektro-Boogie",
+    "description": "Normal-Attacken werden zu Elektro-Attacken. Elektro-Attacken haben 30% Chance, 2,5× Schaden zu verursachen, und 10% Chance zu paralysieren."
+  },
+  "electromagneticMaster": {
+    "name": "Elektromagnetischer Meister",
+    "description": "Elektro-, Gestein- und Stahl-Attacken teilen Typenvorteile. Normal-Attacken werden zum schadensreichsten dieser drei Typen (zufällig bei Gleichstand). Elektro-Attacken haben 10% Chance auf +1 Priorität. Gestein-Attacken haben 5% Chance auf Salzkur. Stahl-Attacken haben 10% Chance auf Volltreffer."
+  },
+  "elementalBypass": {
+    "name": "Elementarer Bypass",
+    "description": "Ist der Gegner vom Wasser-, Boden- oder Feuer-Typ, verursachen die Attacken des Nutzers 1,5× Schaden."
+  },
+  "elementalHavoc": {
+    "name": "Elementares Chaos",
+    "description": "Die Wasser-, Elektro- und Flug-Attacken des Ziels verursachen 0,5× Schaden. Normal-Attacken werden zum schadensreichsten dieser drei Typen (zufällig bei Gleichstand). Wasser-, Elektro- und Flug-Attacken verursachen 1,2× Schaden."
+  },
+  "emeraldGear": {
+    "name": "Smaragd-Getriebe",
+    "description": "Die Pflanzen- und Stahl-Attacken des Nutzers teilen Typenschwächen-Vorteile. Normal-Attacken werden zu Pflanzen-Attacken mit 1,2× Schaden. Haben mindestens 2 andere Team-Pokémon eine Gadget-Attacke, teilen Feuer-Attacken ebenfalls Typenschwächen-Vorteile mit Pflanze und Stahl."
+  },
+  "emeraldStance": {
+    "name": "Smaragd-Haltung",
+    "description": "Bei Angriffen verwendet der Nutzer seinen Verteidigungswert anstelle von Angriff oder Spezial-Angriff."
+  },
+  "emperorsCoin": {
+    "name": "Kaisermünze",
+    "description": "Jede Runde hat der Nutzer eine 50%ige Chance, zwei verschiedene zufällige Werte um eine Stufe zu erhöhen."
+  },
+  "eradicatorsDomain": {
+    "name": "Domäne des Vernichters",
+    "description": "Immer wenn das Ziel eine Spezialattacke einsetzt, hat es 30% Chance, eine zufällige Statusveränderung zu erhalten. Bei Statusattacken erleidet es Schaden in Höhe von 1/8 seiner max. KP."
+  },
+  "etherealLight": {
+    "name": "Ätherisches Licht",
+    "description": "Der Nutzer hat Bedroher. Beim Einwechseln entfernt er alle vom Ziel gelegten Hazards und setzt alle Wertsteigerungen des Ziels zurück."
+  },
+  "evolutionPill": {
+    "name": "Evolutionspille",
+    "description": "Wenn der Nutzer besiegt wird, erhält das nächste Pokémon +1 Stufe auf seinen höchsten Wert und stellt 33% seiner max. KP wieder her."
+  },
+  "expandingMass": {
+    "name": "Expandierende Masse",
+    "description": "Die Attacken des Nutzers erhalten +10 Basisstärke pro Runde auf dem Feld (max. +50), aber er verliert jede Runde 1/8 seiner max. KP."
+  },
+  "experienceBoost": {
+    "name": "Erfahrungsschub",
+    "description": "Am Ende jeder Runde erhöht der Nutzer zufällig Verteidigung, Angriff oder Initiative um eine Stufe."
+  },
+  "explosiveAir": {
+    "name": "Explosive Luft",
+    "description": "Normal-Attacken des Nutzers werden zu Flug-Attacken mit 1,2× Schaden. Flug-Attacken gegen Feuer-Pokémon landen immer als Volltreffer."
+  },
+  "fastFood": {
+    "name": "Schnellimbiss",
+    "description": "Die Initiative des Nutzers steigt am Ende jeder Runde. Biss-Attacken erhalten einen 1,2×-Boost."
+  },
+  "fatedRevival": {
+    "name": "Schicksalhafte Belebung",
+    "description": "Wenn der Nutzer besiegt wird, belebt er ein zufälliges besiegtes Feen-Pokémon im Team mit 50% KP wieder."
+  },
+  "finalBlade": {
+    "name": "Letzte Klinge",
+    "description": "Nicht-zurückschreckende Attacken erhalten pro besiegtem Teammitglied 10% Chance, das Ziel zurückschrecken zu lassen."
+  },
+  "fireAndIce": {
+    "name": "Feuer & Eis",
+    "description": "Normal-Attacken des Nutzers werden zu Eis oder Feuer, je nachdem welcher Typ effektiver gegen das Ziel ist (zufällig bei Gleichstand). Feuer-Attacken haben 10% Chance einzufrieren, Eis-Attacken 30% Chance zu verbrennen."
+  },
+  "fistOfFate": {
+    "name": "Faust des Schicksals",
+    "description": "Die Kontaktattacken des Nutzers ignorieren Resistenzen und Fähigkeiten. Besiegt der Nutzer ein Ziel, erleidet das nächste eingewechselte Pokémon Schaden in Höhe von 1/4 seiner max. KP."
+  },
+  "flamingOblivion": {
+    "name": "Loderndes Vergessen",
+    "description": "Normal-Attacken werden zu Feuer-Attacken. Feuer-Attacken ignorieren Typenresistenzen und haben 30% Chance, das Ziel zu verbrennen und Feuerwirbel auszulösen. Besiegt der Nutzer ein verbranntes Ziel, verliert das nächste Pokémon 25% seiner max. KP."
+  },
+  "fogBody": {
+    "name": "Nebelkörper",
+    "description": "Verfehlt der Nutzer mit einer Attacke mit 50% oder höherer Genauigkeit, steigt sein Angriff um eine Stufe und er heilt 1/8 seiner KP."
+  },
+  "fogBreath": {
+    "name": "Nebelatem",
+    "description": "Normal-Attacken werden zu Wasser-Attacken, verursachen 1,3× Schaden und haben 30% Chance, den Fluchtwert des Ziels zu senken."
+  },
+  "foolsCoin": {
+    "name": "Narrenmünze",
+    "description": "Dieses Pokémon hat eine 50%ige Chance, Wunderwache zu aktivieren."
+  },
+  "forScience": {
+    "name": "Für die Wissenschaft!",
+    "description": "Am Ende jeder Runde wird ein Wert des Nutzers zufällig um 2 Stufen erhöht und ein anderer um 1 gesenkt. Ein Wert des Ziels steigt um 1 und ein anderer sinkt um 1."
+  },
+  "forbiddenPower": {
+    "name": "Verbotene Kraft",
+    "description": "Die Basisstärke aller Attacken des Nutzers steigt um 20 für jeden aufeinanderfolgenden Angriff ohne Wechsel."
+  },
+  "forestGuardian": {
+    "name": "Waldwächter",
+    "description": "Im Grasfeld wird die Initiative des Nutzers verdoppelt und physische Attacken verursachen 1,2× Schaden. Hieb-Attacken haben eine erhöhte Volltrefferrate."
+  },
+  "forestTrickery": {
+    "name": "Waldtäuschung",
+    "description": "Normal-Attacken werden zu Pflanzen- oder Feen-Attacken, je nachdem welcher Typ stärker ist (zufällig bei Gleichstand), mit 1,2× Schaden. Pflanzen-Attacken haben 30% Chance auf Grasfeld. Feen-Attacken haben 30% Chance auf Nebelfeld."
+  },
+  "fossilBarrier": {
+    "name": "Fossil-Barriere",
+    "description": "Das Ziel kann keine Prioritätsattacken oder wertsteigernde Attacken einsetzen. Normal-Attacken werden zu Gestein-Attacken mit 1,2× Schaden."
+  },
+  "frostyAbomination": {
+    "name": "Frostige Abscheulichkeit",
+    "description": "Sinkt das HP des Nutzers unter 50%, erleidet das Ziel 1/8 seiner max. KP als Schaden. Normal-Attacken werden zu Eis-Attacken. Eis-Attacken werden zu Biss-Attacken, verursachen 1,2× Schaden und haben 10% Chance einzufrieren."
+  },
+  "galacticAwakening": {
+    "name": "Galaktisches Erwachen",
+    "description": "Sinkt das HP unter 50%, wird dieses Pokémon zum Stellar-Typ. Unter 50% HP steigt am Ende jeder Runde ein zufälliger Wert um eine Stufe."
+  },
+  "gemSiphon": {
+    "name": "Edelstein-Siphon",
+    "description": "Feen-Attacken heilen den Nutzer um 50% des verursachten Schadens. Bei vollem HP erstellt er ein Delegator, das 25% seiner KP kostet."
+  },
+  "gemstoneTrample": {
+    "name": "Edelstein-Stampfer",
+    "description": "Normal-Attacken werden zu Boden-Attacken, ignorieren Verteidigungssteigerungen und verursachen 20% mehr Schaden."
+  },
+  "genieMagic": {
+    "name": "Dschinni-Magie",
+    "description": "Normal-Attacken werden zu Feuer oder Unlicht, je nachdem welcher Typ effektiver gegen das Ziel ist (zufällig bei Gleichstand). Feuer- und Unlicht-Attacken haben 30% Chance, in der nächsten Runde einen Wunsch-Effekt auszulösen."
+  },
+  "giantImpact": {
+    "name": "Rieseneinschlag",
+    "description": "Feuer-, Pflanzen-, Wasser- und Elektro-Attacken werden zu Normal-Attacken. Normal-Attacken verursachen 1,3× Schaden und haben 30% Chance, das Ziel zu paralysieren oder zurückschrecken zu lassen."
+  },
+  "goldenClutch": {
+    "name": "Goldener Griff",
+    "description": "Normal- und Kampf-Attacken werden zu Hieb-Attacken. Hieb-Attacken ignorieren Resistenzen. Hieb-Attacken ohne Zurückschrecken erhalten +1 Priorität und +1 Volltreffer-Stufe."
+  },
+  "goldenGaze": {
+    "name": "Goldener Blick",
+    "description": "Normal-Attacken des Nutzers werden zu Psycho-Attacken mit 1,2× Schaden. Psycho-Attacken haben 30% Chance, die letzte Attacke des Ziels zu deaktivieren. Bei deaktivierter Attacke verursachen Psycho-Attacken 1,3× Schaden."
+  },
+  "goldenGear": {
+    "name": "Goldenes Getriebe",
+    "description": "Die Elektro- und Stahl-Attacken des Nutzers teilen Typenschwächen-Vorteile. Normal-Attacken werden zu Elektro-Attacken mit 1,2× Schaden. Haben mindestens 2 andere Team-Pokémon eine Gadget-Attacke, teilen Pflanzen-Attacken ebenfalls Typenschwächen-Vorteile mit Elektro und Stahl."
+  },
+  "goldenRadiance": {
+    "name": "Goldene Ausstrahlung",
+    "description": "Wenn die KP des Nutzers unter 10% fallen, steigen alle Werte um 1 Stufe."
+  },
+  "gravityAxe": {
+    "name": "Gravitationsaxt",
+    "description": "Der Nutzer fängt alle gegnerischen Pokémon, hebt Flug-Typ-Immunitäten auf und hat die Effekte von Launisch."
+  },
+  "hammerKnockback": {
+    "name": "Hammer-Rückstoß",
+    "description": "Die Kontaktattacken des Nutzers haben eine 30%ige Chance, das Ziel zum Wechsel zu zwingen."
+  },
+  "handReset": {
+    "name": "Hand-Reset",
+    "description": "Sinkt das HP des Nutzers unter 50%, heilt er seine und die Statusveränderungen seiner Verbündeten und setzt alle Wertänderungen beider Pokémon zurück."
+  },
+  "harpieBoost": {
+    "name": "Harpyien-Boost",
+    "description": "Die Attacken des Nutzers erhalten +15 Basisstärke für jedes andere nicht besiegte Flug-Pokémon im Team."
+  },
+  "heavenPiercer": {
+    "name": "Himmelsdurchbohrer",
+    "description": "Die Stahl-Attacken des Nutzers verursachen 2× Schaden gegen Boden- und Gestein-Pokémon. Normal-Attacken werden zu Stahl-Attacken mit 1,2× Schaden."
+  },
+  "heavensJudgment": {
+    "name": "Himmelsgericht",
+    "description": "Senkt den Angriff des Gegners beim Einwechseln und bei jedem Gegnerwechsel. Attacken erhalten +10 Basisstärke pro Team-Pokémon mit einer Diener-Attacke."
+  },
+  "heavyweightHopper": {
+    "name": "Schwergewichts-Springer",
+    "description": "Normal-Attacken werden zu Flug- oder Kampf-Attacken, je nachdem welcher Typ stärker gegen das Ziel ist (zufällig bei Gleichstand). Flug-Attacken haben 30% Chance auf Zurückschrecken. Kampf-Attacken haben 5% Chance auf Volltreffer."
+  },
+  "hydroClone": {
+    "name": "Hydro-Klon",
+    "description": "Besiegt der Nutzer das Ziel, erstellt er ein Delegator mit 25% seiner max. KP."
+  },
+  "hydroSurge": {
+    "name": "Hydro-Woge",
+    "description": "Alle Attacken des Nutzers sind sehr effektiv gegen Feuer-Pokémon."
+  },
+  "iceAge": {
+    "name": "Eiszeit",
+    "description": "Der Nutzer beschwört Schnee oder Hagel. Am Ende jeder Runde, bei aktivem Schnee/Hagel, senkt er zufällig die Initiative, den höchsten Verteidigungswert oder den höchsten Angriffswert des Ziels."
+  },
+  "illusionWeaver": {
+    "name": "Illusionsweber",
+    "description": "Immer wenn das Ziel eine Statusattacke einsetzt, hat der Anwender eine 10%ige Chance, einen Delegator zu erschaffen, der 25% seiner KP verbraucht."
+  },
+  "illusionist": {
+    "name": "Illusionist",
+    "description": "Der Anwender hat eine 30%ige Chance, physischen Attacken auszuweichen."
+  },
+  "immortalSlime": {
+    "name": "Unsterblicher Schleim",
+    "description": "Der Anwender ist immun gegen Statusveränderungen und Volltreffer. Physischer Schaden, der dem Anwender zugefügt wird, wird um 50% reduziert."
+  },
+  "infinityStones": {
+    "name": "Unendlichkeitssteine",
+    "description": "Normal-Attacken werden zu Gestein-Attacken. Gestein-Attacken haben eine 10%ige Chance auf einen Volltreffer, eine 10%ige Chance, eine zufällige Statusveränderung zuzufügen, und heilen den Anwender um 25% des verursachten Schadens."
+  },
+  "ironGiant": {
+    "name": "Eisenriese",
+    "description": "Stahl- und Kampf-Attacken verursachen 1,3× Schaden und haben eine 30%ige Chance, die Verteidigung des Ziels um eine Stufe zu senken."
+  },
+  "ironJaws": {
+    "name": "Eisenkiefer",
+    "description": "Biss-Attacken heilen den Anwender um 50% des verursachten Schadens und teilen die Typvorteile von Stahl."
+  },
+  "junkToTreasure": {
+    "name": "Schrott zu Schatz",
+    "description": "Attacken mit 45 oder weniger Basisstärke verursachen 3× so viel Schaden."
+  },
+  "jurassicJaws": {
+    "name": "Urzeitkiefer",
+    "description": "Normal-Attacken werden zu Boden-Attacken. Boden-Attacken werden zu Biss-Attacken. Biss-Attacken treffen zweimal, und der zweite Treffer verursacht 80% Schaden."
+  },
+  "kingsRoar": {
+    "name": "Königsgebrüll",
+    "description": "Wenn der Anwender normal eingewechselt wird, senkt er Angriff und Initiative des Ziels um eine Stufe. Wird er eingewechselt, nachdem ein Teammitglied besiegt wurde, senkt er alle Statuswerte des Ziels um eine Stufe."
+  },
+  "laserBusterCannon": {
+    "name": "Laserbusterkanone",
+    "description": "Puls- und Aura-Attacken erhalten +1 Priorität und verursachen 1,3× Schaden."
+  },
+  "lastSamufrog": {
+    "name": "Letzter Samufrosch",
+    "description": "Normal-Attacken werden zu Schneide-Attacken mit hoher Volltrefferrate. Hat den Effekt von Robustheit."
+  },
+  "leviathansDomain": {
+    "name": "Leviathans Domäne",
+    "description": "Wasser- und Drachen-Attacken beschwören beim Treffen immer Regen. Für jede aufeinanderfolgende Runde mit Regen erhalten Wasser- und Drachen-Attacken dieses Pokémon +10 Basisstärke, bis maximal +50."
+  },
+  "leviathansWrath": {
+    "name": "Leviathans Zorn",
+    "description": "Wasser-Attacken landen während Regen immer Volltreffer. Nachdem eine Attacke dieses Pokémon einen Volltreffer landet, wird das aktuelle Wetter aufgehoben."
+  },
+  "lifeExchange": {
+    "name": "Lebenstausch",
+    "description": "Einmal pro Kampf belebt dieses Pokémon nach dem Besiegen eines gegnerischen Pokémon ein zufälliges besiegtes Teammitglied mit 50% seiner maximalen KP wieder."
+  },
+  "looneyDragon": {
+    "name": "Verrückter Drache",
+    "description": "Drachen-Attacken haben eine 30%ige Chance, das Ziel zu verwirren. Feen-Attacken haben eine 30%ige Chance, einen zufälligen Statuswert des Ziels zu senken. Dieses Pokémon erhält +1 Fluchtfaktor beim Einwechseln."
+  },
+  "loversCoin": {
+    "name": "Münze der Liebenden",
+    "description": "Attacken haben eine 50%ige Chance, gegnerische Pokémon mit Geschlecht zu betören. Wenn ein betörtes Ziel angreift, besteht eine 50%ige Chance, die Hälfte des erhaltenen Schadens zurückzugeben."
+  },
+  "lusterGenesis": {
+    "name": "Luster-Genese",
+    "description": "Hat das Team ein besiegtes Unlicht-Pokémon, treffen Attacken zweimal, wobei der zweite Treffer 50% Schaden verursacht. Hat das Team ein besiegtes Feen-Pokémon, verursachen Attacken mit Basisstärke 60 das 1,5-fache. Hat das Team ein besiegtes Unlicht-, ein besiegtes Feen- und ein besiegtes Unlicht/Feen-Pokémon (drei insgesamt), haben Attacken eine 30%ige Chance, eine zufällige Statusveränderung zuzufügen. Jedes besiegte Pokémon wird höchstens einmal gezählt."
+  },
+  "machSpeed": {
+    "name": "Mach-Geschwindigkeit",
+    "description": "Während der ersten Runde im Kampf werden Initiative und Angriff verdoppelt."
+  },
+  "magicalInheritance": {
+    "name": "Magisches Erbe",
+    "description": "Der Anwender erhält einen 10%igen Spezialangriff-Boost pro Teammitglied, das eine Schwarzmagie-Attacke kennt. Feen-Attacken heilen den Anwender um 10% des verursachten Schadens, multipliziert mit der Anzahl besiegter Feen-Pokémon im Team."
+  },
+  "magiciansCoin": {
+    "name": "Münze des Magiers",
+    "description": "Wenn ein Pokémon eine Statusattacke einsetzt, hat dieses Pokémon eine 50%ige Chance, seinen Spezialangriff zu erhöhen oder 1/8 seiner maximalen KP wiederherzustellen."
+  },
+  "magnetizeBeta": {
+    "name": "Magnetisierung Beta",
+    "description": "Elektro-Attacken heilen den Anwender um 25% des verursachten Schadens. Stahl-Attacken verursachen 1,2× Schaden. Wenn mindestens zwei andere Teammitglieder eine Magnet-Attacke kennen, erhält dieses Pokémon beim Auswechseln +1 Angriff und +1 Spezialangriff."
+  },
+  "maskOfRemnants": {
+    "name": "Maske der Überreste",
+    "description": "Wenn dieses Pokémon besiegt wird, fängt es den Angreifer und belegt ihn mit einem Fluch."
+  },
+  "maskedGod": {
+    "name": "Maskierter Gott",
+    "description": "Basierend auf Masken-Attacken im Team erhält der Anwender Effekte. Ab 1: Normal-Attacken werden Unlicht, Geist oder Psycho (stärkster Typ, zufällig bei Gleichstand). Ab 2: Unlicht-, Geist- und Psycho-Attacken heilen um 25% des Schadens. Ab 3: Der Anwender nimmt 25% weniger Schaden. Ab 5: Unlicht hat 10% Schlafchance, Geist hat 5% Fluch-Chance, Psycho hat 10% Chance Vert./Spez.Vert. um 1 Stufe zu senken. Ab 10: Unlicht-, Geist- und Psycho-Attacken teilen ihre Typvorteile."
+  },
+  "masterOfIllusions": {
+    "name": "Meister der Illusionen",
+    "description": "Am Ende jeder Runde hat der Anwender eine 20%ige Chance, einen Delegator zu erschaffen."
+  },
+  "masterOfTheDarkArts": {
+    "name": "Meister der dunklen Künste",
+    "description": "Unlicht-Attacken haben eine 30%ige Chance, Abnutzungsschaden in Höhe von 1/8 der max. KP des Ziels zuzufügen (Wickel). Normal-Attacken werden Unlicht-Typ, wenn dies sehr effektiv gegen das Ziel wäre."
+  },
+  "mastersBlade": {
+    "name": "Meisterklinge",
+    "description": "Alle Normal-Attacken werden Schneide-Attacken. Schneide-Attacken verursachen 1,5× Schaden und haben +1 Volltrefferrate."
+  },
+  "maxDestruction": {
+    "name": "MAX Zerstörung",
+    "description": "Der Anwender wird sofort von Statusveränderungen geheilt. Die Attacken des Anwenders treffen zweimal; der zweite Treffer verursacht 50% Schaden. Hat das Ziel jedoch höhere Verteidigung als Angriff, verursacht der zweite Treffer vollen Schaden."
+  },
+  "meteorShower": {
+    "name": "Meteorschauer",
+    "description": "Normal-, Feuer- und Gestein-Attacken treffen dreimal mit 40% Basisstärke, wobei jeder Treffer zufällig Feuer- oder Gestein-Typ wird."
+  },
+  "millEngine": {
+    "name": "Mühlenmotor",
+    "description": "Am Ende jeder Runde verbraucht das Pokémon, wenn es eine Beere trägt, eine zufällige Beere und erhöht seinen Angriff um eine Stufe. Ist sein Angriff am Ende der Runde auf +3 Stufen, wird der Angriffswert auf 0 zurückgesetzt und es stellt 30% seiner maximalen KP wieder her."
+  },
+  "millennialWeapon": {
+    "name": "Jahrtausendwaffe",
+    "description": "Die Verteidigung des Anwenders wird mit 1,5 multipliziert. Normal-Attacken werden Feen- oder Gestein-Typ, je nachdem was mehr Schaden verursacht (zufällig bei Gleichstand). Feen- und Gestein-Attacken nutzen die Verteidigung des Anwenders statt Angriff oder Spezialangriff."
+  },
+  "millenniumAbsorption": {
+    "name": "Millenniumsabsorption",
+    "description": "Wird der Anwender von einer Kontaktattacke getroffen, verliert der Angreifer KP in Höhe von 50% des erlittenen Schadens. Besiegt der Anwender das Ziel, stellt er 25% seiner KP wieder her und kopiert die Fähigkeit des Ziels als Passiv, welche die bestehende Passivfähigkeit für den Kampf überschreibt."
+  },
+  "millenniumStalker": {
+    "name": "Millenniumsjäger",
+    "description": "Wenn der Anwender das Ziel besiegt, werden sein Angriff und ein zufälliger Statuswert um eine Stufe erhöht, und seine Statusveränderung wird geheilt."
+  },
+  "mindTrance": {
+    "name": "Geistestrance",
+    "description": "Wenn das Ziel eine Statusveränderung oder einen flüchtigen Zustand hat (z.B. Verwirrung oder Betörung), erhalten die Attacken des Anwenders Priorität, und Attacken die normalerweise kein Zurückschrecken verursachen, haben eine 10%ige Chance das Ziel zurückschrecken zu lassen."
+  },
+  "mindWarp": {
+    "name": "Gedankenverzerrung",
+    "description": "Normal-Attacken werden Unlicht- oder Psycho-Typ, je nachdem was effektiver ist (zufällig bei Gleichstand). Psycho-Attacken haben eine 30%ige Chance das Ziel zu verwirren, und Unlicht-Attacken haben eine 30%ige Chance das Ziel zu paralysieren."
+  },
+  "mindlessRampage": {
+    "name": "Blindwütige Randale",
+    "description": "Die Effekte von Rohe Gewalt gelten. Wenn der Anwender dem Ziel Schaden zufügt, wird seine Initiative oder sein Angriff um eine Stufe erhöht. Der Anwender kann jedoch keine Statusattacken einsetzen. Am Ende jeder Runde erleidet der Anwender Schaden in Höhe von 1/8 seiner max. KP."
+  },
+  "mirrorKing": {
+    "name": "Spiegelkönig",
+    "description": "Beim Einwechseln kopiert der Anwender die Fähigkeit des Ziels. Beim Auswechseln stellt er 33% seiner KP wieder her."
+  },
+  "moltenShackles": {
+    "name": "Geschmolzene Fesseln",
+    "description": "Der Anwender fängt das Ziel und verursacht am Ende jeder Runde Schaden in Höhe von 1/8 seiner maximalen KP."
+  },
+  "moonlitMischief": {
+    "name": "Mondlichtunfug",
+    "description": "In Nacht-Biomen werden beim Einwechseln alle Statuswerte dieses Pokémon um eine Stufe erhöht."
+  },
+  "moonsCoin": {
+    "name": "Münze des Mondes",
+    "description": "Beim Einwechseln erzeugt der Anwender Erdanziehung für 5 Runden. Während Erdanziehung aktiv ist, haben Unlicht-Attacken eine 50%ige Chance, das Ziel einzuschläfern, und Psycho-Attacken eine 50%ige Chance, einen Delegator zu erschaffen."
+  },
+  "multiply": {
+    "name": "Vermehren",
+    "description": "Normal-Attacken des Anwenders haben eine 30%ige Chance, einen Delegator zu erschaffen und zwei zufällige Statuswerte um eine Stufe zu erhöhen."
+  },
+  "necroDrain": {
+    "name": "Nekro-Entzug",
+    "description": "Wenn der Anwender das Ziel besiegt, stellt ein zufälliges nicht besiegtes Teammitglied 25% seiner KP wieder her."
+  },
+  "necroSurge": {
+    "name": "Nekro-Welle",
+    "description": "Die Attacken des Anwenders erhalten +5 Basisstärke für jedes besiegte Teammitglied."
+  },
+  "nightStalker": {
+    "name": "Nachtjäger",
+    "description": "In Nacht-Biomen erhalten die Attacken des Anwenders +1 Priorität."
+  },
+  "ojamaLockdown": {
+    "name": "Ojama-Abriegelung",
+    "description": "Verhindert, dass der Gegner wechseln oder Statusattacken einsetzen kann. Haben mindestens drei Teammitglieder Ojama-Attacken, wird ein Statuswert des Ziels am Ende jeder Runde um 2 Stufen gesenkt."
+  },
+  "ojamaMagic": {
+    "name": "Ojama-Magie",
+    "description": "Haben mindestens drei Teammitglieder Ojama-Attacken, haben Normal- und Ojama-Attacken dieses Pokémon eine 30%ige Chance, das Ziel gleichzeitig zu verhöhnen, zu quälen und zu verwirren."
+  },
+  "ojamaSolidarity": {
+    "name": "Ojama-Solidarität",
+    "description": "Beim Einwechseln wird eine Attacke des Ziels deaktiviert. Haben mindestens 3 Teammitglieder Ojama-Attacken, erhalten Normal- und Ojama-Attacken dieses Pokémon Priorität und +1 Volltrefferrate."
+  },
+  "originalSkyKing": {
+    "name": "Ursprünglicher Himmelskönig",
+    "description": "Normal-Attacken werden Biss-Attacken. Biss- und Schneide-Attacken werden Stahl- oder Flug-Typ (effektiver gegen das Ziel, zufällig bei Gleichstand) und verursachen 1,2× Schaden. Der Anwender heilt 20% des verursachten Schadens."
+  },
+  "parallelWorld": {
+    "name": "Parallelwelt",
+    "description": "Beim Einwechseln tauscht der Anwender die Angriff- und Spezialangriff-Werte des Ziels."
+  },
+  "phantomArmor": {
+    "name": "Phantomrüstung",
+    "description": "Das Pokémon ist immun gegen Kontaktattacken."
+  },
+  "phantomArsenal": {
+    "name": "Phantomarsenal",
+    "description": "Unlicht-Attacken haben eine 10%ige Chance, Stachler auf der gegnerischen Seite zu setzen. Gestein-Attacken haben eine 10%ige Chance, Tarnsteine zu setzen. Geist-Attacken haben eine 5%ige Chance, Fluch zuzufügen."
+  },
+  "phantomBeast": {
+    "name": "Phantombestie",
+    "description": "Die Genauigkeit des Anwenders steigt am Ende jeder Runde um 1 Stufe. Solange der Anwender mehr als 1 Stufe Fluchtfaktor hat, erhalten seine Attacken +1 Priorität. Wenn das Ziel eine Attacke verfehlt und der Anwender mehr als 1 Stufe Fluchtfaktor hat, wird sein Fluchtfaktor zurückgesetzt und ein Statuswert um 1 Stufe erhöht."
+  },
+  "piercingSpiral": {
+    "name": "Durchbohrende Spirale",
+    "description": "Normal-Attacken werden Drachen- oder Kampf-Typ, je nachdem was mehr Schaden verursacht (zufällig bei Gleichstand). Drachen- und Kampf-Attacken haben eine 30%ige Chance, die Verteidigung des Ziels zu senken."
+  },
+  "plagueBreathe": {
+    "name": "Pesthauch",
+    "description": "Wenn dieses Pokémon mit weniger als 70% KP ausgewechselt wird, vergiftet es das Ziel, mit einer 30%igen Chance auf schwere Vergiftung."
+  },
+  "plasmasDomain": {
+    "name": "Plasmas Domäne",
+    "description": "Negiert alle Fähigkeiten und Attackeneffekte der gegnerischen Pokémon. Beim Einwechseln erhöht dieses Pokémon bis zu zwei zufällige Statuswerte, die niedriger sind als die des gegnerischen Pokémon."
+  },
+  "polarizeAlpha": {
+    "name": "Polarisierung Alpha",
+    "description": "Elektro-Attacken werden Gestein-Typ mit 1,2× Stärke. Haben mindestens zwei andere Teammitglieder eine Magnet-Attacke, erhält dieses Pokémon beim Auswechseln +1 Verteidigung und +1 Spez.Vert."
+  },
+  "portalBeast": {
+    "name": "Portalbestie",
+    "description": "Immer wenn ein gegnerisches Pokémon eingewechselt wird, erhält dieses Pokémon +1 auf drei zufällige Statuswerte. Beim Auswechseln stellt es 25% seiner maximalen KP wieder her."
+  },
+  "powderKing": {
+    "name": "Pulverkönig",
+    "description": "Normal-Attacken werden Käfer- oder Gift-Typ (stärker gegen das Ziel, zufällig bei Gleichstand) mit 1,2× Schaden. Käfer- und Gift-Attacken haben bei jedem Treffer eine 50%ige Chance, zufällig Vergiftung, Schlaf, Verbrennung oder Paralyse zuzufügen."
+  },
+  "prideOfWeak": {
+    "name": "Stolz der Schwachen",
+    "description": "Das Besiegen eines Gegners gewährt +1 Initiative und +1 auf den höheren Angriffswert. Attacken mit 60 Basisstärke oder weniger verursachen 1,5× Schaden."
+  },
+  "pyroBullet": {
+    "name": "Pyro-Kugel",
+    "description": "Normal-Attacken werden Feuer-Typ. Feuer-Attacken erhalten +1 Priorität."
+  },
+  "quickDrawV2": {
+    "name": "Schnellschuss",
+    "description": "Kugel-, Aura-, Ball- und Puls-Attacken des Anwenders erhalten +1 Priorität und haben 1,2× Stärke."
+  },
+  "quickHarvest": {
+    "name": "Schnellernte",
+    "description": "Am Ende jeder Runde besteht eine 30%ige Chance, eine verbrauchte Beere wiederherzustellen. Am Ende des Kampfes besteht eine 50%ige Chance, eine zufällige Beere zu erzeugen (Mitnahme für Beeren)."
+  },
+  "radiatingGamma": {
+    "name": "Strahlende Gamma",
+    "description": "Normal-Attacken werden Stahl-Typ mit 1,2× Schaden. Die Attacken des Anwenders nutzen seinen Verteidigungswert zur Schadensberechnung. Haben mindestens zwei andere Teammitglieder eine Magnet-Attacke, verliert das Ziel am Ende jeder Runde 1/8 seiner KP."
+  },
+  "ragingAxe": {
+    "name": "Tobende Axt",
+    "description": "Schneide-Attacken verursachen 1,5× Schaden, werden Kampf-Typ, ignorieren Verteidigungserhöhungen und haben eine 30%ige Chance, das Ziel zurückschrecken zu lassen."
+  },
+  "rapidFire": {
+    "name": "Schnellfeuer",
+    "description": "Normal-Attacken werden Stahl- oder Feuer-Typ (je nachdem was mehr Schaden verursacht, zufällig bei Gleichstand) mit 1,2× Schaden. Stahl- und Feuer-Attacken haben eine 30%ige Chance auf +1 Priorität."
+  },
+  "reboundingHurricane": {
+    "name": "Rückprallender Hurrikan",
+    "description": "Beim Einwechseln steigt der Fluchtfaktor um eine Stufe. Wenn der Anwender einem Angriff ausweicht, erhält er Windladung. Das Einsetzen einer Normal- oder Flug-Attacke mit aktiver Windladung zwingt das Ziel zum Wechsel und verbraucht die Windladung."
+  },
+  "rocketImpact": {
+    "name": "Raketeneinschlag",
+    "description": "Normal-Attacken werden Feuer-Typ. Feuer-Attacken erhalten +1 Volltrefferrate, und Volltreffer verbrennen das Ziel."
+  },
+  "roseGarden": {
+    "name": "Rosengarten",
+    "description": "Entfernt beim Einwechseln Hazards und Screens des Gegners. Setzt beim Einwechseln Grasfeld. Pflanzen-Attacken haben eine 30%ige Chance, Angriff und Spez.Angr. des Gegners um 1 Stufe zu senken."
+  },
+  "roundTrip": {
+    "name": "Rundreise",
+    "description": "Beim Auswechseln stellt der Anwender 20% seiner maximalen KP wieder her, und das eingewechselte Pokémon stellt ebenfalls 20% seiner maximalen KP wieder her."
+  },
+  "ruin": {
+    "name": "Verfall",
+    "description": "Normal-Attacken werden Unlicht-Typ. Unlicht-Attacken haben eine 30%ige Chance, die Statuswertänderungen des Ziels umzukehren, und eine 10%ige Chance auf einen Volltreffer."
+  },
+  "sAndMummy": {
+    "name": "S&Mumie",
+    "description": "Kontaktattacken haben eine 30%ige Chance, Wickel auf das Ziel auszulösen. Der Anwender stellt jede Runde 1/16 seiner maximalen KP wieder her."
+  },
+  "scalesOfJustice": {
+    "name": "Waage der Gerechtigkeit",
+    "description": "Attacken verursachen 2,5× Schaden gegen Unlicht-Pokémon."
+  },
+  "scorchedEarth": {
+    "name": "Verbrannte Erde",
+    "description": "Wenn ein Terrain aktiv ist, wird Angriffsschaden um 1,5× erhöht. Hat eine 30%ige Chance, das Terrain zu zerstören, die Initiative um eine Stufe zu erhöhen und das Ziel zu verbrennen."
+  },
+  "scorchingBurster": {
+    "name": "Versengende Explosion",
+    "description": "Normal-Attacken werden Feuer-Typ. Feuer-Attacken haben eine 30%ige Chance zu verbrennen und +1 Volltrefferrate. Wasser- und Eis-Attacken wirken nicht gegen den Anwender."
+  },
+  "scorchingJustice": {
+    "name": "Versengende Gerechtigkeit",
+    "description": "Die Angriffsattacken des Anwenders haben eine 30%ige Chance, das Ziel zu verbrennen. Verbrannte Ziele erleiden 1,5× Schaden."
+  },
+  "shadowFlame": {
+    "name": "Schattenflamme",
+    "description": "Feuer- und Unlicht-Attacken des Anwenders teilen ihre Typvorteile. Normal-Attacken werden Unlicht-Typ mit 1,2× Schaden."
+  },
+  "shadowMartyr": {
+    "name": "Schattenmartyrer",
+    "description": "Wenn der Anwender besiegt wird, stellt das nachfolgende Pokémon 33% seiner maximalen KP wieder her und erhält +1 Stufe auf seinen höchsten Statuswert und einen zufälligen Statuswert."
+  },
+  "shadowReach": {
+    "name": "Schattenergriff",
+    "description": "Die Bindungsattacken des Anwenders verursachen am Ende jeder Runde Schaden in Höhe von 1/6 der maximalen KP des Ziels."
+  },
+  "silentAssassin": {
+    "name": "Stiller Assassine",
+    "description": "Am Ende jeder Runde steigt die Genauigkeit des Anwenders um 1 Stufe, maximal 3 Stufen. Bei 3 Stufen wird der Fluchtfaktor auf 0 zurückgesetzt und alle Statuswerte steigen um 1 Stufe."
+  },
+  "silentBlade": {
+    "name": "Stille Klinge",
+    "description": "Beim Angriff wird der Initiative-Wert des Gegners zur Berechnung der Verteidigung herangezogen."
+  },
+  "slimeAbsorb": {
+    "name": "Schleimabsorption",
+    "description": "Wenn der Anwender das Ziel besiegt, stellt er 1/4 seiner maximalen KP wieder her und erhöht einen zufälligen Statuswert."
+  },
+  "smash22": {
+    "name": "Zerschmetterung 22",
+    "description": "Normal-Attacken werden Kampf- oder Geist-Typ (mehr Schaden, zufällig bei Gleichstand). Kampf-Attacken haben eine 10%ige Chance, Verteidigung und Spez.Vert. des Ziels zu tauschen. Geist-Attacken haben eine 10%ige Chance, Angriff und Spez.Angr. des Ziels zu tauschen."
+  },
+  "soulTax": {
+    "name": "Seelensteuer",
+    "description": "Am Ende jeder Runde verliert das gegnerische Pokémon 1/16 seiner maximalen KP."
+  },
+  "spectralMist": {
+    "name": "Spektraler Nebel",
+    "description": "Geist-Attacken haben eine 30%ige Chance, das Ziel zu verfluchen. Am Ende jeder Runde hat der Anwender eine 25%ige Chance, 1/8 seiner maximalen KP wiederherzustellen."
+  },
+  "spellDrain": {
+    "name": "Zauberentzug",
+    "description": "Der Anwender hat eine 30%ige Chance, Statusattacken des Ziels zu negieren. Wird eine Statusattacke negiert, stellt der Anwender 15% seiner max. KP wieder her und erhöht einen zufälligen Statuswert um eine Stufe."
+  },
+  "spellbreakerBlade": {
+    "name": "Bannbrecher-Klinge",
+    "description": "Beim Einwechseln erhält der Anwender eine zufällige Statusveränderung (außer Schlaf und Einfrieren). Greift er unter einer Statusveränderung an, landen seine Attacken immer als Volltreffer und die Statusveränderung wird geheilt."
+  },
+  "spellcastersFluff": {
+    "name": "Zauber-Flausch",
+    "description": "Der Anwender nimmt bei jedem Einwechseln keinen Schaden durch die erste Attacke."
+  },
+  "spikedShell": {
+    "name": "Stachelschale",
+    "description": "Wird der Anwender von einer Kontaktattacke getroffen, erleidet der Angreifer Schaden in Höhe von 1/6 seiner max. KP. Der Anwender nimmt 50% weniger Schaden durch physische Attacken."
+  },
+  "theGrimMiller": {
+    "name": "Der Düstere Müller",
+    "description": "Geist-Attacken entziehen dem zuletzt eingesetzten Angriff des Ziels 2 AP. Normal-Attacken werden Geist-Typ."
+  },
+  "theUndeadKing": {
+    "name": "Der Untote König",
+    "description": "Wenn dieses Pokémon besiegt wird, opfert es ein zufälliges Teammitglied mit einer Diener-Attacke (falls vorhanden), stellt 50% seiner KP wieder her und erhöht zwei zufällige Statuswerte."
+  },
+  "thousandEyesLock": {
+    "name": "Tausend-Augen-Sperre",
+    "description": "Solange diese Fähigkeit aktiv ist, kann das Ziel nicht wechseln und nicht dieselbe Attacke zweimal hintereinander einsetzen. Jede Runde wird ein zufälliger Statuswert des Ziels um 1 Stufe gesenkt und derselbe Wert beim Anwender um 1 Stufe erhöht."
+  },
+  "thousandSouls": {
+    "name": "Tausend Seelen",
+    "description": "Beim Einwechseln kopiert dieses Pokémon die Fähigkeit eines zufälligen besiegten Teammitglieds und stellt 1/8 seiner KP wieder her."
+  },
+  "thousandYears": {
+    "name": "Tausend Jahre",
+    "description": "Jede Runde wird ein zufälliger Statuswert des Ziels um eine Stufe gesenkt. Haben mindestens zwei andere Teammitglieder eine Zeit-Attacke, werden zwei zufällige Statuswerte um eine Stufe gesenkt."
+  },
+  "threeHeadedBite": {
+    "name": "Dreiköpfiger Biss",
+    "description": "Normal-Attacken werden Unlicht- oder Feuer-Typ (stärker gegen das Ziel, zufällig bei Gleichstand). Unlicht- und Feuer-Attacken werden Biss-Attacken und treffen dreimal mit 40% Stärke."
+  },
+  "timeRoulette": {
+    "name": "Zeitroulette!",
+    "description": "Beim Angriff besteht eine 50%ige Chance, dass der Schaden verdreifacht wird. Andernfalls erleidet der Anwender Rückstoß in Höhe von 50% des verursachten Schadens."
+  },
+  "timeWizardsBlessing": {
+    "name": "Segen des Zeitmagiers",
+    "description": "Am Ende jeder Runde wird ein zufälliger Statuswert erhöht. Haben mindestens zwei andere Teammitglieder eine Zeit-Attacke, stellt der Anwender auch 1/8 seiner max. KP wieder her und erhöht einen weiteren Statuswert."
+  },
+  "timelineMagic": {
+    "name": "Zeitlinien-Magie",
+    "description": "Beim Empfangen von Schaden nutzt der Anwender den höheren Verteidigungswert. Beim Verursachen von Schaden nutzt das Ziel den niedrigeren Verteidigungswert."
+  },
+  "tombRaider": {
+    "name": "Grabräuber",
+    "description": "Normal-Attacken werden Unlicht-Typ mit 1,2× Schaden. Unlicht-Attacken haben eine 30%ige Chance, das Item des Ziels zu stehlen. Mit einem Item erhält der Anwender beim Einwechseln +1 Initiative und seine Unlicht-Attacken verursachen 1,3× Schaden."
+  },
+  "toonChaos": {
+    "name": "Toon-Chaos",
+    "description": "Normal-Attacken werden Feen- oder Unlicht-Typ (stärker, zufällig bei Gleichstand). Feen- und Unlicht-Attacken verursachen 1,2× Schaden und haben eine 30%ige Chance, das Ziel zum Wechsel zu zwingen."
+  },
+  "toonElectricArchfiend": {
+    "name": "Toon-Elektro-Erzfeind",
+    "description": "Normal-Attacken werden Elektro- oder Unlicht-Typ (stärker, zufällig bei Gleichstand). Elektro-Attacken haben eine 30%ige Chance auf +1 Priorität. Unlicht-Attacken haben eine 10%ige Chance auf einen Volltreffer."
+  },
+  "toonGunslinger": {
+    "name": "Toon-Revolverheld",
+    "description": "Normal-, Drachen-, Unlicht- und Feen-Attacken des Anwenders haben eine 50%ige Chance auf +1 Priorität und eine 10%ige Chance auf einen Volltreffer."
+  },
+  "toonIllusion": {
+    "name": "Toon-Illusion",
+    "description": "Wenn das Ziel einen Angriff verfehlt, hat der Anwender eine 30%ige Chance, einen Delegator mit 25% seiner max. KP zu erschaffen. Beim Einwechseln steigt der Fluchtfaktor um eine Stufe."
+  },
+  "toonPlotArmor": {
+    "name": "Toon-Plotrüstung",
+    "description": "Normal-Attacken werden Wasser-Typ. Wasser-Attacken haben eine 10%ige Chance, einen Schutz-Effekt auszulösen."
+  },
+  "toonPounding": {
+    "name": "Toon-Hämmern",
+    "description": "Statt der Verteidigung des Ziels nutzen Stahl- und Feen-Attacken den niedrigsten Statuswert des Ziels zur Schadensberechnung."
+  },
+  "toonSynergy": {
+    "name": "Toon-Synergie",
+    "description": "Normal-Attacken werden Psycho- oder Feen-Typ (stärker, zufällig bei Gleichstand). Psycho- und Feen-Attacken haben pro Pokémon mit Toon-Attacken eine 10%ige Chance, alle Statuswerte des Anwenders zu erhöhen."
+  },
+  "topazLifeorb": {
+    "name": "Topas-Lebensreif",
+    "description": "Die Attacken des Anwenders verursachen 1,3× Schaden und haben eine 10%ige Chance, den Angriff zu erhöhen, aber der Anwender erleidet bei jedem Angriff 15% Schaden."
+  },
+  "torrentialTribute": {
+    "name": "Strömender Tribut",
+    "description": "Beim Einwechseln wird der Anwender sofort Wasser-Geladen. Wird er im geladenen Zustand getroffen, nimmt er keinen Schaden und der Angreifer verliert stattdessen 1/8 seiner max. KP; beide Effekte nur einmal pro Kampf. Normal-Attacken werden Wasser-Typ mit 1,2× Schaden."
+  },
+  "travelBuddiesBlue": {
+    "name": "Reisekameraden Blau",
+    "description": "Normal-Attacken werden Flug-Typ. Flug-Attacken erhalten +1 Priorität. Haben mindestens zwei andere Teammitglieder Union-Attacken, heilen Flug-Attacken auch um 50% des verursachten Schadens."
+  },
+  "travelBuddiesRed": {
+    "name": "Reisekameraden Rot",
+    "description": "Normal-Attacken werden Flug-Typ mit +1 Priorität. Haben mindestens zwei andere Teammitglieder Union-Attacken, erhalten die Attacken dieses Pokémon auch einen 1,5× Stärke-Boost."
+  },
+  "tripleBurst": {
+    "name": "Dreifachsalve",
+    "description": "Nicht-Mehrfachtreffer-Attacken treffen dreimal mit je 55% Stärke."
+  },
+  "tripleCoreEngine": {
+    "name": "Dreikern-Motor",
+    "description": "Alle Mehrfachtreffer-Attacken verhalten sich wie Dreifach-Axel (3 Treffer mit steigender Stärke, sinkender Genauigkeit). Einzeltreffer-Attacken verursachen 1,2× Schaden."
+  },
+  "twinBlessings": {
+    "name": "Zwillingssegen",
+    "description": "Die Chancen auf Zusatzeffekte werden verdoppelt. Normal-Attacken werden Feen-Typ mit 1,2× Schaden. Feen-Attacken haben eine 30%ige Chance, 50% des verursachten Schadens zu heilen."
+  },
+  "twinCoreBurst": {
+    "name": "Doppelkernexplosion",
+    "description": "Hat der Anwender eine Statusveränderung, haben Attacken eine 30%ige Chance, zweimal zu treffen und die Statusveränderung zu heilen."
+  },
+  "twistedLove": {
+    "name": "Verdrehte Liebe",
+    "description": "Der Anwender nimmt nur Schaden von sehr effektiven Attacken. Er kann nicht geheilt werden (Beeren, Attacken und Items wirken nicht). Nach einem Angriff verursacht er 1/8 seiner max. KP als Schaden am Ziel. Jede Runde verliert er 1/4 seiner max. KP."
+  },
+  "tyrantsCoin": {
+    "name": "Tyrannenmünze",
+    "description": "Nicht-Mehrfachtreffer-Schadensattacken haben eine 50%ige Chance, zweimal zu treffen, oder eine 50%ige Chance, dem Anwender Rückstoß in Höhe von 20% seiner max. KP zuzufügen."
+  },
+  "ultimateDefense": {
+    "name": "Ultimative Verteidigung",
+    "description": "Alle Attacken verursachen 50% weniger Schaden, aber dieses Pokémon kann keine Statusattacken einsetzen."
+  },
+  "uncontrollablePower": {
+    "name": "Unkontrollierbare Kraft",
+    "description": "Hat Robustheit. Bei genau 1 KP erhalten alle Attacken +3 Priorität, verursachen doppelten Schaden und heilen den Anwender um 50% des verursachten Schadens."
+  },
+  "undeadArchfiend": {
+    "name": "Untoter Erzfeind",
+    "description": "Dieses Pokémon ist immun gegen Statusattacken und Zusatzeffekte des Ziels. Normal-Attacken werden Geist-Typ mit 1,2× Schaden."
+  },
+  "undeadAvenger": {
+    "name": "Untoter Rächer",
+    "description": "Erhält +10% Angriff und Initiative pro besiegtem Teammitglied."
+  },
+  "underworldThicket": {
+    "name": "Unterweltdickicht",
+    "description": "Wenn ein gegnerisches Pokémon Kontakt herstellt, erleidet es Rückstoß in Höhe von 1/8 seiner max. KP und hat eine 10%ige Chance, Wickel zu erleiden."
+  },
+  "undyingSoul": {
+    "name": "Unsterbliche Seele",
+    "description": "Der Anwender erhält +1 auf einen zufälligen Statuswert pro Normal- oder Kampf-Pokémon im Team. Wird er besiegt, belebt er ein zufälliges Normal- oder Kampf-Pokémon im Team wieder. Dieser Effekt kann nur einmal pro Kampf genutzt werden."
+  },
+  "unitedJungle": {
+    "name": "Vereinter Dschungel",
+    "description": "Heilt 25% KP, wenn ein besiegtes Teammitglied ersetzt wird. Erhält +10 Basisstärke für jedes besiegte Pflanzen-Pokémon im Team."
+  },
+  "unstoppableTitan": {
+    "name": "Unaufhaltsamer Titan",
+    "description": "Kontaktattacken des Anwenders ignorieren Typresistenzen und verursachen 1,2× Schaden. Beim Schaden wird gegen den niedrigsten Statuswert des Ziels statt Verteidigung oder Spez.Vert. gerechnet."
+  },
+  "vileOvergrowth": {
+    "name": "Böses Überwuchern",
+    "description": "Pflanzen- und Unlicht-Attacken teilen ihre Typvorteile. Pflanzen-Attacken haben eine 30%ige Chance, das Ziel zu bepflanzen, und Unlicht-Attacken eine 10%ige Chance, Schlaf zuzufügen."
+  },
+  "voidBanishment": {
+    "name": "Leere-Verbannung",
+    "description": "Wird der Anwender nach dem Besiegen eines Teammitglieds eingewechselt, erzwingt er beim Ziel einen Wechsel. Ist das Ziel Unlicht-Typ, erleidet es zuerst 1/6 seiner max. KP als Schaden. Normal-Attacken werden Unlicht-Typ mit 1,2× Schaden und einer 20%igen Chance, das Item des Ziels zu entfernen."
+  },
+  "volcanicCore": {
+    "name": "Vulkankern",
+    "description": "Normal-Attacken werden Feuer-Typ mit 1,2× Schaden. Wenn der Anwender eine Statusattacke einsetzt, verursacht er Schaden in Höhe von 1/8 der max. KP des Ziels."
+  },
+  "whirlwindAxe": {
+    "name": "Wirbelwindaxt",
+    "description": "Normal-Attacken werden Flug-Typ. Flug-Attacken haben eine 30%ige Chance, das Ziel zum Wechsel zu zwingen. Wird das Ziel vertrieben, stellt der Anwender 1/8 seiner max. KP wieder her."
+  },
+  "whiteLightning": {
+    "name": "Weißer Blitz",
+    "description": "Normal-Attacken werden Elektro-Typ mit 1,2× Stärke. Drachen-Attacken erhalten +1 Volltrefferrate. Drachen- und Elektro-Attacken haben eine 30%ige Chance, das Ziel zu paralysieren."
+  },
+  "windboltDiscard": {
+    "name": "Windblitz-Abwurf",
+    "description": "Wenn der Anwender eine Statusattacke einsetzt, verbraucht er eine zufällige Beere und verursacht Schaden in Höhe von 20% der max. KP des Ziels."
+  },
+  "windstormDiscard": {
+    "name": "Sturm-Abwurf",
+    "description": "Die Attacken des Anwenders haben eine 30%ige Chance, ein eigenes zufälliges Item abzuwerfen. In diesem Fall verursacht die Attacke 2,5× Schaden."
+  },
+  "zanySplasher": {
+    "name": "Verrückter Planscher",
+    "description": "Normal-Attacken werden Feen- oder Wasser-Typ (stärker, zufällig bei Gleichstand). Feen-Attacken haben eine 5%ige Chance auf einen Volltreffer. Wasser-Attacken haben eine 5%ige Chance, Whirlpool zuzufügen. Der Fluchtfaktor steigt beim Einwechseln um eine Stufe."
+  },
+  "zombieColossus": {
+    "name": "Zombie-Koloss",
+    "description": "Einmal pro Kampf belebt sich dieses Pokémon nach dem Besiegen mit 50% seiner maximalen KP wieder."
   }
 }

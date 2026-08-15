@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import BattleScene from "../battle-scene";
 import { TextStyle, addTextObject } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import UiHandler from "./ui-handler";
 import { addWindow } from "./ui-theme";
 import * as Utils from "../utils";
@@ -13,6 +13,7 @@ import { UiTheme } from "../enums/ui-theme";
 import { generateModifierStats } from "../modifier/modifier-type";
 import { Type } from "../data/type";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
+import { isPrimaryPointer } from "./pointer-utils";
 
 interface DisplayStat {
   label_key?: string;
@@ -1203,6 +1204,25 @@ export default class GameStatsUiHandler extends UiHandler {
     this.arrowUp = this.scene.add.sprite(statsBgWidth, headerBg.height + (isLegacyTheme? 7 : 3), "prompt");
     this.arrowUp.flipY = true;
     this.gameStatsContainer.add(this.arrowUp);
+
+    this.arrowDown.setInteractive({
+      hitArea: new Phaser.Geom.Rectangle(-8, -8, 16, 16),
+      hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+      useHandCursor: true
+    });
+    this.arrowDown.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (!isPrimaryPointer(pointer)) return;
+      if (this.arrowDown.visible) this.processInput(Button.DOWN);
+    });
+    this.arrowUp.setInteractive({
+      hitArea: new Phaser.Geom.Rectangle(-8, -8, 16, 16),
+      hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+      useHandCursor: true
+    });
+    this.arrowUp.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (!isPrimaryPointer(pointer)) return;
+      if (this.arrowUp.visible) this.processInput(Button.UP);
+    });
 
     ui.add(this.gameStatsContainer);
 

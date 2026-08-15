@@ -1,5 +1,5 @@
 import BattleScene from "../battle-scene";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import PokemonIconAnimHandler, { PokemonIconAnimMode } from "./pokemon-icon-anim-handler";
 import { TextStyle, addTextObject } from "./text";
 import MessageUiHandler from "./message-ui-handler";
@@ -7,6 +7,7 @@ import { Egg } from "../data/egg";
 import { addWindow } from "./ui-theme";
 import {Button} from "#enums/buttons";
 import i18next from "i18next";
+import { isPrimaryPointer } from "./pointer-utils";
 
 export default class EggListUiHandler extends MessageUiHandler {
   private eggListContainer: Phaser.GameObjects.Container;
@@ -19,6 +20,7 @@ export default class EggListUiHandler extends MessageUiHandler {
   private eggListMessageBoxContainer: Phaser.GameObjects.Container;
 
   private cursorObj: Phaser.GameObjects.Image;
+  private eggIcons: Phaser.GameObjects.Sprite[] = [];
 
   private iconAnimHandler: PokemonIconAnimHandler;
 
@@ -97,6 +99,7 @@ export default class EggListUiHandler extends MessageUiHandler {
     this.eggListContainer.setVisible(true);
 
     let e = 0;
+    this.eggIcons = [];
 
     for (const egg of this.scene.gameData.eggs) {
       const x = (e % 11) * 18;
@@ -106,7 +109,23 @@ export default class EggListUiHandler extends MessageUiHandler {
       icon.setOrigin(0, 0);
       icon.setFrame(egg.getKey());
       this.eggListIconContainer.add(icon);
+      this.eggIcons.push(icon);
       this.iconAnimHandler.addOrUpdate(icon, PokemonIconAnimMode.NONE);
+
+      const hitZone = this.scene.add.zone(x, y, 18, 18);
+      hitZone.setOrigin(0, 0);
+      hitZone.setInteractive({ useHandCursor: true });
+      this.eggListIconContainer.add(hitZone);
+
+      const idx = e;
+      hitZone.on("pointerover", () => {
+        if (this.cursor !== idx) this.setCursor(idx);
+      });
+      hitZone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (!isPrimaryPointer(pointer)) return;
+        if (this.cursor !== idx) this.setCursor(idx);
+      });
+
       e++;
     }
 
@@ -125,7 +144,7 @@ export default class EggListUiHandler extends MessageUiHandler {
       ui.revertMode();
       success = true;
     } else {
-      const eggCount = this.eggListIconContainer.getAll().length;
+      const eggCount = this.eggIcons.length;
       const rows = Math.ceil(eggCount / 11);
       const row = Math.floor(this.cursor / 11);
       switch (button) {
@@ -164,12 +183,12 @@ export default class EggListUiHandler extends MessageUiHandler {
   setEggDetails(egg: Egg): void {
     this.eggSprite.setFrame(`egg_${egg.getKey()}`);
     this.eggNameText.setText(`${i18next.t("egg:egg")} (${egg.getEggDescriptor()})`);
+    const gameLocale = i18next.resolvedLanguage ?? "en";
     this.eggDateText.setText(
-        new Date(egg.timestamp).toLocaleString(undefined, {
-          weekday: "short",
+        new Date(egg.timestamp).toLocaleDateString(gameLocale, {
           year: "numeric",
           month: "2-digit",
-          day: "numeric"
+          day: "2-digit"
         })
     );
     this.eggHatchWavesText.setText(egg.getEggHatchWavesMessage());
@@ -186,10 +205,12 @@ export default class EggListUiHandler extends MessageUiHandler {
     if (changed) {
       this.cursorObj.setPosition(114 + 18 * (cursor % 11), 10 + 18 * Math.floor(cursor / 11));
 
-      if (lastCursor > -1) {
-        this.iconAnimHandler.addOrUpdate(this.eggListIconContainer.getAt(lastCursor) as Phaser.GameObjects.Sprite, PokemonIconAnimMode.NONE);
+      if (lastCursor > -1 && lastCursor < this.eggIcons.length) {
+        this.iconAnimHandler.addOrUpdate(this.eggIcons[lastCursor], PokemonIconAnimMode.NONE);
       }
-      this.iconAnimHandler.addOrUpdate(this.eggListIconContainer.getAt(cursor) as Phaser.GameObjects.Sprite, PokemonIconAnimMode.ACTIVE);
+      if (cursor < this.eggIcons.length) {
+        this.iconAnimHandler.addOrUpdate(this.eggIcons[cursor], PokemonIconAnimMode.ACTIVE);
+      }
 
       this.setEggDetails(this.scene.gameData.eggs[cursor]);
     }
@@ -202,6 +223,7 @@ export default class EggListUiHandler extends MessageUiHandler {
     this.cursor = -1;
     this.eggListContainer.setVisible(false);
     this.iconAnimHandler.removeAll();
+    this.eggIcons = [];
     this.eggListIconContainer.removeAll(true);
   }
 }

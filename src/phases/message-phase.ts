@@ -25,7 +25,10 @@ export class MessagePhase extends Phase {
       this.text = this.text.slice(0, pageIndex).trim();
     }
 
-    this.scene.ui.showText(this.text, null, () => this.end(), this.callbackDelay || (this.prompt ? 0 : 1500), this.prompt, this.promptDelay);
+    const effectivePrompt = this.prompt;
+    const effectiveDelay = this.callbackDelay || (effectivePrompt ? 0 : 1500);
+
+    this.scene.ui.showText(this.text, null, () => this.end(), effectiveDelay, effectivePrompt, this.promptDelay);
   }
 
   end() {

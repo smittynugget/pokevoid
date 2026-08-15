@@ -3,5 +3,7 @@
   "loading": "Loading...",
   "wave": "Wave",
   "lv": "Lv",
+  "rank": "RANK:",
+  "soul": "SOUL:",
   "empty": "Empty"
 }

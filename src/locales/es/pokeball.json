@@ -4,5 +4,8 @@
   "ultraBall": "Ultra Ball",
   "rogueBall": "Rogue Ball",
   "masterBall": "Master Ball",
-  "luxuryBall": "Lujo Ball"
+  "luxuryBall": "Lujo Ball",
+  "typeBall": "{{typeName}} Ball",
+  "voidBall": "Vacío Ball",
+  "voidBallCatchRate": "100% (PS Rojos)"
 }

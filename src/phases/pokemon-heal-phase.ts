@@ -1,8 +1,8 @@
 import BattleScene from "#app/battle-scene.js";
 import { BattlerIndex } from "#app/battle.js";
 import { CommonAnim } from "#app/data/battle-anims.js";
-import { getStatusEffectHealText } from "#app/data/status-effect.js";
-import { StatusEffect } from "#app/enums/status-effect.js";
+import { getStatusEffectHealText, StatusEffect } from "#app/data/status-effect.js";
+import { BattlerTagType } from "#app/enums/battler-tag-type.js";
 import { HitResult, DamageResult } from "#app/field/pokemon.js";
 import { getPokemonNameWithAffix } from "#app/messages.js";
 import { HealingBoosterModifier } from "#app/modifier/modifier.js";
@@ -43,6 +43,12 @@ export class PokemonHealPhase extends CommonAnimPhase {
   end() {
     const pokemon = this.getPokemon();
 
+    if (pokemon.getTag(BattlerTagType.HEAL_BLOCKED) && this.hpHealed > 0 && !this.revive) {
+      this.scene.queueMessage(i18next.t("battlerTags:healBlockedLapse", { pokemonNameWithAffix: getPokemonNameWithAffix(pokemon) }));
+      super.end();
+      return;
+    }
+
     if (!pokemon.isOnField() || (!this.revive && !pokemon.isActive())) {
       super.end();
       return;
@@ -69,6 +75,9 @@ export class PokemonHealPhase extends CommonAnimPhase {
       healAmount.value = pokemon.heal(healAmount.value);
       if (healAmount.value) {
         this.scene.damageNumberHandler.add(pokemon, healAmount.value, HitResult.HEAL);
+      }
+      if (this.revive) {
+        pokemon.battleData.wasRevived = true;
       }
       if (pokemon.isPlayer()) {
         this.scene.validateAchvs(HealAchv, healAmount);

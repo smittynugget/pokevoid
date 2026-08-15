@@ -123,7 +123,7 @@
   "rival_flame": "L'ombre corrompue se dissout dans le Vide",
   "rival_shadowPower": "Une énergie sombre cristallise dans l'air",
   "rival_power": "Maniez la corruption comme une arme contre le Vide",
-  "rival_shadows": "Un de moins—encore XXX",
+  "rival_shadows": "Un de moins—encore ???",
   "rival_final_flame": "La dernière ombre tombe",
   "rival_final_shadowPower": "Le dernier vestige de corruption",
   "rival_final_power": "Retournez les ténèbres contre elles-mêmes",
@@ -160,5 +160,17 @@
   "all_smittys_peace": "La paix revient dans le monde",
   "all_smittys_voidbreak": "Endommagé au-delà de toute réparation—le Vide sommeille",
   "all_smittys_mystery": "Même dans le silence, le chaos grandit, tapi dans les ombres",
-  "all_smittys_journey": "S'il vous plaît, tenez-le à distance. Vous êtes la résistance !"
+  "all_smittys_journey": "S'il vous plaît, tenez-le à distance. Vous êtes la résistance !",
+  "tutorial_trance_1a": "Tu es réveillé ! Je commençais à penser...",
+  "tutorial_trance_1b": "Non. Peu importe. Tu es là. C'est tout ce qui compte.",
+  "tutorial_trance_2a": "Je me suis assis près de trop de Dresseurs en attendant qu'ils se réveillent. Ils ne le font jamais.",
+  "tutorial_trance_2b": "Mais toi... tu viens de prouver que chacun de ces disparus ne l'a pas été pour rien.",
+  "tutorial_trance_3a": "Il y a quelque chose en toi. Quoi que le Vide t'ait fait là-dedans...",
+  "tutorial_trance_3b": "Ça ne t'a pas brisé. Ça t'a rendu plus fort.",
+  "tutorial_trance_4a": "Nous perdons ce combat depuis longtemps.",
+  "tutorial_trance_4b": "Mais tu viens de prouver que le Vide peut être vaincu. Maintenant va le prouver encore.",
+  "tutorial_trance_5a": "Le Vide nous a tout pris. Il est temps de tout reprendre.",
+  "tutorial_trance_5b": "C'est ici que ton histoire commence — en avant et deviens Légendaire !",
+  "loss_whiteout": "Les ténèbres engloutissent tout...",
+  "loss_homebase": "Retour en lieu sûr..."
 }

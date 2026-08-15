@@ -1,0 +1,1295 @@
+{
+  "abaki": {
+    "name": "暴鬼"
+  },
+  "abare_ushioni": {
+    "name": "暴れ牛鬼"
+  },
+  "agido": {
+    "name": "アギド"
+  },
+  "aitsu": {
+    "name": "アイツ"
+  },
+  "alien_grey": {
+    "name": "エーリアン・グレイ"
+  },
+  "alien_mars": {
+    "name": "エーリアン・マーズ"
+  },
+  "alien_mother": {
+    "name": "エーリアン・マザー"
+  },
+  "alligator_s_sword_dragon": {
+    "name": "ワニのすんでいる沼の竜"
+  },
+  "alligators_sword_dragon": {
+    "name": "ワニのすんでいる沼の竜"
+  },
+  "alpha_the_magnet_warrior": {
+    "name": "磁石の戦士α"
+  },
+  "amazoness_tiger": {
+    "name": "アマゾネスペット虎"
+  },
+  "ancient_gear": {
+    "name": "古代の歯車"
+  },
+  "ancient_gear_box": {
+    "name": "古代の機械箱"
+  },
+  "ancient_gear_engineer": {
+    "name": "古代の機械工兵"
+  },
+  "ancient_gear_golem": {
+    "name": "古代の機械巨人"
+  },
+  "ancient_gear_knight": {
+    "name": "古代の機械騎士"
+  },
+  "ancient_gear_soldier": {
+    "name": "古代の機械兵士"
+  },
+  "ancient_tree_of_enlightenment": {
+    "name": "悟りの老樹"
+  },
+  "arcana_force_0_the_fool": {
+    "name": "アルカナフォースO-THE FOOL",
+    "skipStrip": true
+  },
+  "arcana_force_0_—_the_fool": {
+    "name": "アルカナフォースO-THE FOOL",
+    "skipStrip": true
+  },
+  "arcana_force_ex_the_dark_ruler": {
+    "name": "アルカナフォースEX-THE DARK RULER",
+    "skipStrip": true
+  },
+  "arcana_force_ex_—_the_dark_ruler": {
+    "name": "アルカナフォースEX-THE DARK RULER",
+    "skipStrip": true
+  },
+  "arcana_force_i_the_magician": {
+    "name": "アルカナフォースI-THE MAGICIAN",
+    "skipStrip": true
+  },
+  "arcana_force_i_—_the_magician": {
+    "name": "アルカナフォースI-THE MAGICIAN",
+    "skipStrip": true
+  },
+  "arcana_force_iv_the_emperor": {
+    "name": "アルカナフォースIV-THE EMPEROR",
+    "skipStrip": true
+  },
+  "arcana_force_iv_—_the_emperor": {
+    "name": "アルカナフォースIV-THE EMPEROR",
+    "skipStrip": true
+  },
+  "arcana_force_vi_the_lovers": {
+    "name": "アルカナフォースVI-THE LOVERS",
+    "skipStrip": true
+  },
+  "arcana_force_vi_—_the_lovers": {
+    "name": "アルカナフォースVI-THE LOVERS",
+    "skipStrip": true
+  },
+  "arcana_force_xviii_the_moon": {
+    "name": "アルカナフォースXVIII-THE MOON",
+    "skipStrip": true
+  },
+  "arcana_force_xviii_—_the_moon": {
+    "name": "アルカナフォースXVIII-THE MOON",
+    "skipStrip": true
+  },
+  "archfiend_zombie": {
+    "name": "デーモン・ゾンビ"
+  },
+  "armed_dragon_lv3": {
+    "name": "アームド・ドラゴン LV3"
+  },
+  "armed_dragon_lv5": {
+    "name": "アームド・ドラゴン LV5"
+  },
+  "armed_dragon_lv7": {
+    "name": "アームド・ドラゴン LV7"
+  },
+  "avatar_of_the_pot": {
+    "name": "壺の精霊"
+  },
+  "axe_raider": {
+    "name": "アックス・レイダー"
+  },
+  "baby_dragon": {
+    "name": "ベビードラゴン"
+  },
+  "bean_soldier": {
+    "name": "ビーン・ソルジャー"
+  },
+  "beaver_warrior": {
+    "name": "ルイーズ"
+  },
+  "behemoth_the_king_of_all_animals": {
+    "name": "百獣王 ベヒーモス",
+    "skipStrip": true
+  },
+  "beiige,_vanguard_of_dark_world": {
+    "name": "暗黒界の尖兵 ベージ"
+  },
+  "beiige_vanguard_of_dark_world": {
+    "name": "暗黒界の尖兵 ベージ"
+  },
+  "beta_the_magnet_warrior": {
+    "name": "磁石の戦士β"
+  },
+  "bickuribox": {
+    "name": "ビックリボックス"
+  },
+  "big_jaws": {
+    "name": "ビッグ・ジョーズ"
+  },
+  "bio_plant": {
+    "name": "バイオプラント"
+  },
+  "black_dragon_s_chick": {
+    "name": "黒竜の雛"
+  },
+  "black_dragons_chick": {
+    "name": "黒竜の雛"
+  },
+  "black_luster_soldier": {
+    "name": "カオス・ソルジャー"
+  },
+  "black_luster_soldier_envoy_of_the_beginning": {
+    "name": "カオス・ソルジャー -開闢の使者-",
+    "skipStrip": true
+  },
+  "black_luster_soldier_—_envoy_of_the_beginning": {
+    "name": "カオス・ソルジャー -開闢の使者-",
+    "skipStrip": true
+  },
+  "black_magician_of_chaos": {
+    "name": "混沌の黒魔術師"
+  },
+  "black_rose_dragon_(alt)": {
+    "name": "ブラック・ローズ・ドラゴン"
+  },
+  "black_rose_dragon_(alt___full_wings)": {
+    "name": "ブラック・ローズ・ドラゴン"
+  },
+  "black_rose_dragon_(full_wings)": {
+    "name": "ブラック・ローズ・ドラゴン"
+  },
+  "black_tyranno": {
+    "name": "ブラックティラノ"
+  },
+  "blade_knight": {
+    "name": "ブレイドナイト"
+  },
+  "blazing_inpachi": {
+    "name": "火炎木人18"
+  },
+  "blizzard_dragon": {
+    "name": "ブリザード・ドラゴン"
+  },
+  "blizzarddragon": {
+    "name": "ブリザード・ドラゴン"
+  },
+  "blowback_dragon": {
+    "name": "ブローバック・ドラゴン"
+  },
+  "blue-eyes_alternative_white_dragon": {
+    "name": "青眼の亜白龍"
+  },
+  "blue-eyes_chaos_max_dragon": {
+    "name": "青眼の混沌極龍"
+  },
+  "blue-eyes_toon_dragon": {
+    "name": "ブルーアイズ・トゥーン・ドラゴン"
+  },
+  "blue-eyes_toon_dragon_(render)": {
+    "name": "ブルーアイズ・トゥーン・ドラゴン"
+  },
+  "blue-eyes_ultimate_dragon": {
+    "name": "青眼の究極竜"
+  },
+  "blue-eyes_white_dragon": {
+    "name": "青眼の白龍"
+  },
+  "blue-eyes_white_dragon_(alt_master_duel)": {
+    "name": "青眼の白龍"
+  },
+  "blue-eyes_white_dragon_(variant_2)": {
+    "name": "青眼の白龍"
+  },
+  "blue-eyes_white_dragon_(variants)": {
+    "name": "青眼の白龍"
+  },
+  "blue_eyes_alternative_white_dragon": {
+    "name": "青眼の亜白龍"
+  },
+  "blue_eyes_chaos_max_dragon": {
+    "name": "青眼の混沌極龍"
+  },
+  "blue_eyes_ultimate_dragon": {
+    "name": "青眼の究極竜"
+  },
+  "blue_eyes_white_dragon": {
+    "name": "青眼の白龍"
+  },
+  "blue_eyes_white_dragon_v3": {
+    "name": "ブルーアイズ・トゥーン・ドラゴン"
+  },
+  "boo_koo": {
+    "name": "ブークー"
+  },
+  "breaker_the_magical_warrior": {
+    "name": "魔導戦士 ブレイカー"
+  },
+  "breaker_the_magical_warrrior": {
+    "name": "魔導戦士 ブレイカー"
+  },
+  "buster_blader,_destruction_swordmaster": {
+    "name": "バスター・ブレイダー",
+    "skipStrip": true
+  },
+  "buster_blader,_destruction_swordsmaster": {
+    "name": "バスター・ブレイダー",
+    "skipStrip": true
+  },
+  "buster_blader_the_destruction_swordmaster": {
+    "name": "バスター・ブレイダー",
+    "skipStrip": true
+  },
+  "caius_the_shadow_monarch": {
+    "name": "邪帝ガイウス"
+  },
+  "card_trooper": {
+    "name": "カードトルーパー"
+  },
+  "castle_of_dark_illusions": {
+    "name": "闇の城"
+  },
+  "celtic_guardian": {
+    "name": "エルフの剣士"
+  },
+  "chaos_emperor_dragon_envoy_of_the_end": {
+    "name": "カオス・エンペラー・ドラゴン -終焉の使者-",
+    "skipStrip": true
+  },
+  "chaos_emperor_dragon_—_envoy_of_the_end": {
+    "name": "カオス・エンペラー・ドラゴン -終焉の使者-",
+    "skipStrip": true
+  },
+  "claw_reacher": {
+    "name": "クロー・リーチャー"
+  },
+  "cloudian_acid_cloud": {
+    "name": "クラウディアン・アシッドクラウド",
+    "skipStrip": true
+  },
+  "cloudian_eye_of_the_typhoon": {
+    "name": "クラウディアン・アイ・オブ・ザ・タイフーン",
+    "skipStrip": true
+  },
+  "cloudian_ghost_fog": {
+    "name": "クラウディアン・ゴーストフォッグ",
+    "skipStrip": true
+  },
+  "cloudian_nimbusman": {
+    "name": "クラウディアン・ニンバスマン",
+    "skipStrip": true
+  },
+  "cloudian_smoke_ball": {
+    "name": "クラウディアン・スモークボール",
+    "skipStrip": true
+  },
+  "cloudian_storm_dragon": {
+    "name": "クラウディアン・ストームドラゴン",
+    "skipStrip": true
+  },
+  "cloudian_—_acid_cloud": {
+    "name": "クラウディアン・アシッドクラウド",
+    "skipStrip": true
+  },
+  "cloudian_—_eye_of_the_typhoon": {
+    "name": "クラウディアン・アイ・オブ・ザ・タイフーン",
+    "skipStrip": true
+  },
+  "cloudian_—_ghost_fog": {
+    "name": "クラウディアン・ゴーストフォッグ",
+    "skipStrip": true
+  },
+  "cloudian_—_nimbusman": {
+    "name": "クラウディアン・ニンバスマン",
+    "skipStrip": true
+  },
+  "cloudian_—_smoke_ball": {
+    "name": "クラウディアン・スモークボール",
+    "skipStrip": true
+  },
+  "cloudian_—_storm_dragon": {
+    "name": "クラウディアン・ストームドラゴン",
+    "skipStrip": true
+  },
+  "colossal_fighter": {
+    "name": "ギガンテック・ファイター"
+  },
+  "colossal_fighter1": {
+    "name": "ギガンテック・ファイター"
+  },
+  "copycat": {
+    "name": "ものマネ幻想師"
+  },
+  "crab_turtle": {
+    "name": "カニカブト"
+  },
+  "crystal_beast_amber_mammoth": {
+    "name": "宝玉獣 アンバー・マンモス",
+    "skipStrip": true
+  },
+  "crystal_beast_emerald_tortoise": {
+    "name": "宝玉獣 エメラルド・タートル",
+    "skipStrip": true
+  },
+  "crystal_beast_ruby_carbuncle": {
+    "name": "宝玉獣 ルビー・カーバンクル",
+    "skipStrip": true
+  },
+  "crystal_beast_topaz_tiger": {
+    "name": "宝玉獣 トパーズ・タイガー",
+    "skipStrip": true
+  },
+  "crystal_beast_—_emerald_tortoise": {
+    "name": "宝玉獣 エメラルド・タートル",
+    "skipStrip": true
+  },
+  "crystal_beast_—_ruby_carbuncle": {
+    "name": "宝玉獣 ルビー・カーバンクル",
+    "skipStrip": true
+  },
+  "crystal_beast_—_topaz_tiger": {
+    "name": "宝玉獣 トパーズ・タイガー",
+    "skipStrip": true
+  },
+  "curse_of_dragon": {
+    "name": "カース・オブ・ドラゴン",
+    "skipStrip": true
+  },
+  "curse_of_dragonfire": {
+    "name": "カース・オブ・ドラゴンファイア",
+    "skipStrip": true
+  },
+  "cyber_dinosaur": {
+    "name": "サイバー・ダイナソー"
+  },
+  "cyber_dragon": {
+    "name": "サイバー・ドラゴン"
+  },
+  "cyber_dragon_(cydra_2)": {
+    "name": "サイバー・ドラゴン"
+  },
+  "cyber_dragon_vier": {
+    "name": "サイバー・ドラゴン・フィーア"
+  },
+  "cyber_end_dragon": {
+    "name": "サイバー・エンド・ドラゴン"
+  },
+  "cyber_ogre": {
+    "name": "サイバー・オーガ"
+  },
+  "cyber_saurus": {
+    "name": "サイバー・サウルス"
+  },
+  "cyber_tech_alligator": {
+    "name": "メカ・ハンター"
+  },
+  "cyber_twin_dragon": {
+    "name": "サイバー・ツイン・ドラゴン"
+  },
+  "d.d._crazy_beast": {
+    "name": "D.D.クレイジービースト"
+  },
+  "d.d._trainer": {
+    "name": "D.D.トレーナー"
+  },
+  "d.d._warrior": {
+    "name": "D.D.ウォリアー"
+  },
+  "d.d._warrior_lady": {
+    "name": "D.D.アサイラント"
+  },
+  "d_d_crazy_beast": {
+    "name": "D.D.クレイジービースト"
+  },
+  "d_d_trainer": {
+    "name": "D.D.トレーナー"
+  },
+  "d_d_warrior_lady": {
+    "name": "D.D.アサイラント"
+  },
+  "dandylion": {
+    "name": "ダンディライオン"
+  },
+  "danger!_bigfoot!": {
+    "name": "未界域のビッグフット"
+  },
+  "danger_bigfoot": {
+    "name": "未界域のビッグフット"
+  },
+  "dark_eradicator_warlock": {
+    "name": "黒魔導師クラン"
+  },
+  "dark_eyes_illusionist": {
+    "name": "ダーク・アイズ・イリュージョニスト"
+  },
+  "dark_magician": {
+    "name": "ブラック・マジシャン"
+  },
+  "dark_magician_(all_variants)": {
+    "name": "ブラック・マジシャン"
+  },
+  "dark_magician_(alt_master_duel)": {
+    "name": "ブラック・マジシャン"
+  },
+  "dark_magician_(variant_2)": {
+    "name": "ブラック・マジシャン"
+  },
+  "dark_magician_alternate": {
+    "name": "ブラック・マジシャン"
+  },
+  "dark_magician_girl": {
+    "name": "ブラック・マジシャン・ガール"
+  },
+  "dark_magician_girl___alternate": {
+    "name": "ブラック・マジシャン・ガール"
+  },
+  "dark_magician_girl_alternate": {
+    "name": "ブラック・マジシャン・ガール"
+  },
+  "dark_magician_of_chaos": {
+    "name": "混沌の黒魔術師"
+  },
+  "dark_magician_of_chaos_(render)": {
+    "name": "混沌の黒魔術師"
+  },
+  "dark_magician_v2": {
+    "name": "ブラック・マジシャン"
+  },
+  "dark_arkana_magician": {
+    "name": "ブラック・マジシャン・アルカナ"
+  },
+  "dark_magician_—_arkana_variant": {
+    "name": "ブラック・マジシャン — アルカナ"
+  },
+  "dark_necrofear": {
+    "name": "ダーク・ネクロフィア"
+  },
+  "dark_paladin": {
+    "name": "超魔導剣士-ブラック・パラディン"
+  },
+  "dark_rabbit": {
+    "name": "ダーク・ラビット"
+  },
+  "dark_resonator": {
+    "name": "ダーク・リゾネーター"
+  },
+  "dark_ruler_ha_des": {
+    "name": "冥府の使者ゴーズ"
+  },
+  "dark_sage": {
+    "name": "黒衣の大賢者"
+  },
+  "dark_world_thorns": {
+    "name": "暗黒界のイバラ"
+  },
+  "darkfire_dragon": {
+    "name": "暗黒の竜王"
+  },
+  "despair_from_the_dark": {
+    "name": "暗闇からの絶望"
+  },
+  "destiny_hero_defender": {
+    "name": "D-HERO ディフェンドガイ",
+    "skipStrip": true
+  },
+  "destiny_hero_plasma": {
+    "name": "D-HERO Bloo-D",
+    "skipStrip": true
+  },
+  "dragon_destroyer_swordsman": {
+    "name": "竜破壊の剣士"
+  },
+  "dragon_spirit_of_white": {
+    "name": "白き霊龍"
+  },
+  "dragon_zombie": {
+    "name": "ドラゴン・ゾンビ"
+  },
+  "drillago": {
+    "name": "ドリラゴ"
+  },
+  "drillroid": {
+    "name": "ドリルロイド"
+  },
+  "duoterion": {
+    "name": "デューテリオン"
+  },
+  "earthbound_immortal_chacu_challhua": {
+    "name": "地縛神 Chacu Challhua",
+    "skipStrip": true
+  },
+  "earthboundimmortal_chacu_challhua": {
+    "name": "地縛神 Chacu Challhua",
+    "skipStrip": true
+  },
+  "egyptian_god_slime": {
+    "name": "神・スライム"
+  },
+  "elemental_hero_bladedge": {
+    "name": "E・HERO エッジマン",
+    "skipStrip": true
+  },
+  "elemental_hero_burstinatrix": {
+    "name": "E・HERO バーストレディ",
+    "skipStrip": true
+  },
+  "elemental_hero_clayman": {
+    "name": "E・HERO クレイマン",
+    "skipStrip": true
+  },
+  "elemental_hero_flame_wingman": {
+    "name": "E・HERO フレイム・ウィングマン",
+    "skipStrip": true
+  },
+  "elemental_hero_necroshade": {
+    "name": "E・HERO ネクロダークマン",
+    "skipStrip": true
+  },
+  "elemental_hero_neos": {
+    "name": "E・HERO ネオス",
+    "skipStrip": true
+  },
+  "elemental_hero_neos_(alt_master_duel)": {
+    "name": "E・HERO ネオス",
+    "skipStrip": true
+  },
+  "elemental_hero_neos_alius": {
+    "name": "E・HERO アナザー・ネオス",
+    "skipStrip": true
+  },
+  "elemental_hero_sparkman": {
+    "name": "E・HERO スパークマン",
+    "skipStrip": true
+  },
+  "elemental_hero_stratos": {
+    "name": "E・HERO エアーマン",
+    "skipStrip": true
+  },
+  "enraged_battle_ox": {
+    "name": "怒れる類人猿"
+  },
+  "evilswarm_mandragora": {
+    "name": "ヴェルズ・マンドラゴ"
+  },
+  "evilswarm_salamandra": {
+    "name": "ヴェルズ・サラマンドラ"
+  },
+  "exodia": {
+    "name": "エクゾディア"
+  },
+  "exodia_(full_body)": {
+    "name": "エクゾディア"
+  },
+  "exodia_necross": {
+    "name": "エクゾディア・ネクロス"
+  },
+  "exodia_the_forbidden_evolution": {
+    "name": "封印されしエクゾディア 進化"
+  },
+  "exodius_the_ultimate_forbidden_lord": {
+    "name": "究極封印神エクゾディオス"
+  },
+  "fenrir": {
+    "name": "フェンリル"
+  },
+  "feral_imp": {
+    "name": "グレムリン"
+  },
+  "fiend_kraken": {
+    "name": "フィーンド・クラーケン"
+  },
+  "fiend_sword": {
+    "name": "魔剣"
+  },
+  "fossil_dyna_pachycephalo": {
+    "name": "フォッシル・ダイナ パキケファロ"
+  },
+  "fossil_warrior_skull_king": {
+    "name": "化石戦士 スカルキング"
+  },
+  "frost_&_flame_dragon": {
+    "name": "フロスト・アンド・フレイム・ドラゴン"
+  },
+  "frost_and_flame_dragon": {
+    "name": "フロスト・アンド・フレイム・ドラゴン"
+  },
+  "frostosaurus": {
+    "name": "フロストザウルス"
+  },
+  "gagagigo": {
+    "name": "ガガギゴ"
+  },
+  "gaia_the_dragon_champion": {
+    "name": "竜騎士ガイア",
+    "skipStrip": true
+  },
+  "gaia_the_fierce_knight": {
+    "name": "暗黒騎士ガイア",
+    "skipStrip": true
+  },
+  "gamma_the_magnet_warrior": {
+    "name": "磁石の戦士γ"
+  },
+  "gate_guardian": {
+    "name": "ゲート・ガーディアン"
+  },
+  "gazelle_the_king_of_mythical_beasts": {
+    "name": "幻獣王ガゼル",
+    "skipStrip": true
+  },
+  "gellenduo": {
+    "name": "ジェルエンデュオ"
+  },
+  "gem-knight_citrine": {
+    "name": "ジェムナイト・シトリン"
+  },
+  "gem-knight_master_diamond": {
+    "name": "ジェムナイト・マスター・ダイヤ"
+  },
+  "gem_knight_citrine": {
+    "name": "ジェムナイト・シトリン"
+  },
+  "gem_knight_master_diamond": {
+    "name": "ジェムナイト・マスター・ダイヤ"
+  },
+  "genex_ally_birdman": {
+    "name": "A・ジェネクス・バードマン"
+  },
+  "ghostrick_ghoul": {
+    "name": "ゴーストリック・グール"
+  },
+  "ghostrick_mummy": {
+    "name": "ゴーストリック・マミー"
+  },
+  "ghostrick_skeleton": {
+    "name": "ゴーストリック・スケルトン"
+  },
+  "ghostrick_stein": {
+    "name": "ゴーストリック・シュタイン"
+  },
+  "ghostrick_yeti": {
+    "name": "ゴーストリック・イエティ"
+  },
+  "giant_soldier_of_stone": {
+    "name": "岩石の巨兵"
+  },
+  "giga_gagagigo": {
+    "name": "ギガガガギゴ"
+  },
+  "gigobyte": {
+    "name": "ギゴバイト"
+  },
+  "gogiga_gagagigo": {
+    "name": "ゴギガ・ガガギゴ"
+  },
+  "golden_eyes_ido": {
+    "name": "千眼の邪教神"
+  },
+  "golden_eyes_idol": {
+    "name": "千眼の邪教神"
+  },
+  "golden_homunculus": {
+    "name": "ゴールド・ホムンクルス"
+  },
+  "gozuki": {
+    "name": "牛頭鬼"
+  },
+  "granadora": {
+    "name": "グラナドラ"
+  },
+  "graverobber": {
+    "name": "はにわ"
+  },
+  "great_moth": {
+    "name": "グレート・モス"
+  },
+  "great_white": {
+    "name": "グレート・ホワイト"
+  },
+  "green_baboon,_defender_of_the_forest": {
+    "name": "森の番人グリーン・バブーン",
+    "skipStrip": true
+  },
+  "green_baboon_defender_of_the_forest": {
+    "name": "森の番人グリーン・バブーン",
+    "skipStrip": true
+  },
+  "green_gadget": {
+    "name": "グリーン・ガジェット"
+  },
+  "green_gadget_alternate": {
+    "name": "グリーン・ガジェット"
+  },
+  "gren,_tactician_of_dark_world": {
+    "name": "暗黒界の策士 グリン"
+  },
+  "griffore": {
+    "name": "グリフォール"
+  },
+  "guardian_grarl": {
+    "name": "ガーディアン・グラール"
+  },
+  "hade-hane": {
+    "name": "ハデハネ"
+  },
+  "hade_hane": {
+    "name": "ハデハネ"
+  },
+  "hane-hane": {
+    "name": "ハネハネ"
+  },
+  "hane_hane": {
+    "name": "ハネハネ"
+  },
+  "harpie_s_pet_dragon": {
+    "name": "ハーピィズペット竜"
+  },
+  "harpies_pet_dragon": {
+    "name": "ハーピィズペット竜"
+  },
+  "headless_knight": {
+    "name": "首なし騎士"
+  },
+  "hinotama_soul": {
+    "name": "ヒノタマソウル"
+  },
+  "hitotsu-me_giant": {
+    "name": "一つ目巨人"
+  },
+  "hitotsu_me_giant": {
+    "name": "一つ目巨人"
+  },
+  "humanoid_slime": {
+    "name": "ヒューマノイド・スライム"
+  },
+  "hundred-eyes_dragon": {
+    "name": "ワンハンドレッド・アイ・ドラゴン",
+    "skipStrip": true
+  },
+  "hundred_eyes_dragon": {
+    "name": "ワンハンドレッド・アイ・ドラゴン",
+    "skipStrip": true
+  },
+  "hungry_burger": {
+    "name": "ハングリーバーガー"
+  },
+  "hydrogeddon": {
+    "name": "ハイドロゲドン"
+  },
+  "hyozanryu": {
+    "name": "ヒョウザンリュウ"
+  },
+  "hyper_hammerhead": {
+    "name": "ハイパーハンマーヘッド"
+  },
+  "illusionist_faceless_mage": {
+    "name": "イリュージョニスト・ノー・フェイス"
+  },
+  "imairuka": {
+    "name": "イマイルカ"
+  },
+  "inpachi": {
+    "name": "木人18"
+  },
+  "jetroid": {
+    "name": "ジェットロイド"
+  },
+  "jinzo": {
+    "name": "人造人間-サイコ・ショッカー"
+  },
+  "jinzo_the_machine_menace": {
+    "name": "人造人間-サイコ・ショッカー 機械の脅威"
+  },
+  "junk_warrior": {
+    "name": "ジャンク・ウォリアー"
+  },
+  "kahkki,_guerilla_of_dark_world": {
+    "name": "暗黒界の斥候 カーキ"
+  },
+  "kazejin": {
+    "name": "風魔神-ヒューガ"
+  },
+  "king_dragun": {
+    "name": "キング・ドラグーン"
+  },
+  "king_of_the_skull_servants": {
+    "name": "ワイト・キング",
+    "skipStrip": true
+  },
+  "koitsu": {
+    "name": "コイツ"
+  },
+  "kozaky": {
+    "name": "コザッキー"
+  },
+  "kuriboh": {
+    "name": "クリボー"
+  },
+  "la_jinn_the_mystical_genie": {
+    "name": "ランプの魔精・ラ・ジーン"
+  },
+  "la_jinn_the_mystical_genie_(all_variants)": {
+    "name": "ランプの魔精・ラ・ジーン"
+  },
+  "la_jinn_the_mystical_genie_of_the_lamp": {
+    "name": "ランプの魔精・ラ・ジーン"
+  },
+  "lava_golem": {
+    "name": "溶岩魔神ラヴァ・ゴーレム"
+  },
+  "legendary_swordsman": {
+    "name": "伝説の剣豪 MASAKI"
+  },
+  "levia-dragon_daedalus": {
+    "name": "リバイアサン・ドラゴン-ダイダロス"
+  },
+  "levia_dragon_daedalus": {
+    "name": "リバイアサン・ドラゴン-ダイダロス"
+  },
+  "lord_of_d": {
+    "name": "ロード・オブ・ドラゴン-ドラゴンの支配者-",
+    "skipStrip": true
+  },
+  "lord_of_d.": {
+    "name": "ロード・オブ・ドラゴン-ドラゴンの支配者-",
+    "skipStrip": true
+  },
+  "luster_dragon": {
+    "name": "サファイアドラゴン"
+  },
+  "magician_robe": {
+    "name": "マジシャンズ・ローブ"
+  },
+  "magicians_robe": {
+    "name": "マジシャンズ・ローブ"
+  },
+  "magikuriboh": {
+    "name": "マジクリボー"
+  },
+  "man-eating_plant": {
+    "name": "食人植物"
+  },
+  "manga_ryu-ran": {
+    "name": "マンガ・リュウラン"
+  },
+  "masked_beast_des_gardius": {
+    "name": "仮面魔獣デス・ガーディウス"
+  },
+  "master_of_oz": {
+    "name": "マスター・オブ・OZ"
+  },
+  "megalosmasher_x": {
+    "name": "メガロスマッシャーX"
+  },
+  "megazowler": {
+    "name": "メガザウラー"
+  },
+  "meteor_b": {
+    "name": "メテオ・ブラック・ドラゴン"
+  },
+  "meteor_b._dragon": {
+    "name": "メテオ・ブラック・ドラゴン"
+  },
+  "mezuki": {
+    "name": "馬頭鬼"
+  },
+  "milennium_shield": {
+    "name": "千年の盾"
+  },
+  "millennium_scorpion": {
+    "name": "ミレニアム・スコーピオン"
+  },
+  "millennium_shield": {
+    "name": "千年の盾"
+  },
+  "morphing_jar": {
+    "name": "メタモルポット"
+  },
+  "moves:": {
+    "name": "Moves:"
+  },
+  "muka_muka": {
+    "name": "ムカムカ"
+  },
+  "naturia_beast": {
+    "name": "ナチュル・ビースト"
+  },
+  "naturia_cosmobeet": {
+    "name": "ナチュル・コスモスビート"
+  },
+  "naturia_landoise": {
+    "name": "ナチュル・ランドオルス"
+  },
+  "needle_burrower": {
+    "name": "ニードル・バンカー"
+  },
+  "neo-spacian_glow_moss": {
+    "name": "N・グロー・モス"
+  },
+  "number_22:_zombiestein": {
+    "name": "No.22 不乱健",
+    "skipStrip": true
+  },
+  "number_22_zombiestein": {
+    "name": "No.22 不乱健",
+    "skipStrip": true
+  },
+  "obelisk_the_tormentor": {
+    "name": "オベリスクの巨神兵",
+    "skipStrip": true
+  },
+  "ocean_dragon_lord_kairyu_shin": {
+    "name": "海竜神-リバイアシアン",
+    "skipStrip": true
+  },
+  "ocean_dragon_lord_—_kairyu-shin": {
+    "name": "海竜神-リバイアシアン",
+    "skipStrip": true
+  },
+  "ojama_black": {
+    "name": "おジャマ・ブラック / グリーン"
+  },
+  "ojama_black___green": {
+    "name": "おジャマ・ブラック / グリーン"
+  },
+  "ojama_king": {
+    "name": "おジャマ・キング"
+  },
+  "ojama_knight": {
+    "name": "おジャマ・ナイト"
+  },
+  "overtex_qoatlus": {
+    "name": "オーバーテクス・ゴアトルス"
+  },
+  "oxygeddon": {
+    "name": "オキシゲドン"
+  },
+  "paladin_of_the_cursed_dragon": {
+    "name": "冥竜騎士"
+  },
+  "paladin_of_white_dragon": {
+    "name": "白竜の聖騎士"
+  },
+  "pale_beast": {
+    "name": "ペイルビースト"
+  },
+  "panther_warrior": {
+    "name": "漆黒の豹戦士パンサーウォリアー"
+  },
+  "panzer_dragon": {
+    "name": "パンツァー・ドラゴン"
+  },
+  "papa_corn": {
+    "name": "パパコーン"
+  },
+  "plaguespreader_zombie": {
+    "name": "ゾンビキャリア"
+  },
+  "power_invader": {
+    "name": "パワー・インベーダー"
+  },
+  "pyramid_turtle": {
+    "name": "ピラミッド・タートル"
+  },
+  "quickdraw_synchron": {
+    "name": "クイック・シンクロン"
+  },
+  "ra_(winged_dragon_of_ra)": {
+    "name": "ラーの翼神竜"
+  },
+  "red-eyes_black_dragon": {
+    "name": "真紅眼の黒竜"
+  },
+  "red-eyes_dark_dragoon": {
+    "name": "超魔導竜騎士-ドラグーン・オブ・レッドアイズ"
+  },
+  "red-eyes_darkness_dragon": {
+    "name": "真紅眼の闇竜"
+  },
+  "red_gadget": {
+    "name": "レッド・ガジェット"
+  },
+  "relinquished": {
+    "name": "サクリファイス"
+  },
+  "revendread_slayer": {
+    "name": "ヴェンデット・スレイヤー"
+  },
+  "rocket_warrior": {
+    "name": "ロケット戦士"
+  },
+  "ronintoadin": {
+    "name": "粋カエル"
+  },
+  "rusty_bardiche": {
+    "name": "ラスティ・バルディッシュ"
+  },
+  "sanga_of_the_thunder": {
+    "name": "雷魔神-サンガ"
+  },
+  "sasuke_samurai": {
+    "name": "忍者サスケ"
+  },
+  "shinato,_king_of_a_higher_plane": {
+    "name": "天空騎士パーシアス"
+  },
+  "silent_magician_lv8": {
+    "name": "サイレント・マジシャン LV8"
+  },
+  "skull_archfiend_of_lightning": {
+    "name": "迅雷の魔王-スカル・デーモン"
+  },
+  "skull_servant": {
+    "name": "ワイト"
+  },
+  "slifer_the_sky_dragon": {
+    "name": "オシリスの天空竜"
+  },
+  "snowman_eater": {
+    "name": "スノーマンイーター"
+  },
+  "soldier_of_chaos": {
+    "name": "混沌の戦士",
+    "skipStrip": true
+  },
+  "sorcerer_of_dark_magic": {
+    "name": "黒の魔法師"
+  },
+  "soul_hunter": {
+    "name": "ソウル・ハンター"
+  },
+  "spear_dragon": {
+    "name": "スピア・ドラゴン"
+  },
+  "speed_warrior": {
+    "name": "スピード・ウォリアー"
+  },
+  "steel_ogre_grotto": {
+    "name": "鉄のサソリ"
+  },
+  "steel_ogre_grotto_#1": {
+    "name": "鉄のサソリ"
+  },
+  "suijin": {
+    "name": "水魔神-スーガ"
+  },
+  "summoned_skull": {
+    "name": "デーモンの召喚"
+  },
+  "super_conductor_tyranno": {
+    "name": "超伝導恐獣"
+  },
+  "supreme_king_of_armageddon": {
+    "name": "終焉の覇王"
+  },
+  "sword_arm_of_dragon": {
+    "name": "ドラゴンの剣腕"
+  },
+  "swordsman_of_landstar": {
+    "name": "ランドスターの剣士"
+  },
+  "the_creator": {
+    "name": "創世神",
+    "skipStrip": true
+  },
+  "the_dark_creator": {
+    "name": "ダーク・クリエイター"
+  },
+  "the_dark_magicians": {
+    "name": "超魔導師-ブラック・マジシャンズ"
+  },
+  "the_fabled_cerburrel": {
+    "name": "魔轟神獣キャシー"
+  },
+  "the_fabled_cerurrel": {
+    "name": "魔轟神獣キャシー"
+  },
+  "the_fabled_ganashia": {
+    "name": "魔轟神獣ガナシア"
+  },
+  "the_masked_beast": {
+    "name": "仮面魔獣マスクド・ヘルレイザー"
+  },
+  "the_tricky": {
+    "name": "THE トリッキー",
+    "skipStrip": true
+  },
+  "the_winged_dragon_of_ra": {
+    "name": "ラーの翼神竜"
+  },
+  "the_winged_dragon_of_ra_(variant)": {
+    "name": "ラーの翼神竜"
+  },
+  "thousand-eyes_idol": {
+    "name": "サウザンド・アイズ・アイドル"
+  },
+  "thousand_dragon": {
+    "name": "サウザンド・ドラゴン"
+  },
+  "thousand_eyes_restrict": {
+    "name": "サウザンド・アイズ・サクリファイス",
+    "skipStrip": true
+  },
+  "time_wizard_of_tomorrow": {
+    "name": "時の魔術師",
+    "skipStrip": true
+  },
+  "togex": {
+    "name": "トゲクス"
+  },
+  "toon_alligator": {
+    "name": "トゥーン・アリゲーター"
+  },
+  "toon_ancient_gear_golem": {
+    "name": "トゥーン・古代の機械巨人"
+  },
+  "toon_barrel_dragon": {
+    "name": "トゥーン・リボルバー・ドラゴン"
+  },
+  "toon_black_luster_soldier": {
+    "name": "トゥーン・カオス・ソルジャー"
+  },
+  "toon_briefcase": {
+    "name": "トゥーン・ブリーフケース"
+  },
+  "toon_buster_blader": {
+    "name": "トゥーン・バスター・ブレイダー"
+  },
+  "toon_cannon_soldier": {
+    "name": "トゥーン・キャノン・ソルジャー"
+  },
+  "toon_cyber_dragon": {
+    "name": "トゥーン・サイバー・ドラゴン"
+  },
+  "toon_dark_magician": {
+    "name": "トゥーン・ブラック・マジシャン"
+  },
+  "toon_dark_magician_girl": {
+    "name": "トゥーン・ブラック・マジシャン・ガール"
+  },
+  "toon_gemini_elf": {
+    "name": "トゥーン・ジェミニ・エルフ"
+  },
+  "toon_goblin_attack_force": {
+    "name": "トゥーン・ゴブリン突撃部隊"
+  },
+  "toon_harpie_lady": {
+    "name": "トゥーン・ハーピィ・レディ"
+  },
+  "toon_masked_sorcerer": {
+    "name": "トゥーン・仮面魔導師"
+  },
+  "toon_mermaid": {
+    "name": "トゥーン・マーメイド"
+  },
+  "toon_summoned_skull": {
+    "name": "トゥーン・デーモン"
+  },
+  "torike": {
+    "name": "トリケライナー"
+  },
+  "treeborn_frog": {
+    "name": "黄泉ガエル"
+  },
+  "tri-horned_dragon": {
+    "name": "トライホーン・ドラゴン"
+  },
+  "turtle_raccoon": {
+    "name": "タートル・ラクーン"
+  },
+  "twin-headed_king_rex": {
+    "name": "二頭を持つキング・レックス"
+  },
+  "twin-headed_wolf": {
+    "name": "ツインヘッド・ウルフ"
+  },
+  "twin_headed_king_rex": {
+    "name": "二頭を持つキング・レックス"
+  },
+  "ultimate_ancient_gear_golem": {
+    "name": "古代の機械究極巨人"
+  },
+  "unstoppable_exodia_incarnate": {
+    "name": "エクゾディア・ネクロス 進化"
+  },
+  "valkerion_the_magnet_warrior": {
+    "name": "磁石の戦士マグネット・バルキリオン"
+  },
+  "valkyrion_the_magnet_warrior": {
+    "name": "磁石の戦士マグネット・バルキリオン"
+  },
+  "versago_the_destroyer": {
+    "name": "融合呪印生物-闇"
+  },
+  "volcanic_doomfire": {
+    "name": "ヴォルカニック・デビル"
+  },
+  "volcanic_hammerer": {
+    "name": "ヴォルカニック・ハンマー"
+  },
+  "volcanic_rocket": {
+    "name": "ヴォルカニック・ロケット"
+  },
+  "volcanic_shell": {
+    "name": "ヴォルカニック・バレット"
+  },
+  "water_dragon": {
+    "name": "ウォーター・ドラゴン"
+  },
+  "water_dragon_cluster": {
+    "name": "ウォーター・ドラゴン・クラスター"
+  },
+  "wattgiraffe": {
+    "name": "エレキリン"
+  },
+  "white_night_dragon": {
+    "name": "ホワイト・ナイト・ドラゴン"
+  },
+  "woodland_sprite": {
+    "name": "森の精霊"
+  },
+  "x-head_cannon": {
+    "name": "X-ヘッド・キャノン"
+  },
+  "y-dragon_head": {
+    "name": "Y-ドラゴン・ヘッド"
+  },
+  "yellow_gadget": {
+    "name": "イエロー・ガジェット"
+  },
+  "yellow_gear": {
+    "name": "イエロー・ガジェット"
+  },
+  "yubel": {
+    "name": "ユベル"
+  },
+  "yubel_the_loving_defender": {
+    "name": "ユベル"
+  },
+  "z-metal_tank": {
+    "name": "Z-メタル・キャタピラー"
+  },
+  "zombyra_the_dark": {
+    "name": "ダーク・ヒーロー ゾンバイア"
+  }
+}

@@ -13,8 +13,8 @@ import { PermaType } from "#app/modifier/perma-modifiers";
 import { CHAMPION_DEFINITIONS } from "#app/system/champion-registry";
 import { ChampionLevelUpPhase } from "#app/phases/champion-level-up-phase";
 import { Mode } from "#app/ui/ui";
-import { QuestUnlockables } from "#app/system/game-data";
-import { allSpecies } from "#app/data/pokemon-species";
+import { QuestUnlockables, QuestState } from "#app/system/game-data";
+import { allSpecies, getPokemonSpecies } from "#app/data/pokemon-species";
 import { ChampionUtils } from "#app/system/champion-utils";
 import { PokemonAltBuildId, POKEMON_ALT_BUILDS } from "#app/data/pokemon-alt-buid";
 
@@ -107,7 +107,7 @@ export class ChampionXPManager {
 			if (available < amount) return false;
 
 			const championData = ChampionManager.getInstance().getChampionData(championId);
-			const perTypeReq = (ChampionXPManager as any).getPerTypeRequiredForLevel?.(championData) as Array<{ types: Type[]; amount: number }> | null;
+			const perTypeReq = ChampionXPManager.getPerTypeRequiredForLevel(championData);
 			if (perTypeReq && perTypeReq.length) {
 				const allowed = new Set(perTypeReq.flatMap(r => r.types));
 				if (!allowed.has(essenceType)) return false;
@@ -143,7 +143,46 @@ export class ChampionXPManager {
 			return false;
 		}
 	}
-	private static handleChampionLevelUp(scene: BattleScene, championData: PlayableChampionData): void {
+	static canMeetLevelRequirements(scene: BattleScene, championData: PlayableChampionData): boolean {
+		const perTypeReq = ChampionXPManager.getPerTypeRequiredForLevel(championData);
+		if (!perTypeReq?.length) return false;
+		const levelEssence = (championData as any).levelEssence || {};
+		const gd = scene.gameData;
+		return perTypeReq.every(seg => {
+			const staged = seg.types.reduce((sum, t) => sum + (levelEssence[t] || 0), 0);
+			const deficit = Math.max(0, seg.amount - staged);
+			if (deficit <= 0) return true;
+			const wallet = seg.types.reduce((sum, t) => sum + gd.getEssenceCount(t), 0);
+			return wallet >= deficit;
+		});
+	}
+
+	static performBinaryLevelUp(scene: BattleScene, championId: string): boolean {
+		const championData = ChampionManager.getInstance().getChampionData(championId);
+		if (!championData) return false;
+		if (!ChampionXPManager.canMeetLevelRequirements(scene, championData)) return false;
+		const levelEssence = (championData as any).levelEssence = (championData as any).levelEssence || {};
+		const gd = scene.gameData;
+		const perTypeReq = ChampionXPManager.getPerTypeRequiredForLevel(championData);
+		if (!perTypeReq?.length) return false;
+		for (const seg of perTypeReq) {
+			const segmentCurrent = seg.types.reduce((sum, t) => sum + (levelEssence[t] || 0), 0);
+			let remaining = Math.max(0, seg.amount - segmentCurrent);
+			for (const t of seg.types) {
+				if (remaining <= 0) break;
+				const consume = Math.min(gd.getEssenceCount(t), remaining);
+				if (consume <= 0) continue;
+				if (!gd.tryConsumeEssence(t, consume)) return false;
+				levelEssence[t] = (levelEssence[t] || 0) + consume;
+				remaining -= consume;
+			}
+			if (remaining > 0) return false;
+		}
+		ChampionXPManager.checkChampionEssenceLevelUp(scene, championData);
+		return true;
+	}
+
+	public static handleChampionLevelUp(scene: BattleScene, championData: PlayableChampionData): void {
 		const lockedIds = Object.keys(championData.lockedSkills || {});
 		if (lockedIds.length === 0) return;
 		const available = lockedIds.filter(id => {
@@ -255,6 +294,11 @@ export class ChampionXPManager {
 				(championData.unlockedConditionalAbilities = championData.unlockedConditionalAbilities || []).push(skillDef.unlockableId as Abilities);
 			}
 			break;
+		case SkillCategory.SMITTY_ABILITIES:
+			if (!(championData.unlockedSmittyAbilities || []).includes(skillDef.unlockableId as Abilities)) {
+				(championData.unlockedSmittyAbilities = championData.unlockedSmittyAbilities || []).push(skillDef.unlockableId as Abilities);
+			}
+			break;
 			case SkillCategory.MOVE_UPGRADES:
 				if (!(championData.unlockedMoveUpgrades || []).includes(skillDef.unlockableId as UpgradePath)) {
 					(championData.unlockedMoveUpgrades = championData.unlockedMoveUpgrades || []).push(skillDef.unlockableId as UpgradePath);
@@ -316,7 +360,7 @@ export class ChampionXPManager {
 				const questData = scene.gameData.getQuestUnlockDataFromModifierTypes(questId);
 				if (!questData || !questData.rewardId) break;
 
-				const species = (allSpecies as any)?.[questData.rewardId - 1];
+				const species = getPokemonSpecies(questData.rewardId);
 				if (!species) break;
 
 				const formKey = species.getGlitchFormName?.(true, undefined, questData.rewardType);
@@ -330,6 +374,8 @@ export class ChampionXPManager {
 				}
 
 				championData.glitchFormUnlockableIds[formKey.toLowerCase()] = questId;
+
+				scene.gameData.setQuestState(questId, QuestState.COMPLETED, questData);
 			} catch (error) {
 				console.error(`[GLITCH] Failed to process glitch form unlock:`, error);
 			}
@@ -360,7 +406,7 @@ export class ChampionXPManager {
 	}
 	private static checkChampionEssenceLevelUp(scene: BattleScene, championData: PlayableChampionData): void {
 
-		const perTypeReq = (ChampionXPManager as any).getPerTypeRequiredForLevel?.(championData) as Array<{ types: Type[]; amount: number }> | null;
+		const perTypeReq = ChampionXPManager.getPerTypeRequiredForLevel(championData);
 		if (!perTypeReq || perTypeReq.length === 0) {
 
 			const levelEssence = (championData as any).levelEssence = (championData as any).levelEssence || {};
@@ -390,17 +436,19 @@ export class ChampionXPManager {
 			}
 		} else {
 			const levelEssence = (championData as any).levelEssence = (championData as any).levelEssence || {};
-			const canLevel = () => {
-				for (const segment of perTypeReq) {
+			while (true) {
+				const iterPerTypeReq = ChampionXPManager.getPerTypeRequiredForLevel(championData);
+				if (!iterPerTypeReq?.length) break;
+				let canLevel = true;
+				for (const segment of iterPerTypeReq) {
 					const available = segment.types.reduce((sum, type) => sum + (levelEssence[type] || 0), 0);
-					if (available < segment.amount) return false;
+					if (available < segment.amount) {
+						canLevel = false;
+						break;
+					}
 				}
-				return true;
-			};
-
-			while (canLevel()) {
-
-				for (const segment of perTypeReq) {
+				if (!canLevel) break;
+				for (const segment of iterPerTypeReq) {
 					let remainingToDrain = segment.amount;
 					const availableTypes = segment.types.filter(type => (levelEssence[type] || 0) > 0);
 					for (const type of availableTypes) {
@@ -409,15 +457,26 @@ export class ChampionXPManager {
 						const toDrain = Math.min(available, remainingToDrain);
 						levelEssence[type] = available - toDrain;
 						remainingToDrain -= toDrain;
-
 						if (levelEssence[type] <= 0) delete levelEssence[type];
 					}
 				}
-
 				championData.level = (championData.level || 1) + 1;
 				this.handleChampionLevelUp(scene, championData);
 			}
 			return;
+		}
+	}
+
+	static finalizeEndOfRunLevelUps(scene: BattleScene, championId?: string): void {
+		const gameData = scene.gameData;
+		const activeChampionId = championId || (gameData as any)?.selectedChampionId || gameData?.activeSkillTree?.championId;
+		if (!activeChampionId) return;
+		const championData = ChampionManager.getInstance().getChampionData(activeChampionId);
+		if (!championData) return;
+		const levelBefore = championData.level || 1;
+		ChampionXPManager.checkChampionEssenceLevelUp(scene, championData);
+		if ((championData.level || 1) > levelBefore) {
+			try { gameData.saveSystem?.(); } catch {}
 		}
 	}
 

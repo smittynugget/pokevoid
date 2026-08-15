@@ -205,47 +205,47 @@
   },
   "riolu_apollo_diana_signature": {
     "name": "Parceiro de Apollo e Diana",
-    "description": "O corajoso companheiro assinatura tipo Lutador de Apollo e Diana"
+    "description": "O corajoso companheiro assinatura tipo Lutador de {{champion}}"
   },
   "solrock_apollo_diana_signature": {
     "name": "Parceiro de Apollo e Diana",
-    "description": "O radiante companheiro assinatura tipo Pedra de Apollo e Diana"
+    "description": "O radiante companheiro assinatura tipo Pedra de {{champion}}"
   },
   "lunatone_apollo_diana_signature": {
     "name": "Parceiro de Apollo e Diana",
-    "description": "O místico companheiro assinatura tipo Pedra de Apollo e Diana"
+    "description": "O místico companheiro assinatura tipo Pedra de {{champion}}"
   },
   "larvesta_apollo_diana_signature": {
     "name": "Parceiro de Apollo e Diana",
-    "description": "O ardente companheiro assinatura tipo Inseto de Apollo e Diana"
+    "description": "O ardente companheiro assinatura tipo Inseto de {{champion}}"
   },
   "swablu_apollo_diana_signature": {
     "name": "Parceiro de Apollo e Diana",
-    "description": "O fofo companheiro assinatura tipo Normal de Apollo e Diana"
+    "description": "O fofo companheiro assinatura tipo Normal de {{champion}}"
   },
   "castform_apollo_diana_signature": {
     "name": "Parceiro de Apollo e Diana",
-    "description": "O adaptável companheiro assinatura tipo Normal de Apollo e Diana"
+    "description": "O adaptável companheiro assinatura tipo Normal de {{champion}}"
   },
   "litwick_apollo_diana_signature": {
     "name": "Parceiro de Apollo e Diana",
-    "description": "O tremeluzente companheiro assinatura tipo Fantasma de Apollo e Diana"
+    "description": "O tremeluzente companheiro assinatura tipo Fantasma de {{champion}}"
   },
   "eevee_apollo_diana_signature": {
     "name": "Parceiro de Apollo e Diana",
-    "description": "O versátil companheiro assinatura tipo Normal de Apollo e Diana"
+    "description": "O versátil companheiro assinatura tipo Normal de {{champion}}"
   },
   "teddiursa_apollo_diana_signature": {
     "name": "Parceiro de Apollo e Diana",
-    "description": "O fofinho companheiro assinatura tipo Normal de Apollo e Diana"
+    "description": "O fofinho companheiro assinatura tipo Normal de {{champion}}"
   },
   "cleffa_apollo_diana_signature": {
     "name": "Parceiro de Apollo e Diana",
-    "description": "O estrelado companheiro assinatura tipo Fada de Apollo e Diana"
+    "description": "O estrelado companheiro assinatura tipo Fada de {{champion}}"
   },
   "sunkern_apollo_diana_signature": {
     "name": "Parceiro de Apollo e Diana",
-    "description": "O esperançoso companheiro assinatura tipo Planta de Apollo e Diana"
+    "description": "O esperançoso companheiro assinatura tipo Planta de {{champion}}"
   },
   "riolu_shadow_warrior": {
     "name": "Guerreiro das Sombras",
@@ -291,5 +291,93 @@
     "name": "Broto de Plasma",
     "description": "Um Sunkern Elétrico/Planta crepitando com energia de plasma, conversão galvanizante, intensidade de poder solar e dominância de campo elétrico"
   },
-  "championPartner": "Parceiro de {{champion}}"
+  "championPartner": "Parceiro de {{champion}}",
+  "bulbasaur_plasma_jungle": {
+    "name": "Plasma Jungle",
+    "description": "Um Bulbasaur Planta/Elétrico canalizando a selva de plasma, fundindo poder de cipó com relâmpagos crepitantes"
+  },
+  "bulbasaur_red_signature": {
+    "name": "Parceiro de Red",
+    "description": "O Bulbasaur assinatura de Red — um guerreiro semente resiliente canalizando natureza e energia elétrica em perfeita harmonia"
+  },
+  "butterfree_red_signature": {
+    "name": "Parceiro de Red",
+    "description": "O Butterfree assinatura de Red — uma mariposa fascinante com poderes psíquicos e pólen que drena a alma"
+  },
+  "butterfree_soul_moth": {
+    "name": "Soul Moth",
+    "description": "Um Butterfree Inseto/Fantasma transformado em mariposa das almas, drenando força vital com pó espectral das asas"
+  },
+  "charmander_black_inferno": {
+    "name": "Black Inferno",
+    "description": "Um Charmander Fogo/Sombrio consumido pelo inferno negro, brandindo chamas sombrias e fúria dracônica"
+  },
+  "charmander_red_signature": {
+    "name": "Parceiro de Red",
+    "description": "O Charmander assinatura de Red — uma chama feroz que cresce até se tornar um inferno de poder dracônico"
+  },
+  "espeon_moon_goddess": {
+    "name": "Moon Goddess",
+    "description": "Um Espeon Psíquico/Fada ascendendo como deusa lunar, irradiando magia lunar e brilhantismo psíquico"
+  },
+  "espeon_red_signature": {
+    "name": "Parceiro de Red",
+    "description": "O Espeon assinatura de Red — um psíquico lunar irradiando luar e energia feérica com devastação graciosa"
+  },
+  "farfetchd_heavens_edge": {
+    "name": "Heaven's Edge",
+    "description": "Um Farfetch'd Lutador/Voador ascendendo como lâmina celestial, golpeando dos céus com esgrima divina"
+  },
+  "farfetchd_red_signature": {
+    "name": "Parceiro de Red",
+    "description": "O Farfetch'd assinatura de Red — um espadachim destemido empunhando seu alho-poró com maestria letal em golpes críticos"
+  },
+  "lapras_red_signature": {
+    "name": "Parceiro de Red",
+    "description": "O Lapras assinatura de Red — um viajante gracioso comandando gelo e água com precisão serena mas letal"
+  },
+  "lapras_voidfrost": {
+    "name": "Voidfrost",
+    "description": "Um Lapras Gelo/Fantasma vagando pelo Void, fundindo frio espectral com gelo abissal para um poder assombroso"
+  },
+  "magikarp_dragonborn": {
+    "name": "Dragonborn",
+    "description": "Um Magikarp Água/Dragão renascido como verdadeiro filho do dragão, desbloqueando potencial dracônico ancestral"
+  },
+  "magikarp_red_signature": {
+    "name": "Parceiro de Red",
+    "description": "O Magikarp assinatura de Red — um azarão que desafia expectativas e evolui em uma potência de sangue de dragão"
+  },
+  "pikachu_electro_berserker": {
+    "name": "Electro Berserker",
+    "description": "Um Pikachu Elétrico/Lutador transbordando fúria berserk, combinando voltagem bruta com maestria em artes marciais"
+  },
+  "pikachu_red_signature": {
+    "name": "Parceiro de Red",
+    "description": "O Pikachu assinatura de Red — um parceiro veterano de batalha com velocidade incomparável e ataques elétricos devastadores"
+  },
+  "snorlax_dream_colossus": {
+    "name": "Dream Colossus",
+    "description": "Um Snorlax Normal/Psíquico ascendendo à forma de colosso onírico, fundindo massa imensa com manipulação psíquica de sonhos"
+  },
+  "snorlax_red_signature": {
+    "name": "Parceiro de Red",
+    "description": "O Snorlax assinatura de Red — um muro inabalável que absorve castigo e contra-ataca com poder aterrorizante"
+  },
+  "squirtle_abyss_golem": {
+    "name": "Abyss Golem",
+    "description": "Um Squirtle Água/Sombrio forjado em golem abissal, comandando a escuridão das profundezas com poderio blindado"
+  },
+  "squirtle_red_signature": {
+    "name": "Parceiro de Red",
+    "description": "O Squirtle assinatura de Red — uma fortaleza de casco que comanda o abismo com maestria em água sombria"
+  },
+  "tauros_iron_quake": {
+    "name": "Iron Quake",
+    "description": "Um Tauros Terra/Aço se tornando um terremoto de ferro, fundindo armadura metálica com devastação sísmica"
+  },
+  "tauros_red_signature": {
+    "name": "Parceiro de Red",
+    "description": "O Tauros assinatura de Red — um touro furioso com impulso imparável e ataques que abalam a terra"
+  }
 }

@@ -1,0 +1,10 @@
+{
+  "title": "冠軍選擇",
+  "instruction": "選擇你的冠軍",
+  "locked": "已鎖定",
+  "essenceNeeded": "{{amount}} {{typeName}}精華",
+  "mysteryChampion": "???",
+  "mysterySubtitle": "虛空來決定？！",
+  "randomDescription": "隨機冠軍",
+  "tooltip.essenceRequiredDesc": "消耗精華來解鎖此冠軍。要獲得精華，擊敗寶可夢來獲取他們的屬性。"
+}

@@ -123,7 +123,7 @@
   "rival_flame": "Der korrumpierte Schatten löst sich im Void auf",
   "rival_shadowPower": "Dunkle Energie kristallisiert in der Luft",
   "rival_power": "Nutze die Korruption als Waffe gegen den Void",
-  "rival_shadows": "Einer erledigt—noch XXX übrig",
+  "rival_shadows": "Einer erledigt—noch ??? übrig",
   "rival_final_flame": "Der letzte Schatten fällt",
   "rival_final_shadowPower": "Der letzte Rest der Korruption",
   "rival_final_power": "Wende die Dunkelheit gegen sich selbst",
@@ -160,5 +160,17 @@
   "all_smittys_peace": "Frieden kehrt in die Welt zurück",
   "all_smittys_voidbreak": "Jenseits der Rettung beschädigt—der Void schläft",
   "all_smittys_mystery": "Selbst in der Stille wächst das Chaos und lauert in den Schatten",
-  "all_smittys_journey": "Bitte halte es in Schach, du bist der Widerstand!"
+  "all_smittys_journey": "Bitte halte es in Schach, du bist der Widerstand!",
+  "tutorial_trance_1a": "Du bist wach! Ich fing schon an zu denken...",
+  "tutorial_trance_1b": "Nein. Das ist egal. Du bist hier. Das ist alles, was zählt.",
+  "tutorial_trance_2a": "Ich habe neben zu vielen Trainern gesessen und darauf gewartet, dass sie aufwachen. Sie tun es nie.",
+  "tutorial_trance_2b": "Aber du... du hast gerade bewiesen, dass jeder einzelne dieser Verlorenen nicht umsonst war.",
+  "tutorial_trance_3a": "Du hast etwas Besonderes an dir. Was auch immer der Void dir da drin angetan hat...",
+  "tutorial_trance_3b": "Es hat dich nicht gebrochen. Es hat dich stärker gemacht.",
+  "tutorial_trance_4a": "Wir haben diesen Kampf schon lange verloren.",
+  "tutorial_trance_4b": "Aber du hast gerade bewiesen, dass der Void besiegt werden kann. Jetzt beweis es nochmal.",
+  "tutorial_trance_5a": "Der Void hat uns alles genommen. Zeit, es zurückzuholen.",
+  "tutorial_trance_5b": "Hier beginnt deine Geschichte — geh hinaus und werde Legendär!",
+  "loss_whiteout": "Die Dunkelheit verschlingt alles...",
+  "loss_homebase": "Zurück in Sicherheit..."
 }

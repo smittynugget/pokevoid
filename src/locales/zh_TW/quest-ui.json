@@ -105,6 +105,17 @@
       "common": {
         "any": "任意"
       }
+    },
+    "skillTree": {
+      "modalTitle": "技能樹懸賞",
+      "completion": {
+        "title": "懸賞完成！",
+        "standardReward": "選擇你的獎勵！",
+        "rareReward": "大師球稀有度已解鎖！",
+        "veryRareRankUp": "寶可夢晉級在等著你！",
+        "veryRareMove": "決鬥獸招式在等著你！",
+        "fallback": "獎勵已發放！"
+      }
     }
   },
   "modeRewards": {

@@ -4,5 +4,8 @@
   "ultraBall": "Гипербол",
   "rogueBall": "Рогбол",
   "masterBall": "Мастербол",
-  "luxuryBall": "Люксбол"
+  "luxuryBall": "Люксбол",
+  "typeBall": "{{typeName}}бол",
+  "voidBall": "Пустотабол",
+  "voidBallCatchRate": "100% (Красные ОЗ)"
 }

@@ -250,6 +250,22 @@ export class DropDown extends Phaser.GameObjects.Container {
     this.add(this.window);
     this.add(options);
     this.add(this.cursorObj);
+
+    this.options.forEach((option, index) => {
+      const hitZone = scene.add.zone(0, 0, optionWidth, optionHeight + optionSpacing);
+      hitZone.setOrigin(0, 0);
+      hitZone.setInteractive({ useHandCursor: true });
+      hitZone.on("pointerover", () => {
+        this.setCursor(index);
+      });
+      hitZone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (pointer.button !== 0) return;
+        this.setCursor(index);
+        this.toggleOptionState(index);
+      });
+      option.add(hitZone);
+    });
+
     this.setVisible(false);
   }
 
@@ -293,7 +309,6 @@ export class DropDown extends Phaser.GameObjects.Container {
     } else {
       this.cursorObj.y = this.options[cursor].y + 3.5;
       this.cursorObj.setVisible(true);
-
       if (this.dropDownType === DropDownType.HYBRID) {
         this.lastCursor = cursor;
         this.onChange();
@@ -306,10 +321,8 @@ export class DropDown extends Phaser.GameObjects.Container {
     if (this.dropDownType === DropDownType.MULTI || this.dropDownType === DropDownType.HYBRID) {
       const newState = option.toggleOptionState();
       if (index === 0) {
-
         this.setAllOptions(newState);
       } else {
-
         if (newState === DropDownState.ON && this.checkForAllOn()) {
           this.options[0].setOptionState(DropDownState.ON);
         } else {
@@ -349,11 +362,9 @@ export class DropDown extends Phaser.GameObjects.Container {
       if (selected.length > 0) {
         return selected;
       }
-
       if (this.cursor === 0) {
         return this.options.filter((_, i) => i > 0).map(option => option.val);
       }
-
       return [this.options[this.cursor].val];
     } else if (this.dropDownType === DropDownType.RADIAL) {
       return this.options.map((option) => {
@@ -449,6 +460,18 @@ export class DropDown extends Phaser.GameObjects.Container {
       }
     }
     this.window.width = maxWidth + x - this.window.x + 6;
+
+    const newHitWidth = this.window.width;
+    for (const option of this.options) {
+      const hz = option.list?.find((c: any) => c instanceof Phaser.GameObjects.Zone) as Phaser.GameObjects.Zone | undefined;
+      if (hz) {
+        hz.setSize(newHitWidth, hz.height);
+        hz.setInteractive(
+          new Phaser.Geom.Rectangle(0, 0, newHitWidth, hz.height),
+          Phaser.Geom.Rectangle.Contains
+        );
+      }
+    }
 
     if (this.x + this.window.width > this.parentContainer.width) {
       this.x = this.parentContainer.width - this.window.width;

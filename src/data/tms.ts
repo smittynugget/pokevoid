@@ -67610,7 +67610,7 @@ export const tmPoolTiers: TmPoolTiers = {
     [Moves.ROCK_SLIDE]: ModifierTier.GREAT,
     [Moves.TRI_ATTACK]: ModifierTier.ULTRA,
     [Moves.SUPER_FANG]: ModifierTier.COMMON,
-    [Moves.SUBSTITUTE]: ModifierTier.COMMON,
+    [Moves.SUBSTITUTE]: ModifierTier.ULTRA,
     [Moves.THIEF]: ModifierTier.GREAT,
     [Moves.SNORE]: ModifierTier.MEH,
     [Moves.CURSE]: ModifierTier.COMMON,

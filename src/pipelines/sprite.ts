@@ -42,12 +42,17 @@ uniform ivec4 baseVariantColors[32];
 uniform vec4 variantColors[32];
 uniform ivec4 spriteColors[32];
 uniform ivec4 fusionSpriteColors[32];
+uniform int fusionRecolorMode;
 uniform ivec4 altBuildSpriteColors[32];
 uniform ivec4 altBuildTargetColors[32];
 uniform int altBuildBlendMode;
 uniform float altBuildInversionFactor;
 uniform vec3 baseColor;
 uniform int hasBaseColor;
+uniform float portalBrightness;
+uniform float portalInvert;
+uniform float portalHueRotate;
+uniform float portalSaturate;
 const vec3 lumaF = vec3(.299, .587, .114);
 
 float blendOverlay(float base, float blend) {
@@ -175,46 +180,88 @@ void main() {
         }
     }
 
-    for (int i = 0; i < 32; i++) {
-        if (spriteColors[i][3] == 0)
-            break;
-        if (texture.a > 0.0 && colorInt.r == spriteColors[i].r && colorInt.g == spriteColors[i].g && colorInt.b == spriteColors[i].b) {
-            vec3 fusionColor = vec3(float(fusionSpriteColors[i].r) / 255.0, float(fusionSpriteColors[i].g) / 255.0, float(fusionSpriteColors[i].b) / 255.0);
-            vec3 bg = vec3(float(spriteColors[i].r) / 255.0, float(spriteColors[i].g) / 255.0, float(spriteColors[i].b) / 255.0);
-            float gray = (bg.r + bg.g + bg.b) / 3.0;
-            bg = vec3(gray, gray, gray);
-            vec3 fg = fusionColor;
-            texture.rgb = mix(1.0 - 2.0 * (1.0 - bg) * (1.0 - fg), 2.0 * bg * fg, step(bg, vec3(0.5)));
-            break;
+    if (fusionRecolorMode == 1 && texture.a > 0.0 && spriteColors[0][3] != 0 && fusionSpriteColors[0][3] != 0) {
+        vec3 fg = vec3(0.0, 0.0, 0.0);
+        float bestDist = 999999.0;
+        for (int i = 0; i < 4; i++) {
+            if (spriteColors[i][3] == 0 || fusionSpriteColors[i][3] == 0)
+                break;
+            vec3 src = vec3(float(spriteColors[i].r) / 255.0, float(spriteColors[i].g) / 255.0, float(spriteColors[i].b) / 255.0);
+            vec3 diff = texture.rgb - src;
+            float dist = dot(diff, diff);
+            if (dist < bestDist) {
+                bestDist = dist;
+                fg = vec3(float(fusionSpriteColors[i].r) / 255.0, float(fusionSpriteColors[i].g) / 255.0, float(fusionSpriteColors[i].b) / 255.0);
+            }
+        }
+        float gray = (texture.r + texture.g + texture.b) / 3.0;
+        vec3 bg = vec3(gray, gray, gray);
+        texture.rgb = mix(1.0 - 2.0 * (1.0 - bg) * (1.0 - fg), 2.0 * bg * fg, step(bg, vec3(0.5)));
+    } else {
+        for (int i = 0; i < 32; i++) {
+            if (spriteColors[i][3] == 0)
+                break;
+            if (texture.a > 0.0 && colorInt.r == spriteColors[i].r && colorInt.g == spriteColors[i].g && colorInt.b == spriteColors[i].b) {
+                vec3 fusionColor = vec3(float(fusionSpriteColors[i].r) / 255.0, float(fusionSpriteColors[i].g) / 255.0, float(fusionSpriteColors[i].b) / 255.0);
+                vec3 bg = vec3(float(spriteColors[i].r) / 255.0, float(spriteColors[i].g) / 255.0, float(spriteColors[i].b) / 255.0);
+                float gray = (bg.r + bg.g + bg.b) / 3.0;
+                bg = vec3(gray, gray, gray);
+                vec3 fg = fusionColor;
+                texture.rgb = mix(1.0 - 2.0 * (1.0 - bg) * (1.0 - fg), 2.0 * bg * fg, step(bg, vec3(0.5)));
+                break;
+            }
         }
     }
 
-    for (int i = 0; i < 32; i++) {
-        if (altBuildSpriteColors[i][3] == 0)
-            break;
-        if (texture.a > 0.0 && colorInt.r == altBuildSpriteColors[i].r && colorInt.g == altBuildSpriteColors[i].g && colorInt.b == altBuildSpriteColors[i].b) {
-            vec3 targetColor = vec3(float(altBuildTargetColors[i].r) / 255.0, float(altBuildTargetColors[i].g) / 255.0, float(altBuildTargetColors[i].b) / 255.0);
-
-            if (altBuildBlendMode == 0) {
-                texture.rgb = targetColor;
-            } else if (altBuildBlendMode == 1) {
-                texture.rgb = blendOverlay(texture.rgb, targetColor);
-            } else if (altBuildBlendMode == 2) {
-                texture.rgb = texture.rgb * targetColor;
-        } else if (altBuildBlendMode == 3) {
-            vec3 originalColor = vec3(float(altBuildSpriteColors[i].r) / 255.0, float(altBuildSpriteColors[i].g) / 255.0, float(altBuildSpriteColors[i].b) / 255.0);
-
-            float gray = (originalColor.r + originalColor.g + originalColor.b) / 3.0;
-
-            if (altBuildInversionFactor > 0.0) {
-                gray = mix(gray, 1.0 - gray, altBuildInversionFactor);
+    if (altBuildBlendMode == 4 && texture.a > 0.0 && altBuildSpriteColors[0][3] != 0 && altBuildTargetColors[0][3] != 0) {
+        vec3 targetColor = vec3(0.0, 0.0, 0.0);
+        float bestDist = 999999.0;
+        for (int i = 0; i < 4; i++) {
+            if (altBuildSpriteColors[i][3] == 0 || altBuildTargetColors[i][3] == 0)
+                break;
+            vec3 src = vec3(float(altBuildSpriteColors[i].r) / 255.0, float(altBuildSpriteColors[i].g) / 255.0, float(altBuildSpriteColors[i].b) / 255.0);
+            vec3 diff = texture.rgb - src;
+            float dist = dot(diff, diff);
+            if (dist < bestDist) {
+                bestDist = dist;
+                targetColor = vec3(float(altBuildTargetColors[i].r) / 255.0, float(altBuildTargetColors[i].g) / 255.0, float(altBuildTargetColors[i].b) / 255.0);
             }
-
-            vec3 bg = vec3(gray, gray, gray);
-            vec3 fg = targetColor;
-            texture.rgb = mix(1.0 - 2.0 * (1.0 - bg) * (1.0 - fg), 2.0 * bg * fg, step(bg, vec3(0.5)));
         }
-            break;
+        float gray = (texture.r + texture.g + texture.b) / 3.0;
+        if (altBuildInversionFactor > 0.0) {
+            gray = mix(gray, 1.0 - gray, altBuildInversionFactor);
+        }
+        vec3 bg = vec3(gray, gray, gray);
+        vec3 fg = targetColor;
+        texture.rgb = mix(1.0 - 2.0 * (1.0 - bg) * (1.0 - fg), 2.0 * bg * fg, step(bg, vec3(0.5)));
+    } else {
+        for (int i = 0; i < 32; i++) {
+            if (altBuildSpriteColors[i][3] == 0)
+                break;
+            if (texture.a > 0.0 && colorInt.r == altBuildSpriteColors[i].r && colorInt.g == altBuildSpriteColors[i].g && colorInt.b == altBuildSpriteColors[i].b) {
+                vec3 targetColor = vec3(float(altBuildTargetColors[i].r) / 255.0, float(altBuildTargetColors[i].g) / 255.0, float(altBuildTargetColors[i].b) / 255.0);
+
+                if (altBuildBlendMode == 0) {
+                    texture.rgb = targetColor;
+                } else if (altBuildBlendMode == 1) {
+                    texture.rgb = blendOverlay(texture.rgb, targetColor);
+                } else if (altBuildBlendMode == 2) {
+                    texture.rgb = texture.rgb * targetColor;
+            } else if (altBuildBlendMode == 3) {
+                vec3 originalColor = vec3(float(altBuildSpriteColors[i].r) / 255.0, float(altBuildSpriteColors[i].g) / 255.0, float(altBuildSpriteColors[i].b) / 255.0);
+
+                float gray = (originalColor.r + originalColor.g + originalColor.b) / 3.0;
+
+                if (altBuildInversionFactor > 0.0) {
+                    gray = mix(gray, 1.0 - gray, altBuildInversionFactor);
+                }
+
+                vec3 bg = vec3(gray, gray, gray);
+                vec3 fg = targetColor;
+                texture.rgb = mix(1.0 - 2.0 * (1.0 - bg) * (1.0 - fg), 2.0 * bg * fg, step(bg, vec3(0.5)));
+            }
+                break;
+            }
         }
     }
 
@@ -232,6 +279,7 @@ void main() {
         float floorValue = 86.0 / 255.0;
         if (hasBaseColor == 1) {
             vec3 teraPatternHsv = rgb2hsv(teraCol.rgb);
+            vec3 teraHsv = rgb2hsv(teraColor);
 
           float dynamicValue = (teraPatternHsv.b - floorValue) * 4.0 +
                               teraTexCoord.x * fieldScale / 2.0 +
@@ -239,8 +287,8 @@ void main() {
                               teraTime * 255.0;
 
           teraCol.rgb = hsv2rgb(vec3(
-              teraPatternHsv.r,
-              teraPatternHsv.g,
+              teraHsv.r,
+              teraHsv.g * 0.5,
               mod(dynamicValue, 0.8)
           ));
             color.rgb = finalBaseColor;
@@ -263,6 +311,31 @@ void main() {
         color.rgb = mix(texture.rgb, outTint.bgr * outTint.a, texture.a);
     } else if (outTintEffect == 2.0) {
         color = texel;
+    }
+
+    if (color.a >= 0.01) {
+    if (portalHueRotate != 0.0) {
+        float hAngle = portalHueRotate * 3.14159265 / 180.0;
+        float hSin = sin(hAngle);
+        float hCos = cos(hAngle);
+        mat3 hueMatrix = mat3(
+            0.213 + hCos*0.787 - hSin*0.213, 0.213 - hCos*0.213 + hSin*0.143, 0.213 - hCos*0.213 - hSin*0.787,
+            0.715 - hCos*0.715 - hSin*0.715, 0.715 + hCos*0.285 + hSin*0.140, 0.715 - hCos*0.715 + hSin*0.715,
+            0.072 - hCos*0.072 + hSin*0.928, 0.072 - hCos*0.072 - hSin*0.283, 0.072 + hCos*0.928 + hSin*0.072
+        );
+        color.rgb = hueMatrix * color.rgb;
+    }
+
+    if (portalInvert > 0.0) {
+        color.rgb = mix(color.rgb, vec3(1.0) - color.rgb, portalInvert);
+    }
+    if (portalBrightness != 1.0) {
+        color.rgb *= portalBrightness;
+    }
+    if (portalSaturate != 1.0) {
+        float satLuma = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
+        color.rgb = mix(vec3(satLuma), color.rgb, portalSaturate);
+    }
     }
 
     /* Apply gray */
@@ -389,6 +462,11 @@ export default class SpritePipeline extends FieldSpritePipeline {
     this.set2f("texSize", 0, 0);
     this.set1f("yOffset", 0);
     this.set4fv("tone", this._tone);
+    this.set1i("fusionRecolorMode", 0);
+    this.set1f("portalBrightness", 1.0);
+    this.set1f("portalInvert", 0.0);
+    this.set1f("portalHueRotate", 0.0);
+    this.set1f("portalSaturate", 1.0);
   }
 
   onBind(gameObject: Phaser.GameObjects.GameObject): void {
@@ -402,6 +480,17 @@ export default class SpritePipeline extends FieldSpritePipeline {
     const hasShadow = data["hasShadow"] as boolean;
     const ignoreFieldPos = data["ignoreFieldPos"] as boolean;
     const ignoreOverride = data["ignoreOverride"] as boolean;
+
+    const portalBrightness = (data["portalBrightness"] as number) ?? 1.0;
+    const portalInvert = (data["portalInvert"] as number) ?? 0.0;
+    const portalHueRotate = (data["portalHueRotate"] as number) ?? 0.0;
+    const portalSaturate = (data["portalSaturate"] as number) ?? 1.0;
+    const ignoreTimeTint = (data["ignoreTimeTint"] as number) ?? 0;
+    this.set1f("portalBrightness", portalBrightness);
+    this.set1f("portalInvert", portalInvert);
+    this.set1f("portalHueRotate", portalHueRotate);
+    this.set1f("portalSaturate", portalSaturate);
+    this.set1i("ignoreTimeTint", ignoreTimeTint);
 
     const isEntityObj = sprite.parentContainer instanceof Pokemon || sprite.parentContainer instanceof Trainer;
     const field = isEntityObj ? sprite.parentContainer.parentContainer : sprite.parentContainer;
@@ -418,7 +507,8 @@ export default class SpritePipeline extends FieldSpritePipeline {
     }
 
     if (data["baseColor"]) {
-        this.set3fv("baseColor", data["baseColor"]);
+        const baseColor = (data["baseColor"] as number[]).map(c => (c > 1 ? c / 255 : c));
+        this.set3fv("baseColor", baseColor);
         this.set1i("hasBaseColor", 1);
       } else {
         this.set1i("hasBaseColor", 0);
@@ -437,9 +527,20 @@ export default class SpritePipeline extends FieldSpritePipeline {
     this.set4fv("tone", tone);
     this.bindTexture(this.game.textures.get("tera").source[0].glTexture!, 1);
 
+    const fusionRecolorMode = (gameObject.scene as BattleScene).fusionPaletteSwaps
+      ? (ignoreOverride
+        ? ((data["fusionRecolorModeBase"] ?? data["fusionRecolorMode"] ?? 0) as integer)
+        : ((data["fusionRecolorMode"] ?? 0) as integer))
+      : 0;
+    this.set1i("fusionRecolorMode", fusionRecolorMode);
+
     if ((gameObject.scene as BattleScene).fusionPaletteSwaps) {
-      const spriteColors = ((ignoreOverride && data["spriteColorsBase"]) || data["spriteColors"] || []) as number[][];
-      const fusionSpriteColors = ((ignoreOverride && data["fusionSpriteColorsBase"]) || data["fusionSpriteColors"] || []) as number[][];
+      const spriteColors = (ignoreOverride
+        ? (data["spriteColorsBase"] ?? data["spriteColors"] ?? [])
+        : (data["spriteColors"] ?? [])) as number[][];
+      const fusionSpriteColors = (ignoreOverride
+        ? (data["fusionSpriteColorsBase"] ?? data["fusionSpriteColors"] ?? [])
+        : (data["fusionSpriteColors"] ?? [])) as number[][];
 
       const emptyColors = [ 0, 0, 0, 0 ];
       const flatSpriteColors: integer[] = [];
@@ -451,13 +552,25 @@ export default class SpritePipeline extends FieldSpritePipeline {
 
       this.set4iv("spriteColors", flatSpriteColors.flat());
       this.set4iv("fusionSpriteColors", flatFusionSpriteColors.flat());
+    } else {
+      const empty = [ 0, 0, 0, 0 ];
+      const zeros: number[] = [];
+      for (let i = 0; i < 32; i++) {
+        zeros.push(...empty);
+      }
+      this.set4iv("spriteColors", zeros);
+      this.set4iv("fusionSpriteColors", zeros);
     }
 
     if (data["altBuildSpriteColors"] && data["altBuildTargetColors"]) {
 
       const altBuildSpriteColors = data["altBuildSpriteColors"] as number[][];
       const altBuildTargetColors = data["altBuildTargetColors"] as number[][];
-      const blendMode = data["altBuildBlendMode"] === 'overlay' ? 1 : data["altBuildBlendMode"] === 'multiply' ? 2 : data["altBuildBlendMode"] === 'grayscale_overlay' ? 3 : 0;
+      const blendMode = data["altBuildBlendMode"] === 'overlay' ? 1
+        : data["altBuildBlendMode"] === 'multiply' ? 2
+          : data["altBuildBlendMode"] === 'grayscale_overlay' ? 3
+            : data["altBuildBlendMode"] === 'duelmon_cluster4' ? 4
+              : 0;
       const inversionFactor = (data["altBuildInversionFactor"] as number) || 0.0;
 
       const emptyColors = [ 0, 0, 0, 0 ];

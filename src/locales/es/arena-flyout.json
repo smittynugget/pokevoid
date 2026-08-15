@@ -46,5 +46,16 @@
   "magmaStorm": "Lluvia Ígnea",
   "snapTrap": "Trampa Cáscara",
   "thunderCage": "Jaula Voltaica",
-  "infestation": "Acoso"
+  "infestation": "Acoso",
+  "day": "Día",
+  "night": "Noche",
+  "dawn": "Amanecer",
+  "dusk": "Atardecer",
+  "cursed": "Maldición",
+  "seeded": "Drenadoras",
+  "trapped": "Atrapado",
+  "yuTrapped": "Atrapado",
+  "saltCured": "Salazón",
+  "octolock": "Octopresa",
+  "ingrain": "Arraigo"
 }

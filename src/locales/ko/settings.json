@@ -17,6 +17,7 @@
   "hideIvs": "개체값탐지기 효과 끄기",
   "tutorials": "튜토리얼",
   "touchControls": "터치 컨트롤 표시",
+  "disableMouse": "마우스 비활성화",
   "vibrations": "진동",
   "normal": "보통",
   "fast": "빠르게",

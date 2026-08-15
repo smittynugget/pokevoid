@@ -581,6 +581,29 @@ class StickyWebTag extends ArenaTrapTag {
   }
 
 }
+
+class ChaosEndMarkTag extends ArenaTrapTag {
+  constructor(sourceId: integer, side: ArenaTagSide) {
+    super(ArenaTagType.CHAOS_END_MARK, Moves.NONE, sourceId, side, 1);
+  }
+
+  activateTrap(pokemon: Pokemon): boolean {
+    const cancelled = new Utils.BooleanHolder(false);
+    applyAbAttrs(BlockNonDirectDamageAbAttr, pokemon, cancelled);
+    if (cancelled.value) {
+      pokemon.scene.arena.removeTagOnSide(ArenaTagType.CHAOS_END_MARK, this.side);
+      return false;
+    }
+    const damage = Utils.toDmgValue(pokemon.getMaxHp() / 6);
+    pokemon.damageAndUpdate(damage, HitResult.OTHER);
+    if (pokemon.turnData) {
+      pokemon.turnData.damageTaken += damage;
+    }
+    pokemon.scene.arena.removeTagOnSide(ArenaTagType.CHAOS_END_MARK, this.side);
+    return true;
+  }
+}
+
 export class TrickRoomTag extends ArenaTag {
   constructor(turnCount: integer, sourceId: integer) {
     super(ArenaTagType.TRICK_ROOM, turnCount, Moves.TRICK_ROOM, sourceId);
@@ -668,6 +691,25 @@ class HappyHourTag extends ArenaTag {
   }
 }
 
+export class SafeguardTag extends ArenaTag {
+  constructor(turnCount: integer, sourceId: integer, side: ArenaTagSide) {
+    super(ArenaTagType.SAFEGUARD, turnCount, Moves.SAFEGUARD, sourceId, side);
+  }
+
+  onAdd(arena: Arena, quiet: boolean = false): void {
+    super.onAdd(arena);
+    if (!quiet) {
+      arena.scene.queueMessage(i18next.t(`arenaTag:safeguardOnAdd${this.side === ArenaTagSide.PLAYER ? "Player" : this.side === ArenaTagSide.ENEMY ? "Enemy" : ""}`));
+    }
+  }
+
+  onRemove(arena: Arena, quiet: boolean = false): void {
+    if (!quiet) {
+      arena.scene.queueMessage(i18next.t(`arenaTag:safeguardOnRemove${this.side === ArenaTagSide.PLAYER ? "Player" : this.side === ArenaTagSide.ENEMY ? "Enemy" : ""}`));
+    }
+  }
+}
+
 export function getArenaTag(tagType: ArenaTagType, turnCount: integer, sourceMove: Moves | undefined, sourceId: integer, targetIndex?: BattlerIndex, side: ArenaTagSide = ArenaTagSide.BOTH): ArenaTag | null {
   switch (tagType) {
     case ArenaTagType.MIST:
@@ -699,6 +741,8 @@ export function getArenaTag(tagType: ArenaTagType, turnCount: integer, sourceMov
       return new StealthRockTag(sourceId, side);
     case ArenaTagType.STICKY_WEB:
       return new StickyWebTag(sourceId, side);
+    case ArenaTagType.CHAOS_END_MARK:
+      return new ChaosEndMarkTag(sourceId, side);
     case ArenaTagType.TRICK_ROOM:
       return new TrickRoomTag(turnCount, sourceId);
     case ArenaTagType.GRAVITY:
@@ -713,6 +757,8 @@ export function getArenaTag(tagType: ArenaTagType, turnCount: integer, sourceMov
       return new TailwindTag(turnCount, sourceId, side);
   case ArenaTagType.HAPPY_HOUR:
     return new HappyHourTag(turnCount, sourceId, side);
+    case ArenaTagType.SAFEGUARD:
+      return new SafeguardTag(turnCount, sourceId, side);
   default:
     return null;
   }

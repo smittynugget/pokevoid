@@ -1,5 +1,5 @@
 import { ModalConfig, ModalUiHandler } from "./modal-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import BattleScene from "../battle-scene";
 import { addTextObject, TextStyle } from "./text";
 import { createSporadicPattern } from "../utils";
@@ -12,6 +12,7 @@ import { Tutorial } from "../tutorial";
 import { getPokemonSpecies } from "../data/pokemon-species";
 import { Species } from "../enums/species";
 import { isIPhone } from "../loading-scene";
+import { isPrimaryPointer } from "./pointer-utils";
 
 export interface TutorialConfig {
     title: string;
@@ -132,8 +133,6 @@ export default class TutorialUiHandler extends ModalUiHandler {
             title: i18next.t("tutorial:titles.permanentFeatures"),
             tutorials: [
                 EnhancedTutorial.PERMA_MONEY_1,
-                EnhancedTutorial.BOUNTIES_1,
-                EnhancedTutorial.DAILY_BOUNTY,
                 EnhancedTutorial.SMITTY_ITEMS_1,
                 EnhancedTutorial.INTRASHOP_1
             ]
@@ -639,7 +638,8 @@ export default class TutorialUiHandler extends ModalUiHandler {
                 return;
             }
 
-            this.scene.load.image(textureKey, `images/smitty_logos/${logoId}.png`);
+            const logoExt = (this.scene.game as any)?.device?.features?.webp ? "webp" : "png";
+            this.scene.load.image(textureKey, `images/smitty_logos/${logoId}.${logoExt}`);
 
             this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
                 console.log(`[TutorialUI] Successfully loaded SmittyLogo: ${logoId} as ${textureKey}`);
@@ -952,9 +952,10 @@ export default class TutorialUiHandler extends ModalUiHandler {
         if (this.currentStageIndex > 0 || (this.isHubMode && this.selectedCategoryIndex > 0)) {
             const backArrow = this.scene.add.sprite(centerX - 20, bottomY, 'cursor_reverse');
             backArrow.setScale(0.75);
-            backArrow.setInteractive(new Phaser.Geom.Rectangle(0, 0, 6, 10), Phaser.Geom.Rectangle.Contains);
+            backArrow.setInteractive({ hitArea: new Phaser.Geom.Rectangle(0, 0, 6, 10), hitAreaCallback: Phaser.Geom.Rectangle.Contains, useHandCursor: true });
 
-            backArrow.on('pointerup', () => {
+            backArrow.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+                if (!isPrimaryPointer(pointer)) return;
                 if (this.currentStageIndex > 0) {
                     this.navigateStage(-1);
                 } else if (this.isHubMode && this.selectedCategoryIndex > 0) {
@@ -977,9 +978,10 @@ export default class TutorialUiHandler extends ModalUiHandler {
             this.currentStageIndex === this.tutorialConfig.stages.length - 1) {
             const forwardArrow = this.scene.add.sprite(centerX + 20, bottomY, 'cursor');
             forwardArrow.setScale(0.75);
-            forwardArrow.setInteractive(new Phaser.Geom.Rectangle(0, 0, 6, 10), Phaser.Geom.Rectangle.Contains);
+            forwardArrow.setInteractive({ hitArea: new Phaser.Geom.Rectangle(0, 0, 6, 10), hitAreaCallback: Phaser.Geom.Rectangle.Contains, useHandCursor: true });
 
-            forwardArrow.on('pointerup', () => {
+            forwardArrow.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+                if (!isPrimaryPointer(pointer)) return;
                 if (this.currentStageIndex < this.tutorialConfig.stages.length - 1) {
                     this.navigateStage(1);
                 } else if (this.isHubMode && this.selectedCategoryIndex < this.categories.length - 1) {
@@ -1044,6 +1046,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
             highlight.setOrigin(0.5, 0.5);
 
             textObj.setData('highlight', highlight);
+            this.bindCategoryRowInteraction(highlight, index);
 
             this.hubContainer.add([highlight, textObj]);
         });
@@ -1077,6 +1080,29 @@ export default class TutorialUiHandler extends ModalUiHandler {
                         (textObj as Phaser.GameObjects.Text).setColor('#ffffff');
                     }
                 }
+            }
+        });
+    }
+
+    private bindCategoryRowInteraction(highlight: Phaser.GameObjects.Rectangle, index: number): void {
+        highlight.setInteractive({ useHandCursor: true });
+        const idx = index;
+        highlight.on("pointerover", () => {
+            if (this.selectedCategoryIndex !== idx) {
+                this.selectedCategoryIndex = idx;
+                this.updateHubSelection();
+            }
+        });
+        highlight.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+            if (!isPrimaryPointer(pointer)) return;
+            if (this.selectedCategoryIndex !== idx) {
+                this.selectedCategoryIndex = idx;
+                this.updateHubSelection();
+            }
+            if (this.isHubMode && this.tutorialConfig) {
+                this.loadCategoryTutorial(this.categories[idx].id);
+            } else {
+                this.processInput(Button.ACTION);
             }
         });
     }
@@ -1120,6 +1146,7 @@ export default class TutorialUiHandler extends ModalUiHandler {
             highlight.setOrigin(0.5, 0.5);
 
             textObj.setData('highlight', highlight);
+            this.bindCategoryRowInteraction(highlight, index);
 
             this.hubContainer.add([highlight, textObj]);
         });

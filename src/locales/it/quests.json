@@ -167,7 +167,7 @@
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "Regalino di Cloyster",
-    "task": "Usa Regalino 10 volte con Cloyster in modalità Nuzlocke"
+    "task": "Usa Regalino 10 volte con Cloyster"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "Sconfitta Nosepass di Nuzleaf",
@@ -475,7 +475,7 @@
   "NORMAL_STRENGTH": {
     "name": "Forza Normale!",
     "task": "Sconfiggi 125 Pokemon usando Pokemon di tipo Normale in più run",
-    "rewardText": "Sblocca un PermaItem che cambia le Resistenze e i Punti di Forza dei tipi Normali!"
+    "rewardText": "Sblocca un Oggetto Omega che cambia le Resistenze e i Punti di Forza dei tipi Normali!"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "Nuove Mosse di Magikarp",
@@ -485,7 +485,7 @@
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "Forza Normale!",
     "task": "Sconfiggi 125 Pokemon usando Pokemon di tipo Normale in più run",
-    "rewardText": "Sblocca un PermaItem che cambia le Resistenze e i Punti di Forza dei tipi Normali!"
+    "rewardText": "Sblocca un Oggetto Omega che cambia le Resistenze e i Punti di Forza dei tipi Normali!"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "Nuove Mosse di Magikarp",
@@ -521,5 +521,7 @@
     "name": "Nuove mosse di Metapod",
     "task": "Sconfiggi 50 Pokémon con Metapod",
     "rewardText": "Metapod avrà un set di mosse più ampio!"
-  }
+  },
+  "rewardUnlocksGlitchForm": "Sblocca una Forma Glitch",
+  "rewardUnlocksSmittyForm": "Sblocca una Forma Smitty"
 }

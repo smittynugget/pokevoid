@@ -42,11 +42,22 @@
     "defaultRevive": "Erhöhe Wiederbelebungschance für {{types}}-Pokémon um {{percent}}%",
     "defaultTokens": "Erhalte Fertigkeitenbaum-Marken zum Freischalten von Knoten",
     "defaultPoints": "Erhalte Fertigkeitspunkte zum Kaufen von Fähigkeiten",
-    "typesFallback": "Unbekannt"
+    "typesFallback": "Unbekannt",
+    "essenceRequiredTooltip": "Benötigte Essenz",
+    "essenceRequiredTooltipDesc": "Gib Essenzen aus, um deinen Champion aufzuleveln. Besiege Pokémon, um Essenzen ihres Typs zu erhalten.",
+    "essenceLoreNote": "Besondere Essenzen: SMITTY wird von SMITTY-Trainern erhalten. GLITCH von Glitch-Pokémon. GEN I von Gen-I-Pokémon.",
+    "abilityHeader": "FÄHIGKEIT",
+    "descriptionHeader": "BESCHREIBUNG",
+    "itemDescriptionHeader": "ITEM-BESCHREIBUNG",
+    "requiredEssenceHeader": "BENÖTIGTE ESSENZ",
+    "skillInfoHeader": "FÄHIGKEITEN-INFO"
   },
   "skillList": {
-    "levelPrefix": "Lvl {{level}}",
+    "levelPrefix": "Lv {{level}}",
     "unknownSkill": "???"
+  },
+  "skillBar": {
+    "next": "NÄCHSTE"
   },
   "defaultSkillLabels": {
     "tms": "{{types}} TMs",
@@ -63,9 +74,25 @@
     "catchBonus": "{{types}} Fangbonus",
     "fusionPriority": "{{types}} Fusionspriorität"
   },
-  "button": { "useEssence": "Essenz nutzen" },
-  "brock": { "description": "Champion des Gesteins" },
-  "misty": { "description": "Champion des Wassers" },
+  "button": {
+    "useEssence": "Essenz nutzen",
+    "levelUp": "Aufleveln",
+    "notEnoughEssence": "Zum Aufleveln:",
+    "required": "ERFORDERLICH"
+  },
+  "brock": {
+    "description": "Champion des Gesteins",
+    "essenceRequirement": "Benötigt {{ground}} Boden + {{rock}} Gesteins-Essenzen"
+  },
+  "misty": {
+    "description": "Champion des Wassers",
+    "essenceRequirement": "Benötigt {{water}} Wasser-Essenzen"
+  },
+  "red": {
+    "description": "Die Legende...",
+    "unlockRequirement": "Schalte alle Champions frei und besiege Rivale Rot Phase 6 im Chaos oder Spießrutenlauf",
+    "essenceRequirement": "Benötigt {{genOne}} Gen-I-Essenzen"
+  },
   "apollo": {
     "name": "Apollo",
     "description": "Champion der Sonne"
@@ -74,7 +101,10 @@
     "name": "Diana",
     "description": "Champion des Mondes"
   },
-  "generic": { "description": "Der Standard-Champion." },
+  "generic": {
+    "description": "Der Standard-Champion.",
+    "essenceRequirement": "Keine besonderen Anforderungen"
+  },
   "champions": {
     "title": "Wähle deinen Champion",
     "brock": {
@@ -87,10 +117,20 @@
       "description": "Meisterin der Wasser-Typen",
       "essenceRequirement": "Benötigt {{water}} Wasser-Essenzen"
     },
+    "red": {
+      "name": "Rot - Legendärer Champion",
+      "description": "Die Legende...",
+      "unlockRequirement": "Schalte alle Champions frei und besiege Rivale Rot Phase 6 im Chaos oder Spießrutenlauf",
+      "essenceRequirement": "Benötigt {{genOne}} Gen-I-Essenzen"
+    },
     "generic": {
       "name": "Ausgeglichener Champion",
       "description": "Keine Typ-Spezialisierung",
       "essenceRequirement": "Keine besonderen Anforderungen"
-    }
-  }
+    },
+    "generationShort": "GEN {{generation}}"
+  },
+  "generationShort": "GEN {{generation}}",
+  "skillsOfTitle": "FÄHIGKEITEN VON {{subtitle}}",
+  "switchChampion": "Andere Hälfte"
 }

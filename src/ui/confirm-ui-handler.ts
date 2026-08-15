@@ -1,6 +1,6 @@
 import BattleScene from "../battle-scene";
 import AbstractOptionSelectUiHandler, { OptionSelectConfig } from "./abstact-option-select-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import i18next from "i18next";
 import {Button} from "#enums/buttons";
 export default class ConfirmUiHandler extends AbstractOptionSelectUiHandler {
@@ -87,7 +87,8 @@ export default class ConfirmUiHandler extends AbstractOptionSelectUiHandler {
 
       this.optionSelectContainer.setPosition((this.scene.game.canvas.width / 6) - 1 + xOffset, -48 + yOffset);
 
-      this.setCursor(this.switchCheck ? this.switchCheckCursor : 0);
+      const defaultCursor = args.length >= 7 && args[6] !== null ? args[6] as number : 0;
+      this.setCursor(this.switchCheck ? this.switchCheckCursor : defaultCursor);
 
       return true;
     }

@@ -3,40 +3,87 @@ import { Mode } from "../ui/ui";
 import {Phase} from "../phase";
 import { createSporadicPattern } from "../utils";
 
+export interface CharDialogueOptions {
+    bgTextureKey?: string;
+    overlayDuration?: number;
+    variant?: string;
+    preDialogueAction?: () => Promise<void>;
+}
+
 export class CustomDialoguePhase extends Phase {
     private charKey: string;
     private dialogueKey: string;
     private name: string;
     private callback: Function;
     private dialoguePatternOverlay: Phaser.GameObjects.Container | null = null;
+    private options?: CharDialogueOptions;
 
-    constructor(scene: BattleScene, charKey: string, dialogueKey: string, name: string, callback: Function) {
+    constructor(scene: BattleScene, charKey: string, dialogueKey: string, name: string, callback: Function, options?: CharDialogueOptions) {
         super(scene);
         this.scene = scene;
         this.charKey = charKey;
         this.dialogueKey = dialogueKey;
         this.name = name;
         this.callback = callback;
+        this.options = options;
     }
 
     public start(): void {
         this.createPatternOverlay();
-        this.scene.showFieldOverlay(0).then(() => {
-            this.showPatternOverlay();
-            this.scene.ui.setMode(Mode.MESSAGE);
-            this.scene.charSprite.showCharacter(this.charKey, "").then(() => {
-                this.scene.ui.showDialogue(this.dialogueKey, this.name, null, () => {
-                    this.scene.ui.getMessageHandler().hideNameText();
-                    this.scene.ui.clearText();
-                    this.scene.charSprite.hide().then(() => {
-                        this.hidePatternOverlay();
-                        this.scene.hideFieldOverlay(250);
-                        this.callback();
-                        this.end();
+        const fieldUIWasVisible = this.scene.fieldUI.visible;
+        this.scene.fieldUI.setVisible(true);
+        const bgKey = this.options?.bgTextureKey ?? "smitom_dialogue_bg";
+        const overlayDuration = this.options?.overlayDuration ?? 0;
+        const variant = this.options?.variant ?? "";
+
+        const doOverlayAndDialogue = () => {
+            this.scene.showFieldOverlay(overlayDuration, { withDialogueBg: true, bgTextureKey: bgKey }).then(() => {
+                this.showPatternOverlay();
+                this.scene.ui.setMode(Mode.MESSAGE);
+                this.scene.ui.getMessageHandler().clear();
+                this.scene.ui.clearText();
+                this.scene.ui.getMessageHandler().applySmitomPanelStyle();
+                const ensureTexture = (): Promise<void> => {
+                    if (this.scene.textures.exists(this.charKey)) return Promise.resolve();
+                    return new Promise<void>(resolve => {
+                        this.scene.load.image(this.charKey, `images/pokemon/glitch/${this.charKey.replace("pkmn__glitch__", "")}.png`);
+                        this.scene.load.once("complete", () => resolve());
+                        this.scene.load.start();
+                    });
+                };
+                ensureTexture().then(() => {
+                    this.scene.charSprite.showCharacter(this.charKey, variant).then(() => {
+                        this.scene.ui.showDialogue(this.dialogueKey, this.name, null, () => {
+                            this.scene.ui.getMessageHandler().hideNameText();
+                            const glitchPromise = this.scene.ui.getMessageHandler().glitchOutDialogue(350);
+                            glitchPromise.then(() => {
+                                this.scene.ui.showMessageChrome();
+                                this.scene.ui.clearText();
+                                this.scene.ui.getMessageHandler().restoreDefaultPanelStyle();
+                            });
+                            Promise.all([
+                                glitchPromise,
+                                this.scene.charSprite.hide(),
+                                this.scene.hideFieldOverlay(750),
+                            ]).then(() => {
+                                this.hidePatternOverlay();
+                                if (!fieldUIWasVisible) {
+                                    this.scene.fieldUI.setVisible(false);
+                                }
+                                this.callback();
+                                this.end();
+                            });
+                        });
                     });
                 });
             });
-        });
+        };
+
+        if (this.options?.preDialogueAction) {
+            this.options.preDialogueAction().then(() => doOverlayAndDialogue());
+        } else {
+            doOverlayAndDialogue();
+        }
     }
 
     public end(): void {
@@ -48,8 +95,8 @@ export class CustomDialoguePhase extends Phase {
         if (this.dialoguePatternOverlay) return;
 
         this.dialoguePatternOverlay = this.scene.add.container(0, 0);
-        const overlayHeight = (this.scene.game.canvas.height / 6) - 48;
-        this.dialoguePatternOverlay.setPosition(0, overlayHeight * -1 - 48);
+        const logicalH = this.scene.game.canvas.height / 6;
+        this.dialoguePatternOverlay.setPosition(0, -logicalH);
         this.dialoguePatternOverlay.setAlpha(0);
 
         this.scene.fieldUI.add(this.dialoguePatternOverlay);

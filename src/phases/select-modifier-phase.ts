@@ -15,16 +15,17 @@ import {
     ModifierPoolType,
     getPlayerModifierTypeOptions,
     PassiveAbilitySacrificeModifierType,
-    PathNodeTypeFilter
+    PathNodeTypeFilter,
+    getDisabledModifierIds
 } from "#app/modifier/modifier-type.js";
 import {BerryModifier, ExtraModifierModifier, Modifier, PokemonHeldItemModifier, PermaModifier, PersistentModifier} from "#app/modifier/modifier.js";
 import ModifierSelectUiHandler, {SHOP_OPTIONS_ROW_LIMIT} from "#app/ui/modifier-select-ui-handler.js";
 import PartyUiHandler, {PartyUiMode, PartyOption} from "#app/ui/party-ui-handler.js";
-import {Mode} from "#app/ui/ui.js";
+import {Mode} from "#app/ui/mode.js";
 import i18next from "i18next";
 import * as Utils from "#app/utils.js";
 import {BattlePhase} from "./battle-phase";
-import Overrides from "#app/overrides";
+import Overrides, { DEBUG_FORCE_MODIFIER_ITEMS_ENABLED } from "#app/overrides";
 import {
     AbilitySacrificeModifierType, AddPokemonModifierType,
     StatSacrificeModifierType,
@@ -35,9 +36,11 @@ import {PermaType} from "#app/modifier/perma-modifiers";
 import {SelectPermaModifierPhase} from "#app/phases/select-perma-modifier-phase";
 import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
 import { EggLapsePhase } from "./egg-lapse-phase";
+import { SmitomTutorialPhase } from "#app/phases/smitom-tutorial-phase.js";
 import { SkillTreeNode, SkillTreeRewardType } from "#app/system/skill-tree-data";
 import { PlayableChampionData } from "#app/system/playable-champions";
 import { SkillTreeModifierPhase } from "./skill-tree-modifier-phase";
+import { clearShopOptionsCache as clearGlobalShopOptionsCache } from "#app/system/shop-options-cache.js";
 export class SelectModifierPhase extends BattlePhase {
     protected rerollCount: integer;
     private skillTreeNode?: SkillTreeNode;
@@ -53,6 +56,11 @@ export class SelectModifierPhase extends BattlePhase {
     private bypassPoolGeneration: boolean = false;
     private preGeneratedOptions: ModifierTypeOption[] | null = null;
     private refreshing: boolean = false;
+    public suppressReroll: boolean = false;
+    public allowSkip: boolean = false;
+    public uiDisplayConfig: any = null;
+    private rerollCostMultiplier: number = 1;
+    private regenerateOptionsCallback?: () => ModifierTypeOption[];
 
     private static shopOptionsCache: {
         waveIndex: integer | null;
@@ -68,17 +76,18 @@ export class SelectModifierPhase extends BattlePhase {
         SelectModifierPhase.shopOptionsCache.waveIndex = null;
         SelectModifierPhase.shopOptionsCache.options = null;
         SelectModifierPhase.shopOptionsCache.optionsRows = null;
+        clearGlobalShopOptionsCache();
     }
 
     public getCurrentRewardOptions(): ModifierTypeOption[] {
         return this.currentTypeOptions || [];
     }
 
-    protected getUIMode(): Mode {
-        return Mode.MODIFIER_SELECT;
+    public getUIMode(): Mode {
+        return Mode.LOOT_REWARD_SELECT;
     }
 
-    constructor(scene: BattleScene, rerollCount: integer = 0, modifierTiers?: ModifierTier[], draftOnly: boolean = false, onEndCallback?: () => void, pathNodeFilter: PathNodeTypeFilter = PathNodeTypeFilter.NONE, permaRerollCount: integer = 0, preGeneratedOptions?: ModifierTypeOption[], skillTreeNode?: SkillTreeNode, championData?: PlayableChampionData) {
+    constructor(scene: BattleScene, rerollCount: integer = 0, modifierTiers?: ModifierTier[], draftOnly: boolean = false, onEndCallback?: () => void, pathNodeFilter: PathNodeTypeFilter = PathNodeTypeFilter.NONE, permaRerollCount: integer = 0, preGeneratedOptions?: ModifierTypeOption[], skillTreeNode?: SkillTreeNode, championData?: PlayableChampionData, rerollCostMultiplier: number = 1, regenerateOptionsCallback?: () => ModifierTypeOption[]) {
         super(scene);
 
         this.rerollCount = rerollCount;
@@ -90,6 +99,9 @@ export class SelectModifierPhase extends BattlePhase {
         this.permaRerollCount = permaRerollCount;
         this.skillTreeNode = skillTreeNode;
         this.championData = championData;
+        this.rerollCostMultiplier = rerollCostMultiplier;
+        this.regenerateOptionsCallback = regenerateOptionsCallback;
+
         if (preGeneratedOptions && preGeneratedOptions.length > 0) {
             this.bypassPoolGeneration = true;
             this.preGeneratedOptions = preGeneratedOptions;
@@ -97,6 +109,7 @@ export class SelectModifierPhase extends BattlePhase {
     }
     start() {
         super.start();
+        this.scene._inBattleTurn = false;
 
         if (!this.rerollCount && !this.permaRerollCount) {
             this.updateSeed();
@@ -149,12 +162,58 @@ export class SelectModifierPhase extends BattlePhase {
                     this.scene.ui.playError();
                     return false;
                 }
-                this.scene.ui.showText(i18next.t("battle:skipItemQuestion"), null, () => {
-                    this.scene.ui.setOverlayMode(Mode.CONFIRM, () => {
-                        this.scene.ui.revertMode();
-                        this.scene.ui.setMode(Mode.MESSAGE);
-                        this.end();
-                    }, () => this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly));
+                const ui = this.scene.ui;
+                const msgHandler = ui.getMessageHandler() as any;
+                if (msgHandler?.bg) {
+                    msgHandler.bg.setVisible(true);
+                    ui.bringToTop(msgHandler.bg);
+                }
+                if (msgHandler?._messageBgPattern) {
+                    if (msgHandler._messageBgPattern.layers) {
+                        msgHandler._messageBgPattern.layers.forEach((l: any) => {
+                            l.setVisible(true);
+                            ui.bringToTop(l);
+                        });
+                    }
+                }
+                if (msgHandler?.messageContainer) {
+                    msgHandler.messageContainer.setVisible(true);
+                    ui.bringToTop(msgHandler.messageContainer);
+                }
+                ui.showText(i18next.t("battle:skipItemQuestion"), null, () => {
+                    ui.setOverlayMode(Mode.CONFIRM, () => {
+                        ui.revertMode().then(() => {
+                            ui.clearText();
+                            ui.hideMessageChrome();
+                            const nextPhase = this.scene.getNextPhase();
+                            const hasNextLoot = nextPhase instanceof SelectModifierPhase
+                                && (nextPhase as SelectModifierPhase).getUIMode() === Mode.LOOT_REWARD_SELECT;
+                            if (hasNextLoot) {
+                                this.end();
+                            } else {
+                                const handler = ui.getHandler();
+                                if ((handler as any).isLootRewardHandler || handler instanceof ModifierSelectUiHandler) {
+                                    handler.clear();
+                                }
+                                ui.setMode(Mode.MESSAGE);
+                                this.end();
+                            }
+                        });
+                    }, () => {
+                        ui.revertMode();
+                        ui.hideMessageChrome();
+                        ui.clearText();
+                        const handler = ui.getHandler();
+                        if ((handler as any).isLootRewardHandler && handler.active) {
+                            handler.awaitingActionInput = true;
+                            handler.onActionInput = modifierSelectCallback;
+                        } else if (handler instanceof ModifierSelectUiHandler && handler.active) {
+                            handler.awaitingActionInput = true;
+                            handler.onActionInput = modifierSelectCallback;
+                        } else {
+                            ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly);
+                        }
+                    });
                 });
                 return false;
             }
@@ -175,19 +234,14 @@ export class SelectModifierPhase extends BattlePhase {
                     const uiHandler = this.scene.ui.getHandler() as ModifierSelectUiHandler;
                     const shopRowIndex = rowCursor - 2;
 
-                    const adjustedShopRowIndex = uiHandler.shopOptionsRows.length > 1
-                    ? (uiHandler.shopOptionsRows.length - 1) - shopRowIndex
-                    : shopRowIndex;
+                    const allShopOptions = uiHandler.shopOptionsRows.flat();
+                    const effectiveCursor = allShopOptions.length > 0 ? cursor % allShopOptions.length : cursor;
 
-                    if (adjustedShopRowIndex >= 0 && adjustedShopRowIndex < uiHandler.shopOptionsRows.length) {
-                        const shopRow = uiHandler.shopOptionsRows[adjustedShopRowIndex];
-
-                        if (cursor >= 0 && cursor < shopRow.length) {
-                            const shopOption = shopRow[cursor];
-                            if (shopOption?.modifierTypeOption?.type) {
-                                modifierType = shopOption.modifierTypeOption.type;
-                                cost = shopOption.modifierTypeOption.cost;
-                            }
+                    if (effectiveCursor >= 0 && effectiveCursor < allShopOptions.length) {
+                        const shopOption = allShopOptions[effectiveCursor];
+                        if (shopOption?.modifierTypeOption?.type) {
+                            modifierType = shopOption.modifierTypeOption.type;
+                            cost = shopOption.modifierTypeOption.cost;
                         }
                     }
                     break;
@@ -275,30 +329,52 @@ export class SelectModifierPhase extends BattlePhase {
                             if (cost && !Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
                                 this.handlePurchase(cost);
                             }
+
                             SelectModifierPhase.clearShopOptionsCache();
 
-                            const uiHandler = this.scene.ui.getHandler() as ModifierSelectUiHandler;
+                            const uiHandler = this.scene.ui.getHandler();
+                            const refreshCosts = this.getRerollCost(typeOptions, this.scene.lockModifierTiers);
 
-                            this.scene.ui.setMode(Mode.MESSAGE);
-
-                            this.scene.ui.setMode(
-                                this.getUIMode(),
-                                this.isPlayer(),
-                                typeOptions,
-                                modifierSelectCallback,
-                                this.getRerollCost(typeOptions, this.scene.lockModifierTiers),
-                                this.draftOnly
-                            );
+                            if ((uiHandler as any).isLootRewardHandler && uiHandler.active) {
+                                uiHandler.refreshShopStripOnly();
+                                uiHandler.awaitingActionInput = true;
+                                uiHandler.onActionInput = modifierSelectCallback;
+                            } else {
+                                this.scene.ui.setMode(Mode.MESSAGE);
+                                this.scene.ui.setMode(
+                                    this.getUIMode(),
+                                    this.isPlayer(),
+                                    typeOptions,
+                                    modifierSelectCallback,
+                                    refreshCosts,
+                                    this.draftOnly
+                                );
+                            }
                         } else {
                             this.scene.ui.playError();
+                            const currentHandler = this.scene.ui.getHandler();
+                            if ((currentHandler as any).isLootRewardHandler && currentHandler.active) {
+                                currentHandler.awaitingActionInput = true;
+                                currentHandler.onActionInput = modifierSelectCallback;
+                            } else if (currentHandler instanceof ModifierSelectUiHandler && currentHandler.active) {
+                                currentHandler.awaitingActionInput = true;
+                                currentHandler.onActionInput = modifierSelectCallback;
+                            }
                         }
                     });
                     return false;
                 } else {
                     const doEnd = () => {
                         this.scene.ui.clearText();
-                        this.scene.ui.setMode(Mode.MESSAGE);
-                        this.end();
+                        const nextPhase = this.scene.getNextPhase();
+                        const hasNextLoot = nextPhase instanceof SelectModifierPhase
+                            && (nextPhase as SelectModifierPhase).getUIMode() === Mode.LOOT_REWARD_SELECT;
+                        if (hasNextLoot) {
+                            this.end();
+                        } else {
+                            this.scene.ui.setMode(Mode.MESSAGE);
+                            this.end();
+                        }
                     };
                     if (result instanceof Promise) {
                         result.then((success: any) => {
@@ -315,10 +391,10 @@ export class SelectModifierPhase extends BattlePhase {
 
             if (modifierType instanceof PokemonModifierType) {
                 if (modifierType instanceof FusePokemonModifierType) {
-                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.hideTransientOverlays?.();
+                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.suspendForOverlay?.();
                     this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.SPLICE, -1, (fromSlotIndex: integer, spliceSlotIndex: integer) => {
                         if (spliceSlotIndex !== undefined && fromSlotIndex < 6 && spliceSlotIndex < 6 && fromSlotIndex !== spliceSlotIndex) {
-                            this.scene.ui.setMode(this.getUIMode(), this.isPlayer()).then(() => {
+                            this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly).then(() => {
                                 const modifier = modifierType.newModifier(party[fromSlotIndex], party[spliceSlotIndex]);
                                 if (modifier) {
                                     return applyModifier(modifier, true);
@@ -335,10 +411,10 @@ export class SelectModifierPhase extends BattlePhase {
                 }
 
                 else if (modifierType instanceof StatSacrificeModifierType || modifierType instanceof TypeSacrificeModifierType || modifierType instanceof AbilitySacrificeModifierType || modifierType instanceof PassiveAbilitySacrificeModifierType || modifierType instanceof MoveSacrificeModifierType) {
-                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.hideTransientOverlays?.();
+                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.suspendForOverlay?.();
                     this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.SACRIFICE, -1, (fromSlotIndex: integer, targetSlotIndex: integer) => {
                         if (targetSlotIndex !== undefined && fromSlotIndex < 6 && targetSlotIndex < 6 && fromSlotIndex !== targetSlotIndex) {
-                            this.scene.ui.setMode(this.getUIMode(), this.isPlayer()).then(() => {
+                            this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly).then(() => {
                                 const modifier = modifierType.newModifier(party[fromSlotIndex], party[targetSlotIndex]);
                                 if (modifier) {
                                     return applyModifier(modifier, true);
@@ -365,10 +441,10 @@ export class SelectModifierPhase extends BattlePhase {
                     const tmMoveId = isTmModifier
                         ? (modifierType as TmModifierType).moveId
                         : undefined;
-                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.hideTransientOverlays?.();
+                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.suspendForOverlay?.();
                     this.scene.ui.setModeWithoutClear(Mode.PARTY, partyUiMode, -1, (slotIndex: integer, option: PartyOption) => {
                         if (slotIndex < 6) {
-                            this.scene.ui.setMode(this.getUIMode(), this.isPlayer()).then(() => {
+                            this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly).then(() => {
                                 let modifier;
                                 if (!isMoveModifier && !isRememberMoveModifier) {
                                     modifier = modifierType.newModifier(party[slotIndex]);
@@ -394,12 +470,14 @@ export class SelectModifierPhase extends BattlePhase {
             }
 
             else if (modifierType instanceof AddPokemonModifierType) {
+                (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.hideTransientOverlays?.();
                 if (this.scene.getParty().length == 6) {
                     const promptRelease = () => {
                         this.scene.ui.showText(i18next.t("battle:partyFull", {pokemonName: (modifierType as AddPokemonModifierType).getPokemon().name}), null, () => {
                             this.scene.ui.setOverlayMode(Mode.CONFIRM, () => {
                                 this.scene.ui.revertMode();
-                                this.scene.ui.setMode(Mode.PARTY, PartyUiMode.ADDPOKEMON, -1, (slotIndex: integer, _option: PartyOption) => {
+                                (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.suspendForOverlay?.();
+                                this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.ADDPOKEMON, -1, (slotIndex: integer, _option: PartyOption) => {
                                     this.scene.ui.setMode(Mode.MESSAGE).then(() => {
                                         if (slotIndex < 6) {
                                             const newModifier = modifierType.newModifier([this.scene]);
@@ -445,11 +523,37 @@ export class SelectModifierPhase extends BattlePhase {
             }
         }
         const costs = this.getRerollCost(typeOptions, this.scene.lockModifierTiers);
-        this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, costs, this.draftOnly);
+        const existingHandler = this.scene.ui.getHandler();
+        if ((existingHandler as any).isLootRewardHandler && existingHandler.active && this.getUIMode() === Mode.LOOT_REWARD_SELECT) {
+            existingHandler.refreshOptionsWithAnimation(typeOptions, modifierSelectCallback, costs, { regenerateShop: true });
+            existingHandler.setPermaRerollCost(costs.permaRerollCost);
+            existingHandler.updatePermaRerollCostText();
+            if (this.suppressReroll) {
+                existingHandler.setRerollVisible(false);
+            } else {
+                existingHandler.setRerollVisible(true);
+            }
+            return;
+        }
+        if (this.uiDisplayConfig) {
+            this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, costs, this.draftOnly, this.uiDisplayConfig);
+        } else {
+            this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, costs, this.draftOnly);
+        }
 
         const uiHandler = this.scene.ui.getHandler() as ModifierSelectUiHandler;
         uiHandler.setPermaRerollCost(costs.permaRerollCost);
         uiHandler.updatePermaRerollCostText();
+
+        if (this.suppressReroll) {
+            uiHandler.setRerollVisible(false);
+        } else {
+            uiHandler.setRerollVisible(true);
+        }
+
+        if (this.allowSkip) {
+            uiHandler.allowSkip = true;
+        }
         let introTutorials: EnhancedTutorial[] = [];
         if(this.draftOnly) {
 
@@ -471,8 +575,29 @@ export class SelectModifierPhase extends BattlePhase {
             if(!this.scene.gameData.tutorialService.allTutorialsCompleted(introTutorials)) {
                 this.scene.gameData.tutorialService.showCombinedTutorial("", introTutorials, true, false, true);
           }
-          else if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.INTRASHOP_1) && Utils.randSeedInt(100, 1) <= 10) {
-            this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.INTRASHOP_1, true, false);
+          else if(typeOptions.some(o => o.type?.constructor?.name === 'MoveUpgradeModifierType')) {
+            const flags = this.scene.gameData.smitomTutorialFlags;
+            if (!flags["move_upgrades"]) {
+              this.scene.unshiftPhase(new SmitomTutorialPhase(
+                this.scene,
+                "move_upgrades",
+                i18next.t("tutorial:smitomTip.moveUpgrades.title"),
+                [i18next.t("tutorial:smitomTip.moveUpgrades.1"), i18next.t("tutorial:smitomTip.moveUpgrades.2"), i18next.t("tutorial:smitomTip.moveUpgrades.3")],
+                true
+              ));
+            }
+          }
+          else if(Utils.randSeedInt(100, 1) <= 1) {
+            const flags = this.scene.gameData.smitomTutorialFlags;
+            if (!flags["intrashop"]) {
+              this.scene.unshiftPhase(new SmitomTutorialPhase(
+                this.scene,
+                "intrashop",
+                i18next.t("tutorial:smitomTip.intrashop.title"),
+                [i18next.t("tutorial:smitomTip.intrashop.1"), i18next.t("tutorial:smitomTip.intrashop.2")],
+                true
+              ));
+            }
         }
           }
     }
@@ -561,6 +686,11 @@ export class SelectModifierPhase extends BattlePhase {
             this.cachedPermaRerollCost = Math.min(Math.ceil(wave / 10) * permaBaseValue * Math.pow(hasFilter ? 1.2 : 1.5, this.permaRerollCount), Number.MAX_SAFE_INTEGER);
         }
 
+        if (this.rerollCostMultiplier !== 1) {
+            this.cachedRerollCost = Math.ceil(this.cachedRerollCost * this.rerollCostMultiplier);
+            this.cachedPermaRerollCost = Math.ceil(this.cachedPermaRerollCost * this.rerollCostMultiplier);
+        }
+
         return { rerollCost: this.cachedRerollCost, permaRerollCost: this.cachedPermaRerollCost };
     }
     getPoolType(): ModifierPoolType | null {
@@ -575,11 +705,35 @@ export class SelectModifierPhase extends BattlePhase {
         return ModifierPoolType.PLAYER;
     }
 
+    private getDisabledModifierIds(): Set<string> {
+        return getDisabledModifierIds(this.scene);
+    }
+
+    private isOptionDisabled(option: ModifierTypeOption, disabledIds: Set<string>): boolean {
+        return !!option.type?.id && disabledIds.has(option.type.id);
+    }
+
     getModifierTypeOptions(modifierCount: integer): ModifierTypeOption[] {
-        const effectivePathNodeFilter = (!this.scene.moveUpgradesEnabledForRun &&
-            (this.pathNodeFilter === PathNodeTypeFilter.MOVE_UPGRADE || this.pathNodeFilter === PathNodeTypeFilter.LOW_TIER_MOVE_UPGRADE))
-            ? PathNodeTypeFilter.NONE
-            : this.pathNodeFilter;
+        if (DEBUG_FORCE_MODIFIER_ITEMS_ENABLED) {
+            this.scene.moveUpgradesEnabledForRun = true;
+            this.scene.statSwitchersEnabledForRun = true;
+            this.scene.releaseItemsEnabledForRun = true;
+        }
+
+        let effectivePathNodeFilter = this.pathNodeFilter;
+        if (!this.scene.moveUpgradesEnabledForRun &&
+            (this.pathNodeFilter === PathNodeTypeFilter.MOVE_UPGRADE || this.pathNodeFilter === PathNodeTypeFilter.LOW_TIER_MOVE_UPGRADE)) {
+            effectivePathNodeFilter = PathNodeTypeFilter.NONE;
+        }
+        if (!this.scene.statSwitchersEnabledForRun && this.pathNodeFilter === PathNodeTypeFilter.STAT_SWITCHERS) {
+            effectivePathNodeFilter = PathNodeTypeFilter.NONE;
+        }
+        if (!this.scene.releaseItemsEnabledForRun && this.pathNodeFilter === PathNodeTypeFilter.RELEASE_ITEMS) {
+            effectivePathNodeFilter = PathNodeTypeFilter.NONE;
+        }
+
+        const disabledIds = this.getDisabledModifierIds();
+        const needsFiltering = disabledIds.size > 0;
 
         let forcedTier: ModifierTier | null = null;
         switch (effectivePathNodeFilter) {
@@ -596,16 +750,17 @@ export class SelectModifierPhase extends BattlePhase {
                 forcedTier = ModifierTier.ULTRA;
                 break;
         }
+
         if (this.bypassPoolGeneration && this.preGeneratedOptions) {
-            if (!this.scene.moveUpgradesEnabledForRun) {
-                return this.preGeneratedOptions.filter(o => o.type?.id !== "MOVE_UPGRADE" && o.type?.id !== "LOW_TIER_MOVE_UPGRADE");
+            if (needsFiltering) {
+                return this.preGeneratedOptions.filter(o => !this.isOptionDisabled(o, disabledIds));
             }
             return this.preGeneratedOptions;
         }
 
         const party = this.scene.getParty();
         if (forcedTier !== null) {
-            if (this.scene.moveUpgradesEnabledForRun) {
+            if (!needsFiltering) {
                 const tiers = new Array(modifierCount).fill(forcedTier) as ModifierTier[];
                 return getPlayerModifierTypeOptions(modifierCount, party, tiers, this.draftOnly, PathNodeTypeFilter.NONE);
             }
@@ -613,13 +768,13 @@ export class SelectModifierPhase extends BattlePhase {
             const baseCount = modifierCount + 4;
             const baseTiers = new Array(baseCount).fill(forcedTier) as ModifierTier[];
             const baseOptions = getPlayerModifierTypeOptions(baseCount, party, baseTiers, this.draftOnly, PathNodeTypeFilter.NONE);
-            const filtered = baseOptions.filter(o => o.type?.id !== "MOVE_UPGRADE" && o.type?.id !== "LOW_TIER_MOVE_UPGRADE").slice(0, modifierCount);
+            const filtered = baseOptions.filter(o => !this.isOptionDisabled(o, disabledIds)).slice(0, modifierCount);
 
             let attempts = 0;
             while (filtered.length < modifierCount && attempts < 25) {
                 const extra = getPlayerModifierTypeOptions(1, party, [forcedTier], this.draftOnly, PathNodeTypeFilter.NONE);
                 const next = extra[0];
-                if (next && next.type?.id !== "MOVE_UPGRADE" && next.type?.id !== "LOW_TIER_MOVE_UPGRADE") {
+                if (next && !this.isOptionDisabled(next, disabledIds)) {
                     filtered.push(next);
                 }
                 attempts++;
@@ -628,18 +783,18 @@ export class SelectModifierPhase extends BattlePhase {
             return filtered;
         }
 
-        if (this.scene.moveUpgradesEnabledForRun) {
+        if (!needsFiltering) {
             return getPlayerModifierTypeOptions(modifierCount, party, this.scene.lockModifierTiers ? this.modifierTiers : undefined, this.draftOnly, effectivePathNodeFilter);
         }
 
         const baseOptions = getPlayerModifierTypeOptions(modifierCount + 4, party, this.scene.lockModifierTiers ? this.modifierTiers : undefined, this.draftOnly, effectivePathNodeFilter);
-        const filtered = baseOptions.filter(o => o.type?.id !== "MOVE_UPGRADE" && o.type?.id !== "LOW_TIER_MOVE_UPGRADE").slice(0, modifierCount);
+        const filtered = baseOptions.filter(o => !this.isOptionDisabled(o, disabledIds)).slice(0, modifierCount);
 
         let attempts = 0;
         while (filtered.length < modifierCount && attempts < 25) {
             const extra = getPlayerModifierTypeOptions(1, party, this.scene.lockModifierTiers ? this.modifierTiers : undefined, this.draftOnly, effectivePathNodeFilter);
             const next = extra[0];
-            if (next && next.type?.id !== "MOVE_UPGRADE" && next.type?.id !== "LOW_TIER_MOVE_UPGRADE") {
+            if (next && !this.isOptionDisabled(next, disabledIds)) {
                 filtered.push(next);
             }
             attempts++;
@@ -708,12 +863,19 @@ export class SelectModifierPhase extends BattlePhase {
                       const nodeHash = this.skillTreeNode.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
                       const baseNodeOffset = nodeHash * 1000;
                       const rerollOffset = (this.rerollCount + 1) * 10000;
+                      const isBountySelect = this.skillTreeNode.rewardData?.type === SkillTreeRewardType.BOUNTY_SELECT;
                       this.scene.executeWithSeedOffset(() => {
-                        rerollBypassOptions = (phase as any).createSkillTreeModifierOptions();
+                        rerollBypassOptions = isBountySelect
+                          ? phase.createBountyModifierOptions()
+                          : (phase as any).createSkillTreeModifierOptions();
                       }, baseNodeOffset + rerollOffset);
+                    } else if (this.regenerateOptionsCallback) {
+                      this.scene.executeWithSeedOffset(() => {
+                        rerollBypassOptions = this.regenerateOptionsCallback!();
+                      }, (this.rerollCount + 1) * 10000);
                     }
 
-                    this.scene.unshiftPhase(new SelectModifierPhase(this.scene, this.rerollCount + 1, typeOptions.map(o => o.type?.tier).filter(t => t !== undefined) as ModifierTier[], this.draftOnly, this.onEndCallback, this.pathNodeFilter, this.permaRerollCount, rerollBypassOptions, this.skillTreeNode, this.championData));
+                    this.scene.unshiftPhase(new SelectModifierPhase(this.scene, this.rerollCount + 1, typeOptions.map(o => o.type?.tier).filter(t => t !== undefined) as ModifierTier[], this.draftOnly, this.onEndCallback, this.pathNodeFilter, this.permaRerollCount, rerollBypassOptions, this.skillTreeNode, this.championData, this.rerollCostMultiplier, this.regenerateOptionsCallback));
                     this.scene.ui.clearText();
                     this.scene.ui.setMode(Mode.MESSAGE).then(() => this.end());
                     if (!Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
@@ -749,12 +911,19 @@ export class SelectModifierPhase extends BattlePhase {
                       const nodeHash = this.skillTreeNode.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
                       const baseNodeOffset = nodeHash * 1000;
                       const permaOffset = (this.permaRerollCount + 1) * 20000;
+                      const isBountySelect = this.skillTreeNode.rewardData?.type === SkillTreeRewardType.BOUNTY_SELECT;
                       this.scene.executeWithSeedOffset(() => {
-                        permaRerollBypassOptions = (phase as any).createSkillTreeModifierOptions();
+                        permaRerollBypassOptions = isBountySelect
+                          ? phase.createBountyModifierOptions()
+                          : (phase as any).createSkillTreeModifierOptions();
                       }, baseNodeOffset + permaOffset);
+                    } else if (this.regenerateOptionsCallback) {
+                      this.scene.executeWithSeedOffset(() => {
+                        permaRerollBypassOptions = this.regenerateOptionsCallback!();
+                      }, (this.permaRerollCount + 1) * 20000);
                     }
 
-                    this.scene.unshiftPhase(new SelectModifierPhase(this.scene, this.rerollCount, typeOptions.map(o => o.type?.tier).filter(t => t !== undefined) as ModifierTier[], this.draftOnly, this.onEndCallback, this.pathNodeFilter, this.permaRerollCount + 1, permaRerollBypassOptions, this.skillTreeNode, this.championData));
+                    this.scene.unshiftPhase(new SelectModifierPhase(this.scene, this.rerollCount, typeOptions.map(o => o.type?.tier).filter(t => t !== undefined) as ModifierTier[], this.draftOnly, this.onEndCallback, this.pathNodeFilter, this.permaRerollCount + 1, permaRerollBypassOptions, this.skillTreeNode, this.championData, this.rerollCostMultiplier, this.regenerateOptionsCallback));
                     this.scene.ui.clearText();
                     this.scene.ui.setMode(Mode.MESSAGE).then(() => this.end());
                     if (!Overrides.WAIVE_ROLL_FEE_OVERRIDE) {
@@ -766,19 +935,21 @@ export class SelectModifierPhase extends BattlePhase {
                 break;
 
             case "modifierSelectUiHandler:transferDesc":
-                uiHandler.setCallbackContext(typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly);
+                if (this.scene.gameData?.tutorialOnboardActive) return false;
+                uiHandler.setCallbackContext(typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly, this.getUIMode());
                 uiHandler.showTransferSubmenu();
-                break;
+                return false;
 
             case "modifierSelectUiHandler:checkTeamDesc":
-                uiHandler.hideTransientOverlays();
+                uiHandler.suspendForOverlay();
                 this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.CHECK, -1, () => {
                     this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly);
                 });
-                break;
+                return false;
 
             case "modifierSelectUiHandler:lockRaritiesDesc":
                 this.scene.lockModifierTiers = !this.scene.lockModifierTiers;
+                this.clearCachedRerollCost();
                 const lockCosts = this.getRerollCost(typeOptions, this.scene.lockModifierTiers);
                 uiHandler.setRerollCost(lockCosts.rerollCost);
                 uiHandler.setPermaRerollCost(lockCosts.permaRerollCost);

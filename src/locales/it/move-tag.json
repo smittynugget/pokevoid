@@ -1,0 +1,14 @@
+{
+  "magnetMove": "Mossa-Magnete",
+  "gadgetMove": "Mossa-Gadget",
+  "maskMove": "Mossa-Maschera",
+  "timeMove": "Mossa-Tempo",
+  "unionMove": "Mossa-Unione",
+  "servantMove": "Mossa-Servitore",
+  "darkMagicMove": "Mossa-Magia-Oscura",
+  "ojamaMove": "Mossa-Ojama",
+  "ghostMove": "Mossa-Fantasma",
+  "flyingMove": "Mossa-Volo",
+  "auraMove": "Mossa-Aura",
+  "toonMove": "Mossa-Toon"
+}

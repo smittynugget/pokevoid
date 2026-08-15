@@ -18,6 +18,7 @@
   "hideIvs": "禁用个体值探测器信息",
   "tutorials": "教程",
   "touchControls": "显示触控操作",
+  "disableMouse": "禁用鼠标",
   "vibrations": "手柄震动",
   "normal": "普通",
   "fast": "快",

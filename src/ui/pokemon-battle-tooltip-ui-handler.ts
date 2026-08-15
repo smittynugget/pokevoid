@@ -1,6 +1,6 @@
 import BattleScene from "#app/battle-scene";
 import UiHandler from "./ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { Button } from "#enums/buttons";
 import type Pokemon from "#app/field/pokemon";
 import type { PlayerPokemon } from "#app/field/pokemon";

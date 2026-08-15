@@ -61,5 +61,7 @@
   "suppressAbilities": "{{pokemonName}}的特性\n变得无效了！",
   "revivalBlessing": "{{pokemonName}}复活了！",
   "swapArenaTags": "{{pokemonName}}\n交换了双方的场地效果！",
-  "exposedMove": "{{pokemonName}}识破了\n{{targetPokemonName}}的原型！"
+  "exposedMove": "{{pokemonName}}识破了\n{{targetPokemonName}}的原型！",
+  "substituteOnOverlap": "{{pokemonName}}已经有替身了！",
+  "safeguard": "{{targetName}}受到了神秘守护的保护！"
 }

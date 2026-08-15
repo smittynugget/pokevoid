@@ -5,7 +5,7 @@ import { TrainerType } from "#enums/trainer-type";
 import { PathNodeType } from "#app/battle";
 import { SkillTreeProgression } from "#app/system/skill-tree-progression";
 import { ChampionManager } from "#app/system/champion-manager";
-import { allSpecies } from "#app/data/pokemon-species";
+import { allSpecies, getPokemonSpecies } from "#app/data/pokemon-species";
 
 export class SkillPointSources {
 	private scene: BattleScene;
@@ -73,7 +73,7 @@ export class SkillPointSources {
 
 	checkLegendaryEncounterReward(species: number): void {
 		if (!this.scene.gameData.activeSkillTree) return;
-		const speciesData = (allSpecies as any)[species];
+		const speciesData = getPokemonSpecies(species);
 		if (speciesData?.legendary || speciesData?.mythical) {
 			const championData = ChampionManager.getInstance().getChampionData(this.scene.gameData.activeSkillTree.championId);
 			if (championData.legendaryPokemon.includes(species as any)) {

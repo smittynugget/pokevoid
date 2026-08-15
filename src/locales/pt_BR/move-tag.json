@@ -1,0 +1,14 @@
+{
+  "magnetMove": "Movimento-Ímã",
+  "gadgetMove": "Movimento-Gadget",
+  "maskMove": "Movimento-Máscara",
+  "timeMove": "Movimento-Tempo",
+  "unionMove": "Movimento-União",
+  "servantMove": "Movimento-Servo",
+  "darkMagicMove": "Movimento-Magia-Negra",
+  "ojamaMove": "Movimento-Ojama",
+  "ghostMove": "Movimento-Fantasma",
+  "flyingMove": "Movimento-Voo",
+  "auraMove": "Movimento-Aura",
+  "toonMove": "Movimento-Toon"
+}

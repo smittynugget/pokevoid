@@ -46,5 +46,16 @@
   "magmaStorm": "Магма-буря",
   "snapTrap": "Капкан",
   "thunderCage": "Громовая клетка",
-  "infestation": "Инфестация"
+  "infestation": "Инфестация",
+  "day": "День",
+  "night": "Ночь",
+  "dawn": "Рассвет",
+  "dusk": "Закат",
+  "cursed": "Проклятие",
+  "seeded": "Семя-Пиявка",
+  "trapped": "В ловушке",
+  "yuTrapped": "В ловушке",
+  "saltCured": "Солевая Закалка",
+  "octolock": "Октозахват",
+  "ingrain": "Укоренение"
 }

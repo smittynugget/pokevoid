@@ -51,7 +51,13 @@ export class ModifierRewardPhase extends BattlePhase {
           [() => {
             this.scene.ui.getHandler().clear();
             if (this.isPerma) {
-              this.scene.gameData.addPermaModifier(this.modifierType.id as keyof typeof modifierTypes);
+              const key = this.modifierType?.id as keyof typeof modifierTypes;
+              if (key && modifierTypes[key]) {
+                this.scene.gameData.addPermaModifier(key);
+              } else {
+                const newModifier = this.modifierType?.newModifier();
+                if (newModifier) this.scene.addModifier(newModifier);
+              }
               this.scene.ui.updatePermaModifierBar(this.scene.gameData.permaModifiers);
             } else {
               const newModifier = this.modifierType.newModifier();

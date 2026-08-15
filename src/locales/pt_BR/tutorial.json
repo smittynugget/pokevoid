@@ -196,17 +196,6 @@
       "2":"Isso recompensa com ΩOURO e protege contra perda de dados."
     }
   },
-  "bounties": {
-    "title": "Sistema de Recompensas",
-    "text": { 
-      "1":"Insira códigos de 6 letras no console para ativar Recompensas.",
-      "2":"Recompensas são MISSÕES que permitem ganhar ΩOURO/ΩITENS e são completamente reutilizáveis após completá-las."
-    }
-  },
-  "dailyBounty": {
-    "title": "Recompensa Diária!",
-    "text": "Uma nova recompensa diária está disponível! Complete-a para ganhar ΩOURO/ΩITENS. O código já está no console, basta ativá-lo!"
-  },
   "discord": {
     "title": "Discord e Suporte",
     "text": "Junte-se ao Discord do Smittyverse para discussões, relatos de bugs e comunidade. Encontre códigos de recompensa e conecte-se com outros jogadores."
@@ -382,6 +371,13 @@
     "title": { "1": "NOVO Modo FTL" },
     "text": { "1": "FTL (Mais Rápido que a Luz) é a nova variante caos mais rápida! Pule direto para o caos!" }
   },
+  "firstTimeFtlSkillTree": {
+    "title": { "1": "Escolha seus Pokémon", "2": "Assinatura e Geral" },
+    "text": {
+      "1": "Sua primeira jornada começa agora. Use a árvore de habilidades para escolher 2 Pokémon para esta run.",
+      "2": "Nós com o ícone de Draft oferecem Pokémon. Ícone invertido = opção de Pokémon Assinatura."
+    }
+  },
   "championSelectEssence": {
     "title": { "1": "Seleção de Campeão", "2": "Sistema de Essência", "3": "Subir de Nível os Campeões" },
     "text": {
@@ -443,6 +439,103 @@
       "5": "OVOS: Obtenha ovos do gacha de ovos!",
       "6": "LOJA: Acesso rápido à loja!",
       "7": "MAPA: Exiba seu caminho atual dentro do Caos!"
+    },
+    "smitomTip": {
+      "tutorialBattleType": {
+        "title": "Substituição de tipo!",
+        "1": "Combinação de tipo ruim! Use o poder do vazio para mudar nosso tipo — as regras da natureza não se aplicam mais aqui."
+      },
+      "tutorialBattleHeal": {
+        "title": "Novas habilidades do vazio",
+        "1": "Defina isto como nossa passiva — regeneração de HP a cada turno. Ficar vivo é o primeiro passo para vencer. Geralmente."
+      },
+      "tutorialBattleXM": {
+        "title": "O moveset proibido",
+        "1": "Use rapidamente a corrupção do vazio a seu favor! Abrace o poder proibido para ensinar qualquer golpe ao seu pokémon."
+      },
+      "tutorialBattleGlitchReward": {
+        "title": "ALERTA DO VAZIO",
+        "1": "Isso não é bom! Rapidamente pegue a forma glitch de {{pokemonName}} do VAZIO!"
+      },
+      "tutorialBattleEvolveGlitch": {
+        "title": "EVOLUA!",
+        "1": "EVOLUA {{pokemonName}} PARA SUA NOVA FORMA GLITCH AGORA!!"
+      },
+      "starterSelect": {
+        "title": "Fusão Infinita Chamou...",
+        "1": "Eles querem que você pense que são só pokémon assinatura e lendários. Mas olhe mais de perto. As fusões. Elas são INFINITAS.",
+        "2": "*gira o dedo metafórico na sua direção, como um gorila maluco* Você entende o que isso significa?",
+        "3": "Significa que toda combinação possível existe. TODA. Kenney Rogers. CADA UMA. Alguém teve que criar todas elas. Ou... algo criou..."
+      },
+      "skillTreeFirstNode": {
+        "title": "Bônus Aleatório GRÁTIS",
+        "1": "Depois de escolher seu primeiro nó, nós GRÁTIS aparecem!",
+        "2": "GRÁTIS — como este jogo! 3 anos de vida. O Smitty poderia ter feito um jogo indie de boa nesse tempo.",
+        "3": "Ah smitty, minha doce criança de verão, você não disse que isso ia levar 6 meses no máximo?",
+        "4": "...Smitty?",
+        "5": "Smitty pisca duas vezes se precisar de ajuda...",
+        "6": "Ele piscou...",
+        "7": "Mas é, os nós são grátis! eba nós grátis!"
+      },
+      "skillTreeGlitchFormNode": {
+        "title": "Forma Glitch Selada",
+        "1": "Colete habilidades suficientes e você desbloqueará o nó selado — dando acesso a uma Forma Glitch para esta partida!",
+        "2": "Colete habilidades. Ganhe NOVA FORMA!"
+      },
+      "wave35Shared": {
+        "title": "NEW ITEM GET!",
+        "pretext": "Encontramos um novo item no void! {{featureName}}! Vamos pesquisar na internet o que ele faz.",
+        "posttext": "Se estiver curioso, experimente. Você também pode desativá-los nas configurações, caso não te façam cócegas do jeito que eu faço."
+      },
+      "wave35StatSwitchers": {
+        "featureName": "Troca de Status",
+        "1": "Redistribua os stats base de qualquer Pokémon. Scyther com nível de mago em ataque especial. Machamp com velocidade que rivaliza Jolteon. Gengar com espessura superando Snorlax! Seu time, suas regras. O void acabou de te dar o painel admin. Sugiro que abuse dele. De preferência irresponsavelmente. E sim, espessura é uma palavra, eu pesquisei."
+      },
+      "wave35MoveUpgrades": {
+        "featureName": "Melhorias de Golpes",
+        "1": "Bem-vindo às Melhorias de Golpes! Faça Terremoto ser um ataque especial. Dê prioridade ao Raio de Gelo. Dê ao Trovão uma chance de congelar. Seus golpes não estão gravados em pedra — estão gravados no void. Gostou? Escrevi ontem, 'gravados no void', porque estamos no void, não em pedra, isso não é Doctor Stone né. Então faz sentido. Bem esperto né? Pessoalmente eu gosto. Gravados no void soa",
+        "2": "--- 2 HORAS DEPOIS ---",
+        "3": "Provavelmente nível Shakespeare sendo honesto. Bom, tirei isso do sistema."
+      },
+      "wave35ReleaseItems": {
+        "featureName": "Itens de Liberação",
+        "1": "Lembra daquele filme onde o robô diz 'Eu voltarei'? Release Items são assim exceto que o robô não volta. Suas peças vão pra um robô melhor. E esse robô TAMBÉM não diz 'Eu voltarei' porque está ocupado demais sendo imparável. Tipos, stats, habilidades ou golpes — podem ser transferidos! Nenhuma sequência necessária."
+      },
+      "shinyPower": {
+        "title": "Um Espécime Raro Emerge",
+        "1": "Observe: o Pokémon shiny, ao entrar na run, recebe quatro caminhos. O primeiro preserva sua forma original. Dois oferecem novas habilidades com stats redistribuídos. O último substitui todo o moveset por ataques temáticos de tipo.",
+        "2": "Em cada variante alternativa, quatro dos seus stats são trocados — uma adaptação notável. O shiny que entra na run raramente é o mesmo que a termina. A natureza cura. Especificamente, a versão do Void da natureza. O que é, discutivelmente, o oposto de curar."
+      },
+      "rankUp": {
+        "title": "ABRAÇAR ou REMODELAR?",
+        "1": "Meu tio colecionava aquelas garrafinhas de shampoo de hotel. Prateleira inteira. Nunca abriu uma. Só olhava. Dizia que era investimento. Tá preso agora — sem relação, provavelmente — mas o princípio vale. Você anda pelo Void, pega coisas. Não loot, exatamente. A energia sombria. A corrupção. A película nojenta que sai de tudo que você derrota. Não desaparece quando você ganha.. Você tava acumulando. Cada luta adiciona uma camada. Tipo lasanha, só que o queijo é maligno e a avó de ninguém fez.",
+        "2": "Quando ativa, você tem duas escolhas — Abraçar: a energia do Void inunda pra dentro ao invés de destruir. Mesmo Pokémon, mesmo tipo, mesmos golpes, alma um pouco mais sombria. O que já era forte fica mais forte. A cada Abraçar a energia sombria se aprofunda, dando origem a uma forma com tons do Void, um visual que o abismo quase chamaria de seu. Remodelar: onde Abraçar mantém a forma intacta, Remodelar quebra a fronteira entre espécies. Use a corrupção pra dobrar a realidade até seu parceiro estar numa nova casca — stats recebem o mesmo boost do Abraçar, mas tipo e habilidade mudam. O que os tornava perigosos sobrevive à remodelação. Onde Pokémon normais apenas aguentam o toque do Void, Duelmons acumulam — a corrupção se acumula nas almas até que sua onda da alma única explode, sua evolução proibida, garantida em certas faixas de nível. Pokémon normais ganham ondas da alma aleatoriamente no level up ou por recompensas. Ondas da alma são ótimas, né? Tipo garrafinhas de shampoo de hotel — meu tio ia adorar com certeza."
+      },
+      "yuMovePhase": {
+        "title": "Técnica Amaldiçoada",
+        "1": "\"Em todo o Céu e a Terra, somente eu sou o honrado.\" O Void disse isso quando selou os ataques assinatura do seu Duelmon no reino das sombras. Palavras ousadas de algo que esqueceu que técnicas amaldiçoadas podem ser revertidas. Derrote inimigos com seu Duelmon, suba de nível, e PODER DAS SOMBRAS pode deselar três golpes proibidos — dois do pool amaldiçoado do seu Duelmon, um do reino das sombras mais amplo.",
+        "2": "Recompensas ativam Expansão de Domínio imediatamente — sem precisar subir de nível. O reino das sombras não é a prisão que o Void acha. O Void só guardou as coisas boas lá por acidente. Hollow Purple? Mais pra Hollow Void. Seu Duelmon tá pegando as técnicas de volta."
+      },
+      "altBuild": {
+        "title": "IMPOSSÍVEL!!!",
+        "1": "IMPOSSÍVEL. Esse nível de poder — não é — o scouter não pode estar certo. O VÍNCULO deles quebra todo limite — o PODER impulsionado em duas estatísticas, tipo REESCRITO, habilidades TROCADAS, movimentos SUBSTITUÍDOS, uma forma totalmente nova que meu equipamento se recusa a classificar! Magikarp pode se tornar Dragonborn. Água e Dragão. PELO AMOR DE DEUS — ISSO É UM MAGIKARP. E não é só o patético peixe-palhaço — Solrock vira Constelação do Vazio, Lunatone vira Tecelão de Sonhos — SÃO APENAS PEDRAS — UMA DELAS NEM É TÃO LARANJA! O VÍNCULO deles quebrando limites que eu nem sabia que existiam. Esses seres não seguem evolução normal — criaram um caminho evolutivo diferente. Eles sobem de rank. Continuamente. Dez vezes. Não é possível — não, o Príncipe de todos os Saiyajins NÃO VAI ACEITAR ISSO.",
+        "2": "E no rank dez — o que É isso?! Eles DESBLOQUEIAM NOVAS HABILIDADES? Um em um Milhão? Domínio do Leviatã? Essas não deveriam existir. O vínculo entre campeão e parceiro sobrescreve a própria realidade — e tem MAIS lá fora, cada vínculo reescrevendo pra que essas espécies foram construídas. MANDEM TUDO PRO INFERNO! COMO EU, UM GUERREIRO DE RAÇA SUPERIOR, POSSO SER SUPERADO?! KAKAROTTO!!!!!"
+      },
+      "smittyEncounter": {
+        "title": "!!!ALERTA DE DETECÇÃO!!!",
+        "1": "Alerta! Assinaturas de radiação disparando! Leituras de auto-importância em níveis que estão quebrando meus instrumentos! Escaneando a fonte — a densidade de arrogância sozinha tá gerando interferência! Algo tá se aproximando e toda métrica que tenho diz que devemos ficar apavorados! Só um tipo de ser irradia assim — o tipo que se colocaria no próprio jogo, se daria um time ridículo, e chamaria de conteúdo.",
+        "2": "Cruzando assinaturas do Void... esse ser pode ser a fonte do próprio Void. Ou — re-escaneando — pode ser um pedaço quebrado do Void que ganhou forma física. Seus Pokémon não são capturados nem treinados. Se manifestam diretamente da energia do Void. Campeão, preciso que me ouça: podemos morrer aqui. De verdade. Por favor, esteja pronto."
+      },
+      "postRunWin": {
+        "title": "Obrigado Por Ter Conseguido",
+        "1": "Você ganhou. Eu vi tudo. Cada momento apertado, cada troca inteligente, cada momento que podia dar errado e não deu porque você impediu. O Void ainda tá aqui mas por uma run, você venceu.",
+        "2": "Novos modos, missões e desafios tão desbloqueando. O jogo se abre depois disso. Mas antes de correr pro próximo — saiba que ganhar uma run no Void significa algo. Significa que seu time foi forte e suas decisões foram certas. Vou tar aqui pra próxima. E pra depois. Agora a gente pode finalmente ser amigos. Quê. Por que tá me olhando assim — é tipo Persona, tem que fazer 40 horas de side quest antes do companheiro confiar em você. Agora então, vamos caçar umas sombras — que tal, confidant rank 1 bestie?"
+      },
+      "journeyQuestShop": {
+        "title": "O Modo Jornada espera!",
+        "1": "Você desbloqueou a Missão de Captura Inicial — seu ingresso para o Modo Jornada! Vá à OmegaLoja para ativá-la.",
+        "2": "Uma vez ativada, capture 5 Pokémon em quaisquer partidas para completá-la e desbloquear o Modo Jornada!"
+      }
     }
   }
 }

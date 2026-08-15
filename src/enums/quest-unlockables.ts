@@ -231,6 +231,7 @@ export enum QuestUnlockables {
     PICKLISK_SMITTY_QUEST,
     BRAVEHOUND_SMITTY_QUEST,
     MISSINGNO_SMITTY_QUEST,
+    CINNABAR_MISSINGNO_GLITCH_QUEST,
 }
 
 export enum QuestState {

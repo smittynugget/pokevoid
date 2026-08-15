@@ -16,6 +16,7 @@ import { MovePhase } from "./move-phase";
 import { PostTurnStatusEffectPhase } from "./post-turn-status-effect-phase";
 import { SwitchSummonPhase } from "./switch-summon-phase";
 import { TurnEndPhase } from "./turn-end-phase";
+import { TutorialOnboardScriptPhase } from "./tutorial-onboard-script-phase";
 import { WeatherEffectPhase } from "./weather-effect-phase";
 
 export class TurnStartPhase extends FieldPhase {
@@ -25,6 +26,7 @@ export class TurnStartPhase extends FieldPhase {
 
   start() {
     super.start();
+    this.scene._inBattleTurn = true;
 
     const field = this.scene.getField();
     const order = this.getOrder();
@@ -61,14 +63,19 @@ export class TurnStartPhase extends FieldPhase {
         const aMove = this.scene.getUpgradedMove(allMoves[aCommand.move!.move], aPokemon.isPlayer());
         const bMove = this.scene.getUpgradedMove(allMoves[bCommand!.move!.move], bPokemon.isPlayer());
 
+        const aTargets = aCommand.targets ?? aCommand.move?.targets;
+        const bTargets = bCommand!.targets ?? bCommand!.move?.targets;
+        const aDefender = aTargets?.length ? field[aTargets[0]] : null;
+        const bDefender = bTargets?.length ? field[bTargets[0]] : null;
+
         const aPriority = new Utils.IntegerHolder(aMove.priority);
         const bPriority = new Utils.IntegerHolder(bMove.priority);
 
         applyMoveAttrs(IncrementMovePriorityAttr, aPokemon, null, aMove, aPriority);
         applyMoveAttrs(IncrementMovePriorityAttr, bPokemon, null, bMove, bPriority);
 
-        applyAbAttrs(ChangeMovePriorityAbAttr, aPokemon, null, false, aMove, aPriority);
-        applyAbAttrs(ChangeMovePriorityAbAttr, bPokemon, null, false, bMove, bPriority);
+        applyAbAttrs(ChangeMovePriorityAbAttr, aPokemon, null, false, aMove, aPriority, aDefender);
+        applyAbAttrs(ChangeMovePriorityAbAttr, bPokemon, null, false, bMove, bPriority, bDefender);
 
         if (aPriority.value !== bPriority.value) {
           const bracketDifference = Math.ceil(aPriority.value) - Math.ceil(bPriority.value);
@@ -162,6 +169,9 @@ export class TurnStartPhase extends FieldPhase {
 
     this.scene.pushPhase(new BerryPhase(this.scene));
     this.scene.pushPhase(new TurnEndPhase(this.scene));
+    if (this.scene.gameData.tutorialOnboardActive) {
+      this.scene.pushPhase(new TutorialOnboardScriptPhase(this.scene));
+    }
     this.end();
   }
 }

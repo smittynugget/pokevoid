@@ -46,5 +46,16 @@
   "magmaStorm": "Vortex Magma",
   "snapTrap": "Piège Acide",
   "thunderCage": "Cage Éclair",
-  "infestation": "Harcèlement"
+  "infestation": "Harcèlement",
+  "day": "Jour",
+  "night": "Nuit",
+  "dawn": "Aube",
+  "dusk": "Crépuscule",
+  "cursed": "Malédiction",
+  "seeded": "Vampigraine",
+  "trapped": "Piégé",
+  "yuTrapped": "Piégé",
+  "saltCured": "Salaison",
+  "octolock": "Octoprise",
+  "ingrain": "Racines"
 }

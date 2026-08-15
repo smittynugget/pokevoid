@@ -6,7 +6,6 @@
   "newGame": "Nueva Partida",
   "settings": "Ajustes",
   "fanSuggestions": "Sugerencias de Fans",
-  "questsAndBounties": "Misiones y Recompensas",
   "selectGameMode": "Selecciona un modo de juego.",
   "selectRogueMode": "Elige 2 Pokémon al azar para comenzar la aventura!",
   "selectJourneyMode": "Crea tu equipo con los Pokémon que posees!",
@@ -53,6 +52,7 @@
   "backToLogin": "Volver al Inicio de Sesión",
   "failedToLoadSaveData": "Error al cargar los datos guardados. Por favor, recarga la página.\nSi persiste, revisa #announcements en Discord.",
   "sessionSuccess": "Sesión cargada con éxito.",
+  "selectSavePoint": "Elige qué punto de guardado cargar:",
   "failedToLoadSession": "No se pudieron cargar los datos de tu sesión.\nPueden estar corruptos.",
   "boyOrGirl": "¿Eres un chico o una chica?",
   "evolving": "¿Qué?\n¡{{pokemonName}} está evolucionando!",
@@ -74,7 +74,7 @@
   "no": "No",
   "disclaimer": "ADVERTENCIA",
   "disclaimerDescription": "El Vacío está --- consumiéndolo todo. La realidad se rompe --- Aprovecha el poder de la corrupción que se filtra\n de --- para hacer a tus pokémon DIOSES. ¡Tienes que ayudarnos a empujar el vacío hacia atrás!\n Que este poder te sirva bien. Encuentra a los demás en el discord de SmittyNugget",
-  "gameVersion": "v2.4.X [Actualización de 2 Años]",
+  "gameVersion": "v3.0 [La Actualización del Nugget Dorado]",
   "choosePokemon": "Elige un Pokémon.",
   "renamePokemon": "Renombrar Pokémon",
   "rename": "Renombrar",
@@ -90,7 +90,7 @@
   "transferLoadFailed": "Carga de transferencia FALLIDA: {{error}}",
   "transferCredentialsRequired": "Transferencia fallida. Se requieren nombre de usuario y contraseña.",
   "transferDataInitError": "Carga de transferencia FALLIDA. Error de inicialización de datos.",
-    "captcha": {
+  "captcha": {
     "label": "CAPTCHA:",
     "placeholder": "Introduce el texto mostrado arriba",
     "refresh": "↻ Nuevo CAPTCHA",
@@ -121,6 +121,8 @@
   "errorLoadingMods": "Error al cargar los mods",
   "modComplete": "INICIANDO JUEGO...",
   "choosePath": "Elige tu camino...",
+  "manageSaves": "Gestionar Guardados",
+  "manageSavesDescription": "Importar, exportar o gestionar tus datos guardados.",
   "saviourPath": "Elige el camino del Salvador - modos de juego tradicionales con progresión estructurada.",
   "reaperPath": "Elige el camino del Segador - modos caóticos con desafíos dinámicos.",
   "returnToMainMenu": "Volver al menú principal",
@@ -172,5 +174,7 @@
     "clearCacheFailed": "Error al borrar la caché. Por favor, inténtalo de nuevo.",
     "confirmMessage": "¿Estás SEGURO de que quieres REVERTIR tus DATOS a la versión {{version}}?\n\nEsto:\n- Reemplazará tu guardado actual con la copia de seguridad\n- Almacenará tu guardado actual como copia de seguridad eliminada\n- Borrará todas las sesiones activas\n- Recargará el juego\n\n¡Esta acción NO puede deshacerse fácilmente!",
     "restoreFailed": "Error al restaurar la copia de seguridad. Por favor, inténtalo de nuevo."
-  }
-} 
+  },
+  "unlockHintDraftMode": "Pista de Desbloqueo: Vence al invencible...",
+  "unlockHintVoid": "Pista de Desbloqueo: Vence a TODOS los Rivales..."
+}

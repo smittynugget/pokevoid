@@ -25,6 +25,9 @@ import {PokemonPhase} from "./pokemon-phase";
 import {VictoryPhase} from "./victory-phase";
 import {BattleType} from "#app/battle";
 import {FaintPhase} from "#app/phases/faint-phase";
+import {SwitchSummonPhase} from "#app/phases/switch-summon-phase";
+import {ShowRewards} from "#app/utils/show-rewards.js";
+import {BattlerTagLapseType} from "#app/data/battler-tags.js";
 import {QuestUnlockPhase} from "#app/phases/quest-unlock-phase";
 import {PermaCatchQuestModifier, TypeSwitcherModifier} from "#app/modifier/modifier";
 import {QuestState, QuestUnlockables} from "#app/system/game-data";
@@ -38,7 +41,7 @@ import {starterCatchQuestModifier, TypeSwitcherModifierType} from "#app/modifier
 import * as Utils from "#app/utils";
 import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
 import { allMoves, MoveCategory, MoveFlags } from "#app/data/move.js";
-import { Moves } from "#app/enums/moves.js";
+import { Moves, isYuMove } from "#app/enums/moves.js";
 export class AttemptCapturePhase extends PokemonPhase {
     private pokeballType: PokeballType;
     private typeBallTargetType?: Type;
@@ -172,6 +175,10 @@ export class AttemptCapturePhase extends PokemonPhase {
 
                 addPokeballOpenParticles(this.scene, this.pokeball.x, this.pokeball.y, this.pokeballType);
 
+                if (pokemon.portalSprite) {
+                    pokemon.portalSprite.setVisible(false);
+                }
+
                 this.scene.tweens.add({
                     targets: pokemon,
                     duration: 500,
@@ -285,6 +292,9 @@ export class AttemptCapturePhase extends PokemonPhase {
           : (this.pokeballType === PokeballType.VOID_BALL ? 0x2d1450 : getPokeballTintColor(this.pokeballType));
         pokemon.tint(failTintColor);
         pokemon.setVisible(true);
+        if (pokemon.portalSprite && pokemon.species?.generation === 20) {
+            pokemon.portalSprite.setVisible(true);
+        }
         pokemon.untint(250, "Sine.easeOut");
 
         const pokeballAtlasKey = getPokeballAtlasKey(this.pokeballType);
@@ -295,7 +305,7 @@ export class AttemptCapturePhase extends PokemonPhase {
             targets: pokemon,
             duration: 250,
             ease: "Sine.easeOut",
-            scale: 1
+            scale: pokemon.getSpriteScale()
         });
 
         this.scene.currentBattle.lastUsedPokeball = this.pokeballType;
@@ -334,6 +344,8 @@ export class AttemptCapturePhase extends PokemonPhase {
         }
         this.scene.gameData.permaModifiers
             .findModifiers(m => m instanceof PermaCatchQuestModifier)
+            .forEach(modifier => modifier.apply([this.scene]));
+        this.scene.findModifiers(m => m instanceof PermaCatchQuestModifier)
             .forEach(modifier => modifier.apply([this.scene]));
         const speciesForm = !pokemon.fusionSpecies ? pokemon.getSpeciesForm() : pokemon.getFusionSpeciesForm();
 
@@ -377,13 +389,25 @@ export class AttemptCapturePhase extends PokemonPhase {
                     this.end();
                 };
                 const uniqueRemovePokemon = () => {
+                    const capturedFieldIndex = this.fieldIndex;
                     if (this.scene.currentBattle.battleType != BattleType.TRAINER) {
                         removePokemon();
                     } else if (this.scene.currentBattle.battleType === BattleType.TRAINER) {
                         if (this.scene.getEnemyParty().filter(p => !p.isFainted()).length > 1) {
-                            pokemon.hp = 0;
+                            if (this.scene.currentBattle.double) {
+                                const allyPokemon = pokemon.getAlly();
+                                if (allyPokemon) {
+                                    this.scene.redirectPokemonMoves(pokemon, allyPokemon);
+                                }
+                            }
+                            removePokemon();
+                            this.scene.unshiftPhase(new VictoryPhase(this.scene, this.battlerIndex));
                             faintPhaseQueued = true;
-                            this.scene.unshiftPhase(new FaintPhase(this.scene, pokemon.getBattlerIndex(), true));
+                            const hasReservePartyMember = !!this.scene.getEnemyParty().filter(p => p.isActive() && !p.isOnField()).length;
+                            if (hasReservePartyMember) {
+                                ShowRewards(this.scene, undefined, false);
+                                this.scene.pushPhase(new SwitchSummonPhase(this.scene, capturedFieldIndex, -1, false, false, false));
+                            }
                         } else {
                             removePokemon();
                         }
@@ -394,8 +418,15 @@ export class AttemptCapturePhase extends PokemonPhase {
                     this.scene.getPlayerField().filter(p => p.isActive(true)).forEach(playerPokemon => playerPokemon.removeTagsBySourceId(pokemon.id));
                     pokemon.hp = 0;
                     pokemon.trySetStatus(StatusEffect.FAINT);
-                    this.scene.clearEnemyHeldItemModifiers();
-                    this.scene.field.remove(pokemon, true);
+                    pokemon.lapseTags(BattlerTagLapseType.FAINT);
+                    this.scene.currentBattle.enemyFaints += 1;
+                    const modifiersToRemove = this.scene.enemyModifiers.filter(
+                        m => m instanceof PokemonHeldItemModifier && (m as PokemonHeldItemModifier).pokemonId === pokemon.id
+                    );
+                    for (const m of modifiersToRemove) {
+                        this.scene.enemyModifiers.splice(this.scene.enemyModifiers.indexOf(m), 1);
+                    }
+                    this.scene.field.remove(pokemon);
                 };
                 const addToParty = () => {
                     const newPokemon = pokemon.addToParty(this.pokeballType, this.typeBallTargetType);
@@ -480,6 +511,7 @@ export class AttemptCapturePhase extends PokemonPhase {
         const movePool = Utils.getEnumValues(Moves).filter((m: Moves) => {
             const move = allMoves[m];
             return move && m !== Moves.NONE
+                && !isYuMove(m)
                 && move.type === targetType
                 && !move.hasFlag(MoveFlags.IGNORE_VIRTUAL)
                 && !move.name.endsWith(" (N)")

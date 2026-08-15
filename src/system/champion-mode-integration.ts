@@ -1,6 +1,7 @@
 import BattleScene from "../battle-scene";
-import { GameModes, GameMode } from "../game-mode";
+import { GameModes, GameMode, getGameMode } from "../game-mode";
 import { ChampionSelectPhase } from "../phases/champion-select-phase";
+import { CharacterSelectPhase } from "../phases/character-select-phase";
 import { ChampionUtils } from "./champion-utils";
 import { ChampionManager } from "./champion-manager";
 import { Species } from "../enums/species";
@@ -28,9 +29,23 @@ import { PokemonAltBuildModifierType } from "../modifier/modifier-type";
 import * as Modifiers from "../modifier/modifier";
 import { STORY_CUTSCENES } from "#app/system/story-cutscenes.js";
 import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays.js";
+import { ShinyPowerPhase } from "#app/phases/shiny-power-phase";
+import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
+import { PathNodeTypeFilter } from "#app/modifier/modifier-type";
+
 export function setupBattleFlow(scene: BattleScene, loaded: boolean = false): void {
+  if (scene.gameData.tutorialOnboardActive) {
+    cleanupTutorialState(scene);
+  }
   if (!loaded) {
     scene.moveUpgradesEnabledForRun = !scene.disableMoveUpgrades;
+    scene.statSwitchersEnabledForRun = !scene.disableStatSwitchers;
+    scene.releaseItemsEnabledForRun = !scene.disableReleaseItems;
+    scene.ivScannerEnabledForRun = !scene.disableIvScanner;
+    scene.mapEnabledForRun = !scene.disableMap;
+    scene.duelmonsEnabledForRun = !scene.disableDuelmons;
+    scene.skillTreeEnabledForRun = true;
+    scene.wave35UnlockedThisRun = false;
     scene.resetRunEndSummaryRunData();
   }
 
@@ -47,7 +62,16 @@ export function setupBattleFlow(scene: BattleScene, loaded: boolean = false): vo
     scene.currentBattle = null;
     scene.newBattle(1, BattleType.WILD);
     scene.arena.init();
+
+    scene.arenaPlayer.setPosition(300, 0);
+    scene.arenaPlayerTransition.setPosition(0, 0);
+    scene.arenaEnemy.setPosition(-280, 0);
+    scene.arenaNextEnemy.setPosition(-280, 0);
+    scene.arenaNextEnemy.setVisible(false);
     setupFixedBattlePaths(scene);
+    if (!loaded && !scene.disableShinyPower) {
+      scene.pushPhase(new ShinyPowerPhase(scene));
+    }
     scene.pushPhase(new BattlePathPhase(scene, undefined, false));
   } else {
 
@@ -81,6 +105,9 @@ export function setupBattleFlow(scene: BattleScene, loaded: boolean = false): vo
       }
     });
 
+    if (!loaded && !scene.disableShinyPower) {
+      scene.unshiftPhase(new ShinyPowerPhase(scene));
+    }
     scene.unshiftPhase(new EncounterPhase(scene, loaded));
   }
 }
@@ -92,10 +119,17 @@ function handleSaveSlotSelection(scene: BattleScene, onSlotSelected: (slotId: nu
     }
     scene.sessionSlotId = slotId;
     scene.moveUpgradesEnabledForRun = !scene.disableMoveUpgrades;
+    scene.statSwitchersEnabledForRun = !scene.disableStatSwitchers;
+    scene.releaseItemsEnabledForRun = !scene.disableReleaseItems;
+    scene.ivScannerEnabledForRun = !scene.disableIvScanner;
+    scene.mapEnabledForRun = !scene.disableMap;
+    scene.duelmonsEnabledForRun = !scene.disableDuelmons;
+    scene.wave35UnlockedThisRun = false;
     scene.resetRunEndSummaryRunData();
     onSlotSelected(slotId);
   }).catch((err) => {
     console.error("[STARTER] setOverlayMode error:", err);
+    onSlotSelected(-1);
   });
 }
 
@@ -103,17 +137,24 @@ export class ChampionModeIntegration {
   static initializeChampionSelection(
     scene: BattleScene,
     gameMode: GameModes,
-    opts?: { onChampionReady?: (championId: string, availableStarters: Species[]) => void }
+    opts?: { onChampionReady?: (championId: string, availableStarters: Species[]) => void; skipToChampionId?: string }
   ): void {
-    scene.unshiftPhase(new ChampionSelectPhase(scene, gameMode, {
-      allowCancel: true,
-      onChampionSelected: (championId: string) => {
+    const onChampionSelected = (championId: string) => {
         let effectiveChampionId = championId;
         if (championId === "apollo_diana") {
           effectiveChampionId = scene.gameData.gender === PlayerGender.FEMALE ? "diana" : "apollo";
         }
         scene.gameData.selectedChampionId = effectiveChampionId;
         scene.gameData.initializeSkillTree(effectiveChampionId);
+
+        if (scene.trainer) {
+          const backKey = ChampionUtils.getChampionBackSpriteKey(effectiveChampionId, scene.gameData.gender);
+          scene.trainer.setTexture(backKey);
+          const scale = ChampionUtils.getChampionBackSpriteScale(effectiveChampionId);
+          scene.trainer.setScale(scale);
+          const yOff = ChampionUtils.getChampionBackSpriteYOffset(effectiveChampionId);
+          scene.trainer.setY(scene.trainer.y + yOff);
+        }
 
         const championData = ChampionManager.getInstance().getChampionData(effectiveChampionId);
         const gm = scene.gameMode as GameMode;
@@ -122,11 +163,12 @@ export class ChampionModeIntegration {
           const waitPhase = new Phase(scene);
           scene.unshiftPhase(waitPhase);
 
+          scene.ui.setMode(Mode.MESSAGE);
           handleSaveSlotSelection(scene, (slotId) => {
             if (slotId === -1) {
               scene.ui.resetModeChain();
               scene.clearAllPhaseQueues();
-              scene.pushPhase(new TitlePhase(scene));
+              scene.pushPhase(new TitlePhase(scene, false, true));
               waitPhase.end();
               return;
             }
@@ -236,7 +278,7 @@ export class ChampionModeIntegration {
                 if (slotId === -1) {
                   scene.ui.resetModeChain();
                   scene.clearAllPhaseQueues();
-                  scene.pushPhase(new TitlePhase(scene));
+                  scene.pushPhase(new TitlePhase(scene, false, true));
                   scene.getCurrentPhase()?.end();
                   return;
                 }
@@ -284,9 +326,6 @@ export class ChampionModeIntegration {
                   if (starter.nickname) {
                     starterPokemon.nickname = starter.nickname;
                   }
-                  if (starter.fusionIndex > -1) {
-                    starterPokemon.generateFusionViaSpeciesID(scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
-                  }
                   const currentChampionId = scene.gameData.selectedChampionId;
                   let selectedIsSignature = false;
                   let altBuildId: PokemonAltBuildId | null = null;
@@ -299,35 +338,54 @@ export class ChampionModeIntegration {
                       const unlockedSignatures = (currentChampionData as any).unlockedSignaturePokemon as Species[] | undefined;
                       const inUnlockedList = unlockedSignatures?.includes(starter.species.speciesId) || false;
 
-                      selectedIsSignature = inBaseList || inUnlockedList;
+                      selectedIsSignature = (inBaseList || inUnlockedList) && starter.isSignature !== false;
 
                       if (selectedIsSignature) {
                         starterPokemon.isSignature = true;
                         altBuildId = ChampionUtils.getSignatureAltBuildId(starter.species.speciesId, currentChampionData);
-                        if (altBuildId) {
-                          const altBuild = POKEMON_ALT_BUILDS[altBuildId];
-                          if (altBuild) {
-                            const modifierType = new PokemonAltBuildModifierType(altBuild);
-                            const modifier = new Modifiers.PokemonAltBuildModifier(modifierType, starterPokemon.id, altBuild);
-                            modifier.applyAltBuildToPokemon(starterPokemon);
-                          }
-                        }
                       }
+                    }
+                  }
+
+                  if (!selectedIsSignature) {
+                    if (Overrides.STARTER_FUSION_SPECIES_OVERRIDE) {
+                      starterPokemon.generateFusionViaSpeciesID(Overrides.STARTER_FUSION_SPECIES_OVERRIDE as Species, true);
+                    } else if (starter.fusionIndex > -1) {
+                      starterPokemon.generateFusionViaSpeciesID(scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
                     }
                   }
                   starterPokemon.setVisible(false);
                   party.push(starterPokemon);
                   Modifiers.applySignatureTypeSwitcher(scene as any, starterPokemon);
+                  if (starterPokemon.isSignature && altBuildId) {
+                    const def = POKEMON_ALT_BUILDS[altBuildId];
+                    if (def) {
+                      const rank = starterPokemon.altBuildRank ?? def.rank ?? 1;
+                      const modType = new PokemonAltBuildModifierType(def, rank);
+                      modType.id = "POKEMON_ALT_BUILD";
+                      const altBuildMod = modType.newModifier(starterPokemon) as Modifiers.PokemonAltBuildModifier;
+                      altBuildMod.applyAltBuildToPokemon(starterPokemon);
+                      scene.addModifier(altBuildMod, true);
+                    }
+                  }
                   loadPokemonAssets.push(starterPokemon.loadAssets());
                 });
                   Promise.all(loadPokemonAssets).then(() => {
+                    const isJourneyMode = [
+                      GameModes.CHAOS_JOURNEY,
+                      GameModes.CHAOS_JOURNEY_SHORT,
+                      GameModes.CHAOS_JOURNEY_FTL,
+                    ].includes(scene.gameMode.modeId);
 
                     const skillTreeMode = DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE
                       ? SkillTreeMode.DEBUG_ENHANCED
-                      : SkillTreeMode.INITIAL_ACCESS;
+                      : isJourneyMode
+                        ? SkillTreeMode.POKEMON_SELECTION
+                        : SkillTreeMode.INITIAL_ACCESS;
 
                     scene.unshiftPhase(new SkillTreePhase(scene as any, {
                       mode: skillTreeMode,
+                      requiredSelections: isJourneyMode ? 2 : undefined,
                       onComplete: () => {
                       setupBattleFlow(scene, false);
                         opts?.onChampionReady?.(championId, []);
@@ -360,7 +418,116 @@ export class ChampionModeIntegration {
           }
           return;
         }
-      }
+    };
+
+    if (opts?.skipToChampionId) {
+      scene.gameData.gender = PlayerGender.MALE;
+      onChampionSelected(opts.skipToChampionId);
+      return;
+    }
+
+    scene.unshiftPhase(new CharacterSelectPhase(scene, gameMode, {
+      allowCancel: true,
+      onCharacterSelected: (characterId: string) => {
+        scene.unshiftPhase(new ChampionSelectPhase(scene, gameMode, {
+          allowCancel: true,
+          onChampionSelected: onChampionSelected,
+          preSelectedChampion: characterId,
+        }));
+      },
     }));
   }
+}
+
+export function cleanupTutorialState(scene: BattleScene): void {
+  scene.gameData.gameStats.onboardingTutorialComplete = true;
+  scene.gameData.gameStats.firstTimeFtlAutoStartComplete = true;
+  scene.gameData.isNewPlayer = false;
+  scene.gameData.saveSystem();
+  scene.gameData.tutorialOnboardActive = false;
+  scene.gameData.tutorialBattleScript = null;
+  scene.skillTreeEnabledForRun = true;
+  TitlePhase.debugTutorialFlowActive = false;
+  TitlePhase.tutorialBattlePending = false;
+
+  if (scene.currentBattle) {
+    scene.currentBattle.enemyParty.forEach(p => {
+      if (p?.battleInfo) {
+        p.battleInfo.setVisible(false);
+        p.battleInfo.destroy();
+      }
+      p?.destroy();
+    });
+    scene.currentBattle.enemyParty = [];
+  }
+}
+
+export function beginTutorialChaosFtlAfterTrance(scene: BattleScene): void {
+  scene.clearAllPhaseQueues();
+  scene.ui.resetModeChain();
+  scene.ui.clearText();
+  scene.ui.fadeIn(250);
+
+  scene.skillTreeEnabledForRun = false;
+
+  scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE_FTL);
+  scene.sessionSlotId = 0;
+
+  const championId = scene.gameData.gender === PlayerGender.FEMALE ? "diana" : "apollo";
+  scene.gameData.selectedChampionId = championId;
+  scene.gameData.initializeSkillTree(championId);
+
+  const party = scene.getParty();
+  while (party.length > 0) party.pop()?.destroy();
+
+  const placeholder = scene.addPlayerPokemon(getPokemonSpecies(Species.UNOWN), 1, undefined, undefined, undefined, false);
+  placeholder.setVisible(false);
+  party.push(placeholder);
+
+  if (scene.currentBattle?.trainer) {
+    scene.currentBattle.trainer.destroy();
+  }
+  if (scene.currentBattle?.enemyParty) {
+    scene.currentBattle.enemyParty.forEach(p => p.destroy(true));
+  }
+  scene.currentBattle = null;
+  scene.newBattle(1, BattleType.WILD);
+  scene.showTitleBG();
+
+  scene.money = 1000;
+  scene.updateMoneyText();
+
+  const outerDraft = new SelectModifierPhase(
+    scene,
+    0,
+    undefined,
+    true,
+    () => {
+      const innerDraft = new SelectModifierPhase(
+        scene,
+        1,
+        undefined,
+        true,
+        () => {
+          const unownIdx = party.findIndex(p => p.species.speciesId === Species.UNOWN);
+          if (unownIdx >= 0) party.splice(unownIdx, 1)[0]?.destroy();
+
+          scene.unshiftPhase(new SlideshowCutscenePhase(scene, {
+            ...STORY_CUTSCENES.tutorial_void_trance_journey,
+            canSkip: false,
+            resumeBgmOnEnd: true,
+            onComplete: () => {
+              cleanupTutorialState(scene);
+              setupBattleFlow(scene, false);
+              scene.skillTreeEnabledForRun = false;
+            },
+          }));
+        },
+        PathNodeTypeFilter.NONE
+      );
+      scene.unshiftPhase(innerDraft);
+    },
+    PathNodeTypeFilter.NONE
+  );
+  scene.unshiftPhase(outerDraft);
 }

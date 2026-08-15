@@ -1,15 +1,18 @@
 import { updateUserInfo } from "#app/account.js";
 import BattleScene, { bypassLogin } from "#app/battle-scene.js";
 import { Phase } from "#app/phase.js";
-import { handleTutorial, Tutorial } from "#app/tutorial.js";
+
 import { Mode } from "#app/ui/ui.js";
 import i18next, { t } from "i18next";
 import * as Utils from "#app/utils.js";
 import { SelectGenderPhase } from "./select-gender-phase";
 import { UnavailablePhase } from "./unavailable-phase";
+import { isDriveConnected, waitForDriveAuth } from "#app/system/drive-auth";
+import { PlayerGender } from "#app/enums/player-gender.js";
 
 export class LoginPhase extends Phase {
   private showText: boolean;
+  private _loadingData = false;
 
   constructor(scene: BattleScene, showText?: boolean) {
     super(scene);
@@ -28,12 +31,25 @@ export class LoginPhase extends Phase {
       const statusCode = response ? response[1] : null;
 
       const loadData = () => {
-        updateUserInfo().then(success => {
+        if (this._loadingData) return;
+        this._loadingData = true;
+        updateUserInfo().then(async (success) => {
           this.scene.gameData.dataLoadAttempted = true;
           if (!success[0]) {
             Utils.removeCookie(Utils.sessionIdKey);
             this.scene.reset(true, true);
             return;
+          }
+          await waitForDriveAuth();
+          if (isDriveConnected()) {
+            try {
+              const { driveSyncService } = await import("#app/system/drive-sync-service");
+              const resolution = await driveSyncService.resolveBootSaveSource(this.scene);
+              if (resolution === "reload") {
+                window.location.reload();
+                return;
+              }
+            } catch {}
           }
           this.scene.gameData.loadSystem().then(() => this.end());
         });
@@ -100,15 +116,18 @@ export class LoginPhase extends Phase {
 
   end(): void {
     this.scene.ui.setMode(Mode.MESSAGE);
+    this.scene.signalDataReady();
+
+    const isNewPlayer = this.scene.gameData.isNewPlayer;
 
     if (!this.scene.gameData.gender) {
-      this.scene.unshiftPhase(new SelectGenderPhase(this.scene));
+      if (isNewPlayer) {
+        this.scene.gameData.gender = PlayerGender.MALE;
+      } else {
+        this.scene.unshiftPhase(new SelectGenderPhase(this.scene));
+      }
     }
 
-    handleTutorial(this.scene, Tutorial.Intro).then(() => {
-      handleTutorial(this.scene, Tutorial.Backup_Reminder).then(() => {
-        super.end();
-      });
-    });
+    super.end();
   }
 }

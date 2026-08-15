@@ -105,6 +105,17 @@
       "common": {
         "any": "任意"
       }
+    },
+    "skillTree": {
+      "modalTitle": "技能树悬赏",
+      "completion": {
+        "title": "悬赏完成！",
+        "standardReward": "选择你的奖励！",
+        "rareReward": "大师球稀有度已解锁！",
+        "veryRareRankUp": "宝可梦晋级在等着你！",
+        "veryRareMove": "决斗兽招式在等着你！",
+        "fallback": "奖励已发放！"
+      }
     }
   },
   "modeRewards": {
@@ -117,4 +128,4 @@
     "accessShopInBattle": "在战斗中访问Ω商店！",
     "accessQuestsInBattle": "在战斗中访问任务！"
   }
-} 
+}

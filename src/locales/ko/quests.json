@@ -137,7 +137,7 @@
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "파르셀 프레젠트",
-    "task": "너클록 모드에서 파르셀로 프레젠트를 10번 사용하기"
+    "task": "파르셀로 프레젠트를 10번 사용하기"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "잎새코 코코리코 격파",
@@ -445,7 +445,7 @@
   "NORMAL_STRENGTH": {
     "name": "노말의 힘!",
     "task": "여러 런에 걸쳐 노말타입 포켓몬으로 125마리 격파하기",
-    "rewardText": "노말타입의 저항과 강점을 변경하는 영구 아이템 해금!"
+    "rewardText": "노말타입의 저항과 강점을 변경하는 Ω아이템 해금!"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "잉어킹 새로운 기술",
@@ -485,7 +485,7 @@
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "노말의 힘!",
     "task": "여러 런에 걸쳐 노말타입 포켓몬으로 125마리 격파하기",
-    "rewardText": "노말타입의 저항과 강점을 변경하는 영구 아이템 해금!"
+    "rewardText": "노말타입의 저항과 강점을 변경하는 Ω아이템 해금!"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "잉어킹 새로운 기술",
@@ -521,5 +521,7 @@
     "name": "단데기 새로운 기술",
     "task": "단데기로 50마리 격파하기",
     "rewardText": "단데기가 더 많은 기술을 배울 수 있게 됩니다!"
-  }
+  },
+  "rewardUnlocksGlitchForm": "글리치 폼 해금",
+  "rewardUnlocksSmittyForm": "스미티 폼 해금"
 }

@@ -1,5 +1,5 @@
 import {ModalConfig, ModalUiHandler} from "./modal-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import type BattleScene from "../battle-scene";
 import {addTextObject, TextStyle} from "./text";
 import {ModifierType, modifierTypes, AddPokeballModifierType, AddTypeBallModifierType} from "../modifier/modifier-type";
@@ -18,8 +18,9 @@ import {GameModes} from "../game-mode";
 import {getPokemonSpecies} from "#app/data/pokemon-species";
 import { modStorage } from "../system/mod-storage";
 import { getModPokemonName } from "../data/mod-glitch-form-utils";
-import { createSporadicPattern } from "#app/utils";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
+import { getUpgradeRarityColors, fixedInt } from "../utils";
+import { SkillTreeRarity } from "../system/skill-tree-data";
 
 export enum RewardObtainedType {
     MODIFIER,
@@ -78,12 +79,14 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
     protected rewardConfig: RewardConfig;
     protected rewardSprite: Phaser.GameObjects.Sprite;
+    protected rewardPortalSprite: Phaser.GameObjects.Sprite | null = null;
     protected rewardBG: Phaser.GameObjects.Sprite;
     protected uiContainer: Phaser.GameObjects.Container;
     protected textureLoaded: boolean = false;
     private modalBackground: Phaser.GameObjects.GameObject;
+    private loadingBgOverlay: Phaser.GameObjects.Image | null = null;
     private buttonActions: (() => void)[];
-    private overlayPatternContainer: Phaser.GameObjects.Container | null = null;
+    private _rewardBgPattern: ModalBackgroundHandle | null = null;
     private prevPermaBarVisible: boolean | null = null;
     private prevPlayerBarVisible: boolean | null = null;
     private prevEnemyBarVisible: boolean | null = null;
@@ -92,7 +95,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
     private _tooltipPattern: ModalBackgroundHandle | null = null;
 
     private isTooltipStyle(): boolean {
-        return !!this.rewardConfig?.cutsceneStyle || !RewardObtainedUiHandler.USE_LEGACY_NON_CUTSCENE_STYLE;
+        return !RewardObtainedUiHandler.USE_LEGACY_NON_CUTSCENE_STYLE;
     }
 
     constructor(scene: BattleScene, mode: Mode | null = null) {
@@ -170,10 +173,6 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
     }
 
     protected createModalBackground(): void {
-        if (this.isTooltipStyle()) {
-            this.clearModalBackgrounds();
-            return;
-        }
         super.createModalBackground();
     }
 
@@ -651,6 +650,9 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                 }
             }
 
+            if (this.rewardPortalSprite) {
+                this.uiContainer.add(this.rewardPortalSprite);
+            }
             if (this.rewardSprite) {
                 this.uiContainer.add(this.rewardSprite);
                 this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
@@ -728,7 +730,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             pokemon.getSpriteKey(),
             undefined,
             false,
-            true
+            false
         );
         this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
 
@@ -741,9 +743,45 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             if (pokemon.isFusion()) {
                 this.rewardSprite.setPipelineData("spriteColors", pokemon.getSprite().pipelineData.spriteColors);
                 this.rewardSprite.setPipelineData("fusionSpriteColors", pokemon.getSprite().pipelineData.fusionSpriteColors);
+                this.rewardSprite.setPipelineData("fusionRecolorMode", (pokemon.getSprite().pipelineData as any).fusionRecolorMode || 0);
+                this.rewardSprite.setPipelineData("fusionRecolorModeBase", 0);
+            } else {
+                this.rewardSprite.setPipelineData("spriteColors", []);
+                this.rewardSprite.setPipelineData("fusionSpriteColors", []);
+                this.rewardSprite.setPipelineData("spriteColorsBase", []);
+                this.rewardSprite.setPipelineData("fusionSpriteColorsBase", []);
+                this.rewardSprite.setPipelineData("fusionRecolorMode", 0);
+                this.rewardSprite.setPipelineData("fusionRecolorModeBase", 0);
+            }
+            const srcData = pokemon.getSprite().pipelineData as any;
+            if (srcData["altBuildSpriteColors"] && srcData["altBuildTargetColors"]) {
+                this.rewardSprite.setPipelineData("altBuildSpriteColors", srcData["altBuildSpriteColors"]);
+                this.rewardSprite.setPipelineData("altBuildTargetColors", srcData["altBuildTargetColors"]);
+                this.rewardSprite.setPipelineData("altBuildBlendMode", srcData["altBuildBlendMode"]);
+                this.rewardSprite.setPipelineData("altBuildInversionFactor", srcData["altBuildInversionFactor"] || 0.0);
+            } else {
+                delete this.rewardSprite.pipelineData["altBuildSpriteColors"];
+                delete this.rewardSprite.pipelineData["altBuildTargetColors"];
+                delete this.rewardSprite.pipelineData["altBuildBlendMode"];
+                delete this.rewardSprite.pipelineData["altBuildInversionFactor"];
             }
             this.rewardSprite.setPipelineData("shiny", pokemon.shiny);
             this.rewardSprite.setPipelineData("variant", pokemon.variant);
+        }
+
+        if (pokemon.species?.generation === 20) {
+            const spriteState = pokemon.getSpriteState();
+            const portalFile = spriteState?.portal;
+            if (portalFile) {
+                const stem = portalFile.replace(/\.png$/i, "");
+                const portalKey = `yu_portal_${stem}`;
+                if (this.scene.textures.exists(portalKey)) {
+                    const position = this.getSpritePosition();
+                    this.rewardPortalSprite = this.scene.add.sprite(position.x, position.y, portalKey);
+                    this.rewardPortalSprite.setOrigin(0.5, 1);
+                    this.rewardPortalSprite.setScale(this.calculateSpriteScale(this.rewardSprite) * 0.8);
+                }
+            }
         }
     }
 
@@ -1019,6 +1057,13 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                 this.modalContainer.add(this.uiContainer);
                 this.uiContainer.setAlpha(0);
 
+                this.modalContainer.off("pointerdown");
+                this.modalContainer.on("pointerdown", () => {
+                    if (this.buttonActions?.[0]) {
+                        this.buttonActions[0]();
+                    }
+                });
+
                 this.loadTexture()
                     .then(() => {
                         if (!this.active || !this.uiContainer) return;
@@ -1057,46 +1102,57 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         bgX = -this.modalContainer.x;
         bgY = -h - this.modalContainer.y;
 
-        const hideModalBackground = !!this.rewardConfig.hideModalBackground;
-        const isPurple = this.rewardConfig.type === RewardObtainedType.NIGHTMARE_MODE_CHANGE;
-        const isBlack = !hideModalBackground && (priorToGameover || this.rewardConfig.type === RewardObtainedType.RIVAL_TO_VOID);
+        if (!cutsceneStyle) {
+            const loadingBg = this.scene.add.image(bgX, bgY, "loading_bg");
+            loadingBg.setOrigin(0, 0);
+            loadingBg.setDisplaySize(w, h);
+            loadingBg.setAlpha(1);
+            this.loadingBgOverlay = loadingBg;
+            this.modalContainer.addAt(this.loadingBgOverlay, 0);
 
-        if (isBlack) {
-            this.modalBackground = this.scene.add.rectangle(bgX, bgY, w, h, 0x000000, 1.0);
-            (this.modalBackground as any).setOrigin?.(0, 0);
-        } else {
-            const bgImage = this.scene.add.image(bgX, bgY, "modal_bg");
-            bgImage.setOrigin(0, 0);
-            bgImage.setDisplaySize(w, h);
-            bgImage.setAlpha(hideModalBackground ? 0 : (0.65 * this.scene.gameData.rewardOverlayOpacity));
+            const hideModalBackground = !!this.rewardConfig.hideModalBackground;
+            const isPurple = this.rewardConfig.type === RewardObtainedType.NIGHTMARE_MODE_CHANGE;
+            const isBlack = !hideModalBackground && (priorToGameover || this.rewardConfig.type === RewardObtainedType.RIVAL_TO_VOID);
 
-            if (isPurple) {
-                try {
-                    if (bgImage.postFX && typeof bgImage.postFX.addColorMatrix === 'function') {
-                        const colorMatrix = bgImage.postFX.addColorMatrix();
-                        colorMatrix.negative();
-                    } else {
-                        bgImage.setTint(0xFFFFFF);
-                        bgImage.setBlendMode(Phaser.BlendModes.DIFFERENCE);
+            if (isBlack) {
+                this.modalBackground = this.scene.add.rectangle(bgX, bgY, w, h, 0x000000, 1.0);
+                (this.modalBackground as any).setOrigin?.(0, 0);
+            } else {
+                const bgImage = this.scene.add.image(bgX, bgY, "modal_bg");
+                bgImage.setOrigin(0, 0);
+                bgImage.setDisplaySize(w, h);
+                bgImage.setAlpha(hideModalBackground ? 0 : (0.65 * this.scene.gameData.rewardOverlayOpacity));
+
+                if (isPurple) {
+                    try {
+                        if (bgImage.postFX && typeof bgImage.postFX.addColorMatrix === 'function') {
+                            const colorMatrix = bgImage.postFX.addColorMatrix();
+                            colorMatrix.negative();
+                        } else {
+                            bgImage.setTint(0xFFFFFF);
+                            bgImage.setBlendMode(Phaser.BlendModes.DIFFERENCE);
+                        }
+                    } catch (error) {
+                        bgImage.setTint(0x000000);
+                        bgImage.setBlendMode(Phaser.BlendModes.SCREEN);
                     }
-                } catch (error) {
-                    bgImage.setTint(0x000000);
-                    bgImage.setBlendMode(Phaser.BlendModes.SCREEN);
                 }
+
+                this.modalBackground = bgImage as any;
+            }
+            this.modalContainer.addAt(this.modalBackground, 1);
+
+            if (this._rewardBgPattern) {
+                this._rewardBgPattern.clear();
+                this._rewardBgPattern = null;
             }
 
-            this.modalBackground = bgImage as any;
+            if (!hideModalBackground) {
+                this._rewardBgPattern = attachModalBackground(this.scene, this.modalContainer, () => ({
+                    bgX, bgY, bgWidth: w, bgHeight: h
+                }), { mask: false, alphaMultiplier: 0.6 });
+            }
         }
-        this.modalContainer.addAt(this.modalBackground, 0);
-
-        if (this.overlayPatternContainer) {
-            this.overlayPatternContainer.removeAll(true);
-            this.overlayPatternContainer.destroy();
-            this.overlayPatternContainer = null;
-        }
-        this.overlayPatternContainer = this.scene.add.container(bgX, bgY);
-        createSporadicPattern(this.scene, this.overlayPatternContainer, { width: w, height: h, iconAlpha: 0.25 });
-        this.modalContainer.addAt(this.overlayPatternContainer, 1);
 
         const getTextPosition = () => {
             const sprite = this.rewardBG ? this.rewardBG : this.rewardSprite;
@@ -1108,8 +1164,8 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             };
         };
 
-        const bodyFontSize = cutsceneStyle ? '45px' : '50px';
-        const amountFontSize = cutsceneStyle ? '55px' : '60px';
+        const bodyFontSize = '50px';
+        const amountFontSize = '60px';
 
         if (this.rewardConfig.type === RewardObtainedType.MONEY && this.rewardConfig.amount) {
             const textPos = getTextPosition();
@@ -1217,6 +1273,24 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         }
     }
 
+    private getCutsceneRewardRarity(): SkillTreeRarity {
+        if (this.rewardConfig.skillTreeRarity) {
+            return this.rewardConfig.skillTreeRarity as unknown as SkillTreeRarity;
+        }
+        if (this.rewardConfig.modifierType?.tier !== undefined && this.rewardConfig.modifierType.tier !== null) {
+            const tierMap: Record<number, SkillTreeRarity> = {
+                0: SkillTreeRarity.COMMON,
+                1: SkillTreeRarity.GREAT,
+                2: SkillTreeRarity.ULTRA,
+                3: SkillTreeRarity.ROGUE,
+                4: SkillTreeRarity.MASTER,
+                5: SkillTreeRarity.LEGENDARY,
+            };
+            return tierMap[this.rewardConfig.modifierType.tier] ?? SkillTreeRarity.LEGENDARY;
+        }
+        return SkillTreeRarity.LEGENDARY;
+    }
+
     private setupCutsceneTooltipStyle(): void {
         if (!this.uiContainer) return;
 
@@ -1229,18 +1303,18 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         const buttonRowH = 10;
         const barsH = titleBarH + rarityBarH;
 
-        const bg = this.scene.add.graphics();
-        bg.fillStyle(0x000000, 1.0);
-        bg.fillRect(0, 0, tooltipWidth, tooltipHeight);
-        bg.lineStyle(0.5, 0xffffff, 0.5);
-        bg.strokeRoundedRect(0, 0, tooltipWidth, tooltipHeight, 0);
+        const rarity = this.getCutsceneRewardRarity();
+        const rarityColors = getUpgradeRarityColors(rarity);
+
+        const nsBg = this.scene.add.nineslice(0, 0, "tooltip_info", undefined, tooltipWidth, tooltipHeight, 12, 12, 12, 12);
+        nsBg.setOrigin(0, 0);
 
         const titleBar = this.scene.add.graphics();
-        titleBar.fillStyle(0x111111, 0.9);
+        titleBar.fillStyle(0x0a0a14, 0.95);
         titleBar.fillRect(0, 0, tooltipWidth, titleBarH);
 
         const rarityBar = this.scene.add.graphics();
-        rarityBar.fillStyle(0x4d0000, 0.6);
+        rarityBar.fillStyle(0x0f0f1e, 1.0);
         rarityBar.fillRect(0, titleBarH, tooltipWidth, rarityBarH);
 
         const titleText = addTextObject(
@@ -1252,6 +1326,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             { fontSize: "40px", fontStyle: "bold" }
         );
         titleText.setOrigin(0.5, 0.5);
+        titleText.setColor("#" + rarityColors.border.toString(16).padStart(6, "0"));
 
         const subtitleString = this.normalizeCutsceneTooltipSubtitle(this.getCutsceneTooltipSubtitle());
         const subtitleText = addTextObject(
@@ -1263,7 +1338,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             { fontSize: "35px", align: "center" }
         );
         subtitleText.setOrigin(0.5, 0.5);
-        subtitleText.setTint(0xffffff);
+        subtitleText.setTint(rarityColors.border);
         subtitleText.setVisible(!!subtitleString);
 
         const bodyX = padding;
@@ -1273,12 +1348,19 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
         const confirmRow = this.createCutsceneConfirmRow(tooltipWidth, tooltipHeight, padding, buttonRowH);
 
-        this.uiContainer.addAt(bg, 0);
+        this.uiContainer.addAt(nsBg, 0);
         this.uiContainer.addAt(titleBar, 1);
         this.uiContainer.addAt(rarityBar, 2);
         this.uiContainer.add(titleText);
         this.uiContainer.add(subtitleText);
         this.uiContainer.add(confirmRow);
+
+        this._tooltipPattern = attachModalBackground(
+            this.scene as BattleScene,
+            this.uiContainer,
+            () => ({ bgX: 0, bgY: 0, bgWidth: tooltipWidth, bgHeight: tooltipHeight }),
+            { mask: false, alphaMultiplier: 0.6 }
+        );
 
         const cx = bodyX + (bodyW / 2);
         const cy = bodyY + (bodyH / 2);
@@ -1320,15 +1402,10 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         this.modalContainer.addAt(fullscreenBg, 0);
         this.modalBackground = fullscreenBg;
 
-        if (this.overlayPatternContainer) {
-            this.overlayPatternContainer.removeAll(true);
-            this.overlayPatternContainer.destroy();
-            this.overlayPatternContainer = null;
+        if (this._rewardBgPattern) {
+            this._rewardBgPattern.clear();
+            this._rewardBgPattern = null;
         }
-        this.overlayPatternContainer = this.scene.add.container(bgX, bgY);
-        createSporadicPattern(this.scene, this.overlayPatternContainer, { width: w, height: h, iconAlpha: 0.25 });
-        this.overlayPatternContainer.setAlpha(overlayAlpha);
-        this.modalContainer.addAt(this.overlayPatternContainer, 1);
 
         const bg = this.scene.add.graphics();
         this.drawTooltipGradientBackground(bg, 0, 0, tooltipWidth, tooltipHeight);
@@ -1557,28 +1634,23 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
     }
 
     protected fadeInUI(): void {
-        if (this.rewardConfig?.cutsceneStyle) {
-            if (this.rewardConfig.type === RewardObtainedType.UNLOCK && this.rewardSprite) {
-                this.rewardSprite.setAlpha(0);
-            }
-            this.uiContainer.setAlpha(1);
-            if (this.rewardConfig.type === RewardObtainedType.UNLOCK && this.rewardSprite) {
-                this.scene.tweens.add({
-                    targets: this.rewardSprite,
-                    alpha: 1,
-                    duration: 10000,
-                    ease: 'Power2',
-                    delay: 5000
-                });
-            }
-            return;
+        this.uiContainer.setAlpha(1);
+
+        const pixTarget = this.modalContainer || this.uiContainer;
+        if (pixTarget.postFX && typeof pixTarget.postFX.addPixelate === "function") {
+            const containerPixFx = pixTarget.postFX.addPixelate(20);
+            this.scene.tweens.add({
+                targets: containerPixFx,
+                amount: -1,
+                duration: fixedInt(500),
+                ease: "Linear",
+                onComplete: () => {
+                    if (pixTarget.postFX) {
+                        pixTarget.postFX.remove(containerPixFx);
+                    }
+                }
+            });
         }
-        this.scene.tweens.add({
-            targets: this.uiContainer,
-            alpha: 1,
-            duration: 300,
-            ease: 'Power2'
-        });
     }
 
     protected handleUIError(): void {
@@ -1629,7 +1701,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
         const cutsceneStyle = !!this.rewardConfig?.cutsceneStyle;
         const tooltipStyle = this.isTooltipStyle();
-        this.modalBg.setAlpha(tooltipStyle ? 0 : 1);
+        this.modalBg.setAlpha(1);
         this.titleText.setVisible(!tooltipStyle);
         this.buttonContainers.forEach(container => container.setVisible(!tooltipStyle));
         if (this.baseTitleFontSize === null) {
@@ -1641,27 +1713,18 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             this.baseTitleY = this.titleText?.y ?? null;
         }
 
-        if (cutsceneStyle) {
-            if (this.baseTitleFontSize !== null) {
-                this.titleText.setFontSize(`${Math.max(1, this.baseTitleFontSize - 5)}px`);
-            }
-            if (this.baseTitleY !== null) {
-                this.titleText.setY(this.baseTitleY - 2);
-            }
-        } else {
-            if (this.baseTitleFontSize !== null) {
-                this.titleText.setFontSize(`${this.baseTitleFontSize}px`);
-            }
-            if (this.baseTitleY !== null) {
-                this.titleText.setY(this.baseTitleY);
-            }
+        if (this.baseTitleFontSize !== null) {
+            this.titleText.setFontSize(`${this.baseTitleFontSize}px`);
+        }
+        if (this.baseTitleY !== null) {
+            this.titleText.setY(this.baseTitleY);
         }
 
         this.buttonContainers.forEach((container, index) => {
             const buttonBg = this.buttonBgs[index];
             if (buttonBg) {
-                const w = Math.max(0, buttonBg.width * 0.8 - (cutsceneStyle ? 5 : 0));
-                const h = Math.max(0, buttonBg.height * 0.9 - (cutsceneStyle ? 5 : 0));
+                const w = Math.max(0, buttonBg.width * 0.8);
+                const h = Math.max(0, buttonBg.height * 0.9);
                 buttonBg.setSize(w, h);
 
                 container.setPosition(
@@ -1671,12 +1734,26 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             }
             const buttonLabel = container.list[1] as Phaser.GameObjects.Text;
             if (buttonLabel) {
-                buttonLabel.setFontSize(cutsceneStyle ? '45px' : '50px');
+                buttonLabel.setFontSize('50px');
             }
         });
+
+        if (cutsceneStyle) {
+            const SCALE = 0.8;
+            this.modalContainer.setScale(SCALE);
+            const cw = this.getWidth();
+            const ch = this.getHeight();
+            this.modalContainer.x += cw * (1 - SCALE) / 2;
+            this.modalContainer.y += ch * (1 - SCALE) / 2;
+        } else {
+            this.modalContainer.setScale(1);
+        }
     }
 
     clear(): void {
+        this.modalContainer?.off("pointerdown");
+        this.modalContainer?.setScale(1);
+
         if (this.isTooltipStyle()) {
             const uiAny: any = (this.scene as any).ui;
             const perma = uiAny?.permaModifierBar;
@@ -1702,16 +1779,20 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             this._tooltipPattern = null;
         }
 
-        if (this.overlayPatternContainer) {
-            this.overlayPatternContainer.removeAll(true);
-            this.overlayPatternContainer.destroy();
-            this.overlayPatternContainer = null;
+        if (this._rewardBgPattern) {
+            this._rewardBgPattern.clear();
+            this._rewardBgPattern = null;
         }
 
         if (this.uiContainer) {
             this.uiContainer.removeAll(true);
             this.uiContainer.destroy();
             this.uiContainer = null;
+        }
+
+        if (this.rewardPortalSprite) {
+            this.rewardPortalSprite.destroy();
+            this.rewardPortalSprite = null;
         }
 
         if (this.rewardSprite) {
@@ -1727,6 +1808,11 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         if (this.modalBackground) {
             this.modalBackground.destroy();
             this.modalBackground = null;
+        }
+
+        if (this.loadingBgOverlay) {
+            this.loadingBgOverlay.destroy();
+            this.loadingBgOverlay = null;
         }
 
         this.textureLoaded = false;

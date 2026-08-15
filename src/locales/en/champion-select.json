@@ -1,5 +1,6 @@
 {
   "title": "Select Champion",
+  "skillsOfTitle": "SKILLS OF {{subtitle}}",
   "confirmSelection": "Start run with {{name}}?",
   "subheader": "Who will you choose to venture into the Void?",
   "levelUp": "LEVEL UP!",
@@ -26,6 +27,11 @@
   "unlockCharacter": "Unlock Character",
   "unlockCharacterTooltip": "Unlock by using {{current}}/{{required}} Essences to Unlock",
   "tooltip": {
+    "requiredEssenceHeader": "REQUIRED ESSENCE",
+    "descriptionHeader": "DESCRIPTION",
+    "abilityHeader": "ABILITY",
+    "itemDescriptionHeader": "ITEM DESCRIPTION",
+    "skillInfoHeader": "SKILL INFO",
     "lockedSkillTitle": "Locked Skill",
     "levelRequired": "Must be Level {{level}} to unlock.",
     "lockedPrefix": "LOCKED",
@@ -42,11 +48,17 @@
     "defaultRevive": "Increase revive chance for {{types}} Pokémon by {{percent}}%",
     "defaultTokens": "Receive Skill Tree Tokens to unlock nodes",
     "defaultPoints": "Receive Skill Points to purchase skills",
-    "typesFallback": "Unknown"
+    "typesFallback": "Unknown",
+    "essenceRequiredTooltip": "Required Essence",
+    "essenceRequiredTooltipDesc": "Spend essence to level up your champion. To earn essences defeat Pokémon to gain their type.",
+    "essenceLoreNote": "Unique Essences Note: SMITTY obtained from SMITTY trainers. GLITCH from glitch pokemon. GEN I from Gen I pokemon."
   },
   "skillList": {
-    "levelPrefix": "Lvl {{level}}",
+    "levelPrefix": "Lv {{level}}",
     "unknownSkill": "???"
+  },
+  "skillBar": {
+    "next": "NEXT"
   },
   "defaultSkillLabels": {
     "tms": "{{types}} TMs",
@@ -64,10 +76,26 @@
     "fusionPriority": "{{types}} Fusion Priority"
   },
   "button": {
-    "useEssence": "Use Essence"
+    "useEssence": "Use Essence",
+    "levelUp": "Level Up",
+    "notEnoughEssence": "To Level Up:",
+    "required": "REQUIRED"
   },
-  "brock": { "description": "Champion of Rock" },
-  "misty": { "description": "Champion of Water" },
+  "generationShort": "GEN {{generation}}",
+  "switchChampion": "Other Half",
+  "brock": {
+    "description": "Champion of Rock",
+    "essenceRequirement": "Requires {{ground}} Ground + {{rock}} Rock essences"
+  },
+  "misty": {
+    "description": "Champion of Water",
+    "essenceRequirement": "Requires {{water}} Water essences"
+  },
+  "red": {
+    "description": "The legend...",
+    "unlockRequirement": "Unlock all champions and defeat Stage 6 Rival Red in Chaos or Gauntlet",
+    "essenceRequirement": "Requires {{genOne}} Gen I essences"
+  },
   "apollo": {
     "name": "Apollo",
     "description": "Champion of Sun"
@@ -76,23 +104,33 @@
     "name": "Diana",
     "description": "Champion of Moon"
   },
-  "generic": { "description": "The default champion." },
-  "champions": {
-  "title": "Choose Your Champion",
-  "brock": {
-    "name": "Brock - Rock Specialist",
-    "description": "Master of Ground and Rock types",
-    "essenceRequirement": "Requires {{ground}} Ground + {{rock}} Rock essences"
-  },
-  "misty": {
-    "name": "Misty - Water Specialist", 
-    "description": "Master of Water types",
-    "essenceRequirement": "Requires {{water}} Water essences"
-  },
   "generic": {
-    "name": "Balanced Champion",
-    "description": "No type specialization",
+    "description": "The default champion.",
     "essenceRequirement": "No special requirements"
+  },
+  "champions": {
+    "title": "Choose Your Champion",
+    "brock": {
+      "name": "Brock - Rock Specialist",
+      "description": "Master of Ground and Rock types",
+      "essenceRequirement": "Requires {{ground}} Ground + {{rock}} Rock essences"
+    },
+    "misty": {
+      "name": "Misty - Water Specialist", 
+      "description": "Master of Water types",
+      "essenceRequirement": "Requires {{water}} Water essences"
+    },
+    "red": {
+      "name": "Red - Legendary Champion",
+      "description": "The legend...",
+      "unlockRequirement": "Unlock all champions and defeat Stage 6 Rival Red in Chaos or Gauntlet",
+      "essenceRequirement": "Requires {{genOne}} Gen I essences"
+    },
+    "generationShort": "GEN {{generation}}",
+    "generic": {
+      "name": "Balanced Champion",
+      "description": "No type specialization",
+      "essenceRequirement": "No special requirements"
+    }
   }
-}
 }

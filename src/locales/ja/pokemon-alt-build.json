@@ -205,47 +205,47 @@
   },
   "riolu_apollo_diana_signature": {
     "name": "アポロ＆ダイアナの相棒",
-    "description": "アポロ＆ダイアナの勇敢な格闘タイプの相棒"
+    "description": "{{champion}}の勇敢な格闘タイプの相棒"
   },
   "solrock_apollo_diana_signature": {
     "name": "アポロ＆ダイアナの相棒",
-    "description": "アポロ＆ダイアナの輝く岩タイプの相棒"
+    "description": "{{champion}}の輝く岩タイプの相棒"
   },
   "lunatone_apollo_diana_signature": {
     "name": "アポロ＆ダイアナの相棒",
-    "description": "アポロ＆ダイアナの神秘的な岩タイプの相棒"
+    "description": "{{champion}}の神秘的な岩タイプの相棒"
   },
   "larvesta_apollo_diana_signature": {
     "name": "アポロ＆ダイアナの相棒",
-    "description": "アポロ＆ダイアナの燃え盛る虫タイプの相棒"
+    "description": "{{champion}}の燃え盛る虫タイプの相棒"
   },
   "swablu_apollo_diana_signature": {
     "name": "アポロ＆ダイアナの相棒",
-    "description": "アポロ＆ダイアナのふわふわなノーマルタイプの相棒"
+    "description": "{{champion}}のふわふわなノーマルタイプの相棒"
   },
   "castform_apollo_diana_signature": {
     "name": "アポロ＆ダイアナの相棒",
-    "description": "アポロ＆ダイアナの適応力のあるノーマルタイプの相棒"
+    "description": "{{champion}}の適応力のあるノーマルタイプの相棒"
   },
   "litwick_apollo_diana_signature": {
     "name": "アポロ＆ダイアナの相棒",
-    "description": "アポロ＆ダイアナの揺らめくゴーストタイプの相棒"
+    "description": "{{champion}}の揺らめくゴーストタイプの相棒"
   },
   "eevee_apollo_diana_signature": {
     "name": "アポロ＆ダイアナの相棒",
-    "description": "アポロ＆ダイアナの多才なノーマルタイプの相棒"
+    "description": "{{champion}}の多才なノーマルタイプの相棒"
   },
   "teddiursa_apollo_diana_signature": {
     "name": "アポロ＆ダイアナの相棒",
-    "description": "アポロ＆ダイアナの抱きしめたくなるノーマルタイプの相棒"
+    "description": "{{champion}}の抱きしめたくなるノーマルタイプの相棒"
   },
   "cleffa_apollo_diana_signature": {
     "name": "アポロ＆ダイアナの相棒",
-    "description": "アポロ＆ダイアナの星のようなフェアリータイプの相棒"
+    "description": "{{champion}}の星のようなフェアリータイプの相棒"
   },
   "sunkern_apollo_diana_signature": {
     "name": "アポロ＆ダイアナの相棒",
-    "description": "アポロ＆ダイアナの希望に満ちた草タイプの相棒"
+    "description": "{{champion}}の希望に満ちた草タイプの相棒"
   },
   "riolu_shadow_warrior": {
     "name": "シャドウウォリアー",
@@ -291,5 +291,93 @@
     "name": "プラズマスプラウト",
     "description": "プラズマエネルギーで弾ける電気/草タイプのヒマナッツ。エレキスキンの変換、サンパワーの激しさ、エレキメイカーの支配"
   },
-  "championPartner": "{{champion}}のパートナー"
+  "championPartner": "{{champion}}のパートナー",
+  "bulbasaur_plasma_jungle": {
+    "name": "プラズマジャングル",
+    "description": "くさ/でんきタイプのフシギダネ。プラズマの密林を呼び、つるの力と稲妻を融合させる"
+  },
+  "bulbasaur_red_signature": {
+    "name": "レッドの相棒",
+    "description": "レッドのシグニチャー・フシギダネ — 自然と電気エネルギーを調和させる強靭な種子の戦士"
+  },
+  "butterfree_red_signature": {
+    "name": "レッドの相棒",
+    "description": "レッドのシグニチャー・バタフリー — サイコパワーと魂を吸う鱗粉を持つ魅惑の蛾"
+  },
+  "butterfree_soul_moth": {
+    "name": "ソウルモス",
+    "description": "むし/ゴーストタイプのバタフリー。魂の蛾に変身し、霊的な翼の粉で生命力を吸い取る"
+  },
+  "charmander_black_inferno": {
+    "name": "ブラックインフェルノ",
+    "description": "ほのお/あくタイプのヒトカゲ。黒き業火に飲まれ、影の炎と暗き竜の怒りを振るう"
+  },
+  "charmander_red_signature": {
+    "name": "レッドの相棒",
+    "description": "レッドのシグニチャー・ヒトカゲ — 竜の力の大炎へと成長する激しい炎"
+  },
+  "espeon_moon_goddess": {
+    "name": "ムーンゴッデス",
+    "description": "エスパー/フェアリータイプのエーフィ。月の女神として覚醒し、月光と精神の輝きを放つ"
+  },
+  "espeon_red_signature": {
+    "name": "レッドの相棒",
+    "description": "レッドのシグニチャー・エーフィ — 月光とフェアリーエネルギーを優雅な破壊力で放つ"
+  },
+  "farfetchd_heavens_edge": {
+    "name": "ヘブンズエッジ",
+    "description": "かくとう/ひこうタイプのカモネギ。天の刃として天空から神聖な剣技で斬りかかる"
+  },
+  "farfetchd_red_signature": {
+    "name": "レッドの相棒",
+    "description": "レッドのシグニチャー・カモネギ — 長ネギを致命的な急所の達人として振るう恐れ知らずの剣士"
+  },
+  "lapras_red_signature": {
+    "name": "レッドの相棒",
+    "description": "レッドのシグニチャー・ラプラス — 氷と水を穏やかながら致命的な精度で操る優美な旅人"
+  },
+  "lapras_voidfrost": {
+    "name": "ヴォイドフロスト",
+    "description": "こおり/ゴーストタイプのラプラス。ヴォイドを漂い、霊的な冷気と深淵の氷を融合させる"
+  },
+  "magikarp_dragonborn": {
+    "name": "ドラゴンボーン",
+    "description": "みず/ドラゴンタイプのコイキング。真のドラゴンの子として再生し、古代の竜の潜在力を解放する"
+  },
+  "magikarp_red_signature": {
+    "name": "レッドの相棒",
+    "description": "レッドのシグニチャー・コイキング — 期待を裏切り竜の血を持つ強者へと進化するアンダードッグ"
+  },
+  "pikachu_electro_berserker": {
+    "name": "エレクトロバーサーカー",
+    "description": "でんき/かくとうタイプのピカチュウ。バーサーカーの怒りに満ち、生の電圧と格闘技の達人技を融合させる"
+  },
+  "pikachu_red_signature": {
+    "name": "レッドの相棒",
+    "description": "レッドのシグニチャー・ピカチュウ — 比類なき速さと壊滅的な電気攻撃を持つ歴戦の相棒"
+  },
+  "snorlax_dream_colossus": {
+    "name": "ドリームコロッサス",
+    "description": "ノーマル/エスパータイプのカビゴン。夢の巨人形態に覚醒し、圧倒的な質量とサイコの夢操作を融合させる"
+  },
+  "snorlax_red_signature": {
+    "name": "レッドの相棒",
+    "description": "レッドのシグニチャー・カビゴン — 攻撃を吸収し恐ろしい力で反撃する不動の壁"
+  },
+  "squirtle_abyss_golem": {
+    "name": "アビスゴーレム",
+    "description": "みず/あくタイプのゼニガメ。深淵のゴーレムに鍛え上げられ、装甲の威力で深海の闇を支配する"
+  },
+  "squirtle_red_signature": {
+    "name": "レッドの相棒",
+    "description": "レッドのシグニチャー・ゼニガメ — 暗き水の技で深淵を支配する堅固な甲羅の要塞"
+  },
+  "tauros_iron_quake": {
+    "name": "アイアンクエイク",
+    "description": "じめん/はがねタイプのケンタロス。鉄の地震となり、金属の鎧と地震の破壊を融合させる"
+  },
+  "tauros_red_signature": {
+    "name": "レッドの相棒",
+    "description": "レッドのシグニチャー・ケンタロス — 止まらない勢いと大地を揺らす攻撃を持つ暴れ牛"
+  }
 }

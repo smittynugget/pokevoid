@@ -1,6 +1,6 @@
 import BattleScene from "../battle-scene";
 import { addBBCodeTextObject, addTextObject, getTextColor, TextStyle } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import * as Utils from "../utils";
 import MessageUiHandler from "./message-ui-handler";
 import { getStatName, Stat } from "../data/pokemon-stat";
@@ -8,6 +8,7 @@ import { addWindow } from "./ui-theme";
 import BBCodeText from "phaser3-rex-plugins/plugins/bbcodetext";
 import {Button} from "#enums/buttons";
 import i18next from "i18next";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 
 export default class BattleMessageUiHandler extends MessageUiHandler {
   private levelUpStatsContainer: Phaser.GameObjects.Container;
@@ -17,6 +18,8 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
   private nameText: Phaser.GameObjects.Text;
 
   public bg: Phaser.GameObjects.Sprite;
+  public _messageBgPattern: ModalBackgroundHandle | null = null;
+  public commandBacking: Phaser.GameObjects.Rectangle;
   public commandWindow: Phaser.GameObjects.NineSlice;
   public movesWindowContainer: Phaser.GameObjects.Container;
   public nameBoxContainer: Phaser.GameObjects.Container;
@@ -38,6 +41,24 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
     this.bg.setName("sprite-battle-msg-bg");
     this.bg.setOrigin(0, 1);
     ui.add(this.bg);
+
+    this._messageBgPattern = attachModalBackground(
+      this.scene as BattleScene,
+      ui,
+      () => ({
+        bgX: this.bg.x,
+        bgY: this.bg.y - this.bg.height * this.bg.originY,
+        bgWidth: this.bg.width,
+        bgHeight: this.bg.height,
+      }),
+      { mask: false, alphaMultiplier: 0.6, gridInc: -2, getTarget: () => this.bg }
+    );
+
+    this.commandBacking = this.scene.add.rectangle(202, 0, 118, 48, 0x0d1117, 1.0);
+    this.commandBacking.setOrigin(0, 1);
+    this.commandBacking.setName("command-backing");
+    this.commandBacking.setVisible(false);
+    ui.add(this.commandBacking);
 
     this.commandWindow = addWindow(this.scene, 202, 0, 118, 48);
     this.commandWindow.setName("window-command");
@@ -119,7 +140,7 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
 
     this.levelUpStatsIncrContent = levelUpStatsIncrContent;
 
-    const levelUpStatsValuesContent = addBBCodeTextObject(this.scene, (this.scene.game.canvas.width / 6) - 7, -94, "", TextStyle.WINDOW, { maxLines: 6, lineSpacing: 5});
+    const levelUpStatsValuesContent = addBBCodeTextObject(this.scene, (this.scene.game.canvas.width / 6) - 7, -94, "", TextStyle.WINDOW, { maxLines: 6 , lineSpacing: 5});
     levelUpStatsValuesContent.setOrigin(1, 0);
     levelUpStatsValuesContent.setAlign("right");
     levelUpStatsContainer.add(levelUpStatsValuesContent);
@@ -136,9 +157,15 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
 
     super.show(args);
 
+    const ui = this.getUi();
+    ui.showMessageChrome();
+
+    this.commandBacking.setVisible(false);
     this.commandWindow.setVisible(false);
     this.movesWindowContainer.setVisible(false);
-    this.message.setWordWrapWidth(this.wordWrapWidth);
+    if (!this._smitomModeActive) {
+      this.message.setWordWrapWidth(this.wordWrapWidth);
+    }
 
     return true;
   }
@@ -151,6 +178,7 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
           ui.playSelect();
           const originalOnActionInput = this.onActionInput;
           this.onActionInput = null;
+          this.awaitingActionInput = false;
           originalOnActionInput();
           return true;
         }
@@ -165,16 +193,47 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
     if (this.levelUpStatsContainer) {
       this.levelUpStatsContainer.setVisible(false);
     }
+    if (this._smitomModeActive) {
+      this.clearSmitomAnimations();
+    }
   }
 
   showText(text: string, delay?: integer | null, callback?: Function | null, callbackDelay?: integer | null, prompt?: boolean | null, promptDelay?: integer | null) {
+    if (this._smitomModeActive && text) {
+      const maxLines = 2;
+      const wrappedFull = this.message.runWordWrap(text).split(/\n/g);
+      if (wrappedFull.length <= maxLines) {
+        this.showSmitomPixelateText(text, callback, callbackDelay, prompt, promptDelay);
+        return;
+      }
+      const pages = this.paginateSmitomBySentence(text, maxLines);
+      this.showSmitomDialoguePages(pages, 0, callback, callbackDelay, prompt, promptDelay);
+      return;
+    }
     this.hideNameText();
     super.showText(text, delay, callback, callbackDelay, prompt, promptDelay);
   }
 
   showDialogue(text: string, name?: string, delay?: integer | null, callback?: Function, callbackDelay?: integer, prompt?: boolean, promptDelay?: integer) {
+    if (this._smitomModeActive && text) {
+      if (name && this._smitomHeaderText) {
+        this._smitomHeaderText.setText(name);
+        this._smitomHeaderText.setVisible(true);
+        this._smitomHeaderText.setAlpha(0);
+        this.scene.tweens.add({ targets: this._smitomHeaderText, alpha: 1, duration: Utils.fixedInt(280), ease: "Linear" });
+      }
+      const maxLines = 2;
+      const wrappedFull = this.message.runWordWrap(text).split(/\n/g);
+      if (wrappedFull.length <= maxLines) {
+        this.showSmitomPixelateText(text, callback, callbackDelay, prompt, promptDelay);
+        return;
+      }
+      const pages = this.paginateSmitomBySentence(text, maxLines);
+      this.showSmitomDialoguePages(pages, 0, callback, callbackDelay, prompt, promptDelay);
+      return;
+    }
     if (name) {
-      this.showNameText(name);
+    this.showNameText(name);
     }
     super.showDialogue(text, name, delay, callback, callbackDelay, prompt, promptDelay);
   }
@@ -228,26 +287,26 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
 
   getTopIvs(ivs: integer[], shownIvsCount: integer): Stat[] {
     const stats = Utils.getEnumValues(Stat);
-    let shownStats: Stat[] = [];
-    if (shownIvsCount < 6) {
-      const statsPool = stats.slice(0);
-      for (let i = 0; i < shownIvsCount; i++) {
+        let shownStats: Stat[] = [];
+        if (shownIvsCount < 6) {
+          const statsPool = stats.slice(0);
+          for (let i = 0; i < shownIvsCount; i++) {
         let shownStat: Stat | null = null;
-        let highestIv = -1;
-        statsPool.map(s => {
-          if (ivs[s] > highestIv) {
-            shownStat = s as Stat;
-            highestIv = ivs[s];
-          }
-        });
+            let highestIv = -1;
+            statsPool.map(s => {
+              if (ivs[s] > highestIv) {
+                shownStat = s as Stat;
+                highestIv = ivs[s];
+              }
+            });
         if (shownStat !== null && shownStat !== undefined) {
-          shownStats.push(shownStat);
-          statsPool.splice(statsPool.indexOf(shownStat), 1);
-        }
+            shownStats.push(shownStat);
+            statsPool.splice(statsPool.indexOf(shownStat), 1);
+          }
       }
-    } else {
-      shownStats = stats;
-    }
+        } else {
+          shownStats = stats;
+        }
     return shownStats;
   }
 
@@ -301,5 +360,373 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
 
   getMessageContainer(): Phaser.GameObjects.Container {
     return this.messageContainer;
+  }
+
+  private _smitomPanelNS: Phaser.GameObjects.NineSlice | null = null;
+  private _smitomPanelContainer: Phaser.GameObjects.Container | null = null;
+  private _smitomModeActive: boolean = false;
+  private _smitomPixFx: Phaser.FX.Pixelate | null = null;
+  private _smitomAnimTweens: Phaser.Tweens.Tween[] = [];
+  private _smitomHeaderText: Phaser.GameObjects.Text | null = null;
+
+  applySmitomPanelStyle(): void {
+    const ui = this.getUi();
+    this.bg.setVisible(false);
+    if (this._messageBgPattern) {
+      if ((this._messageBgPattern as any).layers) {
+        (this._messageBgPattern as any).layers.forEach((l: any) => l.setVisible(false));
+      } else if ((this._messageBgPattern as any).container) {
+        (this._messageBgPattern as any).container.setVisible(false);
+      }
+    }
+
+    const panelW = 270, panelH = 50;
+    const screenWidth = this.scene.game.canvas.width / 6;
+    const panelX = (screenWidth - panelW) / 2;
+    const panelY = -panelH - 4;
+
+    if (!this._smitomPanelContainer) {
+      this._smitomPanelContainer = this.scene.add.container(panelX, panelY);
+      this._smitomPanelNS = this.scene.add.nineslice(0, 0, "tooltip_info", undefined, panelW, panelH, 12, 12, 12, 12);
+      this._smitomPanelNS.setOrigin(0, 0);
+      this._smitomPanelContainer.add(this._smitomPanelNS);
+      attachModalBackground(
+        this.scene as BattleScene,
+        this._smitomPanelContainer,
+        () => ({ bgX: 0, bgY: 0, bgWidth: panelW, bgHeight: panelH }),
+        { mask: false, alphaMultiplier: 0.6, getTarget: () => this._smitomPanelNS! }
+      );
+      this._smitomHeaderText = addTextObject(this.scene, 12, 7, "", TextStyle.SUMMARY_GOLD, { fontSize: "66px" });
+      this._smitomPanelContainer.add(this._smitomHeaderText);
+      this._smitomHeaderText.setVisible(false);
+      ui.add(this._smitomPanelContainer);
+    }
+    this._smitomPanelContainer.setVisible(true);
+
+    const TEXT_LEFT = 12;
+    const BODY_Y = 19;
+    const LS_BUFFER = 63;
+    const TEXT_WRAP_WIDTH = (panelW - TEXT_LEFT - 16) / this.message.scaleX - LS_BUFFER;
+
+    this.messageContainer.setPosition(panelX + TEXT_LEFT, panelY + BODY_Y);
+    this.message.setWordWrapWidth(TEXT_WRAP_WIDTH);
+    this.message.setFontSize(61);
+    this.message.setLetterSpacing(1);
+    this.message.setLineSpacing(this.message.scale * 30 * (61 / 96));
+    this.message.setMaxLines(2);
+
+    if (this.prompt) {
+      this.prompt.setScale(0.4);
+    }
+
+    ui.bringToTop(this._smitomPanelContainer);
+    ui.bringToTop(this.messageContainer);
+
+    this.nameBoxContainer.setVisible(false);
+    this._smitomModeActive = true;
+
+    if (this._smitomPanelContainer.postFX) {
+      const panelPixFx = this._smitomPanelContainer.postFX.addPixelate(20);
+      this.scene.tweens.add({
+        targets: panelPixFx,
+        amount: -1,
+        duration: Utils.fixedInt(1100),
+        ease: "Linear",
+        onComplete: () => {
+          this._smitomPanelContainer?.postFX?.remove(panelPixFx);
+        }
+      });
+    }
+  }
+
+  restoreDefaultPanelStyle(): void {
+    if (this._smitomPanelContainer) {
+      this._smitomPanelContainer.setVisible(false);
+      this._smitomPanelContainer.setAlpha(1);
+    }
+    this.bg.setVisible(true);
+    if (this._messageBgPattern) {
+      if ((this._messageBgPattern as any).layers) {
+        (this._messageBgPattern as any).layers.forEach((l: any) => l.setVisible(true));
+      } else if ((this._messageBgPattern as any).container) {
+        (this._messageBgPattern as any).container.setVisible(true);
+      }
+    }
+
+    this.messageContainer.setPosition(12, -39);
+    this.message.setWordWrapWidth(this.wordWrapWidth);
+    this.message.setFontSize(96);
+    this.message.setLetterSpacing(0);
+    this.message.setLineSpacing(this.message.scale * 30);
+    this.message.setMaxLines(2);
+    this.message.setAlpha(1);
+    this.nameBoxContainer.setVisible(false);
+
+    if (this.prompt) {
+      this.prompt.setScale(1);
+    }
+    if (this._smitomHeaderText) {
+      this._smitomHeaderText.setVisible(false);
+      this._smitomHeaderText.setText("");
+      this._smitomHeaderText.setAlpha(1);
+    }
+
+    this._smitomModeActive = false;
+    this.clearSmitomAnimations();
+  }
+
+  glitchOutDialogue(duration: number = 350): Promise<void> {
+    return new Promise(resolve => {
+      if (!this._smitomModeActive) {
+        resolve();
+        return;
+      }
+      let completedCount = 0;
+      const totalTargets = 2;
+      const onDone = () => {
+        completedCount++;
+        if (completedCount >= totalTargets) resolve();
+      };
+
+      if (this.message.postFX) {
+        const msgPixFx = this.message.postFX.addPixelate(0);
+        this.scene.tweens.add({
+          targets: msgPixFx,
+          amount: 12,
+          duration: Utils.fixedInt(duration),
+          ease: "Linear",
+          onComplete: () => {
+            this.message.postFX?.remove(msgPixFx);
+            onDone();
+          }
+        });
+        this.scene.tweens.add({
+          targets: this.message,
+          alpha: 0,
+          duration: Utils.fixedInt(duration),
+          ease: "Sine.easeOut"
+        });
+      } else {
+        onDone();
+      }
+
+      if (this._smitomPanelContainer?.postFX) {
+        const panelPixFx = this._smitomPanelContainer.postFX.addPixelate(0);
+        this.scene.tweens.add({
+          targets: panelPixFx,
+          amount: 20,
+          duration: Utils.fixedInt(duration),
+          ease: "Linear",
+          onComplete: () => {
+            this._smitomPanelContainer?.postFX?.remove(panelPixFx);
+            onDone();
+          }
+        });
+        this.scene.tweens.add({
+          targets: this._smitomPanelContainer,
+          alpha: 0,
+          duration: Utils.fixedInt(duration),
+          ease: "Linear"
+        });
+      } else {
+        onDone();
+      }
+
+      if (this._smitomHeaderText) {
+        this.scene.tweens.add({
+          targets: this._smitomHeaderText,
+          alpha: 0,
+          duration: Utils.fixedInt(duration * 0.8),
+          ease: "Linear"
+        });
+      }
+    });
+  }
+
+  private clearSmitomAnimations(): void {
+    for (const tween of this._smitomAnimTweens) {
+      if (tween && tween.isPlaying()) {
+        tween.stop();
+      }
+    }
+    this._smitomAnimTweens = [];
+    if (this._smitomPixFx && this.message.postFX) {
+      this.message.postFX.remove(this._smitomPixFx);
+      this._smitomPixFx = null;
+    }
+  }
+
+  private showSmitomDialoguePages(pages: string[], pageIndex: integer, callback?: Function | null, callbackDelay?: integer | null, prompt?: boolean | null, promptDelay?: integer | null): void {
+    const pageText = pages[pageIndex];
+    const isLastPage = pageIndex >= pages.length - 1;
+    if (isLastPage) {
+      this.showSmitomPixelateText(pageText, callback, callbackDelay, prompt, promptDelay);
+    } else {
+      this.showSmitomPixelateText(pageText, () => {
+        this.showSmitomDialoguePages(pages, pageIndex + 1, callback, callbackDelay, prompt, promptDelay);
+      }, null, true, null);
+    }
+  }
+
+  private paginateSmitomBySentence(text: string, maxLines: number): string[] {
+    const sentenceRegex = /[^.!?]*[.!?]+(?:\s|$)/g;
+    const sentences: string[] = [];
+    let match: RegExpExecArray | null;
+    let lastIdx = 0;
+    while ((match = sentenceRegex.exec(text)) !== null) {
+      sentences.push(match[0]);
+      lastIdx = sentenceRegex.lastIndex;
+    }
+    if (lastIdx < text.length) {
+      sentences.push(text.slice(lastIdx));
+    }
+    if (sentences.length <= 1) {
+      return this.paginateSmitomByWordBoundary(text, maxLines);
+    }
+    const pages: string[] = [];
+    let currentPage = "";
+    for (const sentence of sentences) {
+      const candidate = currentPage + sentence;
+      const candidateLines = this.message.runWordWrap(candidate.trim()).split(/\n/g);
+      if (candidateLines.length > maxLines && currentPage) {
+        pages.push(currentPage.trim());
+        currentPage = sentence;
+      } else if (candidateLines.length > maxLines && !currentPage) {
+        pages.push(...this.paginateSmitomByWordBoundary(sentence.trim(), maxLines));
+        currentPage = "";
+      } else {
+        currentPage = candidate;
+      }
+    }
+    if (currentPage.trim()) {
+      const remainLines = this.message.runWordWrap(currentPage.trim()).split(/\n/g);
+      if (remainLines.length > maxLines) {
+        pages.push(...this.paginateSmitomByWordBoundary(currentPage.trim(), maxLines));
+      } else {
+        pages.push(currentPage.trim());
+      }
+    }
+    return pages.length ? pages : [text];
+  }
+
+  private paginateSmitomByWordBoundary(text: string, maxLines: number): string[] {
+    const words = text.split(/\s+/).filter(w => w.length > 0);
+    if (!words.length) return [text];
+    const pages: string[] = [];
+    let currentPage = "";
+    for (const word of words) {
+      const candidate = currentPage ? `${currentPage} ${word}` : word;
+      const candidateLines = this.message.runWordWrap(candidate).split(/\n/g);
+      if (candidateLines.length > maxLines && currentPage) {
+        pages.push(currentPage);
+        currentPage = word;
+      } else {
+        currentPage = candidate;
+      }
+    }
+    if (currentPage) {
+      pages.push(currentPage);
+    }
+    return pages.length ? pages : [text];
+  }
+
+  private showSmitomPixelateText(text: string, callback?: Function | null, callbackDelay?: integer | null, prompt?: boolean | null, promptDelay?: integer | null): void {
+    this.clearSmitomAnimations();
+    if (this.prompt) {
+      this.prompt.anims.stop();
+      this.prompt.setVisible(false);
+    }
+    this.message.setAlpha(0);
+    this.message.setWordWrapWidth((270 - 12 - 16) / this.message.scaleX - 63);
+    this.message.setFontSize(61);
+    const cleanedText = text.replace(/@[cds]\{[^}]*\}/g, "");
+    this.message.setText(cleanedText);
+
+    const durationMs = 400;
+
+    this._smitomAnimTweens.push(this.scene.tweens.add({
+      targets: this.message,
+      alpha: 1,
+      duration: Utils.fixedInt(Math.round(durationMs * 0.4)),
+      ease: "Linear"
+    }));
+
+    if (this.message.postFX) {
+      this._smitomPixFx = this.message.postFX.addPixelate(12);
+      this._smitomAnimTweens.push(this.scene.tweens.add({
+        targets: this._smitomPixFx,
+        amount: -1,
+        duration: Utils.fixedInt(durationMs),
+        ease: "Linear",
+        onComplete: () => {
+          if (this._smitomPixFx && this.message.postFX) {
+            this.message.postFX.remove(this._smitomPixFx);
+            this._smitomPixFx = null;
+          }
+          if (prompt) {
+            const showPromptAndWait = () => this.showSmitomPrompt(callback, callbackDelay);
+            if (promptDelay) {
+              this.scene.time.delayedCall(Utils.fixedInt(promptDelay), showPromptAndWait);
+            } else {
+              showPromptAndWait();
+            }
+          } else if (callback) {
+            if (callbackDelay) {
+              this.scene.time.delayedCall(Utils.fixedInt(callbackDelay), () => callback());
+            } else {
+              callback();
+            }
+          }
+        }
+      }));
+    } else {
+      this.scene.time.delayedCall(Utils.fixedInt(durationMs), () => {
+        if (prompt) {
+          this.showSmitomPrompt(callback, callbackDelay);
+        } else if (callback) {
+          callback();
+        }
+      });
+    }
+  }
+
+  private showSmitomPrompt(callback?: Function | null, callbackDelay?: integer | null): void {
+    const wrappedLines = this.message.runWordWrap(this.message.text).split(/\n/g);
+    const lineCount = wrappedLines.length;
+    const lastLine = wrappedLines[lineCount - 1] || "";
+    const lineHeight = lineCount > 0 ? this.message.displayHeight / lineCount : 10;
+
+    const tempText = this.scene.add.text(0, 0, lastLine, this.message.style);
+    tempText.setScale(this.message.scale);
+    const lastLineWidth = tempText.displayWidth;
+    tempText.destroy();
+
+    if (this.prompt) {
+      this.prompt.setPosition(lastLineWidth + 7, (lineCount - 1) * lineHeight + 6);
+      this.prompt.setVisible(true);
+      this.prompt.play("prompt");
+    }
+
+    this.pendingPrompt = false;
+    this.awaitingActionInput = true;
+    this.onActionInput = () => {
+      if (this.prompt) {
+        this.prompt.anims.stop();
+        this.prompt.setVisible(false);
+      }
+      if (callback) {
+        if (callbackDelay) {
+          this.textCallbackTimer = this.scene.time.delayedCall(callbackDelay, () => {
+            if (this.textCallbackTimer) {
+              this.textCallbackTimer.destroy();
+              this.textCallbackTimer = null;
+            }
+            callback();
+          });
+        } else {
+          callback();
+        }
+      }
+    };
   }
 }

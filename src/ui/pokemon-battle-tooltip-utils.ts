@@ -19,7 +19,7 @@ import { adjustDuelmonIconScale } from "#app/data/pokemon-species";
 import { intToRoman } from "#app/utils";
 import { ModifierTooltipUtils } from "#app/ui/modifier-tooltip-utils";
 import { attachModalBackground } from "./modal-background-utils";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { getFieldEffectText } from "#app/ui/arena-flyout";
 import { WeatherType } from "#enums/weather-type";
 import { Button } from "#enums/buttons";
@@ -1042,7 +1042,7 @@ export class PokemonBattleTooltipUtils {
     const totalContentW = tooltipWidth - padding * 2 - 4;
     const cellWidth = Math.floor((totalContentW - colGapPx * (TEAM_COLS - 1)) / TEAM_COLS);
     const nameInfoH = 7;
-    const columnBlockH = 36;
+    const columnBlockH = 42;
     const totalRowH = nameInfoH + columnBlockH;
     const gridStartY = currentY;
     const gridRows = Math.ceil(maxSlots / TEAM_COLS);
@@ -1107,15 +1107,16 @@ export class PokemonBattleTooltipUtils {
       if (showMemberRank) {
         const rankY = lvText.y + lvText.displayHeight - 1;
 
-        const rankIcon = scene.add.sprite(icon.x - 2, rankY + 4.5, "smitems", "modSoulCollected");
+        const rankIcon = scene.add.sprite(icon.x - 3, rankY + 4.5, "smitems", "modSoulCollected");
         rankIcon.setScale(0.10);
         rankIcon.setOrigin(0.5, 0.5);
         children.push(rankIcon);
         this.tagTweakTarget("TM_RankIcon", rankIcon);
 
-        const rankText = addTextObject(scene, icon.x - 1, rankY + 4, intToRoman(memberDisplayRank), TextStyle.WINDOW, { fontSize: "25px" });
+        const rankText = addTextObject(scene, icon.x - 2, rankY + 2, intToRoman(memberDisplayRank), TextStyle.PARTY, { fontSize: "22px" });
+        rankText.setShadow(0, 0, undefined);
+        rankText.setStroke("#424242", 13);
         rankText.setOrigin(0, 0);
-        rankText.setColor("#C8C8C8");
         children.push(rankText);
         this.tagTweakTarget("TM_RankText", rankText);
       }
@@ -1172,12 +1173,12 @@ export class PokemonBattleTooltipUtils {
 
       const statLineSpacing = 6;
       const statBarHeight = 3;
-      const statMaxBarW = 12;
 
       for (let sIdx = 0; sIdx < 6; sIdx++) {
         const stat = this.STAT_ORDER[sIdx];
         const sy = columnTopY + sIdx * statLineSpacing;
-        const statVal = member.stats[stat];
+        const statVal = member.getModifiedBaseStats()[stat];
+        const baseVal = member.getCanonicalBaseStats()[stat];
         const mult = getNatureStatMultiplier(member.getNature(), stat);
 
         const lbl = addTextObject(scene, cellInfoStartX, sy + 3, teamStatNames[sIdx], TextStyle.WINDOW, { fontSize: "28px" });
@@ -1187,23 +1188,99 @@ export class PokemonBattleTooltipUtils {
 
         const lblW = lbl.displayWidth + 1;
         const barX = cellInfoStartX + lblW;
-        const barWidth = Math.max(2, Math.min(statMaxBarW, (statVal / 255) * statMaxBarW));
-        const bar = scene.add.rectangle(barX, sy + 3, barWidth, statBarHeight, this.STAT_COLORS[sIdx]);
-        bar.setOrigin(0, 0.5);
-        children.push(bar);
-        this.tagTweakTarget("TM_AllStats", bar);
+        const valReserve = 8;
+        const effectiveMaxBar = Math.max(4, statsColWidth - lblW - valReserve - 2);
+        let totalBarEnd = barX;
 
-        const val = addTextObject(scene, barX + barWidth + 1, sy + 3, statVal.toString(), TextStyle.WINDOW, { fontSize: "28px" });
+        if (statVal !== baseVal) {
+          const minVal = Math.min(statVal, baseVal);
+          const maxVal = Math.max(statVal, baseVal);
+          const baseWidth = Math.max(2, Math.min(effectiveMaxBar, (minVal / 255) * effectiveMaxBar));
+          const baseBar = scene.add.rectangle(barX, sy + 3, baseWidth, statBarHeight, 0x4a90e2);
+          baseBar.setOrigin(0, 0.5);
+          children.push(baseBar);
+          this.tagTweakTarget("TM_AllStats", baseBar);
+
+          const deltaWidth = Math.max(1, Math.min(effectiveMaxBar - baseWidth, ((maxVal - minVal) / 255) * effectiveMaxBar));
+          const deltaColor = statVal > baseVal ? 0x00ff00 : 0xe13d3d;
+          const deltaBar = scene.add.rectangle(barX + baseWidth, sy + 3, deltaWidth, statBarHeight, deltaColor);
+          deltaBar.setOrigin(0, 0.5);
+          children.push(deltaBar);
+          this.tagTweakTarget("TM_AllStats", deltaBar);
+
+          totalBarEnd = barX + baseWidth + deltaWidth;
+        } else {
+          const barWidth = Math.max(2, Math.min(effectiveMaxBar, (statVal / 255) * effectiveMaxBar));
+          const bar = scene.add.rectangle(barX, sy + 3, barWidth, statBarHeight, 0x4a90e2);
+          bar.setOrigin(0, 0.5);
+          children.push(bar);
+          this.tagTweakTarget("TM_AllStats", bar);
+          totalBarEnd = barX + barWidth;
+        }
+
+        const val = addTextObject(scene, totalBarEnd + 1, sy + 3, statVal.toString(), TextStyle.WINDOW, { fontSize: "28px" });
         val.setOrigin(0, 0.5);
         this.tagTweakTarget("TM_AllStats", val);
-        if (mult > 1) val.setColor("#f89890");
-        else if (mult < 1) val.setColor("#40c8f8");
+
+        if (statVal !== baseVal) {
+          val.setColor(statVal > baseVal ? "#78c850" : "#e13d3d");
+          const delta = statVal - baseVal;
+          const deltaSign = delta > 0 ? "+" : "";
+          const deltaStr = `(${deltaSign}${delta})`;
+          const deltaText = addTextObject(scene, totalBarEnd + 1 + val.displayWidth + 1, sy + 3, deltaStr, TextStyle.WINDOW, { fontSize: "24px" });
+          deltaText.setOrigin(0, 0.5);
+          deltaText.setColor(statVal > baseVal ? "#78c850" : "#e13d3d");
+          deltaText.setAlpha(0.75);
+          children.push(deltaText);
+          this.tagTweakTarget("TM_AllStats", deltaText);
+        } else if (mult > 1) {
+          val.setColor("#f89890");
+        } else if (mult < 1) {
+          val.setColor("#40c8f8");
+        }
+
+        const renderedBarW = totalBarEnd - barX;
+        const valMaxW = statsColWidth - lblW - renderedBarW - 3;
+        if (valMaxW > 0 && val.displayWidth > valMaxW) {
+          val.setScale(val.scaleX * (valMaxW / val.displayWidth), val.scaleY);
+        }
         children.push(val);
+      }
+
+      const bstY = columnTopY + 6 * statLineSpacing;
+      let bstSum = 0;
+      let bstBaseSum = 0;
+      for (let s = 0; s < 6; s++) {
+        bstSum += member.getModifiedBaseStats()[this.STAT_ORDER[s]];
+        bstBaseSum += member.getCanonicalBaseStats()[this.STAT_ORDER[s]];
+      }
+      const bstLabel = addTextObject(scene, cellInfoStartX, bstY + 3, i18next.t("pokemonInfo:Stat.Total", { defaultValue: "Total" }), TextStyle.WINDOW, { fontSize: "24px" });
+      bstLabel.setOrigin(0, 0.5);
+      bstLabel.setColor("#cccccc");
+      children.push(bstLabel);
+      this.tagTweakTarget("TM_AllStats", bstLabel);
+
+      const bstValText = addTextObject(scene, cellInfoStartX + bstLabel.displayWidth + 2, bstY + 3, bstSum.toString(), TextStyle.WINDOW, { fontSize: "24px" });
+      bstValText.setOrigin(0, 0.5);
+      const bstDelta = bstSum - bstBaseSum;
+      bstValText.setColor(bstDelta !== 0 ? (bstDelta > 0 ? "#78c850" : "#e13d3d") : "#f8f8f8");
+      children.push(bstValText);
+      this.tagTweakTarget("TM_AllStats", bstValText);
+
+      if (bstDelta !== 0) {
+        const bstDeltaSign = bstDelta > 0 ? "+" : "";
+        const bstDeltaStr = `(${bstDeltaSign}${bstDelta})`;
+        const bstDeltaText = addTextObject(scene, bstValText.x + bstValText.displayWidth + 1, bstY + 3, bstDeltaStr, TextStyle.WINDOW, { fontSize: "22px" });
+        bstDeltaText.setOrigin(0, 0.5);
+        bstDeltaText.setColor(bstDelta > 0 ? "#78c850" : "#e13d3d");
+        bstDeltaText.setAlpha(0.75);
+        children.push(bstDeltaText);
+        this.tagTweakTarget("TM_AllStats", bstDeltaText);
       }
 
       const moveset = member.getMoveset();
       const moveCellH = Math.floor(columnBlockH / 4) - 1;
-      const movesTopY = columnTopY;
+      const movesTopY = columnTopY + 4;
 
       for (let m = 0; m < 4; m++) {
         const mcX = movesColX;

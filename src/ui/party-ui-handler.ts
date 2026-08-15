@@ -3,7 +3,7 @@ import Pokemon, { MoveResult, PlayerPokemon, PokemonMove } from "../field/pokemo
 import { addBBCodeTextObject, addTextObject, getTextColor, TextStyle } from "./text";
 import { Command } from "./command-ui-handler";
 import MessageUiHandler from "./message-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import * as Utils from "../utils";
 import { CollectedTypeModifier, PokemonFormChangeItemModifier, PokemonHeldItemModifier, SwitchEffectTransferModifier } from "../modifier/modifier";
 import { allMoves, ForceSwitchOutAttr } from "../data/move";
@@ -1943,18 +1943,25 @@ class PartySlot extends Phaser.GameObjects.Container {
     if (showRank) {
       this.slotRankContainer = this.scene.add.container(0, 0);
 
-      this.rankIcon = this.scene.add.sprite(-29.5, -3.0, "smitems", "modSoulCollected");
+      this.rankIcon = this.scene.add.sprite(1.5, -3.0, "smitems", "modSoulCollected");
       this.rankIcon.setScale(0.11);
       this.rankIcon.setOrigin(0, 0.5);
       this.slotRankContainer.add(this.rankIcon);
 
-      const rankFontSize = this.slotIndex === 0 ? "31px" : "28px";
-      this.rankNumText = addTextObject(this.scene, -27.5, 0.0, Utils.intToRoman(displayRank), TextStyle.PARTY, { fontSize: rankFontSize });
+      const rankFontSize = this.slotIndex === 0 ? "22px" : "19px";
+      this.rankNumText = addTextObject(this.scene, 5.0, 0.0, Utils.intToRoman(displayRank), TextStyle.PARTY, { fontSize: rankFontSize });
       this.rankNumText.setOrigin(0, 0.5);
+      this.rankNumText.setShadow(0, 0, undefined);
+      this.rankNumText.setStroke("#424242", 14);
       this.slotRankContainer.add(this.rankNumText);
 
+      const rankWidth = Math.max(
+        this.rankIcon.displayWidth,
+        this.rankNumText.x + this.rankNumText.displayWidth
+      );
+      const rankGap = 2;
       const rankYOffset = this.slotIndex === 0 ? 1.5 : 0.5;
-      this.slotRankContainer.setPositionRelative(slotLevelLabel, 9 + slotLevelText.displayWidth + 2, rankYOffset + 4);
+      this.slotRankContainer.setPositionRelative(slotLevelLabel, -(rankWidth + rankGap), rankYOffset + 4);
     }
 
     slotInfoContainer.add([this.slotName, slotLevelLabel, slotLevelText ]);
@@ -1969,7 +1976,7 @@ class PartySlot extends Phaser.GameObjects.Container {
       slotGenderText.setColor(getGenderColor(this.pokemon.getGender(true)));
       slotGenderText.setShadowColor(getGenderColor(this.pokemon.getGender(true), true));
       if (this.slotIndex >= battlerCount) {
-        const genderX = this.slotRankContainer ? 9 + slotLevelText.displayWidth + 2 + this.slotRankContainer.getBounds().width + 2 : 36;
+        const genderX = 9 + slotLevelText.displayWidth + 2;
         slotGenderText.setPositionRelative(slotLevelLabel, genderX, 0);
       } else {
         slotGenderText.setPositionRelative(this.slotName, 76 - (this.pokemon.fusionSpecies ? 8 : 0), 3);

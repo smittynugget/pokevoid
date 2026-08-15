@@ -137,7 +137,7 @@
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "刺甲贝的礼物",
-    "task": "在铁人模式下用刺甲贝使用礼物10次"
+    "task": "用刺甲贝使用礼物10次"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "长鼻叶对战朝北鼻",
@@ -445,7 +445,7 @@
   "NORMAL_STRENGTH": {
     "name": "一般的力量！",
     "task": "在多次对战中用一般属性宝可梦击败125只宝可梦",
-    "rewardText": "解锁改变一般属性宝可梦抗性和优势的永久道具！"
+    "rewardText": "解锁改变一般属性宝可梦抗性和优势的Ω道具！"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "鲤鱼王的新招式",
@@ -485,7 +485,7 @@
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "一般的力量！",
     "task": "在多次对战中用一般属性宝可梦击败125只宝可梦",
-    "rewardText": "解锁改变一般属性宝可梦抗性和优势的永久道具！"
+    "rewardText": "解锁改变一般属性宝可梦抗性和优势的Ω道具！"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "鲤鱼王的新招式",
@@ -521,5 +521,7 @@
     "name": "铁甲蛹的新招式",
     "task": "用铁甲蛹击败50只宝可梦",
     "rewardText": "铁甲蛹将获得更多可学习的招式！"
-  }
+  },
+  "rewardUnlocksGlitchForm": "解锁一个异常形态",
+  "rewardUnlocksSmittyForm": "解锁一个Smitty形态"
 }

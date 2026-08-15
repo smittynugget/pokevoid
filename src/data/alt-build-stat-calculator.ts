@@ -1,17 +1,17 @@
 import { Stat } from "#enums/stat";
 import { integer } from "#app/@types/common";
 
-export function calculateAltBuildStatsWithSwapping(
+export function calculateStatsToTargetBstWithSwapping(
   originalBaseStats: integer[],
   statFocus: Stat[],
-  rank: number
+  targetBST: integer
 ): integer[] {
   const newBaseStats = [...originalBaseStats];
 
   for (let rankIdx = 0; rankIdx < statFocus.length; rankIdx++) {
     const focusStat = statFocus[rankIdx];
 
-    const ranked: Array<{stat: Stat, value: number}> = [];
+    const ranked: Array<{ stat: Stat; value: number }> = [];
     for (let s = Stat.HP; s <= Stat.SPD; s++) {
       ranked.push({ stat: s as Stat, value: newBaseStats[s] });
     }
@@ -26,14 +26,7 @@ export function calculateAltBuildStatsWithSwapping(
     }
   }
 
-  if (rank === undefined || rank <= 0) {
-    return newBaseStats;
-  }
-
-  const rankClamped = Math.min(rank, 9);
-  const targetBST = 425 + (rankClamped * 25);
   const currentBST = newBaseStats.reduce((sum, s) => sum + s, 0);
-
   if (currentBST >= targetBST) {
     return newBaseStats;
   }
@@ -143,4 +136,19 @@ export function calculateAltBuildStatsWithSwapping(
   }
 
   return cappedStats;
+}
+
+export function calculateAltBuildStatsWithSwapping(
+  originalBaseStats: integer[],
+  statFocus: Stat[],
+  rank: number
+): integer[] {
+  if (rank === undefined || rank <= 0) {
+    const currentBST = originalBaseStats.reduce((sum, s) => sum + s, 0);
+    return calculateStatsToTargetBstWithSwapping(originalBaseStats, statFocus, currentBST as integer);
+  }
+
+  const rankClamped = Math.min(rank, 9);
+  const targetBST = (425 + (rankClamped * 25)) as integer;
+  return calculateStatsToTargetBstWithSwapping(originalBaseStats, statFocus, targetBST);
 }

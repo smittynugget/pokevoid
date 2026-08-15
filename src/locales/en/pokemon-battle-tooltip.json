@@ -1,0 +1,12 @@
+{
+  "quickSummary": "Quick Summary",
+  "itemsMoves": "Items & Moves",
+  "currentParty": "Current Party",
+  "enemyInfo": "Enemy Info",
+  "teamTitle": "Team",
+  "noOpponent": "No opponent",
+  "notApplicable": "---",
+  "pageIndicator": "{{current}}/{{total}}",
+  "foeTag": "FOE",
+  "youTag": "YOU"
+}

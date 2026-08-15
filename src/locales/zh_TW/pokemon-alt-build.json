@@ -205,47 +205,47 @@
   },
   "riolu_apollo_diana_signature": {
     "name": "阿波羅與黛安娜的夥伴",
-    "description": "阿波羅與黛安娜勇敢的格鬥屬性夥伴"
+    "description": "{{champion}}勇敢的格鬥屬性夥伴"
   },
   "solrock_apollo_diana_signature": {
     "name": "阿波羅與黛安娜的夥伴",
-    "description": "阿波羅與黛安娜光輝的岩石屬性夥伴"
+    "description": "{{champion}}光輝的岩石屬性夥伴"
   },
   "lunatone_apollo_diana_signature": {
     "name": "阿波羅與黛安娜的夥伴",
-    "description": "阿波羅與黛安娜神秘的岩石屬性夥伴"
+    "description": "{{champion}}神秘的岩石屬性夥伴"
   },
   "larvesta_apollo_diana_signature": {
     "name": "阿波羅與黛安娜的夥伴",
-    "description": "阿波羅與黛安娜燃燒的蟲屬性夥伴"
+    "description": "{{champion}}燃燒的蟲屬性夥伴"
   },
   "swablu_apollo_diana_signature": {
     "name": "阿波羅與黛安娜的夥伴",
-    "description": "阿波羅與黛安娜蓬鬆的一般屬性夥伴"
+    "description": "{{champion}}蓬鬆的一般屬性夥伴"
   },
   "castform_apollo_diana_signature": {
     "name": "阿波羅與黛安娜的夥伴",
-    "description": "阿波羅與黛安娜適應性強的一般屬性夥伴"
+    "description": "{{champion}}適應性強的一般屬性夥伴"
   },
   "litwick_apollo_diana_signature": {
     "name": "阿波羅與黛安娜的夥伴",
-    "description": "阿波羅與黛安娜閃爍的幽靈屬性夥伴"
+    "description": "{{champion}}閃爍的幽靈屬性夥伴"
   },
   "eevee_apollo_diana_signature": {
     "name": "阿波羅與黛安娜的夥伴",
-    "description": "阿波羅與黛安娜多才多藝的一般屬性夥伴"
+    "description": "{{champion}}多才多藝的一般屬性夥伴"
   },
   "teddiursa_apollo_diana_signature": {
     "name": "阿波羅與黛安娜的夥伴",
-    "description": "阿波羅與黛安娜可愛的一般屬性夥伴"
+    "description": "{{champion}}可愛的一般屬性夥伴"
   },
   "cleffa_apollo_diana_signature": {
     "name": "阿波羅與黛安娜的夥伴",
-    "description": "阿波羅與黛安娜星光閃耀的妖精屬性夥伴"
+    "description": "{{champion}}星光閃耀的妖精屬性夥伴"
   },
   "sunkern_apollo_diana_signature": {
     "name": "阿波羅與黛安娜的夥伴",
-    "description": "阿波羅與黛安娜充滿希望的草屬性夥伴"
+    "description": "{{champion}}充滿希望的草屬性夥伴"
   },
   "riolu_shadow_warrior": {
     "name": "暗影戰士",
@@ -291,5 +291,93 @@
     "name": "電漿萌芽",
     "description": "噼啪作響著電漿能量的電/草屬性向日種子，擁有電流轉換、太陽之力強度和電氣場地支配"
   },
-  "championPartner": "{{champion}}的夥伴"
+  "championPartner": "{{champion}}的夥伴",
+  "bulbasaur_plasma_jungle": {
+    "name": "等離子叢林",
+    "description": "草/電屬性妙蛙種子，引導等離子叢林之力，將藤蔓力量與劈啪作響的閃電融合"
+  },
+  "bulbasaur_red_signature": {
+    "name": "小赤的夥伴",
+    "description": "小赤的招牌妙蛙種子——堅韌的種子戰士，將自然與電能完美調和"
+  },
+  "butterfree_red_signature": {
+    "name": "小赤的夥伴",
+    "description": "小赤的招牌巴大蝶——擁有超能力和吸魂鱗粉的迷人飛蛾"
+  },
+  "butterfree_soul_moth": {
+    "name": "靈魂之蛾",
+    "description": "蟲/幽靈屬性巴大蝶，化身靈魂之蛾，以幽靈翼粉吸取生命力"
+  },
+  "charmander_black_inferno": {
+    "name": "黑炎地獄",
+    "description": "火/惡屬性小火龍，被黑色地獄火吞噬，揮舞暗影火焰與黑暗龍之怒"
+  },
+  "charmander_red_signature": {
+    "name": "小赤的夥伴",
+    "description": "小赤的招牌小火龍——成長為龍之力量烈焰的兇猛火苗"
+  },
+  "espeon_moon_goddess": {
+    "name": "月之女神",
+    "description": "超能/妖精屬性太陽伊布，覺醒為月之女神，散發月光魔法與精神光輝"
+  },
+  "espeon_red_signature": {
+    "name": "小赤的夥伴",
+    "description": "小赤的招牌太陽伊布——以優雅的毀滅力散發月光與妖精能量的月之超能者"
+  },
+  "farfetchd_heavens_edge": {
+    "name": "天之鋒刃",
+    "description": "格鬥/飛行屬性大蔥鴨，覺醒為天之鋒刃，從天空以神聖劍術斬擊"
+  },
+  "farfetchd_red_signature": {
+    "name": "小赤的夥伴",
+    "description": "小赤的招牌大蔥鴨——無畏的劍士，以致命的要害一擊之術揮舞大蔥"
+  },
+  "lapras_red_signature": {
+    "name": "小赤的夥伴",
+    "description": "小赤的招牌拉普拉斯——以寧靜而致命的精準度駕馭冰與水的優雅旅者"
+  },
+  "lapras_voidfrost": {
+    "name": "虛空霜",
+    "description": "冰/幽靈屬性拉普拉斯，漂浮於虛空之中，融合幽靈般的寒冷與深淵之冰"
+  },
+  "magikarp_dragonborn": {
+    "name": "龍之子",
+    "description": "水/龍屬性鯉魚王，作為真正的龍之子重生，釋放遠古龍之潛能"
+  },
+  "magikarp_red_signature": {
+    "name": "小赤的夥伴",
+    "description": "小赤的招牌鯉魚王——打破期望、進化為擁有龍之血脈的強者的弱者"
+  },
+  "pikachu_electro_berserker": {
+    "name": "電擊狂戰士",
+    "description": "電/格鬥屬性皮卡丘，充滿狂戰士之怒，將原始電壓與武術精通融合"
+  },
+  "pikachu_red_signature": {
+    "name": "小赤的夥伴",
+    "description": "小赤的招牌皮卡丘——擁有無與倫比的速度和毀滅性電擊的身經百戰之夥伴"
+  },
+  "snorlax_dream_colossus": {
+    "name": "夢境巨像",
+    "description": "一般/超能屬性卡比獸，覺醒為夢境巨像形態，融合龐大體型與超能夢境操控"
+  },
+  "snorlax_red_signature": {
+    "name": "小赤的夥伴",
+    "description": "小赤的招牌卡比獸——吸收攻擊並以恐怖力量反擊的不動之壁"
+  },
+  "squirtle_abyss_golem": {
+    "name": "深淵魔像",
+    "description": "水/惡屬性傑尼龜，鍛造為深淵魔像，以裝甲之力支配深海黑暗"
+  },
+  "squirtle_red_signature": {
+    "name": "小赤的夥伴",
+    "description": "小赤的招牌傑尼龜——以暗水之術支配深淵的堅固龜殼要塞"
+  },
+  "tauros_iron_quake": {
+    "name": "鋼鐵地震",
+    "description": "地面/鋼屬性肯泰羅，化身鋼鐵地震，融合金屬鎧甲與地震級的毀滅"
+  },
+  "tauros_red_signature": {
+    "name": "小赤的夥伴",
+    "description": "小赤的招牌肯泰羅——擁有不可阻擋的衝勁和震撼大地攻擊的暴走公牛"
+  }
 }

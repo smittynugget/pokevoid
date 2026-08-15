@@ -1,0 +1,10 @@
+{
+  "title": "SÉLECTION DU CHAMPION",
+  "instruction": "Sélectionnez votre Champion",
+  "locked": "VERROUILLÉ",
+  "essenceNeeded": "{{amount}} Essence {{typeName}}",
+  "mysteryChampion": "???",
+  "mysterySubtitle": "Le Vide décide ?!",
+  "randomDescription": "Champion Aléatoire",
+  "tooltip.essenceRequiredDesc": "Dépensez de l'essence pour débloquer ce champion. Pour gagner des essences, battez des Pokémon pour obtenir leur type."
+}

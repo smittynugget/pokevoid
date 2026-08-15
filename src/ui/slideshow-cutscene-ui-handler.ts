@@ -1,6 +1,6 @@
 import BattleScene from "#app/battle-scene.js";
 import UiHandler from "./ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { Button } from "../enums/buttons";
 import { SlideshowCutscenePhase } from "#app/phases/slideshow-cutscene-phase.js";
 import i18next from "i18next";
@@ -14,6 +14,7 @@ export default class SlideshowCutsceneUiHandler extends UiHandler {
   private holdTimer: Phaser.Time.TimerEvent | null = null;
   private holdingButton: Button | null = null;
   private holdingPointer: boolean = false;
+  private _justCompletedText: boolean = false;
   private inputDownHandler: ((event: any) => void) | null = null;
   private inputUpHandler: ((event: any) => void) | null = null;
   private pointerDownHandler: ((pointer: Phaser.Input.Pointer) => void) | null = null;
@@ -134,15 +135,9 @@ export default class SlideshowCutsceneUiHandler extends UiHandler {
     if (canArmSkipHold) {
       this.holdTimer = this.scene.time.delayedCall(Utils.fixedInt(1000) as any, () => {
         this.holdTimer = null;
-        if (this.scene.ui.getMode() !== Mode.SLIDESHOW_CUTSCENE) {
-          return;
-        }
-        if ((currentPhase as any).isManualAdvanceBlocked?.() === true) {
-          return;
-        }
-        if ((currentPhase as any).isHoldToSkipAllowed?.(300) === false) {
-          return;
-        }
+        if (this.scene.ui.getMode() !== Mode.SLIDESHOW_CUTSCENE) return;
+        if ((currentPhase as any).isManualAdvanceBlocked?.() === true) return;
+        if ((currentPhase as any).isHoldToSkipAllowed?.(300) === false) return;
         this.holdingButton = null;
         this.holdingPointer = false;
         currentPhase.skipCutscene();
@@ -169,7 +164,13 @@ export default class SlideshowCutsceneUiHandler extends UiHandler {
     if (!(currentPhase instanceof SlideshowCutscenePhase)) {
       return;
     }
-    if (button !== Button.CANCEL && button !== Button.SUBMIT && button !== Button.ACTION) {
+    const isAdvanceButton = button === Button.CANCEL || button === Button.SUBMIT || button === Button.ACTION;
+    const isNonSkippable = currentPhase instanceof SlideshowCutscenePhase && !currentPhase.canSkip();
+    if (!isAdvanceButton && !isNonSkippable) {
+      return;
+    }
+    if (this._justCompletedText) {
+      this._justCompletedText = false;
       return;
     }
     if ((currentPhase as any).isQuickSkipAllowed?.(300) === false) {
@@ -177,6 +178,10 @@ export default class SlideshowCutsceneUiHandler extends UiHandler {
     }
     if ((currentPhase as any).isCurrentTextComplete?.() !== true) {
       (currentPhase as any).completeCurrentText?.();
+      this._justCompletedText = true;
+      return;
+    }
+    if (!currentPhase.isTextReadyForAdvance(250)) {
       return;
     }
     if ((currentPhase as any).isManualAdvanceBlocked?.() === true) {
@@ -205,15 +210,9 @@ export default class SlideshowCutsceneUiHandler extends UiHandler {
     if (canArmSkipHold) {
       this.holdTimer = this.scene.time.delayedCall(Utils.fixedInt(1000) as any, () => {
         this.holdTimer = null;
-        if (this.scene.ui.getMode() !== Mode.SLIDESHOW_CUTSCENE) {
-          return;
-        }
-        if ((currentPhase as any).isManualAdvanceBlocked?.() === true) {
-          return;
-        }
-        if ((currentPhase as any).isHoldToSkipAllowed?.(300) === false) {
-          return;
-        }
+        if (this.scene.ui.getMode() !== Mode.SLIDESHOW_CUTSCENE) return;
+        if ((currentPhase as any).isManualAdvanceBlocked?.() === true) return;
+        if ((currentPhase as any).isHoldToSkipAllowed?.(300) === false) return;
         this.holdingButton = null;
         this.holdingPointer = false;
         currentPhase.skipCutscene();
@@ -239,7 +238,8 @@ export default class SlideshowCutsceneUiHandler extends UiHandler {
     if (!(currentPhase instanceof SlideshowCutscenePhase)) {
       return;
     }
-    if (this.scene.inputMethod !== "touch") {
+    if (this._justCompletedText) {
+      this._justCompletedText = false;
       return;
     }
     if ((currentPhase as any).isQuickSkipAllowed?.(300) === false) {
@@ -247,6 +247,10 @@ export default class SlideshowCutsceneUiHandler extends UiHandler {
     }
     if ((currentPhase as any).isCurrentTextComplete?.() !== true) {
       (currentPhase as any).completeCurrentText?.();
+      this._justCompletedText = true;
+      return;
+    }
+    if (!currentPhase.isTextReadyForAdvance(250)) {
       return;
     }
     if ((currentPhase as any).isManualAdvanceBlocked?.() === true) {
@@ -292,6 +296,9 @@ export default class SlideshowCutsceneUiHandler extends UiHandler {
   }
 
   clear(): void {
+    try {
+      (this.scene as BattleScene).endEndOfRunBattleVisualSuppression();
+    } catch {}
     this.prevFieldVisible = null;
     if (this.prevFieldUiVisible !== null) {
       (this.scene as any).fieldUI?.setVisible?.(this.prevFieldUiVisible);

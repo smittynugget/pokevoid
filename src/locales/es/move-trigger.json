@@ -61,5 +61,7 @@
   "copyType": "¡{{pokemonName}} ahora es del mismo tipo\nque {{targetPokemonName}}!",
   "suppressAbilities": "¡Se ha anulado la habilidad\nde {{pokemonName}}!",
   "swapArenaTags": "¡{{pokemonName}} ha intercambiado\nlos efectos del terreno de combate!",
-  "exposedMove": "¡{{pokemonName}} ha identificado\n{{targetPokemonName}}!"
+  "exposedMove": "¡{{pokemonName}} ha identificado\n{{targetPokemonName}}!",
+  "substituteOnOverlap": "¡{{pokemonName}} ya tiene un sustituto!",
+  "safeguard": "¡{{targetName}} está protegido por Velo Sagrado!"
 }

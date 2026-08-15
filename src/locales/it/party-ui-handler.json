@@ -49,5 +49,6 @@
   "notAble": "No!",
   "learned": "La conosce!",
   "sayonara": "Sayonara, {{pokemonName}}!",
-  "smellYaLater": "Ci becchiamo, {{pokemonName}}!"
+  "smellYaLater": "Ci becchiamo, {{pokemonName}}!",
+  "quickInfo": "Info Rapida"
 }

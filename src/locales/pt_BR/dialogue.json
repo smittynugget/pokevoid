@@ -1086,6 +1086,35 @@
       "1": "Eu suponho que deve parecer que estou fazendo algo terrível. Eu não espero que você entenda.\n$Mas eu devo fornecer à região de Galar energia ilimitada para garantir prosperidade eterna."
     }
   },
+  "pegasus_boss_1": {
+    "encounter": {
+      "1": "Ah, um novo desafiante se aproxima do meu castelo...$Que delícia. Eu estava tão entediado desde o Reino dos Duelistas.$Veja bem, meu Olho do Milênio me permite enxergar as profundezas da sua estratégia...$Cada carta que você segura, cada jogada que planeja — eu já vi tudo.$Pois bem... vamos começar este Jogo das Sombras?",
+      "2": "Bem-vindo, bem-vindo ao meu mundo de ilusões!$Devo dizer, você chegou bem longe para alguém sem um Item do Milênio.$Mas me diga... você realmente acredita que pode derrotar alguém que vê tudo?$Meu Mundo Toon aguarda, e minhas criaturas estão loucas para brincar.$Vamos ver se você é digno da minha atenção, hmm?",
+      "3": "Oh, que convidado inesperado!$Você me lembra um garoto que conheci uma vez... tolo, corajoso e completamente previsível.$O Olho do Milênio me mostrou incontáveis futuros, e em cada um deles...$...sua derrota é absoluta. Mas tente ao menos tornar isso divertido, sim?"
+    },
+    "victory": {
+      "1": "Im...possível! O Olho do Milênio não mostrou nenhum caminho para esse resultado!$Como você pôde... minhas estratégias perfeitas... meu Mundo Toon...$Talvez eu tenha subestimado o poder que flui através de você.$Muito bem. Você mereceu esta vitória... mas lembre-se — no Reino das Sombras, nada jamais termina de verdade.",
+      "2": "Não! Isso não pode ser!$Minhas visões... eram tão claras... tão absolutas...$Você estilhaçou minhas ilusões com nada além de pura determinação.$Eu me rendo... por enquanto. Mas as sombras têm memória longa, caro desafiante."
+    },
+    "defeat": {
+      "1": "Como eu previ... sua mente era um livro aberto desde a sua primeiríssima jogada.$Cada pensamento, cada hesitação — o Olho do Milênio revelou tudo.$Pois bem, seu jogo de penalidade aguarda...$Vamos jogar outro jogo? Eu adoro ver a esperança desaparecer dos olhos de um desafiante.",
+      "2": "Ooh, que delícia! Seu desespero é absolutamente requintado!$Você realmente achou que poderia desafiar o criador dos Monstros de Duelo em pessoa?$O Reino das Sombras te recebe de braços abertos...$Não se preocupe — o tempo passa diferente lá. Você mal vai notar a eternidade."
+    }
+  },
+  "pegasus_boss_2": {
+    "encounter": {
+      "1": "Ah, você voltou! Que persistência da sua parte.$Devo confessar, nosso último encontro deixou uma impressão e tanto...$Desta vez, preparei algo verdadeiramente especial. Meus Toons estiveram treinando, sabe.$E desbloqueei segredos do Olho do Milênio que nunca ousei usar antes.$O vazio entre nossos mundos está ficando mais fino... consegue sentir? Este será nosso jogo final.",
+      "2": "Ora, ora... aquele que desafiou minhas visões retorna.$Não cometerei o mesmo erro duas vezes, garanto.$Meu Restrição dos Mil Olhos vê tudo, prende tudo, consome tudo...$As próprias sombras se curvam diante do seu olhar.$Venha — vamos terminar o que começamos no Reino dos Duelistas!"
+    },
+    "victory": {
+      "1": "Você superou até minhas visões mais impossíveis...$O Olho do Milênio... chora pelo que não pode compreender.$Talvez o vazio tenha escolhido com mais sabedoria do que eu jamais poderia.$Aceite sua vitória, campeão. Você conquistou algo além do mero poder — você conquistou meu respeito.",
+      "2": "Impossível... duas vezes agora... DUAS VEZES!$As sombras recuam... o Olho escurece...$Você é algo que os Itens do Milênio nunca previram.$Siga em frente. Seja qual for o destino que te aguarda... ele te teme mais do que eu jamais poderia."
+    },
+    "defeat": {
+      "1": "O Olho do Milênio vê todos os finais, caro desafiante.$E o seu foi escrito nas sombras muito antes de você comprar sua primeira mão.$Descanse agora no meu Mundo Toon... é bem confortável quando você para de gritar.$Talvez em outra linha temporal, outro ciclo... mas não neste. Nunca neste.",
+      "2": "Você realmente acreditou que o resultado seria diferente na segunda vez?$O Olho se fortalece com cada alma que reivindica...$Sua energia vai alimentar minhas visões por eras.$Adeus, pequeno duelista. As sombras te abraçam agora."
+    }
+  },
   "star_boss_penny_1": {
     "encounter": {
       "1": "Eu sou a grande chefe da Equipe Estrela. Meu nome é Cassiopeia. \n$Agora, ajoelhe-se diante do poder esmagador da fundadora da Equipe Estrela!"
@@ -1749,7 +1778,8 @@
       "2": "...Perdemos o controle. Da próxima vez, gostaria de desafiá-lo a uma corrida de escavação de fósseis no subsolo.",
       "2_female": "...Perdemos o controle. Da próxima vez, gostaria de desafiá-la a uma corrida de escavação de fósseis no subsolo.",
       "3": "Com habilidade como a sua, é natural que você vença.",
-      "4": "O-o que?! Não pode ser! Nem isso foi suficiente?"
+      "4": "O-o que?! Não pode ser! Nem isso foi suficiente?",
+      "5": "Eu estraguei tudo."
     },
     "defeat": {
       "1": "Veja? Estou orgulhoso do meu estilo de batalha rochoso!",
@@ -4700,6 +4730,18 @@
       "10": "Eu... mal posso manter o equilíbrio... O vazio está consumindo toda ordem. Por favor... vença...",
       "11": "Isso é uma catástrofe... O mundo está caindo no caos. Você precisa virar o jogo contra o vazio!",
       "12": "O equilíbrio... está perdido. O vazio... é poderoso demais. Vença... ou o mundo se torna eternamente caótico..."
+    }
+  },
+  "tutorial_blue": {
+    "encounter": {
+      "1": "O mundo está chegando ao fim, Red.\nNão há nada que possamos fazer agora."
+    },
+    "void_power": {
+      "1": "Deixe-me mostrar o verdadeiro poder do Void!"
+    },
+    "defeat": {
+      "1": "Você me venceu, Red... Só queria que tivesse conseguido fazer isso quando realmente importava...",
+      "2": "Este lugar não é real. O Void te prendeu aqui para que você nunca tivesse que enfrentar o que está vindo. Não o deixe vencer. Acorde. ACORDE!"
     }
   }
 }

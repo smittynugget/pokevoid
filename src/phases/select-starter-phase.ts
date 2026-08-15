@@ -19,6 +19,9 @@ import { PokemonAltBuildId, POKEMON_ALT_BUILDS } from "#app/data/pokemon-alt-bui
 import { PokemonAltBuildModifierType, modifierTypes } from "#app/modifier/modifier-type";
 import * as Modifiers from "#app/modifier/modifier";
 import { ChampionUtils } from "#app/system/champion-utils";
+import { DEBUG_FORCE_SMITOM_TUTORIAL } from "#app/overrides.js";
+import { SmitomTipConfig } from "#app/ui/smitom-tip-ui-handler.js";
+import i18next from "i18next";
 
 export interface StarterSelectConfig {
   availableStarters?: SpeciesEnum[];
@@ -29,18 +32,50 @@ export interface StarterSelectConfig {
 
 export class SelectStarterPhase extends Phase {
   private config?: StarterSelectConfig;
+  private static smitomStarterDebugShown = false;
 
   constructor(scene: BattleScene, config?: StarterSelectConfig) {
     super(scene);
     this.config = config;
   }
 
+  private triggerSmitomTipIfNeeded(): void {
+    const flags = this.scene.gameData.smitomTutorialFlags;
+    if (DEBUG_FORCE_SMITOM_TUTORIAL && !SelectStarterPhase.smitomStarterDebugShown) {
+      SelectStarterPhase.smitomStarterDebugShown = true;
+      flags["starter_select_welcome"] = false;
+    }
+    if (!flags["starter_select_welcome"]) {
+      this.scene.time.delayedCall(400, () => {
+        const tipConfig: SmitomTipConfig = {
+          tutorialKey: "starter_select_welcome",
+          title: i18next.t("tutorial:smitomTip.starterSelect.title"),
+          texts: [
+            i18next.t("tutorial:smitomTip.starterSelect.1"),
+            i18next.t("tutorial:smitomTip.starterSelect.2"),
+            i18next.t("tutorial:smitomTip.starterSelect.3"),
+          ],
+          offerReplay: true,
+          onComplete: () => {
+            this.scene.gameData.smitomTutorialFlags["starter_select_welcome"] = true;
+            this.scene.gameData.saveSystem();
+          }
+        };
+        this.scene.ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
+      });
+    }
+  }
+
   start() {
     super.start();
 
     this.scene.moveUpgradesEnabledForRun = !this.scene.disableMoveUpgrades;
-
-    this.scene.playBgm("menu");
+    this.scene.statSwitchersEnabledForRun = !this.scene.disableStatSwitchers;
+    this.scene.releaseItemsEnabledForRun = !this.scene.disableReleaseItems;
+    this.scene.ivScannerEnabledForRun = !this.scene.disableIvScanner;
+    this.scene.mapEnabledForRun = !this.scene.disableMap;
+    this.scene.duelmonsEnabledForRun = !this.scene.disableDuelmons;
+    this.scene.wave35UnlockedThisRun = false;
 
     if (this.config && (this.config.availableStarters?.length || this.config.onStarterSelected)) {
       if (this.config.availableStarters?.length && !this.config.onStarterSelected) {
@@ -49,6 +84,7 @@ export class SelectStarterPhase extends Phase {
           { availableStarters: this.config.availableStarters, championData: this.config.championData }
         );
         this.preGenerateSkillTreeNodes();
+        this.triggerSmitomTipIfNeeded();
         return;
       }
       this.scene.ui.setMode(Mode.STARTER_SELECT,
@@ -66,6 +102,7 @@ export class SelectStarterPhase extends Phase {
         }
       );
       this.preGenerateSkillTreeNodes();
+      this.triggerSmitomTipIfNeeded();
       return;
     }
 
@@ -73,6 +110,7 @@ export class SelectStarterPhase extends Phase {
       this.handleLegacySaveAndStart(starters);
     });
     this.preGenerateSkillTreeNodes();
+    this.triggerSmitomTipIfNeeded();
   }
 
   private handleLegacySaveAndStart(starters: Starter[]) {
@@ -80,7 +118,7 @@ export class SelectStarterPhase extends Phase {
     this.scene.ui.setMode(Mode.SAVE_SLOT, SaveSlotUiMode.SAVE, (slotId: integer) => {
       if (slotId === -1) {
         this.scene.clearPhaseQueue();
-        this.scene.pushPhase(new TitlePhase(this.scene));
+        this.scene.pushPhase(new TitlePhase(this.scene, false, true));
         return this.end();
       }
       this.scene.sessionSlotId = slotId;
@@ -158,7 +196,7 @@ export class SelectStarterPhase extends Phase {
           const unlockedSignatures = (championData as any).unlockedSignaturePokemon as Species[] | undefined;
           const inUnlockedList = unlockedSignatures?.includes(starter.species.speciesId) || false;
 
-          selectedIsSignature = inBaseList || inUnlockedList;
+          selectedIsSignature = (inBaseList || inUnlockedList) && starter.isSignature !== false;
 
           if (selectedIsSignature) {
             altBuildId = ChampionUtils.getSignatureAltBuildId(starter.species.speciesId, championData);
@@ -168,25 +206,16 @@ export class SelectStarterPhase extends Phase {
 
       if (selectedIsSignature) {
         starterPokemon.isSignature = true;
-
-        if (altBuildId) {
-          const altBuild = POKEMON_ALT_BUILDS[altBuildId];
-
-          if (altBuild) {
-            const modifierType = new PokemonAltBuildModifierType(altBuild);
-            modifierType.withIdFromFunc(modifierTypes.POKEMON_ALT_BUILD);
-            const modifier = new Modifiers.PokemonAltBuildModifier(modifierType, starterPokemon.id, altBuild);
-            this.scene.addModifier(modifier, true, false, false, true);
-          } else {
-            console.warn(`[SelectStarterPhase] initBattle: Alt build ${altBuildId} not found in POKEMON_ALT_BUILDS`);
-          }
-        }
       }
-          if(starter.fusionIndex > -1) {
+
+      if (!selectedIsSignature) {
+          if (Overrides.STARTER_FUSION_SPECIES_OVERRIDE) {
+            starterPokemon.generateFusionViaSpeciesID(Overrides.STARTER_FUSION_SPECIES_OVERRIDE as Species, true);
+          } else if(starter.fusionIndex > -1) {
             starterPokemon.generateFusionViaSpeciesID(this.scene.gameData.starterData[starter.species.speciesId].obtainedFusions[starter.fusionIndex]);
+          } else if (this.scene.gameMode.isSplicedOnly) {
+            starterPokemon.generateFusionSpecies(true);
           }
-          else if (this.scene.gameMode.isSplicedOnly) {
-        starterPokemon.generateFusionSpecies(true);
       }
 
           starterPokemon.tryPopulateMoveset(starter.moveset);
@@ -194,6 +223,19 @@ export class SelectStarterPhase extends Phase {
       applyChallenges(this.scene.gameMode, ChallengeType.STARTER_MODIFY, starterPokemon);
       party.push(starterPokemon);
       applySignatureTypeSwitcher(this.scene, starterPokemon);
+      if (starterPokemon.isSignature && altBuildId) {
+        const def = POKEMON_ALT_BUILDS[altBuildId];
+        if (def) {
+          const rank = starterPokemon.altBuildRank ?? def.rank ?? 1;
+          const modType = new PokemonAltBuildModifierType(def, rank);
+          modType.withIdFromFunc(modifierTypes.POKEMON_ALT_BUILD);
+          const altBuildMod = modType.newModifier(starterPokemon) as Modifiers.PokemonAltBuildModifier;
+          altBuildMod.applyAltBuildToPokemon(starterPokemon);
+          this.scene.addModifier(altBuildMod, true);
+        } else {
+          console.warn(`[SelectStarterPhase] initBattle: Alt build ${altBuildId} not found in POKEMON_ALT_BUILDS`);
+        }
+      }
       loadPokemonAssets.push(starterPokemon.loadAssets());
     });
     overrideModifiers(this.scene);

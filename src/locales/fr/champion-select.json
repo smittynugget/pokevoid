@@ -42,11 +42,22 @@
     "defaultRevive": "Augmente la chance de réanimation des Pokémon {{types}} de {{percent}}%",
     "defaultTokens": "Reçoit des Jetons d'Arbre de Compétences pour débloquer des nœuds",
     "defaultPoints": "Reçoit des Points de Compétence pour acheter des compétences",
-    "typesFallback": "Inconnu"
+    "typesFallback": "Inconnu",
+    "essenceRequiredTooltip": "Essence Requise",
+    "essenceRequiredTooltipDesc": "Dépensez des essences pour monter le niveau de votre champion. Battez des Pokémon pour obtenir des essences de leur type.",
+    "essenceLoreNote": "Note sur les Essences Uniques : SMITTY obtenues des dresseurs SMITTY. GLITCH des pokémon glitch. GEN I des pokémon de Gen I.",
+    "abilityHeader": "TALENT",
+    "descriptionHeader": "DESCRIPTION",
+    "itemDescriptionHeader": "DESCRIPTION D'OBJET",
+    "requiredEssenceHeader": "ESSENCE REQUISE",
+    "skillInfoHeader": "INFO COMPÉTENCE"
   },
   "skillList": {
     "levelPrefix": "Niv {{level}}",
     "unknownSkill": "???"
+  },
+  "skillBar": {
+    "next": "SUIVANT"
   },
   "defaultSkillLabels": {
     "tms": "CT {{types}}",
@@ -64,10 +75,24 @@
     "fusionPriority": "Priorité de Fusion {{types}}"
   },
   "button": {
-    "useEssence": "Utiliser Essence"
+    "useEssence": "Utiliser Essence",
+    "levelUp": "Monter de Niveau",
+    "notEnoughEssence": "Pour Monter :",
+    "required": "REQUIS"
   },
-  "brock": { "description": "Champion de la Roche" },
-  "misty": { "description": "Championne de l'Eau" },
+  "brock": {
+    "description": "Champion de la Roche",
+    "essenceRequirement": "Requiert {{ground}} Sol + {{rock}} Roche essences"
+  },
+  "misty": {
+    "description": "Championne de l'Eau",
+    "essenceRequirement": "Requiert {{water}} Eau essences"
+  },
+  "red": {
+    "description": "La légende...",
+    "unlockRequirement": "Débloquez tous les champions et battez le Rival Red Étape 6 en Chaos ou Défi",
+    "essenceRequirement": "Requiert {{genOne}} Gen I essences"
+  },
   "apollo": {
     "name": "Apollon",
     "description": "Champion du Soleil"
@@ -76,7 +101,10 @@
     "name": "Diane",
     "description": "Championne de la Lune"
   },
-  "generic": { "description": "Le champion par défaut." },
+  "generic": {
+    "description": "Le champion par défaut.",
+    "essenceRequirement": "Aucune condition spéciale"
+  },
   "champions": {
     "title": "Choisissez votre Champion",
     "brock": {
@@ -89,11 +117,20 @@
       "description": "Maître des types Eau",
       "essenceRequirement": "Requiert {{water}} Eau essences"
     },
+    "red": {
+      "name": "Red - Champion Légendaire",
+      "description": "La légende...",
+      "unlockRequirement": "Débloquez tous les champions et battez le Rival Red Étape 6 en Chaos ou Défi",
+      "essenceRequirement": "Requiert {{genOne}} Gen I essences"
+    },
     "generic": {
       "name": "Champion Équilibré",
       "description": "Pas de spécialisation de type",
       "essenceRequirement": "Aucune condition spéciale"
-    }
-  }
+    },
+    "generationShort": "GEN {{generation}}"
+  },
+  "generationShort": "GEN {{generation}}",
+  "skillsOfTitle": "COMPÉTENCES DE {{subtitle}}",
+  "switchChampion": "Autre Moitié"
 }
-

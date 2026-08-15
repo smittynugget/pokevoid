@@ -1,5 +1,5 @@
 import BattleScene from "../../battle-scene";
-import {Mode} from "../ui";
+import {Mode} from "../mode";
 import cfg_keyboard_qwerty from "#app/configs/inputs/cfg_keyboard_qwerty";
 import {
   setSettingKeyboard,

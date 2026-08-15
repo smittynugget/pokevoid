@@ -44,10 +44,11 @@ export function updateUserInfo(): Promise<[boolean, number]> {
             const lsItem = localStorage.getItem(d);
             if (lsItem && !!loggedInUser?.username) {
                 const lsUserItem = localStorage.getItem(`${d}_${loggedInUser.username}`);
-                if (lsUserItem) {
+                if (!lsUserItem) {
+                    localStorage.setItem(`${d}_${loggedInUser.username}`, lsItem);
+                } else {
                     localStorage.setItem(`${d}_${loggedInUser.username}_bak`, lsUserItem);
                 }
-                localStorage.setItem(`${d}_${loggedInUser.username}`, lsItem);
                 localStorage.removeItem(d);
             }
         });

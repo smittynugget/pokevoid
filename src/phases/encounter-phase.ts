@@ -11,7 +11,8 @@ import { StatusEffect } from "#app/enums/status-effect";
 import { PlayerGender } from "#app/enums/player-gender";
 import { Species } from "#app/enums/species";
 import { EncounterPhaseEvent } from "#app/events/battle-scene";
-import Pokemon, { FieldPosition } from "#app/field/pokemon";
+import Pokemon, { FieldPosition, DUELMON_PORTAL_WORLD_SCALE } from "#app/field/pokemon";
+import { playPortalSummonAnim, playTrainerPortalSummonAnim } from "#app/field/portal-anim";
 import { getPokemonNameWithAffix } from "#app/messages";
 import {
   regenerateModifierPoolThresholds,
@@ -31,14 +32,15 @@ import {
 import { achvs } from "#app/system/achv";
 import { handleTutorial, Tutorial } from "#app/tutorial";
 import { Mode } from "#app/ui/ui";
+import { SmitomTipConfig } from "#app/ui/smitom-tip-ui-handler";
 import i18next from "i18next";
 import { BattlePhase } from "./battle-phase";
 import * as Utils from "#app/utils";
-import Overrides from "#app/overrides";
+import Overrides, { DEBUG_FORCE_SMITOM_TUTORIAL } from "#app/overrides";
 import { CheckSwitchPhase } from "./check-switch-phase";
 import { GameOverPhase } from "./game-over-phase";
 import { PostSummonPhase } from "./post-summon-phase";
-import { ReturnPhase } from "./return-phase";
+import { getReturnPhase } from "./encounter-phase-cache";
 import { ScanIvsPhase } from "./scan-ivs-phase";
 import { ShinySparklePhase } from "./shiny-sparkle-phase";
 import { SlideshowCutscenePhase } from "#app/phases/slideshow-cutscene-phase.js";
@@ -59,6 +61,7 @@ import { GameDataType } from "#enums/game-data-type";
 import { STORY_CUTSCENES } from "#app/system/story-cutscenes.js";
 
 export class EncounterPhase extends BattlePhase {
+  private static _smitomSmittyDebugShown = false;
   protected loaded: boolean;
 
   constructor(scene: BattleScene, loaded?: boolean) {
@@ -69,6 +72,18 @@ export class EncounterPhase extends BattlePhase {
   start() {
     super.start();
 
+    const bScene = this.scene as BattleScene;
+    if (bScene._commonAnimsReady) {
+      bScene._commonAnimsReady.then(() => {
+        bScene._commonAnimsReady = null;
+        this.doStart();
+      });
+    } else {
+      this.doStart();
+    }
+  }
+
+  private doStart() {
     let battle = this.scene.currentBattle;
     if (!this.scene.disableCutscenes &&
       !this.loaded &&
@@ -117,7 +132,6 @@ export class EncounterPhase extends BattlePhase {
     this.scene.initSession();
 
     this.scene.eventTarget.dispatchEvent(new EncounterPhaseEvent());
-
     this.scene.ui.updatePermaMoneyText(this.scene);
 
     const finalWave = this.scene.gameMode.getFinalWave();
@@ -178,9 +192,17 @@ export class EncounterPhase extends BattlePhase {
         this.scene.gameData.permaModifiers
             .findModifiers(m => m instanceof PermaWaveCheckQuestModifier && !(m instanceof PermaCountdownWaveCheckQuestModifier))
             .forEach(modifier => modifier.apply([this.scene, this.scene]));
+        this.scene.findModifiers(m => m instanceof PermaWaveCheckQuestModifier && !(m instanceof PermaCountdownWaveCheckQuestModifier))
+            .forEach(modifier => modifier.apply([this.scene, this.scene]));
 
         this.scene.gameData.permaModifiers
             .findModifiers(m => m instanceof PermaCountdownWaveCheckQuestModifier)
+            .forEach(modifier => {
+              if (battle.waveIndex >= this.scene.gameMode.getFinalWave() - (modifier as PermaCountdownWaveCheckQuestModifier).startWave) {
+                modifier.apply([this.scene, this.scene]);
+              }
+            });
+        this.scene.findModifiers(m => m instanceof PermaCountdownWaveCheckQuestModifier)
             .forEach(modifier => {
               if (battle.waveIndex >= this.scene.gameMode.getFinalWave() - (modifier as PermaCountdownWaveCheckQuestModifier).startWave) {
                 modifier.apply([this.scene, this.scene]);
@@ -238,6 +260,8 @@ export class EncounterPhase extends BattlePhase {
             this.scene.typeBallCounts[championData.type2!] = (this.scene.typeBallCounts[championData.type2!] || 0) + 3;
           } else if (hasType1) {
             this.scene.typeBallCounts[championData.type1!] = (this.scene.typeBallCounts[championData.type1!] || 0) + 6;
+          } else {
+            this.scene.typeBallCounts[Type.NORMAL] = (this.scene.typeBallCounts[Type.NORMAL] || 0) + 6;
           }
         }
       }
@@ -404,7 +428,7 @@ export class EncounterPhase extends BattlePhase {
       });
     }
 
-    Promise.all(loadEnemyAssets).then(() => {
+    Promise.all(loadEnemyAssets).catch(err => { console.error('[ENCOUNTER] Asset load failed:', err); }).then(() => {
       battle.enemyParty.forEach((enemyPokemon, e) => {
         if (e < (battle.double ? 2 : 1)) {
           if (battle.battleType === BattleType.WILD) {
@@ -414,10 +438,24 @@ export class EncounterPhase extends BattlePhase {
             if (playerPokemon?.visible && this.scene.field.getIndex(playerPokemon) > -1) {
               this.scene.field.moveBelow(enemyPokemon as Pokemon, playerPokemon);
             }
-            enemyPokemon.tint(0, 0.5);
+            if (enemyPokemon.species?.generation === 20) {
+              enemyPokemon.setVisible(false);
+              enemyPokemon.getSprite().setVisible(false);
+              if (enemyPokemon.portalSprite) {
+                enemyPokemon.portalSprite.setAlpha(0);
+              }
+            } else {
+              enemyPokemon.tint(0, 0.5);
+            }
           } else if (battle.battleType === BattleType.TRAINER) {
             enemyPokemon.setVisible(false);
-            this.scene.currentBattle.trainer?.tint(0, 0.5);
+            const trainerRef = this.scene.currentBattle.trainer;
+            if (trainerRef?.isCorrupted || trainerRef?.config.trainerType === TrainerType.SMITTY) {
+              trainerRef.setAlpha(0);
+              trainerRef.getSprites().forEach(s => s.setPipelineData("hasShadow", false));
+            } else {
+              trainerRef?.tint(0, 0.5);
+            }
           }
           if (battle.double) {
             enemyPokemon.setFieldPosition(e ? FieldPosition.RIGHT : FieldPosition.LEFT);
@@ -430,35 +468,36 @@ export class EncounterPhase extends BattlePhase {
         this.scene.generateEnemyModifiers();
       }
 
-      this.scene.ui.setMode(Mode.MESSAGE).then(() => {
-        if (!this.loaded) {
-          if (Overrides.DEBUG_SAVE_TRACE) {
-            console.debug("[SAVE_TRACE] EncounterPhase battle-start saveAll", {
-              autoSaveMode: this.scene.autoSaveMode,
-              waveIndex: this.scene.currentBattle?.waveIndex,
-              battleTurn: this.scene.currentBattle?.turn,
-              encounterInitComplete: this.scene.encounterInitComplete
-            });
-          }
-
-          this.scene.gameData.saveAll(this.scene, true, this.scene.lastSavePlayTime >= 300).then(success => {
-            this.scene.disableMenu = false;
-
-            if (!success) {
-              return this.scene.reset(true);
-            }
-            this.doEncounter();
+      if (!this.loaded) {
+        if (Overrides.DEBUG_SAVE_TRACE) {
+          console.debug("[SAVE_TRACE] EncounterPhase battle-start saveAll", {
+            autoSaveMode: this.scene.autoSaveMode,
+            waveIndex: this.scene.currentBattle?.waveIndex,
+            battleTurn: this.scene.currentBattle?.turn,
+            encounterInitComplete: this.scene.encounterInitComplete
           });
-        } else {
-          this.doEncounter();
         }
-      });
+
+        this.scene.gameData.saveAll(this.scene, true, this.scene.lastSavePlayTime >= 300).then(success => {
+          this.scene.disableMenu = false;
+
+          if (!success && !this.scene.gameData?.tutorialOnboardActive) {
+            return this.scene.reset(true);
+          }
+          this.doEncounter();
+        });
+      } else {
+        this.doEncounter();
+      }
     });
   }
 
   private hydrateActiveBattlersToField(): void {
     const place = (pokemon: Pokemon, player: boolean, fieldIndex: integer, availableCount: integer) => {
       if (pokemon.isOnField()) {
+        if (!pokemon.summonData) {
+          pokemon.resetSummonData();
+        }
         pokemon.setVisible(true);
         pokemon.getSprite().setVisible(true);
         return;
@@ -484,7 +523,11 @@ export class EncounterPhase extends BattlePhase {
       pokemon.playAnim();
       pokemon.setVisible(true);
       pokemon.getSprite().setVisible(true);
-      pokemon.setScale(pokemon.isGlitchOrSmittyForm() ? 0.4 : pokemon.getSpriteScale());
+      if (pokemon.usesCustomFieldSpriteLayout()) {
+        pokemon.finalizeSummonSpriteLayout();
+      } else {
+        pokemon.updateScale();
+      }
       this.scene.updateFieldScale();
       pokemon.resetSummonData();
       pokemon.resetTurnData();
@@ -544,7 +587,7 @@ export class EncounterPhase extends BattlePhase {
     this.scene.tweens.add({
       targets: [this.scene.arenaEnemy, this.scene.currentBattle.trainer, enemyField, this.scene.arenaPlayer, this.scene.trainer].flat(),
       x: (_target, _key, value, fieldIndex: integer) => fieldIndex < 2 + (enemyField.length) ? value + 300 : value - 300,
-      duration: this.loaded ? 100 : 2000,
+      duration: this.loaded ? (this.scene.gameData.tutorialOnboardActive ? 2000 : 100) : 2000,
       onComplete: () => {
         if (!this.tryOverrideForBattleSpec()) {
           this.doEncounterCommon();
@@ -575,90 +618,244 @@ export class EncounterPhase extends BattlePhase {
   }
 
   doEncounterCommon(showEncounterMessage: boolean = true) {
+    this.scene.ui.setMode(Mode.MESSAGE);
     const enemyField = this.scene.getEnemyField();
 
     if (this.scene.currentBattle.battleType === BattleType.WILD) {
+      const portalPromises: Promise<void>[] = [];
       enemyField.forEach(enemyPokemon => {
-        enemyPokemon.untint(100, "Sine.easeOut");
-        enemyPokemon.cry();
-        enemyPokemon.showInfo();
-        if (enemyPokemon.isShiny()) {
-          this.scene.validateAchv(achvs.SEE_SHINY);
+        if (enemyPokemon.species?.generation === 20) {
+          enemyPokemon.finalizeSummonSpriteLayout();
+          if (enemyPokemon.portalSprite) {
+            enemyPokemon.portalSprite.setAlpha(0);
+          }
+          const p = playPortalSummonAnim(this.scene, enemyPokemon).then(() => {
+            enemyPokemon.setVisible(true);
+            enemyPokemon.getSprite().setVisible(true);
+            enemyPokemon.cry();
+            enemyPokemon.showInfo();
+            if (enemyPokemon.usesCustomFieldSpriteLayout()) {
+              enemyPokemon.finalizeSummonSpriteLayout();
+            }
+            if (enemyPokemon.isShiny()) {
+              this.scene.validateAchv(achvs.SEE_SHINY);
+            }
+          });
+          portalPromises.push(p);
+        } else {
+          enemyPokemon.untint(100, "Sine.easeOut");
+          enemyPokemon.cry();
+          enemyPokemon.showInfo();
+          if (enemyPokemon.usesCustomFieldSpriteLayout()) {
+            enemyPokemon.finalizeSummonSpriteLayout();
+          }
+          if (enemyPokemon.isShiny()) {
+            this.scene.validateAchv(achvs.SEE_SHINY);
+          }
         }
       });
       this.scene.updateFieldScale();
-      if (showEncounterMessage && !this.loaded) {
+      this.scene.currentBattle.started = true;
+      if (portalPromises.length > 0) {
+        Promise.all(portalPromises).then(() => {
+          if (showEncounterMessage && !this.loaded) {
+            this.scene.ui.showText(this.getEncounterMessage(), null, () => this.end(), 1500);
+          } else {
+            this.end();
+          }
+        });
+      } else if (showEncounterMessage && !this.loaded) {
         this.scene.ui.showText(this.getEncounterMessage(), null, () => this.end(), 1500);
       } else {
         this.end();
       }
     } else if (this.scene.currentBattle.battleType === BattleType.TRAINER) {
       const trainer = this.scene.currentBattle.trainer;
-      trainer?.untint(100, "Sine.easeOut");
-      if (!this.scene.currentBattle.trainer?.config.hasCharSprite) {
-        trainer?.playAnim();
+      let trainerPortalDone: Promise<void> = Promise.resolve();
+
+      const isSmittyTrainer = trainer?.config.trainerType === TrainerType.SMITTY;
+      if (trainer?.isCorrupted || isSmittyTrainer) {
+        trainer.setAlpha(0);
+        const portalYOffset = isSmittyTrainer ? 15 : 10;
+        const portalSpr = this.scene.add.sprite(trainer.x + 6, trainer.y + portalYOffset, "yu_portal_7");
+        portalSpr.setOrigin(0.5, 1);
+        portalSpr.setVisible(false);
+        portalSpr.setScale(DUELMON_PORTAL_WORLD_SCALE * 0.9);
+        this.scene.field.add(portalSpr);
+        this.scene.field.moveBelow(portalSpr, trainer);
+        trainer.portalSprite = portalSpr;
+        trainerPortalDone = playTrainerPortalSummonAnim(this.scene, trainer, portalSpr).then(() => {
+          trainer.untint(100, "Sine.easeOut");
+        });
+      } else {
+        trainer?.untint(100, "Sine.easeOut");
       }
 
-      const doSummon = () => {
-        this.scene.currentBattle.started = true;
-        this.scene.playBgm(undefined);
-        this.scene.pbTray.showPbTray(this.scene.getParty());
-        this.scene.pbTrayEnemy.showPbTray(this.scene.getEnemyParty());
-        const doTrainerSummon = () => {
-          this.hideEnemyTrainer();
-          const availablePartyMembers = this.scene.getEnemyParty().filter(p => !p.isFainted()).length;
-          this.scene.unshiftPhase(new SummonPhase(this.scene, 0, false));
-          if (this.scene.currentBattle.double && availablePartyMembers > 1) {
-            this.scene.unshiftPhase(new SummonPhase(this.scene, 1, false));
+      const proceedAfterPortal = () => {
+        if (!this.scene.currentBattle.trainer?.config.hasCharSprite) {
+          if (!trainer?.isCorrupted && trainer?.config.trainerType !== TrainerType.SMITTY) {
+            trainer?.playAnim();
           }
-          this.end();
-        };
-        if (showEncounterMessage && !this.loaded) {
-          this.scene.ui.showText(this.getEncounterMessage(), null, doTrainerSummon, 1500, true);
-        } else {
-          doTrainerSummon();
         }
+
+        const doSummon = () => {
+          this.scene.currentBattle.started = true;
+          this.scene.playBgm(undefined);
+          this.scene.pbTray.showPbTray(this.scene.getParty());
+          this.scene.pbTrayEnemy.showPbTray(this.scene.getEnemyParty());
+          const doTrainerSummon = () => {
+            this.hideEnemyTrainer();
+            const availablePartyMembers = this.scene.getEnemyParty().filter(p => !p.isFainted()).length;
+            if (this.scene.currentBattle.double && availablePartyMembers > 1) {
+              this.scene.unshiftPhase(new SummonPhase(this.scene, 1, false));
+            }
+            this.scene.unshiftPhase(new SummonPhase(this.scene, 0, false));
+            this.end();
+          };
+          if (showEncounterMessage && !this.loaded) {
+            this.scene.ui.showText(this.getEncounterMessage(), null, doTrainerSummon, 1500, true);
+          } else {
+            doTrainerSummon();
+          }
+        };
+
+        if (this.loaded) {
+          if (this.scene.gameData.tutorialOnboardActive && this.scene.currentBattle.trainer) {
+            const trainer = this.scene.currentBattle.trainer;
+            const tutorialMessage = "dialogue:tutorial_blue.encounter.1";
+            const afterDialogue = () => {
+              const cb = this.scene.gameData.tutorialStarterSelectCallback;
+              if (cb) {
+                this.scene.gameData.tutorialStarterSelectCallback = null;
+                cb();
+                this.end();
+                return;
+              }
+              doSummon();
+            };
+            if (trainer.config.hasCharSprite) {
+              (async () => {
+                await trainer.playAnim();
+                this.scene.ui.getMessageHandler().clear();
+                this.scene.ui.clearText();
+                this.scene.ui.getMessageHandler().applySmitomPanelStyle();
+                this.scene.showFieldOverlay(500, { withDialogueBg: true, bgTextureKey: "smitom_dialogue_bg" }).then(() => {
+                  this.scene.charSprite.showCharacter(trainer.getKey()!, getCharVariantFromDialogue(tutorialMessage)).then(() => {
+                    this.scene.ui.showDialogue(tutorialMessage, trainer.getName(TrainerSlot.NONE, true), null, () => {
+                      this.scene.ui.getMessageHandler().hideNameText();
+                      const glitchPromise = this.scene.ui.getMessageHandler().glitchOutDialogue(350);
+                      glitchPromise.then(() => {
+                        this.scene.ui.showMessageChrome();
+                        this.scene.ui.clearText();
+                        this.scene.ui.getMessageHandler().restoreDefaultPanelStyle();
+                      });
+                      Promise.all([
+                        glitchPromise,
+                        this.scene.charSprite.hide(),
+                        this.scene.hideFieldOverlay(750),
+                      ]).then(() => {
+                        afterDialogue();
+                      });
+                    });
+                  });
+                });
+              })();
+            } else {
+              this.scene.ui.showDialogue(tutorialMessage, trainer.getName(TrainerSlot.NONE, true), null, () => {
+                afterDialogue();
+              });
+            }
+            return;
+          }
+          doSummon();
+          return;
+        }
+
+        const proceedToDialogue = () => {
+          const encounterMessages = this.scene.currentBattle.trainer?.getEncounterMessages();
+
+          if (!encounterMessages?.length) {
+            doSummon();
+          } else {
+            let message: string;
+            this.scene.executeWithSeedOffset(() => message = Utils.randSeedItem(encounterMessages), this.scene.currentBattle.waveIndex);
+            message = message!;
+            if (this.scene.currentBattle.trainer?.config.hasCharSprite && !this.scene.ui.shouldSkipDialogue(message)) {
+              const showDialogueAndSummon = () => {
+                this.scene.ui.showDialogue(message, trainer?.getName(TrainerSlot.NONE, true), null, () => {
+                  this.scene.ui.getMessageHandler().hideNameText();
+                  const glitchPromise = this.scene.ui.getMessageHandler().glitchOutDialogue(350);
+                  glitchPromise.then(() => {
+                    this.scene.ui.showMessageChrome();
+                    this.scene.ui.clearText();
+                    this.scene.ui.getMessageHandler().restoreDefaultPanelStyle();
+                  });
+                  Promise.all([
+                    glitchPromise,
+                    this.scene.charSprite.hide(),
+                    this.scene.hideFieldOverlay(750),
+                  ]).then(() => {
+                    doSummon();
+                  });
+                });
+              };
+              (async () => {
+                if (trainer && trainer.config.trainerType != TrainerType.SMITTY) {
+                  await trainer.playAnim();
+                }
+                this.scene.ui.getMessageHandler().clear();
+                this.scene.ui.clearText();
+                this.scene.ui.getMessageHandler().applySmitomPanelStyle();
+                this.scene.showFieldOverlay(500, { withDialogueBg: true, bgTextureKey: "smitom_dialogue_bg" })
+                  .then(() => {
+                      if(trainer.config.trainerType == TrainerType.SMITTY) {
+                        return this.scene.charSprite.showCharacter("smitty_trainers", `${trainer?.config.smittyVariantIndex+1}`);
+                      }
+                      else {
+                        return this.scene.charSprite.showCharacter(trainer?.getKey()!, getCharVariantFromDialogue(encounterMessages[0]));
+                      }
+                  }).then(() => showDialogueAndSummon());
+              })();
+            } else {
+              this.scene.ui.showDialogue(message, trainer?.getName(TrainerSlot.NONE, true), null, () => {
+                doSummon();
+              });
+            }
+          }
+        };
+
+        if (isSmittyTrainer) {
+          const smitFlags = this.scene.gameData.smitomTutorialFlags;
+          if (DEBUG_FORCE_SMITOM_TUTORIAL && !EncounterPhase._smitomSmittyDebugShown) {
+            EncounterPhase._smitomSmittyDebugShown = true;
+            smitFlags["smitty_encounter"] = false;
+          }
+          if (this.scene.gameData.tutorialOnboardActive || !smitFlags["smitty_encounter"]) {
+            const tipConfig: SmitomTipConfig = {
+              tutorialKey: "smitty_encounter",
+              title: i18next.t("tutorial:smitomTip.smittyEncounter.title"),
+              texts: [
+                i18next.t("tutorial:smitomTip.smittyEncounter.1"),
+                i18next.t("tutorial:smitomTip.smittyEncounter.2"),
+              ],
+              offerReplay: false,
+              onComplete: () => {
+                if (!this.scene.gameData.tutorialOnboardActive) {
+                  this.scene.gameData.smitomTutorialFlags["smitty_encounter"] = true;
+                  this.scene.gameData.saveSystem();
+                }
+                proceedToDialogue();
+              },
+            };
+            this.scene.ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
+            return;
+          }
+        }
+
+        proceedToDialogue();
       };
 
-      if (this.loaded) {
-        doSummon();
-        return;
-      }
-
-      const encounterMessages = this.scene.currentBattle.trainer?.getEncounterMessages();
-
-      if (!encounterMessages?.length) {
-        doSummon();
-      } else {
-        let message: string;
-        this.scene.executeWithSeedOffset(() => message = Utils.randSeedItem(encounterMessages), this.scene.currentBattle.waveIndex);
-        message = message!;
-        const showDialogueAndSummon = () => {
-          this.scene.ui.showDialogue(message, trainer?.getName(TrainerSlot.NONE, true), null, () => {
-            this.scene.charSprite.hide().then(() => this.scene.hideFieldOverlay(250).then(() => doSummon()));
-          });
-        };
-
-        if (this.scene.currentBattle.trainer?.config.hasCharSprite && !this.scene.ui.shouldSkipDialogue(message)) {
-
-          (async () => {
-            if (trainer && trainer.config.trainerType != TrainerType.SMITTY) {
-              await trainer.playAnim();
-            }
-            this.scene.showFieldOverlay(500)
-              .then(() => {
-                  if(trainer.config.trainerType == TrainerType.SMITTY) {
-                    this.scene.charSprite.showCharacter("smitty_trainers", `${trainer?.config.smittyVariantIndex+1}`);
-                  }
-                  else {
-                    this.scene.charSprite.showCharacter(trainer?.getKey()!, getCharVariantFromDialogue(encounterMessages[0]));
-                  }
-              }).then(() => showDialogueAndSummon());
-          })();
-        } else {
-          showDialogueAndSummon();
-        }
-      }
+      trainerPortalDone.then(() => proceedAfterPortal());
     }
   }
 
@@ -682,6 +879,9 @@ export class EncounterPhase extends BattlePhase {
 
         const requiredPokemonsOnField = Math.min(this.scene.getParty().filter((p) => !p.isFainted()).length, 2);
 
+        if (!this.scene.currentBattle) {
+          return true;
+        }
         if (this.scene.currentBattle.double) {
           return pokemonsOnFieldCount === requiredPokemonsOnField;
         }
@@ -695,7 +895,11 @@ export class EncounterPhase extends BattlePhase {
 
     const availablePartyMembers = this.scene.getParty().filter(p => p.isAllowedInBattle());
 
-    if (availablePartyMembers.length > 0 && !availablePartyMembers[0].isOnField()) {
+    const isTutorialPreStarter = this.scene.gameData.tutorialOnboardActive
+      && this.loaded
+      && this.scene.gameData.tutorialBattleScript?.playerStarterSpecies === null;
+
+    if (!isTutorialPreStarter && availablePartyMembers.length > 0 && !availablePartyMembers[0].isOnField()) {
       this.scene.pushPhase(new SummonPhase(this.scene, 0));
     }
 
@@ -708,6 +912,7 @@ export class EncounterPhase extends BattlePhase {
       }
     } else {
       if (availablePartyMembers.length > 1 && availablePartyMembers[1].isOnField()) {
+        const ReturnPhase = getReturnPhase();
         this.scene.pushPhase(new ReturnPhase(this.scene, 1));
       }
       this.scene.pushPhase(new ToggleDoublePositionPhase(this.scene, false));
@@ -726,13 +931,15 @@ export class EncounterPhase extends BattlePhase {
     }
     handleTutorial(this.scene, Tutorial.Access_Menu).then(() => super.end());
 
-    if (this.scene.currentBattle.waveIndex === 1) {
-      ShowRewards(this.scene);
-      ShowRewards(this.scene);
-      ShowRewards(this.scene);
-    }
-    else {
-      ShowRewards(this.scene, 20, false);
+    if (!this.scene.gameData.tutorialOnboardActive) {
+      if (this.scene.currentBattle.waveIndex === 1) {
+        ShowRewards(this.scene);
+        ShowRewards(this.scene);
+        ShowRewards(this.scene);
+      }
+      else {
+        ShowRewards(this.scene, 20, false);
+      }
     }
   }
 

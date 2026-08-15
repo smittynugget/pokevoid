@@ -15,6 +15,12 @@
     "ACC": "Accuracy",
     "EVA": "Evasiveness",
     "HPStat": "HP",
+    "HPcompact": "H",
+    "ATKcompact": "A",
+    "DEFcompact": "D",
+    "SPATKcompact": "SA",
+    "SPDEFcompact": "SD",
+    "SPDcompact": "S",
     "Total": "Total"
   },
   "Type": {
@@ -39,6 +45,7 @@
     "FAIRY": "Fairy",
     "STELLAR": "Stellar",
     "SMITTY": "Smitty",
-    "GLITCH": "Glitch"
+    "GLITCH": "Glitch",
+    "GEN_ONE": "Gen I"
   }
 }

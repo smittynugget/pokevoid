@@ -4,10 +4,11 @@ import Pokemon, { MoveResult, HitResult } from "../field/pokemon";
 import { Stat, getStatName } from "./pokemon-stat";
 import { StatusEffect } from "./status-effect";
 import * as Utils from "../utils";
-import { ChargeAttr, MoveFlags, allMoves } from "./move";
+import { ChargeAttr, Move, MoveFlags, allMoves } from "./move";
 import { Type } from "./type";
 import { BlockNonDirectDamageAbAttr, FlinchEffectAbAttr, ReverseDrainAbAttr, applyAbAttrs } from "./ability";
 import { TerrainType } from "./terrain";
+import { Gender } from "./gender";
 import { WeatherType } from "./weather";
 import { BattleStat } from "./battle-stat";
 import { allAbilities } from "./ability";
@@ -201,6 +202,20 @@ export class TrappedTag extends BattlerTag {
     return i18next.t("battlerTags:trappedOnAdd", { pokemonNameWithAffix: getPokemonNameWithAffix(pokemon) });
   }
 }
+
+export class YuTrappedTag extends TrappedTag {
+  constructor(turnCount: number, sourceMove: Moves, sourceId: number) {
+    super(BattlerTagType.YU_TRAPPED, BattlerTagLapseType.CUSTOM, turnCount, sourceMove, sourceId);
+  }
+
+  canAdd(pokemon: Pokemon): boolean {
+    return !pokemon.isOfType(Type.GHOST) && !pokemon.findTag(t => t instanceof TrappedTag);
+  }
+
+  isSourceLinked(): boolean {
+    return false;
+  }
+}
 export class FlinchedTag extends BattlerTag {
   constructor(sourceMove: Moves) {
     super(BattlerTagType.FLINCHED, [ BattlerTagLapseType.PRE_MOVE, BattlerTagLapseType.TURN_END ], 0, sourceMove);
@@ -209,6 +224,15 @@ export class FlinchedTag extends BattlerTag {
   onAdd(pokemon: Pokemon): void {
     super.onAdd(pokemon);
 
+    if (pokemon.turnData) {
+      pokemon.turnData.flinched = true;
+    }
+    if (this.sourceId) {
+      const source = pokemon.scene.getPokemonById(this.sourceId);
+      if (source?.battleSummonData) {
+        source.battleSummonData.causedFlinchThisTurn = true;
+      }
+    }
     applyAbAttrs(FlinchEffectAbAttr, pokemon, null);
   }
 
@@ -345,6 +369,9 @@ export class InfatuatedTag extends BattlerTag {
       const pkm = pokemon.scene.getPokemonById(this.sourceId);
 
       if (pkm) {
+        if (pkm.gender === Gender.GENDERLESS && pokemon.gender !== Gender.GENDERLESS) {
+          return true;
+        }
         return pokemon.isOppositeGender(pkm);
       } else  {
         console.warn("canAdd: this.sourceId is not a valid pokemon id!", this.sourceId);
@@ -774,7 +801,14 @@ export abstract class DamagingTrapTag extends TrappedTag {
       applyAbAttrs(BlockNonDirectDamageAbAttr, pokemon, cancelled);
 
       if (!cancelled.value) {
-        pokemon.damageAndUpdate(Utils.toDmgValue(pokemon.getMaxHp() / 8));
+        let trapDivisor = 8;
+        if (this.sourceId) {
+          const source = pokemon.scene.getPokemonById(this.sourceId);
+          if (source && source.hasAbility(Abilities.SHADOW_REACH)) {
+            trapDivisor = 6;
+          }
+        }
+        pokemon.damageAndUpdate(Utils.toDmgValue(pokemon.getMaxHp() / trapDivisor));
       }
     }
 
@@ -1132,7 +1166,7 @@ export class TruantTag extends AbilityBattlerTag {
   }
 
   lapse(pokemon: Pokemon, lapseType: BattlerTagLapseType): boolean {
-    if (!pokemon.hasAbility(Abilities.TRUANT)) {
+    if (!pokemon.hasAbility(Abilities.TRUANT) && !pokemon.hasAbility(Abilities.VACAY_SOUL)) {
       return super.lapse(pokemon, lapseType);
     }
     const passive = pokemon.getAbility().id !== Abilities.TRUANT;
@@ -1565,6 +1599,220 @@ export class ExposedTag extends BattlerTag {
     return type === this.defenderType && this.allowedTypes.includes(moveType);
   }
 }
+
+export class SubstituteTag extends BattlerTag {
+  public hp: number;
+
+  constructor(sourceMove?: Moves, sourceId?: number) {
+    super(BattlerTagType.SUBSTITUTE, BattlerTagLapseType.CUSTOM, 0, sourceMove, sourceId);
+    this.hp = 0;
+  }
+
+  onAdd(pokemon: Pokemon): void {
+    this.hp = Math.floor(pokemon.getMaxHp() / 4);
+    pokemon.scene.queueMessage(
+      i18next.t("battlerTags:substituteOnAdd", {
+        pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      })
+    );
+    this.showDollSprite(pokemon);
+  }
+
+  onRemove(pokemon: Pokemon): void {
+    pokemon.scene.queueMessage(
+      i18next.t("battlerTags:substituteOnRemove", {
+        pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      })
+    );
+    this.hideDollSprite(pokemon);
+  }
+
+  lapse(pokemon: Pokemon, lapseType: BattlerTagLapseType): boolean {
+    return this.hp > 0;
+  }
+
+  loadTag(source: BattlerTag | any): void {
+    super.loadTag(source);
+    this.hp = source.hp;
+  }
+
+  private showDollSprite(pokemon: Pokemon): void {
+    const dollKey = pokemon.isPlayer() ? "pkmn__back__sub" : "pkmn__sub";
+    try {
+      if (pokemon.usesCustomFieldSpriteLayout()) {
+        pokemon.setScale(1);
+        const sprite = pokemon.getSprite();
+        sprite.setPosition(0, 0);
+        sprite.setScale(1);
+        sprite.setFlipX(false);
+        const tintSprite = pokemon.getTintSprite();
+        if (tintSprite) {
+          tintSprite.setPosition(0, 0);
+          tintSprite.setScale(1);
+          tintSprite.setFlipX(false);
+        }
+        if ((pokemon as any).portalSprite) {
+          (pokemon as any).portalSprite.setVisible(false);
+        }
+      }
+      const sprite = pokemon.getSprite();
+      sprite.setTexture(dollKey);
+      sprite.setFrame(0);
+      sprite.stop();
+      const tintSprite = pokemon.getTintSprite();
+      if (tintSprite) {
+        tintSprite.setTexture(dollKey);
+        tintSprite.setFrame(0);
+        tintSprite.stop();
+      }
+    } catch {}
+  }
+
+  private hideDollSprite(pokemon: Pokemon): void {
+    try {
+      const key = pokemon.getBattleSpriteKey();
+      const sprite = pokemon.getSprite();
+      sprite.setTexture(key);
+      sprite.setFrame(0);
+      if (sprite.anims && sprite.anims.exists(key)) {
+        sprite.play(key);
+      }
+      const tintSprite = pokemon.getTintSprite();
+      if (tintSprite) {
+        tintSprite.setTexture(key);
+        tintSprite.setFrame(0);
+        if (tintSprite.anims && tintSprite.anims.exists(key)) {
+          tintSprite.play(key);
+        }
+      }
+      if (pokemon.usesCustomFieldSpriteLayout()) {
+        pokemon.updateScale();
+        pokemon.applySpriteState();
+        pokemon.applyYuBackFlip();
+        if ((pokemon as any).portalSprite) {
+          (pokemon as any).portalSprite.setVisible(true);
+        }
+      }
+    } catch {}
+  }
+}
+
+export class TauntTag extends BattlerTag {
+  constructor(sourceMove?: Moves, sourceId?: number) {
+    super(BattlerTagType.TAUNTED, BattlerTagLapseType.TURN_END, 3, sourceMove, sourceId);
+  }
+
+  onAdd(pokemon: Pokemon): void {
+    pokemon.scene.queueMessage(
+      i18next.t("battlerTags:tauntOnAdd", {
+        pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      })
+    );
+  }
+
+  onRemove(pokemon: Pokemon): void {
+    pokemon.scene.queueMessage(
+      i18next.t("battlerTags:tauntOnRemove", {
+        pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      })
+    );
+  }
+
+  lapse(pokemon: Pokemon, lapseType: BattlerTagLapseType): boolean {
+    return super.lapse(pokemon, lapseType);
+  }
+}
+
+export class TormentTag extends BattlerTag {
+  constructor(sourceMove?: Moves, sourceId?: number) {
+    super(BattlerTagType.TORMENT, BattlerTagLapseType.CUSTOM, 0, sourceMove, sourceId);
+  }
+
+  onAdd(pokemon: Pokemon): void {
+    pokemon.scene.queueMessage(
+      i18next.t("battlerTags:tormentOnAdd", {
+        pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      })
+    );
+  }
+
+  onRemove(pokemon: Pokemon): void {
+    pokemon.scene.queueMessage(
+      i18next.t("battlerTags:tormentOnRemove", {
+        pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      })
+    );
+  }
+
+  lapse(pokemon: Pokemon, lapseType: BattlerTagLapseType): boolean {
+    return true;
+  }
+
+  override isSourceLinked(): boolean {
+    return true;
+  }
+}
+
+export class HealBlockedTag extends BattlerTag {
+  constructor(turnCount: number, sourceMove?: Moves, sourceId?: number) {
+    super(BattlerTagType.HEAL_BLOCKED, BattlerTagLapseType.TURN_END, turnCount, sourceMove, sourceId);
+  }
+
+  onAdd(pokemon: Pokemon): void {
+    pokemon.scene.queueMessage(
+      i18next.t("battlerTags:healBlockedOnAdd", {
+        pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      })
+    );
+  }
+
+  onRemove(pokemon: Pokemon): void {
+    pokemon.scene.queueMessage(
+      i18next.t("battlerTags:healBlockedOnRemove", {
+        pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      })
+    );
+  }
+}
+
+export class ItemBlockedTag extends BattlerTag {
+  constructor(turnCount: number, sourceMove?: Moves, sourceId?: number) {
+    super(BattlerTagType.ITEM_BLOCKED, BattlerTagLapseType.TURN_END, turnCount, sourceMove, sourceId);
+  }
+
+  onAdd(pokemon: Pokemon): void {
+    pokemon.scene.queueMessage(
+      i18next.t("battlerTags:itemBlockedOnAdd", {
+        pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      })
+    );
+  }
+
+  onRemove(pokemon: Pokemon): void {
+    pokemon.scene.queueMessage(
+      i18next.t("battlerTags:itemBlockedOnRemove", {
+        pokemonNameWithAffix: getPokemonNameWithAffix(pokemon),
+      })
+    );
+  }
+}
+
+export class ToonImmunityTag extends BattlerTag {
+  constructor(turnCount: integer, sourceMove?: Moves, sourceId?: integer) {
+    super(BattlerTagType.TOON_IMMUNITY, BattlerTagLapseType.TURN_END, turnCount, sourceMove, sourceId);
+  }
+
+  onHit(_target: Pokemon, _source: Pokemon, _move: Move, hitResult: HitResult): boolean {
+    if (hitResult === HitResult.CRIT) {
+      return false;
+    }
+    if (hitResult === HitResult.SUPER_EFFECTIVE || hitResult === HitResult.ONE_HIT_KO) {
+      return false;
+    }
+    return true;
+  }
+}
+
 export function getBattlerTag(tagType: BattlerTagType, turnCount: number, sourceMove: Moves, sourceId: number): BattlerTag {
   switch (tagType) {
     case BattlerTagType.RECHARGING:
@@ -1601,6 +1849,8 @@ export function getBattlerTag(tagType: BattlerTagType, turnCount: number, source
       return new DrowsyTag();
     case BattlerTagType.TRAPPED:
       return new TrappedTag(tagType, BattlerTagLapseType.CUSTOM, turnCount, sourceMove, sourceId);
+    case BattlerTagType.YU_TRAPPED:
+      return new YuTrappedTag(turnCount, sourceMove, sourceId);
     case BattlerTagType.BIND:
       return new BindTag(turnCount, sourceId);
     case BattlerTagType.WRAP:
@@ -1708,6 +1958,22 @@ export function getBattlerTag(tagType: BattlerTagType, turnCount: number, source
   case BattlerTagType.GULP_MISSILE_ARROKUDA:
   case BattlerTagType.GULP_MISSILE_PIKACHU:
     return new GulpMissileTag(tagType, sourceMove);
+    case BattlerTagType.SUBSTITUTE:
+      return new SubstituteTag(sourceMove, sourceId);
+    case BattlerTagType.TAUNTED:
+      return new TauntTag(sourceMove, sourceId);
+    case BattlerTagType.TORMENT:
+      return new TormentTag(sourceMove, sourceId);
+    case BattlerTagType.HEAL_BLOCKED:
+      return new HealBlockedTag(turnCount, sourceMove, sourceId);
+    case BattlerTagType.ITEM_BLOCKED:
+      return new ItemBlockedTag(turnCount, sourceMove, sourceId);
+    case BattlerTagType.TOON_IMMUNITY:
+      return new ToonImmunityTag(turnCount, sourceMove, sourceId);
+    case BattlerTagType.CRIT_PROTECT:
+      return new BattlerTag(tagType, BattlerTagLapseType.TURN_END, turnCount, sourceMove, sourceId);
+    case BattlerTagType.SUPER_CONDUCTOR_CHARGED:
+      return new BattlerTag(tagType, BattlerTagLapseType.CUSTOM, turnCount, sourceMove, sourceId);
     case BattlerTagType.NONE:
     default:
       return new BattlerTag(tagType, BattlerTagLapseType.CUSTOM, turnCount, sourceMove, sourceId);

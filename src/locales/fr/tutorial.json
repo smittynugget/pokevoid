@@ -196,17 +196,6 @@
       "2":"Cela récompense avec de l'ΩOR et protège contre la perte de données."
     }
   },
-  "bounties": {
-    "title": "Système de Primes",
-    "text": { 
-      "1":"Entrez des codes à 6 lettres dans la console pour activer des Primes.",
-      "2":"Les Primes sont des QUÊTES qui vous permettent de gagner de l'ΩOR/ΩOBJETS et sont complètement réutilisables après achèvement !"
-    }
-  },
-  "dailyBounty": {
-    "title": "Prime Quotidienne !",
-    "text": "Une nouvelle prime quotidienne est disponible ! Complétez-la pour gagner de l'ΩOR/ΩOBJETS. Le code est déjà dans la console, activez-le simplement !"
-  },
   "discord": {
     "title": "Discord et Support",
     "text": "Rejoignez le Discord Smittyverse pour les discussions, signalements de bugs et la communauté ! Trouvez des codes de prime et connectez-vous avec d'autres joueurs."
@@ -382,6 +371,13 @@
     "title": { "1": "NOUVEAU Mode FTL" },
     "text": { "1": "FTL (Plus Rapide que la Lumière) est la nouvelle variante chaos la plus rapide ! Sautez directement dans le chaos !" }
   },
+  "firstTimeFtlSkillTree": {
+    "title": { "1": "Choisis tes Pokémon", "2": "Signature et Général" },
+    "text": {
+      "1": "Ton premier voyage commence maintenant. Utilise l’arbre de compétences pour choisir 2 Pokémon pour cette partie.",
+      "2": "Les nœuds avec l’icône Draft proposent des Pokémon. Icône inversée = option de Pokémon signature."
+    }
+  },
   "championSelectEssence": {
     "title": { "1": "Sélection du Champion", "2": "Système d'Essence", "3": "Monter les Champions de Niveau" },
     "text": {
@@ -443,6 +439,103 @@
       "5": "ŒUFS : Obtenez des œufs du gacha d'œufs !",
       "6": "BOUTIQUE : Accès rapide à la boutique !",
       "7": "CARTE : Affichez votre chemin actuel dans le Chaos !"
+    },
+    "smitomTip": {
+      "tutorialBattleType": {
+        "title": "Changement de type !",
+        "1": "Mauvais matchup de type ! Utilise le pouvoir du néant pour changer notre type — les lois de la nature ne s'appliquent plus ici."
+      },
+      "tutorialBattleHeal": {
+        "title": "Nouvelles capacités du néant",
+        "1": "Définis ceci comme notre passif — régénération de PV chaque tour. Rester en vie est la première étape pour gagner. D'habitude."
+      },
+      "tutorialBattleXM": {
+        "title": "Le moveset interdit",
+        "1": "Utilise rapidement la corruption du néant à ton avantage ! Embrasse le pouvoir interdit pour apprendre n'importe quelle attaque à ton pokémon."
+      },
+      "tutorialBattleGlitchReward": {
+        "title": "ALERTE DU NÉANT",
+        "1": "C'est pas bon ! Vite, prends la forme glitch de {{pokemonName}} du NÉANT !"
+      },
+      "tutorialBattleEvolveGlitch": {
+        "title": "ÉVOLUE !",
+        "1": "FAIS ÉVOLUER {{pokemonName}} VERS SA NOUVELLE FORME GLITCH MAINTENANT !!"
+      },
+      "starterSelect": {
+        "title": "Fusion Infinie a appelé...",
+        "1": "Ils veulent te faire croire que ce ne sont que des signatures et des légendaires. Mais regarde de plus près. Les fusions. Elles sont INFINIES.",
+        "2": "*agite son doigt métaphorique vers toi, comme un gorille dingue* Tu comprends ce que ça veut dire ?",
+        "3": "Ça veut dire que chaque combinaison possible existe. CHAQUE. Kenney Rogers. UNE. Quelqu'un a dû toutes les créer. Ou... quelque chose l'a fait..."
+      },
+      "skillTreeFirstNode": {
+        "title": "Bonus Aléatoire GRATUIT",
+        "1": "Après avoir choisi votre premier nœud, des nœuds GRATUITS apparaissent !",
+        "2": "GRATUIT — comme ce jeu ! 3 ans de sa vie. Smitty aurait pu faire un jeu indé facilement dans ce temps.",
+        "3": "Oh smitty, mon doux enfant de l'été, t'avais pas dit que ça prendrait 6 mois max ?",
+        "4": "...Smitty ?",
+        "5": "Smitty cligne deux fois si t'as besoin d'aide...",
+        "6": "Il a cligné...",
+        "7": "Mais oui, les nœuds sont gratuits ! yay nœuds gratuits !"
+      },
+      "skillTreeGlitchFormNode": {
+        "title": "Forme Glitch Scellée",
+        "1": "Collectez assez de compétences et vous débloquerez le nœud scellé — vous donnant accès à une Forme Glitch pour cette partie !",
+        "2": "Collectez des compétences. Obtenez une NOUVELLE FORME !"
+      },
+      "wave35Shared": {
+        "title": "NEW ITEM GET!",
+        "pretext": "On a trouvé un nouvel objet dans le void ! {{featureName}} ! Allons chercher sur internet ce que ça fait.",
+        "posttext": "Si tu es curieux, essaie-le. Tu peux aussi les désactiver dans les paramètres, au cas où ils ne te chatouillent pas comme moi je te chatouille."
+      },
+      "wave35StatSwitchers": {
+        "featureName": "l'Échange de Stats",
+        "1": "Redistribue les stats de base de n'importe quel Pokémon. Scyther avec un niveau de mage en attaque spéciale. Machamp avec une vitesse rivalisant Jolteon. Gengar avec une épaisseur surpassant Snorlax ! Ton équipe, tes règles. Le void vient de te donner le panneau admin. Je suggère d'en abuser. De préférence irresponsablement. Et oui, épaisseur est un mot, j'ai vérifié."
+      },
+      "wave35MoveUpgrades": {
+        "featureName": "les Améliorations de Capacités",
+        "1": "Bienvenue aux Améliorations de Moves ! Fais de Séisme une attaque spéciale. Donne la priorité à Laser Glace. Donne à Tonnerre une chance de gel. Tes moves ne sont pas gravés dans la pierre — ils sont gravés dans le void. Tu aimes ça ? Je l'ai écrit hier, 'gravés dans le void', parce qu'on est dans le void, pas dans la pierre, c'est pas Doctor Stone quoi. Donc ça a du sens. Assez malin non ? Personnellement j'aime bien. Gravés dans le void ça sonne",
+        "2": "--- 2 HEURES PLUS TARD ---",
+        "3": "Probablement niveau Shakespeare honnêtement. Voilà c'est sorti."
+      },
+      "wave35ReleaseItems": {
+        "featureName": "les Objets de Libération",
+        "1": "Tu te souviens du film où le robot dit 'Je reviendrai' ? Les Release Items c'est pareil sauf que le robot revient pas. Ses pièces vont dans un meilleur robot. Et ce robot NE dit PAS non plus 'Je reviendrai' parce qu'il est trop occupé à être inarrêtable. Types, stats, talents ou moves — peuvent être transférés ! Pas besoin de suite."
+      },
+      "shinyPower": {
+        "title": "Un Spécimen Rare Émerge",
+        "1": "Observez : le Pokémon chromatique, en entrant dans sa partie, se voit offrir quatre chemins. Le premier préserve sa forme originale. Deux proposent de nouvelles capacités avec des statistiques redistribuées. Le dernier remplace tout son moveset par des attaques thématiques de type.",
+        "2": "Dans chaque variante alternative, quatre de ses statistiques sont échangées — une adaptation remarquable. Le chromatique qui entre dans la partie est rarement le même qui la termine. La nature guérit. Plus précisément, la version du Vide de la nature. Ce qui est, sans doute, le contraire de guérir."
+      },
+      "rankUp": {
+        "title": "ACCEPTER ou REMODELER ?",
+        "1": "Mon oncle collectionnait ces petites bouteilles de shampoing d'hôtels. Tout un étagère. N'en a jamais ouvert une. Les regardait simplement. Disait que c'était un investissement. Il est en prison maintenant — sans rapport, probablement — mais le principe tient. Tu traverses le Vide, tu ramasses des trucs. Pas du butin, exactement. L'énergie sombre. La corruption. Le film dégoûtant qui se détache de tout ce que tu bats. Ça ne disparaît pas quand tu gagnes.. Tu l'as accumulée. Chaque combat ajoute une couche. Comme une lasagne, sauf que le fromage est maléfique et la grand-mère de personne ne l'a préparée.",
+        "2": "Quand ça se déclenche, tu as deux choix — Accepter : l'énergie du Vide afflue vers l'intérieur au lieu de tout détruire. Même Pokémon, même type, mêmes attaques, âme légèrement plus sombre. Ce qui était déjà fort devient plus fort. Avec chaque Accepter l'énergie sombre s'approfondit, donnant naissance à une forme teintée du Vide, un look que l'abîme appellerait presque le sien. Remodeler : là où Accepter maintient la forme intacte, Remodeler brise la frontière entre espèces. Utilise la corruption pour plier la réalité jusqu'à ce que ton partenaire se tienne dans une nouvelle coquille — les stats reçoivent le même boost qu'avec Accepter, mais le type et la capacité changent. Ce qui les rendait dangereux survit au remodelage. Là où les Pokémon normaux ne font qu'endurer le toucher du Vide, les Duelmons l'accumulent — la corruption s'accumule dans leurs âmes jusqu'à ce que leur Afflux d'Âme unique explose, leur évolution interdite, garantie à certains niveaux. Les Pokémon normaux obtiennent des afflux d'âme aléatoirement en montant de niveau ou via des primes. Les afflux d'âme sont plutôt géniaux, non ? Un peu comme les petites bouteilles de shampoing d'hôtel — mon oncle apprécierait, c'est sûr."
+      },
+      "yuMovePhase": {
+        "title": "Technique Maudite",
+        "1": "« Dans tout le Ciel et la Terre, moi seul suis l'honoré. » Le Vide a dit ça quand il a scellé les attaques signature de ton Duelmon dans le royaume des ombres. Des mots audacieux pour quelque chose qui a oublié que les techniques maudites peuvent s'inverser. Vaincs des ennemis avec ton Duelmon, monte de niveau, et POUVOIR DES OMBRES peut desceller trois coups interdits — deux du propre pool maudit de ton Duelmon, un du royaume des ombres élargi.",
+        "2": "Les primes déclenchent l'Extension du Territoire immédiatement — pas besoin de monter de niveau. Le royaume des ombres n'est pas la prison que le Vide croit. Le Vide y a juste stocké toutes les bonnes choses par accident. Hollow Purple ? Plutôt Hollow Void. Ton Duelmon reprend ses techniques."
+      },
+      "altBuild": {
+        "title": "IMPOSSIBLE !!!",
+        "1": "IMPOSSIBLE. Ce niveau de puissance — ce n'est pas — le scouter ne peut pas avoir raison. Leur LIEN brise chaque limite — leur PUISSANCE propulsée dans deux stats, type RÉÉCRIT, capacités ÉCHANGÉES, moveset REMPLACÉ, une forme entièrement nouvelle que mon équipement refuse de classifier ! Magicarpe peut devenir Dragonborn. Eau et Dragon. BON SANG — C'EST UN MAGICARPE. Et ce n'est pas que le pathétique poisson clown — Solaroc devient Constellation du Néant, Séléroc devient Tisseur de Rêves — CE SONT JUSTE DES PETITS CAILLOUX — L'UN D'EUX N'EST MÊME PAS SI ORANGE ! Leur LIEN brisant des limites dont j'ignorais l'existence. Ces êtres ne suivent pas l'évolution normale — ils ont créé un chemin évolutif différent. Ils montent en rang à la place. Continuellement. Dix fois. Pas possible — non le Prince de tous les Saiyans N'ACCEPTERA PAS CELA.",
+        "2": "Et au rang dix — qu'est-ce que C'EST ?! Ils DÉBLOQUENT DE NOUVELLES CAPACITÉS ? Un sur un Million ? Domaine du Léviathan ? Celles-là ne sont pas censées exister. Le lien entre champion et partenaire transcende la réalité elle-même — et il y en a PLUS là-dehors, chaque lien réécrivant ce pour quoi ces espèces ont été conçues. QUE TOUT BRÛLE ! COMMENT MOI, UN GUERRIER DE RACE SUPÉRIEURE, PUIS-JE ÊTRE SURPASSÉ ?! KAKAROT !!!!!"
+      },
+      "smittyEncounter": {
+        "title": "!!!ALERTE DÉTECTION!!!",
+        "1": "Alerte ! Signatures de radiation en hausse ! Lectures d'auto-importance à des niveaux qui cassent mes instruments ! Scan de la source — la densité d'arrogance seule génère des interférences ! Quelque chose approche et chaque métrique dit qu'on devrait être terrifiés ! Un seul type d'être irradie comme ça — le genre à se mettre dans son propre jeu, se donner une équipe ridicule, et appeler ça du contenu.",
+        "2": "Croisement des signatures du Vide... cet être pourrait être la source du Vide lui-même. Ou — re-scan — un morceau cassé du Vide qui a pris forme physique. Ses Pokémon ne sont pas capturés ni entraînés. Ils se manifestent directement à partir d'énergie du Vide. Champion, j'ai besoin que tu m'écoutes : on peut mourir ici. Vraiment mourir. S'il te plaît, sois prêt."
+      },
+      "postRunWin": {
+        "title": "Merci d'Avoir Réussi",
+        "1": "Tu as gagné. J'ai tout regardé. Chaque moment critique, chaque échange malin, chaque instant qui aurait pu mal tourner et qui n'a pas mal tourné parce que tu l'en as empêché. Le Vide est toujours là mais pour une partie, tu l'as battu.",
+        "2": "De nouveaux modes, quêtes et défis se débloquent. Le jeu s'ouvre après ça. Mais avant de foncer vers la suite — sache que gagner une partie dans le Vide signifie quelque chose. Ça veut dire que ton équipe était forte et tes décisions étaient justes. Je serai là pour la prochaine. Et celle d'après. Maintenant on peut enfin être amis. Quoi. Pourquoi tu me regardes comme ça — c'est comme dans Persona, tu dois passer 40 heures à faire des quêtes secondaires avant que le compagnon te fasse confiance. Alors, allons chasser des ombres — qu'est-ce que t'en dis, confident rang 1 bestie ?"
+      },
+      "journeyQuestShop": {
+        "title": "Le Mode Voyage attend !",
+        "1": "Vous avez débloqué la Quête de Capture des Starters — votre billet pour le Mode Voyage ! Rendez-vous au OmegaMagasin pour l’activer.",
+        "2": "Une fois activée, capturez 5 Pokémon dans n’importe quelle partie pour la compléter et débloquer le Mode Voyage !"
+      }
     }
   }
 }

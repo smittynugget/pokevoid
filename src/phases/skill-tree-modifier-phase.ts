@@ -1,10 +1,10 @@
 import BattleScene from "#app/battle-scene";
 import { Phase } from "#app/phase";
-import { PokemonAltBuildModifier } from "#app/modifier/modifier";
+import { PokemonAltBuildModifier, PermaRunQuestModifier } from "#app/modifier/modifier";
 import { Mode } from "#app/ui/ui";
 import { SkillTreeRewardType, SkillTreeNodeState } from "#app/system/skill-tree-data";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
-import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, AddTypeBallModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator, TypeSwitcherModifierType, PermaMoneyModifierType } from "#app/modifier/modifier-type";
+import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, AddTypeBallModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator, TypeSwitcherModifierType, PermaMoneyModifierType, ForbiddenFormUnlockModifierType, ForbiddenFormUnlockCandidate, QUEST_CONSOLE_CODES, rivalQuestModifiers, QuestModifierTypeGenerator } from "#app/modifier/modifier-type";
 import * as Utils from "#app/utils";
 import { Abilities } from "#enums/abilities";
 import { allAbilities } from "#app/data/ability";
@@ -14,7 +14,7 @@ import { VoucherType } from "#app/system/voucher";
 import { FormChangeItem } from "#enums/form-change-items";
 import { SkillTreeSelectors } from "#app/system/skill-tree-selectors";
 import { ChampionUtils } from "#app/system/champion-utils";
-import { getPokemonSpecies } from "#app/data/pokemon-species";
+import { getPokemonSpecies, universalSmittyForms } from "#app/data/pokemon-species";
 import { QuestUnlockables, QuestState } from "#app/system/game-data.js";
 import { PokemonAltBuildDefinition, POKEMON_ALT_BUILDS, PokemonAltBuildId } from "#app/data/pokemon-alt-buid";
 import { PlayerPokemon } from "#app/field/pokemon";
@@ -22,10 +22,14 @@ import Battle, { BattleType } from "#app/battle";
 import { GameModes, getGameMode } from "#app/game-mode";
 import { PlayableChampionData } from "#app/system/playable-champions.js";
 import { SkillTreeNode } from "#app/system/skill-tree-data.js";
+import i18next from "i18next";
 import { SkillTreePhase, SkillTreePhaseConfig, SkillTreeMode, PokemonSelection } from "#app/phases/skill-tree-phase";
 import { SkillTreeConfig } from "#app/ui/skill-tree-ui-handler";
 import { PermaType } from "#app/modifier/perma-modifiers";
 import { RewardObtainedType } from "#app/ui/reward-obtained-ui-handler";
+import { RewardType } from "#enums/reward-type";
+import { modGlitchFormData } from "#app/data/mod-glitch-form-data.js";
+import { RunDuration, RunType } from "#enums/quest-type-conditions";
 
 interface SkillTreeNodeLike { rewardData: { type: SkillTreeRewardType, data?: any }; name?: string }
 
@@ -33,6 +37,18 @@ export function isPokemonSelectionComplete(activeSkillTree: any, nodes: any[]): 
   if (!activeSkillTree?.unlockedNodes || !nodes) {
     return false;
   }
+
+  const isJourneyTree = nodes.some(n => n?.id?.startsWith("depth1_journey_mystery_"));
+  if (isJourneyTree) {
+    const primaryUnlocked = nodes.filter(n =>
+      n?.id?.match(/^depth1_journey_mystery_[012]$/) &&
+      activeSkillTree.unlockedNodes.has(n.id)
+    ).length;
+    const fourthNode = nodes.find(n => n?.id === "depth1_journey_mystery_3");
+    const fourthDone = !fourthNode || activeSkillTree.unlockedNodes.has(fourthNode.id);
+    return primaryUnlocked >= 2 && fourthDone;
+  }
+
   let signatureCount = 0;
   let generalCount = 0;
   let mysteryExists = false;
@@ -59,11 +75,23 @@ export class SkillTreeModifierPhase extends Phase {
   private placeholderPokemon: PlayerPokemon | null = null;
   private createdDummyBattle: boolean = false;
   private dummyBattle: Battle | null = null;
+  private static forbiddenFormRegistry: { glitch: ForbiddenFormUnlockCandidate[]; smitty: ForbiddenFormUnlockCandidate[] } | null = null;
 
   constructor(scene: BattleScene, node: SkillTreeNode, championData: PlayableChampionData) {
     super(scene);
     this.node = node;
     this.championData = championData;
+  }
+
+  private createSelectPhase(...args: ConstructorParameters<typeof SelectModifierPhase>): SelectModifierPhase {
+    const phase = new SelectModifierPhase(...args);
+    phase.uiDisplayConfig = {
+      title: i18next.t("modifierSelectUiHandler:skillTreeLootTitle"),
+      subtitle: i18next.t("modifierSelectUiHandler:skillTreeLootSubtitle"),
+      isBounty: this.node.rewardData.type === SkillTreeRewardType.BOUNTY_SELECT,
+      isAltBuild: this.node.rewardData.type === SkillTreeRewardType.POKEMON_ALT_BUILD,
+    };
+    return phase;
   }
 
   start(): void {
@@ -73,7 +101,7 @@ export class SkillTreeModifierPhase extends Phase {
     this.addPlaceholderPokemon();
 
     if (this.node.rewardData.type === SkillTreeRewardType.ROGUEBALL_RARITY_SELECT) {
-      this.scene.unshiftPhase(new SelectModifierPhase(
+      this.scene.unshiftPhase(this.createSelectPhase(
         this.scene,
         0,
         undefined,
@@ -89,7 +117,7 @@ export class SkillTreeModifierPhase extends Phase {
       return;
     }
     if (this.node.rewardData.type === SkillTreeRewardType.MASTERBALL_RARITY_SELECT) {
-      this.scene.unshiftPhase(new SelectModifierPhase(
+      this.scene.unshiftPhase(this.createSelectPhase(
         this.scene,
         0,
         undefined,
@@ -105,7 +133,7 @@ export class SkillTreeModifierPhase extends Phase {
       return;
     }
     if (this.node.rewardData.type === SkillTreeRewardType.HEALING_ITEMS) {
-      this.scene.unshiftPhase(new SelectModifierPhase(
+      this.scene.unshiftPhase(this.createSelectPhase(
         this.scene, 0, undefined, false,
         () => this.returnToSkillTree(),
         PathNodeTypeFilter.HEAL_ITEMS,
@@ -115,7 +143,7 @@ export class SkillTreeModifierPhase extends Phase {
       return;
     }
     if (this.node.rewardData.type === SkillTreeRewardType.PARTY_ABILITY_GRANT) {
-      this.scene.unshiftPhase(new SelectModifierPhase(
+      this.scene.unshiftPhase(this.createSelectPhase(
         this.scene, 0, undefined, false,
         () => this.returnToSkillTree(),
         PathNodeTypeFilter.PARTY_ABILITY,
@@ -125,7 +153,7 @@ export class SkillTreeModifierPhase extends Phase {
       return;
     }
     if (this.node.rewardData.type === SkillTreeRewardType.BERRY_ITEMS) {
-      this.scene.unshiftPhase(new SelectModifierPhase(
+      this.scene.unshiftPhase(this.createSelectPhase(
         this.scene, 0, undefined, false,
         () => this.returnToSkillTree(),
         PathNodeTypeFilter.ITEM_BERRY,
@@ -135,7 +163,7 @@ export class SkillTreeModifierPhase extends Phase {
       return;
     }
     if (this.node.rewardData.type === SkillTreeRewardType.ABILITY_SWITCHER) {
-      this.scene.unshiftPhase(new SelectModifierPhase(
+      this.scene.unshiftPhase(this.createSelectPhase(
         this.scene, 0, undefined, false,
         () => this.returnToSkillTree(),
         PathNodeTypeFilter.ABILITY_SWITCHERS,
@@ -145,7 +173,7 @@ export class SkillTreeModifierPhase extends Phase {
       return;
     }
     if (this.node.rewardData.type === SkillTreeRewardType.GENERAL_ITEMS) {
-      this.scene.unshiftPhase(new SelectModifierPhase(
+      this.scene.unshiftPhase(this.createSelectPhase(
         this.scene, 0, undefined, false,
         () => this.returnToSkillTree(),
         PathNodeTypeFilter.NONE,
@@ -158,7 +186,7 @@ export class SkillTreeModifierPhase extends Phase {
       if (!this.scene.moveUpgradesEnabledForRun) {
         const fallback = this.getIncompatibleNodeFallbackOption();
         if (fallback) {
-          this.scene.unshiftPhase(new SelectModifierPhase(
+          this.scene.unshiftPhase(this.createSelectPhase(
             this.scene, 0, undefined, false,
             () => this.returnToSkillTree(),
             PathNodeTypeFilter.NONE, 0,
@@ -171,11 +199,55 @@ export class SkillTreeModifierPhase extends Phase {
         this.end();
         return;
       }
-      this.scene.unshiftPhase(new SelectModifierPhase(
+      this.scene.unshiftPhase(this.createSelectPhase(
         this.scene, 0, undefined, false,
         () => this.returnToSkillTree(),
         PathNodeTypeFilter.MOVE_UPGRADE,
         0, undefined, this.node, this.championData
+      ));
+      this.end();
+      return;
+    }
+    if (this.node.rewardData.type === SkillTreeRewardType.BOUNTY_SELECT) {
+      let modifierOptions: ModifierTypeOption[] = [];
+      const nodeOffset = this.calculateNodeSeedOffset();
+      try {
+        this.scene.executeWithSeedOffset(() => {
+          modifierOptions = this.createBountyModifierOptions();
+        }, nodeOffset);
+      } catch {
+        modifierOptions = [];
+      }
+
+      if (modifierOptions.length === 0) {
+        const fallback = this.getIncompatibleNodeFallbackOption();
+        if (fallback) {
+          this.scene.unshiftPhase(this.createSelectPhase(
+            this.scene, 0, undefined, false,
+            () => this.returnToSkillTree(),
+            PathNodeTypeFilter.NONE, 0,
+            [fallback], this.node, this.championData, 3
+          ));
+        } else {
+          this.removePlaceholderPokemon();
+          this.returnToSkillTree();
+        }
+        this.end();
+        return;
+      }
+
+      this.scene.unshiftPhase(this.createSelectPhase(
+        this.scene,
+        0,
+        undefined,
+        false,
+        () => this.returnToSkillTree(),
+        PathNodeTypeFilter.NONE,
+        0,
+        modifierOptions,
+        this.node,
+        this.championData,
+        3
       ));
       this.end();
       return;
@@ -198,7 +270,7 @@ export class SkillTreeModifierPhase extends Phase {
       return;
     }
 
-     this.scene.unshiftPhase(new SelectModifierPhase(
+     this.scene.unshiftPhase(this.createSelectPhase(
        this.scene,
        0,
        undefined,
@@ -392,6 +464,17 @@ export class SkillTreeModifierPhase extends Phase {
         break;
       }
 
+      case SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN: {
+        const opts = this.createRandomGlitchFormsForRunOptions(3);
+        if (opts.length) {
+          options.push(...opts);
+        } else {
+          const fallbackOpt = this.getIncompatibleNodeFallbackOption();
+          if (fallbackOpt) options.push(fallbackOpt);
+        }
+        break;
+      }
+
       case SkillTreeRewardType.ESSENCE_BUNDLE: {
         this.grantEssenceBundleImmediate();
         break;
@@ -444,9 +527,230 @@ export class SkillTreeModifierPhase extends Phase {
         if (opt) options.push(opt);
         break;
       }
+
+      case SkillTreeRewardType.BOUNTY_SELECT:
+        options.push(...this.createBountyModifierOptions());
+        break;
     }
 
     return options;
+  }
+
+  public createBountyModifierOptions(): ModifierTypeOption[] {
+    const activeConsoleCodes = new Set<string>();
+    const existingQuestModifiers = this.scene.gameData.permaModifiers.findModifiers(m =>
+      m instanceof PermaRunQuestModifier && m.consoleCode
+    ) || [];
+    for (const modifier of existingQuestModifiers) {
+      activeConsoleCodes.add((modifier as PermaRunQuestModifier).consoleCode);
+    }
+    const runQuestModifiers = this.scene.findModifiers(m =>
+      m instanceof PermaRunQuestModifier && !!(m as PermaRunQuestModifier).consoleCode
+    ) || [];
+    for (const modifier of runQuestModifiers) {
+      activeConsoleCodes.add((modifier as PermaRunQuestModifier).consoleCode);
+    }
+
+    type BountyCandidate = { consoleCode: string; generator: QuestModifierTypeGenerator };
+    const candidates: BountyCandidate[] = [];
+
+    const gm = this.scene.gameMode;
+    const currentWave = this.scene.currentBattle?.waveIndex ?? 0;
+
+    for (const [consoleCode, factory] of Object.entries(QUEST_CONSOLE_CODES)) {
+      if (!factory) continue;
+      const generator = (factory as () => QuestModifierTypeGenerator)();
+      if (!(generator instanceof QuestModifierTypeGenerator)) continue;
+      if (generator.config.duration !== RunDuration.SINGLE_RUN) continue;
+      const rt = generator.config.runType;
+      if (rt !== undefined && rt !== RunType.ANY) {
+        const rtOk = gm.isRunType(rt) || (rt === RunType.NIGHTMARE && gm.isChaosMode && currentWave > 1000);
+        if (!rtOk) continue;
+      }
+      const questId = generator.config.questUnlockData?.questId;
+      if (questId != null && this.scene.gameData.checkQuestState(questId, QuestState.COMPLETED)) continue;
+      if (activeConsoleCodes.has(consoleCode)) continue;
+      candidates.push({ consoleCode, generator });
+    }
+
+    for (const [consoleCode, generator] of Object.entries(rivalQuestModifiers)) {
+      if (!(generator instanceof QuestModifierTypeGenerator)) continue;
+      if (generator.config.duration !== RunDuration.SINGLE_RUN) continue;
+      const rt = generator.config.runType;
+      if (rt !== undefined && rt !== RunType.ANY) {
+        const rtOk = gm.isRunType(rt) || (rt === RunType.NIGHTMARE && gm.isChaosMode && currentWave > 1000);
+        if (!rtOk) continue;
+      }
+      const questId = generator.config.questUnlockData?.questId;
+      if (questId != null && this.scene.gameData.checkQuestState(questId, QuestState.COMPLETED)) continue;
+      if (activeConsoleCodes.has(consoleCode)) continue;
+      candidates.push({ consoleCode, generator });
+    }
+
+    if (candidates.length === 0) return [];
+
+    const shuffled = Utils.randSeedShuffle([...candidates]);
+    const selected = shuffled.slice(0, Math.min(3, shuffled.length));
+    const party = this.scene.getParty();
+    const options: ModifierTypeOption[] = [];
+
+    for (const candidate of selected) {
+      const questType = candidate.generator.generateType(party);
+      if (!questType) continue;
+      const originalNewModifier = questType.newModifier.bind(questType);
+      questType.newModifier = (...args: any[]) => {
+        const modifier = originalNewModifier(...args) as PermaRunQuestModifier;
+        if (modifier) {
+          modifier.consoleCode = candidate.consoleCode;
+          modifier.skillTreeBounty = true;
+        }
+        return modifier;
+      };
+      options.push(new ModifierTypeOption(questType, 0, 0));
+    }
+
+    return options;
+  }
+
+  private getForbiddenFormCandidateKey(c: ForbiddenFormUnlockCandidate): string {
+    if (c.kind === "QUEST_FORM") {
+      const q: any = (c as any).questUnlockData;
+      return `quest:${q?.questId}:${q?.rewardType}:${JSON.stringify(q?.rewardId ?? null)}`;
+    }
+    if (c.kind === "MOD_FORM") {
+      return `mod:${(c as any).systemName}`;
+    }
+    return `uni:${(c as any).formName}`;
+  }
+
+  private buildForbiddenFormRegistry(): { glitch: ForbiddenFormUnlockCandidate[]; smitty: ForbiddenFormUnlockCandidate[] } {
+    const gd: any = (this.scene as any).gameData;
+    const glitch: ForbiddenFormUnlockCandidate[] = [];
+    const smitty: ForbiddenFormUnlockCandidate[] = [];
+    const seen = new Set<string>();
+    const questIds = Object.values(QuestUnlockables).filter(v => typeof v === "number") as any[];
+    for (const questId of questIds) {
+      try {
+        const questUnlockData = gd.getQuestUnlockDataFromModifierTypes(questId as any);
+        const rt: any = questUnlockData?.rewardType;
+        const rid: any = questUnlockData?.rewardId;
+        const ids: any[] = Array.isArray(rid) ? rid : [rid];
+        const hasSpeciesId = ids.some(v => typeof v === "number");
+        if (!hasSpeciesId) continue;
+
+        const candidate: ForbiddenFormUnlockCandidate = { kind: "QUEST_FORM", questUnlockData } as any;
+        const key = this.getForbiddenFormCandidateKey(candidate);
+        if (seen.has(key)) continue;
+        seen.add(key);
+
+        if (
+          rt === RewardType.GLITCH_FORM_A ||
+          rt === RewardType.GLITCH_FORM_B ||
+          rt === RewardType.GLITCH_FORM_C ||
+          rt === RewardType.GLITCH_FORM_D ||
+          rt === RewardType.GLITCH_FORM_E
+        ) {
+          glitch.push(candidate);
+        } else if (rt === RewardType.SMITTY_FORM || rt === RewardType.SMITTY_FORM_B) {
+          smitty.push(candidate);
+        }
+      } catch {
+        continue;
+      }
+    }
+    try {
+      for (const [systemName, data] of Object.entries(modGlitchFormData || {})) {
+        const d: any = data as any;
+        if (!d || typeof d.speciesId !== "number" || !d.formName) continue;
+        const candidate: ForbiddenFormUnlockCandidate = {
+          kind: "MOD_FORM",
+          systemName,
+          speciesId: d.speciesId,
+          formName: d.formName
+        } as any;
+        const key = this.getForbiddenFormCandidateKey(candidate);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        glitch.push(candidate);
+      }
+    } catch {
+    }
+    try {
+      for (const f of universalSmittyForms || []) {
+        const formName = (f as any)?.formName;
+        if (!formName || typeof formName !== "string") continue;
+        const candidate: ForbiddenFormUnlockCandidate = { kind: "UNI_SMITTY", formName } as any;
+        const key = this.getForbiddenFormCandidateKey(candidate);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        smitty.push(candidate);
+      }
+    } catch {
+    }
+
+    glitch.sort((a, b) => this.getForbiddenFormCandidateKey(a).localeCompare(this.getForbiddenFormCandidateKey(b)));
+    smitty.sort((a, b) => this.getForbiddenFormCandidateKey(a).localeCompare(this.getForbiddenFormCandidateKey(b)));
+    return { glitch, smitty };
+  }
+
+  private getForbiddenFormRegistry(): { glitch: ForbiddenFormUnlockCandidate[]; smitty: ForbiddenFormUnlockCandidate[] } {
+    if (SkillTreeModifierPhase.forbiddenFormRegistry) return SkillTreeModifierPhase.forbiddenFormRegistry;
+    SkillTreeModifierPhase.forbiddenFormRegistry = this.buildForbiddenFormRegistry();
+    return SkillTreeModifierPhase.forbiddenFormRegistry;
+  }
+
+  private isForbiddenFormCandidateUnlocked(c: ForbiddenFormUnlockCandidate): boolean {
+    try {
+      const gd: any = (this.scene as any).gameData;
+      if (!gd) return true;
+
+      if (c.kind === "MOD_FORM") {
+        const sys = (c as any).systemName;
+        return typeof sys === "string" ? gd.isModFormUnlocked(sys) : true;
+      }
+      if (c.kind === "UNI_SMITTY") {
+        const name = (c as any).formName;
+        return typeof name === "string" ? gd.isUniSmittyFormUnlocked(name) : true;
+      }
+      if (c.kind === "QUEST_FORM") {
+        const q: any = (c as any).questUnlockData;
+        const rt: any = q?.rewardType;
+        const rid: any = q?.rewardId;
+        const ids: any[] = Array.isArray(rid) ? rid : [rid];
+        const speciesIds = ids.filter(v => typeof v === "number") as any[];
+        if (!speciesIds.length) return true;
+        return speciesIds.some(id => gd.canUseGlitchOrSmittyForm(id as Species, rt as any));
+      }
+    } catch {
+    }
+    return true;
+  }
+
+  private createRandomGlitchFormsForRunOptions(count: number): ModifierTypeOption[] {
+    const { glitch, smitty } = this.getForbiddenFormRegistry();
+    const availableGlitch = glitch.filter(c => !this.isForbiddenFormCandidateUnlocked(c));
+    const availableSmitty = smitty.filter(c => !this.isForbiddenFormCandidateUnlocked(c));
+
+    const selected: ForbiddenFormUnlockCandidate[] = [];
+    const selectedKeys = new Set<string>();
+    const pick = (pool: ForbiddenFormUnlockCandidate[]) => {
+      for (const c of pool) {
+        const k = this.getForbiddenFormCandidateKey(c);
+        if (selectedKeys.has(k)) continue;
+        selectedKeys.add(k);
+        selected.push(c);
+        if (selected.length >= count) return;
+      }
+    };
+
+    pick(Utils.randSeedShuffle(availableGlitch));
+    if (selected.length < count) {
+      pick(Utils.randSeedShuffle(availableSmitty));
+    }
+
+    if (!selected.length) return [];
+
+    return selected.map(c => new ModifierTypeOption(new ForbiddenFormUnlockModifierType(c), 0, 0));
   }
 
   private createTmModifierOption(): ModifierTypeOption | null {
@@ -760,11 +1064,11 @@ export class SkillTreeModifierPhase extends Phase {
 
   private createStatBoostModifierOption(): ModifierTypeOption | null {
     const gen = modifierTypes.CHAMPION_POKEMON_STAT_BOOST();
-    const championTypes = [this.championData.type1, this.championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+    const championTypes = (this.championData.id === "red" && this.championData.unlockedTypeBoosters?.length) ? this.championData.unlockedTypeBoosters.filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[] : [this.championData.type1, this.championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
     const type = gen.generateType(this.scene.getParty(), [
       this.championData.id,
       this.node.rewardData.data.stats,
-      this.node.rewardData.data.boostPercent || 0.01,
+      this.node.rewardData.data.boostPercent || 0.03,
       championTypes
     ]);
     if (type) {
@@ -998,6 +1302,14 @@ export class SkillTreeModifierPhase extends Phase {
     }
 
     const originalConfig = (this.scene.gameData as any).tempSkillTreeConfig as SkillTreeConfig;
+    try {
+      const gd = this.scene.gameData as any;
+      gd.tempSkillTreeTransform = gd.tempSkillTreeTransform || {};
+      const nodeId = (this.node as any)?.id;
+      if (nodeId) {
+        gd.tempSkillTreeTransform.purchasedNodeId = nodeId;
+      }
+    } catch {}
 
     if (originalConfig) {
 
@@ -1020,6 +1332,19 @@ export class SkillTreeModifierPhase extends Phase {
             node.state = SkillTreeNodeState.UNLOCKED;
             node.unlocked = true;
           });
+
+          const isJourneyTree = nodes.some((n: any) => n?.id?.startsWith("depth1_journey_mystery_"));
+          if (isJourneyTree) {
+            const primaryMysteryNodes = nodes.filter((n: any) =>
+              n?.id?.match(/^depth1_journey_mystery_[012]$/) &&
+              !activeSkillTree.unlockedNodes.has(n.id)
+            );
+            primaryMysteryNodes.forEach((node: any) => {
+              activeSkillTree.unlockedNodes.add(node.id);
+              node.state = SkillTreeNodeState.UNLOCKED;
+              node.unlocked = true;
+            });
+          }
         }
       }
 
@@ -1030,6 +1355,7 @@ export class SkillTreeModifierPhase extends Phase {
               : SkillTreeMode.POKEMON_SELECTION)
           : originalConfig.mode,
         requiredSelections: originalConfig.requiredSelections,
+        shouldPlayPurchaseAnimation: true,
         onComplete: (selections?: PokemonSelection[]) => {
           this.cleanupDummyBattle();
           if (originalConfig.phaseOnComplete) {
@@ -1114,6 +1440,13 @@ export class SkillTreeModifierPhase extends Phase {
   private cleanupDummyBattle(): void {
     if (this.createdDummyBattle) {
       if (this.scene.currentBattle === this.dummyBattle) {
+        const removeAll = (ctorName: string) => {
+          while (this.scene.tryRemovePhase(p => p.constructor?.name === ctorName)) {}
+        };
+        removeAll("TurnInitPhase");
+        removeAll("CommandPhase");
+        removeAll("EnemyCommandPhase");
+        removeAll("TurnStartPhase");
         this.scene.currentBattle = null;
       }
       this.createdDummyBattle = false;
@@ -1140,7 +1473,7 @@ export class SkillTreeModifierPhase extends Phase {
     const results: ModifierTypeOption[] = [];
     const baseOffset = (this.scene as any).rngOffset || 0;
     const usedAbilities = new Set<Abilities>();
-    const championTypes = [this.championData.type1, this.championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+    const championTypes = (this.championData.id === "red" && this.championData.unlockedTypeBoosters?.length) ? this.championData.unlockedTypeBoosters.filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[] : [this.championData.type1, this.championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
     const maxAttempts = count * 3;
 
     for (let i = 0; i < maxAttempts && results.length < count; i++) {
@@ -1208,28 +1541,21 @@ export class SkillTreeModifierPhase extends Phase {
   private createMultipleTypeSwitcherOptions(count: number = 3): ModifierTypeOption[] {
     const results: ModifierTypeOption[] = [];
     const baseOffset = (this.scene as any).rngOffset || 0;
-    const t1 = this.championData.type1;
-    const t2 = this.championData.type2;
-    const hasT1 = t1 !== undefined && t1 !== null && t1 !== Type.UNKNOWN;
-    const hasT2 = t2 !== undefined && t2 !== null && t2 !== Type.UNKNOWN;
+    const champTypes = (this.championData.id === "red" && this.championData.unlockedTypeBoosters?.length) ? this.championData.unlockedTypeBoosters.filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[] : [this.championData.type1, this.championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
     const allTypes = Utils.getEnumValues(Type).filter((v: number) => v >= Type.NORMAL && v <= Type.FAIRY) as Type[];
 
     type ComboSpec = { primary: Type | null; secondary: Type | null; needsRandom: "primary" | "secondary" | null };
     const comboPool: ComboSpec[] = [];
-    if (hasT1) {
-      comboPool.push({ primary: t1!, secondary: null, needsRandom: null });
-      comboPool.push({ primary: null, secondary: t1!, needsRandom: null });
-      comboPool.push({ primary: t1!, secondary: null, needsRandom: "secondary" });
-      comboPool.push({ primary: null, secondary: t1!, needsRandom: "primary" });
+    for (const ct of champTypes) {
+      comboPool.push({ primary: ct, secondary: null, needsRandom: null });
+      comboPool.push({ primary: null, secondary: ct, needsRandom: null });
+      comboPool.push({ primary: ct, secondary: null, needsRandom: "secondary" });
+      comboPool.push({ primary: null, secondary: ct, needsRandom: "primary" });
     }
-    if (hasT2) {
-      comboPool.push({ primary: t2!, secondary: null, needsRandom: null });
-      comboPool.push({ primary: null, secondary: t2!, needsRandom: null });
-      comboPool.push({ primary: t2!, secondary: null, needsRandom: "secondary" });
-      comboPool.push({ primary: null, secondary: t2!, needsRandom: "primary" });
-    }
-    if (hasT1 && hasT2) {
-      comboPool.push({ primary: t1!, secondary: t2!, needsRandom: null });
+    for (let i = 0; i < champTypes.length; i++) {
+      for (let j = i + 1; j < champTypes.length; j++) {
+        comboPool.push({ primary: champTypes[i], secondary: champTypes[j], needsRandom: null });
+      }
     }
 
     for (let i = 0; i < count; i++) {

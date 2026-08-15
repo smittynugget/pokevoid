@@ -49,5 +49,6 @@
   "smellYaLater": "Also dann, man riecht sich! Ciao!, {{pokemonName}}!",
   "pausedEvolutions": "Entwicklung von {{pokemonName}} wurde pausiert.",
   "selectPokeToPowerUp": "Wähle ein Pokémon zum Verstärken aus.",
-  "selectPokeToRelease": "Wähle ein Pokémon zum Freilassen aus."
+  "selectPokeToRelease": "Wähle ein Pokémon zum Freilassen aus.",
+  "quickInfo": "Kurzinfo"
 }

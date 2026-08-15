@@ -2,7 +2,7 @@ import BattleScene from "../battle-scene";
 import { addTextObject, TextStyle } from "./text";
 import { getTypeDamageMultiplierColor, Type } from "../data/type";
 import { Command } from "./command-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import UiHandler from "./ui-handler";
 import * as Utils from "../utils";
 import { MoveCategory } from "#app/data/move.js";
@@ -11,6 +11,8 @@ import {Button} from "#enums/buttons";
 import Pokemon, { PokemonMove } from "#app/field/pokemon.js";
 import { CommandPhase } from "#app/phases/command-phase.js";
 import DynamicMoveInfoOverlay from "./dynamic-move-info-overlay";
+import { isPrimaryPointer } from "./pointer-utils";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 
 export default class FightUiHandler extends UiHandler {
   public static readonly MOVES_CONTAINER_NAME = "moves";
@@ -28,6 +30,9 @@ export default class FightUiHandler extends UiHandler {
   private moveCategoryIcon: Phaser.GameObjects.Sprite;
   private moveInfoOverlay: DynamicMoveInfoOverlay;
   private moveInfoOverlayActive: boolean = false;
+  private _moveHitZones: Phaser.GameObjects.Zone[] = [];
+  private _fightPattern?: ModalBackgroundHandle;
+  private _fightDetailsPattern?: ModalBackgroundHandle;
 
   protected fieldIndex: integer = 0;
   protected cursor2: integer = 0;
@@ -116,8 +121,53 @@ export default class FightUiHandler extends UiHandler {
 
     const messageHandler = this.getUi().getMessageHandler();
     messageHandler.bg.setVisible(false);
+    if (messageHandler._messageBgPattern) {
+      for (const layer of messageHandler._messageBgPattern.layers) layer.setVisible(false);
+    }
+    messageHandler.commandBacking.setVisible(false);
     messageHandler.commandWindow.setVisible(false);
     messageHandler.movesWindowContainer.setVisible(true);
+
+    if (!this._fightPattern) {
+      this._fightPattern = attachModalBackground(
+        this.scene,
+        messageHandler.movesWindowContainer,
+        () => ({
+          bgX: 0,
+          bgY: -48,
+          bgWidth: 243,
+          bgHeight: 48,
+        }),
+        {
+          mask: false,
+          alphaMultiplier: 0.6,
+          gridInc: -2,
+        }
+      );
+    } else {
+      this._fightPattern.redraw();
+    }
+
+    if (!this._fightDetailsPattern) {
+      this._fightDetailsPattern = attachModalBackground(
+        this.scene,
+        messageHandler.movesWindowContainer,
+        () => ({
+          bgX: 240,
+          bgY: -48,
+          bgWidth: 80,
+          bgHeight: 48,
+        }),
+        {
+          mask: false,
+          alphaMultiplier: 0.6,
+          gridInc: -3,
+        }
+      );
+    } else {
+      this._fightDetailsPattern.redraw();
+    }
+
     this.setCursor(this.getCursor());
     this.displayMoves();
 
@@ -284,6 +334,9 @@ export default class FightUiHandler extends UiHandler {
     const pokemon = (this.scene.getCurrentPhase() as CommandPhase).getPokemon();
     const moveset = pokemon.getMoveset();
 
+    this._moveHitZones.forEach(z => z.destroy());
+    this._moveHitZones = [];
+
     for (let moveIndex = 0; moveIndex < 4; moveIndex++) {
       const moveText = addTextObject(this.scene, moveIndex % 2 === 0 ? 0 : 100, moveIndex < 2 ? 0 : 16, "-", TextStyle.WINDOW);
       moveText.setName("text-empty-move");
@@ -296,6 +349,28 @@ export default class FightUiHandler extends UiHandler {
       }
 
       this.movesContainer.add(moveText);
+
+      if (moveIndex < moveset.length) {
+        const zoneX = (moveIndex % 2 === 0 ? 0 : 100) + 45;
+        const zoneY = (moveIndex < 2 ? 0 : 16) + 8;
+        const zone = this.scene.add.zone(zoneX, zoneY, 95, 16);
+        zone.setOrigin(0.5, 0.5);
+        zone.setInteractive({ useHandCursor: true });
+        const idx = moveIndex;
+        zone.on("pointerover", () => {
+          if (this.getCursor() !== idx) this.setCursor(idx);
+        });
+        zone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+          if (!isPrimaryPointer(pointer)) return;
+          if (this.getCursor() !== idx) {
+            this.setCursor(idx);
+          } else {
+            this.processInput(Button.ACTION);
+          }
+        });
+        this.movesContainer.add(zone);
+        this._moveHitZones.push(zone);
+      }
     }
   }
   private getMoveColor(pokemon: Pokemon, pokemonMove: PokemonMove): string | undefined {
@@ -329,11 +404,20 @@ export default class FightUiHandler extends UiHandler {
     this.accuracyText.setVisible(false);
     this.moveCategoryIcon.setVisible(false);
     this.moveInfoOverlay.clear();
+    this._fightPattern?.clear();
+    this._fightPattern = undefined;
+    this._fightDetailsPattern?.clear();
+    this._fightDetailsPattern = undefined;
     messageHandler.bg.setVisible(true);
+    if (messageHandler._messageBgPattern) {
+      for (const layer of messageHandler._messageBgPattern.layers) layer.setVisible(true);
+    }
     this.eraseCursor();
   }
 
   clearMoves() {
+    this._moveHitZones.forEach(z => z.destroy());
+    this._moveHitZones = [];
     this.movesContainer.removeAll(true);
 
     const opponents = (this.scene.getCurrentPhase() as CommandPhase).getPokemon().getOpponents();

@@ -1,13 +1,10 @@
 import { BattlePhase } from "./battle-phase";
 import { Mode } from "#app/ui/ui.js";
-import { PathNodeType, PathNode, getCurrentBattlePath, selectPath, FixedBattle, BattleType, DynamicMode, getAvailablePathsFromWave, rivalWaves } from "#app/battle.js";
+import { PathNodeType, PathNodeContext, PathNode, getCurrentBattlePath, selectPath, FixedBattle, BattleType, DynamicMode, getAvailablePathsFromWave, rivalWaves } from "#app/battle.js";
 import { SelectModifierPhase } from "./select-modifier-phase.js";
 import { SelectPermaModifierPhase } from "./select-perma-modifier-phase";
-import { CollectedTypeShopPhase } from "./collected-type-shop-phase";
 import { RewardObtainDisplayPhase } from "./reward-obtain-display-phase.js";
 import { ModifierRewardPhase } from "./modifier-reward-phase.js";
-import { EncounterPhase } from "./encounter-phase.js";
-import { ChaosEncounterPhase } from "./chaos-encounter-phase";
 import { RewardObtainedType } from "#app/ui/reward-obtained-ui-handler.js";
 import { modifierTypes, PathNodeTypeFilter } from "#app/modifier/modifier-type.js";
 import { ExpShareModifier, ExtraModifierModifier } from "#app/modifier/modifier.js";
@@ -15,19 +12,13 @@ import { ModifierTier } from "#app/modifier/modifier-tier.js";
 import { PermaType } from "#app/modifier/perma-modifiers.js";
 import * as Utils from "#app/utils.js";
 import i18next from "i18next";
-import { ReturnPhase } from "./return-phase.js";
+import { getReturnPhase } from "./encounter-phase-cache";
 import { ShowTrainerPhase } from "./show-trainer-phase.js";
 import BattleScene, { RecoveryBossMode } from "#app/battle-scene.js";
 import { SkillPointSources } from "../system/skill-point-sources";
 import Overrides from "#app/overrides.js";
 import { PokeballType } from "#enums/pokeball";
-
-export enum PathNodeContext {
-  BATTLE_NODE,
-  ITEM_REWARD_NODE,
-  MONEY_NODE,
-  SPECIAL_REWARD_NODE
-}
+import { getChaosEncounterPhase } from "./encounter-phase-cache";
 
 function extractNodePattern(nodeId: string): string | null {
   const match = nodeId.match(/^(\d+_\d+)/);
@@ -551,6 +542,9 @@ export class BattlePathPhase extends BattlePhase {
   }
 
   private handleWildPokemonNode(node: PathNode): void {
+    if (!this.scene.fieldUI?.visible) {
+      this.scene.restoreBattleField();
+    }
     const lastBattle = this.scene.currentBattle;
     this.scene.newBattle(node.wave, BattleType.WILD);
     if(node.dynamicMode) {
@@ -564,10 +558,14 @@ export class BattlePathPhase extends BattlePhase {
     if (!this.scene.currentBattle.turnCommands) {
       this.scene.currentBattle.turnCommands = [];
     }
+    const ChaosEncounterPhase = getChaosEncounterPhase();
     this.scene.pushPhase(new ChaosEncounterPhase(this.scene, false));
   }
 
   private handleTrainerBattleNode(node: PathNode): void {
+    if (!this.scene.fieldUI?.visible) {
+      this.scene.restoreBattleField();
+    }
     const lastBattle = this.scene.currentBattle;
     if(node.dynamicMode) {
       this.scene.dynamicMode = node.dynamicMode;
@@ -585,10 +583,12 @@ export class BattlePathPhase extends BattlePhase {
     }
 
     const playerField = this.scene.getPlayerField();
+    const ReturnPhase = getReturnPhase();
     playerField.forEach((_, p) => this.scene.unshiftPhase(new ReturnPhase(this.scene, p)));
     this.scene.pushPhase(new ShowTrainerPhase(this.scene));
 
-    this.scene.pushPhase(new ChaosEncounterPhase(this.scene, false));
+    const ChaosEncPhase = getChaosEncounterPhase();
+    this.scene.pushPhase(new ChaosEncPhase(this.scene, false));
   }
 
   private getPathNodeTypeFilter(nodeType: PathNodeType): PathNodeTypeFilter {
@@ -838,12 +838,16 @@ export class BattlePathPhase extends BattlePhase {
       { weight: 4, outcome: 'ULTRA_BALL_ITEMS' },
       { weight: 1, outcome: 'MASTER_BALL_ITEMS' },
       { weight: 10, outcome: 'ABILITY_SWITCHERS' },
-      { weight: 10, outcome: 'RELEASE_ITEMS' },
+      ...(this.scene.releaseItemsEnabledForRun
+        ? [{ weight: 10, outcome: 'RELEASE_ITEMS' }]
+        : []),
       { weight: 10, outcome: 'MINTS' },
       { weight: 10, outcome: 'PP_MAX' },
       { weight: 10, outcome: 'COLLECTED_TYPE' },
       { weight: 1, outcome: 'COLLECTED_SHOP' },
-      { weight: 10, outcome: 'STAT_SWITCHERS' },
+      ...(this.scene.statSwitchersEnabledForRun
+        ? [{ weight: 10, outcome: 'STAT_SWITCHERS' }]
+        : []),
       { weight: 10, outcome: 'TYPE_SWITCHER' },
       { weight: 10, outcome: 'PASSIVE_ABILITY' },
       { weight: 12, outcome: 'ANY_TMS' },
@@ -1267,15 +1271,19 @@ export class BattlePathPhase extends BattlePhase {
   }
 
   private handleCollectedShopNode(node: PathNode): void {
-    this.scene.unshiftPhase(new CollectedTypeShopPhase(
-      this.scene,
-      0,
-      undefined,
-      false,
-      this.createReturnToBattlePathCallback(),
-      PathNodeTypeFilter.NONE,
-      0
-    ));
+    const scene = this.scene;
+    const callback = this.createReturnToBattlePathCallback();
+    import("./collected-type-shop-phase").then(({ CollectedTypeShopPhase }) => {
+      scene.unshiftPhase(new CollectedTypeShopPhase(
+        scene,
+        0,
+        undefined,
+        false,
+        callback,
+        PathNodeTypeFilter.NONE,
+        0
+      ));
+    });
   }
 
   end(): void {

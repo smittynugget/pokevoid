@@ -1,6 +1,6 @@
 import BattleScene from "../battle-scene";
 import OptionSelectUiHandler from "./settings/option-select-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import * as Utils from "../utils";
 import { TextStyle, addTextObject, getTextStyleOptions } from "./text";
 import { getBattleCountSplashMessage, getSplashMessages } from "../data/splash-messages";
@@ -13,6 +13,8 @@ import {TitlePhase} from "#app/phases/title-phase";
 import {RewardObtainDisplayPhase} from "#app/phases/reward-obtain-display-phase";
 import {RewardObtainedType} from "#app/ui/reward-obtained-ui-handler";
 import {ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
+import { ModifierTooltipUtils, ModifierTooltipData } from "#app/ui/modifier-tooltip-utils";
+import { SkillTreeRarity } from "#app/system/skill-tree-data";
 
 export default class TitleUiHandler extends OptionSelectUiHandler {
   private titleContainer: Phaser.GameObjects.Container;
@@ -26,14 +28,21 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
   private versionText: Phaser.GameObjects.Text;
   private taglineClickCount: number = 0;
   private taglineClickTimer: NodeJS.Timeout | null = null;
+  private _smitomGeneration: number = 0;
   private versionClickCount: number = 0;
   private versionClickTimer: NodeJS.Timeout | null = null;
   private exclamationTimeEvent: Phaser.Time.TimerEvent | null = null;
+  private titleComposeComplete: boolean = false;
 
   private titleStatsTimer: NodeJS.Timeout | null;
 
   constructor(scene: BattleScene, mode: Mode = Mode.TITLE) {
     super(scene, mode);
+  }
+
+  preShowForAnimation(): void {
+    this.titleContainer.setAlpha(0);
+    this.titleContainer.setVisible(true);
   }
 
   setup() {
@@ -53,8 +62,11 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
 
     const taglineText = addTextObject(this.scene, logo.x, logo.y + logo.displayHeight + 3, i18next.t("menu:tagline"), TextStyle.TITLE_MESSAGE, { fontSize: "40px" });
     taglineText.setOrigin(0.5, 0);
+    taglineText.setShadow(4, 4, "#9b4dca");
+    taglineText.setStroke("", 0);
     taglineText.setInteractive({ useHandCursor: true });
     taglineText.on('pointerdown', () => {
+      if ((this.scene as BattleScene).ui.getMode() !== Mode.TITLE) return;
       this.handleTaglineClick();
     });
     this.titleContainer.add(taglineText);
@@ -81,6 +93,7 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
     this.titleContainer.add(this.versionText);
     this.versionText.setInteractive({ useHandCursor: true });
     this.versionText.on('pointerdown', () => {
+        if ((this.scene as BattleScene).ui.getMode() !== Mode.TITLE) return;
         this.handleVersionClick();
     });
 
@@ -124,6 +137,7 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
   }
 
   private setupSmittySprite(): void {
+    if (this.smittySprite) return;
     if (!this.textureLoaded) {
         console.error("[TitleUiHandler] Smitty texture not loaded.");
         return;
@@ -144,16 +158,20 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
     this.smittySprite.setOrigin(0.5, 1);
     this.smittySprite.setScale(0.2);
 
+    const cappedSpeed = Math.min((this.scene as BattleScene).gameSpeed, 3);
+    const bobDuration = Math.ceil(3500 / cappedSpeed);
     this.scene.tweens.add({
         targets: this.smittySprite,
         angle: { from: -2, to: 2 },
-        duration: 3500,
+        duration: Utils.fixedInt(bobDuration),
         ease: 'Sine.easeInOut',
         yoyo: true,
         repeat: -1
     });
+
     if (this.smittySprite.texture.frameTotal > 1) {
         this.smittySprite.play(spriteKey);
+        this.smittySprite.anims.timeScale = 3;
     }
 
     if (this.scene.spritePipeline) {
@@ -164,6 +182,7 @@ export default class TitleUiHandler extends OptionSelectUiHandler {
 
     this.smittySprite.setInteractive({ useHandCursor: true });
     this.smittySprite.on('pointerdown', () => {
+        if ((this.scene as BattleScene).ui.getMode() !== Mode.TITLE) return;
         this.activateSmitomTalk();
     });
   }
@@ -240,7 +259,7 @@ public activateSmitomTalk(initialTalk: boolean = false): void {
                     }
                 }
                 this.scene.gameData.localSaveAll(this.scene);
-                this.scene.pushPhase(new TitlePhase(this.scene)) }
+                this.scene.pushPhase(new TitlePhase(this.scene, false, true)) }
         ));
         this.scene.shiftPhase();
 }
@@ -265,14 +284,24 @@ private setupExclamationWindow(x: number, y: number): void {
             exclamationSprite.setScale(0.20);
             exclamationSprite.setOrigin(0.5, 0.5);
 
+            exclamationSprite.setInteractive({ useHandCursor: true });
+            exclamationSprite.on('pointerover', () => {
+              if ((this.scene as BattleScene).ui.getMode() !== Mode.TITLE) return;
+              const data: ModifierTooltipData = { title: i18next.t("battleScene:tooltipSmitom"), subtitle: "", body: i18next.t("battleScene:tooltipSmitomDesc"), rarity: SkillTreeRarity.LEGENDARY, hasDetails: false };
+              const wm = exclamationSprite.getWorldTransformMatrix();
+              ModifierTooltipUtils.show(this.scene as BattleScene, data, { x: wm.tx, y: wm.ty });
+            });
+            exclamationSprite.on('pointerout', () => ModifierTooltipUtils.hideIfNotPinned(this.scene as BattleScene));
+
             this.exclamationWindow.add(exclamationSprite);
 
             this.titleContainer.add(this.exclamationWindow);
 
+            const exclamCappedSpeed = Math.min((this.scene as BattleScene).gameSpeed, 3);
             this.scene.tweens.add({
                 targets: this.exclamationWindow,
                 y: relativeY - 2,
-                duration: 2500,
+                duration: Utils.fixedInt(Math.ceil(2500 / exclamCappedSpeed)),
                 ease: 'Sine.easeInOut',
                 yoyo: true,
                 repeat: -1
@@ -323,6 +352,9 @@ private setupExclamationWindow(x: number, y: number): void {
     }
 
     if (ret) {
+        this._smitomGeneration++;
+        const gen = this._smitomGeneration;
+
         this.splashMessage = Utils.randItem(getSplashMessages());
         this.splashMessageText.setText(this.splashMessage.replace("{COUNT}", "?"));
 
@@ -332,51 +364,41 @@ private setupExclamationWindow(x: number, y: number): void {
             this.eventDisplay.show();
         }
 
-        this.titleContainer.setAlpha(0);
-        this.titleContainer.setVisible(true);
+        if (this.titleComposeComplete && this.titleContainer?.alpha >= 1) {
+            this.titleContainer.setVisible(true);
+            (this.scene as BattleScene).signalTitleComposed();
+            this.config?.postComposeCallback?.();
+        } else {
+            this.titleContainer.setAlpha(0);
+            this.titleContainer.setVisible(true);
 
-        if (this.optionSelectContainer) {
-            let xPos = 85;
-            let yPos = -6;
-            const lang = i18next.resolvedLanguage;
-            if (lang === 'en') {
-                xPos = 85;
-            } else if (lang === 'es' || lang === 'pt-BR') {
-                xPos = 105;
+            if (this.optionSelectContainer) {
+                const bgWidth = this.optionSelectBg.width;
+                const xPos = bgWidth - 1;
+                let yPos = -6;
+                const lang = i18next.resolvedLanguage;
+                if (lang === 'ja') {
+                    yPos = -9;
+                }
+                this.optionSelectContainer.setPosition(xPos, yPos);
+                this.optionSelectContainer.setAlpha(0);
+                this.optionSelectBg.setVisible(false);
             }
-            else if (lang === 'it') {
-                xPos = 80;
-            }
-            else if (lang === 'de') {
-                xPos = 95;
-            }
-            else if (lang === 'zh-CN' || lang === 'zh-TW') {
-                xPos = 65;
-            }
-            else if (lang === 'ja') {
-                xPos = 82;
-                yPos = -9;
-            }
-            else if (lang === 'ko') {
-                xPos = 75;
-            }
-            else if (lang === 'ru') {
-                xPos = 75;
-            }
-            this.optionSelectContainer.setPosition(xPos, yPos);
-            this.optionSelectBg.setVisible(false);
+
+            this.scene.tweens.add({
+                targets: [ this.titleContainer, this.optionSelectContainer, ui.getMessageHandler().bg ],
+                duration: Utils.fixedInt(325),
+                alpha: (target: any) => target === ui.getMessageHandler().bg ? 0 : 1,
+                ease: "Sine.easeInOut",
+                onStart: () => {
+                },
+                onComplete: () => {
+                    this.titleComposeComplete = true;
+                    (this.scene as BattleScene).signalTitleComposed();
+                    this.config?.postComposeCallback?.();
+                }
+            });
         }
-
-        this.scene.tweens.add({
-            targets: [ this.titleContainer, ui.getMessageHandler().bg ],
-            duration: Utils.fixedInt(325),
-            alpha: (target: any) => target === this.titleContainer ? 1 : 0,
-            ease: "Sine.easeInOut",
-            onStart: () => {
-            },
-            onComplete: () => {
-            }
-        });
 
         const smitomButton = document.getElementById("apadSmitom");
         if (smitomButton) {
@@ -386,6 +408,7 @@ private setupExclamationWindow(x: number, y: number): void {
         if (!this.smittySprite) {
             this.loadSmittyTexture()
                 .then(() => {
+                    if (gen !== this._smitomGeneration) return;
                     this.setupSmittySprite();
                     if(!this.exclamationWindow && this.scene.gameData.isSmitomRewardTime()) {
                         this.setupExclamationWindow(this.smittySprite.x - 60, this.smittySprite.y - 80);
@@ -408,6 +431,18 @@ private setupExclamationWindow(x: number, y: number): void {
 
   clear(): void {
     super.clear();
+    this.titleComposeComplete = false;
+    this._smitomGeneration++;
+
+    if (this.smittySprite) {
+        this.smittySprite.setVisible(false);
+        this.smittySprite.disableInteractive();
+        this.smittySprite.destroy();
+        this.smittySprite = null;
+        this.textureLoaded = false;
+    }
+
+    this.titleContainer?.setVisible(false);
 
     const ui = this.getUi();
 
@@ -417,9 +452,9 @@ private setupExclamationWindow(x: number, y: number): void {
     this.titleStatsTimer = null;
 
     this.scene.tweens.add({
-        targets: [ this.titleContainer, ui.getMessageHandler().bg ],
+        targets: [ this.titleContainer, this.optionSelectContainer, ui.getMessageHandler().bg ],
         duration: Utils.fixedInt(325),
-        alpha: (target: any) => target === this.titleContainer ? 0 : 1,
+        alpha: (target: any) => target === ui.getMessageHandler().bg ? 1 : 0,
         ease: "Sine.easeInOut"
     });
 
@@ -431,12 +466,6 @@ private setupExclamationWindow(x: number, y: number): void {
     if (this.exclamationTimeEvent) {
         this.exclamationTimeEvent.remove();
         this.exclamationTimeEvent = null;
-    }
-
-    if (this.smittySprite) {
-        this.smittySprite.destroy();
-        this.smittySprite = null;
-        this.textureLoaded = false;
     }
 
     if (this.exclamationWindow) {
@@ -463,7 +492,7 @@ export function activateSmitomTalk(scene: BattleScene, initialTalk: boolean = fa
         }
       }
       scene.gameData.localSaveAll(scene);
-      scene.pushPhase(new TitlePhase(scene));
+      scene.pushPhase(new TitlePhase(scene, false, true));
     }
   ));
   scene.shiftPhase();

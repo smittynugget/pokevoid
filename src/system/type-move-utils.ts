@@ -1,7 +1,7 @@
 import BattleScene from "../battle-scene";
 import * as Utils from "../utils";
-import { Type } from "../data/type";
-import { Moves } from "../enums/moves";
+import { Type, getTypeDamageMultiplier } from "../data/type";
+import { Moves, isYuMove } from "../enums/moves";
 import { allMoves, MoveFlags } from "../data/move";
 import { tmPoolTiers } from "../data/tms";
 import { ModifierTier } from "../modifier/modifier-tier";
@@ -13,6 +13,7 @@ function buildWeightedPool(targetType: Type, excludedMoveIds: Moves[]): Weighted
   const movePool = Utils.getEnumValues(Moves).filter((m: Moves) => {
     const move = allMoves[m];
     return move && m !== Moves.NONE
+      && !isYuMove(m)
       && move.type === targetType
       && !move.hasFlag(MoveFlags.IGNORE_VIRTUAL)
       && !move.name.endsWith(" (N)")
@@ -113,4 +114,28 @@ export function assignTypeThemedMoves(_scene: BattleScene, pokemon: PlayerPokemo
       pokemon.moveset.push(new PokemonMove(selectedMoves[i], 0, 0));
     }
   }
+}
+
+export function getDefensiveWeaknesses(defTypes: Type[]): Type[] {
+  const weaknesses: Type[] = [];
+  for (let t = Type.NORMAL; t <= Type.FAIRY; t++) {
+    let product = 1;
+    for (const d of defTypes) {
+      const mult = getTypeDamageMultiplier(t, d);
+      if (mult === 0) { product = 0; break; }
+      product *= mult;
+    }
+    if (product >= 2) weaknesses.push(t);
+  }
+  return weaknesses;
+}
+
+export function getCoverageTypes(weaknesses: Type[]): Type[] {
+  const coverageSet = new Set<Type>();
+  for (const w of weaknesses) {
+    for (let t = Type.NORMAL; t <= Type.FAIRY; t++) {
+      if (getTypeDamageMultiplier(t, w) >= 2) coverageSet.add(t);
+    }
+  }
+  return [...coverageSet];
 }

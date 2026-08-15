@@ -78,5 +78,6 @@
   "stoleItem": " robó\n{{stolenItemType}} de {{defenderName}}!",
   "sillyPressure": " está ejerciendo Presión Tonta!",
   "questionPressure": " está ejerciendo Presión?",
-  "allOrNothingPressure": " está ejerciendo Presión de TODO O NADA!"
+  "allOrNothingPressure": " está ejerciendo Presión de TODO O NADA!",
+  "windboltDiscard": "¡{{pokemonName}} consumió una baya equipada\ny causó daño menor a {{targetName}}!"
 }

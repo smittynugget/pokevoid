@@ -34,5 +34,8 @@
   "sortByCost": "Kosten",
   "sortByCandies": "Anzahl Bonbons",
   "sortByIVs": "IS-Werte",
-  "sortByName": "Name"
+  "sortByName": "Name",
+  "fusionsFilter": "Fusionen",
+  "hasFusions": "Fusionen - Ja",
+  "noFusions": "Fusionen - Nein"
 }

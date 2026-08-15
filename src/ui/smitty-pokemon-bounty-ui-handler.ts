@@ -1,5 +1,5 @@
 import BountyUiHandler from "./bounty-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import BattleScene from "../battle-scene";
 import { SMITTY_CONSOLE_CODES } from "../modifier/modifier-type";
 import { SMITTY_FORM_ITEMS } from "../data/pokemon-forms";

@@ -17,7 +17,7 @@
   "skillsSubheader": "スキルはスキルツリーにランダムで出現します。",
   "rarity": {
     "common": "コモン",
-    "great": "グレート", 
+    "great": "グレート",
     "ultra": "ウルトラ",
     "master": "マスター",
     "rogue": "ローグ",
@@ -42,11 +42,22 @@
     "defaultRevive": "{{types}}ポケモンの復活確率を{{percent}}%増加",
     "defaultTokens": "スキルツリートークンを受け取りノードを解放",
     "defaultPoints": "スキルポイントを受け取りスキルを購入",
-    "typesFallback": "不明"
+    "typesFallback": "不明",
+    "essenceRequiredTooltip": "必要なエッセンス",
+    "essenceRequiredTooltipDesc": "エッセンスを消費してあなたのチャンピオンをレベルアップ。ポケモンを倒してそのタイプのエッセンスを獲得しよう。",
+    "essenceLoreNote": "特殊エッセンスについて: SMITTYはSMITTYトレーナーから獲得。GLITCHはグリッチポケモンから。GEN IはGen Iポケモンから。",
+    "abilityHeader": "特性",
+    "descriptionHeader": "説明",
+    "itemDescriptionHeader": "アイテム説明",
+    "requiredEssenceHeader": "必要エッセンス",
+    "skillInfoHeader": "スキル情報"
   },
   "skillList": {
     "levelPrefix": "Lv {{level}}",
     "unknownSkill": "???"
+  },
+  "skillBar": {
+    "next": "次"
   },
   "defaultSkillLabels": {
     "tms": "{{types}} わざマシン",
@@ -64,10 +75,24 @@
     "fusionPriority": "{{types}} フュージョン優先度"
   },
   "button": {
-    "useEssence": "エッセンスを使う"
+    "useEssence": "エッセンスを使う",
+    "levelUp": "レベルアップ",
+    "notEnoughEssence": "レベルアップに必要:",
+    "required": "必要"
   },
-  "brock": { "description": "岩のチャンピオン" },
-  "misty": { "description": "水のチャンピオン" },
+  "brock": {
+    "description": "岩のチャンピオン",
+    "essenceRequirement": "{{ground}}じめん + {{rock}}いわエッセンスが必要"
+  },
+  "misty": {
+    "description": "水のチャンピオン",
+    "essenceRequirement": "{{water}}みずエッセンスが必要"
+  },
+  "red": {
+    "description": "伝説…",
+    "unlockRequirement": "全チャンピオンを解放し、カオスまたはガントレットでステージ6のライバルレッドを倒す",
+    "essenceRequirement": "{{genOne}}第1世代エッセンスが必要"
+  },
   "apollo": {
     "name": "アポロ",
     "description": "太陽のチャンピオン"
@@ -76,24 +101,36 @@
     "name": "ダイアナ",
     "description": "月のチャンピオン"
   },
-  "generic": { "description": "デフォルトのチャンピオン。" },
-  "champions": {
-  "title": "チャンピオンを選んでください",
-  "brock": {
-    "name": "タケシ - いわタイプの専門家",
-    "description": "じめんといわタイプのマスター",
-    "essenceRequirement": "{{ground}}じめん + {{rock}}いわエッセンスが必要"
-  },
-  "misty": {
-    "name": "カスミ - みずタイプの専門家", 
-    "description": "みずタイプのマスター",
-    "essenceRequirement": "{{water}}みずエッセンスが必要"
-  },
   "generic": {
-    "name": "バランス型チャンピオン",
-    "description": "タイプ特化なし",
+    "description": "デフォルトのチャンピオン。",
     "essenceRequirement": "特別な条件なし"
-  }
+  },
+  "champions": {
+    "title": "チャンピオンを選んでください",
+    "brock": {
+      "name": "タケシ - いわタイプの専門家",
+      "description": "じめんといわタイプのマスター",
+      "essenceRequirement": "{{ground}}じめん + {{rock}}いわエッセンスが必要"
+    },
+    "misty": {
+      "name": "カスミ - みずタイプの専門家",
+      "description": "みずタイプのマスター",
+      "essenceRequirement": "{{water}}みずエッセンスが必要"
+    },
+    "red": {
+      "name": "レッド - 伝説のチャンピオン",
+      "description": "伝説…",
+      "unlockRequirement": "全チャンピオンを解放し、カオスまたはガントレットでステージ6のライバルレッドを倒す",
+      "essenceRequirement": "{{genOne}}第1世代エッセンスが必要"
+    },
+    "generic": {
+      "name": "バランス型チャンピオン",
+      "description": "タイプ特化なし",
+      "essenceRequirement": "特別な条件なし"
+    },
+    "generationShort": "第{{generation}}世代"
+  },
+  "generationShort": "第{{generation}}世代",
+  "skillsOfTitle": "{{subtitle}}のスキル",
+  "switchChampion": "もう一人"
 }
-}
-

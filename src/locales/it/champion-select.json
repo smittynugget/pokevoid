@@ -42,11 +42,22 @@
     "defaultRevive": "Aumenta la probabilità di rianimazione per Pokémon {{types}} del {{percent}}%",
     "defaultTokens": "Ricevi Gettoni dell'Albero delle Abilità per sbloccare nodi",
     "defaultPoints": "Ricevi Punti Abilità per acquistare abilità",
-    "typesFallback": "Sconosciuto"
+    "typesFallback": "Sconosciuto",
+    "essenceRequiredTooltip": "Essenza Richiesta",
+    "essenceRequiredTooltipDesc": "Spendi essenze per far salire di livello il tuo campione. Sconfiggi Pokémon per ottenere essenze del loro tipo.",
+    "essenceLoreNote": "Nota sulle Essenze Uniche: SMITTY ottenute dagli allenatori SMITTY. GLITCH dai pokémon glitch. GEN I dai pokémon di Gen I.",
+    "abilityHeader": "ABILITÀ",
+    "descriptionHeader": "DESCRIZIONE",
+    "itemDescriptionHeader": "DESCRIZIONE STRUMENTO",
+    "requiredEssenceHeader": "ESSENZA RICHIESTA",
+    "skillInfoHeader": "INFO ABILITÀ"
   },
   "skillList": {
     "levelPrefix": "Lv {{level}}",
     "unknownSkill": "???"
+  },
+  "skillBar": {
+    "next": "PROSSIMA"
   },
   "defaultSkillLabels": {
     "tms": "MT {{types}}",
@@ -63,9 +74,25 @@
     "catchBonus": "Bonus Cattura {{types}}",
     "fusionPriority": "Priorità Fusione {{types}}"
   },
-  "button": { "useEssence": "Usa Essenza" },
-  "brock": { "description": "Campione della Roccia" },
-  "misty": { "description": "Campione dell'Acqua" },
+  "button": {
+    "useEssence": "Usa Essenza",
+    "levelUp": "Sali di Livello",
+    "notEnoughEssence": "Per Salire:",
+    "required": "RICHIESTO"
+  },
+  "brock": {
+    "description": "Campione della Roccia",
+    "essenceRequirement": "Richiede {{ground}} Terra + {{rock}} essenze Roccia"
+  },
+  "misty": {
+    "description": "Campione dell'Acqua",
+    "essenceRequirement": "Richiede {{water}} essenze Acqua"
+  },
+  "red": {
+    "description": "La leggenda...",
+    "unlockRequirement": "Sblocca tutti i campioni e sconfiggi il Rivale Rosso Fase 6 in Caos o Sfida",
+    "essenceRequirement": "Richiede {{genOne}} essenze Gen I"
+  },
   "apollo": {
     "name": "Apollo",
     "description": "Campione del Sole"
@@ -74,7 +101,10 @@
     "name": "Diana",
     "description": "Campione della Luna"
   },
-  "generic": { "description": "Il campione predefinito." },
+  "generic": {
+    "description": "Il campione predefinito.",
+    "essenceRequirement": "Nessun requisito speciale"
+  },
   "champions": {
     "title": "Scegli il tuo Campione",
     "brock": {
@@ -87,10 +117,20 @@
       "description": "Maestra dei tipi Acqua",
       "essenceRequirement": "Richiede {{water}} essenze Acqua"
     },
+    "red": {
+      "name": "Rosso - Campione Leggendario",
+      "description": "La leggenda...",
+      "unlockRequirement": "Sblocca tutti i campioni e sconfiggi il Rivale Rosso Fase 6 in Caos o Sfida",
+      "essenceRequirement": "Richiede {{genOne}} essenze Gen I"
+    },
     "generic": {
       "name": "Campione Bilanciato",
       "description": "Nessuna specializzazione di tipo",
       "essenceRequirement": "Nessun requisito speciale"
-    }
-  }
+    },
+    "generationShort": "GEN {{generation}}"
+  },
+  "generationShort": "GEN {{generation}}",
+  "skillsOfTitle": "ABILITÀ DI {{subtitle}}",
+  "switchChampion": "Altra Metà"
 }

@@ -67,11 +67,11 @@
       "description": "使一只寶可夢的等級提升{{levels}}級。"
     },
     "PokemonBaseStatBoosterModifierType": {
-      "description": "增加10%持有者的{{statName}}，\n个体值越高堆叠上限越高。"
+      "description": "增加8%持有者的{{statName}}，\n个体值越高堆叠上限越高。"
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "便宜",
-      "description": "增加1%持有者的{{statName}}。"
+      "description": "增加3%持有者的{{statName}}。"
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "所有宝可梦完全回复HP。"
@@ -410,7 +410,7 @@
       "statLabel": "XM（任意招式学习器）"
     },
     "AnyTmModifierTypeWithInfo": {
-      "name": "++XM{{moveId}} - {{moveName}}++",
+      "name": "XM{{moveId}} - {{moveName}}",
       "description": "让任何宝可梦学会{{moveName}}\n(按住C键或Shift键查看更多信息)。",
       "statLabel": "XM（任意招式学习器）"
     },
@@ -708,7 +708,8 @@
       "name": "精华",
       "shopName": "{{type}}精华",
       "description": "使用4个代替释放宝可梦来获得释放道具，或与收藏家交换奖励。",
-      "statLabel": "精华"
+      "statLabel": "精华",
+      "tooltipDescription": "赋予所选宝可梦1个{{type}}精华。\n\n精华用于冠军技能升级、作为放生替代品（需4个）和收藏家交换。"
     },
     "PermaCollectedTypeModifierType": {
       "name": "收集的精华",
@@ -874,6 +875,7 @@
     "NONE": "无",
     "ABOMASITE": "暴雪王进化石",
     "ABSOLITE": "阿勃梭鲁进化石",
+    "ABSOLITE_Z": "阿勃梭鲁进化石 Z",
     "AERODACTYLITE": "化石翼龙进化石",
     "AGGRONITE": "波士可多拉进化石",
     "ALAKAZITE": "胡地进化石",
@@ -890,6 +892,7 @@
     "DIANCITE": "蒂安希进化石",
     "GALLADITE": "艾路雷朵进化石",
     "GARCHOMPITE": "烈咬陆鲨进化石",
+    "GARCHOMPITE_Z": "烈咬陆鲨进化石 Z",
     "GARDEVOIRITE": "沙奈朵进化石",
     "GENGARITE": "耿鬼进化石",
     "GLALITITE": "冰鬼护进化石",
@@ -901,6 +904,7 @@
     "LATIOSITE": "拉帝欧斯进化石",
     "LOPUNNITE": "长耳兔进化石",
     "LUCARIONITE": "路卡利欧进化石",
+    "LUCARIONITE_Z": "路卡利欧进化石 Z",
     "MANECTITE": "雷电兽进化石",
     "MAWILITE": "大嘴娃进化石",
     "MEDICHAMITE": "恰雷姆进化石",
@@ -948,6 +952,21 @@
     "DRAMPITE": "老翁龙进化石",
     "FALINKSITE": "列阵兵进化石",
     "ZERAORITE": "捷拉奥拉进化石",
+    "RAICHUITE_X": "雷丘进化石 X",
+    "RAICHUITE_Y": "雷丘进化石 Y",
+    "CHIMECHOITE": "风铃铃进化石",
+    "STARAPTORITE": "姆克鹰进化石",
+    "HEATRANITE": "席多蓝恩进化石",
+    "DARKRAITE": "达克莱伊进化石",
+    "GOLURKITE": "泥偶巨人进化石",
+    "MEOWSTITE": "超能妙喵进化石",
+    "CRABOMINITE": "好胜毛蟹进化石",
+    "GOLISOPODITE": "具甲武者进化石",
+    "MAGEARNITE": "玛机雅娜进化石",
+    "SCOVILLAINITE": "狠辣椒进化石",
+    "GLIMMORITE": "晶光花进化石",
+    "TATSUGURITE": "米立龙进化石",
+    "BAXCALIBURITE": "戟脊龙进化石",
 
     "BLUE_ORB": "靛蓝色宝珠",
     "RED_ORB": "朱红色宝珠",
@@ -1067,10 +1086,16 @@
     "uses": "次",
     "glitchPieceCost": "*需要1个故障碎片",
     "essenceAlternativeCost": "如果该宝可梦拥有4个及以上精华，则可改为消耗精华。",
+    "abilityReplaceNote": "替换宝可梦当前的特性。不可叠加。",
+    "passiveAbilityReplaceNote": "替换宝可梦当前的被动特性。不可叠加。",
     "permaMoney": "Ω金币",
     "permaItem": "Ω道具",
     "moreInfo": "(按住C键或Shift键查看更多信息)",
     "morePokeInfo": "(按 P / Shift 查看信息)",
-    "upgrade": "升级"
-  }
+    "upgrade": "升级",
+    "partyAbilityStacksHint": "(可叠加！)"
+  },
+  "permaWaveTooltip": "[color=#ffa500]{{count}}[/color]波后消失 — 第50波之后开始倒计时",
+  "permaUseTooltip": "剩余[color=#ffa500]{{count}}[/color]次使用 — 第50波之后开始倒计时",
+  "permaRemoveHint": "按10次移除"
 }

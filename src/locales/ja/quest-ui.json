@@ -105,6 +105,17 @@
       "common": {
         "any": "任意"
       }
+    },
+    "skillTree": {
+      "modalTitle": "スキルツリーバウンティ",
+      "completion": {
+        "title": "バウンティ完了！",
+        "standardReward": "報酬を選んでください！",
+        "rareReward": "マスターボールレアリティ解禁！",
+        "veryRareRankUp": "ポケモンのランクアップが待っている！",
+        "veryRareMove": "デュエルモンの技が待っている！",
+        "fallback": "報酬獲得！"
+      }
     }
   },
   "modeRewards": {
@@ -117,4 +128,4 @@
     "accessShopInBattle": "バトルちゅうに Ωショップに アクセス！",
     "accessQuestsInBattle": "バトルちゅうに クエストに アクセス！"
   }
-} 
+}

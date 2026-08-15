@@ -34,5 +34,8 @@
   "sortByCost": "费用",
   "sortByCandies": "糖果",
   "sortByIVs": "个体",
-  "sortByName": "名称"
+  "sortByName": "名称",
+  "fusionsFilter": "融合",
+  "hasFusions": "有融合",
+  "noFusions": "无融合"
 }

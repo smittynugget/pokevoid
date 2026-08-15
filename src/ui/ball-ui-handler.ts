@@ -1,15 +1,19 @@
+import i18next from "i18next";
 import BattleScene from "../battle-scene";
 import { getPokeballName } from "../data/pokeball";
 import { PokeballType } from "#enums/pokeball";
 import { Type } from "#app/data/type";
 import { addTextObject, getTextStyleOptions, TextStyle } from "./text";
 import { Command } from "./command-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import UiHandler from "./ui-handler";
 import { addWindow } from "./ui-theme";
 import {Button} from "#enums/buttons";
 import { CommandPhase } from "#app/phases/command-phase.js";
 import { UiTheme } from "#enums/ui-theme";
+import { PokemonBattleTooltipUtils } from "./pokemon-battle-tooltip-utils";
+import { isPrimaryPointer } from "./pointer-utils";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 
 interface BallDisplayEntry {
   pokeballType: PokeballType;
@@ -34,6 +38,8 @@ export default class BallUiHandler extends UiHandler {
   private scrollCursor: number = 0;
   private fullDisplayList: BallDisplayEntry[] = [];
   private visibleDisplayList: BallDisplayEntry[] = [];
+  private _ballHitZones: Phaser.GameObjects.Zone[] = [];
+  private _ballPattern?: ModalBackgroundHandle;
 
   private standardBalls: PokeballType[] = [
     PokeballType.ULTRA_BALL,
@@ -100,8 +106,8 @@ export default class BallUiHandler extends UiHandler {
     for (const [typeIdStr, count] of Object.entries(this.scene.typeBallCounts)) {
       if (count > 0) {
         const typeId = parseInt(typeIdStr) as Type;
-        const typeName = Type[typeId];
-        const displayName = typeName.charAt(0) + typeName.slice(1).toLowerCase() + " Ball";
+        const localizedType = i18next.t(`pokemonInfo:Type.${Type[typeId]}`, { defaultValue: Type[typeId] });
+        const displayName = i18next.t("pokeball:typeBall", { typeName: localizedType });
         typeBallEntries.push({
           pokeballType: PokeballType.TYPE_BALL,
           targetType: typeId,
@@ -144,14 +150,15 @@ export default class BallUiHandler extends UiHandler {
     const hasScrollDown = needsScroll && endIdx < total;
     const totalLines = visibleCount + 1;
 
+    const ROW_STEP = 96;
     const optionsTextWidth = this.optionsText.displayWidth;
-    this.pokeballSelectBg.setSize(50 + Math.max(64, optionsTextWidth), 32 + totalLines * 96 * this.scale);
+    this.pokeballSelectBg.setSize(50 + Math.max(64, optionsTextWidth), 32 + totalLines * ROW_STEP * this.scale);
     this.pokeballSelectContainer.setX((this.scene.game.canvas.width / 6) - 51 - Math.max(64, optionsTextWidth));
 
     this.optionsText.setPositionRelative(this.pokeballSelectBg, 42, 9);
-    this.optionsText.setLineSpacing(this.scale * 72);
+    this.optionsText.setLineSpacing(this.scale * ROW_STEP);
     this.countsText.setPositionRelative(this.pokeballSelectBg, 18, 9);
-    this.countsText.setLineSpacing(this.scale * 72);
+    this.countsText.setLineSpacing(this.scale * ROW_STEP);
 
     this.ensureScrollArrows();
     const centerX = this.pokeballSelectBg.width / 2;
@@ -161,6 +168,36 @@ export default class BallUiHandler extends UiHandler {
     this.arrowDown!.setPositionRelative(this.pokeballSelectBg, centerX, this.pokeballSelectBg.height - 6);
     this.arrowUp!.setVisible(hasScrollUp);
     this.arrowDown!.setVisible(hasScrollDown);
+
+    this._ballHitZones.forEach(z => z.destroy());
+    this._ballHitZones = [];
+    const rowStep = 96 * this.scale;
+    const bgTopY = this.pokeballSelectBg.y - this.pokeballSelectBg.height;
+    for (let r = 0; r <= visibleCount; r++) {
+      const zoneW = this.pokeballSelectBg.width - 16;
+      const zoneH = rowStep;
+      const zoneX = this.pokeballSelectBg.x + 8 + zoneW / 2;
+      const zoneY = bgTopY + 9 + r * rowStep + zoneH / 2;
+      const zone = this.scene.add.zone(zoneX, zoneY, zoneW, zoneH);
+      zone.setOrigin(0.5, 0.5);
+      zone.setInteractive({ useHandCursor: true });
+      const idx = r;
+      zone.on("pointerover", () => {
+        if (this.getCursor() !== idx) this.setCursor(idx);
+      });
+      zone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (!isPrimaryPointer(pointer)) return;
+        if (this.getCursor() !== idx) {
+          this.setCursor(idx);
+        } else {
+          this.processInput(Button.ACTION);
+        }
+      });
+      this.pokeballSelectContainer.add(zone);
+      this._ballHitZones.push(zone);
+    }
+
+    this._ballPattern?.redraw();
   }
 
   show(args: any[]): boolean {
@@ -186,7 +223,31 @@ export default class BallUiHandler extends UiHandler {
       this.arrowUp!.clearTint();
       this.arrowDown!.clearTint();
     }
+    if (!this._ballPattern) {
+      this._ballPattern = attachModalBackground(
+        this.scene,
+        this.pokeballSelectContainer,
+        () => ({
+          bgX: this.pokeballSelectBg.x,
+          bgY: this.pokeballSelectBg.y - this.pokeballSelectBg.height,
+          bgWidth: this.pokeballSelectBg.width,
+          bgHeight: this.pokeballSelectBg.height,
+        }),
+        {
+          mask: false,
+          alphaMultiplier: 0.5,
+          gridInc: -2,
+          getTarget: () => this.pokeballSelectBg,
+        }
+      );
+    } else {
+      this._ballPattern.redraw();
+    }
+
     this.pokeballSelectContainer.setVisible(true);
+    const ui = this.getUi();
+    ui.bringToTop(this.pokeballSelectContainer);
+    PokemonBattleTooltipUtils.disableBattleHoverZones();
     this.setCursor(0);
 
     return true;
@@ -292,7 +353,12 @@ export default class BallUiHandler extends UiHandler {
 
   clear() {
     super.clear();
+    this._ballPattern?.clear();
+    this._ballPattern = undefined;
+    this._ballHitZones.forEach(z => z.destroy());
+    this._ballHitZones = [];
     this.pokeballSelectContainer.setVisible(false);
+    PokemonBattleTooltipUtils.enableBattleHoverZones();
     this.eraseCursor();
     if (this.arrowUp) {
       this.arrowUp.destroy();

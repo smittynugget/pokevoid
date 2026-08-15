@@ -34,5 +34,8 @@
   "sortByCost": "Custo",
   "sortByCandies": "# Doces",
   "sortByIVs": "IVs",
-  "sortByName": "Nome"
+  "sortByName": "Nome",
+  "fusionsFilter": "Fusões",
+  "hasFusions": "Fusões - Sim",
+  "noFusions": "Fusões - Não"
 }

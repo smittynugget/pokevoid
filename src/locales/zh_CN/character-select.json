@@ -1,0 +1,10 @@
+{
+  "title": "冠军选择",
+  "instruction": "选择你的冠军",
+  "locked": "已锁定",
+  "essenceNeeded": "{{amount}} {{typeName}}精华",
+  "mysteryChampion": "???",
+  "mysterySubtitle": "虚空来决定？！",
+  "randomDescription": "随机冠军",
+  "tooltip.essenceRequiredDesc": "消耗精华来解锁此冠军。要获得精华，击败宝可梦来获取他们的属性。"
+}

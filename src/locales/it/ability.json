@@ -2167,6 +2167,10 @@
     "name": "Liane Sanguisughe",
     "description": "Raddoppia la potenza di Frustata. 30% di possibilità di seminare o legare il bersaglio quando usa Frustata."
   },
+  "leftoversPower": {
+    "name": "Leftovers Power",
+    "description": "Ripristina passivamente 1/8 dei PS massimi alla fine di ogni turno."
+  },
   "regeneratorPlus": {
     "name": "Rigeneratore Plus",
     "description": "Recupera il 45% dei PS massimi quando viene richiamato."
@@ -2698,5 +2702,1041 @@
   "dragonize": {
     "name": "Dragonizzazione",
     "description": "Trasforma le mosse di tipo Normale in tipo Drago e aumenta la loro potenza del 20%."
+  },
+  "nightmares": {
+    "name": "Incubi",
+    "description": "Riduce i PS dei Pokémon avversari addormentati di 1/4 alla fine di ogni turno."
+  },
+  "piercingDrill": {
+    "name": "Trapano Perforante",
+    "description": "Le mosse a contatto superano la protezione del bersaglio e infliggono 1/4 dei danni previsti."
+  },
+  "spicySpray": {
+    "name": "Spray Piccante",
+    "description": "Scotta l'attaccante quando il Pokémon subisce danni."
+  },
+  "aCounterInfector": {
+    "name": "A-Contro Infettore",
+    "description": "Quando colpito da un attacco fisico, l'utilizzatore ha il 30% di probabilità di infliggere una condizione di stato casuale all'attaccante. Se l'attaccante ha un problema di stato, al contatto, l'utilizzatore ruba 1/16 dei PS dell'attaccante."
+  },
+  "aParasiticOffspring": {
+    "name": "A-Prole Parassita",
+    "description": "Gli attacchi fisici dell'utilizzatore hanno il 30% di probabilità di infliggere una condizione di stato casuale al bersaglio. Se il bersaglio ha un problema di stato, le mosse a contatto contro l'utilizzatore curano 1/16 dei suoi PS massimi invece di infliggere danno."
+  },
+  "aSuppression": {
+    "name": "A-Soppressione",
+    "description": "I Pokémon avversari con problemi di stato subiscono il 30% di danni in più dagli attacchi e non possono usare le loro abilità."
+  },
+  "abominableProtection": {
+    "name": "Protezione Abominevole",
+    "description": "Quando l'utilizzatore entra in battaglia, attiva Velaurora senza bisogno di Grandine o Neve, ma perde il 25% dei suoi PS massimi. Questo effetto può verificarsi solo una volta per battaglia."
+  },
+  "absoluteLightning": {
+    "name": "Fulmine Assoluto",
+    "description": "Il primo colpo dannoso subito in ogni battaglia viene negato, e l'attaccante perde 1/8 dei suoi PS massimi. Le mosse di tipo Normale diventano di tipo Elettro e infliggono 1,2× i danni."
+  },
+  "absoluteVoidMagic": {
+    "name": "Magia del Vuoto Assoluto",
+    "description": "Gli attacchi dell'utilizzatore hanno il 50% di probabilità di infliggere al bersaglio una condizione di stato casuale, una condizione temporanea, una trappola o un pericolo."
+  },
+  "absoluteZero": {
+    "name": "Zero Assoluto",
+    "description": "Mentre Grandine o Neve è attiva, le mosse di tipo Normale, Volante e Drago dell'utilizzatore diventano di tipo Ghiaccio, infliggono 1,2× i danni e hanno il 20% di probabilità di congelare."
+  },
+  "abyssalFlame": {
+    "name": "Fiamma Abissale",
+    "description": "Le mosse di tipo Normale diventano di tipo Fuoco. Le mosse di tipo Fuoco e Buio condividono i vantaggi di debolezza di tipo e hanno il 30% di probabilità di scottare."
+  },
+  "abyssalGrasp": {
+    "name": "Presa Abissale",
+    "description": "Le mosse di tipo Normale diventano di tipo Acqua. Le mosse di tipo Acqua hanno il 30% di probabilità di infliggere Mulinello al bersaglio."
+  },
+  "acidRain": {
+    "name": "Pioggia Acida",
+    "description": "Quando l'utilizzatore entra in battaglia, attiva la Pioggia. Le mosse di tipo Veleno infliggono 1,3× i danni mentre la Pioggia è attiva. Le mosse di tipo Normale diventano di tipo Veleno."
+  },
+  "adventureStart": {
+    "name": "Avventura Inizio!",
+    "description": "Le mosse dell'utilizzatore hanno il 50% di probabilità di ottenere priorità. Tutte le mosse dell'utilizzatore ottengono +1 livello di brutto colpo."
+  },
+  "almightyGalaxy": {
+    "name": "Galassia Onnipotente",
+    "description": "Alla fine di ogni turno, l'utilizzatore cambia in un tipo casuale e ripristina 1/8 dei suoi PS massimi. Gli attacchi senza effetti secondari infliggono 1,3× i danni."
+  },
+  "alternativeBurst": {
+    "name": "Esplosione Alternativa",
+    "description": "Le mosse di stato dell'utilizzatore infliggono danni pari a 1/8 dei PS massimi del bersaglio. Le mosse di tipo Elettro e Drago hanno il 30% di probabilità di paralizzare."
+  },
+  "ancientBehemoth": {
+    "name": "Behemoth Antico",
+    "description": "Le mosse a contatto dell'utilizzatore ignorano le resistenze di tipo e infliggono 1,3× i danni."
+  },
+  "ancientDrill": {
+    "name": "Trivella Antica",
+    "description": "Gli attacchi dell'utilizzatore hanno il 50% di probabilità di rimuovere lo strumento tenuto dal bersaglio e infliggere danni aggiuntivi pari a 1/8 dei PS massimi del bersaglio."
+  },
+  "ancientDualCore": {
+    "name": "Doppio Nucleo Antico",
+    "description": "Al turno 1, l'utilizzatore è di tipo Normale. Al turno 2, diventa di tipo Acciaio e Lotta. Le mosse di tipo Normale diventano di tipo Acciaio, sono trattate anche come tipo Lotta e infliggono 1,2× i danni."
+  },
+  "ancientKnowledge": {
+    "name": "Conoscenza Antica",
+    "description": "Le mosse di tipo Psico e Folletto dell'utilizzatore infliggono 1,2× i danni e condividono gli stessi vantaggi di debolezza di tipo."
+  },
+  "ancientSummon": {
+    "name": "Evocazione Antica",
+    "description": "All'entrata in battaglia, l'utilizzatore ottiene +1 livello a una statistica casuale per ogni altro Pokémon della squadra con una mossa Gadget. Ogni aumento è scelto casualmente."
+  },
+  "ancientSupplies": {
+    "name": "Rifornimenti Antichi",
+    "description": "Quando l'utilizzatore viene sostituito, il Pokémon in entrata recupera il 25% dei suoi PS massimi e ottiene +1 in Difesa."
+  },
+  "aquaticRitual": {
+    "name": "Rituale Acquatico",
+    "description": "Se la Pioggia è attiva, l'utilizzatore aumenta due statistiche casuali alla fine di ogni turno."
+  },
+  "beastOfRagnarok": {
+    "name": "Bestia del Ragnarök",
+    "description": "Con Neve o Grandine, la Velocità dell'utilizzatore è raddoppiata, e le mosse morso hanno il 10% di probabilità di congelare il bersaglio o il 10% di probabilità di farlo tentennare."
+  },
+  "beaststar": {
+    "name": "Stellabestia",
+    "description": "Gli attacchi dell'utilizzatore infliggono 1,5× i danni. Se un attacco non può far tentennare, ha il 30% di probabilità di far tentennare il bersaglio. La Difesa e la Difesa Speciale dell'utilizzatore calano di un livello dopo l'attacco."
+  },
+  "blackFlameSpark": {
+    "name": "Scintilla di Fiamma Nera",
+    "description": "Dopo che l'utilizzatore viene colpito da un attacco, ottiene una carica. Se l'utilizzatore viene sostituito mentre è carico, il bersaglio viene scottato e il Pokémon in entrata ottiene +1 in Velocità e +1 in una statistica casuale."
+  },
+  "blazingCitrine": {
+    "name": "Citrino Ardente",
+    "description": "Le mosse di tipo Normale dell'utilizzatore diventano di tipo Fuoco o Roccia a seconda di quale tipo infliggerebbe più danni al bersaglio. Se neutro, il tipo è scelto casualmente. Le mosse di tipo Fuoco e Roccia hanno il 30% di probabilità di scottare il bersaglio. I bersagli scottati non possono usare le loro abilità e gli effetti secondari delle loro mosse sono disabilitati."
+  },
+  "blazingTimber": {
+    "name": "Legna Ardente",
+    "description": "Le mosse di tipo Normale e Erba dell'utilizzatore diventano di tipo Fuoco, hanno il 30% di probabilità di scottare il bersaglio e infliggono 1,3× i danni."
+  },
+  "blindRage": {
+    "name": "Rabbia Cieca",
+    "description": "Mentre è confuso, le mosse dell'utilizzatore infliggono 2× i danni e hanno +1 livello di brutto colpo. Le mosse di tipo Normale condividono i vantaggi di tipo delle mosse di tipo Lotta."
+  },
+  "bloodScent": {
+    "name": "Fiuto del Sangue",
+    "description": "Gli attacchi dell'utilizzatore sono automaticamente brutti colpi contro bersagli sotto il 40% dei PS."
+  },
+  "blowbackRoulette": {
+    "name": "Roulette di Contraccolpo",
+    "description": "Le mosse di tipo Buio e Acciaio dell'utilizzatore hanno il 30% di probabilità di abbassare casualmente tre statistiche del bersaglio di un livello ciascuna."
+  },
+  "bullRush": {
+    "name": "Carica del Toro",
+    "description": "Le mosse di tipo Normale dell'utilizzatore diventano di tipo Lotta e ottengono +1 in priorità."
+  },
+  "carnivorousVines": {
+    "name": "Liane Carnivore",
+    "description": "Le mosse a contatto dell'utilizzatore hanno il 50% di probabilità di intrappolare il bersaglio per tre turni, infliggendo danni pari a 1/8 dei suoi PS massimi ogni turno."
+  },
+  "chainsOfInfinity": {
+    "name": "Catene dell'Infinito",
+    "description": "Le mosse che infliggono 60 o meno danni hanno l'1% di probabilità di mandare K.O. il bersaglio istantaneamente."
+  },
+  "chaosEnd": {
+    "name": "Fine del Caos",
+    "description": "Se la squadra ha un Pokémon Buio esausto, dopo aver mandato K.O. il bersaglio, il prossimo Pokémon in entrata subisce danni pari a 1/6 dei suoi PS massimi. Se ha un Pokémon Folletto esausto, le mosse Normali diventano di tipo Buio con 1,2× i danni. Se ha un Buio, un Folletto e un Buio/Folletto esausti (tre alleati totali), quando l'utilizzatore cade, l'avversario subisce danni pari al 50% dei suoi PS massimi."
+  },
+  "chaosOrder": {
+    "name": "Ordine del Caos",
+    "description": "L'utilizzatore subisce il 50% in meno di danni da avversari con 600 o più di BST totale. Le mosse Normali diventano Folletto o Buio a seconda di quale infligga più danni. Se neutro, scelta casuale. Mandando K.O. con una mossa Folletto, recupera 1/4 dei PS. Con una mossa Buio, ottiene +1 in Attacco o Velocità a caso."
+  },
+  "chaosSorcerer": {
+    "name": "Stregone del Caos",
+    "description": "L'utilizzatore ha gli effetti di Mutevole. Le mosse speciali dell'utilizzatore hanno il 30% di probabilità di confondere il bersaglio."
+  },
+  "chaosWarrior": {
+    "name": "Guerriero del Caos",
+    "description": "Le mosse Normali dell'utilizzatore diventano tipo Buio o Folletto a seconda di quale infligga più danni al bersaglio. Se neutro, scelta casuale. Le mosse Buio hanno il 30% di probabilità di addormentare il bersaglio. Le mosse Folletto hanno il 30% di probabilità di abbassare Attacco e Attacco Speciale del bersaglio."
+  },
+  "chargeChampion": {
+    "name": "Campione di Carica",
+    "description": "Le mosse di caricamento dell'utilizzatore infliggono il 50% dei danni al primo turno e aumentano due statistiche casuali."
+  },
+  "clayColossus": {
+    "name": "Colosso d'Argilla",
+    "description": "L'utilizzatore non subisce danni da mosse non molto efficaci. Le mosse di tipo Normale diventano di tipo Terra. Le mosse di tipo Terra hanno il 30% di probabilità di abbassare la Velocità del bersaglio."
+  },
+  "climateChange": {
+    "name": "Cambiamento Climatico",
+    "description": "Con il sole, le mosse Normali e Acqua dell'utilizzatore diventano Fuoco con il 30% di probabilità di scottare. Con la Pioggia, le mosse Normali e Fuoco diventano Acqua con il 10% di probabilità di intrappolare il bersaglio in Mulinello."
+  },
+  "clusterBurst": {
+    "name": "Esplosione a Grappolo",
+    "description": "Le mosse Normali dell'utilizzatore diventano Acqua. Durante la Pioggia o la Pioggia Forte, le mosse Acqua dell'utilizzatore hanno il 50% di probabilità di colpire due volte."
+  },
+  "contagion": {
+    "name": "Contagio",
+    "description": "Le mosse Normali dell'utilizzatore diventano Veleno e infliggono 1,2× i danni. Le mosse Veleno iperavvelenano il bersaglio."
+  },
+  "cornfieldGuardian": {
+    "name": "Guardiano del Campo",
+    "description": "Mentre il Campo Erboso è attivo, l'utilizzatore ottiene +1 in Attacco e cura il suo stato alla fine di ogni turno."
+  },
+  "corpseParty": {
+    "name": "Festa dei Cadaveri",
+    "description": "Le mosse Spettro dell'utilizzatore guadagnano 5 di potenza base per ogni Pokémon Spettro nella squadra. Le mosse Normali diventano Spettro."
+  },
+  "corruptElephant": {
+    "name": "Elefante Corrotto",
+    "description": "Le mosse Normali diventano Folletto o Buio a seconda di quale tipo è più forte contro il bersaglio (casuale se neutro). Quando colpito, l'utilizzatore ripristina 1/8 dei suoi PS massimi e il suo Attacco sale di un livello. Se tiene uno strumento, ne perde uno casualmente."
+  },
+  "corruptedPower": {
+    "name": "Potere Corrotto",
+    "description": "Usare la stessa mossa consecutivamente aumenta la sua potenza del 40% ogni volta, ma l'utilizzatore subisce il 33% di danno da contraccolpo."
+  },
+  "cottonTokens": {
+    "name": "Gettoni di Cotone",
+    "description": "Quando l'utilizzatore subisce un attacco che infligge il 70% o più dei suoi PS massimi senza mandarlo K.O., crea un Sostituto con il 25% dei suoi PS massimi."
+  },
+  "creepySurprise": {
+    "name": "Sorpresa Inquietante",
+    "description": "Se questo Pokémon ha meno del 50% dei PS, paralizza il bersaglio all'entrata. Questo Pokémon non può essere ritirato dopo aver usato questa abilità."
+  },
+  "crimsonGear": {
+    "name": "Ingranaggio Cremisi",
+    "description": "Le mosse Fuoco e Acciaio condividono i vantaggi di debolezza di tipo. Le mosse Normali diventano Fuoco con 1,2× i danni. Se almeno 2 altri Pokémon della squadra hanno una mossa Gadget, anche Elettro condivide i suoi vantaggi con Fuoco e Acciaio."
+  },
+  "cripplingIllusions": {
+    "name": "Illusioni Debilitanti",
+    "description": "Alla fine di ogni turno, la Difesa o la Difesa Speciale dell'utilizzatore sale casualmente di un livello. Quando il totale di entrambi raggiunge 6 o più, entrambi si azzerano e il bersaglio è maledetto."
+  },
+  "criticalPredator": {
+    "name": "Predatore Critico",
+    "description": "Le mosse fisiche dell'utilizzatore infliggono 2,5× i danni quando la Difesa del bersaglio è maggiore o uguale al suo Attacco."
+  },
+  "crystalLuster": {
+    "name": "Lustro Cristallino",
+    "description": "Le mosse Normali e Drago diventano Ghiaccio o Roccia a seconda di quale tipo infligge più danni al bersaglio (casuale se neutro). Le mosse Ghiaccio hanno il 10% di probabilità di congelare. Le mosse Roccia hanno il 10% di probabilità di infliggere Salgemma."
+  },
+  "cursedFlamesV2": {
+    "name": "Fiamme Maledette",
+    "description": "Le mosse Normali diventano Fuoco o Spettro (in base al più forte contro il nemico - casuale se neutro). Le mosse Fuoco hanno il 30% di probabilità di scottare, le Spettro il 5% di maledire."
+  },
+  "cursedFlamesYu": {
+    "name": "Fiamme Maledette",
+    "description": "Le mosse Normali diventano Fuoco. Le mosse Fuoco hanno il 10% di probabilità di scottare l'attaccante e intrappolarlo in Turbofuoco."
+  },
+  "cursedPossession": {
+    "name": "Possessione Maledetta",
+    "description": "Quando l'utilizzatore è colpito da una mossa superefficace, l'attaccante è maledetto."
+  },
+  "cursedPotential": {
+    "name": "Potenziale Maledetto",
+    "description": "All'entrata, tutte le statistiche dell'utilizzatore salgono di un livello, con Attacco che sale di due livelli aggiuntivi (tre totali). Alla fine di ogni turno, da una a tre statistiche calano casualmente di un livello o l'utilizzatore perde 1/4 dei suoi PS massimi. Non può essere ritirato."
+  },
+  "cyberneticControl": {
+    "name": "Controllo Cibernetico",
+    "description": "I Pokémon avversari non possono usare mosse di stato né le loro abilità."
+  },
+  "cyberneticDiscard": {
+    "name": "Scarto Cibernetico",
+    "description": "L'utilizzatore scarta uno strumento tenuto casuale per aumentare il potere d'Attacco di 1,2× e ripristinare il 25% dei danni inflitti."
+  },
+  "cyberneticPredator": {
+    "name": "Predatore Cibernetico",
+    "description": "Gli attacchi dell'utilizzatore infliggono il doppio dei danni al bersaglio che entra. Quando il bersaglio entra, l'utilizzatore ottiene +1 in Velocità."
+  },
+  "cycloneFist": {
+    "name": "Pugno Ciclone",
+    "description": "Quando l'utilizzatore entra in battaglia, attiva Ventoincoda. Le mosse Lotta e Volante condividono i vantaggi di debolezza di tipo."
+  },
+  "cycloneWrath": {
+    "name": "Ira del Ciclone",
+    "description": "All'entrata, l'utilizzatore diventa immediatamente Caricato dal Vento. Se colpito in questo stato, non subisce danni e l'attaccante perde 1/8 dei suoi PS massimi. Entrambi gli effetti avvengono solo una volta per battaglia. Le mosse Normali diventano Volante con 1,2× i danni."
+  },
+  "cyclonicShift": {
+    "name": "Spostamento Ciclonico",
+    "description": "Ogni volta che l'utilizzatore attacca, la Difesa e l'Attacco del bersaglio si scambiano, così come il suo Attacco Speciale e la Difesa Speciale."
+  },
+  "damBuilder": {
+    "name": "Costruttore di Dighe",
+    "description": "Quando l'utilizzatore entra, crea un Sostituto. Quando il Sostituto si rompe, l'utilizzatore ottiene Acquanello."
+  },
+  "dangerDiscard": {
+    "name": "Pericolo! Scarto",
+    "description": "Le mosse di stato dell'utilizzatore aumentano casualmente una statistica e ne abbassano casualmente un'altra."
+  },
+  "darkSoundwave": {
+    "name": "Onda Sonora Oscura",
+    "description": "Le mosse Normali e Buio diventano mosse Sonore, e le mosse Sonore diventano Buio, infliggono 1,1× i danni e hanno il 10% di probabilità di addormentare, confondere o far tentennare il bersaglio."
+  },
+  "darkworldTactics": {
+    "name": "Tattiche del Mondo Oscuro",
+    "description": "Alla fine del turno, se l'utilizzatore ha livelli di statistiche negativi, li azzera, cura 1/6 dei suoi PS massimi e aumenta una statistica casuale di un livello."
+  },
+  "debilitatingRocket": {
+    "name": "Razzo Debilitante",
+    "description": "Le mosse Normali diventano Acciaio o Volante, a seconda di quale infligge più danni (casuale se neutro). Le mosse Acciaio e Volante hanno il 30% di probabilità di abbassare l'Attacco del nemico di 2 livelli."
+  },
+  "deepRoots": {
+    "name": "Radici Profonde",
+    "description": "Alla fine di ogni turno, l'utilizzatore ripristina 1/16 dei suoi PS massimi e scambia Attacco Speciale e Difesa Speciale."
+  },
+  "deflectionHide": {
+    "name": "Pelle Deflettrice",
+    "description": "L'utilizzatore subisce il 30% in meno di danni dalle mosse. Quando colpito da una mossa a contatto, infligge danni pari a 1/16 dei PS massimi dell'attaccante."
+  },
+  "demonicEdge": {
+    "name": "Lama Demoniaca",
+    "description": "Le mosse Normali diventano Acciaio e infliggono 1,2× i danni. I brutti colpi infliggono 2,5× i danni."
+  },
+  "dimensionSlash": {
+    "name": "Taglio Dimensionale",
+    "description": "Le mosse taglienti infliggono 1,2× i danni, diventano Buio e hanno il 10% di probabilità di forzare il bersaglio a cambiare."
+  },
+  "dracoLance": {
+    "name": "Lancia Draco",
+    "description": "Le mosse Normali diventano Drago. Le mosse Drago infliggono 1,5× i danni se la Difesa del bersaglio è maggiore del suo Attacco."
+  },
+  "dracoNegation": {
+    "name": "Negazione Draco",
+    "description": "30% di probabilità di negare le mosse di stato del nemico. Quando una mossa di stato è negata, il nemico subisce 1/16 di danni e una statistica casuale dell'utilizzatore sale."
+  },
+  "draconicFlute": {
+    "name": "Flauto Draconico",
+    "description": "Le mosse Normali e Drago dell'utilizzatore diventano mosse Sonore e infliggono 1,2× i danni. Le mosse Sonore hanno il 10% di probabilità di addormentare il bersaglio."
+  },
+  "dragonbaneSword": {
+    "name": "Spada Ammazzadraghi",
+    "description": "Le mosse taglienti infliggono 2,5× i danni ai Pokémon Drago. Quando l'utilizzatore manda K.O. un Pokémon Drago, ottiene +1 in Velocità e ripristina 1/8 dei suoi PS massimi."
+  },
+  "dragonbaneWrath": {
+    "name": "Furia Ammazzadraghi",
+    "description": "Mentre è attiva, il bersaglio perde 1/8 dei suoi PS massimi alla fine di ogni turno se è di tipo Drago. Le mosse Drago infliggono 0,5× i danni all'utilizzatore."
+  },
+  "drawThree": {
+    "name": "Pescare Tre",
+    "description": "Alla fine di ogni turno, tre statistiche casuali vengono indipendentemente aumentate o abbassate a caso."
+  },
+  "drawTime": {
+    "name": "Ora di Pescare!",
+    "description": "Quando l'utilizzatore manda K.O. un bersaglio, c'è il 5% di probabilità di attivare la selezione ricompensa."
+  },
+  "dualBoneBlade": {
+    "name": "Doppia Lama d'Osso",
+    "description": "Gli attacchi dell'utilizzatore colpiscono due volte, il secondo colpo infligge il 50% dei danni. Gli attacchi usano la Difesa più bassa dell'avversario."
+  },
+  "earthboundCurse": {
+    "name": "Maledizione Terrena",
+    "description": "Con la Pioggia, le mosse Acqua e Terra hanno il 30% di probabilità di scottare il bersaglio e abbassare la sua Velocità di un livello. Le mosse Normali diventano Acqua o Terra a seconda di quale infligge più danni (casuale se neutro)."
+  },
+  "electroBoogey": {
+    "name": "Electro Boogey",
+    "description": "Le mosse Normali diventano Elettro. Le mosse Elettro hanno il 30% di probabilità di infliggere 2,5× i danni e il 10% di probabilità di paralizzare."
+  },
+  "electromagneticMaster": {
+    "name": "Maestro Elettromagnetico",
+    "description": "Le mosse Elettro, Roccia e Acciaio condividono vantaggi di tipo. Le mosse Normali diventano Elettro, Roccia o Acciaio in base a quale infligge più danni (casuale se neutro). Le mosse Elettro hanno 10% di probabilità di +1 priorità. Le Roccia 5% di infliggere Salgemma. Le Acciaio 10% di brutto colpo."
+  },
+  "elementalBypass": {
+    "name": "Bypass Elementale",
+    "description": "Se l'avversario è di tipo Acqua, Terra o Fuoco, gli attacchi dell'utilizzatore infliggono 1,5× i danni."
+  },
+  "elementalHavoc": {
+    "name": "Caos Elementale",
+    "description": "Le mosse Acqua, Elettro e Volante del bersaglio infliggono 0,5× i danni. Le mosse Normali diventano Acqua, Volante o Elettro in base a quale infligge più danni (casuale se neutro). Le mosse Acqua, Elettro e Volante infliggono 1,2× i danni."
+  },
+  "emeraldGear": {
+    "name": "Ingranaggio Smeraldo",
+    "description": "Le mosse Erba e Acciaio dell'utilizzatore condividono i vantaggi di debolezza di tipo. Le mosse Normali diventano Erba con 1,2× i danni. Se almeno 2 altri Pokémon della squadra hanno una mossa Gadget, le mosse Fuoco condividono anche i vantaggi con Erba e Acciaio."
+  },
+  "emeraldStance": {
+    "name": "Postura Smeraldo",
+    "description": "Quando attacca, l'utilizzatore usa la sua statistica di Difesa invece di Attacco o Attacco Speciale."
+  },
+  "emperorsCoin": {
+    "name": "Moneta dell'Imperatore",
+    "description": "Ogni turno, l'utilizzatore ha il 50% di probabilità di aumentare due statistiche casuali uniche di un livello."
+  },
+  "eradicatorsDomain": {
+    "name": "Dominio dell'Eradicatore",
+    "description": "Ogni volta che il bersaglio usa una mossa speciale, ha il 30% di probabilità di ricevere una condizione di stato casuale. Ogni volta che usa una mossa di stato, subisce danni pari a 1/8 dei suoi PS massimi."
+  },
+  "etherealLight": {
+    "name": "Luce Eterea",
+    "description": "L'utilizzatore ha Prepotenza. All'entrata, rimuove tutti i pericoli piazzati dal bersaglio e annulla tutti i potenziamenti del bersaglio."
+  },
+  "evolutionPill": {
+    "name": "Pillola Evoluzione",
+    "description": "Quando l'utilizzatore va K.O., il prossimo Pokémon inviato ottiene +1 livello alla sua statistica più alta e ripristina il 33% dei suoi PS massimi."
+  },
+  "expandingMass": {
+    "name": "Massa Espansiva",
+    "description": "Le mosse dell'utilizzatore guadagnano +10 di potenza base per ogni turno in campo (max. +50), ma perde 1/8 dei suoi PS massimi ogni turno."
+  },
+  "experienceBoost": {
+    "name": "Spinta d'Esperienza",
+    "description": "Alla fine di ogni turno, l'utilizzatore aumenta casualmente Difesa, Attacco o Velocità di un livello."
+  },
+  "explosiveAir": {
+    "name": "Aria Esplosiva",
+    "description": "Le mosse Normali dell'utilizzatore diventano Volante con 1,2× i danni. Le mosse Volante contro Pokémon Fuoco sono sempre brutti colpi."
+  },
+  "fastFood": {
+    "name": "Fast Food",
+    "description": "La Velocità dell'utilizzatore sale alla fine di ogni turno. Le mosse morso ricevono un bonus di 1,2×."
+  },
+  "fatedRevival": {
+    "name": "Rinascita del Destino",
+    "description": "Quando l'utilizzatore va K.O., rianima un Pokémon Folletto K.O. casuale della squadra con il 50% dei PS."
+  },
+  "finalBlade": {
+    "name": "Lama Finale",
+    "description": "Gli attacchi che non causano tentennamento ottengono il 10% di probabilità di far tentennare il bersaglio per ogni membro K.O. della squadra."
+  },
+  "fireAndIce": {
+    "name": "Fuoco e Ghiaccio",
+    "description": "Le mosse Normali dell'utilizzatore diventano Ghiaccio o Fuoco in base a quale tipo è più efficace contro il bersaglio (casuale se neutro). Le mosse Fuoco hanno il 10% di probabilità di congelare, le Ghiaccio il 30% di probabilità di scottare."
+  },
+  "fistOfFate": {
+    "name": "Pugno del Destino",
+    "description": "Le mosse a contatto dell'utilizzatore ignorano resistenze e abilità. Quando l'utilizzatore manda K.O. un bersaglio, il prossimo Pokémon in entrata subisce danni pari a 1/4 dei suoi PS massimi."
+  },
+  "flamingOblivion": {
+    "name": "Oblio Fiammeggiante",
+    "description": "Le mosse Normali diventano Fuoco. Le mosse Fuoco ignorano le resistenze di tipo e hanno il 30% di probabilità di scottare il bersaglio e attivare Turbofuoco. Quando l'utilizzatore manda K.O. un bersaglio scottato, il prossimo Pokémon perde il 25% dei suoi PS massimi."
+  },
+  "fogBody": {
+    "name": "Corpo di Nebbia",
+    "description": "Quando l'utilizzatore manca con un attacco con il 50% o più di precisione, il suo Attacco sale di un livello e recupera 1/8 dei suoi PS."
+  },
+  "fogBreath": {
+    "name": "Respiro di Nebbia",
+    "description": "Le mosse Normali diventano Acqua, infliggono 1,3× i danni e hanno il 30% di probabilità di abbassare l'Elusione del bersaglio."
+  },
+  "foolsCoin": {
+    "name": "Moneta del Folle",
+    "description": "Questo Pokémon ha il 50% di probabilità di attivare Magidifesa."
+  },
+  "forScience": {
+    "name": "Per la Scienza!",
+    "description": "Alla fine di ogni turno, una statistica dell'utilizzatore sale casualmente di 2 livelli e una scende di 1. Una del bersaglio sale di 1 e una scende di 1."
+  },
+  "forbiddenPower": {
+    "name": "Potere Proibito",
+    "description": "La potenza base di tutte le mosse dell'utilizzatore aumenta di 20 per ogni attacco consecutivo senza cambio."
+  },
+  "forestGuardian": {
+    "name": "Guardiano della Foresta",
+    "description": "Nel Campo Erboso, la Velocità dell'utilizzatore è raddoppiata e le mosse fisiche infliggono 1,2× i danni. Le mosse taglienti hanno un alto tasso di brutti colpi."
+  },
+  "forestTrickery": {
+    "name": "Inganno della Foresta",
+    "description": "Le mosse Normali diventano Erba o Folletto a seconda di quale tipo è più forte (casuale se neutro), con 1,2× i danni. Le mosse Erba hanno il 30% di probabilità di attivare Campo Erboso. Le Folletto il 30% di attivare Campo Nebbioso."
+  },
+  "fossilBarrier": {
+    "name": "Barriera Fossile",
+    "description": "Il bersaglio non può usare mosse prioritarie né mosse che aumentano le statistiche. Le mosse Normali diventano Roccia con 1,2× i danni."
+  },
+  "frostyAbomination": {
+    "name": "Abominio Gelido",
+    "description": "Quando i PS dell'utilizzatore scendono sotto il 50%, il bersaglio subisce danni pari a 1/8 dei suoi PS massimi. Le mosse Normali diventano Ghiaccio. Le mosse Ghiaccio diventano mosse morso, infliggono 1,2× i danni e hanno il 10% di probabilità di congelare."
+  },
+  "galacticAwakening": {
+    "name": "Risveglio Galattico",
+    "description": "Quando i PS scendono sotto il 50%, questo Pokémon diventa di tipo Astrale. Sotto il 50%, alla fine di ogni turno, una statistica casuale sale di un livello."
+  },
+  "gemSiphon": {
+    "name": "Sifone di Gemma",
+    "description": "Le mosse Folletto curano l'utilizzatore del 50% dei danni inflitti. Se i PS sono pieni, crea un Sostituto che prende il 25% dei suoi PS."
+  },
+  "gemstoneTrample": {
+    "name": "Calpestamento di Gemma",
+    "description": "Le mosse Normali diventano Terra, ignorano i potenziamenti di Difesa e infliggono il 20% in più di danni."
+  },
+  "genieMagic": {
+    "name": "Magia del Genio",
+    "description": "Le mosse Normali diventano Fuoco o Buio a seconda di quale tipo è più efficace contro il bersaglio (casuale se neutro). Le mosse Fuoco e Buio hanno il 30% di probabilità di attivare un effetto Desiderio al turno successivo."
+  },
+  "giantImpact": {
+    "name": "Impatto Gigante",
+    "description": "Le mosse Fuoco, Erba, Acqua ed Elettro diventano Normali. Le mosse Normali infliggono 1,3× i danni e hanno il 30% di probabilità di paralizzare o far tentennare il bersaglio."
+  },
+  "goldenClutch": {
+    "name": "Presa Dorata",
+    "description": "Le mosse Normali e Lotta diventano mosse taglienti. Le mosse taglienti ignorano le resistenze. Quelle che non causano tentennamento ottengono +1 priorità e +1 livello di brutto colpo."
+  },
+  "goldenGaze": {
+    "name": "Sguardo Dorato",
+    "description": "Le mosse Normali dell'utilizzatore diventano Psico con 1,2× i danni. Le mosse Psico hanno il 30% di probabilità di disabilitare l'ultima mossa del bersaglio. Quando disabilitata, infliggono 1,3× i danni."
+  },
+  "goldenGear": {
+    "name": "Ingranaggio Dorato",
+    "description": "Le mosse Elettro e Acciaio dell'utilizzatore condividono i vantaggi di debolezza di tipo. Le mosse Normali diventano Elettro con 1,2× i danni. Se almeno 2 altri Pokémon della squadra hanno una mossa Gadget, Erba condivide anche i vantaggi con Elettro e Acciaio."
+  },
+  "goldenRadiance": {
+    "name": "Radiosità Dorata",
+    "description": "Quando i PS dell'utilizzatore scendono sotto il 10%, tutte le statistiche salgono di 1 livello."
+  },
+  "gravityAxe": {
+    "name": "Ascia Gravitazionale",
+    "description": "L'utilizzatore intrappola tutti i Pokémon avversari, rimuove le immunità di tipo Volante e ha gli effetti di Mutevole."
+  },
+  "hammerKnockback": {
+    "name": "Rinculo del Martello",
+    "description": "Le mosse a contatto dell'utilizzatore hanno il 30% di probabilità di forzare il bersaglio a cambiare."
+  },
+  "handReset": {
+    "name": "Reset della Mano",
+    "description": "Quando i PS dell'utilizzatore scendono sotto il 50%, cura le condizioni di stato proprie e degli alleati, e azzera tutti i cambiamenti di statistiche di entrambi i Pokémon."
+  },
+  "harpieBoost": {
+    "name": "Spinta Arpia",
+    "description": "Le mosse dell'utilizzatore guadagnano 15 di potenza base per ogni altro Pokémon Volante non K.O. nella squadra."
+  },
+  "heavenPiercer": {
+    "name": "Perforatore Celeste",
+    "description": "Le mosse Acciaio dell'utilizzatore infliggono 2× i danni ai Pokémon Terra e Roccia. Le mosse Normali diventano Acciaio con 1,2× i danni."
+  },
+  "heavensJudgment": {
+    "name": "Giudizio Celeste",
+    "description": "Abbassa l'Attacco del nemico all'entrata e quando qualsiasi nemico entra. Gli attacchi guadagnano 10 di potenza base per ogni Pokémon della squadra che conosce una mossa Servitore."
+  },
+  "heavyweightHopper": {
+    "name": "Saltatore Peso Massimo",
+    "description": "Le mosse Normali diventano Volante o Lotta a seconda di quale tipo è più forte contro il bersaglio (casuale se neutro). Le Volante hanno il 30% di probabilità di far tentennare. Le Lotta il 5% di brutto colpo."
+  },
+  "hydroClone": {
+    "name": "Idro Clone",
+    "description": "Quando l'utilizzatore manda K.O. il bersaglio, crea un Sostituto con il 25% dei suoi PS massimi."
+  },
+  "hydroSurge": {
+    "name": "Idro Ondata",
+    "description": "Tutte le mosse dell'utilizzatore sono superefficaci contro i Pokémon Fuoco."
+  },
+  "iceAge": {
+    "name": "Era Glaciale",
+    "description": "L'utilizzatore evoca Neve o Grandine. Alla fine di ogni turno, se Neve/Grandine è attiva, abbassa casualmente la Velocità, la Difesa più alta o l'Attacco più alto del bersaglio."
+  },
+  "illusionWeaver": {
+    "name": "Tessitore d'Illusioni",
+    "description": "Quando il bersaglio usa una mossa di stato, l'utilizzatore ha il 10% di probabilità di creare un Sostituto, usando il 25% dei suoi PS."
+  },
+  "illusionist": {
+    "name": "Illusionista",
+    "description": "L'utilizzatore ha il 30% di probabilità di evitare gli attacchi fisici."
+  },
+  "immortalSlime": {
+    "name": "Slime Immortale",
+    "description": "L'utilizzatore è immune ai problemi di stato e ai brutti colpi. Il danno fisico inflitto all'utilizzatore è ridotto del 50%."
+  },
+  "infinityStones": {
+    "name": "Pietre dell'Infinito",
+    "description": "Le mosse di tipo Normale diventano di tipo Roccia. Le mosse di tipo Roccia hanno il 10% di probabilità di infliggere un brutto colpo, il 10% di infliggere un problema di stato casuale e curano l'utilizzatore del 25% del danno inflitto."
+  },
+  "ironGiant": {
+    "name": "Gigante di Ferro",
+    "description": "Le mosse di tipo Acciaio e Lotta infliggono 1,3× danni e hanno il 30% di probabilità di ridurre la Difesa del bersaglio di un livello."
+  },
+  "ironJaws": {
+    "name": "Fauci di Ferro",
+    "description": "Le mosse morso curano l'utilizzatore del 50% del danno inflitto e condividono i vantaggi di tipo Acciaio."
+  },
+  "junkToTreasure": {
+    "name": "Spazzatura in Tesoro",
+    "description": "Le mosse con potenza base di 45 o meno infliggono 3× danni."
+  },
+  "jurassicJaws": {
+    "name": "Fauci Giurassiche",
+    "description": "Le mosse di tipo Normale diventano di tipo Terra. Le mosse di tipo Terra diventano mosse morso. Le mosse morso colpiscono due volte, e il secondo colpo infligge l'80% del danno."
+  },
+  "kingsRoar": {
+    "name": "Ruggito del Re",
+    "description": "Quando l'utilizzatore entra in campo normalmente, riduce l'Attacco e la Velocità del bersaglio di un livello. Se entra dopo che un membro del gruppo è stato sconfitto, riduce tutte le statistiche del bersaglio di un livello."
+  },
+  "laserBusterCannon": {
+    "name": "Cannone Laser Distruttore",
+    "description": "Le mosse pulsanti e d'aura ottengono +1 priorità e infliggono 1,3× danni."
+  },
+  "lastSamufrog": {
+    "name": "Ultimo Samuranocchio",
+    "description": "Le mosse di tipo Normale diventano mosse tagliente con un alto tasso di brutti colpi. Possiede l'effetto di Vigore."
+  },
+  "leviathansDomain": {
+    "name": "Dominio del Leviatano",
+    "description": "Le mosse di tipo Acqua e Drago evocano sempre Pioggia quando colpiscono. Per ogni turno consecutivo di Pioggia, le mosse di tipo Acqua e Drago di questo Pokémon guadagnano +10 potenza base, fino a un massimo di +50."
+  },
+  "leviathansWrath": {
+    "name": "Furia del Leviatano",
+    "description": "Le mosse di tipo Acqua infliggono sempre un brutto colpo durante la Pioggia. Dopo un brutto colpo di questo Pokémon, il meteo attuale viene annullato."
+  },
+  "lifeExchange": {
+    "name": "Scambio Vitale",
+    "description": "Una volta per lotta, dopo aver sconfitto un Pokémon avversario, rianima un membro casuale del gruppo con il 50% dei suoi PS massimi."
+  },
+  "looneyDragon": {
+    "name": "Drago Pazzo",
+    "description": "Le mosse di tipo Drago hanno il 30% di probabilità di confondere il bersaglio. Le mosse di tipo Folletto hanno il 30% di ridurre una statistica casuale del bersaglio. Questo Pokémon guadagna +1 elusione quando entra in campo."
+  },
+  "loversCoin": {
+    "name": "Moneta degli Amanti",
+    "description": "Gli attacchi hanno il 50% di probabilità di infatuare i Pokémon avversari con genere. Se un bersaglio infatuato attacca, c'è il 50% di probabilità di infliggere la metà del danno ricevuto al bersaglio."
+  },
+  "lusterGenesis": {
+    "name": "Genesi Lucente",
+    "description": "Se nel gruppo c'è un Pokémon tipo Buio esausto, gli attacchi colpiscono due volte (il secondo colpo infligge il 50% del danno). Se c'è un tipo Folletto esausto, le mosse con potenza base 60 infliggono 1,5× danni. Se ci sono un tipo Buio, un tipo Folletto e un tipo Buio/Folletto esausti (tre in totale), gli attacchi hanno il 30% di infliggere una condizione di stato casuale. Ogni Pokémon esausto viene contato al massimo una volta."
+  },
+  "machSpeed": {
+    "name": "Velocità Mach",
+    "description": "Durante il primo turno in campo, la sua Velocità e il suo Attacco sono raddoppiati."
+  },
+  "magicalInheritance": {
+    "name": "Eredità Magica",
+    "description": "L'utilizzatore guadagna il 10% di Attacco Speciale per ogni Pokémon del gruppo che conosce una mossa di Magia Oscura. Le mosse di tipo Folletto curano l'utilizzatore del 10% del danno inflitto, moltiplicato per il numero di Pokémon tipo Folletto esausti nel gruppo."
+  },
+  "magiciansCoin": {
+    "name": "Moneta del Mago",
+    "description": "Quando un Pokémon usa una mossa di stato, questo Pokémon ha il 50% di probabilità di aumentare il suo Attacco Speciale o recuperare 1/8 dei suoi PS massimi."
+  },
+  "magnetizeBeta": {
+    "name": "Magnetizzare Beta",
+    "description": "Le mosse di tipo Elettro curano l'utilizzatore del 25% del danno inflitto. Le mosse di tipo Acciaio infliggono 1,2× danni. Se almeno altri due Pokémon del gruppo conoscono una mossa Magnetica, questo Pokémon guadagna +1 Attacco e +1 Attacco Speciale uscendo dal campo."
+  },
+  "maskOfRemnants": {
+    "name": "Maschera dei Resti",
+    "description": "Quando questo Pokémon va KO, intrappola e maledice l'attaccante."
+  },
+  "maskedGod": {
+    "name": "Dio Mascherato",
+    "description": "In base alle mosse Maschera nel gruppo, l'utilizzatore ottiene effetti. Con 1+: le mosse Normale diventano Buio, Spettro o Psico (tipo più forte; casuale se neutro). Con 2+: mosse Buio, Spettro e Psico curano del 25% del danno. Con 3+: l'utilizzatore subisce il 25% di danni in meno. Con 5+: Buio ha il 10% di addormentare, Spettro il 5% di maledire, Psico il 10% di ridurre Difesa e Dif. Sp. di un livello. Con 10+: Buio, Spettro e Psico condividono vantaggi di tipo."
+  },
+  "masterOfIllusions": {
+    "name": "Maestro delle Illusioni",
+    "description": "Alla fine di ogni turno, l'utilizzatore ha il 20% di probabilità di creare un Sostituto."
+  },
+  "masterOfTheDarkArts": {
+    "name": "Maestro delle Arti Oscure",
+    "description": "Le mosse di tipo Buio hanno il 30% di probabilità di infliggere danno residuo pari a 1/8 dei PS massimi del bersaglio (Avvolgibotta). Le mosse di tipo Normale diventano di tipo Buio quando sarebbe superefficace contro il bersaglio."
+  },
+  "mastersBlade": {
+    "name": "Lama del Maestro",
+    "description": "Tutte le mosse di tipo Normale sono mosse taglienti. Le mosse taglienti infliggono 1,5× danni e hanno +1 ratio di brutti colpi."
+  },
+  "maxDestruction": {
+    "name": "Distruzione MAX",
+    "description": "L'utilizzatore viene immediatamente guarito dai problemi di stato. Le mosse dell'utilizzatore colpiscono due volte; il secondo colpo infligge il 50% del danno. Tuttavia, se la Difesa del bersaglio è superiore al suo Attacco, il secondo colpo infligge danno pieno."
+  },
+  "meteorShower": {
+    "name": "Pioggia di Meteore",
+    "description": "Le mosse di tipo Normale, Fuoco e Roccia colpiscono tre volte al 40% della potenza base, con ogni colpo che diventa casualmente di tipo Fuoco o Roccia."
+  },
+  "millEngine": {
+    "name": "Motore a Mulino",
+    "description": "Alla fine di ogni turno, se il Pokémon tiene una Bacca, consuma una Bacca casuale e aumenta il suo Attacco di un livello. Se il suo Attacco è a +3 livelli alla fine del turno, l'Attacco viene riportato a 0 e recupera il 30% dei suoi PS massimi."
+  },
+  "millennialWeapon": {
+    "name": "Arma Millenaria",
+    "description": "La Difesa dell'utilizzatore è moltiplicata per 1,5. Le mosse di tipo Normale diventano di tipo Folletto o Roccia, a seconda di quale infliggerebbe più danni (casuale se neutro). Le mosse di tipo Folletto e Roccia usano la Difesa dell'utilizzatore al posto dell'Attacco o Attacco Speciale."
+  },
+  "millenniumAbsorption": {
+    "name": "Assorbimento Millenario",
+    "description": "Quando l'utilizzatore è colpito da una mossa a contatto, l'attaccante perde PS pari al 50% del danno subito. Quando sconfigge il bersaglio, recupera il 25% dei PS e copia l'abilità del bersaglio come passiva, sovrascrivendo la passiva esistente per la lotta."
+  },
+  "millenniumStalker": {
+    "name": "Stalker Millenario",
+    "description": "Quando l'utilizzatore sconfigge il bersaglio, il suo Attacco e una statistica casuale aumentano di un livello, e la sua condizione di stato viene guarita."
+  },
+  "mindTrance": {
+    "name": "Trance Mentale",
+    "description": "Se il bersaglio ha un problema di stato o uno stato volatile (come confusione o infatuazione), le mosse dell'utilizzatore guadagnano priorità, e le mosse che normalmente non causano tentennamento hanno il 10% di probabilità di far tentennare il bersaglio."
+  },
+  "mindWarp": {
+    "name": "Distorsione Mentale",
+    "description": "Le mosse di tipo Normale diventano di tipo Buio o Psico a seconda di quale sia più efficace (casuale se neutro). Le mosse Psico hanno il 30% di confondere il bersaglio, e le mosse Buio il 30% di paralizzare il bersaglio."
+  },
+  "mindlessRampage": {
+    "name": "Furia Cieca",
+    "description": "Si applicano gli effetti di Forzabruta. Quando l'utilizzatore infligge danno, la sua Velocità o il suo Attacco aumenta di un livello. Tuttavia, non può usare mosse di stato. Alla fine di ogni turno, subisce danno pari a 1/8 dei suoi PS massimi."
+  },
+  "mirrorKing": {
+    "name": "Re Specchio",
+    "description": "All'ingresso in campo, l'utilizzatore copia l'abilità del bersaglio. Quando si ritira, recupera il 33% dei suoi PS."
+  },
+  "moltenShackles": {
+    "name": "Catene Fuse",
+    "description": "L'utilizzatore intrappola il bersaglio e infligge danno pari a 1/8 dei suoi PS massimi alla fine di ogni turno."
+  },
+  "moonlitMischief": {
+    "name": "Birichinata Lunare",
+    "description": "Nei biomi notturni, quando questo Pokémon entra in campo, tutte le sue statistiche aumentano di un livello."
+  },
+  "moonsCoin": {
+    "name": "Moneta della Luna",
+    "description": "All'ingresso in campo, l'utilizzatore attiva la Gravità per 5 turni. Mentre la Gravità è attiva, le mosse Buio hanno il 50% di addormentare il bersaglio, e le mosse Psico il 50% di creare un Sostituto."
+  },
+  "multiply": {
+    "name": "Moltiplicare",
+    "description": "Le mosse di tipo Normale dell'utilizzatore hanno il 30% di probabilità di creare un Sostituto e aumentare due statistiche casuali di un livello."
+  },
+  "necroDrain": {
+    "name": "Drenaggio Necro",
+    "description": "Quando l'utilizzatore sconfigge il bersaglio, un membro casuale non esausto del gruppo recupera il 25% dei suoi PS."
+  },
+  "necroSurge": {
+    "name": "Ondata Necro",
+    "description": "Le mosse dell'utilizzatore guadagnano 5 potenza base per ogni membro del gruppo esausto."
+  },
+  "nightStalker": {
+    "name": "Predatore Notturno",
+    "description": "Nei biomi notturni, le mosse dell'utilizzatore guadagnano +1 priorità."
+  },
+  "ojamaLockdown": {
+    "name": "Blocco Ojama",
+    "description": "Impedisce all'avversario di cambiare o usare mosse di stato. Se almeno tre Pokémon del gruppo conoscono mosse Ojama, una statistica del bersaglio è ridotta di 2 livelli alla fine di ogni turno."
+  },
+  "ojamaMagic": {
+    "name": "Magia Ojama",
+    "description": "Se almeno tre Pokémon del gruppo conoscono mosse Ojama, le mosse di tipo Normale e Ojama di questo Pokémon hanno il 30% di provocare, tormentare e confondere il bersaglio simultaneamente."
+  },
+  "ojamaSolidarity": {
+    "name": "Solidarietà Ojama",
+    "description": "All'ingresso, disabilita una mossa del bersaglio. Se almeno 3 Pokémon del gruppo conoscono mosse Ojama, le mosse Normal e Ojama di questo Pokémon guadagnano priorità e +1 ratio di brutti colpi."
+  },
+  "originalSkyKing": {
+    "name": "Re Originario dei Cieli",
+    "description": "Le mosse Normali diventano mosse morso. Le mosse morso e taglienti diventano di tipo Acciaio o Volante (più efficace; casuale se neutro) e infliggono 1,2× danni. L'utilizzatore si cura del 20% del danno inflitto."
+  },
+  "parallelWorld": {
+    "name": "Mondo Parallelo",
+    "description": "All'ingresso in campo, scambia l'Attacco e l'Attacco Speciale del bersaglio."
+  },
+  "phantomArmor": {
+    "name": "Armatura Fantasma",
+    "description": "Il Pokémon è immune alle mosse a contatto."
+  },
+  "phantomArsenal": {
+    "name": "Arsenale Fantasma",
+    "description": "Le mosse Buio hanno il 10% di probabilità di piazzare Punte nel campo avversario. Le mosse Roccia hanno il 10% di piazzare Levitroccia. Le mosse Spettro hanno il 5% di infliggere Maledizione."
+  },
+  "phantomBeast": {
+    "name": "Bestia Fantasma",
+    "description": "L'elusione dell'utilizzatore aumenta di 1 livello alla fine di ogni turno. Mentre ha più di 1 livello di elusione, le mosse guadagnano +1 priorità. Quando il bersaglio manca e l'elusione è sopra 1, l'elusione si resetta e una statistica aumenta di 1 livello."
+  },
+  "piercingSpiral": {
+    "name": "Spirale Perforante",
+    "description": "Le mosse Normali diventano di tipo Drago o Lotta, a seconda di quale infligge più danni (casuale se neutro). Le mosse Drago e Lotta hanno il 30% di ridurre la Difesa del bersaglio."
+  },
+  "plagueBreathe": {
+    "name": "Respiro Pestilente",
+    "description": "Se questo Pokémon ha meno del 70% dei PS quando si ritira, avvelena il bersaglio, con il 30% di probabilità di avvelenare gravemente."
+  },
+  "plasmasDomain": {
+    "name": "Dominio Plasma",
+    "description": "Annulla tutte le abilità e gli effetti delle mosse dei Pokémon avversari. All'ingresso in campo, aumenta fino a due statistiche casuali inferiori a quelle del Pokémon avversario."
+  },
+  "polarizeAlpha": {
+    "name": "Polarizzare Alfa",
+    "description": "Le mosse di tipo Elettro diventano di tipo Roccia con 1,2× potenza. Se almeno altri due Pokémon del gruppo conoscono una mossa Magnetica, questo Pokémon guadagna +1 Difesa e +1 Dif. Sp. uscendo dal campo."
+  },
+  "portalBeast": {
+    "name": "Bestia Portale",
+    "description": "Ogni volta che un Pokémon avversario entra in campo, questo Pokémon guadagna +1 a tre statistiche casuali. Quando si ritira, recupera il 25% dei suoi PS massimi."
+  },
+  "powderKing": {
+    "name": "Re della Polvere",
+    "description": "Le mosse Normali diventano di tipo Coleottero o Veleno (più forte; casuale se neutro) e infliggono 1,2× danni. Le mosse Coleottero e Veleno hanno il 50% ad ogni colpo di infliggere casualmente Veleno, Sonno, Scottatura o Paralisi."
+  },
+  "prideOfWeak": {
+    "name": "Orgoglio del Debole",
+    "description": "Sconfiggere un avversario concede +1 Velocità e +1 alla statistica di Attacco più alta dell'utilizzatore. Le mosse con potenza base 60 o meno infliggono 1,5× danni."
+  },
+  "pyroBullet": {
+    "name": "Proiettile Pyro",
+    "description": "Le mosse di tipo Normale diventano di tipo Fuoco. Le mosse di tipo Fuoco guadagnano +1 priorità."
+  },
+  "quickDrawV2": {
+    "name": "Estrazione Rapida",
+    "description": "Le mosse Proiettile, Aura, Palla e Pulsazione dell'utilizzatore guadagnano +1 priorità e hanno 1,2× potenza."
+  },
+  "quickHarvest": {
+    "name": "Raccolto Rapido",
+    "description": "Alla fine di ogni turno, c'è il 30% di probabilità di ripristinare una Bacca usata. Alla fine della lotta, c'è il 50% di generare una Bacca casuale (Raccolta per Bacche)."
+  },
+  "radiatingGamma": {
+    "name": "Gamma Radiante",
+    "description": "Le mosse Normali diventano di tipo Acciaio con 1,2× danni. Gli attacchi dell'utilizzatore usano la sua Difesa per il calcolo del danno. Se almeno altri due Pokémon del gruppo conoscono una mossa Magnetica, il bersaglio perde 1/8 dei PS alla fine di ogni turno."
+  },
+  "ragingAxe": {
+    "name": "Ascia Furiosa",
+    "description": "Le mosse taglienti infliggono 1,5× danni, diventano di tipo Lotta, ignorano gli aumenti di Difesa e hanno il 30% di far tentennare il bersaglio."
+  },
+  "rapidFire": {
+    "name": "Fuoco Rapido",
+    "description": "Le mosse Normali diventano di tipo Acciaio o Fuoco (più danni; casuale se neutro) con 1,2× danni. Le mosse Acciaio e Fuoco hanno il 30% di guadagnare +1 priorità."
+  },
+  "reboundingHurricane": {
+    "name": "Uragano Rimbalzante",
+    "description": "All'ingresso, l'elusione aumenta di un livello. Se l'utilizzatore schiva un attacco, ottiene Carica di Vento. Usare una mossa Normale o Volante con Carica di Vento attiva forza il bersaglio a uscire dopo il colpo e consuma la Carica di Vento."
+  },
+  "rocketImpact": {
+    "name": "Impatto Razzo",
+    "description": "Le mosse Normali diventano di tipo Fuoco. Le mosse Fuoco guadagnano +1 ratio di brutti colpi, e i brutti colpi scottano il bersaglio."
+  },
+  "roseGarden": {
+    "name": "Giardino di Rose",
+    "description": "All'ingresso, rimuove le trappole e gli schermi avversari. Attiva il Campo Erboso. Le mosse Erba hanno il 30% di ridurre l'Attacco e l'Attacco Speciale del nemico di un livello."
+  },
+  "roundTrip": {
+    "name": "Andata e Ritorno",
+    "description": "Quando si ritira, l'utilizzatore recupera il 20% dei suoi PS massimi, e il Pokémon che entra recupera il 20% dei suoi PS massimi."
+  },
+  "ruin": {
+    "name": "Rovina",
+    "description": "Le mosse Normali diventano di tipo Buio. Le mosse Buio hanno il 30% di invertire le modifiche alle statistiche del bersaglio e il 10% di infliggere un brutto colpo."
+  },
+  "sAndMummy": {
+    "name": "S&Mummia",
+    "description": "Le mosse a contatto hanno il 30% di probabilità di infliggere Avvolgibotta al bersaglio. L'utilizzatore recupera 1/16 dei suoi PS massimi ogni turno."
+  },
+  "scalesOfJustice": {
+    "name": "Bilancia della Giustizia",
+    "description": "Gli attacchi infliggono 2,5× danni contro i Pokémon di tipo Buio."
+  },
+  "scorchedEarth": {
+    "name": "Terra Bruciata",
+    "description": "Se un terreno è attivo, il danno d'attacco è aumentato di 1,5×. Ha il 30% di distruggere il terreno, aumentare la Velocità di un livello e scottare il bersaglio."
+  },
+  "scorchingBurster": {
+    "name": "Scoppio Bruciante",
+    "description": "Le mosse Normali diventano di tipo Fuoco. Le mosse Fuoco hanno il 30% di scottare e +1 ratio di brutti colpi. Le mosse Acqua e Ghiaccio non colpiscono l'utilizzatore."
+  },
+  "scorchingJustice": {
+    "name": "Giustizia Bruciante",
+    "description": "Le mosse d'attacco dell'utilizzatore hanno il 30% di probabilità di scottare il bersaglio. I bersagli scottati subiscono 1,5× danni."
+  },
+  "shadowFlame": {
+    "name": "Fiamma d'Ombra",
+    "description": "Le mosse di tipo Fuoco e Buio dell'utilizzatore condividono i vantaggi di tipo. Le mosse Normali diventano di tipo Buio con 1,2× danni."
+  },
+  "shadowMartyr": {
+    "name": "Martire d'Ombra",
+    "description": "Quando l'utilizzatore va KO, il Pokémon che lo sostituisce recupera il 33% dei suoi PS massimi e guadagna +1 livello alla sua statistica più alta e a una statistica casuale."
+  },
+  "shadowReach": {
+    "name": "Portata d'Ombra",
+    "description": "Le mosse di trappola dell'utilizzatore infliggono danno pari a 1/6 dei PS massimi del bersaglio alla fine di ogni turno."
+  },
+  "silentAssassin": {
+    "name": "Assassino Silenzioso",
+    "description": "Alla fine di ogni turno, l'elusione dell'utilizzatore aumenta di 1 livello, fino a un massimo di 3. Quando raggiunge 3, si resetta a 0 e tutte le statistiche aumentano di 1 livello."
+  },
+  "silentBlade": {
+    "name": "Lama Silenziosa",
+    "description": "Quando attacca, usa la Velocità del nemico come base per il calcolo della difesa."
+  },
+  "slimeAbsorb": {
+    "name": "Assorbimento Viscido",
+    "description": "Quando l'utilizzatore sconfigge il bersaglio, recupera 1/4 dei suoi PS massimi e aumenta una statistica casuale."
+  },
+  "smash22": {
+    "name": "Schianto 22",
+    "description": "Le mosse Normali diventano di tipo Lotta o Spettro (più danni; casuale se neutro). Le mosse Lotta hanno il 10% di scambiare Difesa e Dif. Sp. del bersaglio. Le mosse Spettro hanno il 10% di scambiare Attacco e Att. Sp. del bersaglio."
+  },
+  "soulTax": {
+    "name": "Tassa dell'Anima",
+    "description": "Alla fine di ogni turno, il Pokémon avversario perde 1/16 dei suoi PS massimi."
+  },
+  "spectralMist": {
+    "name": "Nebbia Spettrale",
+    "description": "Le mosse Spettro hanno il 30% di maledire il bersaglio. Alla fine di ogni turno, l'utilizzatore ha il 25% di recuperare 1/8 dei suoi PS massimi."
+  },
+  "spellDrain": {
+    "name": "Drenaggio Magico",
+    "description": "L'utilizzatore ha il 30% di probabilità di annullare le mosse di stato del bersaglio. Quando una mossa è annullata, recupera il 15% dei PS massimi e aumenta una statistica casuale di un livello."
+  },
+  "spellbreakerBlade": {
+    "name": "Lama Spezzaincantesimi",
+    "description": "All'ingresso in campo, l'utilizzatore ottiene un problema di stato casuale (esclusi Sonno e Congelamento). Quando attacca con un problema di stato, i suoi attacchi infliggono sempre brutti colpi e il problema viene guarito."
+  },
+  "spellcastersFluff": {
+    "name": "Pelo del Mago",
+    "description": "L'utilizzatore non subisce danni dal primo attacco ricevuto ogni volta che entra in campo."
+  },
+  "spikedShell": {
+    "name": "Guscio Spinoso",
+    "description": "Quando l'utilizzatore è colpito da una mossa a contatto, l'attaccante subisce danno pari a 1/6 dei suoi PS massimi. L'utilizzatore subisce il 50% di danni in meno dalle mosse fisiche."
+  },
+  "theGrimMiller": {
+    "name": "Il Tetro Mugnaio",
+    "description": "Le mosse Spettro riducono di 2 PP l'ultima mossa usata dal bersaglio. Le mosse Normali diventano di tipo Spettro."
+  },
+  "theUndeadKing": {
+    "name": "Il Re Non Morto",
+    "description": "Quando questo Pokémon va KO, mette KO un Pokémon alleato casuale che conosce una mossa Servitore (se esiste), recupera il 50% dei PS e aumenta due statistiche casuali."
+  },
+  "thousandEyesLock": {
+    "name": "Blocco dei Mille Occhi",
+    "description": "Mentre questa abilità è attiva, il bersaglio non può cambiare né usare la stessa mossa due turni di fila. Ogni turno, una statistica casuale del bersaglio scende di un livello e la stessa statistica dell'utilizzatore sale di un livello."
+  },
+  "thousandSouls": {
+    "name": "Mille Anime",
+    "description": "All'ingresso, questo Pokémon copia l'abilità di un membro del gruppo esausto casuale e recupera 1/8 dei suoi PS."
+  },
+  "thousandYears": {
+    "name": "Mille Anni",
+    "description": "Ogni turno, una statistica casuale del bersaglio scende di un livello. Se almeno altri due Pokémon del gruppo conoscono una mossa Temporale, due statistiche casuali scendono di un livello."
+  },
+  "threeHeadedBite": {
+    "name": "Morso a Tre Teste",
+    "description": "Le mosse Normali diventano di tipo Buio o Fuoco (più forte; casuale se neutro). Le mosse Buio e Fuoco diventano mosse morso e colpiscono tre volte al 40% di potenza."
+  },
+  "timeRoulette": {
+    "name": "Roulette Temporale!",
+    "description": "Quando attacca, c'è il 50% di probabilità che l'attacco infligga il triplo del danno. Altrimenti, l'utilizzatore subisce contraccolpo pari al 50% del danno inflitto."
+  },
+  "timeWizardsBlessing": {
+    "name": "Benedizione del Mago del Tempo",
+    "description": "Alla fine di ogni turno, una statistica casuale aumenta. Se almeno altri due Pokémon del gruppo conoscono una mossa Temporale, l'utilizzatore recupera anche 1/8 dei PS massimi e aumenta un'altra statistica."
+  },
+  "timelineMagic": {
+    "name": "Magia della Linea Temporale",
+    "description": "Quando riceve danno, l'utilizzatore usa la statistica di Difesa più alta. Quando infligge danno, il bersaglio usa la più bassa."
+  },
+  "tombRaider": {
+    "name": "Predatore di Tombe",
+    "description": "Le mosse Normali diventano di tipo Buio con 1,2× danni. Le mosse Buio hanno il 30% di rubare lo strumento del bersaglio. Con uno strumento, la Velocità sale di un livello all'ingresso e le mosse Buio infliggono 1,3× danni."
+  },
+  "toonChaos": {
+    "name": "Caos Toon",
+    "description": "Le mosse Normali diventano di tipo Folletto o Buio (più forte; casuale se neutro). Le mosse Folletto e Buio infliggono 1,2× danni e hanno il 30% di forzare il bersaglio a uscire."
+  },
+  "toonElectricArchfiend": {
+    "name": "Arcidemone Elettrico Toon",
+    "description": "Le mosse Normali diventano di tipo Elettro o Buio (più forte; casuale se neutro). Le mosse Elettro hanno il 30% di guadagnare +1 priorità. Le mosse Buio hanno il 10% di brutto colpo."
+  },
+  "toonGunslinger": {
+    "name": "Pistolero Toon",
+    "description": "Le mosse Normale, Drago, Buio e Folletto dell'utilizzatore hanno il 50% di guadagnare +1 priorità e il 10% di brutto colpo."
+  },
+  "toonIllusion": {
+    "name": "Illusione Toon",
+    "description": "Quando il bersaglio manca un attacco, l'utilizzatore ha il 30% di creare un Sostituto con il 25% dei PS massimi. All'ingresso, l'elusione aumenta di un livello."
+  },
+  "toonPlotArmor": {
+    "name": "Trama Toon",
+    "description": "Le mosse Normali diventano di tipo Acqua. Le mosse Acqua hanno il 10% di attivare un effetto Protezione."
+  },
+  "toonPounding": {
+    "name": "Pestaggio Toon",
+    "description": "Invece della Difesa del bersaglio, gli attacchi Acciaio e Folletto usano la statistica più bassa del bersaglio per il calcolo del danno."
+  },
+  "toonSynergy": {
+    "name": "Sinergia Toon",
+    "description": "Le mosse Normali diventano di tipo Psico o Folletto (più forte; casuale se neutro). Gli attacchi Psico e Folletto hanno il 10% per Pokémon con mosse Toon di aumentare tutte le statistiche dell'utilizzatore."
+  },
+  "topazLifeorb": {
+    "name": "Sfera Vita Topazio",
+    "description": "Gli attacchi dell'utilizzatore infliggono 1,3× danni e hanno il 10% di aumentare l'Attacco, ma l'utilizzatore subisce il 15% di danno ad ogni attacco."
+  },
+  "torrentialTribute": {
+    "name": "Tributo Torrenziale",
+    "description": "All'ingresso, l'utilizzatore diventa Caricato d'Acqua. Se colpito mentre caricato, non subisce danno e l'attaccante perde 1/8 dei PS massimi; entrambi gli effetti solo una volta per lotta. Le mosse Normali diventano Acqua con 1,2× danni."
+  },
+  "travelBuddiesBlue": {
+    "name": "Compagni di Viaggio Blu",
+    "description": "Le mosse Normali diventano di tipo Volante. Le mosse Volante guadagnano +1 priorità. Se almeno altri due Pokémon del gruppo conoscono mosse Unione, le mosse Volante curano anche l'utilizzatore del 50% del danno inflitto."
+  },
+  "travelBuddiesRed": {
+    "name": "Compagni di Viaggio Rosso",
+    "description": "Le mosse Normali diventano di tipo Volante con +1 priorità. Se almeno altri due Pokémon del gruppo conoscono mosse Unione, le mosse di questo Pokémon guadagnano anche 1,5× potenza."
+  },
+  "tripleBurst": {
+    "name": "Tripla Raffica",
+    "description": "Gli attacchi non multicolpo colpiscono tre volte al 55% della potenza ciascuno."
+  },
+  "tripleCoreEngine": {
+    "name": "Motore a Triplo Nucleo",
+    "description": "Tutte le mosse multicolpo agiscono come Triplo Axel (3 colpi con potenza crescente, precisione decrescente). Le mosse a colpo singolo infliggono 1,2× danni."
+  },
+  "twinBlessings": {
+    "name": "Benedizioni Gemelle",
+    "description": "Le probabilità di effetti secondari sono raddoppiate. Le mosse Normali diventano Folletto con 1,2× danni. Le mosse Folletto hanno il 30% di curare il 50% del danno inflitto."
+  },
+  "twinCoreBurst": {
+    "name": "Esplosione Doppio Nucleo",
+    "description": "Se l'utilizzatore ha un problema di stato, le mosse hanno il 30% di colpire due volte e curare il problema."
+  },
+  "twistedLove": {
+    "name": "Amore Contorto",
+    "description": "L'utilizzatore subisce danno solo da mosse superefficaci. Non può essere curato (Bacche, mosse e strumenti non hanno effetto). Dopo aver attaccato, infligge 1/8 dei suoi PS massimi al bersaglio. Ogni turno, perde 1/4 dei suoi PS massimi."
+  },
+  "tyrantsCoin": {
+    "name": "Moneta del Tiranno",
+    "description": "Le mosse danno non multicolpo hanno il 50% di colpire due volte e il 50% di infliggere un contraccolpo del 20% dei PS massimi all'utilizzatore."
+  },
+  "ultimateDefense": {
+    "name": "Difesa Definitiva",
+    "description": "Tutte le mosse infliggono il 50% di danni in meno, ma questo Pokémon non può usare mosse di stato."
+  },
+  "uncontrollablePower": {
+    "name": "Potere Incontrollabile",
+    "description": "Possiede Vigore. Se i PS dell'utilizzatore sono esattamente 1, tutte le mosse guadagnano +3 priorità, infliggono danno doppio e curano del 50% del danno inflitto."
+  },
+  "undeadArchfiend": {
+    "name": "Arcidemone Non Morto",
+    "description": "Questo Pokémon non è influenzato dalle mosse di stato o effetti secondari del bersaglio. Le mosse Normali diventano Spettro con 1,2× danni."
+  },
+  "undeadAvenger": {
+    "name": "Vendicatore Non Morto",
+    "description": "Guadagna +10% di Attacco e Velocità per ogni membro del gruppo esausto."
+  },
+  "underworldThicket": {
+    "name": "Bosco degli Inferi",
+    "description": "Quando un Pokémon avversario fa contatto, subisce contraccolpo pari a 1/8 dei suoi PS massimi e ha il 10% di subire Avvolgibotta."
+  },
+  "undyingSoul": {
+    "name": "Anima Immortale",
+    "description": "L'utilizzatore guadagna +1 a una statistica casuale per ogni Pokémon di tipo Normale o Lotta nel gruppo. Se sconfitto, rianima un Pokémon casuale di tipo Normale o Lotta. Questo effetto può essere usato solo una volta per lotta."
+  },
+  "unitedJungle": {
+    "name": "Giungla Unita",
+    "description": "Cura il 25% dei PS sostituendo un alleato esausto. Guadagna +10 potenza base per ogni Pokémon di tipo Erba esausto nel gruppo."
+  },
+  "unstoppableTitan": {
+    "name": "Titano Inarrestabile",
+    "description": "Le mosse a contatto dell'utilizzatore ignorano le resistenze di tipo e infliggono 1,2× danni. I danni sono calcolati contro la statistica più bassa del bersaglio invece della Difesa o Dif. Sp."
+  },
+  "vileOvergrowth": {
+    "name": "Crescita Vile",
+    "description": "Le mosse Erba e Buio condividono i vantaggi di tipo. Le mosse Erba hanno il 30% di piantare un seme sul bersaglio, e le mosse Buio il 10% di addormentare."
+  },
+  "voidBanishment": {
+    "name": "Bando del Vuoto",
+    "description": "Se l'utilizzatore entra dopo un alleato sconfitto, forza il bersaglio a cambiare. Se il bersaglio è tipo Buio, prima subisce 1/6 dei suoi PS massimi. Le mosse Normali diventano Buio con 1,2× danni e il 20% di rimuovere lo strumento del bersaglio."
+  },
+  "volcanicCore": {
+    "name": "Nucleo Vulcanico",
+    "description": "Le mosse Normali diventano di tipo Fuoco con 1,2× danni. Quando l'utilizzatore usa una mossa di stato, infligge danno pari a 1/8 dei PS massimi del bersaglio."
+  },
+  "whirlwindAxe": {
+    "name": "Ascia Turbine",
+    "description": "Le mosse Normali diventano di tipo Volante. Le mosse Volante hanno il 30% di forzare il bersaglio a uscire. Se il bersaglio è forzato a uscire, l'utilizzatore recupera 1/8 dei PS massimi."
+  },
+  "whiteLightning": {
+    "name": "Fulmine Bianco",
+    "description": "Le mosse Normali diventano Elettro con 1,2× potenza. Le mosse Drago guadagnano +1 ratio di brutti colpi. Le mosse Drago e Elettro hanno il 30% di paralizzare il bersaglio."
+  },
+  "windboltDiscard": {
+    "name": "Scarto Fulminvento",
+    "description": "Quando l'utilizzatore usa una mossa di stato, consuma una Bacca casuale e infligge danno pari al 20% dei PS massimi del bersaglio."
+  },
+  "windstormDiscard": {
+    "name": "Scarto Tempesta",
+    "description": "Gli attacchi dell'utilizzatore hanno il 30% di scartare un proprio strumento casuale. Se lo fa, l'attacco infligge 2,5× danni."
+  },
+  "zanySplasher": {
+    "name": "Spruzzatore Strambo",
+    "description": "Le mosse Normali diventano Folletto o Acqua (più forte; casuale se uguali). Le mosse Folletto hanno il 5% di brutto colpo. Le mosse Acqua hanno il 5% di infliggere Mulinello. L'elusione aumenta di un livello all'ingresso."
+  },
+  "zombieColossus": {
+    "name": "Colosso Zombie",
+    "description": "Una volta per lotta, quando questo Pokémon va KO, rivive con il 50% dei suoi PS massimi."
   }
 }

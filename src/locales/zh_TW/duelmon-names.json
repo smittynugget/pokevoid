@@ -1,0 +1,1295 @@
+{
+  "abaki": {
+    "name": "暴鬼"
+  },
+  "abare_ushioni": {
+    "name": "暴走牛鬼"
+  },
+  "agido": {
+    "name": "阿基德"
+  },
+  "aitsu": {
+    "name": "那傢伙"
+  },
+  "alien_grey": {
+    "name": "外星人 格雷"
+  },
+  "alien_mars": {
+    "name": "外星人 火星"
+  },
+  "alien_mother": {
+    "name": "外星人 母體"
+  },
+  "alligator_s_sword_dragon": {
+    "name": "鱷魚劍龍"
+  },
+  "alligators_sword_dragon": {
+    "name": "鱷魚劍龍"
+  },
+  "alpha_the_magnet_warrior": {
+    "name": "磁石戰士α"
+  },
+  "amazoness_tiger": {
+    "name": "亞馬遜寵物虎"
+  },
+  "ancient_gear": {
+    "name": "古代的齒輪"
+  },
+  "ancient_gear_box": {
+    "name": "古代機械箱"
+  },
+  "ancient_gear_engineer": {
+    "name": "古代機械工兵"
+  },
+  "ancient_gear_golem": {
+    "name": "古代機械巨人"
+  },
+  "ancient_gear_knight": {
+    "name": "古代機械騎士"
+  },
+  "ancient_gear_soldier": {
+    "name": "古代機械兵"
+  },
+  "ancient_tree_of_enlightenment": {
+    "name": "覺悟的古樹"
+  },
+  "arcana_force_0_the_fool": {
+    "name": "命運之力0-愚者",
+    "skipStrip": true
+  },
+  "arcana_force_0_—_the_fool": {
+    "name": "命運之力0-愚者",
+    "skipStrip": true
+  },
+  "arcana_force_ex_the_dark_ruler": {
+    "name": "命運之力EX-暗黑支配者",
+    "skipStrip": true
+  },
+  "arcana_force_ex_—_the_dark_ruler": {
+    "name": "命運之力EX-暗黑支配者",
+    "skipStrip": true
+  },
+  "arcana_force_i_the_magician": {
+    "name": "命運之力I-魔術師",
+    "skipStrip": true
+  },
+  "arcana_force_i_—_the_magician": {
+    "name": "命運之力I-魔術師",
+    "skipStrip": true
+  },
+  "arcana_force_iv_the_emperor": {
+    "name": "命運之力IV-皇帝",
+    "skipStrip": true
+  },
+  "arcana_force_iv_—_the_emperor": {
+    "name": "命運之力IV-皇帝",
+    "skipStrip": true
+  },
+  "arcana_force_vi_the_lovers": {
+    "name": "命運之力VI-戀人",
+    "skipStrip": true
+  },
+  "arcana_force_vi_—_the_lovers": {
+    "name": "命運之力VI-戀人",
+    "skipStrip": true
+  },
+  "arcana_force_xviii_the_moon": {
+    "name": "命運之力XVIII-月亮",
+    "skipStrip": true
+  },
+  "arcana_force_xviii_—_the_moon": {
+    "name": "命運之力XVIII-月亮",
+    "skipStrip": true
+  },
+  "archfiend_zombie": {
+    "name": "惡魔殭屍"
+  },
+  "armed_dragon_lv3": {
+    "name": "武裝龍 LV3"
+  },
+  "armed_dragon_lv5": {
+    "name": "武裝龍 LV5"
+  },
+  "armed_dragon_lv7": {
+    "name": "武裝龍 LV7"
+  },
+  "avatar_of_the_pot": {
+    "name": "壺之精靈"
+  },
+  "axe_raider": {
+    "name": "斧襲者"
+  },
+  "baby_dragon": {
+    "name": "小龍"
+  },
+  "bean_soldier": {
+    "name": "豆兵"
+  },
+  "beaver_warrior": {
+    "name": "河狸戰士"
+  },
+  "behemoth_the_king_of_all_animals": {
+    "name": "百獸王 巨獸",
+    "skipStrip": true
+  },
+  "beiige,_vanguard_of_dark_world": {
+    "name": "暗黑界的尖兵 貝吉"
+  },
+  "beiige_vanguard_of_dark_world": {
+    "name": "暗黑界的尖兵 貝吉"
+  },
+  "beta_the_magnet_warrior": {
+    "name": "磁石戰士β"
+  },
+  "bickuribox": {
+    "name": "驚奇箱"
+  },
+  "big_jaws": {
+    "name": "大顎"
+  },
+  "bio_plant": {
+    "name": "生化植物"
+  },
+  "black_dragon_s_chick": {
+    "name": "黑龍之雛"
+  },
+  "black_dragons_chick": {
+    "name": "黑龍之雛"
+  },
+  "black_luster_soldier": {
+    "name": "混沌戰士"
+  },
+  "black_luster_soldier_envoy_of_the_beginning": {
+    "name": "混沌戰士 -開闢的使者-",
+    "skipStrip": true
+  },
+  "black_luster_soldier_—_envoy_of_the_beginning": {
+    "name": "混沌戰士 -開闢的使者-",
+    "skipStrip": true
+  },
+  "black_magician_of_chaos": {
+    "name": "混沌黑魔術師"
+  },
+  "black_rose_dragon_(alt)": {
+    "name": "黑薔薇龍"
+  },
+  "black_rose_dragon_(alt___full_wings)": {
+    "name": "黑薔薇龍"
+  },
+  "black_rose_dragon_(full_wings)": {
+    "name": "黑薔薇龍"
+  },
+  "black_tyranno": {
+    "name": "黑暴龍"
+  },
+  "blade_knight": {
+    "name": "刃之騎士"
+  },
+  "blazing_inpachi": {
+    "name": "火焰木人18"
+  },
+  "blizzard_dragon": {
+    "name": "暴風雪龍"
+  },
+  "blizzarddragon": {
+    "name": "暴風雪龍"
+  },
+  "blowback_dragon": {
+    "name": "後座力龍"
+  },
+  "blue-eyes_alternative_white_dragon": {
+    "name": "青眼亞白龍"
+  },
+  "blue-eyes_chaos_max_dragon": {
+    "name": "青眼混沌極龍"
+  },
+  "blue-eyes_toon_dragon": {
+    "name": "藍眼卡通龍"
+  },
+  "blue-eyes_toon_dragon_(render)": {
+    "name": "藍眼卡通龍"
+  },
+  "blue-eyes_ultimate_dragon": {
+    "name": "青眼究極龍"
+  },
+  "blue-eyes_white_dragon": {
+    "name": "青眼白龍"
+  },
+  "blue-eyes_white_dragon_(alt_master_duel)": {
+    "name": "青眼白龍"
+  },
+  "blue-eyes_white_dragon_(variant_2)": {
+    "name": "青眼白龍"
+  },
+  "blue-eyes_white_dragon_(variants)": {
+    "name": "青眼白龍"
+  },
+  "blue_eyes_alternative_white_dragon": {
+    "name": "青眼亞白龍"
+  },
+  "blue_eyes_chaos_max_dragon": {
+    "name": "青眼混沌極龍"
+  },
+  "blue_eyes_ultimate_dragon": {
+    "name": "青眼究極龍"
+  },
+  "blue_eyes_white_dragon": {
+    "name": "青眼白龍"
+  },
+  "blue_eyes_white_dragon_v3": {
+    "name": "藍眼卡通龍"
+  },
+  "boo_koo": {
+    "name": "布庫"
+  },
+  "breaker_the_magical_warrior": {
+    "name": "魔導戰士 破壞者"
+  },
+  "breaker_the_magical_warrrior": {
+    "name": "魔導戰士 破壞者"
+  },
+  "buster_blader,_destruction_swordmaster": {
+    "name": "破壞劍士",
+    "skipStrip": true
+  },
+  "buster_blader,_destruction_swordsmaster": {
+    "name": "破壞劍士",
+    "skipStrip": true
+  },
+  "buster_blader_the_destruction_swordmaster": {
+    "name": "破壞劍士",
+    "skipStrip": true
+  },
+  "caius_the_shadow_monarch": {
+    "name": "邪帝 蓋烏斯"
+  },
+  "card_trooper": {
+    "name": "卡片士兵"
+  },
+  "castle_of_dark_illusions": {
+    "name": "暗黑之城"
+  },
+  "celtic_guardian": {
+    "name": "精靈劍士"
+  },
+  "chaos_emperor_dragon_envoy_of_the_end": {
+    "name": "混沌帝龍 -終焉的使者-",
+    "skipStrip": true
+  },
+  "chaos_emperor_dragon_—_envoy_of_the_end": {
+    "name": "混沌帝龍 -終焉的使者-",
+    "skipStrip": true
+  },
+  "claw_reacher": {
+    "name": "爪之伸手"
+  },
+  "cloudian_acid_cloud": {
+    "name": "雲魔物-酸雲",
+    "skipStrip": true
+  },
+  "cloudian_eye_of_the_typhoon": {
+    "name": "雲魔物-颱風之眼",
+    "skipStrip": true
+  },
+  "cloudian_ghost_fog": {
+    "name": "雲魔物-幽靈霧",
+    "skipStrip": true
+  },
+  "cloudian_nimbusman": {
+    "name": "雲魔物-雨雲人",
+    "skipStrip": true
+  },
+  "cloudian_smoke_ball": {
+    "name": "雲魔物-煙球",
+    "skipStrip": true
+  },
+  "cloudian_storm_dragon": {
+    "name": "雲魔物-暴風龍",
+    "skipStrip": true
+  },
+  "cloudian_—_acid_cloud": {
+    "name": "雲魔物-酸雲",
+    "skipStrip": true
+  },
+  "cloudian_—_eye_of_the_typhoon": {
+    "name": "雲魔物-颱風之眼",
+    "skipStrip": true
+  },
+  "cloudian_—_ghost_fog": {
+    "name": "雲魔物-幽靈霧",
+    "skipStrip": true
+  },
+  "cloudian_—_nimbusman": {
+    "name": "雲魔物-雨雲人",
+    "skipStrip": true
+  },
+  "cloudian_—_smoke_ball": {
+    "name": "雲魔物-煙球",
+    "skipStrip": true
+  },
+  "cloudian_—_storm_dragon": {
+    "name": "雲魔物-暴風龍",
+    "skipStrip": true
+  },
+  "colossal_fighter": {
+    "name": "巨大戰士"
+  },
+  "colossal_fighter1": {
+    "name": "巨大戰士"
+  },
+  "copycat": {
+    "name": "模仿幻想師"
+  },
+  "crab_turtle": {
+    "name": "螃蟹龜"
+  },
+  "crystal_beast_amber_mammoth": {
+    "name": "寶玉獸 琥珀猛獁",
+    "skipStrip": true
+  },
+  "crystal_beast_emerald_tortoise": {
+    "name": "寶玉獸 翡翠龜",
+    "skipStrip": true
+  },
+  "crystal_beast_ruby_carbuncle": {
+    "name": "寶玉獸 紅玉獸",
+    "skipStrip": true
+  },
+  "crystal_beast_topaz_tiger": {
+    "name": "寶玉獸 黃玉虎",
+    "skipStrip": true
+  },
+  "crystal_beast_—_emerald_tortoise": {
+    "name": "寶玉獸 翡翠龜",
+    "skipStrip": true
+  },
+  "crystal_beast_—_ruby_carbuncle": {
+    "name": "寶玉獸 紅玉獸",
+    "skipStrip": true
+  },
+  "crystal_beast_—_topaz_tiger": {
+    "name": "寶玉獸 黃玉虎",
+    "skipStrip": true
+  },
+  "curse_of_dragon": {
+    "name": "龍之詛咒",
+    "skipStrip": true
+  },
+  "curse_of_dragonfire": {
+    "name": "龍火之詛咒",
+    "skipStrip": true
+  },
+  "cyber_dinosaur": {
+    "name": "電子恐龍"
+  },
+  "cyber_dragon": {
+    "name": "電子龍"
+  },
+  "cyber_dragon_(cydra_2)": {
+    "name": "電子龍"
+  },
+  "cyber_dragon_vier": {
+    "name": "電子龍 菲爾"
+  },
+  "cyber_end_dragon": {
+    "name": "電子終結龍"
+  },
+  "cyber_ogre": {
+    "name": "電子食人魔"
+  },
+  "cyber_saurus": {
+    "name": "電子恐獸"
+  },
+  "cyber_tech_alligator": {
+    "name": "電子機械鱷魚"
+  },
+  "cyber_twin_dragon": {
+    "name": "電子雙生龍"
+  },
+  "d.d._crazy_beast": {
+    "name": "異次元瘋狂獸"
+  },
+  "d.d._trainer": {
+    "name": "異次元馴獸師"
+  },
+  "d.d._warrior": {
+    "name": "異次元戰士"
+  },
+  "d.d._warrior_lady": {
+    "name": "異次元女戰士"
+  },
+  "d_d_crazy_beast": {
+    "name": "異次元瘋狂獸"
+  },
+  "d_d_trainer": {
+    "name": "異次元馴獸師"
+  },
+  "d_d_warrior_lady": {
+    "name": "異次元女戰士"
+  },
+  "dandylion": {
+    "name": "蒲公英獅"
+  },
+  "danger!_bigfoot!": {
+    "name": "未界域的大腳怪"
+  },
+  "danger_bigfoot": {
+    "name": "未界域的大腳怪"
+  },
+  "dark_eradicator_warlock": {
+    "name": "暗黑殲滅魔導師"
+  },
+  "dark_eyes_illusionist": {
+    "name": "暗黑之眼幻術師"
+  },
+  "dark_magician": {
+    "name": "黑魔導士"
+  },
+  "dark_magician_(all_variants)": {
+    "name": "黑魔導士"
+  },
+  "dark_magician_(alt_master_duel)": {
+    "name": "黑魔導士"
+  },
+  "dark_magician_(variant_2)": {
+    "name": "黑魔導士"
+  },
+  "dark_magician_alternate": {
+    "name": "黑魔導士"
+  },
+  "dark_magician_girl": {
+    "name": "黑魔導女孩"
+  },
+  "dark_magician_girl___alternate": {
+    "name": "黑魔導女孩"
+  },
+  "dark_magician_girl_alternate": {
+    "name": "黑魔導女孩"
+  },
+  "dark_magician_of_chaos": {
+    "name": "混沌黑魔術師"
+  },
+  "dark_magician_of_chaos_(render)": {
+    "name": "混沌黑魔術師"
+  },
+  "dark_magician_v2": {
+    "name": "黑魔導士"
+  },
+  "dark_arkana_magician": {
+    "name": "黑魔導士 阿爾卡納"
+  },
+  "dark_magician_—_arkana_variant": {
+    "name": "黑魔導士 — 阿爾卡納"
+  },
+  "dark_necrofear": {
+    "name": "暗黑死靈恐懼"
+  },
+  "dark_paladin": {
+    "name": "超魔導劍士-黑騎士"
+  },
+  "dark_rabbit": {
+    "name": "暗黑兔"
+  },
+  "dark_resonator": {
+    "name": "暗黑共鳴者"
+  },
+  "dark_ruler_ha_des": {
+    "name": "暗黑支配者 哈迪斯"
+  },
+  "dark_sage": {
+    "name": "暗黑賢者"
+  },
+  "dark_world_thorns": {
+    "name": "暗黑界的荊棘"
+  },
+  "darkfire_dragon": {
+    "name": "暗黑炎龍"
+  },
+  "despair_from_the_dark": {
+    "name": "來自暗黑的絕望"
+  },
+  "destiny_hero_defender": {
+    "name": "D-HERO 防禦俠",
+    "skipStrip": true
+  },
+  "destiny_hero_plasma": {
+    "name": "D-HERO 血魔-D",
+    "skipStrip": true
+  },
+  "dragon_destroyer_swordsman": {
+    "name": "龍破壞劍士"
+  },
+  "dragon_spirit_of_white": {
+    "name": "白之靈龍"
+  },
+  "dragon_zombie": {
+    "name": "龍殭屍"
+  },
+  "drillago": {
+    "name": "鑽頭魚"
+  },
+  "drillroid": {
+    "name": "鑽頭機器人"
+  },
+  "duoterion": {
+    "name": "重氫"
+  },
+  "earthbound_immortal_chacu_challhua": {
+    "name": "地縛神 查庫查爾華",
+    "skipStrip": true
+  },
+  "earthboundimmortal_chacu_challhua": {
+    "name": "地縛神 查庫查爾華",
+    "skipStrip": true
+  },
+  "egyptian_god_slime": {
+    "name": "埃及神之黏液怪"
+  },
+  "elemental_hero_bladedge": {
+    "name": "E-HERO 刃俠",
+    "skipStrip": true
+  },
+  "elemental_hero_burstinatrix": {
+    "name": "E-HERO 爆炎女俠",
+    "skipStrip": true
+  },
+  "elemental_hero_clayman": {
+    "name": "E-HERO 黏土俠",
+    "skipStrip": true
+  },
+  "elemental_hero_flame_wingman": {
+    "name": "E-HERO 火焰翼俠",
+    "skipStrip": true
+  },
+  "elemental_hero_necroshade": {
+    "name": "E-HERO 暗影俠",
+    "skipStrip": true
+  },
+  "elemental_hero_neos": {
+    "name": "E-HERO 新生俠",
+    "skipStrip": true
+  },
+  "elemental_hero_neos_(alt_master_duel)": {
+    "name": "E-HERO 新生俠",
+    "skipStrip": true
+  },
+  "elemental_hero_neos_alius": {
+    "name": "E-HERO 新宇俠另一種",
+    "skipStrip": true
+  },
+  "elemental_hero_sparkman": {
+    "name": "E-HERO 電光俠",
+    "skipStrip": true
+  },
+  "elemental_hero_stratos": {
+    "name": "E-HERO 氣流俠",
+    "skipStrip": true
+  },
+  "enraged_battle_ox": {
+    "name": "狂怒之牛人"
+  },
+  "evilswarm_mandragora": {
+    "name": "侵入魔蔓草"
+  },
+  "evilswarm_salamandra": {
+    "name": "侵入魔蝾螈"
+  },
+  "exodia": {
+    "name": "艾克佐迪亞"
+  },
+  "exodia_(full_body)": {
+    "name": "艾克佐迪亞"
+  },
+  "exodia_necross": {
+    "name": "艾克佐迪亞 死靈"
+  },
+  "exodia_the_forbidden_evolution": {
+    "name": "被封印的艾克佐迪亞 進化"
+  },
+  "exodius_the_ultimate_forbidden_lord": {
+    "name": "究極封印神 艾克佐迪奧斯"
+  },
+  "fenrir": {
+    "name": "芬里爾"
+  },
+  "feral_imp": {
+    "name": "野生小惡魔"
+  },
+  "fiend_kraken": {
+    "name": "惡魔海怪"
+  },
+  "fiend_sword": {
+    "name": "魔劍"
+  },
+  "fossil_dyna_pachycephalo": {
+    "name": "化石恐龍 厚頭龍"
+  },
+  "fossil_warrior_skull_king": {
+    "name": "化石戰士 骷髏王"
+  },
+  "frost_&_flame_dragon": {
+    "name": "冰炎雙龍"
+  },
+  "frost_and_flame_dragon": {
+    "name": "冰炎雙龍"
+  },
+  "frostosaurus": {
+    "name": "冰凍恐龍"
+  },
+  "gagagigo": {
+    "name": "伽伽奇哥"
+  },
+  "gaia_the_dragon_champion": {
+    "name": "龍騎士 蓋亞",
+    "skipStrip": true
+  },
+  "gaia_the_fierce_knight": {
+    "name": "暗黑騎士 蓋亞",
+    "skipStrip": true
+  },
+  "gamma_the_magnet_warrior": {
+    "name": "磁石戰士γ"
+  },
+  "gate_guardian": {
+    "name": "門之守護者"
+  },
+  "gazelle_the_king_of_mythical_beasts": {
+    "name": "幻獸王 加澤爾",
+    "skipStrip": true
+  },
+  "gellenduo": {
+    "name": "天使精靈二重奏"
+  },
+  "gem-knight_citrine": {
+    "name": "寶石騎士 黃水晶"
+  },
+  "gem-knight_master_diamond": {
+    "name": "寶石騎士 大師鑽石"
+  },
+  "gem_knight_citrine": {
+    "name": "寶石騎士 黃水晶"
+  },
+  "gem_knight_master_diamond": {
+    "name": "寶石騎士 大師鑽石"
+  },
+  "genex_ally_birdman": {
+    "name": "同盟 次生代 鳥人"
+  },
+  "ghostrick_ghoul": {
+    "name": "鬼計 食屍鬼"
+  },
+  "ghostrick_mummy": {
+    "name": "鬼計 木乃伊"
+  },
+  "ghostrick_skeleton": {
+    "name": "鬼計 骷髏"
+  },
+  "ghostrick_stein": {
+    "name": "鬼計 弗蘭肯"
+  },
+  "ghostrick_yeti": {
+    "name": "鬼計 雪人"
+  },
+  "giant_soldier_of_stone": {
+    "name": "岩石巨兵"
+  },
+  "giga_gagagigo": {
+    "name": "超伽伽奇哥"
+  },
+  "gigobyte": {
+    "name": "子伽哥"
+  },
+  "gogiga_gagagigo": {
+    "name": "極超伽伽奇哥"
+  },
+  "golden_eyes_ido": {
+    "name": "千眼邪教神"
+  },
+  "golden_eyes_idol": {
+    "name": "千眼邪教神"
+  },
+  "golden_homunculus": {
+    "name": "黃金人造人"
+  },
+  "gozuki": {
+    "name": "牛頭鬼"
+  },
+  "granadora": {
+    "name": "石榴龍"
+  },
+  "graverobber": {
+    "name": "土偶"
+  },
+  "great_moth": {
+    "name": "大蛾"
+  },
+  "great_white": {
+    "name": "大白鯊"
+  },
+  "green_baboon,_defender_of_the_forest": {
+    "name": "森之番人 綠狒狒",
+    "skipStrip": true
+  },
+  "green_baboon_defender_of_the_forest": {
+    "name": "森之番人 綠狒狒",
+    "skipStrip": true
+  },
+  "green_gadget": {
+    "name": "綠色零件"
+  },
+  "green_gadget_alternate": {
+    "name": "綠色零件"
+  },
+  "gren,_tactician_of_dark_world": {
+    "name": "暗黑界的策士 格林"
+  },
+  "griffore": {
+    "name": "格里芙"
+  },
+  "guardian_grarl": {
+    "name": "守護者 古拉爾"
+  },
+  "hade-hane": {
+    "name": "羽根"
+  },
+  "hade_hane": {
+    "name": "羽根"
+  },
+  "hane-hane": {
+    "name": "翼翼"
+  },
+  "hane_hane": {
+    "name": "翼翼"
+  },
+  "harpie_s_pet_dragon": {
+    "name": "鷹身女郎的寵物龍"
+  },
+  "harpies_pet_dragon": {
+    "name": "鷹身女郎的寵物龍"
+  },
+  "headless_knight": {
+    "name": "無頭騎士"
+  },
+  "hinotama_soul": {
+    "name": "火靈魂"
+  },
+  "hitotsu-me_giant": {
+    "name": "獨眼巨人"
+  },
+  "hitotsu_me_giant": {
+    "name": "獨眼巨人"
+  },
+  "humanoid_slime": {
+    "name": "人形黏液怪"
+  },
+  "hundred-eyes_dragon": {
+    "name": "百眼龍",
+    "skipStrip": true
+  },
+  "hundred_eyes_dragon": {
+    "name": "百眼龍",
+    "skipStrip": true
+  },
+  "hungry_burger": {
+    "name": "飢餓漢堡"
+  },
+  "hydrogeddon": {
+    "name": "水恐龍"
+  },
+  "hyozanryu": {
+    "name": "冰山龍"
+  },
+  "hyper_hammerhead": {
+    "name": "超級鎚頭龍"
+  },
+  "illusionist_faceless_mage": {
+    "name": "幻術師 無面法師"
+  },
+  "imairuka": {
+    "name": "海豚"
+  },
+  "inpachi": {
+    "name": "木人18"
+  },
+  "jetroid": {
+    "name": "噴射機器人"
+  },
+  "jinzo": {
+    "name": "人造人"
+  },
+  "jinzo_the_machine_menace": {
+    "name": "人造人 機械威脅"
+  },
+  "junk_warrior": {
+    "name": "廢鐵戰士"
+  },
+  "kahkki,_guerilla_of_dark_world": {
+    "name": "暗黑界的斥候 卡基"
+  },
+  "kazejin": {
+    "name": "風魔神"
+  },
+  "king_dragun": {
+    "name": "龍王"
+  },
+  "king_of_the_skull_servants": {
+    "name": "骷髏僕人之王",
+    "skipStrip": true
+  },
+  "koitsu": {
+    "name": "此傢伙"
+  },
+  "kozaky": {
+    "name": "科學魔人"
+  },
+  "kuriboh": {
+    "name": "栗子球"
+  },
+  "la_jinn_the_mystical_genie": {
+    "name": "燈精 拉金"
+  },
+  "la_jinn_the_mystical_genie_(all_variants)": {
+    "name": "燈精 拉金"
+  },
+  "la_jinn_the_mystical_genie_of_the_lamp": {
+    "name": "燈精 拉金"
+  },
+  "lava_golem": {
+    "name": "熔岩魔神"
+  },
+  "legendary_swordsman": {
+    "name": "傳說劍豪"
+  },
+  "levia-dragon_daedalus": {
+    "name": "海龍-戴達羅斯"
+  },
+  "levia_dragon_daedalus": {
+    "name": "海龍-戴達羅斯"
+  },
+  "lord_of_d": {
+    "name": "龍之支配者",
+    "skipStrip": true
+  },
+  "lord_of_d.": {
+    "name": "龍之支配者",
+    "skipStrip": true
+  },
+  "luster_dragon": {
+    "name": "藍寶石龍"
+  },
+  "magician_robe": {
+    "name": "魔術師的長袍"
+  },
+  "magicians_robe": {
+    "name": "魔術師的長袍"
+  },
+  "magikuriboh": {
+    "name": "魔力栗子球"
+  },
+  "man-eating_plant": {
+    "name": "食人植物"
+  },
+  "manga_ryu-ran": {
+    "name": "漫畫 龍卵"
+  },
+  "masked_beast_des_gardius": {
+    "name": "假面魔獸 死之守護者"
+  },
+  "master_of_oz": {
+    "name": "奧茲大師"
+  },
+  "megalosmasher_x": {
+    "name": "巨齒鯊X"
+  },
+  "megazowler": {
+    "name": "巨型恐龍"
+  },
+  "meteor_b": {
+    "name": "流星黑龍"
+  },
+  "meteor_b._dragon": {
+    "name": "流星黑龍"
+  },
+  "mezuki": {
+    "name": "馬頭鬼"
+  },
+  "milennium_shield": {
+    "name": "千年之盾"
+  },
+  "millennium_scorpion": {
+    "name": "千年蠍子"
+  },
+  "millennium_shield": {
+    "name": "千年之盾"
+  },
+  "morphing_jar": {
+    "name": "變形壺"
+  },
+  "moves:": {
+    "name": "Moves:"
+  },
+  "muka_muka": {
+    "name": "憤怒獸"
+  },
+  "naturia_beast": {
+    "name": "自然獸"
+  },
+  "naturia_cosmobeet": {
+    "name": "自然宇宙甜菜"
+  },
+  "naturia_landoise": {
+    "name": "自然陸龜"
+  },
+  "needle_burrower": {
+    "name": "針刺鑽地獸"
+  },
+  "neo-spacian_glow_moss": {
+    "name": "新宇俠 發光苔蘚"
+  },
+  "number_22:_zombiestein": {
+    "name": "No.22 殭屍弗蘭肯",
+    "skipStrip": true
+  },
+  "number_22_zombiestein": {
+    "name": "No.22 殭屍弗蘭肯",
+    "skipStrip": true
+  },
+  "obelisk_the_tormentor": {
+    "name": "歐貝利斯克的巨神兵",
+    "skipStrip": true
+  },
+  "ocean_dragon_lord_kairyu_shin": {
+    "name": "海龍神",
+    "skipStrip": true
+  },
+  "ocean_dragon_lord_—_kairyu-shin": {
+    "name": "海龍神",
+    "skipStrip": true
+  },
+  "ojama_black": {
+    "name": "擾亂 黑/綠"
+  },
+  "ojama_black___green": {
+    "name": "擾亂 黑/綠"
+  },
+  "ojama_king": {
+    "name": "擾亂王"
+  },
+  "ojama_knight": {
+    "name": "擾亂騎士"
+  },
+  "overtex_qoatlus": {
+    "name": "超越翼龍"
+  },
+  "oxygeddon": {
+    "name": "氧氣恐龍"
+  },
+  "paladin_of_the_cursed_dragon": {
+    "name": "冥龍騎士"
+  },
+  "paladin_of_white_dragon": {
+    "name": "白龍聖騎士"
+  },
+  "pale_beast": {
+    "name": "蒼白獸"
+  },
+  "panther_warrior": {
+    "name": "豹戰士"
+  },
+  "panzer_dragon": {
+    "name": "裝甲龍"
+  },
+  "papa_corn": {
+    "name": "爸爸玉米"
+  },
+  "plaguespreader_zombie": {
+    "name": "瘟疫傳播者殭屍"
+  },
+  "power_invader": {
+    "name": "力量侵略者"
+  },
+  "pyramid_turtle": {
+    "name": "金字塔龜"
+  },
+  "quickdraw_synchron": {
+    "name": "快槍手同調士"
+  },
+  "ra_(winged_dragon_of_ra)": {
+    "name": "拉之翼神龍"
+  },
+  "red-eyes_black_dragon": {
+    "name": "真紅眼黑龍"
+  },
+  "red-eyes_dark_dragoon": {
+    "name": "超魔導龍騎士 真紅眼鐵騎"
+  },
+  "red-eyes_darkness_dragon": {
+    "name": "真紅眼暗黑龍"
+  },
+  "red_gadget": {
+    "name": "紅色零件"
+  },
+  "relinquished": {
+    "name": "犧牲"
+  },
+  "revendread_slayer": {
+    "name": "復仇恐懼 殺手"
+  },
+  "rocket_warrior": {
+    "name": "火箭戰士"
+  },
+  "ronintoadin": {
+    "name": "粹蛙"
+  },
+  "rusty_bardiche": {
+    "name": "鏽蝕戰斧"
+  },
+  "sanga_of_the_thunder": {
+    "name": "雷魔神"
+  },
+  "sasuke_samurai": {
+    "name": "佐助忍者"
+  },
+  "shinato,_king_of_a_higher_plane": {
+    "name": "天空之王"
+  },
+  "silent_magician_lv8": {
+    "name": "沉默魔術師 LV8"
+  },
+  "skull_archfiend_of_lightning": {
+    "name": "迅雷魔王-骷髏惡魔"
+  },
+  "skull_servant": {
+    "name": "骷髏僕人"
+  },
+  "slifer_the_sky_dragon": {
+    "name": "歐西里斯的天空龍"
+  },
+  "snowman_eater": {
+    "name": "雪人食者"
+  },
+  "soldier_of_chaos": {
+    "name": "混沌戰士",
+    "skipStrip": true
+  },
+  "sorcerer_of_dark_magic": {
+    "name": "暗黑魔法師"
+  },
+  "soul_hunter": {
+    "name": "靈魂獵手"
+  },
+  "spear_dragon": {
+    "name": "槍龍"
+  },
+  "speed_warrior": {
+    "name": "速度戰士"
+  },
+  "steel_ogre_grotto": {
+    "name": "鋼鐵食人魔洞窟1號"
+  },
+  "steel_ogre_grotto_#1": {
+    "name": "鋼鐵食人魔洞窟1號"
+  },
+  "suijin": {
+    "name": "水魔神"
+  },
+  "summoned_skull": {
+    "name": "惡魔召喚"
+  },
+  "super_conductor_tyranno": {
+    "name": "超導恐獸"
+  },
+  "supreme_king_of_armageddon": {
+    "name": "終焉的霸王"
+  },
+  "sword_arm_of_dragon": {
+    "name": "龍之劍腕"
+  },
+  "swordsman_of_landstar": {
+    "name": "大地之星劍士"
+  },
+  "the_creator": {
+    "name": "創世神",
+    "skipStrip": true
+  },
+  "the_dark_creator": {
+    "name": "暗黑創造神"
+  },
+  "the_dark_magicians": {
+    "name": "超魔導師-黑魔導組合"
+  },
+  "the_fabled_cerburrel": {
+    "name": "魔轟神獸 犬"
+  },
+  "the_fabled_cerurrel": {
+    "name": "魔轟神獸 犬"
+  },
+  "the_fabled_ganashia": {
+    "name": "魔轟神獸 加納夏"
+  },
+  "the_masked_beast": {
+    "name": "假面魔獸"
+  },
+  "the_tricky": {
+    "name": "詭術師",
+    "skipStrip": true
+  },
+  "the_winged_dragon_of_ra": {
+    "name": "拉之翼神龍"
+  },
+  "the_winged_dragon_of_ra_(variant)": {
+    "name": "拉之翼神龍"
+  },
+  "thousand-eyes_idol": {
+    "name": "千眼邪神像"
+  },
+  "thousand_dragon": {
+    "name": "千年之龍"
+  },
+  "thousand_eyes_restrict": {
+    "name": "千眼犧牲",
+    "skipStrip": true
+  },
+  "time_wizard_of_tomorrow": {
+    "name": "時間魔術師",
+    "skipStrip": true
+  },
+  "togex": {
+    "name": "尖刺獸"
+  },
+  "toon_alligator": {
+    "name": "卡通鱷魚"
+  },
+  "toon_ancient_gear_golem": {
+    "name": "卡通古代機械巨人"
+  },
+  "toon_barrel_dragon": {
+    "name": "卡通左輪手槍龍"
+  },
+  "toon_black_luster_soldier": {
+    "name": "卡通混沌戰士"
+  },
+  "toon_briefcase": {
+    "name": "卡通公文包"
+  },
+  "toon_buster_blader": {
+    "name": "卡通破壞劍士"
+  },
+  "toon_cannon_soldier": {
+    "name": "卡通加農兵"
+  },
+  "toon_cyber_dragon": {
+    "name": "卡通電子龍"
+  },
+  "toon_dark_magician": {
+    "name": "卡通黑魔導士"
+  },
+  "toon_dark_magician_girl": {
+    "name": "卡通黑魔導女孩"
+  },
+  "toon_gemini_elf": {
+    "name": "卡通雙子精靈"
+  },
+  "toon_goblin_attack_force": {
+    "name": "卡通哥布林突擊部隊"
+  },
+  "toon_harpie_lady": {
+    "name": "卡通鷹身女郎"
+  },
+  "toon_masked_sorcerer": {
+    "name": "卡通假面魔導師"
+  },
+  "toon_mermaid": {
+    "name": "卡通美人魚"
+  },
+  "toon_summoned_skull": {
+    "name": "卡通惡魔召喚"
+  },
+  "torike": {
+    "name": "三角獸"
+  },
+  "treeborn_frog": {
+    "name": "黃泉蛙"
+  },
+  "tri-horned_dragon": {
+    "name": "三角龍"
+  },
+  "turtle_raccoon": {
+    "name": "龜浣熊"
+  },
+  "twin-headed_king_rex": {
+    "name": "雙頭恐龍王"
+  },
+  "twin-headed_wolf": {
+    "name": "雙頭狼"
+  },
+  "twin_headed_king_rex": {
+    "name": "雙頭恐龍王"
+  },
+  "ultimate_ancient_gear_golem": {
+    "name": "古代機械究極巨人"
+  },
+  "unstoppable_exodia_incarnate": {
+    "name": "不可阻擋的艾克佐迪亞化身"
+  },
+  "valkerion_the_magnet_warrior": {
+    "name": "磁石戰士 磁力戰神"
+  },
+  "valkyrion_the_magnet_warrior": {
+    "name": "磁石戰士 磁力戰神"
+  },
+  "versago_the_destroyer": {
+    "name": "融合咒印生物-暗"
+  },
+  "volcanic_doomfire": {
+    "name": "火山惡魔"
+  },
+  "volcanic_hammerer": {
+    "name": "火山鎚擊者"
+  },
+  "volcanic_rocket": {
+    "name": "火山火箭"
+  },
+  "volcanic_shell": {
+    "name": "火山彈殼"
+  },
+  "water_dragon": {
+    "name": "水龍"
+  },
+  "water_dragon_cluster": {
+    "name": "水龍群"
+  },
+  "wattgiraffe": {
+    "name": "電氣麒麟"
+  },
+  "white_night_dragon": {
+    "name": "白夜龍"
+  },
+  "woodland_sprite": {
+    "name": "森之精靈"
+  },
+  "x-head_cannon": {
+    "name": "X首之加農"
+  },
+  "y-dragon_head": {
+    "name": "Y龍之頭"
+  },
+  "yellow_gadget": {
+    "name": "黃色零件"
+  },
+  "yellow_gear": {
+    "name": "黃色零件"
+  },
+  "yubel": {
+    "name": "尤貝爾"
+  },
+  "yubel_the_loving_defender": {
+    "name": "尤貝爾"
+  },
+  "z-metal_tank": {
+    "name": "Z金屬坦克"
+  },
+  "zombyra_the_dark": {
+    "name": "暗黑英雄 佐姆拜爾"
+  }
+}

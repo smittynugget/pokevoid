@@ -58,10 +58,10 @@ export default class PokemonIconAnimHandler {
       }
       if (this.toggled) {
         const lastYDelta = this.icons.has(i)
-          ? this.icons.get(i)!
+          ? this.getModeYDelta(this.icons.get(i)!)
           : 0;
         const yDelta = this.getModeYDelta(mode);
-        i.y += yDelta + lastYDelta;
+        i.y += yDelta - lastYDelta;
       }
       this.icons.set(i, mode);
     }

@@ -24,6 +24,7 @@ import {Unlockables} from "#app/system/unlockables";
 import {applyUniversalSmittyForm, pokemonFormChanges, SmittyFormTrigger} from "#app/data/pokemon-forms";
 import Overrides from "../overrides";
 import { AssetLoadProfiler } from "../system/asset-load-profiler";
+import { duelmonPoolOverrides } from "./trainer-duelmon-pool-overrides.generated";
 
 export enum TrainerPoolTier {
   COMMON,
@@ -327,6 +328,9 @@ export class TrainerConfig {
         break;
       case TrainerType.ROSE_2:
         trainerType = TrainerType.ROSE;
+        break;
+      case TrainerType.PEGASUS_2:
+        trainerType = TrainerType.PEGASUS;
         break;
       case TrainerType.MARNIE_ELITE:
         trainerType = TrainerType.MARNIE;
@@ -1930,6 +1934,38 @@ export const trainerConfigs: TrainerConfigs = {
         p.generateName();
       })),
 
+  [TrainerType.PEGASUS]: new TrainerConfig(++t).setName("Pegasus").initForEvilTeamLeader("Master of Illusions", []).setMixedBattleBgm("battle_plasma_boss").setVictoryBgm("victory_team_plasma")
+      .setPartyMemberFunc(0, getRandomPartyMemberFunc([Species.TOON_MERMAID, Species.TOON_ALLIGATOR], TrainerSlot.TRAINER, true))
+      .setPartyMemberFunc(1, getRandomPartyMemberFunc([Species.DARK_RABBIT, Species.TOON_MASKED_SORCERER], TrainerSlot.TRAINER, true))
+      .setPartyMemberFunc(2, getRandomPartyMemberFunc([Species.TOON_DARK_MAGICIAN, Species.TOON_DARK_MAGICIAN_GIRL], TrainerSlot.TRAINER, true))
+      .setPartyMemberFunc(3, getRandomPartyMemberFunc([Species.GOLDEN_EYES_IDOL, Species.DARK_EYES_ILLUSIONIST, Species.ILLUSIONIST_FACELESS_MAGE], TrainerSlot.TRAINER, true))
+      .setPartyMemberFunc(4, getRandomPartyMemberFunc([Species.TOON_SUMMONED_SKULL, Species.TOON_BARREL_DRAGON, Species.TOON_ANCIENT_GEAR_GOLEM], TrainerSlot.TRAINER, true))
+      .setPartyMemberFunc(5, getRandomPartyMemberFunc([Species.RELINQUISHED], TrainerSlot.TRAINER, true, p => {
+        p.setBoss(true, 2);
+        p.generateAndPopulateMoveset();
+        p.pokeball = PokeballType.ULTRA_BALL;
+      })),
+
+  [TrainerType.PEGASUS_2]: new TrainerConfig(++t).setName("Pegasus").initForEvilTeamLeader("Master of Illusions", [], true).setMixedBattleBgm("battle_plasma_boss").setVictoryBgm("victory_team_plasma")
+      .setPartyMemberFunc(0, getRandomPartyMemberFunc([Species.BICKURIBOX, Species.DARK_RABBIT], TrainerSlot.TRAINER, true))
+      .setPartyMemberFunc(1, getRandomPartyMemberFunc([Species.TOON_DARK_MAGICIAN, Species.TOON_DARK_MAGICIAN_GIRL], TrainerSlot.TRAINER, true))
+      .setPartyMemberFunc(2, getRandomPartyMemberFunc([Species.TOON_BLACK_LUSTER_SOLDIER, Species.BLUE_EYES_TOON_DRAGON_RENDER], TrainerSlot.TRAINER, true, p => {
+        p.setBoss(true, 2);
+        p.generateAndPopulateMoveset();
+        p.pokeball = PokeballType.ULTRA_BALL;
+      }))
+      .setPartyMemberFunc(3, getRandomPartyMemberFunc([Species.TOON_BARREL_DRAGON, Species.TOON_ANCIENT_GEAR_GOLEM, Species.TOON_SUMMONED_SKULL], TrainerSlot.TRAINER, true))
+      .setPartyMemberFunc(4, getRandomPartyMemberFunc([Species.RELINQUISHED], TrainerSlot.TRAINER, true, p => {
+        p.setBoss(true, 2);
+        p.generateAndPopulateMoveset();
+        p.pokeball = PokeballType.ULTRA_BALL;
+      }))
+      .setPartyMemberFunc(5, getRandomPartyMemberFunc([Species.THOUSAND_EYES_RESTRICT], TrainerSlot.TRAINER, true, p => {
+        p.setBoss(true, 3);
+        p.generateAndPopulateMoveset();
+        p.pokeball = PokeballType.MASTER_BALL;
+      })),
+
   [TrainerType.DYNAMIC_RIVAL]: new TrainerConfig(TrainerType.DYNAMIC_RIVAL)
       .setName("Dynamic Rival")
       .setTitle("Rival")
@@ -1998,7 +2034,37 @@ export interface RivalStage {
   stage: number;
 }
 
-export const trainerPokemonPools: Record<RivalTrainerType, Species[][]> = {
+function normalizePoolStructure(pools: Species[][]): Species[][] {
+  if (pools.length === 6) {
+    return [pools[0], ...pools.slice(1, -1), [], [], pools[pools.length - 1]];
+  }
+  if (pools.length === 7) {
+    return [pools[0], ...pools.slice(1, -1), [], pools[pools.length - 1]];
+  }
+  return pools;
+}
+
+function mergeTrainerPools(
+  base: Record<RivalTrainerType, Species[][]>,
+  overrides: Partial<Record<TrainerType, Species[][]>>
+): Record<RivalTrainerType, Species[][]> {
+  const out = { ...base } as Record<RivalTrainerType, Species[][]>;
+  for (const [key, duelmonPools] of Object.entries(overrides)) {
+    if (!duelmonPools) {
+      continue;
+    }
+    const rival = Number(key) as RivalTrainerType;
+    const normalizedBase = normalizePoolStructure(base[rival]);
+    out[rival] = normalizedBase.map((vanillaPool, i) => {
+      const additions = duelmonPools[i] ?? [];
+      const seen = new Set(vanillaPool);
+      return [...vanillaPool, ...additions.filter(s => !seen.has(s))];
+    });
+  }
+  return out;
+}
+
+const trainerPokemonPoolsBase: Record<RivalTrainerType, Species[][]> = {
     [TrainerType.BLUE]: [
       [Species.SQUIRTLE],
       [Species.EXEGGCUTE, Species.GROWLITHE, Species.ABRA, Species.MACHOP, Species.TENTACOOL, Species.PONYTA, Species.SLOWPOKE, Species.MAGNEMITE, Species.SEEL, Species.GRIMER, Species.SHELLDER, Species.DROWZEE, Species.VAPOREON, Species.JOLTEON, Species.FLAREON],
@@ -2293,6 +2359,8 @@ export const trainerPokemonPools: Record<RivalTrainerType, Species[][]> = {
   ],
 };
 
+export const trainerPokemonPools = mergeTrainerPools(trainerPokemonPoolsBase, duelmonPoolOverrides);
+
 function shuffleArray<T>(array: T[]): T[] {
   const fourthElement = array[3];
 
@@ -2387,9 +2455,10 @@ export function getDynamicRivalConfig(rivalStage: number, playerRival: RivalTrai
 
 export function glitchText(text: string, intense: boolean = false): string {
   const glitchChars = ['§', '∆', 'π', 'Ω'];
+  const threshold = intense ? 15 : 7;
 
   return text.split('').map(char => {
-    if (randSeedInt(100) < 30) {
+    if (randSeedInt(100) < threshold) {
       let glitchedChar = randSeedItem(glitchChars);
 
       if (randSeedInt(100) < 70) {

@@ -34,5 +34,8 @@
   "sortByCost": "Par cout",
   "sortByCandies": "Par bonbons",
   "sortByIVs": "Par IV",
-  "sortByName": "Par nom"
+  "sortByName": "Par nom",
+  "fusionsFilter": "Fusions",
+  "hasFusions": "Fusions - Avec",
+  "noFusions": "Fusions - Sans"
 }

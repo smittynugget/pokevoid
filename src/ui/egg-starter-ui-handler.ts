@@ -1,17 +1,18 @@
 import StarterSelectUiHandler, { OptionItem, Starter } from "./starter-select-ui-handler";
 import BattleScene from "../battle-scene";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import i18next from "i18next";
 import Pokemon from "../field/pokemon";
 import { Nature } from "../data/nature";
-import { PlayerPokemon } from "../field/pokemon";
+import { PlayerPokemon, PokemonMove } from "../field/pokemon";
 import { StarterMoveset, StarterAttributes } from "../system/game-data";
 import { PokemonIconAnimMode } from "./pokemon-icon-anim-handler";
-import { TypeSwitcherModifier } from "../modifier/modifier";
-import { getTypeRgb } from "../data/type";
+import { applyTypeSwitcherIconRecolor } from "../utils/type-switcher-icon-recolor";
 import { Gender } from "../data/gender";
 import { EnhancedTutorial } from "./tutorial-registry";
 import { Button } from "#enums/buttons";
+import { adjustDuelmonIconScale } from "../data/pokemon-species";
+import { addTextObject, TextStyle } from "./text";
 export type EggStarterSelectCallback = (selected: Starter | null, released: Pokemon | null) => void;
 
 export default class eggStarterUi extends StarterSelectUiHandler {
@@ -31,75 +32,56 @@ export default class eggStarterUi extends StarterSelectUiHandler {
     setup() {
         super.setup();
 
-        const screenWidth = this.scene.game.canvas.width;
-        const startX = screenWidth * 0.32;
-        const width = screenWidth * 0.68;
-        const bgHeight = 105;
-        const bgCenterY = 10 + bgHeight / 2;
+        const gameWidth = this.scene.game.canvas.width / 6;
+        const startX = gameWidth * 0.32;
+        const width = gameWidth * 0.68;
+        const bgHeight = 17.5;
+        const bgCenterY = 1.67 + bgHeight / 2;
 
         this.titleBg = this.scene.add.rectangle(
             startX + width / 2,
-            10,
+            1.67,
             width,
             bgHeight,
             0x151515,
             0.90
         );
         this.titleBg.setOrigin(0.5, 0);
-        this.titleBg.setDepth(999);
-        this.titleBg.setScrollFactor(0);
 
-        const newBgStartX = screenWidth * 0.15;
-        const newBgWidth = screenWidth * 0.18;
+        const newBgStartX = gameWidth * 0.15;
+        const newBgWidth = gameWidth * 0.18;
         const newBgHeight = bgHeight * 0.76;
         const newBgCenterX = newBgStartX + newBgWidth / 2;
-        const newBgCenterY = 10 + newBgHeight / 2;
+        const newBgCenterY = 1.67 + newBgHeight / 2;
 
         this.newTitleBg = this.scene.add.rectangle(
             newBgCenterX,
-            10,
+            1.67,
             newBgWidth,
             newBgHeight,
             0x151515,
             0.90
         );
         this.newTitleBg.setOrigin(0.5, 0);
-        this.newTitleBg.setDepth(999);
-        this.newTitleBg.setScrollFactor(0);
 
         const titleTextCenterX = newBgCenterX;
 
-        this.titleText = this.scene.add.text(
-            titleTextCenterX,
-            newBgCenterY,
+        this.titleText = addTextObject(this.scene, Math.round(titleTextCenterX), Math.round(newBgCenterY),
             i18next.t("eggStarterUi:hatchAndSwap", { defaultValue: "Hatch & Swap" }),
-            {
-                fontFamily: "emerald",
-                fontSize: "40px",
-                color: "#ffffff",
-                align: "center"
-            }
-        );
+            TextStyle.WINDOW, { fontSize: "40px", color: "#ffffff", align: "center" });
         this.titleText.setOrigin(0.5, 0.5);
-        this.titleText.setDepth(999);
-        this.titleText.setScrollFactor(0);
 
-        this.tipText = this.scene.add.text(
-            startX + 35,
-            bgCenterY,
+        this.tipText = addTextObject(this.scene, Math.round(startX + 5.83), Math.round(bgCenterY),
             i18next.t("eggStarterUi:tooltip", {
                 defaultValue: "Check hatched Pokémon and swap 1 for another (if you want).\nLegendaries can only be swapped with legendaries/mega/dyna."
             }),
-            {
-                fontFamily: "emerald",
-                fontSize: "30px",
-                color: "#ffffff",
-                align: "left"
-            }
-        );
+            TextStyle.WINDOW, { fontSize: "30px", color: "#ffffff", align: "left" });
         this.tipText.setOrigin(0, 0.5);
-        this.tipText.setDepth(999);
-        this.tipText.setScrollFactor(0);
+
+        this.starterSelectContainer.add(this.titleBg);
+        this.starterSelectContainer.add(this.newTitleBg);
+        this.starterSelectContainer.add(this.titleText);
+        this.starterSelectContainer.add(this.tipText);
 
         this.titleBg.setVisible(false);
         this.newTitleBg.setVisible(false);
@@ -154,17 +136,35 @@ export default class eggStarterUi extends StarterSelectUiHandler {
     }
 
     private customizeUIForEggSelection(): void {
-                if (this.valueLimitLabel) {
+        if (this.valueLimitLabel) {
             this.valueLimitLabel.setVisible(false);
         }
 
-                if (this.filterBarContainer) {
+        if (this.filterBarContainer) {
             this.filterBarContainer.setVisible(false);
             this.filterInstructionsContainer.setVisible(false);
         }
 
-                this.setFilterMode(false);
+        this.setFilterMode(false);
 
+        if (this.fusionsButtonBg) this.fusionsButtonBg.setVisible(false);
+        if (this.fusionsButtonIcon) this.fusionsButtonIcon.setVisible(false);
+        if (this.fusionsButtonLabel) this.fusionsButtonLabel.setVisible(false);
+        if (this.fusionsCursorObj) this.fusionsCursorObj.setVisible(false);
+        this.fusionsFilterActive = false;
+
+        const eggTeamY = 18;
+        const eggTeamH = 132;
+        if (this.teamWindow) {
+            this.teamWindow.setPosition(285, eggTeamY);
+            this.teamWindow.setSize(34, eggTeamH);
+        }
+
+        const eggSpacing = eggTeamH / 7;
+        const eggFirstY = eggTeamY + eggSpacing / 2;
+        for (let i = 0; i < this.starterIcons.length; i++) {
+            this.starterIcons[i].setY(Math.round(eggFirstY + eggSpacing * i));
+        }
     }
 
     private displayPartyInStarterIcons(partyPokemon: Pokemon[]): void {
@@ -184,35 +184,43 @@ export default class eggStarterUi extends StarterSelectUiHandler {
                 const variant = pokemon.variant;
 
                 if (i >= this.starterSpecies.length) {
+                    const moveset = pokemon.getMoveset()
+                        .filter((m): m is PokemonMove => m != null)
+                        .map(m => m.moveId)
+                        .slice(0, 4) as StarterMoveset;
                     this.addToParty(
                         pokemon.species,
                         this.getCurrentDexProps(pokemon.species.speciesId),
                         pokemon.abilityIndex,
                         pokemon.nature,
-                        pokemon.moveset as StarterMoveset,
+                        moveset,
                         pokemon.fusionFormIndex || -1
                     );
                 } else {
                     this.starterSpecies[i] = pokemon.species;
+                    const moveset = pokemon.getMoveset()
+                        .filter((m): m is PokemonMove => m != null)
+                        .map(m => m.moveId)
+                        .slice(0, 4) as StarterMoveset;
+                    if (i < this.starterMovesets.length) {
+                        this.starterMovesets[i] = moveset;
+                    }
+                    if (i < this.starterAbilityIndexes.length) {
+                        this.starterAbilityIndexes[i] = pokemon.abilityIndex;
+                    }
+                    if (i < this.starterNatures.length) {
+                        this.starterNatures[i] = pokemon.nature;
+                    }
                 }
 
                 const speciesForm = pokemon.getSpeciesForm();
                 this.starterIcons[i].setTexture(speciesForm.getIconAtlasKey(formIndex, shiny, variant));
                 this.starterIcons[i].setFrame(speciesForm.getIconId(isFemale, formIndex, shiny, variant));
                 this.checkIconId(this.starterIcons[i], speciesForm as any, isFemale, formIndex, shiny, variant);
+                const isGen20 = pokemon.species.generation === 20;
+                this.starterIcons[i].setScale(isGen20 ? adjustDuelmonIconScale(0.5, 20) * 0.8 : 0.5);
                 this.starterIcons[i].setVisible(true);
-                const tsModifier = this.scene.findModifier(m =>
-                    m instanceof TypeSwitcherModifier && (m as any).pokemonId === pokemon.id
-                ) as TypeSwitcherModifier | undefined;
-                if (tsModifier) {
-                    const targetType = (tsModifier as any).newPrimaryType ?? (tsModifier as any).newSecondaryType;
-                    if (targetType !== null && targetType !== undefined && targetType >= 0) {
-                        const rgb = getTypeRgb(targetType);
-                        if (rgb) {
-                            this.starterIcons[i].setTint(Phaser.Display.Color.GetColor(rgb[0], rgb[1], rgb[2]));
-                        }
-                    }
-                }
+                applyTypeSwitcherIconRecolor(this.scene as BattleScene, pokemon, this.starterIcons[i], false);
                 if (this.iconAnimHandler) {
                     this.iconAnimHandler.addOrUpdate(this.starterIcons[i], PokemonIconAnimMode.PASSIVE);
                 }

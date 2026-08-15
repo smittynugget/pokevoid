@@ -5,11 +5,13 @@ import { TitlePhase } from "./title-phase";
 
 export class PostGameOverPhase extends Phase {
   private endCardPhase: EndCardPhase | null;
+  private victory: boolean;
 
-  constructor(scene: BattleScene, endCardPhase?: EndCardPhase) {
+  constructor(scene: BattleScene, endCardPhase?: EndCardPhase, victory?: boolean) {
     super(scene);
 
     this.endCardPhase = endCardPhase!;
+    this.victory = !!victory;
   }
 
   start() {
@@ -28,7 +30,8 @@ export class PostGameOverPhase extends Phase {
         }
         if (this.scene.gameMode.isTestMod) {
           this.scene.reset();
-          this.scene.unshiftPhase(new TitlePhase(this.scene));
+          this.scene.showTitleBG();
+          this.scene.unshiftPhase(new TitlePhase(this.scene, false, false, this.victory));
           this.end();
           return;
         }
@@ -37,7 +40,8 @@ export class PostGameOverPhase extends Phase {
             return this.scene.reset(true);
           }
           this.scene.reset();
-          this.scene.unshiftPhase(new TitlePhase(this.scene));
+          this.scene.showTitleBG();
+          this.scene.unshiftPhase(new TitlePhase(this.scene, false, false, this.victory));
           this.end();
         });
       });
@@ -45,7 +49,7 @@ export class PostGameOverPhase extends Phase {
 
     if (this.endCardPhase) {
       this.scene.ui.fadeOut(500).then(() => {
-        this.scene.ui.getMessageHandler().bg.setVisible(true);
+        this.scene.ui.hideMessageChrome?.();
 
         this.endCardPhase?.endCard.destroy();
         this.endCardPhase?.text.destroy();

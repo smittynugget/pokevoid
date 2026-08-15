@@ -3,28 +3,12 @@ import { PathNodeTypeFilter } from "#app/modifier/modifier-type.js";
 import { PermaType } from "#app/modifier/perma-modifiers.js";
 import * as Utils from "#app/utils.js";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase.js";
-import { CollectedTypeShopPhase } from "#app/phases/collected-type-shop-phase.js";
-import { CollectedTypeModifier } from "#app/modifier/modifier.js";
+import { getPartyCollectedTypeTotal } from "#app/utils/collected-type-totals.js";
 import Overrides from "#app/overrides";
 
-function getTotalCollectedTypes(scene: BattleScene): number {
-    const party = scene.getParty();
-    let total = 0;
-
-    for (const pokemon of party) {
-        const modifiers = scene.findModifiers(m =>
-            m instanceof CollectedTypeModifier && m.pokemonId === pokemon.id
-        ) as CollectedTypeModifier[];
-
-        for (const modifier of modifiers) {
-            total += Object.values(modifier.collectedTypes).reduce((sum, count) => sum + count, 0);
-        }
-    }
-
-    return total;
-}
-
 export function ShowRewards(scene: BattleScene, chance: integer = 19, overrideChance: boolean = true, unshiftRatherThanPush: boolean = true, pathNodeFilter: PathNodeTypeFilter = PathNodeTypeFilter.NONE) {
+    if (scene.gameData.tutorialOnboardActive) return;
+
     if (scene.gameMode.isTestMod) {
         for (const species of scene.gameData.testSpeciesForMod) {
             scene.unshiftPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, pathNodeFilter));
@@ -65,16 +49,18 @@ export function ShowRewards(scene: BattleScene, chance: integer = 19, overrideCh
     }
 
     const chaosChance = chance * 3;
-    const totalCollectedTypes = getTotalCollectedTypes(scene);
+    const totalCollectedTypes = getPartyCollectedTypeTotal(scene);
     if (Overrides.FORCE_COLLECTOR_SHOP_OVERRIDE || (totalCollectedTypes > 10 && ((scene.currentBattle.waveIndex > 1) &&
     scene.gameMode.isChaosMode && Utils.randSeedInt(chaosChance, 1) == 1 ||
         (!scene.gameMode.isChaosMode && (scene.currentBattle.waveIndex % 26 == 0 || Utils.randSeedInt(chance, 1) == 1 ))))) {
-        if(unshiftRatherThanPush) {
-            scene.unshiftPhase(new CollectedTypeShopPhase(scene, 1, undefined, false, undefined, undefined));
-        }
-        else {
-            scene.pushPhase(new CollectedTypeShopPhase(scene, 1, undefined, false, undefined, undefined));
-        }
+        import("#app/phases/collected-type-shop-phase.js").then(({ CollectedTypeShopPhase }) => {
+            if(unshiftRatherThanPush) {
+                scene.unshiftPhase(new CollectedTypeShopPhase(scene, 1, undefined, false, undefined, undefined));
+            }
+            else {
+                scene.pushPhase(new CollectedTypeShopPhase(scene, 1, undefined, false, undefined, undefined));
+            }
+        });
         if(!permaReduced) {
             permaReduced = true;
             scene.gameData.reducePermaModifierByType([PermaType.PERMA_SHOW_REWARDS_1, PermaType.PERMA_SHOW_REWARDS_2, PermaType.PERMA_SHOW_REWARDS_3], scene);

@@ -4,5 +4,8 @@
   "ultraBall": "ハイパーボール",
   "rogueBall": "ローグボール",
   "masterBall": "マスターボール",
-  "luxuryBall": "ゴージャスボール"
+  "luxuryBall": "ゴージャスボール",
+  "typeBall": "{{typeName}}ボール",
+  "voidBall": "ヴォイドボール",
+  "voidBallCatchRate": "100%（赤HP）"
 }

@@ -1,12 +1,13 @@
 import BattleScene from "../battle-scene";
 import { TextStyle, getTextColor } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import {Button} from "#enums/buttons";
 export default abstract class UiHandler {
   protected scene: BattleScene;
   protected mode: integer | null;
   protected cursor: integer = 0;
   public active: boolean = false;
+  public _setupDone: boolean = false;
   constructor(scene: BattleScene, mode: Mode | null = null) {
     this.scene = scene;
     this.mode = mode;

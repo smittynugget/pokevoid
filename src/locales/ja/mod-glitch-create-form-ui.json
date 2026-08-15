@@ -11,6 +11,12 @@
   "gatchaCalendar": "ガチャカレンダー！",
   "browseGlitchForms": "Pokevoidグリッチフォームを閲覧",
   "wikiMods": "ウィキ & モッド",
+  "downloadYourMods": "モッドをダウンロード",
+  "downloadAll": "すべてダウンロード (ZIP)",
+  "downloadSelected": "選択してダウンロード",
+  "noModsToDownload": "ダウンロードするモッドがありません。",
+  "downloadStarted": "ダウンロードを開始しました。",
+  "downloadFailed": "ダウンロードに失敗しました。もう一度お試しください。",
   "noModsToRemove": "削除するモッドがありません。",
   "errorLoadingMods": "モッドの読み込み中にエラーが発生しました。もう一度お試しください。",
   "modRemoved": "{{name}}を正常に削除しました。",
@@ -31,8 +37,9 @@
     "stat2": "強化するステータス2",
     "stat3": "強化するステータス3",
     "distributionType": "ステータス強化の分配タイプ",
-    "frontSprite": "ポケモン前面スプライト（150-200px）",
-    "backSprite": "ポケモン背面スプライト（150-200px）",
+    "frontSprite": "ポケモン前面スプライト",
+    "backSprite": "ポケモン背面スプライト",
+    "useFrontAsBack": "前面スプライトを背面スプライトとして使用",
     "rivalTrainer": "ライバル",
     "orRivalTrainer": "またはライバル"
   },
@@ -44,7 +51,12 @@
   },
   "buttons": {
     "saveAndAdd": "保存して再読み込み",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "next": "次へ",
+    "prev": "前へ"
+  },
+  "navigation": {
+    "sectionIndicator": "{{current}} / {{total}}"
   },
   "validation": {
     "requiredField": "この項目は必須です",
@@ -61,7 +73,8 @@
   },
   "sections": {
     "basicInformation": "基本情報",
-    "typesAbilities": "タイプと特性",
+    "typesAbilities": "タイプ",
+    "abilities": "特性",
     "stats": "ステータス",
     "sprites": "スプライト",
     "rivalTrainer": "このフォームを報酬とするライバル"

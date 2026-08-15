@@ -1,5 +1,7 @@
 {
   "title": "{{champion}} Livello Su!",
+  "skillObtained": "{{skillName}}\nOttenuto!",
+  "obtained": "Ottenuto!",
   "levelReached": "Livello {{level}} Raggiunto",
   "continue": "Premi un tasto per continuare"
 }

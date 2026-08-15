@@ -1,11 +1,12 @@
 import * as Utils from "#app/utils";
-import { Moves } from "#enums/moves";
+import { getDuelmonBstLimitForWave } from "#app/data/duelmon-bst-utils";
+import { Moves, isYuMove } from "#enums/moves";
 import { Abilities } from "#enums/abilities";
 import { Species } from "#enums/species";
 import { Type } from "#app/data/type";
 import { Stat } from "#enums/stat";
 import { allMoves } from "#app/data/move";
-import { allSpecies } from "#app/data/pokemon-species";
+import { allSpecies, speciesStarters } from "#app/data/pokemon-species";
 import { allAbilities } from "#app/data/ability";
 import { FormChangeItem } from "#enums/form-change-items";
 import { PlayableChampionData, PokemonAltBuildId } from "#app/system/playable-champions";
@@ -31,7 +32,20 @@ export class SkillTreeSelectors {
   }
 
   private static getChampionTypes(champion: PlayableChampionData): Type[] {
-    return [champion.type1, champion.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+    if (champion.id === "red" && champion.unlockedTypeBoosters?.length) {
+      return champion.unlockedTypeBoosters.filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+    }
+    const realTypes = [champion.type1, champion.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+    if (realTypes.length > 0) return realTypes;
+    if (champion.id === "red") {
+      const allTypes = (Utils.getEnumValues(Type) as Type[])
+        .filter(t => t >= Type.NORMAL && t <= Type.FAIRY);
+      const t1 = Utils.randSeedItem(allTypes);
+      const t2 = Utils.randSeedItem(allTypes.filter(t => t !== t1));
+      const t3 = Utils.randSeedItem(allTypes.filter(t => t !== t1 && t !== t2));
+      return [t1, t2, t3];
+    }
+    return realTypes;
   }
 
   static getAllNonSmittyAbilities(): Abilities[] {
@@ -43,6 +57,7 @@ export class SkillTreeSelectors {
   static pickChampionTM(champion: PlayableChampionData): Moves {
     const types = this.getChampionTypes(champion);
     const pool = (Object.values(Moves) as Moves[]).filter((m) => {
+      if (isYuMove(m)) return false;
       const md: any = (allMoves as any)[m];
       if (!md || !types.includes(md.type) || (md.name as string)?.endsWith(" (N)")) {
         return false;
@@ -54,6 +69,9 @@ export class SkillTreeSelectors {
   }
 
   static pickChampionXM(champion: PlayableChampionData): Moves {
+    if (champion.unlockedXMs?.length) {
+      return Utils.randSeedItem(champion.unlockedXMs);
+    }
     return this.pickChampionTM(champion);
   }
 
@@ -65,12 +83,18 @@ export class SkillTreeSelectors {
     const types = this.getChampionTypes(champion);
 
     const currentWave = scene?.currentBattle?.waveIndex ?? 1;
-    const bstLimit = currentWave < 30 ? 500 : 550;
+    const bstLimit = getDuelmonBstLimitForWave(currentWave);
 
     const allSpeciesArray = allSpecies.filter(s => s != null);
 
     let pool = allSpeciesArray.filter((sd) => {
       if (sd.legendary || sd.mythical || (sd as any).subLegendary) {
+        return false;
+      }
+      if (sd.generation === 20 && scene && !scene.duelmonsEnabledForRun) {
+        return false;
+      }
+      if (sd.generation === 20 && !speciesStarters.hasOwnProperty(sd.speciesId)) {
         return false;
       }
 
@@ -92,6 +116,9 @@ export class SkillTreeSelectors {
     if (!selectedData) {
       const fallbackPool = allSpeciesArray.filter((sd) => {
         if (sd.legendary || sd.mythical || (sd as any).subLegendary) return false;
+        if (sd.generation === 20 && !speciesStarters.hasOwnProperty(sd.speciesId)) return false;
+        const baseStatTotal = (sd.baseStats || []).reduce((sum: number, stat: number) => sum + stat, 0);
+        if (baseStatTotal > bstLimit) return false;
         const hasPrevolution = pokemonPrevolutions[sd.speciesId] !== undefined;
         const isBaseForm = !hasPrevolution;
         const isEvolutionAllowed = isBaseForm || currentWave >= 20;
@@ -157,7 +184,7 @@ export class SkillTreeSelectors {
 
   static pickStatBoostStats(champion: PlayableChampionData): [Stat[], number] {
     const prefs = this.getChampionStatPreferences(champion);
-    return [prefs, 0.01];
+    return [prefs, 0.03];
   }
 
   static pickMoveUpgradePath(): UpgradePath {
@@ -212,7 +239,7 @@ export class SkillTreeSelectors {
     const pool = types.length ? types : (Object.values(Type) as Type[]);
     const t = Utils.randSeedItem(pool);
     const roll = Utils.randSeedInt(100);
-    const amount = roll < 60 ? 2 : roll < 90 ? 5 : 10;
+    const amount = roll < 70 ? 5 : roll < 90 ? 7 : 10;
     return { type: t, amount };
   }
 
@@ -299,6 +326,7 @@ private static getChampionStatPreferences(championData: PlayableChampionData): S
     switch (championData.id) {
       case "brock": return [Stat.DEF, Stat.HP, Stat.ATK];
       case "misty": return [Stat.SPD, Stat.SPATK, Stat.ATK];
+      case "red": return [Stat.ATK, Stat.SPATK, Stat.SPD];
       case "apollo":
       case "diana":
         return getTypeStatPreferences(championData.type1, championData.type2);

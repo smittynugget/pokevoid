@@ -39,7 +39,7 @@ export class HallOfFamePhase extends Phase {
     this.scene.fieldUI.setVisible(true);
     this.scene.setModifiersVisible(true);
     this.scene.ui.getPermaMoneyContainer().setVisible(true);
-    this.scene.ui.permaModifierBar.setVisible(true);
+    this.scene.ui.permaModifierBar.setVisible(this.scene.showPermaBar);
     const sessionData = this.scene.gameData.getSessionSaveData(this.scene);
     const victoryRunEntry = {
       entry: sessionData,

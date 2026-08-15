@@ -1,0 +1,12 @@
+{
+  "quickSummary": "クイックサマリー",
+  "itemsMoves": "道具＆技",
+  "currentParty": "現在のパーティ",
+  "enemyInfo": "敵の情報",
+  "teamTitle": "チーム",
+  "noOpponent": "対戦相手なし",
+  "notApplicable": "---",
+  "pageIndicator": "{{current}}/{{total}}",
+  "foeTag": "相手",
+  "youTag": "自分"
+}

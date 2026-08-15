@@ -205,47 +205,47 @@
   },
   "riolu_apollo_diana_signature": {
     "name": "Apollo & Dianas Partner",
-    "description": "Apollo & Dianas tapferer Signatur-Kampf-Typ-Begleiter"
+    "description": "{{champion}}s tapferer Signatur-Kampf-Typ-Begleiter"
   },
   "solrock_apollo_diana_signature": {
     "name": "Apollo & Dianas Partner",
-    "description": "Apollo & Dianas strahlender Signatur-Gesteins-Typ-Begleiter"
+    "description": "{{champion}}s strahlender Signatur-Gesteins-Typ-Begleiter"
   },
   "lunatone_apollo_diana_signature": {
     "name": "Apollo & Dianas Partner",
-    "description": "Apollo & Dianas mystischer Signatur-Gesteins-Typ-Begleiter"
+    "description": "{{champion}}s mystischer Signatur-Gesteins-Typ-Begleiter"
   },
   "larvesta_apollo_diana_signature": {
     "name": "Apollo & Dianas Partner",
-    "description": "Apollo & Dianas lodernder Signatur-Käfer-Typ-Begleiter"
+    "description": "{{champion}}s lodernder Signatur-Käfer-Typ-Begleiter"
   },
   "swablu_apollo_diana_signature": {
     "name": "Apollo & Dianas Partner",
-    "description": "Apollo & Dianas flauschiger Signatur-Normal-Typ-Begleiter"
+    "description": "{{champion}}s flauschiger Signatur-Normal-Typ-Begleiter"
   },
   "castform_apollo_diana_signature": {
     "name": "Apollo & Dianas Partner",
-    "description": "Apollo & Dianas anpassungsfähiger Signatur-Normal-Typ-Begleiter"
+    "description": "{{champion}}s anpassungsfähiger Signatur-Normal-Typ-Begleiter"
   },
   "litwick_apollo_diana_signature": {
     "name": "Apollo & Dianas Partner",
-    "description": "Apollo & Dianas flackernder Signatur-Geist-Typ-Begleiter"
+    "description": "{{champion}}s flackernder Signatur-Geist-Typ-Begleiter"
   },
   "eevee_apollo_diana_signature": {
     "name": "Apollo & Dianas Partner",
-    "description": "Apollo & Dianas vielseitiger Signatur-Normal-Typ-Begleiter"
+    "description": "{{champion}}s vielseitiger Signatur-Normal-Typ-Begleiter"
   },
   "teddiursa_apollo_diana_signature": {
     "name": "Apollo & Dianas Partner",
-    "description": "Apollo & Dianas knuddeliger Signatur-Normal-Typ-Begleiter"
+    "description": "{{champion}}s knuddeliger Signatur-Normal-Typ-Begleiter"
   },
   "cleffa_apollo_diana_signature": {
     "name": "Apollo & Dianas Partner",
-    "description": "Apollo & Dianas sternenhafter Signatur-Fee-Typ-Begleiter"
+    "description": "{{champion}}s sternenhafter Signatur-Fee-Typ-Begleiter"
   },
   "sunkern_apollo_diana_signature": {
     "name": "Apollo & Dianas Partner",
-    "description": "Apollo & Dianas hoffnungsvoller Signatur-Pflanze-Typ-Begleiter"
+    "description": "{{champion}}s hoffnungsvoller Signatur-Pflanze-Typ-Begleiter"
   },
   "riolu_shadow_warrior": {
     "name": "Schatten-Krieger",
@@ -291,5 +291,93 @@
     "name": "Plasma-Spross",
     "description": "Ein Elektro/Pflanze Sonnkern knisternd mit Plasma-Energie, Galvanisierung-Umwandlung, Solarkraft-Intensität und Elektro-Feld-Dominanz"
   },
-  "championPartner": "{{champion}}s Partner"
+  "championPartner": "{{champion}}s Partner",
+  "bulbasaur_plasma_jungle": {
+    "name": "Plasma-Dschungel",
+    "description": "Ein Pflanzen/Elektro-Bisasam, das den Plasma-Dschungel kanalisiert und Rankenkraft mit knisternden Blitzen vereint"
+  },
+  "bulbasaur_red_signature": {
+    "name": "Reds Partner",
+    "description": "Reds Signatur-Bisasam — ein widerstandsfähiger Samenkrieger, der Natur und Elektroenergie in perfekter Harmonie vereint"
+  },
+  "butterfree_red_signature": {
+    "name": "Reds Partner",
+    "description": "Reds Signatur-Smettbo — eine faszinierende Motte mit psychischen Kräften und seelensaugendem Staub"
+  },
+  "butterfree_soul_moth": {
+    "name": "Seelenmotte",
+    "description": "Ein Käfer/Geist-Smettbo, das sich in eine Seelenmotte verwandelt und mit spektralem Flügelstaub Lebenskraft entzieht"
+  },
+  "charmander_black_inferno": {
+    "name": "Schwarzes Inferno",
+    "description": "Ein Feuer/Unlicht-Glumanda, verzehrt vom schwarzen Inferno, mit Schattenflammen und dunkler drakonischer Wut"
+  },
+  "charmander_red_signature": {
+    "name": "Reds Partner",
+    "description": "Reds Signatur-Glumanda — eine wilde Flamme, die zu einem Inferno drakonischer Macht heranwächst"
+  },
+  "espeon_moon_goddess": {
+    "name": "Mondgöttin",
+    "description": "Ein Psycho/Fee-Psiana, das als Mondgöttin aufsteigt und Mondmagie mit psychischer Brillanz ausstrahlt"
+  },
+  "espeon_red_signature": {
+    "name": "Reds Partner",
+    "description": "Reds Signatur-Psiana — eine lunare Psycho-Kraft, die Mondlicht und Feenenergie mit anmutiger Verwüstung ausstrahlt"
+  },
+  "farfetchd_heavens_edge": {
+    "name": "Himmelsschneide",
+    "description": "Ein Kampf/Flug-Porenta, das als Himmelsschneide aufsteigt und mit göttlicher Schwertkunst aus dem Himmel zuschlägt"
+  },
+  "farfetchd_red_signature": {
+    "name": "Reds Partner",
+    "description": "Reds Signatur-Porenta — ein furchtloser Schwertkämpfer, der seinen Lauch mit tödlicher Volltreffer-Meisterschaft schwingt"
+  },
+  "lapras_red_signature": {
+    "name": "Reds Partner",
+    "description": "Reds Signatur-Lapras — ein anmutiger Reisender, der Eis und Wasser mit gelassener aber tödlicher Präzision beherrscht"
+  },
+  "lapras_voidfrost": {
+    "name": "Voidfrost",
+    "description": "Ein Eis/Geist-Lapras, das durch den Void treibt und spektrale Kälte mit abgrundtiefem Eis zu gespenstischer Macht vereint"
+  },
+  "magikarp_dragonborn": {
+    "name": "Drachengeborenes",
+    "description": "Ein Wasser/Drachen-Karpador, wiedergeboren als wahres Drachengeborenes, das uraltes drakonisches Potenzial freisetzt"
+  },
+  "magikarp_red_signature": {
+    "name": "Reds Partner",
+    "description": "Reds Signatur-Karpador — ein Außenseiter, der Erwartungen trotzt und sich zu einem drachenblütigen Kraftpaket entwickelt"
+  },
+  "pikachu_electro_berserker": {
+    "name": "Elektro-Berserker",
+    "description": "Ein Elektro/Kampf-Pikachu, das vor Berserkerwut sprüht und rohe Spannung mit Kampfkunstmeisterschaft vereint"
+  },
+  "pikachu_red_signature": {
+    "name": "Reds Partner",
+    "description": "Reds Signatur-Pikachu — ein kampferprobter Partner mit unübertroffener Geschwindigkeit und verheerenden Elektroattacken"
+  },
+  "snorlax_dream_colossus": {
+    "name": "Traumkoloss",
+    "description": "Ein Normal/Psycho-Relaxo, das zur Traumkoloss-Form aufsteigt und immense Masse mit psychischer Traummanipulation verbindet"
+  },
+  "snorlax_red_signature": {
+    "name": "Reds Partner",
+    "description": "Reds Signatur-Relaxo — eine unbewegliche Wand, die Bestrafung absorbiert und mit erschreckender Kraft zurückschlägt"
+  },
+  "squirtle_abyss_golem": {
+    "name": "Abgrund-Golem",
+    "description": "Ein Wasser/Unlicht-Schiggy, geschmiedet zum Abgrund-Golem, das Tiefseedunkelheit mit gepanzerter Macht beherrscht"
+  },
+  "squirtle_red_signature": {
+    "name": "Reds Partner",
+    "description": "Reds Signatur-Schiggy — eine standfeste Panzerfestung, die den Abgrund mit dunkler Wassermeisterschaft beherrscht"
+  },
+  "tauros_iron_quake": {
+    "name": "Eisenbeben",
+    "description": "Ein Boden/Stahl-Tauros, das zum Eisenbeben wird und metallische Rüstung mit seismischer Verwüstung vereint"
+  },
+  "tauros_red_signature": {
+    "name": "Reds Partner",
+    "description": "Reds Signatur-Tauros — ein tobender Bulle mit unaufhaltsamer Wucht und erderschütternden Attacken"
+  }
 }

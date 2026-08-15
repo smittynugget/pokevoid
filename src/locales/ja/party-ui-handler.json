@@ -49,5 +49,6 @@
   "PASS_BATON": "バトンタッチ",
   "UNPAUSE_EVOLUTION": "進化を再開",
   "REVIVE": "復活",
-  "RENAME": "名前を変える"
+  "RENAME": "名前を変える",
+  "quickInfo": "クイック情報"
 }

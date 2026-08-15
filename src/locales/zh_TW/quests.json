@@ -137,7 +137,7 @@
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "刺甲貝的禮物",
-    "task": "在努力模式下使用刺甲貝的禮物招式10次"
+    "task": "使用刺甲貝的禮物招式10次"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "長鼻葉對戰朝北鼻",
@@ -445,7 +445,7 @@
   "NORMAL_STRENGTH": {
     "name": "一般的力量！",
     "task": "在多場對戰中使用一般屬性寶可夢擊敗125隻寶可夢",
-    "rewardText": "解鎖永久道具，改變一般屬性的抗性和優勢！"
+    "rewardText": "解鎖Ω道具，改變一般屬性的抗性和優勢！"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "鯉魚王的新招式",
@@ -485,7 +485,7 @@
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "一般的力量！",
     "task": "在多場對戰中使用一般屬性寶可夢擊敗125隻寶可夢",
-    "rewardText": "解鎖永久道具，改變一般屬性的抗性和優勢！"
+    "rewardText": "解鎖Ω道具，改變一般屬性的抗性和優勢！"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "鯉魚王的新招式",
@@ -521,5 +521,7 @@
     "name": "鐵甲蛹的新招式",
     "task": "使用鐵甲蛹擊敗50隻寶可夢",
     "rewardText": "鐵甲蛹將擁有更多招式！"
-  }
+  },
+  "rewardUnlocksGlitchForm": "解鎖一個異常形態",
+  "rewardUnlocksSmittyForm": "解鎖一個Smitty形態"
 }

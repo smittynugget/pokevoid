@@ -108,6 +108,27 @@ export async function initI18n(): Promise<void> {
   i18next.use(LanguageDetector);
   i18next.use(processor);
   i18next.use(new KoreanPostpositionProcessor());
+  i18next.use({
+    type: "postProcessor",
+    name: "duelmon-article-strip",
+    process(value: string, key: string[], options: any) {
+      if (typeof value !== "string") return value;
+      const ns = options?.ns;
+      if (ns === "duelmonNames" || ns === "duelmon-names") {
+        if (key[0]?.endsWith(".skipStrip")) return value;
+        const baseKey = key[0]?.replace(".name", "");
+        if (baseKey) {
+          const langData = i18next.getDataByLanguage(i18next.resolvedLanguage || i18next.language) as any;
+          const entry = langData?.duelmonNames?.[baseKey];
+          if (entry?.skipStrip === true || entry?.skipStrip === "true") {
+            return value;
+          }
+        }
+        return value.replace(/\b(?:the|of|is|in|a|an)\b/gi, "").replace(/\s{2,}/g, " ").trim();
+      }
+      return value;
+    }
+  } as any);
   await i18next.init({
     nonExplicitSupportedLngs: true,
     fallbackLng: "en",
@@ -159,18 +180,18 @@ export async function initI18n(): Promise<void> {
       }
 
     },
-    postProcess: ["korean-postposition"],
+    postProcess: ["korean-postposition", "duelmon-article-strip"],
   });
 
   await initFonts(localStorage.getItem("prLang") ?? undefined);
 
   updateMobileButtonLabels();
-  i18next.on("languageChanged", updateMobileButtonLabels);
+  i18next.on('languageChanged', updateMobileButtonLabels);
 }
 
 function updateMobileButtonLabels(): void {
-  document.querySelectorAll("[data-i18n]").forEach((element) => {
-    const key = element.getAttribute("data-i18n");
+  document.querySelectorAll('[data-i18n]').forEach((element) => {
+    const key = element.getAttribute('data-i18n');
     if (key) {
       const translated = i18next.t(key);
       element.textContent = translated.toUpperCase();

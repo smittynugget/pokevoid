@@ -78,5 +78,6 @@
   "sillyPressure": "は　おかしなプレッシャーを　放っている！",
   "questionPressure": "は　プレッシャーを　放っている？",
   "allOrNothingPressure": "は　オールオアナッシングの　プレッシャーだ！",
-  "poisonHeal": "{{pokemonNameWithAffix}}は\n{{abilityName}}で　回復した！"
+  "poisonHeal": "{{pokemonNameWithAffix}}は\n{{abilityName}}で　回復した！",
+  "windboltDiscard": "{{pokemonName}}は　持っていた　きのみを　消費して\n{{targetName}}に　小ダメージを　与えた！"
 }

@@ -12,6 +12,7 @@ import { getIsInitialized, initI18n } from "#app/plugins/i18n.js";
 import { ShopCursorTarget } from "#app/enums/shop-cursor-target";
 import { isNormalQuestCompleted } from "#app/modifier/perma-modifier-checker";
 import {setChangeNormalTyping} from "#app/data/type";
+import { ChampionUtils } from "#app/system/champion-utils";
 
 function getTranslation(key: string): string {
   if (!getIsInitialized()) {
@@ -86,6 +87,7 @@ export interface Setting {
 }
 export const SettingKeys = {
   Game_Speed: "GAME_SPEED",
+  Battle_Speed: "BATTLE_SPEED",
   HP_Bar_Speed: "HP_BAR_SPEED",
   EXP_Gains_Speed: "EXP_GAINS_SPEED",
   EXP_Party_Display: "EXP_PARTY_DISPLAY",
@@ -95,6 +97,7 @@ export const SettingKeys = {
   Hide_IVs: "HIDE_IVS",
   Tutorials: "TUTORIALS",
   Touch_Controls: "TOUCH_CONTROLS",
+  Disable_Mouse: "DISABLE_MOUSE",
   Vibration: "VIBRATION",
   Language: "LANGUAGE",
   Money_Format: "MONEY_FORMAT",
@@ -122,14 +125,24 @@ export const SettingKeys = {
   Skip_Faint_Cry: "SKIP_FAINT_CRY",
   Music_Preference: "MUSIC_PREFERENCE",
   Show_BGM_Bar: "SHOW_BGM_BAR",
+  Show_Perma_Bar: "SHOW_PERMA_BAR",
   Move_Touch_Controls: "MOVE_TOUCH_CONTROLS",
   Shop_Overlay_Opacity: "SHOP_OVERLAY_OPACITY",
   Reward_Overlay_Opacity: "REWARD_OVERLAY_OPACITY",
   Normal_Effectiveness: "NORMAL_EFFECTIVENESS",
   Disable_Move_Upgrades: "DISABLE_MOVE_UPGRADES",
+  Disable_Stat_Switchers: "DISABLE_STAT_SWITCHERS",
+  Disable_Release_Items: "DISABLE_RELEASE_ITEMS",
+  Disable_IV_Scanner: "DISABLE_IV_SCANNER",
+  Disable_Map: "DISABLE_MAP",
+  Disable_Duelmons: "DISABLE_DUELMONS",
   Disable_Cutscenes: "DISABLE_CUTSCENES",
+  Disable_Shiny_Power: "DISABLE_SHINY_POWER",
   Show_Item_Text_BG: "SHOW_ITEM_TEXT_BG",
   Auto_Save: "AUTO_SAVE",
+  Load_Battle_From: "LOAD_BATTLE_FROM",
+  Cloud_Save: "CLOUD_SAVE",
+  Cloud_Save_Interval: "CLOUD_SAVE_INTERVAL",
 };
 export const Setting: Array<Setting> = [
   {
@@ -150,9 +163,32 @@ export const Setting: Array<Setting> = [
     type: SettingType.GENERAL
   },
   {
+    key: SettingKeys.Battle_Speed,
+    label: i18next.t("settings:battleSpeed"),
+    options: [
+      { value: "game", label: "\u2014" },
+      { value: "1", label: "1x" },
+      { value: "3", label: "3x" },
+      { value: "6", label: "6x" },
+      { value: "10", label: "10x" },
+      { value: "12", label: "12x" },
+      { value: "15", label: "15x" },
+      { value: "20", label: "20x" },
+    ],
+    default: 0,
+    type: SettingType.GENERAL
+  },
+  {
     key: SettingKeys.Touch_Controls,
     label: i18next.t("settings:touchControls"),
     options: AUTO_DISABLED,
+    default: 0,
+    type: SettingType.GENERAL
+  },
+  {
+    key: SettingKeys.Disable_Mouse,
+    label: i18next.t("settings:disableMouse"),
+    options: OFF_ON,
     default: 0,
     type: SettingType.GENERAL
   },
@@ -173,6 +209,62 @@ export const Setting: Array<Setting> = [
     type: SettingType.GENERAL
   },
   {
+    key: SettingKeys.Load_Battle_From,
+    label: i18next.t("settings:loadBattleFrom"),
+    options: [
+      {
+        value: "Ask",
+        label: i18next.t("settings:loadBattleFromAsk")
+      },
+      {
+        value: "Skip",
+        label: i18next.t("settings:loadBattleFromSkip")
+      }
+    ],
+    default: 0,
+    type: SettingType.GENERAL
+  },
+  {
+    key: SettingKeys.Cloud_Save,
+    label: i18next.t("settings:cloudSave"),
+    options: [
+      {
+        value: "Off",
+        label: i18next.t("settings:off")
+      },
+      {
+        value: "Google Drive",
+        label: i18next.t("settings:googleDrive")
+      }
+    ],
+    default: 0,
+    type: SettingType.GENERAL
+  },
+  {
+    key: SettingKeys.Cloud_Save_Interval,
+    label: i18next.t("settings:cloudSaveInterval"),
+    options: [
+      {
+        value: "30",
+        label: i18next.t("settings:interval30min")
+      },
+      {
+        value: "60",
+        label: i18next.t("settings:interval1hr")
+      },
+      {
+        value: "120",
+        label: i18next.t("settings:interval2hr")
+      },
+      {
+        value: "0",
+        label: i18next.t("settings:manualOnly")
+      }
+    ],
+    default: 1,
+    type: SettingType.GENERAL
+  },
+  {
     key: SettingKeys.Disable_Cutscenes,
     label: i18next.t("settings:disableCutscenes"),
     options: OFF_ON,
@@ -180,8 +272,53 @@ export const Setting: Array<Setting> = [
     type: SettingType.GENERAL
   },
   {
+    key: SettingKeys.Disable_Shiny_Power,
+    label: i18next.t("settings:disableShinyPower"),
+    options: OFF_ON,
+    default: 0,
+    type: SettingType.GENERAL
+  },
+  {
     key: SettingKeys.Disable_Move_Upgrades,
     label: i18next.t("settings:disableMoveUpgrades"),
+    options: OFF_ON,
+    default: 1,
+    type: SettingType.GENERAL,
+    isHidden: () => localStorage.getItem("wave35_move_upgrades_unlocked") !== "1"
+  },
+  {
+    key: SettingKeys.Disable_Stat_Switchers,
+    label: i18next.t("settings:disableStatSwitchers"),
+    options: OFF_ON,
+    default: 1,
+    type: SettingType.GENERAL,
+    isHidden: () => localStorage.getItem("wave35_stat_switchers_unlocked") !== "1"
+  },
+  {
+    key: SettingKeys.Disable_Release_Items,
+    label: i18next.t("settings:disableReleaseItems"),
+    options: OFF_ON,
+    default: 1,
+    type: SettingType.GENERAL,
+    isHidden: () => localStorage.getItem("wave35_release_items_unlocked") !== "1"
+  },
+  {
+    key: SettingKeys.Disable_IV_Scanner,
+    label: i18next.t("settings:disableIvScanner"),
+    options: OFF_ON,
+    default: 0,
+    type: SettingType.GENERAL
+  },
+  {
+    key: SettingKeys.Disable_Map,
+    label: i18next.t("settings:disableMap"),
+    options: OFF_ON,
+    default: 0,
+    type: SettingType.GENERAL
+  },
+  {
+    key: SettingKeys.Disable_Duelmons,
+    label: i18next.t("settings:disableDuelmons"),
     options: OFF_ON,
     default: 0,
     type: SettingType.GENERAL
@@ -411,11 +548,10 @@ export const Setting: Array<Setting> = [
   },
   {
     key: SettingKeys.Modifier_Tooltips,
-    label: "Modifier Tooltips",
+    label: i18next.t("settings:modifierTooltips"),
     options: OFF_ON,
     default: 0,
-    type: SettingType.DISPLAY,
-    isHidden: () => true
+    type: SettingType.DISPLAY
   },
   {
     key: SettingKeys.Show_Moveset_Flyout,
@@ -505,6 +641,13 @@ export const Setting: Array<Setting> = [
   {
     key: SettingKeys.Show_BGM_Bar,
     label: i18next.t("settings:showBgmBar"),
+    options: OFF_ON,
+    default: 1,
+    type: SettingType.DISPLAY
+  },
+  {
+    key: SettingKeys.Show_Perma_Bar,
+    label: i18next.t("settings:showPermaBar"),
     options: OFF_ON,
     default: 1,
     type: SettingType.DISPLAY
@@ -645,6 +788,15 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
       scene.gameSpeed = parseFloat(opt.value.replace("x", ""));
       break;
     }
+    case SettingKeys.Battle_Speed: {
+      const options = Setting[index].options;
+      const safeIndex = Number.isInteger(value)
+        ? Math.min(Math.max(value, 0), Math.max(options.length - 1, 0))
+        : Setting[index].default;
+      const opt = options[safeIndex] ?? options[Setting[index].default] ?? options[0];
+      scene.battleSpeed = opt.value === "game" ? 0 : parseFloat(opt.value);
+      break;
+    }
     case SettingKeys.Master_Volume:
       scene.masterVolume = value ? parseInt(Setting[index].options[value].value) * 0.01 : 0;
       scene.updateSoundVolume();
@@ -689,8 +841,26 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
     case SettingKeys.Disable_Move_Upgrades:
       scene.disableMoveUpgrades = Setting[index].options[value].value === "On";
       break;
+    case SettingKeys.Disable_Stat_Switchers:
+      scene.disableStatSwitchers = Setting[index].options[value].value === "On";
+      break;
+    case SettingKeys.Disable_Release_Items:
+      scene.disableReleaseItems = Setting[index].options[value].value === "On";
+      break;
+    case SettingKeys.Disable_IV_Scanner:
+      scene.disableIvScanner = Setting[index].options[value].value === "On";
+      break;
+    case SettingKeys.Disable_Map:
+      scene.disableMap = Setting[index].options[value].value === "On";
+      break;
+    case SettingKeys.Disable_Duelmons:
+      scene.disableDuelmons = Setting[index].options[value].value === "On";
+      break;
     case SettingKeys.Disable_Cutscenes:
       scene.disableCutscenes = Setting[index].options[value].value === "On";
+      break;
+    case SettingKeys.Disable_Shiny_Power:
+      scene.disableShinyPower = Setting[index].options[value].value === "On";
       break;
     case SettingKeys.Show_Item_Text_BG:
       scene.showItemTextBg = Setting[index].options[value].value === "On";
@@ -698,11 +868,37 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
     case SettingKeys.Auto_Save:
       scene.autoSaveMode = value;
       break;
+    case SettingKeys.Load_Battle_From:
+      scene.loadBattleFromMode = value;
+      break;
+    case SettingKeys.Cloud_Save:
+      scene.cloudSaveEnabled = Setting[index].options[value].value === "Google Drive";
+      import("#app/system/drive-sync-service").then(({ driveSyncService }) => {
+        if (scene.cloudSaveEnabled) {
+          driveSyncService.restartInterval(scene.cloudSaveIntervalMs);
+        } else {
+          driveSyncService.stopInterval();
+        }
+      }).catch(() => {});
+      break;
+    case SettingKeys.Cloud_Save_Interval:
+      const intervals = [30 * 60 * 1000, 60 * 60 * 1000, 120 * 60 * 1000, 0];
+      scene.cloudSaveIntervalMs = intervals[value] ?? 60 * 60 * 1000;
+      if (scene.cloudSaveEnabled) {
+        import("#app/system/drive-sync-service").then(({ driveSyncService }) => {
+          driveSyncService.restartInterval(scene.cloudSaveIntervalMs);
+        }).catch(() => {});
+      }
+      break;
     case SettingKeys.Battle_Style:
       scene.battleStyle = value;
       break;
   case SettingKeys.Show_BGM_Bar:
     scene.showBgmBar = Setting[index].options[value].value === "On";
+    break;
+  case SettingKeys.Show_Perma_Bar:
+    scene.showPermaBar = Setting[index].options[value].value === "On";
+    scene.ui?.applyPermaBarVisibility?.();
     break;
     case SettingKeys.Candy_Upgrade_Notification:
       if (scene.candyUpgradeNotification === value) {
@@ -767,7 +963,9 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
       if (scene.gameData) {
         const female = Setting[index].options[value].value === "Girl";
         scene.gameData.gender = female ? PlayerGender.FEMALE : PlayerGender.MALE;
-        scene.trainer.setTexture(scene.trainer.texture.key.replace(female ? "m" : "f", female ? "f" : "m"));
+        const resolvedId = ChampionUtils.resolveActiveChampionId(scene);
+        const newBackKey = ChampionUtils.getChampionBackSpriteKey(resolvedId, scene.gameData.gender);
+        scene.trainer.setTexture(newBackKey);
       } else {
         return false;
       }
@@ -777,6 +975,12 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
       const touchControls = document.getElementById("touchControls");
       if (touchControls) {
         touchControls.classList.toggle("visible", scene.enableTouchControls);
+      }
+      break;
+    case SettingKeys.Disable_Mouse:
+      scene.disableMouseInput = Setting[index].options[value].value === "On";
+      if (scene.input?.mouse) {
+        scene.input.mouse.enabled = !scene.disableMouseInput;
       }
       break;
     case SettingKeys.Vibration:

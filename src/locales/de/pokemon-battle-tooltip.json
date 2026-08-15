@@ -1,0 +1,12 @@
+{
+  "quickSummary": "Kurzübersicht",
+  "itemsMoves": "Items & Attacken",
+  "currentParty": "Aktuelles Team",
+  "enemyInfo": "Gegner Info",
+  "teamTitle": "Team",
+  "noOpponent": "Kein Gegner",
+  "notApplicable": "---",
+  "pageIndicator": "{{current}}/{{total}}",
+  "foeTag": "FEIND",
+  "youTag": "DU"
+}

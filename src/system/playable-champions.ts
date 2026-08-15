@@ -17,6 +17,12 @@ export type ChampionStatBoostId = string;
 export interface ChampionUnlockRequirement {
   essenceRequirements: Array<{ type: Type; amount: number }>;
   totalEssenceRequirement: number;
+  prerequisiteChampions?: string[];
+  rivalDefeatRequired?: {
+    trainerType: TrainerType;
+    inVoid: boolean;
+    waveNumber?: number;
+  };
   description: string | (() => string);
 }
 

@@ -1,5 +1,5 @@
 import BattleScene from "../battle-scene";
-import PokemonSpecies from "../data/pokemon-species";
+import PokemonSpecies, { adjustDuelmonIconScale } from "../data/pokemon-species";
 import { addTextObject, TextStyle } from "./text";
 
 export class StarterContainer extends Phaser.GameObjects.Container {
@@ -15,6 +15,11 @@ export class StarterContainer extends Phaser.GameObjects.Container {
   public candyUpgradeIcon: Phaser.GameObjects.Image;
   public candyUpgradeOverlayIcon: Phaser.GameObjects.Image;
   public cost: number = 0;
+  public fusionSpeciesId: number = -1;
+  public fusionIndex: number = -1;
+  public fusionOverlayIcon: Phaser.GameObjects.Sprite | null = null;
+  public fusionOverlayBg: Phaser.GameObjects.Image | null = null;
+  public hitZone: Phaser.GameObjects.Zone | null = null;
 
   constructor(scene: BattleScene, species: PokemonSpecies) {
     super(scene, 0, 0);
@@ -29,10 +34,14 @@ export class StarterContainer extends Phaser.GameObjects.Container {
     starterPassiveBg.setVisible(false);
     this.add(starterPassiveBg);
     this.starterPassiveBgs = starterPassiveBg;
-    this.icon = this.scene.add.sprite(-2, 2, species.getIconAtlasKey(defaultProps.formIndex, defaultProps.shiny, defaultProps.variant));
-    this.icon.setScale(0.5);
-    this.icon.setOrigin(0, 0);
+    this.icon = this.scene.add.sprite(7, 2, species.getIconAtlasKey(defaultProps.formIndex, defaultProps.shiny, defaultProps.variant));
+    const iconScale = adjustDuelmonIconScale(0.5, this.species.generation);
+    this.icon.setScale(this.species.generation === 20 ? iconScale * 0.8 : iconScale);
+    this.icon.setOrigin(0.5, 0);
+    const _origWarn = console.warn;
+    console.warn = () => {};
     this.icon.setFrame(species.getIconId(defaultProps.female, defaultProps.formIndex, defaultProps.shiny, defaultProps.variant));
+    console.warn = _origWarn;
     this.checkIconId(defaultProps.female, defaultProps.formIndex, defaultProps.shiny, defaultProps.variant);
     this.icon.setTint(0);
     this.add(this.icon);
@@ -80,13 +89,54 @@ export class StarterContainer extends Phaser.GameObjects.Container {
     candyUpgradeOverlayIcon.setVisible(false);
     this.add(candyUpgradeOverlayIcon);
     this.candyUpgradeOverlayIcon = candyUpgradeOverlayIcon;
+
+    this.hitZone = this.scene.add.zone(0, 0, 18, 17);
+    this.hitZone.setOrigin(0, 0);
+    this.hitZone.setInteractive({ useHandCursor: true });
+    this.add(this.hitZone);
   }
 
   checkIconId(female, formIndex, shiny, variant) {
     if (this.icon.frame.name !== this.species.getIconId(female, formIndex, shiny, variant)) {
       console.log(`${this.species.name}'s variant icon does not exist. Replacing with default.`);
+      const origWarn = console.warn;
+      console.warn = () => {};
       this.icon.setTexture(this.species.getIconAtlasKey(formIndex, false, variant));
       this.icon.setFrame(this.species.getIconId(female, formIndex, false, variant));
+      if (this.icon.frame.name !== this.species.getIconId(female, formIndex, false, variant)) {
+        this.icon.setTexture("pokemon_icons_0");
+        this.icon.setFrame("unknown");
+      }
+      console.warn = origWarn;
     }
+  }
+
+  setFusionOverlay(fusionSpecies: PokemonSpecies): void {
+    if (this.fusionOverlayBg) {
+      this.fusionOverlayBg.destroy();
+      this.fusionOverlayBg = null;
+    }
+    if (this.fusionOverlayIcon) {
+      this.fusionOverlayIcon.destroy();
+      this.fusionOverlayIcon = null;
+    }
+    const defaultDexAttr = this.scene.gameData.getSpeciesDefaultDexAttr(fusionSpecies, false, true);
+    const props = this.scene.gameData.getSpeciesDexAttrProps(fusionSpecies, defaultDexAttr);
+
+    this.fusionOverlayBg = this.scene.add.image(13.5, 13.5, "passive_bg");
+    this.fusionOverlayBg.setOrigin(0.5, 0.5);
+    this.fusionOverlayBg.setScale(0.37);
+    this.fusionOverlayBg.setTint(0x000000);
+    this.fusionOverlayBg.setAlpha(1.0);
+    this.add(this.fusionOverlayBg);
+
+    this.fusionOverlayIcon = this.scene.add.sprite(
+      13.5, 12,
+      fusionSpecies.getIconAtlasKey(props.formIndex, props.shiny, props.variant)
+    );
+    this.fusionOverlayIcon.setFrame(fusionSpecies.getIconId(props.female, props.formIndex, props.shiny, props.variant));
+    this.fusionOverlayIcon.setScale(adjustDuelmonIconScale(0.3, fusionSpecies.generation));
+    this.fusionOverlayIcon.setOrigin(0.5, 0.5);
+    this.add(this.fusionOverlayIcon);
   }
 }

@@ -15,6 +15,9 @@ export interface ActiveSkillTreeData {
   selectedPokemonPicks?: Array<{ species: Species; isSignature: boolean }>;
   unlockedGlitchForms: string[];
   sessionQuestUnlockables?: Partial<Record<QuestUnlockables, { questUnlockData?: QuestUnlockData }>>;
+  sessionModFormsUnlocked?: string[];
+  sessionUniSmittyUnlocks?: string[];
+  unlockedBranches: Set<string>;
   skillPoints: number;
   tokens: number;
   starterPokemon?: Species;
@@ -40,6 +43,12 @@ export interface SkillTreeNode {
   cost: number;
   isLegendary: boolean;
   unlocked: boolean;
+  isLevelLocked?: boolean;
+  requiredUnlockLevel?: number;
+  branchUnlockCost?: number;
+  pendingRewardData?: SkillTreeReward;
+  ringIndex?: number;
+  ringSize?: number;
 }
 
 export enum SkillTreeRarity {
@@ -81,6 +90,7 @@ export enum SkillTreeRewardType {
   TYPE_BOOSTER_ITEM = "type_booster_item",
   POKEMON_ALT_BUILD = "pokemon_alt_build",
   GLITCH_FORM_UNLOCK = "glitch_form_unlock",
+  RANDOM_GLITCH_FORMS_FOR_RUN = "random_glitch_forms_for_run",
   PERMA_ITEM = "perma_item",
   ESSENCE_BUNDLE = "essence_bundle",
   ESSENCE_TYPE_WEIGHT = "essence_type_weight",
@@ -107,13 +117,22 @@ export enum SkillTreeRewardType {
   CATCH_RATE_BONUS = "catch_rate_bonus",
   REVIVE_BOOST = "revive_boost",
   TERA_TYPE = "tera_type",
-  PARTY_ABILITY_GRANT = "party_ability_grant"
+  PARTY_ABILITY_GRANT = "party_ability_grant",
+
+  BOUNTY_SELECT = "bounty_select"
 }
 
 export interface SkillTreeReward {
   type: SkillTreeRewardType;
   data: any;
   immediate: boolean;
+}
+
+export interface RewardTooltipSections {
+  summary: string;
+  detail?: string;
+  detailHeaderKey?: string;
+  lore?: string;
 }
 
 export enum SkillCategory {

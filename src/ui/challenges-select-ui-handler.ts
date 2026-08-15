@@ -1,6 +1,6 @@
 import BattleScene from "../battle-scene";
 import { TextStyle, addTextObject } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import UiHandler from "./ui-handler";
 import { addWindow } from "./ui-theme";
 import {Button} from "#enums/buttons";
@@ -206,7 +206,7 @@ export default class GameChallengesUiHandler extends UiHandler {
         this.cursorObj?.setVisible(true);
       } else {
         this.scene.clearPhaseQueue();
-        this.scene.pushPhase(new TitlePhase(this.scene));
+        this.scene.pushPhase(new TitlePhase(this.scene, false, true));
         this.scene.getCurrentPhase()?.end();
       }
       success = true;

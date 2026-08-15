@@ -741,6 +741,35 @@
       "1": "C’est probablement difficile à comprendre pour toi,\nmais ce que je fais n’est en rien une mauvaise chose.$J’œuvre pour la prospérité de ma très chère région\nde Galar en exploitant une source infinie d’énergie."
     }
   },
+  "pegasus_boss_1": {
+    "encounter": {
+      "1": "Ah, un nouveau challenger approche de mon château...$Comme c'est délicieux. Je m'ennuyais tellement depuis le Royaume des Duellistes.$Vois-tu, mon Œil du Millénaire me permet de sonder les profondeurs de ta stratégie...$Chaque carte que tu détiens, chaque coup que tu prévois — j'ai déjà tout vu.$Alors... commençons ce Jeu des Ombres, veux-tu ?",
+      "2": "Bienvenue, bienvenue dans mon monde d'illusions !$Je dois dire, tu es allé assez loin pour quelqu'un sans Objet du Millénaire.$Mais dis-moi... crois-tu vraiment pouvoir vaincre quelqu'un qui voit tout ?$Mon Monde Toon t'attend, et mes créatures meurent d'envie de jouer.$Voyons si tu es digne de mon attention, hmm ?",
+      "3": "Oh là là, quel invité inattendu !$Tu me rappelles un garçon que j'ai connu autrefois... imprudent, courageux et parfaitement prévisible.$L'Œil du Millénaire m'a montré d'innombrables avenirs, et dans chacun d'eux...$...ta défaite est absolue. Mais essaie au moins de rendre cela divertissant, n'est-ce pas ?"
+    },
+    "victory": {
+      "1": "Im...possible ! L'Œil du Millénaire n'a montré aucun chemin vers ce résultat !$Comment as-tu pu... mes stratégies parfaites... mon Monde Toon...$Peut-être ai-je sous-estimé le pouvoir qui coule en toi.$Très bien. Tu as mérité cette victoire... mais souviens-toi — dans le Royaume des Ombres, rien n'est jamais vraiment fini.",
+      "2": "Non ! Ce n'est pas possible !$Mes visions... elles étaient si claires... si absolues...$Tu as brisé mes illusions avec rien d'autre que ta détermination.$Je m'incline... pour l'instant. Mais les ombres ont la mémoire longue, cher challenger."
+    },
+    "defeat": {
+      "1": "Comme je l'avais prévu... ton esprit était un livre ouvert dès ton tout premier coup.$Chaque pensée, chaque hésitation — l'Œil du Millénaire a tout révélé.$Maintenant, ton jeu de pénalité t'attend...$Veux-tu jouer un autre jeu ? J'aime tant regarder l'espoir s'éteindre dans les yeux d'un challenger.",
+      "2": "Ooh, comme c'est délicieux ! Ton désespoir est absolument exquis !$As-tu vraiment cru pouvoir défier le créateur des Monstres de Duel en personne ?$Le Royaume des Ombres t'accueille à bras ouverts...$Ne t'inquiète pas — le temps s'écoule différemment là-bas. Tu remarqueras à peine l'éternité."
+    }
+  },
+  "pegasus_boss_2": {
+    "encounter": {
+      "1": "Ah, tu es revenu ! Quelle persistance de ta part.$Je dois avouer, notre dernière rencontre m'a laissé une forte impression...$Cette fois, j'ai préparé quelque chose de vraiment spécial. Mes Toons se sont entraînés, vois-tu.$Et j'ai déverrouillé des secrets de l'Œil du Millénaire que je n'avais jamais osé utiliser.$Le vide entre nos mondes s'amincit... le sens-tu ? Ce sera notre ultime partie.",
+      "2": "Tiens, tiens... celui qui a défié mes visions revient.$Je ne ferai pas deux fois la même erreur, je te l'assure.$Mon Mille-Yeux Restreint voit tout, lie tout, consume tout...$Les ombres elles-mêmes s'inclinent devant son regard.$Viens — finissons ce que nous avons commencé au Royaume des Duellistes !"
+    },
+    "victory": {
+      "1": "Tu as surpassé même mes visions les plus impossibles...$L'Œil du Millénaire... il pleure ce qu'il ne peut comprendre.$Peut-être le vide a-t-il choisi plus sagement que je ne le pourrais jamais.$Prends ta victoire, champion. Tu as gagné quelque chose au-delà du simple pouvoir — tu as gagné mon respect.",
+      "2": "Impossible... deux fois maintenant... DEUX FOIS !$Les ombres reculent... l'Œil s'éteint...$Tu es quelque chose que les Objets du Millénaire n'ont jamais prédit.$Va de l'avant. Quel que soit le destin qui t'attend... il te craint plus que je ne le pourrais jamais."
+    },
+    "defeat": {
+      "1": "L'Œil du Millénaire voit toutes les fins, cher challenger.$Et la tienne a été écrite dans l'ombre bien avant que tu ne pioches ta première main.$Repose-toi dans mon Monde Toon... c'est assez confortable une fois qu'on arrête de crier.$Peut-être dans une autre ligne temporelle, un autre cycle... mais pas celui-ci. Jamais celui-ci.",
+      "2": "As-tu vraiment cru que le résultat serait différent la deuxième fois ?$L'Œil se renforce avec chaque âme qu'il réclame...$Ton énergie alimentera mes visions pour des éons.$Adieu, petit duelliste. Les ombres t'enlacent maintenant."
+    }
+  },
   "star_boss_penny_1": {
     "encounter": {
       "1": "Je suis la Big Boss de la Team Star, Cassiopée…\n$Incline-toi devant la toute-puissance de la Big Boss !!!"
@@ -3436,7 +3465,8 @@
       "2": "J’ai perdu ? Bon, je vais aller me consoler en cherchant des fossiles dans les sous-sols de Sinnoh.",
       "2_female": "J’ai perdu ? Bon, je vais aller me consoler en cherchant des fossiles dans les sous-sols de Sinnoh.",
       "3": "Avec une force pareille, ta victoire est sans surprise !",
-      "4": "Quoi ? Impossible ! \nJ’avais tellement entrainé ces Pokémon !"
+      "4": "Quoi ? Impossible ! \nJ’avais tellement entrainé ces Pokémon !",
+      "5": "J'ai tout raté."
     },
     "defeat": {
       "1": "Alors ? Ils sont géniaux, mes Pokémon Roche, n’est-ce pas ?",
@@ -4722,6 +4752,18 @@
       "1": "Une autre tempête déchainée, une autre victoire proclamée ! Beau combat !",
       "2": "La tempête t'as prise au piège ! Tu auras plus de chance une prochaine fois.",
       "2_female": "La tempête t'as prise au piège ! Tu auras plus de chance une prochaine fois."
+    }
+  },
+  "tutorial_blue": {
+    "encounter": {
+      "1": "Le monde touche à sa fin, Red.\nIl n'y a plus rien que nous puissions faire."
+    },
+    "void_power": {
+      "1": "Laisse-moi te montrer le vrai pouvoir du Vide !"
+    },
+    "defeat": {
+      "1": "Tu m'as battu, Red... J'aurais juste voulu que tu puisses le faire quand ça comptait vraiment...",
+      "2": "Cet endroit n'est pas réel. Le Vide t'a piégé ici pour que tu n'aies jamais à affronter ce qui arrive. Ne le laisse pas gagner. Réveille-toi. RÉVEILLE-TOI !"
     }
   }
 }

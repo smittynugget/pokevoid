@@ -49,5 +49,6 @@
   "smellYaLater": "Te vejo depois, {{pokemonName}}!",
   "selectPokeToPowerUp": "Selecione um Pokémon para fortalecer.",
   "selectPokeToRelease": "Selecione um Pokémon para liberar.",
-  "pausedEvolutions": "Evoluções foram ativadas para {{pokemonName}}."
+  "pausedEvolutions": "Evoluções foram ativadas para {{pokemonName}}.",
+  "quickInfo": "Info Rápida"
 }

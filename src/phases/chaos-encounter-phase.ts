@@ -1,6 +1,5 @@
 import BattleScene from "#app/battle-scene.js";
 import { EncounterPhase } from "./encounter-phase";
-import { ReturnPhase } from "./return-phase";
 import { ShowTrainerPhase } from "./show-trainer-phase";
 import { BattleType } from "#app/battle.js";
 

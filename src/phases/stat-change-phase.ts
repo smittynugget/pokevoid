@@ -1,6 +1,6 @@
 import BattleScene from "#app/battle-scene.js";
 import { BattlerIndex } from "#app/battle.js";
-import { applyPreStatChangeAbAttrs, ProtectStatAbAttr, applyAbAttrs, StatChangeMultiplierAbAttr, StatChangeCopyAbAttr, applyPostStatChangeAbAttrs, PostStatChangeAbAttr } from "#app/data/ability.js";
+import { applyPreStatChangeAbAttrs, ProtectStatAbAttr, applyAbAttrs, FieldPreventOpponentStatBoostAbAttr, StatChangeMultiplierAbAttr, StatChangeCopyAbAttr, applyPostStatChangeAbAttrs, PostStatChangeAbAttr } from "#app/data/ability.js";
 import { MistTag, ArenaTagSide } from "#app/data/arena-tag.js";
 import { BattleStat, getBattleStatName, getBattleStatLevelChangeDescription } from "#app/data/battle-stat.js";
 import Pokemon from "#app/field/pokemon.js";
@@ -72,6 +72,16 @@ export class StatChangePhase extends PokemonPhase {
       return !cancelled.value;
     });
 
+    if (!this.ignoreAbilities && this.levels > 0 && filteredStats.length) {
+      const cancelled = new Utils.BooleanHolder(false);
+      for (const opponent of pokemon.getOpponents()) {
+        applyAbAttrs(FieldPreventOpponentStatBoostAbAttr, opponent, cancelled, false, pokemon, this.levels);
+        if (cancelled.value) {
+          return this.end();
+        }
+      }
+    }
+
     const levels = new Utils.IntegerHolder(this.levels);
 
     if (!this.ignoreAbilities) {
@@ -93,6 +103,12 @@ export class StatChangePhase extends PokemonPhase {
 
       for (const stat of filteredStats) {
         pokemon.summonData.battleStats[stat] = Math.max(Math.min(pokemon.summonData.battleStats[stat] + levels.value, 6), -6);
+        if (levels.value > 0 && pokemon.summonData.battleStats[stat] > 0) {
+          if (!pokemon.summonData.statsEverBoosted) {
+            pokemon.summonData.statsEverBoosted = [ false, false, false, false, false, false, false ];
+          }
+          pokemon.summonData.statsEverBoosted[stat] = true;
+        }
       }
 
       if (levels.value > 0 && this.canBeCopied) {
@@ -129,12 +145,13 @@ export class StatChangePhase extends PokemonPhase {
       const tileY = ((this.player ? 148 : 84) + (levels.value >= 1 ? 160 : 0)) * pokemon.getSpriteScale() * this.scene.field.scale;
       const tileWidth = 156 * this.scene.field.scale * pokemon.getSpriteScale();
       const tileHeight = 316 * this.scene.field.scale * pokemon.getSpriteScale();
+
       const spriteColor = levels.value >= 1 ? BattleStat[BattleStat.ATK].toLowerCase() : BattleStat[BattleStat.SPD].toLowerCase();
       const statSprite = this.scene.add.tileSprite(tileX, tileY, tileWidth, tileHeight, "battle_stats", spriteColor);
       statSprite.setPipeline(this.scene.fieldSpritePipeline);
       statSprite.setAlpha(0);
       statSprite.setScale(6);
-      if(pokemon.isGlitchOrSmittyForm()) {
+      if (pokemon.isGlitchOrSmittyForm?.()) {
         statSprite.setOrigin(0.5, 0.5);
       } else {
         statSprite.setOrigin(0.5, 1);
@@ -165,6 +182,7 @@ export class StatChangePhase extends PokemonPhase {
       });
 
       this.scene.time.delayedCall(1750, () => {
+        statSprite.destroy();
         pokemon.disableMask();
         end();
       });

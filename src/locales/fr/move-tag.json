@@ -1,0 +1,14 @@
+{
+  "magnetMove": "Coup-Aimant",
+  "gadgetMove": "Coup-Gadget",
+  "maskMove": "Coup-Masque",
+  "timeMove": "Coup-Temps",
+  "unionMove": "Coup-Union",
+  "servantMove": "Coup-Serviteur",
+  "darkMagicMove": "Coup-Magie-Noire",
+  "ojamaMove": "Coup-Ojama",
+  "ghostMove": "Coup-Fantôme",
+  "flyingMove": "Coup-Vol",
+  "auraMove": "Coup-Aura",
+  "toonMove": "Coup-Toon"
+}

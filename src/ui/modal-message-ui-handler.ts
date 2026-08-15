@@ -2,7 +2,8 @@ import BattleScene from "#app/battle-scene";
 import MessageUiHandler from "./message-ui-handler";
 import { addTextObject, TextStyle } from "./text";
 import { addWindow } from "./ui-theme";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
+import { attachModalBackground } from "./modal-background-utils";
 
 export default class ModalMessageUiHandler extends MessageUiHandler {
   public container: Phaser.GameObjects.Container;
@@ -39,6 +40,17 @@ export default class ModalMessageUiHandler extends MessageUiHandler {
     this.messageBg = addWindow(this.scene, 0, 0, bgWidth, bgHeight);
     this.messageBg.setOrigin(0, 1);
     this.messageContainer.add(this.messageBg);
+    attachModalBackground(
+      this.scene as BattleScene,
+      this.messageContainer,
+      () => ({
+        bgX: 0,
+        bgY: -this.messageBg.height,
+        bgWidth: this.messageBg.width,
+        bgHeight: this.messageBg.height,
+      }),
+      { mask: false, alphaMultiplier: 0.6, gridInc: -2, getTarget: () => this.messageBg }
+    );
 
     const textWrapWidth = bgWidth * 6 - 24;
 

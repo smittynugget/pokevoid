@@ -137,7 +137,7 @@
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "Cloyster Present",
-    "task": "Use Present 10 times with Cloyster in Nuzlocke mode"
+    "task": "Use Present 10 times with Cloyster"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "Nuzleaf Nosepass Defeat",
@@ -445,7 +445,7 @@
   "NORMAL_STRENGTH": {
     "name": "Normal Strength!",
     "task": "Defeat 125 Pokemon using Normal-type Pokemon across multiple runs",
-    "rewardText": "Unlocks PermaItem that changes Normal-Types Resistances and Strengths!"
+    "rewardText": "Unlocks Omega Item that changes Normal-Types Resistances and Strengths!"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "Magikarp New Moves",
@@ -485,7 +485,7 @@
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "Normal Strength!",
     "task": "Defeat 125 Pokemon using Normal-type Pokemon across multiple runs",
-    "rewardText": "Unlocks PermaItem that changes Normal-Types Resistances and Strengths!"
+    "rewardText": "Unlocks Omega Item that changes Normal-Types Resistances and Strengths!"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "Magikarp New Moves",
@@ -521,5 +521,7 @@
     "name": "Metapod New Moves",
     "task": "Defeat 50 Pokemon with Metapod",
     "rewardText": "Metapod will have a bigger moveset!"
-  }
+  },
+  "rewardUnlocksGlitchForm": "Unlocks a Glitch Form",
+  "rewardUnlocksSmittyForm": "Unlocks a Smitty Form"
 }

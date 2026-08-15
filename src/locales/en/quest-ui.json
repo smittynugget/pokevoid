@@ -115,6 +115,17 @@
       "common": {
         "any": "ANY"
       }
+    },
+    "skillTree": {
+      "modalTitle": "Skill Tree Bounty",
+      "completion": {
+        "title": "Bounty Complete!",
+        "standardReward": "Choose your reward!",
+        "rareReward": "MASTERBALL Rarity Unlocked!",
+        "veryRareRankUp": "A Pokémon Rank Up awaits!",
+        "veryRareMove": "A Duelmon Move awaits!",
+        "fallback": "Reward granted!"
+      }
     }
   }
 } 

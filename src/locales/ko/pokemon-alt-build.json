@@ -205,47 +205,47 @@
   },
   "riolu_apollo_diana_signature": {
     "name": "아폴로 & 디아나의 파트너",
-    "description": "아폴로 & 디아나의 용감한 시그니처 격투 타입 동료"
+    "description": "{{champion}}의 용감한 시그니처 격투 타입 동료"
   },
   "solrock_apollo_diana_signature": {
     "name": "아폴로 & 디아나의 파트너",
-    "description": "아폴로 & 디아나의 빛나는 시그니처 바위 타입 동료"
+    "description": "{{champion}}의 빛나는 시그니처 바위 타입 동료"
   },
   "lunatone_apollo_diana_signature": {
     "name": "아폴로 & 디아나의 파트너",
-    "description": "아폴로 & 디아나의 신비로운 시그니처 바위 타입 동료"
+    "description": "{{champion}}의 신비로운 시그니처 바위 타입 동료"
   },
   "larvesta_apollo_diana_signature": {
     "name": "아폴로 & 디아나의 파트너",
-    "description": "아폴로 & 디아나의 불타는 시그니처 벌레 타입 동료"
+    "description": "{{champion}}의 불타는 시그니처 벌레 타입 동료"
   },
   "swablu_apollo_diana_signature": {
     "name": "아폴로 & 디아나의 파트너",
-    "description": "아폴로 & 디아나의 푹신한 시그니처 노말 타입 동료"
+    "description": "{{champion}}의 푹신한 시그니처 노말 타입 동료"
   },
   "castform_apollo_diana_signature": {
     "name": "아폴로 & 디아나의 파트너",
-    "description": "아폴로 & 디아나의 적응력 있는 시그니처 노말 타입 동료"
+    "description": "{{champion}}의 적응력 있는 시그니처 노말 타입 동료"
   },
   "litwick_apollo_diana_signature": {
     "name": "아폴로 & 디아나의 파트너",
-    "description": "아폴로 & 디아나의 깜빡이는 시그니처 고스트 타입 동료"
+    "description": "{{champion}}의 깜빡이는 시그니처 고스트 타입 동료"
   },
   "eevee_apollo_diana_signature": {
     "name": "아폴로 & 디아나의 파트너",
-    "description": "아폴로 & 디아나의 다재다능한 시그니처 노말 타입 동료"
+    "description": "{{champion}}의 다재다능한 시그니처 노말 타입 동료"
   },
   "teddiursa_apollo_diana_signature": {
     "name": "아폴로 & 디아나의 파트너",
-    "description": "아폴로 & 디아나의 귀여운 시그니처 노말 타입 동료"
+    "description": "{{champion}}의 귀여운 시그니처 노말 타입 동료"
   },
   "cleffa_apollo_diana_signature": {
     "name": "아폴로 & 디아나의 파트너",
-    "description": "아폴로 & 디아나의 별빛 시그니처 페어리 타입 동료"
+    "description": "{{champion}}의 별빛 시그니처 페어리 타입 동료"
   },
   "sunkern_apollo_diana_signature": {
     "name": "아폴로 & 디아나의 파트너",
-    "description": "아폴로 & 디아나의 희망찬 시그니처 풀 타입 동료"
+    "description": "{{champion}}의 희망찬 시그니처 풀 타입 동료"
   },
   "riolu_shadow_warrior": {
     "name": "그림자 전사",
@@ -291,5 +291,93 @@
     "name": "플라즈마 새싹",
     "description": "갈바나이즈 변환과 솔라 파워 강렬함, 일렉트릭 필드 지배력으로 플라즈마 에너지가 튀기는 전기/풀 해너츠"
   },
-  "championPartner": "{{champion}}의 파트너"
+  "championPartner": "{{champion}}의 파트너",
+  "bulbasaur_plasma_jungle": {
+    "name": "플라즈마 정글",
+    "description": "풀/전기 타입 이상해씨. 플라즈마 정글을 끌어모아 덩굴의 힘과 번개를 융합한다"
+  },
+  "bulbasaur_red_signature": {
+    "name": "레드의 파트너",
+    "description": "레드의 시그니처 이상해씨 — 자연과 전기 에너지를 완벽한 조화로 이끄는 강인한 씨앗 전사"
+  },
+  "butterfree_red_signature": {
+    "name": "레드의 파트너",
+    "description": "레드의 시그니처 버터플 — 사이코 능력과 영혼을 빨아들이는 인분을 가진 매혹적인 나방"
+  },
+  "butterfree_soul_moth": {
+    "name": "소울 모스",
+    "description": "벌레/고스트 타입 버터플. 영혼의 나방으로 변신하여 유령의 날개 가루로 생명력을 빼앗는다"
+  },
+  "charmander_black_inferno": {
+    "name": "블랙 인페르노",
+    "description": "불꽃/악 타입 파이리. 검은 지옥불에 휩싸여 그림자 화염과 어둠의 용 분노를 휘두른다"
+  },
+  "charmander_red_signature": {
+    "name": "레드의 파트너",
+    "description": "레드의 시그니처 파이리 — 드래곤 파워의 맹화로 성장하는 맹렬한 불꽃"
+  },
+  "espeon_moon_goddess": {
+    "name": "문 가디스",
+    "description": "에스퍼/페어리 타입 에브이. 달의 여신으로 각성하여 달빛 마법과 사이킥 빛을 발산한다"
+  },
+  "espeon_red_signature": {
+    "name": "레드의 파트너",
+    "description": "레드의 시그니처 에브이 — 달빛과 페어리 에너지를 우아한 파괴력으로 발산하는 달의 사이킥"
+  },
+  "farfetchd_heavens_edge": {
+    "name": "헤븐즈 엣지",
+    "description": "격투/비행 타입 파오리. 천상의 칼날로 각성하여 하늘에서 신성한 검술로 내리친다"
+  },
+  "farfetchd_red_signature": {
+    "name": "레드의 파트너",
+    "description": "레드의 시그니처 파오리 — 파를 치명적인 급소 달인의 솜씨로 휘두르는 두려움 모르는 검사"
+  },
+  "lapras_red_signature": {
+    "name": "레드의 파트너",
+    "description": "레드의 시그니처 라프라스 — 얼음과 물을 고요하지만 치명적인 정밀함으로 다루는 우아한 여행자"
+  },
+  "lapras_voidfrost": {
+    "name": "보이드프로스트",
+    "description": "얼음/고스트 타입 라프라스. 보이드를 떠다니며 유령의 냉기와 심연의 얼음을 융합한다"
+  },
+  "magikarp_dragonborn": {
+    "name": "드래곤본",
+    "description": "물/드래곤 타입 잉어킹. 진정한 용의 자식으로 재탄생하여 고대 드래곤의 잠재력을 해방한다"
+  },
+  "magikarp_red_signature": {
+    "name": "레드의 파트너",
+    "description": "레드의 시그니처 잉어킹 — 기대를 뒤엎고 용의 피를 가진 강자로 진화하는 약체"
+  },
+  "pikachu_electro_berserker": {
+    "name": "일렉트로 버서커",
+    "description": "전기/격투 타입 피카츄. 광전사의 분노로 가득 차 생 전압과 무술 달인의 솜씨를 합친다"
+  },
+  "pikachu_red_signature": {
+    "name": "레드의 파트너",
+    "description": "레드의 시그니처 피카츄 — 비할 데 없는 속도와 파괴적인 전기 공격을 가진 역전의 파트너"
+  },
+  "snorlax_dream_colossus": {
+    "name": "드림 콜로서스",
+    "description": "노말/에스퍼 타입 잠만보. 꿈의 거인 형태로 각성하여 거대한 체구와 사이킥 꿈 조작을 결합한다"
+  },
+  "snorlax_red_signature": {
+    "name": "레드의 파트너",
+    "description": "레드의 시그니처 잠만보 — 공격을 흡수하고 무서운 힘으로 반격하는 움직이지 않는 벽"
+  },
+  "squirtle_abyss_golem": {
+    "name": "어비스 골렘",
+    "description": "물/악 타입 꼬부기. 심연의 골렘으로 단련되어 장갑의 위력으로 심해의 어둠을 지배한다"
+  },
+  "squirtle_red_signature": {
+    "name": "레드의 파트너",
+    "description": "레드의 시그니처 꼬부기 — 어둠의 물 기술로 심연을 지배하는 견고한 껍질의 요새"
+  },
+  "tauros_iron_quake": {
+    "name": "아이언 퀘이크",
+    "description": "땅/강철 타입 켄타로스. 철의 지진이 되어 금속 갑옷과 지진의 파괴를 융합한다"
+  },
+  "tauros_red_signature": {
+    "name": "레드의 파트너",
+    "description": "레드의 시그니처 켄타로스 — 멈출 수 없는 기세와 대지를 흔드는 공격을 가진 폭주 황소"
+  }
 }

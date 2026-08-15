@@ -224,7 +224,7 @@ export default class FieldSpritePipeline extends Phaser.Renderer.WebGL.Pipelines
   }
 
   onBind(gameObject: Phaser.GameObjects.GameObject): void {
-    super.onBind();
+    super.onBind(gameObject);
 
     const sprite = gameObject as Phaser.GameObjects.Sprite | Phaser.GameObjects.NineSlice;
     const scene = sprite.scene as BattleScene;
@@ -238,6 +238,17 @@ export default class FieldSpritePipeline extends Phaser.Renderer.WebGL.Pipelines
       : Utils.getCurrentTime();
     this.set1f("time", time);
     this.set1i("ignoreTimeTint", ignoreTimeTint ? 1 : 0);
+
+    if (!scene.arena) {
+      this.set1i("isOutside", 1);
+      this.set3fv("dayTint", [128 / 255, 128 / 255, 128 / 255]);
+      this.set3fv("duskTint", [113 / 255, 88 / 255, 100 / 255]);
+      this.set3fv("nightTint", [48 / 255, 48 / 255, 98 / 255]);
+      this.set3fv("terrainColor", getTerrainColor(TerrainType.NONE).map(c => c / 255));
+      this.set1f("terrainColorRatio", terrainColorRatio);
+      return;
+    }
+
     this.set1i("isOutside", scene.arena.isOutside() ? 1 : 0);
     this.set3fv("dayTint", scene.arena.getDayTint().map(c => c / 255));
     this.set3fv("duskTint", scene.arena.getDuskTint().map(c => c / 255));

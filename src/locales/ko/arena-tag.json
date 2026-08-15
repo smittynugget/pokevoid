@@ -47,5 +47,11 @@
   "tailwindOnRemovePlayer": "우리 편의\n순풍이 멈췄다!",
   "tailwindOnRemoveEnemy": "상대의\n순풍이 멈췄다!",
   "happyHourOnAdd": "모두 행복한 기분에\n휩싸였다!",
-  "happyHourOnRemove": "기분이 원래대로 돌아왔다."
+  "happyHourOnRemove": "기분이 원래대로 돌아왔다.",
+  "safeguardOnAdd": "필드 전체가\n신비의부적에 휩싸였다!",
+  "safeguardOnAddPlayer": "아군 팀이\n신비의부적에 휩싸였다!",
+  "safeguardOnAddEnemy": "상대 팀이\n신비의부적에 휩싸였다!",
+  "safeguardOnRemove": "필드의\n신비의부적이 사라졌다!",
+  "safeguardOnRemovePlayer": "아군 팀의\n신비의부적이 사라졌다!",
+  "safeguardOnRemoveEnemy": "상대 팀의\n신비의부적이 사라졌다!"
 }

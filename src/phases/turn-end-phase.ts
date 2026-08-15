@@ -6,13 +6,15 @@ import { TerrainType } from "#app/data/terrain.js";
 import { Moves } from "#app/enums/moves.js";
 import { WeatherType } from "#app/enums/weather-type.js";
 import { TurnEndEvent } from "#app/events/battle-scene.js";
-import Pokemon from "#app/field/pokemon.js";
+import Pokemon, { PokemonMove } from "#app/field/pokemon.js";
 import { getPokemonNameWithAffix } from "#app/messages.js";
 import { TurnHealModifier, EnemyTurnHealModifier, EnemyStatusEffectHealChanceModifier, TurnStatusEffectModifier, TurnHeldItemTransferModifier } from "#app/modifier/modifier.js";
 import i18next from "i18next";
 import { FieldPhase } from "./field-phase";
 import { MessagePhase } from "./message-phase";
 import { PokemonHealPhase } from "./pokemon-heal-phase";
+import { MoveEffectPhase } from "./move-effect-phase";
+import { BattlerTagType } from "#enums/battler-tag-type.js";
 import * as Utils from "../utils";
 export class TurnEndPhase extends FieldPhase {
   constructor(scene: BattleScene) {
@@ -33,6 +35,32 @@ export class TurnEndPhase extends FieldPhase {
         pokemon.summonData.disabledMove = Moves.NONE;
       }
 
+      if (pokemon.summonData.abilitySuppressTurns > 0 && !--pokemon.summonData.abilitySuppressTurns) {
+        pokemon.summonData.abilitySuppressed = false;
+      }
+
+      const sched = pokemon.summonData.scheduledRepeatMove;
+      if (sched && this.scene.currentBattle.turn >= sched.executeTurn) {
+        pokemon.summonData.scheduledRepeatMove = undefined;
+        const echoTarget = this.scene.getPokemonById(sched.targetId);
+        if (pokemon.isActive(true) && echoTarget?.isActive(true)) {
+          this.scene.unshiftPhase(new MoveEffectPhase(
+            this.scene,
+            pokemon.id,
+            [echoTarget.getBattlerIndex()],
+            new PokemonMove(sched.moveId, 0, 0, true)
+          ));
+        }
+      }
+
+      const delayedTrap = pokemon.summonData.delayedTrap;
+      if (delayedTrap && this.scene.currentBattle.turn >= delayedTrap.executeTurn) {
+        pokemon.summonData.delayedTrap = undefined;
+        if (pokemon.isActive(true)) {
+          pokemon.addTag(BattlerTagType.TRAPPED, 2, delayedTrap.sourceMove, delayedTrap.sourceId);
+        }
+      }
+
       this.scene.applyModifiers(TurnHealModifier, pokemon.isPlayer(), pokemon);
 
       if (this.scene.arena.terrain?.terrainType === TerrainType.GRASSY && pokemon.isGrounded()) {
@@ -46,6 +74,12 @@ export class TurnEndPhase extends FieldPhase {
       }
 
       applyPostTurnAbAttrs(PostTurnAbAttr, pokemon);
+
+      pokemon.battleSummonData.flinchedLastTurn = !!pokemon.turnData.flinched;
+      pokemon.battleSummonData.fullParaLastTurn = !!pokemon.turnData.fullParaThisTurn;
+      pokemon.battleSummonData.causedFlinchLastTurn = pokemon.battleSummonData.causedFlinchThisTurn;
+      pokemon.battleSummonData.causedFlinchThisTurn = false;
+      pokemon.battleSummonData.chargeReleasedLastTurn = pokemon.turnData.chargeReleasedThisTurn;
 
       this.scene.applyModifiers(TurnStatusEffectModifier, pokemon.isPlayer(), pokemon);
 

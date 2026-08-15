@@ -15,7 +15,13 @@
     "ACC": "命中率",
     "EVA": "回避率",
     "HPStat": "HP",
-    "Total": "总计"
+    "Total": "总计",
+    "HPcompact": "H",
+    "ATKcompact": "A",
+    "DEFcompact": "D",
+    "SPATKcompact": "SA",
+    "SPDEFcompact": "SD",
+    "SPDcompact": "S"
   },
   "Type": {
     "UNKNOWN": "未知",
@@ -39,6 +45,7 @@
     "FAIRY": "妖精",
     "STELLAR": "星晶",
     "SMITTY": "斯米提",
-    "GLITCH": "故障"
+    "GLITCH": "故障",
+    "GEN_ONE": "第一世代"
   }
 }

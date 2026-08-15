@@ -15,7 +15,13 @@
     "SPDshortened": "Init",
     "ACC": "Genauigkeit",
     "EVA": "Fluchtwert",
-    "Total": "Gesamt"
+    "Total": "Gesamt",
+    "HPcompact": "H",
+    "ATKcompact": "A",
+    "DEFcompact": "D",
+    "SPATKcompact": "SA",
+    "SPDEFcompact": "SD",
+    "SPDcompact": "S"
   },
   "Type": {
     "UNKNOWN": "Unbekannt",
@@ -39,6 +45,7 @@
     "FAIRY": "Fee",
     "STELLAR": "Stellar",
     "SMITTY": "Smitty",
-    "GLITCH": "Glitch"
+    "GLITCH": "Glitch",
+    "GEN_ONE": "Gen I"
   }
 }

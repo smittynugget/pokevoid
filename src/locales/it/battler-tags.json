@@ -67,5 +67,17 @@
   "saltCuredLapse": "{{pokemonNameWithAffix}} viene colpito da {{moveName}}!",
   "cursedOnAdd": "{{pokemonNameWithAffix}} ha sacrificato metà dei suoi PS per\nlanciare una maledizione su {{pokemonName}}!",
   "cursedLapse": "{{pokemonNameWithAffix}} subisce la maledizione!",
-  "stockpilingOnAdd": "{{pokemonNameWithAffix}} ha usato Accumulo per la\n{{stockpiledCount}}ª volta!"
+  "stockpilingOnAdd": "{{pokemonNameWithAffix}} ha usato Accumulo per la\n{{stockpiledCount}}ª volta!",
+  "substituteOnAdd": "{{pokemonNameWithAffix}} ha creato un sostituto!",
+  "substituteOnRemove": "Il sostituto di {{pokemonNameWithAffix}} è svanito!",
+  "substituteOnHit": "Il sostituto ha subito il danno al posto di {{pokemonNameWithAffix}}!",
+  "tauntOnAdd": "{{pokemonNameWithAffix}} è caduto nella provocazione!",
+  "tauntOnRemove": "L'effetto di Provocazione di {{pokemonNameWithAffix}} è svanito!",
+  "tormentOnAdd": "{{pokemonNameWithAffix}} è stato sottoposto a Tormento!",
+  "tormentOnRemove": "L'effetto di Tormento di {{pokemonNameWithAffix}} è svanito!",
+  "healBlockedLapse": "{{pokemonNameWithAffix}} non può curarsi a causa di Anticura!",
+  "healBlockedOnAdd": "{{pokemonNameWithAffix}} non può più curarsi!",
+  "healBlockedOnRemove": "L'effetto di Anticura su {{pokemonNameWithAffix}} è svanito!",
+  "itemBlockedOnAdd": "{{pokemonNameWithAffix}} non può usare il suo strumento!",
+  "itemBlockedOnRemove": "{{pokemonNameWithAffix}} può usare di nuovo gli strumenti!"
 }

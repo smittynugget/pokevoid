@@ -1,11 +1,12 @@
 import BattleScene from "#app/battle-scene.js";
 import { Mode } from "#app/ui/ui.js";
-import { RewardConfig } from "#app/ui/reward-obtained-ui-handler.js";
+import { RewardConfig, RewardObtainedType } from "#app/ui/reward-obtained-ui-handler.js";
 import { SlideshowController } from "#app/utils/slideshow-controller.js";
 import * as Utils from "#app/utils.js";
 
 export function runPowerUnlockOverlays(scene: BattleScene, controller: SlideshowController): void {
-  const pending = scene.takePendingPowerUnlockRewards();
+  const pending = scene.takePendingPowerUnlockRewards()
+    .filter(r => r.type !== RewardObtainedType.RIVAL_TO_VOID);
   if (!pending.length) {
     if (controller.isAutoAdvanceBlocked()) {
       return;

@@ -47,5 +47,11 @@
   "tailwindOnRemovePlayer": "Le vent arrière soufflant\nsur votre équipe s’arrête !",
   "tailwindOnRemoveEnemy": "Le vent arrière soufflant\nsur l’équipe ennemie s’arrête !",
   "happyHourOnAdd": "L’ambiance est euphorique !",
-  "happyHourOnRemove": "L’ambiance se calme !"
+  "happyHourOnRemove": "L’ambiance se calme !",
+  "safeguardOnAdd": "Tout le terrain est enveloppé d'un voile mystique !",
+  "safeguardOnAddPlayer": "Votre équipe s'est enveloppée d'un voile mystique !",
+  "safeguardOnAddEnemy": "L'équipe adverse s'est enveloppée d'un voile mystique !",
+  "safeguardOnRemove": "Le terrain n'est plus protégé par Rune Protect !",
+  "safeguardOnRemovePlayer": "Votre équipe n'est plus protégée par Rune Protect !",
+  "safeguardOnRemoveEnemy": "L'équipe adverse n'est plus protégée par Rune Protect !"
 }

@@ -1,9 +1,8 @@
 import BattleScene from "#app/battle-scene.js";
 import {ModifierTier} from "#app/modifier/modifier-tier.js";
 import {ModifierTypeOption, ModifierType, getShopModifierTypeOptions, PermaPartyAbilityModifierType} from "#app/modifier/modifier-type.js";
-import {Modifier, ReduceShopCostModifier} from "#app/modifier/modifier.js";
-import ShopSelectUiHandler, {SHOP_OPTIONS_ROW_LIMIT} from "#app/ui/shop-select-ui-handler.js";
-import { Mode } from "#app/ui/ui.js";
+import {Modifier} from "#app/modifier/modifier.js";
+import { Mode } from "#app/ui/mode.js";
 import i18next from "i18next";
 import * as Utils from "#app/utils.js";
 import {Phase} from "../phase";
@@ -11,13 +10,11 @@ import Overrides from "#app/overrides";
 import {TitlePhase} from "./title-phase";
 import {PermaRunQuestModifier, PersistentModifier, RerollModifier} from "#app/modifier/modifier";
 import {ModifierTypeGenerator} from "#app/modifier/modifier-type";
-import { CommandPhase } from "./command-phase";
 import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
 
 export class ShopModifierSelectPhase extends Phase {
     private modifierTiers: ModifierTier[];
     private onEndCallback: (() => void) | undefined;
-    private lastRefreshTime: number;
     private selectionMade: boolean = false;
     private currentOptions: ModifierTypeOption[] | null = null;
     private refreshing: boolean = false;
@@ -32,7 +29,6 @@ export class ShopModifierSelectPhase extends Phase {
 
         this.modifierTiers = modifierTiers || [];
         this.onEndCallback = onEndCallback;
-        this.lastRefreshTime = Date.now();
         this.currentOptions = currentOptions || null;
     }
 
@@ -57,13 +53,13 @@ export class ShopModifierSelectPhase extends Phase {
 
         await this.scene.ui.setMode(Mode.SHOP_SELECT, true, typeOptions, this.modifierSelectCallback, this.getRerollCost());
 
-        const uiHandler = this.scene.ui.getHandler() as ShopSelectUiHandler;
-        if (uiHandler && uiHandler instanceof ShopSelectUiHandler) {
+        const uiHandler = this.scene.ui.getHandler() as any;
+        if (uiHandler && (uiHandler as any).isPermaShopHandler) {
             uiHandler.setRefreshFunction(() => this.refreshPhase());
             uiHandler.setRerollCost(this.getRerollCost());
             uiHandler.updateRerollCostText();
         } else {
-            console.error("ShopSelectUiHandler not found or is of incorrect type!");
+            console.error("PermaShopUiHandler not found or incorrect type!");
         }
 
         let permaTutorials = [EnhancedTutorial.SMITTY_ITEMS_1, EnhancedTutorial.PARTY_ABILITY_1, EnhancedTutorial.PERMA_MONEY_1];
@@ -77,12 +73,43 @@ export class ShopModifierSelectPhase extends Phase {
     modifierSelectCallback = (rowCursor: integer, cursor: integer) => {
         const typeOptions: ModifierTypeOption[] = this.getAvailableModifierOptions();
         if (rowCursor < 0 || cursor < 0) {
-            this.scene.ui.showText(i18next.t("starterSelectUiHandler:confirmExit"), null, () => {
-                this.scene.ui.setOverlayMode(Mode.CONFIRM, () => {
-                    this.scene.ui.revertMode();
-                    this.scene.ui.setMode(Mode.MESSAGE);
+            const ui = this.scene.ui;
+            const msgHandler = ui.getMessageHandler() as any;
+            if (msgHandler?.bg) {
+                msgHandler.bg.setVisible(true);
+                ui.bringToTop(msgHandler.bg);
+            }
+            if (msgHandler?._messageBgPattern) {
+                if (msgHandler._messageBgPattern.layers) {
+                    msgHandler._messageBgPattern.layers.forEach((l: any) => {
+                        l.setVisible(true);
+                        ui.bringToTop(l);
+                    });
+                }
+            }
+            if (msgHandler?.messageContainer) {
+                msgHandler.messageContainer.setVisible(true);
+                ui.bringToTop(msgHandler.messageContainer);
+            }
+            ui.showText(i18next.t("starterSelectUiHandler:confirmExit"), null, () => {
+                ui.setOverlayMode(Mode.CONFIRM, () => {
+                    ui.revertMode();
+                    ui.hideMessageChrome();
+                    ui.clearText();
+                    ui.setMode(Mode.MESSAGE);
                     this.end();
-                }, () => this.scene.ui.setMode(Mode.SHOP_SELECT, true, typeOptions, this.modifierSelectCallback, this.getRerollCost()));
+                }, () => {
+                    ui.revertMode();
+                    ui.hideMessageChrome();
+                    ui.clearText();
+                    const handler = ui.getHandler();
+                    if ((handler as any).isPermaShopHandler && handler.active) {
+                        handler.awaitingActionInput = true;
+                        handler.onActionInput = this.modifierSelectCallback;
+                    } else {
+                        ui.setMode(Mode.SHOP_SELECT, true, typeOptions, this.modifierSelectCallback, this.getRerollCost());
+                    }
+                });
             });
             return false;
         }
@@ -112,14 +139,6 @@ export class ShopModifierSelectPhase extends Phase {
                     cost = typeOptions[cursor].cost;
                 }
                 break;
-            default:
-                const shopOptions = getShopModifierTypeOptions(this.scene.gameData, false, this.scene);
-                const shopOption = shopOptions[rowCursor > 2 || shopOptions.length <= SHOP_OPTIONS_ROW_LIMIT ? cursor : cursor + SHOP_OPTIONS_ROW_LIMIT];
-                if (shopOption?.type) {
-                    modifierType = shopOption.type;
-                    cost = shopOption.cost;
-                }
-                break;
         }
 
         if (cost && this.scene.gameData.permaMoney < cost) {
@@ -127,7 +146,7 @@ export class ShopModifierSelectPhase extends Phase {
             return false;
         }
 
-        const shopUiHandler = this.scene.ui.getHandler() as ShopSelectUiHandler;
+        const shopUiHandler = this.scene.ui.getHandler() as any;
 
         const applyModifier = (modifier: Modifier, playSound: boolean = false) => {
             const result = this.scene.addPermaModifier(modifier as PersistentModifier);
@@ -306,21 +325,6 @@ export class ShopModifierSelectPhase extends Phase {
         }
     }
 
-    calculateModifierCost(option: ModifierTypeOption): number {
-        const baseCost = 100;
-        const rarityMultiplier = option.type.tier ? Math.pow(2, option.type.tier - 1) : 1;
-        let cost = Math.round(baseCost * rarityMultiplier);
-
-        const reduceShopCostModifier = this.scene.findModifier(m => m instanceof ReduceShopCostModifier) as ReduceShopCostModifier;
-        if (reduceShopCostModifier) {
-            const costHolder = new Utils.NumberHolder(cost);
-            reduceShopCostModifier.apply([costHolder]);
-            cost = costHolder.value;
-        }
-
-        return cost;
-    }
-
     reroll(): void {
         this.scene.reroll = true;
         this.scene.addPermaMoney(-(this.getRerollCost())!);
@@ -352,10 +356,6 @@ export class ShopModifierSelectPhase extends Phase {
                 this.end();
             });
         }
-    }
-
-    updateSeed(): void {
-        this.scene.resetSeed();
     }
 
     getRerollCost(): number {

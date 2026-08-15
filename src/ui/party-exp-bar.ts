@@ -1,4 +1,5 @@
 import BattleScene from "../battle-scene";
+import { adjustDuelmonIconScale } from "../data/pokemon-species";
 import Pokemon from "../field/pokemon";
 import { TextStyle, addTextObject } from "./text";
 
@@ -36,7 +37,7 @@ export default class PartyExpBar extends Phaser.GameObjects.Container {
       }
 
       this.pokemonIcon = (this.scene as BattleScene).addPokemonIcon(pokemon, -8, 15, 0, 0.5);
-      this.pokemonIcon.setScale(0.5);
+      this.pokemonIcon.setScale(adjustDuelmonIconScale(0.5, pokemon.species.generation));
 
       this.add(this.pokemonIcon);
       if (showOnlyLevelUp) {

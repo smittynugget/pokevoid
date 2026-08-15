@@ -13,6 +13,7 @@ export class Phase {
     }
     this.scene.ui.updateSaveIcon(this.scene);
     this.scene.ui.updateBattlePathIcon(this.scene);
+    this.scene.ui.updateReplayIcon(this.scene);
   }
 
   end() {

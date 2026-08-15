@@ -78,5 +78,6 @@
   "stoleItem": "[[가]] {{defenderName}}의 {{stolenItemType}}[[를]] 훔쳤다!",
   "sillyPressure": "[[가]] 이상한 프레셔를 발산하고 있다!",
   "questionPressure": "[[가]] 프레셔를 발산하고 있나?",
-  "allOrNothingPressure": "[[가]] 전부 아니면 전무 프레셔를 발산하고 있다!"
+  "allOrNothingPressure": "[[가]] 전부 아니면 전무 프레셔를 발산하고 있다!",
+  "windboltDiscard": "{{pokemonName}}[[가]] 지니고 있던 나무열매를 소비하여\n{{targetName}}에게 잔여 데미지를 입혔다!"
 }

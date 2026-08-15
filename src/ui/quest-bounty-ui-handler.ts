@@ -1,6 +1,6 @@
 import BountyUiHandler from "./bounty-ui-handler";
 import BattleScene from "../battle-scene";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { QUEST_CONSOLE_CODES } from "../modifier/modifier-type";
 import { Species } from "#enums/species";
 import { PermaRunQuestModifier } from "../modifier/modifier";
@@ -91,6 +91,7 @@ export default class QuestBountyUiHandler extends BountyUiHandler {
     }
 
     protected setupSprite(): void {
+    if (!this.uiContainer) return;
     let spriteSource = this.questModifier?.questUnlockData?.questSpriteId || Species[this.bountyTarget];
     if (spriteSource == 201) {
         spriteSource = "201-a";

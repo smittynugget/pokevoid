@@ -1,0 +1,12 @@
+{
+  "quickSummary": "Resumo Rápido",
+  "itemsMoves": "Itens e Golpes",
+  "currentParty": "Equipe Atual",
+  "enemyInfo": "Info do Inimigo",
+  "teamTitle": "Equipe",
+  "noOpponent": "Sem oponente",
+  "notApplicable": "---",
+  "pageIndicator": "{{current}}/{{total}}",
+  "foeTag": "INIMIGO",
+  "youTag": "VOCÊ"
+}

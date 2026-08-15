@@ -43,8 +43,11 @@ import {
   UserFieldMoveTypePowerBoostAbAttr,
   VariableMovePowerAbAttr,
   WonderSkinAbAttr,
+  SuppressSecondaryEffectsWhileConditionAbAttr,
+  handleAbilityLost,
+  handleAbilityGained,
 } from "./ability";
-import { allAbilities } from "./ability";
+import { allAbilities, ChargeMoveDamageAbAttr } from "./ability";
 import { PokemonHeldItemModifier, BerryModifier, PreserveBerryModifier, PokemonMoveAccuracyBoosterModifier, AttackTypeBoosterModifier, PokemonMultiHitModifier } from "../modifier/modifier";
 import { BattlerIndex, BattleType } from "../battle";
 import { Stat } from "./pokemon-stat";
@@ -59,7 +62,7 @@ import { Abilities } from "#enums/abilities";
 import { ArenaTagType } from "#enums/arena-tag-type";
 import { BattlerTagType } from "#enums/battler-tag-type";
 import { Biome } from "#enums/biome";
-import { Moves } from "#enums/moves";
+import { Moves, isYuMove } from "#enums/moves";
 import { Species } from "#enums/species";
 import { MoveUsedEvent } from "#app/events/battle-scene";
 import { PartyStatusCurePhase } from "#app/phases/party-status-cure-phase";
@@ -67,7 +70,6 @@ import { BattleEndPhase } from "#app/phases/battle-end-phase";
 import { MoveEndPhase } from "#app/phases/move-end-phase";
 import { MovePhase } from "#app/phases/move-phase";
 import { NewBattlePhase } from "#app/phases/new-battle-phase";
-import { BattlePathPhase } from "#app/phases/battle-path-phase";
 import { PokemonHealPhase } from "#app/phases/pokemon-heal-phase";
 import { StatChangePhase } from "#app/phases/stat-change-phase";
 import { SwitchPhase } from "#app/phases/switch-phase";
@@ -76,7 +78,7 @@ import { SpeciesFormChangeRevertWeatherFormTrigger } from "./pokemon-forms";
 import { NumberHolder } from "#app/utils";
 import { GameMode } from "#app/game-mode";
 import { applyChallenges, ChallengeType } from "./challenge";
-import {removeUnimplementedMoves} from "#app/data/pokemon-level-moves";
+import {removeUnimplementedMoves, stripYuMovesFromLevelTables} from "#app/data/pokemon-level-moves";
 export enum MoveCategory {
   PHYSICAL,
   SPECIAL,
@@ -137,9 +139,36 @@ export enum MoveFlags {
   CHECK_ALL_HITS   = 1 << 17,
 
   REDIRECT_COUNTER = 1 << 18,
+  MAGNET_MOVE      = 1 << 19,
+  GADGET_MOVE      = 1 << 20,
+  MASK_MOVE        = 1 << 21,
+  TIME_MOVE        = 1 << 22,
+  UNION_MOVE       = 1 << 23,
+  SERVANT_MOVE     = 1 << 24,
+  DARK_MAGIC_MOVE  = 1 << 25,
+  OJAMA_MOVE       = 1 << 26,
+  GHOST_MOVE       = 1 << 27,
+  FLYING_MOVE      = 1 << 28,
+  AURA_MOVE        = 1 << 29,
+  TOON_MOVE        = 1 << 30,
 }
 
-type MoveConditionFunc = (user: Pokemon, target: Pokemon, move: Move) => boolean;
+const DUELMON_TAG_LABELS: readonly [MoveFlags, string][] = [
+  [MoveFlags.MAGNET_MOVE, "magnetMove"],
+  [MoveFlags.GADGET_MOVE, "gadgetMove"],
+  [MoveFlags.MASK_MOVE, "maskMove"],
+  [MoveFlags.TIME_MOVE, "timeMove"],
+  [MoveFlags.UNION_MOVE, "unionMove"],
+  [MoveFlags.SERVANT_MOVE, "servantMove"],
+  [MoveFlags.DARK_MAGIC_MOVE, "darkMagicMove"],
+  [MoveFlags.OJAMA_MOVE, "ojamaMove"],
+  [MoveFlags.GHOST_MOVE, "ghostMove"],
+  [MoveFlags.FLYING_MOVE, "flyingMove"],
+  [MoveFlags.AURA_MOVE, "auraMove"],
+  [MoveFlags.TOON_MOVE, "toonMove"],
+];
+
+export type MoveConditionFunc = (user: Pokemon, target: Pokemon, move: Move) => boolean;
 type UserMoveConditionFunc = (user: Pokemon, move: Move) => boolean;
 
 export default class Move implements Localizable {
@@ -156,8 +185,8 @@ export default class Move implements Localizable {
   public priority: integer;
   public generation: integer;
   public attrs: MoveAttr[];
-  public conditions: MoveCondition[];
-  public flags: integer;
+  private conditions: MoveCondition[];
+  private flags: integer;
   private nameAppend: string;
 
   constructor(id: Moves, type: Type, category: MoveCategory, defaultMoveTarget: MoveTarget, power: integer, accuracy: integer, pp: integer, chance: integer, priority: integer, generation: integer) {
@@ -188,30 +217,6 @@ export default class Move implements Localizable {
     this.localize();
   }
 
-  clone(): Move {
-    const cloned = new Move(
-      this.id,
-      this._type,
-      this._category,
-      this.moveTarget,
-      this.power,
-      this.accuracy,
-      this.pp,
-      this.chance,
-      this.priority,
-      this.generation
-    );
-    for (const attr of this.attrs) {
-        cloned.addAttr(attr);
-    }
-    for (const condition of this.conditions) {
-        cloned.conditions.push(condition);
-    }
-    cloned.flags = this.flags;
-    cloned.nameAppend = this.nameAppend;
-    return cloned;
-  }
-
   get type() {
     return this._type;
   }
@@ -229,27 +234,62 @@ export default class Move implements Localizable {
     const i18nKey = Moves[this.id].split("_").filter(f => f).map((f, i) => i ? `${f[0]}${f.slice(1).toLowerCase()}` : f.toLowerCase()).join("") as unknown as string;
 
     this.name = this.id ? `${i18next.t(`move:${i18nKey}.name`)}${this.nameAppend}` : "";
-    this.effect = this.id ? `${i18next.t(`move:${i18nKey}.effect`)}${this.nameAppend}` : "";
+    const baseEffect = this.id ? `${i18next.t(`move:${i18nKey}.effect`)}` : "";
+    let tagSuffix = "";
+    if (!isYuMove(this.id)) {
+      const tags: string[] = [];
+      for (const [flag, key] of DUELMON_TAG_LABELS) {
+        if (this.hasFlag(flag)) {
+          tags.push(i18next.t(`moveTag:${key}`));
+        }
+      }
+      if (tags.length > 0) {
+        tagSuffix = ` [${tags.join(", ")}]`;
+      }
+    }
+    this.effect = `${baseEffect}${tagSuffix}${this.nameAppend}`;
+  }
+
+  clone(): Move {
+    const cloned = new Move(
+      this.id,
+      this._type,
+      this._category,
+      this.moveTarget,
+      this.power,
+      this.accuracy,
+      this.pp,
+      this.chance,
+      this.priority,
+      this.generation
+    );
+    for (const attr of this.attrs) {
+      cloned.addAttr(attr);
+    }
+    for (const condition of this.conditions) {
+      cloned.conditions.push(condition);
+    }
+    cloned.flags = this.flags;
+    cloned.nameAppend = this.nameAppend;
+    return cloned;
   }
 
   getBaseUsesForLevelUp(): number {
-    if(this.category == MoveCategory.STATUS) {
-      if(this.pp <= 24) {
+    if (this.category === MoveCategory.STATUS) {
+      if (this.pp <= 24) {
         return 50;
       }
       return 40;
-    }
-    else {
+    } else {
       if (this.power <= 60) {
         return 10;
+      } else if (this.power <= 70) {
+        return 15;
+      } else if (this.power <= 95) {
+        return 25;
+      } else {
+        return 40;
       }
-    else if (this.power <= 70) {
-      return 15;
-    } else if (this.power <= 95) {
-      return 25;
-    } else {
-      return 40;
-    }
     }
   }
   getAttrs<T extends MoveAttr>(attrType: Constructor<T>): T[] {
@@ -275,19 +315,8 @@ export default class Move implements Localizable {
     return this;
   }
   addAttr(attrAdd: MoveAttr): this {
-
-    const isProtectedAttr = attrAdd instanceof TrapAttr ||
-                          attrAdd instanceof StatChangeAttr ||
-                          attrAdd instanceof AddBattlerTagAttr;
-
-    const existingIndex = this.attrs.findIndex(attr =>
-      attr.constructor === attrAdd.constructor && !isProtectedAttr
-    );
-    if (existingIndex > -1) {
-      this.attrs.splice(existingIndex, 1);
-    }
     this.attrs.push(attrAdd);
-    let attrCondition = attrAdd.getCondition?.();
+    let attrCondition = attrAdd.getCondition();
     if (attrCondition) {
       if (typeof attrCondition === "function") {
         attrCondition = new MoveCondition(attrCondition);
@@ -371,20 +400,19 @@ export default class Move implements Localizable {
   public isUnimplemented(): boolean {
     return this.nameAppend.includes(" (N)");
   }
-  private setFlag(flag: MoveFlags, on: boolean): void {
 
+  private setFlag(flag: MoveFlags, on: boolean): void {
     if (on) {
       this.flags |= flag;
     } else {
-      this.flags ^= flag;
+      this.flags &= ~flag;
     }
   }
   public abilitySetFlag(flag: MoveFlags, on: boolean): void {
-
     if (on) {
       this.flags |= flag;
     } else {
-      this.flags ^= flag;
+      this.flags &= ~flag;
     }
   }
   makesContact(makesContact: boolean = true): this {
@@ -463,10 +491,73 @@ export default class Move implements Localizable {
     this.setFlag(MoveFlags.REDIRECT_COUNTER, redirectCounter);
     return this;
   }
+
+  magnetMove(magnetMove: boolean = true): this {
+    this.setFlag(MoveFlags.MAGNET_MOVE, magnetMove);
+    return this;
+  }
+
+  gadgetMove(gadgetMove: boolean = true): this {
+    this.setFlag(MoveFlags.GADGET_MOVE, gadgetMove);
+    return this;
+  }
+
+  maskMove(maskMove: boolean = true): this {
+    this.setFlag(MoveFlags.MASK_MOVE, maskMove);
+    return this;
+  }
+
+  timeMove(timeMove: boolean = true): this {
+    this.setFlag(MoveFlags.TIME_MOVE, timeMove);
+    return this;
+  }
+
+  unionMove(unionMove: boolean = true): this {
+    this.setFlag(MoveFlags.UNION_MOVE, unionMove);
+    return this;
+  }
+
+  servantMove(servantMove: boolean = true): this {
+    this.setFlag(MoveFlags.SERVANT_MOVE, servantMove);
+    return this;
+  }
+
+  darkMagicMove(darkMagicMove: boolean = true): this {
+    this.setFlag(MoveFlags.DARK_MAGIC_MOVE, darkMagicMove);
+    return this;
+  }
+
+  ojamaMove(ojamaMove: boolean = true): this {
+    this.setFlag(MoveFlags.OJAMA_MOVE, ojamaMove);
+    return this;
+  }
+
+  ghostMove(ghostMove: boolean = true): this {
+    this.setFlag(MoveFlags.GHOST_MOVE, ghostMove);
+    return this;
+  }
+
+  flyingMove(flyingMove: boolean = true): this {
+    this.setFlag(MoveFlags.FLYING_MOVE, flyingMove);
+    return this;
+  }
+
+  auraMove(auraMove: boolean = true): this {
+    this.setFlag(MoveFlags.AURA_MOVE, auraMove);
+    return this;
+  }
+
+  toonMove(toonMove: boolean = true): this {
+    this.setFlag(MoveFlags.TOON_MOVE, toonMove);
+    return this;
+  }
   checkFlag(flag: MoveFlags, user: Pokemon, target: Pokemon | null): boolean {
 
     switch (flag) {
       case MoveFlags.MAKES_CONTACT:
+        if (target && this.hitsSubstitute(user, target)) {
+          return false;
+        }
         if (user.hasAbilityWithAttr(IgnoreContactAbAttr)) {
           return false;
         }
@@ -490,10 +581,39 @@ export default class Move implements Localizable {
 
     return !!(this.flags & flag);
   }
+
+  hitsSubstitute(user: Pokemon, target: Pokemon | null): boolean {
+    if (!target) {
+      return false;
+    }
+    if (
+      this.moveTarget === MoveTarget.USER
+      || this.moveTarget === MoveTarget.USER_SIDE
+      || this.moveTarget === MoveTarget.ENEMY_SIDE
+      || this.moveTarget === MoveTarget.BOTH_SIDES
+    ) {
+      return false;
+    }
+    if (user === target) {
+      return false;
+    }
+    if (!target.getTag(BattlerTagType.SUBSTITUTE)) {
+      return false;
+    }
+    if (this.hasFlag(MoveFlags.SOUND_BASED)) {
+      return false;
+    }
+    return true;
+  }
+
   applyConditions(user: Pokemon, target: Pokemon, move: Move): boolean {
     for (const condition of this.conditions) {
-      if (!condition.apply(user, target, move)) {
-        return false;
+      try {
+        if (!condition.apply(user, target, move)) {
+          return false;
+        }
+      } catch (err) {
+        console.error(`[MOVE CONDITION ERROR] ${this?.id}:`, err);
       }
     }
 
@@ -501,9 +621,13 @@ export default class Move implements Localizable {
   }
   getFailedText(user: Pokemon, target: Pokemon, move: Move, cancelled: Utils.BooleanHolder): string | null {
     for (const attr of this.attrs) {
-      const failedText = attr.getFailedText(user, target, move, cancelled);
-      if (failedText !== null) {
-        return failedText;
+      try {
+        const failedText = attr.getFailedText(user, target, move, cancelled);
+        if (failedText !== null) {
+          return failedText;
+        }
+      } catch (err) {
+        console.error(`[MOVE FAILED TEXT ERROR] ${this?.id} ${attr?.constructor?.name}:`, err);
       }
     }
     return null;
@@ -512,11 +636,11 @@ export default class Move implements Localizable {
     let score = 0;
 
     for (const attr of this.attrs) {
-      score += attr.getUserBenefitScore ? attr.getUserBenefitScore(user, target, move) : 0;
+      score += attr.getUserBenefitScore(user, target, move);
     }
 
     for (const condition of this.conditions) {
-      score += condition.getUserBenefitScore ? condition.getUserBenefitScore(user, target, move) : 0;
+      score += condition.getUserBenefitScore(user, target, move);
     }
 
     return score;
@@ -547,7 +671,7 @@ export default class Move implements Localizable {
       user.scene.applyModifiers(PokemonMoveAccuracyBoosterModifier, user.isPlayer(), user, moveAccuracy);
     }
 
-    if (user.scene.arena.getMoveWeatherType(user) === WeatherType.FOG) {
+    if (user.scene.arena.weather?.weatherType === WeatherType.FOG) {
 
       moveAccuracy.value = Math.floor(moveAccuracy.value * 0.9);
     }
@@ -676,23 +800,6 @@ export class StatusMove extends Move {
   constructor(id: Moves, type: Type, accuracy: integer, pp: integer, chance: integer, priority: integer, generation: integer) {
     super(id, type, MoveCategory.STATUS, MoveTarget.NEAR_OTHER, -1, accuracy, pp, chance, priority, generation);
   }
-
-  getTargetBenefitScore(user: Pokemon, target: Pokemon, move: Move): integer {
-    let ret = super.getTargetBenefitScore(user, target, move);
-
-    let scoreMultiplier = 1;
-    if (this.category === MoveCategory.STATUS) {
-      scoreMultiplier = move.chance < 0 ? 2 : Math.floor(move.chance * 0.01 * scoreMultiplier);
-    }
-
-    ret *= scoreMultiplier;
-
-    return ret;
-  }
-
-  applyConditions(user: Pokemon, target: Pokemon, move: Move): boolean {
-    return super.applyConditions(user, target, move);
-  }
 }
 
 export class SelfStatusMove extends Move {
@@ -749,6 +856,9 @@ export class MoveEffectAttr extends MoveAttr {
     this.firstTargetOnly = firstTargetOnly;
   }
   canApply(user: Pokemon, target: Pokemon, move: Move, args?: any[]) {
+    if (!this.selfTarget && (move.hitsSubstitute(user, target) || target.turnData.subHitThisMove)) {
+      return false;
+    }
     return !! (this.selfTarget ? user.hp && !user.getTag(BattlerTagType.FRENZY) : target.hp)
         && (this.selfTarget || !target.getTag(BattlerTagType.PROTECTED) ||
             move.checkFlag(MoveFlags.IGNORE_PROTECT, user, target));
@@ -761,6 +871,30 @@ export class MoveEffectAttr extends MoveAttr {
     applyAbAttrs(MoveEffectChanceMultiplierAbAttr, user, null, false, moveChance, move, target, selfEffect, showAbility);
     if (!selfEffect) {
       applyPreDefendAbAttrs(IgnoreMoveEffectsAbAttr, target, user, null, null, false, moveChance);
+    }
+    if (moveChance.value > 0 && move.id !== Moves.ORDER_UP) {
+      for (const opponent of user.getOpponents()) {
+        if (!opponent) {
+          continue;
+        }
+        if (opponent.getAbility().hasAttr(SuppressSecondaryEffectsWhileConditionAbAttr) && opponent.canApplyAbility()) {
+          for (const attr of opponent.getAbility().getAttrs(SuppressSecondaryEffectsWhileConditionAbAttr)) {
+            if (attr.apply(user, false, false, null, [moveChance, move])) {
+              break;
+            }
+          }
+        }
+        if (opponent.hasPassive() && opponent.getPassiveAbility().hasAttr(SuppressSecondaryEffectsWhileConditionAbAttr) && opponent.canApplyAbility(true)) {
+          for (const attr of opponent.getPassiveAbility().getAttrs(SuppressSecondaryEffectsWhileConditionAbAttr)) {
+            if (attr.apply(user, false, false, null, [moveChance, move])) {
+              break;
+            }
+          }
+        }
+        if (moveChance.value <= 0) {
+          break;
+        }
+      }
     }
     return moveChance.value;
   }
@@ -866,7 +1000,7 @@ export class CritOnlyAttr extends MoveAttr {
 }
 
 export class FixedDamageAttr extends MoveAttr {
-  public damage: integer;
+  private damage: integer;
 
   constructor(damage: integer) {
     super();
@@ -1002,9 +1136,9 @@ export class SurviveDamageAttr extends ModifiedDamageAttr {
 }
 
 export class RecoilAttr extends MoveEffectAttr {
-  public useHp: boolean;
-  public damageRatio: number;
-  public unblockable: boolean;
+  private useHp: boolean;
+  private damageRatio: number;
+  private unblockable: boolean;
 
   constructor(useHp: boolean = false, damageRatio: number = 0.25, unblockable: boolean = false) {
     super(true, MoveEffectTrigger.POST_APPLY, false, true);
@@ -1119,6 +1253,48 @@ export class HalfSacrificialAttr extends MoveEffectAttr {
   }
 }
 
+export class SubstituteAttr extends MoveEffectAttr {
+  private hpRatio: number;
+
+  constructor(hpRatio: number = 0.25) {
+    super(true);
+    this.hpRatio = hpRatio;
+  }
+
+  getCondition(): MoveConditionFunc {
+    return (user, target, move) => {
+      if (user.getTag(BattlerTagType.SUBSTITUTE)) {
+        return false;
+      }
+      const hpCost = Utils.toDmgValue(user.getMaxHp() * this.hpRatio);
+      return hpCost > 0 && user.hp > hpCost;
+    };
+  }
+
+  apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
+    if (!super.apply(user, target, move, args)) {
+      return false;
+    }
+    const hpCost = Utils.toDmgValue(user.getMaxHp() * this.hpRatio);
+    if (hpCost <= 0 || user.hp <= hpCost) {
+      return false;
+    }
+    user.damageAndUpdate(hpCost, HitResult.OTHER, false, true, true);
+    return user.addTag(BattlerTagType.SUBSTITUTE, 0, move.id, user.id);
+  }
+
+  getUserBenefitScore(user: Pokemon, target: Pokemon, move: Move): integer {
+    if (user.getTag(BattlerTagType.SUBSTITUTE)) {
+      return -20;
+    }
+    const hpCost = Utils.toDmgValue(user.getMaxHp() * this.hpRatio);
+    if (user.hp <= hpCost) {
+      return -20;
+    }
+    return user.getHpRatio() > 0.5 ? 3 : 1;
+  }
+}
+
 export enum MultiHitType {
   _2,
   _2_TO_5,
@@ -1130,9 +1306,9 @@ export enum MultiHitType {
 }
 export class HealAttr extends MoveEffectAttr {
 
-  public healRatio: number;
+  private healRatio: number;
 
-  public showAnim: boolean;
+  private showAnim: boolean;
 
   constructor(healRatio?: number, showAnim?: boolean, selfTarget?: boolean) {
     super(selfTarget === undefined || selfTarget);
@@ -1246,10 +1422,7 @@ export class IgnoreWeatherTypeDebuffAttr extends MoveAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
     const weatherModifier=args[0] as Utils.NumberHolder;
 
-    const weatherType = user.scene.arena.getMoveWeatherType(user);
-    const isSun = (w: WeatherType) => w === WeatherType.SUNNY || w === WeatherType.HARSH_SUN;
-    const isRain = (w: WeatherType) => w === WeatherType.RAIN || w === WeatherType.HEAVY_RAIN;
-    if (weatherType === this.weather || (isSun(weatherType) && isSun(this.weather)) || (isRain(weatherType) && isRain(this.weather))) {
+    if (user.scene.arena.weather?.weatherType === this.weather) {
       weatherModifier.value = Math.max(weatherModifier.value, 1);
     }
     return true;
@@ -1262,8 +1435,11 @@ export abstract class WeatherHealAttr extends HealAttr {
   }
 
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    const weatherType = user.scene.arena.getMoveWeatherType(user);
-    const healRatio = this.getWeatherHealRatio(weatherType);
+    let healRatio = 0.5;
+    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
+      const weatherType = user.scene.arena.weather?.weatherType || WeatherType.NONE;
+      healRatio = this.getWeatherHealRatio(weatherType);
+    }
     this.addHealPhase(user, healRatio);
     return true;
   }
@@ -1331,7 +1507,7 @@ export class HealOnAllyAttr extends HealAttr {
   }
 }
 export class HitHealAttr extends MoveEffectAttr {
-  public healRatio: number;
+  private healRatio: number;
   private message: string;
   private healStat: Stat | null;
 
@@ -1380,7 +1556,7 @@ export class IncrementMovePriorityAttr extends MoveAttr {
 
   private moveIncrementFunc: (pokemon: Pokemon, target:Pokemon, move: Move) => boolean;
 
-  public increaseAmount: integer;
+  private increaseAmount: integer;
 
   constructor(moveIncrementFunc: (pokemon: Pokemon, target:Pokemon, move: Move) => boolean, increaseAmount = 1) {
     super();
@@ -1397,12 +1573,39 @@ export class IncrementMovePriorityAttr extends MoveAttr {
     return true;
   }
 }
+
+export class TerrainMovePriorityAttr extends IncrementMovePriorityAttr {
+  private terrain: TerrainType;
+  constructor(terrain: TerrainType, increaseAmount = 1) {
+    super(
+      (user: Pokemon, _target: Pokemon, _move: Move) =>
+        user.scene.arena.getTerrainType() === terrain && user.isGrounded(),
+      increaseAmount
+    );
+    this.terrain = terrain;
+  }
+}
+export class FirstTurnPriorityAttr extends IncrementMovePriorityAttr {
+
+  constructor(increaseAmount = 1) {
+    super(
+      (user: Pokemon, _target: Pokemon, _move: Move) =>
+        user.battleSummonData?.turnCount === 1,
+      increaseAmount
+    );
+  }
+}
+export class ConditionalPriorityAttr extends IncrementMovePriorityAttr {
+
+  constructor(increaseAmount = 1) {
+    super(
+      (_user: Pokemon, _target: Pokemon, _move: Move) => true,
+      increaseAmount
+    );
+  }
+}
 export class MultiHitAttr extends MoveAttr {
   private multiHitType: MultiHitType;
-
-  public get getMultiHitType() {
-    return this.multiHitType;
-  }
 
   constructor(multiHitType?: MultiHitType) {
     super();
@@ -1507,6 +1710,9 @@ export class StatusEffectAttr extends MoveEffectAttr {
   }
 
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
+    if (!this.selfTarget && (move.hitsSubstitute(user, target) || target.turnData.subHitThisMove)) {
+      return false;
+    }
     const moveChance = this.getMoveChance(user, target, move, this.selfTarget, true);
     const statusCheck = moveChance < 0 || moveChance === 100 || user.randSeedInt(100) < moveChance;
     if (statusCheck) {
@@ -1537,8 +1743,8 @@ export class MultiStatusEffectAttr extends StatusEffectAttr {
   public effects: StatusEffect[];
 
   constructor(effects: StatusEffect[], selfTarget?: boolean, cureTurn?: integer, overrideStatus?: boolean) {
-    super(effects?.[0], selfTarget, cureTurn, overrideStatus);
-    this.effects = effects ?? [];
+    super(effects[0], selfTarget, cureTurn, overrideStatus);
+    this.effects = effects;
   }
 
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
@@ -1586,7 +1792,7 @@ export class PsychoShiftEffectAttr extends MoveEffectAttr {
 }
 
 export class StealHeldItemChanceAttr extends MoveEffectAttr {
-  public chance: number;
+  private chance: number;
 
   constructor(chance: number) {
     super(false, MoveEffectTrigger.HIT);
@@ -1816,7 +2022,7 @@ export class BypassBurnDamageReductionAttr extends MoveAttr {
 }
 
 export class WeatherChangeAttr extends MoveEffectAttr {
-  public weatherType: WeatherType;
+  private weatherType: WeatherType;
 
   constructor(weatherType: WeatherType) {
     super();
@@ -1852,7 +2058,7 @@ export class ClearWeatherAttr extends MoveEffectAttr {
 }
 
 export class TerrainChangeAttr extends MoveEffectAttr {
-  public terrainType: TerrainType;
+  private terrainType: TerrainType;
 
   constructor(terrainType: TerrainType) {
     super();
@@ -1904,6 +2110,22 @@ export class OneHitKOAttr extends MoveAttr {
   }
 }
 
+export class AbilityOneHitKOAttr extends OneHitKOAttr {
+  override getCondition(): (user: Pokemon, target: Pokemon, move: Move) => boolean {
+    return (user, target, move) => {
+      const cancelled = new Utils.BooleanHolder(false);
+      applyAbAttrs(BlockOneHitKOAbAttr, target, cancelled);
+      return !cancelled.value;
+    };
+  }
+}
+
+export class NativeTripleAccelPowerAttr extends MoveAttr {
+  apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
+    return false;
+  }
+}
+
 export class OverrideMoveEffectAttr extends MoveAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean | Promise<boolean> {
     return true;
@@ -1930,7 +2152,10 @@ export class ChargeAttr extends OverrideMoveEffectAttr {
     return new Promise(resolve => {
       const lastMove = user.getLastXMoves().find(() => true);
       if (!lastMove || lastMove.move !== move.id || (lastMove.result !== MoveResult.OTHER && lastMove.turn !== user.scene.currentBattle.turn)) {
-        (args[0] as Utils.BooleanHolder).value = true;
+        const hasChargeDamage = user.hasAbilityWithAttr(ChargeMoveDamageAbAttr);
+        if (!hasChargeDamage) {
+          (args[0] as Utils.BooleanHolder).value = true;
+        }
         new MoveChargeAnim(this.chargeAnim, move.id, user).play(user.scene, () => {
           user.scene.queueMessage(this.chargeText.replace("{TARGET}", getPokemonNameWithAffix(target)).replace("{USER}", getPokemonNameWithAffix(user)));
           if (this.tagType) {
@@ -1968,8 +2193,8 @@ export class SunlightChargeAttr extends ChargeAttr {
 
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): Promise<boolean> {
     return new Promise(resolve => {
-      const weatherType = user.scene.arena.getMoveWeatherType(user);
-      if (weatherType === WeatherType.SUNNY || weatherType === WeatherType.HARSH_SUN) {
+      const weatherType = user.scene.arena.weather?.weatherType;
+      if (!user.scene.arena.weather?.isEffectSuppressed(user.scene) && (weatherType === WeatherType.SUNNY || weatherType === WeatherType.HARSH_SUN)) {
         resolve(false);
       } else {
         super.apply(user, target, move, args).then(result => resolve(result));
@@ -1988,8 +2213,8 @@ export class ElectroShotChargeAttr extends ChargeAttr {
 
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): Promise<boolean> {
     return new Promise(resolve => {
-      const weatherType = user.scene.arena.getMoveWeatherType(user);
-      if (weatherType === WeatherType.RAIN || weatherType === WeatherType.HEAVY_RAIN) {
+      const weatherType = user.scene.arena.weather?.weatherType;
+      if (!user.scene.arena.weather?.isEffectSuppressed(user.scene) && (weatherType === WeatherType.RAIN || weatherType === WeatherType.HEAVY_RAIN)) {
 
         const statChangeAttr = new StatChangeAttr(BattleStat.SPATK, 1, true);
         statChangeAttr.apply(user, target, move, args);
@@ -2170,9 +2395,11 @@ export class GrowthStatChangeAttr extends StatChangeAttr {
   }
 
   getLevels(user: Pokemon): number {
-    const weatherType = user.scene.arena.getMoveWeatherType(user);
-    if (weatherType === WeatherType.SUNNY || weatherType === WeatherType.HARSH_SUN) {
-      return this.levels + 1;
+    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
+      const weatherType = user.scene.arena.weather?.weatherType;
+      if (weatherType === WeatherType.SUNNY || weatherType === WeatherType.HARSH_SUN) {
+        return this.levels + 1;
+      }
     }
     return this.levels;
   }
@@ -2393,6 +2620,34 @@ export class MovePowerMultiplierAttr extends VariablePowerAttr {
     power.value *= this.powerMultiplierFunc(user, target, move);
 
     return true;
+  }
+}
+
+export class TerrainPowerBoostAttr extends MovePowerMultiplierAttr {
+  private terrain: TerrainType;
+  constructor(terrain: TerrainType) {
+    super(
+      (user: Pokemon, target: Pokemon, _move: Move) =>
+        user.scene.arena.getTerrainType() === terrain && target.isGrounded() ? 2 : 1
+    );
+    this.terrain = terrain;
+  }
+}
+export class WeatherPowerBoostAttr extends MovePowerMultiplierAttr {
+  private weather: WeatherType;
+  constructor(weather: WeatherType) {
+    super(
+      (user: Pokemon, _target: Pokemon, _move: Move) => {
+        const weatherType = user.scene.arena.getMoveWeatherType(user);
+        const isSun = (w: WeatherType) => w === WeatherType.SUNNY || w === WeatherType.HARSH_SUN;
+        const isRain = (w: WeatherType) => w === WeatherType.RAIN || w === WeatherType.HEAVY_RAIN;
+        if (weatherType === weather || (isSun(weatherType) && isSun(weather)) || (isRain(weatherType) && isRain(weather))) {
+          return 2;
+        }
+        return 1;
+      }
+    );
+    this.weather = weather;
   }
 }
 const beatUpFunc = (user: Pokemon, allyIndex: number): number => {
@@ -2690,16 +2945,18 @@ export class MagnitudePowerAttr extends VariablePowerAttr {
 
 export class AntiSunlightPowerDecreaseAttr extends VariablePowerAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    const power = args[0] as Utils.NumberHolder;
-    const weatherType = user.scene.arena.getMoveWeatherType(user);
-    switch (weatherType) {
-      case WeatherType.RAIN:
-      case WeatherType.SANDSTORM:
-      case WeatherType.HAIL:
-      case WeatherType.SNOW:
-      case WeatherType.HEAVY_RAIN:
-        power.value *= 0.5;
-        return true;
+    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
+      const power = args[0] as Utils.NumberHolder;
+      const weatherType = user.scene.arena.weather?.weatherType || WeatherType.NONE;
+      switch (weatherType) {
+        case WeatherType.RAIN:
+        case WeatherType.SANDSTORM:
+        case WeatherType.HAIL:
+        case WeatherType.SNOW:
+        case WeatherType.HEAVY_RAIN:
+          power.value *= 0.5;
+          return true;
+      }
     }
 
     return false;
@@ -2966,17 +3223,19 @@ export class VariableAccuracyAttr extends MoveAttr {
 }
 export class ThunderAccuracyAttr extends VariableAccuracyAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    const accuracy = args[0] as Utils.NumberHolder;
-    const weatherType = user.scene.arena.getMoveWeatherType(user);
-    switch (weatherType) {
-      case WeatherType.SUNNY:
-      case WeatherType.HARSH_SUN:
-        accuracy.value = 50;
-        return true;
-      case WeatherType.RAIN:
-      case WeatherType.HEAVY_RAIN:
-        accuracy.value = -1;
-        return true;
+    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
+      const accuracy = args[0] as Utils.NumberHolder;
+      const weatherType = user.scene.arena.weather?.weatherType || WeatherType.NONE;
+      switch (weatherType) {
+        case WeatherType.SUNNY:
+        case WeatherType.HARSH_SUN:
+          accuracy.value = 50;
+          return true;
+        case WeatherType.RAIN:
+        case WeatherType.HEAVY_RAIN:
+          accuracy.value = -1;
+          return true;
+      }
     }
 
     return false;
@@ -2984,13 +3243,15 @@ export class ThunderAccuracyAttr extends VariableAccuracyAttr {
 }
 export class StormAccuracyAttr extends VariableAccuracyAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    const accuracy = args[0] as Utils.NumberHolder;
-    const weatherType = user.scene.arena.getMoveWeatherType(user);
-    switch (weatherType) {
-    case WeatherType.RAIN:
-    case WeatherType.HEAVY_RAIN:
-      accuracy.value = -1;
-      return true;
+    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
+      const accuracy = args[0] as Utils.NumberHolder;
+      const weatherType = user.scene.arena.weather?.weatherType || WeatherType.NONE;
+      switch (weatherType) {
+      case WeatherType.RAIN:
+      case WeatherType.HEAVY_RAIN:
+        accuracy.value = -1;
+        return true;
+      }
     }
 
     return false;
@@ -3024,11 +3285,13 @@ export class ToxicAccuracyAttr extends VariableAccuracyAttr {
 
 export class BlizzardAccuracyAttr extends VariableAccuracyAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    const accuracy = args[0] as Utils.NumberHolder;
-    const weatherType = user.scene.arena.getMoveWeatherType(user);
-    if (weatherType === WeatherType.HAIL || weatherType === WeatherType.SNOW) {
-      accuracy.value = -1;
-      return true;
+    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
+      const accuracy = args[0] as Utils.NumberHolder;
+      const weatherType = user.scene.arena.weather?.weatherType || WeatherType.NONE;
+      if (weatherType === WeatherType.HAIL || weatherType === WeatherType.SNOW) {
+        accuracy.value = -1;
+        return true;
+      }
     }
 
     return false;
@@ -3262,27 +3525,30 @@ export class WeatherBallTypeAttr extends VariableMoveTypeAttr {
       return false;
     }
 
-    const weatherType = user.scene.arena.getMoveWeatherType(user);
-    switch (weatherType) {
-      case WeatherType.SUNNY:
-      case WeatherType.HARSH_SUN:
-      moveType.value = Type.FIRE;
-        break;
-      case WeatherType.RAIN:
-      case WeatherType.HEAVY_RAIN:
-      moveType.value = Type.WATER;
-        break;
-      case WeatherType.SANDSTORM:
-      moveType.value = Type.ROCK;
-        break;
-      case WeatherType.HAIL:
-      case WeatherType.SNOW:
-      moveType.value = Type.ICE;
-        break;
-      default:
-        return false;
+    if (!user.scene.arena.weather?.isEffectSuppressed(user.scene)) {
+      switch (user.scene.arena.weather?.weatherType) {
+        case WeatherType.SUNNY:
+        case WeatherType.HARSH_SUN:
+        moveType.value = Type.FIRE;
+          break;
+        case WeatherType.RAIN:
+        case WeatherType.HEAVY_RAIN:
+        moveType.value = Type.WATER;
+          break;
+        case WeatherType.SANDSTORM:
+        moveType.value = Type.ROCK;
+          break;
+        case WeatherType.HAIL:
+        case WeatherType.SNOW:
+        moveType.value = Type.ICE;
+          break;
+        default:
+          return false;
+      }
+      return true;
     }
-    return true;
+
+    return false;
   }
 }
 export class TerrainPulseTypeAttr extends VariableMoveTypeAttr {
@@ -3416,6 +3682,25 @@ export class WaterSuperEffectTypeMultiplierAttr extends VariableMoveTypeMultipli
   }
 }
 
+export class IceNoEffectTypeAttr extends VariableMoveTypeMultiplierAttr {
+
+  apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
+    if (target.isOfType(Type.ICE)) {
+      (args[0] as Utils.BooleanHolder).value = false;
+      return false;
+    }
+    return true;
+  }
+}
+
+export class FlyingTypeMultiplierAttr extends VariableMoveTypeMultiplierAttr {
+  apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
+    const multiplier = args[0] as Utils.NumberHolder;
+    multiplier.value *= target.getAttackTypeEffectiveness(Type.FLYING, user);
+    return true;
+  }
+}
+
 export class AnyTypeSuperEffectTypeMultiplierAttr extends VariableMoveTypeMultiplierAttr {
   public superEffectiveAgainstType: Type;
 
@@ -3449,25 +3734,6 @@ export class AnyTypeSuperEffectTypeMultiplierAttr extends VariableMoveTypeMultip
 
     return false;
     }
-}
-
-export class IceNoEffectTypeAttr extends VariableMoveTypeMultiplierAttr {
-
-  apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    if (target.isOfType(Type.ICE)) {
-      (args[0] as Utils.BooleanHolder).value = false;
-      return false;
-    }
-    return true;
-  }
-}
-
-export class FlyingTypeMultiplierAttr extends VariableMoveTypeMultiplierAttr {
-  apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
-    const multiplier = args[0] as Utils.NumberHolder;
-    multiplier.value *= target.getAttackTypeEffectiveness(Type.FLYING, user);
-    return true;
-  }
 }
 
 export class AnyTypeMultiplierAttr extends VariableMoveTypeMultiplierAttr {
@@ -3985,7 +4251,7 @@ export class HitsTagAttr extends MoveAttr {
 export class AddArenaTagAttr extends MoveEffectAttr {
   public tagType: ArenaTagType;
   public turnCount: integer;
-  public failOnOverlap: boolean;
+  private failOnOverlap: boolean;
   public selfSideTarget: boolean;
 
   constructor(tagType: ArenaTagType, turnCount?: integer | null, failOnOverlap: boolean = false, selfSideTarget: boolean = false) {
@@ -4016,6 +4282,38 @@ export class AddArenaTagAttr extends MoveEffectAttr {
         : null;
   }
 }
+
+export class AddArenaTagChanceAttr extends AddArenaTagAttr {
+  private effectChance: integer;
+
+  constructor(
+    tagType: ArenaTagType,
+    turnCount: integer,
+    effectChance: integer,
+    failOnOverlap: boolean = false,
+    selfSideTarget: boolean = false,
+  ) {
+    super(tagType, turnCount, failOnOverlap, selfSideTarget);
+    this.effectChance = effectChance;
+  }
+
+  apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
+    if (!MoveEffectAttr.prototype.apply.call(this, user, target, move, args)) {
+      return false;
+    }
+    if (this.effectChance >= 0 && this.effectChance !== 100 && user.randSeedInt(100) >= this.effectChance) {
+      return false;
+    }
+    user.scene.arena.addTag(
+      this.tagType,
+      this.turnCount,
+      move.id,
+      user.id,
+      (this.selfSideTarget ? user : target).isPlayer() ? ArenaTagSide.PLAYER : ArenaTagSide.ENEMY,
+    );
+    return true;
+  }
+}
 export class RemoveArenaTagsAttr extends MoveEffectAttr {
   public tagTypes: ArenaTagType[];
   public selfSideTarget: boolean;
@@ -4043,9 +4341,25 @@ export class RemoveArenaTagsAttr extends MoveEffectAttr {
 }
 
 export class AddArenaTrapTagAttr extends AddArenaTagAttr {
+  apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
+    if (!MoveEffectAttr.prototype.apply.call(this, user, target, move, args)) {
+      return false;
+    }
+    if (move.chance < 0 || move.chance === 100 || user.randSeedInt(100) < move.chance) {
+      const sideTarget = this.selfSideTarget ? user
+        : (move.moveTarget === MoveTarget.USER ? (user.getOpponent(0) ?? target) : target);
+      user.scene.arena.addTag(this.tagType, this.turnCount, move.id, user.id,
+        sideTarget.isPlayer() ? ArenaTagSide.PLAYER : ArenaTagSide.ENEMY);
+      return true;
+    }
+    return false;
+  }
+
   getCondition(): MoveConditionFunc {
     return (user, target, move) => {
-      const side = (this.selfSideTarget ? user : target).isPlayer() ? ArenaTagSide.PLAYER : ArenaTagSide.ENEMY;
+      const sideTarget = this.selfSideTarget ? user
+        : (move.moveTarget === MoveTarget.USER ? (user.getOpponent(0) ?? target) : target);
+      const side = sideTarget.isPlayer() ? ArenaTagSide.PLAYER : ArenaTagSide.ENEMY;
       const tag = user.scene.arena.getTagOnSide(this.tagType, side) as ArenaTrapTag;
       if (!tag) {
         return true;
@@ -4082,8 +4396,7 @@ export class AddArenaTrapTagHitAttr extends AddArenaTagAttr {
     const moveChance = this.getMoveChance(user, target, move, this.selfTarget, true);
     const side = (this.selfSideTarget ? user : target).isPlayer() ? ArenaTagSide.PLAYER : ArenaTagSide.ENEMY;
     const tag = user.scene.arena.getTagOnSide(this.tagType, side) as ArenaTrapTag;
-    const lastMove = user.getLastXMoves(1)[0];
-    if (lastMove?.result === MoveResult.SUCCESS && (moveChance < 0 || moveChance === 100 || user.randSeedInt(100) < moveChance)) {
+    if ((moveChance < 0 || moveChance === 100 || user.randSeedInt(100) < moveChance) && user.getLastXMoves(1)[0].result === MoveResult.SUCCESS) {
       user.scene.arena.addTag(this.tagType, 0, move.id, user.id, side);
       if (!tag) {
         return true;
@@ -4262,9 +4575,6 @@ export class ForceSwitchOutAttr extends MoveEffectAttr {
         return resolve(false);
       }
       const switchOutTarget = this.user ? user : target;
-      if (!switchOutTarget.hp || switchOutTarget.isFainted()) {
-        return resolve(false);
-      }
       if (switchOutTarget instanceof PlayerPokemon) {
         switchOutTarget.leaveField(!this.batonPass);
 
@@ -4278,12 +4588,13 @@ export class ForceSwitchOutAttr extends MoveEffectAttr {
 	  } else if (user.scene.currentBattle.battleType !== BattleType.WILD) {
         const nextIndex = user.scene.currentBattle.trainer
           ? user.scene.currentBattle.trainer.getNextSummonIndex((switchOutTarget as EnemyPokemon).trainerSlot)
-          : 0;
-        if (nextIndex >= 0) {
-          switchOutTarget.leaveField(!this.batonPass);
-          if (switchOutTarget.hp > 0) {
-            user.scene.prependToPhase(new SwitchSummonPhase(user.scene, switchOutTarget.getFieldIndex(), nextIndex, false, this.batonPass, false), MoveEndPhase);
-          }
+          : -1;
+        const incoming = nextIndex > -1 ? user.scene.getEnemyParty()[nextIndex] : undefined;
+        applyPreSwitchOutAbAttrs(PreSwitchOutAbAttr, switchOutTarget, false, incoming);
+        switchOutTarget.leaveField(!this.batonPass);
+
+	  	if (switchOutTarget.hp > 0 && nextIndex > -1) {
+          user.scene.prependToPhase(new SwitchSummonPhase(user.scene, switchOutTarget.getFieldIndex(), nextIndex, false, this.batonPass, false, false, true), MoveEndPhase);
         }
       } else {
 
@@ -4303,11 +4614,7 @@ export class ForceSwitchOutAttr extends MoveEffectAttr {
 
           if (switchOutTarget.hp) {
             user.scene.pushPhase(new BattleEndPhase(user.scene));
-            if (!user.scene.gameMode.isChaosMode) {
-              user.scene.pushPhase(new NewBattlePhase(user.scene));
-            } else {
-              user.scene.pushPhase(new BattlePathPhase(user.scene));
-            }
+            user.scene.pushPhase(new NewBattlePhase(user.scene));
           }
         }
       }
@@ -4331,7 +4638,7 @@ export class ForceSwitchOutAttr extends MoveEffectAttr {
       const switchOutTarget = (this.user ? user : target);
       const player = switchOutTarget instanceof PlayerPokemon;
 
-      if (!this.user && move.category === MoveCategory.STATUS && (target.hasAbilityWithAttr(ForceSwitchOutImmunityAbAttr) || target.isMax() || user.scene.gameMode.isWavePreFinal(user.scene, user.scene.currentBattle.waveIndex))) {
+      if (!this.user && move.category === MoveCategory.STATUS && (target.hasAbilityWithAttr(ForceSwitchOutImmunityAbAttr) || target.isMax())) {
         return false;
       }
 
@@ -4556,7 +4863,7 @@ export class RandomMovesetMoveAttr extends OverrideMoveEffectAttr {
 export class RandomMoveAttr extends OverrideMoveEffectAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): Promise<boolean> {
     return new Promise(resolve => {
-      const moveIds = Utils.getEnumValues(Moves).filter(m => !allMoves[m].hasFlag(MoveFlags.IGNORE_VIRTUAL) && !allMoves[m].name.endsWith(" (N)"));
+      const moveIds = Utils.getEnumValues(Moves).filter(m => !isYuMove(m) && !allMoves[m].hasFlag(MoveFlags.IGNORE_VIRTUAL) && !allMoves[m].name.endsWith(" (N)"));
       const moveId = moveIds[user.randSeedInt(moveIds.length)];
 
       const moveTargets = getMoveTargets(user, moveId);
@@ -4923,7 +5230,7 @@ export class SketchAttr extends MoveEffectAttr {
         Moves.BREAKNECK_BLITZ__SPECIAL
       ];
 
-      if (unsketchableMoves.includes(targetMove.move)) {
+      if (unsketchableMoves.includes(targetMove.move) || isYuMove(targetMove.move)) {
         return false;
       }
 
@@ -4951,8 +5258,10 @@ export class AbilityChangeAttr extends MoveEffectAttr {
     }
 
     const moveTarget = this.selfTarget ? user : target;
-
+    const oldAbility = moveTarget.getAbility().id;
+    handleAbilityLost(moveTarget, oldAbility);
     moveTarget.summonData.ability = this.ability;
+    handleAbilityGained(moveTarget);
     user.scene.triggerPokemonFormChange(moveTarget, SpeciesFormChangeRevertWeatherFormTrigger);
 
     user.scene.queueMessage(i18next.t("moveTriggers:acquiredAbility", {pokemonName: getPokemonNameWithAffix((this.selfTarget ? user : target)), abilityName: allAbilities[this.ability].name}));
@@ -4979,12 +5288,18 @@ export class AbilityCopyAttr extends MoveEffectAttr {
       return false;
     }
 
+    const userOldAbility = user.getAbility().id;
+    handleAbilityLost(user, userOldAbility);
     user.summonData.ability = target.getAbility().id;
+    handleAbilityGained(user);
 
     user.scene.queueMessage(i18next.t("moveTriggers:copiedTargetAbility", {pokemonName: getPokemonNameWithAffix(user), targetName: getPokemonNameWithAffix(target), abilityName: allAbilities[target.getAbility().id].name}));
 
     if (this.copyToPartner && user.scene.currentBattle?.double && user.getAlly().hp) {
+      const allyOldAbility = user.getAlly().getAbility().id;
+      handleAbilityLost(user.getAlly(), allyOldAbility);
       user.getAlly().summonData.ability = target.getAbility().id;
+      handleAbilityGained(user.getAlly());
       user.getAlly().scene.queueMessage(i18next.t("moveTriggers:copiedTargetAbility", {pokemonName: getPokemonNameWithAffix(user.getAlly()), targetName: getPokemonNameWithAffix(target), abilityName: allAbilities[target.getAbility().id].name}));
     }
 
@@ -5016,7 +5331,10 @@ export class AbilityGiveAttr extends MoveEffectAttr {
       return false;
     }
 
+    const targetOldAbility = target.getAbility().id;
+    handleAbilityLost(target, targetOldAbility);
     target.summonData.ability = user.getAbility().id;
+    handleAbilityGained(target);
 
     user.scene.queueMessage(i18next.t("moveTriggers:acquiredAbility", {pokemonName: getPokemonNameWithAffix(target), abilityName: allAbilities[user.getAbility().id].name}));
 
@@ -5034,14 +5352,17 @@ export class SwitchAbilitiesAttr extends MoveEffectAttr {
       return false;
     }
 
-    const tempAbilityId = user.getAbility().id;
-    user.summonData.ability = target.getAbility().id;
-    target.summonData.ability = tempAbilityId;
+    const userOldAbility = user.getAbility().id;
+    const targetOldAbility = target.getAbility().id;
+    handleAbilityLost(user, userOldAbility);
+    handleAbilityLost(target, targetOldAbility);
+    user.summonData.ability = targetOldAbility;
+    target.summonData.ability = userOldAbility;
+    handleAbilityGained(user);
+    handleAbilityGained(target);
 
     user.scene.queueMessage(i18next.t("moveTriggers:swappedAbilitiesWithTarget", {pokemonName: getPokemonNameWithAffix(user)}));
-
     user.scene.arena.triggerWeatherBasedFormChangesToNormal();
-
     user.scene.arena.triggerWeatherBasedFormChanges();
 
     return true;
@@ -5107,6 +5428,22 @@ export class TransformAttr extends MoveEffectAttr {
       user.scene.queueMessage(i18next.t("moveTriggers:transformedIntoTarget", {pokemonName: getPokemonNameWithAffix(user), targetName: getPokemonNameWithAffix(target)}));
 
       user.loadAssets(false).then(() => {
+        const visualForm = user.summonData.speciesForm;
+        if (visualForm && (visualForm.generation === 20 || visualForm.isGlitchOrSmittyForm?.(visualForm.getFormKey?.()))) {
+          user.finalizeSummonSpriteLayout();
+          const sprite = user.getSprite();
+          if (sprite) {
+            sprite.pipelineData["ignoreFieldPos"] = true;
+            sprite.pipelineData["hasShadow"] = false;
+          }
+          const tintSprite = user.getTintSprite();
+          if (tintSprite) {
+            tintSprite.pipelineData["ignoreFieldPos"] = true;
+            tintSprite.pipelineData["hasShadow"] = false;
+          }
+        } else {
+          user.updateScale();
+        }
         user.playAnim();
         resolve(true);
       });
@@ -5196,64 +5533,6 @@ export class VariableTargetAttr extends MoveAttr {
   }
 }
 
-export class TerrainMovePriorityAttr extends IncrementMovePriorityAttr {
-  private terrain: TerrainType;
-  constructor(terrain: TerrainType, increaseAmount = 1) {
-    super(
-      (user: Pokemon, _target: Pokemon, _move: Move) =>
-        user.scene.arena.getTerrainType() === terrain && user.isGrounded(),
-      increaseAmount
-    );
-    this.terrain = terrain;
-  }
-}
-export class FirstTurnPriorityAttr extends IncrementMovePriorityAttr {
-
-  constructor(increaseAmount = 1) {
-    super(
-      (user: Pokemon, _target: Pokemon, _move: Move) =>
-        user.battleSummonData?.turnCount === 1,
-      increaseAmount
-    );
-  }
-}
-export class ConditionalPriorityAttr extends IncrementMovePriorityAttr {
-
-  constructor(increaseAmount = 1) {
-    super(
-      (_user: Pokemon, _target: Pokemon, _move: Move) => true,
-      increaseAmount
-    );
-  }
-}
-export class TerrainPowerBoostAttr extends MovePowerMultiplierAttr {
-  private terrain: TerrainType;
-  constructor(terrain: TerrainType) {
-    super(
-      (user: Pokemon, target: Pokemon, _move: Move) =>
-        user.scene.arena.getTerrainType() === terrain && target.isGrounded() ? 2 : 1
-    );
-    this.terrain = terrain;
-  }
-}
-export class WeatherPowerBoostAttr extends MovePowerMultiplierAttr {
-  private weather: WeatherType;
-  constructor(weather: WeatherType) {
-    super(
-      (user: Pokemon, _target: Pokemon, _move: Move) => {
-        const weatherType = user.scene.arena.getMoveWeatherType(user);
-        const isSun = (w: WeatherType) => w === WeatherType.SUNNY || w === WeatherType.HARSH_SUN;
-        const isRain = (w: WeatherType) => w === WeatherType.RAIN || w === WeatherType.HEAVY_RAIN;
-        if (weatherType === weather || (isSun(weatherType) && isSun(weather)) || (isRain(weatherType) && isRain(weather))) {
-          return 2;
-        }
-        return 1;
-      }
-    );
-    this.weather = weather;
-  }
-}
-
 const failOnGravityCondition: MoveConditionFunc = (user, target, move) => !user.scene.arena.getTag(ArenaTagType.GRAVITY);
 
 const failOnBossCondition: MoveConditionFunc = (user, target, move) => !target.isBossImmune();
@@ -5278,20 +5557,45 @@ export type MoveAttrFilter = (attr: MoveAttr) => boolean;
 
 function applyMoveAttrsInternal(attrFilter: MoveAttrFilter, user: Pokemon | null, target: Pokemon | null, move: Move, args: any[]): Promise<void> {
   return new Promise(resolve => {
-    const attrPromises: Promise<boolean>[] = [];
+    const asyncAttrs: { attr: MoveAttr; promise: Promise<boolean> }[] = [];
     const moveAttrs = move.attrs.filter(a => attrFilter(a));
     for (const attr of moveAttrs) {
-      const result = attr.apply(user, target, move, args);
-      if (result instanceof Promise) {
-        attrPromises.push(result);
+      try {
+        const result = attr.apply(user, target, move, args);
+        if (result instanceof Promise) {
+          asyncAttrs.push({ attr, promise: result });
+        }
+      } catch (err) {
+        console.error(`[MOVE ATTR ERROR] ${move?.id} ${attr?.constructor?.name}:`, err);
       }
     }
-    Promise.allSettled(attrPromises).then(() => resolve());
+    Promise.allSettled(asyncAttrs.map(e => e.promise)).then(results => {
+      results.forEach((r, i) => {
+        if (r.status === "rejected") {
+          const attr = asyncAttrs[i]?.attr;
+          console.error(`[MOVE ATTR ERROR] ${move?.id} ${attr?.constructor?.name}:`, r.reason);
+        }
+      });
+      resolve();
+    });
   });
 }
 
 export function applyMoveAttrs(attrType: Constructor<MoveAttr>, user: Pokemon | null, target: Pokemon | null, move: Move, ...args: any[]): Promise<void> {
   return applyMoveAttrsInternal((attr: MoveAttr) => attr instanceof attrType, user, target, move, args);
+}
+
+export function moveHasSecondaryEffects(move: Move): boolean {
+  if (move.category === MoveCategory.STATUS) {
+    return true;
+  }
+  const hasStatLowerTarget = move.getAttrs(StatChangeAttr).some(a => !a.selfTarget && a.levels < 0);
+  const hasStatusEffect = move.getAttrs(StatusEffectAttr).length > 0 || move.hasAttr(ConfuseAttr);
+  const hasFlinch = move.hasAttr(FlinchAttr);
+  if (!hasStatLowerTarget && !hasStatusEffect && !hasFlinch) {
+    return false;
+  }
+  return (move.chance > 0 && move.chance <= 100) || move.chance === -1;
 }
 
 export function applyFilteredMoveAttrs(attrFilter: MoveAttrFilter, user: Pokemon, target: Pokemon | null, move: Move, ...args: any[]): Promise<void> {
@@ -5347,6 +5651,7 @@ export class MultiHitToRangeFourToEightCondition extends MoveCondition {
     });
   }
 }
+
 export class hitsSameTypeAttr extends VariableMoveTypeMultiplierAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
     const multiplier = args[0] as Utils.NumberHolder;
@@ -5511,7 +5816,35 @@ export const allMoves: Move[] = [
   new SelfStatusMove(Moves.NONE, Type.NORMAL, MoveCategory.STATUS, -1, -1, 0, 1),
 ];
 
+export function resolveMove(id: Moves): Move {
+  return allMoves[id] ?? allMoves[Moves.STRUGGLE];
+}
+
 export const selfStatLowerMoves: Moves[] = [];
+
+let _yuMoveAttrGuardsBound: {
+  hasSelfHpCostOnMove: (move: Move) => boolean;
+  isConditionalHitHealAttr: (attr: MoveAttr) => boolean;
+  isGatedHitHealAttr: (attr: MoveAttr) => boolean;
+} | null = null;
+
+let _cookbookRegisterFn: ((allMoves: Move[]) => void) | null = null;
+
+export function _bindYuMoveAttrGuards(
+  hasSelfHpCostOnMove: (move: Move) => boolean,
+  isConditionalHitHealAttr: (attr: MoveAttr) => boolean,
+  isGatedHitHealAttr: (attr: MoveAttr) => boolean
+): void {
+  _yuMoveAttrGuardsBound = { hasSelfHpCostOnMove, isConditionalHitHealAttr, isGatedHitHealAttr };
+}
+
+export function _bindCookbookRegister(fn: (allMoves: Move[]) => void): void {
+  _cookbookRegisterFn = fn;
+}
+
+export function getYuMoveAttrGuards() {
+  return _yuMoveAttrGuardsBound;
+}
 
 export function initMoves() {
   allMoves.push(
@@ -5560,6 +5893,7 @@ export function initMoves() {
       new StatusMove(Moves.WHIRLWIND, Type.NORMAL, -1, 20, -1, -6, 1)
           .attr(ForceSwitchOutAttr)
           .attr(HitsTagAttr, BattlerTagType.FLYING, false)
+          .hidesTarget()
           .windMove(),
       new AttackMove(Moves.FLY, Type.FLYING, MoveCategory.PHYSICAL, 90, 95, 15, -1, 0, 1)
       .attr(ChargeAttr, ChargeAnim.FLY_CHARGING, i18next.t("moveTriggers:flewUpHigh", {pokemonName: "{USER}"}), BattlerTagType.FLYING)
@@ -5636,7 +5970,8 @@ export function initMoves() {
           .target(MoveTarget.ALL_NEAR_ENEMIES),
       new StatusMove(Moves.ROAR, Type.NORMAL, -1, 20, -1, -6, 1)
           .attr(ForceSwitchOutAttr)
-          .soundBased(),
+          .soundBased()
+          .hidesTarget(),
       new StatusMove(Moves.SING, Type.NORMAL, 55, 15, -1, 0, 1)
           .attr(StatusEffectAttr, StatusEffect.SLEEP)
           .soundBased(),
@@ -5778,7 +6113,8 @@ export function initMoves() {
       new AttackMove(Moves.RAGE, Type.NORMAL, MoveCategory.PHYSICAL, 20, 100, 20, -1, 0, 1)
           .partial(),
       new SelfStatusMove(Moves.TELEPORT, Type.PSYCHIC, -1, 20, -1, -6, 1)
-          .attr(ForceSwitchOutAttr, true),
+          .attr(ForceSwitchOutAttr, true)
+          .hidesUser(),
       new AttackMove(Moves.NIGHT_SHADE, Type.GHOST, MoveCategory.SPECIAL, -1, 100, 15, -1, 0, 1)
           .attr(LevelDamageAttr),
       new StatusMove(Moves.MIMIC, Type.NORMAL, -1, 10, -1, 0, 1)
@@ -5953,8 +6289,7 @@ export function initMoves() {
           .attr(HighCritAttr)
           .slicingMove(),
       new SelfStatusMove(Moves.SUBSTITUTE, Type.NORMAL, -1, 10, -1, 0, 1)
-          .attr(RecoilAttr)
-          .unimplemented(),
+          .attr(SubstituteAttr),
       new AttackMove(Moves.STRUGGLE, Type.NORMAL, MoveCategory.PHYSICAL, 50, -1, 1, -1, 0, 1)
           .attr(RecoilAttr, true, 0.25, true)
           .attr(TypelessAttr)
@@ -6138,7 +6473,8 @@ export function initMoves() {
       new AttackMove(Moves.DRAGON_BREATH, Type.DRAGON, MoveCategory.SPECIAL, 60, 100, 20, 30, 0, 2)
           .attr(StatusEffectAttr, StatusEffect.PARALYSIS),
       new SelfStatusMove(Moves.BATON_PASS, Type.NORMAL, -1, 40, -1, 0, 2)
-          .attr(ForceSwitchOutAttr, true, true),
+          .attr(ForceSwitchOutAttr, true, true)
+          .hidesUser(),
       new StatusMove(Moves.ENCORE, Type.NORMAL, 100, 5, -1, 0, 2)
           .attr(AddBattlerTagAttr, BattlerTagType.ENCORE, false, true)
           .condition((user, target, move) => new EncoreTag(user.id).canAdd(target)),
@@ -6384,7 +6720,7 @@ export function initMoves() {
           .attr(FlinchAttr),
       new AttackMove(Moves.WEATHER_BALL, Type.NORMAL, MoveCategory.SPECIAL, 50, 100, 10, -1, 0, 3)
           .attr(WeatherBallTypeAttr)
-      .attr(MovePowerMultiplierAttr, (user, target, move) => [WeatherType.SUNNY, WeatherType.RAIN, WeatherType.SANDSTORM, WeatherType.HAIL, WeatherType.SNOW, WeatherType.FOG, WeatherType.HEAVY_RAIN, WeatherType.HARSH_SUN].includes(user.scene.arena.getMoveWeatherType(user)) ? 2 : 1)
+      .attr(MovePowerMultiplierAttr, (user, target, move) => [WeatherType.SUNNY, WeatherType.RAIN, WeatherType.SANDSTORM, WeatherType.HAIL, WeatherType.SNOW, WeatherType.FOG, WeatherType.HEAVY_RAIN, WeatherType.HARSH_SUN].includes(user.scene.arena.weather?.weatherType!) && !user.scene.arena.weather?.isEffectSuppressed(user.scene) ? 2 : 1)
           .ballBombMove(),
       new StatusMove(Moves.AROMATHERAPY, Type.GRASS, -1, 5, -1, 0, 3)
       .attr(PartyStatusCureAttr, i18next.t("moveTriggers:soothingAromaWaftedThroughArea"), Abilities.SAP_SIPPER)
@@ -6972,7 +7308,8 @@ export function initMoves() {
       new AttackMove(Moves.FROST_BREATH, Type.ICE, MoveCategory.SPECIAL, 60, 90, 10, 100, 0, 5)
           .attr(CritOnlyAttr),
       new AttackMove(Moves.DRAGON_TAIL, Type.DRAGON, MoveCategory.PHYSICAL, 60, 90, 10, -1, -6, 5)
-      .attr(ForceSwitchOutAttr),
+      .attr(ForceSwitchOutAttr)
+      .hidesTarget(),
       new SelfStatusMove(Moves.WORK_UP, Type.NORMAL, -1, 30, -1, 0, 5)
           .attr(StatChangeAttr, [ BattleStat.ATK, BattleStat.SPATK ], 1, true),
       new AttackMove(Moves.ELECTROWEB, Type.ELECTRIC, MoveCategory.SPECIAL, 55, 95, 15, 100, 0, 5)
@@ -7475,10 +7812,7 @@ export function initMoves() {
       new AttackMove(Moves.BRUTAL_SWING, Type.DARK, MoveCategory.PHYSICAL, 60, 100, 20, -1, 0, 7)
           .target(MoveTarget.ALL_NEAR_OTHERS),
       new StatusMove(Moves.AURORA_VEIL, Type.ICE, -1, 20, -1, 0, 7)
-          .condition((user, target, move) => {
-            const weatherType = user.scene.arena.getMoveWeatherType(user);
-            return weatherType === WeatherType.HAIL || weatherType === WeatherType.SNOW;
-          })
+          .condition((user, target, move) => (user.scene.arena.weather?.weatherType === WeatherType.HAIL || user.scene.arena.weather?.weatherType === WeatherType.SNOW) && !user.scene.arena.weather?.isEffectSuppressed(user.scene))
           .attr(AddArenaTagAttr, ArenaTagType.AURORA_VEIL, 5, true)
           .target(MoveTarget.USER_SIDE),
 
@@ -7983,6 +8317,7 @@ export function initMoves() {
       new SelfStatusMove(Moves.TAKE_HEART, Type.PSYCHIC, -1, 10, -1, 0, 8)
           .attr(StatChangeAttr, [ BattleStat.SPATK, BattleStat.SPDEF ], 1, true)
           .attr(HealStatusEffectAttr, true, StatusEffect.PARALYSIS, StatusEffect.POISON, StatusEffect.TOXIC, StatusEffect.BURN, StatusEffect.SLEEP),
+
       new AttackMove(Moves.TERA_BLAST, Type.NORMAL, MoveCategory.SPECIAL, 80, 100, 10, -1, 0, 9)
           .attr(TeraBlastCategoryAttr)
       .attr(TeraBlastTypeAttr)
@@ -8076,7 +8411,7 @@ export function initMoves() {
           .slicingMove(),
       new AttackMove(Moves.HYDRO_STEAM, Type.WATER, MoveCategory.SPECIAL, 80, 100, 15, -1, 0, 9)
           .attr(IgnoreWeatherTypeDebuffAttr, WeatherType.SUNNY)
-      .attr(MovePowerMultiplierAttr, (user, target, move) => [WeatherType.SUNNY, WeatherType.HARSH_SUN].includes(user.scene.arena.getMoveWeatherType(user)) ? 1.5 : 1),
+      .attr(MovePowerMultiplierAttr, (user, target, move) => [WeatherType.SUNNY, WeatherType.HARSH_SUN].includes(user.scene.arena.weather?.weatherType!) && !user.scene.arena.weather?.isEffectSuppressed(user.scene) ? 1.5 : 1),
       new AttackMove(Moves.RUINATION, Type.DARK, MoveCategory.SPECIAL, -1, 90, 10, -1, 0, 9)
           .attr(TargetHalfHpDamageAttr),
       new AttackMove(Moves.COLLISION_COURSE, Type.FIGHTING, MoveCategory.PHYSICAL, 100, 100, 5, -1, 0, 9)
@@ -8223,6 +8558,26 @@ export function initMoves() {
         .attr(SmittyTypeAttr),
 
   );
+  const preCookbookLength = allMoves.length;
+  if (_cookbookRegisterFn) {
+    _cookbookRegisterFn(allMoves);
+  }
+  let mismatchCount = 0;
+  for (let i = preCookbookLength; i < allMoves.length; i++) {
+    const m = allMoves[i];
+    if (m && m.id !== i) {
+      mismatchCount++;
+      if (mismatchCount <= 10) {
+        console.warn(`[MOVE-INDEX] allMoves[${i}] holds move.id=${m.id} (${Moves[m.id]}) — expected id=${i} (${Moves[i] || '???'})`);
+      }
+    }
+  }
+  if (mismatchCount > 0) {
+    console.error(`[MOVE-INDEX] ${mismatchCount} YU moves at WRONG array index (out of ${allMoves.length - preCookbookLength} registered). Fix: use allMoves[move.id] = move instead of push.`);
+  } else {
+    console.log(`[MOVE-INDEX] All ${allMoves.length - preCookbookLength} YU moves at correct indices.`);
+  }
+
   allMoves.map(m => {
     if (m.getAttrs(StatChangeAttr).some(a => a.selfTarget && a.levels < 0)) {
       selfStatLowerMoves.push(m.id);
@@ -8230,5 +8585,168 @@ export function initMoves() {
   });
 
   removeUnimplementedMoves();
+  stripYuMovesFromLevelTables();
 
+}
+
+export function initRegularMoveTags() {
+  const tag = (id: Moves, fn: (m: Move) => void) => { if (allMoves[id]) fn(allMoves[id]); };
+
+  const TIME_MOVES = [
+    Moves.ROAR_OF_TIME, Moves.TRICK_ROOM, Moves.FUTURE_SIGHT, Moves.ANCIENT_POWER,
+    Moves.DOOM_DESIRE, Moves.COSMIC_POWER, Moves.PERISH_SONG, Moves.ETERNABEAM,
+    Moves.RELIC_SONG, Moves.SYNCHRONOISE, Moves.TACHYON_CUTTER, Moves.FIRST_IMPRESSION,
+    Moves.LAST_RESORT, Moves.MORNING_SUN, Moves.MOONLIGHT, Moves.REST,
+    Moves.SOLAR_BEAM, Moves.SOLAR_BLADE, Moves.LUNAR_DANCE, Moves.LUNAR_BLESSING,
+    Moves.STORED_POWER, Moves.WISH, Moves.REVENGE, Moves.PAYBACK,
+    Moves.AVALANCHE, Moves.ENDEAVOR, Moves.FINAL_GAMBIT, Moves.FORESIGHT,
+    Moves.DESTINY_BOND, Moves.BIDE, Moves.GEOMANCY, Moves.YAWN, Moves.RECOVER,
+  ];
+
+  const UNION_MOVES = [
+    Moves.HELPING_HAND, Moves.HOLD_HANDS, Moves.COACHING, Moves.ALLY_SWITCH,
+    Moves.FOLLOW_ME, Moves.BEAT_UP, Moves.TAILWIND, Moves.LIFE_DEW,
+    Moves.HEAL_BELL, Moves.ROUND, Moves.DRAGON_CHEER, Moves.HOWL,
+    Moves.AFTER_YOU, Moves.BATON_PASS, Moves.WISH, Moves.HEALING_WISH,
+    Moves.REVIVAL_BLESSING, Moves.GUARD_SWAP, Moves.POWER_SWAP, Moves.HEART_SWAP,
+    Moves.BESTOW, Moves.AROMATIC_MIST, Moves.POLLEN_PUFF, Moves.WIDE_GUARD,
+    Moves.QUICK_GUARD, Moves.MAT_BLOCK, Moves.CRAFTY_SHIELD, Moves.SAFEGUARD,
+    Moves.AURORA_VEIL, Moves.REFLECT, Moves.LIGHT_SCREEN, Moves.SPOTLIGHT, Moves.INSTRUCT,
+  ];
+
+  const DARK_MAGIC_MOVES = [
+    Moves.HEX, Moves.CURSE, Moves.EERIE_SPELL, Moves.DARK_VOID,
+    Moves.MYSTICAL_FIRE, Moves.MYSTICAL_POWER, Moves.MAGIC_ROOM, Moves.MAGIC_COAT,
+    Moves.NIGHTMARE, Moves.NIGHT_SHADE, Moves.NIGHT_DAZE, Moves.TRICK_OR_TREAT,
+    Moves.WILL_O_WISP, Moves.DESTINY_BOND, Moves.GRUDGE, Moves.SHADOW_BALL,
+    Moves.SHADOW_FORCE, Moves.DARK_PULSE, Moves.MAGICAL_LEAF, Moves.MAGIC_POWDER,
+    Moves.FORESTS_CURSE, Moves.MOONGEIST_BEAM, Moves.ASTRAL_BARRAGE, Moves.INFERNAL_PARADE,
+    Moves.PHANTOM_FORCE, Moves.STRANGE_STEAM, Moves.OMINOUS_WIND, Moves.BITTER_MALICE,
+    Moves.POLTERGEIST, Moves.SPIRIT_SHACKLE, Moves.SPECTRAL_THIEF, Moves.LUSTER_PURGE,
+    Moves.IMPRISON, Moves.HYPNOSIS, Moves.CONFUSE_RAY,
+  ];
+
+  const GADGET_MOVES = [
+    Moves.GEAR_GRIND, Moves.SHIFT_GEAR, Moves.GEAR_UP, Moves.AUTOTOMIZE,
+    Moves.TECHNO_BLAST, Moves.FLASH_CANNON, Moves.LOCK_ON, Moves.GYRO_BALL,
+    Moves.STEEL_BEAM, Moves.ZAP_CANNON, Moves.CHARGE_BEAM, Moves.MAGNET_BOMB,
+    Moves.PRISMATIC_LASER, Moves.HYPER_DRILL, Moves.ELECTRO_BALL, Moves.ELECTRO_SHOT,
+    Moves.ELECTRO_DRIFT, Moves.DYNAMAX_CANNON, Moves.ARMOR_CANNON, Moves.FLEUR_CANNON,
+    Moves.SPIKE_CANNON, Moves.HYPER_BEAM, Moves.SIGNAL_BEAM, Moves.METEOR_BEAM,
+    Moves.STEEL_ROLLER, Moves.IRON_HEAD, Moves.IRON_TAIL, Moves.DOUBLE_IRON_BASH,
+    Moves.SMART_STRIKE, Moves.METAL_BURST, Moves.METAL_CLAW, Moves.METAL_SOUND,
+    Moves.OVERDRIVE, Moves.BOLT_STRIKE,
+  ];
+
+  const SERVANT_MOVES = [
+    Moves.SHADOW_BONE, Moves.BONE_RUSH, Moves.BONEMERANG, Moves.KOWTOW_CLEAVE,
+    Moves.BEAT_UP, Moves.MEMENTO, Moves.DESTINY_BOND, Moves.GRUDGE,
+    Moves.SUBMISSION, Moves.ATTACK_ORDER, Moves.DEFEND_ORDER, Moves.HEAL_ORDER,
+    Moves.ORDER_UP, Moves.BONE_CLUB, Moves.SKULL_BASH, Moves.LAST_RESPECTS,
+    Moves.FINAL_GAMBIT, Moves.OBLIVION_WING, Moves.SPIRIT_SHACKLE, Moves.SHADOW_SNEAK,
+    Moves.SHADOW_CLAW, Moves.SHADOW_PUNCH, Moves.PARTING_SHOT, Moves.SUCKER_PUNCH,
+    Moves.NIGHT_SLASH, Moves.PUNISHMENT, Moves.LASH_OUT, Moves.RETALIATE,
+    Moves.NO_RETREAT, Moves.RAGE,
+  ];
+
+  const GHOST_TAG_MOVES = [
+    Moves.TRICK_OR_TREAT, Moves.PRESENT, Moves.TEATIME, Moves.CELEBRATE,
+    Moves.MEAN_LOOK, Moves.BLOCK, Moves.WILL_O_WISP, Moves.PERISH_SONG,
+    Moves.PAIN_SPLIT, Moves.TORCH_SONG, Moves.ENCORE, Moves.SING,
+    Moves.POLTERGEIST, Moves.INFERNAL_PARADE, Moves.SHADOW_BALL, Moves.ASTRAL_BARRAGE,
+    Moves.PHANTOM_FORCE, Moves.ASTONISH, Moves.CONFUSE_RAY, Moves.LICK,
+    Moves.SPIRIT_SHACKLE, Moves.SPECTRAL_THIEF, Moves.NIGHT_SHADE, Moves.NIGHTMARE,
+    Moves.BITTER_MALICE, Moves.SPARKLING_ARIA, Moves.RELIC_SONG, Moves.ECHOED_VOICE,
+    Moves.ATTRACT, Moves.CAPTIVATE, Moves.HAPPY_HOUR,
+  ];
+
+  const MASK_MOVES = [
+    Moves.SUBSTITUTE, Moves.TRANSFORM, Moves.MIMIC, Moves.ROLE_PLAY,
+    Moves.CAMOUFLAGE, Moves.SMOKESCREEN, Moves.FEINT_ATTACK, Moves.FALSE_SURRENDER,
+    Moves.COPYCAT, Moves.TRICK, Moves.SWITCHEROO, Moves.HIDDEN_POWER,
+    Moves.SECRET_POWER, Moves.FOUL_PLAY, Moves.SNATCH, Moves.THIEF,
+    Moves.COVET, Moves.SPECTRAL_THIEF, Moves.DOODLE, Moves.REFLECT_TYPE,
+    Moves.CONVERSION, Moves.CONVERSION_2, Moves.DOUBLE_TEAM, Moves.MINIMIZE,
+    Moves.DETECT, Moves.FORESIGHT, Moves.MIRACLE_EYE, Moves.FAKE_OUT,
+    Moves.FAKE_TEARS, Moves.ASSIST, Moves.ME_FIRST, Moves.SKETCH, Moves.SHADOW_SNEAK,
+  ];
+
+  const OJAMA_MOVES = [
+    Moves.DISABLE, Moves.ENCORE, Moves.TAUNT, Moves.TORMENT,
+    Moves.SPITE, Moves.KNOCK_OFF, Moves.FAKE_OUT, Moves.EMBARGO,
+    Moves.HEAL_BLOCK, Moves.THROAT_CHOP, Moves.SPIKES, Moves.STEALTH_ROCK,
+    Moves.STICKY_WEB, Moves.TOXIC_SPIKES, Moves.TOXIC, Moves.CONFUSE_RAY,
+    Moves.SWAGGER, Moves.FLATTER, Moves.ATTRACT, Moves.CAPTIVATE,
+    Moves.INFESTATION, Moves.WRAP, Moves.BIND, Moves.SAND_TOMB,
+    Moves.WHIRLPOOL, Moves.FIRE_SPIN, Moves.LEECH_SEED, Moves.IMPRISON,
+    Moves.FAIRY_LOCK, Moves.MEAN_LOOK, Moves.SPIDER_WEB, Moves.JAW_LOCK, Moves.OCTOLOCK,
+  ];
+
+  const TOON_MOVES = [
+    Moves.DAZZLING_GLEAM, Moves.MOONBLAST, Moves.SPARKLY_SWIRL, Moves.GLITZY_GLOW,
+    Moves.METRONOME, Moves.BABY_DOLL_EYES, Moves.DISARMING_VOICE, Moves.PLAY_ROUGH,
+    Moves.PRESENT, Moves.MOONLIGHT, Moves.CELEBRATE, Moves.DECORATE,
+    Moves.SPLASH, Moves.FLEUR_CANNON, Moves.FAIRY_WIND, Moves.FAIRY_LOCK,
+    Moves.DRAINING_KISS, Moves.SWEET_KISS, Moves.LOVELY_KISS, Moves.CHARM,
+    Moves.LIGHT_OF_RUIN, Moves.DIAMOND_STORM, Moves.NATURE_POWER,
+    Moves.REVELATION_DANCE, Moves.FIERY_DANCE, Moves.QUIVER_DANCE, Moves.PETAL_DANCE,
+    Moves.TEETER_DANCE, Moves.FLORAL_HEALING, Moves.FLOWER_SHIELD, Moves.FLOWER_TRICK,
+    Moves.ALLURING_VOICE,
+  ];
+
+  const MAGNET_MOVES = [
+    Moves.MAGNET_BOMB, Moves.MAGNET_RISE, Moves.MAGNETIC_FLUX, Moves.DISCHARGE,
+    Moves.THUNDER_CAGE, Moves.ANCHOR_SHOT, Moves.VOLT_SWITCH, Moves.CHARGE,
+    Moves.ION_DELUGE, Moves.ELECTROWEB, Moves.IRON_DEFENSE, Moves.THUNDER,
+    Moves.THUNDERBOLT, Moves.THUNDER_WAVE, Moves.THUNDER_SHOCK, Moves.THUNDER_PUNCH,
+    Moves.THUNDER_FANG, Moves.THUNDERCLAP, Moves.SPARK, Moves.VOLT_TACKLE,
+    Moves.RISING_VOLTAGE, Moves.PARABOLIC_CHARGE, Moves.WILD_CHARGE, Moves.SHOCK_WAVE,
+    Moves.SUPERCELL_SLAM, Moves.ELECTRIFY, Moves.ELECTRIC_TERRAIN, Moves.ZAP_CANNON,
+    Moves.ZING_ZAP, Moves.NUZZLE, Moves.PLASMA_FISTS,
+  ];
+
+  const AURA_MOVES = [
+    Moves.AURA_SPHERE, Moves.AURA_WHEEL, Moves.DRAGON_PULSE, Moves.DARK_PULSE,
+    Moves.WATER_PULSE, Moves.HEAL_PULSE, Moves.ORIGIN_PULSE, Moves.VACUUM_WAVE,
+    Moves.FORCE_PALM, Moves.FOCUS_BLAST, Moves.FOCUS_ENERGY, Moves.FOCUS_PUNCH,
+    Moves.LASER_FOCUS, Moves.SACRED_SWORD, Moves.SACRED_FIRE, Moves.SECRET_SWORD,
+    Moves.CALM_MIND, Moves.MEDITATE, Moves.DRAIN_PUNCH, Moves.CLOSE_COMBAT,
+    Moves.SPIRIT_BREAK, Moves.STORED_POWER, Moves.TERRAIN_PULSE, Moves.POWER_GEM,
+    Moves.VITAL_THROW, Moves.MIST_BALL, Moves.REVELATION_DANCE, Moves.JUDGMENT,
+    Moves.GEOMANCY, Moves.PSYSTRIKE,
+  ];
+
+  const FLYING_MOVES = [
+    Moves.FLY, Moves.BRAVE_BIRD, Moves.AERIAL_ACE, Moves.TAILWIND,
+    Moves.HURRICANE, Moves.AIR_SLASH, Moves.DUAL_WINGBEAT, Moves.SKY_ATTACK,
+    Moves.ROOST, Moves.WING_ATTACK, Moves.DRAGON_ASCENT, Moves.ACROBATICS,
+    Moves.AIR_CUTTER, Moves.GUST, Moves.FEATHER_DANCE, Moves.SKY_DROP,
+    Moves.SKY_UPPERCUT, Moves.BOUNCE, Moves.DRILL_PECK, Moves.FLOATY_FALL,
+    Moves.AEROBLAST, Moves.OBLIVION_WING, Moves.DEFOG, Moves.WHIRLWIND,
+    Moves.PECK, Moves.PLUCK, Moves.STEEL_WING, Moves.FLYING_PRESS,
+    Moves.BLEAKWIND_STORM, Moves.SPRINGTIDE_STORM, Moves.WILDBOLT_STORM, Moves.SANDSEAR_STORM,
+  ];
+
+  TIME_MOVES.forEach(id => tag(id, m => m.timeMove()));
+  UNION_MOVES.forEach(id => tag(id, m => m.unionMove()));
+  DARK_MAGIC_MOVES.forEach(id => tag(id, m => m.darkMagicMove()));
+  GADGET_MOVES.forEach(id => tag(id, m => m.gadgetMove()));
+  SERVANT_MOVES.forEach(id => tag(id, m => m.servantMove()));
+  GHOST_TAG_MOVES.forEach(id => tag(id, m => m.ghostMove()));
+  MASK_MOVES.forEach(id => tag(id, m => m.maskMove()));
+  OJAMA_MOVES.forEach(id => tag(id, m => m.ojamaMove()));
+  TOON_MOVES.forEach(id => tag(id, m => m.toonMove()));
+  MAGNET_MOVES.forEach(id => tag(id, m => m.magnetMove()));
+  AURA_MOVES.forEach(id => tag(id, m => m.auraMove()));
+  FLYING_MOVES.forEach(id => tag(id, m => m.flyingMove()));
+
+  for (const m of allMoves) {
+    if (!m) continue;
+    for (const [flag] of DUELMON_TAG_LABELS) {
+      if (m.hasFlag(flag)) {
+        m.localize();
+        break;
+      }
+    }
+  }
 }

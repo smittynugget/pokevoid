@@ -1,7 +1,7 @@
 import BattleScene from "../battle-scene";
 import MessageUiHandler from "./message-ui-handler";
 import { TextStyle, addTextObject } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import {Button} from "#enums/buttons";
 
 export default class EvolutionSceneHandler extends MessageUiHandler {

@@ -118,6 +118,8 @@ export default class Battle {
   public lastUsedPokeball: PokeballType | null;
   public playerFaints: number;
   public enemyFaints: number;
+  public lastAllyFaintTurnPlayer: integer;
+  public lastAllyFaintTurnEnemy: integer;
   public scene: BattleScene;
 
   public switchedOutPokemon: Set<number> = new Set();
@@ -150,6 +152,8 @@ export default class Battle {
     this.lastUsedPokeball = null;
     this.playerFaints = 0;
     this.enemyFaints = 0;
+    this.lastAllyFaintTurnPlayer = -1;
+    this.lastAllyFaintTurnEnemy = -1;
     this.switchedOutPokemon = new Set();
   }
 
@@ -579,11 +583,19 @@ export class FixedBattleConfig {
 }
 function getRandomTrainerFunc(trainerPool: (TrainerType | TrainerType[])[], randomGender: boolean = false, seedOffset: number  = 0): GetTrainerFunc {
   return (scene: BattleScene) => {
-    const rand = Utils.randSeedInt(trainerPool.length);
+    let effectivePool = trainerPool;
+    if (!scene.duelmonsEnabledForRun) {
+      effectivePool = trainerPool.filter(entry => {
+        const type = Array.isArray(entry) ? entry[0] : entry;
+        return type !== TrainerType.PEGASUS && type !== TrainerType.PEGASUS_2;
+      });
+      if (effectivePool.length === 0) effectivePool = trainerPool;
+    }
+    const rand = Utils.randSeedInt(effectivePool.length);
     const trainerTypes: TrainerType[] = [];
 
     scene.executeWithSeedOffset(() => {
-    for (const trainerPoolEntry of trainerPool) {
+    for (const trainerPoolEntry of effectivePool) {
       const trainerType = Array.isArray(trainerPoolEntry)
         ? Utils.randSeedItem(trainerPoolEntry)
         : trainerPoolEntry;
@@ -665,7 +677,8 @@ export const TRAINER_TYPES = {
       TrainerType.ARCHIE,
       TrainerType.CYRUS,
       TrainerType.GHETSIS,
-      TrainerType.LYSANDRE
+      TrainerType.LYSANDRE,
+      TrainerType.PEGASUS
     ],
     SECOND: [
       TrainerType.ROCKET_BOSS_GIOVANNI_2,
@@ -676,7 +689,8 @@ export const TRAINER_TYPES = {
       TrainerType.LYSANDRE_2,
       TrainerType.LUSAMINE_2,
       TrainerType.GUZMA_2,
-      TrainerType.ROSE_2
+      TrainerType.ROSE_2,
+      TrainerType.PEGASUS_2
     ]
   },
 
@@ -1364,7 +1378,7 @@ export function createSmittyBattle(scene: BattleScene, seed: number, isChaosMode
             const levels = scene.currentBattle.trainer.getPartyLevels(waveIndex);
             const level = levels[i] || levels[levels.length - 1];
             const pokemon = getSpeciesFilterRandomPartyMemberFunc(
-                species => species.baseTotal >= 540,
+                species => species.baseTotal >= 540 && species.generation !== 20,
                 TrainerSlot.TRAINER
             )(scene, level, strength);
             if (specificFormSlots.has(i)) {
@@ -1902,6 +1916,13 @@ function generateWavePlacementChart(waves: number[], eventType: string, maxWave:
         chart.push(`${i}-${i + 9}: ${row.join(' ')}`);
     }
     return chart;
+}
+
+export enum PathNodeContext {
+  BATTLE_NODE,
+  ITEM_REWARD_NODE,
+  MONEY_NODE,
+  SPECIAL_REWARD_NODE
 }
 
 export enum PathNodeType {
@@ -5325,9 +5346,16 @@ function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nod
     nodeType: parseInt(nodeTypeStr) as PathNodeType
   }));
 
-  const effectiveNodeOutcomes = scene.moveUpgradesEnabledForRun
-    ? nodeOutcomes
-    : nodeOutcomes.filter(o => o.nodeType !== PathNodeType.MOVE_UPGRADE && o.nodeType !== PathNodeType.LOW_TIER_MOVE_UPGRADE);
+  let effectiveNodeOutcomes = nodeOutcomes;
+  if (!scene.moveUpgradesEnabledForRun) {
+    effectiveNodeOutcomes = effectiveNodeOutcomes.filter(o => o.nodeType !== PathNodeType.MOVE_UPGRADE && o.nodeType !== PathNodeType.LOW_TIER_MOVE_UPGRADE);
+  }
+  if (!scene.statSwitchersEnabledForRun) {
+    effectiveNodeOutcomes = effectiveNodeOutcomes.filter(o => o.nodeType !== PathNodeType.STAT_SWITCHERS);
+  }
+  if (!scene.releaseItemsEnabledForRun) {
+    effectiveNodeOutcomes = effectiveNodeOutcomes.filter(o => o.nodeType !== PathNodeType.RELEASE_ITEMS);
+  }
 
   const totalWeight = effectiveNodeOutcomes.reduce((sum, outcome) => sum + outcome.weight, 0);
   if (!totalWeight) {

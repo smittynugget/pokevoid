@@ -46,5 +46,16 @@
   "magmaStorm": "熔岩风暴",
   "snapTrap": "捕兽夹",
   "thunderCage": "雷电囚笼",
-  "infestation": "骚扰"
+  "infestation": "骚扰",
+  "day": "白天",
+  "night": "夜晚",
+  "dawn": "黎明",
+  "dusk": "黄昏",
+  "cursed": "诅咒",
+  "seeded": "寄生种子",
+  "trapped": "束缚",
+  "yuTrapped": "束缚",
+  "saltCured": "盐腌",
+  "octolock": "蛸固",
+  "ingrain": "扎根"
 }

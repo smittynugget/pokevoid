@@ -6,7 +6,7 @@ import { Mode } from "#app/ui/ui.js";
 import i18next from "i18next";
 import { BattlePhase } from "./battle-phase";
 import { PostSummonPhase } from "./post-summon-phase";
-import { SummonMissingPhase } from "./summon-missing-phase";
+import { getSummonMissingPhase } from "./encounter-phase-cache";
 import { SwitchPhase } from "./switch-phase";
 import {RewardObtainedType} from "#app/ui/reward-obtained-ui-handler";
 import {modifierTypes} from "#app/modifier/modifier-type";
@@ -25,6 +25,12 @@ export class CheckSwitchPhase extends BattlePhase {
   start() {
     super.start();
 
+    const currentMode = this.scene.ui.getMode();
+    if (currentMode === Mode.LOOT_REWARD_SELECT || currentMode === Mode.MODIFIER_SELECT) {
+      this.scene.ui.setMode(Mode.MESSAGE).then(() => this.start());
+      return;
+    }
+
     const pokemon = this.scene.getPlayerField()[this.fieldIndex];
 
     if (this.scene.battleStyle === BattleStyle.SET) {
@@ -38,6 +44,7 @@ export class CheckSwitchPhase extends BattlePhase {
     }
 
     if (this.scene.field.getAll().indexOf(pokemon) === -1) {
+      const SummonMissingPhase = getSummonMissingPhase();
       this.scene.unshiftPhase(new SummonMissingPhase(this.scene, this.fieldIndex));
       super.end();
       return;
@@ -54,13 +61,15 @@ export class CheckSwitchPhase extends BattlePhase {
     }
     this.scene.ui.showText(i18next.t("battle:switchQuestion", { pokemonName: this.useName ? getPokemonNameWithAffix(pokemon) : i18next.t("battle:pokemon") }), null, () => {
       this.scene.ui.setMode(Mode.CONFIRM, () => {
-        this.scene.ui.setMode(Mode.MESSAGE);
-        this.scene.tryRemovePhase(p => p instanceof PostSummonPhase && p.player && p.fieldIndex === this.fieldIndex);
-        this.scene.unshiftPhase(new SwitchPhase(this.scene, this.fieldIndex, false, true));
-        this.end();
+        this.scene.ui.setMode(Mode.MESSAGE).then(() => {
+          this.scene.tryRemovePhase(p => p instanceof PostSummonPhase && p.player && p.fieldIndex === this.fieldIndex);
+          this.scene.unshiftPhase(new SwitchPhase(this.scene, this.fieldIndex, false, true));
+          this.end();
+        });
       }, () => {
-        this.scene.ui.setMode(Mode.MESSAGE);
-        this.end();
+        this.scene.ui.setMode(Mode.MESSAGE).then(() => {
+          this.end();
+        });
       });
     });
   }

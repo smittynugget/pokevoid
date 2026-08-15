@@ -1,0 +1,12 @@
+{
+  "title": "CHAMPION SELECT",
+  "instruction": "Select your Champion",
+  "locked": "LOCKED",
+  "essenceNeeded": "{{amount}} {{typeName}} Essence",
+  "mysteryChampion": "???",
+  "mysterySubtitle": "The Void Decides?!",
+  "randomDescription": "Random Champion",
+  "tooltip": {
+    "essenceRequiredDesc": "Spend essence to unlock this champion. To earn essences defeat Pokémon to gain their type."
+  }
+}

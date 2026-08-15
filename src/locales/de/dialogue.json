@@ -1086,6 +1086,35 @@
       "1": "Ich nehme an, es muss den Anschein haben, dass ich etwas Schreckliches tue.\n$Ich erwarte nicht, dass du es verstehst. Aber ich muss der Galar-Region grenzenlose Energie\n$bereitstellen, um ewigen Wohlstand zu gewährleisten."
     }
   },
+  "pegasus_boss_1": {
+    "encounter": {
+      "1": "Ah, ein neuer Herausforderer nähert sich meiner Burg...$Wie entzückend. Mir war so furchtbar langweilig seit dem Duellanten-Königreich.$Siehst du, mein Millenniumsauge erlaubt mir, die tiefsten Tiefen deiner Strategie zu durchschauen...$Jede Karte, die du hältst, jeden Zug, den du planst — ich habe bereits alles gesehen.$Nun denn... sollen wir dieses Schattenspiel beginnen?",
+      "2": "Willkommen, willkommen in meiner Welt der Illusionen!$Ich muss sagen, du hast es ziemlich weit geschafft für jemanden ohne ein Millenniums-Item.$Aber sag mir... glaubst du wirklich, dass du jemanden besiegen kannst, der alles sieht?$Meine Toon-Welt wartet, und meine Kreaturen brennen darauf zu spielen.$Mal sehen, ob du meiner Aufmerksamkeit würdig bist, hmm?",
+      "3": "Oh je, was für ein unerwarteter Gast!$Du erinnerst mich an einen Jungen, den ich einst kannte... töricht, mutig und vollkommen vorhersehbar.$Das Millenniumsauge hat mir unzählige Zukünfte gezeigt, und in jeder einzelnen...$...ist deine Niederlage absolut. Aber versuch wenigstens, es unterhaltsam zu machen, ja?"
+    },
+    "victory": {
+      "1": "Un...möglich! Das Millenniumsauge zeigte keinen Weg zu diesem Ergebnis!$Wie konntest du... meine perfekten Strategien... meine Toon-Welt...$Vielleicht habe ich die Kraft unterschätzt, die durch dich fließt.$Nun gut. Du hast dir diesen Sieg verdient... aber vergiss nicht — im Schattenreich ist nichts jemals wirklich vorbei.",
+      "2": "Nein! Das kann nicht sein!$Meine Visionen... sie waren so klar... so absolut...$Du hast meine Illusionen mit nichts als roher Entschlossenheit zerschmettert.$Ich gebe nach... vorerst. Aber die Schatten haben ein langes Gedächtnis, werter Herausforderer."
+    },
+    "defeat": {
+      "1": "Wie ich vorhergesehen habe... dein Geist war ein offenes Buch von deinem allerersten Zug an.$Jeder Gedanke, jedes Zögern — das Millenniumsauge enthüllte alles.$Nun denn, dein Strafspiel wartet...$Sollen wir noch ein Spiel spielen? Ich genieße es so sehr, die Hoffnung aus den Augen eines Herausforderers schwinden zu sehen.",
+      "2": "Ooh, wie köstlich! Deine Verzweiflung ist absolut exquisit!$Hast du wirklich geglaubt, du könntest den Schöpfer der Duelmonster selbst herausfordern?$Das Schattenreich heißt dich mit offenen Armen willkommen...$Keine Sorge — die Zeit vergeht dort anders. Du wirst die Ewigkeit kaum bemerken."
+    }
+  },
+  "pegasus_boss_2": {
+    "encounter": {
+      "1": "Ah, du bist zurückgekehrt! Wie hartnäckig von dir.$Ich muss gestehen, unsere letzte Begegnung hat einen bleibenden Eindruck hinterlassen...$Diesmal habe ich etwas wahrhaft Besonderes vorbereitet. Meine Toons haben trainiert, weißt du.$Und ich habe Geheimnisse des Millenniumsauges entschlüsselt, die ich nie zuvor zu nutzen wagte.$Die Leere zwischen unseren Welten wird dünner... spürst du es? Dies wird unser letztes Spiel.",
+      "2": "Nun, nun... derjenige, der meinen Visionen trotzte, kehrt zurück.$Ich werde nicht zweimal denselben Fehler machen, das versichere ich dir.$Mein Tausendäugiges Restrikt sieht alles, bindet alles, verschlingt alles...$Die Schatten selbst verneigen sich vor seinem Blick.$Komm — lass uns beenden, was wir im Duellanten-Königreich begonnen haben!"
+    },
+    "victory": {
+      "1": "Du hast sogar meine unmöglichsten Visionen übertroffen...$Das Millenniumsauge... es weint über das, was es nicht begreifen kann.$Vielleicht hat die Leere weiser gewählt als ich es je könnte.$Nimm deinen Sieg, Champion. Du hast etwas jenseits bloßer Macht verdient — du hast meinen Respekt verdient.",
+      "2": "Unmöglich... zweimal jetzt... ZWEIMAL!$Die Schatten weichen zurück... das Auge wird trüb...$Du bist etwas, das die Millenniums-Items nie vorhergesagt haben.$Geh voran. Welches Schicksal auch immer dich erwartet... es fürchtet dich mehr als ich es je könnte."
+    },
+    "defeat": {
+      "1": "Das Millenniumsauge sieht alle Enden, werter Herausforderer.$Und deines wurde in Schatten geschrieben, lange bevor du je deine erste Hand gezogen hast.$Ruhe nun in meiner Toon-Welt... es ist recht gemütlich, sobald du aufhörst zu schreien.$Vielleicht in einer anderen Zeitlinie, einem anderen Zyklus... aber nicht in diesem. Nie in diesem.",
+      "2": "Hast du wirklich geglaubt, das Ergebnis würde sich beim zweiten Mal ändern?$Das Auge wird stärker mit jeder Seele, die es beansprucht...$Deine Energie wird meine Visionen für Äonen speisen.$Leb wohl, kleiner Duellant. Die Schatten umhüllen dich nun."
+    }
+  },
   "star_boss_penny_1": {
     "encounter": {
       "1": "Ich bin Team Stars Big Boss. Mein Name ist Cassiopeia...$Die Gründerin von Team Star ist kampfbereit! Verneigt euch vor meiner unermesslichen Kraft!"
@@ -1749,7 +1778,8 @@
       "2": "…Wir haben die Kontrolle verloren. Beim nächsten Mal fordere ich dich\n$zu einem Fossilien-Ausgrabungswettbewerb heraus.",
       "2_female": "…Wir haben die Kontrolle verloren. Beim nächsten Mal fordere ich dich\n$zu einem Fossilien-Ausgrabungswettbewerb heraus.",
       "3": "Mit deinem Können ist es nur natürlich, dass du gewinnst.",
-      "4": "W-was?! Das kann nicht sein! Selbst das war nicht genug?"
+      "4": "W-was?! Das kann nicht sein! Selbst das war nicht genug?",
+      "5": "Ich hab's vermasselt."
     },
     "defeat": {
       "1": "Siehst du? Ich bin stolz auf meinen steinigen Kampfstil!",
@@ -3092,8 +3122,6 @@
       "12": "Die Dunkelheit war erst der Anfang. Jetzt droht die Leere, alles zu verschlingen. Kämpfe gegen mich, um der Realität willen!"
     },
     "victory": {
-      "1": "Hah! Immer noch nicht auf meinem Niveau! Warte... warum sehen meine Pokémon so... verblasst aus?",
-      "2": "Du wirst besser, aber... der Siegesrausch fühlt sich hohl an. Was passiert hier?",
       "1": "Was? Ich habe verloren? Unmöglich! Mein Team fühlt sich... irgendwie schwächer an.",
       "2": "Du hast mich übertroffen? Der Kampf fühlte sich... unwirklich an. Wie ein verblassender Traum.",
       "3": "Deine Stärke... sie verankert die Realität. Wir brauchen mehr von deinen Kämpfen.",
@@ -4702,6 +4730,18 @@
       "10": "Ich... ich kann kaum noch das Gleichgewicht halten... Die Leere verschlingt alle Ordnung. Bitte... gewinne...",
       "11": "Das ist eine Katastrophe... Die Welt verfällt dem Chaos. Du musst das Blatt gegen die Leere wenden!",
       "12": "Das Gleichgewicht... es ist verloren. Die Leere... sie ist zu mächtig. Gewinne... oder die Welt wird für immer chaotisch..."
+    }
+  },
+  "tutorial_blue": {
+    "encounter": {
+      "1": "Die Welt geht unter, Red.\nEs gibt nichts mehr, was wir tun können."
+    },
+    "void_power": {
+      "1": "Lass mich dir die wahre Macht des Void zeigen!"
+    },
+    "defeat": {
+      "1": "Du hast mich besiegt, Red... Ich wünschte nur, du hättest es geschafft, als es wirklich darauf ankam...",
+      "2": "Dieser Ort ist nicht echt. Der Void hat dich hier gefangen, damit du nie dem gegenübertreten musst, was kommt. Lass ihn nicht gewinnen. Wach auf. WACH AUF!"
     }
   }
 }

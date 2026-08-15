@@ -175,17 +175,6 @@
         "2":"Questo ti premia con ΩORO e protegge dalla perdita di dati."
       }
     },
-    "bounties": {
-      "title": "Sistema di Taglie",
-      "text": { 
-        "1":"Inserisci codici di 6 lettere nella console per attivare le Taglie.",
-        "2":"Le Taglie sono MISSIONI che ti permettono di guadagnare ΩORO/ΩOGGETTI e sono completamente riutilizzabili dopo il completamento!"
-      }
-    },
-    "dailyBounty": {
-      "title": "Taglia Giornaliera!",
-      "text": "Una nuova taglia giornaliera è disponibile! Completala per guadagnare ΩORO/ΩOGGETTI. Il codice è già nella console, attivalo semplicemente!"
-    },
     "discord": {
       "title": "Discord e Supporto",
       "text": "Unisciti al Discord di Smittyverse per discussioni, segnalazioni di bug e community! Trova codici di taglia e connettiti con altri giocatori."
@@ -383,6 +372,13 @@
     "title": { "1": "NUOVA Modalità FTL" },
     "text": { "1": "FTL (Più Veloce della Luce) è la nuova variante caos più veloce! Salta direttamente nel caos!" }
   },
+  "firstTimeFtlSkillTree": {
+    "title": { "1": "Scegli i tuoi Pokémon", "2": "Firma e Generale" },
+    "text": {
+      "1": "Il tuo primo viaggio inizia ora. Usa l’albero delle abilità per scegliere 2 Pokémon per questa run.",
+      "2": "I nodi con l’icona Draft offrono Pokémon. Icona invertita = opzione Pokémon Firma."
+    }
+  },
   "championSelectEssence": {
     "title": { "1": "Selezione Campione", "2": "Sistema di Essenza", "3": "Aumentare il Livello dei Campioni" },
     "text": {
@@ -444,6 +440,103 @@
       "5": "UOVA: Ottieni uova dal gacha delle uova!",
       "6": "NEGOZIO: Accesso rapido al negozio!",
       "7": "MAPPA: Mostra il tuo percorso attuale nel Caos!"
+    },
+    "smitomTip": {
+      "tutorialBattleType": {
+        "title": "Sovrascrittura di tipo!",
+        "1": "Brutto abbinamento di tipo! Usa il potere del vuoto per cambiare il nostro tipo — le leggi della natura non valgono più qui."
+      },
+      "tutorialBattleHeal": {
+        "title": "Nuove abilità del vuoto",
+        "1": "Imposta questo come nostra passiva — rigenerazione HP ogni turno. Restare vivi è il primo passo per vincere. Di solito."
+      },
+      "tutorialBattleXM": {
+        "title": "Il moveset proibito",
+        "1": "Usa velocemente la corruzione del vuoto a tuo vantaggio! Abbraccia il potere proibito per insegnare qualsiasi mossa al tuo pokémon."
+      },
+      "tutorialBattleGlitchReward": {
+        "title": "ALLERTA VUOTO",
+        "1": "Non va bene! Prendi velocemente la forma glitch di {{pokemonName}} dal VUOTO!"
+      },
+      "tutorialBattleEvolveGlitch": {
+        "title": "EVOLVI!",
+        "1": "EVOLVI {{pokemonName}} NELLA SUA NUOVA FORMA GLITCH ORA!!"
+      },
+      "starterSelect": {
+        "title": "Fusione Infinita ha chiamato...",
+        "1": "Vogliono farti credere che siano solo firme e leggendari. Ma guarda più da vicino. Le fusioni. Sono INFINITE.",
+        "2": "*agita il dito metaforico verso di te, come un gorilla impazzito* Capisci cosa significa?",
+        "3": "Significa che ogni combinazione possibile esiste. OGNI. Kenney Rogers. SINGOLA. Qualcuno ha dovuto crearle tutte. Oppure... qualcosa l'ha fatto..."
+      },
+      "skillTreeFirstNode": {
+        "title": "Bonus Casuale GRATIS",
+        "1": "Dopo aver scelto il tuo primo nodo, appaiono nodi GRATUITI!",
+        "2": "GRATUITO — come questo gioco! 3 anni di vita. Smitty avrebbe potuto fare un gioco indie tranquillamente in quel tempo.",
+        "3": "Oh smitty, dolce creatura estiva, non avevi detto che ci sarebbero voluti 6 mesi al massimo?",
+        "4": "...Smitty?",
+        "5": "Smitty sbatti le palpebre due volte se hai bisogno di aiuto...",
+        "6": "Ha sbattuto le palpebre...",
+        "7": "Ma sì, i nodi sono gratuiti! yay nodi gratuiti!"
+      },
+      "skillTreeGlitchFormNode": {
+        "title": "Forma Glitch Sigillata",
+        "1": "Raccogli abbastanza abilità e sbloccherai il nodo sigillato — dandoti accesso a una Forma Glitch per questa partita!",
+        "2": "Raccogli abilità. Ottieni NUOVA FORMA!"
+      },
+      "wave35Shared": {
+        "title": "NEW ITEM GET!",
+        "pretext": "Abbiamo trovato un nuovo oggetto nel void! {{featureName}}! Cerchiamo su internet cosa fa.",
+        "posttext": "Se sei curioso, provalo. Puoi anche disattivarli nelle impostazioni, nel caso non ti facciano il solletico come te lo faccio io."
+      },
+      "wave35StatSwitchers": {
+        "featureName": "Scambio Statistiche",
+        "1": "Ridistribuisci le statistiche base di qualsiasi Pokémon. Scyther con livello da mago nell'attacco speciale. Machamp con velocità che rivaleggia con Jolteon. Gengar con spessore che supera Snorlax! La tua squadra, le tue regole. Il void ti ha appena dato il pannello admin. Ti suggerisco di abusarne. Preferibilmente irresponsabilmente. E sì, spessore è una parola, l'ho cercata."
+      },
+      "wave35MoveUpgrades": {
+        "featureName": "Potenziamenti Mosse",
+        "1": "Benvenuto ai Potenziamenti Mosse! Rendi Terremoto un attacco speciale. Dai priorità a Geloraggio. Dai a Tuono una possibilità di congelamento. Le tue mosse non sono scolpite nella pietra — sono scolpite nel void. Ti piace? L'ho scritto ieri, 'scolpite nel void', perché siamo nel void, non nella pietra, questo non è Doctor Stone dai. Quindi ha senso. Abbastanza arguto no? Personalmente mi piace. Scolpite nel void suona",
+        "2": "--- 2 ORE DOPO ---",
+        "3": "Probabilmente livello Shakespeare ad essere onesti. Bene, me lo sono tolto dal sistema."
+      },
+      "wave35ReleaseItems": {
+        "featureName": "Oggetti di Rilascio",
+        "1": "Ricordi quel film dove il robot dice 'Tornerò'? I Release Items sono così tranne che il robot non torna. I suoi pezzi vanno in un robot migliore. E quel robot NEMMENO dice 'Tornerò' perché è troppo impegnato a essere inarrestabile. Tipi, statistiche, abilità o mosse — possono essere trasferiti! Nessun sequel necessario."
+      },
+      "shinyPower": {
+        "title": "Un Raro Esemplare Emerge",
+        "1": "Osservate: il Pokémon cromatico, all'inizio della partita, riceve quattro percorsi. Il primo preserva la forma originale. Due offrono nuove abilità con statistiche ridistribuite. L'ultimo sostituisce tutto il moveset con attacchi tematici di tipo.",
+        "2": "In ogni variante alternativa, quattro delle sue statistiche vengono scambiate — un adattamento notevole. Il cromatico che entra nella partita raramente è lo stesso che la finisce. La natura guarisce. Specificamente, la versione del Vuoto della natura. Il che è, probabilmente, l'opposto di guarire."
+      },
+      "rankUp": {
+        "title": "ABBRACCIARE o RIMODELLARE?",
+        "1": "Mio zio collezionava quelle bottigliette di shampoo degli alberghi. Un intero scaffale. Non ne ha mai aperta una. Le guardava e basta. Diceva che era un investimento. Ora è in prigione — non correlato, probabilmente — ma il principio regge. Cammini nel Vuoto, raccogli roba. Non bottino, esattamente. L'energia oscura. La corruzione. La pellicola disgustosa che si stacca da tutto ciò che sconfiggi. Non svanisce quando vinci.. L'hai raccolta. Ogni combattimento aggiunge uno strato. Come le lasagne, tranne che il formaggio è malvagio e la nonna di nessuno le ha fatte.",
+        "2": "Quando si attiva, hai due scelte — Abbracciare: l'energia del Vuoto si riversa all'interno invece di distruggere. Stesso Pokémon, stesso tipo, stesse mosse, anima leggermente più oscura. Ciò che era già forte diventa più forte. Con ogni Abbracciare l'energia oscura si approfondisce, dando origine a una forma con sfumature del Vuoto, un aspetto che l'abisso quasi chiamerebbe suo. Rimodellare: dove Abbracciare mantiene la forma intatta, Rimodellare frantuma il confine tra specie. Usa la corruzione per piegare la realtà fino a che il tuo partner si trova in un nuovo guscio — le statistiche ricevono lo stesso boost di Abbracciare, ma tipo e abilità cambiano. Ciò che li rendeva pericolosi sopravvive al rimodellamento. Dove i Pokémon normali sopportano il tocco del Vuoto, i Duelmon lo accumulano — la corruzione si accumula nelle loro anime fino a che il loro ondata dell'anima unico esplode, la loro evoluzione proibita, garantita a certi livelli. I Pokémon normali guadagnano ondate dell'anima casualmente al level-up o tramite taglie. Le ondate dell'anima sono fantastiche, no? Come le bottigliette di shampoo degli alberghi — mio zio apprezzerebbe sicuramente."
+      },
+      "yuMovePhase": {
+        "title": "Tecnica Maledetta",
+        "1": "\"In tutto il Cielo e la Terra, io solo sono l'onorato.\" Il Vuoto ha detto questo quando ha sigillato gli attacchi firma del tuo Duelmon nel regno delle ombre. Parole audaci da qualcosa che ha dimenticato che le tecniche maledette possono essere invertite. Sconfiggi nemici con il tuo Duelmon, sali di livello, e POTERE DELLE OMBRE può dissigillare tre mosse proibite — due dal pool maledetto del tuo Duelmon, una dal regno delle ombre più ampio.",
+        "2": "Le taglie attivano Espansione del Dominio immediatamente — senza bisogno di salire di livello. Il regno delle ombre non è la prigione che il Vuoto crede. Il Vuoto ha solo immagazzinato tutte le cose buone lì per sbaglio. Hollow Purple? Più come Hollow Vuoto. Il tuo Duelmon si riprende le sue tecniche."
+      },
+      "altBuild": {
+        "title": "IMPOSSIBILE!!!",
+        "1": "IMPOSSIBILE. Quel livello di potenza — non è — lo scouter non può avere ragione. Il loro LEGAME frantuma ogni limite — la loro POTENZA potenziata in due statistiche, tipo RISCRITTO, abilità SCAMBIATE, mosse SOSTITUITE, una forma completamente nuova che la mia attrezzatura rifiuta di classificare! Magikarp può diventare Dragonborn. Acqua e Drago. PER L'AMOR DI DIO — È UN MAGIKARP. E non è solo il patetico pesce pagliaccio — Solrock diventa Costellazione del Vuoto, Lunatone diventa Tessitore di Sogni — SONO SOLO PICCOLE PIETRE — UNA NON È NEMMENO COSÌ ARANCIONE! Il loro LEGAME frantuma limiti di cui non sapevo l'esistenza. Questi esseri non seguono l'evoluzione normale — hanno tracciato un percorso evolutivo diverso. Salgono di rango invece. Continuamente. Dieci volte. Non è possibile — no il Principe di tutti i Saiyan NON ACCETTERÀ QUESTO.",
+        "2": "E al rango dieci — cos'È questo?! SBLOCCANO NUOVE ABILITÀ? Uno su un Milione? Dominio del Leviatano? Non dovrebbero esistere. Il legame tra campione e partner sovrascrive la realtà stessa — e ce ne sono ALTRI là fuori, ogni legame riscrivendo per cosa queste specie sono state costruite. CHE VADA TUTTO ALL'INFERNO! COME POSSO IO, UN GUERRIERO DI RAZZA SUPERIORE, ESSERE SUPERATO?! KAKAROTH!!!!!"
+      },
+      "smittyEncounter": {
+        "title": "!!!ALLARME RILEVAMENTO!!!",
+        "1": "Allarme! Firme di radiazione in aumento! Letture di autoimportanza a livelli che stanno rompendo i miei strumenti! Scansionando la fonte — la densità di arroganza da sola genera interferenze! Qualcosa si avvicina e ogni metrica che ho dice che dovremmo essere terrorizzati! Solo un tipo di essere irradia così — il tipo che si metterebbe nel proprio gioco, si darebbe una squadra ridicola e la chiamerebbe contenuto.",
+        "2": "Incrociando firme del Vuoto... questo essere potrebbe essere la fonte del Vuoto stesso. O — ri-scansionando — potrebbe essere un pezzo rotto del Vuoto che ha acquisito forma fisica. I suoi Pokémon non sono catturati né allenati. Si manifestano direttamente dall'energia del Vuoto. Campione, ho bisogno che tu mi ascolti: possiamo morire qui. Davvero morire. Per favore, sii pronto."
+      },
+      "postRunWin": {
+        "title": "Grazie Per Avercela Fatta",
+        "1": "Hai vinto. Ho visto tutto. Ogni momento critico, ogni scambio intelligente, ogni momento che poteva andare storto e non è andato storto perché tu l'hai impedito. Il Vuoto è ancora qui ma per una partita, l'hai battuto.",
+        "2": "Nuove modalità, missioni e sfide si stanno sbloccando. Il gioco si apre dopo questo. Ma prima di correre alla prossima cosa — sappi che vincere una partita nel Vuoto significa qualcosa. Significa che la tua squadra era forte e le tue decisioni erano giuste. Sarò qui per la prossima. E per quella dopo. Adesso possiamo finalmente essere amici. Cosa. Perché mi guardi così — è come in Persona, devi fare 40 ore di quest secondarie prima che il compagno si fidi di te. Ora allora, andiamo a caccia di ombre — che ne dici, confidant rango 1 bestie?"
+      },
+      "journeyQuestShop": {
+        "title": "La Modalità Viaggio attende!",
+        "1": "Hai sbloccato la Missione Cattura Starter — il tuo biglietto per la Modalità Viaggio! Vai all’OmegaShop per attivarla.",
+        "2": "Una volta attivata, cattura 5 Pokémon in qualsiasi partita per completarla e sbloccare la Modalità Viaggio!"
+      }
     }
   }
 }

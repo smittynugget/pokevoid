@@ -1,6 +1,5 @@
 import {Button} from "#app/enums/buttons";
 import {SettingKeyboard} from "#app/system/settings/settings-keyboard";
-
 const cfg_keyboard_qwerty = {
   padID: "default",
   padType: "keyboard",
@@ -207,6 +206,8 @@ const cfg_keyboard_qwerty = {
     [SettingKeyboard.Button_Toggle_Perma_Bar]: Button.TOGGLE_PERMA_BAR,
     [SettingKeyboard.Button_Toggle_Player_Bar]: Button.TOGGLE_PLAYER_BAR,
     [SettingKeyboard.Button_Toggle_Foe_Bar]: Button.TOGGLE_FOE_BAR,
+    [SettingKeyboard.Button_Replay]: Button.REPLAY,
+    [SettingKeyboard.Button_Toggle_Signature]: Button.TOGGLE_SIGNATURE,
   },
   default: {
     KEY_ARROW_UP: SettingKeyboard.Button_Up,
@@ -231,7 +232,7 @@ const cfg_keyboard_qwerty = {
     KEY_A: SettingKeyboard.Alt_Button_Left,
     KEY_B: SettingKeyboard.Button_Toggle_Player_Bar,
     KEY_D: SettingKeyboard.Alt_Button_Right,
-    KEY_H: -1,
+    KEY_H: SettingKeyboard.Button_Toggle_Signature,
     KEY_I: SettingKeyboard.Button_Toggle_Foe_Bar,
     KEY_J: -1,
     KEY_K: -1,
@@ -239,7 +240,7 @@ const cfg_keyboard_qwerty = {
     KEY_M: SettingKeyboard.Alt_Button_Menu,
     KEY_O: SettingKeyboard.Button_Toggle_Perma_Bar,
     KEY_P: SettingKeyboard.Button_Voidex,
-    KEY_Q: -1,
+    KEY_Q: SettingKeyboard.Button_Replay,
     KEY_S: SettingKeyboard.Alt_Button_Down,
     KEY_T: SettingKeyboard.Alt_Button_Cycle_Form,
     KEY_W: SettingKeyboard.Alt_Button_Up,
@@ -258,7 +259,7 @@ const cfg_keyboard_qwerty = {
     KEY_9: -1,
     KEY_CTRL: -1,
     KEY_DEL: -1,
-    KEY_END: -1,
+    KEY_END: SettingKeyboard.Button_Cancel,
     KEY_F1: -1,
     KEY_F2: -1,
     KEY_F3: -1,

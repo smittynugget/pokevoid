@@ -1,5 +1,5 @@
 import BattleScene from "../battle-scene";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import UiHandler from "./ui-handler";
 import {Button} from "#enums/buttons";
 import { EggHatchPhase } from "#app/phases/egg-hatch-phase.js";
@@ -32,6 +32,7 @@ export default class EggHatchSceneHandler extends UiHandler {
     this.getUi().showText("", 0);
 
     this.scene.setModifiersVisible(false);
+    this.scene.ui.setReplayHudSuppressed(true);
 
     return true;
   }
@@ -55,5 +56,6 @@ export default class EggHatchSceneHandler extends UiHandler {
     super.clear();
     this.eggHatchContainer.removeAll(true);
     this.getUi().hideTooltip();
+    this.scene.ui.setReplayHudSuppressed(false);
   }
 }

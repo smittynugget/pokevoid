@@ -1,5 +1,5 @@
 import { FormModalUiHandler } from "./form-modal-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import BattleScene from "../battle-scene";
 import { ModalConfig } from "./modal-ui-handler";
 import { GameDataType } from "../enums/game-data-type";
@@ -349,13 +349,12 @@ export default class ImportDataFormUiHandler extends FormModalUiHandler {
     }
 
     private onCancel(): void {
-        console.log("Import cancelled");
         this.removeFileInput();
         this.clear();
         if(this.isModImport) {
             this.getUi().setMode(Mode.TITLE);
         } else {
-            this.getUi().setMode(Mode.MENU);
+            this.getUi().revertMode();
         }
     }
 

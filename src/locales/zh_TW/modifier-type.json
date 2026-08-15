@@ -67,11 +67,11 @@
       "description": "Increases all party members' level by {{levels}}."
     },
     "PokemonBaseStatBoosterModifierType": {
-      "description": "增加持有者的{{statName}}10%，個體值越高堆疊\n上限越高。"
+      "description": "增加持有者的{{statName}}8%，個體值越高堆疊\n上限越高。"
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "便宜",
-      "description": "增加持有者的{{statName}}1%。"
+      "description": "增加持有者的{{statName}}3%。"
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "所有寶可夢完全恢復HP。"
@@ -410,7 +410,7 @@
       "statLabel": "XM（任意招式學習器）"
     },
     "AnyTmModifierTypeWithInfo": {
-      "name": "++XM{{moveId}} - {{moveName}}++",
+      "name": "XM{{moveId}} - {{moveName}}",
       "description": "讓任何寶可夢學會{{moveName}}\n(按住C鍵或Shift鍵查看更多資訊)。",
       "statLabel": "XM（任意招式學習器）"
     },
@@ -708,7 +708,8 @@
       "name": "精華",
       "shopName": "{{type}}精華",
       "description": "使用4個代替釋放寶可夢來獲得釋放道具，或與收藏家交換獎勵。",
-      "statLabel": "精華"
+      "statLabel": "精華",
+      "tooltipDescription": "賦予所選寶可夢1個{{type}}精華。\n\n精華用於冠軍技能升級、作為放生替代品（需4個）和收藏家交換。"
     },
     "PermaCollectedTypeModifierType": {
       "name": "收集的精華",
@@ -874,6 +875,7 @@
     "NONE": "無",
     "ABOMASITE": "暴雪王進化石",
     "ABSOLITE": "阿勃梭魯進化石",
+    "ABSOLITE_Z": "阿勃梭魯進化石 Z",
     "AERODACTYLITE": "化石翼龍進化石",
     "AGGRONITE": "波士可多拉進化石",
     "ALAKAZITE": "胡地進化石",
@@ -890,6 +892,7 @@
     "DIANCITE": "蒂安希進化石",
     "GALLADITE": "艾路雷朵進化石",
     "GARCHOMPITE": "烈咬陸鯊進化石",
+    "GARCHOMPITE_Z": "烈咬陸鯊進化石 Z",
     "GARDEVOIRITE": "沙奈朵進化石",
     "GENGARITE": "耿鬼進化石",
     "GLALITITE": "冰鬼護進化石",
@@ -901,6 +904,7 @@
     "LATIOSITE": "拉帝歐斯進化石",
     "LOPUNNITE": "長耳兔進化石",
     "LUCARIONITE": "路卡利歐進化石",
+    "LUCARIONITE_Z": "路卡利歐進化石 Z",
     "MANECTITE": "雷電獸進化石",
     "MAWILITE": "大嘴娃進化石",
     "MEDICHAMITE": "恰雷姆進化石",
@@ -948,6 +952,21 @@
     "DRAMPITE": "老翁龍進化石",
     "FALINKSITE": "列陣兵進化石",
     "ZERAORITE": "捷拉奧拉進化石",
+    "RAICHUITE_X": "雷丘進化石 X",
+    "RAICHUITE_Y": "雷丘進化石 Y",
+    "CHIMECHOITE": "風鈴鈴進化石",
+    "STARAPTORITE": "姆克鷹進化石",
+    "HEATRANITE": "席多藍恩進化石",
+    "DARKRAITE": "達克萊伊進化石",
+    "GOLURKITE": "泥偶巨人進化石",
+    "MEOWSTITE": "超能妙喵進化石",
+    "CRABOMINITE": "好勝毛蟹進化石",
+    "GOLISOPODITE": "具甲武者進化石",
+    "MAGEARNITE": "瑪機雅娜進化石",
+    "SCOVILLAINITE": "狠辣椒進化石",
+    "GLIMMORITE": "晶光花進化石",
+    "TATSUGURITE": "米立龍進化石",
+    "BAXCALIBURITE": "戟脊龍進化石",
 
     "BLUE_ORB": "靛藍色寶珠",
     "RED_ORB": "硃紅色寶珠",
@@ -1067,10 +1086,16 @@
     "uses": "次",
     "glitchPieceCost": "*需要消耗1個故障碎片",
     "essenceAlternativeCost": "如果該寶可夢擁有4個以上精華，則可改為消耗精華。",
+    "abilityReplaceNote": "替換寶可夢當前的特性。不可疊加。",
+    "passiveAbilityReplaceNote": "替換寶可夢當前的被動特性。不可疊加。",
     "permaMoney": "Ω金幣",
     "permaItem": "Ω道具",
     "moreInfo": "(按住C鍵或Shift鍵查看更多資訊)",
     "morePokeInfo": "(按 P / Shift 查看資訊)",
-    "upgrade": "升級"
-  }
+    "upgrade": "升級",
+    "partyAbilityStacksHint": "(可疊加！)"
+  },
+  "permaWaveTooltip": "[color=#ffa500]{{count}}[/color]波後消失 — 第50波之後開始倒計時",
+  "permaUseTooltip": "剩餘[color=#ffa500]{{count}}[/color]次使用 — 第50波之後開始倒計時",
+  "permaRemoveHint": "按10次移除"
 }

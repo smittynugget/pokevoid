@@ -9,10 +9,12 @@ import * as Utils from "#app/utils";
 import {ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
 import {TrainerVictoryPhase} from "#app/phases/trainer-victory-phase";
 import { modifierTypes } from "../modifier/modifier-type.js";
+import { PokemonBattleTooltipUtils } from "#app/ui/pokemon-battle-tooltip-utils";
 
 export class BattleEndPhase extends BattlePhase {
   start() {
     super.start();
+    this.scene._inBattleTurn = false;
 
     this.scene.currentBattle.addBattleScore(this.scene);
     const isTrainer = this.scene.currentBattle.battleType == BattleType.TRAINER;
@@ -95,6 +97,8 @@ export class BattleEndPhase extends BattlePhase {
       applyPostBattleAbAttrs(PostBattleAbAttr, pokemon);
     }
 
+    PokemonBattleTooltipUtils.destroyEnemyHoverZone();
+    PokemonBattleTooltipUtils.destroyPlayerHoverZone();
     this.scene.clearEnemyHeldItemModifiers();
     this.scene.clearEnemyMoveUpgradeModifiers();
 

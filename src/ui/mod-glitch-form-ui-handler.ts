@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import BattleScene from "../battle-scene";
 import { FormModalConfig, FormModalUiHandler } from "./form-modal-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { ModGlitchFormData } from "../data/mod-glitch-form-data";
 import { loadModGlitchFormFromJson } from "../data/mod-glitch-form-utils";
 import { ModalConfig } from "./modal-ui-handler";

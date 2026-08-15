@@ -14,7 +14,10 @@ export function initGameSpeed() {
     if (value instanceof Utils.FixedInt) {
       return (value as Utils.FixedInt).value;
     }
-    return thisArg.gameSpeed === 1 ? value : Math.ceil(value /= thisArg.gameSpeed);
+    const effectiveSpeed = (thisArg._battleAnimDepth > 0 || thisArg._inBattleTurn) && thisArg.battleSpeed > 0
+      ? thisArg.battleSpeed
+      : thisArg.gameSpeed;
+    return effectiveSpeed === 1 ? value : Math.ceil(value /= effectiveSpeed);
   };
 
   const originalAddEvent = this.time.addEvent;

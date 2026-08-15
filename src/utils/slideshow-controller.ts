@@ -31,6 +31,7 @@ export interface SlideshowControllerConfig {
   onSlideChange?: (index: number) => void;
   onTextComplete?: () => void;
   onComplete?: () => void;
+  onBeforeFade?: () => void;
   formatText?: (textKey: string, rawText: string) => string;
 }
 
@@ -44,13 +45,20 @@ export interface SlideshowSceneAdapter {
 }
 
 export class SlideshowController {
+  private static readonly FRAME_NATIVE = { w: 960, h: 540 };
+  private static readonly FRAME_VIEWPORT_TOP = 41;
+  private static readonly FRAME_VIEWPORT_BOTTOM = 477;
+  private static readonly FRAME_BOTTOM_BAND_TOP = 478;
+
   private scene: SlideshowSceneAdapter;
   private config: Required<SlideshowControllerConfig>;
   private container: Phaser.GameObjects.Container | null = null;
   private background: Phaser.GameObjects.Rectangle | null = null;
+  private frameOverlay: Phaser.GameObjects.Image | null = null;
+  private viewportMaskShape: Phaser.GameObjects.Graphics | null = null;
+  private viewportMask: Phaser.Display.Masks.GeometryMask | null = null;
   private currentImage: Phaser.GameObjects.Image | null = null;
   private textObject: Phaser.GameObjects.Text | null = null;
-  private textBg: Phaser.GameObjects.Rectangle | null = null;
   private bgm: Phaser.Sound.BaseSound | null = null;
   private textTimer: Phaser.Time.TimerEvent | null = null;
   private advanceTimer: Phaser.Time.TimerEvent | null = null;
@@ -61,6 +69,7 @@ export class SlideshowController {
   private isEnding: boolean = false;
   private fullText: string = "";
   private textCompleteFired: boolean = false;
+  private textCompletedAt: number = 0;
 
   private readonly DEFAULTS = {
     fadeDuration: 500,
@@ -69,7 +78,7 @@ export class SlideshowController {
     canSkip: false,
     ignoreGameSpeed: false,
     defaultCharSound: "",
-    imageScaleMultiplier: 1.2,
+    imageScaleMultiplier: 1.0,
     textOffsetFromImage: 20,
   };
 
@@ -87,6 +96,48 @@ export class SlideshowController {
 
   private toTime(value: number): any {
     return this.config.ignoreGameSpeed ? (Utils.fixedInt(value) as any) : value;
+  }
+
+  private getCutsceneLayout() {
+    const screenWidth = this.scene.game.canvas.width;
+    const screenHeight = this.scene.game.canvas.height;
+    const scale = screenWidth / SlideshowController.FRAME_NATIVE.w;
+    const vpTop = SlideshowController.FRAME_VIEWPORT_TOP * scale;
+    const vpBottom = SlideshowController.FRAME_VIEWPORT_BOTTOM * scale;
+    const vpH = vpBottom - vpTop;
+    const bandTop = SlideshowController.FRAME_BOTTOM_BAND_TOP * scale;
+    const bandH = screenHeight - bandTop;
+    return {
+      scale,
+      screenWidth,
+      screenHeight,
+      viewportTop: vpTop,
+      viewportLeft: 0,
+      viewportWidth: screenWidth,
+      viewportHeight: vpH,
+      imageCenterX: screenWidth / 2,
+      imageCenterY: vpTop + vpH / 2,
+      imageMaxW: screenWidth,
+      imageMaxH: vpH,
+      textCenterX: screenWidth / 2,
+      textCenterY: bandTop + bandH / 2,
+      textWrapWidth: screenWidth - 120,
+    };
+  }
+
+  private ensureViewportMask(): Phaser.Display.Masks.GeometryMask {
+    if (this.viewportMask) return this.viewportMask;
+    const layout = this.getCutsceneLayout();
+    this.viewportMaskShape = this.scene.add.graphics();
+    this.viewportMaskShape.fillStyle(0xffffff, 1);
+    this.viewportMaskShape.fillRect(
+      layout.viewportLeft,
+      layout.viewportTop,
+      layout.viewportWidth,
+      layout.viewportHeight
+    );
+    this.viewportMask = this.viewportMaskShape.createGeometryMask();
+    return this.viewportMask;
   }
 
   public start(container?: Phaser.GameObjects.Container): void {
@@ -151,48 +202,54 @@ export class SlideshowController {
     this.advanceToNextSlide();
   }
 
+  public isTextReadyForAdvance(delayMs: number = 250): boolean {
+    return this.textCompleteFired && this.textCompletedAt > 0 && (Date.now() - this.textCompletedAt) >= delayMs;
+  }
+
   private createContainer(): void {
-    const screenWidth = this.scene.game.canvas.width;
-    const screenHeight = this.scene.game.canvas.height;
+    const layout = this.getCutsceneLayout();
 
     this.container = this.scene.add.container(0, 0);
     this.container.setDepth(10);
 
     this.background = this.scene.add.rectangle(
-      screenWidth / 2,
-      screenHeight / 2,
-      screenWidth,
-      screenHeight,
+      layout.screenWidth / 2,
+      layout.screenHeight / 2,
+      layout.screenWidth,
+      layout.screenHeight,
       0x000000,
       1
     );
     this.background.setInteractive();
     this.container.add(this.background);
 
-    this.textBg = this.scene.add.rectangle(
-      screenWidth / 2,
-      screenHeight - 80,
-      screenWidth - 40,
-      80,
-      0x000000,
-      0.8
-    );
-    this.textBg.setVisible(false);
-    this.container.add(this.textBg);
+    const hasFrame = !!(this.scene as any).textures?.exists?.("cutscene_frame") ||
+                     !!(this.scene.game as any)?.textures?.exists?.("cutscene_frame");
+    if (hasFrame) {
+      this.frameOverlay = this.scene.add.image(
+        layout.screenWidth / 2,
+        layout.screenHeight / 2,
+        "cutscene_frame"
+      );
+      this.frameOverlay.setOrigin(0.5, 0.5);
+      this.frameOverlay.setScale(layout.scale);
+      this.container.add(this.frameOverlay);
+    }
 
     this.textObject = this.scene.add.text(
-      screenWidth / 2,
-      screenHeight - 80,
+      layout.textCenterX,
+      layout.textCenterY,
       "",
       {
         fontFamily: "emerald",
         fontSize: "38px",
         color: "#ffffff",
         align: "center",
-        wordWrap: { width: screenWidth - 80 },
+        wordWrap: { width: layout.textWrapWidth },
       }
     );
     this.textObject.setOrigin(0.5, 0.5);
+    this.textObject.setShadow(0, 0, "#E8D4F5", 8, true, true);
     this.container.add(this.textObject);
   }
 
@@ -223,28 +280,21 @@ export class SlideshowController {
     this.imageSequenceTimers = [];
   }
 
-  private applyScaleToImage(image: Phaser.GameObjects.Image, screenWidth: number, screenHeight: number): void {
-    const textAreaHeight = 100;
-    const imageAreaHeight = screenHeight - textAreaHeight;
-    const maxWidth = screenWidth * 0.9;
-    const maxHeight = imageAreaHeight * 0.85;
-    const scaleX = maxWidth / image.width;
-    const scaleY = maxHeight / image.height;
-    const scale = Math.min(scaleX, scaleY) * this.config.imageScaleMultiplier;
+  private applyScaleToImage(image: Phaser.GameObjects.Image, _screenWidth?: number, _screenHeight?: number): void {
+    const layout = this.getCutsceneLayout();
+    const scaleX = layout.imageMaxW / image.width;
+    const scaleY = layout.imageMaxH / image.height;
+    const scale = Math.max(scaleX, scaleY) * this.config.imageScaleMultiplier;
     image.setScale(scale);
   }
 
   private startImageSequenceForSlide(slide: SlideConfig): void {
     this.clearImageSequenceTimers();
-    if (!this.currentImage) {
-      return;
-    }
+    if (!this.currentImage) return;
 
     const keys = slide.imageSequenceKeys || [];
     const frameDuration = slide.imageSequenceFrameDuration || 0;
-    if (!keys.length || frameDuration <= 0) {
-      return;
-    }
+    if (!keys.length || frameDuration <= 0) return;
 
     const fadeOutMs = slide.imageSequenceFadeOutMs ?? 0;
     const fadeInMs = slide.imageSequenceFadeInMs ?? 0;
@@ -258,34 +308,27 @@ export class SlideshowController {
       if (crossFadeMs > 0) {
         const fadeStartAt = Math.max(0, swapAt - crossFadeMs);
         const t = this.scene.time.delayedCall(this.toTime(fadeStartAt), () => {
-          if (this.isEnding) {
-            return;
-          }
-          if (this.currentSlideIndex !== indexToken) {
-            return;
-          }
-          if (!this.currentImage) {
-            return;
-          }
-          if (!this.container) {
-            return;
-          }
+          if (this.isEnding) return;
+          if (this.currentSlideIndex !== indexToken) return;
+          if (!this.currentImage) return;
+          if (!this.container) return;
 
           const prevImage = this.currentImage;
-          const textAreaHeight = 100;
-          const imageAreaHeight = screenHeight - textAreaHeight;
+          const seqLayout = this.getCutsceneLayout();
           const nextImage = this.scene.add.image(
-            screenWidth / 2,
-            imageAreaHeight / 2,
+            seqLayout.imageCenterX,
+            seqLayout.imageCenterY,
             key
           );
           nextImage.setOrigin(0.5, 0.5);
           this.applyScaleToImage(nextImage, screenWidth, screenHeight);
+          if (this.frameOverlay) nextImage.setMask(this.ensureViewportMask());
           nextImage.setAlpha(0);
 
           const list: any[] = (this.container as any).list || [];
           const prevIndex = list.indexOf(prevImage);
-          const insertIndex = prevIndex >= 0 ? prevIndex + 1 : 1;
+          const baseInsert = this.frameOverlay ? 2 : 1;
+          const insertIndex = prevIndex >= 0 ? prevIndex + 1 : baseInsert;
           this.container.addAt(nextImage, insertIndex);
 
           this.scene.tweens.add({
@@ -323,15 +366,9 @@ export class SlideshowController {
 
       const fadeOutAt = Math.max(0, swapAt - fadeOutMs - fadeInMs);
       const t = this.scene.time.delayedCall(this.toTime(fadeOutAt), () => {
-        if (this.isEnding) {
-          return;
-        }
-        if (this.currentSlideIndex !== indexToken) {
-          return;
-        }
-        if (!this.currentImage) {
-          return;
-        }
+        if (this.isEnding) return;
+        if (this.currentSlideIndex !== indexToken) return;
+        if (!this.currentImage) return;
         const img = this.currentImage;
         if (fadeOutMs > 0) {
           this.scene.tweens.add({
@@ -339,15 +376,9 @@ export class SlideshowController {
             alpha: 0,
             duration: this.toTime(fadeOutMs),
             onComplete: () => {
-              if (this.isEnding) {
-                return;
-              }
-              if (this.currentSlideIndex !== indexToken) {
-                return;
-              }
-              if (!this.currentImage) {
-                return;
-              }
+              if (this.isEnding) return;
+              if (this.currentSlideIndex !== indexToken) return;
+              if (!this.currentImage) return;
               this.currentImage.setTexture(key);
               this.applyScaleToImage(this.currentImage, screenWidth, screenHeight);
               this.updateTextPosition();
@@ -383,16 +414,18 @@ export class SlideshowController {
   }
 
   private createImageForSlide(slide: SlideConfig, screenWidth: number, screenHeight: number): Phaser.GameObjects.Image {
-    const textAreaHeight = 100;
-    const imageAreaHeight = screenHeight - textAreaHeight;
+    const layout = this.getCutsceneLayout();
     const image = this.scene.add.image(
-      screenWidth / 2,
-      imageAreaHeight / 2,
+      layout.imageCenterX,
+      layout.imageCenterY,
       slide.imageKey
     );
     image.setOrigin(0.5, 0.5);
 
     this.applyScaleToImage(image, screenWidth, screenHeight);
+    if (this.frameOverlay) {
+      image.setMask(this.ensureViewportMask());
+    }
     return image;
   }
 
@@ -436,7 +469,7 @@ export class SlideshowController {
         if (fadeDuration <= 0) {
           const prevImage = this.currentImage;
           const nextImage = this.createImageForSlide(slide, screenWidth, screenHeight);
-          this.container?.addAt(nextImage, 1);
+          this.container?.addAt(nextImage, this.frameOverlay ? 2 : 1);
           this.currentImage = nextImage;
           prevImage.destroy();
           this.updateTextPosition();
@@ -446,7 +479,7 @@ export class SlideshowController {
         const prevImage = this.currentImage;
         const nextImage = this.createImageForSlide(slide, screenWidth, screenHeight);
         nextImage.setAlpha(0);
-        this.container?.addAt(nextImage, 1);
+        this.container?.addAt(nextImage, this.frameOverlay ? 2 : 1);
         this.currentImage = nextImage;
 
         this.scene.tweens.add({
@@ -458,11 +491,13 @@ export class SlideshowController {
           },
         });
 
+        const slideIdxAtFade = this.currentSlideIndex;
         this.scene.tweens.add({
           targets: nextImage,
           alpha: 1,
           duration: this.toTime(fadeDuration),
           onComplete: () => {
+            if (this.currentSlideIndex !== slideIdxAtFade) return;
             this.updateTextPosition();
             this.startTextForSlide(slide);
           },
@@ -474,6 +509,7 @@ export class SlideshowController {
           this.fadeInNewImage(slide, screenWidth, screenHeight);
           return;
         }
+        const slideIdxAtFadeOut = this.currentSlideIndex;
         this.scene.tweens.add({
           targets: this.currentImage,
           alpha: 0,
@@ -481,6 +517,7 @@ export class SlideshowController {
           onComplete: () => {
             this.currentImage?.destroy();
             this.currentImage = null;
+            if (this.currentSlideIndex !== slideIdxAtFadeOut) return;
             this.fadeInNewImage(slide, screenWidth, screenHeight);
           },
         });
@@ -498,7 +535,7 @@ export class SlideshowController {
     const fadeDuration = slide.fadeDuration ?? this.config.fadeDuration;
     this.currentImage = this.createImageForSlide(slide, screenWidth, screenHeight);
 
-    this.container?.addAt(this.currentImage, 1);
+    this.container?.addAt(this.currentImage, this.frameOverlay ? 2 : 1);
     if (fadeDuration <= 0) {
       this.currentImage.setAlpha(1);
       this.updateTextPosition();
@@ -507,11 +544,13 @@ export class SlideshowController {
     }
     this.currentImage.setAlpha(0);
 
+    const slideIdxAtFadeIn = this.currentSlideIndex;
     this.scene.tweens.add({
       targets: this.currentImage,
       alpha: 1,
       duration: this.toTime(fadeDuration),
       onComplete: () => {
+        if (this.currentSlideIndex !== slideIdxAtFadeIn) return;
         this.updateTextPosition();
         this.startTextForSlide(slide);
       },
@@ -519,19 +558,15 @@ export class SlideshowController {
   }
 
   private updateTextPosition(): void {
-    if (this.currentImage && this.textObject && this.textBg) {
-      const imageBottom = this.currentImage.y + (this.currentImage.displayHeight / 2);
-      const textY = imageBottom + this.config.textOffsetFromImage;
-      this.textObject.setY(textY);
-      this.textBg.setY(textY);
-    }
+    if (!this.textObject) return;
+    const layout = this.getCutsceneLayout();
+    this.textObject.setPosition(layout.textCenterX, layout.textCenterY);
   }
 
   private startTypewriterText(textKey: string, charSoundKey?: string): void {
     const rawText = i18next.t(textKey);
     this.fullText = this.config.formatText ? this.config.formatText(textKey, rawText) : rawText;
     this.textObject?.setText("");
-    this.textBg?.setVisible(true);
 
     if (this.textTimer) {
       this.textTimer.remove();
@@ -570,6 +605,7 @@ export class SlideshowController {
       return;
     }
     this.textCompleteFired = true;
+    this.textCompletedAt = Date.now();
 
     const currentSlide = this.config.slides[this.currentSlideIndex];
     if (
@@ -603,10 +639,14 @@ export class SlideshowController {
       this.advanceTimer.remove();
       this.advanceTimer = null;
     }
+    if (this.textTimer) {
+      this.textTimer.remove();
+      this.textTimer = null;
+    }
+    this.textCompletedAt = 0;
 
     const nextSlide = this.config.slides[this.currentSlideIndex + 1];
     if (!nextSlide?.keepText) {
-      this.textBg?.setVisible(false);
       this.textObject?.setText("");
     }
 
@@ -618,9 +658,7 @@ export class SlideshowController {
   }
 
   private endSlideshow(): void {
-    if (this.isEnding) {
-      return;
-    }
+    if (this.isEnding) return;
     this.isEnding = true;
 
     if (this.textTimer) {
@@ -650,17 +688,21 @@ export class SlideshowController {
     if (this.currentImage) {
       fadeTargets.push(this.currentImage);
     }
+    if (this.frameOverlay) {
+      fadeTargets.push(this.frameOverlay);
+    }
     if (this.textObject) {
       fadeTargets.push(this.textObject);
-    }
-    if (this.textBg) {
-      fadeTargets.push(this.textBg);
     }
 
     const finish = () => {
       this.cleanup();
       this.config.onComplete();
     };
+
+    if (this.config.onBeforeFade) {
+      try { this.config.onBeforeFade(); } catch {}
+    }
 
     if (!fadeTargets.length) {
       finish();
@@ -692,6 +734,17 @@ export class SlideshowController {
       this.currentImage = null;
     }
 
+    this.frameOverlay = null;
+
+    if (this.viewportMask) {
+      this.viewportMask.destroy();
+      this.viewportMask = null;
+    }
+    if (this.viewportMaskShape) {
+      this.viewportMaskShape.destroy();
+      this.viewportMaskShape = null;
+    }
+
     if (this.bgm) {
       this.bgm.stop();
       this.bgm.destroy();
@@ -704,7 +757,6 @@ export class SlideshowController {
     }
 
     this.textObject = null;
-    this.textBg = null;
     this.background = null;
   }
 }

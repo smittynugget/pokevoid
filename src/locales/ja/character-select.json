@@ -1,0 +1,10 @@
+{
+  "title": "チャンピオン選択",
+  "instruction": "チャンピオンを選んでください",
+  "locked": "ロック中",
+  "essenceNeeded": "{{amount}} {{typeName}}エッセンス",
+  "mysteryChampion": "???",
+  "mysterySubtitle": "虚空が決める？！",
+  "randomDescription": "ランダムチャンピオン",
+  "tooltip.essenceRequiredDesc": "エッセンスを使ってこのチャンピオンを解放しよう。エッセンスを得るにはポケモンを倒してタイプを獲得しよう。"
+}

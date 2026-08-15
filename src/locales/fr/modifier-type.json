@@ -67,11 +67,11 @@
       "description": "Fait monter toute l'équipe de {{levels}} niveau·x."
     },
     "PokemonBaseStatBoosterModifierType": {
-      "description": "Augmente de 10% {{statName}} de base de son porteur. Plus les IV sont hauts, plus il peut en porter."
+      "description": "Augmente de 8% {{statName}} de base de son porteur. Plus les IV sont hauts, plus il peut en porter."
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "Bon Marché",
-      "description": "Augmente de 1% {{statName}} de base de son porteur."
+      "description": "Augmente de 3% {{statName}} de base de son porteur."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restaure tous les PV de toute l'équipe."
@@ -415,7 +415,7 @@
       "description": "Apprend {{moveName}} à un Pokémon."
     },
     "AnyTmModifierTypeWithInfo": {
-      "name": "++XM{{moveId}} - {{moveName}}++",
+      "name": "XM{{moveId}} - {{moveName}}",
       "statLabel": "CX (N'importe quelle CT)",
       "description": "Apprend la capacité {{moveName}} à N'IMPORTE QUEL Pokémon\n(Maintenez C ou Maj pour plus d'infos)."
     },
@@ -708,7 +708,8 @@
       "name": "Essences",
       "shopName": "Essence {{type}}",
       "statLabel": "Essence",
-      "description": "Utilisez 4 au lieu de relâcher un Pokémon pour les Objets de Libération ou échangez contre des récompenses avec le Collectionneur."
+      "description": "Utilisez 4 au lieu de relâcher un Pokémon pour les Objets de Libération ou échangez contre des récompenses avec le Collectionneur.",
+      "tooltipDescription": "Accorde 1 Essence de {{type}} au Pokémon sélectionné.\n\nLes essences servent à améliorer les compétences du Champion, comme alternative aux sacrifices (4 requises), et pour les échanges du Collectionneur."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Essences Collectées",
@@ -874,6 +875,7 @@
     "NONE": "Aucun",
     "ABOMASITE": "Blizzarite",
     "ABSOLITE": "Absolite",
+    "ABSOLITE_Z": "Absolite Z",
     "AERODACTYLITE": "Ptéraïte",
     "AGGRONITE": "Galekingite",
     "ALAKAZITE": "Alakazamite",
@@ -890,6 +892,7 @@
     "DIANCITE": "Diancite",
     "GALLADITE": "Gallamite",
     "GARCHOMPITE": "Carchacrokite",
+    "GARCHOMPITE_Z": "Carchacrokite Z",
     "GARDEVOIRITE": "Gardevoirite",
     "GENGARITE": "Ectoplasmite",
     "GLALITITE": "Oniglalite",
@@ -901,6 +904,7 @@
     "LATIOSITE": "Latiosite",
     "LOPUNNITE": "Lockpinite",
     "LUCARIONITE": "Lucarite",
+    "LUCARIONITE_Z": "Lucarite Z",
     "MANECTITE": "Élecsprintite",
     "MAWILITE": "Mysdibulite",
     "MEDICHAMITE": "Charminite",
@@ -924,7 +928,7 @@
     "CLEFABLITE": "Mélodelféite",
     "VICTREBELITE": "Empiflite",
     "STARMITE": "Starossite",
-    "DRAGONITITE": "Dracolosssite",
+    "DRAGONITITE": "Dracolossite",
     "MEGANIUMITE": "Méganiumite",
     "FERALIGATRITE": "Aligatueurite",
     "SKARMORYITE": "Airmureite",
@@ -947,7 +951,22 @@
     "ZYGARDITE": "Zygardite",
     "DRAMPITE": "Draïeulite",
     "FALINKSITE": "Hexadronite",
-    "ZERAORITE": "Zeraoraiite",
+    "ZERAORITE": "Zeraoraite",
+    "RAICHUITE_X": "Raichuite X",
+    "RAICHUITE_Y": "Raichuite Y",
+    "CHIMECHOITE": "Éokoite",
+    "STARAPTORITE": "Étouraptorite",
+    "HEATRANITE": "Heatranite",
+    "DARKRAITE": "Darkraite",
+    "GOLURKITE": "Golemastocite",
+    "MEOWSTITE": "Mistigrixite",
+    "CRABOMINITE": "Crabominablite",
+    "GOLISOPODITE": "Sarmuraïte",
+    "MAGEARNITE": "Magearnite",
+    "SCOVILLAINITE": "Scovilainite",
+    "GLIMMORITE": "Floréclatite",
+    "TATSUGURITE": "Nigirigonite",
+    "BAXCALIBURITE": "Glaivodoite",
 
     "BLUE_ORB": "Gemme Bleue",
     "RED_ORB": "Gemme Rouge",
@@ -1067,10 +1086,16 @@
     "uses": "utilisations",
     "glitchPieceCost": "*COÛTE 1x Fragment de Bug",
     "essenceAlternativeCost": "Si le Pokémon a 4 essences ou plus, vous pouvez les utiliser à la place.",
+    "abilityReplaceNote": "Remplace le talent actuel du Pokémon. Non cumulable.",
+    "passiveAbilityReplaceNote": "Remplace le talent passif actuel du Pokémon. Non cumulable.",
     "permaMoney": "ΩOR",
     "permaItem": "ΩOBJET",
     "moreInfo": "(Maintenez C / Maj pour infos)",
     "morePokeInfo": "(Appuyez sur P / Maj pour info)",
-    "upgrade": "Amélioration"
-  }
+    "upgrade": "Amélioration",
+    "partyAbilityStacksHint": "(CUMULABLE !)"
+  },
+  "permaWaveTooltip": "Disparaît après [color=#ffa500]{{count}}[/color] vagues — le décompte commence après la vague 50",
+  "permaUseTooltip": "[color=#ffa500]{{count}}[/color] utilisations restantes — le décompte commence après la vague 50",
+  "permaRemoveHint": "Appuyez 10 fois pour supprimer"
 }

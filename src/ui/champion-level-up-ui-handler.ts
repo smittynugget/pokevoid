@@ -1,19 +1,20 @@
 import BattleScene from "../battle-scene";
 import { Button } from "../enums/buttons";
 import { TextStyle, addTextObject } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { ModalUiHandler } from "./modal-ui-handler";
 import i18next from "../plugins/i18n";
 import { ChampionUtils } from "#app/system/champion-utils";
 import { ChampionSkillDef, PlayableChampionData } from "../system/playable-champions";
-import { SkillTreeNodeGenerator } from "#app/system/skill-tree-node-generator";
-import { SkillTreeReward, SkillTreeRewardType } from "#app/system/skill-tree-data";
+import { SkillTreeNodeGenerator, getDisplayRarityForRewardType } from "#app/system/skill-tree-node-generator";
+import { SkillTreeReward, SkillTreeRewardType, SkillTreeRarity } from "#app/system/skill-tree-data";
 import { Type } from "#app/data/type";
 import { Abilities } from "#app/enums/abilities";
 import { Moves } from "#app/enums/moves";
 import { Species } from "#app/enums/species";
 import { FormChangeItem } from "#app/enums/form-change-items";
 import { UpgradePath } from "#app/enums/upgrade-path";
+import { ModifierOption } from "./modifier-select-ui-handler";
 
 export interface ChampionLevelUpConfig {
   championData: PlayableChampionData;
@@ -50,12 +51,19 @@ export default class ChampionLevelUpUiHandler extends ModalUiHandler {
     this.levelUpContainer.setVisible(false);
     ui.add(this.levelUpContainer);
 
-    const bg = this.scene.add.graphics();
-    bg.fillStyle(0x000000, 0.8);
-    bg.fillRect(-300, -200, 600, 400);
-    bg.lineStyle(4, 0xFFD700);
-    bg.strokeRect(-300, -200, 600, 400);
-    this.levelUpContainer.add(bg);
+    if (this.scene.textures.exists("level_up")) {
+      const bgImage = this.scene.add.image(0, 0, "level_up");
+      bgImage.setDisplaySize(600, 400);
+      bgImage.setOrigin(0.5, 0.5);
+      this.levelUpContainer.add(bgImage);
+    } else {
+      const bg = this.scene.add.graphics();
+      bg.fillStyle(0x000000, 0.8);
+      bg.fillRect(-300, -200, 600, 400);
+      bg.lineStyle(4, 0xFFD700);
+      bg.strokeRect(-300, -200, 600, 400);
+      this.levelUpContainer.add(bg);
+    }
 
     this.titleText = addTextObject(this.scene, 0, -150, "", TextStyle.WINDOW, {
       fontSize: "96px",
@@ -119,7 +127,12 @@ export default class ChampionLevelUpUiHandler extends ModalUiHandler {
     this.updateContent();
     this.levelUpContainer.setVisible(true);
 
-    this.scene.playSound("ui/level_up");
+    const rarity = this.config.newSkill.rewardType
+      ? getDisplayRarityForRewardType(this.config.newSkill.rewardType)
+      : "common";
+    const soundKey = ModifierOption.EMBER_RARITY_SOUNDS[rarity] || "se/shing";
+    const soundConfig = soundKey.startsWith("battle_anims/") ? { volumeGroup: "se" } : undefined;
+    this.scene.playSound(soundKey, soundConfig as any);
 
     return super.show(args);
   }
@@ -127,8 +140,30 @@ export default class ChampionLevelUpUiHandler extends ModalUiHandler {
   private updateContent(): void {
     if (!this.config) return;
 
-    const championName = ChampionUtils.getChampionDisplayName(this.config.championData.id);
-    this.titleText.setText(i18next.t("championLevelUp:title", { champion: championName }));
+    let skillName = "???";
+    let skillDesc = "";
+
+    if (this.config.newSkill.rewardType) {
+      const rewardData: SkillTreeReward = {
+        type: this.config.newSkill.rewardType,
+        data: this.buildRewardData(this.config.newSkill),
+        immediate: false
+      };
+      const nodeGen = new SkillTreeNodeGenerator(0, this.config.championData.id, this.scene);
+      const generatedName = nodeGen.getRewardName(rewardData);
+      if (generatedName && generatedName !== "Unknown Reward") {
+        skillName = generatedName.includes(": ") ? generatedName.substring(generatedName.indexOf(": ") + 2) : generatedName;
+      }
+      skillDesc = nodeGen.getRewardDescription(rewardData);
+    } else {
+      skillDesc = i18next.t(this.config.newSkill.descriptionKey || "");
+    }
+
+    if (this.config.newSkill.customLabel) {
+      skillName = this.config.newSkill.customLabel;
+    }
+
+    this.titleText.setText(i18next.t("championLevelUp:skillObtained", { skillName }));
     this.levelText.setText(
       i18next.t("championLevelUp:levelReached", { level: this.config.championData.level })
     );
@@ -138,26 +173,144 @@ export default class ChampionLevelUpUiHandler extends ModalUiHandler {
       this.championSprite.setTexture(spriteKey);
     }
 
-    const skillNameKey = `championSkill:${this.config.championData.id}.level_${this.config.newSkill.unlockLevel}.name`;
-    const skillName = i18next.t(skillNameKey);
-
-    let skillDesc: string;
-    if (this.config.newSkill.rewardType) {
-      const rewardData: SkillTreeReward = {
-        type: this.config.newSkill.rewardType,
-        data: this.buildRewardData(this.config.newSkill),
-        immediate: false
-      };
-      const nodeGen = new SkillTreeNodeGenerator(0, this.config.championData.id, this.scene);
-      skillDesc = nodeGen.getRewardDescription(rewardData);
-    } else {
-      skillDesc = i18next.t(this.config.newSkill.descriptionKey || "");
-    }
-
     this.skillNameText.setText(skillName);
     this.skillDescText.setText(skillDesc);
 
     this.addLevelUpEffect();
+    this.playEmberCardReveal(skillName);
+  }
+
+  private playEmberCardReveal(skillName: string): void {
+    if (!this.config) return;
+    ModifierOption.ensureEmberTextures(this.scene);
+
+    const rarity = this.config.newSkill.rewardType
+      ? getDisplayRarityForRewardType(this.config.newSkill.rewardType)
+      : SkillTreeRarity.COMMON;
+    const rarityColors = ModifierOption.EMBER_RARITY_COLORS[rarity] || ModifierOption.EMBER_RARITY_COLORS[SkillTreeRarity.COMMON];
+    const cardX = 50;
+    const cardY = 60;
+
+    const glowTexKey = "ember_mat_glow";
+    if (this.scene.textures.exists(glowTexKey)) {
+      const glow = this.scene.add.image(cardX, cardY, glowTexKey);
+      glow.setScale((40 * 1.4) / 64);
+      glow.setAlpha(0);
+      glow.setTint(Phaser.Display.Color.GetColor(rarityColors.glow[0], rarityColors.glow[1], rarityColors.glow[2]));
+      this.levelUpContainer.add(glow);
+      this.scene.tweens.add({
+        targets: glow,
+        alpha: 0.45,
+        duration: 350,
+        ease: "Quad.easeIn"
+      });
+      this.scene.time.delayedCall(1800, () => {
+        if (glow?.active) {
+          this.scene.tweens.add({ targets: glow, alpha: 0.15, duration: 400 });
+        }
+      });
+    }
+
+    const softTexKey = "ember_mat_soft";
+    if (this.scene.textures.exists(softTexKey)) {
+      const particles: Phaser.GameObjects.Image[] = [];
+      for (let j = 0; j < 10; j++) {
+        const img = this.scene.add.image(cardX, cardY, softTexKey);
+        img.setVisible(false);
+        this.levelUpContainer.add(img);
+        particles.push(img);
+      }
+      this.scene.tweens.addCounter({
+        from: 0, to: 1, duration: 800,
+        onUpdate: (t: Phaser.Tweens.Tween) => {
+          const p = t.getValue();
+          if (p <= 0.03 || p >= 0.85) {
+            for (const img of particles) img.setVisible(false);
+            return;
+          }
+          const ea = Math.min(1, p / 0.06) * Math.max(0, 1 - (p - 0.65) / 0.2);
+          for (let j = 0; j < particles.length; j++) {
+            const img = particles[j];
+            const seed = (j * 7 + 13) % 97 / 97;
+            const ex = cardX + (seed - 0.5) * 36;
+            const ey = cardY - p * 100 * (0.5 + seed * 0.5) - j * 3;
+            const cVar = (seed - 0.5) * 40;
+            const pr = Math.min(255, Math.max(0, rarityColors.particle[0] + cVar));
+            const pg = Math.min(255, Math.max(0, rarityColors.particle[1] + cVar));
+            const pb = Math.min(255, Math.max(0, rarityColors.particle[2] + cVar));
+            img.setVisible(ea > 0.01);
+            img.setPosition(ex, ey);
+            img.setScale(0.18 + seed * 0.12);
+            img.setTint(Phaser.Display.Color.GetColor(Math.floor(pr), Math.floor(pg), Math.floor(pb)));
+            img.setAlpha(ea * 0.6 * (0.3 + seed * 0.7));
+          }
+        },
+        onComplete: () => { for (const img of particles) img.setVisible(false); }
+      });
+    }
+
+    const cardContainer = this.scene.add.container(cardX, cardY);
+    cardContainer.setAlpha(0);
+    this.levelUpContainer.add(cardContainer);
+
+    const iconCfg = this.getSkillIconForCard();
+    if (this.scene.textures.exists(iconCfg.key)) {
+      const icon = this.scene.add.sprite(0, 0, iconCfg.key, iconCfg.frame);
+      const scale = iconCfg.scale >= 2.0 ? 1.0 : 0.5;
+      icon.setScale(scale);
+      icon.setOrigin(0.5, 0.5);
+      if (iconCfg.inverted && icon.postFX && typeof icon.postFX.addColorMatrix === "function") {
+        icon.postFX.addColorMatrix().negative();
+      }
+      cardContainer.add(icon);
+    }
+
+    this.scene.time.delayedCall(375, () => {
+      cardContainer.setAlpha(1);
+      if (cardContainer.postFX && typeof cardContainer.postFX.addPixelate === "function") {
+        const pixFx = cardContainer.postFX.addPixelate(16);
+        this.scene.tweens.add({
+          targets: pixFx,
+          amount: -1,
+          duration: 400,
+          ease: "Linear",
+          onComplete: () => {
+            if (cardContainer.postFX) cardContainer.postFX.remove(pixFx);
+          }
+        });
+      }
+    });
+  }
+
+  private getSkillIconForCard(): { key: string; frame: string; scale: number; inverted?: boolean } {
+    const skill = this.config?.newSkill;
+    if (!skill) return { key: "smitems", frame: "permaMoreRevive", scale: 1.0 };
+
+    switch (skill.rewardType) {
+      case SkillTreeRewardType.TM_FILTERED:
+        return { key: "items", frame: "tm_normal", scale: 2.0 };
+      case SkillTreeRewardType.XM_FILTERED:
+        return { key: "smitems", frame: "glitchTm", scale: 1.0 };
+      case SkillTreeRewardType.ABILITY_GRANT:
+      case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
+      case SkillTreeRewardType.SMITTY_ABILITY:
+        return { key: "smitems", frame: "modPassiveAbility", scale: 1.0 };
+      case SkillTreeRewardType.TERA_ABILITY:
+        return { key: "items", frame: "stellar_tera_shard", scale: 2.0, inverted: true };
+      case SkillTreeRewardType.MEGA_STONE:
+        return { key: "items", frame: "pinsirite", scale: 2.0 };
+      case SkillTreeRewardType.STAT_BOOST:
+        return { key: "items", frame: "protein", scale: 2.0 };
+      case SkillTreeRewardType.LEGENDARY_POKEMON:
+        return { key: "items", frame: "mb", scale: 2.0 };
+      case SkillTreeRewardType.GENERAL_POKEMON:
+      case SkillTreeRewardType.SIGNATURE_POKEMON:
+        return { key: "smitems", frame: "draftMode", scale: 1.0 };
+      case SkillTreeRewardType.TRAINER_BOND_ABILITY:
+        return { key: "smitems", frame: "modPassiveAbility", scale: 1.0 };
+      default:
+        return { key: "smitems", frame: "permaMoreRevive", scale: 1.0 };
+    }
   }
 
   private buildRewardData(skill: ChampionSkillDef): any {
@@ -183,9 +336,11 @@ export default class ChampionLevelUpUiHandler extends ModalUiHandler {
         break;
 
       case SkillTreeRewardType.MEGA_STONE:
+        data.megaStone = skill.unlockableId as FormChangeItem;
+        break;
       case SkillTreeRewardType.DYNA_MUSHROOM:
       case SkillTreeRewardType.GLITCH_CHANGE:
-        data.itemId = skill.unlockableId as FormChangeItem;
+        data.formChangeItem = skill.unlockableId as FormChangeItem;
         break;
 
       case SkillTreeRewardType.TYPE_SWITCHER:

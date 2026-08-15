@@ -1,0 +1,1295 @@
+{
+  "abaki": {
+    "name": "Abaki"
+  },
+  "abare_ushioni": {
+    "name": "Abare Ushioni"
+  },
+  "agido": {
+    "name": "Agido"
+  },
+  "aitsu": {
+    "name": "Aitsu"
+  },
+  "alien_grey": {
+    "name": "Alien Grigio"
+  },
+  "alien_mars": {
+    "name": "Alien Marte"
+  },
+  "alien_mother": {
+    "name": "Alien Madre"
+  },
+  "alligator_s_sword_dragon": {
+    "name": "Drago Spada dell'Alligatore"
+  },
+  "alligators_sword_dragon": {
+    "name": "Drago Spada dell'Alligatore"
+  },
+  "alpha_the_magnet_warrior": {
+    "name": "Alfa il Guerriero Magnetico"
+  },
+  "amazoness_tiger": {
+    "name": "Tigre delle Amazzoni"
+  },
+  "ancient_gear": {
+    "name": "Ingranaggio Antico"
+  },
+  "ancient_gear_box": {
+    "name": "Scatola Ingranaggio Antico"
+  },
+  "ancient_gear_engineer": {
+    "name": "Ingegnere Ingranaggio Antico"
+  },
+  "ancient_gear_golem": {
+    "name": "Golem Ingranaggio Antico"
+  },
+  "ancient_gear_knight": {
+    "name": "Cavaliere Ingranaggio Antico"
+  },
+  "ancient_gear_soldier": {
+    "name": "Soldato Ingranaggio Antico"
+  },
+  "ancient_tree_of_enlightenment": {
+    "name": "Albero Antico dell'Illuminazione"
+  },
+  "arcana_force_0_the_fool": {
+    "name": "Forza Arcana 0 - Il Matto",
+    "skipStrip": true
+  },
+  "arcana_force_0_—_the_fool": {
+    "name": "Forza Arcana 0 - Il Matto",
+    "skipStrip": true
+  },
+  "arcana_force_ex_the_dark_ruler": {
+    "name": "Forza Arcana EX - Il Sovrano Oscuro",
+    "skipStrip": true
+  },
+  "arcana_force_ex_—_the_dark_ruler": {
+    "name": "Forza Arcana EX - Il Sovrano Oscuro",
+    "skipStrip": true
+  },
+  "arcana_force_i_the_magician": {
+    "name": "Forza Arcana I - Il Mago",
+    "skipStrip": true
+  },
+  "arcana_force_i_—_the_magician": {
+    "name": "Forza Arcana I - Il Mago",
+    "skipStrip": true
+  },
+  "arcana_force_iv_the_emperor": {
+    "name": "Forza Arcana IV - L'Imperatore",
+    "skipStrip": true
+  },
+  "arcana_force_iv_—_the_emperor": {
+    "name": "Forza Arcana IV - L'Imperatore",
+    "skipStrip": true
+  },
+  "arcana_force_vi_the_lovers": {
+    "name": "Forza Arcana VI - Gli Amanti",
+    "skipStrip": true
+  },
+  "arcana_force_vi_—_the_lovers": {
+    "name": "Forza Arcana VI - Gli Amanti",
+    "skipStrip": true
+  },
+  "arcana_force_xviii_the_moon": {
+    "name": "Forza Arcana XVIII - La Luna",
+    "skipStrip": true
+  },
+  "arcana_force_xviii_—_the_moon": {
+    "name": "Forza Arcana XVIII - La Luna",
+    "skipStrip": true
+  },
+  "archfiend_zombie": {
+    "name": "Zombie Arcidemone"
+  },
+  "armed_dragon_lv3": {
+    "name": "Drago Armato LV3"
+  },
+  "armed_dragon_lv5": {
+    "name": "Drago Armato LV5"
+  },
+  "armed_dragon_lv7": {
+    "name": "Drago Armato LV7"
+  },
+  "avatar_of_the_pot": {
+    "name": "Avatar del Vaso"
+  },
+  "axe_raider": {
+    "name": "Razziatore con l'Ascia"
+  },
+  "baby_dragon": {
+    "name": "Drago Bambino"
+  },
+  "bean_soldier": {
+    "name": "Soldato Fagiolo"
+  },
+  "beaver_warrior": {
+    "name": "Guerriero Castoro"
+  },
+  "behemoth_the_king_of_all_animals": {
+    "name": "Behemoth Re degli Animali",
+    "skipStrip": true
+  },
+  "beiige,_vanguard_of_dark_world": {
+    "name": "Beiige, Avanguardia del Mondo Oscuro"
+  },
+  "beiige_vanguard_of_dark_world": {
+    "name": "Beiige, Avanguardia del Mondo Oscuro"
+  },
+  "beta_the_magnet_warrior": {
+    "name": "Beta il Guerriero Magnetico"
+  },
+  "bickuribox": {
+    "name": "Bickuribox"
+  },
+  "big_jaws": {
+    "name": "Grandi Fauci"
+  },
+  "bio_plant": {
+    "name": "Pianta Bio"
+  },
+  "black_dragon_s_chick": {
+    "name": "Pulcino del Drago Nero"
+  },
+  "black_dragons_chick": {
+    "name": "Pulcino del Drago Nero"
+  },
+  "black_luster_soldier": {
+    "name": "Soldato dello Splendore Nero"
+  },
+  "black_luster_soldier_envoy_of_the_beginning": {
+    "name": "Soldato Splendore Nero - Inviato dell'Inizio",
+    "skipStrip": true
+  },
+  "black_luster_soldier_—_envoy_of_the_beginning": {
+    "name": "Soldato Splendore Nero - Inviato dell'Inizio",
+    "skipStrip": true
+  },
+  "black_magician_of_chaos": {
+    "name": "Mago Nero del Caos"
+  },
+  "black_rose_dragon_(alt)": {
+    "name": "Drago Rosa Nera"
+  },
+  "black_rose_dragon_(alt___full_wings)": {
+    "name": "Drago Rosa Nera"
+  },
+  "black_rose_dragon_(full_wings)": {
+    "name": "Drago Rosa Nera"
+  },
+  "black_tyranno": {
+    "name": "Tiranno Nero"
+  },
+  "blade_knight": {
+    "name": "Cavaliere della Lama"
+  },
+  "blazing_inpachi": {
+    "name": "Inpachi Ardente"
+  },
+  "blizzard_dragon": {
+    "name": "Drago Bufera"
+  },
+  "blizzarddragon": {
+    "name": "Drago Bufera"
+  },
+  "blowback_dragon": {
+    "name": "Drago Rinculo"
+  },
+  "blue-eyes_alternative_white_dragon": {
+    "name": "Drago Bianco Alternativo Occhi Blu"
+  },
+  "blue-eyes_chaos_max_dragon": {
+    "name": "Drago Caos MAX Occhi Blu"
+  },
+  "blue-eyes_toon_dragon": {
+    "name": "Drago Toon Occhi Blu"
+  },
+  "blue-eyes_toon_dragon_(render)": {
+    "name": "Drago Toon Occhi Blu"
+  },
+  "blue-eyes_ultimate_dragon": {
+    "name": "Drago Supremo Occhi Blu"
+  },
+  "blue-eyes_white_dragon": {
+    "name": "Drago Bianco Occhi Blu"
+  },
+  "blue-eyes_white_dragon_(alt_master_duel)": {
+    "name": "Drago Bianco Occhi Blu"
+  },
+  "blue-eyes_white_dragon_(variant_2)": {
+    "name": "Drago Bianco Occhi Blu"
+  },
+  "blue-eyes_white_dragon_(variants)": {
+    "name": "Drago Bianco Occhi Blu"
+  },
+  "blue_eyes_alternative_white_dragon": {
+    "name": "Drago Bianco Alternativo Occhi Blu"
+  },
+  "blue_eyes_chaos_max_dragon": {
+    "name": "Drago Caos MAX Occhi Blu"
+  },
+  "blue_eyes_ultimate_dragon": {
+    "name": "Drago Supremo Occhi Blu"
+  },
+  "blue_eyes_white_dragon": {
+    "name": "Drago Bianco Occhi Blu"
+  },
+  "blue_eyes_white_dragon_v3": {
+    "name": "Drago Toon Occhi Blu"
+  },
+  "boo_koo": {
+    "name": "Boo Koo"
+  },
+  "breaker_the_magical_warrior": {
+    "name": "Breaker il Guerriero Magico"
+  },
+  "breaker_the_magical_warrrior": {
+    "name": "Breaker il Guerriero Magico"
+  },
+  "buster_blader,_destruction_swordmaster": {
+    "name": "Buster Blader",
+    "skipStrip": true
+  },
+  "buster_blader,_destruction_swordsmaster": {
+    "name": "Buster Blader",
+    "skipStrip": true
+  },
+  "buster_blader_the_destruction_swordmaster": {
+    "name": "Buster Blader",
+    "skipStrip": true
+  },
+  "caius_the_shadow_monarch": {
+    "name": "Caius il Monarca delle Ombre"
+  },
+  "card_trooper": {
+    "name": "Soldato delle Carte"
+  },
+  "castle_of_dark_illusions": {
+    "name": "Castello delle Illusioni Oscure"
+  },
+  "celtic_guardian": {
+    "name": "Guardiano Celtico"
+  },
+  "chaos_emperor_dragon_envoy_of_the_end": {
+    "name": "Drago Imperatore del Caos - Inviato della Fine",
+    "skipStrip": true
+  },
+  "chaos_emperor_dragon_—_envoy_of_the_end": {
+    "name": "Drago Imperatore del Caos - Inviato della Fine",
+    "skipStrip": true
+  },
+  "claw_reacher": {
+    "name": "Artiglio Estensibile"
+  },
+  "cloudian_acid_cloud": {
+    "name": "Cloudian - Nube Acida",
+    "skipStrip": true
+  },
+  "cloudian_eye_of_the_typhoon": {
+    "name": "Cloudian - Occhio del Tifone",
+    "skipStrip": true
+  },
+  "cloudian_ghost_fog": {
+    "name": "Cloudian - Nebbia Fantasma",
+    "skipStrip": true
+  },
+  "cloudian_nimbusman": {
+    "name": "Cloudian - Uomo Nembo",
+    "skipStrip": true
+  },
+  "cloudian_smoke_ball": {
+    "name": "Cloudian - Palla di Fumo",
+    "skipStrip": true
+  },
+  "cloudian_storm_dragon": {
+    "name": "Cloudian - Drago Tempesta",
+    "skipStrip": true
+  },
+  "cloudian_—_acid_cloud": {
+    "name": "Cloudian - Nube Acida",
+    "skipStrip": true
+  },
+  "cloudian_—_eye_of_the_typhoon": {
+    "name": "Cloudian - Occhio del Tifone",
+    "skipStrip": true
+  },
+  "cloudian_—_ghost_fog": {
+    "name": "Cloudian - Nebbia Fantasma",
+    "skipStrip": true
+  },
+  "cloudian_—_nimbusman": {
+    "name": "Cloudian - Uomo Nembo",
+    "skipStrip": true
+  },
+  "cloudian_—_smoke_ball": {
+    "name": "Cloudian - Palla di Fumo",
+    "skipStrip": true
+  },
+  "cloudian_—_storm_dragon": {
+    "name": "Cloudian - Drago Tempesta",
+    "skipStrip": true
+  },
+  "colossal_fighter": {
+    "name": "Lottatore Colossale"
+  },
+  "colossal_fighter1": {
+    "name": "Lottatore Colossale"
+  },
+  "copycat": {
+    "name": "Imitatore"
+  },
+  "crab_turtle": {
+    "name": "Granchio Tartaruga"
+  },
+  "crystal_beast_amber_mammoth": {
+    "name": "Bestia Cristallo Mammut Ambra",
+    "skipStrip": true
+  },
+  "crystal_beast_emerald_tortoise": {
+    "name": "Bestia Cristallo Tartaruga Smeraldo",
+    "skipStrip": true
+  },
+  "crystal_beast_ruby_carbuncle": {
+    "name": "Bestia Cristallo Carbonchio Rubino",
+    "skipStrip": true
+  },
+  "crystal_beast_topaz_tiger": {
+    "name": "Bestia Cristallo Tigre Topazio",
+    "skipStrip": true
+  },
+  "crystal_beast_—_emerald_tortoise": {
+    "name": "Bestia Cristallo Tartaruga Smeraldo",
+    "skipStrip": true
+  },
+  "crystal_beast_—_ruby_carbuncle": {
+    "name": "Bestia Cristallo Carbonchio Rubino",
+    "skipStrip": true
+  },
+  "crystal_beast_—_topaz_tiger": {
+    "name": "Bestia Cristallo Tigre Topazio",
+    "skipStrip": true
+  },
+  "curse_of_dragon": {
+    "name": "Maledizione del Drago",
+    "skipStrip": true
+  },
+  "curse_of_dragonfire": {
+    "name": "Maledizione del Fuoco di Drago",
+    "skipStrip": true
+  },
+  "cyber_dinosaur": {
+    "name": "Cyber Dinosauro"
+  },
+  "cyber_dragon": {
+    "name": "Cyber Drago"
+  },
+  "cyber_dragon_(cydra_2)": {
+    "name": "Cyber Drago"
+  },
+  "cyber_dragon_vier": {
+    "name": "Cyber Drago Vier"
+  },
+  "cyber_end_dragon": {
+    "name": "Cyber Drago Finale"
+  },
+  "cyber_ogre": {
+    "name": "Cyber Orco"
+  },
+  "cyber_saurus": {
+    "name": "Cyber Saurus"
+  },
+  "cyber_tech_alligator": {
+    "name": "Ciber Alligatore Tech"
+  },
+  "cyber_twin_dragon": {
+    "name": "Cyber Drago Gemello"
+  },
+  "d.d._crazy_beast": {
+    "name": "D.D. Bestia Pazza"
+  },
+  "d.d._trainer": {
+    "name": "D.D. Domatore"
+  },
+  "d.d._warrior": {
+    "name": "D.D. Guerriero"
+  },
+  "d.d._warrior_lady": {
+    "name": "D.D. Guerriera"
+  },
+  "d_d_crazy_beast": {
+    "name": "D.D. Bestia Pazza"
+  },
+  "d_d_trainer": {
+    "name": "D.D. Domatore"
+  },
+  "d_d_warrior_lady": {
+    "name": "D.D. Guerriera"
+  },
+  "dandylion": {
+    "name": "Dandylion"
+  },
+  "danger!_bigfoot!": {
+    "name": "Pericolo! Bigfoot!"
+  },
+  "danger_bigfoot": {
+    "name": "Pericolo! Bigfoot!"
+  },
+  "dark_eradicator_warlock": {
+    "name": "Stregone Eradicatore Oscuro"
+  },
+  "dark_eyes_illusionist": {
+    "name": "Illusionista Occhi Oscuri"
+  },
+  "dark_magician": {
+    "name": "Mago Nero"
+  },
+  "dark_magician_(all_variants)": {
+    "name": "Mago Nero"
+  },
+  "dark_magician_(alt_master_duel)": {
+    "name": "Mago Nero"
+  },
+  "dark_magician_(variant_2)": {
+    "name": "Mago Nero"
+  },
+  "dark_magician_alternate": {
+    "name": "Mago Nero"
+  },
+  "dark_magician_girl": {
+    "name": "Ragazza Maga Nera"
+  },
+  "dark_magician_girl___alternate": {
+    "name": "Ragazza Maga Nera"
+  },
+  "dark_magician_girl_alternate": {
+    "name": "Ragazza Maga Nera"
+  },
+  "dark_magician_of_chaos": {
+    "name": "Mago Nero del Caos"
+  },
+  "dark_magician_of_chaos_(render)": {
+    "name": "Mago Nero del Caos"
+  },
+  "dark_magician_v2": {
+    "name": "Mago Nero"
+  },
+  "dark_arkana_magician": {
+    "name": "Mago Nero Arkana"
+  },
+  "dark_magician_—_arkana_variant": {
+    "name": "Mago Nero — Arkana"
+  },
+  "dark_necrofear": {
+    "name": "Necrofear Oscuro"
+  },
+  "dark_paladin": {
+    "name": "Paladino Oscuro"
+  },
+  "dark_rabbit": {
+    "name": "Coniglio Oscuro"
+  },
+  "dark_resonator": {
+    "name": "Risonatore Oscuro"
+  },
+  "dark_ruler_ha_des": {
+    "name": "Sovrano Oscuro Ha Des"
+  },
+  "dark_sage": {
+    "name": "Saggio Oscuro"
+  },
+  "dark_world_thorns": {
+    "name": "Spine del Mondo Oscuro"
+  },
+  "darkfire_dragon": {
+    "name": "Drago di Fuoco Oscuro"
+  },
+  "despair_from_the_dark": {
+    "name": "Disperazione dalle Tenebre"
+  },
+  "destiny_hero_defender": {
+    "name": "D-EROE Difensore",
+    "skipStrip": true
+  },
+  "destiny_hero_plasma": {
+    "name": "D-EROE Plasma",
+    "skipStrip": true
+  },
+  "dragon_destroyer_swordsman": {
+    "name": "Spadaccino Distruttore di Draghi"
+  },
+  "dragon_spirit_of_white": {
+    "name": "Spirito del Drago Bianco"
+  },
+  "dragon_zombie": {
+    "name": "Drago Zombi"
+  },
+  "drillago": {
+    "name": "Drillago"
+  },
+  "drillroid": {
+    "name": "Trivelloide"
+  },
+  "duoterion": {
+    "name": "Duoterion"
+  },
+  "earthbound_immortal_chacu_challhua": {
+    "name": "Immortale Terrestre Chacu Challhua",
+    "skipStrip": true
+  },
+  "earthboundimmortal_chacu_challhua": {
+    "name": "Immortale Terrestre Chacu Challhua",
+    "skipStrip": true
+  },
+  "egyptian_god_slime": {
+    "name": "Slime Divinità Egizia"
+  },
+  "elemental_hero_bladedge": {
+    "name": "E-EROE Lama",
+    "skipStrip": true
+  },
+  "elemental_hero_burstinatrix": {
+    "name": "E-EROE Burstinatrix",
+    "skipStrip": true
+  },
+  "elemental_hero_clayman": {
+    "name": "E-EROE Clayman",
+    "skipStrip": true
+  },
+  "elemental_hero_flame_wingman": {
+    "name": "E-EROE Uomo Alato Fiammeggiante",
+    "skipStrip": true
+  },
+  "elemental_hero_necroshade": {
+    "name": "E-EROE Necroshade",
+    "skipStrip": true
+  },
+  "elemental_hero_neos": {
+    "name": "E-EROE Neos",
+    "skipStrip": true
+  },
+  "elemental_hero_neos_(alt_master_duel)": {
+    "name": "E-EROE Neos",
+    "skipStrip": true
+  },
+  "elemental_hero_neos_alius": {
+    "name": "E-EROE Neos Alius",
+    "skipStrip": true
+  },
+  "elemental_hero_sparkman": {
+    "name": "E-EROE Sparkman",
+    "skipStrip": true
+  },
+  "elemental_hero_stratos": {
+    "name": "E-EROE Stratos",
+    "skipStrip": true
+  },
+  "enraged_battle_ox": {
+    "name": "Bue da Battaglia Infuriato"
+  },
+  "evilswarm_mandragora": {
+    "name": "Malevsciame Mandragora"
+  },
+  "evilswarm_salamandra": {
+    "name": "Malevciame Salamandra"
+  },
+  "exodia": {
+    "name": "Exodia"
+  },
+  "exodia_(full_body)": {
+    "name": "Exodia"
+  },
+  "exodia_necross": {
+    "name": "Exodia Necross"
+  },
+  "exodia_the_forbidden_evolution": {
+    "name": "Exodia l'Evoluzione Proibita"
+  },
+  "exodius_the_ultimate_forbidden_lord": {
+    "name": "Exodius il Signore Supremo Proibito"
+  },
+  "fenrir": {
+    "name": "Fenrir"
+  },
+  "feral_imp": {
+    "name": "Imp Selvaggio"
+  },
+  "fiend_kraken": {
+    "name": "Kraken Demone"
+  },
+  "fiend_sword": {
+    "name": "Spada Demone"
+  },
+  "fossil_dyna_pachycephalo": {
+    "name": "Fossil Dyna Pachycephalo"
+  },
+  "fossil_warrior_skull_king": {
+    "name": "Guerriero Fossile Re Teschio"
+  },
+  "frost_&_flame_dragon": {
+    "name": "Drago Gelo e Fuoco"
+  },
+  "frost_and_flame_dragon": {
+    "name": "Drago Gelo e Fuoco"
+  },
+  "frostosaurus": {
+    "name": "Frostosauro"
+  },
+  "gagagigo": {
+    "name": "Gagagigo"
+  },
+  "gaia_the_dragon_champion": {
+    "name": "Gaia il Campione del Drago",
+    "skipStrip": true
+  },
+  "gaia_the_fierce_knight": {
+    "name": "Gaia il Cavaliere Feroce",
+    "skipStrip": true
+  },
+  "gamma_the_magnet_warrior": {
+    "name": "Gamma il Guerriero Magnetico"
+  },
+  "gate_guardian": {
+    "name": "Guardiano del Portale"
+  },
+  "gazelle_the_king_of_mythical_beasts": {
+    "name": "Gazelle Re delle Bestie Mistiche",
+    "skipStrip": true
+  },
+  "gellenduo": {
+    "name": "Gellenduo"
+  },
+  "gem-knight_citrine": {
+    "name": "Cavaliere-Gemma Citrino"
+  },
+  "gem-knight_master_diamond": {
+    "name": "Cavaliere-Gemma Diamante Mastro"
+  },
+  "gem_knight_citrine": {
+    "name": "Cavaliere-Gemma Citrino"
+  },
+  "gem_knight_master_diamond": {
+    "name": "Cavaliere-Gemma Diamante Mastro"
+  },
+  "genex_ally_birdman": {
+    "name": "Alleato Genex Uomo Uccello"
+  },
+  "ghostrick_ghoul": {
+    "name": "Spettrotrucco Ghoul"
+  },
+  "ghostrick_mummy": {
+    "name": "Spettrotrucco Mummia"
+  },
+  "ghostrick_skeleton": {
+    "name": "Spettrotrucco Scheletro"
+  },
+  "ghostrick_stein": {
+    "name": "Spettrotrucco Stein"
+  },
+  "ghostrick_yeti": {
+    "name": "Spettrotrucco Yeti"
+  },
+  "giant_soldier_of_stone": {
+    "name": "Soldato Gigante di Pietra"
+  },
+  "giga_gagagigo": {
+    "name": "Giga Gagagigo"
+  },
+  "gigobyte": {
+    "name": "Gigobyte"
+  },
+  "gogiga_gagagigo": {
+    "name": "Gogiga Gagagigo"
+  },
+  "golden_eyes_ido": {
+    "name": "Idolo dagli Occhi d'Oro"
+  },
+  "golden_eyes_idol": {
+    "name": "Idolo dagli Occhi d'Oro"
+  },
+  "golden_homunculus": {
+    "name": "Homunculus Dorato"
+  },
+  "gozuki": {
+    "name": "Gozuki"
+  },
+  "granadora": {
+    "name": "Granadora"
+  },
+  "graverobber": {
+    "name": "Ladro di Tombe"
+  },
+  "great_moth": {
+    "name": "Grande Falena"
+  },
+  "great_white": {
+    "name": "Grande Squalo Bianco"
+  },
+  "green_baboon,_defender_of_the_forest": {
+    "name": "Babbuino Verde",
+    "skipStrip": true
+  },
+  "green_baboon_defender_of_the_forest": {
+    "name": "Babbuino Verde",
+    "skipStrip": true
+  },
+  "green_gadget": {
+    "name": "Congegno Verde"
+  },
+  "green_gadget_alternate": {
+    "name": "Congegno Verde"
+  },
+  "gren,_tactician_of_dark_world": {
+    "name": "Gren, Stratega del Mondo Oscuro"
+  },
+  "griffore": {
+    "name": "Griffore"
+  },
+  "guardian_grarl": {
+    "name": "Guardiano Grarl"
+  },
+  "hade-hane": {
+    "name": "Hade-Hane"
+  },
+  "hade_hane": {
+    "name": "Hade-Hane"
+  },
+  "hane-hane": {
+    "name": "Hane-Hane"
+  },
+  "hane_hane": {
+    "name": "Hane-Hane"
+  },
+  "harpie_s_pet_dragon": {
+    "name": "Drago da Compagnia della Arpia"
+  },
+  "harpies_pet_dragon": {
+    "name": "Drago da Compagnia della Arpia"
+  },
+  "headless_knight": {
+    "name": "Cavaliere senza Testa"
+  },
+  "hinotama_soul": {
+    "name": "Anima di Hinotama"
+  },
+  "hitotsu-me_giant": {
+    "name": "Gigante Hitotsu-Me"
+  },
+  "hitotsu_me_giant": {
+    "name": "Gigante Hitotsu-Me"
+  },
+  "humanoid_slime": {
+    "name": "Slime Umanoide"
+  },
+  "hundred-eyes_dragon": {
+    "name": "Drago Cento Occhi",
+    "skipStrip": true
+  },
+  "hundred_eyes_dragon": {
+    "name": "Drago Cento Occhi",
+    "skipStrip": true
+  },
+  "hungry_burger": {
+    "name": "Hamburger Affamato"
+  },
+  "hydrogeddon": {
+    "name": "Idrogeddon"
+  },
+  "hyozanryu": {
+    "name": "Hyozanryu"
+  },
+  "hyper_hammerhead": {
+    "name": "Testa di Martello Iper"
+  },
+  "illusionist_faceless_mage": {
+    "name": "Mago Senza Volto Illusionista"
+  },
+  "imairuka": {
+    "name": "Imairuka"
+  },
+  "inpachi": {
+    "name": "Inpachi"
+  },
+  "jetroid": {
+    "name": "Jetroide"
+  },
+  "jinzo": {
+    "name": "Jinzo"
+  },
+  "jinzo_the_machine_menace": {
+    "name": "Jinzo la Minaccia Meccanica"
+  },
+  "junk_warrior": {
+    "name": "Guerriero Rottame"
+  },
+  "kahkki,_guerilla_of_dark_world": {
+    "name": "Kahkki, Guerriglia del Mondo Oscuro"
+  },
+  "kazejin": {
+    "name": "Kazejin"
+  },
+  "king_dragun": {
+    "name": "Re Dragun"
+  },
+  "king_of_the_skull_servants": {
+    "name": "Re dei Servitori del Teschio",
+    "skipStrip": true
+  },
+  "koitsu": {
+    "name": "Koitsu"
+  },
+  "kozaky": {
+    "name": "Kozaky"
+  },
+  "kuriboh": {
+    "name": "Kuriboh"
+  },
+  "la_jinn_the_mystical_genie": {
+    "name": "La Jinn il Genio Mistico"
+  },
+  "la_jinn_the_mystical_genie_(all_variants)": {
+    "name": "La Jinn il Genio Mistico"
+  },
+  "la_jinn_the_mystical_genie_of_the_lamp": {
+    "name": "La Jinn il Genio Mistico"
+  },
+  "lava_golem": {
+    "name": "Golem di Lava"
+  },
+  "legendary_swordsman": {
+    "name": "Spadaccino Leggendario"
+  },
+  "levia-dragon_daedalus": {
+    "name": "Levia-Drago Dedalo"
+  },
+  "levia_dragon_daedalus": {
+    "name": "Levia-Drago Dedalo"
+  },
+  "lord_of_d": {
+    "name": "Signore di D.",
+    "skipStrip": true
+  },
+  "lord_of_d.": {
+    "name": "Signore di D.",
+    "skipStrip": true
+  },
+  "luster_dragon": {
+    "name": "Drago Lucente"
+  },
+  "magician_robe": {
+    "name": "Vestito del Mago"
+  },
+  "magicians_robe": {
+    "name": "Vestito del Mago"
+  },
+  "magikuriboh": {
+    "name": "Magikuriboh"
+  },
+  "man-eating_plant": {
+    "name": "Pianta Mangia-Uomini"
+  },
+  "manga_ryu-ran": {
+    "name": "Manga Ryu-Ran"
+  },
+  "masked_beast_des_gardius": {
+    "name": "Bestia Mascherata Des Gardius"
+  },
+  "master_of_oz": {
+    "name": "Maestro di Oz"
+  },
+  "megalosmasher_x": {
+    "name": "Megalosmasher X"
+  },
+  "megazowler": {
+    "name": "Megazowler"
+  },
+  "meteor_b": {
+    "name": "Drago B. Meteora"
+  },
+  "meteor_b._dragon": {
+    "name": "Drago B. Meteora"
+  },
+  "mezuki": {
+    "name": "Mezuki"
+  },
+  "milennium_shield": {
+    "name": "Scudo del Millennio"
+  },
+  "millennium_scorpion": {
+    "name": "Scorpione del Millennio"
+  },
+  "millennium_shield": {
+    "name": "Scudo del Millennio"
+  },
+  "morphing_jar": {
+    "name": "Giara Mutaforma"
+  },
+  "moves:": {
+    "name": "Moves:"
+  },
+  "muka_muka": {
+    "name": "Muka Muka"
+  },
+  "naturia_beast": {
+    "name": "Bestia Naturia"
+  },
+  "naturia_cosmobeet": {
+    "name": "Naturia Cosmobarbabietola"
+  },
+  "naturia_landoise": {
+    "name": "Naturia Landoise"
+  },
+  "needle_burrower": {
+    "name": "Scavatore di Aghi"
+  },
+  "neo-spacian_glow_moss": {
+    "name": "Neo-Spaziale Muschio Luminescente"
+  },
+  "number_22:_zombiestein": {
+    "name": "Numero 22: Zombiestein",
+    "skipStrip": true
+  },
+  "number_22_zombiestein": {
+    "name": "Numero 22: Zombiestein",
+    "skipStrip": true
+  },
+  "obelisk_the_tormentor": {
+    "name": "Obelisco il Tormentatore",
+    "skipStrip": true
+  },
+  "ocean_dragon_lord_kairyu_shin": {
+    "name": "Signore Drago degli Oceani — Kairyu-Shin",
+    "skipStrip": true
+  },
+  "ocean_dragon_lord_—_kairyu-shin": {
+    "name": "Signore Drago degli Oceani — Kairyu-Shin",
+    "skipStrip": true
+  },
+  "ojama_black": {
+    "name": "Ojama Nero / Verde"
+  },
+  "ojama_black___green": {
+    "name": "Ojama Nero / Verde"
+  },
+  "ojama_king": {
+    "name": "Ojama Re"
+  },
+  "ojama_knight": {
+    "name": "Ojama Cavaliere"
+  },
+  "overtex_qoatlus": {
+    "name": "Overtex Qoatlus"
+  },
+  "oxygeddon": {
+    "name": "Ossigeddon"
+  },
+  "paladin_of_the_cursed_dragon": {
+    "name": "Paladino del Drago Maledetto"
+  },
+  "paladin_of_white_dragon": {
+    "name": "Paladino del Drago Bianco"
+  },
+  "pale_beast": {
+    "name": "Bestia Pallida"
+  },
+  "panther_warrior": {
+    "name": "Guerriero Pantera"
+  },
+  "panzer_dragon": {
+    "name": "Drago Panzer"
+  },
+  "papa_corn": {
+    "name": "Papà Mais"
+  },
+  "plaguespreader_zombie": {
+    "name": "Zombi Diffusore di Piaghe"
+  },
+  "power_invader": {
+    "name": "Invasore Potente"
+  },
+  "pyramid_turtle": {
+    "name": "Tartaruga Piramide"
+  },
+  "quickdraw_synchron": {
+    "name": "Sincrono Pistolero"
+  },
+  "ra_(winged_dragon_of_ra)": {
+    "name": "Ra (Drago Alato di Ra)"
+  },
+  "red-eyes_black_dragon": {
+    "name": "Drago Nero Occhi Rossi"
+  },
+  "red-eyes_dark_dragoon": {
+    "name": "Dragone Oscuro Occhi Rossi"
+  },
+  "red-eyes_darkness_dragon": {
+    "name": "Drago dell'Oscurità Occhi Rossi"
+  },
+  "red_gadget": {
+    "name": "Congegno Rosso"
+  },
+  "relinquished": {
+    "name": "Rinunciato"
+  },
+  "revendread_slayer": {
+    "name": "Slayer Vendettorrore"
+  },
+  "rocket_warrior": {
+    "name": "Guerriero Razzo"
+  },
+  "ronintoadin": {
+    "name": "Ronintoadin"
+  },
+  "rusty_bardiche": {
+    "name": "Bardica Arrugginita"
+  },
+  "sanga_of_the_thunder": {
+    "name": "Sanga del Tuono"
+  },
+  "sasuke_samurai": {
+    "name": "Sasuke Samurai"
+  },
+  "shinato,_king_of_a_higher_plane": {
+    "name": "Shinato, Re di un Piano Superiore"
+  },
+  "silent_magician_lv8": {
+    "name": "Mago Silenzioso LV8"
+  },
+  "skull_archfiend_of_lightning": {
+    "name": "Arcidemone Teschio del Fulmine"
+  },
+  "skull_servant": {
+    "name": "Servitore del Teschio"
+  },
+  "slifer_the_sky_dragon": {
+    "name": "Slifer il Drago del Cielo"
+  },
+  "snowman_eater": {
+    "name": "Pupazzo di Neve Divoratore"
+  },
+  "soldier_of_chaos": {
+    "name": "Soldato del Caos",
+    "skipStrip": true
+  },
+  "sorcerer_of_dark_magic": {
+    "name": "Stregone della Magia Oscura"
+  },
+  "soul_hunter": {
+    "name": "Cacciatore di Anime"
+  },
+  "spear_dragon": {
+    "name": "Drago Lancia"
+  },
+  "speed_warrior": {
+    "name": "Guerriero Velocità"
+  },
+  "steel_ogre_grotto": {
+    "name": "Ogre d'Acciaio Grotta N°1"
+  },
+  "steel_ogre_grotto_#1": {
+    "name": "Ogre d'Acciaio Grotta N°1"
+  },
+  "suijin": {
+    "name": "Suijin"
+  },
+  "summoned_skull": {
+    "name": "Teschio Evocato"
+  },
+  "super_conductor_tyranno": {
+    "name": "Tiranno Super Conduttore"
+  },
+  "supreme_king_of_armageddon": {
+    "name": "Re Supremo dell'Armageddon"
+  },
+  "sword_arm_of_dragon": {
+    "name": "Braccio di Spada del Drago"
+  },
+  "swordsman_of_landstar": {
+    "name": "Spadaccino di Landstar"
+  },
+  "the_creator": {
+    "name": "Il Creatore",
+    "skipStrip": true
+  },
+  "the_dark_creator": {
+    "name": "Il Creatore Oscuro"
+  },
+  "the_dark_magicians": {
+    "name": "I Maghi Neri"
+  },
+  "the_fabled_cerburrel": {
+    "name": "Il Favoloso Cerburrel"
+  },
+  "the_fabled_cerurrel": {
+    "name": "Il Favoloso Cerburrel"
+  },
+  "the_fabled_ganashia": {
+    "name": "Il Favoloso Ganashia"
+  },
+  "the_masked_beast": {
+    "name": "La Bestia Mascherata"
+  },
+  "the_tricky": {
+    "name": "Il Tricky",
+    "skipStrip": true
+  },
+  "the_winged_dragon_of_ra": {
+    "name": "Il Drago Alato di Ra"
+  },
+  "the_winged_dragon_of_ra_(variant)": {
+    "name": "Il Drago Alato di Ra"
+  },
+  "thousand-eyes_idol": {
+    "name": "Idolo dai Mille Occhi"
+  },
+  "thousand_dragon": {
+    "name": "Drago Millenario"
+  },
+  "thousand_eyes_restrict": {
+    "name": "1000 Occhi Restrizioni",
+    "skipStrip": true
+  },
+  "time_wizard_of_tomorrow": {
+    "name": "Mago del Tempo",
+    "skipStrip": true
+  },
+  "togex": {
+    "name": "Togex"
+  },
+  "toon_alligator": {
+    "name": "Alligatore Toon"
+  },
+  "toon_ancient_gear_golem": {
+    "name": "Golem Ingranaggio Antico Toon"
+  },
+  "toon_barrel_dragon": {
+    "name": "Drago Cannone Toon"
+  },
+  "toon_black_luster_soldier": {
+    "name": "Soldato Splendore Nero Toon"
+  },
+  "toon_briefcase": {
+    "name": "Valigetta Toon"
+  },
+  "toon_buster_blader": {
+    "name": "Buster Blader Toon"
+  },
+  "toon_cannon_soldier": {
+    "name": "Soldato Cannone Toon"
+  },
+  "toon_cyber_dragon": {
+    "name": "Cyber Drago Toon"
+  },
+  "toon_dark_magician": {
+    "name": "Mago Nero Toon"
+  },
+  "toon_dark_magician_girl": {
+    "name": "Ragazza Maga Nera Toon"
+  },
+  "toon_gemini_elf": {
+    "name": "Elfo Gemello Toon"
+  },
+  "toon_goblin_attack_force": {
+    "name": "Forza d'Attacco Goblin Toon"
+  },
+  "toon_harpie_lady": {
+    "name": "Lady Arpia Toon"
+  },
+  "toon_masked_sorcerer": {
+    "name": "Stregone Mascherato Toon"
+  },
+  "toon_mermaid": {
+    "name": "Sirena Toon"
+  },
+  "toon_summoned_skull": {
+    "name": "Teschio Evocato Toon"
+  },
+  "torike": {
+    "name": "Torike"
+  },
+  "treeborn_frog": {
+    "name": "Rana Nascalbero"
+  },
+  "tri-horned_dragon": {
+    "name": "Drago Tricorno"
+  },
+  "turtle_raccoon": {
+    "name": "Tartaruga Procione"
+  },
+  "twin-headed_king_rex": {
+    "name": "Re Rex a Due Teste"
+  },
+  "twin-headed_wolf": {
+    "name": "Lupo a Due Teste"
+  },
+  "twin_headed_king_rex": {
+    "name": "Re Rex a Due Teste"
+  },
+  "ultimate_ancient_gear_golem": {
+    "name": "Golem Ingranaggio Antico Supremo"
+  },
+  "unstoppable_exodia_incarnate": {
+    "name": "Exodia Incarnato Inarrestabile"
+  },
+  "valkerion_the_magnet_warrior": {
+    "name": "Valkyrion il Guerriero Magnetico"
+  },
+  "valkyrion_the_magnet_warrior": {
+    "name": "Valkyrion il Guerriero Magnetico"
+  },
+  "versago_the_destroyer": {
+    "name": "Versago il Distruttore"
+  },
+  "volcanic_doomfire": {
+    "name": "Fiamma Fatale Vulcanica"
+  },
+  "volcanic_hammerer": {
+    "name": "Martellatore Vulcanico"
+  },
+  "volcanic_rocket": {
+    "name": "Razzo Vulcanico"
+  },
+  "volcanic_shell": {
+    "name": "Granata Vulcanica"
+  },
+  "water_dragon": {
+    "name": "Drago d'Acqua"
+  },
+  "water_dragon_cluster": {
+    "name": "Cluster Drago d'Acqua"
+  },
+  "wattgiraffe": {
+    "name": "Wattgiraffa"
+  },
+  "white_night_dragon": {
+    "name": "Drago della Notte Bianca"
+  },
+  "woodland_sprite": {
+    "name": "Spiritello del Bosco"
+  },
+  "x-head_cannon": {
+    "name": "Cannone X-Testa"
+  },
+  "y-dragon_head": {
+    "name": "Testa Y-Drago"
+  },
+  "yellow_gadget": {
+    "name": "Congegno Giallo"
+  },
+  "yellow_gear": {
+    "name": "Congegno Giallo"
+  },
+  "yubel": {
+    "name": "Yubel"
+  },
+  "yubel_the_loving_defender": {
+    "name": "Yubel"
+  },
+  "z-metal_tank": {
+    "name": "Carro Z-Metallo"
+  },
+  "zombyra_the_dark": {
+    "name": "Zombyra l'Oscuro"
+  }
+}

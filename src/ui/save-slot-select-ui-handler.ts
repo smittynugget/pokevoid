@@ -8,10 +8,11 @@ import PokemonData from "../system/pokemon-data";
 import * as Utils from "../utils";
 import MessageUiHandler from "./message-ui-handler";
 import { TextStyle, addTextObject } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { addWindow } from "./ui-theme";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 import { GameMechanicsVersion } from "#enums/gameMechanicsID";
+import { isPrimaryPointer } from "./pointer-utils";
 
 const sessionSlotCount = 5;
 
@@ -36,6 +37,7 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
   private scrollCursor: integer = 0;
 
   private cursorObj: Phaser.GameObjects.NineSlice | null;
+  private _sessionSlotHitZones: Phaser.GameObjects.Zone[] = [];
 
   private sessionSlotsContainerInitialY: number;
 
@@ -57,16 +59,16 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
     loadSessionBg.setOrigin(0, 0);
     loadSessionBg.setY(-this.scene.game.canvas.height / 6);
     try {
-      if (loadSessionBg.postFX && typeof loadSessionBg.postFX.addColorMatrix === "function") {
-        const colorMatrix = loadSessionBg.postFX.addColorMatrix();
-        colorMatrix.negative();
-      } else {
-        loadSessionBg.setTint(0xFFFFFF);
-        loadSessionBg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
-      }
+        if (loadSessionBg.postFX && typeof loadSessionBg.postFX.addColorMatrix === 'function') {
+            const colorMatrix = loadSessionBg.postFX.addColorMatrix();
+            colorMatrix.negative();
+        } else {
+            loadSessionBg.setTint(0xFFFFFF);
+            loadSessionBg.setBlendMode(Phaser.BlendModes.DIFFERENCE);
+        }
     } catch (error) {
-      loadSessionBg.setTint(0x000000);
-      loadSessionBg.setBlendMode(Phaser.BlendModes.SCREEN);
+        loadSessionBg.setTint(0x000000);
+        loadSessionBg.setBlendMode(Phaser.BlendModes.SCREEN);
     }
     this.saveSlotSelectContainer.add(loadSessionBg);
 
@@ -97,6 +99,10 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
 
     super.show(args);
 
+    if (this._interactivesDisabledForOverlay) {
+      this.enableSaveSlotInteractives();
+    }
+
     this.uiMode = args[0] as SaveSlotUiMode;
     this.saveSlotSelectCallback = args[1] as SaveSlotSelectCallback;
     this._saveSlotPatterns = this._saveSlotPatterns || {};
@@ -105,6 +111,34 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
     this.populateSessionSlots();
     this.setScrollCursor(0);
     this.setCursor(0);
+
+    this._sessionSlotHitZones.forEach(z => z.destroy());
+    this._sessionSlotHitZones = [];
+    for (let s = 0; s < sessionSlotCount; s++) {
+      const zone = this.scene.add.zone(4, 4 + s * 56, 304, 52);
+      zone.setOrigin(0, 0);
+      zone.setInteractive({ useHandCursor: true });
+      this.sessionSlotsContainer.add(zone);
+      this._sessionSlotHitZones.push(zone);
+
+      const slotIndex = s;
+      zone.on("pointerover", () => {
+        const localCursor = slotIndex - this.scrollCursor;
+        if (localCursor >= 0 && localCursor <= 2 && this.cursor !== localCursor) {
+          this.setCursor(localCursor);
+        }
+      });
+      zone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (!isPrimaryPointer(pointer)) return;
+        const localCursor = slotIndex - this.scrollCursor;
+        if (localCursor < 0 || localCursor > 2) return;
+        if (this.cursor !== localCursor) {
+          this.setCursor(localCursor);
+        } else {
+          this.processInput(Button.ACTION);
+        }
+      });
+    }
     this._saveSlotPatterns.sessionSlots = [];
     this.sessionSlots.forEach((sessionSlot, index) => {
       const handle = attachModalBackground(
@@ -134,42 +168,44 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
           error = true;
         } else {
           switch (this.uiMode) {
-          case SaveSlotUiMode.LOAD:
-            this.saveSlotSelectCallback = null;
-            originalCallback && originalCallback(cursor);
-            break;
-          case SaveSlotUiMode.SAVE:
-            const saveAndCallback = async () => {
-              const originalCallback = this.saveSlotSelectCallback;
+            case SaveSlotUiMode.LOAD:
               this.saveSlotSelectCallback = null;
+            originalCallback && originalCallback(cursor);
+              break;
+            case SaveSlotUiMode.SAVE:
+              const saveAndCallback = async () => {
+                const originalCallback = this.saveSlotSelectCallback;
+                this.saveSlotSelectCallback = null;
 
-              await ui.revertMode();
-              ui.showText("", 0);
-              await ui.setMode(Mode.MESSAGE);
+                    await ui.revertMode();
+                    ui.showText("", 0);
+                    await ui.setMode(Mode.MESSAGE);
 
-              originalCallback && originalCallback(cursor);
-            };
-            if (this.sessionSlots[cursor].hasData) {
-              ui.showText(i18next.t("saveSlotSelectUiHandler:overwriteData"), null, () => {
+                originalCallback && originalCallback(cursor);
+              };
+              if (this.sessionSlots[cursor].hasData) {
+                this.disableSaveSlotInteractives();
+                ui.showText(i18next.t("saveSlotSelectUiHandler:overwriteData"), null, () => {
                 ui.setOverlayMode(Mode.CONFIRM, () => {
                   this.scene.gameData.deleteSession(cursor).then(response => {
                     if (response === false) {
                       this.scene.reset(true);
                     } else {
-                      saveAndCallback();
+                          saveAndCallback();
                     }
                   });
                 }, () => {
-                  ui.revertMode();
+                    ui.revertMode();
+                    this.enableSaveSlotInteractives();
                   ui.showText("", 0);
-                }, false, 0, 19, 2000);
-              });
-            } else if (this.sessionSlots[cursor].hasData === false) {
-              saveAndCallback();
-            } else {
-              return false;
-            }
-            break;
+                  }, false, 0, 19, 2000);
+                });
+              } else if (this.sessionSlots[cursor].hasData === false) {
+                saveAndCallback();
+              } else {
+                return false;
+              }
+              break;
           }
           success = true;
         }
@@ -180,20 +216,20 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
       }
     } else {
       switch (button) {
-      case Button.UP:
-        if (this.cursor) {
-          success = this.setCursor(this.cursor - 1);
-        } else if (this.scrollCursor) {
-          success = this.setScrollCursor(this.scrollCursor - 1);
-        }
-        break;
-      case Button.DOWN:
-        if (this.cursor < 2) {
-          success = this.setCursor(this.cursor + 1);
-        } else if (this.scrollCursor < sessionSlotCount - 3) {
-          success = this.setScrollCursor(this.scrollCursor + 1);
-        }
-        break;
+        case Button.UP:
+          if (this.cursor) {
+            success = this.setCursor(this.cursor - 1);
+          } else if (this.scrollCursor) {
+            success = this.setScrollCursor(this.scrollCursor - 1);
+          }
+          break;
+        case Button.DOWN:
+          if (this.cursor < 2) {
+            success = this.setCursor(this.cursor + 1);
+          } else if (this.scrollCursor < sessionSlotCount - 3) {
+            success = this.setScrollCursor(this.scrollCursor + 1);
+          }
+          break;
       }
     }
 
@@ -295,8 +331,26 @@ export default class SaveSlotSelectUiHandler extends MessageUiHandler {
   }
 
   clearSessionSlots() {
+    this._sessionSlotHitZones.forEach(z => z.destroy());
+    this._sessionSlotHitZones = [];
     this.sessionSlots.splice(0, this.sessionSlots.length);
     this.sessionSlotsContainer.removeAll(true);
+  }
+
+  private _interactivesDisabledForOverlay = false;
+
+  private disableSaveSlotInteractives(): void {
+    if (this._interactivesDisabledForOverlay) return;
+    this._interactivesDisabledForOverlay = true;
+    this._sessionSlotHitZones?.forEach(z => z?.disableInteractive());
+  }
+
+  private enableSaveSlotInteractives(): void {
+    if (!this._interactivesDisabledForOverlay) return;
+    this._interactivesDisabledForOverlay = false;
+    this._sessionSlotHitZones?.forEach(z => {
+      if (z?.input) z.input.enabled = true;
+    });
   }
 }
 
@@ -348,8 +402,25 @@ class SessionSlot extends Phaser.GameObjects.Container {
       text.setStroke("#424242", 14);
       text.setOrigin(1, 0);
 
+      const isAltBuild = !!p.altBuildId;
+      const displayRank = isAltBuild ? Math.max(1, p.altBuildRank ?? 0) : (p.rankUpCount ?? 0) + 1;
+      const showRank = isAltBuild || displayRank > 1;
+
       iconContainer.add(icon);
       iconContainer.add(text);
+
+      if (showRank) {
+        const rankIcon = this.scene.add.sprite(31, 26, "smitems", "modSoulCollected");
+        rankIcon.setScale(0.1875);
+        rankIcon.setOrigin(0, 0.5);
+        iconContainer.add(rankIcon);
+
+        const rankText = addTextObject(this.scene, 37.5, 24, Utils.intToRoman(displayRank), TextStyle.PARTY, { fontSize: "30px", color: "#FFD700" });
+        rankText.setShadow(0, 0, undefined);
+        rankText.setStroke("#424242", 14);
+        rankText.setOrigin(0, 0);
+        iconContainer.add(rankText);
+      }
 
       pokemonIconsContainer.add(iconContainer);
 
@@ -370,8 +441,8 @@ class SessionSlot extends Phaser.GameObjects.Container {
       }
       const icon = modifier?.getIcon(this.scene, false);
       if (icon) {
-        icon.setPosition(24 * visibleModifierIndex, 0);
-        modifierIconsContainer.add(icon);
+      icon.setPosition(24 * visibleModifierIndex, 0);
+      modifierIconsContainer.add(icon);
       }
       if (++visibleModifierIndex === 12) {
         break;
@@ -387,24 +458,24 @@ class SessionSlot extends Phaser.GameObjects.Container {
       return mode;
     }
     switch (mode) {
-    case GameModes.NUZLOCKE:
-      return GameModes.NUZLIGHT;
-    case GameModes.NUZLOCKE_DRAFT:
-      return GameModes.NUZLIGHT_DRAFT;
-    case GameModes.CHAOS_NUZLOCKE:
-      return GameModes.CHAOS_NUZLIGHT;
-    case GameModes.CHAOS_NUZLOCKE_DRAFT:
-      return GameModes.CHAOS_NUZLIGHT_DRAFT;
-    case GameModes.CHAOS_NUZLOCKE_SHORT:
-      return GameModes.CHAOS_NUZLIGHT_SHORT;
-    case GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT:
-      return GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT;
-    case GameModes.CHAOS_NUZLOCKE_FTL:
-      return GameModes.CHAOS_NUZLIGHT_FTL;
-    case GameModes.CHAOS_NUZLOCKE_DRAFT_FTL:
-      return GameModes.CHAOS_NUZLIGHT_DRAFT_FTL;
-    default:
-      return mode;
+      case GameModes.NUZLOCKE:
+        return GameModes.NUZLIGHT;
+      case GameModes.NUZLOCKE_DRAFT:
+        return GameModes.NUZLIGHT_DRAFT;
+      case GameModes.CHAOS_NUZLOCKE:
+        return GameModes.CHAOS_NUZLIGHT;
+      case GameModes.CHAOS_NUZLOCKE_DRAFT:
+        return GameModes.CHAOS_NUZLIGHT_DRAFT;
+      case GameModes.CHAOS_NUZLOCKE_SHORT:
+        return GameModes.CHAOS_NUZLIGHT_SHORT;
+      case GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT:
+        return GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT;
+      case GameModes.CHAOS_NUZLOCKE_FTL:
+        return GameModes.CHAOS_NUZLIGHT_FTL;
+      case GameModes.CHAOS_NUZLOCKE_DRAFT_FTL:
+        return GameModes.CHAOS_NUZLIGHT_DRAFT_FTL;
+      default:
+        return mode;
     }
   }
 
@@ -424,7 +495,7 @@ class SessionSlot extends Phaser.GameObjects.Container {
     const rawMode = this.sanitizeModeForUnlocks(data.gameMode);
 
     if (rawMode !== GameModes.SHOP) {
-      return rawMode;
+        return rawMode;
     }
 
     const hasBattlePath = data.battlePath !== null && data.battlePath !== undefined;
@@ -434,13 +505,13 @@ class SessionSlot extends Phaser.GameObjects.Container {
     const hasChaosRivals = (data as any).chaosAltRivals && (data as any).chaosAltRivals.length > 0;
     const isChaosV2Save = data.gameMechanicTracking &&
         Object.values(data.gameMechanicTracking).some(v =>
-          v === GameMechanicsVersion.CHAOS_V2 || v === "CHAOS_V2_BALANCE_IMPROVEMENTS"
+            v === GameMechanicsVersion.CHAOS_V2 || v === "CHAOS_V2_BALANCE_IMPROVEMENTS"
         );
 
     const shouldDisplayAsChaos = isChaosV2Save || hasChaosRivals;
 
     if (shouldDisplayAsChaos) {
-      return this.sanitizeModeForUnlocks(this.inferChaosMode(data));
+        return this.sanitizeModeForUnlocks(this.inferChaosMode(data));
     }
 
     return this.sanitizeModeForUnlocks(this.inferGauntletMode());
@@ -458,60 +529,44 @@ class SessionSlot extends Phaser.GameObjects.Container {
     let effectiveWaves = totalWaves;
 
     if (totalWaves !== undefined && waveIndex > totalWaves) {
-      effectiveWaves = undefined;
+        effectiveWaves = undefined;
     }
 
     if (effectiveWaves === undefined && waveIndex > 0) {
-      if (waveIndex <= 100) {
-        effectiveWaves = 100;
-      } else if (waveIndex <= 200) {
-        effectiveWaves = 200;
-      } else if (waveIndex <= 500) {
-        effectiveWaves = 500;
-      } else if (waveIndex <= 1000) {
-        effectiveWaves = 1000;
-      } else {
-        effectiveWaves = 100000;
-      }
+        if (waveIndex <= 100) {
+            effectiveWaves = 100;
+        } else if (waveIndex <= 200) {
+            effectiveWaves = 200;
+        } else if (waveIndex <= 500) {
+            effectiveWaves = 500;
+        } else if (waveIndex <= 1000) {
+            effectiveWaves = 1000;
+        } else {
+            effectiveWaves = 100000;
+        }
     }
 
     if (effectiveWaves !== undefined) {
-      if (effectiveWaves <= 100) {
-        if (isVoid) {
-          return isDraft ? GameModes.CHAOS_ROGUE_VOID_FTL : GameModes.CHAOS_VOID_FTL;
+        if (effectiveWaves <= 100) {
+            if (isVoid) return isDraft ? GameModes.CHAOS_ROGUE_VOID_FTL : GameModes.CHAOS_VOID_FTL;
+            if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_FTL : GameModes.CHAOS_NUZLOCKE_FTL;
+            if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_FTL : GameModes.CHAOS_NUZLIGHT_FTL;
+            return isDraft ? GameModes.CHAOS_ROGUE_FTL : GameModes.CHAOS_JOURNEY_FTL;
         }
-        if (isNuzlocke) {
-          return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_FTL : GameModes.CHAOS_NUZLOCKE_FTL;
+        if (effectiveWaves <= 200) {
+            if (isVoid) return isDraft ? GameModes.CHAOS_ROGUE_VOID_SHORT : GameModes.CHAOS_VOID_SHORT;
+            if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT : GameModes.CHAOS_NUZLOCKE_SHORT;
+            if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT : GameModes.CHAOS_NUZLIGHT_SHORT;
+            return isDraft ? GameModes.CHAOS_ROGUE_SHORT : GameModes.CHAOS_JOURNEY_SHORT;
         }
-        if (isNuzlight) {
-          return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_FTL : GameModes.CHAOS_NUZLIGHT_FTL;
+        if (effectiveWaves <= 500) {
+            if (isNuzlocke) return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT : GameModes.CHAOS_NUZLOCKE;
+            if (isNuzlight) return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT : GameModes.CHAOS_NUZLIGHT;
+            return isDraft ? GameModes.CHAOS_ROGUE : GameModes.CHAOS_JOURNEY;
         }
-        return isDraft ? GameModes.CHAOS_ROGUE_FTL : GameModes.CHAOS_JOURNEY_FTL;
-      }
-      if (effectiveWaves <= 200) {
-        if (isVoid) {
-          return isDraft ? GameModes.CHAOS_ROGUE_VOID_SHORT : GameModes.CHAOS_VOID_SHORT;
+        if (effectiveWaves <= 1000) {
+            return isDraft ? GameModes.CHAOS_ROGUE_VOID : GameModes.CHAOS_VOID;
         }
-        if (isNuzlocke) {
-          return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT_SHORT : GameModes.CHAOS_NUZLOCKE_SHORT;
-        }
-        if (isNuzlight) {
-          return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT_SHORT : GameModes.CHAOS_NUZLIGHT_SHORT;
-        }
-        return isDraft ? GameModes.CHAOS_ROGUE_SHORT : GameModes.CHAOS_JOURNEY_SHORT;
-      }
-      if (effectiveWaves <= 500) {
-        if (isNuzlocke) {
-          return isDraft ? GameModes.CHAOS_NUZLOCKE_DRAFT : GameModes.CHAOS_NUZLOCKE;
-        }
-        if (isNuzlight) {
-          return isDraft ? GameModes.CHAOS_NUZLIGHT_DRAFT : GameModes.CHAOS_NUZLIGHT;
-        }
-        return isDraft ? GameModes.CHAOS_ROGUE : GameModes.CHAOS_JOURNEY;
-      }
-      if (effectiveWaves <= 1000) {
-        return isDraft ? GameModes.CHAOS_ROGUE_VOID : GameModes.CHAOS_VOID;
-      }
     }
 
     return isDraft ? GameModes.CHAOS_INFINITE_ROGUE : GameModes.CHAOS_INFINITE;

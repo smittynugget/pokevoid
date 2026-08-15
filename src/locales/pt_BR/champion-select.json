@@ -42,11 +42,22 @@
     "defaultRevive": "Aumenta a chance de reviver para Pokémon {{types}} em {{percent}}%",
     "defaultTokens": "Receba Tokens da Árvore de Habilidades para desbloquear nós",
     "defaultPoints": "Receba Pontos de Habilidade para comprar habilidades",
-    "typesFallback": "Desconhecido"
+    "typesFallback": "Desconhecido",
+    "essenceRequiredTooltip": "Essência Necessária",
+    "essenceRequiredTooltipDesc": "Gaste essências para subir de nível seu campeão. Derrote Pokémon para obter essências do tipo deles.",
+    "essenceLoreNote": "Nota de Essências Únicas: SMITTY obtida de treinadores SMITTY. GLITCH de pokémon glitch. GEN I de pokémon da Gen I.",
+    "abilityHeader": "HABILIDADE",
+    "descriptionHeader": "DESCRIÇÃO",
+    "itemDescriptionHeader": "DESCRIÇÃO DO ITEM",
+    "requiredEssenceHeader": "ESSÊNCIA NECESSÁRIA",
+    "skillInfoHeader": "INFO DA HABILIDADE"
   },
   "skillList": {
     "levelPrefix": "Nv {{level}}",
     "unknownSkill": "???"
+  },
+  "skillBar": {
+    "next": "PRÓXIMO"
   },
   "defaultSkillLabels": {
     "tms": "MTs {{types}}",
@@ -64,10 +75,24 @@
     "fusionPriority": "Prioridade de Fusão {{types}}"
   },
   "button": {
-    "useEssence": "Usar Essência"
+    "useEssence": "Usar Essência",
+    "levelUp": "Subir de Nível",
+    "notEnoughEssence": "Para Subir:",
+    "required": "NECESSÁRIO"
   },
-  "brock": { "description": "Campeão da Rocha" },
-  "misty": { "description": "Campeã da Água" },
+  "brock": {
+    "description": "Campeão da Rocha",
+    "essenceRequirement": "Requer {{ground}} essências Terra + {{rock}} essências Rocha"
+  },
+  "misty": {
+    "description": "Campeã da Água",
+    "essenceRequirement": "Requer {{water}} essências Água"
+  },
+  "red": {
+    "description": "A lenda...",
+    "unlockRequirement": "Desbloqueie todos os campeões e derrote o Rival Red Fase 6 no Caos ou Desafio",
+    "essenceRequirement": "Requer {{genOne}} essências Gen I"
+  },
   "apollo": {
     "name": "Apollo",
     "description": "Campeão do Sol"
@@ -76,7 +101,10 @@
     "name": "Diana",
     "description": "Campeã da Lua"
   },
-  "generic": { "description": "O campeão padrão." },
+  "generic": {
+    "description": "O campeão padrão.",
+    "essenceRequirement": "Sem requisitos especiais"
+  },
   "champions": {
     "title": "Escolha Seu Campeão",
     "brock": {
@@ -89,11 +117,20 @@
       "description": "Mestra dos tipos Água",
       "essenceRequirement": "Requer {{water}} essências Água"
     },
+    "red": {
+      "name": "Red - Campeão Lendário",
+      "description": "A lenda...",
+      "unlockRequirement": "Desbloqueie todos os campeões e derrote o Rival Red Fase 6 no Caos ou Desafio",
+      "essenceRequirement": "Requer {{genOne}} essências Gen I"
+    },
     "generic": {
       "name": "Campeão Equilibrado",
       "description": "Sem especialização de tipo",
       "essenceRequirement": "Sem requisitos especiais"
-    }
-  }
+    },
+    "generationShort": "GER {{generation}}"
+  },
+  "generationShort": "GER {{generation}}",
+  "skillsOfTitle": "HABILIDADES DE {{subtitle}}",
+  "switchChampion": "Outra Metade"
 }
-

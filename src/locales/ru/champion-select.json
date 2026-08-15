@@ -42,11 +42,22 @@
     "defaultRevive": "Увеличь шанс возрождения покемонов {{types}} на {{percent}}%",
     "defaultTokens": "Получай жетоны дерева навыков для открытия узлов",
     "defaultPoints": "Получай очки навыков для покупки навыков",
-    "typesFallback": "Неизвестно"
+    "typesFallback": "Неизвестно",
+    "essenceRequiredTooltip": "Требуемая эссенция",
+    "essenceRequiredTooltipDesc": "Потратьте эссенции, чтобы повысить уровень вашего чемпиона. Побеждайте покемонов, чтобы получать эссенции их типа.",
+    "essenceLoreNote": "Заметка об уникальных эссенциях: SMITTY от тренеров SMITTY. GLITCH от глитч-покемонов. GEN I от покемонов Gen I.",
+    "abilityHeader": "ТАЛАНТ",
+    "descriptionHeader": "ОПИСАНИЕ",
+    "itemDescriptionHeader": "ОПИСАНИЕ ПРЕДМЕТА",
+    "requiredEssenceHeader": "НЕОБХОДИМАЯ ЭССЕНЦИЯ",
+    "skillInfoHeader": "ИНФОРМАЦИЯ О НАВЫКЕ"
   },
   "skillList": {
     "levelPrefix": "Ур. {{level}}",
     "unknownSkill": "???"
+  },
+  "skillBar": {
+    "next": "ДАЛЕЕ"
   },
   "defaultSkillLabels": {
     "tms": "TM: {{types}}",
@@ -64,13 +75,23 @@
     "fusionPriority": "Приоритет слияний: {{types}}"
   },
   "button": {
-    "useEssence": "Использовать эссенцию"
+    "useEssence": "Использовать эссенцию",
+    "levelUp": "Повысить Уровень",
+    "notEnoughEssence": "Для повышения:",
+    "required": "НЕОБХОДИМО"
   },
   "brock": {
-    "description": "Чемпион камня"
+    "description": "Чемпион камня",
+    "essenceRequirement": "Нужно: {{ground}} эссенций Земли + {{rock}} эссенций Камня"
   },
   "misty": {
-    "description": "Чемпион воды"
+    "description": "Чемпион воды",
+    "essenceRequirement": "Нужно: {{water}} эссенций Воды"
+  },
+  "red": {
+    "description": "Легенда...",
+    "unlockRequirement": "Разблокируйте всех чемпионов и победите Соперника Реда 6 стадии в Хаосе или Гаунтлете",
+    "essenceRequirement": "Нужно: {{genOne}} эссенций Gen I"
   },
   "apollo": {
     "name": "Аполлон",
@@ -81,7 +102,8 @@
     "description": "Чемпион луны"
   },
   "generic": {
-    "description": "Чемпион по умолчанию."
+    "description": "Чемпион по умолчанию.",
+    "essenceRequirement": "Нет особых требований"
   },
   "champions": {
     "title": "Выбери своего чемпиона",
@@ -95,10 +117,20 @@
       "description": "Мастер Воды",
       "essenceRequirement": "Нужно: {{water}} эссенций Воды"
     },
+    "red": {
+      "name": "Ред - Легендарный Чемпион",
+      "description": "Легенда...",
+      "unlockRequirement": "Разблокируйте всех чемпионов и победите Соперника Реда 6 стадии в Хаосе или Гаунтлете",
+      "essenceRequirement": "Нужно: {{genOne}} эссенций Gen I"
+    },
     "generic": {
       "name": "Сбалансированный чемпион",
       "description": "Без специализации по типу",
       "essenceRequirement": "Нет особых требований"
-    }
-  }
+    },
+    "generationShort": "ПОК {{generation}}"
+  },
+  "generationShort": "ПОК {{generation}}",
+  "skillsOfTitle": "НАВЫКИ {{subtitle}}",
+  "switchChampion": "Другая Половина"
 }

@@ -34,5 +34,8 @@
   "sortByCost": "ポイント",
   "sortByCandies": "飴の数",
   "sortByIVs": "個体値",
-  "sortByName": "名前"
+  "sortByName": "名前",
+  "fusionsFilter": "融合",
+  "hasFusions": "融合 - あり",
+  "noFusions": "融合 - なし"
 }

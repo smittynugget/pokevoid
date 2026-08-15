@@ -1,11 +1,11 @@
 import BattleScene from "../battle-scene";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { TextStyle, addTextObject, getEggTierTextTint, getTextStyleOptions } from "./text";
 import MessageUiHandler from "./message-ui-handler";
 import * as Utils from "../utils";
 import { Egg, getLegendaryGachaSpeciesForTimestamp, IEggOptions } from "../data/egg";
 import { VoucherType, getVoucherTypeIcon } from "../system/voucher";
-import { getPokemonSpecies } from "../data/pokemon-species";
+import { getPokemonSpecies, adjustDuelmonIconScale } from "../data/pokemon-species";
 import { addWindow } from "./ui-theme";
 import { Tutorial, handleTutorial } from "../tutorial";
 import {Button} from "#enums/buttons";
@@ -13,6 +13,7 @@ import Overrides from "#app/overrides";
 import { GachaType } from "#app/enums/gacha-types";
 import i18next from "i18next";
 import { EggTier } from "#enums/egg-type";
+import { isPrimaryPointer } from "./pointer-utils";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 
 export default class EggGachaUiHandler extends MessageUiHandler {
@@ -46,6 +47,9 @@ export default class EggGachaUiHandler extends MessageUiHandler {
   private voucherContainers: Phaser.GameObjects.Container[] = [];
   private gachaMessageBoxContainer?: Phaser.GameObjects.Container;
   private voucherBackgrounds: Phaser.GameObjects.NineSlice[] = [];
+  private _pullOptionHitZones: Phaser.GameObjects.Zone[] = [];
+  private gachaNavLeft: Phaser.GameObjects.Sprite | null = null;
+  private gachaNavRight: Phaser.GameObjects.Sprite | null = null;
 
   constructor(scene: BattleScene) {
     super(scene, Mode.EGG_GACHA);
@@ -86,6 +90,11 @@ export default class EggGachaUiHandler extends MessageUiHandler {
     }
 
     this.eggGachaContainer.add(bg);
+
+    this.eggGachaContainer.setInteractive(
+      new Phaser.Geom.Rectangle(0, 0, bg.displayWidth, bg.displayHeight),
+      Phaser.Geom.Rectangle.Contains
+    );
 
     const hatchFrameNames = this.scene.anims.generateFrameNames("gacha_hatch", { suffix: ".png", start: 1, end: 4 });
     if (!(this.scene.anims.exists("open"))) {
@@ -164,7 +173,7 @@ export default class EggGachaUiHandler extends MessageUiHandler {
         if (["pt-BR"].includes(currentLanguage)) {
           pokemonIcon.setX(pokemonIconX - 2);
         }
-          pokemonIcon.setScale(0.5);
+          pokemonIcon.setScale(adjustDuelmonIconScale(0.5, undefined));
           pokemonIcon.setOrigin(0, 0.5);
 
           gachaInfoContainer.add(pokemonIcon);
@@ -271,6 +280,8 @@ export default class EggGachaUiHandler extends MessageUiHandler {
       this.eggGachaOptionsContainer.add(icon);
     });
 
+    this.rebuildPullOptionHitZones();
+
     this.eggGachaContainer.add(this.eggGachaOptionsContainer);
 
     new Array(Utils.getEnumKeys(VoucherType).length).fill(null).map((_, i) => {
@@ -324,6 +335,41 @@ export default class EggGachaUiHandler extends MessageUiHandler {
     this.message = gachaMessageText;
 
     this.eggGachaContainer.add(this.gachaMessageBoxContainer);
+
+    this.gachaNavLeft = this.scene.add.sprite(100, 85, "cursor_reverse");
+    this.gachaNavLeft.setScale(0.75);
+    this.gachaNavLeft.setInteractive({ useHandCursor: true });
+    this.gachaNavLeft.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (!isPrimaryPointer(pointer)) return;
+      if (!this.transitioning && !this.eggGachaSummaryContainer.visible) {
+        this.processInput(Button.LEFT);
+      }
+    });
+    this.eggGachaContainer.add(this.gachaNavLeft);
+    this.eggGachaContainer.bringToTop(this.gachaNavLeft);
+
+    this.gachaNavRight = this.scene.add.sprite(220, 85, "cursor");
+    this.gachaNavRight.setScale(0.75);
+    this.gachaNavRight.setInteractive({ useHandCursor: true });
+    this.gachaNavRight.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (!isPrimaryPointer(pointer)) return;
+      if (!this.transitioning && !this.eggGachaSummaryContainer.visible) {
+        this.processInput(Button.RIGHT);
+      }
+    });
+    this.eggGachaContainer.add(this.gachaNavRight);
+    this.eggGachaContainer.bringToTop(this.gachaNavRight);
+
+    this.eggGachaContainer.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (!isPrimaryPointer(pointer)) return;
+      if (this.transitioning) {
+        this.processInput(Button.ACTION);
+        return;
+      }
+      if (this.eggGachaSummaryContainer.visible) {
+        this.processInput(Button.ACTION);
+      }
+    });
 
     this.setCursor(0);
   }
@@ -379,6 +425,8 @@ export default class EggGachaUiHandler extends MessageUiHandler {
       { mask: false, alphaMultiplier: 0.4, getTarget: () => this.eggGachaMessageBox }
     );
 
+    this.rebuildPullOptionHitZones();
+
     this.getUi().bringToTop(this.eggGachaContainer);
 
     this.eggGachaContainer.setVisible(true);
@@ -416,6 +464,21 @@ export default class EggGachaUiHandler extends MessageUiHandler {
 
       this.gachaContainers[this.gachaCursor].add(egg);
       this.gachaContainers[this.gachaCursor].moveTo(egg, 2);
+
+      if (egg.postFX && typeof egg.postFX.addPixelate === "function") {
+        const pixFx = egg.postFX.addPixelate(20);
+        this.scene.tweens.add({
+          targets: pixFx,
+          amount: -1,
+          duration: Utils.fixedInt(350),
+          ease: "Linear",
+          onComplete: () => {
+            if (egg.postFX) {
+              egg.postFX.remove(pixFx);
+            }
+          }
+        });
+      }
 
       const doPullAnim = () => {
         this.scene.playSound("se/gacha_running", { loop: true });
@@ -597,6 +660,7 @@ export default class EggGachaUiHandler extends MessageUiHandler {
         this.eggGachaSummaryContainer.removeAll(true);
         this.setTransitioning(false);
         this.eggGachaOptionsContainer.setVisible(true);
+        this.getUi().updateEggHatchHudCounter();
       }
     });
   }
@@ -608,6 +672,7 @@ export default class EggGachaUiHandler extends MessageUiHandler {
         const species = getPokemonSpecies(getLegendaryGachaSpeciesForTimestamp(this.scene, new Date().getTime()));
         const pokemonIcon = infoContainer.getAt(1) as Phaser.GameObjects.Sprite;
         pokemonIcon.setTexture(species.getIconAtlasKey(), species.getIconId(false));
+        pokemonIcon.setScale(adjustDuelmonIconScale(0.5, species.generation));
         break;
     }
   }
@@ -752,6 +817,7 @@ export default class EggGachaUiHandler extends MessageUiHandler {
             }
             break;
           case Button.CANCEL:
+            this.getUi().updateEggHatchHudCounter();
             this.getUi().revertMode();
             success = true;
             break;
@@ -765,16 +831,18 @@ export default class EggGachaUiHandler extends MessageUiHandler {
               success = this.setCursor(this.cursor + 1);
             }
             break;
-          case Button.LEFT:
-            if (this.gachaCursor) {
-              success = this.setGachaCursor(this.gachaCursor - 1);
-            }
+          case Button.LEFT: {
+            const gachaCount = Utils.getEnumKeys(GachaType).length;
+            const nextLeft = (this.gachaCursor - 1 + gachaCount) % gachaCount;
+            success = this.setGachaCursor(nextLeft);
             break;
-          case Button.RIGHT:
-            if (this.gachaCursor < Utils.getEnumKeys(GachaType).length - 1) {
-              success = this.setGachaCursor(this.gachaCursor + 1);
-            }
+          }
+          case Button.RIGHT: {
+            const gachaCount = Utils.getEnumKeys(GachaType).length;
+            const nextRight = (this.gachaCursor + 1) % gachaCount;
+            success = this.setGachaCursor(nextRight);
             break;
+          }
         }
       }
     }
@@ -802,6 +870,43 @@ export default class EggGachaUiHandler extends MessageUiHandler {
     return ret;
   }
 
+  private rebuildPullOptionHitZones(): void {
+    this._pullOptionHitZones.forEach(z => z.destroy());
+    this._pullOptionHitZones = [];
+    const pullRowStep = 96 * this.scale;
+    const zoneH = pullRowStep + 4;
+    for (let i = 0; i < 6; i++) {
+      const rowTopY = i === 0 ? 0 : 9 + i * pullRowStep;
+      const rowBottomY = 9 + (i + 1) * pullRowStep;
+      const thisZoneH = i === 0 ? rowBottomY : zoneH;
+      const rowCenterY = rowTopY + thisZoneH / 2;
+      const zone = this.scene.add.zone(0, 0, this.eggGachaOptionSelectBg.width - 8, thisZoneH);
+      zone.setOrigin(0, 0.5);
+      const bg = this.eggGachaOptionSelectBg;
+      const offsetX = bg.width * (-0.5 + (0.5 - bg.originX));
+      const offsetY = bg.height * (-0.5 + (0.5 - bg.originY));
+      zone.setPosition(bg.x + offsetX + 4, bg.y + offsetY + rowCenterY);
+      zone.setInteractive({ useHandCursor: true });
+      this.eggGachaOptionsContainer.add(zone);
+      this._pullOptionHitZones.push(zone);
+      const idx = i;
+      zone.on("pointerover", () => {
+        if (this.cursor !== idx) this.setCursor(idx);
+      });
+      zone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (!isPrimaryPointer(pointer)) return;
+        if (this.cursor !== idx) {
+          this.setCursor(idx);
+        } else {
+          this.processInput(Button.ACTION);
+        }
+      });
+    }
+    for (const z of this._pullOptionHitZones) {
+      this.eggGachaOptionsContainer.bringToTop(z);
+    }
+  }
+
   setGachaCursor(cursor: integer): boolean {
     const oldCursor = this.gachaCursor;
 
@@ -821,11 +926,21 @@ export default class EggGachaUiHandler extends MessageUiHandler {
       });
     }
 
+    if (cursor >= 0) {
+      const arrowsVisible = !this.eggGachaSummaryContainer.visible;
+      if (this.gachaNavLeft) this.gachaNavLeft.setVisible(arrowsVisible);
+      if (this.gachaNavRight) this.gachaNavRight.setVisible(arrowsVisible);
+    } else {
+      if (this.gachaNavLeft) this.gachaNavLeft.setVisible(false);
+      if (this.gachaNavRight) this.gachaNavRight.setVisible(false);
+    }
+
     return changed;
   }
 
   clear(): void {
-
+    this._pullOptionHitZones.forEach(z => z.destroy());
+    this._pullOptionHitZones = [];
     this._gachaPatterns?.voucherContainers?.forEach(handle => handle.clear());
     this._gachaPatterns?.pullOptionsArea?.clear();
     this._gachaPatterns?.messageArea?.clear();

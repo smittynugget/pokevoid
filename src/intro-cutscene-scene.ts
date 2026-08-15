@@ -82,6 +82,10 @@ export class IntroCutsceneScene extends Phaser.Scene {
       }
     }
 
+    if (!this.textures.exists("cutscene_frame")) {
+      this.load.image("cutscene_frame", `cutscenes/cutscene-frame.${ext}`);
+    }
+
     this.load.setPath("audio/");
     this.load.audio("wasteland", "bgm/wasteland.mp3");
     this.load.audio("char_sound", "se/select.wav");

@@ -42,11 +42,9 @@ export function addWindow(scene: BattleScene, x: number, y: number, width: numbe
     windowVariant = WindowVariant.NORMAL;
   }
 
-  const borderSize =  scene.uiTheme ? 6 : 8;
+  const borderSize = 12;
 
-  let windowKey = `window_${scene.windowType}${getWindowVariantSuffix(windowVariant)}`
-
-  const window = scene.add.nineslice(x, y, windowKey, undefined, width, height, borderSize, borderSize, borderSize, borderSize);
+  const window = scene.add.nineslice(x, y, "tooltip_info", undefined, width, height, borderSize, borderSize, borderSize, borderSize);
   window.setOrigin(0, 0);
 
   if (mergeMaskLeft || mergeMaskTop || maskOffsetX || maskOffsetY) {

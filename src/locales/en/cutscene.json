@@ -123,7 +123,7 @@
   "rival_flame": "The corrupted shadow dissolves into the Void",
   "rival_shadowPower": "Dark energy crystallizes in the air",
   "rival_power": "Wield the corruption as a weapon against the Void",
-  "rival_shadows": "One down—XXX to go",
+  "rival_shadows": "One down—??? to go",
   "rival_final_flame": "The final shadow falls",
   "rival_final_shadowPower": "The last remnant of corruption",
   "rival_final_power": "Turn the darkness against itself",
@@ -162,5 +162,15 @@
   "all_smittys_mystery": "Even in the silence, the chaos grows, lurking in the shadows",
   "all_smittys_journey": "Please keep it at bay, You are the resistance!",
   "loss_whiteout": "Darkness consumes all...",
-  "loss_homebase": "Return to safety..."
+  "loss_homebase": "Return to safety...",
+  "tutorial_trance_1a": "You're awake! I was starting to think...",
+  "tutorial_trance_1b": "No. It doesn't matter. You're here. That's what matters.",
+  "tutorial_trance_2a": "I've sat beside too many trainers waiting for them to wake up. They never do.",
+  "tutorial_trance_2b": "But you... you just proved every one of those lost ones wasn't for nothing.",
+  "tutorial_trance_3a": "There's something about you. Whatever the void did to you in there...",
+  "tutorial_trance_3b": "It didn't break you. It made you stronger.",
+  "tutorial_trance_4a": "We've been losing this fight for a long time.",
+  "tutorial_trance_4b": "But you just proved the void can be beaten. Now go prove it again.",
+  "tutorial_trance_5a": "The void took everything from us. Time to take it back.",
+  "tutorial_trance_5b": "This is where your story begins — go forth and become Legendary!"
 }

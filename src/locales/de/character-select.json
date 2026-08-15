@@ -1,0 +1,10 @@
+{
+  "title": "CHAMPION AUSWAHL",
+  "instruction": "Wähle deinen Champion",
+  "locked": "GESPERRT",
+  "essenceNeeded": "{{amount}} {{typeName}}-Essenz",
+  "mysteryChampion": "???",
+  "mysterySubtitle": "Der Void entscheidet?!",
+  "randomDescription": "Zufälliger Champion",
+  "tooltip.essenceRequiredDesc": "Gib Essenz aus, um diesen Champion freizuschalten. Um Essenzen zu verdienen, besiege Pokémon, um ihren Typ zu erhalten."
+}

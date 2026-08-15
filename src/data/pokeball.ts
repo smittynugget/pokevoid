@@ -263,27 +263,23 @@ export function applyVoidBallRecolor(scene: BattleScene, sprite: Phaser.GameObje
 }
 
 export function applyChampionSpriteRecolor(scene: BattleScene, sprite: Phaser.GameObjects.Sprite, primaryType: Type, ignoreTimeTint: boolean = false, isFemale: boolean = false, secondaryType?: Type): void {
-    console.log("[ChampRecolor] applyChampionSpriteRecolor called, primaryType:", primaryType, "secondaryType:", secondaryType, "isFemale:", isFemale);
     try {
         const pName = (Type as any)[primaryType] ?? `${primaryType}`;
         const sName = (secondaryType !== undefined && secondaryType !== null)
             ? ((Type as any)[secondaryType as any] ?? `${secondaryType}`)
             : "NONE";
-        console.log("[ChampRecolor] typeNames primary/secondary:", pName, sName);
     } catch {}
-    if (typeof document === "undefined") { console.log("[ChampRecolor] BAIL: no document"); return; }
+    if (typeof document === "undefined") { return; }
     const primaryRgb = getTypeRgb(primaryType);
     const secondaryRgb = (secondaryType !== undefined && secondaryType !== null && secondaryType !== Type.UNKNOWN)
         ? getTypeRgb(secondaryType)
         : null;
-    console.log("[ChampRecolor] rgb primary/secondary:", primaryRgb, secondaryRgb);
-    if (!primaryRgb) { console.log("[ChampRecolor] BAIL: no primary rgb"); return; }
+    if (!primaryRgb) { return; }
     const effectiveSecondaryRgb = secondaryRgb ?? primaryRgb;
 
     const frame = sprite.frame;
     const sourceImage = sprite.texture?.getSourceImage() as HTMLImageElement | HTMLCanvasElement | null;
-    console.log("[ChampRecolor] frame:", !!frame, "sourceImage:", !!sourceImage, "frame.width:", frame?.width, "frame.height:", frame?.height, "textureKey:", sprite.texture?.key);
-    if (!frame || !sourceImage) { console.log("[ChampRecolor] BAIL: no frame or sourceImage"); return; }
+    if (!frame || !sourceImage) { return; }
 
     const baseTextureKey = sprite.texture?.key ?? "";
     const baseFrameName = `${sprite.frame?.name ?? ""}`;
@@ -304,16 +300,14 @@ export function applyChampionSpriteRecolor(scene: BattleScene, sprite: Phaser.Ga
             }
             sprite.clearTint();
         } catch {}
-        console.log("[ChampRecolor] CACHE HIT:", cachedTextureKey, "cacheKey:", cacheKey);
         return;
     }
-    console.log("[ChampRecolor] CACHE MISS cacheKey:", cacheKey);
 
     const canvas = document.createElement("canvas");
     canvas.width = frame.width;
     canvas.height = frame.height;
     const ctx = canvas.getContext("2d", { willReadFrequently: true } as any);
-    if (!ctx) { console.log("[ChampRecolor] BAIL: no canvas context"); return; }
+    if (!ctx) { return; }
 
     ctx.drawImage(sourceImage as any, frame.cutX, frame.cutY, frame.width, frame.height, 0, 0, frame.width, frame.height);
     const imageData = ctx.getImageData(0, 0, frame.width, frame.height);
@@ -573,14 +567,6 @@ export function applyChampionSpriteRecolor(scene: BattleScene, sprite: Phaser.Ga
     }
 
     const matchedPixels = matchedBallPixels + matchedTopPixels + matchedBottomPixels + shoePixels;
-    console.log(
-        "[ChampRecolor] totalPixels:", totalPixels,
-        "matchedPixels:", matchedPixels,
-        "skinPixels:", skinPixels,
-        "shoePixels:", shoePixels,
-        "ball/top/bottom:", matchedBallPixels, matchedTopPixels, matchedBottomPixels,
-        "matchRate:", totalPixels ? (matchedPixels / totalPixels * 100).toFixed(1) + "%" : "0%"
-    );
     const topLabel = isFemale ? "sweater" : "jacket";
     const bottomLabel = isFemale ? "pants" : "jeans";
     const unmatchedBallCount = sumCounts(unmatchedBallColors);
@@ -593,28 +579,7 @@ export function applyChampionSpriteRecolor(scene: BattleScene, sprite: Phaser.Ga
     const bottomCandidates = matchedBottomPixels + unmatchedBottomCount;
     const shoeCandidates = shoePixels + unmatchedShoeCount;
 
-    console.log(
-        "[ChampRecolor] REGION_MATCH",
-        `ball=${matchedBallPixels}/${ballCandidates}(${fmtPct(matchedBallPixels, ballCandidates)})`,
-        `${topLabel}=${matchedTopPixels}/${topCandidates}(${fmtPct(matchedTopPixels, topCandidates)})`,
-        `${bottomLabel}=${matchedBottomPixels}/${bottomCandidates}(${fmtPct(matchedBottomPixels, bottomCandidates)})`,
-        `shoes=${shoePixels}/${shoeCandidates}(${fmtPct(shoePixels, shoeCandidates)})`
-    );
-    console.log("[ChampRecolor] REGION_BOUNDS ball candidate:", fmtBox(ballCandidateBox), "matched:", fmtBox(ballMatchedBox));
-    console.log("[ChampRecolor] REGION_BOUNDS shoes candidate:", fmtBox(shoeCandidateBox), "matched:", fmtBox(shoeMatchedBox));
-    console.log("[ChampRecolor] REGION_BOUNDS ball unrecolored reddish:", fmtBox(ballUnrecoloredReddishBox));
-    console.log("[ChampRecolor] REGION_BOUNDS shoes unrecolored reddish:", fmtBox(shoeUnrecoloredReddishBox));
-    console.log("[ChampRecolor] REGION_BOUNDS jacket unrecolored warm:", fmtBox(topUnrecoloredWarmBox));
-
-    console.log("[ChampRecolor] AUDIT ball candidates:", ballCandidates, "unmatched:", unmatchedBallCount, "top10:", fmtTop(unmatchedBallColors, 10));
-    console.log("[ChampRecolor] AUDIT", topLabel, "candidates:", topCandidates, "unmatched:", unmatchedTopCount, "top10:", fmtTop(unmatchedTopColors, 10));
-    console.log("[ChampRecolor] AUDIT", bottomLabel, "candidates:", bottomCandidates, "unmatched:", unmatchedBottomCount, "top10:", fmtTop(unmatchedBottomColors, 10));
-    console.log("[ChampRecolor] AUDIT shoes candidates:", shoeCandidates, "unmatched:", unmatchedShoeCount, "top10:", fmtTop(unmatchedShoeColors, 10));
-    console.log("[ChampRecolor] AUDIT skin excluded:", skinPixels, "top10:", fmtTop(skinExcludedColors, 10));
-    console.log("[ChampRecolor] AUDIT ball unrecolored reddish top10:", fmtTop(ballUnrecoloredReddishColors, 10));
-    console.log("[ChampRecolor] AUDIT shoes unrecolored reddish top10:", fmtTop(shoeUnrecoloredReddishColors, 10));
-    console.log("[ChampRecolor] AUDIT jacket unrecolored warm top10:", fmtTop(topUnrecoloredWarmColors, 10));
-    if (!matchedPixels) { console.log("[ChampRecolor] BAIL: no matched pixels"); return; }
+    if (!matchedPixels) { return; }
 
     ctx.putImageData(imageData, 0, 0);
 
@@ -640,11 +605,10 @@ export function applyChampionSpriteRecolor(scene: BattleScene, sprite: Phaser.Ga
             }
         }
     } catch (e) {
-        console.log("[ChampRecolor] BAIL: texture add error", e);
         return;
     }
 
-    if (!added) { console.log("[ChampRecolor] BAIL: unable to add canvas texture"); return; }
+    if (!added) { return; }
 
     CHAMPION_RECOLOR_TEXTURE_CACHE.set(cacheKey, canvasTextureKey);
 
@@ -662,8 +626,6 @@ export function applyChampionSpriteRecolor(scene: BattleScene, sprite: Phaser.Ga
         }
         sprite.clearTint();
     } catch {}
-
-    console.log("[ChampRecolor] SUCCESS: Applied canvas recolor texture:", canvasTextureKey);
 }
 
 export function doPokeballBounceAnim(scene: BattleScene, pokeball: Phaser.GameObjects.Sprite, y1: number, y2: number, baseBounceDuration: integer, callback: Function) {

@@ -205,47 +205,47 @@
   },
   "riolu_apollo_diana_signature": {
     "name": "阿波罗与戴安娜的伙伴",
-    "description": "阿波罗与戴安娜勇敢的格斗属性伙伴"
+    "description": "{{champion}}勇敢的格斗属性伙伴"
   },
   "solrock_apollo_diana_signature": {
     "name": "阿波罗与戴安娜的伙伴",
-    "description": "阿波罗与戴安娜光辉的岩石属性伙伴"
+    "description": "{{champion}}光辉的岩石属性伙伴"
   },
   "lunatone_apollo_diana_signature": {
     "name": "阿波罗与戴安娜的伙伴",
-    "description": "阿波罗与戴安娜神秘的岩石属性伙伴"
+    "description": "{{champion}}神秘的岩石属性伙伴"
   },
   "larvesta_apollo_diana_signature": {
     "name": "阿波罗与戴安娜的伙伴",
-    "description": "阿波罗与戴安娜燃烧的虫属性伙伴"
+    "description": "{{champion}}燃烧的虫属性伙伴"
   },
   "swablu_apollo_diana_signature": {
     "name": "阿波罗与戴安娜的伙伴",
-    "description": "阿波罗与戴安娜蓬松的普通属性伙伴"
+    "description": "{{champion}}蓬松的普通属性伙伴"
   },
   "castform_apollo_diana_signature": {
     "name": "阿波罗与戴安娜的伙伴",
-    "description": "阿波罗与戴安娜适应性的普通属性伙伴"
+    "description": "{{champion}}适应性的普通属性伙伴"
   },
   "litwick_apollo_diana_signature": {
     "name": "阿波罗与戴安娜的伙伴",
-    "description": "阿波罗与戴安娜闪烁的幽灵属性伙伴"
+    "description": "{{champion}}闪烁的幽灵属性伙伴"
   },
   "eevee_apollo_diana_signature": {
     "name": "阿波罗与戴安娜的伙伴",
-    "description": "阿波罗与戴安娜多才的普通属性伙伴"
+    "description": "{{champion}}多才的普通属性伙伴"
   },
   "teddiursa_apollo_diana_signature": {
     "name": "阿波罗与戴安娜的伙伴",
-    "description": "阿波罗与戴安娜可爱的普通属性伙伴"
+    "description": "{{champion}}可爱的普通属性伙伴"
   },
   "cleffa_apollo_diana_signature": {
     "name": "阿波罗与戴安娜的伙伴",
-    "description": "阿波罗与戴安娜星光的妖精属性伙伴"
+    "description": "{{champion}}星光的妖精属性伙伴"
   },
   "sunkern_apollo_diana_signature": {
     "name": "阿波罗与戴安娜的伙伴",
-    "description": "阿波罗与戴安娜希望的草属性伙伴"
+    "description": "{{champion}}希望的草属性伙伴"
   },
   "riolu_shadow_warrior": {
     "name": "暗影战士",
@@ -291,5 +291,93 @@
     "name": "等离子嫩芽",
     "description": "闪烁等离子能量的电/草属性向日种子，拥有电气皮肤转换、太阳之力激情和电气制造者支配"
   },
-  "championPartner": "{{champion}}的伙伴"
+  "championPartner": "{{champion}}的伙伴",
+  "bulbasaur_plasma_jungle": {
+    "name": "等离子丛林",
+    "description": "草/电属性妙蛙种子，引导等离子丛林之力，将藤蔓力量与噼啪作响的闪电融合"
+  },
+  "bulbasaur_red_signature": {
+    "name": "小赤的伙伴",
+    "description": "小赤的招牌妙蛙种子——坚韧的种子战士，将自然与电能完美调和"
+  },
+  "butterfree_red_signature": {
+    "name": "小赤的伙伴",
+    "description": "小赤的招牌巴大蝶——拥有超能力和吸魂鳞粉的迷人飞蛾"
+  },
+  "butterfree_soul_moth": {
+    "name": "灵魂之蛾",
+    "description": "虫/幽灵属性巴大蝶，化身灵魂之蛾，以幽灵翼粉吸取生命力"
+  },
+  "charmander_black_inferno": {
+    "name": "黑炎地狱",
+    "description": "火/恶属性小火龙，被黑色地狱火吞噬，挥舞暗影火焰与黑暗龙之怒"
+  },
+  "charmander_red_signature": {
+    "name": "小赤的伙伴",
+    "description": "小赤的招牌小火龙——成长为龙之力量烈焰的凶猛火苗"
+  },
+  "espeon_moon_goddess": {
+    "name": "月之女神",
+    "description": "超能/妖精属性太阳伊布，觉醒为月之女神，散发月光魔法与精神光辉"
+  },
+  "espeon_red_signature": {
+    "name": "小赤的伙伴",
+    "description": "小赤的招牌太阳伊布——以优雅的毁灭力散发月光与妖精能量的月之超能者"
+  },
+  "farfetchd_heavens_edge": {
+    "name": "天之锋刃",
+    "description": "格斗/飞行属性大葱鸭，觉醒为天之锋刃，从天空以神圣剑术斩击"
+  },
+  "farfetchd_red_signature": {
+    "name": "小赤的伙伴",
+    "description": "小赤的招牌大葱鸭——无畏的剑士，以致命的会心一击之术挥舞大葱"
+  },
+  "lapras_red_signature": {
+    "name": "小赤的伙伴",
+    "description": "小赤的招牌拉普拉斯——以宁静而致命的精准度驾驭冰与水的优雅旅者"
+  },
+  "lapras_voidfrost": {
+    "name": "虚空霜",
+    "description": "冰/幽灵属性拉普拉斯，漂浮于虚空之中，融合幽灵般的寒冷与深渊之冰"
+  },
+  "magikarp_dragonborn": {
+    "name": "龙之子",
+    "description": "水/龙属性鲤鱼王，作为真正的龙之子重生，释放远古龙之潜能"
+  },
+  "magikarp_red_signature": {
+    "name": "小赤的伙伴",
+    "description": "小赤的招牌鲤鱼王——打破期望、进化为拥有龙之血脉的强者的弱者"
+  },
+  "pikachu_electro_berserker": {
+    "name": "电击狂战士",
+    "description": "电/格斗属性皮卡丘，充满狂战士之怒，将原始电压与武术精通融合"
+  },
+  "pikachu_red_signature": {
+    "name": "小赤的伙伴",
+    "description": "小赤的招牌皮卡丘——拥有无与伦比的速度和毁灭性电击的身经百战之伙伴"
+  },
+  "snorlax_dream_colossus": {
+    "name": "梦境巨像",
+    "description": "一般/超能属性卡比兽，觉醒为梦境巨像形态，融合庞大体型与超能梦境操控"
+  },
+  "snorlax_red_signature": {
+    "name": "小赤的伙伴",
+    "description": "小赤的招牌卡比兽——吸收攻击并以恐怖力量反击的不动之壁"
+  },
+  "squirtle_abyss_golem": {
+    "name": "深渊魔像",
+    "description": "水/恶属性杰尼龟，锻造为深渊魔像，以装甲之力支配深海黑暗"
+  },
+  "squirtle_red_signature": {
+    "name": "小赤的伙伴",
+    "description": "小赤的招牌杰尼龟——以暗水之术支配深渊的坚固龟壳要塞"
+  },
+  "tauros_iron_quake": {
+    "name": "钢铁地震",
+    "description": "地面/钢属性肯泰罗，化身钢铁地震，融合金属铠甲与地震级的毁灭"
+  },
+  "tauros_red_signature": {
+    "name": "小赤的伙伴",
+    "description": "小赤的招牌肯泰罗——拥有不可阻挡的冲劲和震撼大地攻击的暴走公牛"
+  }
 }

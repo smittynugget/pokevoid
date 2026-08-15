@@ -1,0 +1,14 @@
+{
+  "magnetMove": "マグネット技",
+  "gadgetMove": "ガジェット技",
+  "maskMove": "マスク技",
+  "timeMove": "タイム技",
+  "unionMove": "ユニオン技",
+  "servantMove": "サーヴァント技",
+  "darkMagicMove": "ダークマジック技",
+  "ojamaMove": "オジャマ技",
+  "ghostMove": "ゴースト技",
+  "flyingMove": "フライング技",
+  "auraMove": "オーラ技",
+  "toonMove": "トゥーン技"
+}

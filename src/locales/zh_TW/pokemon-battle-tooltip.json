@@ -1,0 +1,12 @@
+{
+  "quickSummary": "快速摘要",
+  "itemsMoves": "道具與招式",
+  "currentParty": "當前隊伍",
+  "enemyInfo": "敵方資訊",
+  "teamTitle": "隊伍",
+  "noOpponent": "無對手",
+  "notApplicable": "---",
+  "pageIndicator": "{{current}}/{{total}}",
+  "foeTag": "敵方",
+  "youTag": "我方"
+}

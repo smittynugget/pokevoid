@@ -14,7 +14,10 @@ import { PartyMemberPokemonPhase } from "./party-member-pokemon-phase";
 import { PostSummonPhase } from "./post-summon-phase";
 import { GameOverPhase } from "./game-over-phase";
 import { ShinySparklePhase } from "./shiny-sparkle-phase";
+import { playPortalSummonAnim } from "#app/field/portal-anim.js";
+import { TrainerType } from "#enums/trainer-type";
 import { ChampionUtils } from "#app/system/champion-utils.js";
+import { clearTrainerDualColorAltBuild } from "#app/utils/trainer-dualcolor-recolor.js";
 
 export class SummonPhase extends PartyMemberPokemonPhase {
   private loaded: boolean;
@@ -32,6 +35,14 @@ export class SummonPhase extends PartyMemberPokemonPhase {
   }
   preSummon(): void {
     const partyMember = this.getPokemon();
+
+    if (partyMember.isOnField() && partyMember.summonData) {
+      if (partyMember.battleInfo && !partyMember.battleInfo.visible) {
+        partyMember.showInfo();
+      }
+      this.end();
+      return;
+    }
 
     if (!partyMember.isAllowedInBattle()) {
       console.warn("The Pokemon about to be sent out is fainted or illegal under a challenge. Attempting to resolve...");
@@ -57,10 +68,11 @@ export class SummonPhase extends PartyMemberPokemonPhase {
         this.scene.pbTray.hide();
       }
 
-      const championId = this.scene.gameData.selectedChampionId;
+      const championId = ChampionUtils.resolveActiveChampionId(this.scene);
       const backSpriteKey = ChampionUtils.getChampionBackSpriteKey(championId, this.scene.gameData.gender);
 
-      if (this.scene.textures.exists(backSpriteKey)) {
+      const hasTrainerTexture = this.scene.textures.exists(backSpriteKey);
+      if (hasTrainerTexture) {
         this.scene.trainer.setTexture(backSpriteKey);
         this.scene.trainer.setVisible(true);
       } else {
@@ -72,6 +84,9 @@ export class SummonPhase extends PartyMemberPokemonPhase {
       const trainerYOffset = ChampionUtils.getChampionBackSpriteYOffset(championId);
       const currentX = this.scene.trainer.x;
       this.scene.trainer.setPosition(currentX, 186 + trainerYOffset);
+
+      this.scene.trainer.setPipeline(this.scene.fieldSpritePipeline);
+      clearTrainerDualColorAltBuild(this.scene.trainer);
 
       this.scene.tweens.add({
         targets: this.scene.trainer,
@@ -92,6 +107,51 @@ export class SummonPhase extends PartyMemberPokemonPhase {
 
   summon(): void {
     const pokemon = this.getPokemon();
+
+    const usePortalAnim = pokemon.species?.generation === 20 ||
+      (!pokemon.isPlayer() && (this.scene.currentBattle?.trainer?.isCorrupted ||
+       this.scene.currentBattle?.trainer?.config.trainerType === TrainerType.SMITTY) && pokemon.portalSprite);
+
+    if (usePortalAnim) {
+      if (this.fieldIndex === 1) {
+        pokemon.setFieldPosition(FieldPosition.RIGHT, 0);
+      } else {
+        const availablePartyMembers = this.getParty().filter(p => p.isAllowedInBattle()).length;
+        const position = !this.scene.currentBattle.double || availablePartyMembers === 1 ? FieldPosition.CENTER : FieldPosition.LEFT;
+        pokemon.setFieldPosition(position);
+      }
+      this.scene.add.existing(pokemon);
+      this.scene.field.add(pokemon);
+      if (!this.player) {
+        const playerPokemon = this.scene.getPlayerPokemon() as Pokemon;
+        if (playerPokemon?.visible) {
+          this.scene.field.moveBelow(pokemon, playerPokemon);
+        }
+        this.scene.currentBattle.seenEnemyPartyMemberIds.add(pokemon.id);
+      }
+      this.scene.updateModifiers(this.player);
+      this.scene.updateFieldScale();
+      pokemon.playAnim(false);
+      pokemon.finalizeSummonSpriteLayout();
+      if (pokemon.portalSprite) {
+        pokemon.portalSprite.setAlpha(0);
+      }
+      pokemon.setVisible(true);
+      pokemon.getSprite().setVisible(false);
+      pokemon.setAlpha(1);
+      playPortalSummonAnim(this.scene, pokemon).then(() => {
+        pokemon.setVisible(true);
+        pokemon.getSprite().setVisible(true);
+        pokemon.showInfo();
+        pokemon.getSprite().clearTint();
+        this.scene.updateFieldScale();
+        pokemon.cry(pokemon.getHpRatio() > 0.25 ? undefined : { rate: 0.85 });
+        pokemon.resetSummonData();
+        pokemon.finalizeSummonSpriteLayout();
+        this.scene.time.delayedCall(350, () => this.end());
+      });
+      return;
+    }
 
     const pokeball = this.scene.addFieldSprite(this.player ? 36 : 248, this.player ? 80 : 44, "pb", getPokeballAtlasKey(pokemon.pokeball));
     pokeball.setVisible(false);
@@ -149,8 +209,8 @@ export class SummonPhase extends PartyMemberPokemonPhase {
             addPokeballOpenParticles(this.scene, pokemon.x, pokemon.y - 16, pokemon.pokeball);
             this.scene.updateModifiers(this.player);
             this.scene.updateFieldScale();
-            pokemon.showInfo();
-            pokemon.playAnim();
+            pokemon.playAnim(false);
+            const customLayout = pokemon.usesCustomFieldSpriteLayout();
             pokemon.setVisible(true);
             pokemon.getSprite().setVisible(true);
             pokemon.setScale(0.5);
@@ -164,12 +224,19 @@ export class SummonPhase extends PartyMemberPokemonPhase {
               targets: pokemon,
               duration: 250,
               ease: "Sine.easeIn",
-              scale: pokemon.isGlitchOrSmittyForm() ? 0.4 : pokemon.getSpriteScale(),
+              scale: pokemon.getSpriteScale(),
               onComplete: () => {
+                pokemon.showInfo();
                 pokemon.cry(pokemon.getHpRatio() > 0.25 ? undefined : { rate: 0.85 });
                 pokemon.getSprite().clearTint();
                 pokemon.resetSummonData();
-                this.scene.time.delayedCall(1000, () => this.end());
+                if (customLayout) {
+                  pokemon.finalizeSummonSpriteLayout();
+                  this.scene.time.delayedCall(0, () => pokemon.finalizeSummonSpriteLayout());
+                } else {
+                  pokemon.setupBattleTooltipHover();
+                }
+                this.scene.time.delayedCall(350, () => this.end());
               }
             });
           }

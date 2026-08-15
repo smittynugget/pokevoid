@@ -1,5 +1,7 @@
 {
   "title": "{{champion}} 升級！",
+  "skillObtained": "{{skillName}}\n已獲得！",
+  "obtained": "已獲得！",
   "levelReached": "達到等級 {{level}}",
   "continue": "按任意鍵繼續"
 }

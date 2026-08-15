@@ -16,6 +16,7 @@ import { SelectModifierPhase } from "./select-modifier-phase";
 import { ShowRewards } from "#app/utils/show-rewards.js";
 import { ShowPartyExpBarPhase } from "./show-party-exp-bar-phase";
 import { TrainerVictoryPhase } from "./trainer-victory-phase";
+import { TutorialBlueDefeatPhase } from "./tutorial-blue-defeat-phase";
 import {TrainerType} from "#enums/trainer-type";
 import {GameModes} from "../game-mode";
 import { SelectNightmareDraftPhase } from "./select-nightmare-draft-phase";
@@ -37,15 +38,16 @@ import {achvs} from "#app/system/achv";
 import {RibbonModifierRewardPhase} from "#app/phases/ribbon-modifier-reward-phase";
 import Pokemon from "#app/field/pokemon";
 import PokemonSpecies, {getPokemonSpecies, universalSmittyForms} from "#app/data/pokemon-species";
-import {PathNodeTypeFilter, PermaPartyAbilityModifierType} from "#app/modifier/modifier-type";
+import {PathNodeTypeFilter} from "#app/modifier/modifier-type";
 import { BattlePathPhase } from "./battle-path-phase";
-import { ShopModifierSelectPhase } from "./shop-modifier-select-phase";
-import { PathNodeContext } from "./battle-path-phase";
+
+import { PathNodeContext } from "#app/battle";
 import { SkillPointSources } from "#app/system/skill-point-sources";
 import { HallOfFamePhase } from "./hall-of-fame-phase";
 import { SlideshowCutscenePhase } from "./slideshow-cutscene-phase.js";
 import { loggedInUser } from "#app/account.js";
 import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays.js";
+import { TitlePhase } from "./title-phase";
 
 export class VictoryPhase extends PokemonPhase {
 
@@ -57,10 +59,28 @@ export class VictoryPhase extends PokemonPhase {
 
   start() {
     super.start();
+    this.scene._inBattleTurn = false;
 
     if (this.scene.gameMode.isTestMod) {
       this.scene.unshiftPhase(new GameOverPhase(this.scene, false));
       this.end();
+      return;
+    }
+
+    if (this.scene.pegasusDebugBattleActive || this.scene.smittyDebugBattleActive || this.scene.wave35SmitomDebugActive || this.scene.wave100DebugActive) {
+      this.scene.pegasusDebugBattleActive = false;
+      this.scene.smittyDebugBattleActive = false;
+      this.scene.wave35SmitomDebugActive = false;
+      this.scene.wave100DebugActive = false;
+      this.scene.disableStatSwitchers = false;
+      this.scene.disableMoveUpgrades = false;
+      this.scene.disableReleaseItems = false;
+      this.scene.skillTreeEnabledForRun = true;
+      this.scene.wave35UnlockedThisRun = false;
+      this.scene.clearAllPhaseQueues();
+      this.scene.reset(true);
+      this.scene.unshiftPhase(new TitlePhase(this.scene));
+      this.scene.shiftPhase();
       return;
     }
 
@@ -169,6 +189,11 @@ export class VictoryPhase extends PokemonPhase {
     if (!this.scene.getEnemyParty().find(p => this.scene.currentBattle.battleType ? !p?.isFainted() : p.isOnField())) {
       this.scene.pushPhase(new BattleEndPhase(this.scene));
       if (this.scene.currentBattle.battleType === BattleType.TRAINER) {
+        if (this.scene.gameData.tutorialOnboardActive) {
+          this.scene.unshiftPhase(new TutorialBlueDefeatPhase(this.scene));
+          this.end();
+          return;
+        }
         this.scene.unshiftPhase(new TrainerVictoryPhase(this.scene));
       }
       let trainerIsRival = this.scene.currentBattle.trainer != undefined ? this.scene.currentBattle.trainer.isDynamicRival : false;
@@ -178,6 +203,8 @@ export class VictoryPhase extends PokemonPhase {
         ).forEach(modifier => {
           modifier.apply([this.scene, this.scene]);
         });
+        this.scene.findModifiers(m => m instanceof PermaBeatTrainerQuestModifier)
+          .forEach(modifier => modifier.apply([this.scene, this.scene]));
 
         if (this.scene.gameData.getQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST) == undefined && this.scene.currentBattle.waveIndex >= BATTLE_WAVES.RIVAL.FOURTH ) {
           this.scene.gameData.setQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.UNLOCKED);
@@ -267,21 +294,6 @@ export class VictoryPhase extends PokemonPhase {
             this.scene.gameData.selectedPath = undefined;
             setupFixedBattlePaths(this.scene, this.scene.currentBattle.waveIndex + 1);
           }
-        if (this.scene.gameMode.isChaosMode
-            && !this.scene.gameData.hasSeenCurrentShopItems
-            && this.scene.gameData.currentPermaShopOptions
-            && this.scene.gameData.lastPermaShopRefreshTime > 0) {
-            const partyAbilityOptions = this.scene.gameData.currentPermaShopOptions.filter(
-                (opt: any) => opt.type instanceof PermaPartyAbilityModifierType
-            );
-            const cheapest = partyAbilityOptions.reduce(
-                (min: number, opt: any) => Math.min(min, opt.cost || Infinity), Infinity
-            );
-            if (this.scene.gameData.permaMoney >= cheapest) {
-                this.scene.pushPhase(new ShopModifierSelectPhase(this.scene, undefined, undefined));
-                this.scene.gameData.hasSeenCurrentShopItems = true;
-            }
-        }
             this.scene.pushPhase(new BattlePathPhase(this.scene));
         } else {
           this.scene.pushPhase(new NewBattlePhase(this.scene));
@@ -321,7 +333,9 @@ export class VictoryPhase extends PokemonPhase {
 
             if (!this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) {
               const userKey = `pokevoid_void_overtaken_${loggedInUser?.username ?? "guest"}`;
-              localStorage.setItem(userKey, 'true');
+              try {
+                localStorage.setItem(userKey, 'true');
+              } catch {}
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.THE_VOID_OVERTAKEN, "smitom", true));
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.SMITTY_NUGGET, "tm_electric"));
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.NUGGET_OF_SMITTY, "tm_ice"));
@@ -362,7 +376,9 @@ export class VictoryPhase extends PokemonPhase {
           } else {
             if (!this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN]) {
               const userKey = `pokevoid_void_overtaken_${loggedInUser?.username ?? "guest"}`;
-              localStorage.setItem(userKey, 'true');
+              try {
+                localStorage.setItem(userKey, 'true');
+              } catch {}
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.THE_VOID_OVERTAKEN, "smitom", true));
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.SMITTY_NUGGET, "tm_electric"));
               this.scene.unshiftPhase(new UnlockPhase(this.scene, Unlockables.NUGGET_OF_SMITTY, "tm_ice"));
@@ -450,6 +466,8 @@ export class VictoryPhase extends PokemonPhase {
 
          this.scene.gameData.permaModifiers
             .findModifiers(m => m instanceof PermaWinQuestModifier)
+            .forEach(modifier => modifier.apply([this.scene, this.scene]));
+         this.scene.findModifiers(m => m instanceof PermaWinQuestModifier)
             .forEach(modifier => modifier.apply([this.scene, this.scene]));
         for (const pokemon of this.scene.getParty()) {
           this.awardRibbon(pokemon);

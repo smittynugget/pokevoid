@@ -137,7 +137,7 @@
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "Cadeau de Crustabri",
-    "task": "Utiliser Cadeau 10 fois avec Crustabri en mode Nuzlocke"
+    "task": "Utiliser Cadeau 10 fois avec Crustabri"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "Pifeuil contre Tarinor",
@@ -445,7 +445,7 @@
   "NORMAL_STRENGTH": {
     "name": "Force Normale !",
     "task": "Vaincre 125 Pokémon en utilisant des Pokémon de type Normal sur plusieurs parties",
-    "rewardText": "Débloque un ObjetPerma qui change les Résistances et Forces des types Normal !"
+    "rewardText": "Débloque un Objet Omega qui change les Résistances et Forces des types Normal !"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "Nouvelles Attaques de Magicarpe",
@@ -485,7 +485,7 @@
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "Force Normale !",
     "task": "Vaincre 125 Pokémon en utilisant des Pokémon de type Normal sur plusieurs parties",
-    "rewardText": "Débloque un ObjetPerma qui change les Résistances et Forces des types Normal !"
+    "rewardText": "Débloque un Objet Omega qui change les Résistances et Forces des types Normal !"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Magicarpe",
@@ -521,5 +521,7 @@
     "name": "Nouvelles Attaques de Chrysacier",
     "task": "Vaincre 50 Pokémon avec Chrysacier",
     "rewardText": "Chrysacier aura un plus grand choix d'attaques !"
-  }
+  },
+  "rewardUnlocksGlitchForm": "Débloque une Forme Glitch",
+  "rewardUnlocksSmittyForm": "Débloque une Forme Smitty"
 }

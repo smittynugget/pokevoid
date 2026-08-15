@@ -17,7 +17,7 @@
   "skillsSubheader": "技能将随机出现在技能树中。",
   "rarity": {
     "common": "普通",
-    "great": "优秀", 
+    "great": "优秀",
     "ultra": "超级",
     "master": "大师",
     "rogue": "流氓",
@@ -42,11 +42,22 @@
     "defaultRevive": "增加{{types}}宝可梦复活几率{{percent}}%",
     "defaultTokens": "获得技能树代币以解锁节点",
     "defaultPoints": "获得技能点以购买技能",
-    "typesFallback": "未知"
+    "typesFallback": "未知",
+    "essenceRequiredTooltip": "所需精华",
+    "essenceRequiredTooltipDesc": "消耗精华来提升你的冠军等级。击败宝可梦以获取其属性的精华。",
+    "essenceLoreNote": "特殊精华说明：SMITTY精华从SMITTY训练家处获得。GLITCH精华从故障宝可梦获得。GEN I精华从第一世代宝可梦获得。",
+    "abilityHeader": "特性",
+    "descriptionHeader": "描述",
+    "itemDescriptionHeader": "道具描述",
+    "requiredEssenceHeader": "所需精华",
+    "skillInfoHeader": "技能信息"
   },
   "skillList": {
     "levelPrefix": "Lv {{level}}",
     "unknownSkill": "???"
+  },
+  "skillBar": {
+    "next": "下一个"
   },
   "defaultSkillLabels": {
     "tms": "{{types}} 招式机",
@@ -64,10 +75,24 @@
     "fusionPriority": "{{types}} 融合优先级"
   },
   "button": {
-    "useEssence": "使用精华"
+    "useEssence": "使用精华",
+    "levelUp": "升级",
+    "notEnoughEssence": "升级需要：",
+    "required": "必需"
   },
-  "brock": { "description": "岩石冠军" },
-  "misty": { "description": "水系冠军" },
+  "brock": {
+    "description": "岩石冠军",
+    "essenceRequirement": "需要{{ground}}地面 + {{rock}}岩石精华"
+  },
+  "misty": {
+    "description": "水系冠军",
+    "essenceRequirement": "需要{{water}}水属性精华"
+  },
+  "red": {
+    "description": "传说…",
+    "unlockRequirement": "解锁所有冠军并在混沌或挑战中击败第6阶段对手赤红",
+    "essenceRequirement": "需要{{genOne}}第一世代精华"
+  },
   "apollo": {
     "name": "阿波罗",
     "description": "太阳冠军"
@@ -76,24 +101,36 @@
     "name": "戴安娜",
     "description": "月亮冠军"
   },
-  "generic": { "description": "默认冠军。" },
-  "champions": {
-  "title": "选择你的冠军",
-  "brock": {
-    "name": "小刚 - 岩石专家",
-    "description": "地面和岩石属性大师",
-    "essenceRequirement": "需要{{ground}}地面 + {{rock}}岩石精华"
-  },
-  "misty": {
-    "name": "小霞 - 水系专家", 
-    "description": "水属性大师",
-    "essenceRequirement": "需要{{water}}水属性精华"
-  },
   "generic": {
-    "name": "平衡冠军",
-    "description": "无属性专精",
+    "description": "默认冠军。",
     "essenceRequirement": "无特殊要求"
-  }
+  },
+  "champions": {
+    "title": "选择你的冠军",
+    "brock": {
+      "name": "小刚 - 岩石专家",
+      "description": "地面和岩石属性大师",
+      "essenceRequirement": "需要{{ground}}地面 + {{rock}}岩石精华"
+    },
+    "misty": {
+      "name": "小霞 - 水系专家",
+      "description": "水属性大师",
+      "essenceRequirement": "需要{{water}}水属性精华"
+    },
+    "red": {
+      "name": "赤红 - 传说冠军",
+      "description": "传说…",
+      "unlockRequirement": "解锁所有冠军并在混沌或挑战中击败第6阶段对手赤红",
+      "essenceRequirement": "需要{{genOne}}第一世代精华"
+    },
+    "generic": {
+      "name": "平衡冠军",
+      "description": "无属性专精",
+      "essenceRequirement": "无特殊要求"
+    },
+    "generationShort": "第{{generation}}世代"
+  },
+  "generationShort": "第{{generation}}世代",
+  "skillsOfTitle": "{{subtitle}}的技能",
+  "switchChampion": "另一半"
 }
-}
-

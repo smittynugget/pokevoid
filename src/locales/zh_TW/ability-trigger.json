@@ -78,5 +78,6 @@
   "postSummonVesselOfRuin": "{{pokemonNameWithAffix}}的災禍之鼎\n令周圍的寶可夢的{{statName}}減弱了！",
   "postSummonSwordOfRuin": "{{pokemonNameWithAffix}}的災禍之劍\n令周圍的寶可夢的{{statName}}減弱了！",
   "postSummonTabletsOfRuin": "{{pokemonNameWithAffix}}的災禍之簡\n令周圍的寶可夢的{{statName}}減弱了！",
-  "postSummonBeadsOfRuin": "{{pokemonNameWithAffix}}的災禍之玉\n令周圍的寶可夢的{{statName}}減弱了！"
+  "postSummonBeadsOfRuin": "{{pokemonNameWithAffix}}的災禍之玉\n令周圍的寶可夢的{{statName}}減弱了！",
+  "windboltDiscard": "{{pokemonName}}消耗了持有的樹果\n並對{{targetName}}造成了少量傷害！"
 }

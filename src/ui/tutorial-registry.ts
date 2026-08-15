@@ -36,8 +36,6 @@ export enum EnhancedTutorial {
     EGG_SWAP_1 = "EGG_SWAP_1",
     RUN_DETAILS_1 = "RUN_DETAILS_1",
 
-    BOUNTIES_1 = "BOUNTIES_1",
-    DAILY_BOUNTY = "DAILY_BOUNTY",
     DISCORD = "DISCORD",
     SMITTY_FORMS_1 = "SMITTY_FORMS_1",
     SMITTY_FORM_UNLOCKED_1 = "SMITTY_FORM_UNLOCKED_1",
@@ -66,6 +64,7 @@ export enum EnhancedTutorial {
 
     POKEVOID_V2_UPDATE = "POKEVOID_V2_UPDATE",
     FTL_MODE_SELECT = "FTL_MODE_SELECT",
+    FIRST_TIME_FTL_SKILLTREE_SELECTION = "FIRST_TIME_FTL_SKILLTREE_SELECTION",
     CHAMPION_SELECT_ESSENCE = "CHAMPION_SELECT_ESSENCE",
     CHAMPION_SELECT_SPECIAL_ESSENCES = "CHAMPION_SELECT_SPECIAL_ESSENCES",
     SPECIAL_ESSENCES_INTRO = "SPECIAL_ESSENCES_INTRO",
@@ -179,8 +178,6 @@ export class TutorialRegistry {
         this.registerMoveUpgradesTutorials();
         this.registerFirstMoveUpgradeTutorials();
 
-        this.registerBountiesTutorials();
-        this.registerDailyBountyTutorial();
         this.registerDiscordTutorial();
         this.registerSmittyFormsTutorials();
         this.registerSmittyFormsUnlockedTutorials();
@@ -209,6 +206,7 @@ export class TutorialRegistry {
 
         this.registerPokevoidV2UpdateTutorial();
         this.registerFTLModeSelectTutorial();
+        this.registerFirstTimeFtlSkillTreeSelectionTutorial();
         this.registerChampionSelectEssenceTutorial();
         this.registerChampionSelectSpecialEssencesTutorial();
         this.registerSpecialEssencesIntroTutorial();
@@ -237,12 +235,7 @@ export class TutorialRegistry {
         this.tutorialConfigs.set(EnhancedTutorial.MENU_ACCESS, {
             title: i18next.t("tutorial:accessMenu.title"),
             stages: [{
-                sprites: [{
-                    spriteType: 'smitty_logo',
-                    smittyLogoId: 38,
-                    scale: 0.25,
-                    key: "smitty_logo"
-                }],
+                sprites: [{ key: "logo", scale: 0.2 }],
                 text: i18next.t("tutorial:accessMenu.text"),
                 title: i18next.t("tutorial:accessMenu.title")
             }],
@@ -360,13 +353,6 @@ export class TutorialRegistry {
             },
             {
                 sprites: [
-                   {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 111,
-                        scale: 0.23,
-                        x: 0,
-                        key: "smitty_logo"
-                    },
                     {
                         key: getPokemonSpecies(Species.CATERPIE).getIconAtlasKey(),
                         frame: getPokemonSpecies(Species.CATERPIE).getIconId(false),
@@ -402,12 +388,7 @@ export class TutorialRegistry {
             },
             {
                 sprites: [
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 72,
-                        scale: 0.25,
-                        key: "smitty_logo"
-                    }
+                    { key: "discord", scale: 0.125 }
                 ],
                 text: i18next.t("tutorial:firstMoveUpgrade.text.4"),
                 title: i18next.t("tutorial:firstMoveUpgrade.title.2")
@@ -838,13 +819,7 @@ export class TutorialRegistry {
             title: i18next.t("tutorial:bugs.title"),
             stages: [{
                 sprites: [
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 111,
-                        scale: 0.23,
-                        x: 0,
-                        key: "smitty_logo"
-                    },
+                    { key: "discord", scale: 0.125, x: 0 },
                     {
                         key: getPokemonSpecies(Species.CATERPIE).getIconAtlasKey(),
                         frame: getPokemonSpecies(Species.CATERPIE).getIconId(false),
@@ -1064,12 +1039,7 @@ export class TutorialRegistry {
             title: i18next.t("tutorial:fusionPokemon.title"),
             stages: [{
                 sprites: [
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 110,
-                        scale: 0.25,
-                        key: "smitty_logo"
-                    }
+                    { key: "smitems", frame: "permaFusionIncrease", scale: 0.52 }
                 ],
                 text: i18next.t("tutorial:fusionPokemon.text.1"),
                 title: i18next.t("tutorial:fusionPokemon.title")
@@ -1162,7 +1132,7 @@ export class TutorialRegistry {
             {
                 sprites: [
                     { key: "pokemon_icons_glitch", frame: "smitom", scale: 0.8, x: -30 },
-                    { spriteType: "save", scale: 1, x: 30, key: "save" }
+                    { spriteType: "save", scale: 2, x: 30, key: "save" }
                 ],
                 text: i18next.t("tutorial:permaMoney.text.2"),
                 title: i18next.t("tutorial:permaMoney.title")
@@ -1176,13 +1146,7 @@ export class TutorialRegistry {
             title: i18next.t("tutorial:saving.title"),
             stages: [{
                 sprites: [
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 99,
-                        scale: 0.25,
-                        x: 0,
-                        key: "smitty_logo"
-                    },
+                    { spriteType: "save", scale: 2, x: 0 },
                     { key: "smitems", frame: "exclamationMark", scale: 0.52, x: 15 }
                 ],
                 text: i18next.t("tutorial:saving.text.1"),
@@ -1190,52 +1154,10 @@ export class TutorialRegistry {
             },
             {
                 sprites: [
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 11,
-                        scale: 0.25,
-                        x: 0,
-                        key: "smitty_logo"
-                    },
                     { key: "smitems", frame: "permaMoney", scale: 0.52, x: 15 }
                 ],
                 text: i18next.t("tutorial:saving.text.2"),
                 title: i18next.t("tutorial:saving.title")
-            }],
-            isTipActive: false
-        });
-    }
-
-    private registerBountiesTutorials(): void {
-        this.tutorialConfigs.set(EnhancedTutorial.BOUNTIES_1, {
-            title: i18next.t("tutorial:bounties.title"),
-            stages: [{
-                sprites: [
-                    { key: "smitems", frame: "permaPostBattleMoney", scale: 0.52 }
-                ],
-                text: i18next.t("tutorial:bounties.text.1"),
-                title: i18next.t("tutorial:bounties.title")
-            },
-            {
-                sprites: [
-                    { key: "smitems", frame: "permaStartMoney", scale: 0.52 }
-                ],
-                text: i18next.t("tutorial:bounties.text.2"),
-                title: i18next.t("tutorial:bounties.title")
-            }],
-            isTipActive: false
-        });
-    }
-
-    private registerDailyBountyTutorial(): void {
-        this.tutorialConfigs.set(EnhancedTutorial.DAILY_BOUNTY, {
-            title: i18next.t("tutorial:dailyBounty.title"),
-            stages: [{
-                sprites: [
-                    { key: "smitems", frame: "permaPostBattleMoney", scale: 0.52 }
-                ],
-                text: i18next.t("tutorial:dailyBounty.text"),
-                title: i18next.t("tutorial:dailyBounty.title")
             }],
             isTipActive: false
         });
@@ -1246,12 +1168,7 @@ export class TutorialRegistry {
             title: i18next.t("tutorial:discord.title"),
             stages: [{
                 sprites: [
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 68,
-                        scale: 0.25,
-                        key: "smitty_logo"
-                    }
+                    { key: "discord", scale: 0.125 }
                 ],
                 text: i18next.t("tutorial:discord.text"),
                 title: i18next.t("tutorial:discord.title")
@@ -1322,12 +1239,7 @@ export class TutorialRegistry {
             },
             {
                 sprites: [
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 96,
-                        scale: 0.25,
-                        key: "smitty_logo"
-                    }
+                    { key: "smitems", frame: "smittyEssence", scale: 0.52 }
                 ],
                 text: i18next.t("tutorial:smittyFormUnlocked.text.3"),
                 title: i18next.t("tutorial:smittyFormUnlocked.title")
@@ -1518,12 +1430,7 @@ export class TutorialRegistry {
             title: i18next.t("tutorial:firstVictory.title"),
             stages: [{
                 sprites: [
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 45,
-                        scale: 0.25,
-                        key: "smitty_logo"
-                    }
+                    { key: "items", frame: "ribbon_gen9" }
                 ],
                 text: i18next.t("tutorial:firstVictory.text"),
                 title: i18next.t("tutorial:firstVictory.title")
@@ -1551,12 +1458,7 @@ export class TutorialRegistry {
             title: i18next.t("tutorial:theVoidOvertaken.title"),
             stages: [{
                 sprites: [
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 21,
-                        scale: 0.25,
-                        key: "smitty_logo"
-                    }
+                    { key: "void_portal", scale: 0.28 }
                 ],
                 text: i18next.t("tutorial:theVoidOvertaken.text"),
                 title: i18next.t("tutorial:theVoidOvertaken.title")
@@ -1654,12 +1556,7 @@ export class TutorialRegistry {
                 },
                 {
                     sprites: [
-                        {
-                            spriteType: 'smitty_logo',
-                            smittyLogoId: 60,
-                            scale: 0.25,
-                            key: "smitty_logo"
-                        }
+                        { key: "logo", scale: 0.25 }
                     ],
                     text: i18next.t("tutorial:pokerogue.text.4"),
                     title: i18next.t("tutorial:pokerogue.title")
@@ -1726,12 +1623,7 @@ export class TutorialRegistry {
             title: i18next.t("tutorial:thankYou.title"),
             stages: [{
                 sprites: [
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 126,
-                        scale: 0.25,
-                        key: "smitty_logo"
-                    }
+                    { key: "logo", scale: 0.25 }
                 ],
                 text: i18next.t("tutorial:thankYou.text.1"),
                 title: i18next.t("tutorial:thankYou.title")
@@ -1739,38 +1631,10 @@ export class TutorialRegistry {
             {
                 sprites: [
                     { key: "smitems", frame: "permaPartyAbility", scale: 0.36, x: 0, y: -15 },
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 106,
-                        scale: 0.36,
-                        x: -40,
-                        y: 10,
-                        key: "smitty_logo"
-                    },
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 122,
-                        scale: 0.36,
-                        x: -13,
-                        y: 10,
-                        key: "smitty_logo"
-                    },
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 40,
-                        scale: 0.36,
-                        x: 13,
-                        y: 10,
-                        key: "smitty_logo"
-                    },
-                    {
-                        spriteType: 'smitty_logo',
-                        smittyLogoId: 77,
-                        scale: 0.36,
-                        x: 40,
-                        y: 10,
-                        key: "smitty_logo"
-                    }
+                    { key: "player_m", scale: 0.36, x: -40, y: 10 },
+                    { key: "player_f", scale: 0.36, x: -13, y: 10 },
+                    { key: "brock", scale: 0.36, x: 13, y: 10 },
+                    { key: "misty", scale: 0.36, x: 40, y: 10 }
                 ],
                 text: i18next.t("tutorial:thankYou.text.2"),
                 title: i18next.t("tutorial:thankYou.title")
@@ -1891,6 +1755,31 @@ export class TutorialRegistry {
                     ],
                     text: i18next.t("tutorial:ftlModeSelect.text.1"),
                     title: i18next.t("tutorial:ftlModeSelect.title.1")
+                }
+            ],
+            isTipActive: false
+        });
+    }
+
+    private registerFirstTimeFtlSkillTreeSelectionTutorial(): void {
+        this.tutorialConfigs.set(EnhancedTutorial.FIRST_TIME_FTL_SKILLTREE_SELECTION, {
+            title: i18next.t("tutorial:firstTimeFtlSkillTree.title"),
+            stages: [
+                {
+                    sprites: [
+                        { key: "smitems", frame: "draftMode", scale: 0.52, x: -10 },
+                        { key: "smitems", frame: "exclamationMark", scale: 0.36, x: 15 }
+                    ],
+                    text: i18next.t("tutorial:firstTimeFtlSkillTree.text.1"),
+                    title: i18next.t("tutorial:firstTimeFtlSkillTree.title.1")
+                },
+                {
+                    sprites: [
+                        { key: "smitems", frame: "draftMode", scale: 0.52, x: -20, inverted: true },
+                        { key: "smitems", frame: "draftMode", scale: 0.52, x: 20 }
+                    ],
+                    text: i18next.t("tutorial:firstTimeFtlSkillTree.text.2"),
+                    title: i18next.t("tutorial:firstTimeFtlSkillTree.title.2")
                 }
             ],
             isTipActive: false

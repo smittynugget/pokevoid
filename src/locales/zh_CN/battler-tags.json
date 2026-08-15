@@ -67,5 +67,17 @@
   "saltCuredLapse": "{{pokemonNameWithAffix}}\n受到了{{moveName}}的伤害！",
   "cursedOnAdd": "{{pokemonNameWithAffix}}削减了自己的体力，\n并诅咒了{{pokemonName}}！",
   "cursedLapse": "{{pokemonNameWithAffix}}\n正受到诅咒！",
-  "stockpilingOnAdd": "{{pokemonNameWithAffix}}蓄力了{{stockpiledCount}}次！"
+  "stockpilingOnAdd": "{{pokemonNameWithAffix}}蓄力了{{stockpiledCount}}次！",
+  "substituteOnAdd": "{{pokemonNameWithAffix}}制造了一个替身！",
+  "substituteOnRemove": "{{pokemonNameWithAffix}}的替身消失了！",
+  "substituteOnHit": "替身替{{pokemonNameWithAffix}}承受了伤害！",
+  "tauntOnAdd": "{{pokemonNameWithAffix}}被挑衅了！",
+  "tauntOnRemove": "{{pokemonNameWithAffix}}的挑衅效果解除了！",
+  "tormentOnAdd": "{{pokemonNameWithAffix}}被无理取闹了！",
+  "tormentOnRemove": "{{pokemonNameWithAffix}}的无理取闹效果解除了！",
+  "healBlockedLapse": "{{pokemonNameWithAffix}}因回复封锁无法回复！",
+  "healBlockedOnAdd": "{{pokemonNameWithAffix}}被封锁了回复！",
+  "healBlockedOnRemove": "{{pokemonNameWithAffix}}的回复封锁解除了！",
+  "itemBlockedOnAdd": "{{pokemonNameWithAffix}}无法使用携带的道具了！",
+  "itemBlockedOnRemove": "{{pokemonNameWithAffix}}又能使用道具了！"
 }

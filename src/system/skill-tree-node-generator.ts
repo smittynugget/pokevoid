@@ -1,13 +1,13 @@
 import i18next from "../plugins/i18n";
 import * as Utils from "../utils";
 import { PlayableChampionData } from "./playable-champions";
-import { SkillTreeRarity, SkillTreeReward, SkillTreeRewardType } from "./skill-tree-data";
+import { RewardTooltipSections, SkillTreeRarity, SkillTreeReward, SkillTreeRewardType } from "./skill-tree-data";
 import { allMoves } from "../data/move";
 import { allSpecies, starterPassiveAbilities, getPokemonSpecies } from "../data/pokemon-species";
 import { allAbilities } from "../data/ability";
 import { pokemonPrevolutions } from "../data/pokemon-evolutions";
 import { Abilities } from "../enums/abilities";
-import { Moves } from "../enums/moves";
+import { Moves, isYuMove } from "../enums/moves";
 import { Species } from "../enums/species";
 import { SpeciesFormKey } from "../enums/species-form-key";
 import { Stat } from "../enums/stat";
@@ -26,7 +26,8 @@ import { ChampionUtils } from "./champion-utils";
 import { RewardType } from "../enums/reward-type";
 import { getAbilitiesForTypes } from "./type-ability-mappings";
 import { getTypeStatPreferences } from "./type-stat-preferences";
-import { DEBUG_SKILL_TREE_FORCE_REWARD_TYPE } from "../overrides";
+import Overrides, { DEBUG_SKILL_TREE_FORCE_REWARD_TYPE } from "../overrides";
+import { ChampionSkillVersion } from "./game-data";
 
 export interface GeneratedNode {
   rarity: SkillTreeRarity;
@@ -43,6 +44,8 @@ export function getRaritiesForRewardType(rewardType: SkillTreeRewardType): Skill
     case SkillTreeRewardType.BERRY_ITEMS:
     case SkillTreeRewardType.MOVE_UPGRADE:
     case SkillTreeRewardType.TYPE_SWITCHER:
+    case SkillTreeRewardType.BATON_ITEM:
+    case SkillTreeRewardType.PP_MAX_ITEM:
       return [SkillTreeRarity.COMMON];
 
     case SkillTreeRewardType.GENERAL_POKEMON:
@@ -50,9 +53,7 @@ export function getRaritiesForRewardType(rewardType: SkillTreeRewardType): Skill
     case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
     case SkillTreeRewardType.TERA_TYPE:
     case SkillTreeRewardType.ROGUE_BALL:
-    case SkillTreeRewardType.PP_MAX_ITEM:
     case SkillTreeRewardType.MEMORY_MUSHROOM:
-    case SkillTreeRewardType.BATON_ITEM:
     case SkillTreeRewardType.GENERAL_ITEMS:
     case SkillTreeRewardType.ABILITY_SWITCHER:
     case SkillTreeRewardType.MONEY_REWARD:
@@ -62,13 +63,15 @@ export function getRaritiesForRewardType(rewardType: SkillTreeRewardType): Skill
 
     case SkillTreeRewardType.SKILL_POINTS:
     case SkillTreeRewardType.STAT_BOOST:
-    case SkillTreeRewardType.XM_FILTERED:
     case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
     case SkillTreeRewardType.TRAINER_BOND_ABILITY:
     case SkillTreeRewardType.PERMA_MONEY:
     case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY:
     case SkillTreeRewardType.TYPE_BALL_FILTERED:
       return [SkillTreeRarity.ULTRA];
+
+    case SkillTreeRewardType.XM_FILTERED:
+      return [SkillTreeRarity.MASTER];
 
     case SkillTreeRewardType.MEGA_STONE:
     case SkillTreeRewardType.DYNA_MUSHROOM:
@@ -83,6 +86,7 @@ export function getRaritiesForRewardType(rewardType: SkillTreeRewardType): Skill
     case SkillTreeRewardType.SIGNATURE_POKEMON:
     case SkillTreeRewardType.PERMA_ITEM:
     case SkillTreeRewardType.TERA_ABILITY:
+    case SkillTreeRewardType.BOUNTY_SELECT:
       return [SkillTreeRarity.ROGUE];
 
     case SkillTreeRewardType.HEALING_ITEMS:
@@ -115,17 +119,54 @@ export class SkillTreeNodeGenerator {
   private seed: number;
   private championId: string;
   private scene?: BattleScene;
+  public currentNodeTypes: Type[] = [];
+  private tooltipPreviewMode: boolean;
 
-  constructor(seed: number, championId: string, scene?: BattleScene) {
+  constructor(seed: number, championId: string, scene?: BattleScene, tooltipPreviewMode = false) {
     this.seed = seed;
     this.championId = championId;
     this.scene = scene;
+    this.tooltipPreviewMode = tooltipPreviewMode;
+  }
 
+  private isRandomTypeChampion(): boolean {
+    return this.championId === "red"
+      || this.championId === "apollo"
+      || this.championId === "diana"
+      || this.championId === "apollo_diana";
+  }
+
+  private getPreviewTypeLabel(): string {
+    return i18next.t("skillTree:randomTypesLabel", { defaultValue: "RANDOM" });
+  }
+
+  formatTypesForTooltip(types: Type[]): string {
+    if (this.tooltipPreviewMode && this.isRandomTypeChampion()) {
+      return this.getPreviewTypeLabel();
+    }
+    return types.map(t => i18next.t(`pokemonInfo:Type.${Type[t]}`)).join("/");
+  }
+
+  resolveEffectiveChampionData(championData: PlayableChampionData): PlayableChampionData {
+    if (this.championId !== "red") {
+      this.currentNodeTypes = [championData.type1, championData.type2]
+        .filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+      return championData;
+    }
+    const allTypes = (Utils.getEnumValues(Type) as Type[])
+      .filter(t => t >= Type.NORMAL && t <= Type.FAIRY);
+    const rolledType1 = Utils.randSeedItem(allTypes);
+    const rolledType2 = Utils.randSeedItem(allTypes.filter(t => t !== rolledType1));
+    const rolledType3 = Utils.randSeedItem(allTypes.filter(t => t !== rolledType1 && t !== rolledType2));
+    this.currentNodeTypes = [rolledType1, rolledType2, rolledType3];
+    return { ...championData, type1: rolledType1, type2: rolledType2, unlockedTypeBoosters: [rolledType1, rolledType2, rolledType3], unlockedEssenceBundles: [rolledType1, rolledType2, rolledType3], unlockedTypeSwitchers: [rolledType1, rolledType2, rolledType3], unlockedTeraTypes: [rolledType1, rolledType2, rolledType3] };
   }
 
   generateChampionSpecificNode(depth: number, rarity: SkillTreeRarity, championData: PlayableChampionData): GeneratedNode {
+    const effectiveChampion = this.resolveEffectiveChampionData(championData);
+
     if (DEBUG_SKILL_TREE_FORCE_REWARD_TYPE && depth > 0) {
-      const rewardData = this.generateSpecificReward(DEBUG_SKILL_TREE_FORCE_REWARD_TYPE, championData);
+      const rewardData = this.generateSpecificReward(DEBUG_SKILL_TREE_FORCE_REWARD_TYPE, effectiveChampion);
       const displayRarity = getDisplayRarityForRewardType(DEBUG_SKILL_TREE_FORCE_REWARD_TYPE);
       return {
         rarity: displayRarity,
@@ -135,7 +176,7 @@ export class SkillTreeNodeGenerator {
       };
     }
 
-    const rewardPool = this.getChampionRewardPool(championData).filter(r => r !== SkillTreeRewardType.POKEMON_ALT_BUILD);
+    const rewardPool = this.getChampionRewardPool(effectiveChampion).filter(r => r !== SkillTreeRewardType.POKEMON_ALT_BUILD);
 
     let altBuildChanceBps = 0;
     if (depth >= 7) altBuildChanceBps = 1300;
@@ -145,7 +186,20 @@ export class SkillTreeNodeGenerator {
 
     if (altBuildChanceBps > 0 && this.isRewardEligibleForChampion(SkillTreeRewardType.POKEMON_ALT_BUILD, championData)) {
       if (Utils.randSeedInt(10000) < altBuildChanceBps) {
-        const rewardData = this.generateSpecificReward(SkillTreeRewardType.POKEMON_ALT_BUILD, championData);
+        const rewardData = this.generateSpecificReward(SkillTreeRewardType.POKEMON_ALT_BUILD, effectiveChampion);
+        return {
+          rarity: SkillTreeRarity.ROGUE,
+          rewardData,
+          name: this.getRewardName(rewardData),
+          description: this.getRewardDescription(rewardData)
+        };
+      }
+    }
+
+    if (Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE || (this.scene && this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1)) {
+      const BOUNTY_CHANCE_BPS = 50;
+      if (depth >= 2 && Utils.randSeedInt(10000) < BOUNTY_CHANCE_BPS) {
+        const rewardData = this.generateSpecificReward(SkillTreeRewardType.BOUNTY_SELECT, effectiveChampion);
         return {
           rarity: SkillTreeRarity.ROGUE,
           rewardData,
@@ -168,11 +222,11 @@ export class SkillTreeNodeGenerator {
 
     for (const attemptRarity of attempts) {
       const eligiblePool = rewardPool.filter(reward =>
-        this.isRewardAvailableAtRarity(reward, attemptRarity) && this.isRewardEligibleForChampion(reward, championData)
+        this.isRewardAvailableAtRarity(reward, attemptRarity) && this.isRewardEligibleForChampion(reward, effectiveChampion)
       );
       if (eligiblePool.length > 0) {
         const selectedReward = Utils.randSeedItem(eligiblePool);
-        const rewardData = this.generateSpecificReward(selectedReward, championData);
+        const rewardData = this.generateSpecificReward(selectedReward, effectiveChampion);
 
         const generatedName = this.getRewardName(rewardData);
         const generatedDescription = this.getRewardDescription(rewardData);
@@ -228,7 +282,6 @@ export class SkillTreeNodeGenerator {
       SkillTreeRewardType.TYPE_BALL_FILTERED,
       SkillTreeRewardType.TYPE_BOOSTER_ITEM,
       SkillTreeRewardType.POKEMON_ALT_BUILD,
-      SkillTreeRewardType.GLITCH_FORM_UNLOCK,
       SkillTreeRewardType.PERMA_ITEM,
       SkillTreeRewardType.PERMA_MONEY,
       SkillTreeRewardType.MONEY_REWARD,
@@ -380,6 +433,9 @@ export class SkillTreeNodeGenerator {
       case SkillTreeRewardType.PARTY_ABILITY_GRANT:
         return this.generatePartyAbilityGrant();
 
+      case SkillTreeRewardType.BOUNTY_SELECT:
+        return { type: SkillTreeRewardType.BOUNTY_SELECT, data: { bountyNode: true }, immediate: false };
+
       default:
         return this.generateChampionXM(championData);
     }
@@ -404,7 +460,8 @@ export class SkillTreeNodeGenerator {
       case SkillTreeRewardType.GENERAL_POKEMON: return this.getTypeCompatiblePokemon([c.type1, c.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[], c.pokemonGenerationFilter).length > 0;
       case SkillTreeRewardType.LEGENDARY_POKEMON: return (c.legendaryPokemon?.length ?? 0) > 0;
       case SkillTreeRewardType.POKEMON_ALT_BUILD: return (c.unlockedAltBuilds?.length ?? 0) > 0;
-      case SkillTreeRewardType.TRAINER_BOND_ABILITY: return (c.unlockedConditionalAbilities || []).some(a => !allAbilities[a]?.name?.endsWith(" (N)"));
+      case SkillTreeRewardType.TRAINER_BOND_ABILITY:
+        return true;
       case SkillTreeRewardType.STAT_BOOST: return this.getChampionStatPreferences(c).length > 0;
       case SkillTreeRewardType.MOVE_UPGRADE: return Object.values(UpgradePath).length > 0;
       case SkillTreeRewardType.MEGA_STONE: return (c.unlockedMegaStones?.length ?? 0) > 0;
@@ -449,6 +506,7 @@ export class SkillTreeNodeGenerator {
       case SkillTreeRewardType.BATON_ITEM: return !!c.unlockedBaton;
       case SkillTreeRewardType.PP_MAX_ITEM: return !!c.unlockedPPMax;
       case SkillTreeRewardType.ROGUE_BALL: return !!c.unlockedRogueBall;
+      case SkillTreeRewardType.BOUNTY_SELECT: return true;
       default: return false;
     }
   }
@@ -496,7 +554,7 @@ export class SkillTreeNodeGenerator {
 
     return {
       type: SkillTreeRewardType.GENERAL_POKEMON,
-      data: { species: selectedPokemon },
+      data: { species: selectedPokemon, nodeTypes: this.currentNodeTypes.slice() },
       immediate: false
     };
   }
@@ -943,6 +1001,18 @@ export class SkillTreeNodeGenerator {
 
       case SkillTreeRewardType.SIGNATURE_POKEMON: {
         const championDisplayName = ChampionUtils.getChampionDisplayName(this.championId);
+        const sigSpecies = rewardData.data?.species;
+        if (sigSpecies) {
+          try {
+            const sp = getPokemonSpecies(sigSpecies);
+            if (sp) {
+              return i18next.t("skillTree:rewards.signaturePokemonName", {
+                champion: championDisplayName,
+                pokemon: sp.name
+              });
+            }
+          } catch {}
+        }
         return i18next.t("skillTree:rewards.signaturePokemonMysteryName", {
           champion: championDisplayName
         });
@@ -955,7 +1025,8 @@ export class SkillTreeNodeGenerator {
 
       case SkillTreeRewardType.LEGENDARY_POKEMON: {
         const species = rewardData.data?.species;
-        const pokemonName = species ? (allSpecies as any)?.[species - 1]?.name : i18next.t("skillTree:unknownReward");
+        let pokemonName = i18next.t("skillTree:unknownReward");
+        if (species) { try { pokemonName = getPokemonSpecies(species)?.name ?? pokemonName; } catch {} }
         return i18next.t("skillTree:rewards.legendaryPokemon", { pokemon: pokemonName });
       }
 
@@ -1017,8 +1088,10 @@ export class SkillTreeNodeGenerator {
         const altBuildId = rewardData.data?.altBuildId;
         const altBuildDef = altBuildId ? POKEMON_ALT_BUILDS[altBuildId] : undefined;
         const speciesId = rewardData.data?.species || altBuildDef?.species;
-        const pokemonName = speciesId ? (allSpecies as any)?.[speciesId - 1]?.name : i18next.t("skillTree:fallback.unknownPokemon");
-        const buildName = altBuildId ? i18next.t(`pokemonAltBuild:${altBuildId}.name`) : i18next.t("skillTree:fallback.unknownBuild");
+        let pokemonName = i18next.t("skillTree:fallback.unknownPokemon");
+        if (speciesId) { try { pokemonName = getPokemonSpecies(speciesId)?.name ?? pokemonName; } catch {} }
+        const buildName = altBuildId ? ChampionUtils.getAltBuildDisplayName(altBuildId) : i18next.t("skillTree:fallback.unknownBuild");
+
         const actualRank = rewardData.data?.rank ?? altBuildDef?.rank ?? 1;
         const rankLabel = actualRank >= 10
           ? `${Utils.intToRoman(10)}:${i18next.t("skillTree:rankMax")}`
@@ -1036,7 +1109,7 @@ export class SkillTreeNodeGenerator {
           if (unlockableId && this.scene) {
             const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(unlockableId);
             if (questUnlockData && questUnlockData.rewardId) {
-              const species = (allSpecies as any)?.[questUnlockData.rewardId - 1];
+              const species = getPokemonSpecies(questUnlockData.rewardId);
               if (species) {
                 const glitchFormKey = species.getGlitchFormName?.(true, undefined, questUnlockData.rewardType) || rewardData.data?.formKey || "unknown";
                 const glitchFormName = glitchFormKey !== "unknown" ? i18next.t(`glitchNames:${glitchFormKey}.name`, { defaultValue: glitchFormKey }) : i18next.t("skillTree:fallback.unknownGlitchForm");
@@ -1086,7 +1159,7 @@ export class SkillTreeNodeGenerator {
         return i18next.t("skillTree:rewards.voidBall");
       case SkillTreeRewardType.TYPE_BALL_FILTERED: {
         const ballTypeId = rewardData.data?.ballType;
-        const typeName = ballTypeId !== undefined ? i18next.t(`pokemonInfo:Type.${Type[ballTypeId]}`) : "?";
+        const typeName = ballTypeId !== undefined ? this.formatTypesForTooltip([ballTypeId]) : "?";
         return i18next.t("skillTree:rewards.typeBall", { type: typeName });
       }
       case SkillTreeRewardType.EGG_VOUCHER:
@@ -1098,28 +1171,31 @@ export class SkillTreeNodeGenerator {
       case SkillTreeRewardType.CATCH_RATE_BONUS: {
         const types = (rewardData.data?.types as Type[] | undefined) || [];
         const typeNames = types.length > 0
-          ? types.map(t => i18next.t(`pokemonInfo:Type.${Type[t]}`)).join(" & ")
+          ? this.formatTypesForTooltip(types)
           : "All";
         const percent = ((rewardData.data?.amount ?? 0.1) * 100).toFixed(0);
         return i18next.t("skillTree:rewards.catchBonus", { types: typeNames, percent });
       }
-      case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT:
-        return i18next.t("skillTree:rewards.essenceTypeWeight", { type: (Type as any)[rewardData.data?.type] || "?", weight: rewardData.data?.weight ?? 0 });
+      case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT: {
+        const ewType = rewardData.data?.type;
+        const ewTypeName = ewType !== undefined ? this.formatTypesForTooltip([ewType]) : "?";
+        return i18next.t("skillTree:rewards.essenceTypeWeight", { type: ewTypeName, weight: rewardData.data?.weight ?? 0 });
+      }
       case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY: {
         const pref = rewardData.data as { types?: Type[]; species?: Species[] } | undefined;
         const types = pref?.types || [];
-        const typeNames = types.map(t => i18next.t(`pokemonInfo:Type.${Type[t]}`)).join(" & ");
+        const typeNames = this.formatTypesForTooltip(types);
         return i18next.t("skillTree:rewards.fusionSecondaryPriority", { types: typeNames });
       }
       case SkillTreeRewardType.REVIVE_BOOST: {
         const reviveTypes = (rewardData.data?.types as Type[] | undefined) || [];
         const reviveTypeNames = reviveTypes.length > 0
-          ? reviveTypes.map(t => i18next.t(`pokemonInfo:Type.${Type[t]}`)).join(" & ")
+          ? this.formatTypesForTooltip(reviveTypes)
           : "All";
         return i18next.t("skillTree:rewards.reviveBoost", { types: reviveTypeNames });
       }
       case SkillTreeRewardType.TERA_TYPE:
-        return i18next.t("skillTree:rewards.teraType", { type: (Type as any)[rewardData.data?.type] || "?" });
+        return i18next.t("skillTree:rewards.teraType", { type: rewardData.data?.type !== undefined ? this.formatTypesForTooltip([rewardData.data.type]) : "?" });
 
       case SkillTreeRewardType.SKILL_POINTS:
         return i18next.t("skillTree:rewards.skillPoints", { amount: rewardData.data?.amount ?? 0 });
@@ -1129,7 +1205,7 @@ export class SkillTreeNodeGenerator {
 
       case SkillTreeRewardType.ESSENCE_BUNDLE:
         return i18next.t("skillTree:rewards.essenceBundle", {
-          type: (Type as any)[rewardData.data?.type] || "?",
+          type: rewardData.data?.type !== undefined ? this.formatTypesForTooltip([rewardData.data.type]) : "?",
           amount: rewardData.data?.amount ?? 0
         });
 
@@ -1152,6 +1228,9 @@ export class SkillTreeNodeGenerator {
       case SkillTreeRewardType.PARTY_ABILITY_GRANT: {
         return i18next.t("skillTree:rewards.partyAbilityGrant", { defaultValue: "Party Abilities" });
       }
+
+      case SkillTreeRewardType.BOUNTY_SELECT:
+        return i18next.t("skillTree:rewards.bountyNodeInTree");
 
       default:
         return i18next.t("skillTree:unknownReward");
@@ -1178,11 +1257,27 @@ export class SkillTreeNodeGenerator {
 
       case SkillTreeRewardType.SIGNATURE_POKEMON: {
         const championDisplayName = ChampionUtils.getChampionDisplayName(this.championId);
-        let description = i18next.t("skillTree:descriptions.signaturePokemonMystery", {
-          champion: championDisplayName
+        const sigSpeciesId = rewardData.data?.species;
+        let sigIntroDesc: string;
+        if (sigSpeciesId) {
+          try {
+            const sp = getPokemonSpecies(sigSpeciesId);
+            if (sp) {
+              sigIntroDesc = i18next.t("skillTree:descriptions.signaturePokemon", { champion: championDisplayName, pokemon: sp.name });
+            } else {
+              sigIntroDesc = i18next.t("skillTree:descriptions.signaturePokemonMystery", { champion: championDisplayName });
+            }
+          } catch {
+            sigIntroDesc = i18next.t("skillTree:descriptions.signaturePokemonMystery", { champion: championDisplayName });
+          }
+        } else {
+          sigIntroDesc = i18next.t("skillTree:descriptions.signaturePokemonMystery", { champion: championDisplayName });
+        }
+        const sigGrowthLore = i18next.t("skillTree:descriptions.signaturePokemonGrowthLore", {
+          defaultValue: "Signature Pokemon have the potential to grow immensely stronger, if their trainer is able to override reality and unlock their normally dormant abilities."
         });
-        description += `\n\n${i18next.t("skillTree:descriptions.signaturePokemonRankInfoGeneric")}`;
-        return description;
+        const sigRankInfoDesc = i18next.t("skillTree:descriptions.signaturePokemonRankInfoGeneric");
+        return `${sigIntroDesc}\n\n${sigGrowthLore}\n\n${sigRankInfoDesc}`;
       }
 
       case SkillTreeRewardType.GENERAL_POKEMON: {
@@ -1190,26 +1285,31 @@ export class SkillTreeNodeGenerator {
         let description = i18next.t("skillTree:descriptions.generalPokemon", { champion: championDisplayName });
 
         try {
-          const manager = ChampionManager.getInstance();
-          const championData = manager.getChampionData(this.championId);
-          const championTypes = [championData.type1, championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+          const persistedNodeTypes = rewardData?.data?.nodeTypes as Type[] | undefined;
+          const championTypes = (persistedNodeTypes && persistedNodeTypes.length > 0)
+            ? persistedNodeTypes
+            : this.currentNodeTypes.length > 0
+              ? this.currentNodeTypes
+              : (() => { const m = ChampionManager.getInstance(); const cd = m.getChampionData(this.championId); return [cd.type1, cd.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[]; })();
 
           if (championTypes.length > 0) {
-            const toHex2 = (v: number) => v.toString(16).padStart(2, "0");
-            const formatType = (t: Type) => {
-              const typeKey = Type[t];
-              const name = i18next.t(`pokemonInfo:Type.${typeKey}`, { defaultValue: typeKey });
-              const [r, g, b] = getTypeRgb(t);
-              const color = `#${toHex2(r)}${toHex2(g)}${toHex2(b)}`;
-              return `[color=${color}]${name}[/color]`;
-            };
-
             const label = i18next.t("skillTree:descriptions.typesLabel");
-            description += `\n\n${label} ${championTypes.map(formatType).join("/")}`;
-          } else if (this.championId === "apollo" || this.championId === "diana" || this.championId === "apollo_diana") {
-            const unknownName = i18next.t("pokemonInfo:Type.UNKNOWN", { defaultValue: "Unknown" });
+            if (this.tooltipPreviewMode && this.isRandomTypeChampion()) {
+              description += `\n\n${label} [color=#ffdd44]${this.getPreviewTypeLabel()}[/color]`;
+            } else {
+              const toHex2 = (v: number) => v.toString(16).padStart(2, "0");
+              const formatType = (t: Type) => {
+                const typeKey = Type[t];
+                const name = i18next.t(`pokemonInfo:Type.${typeKey}`, { defaultValue: typeKey });
+                const [r, g, b] = getTypeRgb(t);
+                const color = `#${toHex2(r)}${toHex2(g)}${toHex2(b)}`;
+                return `[color=${color}]${name}[/color]`;
+              };
+              description += `\n\n${label} ${championTypes.map(formatType).join("/")}`;
+            }
+          } else if (this.isRandomTypeChampion()) {
             const label = i18next.t("skillTree:descriptions.typesLabel");
-            description += `\n\n${label} [color=#ffdd44]${unknownName}[/color]/[color=#ffdd44]${unknownName}[/color]`;
+            description += `\n\n${label} [color=#ffdd44]${this.getPreviewTypeLabel()}[/color]`;
           }
         } catch {}
 
@@ -1218,7 +1318,8 @@ export class SkillTreeNodeGenerator {
 
       case SkillTreeRewardType.LEGENDARY_POKEMON: {
         const species = rewardData.data?.species;
-        const pokemonName = species ? (allSpecies as any)?.[species - 1]?.name : i18next.t("skillTree:fallback.unknownPokemon");
+        let pokemonName = i18next.t("skillTree:fallback.unknownPokemon");
+        if (species) { try { pokemonName = getPokemonSpecies(species)?.name ?? pokemonName; } catch {} }
         const championDisplayName = ChampionUtils.getChampionDisplayName(this.championId);
         let championId = this.championId || "apollo_diana";
         if (championId === "apollo" || championId === "diana") {
@@ -1262,12 +1363,12 @@ export class SkillTreeNodeGenerator {
         const percentText = ((rewardData.data?.boostPercent ?? 0) * 100).toFixed(0);
 
         try {
-          const manager = ChampionManager.getInstance();
-          const championData = manager.getChampionData(this.championId);
-          const championTypes = [championData.type1, championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+          const championTypes = this.currentNodeTypes.length > 0
+            ? this.currentNodeTypes
+            : (() => { const m = ChampionManager.getInstance(); const cd = m.getChampionData(this.championId); return [cd.type1, cd.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[]; })();
 
           if (championTypes.length > 0 && stats.length > 1) {
-            const typeNames = championTypes.map(t => i18next.t(`pokemonInfo:Type.${Type[t]}`)).join("/");
+            const typeNames = this.formatTypesForTooltip(championTypes);
             return i18next.t("skillTree:descriptions.statBoostConditional", {
               stats: statNames,
               types: typeNames,
@@ -1311,7 +1412,8 @@ export class SkillTreeNodeGenerator {
         const altBuildId = rewardData.data?.altBuildId;
         const altBuildDef = altBuildId ? POKEMON_ALT_BUILDS[altBuildId] : undefined;
         const speciesId = rewardData.data?.species || altBuildDef?.species;
-        const pokemonName = speciesId ? (allSpecies as any)?.[speciesId - 1]?.name : i18next.t("skillTree:fallback.unknownPokemon");
+        let pokemonName = i18next.t("skillTree:fallback.unknownPokemon");
+        if (speciesId) { try { pokemonName = getPokemonSpecies(speciesId)?.name ?? pokemonName; } catch {} }
         const championDisplayName = ChampionUtils.getChampionDisplayName(this.championId);
         const storedRank = rewardData.data?.rank ?? 1;
         const rank = altBuildId ? this.getEffectiveRankForNode(altBuildId as PokemonAltBuildId, storedRank) : storedRank;
@@ -1325,7 +1427,7 @@ export class SkillTreeNodeGenerator {
         const rankLabel = currentRank >= 10
           ? `${Utils.intToRoman(10)}:${i18next.t("skillTree:rankMax")}`
           : Utils.intToRoman(rank);
-        const altBuildName = altBuildId ? i18next.t(`pokemonAltBuild:${altBuildId}.name`) : i18next.t("skillTree:fallback.unknownBuild");
+        const altBuildName = altBuildId ? ChampionUtils.getAltBuildDisplayName(altBuildId) : i18next.t("skillTree:fallback.unknownBuild");
 
         const flavorKey = `skillTree:descriptions.altBuildFlavor_${this.championId}`;
         const flavorText = i18next.t(flavorKey, {
@@ -1347,10 +1449,8 @@ export class SkillTreeNodeGenerator {
 
           if (altBuildDef.typeChanges) {
             const [t1, t2] = altBuildDef.typeChanges;
-            const typeList = [t1, t2]
-              .filter(t => t !== undefined)
-              .map(t => Type[t])
-              .join(" / ");
+            const filteredTypes = [t1, t2].filter(t => t !== undefined) as Type[];
+            const typeList = this.formatTypesForTooltip(filteredTypes);
             if (typeList) {
               const label = i18next.t("skillTree:descriptions.altBuildTypes");
               changes.push(`[color=#ffdd44]${label}[/color] ${typeList}`);
@@ -1497,7 +1597,7 @@ export class SkillTreeNodeGenerator {
           if (unlockableId && this.scene) {
             const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(unlockableId);
             if (questUnlockData && questUnlockData.rewardId) {
-              const species = (allSpecies as any)?.[questUnlockData.rewardId - 1];
+              const species = getPokemonSpecies(questUnlockData.rewardId);
               if (species) {
                 const glitchFormKey = species.getGlitchFormName?.(true, undefined, questUnlockData.rewardType) || rewardData.data?.formKey || "unknown";
                 const glitchFormName = glitchFormKey !== "unknown" ? i18next.t(`glitchNames:${glitchFormKey}.name`, { defaultValue: glitchFormKey }) : i18next.t("skillTree:fallback.unknownGlitchForm");
@@ -1511,7 +1611,8 @@ export class SkillTreeNodeGenerator {
                 const flavorKey = `skillTree:descriptions.glitchFormFlavor_${championId}`;
                 const flavorText = i18next.t(flavorKey, { champion: championDisplayName, glitchFormName });
 
-                return i18next.t("skillTree:descriptions.glitchForm", {
+                const descKey = rewardData.data?.permanent ? "skillTree:descriptions.glitchFormPermanent" : "skillTree:descriptions.glitchForm";
+                return i18next.t(descKey, {
                   flavorText,
                   glitchFormName,
                   originalSpecies
@@ -1533,7 +1634,8 @@ export class SkillTreeNodeGenerator {
           champion: championDisplayName,
           glitchFormName
         });
-        return i18next.t("skillTree:descriptions.glitchForm", {
+        const descKey = rewardData.data?.permanent ? "skillTree:descriptions.glitchFormPermanent" : "skillTree:descriptions.glitchForm";
+        return i18next.t(descKey, {
           flavorText,
           glitchFormName,
           originalSpecies: i18next.t("skillTree:fallback.unknownPokemon")
@@ -1558,12 +1660,12 @@ export class SkillTreeNodeGenerator {
         return abilityDesc ? `${modifierDesc}\n${abilityName}: ${abilityDesc}` : modifierDesc;
       }
       case SkillTreeRewardType.TYPE_BOOSTER_ITEM: {
-        const moveType = rewardData.data?.type !== undefined ? i18next.t(`pokemonInfo:Type.${Type[rewardData.data.type]}`) : i18next.t("skillTree:fallback.unknownType");
+        const moveType = rewardData.data?.type !== undefined ? this.formatTypesForTooltip([rewardData.data.type]) : i18next.t("skillTree:fallback.unknownType");
         return i18next.t("modifierType:ModifierType.AttackTypeBoosterModifierType.description", { moveType });
       }
       case SkillTreeRewardType.TERA_TYPE: {
         const type = rewardData.data?.type;
-        const teraTypeName = type !== undefined ? Type[type] : i18next.t("skillTree:fallback.unknownType");
+        const teraTypeName = type !== undefined ? this.formatTypesForTooltip([type]) : i18next.t("skillTree:fallback.unknownType");
         return i18next.t("modifierType:ModifierType.TerastallizeModifierType.description", {
           teraType: teraTypeName
         });
@@ -1571,7 +1673,7 @@ export class SkillTreeNodeGenerator {
       case SkillTreeRewardType.CATCH_RATE_BONUS: {
         const types = (rewardData.data?.types as Type[] | undefined) || [];
         const amount = (rewardData.data?.amount ?? 0.1) * 100;
-        const typeNames = types.map(t => i18next.t(`pokemonInfo:Type.${Type[t]}`)).join(" & ");
+        const typeNames = this.formatTypesForTooltip(types);
 
         return i18next.t("skillTree:descriptions.catchRateBonus", {
           types: typeNames,
@@ -1579,16 +1681,19 @@ export class SkillTreeNodeGenerator {
         });
       }
       case SkillTreeRewardType.ESSENCE_BUNDLE: {
-        const essenceType = rewardData.data?.type !== undefined ? i18next.t(`pokemonInfo:Type.${Type[rewardData.data.type]}`) : i18next.t("skillTree:fallback.unknownType");
+        const essenceType = rewardData.data?.type !== undefined ? this.formatTypesForTooltip([rewardData.data.type]) : i18next.t("skillTree:fallback.unknownType");
         const essenceAmount = rewardData.data?.amount ?? 0;
         return i18next.t("skillTree:descriptions.essenceBundle", { type: essenceType, amount: essenceAmount });
       }
-      case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT:
-        return i18next.t("skillTree:descriptions.essenceTypeWeight", { type: (Type as any)[rewardData.data?.type] || "?", weight: rewardData.data?.weight ?? 0 });
+      case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT: {
+        const descEwType = rewardData.data?.type;
+        const descEwTypeName = descEwType !== undefined ? this.formatTypesForTooltip([descEwType]) : "?";
+        return i18next.t("skillTree:descriptions.essenceTypeWeight", { type: descEwTypeName, weight: rewardData.data?.weight ?? 0 });
+      }
       case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY: {
         const pref = rewardData.data as { types?: Type[]; species?: Species[] } | undefined;
         const types = pref?.types || [];
-        const typeNames = types.map(t => i18next.t(`pokemonInfo:Type.${Type[t]}`)).join(", ");
+        const typeNames = this.formatTypesForTooltip(types);
 
         return i18next.t("skillTree:descriptions.fusionSecondaryPriority", {
           types: typeNames
@@ -1597,7 +1702,7 @@ export class SkillTreeNodeGenerator {
       case SkillTreeRewardType.REVIVE_BOOST: {
         const reviveDescTypes = (rewardData.data?.types as Type[] | undefined) || [];
         const reviveDescTypeNames = reviveDescTypes.length > 0
-          ? reviveDescTypes.map(t => i18next.t(`pokemonInfo:Type.${Type[t]}`)).join(", ")
+          ? this.formatTypesForTooltip(reviveDescTypes)
           : "all";
         return i18next.t("skillTree:descriptions.reviveBoost", { types: reviveDescTypeNames });
       }
@@ -1642,7 +1747,7 @@ export class SkillTreeNodeGenerator {
         return i18next.t("skillTree:descriptions.voidBall");
       case SkillTreeRewardType.TYPE_BALL_FILTERED: {
         const descBallType = rewardData.data?.ballType;
-        const descTypeName = descBallType !== undefined ? i18next.t(`pokemonInfo:Type.${Type[descBallType]}`) : "?";
+        const descTypeName = descBallType !== undefined ? this.formatTypesForTooltip([descBallType]) : "?";
         return i18next.t("skillTree:descriptions.typeBall", { type: descTypeName });
       }
       case SkillTreeRewardType.EGG_VOUCHER: {
@@ -1660,10 +1765,248 @@ export class SkillTreeNodeGenerator {
       case SkillTreeRewardType.GOLDEN_POKEBALL:
         return i18next.t("skillTree:descriptions.goldenPokeball");
 
+      case SkillTreeRewardType.BOUNTY_SELECT:
+        return i18next.t("skillTree:rewards.bountyNodeInTreeDesc");
+
       default:
         return i18next.t("skillTree:descriptions.default");
     }
   }
+
+  public getStructuredDescription(rewardData: SkillTreeReward): RewardTooltipSections {
+    const ABILITY_HEADER = "championSelect:tooltip.abilityHeader";
+    const ITEM_HEADER = "championSelect:tooltip.itemDescriptionHeader";
+    const SKILL_HEADER = "championSelect:tooltip.skillInfoHeader";
+
+    switch (rewardData.type) {
+      case SkillTreeRewardType.TM_FILTERED: {
+        const move = (allMoves as any)?.[rewardData.data?.moveId];
+        const moveName = move?.name || i18next.t("skillTree:unknownReward");
+        const modifierDesc = i18next.t("modifierType:ModifierType.TmModifierType.description", { moveName });
+        const moveEffect = move?.effect || move?.description || "";
+        if (moveEffect) {
+          return { summary: modifierDesc, detail: `${moveName}: ${moveEffect}`, detailHeaderKey: ITEM_HEADER };
+        }
+        return { summary: modifierDesc, detailHeaderKey: ITEM_HEADER };
+      }
+
+      case SkillTreeRewardType.XM_FILTERED: {
+        const move = (allMoves as any)?.[rewardData.data?.moveId];
+        const moveName = move?.name || i18next.t("skillTree:unknownReward");
+        const modifierDesc = i18next.t("modifierType:ModifierType.AnyTmModifierType.description", { moveName });
+        const moveEffect = move?.effect || move?.description || "";
+        if (moveEffect) {
+          return { summary: modifierDesc, detail: `${moveName}: ${moveEffect}`, detailHeaderKey: ITEM_HEADER };
+        }
+        return { summary: modifierDesc, detailHeaderKey: ITEM_HEADER };
+      }
+
+      case SkillTreeRewardType.ABILITY_GRANT: {
+        const ability = (allAbilities as any)?.[rewardData.data?.abilityId];
+        const abilityName = ability?.name || i18next.t("skillTree:unknownReward");
+        const modifierDesc = i18next.t("skillTree:descriptions.abilityGrant");
+        const abilityDesc = ability?.description || "";
+        if (abilityDesc) {
+          return { summary: modifierDesc, detail: `${abilityName}: ${abilityDesc}`, detailHeaderKey: ABILITY_HEADER };
+        }
+        return { summary: modifierDesc, detailHeaderKey: ABILITY_HEADER };
+      }
+
+      case SkillTreeRewardType.PASSIVE_ABILITY_GRANT: {
+        const ability = (allAbilities as any)?.[rewardData.data?.abilityId];
+        const abilityName = ability?.name || i18next.t("skillTree:unknownReward");
+        const modifierDesc = i18next.t("skillTree:descriptions.passiveAbility");
+        const abilityDesc = ability?.description || "";
+        if (abilityDesc) {
+          return { summary: modifierDesc, detail: `${abilityName}: ${abilityDesc}`, detailHeaderKey: ABILITY_HEADER };
+        }
+        return { summary: modifierDesc, detailHeaderKey: ABILITY_HEADER };
+      }
+
+      case SkillTreeRewardType.SMITTY_ABILITY: {
+        const ability = (allAbilities as any)?.[rewardData.data?.abilityId];
+        const abilityName = ability?.name || i18next.t("skillTree:unknownReward");
+        const abilityDesc = ability?.description || "";
+        const smittyLore = i18next.t("skillTree:descriptions.smittyAbility");
+        const smittySummary = i18next.t("skillTree:descriptions.smittyAbilityGeneric", {
+          defaultValue: "Grants a forbidden SMITTY ability to one of your Pokémon."
+        });
+        if (abilityDesc) {
+          return { summary: smittySummary, detail: `${abilityName}: ${abilityDesc}`, detailHeaderKey: ABILITY_HEADER, lore: smittyLore };
+        }
+        return { summary: smittySummary, detailHeaderKey: ABILITY_HEADER, lore: smittyLore };
+      }
+
+      case SkillTreeRewardType.TRAINER_BOND_ABILITY: {
+        const tbAbility = (allAbilities as any)?.[rewardData.data?.abilityId];
+        const tbAbilityName = tbAbility?.name || i18next.t("skillTree:unknownReward");
+        const tbAbilityDesc = tbAbility?.description || "";
+        const tbChampionDisplayName = ChampionUtils.getChampionDisplayName(this.championId);
+        let tbChampionId = this.championId || "apollo_diana";
+        if (tbChampionId === "apollo" || tbChampionId === "diana") tbChampionId = "apollo_diana";
+        const tbFlavorKey = `skillTree:descriptions.trainerBondFlavorText_${tbChampionId}`;
+        const tbLore = i18next.t(tbFlavorKey, { champion: tbChampionDisplayName });
+        const tbGeneric = i18next.t("skillTree:descriptions.trainerBondGeneric", { champion: tbChampionDisplayName });
+        if (tbAbilityDesc) {
+          return { summary: tbGeneric, detail: `${tbAbilityName}: ${tbAbilityDesc}`, detailHeaderKey: ABILITY_HEADER, lore: tbLore };
+        }
+        return { summary: tbGeneric, detailHeaderKey: ABILITY_HEADER, lore: tbLore };
+      }
+
+      case SkillTreeRewardType.TERA_ABILITY: {
+        const teraAbility = (allAbilities as any)?.[rewardData.data?.abilityId];
+        const teraAbilityName = teraAbility?.name || i18next.t("skillTree:unknownReward");
+        const teraAbilityDesc = teraAbility?.description || "";
+        const teraSummary = this.getRewardDescription(rewardData);
+        if (teraAbilityDesc) {
+          return { summary: teraSummary, detail: `${teraAbilityName}: ${teraAbilityDesc}`, detailHeaderKey: ABILITY_HEADER };
+        }
+        return { summary: teraSummary, detailHeaderKey: ABILITY_HEADER };
+      }
+
+      case SkillTreeRewardType.PARTY_ABILITY_GRANT:
+        return { summary: this.getRewardDescription(rewardData), detailHeaderKey: ABILITY_HEADER };
+
+      case SkillTreeRewardType.MEGA_STONE:
+      case SkillTreeRewardType.DYNA_MUSHROOM:
+      case SkillTreeRewardType.GLITCH_CHANGE:
+      case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
+      case SkillTreeRewardType.PERMA_ITEM:
+      case SkillTreeRewardType.HEALING_ITEMS:
+      case SkillTreeRewardType.MEMORY_MUSHROOM:
+      case SkillTreeRewardType.BERRY_ITEMS:
+      case SkillTreeRewardType.ABILITY_SWITCHER:
+      case SkillTreeRewardType.GENERAL_ITEMS:
+      case SkillTreeRewardType.BATON_ITEM:
+      case SkillTreeRewardType.PP_MAX_ITEM:
+      case SkillTreeRewardType.ROGUE_BALL:
+      case SkillTreeRewardType.GOLDEN_POKEBALL:
+      case SkillTreeRewardType.MASTER_BALL:
+      case SkillTreeRewardType.VOID_BALL:
+      case SkillTreeRewardType.TYPE_BALL_FILTERED:
+      case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
+      case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
+      case SkillTreeRewardType.EGG_VOUCHER:
+      case SkillTreeRewardType.MONEY_REWARD:
+      case SkillTreeRewardType.PERMA_MONEY:
+      case SkillTreeRewardType.TERA_TYPE:
+        return { summary: this.getRewardDescription(rewardData), detailHeaderKey: ITEM_HEADER };
+
+      case SkillTreeRewardType.LEGENDARY_POKEMON: {
+        const legSpecies = rewardData.data?.species;
+        let legPokemonName = i18next.t("skillTree:fallback.unknownPokemon");
+        if (legSpecies) { try { legPokemonName = getPokemonSpecies(legSpecies)?.name ?? legPokemonName; } catch {} }
+        const legChampionDisplayName = ChampionUtils.getChampionDisplayName(this.championId);
+        let legChampionId = this.championId || "apollo_diana";
+        if (legChampionId === "apollo" || legChampionId === "diana") legChampionId = "apollo_diana";
+        const legFlavorKey = `skillTree:descriptions.legendaryFlavorText_${legChampionId}`;
+        const legFlavorText = i18next.t(legFlavorKey, { champion: legChampionDisplayName, pokemon: legPokemonName });
+        const legTechnicalDesc = i18next.t("skillTree:descriptions.legendaryPokemon", { pokemon: legPokemonName });
+        return { summary: legTechnicalDesc, lore: legFlavorText, detailHeaderKey: SKILL_HEADER };
+      }
+
+      case SkillTreeRewardType.POKEMON_ALT_BUILD: {
+        const abIsSignature = rewardData.data?.signatureAltBuild === true || !rewardData.data?.altBuildId;
+        if (abIsSignature) {
+          return { summary: this.getRewardDescription(rewardData), detailHeaderKey: SKILL_HEADER };
+        }
+        const abFlavorKey = `skillTree:descriptions.altBuildFlavor_${this.championId}`;
+        const abSpeciesId = rewardData.data?.species || (rewardData.data?.altBuildId ? POKEMON_ALT_BUILDS[rewardData.data.altBuildId]?.species : undefined);
+        let abPokemonName = i18next.t("skillTree:fallback.unknownPokemon");
+        if (abSpeciesId) { try { abPokemonName = getPokemonSpecies(abSpeciesId)?.name ?? abPokemonName; } catch {} }
+        const abChampionName = ChampionUtils.getChampionDisplayName(this.championId);
+        const abBuildName = rewardData.data?.altBuildId ? ChampionUtils.getAltBuildDisplayName(rewardData.data.altBuildId) : i18next.t("skillTree:fallback.unknownBuild");
+        const abLore = i18next.t(abFlavorKey, { champion: abChampionName, pokemon: abPokemonName, altBuildName: abBuildName, defaultValue: "" });
+        const abFullDesc = this.getRewardDescription(rewardData);
+        const abLoreTrimmed = abLore.trim();
+        let abSummary = abFullDesc;
+        if (abLoreTrimmed && abFullDesc.startsWith(abLoreTrimmed)) {
+          abSummary = abFullDesc.substring(abLoreTrimmed.length).replace(/^\n+/, "");
+        }
+        return { summary: abSummary, lore: abLore, detailHeaderKey: SKILL_HEADER };
+      }
+
+      case SkillTreeRewardType.GLITCH_FORM_UNLOCK: {
+        let gfChampionId = this.championId || "apollo_diana";
+        if (gfChampionId === "apollo" || gfChampionId === "diana") gfChampionId = "apollo_diana";
+        const gfChampionName = ChampionUtils.getChampionDisplayName(this.championId);
+        let gfFormName = "";
+        let gfOriginalSpecies = i18next.t("skillTree:fallback.unknownPokemon");
+        try {
+          const gfUnlockableId = rewardData.data?.unlockableId;
+          if (gfUnlockableId && this.scene) {
+            const gfQuestData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(gfUnlockableId);
+            if (gfQuestData && gfQuestData.rewardId) {
+              const gfSpecies = getPokemonSpecies(gfQuestData.rewardId);
+              if (gfSpecies) {
+                const gfKey = gfSpecies.getGlitchFormName?.(true, undefined, gfQuestData.rewardType) || rewardData.data?.formKey || "unknown";
+                gfFormName = gfKey !== "unknown" ? i18next.t(`glitchNames:${gfKey}.name`, { defaultValue: gfKey }) : i18next.t("skillTree:fallback.unknownGlitchForm");
+                gfOriginalSpecies = gfSpecies.name || gfOriginalSpecies;
+              }
+            }
+          }
+        } catch {}
+        if (!gfFormName) {
+          const gfFallbackKey = rewardData.data?.formKey ?? "unknown";
+          gfFormName = gfFallbackKey !== "unknown" ? i18next.t(`glitchNames:${gfFallbackKey}.name`, { defaultValue: gfFallbackKey }) : "Unknown";
+        }
+        const gfFlavorKey = `skillTree:descriptions.glitchFormFlavor_${gfChampionId}`;
+        const gfLore = i18next.t(gfFlavorKey, { champion: gfChampionName, glitchFormName: gfFormName, defaultValue: "" });
+        const gfFullDesc = this.getRewardDescription(rewardData);
+        const gfLoreTrimmed = gfLore.trim();
+        let gfSummary = gfFullDesc;
+        if (gfLoreTrimmed && gfFullDesc.startsWith(gfLoreTrimmed)) {
+          gfSummary = gfFullDesc.substring(gfLoreTrimmed.length).replace(/^\n+/, "");
+        }
+        return { summary: gfSummary, lore: gfLore, detailHeaderKey: SKILL_HEADER };
+      }
+
+      case SkillTreeRewardType.SIGNATURE_POKEMON: {
+        const sigChampionName = ChampionUtils.getChampionDisplayName(this.championId);
+        const sigSpeciesIdTT = rewardData.data?.species;
+        let sigIntro: string;
+        if (sigSpeciesIdTT) {
+          try {
+            const sp = getPokemonSpecies(sigSpeciesIdTT);
+            if (sp) {
+              sigIntro = i18next.t("skillTree:descriptions.signaturePokemon", { champion: sigChampionName, pokemon: sp.name });
+            } else {
+              sigIntro = i18next.t("skillTree:descriptions.signaturePokemonMystery", { champion: sigChampionName });
+            }
+          } catch {
+            sigIntro = i18next.t("skillTree:descriptions.signaturePokemonMystery", { champion: sigChampionName });
+          }
+        } else {
+          sigIntro = i18next.t("skillTree:descriptions.signaturePokemonMystery", { champion: sigChampionName });
+        }
+        const sigRankInfo = i18next.t("skillTree:descriptions.signaturePokemonRankInfoGeneric");
+        const sigLore = i18next.t("skillTree:descriptions.signaturePokemonGrowthLore", {
+          defaultValue: "Signature Pokemon have the potential to grow immensely stronger, if their trainer is able to override reality and unlock their normally dormant abilities."
+        });
+        return { summary: `${sigIntro}\n\n${sigRankInfo}`, lore: sigLore, detailHeaderKey: SKILL_HEADER };
+      }
+
+      case SkillTreeRewardType.GENERAL_POKEMON:
+      case SkillTreeRewardType.STAT_BOOST:
+      case SkillTreeRewardType.MOVE_UPGRADE:
+      case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
+      case SkillTreeRewardType.TYPE_SWITCHER:
+      case SkillTreeRewardType.ESSENCE_BUNDLE:
+      case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT:
+      case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY:
+      case SkillTreeRewardType.CATCH_RATE_BONUS:
+      case SkillTreeRewardType.REVIVE_BOOST:
+      case SkillTreeRewardType.SKILL_POINTS:
+      case SkillTreeRewardType.SKILL_TREE_TOKENS:
+      case SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN:
+      case SkillTreeRewardType.BOUNTY_SELECT:
+        return { summary: this.getRewardDescription(rewardData), detailHeaderKey: SKILL_HEADER };
+
+      default:
+        return { summary: this.getRewardDescription(rewardData) };
+    }
+  }
+
   private getSpecificMoveUpgradeDescription(data: any): string {
     try {
       const championDisplayName = ChampionUtils.getChampionDisplayName(this.championId);
@@ -1671,9 +2014,9 @@ export class SkillTreeNodeGenerator {
       if (data?.kind) {
         switch (data.kind) {
           case "super_effective_vs_type":
-            return `${prefix}\n${i18next.t("skillTree:descriptions.moveUpgradeSE", { type: Type[data.data.type] })}`;
+            return `${prefix}\n${i18next.t("skillTree:descriptions.moveUpgradeSE", { type: this.formatTypesForTooltip([data.data.type]) })}`;
           case "change_type":
-            return `${prefix}\n${i18next.t("skillTree:descriptions.moveUpgradeChangeType", { type: Type[data.data.type] })}`;
+            return `${prefix}\n${i18next.t("skillTree:descriptions.moveUpgradeChangeType", { type: this.formatTypesForTooltip([data.data.type]) })}`;
           case "recoil_mod":
             return `${prefix}\n${i18next.t("skillTree:descriptions.moveUpgradeRecoil", { delta: Math.round(Math.abs(data.data.delta) * 100) })}`;
         }
@@ -1700,7 +2043,7 @@ export class SkillTreeNodeGenerator {
       }
 
       if (Array.isArray(filters.types) && filters.types.length) {
-        const typeNames = filters.types.map((t: Type) => Type[t]).join("/");
+        const typeNames = this.formatTypesForTooltip(filters.types);
         parts.push(i18next.t("skillTree:descriptions.moveUpgradeTypes", { types: typeNames }));
       }
 
@@ -1733,11 +2076,10 @@ export class SkillTreeNodeGenerator {
         .join(" ");
   }
   private getChampionCompatibleTMs(championTypes: Type[]): Moves[] {
-
     const numericMoves = Object.values(Moves).filter(move => typeof move === 'number') as Moves[];
     return numericMoves.filter(move => {
       const moveData = allMoves[move];
-      return moveData && championTypes.includes(moveData.type);
+      return moveData && championTypes.includes(moveData.type) && !isYuMove(move);
     });
   }
 
@@ -1747,23 +2089,19 @@ export class SkillTreeNodeGenerator {
   }
 
   private getTypeCompatiblePokemon(championTypes: Type[], generationFilter: number[]): Species[] {
-    const allSpeciesKeys = Object.keys(allSpecies).map(key => parseInt(key) as Species);
-
-    return allSpeciesKeys.filter(species => {
-      const speciesData = allSpecies[species];
+    const result: Species[] = [];
+    for (const speciesData of allSpecies) {
+      if (!speciesData) continue;
       const hasMatchingType = championTypes.some(championType =>
           speciesData.type1 === championType || speciesData.type2 === championType
       );
-
-      if (!hasMatchingType) return false;
+      if (!hasMatchingType) continue;
       if (generationFilter && generationFilter.length > 0) {
-        if (!generationFilter.includes(speciesData.generation)) {
-          return false;
-        }
+        if (!generationFilter.includes(speciesData.generation)) continue;
       }
-
-      return true;
-    });
+      result.push(speciesData.speciesId as Species);
+    }
+    return result;
   }
 
   private getChampionTypeAbilities(championTypes: Type[]): Abilities[] {
@@ -1779,6 +2117,8 @@ export class SkillTreeNodeGenerator {
         return [Stat.DEF, Stat.HP, Stat.ATK];
       case "misty":
         return [Stat.SPD, Stat.SPATK, Stat.ATK];
+      case "red":
+        return [Stat.ATK, Stat.SPATK, Stat.SPD];
       case "apollo":
       case "diana":
         return getTypeStatPreferences(championData.type1, championData.type2);

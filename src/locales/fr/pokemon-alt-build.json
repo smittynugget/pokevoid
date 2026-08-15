@@ -205,47 +205,47 @@
   },
   "riolu_apollo_diana_signature": {
     "name": "Partenaire d'Apollon & Diane",
-    "description": "Le compagnon type Combat courageux d'Apollon & Diane"
+    "description": "Le compagnon type Combat courageux de {{champion}}"
   },
   "solrock_apollo_diana_signature": {
     "name": "Partenaire d'Apollon & Diane",
-    "description": "Le compagnon type Roche radieux d'Apollon & Diane"
+    "description": "Le compagnon type Roche radieux de {{champion}}"
   },
   "lunatone_apollo_diana_signature": {
     "name": "Partenaire d'Apollon & Diane",
-    "description": "Le compagnon type Roche mystique d'Apollon & Diane"
+    "description": "Le compagnon type Roche mystique de {{champion}}"
   },
   "larvesta_apollo_diana_signature": {
     "name": "Partenaire d'Apollon & Diane",
-    "description": "Le compagnon type Insecte flamboyant d'Apollon & Diane"
+    "description": "Le compagnon type Insecte flamboyant de {{champion}}"
   },
   "swablu_apollo_diana_signature": {
     "name": "Partenaire d'Apollon & Diane",
-    "description": "Le compagnon type Normal duveteux d'Apollon & Diane"
+    "description": "Le compagnon type Normal duveteux de {{champion}}"
   },
   "castform_apollo_diana_signature": {
     "name": "Partenaire d'Apollon & Diane",
-    "description": "Le compagnon type Normal adaptatif d'Apollon & Diane"
+    "description": "Le compagnon type Normal adaptatif de {{champion}}"
   },
   "litwick_apollo_diana_signature": {
     "name": "Partenaire d'Apollon & Diane",
-    "description": "Le compagnon type Spectre vacillant d'Apollon & Diane"
+    "description": "Le compagnon type Spectre vacillant de {{champion}}"
   },
   "eevee_apollo_diana_signature": {
     "name": "Partenaire d'Apollon & Diane",
-    "description": "Le compagnon type Normal polyvalent d'Apollon & Diane"
+    "description": "Le compagnon type Normal polyvalent de {{champion}}"
   },
   "teddiursa_apollo_diana_signature": {
     "name": "Partenaire d'Apollon & Diane",
-    "description": "Le compagnon type Normal câlin d'Apollon & Diane"
+    "description": "Le compagnon type Normal câlin de {{champion}}"
   },
   "cleffa_apollo_diana_signature": {
     "name": "Partenaire d'Apollon & Diane",
-    "description": "Le compagnon type Fée étoilé d'Apollon & Diane"
+    "description": "Le compagnon type Fée étoilé de {{champion}}"
   },
   "sunkern_apollo_diana_signature": {
     "name": "Partenaire d'Apollon & Diane",
-    "description": "Le compagnon type Plante plein d'espoir d'Apollon & Diane"
+    "description": "Le compagnon type Plante plein d'espoir de {{champion}}"
   },
   "riolu_shadow_warrior": {
     "name": "Guerrier de l'Ombre",
@@ -291,5 +291,93 @@
     "name": "Pousse Plasma",
     "description": "Un Tournegrin Électrik/Plante crépitant d'énergie plasma, de conversion peau électrique, d'intensité force soleil et de domination champ électrique"
   },
-  "championPartner": "Partenaire de {{champion}}"
+  "championPartner": "Partenaire de {{champion}}",
+  "bulbasaur_plasma_jungle": {
+    "name": "Plasma Jungle",
+    "description": "Un Bulbizarre Plante/Électrik canalisant la jungle de plasma, fusionnant pouvoir de lianes et éclairs crépitants"
+  },
+  "bulbasaur_red_signature": {
+    "name": "Partenaire de Red",
+    "description": "Le Bulbizarre signature de Red — un guerrier semence résilient canalisant nature et énergie électrique en parfaite harmonie"
+  },
+  "butterfree_red_signature": {
+    "name": "Partenaire de Red",
+    "description": "Le Papilusion signature de Red — un papillon envoûtant aux pouvoirs psychiques et à la poussière drainant l'âme"
+  },
+  "butterfree_soul_moth": {
+    "name": "Soul Moth",
+    "description": "Un Papilusion Insecte/Spectre transformé en papillon des âmes, drainant la force vitale avec sa poussière spectrale"
+  },
+  "charmander_black_inferno": {
+    "name": "Black Inferno",
+    "description": "Un Salamèche Feu/Ténèbres consumé par l'inferno noir, maniant les flammes sombres et la fureur draconique"
+  },
+  "charmander_red_signature": {
+    "name": "Partenaire de Red",
+    "description": "Le Salamèche signature de Red — une flamme féroce qui grandit en un inferno de puissance draconique"
+  },
+  "espeon_moon_goddess": {
+    "name": "Moon Goddess",
+    "description": "Un Mentali Psy/Fée s'élevant en déesse lunaire, irradiant magie lunaire et brillance psychique"
+  },
+  "espeon_red_signature": {
+    "name": "Partenaire de Red",
+    "description": "Le Mentali signature de Red — un psychique lunaire irradiant clair de lune et énergie féerique avec une dévastation gracieuse"
+  },
+  "farfetchd_heavens_edge": {
+    "name": "Heaven's Edge",
+    "description": "Un Canarticho Combat/Vol s'élevant comme le tranchant céleste, frappant depuis les cieux avec une escrime divine"
+  },
+  "farfetchd_red_signature": {
+    "name": "Partenaire de Red",
+    "description": "Le Canarticho signature de Red — un épéiste intrépide maniant son poireau avec une maîtrise mortelle des coups critiques"
+  },
+  "lapras_red_signature": {
+    "name": "Partenaire de Red",
+    "description": "Le Lokhlass signature de Red — un voyageur gracieux commandant glace et eau avec une précision sereine mais létale"
+  },
+  "lapras_voidfrost": {
+    "name": "Voidfrost",
+    "description": "Un Lokhlass Glace/Spectre dérivant dans le Vide, fusionnant froid spectral et glace abyssale pour un pouvoir spectral"
+  },
+  "magikarp_dragonborn": {
+    "name": "Dragonborn",
+    "description": "Un Magicarpe Eau/Dragon renaissant en véritable fils du dragon, libérant un potentiel draconique ancestral"
+  },
+  "magikarp_red_signature": {
+    "name": "Partenaire de Red",
+    "description": "Le Magicarpe signature de Red — un outsider qui défie les attentes et évolue en une puissance au sang de dragon"
+  },
+  "pikachu_electro_berserker": {
+    "name": "Electro Berserker",
+    "description": "Un Pikachu Électrik/Combat débordant de fureur berserk, combinant voltage brut et maîtrise des arts martiaux"
+  },
+  "pikachu_red_signature": {
+    "name": "Partenaire de Red",
+    "description": "Le Pikachu signature de Red — un partenaire aguerri au combat avec une vitesse inégalée et des attaques électriques dévastatrices"
+  },
+  "snorlax_dream_colossus": {
+    "name": "Dream Colossus",
+    "description": "Un Ronflex Normal/Psy s'élevant en forme de colosse onirique, mêlant masse immense et manipulation psychique des rêves"
+  },
+  "snorlax_red_signature": {
+    "name": "Partenaire de Red",
+    "description": "Le Ronflex signature de Red — un mur immobile qui absorbe les coups et riposte avec une puissance terrifiante"
+  },
+  "squirtle_abyss_golem": {
+    "name": "Abyss Golem",
+    "description": "Un Carapuce Eau/Ténèbres forgé en golem abyssal, commandant les ténèbres des profondeurs avec une puissance blindée"
+  },
+  "squirtle_red_signature": {
+    "name": "Partenaire de Red",
+    "description": "Le Carapuce signature de Red — une forteresse de carapace commandant l'abîme avec une maîtrise de l'eau sombre"
+  },
+  "tauros_iron_quake": {
+    "name": "Iron Quake",
+    "description": "Un Tauros Sol/Acier devenant un séisme de fer, fusionnant armure métallique et dévastation sismique"
+  },
+  "tauros_red_signature": {
+    "name": "Partenaire de Red",
+    "description": "Le Tauros signature de Red — un taureau furieux à l'élan imparable et aux attaques sismiques"
+  }
 }

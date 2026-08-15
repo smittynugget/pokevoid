@@ -78,5 +78,6 @@
   "stoleItem": "偷走了\n{{defenderName}}的{{stolenItemType}}！",
   "sillyPressure": "正在释放滑稽压迫感！",
   "questionPressure": "正在释放压迫感？",
-  "allOrNothingPressure": "正在释放全有或全无的压迫感！"
+  "allOrNothingPressure": "正在释放全有或全无的压迫感！",
+  "windboltDiscard": "{{pokemonName}}消耗了持有的树果\n并对{{targetName}}造成了少量伤害！"
 }

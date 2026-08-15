@@ -2,6 +2,7 @@
   "mega": "Mega-{{pokemonName}}",
   "mega-x": "Mega-{{pokemonName}} X",
   "mega-y": "Mega-{{pokemonName}} Y",
+  "mega-z": "Mega-{{pokemonName}} Z",
   "primal": "Proto-{{pokemonName}}",
   "gigantamax": "G-Dyna-{{pokemonName}}",
   "eternamax": "U-Dyna-{{pokemonName}}",

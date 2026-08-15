@@ -67,5 +67,17 @@
   "saltCuredLapse": "{{pokemonNameWithAffix}} is hurt by {{moveName}}!",
   "cursedOnAdd": "{{pokemonNameWithAffix}} cut its own HP and put a curse on the {{pokemonName}}!",
   "cursedLapse": "{{pokemonNameWithAffix}} is afflicted by the Curse!",
-  "stockpilingOnAdd": "{{pokemonNameWithAffix}} stockpiled {{stockpiledCount}}!"
+  "stockpilingOnAdd": "{{pokemonNameWithAffix}} stockpiled {{stockpiledCount}}!",
+  "substituteOnAdd": "{{pokemonNameWithAffix}} put in a substitute!",
+  "substituteOnRemove": "{{pokemonNameWithAffix}}'s substitute faded!",
+  "substituteOnHit": "The substitute took damage for {{pokemonNameWithAffix}}!",
+  "tauntOnAdd": "{{pokemonNameWithAffix}} fell for the taunt!",
+  "tauntOnRemove": "{{pokemonNameWithAffix}}'s taunt wore off!",
+  "tormentOnAdd": "{{pokemonNameWithAffix}} was subjected to torment!",
+  "tormentOnRemove": "{{pokemonNameWithAffix}}'s torment wore off!",
+  "healBlockedOnAdd": "{{pokemonNameWithAffix}} was prevented from healing!",
+  "healBlockedOnRemove": "{{pokemonNameWithAffix}}'s Heal Block wore off!",
+  "healBlockedLapse": "{{pokemonNameWithAffix}} couldn't heal because of Heal Block!",
+  "itemBlockedOnAdd": "{{pokemonNameWithAffix}} can't use its held item!",
+  "itemBlockedOnRemove": "{{pokemonNameWithAffix}} can use items again!"
 }

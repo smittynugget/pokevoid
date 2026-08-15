@@ -46,5 +46,16 @@
   "magmaStorm": "Tempestade de Magma",
   "snapTrap": "Armadilha de Concha",
   "thunderCage": "Gaiola de Trovão",
-  "infestation": "Infestação"
+  "infestation": "Infestação",
+  "day": "Dia",
+  "night": "Noite",
+  "dawn": "Amanhecer",
+  "dusk": "Entardecer",
+  "cursed": "Maldição",
+  "seeded": "Semente Sanguessuga",
+  "trapped": "Preso",
+  "yuTrapped": "Preso",
+  "saltCured": "Cura de Sal",
+  "octolock": "Octopresa",
+  "ingrain": "Enraizar"
 }

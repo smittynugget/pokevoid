@@ -78,5 +78,6 @@
   "stoleItem": " vole\n{{stolenItemType}} de {{defenderName}} !",
   "sillyPressure": " exerce une Pression Ridicule !",
   "questionPressure": " exerce une Pression ?",
-  "allOrNothingPressure": " exerce une Pression TOUT OU RIEN !"
+  "allOrNothingPressure": " exerce une Pression TOUT OU RIEN !",
+  "windboltDiscard": "{{pokemonName}} a consommé une Baie tenue\net a infligé des dégâts légers à {{targetName}} !"
 }

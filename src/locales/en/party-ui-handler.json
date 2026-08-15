@@ -49,5 +49,6 @@
   "sayonara": "Sayonara, {{pokemonName}}!",
   "smellYaLater": "Smell ya later, {{pokemonName}}!",
   "selectPokeToPowerUp":"Select a Pokémon to power up.",
-  "selectPokeToRelease":"Select a Pokémon to release."
+  "selectPokeToRelease":"Select a Pokémon to release.",
+  "quickInfo": "Quick Info"
 }

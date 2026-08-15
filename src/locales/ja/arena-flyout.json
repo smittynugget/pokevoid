@@ -3,7 +3,6 @@
   "player": "プレイヤー",
   "neutral": "ニュートラル",
   "enemy": "相手",
-  
   "sunny": "晴れ",
   "rain": "雨",
   "sandstorm": "砂嵐",
@@ -13,12 +12,10 @@
   "heavyRain": "大雨",
   "harshSun": "猛烈な日差し",
   "strongWinds": "乱気流",
-  
   "misty": "ミストフィールド",
   "electric": "エレキフィールド",
   "grassy": "グラスフィールド",
   "psychic": "サイコフィールド",
-  
   "mudSport": "どろあそび",
   "waterSport": "みずあそび",
   "spikes": "まきびし",
@@ -49,5 +46,16 @@
   "magmaStorm": "マグマストーム",
   "snapTrap": "トラバサミ",
   "thunderCage": "サンダープリズン",
-  "infestation": "まとわりつく"
+  "infestation": "まとわりつく",
+  "day": "昼",
+  "night": "夜",
+  "dawn": "朝",
+  "dusk": "夕方",
+  "cursed": "のろい",
+  "seeded": "やどりぎのタネ",
+  "trapped": "逃げられない",
+  "yuTrapped": "逃げられない",
+  "saltCured": "しおづけ",
+  "octolock": "たこがため",
+  "ingrain": "ねをはる"
 }

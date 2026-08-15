@@ -123,7 +123,7 @@
   "rival_flame": "오염된 그림자가 보이드 속으로 녹아든다",
   "rival_shadowPower": "어둠의 에너지가 공중에서 결정화된다",
   "rival_power": "오염을 무기로 삼아 보이드에 맞서라",
-  "rival_shadows": "하나 끝—남은 건 XXX",
+  "rival_shadows": "하나 끝—남은 건 ???",
   "rival_final_flame": "마지막 그림자가 쓰러진다",
   "rival_final_shadowPower": "오염의 마지막 잔재",
   "rival_final_power": "어둠을 스스로에게 돌려라",
@@ -160,5 +160,17 @@
   "all_smittys_peace": "평화가 세상에 돌아온다",
   "all_smittys_voidbreak": "회복 불가할 만큼 파괴되어—보이드는 잠든다",
   "all_smittys_mystery": "고요 속에서도 혼돈은 자라며, 그림자에 숨어 있다",
-  "all_smittys_journey": "부디 그것을 억눌러 줘. 너는 저항이야!"
+  "all_smittys_journey": "부디 그것을 억눌러 줘. 너는 저항이야!",
+  "tutorial_trance_1a": "깨어났구나! 이제 안 되는 줄 알았는데...",
+  "tutorial_trance_1b": "아니, 됐어. 여기 있잖아. 그게 중요한 거야.",
+  "tutorial_trance_2a": "너무 많은 트레이너 곁에 앉아 깨어나길 기다렸어. 아무도 깨지 않았지.",
+  "tutorial_trance_2b": "하지만 너는... 네가 방금 잃어버린 모든 이들이 헛되지 않았음을 증명했어.",
+  "tutorial_trance_3a": "너한테는 뭔가 특별한 게 있어. 공허가 그 안에서 뭘 했든...",
+  "tutorial_trance_3b": "너를 꺾지 못했어. 오히려 더 강하게 만들었지.",
+  "tutorial_trance_4a": "우리는 오랫동안 이 싸움에서 지고 있었어.",
+  "tutorial_trance_4b": "하지만 네가 공허를 이길 수 있다는 걸 증명했어. 이제 가서 다시 증명해 봐.",
+  "tutorial_trance_5a": "공허가 모든 것을 빼앗았어. 되찾을 시간이야.",
+  "tutorial_trance_5b": "여기서 너의 이야기가 시작돼 — 나아가서 전설이 되어라!",
+  "loss_whiteout": "어둠이 모든 것을 삼킨다...",
+  "loss_homebase": "안전한 곳으로 돌아가다..."
 }

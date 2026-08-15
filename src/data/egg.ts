@@ -264,8 +264,8 @@ export class Egg {
 
   private rollEggTier(): EggTier {
     const tierValueOffset = this._sourceType === EggSourceType.GACHA_LEGENDARY ? 1 : 0;
-    const tierValue = Utils.randInt(256);
-    return tierValue >= 52 + tierValueOffset ? EggTier.COMMON : tierValue >= 8 + tierValueOffset ? EggTier.GREAT : tierValue >= 1 + tierValueOffset ? EggTier.ULTRA : EggTier.MASTER;
+    const tierValue = Utils.randInt(512);
+    return tierValue >= 96 + tierValueOffset ? EggTier.COMMON : tierValue >= 8 + tierValueOffset ? EggTier.GREAT : tierValue >= 1 + tierValueOffset ? EggTier.ULTRA : EggTier.MASTER;
   }
 
   private rollSpecies(scene: BattleScene): Species | null {
@@ -310,7 +310,7 @@ export class Egg {
     let speciesPool = Object.keys(speciesStarters)
       .filter(s => speciesStarters[s] >= minStarterValue && speciesStarters[s] <= maxStarterValue)
       .map(s => parseInt(s) as Species)
-      .filter(s => !pokemonPrevolutions.hasOwnProperty(s) && getPokemonSpecies(s).isObtainable() && ignoredSpecies.indexOf(s) === -1);
+      .filter(s => !pokemonPrevolutions.hasOwnProperty(s) && getPokemonSpecies(s).isObtainable() && ignoredSpecies.indexOf(s) === -1 && (scene!.duelmonsEnabledForRun || getPokemonSpecies(s).generation !== 20));
     if (scene.gameData.unlockPity[this.tier] >= 9) {
       const lockedPool = speciesPool.filter(s => !scene.gameData.dexData[s].caughtAttr && !scene.gameData.eggs.some(e => e.species === s));
       if (lockedPool.length) {

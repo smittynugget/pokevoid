@@ -67,11 +67,11 @@
       "description": "자신의 모든 포켓몬의 레벨이 {{levels}}만큼 상승한다."
     },
     "PokemonBaseStatBoosterModifierType": {
-      "description": "지니게 하면 {{statName}} 종족값을 10% 올려준다. 개체값이 높을수록 더 많이 누적시킬 수 있다."
+      "description": "지니게 하면 {{statName}} 종족값을 8% 올려준다. 개체값이 높을수록 더 많이 누적시킬 수 있다."
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "저렴한",
-      "description": "지니게 하면 {{statName}} 종족값을 1% 올려준다."
+      "description": "지니게 하면 {{statName}} 종족값을 3% 올려준다."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "자신의 포켓몬의 HP를 모두 회복한다."
@@ -418,7 +418,7 @@
       "statLabel": "XM (모든 기술머신)"
     },
     "AnyTmModifierTypeWithInfo": {
-      "name": "++XM{{moveId}} - {{moveName}}++",
+      "name": "XM{{moveId}} - {{moveName}}",
       "description": "아무 포켓몬에게나 {{moveName}}을(를) 가르칩니다\n(자세한 정보는 C키 또는 Shift키를 눌러세요).",
       "statLabel": "XM (모든 기술머신)"
     },
@@ -716,7 +716,8 @@
       "name": "에센스",
       "shopName": "{{type}} 에센스",
       "description": "포켓몬을 방출하는 대신 4개를 사용하여 방출 아이템을 얻거나 수집가와 보상을 교환하세요.",
-      "statLabel": "에센스"
+      "statLabel": "에센스",
+      "tooltipDescription": "선택한 포켓몬에게 {{type}} 에센스 1개를 부여합니다.\n\n에센스는 챔피언 스킬 레벨업, 희생 대안(4개 필요), 수집가 교환에 사용됩니다."
     },
     "PermaCollectedTypeModifierType": {
       "name": "수집된 에센스",
@@ -874,6 +875,7 @@
     "NONE": "None",
     "ABOMASITE": "눈설왕나이트",
     "ABSOLITE": "앱솔나이트",
+    "ABSOLITE_Z": "앱솔나이트 Z",
     "AERODACTYLITE": "프테라나이트",
     "AGGRONITE": "보스로라나이트",
     "ALAKAZITE": "후딘나이트",
@@ -890,6 +892,7 @@
     "DIANCITE": "디안시나이트",
     "GALLADITE": "엘레이드나이트",
     "GARCHOMPITE": "한카리아스나이트",
+    "GARCHOMPITE_Z": "한카리아스나이트 Z",
     "GARDEVOIRITE": "가디안나이트",
     "GENGARITE": "팬텀나이트",
     "GLALITITE": "얼음귀신나이트",
@@ -901,6 +904,7 @@
     "LATIOSITE": "라티오스나이트",
     "LOPUNNITE": "이어롭나이트",
     "LUCARIONITE": "루카리오나이트",
+    "LUCARIONITE_Z": "루카리오나이트 Z",
     "MANECTITE": "썬더볼트나이트",
     "MAWILITE": "입치트나이트",
     "MEDICHAMITE": "요가램나이트",
@@ -948,6 +952,21 @@
     "DRAMPITE": "할비롱나이트",
     "FALINKSITE": "대련군나이트",
     "ZERAORITE": "제라오라나이트",
+    "RAICHUITE_X": "라이츄나이트 X",
+    "RAICHUITE_Y": "라이츄나이트 Y",
+    "CHIMECHOITE": "치렁나이트",
+    "STARAPTORITE": "찌르호크나이트",
+    "HEATRANITE": "히드런나이트",
+    "DARKRAITE": "다크라이나이트",
+    "GOLURKITE": "골루그나이트",
+    "MEOWSTITE": "냐오닉스나이트",
+    "CRABOMINITE": "모단단게나이트",
+    "GOLISOPODITE": "갑주무사나이트",
+    "MAGEARNITE": "마기아나나이트",
+    "SCOVILLAINITE": "스코빌런나이트",
+    "GLIMMORITE": "킬라플로르나이트",
+    "TATSUGURITE": "싸리용나이트",
+    "BAXCALIBURITE": "드닐레이브나이트",
 
     "BLUE_ORB": "쪽빛구슬",
     "RED_ORB": "주홍구슬",
@@ -1067,10 +1086,16 @@
     "uses": "사용",
     "glitchPieceCost": "*글리치 조각 1개 필요",
     "essenceAlternativeCost": "포켓몬이 에센스를 4개 이상 가지고 있으면 대신 그것을 사용할 수 있습니다.",
+    "abilityReplaceNote": "포켓몬의 현재 특성을 교체합니다. 중첩되지 않습니다.",
+    "passiveAbilityReplaceNote": "포켓몬의 현재 패시브 특성을 교체합니다. 중첩되지 않습니다.",
     "permaMoney": "Ω골드",
     "permaItem": "Ω아이템",
     "moreInfo": "(자세한 정보는 C키나 Shift키를 길게 누르세요)",
     "morePokeInfo": "(P / Shift로 정보 보기)",
-    "upgrade": "강화"
-  }
+    "upgrade": "강화",
+    "partyAbilityStacksHint": "(중첩 가능!)"
+  },
+  "permaWaveTooltip": "[color=#ffa500]{{count}}[/color]웨이브 후 사라짐 — 웨이브 50 이후부터 카운트 시작",
+  "permaUseTooltip": "[color=#ffa500]{{count}}[/color]회 사용 남음 — 웨이브 50 이후부터 카운트 시작",
+  "permaRemoveHint": "10번 눌러서 제거"
 }

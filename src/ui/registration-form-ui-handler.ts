@@ -1,7 +1,7 @@
 import { FormModalUiHandler } from "./form-modal-ui-handler";
 import { ModalConfig } from "./modal-ui-handler";
 import * as Utils from "../utils";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { TextStyle, addTextObject } from "./text";
 import i18next from "i18next";
 import {sanitizeEmailString} from "#app/frontend-to-server/utils-";

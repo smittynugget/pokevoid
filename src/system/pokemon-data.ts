@@ -59,6 +59,18 @@ export default class PokemonData {
   public altBuildRank?: number;
   public altPassiveForRun?: Abilities;
   public isSignature?: boolean;
+  public rankUpHistorySpeciesIds: Species[];
+  public rankUpCount: number;
+  public embracePaletteRank?: number;
+  public reshapeSourceSpeciesId?: Species;
+  public randomRankUpBandUsed: number | null;
+  public randomRankUpBandPending: number | null;
+  public yuMoveRangeUsed: number | null;
+  public yuMoveRangePending: number | null;
+  public duelmonBandThresholds: number[];
+  public duelmonBandsConsumed: number;
+  public duelmonLastTriggerLevel: number;
+  public rankUpBaseStats?: integer[];
 
   public boss: boolean;
   public bossSegments?: integer;
@@ -120,6 +132,74 @@ export default class PokemonData {
     this.altPassiveForRun = source.altPassiveForRun;
     this.isSignature = sourcePokemon ? sourcePokemon.isSignature : source.isSignature;
 
+    const dsRankUpHistory = sourcePokemon ? (sourcePokemon as any).rankUpHistorySpeciesIds : source.rankUpHistorySpeciesIds;
+    if (Array.isArray(dsRankUpHistory)) {
+      const normalized = dsRankUpHistory.filter((v: unknown) => typeof v === "number") as Species[];
+      this.rankUpHistorySpeciesIds = Array.from(new Set(normalized));
+    } else {
+      this.rankUpHistorySpeciesIds = [];
+    }
+    if (!this.rankUpHistorySpeciesIds.length) {
+      this.rankUpHistorySpeciesIds = [this.species];
+    } else if (!this.rankUpHistorySpeciesIds.includes(this.species)) {
+      this.rankUpHistorySpeciesIds.push(this.species);
+    }
+
+    const dsRankUpCount = sourcePokemon ? (sourcePokemon as any).rankUpCount : source.rankUpCount;
+    this.rankUpCount = typeof dsRankUpCount === "number" && dsRankUpCount >= 0 ? Math.floor(dsRankUpCount) : Math.max(0, this.rankUpHistorySpeciesIds.length - 1);
+
+    const dsEmbracePaletteRank = sourcePokemon ? (sourcePokemon as any).embracePaletteRank : source.embracePaletteRank;
+    this.embracePaletteRank = typeof dsEmbracePaletteRank === "number" && dsEmbracePaletteRank > 0 ? dsEmbracePaletteRank : undefined;
+
+    const dsReshapeSourceSpeciesId = sourcePokemon ? (sourcePokemon as any).reshapeSourceSpeciesId : source.reshapeSourceSpeciesId;
+    this.reshapeSourceSpeciesId = typeof dsReshapeSourceSpeciesId === "number" && dsReshapeSourceSpeciesId > 0 ? dsReshapeSourceSpeciesId : undefined;
+
+    const dsRandomRankUpBandUsed = sourcePokemon ? (sourcePokemon as any).randomRankUpBandUsed : source.randomRankUpBandUsed;
+    this.randomRankUpBandUsed = typeof dsRandomRankUpBandUsed === "number" ? dsRandomRankUpBandUsed : null;
+    const dsRandomRankUpBandPending = sourcePokemon ? (sourcePokemon as any).randomRankUpBandPending : source.randomRankUpBandPending;
+    this.randomRankUpBandPending = typeof dsRandomRankUpBandPending === "number" ? dsRandomRankUpBandPending : null;
+    const dsYuMoveRangeUsed = sourcePokemon ? (sourcePokemon as any).yuMoveRangeUsed : source.yuMoveRangeUsed;
+    this.yuMoveRangeUsed = typeof dsYuMoveRangeUsed === "number" ? dsYuMoveRangeUsed : null;
+    const dsYuMoveRangePending = sourcePokemon ? (sourcePokemon as any).yuMoveRangePending : source.yuMoveRangePending;
+    this.yuMoveRangePending = typeof dsYuMoveRangePending === "number" ? dsYuMoveRangePending : null;
+
+    const dsDuelmonBandThresholds = sourcePokemon
+      ? (sourcePokemon as any).duelmonBandThresholds
+      : source.duelmonBandThresholds;
+    if (Array.isArray(dsDuelmonBandThresholds)) {
+      this.duelmonBandThresholds = dsDuelmonBandThresholds.filter(
+        (v: unknown) => typeof v === "number"
+      );
+    } else {
+      this.duelmonBandThresholds = [];
+    }
+
+    const dsDuelmonBandsConsumed = sourcePokemon
+      ? (sourcePokemon as any).duelmonBandsConsumed
+      : source.duelmonBandsConsumed;
+    if (typeof dsDuelmonBandsConsumed === "number" && dsDuelmonBandsConsumed >= 0) {
+      this.duelmonBandsConsumed = Math.floor(dsDuelmonBandsConsumed);
+    } else {
+      this.duelmonBandsConsumed = 0;
+    }
+
+    const dsDuelmonLastTriggerLevel = sourcePokemon
+      ? (sourcePokemon as any).duelmonLastTriggerLevel
+      : source.duelmonLastTriggerLevel;
+    if (typeof dsDuelmonLastTriggerLevel === "number" && dsDuelmonLastTriggerLevel >= 0) {
+      this.duelmonLastTriggerLevel = Math.floor(dsDuelmonLastTriggerLevel);
+    } else {
+      this.duelmonLastTriggerLevel = 0;
+    }
+
+    if (sourcePokemon?.species?.unique) {
+      this.rankUpBaseStats = sourcePokemon.getSpeciesForm().baseStats.slice();
+    } else if (Array.isArray(source.rankUpBaseStats) && source.rankUpBaseStats.length === 6) {
+      this.rankUpBaseStats = source.rankUpBaseStats.slice();
+    } else {
+      this.rankUpBaseStats = undefined;
+    }
+
     if (!forHistory) {
       this.boss = (source instanceof EnemyPokemon && !!source.bossSegments) || (!this.player && !!source.boss);
       this.bossSegments = source.bossSegments;
@@ -147,6 +227,7 @@ export default class PokemonData {
         this.summonData.disabledMove = source.summonData.disabledMove;
         this.summonData.disabledTurns = source.summonData.disabledTurns;
         this.summonData.abilitySuppressed = source.summonData.abilitySuppressed;
+        this.summonData.abilitySuppressTurns = source.summonData.abilitySuppressTurns;
         this.summonData.abilitiesApplied = source.summonData.abilitiesApplied;
 
         this.summonData.ability = source.summonData.ability;
@@ -190,6 +271,15 @@ export default class PokemonData {
         }
       })
       : scene.addEnemyPokemon(species, this.level, battleType === BattleType.TRAINER ? !double || !(partyMemberIndex % 2) ? TrainerSlot.TRAINER : TrainerSlot.TRAINER_PARTNER : TrainerSlot.NONE, this.boss, this);
+    if (this.rankUpBaseStats?.length === 6) {
+      const uniqueSpecies = ret.makeSpeciesUnique();
+      const currentForm = uniqueSpecies.forms && uniqueSpecies.forms.length > ret.formIndex
+        ? uniqueSpecies.forms[ret.formIndex]
+        : uniqueSpecies;
+      currentForm.baseStats = [...this.rankUpBaseStats];
+      currentForm.baseTotal = this.rankUpBaseStats.reduce((sum, s) => sum + s, 0);
+    }
+
     if (this.summonData) {
       ret.primeSummonData(this.summonData);
     }

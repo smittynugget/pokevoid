@@ -46,5 +46,16 @@
   "magmaStorm": "Magmaclisma",
   "snapTrap": "Tagliola",
   "thunderCage": "Elettrogabbia",
-  "infestation": "Assillo"
+  "infestation": "Assillo",
+  "day": "Giorno",
+  "night": "Notte",
+  "dawn": "Alba",
+  "dusk": "Crepuscolo",
+  "cursed": "Maledizione",
+  "seeded": "Parassiseme",
+  "trapped": "Intrappolato",
+  "yuTrapped": "Intrappolato",
+  "saltCured": "Sotto Sale",
+  "octolock": "Tentacolock",
+  "ingrain": "Radicamento"
 }

@@ -11,7 +11,7 @@ export class BattlePhase extends Phase {
     const sprites = this.scene.currentBattle.trainer?.getSprites()!;
     const tintSprites = this.scene.currentBattle.trainer?.getTintSprites()!;
     for (let i = 0; i < sprites.length; i++) {
-      const visible = !trainerSlot || !i === (trainerSlot === TrainerSlot.TRAINER) || sprites.length < 2;
+      const visible = !trainerSlot || (i === 0) === (trainerSlot === TrainerSlot.TRAINER) || sprites.length < 2;
       [sprites[i], tintSprites[i]].map(sprite => {
         if (visible) {
           sprite.x = trainerSlot || sprites.length < 2 ? 0 : i ? 16 : -16;
@@ -35,13 +35,28 @@ export class BattlePhase extends Phase {
   }
 
   hideEnemyTrainer(): void {
+    const trainer = this.scene.currentBattle.trainer;
     this.scene.tweens.add({
-      targets: this.scene.currentBattle.trainer,
+      targets: trainer,
       x: "+=16",
       y: "-=16",
       alpha: 0,
       ease: "Sine.easeInOut",
       duration: 750
     });
+    if (trainer?.portalSprite) {
+      const portal = trainer.portalSprite;
+      trainer.portalSprite = null;
+      this.scene.tweens.killTweensOf(portal);
+      this.scene.tweens.add({
+        targets: portal,
+        alpha: 0,
+        duration: 750,
+        ease: "Sine.easeInOut",
+        onComplete: () => {
+          portal.destroy();
+        }
+      });
+    }
   }
 }

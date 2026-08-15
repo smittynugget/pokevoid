@@ -1,6 +1,6 @@
 import BattleScene from "../../battle-scene";
 import {addTextObject, TextStyle} from "../text";
-import {Mode} from "../ui";
+import {Mode} from "../mode";
 import {
   setSettingGamepad,
   SettingGamepad,

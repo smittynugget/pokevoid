@@ -137,7 +137,7 @@
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "パルシェンのプレゼント配布",
-    "task": "ヌズロックモードでパルシェンのプレゼントを10回使用する"
+    "task": "パルシェンのプレゼントを10回使用する"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "コノハナVSノズパス",
@@ -445,7 +445,7 @@
   "NORMAL_STRENGTH": {
     "name": "ノーマルの力！",
     "task": "複数のプレイを通じてノーマルタイプのポケモンで125匹のポケモンを倒す",
-    "rewardText": "ノーマルタイプの耐性と弱点を変更する永続アイテムが解放される！"
+    "rewardText": "ノーマルタイプの耐性と弱点を変更するΩアイテムが解放される！"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "コイキングの新技",
@@ -485,7 +485,7 @@
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "ノーマルの力！",
     "task": "複数のプレイを通じてノーマルタイプのポケモンで125匹のポケモンを倒す",
-    "rewardText": "ノーマルタイプの耐性と弱点を変更する永続アイテムが解放される！"
+    "rewardText": "ノーマルタイプの耐性と弱点を変更するΩアイテムが解放される！"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "コイキングの新技",
@@ -521,5 +521,7 @@
     "name": "トランセルの新技",
     "task": "トランセルで50匹のポケモンを倒す",
     "rewardText": "トランセルが覚える技が増える！"
-  }
+  },
+  "rewardUnlocksGlitchForm": "グリッチフォームを解放",
+  "rewardUnlocksSmittyForm": "スミッティフォームを解放"
 }

@@ -1,6 +1,6 @@
 import BattleScene from "../battle-scene";
 import TutorialUiHandler from "./tutorial-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { Tutorial } from "../tutorial";
 import { EnhancedTutorial, TutorialRegistry } from "./tutorial-registry";
 import Overrides from "../overrides";
@@ -19,6 +19,7 @@ export class TutorialService {
         isFromMenu: boolean = false,
         delay: number = 350
     ): Promise<void> {
+        if (!isFromMenu) return Promise.resolve();
         return new Promise<void>(resolve => {
             const executeShow = () => {
                 if (isFromMenu) {
@@ -131,6 +132,7 @@ export class TutorialService {
         delay: number = 350,
         chance: number = 0.05
     ): Promise<void> {
+        if (!isFromMenu) return Promise.resolve();
         return new Promise<void>(resolve => {
             const executeShow = () => {
                 let filteredTutorials = [...tutorials];
@@ -252,7 +254,9 @@ export class TutorialService {
         } catch (e) {
 
             console.warn('[TutorialService] Corrupted enhancedTutorials localStorage, removing:', raw, 'Error:', e);
-            localStorage.removeItem(key);
+            try {
+                localStorage.removeItem(key);
+            } catch {}
             return;
         }
 
@@ -262,11 +266,12 @@ export class TutorialService {
             cleanedFlags[sanitized] = tutorialFlags[k];
         }
 
-        localStorage.setItem(key, JSON.stringify(cleanedFlags));
+        try {
+            localStorage.setItem(key, JSON.stringify(cleanedFlags));
+        } catch {}
     }
 
     public saveTutorialFlag(tutorial: Tutorial | EnhancedTutorial, resetTutorial: boolean = false): void {
-
         if (Object.values(Tutorial).includes(tutorial as Tutorial)) {
             this.scene.gameData.saveTutorialFlag(tutorial as Tutorial, true);
             return;
@@ -280,7 +285,9 @@ export class TutorialService {
         }
         const sanitizedKey = this.sanitizeTutorialKey(String(tutorial));
         tutorialFlags[sanitizedKey] = !resetTutorial;
-        localStorage.setItem(key, JSON.stringify(tutorialFlags));
+        try {
+            localStorage.setItem(key, JSON.stringify(tutorialFlags));
+        } catch {}
     }
 
     private getTutorialFlags(): Record<string, boolean> {
@@ -359,8 +366,6 @@ export class TutorialService {
                 title: "Permanent Features",
                 tutorials: [
                     EnhancedTutorial.PERMA_MONEY_1,
-                    EnhancedTutorial.BOUNTIES_1,
-                    EnhancedTutorial.DAILY_BOUNTY,
                     EnhancedTutorial.SMITTY_ITEMS_1
                 ]
             },

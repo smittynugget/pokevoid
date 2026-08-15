@@ -34,5 +34,8 @@
   "sortByCost": "Стоимость",
   "sortByCandies": "Кол-во конфет",
   "sortByIVs": "IV",
-  "sortByName": "Имя"
+  "sortByName": "Имя",
+  "fusionsFilter": "Слияния",
+  "hasFusions": "Слияния — да",
+  "noFusions": "Слияния — нет"
 }

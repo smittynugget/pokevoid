@@ -1,5 +1,5 @@
 import {ModalConfig, ModalUiHandler} from "./modal-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import BattleScene from "../battle-scene";
 import { addTextObject, TextStyle } from "./text";
 import { PermaRunQuestModifier } from "../modifier/modifier";
@@ -8,6 +8,7 @@ import {Button} from "#enums/buttons";
 import {Species} from "#enums/species";
 import {RunDuration} from "#enums/quest-type-conditions";
 import {QuestUnlockables} from "#app/system/game-data";
+import { isPrimaryPointer } from "./pointer-utils";
 
 export default abstract class BountyUiHandler extends ModalUiHandler {
     protected consoleCode: string;
@@ -128,6 +129,23 @@ export default abstract class BountyUiHandler extends ModalUiHandler {
     protected initializeButtonHighlight(): void {
         if (this.buttonContainers?.length > 0) {
             this.setButtonIndex(0);
+            for (let idx = 0; idx < this.buttonBgs.length; idx++) {
+                const bg = this.buttonBgs[idx];
+                if (!bg) continue;
+                bg.setInteractive({
+                    hitArea: new Phaser.Geom.Rectangle(0, 0, bg.width, bg.height),
+                    hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+                    useHandCursor: true
+                });
+                bg.on("pointerover", () => {
+                    this.setButtonIndex(idx);
+                });
+                bg.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+                    if (!isPrimaryPointer(pointer)) return;
+                    this.setButtonIndex(idx);
+                    this.processInput(Button.ACTION);
+                });
+            }
         }
     }
 
@@ -173,8 +191,11 @@ export default abstract class BountyUiHandler extends ModalUiHandler {
 
         if (super.show(args)) {
 
+            if (this.scene.currentBattle) {
+                this.scene.showShopOverlay(750 * this.scene.gameSpeed);
+            }
+
             if (!this.questModifier) {
-                console.error('[QuestBountyUI] No quest modifier provided');
                 return false;
             }
 
@@ -605,6 +626,7 @@ export default abstract class BountyUiHandler extends ModalUiHandler {
     }
 
     protected handleUIError(): void {
+        if (!this.uiContainer) return;
         this.uiContainer.removeAll(true);
         const errorText = addTextObject(
             this.scene,
@@ -631,6 +653,9 @@ export default abstract class BountyUiHandler extends ModalUiHandler {
     }
 
     clear(): void {
+        if (this.scene.currentBattle) {
+            this.scene.hideShopOverlay(750 * this.scene.gameSpeed);
+        }
         if (this.uiContainer) {
             this.uiContainer.destroy();
             this.uiContainer = null;

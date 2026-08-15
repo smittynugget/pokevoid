@@ -1004,13 +1004,17 @@ export default class BattleInfo extends Phaser.GameObjects.Container {
     }
 
     if (this.glitchFormContainer.visible) {
-      this.glitchFormContainer.setPosition(cursorX + 1.5, 0);
+      this.glitchFormContainer.setPosition(cursorX > 0 ? cursorX + 1.5 : cursorX + 17.5, 0);
       const glitchW = this.glitchPokemonIcon.displayWidth + (this.glitchItemIcon.visible ? this.glitchItemIcon.displayWidth : 0);
       cursorX += glitchW + gap;
     }
 
     if (this.rankContainer.visible) {
-      this.rankContainer.setPosition(cursorX + 3.0, 0);
+      const isFirstGroup = cursorX === 0 && !this.fusionContainer.visible && !this.glitchFormContainer.visible;
+      this.rankContainer.setPosition(isFirstGroup ? 0 : cursorX + 3.0, 0);
+      const soulNudge = isFirstGroup ? 27.0 : (this.glitchFormContainer.visible ? 0 : 11.0);
+      this.rankIcon.setPosition(-24.0 + soulNudge, -0.5);
+      this.rankText.setPosition(-19.5 + soulNudge, 1.5);
     }
 
     this.iconRowContainer.setPosition(this.nameText.x, this.nameText.y + (this.player ? 23.5 : 25.0));

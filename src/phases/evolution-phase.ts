@@ -108,7 +108,7 @@ export class EvolutionPhase extends Phase {
 
       const getPokemonSprite = () => {
         const ret = this.scene.addPokemonSprite(this.pokemon, this.evolutionBaseBg.displayWidth / 2, this.evolutionBaseBg.displayHeight / 2, "pkmn__sub");
-        ret.setPipeline(this.scene.spritePipeline, { tone: [ 0.0, 0.0, 0.0, 0.0 ], ignoreTimeTint: true });
+        ret.setPipeline(this.scene.spritePipeline, { tone: [ 0.0, 0.0, 0.0, 0.0 ], ignoreTimeTint: true, ignoreOverride: !!this.pokemon.summonData?.speciesForm });
         return ret;
       };
 
@@ -137,19 +137,32 @@ export class EvolutionPhase extends Phase {
 
       [ this.pokemonSprite, this.pokemonTintSprite, this.pokemonEvoSprite, this.pokemonEvoTintSprite ].map(sprite => {
         sprite.play(this.pokemon.getSpriteKey(true));
-        sprite.setPipeline(this.scene.spritePipeline, { tone: [ 0.0, 0.0, 0.0, 0.0 ], hasShadow: false, teraColor: getTypeRgb(this.pokemon.getTeraType()) });
+        sprite.setPipeline(this.scene.spritePipeline, { tone: [ 0.0, 0.0, 0.0, 0.0 ], hasShadow: false, ignoreOverride: !!this.pokemon.summonData?.speciesForm, teraColor: getTypeRgb(this.pokemon.getTeraType()) });
         sprite.setPipelineData("ignoreTimeTint", true);
         sprite.setPipelineData("spriteKey", this.pokemon.getSpriteKey());
         sprite.setPipelineData("shiny", this.pokemon.shiny);
         sprite.setPipelineData("variant", this.pokemon.variant);
-      [ "spriteColors", "fusionSpriteColors" ].map(k => {
+      [ "spriteColors", "fusionSpriteColors", "fusionRecolorMode" ].map(k => {
         if (this.pokemon.summonData?.speciesForm) {
           k += "Base";
         }
         sprite.pipelineData[k] = this.pokemon.getSprite().pipelineData[k];
       });
 
-      sprite.setScale(this.pokemon.getSpriteScale());
+      const sourceData = this.pokemon.getSprite().pipelineData;
+      if (sourceData["altBuildSpriteColors"] && sourceData["altBuildTargetColors"]) {
+        sprite.pipelineData["altBuildSpriteColors"] = sourceData["altBuildSpriteColors"];
+        sprite.pipelineData["altBuildTargetColors"] = sourceData["altBuildTargetColors"];
+        sprite.pipelineData["altBuildBlendMode"] = sourceData["altBuildBlendMode"] || 'replace';
+        sprite.pipelineData["altBuildInversionFactor"] = sourceData["altBuildInversionFactor"] || 0.0;
+      } else {
+        delete sprite.pipelineData["altBuildSpriteColors"];
+        delete sprite.pipelineData["altBuildTargetColors"];
+        delete sprite.pipelineData["altBuildBlendMode"];
+        delete sprite.pipelineData["altBuildInversionFactor"];
+      }
+
+      sprite.setScale(this.pokemon.getEffectiveVisualScale());
       });
 
       const isAltBuildFormChange = (this as any)?.formChange?.formKey === SpeciesFormKey.ALT_BUILD;
@@ -195,8 +208,8 @@ export class EvolutionPhase extends Phase {
         delete (this.pokemon as any)._preStateAltBuildSnapshot;
       }
       this.pokemon.getPossibleEvolution(this.evolution).then(evolvedPokemon => {
-        this.pokemonEvoSprite.setScale(evolvedPokemon.getSpriteScale());
-        this.pokemonEvoTintSprite.setScale(evolvedPokemon.getSpriteScale());
+        this.pokemonEvoSprite.setScale(evolvedPokemon.getEffectiveVisualScale());
+        this.pokemonEvoTintSprite.setScale(evolvedPokemon.getEffectiveVisualScale());
       });
 
       this.doEvolution();
@@ -218,20 +231,59 @@ export class EvolutionPhase extends Phase {
       this.pokemon.cry();
 
       this.pokemon.getPossibleEvolution(this.evolution).then(evolvedPokemon => {
+        const tsModifier = this.scene.findModifier(m =>
+            m instanceof TypeSwitcherModifier && (m as TypeSwitcherModifier).pokemonId === this.pokemon.id
+        ) as TypeSwitcherModifier | undefined;
+        if (tsModifier) {
+            const targetType = tsModifier.newPrimaryType ?? tsModifier.newSecondaryType;
+            if (targetType !== null && targetType !== undefined && targetType >= 0) {
+              const rgb = getTypeRgb(targetType);
+              if (rgb) {
+                const toHex = (r: number, g: number, b: number) =>
+                  `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+                const targetPalette = [
+                  toHex(Math.round(rgb[0] * 0.25), Math.round(rgb[1] * 0.25), Math.round(rgb[2] * 0.25)),
+                  toHex(Math.round(rgb[0] * 0.50), Math.round(rgb[1] * 0.50), Math.round(rgb[2] * 0.50)),
+                  toHex(Math.round(rgb[0] * 0.78), Math.round(rgb[1] * 0.78), Math.round(rgb[2] * 0.78)),
+                  toHex(rgb[0], rgb[1], rgb[2]),
+                ];
+                evolvedPokemon.updateAltBuildPalette({
+                  spriteColorPalette: {
+                    targetPalette: targetPalette,
+                    blendMode: 'grayscale_overlay',
+                  },
+                  inversionFactor: 0.0,
+                });
+              }
+            }
+        }
 
         [ this.pokemonEvoSprite, this.pokemonEvoTintSprite ].map(sprite => {
           sprite.play(evolvedPokemon.getSpriteKey(true));
+          sprite.setPipelineData("ignoreOverride", !!evolvedPokemon.summonData?.speciesForm);
           sprite.setPipelineData("ignoreTimeTint", true);
           sprite.setPipelineData("spriteKey", evolvedPokemon.getSpriteKey());
           sprite.setPipelineData("shiny", evolvedPokemon.shiny);
           sprite.setPipelineData("variant", evolvedPokemon.variant);
-          [ "spriteColors", "fusionSpriteColors" ].map(k => {
+          [ "spriteColors", "fusionSpriteColors", "fusionRecolorMode" ].map(k => {
             if (evolvedPokemon.summonData?.speciesForm) {
               k += "Base";
             }
             sprite.pipelineData[k] = evolvedPokemon.getSprite().pipelineData[k];
           });
-          sprite.setScale(evolvedPokemon.getSpriteScale());
+          const sourceData = evolvedPokemon.getSprite().pipelineData;
+          if (sourceData["altBuildSpriteColors"] && sourceData["altBuildTargetColors"]) {
+            sprite.pipelineData["altBuildSpriteColors"] = sourceData["altBuildSpriteColors"];
+            sprite.pipelineData["altBuildTargetColors"] = sourceData["altBuildTargetColors"];
+            sprite.pipelineData["altBuildBlendMode"] = sourceData["altBuildBlendMode"] || 'replace';
+            sprite.pipelineData["altBuildInversionFactor"] = sourceData["altBuildInversionFactor"] || 0.0;
+          } else {
+            delete sprite.pipelineData["altBuildSpriteColors"];
+            delete sprite.pipelineData["altBuildTargetColors"];
+            delete sprite.pipelineData["altBuildBlendMode"];
+            delete sprite.pipelineData["altBuildInversionFactor"];
+          }
+          sprite.setScale(evolvedPokemon.getEffectiveVisualScale());
         });
 
         this.scene.time.delayedCall(1000, () => {

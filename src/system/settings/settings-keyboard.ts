@@ -49,6 +49,8 @@ export enum SettingKeyboard {
     Button_Toggle_Perma_Bar = "BUTTON_TOGGLE_PERMA_BAR",
     Button_Toggle_Player_Bar = "BUTTON_TOGGLE_PLAYER_BAR",
     Button_Toggle_Foe_Bar = "BUTTON_TOGGLE_FOE_BAR",
+    Button_Replay = "BUTTON_REPLAY",
+    Button_Toggle_Signature = "BUTTON_TOGGLE_SIGNATURE",
 }
 
 const pressAction = i18next.t("settings:pressToBind");
@@ -99,6 +101,8 @@ export const settingKeyboardOptions = {
   [SettingKeyboard.Button_Toggle_Perma_Bar]: [`KEY ${Button.TOGGLE_PERMA_BAR.toString()}`, pressAction],
   [SettingKeyboard.Button_Toggle_Player_Bar]: [`KEY ${Button.TOGGLE_PLAYER_BAR.toString()}`, pressAction],
   [SettingKeyboard.Button_Toggle_Foe_Bar]: [`KEY ${Button.TOGGLE_FOE_BAR.toString()}`, pressAction],
+  [SettingKeyboard.Button_Replay]: [`KEY ${Button.REPLAY.toString()}`, pressAction],
+  [SettingKeyboard.Button_Toggle_Signature]: [`KEY ${Button.TOGGLE_SIGNATURE.toString()}`, pressAction],
 };
 
 export const settingKeyboardDefaults = {
@@ -144,6 +148,8 @@ export const settingKeyboardDefaults = {
   [SettingKeyboard.Button_Toggle_Perma_Bar]: 0,
   [SettingKeyboard.Button_Toggle_Player_Bar]: 0,
   [SettingKeyboard.Button_Toggle_Foe_Bar]: 0,
+  [SettingKeyboard.Button_Replay]: 0,
+  [SettingKeyboard.Button_Toggle_Signature]: 0,
 };
 
 export const settingKeyboardBlackList = [
@@ -195,6 +201,7 @@ export function setSettingKeyboard(scene: BattleScene, setting: SettingKeyboard,
   case SettingKeyboard.Alt_Button_Speed_Up:
   case SettingKeyboard.Alt_Button_Slow_Down:
   case SettingKeyboard.Alt_Button_Submit:
+  case SettingKeyboard.Button_Toggle_Signature:
     if (value) {
       if (scene.ui) {
         const cancelHandler = (success: boolean = false) : boolean => {

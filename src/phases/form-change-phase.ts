@@ -5,6 +5,7 @@ import { SpeciesFormKey } from "#enums/species-form-key";
 import { achvs } from "../system/achv";
 import { SpeciesFormChange, getSpeciesFormChangeMessage } from "../data/pokemon-forms";
 import Pokemon, { PlayerPokemon } from "../field/pokemon";
+import { getTypeRgb } from "../data/type";
 import { Gender } from "#app/data/gender";
 import { Mode } from "../ui/ui";
 import PartyUiHandler from "../ui/party-ui-handler";
@@ -61,6 +62,7 @@ export class FormChangePhase extends EvolutionPhase {
           const fallbackOk = this.scene.textures.exists(fallbackKey) && this.scene.textures.get(fallbackKey).key !== "__MISSING";
           if (fallbackOk) {
             transformedPokemon.variant = 0;
+            this.pokemon.variant = 0;
             textureOk = true;
           }
         }
@@ -81,6 +83,33 @@ export class FormChangePhase extends EvolutionPhase {
           delete sprite.pipelineData["altBuildBlendMode"];
           delete sprite.pipelineData["altBuildInversionFactor"];
         });
+      }
+
+      const tsModifier = this.scene.findModifier(m =>
+        m instanceof TypeSwitcherModifier && (m as TypeSwitcherModifier).pokemonId === this.pokemon.id
+      ) as TypeSwitcherModifier | undefined;
+      if (tsModifier) {
+        const targetType = tsModifier.newPrimaryType ?? tsModifier.newSecondaryType;
+        if (targetType !== null && targetType !== undefined && targetType >= 0) {
+          const rgb = getTypeRgb(targetType);
+          if (rgb) {
+            const toHex = (r: number, g: number, b: number) =>
+              `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+            const targetPalette = [
+              toHex(Math.round(rgb[0] * 0.25), Math.round(rgb[1] * 0.25), Math.round(rgb[2] * 0.25)),
+              toHex(Math.round(rgb[0] * 0.50), Math.round(rgb[1] * 0.50), Math.round(rgb[2] * 0.50)),
+              toHex(Math.round(rgb[0] * 0.78), Math.round(rgb[1] * 0.78), Math.round(rgb[2] * 0.78)),
+              toHex(rgb[0], rgb[1], rgb[2]),
+            ];
+            transformedPokemon.updateAltBuildPalette({
+              spriteColorPalette: {
+                targetPalette: targetPalette,
+                blendMode: 'grayscale_overlay',
+              },
+              inversionFactor: 0.0,
+            });
+          }
+        }
       }
 
       [ this.pokemonEvoSprite, this.pokemonEvoTintSprite ].map(sprite => {
@@ -109,27 +138,34 @@ export class FormChangePhase extends EvolutionPhase {
           sprite.setPipelineData("spriteKey", transformedPokemon.getSpriteKey());
           sprite.setPipelineData("shiny", transformedPokemon.shiny);
           sprite.setPipelineData("variant", transformedPokemon.variant);
-          [ "spriteColors", "fusionSpriteColors" ].map(k => {
+          sprite.setPipelineData("ignoreOverride", !!transformedPokemon.summonData?.speciesForm);
+          [ "spriteColors", "fusionSpriteColors", "fusionRecolorMode" ].map(k => {
             if (transformedPokemon.summonData?.speciesForm) {
               k += "Base";
             }
             sprite.pipelineData[k] = transformedPokemon.getSprite().pipelineData[k];
           });
 
-          if (transformedPokemon.altBuildSpriteColors && transformedPokemon.altBuildTargetColors) {
-            sprite.pipelineData["altBuildSpriteColors"] = transformedPokemon.altBuildSpriteColors;
-            sprite.pipelineData["altBuildTargetColors"] = transformedPokemon.altBuildTargetColors;
-            sprite.pipelineData["altBuildBlendMode"] = transformedPokemon.altBuildBlendMode || 'replace';
-            sprite.pipelineData["altBuildInversionFactor"] = transformedPokemon.altBuildInversionFactor || 0.0;
+          const sourceData = transformedPokemon.getSprite().pipelineData;
+          if (sourceData["altBuildSpriteColors"] && sourceData["altBuildTargetColors"]) {
+            sprite.pipelineData["altBuildSpriteColors"] = sourceData["altBuildSpriteColors"];
+            sprite.pipelineData["altBuildTargetColors"] = sourceData["altBuildTargetColors"];
+            sprite.pipelineData["altBuildBlendMode"] = sourceData["altBuildBlendMode"] || 'replace';
+            sprite.pipelineData["altBuildInversionFactor"] = sourceData["altBuildInversionFactor"] || 0.0;
 
             const spriteKey = transformedPokemon.getSpriteKey(true);
             console.log(`🎨 Attempting to extract colors from animation sprite: ${spriteKey}`);
             console.log(`🎨 FormChangePhase: Applied alt build to evo sprite: inversionFactor=${transformedPokemon.altBuildInversionFactor}, rank=${transformedPokemon.altBuildRank}, blendMode=${transformedPokemon.altBuildBlendMode}`);
             const actualColors = transformedPokemon.extractActualSpriteColors(spriteKey);
             console.log(`🎨 Animation sprite has ${actualColors.size} unique colors`);
+          } else {
+            delete sprite.pipelineData["altBuildSpriteColors"];
+            delete sprite.pipelineData["altBuildTargetColors"];
+            delete sprite.pipelineData["altBuildBlendMode"];
+            delete sprite.pipelineData["altBuildInversionFactor"];
           }
 
-          sprite.setScale(transformedPokemon.getSpriteScale());
+          sprite.setScale(transformedPokemon.getEffectiveVisualScale());
         } catch (error) {
           console.error(`Error setting up sprite animation for ${transformedPokemon.getSpriteKey(true)}:`, error);
 
@@ -210,6 +246,8 @@ export class FormChangePhase extends EvolutionPhase {
                           ).forEach(modifier => {
                                       modifier.apply([this.scene, this.pokemon]);
                                   });
+                          this.scene.findModifiers(m => m instanceof PermaFormChangeQuestModifier)
+                              .forEach(modifier => modifier.apply([this.scene, this.pokemon]));
 
                           const modifiers = this.pokemon.scene.findModifiers(m =>
                               (m instanceof AbilitySwitcherModifier ||

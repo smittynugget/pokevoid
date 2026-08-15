@@ -15,7 +15,13 @@
     "ACC": "Precisión",
     "EVA": "Evasión",
     "HPStat": "PS",
-    "Total": "Total"
+    "Total": "Total",
+    "HPcompact": "H",
+    "ATKcompact": "A",
+    "DEFcompact": "D",
+    "SPATKcompact": "SA",
+    "SPDEFcompact": "SD",
+    "SPDcompact": "S"
   },
   "Type": {
     "UNKNOWN": "Desconocido",
@@ -39,6 +45,7 @@
     "FAIRY": "Hada",
     "STELLAR": "Astral",
     "SMITTY": "Smitty",
-    "GLITCH": "Glitch"
+    "GLITCH": "Glitch",
+    "GEN_ONE": "Gen I"
   }
 }

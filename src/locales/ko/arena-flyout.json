@@ -46,5 +46,16 @@
   "magmaStorm": "마그마스톰",
   "snapTrap": "덫아가미",
   "thunderCage": "레이징볼트",
-  "infestation": "괴롭히기"
+  "infestation": "괴롭히기",
+  "day": "낮",
+  "night": "밤",
+  "dawn": "새벽",
+  "dusk": "해질녘",
+  "cursed": "저주",
+  "seeded": "씨뿌리기",
+  "trapped": "잡힘",
+  "yuTrapped": "잡힘",
+  "saltCured": "소금절이",
+  "octolock": "문어굳히기",
+  "ingrain": "뿌리박기"
 }

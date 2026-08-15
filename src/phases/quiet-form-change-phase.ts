@@ -51,6 +51,14 @@ export class QuietFormChangePhase extends BattlePhase {
 
     if (!this.pokemon.isOnField() || this.pokemon.getTag(SemiInvulnerableTag)) {
       this.pokemon.changeForm(this.formChange).then(() => {
+        if ((this.pokemon as any)._tutorialCorruptionPalette) {
+          this.pokemon.altBuildSpriteColors = undefined;
+          this.pokemon.altBuildTargetColors = undefined;
+          this.pokemon.updateAltBuildPalette({
+            spriteColorPalette: { targetPalette: (this.pokemon as any)._tutorialCorruptionPalette },
+            inversionFactor: 0.7,
+          });
+        }
         this.reapplyFormDependentModifiers();
         this.scene.ui.showText(getSpeciesFormChangeMessage(this.pokemon, this.formChange, preName), null, () => this.end(), 1500);
       });
@@ -65,13 +73,25 @@ export class QuietFormChangePhase extends BattlePhase {
       } catch (e) {
         sprite.setFrame(0);
       }
-      sprite.setPipeline(this.scene.spritePipeline, { tone: [ 0.0, 0.0, 0.0, 0.0 ], hasShadow: false, teraColor: getTypeRgb(this.pokemon.getTeraType()) });
-      [ "spriteColors", "fusionSpriteColors" ].map(k => {
+      sprite.setPipeline(this.scene.spritePipeline, { tone: [ 0.0, 0.0, 0.0, 0.0 ], hasShadow: false, ignoreOverride: !!this.pokemon.summonData?.speciesForm, teraColor: getTypeRgb(this.pokemon.getTeraType()) });
+      [ "spriteColors", "fusionSpriteColors", "fusionRecolorMode" ].map(k => {
         if (this.pokemon.summonData?.speciesForm) {
           k += "Base";
         }
         sprite.pipelineData[k] = this.pokemon.getSprite().pipelineData[k];
       });
+      const sourceData = this.pokemon.getSprite().pipelineData;
+      if (sourceData["altBuildSpriteColors"] && sourceData["altBuildTargetColors"]) {
+        sprite.pipelineData["altBuildSpriteColors"] = sourceData["altBuildSpriteColors"];
+        sprite.pipelineData["altBuildTargetColors"] = sourceData["altBuildTargetColors"];
+        sprite.pipelineData["altBuildBlendMode"] = sourceData["altBuildBlendMode"] || 'replace';
+        sprite.pipelineData["altBuildInversionFactor"] = sourceData["altBuildInversionFactor"] || 0.0;
+      } else {
+        delete sprite.pipelineData["altBuildSpriteColors"];
+        delete sprite.pipelineData["altBuildTargetColors"];
+        delete sprite.pipelineData["altBuildBlendMode"];
+        delete sprite.pipelineData["altBuildInversionFactor"];
+      }
       this.scene.field.add(sprite);
       return sprite;
     };
@@ -101,6 +121,14 @@ export class QuietFormChangePhase extends BattlePhase {
       onComplete: () => {
         this.pokemon.setVisible(false);
         this.pokemon.changeForm(this.formChange).then(() => {
+          if ((this.pokemon as any)._tutorialCorruptionPalette) {
+            this.pokemon.altBuildSpriteColors = undefined;
+            this.pokemon.altBuildTargetColors = undefined;
+            this.pokemon.updateAltBuildPalette({
+              spriteColorPalette: { targetPalette: (this.pokemon as any)._tutorialCorruptionPalette },
+              inversionFactor: 0.7,
+            });
+          }
           this.reapplyFormDependentModifiers();
           if(this.pokemon.isGlitchOrSmittyForm()) {
             this.pokemon.toggleShadow(false);
@@ -111,6 +139,24 @@ export class QuietFormChangePhase extends BattlePhase {
             pokemonFormTintSprite.play(newBattleSpriteKey).stop();
           } catch (e) {
             pokemonFormTintSprite.setFrame(0);
+          }
+          [ "spriteColors", "fusionSpriteColors", "fusionRecolorMode" ].map(k => {
+            if (this.pokemon.summonData?.speciesForm) {
+              k += "Base";
+            }
+            pokemonFormTintSprite.pipelineData[k] = this.pokemon.getSprite().pipelineData[k];
+          });
+          const sourceData = this.pokemon.getSprite().pipelineData;
+          if (sourceData["altBuildSpriteColors"] && sourceData["altBuildTargetColors"]) {
+            pokemonFormTintSprite.pipelineData["altBuildSpriteColors"] = sourceData["altBuildSpriteColors"];
+            pokemonFormTintSprite.pipelineData["altBuildTargetColors"] = sourceData["altBuildTargetColors"];
+            pokemonFormTintSprite.pipelineData["altBuildBlendMode"] = sourceData["altBuildBlendMode"] || 'replace';
+            pokemonFormTintSprite.pipelineData["altBuildInversionFactor"] = sourceData["altBuildInversionFactor"] || 0.0;
+          } else {
+            delete pokemonFormTintSprite.pipelineData["altBuildSpriteColors"];
+            delete pokemonFormTintSprite.pipelineData["altBuildTargetColors"];
+            delete pokemonFormTintSprite.pipelineData["altBuildBlendMode"];
+            delete pokemonFormTintSprite.pipelineData["altBuildInversionFactor"];
           }
           pokemonFormTintSprite.setVisible(true);
           this.scene.tweens.add({
@@ -124,7 +170,7 @@ export class QuietFormChangePhase extends BattlePhase {
           this.scene.tweens.add({
             targets: pokemonFormTintSprite,
             delay: 250,
-            scale: this.pokemon.getSpriteScale(),
+            scale: this.pokemon.getEffectiveVisualScale(),
             ease: "Cubic.easeInOut",
             duration: 500,
             onComplete: () => {
@@ -148,8 +194,18 @@ export class QuietFormChangePhase extends BattlePhase {
   }
 
   end(): void {
-    if (this.scene.gameMode.isWavePreFinal(this.scene, this.scene.currentBattle.waveIndex) && this.pokemon instanceof EnemyPokemon && !this.pokemon.is2ndStageBoss) {
-      this.scene.playBgm();
+    const isTutorialGlitch = this.scene.gameData.tutorialOnboardActive
+      && this.pokemon instanceof EnemyPokemon
+      && this.pokemon.isGlitchOrSmittyForm();
+
+    const isPreFinalBoss = this.scene.gameMode.isWavePreFinal(this.scene, this.scene.currentBattle.waveIndex)
+      && this.pokemon instanceof EnemyPokemon
+      && !this.pokemon.is2ndStageBoss;
+
+    if (isPreFinalBoss || isTutorialGlitch) {
+      if (isPreFinalBoss) {
+        this.scene.playBgm();
+      }
       this.scene.unshiftPhase(new PokemonHealPhase(this.scene, this.pokemon.getBattlerIndex(), this.pokemon.getMaxHp(), null, false, false, true, true));
       this.pokemon.is2ndStageBoss = true;
       for (let s = 0; s < this.pokemon.summonData.battleStats.length; s++) {

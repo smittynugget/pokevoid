@@ -1,19 +1,14 @@
 import BattleScene from "#app/battle-scene.js";
 import { ModifierTier } from "#app/modifier/modifier-tier.js";
 import {
-    regenerateModifierPoolThresholds,
     ModifierTypeOption,
     ModifierType,
     getShopModifierTypeOptions,
-    ModifierPoolType
 } from "#app/modifier/modifier-type.js";
-import { Modifier } from "#app/modifier/modifier.js";
-import ModifierSelectUiHandler from "#app/ui/modifier-select-ui-handler.js";
-import { Mode } from "#app/ui/ui.js";
+import { Mode } from "#app/ui/mode.js";
 import i18next from "i18next";
 import * as Utils from "#app/utils.js";
 import { BattlePhase } from "./battle-phase";
-import { PermaType } from "#app/modifier/perma-modifiers";
 import {PersistentModifier} from "#app/modifier/modifier";
 import Overrides from "#app/overrides";
 
@@ -41,12 +36,43 @@ export class SelectPermaModifierPhase extends BattlePhase {
 
         const modifierSelectCallback = (rowCursor: integer, cursor: integer) => {
             if (rowCursor < 0 || cursor < 0) {
-                this.scene.ui.showText(i18next.t("battle:skipItemQuestion"), null, () => {
-                    this.scene.ui.setOverlayMode(Mode.CONFIRM, () => {
-                        this.scene.ui.revertMode();
-                        this.scene.ui.setMode(Mode.MESSAGE);
+                const ui = this.scene.ui;
+                const msgHandler = ui.getMessageHandler() as any;
+                if (msgHandler?.bg) {
+                    msgHandler.bg.setVisible(true);
+                    ui.bringToTop(msgHandler.bg);
+                }
+                if (msgHandler?._messageBgPattern) {
+                    if (msgHandler._messageBgPattern.layers) {
+                        msgHandler._messageBgPattern.layers.forEach((l: any) => {
+                            l.setVisible(true);
+                            ui.bringToTop(l);
+                        });
+                    }
+                }
+                if (msgHandler?.messageContainer) {
+                    msgHandler.messageContainer.setVisible(true);
+                    ui.bringToTop(msgHandler.messageContainer);
+                }
+                ui.showText(i18next.t("battle:skipItemQuestion"), null, () => {
+                    ui.setOverlayMode(Mode.CONFIRM, () => {
+                        ui.revertMode();
+                        ui.hideMessageChrome();
+                        ui.clearText();
+                        ui.setMode(Mode.MESSAGE);
                         this.end();
-                    }, () => this.scene.ui.setMode(Mode.SHOP_SELECT, true, typeOptions, modifierSelectCallback, this.getRerollCost()));
+                    }, () => {
+                        ui.revertMode();
+                        ui.hideMessageChrome();
+                        ui.clearText();
+                        const handler = ui.getHandler();
+                        if ((handler as any).isLootRewardHandler && handler.active) {
+                            handler.awaitingActionInput = true;
+                            handler.onActionInput = modifierSelectCallback;
+                        } else {
+                            ui.setMode(Mode.SHOP_SELECT, true, typeOptions, modifierSelectCallback, this.getRerollCost());
+                        }
+                    });
                 });
                 return false;
             }

@@ -11,6 +11,12 @@
   "gatchaCalendar": "가차 캘린더!",
   "browseGlitchForms": "Pokevoid 글리치 폼 찾아보기",
   "wikiMods": "위키 & 모드",
+  "downloadYourMods": "모드 다운로드",
+  "downloadAll": "모두 다운로드 (ZIP)",
+  "downloadSelected": "선택 다운로드",
+  "noModsToDownload": "다운로드할 모드가 없습니다.",
+  "downloadStarted": "다운로드가 시작되었습니다.",
+  "downloadFailed": "다운로드에 실패했습니다. 다시 시도해 주세요.",
   "noModsToRemove": "제거할 모드가 없습니다.",
   "errorLoadingMods": "모드 로딩 중 오류가 발생했습니다. 다시 시도해 주세요.",
   "modRemoved": "{{name}}이(가) 성공적으로 제거되었습니다.",
@@ -31,8 +37,9 @@
     "stat2": "강화할 스탯 2",
     "stat3": "강화할 스탯 3",
     "distributionType": "스탯 강화 분배 유형",
-    "frontSprite": "포켓몬 정면 스프라이트 (150-200px)",
-    "backSprite": "포켓몬 후면 스프라이트 (150-200px)",
+    "frontSprite": "포켓몬 정면 스프라이트",
+    "backSprite": "포켓몬 후면 스프라이트",
+    "useFrontAsBack": "정면 스프라이트를 후면 스프라이트로 사용",
     "rivalTrainer": "라이벌",
     "orRivalTrainer": "또는 라이벌"
   },
@@ -44,7 +51,12 @@
   },
   "buttons": {
     "saveAndAdd": "저장 및 다시 로드",
-    "cancel": "취소"
+    "cancel": "취소",
+    "next": "다음",
+    "prev": "이전"
+  },
+  "navigation": {
+    "sectionIndicator": "{{current}} / {{total}}"
   },
   "validation": {
     "requiredField": "이 필드는 필수입니다",
@@ -61,7 +73,8 @@
   },
   "sections": {
     "basicInformation": "기본 정보",
-    "typesAbilities": "타입 및 특성",
+    "typesAbilities": "타입",
+    "abilities": "특성",
     "stats": "스탯",
     "sprites": "스프라이트",
     "rivalTrainer": "이 폼을 보상으로 주는 라이벌"

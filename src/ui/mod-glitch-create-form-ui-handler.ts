@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import BattleScene from "../battle-scene";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { ModGlitchFormData, StatDistributionType } from "../data/mod-glitch-form-data";
 import { loadModGlitchFormFromJson } from "../data/mod-glitch-form-utils";
 import { modStorage } from "../system/mod-storage";
@@ -8,7 +8,8 @@ import { Species } from "../enums/species";
 import { Abilities } from "../enums/abilities";
 import { Type } from "../data/type";
 import { Stat } from "../enums/stat";
-import { getAllRivalTrainerTypes } from "../data/trainer-config";
+import { getAllRivalTrainerTypes, trainerConfigs } from "../data/trainer-config";
+import * as Utils from "../utils";
 import { Button } from "../enums/buttons";
 import UiHandler from "./ui-handler";
 import { TrainerType } from "../enums/trainer-type";
@@ -39,6 +40,17 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
     private formContainer: HTMLDivElement | null = null;
     private resizeHandler: () => void;
     private wheelHandler: (event: WheelEvent) => void | null = null;
+    private iconCache: Map<number, string> = new Map();
+    private iconObserver: IntersectionObserver | null = null;
+    private pageContainers: HTMLDivElement[] = [];
+    private currentPageIndex: number = 0;
+    private currentPageTarget: HTMLDivElement | null = null;
+    private navIndicator: HTMLSpanElement | null = null;
+    private prevButton: HTMLButtonElement | null = null;
+    private nextButton: HTMLButtonElement | null = null;
+    private actionButtonContainer: HTMLDivElement | null = null;
+    private persistentPreviewImg: HTMLImageElement | null = null;
+    private spritePreviewBox: HTMLDivElement | null = null;
 
     constructor(scene: BattleScene) {
         super(scene, Mode.MOD_GLITCH_CREATE_FORM);
@@ -54,7 +66,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
     }
 
     getWidth(): number {
-        return 550;
+        return 720;
     }
 
     getHeight(): number {
@@ -73,7 +85,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
             return this.createAndSaveMod();
         } else {
             this.clear();
-            this.scene.ui.setMode(Mode.TITLE);
+            this.scene.ui.revertMode();
             return true;
         }
     }
@@ -96,17 +108,21 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
     }
 
     processInput(button: Button): boolean {
-        console.log("ModGlitchCreateFormUiHandler: processInput called with button:", button);
-
         if (button === Button.CANCEL) {
             if (this.formContainer && this.formContainer.contains(document.activeElement) &&
                 (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT' || document.activeElement.tagName === 'BUTTON' || document.activeElement.tagName === 'TEXTAREA')) {
-                console.log("Cancel button ignored because an input field is focused.");
                 return true;
             }
 
             this.clear();
-            this.scene.ui.setMode(Mode.TITLE);
+            this.scene.ui.revertMode();
+            return true;
+        }
+
+        if (button === Button.ACTION || button === Button.SUBMIT) {
+            if (!this.isCreating) {
+                this.createAndSaveMod();
+            }
             return true;
         }
 
@@ -191,6 +207,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
         if (this.isCreating) {
             return false;
         }
+
         if (!this.validateForm()) {
             this.updateStatus(i18next.t("modGlitchCreateFormUi:validation.requiredField"));
             return false;
@@ -200,109 +217,13 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
         this.updateStatus(i18next.t("modGlitchCreateFormUi:statusMessages.creatingMod"));
         this.setButtonsEnabled(false);
 
+        const timeoutPromise = new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error("Creation timed out after 15 seconds")), 15000)
+        );
+
         try {
-            const speciesId = Number(this.formFields["species"].getValue());
-            const formName = this.formFields["formName"].getValue();
-            const primaryType = Number(this.formFields["primaryType"].getValue());
-            const secondaryType = this.formFields["secondaryType"].getValue();
-            const secondaryTypeNumber = (secondaryType !== null && secondaryType !== '') ? Number(secondaryType) : undefined;
-            const ability1 = Number(this.formFields["ability1"].getValue());
-            const ability2 = Number(this.formFields["ability2"].getValue());
-            const hiddenAbility = Number(this.formFields["hiddenAbility"].getValue());
-            const stat1 = Number(this.formFields["stat1"].getValue());
-            const stat2 = Number(this.formFields["stat2"].getValue());
-            const stat3 = Number(this.formFields["stat3"].getValue());
-            const distributionType = this.formFields["distributionType"].getValue() as StatDistributionType;
-            const rivalTrainerTypes = [
-                Number(this.formFields["rivalTrainerType1"].getValue()),
-                Number(this.formFields["rivalTrainerType2"].getValue()),
-                Number(this.formFields["rivalTrainerType3"].getValue()),
-                Number(this.formFields["rivalTrainerType4"].getValue()),
-            ].filter(type => !isNaN(type) && type !== -1);
-
-            const frontSprite = this.formFields["frontSprite"].getValue();
-            const backSprite = this.formFields["backSprite"].getValue();
-            const iconData = await this.createIconFromSprite(frontSprite);
-            const lang: {[key: string]: string} = {};
-            lang["en"] = formName;
-            Object.keys(this.formFields)
-                .filter(key => key.startsWith("lang_"))
-                .forEach(key => {
-                    const langCode = key.replace("lang_", "");
-                    const value = this.formFields[key].getValue();
-                    if (value) {
-                        lang[langCode] = value;
-                    }
-                });
-
-            const jsonData = {
-                speciesId,
-                formName,
-                primaryType,
-                secondaryType: secondaryTypeNumber,
-                abilities: [ability1, ability2, hiddenAbility],
-                stats: {
-                    statsToBoost: [stat1, stat2, stat3],
-                    distributionType
-                },
-                sprites: {
-                    front: frontSprite,
-                    back: backSprite,
-                    icon: iconData
-                },
-                lang,
-                unlockConditions: {
-                    rivalTrainerTypes: rivalTrainerTypes
-                }
-            };
-
-            this.createdModData = jsonData;
-            const success = await loadModGlitchFormFromJson(this.scene, jsonData);
-
-            if (success) {
-                try {
-
-                    await modStorage.storeMod({
-                        speciesId: jsonData.speciesId,
-                        formName: jsonData.formName,
-                        jsonData,
-                        spriteData: jsonData.sprites.front,
-                        iconData: jsonData.sprites.icon
-                    });
-
-                    this.scene.gameData.gameStats.glitchModsCreated++;
-
-                    this.downloadModJson(jsonData);
-
-                    this.scene.gameData.testSpeciesForMod.push(jsonData.speciesId);
-                    this.scene.gameData.testModsCount += 2;
-
-                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-
-                    await this.scene.gameData.saveAll(this.scene);
-
-                    if (isIOS) {
-                        console.log("iOS device detected, using alternative page reload method");
-                        setTimeout(() => {
-                            console.log("Performing iOS page reload");
-                            window.location.href = window.location.href;
-                        }, 100);
-                    } else {
-                        window.location.reload();
-                    }
-
-                    return true;
-                } catch (storageError) {
-                    console.error("Error storing mod:", storageError);
-                    this.downloadModJson(jsonData);
-
-                    this.updateStatus(i18next.t("modGlitchCreateFormUi:statusMessages.storageError"));
-                    return false;
-                }
-            } else {
-                this.updateStatus(i18next.t("modGlitchCreateFormUi:statusMessages.error", { message: "Failed to register glitch form" }));
-                return false;
-            }
+            await Promise.race([this.doCreatePipeline(), timeoutPromise]);
+            return true;
         } catch (error) {
             console.error("Error creating mod:", error);
             this.updateStatus(i18next.t("modGlitchCreateFormUi:statusMessages.error", { message: error.message || "Unknown error" }));
@@ -312,10 +233,106 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
             this.setButtonsEnabled(true);
         }
     }
+
+    private async doCreatePipeline(): Promise<void> {
+        const speciesId = Number(this.formFields["species"].getValue());
+        const formName = this.formFields["formName"].getValue();
+        const primaryType = Number(this.formFields["primaryType"].getValue());
+        const secondaryType = this.formFields["secondaryType"].getValue();
+        const secondaryTypeNumber = (secondaryType !== null && secondaryType !== '') ? Number(secondaryType) : undefined;
+        const ability1 = Number(this.formFields["ability1"].getValue());
+        const ability2 = Number(this.formFields["ability2"].getValue());
+        const hiddenAbility = Number(this.formFields["hiddenAbility"].getValue());
+        const stat1 = Number(this.formFields["stat1"].getValue());
+        const stat2 = Number(this.formFields["stat2"].getValue());
+        const stat3 = Number(this.formFields["stat3"].getValue());
+        const distributionType = this.formFields["distributionType"].getValue() as StatDistributionType;
+        const rivalTrainerTypes = [
+            Number(this.formFields["rivalTrainerType1"].getValue()),
+            Number(this.formFields["rivalTrainerType2"].getValue()),
+            Number(this.formFields["rivalTrainerType3"].getValue()),
+            Number(this.formFields["rivalTrainerType4"].getValue()),
+        ].filter(type => !isNaN(type) && type !== -1);
+
+        const frontSprite = this.formFields["frontSprite"].getValue();
+        const backSprite = this.useFrontAsBack ? frontSprite : this.formFields["backSprite"].getValue();
+        const iconData = await this.createIconFromSprite(frontSprite);
+
+        const lang: {[key: string]: string} = {};
+        lang["en"] = formName;
+        Object.keys(this.formFields)
+            .filter(key => key.startsWith("lang_"))
+            .forEach(key => {
+                const langCode = key.replace("lang_", "");
+                const value = this.formFields[key].getValue();
+                if (value) {
+                    lang[langCode] = value;
+                }
+            });
+
+        const jsonData = {
+            speciesId,
+            formName,
+            primaryType,
+            secondaryType: secondaryTypeNumber,
+            abilities: [ability1, ability2, hiddenAbility],
+            stats: {
+                statsToBoost: [stat1, stat2, stat3],
+                distributionType
+            },
+            sprites: {
+                front: frontSprite,
+                back: backSprite,
+                icon: iconData
+            },
+            lang,
+            unlockConditions: {
+                rivalTrainerTypes: rivalTrainerTypes
+            }
+        };
+
+        this.createdModData = jsonData;
+
+        const success = await loadModGlitchFormFromJson(this.scene, jsonData);
+
+        if (!success) {
+            throw new Error("Failed to register glitch form");
+        }
+
+        this.downloadModJson(jsonData);
+
+        try {
+            await modStorage.storeMod({
+                speciesId: jsonData.speciesId,
+                formName: jsonData.formName,
+                jsonData,
+                spriteData: jsonData.sprites.front,
+                iconData: jsonData.sprites.icon
+            });
+        } catch (storageError) {
+            console.error("Error storing mod:", storageError);
+            this.updateStatus(i18next.t("modGlitchCreateFormUi:statusMessages.storageError"));
+        }
+
+        this.scene.gameData.gameStats.glitchModsCreated++;
+        this.scene.gameData.testSpeciesForMod.push(jsonData.speciesId);
+        this.scene.gameData.testModsCount += 2;
+
+        await this.scene.gameData.saveAll(this.scene);
+
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+        if (isIOS) {
+            setTimeout(() => { window.location.href = window.location.href; }, 100);
+        } else {
+            window.location.reload();
+        }
+    }
     private setButtonsEnabled(enabled: boolean): void {
         if (!this.formContainer) return;
+
         const buttons = this.formContainer.querySelectorAll('button');
         buttons.forEach(button => {
+            if ((button as HTMLElement).dataset.role === 'cancel') return;
             button.disabled = !enabled;
             button.style.opacity = enabled ? '1' : '0.5';
             button.style.cursor = enabled ? 'pointer' : 'not-allowed';
@@ -383,49 +400,111 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
         overlay.style.justifyContent = 'center';
         overlay.style.alignItems = 'center';
 
-        const formContainer = document.createElement('div');
-        formContainer.style.backgroundColor = '#1a2233';
-        formContainer.style.border = '2px solid #6688aa';
-        formContainer.style.borderRadius = '5px';
-        formContainer.style.padding = '20px';
-        formContainer.style.width = `${Math.min(this.getWidth(), window.innerWidth - 40)}px`;
-        formContainer.style.maxHeight = `${Math.min(this.getHeight(), window.innerHeight - 40)}px`;
-        formContainer.style.overflowY = 'auto';
-        formContainer.style.boxShadow = '0 0 20px rgba(0, 0, 100, 0.5)';
-        formContainer.style.color = '#ffffff';
-        formContainer.style.fontFamily = 'monospace, Arial, sans-serif';
+        const modalWrapper = document.createElement('div');
+        modalWrapper.style.backgroundColor = '#1a2233';
+        modalWrapper.style.border = '2px solid #6688aa';
+        modalWrapper.style.borderRadius = '5px';
+        modalWrapper.style.padding = '20px';
+        modalWrapper.style.width = `${Math.min(this.getWidth(), window.innerWidth - 40)}px`;
+        modalWrapper.style.maxHeight = `${Math.min(this.getHeight(), window.innerHeight - 40)}px`;
+        modalWrapper.style.boxShadow = '0 0 20px rgba(0, 0, 100, 0.5)';
+        modalWrapper.style.color = '#ffffff';
+        modalWrapper.style.fontFamily = 'monospace, Arial, sans-serif';
+        modalWrapper.style.display = 'flex';
+        modalWrapper.style.flexDirection = 'column';
 
         const title = document.createElement('h2');
         title.textContent = this.getModalTitle();
         title.style.textAlign = 'center';
-        title.style.margin = '0 0 20px 0';
+        title.style.margin = '0 0 15px 0';
         title.style.color = '#aaddff';
         title.style.borderBottom = '1px solid #6688aa';
         title.style.paddingBottom = '10px';
-        formContainer.appendChild(title);
+        title.style.flexShrink = '0';
+        modalWrapper.appendChild(title);
+
+        const contentRow = document.createElement('div');
+        contentRow.style.display = 'flex';
+        contentRow.style.flexDirection = 'row';
+        contentRow.style.flex = '1';
+        contentRow.style.overflow = 'hidden';
+        contentRow.style.minHeight = '0';
+
+        const formScrollColumn = document.createElement('div');
+        formScrollColumn.style.flex = '1';
+        formScrollColumn.style.overflowY = 'auto';
+        formScrollColumn.style.paddingRight = '15px';
+        formScrollColumn.style.minHeight = '0';
+
+        const spritePreviewColumn = document.createElement('div');
+        spritePreviewColumn.style.width = '180px';
+        spritePreviewColumn.style.flexShrink = '0';
+        spritePreviewColumn.style.display = 'flex';
+        spritePreviewColumn.style.flexDirection = 'column';
+        spritePreviewColumn.style.alignItems = 'center';
+        spritePreviewColumn.style.paddingLeft = '15px';
+        spritePreviewColumn.style.borderLeft = '1px solid #445566';
+
+        const spriteLabel = document.createElement('div');
+        spriteLabel.textContent = i18next.t("modGlitchCreateFormUi:fields.frontSprite");
+        spriteLabel.style.color = '#bbddff';
+        spriteLabel.style.fontSize = '12px';
+        spriteLabel.style.marginBottom = '8px';
+        spritePreviewColumn.appendChild(spriteLabel);
+
+        const spritePreviewBox = document.createElement('div');
+        spritePreviewBox.style.width = '150px';
+        spritePreviewBox.style.height = '150px';
+        spritePreviewBox.style.border = '2px dashed #6688aa';
+        spritePreviewBox.style.borderRadius = '6px';
+        spritePreviewBox.style.display = 'flex';
+        spritePreviewBox.style.alignItems = 'center';
+        spritePreviewBox.style.justifyContent = 'center';
+        spritePreviewBox.style.backgroundColor = '#0d1520';
+        spritePreviewBox.style.position = 'sticky';
+        spritePreviewBox.style.top = '0';
+        this.spritePreviewBox = spritePreviewBox;
+        spritePreviewColumn.appendChild(spritePreviewBox);
+
+        contentRow.appendChild(formScrollColumn);
+        contentRow.appendChild(spritePreviewColumn);
+        modalWrapper.appendChild(contentRow);
+
         this.formOverlay = overlay;
-        this.formContainer = formContainer;
-        overlay.appendChild(formContainer);
+        this.formContainer = formScrollColumn;
+
+        overlay.appendChild(modalWrapper);
         document.body.appendChild(overlay);
+
         this.setupFormFields();
+        this.addNavigation();
         this.addActionButtons();
+        this.showPage(0);
+
         this.resizeHandler = () => {
-            if (this.formContainer) {
-                this.formContainer.style.width = `${Math.min(this.getWidth(), window.innerWidth - 40)}px`;
-                this.formContainer.style.maxHeight = `${Math.min(this.getHeight(), window.innerHeight - 40)}px`;
+            if (modalWrapper) {
+                modalWrapper.style.width = `${Math.min(this.getWidth(), window.innerWidth - 40)}px`;
+                modalWrapper.style.maxHeight = `${Math.min(this.getHeight(), window.innerHeight - 40)}px`;
             }
         };
 
         window.addEventListener('resize', this.resizeHandler);
+
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) {
                 this.clear();
-                this.scene.ui.setMode(Mode.TITLE);
+                this.scene.ui.revertMode();
             }
         });
     }
 
     private removeFormOverlay(): void {
+        if (this.iconObserver) {
+            this.iconObserver.disconnect();
+            this.iconObserver = null;
+        }
+        this.iconCache.clear();
+
         if (this.formOverlay) {
             document.body.removeChild(this.formOverlay);
             this.formOverlay = null;
@@ -446,10 +525,109 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
         });
 
         this.formFields = {};
+        this.pageContainers = [];
+        this.currentPageIndex = 0;
+        this.currentPageTarget = null;
+        this.persistentPreviewImg = null;
+        this.spritePreviewBox = null;
+    }
+
+    private startPage(): HTMLDivElement {
+        const page = document.createElement('div');
+        page.style.display = 'none';
+        this.pageContainers.push(page);
+        this.formContainer!.appendChild(page);
+        this.currentPageTarget = page;
+        return page;
+    }
+
+    private showPage(index: number): void {
+        if (index < 0 || index >= this.pageContainers.length) return;
+        this.currentPageIndex = index;
+        this.pageContainers.forEach((p, i) => {
+            p.style.display = i === index ? 'block' : 'none';
+        });
+        if (this.navIndicator) {
+            this.navIndicator.textContent = `${index + 1} / ${this.pageContainers.length}`;
+        }
+        if (this.prevButton) {
+            this.prevButton.disabled = index === 0;
+            this.prevButton.style.opacity = index === 0 ? '0.4' : '1';
+        }
+        if (this.nextButton) {
+            this.nextButton.disabled = index === this.pageContainers.length - 1;
+            this.nextButton.style.opacity = index === this.pageContainers.length - 1 ? '0.4' : '1';
+        }
+        if (this.actionButtonContainer) {
+            this.actionButtonContainer.style.display = (index === this.pageContainers.length - 1) ? 'flex' : 'none';
+        }
+    }
+
+    private addNavigation(): void {
+        if (!this.formContainer) return;
+        const navBar = document.createElement('div');
+        navBar.style.display = 'flex';
+        navBar.style.justifyContent = 'center';
+        navBar.style.alignItems = 'center';
+        navBar.style.gap = '15px';
+        navBar.style.margin = '15px 0';
+        navBar.style.padding = '8px';
+        navBar.style.borderTop = '1px solid #445566';
+        navBar.style.borderBottom = '1px solid #445566';
+
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = `← ${i18next.t("modGlitchCreateFormUi:buttons.prev", { defaultValue: "Prev" })}`;
+        prevBtn.style.backgroundColor = '#334455';
+        prevBtn.style.color = '#ffffff';
+        prevBtn.style.border = '1px solid #6688aa';
+        prevBtn.style.borderRadius = '4px';
+        prevBtn.style.padding = '6px 14px';
+        prevBtn.style.cursor = 'pointer';
+        prevBtn.style.fontSize = '13px';
+        prevBtn.addEventListener('click', () => this.showPage(this.currentPageIndex - 1));
+        this.prevButton = prevBtn;
+
+        const indicator = document.createElement('span');
+        indicator.style.color = '#bbddff';
+        indicator.style.fontSize = '13px';
+        indicator.style.minWidth = '40px';
+        indicator.style.textAlign = 'center';
+        this.navIndicator = indicator;
+
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = `${i18next.t("modGlitchCreateFormUi:buttons.next", { defaultValue: "Next" })} →`;
+        nextBtn.style.backgroundColor = '#334455';
+        nextBtn.style.color = '#ffffff';
+        nextBtn.style.border = '1px solid #6688aa';
+        nextBtn.style.borderRadius = '4px';
+        nextBtn.style.padding = '6px 14px';
+        nextBtn.style.cursor = 'pointer';
+        nextBtn.style.fontSize = '13px';
+        nextBtn.addEventListener('click', () => this.showPage(this.currentPageIndex + 1));
+        this.nextButton = nextBtn;
+
+        navBar.appendChild(prevBtn);
+        navBar.appendChild(indicator);
+        navBar.appendChild(nextBtn);
+        this.formContainer.appendChild(navBar);
+    }
+
+    private updatePersistentPreview(dataUrl: string): void {
+        if (!this.spritePreviewBox) return;
+        if (!this.persistentPreviewImg) {
+            this.persistentPreviewImg = document.createElement('img');
+            this.persistentPreviewImg.style.maxWidth = '100%';
+            this.persistentPreviewImg.style.maxHeight = '100%';
+            this.persistentPreviewImg.style.imageRendering = 'pixelated';
+            this.spritePreviewBox.innerHTML = '';
+            this.spritePreviewBox.appendChild(this.persistentPreviewImg);
+        }
+        this.persistentPreviewImg.src = dataUrl;
     }
 
     private setupFormFields(): void {
         if (!this.formContainer) return;
+
         const statusContainer = document.createElement('div');
         statusContainer.style.color = '#ff5555';
         statusContainer.style.marginBottom = '15px';
@@ -467,6 +645,8 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
                 statusContainer.style.display = visible ? 'block' : 'none';
             }
         };
+
+        this.startPage();
         this.addSectionDivider("modGlitchCreateFormUi:sections.basicInformation");
         this.createDropdown("species", i18next.t("modGlitchCreateFormUi:fields.species"),
             Object.keys(Species)
@@ -476,6 +656,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
                     label: i18next.t(`pokemon:${key.toLowerCase()}`)
                 }))
         );
+        this.createSpeciesIconGrid();
         const speciesSelect = this.formFields["species"].input as HTMLSelectElement;
         speciesSelect.addEventListener('change', () => {
             const selectedSpeciesId = Number(speciesSelect.value);
@@ -498,7 +679,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
         langContainer.style.display = 'none';
         langContainer.style.marginLeft = '15px';
         langSection.appendChild(langContainer);
-        this.formContainer.appendChild(langSection);
+        this.getAppendTarget().appendChild(langSection);
 
         langHeader.addEventListener('click', () => {
             const isVisible = langContainer.style.display !== 'none';
@@ -549,20 +730,25 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
                 validate: () => true
             };
         });
+
+        this.createImageUpload("frontSprite", i18next.t("modGlitchCreateFormUi:fields.frontSprite"));
+
+        this.startPage();
         this.addSectionDivider("modGlitchCreateFormUi:sections.typesAbilities");
 
         this.createDropdown("primaryType", i18next.t("modGlitchCreateFormUi:fields.primaryType"),
             Object.keys(Type)
-                .filter(key => isNaN(Number(key)) && key != "UNKNOWN" && key != "ALL" && key != "STELLAR")
+                .filter(key => isNaN(Number(key)) && key != "UNKNOWN" && key != "ALL" && key != "STELLAR" && key != "SMITTY" && key != "GLITCH" && key != "GEN_ONE")
                 .map(key => ({
                     value: Type[key],
                     label: i18next.t(`pokemonInfo:Type:${key}`)
                 }))
         );
+        this.createTypeIconGrid("primaryType");
         this.createDropdown("secondaryType", i18next.t("modGlitchCreateFormUi:fields.secondaryType"),
             [{ value: -1, label: "None" }].concat(
                 Object.keys(Type)
-                    .filter(key => isNaN(Number(key)) && key != "UNKNOWN" && key != "ALL" && key != "STELLAR")
+                    .filter(key => isNaN(Number(key)) && key != "UNKNOWN" && key != "ALL" && key != "STELLAR" && key != "SMITTY" && key != "GLITCH" && key != "GEN_ONE")
                     .map(key => ({
                         value: Type[key],
                         label: i18next.t(`pokemonInfo:Type:${key}`)
@@ -570,6 +756,14 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
             ),
             true
         );
+        this.createTypeIconGrid("secondaryType");
+
+        this.startPage();
+        const abilitiesHeader = document.createElement('h3');
+        abilitiesHeader.textContent = i18next.t("modGlitchCreateFormUi:sections.abilities", { defaultValue: "Abilities" });
+        abilitiesHeader.style.color = '#aaddff';
+        abilitiesHeader.style.margin = '10px 0 10px 0';
+        this.getAppendTarget().appendChild(abilitiesHeader);
 
         const abilityOptions = Object.keys(Abilities)
             .filter(key => isNaN(Number(key)) && key !== "NONE")
@@ -639,12 +833,13 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
             }
         });
 
+        this.startPage();
         this.addSectionDivider("modGlitchCreateFormUi:sections.stats");
         const baseStatsDisplayContainer = document.createElement('div');
         baseStatsDisplayContainer.style.marginTop = '20px';
         baseStatsDisplayContainer.style.borderTop = 'none';
         baseStatsDisplayContainer.style.paddingTop = '0px';
-        this.formContainer.appendChild(baseStatsDisplayContainer);
+        this.getAppendTarget().appendChild(baseStatsDisplayContainer);
 
         this.formFields["baseStatsDisplay"] = {
             input: baseStatsDisplayContainer,
@@ -728,8 +923,9 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
             this.updateBaseStatsDisplay(Number(speciesSelect.value));
         });
 
+        this.startPage();
         this.addSectionDivider("modGlitchCreateFormUi:sections.sprites");
-        this.createImageUpload("frontSprite", i18next.t("modGlitchCreateFormUi:fields.frontSprite"));
+        this.createUseFrontAsBackCheckbox();
         this.createImageUpload("backSprite", i18next.t("modGlitchCreateFormUi:fields.backSprite"));
 
         this.addSectionDivider("modGlitchCreateFormUi:sections.rivalTrainer");
@@ -751,6 +947,38 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
         if (rivalOptions.length >= 3) (this.formFields["rivalTrainerType2"].input as HTMLSelectElement).value = String(rivalOptions[2].value);
         if (rivalOptions.length >= 4) (this.formFields["rivalTrainerType3"].input as HTMLSelectElement).value = String(rivalOptions[3].value);
         if (rivalOptions.length >= 5) (this.formFields["rivalTrainerType4"].input as HTMLSelectElement).value = String(rivalOptions[4].value);
+
+        const rivalKeys = ["rivalTrainerType1", "rivalTrainerType2", "rivalTrainerType3", "rivalTrainerType4"];
+        rivalKeys.forEach(rKey => {
+            const selectEl = this.formFields[rKey].input as HTMLSelectElement;
+            const parentRow = selectEl.parentElement;
+            if (!parentRow) return;
+            const iconImg = document.createElement("img");
+            iconImg.style.width = "64px";
+            iconImg.style.height = "64px";
+            iconImg.style.marginLeft = "12px";
+            iconImg.style.imageRendering = "pixelated";
+            iconImg.style.display = "none";
+            iconImg.style.borderRadius = "4px";
+            iconImg.style.border = "1px solid #445566";
+            parentRow.appendChild(iconImg);
+            const updateRivalIcon = () => {
+                const val = Number(selectEl.value);
+                if (val > 0) {
+                    const dataUrl = this.getRivalIconDataUrl(val);
+                    if (dataUrl) {
+                        iconImg.src = dataUrl;
+                        iconImg.style.display = "block";
+                    } else {
+                        iconImg.style.display = "none";
+                    }
+                } else {
+                    iconImg.style.display = "none";
+                }
+            };
+            updateRivalIcon();
+            selectEl.addEventListener("change", updateRivalIcon);
+        });
 
         const rivalSelect1 = this.formFields["rivalTrainerType1"].input as HTMLSelectElement;
         const rivalSelect2 = this.formFields["rivalTrainerType2"].input as HTMLSelectElement;
@@ -795,8 +1023,13 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
         rivalSelect4.addEventListener('change', updateRivalOptions);
     }
 
+    private getAppendTarget(): HTMLDivElement {
+        return this.currentPageTarget || this.formContainer!;
+    }
+
     private addSectionDivider(localizationKey: string): void {
         if (!this.formContainer) return;
+        const target = this.getAppendTarget();
         const divider = document.createElement('div');
         divider.style.margin = '20px 0 15px 0';
 
@@ -813,11 +1046,12 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
         line.style.width = '100%';
         divider.appendChild(line);
 
-        this.formContainer.appendChild(divider);
+        target.appendChild(divider);
     }
 
     private createTextInput(key: string, label: string, required: boolean = true): void {
         if (!this.formContainer) return;
+        const target = this.getAppendTarget();
 
         const fieldContainer = document.createElement('div');
         fieldContainer.style.display = 'flex';
@@ -843,7 +1077,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
         input.style.boxShadow = '0 0 5px rgba(0,0,0,0.5)';
         fieldContainer.appendChild(input);
 
-        this.formContainer.appendChild(fieldContainer);
+        target.appendChild(fieldContainer);
 
         this.formFields[key] = {
             input: input,
@@ -859,6 +1093,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
 
     private createDropdown(key: string, label: string, options: Array<{value: any, label: string}>, optional: boolean = false): void {
         if (!this.formContainer) return;
+        const target = this.getAppendTarget();
 
         const fieldContainer = document.createElement('div');
         fieldContainer.style.display = 'flex';
@@ -897,7 +1132,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
         });
 
         fieldContainer.appendChild(select);
-        this.formContainer.appendChild(fieldContainer);
+        target.appendChild(fieldContainer);
 
         this.formFields[key] = {
             input: select,
@@ -913,8 +1148,12 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
 
     private createImageUpload(key: string, label: string): void {
         if (!this.formContainer) return;
+        const target = this.getAppendTarget();
         const fieldContainer = document.createElement('div');
         fieldContainer.style.marginBottom = '20px';
+        if (key === "backSprite") {
+            this.backSpriteFieldContainer = fieldContainer;
+        }
 
         const labelRow = document.createElement('div');
         labelRow.style.display = 'flex';
@@ -969,7 +1208,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
         previewContainer.style.justifyContent = 'center';
         fieldContainer.appendChild(previewContainer);
 
-        this.formContainer.appendChild(fieldContainer);
+        target.appendChild(fieldContainer);
 
         let imageData: string | null = null;
         let isValid = false;
@@ -982,29 +1221,40 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
             reader.onload = (event) => {
                 const img = new Image();
                 img.onload = () => {
+                    const targetSize = 192;
+                    const canvas = document.createElement("canvas");
+                    canvas.width = targetSize;
+                    canvas.height = targetSize;
+                    const ctx = canvas.getContext("2d")!;
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = "high";
+                    const scale = Math.min(targetSize / img.width, targetSize / img.height);
+                    const w = img.width * scale;
+                    const h = img.height * scale;
+                    const x = (targetSize - w) / 2;
+                    const y = (targetSize - h) / 2;
+                    ctx.clearRect(0, 0, targetSize, targetSize);
+                    ctx.drawImage(img, x, y, w, h);
+                    const resizedDataUrl = canvas.toDataURL("image/png");
 
-                    if (img.width >= 130 && img.width <= 200 && img.height >= 130 && img.height <= 200) {
+                    fileNameDisplay.textContent = file.name.length > 15 ? file.name.substring(0, 12) + "..." : file.name;
+                    fileNameDisplay.style.color = '#ffffff';
+                    previewContainer.innerHTML = '';
 
-                        fileNameDisplay.textContent = file.name.length > 15 ? file.name.substring(0, 12) + "..." : file.name;
-                        fileNameDisplay.style.color = '#ffffff';
-                        previewContainer.innerHTML = '';
+                    const previewImg = document.createElement('img');
+                    previewImg.src = resizedDataUrl;
+                    previewImg.style.maxWidth = '100%';
+                    previewImg.style.maxHeight = '100%';
+                    previewContainer.appendChild(previewImg);
 
-                        const previewImg = document.createElement('img');
-                        previewImg.src = event.target?.result as string;
-                        previewImg.style.maxWidth = '100%';
-                        previewImg.style.maxHeight = '100%';
-                        previewContainer.appendChild(previewImg);
-                        imageData = event.target?.result as string;
-                        isValid = true;
-                        labelElement.style.color = '#bbddff';
-                        this.scene.textures.addBase64(key, imageData);
-                    } else {
-                        this.updateStatus(i18next.t("modGlitchCreateFormUi:validation.imageSize"));
-                        isValid = false;
-                        labelElement.style.color = '#ff5555';
-                        fileNameDisplay.textContent = i18next.t("modGlitchCreateFormUi:imageUpload.invalidSize");
-                        fileNameDisplay.style.color = '#ff5555';
+                    imageData = resizedDataUrl;
+                    isValid = true;
+                    labelElement.style.color = '#bbddff';
+
+                    if (key === "frontSprite") {
+                        this.updatePersistentPreview(resizedDataUrl);
                     }
+                    this.scene.textures.addBase64(key, imageData);
                 };
                 img.src = event.target?.result as string;
             };
@@ -1016,20 +1266,323 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
             setValue: () => {},
             getValue: () => imageData,
             validate: () => {
+                if (key === "backSprite" && this.useFrontAsBack) return true;
                 labelElement.style.color = isValid ? '#bbddff' : '#ff5555';
                 return isValid;
             }
         };
     }
 
+    private useFrontAsBack: boolean = false;
+    private backSpriteFieldContainer: HTMLDivElement | null = null;
+
+    private createUseFrontAsBackCheckbox(): void {
+        if (!this.formContainer) return;
+        const target = this.getAppendTarget();
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.alignItems = 'center';
+        row.style.marginBottom = '15px';
+        row.style.marginLeft = '5px';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = 'useFrontAsBack';
+        checkbox.style.marginRight = '10px';
+        checkbox.style.width = '18px';
+        checkbox.style.height = '18px';
+        checkbox.style.cursor = 'pointer';
+
+        const label = document.createElement('label');
+        label.htmlFor = 'useFrontAsBack';
+        label.textContent = i18next.t("modGlitchCreateFormUi:fields.useFrontAsBack", { defaultValue: "Use front sprite as back sprite" });
+        label.style.color = '#bbddff';
+        label.style.cursor = 'pointer';
+
+        checkbox.addEventListener('change', () => {
+            this.useFrontAsBack = checkbox.checked;
+            if (this.backSpriteFieldContainer) {
+                this.backSpriteFieldContainer.style.display = checkbox.checked ? 'none' : 'block';
+            }
+        });
+
+        row.appendChild(checkbox);
+        row.appendChild(label);
+        target.appendChild(row);
+    }
+
+    private getSpeciesIconDataUrl(speciesId: number): string | null {
+        if (this.iconCache.has(speciesId)) return this.iconCache.get(speciesId)!;
+        const species = getPokemonSpecies(speciesId);
+        if (!species) return null;
+        const atlasKey = species.getIconAtlasKey();
+        const frameId = species.getIconId(false);
+        if (!this.scene.textures.exists(atlasKey)) return null;
+        const texture = this.scene.textures.get(atlasKey);
+        const frame = texture.get(frameId);
+        if (!frame || frame.name === "__BASE") return null;
+        const source = texture.getSourceImage() as HTMLImageElement;
+        const canvas = document.createElement("canvas");
+        canvas.width = 32;
+        canvas.height = 32;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return null;
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(source, frame.cutX, frame.cutY, frame.width, frame.height, 0, 0, 32, 32);
+        const dataUrl = canvas.toDataURL("image/png");
+        this.iconCache.set(speciesId, dataUrl);
+        return dataUrl;
+    }
+
+    private getTypeIconDataUrl(typeKey: string): string | null {
+        const atlasKey = Utils.getLocalizedSpriteKey("types");
+        if (!this.scene.textures.exists(atlasKey)) return null;
+        const texture = this.scene.textures.get(atlasKey);
+        const frame = texture.get(typeKey.toLowerCase());
+        if (!frame || frame.name === "__BASE") return null;
+        const source = texture.getSourceImage() as HTMLImageElement;
+        const canvas = document.createElement("canvas");
+        canvas.width = frame.width;
+        canvas.height = frame.height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return null;
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(source, frame.cutX, frame.cutY, frame.width, frame.height, 0, 0, frame.width, frame.height);
+        return canvas.toDataURL("image/png");
+    }
+
+    private getRivalIconDataUrl(trainerType: number): string | null {
+        const config = trainerConfigs[trainerType];
+        if (!config) return null;
+        const spriteKey = config.getSpriteKey(false, false);
+        if (!this.scene.textures.exists(spriteKey)) return null;
+        const texture = this.scene.textures.get(spriteKey);
+        const frameNames = texture.getFrameNames();
+        if (!frameNames || frameNames.length === 0) return null;
+        const lastFrame = frameNames[frameNames.length - 1];
+        const frame = texture.get(lastFrame);
+        if (!frame || frame.name === "__BASE") return null;
+        const source = texture.getSourceImage() as HTMLImageElement;
+        const canvas = document.createElement("canvas");
+        canvas.width = 64;
+        canvas.height = 64;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return null;
+        ctx.imageSmoothingEnabled = false;
+        const scale = Math.min(64 / frame.width, 64 / frame.height);
+        const w = frame.width * scale;
+        const h = frame.height * scale;
+        const x = (64 - w) / 2;
+        const y = (64 - h) / 2;
+        ctx.drawImage(source, frame.cutX, frame.cutY, frame.width, frame.height, x, y, w, h);
+        return canvas.toDataURL("image/png");
+    }
+
+    private createTypeIconGrid(fieldKey: string): void {
+        if (!this.formContainer) return;
+        const target = this.getAppendTarget();
+        const excludedTypes = ["UNKNOWN", "ALL", "STELLAR", "SMITTY", "GLITCH", "GEN_ONE"];
+        const typeKeys = Object.keys(Type)
+            .filter(key => isNaN(Number(key)) && !excludedTypes.includes(key));
+
+        const grid = document.createElement('div');
+        grid.style.display = 'flex';
+        grid.style.flexWrap = 'wrap';
+        grid.style.gap = '4px';
+        grid.style.marginBottom = '10px';
+        grid.style.padding = '6px';
+        grid.style.border = '1px solid #445566';
+        grid.style.borderRadius = '4px';
+        grid.style.backgroundColor = '#1a2a3a';
+
+        let selectedBtn: HTMLDivElement | null = null;
+        const isSecondary = fieldKey === "secondaryType";
+
+        if (isSecondary) {
+            const noneBtn = document.createElement('div');
+            noneBtn.style.padding = '4px 8px';
+            noneBtn.style.cursor = 'pointer';
+            noneBtn.style.borderRadius = '4px';
+            noneBtn.style.border = '1px solid transparent';
+            noneBtn.style.fontSize = '11px';
+            noneBtn.style.color = '#aaa';
+            noneBtn.textContent = 'None';
+            noneBtn.title = 'None';
+            noneBtn.addEventListener('click', () => {
+                if (selectedBtn) { selectedBtn.style.border = '1px solid transparent'; selectedBtn.style.backgroundColor = ''; }
+                noneBtn.style.border = '1px solid #88ccff';
+                noneBtn.style.backgroundColor = '#334466';
+                selectedBtn = noneBtn;
+                const select = this.formFields[fieldKey].input as HTMLSelectElement;
+                select.value = '-1';
+                select.dispatchEvent(new Event('change'));
+            });
+            grid.appendChild(noneBtn);
+        }
+
+        for (const key of typeKeys) {
+            const typeValue = Type[key];
+            const localName = i18next.t(`pokemonInfo:Type:${key}`);
+            const btn = document.createElement('div');
+            btn.style.width = '40px';
+            btn.style.height = '22px';
+            btn.style.display = 'flex';
+            btn.style.alignItems = 'center';
+            btn.style.justifyContent = 'center';
+            btn.style.cursor = 'pointer';
+            btn.style.borderRadius = '4px';
+            btn.style.border = '1px solid transparent';
+            btn.title = localName;
+
+            const img = document.createElement('img');
+            const typeDataUrl = this.getTypeIconDataUrl(key);
+            if (typeDataUrl) {
+                img.src = typeDataUrl;
+            } else {
+                img.src = `./images/types/${key.toLowerCase()}.png`;
+                img.onerror = () => { img.style.display = 'none'; btn.textContent = key.slice(0, 3); btn.style.fontSize = '9px'; btn.style.color = '#aaa'; };
+            }
+            img.style.width = '32px';
+            img.style.height = '14px';
+            img.style.objectFit = 'contain';
+            img.style.imageRendering = 'pixelated';
+            btn.appendChild(img);
+
+            btn.addEventListener('click', () => {
+                if (selectedBtn) { selectedBtn.style.border = '1px solid transparent'; selectedBtn.style.backgroundColor = ''; }
+                btn.style.border = '1px solid #88ccff';
+                btn.style.backgroundColor = '#334466';
+                selectedBtn = btn;
+                const select = this.formFields[fieldKey].input as HTMLSelectElement;
+                select.value = String(typeValue);
+                select.dispatchEvent(new Event('change'));
+            });
+
+            grid.appendChild(btn);
+        }
+
+        target.appendChild(grid);
+    }
+
+    private createSpeciesIconGrid(): void {
+        if (!this.formContainer) return;
+        const appendTarget = this.getAppendTarget();
+        const container = document.createElement('div');
+        container.style.marginBottom = '15px';
+
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.placeholder = i18next.t("modGlitchCreateFormUi:fields.speciesSearch", { defaultValue: "Search species..." });
+        searchInput.style.width = '100%';
+        searchInput.style.padding = '6px 10px';
+        searchInput.style.marginBottom = '8px';
+        searchInput.style.backgroundColor = '#223344';
+        searchInput.style.color = '#ffffff';
+        searchInput.style.border = '1px solid #6688aa';
+        searchInput.style.borderRadius = '4px';
+        searchInput.style.fontSize = '13px';
+        container.appendChild(searchInput);
+
+        const grid = document.createElement('div');
+        grid.style.display = 'grid';
+        grid.style.gridTemplateColumns = 'repeat(8, 1fr)';
+        grid.style.gap = '4px';
+        grid.style.maxHeight = '180px';
+        grid.style.overflowY = 'auto';
+        grid.style.padding = '4px';
+        grid.style.border = '1px solid #445566';
+        grid.style.borderRadius = '4px';
+        grid.style.backgroundColor = '#1a2a3a';
+
+        const speciesKeys = Object.keys(Species)
+            .filter(key => isNaN(Number(key)) && key !== "NONE" && !key.includes("_FORM"));
+
+        let selectedCell: HTMLDivElement | null = null;
+
+        const cells: { el: HTMLDivElement; key: string; label: string }[] = [];
+
+        this.iconObserver = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+                if (!entry.isIntersecting) continue;
+                const cellEl = entry.target as HTMLDivElement;
+                const sid = Number(cellEl.dataset.speciesId);
+                if (isNaN(sid)) continue;
+                const imgEl = cellEl.querySelector("img") as HTMLImageElement;
+                if (!imgEl || imgEl.src) continue;
+                const dataUrl = this.getSpeciesIconDataUrl(sid);
+                if (dataUrl) {
+                    imgEl.src = dataUrl;
+                } else {
+                    imgEl.style.display = "none";
+                    cellEl.textContent = (cellEl.dataset.fallback || "???").slice(0, 3);
+                    cellEl.style.fontSize = "9px";
+                    cellEl.style.color = "#aaa";
+                }
+                this.iconObserver?.unobserve(cellEl);
+            }
+        }, { root: grid, rootMargin: "50px" });
+
+        for (const key of speciesKeys) {
+            const speciesId = Species[key];
+            const localName = i18next.t(`pokemon:${key.toLowerCase()}`);
+            const cell = document.createElement('div');
+            cell.style.width = '40px';
+            cell.style.height = '40px';
+            cell.style.display = 'flex';
+            cell.style.alignItems = 'center';
+            cell.style.justifyContent = 'center';
+            cell.style.cursor = 'pointer';
+            cell.style.borderRadius = '4px';
+            cell.style.border = '1px solid transparent';
+            cell.title = localName;
+            cell.dataset.speciesId = String(speciesId);
+            cell.dataset.fallback = key;
+
+            const img = document.createElement('img');
+            img.style.width = '32px';
+            img.style.height = '32px';
+            img.style.imageRendering = 'pixelated';
+            cell.appendChild(img);
+
+            cell.addEventListener('click', () => {
+                if (selectedCell) {
+                    selectedCell.style.border = '1px solid transparent';
+                    selectedCell.style.backgroundColor = '';
+                }
+                cell.style.border = '1px solid #88ccff';
+                cell.style.backgroundColor = '#334466';
+                selectedCell = cell;
+                const speciesSelect = this.formFields["species"].input as HTMLSelectElement;
+                speciesSelect.value = String(speciesId);
+                speciesSelect.dispatchEvent(new Event('change'));
+            });
+
+            grid.appendChild(cell);
+            this.iconObserver.observe(cell);
+            cells.push({ el: cell, key: key.toLowerCase(), label: localName.toLowerCase() });
+        }
+
+        searchInput.addEventListener('input', () => {
+            const term = searchInput.value.toLowerCase().trim();
+            for (const c of cells) {
+                const match = !term || c.key.includes(term) || c.label.includes(term);
+                c.el.style.display = match ? 'flex' : 'none';
+            }
+        });
+
+        container.appendChild(grid);
+        appendTarget.appendChild(container);
+    }
+
     private addActionButtons(): void {
         if (!this.formContainer) return;
 
         const buttonContainer = document.createElement('div');
-        buttonContainer.style.display = 'flex';
+        buttonContainer.style.display = 'none';
         buttonContainer.style.justifyContent = 'center';
         buttonContainer.style.marginTop = '25px';
         buttonContainer.style.gap = '20px';
+        this.actionButtonContainer = buttonContainer;
 
         const saveButton = document.createElement('button');
         saveButton.textContent = i18next.t("modGlitchCreateFormUi:buttons.saveAndAdd");
@@ -1047,6 +1600,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
 
         const cancelButton = document.createElement('button');
         cancelButton.textContent = i18next.t("modGlitchCreateFormUi:buttons.cancel");
+        cancelButton.dataset.role = 'cancel';
         cancelButton.style.backgroundColor = '#666666';
         cancelButton.style.color = '#ffffff';
         cancelButton.style.border = 'none';
@@ -1057,7 +1611,7 @@ export default class ModGlitchCreateFormUiHandler extends UiHandler {
 
         cancelButton.addEventListener('click', () => {
             this.clear();
-            this.scene.ui.setMode(Mode.TITLE);
+            this.scene.ui.revertMode();
         });
 
         buttonContainer.appendChild(saveButton);

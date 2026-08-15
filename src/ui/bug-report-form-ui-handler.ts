@@ -1,5 +1,5 @@
 import { ModalConfig, ModalUiHandler } from "./modal-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { TextStyle, addTextObject, addTextInputObject } from "./text";
 import { addWindow, WindowVariant } from "./ui-theme";
 import i18next from "i18next";

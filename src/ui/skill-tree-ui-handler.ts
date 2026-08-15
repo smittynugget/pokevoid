@@ -1,12 +1,14 @@
 import i18next from "i18next";
 import * as Utils from "#app/utils";
 import { createSporadicPattern } from "#app/utils";
+import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 import BattleScene from "#app/battle-scene";
 import { ModalUiHandler, ModalConfig } from "./modal-ui-handler";
 import { Mode } from "#app/ui/ui";
 import ModalMessageUiHandler from "./modal-message-ui-handler";
 import { addTextObject, addBBCodeTextObject, TextStyle, getBBCodeFrag } from "#app/ui/text";
 import { Button } from "#enums/buttons";
+import { Device } from "#enums/devices";
 import { ActiveSkillTreeData, SkillTreeNode, SkillTreeNodeState, SkillTreeRewardType, SkillTreeRarity } from "#app/system/skill-tree-data";
 import { SkillTreeUtils, isSkillTreeV2 } from "#app/system/skill-tree-utils";
 import { SkillTreeSelectors } from "#app/system/skill-tree-selectors";
@@ -26,13 +28,15 @@ import { FormChangeItem } from "#enums/form-change-items";
 import { getFormChangeItemSpriteFrame } from "../utils/form-change-item-sprite-utils";
 import { TrainerBondAbilityModifier, TeraAbilityModifier } from "#app/modifier/modifier";
 import { Abilities } from "#enums/abilities";
+import { Stat } from "#enums/stat";
+import { allAbilities } from "#app/data/ability";
 import { Species } from "#enums/species";
 import { Type } from "#app/data/type";
 import { getTypeRgb } from "#app/data/type";
 import { applyVoidBallRecolor, applyTypeBallRecolor } from "#app/data/pokeball";
 import { getPokemonSpecies, allSpecies } from "#app/data/pokemon-species";
 import { RewardType } from "#enums/reward-type";
-import { QuestUnlockables } from "#app/system/game-data";
+import { QuestUnlockables, ChampionSkillVersion } from "#app/system/game-data";
 import { getDisplayRarityForRewardType, SkillTreeNodeGenerator } from "#app/system/skill-tree-node-generator";
 import { SkillTreeGenerator } from "#app/system/skill-tree-generator";
 import { SkillTreeMode, PokemonSelection, SkillTreePhase } from "#app/phases/skill-tree-phase";
@@ -40,7 +44,7 @@ import { PlayableChampionData } from "#app/system/playable-champions";
 import { SkillTreeModifierPhase } from "#app/phases/skill-tree-modifier-phase";
 import { modifierTypes, getAttackTypeBoosterItemName, AddVoucherModifierType, AddTypeBallModifierType, ModifierTypeGenerator, PermaModifierType, TrainerBondAbilityModifierType, TeraAbilityModifierType, PermaMoneyModifierType } from "#app/modifier/modifier-type";
 import type { ModifierTypeFunc } from "#app/modifier/modifier-type";
-import { playGenericLevelUpAnimation, skipCurrentLevelUpAnimation } from "./level-up-animation";
+import { playGenericLevelUpAnimation, skipCurrentLevelUpAnimation, SkillRevealConfig } from "./level-up-animation";
 import { VoucherType, getVoucherTypeIcon } from "#app/system/voucher";
 import { PermaType, PermaDuration } from "#app/modifier/perma-modifiers";
 import { POKEMON_ALT_BUILDS, PokemonAltBuildId } from "#app/data/pokemon-alt-buid";
@@ -48,6 +52,8 @@ import { MoveUpgradeTooltipUtils } from "./move-upgrade-tooltip";
 import { allMoves } from "#app/data/move";
 import { EnhancedTutorial } from "./tutorial-registry";
 import Overrides from "#app/overrides";
+import { SmitomTipConfig } from "#app/ui/smitom-tip-ui-handler.js";
+import { DEBUG_FORCE_SMITOM_TUTORIAL } from "#app/overrides.js";
 
 export interface SkillTreeConfig {
   mode: SkillTreeMode;
@@ -59,6 +65,43 @@ export interface SkillTreeConfig {
   onClose?: () => void;
   onCancel?: () => void;
   phaseOnComplete?: (selections?: any[]) => void;
+}
+
+function buildChampionSpriteRevealConfig(
+  scene: BattleScene,
+  championId: string,
+  displayText: string
+): SkillRevealConfig {
+  const gender = scene.gameData.gender;
+  const key = ChampionUtils.getChampionSpriteKey(championId, gender);
+
+  let frame = "";
+  if (scene.textures.exists(key)) {
+    const frameNames = scene.textures.get(key).getFrameNames();
+    if (frameNames.includes("0001.png")) frame = "0001.png";
+  }
+
+  const resolvedId = (championId === "apollo_diana")
+    ? (gender === 0 ? "apollo" : "diana")
+    : championId;
+  const def = CHAMPION_DEFINITIONS[resolvedId] as any;
+  const previewScale = def?.ui?.previewScale ?? 1.0;
+  const revealScale = Math.min(((previewScale * 1.1) + 0.040) * 1.35, 2.0);
+  const offsetX = def?.ui?.skillTreeRootOffsetX ?? 0;
+  const offsetY = def?.ui?.skillTreeRootOffsetY ?? 0;
+
+  return {
+    rarity: SkillTreeRarity.LEGENDARY,
+    iconConfig: {
+      key,
+      frame,
+      scale: revealScale,
+      isChampionSprite: true,
+      offsetX,
+      offsetY,
+    },
+    skillName: displayText,
+  };
 }
 
 export default class SkillTreeUiHandler extends ModalUiHandler {
@@ -189,6 +232,25 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       BORDER_THICKNESS: 0.35,
     },
 
+    KEY_HINTS: {
+      BAR_COLOR: 0x000000,
+      BAR_BG_ALPHA: 0.4,
+      BAR_HEIGHT: 22,
+      BAR_Y_ABOVE_GAUGE: 2,
+      BAR_RADIUS: 4,
+      BAR_BORDER_THICKNESS: 0.35,
+      BAR_BORDER_COLOR: 0xffffff,
+      BAR_BORDER_ALPHA: 0.1,
+      BAR_X_OFFSET: 8,
+      ROW_HEIGHT: 8,
+      COL_WIDTH: 20,
+      KEY_SCALE_KB: 0.5,
+      KEY_SCALE_GP: 0.62,
+      NODE_ICON_BASE: 0.133,
+      GAP: 2,
+      PADDING: 4,
+    },
+
     ZOOM_LEVEL: {
       FONT_SIZE: "24px",
       X_OFFSET: 100,
@@ -210,13 +272,13 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       TITLE_BAR_Y: 0,
 
       RARITY_BAR_HEIGHT: 6,
-      RARITY_BAR_Y: 12,
+      RARITY_BAR_Y: 14,
 
       CONTENT_Y: 20,
       CONTENT_MIN_HEIGHT: 20,
 
       TITLE_TEXT_Y: 6,
-      RARITY_TEXT_Y: 15,
+      RARITY_TEXT_Y: 17,
 
       ICON_SIZE: 10,
       ICON_X_OFFSET: 8,
@@ -309,10 +371,12 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private connectionsLayer: Phaser.GameObjects.Container;
   private connectionGraphics: Phaser.GameObjects.Graphics;
   private connectionLines: Array<{ childId: string; parentId: string; g: Phaser.GameObjects.Graphics }> = [];
+  private connectionLineKeys: Set<string> = new Set();
   private hud: Phaser.GameObjects.Container;
   private tooltip: Phaser.GameObjects.Container;
   private instructionsContainer: Phaser.GameObjects.Container;
-  private tooltipBg: Phaser.GameObjects.Graphics;
+  private tooltipBg: Phaser.GameObjects.NineSlice;
+  private _tooltipPattern: ModalBackgroundHandle | null = null;
   private tooltipTitleBarBg: Phaser.GameObjects.Graphics;
   private tooltipRarityBarBg: Phaser.GameObjects.Graphics;
 
@@ -324,12 +388,16 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private nodeSprites: Map<string, Phaser.GameObjects.Container> = new Map();
   private selectedNodeId: string | null = null;
+  private focusPreviewAnchorId: string | null = null;
+  private currentFocusPreviewNodes: Set<string> = new Set();
+  private static readonly FOCUS_PREVIEW_HOPS = 2;
   private transform = { scale: SkillTreeUiHandler.UI_CONSTANTS.ZOOM.DEFAULT, tx: 0, ty: 0 };
   private subtitleText: Phaser.GameObjects.Text;
   private DEFAULT_ZOOM = SkillTreeUiHandler.UI_CONSTANTS.ZOOM.DEFAULT;
   private isPanning = false; private startX = 0; private startY = 0;
   private pointermoveHandler?: (p: Phaser.Input.Pointer) => void;
   private pointerupHandler?: () => void;
+  private wheelHandler?: (p: Phaser.Input.Pointer, g: any, dx: number, dy: number) => void;
 
   private titleContainer!: Phaser.GameObjects.Container;
   private titleBackground!: Phaser.GameObjects.Graphics;
@@ -348,6 +416,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private instructionsTextBg!: Phaser.GameObjects.Graphics;
   private zoomLevelText!: Phaser.GameObjects.Text;
   private currentInputMethod: string = "keyboard";
+  private navHintsLayer!: Phaser.GameObjects.Container;
+  private keyHintsContainer: Phaser.GameObjects.Container | null = null;
+  private keyHintsBarBg: Phaser.GameObjects.Graphics | null = null;
+  private quickNavTargets: (SkillTreeNode | null)[] = [null, null, null, null];
+  private keyHintsMode: "icons" | "text" = "icons";
 
   private static readonly SKILL_POINTS_LABEL_OFFSETS: Record<string, { x: number; y: number }> = {
     'en': { x: 0, y: 0 },
@@ -377,6 +450,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private isLevelUpAnimationActive: boolean = false;
   private debugDepthOverride: number = 0;
   private isEnhancedDebugMode: boolean = false;
+  private _selectionComplete: boolean = false;
 
   private nodeConnectionMap: Map<string, {
     parents: string[];
@@ -397,6 +471,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private championTypingContainer: Phaser.GameObjects.Container | null = null;
   private championTypeIcon1: Phaser.GameObjects.Sprite | null = null;
   private championTypeIcon2: Phaser.GameObjects.Sprite | null = null;
+  private championAffinityIcon: Phaser.GameObjects.Sprite | null = null;
+  private championAffinityLabel: Phaser.GameObjects.Text | null = null;
 
   private saveZoomPreference(zoom: number): void {
     try {
@@ -448,6 +524,16 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.championTypeIcon2.setScale(0.42);
     this.championTypeIcon2.setVisible(false);
     this.championTypingContainer.add(this.championTypeIcon2);
+    this.championAffinityIcon = this.scene.add.sprite(14, 0, "categories", "status");
+    this.championAffinityIcon.setOrigin(0.5, 0.5);
+    this.championAffinityIcon.setScale(0.7);
+    this.championAffinityIcon.setTint(0xC8A000);
+    this.championAffinityIcon.setVisible(false);
+    this.championTypingContainer.add(this.championAffinityIcon);
+    this.championAffinityLabel = addTextObject(this.scene, 14, 0, "", TextStyle.WINDOW, { fontSize: "42px", align: "center", stroke: "#000000", strokeThickness: 4 });
+    this.championAffinityLabel.setOrigin(0.5, 0.5);
+    this.championAffinityLabel.setVisible(false);
+    this.championTypingContainer.add(this.championAffinityLabel);
     this.skillTreeContainer.add(this.championTypingContainer);
 
     this.skillTreeContent = this.scene.add.container(this.getWidth() / 2, this.getHeight() / 2);
@@ -464,6 +550,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.nodesContainer = this.scene.add.container(0, 0);
     this.skillTreeContent.add(this.connectionsLayer);
     this.skillTreeContent.add(this.nodesContainer);
+    this.navHintsLayer = this.scene.add.container(0, 0);
+    this.skillTreeContent.add(this.navHintsLayer);
 
     this.hud = this.scene.add.container(0, 0);
     this.skillTreeContainer.add(this.hud);
@@ -484,9 +572,14 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     super.updateContainer(config);
 
     if (!this.modalBackgroundCreated) {
-      this.modalBackgroundImage = this.scene.add.image(0, 0, "modal_bg");
-      this.modalBackgroundImage.setOrigin(0, 0);
-      this.modalContainer.addAt(this.modalBackgroundImage, 1);
+      if (this.scene.textures.exists("modal_bg") &&
+          this.scene.textures.get("modal_bg").key !== "__MISSING") {
+        this.modalBackgroundImage = this.scene.add.image(0, 0, "modal_bg");
+        this.modalBackgroundImage.setOrigin(0, 0);
+        this.modalContainer.addAt(this.modalBackgroundImage, 1);
+      } else {
+        super.createModalBackground();
+      }
       this.modalBackgroundCreated = true;
     }
 
@@ -499,6 +592,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         this.modalBg.width,
         this.modalBg.height
       );
+      this.modalBackgroundImage.setAlpha(0.75);
     }
 
     if (!this.modalPatternCreated) {
@@ -527,8 +621,136 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.applyChampionTypingToModalBackground();
   }
 
+  private static smitomSkillTreeDebugShown = false;
+  private static smitomRogueModeDebugShown = false;
+  private static smitomFirstNodeDebugShown = false;
+  private static smitomGlitchFormNodeDebugShown = false;
+
+  private triggerSmitomSkillTreeTipIfNeeded(): void {
+    const scene = this.scene as BattleScene;
+    const flags = scene.gameData.smitomTutorialFlags;
+    if (DEBUG_FORCE_SMITOM_TUTORIAL && !SkillTreeUiHandler.smitomSkillTreeDebugShown) {
+      SkillTreeUiHandler.smitomSkillTreeDebugShown = true;
+      flags["skill_tree_welcome"] = false;
+    }
+    if (!flags["skill_tree_welcome"]) {
+      scene.time.delayedCall(350, () => {
+        if (scene.ui.getMode() !== Mode.SKILL_TREE) return;
+        const tipConfig: SmitomTipConfig = {
+          tutorialKey: "skill_tree_welcome",
+          title: i18next.t("tutorial:smitomTip.skillTree.title"),
+          texts: [
+            i18next.t("tutorial:smitomTip.skillTree.1"),
+            i18next.t("tutorial:smitomTip.skillTree.2"),
+          ],
+          offerReplay: true,
+          onComplete: () => {
+            scene.gameData.smitomTutorialFlags["skill_tree_welcome"] = true;
+            scene.gameData.saveSystem();
+          }
+        };
+        scene.ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
+      });
+    }
+  }
+
+  private triggerSmitomRogueModeTipIfNeeded(node: SkillTreeNode): void {
+    const scene = this.scene as BattleScene;
+    const flags = scene.gameData.smitomTutorialFlags;
+    if (DEBUG_FORCE_SMITOM_TUTORIAL && !SkillTreeUiHandler.smitomRogueModeDebugShown) {
+      SkillTreeUiHandler.smitomRogueModeDebugShown = true;
+      flags["skill_tree_rogue_mode"] = false;
+    }
+    if (node.rewardData?.type !== SkillTreeRewardType.SIGNATURE_POKEMON && node.rewardData?.type !== SkillTreeRewardType.GENERAL_POKEMON) return;
+    if (flags["skill_tree_rogue_mode"]) return;
+    scene.time.delayedCall(350, () => {
+      if (scene.ui.getMode() !== Mode.SKILL_TREE) return;
+      const tipConfig: SmitomTipConfig = {
+        tutorialKey: "skill_tree_rogue_mode",
+        title: i18next.t("tutorial:smitomTip.skillTreeRogueMode.title"),
+        texts: [
+          i18next.t("tutorial:smitomTip.skillTreeRogueMode.1"),
+          i18next.t("tutorial:smitomTip.skillTreeRogueMode.2"),
+        ],
+        offerReplay: true,
+        onComplete: () => {
+          scene.gameData.smitomTutorialFlags["skill_tree_rogue_mode"] = true;
+          scene.gameData.saveSystem();
+        }
+      };
+      scene.ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
+    });
+  }
+
+  private triggerSmitomFreeNodeTipIfNeeded(node: SkillTreeNode): void {
+    if (!node?.rewardData?.data?.starterMysteryNode) return;
+    const scene = this.scene as BattleScene;
+    const flags = scene.gameData.smitomTutorialFlags;
+    if (DEBUG_FORCE_SMITOM_TUTORIAL && !SkillTreeUiHandler.smitomFirstNodeDebugShown) {
+      SkillTreeUiHandler.smitomFirstNodeDebugShown = true;
+      flags["skill_tree_first_node"] = false;
+    }
+    if (flags["skill_tree_first_node"]) return;
+    scene.time.delayedCall(350, () => {
+      if (scene.ui.getMode() !== Mode.SKILL_TREE) return;
+      const tipConfig: SmitomTipConfig = {
+        tutorialKey: "skill_tree_first_node",
+        title: i18next.t("tutorial:smitomTip.skillTreeFirstNode.title"),
+        texts: [
+          i18next.t("tutorial:smitomTip.skillTreeFirstNode.1"),
+          i18next.t("tutorial:smitomTip.skillTreeFirstNode.2"),
+          i18next.t("tutorial:smitomTip.skillTreeFirstNode.3"),
+          i18next.t("tutorial:smitomTip.skillTreeFirstNode.4"),
+          i18next.t("tutorial:smitomTip.skillTreeFirstNode.5"),
+          i18next.t("tutorial:smitomTip.skillTreeFirstNode.6"),
+          i18next.t("tutorial:smitomTip.skillTreeFirstNode.7"),
+        ],
+        offerReplay: true,
+        onComplete: () => {
+          scene.gameData.smitomTutorialFlags["skill_tree_first_node"] = true;
+          scene.gameData.saveSystem();
+        }
+      };
+      scene.ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
+    });
+  }
+
+  private triggerSmitomGlitchFormNodeTipIfNeeded(node: SkillTreeNode): void {
+    if (!node?.rewardData?.data?.starterGlitchRunNode) return;
+    const scene = this.scene as BattleScene;
+    const flags = scene.gameData.smitomTutorialFlags;
+    if (DEBUG_FORCE_SMITOM_TUTORIAL && !SkillTreeUiHandler.smitomGlitchFormNodeDebugShown) {
+      SkillTreeUiHandler.smitomGlitchFormNodeDebugShown = true;
+      flags["skill_tree_glitch_form_node"] = false;
+    }
+    if (flags["skill_tree_glitch_form_node"]) return;
+    scene.time.delayedCall(350, () => {
+      if (scene.ui.getMode() !== Mode.SKILL_TREE) return;
+      const tipConfig: SmitomTipConfig = {
+        tutorialKey: "skill_tree_glitch_form_node",
+        title: i18next.t("tutorial:smitomTip.skillTreeGlitchFormNode.title"),
+        texts: [
+          i18next.t("tutorial:smitomTip.skillTreeGlitchFormNode.1"),
+          i18next.t("tutorial:smitomTip.skillTreeGlitchFormNode.2"),
+        ],
+        offerReplay: true,
+        onComplete: () => {
+          scene.gameData.smitomTutorialFlags["skill_tree_glitch_form_node"] = true;
+          scene.gameData.saveSystem();
+        }
+      };
+      scene.ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
+    });
+  }
+
   private applyChampionTypingToModalBackground(): void {
     if (!this.modalBackgroundImage) return;
+
+    const championId = this.config?.activeSkillTree?.championId || this.config?.championData?.id;
+    if (championId && ChampionUtils.getChampionAffinityLabel(championId)) {
+      this.modalBackgroundImage.clearTint();
+      return;
+    }
 
     const t1 = this.config?.championData?.type1;
     const t2 = this.config?.championData?.type2;
@@ -766,28 +988,31 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.zoomLevelText.setAlpha(c.ZOOM_LEVEL.ALPHA);
       this.hud.add(this.zoomLevelText);
     }
+    this.setKeyHintsMode("icons");
   }
 
   private setupTooltip(): void {
     const c = SkillTreeUiHandler.UI_CONSTANTS.TOOLTIP;
-    this.tooltipBg = this.scene.add.graphics();
+
+    this.tooltipBg = this.scene.add.nineslice(0, 0, "tooltip_info", undefined, 120, 167, 12, 12, 12, 12);
+    this.tooltipBg.setOrigin(0, 0);
     this.tooltip.add(this.tooltipBg);
     this.tooltipTitleBarBg = this.scene.add.graphics();
     this.tooltip.add(this.tooltipTitleBarBg);
     this.tooltipRarityBarBg = this.scene.add.graphics();
     this.tooltip.add(this.tooltipRarityBarBg);
     this.tooltipTitle = addTextObject(this.scene, c.MIN_WIDTH / 2, c.TITLE_TEXT_Y, "", TextStyle.WINDOW, {
-      fontSize: c.TITLE_FONT_SIZE, fontStyle: "bold" });
+      fontSize: c.TITLE_FONT_SIZE });
     this.tooltipTitle.setOrigin(0.5, 0.5);
 
     this.tooltipRarity = addTextObject(this.scene, c.MIN_WIDTH / 2, c.RARITY_TEXT_Y, "", TextStyle.WINDOW, {
       fontSize: "30px" });
     this.tooltipRarity.setOrigin(0.5, 0.5);
-    this.tooltipDesc = addBBCodeTextObject(this.scene, c.PADDING, c.CONTENT_Y + 2, "", TextStyle.WINDOW, {
+    this.tooltipDesc = addBBCodeTextObject(this.scene, c.PADDING + 1, c.CONTENT_Y + 2, "", TextStyle.WINDOW, {
       fontSize: "36px" });
-    this.tooltipCost = addTextObject(this.scene, c.PADDING, c.CONTENT_Y + 10, "", TextStyle.WINDOW, {
+    this.tooltipCost = addTextObject(this.scene, c.PADDING + 1, c.CONTENT_Y + 10, "", TextStyle.WINDOW, {
       fontSize: "36px" });
-    this.tooltipPrereq = addTextObject(this.scene, c.PADDING, c.CONTENT_Y + 18, "", TextStyle.WINDOW, {
+    this.tooltipPrereq = addTextObject(this.scene, c.PADDING + 1, c.CONTENT_Y + 18, "", TextStyle.WINDOW, {
       fontSize: "32px" });
     this.tooltipPrereq.setColor("#ffdd44");
 
@@ -796,23 +1021,34 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.tooltip.add(this.tooltipDesc);
     this.tooltip.add(this.tooltipCost);
     this.tooltip.add(this.tooltipPrereq);
+
+    this._tooltipPattern = attachModalBackground(
+      this.scene as BattleScene,
+      this.tooltip,
+      () => ({ bgX: 0, bgY: 0, bgWidth: this.tooltipBg.width, bgHeight: this.tooltipBg.height }),
+      { mask: false, alphaMultiplier: 0.6, getTarget: () => this.tooltipBg }
+    );
+  }
+
+  private isPointerInputAllowed(): boolean {
+    return this.active && !this.isLevelUpAnimationActive && (this.scene as BattleScene).ui.getMode() === Mode.SKILL_TREE;
   }
 
   private setupControls(): void {
-
     this.cleanupControls();
+
     this.skillTreeContent.setInteractive(new Phaser.Geom.Rectangle(-15000, -15000, 30000, 30000), Phaser.Geom.Rectangle.Contains);
     this.skillTreeContent.on('pointerdown', (p: Phaser.Input.Pointer) => {
+      if (!this.isPointerInputAllowed()) return;
       if (p.leftButtonDown()) {
-
         this.hideTooltip();
         this.isPanning = true;
         this.startX = p.x;
         this.startY = p.y;
       }
     });
-
     this.pointermoveHandler = (p: Phaser.Input.Pointer) => {
+      if (!this.isPointerInputAllowed()) return;
       if (!this.isPanning) return;
       const deltaX = (p.x - this.startX) * SkillTreeUiHandler.UI_CONSTANTS.PAN.DRAG_SENSITIVITY;
       const deltaY = (p.y - this.startY) * SkillTreeUiHandler.UI_CONSTANTS.PAN.DRAG_SENSITIVITY;
@@ -826,7 +1062,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     this.scene.input.on('pointermove', this.pointermoveHandler);
     this.scene.input.on('pointerup', this.pointerupHandler);
-    this.scene.input.on('wheel', (p: Phaser.Input.Pointer, _g: any, _dx: number, dy: number) => {
+    this.wheelHandler = (_p: Phaser.Input.Pointer, _g: any, _dx: number, dy: number) => {
+      if (!this.isPointerInputAllowed()) return;
       this.hideTooltip();
       const c = SkillTreeUiHandler.UI_CONSTANTS.ZOOM;
       const dir = Math.sign(dy);
@@ -839,10 +1076,15 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.transform.scale = newScale;
       this.DEFAULT_ZOOM = newScale;
       this.applyTransform();
-    });
+    };
+    this.scene.input.on('wheel', this.wheelHandler);
   }
 
   private cleanupControls(): void {
+    if (this.skillTreeContent) {
+      this.skillTreeContent.off('pointerdown');
+      this.skillTreeContent.disableInteractive();
+    }
     if (this.pointermoveHandler) {
       this.scene.input.off('pointermove', this.pointermoveHandler);
       this.pointermoveHandler = undefined;
@@ -850,6 +1092,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     if (this.pointerupHandler) {
       this.scene.input.off('pointerup', this.pointerupHandler);
       this.pointerupHandler = undefined;
+    }
+    if (this.wheelHandler) {
+      this.scene.input.off('wheel', this.wheelHandler);
+      this.wheelHandler = undefined;
     }
   }
 
@@ -867,6 +1113,16 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.championTypeIcon2.setScale(0.42);
       this.championTypeIcon2.setVisible(false);
       this.championTypingContainer.add(this.championTypeIcon2);
+      this.championAffinityIcon = this.scene.add.sprite(14, 0, "categories", "status");
+      this.championAffinityIcon.setOrigin(0.5, 0.5);
+      this.championAffinityIcon.setScale(0.7);
+      this.championAffinityIcon.setTint(0xC8A000);
+      this.championAffinityIcon.setVisible(false);
+      this.championTypingContainer.add(this.championAffinityIcon);
+      this.championAffinityLabel = addTextObject(this.scene, 14, 0, "", TextStyle.WINDOW, { fontSize: "42px", align: "center", stroke: "#000000", strokeThickness: 4 });
+      this.championAffinityLabel.setOrigin(0.5, 0.5);
+      this.championAffinityLabel.setVisible(false);
+      this.championTypingContainer.add(this.championAffinityLabel);
       this.skillTreeContainer.add(this.championTypingContainer);
       this.skillTreeContainer.bringToTop(this.titleContainer);
       this.skillTreeContainer.bringToTop(this.championTypingContainer);
@@ -929,6 +1185,9 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         if (saved.selectedNodeId && typeof saved.selectedNodeId === "string") {
           this.selectedNodeId = saved.selectedNodeId;
         }
+        if (saved.focusPreviewAnchorId && typeof saved.focusPreviewAnchorId === "string") {
+          this.focusPreviewAnchorId = saved.focusPreviewAnchorId;
+        }
       } else {
         const savedZoom = this.loadZoomPreference();
         if (savedZoom !== null) {
@@ -941,19 +1200,30 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     } catch {}
     this.selections = [];
     this.generateSkillTree();
+    const isPokemonSelectionFresh = this.config?.mode === SkillTreeMode.POKEMON_SELECTION
+      && (this.config?.activeSkillTree?.selectedPokemonPicks?.length ?? 0) === 0;
+    if (isPokemonSelectionFresh) {
+      this.selectedNodeId = "root_0";
+      this.focusPreviewAnchorId = "root_0";
+    }
     this.renderTree();
     this.updateNodeStatesAndRender();
     if (!hadSaved) this.fitViewToVisibleNodes();
-    this.updateHUD();
+    const hasPurchasedNodeId = !!((this.scene as BattleScene).gameData as any)?.tempSkillTreeTransform?.purchasedNodeId;
+    const isPurchaseReturn = hasPurchasedNodeId && args[0]?.shouldPlayPurchaseAnimation;
+    this.updateHUD(isPurchaseReturn && hasPurchasedNodeId);
     this.updateInstructionsOpacity();
+
     this.startWaveAnimation();
 
     this.setupControls();
+
     if (!this.selectedNodeId) {
       const visibleNodes = this.getVisibleNodes();
       if (visibleNodes.length > 0) {
         const rootNode = visibleNodes.find(n => n.id === "root_0" || n.depth === 0);
         this.selectedNodeId = rootNode ? rootNode.id : visibleNodes[0].id;
+        this.updateFocusPreviewAnchor(this.selectedNodeId);
         this.updateNodeStatesAndRender();
       }
     } else {
@@ -965,9 +1235,14 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         const rootNode = visibleNodes.find(n => n.id === "root_0" || n.depth === 0);
         this.selectedNodeId = rootNode ? rootNode.id : (visibleNodes.length > 0 ? visibleNodes[0].id : null);
         if (this.selectedNodeId) {
+          this.updateFocusPreviewAnchor(this.selectedNodeId);
           this.updateNodeStatesAndRender();
         }
       }
+    }
+
+    if (this.selectedNodeId && !this.focusPreviewAnchorId) {
+      this.focusPreviewAnchorId = this.selectedNodeId;
     }
 
     const gd = (this.scene as BattleScene).gameData as any;
@@ -978,7 +1253,12 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       if (purchasedNode) {
         this.updateNodeVisual(purchasedNode);
         this.updateNodeStatesAndRender();
-        this.updateHUD();
+        this.updateHUD(true);
+        this.playUnlockEffect(purchasedNode, 0, async () => {
+          await this.batchAutoLevelUpIfAffordable();
+        });
+      } else {
+        this.updateHUD(false);
       }
 
       delete gd.tempSkillTreeTransform.purchasedNodeId;
@@ -989,20 +1269,58 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.updateHUD();
       delete gd.tempSkillTreeTransform.treeLeveledUp;
     }
+
+    if (args[0]?.shouldPlayPurchaseAnimation && !this.autoBatchLevelUpInProgress && this.config) {
+      const ast = this.config.activeSkillTree;
+      if (ast && ast.tokens >= SkillTreeUtils.getTokenCostForNextLevel(ast.treeLevel)) {
+        (this.scene as BattleScene).time.delayedCall(500, () => {
+          if (!this.autoBatchLevelUpInProgress) {
+            this.batchAutoLevelUpIfAffordable();
+          }
+        });
+      }
+    }
     try {
       if (this.selectedNodeId) {
         const selected = this.nodes.find(n => n.id === this.selectedNodeId);
         if (selected) {
           this.panToNode(selected, 0, true);
+          this.updateFocusHighlight(this.selectedNodeId);
         }
       }
     } catch {}
+
+    this.triggerSmitomSkillTreeTipIfNeeded();
 
     return true;
   }
 
   private updateChampionTypingIcons(): void {
     if (!this.championTypingContainer || !this.championTypeIcon1 || !this.championTypeIcon2) return;
+
+    const championId = this.config?.activeSkillTree?.championId || this.config?.championData?.id;
+    const affinityText = championId ? ChampionUtils.getChampionAffinityLabel(championId) : null;
+
+    if (affinityText) {
+      this.championTypingContainer.setVisible(true);
+      this.championTypeIcon1.setVisible(false);
+      this.championTypeIcon2.setVisible(false);
+      if (this.championAffinityIcon) {
+        this.championAffinityIcon.setVisible(true);
+      }
+      if (this.championAffinityLabel) {
+        this.championAffinityLabel.setText(affinityText);
+        this.championAffinityLabel.setVisible(true);
+      }
+      return;
+    }
+
+    if (this.championAffinityIcon) {
+      this.championAffinityIcon.setVisible(false);
+    }
+    if (this.championAffinityLabel) {
+      this.championAffinityLabel.setVisible(false);
+    }
 
     const t1 = this.config?.championData?.type1;
     const t2 = this.config?.championData?.type2;
@@ -1035,11 +1353,19 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.modalBackgroundCreated = false;
     }
 
+    if (this.modalPatternOverlay) {
+      this.modalPatternOverlay.destroy();
+      this.modalPatternOverlay = null;
+      this.modalPatternCreated = false;
+    }
+
     if (this.championTypingContainer) {
       this.championTypingContainer.destroy(true);
       this.championTypingContainer = null;
       this.championTypeIcon1 = null;
       this.championTypeIcon2 = null;
+      this.championAffinityIcon = null;
+      this.championAffinityLabel = null;
     }
     if (this.isEnhancedDebugMode) {
       try {
@@ -1055,11 +1381,14 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
     try {
       const gd = (this.scene as BattleScene).gameData as any;
+      const prev = gd.tempSkillTreeTransform || {};
       gd.tempSkillTreeTransform = {
+        ...prev,
         scale: this.transform.scale,
         tx: this.transform.tx,
         ty: this.transform.ty,
-        selectedNodeId: this.selectedNodeId
+        selectedNodeId: this.selectedNodeId,
+        focusPreviewAnchorId: this.focusPreviewAnchorId
       };
       this.saveZoomPreference(this.transform.scale);
     } catch {}
@@ -1070,7 +1399,13 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.nodeSprites.clear();
     this.connectionsLayer.removeAll(true);
     this.nodesContainer.removeAll(true);
+    this.navHintsLayer?.removeAll(true);
+    this.keyHintsContainer?.removeAll(true);
+    this.keyHintsBarBg?.clear();
+    this.quickNavTargets = [null, null, null, null];
     this.selectedNodeId = null;
+    this.focusPreviewAnchorId = null;
+    this.currentFocusPreviewNodes.clear();
     super.clear();
     this.modalMessage?.clear();
   }
@@ -1078,9 +1413,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   processInput(button: Button): boolean {
     this.updateInstructionsForInputMethod();
 
-    if (this.isLevelUpAnimationActive && (button === Button.SUBMIT || button === Button.ACTION || button === Button.CANCEL)) {
-      skipCurrentLevelUpAnimation();
-      this.isLevelUpAnimationActive = false;
+    if (this.isLevelUpAnimationActive) {
+      if (button === Button.SUBMIT || button === Button.ACTION || button === Button.CANCEL) {
+        skipCurrentLevelUpAnimation();
+      }
       return true;
     }
 
@@ -1092,10 +1428,18 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       case Button.ACTION: return this.handleAction();
       case Button.CANCEL: return this.handleCancel();
       case Button.SUBMIT: return this.handleComplete();
-      case Button.MENU: return Overrides.SKILL_TREE_DEBUG_CONTROLS_OVERRIDE ? this.handleMenu() : false;
-      case Button.STATS: return Overrides.SKILL_TREE_DEBUG_CONTROLS_OVERRIDE ? this.handleStatsTest() : false;
+      case Button.MENU:
+        if (Overrides.SKILL_TREE_DEBUG_CONTROLS_OVERRIDE) {
+          return this.handleMenu();
+        }
+        this.scene.ui.setOverlayMode(Mode.MENU);
+        return true;
+      case Button.STATS: return Overrides.SKILL_TREE_DEBUG_CONTROLS_OVERRIDE ? this.handleStatsTest() : this.handleQuickNav(1);
       case Button.CYCLE_SHINY: return this.handleZoomIn();
       case Button.CYCLE_FORM: return this.handleZoomOut();
+      case Button.CYCLE_ABILITY: return this.handleQuickNav(0);
+      case Button.CYCLE_VARIANT: return this.handleQuickNav(2);
+      case Button.VOIDEX: return this.handleQuickNav(3);
       default: return false;
     }
   }
@@ -1171,6 +1515,9 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       ui.revertMode();
       this.modalMessage?.clear();
       this.updateNodeStatesAndRender();
+      if (this.selectedNodeId) {
+        this.updateFocusHighlight(this.selectedNodeId);
+      }
     };
 
     const confirmExit = () => {
@@ -1200,36 +1547,454 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     });
   }
 
+  private getDirectionKeyIcon(direction: 'up' | 'down' | 'left' | 'right'): { textureKey: string; frame: string; scale: number } {
+    const buttonMap: Record<string, { button: string; fallback: string }> = {
+      up: { button: "BUTTON_UP", fallback: "KEY_ARROW_UP.png" },
+      down: { button: "BUTTON_DOWN", fallback: "KEY_ARROW_DOWN.png" },
+      left: { button: "BUTTON_LEFT", fallback: "KEY_ARROW_LEFT.png" },
+      right: { button: "BUTTON_RIGHT", fallback: "KEY_ARROW_RIGHT.png" },
+    };
+    let textureKey: string;
+    if (this.scene.inputMethod === "gamepad") {
+      textureKey = this.scene.inputController?.getConfig(
+        this.scene.inputController.selectedDevice[Device.GAMEPAD]
+      )?.padType || "keyboard";
+    } else {
+      textureKey = "keyboard";
+    }
+    const isGamepad = textureKey !== "keyboard" && this.scene.inputMethod !== "touch";
+    const entry = buttonMap[direction];
+    const frame = isGamepad
+      ? (this.scene.inputController?.getIconForLatestInputRecorded(entry.button) || entry.fallback)
+      : entry.fallback;
+    return { textureKey, frame, scale: isGamepad ? 3.375 : 2.75 };
+  }
+
+  private getNavigationTargets(nodeId: string): Record<'up' | 'down' | 'left' | 'right', SkillTreeNode | null> {
+    const result: Record<'up' | 'down' | 'left' | 'right', SkillTreeNode | null> = { up: null, down: null, left: null, right: null };
+    const currentNode = this.nodes.find(n => n.id === nodeId);
+    if (!currentNode) return result;
+    const visibleNodes = this.getVisibleNodes();
+    for (const dir of ['up', 'down', 'left', 'right'] as const) {
+      result[dir] = this.findConnectedNeighborInDirection(currentNode, visibleNodes, dir);
+    }
+    return result;
+  }
+
+  private computeQuickNavCandidates(dirTargetIds: Set<string>): SkillTreeNode[] {
+    if (!this.selectedNodeId) return [];
+    const currentNode = this.nodes.find(n => n.id === this.selectedNodeId);
+    if (!currentNode) return [];
+    const connections = this.nodeConnectionMap.get(currentNode.id);
+    if (!connections) return [];
+    const connectedIds = new Set([...connections.parents, ...connections.children, ...connections.siblings]);
+    const candidateNodes = this.nodes.filter(n =>
+      connectedIds.has(n.id) &&
+      n.id !== currentNode.id &&
+      !dirTargetIds.has(n.id) &&
+      n.state !== SkillTreeNodeState.LOCKED_HIDDEN &&
+      this.isNodeInViewport(n)
+    );
+    candidateNodes.sort((a, b) => {
+      const da = Math.abs(a.position.x - currentNode.position.x) + Math.abs(a.position.y - currentNode.position.y);
+      const db = Math.abs(b.position.x - currentNode.position.x) + Math.abs(b.position.y - currentNode.position.y);
+      return da - db;
+    });
+    return candidateNodes.slice(0, 4);
+  }
+
+  private getNextDepthBackfillNodes(excludeIds: Set<string>): SkillTreeNode[] {
+    const current = this.nodes.find(n => n.id === this.selectedNodeId);
+    if (!current) return [];
+    const targetDepth = current.depth + 1;
+    const pool = this.nodes.filter(n =>
+      n.depth === targetDepth &&
+      !excludeIds.has(n.id) &&
+      n.state !== SkillTreeNodeState.LOCKED_HIDDEN &&
+      this.isNodeInViewport(n)
+    );
+    pool.sort((a, b) => {
+      const da = Math.abs(a.position.x - current.position.x) + Math.abs(a.position.y - current.position.y);
+      const db = Math.abs(b.position.x - current.position.x) + Math.abs(b.position.y - current.position.y);
+      return da - db;
+    });
+    return pool;
+  }
+
+  private getLockedVisibleBackfillNodes(excludeIds: Set<string>): SkillTreeNode[] {
+    const current = this.nodes.find(n => n.id === this.selectedNodeId);
+    if (!current) return [];
+    const pool = this.nodes.filter(n =>
+      (n.state === SkillTreeNodeState.LOCKED_VISIBLE || n.state === SkillTreeNodeState.LOCKED_DETAILS) &&
+      !excludeIds.has(n.id) &&
+      this.isNodeInViewport(n)
+    );
+    pool.sort((a, b) => {
+      const da = Math.abs(a.position.x - current.position.x) + Math.abs(a.position.y - current.position.y);
+      const db = Math.abs(b.position.x - current.position.x) + Math.abs(b.position.y - current.position.y);
+      return da - db;
+    });
+    return pool;
+  }
+
+  private updateNavKeyHints(): void {
+    this.navHintsLayer?.removeAll(true);
+    if (!this.selectedNodeId) return;
+    if (this.isLevelUpAnimationActive) return;
+    if (this.scene.inputMethod === "touch") return;
+    const targets = this.getNavigationTargets(this.selectedNodeId);
+    const dirTargetIds = new Set<string>();
+    for (const dir of ['up', 'down', 'left', 'right'] as const) {
+      const target = targets[dir];
+      if (!target) continue;
+      dirTargetIds.add(target.id);
+      const sprite = this.nodeSprites.get(target.id);
+      if (sprite && !sprite.visible) continue;
+      const { textureKey, frame, scale } = this.getDirectionKeyIcon(dir);
+      const bgCircle = this.scene.add.graphics();
+      bgCircle.fillStyle(0x000000, 0.6);
+      bgCircle.fillCircle(target.position.x, target.position.y + this.NODE_SIZE / 2, 10);
+      this.navHintsLayer.add(bgCircle);
+      const icon = this.scene.add.sprite(target.position.x, target.position.y + this.NODE_SIZE / 2, textureKey);
+      icon.setFrame(frame);
+      icon.setScale(scale);
+      icon.setOrigin(0.5, 0.5);
+      this.navHintsLayer.add(icon);
+    }
+    const actionKeyDefs = [
+      { setting: "BUTTON_CYCLE_ABILITY", fallback: "E.png" },
+      { setting: "BUTTON_STATS", fallback: "C.png" },
+      { setting: "BUTTON_CYCLE_VARIANT", fallback: "V.png" },
+      { setting: "BUTTON_VOIDEX", fallback: "P.png" },
+    ];
+    const candidates = this.computeQuickNavCandidates(dirTargetIds);
+    for (let i = 0; i < 4; i++) {
+      this.quickNavTargets[i] = candidates[i] ?? null;
+    }
+    if (candidates.length < 4) {
+      const allUsedIds = new Set([...dirTargetIds, ...candidates.map(c => c.id), this.selectedNodeId]);
+      const backfill = this.getNextDepthBackfillNodes(allUsedIds);
+      for (let i = candidates.length; i < 4 && (i - candidates.length) < backfill.length; i++) {
+        this.quickNavTargets[i] = backfill[i - candidates.length];
+      }
+    }
+    const glitchNode = this.nodes.find(n => n.rewardData?.type === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN);
+    if (glitchNode
+        && glitchNode.state !== SkillTreeNodeState.LOCKED_HIDDEN
+        && this.isNodeInViewport(glitchNode)) {
+      const alreadyUsed = dirTargetIds.has(glitchNode.id)
+        || this.quickNavTargets.some(t => t?.id === glitchNode.id);
+      if (!alreadyUsed && glitchNode.id !== this.selectedNodeId) {
+        const emptySlot = this.quickNavTargets.findIndex(t => t === null);
+        if (emptySlot >= 0) {
+          this.quickNavTargets[emptySlot] = glitchNode;
+        }
+      }
+    }
+    if (this.quickNavTargets.some(t => t === null)) {
+      const allUsedForLocked = new Set([
+        ...dirTargetIds,
+        ...this.quickNavTargets.filter(t => t !== null).map(t => t!.id),
+        this.selectedNodeId,
+      ]);
+      const lockedBackfill = this.getLockedVisibleBackfillNodes(allUsedForLocked);
+      for (const node of lockedBackfill) {
+        const slot = this.quickNavTargets.findIndex(t => t === null);
+        if (slot < 0) break;
+        this.quickNavTargets[slot] = node;
+      }
+    }
+    for (let i = 0; i < 4; i++) {
+      const target = this.quickNavTargets[i];
+      if (!target) continue;
+      const spr = this.nodeSprites.get(target.id);
+      if (spr && !spr.visible) continue;
+      const { textureKey, frame, scale } = this.getActionKeyIcon(actionKeyDefs[i].setting, actionKeyDefs[i].fallback, true);
+      const bgCircle = this.scene.add.graphics();
+      bgCircle.fillStyle(0x000000, 0.6);
+      bgCircle.fillCircle(target.position.x, target.position.y + this.NODE_SIZE / 2, 10);
+      this.navHintsLayer.add(bgCircle);
+      const actionIcon = this.scene.add.sprite(target.position.x, target.position.y + this.NODE_SIZE / 2, textureKey);
+      actionIcon.setFrame(frame);
+      actionIcon.setScale(scale);
+      actionIcon.setOrigin(0.5, 0.5);
+      this.navHintsLayer.add(actionIcon);
+    }
+    if (this.keyHintsMode === "icons") {
+      this.buildKeyHintsRow();
+    }
+  }
+
+  private getActionKeyIcon(settingName: string, fallbackFrame: string, forNode = false): { textureKey: string; frame: string; scale: number } {
+    let textureKey: string;
+    if (this.scene.inputMethod === "gamepad") {
+      textureKey = this.scene.inputController?.getConfig(
+        this.scene.inputController.selectedDevice[Device.GAMEPAD]
+      )?.padType || "keyboard";
+    } else {
+      textureKey = "keyboard";
+    }
+    const isGamepad = textureKey !== "keyboard" && this.scene.inputMethod !== "touch";
+    const c = SkillTreeUiHandler.UI_CONSTANTS.KEY_HINTS;
+    const frame = isGamepad
+      ? (this.scene.inputController?.getIconForLatestInputRecorded(settingName) || fallbackFrame)
+      : fallbackFrame;
+    const scale = forNode
+      ? (isGamepad ? 3.375 : 2.75)
+      : (isGamepad ? c.KEY_SCALE_GP : c.KEY_SCALE_KB);
+    return { textureKey, frame, scale };
+  }
+
+  private isNodeInViewport(node: SkillTreeNode): boolean {
+    const pos = this.nodeScreenPosition(node);
+    const half = (this.NODE_SIZE / 2) * this.transform.scale;
+    return pos.x + half >= 0 && pos.x - half <= this.getWidth() &&
+           pos.y + half >= 0 && pos.y - half <= this.getHeight();
+  }
+
+  private getHudIconScale(node: SkillTreeNode, iconCfg: { scale: number }): number {
+    const kc = SkillTreeUiHandler.UI_CONSTANTS.KEY_HINTS;
+    if (node.id === "root_0" || node.depth === 0) {
+      return kc.NODE_ICON_BASE * this.getSkillTreeTrainerBondScale(this.config?.activeSkillTree?.championId ?? "");
+    }
+    return kc.NODE_ICON_BASE * iconCfg.scale;
+  }
+
+  private getNodeHudIconConfig(node: SkillTreeNode): { key: string; frame: string; scale: number; costText?: string; inverted?: boolean } {
+    switch (node.state) {
+      case SkillTreeNodeState.LOCKED_DETAILS:
+        if (node.isLevelLocked && node.branchUnlockCost != null) {
+          return { key: "items", frame: "ribbon_gen9", scale: 2.0, costText: `x${node.branchUnlockCost}` };
+        }
+        break;
+      case SkillTreeNodeState.LOCKED_VISIBLE:
+        if (!isSkillTreeV2() && !(node.isLevelLocked && node.requiredUnlockLevel != null)) {
+          return { key: "smitems", frame: "permaMoreRewardChoice", scale: 1.0 };
+        }
+        break;
+      case SkillTreeNodeState.LOCKED_HIDDEN:
+        if (this.scene.textures.exists("ui")) {
+          return { key: "ui", frame: "lock", scale: 0.5 };
+        }
+        return { key: "smitems", frame: "glitchPiece", scale: 0.045 };
+    }
+    if (node.rewardData?.type === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN) {
+      const ast = this.config?.activeSkillTree;
+      const eligible = ast ? this.countEligibleUnlockedNodesForRandomGlitchPrereq(ast) : 0;
+      const baseline = ast ? this.ensureRandomGlitchFormsBaseline(ast, node.id, eligible) : 0;
+      const required = ast ? this.getRandomGlitchFormsRequiredCount(ast, node.id) : 5;
+      const remaining = Math.max(0, required - Math.max(0, eligible - baseline));
+      const cfg = this.getNodeIconConfig(node);
+      return { key: cfg.key, frame: cfg.frame, scale: cfg.scale, costText: `x${remaining}`, inverted: cfg.inverted };
+    }
+    const cfg = this.getNodeIconConfig(node);
+    return { key: cfg.key, frame: cfg.frame, scale: cfg.scale, inverted: cfg.inverted };
+  }
+
+  private buildKeyHintsRow(): void {
+    if (this.keyHintsContainer) {
+      this.keyHintsContainer.removeAll(true);
+    }
+    if (this.keyHintsBarBg) {
+      this.keyHintsBarBg.clear();
+    }
+    if (!this.selectedNodeId || this.scene.inputMethod === "touch" || this.isLevelUpAnimationActive) {
+      if (this.keyHintsContainer) this.keyHintsContainer.setVisible(false);
+      if (this.keyHintsBarBg) this.keyHintsBarBg.setVisible(false);
+      return;
+    }
+    const kc = SkillTreeUiHandler.UI_CONSTANTS.KEY_HINTS;
+    const hc = SkillTreeUiHandler.UI_CONSTANTS.HUD;
+    const gaugeTopY = this.getHeight() - hc.Y_BOTTOM_OFFSET + hc.LEVEL_GAUGE.Y_OFFSET + hc.LEVEL_GAUGE.CONTAINER_Y - hc.LEVEL_GAUGE.BG_HEIGHT / 2;
+    const barY = gaugeTopY - kc.BAR_HEIGHT - kc.BAR_Y_ABOVE_GAUGE;
+    const targets = this.getNavigationTargets(this.selectedNodeId);
+    const dirOrder: ('up' | 'down' | 'left' | 'right')[] = ['left', 'up', 'down', 'right'];
+    let dirCount = 0;
+    for (const dir of dirOrder) {
+      const target = targets[dir];
+      if (!target) continue;
+      const spr = this.nodeSprites.get(target.id);
+      if (spr && !spr.visible) continue;
+      dirCount++;
+    }
+    const actionKeys: { setting: string; fallback: string }[] = [
+      { setting: "BUTTON_CYCLE_ABILITY", fallback: "E.png" },
+      { setting: "BUTTON_STATS", fallback: "C.png" },
+      { setting: "BUTTON_CYCLE_VARIANT", fallback: "V.png" },
+      { setting: "BUTTON_VOIDEX", fallback: "P.png" },
+    ];
+    let actionCount = 0;
+    for (let i = 0; i < 4; i++) {
+      if (this.quickNavTargets[i]) actionCount++;
+    }
+    const maxCols = Math.max(dirCount, actionCount);
+    if (maxCols === 0) {
+      if (this.keyHintsContainer) this.keyHintsContainer.setVisible(false);
+      if (this.keyHintsBarBg) this.keyHintsBarBg.setVisible(false);
+      return;
+    }
+    const barWidth = maxCols * kc.COL_WIDTH + kc.PADDING * 2;
+    const barX = this.getWidth() - barWidth - kc.BAR_X_OFFSET;
+    if (!this.keyHintsBarBg) {
+      this.keyHintsBarBg = this.scene.add.graphics();
+      this.hud.addAt(this.keyHintsBarBg, 0);
+    }
+    this.keyHintsBarBg.clear();
+    this.keyHintsBarBg.fillStyle(kc.BAR_COLOR, kc.BAR_BG_ALPHA);
+    this.keyHintsBarBg.fillRoundedRect(barX, barY, barWidth, kc.BAR_HEIGHT, kc.BAR_RADIUS);
+    this.keyHintsBarBg.lineStyle(kc.BAR_BORDER_THICKNESS, kc.BAR_BORDER_COLOR, kc.BAR_BORDER_ALPHA);
+    this.keyHintsBarBg.strokeRoundedRect(barX, barY, barWidth, kc.BAR_HEIGHT, kc.BAR_RADIUS);
+    this.keyHintsBarBg.setVisible(true);
+    if (!this.keyHintsContainer) {
+      this.keyHintsContainer = this.scene.add.container(0, 0);
+      this.hud.add(this.keyHintsContainer);
+    }
+    this.keyHintsContainer.removeAll(true);
+    this.keyHintsContainer.setVisible(true);
+    const isGamepad = this.scene.inputMethod === "gamepad";
+    const hudKeyScale = isGamepad ? kc.KEY_SCALE_GP : kc.KEY_SCALE_KB;
+    const contentH = 8.5;
+    const rowGap = 2;
+    const totalH = contentH * 2 + rowGap;
+    const topInset = (kc.BAR_HEIGHT - totalH) / 2;
+    const row1CenterY = barY + topInset + contentH / 2;
+    const row2CenterY = barY + topInset + contentH + rowGap + contentH / 2;
+    let colX = barX + kc.PADDING;
+    for (const dir of dirOrder) {
+      const target = targets[dir];
+      if (!target) continue;
+      const spr = this.nodeSprites.get(target.id);
+      if (spr && !spr.visible) continue;
+      const { textureKey, frame } = this.getDirectionKeyIcon(dir);
+      const keyIcon = this.scene.add.sprite(colX, row1CenterY, textureKey);
+      keyIcon.setFrame(frame);
+      keyIcon.setScale(hudKeyScale);
+      keyIcon.setOrigin(0, 0.5);
+      this.keyHintsContainer.add(keyIcon);
+      const iconCfg = this.getNodeHudIconConfig(target);
+      const nodeIconX = colX + keyIcon.displayWidth + kc.GAP;
+      const nodeIcon = iconCfg.frame
+        ? this.scene.add.sprite(nodeIconX, iconCfg.costText ? row1CenterY - 1 : row1CenterY, iconCfg.key, iconCfg.frame as any)
+        : this.scene.add.sprite(nodeIconX, iconCfg.costText ? row1CenterY - 1 : row1CenterY, iconCfg.key);
+      nodeIcon.setScale(this.getHudIconScale(target, iconCfg));
+      nodeIcon.setOrigin(0, 0.5);
+      this.keyHintsContainer.add(nodeIcon);
+      if (iconCfg.inverted && nodeIcon.postFX && typeof nodeIcon.postFX.addColorMatrix === 'function') {
+        nodeIcon.postFX.addColorMatrix().negative();
+      }
+      if (iconCfg.costText) {
+        const costCenterX = nodeIconX + nodeIcon.displayWidth / 2;
+        const costLabel = addTextObject(this.scene, costCenterX, row1CenterY - 1, iconCfg.costText, TextStyle.WINDOW, { fontSize: "31px" });
+        costLabel.setOrigin(0.5, 0);
+        costLabel.setStyle({ fontFamily: "pkmnems", color: "#FFFFFF", stroke: "#000000", strokeThickness: 4 });
+        costLabel.setShadow(0, 0, undefined as any, 0);
+        this.keyHintsContainer.add(costLabel);
+      }
+      colX += kc.COL_WIDTH;
+    }
+    let actionColX = barX + kc.PADDING;
+    for (let i = 0; i < 4; i++) {
+      const ak = actionKeys[i];
+      const candidate = this.quickNavTargets[i];
+      if (!candidate) continue;
+      const { textureKey, frame } = this.getActionKeyIcon(ak.setting, ak.fallback);
+      const keyIcon = this.scene.add.sprite(actionColX, row2CenterY, textureKey);
+      keyIcon.setFrame(frame);
+      keyIcon.setScale(hudKeyScale);
+      keyIcon.setOrigin(0, 0.5);
+      this.keyHintsContainer.add(keyIcon);
+      const iconCfg = this.getNodeHudIconConfig(candidate);
+      const nodeIconX = actionColX + keyIcon.displayWidth + kc.GAP;
+      const nodeIcon = iconCfg.frame
+        ? this.scene.add.sprite(nodeIconX, iconCfg.costText ? row2CenterY - 1 : row2CenterY, iconCfg.key, iconCfg.frame as any)
+        : this.scene.add.sprite(nodeIconX, iconCfg.costText ? row2CenterY - 1 : row2CenterY, iconCfg.key);
+      nodeIcon.setScale(this.getHudIconScale(candidate, iconCfg));
+      nodeIcon.setOrigin(0, 0.5);
+      this.keyHintsContainer.add(nodeIcon);
+      if (iconCfg.inverted && nodeIcon.postFX && typeof nodeIcon.postFX.addColorMatrix === 'function') {
+        nodeIcon.postFX.addColorMatrix().negative();
+      }
+      if (iconCfg.costText) {
+        const costCenterX = nodeIconX + nodeIcon.displayWidth / 2;
+        const costLabel = addTextObject(this.scene, costCenterX, row2CenterY - 1, iconCfg.costText, TextStyle.WINDOW, { fontSize: "31px" });
+        costLabel.setOrigin(0.5, 0);
+        costLabel.setStyle({ fontFamily: "pkmnems", color: "#FFFFFF", stroke: "#000000", strokeThickness: 4 });
+        costLabel.setShadow(0, 0, undefined as any, 0);
+        this.keyHintsContainer.add(costLabel);
+      }
+      actionColX += kc.COL_WIDTH;
+    }
+  }
+
+  private handleQuickNav(slotIndex: number): boolean {
+    const target = this.quickNavTargets[slotIndex];
+    if (!target) return false;
+    this.selectNode(target);
+    return true;
+  }
+
+  private setKeyHintsMode(mode: "icons" | "text"): void {
+    this.keyHintsMode = mode;
+    if (mode === "icons") {
+      this.instructionsText?.setVisible(false);
+      this.instructionsTextBg?.setVisible(false);
+      this.updateNavKeyHints();
+    } else {
+      this.keyHintsContainer?.setVisible(false);
+      this.keyHintsBarBg?.setVisible(false);
+      this.instructionsText?.setVisible(true);
+      this.instructionsTextBg?.setVisible(true);
+    }
+  }
+
   private handleNavigation(direction: 'left' | 'right' | 'up' | 'down'): boolean {
     const visibleNodes = this.getVisibleNodes();
     if (visibleNodes.length === 0) return false;
 
     if (!this.selectedNodeId) {
-
       const rootNode = visibleNodes.find(n => n.id === "root_0" || n.depth === 0);
       const startNode = rootNode || visibleNodes[0];
       this.modalMessage?.clear();
       this.selectedNodeId = startNode.id;
+      this.updateFocusPreviewAnchor(startNode.id);
       this.updateNodeStatesAndRender();
-
       this.showTooltipFor(startNode);
+      this.updateFocusHighlight(startNode.id);
       try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3", { volumeGroup: "ui" }); } catch {}
+      this.updateNavKeyHints();
       return true;
     }
 
     const currentNode = visibleNodes.find(n => n.id === this.selectedNodeId);
-    if (!currentNode) return false;
+    if (!currentNode) {
+      const rootNode = visibleNodes.find(n => n.id === "root_0" || n.depth === 0);
+      const startNode = rootNode || visibleNodes[0];
+      this.modalMessage?.clear();
+      this.selectedNodeId = startNode.id;
+      this.updateFocusPreviewAnchor(startNode.id);
+      this.updateNodeStatesAndRender();
+      this.showTooltipFor(startNode);
+      this.updateFocusHighlight(startNode.id);
+      try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3", { volumeGroup: "ui" }); } catch {}
+      this.updateNavKeyHints();
+      return true;
+    }
 
     const neighbor = this.findConnectedNeighborInDirection(currentNode, visibleNodes, direction);
     if (neighbor) {
       this.modalMessage?.clear();
       this.selectedNodeId = neighbor.id;
+      this.updateFocusPreviewAnchor(neighbor.id);
       this.updateNodeStatesAndRender();
-      this.highlightDependencyChain(neighbor.id);
+      this.updateFocusHighlight(neighbor.id);
       this.panToNode(neighbor, 700, true);
       this.showTooltipFor(neighbor);
       try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3", { volumeGroup: "ui" }); } catch {}
       this.checkApolloDianaTutorial(neighbor);
+      this.triggerSmitomRogueModeTipIfNeeded(neighbor);
+      this.triggerSmitomFreeNodeTipIfNeeded(neighbor);
+      this.triggerSmitomGlitchFormNodeTipIfNeeded(neighbor);
+      this.updateNavKeyHints();
       return true;
     }
 
@@ -1467,31 +2232,54 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private generateSkillTree(): void {
     if (!this.config) return;
     const gd = (this.scene as BattleScene).gameData as any;
-    const cached: SkillTreeNode[] | undefined = gd.tempSkillTreeNodes as SkillTreeNode[] | undefined;
+    let cached: SkillTreeNode[] | undefined = gd.tempSkillTreeNodes as SkillTreeNode[] | undefined;
     const isSelection = this.config.mode === SkillTreeMode.POKEMON_SELECTION;
     const isEnhancedDebug = this.config.mode === SkillTreeMode.DEBUG_ENHANCED;
     const requiredSelections = this.config.requiredSelections ?? 0;
     const picksCount = this.config.activeSkillTree.selectedPokemonPicks?.length ?? 0;
-    const pokemonSelectionComplete = requiredSelections > 0 ? picksCount >= requiredSelections : picksCount >= 2;
-    let mysteryOk = true;
-    if (isSelection && cached && cached.length) {
-      let mysteryExists = false;
-      let mysteryPurchased = false;
-      for (const n of cached) {
-        const isMystery = !!n?.rewardData?.data?.starterMysteryNode;
-        if (!isMystery) continue;
-        mysteryExists = true;
-        if (this.config.activeSkillTree.unlockedNodes?.has(n.id)) {
-          mysteryPurchased = true;
-          break;
+    const isJourneyTree = Array.isArray(cached) && cached.some(n => n?.id?.startsWith("depth1_journey_mystery_"));
+
+    let selectionComplete = false;
+    if (isSelection && isJourneyTree && cached) {
+      const primaryUnlocked = cached.filter(n =>
+        n?.id?.match(/^depth1_journey_mystery_[012]$/) &&
+        this.config!.activeSkillTree.unlockedNodes?.has(n.id)
+      ).length;
+      const fourthNode = cached.find(n => n?.id === "depth1_journey_mystery_3");
+      const fourthDone = !fourthNode || this.config!.activeSkillTree.unlockedNodes?.has(fourthNode.id);
+      selectionComplete = primaryUnlocked >= 2 && fourthDone;
+    } else {
+      const pokemonSelectionComplete = requiredSelections > 0 ? picksCount >= requiredSelections : picksCount >= 2;
+      let mysteryOk = true;
+      if (isSelection && cached && cached.length) {
+        let mysteryExists = false;
+        let mysteryPurchased = false;
+        for (const n of cached) {
+          const isMystery = !!n?.rewardData?.data?.starterMysteryNode;
+          if (!isMystery) continue;
+          mysteryExists = true;
+          if (this.config!.activeSkillTree.unlockedNodes?.has(n.id)) {
+            mysteryPurchased = true;
+            break;
+          }
         }
+        mysteryOk = !mysteryExists || mysteryPurchased;
       }
-      mysteryOk = !mysteryExists || mysteryPurchased;
+      selectionComplete = isSelection ? (pokemonSelectionComplete && mysteryOk) : pokemonSelectionComplete;
     }
-    const selectionComplete = isSelection ? (pokemonSelectionComplete && mysteryOk) : pokemonSelectionComplete;
+    this._selectionComplete = selectionComplete;
     const selectionBaseDepth = selectionComplete ? 2 : 1;
     const hasRoot = Array.isArray(cached) && cached.some(n => n.id === "root_0" || n.depth === 0);
     const hasDepth2Plus = Array.isArray(cached) && cached.some(n => typeof n.depth === "number" && n.depth >= 2);
+
+    const hasForcedRandomGlitchDepth1 =
+      Array.isArray(cached) &&
+      cached.some(n => n?.depth === 1 && n?.rewardData?.type === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN);
+    if (cached && cached.length && hasRoot && hasDepth2Plus && !hasForcedRandomGlitchDepth1) {
+      gd.tempSkillTreeNodes = undefined;
+      cached = undefined;
+    }
+
     if (cached && cached.length && (isSelection || isEnhancedDebug || (hasRoot && hasDepth2Plus))) {
       if (isSelection) {
         const maxDepth = this.debugDepthOverride > 0 ? this.debugDepthOverride : selectionBaseDepth;
@@ -1507,7 +2295,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     const ast = this.config.activeSkillTree;
     const hasPokemonDepth1 = Array.from(ast.unlockedNodes || []).some(id => typeof id === "string" && (id.startsWith("depth1_signature_") || id.startsWith("depth1_general_")));
     const hasPicks = (ast.selectedPokemonPicks?.length ?? 0) > 0;
-    const usePokemonSelectionTree = isSelection || hasPokemonDepth1 || hasPicks;
+    const hasJourneyDepth1 = Array.isArray(cached) && cached.some(n => n?.id?.startsWith("depth1_journey_mystery_"));
+    const usePokemonSelectionTree = isSelection || hasPokemonDepth1 || hasPicks || hasJourneyDepth1;
     const championData = this.config.championData;
     const applyPokemonSelectionTree = (fullTree: SkillTreeNode[]): SkillTreeNode[] => {
       const cachedDepth1 = Array.isArray(cached) ? cached.filter(n => n && n.depth === 1) : [];
@@ -1516,7 +2305,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         const originalDepth1NodeIds = fullTree.filter(n => n.depth === 1).map(n => n.id);
         cachedDepth1.forEach(n => filteredTree.push(n));
         const newPokemonNodes = cachedDepth1.filter(n =>
-          n && (n.rewardData?.type === SkillTreeRewardType.SIGNATURE_POKEMON || n.rewardData?.type === SkillTreeRewardType.GENERAL_POKEMON)
+          n && (n.rewardData?.type === SkillTreeRewardType.SIGNATURE_POKEMON || n.rewardData?.type === SkillTreeRewardType.GENERAL_POKEMON || !!n.rewardData?.data?.starterMysteryNode)
         );
         if (newPokemonNodes.length > 0) {
           filteredTree.forEach(node => {
@@ -1568,6 +2357,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         }
 
         const nodeCount = Math.max(1, signatureCount + generalCount);
+        const hasBountyUI = this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE;
+        const totalRingSlots = nodeCount + (hasBountyUI ? 2 : 1);
         const bottomSlot = Math.max(1, Math.round(nodeCount / 4));
         const mysteryIdx = signatureCount > 0 ? Math.min(signatureCount - 1, bottomSlot) : -1;
 
@@ -1670,7 +2461,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         let sigPlaced = 0;
 
         for (let i = 0; i < signatureCount; i++, placed++) {
-          const angle = (placed * 2 * Math.PI) / nodeCount;
+          const angle = (placed * 2 * Math.PI) / totalRingSlots;
           const nodeId = i === mysteryIdx ? `depth1_signature_mystery_${i}` : `depth1_signature_${i}`;
 
           if (i === mysteryIdx) {
@@ -1719,10 +2510,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         }
 
         for (let i = 0; i < generalCount; i++, placed++) {
-          const angle = (placed * 2 * Math.PI) / nodeCount;
-          const species = SkillTreeSelectors.pickGeneralPokemon(championData as any, this.scene as BattleScene) as unknown as number;
+          const angle = (placed * 2 * Math.PI) / totalRingSlots;
+          const effectiveChampion = nodeGen.resolveEffectiveChampionData(championData as any);
+          const species = SkillTreeSelectors.pickGeneralPokemon(effectiveChampion as any, this.scene as BattleScene) as unknown as number;
           const nodeId = `depth1_general_${i}`;
-          const rewardData = { type: SkillTreeRewardType.GENERAL_POKEMON, data: { species }, immediate: false };
+          const rewardData = { type: SkillTreeRewardType.GENERAL_POKEMON, data: { species, nodeTypes: nodeGen.currentNodeTypes.slice() }, immediate: false };
           const generatedDescription = nodeGen.getRewardDescription(rewardData);
           filteredTree.push({
             id: nodeId,
@@ -1732,12 +2524,49 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
             rarity: SkillTreeRarity.GREAT,
             state: SkillTreeNodeState.LOCKED_DETAILS,
             rewardData,
-            name: (allSpecies as any)?.[species]?.name ?? i18next.t("skillTree:descriptions.generalPokemon", { champion: ChampionUtils.getChampionDisplayName((championData as any).id) }),
+            name: (species ? getPokemonSpecies(species)?.name : undefined) ?? i18next.t("skillTree:descriptions.generalPokemon", { champion: ChampionUtils.getChampionDisplayName((championData as any).id) }),
             description: generatedDescription,
             cost: 1,
             isLegendary: false,
             unlocked: false,
           } as any);
+        }
+
+        const glitchAngle = (nodeCount * 2 * Math.PI) / totalRingSlots;
+        filteredTree.push({
+          id: "depth1_glitch_run_0",
+          depth: 1,
+          position: { x: Math.cos(glitchAngle) * radius, y: Math.sin(glitchAngle) * radius },
+          dependencies: ["root_0"],
+          rarity: SkillTreeRarity.LEGENDARY,
+          state: SkillTreeNodeState.LOCKED_HIDDEN,
+          rewardData: { type: SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN, data: { starterGlitchRunNode: true }, immediate: false },
+          name: i18next.t("skillTree:rewards.randomGlitchFormsForRun"),
+          description: i18next.t("skillTree:descriptions.randomGlitchFormsForRun"),
+          cost: 0,
+          isLegendary: false,
+          unlocked: false,
+        } as any);
+
+        if (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) {
+          const shouldAdd = Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE || Utils.randSeedInt(10000) < 185;
+          if (shouldAdd) {
+            const bountyAngle = ((nodeCount + 1) * 2 * Math.PI) / totalRingSlots;
+            filteredTree.push({
+              id: "depth1_bounty_0",
+              depth: 1,
+              position: { x: Math.cos(bountyAngle) * radius, y: Math.sin(bountyAngle) * radius },
+              dependencies: ["root_0"],
+              rarity: SkillTreeRarity.ROGUE,
+              state: SkillTreeNodeState.LOCKED_HIDDEN,
+              rewardData: { type: SkillTreeRewardType.BOUNTY_SELECT, data: { bountyNode: true }, immediate: false },
+              name: i18next.t("skillTree:rewards.bountyNode"),
+              description: i18next.t("skillTree:rewards.bountyNodeDesc"),
+              cost: 0,
+              isLegendary: false,
+              unlocked: false,
+            } as any);
+          }
         }
       }, 0, ast.seed.toString());
 
@@ -1806,8 +2635,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private renderTree(): void {
     this.connectionsLayer.removeAll(true);
     this.connectionLines = [];
+    this.connectionLineKeys.clear();
     this.nodesContainer.removeAll(true);
     this.nodeSprites.clear();
+    this.navHintsLayer?.removeAll(true);
 
     this.buildConnectionMap();
 
@@ -1846,6 +2677,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         g.strokePath();
         this.connectionsLayer.add(g);
         this.connectionLines.push({ childId: node.id, parentId: depId, g });
+        this.connectionLineKeys.add(`${depId}__${node.id}`);
       });
     });
 
@@ -1878,26 +2710,99 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     c.add(icon);
     c.setInteractive(new Phaser.Geom.Circle(0, 0, this.NODE_SIZE / 2), Phaser.Geom.Circle.Contains);
-    c.on('pointerover', () => this.showTooltipFor(node));
-    c.on('pointerout', () => this.hideTooltip());
-    c.on('pointerdown', () => this.selectNode(node));
+    c.on('pointerover', () => { if (this.isPointerInputAllowed()) this.showTooltipFor(node); });
+    c.on('pointerout', () => { if (this.isPointerInputAllowed()) this.hideTooltip(); });
+    c.on('pointerdown', () => { if (this.isPointerInputAllowed()) this.selectNode(node); });
     this.nodesContainer.add(c);
     this.nodeSprites.set(node.id, c);
     this.updateNodeVisual(node);
   }
 
-  private selectNode(node: SkillTreeNode): void {
-    if (this.selectedNodeId !== node.id) {
-      this.modalMessage?.clear();
+  private ensureConnectionLine(parentId: string, childId: string): void {
+    const key = `${parentId}__${childId}`;
+    if (this.connectionLineKeys.has(key)) {
+      return;
     }
-    this.selectedNodeId = node.id;
-    this.updateNodeStatesAndRender();
-    this.highlightDependencyChain(node.id);
-    this.hideTooltip();
+    if (!this.nodeSprites.has(parentId) || !this.nodeSprites.has(childId)) {
+      return;
+    }
+    const parent = this.nodes.find(n => n.id === parentId);
+    const child = this.nodes.find(n => n.id === childId);
+    if (!parent || !child) {
+      return;
+    }
+    const g = this.scene.add.graphics();
+    g.lineStyle(4, 0xaaaaaa, 0.9);
+    g.beginPath();
+    g.moveTo(parent.position.x, parent.position.y);
+    g.lineTo(child.position.x, child.position.y);
+    g.strokePath();
+    g.lineStyle(2, 0xffffff, 0.3);
+    g.beginPath();
+    g.moveTo(parent.position.x, parent.position.y);
+    g.lineTo(child.position.x, child.position.y);
+    g.strokePath();
+    this.connectionsLayer.add(g);
+    this.connectionLines.push({ childId, parentId, g });
+    this.connectionLineKeys.add(key);
+  }
 
+  private ensureRenderedForVisibleNodes(): void {
+    const visible = this.nodes.filter(n => n.state !== SkillTreeNodeState.LOCKED_HIDDEN);
+    visible.forEach(node => {
+      if (!this.nodeSprites.has(node.id)) {
+        this.renderNode(node);
+      }
+    });
+    visible.forEach(node => {
+      if (!node.dependencies?.length) {
+        return;
+      }
+      node.dependencies.forEach(depId => {
+        this.ensureConnectionLine(depId, node.id);
+      });
+    });
+  }
+
+  private updateFocusPreviewAnchor(nextSelectedId: string | null): void {
+    if (!nextSelectedId) {
+      this.focusPreviewAnchorId = null;
+      return;
+    }
+    if (!this.focusPreviewAnchorId) {
+      this.focusPreviewAnchorId = nextSelectedId;
+      return;
+    }
+    if (nextSelectedId === this.focusPreviewAnchorId) {
+      return;
+    }
+    if (this.currentFocusPreviewNodes.has(nextSelectedId)) {
+      return;
+    }
+    this.focusPreviewAnchorId = nextSelectedId;
+  }
+
+  private selectNode(node: SkillTreeNode): void {
+    if (this.selectedNodeId === node.id) {
+      this.handleAction();
+      return;
+    }
+    this.modalMessage?.clear();
+    this.selectedNodeId = node.id;
+    this.updateFocusPreviewAnchor(node.id);
+    this.updateNodeStatesAndRender();
+
+    this.updateFocusHighlight(node.id);
+
+    this.hideTooltip();
     this.panToNode(node, 700, true);
     try { (this.scene as BattleScene).playSound("battle_anims/PRSFX- Gear Up3", { volumeGroup: "ui" }); } catch {}
+    this.triggerSmitomRogueModeTipIfNeeded(node);
+    this.triggerSmitomFreeNodeTipIfNeeded(node);
+    this.triggerSmitomGlitchFormNodeTipIfNeeded(node);
+    this.updateNavKeyHints();
   }
+
   private getChampionIconConfig(): { key: string; frame: string; scale: number; xOffset: number; yOffset: number } {
     try {
       const championId = this.config?.activeSkillTree?.championId;
@@ -2099,16 +3004,19 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private repositionTextElements(tooltipWidth: number): void {
     const c = SkillTreeUiHandler.UI_CONSTANTS.TOOLTIP;
-    this.tooltipTitle.setPosition(tooltipWidth / 2, c.TITLE_TEXT_Y);
+
+    this.tooltipTitle.setPosition(tooltipWidth / 2, c.TITLE_TEXT_Y + 2);
     this.tooltipTitle.setOrigin(0.5, 0.5);
     this.tooltipRarity.setPosition(tooltipWidth / 2, c.RARITY_TEXT_Y);
     let currentY = c.CONTENT_Y + 2;
-    this.tooltipDesc.setPosition(c.PADDING, currentY);
+    this.tooltipDesc.setPosition(c.PADDING + 1, currentY);
     currentY += this.tooltipDesc.displayHeight + c.TEXT_SPACING;
-    this.tooltipCost.setPosition(c.PADDING, currentY);
+
+    this.tooltipCost.setPosition(c.PADDING + 1, currentY);
     currentY += this.tooltipCost.displayHeight + c.TEXT_SPACING;
+
     if (this.tooltipPrereq.text) {
-      this.tooltipPrereq.setPosition(c.PADDING, currentY);
+      this.tooltipPrereq.setPosition(c.PADDING + 1, currentY);
     }
   }
 
@@ -2210,6 +3118,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
         }
         return { key: "smitems", frame: "glitchModSoul", scale: 1.0 };
+      case SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN:
+        return { key: "smitems", frame: "glitchModSoul", scale: 1.0 };
       case SkillTreeRewardType.SKILL_POINTS:
         return { key: "items", frame: "ribbon_gen9", scale: 2.0 };
       case SkillTreeRewardType.SKILL_TREE_TOKENS:
@@ -2309,6 +3219,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         return { key: "items", frame: "rb", scale: 2.0 };
       case SkillTreeRewardType.PARTY_ABILITY_GRANT:
         return { key: "smitems", frame: "permaPartyAbility", scale: 1.0 };
+      case SkillTreeRewardType.BOUNTY_SELECT:
+        return { key: "smitems", frame: "quest", scale: 1.0 };
       default:
         return { key: "smitems", frame: "permaMoreRevive", scale: 1.0 };
     }
@@ -2363,7 +3275,45 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
         break;
       case SkillTreeNodeState.LOCKED_DETAILS:
-
+        if (node.isLevelLocked && node.branchUnlockCost != null) {
+          const detailsIconCfg = { key: "items", frame: "ribbon_gen9", scale: 2.0, xOffset: 0, yOffset: 0, inverted: false };
+          try {
+            if (detailsIconCfg.frame) {
+              icon.setTexture(detailsIconCfg.key, detailsIconCfg.frame as any);
+            } else {
+              icon.setTexture(detailsIconCfg.key);
+            }
+            icon.setScale(detailsIconCfg.scale);
+            icon.setPosition(detailsIconCfg.xOffset ?? 0, (detailsIconCfg.yOffset ?? 0) - 4);
+            if (detailsIconCfg.inverted) {
+              if (icon.postFX && typeof icon.postFX.addColorMatrix === 'function') {
+                icon.postFX.clear();
+                const colorMatrix = icon.postFX.addColorMatrix();
+                colorMatrix.negative();
+              }
+            } else {
+              if (icon.postFX) {
+                icon.postFX.clear();
+              }
+            }
+          } catch { }
+          bg.fillStyle(0x3a2a00);
+          bg.lineStyle(3, 0xFFCB05);
+          icon.setTint(0xcccccc);
+          let spLabel = c.list.find((child: any) => child?.name === "lockLabel") as Phaser.GameObjects.Text | undefined;
+          if (!spLabel) {
+            spLabel = (this.scene as any).add.text(0, 18, "", { fontSize: "32px", fontFamily: "pkmnems", color: "#FFFFFF", align: "center", stroke: "#000000", strokeThickness: 4 });
+            spLabel.setOrigin(0.5);
+            spLabel.name = "lockLabel";
+            c.add(spLabel);
+          }
+          spLabel.setStyle({ fontSize: "32px", fontFamily: "pkmnems", color: "#FFFFFF", align: "center", stroke: "#000000", strokeThickness: 4 });
+          spLabel.setOrigin(0.5);
+          spLabel.setPosition(0, 18);
+          spLabel.setText(`x${node.branchUnlockCost}`);
+          spLabel.setVisible(true);
+          break;
+        }
         const dependenciesMet = this.areNodeDependenciesMet(node);
         if (dependenciesMet) {
 
@@ -2414,6 +3364,61 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         }
         break;
       case SkillTreeNodeState.LOCKED_VISIBLE:
+        if (node.isLevelLocked && node.requiredUnlockLevel != null) {
+          const iconCfg = this.getNodeIconConfig(node);
+          try {
+            if (iconCfg.frame) {
+              icon.setTexture(iconCfg.key, iconCfg.frame as any);
+            } else {
+              icon.setTexture(iconCfg.key);
+            }
+            icon.setScale(iconCfg.scale);
+            icon.setPosition(iconCfg.xOffset ?? 0, (iconCfg.yOffset ?? 0) - 8);
+            if (iconCfg.inverted) {
+              if (icon.postFX && typeof icon.postFX.addColorMatrix === 'function') {
+                icon.postFX.clear();
+                const colorMatrix = icon.postFX.addColorMatrix();
+                colorMatrix.negative();
+              }
+            } else {
+              if (icon.postFX) {
+                icon.postFX.clear();
+              }
+            }
+          } catch { }
+          bg.fillStyle(0x3a2a00);
+          bg.lineStyle(3, 0x806000);
+          if (node.rewardData?.type === SkillTreeRewardType.VOID_BALL) {
+            applyVoidBallRecolor(this.scene as BattleScene, icon, true);
+          } else if (node.rewardData?.type === SkillTreeRewardType.TYPE_BALL_FILTERED && node.rewardData?.data?.ballType !== undefined) {
+            applyTypeBallRecolor(this.scene as BattleScene, icon, node.rewardData.data.ballType as Type, true);
+          }
+          icon.setTint(0x666666);
+
+          const showLevelLabel = !this.currentFocusPreviewNodes.has(node.id) &&
+            (node.id === this.selectedNodeId || node.id === this.focusPreviewAnchorId);
+          if (!showLevelLabel) {
+            const existingLabel = c.list.find((child: any) => child?.name === "lockLabel") as Phaser.GameObjects.Text | undefined;
+            if (existingLabel) {
+              existingLabel.setVisible(false);
+            }
+            break;
+          }
+
+          let lockLabel = c.list.find((child: any) => child?.name === "lockLabel") as Phaser.GameObjects.Text | undefined;
+          if (!lockLabel) {
+            lockLabel = (this.scene as any).add.text(0, 16, "", { fontSize: "20px", fontFamily: "pkmnems", color: "#FFD700", align: "center", stroke: "#000000", strokeThickness: 3 });
+            lockLabel.setOrigin(0.5);
+            lockLabel.name = "lockLabel";
+            c.add(lockLabel);
+          }
+          lockLabel.setStyle({ fontSize: "20px", fontFamily: "pkmnems", color: "#FFD700", align: "center", stroke: "#000000", strokeThickness: 3 });
+          lockLabel.setOrigin(0.5);
+          lockLabel.setPosition(0, 16);
+          lockLabel.setText(`Lvl ${node.requiredUnlockLevel}`);
+          lockLabel.setVisible(true);
+          break;
+        }
         if (isSkillTreeV2()) {
           const iconCfg = this.getNodeIconConfig(node);
           try {
@@ -2444,6 +3449,22 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
             applyVoidBallRecolor(this.scene as BattleScene, icon, true);
           } else if (node.rewardData?.type === SkillTreeRewardType.TYPE_BALL_FILTERED && node.rewardData?.data?.ballType !== undefined) {
             applyTypeBallRecolor(this.scene as BattleScene, icon, node.rewardData.data.ballType as Type, true);
+          }
+          if (node.rewardData?.type === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN) {
+            let glitchLabel = c.list.find((child: any) => child?.name === "glitchPrereqLabel") as Phaser.GameObjects.Text | undefined;
+            if (!glitchLabel) {
+              glitchLabel = (this.scene as any).add.text(0, 18, "", { fontSize: "32px", fontFamily: "pkmnems", color: "#FFFFFF", align: "center", stroke: "#000000", strokeThickness: 4 });
+              glitchLabel.setOrigin(0.5);
+              glitchLabel.name = "glitchPrereqLabel";
+              c.add(glitchLabel);
+            }
+            const ast = this.config?.activeSkillTree;
+            const eligible = ast ? this.countEligibleUnlockedNodesForRandomGlitchPrereq(ast) : 0;
+            const baseline = ast ? this.ensureRandomGlitchFormsBaseline(ast, node.id, eligible) : 0;
+            const required = ast ? this.getRandomGlitchFormsRequiredCount(ast, node.id) : 5;
+            const remaining = Math.max(0, required - Math.max(0, eligible - baseline));
+            glitchLabel.setText(`x${remaining}`);
+            glitchLabel.setVisible(true);
           }
         } else {
           bg.fillStyle(0x444444);
@@ -2480,9 +3501,17 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         }
         break;
     }
+    if (!node.isLevelLocked) {
+      const existingLabel = c.list.find((child: any) => child?.name === "lockLabel") as Phaser.GameObjects.Text | undefined;
+      if (existingLabel) existingLabel.setVisible(false);
+    }
+    if (node.state !== SkillTreeNodeState.LOCKED_VISIBLE || node.rewardData?.type !== SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN) {
+      const existingGlitchLabel = c.list.find((child: any) => child?.name === "glitchPrereqLabel") as Phaser.GameObjects.Text | undefined;
+      if (existingGlitchLabel) existingGlitchLabel.setVisible(false);
+    }
+
     bg.fillCircle(0, 0, this.NODE_SIZE / 2);
     bg.strokeCircle(0, 0, this.NODE_SIZE / 2);
-
     if ((node as any).isLegendary) {
 
       if (node.state === SkillTreeNodeState.UNLOCKED || node.state === SkillTreeNodeState.LOCKED_DETAILS) {
@@ -2504,11 +3533,59 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     (node as any).__previousState = node.state;
   }
 
+  private unlockLevelLockedNodes(ast: any): void {
+    if (!ast) return;
+    const sorted = [...this.nodes].sort((a, b) => a.depth - b.depth);
+    for (const node of sorted) {
+      if (!node.isLevelLocked || node.depth < 3) continue;
+      const parents = (node.dependencies || [])
+        .map((id: string) => this.nodes.find(n => n.id === id))
+        .filter((p: any): p is SkillTreeNode => p != null);
+      if (parents.some((p: SkillTreeNode) => !p.isLevelLocked)) {
+        node.isLevelLocked = false;
+        if (node.pendingRewardData) {
+          node.rewardData = node.pendingRewardData;
+          delete node.pendingRewardData;
+        }
+        delete node.branchUnlockCost;
+      }
+    }
+  }
+
+  private isAdjacentToUnlocked(node: any, ast: any): boolean {
+    if (!ast?.unlockedNodes) return false;
+    const unlockedSet = ast.unlockedNodes instanceof Set ? ast.unlockedNodes : new Set(ast.unlockedNodes);
+    if (node.depth === 2 && node.isLevelLocked) {
+      return this.isRingAngularNeighbor(node);
+    }
+    for (const depId of (node.dependencies || [])) {
+      if (unlockedSet.has(depId)) return true;
+    }
+    for (const other of this.nodes) {
+      if (!unlockedSet.has(other.id)) continue;
+      if ((other.dependencies || []).includes(node.id)) return true;
+    }
+    return false;
+  }
+
+  private isRingAngularNeighbor(node: SkillTreeNode): boolean {
+    if (node.ringIndex == null || node.depth !== 2) return false;
+    const ring = this.nodes.filter(n => n.depth === 2 && n.ringIndex != null);
+    const ringSize = node.ringSize ?? ring.length;
+    const opened = ring.filter(r => !r.isLevelLocked);
+    return opened.some(o => {
+      if (o.ringIndex == null) return false;
+      const d = Math.abs(node.ringIndex! - o.ringIndex!);
+      return Math.min(d, ringSize - d) === 1;
+    });
+  }
+
   private updateNodeStatesAndRender(): void {
     if (!this.config) return;
     const ast = this.config.activeSkillTree;
 
     if (this.isEnhancedDebugMode) {
+      this.currentFocusPreviewNodes.clear();
       this.nodes.forEach(node => {
         if (node.state !== SkillTreeNodeState.UNLOCKED) {
           node.state = SkillTreeNodeState.LOCKED_DETAILS;
@@ -2522,6 +3599,29 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.applyDepthFilter();
       return;
     }
+
+    this.unlockLevelLockedNodes(ast);
+
+    if (ast.unlockedBranches && ast.unlockedBranches.size > 0) {
+      for (const node of this.nodes) {
+        if (node.isLevelLocked && ast.unlockedBranches.has(node.id)) {
+          node.isLevelLocked = false;
+          node.cost = 0;
+          if (node.pendingRewardData) {
+            node.rewardData = node.pendingRewardData;
+            delete node.pendingRewardData;
+          }
+        }
+      }
+      if (ast.unlockedBranches.size > 0) {
+        for (const n of this.nodes) {
+          if (n.isLevelLocked && n.branchUnlockCost != null && n.branchUnlockCost < 4) {
+            n.branchUnlockCost = 4;
+          }
+        }
+      }
+    }
+
     const childrenMap = new Map<string, string[]>();
     this.nodes.forEach(node => {
       node.dependencies.forEach(depId => {
@@ -2572,8 +3672,14 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     if (isSkillTreeV2()) {
       this.updateNodeStatesV2(ast, childrenMap);
+      this.ensureRenderedForVisibleNodes();
       this.nodes.forEach(node => this.updateNodeVisual(node));
       this.applyDepthFilter();
+      if (this.selectedNodeId) {
+        this.updateFocusHighlight(this.selectedNodeId);
+      } else {
+        this.clearDependencyHighlights();
+      }
       return;
     }
     const allVisibleNodes = new Set([...depthVisibleNodes, ...dependencyVisibleNodes]);
@@ -2639,17 +3745,89 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.applyDepthFilter();
   }
 
+  private getForwardPreviewNodesByHops(
+    anchorId: string,
+    maxHops: number,
+    childrenMap: Map<string, string[]>,
+    shouldSkipNode: (node: SkillTreeNode) => boolean
+  ): Set<string> {
+    const result = new Set<string>();
+    const visited = new Set<string>();
+    const queue: Array<{ id: string; hops: number }> = [];
+    visited.add(anchorId);
+    queue.push({ id: anchorId, hops: 0 });
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+      if (current.hops >= maxHops) {
+        continue;
+      }
+      const children = childrenMap.get(current.id) || [];
+      for (const childId of children) {
+        if (visited.has(childId)) {
+          continue;
+        }
+        visited.add(childId);
+        const child = this.nodes.find(n => n.id === childId);
+        if (!child) {
+          continue;
+        }
+        if (shouldSkipNode(child)) {
+          continue;
+        }
+        result.add(childId);
+        queue.push({ id: childId, hops: current.hops + 1 });
+      }
+    }
+    return result;
+  }
+
   private updateNodeStatesV2(ast: ActiveSkillTreeData, childrenMap: Map<string, string[]>): void {
     const revealedNodes = new Set<string>();
+    const focusPreviewNodes = new Set<string>();
     const rootNode = this.nodes.find(n => n.depth === 0);
     if (rootNode && rootNode.state !== SkillTreeNodeState.UNLOCKED) {
       revealedNodes.add(rootNode.id);
     }
     const isPokemonSelectionMode = this.config?.mode === SkillTreeMode.POKEMON_SELECTION;
     const picksCount = ast.selectedPokemonPicks?.length ?? 0;
+    const isJourneyTree = this.nodes.some(n => n.id?.startsWith("depth1_journey_mystery_"));
+    const journeyPrimaryUnlocked = isJourneyTree ? this.nodes.filter(n =>
+      n.id?.match(/^depth1_journey_mystery_[012]$/) &&
+      n.state === SkillTreeNodeState.UNLOCKED
+    ).length : 0;
+
+    const shouldHideMysteryNode = (node: any): boolean => {
+      if (!isPokemonSelectionMode || !node.rewardData?.data?.starterMysteryNode) return false;
+      if (isJourneyTree) {
+        if (node.id === "depth1_journey_mystery_3") {
+          return journeyPrimaryUnlocked < 2;
+        }
+        return false;
+      }
+      return picksCount < 1;
+    };
+
+    const isHiddenPreSelectionNode = (node: SkillTreeNode): boolean =>
+      isPokemonSelectionMode && !this._selectionComplete &&
+      (!!node.rewardData?.data?.starterGlitchRunNode || !!node.rewardData?.data?.bountyNode);
+
     this.nodes.forEach(node => {
       if ((node.depth === 0 || node.depth === 1) && node.state !== SkillTreeNodeState.UNLOCKED) {
-        if (isPokemonSelectionMode && !!node.rewardData?.data?.starterMysteryNode && picksCount < 1) {
+        if (shouldHideMysteryNode(node)) {
+          return;
+        }
+        if (isHiddenPreSelectionNode(node)) {
+          return;
+        }
+        revealedNodes.add(node.id);
+      }
+    });
+    this.nodes.forEach(node => {
+      if (node.depth === 2 && node.state !== SkillTreeNodeState.UNLOCKED) {
+        if (shouldHideMysteryNode(node)) {
+          return;
+        }
+        if (isHiddenPreSelectionNode(node)) {
           return;
         }
         revealedNodes.add(node.id);
@@ -2662,7 +3840,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         connectedNodes.forEach(nodeId => {
           const node = this.nodes.find(n => n.id === nodeId);
           if (node && node.state === SkillTreeNodeState.LOCKED_HIDDEN) {
-            if (isPokemonSelectionMode && !!node.rewardData?.data?.starterMysteryNode && picksCount < 1) {
+            if (shouldHideMysteryNode(node)) {
+              return;
+            }
+            if (isHiddenPreSelectionNode(node)) {
               return;
             }
             revealedNodes.add(nodeId);
@@ -2670,7 +3851,49 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         });
       }
     });
-    this.setFinalNodeStatesV2(ast, revealedNodes);
+
+    this.currentFocusPreviewNodes.clear();
+    const selectedId = this.selectedNodeId;
+    const anchorId = this.focusPreviewAnchorId ?? selectedId;
+    if (selectedId) {
+      const selNode = this.nodes.find(n => n.id === selectedId);
+      if (!selNode || (!shouldHideMysteryNode(selNode) && !isHiddenPreSelectionNode(selNode))) {
+        revealedNodes.add(selectedId);
+      }
+    }
+    if (anchorId) {
+      const ancNode = this.nodes.find(n => n.id === anchorId);
+      if (!ancNode || (!shouldHideMysteryNode(ancNode) && !isHiddenPreSelectionNode(ancNode))) {
+        revealedNodes.add(anchorId);
+      }
+      const anchorNode = this.nodes.find(n => n.id === anchorId);
+      if (anchorNode && anchorNode.depth > 1) {
+        const baselineRevealed = new Set(revealedNodes);
+        const previewIds = this.getForwardPreviewNodesByHops(
+          anchorId,
+          SkillTreeUiHandler.FOCUS_PREVIEW_HOPS,
+          childrenMap,
+          (n: SkillTreeNode): boolean => {
+            if (shouldHideMysteryNode(n)) {
+              return true;
+            }
+            if (isHiddenPreSelectionNode(n)) {
+              return true;
+            }
+            return false;
+          }
+        );
+        previewIds.forEach(id => {
+          revealedNodes.add(id);
+          if (!baselineRevealed.has(id)) {
+            focusPreviewNodes.add(id);
+            this.currentFocusPreviewNodes.add(id);
+          }
+        });
+      }
+    }
+
+    this.setFinalNodeStatesV2(ast, revealedNodes, focusPreviewNodes);
   }
 
   private getConnectedNodesWithinDepthV2(startNodeId: string, maxDepth: number, childrenMap: Map<string, string[]>): Set<string> {
@@ -2693,22 +3916,110 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     return result;
   }
 
-  private setFinalNodeStatesV2(ast: ActiveSkillTreeData, revealedNodes: Set<string>): void {
+  private setFinalNodeStatesV2(ast: ActiveSkillTreeData, revealedNodes: Set<string>, focusPreviewNodes: Set<string>): void {
+    const eligibleUnlockedCount = this.countEligibleUnlockedNodesForRandomGlitchPrereq(ast);
+
     this.nodes.forEach(node => {
       if (node.state === SkillTreeNodeState.UNLOCKED) return;
-      if (revealedNodes.has(node.id)) {
-        const dependenciesMet = this.checkDependenciesMetV2(node, ast);
-        const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
-        const meetsLevelRequirement = (ast.treeLevel || 1) >= requiredLevel;
-        if (dependenciesMet && meetsLevelRequirement) {
+
+      if (!revealedNodes.has(node.id)) {
+        node.state = SkillTreeNodeState.LOCKED_HIDDEN;
+        return;
+      }
+      if (node.rewardData?.type === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN) {
+        this.ensureRandomGlitchFormsBaseline(ast, node.id, eligibleUnlockedCount);
+      }
+
+      if (node.isLevelLocked) {
+        const ast2 = this.config?.activeSkillTree;
+        if (this.isAdjacentToUnlocked(node, ast2)) {
           node.state = SkillTreeNodeState.LOCKED_DETAILS;
         } else {
-          node.state = SkillTreeNodeState.LOCKED_VISIBLE;
+          if (node.id === this.selectedNodeId || node.id === this.focusPreviewAnchorId) {
+            node.state = SkillTreeNodeState.LOCKED_VISIBLE;
+          } else {
+            node.state = focusPreviewNodes.has(node.id) ? SkillTreeNodeState.LOCKED_VISIBLE : SkillTreeNodeState.LOCKED_HIDDEN;
+          }
         }
-      } else {
-        node.state = SkillTreeNodeState.LOCKED_HIDDEN;
+        return;
       }
+
+      const dependenciesMet = this.checkDependenciesMetV2(node, ast);
+      const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
+      const meetsLevelRequirement = (ast.treeLevel || 1) >= requiredLevel;
+
+      if (!dependenciesMet || !meetsLevelRequirement) {
+        node.state = SkillTreeNodeState.LOCKED_VISIBLE;
+        return;
+      }
+
+      if (node.rewardData?.type === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN) {
+        const baseline = this.ensureRandomGlitchFormsBaseline(ast, node.id, eligibleUnlockedCount);
+        const required = this.getRandomGlitchFormsRequiredCount(ast, node.id);
+        const isEligible = (eligibleUnlockedCount - baseline) >= required;
+        node.state = isEligible ? SkillTreeNodeState.LOCKED_DETAILS : SkillTreeNodeState.LOCKED_VISIBLE;
+        return;
+      }
+
+      if (this.config?.mode === SkillTreeMode.POKEMON_SELECTION &&
+          this.isJourneyPrimaryMystery(node) &&
+          this.getJourneyPrimaryUnlockedCount() >= 2 &&
+          !ast.unlockedNodes.has(node.id)) {
+        node.state = SkillTreeNodeState.LOCKED_VISIBLE;
+        return;
+      }
+
+      node.state = SkillTreeNodeState.LOCKED_DETAILS;
     });
+  }
+
+  private countEligibleUnlockedNodesForRandomGlitchPrereq(ast: ActiveSkillTreeData): number {
+    const unlocked = ast.unlockedNodes;
+    if (!unlocked) return 0;
+
+    let count = 0;
+    for (const node of this.nodes) {
+      if (!unlocked.has(node.id)) continue;
+      if (node.id === "root_0" || node.depth <= 1) continue;
+
+      const rt = node.rewardData?.type;
+      if (rt === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN) continue;
+
+      count += 1;
+    }
+    return count;
+  }
+
+  private getRandomGlitchFormsRequiredCount(ast: ActiveSkillTreeData, nodeId: string): number {
+    const effectData = (ast.skillEffects as any)?.get?.(nodeId);
+    const timesUnlocked = (effectData && typeof effectData === "object") ? (effectData.timesUnlocked || 0) : 0;
+    const baseRequired = Overrides.SKILL_TREE_RANDOM_GLITCH_PREREQ_REQUIRED_COUNT_OVERRIDE || 5;
+    return timesUnlocked === 0 ? baseRequired : 10;
+  }
+
+  private getRandomGlitchFormsBaselineEligibleUnlockedCount(ast: ActiveSkillTreeData, nodeId: string): number | null {
+    try {
+      const v = (ast.skillEffects as any)?.get?.(nodeId);
+      if (typeof v === "number") return v;
+      if (v && typeof v === "object" && typeof (v as any).baselineEligibleUnlockedCount === "number") {
+        return (v as any).baselineEligibleUnlockedCount;
+      }
+    } catch {}
+    return null;
+  }
+
+  private ensureRandomGlitchFormsBaseline(ast: ActiveSkillTreeData, nodeId: string, eligibleUnlockedCount: number): number {
+    if (!(ast as any).skillEffects) {
+      (ast as any).skillEffects = new Map();
+    }
+    const existing = this.getRandomGlitchFormsBaselineEligibleUnlockedCount(ast, nodeId);
+    if (typeof existing === "number") {
+      return existing;
+    }
+
+    const payload = { baselineEligibleUnlockedCount: eligibleUnlockedCount };
+    (ast.skillEffects as any).set(nodeId, payload);
+    return eligibleUnlockedCount;
   }
 
   private checkDependenciesMetV2(node: SkillTreeNode, ast: ActiveSkillTreeData): boolean {
@@ -2729,6 +4040,9 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private applyDepthFilter(): void {
     if (!this.config) return;
     const ast = this.config.activeSkillTree;
+    const selectedId = this.selectedNodeId;
+    const anchorId = this.focusPreviewAnchorId;
+    const previewNodes = this.currentFocusPreviewNodes;
     this.nodes.forEach(node => {
       const c = this.nodeSprites.get(node.id);
       if (c) {
@@ -2754,6 +4068,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       } else if (isSkillTreeV2()) {
         childVisible = !!child && child.state !== SkillTreeNodeState.LOCKED_HIDDEN;
         parentVisible = !!parent && parent.state !== SkillTreeNodeState.LOCKED_HIDDEN;
+        const childIsPreviewEndpoint = line.childId === selectedId || line.childId === anchorId || previewNodes.has(line.childId);
+        const parentIsPreviewEndpoint = line.parentId === selectedId || line.parentId === anchorId || previewNodes.has(line.parentId);
+        if (child?.isLevelLocked && child?.depth === 2 && !this.isRingAngularNeighbor(child) && !childIsPreviewEndpoint) childVisible = false;
+        if (parent?.isLevelLocked && parent?.depth === 2 && !this.isRingAngularNeighbor(parent) && !parentIsPreviewEndpoint) parentVisible = false;
       } else {
         childVisible = !!child && child.state !== SkillTreeNodeState.LOCKED_HIDDEN && child.depth <= (ast.maxVisibleDepth || 0);
         parentVisible = !!parent && parent.state !== SkillTreeNodeState.LOCKED_HIDDEN && parent.depth <= (ast.maxVisibleDepth || 0);
@@ -2765,7 +4083,71 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private showTooltipFor(node: SkillTreeNode): void {
     this.tooltipTargetNodeId = node.id;
-    switch (node.state) {
+
+    if (isSkillTreeV2() && node.isLevelLocked && node.state !== SkillTreeNodeState.LOCKED_HIDDEN) {
+      this.tooltipTitle.setText(i18next.t("skillTree:nodeStates.lockedPotential"));
+      this.tooltipDesc.setStroke("", 0);
+      const requirementsV2: string[] = [];
+      const requiredLevelV2 = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
+      const currentLevelV2 = this.config?.activeSkillTree.treeLevel || 1;
+      if (currentLevelV2 < requiredLevelV2) {
+        requirementsV2.push(i18next.t("skillTree:prereq.treeLevelRequired", { level: requiredLevelV2 }));
+      }
+      const unmetDepsV2 = node.dependencies.filter(depId => !this.config?.activeSkillTree.unlockedNodes.has(depId));
+      if (unmetDepsV2.length > 0) {
+        const depNamesV2 = unmetDepsV2.map(depId => {
+          const depNode = this.nodes.find(n => n.id === depId);
+          if (!depNode || depNode.state === SkillTreeNodeState.LOCKED_HIDDEN) return "???";
+          return this.getRewardDisplayName(depNode) || depNode.name;
+        });
+        if ((node as any).requiresAllDependencies) {
+          requirementsV2.push(i18next.t("skillTree:prereq.unlockAllPrior", { skills: depNamesV2.join(", ") }));
+        } else {
+          requirementsV2.push(i18next.t("skillTree:prereq.unlockOnePrior", { skills: depNamesV2.join(", ") }));
+        }
+      }
+      const prereqV2 = this.evaluateNodePrerequisites(node, true);
+      if (!prereqV2.ok && !this.shouldUseIncompatibleFallback(node)) {
+        if (prereqV2.messages.length) {
+          requirementsV2.push(...prereqV2.messages);
+        } else {
+          requirementsV2.push(i18next.t("skillTree:prereq.notMet"));
+        }
+      }
+      if (node.branchUnlockCost != null) {
+        requirementsV2.push(i18next.t("skillTree:prereq.useSkillPointsToUnlock", { cost: node.branchUnlockCost }));
+      }
+      if (node.rewardData?.type === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN) {
+        const ast = this.config?.activeSkillTree;
+        if (ast) {
+          const eligibleUnlockedCount = this.countEligibleUnlockedNodesForRandomGlitchPrereq(ast);
+          const baseline = this.ensureRandomGlitchFormsBaseline(ast, node.id, eligibleUnlockedCount);
+          const required = this.getRandomGlitchFormsRequiredCount(ast, node.id);
+          const progress = Math.max(0, eligibleUnlockedCount - baseline);
+          const remaining = Math.max(0, required - progress);
+          if (remaining > 0) {
+            requirementsV2.push(i18next.t("skillTree:prereq.randomGlitchFormsForRunUnlockMore", { remaining, progress, required }));
+          }
+        }
+      }
+      if (node.branchUnlockCost != null) {
+        const canAffordBranch = (this.config?.activeSkillTree.skillPoints || 0) >= node.branchUnlockCost;
+        this.tooltipCost.setText(i18next.t("skillTree:nodeCost", { cost: node.branchUnlockCost }));
+        this.tooltipCost.setColor(canAffordBranch ? "#00ff00" : "#ff0000");
+      } else {
+        const nodeCostV2 = this.getNodeCost(node);
+        this.tooltipCost.setText(i18next.t("skillTree:nodeCost", { cost: nodeCostV2 }));
+        this.tooltipCost.setColor("#888888");
+      }
+      if (requirementsV2.length > 0) {
+        const requirementsLine = `[color=#ff6b6b]${i18next.t("skillTree:prereq.header")}[/color] [color=#ffdd44]${requirementsV2.join(", ")}[/color]`;
+        this.tooltipDesc.setText(requirementsLine);
+      } else {
+        this.tooltipDesc.setText("");
+      }
+      this.tooltipPrereq.setText("");
+    } else {
+      switch (node.state) {
       case SkillTreeNodeState.LOCKED_HIDDEN:
         this.tooltipTitle.setText(node.name);
         this.tooltipDesc.setText(i18next.t("skillTree:nodeStates.hidden"));
@@ -2775,6 +4157,14 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         break;
 
       case SkillTreeNodeState.LOCKED_VISIBLE:
+        if (node.isLevelLocked && node.requiredUnlockLevel != null) {
+          this.tooltipTitle.setText(i18next.t("skillTree:nodeStates.locked"));
+          this.tooltipDesc.setText(i18next.t("skillTree:prereq.treeLevelRequired", { level: node.requiredUnlockLevel }));
+          this.tooltipCost.setText("");
+          this.tooltipPrereq.setText("");
+          this.tooltipRarity.setVisible(false);
+          break;
+        }
         if (isSkillTreeV2()) {
           const displayNameV2 = this.getRewardDisplayName(node);
           this.tooltipTitle.setText(displayNameV2 || node.name);
@@ -2797,6 +4187,19 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
               requirementsV2.push(i18next.t("skillTree:prereq.unlockAllPrior", { skills: depNamesV2.join(", ") }));
             } else {
               requirementsV2.push(i18next.t("skillTree:prereq.unlockOnePrior", { skills: depNamesV2.join(", ") }));
+            }
+          }
+          if (node.rewardData?.type === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN) {
+            const ast = this.config?.activeSkillTree;
+            if (ast) {
+              const eligibleUnlockedCount = this.countEligibleUnlockedNodesForRandomGlitchPrereq(ast);
+              const baseline = this.ensureRandomGlitchFormsBaseline(ast, node.id, eligibleUnlockedCount);
+              const required = this.getRandomGlitchFormsRequiredCount(ast, node.id);
+              const progress = Math.max(0, eligibleUnlockedCount - baseline);
+              const remaining = Math.max(0, required - progress);
+              if (remaining > 0) {
+                requirementsV2.push(i18next.t("skillTree:prereq.randomGlitchFormsForRunUnlockMore", { remaining, progress, required }));
+              }
             }
           }
           const nodeCostV2 = this.getNodeCost(node);
@@ -2842,7 +4245,16 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         break;
 
       case SkillTreeNodeState.LOCKED_DETAILS:
-
+        if (node.isLevelLocked && node.branchUnlockCost != null) {
+          this.tooltipTitle.setText(i18next.t("skillTree:nodeStates.locked"));
+          this.tooltipDesc.setText(i18next.t("skillTree:prereq.useSkillPointsToUnlock", { cost: node.branchUnlockCost }));
+          const canAffordBranch = (this.config?.activeSkillTree.skillPoints || 0) >= node.branchUnlockCost;
+          this.tooltipCost.setText(i18next.t("skillTree:nodeCost", { cost: node.branchUnlockCost }));
+          this.tooltipCost.setColor(canAffordBranch ? "#00ff00" : "#ff0000");
+          this.tooltipPrereq.setText("");
+          this.tooltipRarity.setVisible(false);
+          break;
+        }
         const dependenciesMet = this.areNodeDependenciesMet(node);
 
         if (!dependenciesMet) {
@@ -2917,30 +4329,30 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         this.tooltipCost.setColor("#00ff00");
         this.tooltipPrereq.setText("");
         break;
+      }
     }
     const rarity = this.getSkillRarityFromNode(node);
     const rarityText = this.getRarityText(rarity);
     const rarityColors = this.getRarityColors(rarity);
+
     this.tooltipRarity.setText(rarityText);
     this.tooltipRarity.setTint(rarityColors.border);
     this.tooltipRarity.setVisible(node.state !== SkillTreeNodeState.LOCKED_HIDDEN);
+    const rarityHex = "#" + rarityColors.border.toString(16).padStart(6, "0");
+    this.tooltipTitle.setColor(rarityHex);
 
     const c = SkillTreeUiHandler.UI_CONSTANTS.TOOLTIP;
     const { width: tooltipWidth, height: tooltipHeight } = this.calculateTooltipDimensions(node);
     this.repositionTextElements(tooltipWidth);
-    this.tooltipBg.clear();
+
     this.tooltipTitleBarBg.clear();
     this.tooltipRarityBarBg.clear();
-    this.drawTooltipGradientBackground(this.tooltipBg, 0, 0, tooltipWidth, tooltipHeight, c.RADIUS);
-    this.tooltipBg.lineStyle(c.BORDER_THICKNESS, c.BORDER_COLOR, c.BORDER_ALPHA);
-    this.tooltipBg.strokeRoundedRect(0, 0, tooltipWidth, tooltipHeight, c.RADIUS);
-    if (node.state !== SkillTreeNodeState.LOCKED_HIDDEN) {
-      this.tooltipTitleBarBg.fillStyle(rarityColors.border, 0.3);
-      this.tooltipTitleBarBg.fillRect(0, c.TITLE_BAR_Y, tooltipWidth, c.TITLE_BAR_HEIGHT);
-    }
+
+    this.tooltipBg.setSize(tooltipWidth, tooltipHeight);
+    this._tooltipPattern?.redraw();
     if (this.tooltipRarity.visible) {
-      this.tooltipRarityBarBg.fillStyle(rarityColors.bg, 0.6);
-      this.tooltipRarityBarBg.fillRect(0, c.RARITY_BAR_Y, tooltipWidth, c.RARITY_BAR_HEIGHT);
+      this.tooltipRarityBarBg.fillStyle(0x0f0f1e, 1.0);
+      this.tooltipRarityBarBg.fillRect(2, 14, tooltipWidth - 4, c.RARITY_BAR_HEIGHT);
     }
     this.positionTooltip(node, tooltipWidth, tooltipHeight);
     this.tooltip.setVisible(true);
@@ -2989,6 +4401,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private hideTooltip(): void {
     this.tooltipTargetNodeId = null;
     this.tooltip.setVisible(false);
+    this.modalMessage?.clear();
     this.restoreNormalInstructions();
   }
 
@@ -3015,6 +4428,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         : i18next.t("skillTree:prereq.unlockOnePrior", { skills: depNames.join(", ") });
 
       this.instructionsText.setText(requirementText);
+      this.setKeyHintsMode("text");
       this.updateInstructionBackground();
     }
   }
@@ -3024,29 +4438,51 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     try {
       if (this.config.mode === SkillTreeMode.POKEMON_SELECTION) {
-        const { signatureCount: sigCount, generalCount: genCount, total } = this.countPokemonSelectionsFromUnlockedNodes();
-        const remaining = 2 - total;
-        const mysteryNode = this.nodes.find(n => !!n?.rewardData?.data?.starterMysteryNode);
-        const mysteryExists = !!mysteryNode;
-        const mysteryPurchased = mysteryNode ? this.config.activeSkillTree.unlockedNodes.has(mysteryNode.id) : true;
-
-        let key: string;
-        if (total >= 2) {
-          key = (mysteryExists && !mysteryPurchased)
-            ? "skillTree:instructionsPokemonSelectionMysteryRemaining"
-            : "skillTree:instructionsPokemonSelectionComplete";
-        } else if (remaining === 2) {
-          key = "skillTree:instructionsPokemonSelection";
-        } else if (sigCount === 0 && genCount < 2) {
-          key = "skillTree:instructionsPokemonSelectionSignatureAvailable";
+        const isJourney = this.nodes.some(n => n.id?.startsWith("depth1_journey_mystery_"));
+        if (isJourney) {
+          const primaryCount = this.nodes.filter(n =>
+            n?.id?.match(/^depth1_journey_mystery_[012]$/) &&
+            this.config!.activeSkillTree.unlockedNodes.has(n.id)
+          ).length;
+          const fourthNode = this.nodes.find(n => n.id === "depth1_journey_mystery_3");
+          const fourthDone = !fourthNode || this.config.activeSkillTree.unlockedNodes.has(fourthNode.id);
+          let key: string;
+          if (primaryCount >= 2 && !fourthDone) {
+            key = "skillTree:instructionsJourneyFourthMystery";
+          } else if (primaryCount >= 2 && fourthDone) {
+            key = "skillTree:instructionsPokemonSelectionComplete";
+          } else {
+            key = primaryCount === 0
+              ? "skillTree:instructionsJourneySelection"
+              : "skillTree:instructionsJourneySelectionRemaining";
+          }
+          this.instructionsText.setText(i18next.t(key, { remaining: 2 - primaryCount }));
         } else {
-          key = "skillTree:instructionsPokemonSelectionRemaining";
+          const { signatureCount: sigCount, generalCount: genCount, total } = this.countPokemonSelectionsFromUnlockedNodes();
+          const remaining = 2 - total;
+          const mysteryNode = this.nodes.find(n => !!n?.rewardData?.data?.starterMysteryNode);
+          const mysteryExists = !!mysteryNode;
+          const mysteryPurchased = mysteryNode ? this.config.activeSkillTree.unlockedNodes.has(mysteryNode.id) : true;
+
+          let key: string;
+          if (total >= 2) {
+            key = (mysteryExists && !mysteryPurchased)
+              ? "skillTree:instructionsPokemonSelectionMysteryRemaining"
+              : "skillTree:instructionsPokemonSelectionComplete";
+          } else if (remaining === 2) {
+            key = "skillTree:instructionsPokemonSelection";
+          } else if (sigCount === 0 && genCount < 2) {
+            key = "skillTree:instructionsPokemonSelectionSignatureAvailable";
+          } else {
+            key = "skillTree:instructionsPokemonSelectionRemaining";
+          }
+          this.instructionsText.setText(i18next.t(key, { remaining }));
         }
-        this.instructionsText.setText(i18next.t(key, { remaining }));
       } else {
-        const instructionsKey = this.getInstructionsKey();
-        this.instructionsText.setText(i18next.t(instructionsKey));
+        this.setKeyHintsMode("icons");
+        return;
       }
+      this.setKeyHintsMode("text");
       this.updateInstructionBackground();
     } catch {
     }
@@ -3078,6 +4514,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.instructionsText.setText(i18next.t(instructionsKey));
       this.updateInstructionBackground();
     }
+    this.updateNavKeyHints();
   }
 
   private updateInstructionBackground(): void {
@@ -3128,6 +4565,15 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     return [...new Set(chain)];
   }
 
+  private getForwardChain(nodeId: string): string[] {
+    const connections = this.nodeConnectionMap.get(nodeId);
+    if (!connections) return [];
+    return connections.children.filter(childId => {
+      const child = this.nodes.find(n => n.id === childId);
+      return child != null && child.state !== SkillTreeNodeState.LOCKED_HIDDEN;
+    });
+  }
+
   private highlightDependencyChain(nodeId: string): void {
     this.clearDependencyHighlights();
 
@@ -3161,6 +4607,70 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       }
     });
     this.highlightDependencyConnections(nodeId, dependencyChain);
+  }
+
+  private highlightForwardBranch(anchorId: string, previewIds: Set<string>): void {
+    this.clearDependencyHighlights();
+
+    const anchor = this.nodes.find(n => n.id === anchorId);
+    if (!anchor || anchor.depth < 2) return;
+    if (!previewIds.size) return;
+
+    const chainSet = new Set<string>();
+    chainSet.add(anchorId);
+    previewIds.forEach(id => chainSet.add(id));
+
+    this.nodes.forEach(n => {
+      const nodeContainer = this.nodeSprites.get(n.id);
+      if (!nodeContainer) return;
+
+      if (chainSet.has(n.id)) {
+        nodeContainer.setAlpha(1.0);
+        if (n.id !== anchorId) {
+          this.applyPurpleBackground(n);
+        }
+      } else {
+        nodeContainer.setAlpha(0.4);
+      }
+    });
+
+    this.connectionLines.forEach(connection => {
+      const isHighlighted = chainSet.has(connection.childId) && chainSet.has(connection.parentId);
+      if (!isHighlighted) {
+        connection.g.setAlpha(0.2);
+      }
+    });
+
+    this.highlightDependencyConnections(anchorId, Array.from(previewIds));
+  }
+
+  private updateFocusHighlight(nodeId: string): void {
+    const node = this.nodes.find(n => n.id === nodeId);
+    if (!node) {
+      this.clearDependencyHighlights();
+      return;
+    }
+
+    const anchorId = this.focusPreviewAnchorId ?? nodeId;
+    if (anchorId && this.currentFocusPreviewNodes.size > 0) {
+      this.highlightForwardBranch(anchorId, this.currentFocusPreviewNodes);
+      return;
+    }
+    if (anchorId && this.currentFocusPreviewNodes.size === 0) {
+      this.clearDependencyHighlights();
+    }
+
+    const isLevelLockedPurchasable = node.isLevelLocked &&
+      node.state === SkillTreeNodeState.LOCKED_DETAILS;
+
+    if (node.state !== SkillTreeNodeState.UNLOCKED &&
+        !this.areNodeDependenciesMet(node) &&
+        !isLevelLockedPurchasable) {
+      this.highlightDependencyChain(nodeId);
+      return;
+    }
+
+    this.clearDependencyHighlights();
   }
 
   private applyPurpleBackground(node: SkillTreeNode): void {
@@ -3240,18 +4750,23 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     });
   }
 
-  private playUnlockEffect(node: SkillTreeNode): void {
+  private playUnlockEffect(node: SkillTreeNode, delayOverride?: integer, onComplete?: () => void): void {
     const nodeContainer = this.nodeSprites.get(node.id);
-    if (!nodeContainer) return;
+    if (!nodeContainer) {
+      onComplete?.();
+      return;
+    }
 
     const c = SkillTreeUiHandler.UI_CONSTANTS.ANIMATIONS.UNLOCK_EFFECT;
-    this.scene.time.delayedCall(c.DELAY, () => {
 
+    const delay = delayOverride !== undefined ? delayOverride : c.DELAY;
+    this.scene.time.delayedCall(delay, () => {
       const glowGraphics = this.scene.add.graphics();
       glowGraphics.fillStyle(c.GLOW_COLOR, c.GLOW_ALPHA);
       glowGraphics.fillCircle(0, 0, this.NODE_SIZE * 0.8);
       glowGraphics.setBlendMode(Phaser.BlendModes.ADD);
       nodeContainer.add(glowGraphics);
+
       this.scene.tweens.add({
         targets: nodeContainer,
         scaleX: c.PULSE_SCALE,
@@ -3260,11 +4775,13 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         ease: 'Back.easeOut',
         yoyo: true,
         onComplete: () => {
-
           glowGraphics.destroy();
+          onComplete?.();
         }
       });
+
       this.createUnlockParticles(node.position, c.PARTICLE_COUNT);
+
       try {
         (this.scene as BattleScene).playSound("battle_anims/PRSFX- Last Resort1", { volumeGroup: "ui" });
       } catch {}
@@ -3405,29 +4922,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.playUnlockEffect(node);
     }
   }
-
-  private drawTooltipGradientBackground(graphics: Phaser.GameObjects.Graphics, x: number, y: number, width: number, height: number, radius: number): void {
-
-    const topColor = { r: 106, g: 15, b: 58 };
-    const bottomColor = { r: 0, g: 0, b: 0 };
-    const gradientSteps = 48;
-
-    for (let step = 0; step < gradientSteps; step++) {
-      const stepY = y + (step / gradientSteps) * height;
-      const stepHeight = height / gradientSteps;
-      const rawFactor = step / (gradientSteps - 1);
-
-      const factor = Math.pow(rawFactor, 2.5);
-      const r = Math.floor(topColor.r * (1 - factor) + bottomColor.r * factor);
-      const g = Math.floor(topColor.g * (1 - factor) + bottomColor.g * factor);
-      const b = Math.floor(topColor.b * (1 - factor) + bottomColor.b * factor);
-      const color = (r << 16) | (g << 8) | b;
-
-      graphics.fillStyle(color, 0.85);
-      graphics.fillRect(x, stepY, width, stepHeight + (step < gradientSteps - 1 ? 1 : 0));
-    }
-  }
-
   private fitViewToVisibleNodes(): void {
     if (!this.config || !this.nodes || !this.nodes.length) return;
     const ast = this.config.activeSkillTree;
@@ -3551,10 +5045,14 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         nodes: this.nodes
       };
 
-      (this.scene as BattleScene).unshiftPhase(new SkillTreeModifierPhase(this.scene as BattleScene, node as any, (this.config as any)?.championData));
+      let modChampionData = (this.config as any)?.championData;
+      const nodeTypes = node.rewardData?.data?.nodeTypes as Type[] | undefined;
+      if (nodeTypes && nodeTypes.length > 0 && modChampionData) {
+        modChampionData = { ...modChampionData, type1: nodeTypes[0], type2: nodeTypes[1] ?? Type.UNKNOWN, unlockedTypeBoosters: [...nodeTypes], unlockedEssenceBundles: [...nodeTypes], unlockedTypeSwitchers: [...nodeTypes], unlockedTeraTypes: [...nodeTypes] };
+      }
+      (this.scene as BattleScene).unshiftPhase(new SkillTreeModifierPhase(this.scene as BattleScene, node as any, modChampionData));
       (this.scene as BattleScene).shiftPhase();
     } else {
-
       this.applyReward(node);
     }
 
@@ -3572,6 +5070,13 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     const ast = this.config?.activeSkillTree; if (!ast) return false;
 
     if (this.isEnhancedDebugMode) {
+      return true;
+    }
+
+    if (node.isLevelLocked) {
+      if (!this.isAdjacentToUnlocked(node, ast)) return false;
+      const branchCost = node.branchUnlockCost || 3;
+      if ((ast.skillPoints || 0) < branchCost) return false;
       return true;
     }
 
@@ -3605,12 +5110,53 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       return null;
     }
 
+    if (node.isLevelLocked) {
+      if (node.branchUnlockCost != null && this.isAdjacentToUnlocked(node, ast)) {
+        if ((ast.skillPoints || 0) < node.branchUnlockCost) {
+          return i18next.t("skillTree:prereq.notEnoughSP", { cost: node.branchUnlockCost });
+        }
+        return null;
+      }
+      if (isSkillTreeV2()) {
+        const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
+        if ((ast.treeLevel || 1) < requiredLevel) {
+          return i18next.t("skillTree:prereq.treeLevelRequired", { level: requiredLevel });
+        }
+      }
+      if (node.branchUnlockCost != null) {
+        return [i18next.t("skillTree:prereq.header"), i18next.t("skillTree:prereq.useSkillPointsToUnlock", { cost: node.branchUnlockCost })].join(" · ");
+      }
+      const lockLevel = isSkillTreeV2() ? SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth) : null;
+      if (lockLevel) {
+        return `${i18next.t("skillTree:nodeStates.locked")} · ${i18next.t("skillTree:prereq.treeLevelRequired", { level: lockLevel })}`;
+      }
+      return i18next.t("skillTree:nodeStates.locked");
+    }
+
     if (node.state !== SkillTreeNodeState.LOCKED_DETAILS) {
+      if (isSkillTreeV2()
+          && node.state === SkillTreeNodeState.LOCKED_VISIBLE
+          && node.rewardData?.type === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN) {
+        const eligibleUnlockedCount = this.countEligibleUnlockedNodesForRandomGlitchPrereq(ast);
+        const baseline = this.ensureRandomGlitchFormsBaseline(ast, node.id, eligibleUnlockedCount);
+        const required = this.getRandomGlitchFormsRequiredCount(ast, node.id);
+        const progress = Math.max(0, eligibleUnlockedCount - baseline);
+        const remaining = Math.max(0, required - progress);
+        if (remaining > 0) {
+          return [
+            i18next.t("skillTree:prereq.header"),
+            i18next.t("skillTree:prereq.randomGlitchFormsForRunUnlockMore", { remaining, progress, required })
+          ].join(" · ");
+        }
+      }
       if (node.state === SkillTreeNodeState.UNLOCKED) {
         return i18next.t("skillTree:nodeStates.unlocked");
       }
       if (node.state === SkillTreeNodeState.LOCKED_HIDDEN) {
         return i18next.t("skillTree:nodeStates.hidden");
+      }
+      if (node.dependencies?.length > 0) {
+        return `${i18next.t("skillTree:nodeStates.locked")} · ${i18next.t("skillTree:dependenciesNotMet", { defaultValue: "Unlock parent nodes first" })}`;
       }
       return i18next.t("skillTree:nodeStates.locked");
     }
@@ -3650,6 +5196,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       }
     }
 
+    if (node.isLevelLocked && node.branchUnlockCost != null) {
+      requirements.push(i18next.t("skillTree:prereq.useSkillPointsToUnlock", { cost: node.branchUnlockCost }));
+    }
+
     if (isSkillTreeV2()) {
       const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
       if ((ast.treeLevel || 1) < requiredLevel) {
@@ -3658,7 +5208,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
 
     if (requirements.length > 0) {
-      return [i18next.t("skillTree:prereq.header"), ...requirements].join("\n");
+      return [i18next.t("skillTree:prereq.header"), ...requirements].join(" · ");
     }
 
     return null;
@@ -3696,14 +5246,23 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         return 0;
       }
     }
+    if (node.rewardData.type === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN) {
+      return 0;
+    }
     if (node.rewardData.type === SkillTreeRewardType.TYPE_SWITCHER
         || node.rewardData.type === SkillTreeRewardType.CATCH_RATE_BONUS
         || node.rewardData.type === SkillTreeRewardType.FUSION_SECONDARY_PRIORITY
-        || node.rewardData.type === SkillTreeRewardType.TM_FILTERED) {
+        || node.rewardData.type === SkillTreeRewardType.TM_FILTERED
+        || node.rewardData.type === SkillTreeRewardType.BATON_ITEM
+        || node.rewardData.type === SkillTreeRewardType.PP_MAX_ITEM
+        || node.rewardData.type === SkillTreeRewardType.BERRY_ITEMS) {
       return 0;
     }
     if (node.rewardData.type === SkillTreeRewardType.POKEMON_ALT_BUILD) {
       return 4;
+    }
+    if (node.id === "depth1_bounty_0") {
+      return 0;
     }
     return node.cost;
   }
@@ -3726,14 +5285,61 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
   }
 
+  private getJourneyPrimaryUnlockedCount(): number {
+    if (!this.config?.activeSkillTree?.unlockedNodes) return 0;
+    return this.nodes.filter(n =>
+      n.id?.match(/^depth1_journey_mystery_[012]$/) &&
+      this.config!.activeSkillTree.unlockedNodes!.has(n.id)
+    ).length;
+  }
+
+  private isJourneyPrimaryMystery(node: SkillTreeNode): boolean {
+    return !!node.id?.match(/^depth1_journey_mystery_[012]$/);
+  }
+
   private handlePurchase(node: SkillTreeNode): boolean {
+    if (this.config?.mode === SkillTreeMode.POKEMON_SELECTION &&
+        this.isJourneyPrimaryMystery(node) &&
+        this.getJourneyPrimaryUnlockedCount() >= 2 &&
+        !this.config.activeSkillTree.unlockedNodes?.has(node.id)) {
+      this.showSelectionLimitMessage("max");
+      return false;
+    }
     const blockedMessage = this.getPurchaseBlockedMessage(node);
     if (blockedMessage) {
       this.modalMessage?.showText(blockedMessage, 0);
       (this.scene as BattleScene).ui.playError();
+      this.scene.time.delayedCall(3000, () => {
+        if (this.modalMessage) this.modalMessage.clear();
+      });
       return false;
     }
     const ast = this.config!.activeSkillTree;
+
+    if (node.isLevelLocked && node.branchUnlockCost != null) {
+      const branchCost = node.branchUnlockCost;
+      ast.skillPoints -= branchCost;
+      node.isLevelLocked = false;
+      node.cost = 0;
+      if (node.pendingRewardData) {
+        node.rewardData = node.pendingRewardData;
+        delete node.pendingRewardData;
+      }
+      if (!ast.unlockedBranches) ast.unlockedBranches = new Set();
+      ast.unlockedBranches.add(node.id);
+      for (const n of this.nodes) {
+        if (n.isLevelLocked && n.branchUnlockCost != null && n.branchUnlockCost < 4) {
+          n.branchUnlockCost = 4;
+        }
+      }
+      this.updateNodeStatesAndRender();
+      this.updateFocusHighlight(node.id);
+      this.updateHUD();
+      (this.scene as BattleScene).gameData.localSaveAll(this.scene as BattleScene);
+      (this.scene as BattleScene).playSound("ui/money");
+      return true;
+    }
+
     const nodeCost = this.getNodeCost(node);
     ast.skillPoints -= nodeCost;
 
@@ -3742,13 +5348,13 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       const storedRank = node.rewardData.data?.rank || 1;
       if (altBuildId) {
         const purchasedRank = this.getEffectiveAltBuildRank(altBuildId, storedRank);
-        const buildName = i18next.t(`pokemonAltBuild:${altBuildId}.name`);
+        const buildName = ChampionUtils.getAltBuildDisplayName(altBuildId);
         const purchasedRankLabel = purchasedRank >= 10
           ? `${Utils.intToRoman(10)}:${i18next.t("skillTree:rankMax")}`
           : Utils.intToRoman(purchasedRank);
         node.name = `${buildName} ${purchasedRankLabel}`;
 
-        const nodeGen = new SkillTreeNodeGenerator(0, this.config?.championData?.id || this.config?.activeSkillTree?.championData?.id || "brock", this.scene);
+        const nodeGen = new SkillTreeNodeGenerator(0, this.config?.activeSkillTree?.championId || this.config?.championData?.id || "red", this.scene);
         const dynamicRewardData = {
           ...node.rewardData,
           data: {
@@ -3762,6 +5368,9 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     node.state = SkillTreeNodeState.UNLOCKED; node.unlocked = true; ast.unlockedNodes.add(node.id);
     this.selectedNodeId = node.id;
+    this.focusPreviewAnchorId = node.id;
+    this.currentFocusPreviewNodes.clear();
+    this.updateNodeStatesAndRender();
 
     (this.scene as BattleScene).gameData.tempSkillTreeTransform = (this.scene as BattleScene).gameData.tempSkillTreeTransform || {} as any;
     (this.scene as BattleScene).gameData.tempSkillTreeTransform.purchasedNodeId = node.id;
@@ -3790,7 +5399,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         }
       } catch {}
 
-      (this.scene as BattleScene).gameData.saveSystem();
+      (this.scene as BattleScene).gameData.localSaveAll(this.scene as BattleScene);
       (this.scene as BattleScene).playSound("ui/money");
 
       (this.scene.gameData as any).tempSkillTreeConfig = {
@@ -3799,13 +5408,15 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       };
       (this.scene as BattleScene).unshiftPhase(new SkillTreeModifierPhase(this.scene as BattleScene, node as any, (this.config as any)?.championData));
       (this.scene as BattleScene).shiftPhase();
+      this.updateFocusHighlight(node.id);
       return true;
     }
 
     this.applyReward(node);
 
-    (this.scene as BattleScene).gameData.saveSystem();
+    (this.scene as BattleScene).gameData.localSaveAll(this.scene as BattleScene);
     (this.scene as BattleScene).playSound("ui/money");
+    this.updateFocusHighlight(node.id);
     return true;
   }
 
@@ -3828,14 +5439,18 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         gd.tempSkillTreeTransform.ty = this.transform.ty;
       }
       gd.tempSkillTreeTransform.selectedNodeId = this.selectedNodeId;
+      gd.tempSkillTreeTransform.focusPreviewAnchorId = this.focusPreviewAnchorId;
     } catch {}
 
     const originalOnClose = this.config?.onClose;
+    const originalPhaseOnComplete = this.config?.phaseOnComplete;
     const originalOnCancel = this.config?.onCancel;
 
     const returnConfig = {
       mode: this.config?.mode,
-      onComplete: (originalOnClose && this.config?.mode !== SkillTreeMode.BATTLE_ACCESS) ? () => originalOnClose() : undefined,
+      onComplete: (originalPhaseOnComplete && this.config?.mode !== SkillTreeMode.BATTLE_ACCESS)
+        ? () => originalPhaseOnComplete()
+        : (originalOnClose && this.config?.mode !== SkillTreeMode.BATTLE_ACCESS) ? () => originalOnClose() : undefined,
       onCancel: originalOnCancel ? () => originalOnCancel() : undefined,
       shouldPlayPurchaseAnimation: true
     };
@@ -3856,14 +5471,18 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         gd.tempSkillTreeTransform.ty = this.transform.ty;
       }
       gd.tempSkillTreeTransform.selectedNodeId = this.selectedNodeId;
+      gd.tempSkillTreeTransform.focusPreviewAnchorId = this.focusPreviewAnchorId;
     } catch {}
 
     const originalOnClose = this.config?.onClose;
+    const originalPhaseOnComplete = this.config?.phaseOnComplete;
     const originalOnCancel = this.config?.onCancel;
 
     const returnConfig = {
       mode: this.config?.mode,
-      onComplete: (originalOnClose && this.config?.mode !== SkillTreeMode.BATTLE_ACCESS) ? () => originalOnClose() : undefined,
+      onComplete: (originalPhaseOnComplete && this.config?.mode !== SkillTreeMode.BATTLE_ACCESS)
+        ? () => originalPhaseOnComplete()
+        : (originalOnClose && this.config?.mode !== SkillTreeMode.BATTLE_ACCESS) ? () => originalOnClose() : undefined,
       onCancel: originalOnCancel ? () => originalOnCancel() : undefined,
       shouldPlayPurchaseAnimation: true
     };
@@ -4028,10 +5647,29 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         SkillTreeRewardType.BATON_ITEM,
         SkillTreeRewardType.TRAINER_BOND_ABILITY,
         SkillTreeRewardType.TERA_ABILITY,
+        SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN,
+        SkillTreeRewardType.BOUNTY_SELECT,
       ]);
       if (selectionTypes.has(t)) {
-        (this.scene.gameData as any).tempSkillTreeConfig = this.config;
-        (this.scene as BattleScene).unshiftPhase(new SkillTreeModifierPhase(this.scene as BattleScene, node as any, (this.config as any)?.championData));
+        (this.scene.gameData as any).tempSkillTreeConfig = { ...(this.config || {}), nodes: this.nodes };
+        let rewardChampionData = (this.config as any)?.championData;
+        const rewardNodeTypes = node.rewardData?.data?.nodeTypes as Type[] | undefined;
+        if (rewardNodeTypes && rewardNodeTypes.length > 0 && rewardChampionData) {
+          rewardChampionData = { ...rewardChampionData, type1: rewardNodeTypes[0], type2: rewardNodeTypes[1] ?? Type.UNKNOWN, unlockedTypeBoosters: [...rewardNodeTypes], unlockedEssenceBundles: [...rewardNodeTypes], unlockedTypeSwitchers: [...rewardNodeTypes], unlockedTeraTypes: [...rewardNodeTypes] };
+        }
+        if (t === SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN) {
+          const ast = this.config?.activeSkillTree;
+          if (ast) {
+            ast.unlockedNodes.delete(node.id);
+            node.state = SkillTreeNodeState.LOCKED_VISIBLE;
+            node.unlocked = false;
+            const effectData = (ast.skillEffects as any)?.get?.(node.id) || {};
+            effectData.timesUnlocked = (effectData.timesUnlocked || 0) + 1;
+            effectData.baselineEligibleUnlockedCount = this.countEligibleUnlockedNodesForRandomGlitchPrereq(ast);
+            (ast.skillEffects as Map<string, any>).set(node.id, effectData);
+          }
+        }
+        (this.scene as BattleScene).unshiftPhase(new SkillTreeModifierPhase(this.scene as BattleScene, node as any, rewardChampionData));
         (this.scene as BattleScene).shiftPhase();
         return;
       }
@@ -4379,7 +6017,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
   }
 
-  private updateHUD(): void {
+  private updateHUD(skipLevelUp: boolean = false): void {
     if (!this.config) return;
     const ast = this.config.activeSkillTree;
     this.skillPointsText.setText(`x ${ast.skillPoints}`);
@@ -4398,29 +6036,52 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     this.treeLevelGaugeText.setText(`${have} / ${cost}`);
 
-    this.batchAutoLevelUpIfAffordable();
+    if (!skipLevelUp) {
+      this.batchAutoLevelUpIfAffordable();
+    }
 
     try {
       if (this.config.mode === SkillTreeMode.POKEMON_SELECTION) {
-        const { signatureCount: sigCount, generalCount: genCount, total } = this.countPokemonSelectionsFromUnlockedNodes();
-        const remaining = 2 - total;
-        const mysteryNode = this.nodes.find(n => !!n?.rewardData?.data?.starterMysteryNode);
-        const mysteryExists = !!mysteryNode;
-        const mysteryPurchased = mysteryNode ? this.config.activeSkillTree.unlockedNodes.has(mysteryNode.id) : true;
-
-        let key: string;
-        if (total >= 2) {
-          key = (mysteryExists && !mysteryPurchased)
-            ? "skillTree:instructionsPokemonSelectionMysteryRemaining"
-            : "skillTree:instructionsPokemonSelectionComplete";
-        } else if (remaining === 2) {
-          key = "skillTree:instructionsPokemonSelection";
-        } else if (sigCount === 0 && genCount < 2) {
-          key = "skillTree:instructionsPokemonSelectionSignatureAvailable";
+        const isJourney = this.nodes.some(n => n.id?.startsWith("depth1_journey_mystery_"));
+        if (isJourney) {
+          const primaryCount = this.nodes.filter(n =>
+            n?.id?.match(/^depth1_journey_mystery_[012]$/) &&
+            this.config!.activeSkillTree.unlockedNodes.has(n.id)
+          ).length;
+          const fourthNode = this.nodes.find(n => n.id === "depth1_journey_mystery_3");
+          const fourthDone = !fourthNode || this.config.activeSkillTree.unlockedNodes.has(fourthNode.id);
+          let key: string;
+          if (primaryCount >= 2 && !fourthDone) {
+            key = "skillTree:instructionsJourneyFourthMystery";
+          } else if (primaryCount >= 2 && fourthDone) {
+            key = "skillTree:instructionsPokemonSelectionComplete";
+          } else {
+            key = primaryCount === 0
+              ? "skillTree:instructionsJourneySelection"
+              : "skillTree:instructionsJourneySelectionRemaining";
+          }
+          this.instructionsText.setText(i18next.t(key, { remaining: 2 - primaryCount }));
         } else {
-          key = "skillTree:instructionsPokemonSelectionRemaining";
+          const { signatureCount: sigCount, generalCount: genCount, total } = this.countPokemonSelectionsFromUnlockedNodes();
+          const remaining = 2 - total;
+          const mysteryNode = this.nodes.find(n => !!n?.rewardData?.data?.starterMysteryNode);
+          const mysteryExists = !!mysteryNode;
+          const mysteryPurchased = mysteryNode ? this.config.activeSkillTree.unlockedNodes.has(mysteryNode.id) : true;
+
+          let key: string;
+          if (total >= 2) {
+            key = (mysteryExists && !mysteryPurchased)
+              ? "skillTree:instructionsPokemonSelectionMysteryRemaining"
+              : "skillTree:instructionsPokemonSelectionComplete";
+          } else if (remaining === 2) {
+            key = "skillTree:instructionsPokemonSelection";
+          } else if (sigCount === 0 && genCount < 2) {
+            key = "skillTree:instructionsPokemonSelectionSignatureAvailable";
+          } else {
+            key = "skillTree:instructionsPokemonSelectionRemaining";
+          }
+          this.instructionsText.setText(i18next.t(key, { remaining }));
         }
-        this.instructionsText.setText(i18next.t(key, { remaining }));
       } else {
         const instructionsKey = this.getInstructionsKey();
         this.instructionsText.setText(i18next.t(instructionsKey));
@@ -4463,11 +6124,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         case SkillTreeRewardType.XM_FILTERED:
           return i18next.t("skillTree:rewards.xm", { move: allMoves?.[node.rewardData.data?.moveId]?.name });
         case SkillTreeRewardType.ESSENCE_BUNDLE:
-          return i18next.t("skillTree:rewards.essenceBundle", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type], amount: node.rewardData.data?.amount });
+          return i18next.t("skillTree:rewards.essenceBundle", { type: Type[node.rewardData.data?.type], amount: node.rewardData.data?.amount });
         case SkillTreeRewardType.STAT_BOOST: {
           const stats = (node.rewardData.data?.stats || []);
           const statNames = stats.map((s: any) => {
-            const Stat = (require as any)("#enums/stat").Stat;
             return (Stat as any)[s] || "?";
           }).join(", ");
 
@@ -4475,7 +6135,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
             const championId = this.config?.activeSkillTree?.championData?.id || this.config?.championData?.id;
             if (!championId) return node.name;
 
-            const ChampionUtils = (require as any)("#app/system/champion-utils").ChampionUtils;
             const championName = ChampionUtils.getChampionDisplayName(championId);
             const flavorKey = `skillTree:rewards.statBoostFlavor_${championId}`;
             const flavorText = i18next.t(flavorKey, { defaultValue: "Training" });
@@ -4490,15 +6149,15 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           }
         }
         case SkillTreeRewardType.TYPE_BOOSTER_ITEM:
-          return i18next.t("skillTree:rewards.typeBooster", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type] });
+          return i18next.t("skillTree:rewards.typeBooster", { type: Type[node.rewardData.data?.type] });
         case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
           return node.name;
         case SkillTreeRewardType.MOVE_UPGRADE:
           return i18next.t("skillTree:rewards.moveUpgrade");
         case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
-          return (require as any)("#app/data/ability").allAbilities?.[node.rewardData.data?.abilityId]?.name || i18next.t("skillTree:unknownReward");
+          return allAbilities?.[node.rewardData.data?.abilityId]?.name || i18next.t("skillTree:unknownReward");
         case SkillTreeRewardType.TERA_ABILITY:
-          return (require as any)("#app/data/ability").allAbilities?.[node.rewardData.data?.abilityId]?.name || i18next.t("skillTree:unknownReward");
+          return allAbilities?.[node.rewardData.data?.abilityId]?.name || i18next.t("skillTree:unknownReward");
         case SkillTreeRewardType.GOLDEN_POKEBALL:
           return i18next.t("skillTree:rewards.goldenPokeball");
         case SkillTreeRewardType.MASTER_BALL:
@@ -4510,7 +6169,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
           return i18next.t("skillTree:rewards.masterballRarity");
         case SkillTreeRewardType.EGG_VOUCHER:
-          return i18next.t("skillTree:rewards.eggVoucher", { tier: (require as any)("#app/data/voucher").VoucherType?.[node.rewardData.data?.tier] });
+          return i18next.t("skillTree:rewards.eggVoucher", { tier: VoucherType?.[node.rewardData.data?.tier] });
         case SkillTreeRewardType.MONEY_REWARD:
           return i18next.t("skillTree:rewards.relicGold");
         case SkillTreeRewardType.PERMA_MONEY:
@@ -4519,7 +6178,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           return node.name;
         case SkillTreeRewardType.ESSENCE_TYPE_WEIGHT:
           const typeValue = node.rewardData.data?.type;
-          const Type = (require as any)("#app/data/type").Type;
           const typeName = typeof typeValue === 'string' ? typeValue : Type[typeValue];
           return i18next.t("skillTree:rewards.essenceTypeWeight", {
             type: typeName || "Unknown",
@@ -4530,10 +6188,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         case SkillTreeRewardType.REVIVE_BOOST:
           return node.name;
         case SkillTreeRewardType.TERA_TYPE:
-          return i18next.t("skillTree:rewards.teraType", { type: (require as any)("#app/data/type").Type[node.rewardData.data?.type] });
+          return i18next.t("skillTree:rewards.teraType", { type: Type[node.rewardData.data?.type] });
         case SkillTreeRewardType.MEGA_STONE: {
           const megaStoneId = node.rewardData.data?.megaStone || node.rewardData.data?.formChangeItem;
-          const megaStoneKey = (require as any)("#enums/form-change-items").FormChangeItem?.[megaStoneId];
+          const megaStoneKey = (FormChangeItem as any)?.[megaStoneId];
           const megaStoneName = megaStoneKey ? i18next.t(`modifierType:FormChangeItem.${megaStoneKey}`) : "?";
           return i18next.t("skillTree:rewards.megaStone", { item: megaStoneName });
         }
@@ -4560,7 +6218,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           const currentRank = matchingPokemon?.altBuildRank ?? 0;
           const effectiveRank = this.getEffectiveAltBuildRank(altBuildId as PokemonAltBuildId, storedRank);
 
-          const buildName = i18next.t(`pokemonAltBuild:${altBuildId}.name`);
+          const buildName = ChampionUtils.getAltBuildDisplayName(altBuildId);
           const showMax = currentRank >= 10 || effectiveRank === 10;
           const rankLabel = showMax
             ? `${Utils.intToRoman(10)}:${i18next.t("skillTree:rankMax")}`
@@ -4608,14 +6266,14 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
         case SkillTreeRewardType.LEGENDARY_POKEMON: {
           const s = node.rewardData.data?.species;
-          const pokemonName = s ? allSpecies[s - 1]?.name : undefined;
+          const pokemonName = s ? getPokemonSpecies(s)?.name : undefined;
           if (!pokemonName) {
             return node.name;
           }
           return i18next.t("skillTree:rewards.legendaryPokemon", { pokemon: pokemonName });
         }
         case SkillTreeRewardType.TRAINER_BOND_ABILITY: {
-          const ChampionUtilsRef = (require as any)("#app/system/champion-utils").ChampionUtils;
+          const ChampionUtilsRef = ChampionUtils;
           const championName = ChampionUtilsRef.getChampionDisplayName(this.config?.activeSkillTree?.championId);
           return i18next.t("skillTree:rewards.trainerBondGeneric", { champion: championName });
         }
@@ -4928,7 +6586,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
                       (p.species.speciesId === prereqBuild.species && p.altBuildId === altBuild.prerequisiteBuilds![0]) ||
                       (p.isFusion() && p.fusionSpecies?.speciesId === prereqBuild.species && p.altBuildId === altBuild.prerequisiteBuilds![0])
                     );
-                    const prereqName = i18next.t(`pokemonAltBuild:${altBuild.prerequisiteBuilds[0]}.name`);
+                    const prereqName = ChampionUtils.getAltBuildDisplayName(altBuild.prerequisiteBuilds[0]);
                     const line = i18next.t("skillTree:prereq.altBuildPrereq", { species: getPokemonSpecies(prereqBuild.species).name, build: prereqName });
                     if (forDisplay) messages.push(line);
                     if (!hasPrereq) { if (!forDisplay) messages.push(line); ok = false; }
@@ -4938,7 +6596,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
                   const hasPrereq = (this.scene as BattleScene).getParty().some(p =>
                     (p.altBuildId === altBuildId && p.altBuildRank && p.altBuildRank >= requiredPreviousRank)
                   );
-                  const buildName = i18next.t(`pokemonAltBuild:${altBuildId}.name`);
+                  const buildName = ChampionUtils.getAltBuildDisplayName(altBuildId);
                   const rankRoman = Utils.intToRoman(requiredPreviousRank);
                   const line = i18next.t("skillTree:prereq.altBuildRankPrereq", {
                     species: getPokemonSpecies(altBuild.species!).name,
@@ -5271,11 +6929,16 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     if (plan.levels <= 0) return;
     this.autoBatchLevelUpInProgress = true;
     try {
-      const label = plan.levels > 1
-        ? i18next.t("skillTree:levelUpMulti", { count: plan.levels, defaultValue: `TREE LEVEL UP x${plan.levels}!` })
-        : i18next.t("skillTree:levelUp", { defaultValue: "TREE LEVEL UP!" });
+      const label = i18next.t("championSelect:levelUp", { defaultValue: "LEVEL UP!" });
+
+      const championId = ast.championId || this.config?.championData?.id;
+      const topLine = i18next.t("skillTree:title", { defaultValue: "Skill Tree" }).toUpperCase();
+      const revealConfig = championId
+        ? buildChampionSpriteRevealConfig(this.scene as BattleScene, championId, topLine)
+        : undefined;
 
       if (!this.isEnhancedDebugMode) {
+        const currentBgmKey = (this.scene as any).bgm?.key || null;
         if (!isSkillTreeV2()) {
           const previousScale = this.DEFAULT_ZOOM;
           const previousTx = this.transform.tx;
@@ -5286,7 +6949,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           this.applyTransform();
 
           this.isLevelUpAnimationActive = true;
-          await playGenericLevelUpAnimation(this.scene as BattleScene, label);
+          await playGenericLevelUpAnimation(this.scene as BattleScene, label, undefined, revealConfig, false, currentBgmKey);
           this.isLevelUpAnimationActive = false;
 
           this.transform.scale = previousScale;
@@ -5295,7 +6958,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           this.applyTransform();
         } else {
           this.isLevelUpAnimationActive = true;
-          await playGenericLevelUpAnimation(this.scene as BattleScene, label);
+          await playGenericLevelUpAnimation(this.scene as BattleScene, label, undefined, revealConfig, false, currentBgmKey);
           this.isLevelUpAnimationActive = false;
         }
       }
@@ -5336,7 +6999,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       if (newlyVisibleNodes.length > 0) {
         this.playDepthRevealEffect(newlyVisibleNodes);
       }
-      try { (this.scene as BattleScene).gameData.saveSystem(); } catch {}
+      try { (this.scene as BattleScene).gameData.localSaveAll(this.scene as BattleScene); } catch {}
     } finally {
       this.autoBatchLevelUpInProgress = false;
       this.isLevelUpAnimationActive = false;
@@ -5571,7 +7234,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     const storedRank = node.rewardData.data?.rank || 1;
     const effectiveRank = this.getEffectiveAltBuildRank(altBuildId as PokemonAltBuildId, storedRank);
 
-    const nodeGen = new SkillTreeNodeGenerator(0, this.config?.championData?.id || this.config?.activeSkillTree?.championData?.id || "brock", this.scene);
+    const nodeGen = new SkillTreeNodeGenerator(0, this.config?.activeSkillTree?.championId || this.config?.championData?.id || "red", this.scene);
 
     const dynamicRewardData = {
       ...node.rewardData,

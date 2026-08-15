@@ -42,11 +42,22 @@
     "defaultRevive": "增加{{types}}寶可夢復活機率{{percent}}%",
     "defaultTokens": "獲得技能樹代幣以解鎖節點",
     "defaultPoints": "獲得技能點以購買技能",
-    "typesFallback": "未知"
+    "typesFallback": "未知",
+    "essenceRequiredTooltip": "所需精華",
+    "essenceRequiredTooltipDesc": "消耗精華來提升你的冠軍等級。擊敗寶可夢以獲取其屬性的精華。",
+    "essenceLoreNote": "特殊精華說明：SMITTY精華從SMITTY訓練家處獲得。GLITCH精華從故障寶可夢獲得。GEN I精華從第一世代寶可夢獲得。",
+    "abilityHeader": "特性",
+    "descriptionHeader": "描述",
+    "itemDescriptionHeader": "道具描述",
+    "requiredEssenceHeader": "所需精華",
+    "skillInfoHeader": "技能資訊"
   },
   "skillList": {
     "levelPrefix": "等級 {{level}}",
     "unknownSkill": "???"
+  },
+  "skillBar": {
+    "next": "下一個"
   },
   "defaultSkillLabels": {
     "tms": "{{types}} 招式機",
@@ -64,10 +75,24 @@
     "fusionPriority": "{{types}} 融合優先度"
   },
   "button": {
-    "useEssence": "使用精華"
+    "useEssence": "使用精華",
+    "levelUp": "升級",
+    "notEnoughEssence": "升級需要：",
+    "required": "必需"
   },
-  "brock": { "description": "岩石冠軍" },
-  "misty": { "description": "水系冠軍" },
+  "brock": {
+    "description": "岩石冠軍",
+    "essenceRequirement": "需要 {{ground}} 地面 + {{rock}} 岩石精華"
+  },
+  "misty": {
+    "description": "水系冠軍",
+    "essenceRequirement": "需要 {{water}} 水屬性精華"
+  },
+  "red": {
+    "description": "傳說…",
+    "unlockRequirement": "解鎖所有冠軍並在混沌或挑戰中擊敗第6階段對手赤紅",
+    "essenceRequirement": "需要 {{genOne}} 第一世代精華"
+  },
   "apollo": {
     "name": "阿波羅",
     "description": "太陽冠軍"
@@ -76,24 +101,36 @@
     "name": "黛安娜",
     "description": "月亮冠軍"
   },
-  "generic": { "description": "預設冠軍。" },
-  "champions": {
-  "title": "選擇你的冠軍",
-  "brock": {
-    "name": "小剛 - 岩石專家",
-    "description": "地面與岩石屬性大師",
-    "essenceRequirement": "需要 {{ground}} 地面 + {{rock}} 岩石精華"
-  },
-  "misty": {
-    "name": "小霞 - 水系專家",
-    "description": "水屬性大師",
-    "essenceRequirement": "需要 {{water}} 水屬性精華"
-  },
   "generic": {
-    "name": "平衡冠軍",
-    "description": "無屬性專精",
+    "description": "預設冠軍。",
     "essenceRequirement": "無特殊需求"
-  }
+  },
+  "champions": {
+    "title": "選擇你的冠軍",
+    "brock": {
+      "name": "小剛 - 岩石專家",
+      "description": "地面與岩石屬性大師",
+      "essenceRequirement": "需要 {{ground}} 地面 + {{rock}} 岩石精華"
+    },
+    "misty": {
+      "name": "小霞 - 水系專家",
+      "description": "水屬性大師",
+      "essenceRequirement": "需要 {{water}} 水屬性精華"
+    },
+    "red": {
+      "name": "赤紅 - 傳說冠軍",
+      "description": "傳說…",
+      "unlockRequirement": "解鎖所有冠軍並在混沌或挑戰中擊敗第6階段對手赤紅",
+      "essenceRequirement": "需要 {{genOne}} 第一世代精華"
+    },
+    "generic": {
+      "name": "平衡冠軍",
+      "description": "無屬性專精",
+      "essenceRequirement": "無特殊需求"
+    },
+    "generationShort": "第{{generation}}世代"
+  },
+  "generationShort": "第{{generation}}世代",
+  "skillsOfTitle": "{{subtitle}}的技能",
+  "switchChampion": "另一半"
 }
-}
-

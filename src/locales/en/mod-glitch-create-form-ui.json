@@ -11,6 +11,12 @@
   "gatchaCalendar": "Gatcha Calendar!",
   "browseGlitchForms": "Browse Pokevoid Glitch Forms",
   "wikiMods": "Wiki & Mods",
+  "downloadYourMods": "Download Your Mods",
+  "downloadAll": "Download All (ZIP)",
+  "downloadSelected": "Download Selected",
+  "noModsToDownload": "No mods to download.",
+  "downloadStarted": "Download started.",
+  "downloadFailed": "Download failed. Please try again.",
   "noModsToRemove": "No mods to remove.",
   "errorLoadingMods": "Error loading mods. Please try again.",
   "modRemoved": "{{name}} removed successfully.",
@@ -31,8 +37,9 @@
     "stat2": "Stat 2 to Boost",
     "stat3": "Stat 3 to Boost",
     "distributionType": "Stat Boost Distribution Type",
-    "frontSprite": "Pokémon Front Sprite (150-200px)",
-    "backSprite": "Pokémon Back Sprite (150-200px)",
+    "frontSprite": "Pokémon Front Sprite",
+    "backSprite": "Pokémon Back Sprite",
+    "useFrontAsBack": "Use front sprite as back sprite",
     "rivalTrainer": "Rival",
     "orRivalTrainer": "or Rival"
   },
@@ -44,7 +51,12 @@
   },
   "buttons": {
     "saveAndAdd": "Save & Reload",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "next": "Next",
+    "prev": "Prev"
+  },
+  "navigation": {
+    "sectionIndicator": "{{current}} / {{total}}"
   },
   "validation": {
     "requiredField": "This field is required",
@@ -61,7 +73,8 @@
   },
   "sections": {
     "basicInformation": "Basic Information",
-    "typesAbilities": "Types and Abilities",
+    "typesAbilities": "Types",
+    "abilities": "Abilities",
     "stats": "Stats",
     "sprites": "Sprites",
     "rivalTrainer": "Rivals That Reward This Form"

@@ -1,6 +1,6 @@
 import BattleScene from "#app/battle-scene.js";
 import { TurnCommand, BattleType, DynamicModes } from "#app/battle.js";
-import { applyCheckTrappedAbAttrs, CheckTrappedAbAttr } from "#app/data/ability.js";
+import { applyAbAttrs, applyCheckTrappedAbAttrs, BlockSwitchCommandAbAttr, CheckTrappedAbAttr } from "#app/data/ability.js";
 import { TrappedTag, EncoreTag } from "#app/data/battler-tags.js";
 import { MoveTargetSet, getMoveTargets } from "#app/data/move.js";
 import { speciesStarters } from "#app/data/pokemon-species.js";
@@ -30,6 +30,16 @@ import { MoveUpgradePhase } from "./move-upgrade-phase.js";
 import { getDynamicModeLocalizedString } from "#app/battle.js";
 import { SkillTreePhase } from "#app/phases/skill-tree-phase";
 import { Species } from "#app/enums/species.js";
+import { SmitomTutorialPhase } from "#app/phases/smitom-tutorial-phase.js";
+import { SlideshowCutscenePhase } from "#app/phases/slideshow-cutscene-phase.js";
+import { STORY_CUTSCENES } from "#app/system/story-cutscenes.js";
+import { beginTutorialChaosFtlAfterTrance } from "#app/system/champion-mode-integration.js";
+import { PokemonBattleTooltipUtils } from "#app/ui/pokemon-battle-tooltip-utils";
+import { ForbiddenFormUnlockModifierType, FormChangeItemModifierType, ModifierTypeOption, PathNodeTypeFilter, TypeSwitcherModifierType, modifierTypes, RandomStatSwitcherModifierType, TypeSacrificeModifierType } from "#app/modifier/modifier-type.js";
+import { SelectModifierPhase } from "./select-modifier-phase";
+import { FormChangeItem } from "#enums/form-change-items";
+import { getResistantTypes, queueSmitomThenReward, queueSmitomThenShop } from "./tutorial-onboard-script-phase";
+import { setSetting, SettingKeys } from "#app/system/settings/settings";
 
 export class CommandPhase extends FieldPhase {
   protected fieldIndex: integer;
@@ -43,6 +53,9 @@ export class CommandPhase extends FieldPhase {
   start() {
     super.start();
 
+    PokemonBattleTooltipUtils.ensureEnemyHoverZone(this.scene);
+    PokemonBattleTooltipUtils.ensurePlayerHoverZone(this.scene);
+
     if (this.fieldIndex === 0 && this.scene.currentBattle) {
       this.scene.encounterInitComplete = true;
       if (Overrides.DEBUG_SAVE_TRACE) {
@@ -54,7 +67,11 @@ export class CommandPhase extends FieldPhase {
       }
     }
 
-    if (this.fieldIndex === 0 && this.scene.autoSaveMode === 0 && this.scene.currentBattle && this.scene.gameData?.dataLoaded) {
+    if (this.tryTriggerReviverSeedTutorialChain()) {
+      return;
+    }
+
+    if (this.fieldIndex === 0 && this.scene.currentBattle && this.scene.gameData?.dataLoaded) {
         const now = Date.now();
         if (!this.scene._lastCommandPhaseSaveTime || (now - this.scene._lastCommandPhaseSaveTime) > 5000) {
             this.scene._lastCommandPhaseSaveTime = now;
@@ -94,6 +111,81 @@ export class CommandPhase extends FieldPhase {
       moveQueue.shift();
     }
 
+    if (this.fieldIndex === 0) {
+      if (this.scene.currentBattle.battleType === BattleType.TRAINER) {
+        if (this.scene.gameMode.checkIfRival(this.scene)) {
+          const flags = this.scene.gameData.smitomTutorialFlags;
+          if (!flags["rivals"]) {
+            this.scene.unshiftPhase(new SmitomTutorialPhase(
+              this.scene,
+              "rivals",
+              i18next.t("tutorial:smitomTip.rivals.title"),
+              [i18next.t("tutorial:smitomTip.rivals.1"), i18next.t("tutorial:smitomTip.rivals.2")],
+              false
+            ));
+            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+            this.end();
+            return;
+          }
+        }
+        else if (this.scene.currentBattle.trainer?.isCorrupted && this.scene.currentBattle.trainer?.isDynamicRival) {
+          const flags = this.scene.gameData.smitomTutorialFlags;
+          if (!flags["glitch_rivals"]) {
+            this.scene.unshiftPhase(new SmitomTutorialPhase(
+              this.scene,
+              "glitch_rivals",
+              i18next.t("tutorial:smitomTip.glitchRivals.title"),
+              [i18next.t("tutorial:smitomTip.glitchRivals.1")],
+              false
+            ));
+            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+            this.end();
+            return;
+          }
+        }
+      }
+      else if (this.scene.currentBattle.battleType === BattleType.WILD) {
+        if (this.scene.getEnemyField().some(p => p.isActive(true) && p.isFusion())) {
+          const flags = this.scene.gameData.smitomTutorialFlags;
+          if (!flags["fusion_pokemon"]) {
+            this.scene.unshiftPhase(new SmitomTutorialPhase(
+              this.scene,
+              "fusion_pokemon",
+              i18next.t("tutorial:smitomTip.fusionPokemon.title"),
+              [i18next.t("tutorial:smitomTip.fusionPokemon.1"), i18next.t("tutorial:smitomTip.fusionPokemon.2")],
+              false
+            ));
+            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+            this.end();
+            return;
+          }
+        }
+        else if (Utils.randSeedInt(100, 1) <= 1) {
+          const flags = this.scene.gameData.smitomTutorialFlags;
+          if (!flags["run_details"]) {
+            this.scene.unshiftPhase(new SmitomTutorialPhase(
+              this.scene,
+              "run_details",
+              i18next.t("tutorial:smitomTip.runDetails.title"),
+              [i18next.t("tutorial:smitomTip.runDetails.1")],
+              false
+            ));
+            this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+            this.end();
+            return;
+          }
+        }
+      }
+    }
+
+    if (this.tryTriggerWave35FeatureUnlock()) {
+      return;
+    }
+
+    if (this.tryTriggerJourneyQuestShopTip()) {
+      return;
+    }
+
     if (moveQueue.length) {
       const queuedMove = moveQueue[0];
       if (!queuedMove.move) {
@@ -110,42 +202,268 @@ export class CommandPhase extends FieldPhase {
       this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
     }
 
-    if(this.scene.currentBattle.battleType === BattleType.TRAINER) {
-      let introTutorials: EnhancedTutorial[];
-      if (this.scene.gameMode.checkIfRival(this.scene)) {
-            introTutorials = [EnhancedTutorial.RIVALS_1];
-      }
-      else if(this.scene.currentBattle.trainer?.isCorrupted && this.scene.currentBattle.trainer?.isDynamicRival) {
-        introTutorials = [EnhancedTutorial.GLITCH_RIVALS_1];
-      }
-       else {
-          introTutorials = [EnhancedTutorial.TRAINER_POKEMON_1];
-      }
-        if(!this.scene.gameData.tutorialService.allTutorialsCompleted(introTutorials)) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", introTutorials, true, false, true);
+    if (this.scene.currentBattle.battleType === BattleType.TRAINER) {
+      if (!this.scene.gameMode.checkIfRival(this.scene)
+        && !(this.scene.currentBattle.trainer?.isCorrupted && this.scene.currentBattle.trainer?.isDynamicRival)) {
+        const introTutorials = [EnhancedTutorial.TRAINER_POKEMON_1];
+        if (!this.scene.gameData.tutorialService.allTutorialsCompleted(introTutorials)) {
+          this.scene.gameData.tutorialService.showCombinedTutorial("", introTutorials, true, false, true);
+        }
       }
     }
-    else if(this.scene.currentBattle.battleType === BattleType.WILD) {
-      let introTutorials: EnhancedTutorial[];
-
-      if(this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.UNLOCKED)
-      && !this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.STARTER_CATCH_QUEST)) {
-
-            this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.STARTER_CATCH_QUEST);
-      }
-      else if(this.scene.getEnemyField().some(p => p.isActive(true) && p.isFusion())) {
-        if(!this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.FUSION_POKEMON_1)) {
-              this.scene.gameData.tutorialService.showNewTutorial(EnhancedTutorial.FUSION_POKEMON_1, true, false);
-          }
-      }
-      else if(Utils.randSeedInt(100, 1) <= 10) {
+    else if (this.scene.currentBattle.battleType === BattleType.WILD) {
+      if (this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.UNLOCKED)
+        && !this.scene.gameData.tutorialService.isTutorialCompleted(EnhancedTutorial.STARTER_CATCH_QUEST)) {
+        this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.STARTER_CATCH_QUEST);
       }
     }
-    else if(this.scene.gameMode.isWavePreFinal(this.scene)) {
+    else if (this.scene.gameMode.isWavePreFinal(this.scene)) {
       const introTutorials = [EnhancedTutorial.ENDGAME];
-        if(!this.scene.gameData.tutorialService.allTutorialsCompleted(introTutorials)) {
-            this.scene.gameData.tutorialService.showCombinedTutorial("", introTutorials, true, false, true);
+      if (!this.scene.gameData.tutorialService.allTutorialsCompleted(introTutorials)) {
+        this.scene.gameData.tutorialService.showCombinedTutorial("", introTutorials, true, false, true);
       }
+    }
+  }
+
+  public tryTriggerVoidCaptureChain(): boolean {
+    const tutScriptFight = this.scene.gameData.tutorialBattleScript;
+    if (
+      this.fieldIndex === 0
+      && this.scene.gameData.tutorialOnboardActive
+      && tutScriptFight?.tutorialGlitchTriggered
+      && !tutScriptFight.voidCaptureTipTriggered
+    ) {
+      tutScriptFight.voidCaptureTipTriggered = true;
+      const player = this.scene.getPlayerPokemon();
+      const pokemonName = player?.getNameToRender() ?? "";
+
+      this.scene.unshiftPhase(new SmitomTutorialPhase(
+        this.scene,
+        "tutorial_battle_glitch_reward",
+        i18next.t("tutorial:smitomTip.tutorialBattleGlitchReward.title"),
+        [i18next.t("tutorial:smitomTip.tutorialBattleGlitchReward.1", { pokemonName })],
+        false
+      ));
+
+      const questMap: Record<number, QuestUnlockables> = {
+        [Species.CHARIZARD]: QuestUnlockables.CHARIZARD_GROUND_MOVE_KNOCKOUT_QUEST,
+        [Species.BLASTOISE]: QuestUnlockables.BLASTOISE_FAIRY_DEFEAT_QUEST,
+        [Species.VENUSAUR]: QuestUnlockables.VENUSAUR_PSYCHIC_MOVE_USE_QUEST,
+      };
+      const questUnlockable = questMap[tutScriptFight.playerStarterSpecies!];
+      if (questUnlockable !== undefined) {
+        const questUnlockData = this.scene.gameData.getQuestUnlockDataFromModifierTypes(questUnlockable);
+        const unlockOption = new ModifierTypeOption(
+          new ForbiddenFormUnlockModifierType({ kind: "QUEST_FORM", questUnlockData }),
+          0, 0
+        );
+        const unlockPhase = new SelectModifierPhase(
+          this.scene, 0, undefined, true,
+          () => {
+            this.scene.ui.setMode(Mode.MESSAGE);
+            const p = this.scene.getPlayerPokemon();
+            const pName = p?.getNameToRender() ?? "";
+
+            this.scene.unshiftPhase(new SmitomTutorialPhase(
+              this.scene,
+              "tutorial_battle_evolve_glitch",
+              i18next.t("tutorial:smitomTip.tutorialBattleEvolveGlitch.title"),
+              [i18next.t("tutorial:smitomTip.tutorialBattleEvolveGlitch.1", { pokemonName: pName })],
+              false
+            ));
+
+            const glitchFormOption = new ModifierTypeOption(
+              new FormChangeItemModifierType(FormChangeItem.GLITCHI_GLITCHI_FRUIT),
+              0,
+              0
+            );
+
+            const formChangeSelectPhase = new SelectModifierPhase(
+              this.scene, 0, undefined, true,
+              () => {
+                this.scene.ui.setMode(Mode.MESSAGE);
+              },
+              PathNodeTypeFilter.NONE, 0, [glitchFormOption]
+            );
+            formChangeSelectPhase.suppressReroll = true;
+            this.scene.unshiftPhase(formChangeSelectPhase);
+          },
+          PathNodeTypeFilter.NONE, 0, [unlockOption]
+        );
+        unlockPhase.suppressReroll = true;
+        this.scene.unshiftPhase(unlockPhase);
+      }
+
+      this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+      this.end();
+      return true;
+    }
+    return false;
+  }
+
+  public tryTriggerWakeUpChain(): boolean {
+    return false;
+  }
+
+  public tryTriggerReviverSeedTutorialChain(): boolean {
+    const tutScript = this.scene.gameData.tutorialBattleScript;
+    if (
+      this.fieldIndex === 0
+      && this.scene.gameData.tutorialOnboardActive
+      && tutScript?.step === "pending_hp_trigger"
+      && tutScript.reviverSeedPendingTrigger
+      && tutScript.rewardSubstep === "idle"
+    ) {
+      tutScript.reviverSeedPendingTrigger = false;
+      tutScript.rewardSubstep = "smitom";
+      const { primary, secondary } = getResistantTypes(tutScript.foeSpecies!);
+      queueSmitomThenReward(
+        this.scene,
+        "tutorial_battle_type_tip",
+        i18next.t("tutorial:smitomTip.tutorialBattleType.title"),
+        [i18next.t("tutorial:smitomTip.tutorialBattleType.1")],
+        [new ModifierTypeOption(new TypeSwitcherModifierType(primary, secondary), 0, 0)],
+        () => {
+          tutScript.step = "type_switcher_given";
+          tutScript.turnsSinceLastReward = 0;
+          tutScript.rewardSubstep = "idle";
+        }
+      );
+      this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+      this.end();
+      return true;
+    }
+    return false;
+  }
+
+  private tryTriggerWave35FeatureUnlock(): boolean {
+    if (this.fieldIndex !== 0) return false;
+    const wave = this.scene.currentBattle?.waveIndex;
+    if (wave !== 35) return false;
+    if (this.scene.wave35UnlockedThisRun) return false;
+
+    const flags = this.scene.gameData.smitomTutorialFlags;
+
+    if (Overrides.DEBUG_WAVE35_SMITOM_TIP_OVERRIDE) {
+      flags["wave35_stat_switchers"] = false;
+      flags["wave35_move_upgrades"] = false;
+      flags["wave35_release_items"] = false;
+    }
+
+    if (!flags["wave35_stat_switchers"]) {
+      this.executeWave35Unlock("wave35_stat_switchers", "wave35StatSwitchers", SettingKeys.Disable_Stat_Switchers, "stat_switchers");
+      return true;
+    }
+    if (!flags["wave35_move_upgrades"]) {
+      this.executeWave35Unlock("wave35_move_upgrades", "wave35MoveUpgrades", SettingKeys.Disable_Move_Upgrades, "move_upgrades");
+      return true;
+    }
+    if (!flags["wave35_release_items"]) {
+      this.executeWave35Unlock("wave35_release_items", "wave35ReleaseItems", SettingKeys.Disable_Release_Items, "release_items");
+      return true;
+    }
+
+    return false;
+  }
+
+  private tryTriggerJourneyQuestShopTip(): boolean {
+    if (this.fieldIndex !== 0) return false;
+    if (this.scene.gameData.tutorialOnboardActive) return false;
+    const flags = this.scene.gameData.smitomTutorialFlags;
+    if (flags["journey_quest_shop_tip"]) return false;
+    if (!this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.UNLOCKED)) return false;
+    if (this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.ACTIVE)) return false;
+    if (this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED)) return false;
+
+    this.scene.gameData.lastPermaShopRefreshTime = 0;
+
+    queueSmitomThenShop(
+      this.scene,
+      "journey_quest_shop_tip",
+      i18next.t("tutorial:smitomTip.journeyQuestShop.title"),
+      [
+        i18next.t("tutorial:smitomTip.journeyQuestShop.1"),
+        i18next.t("tutorial:smitomTip.journeyQuestShop.2"),
+      ],
+      () => { this.scene.gameData.saveSystem(); }
+    );
+
+    this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+    this.end();
+    return true;
+  }
+
+  private executeWave35Unlock(flagKey: string, localeKey: string, settingKey: string, featureId: string): void {
+    localStorage.setItem(`wave35_${featureId}_unlocked`, "1");
+    setSetting(this.scene, settingKey, 0);
+
+    switch (featureId) {
+      case "stat_switchers":
+        this.scene.disableStatSwitchers = false;
+        this.scene.statSwitchersEnabledForRun = true;
+        break;
+      case "move_upgrades":
+        this.scene.disableMoveUpgrades = false;
+        this.scene.moveUpgradesEnabledForRun = true;
+        break;
+      case "release_items":
+        this.scene.disableReleaseItems = false;
+        this.scene.releaseItemsEnabledForRun = true;
+        break;
+    }
+
+    this.scene.wave35UnlockedThisRun = true;
+
+    const featureName = i18next.t(`tutorial:smitomTip.${localeKey}.featureName`);
+    const title = i18next.t("tutorial:smitomTip.wave35Shared.title");
+    const featurePages: string[] = [];
+    for (let i = 1; ; i++) {
+      const key = `tutorial:smitomTip.${localeKey}.${i}`;
+      if (!i18next.exists(key)) break;
+      featurePages.push(i18next.t(key));
+    }
+    const texts = [
+      i18next.t("tutorial:smitomTip.wave35Shared.pretext", { featureName }),
+      ...featurePages,
+      i18next.t("tutorial:smitomTip.wave35Shared.posttext"),
+    ];
+
+    const options = this.generateWave35ModifierOption(featureId);
+
+    queueSmitomThenReward(this.scene, flagKey, title, texts, options, () => {
+      this.scene.gameData.saveSystem();
+    });
+
+    this.scene.unshiftPhase(new CommandPhase(this.scene, this.fieldIndex));
+    this.end();
+  }
+
+  private generateWave35ModifierOption(featureId: string): ModifierTypeOption[] {
+    const party = this.scene.getParty();
+
+    switch (featureId) {
+      case "stat_switchers": {
+        const gen = modifierTypes.STAT_SWITCHER();
+        const modType = gen.generateType(party);
+        if (modType) return [new ModifierTypeOption(modType, 0, 0)];
+        return [new ModifierTypeOption(new RandomStatSwitcherModifierType(), 0, 0)];
+      }
+      case "move_upgrades": {
+        const gen = modifierTypes.MOVE_UPGRADE();
+        const modType = gen.generateType(party);
+        if (modType) return [new ModifierTypeOption(modType, 0, 0)];
+        const fallbackGen = modifierTypes.STAT_SWITCHER();
+        const fallback = fallbackGen.generateType(party);
+        return [new ModifierTypeOption(fallback || new RandomStatSwitcherModifierType(), 0, 0)];
+      }
+      case "release_items": {
+        const gen = modifierTypes.TYPE_SACRIFICE();
+        const modType = gen.generateType(party);
+        if (modType) return [new ModifierTypeOption(modType, 0, 0)];
+        return [new ModifierTypeOption(new TypeSacrificeModifierType(), 0, 0)];
+      }
+      default:
+        return [new ModifierTypeOption(new RandomStatSwitcherModifierType(), 0, 0)];
     }
   }
 
@@ -155,7 +473,7 @@ export class CommandPhase extends FieldPhase {
     let success: boolean;
 
     switch (command) {
-    case Command.FIGHT:
+    case Command.FIGHT: {
       let useStruggle = false;
       if (cursor === -1 ||
             playerPokemon.trySelectMove(cursor, args[0] as boolean) ||
@@ -207,7 +525,18 @@ export class CommandPhase extends FieldPhase {
         }, null, true);
       }
       break;
+    }
     case Command.BALL:
+
+      if (this.scene.gameData.tutorialOnboardActive) {
+        this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
+        this.scene.ui.setMode(Mode.MESSAGE);
+        this.scene.ui.showText(i18next.t("battle:noPokeballForce"), null, () => {
+          this.scene.ui.showText("", 0);
+          this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
+        }, null, true);
+        break;
+      }
 
       if (this.scene.dynamicMode?.noCatch) {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
@@ -339,11 +668,15 @@ export class CommandPhase extends FieldPhase {
         const trapped = new Utils.BooleanHolder(false);
         const noSwitch = this.scene.dynamicMode?.noSwitch;
         const batonPass = isSwitch && args[0] as boolean;
+        const blockSwitch = new Utils.BooleanHolder(false);
+        if (isSwitch) {
+          applyAbAttrs(BlockSwitchCommandAbAttr, playerPokemon, blockSwitch);
+        }
         const trappedAbMessages: string[] = [];
         if (!batonPass) {
           enemyField.forEach(enemyPokemon => applyCheckTrappedAbAttrs(CheckTrappedAbAttr, enemyPokemon, trapped, playerPokemon, trappedAbMessages, true));
         }
-        if (batonPass || (!trapTag && !trapped.value && !noSwitch)) {
+        if (batonPass || (!trapTag && !trapped.value && !noSwitch && !blockSwitch.value)) {
           this.scene.currentBattle.turnCommands[this.fieldIndex] = isSwitch
             ? { command: Command.POKEMON, cursor: cursor, args: args }
             : { command: Command.RUN };
@@ -445,7 +778,13 @@ export class CommandPhase extends FieldPhase {
     this.scene.ui.setMode(Mode.MESSAGE).then(() => super.end());
   }
   openSkillTreeFromCommand(): void {
+    if (!this.scene.skillTreeEnabledForRun) {
+      return;
+    }
     const gameData: any = (this.scene as any).gameData;
+    if (gameData?.tutorialOnboardActive) {
+      return;
+    }
     if (!gameData?.activeSkillTree) {
       return;
     }

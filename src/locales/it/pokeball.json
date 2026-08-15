@@ -4,5 +4,8 @@
   "ultraBall": "Ultra Ball",
   "rogueBall": "Rogue Ball",
   "masterBall": "Master Ball",
-  "luxuryBall": "Chic Ball"
+  "luxuryBall": "Chic Ball",
+  "typeBall": "{{typeName}} Ball",
+  "voidBall": "Void Ball",
+  "voidBallCatchRate": "100% (PS Rossi)"
 }

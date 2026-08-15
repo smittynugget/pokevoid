@@ -1,6 +1,6 @@
 import BattleScene, { starterColors } from "../battle-scene";
 import { getYuTuning, yuTuningLog } from "../yu-visual-tuning";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import UiHandler from "./ui-handler";
 import * as Utils from "../utils";
 import { PlayerPokemon, PokemonMove, YU_BATTLE_FIT, YU_PLAYER_FIT_MULT, YU_SPECIES_PORTAL_OFFSETS, YU_SPECIES_VISUAL_OFFSETS } from "../field/pokemon";
@@ -150,7 +150,7 @@ export default class SummaryUiHandler extends UiHandler {
   private _sumIconTweakHudText: Phaser.GameObjects.Text | null = null;
   private _sumIconKeyVHandler: (() => void) | null = null;
   private _sumIconKeyFiveHandler: (() => void) | null = null;
-  private _sumIconRowGap: number = 1.5;
+  private _sumIconRowGap: number = 0;
   private _sumIconRowBorderRadius: number | { tl: number; tr: number; bl: number; br: number } = 0;
   private _sumIconRowBgWidthPad: number = -16;
   private _sumIconRowBgHeight: number = 12;
@@ -379,7 +379,7 @@ export default class SummaryUiHandler extends UiHandler {
     this.fusionShinyIcon = this.scene.add.image(0, 0, "shiny_star_2");
     this.fusionShinyIcon.setVisible(false);
     this.fusionShinyIcon.setOrigin(0, 0);
-    this.fusionShinyIcon.setScale(0.525);
+    this.fusionShinyIcon.setScale(0.485);
 
     this.summaryShinyContainer = this.scene.add.container(0, 0);
     this.summaryShinyContainer.setVisible(false);
@@ -903,7 +903,8 @@ export default class SummaryUiHandler extends UiHandler {
       this.shinyIcon.off("pointerout");
       this.shinyIcon.on("pointerover", () => (this.scene as BattleScene).ui.showTooltip("", `${i18next.t("common:shinyOnHover")}${shinyDescriptor ? ` (${shinyDescriptor})` : ""}`, true));
       this.shinyIcon.on("pointerout", () => (this.scene as BattleScene).ui.hideTooltip());
-      this.fusionShinyIcon.setPosition(-5.6, 0);
+      this.fusionShinyIcon.setPosition(this.shinyIcon.x, this.shinyIcon.y);
+      this.fusionShinyIcon.setOrigin(0, 0.5);
       this.fusionShinyIcon.setVisible(doubleShiny);
       if (isFusion) this.fusionShinyIcon.setTint(getVariantTint(this.pokemon.fusionVariant));
     } else {
@@ -1798,21 +1799,34 @@ export default class SummaryUiHandler extends UiHandler {
     }
 
     if (this.summaryGlitchContainer.visible) {
-      this.summaryGlitchContainer.setPosition(cursorX + 3.0, 0);
+      this.summaryGlitchContainer.setPosition(cursorX > 0 ? cursorX + 1.5 : cursorX + 17.5, 0);
       const glitchW = this.summaryGlitchPokemonIcon.displayWidth +
         (this.summaryGlitchItemIcon.visible ? this.summaryGlitchItemIcon.displayWidth : 0);
       cursorX += glitchW + gap;
     }
 
     if (this.rankContainer.visible) {
-      this.rankContainer.setPosition(cursorX + 6.0, 0);
+      const isFirstGroup = cursorX === 0 && !this.summaryFusionContainer.visible && !this.summaryGlitchContainer.visible;
+      this.rankContainer.setPosition(isFirstGroup ? 0 : cursorX + 3.0, 0);
+      const soulNudge = isFirstGroup ? 20.0 : (this.summaryGlitchContainer.visible ? 0 : 11.0);
+      this.rankIcon.setPosition(-24.0 + soulNudge, -0.5);
+      this.rankText.setPosition(-19.5 + soulNudge, 1.5);
       const containerWidth = Math.max(this.rankIcon.displayWidth, this.rankText.x + this.rankText.displayWidth);
       cursorX += containerWidth + gap;
     }
 
+    const fewerGroups = !this.summaryGlitchContainer.visible || !this.rankContainer.visible;
+
     if (this.summaryShinyContainer.visible) {
-      this.summaryShinyContainer.setPosition(cursorX, 0);
-      cursorX += this.shinyIcon.displayWidth + (this.fusionShinyIcon.visible ? this.fusionShinyIcon.displayWidth : 0) + gap;
+      if (fewerGroups) {
+        this.shinyIcon.setPosition(-7.0, -0.5);
+        this.fusionShinyIcon.setPosition(-7.0, -0.5);
+      } else {
+        this.shinyIcon.setPosition(-13.5, 0);
+        this.fusionShinyIcon.setPosition(-13.5, 0);
+      }
+      this.summaryShinyContainer.setPosition(cursorX > 0 ? cursorX : 10.0, 0);
+      cursorX += this.shinyIcon.displayWidth + gap;
     }
 
     const anyVisible = this.summaryFusionContainer.visible ||
@@ -1823,9 +1837,10 @@ export default class SummaryUiHandler extends UiHandler {
     this.summaryIconRowContainer.setVisible(anyVisible);
 
     if (anyVisible) {
+      const effectiveWidthPad = fewerGroups ? -1 : this._sumIconRowBgWidthPad;
       this.summaryIconRowBg.clear();
       this.summaryIconRowBg.fillStyle(0x000000, 0.65);
-      this.summaryIconRowBg.fillRoundedRect(-2, -7, Math.max(0, cursorX + this._sumIconRowBgWidthPad), Math.max(0, this._sumIconRowBgHeight), this._sumIconRowBorderRadius);
+      this.summaryIconRowBg.fillRoundedRect(-2, -7, Math.max(0, cursorX + effectiveWidthPad), Math.max(0, this._sumIconRowBgHeight), this._sumIconRowBorderRadius);
       this.summaryIconRowBg.setVisible(true);
     } else {
       this.summaryIconRowBg.setVisible(false);
@@ -2289,9 +2304,9 @@ export default class SummaryUiHandler extends UiHandler {
         }
         changed.push(block);
       } else {
-        if (name === "IconRow" && Math.abs(this._sumIconRowGap - 1.5) > 0.001) {
-          let block = `${name}:\n  ORIGINAL: x=${baseline.x.toFixed(1)} y=${baseline.y.toFixed(1)} scaleX=${baseline.scaleX.toFixed(3)} scaleY=${baseline.scaleY.toFixed(3)} α=${baseline.alpha.toFixed(2)} zOrder=${baseline.listIndex} gap=1.5`;
-          block += `\n  CHANGE:   Δgap=${(this._sumIconRowGap - 1.5) >= 0 ? "+" : ""}${(this._sumIconRowGap - 1.5).toFixed(1)}`;
+        if (name === "IconRow" && Math.abs(this._sumIconRowGap - 0) > 0.001) {
+          let block = `${name}:\n  ORIGINAL: x=${baseline.x.toFixed(1)} y=${baseline.y.toFixed(1)} scaleX=${baseline.scaleX.toFixed(3)} scaleY=${baseline.scaleY.toFixed(3)} α=${baseline.alpha.toFixed(2)} zOrder=${baseline.listIndex} gap=0.0`;
+          block += `\n  CHANGE:   Δgap=${(this._sumIconRowGap - 0) >= 0 ? "+" : ""}${(this._sumIconRowGap - 0).toFixed(1)}`;
           block += `\n  APPLIED:  x=${x.toFixed(1)} y=${y.toFixed(1)} scaleX=${sx.toFixed(3)} scaleY=${sy.toFixed(3)} α=${a.toFixed(2)} zOrder=${zi} gap=${this._sumIconRowGap.toFixed(1)}`;
           changed.push(block);
         } else if (name === "IconRowBg") {

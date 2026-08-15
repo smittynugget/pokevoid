@@ -1,5 +1,5 @@
 import { FormModalUiHandler } from "./form-modal-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { transferSave } from "#app/account";
 import BattleScene from "#app/battle-scene";
 import {ModalConfig} from "#app/ui/modal-ui-handler";

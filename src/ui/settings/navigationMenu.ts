@@ -5,6 +5,7 @@ import {addTextObject, setTextStyle, TextStyle} from "#app/ui/text";
 import {addWindow} from "#app/ui/ui-theme";
 import {Button} from "#enums/buttons";
 import i18next from "i18next";
+import { isPrimaryPointer } from "../pointer-utils";
 
 const LEFT = "LEFT";
 const RIGHT = "RIGHT";
@@ -106,6 +107,30 @@ export default class NavigationMenu extends Phaser.GameObjects.Container {
 
     this.add(iconPreviousTab);
     this.add(iconNextTab);
+
+    for (let i = 0; i < this.headerTitles.length; i++) {
+      const tabLabel = this.headerTitles[i];
+      tabLabel.setInteractive({ useHandCursor: true });
+      tabLabel.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (!isPrimaryPointer(pointer)) return;
+        navigationManager.selectedMode = navigationManager.modes[i];
+        this.scene.ui.setMode(navigationManager.modes[i]);
+        navigationManager.updateNavigationMenus();
+      });
+    }
+
+    iconPreviousTab.setInteractive({ useHandCursor: true });
+    iconPreviousTab.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (!isPrimaryPointer(pointer)) return;
+      this.navigate(Button.CYCLE_FORM);
+    });
+
+    iconNextTab.setInteractive({ useHandCursor: true });
+    iconNextTab.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (!isPrimaryPointer(pointer)) return;
+      this.navigate(Button.CYCLE_SHINY);
+    });
+
     navigationManager.navigationMenus.push(this);
     navigationManager.updateNavigationMenus();
   }

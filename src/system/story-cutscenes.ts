@@ -19,7 +19,9 @@ export type StoryCutsceneId =
   | "smitty_victory"
   | "void_victory"
   | "all_smittys_complete_victory"
-  | "loss_whiteout_homebase";
+  | "loss_whiteout_homebase"
+  | "tutorial_void_trance"
+  | "tutorial_void_trance_journey";
 
 export interface StoryCutsceneDefinition {
   bgmKey: string;
@@ -194,6 +196,26 @@ export const STORY_CUTSCENES: Record<StoryCutsceneId, StoryCutsceneDefinition> =
     slides: [
       { imageKey: "whiteout", textKey: "cutscene:loss_whiteout_13" },
       { imageKey: "homebase", textKey: "cutscene:loss_homebase_1" },
+    ],
+  },
+  tutorial_void_trance: {
+    bgmKey: "battle_legendary_kor_mir",
+    slides: [
+      { imageKey: "whiteout", textKey: "cutscene:tutorial_trance_1a" },
+      { imageKey: "whiteout", textKey: "cutscene:tutorial_trance_1b", fadeDuration: 0 },
+      { imageKey: "homebase", textKey: "cutscene:tutorial_trance_2a" },
+      { imageKey: "homebase", textKey: "cutscene:tutorial_trance_2b", fadeDuration: 0 },
+      { imageKey: "you", textKey: "cutscene:tutorial_trance_3a" },
+      { imageKey: "you", textKey: "cutscene:tutorial_trance_3b", fadeDuration: 0 },
+      { imageKey: "choose", textKey: "cutscene:tutorial_trance_4a" },
+      { imageKey: "choose", textKey: "cutscene:tutorial_trance_4b", fadeDuration: 0 },
+    ],
+  },
+  tutorial_void_trance_journey: {
+    bgmKey: "battle_legendary_kor_mir",
+    slides: [
+      { imageKey: "journey", textKey: "cutscene:tutorial_trance_5a" },
+      { imageKey: "journey", textKey: "cutscene:tutorial_trance_5b", fadeDuration: 0 },
     ],
   },
 };

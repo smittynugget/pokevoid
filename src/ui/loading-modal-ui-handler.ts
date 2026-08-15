@@ -2,7 +2,7 @@ import i18next from "i18next";
 import BattleScene from "../battle-scene";
 import { ModalUiHandler } from "./modal-ui-handler";
 import { addTextObject, TextStyle } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 
 export default class LoadingModalUiHandler extends ModalUiHandler {
   protected alphaMultiplier: number = 0.5;

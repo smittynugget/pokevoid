@@ -105,6 +105,17 @@
       "common": {
         "any": "N'IMPORTE LEQUEL"
       }
+    },
+    "skillTree": {
+      "modalTitle": "Prime de l'Arbre de Compétences",
+      "completion": {
+        "title": "Prime Terminée !",
+        "standardReward": "Choisissez votre récompense !",
+        "rareReward": "Rareté MASTER BALL débloquée !",
+        "veryRareRankUp": "Un rang Pokémon supérieur vous attend !",
+        "veryRareMove": "Un Coup Duelmon vous attend !",
+        "fallback": "Récompense obtenue !"
+      }
     }
   },
   "modeRewards": {
@@ -117,4 +128,4 @@
     "accessShopInBattle": "Accéder à la ΩBOUTIQUE en COMBAT !",
     "accessQuestsInBattle": "Accéder aux QUÊTES en COMBAT !"
   }
-} 
+}

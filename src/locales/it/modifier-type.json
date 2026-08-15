@@ -72,11 +72,11 @@
       "description": "Aumenta i livell di tutti i Pokémon della squadra di {{levels}}."
     },
     "PokemonBaseStatBoosterModifierType": {
-      "description": "Aumenta {{statName}} di base del possessore del 10%."
+      "description": "Aumenta {{statName}} di base del possessore del 8%."
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "Economico",
-      "description": "Aumenta {{statName}} di base del possessore del 1%."
+      "description": "Aumenta {{statName}} di base del possessore del 3%."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restituisce il 100% dei PS a tutti i Pokémon."
@@ -423,7 +423,7 @@
       "description": "Insegna {{moveName}} a qualsiasi Pokémon."
     },
     "AnyTmModifierTypeWithInfo": {
-      "name": "++XM{{moveId}} - {{moveName}}++",
+      "name": "XM{{moveId}} - {{moveName}}",
       "statLabel": "XM (Qualsiasi MT)",
       "description": "Insegna {{moveName}} a qualsiasi Pokémon\n(Tieni premuto C o Shift per maggiori informazioni)."
     },
@@ -721,7 +721,8 @@
       "name": "Essenze",
       "shopName": "Essenza {{type}}",
       "statLabel": "Essenza",
-      "description": "Usa 4 invece di liberare un Pokémon per Oggetti di Liberazione o scambia per ricompense con il Collezionista."
+      "description": "Usa 4 invece di liberare un Pokémon per Oggetti di Liberazione o scambia per ricompense con il Collezionista.",
+      "tooltipDescription": "Concede 1 Essenza di {{type}} al Pokémon selezionato.\n\nLe essenze servono per potenziare le abilità del Campione, come alternativa ai sacrifici (4 richieste) e per gli scambi col Collezionista."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Essenze Raccolte",
@@ -879,6 +880,7 @@
     "NONE": "Nessuno",
     "ABOMASITE": "Abomasnowite",
     "ABSOLITE": "Absolite",
+    "ABSOLITE_Z": "Absolite Z",
     "AERODACTYLITE": "Aerodactylite",
     "AGGRONITE": "Aggronite",
     "ALAKAZITE": "Alakazamite",
@@ -895,6 +897,7 @@
     "DIANCITE": "Diancite",
     "GALLADITE": "Galladite",
     "GARCHOMPITE": "Garchompite",
+    "GARCHOMPITE_Z": "Garchompite Z",
     "GARDEVOIRITE": "Gardevoirite",
     "GENGARITE": "Gengarite",
     "GLALITITE": "Glalite",
@@ -906,6 +909,7 @@
     "LATIOSITE": "Latiosite",
     "LOPUNNITE": "Lopunnite",
     "LUCARIONITE": "Lucarite",
+    "LUCARIONITE_Z": "Lucarite Z",
     "MANECTITE": "Manectricite",
     "MAWILITE": "Mawilite",
     "MEDICHAMITE": "Medichamite",
@@ -953,6 +957,21 @@
     "DRAMPITE": "Drampite",
     "FALINKSITE": "Falinksite",
     "ZERAORITE": "Zeraorite",
+    "RAICHUITE_X": "Raichuite X",
+    "RAICHUITE_Y": "Raichuite Y",
+    "CHIMECHOITE": "Chimechoite",
+    "STARAPTORITE": "Staraptorite",
+    "HEATRANITE": "Heatranite",
+    "DARKRAITE": "Darkraite",
+    "GOLURKITE": "Golurkite",
+    "MEOWSTITE": "Meowstite",
+    "CRABOMINITE": "Crabominite",
+    "GOLISOPODITE": "Golisopodite",
+    "MAGEARNITE": "Magearnite",
+    "SCOVILLAINITE": "Scovillainite",
+    "GLIMMORITE": "Glimmorite",
+    "TATSUGURITE": "Tatsugurite",
+    "BAXCALIBURITE": "Baxcaliburite",
 
     "BLUE_ORB": "Gemma Blu",
     "RED_ORB": "Gemma Rossa",
@@ -1072,10 +1091,16 @@
     "uses": "usi",
     "glitchPieceCost": "*COSTA 1x Frammento Glitch",
     "essenceAlternativeCost": "Se il Pokémon ha 4+ Essenze, puoi usare quelle al suo posto.",
+    "abilityReplaceNote": "Sostituisce l'abilità attuale del Pokémon. Non cumulabile.",
+    "passiveAbilityReplaceNote": "Sostituisce l'abilità passiva attuale del Pokémon. Non cumulabile.",
     "permaMoney": "ΩORO",
     "permaItem": "ΩOGGETTO",
     "moreInfo": "(Tieni premuto C / Shift per informazioni)",
     "morePokeInfo": "(Premi P / Shift per info)",
-    "upgrade": "Potenziamento"
-  }
+    "upgrade": "Potenziamento",
+    "partyAbilityStacksHint": "(CUMULABILE!)"
+  },
+  "permaWaveTooltip": "Scompare dopo [color=#ffa500]{{count}}[/color] ondate — il conto alla rovescia inizia dopo l'ondata 50",
+  "permaUseTooltip": "[color=#ffa500]{{count}}[/color] utilizzi rimanenti — il conto alla rovescia inizia dopo l'ondata 50",
+  "permaRemoveHint": "Premi 10 volte per rimuovere"
 }

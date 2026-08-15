@@ -1,14 +1,16 @@
 import BattleScene from "../../battle-scene";
 import { hasTouchscreen, isMobile } from "../../touch-controls";
 import { TextStyle, addTextObject } from "../text";
-import { Mode } from "../ui";
+import { Mode } from "../mode";
 import UiHandler from "../ui-handler";
 import { addWindow } from "../ui-theme";
 import {Button} from "#enums/buttons";
 import {InputsIcons} from "#app/ui/settings/abstract-control-settings-ui-handler.js";
 import NavigationMenu, {NavigationManager} from "#app/ui/settings/navigationMenu";
 import { Setting, SettingKeys, SettingType } from "#app/system/settings/settings";
+import { isPrimaryPointer } from "../pointer-utils";
 import { attachModalBackground, ModalBackgroundHandle } from "../modal-background-utils";
+import { ModifierTooltipUtils } from "../modifier-tooltip-utils";
 import i18next from "i18next";
 export default class AbstractSettingsUiHandler extends UiHandler {
   private settingsContainer: Phaser.GameObjects.Container;
@@ -31,6 +33,9 @@ export default class AbstractSettingsUiHandler extends UiHandler {
 
   private reloadSettings: Array<Setting>;
   private reloadRequired: boolean;
+
+  private _rowZones: Phaser.GameObjects.Zone[] = [];
+  private _wheelHandler: ((...args: any[]) => void) | null = null;
 
   protected rowsToDisplay: number;
   protected title: string;
@@ -119,6 +124,61 @@ export default class AbstractSettingsUiHandler extends UiHandler {
         });
 
     this.optionCursors = this.settings.map(setting => setting.default);
+
+    const rowWidth = (this.scene.game.canvas.width / 6) - 10;
+    const rowHeight = 16;
+    this._rowZones = [];
+    for (let s = 0; s < this.settings.length; s++) {
+      const zone = this.scene.add.zone(4, 28 + s * rowHeight, rowWidth, rowHeight);
+      zone.setOrigin(0, 0);
+      zone.setInteractive({ useHandCursor: true });
+      this.optionsContainer.add(zone);
+      this._rowZones.push(zone);
+
+      const settingIdx = s;
+      zone.on("pointerover", () => {
+        const isVisible = settingIdx >= this.scrollCursor && settingIdx < this.scrollCursor + this.rowsToDisplay;
+        if (!isVisible) return;
+        const targetCursor = settingIdx - this.scrollCursor;
+        if (targetCursor !== this.cursor) {
+          this.setCursor(targetCursor);
+          this.getUi().playSelect();
+        }
+      });
+
+      zone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (!isPrimaryPointer(pointer)) return;
+        const isVisible = settingIdx >= this.scrollCursor && settingIdx < this.scrollCursor + this.rowsToDisplay;
+        if (!isVisible) return;
+        const targetCursor = settingIdx - this.scrollCursor;
+        if (this.cursor !== targetCursor) {
+          this.setCursor(targetCursor);
+          this.getUi().playSelect();
+        }
+      });
+
+      for (let o = 0; o < this.settings[s].options.length; o++) {
+        const label = this.optionValueLabels[s][o];
+        label.setInteractive({ useHandCursor: true });
+        const optIdx = o;
+        label.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+          if (!isPrimaryPointer(pointer)) return;
+          const isVisible = settingIdx >= this.scrollCursor && settingIdx < this.scrollCursor + this.rowsToDisplay;
+          if (!isVisible) return;
+          const targetCursor = settingIdx - this.scrollCursor;
+          this.setCursor(targetCursor);
+          this.setOptionCursor(settingIdx, optIdx, true);
+          this.getUi().playSelect();
+        });
+      }
+    }
+
+    for (let s = 0; s < this.settings.length; s++) {
+      for (const label of this.optionValueLabels[s]) {
+        this.optionsContainer.bringToTop(label);
+      }
+    }
+
     this.settingsContainer.add(this.navigationContainer);
     this.settingsContainer.add(this.optionsBg);
     this.settingsContainer.add(this.actionsBg);
@@ -184,11 +244,30 @@ export default class AbstractSettingsUiHandler extends UiHandler {
     this.settings.forEach((setting, s) => this.setOptionCursor(s, settings.hasOwnProperty(setting.key) ? settings[setting.key] : this.settings[s].default));
 
     this.settingsContainer.setVisible(true);
+    this.setScrollCursor(0);
     this.setCursor(0);
+
+    this._wheelHandler = (_p: any, _g: any, _dx: number, dy: number) => {
+      const maxScroll = Math.max(0, this.settings.length - this.rowsToDisplay);
+      if (dy > 0 && this.scrollCursor < maxScroll) {
+        this.setScrollCursor(this.scrollCursor + 1);
+      } else if (dy < 0 && this.scrollCursor > 0) {
+        this.setScrollCursor(this.scrollCursor - 1);
+      }
+    };
+    this.scene.input.on("wheel", this._wheelHandler);
 
     this.getUi().moveTo(this.settingsContainer, this.getUi().length - 1);
 
     this.getUi().hideTooltip();
+
+    ModifierTooltipUtils.hide(this.scene as BattleScene);
+    const bs = this.scene as BattleScene;
+    [bs.getModifierBar(), bs.getModifierBar(true), bs.ui.permaModifierBar].forEach(bar => {
+      bar?.getAll().forEach((icon: any) => {
+        if (typeof icon.disableInteractive === "function") icon.disableInteractive();
+      });
+    });
     this._settingsPatterns?.nav?.redraw();
     this._settingsPatterns?.options?.redraw();
     this._settingsPatterns?.actions?.redraw();
@@ -337,18 +416,43 @@ export default class AbstractSettingsUiHandler extends UiHandler {
         option.setVisible(visible);
       }
     }
+
+    if (this._rowZones) {
+      for (let s = 0; s < this._rowZones.length; s++) {
+        const visible = s >= this.scrollCursor && s < this.scrollCursor + this.rowsToDisplay;
+        if (visible) {
+          this._rowZones[s].setInteractive({ useHandCursor: true });
+        } else {
+          this._rowZones[s].disableInteractive();
+        }
+      }
+    }
+
+    this.settingsContainer.bringToTop(this.navigationContainer);
   }
   clear() {
+    const bs = this.scene as BattleScene;
+    [bs.getModifierBar(), bs.getModifierBar(true), bs.ui.permaModifierBar].forEach(bar => {
+      bar?.getAll().forEach((icon: any) => {
+        if (typeof icon.setInteractive === "function") icon.setInteractive();
+      });
+    });
 
     this._settingsPatterns?.nav?.clear();
     this._settingsPatterns?.options?.clear();
     this._settingsPatterns?.actions?.clear();
     this._settingsPatterns = undefined;
 
+    if (this._wheelHandler) {
+      this.scene.input.off("wheel", this._wheelHandler);
+      this._wheelHandler = null;
+    }
+
     super.clear();
     this.settingsContainer.setVisible(false);
     this.eraseCursor();
     this.getUi().bgmBar.toggleBgmBar(this.scene.showBgmBar);
+    this.getUi().applyPermaBarVisibility();
     if (this.reloadRequired) {
       this.reloadRequired = false;
       this.scene.reset(true, false, true);

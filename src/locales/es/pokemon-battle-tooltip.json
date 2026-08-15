@@ -1,0 +1,12 @@
+{
+  "quickSummary": "Resumen Rápido",
+  "itemsMoves": "Objetos y Movimientos",
+  "currentParty": "Equipo Actual",
+  "enemyInfo": "Info del Enemigo",
+  "teamTitle": "Equipo",
+  "noOpponent": "Sin oponente",
+  "notApplicable": "---",
+  "pageIndicator": "{{current}}/{{total}}",
+  "foeTag": "RIVAL",
+  "youTag": "TÚ"
+}

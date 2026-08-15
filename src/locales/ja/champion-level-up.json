@@ -1,5 +1,7 @@
 {
   "title": "{{champion}} レベルアップ！",
+  "skillObtained": "{{skillName}}\n獲得！",
+  "obtained": "獲得！",
   "levelReached": "レベル{{level}}に到達",
   "continue": "続けるには何かキーを押してください"
 }

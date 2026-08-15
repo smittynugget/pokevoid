@@ -2167,6 +2167,10 @@
     "name": "Enredaderas Parásitas",
     "description": "Duplica la potencia de Látigo Cepa. 30% de probabilidad de sembrar o atar al objetivo al usar Látigo Cepa."
   },
+  "leftoversPower": {
+    "name": "Leftovers Power",
+    "description": "Restaura pasivamente 1/8 de los PS máximos al final de cada turno."
+  },
   "regeneratorPlus": {
     "name": "Regeneración Plus",
     "description": "Restaura el 45% de los PS máximos al cambiar."
@@ -2698,5 +2702,1041 @@
   "dragonize": {
     "name": "Dragonizar",
     "description": "Convierte los movimientos de tipo Normal en tipo Dragón y aumenta su potencia en un 20%."
+  },
+  "nightmares": {
+    "name": "Pesadillas",
+    "description": "Reduce los PS de los Pokémon rivales dormidos en 1/4 al final de cada turno."
+  },
+  "piercingDrill": {
+    "name": "Taladro Perforante",
+    "description": "Los movimientos de contacto traspasan la protección del objetivo e infligen 1/4 del daño esperado."
+  },
+  "spicySpray": {
+    "name": "Rocío Picante",
+    "description": "Quema al atacante cuando el Pokémon recibe daño."
+  },
+  "aCounterInfector": {
+    "name": "A-Contra Infector",
+    "description": "Cuando es golpeado por un ataque físico, el usuario tiene un 30% de probabilidad de infligir una condición de estado aleatoria al atacante. Si el atacante tiene un estado alterado, al hacer contacto, el usuario roba 1/16 de los PS del atacante."
+  },
+  "aParasiticOffspring": {
+    "name": "A-Descendencia Parasitaria",
+    "description": "Los ataques físicos del usuario tienen un 30% de probabilidad de infligir una condición de estado aleatoria al objetivo. Si el objetivo tiene un estado alterado, los movimientos de contacto contra el usuario curan 1/16 de sus PS máximos en lugar de infligir daño."
+  },
+  "aSuppression": {
+    "name": "A-Supresión",
+    "description": "Los Pokémon rivales con condiciones de estado reciben un 30% más de daño de los ataques y no pueden usar sus habilidades."
+  },
+  "abominableProtection": {
+    "name": "Protección Abominable",
+    "description": "Cuando el usuario entra en combate, establece Velo Aurora sin necesitar Granizo o Nieve, pero pierde el 25% de sus PS máximos. Este efecto solo puede ocurrir una vez por combate."
+  },
+  "absoluteLightning": {
+    "name": "Rayo Absoluto",
+    "description": "El primer golpe dañino recibido en cada combate es negado, y el atacante recibe 1/8 de sus PS máximos en su lugar. Los movimientos de tipo Normal se convierten en tipo Eléctrico e infligen 1,2× de daño."
+  },
+  "absoluteVoidMagic": {
+    "name": "Magia del Vacío Absoluto",
+    "description": "Los ataques del usuario tienen un 50% de probabilidad de infligir una condición de estado aleatoria, condición temporal, trampa o trampa de terreno al objetivo."
+  },
+  "absoluteZero": {
+    "name": "Cero Absoluto",
+    "description": "Mientras Granizo o Nieve está activo, los movimientos de tipo Normal, Volador y Dragón del usuario se convierten en tipo Hielo, infligen 1,2× de daño y tienen un 20% de probabilidad de congelar."
+  },
+  "abyssalFlame": {
+    "name": "Llama Abisal",
+    "description": "Los movimientos de tipo Normal se convierten en tipo Fuego. Los movimientos de tipo Fuego y Siniestro comparten ventajas de debilidad de tipo y tienen un 30% de probabilidad de quemar."
+  },
+  "abyssalGrasp": {
+    "name": "Agarre Abisal",
+    "description": "Los movimientos de tipo Normal se convierten en tipo Agua. Los movimientos de tipo Agua tienen un 30% de probabilidad de infligir Remolino al objetivo."
+  },
+  "acidRain": {
+    "name": "Lluvia Ácida",
+    "description": "Cuando el usuario entra en combate, establece Lluvia. Los movimientos de tipo Veneno infligen 1,3× de daño mientras la Lluvia está activa. Los movimientos de tipo Normal se convierten en tipo Veneno."
+  },
+  "adventureStart": {
+    "name": "¡Aventura Inicio!",
+    "description": "Los movimientos del usuario tienen un 50% de probabilidad de ganar prioridad. Todos los movimientos del usuario ganan +1 nivel de golpe crítico."
+  },
+  "almightyGalaxy": {
+    "name": "Galaxia Todopoderosa",
+    "description": "Al final de cada turno, el usuario cambia a un tipo aleatorio y restaura 1/8 de sus PS máximos. Los ataques sin efectos secundarios infligen 1,3× de daño."
+  },
+  "alternativeBurst": {
+    "name": "Estallido Alternativo",
+    "description": "Los movimientos de estado del usuario infligen daño igual a 1/8 de los PS máximos del objetivo. Los movimientos de tipo Eléctrico y Dragón tienen un 30% de probabilidad de paralizar."
+  },
+  "ancientBehemoth": {
+    "name": "Behemoth Antiguo",
+    "description": "Los movimientos de contacto del usuario ignoran las resistencias de tipo e infligen 1,3× de daño."
+  },
+  "ancientDrill": {
+    "name": "Taladro Antiguo",
+    "description": "Los ataques del usuario tienen un 50% de probabilidad de eliminar el objeto equipado del objetivo e infligir daño adicional igual a 1/8 de los PS máximos del objetivo."
+  },
+  "ancientDualCore": {
+    "name": "Doble Núcleo Antiguo",
+    "description": "En el turno 1, el usuario es de tipo Normal. En el turno 2, se convierte en tipo Acero y Lucha. Los movimientos de tipo Normal se convierten en tipo Acero, también se tratan como tipo Lucha e infligen 1,2× de daño."
+  },
+  "ancientKnowledge": {
+    "name": "Conocimiento Antiguo",
+    "description": "Los movimientos de tipo Psíquico y Hada del usuario infligen 1,2× de daño y comparten las mismas ventajas de debilidad de tipo."
+  },
+  "ancientSummon": {
+    "name": "Invocación Antigua",
+    "description": "Al entrar en combate, el usuario gana +1 nivel en una estadística aleatoria por cada otro Pokémon del equipo que tenga un movimiento Gadget. Cada aumento se elige al azar."
+  },
+  "ancientSupplies": {
+    "name": "Suministros Antiguos",
+    "description": "Cuando el usuario es retirado, el Pokémon entrante cura el 25% de sus PS máximos y gana +1 en Defensa."
+  },
+  "aquaticRitual": {
+    "name": "Ritual Acuático",
+    "description": "Si la Lluvia está activa, el usuario aumenta dos estadísticas aleatorias al final de cada turno."
+  },
+  "beastOfRagnarok": {
+    "name": "Bestia de Ragnarok",
+    "description": "Con Nieve o Granizo, la Velocidad del usuario se duplica, y los movimientos de mordisco tienen un 10% de probabilidad de congelar al objetivo o un 10% de probabilidad de hacerlo retroceder."
+  },
+  "beaststar": {
+    "name": "Bestiestrella",
+    "description": "Los ataques del usuario infligen 1,5× de daño. Si un ataque no puede causar retroceso, tiene un 30% de probabilidad de hacer retroceder al objetivo. La Defensa y Defensa Especial del usuario bajan un nivel tras atacar."
+  },
+  "blackFlameSpark": {
+    "name": "Chispa de Llama Negra",
+    "description": "Después de que el usuario es golpeado por un ataque, gana una carga. Si el usuario se retira mientras está cargado, el objetivo se quema y el Pokémon que entra gana +1 en Velocidad y +1 en una estadística aleatoria."
+  },
+  "blazingCitrine": {
+    "name": "Citrina Ardiente",
+    "description": "Los movimientos de tipo Normal del usuario se convierten en tipo Fuego o Roca dependiendo de cuál infligiría más daño al objetivo. Si es neutral, se elige al azar. Los movimientos de tipo Fuego y Roca tienen un 30% de probabilidad de quemar al objetivo. Los objetivos quemados no pueden usar sus habilidades y los efectos secundarios de sus movimientos se desactivan."
+  },
+  "blazingTimber": {
+    "name": "Madera Ardiente",
+    "description": "Los movimientos de tipo Normal y Planta del usuario se convierten en tipo Fuego, tienen un 30% de probabilidad de quemar al objetivo e infligen 1,3× de daño."
+  },
+  "blindRage": {
+    "name": "Rabia Ciega",
+    "description": "Mientras está confuso, los movimientos del usuario infligen 2× de daño y tienen +1 nivel de golpe crítico. Los movimientos de tipo Normal comparten las ventajas de tipo de los movimientos de tipo Lucha."
+  },
+  "bloodScent": {
+    "name": "Olfato de Sangre",
+    "description": "Los ataques del usuario aterrizan automáticamente como golpes críticos contra objetivos por debajo del 40% de PS."
+  },
+  "blowbackRoulette": {
+    "name": "Ruleta de Retroceso",
+    "description": "Los movimientos de tipo Siniestro y Acero del usuario tienen un 30% de probabilidad de bajar aleatoriamente tres estadísticas del objetivo en un nivel cada una."
+  },
+  "bullRush": {
+    "name": "Embestida de Toro",
+    "description": "Los movimientos de tipo Normal del usuario se convierten en tipo Lucha y ganan +1 de prioridad."
+  },
+  "carnivorousVines": {
+    "name": "Enredaderas Carnívoras",
+    "description": "Los movimientos de contacto del usuario tienen un 50% de probabilidad de atrapar al objetivo durante tres turnos, infligiendo daño igual a 1/8 de sus PS máximos cada turno."
+  },
+  "chainsOfInfinity": {
+    "name": "Cadenas del Infinito",
+    "description": "Los movimientos que infligen 60 o menos de daño tienen un 1% de probabilidad de debilitar al objetivo instantáneamente."
+  },
+  "chaosEnd": {
+    "name": "Fin del Caos",
+    "description": "Si el equipo tiene un Pokémon Siniestro debilitado, tras debilitar al objetivo, el siguiente Pokémon que entra recibe daño igual a 1/6 de sus PS máximos. Si tiene un Pokémon Hada debilitado, los movimientos de tipo Normal se convierten en Siniestro con 1,2× de daño. Si tiene un Siniestro, un Hada y un Siniestro/Hada debilitados (tres aliados en total), cuando el usuario cae, el rival recibe daño igual al 50% de sus PS máximos."
+  },
+  "chaosOrder": {
+    "name": "Orden del Caos",
+    "description": "El usuario recibe un 50% menos de daño de oponentes con 600 o más de BST total. Los movimientos Normal se convierten en tipo Hada o Siniestro según cuál inflija más daño. Si son neutrales, se elige al azar. Al debilitar con un movimiento Hada, recupera 1/4 de sus PS. Al debilitar con un movimiento Siniestro, gana +1 en Ataque o Velocidad al azar."
+  },
+  "chaosSorcerer": {
+    "name": "Hechicero del Caos",
+    "description": "El usuario tiene los efectos de Veleta. Los movimientos especiales del usuario tienen un 30% de probabilidad de confundir al objetivo."
+  },
+  "chaosWarrior": {
+    "name": "Guerrero del Caos",
+    "description": "Los movimientos Normal del usuario se convierten en tipo Siniestro o Hada según cuál infligiría más daño al objetivo. Si son neutrales, se elige al azar. Los movimientos Siniestro tienen un 30% de probabilidad de dormir al objetivo. Los movimientos Hada tienen un 30% de probabilidad de bajar el Ataque y Ataque Especial del objetivo."
+  },
+  "chargeChampion": {
+    "name": "Campeón de Carga",
+    "description": "Los movimientos de carga del usuario infligen un 50% de daño en el primer turno y aumentan dos estadísticas aleatorias."
+  },
+  "clayColossus": {
+    "name": "Coloso de Arcilla",
+    "description": "El usuario no recibe daño de movimientos poco eficaces. Los movimientos de tipo Normal se convierten en tipo Tierra. Los movimientos de tipo Tierra tienen un 30% de probabilidad de bajar la Velocidad del objetivo."
+  },
+  "climateChange": {
+    "name": "Cambio Climático",
+    "description": "Durante el sol, los movimientos Normal y Agua del usuario se convierten en tipo Fuego con un 30% de probabilidad de quemar. Durante la lluvia, los movimientos Normal y Fuego se convierten en tipo Agua con un 10% de probabilidad de atrapar al objetivo en Remolino."
+  },
+  "clusterBurst": {
+    "name": "Estallido en Grupo",
+    "description": "Los movimientos Normal del usuario se convierten en tipo Agua. Durante la Lluvia o Lluvia Intensa, los movimientos Agua del usuario tienen un 50% de probabilidad de golpear dos veces."
+  },
+  "contagion": {
+    "name": "Contagio",
+    "description": "Los movimientos Normal del usuario se convierten en tipo Veneno e infligen 1,2× de daño. Los movimientos Veneno envenenan gravemente al objetivo."
+  },
+  "cornfieldGuardian": {
+    "name": "Guardián del Maizal",
+    "description": "Mientras el Campo de Hierba está activo, el usuario gana +1 en Ataque y cura su condición de estado al final de cada turno."
+  },
+  "corpseParty": {
+    "name": "Fiesta Cadáver",
+    "description": "Los movimientos Fantasma del usuario ganan 5 de potencia base por cada Pokémon Fantasma en el equipo. Los movimientos Normal se convierten en tipo Fantasma."
+  },
+  "corruptElephant": {
+    "name": "Elefante Corrupto",
+    "description": "Los movimientos Normal se convierten en tipo Hada o Siniestro según cuál sea más fuerte contra el objetivo (al azar si neutral). Al ser golpeado, el usuario restaura 1/8 de sus PS máximos y su Ataque sube un nivel. Si lleva un objeto, pierde uno al azar."
+  },
+  "corruptedPower": {
+    "name": "Poder Corrupto",
+    "description": "Usar el mismo movimiento consecutivamente aumenta su poder en un 40% cada vez, pero el usuario recibe un 33% de daño por retroceso."
+  },
+  "cottonTokens": {
+    "name": "Fichas de Algodón",
+    "description": "Cuando el usuario recibe un ataque que inflige el 70% o más de sus PS máximos sin debilitarlo, crea un Sustituto con el 25% de sus PS máximos."
+  },
+  "creepySurprise": {
+    "name": "Sorpresa Escalofriante",
+    "description": "Si este Pokémon tiene menos del 50% de PS, paraliza al objetivo al entrar. Este Pokémon no puede retirarse después de usar esta habilidad."
+  },
+  "crimsonGear": {
+    "name": "Engranaje Carmesí",
+    "description": "Los movimientos Fuego y Acero comparten ventajas de debilidad de tipo. Los movimientos Normal se convierten en tipo Fuego con 1,2× de daño. Si al menos 2 otros Pokémon del equipo tienen un movimiento Gadget, Eléctrico también comparte sus ventajas con Fuego y Acero."
+  },
+  "cripplingIllusions": {
+    "name": "Ilusiones Debilitantes",
+    "description": "Al final de cada turno, la Defensa o Defensa Especial del usuario sube aleatoriamente un nivel. Cuando la suma de ambos niveles llega a 6 o más, ambos se reinician a 0 y el objetivo es maldecido."
+  },
+  "criticalPredator": {
+    "name": "Depredador Crítico",
+    "description": "Los movimientos físicos del usuario infligen 2,5× de daño cuando la Defensa del objetivo es mayor o igual a su Ataque."
+  },
+  "crystalLuster": {
+    "name": "Brillo Cristalino",
+    "description": "Los movimientos Normal y Dragón se convierten en tipo Hielo o Roca según cuál inflija más daño al objetivo (al azar si neutral). Los movimientos Hielo tienen un 10% de probabilidad de congelar. Los movimientos Roca tienen un 10% de probabilidad de infligir Salazón."
+  },
+  "cursedFlamesV2": {
+    "name": "Llamas Malditas",
+    "description": "Los movimientos Normal se convierten en Fuego o Fantasma (el más fuerte contra el rival - al azar si neutral). Los movimientos Fuego tienen 30% de probabilidad de quemar, los Fantasma 5% de maldecir."
+  },
+  "cursedFlamesYu": {
+    "name": "Llamas Malditas",
+    "description": "Los movimientos Normal se convierten en tipo Fuego. Los movimientos Fuego tienen un 10% de probabilidad de quemar al atacante y atraparlo en Giro Fuego."
+  },
+  "cursedPossession": {
+    "name": "Posesión Maldita",
+    "description": "Cuando el usuario es golpeado por un movimiento supereficaz, el atacante es maldecido."
+  },
+  "cursedPotential": {
+    "name": "Potencial Maldito",
+    "description": "Al entrar, todas las estadísticas del usuario suben un nivel, con Ataque subiendo dos niveles adicionales (tres en total). Al final de cada turno, aleatoriamente baja de una a tres estadísticas un nivel o pierde 1/4 de sus PS máximos. No puede retirarse."
+  },
+  "cyberneticControl": {
+    "name": "Control Cibernético",
+    "description": "Los Pokémon rivales no pueden usar movimientos de estado ni sus habilidades."
+  },
+  "cyberneticDiscard": {
+    "name": "Descarte Cibernético",
+    "description": "El usuario descarta un objeto equipado al azar para aumentar el poder de Ataque en 1,2× y restaurar el 25% del daño infligido."
+  },
+  "cyberneticPredator": {
+    "name": "Depredador Cibernético",
+    "description": "Los ataques del usuario infligen el doble de daño al objetivo que entra. Cuando el objetivo entra, el usuario gana +1 en Velocidad."
+  },
+  "cycloneFist": {
+    "name": "Puño Ciclón",
+    "description": "Cuando el usuario entra en combate, activa Viento de Cola. Los movimientos Lucha y Volador comparten ventajas de debilidad de tipo."
+  },
+  "cycloneWrath": {
+    "name": "Ira del Ciclón",
+    "description": "Al entrar, el usuario se carga de viento inmediatamente. Si es golpeado mientras está cargado, recibe 0 daño y el atacante recibe daño igual a 1/8 de sus PS máximos. Ambos efectos solo ocurren una vez por combate. Los movimientos Normal se convierten en Volador con 1,2× de daño."
+  },
+  "cyclonicShift": {
+    "name": "Cambio Ciclónico",
+    "description": "Cada vez que el usuario ataca, la Defensa y el Ataque del objetivo se intercambian, y su Ataque Especial y Defensa Especial se intercambian."
+  },
+  "damBuilder": {
+    "name": "Constructor de Dique",
+    "description": "Cuando el usuario entra, establece un Sustituto. Cuando el Sustituto se rompe, el usuario gana Acua Aro."
+  },
+  "dangerDiscard": {
+    "name": "¡Peligro! Descarte",
+    "description": "Los movimientos de estado del usuario aumentan aleatoriamente una estadística y bajan aleatoriamente otra."
+  },
+  "darkSoundwave": {
+    "name": "Onda Sonora Oscura",
+    "description": "Los movimientos Normal y Siniestro se convierten en movimientos de Sonido, y los movimientos de Sonido se convierten en Siniestro, infligen 1,1× de daño y tienen un 10% de probabilidad de dormir, confundir o hacer retroceder al objetivo."
+  },
+  "darkworldTactics": {
+    "name": "Tácticas del Mundo Oscuro",
+    "description": "Al final del turno, si el usuario tiene niveles de estadísticas negativos, los reinicia, cura 1/6 de sus PS máximos y aumenta una estadística aleatoria en un nivel."
+  },
+  "debilitatingRocket": {
+    "name": "Cohete Debilitante",
+    "description": "Los movimientos Normal se convierten en Acero o Volador, según cuál haga más daño (al azar si neutral). Los movimientos Acero y Volador tienen un 30% de probabilidad de bajar el Ataque del rival en 2 niveles."
+  },
+  "deepRoots": {
+    "name": "Raíces Profundas",
+    "description": "Al final de cada turno, el usuario restaura 1/16 de sus PS máximos e intercambia su Ataque Especial y Defensa Especial."
+  },
+  "deflectionHide": {
+    "name": "Piel Deflectora",
+    "description": "El usuario recibe un 30% menos de daño de los movimientos. Al ser golpeado por un movimiento de contacto, inflige daño igual a 1/16 de los PS máximos del atacante."
+  },
+  "demonicEdge": {
+    "name": "Filo Demoníaco",
+    "description": "Los movimientos Normal se convierten en tipo Acero e infligen 1,2× de daño. Los golpes críticos infligen 2,5× de daño."
+  },
+  "dimensionSlash": {
+    "name": "Corte Dimensional",
+    "description": "Los movimientos cortantes infligen 1,2× de daño, se convierten en tipo Siniestro y tienen un 10% de probabilidad de forzar al objetivo a cambiar."
+  },
+  "dracoLance": {
+    "name": "Lanza Draco",
+    "description": "Los movimientos Normal se convierten en tipo Dragón. Los movimientos Dragón infligen 1,5× de daño si la Defensa del objetivo es mayor que su Ataque."
+  },
+  "dracoNegation": {
+    "name": "Negación Draco",
+    "description": "30% de probabilidad de negar los movimientos de estado del rival. Cuando un movimiento de estado es negado, el rival recibe 1/16 de daño y una estadística aleatoria del usuario sube."
+  },
+  "draconicFlute": {
+    "name": "Flauta Dracónica",
+    "description": "Los movimientos Normal y Dragón del usuario se convierten en movimientos de Sonido e infligen 1,2× de daño. Los movimientos de Sonido tienen un 10% de probabilidad de dormir al objetivo."
+  },
+  "dragonbaneSword": {
+    "name": "Espada Matadragones",
+    "description": "Los movimientos cortantes infligen 2,5× de daño a los Pokémon Dragón. Cuando el usuario debilita a un Pokémon Dragón, gana +1 en Velocidad y restaura 1/8 de sus PS máximos."
+  },
+  "dragonbaneWrath": {
+    "name": "Ira Matadragones",
+    "description": "Mientras está activa, el objetivo pierde 1/8 de sus PS máximos al final de cada turno si es tipo Dragón. Los movimientos Dragón infligen 0,5× de daño al usuario."
+  },
+  "drawThree": {
+    "name": "Robar Tres",
+    "description": "Al final de cada turno, tres estadísticas aleatorias se aumentan o bajan independientemente al azar."
+  },
+  "drawTime": {
+    "name": "¡Hora de Robar!",
+    "description": "Cuando el usuario debilita a un objetivo, hay un 5% de probabilidad de activar la selección de recompensa."
+  },
+  "dualBoneBlade": {
+    "name": "Doble Hoja de Hueso",
+    "description": "Los ataques del usuario golpean dos veces, y el segundo golpe inflige el 50% del daño. Los ataques usan la Defensa más baja del oponente."
+  },
+  "earthboundCurse": {
+    "name": "Maldición Terrenal",
+    "description": "Con Lluvia, los movimientos Agua y Tierra tienen un 30% de probabilidad de quemar al objetivo y bajar su Velocidad un nivel. Los movimientos Normal se convierten en Agua o Tierra según cuál haga más daño (al azar si neutral)."
+  },
+  "electroBoogey": {
+    "name": "Electro Boogey",
+    "description": "Los movimientos Normal se convierten en tipo Eléctrico. Los movimientos Eléctrico tienen un 30% de probabilidad de infligir 2,5× de daño y un 10% de probabilidad de paralizar."
+  },
+  "electromagneticMaster": {
+    "name": "Maestro Electromagnético",
+    "description": "Los movimientos Eléctrico, Roca y Acero comparten ventajas de tipo. Los movimientos Normal se convierten en Eléctrico, Roca o Acero según cuál inflija más daño (al azar si neutral). Los movimientos Eléctrico tienen 10% de probabilidad de ganar +1 prioridad. Los Roca 5% de infligir Salazón. Los Acero 10% de asestar golpe crítico."
+  },
+  "elementalBypass": {
+    "name": "Derivación Elemental",
+    "description": "Si el oponente es de tipo Agua, Tierra o Fuego, los ataques del usuario infligen 1,5× de daño."
+  },
+  "elementalHavoc": {
+    "name": "Caos Elemental",
+    "description": "Los movimientos Agua, Eléctrico y Volador del objetivo infligen 0,5× de daño. Los movimientos Normal se convierten en Agua, Volador o Eléctrico según cuál inflija más daño (al azar si neutral). Los movimientos Agua, Eléctrico y Volador infligen 1,2× de daño."
+  },
+  "emeraldGear": {
+    "name": "Engranaje Esmeralda",
+    "description": "Los movimientos Planta y Acero del usuario comparten ventajas de debilidad de tipo. Los movimientos Normal se convierten en Planta con 1,2× de daño. Si al menos 2 otros Pokémon del equipo tienen un movimiento Gadget, los movimientos Fuego también comparten ventajas con Planta y Acero."
+  },
+  "emeraldStance": {
+    "name": "Postura Esmeralda",
+    "description": "Al usar un ataque, el usuario usa su estadística de Defensa en lugar de Ataque o Ataque Especial."
+  },
+  "emperorsCoin": {
+    "name": "Moneda del Emperador",
+    "description": "Cada turno, el usuario tiene un 50% de probabilidad de aumentar dos estadísticas aleatorias diferentes en un nivel."
+  },
+  "eradicatorsDomain": {
+    "name": "Dominio del Erradicador",
+    "description": "Cada vez que el objetivo usa un movimiento especial, tiene un 30% de probabilidad de recibir una condición de estado aleatoria. Cada vez que usa un movimiento de estado, recibe daño igual a 1/8 de sus PS máximos."
+  },
+  "etherealLight": {
+    "name": "Luz Etérea",
+    "description": "El usuario tiene Intimidación. Al entrar, elimina todas las trampas colocadas por el objetivo y remueve todos los aumentos de estadísticas del objetivo."
+  },
+  "evolutionPill": {
+    "name": "Píldora de Evolución",
+    "description": "Cuando el usuario es debilitado, el siguiente Pokémon que entra en combate gana +1 nivel en su estadística más alta y restaura el 33% de sus PS máximos."
+  },
+  "expandingMass": {
+    "name": "Masa Expansiva",
+    "description": "Los movimientos del usuario ganan +10 de potencia base por cada turno en el campo (máximo +50), pero pierde 1/8 de sus PS máximos cada turno."
+  },
+  "experienceBoost": {
+    "name": "Impulso de Experiencia",
+    "description": "Al final de cada turno, el usuario aumenta aleatoriamente su Defensa, Ataque o Velocidad en un nivel."
+  },
+  "explosiveAir": {
+    "name": "Aire Explosivo",
+    "description": "Los movimientos Normal del usuario se convierten en Volador con 1,2× de daño. Los movimientos Volador contra Pokémon de tipo Fuego siempre resultan en golpes críticos."
+  },
+  "fastFood": {
+    "name": "Comida Rápida",
+    "description": "La Velocidad del usuario sube al final de cada turno. Los movimientos de mordisco reciben un aumento de 1,2×."
+  },
+  "fatedRevival": {
+    "name": "Resurgimiento Predestinado",
+    "description": "Cuando el usuario es debilitado, revive un Pokémon Hada debilitado aleatorio de su equipo con el 50% de PS."
+  },
+  "finalBlade": {
+    "name": "Hoja Final",
+    "description": "Los ataques que no causan retroceso ganan un 10% de probabilidad de hacer retroceder al objetivo por cada Pokémon del equipo debilitado."
+  },
+  "fireAndIce": {
+    "name": "Fuego y Hielo",
+    "description": "Los movimientos Normal del usuario se convierten en Hielo o Fuego según cuál sea más eficaz contra el objetivo (al azar si neutral). Los movimientos Fuego tienen 10% de probabilidad de congelar, y los Hielo 30% de probabilidad de quemar."
+  },
+  "fistOfFate": {
+    "name": "Puño del Destino",
+    "description": "Los movimientos de contacto del usuario ignoran resistencias y habilidades. Cuando el usuario debilita a un objetivo, el siguiente Pokémon que entra recibe daño igual a 1/4 de sus PS máximos."
+  },
+  "flamingOblivion": {
+    "name": "Olvido Flamígero",
+    "description": "Los movimientos Normal se convierten en Fuego. Los movimientos Fuego ignoran resistencias de tipo y tienen un 30% de probabilidad de quemar al objetivo y activar Giro Fuego. Cuando el usuario debilita a un objetivo quemado, el siguiente Pokémon pierde el 25% de sus PS máximos."
+  },
+  "fogBody": {
+    "name": "Cuerpo de Niebla",
+    "description": "Cuando el usuario falla con un ataque de 50% o más de precisión, su Ataque sube un nivel y recupera 1/8 de sus PS."
+  },
+  "fogBreath": {
+    "name": "Aliento de Niebla",
+    "description": "Los movimientos Normal se convierten en tipo Agua, infligen 1,3× de daño y tienen un 30% de probabilidad de bajar la Evasión del objetivo."
+  },
+  "foolsCoin": {
+    "name": "Moneda del Bufón",
+    "description": "Este Pokémon tiene un 50% de probabilidad de activar Protección Milagrosa."
+  },
+  "forScience": {
+    "name": "¡Por la Ciencia!",
+    "description": "Al final de cada turno, una estadística del usuario sube aleatoriamente 2 niveles y otra baja 1. Una del objetivo sube 1 y otra baja 1."
+  },
+  "forbiddenPower": {
+    "name": "Poder Prohibido",
+    "description": "La potencia base de todos los movimientos del usuario aumenta en 20 cada vez que ataca consecutivamente sin cambiar."
+  },
+  "forestGuardian": {
+    "name": "Guardián del Bosque",
+    "description": "En Campo de Hierba, la Velocidad del usuario se duplica y sus movimientos físicos infligen 1,2× de daño. Los movimientos cortantes tienen una alta probabilidad de golpe crítico."
+  },
+  "forestTrickery": {
+    "name": "Artimaña del Bosque",
+    "description": "Los movimientos Normal se convierten en Planta o Hada según cuál sea más fuerte (al azar si neutral), con 1,2× de daño. Los movimientos Planta tienen 30% de probabilidad de activar Campo de Hierba. Los Hada 30% de activar Campo de Niebla."
+  },
+  "fossilBarrier": {
+    "name": "Barrera Fósil",
+    "description": "El objetivo no puede usar movimientos con prioridad ni movimientos que aumenten estadísticas. Los movimientos Normal se convierten en Roca con 1,2× de daño."
+  },
+  "frostyAbomination": {
+    "name": "Abominación Gélida",
+    "description": "Cuando los PS del usuario bajan del 50%, el objetivo recibe daño igual a 1/8 de sus PS máximos. Los movimientos Normal se convierten en Hielo. Los movimientos Hielo se convierten en movimientos de mordisco, infligen 1,2× de daño y tienen 10% de probabilidad de congelar."
+  },
+  "galacticAwakening": {
+    "name": "Despertar Galáctico",
+    "description": "Cuando sus PS bajan del 50%, este Pokémon cambia al tipo Astral. Con PS bajo el 50%, al final de cada turno, una estadística aleatoria sube un nivel."
+  },
+  "gemSiphon": {
+    "name": "Sifón de Gema",
+    "description": "Los movimientos Hada curan al usuario el 50% del daño infligido. Si los PS del usuario están al máximo, crea un Sustituto con el 25% de sus PS."
+  },
+  "gemstoneTrample": {
+    "name": "Pisotón de Gema",
+    "description": "Los movimientos Normal se convierten en Tierra, ignoran aumentos de Defensa e infligen un 20% más de daño."
+  },
+  "genieMagic": {
+    "name": "Magia de Genio",
+    "description": "Los movimientos Normal se convierten en Fuego o Siniestro según cuál sea más eficaz contra el objetivo (al azar si neutral). Los movimientos Fuego y Siniestro tienen un 30% de probabilidad de activar un efecto de Deseo en el siguiente turno."
+  },
+  "giantImpact": {
+    "name": "Impacto Gigante",
+    "description": "Los movimientos Fuego, Planta, Agua y Eléctrico se convierten en Normal. Los movimientos Normal infligen 1,3× de daño y tienen un 30% de probabilidad de paralizar al objetivo o hacerlo retroceder."
+  },
+  "goldenClutch": {
+    "name": "Garra Dorada",
+    "description": "Los movimientos Normal y Lucha se convierten en movimientos cortantes. Los movimientos cortantes ignoran resistencias. Los cortantes que no causan retroceso ganan +1 prioridad y +1 nivel de golpe crítico."
+  },
+  "goldenGaze": {
+    "name": "Mirada Dorada",
+    "description": "Los movimientos Normal del usuario se convierten en Psíquico con 1,2× de daño. Los movimientos Psíquico tienen un 30% de probabilidad de inhabilitar el último movimiento del objetivo. Cuando está inhabilitado, infligen 1,3× de daño."
+  },
+  "goldenGear": {
+    "name": "Engranaje Dorado",
+    "description": "Los movimientos Eléctrico y Acero del usuario comparten ventajas de debilidad de tipo. Los movimientos Normal se convierten en Eléctrico con 1,2× de daño. Si al menos 2 otros Pokémon del equipo tienen un movimiento Gadget, Planta también comparte ventajas con Eléctrico y Acero."
+  },
+  "goldenRadiance": {
+    "name": "Resplandor Dorado",
+    "description": "Cuando los PS del usuario bajan del 10%, todas las estadísticas suben 1 nivel."
+  },
+  "gravityAxe": {
+    "name": "Hacha de Gravedad",
+    "description": "El usuario atrapa a todos los Pokémon rivales, elimina las inmunidades de tipo Volador y tiene los efectos de Veleta."
+  },
+  "hammerKnockback": {
+    "name": "Retroceso de Martillo",
+    "description": "Los movimientos de contacto del usuario tienen un 30% de probabilidad de forzar al objetivo a cambiar."
+  },
+  "handReset": {
+    "name": "Reinicio de Mano",
+    "description": "Cuando los PS del usuario bajan del 50%, cura sus condiciones de estado y las de sus aliados, y reinicia todos los cambios de estadísticas de ambos Pokémon."
+  },
+  "harpieBoost": {
+    "name": "Impulso Harpía",
+    "description": "Los movimientos del usuario ganan 15 de potencia base por cada otro Pokémon Volador no debilitado en el equipo."
+  },
+  "heavenPiercer": {
+    "name": "Perforador Celestial",
+    "description": "Los movimientos Acero del usuario hacen 2× de daño contra Pokémon Tierra y Roca. Los movimientos Normal se convierten en Acero con 1,2× de daño."
+  },
+  "heavensJudgment": {
+    "name": "Juicio Celestial",
+    "description": "Baja el Ataque del rival al entrar y cuando cualquier rival entra o cambia. Los ataques ganan 10 de potencia base por cada Pokémon del equipo que conozca un movimiento Siervo."
+  },
+  "heavyweightHopper": {
+    "name": "Saltador Pesado",
+    "description": "Los movimientos Normal se convierten en Volador o Lucha según cuál sea más fuerte contra el objetivo (al azar si neutral). Los Volador tienen 30% de probabilidad de hacer retroceder. Los Lucha 5% de asestar golpe crítico."
+  },
+  "hydroClone": {
+    "name": "Hidro Clon",
+    "description": "Cuando el usuario debilita al objetivo, crea un Sustituto con el 25% de sus PS máximos."
+  },
+  "hydroSurge": {
+    "name": "Hidro Oleaje",
+    "description": "Todos los movimientos del usuario son supereficaces contra Pokémon de tipo Fuego."
+  },
+  "iceAge": {
+    "name": "Era de Hielo",
+    "description": "El usuario invoca Nieve o Granizo. Al final de cada turno, si hay Nieve o Granizo, baja aleatoriamente la Velocidad, la Defensa más alta o el Ataque más alto del objetivo."
+  },
+  "illusionWeaver": {
+    "name": "Tejedor de Ilusiones",
+    "description": "Cuando el objetivo usa un movimiento de estado, el usuario tiene un 10% de probabilidad de crear un Sustituto, usando el 25% de sus PS."
+  },
+  "illusionist": {
+    "name": "Ilusionista",
+    "description": "El usuario tiene un 30% de probabilidad de evadir ataques físicos."
+  },
+  "immortalSlime": {
+    "name": "Limo Inmortal",
+    "description": "El usuario es inmune a los problemas de estado y a los golpes críticos. El daño físico recibido por el usuario se reduce en un 50%."
+  },
+  "infinityStones": {
+    "name": "Piedras del Infinito",
+    "description": "Los movimientos de tipo Normal se convierten en tipo Roca. Los movimientos de tipo Roca tienen un 10% de probabilidad de asestar un golpe crítico, un 10% de infligir un problema de estado aleatorio y curan al usuario en un 25% del daño infligido."
+  },
+  "ironGiant": {
+    "name": "Gigante de Hierro",
+    "description": "Los movimientos de tipo Acero y Lucha infligen 1,3× de daño y tienen un 30% de probabilidad de reducir la Defensa del objetivo en un nivel."
+  },
+  "ironJaws": {
+    "name": "Mandíbulas de Hierro",
+    "description": "Los movimientos de mordisco curan al usuario en un 50% del daño infligido y comparten las ventajas de tipo Acero."
+  },
+  "junkToTreasure": {
+    "name": "Basura a Tesoro",
+    "description": "Los movimientos con 45 de potencia base o menos infligen 3× de daño."
+  },
+  "jurassicJaws": {
+    "name": "Mandíbulas Jurásicas",
+    "description": "Los movimientos de tipo Normal se convierten en tipo Tierra. Los movimientos de tipo Tierra se convierten en movimientos de mordisco. Los movimientos de mordisco golpean dos veces, y el segundo golpe inflige el 80% del daño."
+  },
+  "kingsRoar": {
+    "name": "Rugido del Rey",
+    "description": "Cuando el usuario entra en combate normalmente, reduce el Ataque y la Velocidad del objetivo en un nivel. Si entra tras la derrota de un compañero de equipo, reduce todas las estadísticas del objetivo en un nivel."
+  },
+  "laserBusterCannon": {
+    "name": "Cañón Láser Destructor",
+    "description": "Los movimientos de pulso y aura obtienen +1 prioridad e infligen 1,3× de daño."
+  },
+  "lastSamufrog": {
+    "name": "Último Samurana",
+    "description": "Los movimientos de tipo Normal se convierten en movimientos cortantes con alta probabilidad de golpe crítico. Tiene el efecto de Robustez."
+  },
+  "leviathansDomain": {
+    "name": "Dominio del Leviatán",
+    "description": "Los movimientos de tipo Agua y Dragón siempre invocan Lluvia al golpear. Por cada turno consecutivo de Lluvia, los movimientos de tipo Agua y Dragón de este Pokémon ganan +10 de potencia base, hasta un máximo de +50."
+  },
+  "leviathansWrath": {
+    "name": "Ira del Leviatán",
+    "description": "Los movimientos de tipo Agua siempre asestan golpe crítico mientras llueve. Tras un golpe crítico de este Pokémon, el clima actual se disipa."
+  },
+  "lifeExchange": {
+    "name": "Intercambio Vital",
+    "description": "Una vez por combate, tras derrotar a un Pokémon rival, revive a un miembro del equipo debilitado aleatorio con el 50% de sus PS máximos."
+  },
+  "looneyDragon": {
+    "name": "Dragón Loco",
+    "description": "Los movimientos de tipo Dragón tienen un 30% de probabilidad de confundir al objetivo. Los movimientos de tipo Hada tienen un 30% de reducir una estadística aleatoria del objetivo. Este Pokémon gana +1 evasión al entrar en combate."
+  },
+  "loversCoin": {
+    "name": "Moneda de los Amantes",
+    "description": "Los ataques tienen un 50% de probabilidad de enamorar a los Pokémon rivales con género. Si un objetivo enamorado ataca, hay un 50% de probabilidad de devolver la mitad del daño recibido."
+  },
+  "lusterGenesis": {
+    "name": "Génesis de Lustre",
+    "description": "Si el equipo tiene un Pokémon tipo Siniestro debilitado, los ataques golpean dos veces (el segundo golpe inflige el 50% del daño). Si tiene un tipo Hada debilitado, los movimientos con potencia base 60 infligen 1,5× daño. Si tiene un tipo Siniestro, un tipo Hada y un tipo Siniestro/Hada debilitados (tres en total), los ataques tienen un 30% de infligir un estado aleatorio. Cada Pokémon debilitado se cuenta una sola vez."
+  },
+  "machSpeed": {
+    "name": "Velocidad Mach",
+    "description": "Durante el primer turno en combate, su Velocidad y Ataque se duplican."
+  },
+  "magicalInheritance": {
+    "name": "Herencia Mágica",
+    "description": "El usuario gana un 10% de aumento en Ataque Especial por cada Pokémon del equipo que conozca un movimiento de Magia Oscura. Los movimientos de tipo Hada curan al usuario en un 10% del daño infligido, multiplicado por el número de Pokémon de tipo Hada debilitados en el equipo."
+  },
+  "magiciansCoin": {
+    "name": "Moneda del Mago",
+    "description": "Cuando cualquier Pokémon usa un movimiento de estado, este Pokémon tiene un 50% de probabilidad de aumentar su Ataque Especial o recuperar 1/8 de sus PS máximos."
+  },
+  "magnetizeBeta": {
+    "name": "Magnetizar Beta",
+    "description": "Los movimientos de tipo Eléctrico curan al usuario en un 25% del daño infligido. Los movimientos de tipo Acero infligen 1,2× daño. Si al menos otros dos Pokémon del equipo tienen un movimiento Magnético, este Pokémon gana +1 Ataque y +1 Ataque Especial al salir del campo."
+  },
+  "maskOfRemnants": {
+    "name": "Máscara de Vestigios",
+    "description": "Cuando este Pokémon se debilita, atrapa y maldice al atacante."
+  },
+  "maskedGod": {
+    "name": "Dios Enmascarado",
+    "description": "Según los movimientos Máscara del equipo, el usuario gana efectos. Con 1+: Los movimientos Normales se tratan como Siniestro, Fantasma o Psíquico (el más fuerte; aleatorio si neutral). Con 2+: Movimientos Siniestro, Fantasma y Psíquico curan un 25% del daño. Con 3+: El usuario recibe un 25% menos de daño. Con 5+: Siniestro tiene 10% de causar sueño, Fantasma 5% de maldecir, Psíquico 10% de reducir Defensa y Def. Esp. en un nivel. Con 10+: Siniestro, Fantasma y Psíquico comparten ventajas de tipo."
+  },
+  "masterOfIllusions": {
+    "name": "Maestro de las Ilusiones",
+    "description": "Al final de cada turno, el usuario tiene un 20% de probabilidad de crear un Sustituto."
+  },
+  "masterOfTheDarkArts": {
+    "name": "Maestro de las Artes Oscuras",
+    "description": "Los movimientos de tipo Siniestro tienen un 30% de probabilidad de infligir daño residual igual a 1/8 de los PS máximos del objetivo (Constricción). Los movimientos de tipo Normal se convierten en tipo Siniestro cuando sería supereficaz contra el objetivo."
+  },
+  "mastersBlade": {
+    "name": "Espada del Maestro",
+    "description": "Todos los movimientos de tipo Normal son movimientos cortantes. Los movimientos cortantes infligen 1,5× de daño y tienen +1 ratio de golpe crítico."
+  },
+  "maxDestruction": {
+    "name": "Destrucción MAX",
+    "description": "El usuario se cura inmediatamente de los problemas de estado. Los movimientos del usuario golpean dos veces; el segundo golpe inflige el 50% del daño. Sin embargo, si la Defensa del objetivo es mayor que su Ataque, el segundo golpe inflige daño completo."
+  },
+  "meteorShower": {
+    "name": "Lluvia de Meteoros",
+    "description": "Los movimientos de tipo Normal, Fuego y Roca golpean tres veces al 40% de potencia base, con cada golpe convirtiéndose aleatoriamente en tipo Fuego o Roca."
+  },
+  "millEngine": {
+    "name": "Motor de Molino",
+    "description": "Al final de cada turno, si el Pokémon lleva una Baya, consume una Baya aleatoria y sube su Ataque en un nivel. Si su Ataque está a +3 niveles al final del turno, su Ataque se reinicia a 0 y recupera el 30% de sus PS máximos."
+  },
+  "millennialWeapon": {
+    "name": "Arma Milenaria",
+    "description": "La Defensa del usuario se multiplica por 1,5. Los movimientos de tipo Normal se convierten en tipo Hada o Roca, dependiendo de cuál infligiría más daño (aleatorio si neutral). Los movimientos de tipo Hada y Roca usan la Defensa del usuario en lugar de Ataque o Ataque Especial."
+  },
+  "millenniumAbsorption": {
+    "name": "Absorción del Milenio",
+    "description": "Cuando el usuario es golpeado por un movimiento de contacto, el atacante pierde PS iguales al 50% del daño recibido. Cuando el usuario derrota al objetivo, recupera el 25% de sus PS y copia la habilidad del objetivo como pasiva, reemplazando la pasiva existente para el combate."
+  },
+  "millenniumStalker": {
+    "name": "Acosador del Milenio",
+    "description": "Cuando el usuario derrota al objetivo, su Ataque y una estadística aleatoria suben un nivel, y su problema de estado se elimina."
+  },
+  "mindTrance": {
+    "name": "Trance Mental",
+    "description": "Si el objetivo tiene un problema de estado o estado volátil (como confusión o enamoramiento), los movimientos del usuario ganan prioridad, y los movimientos que normalmente no causan retroceso tienen un 10% de probabilidad de hacer retroceder al objetivo."
+  },
+  "mindWarp": {
+    "name": "Distorsión Mental",
+    "description": "Los movimientos de tipo Normal se convierten en tipo Siniestro o Psíquico dependiendo de cuál sea más eficaz (aleatorio si neutral). Los movimientos Psíquicos tienen un 30% de confundir al objetivo, y los Siniestros un 30% de paralizar al objetivo."
+  },
+  "mindlessRampage": {
+    "name": "Furia Descontrolada",
+    "description": "Se aplican los efectos de Potencia Bruta. Cuando el usuario daña al objetivo, su Velocidad o Ataque sube un nivel. Sin embargo, no puede usar movimientos de estado. Al final de cada turno, recibe daño igual a 1/8 de sus PS máximos."
+  },
+  "mirrorKing": {
+    "name": "Rey Espejo",
+    "description": "Al entrar en combate, el usuario copia la habilidad del objetivo. Al retirarse, recupera el 33% de sus PS."
+  },
+  "moltenShackles": {
+    "name": "Grilletes Fundidos",
+    "description": "El usuario atrapa al objetivo e inflige daño igual a 1/8 de sus PS máximos al final de cada turno."
+  },
+  "moonlitMischief": {
+    "name": "Travesura Lunar",
+    "description": "En biomas nocturnos, cuando este Pokémon entra en combate, todas sus estadísticas suben un nivel."
+  },
+  "moonsCoin": {
+    "name": "Moneda de la Luna",
+    "description": "Al entrar en combate, el usuario activa Gravedad durante 5 turnos. Mientras la Gravedad está activa, los movimientos Siniestros tienen un 50% de dormir al objetivo, y los Psíquicos un 50% de crear un Sustituto."
+  },
+  "multiply": {
+    "name": "Multiplicar",
+    "description": "Los movimientos de tipo Normal del usuario tienen un 30% de probabilidad de crear un Sustituto y subir dos estadísticas aleatorias en un nivel."
+  },
+  "necroDrain": {
+    "name": "Drenaje Necro",
+    "description": "Cuando el usuario derrota al objetivo, un miembro aleatorio no debilitado del equipo recupera el 25% de sus PS."
+  },
+  "necroSurge": {
+    "name": "Oleada Necro",
+    "description": "Los movimientos del usuario ganan 5 de potencia base por cada miembro debilitado del equipo."
+  },
+  "nightStalker": {
+    "name": "Acechador Nocturno",
+    "description": "En biomas nocturnos, los movimientos del usuario ganan +1 prioridad."
+  },
+  "ojamaLockdown": {
+    "name": "Bloqueo Ojama",
+    "description": "Impide al rival cambiar de Pokémon o usar movimientos de estado. Si al menos tres Pokémon del equipo tienen movimientos Ojama, una estadística del objetivo se reduce en 2 niveles al final de cada turno."
+  },
+  "ojamaMagic": {
+    "name": "Magia Ojama",
+    "description": "Si al menos tres Pokémon del equipo tienen movimientos Ojama, los movimientos de tipo Normal y Ojama de este Pokémon tienen un 30% de provocar, atormentar y confundir al objetivo simultáneamente."
+  },
+  "ojamaSolidarity": {
+    "name": "Solidaridad Ojama",
+    "description": "Al entrar, desactiva uno de los movimientos del objetivo. Si al menos 3 Pokémon del equipo tienen movimientos Ojama, los movimientos Normal y Ojama de este Pokémon ganan prioridad y +1 ratio de golpe crítico."
+  },
+  "originalSkyKing": {
+    "name": "Rey del Cielo Original",
+    "description": "Los movimientos Normal se convierten en mordiscos. Los movimientos de mordisco y cortantes se convierten en tipo Acero o Volador (el más eficaz; aleatorio si neutral), infligen 1,2× daño. El usuario cura el 20% del daño infligido."
+  },
+  "parallelWorld": {
+    "name": "Mundo Paralelo",
+    "description": "Al entrar en combate, intercambia el Ataque y el Ataque Especial del objetivo."
+  },
+  "phantomArmor": {
+    "name": "Armadura Fantasma",
+    "description": "El Pokémon es inmune a los movimientos de contacto."
+  },
+  "phantomArsenal": {
+    "name": "Arsenal Fantasma",
+    "description": "Los movimientos Siniestros tienen un 10% de probabilidad de colocar Púas en el campo rival. Los movimientos Roca tienen un 10% de colocar Trampa Rocas. Los movimientos Fantasma tienen un 5% de infligir Maldición."
+  },
+  "phantomBeast": {
+    "name": "Bestia Fantasma",
+    "description": "La evasión del usuario aumenta 1 nivel al final de cada turno. Mientras tenga más de 1 nivel de evasión, sus movimientos ganan +1 prioridad. Si el objetivo falla un ataque y el usuario tiene más de 1 nivel de evasión, la evasión se reinicia y una estadística del usuario sube 1 nivel."
+  },
+  "piercingSpiral": {
+    "name": "Espiral Perforante",
+    "description": "Los movimientos Normal se convierten en tipo Dragón o Lucha, según cuál inflija más daño (aleatorio si neutral). Los movimientos Dragón y Lucha tienen un 30% de reducir la Defensa del objetivo."
+  },
+  "plagueBreathe": {
+    "name": "Aliento de Plaga",
+    "description": "Si este Pokémon tiene menos del 70% de PS al ser retirado, envenena al objetivo, con un 30% de envenenarlo gravemente."
+  },
+  "plasmasDomain": {
+    "name": "Dominio Plasma",
+    "description": "Anula todas las habilidades y efectos de movimiento de los Pokémon rivales. Al entrar, sube hasta dos estadísticas aleatorias que sean inferiores a las del Pokémon rival."
+  },
+  "polarizeAlpha": {
+    "name": "Polarizar Alfa",
+    "description": "Los movimientos de tipo Eléctrico se convierten en tipo Roca con 1,2× potencia. Si al menos otros dos Pokémon del equipo tienen un movimiento Magnético, este Pokémon gana +1 Defensa y +1 Defensa Especial al salir."
+  },
+  "portalBeast": {
+    "name": "Bestia Portal",
+    "description": "Cada vez que un Pokémon rival entra en combate, este Pokémon gana +1 en tres estadísticas aleatorias. Al retirarse, recupera el 25% de sus PS máximos."
+  },
+  "powderKing": {
+    "name": "Rey del Polvo",
+    "description": "Los movimientos Normal se convierten en tipo Bicho o Veneno (el más fuerte; aleatorio si neutral) e infligen 1,2× daño. Los movimientos Bicho y Veneno tienen un 50% con cada golpe de infligir aleatoriamente Envenenamiento, Sueño, Quemadura o Parálisis."
+  },
+  "prideOfWeak": {
+    "name": "Orgullo del Débil",
+    "description": "Derrotar a un rival otorga +1 Velocidad y +1 a la estadística de Ataque más alta del usuario. Los movimientos con potencia base 60 o menos infligen 1,5× daño."
+  },
+  "pyroBullet": {
+    "name": "Bala de Fuego",
+    "description": "Los movimientos de tipo Normal se convierten en tipo Fuego. Los movimientos de tipo Fuego ganan +1 prioridad."
+  },
+  "quickDrawV2": {
+    "name": "Desenfunde Rápido",
+    "description": "Los movimientos de Bala, Aura, Bola y Pulso del usuario ganan +1 prioridad y tienen 1,2× potencia."
+  },
+  "quickHarvest": {
+    "name": "Cosecha Rápida",
+    "description": "Al final de cada turno, hay un 30% de probabilidad de restaurar una Baya usada. Al final del combate, hay un 50% de generar una Baya aleatoria (Recogida de Bayas)."
+  },
+  "radiatingGamma": {
+    "name": "Gamma Radiante",
+    "description": "Los movimientos Normal se convierten en tipo Acero con 1,2× daño. Los ataques del usuario usan su Defensa para el cálculo de daño. Si al menos otros dos Pokémon del equipo tienen un movimiento Magnético, el objetivo pierde 1/8 de sus PS al final de cada turno."
+  },
+  "ragingAxe": {
+    "name": "Hacha Furiosa",
+    "description": "Los movimientos cortantes infligen 1,5× daño, se convierten en tipo Lucha, ignoran aumentos de Defensa y tienen un 30% de hacer retroceder al objetivo."
+  },
+  "rapidFire": {
+    "name": "Fuego Rápido",
+    "description": "Los movimientos Normal se convierten en tipo Acero o Fuego (el más dañino; aleatorio si neutral) con 1,2× daño. Los movimientos Acero y Fuego tienen un 30% de ganar +1 prioridad."
+  },
+  "reboundingHurricane": {
+    "name": "Huracán Rebotante",
+    "description": "Al entrar, la evasión sube un nivel. Si el usuario esquiva un ataque, gana Carga de Viento. Usar un movimiento Normal o Volador con Carga de Viento activa obliga al objetivo a salir tras el golpe y consume la Carga de Viento."
+  },
+  "rocketImpact": {
+    "name": "Impacto Cohete",
+    "description": "Los movimientos Normal se convierten en tipo Fuego. Los movimientos Fuego ganan +1 ratio de golpe crítico, y los golpes críticos queman al objetivo."
+  },
+  "roseGarden": {
+    "name": "Jardín de Rosas",
+    "description": "Al entrar, elimina los riesgos y pantallas del rival. Activa Campo de Hierba. Los movimientos Planta tienen un 30% de reducir el Ataque y Ataque Especial del rival en un nivel."
+  },
+  "roundTrip": {
+    "name": "Viaje de Ida y Vuelta",
+    "description": "Al retirarse, el usuario recupera el 20% de sus PS máximos, y el Pokémon que entra también recupera el 20% de sus PS máximos."
+  },
+  "ruin": {
+    "name": "Ruina",
+    "description": "Los movimientos Normal se convierten en tipo Siniestro. Los movimientos Siniestros tienen un 30% de invertir los cambios de estadísticas del objetivo y un 10% de asestar golpe crítico."
+  },
+  "sAndMummy": {
+    "name": "S&Momia",
+    "description": "Los movimientos de contacto tienen un 30% de probabilidad de infligir Constricción al objetivo. El usuario recupera 1/16 de sus PS máximos cada turno."
+  },
+  "scalesOfJustice": {
+    "name": "Balanza de la Justicia",
+    "description": "Los ataques infligen 2,5× de daño contra Pokémon de tipo Siniestro."
+  },
+  "scorchedEarth": {
+    "name": "Tierra Quemada",
+    "description": "Si hay un terreno activo, el daño de ataque se aumenta en 1,5×. Tiene un 30% de destruir el terreno, subir la Velocidad un nivel y quemar al objetivo."
+  },
+  "scorchingBurster": {
+    "name": "Explosión Ardiente",
+    "description": "Los movimientos Normal se convierten en tipo Fuego. Los movimientos Fuego tienen un 30% de quemar y +1 ratio de golpe crítico. Los movimientos Agua y Hielo no afectan al usuario."
+  },
+  "scorchingJustice": {
+    "name": "Justicia Abrasadora",
+    "description": "Los movimientos de ataque del usuario tienen un 30% de probabilidad de quemar al objetivo. Los objetivos quemados reciben 1,5× de daño."
+  },
+  "shadowFlame": {
+    "name": "Llama Sombría",
+    "description": "Los movimientos de tipo Fuego y Siniestro del usuario comparten ventajas de tipo. Los movimientos Normal se convierten en tipo Siniestro con 1,2× daño."
+  },
+  "shadowMartyr": {
+    "name": "Mártir de las Sombras",
+    "description": "Cuando el usuario se debilita, el Pokémon que lo reemplaza recupera el 33% de sus PS máximos y gana +1 nivel en su estadística más alta y una estadística aleatoria."
+  },
+  "shadowReach": {
+    "name": "Alcance de las Sombras",
+    "description": "Los movimientos de atrapamiento del usuario infligen daño igual a 1/6 de los PS máximos del objetivo al final de cada turno."
+  },
+  "silentAssassin": {
+    "name": "Asesino Silencioso",
+    "description": "Al final de cada turno, la evasión del usuario sube 1 nivel, hasta un máximo de 3. Al llegar a 3, la evasión se reinicia a 0 y todas las estadísticas suben 1 nivel."
+  },
+  "silentBlade": {
+    "name": "Hoja Silenciosa",
+    "description": "Al atacar, usa la Velocidad del rival como base para calcular la defensa."
+  },
+  "slimeAbsorb": {
+    "name": "Absorción de Limo",
+    "description": "Cuando el usuario derrota al objetivo, recupera 1/4 de sus PS máximos y sube una estadística aleatoria."
+  },
+  "smash22": {
+    "name": "Golpe 22",
+    "description": "Los movimientos Normal se convierten en tipo Lucha o Fantasma (más daño; aleatorio si neutral). Los movimientos Lucha tienen un 10% de intercambiar la Defensa y Def. Esp. del objetivo. Los Fantasma tienen un 10% de intercambiar el Ataque y At. Esp. del objetivo."
+  },
+  "soulTax": {
+    "name": "Impuesto del Alma",
+    "description": "Al final de cada turno, el Pokémon rival pierde 1/16 de sus PS máximos."
+  },
+  "spectralMist": {
+    "name": "Niebla Espectral",
+    "description": "Los movimientos Fantasma tienen un 30% de maldecir al objetivo. Al final de cada turno, el usuario tiene un 25% de recuperar 1/8 de sus PS máximos."
+  },
+  "spellDrain": {
+    "name": "Drenaje de Hechizo",
+    "description": "El usuario tiene un 30% de probabilidad de anular los movimientos de estado del objetivo. Al anularlos, recupera el 15% de sus PS máximos y sube una estadística aleatoria en un nivel."
+  },
+  "spellbreakerBlade": {
+    "name": "Espada Rompehechizos",
+    "description": "Al entrar en combate, el usuario obtiene un problema de estado aleatorio (excepto Sueño y Congelación). Al atacar con un problema de estado, sus ataques siempre son golpes críticos y el problema de estado se cura."
+  },
+  "spellcastersFluff": {
+    "name": "Pelusa del Hechicero",
+    "description": "El usuario no recibe daño del primer ataque que recibe cada vez que entra en combate."
+  },
+  "spikedShell": {
+    "name": "Caparazón con Púas",
+    "description": "Cuando el usuario es golpeado por un movimiento de contacto, el atacante recibe daño igual a 1/6 de sus PS máximos. El usuario recibe un 50% menos de daño de movimientos físicos."
+  },
+  "theGrimMiller": {
+    "name": "El Molinero Sombrío",
+    "description": "Los movimientos Fantasma agotan 2 PP del último movimiento usado por el objetivo. Los movimientos Normal se convierten en tipo Fantasma."
+  },
+  "theUndeadKing": {
+    "name": "El Rey No Muerto",
+    "description": "Cuando este Pokémon se debilita, derrota a un Pokémon aliado aleatorio que conozca un movimiento Sirviente (si existe), recupera el 50% de sus PS y sube dos estadísticas aleatorias."
+  },
+  "thousandEyesLock": {
+    "name": "Bloqueo de Mil Ojos",
+    "description": "Mientras esta habilidad está activa, el objetivo no puede cambiar ni usar el mismo movimiento dos turnos seguidos. Cada turno, una estadística aleatoria del objetivo baja un nivel y la misma sube un nivel para el usuario."
+  },
+  "thousandSouls": {
+    "name": "Mil Almas",
+    "description": "Al entrar, este Pokémon copia la habilidad de un miembro debilitado aleatorio del equipo y recupera 1/8 de sus PS."
+  },
+  "thousandYears": {
+    "name": "Mil Años",
+    "description": "Cada turno, una estadística aleatoria del objetivo baja un nivel. Si al menos otros dos Pokémon del equipo tienen un movimiento Temporal, dos estadísticas aleatorias bajan un nivel."
+  },
+  "threeHeadedBite": {
+    "name": "Mordisco Tricéfalo",
+    "description": "Los movimientos Normal se convierten en tipo Siniestro o Fuego (el más fuerte; aleatorio si neutral). Los movimientos Siniestro y Fuego se convierten en mordiscos y golpean tres veces al 40% de potencia."
+  },
+  "timeRoulette": {
+    "name": "¡Ruleta del Tiempo!",
+    "description": "Al atacar, hay un 50% de que el ataque inflija el triple de daño. De lo contrario, el usuario recibe retroceso igual al 50% del daño infligido."
+  },
+  "timeWizardsBlessing": {
+    "name": "Bendición del Mago del Tiempo",
+    "description": "Al final de cada turno, una estadística aleatoria sube. Si al menos otros dos Pokémon del equipo tienen un movimiento Temporal, el usuario también recupera 1/8 de sus PS máximos y sube otra estadística."
+  },
+  "timelineMagic": {
+    "name": "Magia de Línea Temporal",
+    "description": "Al recibir daño, el usuario usa la estadística de Defensa que sea más alta. Al infligir daño, el objetivo usa la que sea más baja."
+  },
+  "tombRaider": {
+    "name": "Saqueador de Tumbas",
+    "description": "Los movimientos Normal se convierten en tipo Siniestro con 1,2× daño. Los movimientos Siniestros tienen un 30% de robar el objeto del objetivo. Con un objeto, la Velocidad sube un nivel al entrar y los movimientos Siniestros infligen 1,3× daño."
+  },
+  "toonChaos": {
+    "name": "Caos Toon",
+    "description": "Los movimientos Normal se convierten en tipo Hada o Siniestro (el más fuerte; aleatorio si neutral). Los movimientos Hada y Siniestro infligen 1,2× daño y tienen un 30% de forzar al objetivo a salir."
+  },
+  "toonElectricArchfiend": {
+    "name": "Archidemonio Eléctrico Toon",
+    "description": "Los movimientos Normal se convierten en tipo Eléctrico o Siniestro (el más fuerte; aleatorio si neutral). Los movimientos Eléctricos tienen un 30% de ganar +1 prioridad. Los Siniestros tienen un 10% de golpe crítico."
+  },
+  "toonGunslinger": {
+    "name": "Pistolero Toon",
+    "description": "Los movimientos Normal, Dragón, Siniestro y Hada del usuario tienen un 50% de ganar +1 prioridad y un 10% de asestar golpe crítico."
+  },
+  "toonIllusion": {
+    "name": "Ilusión Toon",
+    "description": "Cuando el objetivo falla un ataque, el usuario tiene un 30% de crear un Sustituto con el 25% de sus PS máximos. Al entrar, la evasión sube un nivel."
+  },
+  "toonPlotArmor": {
+    "name": "Armadura de Trama Toon",
+    "description": "Los movimientos Normal se convierten en tipo Agua. Los movimientos Agua tienen un 10% de activar un efecto de Protección."
+  },
+  "toonPounding": {
+    "name": "Golpeteo Toon",
+    "description": "En vez de la Defensa del objetivo, los ataques de tipo Acero y Hada usan la estadística más baja del objetivo para calcular el daño."
+  },
+  "toonSynergy": {
+    "name": "Sinergia Toon",
+    "description": "Los movimientos Normal se convierten en tipo Psíquico o Hada (el más fuerte; aleatorio si neutral). Los ataques Psíquicos y Hada tienen un 10% por Pokémon con movimientos Toon de subir todas las estadísticas del usuario."
+  },
+  "topazLifeorb": {
+    "name": "Orbe Vital Topacio",
+    "description": "Los ataques del usuario infligen 1,3× daño y tienen un 10% de subir el Ataque, pero el usuario recibe un 15% de daño con cada ataque."
+  },
+  "torrentialTribute": {
+    "name": "Tributo Torrencial",
+    "description": "Al entrar, el usuario se carga de Agua. Si es golpeado mientras está cargado, no recibe daño y el atacante pierde 1/8 de sus PS máximos; ambos efectos solo una vez por combate. Los movimientos Normal se convierten en tipo Agua con 1,2× daño."
+  },
+  "travelBuddiesBlue": {
+    "name": "Compañeros de Viaje Azul",
+    "description": "Los movimientos Normal se convierten en tipo Volador. Los movimientos Volador ganan +1 prioridad. Si al menos otros dos Pokémon del equipo tienen movimientos Unión, los movimientos Volador también curan al usuario en un 50% del daño infligido."
+  },
+  "travelBuddiesRed": {
+    "name": "Compañeros de Viaje Rojo",
+    "description": "Los movimientos Normal se convierten en tipo Volador con +1 prioridad. Si al menos otros dos Pokémon del equipo tienen movimientos Unión, los movimientos de este Pokémon también ganan 1,5× potencia."
+  },
+  "tripleBurst": {
+    "name": "Ráfaga Triple",
+    "description": "Los ataques que no sean de golpe múltiple golpean tres veces al 55% de potencia cada uno."
+  },
+  "tripleCoreEngine": {
+    "name": "Motor de Triple Núcleo",
+    "description": "Todos los movimientos de golpe múltiple actúan como Triple Axel (3 golpes con potencia creciente y precisión decreciente). Los movimientos de un solo golpe infligen 1,2× daño."
+  },
+  "twinBlessings": {
+    "name": "Bendiciones Gemelas",
+    "description": "Las probabilidades de efectos secundarios se duplican. Los movimientos Normal se convierten en tipo Hada con 1,2× daño. Los movimientos Hada tienen un 30% de curar el 50% del daño infligido."
+  },
+  "twinCoreBurst": {
+    "name": "Explosión de Doble Núcleo",
+    "description": "Si el usuario tiene un problema de estado, los movimientos tienen un 30% de golpear dos veces y curar el problema de estado."
+  },
+  "twistedLove": {
+    "name": "Amor Retorcido",
+    "description": "El usuario solo recibe daño de movimientos supereficaces. No puede ser curado (Bayas, movimientos y objetos no tienen efecto). Tras atacar, inflige daño igual a 1/8 de sus PS máximos al objetivo. Cada turno, pierde 1/4 de sus PS máximos."
+  },
+  "tyrantsCoin": {
+    "name": "Moneda del Tirano",
+    "description": "Los movimientos de daño que no sean de golpe múltiple tienen un 50% de golpear dos veces y un 50% de infligir un retroceso del 20% de los PS máximos al usuario."
+  },
+  "ultimateDefense": {
+    "name": "Defensa Definitiva",
+    "description": "Todos los movimientos infligen un 50% menos de daño, pero este Pokémon no puede usar movimientos de estado."
+  },
+  "uncontrollablePower": {
+    "name": "Poder Incontrolable",
+    "description": "Posee Robustez. Si los PS del usuario son exactamente 1, todos sus movimientos ganan +3 prioridad, infligen el doble de daño y curan al usuario en un 50% del daño infligido."
+  },
+  "undeadArchfiend": {
+    "name": "Archidemonio No Muerto",
+    "description": "Este Pokémon no se ve afectado por movimientos de estado ni efectos secundarios del objetivo. Los movimientos Normal se convierten en tipo Fantasma con 1,2× daño."
+  },
+  "undeadAvenger": {
+    "name": "Vengador No Muerto",
+    "description": "Gana +10% de Ataque y Velocidad por cada miembro del equipo debilitado."
+  },
+  "underworldThicket": {
+    "name": "Espesura del Inframundo",
+    "description": "Cuando un Pokémon rival hace contacto, recibe daño de retroceso igual a 1/8 de sus PS máximos y tiene un 10% de sufrir Constricción."
+  },
+  "undyingSoul": {
+    "name": "Alma Inmortal",
+    "description": "El usuario gana +1 a una estadística aleatoria por cada Pokémon de tipo Normal o Lucha en el equipo. Al ser derrotado, revive un Pokémon aleatorio de tipo Normal o Lucha del equipo. Este efecto solo puede usarse una vez por combate."
+  },
+  "unitedJungle": {
+    "name": "Jungla Unida",
+    "description": "Cura el 25% de PS al reemplazar a un aliado debilitado. Gana +10 potencia base en sus movimientos por cada Pokémon de tipo Planta debilitado en el equipo."
+  },
+  "unstoppableTitan": {
+    "name": "Titán Imparable",
+    "description": "Los movimientos de contacto del usuario ignoran resistencias de tipo e infligen 1,2× daño. Al infligir daño, se calcula contra la estadística más baja del objetivo en vez de Defensa o Def. Esp."
+  },
+  "vileOvergrowth": {
+    "name": "Maleza Vil",
+    "description": "Los movimientos Planta y Siniestro comparten ventajas de tipo. Los movimientos Planta tienen un 30% de plantar semilla al objetivo, y los Siniestros un 10% de causar sueño."
+  },
+  "voidBanishment": {
+    "name": "Destierro del Vacío",
+    "description": "Si el usuario entra tras la derrota de un aliado, fuerza al objetivo a cambiar. Si el objetivo es tipo Siniestro, primero recibe daño igual a 1/6 de sus PS máximos. Los movimientos Normal se convierten en tipo Siniestro con 1,2× daño y un 20% de eliminar el objeto del objetivo."
+  },
+  "volcanicCore": {
+    "name": "Núcleo Volcánico",
+    "description": "Los movimientos Normal se convierten en tipo Fuego con 1,2× daño. Cuando el usuario usa un movimiento de estado, inflige daño igual a 1/8 de los PS máximos del objetivo."
+  },
+  "whirlwindAxe": {
+    "name": "Hacha de Torbellino",
+    "description": "Los movimientos Normal se convierten en tipo Volador. Los movimientos Volador tienen un 30% de forzar al objetivo a salir. Si el objetivo es forzado a salir, el usuario recupera 1/8 de sus PS máximos."
+  },
+  "whiteLightning": {
+    "name": "Relámpago Blanco",
+    "description": "Los movimientos Normal se convierten en tipo Eléctrico con 1,2× potencia. Los movimientos Dragón ganan +1 ratio de golpe crítico. Los movimientos Dragón y Eléctrico tienen un 30% de paralizar al objetivo."
+  },
+  "windboltDiscard": {
+    "name": "Descarte de Vientoláser",
+    "description": "Cuando el usuario usa un movimiento de estado, consume una Baya aleatoria e inflige daño igual al 20% de los PS máximos del objetivo."
+  },
+  "windstormDiscard": {
+    "name": "Descarte de Tormenta",
+    "description": "Los ataques del usuario tienen un 30% de descartar un objeto propio aleatorio. Si lo hace, el ataque inflige 2,5× daño."
+  },
+  "zanySplasher": {
+    "name": "Chapoteador Chiflado",
+    "description": "Los movimientos Normal se convierten en tipo Hada o Agua (el más fuerte; aleatorio si iguales). Los movimientos Hada tienen un 5% de golpe crítico. Los movimientos Agua tienen un 5% de infligir Torbellino. La evasión sube un nivel al entrar."
+  },
+  "zombieColossus": {
+    "name": "Coloso Zombi",
+    "description": "Una vez por combate, cuando este Pokémon se debilita, revive con el 50% de sus PS máximos."
   }
 }

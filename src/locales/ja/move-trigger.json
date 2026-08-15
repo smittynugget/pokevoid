@@ -61,5 +61,7 @@
   "swapArenaTags": "{{pokemonName}}は\nおたがいの　ばのこうかを　いれかえた！",
   "isTighteningFocus": "{{pokemonName}}は\n集中力を　高めている！",
   "statEliminated": "全ての　能力変化が　元に戻った！",
-  "exposedMove": "{{pokemonName}}は {{targetPokemonName}}の\n正体を　見破った！"
+  "exposedMove": "{{pokemonName}}は {{targetPokemonName}}の\n正体を　見破った！",
+  "substituteOnOverlap": "{{pokemonName}}は　すでに　みがわりが　ある！",
+  "safeguard": "{{targetName}}は　しんぴのまもりに　守られている！"
 }

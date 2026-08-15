@@ -1,13 +1,50 @@
+import { CANVAS_SCALE, GAME_HEIGHT, GAME_WIDTH, LOGICAL_HEIGHT, LOGICAL_WIDTH, fieldUIBottomLocalY, logicalFromCanvas, uiTopEdgeY } from "./canvas-coords";
+
 export const legacyCompatibleImages: string[] = [];
 
 export class SceneBase extends Phaser.Scene {
-
   public readonly scaledCanvas = {
-    width: 1920 / 6,
-    height: 1080 / 6
+    width: LOGICAL_WIDTH,
+    height: LOGICAL_HEIGHT
   };
   constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
     super(config);
+  }
+
+  get logicalWidth(): number {
+    return this.scaledCanvas.width;
+  }
+
+  get logicalHeight(): number {
+    return this.scaledCanvas.height;
+  }
+
+  getCanvasLogicalWidth(): number {
+    return logicalFromCanvas(this.game.canvas.width);
+  }
+
+  getCanvasLogicalHeight(): number {
+    return logicalFromCanvas(this.game.canvas.height);
+  }
+
+  getFieldUIBottomLocalY(): number {
+    return fieldUIBottomLocalY(this.getCanvasLogicalHeight());
+  }
+
+  getUiTopEdgeY(multiplier: number = -1): number {
+    return uiTopEdgeY(multiplier, this.getCanvasLogicalHeight());
+  }
+
+  get canvasScale(): number {
+    return CANVAS_SCALE;
+  }
+
+  get gameWidth(): number {
+    return GAME_WIDTH;
+  }
+
+  get gameHeight(): number {
+    return GAME_HEIGHT;
   }
 
   getCachedUrl(url: string): string {

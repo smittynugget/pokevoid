@@ -5,7 +5,7 @@ import { PlayableChampionData, SkillCategory } from "../system/playable-champion
 import { SkillTreeRewardType } from "../system/skill-tree-data";
 import { Species } from "#enums/species";
 import { Type } from "#app/data/type";
-import PokemonSpecies, { allSpecies } from "#app/data/pokemon-species";
+import PokemonSpecies, { allSpecies, getPokemonSpecies } from "#app/data/pokemon-species";
 import { GameMode } from "#app/game-mode";
 import { TrainerType } from "#enums/trainer-type";
 import { trainerConfigs } from "#app/data/trainer-config";
@@ -38,6 +38,19 @@ export class ChampionUtils {
       .split(/\s+/)
       .map((token) => token.charAt(0).toUpperCase() + token.slice(1))
       .join(" ");
+  }
+
+  static getChampionAffinityLabel(championId: string): string | null {
+    const def = CHAMPION_DEFINITIONS[championId];
+    if (!def) return null;
+    const realTypes = [def.type1, def.type2].filter(
+      t => t !== undefined && t !== null && t !== Type.UNKNOWN
+    );
+    if (realTypes.length > 0) return null;
+    const genFilter = def.pokemonGenerationFilter;
+    if (!genFilter || !Array.isArray(genFilter) || genFilter.length === 0) return null;
+    const genRoman = i18next.t(`starterSelectUiHandler:gen${genFilter[0]}`);
+    return i18next.t("championSelect:generationShort", { generation: genRoman, defaultValue: `GEN ${genRoman}` });
   }
 
   static syncChampionUnlocks(championData: PlayableChampionData): void {
@@ -115,6 +128,13 @@ export class ChampionUtils {
       }
 
       if (championTypes.length === 0) {
+        const genFilter = championData.pokemonGenerationFilter;
+        if (genFilter && genFilter.length > 0) {
+          if (!genFilter.includes((speciesData as any).generation)) {
+            typeFiltered++;
+            return false;
+          }
+        }
         passed++;
         return true;
       }
@@ -144,6 +164,17 @@ export class ChampionUtils {
 
     this.syncChampionUnlocks(championData);
 
+    const sigSpecies = [
+      ...(championData.signaturePokemon || []),
+      ...((championData as any).unlockedSignaturePokemon || [])
+    ];
+    for (const sp of sigSpecies) {
+      const sd = scene?.gameData?.starterData?.[sp];
+      if (sd && !sd.abilityAttr) {
+        sd.abilityAttr = 1;
+      }
+    }
+
     const isApolloDiana = championData.id === "apollo" || championData.id === "diana" || championData.id === "apollo_diana";
 
     const championTypes = isApolloDiana
@@ -159,6 +190,12 @@ export class ChampionUtils {
       if (hasPrevolution) return false;
 
       if (championTypes.length === 0) {
+        const genFilter = championData.pokemonGenerationFilter;
+        if (genFilter && genFilter.length > 0) {
+          if (!genFilter.includes((speciesData as any).generation)) {
+            return false;
+          }
+        }
         return true;
       }
 
@@ -281,6 +318,19 @@ export class ChampionUtils {
         [Species.CLEFFA]: PokemonAltBuildId.CLEFFA_APOLLO_DIANA_SIGNATURE,
         [Species.SUNKERN]: PokemonAltBuildId.SUNKERN_APOLLO_DIANA_SIGNATURE
       },
+      "red": {
+        [Species.PIKACHU]: PokemonAltBuildId.PIKACHU_RED_SIGNATURE,
+        [Species.SNORLAX]: PokemonAltBuildId.SNORLAX_RED_SIGNATURE,
+        [Species.LAPRAS]: PokemonAltBuildId.LAPRAS_RED_SIGNATURE,
+        [Species.FARFETCHD]: PokemonAltBuildId.FARFETCHD_RED_SIGNATURE,
+        [Species.CHARMANDER]: PokemonAltBuildId.CHARMANDER_RED_SIGNATURE,
+        [Species.TAUROS]: PokemonAltBuildId.TAUROS_RED_SIGNATURE,
+        [Species.MAGIKARP]: PokemonAltBuildId.MAGIKARP_RED_SIGNATURE,
+        [Species.BUTTERFREE]: PokemonAltBuildId.BUTTERFREE_RED_SIGNATURE,
+        [Species.BULBASAUR]: PokemonAltBuildId.BULBASAUR_RED_SIGNATURE,
+        [Species.SQUIRTLE]: PokemonAltBuildId.SQUIRTLE_RED_SIGNATURE,
+        [Species.ESPEON]: PokemonAltBuildId.ESPEON_RED_SIGNATURE
+      },
       "apollo_diana": {
         [Species.RIOLU]: PokemonAltBuildId.RIOLU_APOLLO_DIANA_SIGNATURE,
         [Species.SOLROCK]: PokemonAltBuildId.SOLROCK_APOLLO_DIANA_SIGNATURE,
@@ -359,9 +409,7 @@ export class ChampionUtils {
     const combined = Array.from(new Set([...(unlocked || []), ...(base || [])]));
 
     return combined.filter((species) => {
-      const speciesData = (species >= 2000)
-        ? (allSpecies.find(s => s.speciesId === species) as PokemonSpecies | undefined)
-        : (allSpecies[species - 1] as PokemonSpecies | undefined);
+      const speciesData = getPokemonSpecies(species);
       if (!speciesData) return false;
       if (championData.pokemonGenerationFilter && championData.pokemonGenerationFilter.length > 0) {
         if (!(championData.pokemonGenerationFilter as number[]).includes((speciesData as any).generation)) return false;
@@ -389,21 +437,24 @@ export class ChampionUtils {
     const championTypes = [championData.type1, championData.type2].filter(t =>
       t !== undefined && t !== null && t !== Type.UNKNOWN
     ) as Type[];
-    const allSpeciesKeys = Object.keys(allSpecies).map((key) => parseInt(key) as unknown as Species);
-    const compatiblePokemon = allSpeciesKeys.filter((species) => {
-      const speciesData = (allSpecies as any)[species] as PokemonSpecies;
+    const compatiblePokemon: Species[] = [];
+    for (const speciesData of allSpecies) {
+      if (!speciesData) continue;
+      const speciesId = speciesData.speciesId as Species;
       if (championTypes.length > 0) {
         const hasMatchingType = championTypes.some(
           (championType) => speciesData.type1 === championType || speciesData.type2 === championType
         );
-        if (!hasMatchingType) return false;
+        if (!hasMatchingType) continue;
       }
       if (championData.pokemonGenerationFilter && championData.pokemonGenerationFilter.length > 0) {
-        if (!(championData.pokemonGenerationFilter as number[]).includes((speciesData as any).generation)) return false;
+        if (!(championData.pokemonGenerationFilter as number[]).includes((speciesData as any).generation)) continue;
       }
-      const caughtAttr = (scene.gameData.dexData as any)[species]?.caughtAttr;
-      return caughtAttr && BigInt(caughtAttr) !== BigInt(0);
-    });
+      const caughtAttr = (scene.gameData.dexData as any)[speciesId]?.caughtAttr;
+      if (caughtAttr && BigInt(caughtAttr) !== BigInt(0)) {
+        compatiblePokemon.push(speciesId);
+      }
+    }
     return Utils.randSeedItem(compatiblePokemon.length > 0 ? compatiblePokemon : [(Species as any).PIDGEY]);
   }
 
@@ -412,6 +463,7 @@ export class ChampionUtils {
       const trainerTypeMap: Record<string, number> = {
         brock: TrainerType.BROCK,
         misty: TrainerType.MISTY,
+        red: TrainerType.RED,
       };
       const trainerType = trainerTypeMap[championId];
       if (trainerType !== undefined) {
@@ -432,6 +484,48 @@ export class ChampionUtils {
     return isFemale ? "player_f" : "player_m";
   }
 
+  static resolveActiveChampionId(scene: BattleScene): string {
+    let id = scene.gameData?.selectedChampionId
+      || scene.gameData?.activeSkillTree?.championId;
+    if (!id) {
+      return scene.gameData?.gender === PlayerGender.FEMALE ? "diana" : "apollo";
+    }
+    if (id === "apollo_diana") {
+      id = scene.gameData?.gender === PlayerGender.FEMALE ? "diana" : "apollo";
+    }
+    return id;
+  }
+
+  static getAltBuildDisplayName(altBuildId: PokemonAltBuildId | string): string {
+    const id = String(altBuildId);
+    if (id.includes("apollo_diana_signature")) {
+      const scene = BattleScene.currentScene;
+      if (scene) {
+        const championId = ChampionUtils.resolveActiveChampionId(scene);
+        if (championId === "apollo" || championId === "diana") {
+          return i18next.t("pokemonAltBuild:championPartner", {
+            champion: ChampionUtils.getChampionDisplayName(championId),
+          });
+        }
+      }
+    }
+    return i18next.t(`pokemonAltBuild:${id}.name`);
+  }
+
+  static getAltBuildDisplayDescription(altBuildId: PokemonAltBuildId | string, scene?: BattleScene | null): string {
+    const id = String(altBuildId);
+    const activeScene = scene ?? BattleScene.currentScene;
+    if (id.includes("apollo_diana_signature") && activeScene) {
+      const championId = ChampionUtils.resolveActiveChampionId(activeScene);
+      if (championId === "apollo" || championId === "diana") {
+        return i18next.t(`pokemonAltBuild:${id}.description`, {
+          champion: ChampionUtils.getChampionDisplayName(championId),
+        });
+      }
+    }
+    return i18next.t(`pokemonAltBuild:${id}.description`);
+  }
+
   static getChampionBackSpriteKey(championId: string | undefined, genderIndex: number | undefined): string {
     const isFemale = genderIndex === PlayerGender.FEMALE;
 
@@ -446,6 +540,9 @@ export class ChampionUtils {
     if (championId === "brock") {
       return 0.55;
     }
+    else if (championId === "red") {
+      return 0.6;
+    }
     else if (championId === "misty") {
       return 0.7;
     }
@@ -459,6 +556,9 @@ export class ChampionUtils {
   static getChampionBackSpriteYOffset(championId: string | undefined): number {
     if (championId === "brock") {
       return -20;
+    }
+    if (championId === "red") {
+      return -15;
     }
 
     return 0;

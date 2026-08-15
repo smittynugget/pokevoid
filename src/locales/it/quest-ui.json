@@ -105,6 +105,17 @@
       "common": {
         "any": "QUALSIASI"
       }
+    },
+    "skillTree": {
+      "modalTitle": "Taglia dell'Albero delle Abilità",
+      "completion": {
+        "title": "Taglia Completata!",
+        "standardReward": "Scegli la tua ricompensa!",
+        "rareReward": "Rarità MASTER BALL sbloccata!",
+        "veryRareRankUp": "Un aumento di grado Pokémon attende!",
+        "veryRareMove": "Una Mossa Duelmon attende!",
+        "fallback": "Ricompensa ottenuta!"
+      }
     }
   },
   "modeRewards": {
@@ -117,4 +128,4 @@
     "accessShopInBattle": "Accedi al ΩNEGOZIO in LOTTA!",
     "accessQuestsInBattle": "Accedi alle MISSIONI in LOTTA!"
   }
-} 
+}

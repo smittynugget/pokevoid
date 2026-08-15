@@ -3,7 +3,7 @@ import { GameMode, GameModes } from "../game-mode";
 import UiHandler from "./ui-handler";
 import { SessionSaveData } from "../system/game-data";
 import { TextStyle, addTextObject, addBBCodeTextObject, getTextColor } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { addWindow } from "./ui-theme";
 import * as Utils from "../utils";
 import PokemonData from "../system/pokemon-data";
@@ -555,6 +555,27 @@ export default class RunInfoUiHandler extends UiHandler {
           marksContainer.add(fusionShinyStar);
           this.getUi().bringToTop(fusionShinyStar);
         }
+      }
+
+      const isAltBuild = !!(pokemon as any).altBuildId;
+      const displayRank = isAltBuild
+        ? Math.max(1, (pokemon as any).altBuildRank ?? 0)
+        : ((pokemon as any).rankUpCount ?? 0) + 1;
+      const showRank = isAltBuild || displayRank > 1;
+
+      if (showRank) {
+        const rankIcon = this.scene.add.sprite(0, 0, "smitems", "modSoulCollected");
+        rankIcon.setScale(0.11);
+        rankIcon.setOrigin(0, 0.5);
+        rankIcon.setPosition(-57, 13.5);
+        marksContainer.add(rankIcon);
+
+        const rankText = addTextObject(this.scene, 0, 0, Utils.intToRoman(displayRank), TextStyle.PARTY, { fontSize: "25px" });
+        rankText.setShadow(0, 0, undefined);
+        rankText.setStroke("#424242", 14);
+        rankText.setOrigin(0, 0.5);
+        rankText.setPosition(-52.5, 13.5);
+        marksContainer.add(rankText);
       }
       const pokemonMoveset = pokemon.getMoveset();
       const movesetContainer = this.scene.add.container(70, -29);

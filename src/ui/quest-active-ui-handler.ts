@@ -1,6 +1,6 @@
 import QuestBountyUiHandler from "./quest-bounty-ui-handler";
 import BattleScene from "../battle-scene";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { Species } from "#enums/species";
 import { PermaRunQuestModifier } from "../modifier/modifier";
 import {addTextObject, TextStyle} from "#app/ui/text";

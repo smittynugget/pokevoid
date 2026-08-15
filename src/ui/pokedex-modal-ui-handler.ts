@@ -1,6 +1,7 @@
 import i18next from "i18next";
+import { getYuTuning, yuTuningLog } from "../yu-visual-tuning";
 import BattleScene from "../battle-scene";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { Species } from "../enums/species";
 import { Abilities } from "../enums/abilities";
 import { Type } from "../data/type";
@@ -23,7 +24,7 @@ import { ModalConfig, ModalUiHandler } from "./modal-ui-handler";
 import { RewardType } from "../enums/reward-type";
 import { getModPokemonName } from "../data/mod-glitch-form-utils";
 import { modGlitchFormData, getModFormSystemName } from "../data/mod-glitch-form-data";
-import Pokemon, { EnemyPokemon, PlayerPokemon } from "#app/field/pokemon.js";
+import Pokemon, { EnemyPokemon, PlayerPokemon, YU_SPECIES_PORTAL_OFFSETS, YU_SPECIES_VISUAL_OFFSETS } from "#app/field/pokemon.js";
 import {
   pokemonEvolutions,
   pokemonPrevolutions,
@@ -49,6 +50,9 @@ import { modStorage } from "../system/mod-storage";
 import { AddPokemonModifierType } from "../modifier/modifier-type";
 import ModifierSelectUiHandler from "./modifier-select-ui-handler";
 import { getPokedexMethodDescription } from "./pokedex-method-description";
+import { TweakMetaMode, cycleMetaMode, TWEAK_META_CYCLE, tweakCopyToClipboard } from "./tweak/tweak-meta-types";
+import { TweakDropdownPanel } from "./tweak/tweak-dropdown-panel";
+import { DEBUG_YU_VISUAL_TUNING } from "../overrides";
 enum PokedexDisplayMode {
     ABILITIES,
     MOVES
@@ -75,6 +79,13 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
     private selectionDropdownClickHandler: ((event: MouseEvent) => void) | null = null;
     private formDropdownClickHandler: ((event: MouseEvent) => void) | null = null;
     private pokemonSprite: Phaser.GameObjects.Sprite;
+    private voidexPortalSprite: Phaser.GameObjects.Sprite | null = null;
+    private _voidexBasePortalX = 0;
+    private _voidexBasePortalY = 0;
+    private _voidexBasePortalScale = 0;
+    private _voidexBaseCreatureX = 0;
+    private _voidexBaseCreatureY = 0;
+    private _voidexBaseCreatureScale = 1;
     private type1Icon: Phaser.GameObjects.Sprite;
     private type2Icon: Phaser.GameObjects.Sprite;
 
@@ -106,6 +117,30 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
     private forcedVariant: number = 0;
     private ownedPokemonInstance: Pokemon | null = null;
     private onCloseCallback: (() => void) | null = null;
+    private modalBackgroundImage: Phaser.GameObjects.Image | null = null;
+    private modalBackgroundCreated = false;
+
+    private _metaMode: TweakMetaMode = TweakMetaMode.NONE;
+    get _tweakActive(): boolean { return this._metaMode !== TweakMetaMode.NONE; }
+    private _tweakMode: number = 0;
+    private _tweakAssetIndex: number = 0;
+    private _tweakHudText: Phaser.GameObjects.Text | null = null;
+    private _tweakKeyOneHandler: (() => void) | null = null;
+    private _tweakKeyTwoHandler: (() => void) | null = null;
+    private _tweakKeyThreeHandler: (() => void) | null = null;
+    private _tweakKeyVHandler: (() => void) | null = null;
+    private _tweakKeyRHandler: (() => void) | null = null;
+    private static readonly VX_TWEAK_MODES = ["portalScale", "creatureScale", "position"];
+    private static readonly VX_TWEAK_ASSETS = ["DuelmonSprite", "PortalSprite"];
+    private _vxTweakOffsets = {
+        portalScaleOffset: 0,
+        creatureScaleOffset: 0,
+        yOffset: 0,
+        xOffset: 0,
+        creatureYOffset: 0,
+        creatureXOffset: 0,
+    };
+    private _dropdownPanel: TweakDropdownPanel | null = null;
 
     constructor(scene: BattleScene) {
         super(scene, Mode.POKEDEX);
@@ -131,11 +166,40 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         return [i18next.t("menu:close")];
     }
 
+    protected createModalBackground(): void {
+    }
+
+    updateContainer(config?: ModalConfig): void {
+        super.updateContainer(config);
+
+        const borderSize = this.scene.uiTheme ? 6 : 8;
+
+        if (!this.modalBackgroundCreated) {
+            if (this.scene.textures.exists("voidex_bg") &&
+                this.scene.textures.get("voidex_bg").key !== "__MISSING") {
+                this.modalBackgroundImage = this.scene.add.image(0, 0, "voidex_bg");
+                this.modalBackgroundImage.setOrigin(0, 0);
+                this.modalContainer.addAt(this.modalBackgroundImage, 1);
+            } else {
+                super.createModalBackground();
+            }
+            this.modalBackgroundCreated = true;
+        }
+
+        if (this.modalBackgroundImage) {
+            this.modalBackgroundImage.setPosition(this.modalBg.x + borderSize - 5, this.modalBg.y + borderSize - 5);
+            this.modalBackgroundImage.setDisplaySize(this.modalBg.width - borderSize * 2 + 10, this.modalBg.height - borderSize * 2 + 10);
+        }
+
+        this.titleText.setOrigin(1, 1);
+        this.titleText.setPosition(this.modalBg.width - borderSize + 1, this.modalBg.height - borderSize + 4);
+        this.titleText.setFontSize("73px");
+    }
+
     setup(): void {
         super.setup();
 
         this.setupContainers();
-
     }
 
     show(args: any[]): boolean {
@@ -211,6 +275,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
             this.createPokemonDropdown();
             this.updateNavButtonPositions();
+            this.bindNavButtonHandlers();
 
             if (this.pendingUniversalSmittyFormName) {
                 const formName = this.pendingUniversalSmittyFormName;
@@ -262,6 +327,22 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         this.navRightButton.setPosition(rightX, centerY);
         this.navLeftButton.setScale(1.0);
         this.navRightButton.setScale(1.0);
+        this.modalContainer.bringToTop(this.navLeftButton);
+        this.modalContainer.bringToTop(this.navRightButton);
+    }
+
+    private bindNavButtonHandlers(): void {
+        if (!this.navLeftButton || !this.navRightButton) {
+            return;
+        }
+        this.navLeftButton.off('pointerup');
+        this.navRightButton.off('pointerup');
+        this.navLeftButton.on('pointerup', () => {
+            this.processInput(Button.LEFT);
+        });
+        this.navRightButton.on('pointerup', () => {
+            this.processInput(Button.RIGHT);
+        });
     }
 
     private appendUniversalSmittyOptions(dropdown: HTMLSelectElement): void {
@@ -294,6 +375,11 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
     }
 
     clear(): void {
+        this._metaMode = TweakMetaMode.NONE;
+        this.cleanupVxTweakKeyListeners();
+        if (this._tweakHudText) {
+            this._tweakHudText.setVisible(false);
+        }
         if (this.onCloseCallback) {
             try { this.onCloseCallback(); } catch {}
         }
@@ -392,6 +478,12 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
         this.selectedFormIndex = 0;
         this.selectedSpeciesData = null;
+
+        if (this.modalBackgroundImage) {
+            this.modalBackgroundImage.destroy();
+            this.modalBackgroundImage = null;
+            this.modalBackgroundCreated = false;
+        }
 
         super.clear();
 
@@ -565,7 +657,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
     }
 
     private async ensurePokemonAtlasLoaded(key: string, atlasPath: string): Promise<void> {
-        if (this.scene.textures.exists(key)) {
+        if (this.scene.textures.exists(key) && this.scene.textures.get(key).key !== "__MISSING") {
             return;
         }
         (this.scene as BattleScene).loadPokemonAtlas(key, atlasPath);
@@ -578,9 +670,10 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
     }
 
     private async ensureBackAtlasLoaded(speciesData: PokemonSpecies, formIndex: number, shiny: boolean, variant: number): Promise<void> {
-        const backSpriteId = speciesData.getSpriteId(false, formIndex, shiny, variant, true).replace(/\_{2}/g, "/");
-        const atlasPath = `${/_[1-3]$/.test(backSpriteId) ? "variant/" : ""}${backSpriteId}`;
-        const key = `pkmn__${backSpriteId}`;
+        const rawBackSpriteId = speciesData.getSpriteId(false, formIndex, shiny, variant, true);
+        const backSpritePathId = rawBackSpriteId.replace(/\_{2}/g, "/");
+        const atlasPath = `${/_[1-3]$/.test(backSpritePathId) ? "variant/" : ""}${backSpritePathId}`;
+        const key = `pkmn__${rawBackSpriteId}`;
         await this.ensurePokemonAtlasLoaded(key, atlasPath);
     }
 
@@ -604,10 +697,10 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             const primarySpriteKey = primarySpecies.getSpriteKey(false, primaryFormIndex, shiny, variant);
             const fusionSpriteKey = fusionSpecies.getSpriteKey(false, fusionFormIndex, shiny, variant);
 
-            if (!this.scene.textures.exists(primarySpriteKey)) {
+            if (!this.scene.textures.exists(primarySpriteKey) || this.scene.textures.get(primarySpriteKey).key === "__MISSING") {
                 await primarySpecies.loadAssets(this.scene, false, primaryFormIndex, shiny, variant, true);
             }
-            if (!this.scene.textures.exists(fusionSpriteKey)) {
+            if (!this.scene.textures.exists(fusionSpriteKey) || this.scene.textures.get(fusionSpriteKey).key === "__MISSING") {
                 await fusionSpecies.loadAssets(this.scene, false, fusionFormIndex, shiny, variant, true);
             }
             await this.ensureBackAtlasLoaded(primarySpecies, primaryFormIndex, shiny, variant);
@@ -637,7 +730,12 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             }
 
             if (this.scene.spritePipeline) {
-                pokemonSprite.setPipeline(this.scene.spritePipeline);
+                pokemonSprite.setPipeline(this.scene.spritePipeline, {
+                    tone: [0.0, 0.0, 0.0, 0.0],
+                    hasShadow: false,
+                    ignoreOverride: true,
+                    ignoreFieldPos: false
+                });
                 pokemonSprite.setPipelineData("shiny", false);
                 pokemonSprite.setPipelineData("variant", 0);
                 pokemonSprite.setPipelineData("spriteKey", primarySpriteKey);
@@ -660,6 +758,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             const srcData: any = tempSprite.pipelineData as any;
             pokemonSprite.setPipelineData("spriteColors", srcData["spriteColors"] || []);
             pokemonSprite.setPipelineData("fusionSpriteColors", srcData["fusionSpriteColors"] || []);
+            pokemonSprite.setPipelineData("fusionRecolorMode", srcData["fusionRecolorMode"] || 0);
 
             try { tempPokemon.destroy(true); } catch {}
 
@@ -773,7 +872,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
         this.setTypeIcons(type1, type2);
         this.displayStats(fusedBaseStats);
-        this.displayAbilities(fusionForm.ability1, fusionForm.ability2, fusionForm.abilityHidden);
+        this.displayAbilities(fusionForm.ability1, fusionForm.ability2, fusionForm.abilityHidden, 500, primarySpecies.generation);
 
         const fusionInstance = new PlayerPokemon(this.scene as BattleScene, primarySpecies, 1, abilityIndex, this.selectedFormIndex, Gender.MALE, false, 0, undefined, Nature.HARDY);
         fusionInstance.generateFusionViaSpeciesID(fusionSpeciesId, false);
@@ -952,7 +1051,9 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                         });
                     }
 
-                const modifierSelectHandler = this.scene.ui.handlers[Mode.MODIFIER_SELECT] as ModifierSelectUiHandler;
+                const lootHandler = this.scene.ui.handlers[Mode.LOOT_REWARD_SELECT] as ModifierSelectUiHandler;
+                const baseModHandler = this.scene.ui.handlers[Mode.MODIFIER_SELECT] as ModifierSelectUiHandler;
+                const modifierSelectHandler = (lootHandler?.getCurrentShopOptions?.()?.length ? lootHandler : baseModHandler) as ModifierSelectUiHandler;
                 if (modifierSelectHandler && typeof modifierSelectHandler.getCurrentShopOptions === 'function') {
                     const shopOptions = modifierSelectHandler.getCurrentShopOptions();
                     shopOptions.forEach(option => {
@@ -1448,7 +1549,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
             this.setTypeIcons(sourceForm.type1, sourceForm.type2);
             this.displayStats(sourceForm.baseStats);
-            this.displayAbilities(sourceForm.ability1, sourceForm.ability2, sourceForm.abilityHidden);
+            this.displayAbilities(sourceForm.ability1, sourceForm.ability2, sourceForm.abilityHidden, 500, speciesData.generation);
             this.displayLearnableMoves(this.selectedSpeciesId);
             const eggMovesEndY = this.displayEggMoves(this.selectedSpeciesId);
             this.evolutionContainer.setY(this.abilitiesMovesY + eggMovesEndY + 10);
@@ -1557,10 +1658,14 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         this.spriteContainer.add(loadingText);
 
         try {
-            const sanitizedFormName = formName.toLowerCase().replace(/[^a-z0-9]/g, '');
-            const spriteKey = `pkmn__glitch__${sanitizedFormName}`;
+            const raw = (formName || "").toLowerCase();
+            const sanitizedFormName = raw.replace(/[^a-z0-9]/g, '');
+            const assetKey = raw === "porygonω"
+                ? "porygon-q"
+                : (raw === "karasu-me" ? "karasume" : sanitizedFormName);
+            const spriteKey = `pkmn__glitch__${assetKey}`;
             if (!this.scene.textures.exists(spriteKey)) {
-                await this.loadGlitchSpriteFromFile(sanitizedFormName, spriteKey);
+                await this.loadGlitchSpriteFromFile(assetKey, spriteKey);
             }
 
             const pokemonSprite = (this.scene as BattleScene).addPokemonSprite(
@@ -1573,6 +1678,18 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 true
             );
             pokemonSprite.setOrigin(0.5, 0.5);
+
+            if (this.scene.spritePipeline) {
+                pokemonSprite.setPipeline(this.scene.spritePipeline, {
+                    tone: [0.0, 0.0, 0.0, 0.0],
+                    hasShadow: false,
+                    ignoreOverride: false,
+                    ignoreFieldPos: true
+                });
+                pokemonSprite.setPipelineData("shiny", false);
+                pokemonSprite.setPipelineData("variant", 0);
+                pokemonSprite.setPipelineData("spriteKey", spriteKey);
+            }
 
             const MAX_SIZE = 64;
             const textureWidth = pokemonSprite.width;
@@ -1617,7 +1734,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
         this.setTypeIcons(sourceForm.type1, sourceForm.type2);
         this.displayStats(sourceForm.baseStats);
-        this.displayAbilities(sourceForm.ability1, sourceForm.ability2, sourceForm.abilityHidden);
+        this.displayAbilities(sourceForm.ability1, sourceForm.ability2, sourceForm.abilityHidden, 500, speciesData?.generation);
         this.displayLearnableMoves(speciesId);
         const eggMovesEndY = this.displayEggMoves(speciesId);
         this.evolutionContainer.setY(this.abilitiesMovesY + eggMovesEndY + 10);
@@ -1626,6 +1743,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
     private async loadPokemonSprite(speciesId: Species, formIndex: number = 0): Promise<void> {
 
+        this.voidexPortalSprite = null;
         this.spriteContainer.removeAll(true);
 
         const speciesData = this.selectedSpeciesData || getPokemonSpecies(speciesId);
@@ -1697,18 +1815,96 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 false,
                 true
             );
-            pokemonSprite.setOrigin(0.5, 0.5);
 
             const MAX_SIZE = 64;
             const textureWidth = pokemonSprite.width;
             const textureHeight = pokemonSprite.height;
 
-            if (textureWidth > MAX_SIZE || textureHeight > MAX_SIZE) {
+            const VOIDEX_CREATURE_FIT = 0.21;
+            const VOIDEX_PORTAL_DAMPEN = 0.75;
+            const NORMAL_FEET_Y = MAX_SIZE / 2;
+            const _voidTuning = getYuTuning();
+
+            if (speciesData.generation === 20) {
+              pokemonSprite.setOrigin(0.5, 1);
+              pokemonSprite.setPipelineData("ignoreFieldPos", true);
+              const _vSpriteState = this.scene.cache.json.exists(spriteKey)
+                ? this.scene.cache.json.get(spriteKey)?.spriteState ?? null
+                : null;
+              const _vStateScale = _vSpriteState?.scale ?? 1;
+              this._voidexBaseCreatureScale = _vStateScale * VOIDEX_CREATURE_FIT + 0.050;
+              const _spVisOff = YU_SPECIES_VISUAL_OFFSETS[this.selectedSpeciesId] ?? {};
+              const _vCreatureScale = this._voidexBaseCreatureScale + _voidTuning.creatureScaleOffset + (_spVisOff.creatureScaleOffset ?? 0);
+              pokemonSprite.setScale(_vCreatureScale);
+              this._voidexBaseCreatureX = 0;
+              this._voidexBaseCreatureY = NORMAL_FEET_Y - 6;
+              pokemonSprite.setPosition(this._voidexBaseCreatureX + _voidTuning.creatureXOffset, this._voidexBaseCreatureY + _voidTuning.yOffset + _voidTuning.creatureYOffset);
+              yuTuningLog("Voidex", "creature", { scale: _vCreatureScale, x: 0 + _voidTuning.creatureXOffset, y: NORMAL_FEET_Y - 6 + _voidTuning.yOffset + _voidTuning.creatureYOffset, _vStateScale });
+            } else {
+              pokemonSprite.setOrigin(0.5, 0.5);
+              if (textureWidth > MAX_SIZE || textureHeight > MAX_SIZE) {
                 const scale = MAX_SIZE / Math.max(textureWidth, textureHeight);
                 pokemonSprite.setScale(scale);
+              }
             }
 
             this.spriteContainer.removeAll(true);
+
+            if (speciesData.generation === 20) {
+              const _vSpriteState2 = this.scene.cache.json.exists(spriteKey)
+                ? this.scene.cache.json.get(spriteKey)?.spriteState ?? null
+                : null;
+              const portalFile = _vSpriteState2?.portal;
+              if (portalFile) {
+                const stem = portalFile.replace(/\.png$/i, "");
+                const portalKey = `yu_portal_${stem}`;
+                if (this.scene.textures.exists(portalKey)) {
+                  const portalSpr = this.scene.add.sprite(0, 0, portalKey);
+                  portalSpr.setOrigin(0.5, 1);
+                  const _vStateScale2 = _vSpriteState2?.scale ?? 1;
+                  const _vBasis = pokemonSprite.frame?.width || 1;
+                  const _frameH = pokemonSprite.frame?.height || 1;
+                  const _portalNativeW = portalSpr.frame?.width || 195;
+                  const _portalNativeH = portalSpr.frame?.height || 50;
+                  const _sorterX = (_vSpriteState2?.x ?? 0) * _vBasis;
+                  const _sorterY = (_vSpriteState2?.y ?? 0) * _vBasis;
+                  const _displayW = _vStateScale2 * _vBasis;
+                  const _displayH = _vStateScale2 * _frameH;
+                  const _portalSorterW = (_vSpriteState2?.portalScale ?? 1) * _vBasis;
+                  const _portalSorterX = (_vSpriteState2?.portalX ?? 0) * _vBasis;
+                  const _portalSorterY = (_vSpriteState2?.portalY ?? 0) * _vBasis;
+                  const _portalSorterH = _portalSorterW * (_portalNativeH / _portalNativeW);
+                  const _feetDeltaY = ((_portalSorterY + _portalSorterH) - (_sorterY + _displayH)) / _vStateScale2;
+                  const _centerDeltaX = ((_portalSorterX - _portalSorterW / 2) - (_sorterX - _displayW / 2)) / _vStateScale2;
+                  const _portalChildScale = _portalSorterW / (_portalNativeW * _vStateScale2);
+                  const _posScale = _vStateScale2 * VOIDEX_CREATURE_FIT;
+                  this._voidexBasePortalScale = _portalChildScale * _posScale * VOIDEX_PORTAL_DAMPEN - 0.100;
+                  const _vxPortalOffsets = YU_SPECIES_PORTAL_OFFSETS[speciesId];
+                  const _vPortalScale = this._voidexBasePortalScale + _voidTuning.portalScaleOffset + (_vxPortalOffsets?.portalScaleOffset ?? 0);
+                  this._voidexBasePortalX = _centerDeltaX * _posScale;
+                  this._voidexBasePortalY = NORMAL_FEET_Y + _feetDeltaY * _posScale - 12;
+                  if (_vxPortalOffsets) {
+                    this._voidexBasePortalX += _vxPortalOffsets.portalDeltaX ?? 0;
+                    this._voidexBasePortalY += _vxPortalOffsets.portalDeltaY ?? 0;
+                  }
+                  let _vPortalX = this._voidexBasePortalX + _voidTuning.xOffset;
+                  let _vPortalY = this._voidexBasePortalY + _voidTuning.yOffset;
+                  const _vPortalHalfW = (_portalNativeW * _vPortalScale) / 2;
+                  const _vModalLeft = -(MAX_SIZE / 2);
+                  if (_vPortalX - _vPortalHalfW < _vModalLeft) {
+                    const _shift = (_vModalLeft - (_vPortalX - _vPortalHalfW)) + 2;
+                    _vPortalX += _shift;
+                    pokemonSprite.x += _shift;
+                  }
+                  portalSpr.setScale(_vPortalScale);
+                  portalSpr.setPosition(_vPortalX, _vPortalY);
+                  this.spriteContainer.add(portalSpr);
+                  this.voidexPortalSprite = portalSpr;
+                  yuTuningLog("Voidex", "portal", { _vPortalX, _vPortalY, _vPortalScale, _posScale, _centerDeltaX, _feetDeltaY });
+                }
+              }
+            }
+
             this.spriteContainer.add(pokemonSprite);
             this.pokemonSprite = pokemonSprite;
 
@@ -1719,25 +1915,49 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
                 }
             }
 
-            if (!isGlitchOrSmittyForm && this.scene.spritePipeline) {
-                this.pokemonSprite.setPipeline(this.scene.spritePipeline);
+            if (this.scene.spritePipeline) {
+                this.pokemonSprite.setPipeline(this.scene.spritePipeline, {
+                    tone: [0.0, 0.0, 0.0, 0.0],
+                    hasShadow: false,
+                    ignoreOverride: !!this.selectedPokemonInstance?.summonData?.speciesForm,
+                    ignoreFieldPos: isGlitchOrSmittyForm
+                });
                  const shiny = this.selectedPokemonInstance ? !!(this.selectedPokemonInstance as any).shiny : this.forcedShiny;
                  const variant = this.selectedPokemonInstance ? Number((this.selectedPokemonInstance as any).variant) || 0 : this.forcedVariant;
                  this.pokemonSprite.setPipelineData("shiny", shiny);
                  this.pokemonSprite.setPipelineData("variant", variant);
                  this.pokemonSprite.setPipelineData("spriteKey", spriteKey);
-                 this.pokemonSprite.setPipelineData("spriteColors", []);
-                 this.pokemonSprite.setPipelineData("fusionSpriteColors", []);
+                 [ "spriteColors", "fusionSpriteColors", "fusionRecolorMode" ].forEach((k) => {
+                    delete this.pokemonSprite.pipelineData[k];
+                    delete this.pokemonSprite.pipelineData[`${k}Base`];
+                 });
+                 this.pokemonSprite.setPipelineData("fusionRecolorMode", 0);
+                 this.pokemonSprite.setPipelineData("fusionRecolorModeBase", 0);
             }
 
             if (this.selectedPokemonInstance && this.selectedPokemonInstance.getSprite()) {
                 const srcData = this.selectedPokemonInstance.getSprite().pipelineData as any;
+                if (this.selectedPokemonInstance.isFusion && this.selectedPokemonInstance.isFusion()) {
+                    [ "spriteColors", "fusionSpriteColors", "fusionRecolorMode" ].forEach((k) => {
+                        let targetKey = k;
+                        if (this.selectedPokemonInstance?.summonData?.speciesForm) {
+                            targetKey += "Base";
+                        }
+                        if (srcData[targetKey] !== undefined) {
+                            this.pokemonSprite.pipelineData[targetKey] = srcData[targetKey];
+                        }
+                    });
+                }
                 if (srcData["altBuildSpriteColors"] && srcData["altBuildTargetColors"]) {
                     this.pokemonSprite.setPipelineData("altBuildSpriteColors", srcData["altBuildSpriteColors"]);
                     this.pokemonSprite.setPipelineData("altBuildTargetColors", srcData["altBuildTargetColors"]);
                     this.pokemonSprite.setPipelineData("altBuildBlendMode", srcData["altBuildBlendMode"]);
                     this.pokemonSprite.setPipelineData("altBuildInversionFactor", srcData["altBuildInversionFactor"] || 0.0);
                 }
+            }
+
+            if (speciesData.generation === 20 && this.pokemonSprite && this._vxTweakOffsets) {
+                this.applyVxTweakOffsets();
             }
 
         } catch (e) {
@@ -1943,18 +2163,20 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
     }
 
-    private displayAbilities(ability1: Abilities, ability2: Abilities, abilityHidden: Abilities, descWrapWidth: number = 500): void {
+    private displayAbilities(ability1: Abilities, ability2: Abilities, abilityHidden: Abilities, descWrapWidth: number = 500, generation?: number): void {
 
         this.abilitiesContainer.removeAll(true);
         const abilities = [
             { name: ability1, hidden: false },
-            { name: ability2, hidden: false },
+            ...(ability2 !== Abilities.NONE && ability2 !== ability1
+                ? [{ name: ability2, hidden: false }]
+                : []),
             { name: abilityHidden, hidden: true }
-        ].filter(a => a.name !== Abilities.NONE);
+        ].filter(a => a.name !== Abilities.NONE && !(a.hidden && generation === 20));
         const title = addTextObject(
             this.scene,
             -70,
-            0,
+            -2,
             i18next.t("pokedex:abilities"),
             TextStyle.WINDOW,
             { fontSize: '50px', fontStyle: 'bold' }
@@ -2428,6 +2650,47 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
     processInput(button: Button): boolean {
 
+        if (button === Button.CYCLE_ABILITY && this.scene.uiEditModeActive && DEBUG_YU_VISUAL_TUNING) {
+            const wasActive = this._metaMode !== TweakMetaMode.NONE;
+            this._metaMode = cycleMetaMode(this._metaMode, TWEAK_META_CYCLE);
+            const isActive = this._metaMode !== TweakMetaMode.NONE;
+            this.updateVxTweakHUD();
+            if (isActive && !wasActive) {
+                this.setupVxTweakKeyListeners();
+                this._dropdownPanel = new TweakDropdownPanel({
+                    scene: this.scene as BattleScene,
+                    getAnchorGameCoords: () => {
+                        const gameWidth = this.scene.game.canvas.width;
+                        const gameHeight = this.scene.game.canvas.height;
+                        const modalX = (gameWidth / 2) - (this.getWidth() / 2) + 20;
+                        const modalY = (gameHeight / 2) - (this.getHeight() / 2) + 20;
+                        return { x: modalX, y: modalY };
+                    },
+                    elements: PokedexModalUiHandler.VX_TWEAK_ASSETS as unknown as string[],
+                    modes: PokedexModalUiHandler.VX_TWEAK_MODES as unknown as string[],
+                    onElementChange: (_name, idx) => {
+                        this._tweakAssetIndex = idx;
+                        this.updateVxTweakHUD();
+                    },
+                    onModeChange: (_name, idx) => {
+                        this._tweakMode = idx;
+                        this.updateVxTweakHUD();
+                    },
+                });
+                this._dropdownPanel.create();
+            } else if (!isActive && wasActive) {
+                this.cleanupVxTweakKeyListeners();
+                this._dropdownPanel?.destroy();
+                this._dropdownPanel = null;
+            }
+            console.log(`[VX-TWEAK] meta mode ${TweakMetaMode[this._metaMode]}`);
+            return true;
+        }
+
+        if (this._metaMode !== TweakMetaMode.NONE) {
+            return this.handleVxTweakInput(button);
+        }
+
         switch (button) {
         case Button.CANCEL:
         case Button.MENU:
@@ -2537,7 +2800,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         const spriteY = halfHeight * 0.55;
         const typingY = containerHeight * 0.45;
         const infoY = halfHeight * 0.55;
-        const statsY = containerHeight * 0.52;
+        const statsY = containerHeight * 0.52 - 2;
         const abilitiesMovesY = halfHeight * 0.35;
         this.abilitiesMovesY = abilitiesMovesY;
 
@@ -2570,7 +2833,7 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
         this.evolutionContainer.setVisible(false);
         this.modalContainer.add(this.evolutionContainer);
 
-        this.abilitiesContainer = this.scene.add.container(section2X, abilitiesMovesY);
+        this.abilitiesContainer = this.scene.add.container(section2X, abilitiesMovesY - 7);
         this.abilitiesContainer.setName("abilitiesContainer");
         this.abilitiesContainer.setVisible(true);
         this.modalContainer.add(this.abilitiesContainer);
@@ -2585,28 +2848,259 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
 
         this.navLeftButton = this.scene.add.sprite(-4, halfHeight, 'cursor_reverse');
         this.navLeftButton.setScale(0.75);
-        this.navLeftButton.setInteractive({ useHandCursor: true });
+        this.navLeftButton.setInteractive(new Phaser.Geom.Rectangle(0, 0, 6, 10), Phaser.Geom.Rectangle.Contains);
         this.navLeftButton.setName("navLeftButton");
         this.navLeftButton.setVisible(false);
         this.modalContainer.add(this.navLeftButton);
 
         this.navRightButton = this.scene.add.sprite(containerWidth + 4, halfHeight, 'cursor');
         this.navRightButton.setScale(0.75);
-        this.navRightButton.setInteractive({ useHandCursor: true });
+        this.navRightButton.setInteractive(new Phaser.Geom.Rectangle(0, 0, 6, 10), Phaser.Geom.Rectangle.Contains);
         this.navRightButton.setName("navRightButton");
         this.navRightButton.setVisible(false);
         this.modalContainer.add(this.navRightButton);
 
-        this.navLeftButton.on('pointerup', () => {
-            this.processInput(Button.LEFT);
-        });
-
-        this.navRightButton.on('pointerup', () => {
-            this.processInput(Button.RIGHT);
-        });
+        this.bindNavButtonHandlers();
 
         this.moveScrollContainer = this.scene.add.container(0, 0);
         this.moveScrollContainer.setName("moveScrollContainer");
         this.movesContainer.add(this.moveScrollContainer);
+
+        if (DEBUG_YU_VISUAL_TUNING) {
+            this._tweakHudText = addTextObject(this.scene, Math.floor(this.getWidth() / 2), 2, "", TextStyle.WINDOW, {
+                fontSize: "28px",
+                color: "#00FF00",
+                align: "center"
+            });
+            this._tweakHudText.setOrigin(0.5, 0);
+            this._tweakHudText.setDepth(2000);
+            this._tweakHudText.setVisible(false);
+            this.modalContainer.add(this._tweakHudText);
+        }
     }
+
+    private handleVxTweakInput(button: Button): boolean {
+        if (button === Button.CANCEL) {
+            this._metaMode = TweakMetaMode.NONE;
+            this.cleanupVxTweakKeyListeners();
+            this.updateVxTweakHUD();
+            this.scene.uiEditModeActive = false;
+            console.log(`[VX-TWEAK] meta mode ${TweakMetaMode[this._metaMode]}`);
+            return true;
+        }
+        if (button === Button.SUBMIT) {
+            if (this._metaMode === TweakMetaMode.EDIT_TYPE || this._metaMode === TweakMetaMode.ELEMENT) {
+                this._metaMode = TweakMetaMode.EDIT;
+                this.updateVxTweakHUD();
+                console.log(`[VX-TWEAK] meta mode ${TweakMetaMode[this._metaMode]}`);
+            }
+            return true;
+        }
+
+        if (this._metaMode === TweakMetaMode.EDIT_TYPE) {
+            if (button === Button.LEFT) {
+                this._tweakMode = (this._tweakMode - 1 + PokedexModalUiHandler.VX_TWEAK_MODES.length) % PokedexModalUiHandler.VX_TWEAK_MODES.length;
+                this.updateVxTweakHUD();
+                console.log(`[VX-TWEAK] mode=${PokedexModalUiHandler.VX_TWEAK_MODES[this._tweakMode]}`);
+            } else if (button === Button.RIGHT) {
+                this._tweakMode = (this._tweakMode + 1) % PokedexModalUiHandler.VX_TWEAK_MODES.length;
+                this.updateVxTweakHUD();
+                console.log(`[VX-TWEAK] mode=${PokedexModalUiHandler.VX_TWEAK_MODES[this._tweakMode]}`);
+            }
+            return true;
+        }
+
+        if (this._metaMode === TweakMetaMode.ELEMENT) {
+            if (button === Button.LEFT) {
+                this._tweakAssetIndex = (this._tweakAssetIndex - 1 + PokedexModalUiHandler.VX_TWEAK_ASSETS.length) % PokedexModalUiHandler.VX_TWEAK_ASSETS.length;
+                this.updateVxTweakHUD();
+                console.log(`[VX-TWEAK] asset=${PokedexModalUiHandler.VX_TWEAK_ASSETS[this._tweakAssetIndex]}`);
+            } else if (button === Button.RIGHT) {
+                this._tweakAssetIndex = (this._tweakAssetIndex + 1) % PokedexModalUiHandler.VX_TWEAK_ASSETS.length;
+                this.updateVxTweakHUD();
+                console.log(`[VX-TWEAK] asset=${PokedexModalUiHandler.VX_TWEAK_ASSETS[this._tweakAssetIndex]}`);
+            }
+            return true;
+        }
+
+        const mode = PokedexModalUiHandler.VX_TWEAK_MODES[this._tweakMode];
+        const STEP_SCALE = 0.05;
+        const STEP_PX = 2;
+        let changed = false;
+
+        if (mode === "portalScale") {
+            if (button === Button.UP) { this._vxTweakOffsets.portalScaleOffset += STEP_SCALE; changed = true; }
+            else if (button === Button.DOWN) { this._vxTweakOffsets.portalScaleOffset -= STEP_SCALE; changed = true; }
+        } else if (mode === "creatureScale") {
+            if (button === Button.UP) { this._vxTweakOffsets.creatureScaleOffset += STEP_SCALE; changed = true; }
+            else if (button === Button.DOWN) { this._vxTweakOffsets.creatureScaleOffset -= STEP_SCALE; changed = true; }
+            else if (button === Button.LEFT) { this._vxTweakOffsets.creatureYOffset -= STEP_PX; changed = true; }
+            else if (button === Button.RIGHT) { this._vxTweakOffsets.creatureYOffset += STEP_PX; changed = true; }
+        } else if (mode === "position") {
+            const vxAsset = PokedexModalUiHandler.VX_TWEAK_ASSETS[this._tweakAssetIndex];
+            const vxIsPortal = vxAsset.toLowerCase().includes("portal");
+            if (button === Button.UP || button === Button.DOWN) {
+                const d = button === Button.UP ? -STEP_PX : STEP_PX;
+                if (vxIsPortal) { this._vxTweakOffsets.yOffset += d; }
+                else { this._vxTweakOffsets.creatureYOffset += d; }
+                changed = true;
+            } else if (button === Button.LEFT || button === Button.RIGHT) {
+                const d = button === Button.LEFT ? -STEP_PX : STEP_PX;
+                if (vxIsPortal) { this._vxTweakOffsets.xOffset += d; }
+                else { this._vxTweakOffsets.creatureXOffset += d; }
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            this.applyVxTweakOffsets();
+            this.updateVxTweakHUD();
+        }
+
+        return true;
+    }
+
+    private applyVxTweakOffsets(): void {
+        const o = this._vxTweakOffsets;
+        const globalState = getYuTuning();
+        if (this.pokemonSprite) {
+            const _spVisOff = YU_SPECIES_VISUAL_OFFSETS[this.selectedSpeciesId] ?? {};
+            const baseScale = this._voidexBaseCreatureScale + globalState.creatureScaleOffset + o.creatureScaleOffset + (_spVisOff.creatureScaleOffset ?? 0);
+            this.pokemonSprite.setScale(baseScale);
+            this.pokemonSprite.setPosition(
+                this._voidexBaseCreatureX + globalState.creatureXOffset + o.creatureXOffset,
+                this._voidexBaseCreatureY + globalState.yOffset + globalState.creatureYOffset + o.creatureYOffset
+            );
+        }
+        if (this.voidexPortalSprite) {
+            const _vxPortalOff = YU_SPECIES_PORTAL_OFFSETS[this.selectedSpeciesId] ?? {};
+            const portalScale = this._voidexBasePortalScale + globalState.portalScaleOffset + o.portalScaleOffset + (_vxPortalOff.portalScaleOffset ?? 0);
+            this.voidexPortalSprite.setScale(portalScale);
+            this.voidexPortalSprite.setPosition(
+                this._voidexBasePortalX + globalState.xOffset + o.xOffset,
+                this._voidexBasePortalY + globalState.yOffset + o.yOffset
+            );
+        }
+        console.log(`[VX-TWEAK] offsets: portal=${o.portalScaleOffset.toFixed(3)} creature=${o.creatureScaleOffset.toFixed(3)} y=${o.yOffset} x=${o.xOffset} creatureY=${o.creatureYOffset} creatureX=${o.creatureXOffset}`);
+    }
+
+    private setupVxTweakKeyListeners(): void {
+        this._tweakKeyOneHandler = () => {
+            if (this._metaMode === TweakMetaMode.NONE) return;
+            if (!this.scene.uiEditModeActive) return;
+            this._metaMode = cycleMetaMode(this._metaMode, TWEAK_META_CYCLE);
+            if (this._metaMode === TweakMetaMode.NONE) {
+                this.cleanupVxTweakKeyListeners();
+            }
+            this.updateVxTweakHUD();
+            console.log(`[VX-TWEAK] meta mode ${TweakMetaMode[this._metaMode]}`);
+        };
+        this._tweakKeyTwoHandler = () => {
+            if (this._metaMode === TweakMetaMode.NONE) return;
+            if (!this.scene.uiEditModeActive) return;
+            this._tweakAssetIndex = (this._tweakAssetIndex + 1) % PokedexModalUiHandler.VX_TWEAK_ASSETS.length;
+            this.updateVxTweakHUD();
+            this._dropdownPanel?.syncElementValue(PokedexModalUiHandler.VX_TWEAK_ASSETS[this._tweakAssetIndex]);
+            console.log(`[VX-TWEAK] asset=${PokedexModalUiHandler.VX_TWEAK_ASSETS[this._tweakAssetIndex]}`);
+        };
+        this._tweakKeyThreeHandler = () => {
+            if (this._metaMode === TweakMetaMode.NONE) return;
+            if (!this.scene.uiEditModeActive) return;
+            this._tweakAssetIndex = (this._tweakAssetIndex - 1 + PokedexModalUiHandler.VX_TWEAK_ASSETS.length) % PokedexModalUiHandler.VX_TWEAK_ASSETS.length;
+            this.updateVxTweakHUD();
+            this._dropdownPanel?.syncElementValue(PokedexModalUiHandler.VX_TWEAK_ASSETS[this._tweakAssetIndex]);
+            console.log(`[VX-TWEAK] asset=${PokedexModalUiHandler.VX_TWEAK_ASSETS[this._tweakAssetIndex]}`);
+        };
+        this._tweakKeyVHandler = () => {
+            if (this._metaMode === TweakMetaMode.NONE) return;
+            if (!this.scene.uiEditModeActive) return;
+            const o = this._vxTweakOffsets;
+            const globalState = getYuTuning();
+            const output = [
+                "[VX-TWEAK-SNAPSHOT]",
+                "NOTE: CHANGE values are deltas for code adjustments.",
+                `asset=${PokedexModalUiHandler.VX_TWEAK_ASSETS[this._tweakAssetIndex]} mode=${PokedexModalUiHandler.VX_TWEAK_MODES[this._tweakMode]}`,
+                "",
+                "Local offsets:",
+                `  ORIGINAL: portalScale=0 creatureScale=0 y=0 x=0 creatureY=0 creatureX=0`,
+                `  CHANGE:   Δportal=${o.portalScaleOffset >= 0 ? "+" : ""}${o.portalScaleOffset.toFixed(4)} Δcreature=${o.creatureScaleOffset >= 0 ? "+" : ""}${o.creatureScaleOffset.toFixed(4)} Δy=${o.yOffset >= 0 ? "+" : ""}${o.yOffset} Δx=${o.xOffset >= 0 ? "+" : ""}${o.xOffset} ΔcreatureY=${o.creatureYOffset >= 0 ? "+" : ""}${o.creatureYOffset} ΔcreatureX=${o.creatureXOffset >= 0 ? "+" : ""}${o.creatureXOffset}`,
+                `  APPLIED:  portalScale=${o.portalScaleOffset.toFixed(4)} creatureScale=${o.creatureScaleOffset.toFixed(4)} y=${o.yOffset} x=${o.xOffset} creatureY=${o.creatureYOffset} creatureX=${o.creatureXOffset}`,
+                "",
+                "Global offsets:",
+                `  APPLIED:  portalScale=${globalState.portalScaleOffset.toFixed(4)} creatureScale=${globalState.creatureScaleOffset.toFixed(4)} y=${globalState.yOffset} x=${globalState.xOffset} creatureY=${globalState.creatureYOffset} creatureX=${globalState.creatureXOffset}`,
+            ].join("\n");
+            console.log(output);
+            tweakCopyToClipboard(output);
+        };
+        this._tweakKeyRHandler = () => {
+            if (this._metaMode === TweakMetaMode.NONE) return;
+            if (!this.scene.uiEditModeActive) return;
+            this._vxTweakOffsets = { portalScaleOffset: 0, creatureScaleOffset: 0, yOffset: 0, xOffset: 0, creatureYOffset: 0, creatureXOffset: 0 };
+            this.applyVxTweakOffsets();
+            this.updateVxTweakHUD();
+            console.log("[VX-TWEAK] reset local offsets");
+        };
+        (this as any)._tweakKeyFiveHandler = () => {
+            if (this._metaMode === TweakMetaMode.NONE) return;
+            if (!this.scene.uiEditModeActive) return;
+            this._dropdownPanel?.toggle();
+        };
+        this.scene.input.keyboard?.on("keydown-ONE", this._tweakKeyOneHandler);
+        this.scene.input.keyboard?.on("keydown-TWO", this._tweakKeyTwoHandler);
+        this.scene.input.keyboard?.on("keydown-THREE", this._tweakKeyThreeHandler);
+        this.scene.input.keyboard?.on("keydown-V", this._tweakKeyVHandler);
+        this.scene.input.keyboard?.on("keydown-R", this._tweakKeyRHandler);
+        this.scene.input.keyboard?.on("keydown-FIVE", (this as any)._tweakKeyFiveHandler);
+    }
+
+    private cleanupVxTweakKeyListeners(): void {
+        if (this._tweakKeyOneHandler) {
+            this.scene.input.keyboard?.off("keydown-ONE", this._tweakKeyOneHandler);
+            this._tweakKeyOneHandler = null;
+        }
+        if (this._tweakKeyTwoHandler) {
+            this.scene.input.keyboard?.off("keydown-TWO", this._tweakKeyTwoHandler);
+            this._tweakKeyTwoHandler = null;
+        }
+        if (this._tweakKeyThreeHandler) {
+            this.scene.input.keyboard?.off("keydown-THREE", this._tweakKeyThreeHandler);
+            this._tweakKeyThreeHandler = null;
+        }
+        if (this._tweakKeyVHandler) {
+            this.scene.input.keyboard?.off("keydown-V", this._tweakKeyVHandler);
+            this._tweakKeyVHandler = null;
+        }
+        if (this._tweakKeyRHandler) {
+            this.scene.input.keyboard?.off("keydown-R", this._tweakKeyRHandler);
+            this._tweakKeyRHandler = null;
+        }
+        if ((this as any)._tweakKeyFiveHandler) {
+            this.scene.input.keyboard?.off("keydown-FIVE", (this as any)._tweakKeyFiveHandler);
+            (this as any)._tweakKeyFiveHandler = null;
+        }
+        this._dropdownPanel?.destroy();
+        this._dropdownPanel = null;
+    }
+
+    private updateVxTweakHUD(): void {
+        if (!this._tweakHudText) return;
+        if (this._metaMode === TweakMetaMode.NONE) {
+            this._tweakHudText.setVisible(false);
+            return;
+        }
+        const modeName = PokedexModalUiHandler.VX_TWEAK_MODES[this._tweakMode].toUpperCase();
+        const assetName = PokedexModalUiHandler.VX_TWEAK_ASSETS[this._tweakAssetIndex];
+        if (this._metaMode === TweakMetaMode.EDIT) {
+            this._tweakHudText.setText(`EDIT MODE - ${modeName} - ${assetName}`);
+            this._tweakHudText.setColor("#00FF00");
+        } else if (this._metaMode === TweakMetaMode.EDIT_TYPE) {
+            this._tweakHudText.setText(`EDIT TYPE SELECT - ${modeName}`);
+            this._tweakHudText.setColor("#FFD700");
+        } else if (this._metaMode === TweakMetaMode.ELEMENT) {
+            this._tweakHudText.setText(`ELEMENT SELECT - ${assetName}`);
+            this._tweakHudText.setColor("#40C8F8");
+        }
+        this._tweakHudText.setVisible(true);
+    }
+
 }

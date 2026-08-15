@@ -1,5 +1,5 @@
 import BattleScene from "../battle-scene";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import UiHandler from "./ui-handler";
 import { Button } from "../enums/buttons";
 import { addTextObject, TextStyle } from "./text";
@@ -7,6 +7,7 @@ import { addWindow } from "./ui-theme";
 import { Tutorial } from "../tutorial";
 import { EnhancedTutorial } from "./tutorial-registry";
 import { TutorialService } from "./tutorial-service";
+import { isPrimaryPointer } from "./pointer-utils";
 
 const DEBUG_UI = false;
 
@@ -140,8 +141,6 @@ export default class TutorialListUiHandler extends UiHandler {
                 name: "Permanent Features",
                 tutorials: [
                     EnhancedTutorial.PERMA_MONEY_1,
-                    EnhancedTutorial.BOUNTIES_1,
-                    EnhancedTutorial.DAILY_BOUNTY,
                     EnhancedTutorial.SMITTY_ITEMS_1
                 ]
             },
@@ -329,7 +328,7 @@ export default class TutorialListUiHandler extends UiHandler {
                 );
             }
 
-            bg.setInteractive();
+            bg.setInteractive({ useHandCursor: true });
 
             let buttonText;
             if (item.tutorial === null && item.name !== "Back") {
@@ -360,8 +359,13 @@ export default class TutorialListUiHandler extends UiHandler {
 
             buttonContainer.add([bg, buttonText]);
 
-            bg.on('pointerup', () => {
-                this.selectTutorial(index);
+            const btnIndex = index;
+            bg.on("pointerover", () => {
+                this.setTutorialIndex(btnIndex, false);
+            });
+            bg.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+                if (!isPrimaryPointer(pointer)) return;
+                this.selectTutorial(btnIndex);
             });
 
             this.tutorialButtonContainers.push(buttonContainer);
@@ -512,7 +516,7 @@ export default class TutorialListUiHandler extends UiHandler {
         this.scene.ui.revertMode();
     }
 
-    private setTutorialIndex(index: number): boolean {
+    private setTutorialIndex(index: number, showContent = true): boolean {
         if (index < 0 || index >= this.activeTutorialCount) {
             return false;
         }
@@ -534,7 +538,7 @@ export default class TutorialListUiHandler extends UiHandler {
             const newButton = this.tutorialButtonContainers[this.currentTutorialIndex].getAt(0) as Phaser.GameObjects.Rectangle;
             newButton.setFillStyle(0x888888);
 
-            if (previousIndex !== this.currentTutorialIndex) {
+            if (previousIndex !== this.currentTutorialIndex && showContent) {
                 this.showTutorialContent(this.currentTutorialIndex);
             }
         }

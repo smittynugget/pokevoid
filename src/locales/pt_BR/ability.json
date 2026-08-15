@@ -1,226 +1,226 @@
 {
   "stench": {
-    "name": "Stench",
+    "name": "Fedor",
     "description": "Liberando um forte odor enquanto ataca, este Pokémon pode fazer o alvo hesitar."
   },
   "drizzle": {
-    "name": "Drizzle",
+    "name": "Chuvisco",
     "description": "O Pokémon faz chover ao entrar em batalha."
   },
   "speedBoost": {
-    "name": "Speed Boost",
+    "name": "Impulso de Velocidade",
     "description": "Seu atributo de Velocidade é aumentado a cada turno."
   },
   "battleArmor": {
-    "name": "Battle Armor",
+    "name": "Armadura de Batalha",
     "description": "Uma forte armadura protege o Pokémon de golpes críticos."
   },
   "sturdy": {
-    "name": "Sturdy",
+    "name": "Resistente",
     "description": "Impede que seja nocauteado com apenas um golpe, se estiver com seus PS ao máximo. Também evita que movimentos de golpes fatais o derrubem."
   },
   "damp": {
-    "name": "Damp",
+    "name": "Umidade",
     "description": "Previne o uso de movimentos explosivos, como a Autodestruição, aumentando a umidade dos arredores."
   },
   "limber": {
-    "name": "Limber",
+    "name": "Flexível",
     "description": "Seu corpo maleável protege o Pokémon da paralisia."
   },
   "sandVeil": {
-    "name": "Sand Veil",
+    "name": "Véu de Areia",
     "description": "Aumenta a evasão do Pokémon durante as tempestades de areia."
   },
   "static": {
-    "name": "Static",
+    "name": "Estática",
     "description": "O Pokémon é carregado com energia estática, então entrar em contato com ele pode causar paralisia."
   },
   "voltAbsorb": {
-    "name": "Volt Absorb",
+    "name": "Absorção de Volt",
     "description": "Se for atingido por um movimento do tipo Elétrico, ele restaura seus PS ao invés de receber dano."
   },
   "waterAbsorb": {
-    "name": "Water Absorb",
+    "name": "Absorção de Água",
     "description": "Se for atingido por um movimento do tipo Água, ele restaura seus PS ao invés de receber dano."
   },
   "oblivious": {
-    "name": "Oblivious",
+    "name": "Alheio",
     "description": "Sua indiferença impede que o Pokémon fique apaixonado ou seja provocado por outro Pokémon."
   },
   "cloudNine": {
-    "name": "Cloud Nine",
+    "name": "Nona Nuvem",
     "description": "Anula todos os efeitos climáticos na batalha."
   },
   "compoundEyes": {
-    "name": "Compound Eyes",
+    "name": "Olhos Compostos",
     "description": "O olho preciso do Pokémon aumenta sua precisão."
   },
   "insomnia": {
-    "name": "Insomnia",
+    "name": "Insônia",
     "description": "Este Pokémon está sofrendo com insônia e não pode adormecer."
   },
   "colorChange": {
-    "name": "Color Change",
+    "name": "Mudança de Cor",
     "description": "Este Pokémon se torna do tipo do último ataque que sofreu."
   },
   "immunity": {
-    "name": "Immunity",
+    "name": "Imunidade",
     "description": "O sistema imunológico deste Pokémon impede que ele seja envenenado."
   },
   "flashFire": {
-    "name": "Flash Fire",
+    "name": "Fogo Instantâneo",
     "description": "Fortalece movimentos do tipo Fogo quando atingido por um."
   },
   "shieldDust": {
-    "name": "Shield Dust",
+    "name": "Pó de Escudo",
     "description": "A poeira desse Pokémon bloqueia efeitos adicionais dos ataques recebidos."
   },
   "ownTempo": {
-    "name": "Own Tempo",
+    "name": "Ritmo Próprio",
     "description": "Este Pokémon tem seu próprio ritmo, que o impede de ficar confuso."
   },
   "suctionCups": {
-    "name": "Suction Cups",
+    "name": "Ventosas",
     "description": "Este Pokémon usa sua ventosas para fixar-se no lugar, negando todos os movimentos e itens que o obriguem a recuar."
   },
   "intimidate": {
-    "name": "Intimidate",
+    "name": "Intimidação",
     "description": "Quando entra em batalha, este Pokémon intimida o Pokémon adversário, diminuindo seu Ataque."
   },
   "shadowTag": {
-    "name": "Shadow Tag",
+    "name": "Marcação Sombria",
     "description": "Este Pokémon pisa na sombra do Pokémon adversário, impedindo que ele escape da batalha."
   },
   "roughSkin": {
-    "name": "Rough Skin",
+    "name": "Pele Áspera",
     "description": "Quando recebe um ataque direto, usa sua pele áspera para infligir dano ao Pokémon atacante."
   },
   "wonderGuard": {
-    "name": "Wonder Guard",
+    "name": "Guarda Maravilhosa",
     "description": "Devido seu misterioso poder, apenas movimentos supereficazes acertam esse Pokémon."
   },
   "levitate": {
-    "name": "Levitate",
+    "name": "Levitar",
     "description": "Através da levitação esse Pokémon se torna completamente imune a movimentos do tipo Terra."
   },
   "effectSpore": {
-    "name": "Effect Spore",
+    "name": "Esporo de Efeito",
     "description": "Contato direto com o Pokémon pode infligir paralisia, sono ou envenenamento ao atacante."
   },
   "synchronize": {
-    "name": "Synchronize",
+    "name": "Sincronizar",
     "description": "O atacante sofrerá a mesma mudança de estado se causar queima, envenenamento ou paralisia ao Pokémon."
   },
   "clearBody": {
-    "name": "Clear Body",
+    "name": "Corpo Puro",
     "description": "Previne que Habilidades e movimentos de outros Pokémon diminuam os atributos deste Pokémon."
   },
   "naturalCure": {
-    "name": "Natural Cure",
+    "name": "Cura Natural",
     "description": "Quando este Pokémon recua, todas mudanças de estado são curadas."
   },
   "lightningRod": {
-    "name": "Lightning Rod",
+    "name": "Para-Raios",
     "description": "O Pokémon absorve todos os movimentos do tipo Elétrico e, ao invés de sofrer dano, aumenta seu Ataque Esp."
   },
   "sereneGrace": {
-    "name": "Serene Grace",
+    "name": "Graça Serena",
     "description": "Aumenta a probabilidade de ocorrerem efeitos adicionais ao atacar."
   },
   "swiftSwim": {
-    "name": "Swift Swim",
+    "name": "Nado Rápido",
     "description": "A Velocidade do Pokémon é aumentada quando chove."
   },
   "chlorophyll": {
-    "name": "Chlorophyll",
+    "name": "Clorofila",
     "description": "A Velocidade do Pokémon é aumentada sob sol forte."
   },
   "illuminate": {
-    "name": "Illuminate",
+    "name": "Iluminar",
     "description": "Ilumina os arredores, aumentado a possibilidade de encontrar Pokémon selvagens."
   },
   "trace": {
-    "name": "Trace",
+    "name": "Rastrear",
     "description": "Quando entra em batalha, o Pokémon copia a Habilidade de um Pokémon adversário."
   },
   "hugePower": {
-    "name": "Huge Power",
+    "name": "Poder Imenso",
     "description": "Dobra o Ataque do Pokémon."
   },
   "poisonPoint": {
-    "name": "Poison Point",
+    "name": "Ponta Venenosa",
     "description": "Contato direto com o Pokémon pode envenenar o atacante."
   },
   "innerFocus": {
-    "name": "Inner Focus",
+    "name": "Foco Interior",
     "description": "O foco extraordinário do Pokémon o impede de hesitar."
   },
   "magmaArmor": {
-    "name": "Magma Armor",
+    "name": "Armadura de Magma",
     "description": "O magma escaldante que cobre o Pokémon previne seu congelamento."
   },
   "waterVeil": {
-    "name": "Water Veil",
+    "name": "Véu de Água",
     "description": "O véu de água que cobre o Pokémon previne que ele seja queimado."
   },
   "magnetPull": {
-    "name": "Magnet Pull",
+    "name": "Atração Magnética",
     "description": "Impede que Pokémon do tipo Aço escapem através da utilização de sua força magnética."
   },
   "soundproof": {
-    "name": "Soundproof",
+    "name": "Prova de Som",
     "description": "Antirruído dá ao Pokémon imunidade completa a todos movimentos baseados em som."
   },
   "rainDish": {
-    "name": "Rain Dish",
+    "name": "Prato de Chuva",
     "description": "O Pokémon recupera PS gradualmente na chuva."
   },
   "sandStream": {
-    "name": "Sand Stream",
+    "name": "Fluxo de Areia",
     "description": "Quando entra em batalha o Pokémon conjura uma tempestade de areia."
   },
   "pressure": {
-    "name": "Pressure",
+    "name": "Pressão",
     "description": "Pressionando o Pokémon adversário, ele aumenta o custo de PP para o adversário usar um movimento."
   },
   "thickFat": {
-    "name": "Thick Fat",
+    "name": "Gordura Espessa",
     "description": "Movimentos dos tipos Fogo e Água têm seu dano reduzido pela metade devido à grossa camada de  gordura que protege o Pokémon."
   },
   "earlyBird": {
-    "name": "Early Bird",
+    "name": "Madrugador",
     "description": "O Pokémon acorda duas vezes mais rápido que outros Pokémon."
   },
   "flameBody": {
-    "name": "Flame Body",
+    "name": "Corpo de Chamas",
     "description": "Contato direto com o Pokémon pode queimar o atacante."
   },
   "runAway": {
-    "name": "Run Away",
+    "name": "Fuga",
     "description": "Torna a fuga de encontros com Pokémon selvagem garantida."
   },
   "keenEye": {
-    "name": "Keen Eye",
+    "name": "Olho Aguçado",
     "description": "Seu olhar extremamente aguçado evita que outros Pokémon diminuam sua Precisão."
   },
   "hyperCutter": {
-    "name": "Hyper Cutter",
+    "name": "Hiper Cortador",
     "description": "Suas poderosas pinças enchem o Pokémon de orgulho. Elas impedem que outros Pokémon diminuam seu atributo de Ataque."
   },
   "pickup": {
-    "name": "Pickup",
+    "name": "Coleta",
     "description": "Após uma batalha, o Pokémon pegará um item que um adversário deixou cair."
   },
   "truant": {
-    "name": "Truant",
+    "name": "Preguiça",
     "description": "Se utilizar um movimento, o Pokémon precisará descansar no turno seguinte."
   },
   "hustle": {
-    "name": "Hustle",
+    "name": "Agitação",
     "description": "Aumenta seu Ataque em troca de diminuir a precisão."
   },
   "cuteCharm": {
-    "name": "Cute Charm",
+    "name": "Encanto",
     "description": "Contato direto com o Pokémon pode causar paixão ao atacante."
   },
   "plus": {
@@ -232,79 +232,79 @@
     "description": "Aumenta o Ataque Esp. do Pokémon se estiver em batalha com um aliado que tenha as Habilidades Mais ou Menos."
   },
   "forecast": {
-    "name": "Forecast",
+    "name": "Previsão",
     "description": "O tipo do Pokémon altera-se para Água, Fogo ou Gelo, dependendo do clima."
   },
   "stickyHold": {
-    "name": "Sticky Hold",
+    "name": "Aderência",
     "description": "Outros Pokémon não podem remover itens que este Pokémon esteja segurando."
   },
   "shedSkin": {
-    "name": "Shed Skin",
+    "name": "Troca de Pele",
     "description": "O Pokémon pode curar-se de mudanças de estado através da troca de pele."
   },
   "guts": {
-    "name": "Guts",
+    "name": "Determinação",
     "description": "É tão corajoso que ser afetado por uma mudança de estado aumenta seu Ataque."
   },
   "marvelScale": {
-    "name": "Marvel Scale",
+    "name": "Escama Maravilhosa",
     "description": "Se for afetado por uma mudança de estado, as escamas maravilhosas do Pokémon aumentarão sua Defesa."
   },
   "liquidOoze": {
-    "name": "Liquid Ooze",
+    "name": "Limo Líquido",
     "description": "Exala uma substância tóxica com fedor terrível que causa dano a qualquer atacante que use um movimento de dreno."
   },
   "overgrow": {
-    "name": "Overgrow",
+    "name": "Vegetação",
     "description": "Fortalece os movimentos do tipo Grama quando o Pokémon está com poucos PS."
   },
   "blaze": {
-    "name": "Blaze",
+    "name": "Labareda",
     "description": "Fortalece os movimentos do tipo Fogo quando o Pokémon está com poucos PS."
   },
   "torrent": {
-    "name": "Torrent",
+    "name": "Torrente",
     "description": "Fortalece os movimentos do tipo Água quando o Pokémon está com poucos PS."
   },
   "swarm": {
-    "name": "Swarm",
+    "name": "Enxame",
     "description": "Fortalece os movimentos do tipo Inseto quando o Pokémon está com poucos PS."
   },
   "rockHead": {
-    "name": "Rock Head",
+    "name": "Cabeça de Pedra",
     "description": "Protege o Pokémon de dano colateral."
   },
   "drought": {
-    "name": "Drought",
+    "name": "Seca",
     "description": "Intensifica a luz solar quando o Pokémon entra em batalha."
   },
   "arenaTrap": {
-    "name": "Arena Trap",
+    "name": "Armadilha de Arena",
     "description": "Impede que Pokémon adversários fujam."
   },
   "vitalSpirit": {
-    "name": "Vital Spirit",
+    "name": "Espírito Vital",
     "description": "Sua determinação o impede de adormecer."
   },
   "whiteSmoke": {
-    "name": "White Smoke",
+    "name": "Fumaça Branca",
     "description": "O Pokémon é protegido por sua fumaça branca que previne que outros Pokémon diminuam seus atributos."
   },
   "purePower": {
-    "name": "Pure Power",
+    "name": "Poder Puro",
     "description": "O Pokémon dobra seu Ataque usando seu poder puro."
   },
   "shellArmor": {
-    "name": "Shell Armor",
+    "name": "Armadura de Concha",
     "description": "A robusta couraça que protege o Pokémon bloqueia os golpes críticos."
   },
   "airLock": {
-    "name": "Air Lock",
+    "name": "Bloqueio de Ar",
     "description": "Elimina efeitos climáticos."
   },
   "tangledFeet": {
-    "name": "Tangled Feet",
+    "name": "Pés Emaranhados",
     "description": "Sua evasão aumenta se estiver confuso."
   },
   "motorDrive": {
@@ -312,39 +312,39 @@
     "description": "O Pokémon absorve todos os movimentos do tipo Elétrico e, ao invés de sofrer dano, aumenta seu atributo de Velocidade."
   },
   "rivalry": {
-    "name": "Rivalry",
+    "name": "Rivalidade",
     "description": "Sua competitividade faz com que cause mais dano a Pokémon do mesmo gênero, enquanto causa dano reduzido a Pokémon do gênero oposto."
   },
   "steadfast": {
-    "name": "Steadfast",
+    "name": "Firme",
     "description": "A determinação do Pokémon faz com que sua Velocidade aumente cada vez que ele hesita."
   },
   "snowCloak": {
-    "name": "Snow Cloak",
+    "name": "Manto de Neve",
     "description": "Aumenta a evasão numa tempestade de granizo."
   },
   "gluttony": {
-    "name": "Gluttony",
+    "name": "Gula",
     "description": "Se estiver segurando uma fruta, a consumirá quando seus PS caírem abaixo da metade, o que é mais cedo que o usual."
   },
   "angerPoint": {
-    "name": "Anger Point",
+    "name": "Ponto de Raiva",
     "description": "Quando recebe um acerto crítico se enraivece, e com isso, aumenta seu Ataque."
   },
   "unburden": {
-    "name": "Unburden",
+    "name": "Desonerar",
     "description": "Se o item que o Pokémon estiver segurando for usado ou perdido, sua Velocidade aumentará."
   },
   "heatproof": {
-    "name": "Heatproof",
+    "name": "Resistente ao Calor",
     "description": "O corpo a prova de calor desse Pokémon corta pela metade o dano de ataques do tipo Fogo que o acertam."
   },
   "simple": {
-    "name": "Simple",
+    "name": "Simples",
     "description": "Duplica as mudanças de atributos do Pokémon."
   },
   "drySkin": {
-    "name": "Dry Skin",
+    "name": "Pele Seca",
     "description": "Durante chuva ou se for atingido por movimentos de Água, recupera PS. Durante sol forte tem seus PS máximo reduzido e leva dano aumentado do tipo Fogo."
   },
   "download": {
@@ -352,303 +352,303 @@
     "description": "Compara Defesa e Defesa Esp. do Pokémon adversário antes de aumentar seu próprio Ataque Esp. ou Ataque, a depender de qual será mais efetivo."
   },
   "ironFist": {
-    "name": "Iron Fist",
+    "name": "Punho de Ferro",
     "description": "Fortalece movimentos de soco."
   },
   "poisonHeal": {
-    "name": "Poison Heal",
+    "name": "Cura Venenosa",
     "description": "Se o Pokémon estiver envenenado, recuperará PS ao invés de perdê-los."
   },
   "adaptability": {
-    "name": "Adaptability",
+    "name": "Adaptabilidade",
     "description": "Fortalece movimentos do mesmo tipo do Pokémon."
   },
   "skillLink": {
-    "name": "Skill Link",
+    "name": "Elo de Habilidade",
     "description": "Faz com que movimentos de repetição acertem sempre o máximo de vezes possível."
   },
   "hydration": {
-    "name": "Hydration",
+    "name": "Hidratação",
     "description": "Cura mudanças de estado durante a chuva."
   },
   "solarPower": {
-    "name": "Solar Power",
+    "name": "Poder Solar",
     "description": "Aumenta o Ataque Esp. durante o sol forte, entretanto perde um pouco de PS a cada turno."
   },
   "quickFeet": {
-    "name": "Quick Feet",
+    "name": "Pés Rápidos",
     "description": "Aumenta a Velocidade se o Pokémon sofrer uma mudança de estado."
   },
   "normalize": {
-    "name": "Normalize",
+    "name": "Normalizar",
     "description": "Todos os movimentos do Pokémon se tornam do tipo Normal. Aumenta um pouco o poder desses movimentos."
   },
   "sniper": {
-    "name": "Sniper",
+    "name": "Atirador",
     "description": "Aumenta o poder dos ataques caso sejam críticos."
   },
   "magicGuard": {
-    "name": "Magic Guard",
+    "name": "Guarda Mágica",
     "description": "O Pokémon só recebe dano de movimentos de ataque."
   },
   "noGuard": {
-    "name": "No Guard",
+    "name": "Sem Guarda",
     "description": "Para garantir que todos os ataques atinjam o oponente, o Pokémon adota uma estratégia de desguarnecimento, porém, isso faz com que todos ataques o atinjam."
   },
   "stall": {
-    "name": "Stall",
+    "name": "Retardar",
     "description": "O Pokémon age somente após todos os outros agirem."
   },
   "technician": {
-    "name": "Technician",
+    "name": "Técnico",
     "description": "Aumenta o poder dos ataques mais fracos do Pokémon."
   },
   "leafGuard": {
-    "name": "Leaf Guard",
+    "name": "Guarda Folha",
     "description": "Previne mudanças de estado sob o sol forte."
   },
   "klutz": {
-    "name": "Klutz",
+    "name": "Desajeitado",
     "description": "O Pokémon não pode usar nenhum item que esteja segurando."
   },
   "moldBreaker": {
-    "name": "Mold Breaker",
+    "name": "Quebra-Molde",
     "description": "Movimentos podem atingir independentemente da Habilidade do alvo."
   },
   "superLuck": {
-    "name": "Super Luck",
+    "name": "Super Sorte",
     "description": "O Pokémon é tão sortudo que tem a sua probabilidade de realizar golpes críticos aumentada."
   },
   "aftermath": {
-    "name": "Aftermath",
+    "name": "Rescaldo",
     "description": "Caso o Pokémon seja derrotado em decorrência de um movimento de contato, o atacante recebe dano."
   },
   "anticipation": {
-    "name": "Anticipation",
+    "name": "Antecipação",
     "description": "O Pokémon pode sentir movimentos perigosos vindos do Pokémon adversário."
   },
   "forewarn": {
-    "name": "Forewarn",
+    "name": "Premonição",
     "description": "Quando entra em batalha, o Pokémon pode dizer um dos movimentos do Pokémon adversário."
   },
   "unaware": {
-    "name": "Unaware",
+    "name": "Inconsciente",
     "description": "Quando está atacando, o Pokémon ignora mudanças de atributos do Pokémon adversário."
   },
   "tintedLens": {
-    "name": "Tinted Lens",
+    "name": "Lente Colorida",
     "description": "Movimentos que seriam “pouco eficazes” causam dano normalmente quando usados pelo Pokémon."
   },
   "filter": {
-    "name": "Filter",
+    "name": "Filtro",
     "description": "Ataques supereficazes recebidos dão menos dano."
   },
   "slowStart": {
-    "name": "Slow Start",
+    "name": "Começo Lento",
     "description": "O Ataque e a Velocidade do Pokémon são cortados pela metade por cinco turnos."
   },
   "scrappy": {
-    "name": "Scrappy",
+    "name": "Destemido",
     "description": "O Pokémon pode atingir Pokémon do tipo Fantasma com ataques dos tipos Normal e Lutador."
   },
   "stormDrain": {
-    "name": "Storm Drain",
+    "name": "Drenar Tempestade",
     "description": "Atrai todos movimentos do tipo Água para si. Ao invés de receber dano desses ataques, tem seu Ataque Esp. aumentado."
   },
   "iceBody": {
-    "name": "Ice Body",
+    "name": "Corpo de Gelo",
     "description": "O Pokémon recupera PS gradualmente durante as tempestades de granizo."
   },
   "solidRock": {
-    "name": "Solid Rock",
+    "name": "Rocha Sólida",
     "description": "Reduz o dano recebido de ataques supereficazes."
   },
   "snowWarning": {
-    "name": "Snow Warning",
+    "name": "Alerta de Neve",
     "description": "O Pokémon conjura uma tempestade de granizo quando entra em batalha."
   },
   "honeyGather": {
-    "name": "Honey Gather",
+    "name": "Coletor de Mel",
     "description": "The Pokémon gathers Honey after a battle. The Honey is then sold for money."
   },
   "frisk": {
-    "name": "Frisk",
+    "name": "Revista",
     "description": "Quando entra em batalha, o Pokémon pode checar a Habilidade do adversário."
   },
   "reckless": {
-    "name": "Reckless",
+    "name": "Imprudente",
     "description": "Fortalece movimentos que têm dano colateral."
   },
   "multitype": {
-    "name": "Multitype",
+    "name": "Multitipo",
     "description": "Altera o tipo do Pokémon para o mesmo da Placa ou Cristal Z em sua posse."
   },
   "flowerGift": {
-    "name": "Flower Gift",
+    "name": "Presente Floral",
     "description": "Sob sol forte, o Ataque e a Defesa Esp. do Pokémon e de seus aliados são aumentados."
   },
   "badDreams": {
-    "name": "Bad Dreams",
+    "name": "Pesadelos",
     "description": "Reduz os PS de Pokémon adversários que estiverem dormindo."
   },
   "pickpocket": {
-    "name": "Pickpocket",
+    "name": "Batedor de Carteiras",
     "description": "Rouba o item de um atacante que tenha feito contato direto."
   },
   "sheerForce": {
-    "name": "Sheer Force",
+    "name": "Força Bruta",
     "description": "Aumenta o poder de seus movimentos quando ataca, em detrimento de seus efeitos adicionais que são anulados."
   },
   "contrary": {
-    "name": "Contrary",
+    "name": "Contrário",
     "description": "Faz as mudanças de atributos terem efeito contrário."
   },
   "unnerve": {
-    "name": "Unnerve",
+    "name": "Intimidar",
     "description": "Enerva Pokémon adversários, impossibilitando que eles consumam Frutas."
   },
   "defiant": {
-    "name": "Defiant",
+    "name": "Desafiante",
     "description": "Aumenta bruscamente o Ataque do Pokémon quando seus atributos são diminuídos pelo adversário."
   },
   "defeatist": {
-    "name": "Defeatist",
+    "name": "Derrotista",
     "description": "Quando fica com metade ou menos dos PS totais, corta o Ataque e Ataque Esp. do Pokémon pela metade."
   },
   "cursedBody": {
-    "name": "Cursed Body",
+    "name": "Corpo Amaldiçoado",
     "description": "Pode desabilitar um movimento utilizado no Pokémon."
   },
   "healer": {
-    "name": "Healer",
+    "name": "Curandeiro",
     "description": "Às vezes cura mudanças de estado de um aliado."
   },
   "friendGuard": {
-    "name": "Friend Guard",
+    "name": "Guarda Amigo",
     "description": "Reduz o dano causado em aliados."
   },
   "weakArmor": {
-    "name": "Weak Armor",
+    "name": "Armadura Fraca",
     "description": "Ataques físicos ao Pokémon diminuem sua Defesa, mas aumenta bruscamente sua Velocidade."
   },
   "heavyMetal": {
-    "name": "Heavy Metal",
+    "name": "Metal Pesado",
     "description": "Dobra o peso do Pokémon."
   },
   "lightMetal": {
-    "name": "Light Metal",
+    "name": "Metal Leve",
     "description": "Divide o peso do Pokémon pela metade."
   },
   "multiscale": {
-    "name": "Multiscale",
+    "name": "Multiescama",
     "description": "Reduz o dano que o Pokémon recebe quando está com os PS cheios."
   },
   "toxicBoost": {
-    "name": "Toxic Boost",
+    "name": "Impulso Tóxico",
     "description": "Fortalece ataques físicos quando o Pokémon está envenenado."
   },
   "flareBoost": {
-    "name": "Flare Boost",
+    "name": "Impulso de Chama",
     "description": "Fortalece ataques especiais quando o Pokémon está queimado."
   },
   "harvest": {
-    "name": "Harvest",
+    "name": "Colheita",
     "description": "Pode criar outra Fruta após consumir uma."
   },
   "telepathy": {
-    "name": "Telepathy",
+    "name": "Telepatia",
     "description": "Prevê os ataques de um aliado em combate e desvia de todos eles."
   },
   "moody": {
-    "name": "Moody",
+    "name": "Temperamental",
     "description": "Aumenta bruscamente um atributo e diminui outro a cada turno."
   },
   "overcoat": {
-    "name": "Overcoat",
+    "name": "Sobretudo",
     "description": "Protege o Pokémon de coisas como areia, geada e pó."
   },
   "poisonTouch": {
-    "name": "Poison Touch",
+    "name": "Toque Venenoso",
     "description": "Pode envenenar um alvo quando o Pokémon faz contato."
   },
   "regenerator": {
-    "name": "Regenerator",
+    "name": "Regenerador",
     "description": "Recupera um pouco de PS quando recua da batalha."
   },
   "bigPecks": {
-    "name": "Big Pecks",
+    "name": "Peitorais",
     "description": "Protege o Pokémon de efeitos que diminuam a Defesa."
   },
   "sandRush": {
-    "name": "Sand Rush",
+    "name": "Ímpeto de Areia",
     "description": "Aumenta a Velocidade do Pokémon durante uma tempestade de areia."
   },
   "wonderSkin": {
-    "name": "Wonder Skin",
+    "name": "Pele Maravilhosa",
     "description": "Torna movimentos de atributos mais suscetíveis ao erro."
   },
   "analytic": {
-    "name": "Analytic",
+    "name": "Analítico",
     "description": "Aumenta o poder do movimento quando o Pokémon age por último."
   },
   "illusion": {
-    "name": "Illusion",
+    "name": "Ilusão",
     "description": "Entra em batalha disfarçado, na forma do Pokémon que ocupar o último lugar na equipe."
   },
   "imposter": {
-    "name": "Imposter",
+    "name": "Impostor",
     "description": "O Pokémon se transforma no Pokémon que está enfrentando."
   },
   "infiltrator": {
-    "name": "Infiltrator",
+    "name": "Infiltrador",
     "description": "Ignora barreiras, substitutos e coisas do tipo utilizadas pelo Pokémon adversário e ataca normalmente."
   },
   "mummy": {
-    "name": "Mummy",
+    "name": "Múmia",
     "description": "Contato direto com o Pokémon altera a Habilidade do atacante para Múmia."
   },
   "moxie": {
-    "name": "Moxie",
+    "name": "Audácia",
     "description": "O Pokémon demonstra arrogância, e isso faz com que seu Ataque aumente após derrotar qualquer Pokémon."
   },
   "justified": {
-    "name": "Justified",
+    "name": "Justiça",
     "description": "Ser atingido por movimentos do tipo Sombrio aumenta o Ataque do Pokémon, por justiça."
   },
   "rattled": {
-    "name": "Rattled",
+    "name": "Assustado",
     "description": "Movimentos dos tipos Sombrio, Fantasma e Inseto assustam o Pokémon, aumentando sua Velocidade"
   },
   "magicBounce": {
-    "name": "Magic Bounce",
+    "name": "Rebote Mágico",
     "description": "Ao invés de ser atingido por movimentos de atributos, reflete-os."
   },
   "sapSipper": {
-    "name": "Sap Sipper",
+    "name": "Bebedor de Seiva",
     "description": "Se for atingido por um movimento do tipo Grama, ao invés de receber dano, aumenta seu Ataque."
   },
   "prankster": {
-    "name": "Prankster",
+    "name": "Brincalhão",
     "description": "Dá prioridade a movimentos de estado."
   },
   "sandForce": {
-    "name": "Sand Force",
+    "name": "Força de Areia",
     "description": "Fortalece o poder dos movimentos do tipo Pedra, Terra e Aço em uma tempestade de areia."
   },
   "ironBarbs": {
-    "name": "Iron Barbs",
+    "name": "Farpas de Ferro",
     "description": "Os espinhos de ferro infligem dano a um atacante que fizer contato direto."
   },
   "zenMode": {
-    "name": "Zen Mode",
+    "name": "Modo Zen",
     "description": "Quando o Pokémon tem seus PS reduzidos à metade ou menos, muda de forma."
   },
   "victoryStar": {
-    "name": "Victory Star",
+    "name": "Estrela da Vitória",
     "description": "Aumenta a Precisão sua e de seus aliados."
   },
   "turboblaze": {
-    "name": "Turboblaze",
+    "name": "Turbo Chamas",
     "description": "Movimentos podem atingir independentemente da Habilidade do alvo."
   },
   "teravolt": {
@@ -656,319 +656,319 @@
     "description": "Movimentos podem atingir independentemente da Habilidade do alvo."
   },
   "aromaVeil": {
-    "name": "Aroma Veil",
+    "name": "Véu de Aroma",
     "description": "Protege a si mesmo e a seus aliados de ataques que limitem a escolha de movimentos."
   },
   "flowerVeil": {
-    "name": "Flower Veil",
+    "name": "Véu Floral",
     "description": "Pokémon aliados do tipo Grama são protegidos de mudanças de estado e diminuição de seus atributos."
   },
   "cheekPouch": {
-    "name": "Cheek Pouch",
+    "name": "Bochecha",
     "description": "Quando o Pokémon consome uma Fruta, também recupera um pouco de PS."
   },
   "protean": {
-    "name": "Protean",
+    "name": "Proteano",
     "description": "Muda o tipo do Pokémon para o tipo do movimento que ele vai utilizar."
   },
   "furCoat": {
-    "name": "Fur Coat",
+    "name": "Pelagem",
     "description": "Reduz o dano de movimentos físicos pela metade."
   },
   "magician": {
-    "name": "Magician",
+    "name": "Mágico",
     "description": "O Pokémon rouba o item que um Pokémon alvo estiver segurando quando acerta um movimento."
   },
   "bulletproof": {
-    "name": "Bulletproof",
+    "name": "À Prova de Balas",
     "description": "Protege o Pokémon de alguns movimentos de bola e bomba."
   },
   "competitive": {
-    "name": "Competitive",
+    "name": "Competitivo",
     "description": "Aumenta bruscamente o Ataque Esp. quando um atributo é diminuído."
   },
   "strongJaw": {
-    "name": "Strong Jaw",
+    "name": "Mandíbula Forte",
     "description": "A poderosa mandíbula do Pokémon aumenta o poder dos seus movimentos de mordida."
   },
   "refrigerate": {
-    "name": "Refrigerate",
+    "name": "Refrigerar",
     "description": "Movimentos do tipo Normal se tornam do tipo Gelo. Aumenta um pouco o poder desses movimentos."
   },
   "sweetVeil": {
-    "name": "Sweet Veil",
+    "name": "Véu Doce",
     "description": "Previne a si e a Pokémon aliados de caírem no sono."
   },
   "stanceChange": {
-    "name": "Stance Change",
+    "name": "Troca de Postura",
     "description": "O Pokemon muda para Forma Espada quando usa um movimento de ataque, e muda para a Forma Escudo quando usa o movimento Escudo do Rei."
   },
   "galeWings": {
-    "name": "Gale Wings",
+    "name": "Asas de Vendaval",
     "description": "Quando o Pokémon está com os PS cheios, dá prioridade a movimentos do tipo Voador."
   },
   "megaLauncher": {
-    "name": "Mega Launcher",
+    "name": "Mega Lançador",
     "description": "Fortalece movimentos de aura e pulso."
   },
   "grassPelt": {
-    "name": "Grass Pelt",
+    "name": "Pelagem Vegetal",
     "description": "Aumenta a Defesa do Pokémon em Terreno de Grama."
   },
   "symbiosis": {
-    "name": "Symbiosis",
+    "name": "Simbiose",
     "description": "O Pokémon entrega seu item para um aliado que já tiver utilizado seu próprio item."
   },
   "toughClaws": {
-    "name": "Tough Claws",
+    "name": "Garras Duras",
     "description": "Fortalece movimentos que façam contato direto."
   },
   "pixilate": {
-    "name": "Pixilate",
+    "name": "Pixilato",
     "description": "Movimentos do tipo Normal se tornam do tipo Fada. Aumenta um pouco o poder desses movimentos."
   },
   "gooey": {
-    "name": "Gooey",
+    "name": "Viscoso",
     "description": "Contato direto com o Pokémon diminui o atributo de Velocidade do atacante."
   },
   "aerilate": {
-    "name": "Aerilate",
+    "name": "Aerilato",
     "description": "Movimentos do tipo Normal se tornam do tipo Voador. Aumenta um pouco o poder desses movimentos."
   },
   "parentalBond": {
-    "name": "Parental Bond",
+    "name": "Vínculo Parental",
     "description": "Une suas forças com sua cria para atacar duas vezes."
   },
   "darkAura": {
-    "name": "Dark Aura",
+    "name": "Aura Sombria",
     "description": "Fortalece movimentos do tipo Sombrio de todos os Pokémon."
   },
   "fairyAura": {
-    "name": "Fairy Aura",
+    "name": "Aura Feérica",
     "description": "Fortalece movimentos do tipo Fada de todos os Pokémon."
   },
   "auraBreak": {
-    "name": "Aura Break",
+    "name": "Ruptura de Aura",
     "description": "Os efeitos de Habilidades de “Aura” são revertidos para diminuir o poder de movimentos afetados."
   },
   "primordialSea": {
-    "name": "Primordial Sea",
+    "name": "Mar Primordial",
     "description": "O Pokémon muda o clima para neutralizar ataques do tipo Fogo."
   },
   "desolateLand": {
-    "name": "Desolate Land",
+    "name": "Terra Desolada",
     "description": "O Pokémon muda o clima para neutralizar ataques do tipo Água."
   },
   "deltaStream": {
-    "name": "Delta Stream",
+    "name": "Corrente Delta",
     "description": "O Pokémon muda o clima para eliminar todas as vulnerabilidades do tipo Voador."
   },
   "stamina": {
-    "name": "Stamina",
+    "name": "Estamina",
     "description": "Aumenta a Defesa quando atingido por um ataque."
   },
   "wimpOut": {
-    "name": "Wimp Out",
+    "name": "Covarde",
     "description": "Quando fica com metade ou menos de seus PS, recua covardemente da batalha."
   },
   "emergencyExit": {
-    "name": "Emergency Exit",
+    "name": "Saída de Emergência",
     "description": "Quando fica com metade ou menos de seus PS, sentindo que está em perigo, o Pokémon recua da batalha."
   },
   "waterCompaction": {
-    "name": "Water Compaction",
+    "name": "Compactação de Água",
     "description": "Aumenta bruscamente a Defesa do Pokémon quando atingido por um movimento do tipo Água."
   },
   "merciless": {
-    "name": "Merciless",
+    "name": "Impiedoso",
     "description": "Os ataques do Pokémon se tornam críticos se o alvo estiver envenenado."
   },
   "shieldsDown": {
-    "name": "Shields Down",
+    "name": "Escudos Abaixados",
     "description": "Quando fica com metade ou menos de seus PS, o Pokémon quebra sua carapaça e se torna agressivo."
   },
   "stakeout": {
-    "name": "Stakeout",
+    "name": "Tocaia",
     "description": "Caso o alvo recue da batalha, dobra o dano causado ao Pokémon suplente."
   },
   "waterBubble": {
-    "name": "Water Bubble",
+    "name": "Bolha d'Água",
     "description": "Diminui o poder de movimentos do tipo Fogo usados contra o Pokémon e o impede de ficar queimado."
   },
   "steelworker": {
-    "name": "Steelworker",
+    "name": "Metalúrgico",
     "description": "Fortalece os movimentos do tipo Aço."
   },
   "berserk": {
-    "name": "Berserk",
+    "name": "Frenesi",
     "description": "Quando é atingido por um movimento que deixa seus PS na metade ou menos, aumenta seu Ataque Esp.."
   },
   "slushRush": {
-    "name": "Slush Rush",
+    "name": "Ímpeto de Neve",
     "description": "Aumenta a Velocidade do Pokémon em uma tempestade de granizo."
   },
   "longReach": {
-    "name": "Long Reach",
+    "name": "Longo Alcance",
     "description": "O Pokémon usa seus movimentos sem fazer contato direto com o alvo."
   },
   "liquidVoice": {
-    "name": "Liquid Voice",
+    "name": "Voz Líquida",
     "description": "Todos os movimentos baseados em som se tornam do tipo Água."
   },
   "triage": {
-    "name": "Triage",
+    "name": "Triagem",
     "description": "Concede prioridade para movimentos de cura."
   },
   "galvanize": {
-    "name": "Galvanize",
+    "name": "Galvanizar",
     "description": "Movimentos do tipo Normal se transformam em movimentos do tipo Elétrico. Aumenta um pouco o poder desses movimentos."
   },
   "surgeSurfer": {
-    "name": "Surge Surfer",
+    "name": "Surfista de Surto",
     "description": "Dobra a Velocidade do Pokémon em Terreno Elétrico."
   },
   "schooling": {
-    "name": "Schooling",
+    "name": "Cardume",
     "description": "Quando está com bastante PS, o Pokémon forma um poderoso cardume, que se desfaz quando seus PS ficam baixos."
   },
   "disguise": {
-    "name": "Disguise",
+    "name": "Disfarce",
     "description": "Uma vez por batalha, a mortalha que cobre o Pokémon pode protegê-lo de um ataque."
   },
   "battleBond": {
-    "name": "Battle Bond",
+    "name": "Vínculo de Batalha",
     "description": "Derrotar um Pokémon adversário fortalece os laços entre Pokémon e Treinador, fazendo com que se torne Greninja do Ash, e fortalecendo o ataque Shuriken de Água."
   },
   "powerConstruct": {
-    "name": "Power Construct",
+    "name": "Construção de Poder",
     "description": "Quando seus PS ficam da metade para baixo, outras Células se agrupam para auxiliá-lo, fazendo com que o Pokémon mude para sua Forma Completa."
   },
   "corrosion": {
-    "name": "Corrosion",
+    "name": "Corrosão",
     "description": "O Pokémon pode envenenar o alvo mesmo que ele seja dos tipos Aço ou Venenoso."
   },
   "comatose": {
-    "name": "Comatose",
+    "name": "Comatoso",
     "description": "Está sempre cochilando e nunca acordará, entretanto, pode atacar sem acordar."
   },
   "queenlyMajesty": {
-    "name": "Queenly Majesty",
+    "name": "Majestade Real",
     "description": "Sua magnificência pressiona o Pokémon adversário, impossibilitando-o de utilizar movimentos de prioridade."
   },
   "innardsOut": {
-    "name": "Innards Out",
+    "name": "Vísceras Expostas",
     "description": "Ao ser nocauteado, inflige dano ao adversário igual ao valor de PS que possuía antes de ser atacado."
   },
   "dancer": {
-    "name": "Dancer",
+    "name": "Dançarino",
     "description": "Quando outro Pokémon usa um movimento de dança,  pode usar um movimento de dança na sequência independentemente de sua Velocidade."
   },
   "battery": {
-    "name": "Battery",
+    "name": "Bateria",
     "description": "Fortalece os movimentos especiais dos Pokémon aliados."
   },
   "fluffy": {
-    "name": "Fluffy",
+    "name": "Felpudo",
     "description": "Corta pela metade o dano recebido de movimentos que fazem contato direto, porém, dobra o dano dos ataques do tipo Fogo."
   },
   "dazzling": {
-    "name": "Dazzling",
+    "name": "Deslumbrante",
     "description": "Surpreende o Pokémon adversário, impedindo-o de atacar usando movimentos de prioridade."
   },
   "soulHeart": {
-    "name": "Soul-Heart",
+    "name": "Alma-Coração",
     "description": "Aumenta seu atributo de Ataque Esp. toda vez que um Pokémon desmaia."
   },
   "tanglingHair": {
-    "name": "Tangling Hair",
+    "name": "Cabelos Emaranhados",
     "description": "Contato direto com o Pokémon diminui o atributo de Velocidade do atacante."
   },
   "receiver": {
-    "name": "Receiver",
+    "name": "Receptor",
     "description": "O Pokémon copia a Habilidade de um aliado derrotado."
   },
   "powerOfAlchemy": {
-    "name": "Power of Alchemy",
+    "name": "Poder da Alquimia",
     "description": "O Pokémon copia a Habilidade de um aliado derrotado."
   },
   "beastBoost": {
-    "name": "Beast Boost",
+    "name": "Impulso Bestial",
     "description": "O Pokémon aumentará seu melhor atributo sempre que derrotar outro Pokémon."
   },
   "rksSystem": {
-    "name": "RKS System",
+    "name": "Sistema RKS",
     "description": "Troca o tipo do Pokémon para igualar com o disco de memória que ele tiver instalado."
   },
   "electricSurge": {
-    "name": "Electric Surge",
+    "name": "Surto Elétrico",
     "description": "Quando o Pokémon entra em batalha, altera o terreno para Terreno Elétrico."
   },
   "psychicSurge": {
-    "name": "Psychic Surge",
+    "name": "Surto Psíquico",
     "description": "Quando o Pokémon entra em batalha, altera o terreno para Terreno Psíquico."
   },
   "mistySurge": {
-    "name": "Misty Surge",
+    "name": "Surto Nebuloso",
     "description": "Quando o Pokémon entra em batalha, altera o terreno para Terreno Enevoado."
   },
   "grassySurge": {
-    "name": "Grassy Surge",
+    "name": "Surto Herbáceo",
     "description": "Quando o Pokémon entra em batalha, altera o terreno para Terreno de Grama."
   },
   "fullMetalBody": {
-    "name": "Full Metal Body",
+    "name": "Corpo de Metal",
     "description": "Previne que as Habilidades e movimentos de outros Pokémon diminuam os atributos deste Pokémon."
   },
   "shadowShield": {
-    "name": "Shadow Shield",
+    "name": "Escudo das Sombras",
     "description": "Reduz a quantidade de dano que o Pokémon recebe enquanto estiver com seus PS ao máximo."
   },
   "prismArmor": {
-    "name": "Prism Armor",
+    "name": "Armadura Prisma",
     "description": "Reduz o dano recebido por movimentos supereficazes."
   },
   "neuroforce": {
-    "name": "Neuroforce",
+    "name": "Neuroforça",
     "description": "Fortalece movimentos supereficazes."
   },
   "intrepidSword": {
-    "name": "Intrepid Sword",
+    "name": "Espada Intrépida",
     "description": "Aumenta o atributo de Ataque ao entrar em batalha."
   },
   "dauntlessShield": {
-    "name": "Dauntless Shield",
+    "name": "Escudo Destemido",
     "description": "Aumenta o atributo de Defesa ao entrar em batalha."
   },
   "libero": {
-    "name": "Libero",
+    "name": "Líbero",
     "description": "Muda o tipo do Pokémon para o tipo do movimento que ele estiver prestes a usar."
   },
   "ballFetch": {
-    "name": "Ball Fetch",
+    "name": "Busca-Bola",
     "description": "Se o Pokémon não estiver segurando nenhum item, ele irá buscar a primeira Poké Bola que falhou em capturar um Pokémon na batalha."
   },
   "cottonDown": {
-    "name": "Cotton Down",
+    "name": "Penugem de Algodão",
     "description": "Quando o Pokémon é atingido por um ataque, ele espalha algodão à volta, diminuindo o atributo de Velocidade de todos os Pokémon, exceto ele mesmo."
   },
   "propellerTail": {
-    "name": "Propeller Tail",
+    "name": "Cauda Propulsora",
     "description": "Ignora os efeitos de Habilidades e movimentos de Pokémon adversários que redirecionam e atraem movimentos para si."
   },
   "mirrorArmor": {
-    "name": "Mirror Armor",
+    "name": "Armadura Espelho",
     "description": "Devolve apenas os efeitos redutores de atributos que o Pokémon recebe."
   },
   "gulpMissile": {
-    "name": "Gulp Missile",
+    "name": "Míssil de Engolir",
     "description": "Quando o Pokémon usa Surf ou Dive, volta com uma presa. Quando recebe dano, cospe a presa no atacante."
   },
   "stalwart": {
-    "name": "Stalwart",
+    "name": "Inabalável",
     "description": "Ignora os efeitos de Habilidades e movimentos de Pokémon adversários que redirecionam e atraem movimentos para si."
   },
   "steamEngine": {
-    "name": "Steam Engine",
+    "name": "Motor a Vapor",
     "description": "Aumenta drasticamente a Velocidade, se for atingido por um movimento do tipo Água ou Fogo."
   },
   "punkRock": {
@@ -976,71 +976,71 @@
     "description": "Aumenta o poder dos movimentos baseados em som. O Pokémon também recebe metade do dano desses tipos de movimentos."
   },
   "sandSpit": {
-    "name": "Sand Spit",
+    "name": "Cuspe de Areia",
     "description": "O Pokémon cria uma tempestade de areia quando é atingido por um ataque."
   },
   "iceScales": {
-    "name": "Ice Scales",
+    "name": "Escamas de Gelo",
     "description": "As gélidas escamas que rodeiam seu corpo reduzem à metade o dano recebido por movimentos especiais."
   },
   "ripen": {
-    "name": "Ripen",
+    "name": "Amadurecer",
     "description": "Amadurece Frutas e dobram seus efeitos."
   },
   "iceFace": {
-    "name": "Ice Face",
+    "name": "Face de Gelo",
     "description": "Sua cabeça de gelo pode receber ataques físicos como substituto, mas faz com que a aparência do Pokémon mude. O gelo é restaurado no granizo."
   },
   "powerSpot": {
-    "name": "Power Spot",
+    "name": "Ponto de Poder",
     "description": "O simples fato de estar próximo ao Pokémon fortalece o poder de movimentos."
   },
   "mimicry": {
-    "name": "Mimicry",
+    "name": "Mimetismo",
     "description": "Muda o tipo do Pokémon dependendo do terreno."
   },
   "screenCleaner": {
-    "name": "Screen Cleaner",
+    "name": "Limpa-Telas",
     "description": "Quando o Pokémon entra em batalha os efeitos de Tela de Luz, Refletir e Véu Aurora são anulados, tanto para Pokémon aliados quanto para oponentes."
   },
   "steelySpirit": {
-    "name": "Steely Spirit",
+    "name": "Espírito de Aço",
     "description": "Fortalece o poder dos movimentos do tipo Aço de Pokémon aliados."
   },
   "perishBody": {
-    "name": "Perish Body",
+    "name": "Corpo Perecível",
     "description": "Quando for atingido por um ataque que cause contato direto, tanto o Pokémon quanto o atacante desmaiarão após três turnos, a não ser que recuem da batalha."
   },
   "wanderingSpirit": {
-    "name": "Wandering Spirit",
+    "name": "Espírito Errante",
     "description": "O Pokémon troca de Habilidade com um Pokémon que o atinja com um movimento que faz contato direto."
   },
   "gorillaTactics": {
-    "name": "Gorilla Tactics",
+    "name": "Táticas de Gorila",
     "description": "Aumenta o Ataque do Pokémon, entretanto, só permite que ele utilize o primeiro movimento escolhido."
   },
   "neutralizingGas": {
-    "name": "Neutralizing Gas",
+    "name": "Gás Neutralizador",
     "description": "Se o Pokémon com Gás Neutralizador está na batalha, os efeitos das Habilidades de todos os Pokémon serão anuladas ou não serão ativados."
   },
   "pastelVeil": {
-    "name": "Pastel Veil",
+    "name": "Véu Pastel",
     "description": "Protege o Pokémon e seu aliado de serem envenenados."
   },
   "hungerSwitch": {
-    "name": "Hunger Switch",
+    "name": "Troca de Fome",
     "description": "O Pokémon troca sua forma, alternando entre o Modo Satisfeito e Modo Voraz ao fim de cada turno."
   },
   "quickDraw": {
-    "name": "Quick Draw",
+    "name": "Saque Rápido",
     "description": "Permite que o Pokémon aja primeiro ocasionalmente."
   },
   "unseenFist": {
-    "name": "Unseen Fist",
+    "name": "Punho Invisível",
     "description": "Se o Pokémon utilizar movimentos que façam contato direto, pode atacar seu alvo mesmo que ele tenha se protegido."
   },
   "curiousMedicine": {
-    "name": "Curious Medicine",
+    "name": "Medicina Curiosa",
     "description": "Quando o Pokémon entra em uma batalha, espalha medicamentos de sua concha que removem de aliados todas mudanças de estado."
   },
   "transistor": {
@@ -1048,195 +1048,195 @@
     "description": "Fortalece movimentos do tipo Elétrico."
   },
   "dragonsMaw": {
-    "name": "Dragon's Maw",
+    "name": "Mandíbula Dragão",
     "description": "Fortalece movimentos do tipo Dragão."
   },
   "chillingNeigh": {
-    "name": "Chilling Neigh",
+    "name": "Relincho Gélido",
     "description": "Quando o Pokémon derrota um alvo, emite um relincho assustador que aumenta seu Ataque."
   },
   "grimNeigh": {
-    "name": "Grim Neigh",
+    "name": "Relincho Sombrio",
     "description": "Quando o Pokémon derrota um alvo, emite um relincho assustador que aumenta seu Ataque Esp."
   },
   "asOneGlastrier": {
-    "name": "As One",
+    "name": "Como Um",
     "description": "Esta habilidade combina os efeitos da habilidade Unnerve de Calyrex e da habilidade Chilling Neigh de Glastrier."
   },
   "asOneSpectrier": {
-    "name": "As One",
+    "name": "Como Um",
     "description": "Essa Habilidade combina os efeitos das Habilidades Enervar de Calyrex e Relincho Negro de Spectrier."
   },
   "lingeringAroma": {
-    "name": "Lingering Aroma",
+    "name": "Aroma Persistente",
     "description": "O contato com o Pokémon muda a Habilidade do atacante para Lingering Aroma."
   },
   "seedSower": {
-    "name": "Seed Sower",
+    "name": "Semeador",
     "description": "Transforma o solo em Terreno de Grama quando o Pokémon é atingido por um ataque."
   },
   "thermalExchange": {
-    "name": "Thermal Exchange",
+    "name": "Troca Térmica",
     "description": "Aumenta o atributo de Ataque quando o Pokémon é atingido por um movimento do tipo Fogo. O Pokémon também não pode ser queimado."
   },
   "angerShell": {
-    "name": "Anger Shell",
+    "name": "Casca de Fúria",
     "description": "Quando um ataque faz com que seu HP caia para metade ou menos, o Pokémon se enfurece. Isso reduz seus atributos de Defesa e Defesa Especial, mas aumenta seus atributos de Ataque, Ataque Especial e Velocidade."
   },
   "purifyingSalt": {
-    "name": "Purifying Salt",
+    "name": "Sal Purificador",
     "description": "O sal puro do Pokémon o protege de condições de estado e reduz pela metade o dano recebido de movimentos do tipo Fantasma."
   },
   "wellBakedBody": {
-    "name": "Well-Baked Body",
+    "name": "Corpo Bem Assado",
     "description": "O Pokémon não recebe dano quando atingido por movimentos do tipo Fogo. Em vez disso, seu atributo de Defesa é aumentado drasticamente."
   },
   "windRider": {
-    "name": "Wind Rider",
+    "name": "Cavaleiro do Vento",
     "description": "Aumenta o atributo de Ataque do Pokémon se o Vento de Cauda tiver efeito ou se o Pokémon for atingido por um movimento de vento. O Pokémon também não recebe dano de movimentos de vento."
   },
   "guardDog": {
-    "name": "Guard Dog",
+    "name": "Cão de Guarda",
     "description": "Aumenta o atributo de Ataque do Pokémon se intimidado. Movimentos e itens que forçariam o Pokémon a trocar também falham em funcionar."
   },
   "rockyPayload": {
-    "name": "Rocky Payload",
+    "name": "Carga Rochosa",
     "description": "Aumenta o poder dos movimentos do tipo Pedra."
   },
   "windPower": {
-    "name": "Wind Power",
+    "name": "Poder do Vento",
     "description": "O Pokémon fica carregado quando é atingido por um movimento de vento, aumentando o poder do próximo movimento do tipo Elétrico que o Pokémon usa."
   },
   "zeroToHero": {
-    "name": "Zero to Hero",
+    "name": "De Zero a Herói",
     "description": "O Pokémon se transforma em sua Forma Herói quando é trocado."
   },
   "commander": {
-    "name": "Commander",
+    "name": "Comandante",
     "description": "Quando o Pokémon entra em batalha, ele entra na boca de um Dondozo aliado se ele estiver no campo. O Pokémon então emite comandos de lá."
   },
   "electromorphosis": {
-    "name": "Electromorphosis",
+    "name": "Eletromorfia",
     "description": "O Pokémon fica carregado quando sofre dano, aumentando o poder do próximo movimento do tipo Elétrico que o Pokémon usa."
   },
   "protosynthesis": {
-    "name": "Protosynthesis",
+    "name": "Protossíntese",
     "description": "Aumenta o atributo mais proficiente do Pokémon sob sol intenso ou se o Pokémon estiver segurando Booster Energy."
   },
   "quarkDrive": {
-    "name": "Quark Drive",
+    "name": "Propulsão de Quarks",
     "description": "Aumenta o atributo mais proficiente do Pokémon em Terreno Elétrico ou se o Pokémon estiver segurando Booster Energy."
   },
   "goodAsGold": {
-    "name": "Good as Gold",
+    "name": "Bom como Ouro",
     "description": "Um corpo de ouro puro dá ao Pokémon imunidade completa aos movimentos de status de outros Pokémon."
   },
   "vesselOfRuin": {
-    "name": "Vessel of Ruin",
+    "name": "Vaso da Ruína",
     "description": "O poder do recipiente de ruínas do Pokémon reduz os atributos de Ataque Especial de todos os Pokémon exceto o dele."
   },
   "swordOfRuin": {
-    "name": "Sword of Ruin",
+    "name": "Espada da Ruína",
     "description": "O poder da espada de ruínas do Pokémon reduz os atributos de Defesa de todos os Pokémon exceto o dele."
   },
   "tabletsOfRuin": {
-    "name": "Tablets of Ruin",
+    "name": "Tábuas da Ruína",
     "description": "O poder das tábuas de ruínas do Pokémon reduz os atributos de Ataque de todos os Pokémon exceto o dele."
   },
   "beadsOfRuin": {
-    "name": "Beads of Ruin",
+    "name": "Contas da Ruína",
     "description": "O poder das contas de ruínas do Pokémon reduz os atributos de Defesa Especial de todos os Pokémon exceto o dele."
   },
   "orichalcumPulse": {
-    "name": "Orichalcum Pulse",
+    "name": "Pulso de Oricalco",
     "description": "Torna a luz solar intensa quando o Pokémon entra em batalha. O antigo pulso vibrante do Pokémon também aumenta seu atributo de Ataque sob sol intenso."
   },
   "hadronEngine": {
-    "name": "Hadron Engine",
+    "name": "Motor de Hádron",
     "description": "Transforma o solo em Terreno Elétrico quando o Pokémon entra em batalha. O motor futurista dentro do Pokémon também aumenta seu atributo de Ataque Especial em Terreno Elétrico."
   },
   "opportunist": {
-    "name": "Opportunist",
+    "name": "Oportunista",
     "description": "Se um atributo de um oponente for aumentado, o Pokémon aproveita a oportunidade para aumentar o mesmo atributo para si mesmo."
   },
   "cudChew": {
-    "name": "Cud Chew",
+    "name": "Ruminação",
     "description": "Quando o Pokémon come uma Berry, ele a regurgita no final do próximo turno e come novamente."
   },
   "sharpness": {
-    "name": "Sharpness",
+    "name": "Afiação",
     "description": "Aumenta o poder dos movimentos de corte."
   },
   "supremeOverlord": {
-    "name": "Supreme Overlord",
+    "name": "Lorde Supremo",
     "description": "Quando o Pokémon entra em batalha, seus atributos de Ataque e Ataque Especial são levemente aumentados para cada um dos aliados em sua equipe que já foram derrotados."
   },
   "costar": {
-    "name": "Costar",
+    "name": "Coestrela",
     "description": "Quando o Pokémon entra em batalha, ele copia as mudanças de atributos de um aliado."
   },
   "toxicDebris": {
-    "name": "Toxic Debris",
+    "name": "Detritos Tóxicos",
     "description": "Espalha espinhos venenosos aos pés da equipe adversária quando o Pokémon sofre dano de movimentos físicos."
   },
   "armorTail": {
-    "name": "Armor Tail",
+    "name": "Cauda Blindada",
     "description": "A cauda misteriosa que cobre a cabeça do Pokémon impede que oponentes usem movimentos de prioridade contra o Pokémon ou seus aliados."
   },
   "earthEater": {
-    "name": "Earth Eater",
+    "name": "Devorador de Terra",
     "description": "Se for atingido por um movimento do tipo Terra, o Pokémon restaura seu HP em vez de sofrer dano."
   },
   "myceliumMight": {
-    "name": "Mycelium Might",
+    "name": "Força do Micélio",
     "description": "O Pokémon sempre agirá mais lentamente quando usar movimentos de status, mas esses movimentos não serão impedidos pela Habilidade do alvo."
   },
   "mindsEye": {
-    "name": "Mind's Eye",
+    "name": "Olho da Mente",
     "description": "O Pokémon ignora mudanças na evasividade dos oponentes, sua precisão não pode ser reduzida, e ele pode atingir tipos Fantasma com movimentos dos tipos Normal e Lutador."
   },
   "supersweetSyrup": {
-    "name": "Supersweet Syrup",
+    "name": "Xarope Superdoce",
     "description": "Um aroma doce e enjoativo se espalha pelo campo na primeira vez que o Pokémon entra em batalha, reduzindo a evasividade dos Pokémon oponentes."
   },
   "hospitality": {
-    "name": "Hospitality",
+    "name": "Hospitalidade",
     "description": "Quando o Pokémon entra em batalha, ele banha seu aliado com hospitalidade, restaurando uma pequena quantidade do HP do aliado."
   },
   "toxicChain": {
-    "name": "Toxic Chain",
+    "name": "Corrente Tóxica",
     "description": "O poder da cadeia tóxica do Pokémon pode envenenar gravemente qualquer alvo que o Pokémon atinja com um movimento."
   },
   "embodyAspectTeal": {
-    "name": "Embody Aspect",
+    "name": "Aspecto Corporificado",
     "description": "O coração do Pokémon se enche de memórias, fazendo com que a Máscara Teal brilhe e aumente o atributo de Velocidade do Pokémon."
   },
   "embodyAspectWellspring": {
-    "name": "Embody Aspect",
+    "name": "Aspecto Corporificado",
     "description": "O coração do Pokémon se enche de memórias, fazendo com que a Máscara Wellspring brilhe e aumente o atributo de Defesa Especial do Pokémon."
   },
   "embodyAspectHearthflame": {
-    "name": "Embody Aspect",
+    "name": "Aspecto Corporificado",
     "description": "O coração do Pokémon se enche de memórias, fazendo com que a Máscara Hearthflame brilhe e aumente o atributo de Ataque do Pokémon."
   },
   "embodyAspectCornerstone": {
-    "name": "Embody Aspect",
+    "name": "Aspecto Corporificado",
     "description": "O coração do Pokémon se enche de memórias, fazendo com que a Máscara Cornerstone brilhe e aumente o atributo de Defesa do Pokémon."
   },
   "teraShift": {
-    "name": "Tera Shift",
+    "name": "Tera Mudança",
     "description": "Quando o Pokémon entra em batalha, ele absorve a energia ao seu redor e se transforma em sua Forma Terastal."
   },
   "teraShell": {
-    "name": "Tera Shell",
+    "name": "Tera Concha",
     "description": "A casca do Pokémon contém os poderes de cada tipo. Todos os movimentos que causam dano que atingem o Pokémon quando seu HP está cheio não serão muito eficazes."
   },
   "teraformZero": {
-    "name": "Teraform Zero",
+    "name": "Teraforma Zero",
     "description": "Quando Terapagos muda para sua Forma Estelar, ele usa seus poderes ocultos para eliminar todos os efeitos do clima e do terreno, reduzindo-os a zero."
   },
   "poisonPuppeteer": {
-    "name": "Poison Puppeteer",
+    "name": "Titereiro Venenoso",
     "description": "Pokémon envenenados pelos movimentos de Pecharunt também ficarão confusos."
   },
   "unleashed": {
@@ -2167,6 +2167,10 @@
     "name": "Cipós Sugadores",
     "description": "Dobra o poder de Chicote de Cipó. 30% de chance de semear ou prender o alvo ao usar Chicote de Cipó."
   },
+  "leftoversPower": {
+    "name": "Leftovers Power",
+    "description": "Restaura passivamente 1/8 do HP máximo ao final de cada turno."
+  },
   "regeneratorPlus": {
     "name": "Regenerador Plus",
     "description": "Restaura 45% do HP máximo ao trocar de Pokémon."
@@ -2698,5 +2702,1041 @@
   "dragonize": {
     "name": "Dragonizar",
     "description": "Transforma golpes do tipo Normal em tipo Dragão e aumenta seu poder em 20%."
+  },
+  "nightmares": {
+    "name": "Pesadelos",
+    "description": "Reduz o HP dos Pokémon adversários adormecidos em 1/4 no final de cada turno."
+  },
+  "piercingDrill": {
+    "name": "Broca Perfurante",
+    "description": "Movimentos de contato atravessam a proteção do alvo e causam 1/4 do dano esperado."
+  },
+  "spicySpray": {
+    "name": "Spray Picante",
+    "description": "Queima o atacante quando o Pokémon recebe dano."
+  },
+  "aCounterInfector": {
+    "name": "A-Contra Infector",
+    "description": "Quando atingido por um ataque físico, o usuário tem 30% de chance de infligir uma condição de status aleatória no atacante. Se o atacante estiver com status alterado, ao fazer contato, o usuário rouba 1/16 dos PS do atacante."
+  },
+  "aParasiticOffspring": {
+    "name": "A-Prole Parasitária",
+    "description": "Os ataques físicos do usuário têm 30% de chance de infligir uma condição de status aleatória no alvo. Se o alvo estiver com status alterado, movimentos de contato contra o usuário curam 1/16 de seus PS máximos ao invés de causar dano."
+  },
+  "aSuppression": {
+    "name": "A-Supressão",
+    "description": "Pokémon adversários com condições de status recebem 30% mais dano de ataques e não podem usar suas habilidades."
+  },
+  "abominableProtection": {
+    "name": "Proteção Abominável",
+    "description": "Quando o usuário entra em batalha, ativa Véu Aurora sem precisar de Granizo ou Neve, mas perde 25% de seus PS máximos. Este efeito só pode ocorrer uma vez por batalha."
+  },
+  "absoluteLightning": {
+    "name": "Relâmpago Absoluto",
+    "description": "O primeiro golpe causador de dano recebido em cada batalha é negado, e o atacante perde 1/8 de seus PS máximos. Movimentos do tipo Normal se tornam do tipo Elétrico e causam 1,2× de dano."
+  },
+  "absoluteVoidMagic": {
+    "name": "Magia do Vazio Absoluto",
+    "description": "Os ataques do usuário têm 50% de chance de infligir no alvo uma condição de status aleatória, condição temporária, armadilha ou perigo de terreno."
+  },
+  "absoluteZero": {
+    "name": "Zero Absoluto",
+    "description": "Enquanto Granizo ou Neve está ativo, os movimentos do tipo Normal, Voador e Dragão do usuário se tornam tipo Gelo, causam 1,2× de dano e têm 20% de chance de congelar."
+  },
+  "abyssalFlame": {
+    "name": "Chama Abissal",
+    "description": "Movimentos do tipo Normal se tornam tipo Fogo. Movimentos tipo Fogo e Sombrio compartilham vantagens de fraqueza de tipo e têm 30% de chance de queimar."
+  },
+  "abyssalGrasp": {
+    "name": "Agarrão Abissal",
+    "description": "Movimentos do tipo Normal se tornam tipo Água. Movimentos tipo Água têm 30% de chance de infligir Redemoinho no alvo."
+  },
+  "acidRain": {
+    "name": "Chuva Ácida",
+    "description": "Quando o usuário entra em batalha, ativa Chuva. Movimentos do tipo Veneno causam 1,3× de dano enquanto a Chuva está ativa. Movimentos do tipo Normal se tornam tipo Veneno."
+  },
+  "adventureStart": {
+    "name": "Aventura Início!",
+    "description": "Os movimentos do usuário têm 50% de chance de ganhar prioridade. Todos os movimentos do usuário ganham +1 nível de golpe crítico."
+  },
+  "almightyGalaxy": {
+    "name": "Galáxia Onipotente",
+    "description": "No final de cada turno, o usuário muda para um tipo aleatório e restaura 1/8 de seus PS máximos. Ataques sem efeitos secundários causam 1,3× de dano."
+  },
+  "alternativeBurst": {
+    "name": "Explosão Alternativa",
+    "description": "Os movimentos de status do usuário causam dano igual a 1/8 dos PS máximos do alvo. Movimentos tipo Elétrico e Dragão têm 30% de chance de paralisar."
+  },
+  "ancientBehemoth": {
+    "name": "Behemoth Antigo",
+    "description": "Os movimentos de contato do usuário ignoram resistências de tipo e causam 1,3× de dano."
+  },
+  "ancientDrill": {
+    "name": "Broca Antiga",
+    "description": "Os ataques do usuário têm 50% de chance de remover o item do alvo e causar dano adicional igual a 1/8 dos PS máximos do alvo."
+  },
+  "ancientDualCore": {
+    "name": "Duplo Núcleo Antigo",
+    "description": "No turno 1, o usuário é do tipo Normal. No turno 2, torna-se tipo Aço e Lutador. Movimentos do tipo Normal se tornam tipo Aço, também são tratados como tipo Lutador e causam 1,2× de dano."
+  },
+  "ancientKnowledge": {
+    "name": "Conhecimento Antigo",
+    "description": "Os movimentos do tipo Psíquico e Fada do usuário causam 1,2× de dano e compartilham as mesmas vantagens de fraqueza de tipo."
+  },
+  "ancientSummon": {
+    "name": "Invocação Antiga",
+    "description": "Ao entrar em batalha, o usuário ganha +1 nível em um atributo aleatório para cada outro Pokémon da equipe com um movimento Gadget. Cada aumento é escolhido aleatoriamente."
+  },
+  "ancientSupplies": {
+    "name": "Suprimentos Antigos",
+    "description": "Quando o usuário é substituído, o Pokémon que entra cura 25% de seus PS máximos e ganha +1 em Defesa."
+  },
+  "aquaticRitual": {
+    "name": "Ritual Aquático",
+    "description": "Se a Chuva está ativa, o usuário aumenta dois atributos aleatórios no final de cada turno."
+  },
+  "beastOfRagnarok": {
+    "name": "Besta de Ragnarök",
+    "description": "Com Neve ou Granizo, a Velocidade do usuário é dobrada, e movimentos de mordida têm 10% de chance de congelar o alvo ou 10% de chance de fazê-lo hesitar."
+  },
+  "beaststar": {
+    "name": "Bestiestrela",
+    "description": "Os ataques do usuário causam 1,5× de dano. Se um ataque não pode causar hesitação, tem 30% de chance de fazer o alvo hesitar. A Defesa e Defesa Especial do usuário caem um nível após atacar."
+  },
+  "blackFlameSpark": {
+    "name": "Faísca de Chama Negra",
+    "description": "Depois que o usuário é atingido por um ataque, ganha uma carga. Se o usuário for substituído enquanto carregado, o alvo é queimado e o Pokémon que entra ganha +1 em Velocidade e +1 em um atributo aleatório."
+  },
+  "blazingCitrine": {
+    "name": "Citrino Ardente",
+    "description": "Os movimentos do tipo Normal do usuário se tornam tipo Fogo ou Pedra dependendo de qual tipo causaria mais dano ao alvo. Se neutro, o tipo é escolhido aleatoriamente. Movimentos tipo Fogo e Pedra têm 30% de chance de queimar o alvo. Alvos queimados não podem usar suas habilidades e os efeitos secundários de seus movimentos são desativados."
+  },
+  "blazingTimber": {
+    "name": "Madeira Ardente",
+    "description": "Os movimentos do tipo Normal e Planta do usuário se tornam tipo Fogo, têm 30% de chance de queimar o alvo e causam 1,3× de dano."
+  },
+  "blindRage": {
+    "name": "Raiva Cega",
+    "description": "Enquanto confuso, os movimentos do usuário causam 2× de dano e têm +1 nível de golpe crítico. Movimentos do tipo Normal compartilham as vantagens de tipo dos movimentos tipo Lutador."
+  },
+  "bloodScent": {
+    "name": "Faro de Sangue",
+    "description": "Os ataques do usuário acertam automaticamente como golpes críticos contra alvos abaixo de 40% de PS."
+  },
+  "blowbackRoulette": {
+    "name": "Roleta de Recuo",
+    "description": "Os movimentos tipo Sombrio e Aço do usuário têm 30% de chance de baixar aleatoriamente três atributos do alvo em um nível cada."
+  },
+  "bullRush": {
+    "name": "Investida do Touro",
+    "description": "Os movimentos do tipo Normal do usuário se tornam tipo Lutador e ganham +1 de prioridade."
+  },
+  "carnivorousVines": {
+    "name": "Vinhas Carnívoras",
+    "description": "Os movimentos de contato do usuário têm 50% de chance de prender o alvo por três turnos, causando dano igual a 1/8 de seus PS máximos a cada turno."
+  },
+  "chainsOfInfinity": {
+    "name": "Correntes do Infinito",
+    "description": "Movimentos que causam 60 ou menos de dano têm 1% de chance de derrotar o alvo instantaneamente."
+  },
+  "chaosEnd": {
+    "name": "Fim do Caos",
+    "description": "Se a equipe tem um Pokémon Sombrio derrotado, após derrotar o alvo, o próximo Pokémon a entrar recebe dano igual a 1/6 de seus PS máximos. Se tem um Pokémon Fada derrotado, movimentos Normal se tornam Sombrio com 1,2× de dano. Se tem um Sombrio, um Fada e um Sombrio/Fada derrotados (três aliados), quando o usuário cai, o adversário recebe dano igual a 50% de seus PS máximos."
+  },
+  "chaosOrder": {
+    "name": "Ordem do Caos",
+    "description": "O usuário recebe 50% menos dano de oponentes com 600 ou mais de BST total. Movimentos Normal se tornam Fada ou Sombrio conforme qual tipo cause mais dano. Se neutro, escolha aleatória. Ao derrotar com um movimento Fada, recupera 1/4 dos PS. Com um movimento Sombrio, ganha +1 em Ataque ou Velocidade aleatoriamente."
+  },
+  "chaosSorcerer": {
+    "name": "Feiticeiro do Caos",
+    "description": "O usuário tem os efeitos de Instável. Os movimentos especiais do usuário têm 30% de chance de confundir o alvo."
+  },
+  "chaosWarrior": {
+    "name": "Guerreiro do Caos",
+    "description": "Movimentos Normal do usuário se tornam Sombrio ou Fada conforme qual tipo causaria mais dano ao alvo. Se neutro, escolha aleatória. Movimentos Sombrio têm 30% de chance de adormecer o alvo. Movimentos Fada têm 30% de chance de baixar o Ataque e Ataque Especial do alvo."
+  },
+  "chargeChampion": {
+    "name": "Campeão de Carga",
+    "description": "Os movimentos de carga do usuário causam 50% de dano no primeiro turno e aumentam dois atributos aleatórios."
+  },
+  "clayColossus": {
+    "name": "Colosso de Argila",
+    "description": "O usuário não recebe dano de movimentos pouco eficazes. Movimentos do tipo Normal se tornam tipo Terra. Movimentos tipo Terra têm 30% de chance de baixar a Velocidade do alvo."
+  },
+  "climateChange": {
+    "name": "Mudança Climática",
+    "description": "Durante sol, movimentos Normal e Água do usuário se tornam Fogo com 30% de chance de queimar. Durante chuva, movimentos Normal e Fogo se tornam Água com 10% de chance de prender o alvo em Redemoinho."
+  },
+  "clusterBurst": {
+    "name": "Explosão em Grupo",
+    "description": "Movimentos Normal do usuário se tornam Água. Durante Chuva ou Chuva Forte, movimentos Água do usuário têm 50% de chance de acertar duas vezes."
+  },
+  "contagion": {
+    "name": "Contágio",
+    "description": "Movimentos Normal do usuário se tornam Veneno e causam 1,2× de dano. Movimentos Veneno envenenam gravemente o alvo."
+  },
+  "cornfieldGuardian": {
+    "name": "Guardião do Milharal",
+    "description": "Enquanto o Campo de Grama está ativo, o usuário ganha +1 em Ataque e cura sua condição de status no final de cada turno."
+  },
+  "corpseParty": {
+    "name": "Festa de Cadáveres",
+    "description": "Movimentos Fantasma do usuário ganham 5 de poder base para cada Pokémon Fantasma na equipe. Movimentos Normal se tornam Fantasma."
+  },
+  "corruptElephant": {
+    "name": "Elefante Corrupto",
+    "description": "Movimentos Normal se tornam Fada ou Sombrio conforme qual tipo é mais forte contra o alvo (aleatório se neutro). Ao ser atingido, o usuário restaura 1/8 de seus PS máximos e seu Ataque sobe um nível. Se estiver segurando um item, perde um aleatoriamente."
+  },
+  "corruptedPower": {
+    "name": "Poder Corrompido",
+    "description": "Usar o mesmo movimento consecutivamente aumenta seu poder em 40% a cada vez, mas o usuário recebe 33% de dano de recuo."
+  },
+  "cottonTokens": {
+    "name": "Fichas de Algodão",
+    "description": "Quando o usuário recebe um ataque que causa 70% ou mais de seus PS máximos sem derrotá-lo, cria um Substituto com 25% de seus PS máximos."
+  },
+  "creepySurprise": {
+    "name": "Surpresa Assustadora",
+    "description": "Se este Pokémon tem menos de 50% de PS, paralisa o alvo ao entrar. Este Pokémon não pode ser substituído após usar esta habilidade."
+  },
+  "crimsonGear": {
+    "name": "Engrenagem Carmesim",
+    "description": "Movimentos Fogo e Aço compartilham vantagens de fraqueza de tipo. Movimentos Normal se tornam Fogo com 1,2× de dano. Se pelo menos 2 outros Pokémon da equipe têm um movimento Gadget, Elétrico também compartilha suas vantagens com Fogo e Aço."
+  },
+  "cripplingIllusions": {
+    "name": "Ilusões Debilitantes",
+    "description": "No final de cada turno, a Defesa ou Defesa Especial do usuário sobe aleatoriamente um nível. Quando o total de ambos atinge 6 ou mais, ambos são redefinidos para 0 e o alvo é amaldiçoado."
+  },
+  "criticalPredator": {
+    "name": "Predador Crítico",
+    "description": "Os movimentos físicos do usuário causam 2,5× de dano quando a Defesa do alvo é maior ou igual ao seu Ataque."
+  },
+  "crystalLuster": {
+    "name": "Brilho Cristalino",
+    "description": "Movimentos Normal e Dragão se tornam Gelo ou Pedra conforme qual tipo causa mais dano ao alvo (aleatório se neutro). Movimentos Gelo têm 10% de chance de congelar. Movimentos Pedra têm 10% de chance de infligir Salga."
+  },
+  "cursedFlamesV2": {
+    "name": "Chamas Amaldiçoadas",
+    "description": "Movimentos Normal se tornam Fogo ou Fantasma (o mais forte contra o inimigo - aleatório se neutro). Movimentos Fogo têm 30% de chance de queimar, Fantasma 5% de amaldiçoar."
+  },
+  "cursedFlamesYu": {
+    "name": "Chamas Amaldiçoadas",
+    "description": "Movimentos Normal se tornam Fogo. Movimentos Fogo têm 10% de chance de queimar o atacante e prendê-lo em Roda de Fogo."
+  },
+  "cursedPossession": {
+    "name": "Possessão Amaldiçoada",
+    "description": "Quando o usuário é atingido por um movimento supereficaz, o atacante é amaldiçoado."
+  },
+  "cursedPotential": {
+    "name": "Potencial Amaldiçoado",
+    "description": "Ao entrar, todos os atributos do usuário sobem um nível, com Ataque subindo dois níveis adicionais (três no total). No final de cada turno, aleatoriamente baixa de um a três atributos em um nível ou perde 1/4 de seus PS máximos. Não pode ser substituído."
+  },
+  "cyberneticControl": {
+    "name": "Controle Cibernético",
+    "description": "Pokémon adversários não podem usar movimentos de status nem suas habilidades."
+  },
+  "cyberneticDiscard": {
+    "name": "Descarte Cibernético",
+    "description": "O usuário descarta um item aleatório para aumentar o poder de Ataque em 1,2× e restaurar 25% do dano causado."
+  },
+  "cyberneticPredator": {
+    "name": "Predador Cibernético",
+    "description": "Os ataques do usuário causam o dobro de dano ao alvo que entra. Quando o alvo entra, o usuário ganha +1 em Velocidade."
+  },
+  "cycloneFist": {
+    "name": "Punho Ciclone",
+    "description": "Quando o usuário entra em batalha, ativa Vento de Cauda. Movimentos Lutador e Voador compartilham vantagens de fraqueza de tipo."
+  },
+  "cycloneWrath": {
+    "name": "Fúria do Ciclone",
+    "description": "Ao entrar, o usuário fica imediatamente Carregado pelo Vento. Se atingido neste estado, recebe 0 dano e o atacante perde 1/8 de seus PS máximos. Ambos efeitos só ocorrem uma vez por batalha. Movimentos Normal se tornam Voador com 1,2× de dano."
+  },
+  "cyclonicShift": {
+    "name": "Mudança Ciclônica",
+    "description": "Sempre que o usuário ataca, a Defesa e o Ataque do alvo são trocados, assim como seu Ataque Especial e Defesa Especial."
+  },
+  "damBuilder": {
+    "name": "Construtor de Barragem",
+    "description": "Quando o usuário entra, cria um Substituto. Quando o Substituto quebra, o usuário ganha Anel de Água."
+  },
+  "dangerDiscard": {
+    "name": "Perigo! Descarte",
+    "description": "Os movimentos de status do usuário aumentam aleatoriamente um atributo e baixam aleatoriamente outro."
+  },
+  "darkSoundwave": {
+    "name": "Onda Sonora Sombria",
+    "description": "Movimentos Normal e Sombrio se tornam movimentos de Som, e movimentos de Som se tornam Sombrio, causam 1,1× de dano e têm 10% de chance de adormecer, confundir ou fazer o alvo hesitar."
+  },
+  "darkworldTactics": {
+    "name": "Táticas do Mundo Sombrio",
+    "description": "No final do turno, se o usuário tem níveis de atributos negativos, ele os redefine, cura 1/6 de seus PS máximos e aumenta um atributo aleatório em um nível."
+  },
+  "debilitatingRocket": {
+    "name": "Foguete Debilitante",
+    "description": "Movimentos Normal se tornam Aço ou Voador, conforme qual cause mais dano (aleatório se neutro). Movimentos Aço e Voador têm 30% de chance de baixar o Ataque do inimigo em 2 níveis."
+  },
+  "deepRoots": {
+    "name": "Raízes Profundas",
+    "description": "No final de cada turno, o usuário restaura 1/16 de seus PS máximos e troca seu Ataque Especial e Defesa Especial."
+  },
+  "deflectionHide": {
+    "name": "Couro Defletor",
+    "description": "O usuário recebe 30% menos dano de movimentos. Ao ser atingido por um movimento de contato, causa dano igual a 1/16 dos PS máximos do atacante."
+  },
+  "demonicEdge": {
+    "name": "Lâmina Demoníaca",
+    "description": "Movimentos Normal se tornam Aço e causam 1,2× de dano. Golpes críticos causam 2,5× de dano."
+  },
+  "dimensionSlash": {
+    "name": "Corte Dimensional",
+    "description": "Movimentos cortantes causam 1,2× de dano, se tornam Sombrio e têm 10% de chance de forçar o alvo a trocar."
+  },
+  "dracoLance": {
+    "name": "Lança Draco",
+    "description": "Movimentos Normal se tornam Dragão. Movimentos Dragão causam 1,5× de dano se a Defesa do alvo é maior que seu Ataque."
+  },
+  "dracoNegation": {
+    "name": "Negação Draco",
+    "description": "30% de chance de negar movimentos de status do inimigo. Quando um movimento de status é negado, o inimigo recebe 1/16 de dano e um atributo aleatório do usuário sobe."
+  },
+  "draconicFlute": {
+    "name": "Flauta Dracônica",
+    "description": "Movimentos Normal e Dragão do usuário se tornam movimentos de Som e causam 1,2× de dano. Movimentos de Som têm 10% de chance de adormecer o alvo."
+  },
+  "dragonbaneSword": {
+    "name": "Espada Matadora de Dragões",
+    "description": "Movimentos cortantes causam 2,5× de dano a Pokémon Dragão. Ao derrotar um Pokémon Dragão, o usuário ganha +1 em Velocidade e restaura 1/8 de seus PS máximos."
+  },
+  "dragonbaneWrath": {
+    "name": "Fúria Matadora de Dragões",
+    "description": "Enquanto ativa, o alvo perde 1/8 de seus PS máximos no final de cada turno se for tipo Dragão. Movimentos Dragão causam 0,5× de dano ao usuário."
+  },
+  "drawThree": {
+    "name": "Comprar Três",
+    "description": "No final de cada turno, três atributos aleatórios são independentemente aumentados ou diminuídos aleatoriamente."
+  },
+  "drawTime": {
+    "name": "Hora de Comprar!",
+    "description": "Quando o usuário derrota um alvo, há 5% de chance de ativar a seleção de recompensa."
+  },
+  "dualBoneBlade": {
+    "name": "Lâmina Dupla de Osso",
+    "description": "Os ataques do usuário acertam duas vezes, e o segundo golpe causa 50% de dano. Os ataques usam a Defesa mais baixa do oponente."
+  },
+  "earthboundCurse": {
+    "name": "Maldição Terrena",
+    "description": "Com Chuva, movimentos Água e Terra têm 30% de chance de queimar o alvo e baixar sua Velocidade um nível. Movimentos Normal se tornam Água ou Terra conforme qual cause mais dano (aleatório se neutro)."
+  },
+  "electroBoogey": {
+    "name": "Electro Boogey",
+    "description": "Movimentos Normal se tornam Elétrico. Movimentos Elétrico têm 30% de chance de causar 2,5× de dano e 10% de chance de paralisar."
+  },
+  "electromagneticMaster": {
+    "name": "Mestre Eletromagnético",
+    "description": "Movimentos Elétrico, Pedra e Aço compartilham vantagens de tipo. Movimentos Normal se tornam Elétrico, Pedra ou Aço conforme qual cause mais dano (aleatório se neutro). Movimentos Elétrico têm 10% de chance de +1 prioridade. Pedra 5% de Salga. Aço 10% de golpe crítico."
+  },
+  "elementalBypass": {
+    "name": "Desvio Elemental",
+    "description": "Se o oponente é do tipo Água, Terra ou Fogo, os ataques do usuário causam 1,5× de dano."
+  },
+  "elementalHavoc": {
+    "name": "Caos Elemental",
+    "description": "Movimentos Água, Elétrico e Voador do alvo causam 0,5× de dano. Movimentos Normal se tornam Água, Voador ou Elétrico conforme qual cause mais dano (aleatório se neutro). Movimentos Água, Elétrico e Voador causam 1,2× de dano."
+  },
+  "emeraldGear": {
+    "name": "Engrenagem Esmeralda",
+    "description": "Movimentos Planta e Aço do usuário compartilham vantagens de fraqueza de tipo. Movimentos Normal se tornam Planta com 1,2× de dano. Se pelo menos 2 outros Pokémon da equipe têm um movimento Gadget, movimentos Fogo também compartilham vantagens com Planta e Aço."
+  },
+  "emeraldStance": {
+    "name": "Postura Esmeralda",
+    "description": "Ao usar um ataque, o usuário usa seu atributo de Defesa em vez de Ataque ou Ataque Especial."
+  },
+  "emperorsCoin": {
+    "name": "Moeda do Imperador",
+    "description": "A cada turno, o usuário tem 50% de chance de aumentar dois atributos aleatórios únicos em um nível."
+  },
+  "eradicatorsDomain": {
+    "name": "Domínio do Erradicador",
+    "description": "Sempre que o alvo usa um movimento especial, tem 30% de chance de receber uma condição de status aleatória. Sempre que usa um movimento de status, recebe dano igual a 1/8 de seus PS máximos."
+  },
+  "etherealLight": {
+    "name": "Luz Etérea",
+    "description": "O usuário tem Intimidação. Ao entrar, remove todos os perigos colocados pelo alvo e remove todos os aumentos de atributos do alvo."
+  },
+  "evolutionPill": {
+    "name": "Pílula de Evolução",
+    "description": "Quando o usuário é derrotado, o próximo Pokémon enviado ganha +1 nível em seu atributo mais alto e restaura 33% de seus PS máximos."
+  },
+  "expandingMass": {
+    "name": "Massa Expansiva",
+    "description": "Os movimentos do usuário ganham +10 de poder base a cada turno em campo (máximo +50), mas perde 1/8 de seus PS máximos a cada turno."
+  },
+  "experienceBoost": {
+    "name": "Impulso de Experiência",
+    "description": "No final de cada turno, o usuário aumenta aleatoriamente sua Defesa, Ataque ou Velocidade em um nível."
+  },
+  "explosiveAir": {
+    "name": "Ar Explosivo",
+    "description": "Movimentos Normal do usuário se tornam Voador com 1,2× de dano. Movimentos Voador contra Pokémon Fogo sempre resultam em golpes críticos."
+  },
+  "fastFood": {
+    "name": "Fast Food",
+    "description": "A Velocidade do usuário sobe no final de cada turno. Movimentos de mordida recebem um bônus de 1,2×."
+  },
+  "fatedRevival": {
+    "name": "Revivescência Predestinada",
+    "description": "Quando o usuário é derrotado, revive um Pokémon Fada derrotado aleatório de sua equipe com 50% de PS."
+  },
+  "finalBlade": {
+    "name": "Lâmina Final",
+    "description": "Ataques que não causam hesitação ganham 10% de chance de fazer o alvo hesitar por cada membro da equipe derrotado."
+  },
+  "fireAndIce": {
+    "name": "Fogo e Gelo",
+    "description": "Movimentos Normal do usuário se tornam Gelo ou Fogo conforme qual tipo é mais eficaz contra o alvo (aleatório se neutro). Movimentos Fogo têm 10% de chance de congelar, e Gelo 30% de chance de queimar."
+  },
+  "fistOfFate": {
+    "name": "Punho do Destino",
+    "description": "Os movimentos de contato do usuário ignoram resistências e habilidades. Ao derrotar um alvo, o próximo Pokémon a entrar recebe dano igual a 1/4 de seus PS máximos."
+  },
+  "flamingOblivion": {
+    "name": "Esquecimento Flamejante",
+    "description": "Movimentos Normal se tornam Fogo. Movimentos Fogo ignoram resistências de tipo e têm 30% de chance de queimar o alvo e ativar Roda de Fogo. Ao derrotar um alvo queimado, o próximo Pokémon perde 25% de seus PS máximos."
+  },
+  "fogBody": {
+    "name": "Corpo de Névoa",
+    "description": "Quando o usuário erra um ataque com 50% ou mais de precisão, seu Ataque sobe um nível e recupera 1/8 de seus PS."
+  },
+  "fogBreath": {
+    "name": "Sopro de Névoa",
+    "description": "Movimentos Normal se tornam Água, causam 1,3× de dano e têm 30% de chance de baixar a Evasão do alvo."
+  },
+  "foolsCoin": {
+    "name": "Moeda do Tolo",
+    "description": "Este Pokémon tem 50% de chance de ativar Proteção Mágica."
+  },
+  "forScience": {
+    "name": "Pela Ciência!",
+    "description": "No final de cada turno, um atributo do usuário sobe aleatoriamente 2 níveis e outro baixa 1. Um atributo do alvo sobe 1 e outro baixa 1."
+  },
+  "forbiddenPower": {
+    "name": "Poder Proibido",
+    "description": "O poder base de todos os movimentos do usuário aumenta em 20 a cada ataque consecutivo sem trocar."
+  },
+  "forestGuardian": {
+    "name": "Guardião da Floresta",
+    "description": "Em Campo de Grama, a Velocidade do usuário é dobrada e seus movimentos físicos causam 1,2× de dano. Movimentos cortantes têm alta taxa de golpe crítico."
+  },
+  "forestTrickery": {
+    "name": "Ardil da Floresta",
+    "description": "Movimentos Normal se tornam Planta ou Fada conforme qual tipo é mais forte (aleatório se neutro), com 1,2× de dano. Movimentos Planta têm 30% de chance de ativar Campo de Grama. Fada 30% de ativar Campo de Névoa."
+  },
+  "fossilBarrier": {
+    "name": "Barreira Fóssil",
+    "description": "O alvo não pode usar movimentos prioritários nem movimentos que aumentam atributos. Movimentos Normal se tornam Pedra com 1,2× de dano."
+  },
+  "frostyAbomination": {
+    "name": "Abominação Gélida",
+    "description": "Quando os PS do usuário caem abaixo de 50%, o alvo recebe dano igual a 1/8 de seus PS máximos. Movimentos Normal se tornam Gelo. Movimentos Gelo se tornam mordidas, causam 1,2× de dano e têm 10% de chance de congelar."
+  },
+  "galacticAwakening": {
+    "name": "Despertar Galáctico",
+    "description": "Quando seus PS caem abaixo de 50%, este Pokémon muda para o tipo Estelar. Abaixo de 50%, no final de cada turno, um atributo aleatório sobe um nível."
+  },
+  "gemSiphon": {
+    "name": "Sifão de Gema",
+    "description": "Movimentos Fada curam o usuário em 50% do dano causado. Se os PS do usuário estão cheios, cria um Substituto usando 25% de seus PS."
+  },
+  "gemstoneTrample": {
+    "name": "Pisoteio de Gema",
+    "description": "Movimentos Normal se tornam Terra, ignoram aumentos de Defesa e causam 20% mais dano."
+  },
+  "genieMagic": {
+    "name": "Magia do Gênio",
+    "description": "Movimentos Normal se tornam Fogo ou Sombrio conforme qual tipo é mais eficaz contra o alvo (aleatório se neutro). Movimentos Fogo e Sombrio têm 30% de chance de ativar um efeito de Desejo no próximo turno."
+  },
+  "giantImpact": {
+    "name": "Impacto Gigante",
+    "description": "Movimentos Fogo, Planta, Água e Elétrico se tornam Normal. Movimentos Normal causam 1,3× de dano e têm 30% de chance de paralisar ou fazer o alvo hesitar."
+  },
+  "goldenClutch": {
+    "name": "Garra Dourada",
+    "description": "Movimentos Normal e Lutador se tornam movimentos cortantes. Movimentos cortantes ignoram resistências. Os que não causam hesitação ganham +1 prioridade e +1 nível de golpe crítico."
+  },
+  "goldenGaze": {
+    "name": "Olhar Dourado",
+    "description": "Movimentos Normal do usuário se tornam Psíquico com 1,2× de dano. Movimentos Psíquico têm 30% de chance de desabilitar o último movimento do alvo. Quando desabilitado, causam 1,3× de dano."
+  },
+  "goldenGear": {
+    "name": "Engrenagem Dourada",
+    "description": "Movimentos Elétrico e Aço do usuário compartilham vantagens de fraqueza de tipo. Movimentos Normal se tornam Elétrico com 1,2× de dano. Se pelo menos 2 outros Pokémon da equipe têm um movimento Gadget, Planta também compartilha vantagens com Elétrico e Aço."
+  },
+  "goldenRadiance": {
+    "name": "Radiância Dourada",
+    "description": "Quando os PS do usuário caem abaixo de 10%, todos os atributos sobem 1 nível."
+  },
+  "gravityAxe": {
+    "name": "Machado Gravitacional",
+    "description": "O usuário prende todos os Pokémon adversários, remove imunidades do tipo Voador e tem os efeitos de Instável."
+  },
+  "hammerKnockback": {
+    "name": "Recuo do Martelo",
+    "description": "Os movimentos de contato do usuário têm 30% de chance de forçar o alvo a trocar."
+  },
+  "handReset": {
+    "name": "Reinício de Mão",
+    "description": "Quando os PS do usuário caem abaixo de 50%, cura suas condições de status e dos aliados, e redefine todas as mudanças de atributos de ambos os Pokémon."
+  },
+  "harpieBoost": {
+    "name": "Impulso Harpia",
+    "description": "Os movimentos do usuário ganham 15 de poder base para cada outro Pokémon Voador não derrotado na equipe."
+  },
+  "heavenPiercer": {
+    "name": "Perfurador Celestial",
+    "description": "Os movimentos Aço do usuário causam 2× de dano contra Pokémon Terra e Pedra. Movimentos Normal se tornam Aço com 1,2× de dano."
+  },
+  "heavensJudgment": {
+    "name": "Julgamento Celestial",
+    "description": "Baixa o Ataque do inimigo ao entrar e quando qualquer inimigo entra. Ataques ganham 10 de poder base para cada Pokémon da equipe que conheça um movimento Servo."
+  },
+  "heavyweightHopper": {
+    "name": "Saltador Peso Pesado",
+    "description": "Movimentos Normal se tornam Voador ou Lutador conforme qual tipo é mais forte contra o alvo (aleatório se neutro). Voador têm 30% de chance de hesitação. Lutador 5% de golpe crítico."
+  },
+  "hydroClone": {
+    "name": "Hidro Clone",
+    "description": "Ao derrotar o alvo, o usuário cria um Substituto com 25% de seus PS máximos."
+  },
+  "hydroSurge": {
+    "name": "Hidro Surto",
+    "description": "Todos os movimentos do usuário são supereficazes contra Pokémon Fogo."
+  },
+  "iceAge": {
+    "name": "Era do Gelo",
+    "description": "O usuário invoca Neve ou Granizo. No final de cada turno, se Neve/Granizo está ativo, baixa aleatoriamente a Velocidade, a maior Defesa ou o maior Ataque do alvo."
+  },
+  "illusionWeaver": {
+    "name": "Tecelão de Ilusões",
+    "description": "Sempre que o alvo usa um golpe de estado, o usuário tem 10% de chance de criar um Substituto, usando 25% de seus PS."
+  },
+  "illusionist": {
+    "name": "Ilusionista",
+    "description": "O usuário tem 30% de chance de esquivar de ataques físicos."
+  },
+  "immortalSlime": {
+    "name": "Gosma Imortal",
+    "description": "O usuário é imune a condições de estado e golpes críticos. O dano físico recebido pelo usuário é reduzido em 50%."
+  },
+  "infinityStones": {
+    "name": "Pedras do Infinito",
+    "description": "Golpes do tipo Normal se tornam do tipo Pedra. Golpes do tipo Pedra têm 10% de chance de acertar um golpe crítico, 10% de chance de infligir uma condição de estado aleatória e curam o usuário em 25% do dano causado."
+  },
+  "ironGiant": {
+    "name": "Gigante de Ferro",
+    "description": "Golpes do tipo Aço e Lutador causam 1,3× de dano e têm 30% de chance de reduzir a Defesa do alvo em um nível."
+  },
+  "ironJaws": {
+    "name": "Mandíbulas de Ferro",
+    "description": "Golpes de mordida curam o usuário em 50% do dano causado e compartilham as vantagens de tipo Aço."
+  },
+  "junkToTreasure": {
+    "name": "Lixo em Tesouro",
+    "description": "Golpes com poder base de 45 ou menos causam 3× de dano."
+  },
+  "jurassicJaws": {
+    "name": "Mandíbulas Jurássicas",
+    "description": "Golpes do tipo Normal se tornam do tipo Terra. Golpes do tipo Terra se tornam golpes de mordida. Golpes de mordida atingem duas vezes, e o segundo golpe causa 80% do dano."
+  },
+  "kingsRoar": {
+    "name": "Rugido do Rei",
+    "description": "Quando o usuário entra em campo normalmente, reduz o Ataque e a Velocidade do alvo em um nível. Se entrar após um membro do time ser derrotado, reduz todas as estatísticas do alvo em um nível."
+  },
+  "laserBusterCannon": {
+    "name": "Canhão Laser Destruidor",
+    "description": "Golpes de pulso e aura ganham +1 prioridade e causam 1,3× de dano."
+  },
+  "lastSamufrog": {
+    "name": "Último Samurã",
+    "description": "Golpes do tipo Normal se tornam golpes cortantes com alta taxa de golpe crítico. Possui o efeito de Robustez."
+  },
+  "leviathansDomain": {
+    "name": "Domínio do Leviatã",
+    "description": "Golpes do tipo Água e Dragão sempre invocam Chuva ao acertar. A cada turno consecutivo de Chuva, os golpes de tipo Água e Dragão deste Pokémon ganham +10 de poder base, até um máximo de +50."
+  },
+  "leviathansWrath": {
+    "name": "Fúria do Leviatã",
+    "description": "Golpes do tipo Água sempre acertam golpes críticos durante Chuva. Após um golpe crítico deste Pokémon, o clima atual é dissipado."
+  },
+  "lifeExchange": {
+    "name": "Troca Vital",
+    "description": "Uma vez por batalha, após derrotar um Pokémon adversário, revive um membro aleatório do time com 50% de seus PS máximos."
+  },
+  "looneyDragon": {
+    "name": "Dragão Maluco",
+    "description": "Golpes do tipo Dragão têm 30% de chance de confundir o alvo. Golpes do tipo Fada têm 30% de chance de reduzir uma estatística aleatória do alvo. Este Pokémon ganha +1 evasão ao entrar em batalha."
+  },
+  "loversCoin": {
+    "name": "Moeda dos Amantes",
+    "description": "Ataques têm 50% de chance de apaixonar Pokémon adversários com gênero. Se um alvo apaixonado atacar, há 50% de chance de devolver metade do dano recebido ao alvo."
+  },
+  "lusterGenesis": {
+    "name": "Gênese Lustrosa",
+    "description": "Se o time tem um Pokémon tipo Sombrio derrotado, os ataques acertam duas vezes (o segundo causa 50% do dano). Se tem um tipo Fada derrotado, golpes com poder base 60 causam 1,5× dano. Se tem um tipo Sombrio, um tipo Fada e um tipo Sombrio/Fada derrotados (três no total), ataques têm 30% de chance de infligir uma condição de estado aleatória. Cada Pokémon derrotado é contado no máximo uma vez."
+  },
+  "machSpeed": {
+    "name": "Velocidade Mach",
+    "description": "Durante o primeiro turno em campo, sua Velocidade e Ataque são dobrados."
+  },
+  "magicalInheritance": {
+    "name": "Herança Mágica",
+    "description": "O usuário ganha 10% de aumento em Ataque Especial por cada Pokémon do time que conheça um golpe de Magia Negra. Golpes do tipo Fada curam o usuário em 10% do dano causado, multiplicado pelo número de Pokémon tipo Fada derrotados no time."
+  },
+  "magiciansCoin": {
+    "name": "Moeda do Mágico",
+    "description": "Quando qualquer Pokémon usa um golpe de estado, este Pokémon tem 50% de chance de aumentar seu Ataque Especial ou restaurar 1/8 de seus PS máximos."
+  },
+  "magnetizeBeta": {
+    "name": "Magnetizar Beta",
+    "description": "Golpes do tipo Elétrico curam o usuário em 25% do dano causado. Golpes do tipo Aço causam 1,2× dano. Se pelo menos outros dois Pokémon do time possuem um golpe Magnético, este Pokémon ganha +1 Ataque e +1 Ataque Especial ao sair de campo."
+  },
+  "maskOfRemnants": {
+    "name": "Máscara dos Vestígios",
+    "description": "Quando este Pokémon é derrotado, prende e amaldiçoa o atacante."
+  },
+  "maskedGod": {
+    "name": "Deus Mascarado",
+    "description": "Com base nos golpes Máscara no time, o usuário ganha efeitos. Com 1+: golpes Normal se tornam Sombrio, Fantasma ou Psíquico (tipo mais forte; aleatório se neutro). Com 2+: golpes Sombrio, Fantasma e Psíquico curam 25% do dano. Com 3+: o usuário recebe 25% menos dano. Com 5+: Sombrio tem 10% de causar sono, Fantasma 5% de amaldiçoar, Psíquico 10% de reduzir Defesa e Def. Esp. em um nível. Com 10+: Sombrio, Fantasma e Psíquico compartilham vantagens de tipo."
+  },
+  "masterOfIllusions": {
+    "name": "Mestre das Ilusões",
+    "description": "No final de cada turno, o usuário tem 20% de chance de criar um Substituto."
+  },
+  "masterOfTheDarkArts": {
+    "name": "Mestre das Artes das Trevas",
+    "description": "Golpes do tipo Sombrio têm 30% de chance de infligir dano residual igual a 1/8 dos PS máximos do alvo (Aperto). Golpes do tipo Normal se tornam tipo Sombrio quando seria supereficaz contra o alvo."
+  },
+  "mastersBlade": {
+    "name": "Lâmina do Mestre",
+    "description": "Todos os golpes do tipo Normal são golpes cortantes. Golpes cortantes causam 1,5× de dano e têm +1 de taxa de golpe crítico."
+  },
+  "maxDestruction": {
+    "name": "Destruição MAX",
+    "description": "O usuário é curado imediatamente de condições de estado. Os golpes do usuário acertam duas vezes; o segundo golpe causa 50% do dano. Porém, se a Defesa do alvo for maior que seu Ataque, o segundo golpe causa dano total."
+  },
+  "meteorShower": {
+    "name": "Chuva de Meteoros",
+    "description": "Golpes do tipo Normal, Fogo e Pedra acertam três vezes com 40% do poder base, com cada golpe se tornando aleatoriamente tipo Fogo ou Pedra."
+  },
+  "millEngine": {
+    "name": "Motor de Moinho",
+    "description": "No final de cada turno, se o Pokémon estiver segurando uma Fruta, ele consome uma Fruta aleatória e aumenta seu Ataque em um nível. Se seu Ataque estiver em +3 níveis no final do turno, seu Ataque é redefinido para 0 e restaura 30% de seus PS máximos."
+  },
+  "millennialWeapon": {
+    "name": "Arma Milenar",
+    "description": "A Defesa do usuário é multiplicada por 1,5. Golpes do tipo Normal se tornam tipo Fada ou Pedra, dependendo de qual causaria mais dano (aleatório se neutro). Golpes do tipo Fada e Pedra usam a Defesa do usuário em vez de Ataque ou Ataque Especial."
+  },
+  "millenniumAbsorption": {
+    "name": "Absorção do Milênio",
+    "description": "Quando o usuário é atingido por um golpe de contato, o atacante perde PS iguais a 50% do dano recebido. Quando derrota o alvo, restaura 25% de seus PS e copia a habilidade do alvo como passiva, sobrescrevendo a passiva existente para a batalha."
+  },
+  "millenniumStalker": {
+    "name": "Perseguidor do Milênio",
+    "description": "Quando o usuário derrota o alvo, seu Ataque e uma estatística aleatória sobem um nível, e sua condição de estado é curada."
+  },
+  "mindTrance": {
+    "name": "Transe Mental",
+    "description": "Se o alvo tiver uma condição de estado ou estado volátil (como confusão ou paixão), os golpes do usuário ganham prioridade, e golpes que normalmente não causam hesitação têm 10% de chance de fazer o alvo hesitar."
+  },
+  "mindWarp": {
+    "name": "Distorção Mental",
+    "description": "Golpes do tipo Normal se tornam tipo Sombrio ou Psíquico dependendo de qual é mais eficaz (aleatório se neutro). Golpes Psíquicos têm 30% de chance de confundir o alvo, e golpes Sombrios têm 30% de chance de paralisar o alvo."
+  },
+  "mindlessRampage": {
+    "name": "Fúria Desenfreada",
+    "description": "Os efeitos de Força Bruta se aplicam. Quando o usuário causa dano, sua Velocidade ou Ataque sobe um nível. Porém, não pode usar golpes de estado. No final de cada turno, recebe dano igual a 1/8 de seus PS máximos."
+  },
+  "mirrorKing": {
+    "name": "Rei Espelho",
+    "description": "Ao entrar em campo, o usuário copia a habilidade do alvo. Ao se retirar, restaura 33% de seus PS."
+  },
+  "moltenShackles": {
+    "name": "Grilhões Derretidos",
+    "description": "O usuário prende o alvo e causa dano igual a 1/8 de seus PS máximos no final de cada turno."
+  },
+  "moonlitMischief": {
+    "name": "Travessura Lunar",
+    "description": "Em biomas noturnos, quando este Pokémon entra em campo, todas as suas estatísticas sobem um nível."
+  },
+  "moonsCoin": {
+    "name": "Moeda da Lua",
+    "description": "Ao entrar em campo, o usuário ativa Gravidade por 5 turnos. Enquanto a Gravidade está ativa, golpes Sombrios têm 50% de chance de adormecer o alvo, e golpes Psíquicos têm 50% de chance de criar um Substituto."
+  },
+  "multiply": {
+    "name": "Multiplicar",
+    "description": "Golpes do tipo Normal do usuário têm 30% de chance de criar um Substituto e aumentar duas estatísticas aleatórias em um nível."
+  },
+  "necroDrain": {
+    "name": "Dreno Necro",
+    "description": "Quando o usuário derrota o alvo, um membro aleatório não derrotado do time restaura 25% de seus PS."
+  },
+  "necroSurge": {
+    "name": "Surto Necro",
+    "description": "Os golpes do usuário ganham 5 de poder base por cada membro derrotado do time."
+  },
+  "nightStalker": {
+    "name": "Perseguidor Noturno",
+    "description": "Em biomas noturnos, os golpes do usuário ganham +1 prioridade."
+  },
+  "ojamaLockdown": {
+    "name": "Bloqueio Ojama",
+    "description": "Impede o oponente de trocar ou usar golpes de estado. Se pelo menos três Pokémon do time possuem golpes Ojama, uma estatística do alvo é reduzida em 2 níveis no final de cada turno."
+  },
+  "ojamaMagic": {
+    "name": "Magia Ojama",
+    "description": "Se pelo menos três Pokémon do time possuem golpes Ojama, os golpes Normal e Ojama deste Pokémon têm 30% de chance de provocar, atormentar e confundir o alvo simultaneamente."
+  },
+  "ojamaSolidarity": {
+    "name": "Solidariedade Ojama",
+    "description": "Ao entrar, desabilita um dos golpes do alvo. Se pelo menos 3 Pokémon do time possuem golpes Ojama, os golpes Normal e Ojama deste Pokémon ganham prioridade e +1 de taxa de golpe crítico."
+  },
+  "originalSkyKing": {
+    "name": "Rei Original dos Céus",
+    "description": "Golpes Normal se tornam golpes de mordida. Golpes de mordida e cortantes se tornam tipo Aço ou Voador (mais eficaz; aleatório se neutro) e causam 1,2× dano. O usuário cura 20% do dano causado."
+  },
+  "parallelWorld": {
+    "name": "Mundo Paralelo",
+    "description": "Ao entrar em campo, troca o Ataque e o Ataque Especial do alvo."
+  },
+  "phantomArmor": {
+    "name": "Armadura Fantasma",
+    "description": "O Pokémon é imune a golpes de contato."
+  },
+  "phantomArsenal": {
+    "name": "Arsenal Fantasma",
+    "description": "Golpes Sombrios têm 10% de chance de colocar Espinhos no campo adversário. Golpes Pedra têm 10% de chance de colocar Pedras Furtivas. Golpes Fantasma têm 5% de chance de infligir Maldição."
+  },
+  "phantomBeast": {
+    "name": "Besta Fantasma",
+    "description": "A evasão do usuário aumenta 1 nível no final de cada turno. Enquanto tiver mais de 1 nível de evasão, seus golpes ganham +1 prioridade. Quando o alvo erra e a evasão é maior que 1, a evasão é resetada e uma estatística do usuário sobe 1 nível."
+  },
+  "piercingSpiral": {
+    "name": "Espiral Perfurante",
+    "description": "Golpes Normal se tornam tipo Dragão ou Lutador, dependendo de qual causa mais dano (aleatório se neutro). Golpes Dragão e Lutador têm 30% de chance de reduzir a Defesa do alvo."
+  },
+  "plagueBreathe": {
+    "name": "Sopro de Peste",
+    "description": "Se este Pokémon tiver menos de 70% de PS ao se retirar, envenena o alvo, com 30% de chance de envenenar gravemente."
+  },
+  "plasmasDomain": {
+    "name": "Domínio Plasma",
+    "description": "Anula todas as habilidades e efeitos de golpes dos Pokémon adversários. Ao entrar em campo, aumenta até duas estatísticas aleatórias que sejam inferiores às do Pokémon adversário."
+  },
+  "polarizeAlpha": {
+    "name": "Polarizar Alfa",
+    "description": "Golpes do tipo Elétrico se tornam tipo Pedra com 1,2× poder. Se pelo menos outros dois Pokémon do time possuem um golpe Magnético, este Pokémon ganha +1 Defesa e +1 Defesa Especial ao sair."
+  },
+  "portalBeast": {
+    "name": "Besta Portal",
+    "description": "Sempre que um Pokémon adversário entra em campo, este Pokémon ganha +1 em três estatísticas aleatórias. Ao se retirar, restaura 25% de seus PS máximos."
+  },
+  "powderKing": {
+    "name": "Rei do Pó",
+    "description": "Golpes Normal se tornam tipo Inseto ou Venenoso (mais forte; aleatório se neutro) e causam 1,2× dano. Golpes Inseto e Venenoso têm 50% de chance a cada golpe de infligir aleatoriamente Envenenamento, Sono, Queimadura ou Paralisia."
+  },
+  "prideOfWeak": {
+    "name": "Orgulho do Fraco",
+    "description": "Derrotar um inimigo concede +1 Velocidade e +1 à estatística de Ataque mais alta do usuário. Golpes com poder base 60 ou menos causam 1,5× dano."
+  },
+  "pyroBullet": {
+    "name": "Projétil Pyro",
+    "description": "Golpes do tipo Normal se tornam tipo Fogo. Golpes do tipo Fogo ganham +1 prioridade."
+  },
+  "quickDrawV2": {
+    "name": "Saque Rápido",
+    "description": "Golpes de Bala, Aura, Bola e Pulso do usuário ganham +1 prioridade e têm 1,2× poder."
+  },
+  "quickHarvest": {
+    "name": "Colheita Rápida",
+    "description": "No final de cada turno, há 30% de chance de restaurar uma Fruta usada. No final da batalha, há 50% de chance de gerar uma Fruta aleatória (Coleta de Frutas)."
+  },
+  "radiatingGamma": {
+    "name": "Gama Radiante",
+    "description": "Golpes Normal se tornam tipo Aço com 1,2× dano. Os ataques do usuário usam sua Defesa para cálculo de dano. Se pelo menos outros dois Pokémon do time possuem um golpe Magnético, o alvo perde 1/8 de seus PS no final de cada turno."
+  },
+  "ragingAxe": {
+    "name": "Machado Furioso",
+    "description": "Golpes cortantes causam 1,5× dano, se tornam tipo Lutador, ignoram aumentos de Defesa e têm 30% de chance de fazer o alvo hesitar."
+  },
+  "rapidFire": {
+    "name": "Fogo Rápido",
+    "description": "Golpes Normal se tornam tipo Aço ou Fogo (mais dano; aleatório se neutro) com 1,2× dano. Golpes Aço e Fogo têm 30% de chance de ganhar +1 prioridade."
+  },
+  "reboundingHurricane": {
+    "name": "Furacão Ricochete",
+    "description": "Ao entrar, a evasão sobe um nível. Se o usuário esquivar de um ataque, ganha Carga de Vento. Usar um golpe Normal ou Voador com Carga de Vento ativa força o alvo a sair e consome a Carga de Vento."
+  },
+  "rocketImpact": {
+    "name": "Impacto Foguete",
+    "description": "Golpes Normal se tornam tipo Fogo. Golpes Fogo ganham +1 de taxa de golpe crítico, e golpes críticos queimam o alvo."
+  },
+  "roseGarden": {
+    "name": "Jardim de Rosas",
+    "description": "Ao entrar, remove riscos e barreiras do adversário. Ativa Campo de Grama. Golpes Grama têm 30% de chance de reduzir o Ataque e Ataque Especial do inimigo em um nível."
+  },
+  "roundTrip": {
+    "name": "Ida e Volta",
+    "description": "Ao se retirar, o usuário restaura 20% de seus PS máximos, e o Pokémon que entra restaura 20% de seus PS máximos."
+  },
+  "ruin": {
+    "name": "Ruína",
+    "description": "Golpes Normal se tornam tipo Sombrio. Golpes Sombrios têm 30% de chance de inverter as mudanças de estatísticas do alvo e 10% de chance de acertar golpe crítico."
+  },
+  "sAndMummy": {
+    "name": "S&Múmia",
+    "description": "Golpes de contato têm 30% de chance de infligir Aperto ao alvo. O usuário restaura 1/16 de seus PS máximos a cada turno."
+  },
+  "scalesOfJustice": {
+    "name": "Balança da Justiça",
+    "description": "Ataques causam 2,5× de dano contra Pokémon do tipo Sombrio."
+  },
+  "scorchedEarth": {
+    "name": "Terra Arrasada",
+    "description": "Se um terreno está ativo, o dano de ataque é aumentado em 1,5×. Tem 30% de chance de destruir o terreno, aumentar a Velocidade em um nível e queimar o alvo."
+  },
+  "scorchingBurster": {
+    "name": "Explosão Escaldante",
+    "description": "Golpes Normal se tornam tipo Fogo. Golpes Fogo têm 30% de chance de queimar e +1 de taxa de golpe crítico. Golpes Água e Gelo não afetam o usuário."
+  },
+  "scorchingJustice": {
+    "name": "Justiça Abrasadora",
+    "description": "Os golpes de ataque do usuário têm 30% de chance de queimar o alvo. Alvos queimados recebem 1,5× de dano."
+  },
+  "shadowFlame": {
+    "name": "Chama Sombria",
+    "description": "Golpes do tipo Fogo e Sombrio do usuário compartilham vantagens de tipo. Golpes Normal se tornam tipo Sombrio com 1,2× dano."
+  },
+  "shadowMartyr": {
+    "name": "Mártir Sombrio",
+    "description": "Quando o usuário é derrotado, o Pokémon que o substitui restaura 33% de seus PS máximos e ganha +1 nível em sua estatística mais alta e uma estatística aleatória."
+  },
+  "shadowReach": {
+    "name": "Alcance Sombrio",
+    "description": "Os golpes de aprisionamento do usuário causam dano igual a 1/6 dos PS máximos do alvo no final de cada turno."
+  },
+  "silentAssassin": {
+    "name": "Assassino Silencioso",
+    "description": "No final de cada turno, a evasão do usuário sobe 1 nível, até um máximo de 3. Ao atingir 3, a evasão é resetada para 0 e todas as estatísticas sobem 1 nível."
+  },
+  "silentBlade": {
+    "name": "Lâmina Silenciosa",
+    "description": "Ao atacar, usa a Velocidade do inimigo como base para calcular a defesa."
+  },
+  "slimeAbsorb": {
+    "name": "Absorção de Gosma",
+    "description": "Quando o usuário derrota o alvo, restaura 1/4 de seus PS máximos e aumenta uma estatística aleatória."
+  },
+  "smash22": {
+    "name": "Golpe 22",
+    "description": "Golpes Normal se tornam tipo Lutador ou Fantasma (mais dano; aleatório se neutro). Golpes Lutador têm 10% de chance de trocar a Defesa e Def. Esp. do alvo. Golpes Fantasma têm 10% de trocar o Ataque e At. Esp. do alvo."
+  },
+  "soulTax": {
+    "name": "Imposto da Alma",
+    "description": "No final de cada turno, o Pokémon adversário perde 1/16 de seus PS máximos."
+  },
+  "spectralMist": {
+    "name": "Névoa Espectral",
+    "description": "Golpes Fantasma têm 30% de chance de amaldiçoar o alvo. No final de cada turno, o usuário tem 25% de chance de restaurar 1/8 de seus PS máximos."
+  },
+  "spellDrain": {
+    "name": "Dreno de Feitiço",
+    "description": "O usuário tem 30% de chance de anular golpes de estado do alvo. Ao anular, restaura 15% de seus PS máximos e aumenta uma estatística aleatória em um nível."
+  },
+  "spellbreakerBlade": {
+    "name": "Lâmina Quebra-Feitiço",
+    "description": "Ao entrar em batalha, o usuário ganha uma condição de estado aleatória (exceto Sono e Congelamento). Ao atacar com uma condição de estado, seus ataques sempre acertam golpes críticos e a condição é curada."
+  },
+  "spellcastersFluff": {
+    "name": "Pelúcia do Feiticeiro",
+    "description": "O usuário não recebe dano do primeiro ataque que recebe cada vez que entra em batalha."
+  },
+  "spikedShell": {
+    "name": "Casco com Espinhos",
+    "description": "Quando o usuário é atingido por um golpe de contato, o atacante recebe dano igual a 1/6 de seus PS máximos. O usuário recebe 50% menos dano de golpes físicos."
+  },
+  "theGrimMiller": {
+    "name": "O Moleiro Sombrio",
+    "description": "Golpes Fantasma retiram 2 PP do último golpe usado pelo alvo. Golpes Normal se tornam tipo Fantasma."
+  },
+  "theUndeadKing": {
+    "name": "O Rei Morto-Vivo",
+    "description": "Quando este Pokémon é derrotado, derrota um Pokémon aliado aleatório que conheça um golpe Servo (se existir), restaura 50% de seus PS e aumenta duas estatísticas aleatórias."
+  },
+  "thousandEyesLock": {
+    "name": "Bloqueio de Mil Olhos",
+    "description": "Enquanto esta habilidade está ativa, o alvo não pode trocar nem usar o mesmo golpe duas vezes seguidas. A cada turno, uma estatística aleatória do alvo desce um nível e a mesma sobe um nível para o usuário."
+  },
+  "thousandSouls": {
+    "name": "Mil Almas",
+    "description": "Ao entrar, este Pokémon copia a habilidade de um membro derrotado aleatório do time e restaura 1/8 de seus PS."
+  },
+  "thousandYears": {
+    "name": "Mil Anos",
+    "description": "A cada turno, uma estatística aleatória do alvo desce um nível. Se pelo menos outros dois Pokémon do time possuem um golpe Temporal, duas estatísticas aleatórias descem um nível."
+  },
+  "threeHeadedBite": {
+    "name": "Mordida de Três Cabeças",
+    "description": "Golpes Normal se tornam tipo Sombrio ou Fogo (mais forte; aleatório se neutro). Golpes Sombrio e Fogo se tornam golpes de mordida e acertam três vezes com 40% do poder."
+  },
+  "timeRoulette": {
+    "name": "Roleta do Tempo!",
+    "description": "Ao atacar, há 50% de chance de o ataque causar o triplo do dano. Caso contrário, o usuário sofre recuo igual a 50% do dano causado."
+  },
+  "timeWizardsBlessing": {
+    "name": "Bênção do Mago do Tempo",
+    "description": "No final de cada turno, uma estatística aleatória sobe. Se pelo menos outros dois Pokémon do time possuem um golpe Temporal, o usuário também restaura 1/8 de seus PS máximos e sobe outra estatística."
+  },
+  "timelineMagic": {
+    "name": "Magia da Linha do Tempo",
+    "description": "Ao receber dano, o usuário usa a estatística de Defesa mais alta. Ao causar dano, o alvo usa a mais baixa."
+  },
+  "tombRaider": {
+    "name": "Saqueador de Tumbas",
+    "description": "Golpes Normal se tornam tipo Sombrio com 1,2× dano. Golpes Sombrios têm 30% de chance de roubar o item do alvo. Segurando um item, a Velocidade sobe um nível ao entrar e golpes Sombrios causam 1,3× dano."
+  },
+  "toonChaos": {
+    "name": "Caos Toon",
+    "description": "Golpes Normal se tornam tipo Fada ou Sombrio (mais forte; aleatório se neutro). Golpes Fada e Sombrio causam 1,2× dano e têm 30% de chance de forçar o alvo a sair."
+  },
+  "toonElectricArchfiend": {
+    "name": "Arquidemônio Elétrico Toon",
+    "description": "Golpes Normal se tornam tipo Elétrico ou Sombrio (mais forte; aleatório se neutro). Golpes Elétrico têm 30% de chance de ganhar +1 prioridade. Golpes Sombrio têm 10% de chance de golpe crítico."
+  },
+  "toonGunslinger": {
+    "name": "Pistoleiro Toon",
+    "description": "Golpes Normal, Dragão, Sombrio e Fada do usuário têm 50% de chance de ganhar +1 prioridade e 10% de chance de golpe crítico."
+  },
+  "toonIllusion": {
+    "name": "Ilusão Toon",
+    "description": "Quando o alvo erra um ataque, o usuário tem 30% de chance de criar um Substituto com 25% de seus PS máximos. Ao entrar, a evasão sobe um nível."
+  },
+  "toonPlotArmor": {
+    "name": "Armadura de Enredo Toon",
+    "description": "Golpes Normal se tornam tipo Água. Golpes Água têm 10% de chance de ativar um efeito de Proteção."
+  },
+  "toonPounding": {
+    "name": "Pancada Toon",
+    "description": "Em vez da Defesa do alvo, ataques Aço e Fada usam a estatística mais baixa do alvo para cálculo de dano."
+  },
+  "toonSynergy": {
+    "name": "Sinergia Toon",
+    "description": "Golpes Normal se tornam tipo Psíquico ou Fada (mais forte; aleatório se neutro). Ataques Psíquico e Fada têm 10% de chance por Pokémon com golpes Toon de aumentar todas as estatísticas do usuário."
+  },
+  "topazLifeorb": {
+    "name": "Orbe Vital Topázio",
+    "description": "Os ataques do usuário causam 1,3× dano e têm 10% de chance de aumentar o Ataque, mas o usuário recebe 15% de dano a cada ataque."
+  },
+  "torrentialTribute": {
+    "name": "Tributo Torrencial",
+    "description": "Ao entrar, o usuário fica Carregado de Água. Se atingido enquanto carregado, não recebe dano e o atacante perde 1/8 de seus PS máximos; ambos efeitos apenas uma vez por batalha. Golpes Normal se tornam tipo Água com 1,2× dano."
+  },
+  "travelBuddiesBlue": {
+    "name": "Companheiros de Viagem Azul",
+    "description": "Golpes Normal se tornam tipo Voador. Golpes Voador ganham +1 prioridade. Se pelo menos outros dois Pokémon do time possuem golpes União, golpes Voador também curam o usuário em 50% do dano causado."
+  },
+  "travelBuddiesRed": {
+    "name": "Companheiros de Viagem Vermelho",
+    "description": "Golpes Normal se tornam tipo Voador com +1 prioridade. Se pelo menos outros dois Pokémon do time possuem golpes União, os golpes deste Pokémon também ganham 1,5× de poder."
+  },
+  "tripleBurst": {
+    "name": "Rajada Tripla",
+    "description": "Ataques que não são multi-golpe acertam três vezes com 55% do poder cada."
+  },
+  "tripleCoreEngine": {
+    "name": "Motor de Triplo Núcleo",
+    "description": "Todos os golpes multi-golpe agem como Triplo Axel (3 golpes com poder crescente e precisão decrescente). Golpes de golpe único causam 1,2× dano."
+  },
+  "twinBlessings": {
+    "name": "Bênçãos Gêmeas",
+    "description": "As chances de efeitos secundários são dobradas. Golpes Normal se tornam tipo Fada com 1,2× dano. Golpes Fada têm 30% de chance de curar 50% do dano causado."
+  },
+  "twinCoreBurst": {
+    "name": "Explosão de Núcleo Duplo",
+    "description": "Se o usuário tiver uma condição de estado, golpes têm 30% de chance de acertar duas vezes e curar a condição."
+  },
+  "twistedLove": {
+    "name": "Amor Distorcido",
+    "description": "O usuário só recebe dano de golpes supereficazes. Não pode ser curado (Frutas, golpes e itens não têm efeito). Após atacar, causa dano igual a 1/8 de seus PS máximos ao alvo. A cada turno, perde 1/4 de seus PS máximos."
+  },
+  "tyrantsCoin": {
+    "name": "Moeda do Tirano",
+    "description": "Golpes de dano que não são multi-golpe têm 50% de chance de acertar duas vezes e 50% de chance de causar recuo de 20% dos PS máximos ao usuário."
+  },
+  "ultimateDefense": {
+    "name": "Defesa Definitiva",
+    "description": "Todos os golpes causam 50% menos dano, mas este Pokémon não pode usar golpes de estado."
+  },
+  "uncontrollablePower": {
+    "name": "Poder Incontrolável",
+    "description": "Possui Robustez. Se os PS do usuário são exatamente 1, todos os golpes ganham +3 prioridade, causam o dobro de dano e curam o usuário em 50% do dano causado."
+  },
+  "undeadArchfiend": {
+    "name": "Arquidemônio Morto-Vivo",
+    "description": "Este Pokémon não é afetado por golpes de estado ou efeitos secundários do alvo. Golpes Normal se tornam tipo Fantasma com 1,2× dano."
+  },
+  "undeadAvenger": {
+    "name": "Vingador Morto-Vivo",
+    "description": "Ganha +10% de Ataque e Velocidade por cada membro do time derrotado."
+  },
+  "underworldThicket": {
+    "name": "Matagal do Submundo",
+    "description": "Quando um Pokémon adversário faz contato, recebe recuo de 1/8 de seus PS máximos e tem 10% de chance de sofrer Aperto."
+  },
+  "undyingSoul": {
+    "name": "Alma Imortal",
+    "description": "O usuário ganha +1 em uma estatística aleatória por cada Pokémon tipo Normal ou Lutador no time. Se derrotado, revive um Pokémon aleatório tipo Normal ou Lutador do time. Este efeito só pode ser usado uma vez por batalha."
+  },
+  "unitedJungle": {
+    "name": "Selva Unida",
+    "description": "Cura 25% de PS ao substituir um aliado derrotado. Ganha +10 de poder base por cada Pokémon tipo Grama derrotado no time."
+  },
+  "unstoppableTitan": {
+    "name": "Titã Imparável",
+    "description": "Golpes de contato do usuário ignoram resistências de tipo e causam 1,2× dano. O dano é calculado contra a estatística mais baixa do alvo em vez da Defesa ou Def. Esp."
+  },
+  "vileOvergrowth": {
+    "name": "Crescimento Vil",
+    "description": "Golpes Grama e Sombrio compartilham vantagens de tipo. Golpes Grama têm 30% de chance de plantar semente no alvo, e golpes Sombrio 10% de chance de adormecer."
+  },
+  "voidBanishment": {
+    "name": "Banimento do Vazio",
+    "description": "Se o usuário entra após um aliado ser derrotado, força o alvo a trocar. Se o alvo é tipo Sombrio, primeiro recebe dano de 1/6 de seus PS máximos. Golpes Normal se tornam tipo Sombrio com 1,2× dano e 20% de chance de remover o item do alvo."
+  },
+  "volcanicCore": {
+    "name": "Núcleo Vulcânico",
+    "description": "Golpes Normal se tornam tipo Fogo com 1,2× dano. Quando o usuário usa um golpe de estado, causa dano igual a 1/8 dos PS máximos do alvo."
+  },
+  "whirlwindAxe": {
+    "name": "Machado Turbilhão",
+    "description": "Golpes Normal se tornam tipo Voador. Golpes Voador têm 30% de chance de forçar o alvo a sair. Se o alvo for forçado a sair, o usuário restaura 1/8 de seus PS máximos."
+  },
+  "whiteLightning": {
+    "name": "Relâmpago Branco",
+    "description": "Golpes Normal se tornam tipo Elétrico com 1,2× poder. Golpes Dragão ganham +1 de taxa de golpe crítico. Golpes Dragão e Elétrico têm 30% de chance de paralisar o alvo."
+  },
+  "windboltDiscard": {
+    "name": "Descarte Eólico",
+    "description": "Quando o usuário usa um golpe de estado, consome uma Fruta aleatória e causa dano igual a 20% dos PS máximos do alvo."
+  },
+  "windstormDiscard": {
+    "name": "Descarte Tempestade",
+    "description": "Os ataques do usuário têm 30% de chance de descartar um item aleatório. Se descartar, o ataque causa 2,5× dano."
+  },
+  "zanySplasher": {
+    "name": "Esguichador Maluco",
+    "description": "Golpes Normal se tornam tipo Fada ou Água (mais forte; aleatório se iguais). Golpes Fada têm 5% de chance de golpe crítico. Golpes Água têm 5% de chance de infligir Redemoinho. A evasão sobe um nível ao entrar."
+  },
+  "zombieColossus": {
+    "name": "Colosso Zumbi",
+    "description": "Uma vez por batalha, quando este Pokémon é derrotado, revive com 50% de seus PS máximos."
   }
 }

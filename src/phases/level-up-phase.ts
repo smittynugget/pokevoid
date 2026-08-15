@@ -10,8 +10,14 @@ import { PlayerPartyMemberPokemonPhase } from "./player-party-member-pokemon-pha
 import { LearnMovePhase } from "./learn-move-phase";
 import {PermaType} from "#app/modifier/perma-modifiers";
 import {Moves} from "#enums/moves";
+import { getYuMoveRange, pickThreeYuMovesWithFallback } from "#app/data/yu-move-utils.js";
+import { YuMovePhase } from "#app/phases/yu-move-phase.js";
 import { BattleStat } from "#app/data/battle-stat.ts";
 import { Unlockables } from "#app/system/unlockables";
+import { ensureDuelmonBandRolled, isDuelmonSpecies } from "#app/data/duelmon-rankups";
+import { RankUpPhase } from "#app/phases/rank-up-phase";
+import { RandomRankUpPhase } from "#app/phases/random-rank-up-phase";
+import Overrides from "../overrides";
 
 export class LevelUpPhase extends PlayerPartyMemberPokemonPhase {
   private lastLevel: integer;
@@ -43,6 +49,7 @@ export class LevelUpPhase extends PlayerPartyMemberPokemonPhase {
     }
     else {
       this.end();
+      return;
     }
     if (this.scene.expParty === ExpNotification.DEFAULT) {
       this.scene.playSound("level_up_fanfare");
@@ -53,11 +60,9 @@ export class LevelUpPhase extends PlayerPartyMemberPokemonPhase {
 
       this.scene.ui.getMessageHandler().promptLevelUpStats(this.partyMemberIndex, prevStats, false).then(() => this.end());
     }
-    if (this.lastLevel < 100) {
-      const levelMoves = this.getPokemon().getLevelMoves(this.lastLevel + 1);
-      for (const lm of levelMoves) {
-        this.scene.unshiftPhase(new LearnMovePhase(this.scene, this.partyMemberIndex, lm[1]));
-      }
+    const levelMoves = this.getPokemon().getLevelMoves(this.lastLevel + 1);
+    for (const lm of levelMoves) {
+      this.scene.unshiftPhase(new LearnMovePhase(this.scene, this.partyMemberIndex, lm[1]));
     }
     if(this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_METRONOME_LEVELUP) && (this.lastLevel + 1) % 7 === 0) {
       this.scene.unshiftPhase(new LearnMovePhase(this.scene, this.partyMemberIndex, Moves.METRONOME));
@@ -72,7 +77,76 @@ export class LevelUpPhase extends PlayerPartyMemberPokemonPhase {
         this.scene.unshiftPhase(new LearnMovePhase(this.scene, this.partyMemberIndex, Moves.SMITTY_NUGGETS));
       }
     }
-    if (!pokemon.pauseEvolutions) {
+    const speciesId = pokemon.species.speciesId;
+    let queuedDuelmonRankUp = false;
+    if (isDuelmonSpecies(speciesId) && !pokemon.isEvolutionLocked()) {
+      ensureDuelmonBandRolled(this.scene, pokemon as PlayerPokemon);
+      const nextSlot = pokemon.duelmonBandsConsumed;
+      const threshold = pokemon.duelmonBandThresholds[nextSlot];
+      const crossed = Overrides.FORCE_DUELMON_RANK_UP_OVERRIDE
+        || (threshold !== undefined && this.lastLevel < threshold && threshold <= this.level);
+      if (crossed) {
+        queuedDuelmonRankUp = true;
+        this.scene.unshiftPhase(new RankUpPhase(this.scene, pokemon as PlayerPokemon, this.lastLevel));
+      }
+    }
+    let queuedRandomRankUp = false;
+    if (!queuedDuelmonRankUp && !pokemon.isEvolutionLocked()) {
+      const band = Math.floor((this.level - 1) / 30) as integer;
+
+      const alreadyUsedThisBand = pokemon.randomRankUpBandUsed === band;
+      const alreadyPendingThisBand = pokemon.randomRankUpBandPending === band;
+      const partyBandConsumedOrPending = this.scene.getParty().some(p =>
+        p.randomRankUpBandUsed === band || p.randomRankUpBandPending === band
+      );
+      const effectiveBst = pokemon.getSpeciesForm().baseTotal;
+
+      if ((!alreadyUsedThisBand || Overrides.BYPASS_RANDOM_RANK_UP_BAND_OVERRIDE) && !alreadyPendingThisBand && !partyBandConsumedOrPending && effectiveBst < 800) {
+
+        let chanceHit = false;
+        this.scene.executeWithSeedOffset(() => {
+          const rawDenom = Overrides.RANDOM_RANK_UP_CHANCE_DENOMINATOR_OVERRIDE || 100;
+          const denom = Math.max(1, rawDenom);
+          chanceHit = Overrides.FORCE_RANDOM_RANK_UP_OVERRIDE || !Utils.randSeedInt(denom);
+        }, ((pokemon.id << 10) ^ (band << 4) ^ (this.level << 1) ^ this.lastLevel) as integer, this.scene.waveSeed);
+
+        if (chanceHit) {
+          pokemon.randomRankUpBandPending = band;
+          queuedRandomRankUp = true;
+          this.scene.unshiftPhase(new RandomRankUpPhase(this.scene, pokemon as PlayerPokemon, this.lastLevel, band));
+        }
+      }
+    }
+
+    if (!queuedDuelmonRankUp && !queuedRandomRankUp && isDuelmonSpecies(speciesId)) {
+      const yuRange = getYuMoveRange(this.scene);
+      if (yuRange >= 0 && pokemon.yuMoveRangePending === yuRange && pokemon.yuMoveRangeUsed !== yuRange) {
+        let yuCheckPassed = false;
+        if (Overrides.FORCE_YU_MOVE_CHECK_OVERRIDE) {
+          yuCheckPassed = true;
+        } else {
+          this.scene.executeWithSeedOffset(() => {
+            yuCheckPassed = Utils.randSeedInt(100) < 10;
+          }, ((pokemon.id << 10) ^ (yuRange << 4) ^ (this.level << 1)) as integer, this.scene.waveSeed);
+        }
+
+        if (yuCheckPassed) {
+          const choices = pickThreeYuMovesWithFallback(this.scene, pokemon as PlayerPokemon);
+          if (choices.length >= 1) {
+            this.scene.unshiftPhase(new YuMovePhase(this.scene, pokemon as PlayerPokemon, choices, () => {
+              pokemon.yuMoveRangeUsed = yuRange;
+              pokemon.yuMoveRangePending = null;
+            }));
+          } else {
+            pokemon.yuMoveRangePending = null;
+          }
+        } else {
+          pokemon.yuMoveRangePending = null;
+        }
+      }
+    }
+
+    if (!queuedRandomRankUp && (!pokemon.pauseEvolutions || Overrides.FORCE_EVOLUTION_OVERRIDE)) {
       const evolution = pokemon.getEvolution();
       if (evolution) {
         this.scene.unshiftPhase(new EvolutionPhase(this.scene, pokemon as PlayerPokemon, evolution, this.lastLevel));

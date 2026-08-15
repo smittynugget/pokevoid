@@ -49,5 +49,6 @@
   "UNPAUSE_EVOLUTION": "恢復進化",
   "REVIVE": "復活",
   "RENAME": "改名",
-  "pausedEvolutions": "{{pokemonName}}的進化已暫停。"
+  "pausedEvolutions": "{{pokemonName}}的進化已暫停。",
+  "quickInfo": "快速資訊"
 }

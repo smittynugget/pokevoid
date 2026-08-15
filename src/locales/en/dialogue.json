@@ -1086,6 +1086,35 @@
       "1": "I suppose it must seem that I am doing something terrible. I don't expect you to understand.\n$But I must provide the Galar region with limitless energy to ensure everlasting prosperity."
     }
   },
+  "pegasus_boss_1": {
+    "encounter": {
+      "1": "Ah, a new challenger approaches my castle...$How delightful. I've been ever so bored since Duelist Kingdom.$You see, my Millennium Eye allows me to peer into the very depths of your strategy...$Every card you hold, every move you plan — I've already seen it all.$Now then... shall we begin this Shadow Game?",
+      "2": "Welcome, welcome to my world of illusions!$I must say, you've made it quite far for someone without a Millennium Item.$But tell me... do you truly believe you can defeat someone who sees all?$My Toon World awaits, and my creatures are simply dying to play.$Let us see if you're worthy of my attention, hmm?",
+      "3": "Oh my, what an unexpected guest!$You remind me of a boy I once knew... foolish, brave, and utterly predictable.$The Millennium Eye has shown me countless futures, and in each one...$...your defeat is absolute. But do try to make it entertaining, won't you?"
+    },
+    "victory": {
+      "1": "Im...possible! The Millennium Eye showed no path to this outcome!$How could you... my perfect strategies... my Toon World...$Perhaps I underestimated the power that flows through you.$Very well. You've earned this victory... but remember — in the Shadow Realm, nothing is ever truly over.",
+      "2": "No! This cannot be!$My visions... they were so clear... so absolute...$You've shattered my illusions with nothing but raw determination.$I concede... for now. But the shadows have long memories, dear challenger."
+    },
+    "defeat": {
+      "1": "As I foresaw... your mind was an open book from the very first move.$Every thought, every hesitation — the Millennium Eye revealed it all.$Now then, your penalty game awaits...$Shall we play another game? I do so enjoy watching hope fade from a challenger's eyes.",
+      "2": "Ooh, how delicious! Your despair is absolutely exquisite!$Did you truly think you could challenge the creator of Duel Monsters himself?$The Shadow Realm welcomes you with open arms...$Don't worry — time passes differently there. You'll barely notice the eternity."
+    }
+  },
+  "pegasus_boss_2": {
+    "encounter": {
+      "1": "Ah, you've returned! How persistent of you.$I must confess, our last encounter left quite an impression...$This time, I've prepared something truly special. My Toons have been training, you see.$And I've unlocked secrets of the Millennium Eye that I'd never dared use before.$The void between our worlds grows thin... can you feel it? This will be our final game.",
+      "2": "Well, well... the one who defied my visions returns.$I won't make the same mistake twice, I assure you.$My Thousand-Eyes Restrict sees all, binds all, consumes all...$The shadows themselves bow before its gaze.$Come — let us finish what we started in Duelist Kingdom!"
+    },
+    "victory": {
+      "1": "You've surpassed even my most impossible visions...$The Millennium Eye... it weeps at what it cannot comprehend.$Perhaps the void chose more wisely than I ever could.$Take your victory, champion. You've earned something beyond mere power — you've earned my respect.",
+      "2": "Impossible... twice now... TWICE!$The shadows recede... the Eye grows dim...$You are something the Millennium Items never predicted.$Go forth. Whatever destiny awaits you... it fears you more than I ever could."
+    },
+    "defeat": {
+      "1": "The Millennium Eye sees all endings, dear challenger.$And yours was written in shadow long before you ever drew your first hand.$Rest now in my Toon World... it's quite comfortable once you stop screaming.$Perhaps in another timeline, another cycle... but not this one. Never this one.",
+      "2": "Did you truly believe the outcome would differ a second time?$The Eye grows stronger with each soul it claims...$Your energy will fuel my visions for eons to come.$Farewell, little duelist. The shadows embrace you now."
+    }
+  },
   "star_boss_penny_1": {
     "encounter": {
       "1": "I'm the big boss of Team Star. The name's Cassiopeia. \n$Now, bow down before the overwhelming might of Team Star's founder!"
@@ -4702,6 +4731,18 @@
       "101": "Hey, you ever wonder what happens in Professor Oak's lab at 3 AM? Well, I snuck in last night and replaced all his research papers with Guy Fieri fan fiction. Now he's giving a lecture about the 'evolutionary implications of Flavortown.' The other professors are too scared to question it.",
       "102": "Just spent the morning possessing random street signs. Made them all give passive-aggressive life advice instead of directions. 'Turn left, unlike how your ex turned right out of your life' and 'Yield to oncoming traffic and your emotional baggage.' Traffic's been chaos, but three people had breakthrough therapy moments at the intersection.",
       "103": "Started teaching philosophy to the vending machines in the train station. Now they only accept money after you answer their riddles about free will. There's a businessman who's been arguing with a machine for two hours about whether free choice exists if all the good snacks are sold out. The machine's winning."
+    }
+  },
+  "tutorial_blue": {
+    "encounter": {
+      "1": "The world is coming to an end, Red.\nThere's nothing we can do now."
+    },
+    "void_power": {
+      "1": "Let me show you the void's true power!"
+    },
+    "defeat": {
+      "1": "You beat me Red... I just wish you were able to do it when it mattered most...",
+      "2": "This place isn't real. The void trapped you here so you'd never have to face what's coming. Don't let it win. Wake up. WAKE UP!"
     }
   }
 }

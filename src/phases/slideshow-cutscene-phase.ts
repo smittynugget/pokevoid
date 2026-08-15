@@ -4,6 +4,7 @@ import { Mode } from "#app/ui/ui.js";
 import { SlideshowController, SlideConfig, SlideshowSceneAdapter } from "#app/utils/slideshow-controller.js";
 import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays.js";
 import { ensureCutsceneImagesLoaded, unloadCutsceneImages } from "#app/utils/cutscene-images.js";
+import { TitlePhase } from "#app/phases/title-phase.js";
 import * as Utils from "#app/utils.js";
 
 export interface SlideshowCutsceneConfig {
@@ -29,6 +30,7 @@ export class SlideshowCutscenePhase extends Phase {
   private currentSlideIndex: number = 0;
   private currentSlideTextComplete: boolean = false;
   private currentSlideStartedAt: number = 0;
+  private _justCompletedText: boolean = false;
 
   constructor(scene: BattleScene, config: SlideshowCutsceneConfig) {
     super(scene);
@@ -56,6 +58,10 @@ export class SlideshowCutscenePhase extends Phase {
 
   public nextSlide(): void {
     this.slideshowController?.next();
+  }
+
+  public isTextReadyForAdvance(delayMs: number = 250): boolean {
+    return this.slideshowController?.isTextReadyForAdvance(delayMs) ?? false;
   }
 
   public isManualAdvanceBlocked(): boolean {
@@ -90,7 +96,7 @@ export class SlideshowCutscenePhase extends Phase {
   start(): void {
     super.start();
 
-    if (this.scene.disableCutscenes) {
+    if (this.scene.disableCutscenes || TitlePhase.debugTutorialFlowActive) {
       this.config.onComplete?.();
       this.end();
       return;

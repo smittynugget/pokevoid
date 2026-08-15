@@ -47,5 +47,11 @@
   "arenaOnRemove": "El efecto de {{moveName}} se ha desvanecido.",
   "arenaOnRemovePlayer": "El efecto de {{moveName}} se ha desvanecido\nen tu lado.",
   "arenaOnRemoveEnemy": "El efecto de {{moveName}} se ha desvanecido\nen el lado rival.",
-  "toxicSpikesActivateTrapPoison": "¡{{pokemonNameWithAffix}} absorbió {{moveName}}!"
+  "toxicSpikesActivateTrapPoison": "¡{{pokemonNameWithAffix}} absorbió {{moveName}}!",
+  "safeguardOnAdd": "¡Todo el campo se cubrió con un velo místico!",
+  "safeguardOnAddPlayer": "¡Tu equipo se cubrió con un velo místico!",
+  "safeguardOnAddEnemy": "¡El equipo rival se cubrió con un velo místico!",
+  "safeguardOnRemove": "¡El campo ya no está protegido por Velo Sagrado!",
+  "safeguardOnRemovePlayer": "¡Tu equipo ya no está protegido por Velo Sagrado!",
+  "safeguardOnRemoveEnemy": "¡El equipo rival ya no está protegido por Velo Sagrado!"
 }

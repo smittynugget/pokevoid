@@ -194,6 +194,9 @@ export class GlitchPieceTrigger extends SpeciesFormChangeTrigger {
   }
 
   canChange(pokemon: Pokemon): boolean {
+    if (pokemon.scene.gameData.tutorialOnboardActive) {
+      return !pokemon.species.forms[pokemon.formIndex].formKey.includes("glitch");
+    }
     const glitchPieceModifier = pokemon.scene.findModifier(m => m instanceof GlitchPieceModifier) as GlitchPieceModifier;
     if ((glitchPieceModifier && glitchPieceModifier.getStackCount() >= this.requiredCount) && !pokemon.species.forms[pokemon.formIndex].formKey.includes("glitch")) {
       return true;
@@ -388,8 +391,11 @@ export class SpeciesFormChangeRevertWeatherFormTrigger extends SpeciesFormChange
 }
 
 export function getSpeciesFormChangeMessage(pokemon: Pokemon, formChange: SpeciesFormChange, preName: string): string {
+  const isAltBuild = formChange.formKey === SpeciesFormKey.ALT_BUILD;
+  if (isAltBuild) {
+    return i18next.t("battle:rankUpSelfComplete", { pokemonName: pokemon.name });
+  }
   if (pokemon.species.forms && pokemon.species.forms.length > 0) {
-
     const isMega = formChange.formKey.indexOf(SpeciesFormKey.MEGA) > -1;
     const isGmax = formChange.formKey.indexOf(SpeciesFormKey.GIGANTAMAX) > -1;
     const isEmax = formChange.formKey.indexOf(SpeciesFormKey.ETERNAMAX) > -1;
@@ -445,6 +451,10 @@ export const pokemonFormChanges: PokemonFormChanges = {
   [Species.PIKACHU]: [
     new SpeciesFormChange(Species.PIKACHU, "", SpeciesFormKey.GIGANTAMAX, new SpeciesFormChangeItemTrigger(FormChangeItem.MAX_MUSHROOMS)),
     new SpeciesFormChange(Species.PIKACHU, "partner", SpeciesFormKey.GIGANTAMAX, new SpeciesFormChangeItemTrigger(FormChangeItem.MAX_MUSHROOMS))
+  ],
+  [Species.RAICHU]: [
+    new SpeciesFormChange(Species.RAICHU, "", SpeciesFormKey.MEGA_X, new SpeciesFormChangeItemTrigger(FormChangeItem.RAICHUITE_X)),
+    new SpeciesFormChange(Species.RAICHU, "", SpeciesFormKey.MEGA_Y, new SpeciesFormChangeItemTrigger(FormChangeItem.RAICHUITE_Y))
   ],
   [Species.MEOWTH]: [
     new SpeciesFormChange(Species.MEOWTH, "", SpeciesFormKey.GIGANTAMAX, new SpeciesFormChangeItemTrigger(FormChangeItem.MAX_MUSHROOMS))
@@ -549,7 +559,8 @@ export const pokemonFormChanges: PokemonFormChanges = {
     new SpeciesFormChange(Species.BANETTE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.BANETTITE))
   ],
   [Species.ABSOL]: [
-    new SpeciesFormChange(Species.ABSOL, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ABSOLITE))
+    new SpeciesFormChange(Species.ABSOL, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ABSOLITE)),
+    new SpeciesFormChange(Species.ABSOL, "", SpeciesFormKey.MEGA_Z, new SpeciesFormChangeItemTrigger(FormChangeItem.ABSOLITE_Z))
   ],
   [Species.GLALIE]: [
     new SpeciesFormChange(Species.GLALIE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.GLALITITE))
@@ -584,10 +595,12 @@ export const pokemonFormChanges: PokemonFormChanges = {
     new SpeciesFormChange(Species.LOPUNNY, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.LOPUNNITE))
   ],
   [Species.GARCHOMP]: [
-    new SpeciesFormChange(Species.GARCHOMP, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.GARCHOMPITE))
+    new SpeciesFormChange(Species.GARCHOMP, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.GARCHOMPITE)),
+    new SpeciesFormChange(Species.GARCHOMP, "", SpeciesFormKey.MEGA_Z, new SpeciesFormChangeItemTrigger(FormChangeItem.GARCHOMPITE_Z))
   ],
   [Species.LUCARIO]: [
-    new SpeciesFormChange(Species.LUCARIO, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.LUCARIONITE))
+    new SpeciesFormChange(Species.LUCARIO, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.LUCARIONITE)),
+    new SpeciesFormChange(Species.LUCARIO, "", SpeciesFormKey.MEGA_Z, new SpeciesFormChangeItemTrigger(FormChangeItem.LUCARIONITE_Z))
   ],
   [Species.ABOMASNOW]: [
     new SpeciesFormChange(Species.ABOMASNOW, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ABOMASITE))
@@ -666,7 +679,8 @@ export const pokemonFormChanges: PokemonFormChanges = {
   ],
   [Species.GRENINJA]: [
     new SpeciesFormChange(Species.GRENINJA, "battle-bond", "ash", new SpeciesFormChangeManualTrigger(), true),
-    new SpeciesFormChange(Species.GRENINJA, "ash", "battle-bond", new SpeciesFormChangeManualTrigger(), true)
+    new SpeciesFormChange(Species.GRENINJA, "ash", "battle-bond", new SpeciesFormChangeManualTrigger(), true),
+    new SpeciesFormChange(Species.GRENINJA, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.GRENINJITE))
   ],
   [Species.PALAFIN] : [
     new SpeciesFormChange(Species.PALAFIN, "zero", "hero", new SpeciesFormChangeManualTrigger(), true),
@@ -685,7 +699,12 @@ export const pokemonFormChanges: PokemonFormChanges = {
     new SpeciesFormChange(Species.ZYGARDE, "50-pc", "complete", new SpeciesFormChangeManualTrigger(), true),
     new SpeciesFormChange(Species.ZYGARDE, "complete", "50-pc", new SpeciesFormChangeManualTrigger(), true),
     new SpeciesFormChange(Species.ZYGARDE, "10-pc", "complete", new SpeciesFormChangeManualTrigger(), true),
-    new SpeciesFormChange(Species.ZYGARDE, "complete", "10-pc", new SpeciesFormChangeManualTrigger(), true)
+    new SpeciesFormChange(Species.ZYGARDE, "complete", "10-pc", new SpeciesFormChangeManualTrigger(), true),
+    new SpeciesFormChange(Species.ZYGARDE, "50", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ZYGARDITE)),
+    new SpeciesFormChange(Species.ZYGARDE, "10", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ZYGARDITE)),
+    new SpeciesFormChange(Species.ZYGARDE, "50-pc", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ZYGARDITE)),
+    new SpeciesFormChange(Species.ZYGARDE, "10-pc", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ZYGARDITE)),
+    new SpeciesFormChange(Species.ZYGARDE, "complete", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ZYGARDITE))
   ],
   [Species.DIANCIE]: [
     new SpeciesFormChange(Species.DIANCIE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.DIANCITE))
@@ -738,9 +757,6 @@ export const pokemonFormChanges: PokemonFormChanges = {
   [Species.DELPHOX]: [
     new SpeciesFormChange(Species.DELPHOX, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.DELPHOXITE))
   ],
-  [Species.GRENINJA]: [
-    new SpeciesFormChange(Species.GRENINJA, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.GRENINJITE))
-  ],
   [Species.PYROAR]: [
     new SpeciesFormChange(Species.PYROAR, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.PYROARITE))
   ],
@@ -758,9 +774,6 @@ export const pokemonFormChanges: PokemonFormChanges = {
   ],
   [Species.HAWLUCHA]: [
     new SpeciesFormChange(Species.HAWLUCHA, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.HAWLUCHITE))
-  ],
-  [Species.ZYGARDE]: [
-    new SpeciesFormChange(Species.ZYGARDE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ZYGARDITE))
   ],
   [Species.DRAMPA]: [
     new SpeciesFormChange(Species.DRAMPA, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.DRAMPITE))
@@ -944,6 +957,52 @@ export const pokemonFormChanges: PokemonFormChanges = {
     new SpeciesFormChange(Species.CRAMORANT, "gorging", "", new SpeciesFormChangeManualTrigger, true),
     new SpeciesFormChange(Species.CRAMORANT, "gulping", "", new SpeciesFormChangeActiveTrigger(false), true),
     new SpeciesFormChange(Species.CRAMORANT, "gorging", "", new SpeciesFormChangeActiveTrigger(false), true),
+  ],
+  [Species.CHIMECHO]: [
+    new SpeciesFormChange(Species.CHIMECHO, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.CHIMECHOITE))
+  ],
+  [Species.STARAPTOR]: [
+    new SpeciesFormChange(Species.STARAPTOR, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.STARAPTORITE))
+  ],
+  [Species.HEATRAN]: [
+    new SpeciesFormChange(Species.HEATRAN, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.HEATRANITE))
+  ],
+  [Species.DARKRAI]: [
+    new SpeciesFormChange(Species.DARKRAI, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.DARKRAITE))
+  ],
+  [Species.GOLURK]: [
+    new SpeciesFormChange(Species.GOLURK, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.GOLURKITE))
+  ],
+  [Species.MEOWSTIC]: [
+    new SpeciesFormChange(Species.MEOWSTIC, "male", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.MEOWSTITE)),
+    new SpeciesFormChange(Species.MEOWSTIC, "female", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.MEOWSTITE))
+  ],
+  [Species.CRABOMINABLE]: [
+    new SpeciesFormChange(Species.CRABOMINABLE, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.CRABOMINITE))
+  ],
+  [Species.GOLISOPOD]: [
+    new SpeciesFormChange(Species.GOLISOPOD, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.GOLISOPODITE))
+  ],
+  [Species.MAGEARNA]: [
+    new SpeciesFormChange(Species.MAGEARNA, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.MAGEARNITE)),
+    new SpeciesFormChange(Species.MAGEARNA, "original", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.MAGEARNITE))
+  ],
+  [Species.ZERAORA]: [
+    new SpeciesFormChange(Species.ZERAORA, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.ZERAORITE))
+  ],
+  [Species.SCOVILLAIN]: [
+    new SpeciesFormChange(Species.SCOVILLAIN, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.SCOVILLAINITE))
+  ],
+  [Species.GLIMMORA]: [
+    new SpeciesFormChange(Species.GLIMMORA, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.GLIMMORITE))
+  ],
+  [Species.TATSUGIRI]: [
+    new SpeciesFormChange(Species.TATSUGIRI, "curly", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.TATSUGURITE)),
+    new SpeciesFormChange(Species.TATSUGIRI, "droopy", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.TATSUGURITE)),
+    new SpeciesFormChange(Species.TATSUGIRI, "stretchy", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.TATSUGURITE))
+  ],
+  [Species.BAXCALIBUR]: [
+    new SpeciesFormChange(Species.BAXCALIBUR, "", SpeciesFormKey.MEGA, new SpeciesFormChangeItemTrigger(FormChangeItem.BAXCALIBURITE))
   ],
   [Species.CASTFORM]: [
     new SpeciesFormChange(Species.CASTFORM, "", "sunny", new SpeciesFormChangeWeatherTrigger(Abilities.FORECAST, [WeatherType.SUNNY, WeatherType.HARSH_SUN]), true),

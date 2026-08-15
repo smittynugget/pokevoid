@@ -11,6 +11,12 @@
   "gatchaCalendar": "¡Calendario Gatcha!",
   "browseGlitchForms": "Explorar Formas Glitch de Pokevoid",
   "wikiMods": "Wiki y Mods",
+  "downloadYourMods": "Descargar tus Mods",
+  "downloadAll": "Descargar Todo (ZIP)",
+  "downloadSelected": "Descargar Seleccionado",
+  "noModsToDownload": "No hay mods para descargar.",
+  "downloadStarted": "Descarga iniciada.",
+  "downloadFailed": "Error en la descarga. Por favor, inténtalo de nuevo.",
   "noModsToRemove": "No hay mods para eliminar.",
   "errorLoadingMods": "Error al cargar mods. Por favor, inténtalo de nuevo.",
   "modRemoved": "{{name}} eliminado correctamente.",
@@ -31,8 +37,9 @@
     "stat2": "Estadística 2 a Mejorar",
     "stat3": "Estadística 3 a Mejorar",
     "distributionType": "Tipo de Distribución de Mejora de Estadísticas",
-    "frontSprite": "Sprite Frontal del Pokémon (150-200px)",
-    "backSprite": "Sprite Trasero del Pokémon (150-200px)",
+    "frontSprite": "Sprite Frontal del Pokémon",
+    "backSprite": "Sprite Trasero del Pokémon",
+    "useFrontAsBack": "Usar sprite frontal como sprite trasero",
     "rivalTrainer": "Rival",
     "orRivalTrainer": "o Rival"
   },
@@ -44,7 +51,12 @@
   },
   "buttons": {
     "saveAndAdd": "Guardar y Recargar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "next": "Siguiente",
+    "prev": "Anterior"
+  },
+  "navigation": {
+    "sectionIndicator": "{{current}} / {{total}}"
   },
   "validation": {
     "requiredField": "Este campo es obligatorio",
@@ -61,7 +73,8 @@
   },
   "sections": {
     "basicInformation": "Información Básica",
-    "typesAbilities": "Tipos y Habilidades",
+    "typesAbilities": "Tipos",
+    "abilities": "Habilidades",
     "stats": "Estadísticas",
     "sprites": "Sprites",
     "rivalTrainer": "Rivales que Recompensan Esta Forma"

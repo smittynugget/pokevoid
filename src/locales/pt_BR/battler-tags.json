@@ -67,5 +67,17 @@
   "saltCuredLapse": "{{pokemonNameWithAffix}} foi ferido pelo {{moveName}}!",
   "cursedOnAdd": "{{pokemonNameWithAffix}} cortou seus PS pela metade e amaldiçoou {{pokemonName}}!",
   "cursedLapse": "{{pokemonNameWithAffix}} foi ferido pelo Curse!",
-  "stockpilingOnAdd": "{{pokemonNameWithAffix}} estocou {{stockpiledCount}}!"
+  "stockpilingOnAdd": "{{pokemonNameWithAffix}} estocou {{stockpiledCount}}!",
+  "substituteOnAdd": "{{pokemonNameWithAffix}} colocou um substituto!",
+  "substituteOnRemove": "O substituto de {{pokemonNameWithAffix}} desapareceu!",
+  "substituteOnHit": "O substituto recebeu o dano no lugar de {{pokemonNameWithAffix}}!",
+  "tauntOnAdd": "{{pokemonNameWithAffix}} caiu na provocação!",
+  "tauntOnRemove": "O efeito de Taunt de {{pokemonNameWithAffix}} acabou!",
+  "tormentOnAdd": "{{pokemonNameWithAffix}} foi submetido a tormento!",
+  "tormentOnRemove": "O efeito de Torment de {{pokemonNameWithAffix}} acabou!",
+  "healBlockedLapse": "{{pokemonNameWithAffix}} não pode se curar por causa do Bloqueio de Cura!",
+  "healBlockedOnAdd": "{{pokemonNameWithAffix}} foi impedido de se curar!",
+  "healBlockedOnRemove": "O Bloqueio de Cura de {{pokemonNameWithAffix}} acabou!",
+  "itemBlockedOnAdd": "{{pokemonNameWithAffix}} não pode usar seu item equipado!",
+  "itemBlockedOnRemove": "{{pokemonNameWithAffix}} pode usar itens novamente!"
 }

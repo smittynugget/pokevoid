@@ -61,20 +61,25 @@ import smittyNames from "./smitty-names.json";
 import quests from "./quests.json";
 import questUi from "./quest-ui.json";
 import glitchNames from "./glitch-names.json";
+import duelmonNames from "./duelmon-names.json";
 import importData from "./import-data.json";
 import questModifierInfo from "./quest-modifier-info.json";
 import moveUpgrade from "./move-upgrade.json";
+import moveTag from "./move-tag.json";
 import eggStarterUi from "./egg-starter-ui.json";
 import modGlitchCreateFormUi from "./mod-glitch-create-form-ui.json";
 import pokedex from "./pokedex.json";
 import nodeMode from "./node-mode.json";
-
 import championSelect from "./champion-select.json";
+import characterSelect from "./character-select.json";
 import skillTree from "./skill-tree.json";
 import championLevelUp from "./champion-level-up.json";
 import championSkills from "./champion-skills.json";
 import championModifiers from "./champion-modifiers.json";
 import cutscene from "./cutscene.json";
+import shinyPower from "./shiny-power.json";
+import pokemonBattleTooltip from "./pokemon-battle-tooltip.json";
+import replayViewerUiHandler from "./replay-viewer-ui-handler.json";
 
 export const enConfig = {
   ability,
@@ -139,9 +144,11 @@ export const enConfig = {
   quests,
   questUi,
   glitchNames,
+  duelmonNames,
   importData,
   questModifierInfo,
   moveUpgrade,
+  moveTag,
   eggStarterUi,
   modGlitchCreateFormUi,
   pokedex,
@@ -149,8 +156,12 @@ export const enConfig = {
   moveUpgradeAttrs,
   skillTree,
   championSelect,
+  characterSelect,
   championLevelUp,
   championSkills,
   championModifiers,
   cutscene,
+  shinyPower,
+  pokemonBattleTooltip,
+  replayViewerUiHandler,
 };

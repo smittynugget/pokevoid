@@ -1,14 +1,14 @@
 import i18next from "i18next";
 import BattleScene from "../battle-scene";
 import { ModalConfig, ModalUiHandler } from "./modal-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { Button } from "../enums/buttons";
 import { Device } from "../enums/devices";
 import * as Utils from "../utils";
 import { createSporadicPattern } from "../utils";
 import { Type } from "../data/type";
 import { applyTypeBallRecolor, applyVoidBallRecolor } from "../data/pokeball";
-import { getPokemonSpecies, allSpecies } from "../data/pokemon-species";
+import { getPokemonSpecies, allSpecies, adjustDuelmonIconScale } from "../data/pokemon-species";
 import { getAllRivalTrainerTypes, trainerConfigs, trainerPokemonPools, RivalTrainerType } from "../data/trainer-config";
 import { SkillTreeGenerator } from "../system/skill-tree-generator";
 import { SkillTreeNode, SkillTreeRewardType } from "../system/skill-tree-data";
@@ -210,6 +210,15 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
     this.layout();
     this.startRevealSequence();
 
+    this.modalContainer.setInteractive(
+      new Phaser.Geom.Rectangle(0, 0, this.getWidth() * 6, this.getHeight() * 6),
+      Phaser.Geom.Rectangle.Contains
+    );
+    this.modalContainer.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (pointer.button !== 0) return;
+      this.processInput(Button.ACTION);
+    });
+
     return true;
   }
 
@@ -259,6 +268,8 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
     }
     this.scrollMask = null;
     this.prevFieldVisible = null;
+    this.modalContainer.off("pointerdown");
+    this.modalContainer.disableInteractive();
     super.clear();
   }
 
@@ -783,7 +794,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
       }
     }
     spr.setOrigin(0.5, 0);
-    spr.setScale(scale);
+    spr.setScale(adjustDuelmonIconScale(scale, s.generation));
     return spr;
   }
 
@@ -814,7 +825,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
       }
     }
     top.setOrigin(0.5, 0);
-    top.setScale(scale);
+    top.setScale(adjustDuelmonIconScale(scale, primary.generation));
 
     const bottom = this.scene.add.sprite(0, 0, fusionAtlasKey);
     if (!fusionAtlasKey.startsWith("pokemon_icons_mod_")) {
@@ -830,7 +841,7 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
       }
     }
     bottom.setOrigin(0.5, 0);
-    bottom.setScale(scale);
+    bottom.setScale(adjustDuelmonIconScale(scale, fusion.generation));
 
     container.add(top);
     container.add(bottom);
@@ -1543,6 +1554,17 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
       case SkillTreeRewardType.PP_MAX_ITEM: return { kind: "item", key: "items", frame: "pp_max", scale: itemScale };
       case SkillTreeRewardType.ROGUE_BALL: return { kind: "item", key: "items", frame: "rb", scale: itemScale };
       case SkillTreeRewardType.PARTY_ABILITY_GRANT: return { kind: "item", key: "smitems", frame: "permaPartyAbility", scale: smitemsScale };
+      case SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN: {
+        const iconKey = (reward as any)?.data?.iconKey;
+        const iconFrame = (reward as any)?.data?.iconFrame;
+        if (typeof iconKey === "string" && iconKey) {
+          if (iconFrame !== undefined && iconFrame !== null) {
+            return { kind: "item", key: iconKey, frame: iconFrame as any };
+          }
+          return { kind: "item", key: iconKey };
+        }
+        return { kind: "item", key: "smitems", frame: "glitchModSoul", scale: smitemsScale };
+      }
       default:
         return { kind: "item", key: "smitems", frame: "permaMoreRewardChoice", scale: smitemsScale };
     }

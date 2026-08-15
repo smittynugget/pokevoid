@@ -9,8 +9,8 @@ type PokemonFunc = (pokemon: Pokemon) => void;
 
 export abstract class FieldPhase extends BattlePhase {
   getOrder(): BattlerIndex[] {
-    const playerField = this.scene.getPlayerField().filter(p => p.isActive()) as Pokemon[];
-    const enemyField = this.scene.getEnemyField().filter(p => p.isActive()) as Pokemon[];
+    const playerField = this.scene.getPlayerField().filter(p => p.isActive() && p.summonData) as Pokemon[];
+    const enemyField = this.scene.getEnemyField().filter(p => p.isActive() && p.summonData) as Pokemon[];
     let orderedTargets: Pokemon[] = playerField.concat(enemyField);
     const turn = this.scene.currentBattle?.turn ?? 0;
     this.scene.executeWithSeedOffset(() => {

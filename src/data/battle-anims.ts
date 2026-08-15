@@ -450,7 +450,8 @@ export function initMoveAnim(scene: BattleScene, move: Moves): Promise<void> {
       } else {
         const loadedCheckTimer = setInterval(() => {
           if (moveAnims.get(move) !== null) {
-            const chargeAttr = allMoves[move].getAttrs(ChargeAttr)[0] || allMoves[move].getAttrs(DelayedAttackAttr)[0];
+            const moveRef = allMoves[move];
+            const chargeAttr = moveRef ? (moveRef.getAttrs(ChargeAttr)[0] || moveRef.getAttrs(DelayedAttackAttr)[0]) : undefined;
             if (chargeAttr && chargeAnims.get(chargeAttr.chargeAnim) === null) {
               return;
             }
@@ -461,8 +462,10 @@ export function initMoveAnim(scene: BattleScene, move: Moves): Promise<void> {
       }
     } else {
       moveAnims.set(move, null);
-      const defaultMoveAnim = allMoves[move] instanceof AttackMove ? Moves.TACKLE : allMoves[move] instanceof SelfStatusMove ? Moves.FOCUS_ENERGY : Moves.TAIL_WHIP;
-      const moveName = Moves[move].toLowerCase().replace(/\_/g, "-");
+      const moveObj = allMoves[move];
+      const defaultMoveAnim = moveObj instanceof AttackMove ? Moves.TACKLE : moveObj instanceof SelfStatusMove ? Moves.FOCUS_ENERGY : Moves.TAIL_WHIP;
+      const effectiveMove = moveObj?.animationProxy ?? move;
+      const moveName = Moves[effectiveMove].toLowerCase().replace(/\_/g, "-");
       const fetchAnimAndResolve = (move: Moves) => {
         scene.cachedFetch(`./battle-anims/${moveName}.json`)
           .then(response => {
@@ -485,9 +488,12 @@ export function initMoveAnim(scene: BattleScene, move: Moves): Promise<void> {
             } else {
               populateMoveAnim(move, ba);
             }
-            const chargeAttr = allMoves[move].getAttrs(ChargeAttr)[0]
-                            || allMoves[move].getAttrs(DelayedAttackAttr)[0]
-                            || allMoves[move].getAttrs(BeakBlastHeaderAttr)[0];
+            const moveData = allMoves[move];
+            const chargeAttr = moveData
+              ? (moveData.getAttrs(ChargeAttr)[0]
+                || moveData.getAttrs(DelayedAttackAttr)[0]
+                || moveData.getAttrs(BeakBlastHeaderAttr)[0])
+              : undefined;
             if (chargeAttr) {
               initMoveChargeAnim(scene, chargeAttr.chargeAnim).then(() => resolve());
             } else {
@@ -593,9 +599,10 @@ export function loadMoveAnimAssets(scene: BattleScene, moveIds: Moves[], startLo
   return new Promise(resolve => {
     const moveAnimations = moveIds.map(m => moveAnims.get(m) as AnimConfig).flat();
     for (const moveId of moveIds) {
-      const chargeAttr = allMoves[moveId].getAttrs(ChargeAttr)[0]
-                      || allMoves[moveId].getAttrs(DelayedAttackAttr)[0]
-                      || allMoves[moveId].getAttrs(BeakBlastHeaderAttr)[0];
+      const moveEntry = allMoves[moveId];
+      const chargeAttr = moveEntry
+        ? (moveEntry.getAttrs(ChargeAttr)[0] || moveEntry.getAttrs(DelayedAttackAttr)[0] || moveEntry.getAttrs(BeakBlastHeaderAttr)[0])
+        : undefined;
       if (chargeAttr) {
         const moveChargeAnims = chargeAnims.get(chargeAttr.chargeAnim);
         moveAnimations.push(moveChargeAnims instanceof AnimConfig ? moveChargeAnims : moveChargeAnims![0]);
@@ -734,11 +741,11 @@ export abstract class BattleAnim {
       const userInitialX = user!.x;
       const userInitialY = user!.y;
       const userSprite = user!.getSprite();
-      const userHalfHeight = (userSprite.height * userSprite.parentContainer.scale) / 2;
+      const userHalfHeight = (userSprite.height * userSprite.parentContainer.scale * (userSprite.scale ?? 1)) / 2;
       const targetInitialX = target!.x;
       const targetInitialY = target!.y;
       const targetSprite = target!.getSprite();
-      const targetHalfHeight = (targetSprite.height * targetSprite.parentContainer.scale) / 2;
+      const targetHalfHeight = (targetSprite.height * targetSprite.parentContainer.scale * (targetSprite.scale ?? 1)) / 2;
 
       let g = 0;
       let u = 0;
@@ -783,10 +790,16 @@ export abstract class BattleAnim {
 
       if (!target?.isOnField()) {
         if (callback) {
-          callback();
+          try {
+            callback();
+          } catch (err) {
+            console.error(`[BATTLE-ANIM ERROR] callback:`, err);
+          }
         }
         return;
       }
+
+      scene._battleAnimDepth++;
 
       const userSprite = user.getSprite();
       const targetSprite = target.getSprite();
@@ -799,32 +812,54 @@ export abstract class BattleAnim {
       const spritePriorities: integer[] = [];
 
       const cleanUpAndComplete = () => {
-        userSprite.setPosition(0, 0);
-        userSprite.setScale(1);
-        userSprite.setAlpha(1);
-        userSprite.pipelineData["tone"] = [ 0.0, 0.0, 0.0, 0.0 ];
-        userSprite.setAngle(0);
-        targetSprite.setPosition(0, 0);
-        targetSprite.setScale(1);
-        targetSprite.setAlpha(1);
-        targetSprite.pipelineData["tone"] = [ 0.0, 0.0, 0.0, 0.0 ];
-        targetSprite.setAngle(0);
-        if (!this.isHideUser() && userSprite) {
-          userSprite.setVisible(true);
-        }
-        if (!this.isHideTarget() && (targetSprite !== userSprite || !this.isHideUser())) {
-          targetSprite.setVisible(true);
-        }
-        for (const ms of Object.values(spriteCache).flat()) {
-          if (ms) {
-            ms.destroy();
+        try {
+          userSprite.setPosition(0, 0);
+          userSprite.setScale(1);
+          userSprite.setAlpha(1);
+          userSprite.pipelineData["tone"] = [ 0.0, 0.0, 0.0, 0.0 ];
+          userSprite.setAngle(0);
+          targetSprite.setPosition(0, 0);
+          targetSprite.setScale(1);
+          targetSprite.setAlpha(1);
+          targetSprite.pipelineData["tone"] = [ 0.0, 0.0, 0.0, 0.0 ];
+          targetSprite.setAngle(0);
+          if (!this.isHideUser() && userSprite) {
+            userSprite.setVisible(true);
           }
-        }
-        if (this.bgSprite) {
-          this.bgSprite.destroy();
-        }
-        if (callback) {
-          callback();
+          if (!this.isHideTarget() && (targetSprite !== userSprite || !this.isHideUser())) {
+            targetSprite.setVisible(true);
+          }
+          if (user?.species?.generation === 20) {
+            user.applySpriteState();
+            user.applyYuBackFlip();
+            if (user.portalSprite && !user.isFainted()) {
+              user.portalSprite.setVisible(true);
+            }
+          }
+          if (target && target !== user && target?.species?.generation === 20) {
+            target.applySpriteState();
+            target.applyYuBackFlip();
+            if (target.portalSprite && !target.isFainted()) {
+              target.portalSprite.setVisible(true);
+            }
+          }
+          for (const ms of Object.values(spriteCache).flat()) {
+            if (ms) {
+              ms.destroy();
+            }
+          }
+          if (this.bgSprite) {
+            this.bgSprite.destroy();
+          }
+        } finally {
+          scene._battleAnimDepth = Math.max(0, scene._battleAnimDepth - 1);
+          if (callback) {
+            try {
+              callback();
+            } catch (err) {
+              console.error(`[BATTLE-ANIM ERROR] callback:`, err);
+            }
+          }
         }
       };
 
@@ -853,6 +888,7 @@ export abstract class BattleAnim {
         duration: Utils.getFrameMs(3),
         repeat: anim.frames.length,
         onRepeat: () => {
+          try {
           if (!f) {
             userSprite.setVisible(false);
             targetSprite.setVisible(false);
@@ -876,6 +912,7 @@ export abstract class BattleAnim {
                 const sourcePipelineData = (isUser ? user! : target).getSprite().pipelineData;
                 Object.keys(sourcePipelineData).forEach(k => sprite.pipelineData[k] = sourcePipelineData[k]);
                 sprite.setPipelineData("ignoreFieldPos", true);
+                sprite.setFlipX(spriteSource!.flipX);
                 spriteSource.on("animationupdate", (_anim, frame) => sprite.setFrame(frame.textureFrame));
                 scene.field.add(sprite);
                 sprites.push(sprite);
@@ -887,7 +924,8 @@ export abstract class BattleAnim {
               pokemonSprite.setPosition(graphicFrameData.x, graphicFrameData.y);
 
               pokemonSprite.setAngle(graphicFrameData.angle);
-              pokemonSprite.setScale(graphicFrameData.scaleX * spriteSource.parentContainer.scale,  graphicFrameData.scaleY * spriteSource.parentContainer.scale);
+              const baseScale = spriteSource.parentContainer.scale * (spriteSource.scale ?? 1);
+              pokemonSprite.setScale(graphicFrameData.scaleX * baseScale, graphicFrameData.scaleY * baseScale);
 
               pokemonSprite.setData("locked", frame.locked);
 
@@ -990,19 +1028,28 @@ export abstract class BattleAnim {
           }
           f++;
           r--;
+          } catch (err) {
+            console.error("[BATTLE-ANIM] onRepeat error:", err);
+            cleanUpAndComplete();
+          }
         },
         onComplete: () => {
-          for (const ms of Object.values(spriteCache).flat()) {
-            if (ms && !ms.getData("locked")) {
-              ms.destroy();
+          try {
+            for (const ms of Object.values(spriteCache).flat()) {
+              if (ms && !ms.getData("locked")) {
+                ms.destroy();
+              }
             }
-          }
-          if (r) {
-            scene.tweens.addCounter({
-              duration: Utils.getFrameMs(r),
-              onComplete: () => cleanUpAndComplete()
-            });
-          } else {
+            if (r) {
+              scene.tweens.addCounter({
+                duration: Utils.getFrameMs(r),
+                onComplete: () => cleanUpAndComplete()
+              });
+            } else {
+              cleanUpAndComplete();
+            }
+          } catch (err) {
+            console.error("[BATTLE-ANIM] onComplete error:", err);
             cleanUpAndComplete();
           }
         }
@@ -1061,11 +1108,11 @@ export class MoveAnim extends BattleAnim {
   }
 
   protected isHideUser(): boolean {
-    return allMoves[this.move].hasFlag(MoveFlags.HIDE_USER);
+    return allMoves[this.move]?.hasFlag(MoveFlags.HIDE_USER) ?? false;
   }
 
   protected isHideTarget(): boolean {
-    return allMoves[this.move].hasFlag(MoveFlags.HIDE_TARGET);
+    return allMoves[this.move]?.hasFlag(MoveFlags.HIDE_TARGET) ?? false;
   }
 }
 

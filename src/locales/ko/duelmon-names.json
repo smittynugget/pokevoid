@@ -1,0 +1,1295 @@
+{
+  "abaki": {
+    "name": "아바키"
+  },
+  "abare_ushioni": {
+    "name": "날뛰는 우시오니"
+  },
+  "agido": {
+    "name": "아기도"
+  },
+  "aitsu": {
+    "name": "아이츠"
+  },
+  "alien_grey": {
+    "name": "에이리언 그레이"
+  },
+  "alien_mars": {
+    "name": "에이리언 마즈"
+  },
+  "alien_mother": {
+    "name": "에이리언 마더"
+  },
+  "alligator_s_sword_dragon": {
+    "name": "악어의 검 드래곤"
+  },
+  "alligators_sword_dragon": {
+    "name": "악어의 검 드래곤"
+  },
+  "alpha_the_magnet_warrior": {
+    "name": "마그넷 워리어 α"
+  },
+  "amazoness_tiger": {
+    "name": "아마조네스 애완 호랑이"
+  },
+  "ancient_gear": {
+    "name": "앤틱 기어"
+  },
+  "ancient_gear_box": {
+    "name": "앤틱 기어 박스"
+  },
+  "ancient_gear_engineer": {
+    "name": "앤틱 기어 엔지니어"
+  },
+  "ancient_gear_golem": {
+    "name": "앤틱 기어 골렘"
+  },
+  "ancient_gear_knight": {
+    "name": "앤틱 기어 나이트"
+  },
+  "ancient_gear_soldier": {
+    "name": "앤틱 기어 솔저"
+  },
+  "ancient_tree_of_enlightenment": {
+    "name": "깨달음의 고목"
+  },
+  "arcana_force_0_the_fool": {
+    "name": "아르카나 포스 0-더 풀",
+    "skipStrip": true
+  },
+  "arcana_force_0_—_the_fool": {
+    "name": "아르카나 포스 0-더 풀",
+    "skipStrip": true
+  },
+  "arcana_force_ex_the_dark_ruler": {
+    "name": "아르카나 포스 EX-더 다크 룰러",
+    "skipStrip": true
+  },
+  "arcana_force_ex_—_the_dark_ruler": {
+    "name": "아르카나 포스 EX-더 다크 룰러",
+    "skipStrip": true
+  },
+  "arcana_force_i_the_magician": {
+    "name": "아르카나 포스 I-더 매지션",
+    "skipStrip": true
+  },
+  "arcana_force_i_—_the_magician": {
+    "name": "아르카나 포스 I-더 매지션",
+    "skipStrip": true
+  },
+  "arcana_force_iv_the_emperor": {
+    "name": "아르카나 포스 IV-더 엠퍼러",
+    "skipStrip": true
+  },
+  "arcana_force_iv_—_the_emperor": {
+    "name": "아르카나 포스 IV-더 엠퍼러",
+    "skipStrip": true
+  },
+  "arcana_force_vi_the_lovers": {
+    "name": "아르카나 포스 VI-더 러버즈",
+    "skipStrip": true
+  },
+  "arcana_force_vi_—_the_lovers": {
+    "name": "아르카나 포스 VI-더 러버즈",
+    "skipStrip": true
+  },
+  "arcana_force_xviii_the_moon": {
+    "name": "아르카나 포스 XVIII-더 문",
+    "skipStrip": true
+  },
+  "arcana_force_xviii_—_the_moon": {
+    "name": "아르카나 포스 XVIII-더 문",
+    "skipStrip": true
+  },
+  "archfiend_zombie": {
+    "name": "데몬 좀비"
+  },
+  "armed_dragon_lv3": {
+    "name": "암드 드래곤 LV3"
+  },
+  "armed_dragon_lv5": {
+    "name": "암드 드래곤 LV5"
+  },
+  "armed_dragon_lv7": {
+    "name": "암드 드래곤 LV7"
+  },
+  "avatar_of_the_pot": {
+    "name": "항아리의 정령"
+  },
+  "axe_raider": {
+    "name": "액스 레이더"
+  },
+  "baby_dragon": {
+    "name": "베이비 드래곤"
+  },
+  "bean_soldier": {
+    "name": "빈 솔저"
+  },
+  "beaver_warrior": {
+    "name": "루이즈"
+  },
+  "behemoth_the_king_of_all_animals": {
+    "name": "백수왕 베히모스",
+    "skipStrip": true
+  },
+  "beiige,_vanguard_of_dark_world": {
+    "name": "암흑계의 첨병 베이지"
+  },
+  "beiige_vanguard_of_dark_world": {
+    "name": "암흑계의 첨병 베이지"
+  },
+  "beta_the_magnet_warrior": {
+    "name": "마그넷 워리어 β"
+  },
+  "bickuribox": {
+    "name": "비쿠리박스"
+  },
+  "big_jaws": {
+    "name": "빅 죠즈"
+  },
+  "bio_plant": {
+    "name": "바이오 플랜트"
+  },
+  "black_dragon_s_chick": {
+    "name": "흑룡의 병아리"
+  },
+  "black_dragons_chick": {
+    "name": "흑룡의 병아리"
+  },
+  "black_luster_soldier": {
+    "name": "카오스 솔저"
+  },
+  "black_luster_soldier_envoy_of_the_beginning": {
+    "name": "카오스 솔저 -개벽의 사자-",
+    "skipStrip": true
+  },
+  "black_luster_soldier_—_envoy_of_the_beginning": {
+    "name": "카오스 솔저 -개벽의 사자-",
+    "skipStrip": true
+  },
+  "black_magician_of_chaos": {
+    "name": "혼돈의 흑마술사"
+  },
+  "black_rose_dragon_(alt)": {
+    "name": "블랙 로즈 드래곤"
+  },
+  "black_rose_dragon_(alt___full_wings)": {
+    "name": "블랙 로즈 드래곤"
+  },
+  "black_rose_dragon_(full_wings)": {
+    "name": "블랙 로즈 드래곤"
+  },
+  "black_tyranno": {
+    "name": "블랙 티라노"
+  },
+  "blade_knight": {
+    "name": "블레이드 나이트"
+  },
+  "blazing_inpachi": {
+    "name": "화염목인18"
+  },
+  "blizzard_dragon": {
+    "name": "블리자드 드래곤"
+  },
+  "blizzarddragon": {
+    "name": "블리자드 드래곤"
+  },
+  "blowback_dragon": {
+    "name": "블로우백 드래곤"
+  },
+  "blue-eyes_alternative_white_dragon": {
+    "name": "푸른 눈의 아백룡"
+  },
+  "blue-eyes_chaos_max_dragon": {
+    "name": "푸른 눈의 혼돈극룡"
+  },
+  "blue-eyes_toon_dragon": {
+    "name": "블루아이즈 툰 드래곤"
+  },
+  "blue-eyes_toon_dragon_(render)": {
+    "name": "블루아이즈 툰 드래곤"
+  },
+  "blue-eyes_ultimate_dragon": {
+    "name": "푸른 눈의 궁극룡"
+  },
+  "blue-eyes_white_dragon": {
+    "name": "푸른 눈의 백룡"
+  },
+  "blue-eyes_white_dragon_(alt_master_duel)": {
+    "name": "푸른 눈의 백룡"
+  },
+  "blue-eyes_white_dragon_(variant_2)": {
+    "name": "푸른 눈의 백룡"
+  },
+  "blue-eyes_white_dragon_(variants)": {
+    "name": "푸른 눈의 백룡"
+  },
+  "blue_eyes_alternative_white_dragon": {
+    "name": "푸른 눈의 아백룡"
+  },
+  "blue_eyes_chaos_max_dragon": {
+    "name": "푸른 눈의 혼돈극룡"
+  },
+  "blue_eyes_ultimate_dragon": {
+    "name": "푸른 눈의 궁극룡"
+  },
+  "blue_eyes_white_dragon": {
+    "name": "푸른 눈의 백룡"
+  },
+  "blue_eyes_white_dragon_v3": {
+    "name": "블루아이즈 툰 드래곤"
+  },
+  "boo_koo": {
+    "name": "부쿠"
+  },
+  "breaker_the_magical_warrior": {
+    "name": "마도전사 브레이커"
+  },
+  "breaker_the_magical_warrrior": {
+    "name": "마도전사 브레이커"
+  },
+  "buster_blader,_destruction_swordmaster": {
+    "name": "버스터 블레이더",
+    "skipStrip": true
+  },
+  "buster_blader,_destruction_swordsmaster": {
+    "name": "버스터 블레이더",
+    "skipStrip": true
+  },
+  "buster_blader_the_destruction_swordmaster": {
+    "name": "버스터 블레이더",
+    "skipStrip": true
+  },
+  "caius_the_shadow_monarch": {
+    "name": "사제 가이우스"
+  },
+  "card_trooper": {
+    "name": "카드 트루퍼"
+  },
+  "castle_of_dark_illusions": {
+    "name": "어둠의 성"
+  },
+  "celtic_guardian": {
+    "name": "엘프의 검사"
+  },
+  "chaos_emperor_dragon_envoy_of_the_end": {
+    "name": "카오스 엠퍼러 드래곤 -종언의 사자-",
+    "skipStrip": true
+  },
+  "chaos_emperor_dragon_—_envoy_of_the_end": {
+    "name": "카오스 엠퍼러 드래곤 -종언의 사자-",
+    "skipStrip": true
+  },
+  "claw_reacher": {
+    "name": "클로 리처"
+  },
+  "cloudian_acid_cloud": {
+    "name": "클라우디안 애시드 클라우드",
+    "skipStrip": true
+  },
+  "cloudian_eye_of_the_typhoon": {
+    "name": "클라우디안 아이 오브 더 타이푼",
+    "skipStrip": true
+  },
+  "cloudian_ghost_fog": {
+    "name": "클라우디안 고스트 포그",
+    "skipStrip": true
+  },
+  "cloudian_nimbusman": {
+    "name": "클라우디안 님부스맨",
+    "skipStrip": true
+  },
+  "cloudian_smoke_ball": {
+    "name": "클라우디안 스모크 볼",
+    "skipStrip": true
+  },
+  "cloudian_storm_dragon": {
+    "name": "클라우디안 스톰 드래곤",
+    "skipStrip": true
+  },
+  "cloudian_—_acid_cloud": {
+    "name": "클라우디안 애시드 클라우드",
+    "skipStrip": true
+  },
+  "cloudian_—_eye_of_the_typhoon": {
+    "name": "클라우디안 아이 오브 더 타이푼",
+    "skipStrip": true
+  },
+  "cloudian_—_ghost_fog": {
+    "name": "클라우디안 고스트 포그",
+    "skipStrip": true
+  },
+  "cloudian_—_nimbusman": {
+    "name": "클라우디안 님부스맨",
+    "skipStrip": true
+  },
+  "cloudian_—_smoke_ball": {
+    "name": "클라우디안 스모크 볼",
+    "skipStrip": true
+  },
+  "cloudian_—_storm_dragon": {
+    "name": "클라우디안 스톰 드래곤",
+    "skipStrip": true
+  },
+  "colossal_fighter": {
+    "name": "기간테크 파이터"
+  },
+  "colossal_fighter1": {
+    "name": "기간테크 파이터"
+  },
+  "copycat": {
+    "name": "모노마네 환상사"
+  },
+  "crab_turtle": {
+    "name": "카니카부토"
+  },
+  "crystal_beast_amber_mammoth": {
+    "name": "보옥수 앰버 맘모스",
+    "skipStrip": true
+  },
+  "crystal_beast_emerald_tortoise": {
+    "name": "보옥수 에메랄드 터틀",
+    "skipStrip": true
+  },
+  "crystal_beast_ruby_carbuncle": {
+    "name": "보옥수 루비 카벙클",
+    "skipStrip": true
+  },
+  "crystal_beast_topaz_tiger": {
+    "name": "보옥수 토파즈 타이거",
+    "skipStrip": true
+  },
+  "crystal_beast_—_emerald_tortoise": {
+    "name": "보옥수 에메랄드 터틀",
+    "skipStrip": true
+  },
+  "crystal_beast_—_ruby_carbuncle": {
+    "name": "보옥수 루비 카벙클",
+    "skipStrip": true
+  },
+  "crystal_beast_—_topaz_tiger": {
+    "name": "보옥수 토파즈 타이거",
+    "skipStrip": true
+  },
+  "curse_of_dragon": {
+    "name": "커스 오브 드래곤",
+    "skipStrip": true
+  },
+  "curse_of_dragonfire": {
+    "name": "커스 오브 드래곤 파이어",
+    "skipStrip": true
+  },
+  "cyber_dinosaur": {
+    "name": "사이버 다이노소어"
+  },
+  "cyber_dragon": {
+    "name": "사이버 드래곤"
+  },
+  "cyber_dragon_(cydra_2)": {
+    "name": "사이버 드래곤"
+  },
+  "cyber_dragon_vier": {
+    "name": "사이버 드래곤 피어"
+  },
+  "cyber_end_dragon": {
+    "name": "사이버 엔드 드래곤"
+  },
+  "cyber_ogre": {
+    "name": "사이버 오거"
+  },
+  "cyber_saurus": {
+    "name": "사이버 사우루스"
+  },
+  "cyber_tech_alligator": {
+    "name": "메카 헌터"
+  },
+  "cyber_twin_dragon": {
+    "name": "사이버 트윈 드래곤"
+  },
+  "d.d._crazy_beast": {
+    "name": "D.D. 크레이지 비스트"
+  },
+  "d.d._trainer": {
+    "name": "D.D. 트레이너"
+  },
+  "d.d._warrior": {
+    "name": "D.D. 워리어"
+  },
+  "d.d._warrior_lady": {
+    "name": "D.D. 어설턴트"
+  },
+  "d_d_crazy_beast": {
+    "name": "D.D. 크레이지 비스트"
+  },
+  "d_d_trainer": {
+    "name": "D.D. 트레이너"
+  },
+  "d_d_warrior_lady": {
+    "name": "D.D. 어설턴트"
+  },
+  "dandylion": {
+    "name": "단디라이언"
+  },
+  "danger!_bigfoot!": {
+    "name": "미계역의 빅풋"
+  },
+  "danger_bigfoot": {
+    "name": "미계역의 빅풋"
+  },
+  "dark_eradicator_warlock": {
+    "name": "흑마도사 쿠란"
+  },
+  "dark_eyes_illusionist": {
+    "name": "다크 아이즈 일루저니스트"
+  },
+  "dark_magician": {
+    "name": "블랙 매지션"
+  },
+  "dark_magician_(all_variants)": {
+    "name": "블랙 매지션"
+  },
+  "dark_magician_(alt_master_duel)": {
+    "name": "블랙 매지션"
+  },
+  "dark_magician_(variant_2)": {
+    "name": "블랙 매지션"
+  },
+  "dark_magician_alternate": {
+    "name": "블랙 매지션"
+  },
+  "dark_magician_girl": {
+    "name": "블랙 매지션 걸"
+  },
+  "dark_magician_girl___alternate": {
+    "name": "블랙 매지션 걸"
+  },
+  "dark_magician_girl_alternate": {
+    "name": "블랙 매지션 걸"
+  },
+  "dark_magician_of_chaos": {
+    "name": "혼돈의 흑마술사"
+  },
+  "dark_magician_of_chaos_(render)": {
+    "name": "혼돈의 흑마술사"
+  },
+  "dark_magician_v2": {
+    "name": "블랙 매지션"
+  },
+  "dark_arkana_magician": {
+    "name": "블랙 매지션 아르카나"
+  },
+  "dark_magician_—_arkana_variant": {
+    "name": "블랙 매지션 — 아르카나"
+  },
+  "dark_necrofear": {
+    "name": "다크 네크로피어"
+  },
+  "dark_paladin": {
+    "name": "초마도검사-블랙 팔라딘"
+  },
+  "dark_rabbit": {
+    "name": "다크 래빗"
+  },
+  "dark_resonator": {
+    "name": "다크 리조네이터"
+  },
+  "dark_ruler_ha_des": {
+    "name": "명계의 사자 하데스"
+  },
+  "dark_sage": {
+    "name": "흑의의 대현자"
+  },
+  "dark_world_thorns": {
+    "name": "암흑계의 가시덤불"
+  },
+  "darkfire_dragon": {
+    "name": "암흑의 용왕"
+  },
+  "despair_from_the_dark": {
+    "name": "어둠으로부터의 절망"
+  },
+  "destiny_hero_defender": {
+    "name": "D-히어로 디펜드 가이",
+    "skipStrip": true
+  },
+  "destiny_hero_plasma": {
+    "name": "D-히어로 블루-D",
+    "skipStrip": true
+  },
+  "dragon_destroyer_swordsman": {
+    "name": "용파괴의 검사"
+  },
+  "dragon_spirit_of_white": {
+    "name": "백의 영룡"
+  },
+  "dragon_zombie": {
+    "name": "드래곤 좀비"
+  },
+  "drillago": {
+    "name": "드릴라고"
+  },
+  "drillroid": {
+    "name": "드릴로이드"
+  },
+  "duoterion": {
+    "name": "듀테리온"
+  },
+  "earthbound_immortal_chacu_challhua": {
+    "name": "지박신 차쿠 찰후아",
+    "skipStrip": true
+  },
+  "earthboundimmortal_chacu_challhua": {
+    "name": "지박신 차쿠 찰후아",
+    "skipStrip": true
+  },
+  "egyptian_god_slime": {
+    "name": "신 슬라임"
+  },
+  "elemental_hero_bladedge": {
+    "name": "E-히어로 에지맨",
+    "skipStrip": true
+  },
+  "elemental_hero_burstinatrix": {
+    "name": "E-히어로 버스트 레이디",
+    "skipStrip": true
+  },
+  "elemental_hero_clayman": {
+    "name": "E-히어로 클레이맨",
+    "skipStrip": true
+  },
+  "elemental_hero_flame_wingman": {
+    "name": "E-히어로 플레임 윙맨",
+    "skipStrip": true
+  },
+  "elemental_hero_necroshade": {
+    "name": "E-히어로 네크로 다크맨",
+    "skipStrip": true
+  },
+  "elemental_hero_neos": {
+    "name": "E-히어로 네오스",
+    "skipStrip": true
+  },
+  "elemental_hero_neos_(alt_master_duel)": {
+    "name": "E-히어로 네오스",
+    "skipStrip": true
+  },
+  "elemental_hero_neos_alius": {
+    "name": "E-히어로 어나더 네오스",
+    "skipStrip": true
+  },
+  "elemental_hero_sparkman": {
+    "name": "E-히어로 스파크맨",
+    "skipStrip": true
+  },
+  "elemental_hero_stratos": {
+    "name": "E-히어로 에어맨",
+    "skipStrip": true
+  },
+  "enraged_battle_ox": {
+    "name": "분노하는 배틀 옥스"
+  },
+  "evilswarm_mandragora": {
+    "name": "벨즈 만드라고"
+  },
+  "evilswarm_salamandra": {
+    "name": "벨즈 살라만드라"
+  },
+  "exodia": {
+    "name": "엑조디아"
+  },
+  "exodia_(full_body)": {
+    "name": "엑조디아"
+  },
+  "exodia_necross": {
+    "name": "엑조디아 네크로스"
+  },
+  "exodia_the_forbidden_evolution": {
+    "name": "봉인된 엑조디아 진화"
+  },
+  "exodius_the_ultimate_forbidden_lord": {
+    "name": "궁극봉인신 엑조디오스"
+  },
+  "fenrir": {
+    "name": "펜리르"
+  },
+  "feral_imp": {
+    "name": "그렘린"
+  },
+  "fiend_kraken": {
+    "name": "핀드 크라켄"
+  },
+  "fiend_sword": {
+    "name": "마검"
+  },
+  "fossil_dyna_pachycephalo": {
+    "name": "포실 다이나 파키세팔로"
+  },
+  "fossil_warrior_skull_king": {
+    "name": "화석전사 스컬 킹"
+  },
+  "frost_&_flame_dragon": {
+    "name": "프로스트 앤드 플레임 드래곤"
+  },
+  "frost_and_flame_dragon": {
+    "name": "프로스트 앤드 플레임 드래곤"
+  },
+  "frostosaurus": {
+    "name": "프로스트자우르스"
+  },
+  "gagagigo": {
+    "name": "가가기고"
+  },
+  "gaia_the_dragon_champion": {
+    "name": "용기사 가이아",
+    "skipStrip": true
+  },
+  "gaia_the_fierce_knight": {
+    "name": "암흑기사 가이아",
+    "skipStrip": true
+  },
+  "gamma_the_magnet_warrior": {
+    "name": "마그넷 워리어 γ"
+  },
+  "gate_guardian": {
+    "name": "게이트 가디언"
+  },
+  "gazelle_the_king_of_mythical_beasts": {
+    "name": "환수왕 가젤",
+    "skipStrip": true
+  },
+  "gellenduo": {
+    "name": "젤엔듀오"
+  },
+  "gem-knight_citrine": {
+    "name": "젬나이트 시트린"
+  },
+  "gem-knight_master_diamond": {
+    "name": "젬나이트 마스터 다이아"
+  },
+  "gem_knight_citrine": {
+    "name": "젬나이트 시트린"
+  },
+  "gem_knight_master_diamond": {
+    "name": "젬나이트 마스터 다이아"
+  },
+  "genex_ally_birdman": {
+    "name": "A 제넥스 버드맨"
+  },
+  "ghostrick_ghoul": {
+    "name": "고스트릭 구울"
+  },
+  "ghostrick_mummy": {
+    "name": "고스트릭 머미"
+  },
+  "ghostrick_skeleton": {
+    "name": "고스트릭 스켈레톤"
+  },
+  "ghostrick_stein": {
+    "name": "고스트릭 슈타인"
+  },
+  "ghostrick_yeti": {
+    "name": "고스트릭 예티"
+  },
+  "giant_soldier_of_stone": {
+    "name": "암석의 거병"
+  },
+  "giga_gagagigo": {
+    "name": "기가가가기고"
+  },
+  "gigobyte": {
+    "name": "기고바이트"
+  },
+  "gogiga_gagagigo": {
+    "name": "고기가 가가기고"
+  },
+  "golden_eyes_ido": {
+    "name": "천안의 사교신"
+  },
+  "golden_eyes_idol": {
+    "name": "천안의 사교신"
+  },
+  "golden_homunculus": {
+    "name": "골드 호문쿨루스"
+  },
+  "gozuki": {
+    "name": "고즈키"
+  },
+  "granadora": {
+    "name": "그라나도라"
+  },
+  "graverobber": {
+    "name": "하니와"
+  },
+  "great_moth": {
+    "name": "그레이트 모스"
+  },
+  "great_white": {
+    "name": "그레이트 화이트"
+  },
+  "green_baboon,_defender_of_the_forest": {
+    "name": "숲의 파수꾼 그린 바분",
+    "skipStrip": true
+  },
+  "green_baboon_defender_of_the_forest": {
+    "name": "숲의 파수꾼 그린 바분",
+    "skipStrip": true
+  },
+  "green_gadget": {
+    "name": "그린 가젯"
+  },
+  "green_gadget_alternate": {
+    "name": "그린 가젯"
+  },
+  "gren,_tactician_of_dark_world": {
+    "name": "암흑계의 책사 그린"
+  },
+  "griffore": {
+    "name": "그리포르"
+  },
+  "guardian_grarl": {
+    "name": "가디언 그라르"
+  },
+  "hade-hane": {
+    "name": "하데하네"
+  },
+  "hade_hane": {
+    "name": "하데하네"
+  },
+  "hane-hane": {
+    "name": "하네하네"
+  },
+  "hane_hane": {
+    "name": "하네하네"
+  },
+  "harpie_s_pet_dragon": {
+    "name": "해피의 애완 드래곤"
+  },
+  "harpies_pet_dragon": {
+    "name": "해피의 애완 드래곤"
+  },
+  "headless_knight": {
+    "name": "목없는 기사"
+  },
+  "hinotama_soul": {
+    "name": "히노타마 소울"
+  },
+  "hitotsu-me_giant": {
+    "name": "외눈박이 거인"
+  },
+  "hitotsu_me_giant": {
+    "name": "외눈박이 거인"
+  },
+  "humanoid_slime": {
+    "name": "휴머노이드 슬라임"
+  },
+  "hundred-eyes_dragon": {
+    "name": "원 헌드레드 아이 드래곤",
+    "skipStrip": true
+  },
+  "hundred_eyes_dragon": {
+    "name": "원 헌드레드 아이 드래곤",
+    "skipStrip": true
+  },
+  "hungry_burger": {
+    "name": "헝그리 버거"
+  },
+  "hydrogeddon": {
+    "name": "하이드로게돈"
+  },
+  "hyozanryu": {
+    "name": "효잔류"
+  },
+  "hyper_hammerhead": {
+    "name": "하이퍼 해머헤드"
+  },
+  "illusionist_faceless_mage": {
+    "name": "일루저니스트 노 페이스"
+  },
+  "imairuka": {
+    "name": "이마이루카"
+  },
+  "inpachi": {
+    "name": "목인18"
+  },
+  "jetroid": {
+    "name": "제트로이드"
+  },
+  "jinzo": {
+    "name": "인조인간 사이코 쇼커"
+  },
+  "jinzo_the_machine_menace": {
+    "name": "인조인간 사이코 쇼커 기계의 위협"
+  },
+  "junk_warrior": {
+    "name": "정크 워리어"
+  },
+  "kahkki,_guerilla_of_dark_world": {
+    "name": "암흑계의 척후 카키"
+  },
+  "kazejin": {
+    "name": "풍마신 히우가"
+  },
+  "king_dragun": {
+    "name": "킹 드래군"
+  },
+  "king_of_the_skull_servants": {
+    "name": "와이트 킹",
+    "skipStrip": true
+  },
+  "koitsu": {
+    "name": "코이츠"
+  },
+  "kozaky": {
+    "name": "코자키"
+  },
+  "kuriboh": {
+    "name": "크리보"
+  },
+  "la_jinn_the_mystical_genie": {
+    "name": "램프의 마정 라 진"
+  },
+  "la_jinn_the_mystical_genie_(all_variants)": {
+    "name": "램프의 마정 라 진"
+  },
+  "la_jinn_the_mystical_genie_of_the_lamp": {
+    "name": "램프의 마정 라 진"
+  },
+  "lava_golem": {
+    "name": "용암마신 라바 골렘"
+  },
+  "legendary_swordsman": {
+    "name": "전설의 검호 마사키"
+  },
+  "levia-dragon_daedalus": {
+    "name": "리바이어선 드래곤 다이달로스"
+  },
+  "levia_dragon_daedalus": {
+    "name": "리바이어선 드래곤 다이달로스"
+  },
+  "lord_of_d": {
+    "name": "로드 오브 드래곤",
+    "skipStrip": true
+  },
+  "lord_of_d.": {
+    "name": "로드 오브 드래곤",
+    "skipStrip": true
+  },
+  "luster_dragon": {
+    "name": "사파이어 드래곤"
+  },
+  "magician_robe": {
+    "name": "매지션즈 로브"
+  },
+  "magicians_robe": {
+    "name": "매지션즈 로브"
+  },
+  "magikuriboh": {
+    "name": "매직 크리보"
+  },
+  "man-eating_plant": {
+    "name": "식인식물"
+  },
+  "manga_ryu-ran": {
+    "name": "만화 류란"
+  },
+  "masked_beast_des_gardius": {
+    "name": "가면마수 데스 가디우스"
+  },
+  "master_of_oz": {
+    "name": "마스터 오브 오즈"
+  },
+  "megalosmasher_x": {
+    "name": "메갈로스매셔 X"
+  },
+  "megazowler": {
+    "name": "메가자울러"
+  },
+  "meteor_b": {
+    "name": "메테오 블랙 드래곤"
+  },
+  "meteor_b._dragon": {
+    "name": "메테오 블랙 드래곤"
+  },
+  "mezuki": {
+    "name": "메즈키"
+  },
+  "milennium_shield": {
+    "name": "천년의 방패"
+  },
+  "millennium_scorpion": {
+    "name": "밀레니엄 스콜피온"
+  },
+  "millennium_shield": {
+    "name": "천년의 방패"
+  },
+  "morphing_jar": {
+    "name": "메타모르 포트"
+  },
+  "moves:": {
+    "name": "Moves:"
+  },
+  "muka_muka": {
+    "name": "무카무카"
+  },
+  "naturia_beast": {
+    "name": "나츄르 비스트"
+  },
+  "naturia_cosmobeet": {
+    "name": "나츄르 코스모비트"
+  },
+  "naturia_landoise": {
+    "name": "나츄르 랜드올스"
+  },
+  "needle_burrower": {
+    "name": "니들 벙커"
+  },
+  "neo-spacian_glow_moss": {
+    "name": "N 글로 모스"
+  },
+  "number_22:_zombiestein": {
+    "name": "No.22 좀비슈타인",
+    "skipStrip": true
+  },
+  "number_22_zombiestein": {
+    "name": "No.22 좀비슈타인",
+    "skipStrip": true
+  },
+  "obelisk_the_tormentor": {
+    "name": "오벨리스크의 거신병",
+    "skipStrip": true
+  },
+  "ocean_dragon_lord_kairyu_shin": {
+    "name": "해룡신 카이류신",
+    "skipStrip": true
+  },
+  "ocean_dragon_lord_—_kairyu-shin": {
+    "name": "해룡신 카이류신",
+    "skipStrip": true
+  },
+  "ojama_black": {
+    "name": "오쟈마 블랙 / 그린"
+  },
+  "ojama_black___green": {
+    "name": "오쟈마 블랙 / 그린"
+  },
+  "ojama_king": {
+    "name": "오쟈마 킹"
+  },
+  "ojama_knight": {
+    "name": "오쟈마 나이트"
+  },
+  "overtex_qoatlus": {
+    "name": "오버텍스 고아틀루스"
+  },
+  "oxygeddon": {
+    "name": "옥시게돈"
+  },
+  "paladin_of_the_cursed_dragon": {
+    "name": "명룡기사"
+  },
+  "paladin_of_white_dragon": {
+    "name": "백룡의 성기사"
+  },
+  "pale_beast": {
+    "name": "페일 비스트"
+  },
+  "panther_warrior": {
+    "name": "칠흑의 표전사 팬서 워리어"
+  },
+  "panzer_dragon": {
+    "name": "판처 드래곤"
+  },
+  "papa_corn": {
+    "name": "파파콘"
+  },
+  "plaguespreader_zombie": {
+    "name": "좀비 캐리어"
+  },
+  "power_invader": {
+    "name": "파워 인베이더"
+  },
+  "pyramid_turtle": {
+    "name": "피라미드 터틀"
+  },
+  "quickdraw_synchron": {
+    "name": "퀵 싱크론"
+  },
+  "ra_(winged_dragon_of_ra)": {
+    "name": "라의 익신룡"
+  },
+  "red-eyes_black_dragon": {
+    "name": "붉은 눈의 흑룡"
+  },
+  "red-eyes_dark_dragoon": {
+    "name": "초마도용기사 드라군 오브 레드아이즈"
+  },
+  "red-eyes_darkness_dragon": {
+    "name": "붉은 눈의 암흑룡"
+  },
+  "red_gadget": {
+    "name": "레드 가젯"
+  },
+  "relinquished": {
+    "name": "새크리파이스"
+  },
+  "revendread_slayer": {
+    "name": "벤데트 슬레이어"
+  },
+  "rocket_warrior": {
+    "name": "로켓 전사"
+  },
+  "ronintoadin": {
+    "name": "이키 개구리"
+  },
+  "rusty_bardiche": {
+    "name": "러스티 발디시"
+  },
+  "sanga_of_the_thunder": {
+    "name": "뇌마신 산가"
+  },
+  "sasuke_samurai": {
+    "name": "닌자 사스케"
+  },
+  "shinato,_king_of_a_higher_plane": {
+    "name": "천공기사 퍼시어스"
+  },
+  "silent_magician_lv8": {
+    "name": "사일런트 매지션 LV8"
+  },
+  "skull_archfiend_of_lightning": {
+    "name": "신뢰의 마왕 스컬 데몬"
+  },
+  "skull_servant": {
+    "name": "와이트"
+  },
+  "slifer_the_sky_dragon": {
+    "name": "오시리스의 천공룡"
+  },
+  "snowman_eater": {
+    "name": "스노우맨 이터"
+  },
+  "soldier_of_chaos": {
+    "name": "혼돈의 전사",
+    "skipStrip": true
+  },
+  "sorcerer_of_dark_magic": {
+    "name": "흑의 마법사"
+  },
+  "soul_hunter": {
+    "name": "소울 헌터"
+  },
+  "spear_dragon": {
+    "name": "스피어 드래곤"
+  },
+  "speed_warrior": {
+    "name": "스피드 워리어"
+  },
+  "steel_ogre_grotto": {
+    "name": "철의 전갈"
+  },
+  "steel_ogre_grotto_#1": {
+    "name": "철의 전갈"
+  },
+  "suijin": {
+    "name": "수마신 스우가"
+  },
+  "summoned_skull": {
+    "name": "데몬의 소환"
+  },
+  "super_conductor_tyranno": {
+    "name": "초전도 공수"
+  },
+  "supreme_king_of_armageddon": {
+    "name": "종언의 패왕"
+  },
+  "sword_arm_of_dragon": {
+    "name": "드래곤의 검완"
+  },
+  "swordsman_of_landstar": {
+    "name": "랜드스타의 검사"
+  },
+  "the_creator": {
+    "name": "창세신",
+    "skipStrip": true
+  },
+  "the_dark_creator": {
+    "name": "다크 크리에이터"
+  },
+  "the_dark_magicians": {
+    "name": "초마도사-블랙 매지션즈"
+  },
+  "the_fabled_cerburrel": {
+    "name": "마굉신수 캐시"
+  },
+  "the_fabled_cerurrel": {
+    "name": "마굉신수 캐시"
+  },
+  "the_fabled_ganashia": {
+    "name": "마굉신수 가나시아"
+  },
+  "the_masked_beast": {
+    "name": "가면마수 마스크드 헬레이저"
+  },
+  "the_tricky": {
+    "name": "THE 트리키",
+    "skipStrip": true
+  },
+  "the_winged_dragon_of_ra": {
+    "name": "라의 익신룡"
+  },
+  "the_winged_dragon_of_ra_(variant)": {
+    "name": "라의 익신룡"
+  },
+  "thousand-eyes_idol": {
+    "name": "사우전드 아이즈 아이돌"
+  },
+  "thousand_dragon": {
+    "name": "사우전드 드래곤"
+  },
+  "thousand_eyes_restrict": {
+    "name": "사우전드 아이즈 새크리파이스",
+    "skipStrip": true
+  },
+  "time_wizard_of_tomorrow": {
+    "name": "시간의 마술사",
+    "skipStrip": true
+  },
+  "togex": {
+    "name": "토겍스"
+  },
+  "toon_alligator": {
+    "name": "툰 앨리게이터"
+  },
+  "toon_ancient_gear_golem": {
+    "name": "툰 앤틱 기어 골렘"
+  },
+  "toon_barrel_dragon": {
+    "name": "툰 리볼버 드래곤"
+  },
+  "toon_black_luster_soldier": {
+    "name": "툰 카오스 솔저"
+  },
+  "toon_briefcase": {
+    "name": "툰 브리프케이스"
+  },
+  "toon_buster_blader": {
+    "name": "툰 버스터 블레이더"
+  },
+  "toon_cannon_soldier": {
+    "name": "툰 캐논 솔저"
+  },
+  "toon_cyber_dragon": {
+    "name": "툰 사이버 드래곤"
+  },
+  "toon_dark_magician": {
+    "name": "툰 블랙 매지션"
+  },
+  "toon_dark_magician_girl": {
+    "name": "툰 블랙 매지션 걸"
+  },
+  "toon_gemini_elf": {
+    "name": "툰 제미니 엘프"
+  },
+  "toon_goblin_attack_force": {
+    "name": "툰 고블린 돌격부대"
+  },
+  "toon_harpie_lady": {
+    "name": "툰 해피 레이디"
+  },
+  "toon_masked_sorcerer": {
+    "name": "툰 가면마도사"
+  },
+  "toon_mermaid": {
+    "name": "툰 머메이드"
+  },
+  "toon_summoned_skull": {
+    "name": "툰 데몬"
+  },
+  "torike": {
+    "name": "토리케라이너"
+  },
+  "treeborn_frog": {
+    "name": "황천 개구리"
+  },
+  "tri-horned_dragon": {
+    "name": "트라이혼 드래곤"
+  },
+  "turtle_raccoon": {
+    "name": "터틀 라쿤"
+  },
+  "twin-headed_king_rex": {
+    "name": "쌍두의 킹 렉스"
+  },
+  "twin-headed_wolf": {
+    "name": "트윈헤드 울프"
+  },
+  "twin_headed_king_rex": {
+    "name": "쌍두의 킹 렉스"
+  },
+  "ultimate_ancient_gear_golem": {
+    "name": "앤틱 기어 얼티밋 골렘"
+  },
+  "unstoppable_exodia_incarnate": {
+    "name": "엑조디아 네크로스 진화"
+  },
+  "valkerion_the_magnet_warrior": {
+    "name": "마그넷 발키리온"
+  },
+  "valkyrion_the_magnet_warrior": {
+    "name": "마그넷 발키리온"
+  },
+  "versago_the_destroyer": {
+    "name": "융합주인생물-어둠"
+  },
+  "volcanic_doomfire": {
+    "name": "볼캐닉 데블"
+  },
+  "volcanic_hammerer": {
+    "name": "볼캐닉 해머"
+  },
+  "volcanic_rocket": {
+    "name": "볼캐닉 로켓"
+  },
+  "volcanic_shell": {
+    "name": "볼캐닉 불릿"
+  },
+  "water_dragon": {
+    "name": "워터 드래곤"
+  },
+  "water_dragon_cluster": {
+    "name": "워터 드래곤 클러스터"
+  },
+  "wattgiraffe": {
+    "name": "에레키린"
+  },
+  "white_night_dragon": {
+    "name": "화이트 나이트 드래곤"
+  },
+  "woodland_sprite": {
+    "name": "숲의 정령"
+  },
+  "x-head_cannon": {
+    "name": "X-헤드 캐논"
+  },
+  "y-dragon_head": {
+    "name": "Y-드래곤 헤드"
+  },
+  "yellow_gadget": {
+    "name": "옐로 가젯"
+  },
+  "yellow_gear": {
+    "name": "옐로 가젯"
+  },
+  "yubel": {
+    "name": "유벨"
+  },
+  "yubel_the_loving_defender": {
+    "name": "유벨"
+  },
+  "z-metal_tank": {
+    "name": "Z-메탈 캐터필러"
+  },
+  "zombyra_the_dark": {
+    "name": "다크 히어로 좀바이어"
+  }
+}

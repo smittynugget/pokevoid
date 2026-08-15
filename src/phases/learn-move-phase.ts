@@ -2,7 +2,8 @@ import BattleScene from "#app/battle-scene.js";
 import { initMoveAnim, loadMoveAnimAssets } from "#app/data/battle-anims.js";
 import { allMoves } from "#app/data/move.js";
 import { SpeciesFormChangeMoveLearnedTrigger } from "#app/data/pokemon-forms.js";
-import { Moves } from "#app/enums/moves.js";
+import { Moves, isYuMove } from "#app/enums/moves.js";
+import { isDuelmonSpecies } from "#app/data/duelmon-rankups.js";
 import { getPokemonNameWithAffix } from "#app/messages.js";
 import EvolutionSceneHandler from "#app/ui/evolution-scene-handler.js";
 import { SummaryUiMode } from "#app/ui/summary-ui-handler.js";
@@ -25,6 +26,10 @@ export class LearnMovePhase extends PlayerPartyMemberPokemonPhase {
 
     const pokemon = this.getPokemon();
     const move = allMoves[this.moveId];
+
+    if (isYuMove(this.moveId) && !isDuelmonSpecies(pokemon.species.speciesId)) {
+      return this.end();
+    }
 
     const existingMoveIndex = pokemon.getMoveset().findIndex(m => m?.moveId === move.id);
 

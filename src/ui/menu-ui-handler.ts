@@ -1,6 +1,6 @@
 import BattleScene, { bypassLogin } from "../battle-scene";
 import { TextStyle, addTextObject, getTextStyleOptions } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import * as Utils from "../utils";
 import { addWindow, WindowVariant } from "./ui-theme";
 import MessageUiHandler from "./message-ui-handler";
@@ -13,6 +13,7 @@ import { GameDataType } from "#enums/game-data-type";
 import BgmBar from "#app/ui/bgm-bar";
 import AwaitableUiHandler from "./awaitable-ui-handler";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
+import { isPrimaryPointer } from "./pointer-utils";
 import { TutorialService } from "#app/ui/tutorial-service";
 import { PermaQuestModifier, PermaRunQuestModifier, PersistentModifier, PermaPartyAbilityModifier, PermaCollectedTypeModifier } from "../modifier/modifier";
 import { TitlePhase } from "../phases/title-phase";
@@ -22,6 +23,8 @@ import {signOut} from "firebase/auth";
 import {auth, db} from "#app/server/firebase";
 import {doc, updateDoc} from "firebase/firestore";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
+import { isDriveConnected, connectGoogleDrive, disconnectGoogleDrive, getLastSyncLabel } from "#app/system/drive-auth";
+import { driveSyncService } from "#app/system/drive-sync-service";
 
 enum MenuOptions {
   GAME_SETTINGS,
@@ -38,6 +41,35 @@ enum MenuOptions {
 let socialUrl = "https://www.tiktok.com/@smittynugget";
 const discordUrl = "https://discord.gg/xsQummMK3H";
 const githubUrl = "https://github.com/smittynugget/pokevoid";
+
+function driveConnectErrorKey(error?: string): string {
+  switch (error) {
+    case "GIS unavailable":
+      return "menuUiHandler:driveErrorGisUnavailable";
+    case "access_denied":
+    case "popup_closed":
+      return "menuUiHandler:driveErrorAccessDenied";
+    default:
+      return "menuUiHandler:driveConnectFailed";
+  }
+}
+
+function driveSyncErrorKey(error?: string): string {
+  switch (error) {
+    case "Offline":
+      return "menuUiHandler:syncErrorOffline";
+    case "Upload failed":
+      return "menuUiHandler:syncErrorUploadFailed";
+    case "Not connected":
+      return "menuUiHandler:driveNotConnected";
+    case "Sync in progress":
+      return "menuUiHandler:syncErrorInProgress";
+    case "Cloud is newer":
+      return "menuUiHandler:syncErrorCloudNewer";
+    default:
+      return "menuUiHandler:syncFailed";
+  }
+}
 
 export default class MenuUiHandler extends MessageUiHandler {
   private readonly textPadding = 8;
@@ -56,6 +88,7 @@ export default class MenuUiHandler extends MessageUiHandler {
 
   private excludedMenus: () => ConditionalMenu[];
   private menuOptions: MenuOptions[];
+  private _menuHitZones: Phaser.GameObjects.Zone[] = [];
 
   protected manageDataConfig: OptionSelectConfig;
   protected communityConfig: OptionSelectConfig;
@@ -71,7 +104,7 @@ export default class MenuUiHandler extends MessageUiHandler {
 
     this.excludedMenus = () => [
       { condition: [Mode.COMMAND, Mode.TITLE].includes(mode ?? Mode.TITLE), options: [MenuOptions.EGG_GACHA, MenuOptions.EGG_LIST] },
-      { condition: bypassLogin, options: [MenuOptions.LOG_OUT] }
+      { condition: (this.scene as BattleScene).gameData?.tutorialOnboardActive === true && !TitlePhase.debugTutorialFlowActive, options: [MenuOptions.SAVE_AND_QUIT] }
     ];
 
     this.menuOptions = Utils.getEnumKeys(MenuOptions)
@@ -85,10 +118,13 @@ export default class MenuUiHandler extends MessageUiHandler {
     const ui = this.getUi();
     const lang = i18next.resolvedLanguage?.substring(0, 2)!;
 
-    this.bgmBar = new BgmBar(this.scene);
-    this.bgmBar.setup();
-
-    ui.bgmBar = this.bgmBar;
+    if (ui.bgmBar) {
+      this.bgmBar = ui.bgmBar;
+    } else {
+      this.bgmBar = new BgmBar(this.scene);
+      this.bgmBar.setup();
+      ui.bgmBar = this.bgmBar;
+    }
 
     this.menuContainer = this.scene.add.container(1, -(this.scene.game.canvas.height / 6) + 1);
     this.menuContainer.setName("menu");
@@ -108,7 +144,7 @@ export default class MenuUiHandler extends MessageUiHandler {
     const ui = this.getUi();
     this.excludedMenus = () => [
       { condition: this.scene.getCurrentPhase() instanceof SelectModifierPhase, options: [MenuOptions.EGG_GACHA, MenuOptions.EGG_LIST] },
-      { condition: bypassLogin, options: [MenuOptions.LOG_OUT] }
+      { condition: (this.scene as BattleScene).gameData?.tutorialOnboardActive === true && !TitlePhase.debugTutorialFlowActive, options: [MenuOptions.SAVE_AND_QUIT] }
     ];
 
     this.menuOptions = Utils.getEnumKeys(MenuOptions)
@@ -141,6 +177,41 @@ export default class MenuUiHandler extends MessageUiHandler {
     this.menuContainer.add(this.menuBg);
 
     this.menuContainer.add(this.optionSelectText);
+
+    this._menuHitZones.forEach(z => z.destroy());
+    this._menuHitZones = [];
+
+    const menuRowStep = 96 * this.scale;
+    const menuFirstRowY = 6 + 18 * this.scale;
+
+    for (let i = 0; i < this.menuOptions.length; i++) {
+      const zone = this.scene.add.zone(
+        this.menuBg.x + 4,
+        this.menuBg.y + menuFirstRowY + i * menuRowStep,
+        this.menuBg.width - 8,
+        menuRowStep
+      );
+      zone.setOrigin(0, 0);
+      zone.setInteractive({ useHandCursor: true });
+      this.menuContainer.add(zone);
+      this._menuHitZones.push(zone);
+
+      const idx = i;
+      zone.on("pointerover", () => {
+        if (this.cursor !== idx) {
+          this.setCursor(idx);
+        }
+      });
+
+      zone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (!isPrimaryPointer(pointer)) return;
+        if (this.cursor !== idx) {
+          this.setCursor(idx);
+        } else {
+          this.processInput(Button.ACTION);
+        }
+      });
+    }
 
     ui.add(this.menuContainer);
 
@@ -225,6 +296,7 @@ export default class MenuUiHandler extends MessageUiHandler {
           },
           keepOpen: true
         });
+
     manageDataOptions.push({
       label: i18next.t("menuUiHandler:removePermaItems", { defaultValue: "Remove ∞ITEMS" }),
       handler: () => {
@@ -300,6 +372,62 @@ export default class MenuUiHandler extends MessageUiHandler {
       keepOpen: true
     });
     manageDataOptions.push({
+      label: isDriveConnected()
+        ? i18next.t("menuUiHandler:disconnectGoogleDrive")
+        : i18next.t("menuUiHandler:connectGoogleDrive"),
+      handler: () => {
+        if (isDriveConnected()) {
+          ui.showText(i18next.t("menuUiHandler:confirmDisconnectDrive"), null, () => {
+            ui.setOverlayMode(Mode.CONFIRM, () => {
+              disconnectGoogleDrive();
+              ui.revertMode();
+              ui.showText(i18next.t("menuUiHandler:driveDisconnected"), null, () => ui.showText(""), Utils.fixedInt(1500));
+            }, () => {
+              ui.revertMode();
+              ui.showText("", null, () => {});
+            });
+          });
+        } else {
+          ui.showText(i18next.t("menuUiHandler:driveConnecting"), null, () => {}, 0);
+          connectGoogleDrive().then((result) => {
+            ui.revertMode();
+            if (result.success && (this.scene as BattleScene).cloudSaveEnabled) {
+              import("#app/system/drive-sync-service").then(({ driveSyncService }) => {
+                driveSyncService.restartInterval((this.scene as BattleScene).cloudSaveIntervalMs);
+              }).catch(() => {});
+            }
+            const msg = result.success ? "menuUiHandler:driveConnected" : driveConnectErrorKey(result.error);
+            ui.showText(i18next.t(msg), null, () => ui.showText(""), Utils.fixedInt(1500));
+          });
+        }
+        return true;
+      },
+      keepOpen: true
+    });
+
+    manageDataOptions.push({
+      label: i18next.t("menuUiHandler:syncNow"),
+      handler: () => {
+        if (!isDriveConnected()) {
+          ui.showText(i18next.t("menuUiHandler:driveNotConnected"), null, () => ui.showText(""), Utils.fixedInt(1500));
+          return true;
+        }
+        ui.showText(i18next.t("menuUiHandler:syncInProgress"), null, () => {}, 0);
+        driveSyncService.syncNow().then((result) => {
+          ui.revertMode();
+          const syncLabel = getLastSyncLabel();
+          const successText = syncLabel
+            ? `${i18next.t("menuUiHandler:syncSuccess")} (${syncLabel})`
+            : i18next.t("menuUiHandler:syncSuccess");
+          const msg = result.success ? successText : i18next.t(driveSyncErrorKey(result.error));
+          ui.showText(msg, null, () => ui.showText(""), Utils.fixedInt(1500));
+        });
+        return true;
+      },
+      keepOpen: true
+    });
+
+    manageDataOptions.push({
           label: i18next.t("menuUiHandler:cancel"),
           handler: () => {
             this.scene.ui.revertMode();
@@ -307,10 +435,11 @@ export default class MenuUiHandler extends MessageUiHandler {
       },
       keepOpen: true
     });
+
     this.manageDataConfig = {
       xOffset: 98,
       options: manageDataOptions,
-      maxOptions: 7
+      maxOptions: 9
     };
 
     const communityOptions: OptionSelectItem[] = [
@@ -372,6 +501,21 @@ export default class MenuUiHandler extends MessageUiHandler {
     };
 
     this.setCursor(0);
+  }
+
+  public getManageDataConfig(): OptionSelectConfig {
+    if (!this.manageDataConfig) {
+      this.render();
+    }
+    const driveOpt = this.manageDataConfig.options.find(
+      (o: any) => o.label === i18next.t("menuUiHandler:connectGoogleDrive") || o.label === i18next.t("menuUiHandler:disconnectGoogleDrive")
+    );
+    if (driveOpt) {
+      driveOpt.label = isDriveConnected()
+        ? i18next.t("menuUiHandler:disconnectGoogleDrive")
+        : i18next.t("menuUiHandler:connectGoogleDrive");
+    }
+    return this.manageDataConfig;
   }
 
   show(args: any[]): boolean {
@@ -460,6 +604,14 @@ export default class MenuUiHandler extends MessageUiHandler {
           success = true;
           break;
         case MenuOptions.MANAGE_DATA:
+          const driveOpt = this.manageDataConfig.options.find(
+            (o: any) => o.label === i18next.t("menuUiHandler:connectGoogleDrive") || o.label === i18next.t("menuUiHandler:disconnectGoogleDrive")
+          );
+          if (driveOpt) {
+            driveOpt.label = isDriveConnected()
+              ? i18next.t("menuUiHandler:disconnectGoogleDrive")
+              : i18next.t("menuUiHandler:connectGoogleDrive");
+          }
           ui.setOverlayMode(Mode.MENU_OPTION_SELECT, this.manageDataConfig);
           success = true;
           break;
@@ -473,6 +625,9 @@ export default class MenuUiHandler extends MessageUiHandler {
           success = true;
           break;
         case MenuOptions.SAVE_AND_QUIT:
+          if ((this.scene as BattleScene).gameData?.tutorialOnboardActive && !TitlePhase.debugTutorialFlowActive) {
+            break;
+          }
           if (this.scene.currentBattle) {
             success = true;
             if (Overrides.DEBUG_SAVE_TRACE) {
@@ -569,6 +724,9 @@ export default class MenuUiHandler extends MessageUiHandler {
     this._menuPatterns?.menu?.clear();
     this._menuPatterns = undefined;
 
+    this._menuHitZones.forEach(z => z.destroy());
+    this._menuHitZones = [];
+
     super.clear();
     this.menuContainer.setVisible(false);
     this.bgmBar.toggleBgmBar(false);
@@ -585,6 +743,9 @@ export default class MenuUiHandler extends MessageUiHandler {
   private getMenuOptionText(option: MenuOptions): string {
     if (option === MenuOptions.TUTORIAL) {
       return i18next.t('settings:tutorials');
+    }
+    if (option === MenuOptions.MANAGE_DATA) {
+      return i18next.t('menu:manageSaves');
     }
     return i18next.t(`menuUiHandler:${MenuOptions[option]}`);
   }

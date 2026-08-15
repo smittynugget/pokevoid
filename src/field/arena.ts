@@ -1,4 +1,6 @@
 import BattleScene from "../battle-scene";
+import { DUELMON_SPECIES } from "../data/duelmon-rankups";
+import { getEligibleDuelmonSpeciesForWave, getDuelmonBstLimitForWave } from "../data/duelmon-bst-utils";
 import { BiomePoolTier, PokemonPools, BiomeTierTrainerPools, biomePokemonPools, biomeTrainerPools } from "../data/biomes";
 import { Constructor } from "#app/utils";
 import * as Utils from "../utils";
@@ -132,6 +134,10 @@ export class Arena {
   }
 
   randomSpecies(waveIndex: integer, level: integer, attempt?: integer, luckValue?: integer): PokemonSpecies {
+    if (Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE && !this.scene.gameData?.tutorialOnboardActive) {
+      const eligible = getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, waveIndex);
+      return getPokemonSpecies(eligible[Utils.randSeedInt(eligible.length)]);
+    }
     const overrideSpecies = this.scene.gameMode.getOverrideSpecies(this.scene);
     if (overrideSpecies) {
       return overrideSpecies;
@@ -198,6 +204,12 @@ export class Arena {
             regen = level < 30;
             break;
         }
+      }
+    }
+
+    if (!regen && ret.generation === 20) {
+      if (!this.scene.duelmonsEnabledForRun || ret.baseTotal > getDuelmonBstLimitForWave(waveIndex)) {
+        regen = true;
       }
     }
 

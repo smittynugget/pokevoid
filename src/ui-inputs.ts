@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import {Mode} from "./ui/ui";
+import {Mode} from "./ui/mode";
 import {InputsController} from "./inputs-controller";
 import MessageUiHandler from "./ui/message-ui-handler";
 import StarterSelectUiHandler from "./ui/starter-select-ui-handler";
@@ -13,24 +13,58 @@ import SettingsDisplayUiHandler from "./ui/settings/settings-display-ui-handler"
 import SettingsAudioUiHandler from "./ui/settings/settings-audio-ui-handler";
 import RunInfoUiHandler from "./ui/run-info-ui-handler";
 import RunHistoryUiHandler from "./ui/run-history-ui-handler";
-import { randomString } from "./utils";
+import { randomString, intToRoman, hashCode, randSeedInt } from "./utils";
 import { GameMode, GameModes, getGameMode } from "./game-mode";
 import { ShopModifierSelectPhase } from "./phases/shop-modifier-select-phase";
-import { SelectPermaModifierPhase } from "./phases/select-perma-modifier-phase";
 import { QuestUnlockables, QuestState } from "./system/game-data";
 import { activateSmitomTalk } from "./ui/title-ui-handler";
 import ModifierSelectUiHandler from "./ui/modifier-select-ui-handler";
-import { AddPokemonModifierType } from "./modifier/modifier-type";
+import { AddPokemonModifierType, getPlayerModifierTypeOptions, regenerateModifierPoolThresholds, ModifierPoolType, PathNodeTypeFilter, ModifierType, ModifierTypeOption, CollectedTypeModifierType } from "./modifier/modifier-type";
+import { ModifierTier } from "./modifier/modifier-tier";
+import { DUELMON_SPECIES } from "./data/duelmon-rankups";
+import { Gender } from "./data/gender";
+import i18next from "i18next";
+import { getPokemonSpecies } from "./data/pokemon-species";
+import { Species } from "#enums/species";
+import Battle, { BattleType, FixedBattleConfig, createSmittyBattle } from "./battle";
 import ChampionSelectUiHandler from "./ui/champion-select-ui-handler";
 import BattlePathUiHandler from "./ui/battle-path-ui-handler";
 import { ModifierTooltipUtils } from "#app/ui/modifier-tooltip-utils";
-
+import Overrides, { DEBUG_YU_VISUAL_TUNING } from "./overrides";
+import { PermaRunQuestModifier, PermaWinQuestModifier, PermaBeatTrainerQuestModifier, GlitchPieceModifier, CollectedTypeModifier } from "./modifier/modifier";
+import { Type } from "./data/type";
+import { allAbilities } from "./data/ability";
+import { BountyRewardPhase } from "./phases/bounty-reward-phase";
+import { QuestManagerPhase } from "./phases/quest-manager-phase";
+import { TitlePhase } from "./phases/title-phase";
+import { SlideshowCutscenePhase } from "./phases/slideshow-cutscene-phase";
+import { STORY_CUTSCENES } from "./system/story-cutscenes";
+import { PlayerGender } from "#enums/player-gender";
+import { TrainerType } from "#enums/trainer-type";
+import Trainer, { TrainerVariant } from "./field/trainer";
+import TrainerData from "./system/trainer-data";
+import { getDynamicRival } from "./data/trainer-config";
+import { Biome } from "#enums/biome";
+import { EncounterPhase } from "./phases/encounter-phase";
+import { ShinyPowerPhase } from "./phases/shiny-power-phase";
+import { RankUpPhase } from "./phases/rank-up-phase";
+import type { PlayerPokemon } from "./field/pokemon";
+import { YuMovePhase } from "./phases/yu-move-phase";
+import { isDuelmonSpecies } from "./data/duelmon-rankups";
+import { pickThreeYuMovesWithFallback } from "./data/yu-move-utils";
+import { addCorruptedRivalOverlay, playCutsceneFaintAnim } from "./utils/story-cutscene-overlays";
+import { runPowerUnlockOverlays } from "./utils/story-cutscene-power-overlays";
+import { RewardObtainedType, UnlockModePokeSpriteType } from "./ui/reward-obtained-ui-handler";
+import type { RewardConfig } from "./ui/reward-obtained-ui-handler";
+import { fixedInt } from "./utils";
 type ActionKeys = Record<Button, () => void>;
 
 export class UiInputs {
   private scene: BattleScene;
   private events: Phaser.Events.EventEmitter;
   private inputsController: InputsController;
+  private _leftMouseDown = false;
+  private _rightMouseDown = false;
 
   constructor(scene: BattleScene, inputsController: InputsController) {
     this.scene = scene;
@@ -38,9 +72,245 @@ export class UiInputs {
     this.init();
   }
 
+  private isTouchControlHit(pointer: Phaser.Input.Pointer): boolean {
+    if (!this.scene.enableTouchControls) return false;
+    const controlGroups = document.querySelectorAll("#dpad, #apad, .apadNewBtnContainer");
+    const evt = pointer.event;
+    let x: number, y: number;
+    if (evt instanceof TouchEvent && evt.changedTouches?.length) {
+      x = evt.changedTouches[0].clientX;
+      y = evt.changedTouches[0].clientY;
+    } else if (evt instanceof MouseEvent) {
+      x = evt.clientX;
+      y = evt.clientY;
+    } else {
+      return false;
+    }
+    for (const el of controlGroups) {
+      const rect = (el as HTMLElement).getBoundingClientRect();
+      if (rect.width > 0 && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   init(): void {
     this.events = this.inputsController.events;
     this.listenInputs();
+
+    this.scene.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (this.scene.uiEditModeActive) return;
+      if (!this.scene.ui) return;
+      if (this.scene.disableMouseInput && !(pointer.event instanceof TouchEvent)) return;
+      if (this.isTouchControlHit(pointer)) return;
+      if (pointer.button === 0) {
+        this._leftMouseDown = true;
+        if (this._rightMouseDown) {
+          this.scene.ui.processInput(Button.ACTION);
+          return;
+        }
+        const currentMode = this.scene.ui.getMode();
+        const hitObjects = this.scene.input.hitTestPointer(pointer);
+        if (!hitObjects || hitObjects.length === 0) {
+          if (currentMode === Mode.TITLE) {
+            return;
+          }
+          this.scene.ui.processInput(Button.ACTION);
+        }
+      } else if (pointer.button === 2) {
+        this._rightMouseDown = true;
+        this._leftMouseDown = false;
+        if (this.scene.ui.getMode() === Mode.TITLE) {
+          this.buttonMenu();
+          return;
+        }
+        this.scene.ui.processInput(Button.CANCEL);
+      }
+    });
+
+    this.scene.input.on("pointerup", (pointer: Phaser.Input.Pointer) => {
+      if (pointer.button === 0) this._leftMouseDown = false;
+      else if (pointer.button === 2) this._rightMouseDown = false;
+    });
+
+    this.scene.game.canvas.addEventListener("pointerleave", () => {
+      this._leftMouseDown = false;
+      this._rightMouseDown = false;
+    });
+
+    this.scene.input.on("wheel", (_pointer: Phaser.Input.Pointer, _g: any, _dx: number, dy: number) => {
+      if (!this.scene.ui) return;
+      if (this.scene.disableMouseInput) return;
+      const mode = this.scene.ui?.getMode();
+      if (mode === Mode.POKEMON_BATTLE_TOOLTIP) {
+        if (dy > 0) {
+          this.scene.ui.processInput(Button.RIGHT);
+        } else if (dy < 0) {
+          this.scene.ui.processInput(Button.LEFT);
+        }
+        return;
+      }
+      if (dy > 0) {
+        this.scene.ui.processInput(Button.DOWN);
+      } else if (dy < 0) {
+        this.scene.ui.processInput(Button.UP);
+      }
+    });
+
+    if (Overrides.MODIFIER_SELECT_DEBUG_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-H", (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        const mode = this.scene.ui?.getMode();
+        if (mode === Mode.TITLE) {
+          this.launchModifierSelectDebug();
+          return;
+        }
+        if (mode === Mode.LOOT_REWARD_SELECT) return;
+        if (mode === Mode.SHOP_SELECT) return;
+        if (mode === Mode.CHAMPION_SELECT) return;
+        if (mode === Mode.POKEMON_BATTLE_TOOLTIP) return;
+        if ((mode === Mode.STARTER_SELECT || mode === Mode.EGG_STARTER_SELECT) && !Overrides.STARTER_SELECT_TWEAK_TOOL_OVERRIDE) return;
+        if (DEBUG_YU_VISUAL_TUNING) {
+          if (!this.scene.uiEditModeActive) {
+            this.scene.uiEditModeActive = true;
+          }
+          this.scene.ui.processInput(Button.CYCLE_ABILITY);
+        }
+      });
+    }
+
+    if (Overrides.MODIFIER_SELECT_DEBUG_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-J", () => {
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchRankUpLootDebug();
+        }
+      });
+    }
+
+    if (Overrides.MODIFIER_SELECT_DEBUG_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-G", (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchCollectedTypeShopDebug();
+          return;
+        }
+      });
+    }
+
+    if (Overrides.DEBUG_TUTORIAL_FLOW_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-K", () => {
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchTutorialFlowDebug();
+        }
+      });
+    }
+
+    if (Overrides.DEBUG_PEGASUS_BATTLE_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-L", () => {
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchPegasusBossDebug();
+        }
+      });
+    }
+
+    if (Overrides.DEBUG_SMITTY_BATTLE_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-FIVE", (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchSmittyBossDebug();
+        }
+      });
+    }
+
+    if (Overrides.DEBUG_WAVE35_SMITOM_TIP_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-FOUR", (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchWave35SmitomTipDebug();
+        }
+      });
+    }
+
+    if (Overrides.DEBUG_WAVE100_LEVEL1_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-ONE", (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchWave100Level1Debug();
+        }
+      });
+    }
+
+    if (Overrides.MODIFIER_SELECT_DEBUG_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-EIGHT", (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchShinyPowerDebug();
+        }
+      });
+    }
+
+    if (Overrides.MODIFIER_SELECT_DEBUG_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-SEVEN", (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchYuMoveDebug();
+        }
+      });
+    }
+
+    if (Overrides.MODIFIER_SELECT_DEBUG_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-SIX", (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchRivalDefeatCutsceneDebug();
+        }
+      });
+    }
+
+    if (Overrides.FORCE_BOUNTY_COMPLETION_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-NINE", (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        this.triggerBountyCompletionDebug();
+      });
+      this.scene.input.keyboard?.on("keydown-NUMPAD_NINE", (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        this.triggerBountyCompletionDebug();
+      });
+    }
+
+    this.scene.input.keyboard?.on("keydown-ZERO", (event: KeyboardEvent) => {
+      if (event.repeat) return;
+      const mode = this.scene.ui?.getMode();
+      if (mode === Mode.TITLE && Overrides.DEBUG_LOCALE_CYCLE_OVERRIDE) {
+        const locales = ["en", "es", "fr", "it", "de", "ru", "pt-BR", "zh-CN", "zh-TW", "ko", "ja"];
+        const current = i18next.resolvedLanguage || "en";
+        const idx = locales.indexOf(current);
+        const next = locales[(idx + 1) % locales.length];
+        console.log(`[LOCALE_CYCLE] ${current} → ${next}`);
+        i18next.changeLanguage(next);
+        localStorage.setItem("prLang", next);
+        window.location.reload();
+      } else if (Overrides.FORCE_BOUNTY_COMPLETION_OVERRIDE) {
+        this.triggerBountyCompletionDebug();
+      }
+    });
+    this.scene.input.keyboard?.on("keydown-NUMPAD_ZERO", (event: KeyboardEvent) => {
+      if (event.repeat) return;
+      const mode = this.scene.ui?.getMode();
+      if (mode === Mode.TITLE && Overrides.DEBUG_LOCALE_CYCLE_OVERRIDE) {
+        const locales = ["en", "es", "fr", "it", "de", "ru", "pt-BR", "zh-CN", "zh-TW", "ko", "ja"];
+        const current = i18next.resolvedLanguage || "en";
+        const idx = locales.indexOf(current);
+        const next = locales[(idx + 1) % locales.length];
+        console.log(`[LOCALE_CYCLE] ${current} → ${next}`);
+        i18next.changeLanguage(next);
+        localStorage.setItem("prLang", next);
+        window.location.reload();
+      } else if (Overrides.FORCE_BOUNTY_COMPLETION_OVERRIDE) {
+        this.triggerBountyCompletionDebug();
+      }
+    });
   }
 
   detectInputMethod(evt): void {
@@ -58,7 +328,10 @@ export class UiInputs {
 
   listenInputs(): void {
     this.events.on("input_down", (event) => {
+      if (!this.scene.ui) return;
       this.detectInputMethod(event);
+      const mode = this.scene.ui?.getMode();
+      if (this.shouldBlockForEditMode(event.button)) return;
 
       const actions = this.getActionsKeyDown();
       if (!actions.hasOwnProperty(event.button)) {
@@ -68,12 +341,33 @@ export class UiInputs {
     }, this);
 
     this.events.on("input_up", (event) => {
+      if (!this.scene.ui) return;
+      if (this.shouldBlockForEditMode(event.button)) return;
       const actions = this.getActionsKeyUp();
       if (!actions.hasOwnProperty(event.button)) {
         return;
       }
       actions[event.button]();
     }, this);
+  }
+
+  private shouldBlockForEditMode(button?: Button): boolean {
+    if (!this.scene.uiEditModeActive) return false;
+    if (button === Button.CYCLE_ABILITY) return false;
+    if (button === Button.CYCLE_GENDER) return false;
+    if (button === Button.CANCEL) return false;
+    if (!DEBUG_YU_VISUAL_TUNING) return false;
+    const handler = this.scene.ui?.getHandler();
+    if (handler && typeof (handler as any)._tweakActive === "boolean" && (handler as any)._tweakActive) return false;
+    if (handler && typeof (handler as any)._msTweakActive === "boolean" && (handler as any)._msTweakActive) return false;
+    if (handler && typeof (handler as any).sumIconTweakActive === "boolean" && (handler as any).sumIconTweakActive) return false;
+    if (handler && typeof (handler as any).partyTweakActive === "boolean" && (handler as any).partyTweakActive) return false;
+    if ((this.scene as any).fieldSpriteTweak?.tweakActive) return false;
+    if ((this.scene as any).commandUiTweak?.tweakActive) return false;
+    const playerBi = (this.scene as any).getPlayerField?.()?.[0]?.getBattleInfo?.();
+    const enemyBi = (this.scene as any).getEnemyField?.()?.[0]?.getBattleInfo?.();
+    if (playerBi?.biTweakActive || enemyBi?.biTweakActive) return false;
+    return true;
   }
 
   doVibration(inputSuccess: boolean, vibrationLength: number): void {
@@ -108,6 +402,8 @@ export class UiInputs {
       [Button.TOGGLE_PERMA_BAR]: () => this.buttonTogglePermaBar(),
       [Button.TOGGLE_PLAYER_BAR]: () => this.buttonTogglePlayerBar(),
       [Button.TOGGLE_FOE_BAR]: () => this.buttonToggleFoeBar(),
+      [Button.REPLAY]: () => this.buttonReplay(),
+      [Button.TOGGLE_SIGNATURE]: () => this.buttonCycleOption(Button.TOGGLE_SIGNATURE),
     };
     return actions;
   }
@@ -137,6 +433,7 @@ export class UiInputs {
       [Button.TOGGLE_PERMA_BAR]: () => undefined,
       [Button.TOGGLE_PLAYER_BAR]: () => undefined,
       [Button.TOGGLE_FOE_BAR]: () => undefined,
+      [Button.TOGGLE_SIGNATURE]: () => undefined,
     };
     return actions;
   }
@@ -148,6 +445,11 @@ export class UiInputs {
   }
 
   buttonAb(button: Button): void {
+    if (!this.scene.ui) return;
+    if (button === Button.CANCEL && this.scene.ui.getMode() === Mode.TITLE) {
+      this.buttonMenu();
+      return;
+    }
     this.scene.ui.processInput(button);
   }
 
@@ -167,6 +469,10 @@ export class UiInputs {
     }
 
     if (pressed && uiHandler instanceof ModifierSelectUiHandler) {
+      if (uiHandler.wantsForbiddenFormCycleOnStats()) {
+        this.scene.ui.processInput(Button.STATS);
+        return;
+      }
       if (uiHandler.wantsStatsForTooltipDetails()) {
         this.scene.ui.processInput(Button.STATS);
         return;
@@ -226,11 +532,6 @@ export class UiInputs {
 
     const currentMode = this.scene.ui?.getMode();
 
-    if (currentMode === Mode.SKILL_TREE) {
-      this.scene.ui.processInput(Button.MENU);
-      return;
-    }
-
     switch (currentMode) {
     case Mode.MESSAGE:
       if (!(this.scene.ui.getHandler() as MessageUiHandler).pendingPrompt) {
@@ -239,6 +540,15 @@ export class UiInputs {
     case Mode.TITLE:
     case Mode.COMMAND:
     case Mode.MODIFIER_SELECT:
+    case Mode.LOOT_REWARD_SELECT:
+    case Mode.COLLECTED_TYPE_SELECT:
+    case Mode.SHOP_SELECT:
+    case Mode.BATTLE_PATH:
+    case Mode.SKILL_TREE:
+      this.scene.ui.setOverlayMode(Mode.MENU);
+      break;
+    case Mode.REPLAY_VIEWER:
+      try { (this.scene as any).replayPlayer?.stopAuto?.(); } catch {}
       this.scene.ui.setOverlayMode(Mode.MENU);
       break;
     case Mode.STARTER_SELECT:
@@ -256,8 +566,17 @@ export class UiInputs {
   buttonVoidex(): void {
     const currentMode = this.scene.ui?.getMode();
 
-    if (currentMode === Mode.TITLE || currentMode === Mode.COMMAND || currentMode === Mode.MODIFIER_SELECT) {
-      if(currentMode === Mode.MODIFIER_SELECT) {
+    if (currentMode === Mode.VOIDEX_PRELIST || currentMode === Mode.POKEDEX || currentMode === Mode.SKILL_TREE) {
+      this.scene.ui.processInput(Button.VOIDEX);
+      return;
+    }
+
+    if (currentMode === Mode.TITLE || currentMode === Mode.COMMAND || currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.LOOT_REWARD_SELECT || currentMode === Mode.COLLECTED_TYPE_SELECT || currentMode === Mode.SHOP_SELECT || currentMode === Mode.STARTER_SELECT || currentMode === Mode.EGG_STARTER_SELECT || currentMode === Mode.EGG_GACHA) {
+      if (currentMode === Mode.STARTER_SELECT || currentMode === Mode.EGG_STARTER_SELECT) {
+        this.scene.ui.processInput(Button.VOIDEX);
+        return;
+      }
+      if(currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.LOOT_REWARD_SELECT || currentMode === Mode.COLLECTED_TYPE_SELECT || currentMode === Mode.SHOP_SELECT) {
         const uiHandler = this.scene.ui?.getHandler();
         if (uiHandler instanceof ModifierSelectUiHandler) {
           const currentOption = uiHandler.getCurrentSelectedOption();
@@ -276,6 +595,11 @@ export class UiInputs {
   }
 
   buttonTogglePlayerBar(): void {
+    const uiHandler = this.scene.ui?.getHandler();
+    if (uiHandler instanceof ChampionSelectUiHandler) {
+      this.scene.ui.processInput(Button.TOGGLE_PLAYER_BAR);
+      return;
+    }
     const currentMode = this.scene.ui?.getMode();
     if (currentMode !== Mode.TITLE && this.scene.currentBattle) {
       this.scene.ui.handlePlayerBarToggle(this.scene);
@@ -284,9 +608,21 @@ export class UiInputs {
 
   buttonToggleFoeBar(): void {
     const currentMode = this.scene.ui?.getMode();
+    if (currentMode === Mode.POKEMON_BATTLE_TOOLTIP) {
+      this.scene.ui.processInput(Button.TOGGLE_FOE_BAR);
+      return;
+    }
+    if (currentMode === Mode.PARTY) {
+      this.scene.ui.processInput(Button.TOGGLE_FOE_BAR);
+      return;
+    }
     if (currentMode !== Mode.TITLE && this.scene.currentBattle) {
       this.scene.ui.handleFoeBarToggle(this.scene);
     }
+  }
+
+  buttonReplay(): void {
+    return;
   }
 
   buttonConsole(): void {
@@ -336,6 +672,11 @@ export class UiInputs {
     const uiHandler = this.scene.ui?.getHandler();
     const currentMode = this.scene.ui?.getMode();
 
+    if (button === Button.CYCLE_ABILITY && this.scene.uiEditModeActive && DEBUG_YU_VISUAL_TUNING) {
+      this.scene.ui.processInput(button);
+      return;
+    }
+
     if (whitelist.some(handler => uiHandler instanceof handler)) {
       this.scene.ui.processInput(button);
     } else if (button === Button.CYCLE_SHINY) {
@@ -345,6 +686,9 @@ export class UiInputs {
           break;
         case Mode.COMMAND:
         case Mode.MODIFIER_SELECT:
+        case Mode.LOOT_REWARD_SELECT:
+        case Mode.COLLECTED_TYPE_SELECT:
+        case Mode.SHOP_SELECT:
           if (this.scene.sessionSlotId < 0) {
             break;
           }
@@ -378,7 +722,15 @@ export class UiInputs {
         case Mode.COMMAND:
           this.scene.ui.setOverlayMode(Mode.EGG_GACHA);
           break;
-        case Mode.MODIFIER_SELECT: {
+        case Mode.LOOT_REWARD_SELECT: {
+          const handler = this.scene.ui?.getHandler();
+          if (handler instanceof ModifierSelectUiHandler) {
+            this.scene.ui.processInput(button);
+          }
+          break;
+        }
+        case Mode.MODIFIER_SELECT:
+        case Mode.SHOP_SELECT: {
           const handler = this.scene.ui?.getHandler();
           if (handler instanceof ModifierSelectUiHandler && handler.wantsCycleAbilityForTooltip()) {
             this.scene.ui.processInput(button);
@@ -400,6 +752,7 @@ export class UiInputs {
       }
     }
     else if (button === Button.CYCLE_VARIANT) {
+      if (this.scene.uiEditModeActive) return;
       const shopUnlocked = this.scene.gameData.checkQuestState(QuestUnlockables.NUZLOCKE_UNLOCK_QUEST, QuestState.COMPLETED);
       if (!shopUnlocked && (currentMode === Mode.TITLE || currentMode === Mode.COMMAND)) {
         return;
@@ -429,7 +782,7 @@ export class UiInputs {
     } else if (button === Button.CYCLE_GENDER) {
       this.scene.ui.processInput(button);
     } else if (button === Button.CYCLE_NATURE) {
-      if((currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.COMMAND) && this.scene.gameMode.isChaosMode) {
+      if((currentMode === Mode.MODIFIER_SELECT || currentMode === Mode.LOOT_REWARD_SELECT || currentMode === Mode.COLLECTED_TYPE_SELECT || currentMode === Mode.SHOP_SELECT || currentMode === Mode.COMMAND) && this.scene.gameMode.isChaosMode) {
           this.scene.ui.setOverlayMode(Mode.BATTLE_PATH, { viewOnly: true });
       }
       else if (currentMode === Mode.TITLE) {
@@ -466,6 +819,845 @@ export class UiInputs {
     if (this.scene.ui?.getMode() === Mode.SETTINGS) {
       (this.scene.ui.getHandler() as SettingsUiHandler).show([]);
     }
+  }
+
+  private launchModifierSelectDebug(): void {
+    this.scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE);
+
+    const party = this.scene.getParty();
+    if (party.length === 0) {
+      const pool = [...DUELMON_SPECIES];
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      const count = Math.min(6, pool.length);
+      for (let i = 0; i < count; i++) {
+        const pokemon = this.scene.addPlayerPokemon(
+          getPokemonSpecies(pool[i]), 5 + Math.floor(Math.random() * 96),
+          undefined, undefined, undefined, Math.random() < 0.15
+        );
+        pokemon.setVisible(false);
+        party.push(pokemon);
+      }
+    }
+
+    for (const p of party) {
+      if (p.isFusion()) {
+        p.clearFusionSpecies();
+      }
+      (p as any).isSignature = false;
+    }
+    while (party.filter(p => !p.isFusion()).length < 4) {
+      const pool = [...DUELMON_SPECIES];
+      const species = pool[Math.floor(Math.random() * pool.length)];
+      const pokemon = this.scene.addPlayerPokemon(
+        getPokemonSpecies(species), 50
+      );
+      (pokemon as any).isSignature = false;
+      pokemon.setVisible(false);
+      party.push(pokemon);
+    }
+
+    if (!this.scene.currentBattle) {
+      this.scene.currentBattle = new Battle(
+        this.scene.gameMode, 499, BattleType.WILD, undefined, false, this.scene
+      );
+    }
+
+    this.scene.money = 999999;
+    this.scene.updateMoneyText();
+
+    let glitch = this.scene.findModifier(m => m instanceof GlitchPieceModifier) as GlitchPieceModifier | null;
+    if (!glitch) {
+      const glitchType = new ModifierType("Glitch Piece", "glitchPiece", (type) => new GlitchPieceModifier(type, 5), "glitch");
+      glitch = new GlitchPieceModifier(glitchType, 5);
+      this.scene.addModifier(glitch, false, false);
+    } else if (glitch.stackCount < 5) {
+      glitch.stackCount = 5;
+      this.scene.updateModifiers(true);
+    }
+
+    regenerateModifierPoolThresholds(party, ModifierPoolType.PLAYER, 0);
+    const typeOptions = getPlayerModifierTypeOptions(4, party, undefined, false, PathNodeTypeFilter.NONE);
+
+    const debugConfig = {
+      title: i18next.t("modifierSelectUiHandler:lootRewardsTitle", { defaultValue: "LOOT REWARDS" }),
+      subtitle: i18next.t("modifierSelectUiHandler:lootRewardsSubtitle", { defaultValue: "Choose your loot wisely..." }),
+    };
+
+    const launchWithOptions = (options: ModifierTypeOption[], rerollCount: number, forceTransition: boolean = false) => {
+      const cost = 150 * Math.pow(2, rerollCount);
+      const setModeFn = forceTransition
+        ? this.scene.ui.setModeForceTransition.bind(this.scene.ui)
+        : this.scene.ui.setMode.bind(this.scene.ui);
+      setModeFn(Mode.LOOT_REWARD_SELECT, true, options, (rowCursor: number, _cursor: number) => {
+        if (rowCursor === 0) {
+          this.scene.reroll = true;
+          regenerateModifierPoolThresholds(party, ModifierPoolType.PLAYER, 0);
+          const newOptions = getPlayerModifierTypeOptions(4, party, undefined, false, PathNodeTypeFilter.NONE);
+          launchWithOptions(newOptions, rerollCount + 1, true);
+          return true;
+        }
+        this.scene.reroll = false;
+        this.scene.ui.setMode(Mode.TITLE);
+        return true;
+      }, { rerollCost: cost, permaRerollCost: 5000 }, false, debugConfig);
+    };
+
+    launchWithOptions(typeOptions, 0);
+  }
+
+  private launchCollectedTypeShopDebug(): void {
+    this.scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE);
+
+    const party = this.scene.getParty();
+    if (party.length === 0) {
+      const pool = [...DUELMON_SPECIES];
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      const count = Math.min(6, pool.length);
+      for (let i = 0; i < count; i++) {
+        const pokemon = this.scene.addPlayerPokemon(
+          getPokemonSpecies(pool[i]), 5 + Math.floor(Math.random() * 96),
+          undefined, undefined, undefined, Math.random() < 0.15
+        );
+        pokemon.setVisible(false);
+        party.push(pokemon);
+      }
+    }
+
+    if (!this.scene.currentBattle) {
+      this.scene.currentBattle = new Battle(
+        this.scene.gameMode, 25, BattleType.WILD, undefined, false, this.scene
+      );
+    }
+
+    this.scene.money = 999999;
+    this.scene.updateMoneyText();
+
+    for (const pokemon of party) {
+      const existingMods = this.scene.findModifiers(m =>
+        m instanceof CollectedTypeModifier && m.pokemonId === pokemon.id
+      );
+      if (existingMods.length === 0) {
+        const essenceRecord: Record<number, number> = {
+          [Type.FIRE]: 8,
+          [Type.WATER]: 8,
+          [Type.GRASS]: 8,
+          [Type.ELECTRIC]: 8,
+          [Type.PSYCHIC]: 8,
+          [Type.DARK]: 5,
+          [Type.DRAGON]: 5,
+        };
+        const modType = new CollectedTypeModifierType(Type.FIRE);
+        const mod = new CollectedTypeModifier(modType, pokemon.id, essenceRecord);
+        this.scene.addModifier(mod, true, false, false, true);
+      }
+    }
+    this.scene.updateModifiers(true, true);
+
+    regenerateModifierPoolThresholds(party, ModifierPoolType.COLLECTOR, 0);
+    let typeOptions = getPlayerModifierTypeOptions(8, party, undefined, false, PathNodeTypeFilter.NONE, ModifierPoolType.COLLECTOR);
+
+    const tierCosts: Record<number, number> = { 0: 2, 1: 4, 2: 6, 3: 10, 4: 25 };
+    typeOptions = typeOptions.map(o =>
+      new ModifierTypeOption(o.type, o.upgradeCount, tierCosts[o.type?.tier ?? 0] || 8)
+    );
+
+    const launchWithOptions = (options: ModifierTypeOption[], rerollCount: number, forceTransition: boolean = false) => {
+      const rerollCost = 150 * Math.pow(2, rerollCount);
+      const setModeFn = forceTransition
+        ? this.scene.ui.setModeForceTransition.bind(this.scene.ui)
+        : this.scene.ui.setMode.bind(this.scene.ui);
+
+      setModeFn(Mode.COLLECTED_TYPE_SELECT, true, options, (rowCursor: number, _cursor: number) => {
+        if (rowCursor === 0) {
+          this.scene.reroll = true;
+          regenerateModifierPoolThresholds(party, ModifierPoolType.COLLECTOR, 0);
+          let newOptions = getPlayerModifierTypeOptions(8, party, undefined, false, PathNodeTypeFilter.NONE, ModifierPoolType.COLLECTOR);
+          newOptions = newOptions.map(o =>
+            new ModifierTypeOption(o.type, o.upgradeCount, tierCosts[o.type?.tier ?? 0] || 8)
+          );
+          launchWithOptions(newOptions, rerollCount + 1, true);
+          return true;
+        }
+        this.scene.reroll = false;
+        this.scene.ui.setMode(Mode.TITLE);
+        return true;
+      }, { rerollCost, permaRerollCost: 5000 }, false);
+    };
+
+    launchWithOptions(typeOptions, 0);
+  }
+
+  private launchRankUpLootDebug(): void {
+    const scene = this.scene;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+
+    scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE);
+
+    const party = scene.getParty();
+    if (party.length === 0) {
+      const pool = [...DUELMON_SPECIES];
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      const count = Math.min(6, pool.length);
+      for (let i = 0; i < count; i++) {
+        const pokemon = scene.addPlayerPokemon(
+          getPokemonSpecies(pool[i]), 5 + Math.floor(Math.random() * 96),
+          undefined, undefined, undefined, Math.random() < 0.15
+        );
+        pokemon.setVisible(false);
+        party.push(pokemon);
+      }
+    }
+
+    if (!scene.currentBattle) {
+      scene.currentBattle = new Battle(
+        scene.gameMode, 25, BattleType.WILD, undefined, false, scene
+      );
+    }
+
+    scene.money = 999999;
+    scene.updateMoneyText();
+    scene.modifierTooltipsEnabled = true;
+
+    const pokemon = party[0] as PlayerPokemon;
+
+    const testRank = Math.floor(Math.random() * 10) + 1;
+    pokemon.rankUpCount = testRank - 1;
+    if (testRank > 1) {
+      pokemon.embracePaletteRank = testRank - 1;
+    }
+
+    Promise.all(party.map(p => p.loadAssets())).then(() => {
+      scene.ui.setMode(Mode.MESSAGE);
+      scene.unshiftPhase(new RankUpPhase(scene, pokemon, pokemon.level - 1));
+      scene.pushPhase(new TitlePhase(scene));
+      scene.shiftPhase();
+    });
+  }
+
+  private getAbilityInfoForForm(form: any, abilityIndex: number): { name: string; description: string } {
+    const abilityCount = form.getAbilityCount?.() ?? 1;
+    const clamped = abilityIndex >= abilityCount ? Math.max(abilityCount - 1, 0) : abilityIndex;
+    const abilityId = form.getAbility?.(clamped) ?? 0;
+    const ability = allAbilities[abilityId];
+    return {
+      name: ability?.name ?? "None",
+      description: ability?.description ?? "",
+    };
+  }
+
+  private buildRankUpModifierTypeOption(
+    id: string,
+    name: string,
+    tooltipTitle: string,
+    description: string,
+    iconAtlasKey: string,
+    iconFrame: string | number,
+    tier: ModifierTier
+  ): ModifierTypeOption {
+    const modType = new ModifierType(null, null, null, "rankup");
+    modType.id = `rankup_${id}`;
+    modType.setTier(tier);
+    (modType as any)._rankUpName = name;
+    (modType as any)._rankUpDescription = description;
+    (modType as any)._rankUpIconAtlasKey = iconAtlasKey;
+    (modType as any)._rankUpIconFrame = iconFrame;
+
+    Object.defineProperty(modType, 'name', {
+      get() { return this._rankUpName; },
+      configurable: true,
+    });
+
+    const origGetDescription = modType.getDescription.bind(modType);
+    modType.getDescription = function(_scene: any) {
+      return this._rankUpDescription ?? origGetDescription(_scene);
+    };
+
+    return new ModifierTypeOption(modType, 0, 0);
+  }
+
+  private launchTutorialFlowDebug(): void {
+    const scene = this.scene;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+    scene.ui.fadeIn(250);
+
+    if (scene.gameData.gender === PlayerGender.UNSET) {
+      scene.gameData.gender = PlayerGender.MALE;
+    }
+
+    TitlePhase.debugTutorialFlowActive = true;
+
+    const def = STORY_CUTSCENES.title_intro_a;
+
+    scene.pushPhase(new TitlePhase(scene));
+    scene.unshiftPhase(new SlideshowCutscenePhase(scene, {
+      slides: def.slides,
+      bgmKey: def.bgmKey,
+      canSkip: false,
+      pauseAfterText: 1000,
+      defaultCharSound: "ui/select",
+      resumeBgmOnEnd: false,
+      onComplete: () => {
+        TitlePhase.tutorialBattlePending = true;
+        TitlePhase.titleStoryCutsceneTriggered = false;
+      }
+    }));
+
+    scene.shiftPhase();
+  }
+
+  private launchPegasusBossDebug(): void {
+    const scene = this.scene;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+    scene.ui.fadeIn(250);
+
+    scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE_FTL);
+    scene.sessionSlotId = -1;
+    scene.skillTreeEnabledForRun = false;
+
+    if (scene.gameData.gender === PlayerGender.UNSET) {
+      scene.gameData.gender = PlayerGender.MALE;
+    }
+
+    const party = scene.getParty();
+    while (party.length > 0) party.pop()?.destroy();
+
+    scene.currentBattle = null as any;
+    scene.newArena(Biome.END);
+    scene.arena.init();
+    scene.money = 0;
+
+    const trainerData = new TrainerData({ trainerType: TrainerType.PEGASUS, variant: TrainerVariant.DEFAULT });
+    scene.newBattle(50, BattleType.TRAINER, trainerData);
+
+    const battle = scene.currentBattle!;
+    battle.started = false;
+
+    const maxFoeLevel = Math.max(...(battle.enemyLevels ?? [38]));
+    const playerLevel = maxFoeLevel + 10;
+
+    for (let i = 0; i < 6; i++) {
+      const species = scene.randomSpecies(50, playerLevel);
+      const pokemon = scene.addPlayerPokemon(species, playerLevel);
+      pokemon.setVisible(false);
+      party.push(pokemon);
+    }
+
+    scene.pegasusDebugBattleActive = true;
+
+    Promise.all(party.map(p => p.loadAssets())).then(() => {
+      scene.unshiftPhase(new EncounterPhase(scene, false));
+      scene.shiftPhase();
+    });
+  }
+
+  private launchSmittyBossDebug(): void {
+    const scene = this.scene;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+    scene.ui.fadeIn(250);
+
+    scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE_FTL);
+    scene.sessionSlotId = -1;
+    scene.skillTreeEnabledForRun = false;
+
+    if (scene.gameData.gender === PlayerGender.UNSET) {
+      scene.gameData.gender = PlayerGender.MALE;
+    }
+
+    const party = scene.getParty();
+    while (party.length > 0) party.pop()?.destroy();
+
+    scene.currentBattle = null as any;
+    scene.newArena(Biome.END);
+    scene.arena.init();
+    scene.money = 0;
+
+    const smittyOffset = hashCode(randomString(24));
+    const smittyConfig = createSmittyBattle(scene, smittyOffset, true);
+    scene.gameMode.setChaosBattleConfig(smittyConfig);
+    scene.newBattle(50, BattleType.TRAINER);
+
+    const battle = scene.currentBattle!;
+    battle.started = false;
+
+    const maxFoeLevel = Math.max(...(battle.enemyLevels ?? [38]));
+    const playerLevel = maxFoeLevel + 10;
+
+    for (let i = 0; i < 6; i++) {
+      const species = scene.randomSpecies(50, playerLevel);
+      const pokemon = scene.addPlayerPokemon(species, playerLevel);
+      pokemon.setVisible(false);
+      party.push(pokemon);
+    }
+
+    scene.smittyDebugBattleActive = true;
+
+    Promise.all(party.map(p => p.loadAssets())).then(() => {
+      scene.unshiftPhase(new EncounterPhase(scene, false));
+      scene.shiftPhase();
+    });
+  }
+
+  private launchWave35SmitomTipDebug(): void {
+    const scene = this.scene;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+    scene.ui.fadeIn(250);
+
+    scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE);
+    scene.sessionSlotId = -1;
+    scene.skillTreeEnabledForRun = false;
+
+    if (scene.gameData.gender === PlayerGender.UNSET) {
+      scene.gameData.gender = PlayerGender.MALE;
+    }
+
+    const party = scene.getParty() as any[];
+    while (party.length > 0) party.pop()?.destroy();
+
+    scene.currentBattle = null as any;
+    scene.newArena(Biome.TOWN);
+    scene.arena.init();
+    scene.money = 5000;
+
+    delete scene.gameData.smitomTutorialFlags["wave35_stat_switchers"];
+    delete scene.gameData.smitomTutorialFlags["wave35_move_upgrades"];
+    delete scene.gameData.smitomTutorialFlags["wave35_release_items"];
+    localStorage.removeItem("wave35_stat_switchers_unlocked");
+    localStorage.removeItem("wave35_move_upgrades_unlocked");
+    localStorage.removeItem("wave35_release_items_unlocked");
+
+    scene.disableStatSwitchers = true;
+    scene.disableMoveUpgrades = true;
+    scene.disableReleaseItems = true;
+    scene.statSwitchersEnabledForRun = false;
+    scene.moveUpgradesEnabledForRun = false;
+    scene.releaseItemsEnabledForRun = false;
+    scene.wave35UnlockedThisRun = false;
+
+    scene.newBattle(35, BattleType.WILD);
+
+    const battle = scene.currentBattle!;
+    battle.started = false;
+
+    const playerLevel = 35;
+
+    for (let i = 0; i < 6; i++) {
+      const species = scene.randomSpecies(35, playerLevel);
+      const pokemon = scene.addPlayerPokemon(species, playerLevel);
+      pokemon.setVisible(false);
+      party.push(pokemon);
+    }
+
+    scene.wave35SmitomDebugActive = true;
+
+    Promise.all(party.map(p => p.loadAssets())).then(() => {
+      scene.unshiftPhase(new EncounterPhase(scene, false));
+      scene.shiftPhase();
+    });
+  }
+
+  private launchWave100Level1Debug(): void {
+    const scene = this.scene;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+    scene.ui.fadeIn(250);
+
+    scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE_FTL);
+    scene.sessionSlotId = -1;
+    scene.skillTreeEnabledForRun = false;
+    scene.moveUpgradesEnabledForRun = false;
+
+    if (scene.gameData.gender === PlayerGender.UNSET) {
+      scene.gameData.gender = PlayerGender.MALE;
+    }
+
+    if (typeof scene.resetRunEndSummaryRunData === "function") {
+      scene.resetRunEndSummaryRunData();
+    }
+
+    const party = scene.getParty() as any[];
+    while (party.length > 0) party.pop()?.destroy();
+
+    scene.currentBattle = null as any;
+    scene.setSeed(randomString(24));
+    scene.resetSeed();
+    scene.newArena(Biome.END);
+    scene.arena.init();
+    scene.money = 50000;
+
+    const rivalConfig = getDynamicRival(6, scene.gameData, scene);
+    const rivalBattleConfig = new FixedBattleConfig()
+      .setBattleType(BattleType.TRAINER)
+      .setGetTrainerFunc(s => new Trainer(
+        s,
+        TrainerType.DYNAMIC_RIVAL,
+        TrainerVariant.DEFAULT,
+        undefined, undefined, undefined,
+        rivalConfig,
+        6,
+        false
+      ));
+
+    scene.gameMode.setChaosBattleConfig(rivalBattleConfig);
+    scene.rivalWave = 100;
+
+    scene.newBattle(100, BattleType.TRAINER);
+
+    const battle = scene.currentBattle!;
+    battle.started = false;
+
+    const playerLevel = 100;
+
+    for (let i = 0; i < 6; i++) {
+      const species = scene.randomSpecies(100, playerLevel);
+      const pokemon = scene.addPlayerPokemon(species, playerLevel);
+      pokemon.setVisible(false);
+      party.push(pokemon);
+    }
+
+    if (Overrides.DEBUG_EMULATE_RANDOM_PARTY_COMBOS) {
+      const COMBO_OPTIONS = ["shiny", "fusion", "variant", "rank"];
+      const allCombos: string[][] = [];
+      for (let mask = 1; mask <= 15; mask++) {
+        const combo: string[] = [];
+        for (let bit = 0; bit < 4; bit++) {
+          if (mask & (1 << bit)) combo.push(COMBO_OPTIONS[bit]);
+        }
+        allCombos.push(combo);
+      }
+
+      const shuffled = [...allCombos];
+      scene.executeWithSeedOffset(() => {
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = randSeedInt(i + 1);
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+      }, (scene.seed as any) << 8, scene.waveSeed);
+
+      party.forEach((pokemon, i) => {
+        pokemon.shiny = false;
+        pokemon.variant = 0;
+        pokemon.fusionSpecies = null;
+        pokemon.rankUpCount = 0;
+        pokemon.embracePaletteRank = undefined;
+
+        const combo = shuffled[i % shuffled.length];
+
+        if (combo.includes("shiny")) {
+          pokemon.shiny = true;
+          pokemon.variant = 0;
+          pokemon.initShinySparkle();
+        }
+        if (combo.includes("fusion") && Overrides.DEBUG_EMULATE_FUSION) {
+          pokemon.generateFusionViaSpeciesID(Overrides.DEBUG_EMULATE_FUSION as Species, true);
+        }
+        if (combo.includes("variant") && pokemon.shiny) {
+          pokemon.variant = Math.max(1, pokemon.generateVariant());
+        }
+        if (combo.includes("rank") && Overrides.DEBUG_EMULATE_RANK > 0) {
+          pokemon.rankUpCount = Overrides.DEBUG_EMULATE_RANK - 1;
+          if (pokemon.rankUpCount > 0) {
+            pokemon.embracePaletteRank = pokemon.rankUpCount;
+          }
+        }
+
+        pokemon.luck = (pokemon.shiny ? pokemon.variant + 1 : 0) + (pokemon.fusionShiny ? pokemon.fusionVariant + 1 : 0);
+        pokemon.fusionLuck = pokemon.luck;
+        pokemon.generateName();
+      });
+    }
+
+    Promise.all(party.map(p => p.loadAssets())).then(() => {
+      scene.unshiftPhase(new EncounterPhase(scene, false));
+      scene.shiftPhase();
+    });
+  }
+
+  private launchShinyPowerDebug(): void {
+    const scene = this.scene;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+
+    scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE);
+    scene.setSeed(randomString(24));
+    scene.resetSeed();
+    scene.money = 999999;
+
+    const party = scene.getParty();
+    while (party.length > 0) party.pop()?.destroy();
+
+    if (!scene.currentBattle) {
+      scene.currentBattle = new Battle(
+        scene.gameMode, 25, BattleType.WILD, undefined, false, scene
+      );
+    }
+
+    const squirtle = scene.addPlayerPokemon(
+      getPokemonSpecies(Species.SQUIRTLE),
+      50,
+      undefined,
+      undefined,
+      undefined,
+      true,
+      0
+    );
+    squirtle.setVisible(false);
+    squirtle.initShinySparkle();
+    party.push(squirtle);
+
+    scene.ui.setMode(Mode.MESSAGE);
+    scene.unshiftPhase(new ShinyPowerPhase(scene));
+    scene.shiftPhase();
+  }
+
+  private launchYuMoveDebug(): void {
+    const scene = this.scene;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+
+    scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE);
+    scene.setSeed(randomString(24));
+    scene.resetSeed();
+    scene.money = 999999;
+
+    const party = scene.getParty();
+    if (party.length === 0) {
+      const pool = [...DUELMON_SPECIES];
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      const count = Math.min(6, pool.length);
+      for (let i = 0; i < count; i++) {
+        const pokemon = scene.addPlayerPokemon(
+          getPokemonSpecies(pool[i]),
+          5 + Math.floor(Math.random() * 96),
+          undefined, undefined, undefined,
+          Math.random() < 0.15
+        );
+        pokemon.setVisible(false);
+        party.push(pokemon);
+      }
+    }
+
+    if (!scene.currentBattle) {
+      scene.currentBattle = new Battle(
+        scene.gameMode, 25, BattleType.WILD, undefined, false, scene
+      );
+    }
+
+    const target = party.find(p => isDuelmonSpecies(p.species.speciesId)) ?? party[0];
+    const choices = pickThreeYuMovesWithFallback(scene, target);
+
+    if (choices.length === 0) {
+      scene.ui.setMode(Mode.TITLE);
+      return;
+    }
+
+    scene.ui.setMode(Mode.MESSAGE);
+    scene.unshiftPhase(new YuMovePhase(scene, target as any, choices, () => {
+      scene.ui.setMode(Mode.TITLE);
+    }, false));
+    scene.shiftPhase();
+  }
+
+  private launchRivalDefeatCutsceneDebug(): void {
+    const scene = this.scene;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+    scene.ui.fadeIn(250);
+
+    if (scene.gameData.gender === PlayerGender.UNSET) {
+      scene.gameData.gender = PlayerGender.MALE;
+    }
+
+    scene.resetRunUnlockRewards();
+    const rewards: RewardConfig[] = [
+      { type: RewardObtainedType.UNLOCK, name: "Unlock" } as any,
+      { type: RewardObtainedType.FORM, name: "smitom", isGlitch: true, unlockableSpriteType: UnlockModePokeSpriteType.GLITCH } as any,
+      { type: RewardObtainedType.QUEST_UNLOCK, name: "Quest Unlock", questSpriteId: Species.BULBASAUR, isInitialQuestUnlock: true } as any,
+      { type: RewardObtainedType.RIVAL_TO_VOID, name: "Rival To Void", rivalType: TrainerType.BLUE } as any,
+      { type: RewardObtainedType.NIGHTMARE_MODE_CHANGE, name: "Draft Mode", gameMode: GameModes.DRAFT } as any,
+      { type: RewardObtainedType.NIGHTMARE_MODE_CHANGE, name: "Nightmare Mode", gameMode: GameModes.NIGHTMARE } as any,
+      { type: RewardObtainedType.NIGHTMARE_MODE_CHANGE, name: "Nuzlocke Mode", gameMode: GameModes.NUZLOCKE } as any,
+      { type: RewardObtainedType.NIGHTMARE_MODE_CHANGE, name: "Nuzlight Mode", gameMode: GameModes.NUZLIGHT } as any,
+    ];
+    for (const r of rewards) {
+      scene.recordRunUnlockReward(r);
+    }
+    scene.runUnlockRewardsShownIndex = 0;
+    scene.beginPowerUnlockDeferral();
+
+    const def = STORY_CUTSCENES.rival_defeat;
+    const finalSlides = def.slides.map(s => ({ ...s }));
+
+    let currentSlideKey: string | null = null;
+    let overlay: Phaser.GameObjects.Sprite | null = null;
+    let flameFadeDone = false;
+    let flameTextDone = false;
+    let flameMinPauseDone = false;
+    let flameDidAdvance = false;
+    let flameMinPauseTimer: Phaser.Time.TimerEvent | null = null;
+
+    const maybeAdvanceFlame = (controller: any) => {
+      if (flameDidAdvance || currentSlideKey !== "flame") return;
+      if (!flameFadeDone || !flameTextDone || !flameMinPauseDone) return;
+      flameDidAdvance = true;
+      controller.next();
+    };
+
+    scene.pushPhase(new TitlePhase(scene, false, true));
+    scene.unshiftPhase(new SlideshowCutscenePhase(scene, {
+      slides: finalSlides,
+      bgmKey: def.bgmKey,
+      canSkip: true,
+      pauseAfterText: 1000,
+      defaultCharSound: "ui/select",
+      resumeBgmOnEnd: false,
+      onSlideChange: (index: number, controller: any) => {
+        currentSlideKey = finalSlides[index]?.imageKey ?? null;
+
+        if (overlay) {
+          scene.tweens.killTweensOf(overlay);
+          overlay.destroy();
+          overlay = null;
+        }
+        if (flameMinPauseTimer) {
+          flameMinPauseTimer.remove();
+          flameMinPauseTimer = null;
+        }
+
+        if (currentSlideKey === "flame") {
+          flameFadeDone = false;
+          flameTextDone = false;
+          flameMinPauseDone = false;
+          flameDidAdvance = false;
+
+          const container = controller.getContainer?.() ?? controller.getContainer();
+          if (container) {
+            overlay = addCorruptedRivalOverlay(scene, container, TrainerType.BLUE as any);
+            if (overlay) {
+              overlay.setAlpha(1);
+              playCutsceneFaintAnim(scene, container, overlay).then(() => {
+                if (currentSlideKey !== "flame") return;
+                flameFadeDone = true;
+                flameMinPauseDone = false;
+                flameMinPauseTimer = scene.time.delayedCall(fixedInt(150) as any, () => {
+                  if (currentSlideKey !== "flame") return;
+                  flameMinPauseDone = true;
+                  maybeAdvanceFlame(controller);
+                });
+                maybeAdvanceFlame(controller);
+              });
+            } else {
+              flameFadeDone = true;
+              flameMinPauseDone = false;
+              flameMinPauseTimer = scene.time.delayedCall(fixedInt(150) as any, () => {
+                if (currentSlideKey !== "flame") return;
+                flameMinPauseDone = true;
+                maybeAdvanceFlame(controller);
+              });
+            }
+          }
+        } else {
+          flameFadeDone = false;
+          flameTextDone = false;
+          flameMinPauseDone = false;
+          flameDidAdvance = false;
+        }
+      },
+      onTextComplete: (controller: any) => {
+        if (currentSlideKey === "flame") {
+          flameTextDone = true;
+          maybeAdvanceFlame(controller);
+        }
+        if (currentSlideKey === "power") {
+          runPowerUnlockOverlays(scene, controller);
+        }
+      },
+      onComplete: () => {
+        if (overlay) {
+          scene.tweens.killTweensOf(overlay);
+          overlay.destroy();
+          overlay = null;
+        }
+        if (flameMinPauseTimer) {
+          flameMinPauseTimer.remove();
+          flameMinPauseTimer = null;
+        }
+        scene.endPowerUnlockDeferral();
+      }
+    }));
+
+    scene.shiftPhase();
+  }
+
+  private triggerBountyCompletionDebug(): void {
+    const replayActive = !!(this.scene as any)?.replayMode || !!(globalThis as any).__POKEVOID_REPLAY_MODE__;
+    const mode = this.scene.ui?.getMode();
+    if (replayActive || mode === Mode.REPLAY_VIEWER) return;
+
+    const activeSkillTreeBounty = this.scene.modifiers.find(
+      m => m instanceof PermaRunQuestModifier && (m as PermaRunQuestModifier).skillTreeBounty
+    ) as PermaRunQuestModifier | undefined;
+
+    if (!activeSkillTreeBounty) return;
+    const isVictoryBounty = activeSkillTreeBounty instanceof PermaWinQuestModifier;
+
+    this.scene.ui.setMode(Mode.MESSAGE);
+
+    this.scene.unshiftPhase(new QuestManagerPhase(
+      this.scene,
+      activeSkillTreeBounty,
+      [{
+        action: async () => {
+          try { this.scene.ui.getHandler().clear(); } catch {}
+          if (!Overrides.FORCE_BOUNTY_COMPLETION_OVERRIDE) {
+            try { this.scene.removeModifier(activeSkillTreeBounty); } catch {}
+            try { await this.scene.updateModifiers(true); } catch {}
+          }
+          try { this.scene.unshiftPhase(new BountyRewardPhase(this.scene, isVictoryBounty, activeSkillTreeBounty instanceof PermaBeatTrainerQuestModifier)); } catch {}
+        },
+        label: i18next.t("modifier:permaRunQuest.collectRewards")
+      }]
+    ));
+
+    const currentPhase = this.scene.getCurrentPhase();
+    if (currentPhase) {
+      this.scene.unshiftPhase(currentPhase);
+    }
+    this.scene.shiftPhase();
   }
 
 }

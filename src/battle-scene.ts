@@ -354,6 +354,7 @@ export default class BattleScene extends SceneBase {
   public hpBarSpeed: integer = 0;
   public fusionPaletteSwaps: boolean = true;
   public enableTouchControls: boolean = false;
+  public disableMouseInput: boolean = false;
   public enableVibration: boolean = false;
   public showBgmBar: boolean = true;
   public showPermaBar: boolean = true;
@@ -362,6 +363,7 @@ export default class BattleScene extends SceneBase {
   public disableReleaseItems: boolean = false;
   public disableIvScanner: boolean = false;
   public disableMap: boolean = false;
+  public disableDuelmons: boolean = false;
   public disableCutscenes: boolean = false;
   public disableShinyPower: boolean = false;
   public lossWhiteoutPreSummaryQueued: boolean = false;
@@ -370,6 +372,7 @@ export default class BattleScene extends SceneBase {
   public releaseItemsEnabledForRun: boolean = true;
   public ivScannerEnabledForRun: boolean = true;
   public mapEnabledForRun: boolean = true;
+  public duelmonsEnabledForRun: boolean = true;
   public skillTreeEnabledForRun: boolean = true;
   public trainerDualColorRecolorEnabledForRun: boolean = false;
   public trainerDualColorAForRun: number[] | null = null;
@@ -759,20 +762,22 @@ export default class BattleScene extends SceneBase {
 
     this.load.setBaseURL();
 
-    const renderer = this.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
-    if (renderer.pipelines.has("Sprite")) {
-      this.spritePipeline = renderer.pipelines.get("Sprite") as SpritePipeline;
-    } else {
-      this.spritePipeline = new SpritePipeline(this.game);
-      renderer.pipelines.add("Sprite", this.spritePipeline);
+    if (this.renderer.type === Phaser.WEBGL) {
+      const renderer = this.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
+      if (renderer.pipelines.has("Sprite")) {
+        this.spritePipeline = renderer.pipelines.get("Sprite") as SpritePipeline;
+      } else {
+        this.spritePipeline = new SpritePipeline(this.game);
+        renderer.pipelines.add("Sprite", this.spritePipeline);
+      }
+      if (renderer.pipelines.has("FieldSprite")) {
+        this.fieldSpritePipeline = renderer.pipelines.get("FieldSprite") as FieldSpritePipeline;
+      } else {
+        this.fieldSpritePipeline = new FieldSpritePipeline(this.game);
+        renderer.pipelines.add("FieldSprite", this.fieldSpritePipeline);
+      }
+      this._prewarmGlowPostFX();
     }
-    if (renderer.pipelines.has("FieldSprite")) {
-      this.fieldSpritePipeline = renderer.pipelines.get("FieldSprite") as FieldSpritePipeline;
-    } else {
-      this.fieldSpritePipeline = new FieldSpritePipeline(this.game);
-      renderer.pipelines.add("FieldSprite", this.fieldSpritePipeline);
-    }
-    this._prewarmGlowPostFX();
     this.eventManager = new TimedEventManager();
 
     const _c1YieldStart = performance.now();
@@ -3057,7 +3062,7 @@ export default class BattleScene extends SceneBase {
     this.costToSnatchContainer.setX(this.moneyText.x);
     if(this.currentBattle) {
         const isSmittyBattle = this.currentBattle.trainer?.config.trainerType === TrainerType.SMITTY;
-        this.costToSnatchContainer.setVisible(this.currentBattle.battleType == BattleType.TRAINER && !this.gameMode.checkIfRival(this) && !this.dynamicMode?.noCatch && !isSmittyBattle);
+        this.costToSnatchContainer.setVisible(this.currentBattle.battleType == BattleType.TRAINER && !this.gameMode.checkIfRival(this) && !this.dynamicMode?.noCatch && !isSmittyBattle && !this.gameData.tutorialOnboardActive);
     }
     const offsetY = (this.scoreText.visible ? this.scoreText : this.moneyText).y + 15;
     this.partyExpBar.setY(offsetY);
@@ -3101,14 +3106,14 @@ export default class BattleScene extends SceneBase {
       const eligible = getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, waveIndex);
       return getPokemonSpecies(eligible[Utils.randSeedInt(eligible.length)]);
     }
-    const filteredSpecies = speciesFilter ? [...new Set(allSpecies.filter(s => s.isCatchable()).filter(speciesFilter).map(s => {
+    const filteredSpecies = speciesFilter ? [...new Set(allSpecies.filter(s => s.isCatchable()).filter(s => this.duelmonsEnabledForRun || s.generation !== 20).filter(speciesFilter).map(s => {
       if (!filterAllEvolutions) {
         while (pokemonPrevolutions.hasOwnProperty(s.speciesId)) {
           s = getPokemonSpecies(pokemonPrevolutions[s.speciesId]);
         }
       }
       return s;
-    }))] : allSpecies.filter(s => s.isCatchable());
+    }))] : allSpecies.filter(s => s.isCatchable() && (this.duelmonsEnabledForRun || s.generation !== 20));
     return filteredSpecies[Utils.randSeedInt(filteredSpecies.length)];
   }
 
@@ -3691,6 +3696,7 @@ export default class BattleScene extends SceneBase {
     this.prevSuppressedPermaModifierBarVisible = null;
     this.prevSuppressedMessageBgVisible = null;
     this.prevSuppressedMessageContainerVisible = null;
+    this.ui?.updatePermaMoneyText?.(this);
   }
 
   public beginEndOfRunBattleVisualSuppression(): void {
@@ -4032,7 +4038,9 @@ export default class BattleScene extends SceneBase {
             this.playSound(soundName);
           }
         } else if (!virtual) {
-          this.currentBattle.giveMoney(this, 0.25);
+          if (this.currentBattle) {
+            this.currentBattle.giveMoney(this, 0.25);
+          }
           return resolve(true);
         }
 

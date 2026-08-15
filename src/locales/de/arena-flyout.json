@@ -46,5 +46,16 @@
   "magmaStorm": "Magmastürm",
   "snapTrap": "Schnappfalle",
   "thunderCage": "Donnerkäfig",
-  "infestation": "Plage"
+  "infestation": "Plage",
+  "day": "Tag",
+  "night": "Nacht",
+  "dawn": "Morgengrauen",
+  "dusk": "Abenddämmerung",
+  "cursed": "Fluch",
+  "seeded": "Egelsamen",
+  "trapped": "Gefangen",
+  "yuTrapped": "Gefangen",
+  "saltCured": "Pökelsalz",
+  "octolock": "Octoklammer",
+  "ingrain": "Verwurzler"
 }

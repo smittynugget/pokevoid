@@ -7,7 +7,7 @@ import { PermaType } from "#app/modifier/perma-modifiers.js";
 import { Mode } from "#app/ui/ui.js";
 import { PartyUiMode } from "#app/ui/party-ui-handler.js";
 import { BattlePhase } from "./battle-phase.js";
-import { MoveUpgradePhase } from "./move-upgrade-phase.js";
+
 import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
 import Overrides from "#app/overrides";
 

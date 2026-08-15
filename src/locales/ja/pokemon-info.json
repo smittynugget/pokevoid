@@ -15,7 +15,13 @@
     "ACC": "めいちゅう",
     "EVA": "かいひ",
     "HPStat": "HP",
-    "Total": "合計"
+    "Total": "合計",
+    "HPcompact": "H",
+    "ATKcompact": "A",
+    "DEFcompact": "D",
+    "SPATKcompact": "SA",
+    "SPDEFcompact": "SD",
+    "SPDcompact": "S"
   },
   "Type": {
     "UNKNOWN": "Unknown",
@@ -39,6 +45,7 @@
     "FAIRY": "フェアリー",
     "STELLAR": "ステラ",
     "SMITTY": "スミッティ",
-    "GLITCH": "グリッチ"
+    "GLITCH": "グリッチ",
+    "GEN_ONE": "第1世代"
   }
 }

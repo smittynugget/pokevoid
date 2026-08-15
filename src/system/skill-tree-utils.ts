@@ -67,18 +67,18 @@ export class SkillTreeUtils {
   }
 
   static getMaxDepthForLevel(treeLevel: number): number {
-    if (treeLevel === 1) return 3;
-    return treeLevel * 2;
+    if (treeLevel === 1) return 5;
+    return (treeLevel - 1) * 2 + 5;
   }
 
   static getRequiredTreeLevelForDepth(depth: number): number {
-    if (depth <= 2) return 1;
-    return Math.ceil((depth - 1) / 2);
+    if (depth <= 5) return 1;
+    return Math.ceil((depth - 5) / 2) + 1;
   }
 
   static getMaxPurchasableDepthForLevel(treeLevel: number): number {
-    if (treeLevel === 1) return 2;
-    return treeLevel * 2;
+    if (treeLevel === 1) return 5;
+    return (treeLevel - 1) * 2 + 5;
   }
 
   static getChampionXPGain(nodeDepth: number, maxVisibleDepth: number): number {
@@ -96,6 +96,24 @@ export class SkillTreeUtils {
       total += 1;
     }
     return total;
+  }
+
+  static getRedTypesForLevel(level: number): { type1: Type; type2: Type } {
+    const allTypes = Object.values(Type).filter(t =>
+      typeof t === 'number' &&
+      t >= Type.NORMAL &&
+      t <= Type.FAIRY
+    ) as Type[];
+
+    if (allTypes.length === 0) {
+      return { type1: (Type as any).GEN_ONE, type2: Type.NORMAL };
+    }
+
+    const seed = `red_${level}`;
+    const hash = Utils.hashCode(seed);
+    const type2Index = Math.abs(hash) % allTypes.length;
+
+    return { type1: (Type as any).GEN_ONE, type2: allTypes[type2Index] };
   }
 
   static getApolloDianaTypesForLevel(championId: string, level: number): { type1: Type; type2: Type } {
@@ -143,6 +161,10 @@ export class SkillTreeUtils {
       const apolloDianaTypes = this.getApolloDianaTypesForLevel(championId, level);
       actualType1 = apolloDianaTypes.type1;
       actualType2 = apolloDianaTypes.type2;
+    } else if (championId === "red" && championType1 === Type.UNKNOWN) {
+      const redTypes = this.getRedTypesForLevel(level);
+      actualType1 = redTypes.type1;
+      actualType2 = redTypes.type2;
     }
 
     const championTypes = [actualType1, actualType2].filter(

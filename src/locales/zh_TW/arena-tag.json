@@ -47,5 +47,11 @@
   "stickyWebOnAdd": "{{moveName}}已鋪設在對方隊伍周圍的地面上！",
   "stickyWebActivateTrap": "對方的{{pokemonName}}被黏黏網纏住了！",
   "tailwindOnAdd": "順風從隊伍身後吹起了！",
-  "tailwindOnRemove": "隊伍的順風停止了！"
+  "tailwindOnRemove": "隊伍的順風停止了！",
+  "safeguardOnAdd": "整個場地都籠罩在神祕守護中！",
+  "safeguardOnAddPlayer": "我方隊伍被神祕守護所籠罩！",
+  "safeguardOnAddEnemy": "對方隊伍被神祕守護所籠罩！",
+  "safeguardOnRemove": "場地不再受到神祕守護的保護！",
+  "safeguardOnRemovePlayer": "我方隊伍不再受到神祕守護的保護！",
+  "safeguardOnRemoveEnemy": "對方隊伍不再受到神祕守護的保護！"
 }

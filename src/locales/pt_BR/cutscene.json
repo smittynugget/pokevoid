@@ -123,7 +123,7 @@
   "rival_flame": "A sombra corrompida se dissolve no Void",
   "rival_shadowPower": "A energia sombria cristaliza no ar",
   "rival_power": "Empunhe a corrupção como arma contra o Void",
-  "rival_shadows": "Um a menos—faltam XXX",
+  "rival_shadows": "Um a menos—faltam ???",
   "rival_final_flame": "A última sombra cai",
   "rival_final_shadowPower": "O último resquício de corrupção",
   "rival_final_power": "Vire a escuridão contra ela mesma",
@@ -160,5 +160,17 @@
   "all_smittys_peace": "A paz retorna ao mundo",
   "all_smittys_voidbreak": "Danificado além de qualquer reparo—o Void dorme",
   "all_smittys_mystery": "Mesmo no silêncio, o caos cresce, à espreita nas sombras",
-  "all_smittys_journey": "Por favor, mantenha isso sob controle. Você é a resistência!"
+  "all_smittys_journey": "Por favor, mantenha isso sob controle. Você é a resistência!",
+  "tutorial_trance_1a": "Você acordou! Eu estava começando a pensar...",
+  "tutorial_trance_1b": "Não. Não importa. Você está aqui. Isso é o que importa.",
+  "tutorial_trance_2a": "Eu sentei ao lado de treinadores demais esperando que acordassem. Eles nunca acordam.",
+  "tutorial_trance_2b": "Mas você... você acabou de provar que cada um daqueles perdidos não foi em vão.",
+  "tutorial_trance_3a": "Tem algo em você. O que quer que o vazio tenha feito com você lá dentro...",
+  "tutorial_trance_3b": "Não te quebrou. Te tornou mais forte.",
+  "tutorial_trance_4a": "Estamos perdendo essa luta há muito tempo.",
+  "tutorial_trance_4b": "Mas você acabou de provar que o vazio pode ser derrotado. Agora vá provar de novo.",
+  "tutorial_trance_5a": "O vazio tirou tudo de nós. É hora de tomar de volta.",
+  "tutorial_trance_5b": "É aqui que sua história começa — vá em frente e torne-se Lendário!",
+  "loss_whiteout": "A escuridão consome tudo...",
+  "loss_homebase": "Retorne à segurança..."
 }

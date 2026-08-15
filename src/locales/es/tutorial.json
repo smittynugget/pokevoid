@@ -196,17 +196,6 @@
         "2":"Esto recompensa con ΩORO y protege contra la pérdida de datos."
       }
     },
-    "bounties": {
-      "title": "Sistema de Recompensas",
-      "text": { 
-        "1":"Introduce códigos de 6 letras en la consola para activar Recompensas.",
-        "2":"Las Recompensas son MISIONES que te permiten ganar ΩORO/ΩOBJETOS y son completamente reutilizables al completarlas."
-      }
-    },
-    "dailyBounty": {
-      "title": "¡Recompensa Diaria!",
-      "text": "¡Hay una nueva recompensa diaria disponible! Complétala para ganar ΩORO/ΩOBJETOS. El código ya está en la consola, ¡solo actívalo!"
-    },
     "discord": {
       "title": "Discord y Soporte",
       "text": "Únete al Discord de Smittyverse para discusiones, informes de errores y comunidad. Encuentra códigos de recompensa y conéctate con otros jugadores."
@@ -382,6 +371,13 @@
     "title": { "1": "NUEVO Modo FTL" },
     "text": { "1": "¡FTL (Más Rápido que la Luz) es la nueva variante caos más rápida! ¡Salta directo al caos!" }
   },
+  "firstTimeFtlSkillTree": {
+    "title": { "1": "Elige tus Pokémon", "2": "Firma y General" },
+    "text": {
+      "1": "Tu primera aventura empieza ahora. Usa el árbol de habilidades para elegir 2 Pokémon para esta partida.",
+      "2": "Los nodos con el icono de Draft ofrecen Pokémon. Icono invertido = opción de Pokémon de firma."
+    }
+  },
   "championSelectEssence": {
     "title": { "1": "Selección de Campeón", "2": "Sistema de Esencia", "3": "Subir de Nivel a los Campeones" },
     "text": {
@@ -443,6 +439,103 @@
       "5": "HUEVOS: ¡Obtén huevos del gacha de huevos!",
       "6": "TIENDA: ¡Acceso rápido a la tienda!",
       "7": "MAPA: ¡Muestra tu camino actual dentro del Caos!"
+    },
+    "smitomTip": {
+      "tutorialBattleType": {
+        "title": "¡Anulación de tipo!",
+        "1": "¡Mala combinación de tipos! Usa el poder del vacío para cambiar nuestro tipo — las reglas de la naturaleza ya no aplican aquí."
+      },
+      "tutorialBattleHeal": {
+        "title": "Nuevas habilidades del vacío",
+        "1": "Establece esto como nuestra pasiva — regeneración de HP cada turno. Mantenerse vivo es el primer paso para ganar. Normalmente."
+      },
+      "tutorialBattleXM": {
+        "title": "El moveset prohibido",
+        "1": "¡Usa rápidamente la corrupción del vacío a tu favor! Abraza el poder prohibido para enseñarle a tu pokémon cualquier movimiento."
+      },
+      "tutorialBattleGlitchReward": {
+        "title": "¡ALERTA DE VACÍO!",
+        "1": "¡Esto no es bueno! ¡Rápido, toma la forma glitch de {{pokemonName}} del VACÍO!"
+      },
+      "tutorialBattleEvolveGlitch": {
+        "title": "¡EVOLUCIONA!",
+        "1": "¡¡EVOLUCIONA A {{pokemonName}} A SU NUEVA FORMA GLITCH AHORA!!"
+      },
+      "starterSelect": {
+        "title": "Fusión Infinita Llamó...",
+        "1": "Quieren que pienses que solo son pokémon insignia y legendarios. Pero mira más de cerca. Las fusiones. Son INFINITAS.",
+        "2": "*agita su dedo metafórico hacia ti, como un gorila loco* ¿Entiendes lo que eso significa?",
+        "3": "Significa que cada combinación posible existe. CADA. Kenney Rogers. UNA. Alguien tuvo que crearlas todas. O... algo lo hizo..."
+      },
+      "skillTreeFirstNode": {
+        "title": "Bonus Aleatorio GRATIS",
+        "1": "¡Después de elegir tu primer nodo, aparecen nodos GRATIS!",
+        "2": "GRATIS — ¡como este juego! 3 años de vida. Smitty podría haber hecho un juego indie tranquilamente en ese tiempo.",
+        "3": "Oh smitty, mi dulce criatura de verano, ¿no dijiste que esto tomaría 6 meses como mucho?",
+        "4": "...¿Smitty?",
+        "5": "Smitty parpadea dos veces si necesitas ayuda...",
+        "6": "¿Parpadeó...",
+        "7": "¡Pero sí, los nodos son gratis! ¡yay nodos gratis!"
+      },
+      "skillTreeGlitchFormNode": {
+        "title": "Forma Glitch Sellada",
+        "1": "¡Recolecta suficientes habilidades y desbloquearás el nodo sellado — dándote acceso a una Forma Glitch para esta partida!",
+        "2": "¡Recolecta habilidades. Obtén NUEVA FORMA!"
+      },
+      "wave35Shared": {
+        "title": "NEW ITEM GET!",
+        "pretext": "¡Hemos encontrado un nuevo objeto en el vacío! ¡{{featureName}}! Vamos a buscar en internet qué hace.",
+        "posttext": "Si tienes curiosidad, pruébalo. También puedes desactivarlos en los ajustes, por si no te hacen cosquillas como yo te hago cosquillas."
+      },
+      "wave35StatSwitchers": {
+        "featureName": "Intercambio de Stats",
+        "1": "Redistribuye los stats base de cualquier Pokémon. Scyther con nivel de mago en ataque especial. Machamp con velocidad que rivaliza con Jolteon. ¡Gengar con grosor que supera a Snorlax! Tu equipo, tus reglas. El vacío acaba de darte el panel de administrador. Te sugiero que abuses de él. Preferiblemente de forma irresponsable. Y sí, grosor es una palabra, lo busqué."
+      },
+        "wave35MoveUpgrades": {
+        "featureName": "Mejoras de Movimientos",
+        "1": "¡Bienvenido a Mejoras de Movimientos! Haz que Terremoto sea un ataque especial. Dale prioridad a Rayo Hielo. Dale a Trueno una chance de congelar. Tus movimientos no están grabados en piedra — están grabados en vacío. ¿Te gusta eso? Lo escribí ayer, 'grabados en vacío', porque estamos en el vacío, no en piedra, esto no es Doctor Stone, por favor. Tiene sentido. Bastante ingenioso, ¿no? Personalmente me gusta. Grabados en vacío suena",
+        "2": "--- 2 HORAS DESPUÉS ---",
+        "3": "Probablemente nivel Shakespeare si soy honesto. Bueno, ya me desahogué."
+      },
+      "wave35ReleaseItems": {
+        "featureName": "Objetos de Liberación",
+        "1": "¿Recuerdas esa película donde el robot dice 'Volveré'? Los Release Items son así excepto que el robot no vuelve. Sus partes van a un robot mejor. Y ese robot TAMPOCO dice 'Volveré' porque está demasiado ocupado siendo imparable. ¡Tipos, stats, habilidades o movimientos — pueden ser transferidos! No se necesita secuela."
+      },
+      "shinyPower": {
+        "title": "Un Espécimen Raro Emerge",
+        "1": "Observen: el Pokémon variocolor, al entrar a su partida, recibe cuatro caminos. El primero preserva su forma original. Dos ofrecen nuevas habilidades con estadísticas redistribuidas. El último reemplaza todo su moveset con ataques temáticos de tipo.",
+        "2": "En cada variante alternativa, cuatro de sus estadísticas se intercambian — una adaptación notable. El variocolor que entra a la partida rara vez es el mismo que la termina. La naturaleza sana. Específicamente, la versión del Vacío de la naturaleza. Lo cual es, discutiblemente, lo opuesto a sanar."
+      },
+      "rankUp": {
+        "title": "¿ABRAZAR o REMODELAR?",
+        "1": "Mi tío coleccionaba esas botellitas de shampoo de hoteles. Un estante entero. Nunca abrió una. Solo las miraba. Decía que era inversión. Está preso ahora — no relacionado, probablemente — pero el principio aplica. Caminas por el Vacío, recoges cosas. No botín, exactamente. La energía oscura. La corrupción. La película asquerosa que suelta todo lo que derrotas. No desaparece cuando ganas.. La has estado acumulando. Cada pelea agrega otra capa. Como lasaña, excepto que el queso es malvado y la abuela de nadie la hizo.",
+        "2": "Cuando se activa, tienes dos opciones — Abrazar: la energía del Vacío inunda hacia dentro en vez de destruir. Mismo Pokémon, mismo tipo, mismos movimientos, alma ligeramente más oscura. Lo que ya era fuerte se hace más fuerte. Con cada Abrazar la energía oscura se profundiza, dando paso a una forma con matices del Vacío, un look que el abismo casi llamaría propio. Remodelar: donde Abrazar mantiene la forma intacta, Remodelar destroza la frontera entre especies. Usa la corrupción para doblar la realidad hasta que tu compañero esté en un nuevo caparazón — estadísticas reciben el mismo boost que vía Abrazar, pero tipo y habilidad cambian. Lo que los hacía peligrosos sobrevive la remodelación. Mientras los Pokémon regulares simplemente soportan el toque del Vacío, los Duelmons lo acumulan — la corrupción se acumula en sus almas hasta que su Oleada del Alma única estalla, su evolución prohibida, garantizada en ciertos rangos de nivel. Los Pokémon regulares ganan oleadas del alma aleatoriamente al subir de nivel o mediante recompensas. Las oleadas del alma son geniales, ¿no? Como las botellitas de shampoo de hotel — mi tío las apreciaría, seguro."
+      },
+      "yuMovePhase": {
+        "title": "Técnica Maldita",
+        "1": "\"En todo el Cielo y la Tierra, solo yo soy el honrado.\" Eso dijo el Vacío cuando selló los ataques firma de tu Duelmon en el reino de las sombras. Palabras audaces de algo que olvidó que las técnicas malditas pueden revertirse. Derrota enemigos con tu Duelmon, sube de nivel, y PODER DE LAS SOMBRAS puede desellar tres movimientos prohibidos — dos del pool maldito propio de tu Duelmon, uno del reino de sombras más amplio.",
+        "2": "Las recompensas activan Expansión de Dominio inmediatamente — sin necesidad de subir de nivel. El reino de las sombras no es la prisión que el Vacío cree. El Vacío solo almacenó las cosas buenas ahí por accidente. ¿Hollow Purple? Más bien Hollow Void. Tu Duelmon está recuperando sus técnicas."
+      },
+      "altBuild": {
+        "title": "¡¡¡IMPOSIBLE!!!",
+        "1": "IMPOSIBLE. Ese nivel de poder — no es — el scouter no puede estar bien. Su VÍNCULO destroza cada límite — su PODER impulsado en dos estadísticas, tipo REESCRITO, habilidades INTERCAMBIADAS, movimientos REEMPLAZADOS, ¡una forma completamente nueva que mi equipo se niega a clasificar! Magikarp puede convertirse en Dragonborn. Agua y Dragón. POR DIOS — ESO ES UN MAGIKARP. Y no es solo el patético pez payaso — Solrock se convierte en Constelación del Vacío, Lunatone en Tejedor de Sueños — SON SOLO PIEDRAS — ¡UNA NI SIQUIERA ES TAN NARANJA! Su VÍNCULO destrozando límites que no sabía que existían. Estos seres no siguen la evolución normal — han forjado un camino evolutivo diferente. Suben de rango en su lugar. Continuamente. Diez veces. No es posible — no, el Príncipe de todos los Saiyajins NO ACEPTARÁ ESTO.",
+        "2": "Y en rango diez — ¿¡qué ES esto?! ¿¡DESBLOQUEAN NUEVAS HABILIDADES?! ¿Uno en un Millón? ¿Dominio del Leviatán? Se supone que no deben existir. El vínculo entre campeón y compañero anula la realidad misma — y hay MÁS allá afuera, cada vínculo reescribiendo para qué fueron construidas estas especies. ¡¡MALDITA SEA!! ¿¡CÓMO PUEDO YO, UN GUERRERO DE RAZA SUPERIOR, SER SUPERADO?! ¡¡¡¡¡KAKAROTTO!!!!!"
+      },
+      "smittyEncounter": {
+        "title": "¡¡¡ALERTA DE DETECCIÓN!!!",
+        "1": "¡Alerta! ¡Firmas de radiación en aumento! ¡Lecturas de autoimportancia en niveles que están rompiendo mis instrumentos! Escaneando la fuente — ¡la densidad de arrogancia sola genera interferencias! ¡Algo se acerca y cada métrica que tengo dice que deberíamos estar aterrados! Solo un tipo de ser irradia esto — el tipo que se pondría en su propio juego, se daría un equipo ridículo y lo llamaría contenido.",
+        "2": "Cruzando referencias con firmas del Vacío... este ser podría ser la fuente del Vacío mismo. O — re-escaneando — puede ser un pedazo roto del Vacío que obtuvo forma física. Sus Pokémon no son capturados ni entrenados. Se manifiestan directamente de energía del Vacío. Campeón, necesito que me escuches: podemos morir aquí. Realmente morir. Por favor, prepárate."
+      },
+      "postRunWin": {
+        "title": "Gracias Por Lograrlo",
+        "1": "Ganaste. Vi todo. Cada momento apretado, cada cambio inteligente, cada momento que pudo salir mal y no lo hizo porque tú lo evitaste. El Vacío sigue aquí, pero por una partida, lo venciste.",
+        "2": "Nuevos modos, misiones y desafíos se están desbloqueando. El juego se abre después de esto. Pero antes de que corras a lo siguiente — solo sabe que ganar una partida en el Vacío significa algo. Significa que tu equipo fue fuerte y tus decisiones fueron correctas. Estaré aquí para la próxima. Y para la que sigue. Ahora por fin podemos ser amigos. Qué. Por qué me miras así — es como en Persona, tienes que hacer 40 horas de misiones secundarias antes de que el compañero confíe en ti. Ahora entonces, vamos a cazar unas sombras — ¿qué dices, confidente rango 1 bestie?"
+      },
+      "journeyQuestShop": {
+        "title": "¡El Modo Viaje espera!",
+        "1": "¡Has desbloqueado la Misión de Captura Inicial — tu boleto al Modo Viaje! Ve a la TiendaOmega para activarla.",
+        "2": "Una vez activada, captura 5 Pokémon en cualquier partida para completarla y desbloquear el Modo Viaje!"
+      }
     }
   }
 }

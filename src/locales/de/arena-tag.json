@@ -47,5 +47,11 @@
   "tailwindOnRemovePlayer": "Der Rückenwind auf deiner Seite hat sich gelegt!",
   "tailwindOnRemoveEnemy": "Der Rückenwind auf gegnerischer Seite hat sich gelegt!",
   "happyHourOnAdd": "Goldene Zeiten sind angebrochen!",
-  "happyHourOnRemove": "Die goldenen Zeiten sind vorbei!"
+  "happyHourOnRemove": "Die goldenen Zeiten sind vorbei!",
+  "safeguardOnAdd": "Das gesamte Feld ist in einen mystischen Schleier gehüllt!",
+  "safeguardOnAddPlayer": "Dein Team hüllte sich in einen mystischen Schleier!",
+  "safeguardOnAddEnemy": "Das gegnerische Team hüllte sich in einen mystischen Schleier!",
+  "safeguardOnRemove": "Das Feld wird nicht mehr durch Bodyguard geschützt!",
+  "safeguardOnRemovePlayer": "Dein Team wird nicht mehr durch Bodyguard geschützt!",
+  "safeguardOnRemoveEnemy": "Das gegnerische Team wird nicht mehr durch Bodyguard geschützt!"
 }

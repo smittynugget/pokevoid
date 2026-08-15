@@ -1,6 +1,6 @@
 import BattleScene from "../battle-scene";
 import AwaitableUiHandler from "./awaitable-ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import * as Utils from "../utils";
 import i18next from "i18next";
 import { addTextObject, TextStyle } from "./text";
@@ -20,20 +20,27 @@ export default abstract class MessageUiHandler extends AwaitableUiHandler {
   }
 
   showText(text: string, delay?: integer | null, callback?: Function | null, callbackDelay?: integer | null, prompt?: boolean | null, promptDelay?: integer | null) {
-    this.showTextInternal(text, delay, callback, callbackDelay, prompt, promptDelay);
+    this.showTextInternal(text, delay, callback, callbackDelay, prompt, promptDelay, { kind: "text", source: "showText" });
   }
 
   showDialogue(text: string, name?: string, delay?: integer | null, callback?: Function | null, callbackDelay?: integer | null, prompt?: boolean | null, promptDelay?: integer | null) {
-    this.showTextInternal(text, delay, callback, callbackDelay, prompt, promptDelay);
+    this.showTextInternal(text, delay, callback, callbackDelay, prompt, promptDelay, { kind: "dialogue", source: "showDialogue", speakerName: name });
   }
 
-  private showTextInternal(text: string, delay?: integer | null, callback?: Function | null, callbackDelay?: integer | null, prompt?: boolean | null, promptDelay?: integer | null) {
+  private showTextInternal(text: string, delay?: integer | null, callback?: Function | null, callbackDelay?: integer | null, prompt?: boolean | null, promptDelay?: integer | null, replay?: { kind: "text" | "dialogue", source: "showText" | "showDialogue", speakerName?: string } | null) {
     if (text === undefined || text === null) {
       text = "";
     }
 
     if (delay === null || delay === undefined) {
-      delay = 20;
+      const baseDelay = 20;
+      const scene = this.scene as any;
+      if (scene.battleSpeed > 0 && (scene._inBattleTurn || scene._battleAnimDepth > 0)) {
+        const scaledDelay = scene.gameSpeed === 1 ? baseDelay : Math.ceil(baseDelay / scene.gameSpeed);
+        delay = Utils.fixedInt(scaledDelay);
+      } else {
+        delay = baseDelay;
+      }
     }
     const charVarMap = new Map<integer, string>();
     const delayMap = new Map<integer, integer>();
@@ -115,7 +122,6 @@ export default abstract class MessageUiHandler extends AwaitableUiHandler {
         text = newText;
       }
     }
-
     if (this.textTimer) {
       this.textTimer.remove();
       if (this.textCallbackTimer) {
@@ -206,7 +212,10 @@ export default abstract class MessageUiHandler extends AwaitableUiHandler {
       this.prompt.play("prompt");
     }
     this.pendingPrompt = false;
-    this.awaitingActionInput = true;
+    this.awaitingActionInput = false;
+    this.scene.time.delayedCall(100, () => {
+      this.awaitingActionInput = true;
+    });
     this.onActionInput = () => {
       if (this.prompt) {
         this.prompt.anims.stop();

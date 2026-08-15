@@ -59,7 +59,7 @@ export default class AbilityBar extends Phaser.GameObjects.Container {
 
     this.setVisible(true);
     this.shown = true;
-  }z
+  }
 
   hide(): void {
     if (!this.shown) {

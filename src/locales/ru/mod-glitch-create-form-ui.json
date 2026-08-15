@@ -11,6 +11,12 @@
   "gatchaCalendar": "Календарь гачи!",
   "browseGlitchForms": "Просмотр глитч-форм Pokevoid",
   "wikiMods": "Вики и моды",
+  "downloadYourMods": "Скачать ваши моды",
+  "downloadAll": "Скачать все (ZIP)",
+  "downloadSelected": "Скачать выбранное",
+  "noModsToDownload": "Нет модов для скачивания.",
+  "downloadStarted": "Загрузка начата.",
+  "downloadFailed": "Ошибка загрузки. Попробуй ещё раз.",
   "noModsToRemove": "Нет модов для удаления.",
   "errorLoadingMods": "Ошибка загрузки модов. Попробуй ещё раз.",
   "modRemoved": "{{name}} успешно удалён.",
@@ -31,8 +37,9 @@
     "stat2": "Характеристика 2 для усиления",
     "stat3": "Характеристика 3 для усиления",
     "distributionType": "Распределение усиления характеристик",
-    "frontSprite": "Передний спрайт покемона (150–200px)",
-    "backSprite": "Задний спрайт покемона (150–200px)",
+    "frontSprite": "Передний спрайт покемона",
+    "backSprite": "Задний спрайт покемона",
+    "useFrontAsBack": "Использовать передний спрайт как задний",
     "rivalTrainer": "Соперник",
     "orRivalTrainer": "или соперник"
   },
@@ -44,7 +51,12 @@
   },
   "buttons": {
     "saveAndAdd": "Сохранить и перезагрузить",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "next": "Далее",
+    "prev": "Назад"
+  },
+  "navigation": {
+    "sectionIndicator": "{{current}} / {{total}}"
   },
   "validation": {
     "requiredField": "Это поле обязательно",
@@ -61,7 +73,8 @@
   },
   "sections": {
     "basicInformation": "Основная информация",
-    "typesAbilities": "Типы и таланты",
+    "typesAbilities": "Типы",
+    "abilities": "Таланты",
     "stats": "Характеристики",
     "sprites": "Спрайты",
     "rivalTrainer": "Соперники, за которых выдаётся эта форма"

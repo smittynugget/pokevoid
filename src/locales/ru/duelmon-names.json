@@ -1,0 +1,1295 @@
+{
+  "abaki": {
+    "name": "Абаки"
+  },
+  "abare_ushioni": {
+    "name": "Абарэ Усиони"
+  },
+  "agido": {
+    "name": "Агидо"
+  },
+  "aitsu": {
+    "name": "Айцу"
+  },
+  "alien_grey": {
+    "name": "Пришелец Грей"
+  },
+  "alien_mars": {
+    "name": "Пришелец Марс"
+  },
+  "alien_mother": {
+    "name": "Пришелец Мать"
+  },
+  "alligator_s_sword_dragon": {
+    "name": "Дракон Меч Аллигатора"
+  },
+  "alligators_sword_dragon": {
+    "name": "Дракон Меч Аллигатора"
+  },
+  "alpha_the_magnet_warrior": {
+    "name": "Альфа Магнитный Воин"
+  },
+  "amazoness_tiger": {
+    "name": "Тигрица Амазонок"
+  },
+  "ancient_gear": {
+    "name": "Древнее Зубчатое Колесо"
+  },
+  "ancient_gear_box": {
+    "name": "Древний Механический Ящик"
+  },
+  "ancient_gear_engineer": {
+    "name": "Древний Механический Инженер"
+  },
+  "ancient_gear_golem": {
+    "name": "Древний Механический Голем"
+  },
+  "ancient_gear_knight": {
+    "name": "Древний Механический Рыцарь"
+  },
+  "ancient_gear_soldier": {
+    "name": "Древний Механический Солдат"
+  },
+  "ancient_tree_of_enlightenment": {
+    "name": "Древнее Древо Просветления"
+  },
+  "arcana_force_0_the_fool": {
+    "name": "Сила Аркана 0 - Шут",
+    "skipStrip": true
+  },
+  "arcana_force_0_—_the_fool": {
+    "name": "Сила Аркана 0 - Шут",
+    "skipStrip": true
+  },
+  "arcana_force_ex_the_dark_ruler": {
+    "name": "Сила Аркана EX - Тёмный Владыка",
+    "skipStrip": true
+  },
+  "arcana_force_ex_—_the_dark_ruler": {
+    "name": "Сила Аркана EX - Тёмный Владыка",
+    "skipStrip": true
+  },
+  "arcana_force_i_the_magician": {
+    "name": "Сила Аркана I - Маг",
+    "skipStrip": true
+  },
+  "arcana_force_i_—_the_magician": {
+    "name": "Сила Аркана I - Маг",
+    "skipStrip": true
+  },
+  "arcana_force_iv_the_emperor": {
+    "name": "Сила Аркана IV - Император",
+    "skipStrip": true
+  },
+  "arcana_force_iv_—_the_emperor": {
+    "name": "Сила Аркана IV - Император",
+    "skipStrip": true
+  },
+  "arcana_force_vi_the_lovers": {
+    "name": "Сила Аркана VI - Влюблённые",
+    "skipStrip": true
+  },
+  "arcana_force_vi_—_the_lovers": {
+    "name": "Сила Аркана VI - Влюблённые",
+    "skipStrip": true
+  },
+  "arcana_force_xviii_the_moon": {
+    "name": "Сила Аркана XVIII - Луна",
+    "skipStrip": true
+  },
+  "arcana_force_xviii_—_the_moon": {
+    "name": "Сила Аркана XVIII - Луна",
+    "skipStrip": true
+  },
+  "archfiend_zombie": {
+    "name": "Архидемон-Зомби"
+  },
+  "armed_dragon_lv3": {
+    "name": "Вооружённый Дракон LV3"
+  },
+  "armed_dragon_lv5": {
+    "name": "Вооружённый Дракон LV5"
+  },
+  "armed_dragon_lv7": {
+    "name": "Вооружённый Дракон LV7"
+  },
+  "avatar_of_the_pot": {
+    "name": "Аватар Горшка"
+  },
+  "axe_raider": {
+    "name": "Топор-Налётчик"
+  },
+  "baby_dragon": {
+    "name": "Дракончик"
+  },
+  "bean_soldier": {
+    "name": "Бобовый Солдат"
+  },
+  "beaver_warrior": {
+    "name": "Воин-Бобёр"
+  },
+  "behemoth_the_king_of_all_animals": {
+    "name": "Бегемот Царь Зверей",
+    "skipStrip": true
+  },
+  "beiige,_vanguard_of_dark_world": {
+    "name": "Бейдж, Авангард Тёмного Мира"
+  },
+  "beiige_vanguard_of_dark_world": {
+    "name": "Бейдж, Авангард Тёмного Мира"
+  },
+  "beta_the_magnet_warrior": {
+    "name": "Бета Магнитный Воин"
+  },
+  "bickuribox": {
+    "name": "Бикурибокс"
+  },
+  "big_jaws": {
+    "name": "Большие Челюсти"
+  },
+  "bio_plant": {
+    "name": "Био-Растение"
+  },
+  "black_dragon_s_chick": {
+    "name": "Птенец Чёрного Дракона"
+  },
+  "black_dragons_chick": {
+    "name": "Птенец Чёрного Дракона"
+  },
+  "black_luster_soldier": {
+    "name": "Чёрный Сверкающий Солдат"
+  },
+  "black_luster_soldier_envoy_of_the_beginning": {
+    "name": "Чёрный Солдат - Посланник Начала",
+    "skipStrip": true
+  },
+  "black_luster_soldier_—_envoy_of_the_beginning": {
+    "name": "Чёрный Солдат - Посланник Начала",
+    "skipStrip": true
+  },
+  "black_magician_of_chaos": {
+    "name": "Чёрный Маг Хаоса"
+  },
+  "black_rose_dragon_(alt)": {
+    "name": "Дракон Чёрной Розы"
+  },
+  "black_rose_dragon_(alt___full_wings)": {
+    "name": "Дракон Чёрной Розы"
+  },
+  "black_rose_dragon_(full_wings)": {
+    "name": "Дракон Чёрной Розы"
+  },
+  "black_tyranno": {
+    "name": "Чёрный Тиранно"
+  },
+  "blade_knight": {
+    "name": "Рыцарь Клинка"
+  },
+  "blazing_inpachi": {
+    "name": "Пылающий Инпачи"
+  },
+  "blizzard_dragon": {
+    "name": "Дракон Метели"
+  },
+  "blizzarddragon": {
+    "name": "Дракон Метели"
+  },
+  "blowback_dragon": {
+    "name": "Дракон Отдачи"
+  },
+  "blue-eyes_alternative_white_dragon": {
+    "name": "Голубоглазый Альтернативный Белый Дракон"
+  },
+  "blue-eyes_chaos_max_dragon": {
+    "name": "Голубоглазый Хаос МАКС Дракон"
+  },
+  "blue-eyes_toon_dragon": {
+    "name": "Голубоглазый Мульт-Дракон"
+  },
+  "blue-eyes_toon_dragon_(render)": {
+    "name": "Голубоглазый Мульт-Дракон"
+  },
+  "blue-eyes_ultimate_dragon": {
+    "name": "Голубоглазый Абсолютный Дракон"
+  },
+  "blue-eyes_white_dragon": {
+    "name": "Голубоглазый Белый Дракон"
+  },
+  "blue-eyes_white_dragon_(alt_master_duel)": {
+    "name": "Голубоглазый Белый Дракон"
+  },
+  "blue-eyes_white_dragon_(variant_2)": {
+    "name": "Голубоглазый Белый Дракон"
+  },
+  "blue-eyes_white_dragon_(variants)": {
+    "name": "Голубоглазый Белый Дракон"
+  },
+  "blue_eyes_alternative_white_dragon": {
+    "name": "Голубоглазый Альтернативный Белый Дракон"
+  },
+  "blue_eyes_chaos_max_dragon": {
+    "name": "Голубоглазый Хаос МАКС Дракон"
+  },
+  "blue_eyes_ultimate_dragon": {
+    "name": "Голубоглазый Абсолютный Дракон"
+  },
+  "blue_eyes_white_dragon": {
+    "name": "Голубоглазый Белый Дракон"
+  },
+  "blue_eyes_white_dragon_v3": {
+    "name": "Голубоглазый Мульт-Дракон"
+  },
+  "boo_koo": {
+    "name": "Бу Ку"
+  },
+  "breaker_the_magical_warrior": {
+    "name": "Брейкер Магический Воин"
+  },
+  "breaker_the_magical_warrrior": {
+    "name": "Брейкер Магический Воин"
+  },
+  "buster_blader,_destruction_swordmaster": {
+    "name": "Бастер Блейдер",
+    "skipStrip": true
+  },
+  "buster_blader,_destruction_swordsmaster": {
+    "name": "Бастер Блейдер",
+    "skipStrip": true
+  },
+  "buster_blader_the_destruction_swordmaster": {
+    "name": "Бастер Блейдер",
+    "skipStrip": true
+  },
+  "caius_the_shadow_monarch": {
+    "name": "Кайус Теневой Монарх"
+  },
+  "card_trooper": {
+    "name": "Карточный Солдат"
+  },
+  "castle_of_dark_illusions": {
+    "name": "Замок Тёмных Иллюзий"
+  },
+  "celtic_guardian": {
+    "name": "Кельтский Страж"
+  },
+  "chaos_emperor_dragon_envoy_of_the_end": {
+    "name": "Дракон Император Хаоса - Посланник Конца",
+    "skipStrip": true
+  },
+  "chaos_emperor_dragon_—_envoy_of_the_end": {
+    "name": "Дракон Император Хаоса - Посланник Конца",
+    "skipStrip": true
+  },
+  "claw_reacher": {
+    "name": "Коготь-Хваталка"
+  },
+  "cloudian_acid_cloud": {
+    "name": "Облачник - Кислотное Облако",
+    "skipStrip": true
+  },
+  "cloudian_eye_of_the_typhoon": {
+    "name": "Облачник - Глаз Тайфуна",
+    "skipStrip": true
+  },
+  "cloudian_ghost_fog": {
+    "name": "Облачник - Туман Призраков",
+    "skipStrip": true
+  },
+  "cloudian_nimbusman": {
+    "name": "Облачник - Человек-Нимб",
+    "skipStrip": true
+  },
+  "cloudian_smoke_ball": {
+    "name": "Облачник - Шар Дыма",
+    "skipStrip": true
+  },
+  "cloudian_storm_dragon": {
+    "name": "Облачник - Штормовой Дракон",
+    "skipStrip": true
+  },
+  "cloudian_—_acid_cloud": {
+    "name": "Облачник - Кислотное Облако",
+    "skipStrip": true
+  },
+  "cloudian_—_eye_of_the_typhoon": {
+    "name": "Облачник - Глаз Тайфуна",
+    "skipStrip": true
+  },
+  "cloudian_—_ghost_fog": {
+    "name": "Облачник - Туман Призраков",
+    "skipStrip": true
+  },
+  "cloudian_—_nimbusman": {
+    "name": "Облачник - Человек-Нимб",
+    "skipStrip": true
+  },
+  "cloudian_—_smoke_ball": {
+    "name": "Облачник - Шар Дыма",
+    "skipStrip": true
+  },
+  "cloudian_—_storm_dragon": {
+    "name": "Облачник - Штормовой Дракон",
+    "skipStrip": true
+  },
+  "colossal_fighter": {
+    "name": "Колоссальный Боец"
+  },
+  "colossal_fighter1": {
+    "name": "Колоссальный Боец"
+  },
+  "copycat": {
+    "name": "Подражатель"
+  },
+  "crab_turtle": {
+    "name": "Краб-Черепаха"
+  },
+  "crystal_beast_amber_mammoth": {
+    "name": "Кристальный Зверь Янтарный Мамонт",
+    "skipStrip": true
+  },
+  "crystal_beast_emerald_tortoise": {
+    "name": "Кристальный Зверь Изумрудная Черепаха",
+    "skipStrip": true
+  },
+  "crystal_beast_ruby_carbuncle": {
+    "name": "Кристальный Зверь Рубиновый Карбункул",
+    "skipStrip": true
+  },
+  "crystal_beast_topaz_tiger": {
+    "name": "Кристальный Зверь Топазовый Тигр",
+    "skipStrip": true
+  },
+  "crystal_beast_—_emerald_tortoise": {
+    "name": "Кристальный Зверь Изумрудная Черепаха",
+    "skipStrip": true
+  },
+  "crystal_beast_—_ruby_carbuncle": {
+    "name": "Кристальный Зверь Рубиновый Карбункул",
+    "skipStrip": true
+  },
+  "crystal_beast_—_topaz_tiger": {
+    "name": "Кристальный Зверь Топазовый Тигр",
+    "skipStrip": true
+  },
+  "curse_of_dragon": {
+    "name": "Проклятие Дракона",
+    "skipStrip": true
+  },
+  "curse_of_dragonfire": {
+    "name": "Проклятие Драконьего Огня",
+    "skipStrip": true
+  },
+  "cyber_dinosaur": {
+    "name": "Кибер-Динозавр"
+  },
+  "cyber_dragon": {
+    "name": "Кибер-Дракон"
+  },
+  "cyber_dragon_(cydra_2)": {
+    "name": "Кибер-Дракон"
+  },
+  "cyber_dragon_vier": {
+    "name": "Кибер-Дракон Фир"
+  },
+  "cyber_end_dragon": {
+    "name": "Кибер-Дракон Финала"
+  },
+  "cyber_ogre": {
+    "name": "Кибер-Огр"
+  },
+  "cyber_saurus": {
+    "name": "Кибер-Завр"
+  },
+  "cyber_tech_alligator": {
+    "name": "Кибер-Техноаллигатор"
+  },
+  "cyber_twin_dragon": {
+    "name": "Кибер-Дракон Близнец"
+  },
+  "d.d._crazy_beast": {
+    "name": "Д.Д. Безумный Зверь"
+  },
+  "d.d._trainer": {
+    "name": "Д.Д. Тренер"
+  },
+  "d.d._warrior": {
+    "name": "Д.Д. Воин"
+  },
+  "d.d._warrior_lady": {
+    "name": "Д.Д. Воительница"
+  },
+  "d_d_crazy_beast": {
+    "name": "Д.Д. Безумный Зверь"
+  },
+  "d_d_trainer": {
+    "name": "Д.Д. Тренер"
+  },
+  "d_d_warrior_lady": {
+    "name": "Д.Д. Воительница"
+  },
+  "dandylion": {
+    "name": "Одуванлев"
+  },
+  "danger!_bigfoot!": {
+    "name": "Опасность! Бигфут!"
+  },
+  "danger_bigfoot": {
+    "name": "Опасность! Бигфут!"
+  },
+  "dark_eradicator_warlock": {
+    "name": "Тёмный Маг-Истребитель"
+  },
+  "dark_eyes_illusionist": {
+    "name": "Иллюзионист Тёмных Глаз"
+  },
+  "dark_magician": {
+    "name": "Тёмный Маг"
+  },
+  "dark_magician_(all_variants)": {
+    "name": "Тёмный Маг"
+  },
+  "dark_magician_(alt_master_duel)": {
+    "name": "Тёмный Маг"
+  },
+  "dark_magician_(variant_2)": {
+    "name": "Тёмный Маг"
+  },
+  "dark_magician_alternate": {
+    "name": "Тёмный Маг"
+  },
+  "dark_magician_girl": {
+    "name": "Тёмная Волшебница"
+  },
+  "dark_magician_girl___alternate": {
+    "name": "Тёмная Волшебница"
+  },
+  "dark_magician_girl_alternate": {
+    "name": "Тёмная Волшебница"
+  },
+  "dark_magician_of_chaos": {
+    "name": "Чёрный Маг Хаоса"
+  },
+  "dark_magician_of_chaos_(render)": {
+    "name": "Тёмный Маг Хаоса"
+  },
+  "dark_magician_v2": {
+    "name": "Тёмный Маг"
+  },
+  "dark_arkana_magician": {
+    "name": "Тёмный Маг Аркана"
+  },
+  "dark_magician_—_arkana_variant": {
+    "name": "Тёмный Маг — Аркана"
+  },
+  "dark_necrofear": {
+    "name": "Тёмный Некрофир"
+  },
+  "dark_paladin": {
+    "name": "Тёмный Паладин"
+  },
+  "dark_rabbit": {
+    "name": "Тёмный Кролик"
+  },
+  "dark_resonator": {
+    "name": "Тёмный Резонатор"
+  },
+  "dark_ruler_ha_des": {
+    "name": "Тёмный Правитель Ха Дес"
+  },
+  "dark_sage": {
+    "name": "Тёмный Мудрец"
+  },
+  "dark_world_thorns": {
+    "name": "Шипы Тёмного Мира"
+  },
+  "darkfire_dragon": {
+    "name": "Дракон Тёмного Огня"
+  },
+  "despair_from_the_dark": {
+    "name": "Отчаяние из Тьмы"
+  },
+  "destiny_hero_defender": {
+    "name": "Д-ГЕРОЙ Защитник",
+    "skipStrip": true
+  },
+  "destiny_hero_plasma": {
+    "name": "Д-ГЕРОЙ Плазма",
+    "skipStrip": true
+  },
+  "dragon_destroyer_swordsman": {
+    "name": "Мечник-Драконоборец"
+  },
+  "dragon_spirit_of_white": {
+    "name": "Дух Белого Дракона"
+  },
+  "dragon_zombie": {
+    "name": "Дракон-Зомби"
+  },
+  "drillago": {
+    "name": "Дриллаго"
+  },
+  "drillroid": {
+    "name": "Буроид"
+  },
+  "duoterion": {
+    "name": "Дуотерион"
+  },
+  "earthbound_immortal_chacu_challhua": {
+    "name": "Земной Бессмертный Чаку Чальуа",
+    "skipStrip": true
+  },
+  "earthboundimmortal_chacu_challhua": {
+    "name": "Земной Бессмертный Чаку Чальуа",
+    "skipStrip": true
+  },
+  "egyptian_god_slime": {
+    "name": "Слизь Египетского Бога"
+  },
+  "elemental_hero_bladedge": {
+    "name": "Э-ГЕРОЙ Клинок",
+    "skipStrip": true
+  },
+  "elemental_hero_burstinatrix": {
+    "name": "Э-ГЕРОЙ Бёрстинатрикс",
+    "skipStrip": true
+  },
+  "elemental_hero_clayman": {
+    "name": "Э-ГЕРОЙ Глинник",
+    "skipStrip": true
+  },
+  "elemental_hero_flame_wingman": {
+    "name": "Э-ГЕРОЙ Пламенный Крылач",
+    "skipStrip": true
+  },
+  "elemental_hero_necroshade": {
+    "name": "Э-ГЕРОЙ Некрошейд",
+    "skipStrip": true
+  },
+  "elemental_hero_neos": {
+    "name": "Э-ГЕРОЙ Неос",
+    "skipStrip": true
+  },
+  "elemental_hero_neos_(alt_master_duel)": {
+    "name": "Э-ГЕРОЙ Неос",
+    "skipStrip": true
+  },
+  "elemental_hero_neos_alius": {
+    "name": "Э-ГЕРОЙ Неос Алиус",
+    "skipStrip": true
+  },
+  "elemental_hero_sparkman": {
+    "name": "Э-ГЕРОЙ Спаркмен",
+    "skipStrip": true
+  },
+  "elemental_hero_stratos": {
+    "name": "Э-ГЕРОЙ Стратос",
+    "skipStrip": true
+  },
+  "enraged_battle_ox": {
+    "name": "Разъярённый Боевой Бык"
+  },
+  "evilswarm_mandragora": {
+    "name": "Злорой Мандрагора"
+  },
+  "evilswarm_salamandra": {
+    "name": "Злорой Саламандра"
+  },
+  "exodia": {
+    "name": "Экзодия"
+  },
+  "exodia_(full_body)": {
+    "name": "Экзодия"
+  },
+  "exodia_necross": {
+    "name": "Экзодия Некросс"
+  },
+  "exodia_the_forbidden_evolution": {
+    "name": "Экзодия Запретная Эволюция"
+  },
+  "exodius_the_ultimate_forbidden_lord": {
+    "name": "Экзодиус Абсолютный Запретный Лорд"
+  },
+  "fenrir": {
+    "name": "Фенрир"
+  },
+  "feral_imp": {
+    "name": "Дикий Бес"
+  },
+  "fiend_kraken": {
+    "name": "Демон-Кракен"
+  },
+  "fiend_sword": {
+    "name": "Демонический Меч"
+  },
+  "fossil_dyna_pachycephalo": {
+    "name": "Фоссил Дина Пахицефало"
+  },
+  "fossil_warrior_skull_king": {
+    "name": "Ископаемый Воин Король Черепов"
+  },
+  "frost_&_flame_dragon": {
+    "name": "Дракон Льда и Пламени"
+  },
+  "frost_and_flame_dragon": {
+    "name": "Дракон Льда и Пламени"
+  },
+  "frostosaurus": {
+    "name": "Фростозавр"
+  },
+  "gagagigo": {
+    "name": "Гагагиго"
+  },
+  "gaia_the_dragon_champion": {
+    "name": "Гайя Чемпион Дракона",
+    "skipStrip": true
+  },
+  "gaia_the_fierce_knight": {
+    "name": "Гайя Свирепый Рыцарь",
+    "skipStrip": true
+  },
+  "gamma_the_magnet_warrior": {
+    "name": "Гамма Магнитный Воин"
+  },
+  "gate_guardian": {
+    "name": "Страж Врат"
+  },
+  "gazelle_the_king_of_mythical_beasts": {
+    "name": "Газель Король Мистических Зверей",
+    "skipStrip": true
+  },
+  "gellenduo": {
+    "name": "Геллендуо"
+  },
+  "gem-knight_citrine": {
+    "name": "Рыцарь-Самоцвет Цитрин"
+  },
+  "gem-knight_master_diamond": {
+    "name": "Рыцарь-Самоцвет Мастер Бриллиант"
+  },
+  "gem_knight_citrine": {
+    "name": "Рыцарь-Самоцвет Цитрин"
+  },
+  "gem_knight_master_diamond": {
+    "name": "Рыцарь-Самоцвет Мастер Бриллиант"
+  },
+  "genex_ally_birdman": {
+    "name": "Союзник Генекс Птицечеловек"
+  },
+  "ghostrick_ghoul": {
+    "name": "Гострик Гуль"
+  },
+  "ghostrick_mummy": {
+    "name": "Гострик Мумия"
+  },
+  "ghostrick_skeleton": {
+    "name": "Гострик Скелет"
+  },
+  "ghostrick_stein": {
+    "name": "Гострик Штейн"
+  },
+  "ghostrick_yeti": {
+    "name": "Гострик Йети"
+  },
+  "giant_soldier_of_stone": {
+    "name": "Каменный Гигант-Солдат"
+  },
+  "giga_gagagigo": {
+    "name": "Гига Гагагиго"
+  },
+  "gigobyte": {
+    "name": "Гигобайт"
+  },
+  "gogiga_gagagigo": {
+    "name": "Гогига Гагагиго"
+  },
+  "golden_eyes_ido": {
+    "name": "Идол Золотых Глаз"
+  },
+  "golden_eyes_idol": {
+    "name": "Идол Золотых Глаз"
+  },
+  "golden_homunculus": {
+    "name": "Золотой Гомункул"
+  },
+  "gozuki": {
+    "name": "Годзуки"
+  },
+  "granadora": {
+    "name": "Гранадора"
+  },
+  "graverobber": {
+    "name": "Грабитель Могил"
+  },
+  "great_moth": {
+    "name": "Великая Моль"
+  },
+  "great_white": {
+    "name": "Большая Белая"
+  },
+  "green_baboon,_defender_of_the_forest": {
+    "name": "Зелёный Бабуин",
+    "skipStrip": true
+  },
+  "green_baboon_defender_of_the_forest": {
+    "name": "Зелёный Бабуин",
+    "skipStrip": true
+  },
+  "green_gadget": {
+    "name": "Зелёный Гаджет"
+  },
+  "green_gadget_alternate": {
+    "name": "Зелёный Гаджет"
+  },
+  "gren,_tactician_of_dark_world": {
+    "name": "Грен, Тактик Тёмного Мира"
+  },
+  "griffore": {
+    "name": "Гриффор"
+  },
+  "guardian_grarl": {
+    "name": "Страж Гларл"
+  },
+  "hade-hane": {
+    "name": "Хадэ-Ханэ"
+  },
+  "hade_hane": {
+    "name": "Хадэ-Ханэ"
+  },
+  "hane-hane": {
+    "name": "Ханэ-Ханэ"
+  },
+  "hane_hane": {
+    "name": "Ханэ-Ханэ"
+  },
+  "harpie_s_pet_dragon": {
+    "name": "Дракон-Питомец Гарпии"
+  },
+  "harpies_pet_dragon": {
+    "name": "Дракон-Питомец Гарпии"
+  },
+  "headless_knight": {
+    "name": "Безголовый Рыцарь"
+  },
+  "hinotama_soul": {
+    "name": "Душа Хинотама"
+  },
+  "hitotsu-me_giant": {
+    "name": "Одноглазый Великан"
+  },
+  "hitotsu_me_giant": {
+    "name": "Одноглазый Великан"
+  },
+  "humanoid_slime": {
+    "name": "Гуманоидная Слизь"
+  },
+  "hundred-eyes_dragon": {
+    "name": "Стоглазый Дракон",
+    "skipStrip": true
+  },
+  "hundred_eyes_dragon": {
+    "name": "Стоглазый Дракон",
+    "skipStrip": true
+  },
+  "hungry_burger": {
+    "name": "Голодный Бургер"
+  },
+  "hydrogeddon": {
+    "name": "Гидрогеддон"
+  },
+  "hyozanryu": {
+    "name": "Хёдзанрю"
+  },
+  "hyper_hammerhead": {
+    "name": "Гипер-Молотоглав"
+  },
+  "illusionist_faceless_mage": {
+    "name": "Иллюзионист Безликий Маг"
+  },
+  "imairuka": {
+    "name": "Имайрука"
+  },
+  "inpachi": {
+    "name": "Инпачи"
+  },
+  "jetroid": {
+    "name": "Джетроид"
+  },
+  "jinzo": {
+    "name": "Дзинзо"
+  },
+  "jinzo_the_machine_menace": {
+    "name": "Дзинзо Машинная Угроза"
+  },
+  "junk_warrior": {
+    "name": "Мусорный Воин"
+  },
+  "kahkki,_guerilla_of_dark_world": {
+    "name": "Какки, Партизан Тёмного Мира"
+  },
+  "kazejin": {
+    "name": "Кадзэдзин"
+  },
+  "king_dragun": {
+    "name": "Король Драгун"
+  },
+  "king_of_the_skull_servants": {
+    "name": "Король Слуг Черепа",
+    "skipStrip": true
+  },
+  "koitsu": {
+    "name": "Койцу"
+  },
+  "kozaky": {
+    "name": "Козаки"
+  },
+  "kuriboh": {
+    "name": "Курибо"
+  },
+  "la_jinn_the_mystical_genie": {
+    "name": "Ла Джинн Мистический Дух"
+  },
+  "la_jinn_the_mystical_genie_(all_variants)": {
+    "name": "Ла Джинн Мистический Дух"
+  },
+  "la_jinn_the_mystical_genie_of_the_lamp": {
+    "name": "Ла Джинн Мистический Дух"
+  },
+  "lava_golem": {
+    "name": "Лавовый Голем"
+  },
+  "legendary_swordsman": {
+    "name": "Легендарный Мечник"
+  },
+  "levia-dragon_daedalus": {
+    "name": "Левиа-Дракон Дедал"
+  },
+  "levia_dragon_daedalus": {
+    "name": "Левиа-Дракон Дедал"
+  },
+  "lord_of_d": {
+    "name": "Лорд Д.",
+    "skipStrip": true
+  },
+  "lord_of_d.": {
+    "name": "Лорд Д.",
+    "skipStrip": true
+  },
+  "luster_dragon": {
+    "name": "Блестящий Дракон"
+  },
+  "magician_robe": {
+    "name": "Мантия Мага"
+  },
+  "magicians_robe": {
+    "name": "Мантия Мага"
+  },
+  "magikuriboh": {
+    "name": "Магикурибо"
+  },
+  "man-eating_plant": {
+    "name": "Плотоядное Растение"
+  },
+  "manga_ryu-ran": {
+    "name": "Манга Рю-Ран"
+  },
+  "masked_beast_des_gardius": {
+    "name": "Зверь в Маске Дес Гардиус"
+  },
+  "master_of_oz": {
+    "name": "Мастер Оза"
+  },
+  "megalosmasher_x": {
+    "name": "Мегалосмэшер X"
+  },
+  "megazowler": {
+    "name": "Мегазовлер"
+  },
+  "meteor_b": {
+    "name": "Метеорный Ч. Дракон"
+  },
+  "meteor_b._dragon": {
+    "name": "Метеорный Ч. Дракон"
+  },
+  "mezuki": {
+    "name": "Мэдзуки"
+  },
+  "milennium_shield": {
+    "name": "Тысячелетний Щит"
+  },
+  "millennium_scorpion": {
+    "name": "Тысячелетний Скорпион"
+  },
+  "millennium_shield": {
+    "name": "Тысячелетний Щит"
+  },
+  "morphing_jar": {
+    "name": "Превращающийся Кувшин"
+  },
+  "moves:": {
+    "name": "Moves:"
+  },
+  "muka_muka": {
+    "name": "Мука Мука"
+  },
+  "naturia_beast": {
+    "name": "Зверь Натурии"
+  },
+  "naturia_cosmobeet": {
+    "name": "Натурия Космосвёкла"
+  },
+  "naturia_landoise": {
+    "name": "Натурия Ландуаз"
+  },
+  "needle_burrower": {
+    "name": "Игольчатый Землерой"
+  },
+  "neo-spacian_glow_moss": {
+    "name": "Нео-Космический Светомох"
+  },
+  "number_22:_zombiestein": {
+    "name": "№22: Зомбиштейн",
+    "skipStrip": true
+  },
+  "number_22_zombiestein": {
+    "name": "№22: Зомбиштейн",
+    "skipStrip": true
+  },
+  "obelisk_the_tormentor": {
+    "name": "Обелиск Мучитель",
+    "skipStrip": true
+  },
+  "ocean_dragon_lord_kairyu_shin": {
+    "name": "Владыка Морских Драконов — Кайрю-Шин",
+    "skipStrip": true
+  },
+  "ocean_dragon_lord_—_kairyu-shin": {
+    "name": "Владыка Морских Драконов — Кайрю-Шин",
+    "skipStrip": true
+  },
+  "ojama_black": {
+    "name": "Оджама Чёрный / Зелёный"
+  },
+  "ojama_black___green": {
+    "name": "Оджама Чёрный / Зелёный"
+  },
+  "ojama_king": {
+    "name": "Оджама Король"
+  },
+  "ojama_knight": {
+    "name": "Оджама Рыцарь"
+  },
+  "overtex_qoatlus": {
+    "name": "Овертекс Коатлус"
+  },
+  "oxygeddon": {
+    "name": "Оксигеддон"
+  },
+  "paladin_of_the_cursed_dragon": {
+    "name": "Паладин Проклятого Дракона"
+  },
+  "paladin_of_white_dragon": {
+    "name": "Паладин Белого Дракона"
+  },
+  "pale_beast": {
+    "name": "Бледный Зверь"
+  },
+  "panther_warrior": {
+    "name": "Воин-Пантера"
+  },
+  "panzer_dragon": {
+    "name": "Панцер-Дракон"
+  },
+  "papa_corn": {
+    "name": "Папа Корн"
+  },
+  "plaguespreader_zombie": {
+    "name": "Зомби-Чумоносец"
+  },
+  "power_invader": {
+    "name": "Мощный Захватчик"
+  },
+  "pyramid_turtle": {
+    "name": "Черепаха-Пирамида"
+  },
+  "quickdraw_synchron": {
+    "name": "Быстронов Синхрон"
+  },
+  "ra_(winged_dragon_of_ra)": {
+    "name": "Ра (Крылатый Дракон Ра)"
+  },
+  "red-eyes_black_dragon": {
+    "name": "Красноглазый Чёрный Дракон"
+  },
+  "red-eyes_dark_dragoon": {
+    "name": "Красноглазый Тёмный Драгун"
+  },
+  "red-eyes_darkness_dragon": {
+    "name": "Красноглазый Дракон Тьмы"
+  },
+  "red_gadget": {
+    "name": "Красный Гаджет"
+  },
+  "relinquished": {
+    "name": "Отречённый"
+  },
+  "revendread_slayer": {
+    "name": "Призрак-Убийца"
+  },
+  "rocket_warrior": {
+    "name": "Воин-Ракета"
+  },
+  "ronintoadin": {
+    "name": "Ронинтоадин"
+  },
+  "rusty_bardiche": {
+    "name": "Ржавая Бердыш"
+  },
+  "sanga_of_the_thunder": {
+    "name": "Санга Грома"
+  },
+  "sasuke_samurai": {
+    "name": "Сасукэ Самурай"
+  },
+  "shinato,_king_of_a_higher_plane": {
+    "name": "Синато, Король Высшего Плана"
+  },
+  "silent_magician_lv8": {
+    "name": "Безмолвный Маг LV8"
+  },
+  "skull_archfiend_of_lightning": {
+    "name": "Архидемон-Череп Молнии"
+  },
+  "skull_servant": {
+    "name": "Слуга Черепа"
+  },
+  "slifer_the_sky_dragon": {
+    "name": "Слайфер Небесный Дракон"
+  },
+  "snowman_eater": {
+    "name": "Снеговик-Пожиратель"
+  },
+  "soldier_of_chaos": {
+    "name": "Солдат Хаоса",
+    "skipStrip": true
+  },
+  "sorcerer_of_dark_magic": {
+    "name": "Колдун Тёмной Магии"
+  },
+  "soul_hunter": {
+    "name": "Охотник за Душами"
+  },
+  "spear_dragon": {
+    "name": "Дракон-Копьё"
+  },
+  "speed_warrior": {
+    "name": "Скоростной Воин"
+  },
+  "steel_ogre_grotto": {
+    "name": "Стальной Огр Грот №1"
+  },
+  "steel_ogre_grotto_#1": {
+    "name": "Стальной Огр Грот №1"
+  },
+  "suijin": {
+    "name": "Суйдзин"
+  },
+  "summoned_skull": {
+    "name": "Призванный Череп"
+  },
+  "super_conductor_tyranno": {
+    "name": "Суперпроводящий Тиранно"
+  },
+  "supreme_king_of_armageddon": {
+    "name": "Верховный Король Армагеддона"
+  },
+  "sword_arm_of_dragon": {
+    "name": "Рука-Меч Дракона"
+  },
+  "swordsman_of_landstar": {
+    "name": "Мечник Лэндстара"
+  },
+  "the_creator": {
+    "name": "Создатель",
+    "skipStrip": true
+  },
+  "the_dark_creator": {
+    "name": "Тёмный Создатель"
+  },
+  "the_dark_magicians": {
+    "name": "Тёмные Маги"
+  },
+  "the_fabled_cerburrel": {
+    "name": "Легендарный Цербуррель"
+  },
+  "the_fabled_cerurrel": {
+    "name": "Легендарный Цербуррель"
+  },
+  "the_fabled_ganashia": {
+    "name": "Легендарный Ганаша"
+  },
+  "the_masked_beast": {
+    "name": "Зверь в Маске"
+  },
+  "the_tricky": {
+    "name": "Трикки",
+    "skipStrip": true
+  },
+  "the_winged_dragon_of_ra": {
+    "name": "Крылатый Дракон Ра"
+  },
+  "the_winged_dragon_of_ra_(variant)": {
+    "name": "Крылатый Дракон Ра"
+  },
+  "thousand-eyes_idol": {
+    "name": "Тысячеглазый Идол"
+  },
+  "thousand_dragon": {
+    "name": "Тысячный Дракон"
+  },
+  "thousand_eyes_restrict": {
+    "name": "1000-Глазое Ограничение",
+    "skipStrip": true
+  },
+  "time_wizard_of_tomorrow": {
+    "name": "Маг Времени",
+    "skipStrip": true
+  },
+  "togex": {
+    "name": "Тогекс"
+  },
+  "toon_alligator": {
+    "name": "Мульт-Аллигатор"
+  },
+  "toon_ancient_gear_golem": {
+    "name": "Мульт-Древний Механический Голем"
+  },
+  "toon_barrel_dragon": {
+    "name": "Мульт-Дракон Ствол"
+  },
+  "toon_black_luster_soldier": {
+    "name": "Мульт-Чёрный Сверкающий Солдат"
+  },
+  "toon_briefcase": {
+    "name": "Мульт-Портфель"
+  },
+  "toon_buster_blader": {
+    "name": "Мульт-Бастер Блейдер"
+  },
+  "toon_cannon_soldier": {
+    "name": "Мульт-Солдат Пушка"
+  },
+  "toon_cyber_dragon": {
+    "name": "Мульт-Кибер-Дракон"
+  },
+  "toon_dark_magician": {
+    "name": "Мульт-Тёмный Маг"
+  },
+  "toon_dark_magician_girl": {
+    "name": "Мульт-Тёмная Волшебница"
+  },
+  "toon_gemini_elf": {
+    "name": "Мульт-Эльф Близнец"
+  },
+  "toon_goblin_attack_force": {
+    "name": "Мульт-Гоблин Ударная Сила"
+  },
+  "toon_harpie_lady": {
+    "name": "Мульт-Дама Гарпия"
+  },
+  "toon_masked_sorcerer": {
+    "name": "Мульт-Маг в Маске"
+  },
+  "toon_mermaid": {
+    "name": "Мульт-Русалка"
+  },
+  "toon_summoned_skull": {
+    "name": "Мульт-Призванный Череп"
+  },
+  "torike": {
+    "name": "Торикэ"
+  },
+  "treeborn_frog": {
+    "name": "Древесная Лягушка"
+  },
+  "tri-horned_dragon": {
+    "name": "Трёхрогий Дракон"
+  },
+  "turtle_raccoon": {
+    "name": "Черепаха-Енот"
+  },
+  "twin-headed_king_rex": {
+    "name": "Двухголовый Король Рекс"
+  },
+  "twin-headed_wolf": {
+    "name": "Двухголовый Волк"
+  },
+  "twin_headed_king_rex": {
+    "name": "Двухголовый Король Рекс"
+  },
+  "ultimate_ancient_gear_golem": {
+    "name": "Абсолютный Древний Механический Голем"
+  },
+  "unstoppable_exodia_incarnate": {
+    "name": "Неостановимый Воплощённый Экзодия"
+  },
+  "valkerion_the_magnet_warrior": {
+    "name": "Валькирион Магнитный Воин"
+  },
+  "valkyrion_the_magnet_warrior": {
+    "name": "Валькирион Магнитный Воин"
+  },
+  "versago_the_destroyer": {
+    "name": "Версаго Разрушитель"
+  },
+  "volcanic_doomfire": {
+    "name": "Вулканическое Адское Пламя"
+  },
+  "volcanic_hammerer": {
+    "name": "Вулканический Молотобоец"
+  },
+  "volcanic_rocket": {
+    "name": "Вулканическая Ракета"
+  },
+  "volcanic_shell": {
+    "name": "Вулканический Снаряд"
+  },
+  "water_dragon": {
+    "name": "Водяной Дракон"
+  },
+  "water_dragon_cluster": {
+    "name": "Скопление Водяных Драконов"
+  },
+  "wattgiraffe": {
+    "name": "Ваттжираф"
+  },
+  "white_night_dragon": {
+    "name": "Дракон Белой Ночи"
+  },
+  "woodland_sprite": {
+    "name": "Лесной Дух"
+  },
+  "x-head_cannon": {
+    "name": "Пушка Х-Голова"
+  },
+  "y-dragon_head": {
+    "name": "Голова Y-Дракона"
+  },
+  "yellow_gadget": {
+    "name": "Жёлтый Гаджет"
+  },
+  "yellow_gear": {
+    "name": "Жёлтый Гаджет"
+  },
+  "yubel": {
+    "name": "Юбель"
+  },
+  "yubel_the_loving_defender": {
+    "name": "Юбель"
+  },
+  "z-metal_tank": {
+    "name": "Z-Металлический Танк"
+  },
+  "zombyra_the_dark": {
+    "name": "Зомбира Тёмный"
+  }
+}

@@ -1,6 +1,6 @@
 import BattleScene from "#app/battle-scene.js";
 import { BattlerIndex } from "#app/battle.js";
-import { applyCheckTrappedAbAttrs, CheckTrappedAbAttr } from "#app/data/ability.js";
+import { applyAbAttrs, applyCheckTrappedAbAttrs, BlockSwitchCommandAbAttr, CheckTrappedAbAttr } from "#app/data/ability.js";
 import { TrappedTag } from "#app/data/battler-tags.js";
 import { Command } from "#app/ui/command-ui-handler.js";
 import * as Utils from "#app/utils.js";
@@ -27,8 +27,10 @@ export class EnemyCommandPhase extends FieldPhase {
 
       const trapTag = enemyPokemon.findTag(t => t instanceof TrappedTag) as TrappedTag;
       const trapped = new Utils.BooleanHolder(false);
+      const blockSwitch = new Utils.BooleanHolder(false);
+      applyAbAttrs(BlockSwitchCommandAbAttr, enemyPokemon, blockSwitch);
       opponents.forEach(playerPokemon => applyCheckTrappedAbAttrs(CheckTrappedAbAttr, playerPokemon, trapped, enemyPokemon, [""], true));
-      if (!trapTag && !trapped.value) {
+      if (!trapTag && !trapped.value && !blockSwitch.value) {
         const partyMemberScores = trainer.getPartyMemberMatchupScores(enemyPokemon.trainerSlot, true);
 
         if (partyMemberScores.length) {

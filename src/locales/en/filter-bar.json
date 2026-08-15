@@ -34,5 +34,8 @@
   "sortByCost": "Cost",
   "sortByCandies": "Candy Count",
   "sortByIVs": "IVs",
-  "sortByName": "Name"
+  "sortByName": "Name",
+  "fusionsFilter": "Fusions",
+  "hasFusions": "Has Fusions",
+  "noFusions": "No Fusions"
 }

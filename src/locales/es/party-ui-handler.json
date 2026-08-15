@@ -49,5 +49,6 @@
   "SUMMARY": "Resumen",
   "CANCEL": "Cancelar",
   "RELEASE": "Liberar",
-  "APPLY": "Aplicar"
+  "APPLY": "Aplicar",
+  "quickInfo": "Info Rápida"
 }

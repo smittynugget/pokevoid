@@ -52,7 +52,7 @@
       "description": "ポケモンのわざのさいだいPPを さいだいPP 5ごとに {{upPoints}} ポイントずつ ふやします（さいだい3）"
     },
     "PokemonNatureChangeModifierType": {
-      "name": "{{natureName}} Mint",
+      "name": "{{natureName}}ミント",
       "statLabel": "せいかくミント",
       "description": "ポケモンのせいかくを {{natureName}}にかえて スターターのせいかくをえいきゅうにかいじょする"
     },
@@ -72,11 +72,11 @@
       "description": "すべてのパーティメンバーのレベルを1あげる"
     },
     "PokemonBaseStatBoosterModifierType": {
-      "description": "ポケモンの{{statName}}のきほんステータスを10パーセントあげる。こたいちがたかいほどスタックのげんかいもたかくなる。"
+      "description": "ポケモンの{{statName}}のきほんステータスを8パーセントあげる。こたいちがたかいほどスタックのげんかいもたかくなる。"
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "安価",
-      "description": "ポケモンの{{statName}}のきほんステータスを1パーセントあげる。"
+      "description": "ポケモンの{{statName}}のきほんステータスを3パーセントあげる。"
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "すべてのポケモンのHPを100パーセントかいふくする"
@@ -420,7 +420,7 @@
       "description": "どのポケモンにも {{moveName}} をおしえる"
     },
     "AnyTmModifierTypeWithInfo": {
-      "name": "++XM{{moveId}} - {{moveName}}++",
+      "name": "XM{{moveId}} - {{moveName}}",
       "statLabel": "XM（任意のわざマシン）",
       "description": "どのポケモンにも {{moveName}} をおしえる\n(Hold C or Shift for more info)"
     },
@@ -713,7 +713,8 @@
       "name": "エッセンス",
       "shopName": "{{type}}エッセンス",
       "statLabel": "エッセンス",
-      "description": "リリースアイテムのためにポケモンを逃がす代わりに4個使うか、コレクターと報酬を交換します。"
+      "description": "リリースアイテムのためにポケモンを逃がす代わりに4個使うか、コレクターと報酬を交換します。",
+      "tooltipDescription": "選択したポケモンに{{type}}エッセンス1個を付与。\n\nエッセンスはチャンピオンスキルのレベルアップ、リリースの代替（4個必要）、コレクターとの交換に使用できます。"
     },
     "PermaCollectedTypeModifierType": {
       "name": "収集エッセンス",
@@ -879,6 +880,7 @@
     "NONE": "None",
     "ABOMASITE": "ユキノオナイト",
     "ABSOLITE": "アブソルナイト",
+    "ABSOLITE_Z": "アブソルナイト Z",
     "AERODACTYLITE": "プテラナイト",
     "AGGRONITE": "ボスゴドラナイト",
     "ALAKAZITE": "フーディナイト",
@@ -895,6 +897,7 @@
     "DIANCITE": "ディアンシナイト",
     "GALLADITE": "エルレイドナイト",
     "GARCHOMPITE": "ガブリアスナイト",
+    "GARCHOMPITE_Z": "ガブリアスナイト Z",
     "GARDEVOIRITE": "サーナイトナイト",
     "GENGARITE": "ゲンガナイト",
     "GLALITITE": "オニゴーリナイト",
@@ -906,6 +909,7 @@
     "LATIOSITE": "ラティオスナイト",
     "LOPUNNITE": "ミミロップナイト",
     "LUCARIONITE": "ルカリオナイト",
+    "LUCARIONITE_Z": "ルカリオナイト Z",
     "MANECTITE": "ライボルトナイト",
     "MAWILITE": "クチートナイト",
     "MEDICHAMITE": "チャーレムナイト",
@@ -953,6 +957,21 @@
     "DRAMPITE": "ジジーロンナイト",
     "FALINKSITE": "タイレーツナイト",
     "ZERAORITE": "ゼラオラナイト",
+    "RAICHUITE_X": "ライチュウナイト X",
+    "RAICHUITE_Y": "ライチュウナイト Y",
+    "CHIMECHOITE": "チリーンナイト",
+    "STARAPTORITE": "ムクホークナイト",
+    "HEATRANITE": "ヒードランナイト",
+    "DARKRAITE": "ダークライナイト",
+    "GOLURKITE": "ゴルーグナイト",
+    "MEOWSTITE": "ニャオニクスナイト",
+    "CRABOMINITE": "ケケンカニナイト",
+    "GOLISOPODITE": "グソクムシャナイト",
+    "MAGEARNITE": "マギアナナイト",
+    "SCOVILLAINITE": "スコヴィランナイト",
+    "GLIMMORITE": "キラフロルナイト",
+    "TATSUGURITE": "シャリタツナイト",
+    "BAXCALIBURITE": "セグレイブナイト",
 
     "BLUE_ORB": "あいいろのたま",
     "RED_ORB": "べにいろのたま",
@@ -1072,10 +1091,16 @@
     "uses": "回使用可能",
     "glitchPieceCost": "*グリッチピース1個が必要",
     "essenceAlternativeCost": "ポケモンがエッセンスを4個以上持っている場合、代わりにそれらを使用できます。",
+    "abilityReplaceNote": "ポケモンの現在の特性を置き換えます。重複しません。",
+    "passiveAbilityReplaceNote": "ポケモンの現在のパッシブ特性を置き換えます。重複しません。",
     "permaMoney": "Ωゴールド",
     "permaItem": "Ωアイテム",
     "moreInfo": "(Cキー/Shiftキー長押しで詳細表示)",
     "morePokeInfo": "(P / Shift で詳細)",
-    "upgrade": "強化"
-  }
+    "upgrade": "強化",
+    "partyAbilityStacksHint": "(重複可能！)"
+  },
+  "permaWaveTooltip": "[color=#ffa500]{{count}}[/color]ウェーブ後に消滅 — ウェーブ50以降からカウント開始",
+  "permaUseTooltip": "残り[color=#ffa500]{{count}}[/color]回使用可能 — ウェーブ50以降からカウント開始",
+  "permaRemoveHint": "10回押して削除"
 }

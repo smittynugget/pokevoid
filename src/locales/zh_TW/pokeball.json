@@ -4,5 +4,8 @@
   "ultraBall": "高級球",
   "rogueBall": "肉鴿球",
   "masterBall": "大師球",
-  "luxuryBall": "豪華球"
+  "luxuryBall": "豪華球",
+  "typeBall": "{{typeName}}球",
+  "voidBall": "虛空球",
+  "voidBallCatchRate": "100%（紅色HP）"
 }

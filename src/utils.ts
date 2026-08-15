@@ -72,11 +72,11 @@ export function padInt(value: integer, length: integer, padWith?: string): strin
 
 export function intToRoman(num: number): string {
   const romanNumerals: [string, number][] = [
-    ["M", 1000], ["CM", 900], ["D", 500], ["CD", 400],
-    ["C", 100], ["XC", 90], ["L", 50], ["XL", 40],
-    ["X", 10], ["IX", 9], ["V", 5], ["IV", 4], ["I", 1]
+    ['M', 1000], ['CM', 900], ['D', 500], ['CD', 400],
+    ['C', 100], ['XC', 90], ['L', 50], ['XL', 40],
+    ['X', 10], ['IX', 9], ['V', 5], ['IV', 4], ['I', 1]
   ];
-  let result = "";
+  let result = '';
   for (const [letter, value] of romanNumerals) {
     while (num >= value) {
       result += letter;
@@ -104,8 +104,8 @@ export function randIntRange(min: integer, max: integer): integer {
 
 export function randItem<T>(items: T[]): T {
   return items.length === 1
-    ? items[0]
-    : items[randInt(items.length)];
+      ? items[0]
+      : items[randInt(items.length)];
 }
 
 export function randSeedItem<T>(items: T[]): T {
@@ -113,17 +113,17 @@ export function randSeedItem<T>(items: T[]): T {
     return items[0];
   }
 
-  if (typeof Phaser !== "undefined" && Phaser.Math && Phaser.Math.RND && Phaser.Math.RND.pick) {
+  if (typeof Phaser !== 'undefined' && Phaser.Math && Phaser.Math.RND && Phaser.Math.RND.pick) {
     const picked = Phaser.Math.RND.pick(items);
     if (picked !== undefined) {
       return picked;
     }
   }
 
-  const index = randSeedInt(items.length);
-  const result = items[index];
+  const index = randSeedInt(items.length)
+  let result = items[index];
 
-  if (!result) {
+  if(!result) {
     const index = Math.floor(Math.random() * items.length);
     return items[index];
   }
@@ -131,8 +131,8 @@ export function randSeedItem<T>(items: T[]): T {
 
 export function randSeedWeightedItem<T>(items: T[]): T {
   return items.length === 1
-    ? items[0]
-    : Phaser.Math.RND.weightedPick(items);
+      ? items[0]
+      : Phaser.Math.RND.weightedPick(items);
 }
 
 export function randSeedEasedWeightedItem<T>(items: T[], easingFunction: string = "Sine.easeIn"): T | null {
@@ -195,23 +195,23 @@ export function formatLargeNumber(count: integer, threshold: integer): string {
   const ret = count.toString();
   let suffix = "";
   switch (Math.ceil(ret.length / 3) - 1) {
-  case 1:
-    suffix = "K";
-    break;
-  case 2:
-    suffix = "M";
-    break;
-  case 3:
-    suffix = "B";
-    break;
-  case 4:
-    suffix = "T";
-    break;
-  case 5:
-    suffix = "q";
-    break;
-  default:
-    return "?";
+    case 1:
+      suffix = "K";
+      break;
+    case 2:
+      suffix = "M";
+      break;
+    case 3:
+      suffix = "B";
+      break;
+    case 4:
+      suffix = "T";
+      break;
+    case 5:
+      suffix = "q";
+      break;
+    default:
+      return "?";
   }
   const digits = ((ret.length + 2) % 3) + 1;
   let decimalNumber = ret.slice(digits, digits + 2);
@@ -223,7 +223,7 @@ export function formatLargeNumber(count: integer, threshold: integer): string {
 const AbbreviationsLargeNumber: string[] = ["", "K", "M", "B", "t", "q", "Q", "s", "S", "o", "n", "d"];
 
 export function formatFancyLargeNumber(number: number, rounded: number = 3): string {
-  if (typeof number !== "number" || isNaN(number) || !isFinite(number)) {
+  if (typeof number !== 'number' || isNaN(number) || !isFinite(number)) {
     return "0";
   }
 
@@ -312,9 +312,9 @@ export function getCookie(cName: string): string {
 export function localPing() {
   if (isLocal) {
     apiFetch("game/titlestats")
-      .then(resolved => isLocalServerConnected = true,
-        rejected => isLocalServerConnected = false
-      );
+        .then(resolved => isLocalServerConnected = true,
+            rejected => isLocalServerConnected = false
+        );
   }
 }
 
@@ -328,8 +328,8 @@ export function apiFetch(path: string, authed: boolean = false): Promise<Respons
       }
     }
     fetch(`${apiUrl}/${path}`, request)
-      .then(response => resolve(response))
-      .catch(err => reject(err));
+        .then(response => resolve(response))
+        .catch(err => reject(err));
   }) : new Promise(() => {});
 }
 
@@ -346,8 +346,8 @@ export function apiPost(path: string, data?: any, contentType: string = "applica
       }
     }
     fetch(`${apiUrl}/${path}`, { method: "POST", headers: headers, body: data })
-      .then(response => resolve(response))
-      .catch(err => reject(err));
+        .then(response => resolve(response))
+        .catch(err => reject(err));
   }) : new Promise(() => {});
 }
 
@@ -355,17 +355,13 @@ import { auth, db } from "#app/server/firebase";
 import { doc, getDoc, setDoc, updateDoc, DocumentReference } from "firebase/firestore";
 export async function getIdToken(): Promise<string | null> {
   const user = auth.currentUser;
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
   return user.getIdToken();
 }
 
 export async function refreshIdToken(): Promise<string | null> {
   const user = auth.currentUser;
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
   try {
     await user.getIdToken(true);
     return user.getIdToken();
@@ -394,7 +390,7 @@ export async function updateUserDocument(uid: string, data: object) {
 }
 
 export function sanitizeString(str: string): string {
-  const temp = document.createElement("div");
+  const temp = document.createElement('div');
   temp.textContent = str;
   return temp.innerHTML;
 }
@@ -413,7 +409,7 @@ export function isValidFullEmail(email: string): boolean {
     return false;
   }
 
-  const [localPart, domainPart] = email.split("@");
+  const [localPart, domainPart] = email.split('@');
 
   if (email.length > 254 || localPart.length > 64 || domainPart.length > 253) {
     return false;
@@ -534,18 +530,18 @@ export function verifyLang(lang?: string): boolean {
   }
 
   switch (lang) {
-  case "es":
-  case "fr":
-  case "de":
-  case "it":
+    case "es":
+    case "fr":
+    case "de":
+    case "it":
   case "zh-CN":
   case "zh-TW":
   case "pt-BR":
-  case "ko":
+    case "ko":
   case "ja":
-    return true;
-  default:
-    return false;
+      return true;
+    default:
+      return false;
   }
 }
 export function printContainerList(container: Phaser.GameObjects.Container): void {
@@ -645,17 +641,17 @@ export function base64ToUint8Array(base64: string): Uint8Array {
 
 export function decompressData(compressedData: Uint8Array): string {
   try {
-    if (typeof window !== "undefined" && (window as any).pako) {
-      return (window as any).pako.inflate(compressedData, { to: "string" });
+    if (typeof window !== 'undefined' && (window as any).pako) {
+      return (window as any).pako.inflate(compressedData, { to: 'string' });
     } else {
-      console.error("Pako library is not available. Make sure it is loaded in your HTML.");
+      console.error('Pako library is not available. Make sure it is loaded in your HTML.');
       return new TextDecoder().decode(compressedData);
     }
   } catch (e) {
-    console.error("Error decompressing data:", e);
+    console.error('Error decompressing data:', e);
     return Array.from(compressedData)
       .map(byte => String.fromCharCode(byte))
-      .join("");
+      .join('');
   }
 }
 
@@ -670,7 +666,7 @@ function extractPngMetadata(data: Uint8Array): Record<string, string> {
     const chunkType = String.fromCharCode(data[pos], data[pos+1], data[pos+2], data[pos+3]);
     pos += 4;
 
-    if (chunkType === "tEXt") {
+    if (chunkType === 'tEXt') {
       let keywordEnd = pos;
       while (data[keywordEnd] !== 0 && keywordEnd < pos + length) {
         keywordEnd++;
@@ -678,14 +674,14 @@ function extractPngMetadata(data: Uint8Array): Record<string, string> {
 
       const keyword = Array.from(data.slice(pos, keywordEnd))
         .map(byte => String.fromCharCode(byte))
-        .join("");
+        .join('');
 
       const textStart = keywordEnd + 1;
       const textEnd = pos + length;
 
       const textValue = Array.from(data.slice(textStart, textEnd))
         .map(byte => String.fromCharCode(byte))
-        .join("");
+        .join('');
 
       chunks[keyword] = textValue;
     }
@@ -758,9 +754,26 @@ export function createSporadicPattern(
 
 import { SkillTreeRarity } from "#app/system/skill-tree-data";
 
-export function getUpgradeRarityFromTier(tier: number, maxTier: number): SkillTreeRarity {
+export function getUpgradeRarityFromTier(tier: number, maxTier: number, isPathless?: boolean): SkillTreeRarity {
+  if (isPathless) return SkillTreeRarity.MASTER;
+  if (tier > 25) return SkillTreeRarity.MASTER;
+  if (tier > 15) return SkillTreeRarity.ROGUE;
   const denom = Math.max(1, maxTier - 1);
   const p = Math.max(0, Math.min(1, (tier - 1) / denom));
+  const idx = Math.min(5, Math.floor(p * 6));
+  const table: SkillTreeRarity[] = [
+    SkillTreeRarity.COMMON,
+    SkillTreeRarity.GREAT,
+    SkillTreeRarity.ULTRA,
+    SkillTreeRarity.ROGUE,
+    SkillTreeRarity.MASTER,
+    SkillTreeRarity.LEGENDARY
+  ];
+  return table[idx];
+}
+
+export function getRarityFromLevel(level: number, maxLevel = 100): SkillTreeRarity {
+  const p = Math.max(0, Math.min(1, (level - 1) / (maxLevel - 1)));
   const idx = Math.min(5, Math.floor(p * 6));
   const table: SkillTreeRarity[] = [
     SkillTreeRarity.COMMON,
@@ -789,22 +802,22 @@ export default class EmbeddedAtlasFile extends Phaser.Loader.FileTypes.ImageFile
   constructor(loader: Phaser.Loader.LoaderPlugin, key: string, url: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject) {
     super(loader, key, url, xhrSettings);
 
-    this.type = "embeddedAtlas";
+    this.type = 'embeddedAtlas';
   }
 
   onProcess(): void {
     this.state = Phaser.Loader.FILE_PROCESSING;
 
     this.data = new Image();
-    this.data.crossOrigin = this.crossOrigin || "";
+    this.data.crossOrigin = this.crossOrigin || '';
 
     const _this = this;
 
     this.data.onload = function() {
-      const canvas = document.createElement("canvas");
+      const canvas = document.createElement('canvas');
       canvas.width = this.width;
       canvas.height = this.height;
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.drawImage(this, 0, 0);
       }
@@ -817,18 +830,18 @@ export default class EmbeddedAtlasFile extends Phaser.Loader.FileTypes.ImageFile
           const metadataChunks = extractPngMetadata(data);
           let jsonData = null;
 
-          if (metadataChunks && "jsonData" in metadataChunks) {
-            const isCompressed = metadataChunks["jsonDataCompressed"] === "true";
+          if (metadataChunks && 'jsonData' in metadataChunks) {
+            const isCompressed = metadataChunks['jsonDataCompressed'] === 'true';
 
             if (isCompressed) {
               try {
-                const compressedData = base64ToUint8Array(metadataChunks["jsonData"]);
+                const compressedData = base64ToUint8Array(metadataChunks['jsonData']);
 
                 const jsonString = decompressData(compressedData);
 
                 jsonData = JSON.parse(jsonString);
               } catch (error) {
-                console.error("Error processing JSON data:", error);
+                console.error('Error processing JSON data:', error);
               }
             }
           }
@@ -851,12 +864,12 @@ export default class EmbeddedAtlasFile extends Phaser.Loader.FileTypes.ImageFile
 
             _this.onProcessComplete();
           } else {
-            console.error("No JSON data found in PNG:", _this.key);
-            _this.onProcessComplete();
+            console.error('No JSON data found in PNG:', _this.key);
+            _this.onProcessError();
           }
         })
         .catch(error => {
-          console.error("Error extracting JSON from PNG:", error);
+          console.error('Error extracting JSON from PNG:', error);
           _this.onProcessError();
         });
     };

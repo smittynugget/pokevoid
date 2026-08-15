@@ -47,5 +47,11 @@
   "tailwindOnRemovePlayer": "Попутный ветер твоей команды иссяк!",
   "tailwindOnRemoveEnemy": "Попутный ветер команды противника иссяк!",
   "happyHourOnAdd": "Всех захватила счастливая атмосфера!",
-  "happyHourOnRemove": "Атмосфера вернулась в норму."
+  "happyHourOnRemove": "Атмосфера вернулась в норму.",
+  "safeguardOnAdd": "Всё поле окутано мистической завесой!",
+  "safeguardOnAddPlayer": "Ваша команда окутала себя мистической завесой!",
+  "safeguardOnAddEnemy": "Вражеская команда окутала себя мистической завесой!",
+  "safeguardOnRemove": "Поле больше не защищено Безопасностью!",
+  "safeguardOnRemovePlayer": "Ваша команда больше не защищена Безопасностью!",
+  "safeguardOnRemoveEnemy": "Вражеская команда больше не защищена Безопасностью!"
 }

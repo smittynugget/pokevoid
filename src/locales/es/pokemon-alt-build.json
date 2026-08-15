@@ -205,47 +205,47 @@
   },
   "riolu_apollo_diana_signature": {
     "name": "Compañero de Apolo y Diana",
-    "description": "El valiente compañero tipo Lucha insignia de Apolo y Diana"
+    "description": "El valiente compañero tipo Lucha insignia de {{champion}}"
   },
   "solrock_apollo_diana_signature": {
     "name": "Compañero de Apolo y Diana",
-    "description": "El radiante compañero tipo Roca insignia de Apolo y Diana"
+    "description": "El radiante compañero tipo Roca insignia de {{champion}}"
   },
   "lunatone_apollo_diana_signature": {
     "name": "Compañero de Apolo y Diana",
-    "description": "El místico compañero tipo Roca insignia de Apolo y Diana"
+    "description": "El místico compañero tipo Roca insignia de {{champion}}"
   },
   "larvesta_apollo_diana_signature": {
     "name": "Compañero de Apolo y Diana",
-    "description": "El ardiente compañero tipo Bicho insignia de Apolo y Diana"
+    "description": "El ardiente compañero tipo Bicho insignia de {{champion}}"
   },
   "swablu_apollo_diana_signature": {
     "name": "Compañero de Apolo y Diana",
-    "description": "El esponjoso compañero tipo Normal insignia de Apolo y Diana"
+    "description": "El esponjoso compañero tipo Normal insignia de {{champion}}"
   },
   "castform_apollo_diana_signature": {
     "name": "Compañero de Apolo y Diana",
-    "description": "El adaptable compañero tipo Normal insignia de Apolo y Diana"
+    "description": "El adaptable compañero tipo Normal insignia de {{champion}}"
   },
   "litwick_apollo_diana_signature": {
     "name": "Compañero de Apolo y Diana",
-    "description": "El parpadeante compañero tipo Fantasma insignia de Apolo y Diana"
+    "description": "El parpadeante compañero tipo Fantasma insignia de {{champion}}"
   },
   "eevee_apollo_diana_signature": {
     "name": "Compañero de Apolo y Diana",
-    "description": "El versátil compañero tipo Normal insignia de Apolo y Diana"
+    "description": "El versátil compañero tipo Normal insignia de {{champion}}"
   },
   "teddiursa_apollo_diana_signature": {
     "name": "Compañero de Apolo y Diana",
-    "description": "El adorable compañero tipo Normal insignia de Apolo y Diana"
+    "description": "El adorable compañero tipo Normal insignia de {{champion}}"
   },
   "cleffa_apollo_diana_signature": {
     "name": "Compañero de Apolo y Diana",
-    "description": "El estrellado compañero tipo Hada insignia de Apolo y Diana"
+    "description": "El estrellado compañero tipo Hada insignia de {{champion}}"
   },
   "sunkern_apollo_diana_signature": {
     "name": "Compañero de Apolo y Diana",
-    "description": "El esperanzado compañero tipo Planta insignia de Apolo y Diana"
+    "description": "El esperanzado compañero tipo Planta insignia de {{champion}}"
   },
   "riolu_shadow_warrior": {
     "name": "Guerrero de las Sombras",
@@ -291,5 +291,93 @@
     "name": "Brote de Plasma",
     "description": "Un Sunkern Eléctrico/Planta crepitando con energía de plasma, conversión de piel eléctrica, intensidad de poder solar y dominio de campo eléctrico"
   },
-  "championPartner": "Compañero de {{champion}}"
+  "championPartner": "Compañero de {{champion}}",
+  "bulbasaur_plasma_jungle": {
+    "name": "Plasma Jungle",
+    "description": "Un Bulbasaur Planta/Eléctrico canalizando la jungla de plasma, fusionando el poder de sus lianas con relámpagos crepitantes"
+  },
+  "bulbasaur_red_signature": {
+    "name": "Compañero de Red",
+    "description": "El Bulbasaur insignia de Red — un guerrero semilla resiliente que canaliza la naturaleza y la energía eléctrica en perfecta armonía"
+  },
+  "butterfree_red_signature": {
+    "name": "Compañero de Red",
+    "description": "El Butterfree insignia de Red — una polilla hipnótica con poderes psíquicos y polvo que drena el alma"
+  },
+  "butterfree_soul_moth": {
+    "name": "Soul Moth",
+    "description": "Un Butterfree Bicho/Fantasma transformado en polilla del alma, drenando fuerza vital con polvo espectral de sus alas"
+  },
+  "charmander_black_inferno": {
+    "name": "Black Inferno",
+    "description": "Un Charmander Fuego/Siniestro consumido por el infierno negro, blandiendo llamas sombrías y furia dracónica oscura"
+  },
+  "charmander_red_signature": {
+    "name": "Compañero de Red",
+    "description": "El Charmander insignia de Red — una llama feroz que crece hasta convertirse en un infierno de poder dracónico"
+  },
+  "espeon_moon_goddess": {
+    "name": "Moon Goddess",
+    "description": "Un Espeon Psíquico/Hada ascendiendo como la diosa lunar, irradiando magia lunar y brillantez psíquica"
+  },
+  "espeon_red_signature": {
+    "name": "Compañero de Red",
+    "description": "El Espeon insignia de Red — una psíquica lunar que irradia luz de luna y energía feérica con devastación elegante"
+  },
+  "farfetchd_heavens_edge": {
+    "name": "Heaven's Edge",
+    "description": "Un Farfetch'd Lucha/Volador ascendiendo como el filo celestial, golpeando desde los cielos con esgrima divina"
+  },
+  "farfetchd_red_signature": {
+    "name": "Compañero de Red",
+    "description": "El Farfetch'd insignia de Red — un espadachín intrépido que blande su puerro con maestría letal en golpes críticos"
+  },
+  "lapras_red_signature": {
+    "name": "Compañero de Red",
+    "description": "El Lapras insignia de Red — un viajero grácil que domina el hielo y el agua con precisión serena pero letal"
+  },
+  "lapras_voidfrost": {
+    "name": "Voidfrost",
+    "description": "Un Lapras Hielo/Fantasma navegando por el Vacío, fusionando frío espectral con hielo abisal para un poder inquietante"
+  },
+  "magikarp_dragonborn": {
+    "name": "Dragonborn",
+    "description": "Un Magikarp Agua/Dragón renacido como verdadero hijo del dragón, desbloqueando potencial dracónico ancestral"
+  },
+  "magikarp_red_signature": {
+    "name": "Compañero de Red",
+    "description": "El Magikarp insignia de Red — un luchador inesperado que desafía las expectativas y evoluciona en una potencia de sangre dragón"
+  },
+  "pikachu_electro_berserker": {
+    "name": "Electro Berserker",
+    "description": "Un Pikachu Eléctrico/Lucha rebosante de furia berserk, combinando voltaje bruto con maestría en artes marciales"
+  },
+  "pikachu_red_signature": {
+    "name": "Compañero de Red",
+    "description": "El Pikachu insignia de Red — un compañero curtido en batalla con velocidad incomparable y ataques eléctricos devastadores"
+  },
+  "snorlax_dream_colossus": {
+    "name": "Dream Colossus",
+    "description": "Un Snorlax Normal/Psíquico ascendiendo a la forma de coloso onírico, combinando masa inmensa con manipulación psíquica de sueños"
+  },
+  "snorlax_red_signature": {
+    "name": "Compañero de Red",
+    "description": "El Snorlax insignia de Red — un muro inamovible que absorbe castigo y contraataca con poder aterrador"
+  },
+  "squirtle_abyss_golem": {
+    "name": "Abyss Golem",
+    "description": "Un Squirtle Agua/Siniestro forjado como gólem abisal, dominando la oscuridad del fondo marino con poderío blindado"
+  },
+  "squirtle_red_signature": {
+    "name": "Compañero de Red",
+    "description": "El Squirtle insignia de Red — una fortaleza de caparazón que domina el abismo con maestría en agua oscura"
+  },
+  "tauros_iron_quake": {
+    "name": "Iron Quake",
+    "description": "Un Tauros Tierra/Acero convertido en terremoto de hierro, fusionando armadura metálica con devastación sísmica"
+  },
+  "tauros_red_signature": {
+    "name": "Compañero de Red",
+    "description": "El Tauros insignia de Red — un toro embravecido con impulso imparable y ataques que sacuden la tierra"
+  }
 }

@@ -9,7 +9,7 @@ export function getPokemonNameWithAffix(pokemon: Pokemon | undefined): string {
     return "Missigno";
   }
 
-  switch (pokemon.scene.currentBattle.battleSpec) {
+  switch (pokemon.scene.currentBattle?.battleSpec ?? BattleSpec.DEFAULT) {
     case BattleSpec.DEFAULT:
       return !pokemon.isPlayer()
           ? pokemon.hasTrainer()

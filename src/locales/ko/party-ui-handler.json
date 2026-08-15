@@ -49,5 +49,6 @@
   "smellYaLater": "또 보자, {{pokemonName}}!",
   "selectPokeToPowerUp": "강화할 포켓몬을 선택하세요.",
   "selectPokeToRelease": "놓아줄 포켓몬을 선택하세요.",
-  "pausedEvolutions": "{{pokemonName}}[[가]] 진화하지 않도록 했다."
+  "pausedEvolutions": "{{pokemonName}}[[가]] 진화하지 않도록 했다.",
+  "quickInfo": "빠른 정보"
 }

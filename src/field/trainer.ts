@@ -30,6 +30,10 @@ import { NightmareRivalInfo } from "#app/battle.ts";
 import { getTypeRgb, Type } from "#app/data/type.ts";
 import { Unlockables } from "#app/system/unlockables.ts";
 import Overrides from "#app/overrides";
+import { DEBUG_FORCE_TRAINER_CORRUPTED } from "#app/overrides";
+import { DUELMON_SPECIES } from "#app/data/duelmon-rankups";
+import { getEligibleDuelmonSpeciesForWave } from "#app/data/duelmon-bst-utils";
+import { applyTrainerDualColorAltBuild, getTrainerSpriteCluster4 } from "../utils/trainer-dualcolor-recolor";
 
 export enum TrainerVariant {
   DEFAULT,
@@ -49,6 +53,7 @@ export default class Trainer extends Phaser.GameObjects.Container {
   public rivalStage: number;
   private nightmareTemplate: TrainerPartyTemplate | null;
   public isCorrupted: boolean;
+  public portalSprite: Phaser.GameObjects.Sprite | null = null;
 
   constructor(scene: BattleScene, trainerType: TrainerType, variant: TrainerVariant, partyTemplateIndex?: integer, name?: string, partnerName?: string, rivalConfig?: TrainerConfig, rivalStage?: number, isCorrupted?: boolean) {
     super(scene, -72, 80);
@@ -56,7 +61,7 @@ export default class Trainer extends Phaser.GameObjects.Container {
     this.rivalStage = rivalStage || -1;
     this.isDynamicRival = rivalStage >= 1
     this.dynamicRivalType = null;
-    this.isCorrupted = trainerType !== TrainerType.SMITTY && (isCorrupted || ((!this.scene.gameMode.isNightmare && Utils.randSeedChance(5) && !this.isDynamicRival) || (this.scene.gameData.defeatedRivals?.includes(trainerType) && !this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN])));
+    this.isCorrupted = (DEBUG_FORCE_TRAINER_CORRUPTED && trainerType !== TrainerType.SMITTY) || (trainerType !== TrainerType.SMITTY && (isCorrupted || (!this.scene.gameData.tutorialOnboardActive && ((!this.scene.gameMode.isNightmare && Utils.randSeedChance(5) && !this.isDynamicRival) || (this.scene.gameData.defeatedRivals?.includes(trainerType) && !this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN])))));
 
     if (this.isDynamicRival && rivalConfig) {
       this.config = this.rivalConfig = rivalConfig;
@@ -110,6 +115,10 @@ export default class Trainer extends Phaser.GameObjects.Container {
         ret = this.scene.addFieldSprite(0, 5, "smitty_trainers", this.config.getSpriteKey(variant === TrainerVariant.FEMALE || forceFemale,this.isDouble()));
         ret.setPipeline(this.scene.spritePipeline, {tone: [0.0, 0.0, 0.0, 0.0], hasShadow: false});
         ret.setScale(0.59);
+      } else if (this.config.trainerType === TrainerType.PEGASUS || this.config.trainerType === TrainerType.PEGASUS_2) {
+        ret = this.scene.addFieldSprite(0, 0, this.config.getSpriteKey(variant === TrainerVariant.FEMALE || forceFemale, this.isDouble()));
+        ret.setPipeline(this.scene.spritePipeline, { tone: [0.0, 0.0, 0.0, 0.0], hasShadow: false });
+        ret.setScale(0.44);
       } else {
         ret = this.scene.addFieldSprite(0, 0, this.config.getSpriteKey(variant === TrainerVariant.FEMALE || forceFemale, this.isDouble()));
         ret.setPipeline(this.scene.spritePipeline, {
@@ -125,36 +134,15 @@ export default class Trainer extends Phaser.GameObjects.Container {
     const tintSprite = getSprite();
 
     tintSprite.setVisible(false);
-    if ((this.scene.gameMode.isNightmare || this.isCorrupted) && this.config.trainerType !== TrainerType.SMITTY) {
-        const baseColor = [0, 0, 0];
-        const teraColor = Utils.randSeedItem([
-            getTypeRgb(Type.POISON),
-            getTypeRgb(Type.DARK),
-            [240, 48, 48],
-            [50, 50, 50]
-        ]);
-
-        [sprite, tintSprite]
-        .filter(s => s)
-        .forEach(s => {
-
-          if (this.isCorrupted) {
-            s.pipelineData["teraColor"] = teraColor;
-            s.pipelineData["baseColor"] = baseColor;
-            s.setPipelineData({ teraColor, baseColor });
-          } else if (this.scene.gameMode.isNightmare) {
-            s.pipelineData["teraColor"] = teraColor;
-            s.setPipelineData({ teraColor });
-          }
-        });
-    }
 
     this.add(sprite);
     this.add(tintSprite);
 
+    let partnerSprite: Phaser.GameObjects.Sprite | null = null;
+    let partnerTintSprite: Phaser.GameObjects.Sprite | null = null;
     if (variant === TrainerVariant.DOUBLE && !this.config.doubleOnly) {
-      const partnerSprite = getSprite(true, true);
-      const partnerTintSprite = getSprite(false, true);
+      partnerSprite = getSprite(true, true);
+      partnerTintSprite = getSprite(false, true);
 
       partnerTintSprite.setVisible(false);
 
@@ -166,6 +154,53 @@ export default class Trainer extends Phaser.GameObjects.Container {
       this.add(partnerSprite);
       this.add(partnerTintSprite);
     }
+
+    if ((this.scene.gameMode.isNightmare || this.isCorrupted) && this.config.trainerType !== TrainerType.SMITTY) {
+        if (this.isCorrupted) {
+            const corruptedPalettes = [
+                ["#0C0C0C", "#5A1BB2", "#000000", "#330066"],
+                ["#000000", "#4B0082", "#0C0C0C", "#6340AB"],
+                ["#0C0C0C", "#6A0DAD", "#000000", "#371B58"],
+            ];
+            const chosenPalette = Utils.randSeedItem(corruptedPalettes);
+            const targetColors = chosenPalette.map(hex => {
+                const r = parseInt(hex.slice(1, 3), 16);
+                const g = parseInt(hex.slice(3, 5), 16);
+                const b = parseInt(hex.slice(5, 7), 16);
+                return [r, g, b, 255];
+            });
+            const allSprites = [sprite, tintSprite, partnerSprite, partnerTintSprite].filter(s => !!s);
+            allSprites.forEach(s => {
+                const quantized = getTrainerSpriteCluster4(this.scene, s);
+                const sourceColors = quantized || targetColors.map(() => [128, 128, 128, 255]);
+                s.pipelineData["altBuildSpriteColors"] = sourceColors;
+                s.pipelineData["altBuildTargetColors"] = targetColors;
+                s.pipelineData["altBuildBlendMode"] = "duelmon_cluster4";
+                s.pipelineData["altBuildInversionFactor"] = 0.7;
+                delete s.pipelineData["teraColor"];
+                delete s.pipelineData["baseColor"];
+            });
+        } else if (this.scene.gameMode.isNightmare) {
+            const teraColor = Utils.randSeedItem([
+                getTypeRgb(Type.POISON),
+                getTypeRgb(Type.DARK),
+                [240, 48, 48],
+                [12, 12, 18]
+            ]);
+            [sprite, tintSprite, partnerSprite, partnerTintSprite]
+            .filter(s => !!s)
+            .forEach(s => {
+                s.pipelineData["teraColor"] = teraColor;
+                s.setPipelineData({ teraColor });
+            });
+        }
+    }
+
+    const dualColorCorruptedPriority = this.isCorrupted;
+    this.getSprites()
+      .concat(this.getTintSprites())
+      .filter(s => !!s)
+      .forEach(s => applyTrainerDualColorAltBuild(this.scene, s, dualColorCorruptedPriority));
   }
 
   getKey(forceFemale?: boolean): string {
@@ -207,9 +242,6 @@ export default class Trainer extends Phaser.GameObjects.Container {
     if (this.config.titleDouble && this.variant === TrainerVariant.DOUBLE && !this.config.doubleOnly) {
       title = this.config.titleDouble;
       name = i18next.t(`trainerNames:${this.config.nameDouble.toLowerCase().replace(/\s/g, "_")}`);
-    }
-    if(this.isCorrupted) {
-      return glitchText(title ? `${title} ${name}` : name);
     }
     return title ? `${title} ${name}` : name;
   }
@@ -415,7 +447,10 @@ export default class Trainer extends Phaser.GameObjects.Container {
 
     let species = null
     if (this.isDynamicRival && this.dynamicRivalType) {
-      const dynamicSpeciesPool = trainerPokemonPools[this.dynamicRivalType][index] || [];
+      let dynamicSpeciesPool = trainerPokemonPools[this.dynamicRivalType][index] || [];
+      if (!this.scene.duelmonsEnabledForRun) {
+        dynamicSpeciesPool = dynamicSpeciesPool.filter(s => getPokemonSpecies(s).generation !== 20);
+      }
       if (dynamicSpeciesPool.length > 0) {
         species = getPokemonSpecies(Utils.randSeedItem(dynamicSpeciesPool));
         species = getPokemonSpecies(species.getSpeciesForLevel(level, true, true, strength, battle.waveIndex, this.scene.gameMode.isNightmare));
@@ -473,7 +508,10 @@ export default class Trainer extends Phaser.GameObjects.Container {
     const template = this.getPartyTemplate();
 
     let species: PokemonSpecies;
-    if (this.config.speciesPools) {
+    if (Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE) {
+      const eligible = getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, battle.waveIndex);
+      species = getPokemonSpecies(eligible[Utils.randSeedInt(eligible.length)]);
+    } else if (this.config.speciesPools) {
       const tierValue = Utils.randSeedInt(512);
       let tier = tierValue >= 156 ? TrainerPoolTier.COMMON : tierValue >= 32 ? TrainerPoolTier.UNCOMMON : tierValue >= 6 ? TrainerPoolTier.RARE : tierValue >= 1 ? TrainerPoolTier.SUPER_RARE : TrainerPoolTier.ULTRA_RARE;
       console.log(TrainerPoolTier[tier]);
@@ -616,24 +654,90 @@ export default class Trainer extends Phaser.GameObjects.Container {
   }
 
   initSprite(): void {
-    if(this.config.trainerType == TrainerType.SMITTY) return;
-    this.getSprites().map((sprite, i) => sprite.setTexture(this.getKey(!!i)).setFrame(0));
-    this.getTintSprites().map((tintSprite, i) => tintSprite.setTexture(this.getKey(!!i)).setFrame(0));
+    if (this.config.trainerType == TrainerType.SMITTY) {
+      this.getSprites().map((sprite, i) => sprite.setTexture("smitty_trainers", this.getKey(!!i)));
+      this.getTintSprites().map((tintSprite, i) => tintSprite.setTexture("smitty_trainers", this.getKey(!!i)));
+    } else {
+      this.getSprites().map((sprite, i) => sprite.setTexture(this.getKey(!!i)).setFrame(0));
+      this.getTintSprites().map((tintSprite, i) => tintSprite.setTexture(this.getKey(!!i)).setFrame(0));
+    }
+
+    if (this.isCorrupted) {
+        const corruptedPalettes = [
+            ["#0C0C0C", "#5A1BB2", "#000000", "#330066"],
+            ["#000000", "#4B0082", "#0C0C0C", "#6340AB"],
+            ["#0C0C0C", "#6A0DAD", "#000000", "#371B58"],
+        ];
+        const chosenPalette = Utils.randSeedItem(corruptedPalettes);
+        const targetColors = chosenPalette.map(hex => {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return [r, g, b, 255];
+        });
+        this.getSprites().concat(this.getTintSprites()).filter(s => !!s).forEach(s => {
+            const quantized = getTrainerSpriteCluster4(this.scene, s);
+            const sourceColors = quantized || targetColors.map(() => [128, 128, 128, 255]);
+            s.pipelineData["altBuildSpriteColors"] = sourceColors;
+            s.pipelineData["altBuildTargetColors"] = targetColors;
+            s.pipelineData["altBuildBlendMode"] = "duelmon_cluster4";
+            s.pipelineData["altBuildInversionFactor"] = 0.7;
+            delete s.pipelineData["teraColor"];
+            delete s.pipelineData["baseColor"];
+        });
+    }
+
+    const dualColorCorruptedPriority = this.isCorrupted;
+    this.getSprites()
+      .concat(this.getTintSprites())
+      .filter(s => !!s)
+      .forEach(s => applyTrainerDualColorAltBuild(this.scene, s, dualColorCorruptedPriority));
   }
   tryPlaySprite(sprite: Phaser.GameObjects.Sprite, tintSprite: Phaser.GameObjects.Sprite, animConfig: Phaser.Types.Animations.PlayAnimationConfig): boolean {
     if (sprite.texture.key === "__MISSING") {
       console.error(`No texture found for '${animConfig.key}'!`);
-
       return false;
     }
     if (sprite.texture.frameTotal <= 1) {
-      console.warn(`No animation found for '${animConfig.key}'. Is this intentional?`);
-
       return false;
     }
 
-    sprite.play(animConfig);
-    tintSprite.play(animConfig);
+    try {
+      sprite.play(animConfig);
+      tintSprite.play(animConfig);
+    } catch (error: unknown) {
+      console.warn(`[Trainer] Animation failed for '${animConfig.key}':`, error);
+      return false;
+    }
+
+    if (
+      !this.isCorrupted
+      && this.scene.trainerDualColorRecolorEnabledForRun
+      && this.scene.trainerDualColorAForRun
+      && this.scene.trainerDualColorBForRun
+    ) {
+      let lastFrameName: string | null = sprite.frame?.name ?? null;
+      const onUpdate = (_anim: any, frame: any) => {
+        const nextFrameName = (frame?.textureFrame ?? sprite.frame?.name) as (string | undefined);
+        if (!nextFrameName || nextFrameName === lastFrameName) return;
+        lastFrameName = nextFrameName;
+        applyTrainerDualColorAltBuild(this.scene, sprite, false);
+        applyTrainerDualColorAltBuild(this.scene, tintSprite, false);
+      };
+      let cleaned = false;
+      const cleanup = () => {
+        if (cleaned) return;
+        cleaned = true;
+        sprite.off("animationupdate", onUpdate);
+        sprite.off("animationcomplete", cleanup);
+        sprite.off("destroy", cleanup);
+      };
+      sprite.on("animationupdate", onUpdate);
+      sprite.once("animationcomplete", cleanup);
+      sprite.once("destroy", cleanup);
+      applyTrainerDualColorAltBuild(this.scene, sprite, false);
+      applyTrainerDualColorAltBuild(this.scene, tintSprite, false);
+    }
 
     return true;
   }
@@ -755,7 +859,11 @@ export default class Trainer extends Phaser.GameObjects.Container {
   }
 
   destroy(removeTextures: boolean = false): void {
-  super.destroy();
+    if (this.portalSprite) {
+      this.portalSprite.destroy();
+      this.portalSprite = null;
+    }
+    super.destroy();
   }
 }
 

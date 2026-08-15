@@ -4,5 +4,8 @@
   "ultraBall": "하이퍼볼",
   "rogueBall": "로그볼",
   "masterBall": "마스터볼",
-  "luxuryBall": "럭셔리볼"
+  "luxuryBall": "럭셔리볼",
+  "typeBall": "{{typeName}}볼",
+  "voidBall": "보이드볼",
+  "voidBallCatchRate": "100% (빨간 HP)"
 }

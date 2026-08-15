@@ -27,7 +27,7 @@ export default class TouchControl {
   }
   init() {
     this.preventElementZoom(document.querySelector("#dpad"));
-    document.querySelectorAll(".apad-button").forEach((element) => this.preventElementZoom(element as HTMLElement));
+    document.querySelectorAll(".apadBtn").forEach((element) => this.preventElementZoom(element as HTMLElement));
 
     for (const button of document.querySelectorAll("[data-key]")) {
 
@@ -37,11 +37,13 @@ export default class TouchControl {
   bindKey(node: HTMLElement, key: string) {
     node.addEventListener("touchstart", event => {
       event.preventDefault();
+      event.stopPropagation();
       this.touchButtonDown(node, key);
     });
 
     node.addEventListener("touchend", event => {
       event.preventDefault();
+      event.stopPropagation();
       this.touchButtonUp(node, key, event.target?.["id"]);
     });
   }
@@ -79,7 +81,6 @@ export default class TouchControl {
     clearInterval(this.inputInterval[key]);
   }
   simulateKeyboardEvent(eventType: string, key: string): boolean {
-    console.log("simulateKeyboardEvent", eventType, key);
     if (!Button.hasOwnProperty(key) || this.disabled) {
       return false;
     }

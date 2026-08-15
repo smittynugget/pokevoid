@@ -6,10 +6,12 @@ import i18next from "i18next";
 import { ChampionManager } from "#app/system/champion-manager";
 import { SelectStarterPhase } from "#app/phases/select-starter-phase";
 import { TitlePhase } from "#app/phases/title-phase";
+import { CharacterSelectPhase } from "#app/phases/character-select-phase";
 
 export interface ChampionSelectConfig {
   onChampionSelected: (championId: string) => void;
   allowCancel?: boolean;
+  preSelectedChampion?: string;
 }
 
 export class ChampionSelectPhase extends Phase {
@@ -39,6 +41,7 @@ export class ChampionSelectPhase extends Phase {
       gameMode: this.gameMode,
       onChampionSelected: (championId: string) => this.handleChampionSelection(championId),
       onCancel: this.config.allowCancel ? () => this.handleCancel() : undefined,
+      preSelectedChampion: this.config.preSelectedChampion,
     });
   }
 
@@ -48,7 +51,6 @@ export class ChampionSelectPhase extends Phase {
       return;
     }
 
-    this.scene.ui.revertMode();
     this.config.onChampionSelected(championId);
     this.end();
   }
@@ -57,8 +59,20 @@ export class ChampionSelectPhase extends Phase {
     if (!this.config.allowCancel) return;
     this.scene.ui.clearText();
     this.scene.ui.setMode(Mode.MESSAGE).then(() => {
-      (this.scene as any).clearAllPhaseQueues?.();
-      this.scene.pushPhase(new TitlePhase(this.scene));
+      const savedCallback = this.config.onChampionSelected;
+      const gm = this.gameMode;
+      const prevChampion = this.config.preSelectedChampion;
+      this.scene.unshiftPhase(new CharacterSelectPhase(this.scene, gm, {
+        allowCancel: true,
+        preSelectedChampion: prevChampion,
+        onCharacterSelected: (characterId: string) => {
+          this.scene.unshiftPhase(new ChampionSelectPhase(this.scene, gm, {
+            allowCancel: true,
+            onChampionSelected: savedCallback,
+            preSelectedChampion: characterId,
+          }));
+        },
+      }));
       this.end();
     });
   }

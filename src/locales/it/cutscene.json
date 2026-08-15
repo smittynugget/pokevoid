@@ -123,7 +123,7 @@
   "rival_flame": "L'ombra corrotta si dissolve nel Void",
   "rival_shadowPower": "L'energia oscura cristallizza nell'aria",
   "rival_power": "Imbraccia la corruzione come arma contro il Void",
-  "rival_shadows": "Uno in meno—ne restano XXX",
+  "rival_shadows": "Uno in meno—ne restano ???",
   "rival_final_flame": "L'ultima ombra cade",
   "rival_final_shadowPower": "L'ultimo residuo di corruzione",
   "rival_final_power": "Rivolta l'oscurità contro se stessa",
@@ -160,5 +160,17 @@
   "all_smittys_peace": "La pace torna nel mondo",
   "all_smittys_voidbreak": "Danneggiato oltre ogni recupero—il Void dorme",
   "all_smittys_mystery": "Persino nel silenzio, il caos cresce, in agguato nelle ombre",
-  "all_smittys_journey": "Ti prego, tienilo a bada. Tu sei la resistenza!"
+  "all_smittys_journey": "Ti prego, tienilo a bada. Tu sei la resistenza!",
+  "tutorial_trance_1a": "Sei sveglio! Stavo iniziando a pensare...",
+  "tutorial_trance_1b": "No. Non importa. Sei qui. È questo che conta.",
+  "tutorial_trance_2a": "Mi sono seduto accanto a troppi allenatori aspettando che si svegliassero. Non lo fanno mai.",
+  "tutorial_trance_2b": "Ma tu... hai appena dimostrato che ognuno di quei perduti non è stato vano.",
+  "tutorial_trance_3a": "C'è qualcosa in te. Qualunque cosa il vuoto ti abbia fatto là dentro...",
+  "tutorial_trance_3b": "Non ti ha spezzato. Ti ha reso più forte.",
+  "tutorial_trance_4a": "Stiamo perdendo questa battaglia da molto tempo.",
+  "tutorial_trance_4b": "Ma hai appena dimostrato che il vuoto può essere sconfitto. Ora vai e dimostralo di nuovo.",
+  "tutorial_trance_5a": "Il vuoto ci ha portato via tutto. È ora di riprenderselo.",
+  "tutorial_trance_5b": "È qui che inizia la tua storia — vai avanti e diventa Leggendario!",
+  "loss_whiteout": "L'oscurità consuma tutto...",
+  "loss_homebase": "Torna in salvo..."
 }

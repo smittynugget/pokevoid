@@ -39,6 +39,7 @@ import battlePokemonForm from "./pokemon-form-battle.json";
 import pokemonInfo from "./pokemon-info.json";
 import pokemonInfoContainer from "./pokemon-info-container.json";
 import pokemonSummary from "./pokemon-summary.json";
+import pokemonBattleTooltip from "./pokemon-battle-tooltip.json";
 import saveSlotSelectUiHandler from "./save-slot-select-ui-handler.json";
 import splashMessages from "./splash-messages.json";
 import starterSelectUiHandler from "./starter-select-ui-handler.json";
@@ -62,18 +63,22 @@ import glitchNames from "./glitch-names.json";
 import importData from "./import-data.json";
 import questModifierInfo from "./quest-modifier-info.json";
 import moveUpgrade from "./move-upgrade.json";
+import moveTag from "./move-tag.json";
 import eggStarterUi from "./egg-starter-ui.json";
 import modGlitchCreateFormUi from "./mod-glitch-create-form-ui.json";
 import pokedex from "./pokedex.json";
 import nodeMode from "./node-mode.json";
 import moveUpgradeAttrs from "./move-upgrade-attrs.json";
 import championSelect from "./champion-select.json";
+import characterSelect from "./character-select.json";
 import skillTree from "./skill-tree.json";
 import championLevelUp from "./champion-level-up.json";
 import championSkills from "./champion-skills.json";
 import championModifiers from "./champion-modifiers.json";
 import pokemonAltBuild from "./pokemon-alt-build.json";
 import cutscene from "./cutscene.json";
+import replayViewerUiHandler from "./replay-viewer-ui-handler.json";
+import duelmonNames from "./duelmon-names.json";
 
 export const jaConfig = {
   ability,
@@ -140,16 +145,21 @@ export const jaConfig = {
   importData,
   questModifierInfo,
   moveUpgrade,
+  moveTag,
   eggStarterUi,
   modGlitchCreateFormUi,
   pokedex,
   nodeMode,
   moveUpgradeAttrs,
   championSelect,
+  characterSelect,
+  pokemonBattleTooltip,
   skillTree,
   championLevelUp,
   championSkills,
   championModifiers,
   pokemonAltBuild,
-  cutscene
+  cutscene,
+  replayViewerUiHandler,
+  duelmonNames,
 };

@@ -4,6 +4,11 @@
   "neutral": "Neutral",
   "enemy": "Enemy",
 
+  "day": "Day",
+  "night": "Night",
+  "dawn": "Dawn",
+  "dusk": "Dusk",
+
   "sunny": "Sunny",
   "rain": "Rain",
   "sandstorm": "Sandstorm",
@@ -49,5 +54,12 @@
   "magmaStorm": "Magma Storm",
   "snapTrap": "Snap Trap",
   "thunderCage": "Thunder Cage",
-  "infestation": "Infestation"
+  "infestation": "Infestation",
+  "cursed": "Curse",
+  "seeded": "Leech Seed",
+  "trapped": "Trapped",
+  "yuTrapped": "Trapped",
+  "saltCured": "Salt Cure",
+  "octolock": "Octolock",
+  "ingrain": "Ingrain"
 }

@@ -15,7 +15,13 @@
     "ACC": "Точность",
     "EVA": "Уклонение",
     "HPStat": "ОЖ",
-    "Total": "Итого"
+    "Total": "Итого",
+    "HPcompact": "Н",
+    "ATKcompact": "А",
+    "DEFcompact": "З",
+    "SPATKcompact": "СА",
+    "SPDEFcompact": "СЗ",
+    "SPDcompact": "С"
   },
   "Type": {
     "UNKNOWN": "Неизвестно",
@@ -39,6 +45,7 @@
     "FAIRY": "Фейский",
     "STELLAR": "Звёздный",
     "SMITTY": "Смитти",
-    "GLITCH": "Глитч"
+    "GLITCH": "Глитч",
+    "GEN_ONE": "Поколение I"
   }
 }

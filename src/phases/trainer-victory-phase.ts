@@ -17,6 +17,7 @@ import { UnlockUniSmittyPhase } from "./unlock-unismitty-phase";
 import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays.js";
 import { universalSmittyForms } from "#app/data/pokemon-species.js";
 import Overrides from "#app/overrides.js";
+import { playTrainerPortalFaintAnim } from "#app/field/portal-anim.js";
 
 export class TrainerVictoryPhase extends BattlePhase {
   constructor(scene: BattleScene) {
@@ -125,6 +126,11 @@ export class TrainerVictoryPhase extends BattlePhase {
       }
     }
 
+    const trainerRef = this.scene.currentBattle.trainer;
+    const isPortalFaintTrainer = trainerRef?.isCorrupted || trainerRef?.config.trainerType === TrainerType.SMITTY;
+
+    this.showEnemyTrainer();
+
     this.scene.ui.showText(i18next.t("battle:trainerDefeated", { trainerName: this.scene.currentBattle.trainer?.getName(TrainerSlot.NONE, true) }), null, () => {
       const victoryMessages = this.scene.currentBattle.trainer?.getVictoryMessages()!;
       let message: string;
@@ -137,16 +143,57 @@ export class TrainerVictoryPhase extends BattlePhase {
 
         showMessageOrEnd();
       };
-      let showMessageOrEnd = () => this.end();
+      let showMessageOrEnd = () => {
+        if (isPortalFaintTrainer && trainerRef) {
+          this.scene.time.delayedCall(Utils.fixedInt(750), () => {
+            playTrainerPortalFaintAnim(this.scene, trainerRef).then(() => {
+              trainerRef.setVisible(false);
+              if (trainerRef.portalSprite) {
+                this.scene.tweens.add({
+                  targets: trainerRef.portalSprite,
+                  alpha: 0,
+                  duration: Utils.fixedInt(800),
+                  onComplete: () => {
+                    trainerRef.portalSprite?.destroy();
+                    trainerRef.portalSprite = null;
+                    this.end();
+                  }
+                });
+              } else {
+                this.end();
+              }
+            });
+          });
+        } else {
+          this.end();
+        }
+      };
       if (victoryMessages?.length) {
         if (this.scene.currentBattle.trainer?.config.hasCharSprite && !this.scene.ui.shouldSkipDialogue(message)) {
           const originalFunc = showMessageOrEnd;
-          showMessageOrEnd = () => this.scene.charSprite.hide().then(() => this.scene.hideFieldOverlay(250).then(() => originalFunc()));
+          showMessageOrEnd = () => {
+            this.scene.ui.getMessageHandler().hideNameText();
+            const glitchPromise = this.scene.ui.getMessageHandler().glitchOutDialogue(350);
+            glitchPromise.then(() => {
+              this.scene.ui.showMessageChrome();
+              this.scene.ui.clearText();
+              this.scene.ui.getMessageHandler().restoreDefaultPanelStyle();
+            });
+            Promise.all([
+              glitchPromise,
+              this.scene.charSprite.hide(),
+              this.scene.hideFieldOverlay(750),
+            ]).then(() => {
+              originalFunc();
+            });
+          };
           const trainer = this.scene.currentBattle.trainer;
-          if (trainer?.config.trainerType == TrainerType.SMITTY) {
-            this.scene.showFieldOverlay(500).then(() => this.scene.charSprite.showCharacter("smitty_trainers", `${trainer?.config.smittyVariantIndex+1}`).then(() => showMessage()));
-          } else {
-            this.scene.showFieldOverlay(500).then(() => this.scene.charSprite.showCharacter(this.scene.currentBattle.trainer?.getKey()!, getCharVariantFromDialogue(victoryMessages[0])).then(() => showMessage()));
+          this.scene.ui.getMessageHandler().applySmitomPanelStyle();
+          if(trainer?.config.trainerType == TrainerType.SMITTY) {
+            this.scene.showFieldOverlay(500, { withDialogueBg: true, bgTextureKey: "smitom_dialogue_bg" }).then(() => this.scene.charSprite.showCharacter("smitty_trainers", `${trainer?.config.smittyVariantIndex+1}`).then(() => showMessage()));
+          }
+          else {
+            this.scene.showFieldOverlay(500, { withDialogueBg: true, bgTextureKey: "smitom_dialogue_bg" }).then(() => this.scene.charSprite.showCharacter(this.scene.currentBattle.trainer?.getKey()!, getCharVariantFromDialogue(victoryMessages[0])).then(() => showMessage()));
           }
         } else {
           showMessage();
@@ -155,8 +202,6 @@ export class TrainerVictoryPhase extends BattlePhase {
         showMessageOrEnd();
       }
     }, null, true);
-
-    this.showEnemyTrainer();
   }
 
   private incrementTrainerTypeStats(trainerType: TrainerType): void {
@@ -165,17 +210,22 @@ export class TrainerVictoryPhase extends BattlePhase {
         TRAINER_TYPES.ELITE_FOUR.THIRD.includes(trainerType) ||
         TRAINER_TYPES.ELITE_FOUR.FOURTH.includes(trainerType)) {
       this.scene.gameData.gameStats.elite4Defeated++;
-    } else if (TRAINER_TYPES.ELITE_FOUR.CHAMPION.includes(trainerType)) {
+    }
+    else if (TRAINER_TYPES.ELITE_FOUR.CHAMPION.includes(trainerType)) {
       this.scene.gameData.gameStats.championsDefeated++;
-    } else if (TRAINER_TYPES.EVIL_TEAM_GRUNTS.includes(trainerType)) {
+    }
+    else if (TRAINER_TYPES.EVIL_TEAM_GRUNTS.includes(trainerType)) {
       this.scene.gameData.gameStats.gruntsDefeated++;
-    } else if (TRAINER_TYPES.EVIL_TEAM_ADMINS.some(admins =>
-      Array.isArray(admins) ? admins.includes(trainerType) : admins === trainerType)) {
+    }
+    else if (TRAINER_TYPES.EVIL_TEAM_ADMINS.some(admins =>
+               Array.isArray(admins) ? admins.includes(trainerType) : admins === trainerType)) {
       this.scene.gameData.gameStats.evilAdminsDefeated++;
-    } else if (TRAINER_TYPES.EVIL_TEAM_BOSSES.FIRST.includes(trainerType) ||
+    }
+    else if (TRAINER_TYPES.EVIL_TEAM_BOSSES.FIRST.includes(trainerType) ||
                TRAINER_TYPES.EVIL_TEAM_BOSSES.SECOND.includes(trainerType)) {
       this.scene.gameData.gameStats.evilBossesDefeated++;
-    } else if (trainerType === TrainerType.SMITTY) {
+    }
+    else if (trainerType === TrainerType.SMITTY) {
       this.scene.gameData.gameStats.smittysDefeated++;
     }
   }

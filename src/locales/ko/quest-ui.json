@@ -105,6 +105,17 @@
       "common": {
         "any": "아무거나"
       }
+    },
+    "skillTree": {
+      "modalTitle": "스킬 트리 바운티",
+      "completion": {
+        "title": "바운티 완료!",
+        "standardReward": "보상을 선택하세요!",
+        "rareReward": "마스터볼 희귀도 해금!",
+        "veryRareRankUp": "포켓몬 랭크업이 기다리고 있다!",
+        "veryRareMove": "듀얼몬 기술이 기다리고 있다!",
+        "fallback": "보상 획득!"
+      }
     }
   },
   "modeRewards": {
@@ -117,4 +128,4 @@
     "accessShopInBattle": "배틀 중에 Ω상점 접속!",
     "accessQuestsInBattle": "배틀 중에 퀘스트 접속!"
   }
-} 
+}

@@ -137,7 +137,7 @@
   },
   "CLOYSTER_PRESENT_QUEST": {
     "name": "Austos' Geschenk",
-    "task": "Setze 10 Mal Geschenk mit Austos im Nuzlocke-Modus ein"
+    "task": "Setze 10 Mal Geschenk mit Austos ein"
   },
   "NUZLEAF_NOSEPASS_DEFEAT_QUEST": {
     "name": "Blanas vs. Nasgnet",
@@ -445,7 +445,7 @@
   "NORMAL_STRENGTH": {
     "name": "Normal-Stärke!",
     "task": "Besiege 125 Pokémon mit Normal-Pokémon über mehrere Durchläufe hinweg",
-    "rewardText": "Schaltet ein PermaItem frei, das die Resistenzen und Stärken von Normal-Typen verändert!"
+    "rewardText": "Schaltet einen Omega-Gegenstand frei, der die Resistenzen und Stärken von Normal-Typen verändert!"
   },
   "MAGIKARP_NEW_MOVES": {
     "name": "Karpadors neue Attacken",
@@ -485,7 +485,7 @@
   "NORMAL_EFFECTIVENESS_QUEST": {
     "name": "Normal-Stärke!",
     "task": "Besiege 125 Pokémon mit Normal-Pokémon über mehrere Durchläufe hinweg",
-    "rewardText": "Schaltet ein PermaItem frei, das die Resistenzen und Stärken von Normal-Typen verändert!"
+    "rewardText": "Schaltet einen Omega-Gegenstand frei, der die Resistenzen und Stärken von Normal-Typen verändert!"
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "Karpadors neue Attacken",
@@ -521,5 +521,7 @@
     "name": "Safcons neue Attacken",
     "task": "Besiege 50 Pokémon mit Safcon",
     "rewardText": "Safcon wird ein größeres Attacken-Set haben!"
-  }
+  },
+  "rewardUnlocksGlitchForm": "Schaltet eine Glitch-Form frei",
+  "rewardUnlocksSmittyForm": "Schaltet eine Smitty-Form frei"
 }

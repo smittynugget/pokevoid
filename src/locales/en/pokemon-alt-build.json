@@ -205,47 +205,47 @@
   },
   "riolu_apollo_diana_signature": {
     "name": "Apollo & Diana's Partner",
-    "description": "Apollo & Diana's brave signature Fighting-type companion"
+    "description": "{{champion}}'s brave signature Fighting-type companion"
   },
   "solrock_apollo_diana_signature": {
     "name": "Apollo & Diana's Partner",
-    "description": "Apollo & Diana's radiant signature Rock-type companion"
+    "description": "{{champion}}'s radiant signature Rock-type companion"
   },
   "lunatone_apollo_diana_signature": {
     "name": "Apollo & Diana's Partner",
-    "description": "Apollo & Diana's mystical signature Rock-type companion"
+    "description": "{{champion}}'s mystical signature Rock-type companion"
   },
   "larvesta_apollo_diana_signature": {
     "name": "Apollo & Diana's Partner",
-    "description": "Apollo & Diana's blazing signature Bug-type companion"
+    "description": "{{champion}}'s blazing signature Bug-type companion"
   },
   "swablu_apollo_diana_signature": {
     "name": "Apollo & Diana's Partner",
-    "description": "Apollo & Diana's fluffy signature Normal-type companion"
+    "description": "{{champion}}'s fluffy signature Normal-type companion"
   },
   "castform_apollo_diana_signature": {
     "name": "Apollo & Diana's Partner",
-    "description": "Apollo & Diana's adaptive signature Normal-type companion"
+    "description": "{{champion}}'s adaptive signature Normal-type companion"
   },
   "litwick_apollo_diana_signature": {
     "name": "Apollo & Diana's Partner",
-    "description": "Apollo & Diana's flickering signature Ghost-type companion"
+    "description": "{{champion}}'s flickering signature Ghost-type companion"
   },
   "eevee_apollo_diana_signature": {
     "name": "Apollo & Diana's Partner",
-    "description": "Apollo & Diana's versatile signature Normal-type companion"
+    "description": "{{champion}}'s versatile signature Normal-type companion"
   },
   "teddiursa_apollo_diana_signature": {
     "name": "Apollo & Diana's Partner",
-    "description": "Apollo & Diana's cuddly signature Normal-type companion"
+    "description": "{{champion}}'s cuddly signature Normal-type companion"
   },
   "cleffa_apollo_diana_signature": {
     "name": "Apollo & Diana's Partner",
-    "description": "Apollo & Diana's starry signature Fairy-type companion"
+    "description": "{{champion}}'s starry signature Fairy-type companion"
   },
   "sunkern_apollo_diana_signature": {
     "name": "Apollo & Diana's Partner",
-    "description": "Apollo & Diana's hopeful signature Grass-type companion"
+    "description": "{{champion}}'s hopeful signature Grass-type companion"
   },
   "riolu_shadow_warrior": {
     "name": "Shadow Warrior",
@@ -290,6 +290,94 @@
   "sunkern_plasma_sprout": {
     "name": "Plasma Sprout",
     "description": "An Electric/Grass Sunkern crackling with plasma energy, galvanize conversion, solar power intensity, and electric surge dominance"
+  },
+  "pikachu_red_signature": {
+    "name": "Red's Partner",
+    "description": "Red's signature Pikachu — a battle-hardened partner with unmatched speed and devastating electric attacks"
+  },
+  "snorlax_red_signature": {
+    "name": "Red's Partner",
+    "description": "Red's signature Snorlax — an immovable wall that absorbs punishment and strikes back with terrifying power"
+  },
+  "lapras_red_signature": {
+    "name": "Red's Partner",
+    "description": "Red's signature Lapras — a graceful voyager commanding ice and water with serene but lethal precision"
+  },
+  "farfetchd_red_signature": {
+    "name": "Red's Partner",
+    "description": "Red's signature Farfetch'd — a fearless swordsman wielding its leek with deadly critical-hit mastery"
+  },
+  "charmander_red_signature": {
+    "name": "Red's Partner",
+    "description": "Red's signature Charmander — a fierce flame that grows into an inferno of draconic power"
+  },
+  "tauros_red_signature": {
+    "name": "Red's Partner",
+    "description": "Red's signature Tauros — a rampaging bull with unstoppable momentum and ground-shaking attacks"
+  },
+  "magikarp_red_signature": {
+    "name": "Red's Partner",
+    "description": "Red's signature Magikarp — an underdog that defies expectations and evolves into a dragon-blooded powerhouse"
+  },
+  "butterfree_red_signature": {
+    "name": "Red's Partner",
+    "description": "Red's signature Butterfree — a mesmerizing moth with psychic prowess and soul-draining dust"
+  },
+  "bulbasaur_red_signature": {
+    "name": "Red's Partner",
+    "description": "Red's signature Bulbasaur — a resilient seed warrior channeling nature and electric energy in perfect harmony"
+  },
+  "squirtle_red_signature": {
+    "name": "Red's Partner",
+    "description": "Red's signature Squirtle — a stalwart shell fortress commanding the abyss with dark water mastery"
+  },
+  "espeon_red_signature": {
+    "name": "Red's Partner",
+    "description": "Red's signature Espeon — a lunar psychic radiating moonlight and fairy energy with graceful devastation"
+  },
+  "pikachu_electro_berserker": {
+    "name": "Electro Berserker",
+    "description": "An Electric/Fighting Pikachu surging with berserker fury, combining raw voltage with martial arts mastery"
+  },
+  "snorlax_dream_colossus": {
+    "name": "Dream Colossus",
+    "description": "A Normal/Psychic Snorlax ascending to dream colossus form, blending immense bulk with psychic dream manipulation"
+  },
+  "lapras_voidfrost": {
+    "name": "Voidfrost",
+    "description": "An Ice/Ghost Lapras drifting through the void, merging spectral cold with abyssal ice for haunting power"
+  },
+  "farfetchd_heavens_edge": {
+    "name": "Heaven's Edge",
+    "description": "A Fighting/Flying Farfetch'd ascending as heaven's edge, striking from the skies with divine swordsmanship"
+  },
+  "charmander_black_inferno": {
+    "name": "Black Inferno",
+    "description": "A Fire/Dark Charmander consumed by black inferno, wielding shadow flames and dark draconic wrath"
+  },
+  "tauros_iron_quake": {
+    "name": "Iron Quake",
+    "description": "A Ground/Steel Tauros becoming an iron quake, merging metallic armor with seismic devastation"
+  },
+  "magikarp_dragonborn": {
+    "name": "Dragonborn",
+    "description": "A Water/Dragon Magikarp reborn as a true dragonborn, unlocking ancient draconic potential from within"
+  },
+  "butterfree_soul_moth": {
+    "name": "Soul Moth",
+    "description": "A Bug/Ghost Butterfree transforming into a soul moth, draining life force with spectral wing dust"
+  },
+  "bulbasaur_plasma_jungle": {
+    "name": "Plasma Jungle",
+    "description": "A Grass/Electric Bulbasaur channeling the plasma jungle, merging vine power with crackling lightning"
+  },
+  "squirtle_abyss_golem": {
+    "name": "Abyss Golem",
+    "description": "A Water/Dark Squirtle forged into an abyss golem, commanding deep-sea darkness with armored might"
+  },
+  "espeon_moon_goddess": {
+    "name": "Moon Goddess",
+    "description": "A Psychic/Fairy Espeon ascending as the moon goddess, radiating lunar magic and psychic brilliance"
   },
   "championPartner": "{{champion}}'s Partner"
 }

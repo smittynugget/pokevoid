@@ -49,5 +49,6 @@
   "sayonara": "Сайонара, {{pokemonName}}!",
   "smellYaLater": "Увидимся, {{pokemonName}}!",
   "selectPokeToPowerUp": "Выбери покемона для усиления.",
-  "selectPokeToRelease": "Выбери покемона, которого отпустить."
+  "selectPokeToRelease": "Выбери покемона, которого отпустить.",
+  "quickInfo": "Быстрая инфо"
 }

@@ -67,11 +67,11 @@
       "description": "Erhöht das Level aller Teammitglieder um {{levels}}."
     },
     "PokemonBaseStatBoosterModifierType": {
-      "description": "Erhöht den {{statName}} Basiswert des Trägers um 10%. Das Stapellimit erhöht sich, je höher dein IS-Wert ist."
+      "description": "Erhöht den {{statName}} Basiswert des Trägers um 8%. Das Stapellimit erhöht sich, je höher dein IS-Wert ist."
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "Günstig",
-      "description": "Erhöht den {{statName}} Basiswert des Trägers um 1%."
+      "description": "Erhöht den {{statName}} Basiswert des Trägers um 3%."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Stellt 100% der KP aller Pokémon her."
@@ -423,7 +423,7 @@
       "description": "Bringt einem Pokémon {{moveName}} bei."
     },
     "AnyTmModifierTypeWithInfo": {
-      "name": "++XM{{moveId}} - {{moveName}}++",
+      "name": "XM{{moveId}} - {{moveName}}",
       "statLabel": "XM (Beliebige TM)",
       "description": "Bringt JEDEM Pokémon {{moveName}} bei\n(Halte C oder Shift für mehr Infos)."
     },
@@ -716,7 +716,8 @@
       "name": "Essenzen",
       "shopName": "{{type}}-Essenz",
       "statLabel": "Essenz",
-      "description": "Verwende 4 anstatt ein Pokémon für Freilassungsgegenstände freizulassen oder tausche gegen Belohnungen beim Sammler."
+      "description": "Verwende 4 anstatt ein Pokémon für Freilassungsgegenstände freizulassen oder tausche gegen Belohnungen beim Sammler.",
+      "tooltipDescription": "Gewährt dem ausgewählten Pokémon 1 {{type}}-Essenz.\n\nEssenzen werden für Champion-Fähigkeitsausbau, Opferalternativen (4 benötigt) und Sammler-Tausch verwendet."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Gesammelte Essenzen",
@@ -874,6 +875,7 @@
     "NONE": "Keins",
     "ABOMASITE": "Rexblisarnit",
     "ABSOLITE": "Absolnit",
+    "ABSOLITE_Z": "Absolnit Z",
     "AERODACTYLITE": "Aerodactylonit",
     "AGGRONITE": "Stollossnit",
     "ALAKAZITE": "Simsalanit",
@@ -890,6 +892,7 @@
     "DIANCITE": "Diancienit",
     "GALLADITE": "Galagladinit",
     "GARCHOMPITE": "Knakracknit",
+    "GARCHOMPITE_Z": "Knakracknit Z",
     "GARDEVOIRITE": "Guardevoirnit",
     "GENGARITE": "Gengarnit ",
     "GLALITITE": "Firnontornit",
@@ -901,6 +904,7 @@
     "LATIOSITE": "Latiosnit",
     "LOPUNNITE": "Schlapornit",
     "LUCARIONITE": "Lucarionit",
+    "LUCARIONITE_Z": "Lucarionit Z",
     "MANECTITE": "Voltensonit",
     "MAWILITE": "Flunkifernit",
     "MEDICHAMITE": "Meditalisnit",
@@ -921,33 +925,48 @@
     "TYRANITARITE": "Despotarnit",
     "VENUSAURITE": "Bisaflornit",
 
-    "CLEFABLITE": "Pixit",
-    "VICTREBELITE": "Sarzeniit",
-    "STARMITE": "Starmit",
+    "CLEFABLITE": "Pixinit",
+    "VICTREBELITE": "Sarzenianit",
+    "STARMITE": "Starmienit",
     "DRAGONITITE": "Dragorannit",
-    "MEGANIUMITE": "Meganiumnit",
-    "FERALIGATRITE": "Impoleonit",
+    "MEGANIUMITE": "Meganienit",
+    "FERALIGATRITE": "Impergatornit",
     "SKARMORYITE": "Panzaeronit",
-    "FROSLASSITE": "Frosdelassnit",
-    "EMBOARITE": "Flambirnit",
+    "FROSLASSITE": "Frosdedjenit",
+    "EMBOARITE": "Flambirexnit",
     "EXCADRILLITE": "Stalobornit",
     "SCOLIPEDITE": "Cerapendranit",
     "SCRAFTITE": "Irokexnit",
-    "EELEKTROSSITE": "Zapplariknit",
+    "EELEKTROSSITE": "Zapplarangnit",
     "CHANDELURITE": "Skelabranit",
-    "CHESNAUGHTITE": "Brigarnit",
+    "CHESNAUGHTITE": "Brigaronnit",
     "DELPHOXITE": "Fennexisnit",
     "GRENINJITE": "Quajutsunit",
     "PYROARITE": "Pyroleonit",
     "FLOETTITE": "Floettenit",
-    "MALAMARITE": "Calamanernit",
+    "MALAMARITE": "Calamaneronit",
     "BARBARACLITE": "Thanathoranit",
     "DRAGALGITE": "Tandraknit",
-    "HAWLUCHITE": "Resladernit",
+    "HAWLUCHITE": "Resladeronit",
     "ZYGARDITE": "Zygardenit",
-    "DRAMPITE": "Senganit",
-    "FALINKSITE": "Legionit",
+    "DRAMPITE": "Sen-Longnit",
+    "FALINKSITE": "Legiosnit",
     "ZERAORITE": "Zeraoranit",
+    "RAICHUITE_X": "Raichunit X",
+    "RAICHUITE_Y": "Raichunit Y",
+    "CHIMECHOITE": "Palimpalimit",
+    "STARAPTORITE": "Staraptornit",
+    "HEATRANITE": "Heatrannit",
+    "DARKRAITE": "Darkrainit",
+    "GOLURKITE": "Golgantesnit",
+    "MEOWSTITE": "Psiaugonit",
+    "CRABOMINITE": "Krawellnit",
+    "GOLISOPODITE": "Tectassnit",
+    "MAGEARNITE": "Magearnanit",
+    "SCOVILLAINITE": "Halupenjoit",
+    "GLIMMORITE": "Lumifloranit",
+    "TATSUGURITE": "Ngiiraginit",
+    "BAXCALIBURITE": "Espinodonnit",
 
     "BLUE_ORB": "Blauer Edelstein",
     "RED_ORB": "Roter Edelstein",
@@ -1067,10 +1086,16 @@
     "uses": "Verwendungen",
     "glitchPieceCost": "*KOSTET 1x Glitch-Stück",
     "essenceAlternativeCost": "Wenn das Pokémon 4+ Essenzen hat, kannst du stattdessen diese verwenden.",
+    "abilityReplaceNote": "Ersetzt die aktuelle Fähigkeit des Pokémon. Nicht stapelbar.",
+    "passiveAbilityReplaceNote": "Ersetzt die aktuelle passive Fähigkeit des Pokémon. Nicht stapelbar.",
     "permaMoney": "ΩGOLD",
     "permaItem": "ΩGEGENSTAND",
     "moreInfo": "(Halte C / Shift für Infos)",
     "morePokeInfo": "(Drücke P / Shift für Infos)",
-    "upgrade": "Verbesserung"
-  }
+    "upgrade": "Verbesserung",
+    "partyAbilityStacksHint": "(STAPELBAR!)"
+  },
+  "permaWaveTooltip": "Verschwindet nach [color=#ffa500]{{count}}[/color] Wellen — Countdown beginnt nach Welle 50",
+  "permaUseTooltip": "[color=#ffa500]{{count}}[/color] Nutzungen verbleibend — Countdown beginnt nach Welle 50",
+  "permaRemoveHint": "10-mal drücken zum Entfernen"
 }

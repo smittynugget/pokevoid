@@ -67,5 +67,17 @@
   "saltCuredLapse": "{{pokemonNameWithAffix}} получает урон\nот {{moveName}}!",
   "cursedOnAdd": "{{pokemonNameWithAffix}} сократил(а) свои ОЖ и наложил(а) проклятие на {{pokemonName}}!",
   "cursedLapse": "{{pokemonNameWithAffix}} страдает\nот Проклятия!",
-  "stockpilingOnAdd": "{{pokemonNameWithAffix}} накопил(а) {{stockpiledCount}}!"
+  "stockpilingOnAdd": "{{pokemonNameWithAffix}} накопил(а) {{stockpiledCount}}!",
+  "substituteOnAdd": "{{pokemonNameWithAffix}} создал(а) замену!",
+  "substituteOnRemove": "Замена {{pokemonNameWithAffix}} исчезла!",
+  "substituteOnHit": "Замена приняла урон вместо {{pokemonNameWithAffix}}!",
+  "tauntOnAdd": "{{pokemonNameWithAffix}} поддался(ась) на провокацию!",
+  "tauntOnRemove": "Эффект Насмешки {{pokemonNameWithAffix}} закончился!",
+  "tormentOnAdd": "{{pokemonNameWithAffix}} подвергся(ась) мучению!",
+  "tormentOnRemove": "Эффект Мучения {{pokemonNameWithAffix}} закончился!",
+  "healBlockedLapse": "{{pokemonNameWithAffix}} не может лечиться из-за Блока Исцеления!",
+  "healBlockedOnAdd": "{{pokemonNameWithAffix}} не может исцеляться!",
+  "healBlockedOnRemove": "Блок Исцеления {{pokemonNameWithAffix}} рассеялся!",
+  "itemBlockedOnAdd": "{{pokemonNameWithAffix}} не может использовать свой предмет!",
+  "itemBlockedOnRemove": "{{pokemonNameWithAffix}} снова может использовать предметы!"
 }

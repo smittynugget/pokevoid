@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { GAME_HEIGHT, GAME_WIDTH } from "./canvas-coords";
 import BattleScene from "./battle-scene";
 import InvertPostFX from "./pipelines/invert";
 import { version } from "../package.json";
@@ -9,7 +10,6 @@ import TransitionImagePackPlugin from "phaser3-rex-plugins/templates/transitioni
 import { LoadingScene } from "./loading-scene";
 import { clearCachesAndUnregisterServiceWorkers } from "./system/client-cache-utils";
 import { INTERNAL_BACKUP_VERSION } from "./system/game-data";
-
 window.onerror = function (message, source, lineno, colno, error) {
   console.error('Global error:', error);
   const errorString = `Uncaught error: ${message}\nSource: ${source}\nLine: ${lineno}\nColumn: ${colno}\nStack: ${error?.stack}`;
@@ -21,6 +21,15 @@ window.addEventListener("unhandledrejection", (event) => {
   console.error('Unhandled promise rejection:', event.reason);
   const errorString = `Unhandled promise rejection: ${event.reason}\nStack: ${event.reason?.stack}`;
   console.error(errorString);
+  try {
+    const scene = game?.scene?.scenes?.find(
+      (s: Phaser.Scene): boolean => s.scene.key === 'battle'
+    ) as any;
+    if (scene?.currentBattle && scene.recoverFromPhaseFailure) {
+      console.warn('[RECOVERY] Attempting phase recovery from unhandled rejection');
+      scene.recoverFromPhaseFailure(scene.currentPhase, event.reason);
+    }
+  } catch {}
 });
 
 document.addEventListener('visibilitychange', (): void => {
@@ -46,11 +55,11 @@ window.addEventListener('beforeunload', (event: BeforeUnloadEvent): void => {
 });
 
 const config: Phaser.Types.Core.GameConfig = {
-  type: Phaser.WEBGL,
+  type: Phaser.AUTO,
   parent: "app",
   scale: {
-    width: 1920,
-    height: 1080,
+    width: GAME_WIDTH,
+    height: GAME_HEIGHT,
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
@@ -118,7 +127,7 @@ const VERSION_STORAGE_KEY = "last_seen_game_version";
 
 async function maybeClearCacheOnVersionChange(): Promise<boolean> {
   try {
-    const currentVersion = `v2.3.${INTERNAL_BACKUP_VERSION}`;
+    const currentVersion = `v3.0.${INTERNAL_BACKUP_VERSION}`;
     const lastSeen = localStorage.getItem(VERSION_STORAGE_KEY);
     if (lastSeen && lastSeen !== currentVersion) {
       localStorage.setItem(VERSION_STORAGE_KEY, currentVersion);
@@ -152,6 +161,11 @@ const boot = async (): Promise<void> => {
   }
 
   try {
+    const { initDriveAuth } = await import("./system/drive-auth");
+    await initDriveAuth();
+  } catch {}
+
+  try {
     startGame();
     if (import.meta.env.MODE === "production" || import.meta.env.VITE_LOAD_ASSET_MANIFEST === "1") {
       const res = await fetch("/manifest.json");
@@ -165,10 +179,18 @@ const boot = async (): Promise<void> => {
         loadingScene.load.manifest = jsonResponse.manifest;
       }
     }
-  } catch {}
+  } catch (e) { console.error('[BOOT ERROR]', e); }
 };
 
 void boot();
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") {
+    import("./system/drive-sync-service").then(({ driveSyncService }) => {
+      driveSyncService.flush();
+    }).catch(() => {});
+  }
+});
 
 if (typeof (window as any).Capacitor !== "undefined") {
   import("@capgo/capacitor-updater").then(({ CapacitorUpdater }) => {

@@ -4,5 +4,8 @@
   "ultraBall": "Ultra Bola",
   "rogueBall": "Bola Rogue",
   "masterBall": "Bola Mestra",
-  "luxuryBall": "Bola Luxo"
+  "luxuryBall": "Bola Luxo",
+  "typeBall": "Bola {{typeName}}",
+  "voidBall": "Bola Void",
+  "voidBallCatchRate": "100% (HP Vermelho)"
 }

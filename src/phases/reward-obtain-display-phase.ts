@@ -5,138 +5,130 @@ import { RewardConfig, RewardObtainedType } from "#app/ui/reward-obtained-ui-han
 import {randSeedInt} from "../utils";
 
 export class RewardObtainDisplayPhase extends Phase {
-  scene: BattleScene;
-  private rewardConfig: RewardConfig;
-  private buttonActions: (() => void)[];
-  private fadeDelay: number = 1500;
-  private restoreWithRevertMode: boolean = false;
+    scene: BattleScene;
+    private rewardConfig: RewardConfig;
+    private buttonActions: (() => void)[];
+    private fadeDelay: number = 1500;
+    private restoreWithRevertMode: boolean = false;
 
-  constructor(
-    scene: BattleScene,
-    rewardConfig: RewardConfig,
-    buttonActions: (() => void)[] | (() => void) = []
-  ) {
-    super(scene);
-    this.scene = scene;
+    constructor(
+        scene: BattleScene,
+        rewardConfig: RewardConfig,
+        buttonActions: (() => void)[] | (() => void) = []
+    ) {
+        super(scene);
+        this.scene = scene;
 
-    if (!scene) {
-      throw new Error("Scene is required for RewardObtainDisplayPhase");
+        if (!scene) {
+            throw new Error('Scene is required for RewardObtainDisplayPhase');
+        }
+
+        this.rewardConfig = rewardConfig;
+
+        const actionsArray = typeof buttonActions === 'function' ? [buttonActions] : buttonActions;
+
+        this.buttonActions = actionsArray?.length
+            ? actionsArray.map(action => () => this.finishReward(action))
+            : [() => this.finishReward()];
     }
 
-    this.rewardConfig = rewardConfig;
+    show(args: any[]): boolean {
+        if (this.active || !args.length) return false;
 
-    const actionsArray = typeof buttonActions === "function" ? [buttonActions] : buttonActions;
+        if (args.length >= 2) {
+            this.rewardConfig = args[1] as RewardConfig;
+            const buttonAction = args[2];
 
-    this.buttonActions = actionsArray?.length
-      ? actionsArray.map(action => () => this.finishReward(action))
-      : [() => this.finishReward()];
-  }
+            const actionsArray = typeof buttonAction === 'function' ? [buttonAction] : buttonAction;
 
-  show(args: any[]): boolean {
-    if (this.active || !args.length) {
-      return false;
+            this.buttonActions = actionsArray?.length
+                ? actionsArray.map(action => () => this.finishReward(action))
+                : [() => this.finishReward()];
+
+            this.showRewardUI();
+            return true;
+        }
+        return false;
     }
 
-    if (args.length >= 2) {
-      this.rewardConfig = args[1] as RewardConfig;
-      const buttonAction = args[2];
+    start(): void {
+        super.start();
 
-      const actionsArray = typeof buttonAction === "function" ? [buttonAction] : buttonAction;
+        if (!this.scene) {
+            throw new Error('Scene is undefined in RewardObtainDisplayPhase start');
+        }
 
-      this.buttonActions = actionsArray?.length
-        ? actionsArray.map(action => () => this.finishReward(action))
-        : [() => this.finishReward()];
+        const isCutsceneContext = this.scene.ui.getMode() === Mode.SLIDESHOW_CUTSCENE;
+        if (isCutsceneContext) {
+            this.scene.playSound("battle_anims/PRSFX- Oblivion Wing2", { volumeGroup: "se" });
+            this.showRewardUI();
+            return;
+        }
 
-      this.showRewardUI();
-      return true;
-    }
-    return false;
-  }
+        if (this.scene.finalBattleVictory) {
+            this.scene.playSound("battle_anims/PRSFX- Quiver Dance", { volumeGroup: "se" });
+            this.showRewardUI();
+            return;
+        }
 
-  start(): void {
-    super.start();
-
-    if (!this.scene) {
-      throw new Error("Scene is undefined in RewardObtainDisplayPhase start");
-    }
-
-    const isCutsceneContext = this.scene.ui.getMode() === Mode.SLIDESHOW_CUTSCENE;
-    if (isCutsceneContext) {
-      this.scene.playSound("battle_anims/PRSFX- Oblivion Wing2");
-      this.showRewardUI();
-      return;
-    }
-
-    if (this.scene.finalBattleVictory) {
-      this.scene.playSound("battle_anims/PRSFX- Quiver Dance");
-      this.showRewardUI();
-      return;
-    }
-
-    if (this.rewardConfig.skillTreeRarity) {
-      const rarity = this.rewardConfig.skillTreeRarity;
-      const isHighRarity =
-                rarity === "rogue" ||
-                rarity === "master" ||
-                rarity === "legendary";
-
-      if (isHighRarity) {
-        this.scene.playSound("battle_anims/PRSFX- Oblivion Wing2");
-      } else {
-        this.scene.playSound("battle_anims/PRSFX- Bestow2");
-      }
-    } else {
-      if (this.rewardConfig.type === RewardObtainedType.SKILL_POINTS) {
-        this.scene.playSound("battle_anims/PRSFX- Bestow2");
-      } else if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_TOKENS) {
-        this.scene.playSound("battle_anims/PRSFX- Oblivion Wing2");
-      } else {
-        this.scene.playSound("item_fanfare");
-      }
-    }
-    this.showRewardUI();
-  }
-
-  private showRewardUI(): void {
-    if (!this.scene?.ui) {
-      throw new Error("Scene or UI is undefined in RewardObtainDisplayPhase showRewardUI");
+        if (this.rewardConfig.skillTreeRarity) {
+            const rarity = this.rewardConfig.skillTreeRarity;
+            const REWARD_RARITY_SOUNDS: Record<string, string> = {
+                "common": "battle_anims/PRSFX- Bestow2",
+                "great": "battle_anims/PRSFX- Bestow2",
+                "ultra": "battle_anims/PRSFX- Foresight2",
+                "rogue": "battle_anims/PRSFX- Camouflage",
+                "master": "battle_anims/PRSFX- Oblivion Wing2",
+                "legendary": "battle_anims/PRSFX- Grudge",
+            };
+            const rewardSound = REWARD_RARITY_SOUNDS[rarity] || "battle_anims/PRSFX- Bestow2";
+            this.scene.playSound(rewardSound, { volumeGroup: "se" });
+        } else {
+            if (this.rewardConfig.type === RewardObtainedType.SKILL_POINTS) {
+                this.scene.playSound("battle_anims/PRSFX- Bestow2", { volumeGroup: "se" });
+            } else if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_TOKENS) {
+                this.scene.playSound("battle_anims/PRSFX- Oblivion Wing2", { volumeGroup: "se" });
+            } else {
+                this.scene.playSound("item_fanfare");
+            }
+        }
+        this.showRewardUI();
     }
 
-    this.restoreWithRevertMode = this.scene.ui.getMode() === Mode.SLIDESHOW_CUTSCENE;
+    private showRewardUI(): void {
+        if (!this.scene?.ui) {
+            throw new Error('Scene or UI is undefined in RewardObtainDisplayPhase showRewardUI');
+        }
 
-    if (this.scene.ui.getMode() == Mode.REWARD_OBTAINED) {
-      this.scene.ui.setMode(Mode.MESSAGE);
+        this.restoreWithRevertMode = this.scene.ui.getMode() === Mode.SLIDESHOW_CUTSCENE;
+
+        if(this.scene.ui.getMode() == Mode.REWARD_OBTAINED) {
+            this.scene.ui.setMode(Mode.MESSAGE);
+        }
+
+        const cfg = this.restoreWithRevertMode
+            ? ({ ...this.rewardConfig, cutsceneStyle: true } as any)
+            : this.rewardConfig;
+
+        this.scene.ui.setOverlayModeForceTransition(
+            Mode.REWARD_OBTAINED,
+            {
+                buttonActions: this.buttonActions
+            },
+            cfg
+        );
     }
 
-    const cfg = this.restoreWithRevertMode
-      ? ({ ...this.rewardConfig, cutsceneStyle: true } as any)
-      : this.rewardConfig;
+    private finishReward(action?: () => void): void {
+        try {
+            action?.();
+        } catch {
+        }
 
-    this.scene.ui.setOverlayModeForceTransition(
-      Mode.REWARD_OBTAINED,
-      {
-        buttonActions: this.buttonActions
-      },
-      cfg
-    );
-  }
-
-  private finishReward(action?: () => void): void {
-    try {
-      action?.();
-    } catch {
+        this.scene.ui.revertMode().then(() => this.end());
     }
 
-    if (this.restoreWithRevertMode) {
-      this.scene.ui.revertMode().then(() => this.end());
-      return;
+    end(): void {
+        super.end();
     }
-
-    this.scene.ui.setMode(Mode.MESSAGE);
-    this.end();
-  }
-
-  end(): void {
-    super.end();
-  }
 }

@@ -11,6 +11,12 @@
   "gatchaCalendar": "扭蛋日历！",
   "browseGlitchForms": "浏览Pokevoid故障形态",
   "wikiMods": "维基 & 模组",
+  "downloadYourMods": "下载你的模组",
+  "downloadAll": "全部下载 (ZIP)",
+  "downloadSelected": "下载已选",
+  "noModsToDownload": "没有可下载的模组。",
+  "downloadStarted": "下载已开始。",
+  "downloadFailed": "下载失败。请重试。",
   "noModsToRemove": "没有可删除的模组。",
   "errorLoadingMods": "加载模组出错。请重试。",
   "modRemoved": "{{name}} 成功删除。",
@@ -31,8 +37,9 @@
     "stat2": "提升的能力值 2",
     "stat3": "提升的能力值 3",
     "distributionType": "能力值提升分配类型",
-    "frontSprite": "宝可梦正面精灵图 (150-200像素)",
-    "backSprite": "宝可梦背面精灵图 (150-200像素)",
+    "frontSprite": "宝可梦正面精灵图",
+    "backSprite": "宝可梦背面精灵图",
+    "useFrontAsBack": "使用正面精灵图作为背面精灵图",
     "rivalTrainer": "对手",
     "orRivalTrainer": "或对手"
   },
@@ -44,7 +51,12 @@
   },
   "buttons": {
     "saveAndAdd": "保存并重新加载",
-    "cancel": "取消"
+    "cancel": "取消",
+    "next": "下一步",
+    "prev": "上一步"
+  },
+  "navigation": {
+    "sectionIndicator": "{{current}} / {{total}}"
   },
   "validation": {
     "requiredField": "此字段为必填项",
@@ -61,7 +73,8 @@
   },
   "sections": {
     "basicInformation": "基本信息",
-    "typesAbilities": "属性和特性",
+    "typesAbilities": "属性",
+    "abilities": "特性",
     "stats": "能力值",
     "sprites": "精灵图",
     "rivalTrainer": "奖励此形态的对手"

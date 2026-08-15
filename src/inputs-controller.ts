@@ -83,6 +83,7 @@ export class InputsController {
     }
     delete this.interactions[Button.MENU];
     delete this.interactions[Button.STATS];
+    delete this.interactions[Button.CYCLE_ABILITY];
     this.init();
   }
   init(): void {
@@ -213,6 +214,12 @@ export class InputsController {
     }
   }
   keyboardKeyDown(event): void {
+    const el = document.activeElement as HTMLElement | null;
+    const tag = el?.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || (el as any)?.isContentEditable) {
+      this.deactivatePressedKey();
+      return;
+    }
     this.lastSource = "keyboard";
     this.ensureKeyboardIsInit();
     const buttonDown = getButtonWithKeycode(this.getActiveConfig(Device.KEYBOARD), event.keyCode);
@@ -224,28 +231,41 @@ export class InputsController {
         controller_type: "keyboard",
         button: buttonDown,
       });
-      clearInterval(this.inputInterval[buttonDown]);
-      this.inputInterval[buttonDown] = setInterval(() => {
-        this.events.emit("input_down", {
-          controller_type: "keyboard",
-          button: buttonDown,
-        });
-      }, repeatInputDelayMillis);
+      if (this.interactions[buttonDown]) {
+        clearInterval(this.inputInterval[buttonDown]);
+        this.inputInterval[buttonDown] = setInterval(() => {
+          this.events.emit("input_down", {
+            controller_type: "keyboard",
+            button: buttonDown,
+          });
+        }, repeatInputDelayMillis);
+      }
       this.buttonLock.push(buttonDown);
     }
   }
   keyboardKeyUp(event): void {
     this.lastSource = "keyboard";
     const buttonUp = getButtonWithKeycode(this.getActiveConfig(Device.KEYBOARD), event.keyCode);
-    if (buttonUp !== undefined) {
+    if (buttonUp === undefined) {
+      return;
+    }
+
+    const el = document.activeElement as HTMLElement | null;
+    const tag = el?.tagName;
+    const isTyping = tag === "INPUT" || tag === "TEXTAREA" || (el as any)?.isContentEditable;
+
+    if (!isTyping) {
       this.events.emit("input_up", {
         controller_type: "keyboard",
         button: buttonUp,
       });
-      const index = this.buttonLock.indexOf(buttonUp);
-      this.buttonLock.splice(index, 1);
-      clearInterval(this.inputInterval[buttonUp]);
     }
+
+    const index = this.buttonLock.indexOf(buttonUp);
+    if (index > -1) {
+      this.buttonLock.splice(index, 1);
+    }
+    clearInterval(this.inputInterval[buttonUp]);
   }
   gamepadButtonDown(pad: Phaser.Input.Gamepad.Gamepad, button: Phaser.Input.Gamepad.Button, value: number): void {
     if (!this.configs[this.selectedDevice[Device.KEYBOARD]]?.padID) {
@@ -255,7 +275,7 @@ export class InputsController {
       return;
     }
     this.lastSource = "gamepad";
-    if (!this.selectedDevice[Device.GAMEPAD] || (this.scene.ui.getMode() !== Mode.GAMEPAD_BINDING && this.selectedDevice[Device.GAMEPAD] !== pad.id.toLowerCase())) {
+    if (!this.selectedDevice[Device.GAMEPAD] || (this.scene.ui?.getMode() !== Mode.GAMEPAD_BINDING && this.selectedDevice[Device.GAMEPAD] !== pad.id.toLowerCase())) {
       this.setChosenGamepad(pad.id);
     }
     if (!this.gamepadSupport || pad.id.toLowerCase() !== this.selectedDevice[Device.GAMEPAD].toLowerCase()) {
@@ -271,17 +291,19 @@ export class InputsController {
         controller_type: "gamepad",
         button: buttonDown,
       });
-      clearInterval(this.inputInterval[buttonDown]);
-      this.inputInterval[buttonDown] = setInterval(() => {
-        if (!this.buttonLock.includes(buttonDown)) {
-          clearInterval(this.inputInterval[buttonDown]);
-          return;
-        }
-        this.events.emit("input_down", {
-          controller_type: "gamepad",
-          button: buttonDown,
-        });
-      }, repeatInputDelayMillis);
+      if (this.interactions[buttonDown]) {
+        clearInterval(this.inputInterval[buttonDown]);
+        this.inputInterval[buttonDown] = setInterval(() => {
+          if (!this.buttonLock.includes(buttonDown)) {
+            clearInterval(this.inputInterval[buttonDown]);
+            return;
+          }
+          this.events.emit("input_down", {
+            controller_type: "gamepad",
+            button: buttonDown,
+          });
+        }, repeatInputDelayMillis);
+      }
       this.buttonLock.push(buttonDown);
     }
   }

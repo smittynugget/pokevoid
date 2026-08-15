@@ -3,6 +3,7 @@ import { CommonAnim } from "#app/data/battle-anims.js";
 import { BerryUsedEvent } from "#app/events/battle-scene.js";
 import { getPokemonNameWithAffix } from "#app/messages.js";
 import { BerryModifier } from "#app/modifier/modifier.js";
+import { BattlerTagType } from "#enums/battler-tag-type";
 import i18next from "i18next";
 import * as Utils from "#app/utils.js";
 import { FieldPhase } from "./field-phase";
@@ -17,6 +18,10 @@ export class BerryPhase extends FieldPhase {
       }, pokemon.isPlayer());
 
       if (hasUsableBerry) {
+        if (pokemon.getTag(BattlerTagType.ITEM_BLOCKED)) {
+          return;
+        }
+
         const cancelled = new Utils.BooleanHolder(false);
         pokemon.getOpponents().map((opp) => applyAbAttrs(PreventBerryUseAbAttr, opp, cancelled));
 

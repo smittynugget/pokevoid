@@ -78,7 +78,8 @@ export enum PermaDuration {
 export enum BountyType {
     SMITTY,
     RIVAL,
-    QUEST
+    QUEST,
+    SKILL_TREE = 3
 }
 
 export class PermaModifiers {
@@ -126,7 +127,8 @@ export class PermaModifiers {
                         const existingQuestBounties = this.modifiers.filter(m =>
                             m instanceof PermaRunQuestModifier &&
                             m.consoleCode &&
-                            this.isQuestBountyQuest(m.questUnlockData.questId)
+                            this.isQuestBountyQuest(m.questUnlockData.questId) &&
+                            !this.isSkillTreeBountyQuest(m as PermaRunQuestModifier)
                         );
 
                         if (existingQuestBounties.length >= this.QUEST_BOUNTY_LIMIT) {
@@ -172,6 +174,10 @@ export class PermaModifiers {
   public isSmittyBountyQuest(questId: QuestUnlockables): boolean {
     return questId >= QuestUnlockables.TARTAUROS_SMITTY_QUEST &&
         questId <= QuestUnlockables.MISSINGNO_SMITTY_QUEST;
+  }
+
+  public isSkillTreeBountyQuest(modifier: PermaRunQuestModifier): boolean {
+    return modifier.skillTreeBounty === true;
   }
 
     private removeExistingQuestModifiers(bountyType: BountyType): void {

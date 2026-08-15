@@ -1,0 +1,12 @@
+{
+  "quickSummary": "빠른 요약",
+  "itemsMoves": "도구 & 기술",
+  "currentParty": "현재 파티",
+  "enemyInfo": "적 정보",
+  "teamTitle": "팀",
+  "noOpponent": "상대 없음",
+  "notApplicable": "---",
+  "pageIndicator": "{{current}}/{{total}}",
+  "foeTag": "적",
+  "youTag": "나"
+}

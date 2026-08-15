@@ -49,5 +49,6 @@
   "smellYaLater": "À la revoyure, {{pokemonName}} !",
   "selectPokeToPowerUp": "Sélectionnez un Pokémon à renforcer.",
   "selectPokeToRelease": "Sélectionnez un Pokémon à relâcher.",
-  "pausedEvolutions": "{{pokemonName}} ne peut plus évoluer."
+  "pausedEvolutions": "{{pokemonName}} ne peut plus évoluer.",
+  "quickInfo": "Info Rapide"
 }

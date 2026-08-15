@@ -67,5 +67,17 @@
   "saltCuredLapse": "¡{{moveName}} ha herido a {{pokemonNameWithAffix}}!",
   "cursedOnAdd": "¡{{pokemonNameWithAffix}} sacrifica algunos PS y maldice a {{pokemonName}}!",
   "cursedLapse": "¡{{pokemonNameWithAffix}} es víctima de una maldición!",
-  "stockpilingOnAdd": "¡{{pokemonNameWithAffix}} ha reservado energía por {{stockpiledCount}}ª vez!"
+  "stockpilingOnAdd": "¡{{pokemonNameWithAffix}} ha reservado energía por {{stockpiledCount}}ª vez!",
+  "substituteOnAdd": "¡{{pokemonNameWithAffix}} creó un sustituto!",
+  "substituteOnRemove": "¡El sustituto de {{pokemonNameWithAffix}} se desvaneció!",
+  "substituteOnHit": "¡El sustituto recibió el daño en lugar de {{pokemonNameWithAffix}}!",
+  "tauntOnAdd": "¡{{pokemonNameWithAffix}} cayó en la provocación!",
+  "tauntOnRemove": "¡El efecto de Mofa de {{pokemonNameWithAffix}} se disipó!",
+  "tormentOnAdd": "¡{{pokemonNameWithAffix}} fue sometido a tormento!",
+  "tormentOnRemove": "¡El efecto de Tormento de {{pokemonNameWithAffix}} se disipó!",
+  "healBlockedLapse": "¡{{pokemonNameWithAffix}} no puede curarse por Anticura!",
+  "healBlockedOnAdd": "¡{{pokemonNameWithAffix}} no puede curarse!",
+  "healBlockedOnRemove": "¡El efecto de Anticura sobre {{pokemonNameWithAffix}} se disipó!",
+  "itemBlockedOnAdd": "¡{{pokemonNameWithAffix}} no puede usar su objeto equipado!",
+  "itemBlockedOnRemove": "¡{{pokemonNameWithAffix}} puede usar objetos de nuevo!"
 }

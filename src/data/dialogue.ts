@@ -1063,6 +1063,39 @@ export const trainerTypeDialogue: TrainerTypeDialogue = {
       ]
     }
   ],
+  [TrainerType.PEGASUS]: [
+    {
+      encounter: [
+        "dialogue:pegasus_boss_1.encounter.1",
+        "dialogue:pegasus_boss_1.encounter.2",
+        "dialogue:pegasus_boss_1.encounter.3"
+      ],
+      victory: [
+        "dialogue:pegasus_boss_1.victory.1",
+        "dialogue:pegasus_boss_1.victory.2"
+      ],
+      defeat: [
+        "dialogue:pegasus_boss_1.defeat.1",
+        "dialogue:pegasus_boss_1.defeat.2"
+      ]
+    }
+  ],
+  [TrainerType.PEGASUS_2]: [
+    {
+      encounter: [
+        "dialogue:pegasus_boss_2.encounter.1",
+        "dialogue:pegasus_boss_2.encounter.2"
+      ],
+      victory: [
+        "dialogue:pegasus_boss_2.victory.1",
+        "dialogue:pegasus_boss_2.victory.2"
+      ],
+      defeat: [
+        "dialogue:pegasus_boss_2.defeat.1",
+        "dialogue:pegasus_boss_2.defeat.2"
+      ]
+    }
+  ],
   [TrainerType.BROCK]: {
     encounter: [
       "dialogue:brock.encounter.1",
@@ -4517,6 +4550,10 @@ export function getSmitomDialogue(scene: BattleScene): string {
     return `dialogue:smitom.message.${newIndex + 1}`;
   }
 
-  const randomIndex = randSeedInt(TOTAL_DIALOGUES, 0);
+  let randomIndex: number;
+  do {
+    randomIndex = randSeedInt(TOTAL_DIALOGUES, 0);
+  } while (randomIndex === scene.gameData.smitomTalks.at(-1));
+  scene.gameData.smitomTalks.push(randomIndex);
   return `dialogue:smitom.message.${randomIndex + 1}`;
 }

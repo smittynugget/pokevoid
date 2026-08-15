@@ -153,7 +153,8 @@ export class FilterBar extends Phaser.GameObjects.Container {
   }
 
   getVals(col: DropDownColumn): any[] {
-    return this.getFilter(col).getVals();
+    const filter = this.getFilter(col);
+    return filter ? filter.getVals() : [];
   }
 
   setValsToDefault(): void {
@@ -174,6 +175,24 @@ export class FilterBar extends Phaser.GameObjects.Container {
       }
     }
 
+    return nearest;
+  }
+
+  getOpenDropDown(): DropDown | null {
+    return this.dropDowns.find(dd => dd.visible) ?? null;
+  }
+
+  getFilterIndexAtX(localX: number): number {
+    let nearest = 0;
+    let nearestDist = Infinity;
+    for (let i = 0; i < this.labels.length; i++) {
+      const center = this.labels[i].x + this.labels[i].displayWidth / 2;
+      const dist = Math.abs(localX - center);
+      if (dist < nearestDist) {
+        nearest = i;
+        nearestDist = dist;
+      }
+    }
     return nearest;
   }
 

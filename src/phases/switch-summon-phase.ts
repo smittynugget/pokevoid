@@ -1,8 +1,9 @@
 import BattleScene from "#app/battle-scene.js";
-import { applyPreSwitchOutAbAttrs, PreSwitchOutAbAttr } from "#app/data/ability.js";
-import { allMoves, ForceSwitchOutAttr } from "#app/data/move.js";
+import { applyPostFaintReplacementAbAttrs, applyPreSwitchOutAbAttrs, PostFaintReplacementAbAttr, PreSwitchOutAbAttr } from "#app/data/ability.js";
+import { StealHeldItemChanceAttr } from "#app/data/move.js";
 import { getPokeballTintColor } from "#app/data/pokeball.js";
 import { getTypeRgb } from "#app/data/type.js";
+import { BattlerTagType } from "#app/enums/battler-tag-type.js";
 import { PokeballType } from "#enums/pokeball";
 import { SpeciesFormChangeActiveTrigger } from "#app/data/pokemon-forms.js";
 import { TrainerSlot } from "#app/data/trainer-config.js";
@@ -14,21 +15,28 @@ import { Mode } from "#app/ui/ui.js";
 import i18next from "i18next";
 import { SummonPhase } from "./summon-phase";
 import { PostSummonPhase } from "./post-summon-phase";
+import { StatChangePhase } from "./stat-change-phase";
+import { PokemonHealPhase } from "./pokemon-heal-phase";
 import { isNuzlockeActive } from "#app/game-mode.js";
+import * as Utils from "../utils";
+import { SubstituteTag } from "#app/data/battler-tags.js";
 export class SwitchSummonPhase extends SummonPhase {
   private slotIndex: integer;
   private doReturn: boolean;
   private batonPass: boolean;
   private releaseSwitchedOut: boolean;
+  private preSwitchOutAbilityApplied: boolean = false;
+  private preSwitchOutSummonSnapshot: any = null;
 
   private lastPokemon: Pokemon;
-  constructor(scene: BattleScene, fieldIndex: integer, slotIndex: integer, doReturn: boolean, batonPass: boolean, player?: boolean, releaseSwitchedOut: boolean = false) {
+  constructor(scene: BattleScene, fieldIndex: integer, slotIndex: integer, doReturn: boolean, batonPass: boolean, player?: boolean, releaseSwitchedOut: boolean = false, preSwitchOutAlreadyApplied: boolean = false) {
     super(scene, fieldIndex, player !== undefined ? player : true);
 
     this.slotIndex = slotIndex;
     this.doReturn = doReturn;
     this.batonPass = batonPass;
     this.releaseSwitchedOut = releaseSwitchedOut;
+    this.preSwitchOutAbilityApplied = preSwitchOutAlreadyApplied;
   }
 
   start(): void {
@@ -36,7 +44,8 @@ export class SwitchSummonPhase extends SummonPhase {
   }
 
   preSummon(): void {
-    this.scene.ui.setMode(Mode.MESSAGE).then(() => {
+    const replayActive = false;
+    const run = () => {
       if (!this.player) {
         if (this.slotIndex === -1) {
 
@@ -82,11 +91,30 @@ export class SwitchSummonPhase extends SummonPhase {
         ease: "Sine.easeIn",
         scale: 0.5,
         onComplete: () => {
+          const party = this.player ? this.getParty() : this.scene.getEnemyParty();
+          const switchedIn = party[this.slotIndex];
+          applyPreSwitchOutAbAttrs(PreSwitchOutAbAttr, pokemon, false, switchedIn);
+          this.preSwitchOutAbilityApplied = true;
+          this.preSwitchOutSummonSnapshot = pokemon.summonData ? {
+            switchOutAllyStatBoost: pokemon.summonData.switchOutAllyStatBoost,
+            incomingStatBoostTag: pokemon.summonData.incomingStatBoostTag,
+            incomingAllyHealRatio: pokemon.summonData.incomingAllyHealRatio,
+            incomingAllyCureStatus: pokemon.summonData.incomingAllyCureStatus,
+            retainSubstituteForAlly: pokemon.summonData.retainSubstituteForAlly,
+            stealItemOnSwitch: pokemon.summonData.stealItemOnSwitch,
+            stealItemOnSwitchBeneficiaryId: pokemon.summonData.stealItemOnSwitchBeneficiaryId,
+            spawnMigrationSourceId: pokemon.summonData.spawnMigrationSourceId,
+          } : null;
           pokemon.leaveField(!this.batonPass, false);
           this.scene.time.delayedCall(750, () => this.switchAndSummon());
         }
       });
-    });
+    };
+    if (replayActive) {
+      run();
+      return;
+    }
+    this.scene.ui.setMode(Mode.MESSAGE).then(run);
   }
 
   switchAndSummon() {
@@ -98,7 +126,66 @@ export class SwitchSummonPhase extends SummonPhase {
       this.scene.gameData.gameStats.pokemonSwitched++;
     }
 
-    applyPreSwitchOutAbAttrs(PreSwitchOutAbAttr, this.lastPokemon);
+    if (!this.preSwitchOutAbilityApplied) {
+      applyPreSwitchOutAbAttrs(PreSwitchOutAbAttr, this.lastPokemon, false, switchedInPokemon);
+    }
+    const outgoing = this.lastPokemon;
+    const sd = this.preSwitchOutSummonSnapshot || outgoing?.summonData;
+    if (sd?.switchOutAllyStatBoost && switchedInPokemon) {
+      const { stat, levels } = sd.switchOutAllyStatBoost;
+      this.scene.unshiftPhase(new StatChangePhase(this.scene, switchedInPokemon.getBattlerIndex(), true, [stat], levels));
+    }
+    if (sd?.incomingStatBoostTag && switchedInPokemon) {
+      const { stat, levels } = sd.incomingStatBoostTag;
+      this.scene.unshiftPhase(new StatChangePhase(this.scene, switchedInPokemon.getBattlerIndex(), true, [stat], levels));
+    }
+    if (sd?.incomingAllyHealRatio && switchedInPokemon) {
+      const heal = Utils.toDmgValue(switchedInPokemon.getMaxHp() * sd.incomingAllyHealRatio);
+      this.scene.unshiftPhase(new PokemonHealPhase(this.scene, switchedInPokemon.getBattlerIndex(), heal, "", true, true));
+    }
+    if (sd?.incomingAllyCureStatus && switchedInPokemon) {
+      switchedInPokemon.resetStatus(true, true);
+      switchedInPokemon.updateInfo();
+    }
+    if (sd?.retainSubstituteForAlly && switchedInPokemon) {
+      const sub = outgoing.getTag(BattlerTagType.SUBSTITUTE) as SubstituteTag;
+      if (sub) {
+        outgoing.removeTag(BattlerTagType.SUBSTITUTE);
+        const xfer = new SubstituteTag(sub.sourceMove, sub.sourceId);
+        xfer.hp = sub.hp;
+        switchedInPokemon.summonData.tags.push(xfer);
+      }
+    }
+    if (sd?.stealItemOnSwitch && switchedInPokemon) {
+      const beneficiaryId = sd.stealItemOnSwitchBeneficiaryId;
+      const beneficiary = beneficiaryId !== undefined
+        ? this.scene.getPokemonById(beneficiaryId) ?? outgoing
+        : outgoing;
+      new StealHeldItemChanceAttr(1).apply(beneficiary, switchedInPokemon, null as any, []);
+    }
+    if (sd?.spawnMigrationSourceId !== undefined && switchedInPokemon) {
+      const sourceMove = outgoing.getTag(BattlerTagType.SEEDED)?.sourceMove;
+      if (sourceMove !== undefined) {
+        switchedInPokemon.addTag(BattlerTagType.SEEDED, 0, sourceMove, sd.spawnMigrationSourceId);
+      }
+    } else if (outgoing?.battleSummonData?.pendingSpawnMigrationSourceId !== undefined && switchedInPokemon) {
+      const sourceMove = outgoing.battleSummonData.pendingSpawnMigrationMove;
+      if (sourceMove !== undefined) {
+        switchedInPokemon.addTag(BattlerTagType.SEEDED, 0, sourceMove, outgoing.battleSummonData.pendingSpawnMigrationSourceId);
+      }
+      outgoing.battleSummonData.pendingSpawnMigrationSourceId = undefined;
+      outgoing.battleSummonData.pendingSpawnMigrationMove = undefined;
+    }
+    if (outgoing?.summonData) {
+      outgoing.summonData.switchOutAllyStatBoost = undefined;
+      outgoing.summonData.incomingStatBoostTag = undefined;
+      outgoing.summonData.incomingAllyHealRatio = undefined;
+      outgoing.summonData.incomingAllyCureStatus = undefined;
+      outgoing.summonData.retainSubstituteForAlly = undefined;
+      outgoing.summonData.stealItemOnSwitch = undefined;
+      outgoing.summonData.stealItemOnSwitchBeneficiaryId = undefined;
+      outgoing.summonData.spawnMigrationSourceId = undefined;
+    }
     if (this.batonPass && switchedInPokemon) {
       (this.player ? this.scene.getEnemyField() : this.scene.getPlayerField()).forEach(enemyPokemon => enemyPokemon.transferTagsBySourceId(this.lastPokemon.id, switchedInPokemon.id));
       if (!this.scene.findModifier(m => m instanceof SwitchEffectTransferModifier && (m as SwitchEffectTransferModifier).pokemonId === switchedInPokemon.id)) {
@@ -122,7 +209,6 @@ export class SwitchSummonPhase extends SummonPhase {
         );
 
         if (!this.batonPass) {
-          switchedInPokemon.resetBattleData();
           switchedInPokemon.resetSummonData();
         }
         this.summon();
@@ -145,13 +231,12 @@ export class SwitchSummonPhase extends SummonPhase {
     super.onEnd();
 
     const pokemon = this.getPokemon();
-
-    const moveId = this.lastPokemon?.scene.currentBattle.lastMove;
-    const lastUsedMove = moveId ? allMoves[moveId] : undefined;
+    if (pokemon?.battleSummonData) {
+      pokemon.battleSummonData.enteredFromKnockOut = !!this.lastPokemon?.isFainted();
+    }
 
     const currentCommand = pokemon.scene.currentBattle.turnCommands[this.fieldIndex]?.command;
-    const lastPokemonIsForceSwitchedAndNotFainted = lastUsedMove?.hasAttr(ForceSwitchOutAttr) && !this.lastPokemon.isFainted();
-    if (currentCommand === Command.POKEMON || lastPokemonIsForceSwitchedAndNotFainted) {
+    if (currentCommand === Command.POKEMON) {
       pokemon.battleSummonData.turnCount--;
     }
 
@@ -188,6 +273,10 @@ export class SwitchSummonPhase extends SummonPhase {
   }
 
   queuePostSummon(): void {
+
+    if (this.lastPokemon?.isFainted()) {
+      applyPostFaintReplacementAbAttrs(PostFaintReplacementAbAttr, this.lastPokemon, this.getPokemon());
+    }
     this.scene.unshiftPhase(new PostSummonPhase(this.scene, this.getPokemon().getBattlerIndex()));
   }
 }

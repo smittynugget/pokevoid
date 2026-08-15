@@ -4,6 +4,7 @@ import {
   GeneratedPersistentModifierType,
   ModifierType,
   ModifierTypeGenerator,
+  PermaPartyAbilityModifierTypeGenerator,
   getModifierTypeFuncById,
   smittyFormQuestModifiers, rivalQuestModifiers, QuestModifierType,
   GeneratorInstanceCheck
@@ -19,6 +20,7 @@ export default class ModifierData {
   private stackCount: integer;
   private consoleCode?: string;
   private skillTreeTooltip?: any;
+  private skillTreeBounty?: boolean;
 
   public className: string;
 
@@ -37,6 +39,12 @@ export default class ModifierData {
       this.skillTreeTooltip = (sourceModifier as any).skillTreeTooltip;
     } else if (source.skillTreeTooltip) {
       this.skillTreeTooltip = source.skillTreeTooltip;
+    }
+
+    if (sourceModifier && 'skillTreeBounty' in sourceModifier) {
+      this.skillTreeBounty = (sourceModifier as any).skillTreeBounty;
+    } else if (source.skillTreeBounty) {
+      this.skillTreeBounty = source.skillTreeBounty;
     }
 
     if (sourceModifier) {
@@ -111,6 +119,9 @@ export default class ModifierData {
           const modifier = questModifier.newModifier(...args) as PersistentModifier;
           if (modifier) {
             (modifier as any).consoleCode = this.consoleCode;
+            if (this.skillTreeBounty) {
+              (modifier as any).skillTreeBounty = this.skillTreeBounty;
+            }
             modifier.stackCount = this.stackCount;
             return modifier;
           }
@@ -129,13 +140,17 @@ export default class ModifierData {
       type.id = this.typeId;
 
       if (this.className === 'PermaPartyAbilityModifier' && this.typePregenArgs && this.typePregenArgs.length >= 1 && this.args.length >= 3) {
-        const abilityID = this.typePregenArgs[0].id;
-        if (type.constructor.name === 'PermaPartyAbilityModifierTypeGenerator' && abilityID) {
+        const raw = this.typePregenArgs[0];
+        const abilityID = typeof raw === "number" ? raw : raw?.id;
+        if (type.constructor.name === 'PermaPartyAbilityModifierTypeGenerator' && abilityID != null && abilityID >= 0) {
           this.args[2] = abilityID;
         }
       }
 
       if (type instanceof ModifierTypeGenerator) {
+        if (type instanceof PermaPartyAbilityModifierTypeGenerator) {
+          type.assignScene(scene);
+        }
         if(this.typePregenArgs) {
           type = (type as ModifierTypeGenerator).generateType(
                 this.player ? scene.getParty() : scene.getEnemyField(),
@@ -162,6 +177,9 @@ export default class ModifierData {
           if (this.consoleCode) {
             (questModifier as any).consoleCode = this.consoleCode;
           }
+          if (this.skillTreeBounty) {
+            (questModifier as any).skillTreeBounty = this.skillTreeBounty;
+          }
           questModifier.stackCount = this.stackCount;
           if (this.skillTreeTooltip) {
             (questModifier as any).skillTreeTooltip = this.skillTreeTooltip;
@@ -178,6 +196,9 @@ export default class ModifierData {
 
       if (this.skillTreeTooltip) {
         (ret as any).skillTreeTooltip = this.skillTreeTooltip;
+      }
+      if (this.skillTreeBounty) {
+        (ret as any).skillTreeBounty = this.skillTreeBounty;
       }
 
       return ret;

@@ -1,7 +1,7 @@
 import BattleScene from "../battle-scene";
 import { GameModes } from "../game-mode";
 import { TextStyle, addTextObject } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { addWindow } from "./ui-theme";
 import * as Utils from "../utils";
 import PokemonData from "../system/pokemon-data";
@@ -13,6 +13,7 @@ import { RunEntry, SessionSaveData } from "../system/game-data";
 import { PlayerGender } from "#enums/player-gender";
 import { TrainerVariant } from "../field/trainer";
 import { SessionHistoryResult } from "../system/session-history";
+import { isPrimaryPointer } from "./pointer-utils";
 import { loggedInUser } from "../account";
 import { GameMode } from "../game-mode";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
@@ -35,6 +36,7 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
   private scrollCursor: integer = 0;
 
   private cursorObj: Phaser.GameObjects.NineSlice | null;
+  private _runHitZones: Phaser.GameObjects.Zone[] = [];
 
   private runContainerInitialY: number;
 
@@ -90,6 +92,35 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
       this.attachRunBackgrounds();
       this.setScrollCursor(0);
       this.setCursor(0);
+
+      this._runHitZones.forEach(z => z.destroy());
+      this._runHitZones = [];
+      for (let s = 0; s < this.runs.length; s++) {
+        const zone = this.scene.add.zone(4, 4 + s * 56, 304, 52);
+        zone.setOrigin(0, 0);
+        zone.setInteractive({ useHandCursor: true });
+        this.runsContainer.add(zone);
+        this._runHitZones.push(zone);
+
+        const slotIndex = s;
+        zone.on("pointerover", () => {
+          const localCursor = slotIndex - this.scrollCursor;
+          if (localCursor >= 0 && localCursor <= 2 && this.cursor !== localCursor) {
+            this.setCursor(localCursor);
+          }
+        });
+        zone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+          if (!isPrimaryPointer(pointer)) return;
+          const localCursor = slotIndex - this.scrollCursor;
+          if (localCursor < 0 || localCursor > 2) return;
+          if (this.cursor !== localCursor) {
+            this.setCursor(localCursor);
+          } else {
+            this.processInput(Button.ACTION);
+          }
+        });
+      }
+
       if (this.runs.length === 0) {
         this.clearCursor();
       }
@@ -293,6 +324,8 @@ export default class RunHistoryUiHandler extends MessageUiHandler {
   }
 
   private clearRuns() {
+    this._runHitZones.forEach(z => z.destroy());
+    this._runHitZones = [];
     this.runs.splice(0, this.runs.length);
     this.runsContainer.removeAll(true);
   }

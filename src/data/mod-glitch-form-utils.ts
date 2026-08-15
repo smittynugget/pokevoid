@@ -119,38 +119,34 @@ export function loadModPokemonIconFromData(
             return;
         }
 
-        let objectUrl: string;
+        let timeoutId: any;
+        let settled = false;
+
+        const settle = (success: boolean, error?: Error) => {
+            if (settled) return;
+            settled = true;
+            if (timeoutId) clearTimeout(timeoutId);
+            success ? resolve() : reject(error);
+        };
+
+        const doAdd = (dataUrl: string) => {
+            scene.textures.addBase64(iconKey, dataUrl);
+            scene.textures.once(`addtexture-${iconKey}`, () => settle(true));
+            timeoutId = setTimeout(() => {
+                if (scene.textures.exists(iconKey)) settle(true);
+                else settle(false, new Error(`Timeout loading icon for ${formName}`));
+            }, 10000);
+        };
 
         if (typeof iconData === 'string') {
-            if (iconData.startsWith('data:')) {
-                objectUrl = iconData;
-            } else {
-                objectUrl = `data:image/png;base64,${iconData}`;
-            }
+            const dataUrl = iconData.startsWith('data:') ? iconData : `data:image/png;base64,${iconData}`;
+            doAdd(dataUrl);
         } else {
             const blob = iconData instanceof ArrayBuffer ? new Blob([iconData]) : iconData;
-            objectUrl = URL.createObjectURL(blob);
-        }
-
-        scene.load.image(iconKey, objectUrl);
-
-        scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
-            if (!objectUrl.startsWith('data:')) {
-                URL.revokeObjectURL(objectUrl);
-            }
-
-            resolve();
-        });
-
-        scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, () => {
-            if (!objectUrl.startsWith('data:')) {
-                URL.revokeObjectURL(objectUrl);
-            }
-            reject(new Error(`Failed to load icon for ${formName}`));
-        });
-
-        if (!scene.load.isLoading()) {
-            scene.load.start();
+            const reader = new FileReader();
+            reader.onload = () => doAdd(reader.result as string);
+            reader.onerror = () => settle(false, new Error(`Failed to read icon data for ${formName}`));
+            reader.readAsDataURL(blob);
         }
     });
 }
@@ -182,47 +178,46 @@ export function loadModGlitchSpriteFromData(
             return;
         }
 
-        let objectUrl: string;
+        let timeoutId: any;
+        let settled = false;
+
+        const settle = (success: boolean, error?: Error) => {
+            if (settled) return;
+            settled = true;
+            if (timeoutId) clearTimeout(timeoutId);
+            if (success) {
+                if (scene.anims && typeof scene.anims.create === 'function' && !scene.anims.exists(spriteKey)) {
+                    scene.anims.create({
+                        key: spriteKey,
+                        frames: [{ key: spriteKey }],
+                        frameRate: 1,
+                        repeat: -1
+                    });
+                }
+                resolve();
+            } else {
+                reject(error);
+            }
+        };
+
+        const doAdd = (dataUrl: string) => {
+            scene.textures.addBase64(spriteKey, dataUrl);
+            scene.textures.once(`addtexture-${spriteKey}`, () => settle(true));
+            timeoutId = setTimeout(() => {
+                if (scene.textures.exists(spriteKey)) settle(true);
+                else settle(false, new Error(`Timeout loading sprite: ${spriteKey}`));
+            }, 10000);
+        };
 
         if (typeof spriteData === 'string') {
-            if (spriteData.startsWith('data:')) {
-                objectUrl = spriteData;
-            } else {
-                objectUrl = `data:image/png;base64,${spriteData}`;
-            }
+            const dataUrl = spriteData.startsWith('data:') ? spriteData : `data:image/png;base64,${spriteData}`;
+            doAdd(dataUrl);
         } else {
             const blob = spriteData instanceof ArrayBuffer ? new Blob([spriteData]) : spriteData;
-            objectUrl = URL.createObjectURL(blob);
-        }
-
-        scene.load.image(spriteKey, objectUrl);
-
-        scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
-            if (!objectUrl.startsWith('data:')) {
-                URL.revokeObjectURL(objectUrl);
-            }
-
-            if (scene.anims && typeof scene.anims.create === 'function' && !scene.anims.exists(spriteKey)) {
-                scene.anims.create({
-                    key: spriteKey,
-                    frames: [{ key: spriteKey }],
-                    frameRate: 1,
-                    repeat: -1
-                });
-            }
-
-            resolve();
-        });
-
-        scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, () => {
-            if (!objectUrl.startsWith('data:')) {
-                URL.revokeObjectURL(objectUrl);
-            }
-            reject(new Error(`Failed to load sprite for ${formName}`));
-        });
-
-        if (!scene.load.isLoading()) {
-            scene.load.start();
+            const reader = new FileReader();
+            reader.onload = () => doAdd(reader.result as string);
+            reader.onerror = () => settle(false, new Error(`Failed to read sprite data for ${spriteKey}`));
+            reader.readAsDataURL(blob);
         }
     });
 }

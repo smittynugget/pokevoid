@@ -1,0 +1,10 @@
+{
+  "title": "SELEZIONE CAMPIONE",
+  "instruction": "Seleziona il tuo Campione",
+  "locked": "BLOCCATO",
+  "essenceNeeded": "{{amount}} Essenza {{typeName}}",
+  "mysteryChampion": "???",
+  "mysterySubtitle": "Il Vuoto decide?!",
+  "randomDescription": "Campione Casuale",
+  "tooltip.essenceRequiredDesc": "Spendi essenza per sbloccare questo campione. Per guadagnare essenze, sconfiggi i Pokémon per ottenere il loro tipo."
+}

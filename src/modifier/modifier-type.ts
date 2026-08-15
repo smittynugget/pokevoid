@@ -30,7 +30,8 @@ import * as Utils from "../utils";
 import {TempBattleStat, getTempBattleStatBoosterItemName, getTempBattleStatName} from "../data/temp-battle-stat";
 import {getBerryEffectDescription, getBerryName} from "../data/berry";
 import {StatusEffect, getStatusEffectDescriptor} from "../data/status-effect";
-import {allSpecies, getPokemonSpecies, universalSmittyForms, isGlitchFormKey} from "../data/pokemon-species";
+import {allSpecies, getPokemonSpecies, universalSmittyForms, isGlitchFormKey, speciesStarters} from "../data/pokemon-species";
+import {modGlitchFormData} from "../data/mod-glitch-form-data";
 import { SpeciesFormKey } from "#enums/species-form-key";
 import BattleScene from "../battle-scene";
 import { SkillTreeNodeGenerator } from "../system/skill-tree-node-generator";
@@ -48,13 +49,14 @@ import {Nature, getNatureName, getNatureStatMultiplier} from "#app/data/nature";
 import i18next from "i18next";
 import {getModifierTierTextTint} from "#app/ui/text";
 import Overrides from "#app/overrides";
+import { getDuelmonBstLimitForWave } from "#app/data/duelmon-bst-utils";
 import {Abilities} from "#enums/abilities";
 import {BattlerTagType} from "#enums/battler-tag-type";
 import {BerryType} from "#enums/berry-type";
 import {Moves} from "#enums/moves";
 import {Species} from "#enums/species";
 import {getPokemonNameWithAffix} from "#app/messages.js";
-import {Mode} from "../ui/ui";
+import {Mode} from "../ui/mode";
 import {Ability, allAbilities} from "#app/data/ability";
 import {
     AbilitySacrificeModifier,
@@ -84,11 +86,11 @@ import {
     QuestModifierTypes
 } from "#app/modifier/modifier-quest-config";
 import {TrainerType} from "#enums/trainer-type";
-import {GameData} from "#app/system/game-data";
+import {GameData, QuestUnlockData} from "#app/system/game-data";
 import {QuestState, QuestUnlockables} from "#enums/quest-unlockables";
 import {RewardType} from "#enums/reward-type";
 import {Unlockables} from "#app/system/unlockables";
-import {GameModes} from "#app/game-mode";
+import {GameMode, GameModes} from "#app/game-mode";
 import {PermaDuration, PermaType} from "#app/modifier/perma-modifiers";
 import {randSeedInt} from "../utils";
 import {RivalTrainerType} from "#app/data/trainer-config";
@@ -103,6 +105,7 @@ import { PlayableChampionData } from "../system/playable-champions";
 import { ChampionUtils } from "#app/system/champion-utils.js";
 import { PlayerGender } from "#enums/player-gender";
 import { SkillTreeSelectors } from "../system/skill-tree-selectors";
+import { assignTypeThemedMoves } from "../system/type-move-utils";
 
 const outputModifierData = false;
 const useMaxWeightForOutput = false;
@@ -298,6 +301,378 @@ export class ModifierType {
     }
 }
 
+export type ForbiddenFormUnlockCandidate =
+    | {
+          kind: "QUEST_FORM";
+          questUnlockData: QuestUnlockData;
+      }
+    | {
+          kind: "MOD_FORM";
+          systemName: string;
+          speciesId: Species;
+          formName: string;
+      }
+    | {
+          kind: "UNI_SMITTY";
+          formName: string;
+      };
+
+export const FORBIDDEN_FORM_REWARDTYPE_TO_FORMKEY: Partial<Record<RewardType, SpeciesFormKey>> = {
+    [RewardType.GLITCH_FORM_A]: SpeciesFormKey.GLITCH,
+    [RewardType.GLITCH_FORM_B]: SpeciesFormKey.GLITCH_B,
+    [RewardType.GLITCH_FORM_C]: SpeciesFormKey.GLITCH_C,
+    [RewardType.GLITCH_FORM_D]: SpeciesFormKey.GLITCH_D,
+    [RewardType.GLITCH_FORM_E]: SpeciesFormKey.GLITCH_E,
+    [RewardType.SMITTY_FORM]: SpeciesFormKey.SMITTY,
+    [RewardType.SMITTY_FORM_B]: SpeciesFormKey.SMITTY_B
+};
+
+function normalizeGlitchOrSmittyAssetKey(formName: string): string {
+    const raw = (formName || "").toLowerCase();
+
+    if (raw === "porygonω") return "porygon-q";
+    if (raw === "karasu-me") return "karasume";
+    return raw;
+}
+
+export class ForbiddenFormUnlockModifierType extends ModifierType {
+    public readonly candidate: ForbiddenFormUnlockCandidate;
+    public readonly iconAtlasKey: string;
+    public readonly iconFrame: string | null;
+
+    constructor(candidate: ForbiddenFormUnlockCandidate) {
+        super(null, "pb", (type, _args) => new Modifiers.ForbiddenFormUnlockModifier(type, candidate), "forbiddenFormUnlock", "se/restore");
+        this.candidate = candidate;
+        this.setTier(ModifierTier.LUXURY);
+
+        const icon = this.resolveIcon();
+        this.iconAtlasKey = icon.key;
+        this.iconFrame = icon.frame;
+    }
+
+    get name(): string {
+        const label = this.getFormDisplayName();
+        return label || i18next.t("skillTree:fallback.unknownGlitchForm");
+    }
+
+    getDescription(_scene: BattleScene): string {
+        const data = this.getTooltipData();
+        if (data?.isSmitty) {
+            return i18next.t("skillTree:descriptions.smittyFormTooltipDescription");
+        }
+        const species = data?.speciesName;
+        const form = data?.formName;
+        if (species && form) {
+            const itemKey = typeof data.formChangeItem === "number" ? (FormChangeItem[data.formChangeItem] || "NONE") : "NONE";
+            const item = i18next.t(`modifierType:FormChangeItem.${itemKey}`, { defaultValue: itemKey });
+            return i18next.t("skillTree:descriptions.forbiddenFormUnlockRunIntro", { species, form, item });
+        }
+        return i18next.t("skillTree:descriptions.randomGlitchFormsForRun");
+    }
+
+    public getTooltipData(): {
+        kind: ForbiddenFormUnlockCandidate["kind"];
+        speciesId: Species | null;
+        speciesName: string | null;
+        formKey: SpeciesFormKey | null;
+        formName: string | null;
+        types: Type[];
+        abilities: Abilities[];
+        baseTotal?: number;
+        targetTotal?: number;
+        baseStats?: number[];
+        targetStats?: number[];
+        formChangeItem?: FormChangeItem | null;
+    } | null {
+        const resolved = this.resolveFormPreview();
+        if (!resolved) return null;
+
+        const types = [resolved.type1, resolved.type2].filter(t => t !== null && t !== undefined) as Type[];
+        const abilities = [resolved.ability1, resolved.ability2, resolved.abilityHidden]
+            .filter(a => typeof a === "number" && a >= 0) as Abilities[];
+
+        const c: any = this.candidate as any;
+        let speciesId: Species | null = null;
+        let formKey: SpeciesFormKey | null = null;
+        let formIndex: integer | null = null;
+        let formName: string | null = null;
+
+        if (c?.kind === "MOD_FORM") {
+            speciesId = c.speciesId as Species;
+            try {
+                const species = getPokemonSpecies(speciesId);
+                const form = species?.forms?.find((f: any) => (f?.formName || "").toLowerCase() === (c.formName || "").toLowerCase());
+                formKey = (form?.formKey as SpeciesFormKey) ?? null;
+                formIndex = (typeof form?.formIndex === "number" ? (form.formIndex as any) : null);
+                if (formIndex !== null && typeof species?.getName === "function") {
+                    formName = species.getName(formIndex);
+                } else {
+                    formName = (getModPokemonName(speciesId, c.formName) || c.formName || null);
+                }
+            } catch {
+                formName = (c.formName || null);
+            }
+        } else if (c?.kind === "QUEST_FORM") {
+            try {
+                speciesId = this.resolveQuestRepresentativeSpeciesId(c.questUnlockData);
+                const rt = c.questUnlockData?.rewardType as RewardType;
+                formKey = FORBIDDEN_FORM_REWARDTYPE_TO_FORMKEY[rt] ?? null;
+                if (speciesId != null) {
+                    const species = getPokemonSpecies(speciesId);
+                    const form = this.resolveSpeciesFormForRewardType(speciesId, rt);
+                    formIndex = (typeof form?.formIndex === "number" ? (form.formIndex as any) : null);
+                    if (formIndex !== null && typeof species?.getName === "function") {
+                        formName = species.getName(formIndex);
+                    } else {
+                        formName = (form?.formName || null);
+                    }
+                }
+            } catch {
+            }
+        } else if (c?.kind === "UNI_SMITTY") {
+            try {
+                const uni = universalSmittyForms.find(f => (f?.formName || "").toLowerCase() === (c.formName || "").toLowerCase());
+                formKey = (uni?.formKey as SpeciesFormKey) ?? null;
+            } catch {
+            }
+            try {
+                const key = normalizeGlitchOrSmittyAssetKey(c.formName || "");
+                const t = i18next.t(`smittyNames:${key}.name`, { defaultValue: c.formName || "" });
+                formName = (t && typeof t === "string") ? t : (c.formName || null);
+            } catch {
+                formName = (c.formName || null);
+            }
+        }
+
+        let speciesName: string | null = null;
+        try {
+            if (speciesId != null) {
+                const species = getPokemonSpecies(speciesId);
+                speciesName = (typeof species?.getName === "function") ? species.getName() : (species?.name ?? null);
+            }
+        } catch {
+        }
+
+        let formChangeItem: FormChangeItem | null = null;
+        try {
+            if (speciesId != null) {
+                const changes = pokemonFormChanges[speciesId] || [];
+                let match: any | null = null;
+                if (c?.kind === "MOD_FORM" && typeof c?.systemName === "string") {
+                    match = changes.find((fc: any) => fc?.modFormName === c.systemName) || null;
+                }
+                if (!match && formKey != null) {
+                    match = changes.find((fc: any) => {
+                        if (fc?.formKey !== formKey) return false;
+
+                        if (c?.kind === "QUEST_FORM" && typeof fc?.isModForm === "function" && fc.isModForm()) return false;
+                        return true;
+                    }) || null;
+                }
+                const trig = match?.findTrigger?.(SpeciesFormChangeItemTrigger) as any;
+                formChangeItem = (typeof trig?.item === "number") ? (trig.item as FormChangeItem) : null;
+            }
+        } catch {
+        }
+
+        const isSmitty = c?.kind === "UNI_SMITTY" ||
+            (formKey != null && (formKey === SpeciesFormKey.SMITTY || formKey === SpeciesFormKey.SMITTY_B));
+
+        return {
+            kind: this.candidate.kind,
+            speciesId,
+            speciesName,
+            formKey,
+            formName: formName || this.getFormDisplayName() || null,
+            types,
+            abilities,
+            baseTotal: resolved.baseTotal,
+            targetTotal: resolved.targetTotal,
+            baseStats: resolved.baseStats,
+            targetStats: resolved.targetStats,
+            formChangeItem,
+            isSmitty
+        };
+    }
+
+    private resolveQuestRepresentativeSpeciesId(questUnlockData: QuestUnlockData): Species | null {
+        const rid: any = questUnlockData?.rewardId as any;
+        const ids: any[] = Array.isArray(rid) ? rid : [rid];
+        const first = ids.find(v => typeof v === "number");
+        return typeof first === "number" ? (first as Species) : null;
+    }
+
+    private resolveSpeciesFormForRewardType(speciesId: Species, rewardType: RewardType): any | null {
+        try {
+            const species = getPokemonSpecies(speciesId);
+            if (!species?.forms?.length) return null;
+            const formKey = FORBIDDEN_FORM_REWARDTYPE_TO_FORMKEY[rewardType];
+            if (!formKey) return null;
+            return species.forms.find((f: any) => f?.formKey === formKey) || null;
+        } catch {
+            return null;
+        }
+    }
+
+    private getFormDisplayName(): string | null {
+        const c = this.candidate;
+        if (c.kind === "UNI_SMITTY") {
+            try {
+                const key = normalizeGlitchOrSmittyAssetKey(c.formName || "");
+                const t = i18next.t(`smittyNames:${key}.name`, { defaultValue: c.formName || "" });
+                return (t && typeof t === "string") ? t : (c.formName || null);
+            } catch {
+                return c.formName || null;
+            }
+        }
+        if (c.kind === "MOD_FORM") {
+            try {
+                const species = getPokemonSpecies(c.speciesId);
+                const form = species?.forms?.find((f: any) => (f?.formName || "").toLowerCase() === (c.formName || "").toLowerCase());
+                if (form && typeof species?.getName === "function") {
+                    return species.getName(form.formIndex);
+                }
+                const localized = getModPokemonName(c.speciesId, c.formName);
+                return localized || c.formName || null;
+            } catch {
+                return c.formName || null;
+            }
+        }
+        if (c.kind === "QUEST_FORM") {
+            const rep = this.resolveQuestRepresentativeSpeciesId(c.questUnlockData);
+            if (!rep) return null;
+            const rewardType = c.questUnlockData.rewardType as RewardType;
+            const form = this.resolveSpeciesFormForRewardType(rep, rewardType);
+            try {
+                const species = getPokemonSpecies(rep);
+                if (typeof species?.getName === "function" && typeof form?.formIndex === "number") {
+                    return species.getName(form.formIndex);
+                }
+            } catch {
+            }
+            return form?.formName || null;
+        }
+        return null;
+    }
+
+    private resolveIcon(): { key: string; frame: string | null } {
+        const fallback = { key: "pokemon_icons_glitch", frame: "smitom" };
+        const c = this.candidate;
+
+        if (c.kind === "UNI_SMITTY") {
+            return { key: "pokemon_icons_glitch", frame: normalizeGlitchOrSmittyAssetKey(c.formName || "smitom") };
+        }
+
+        if (c.kind === "MOD_FORM") {
+            try {
+                const species = getPokemonSpecies(c.speciesId);
+                const form = species?.forms?.find((f: any) => (f?.formName || "").toLowerCase() === (c.formName || "").toLowerCase());
+                if (form) {
+                    const key = form.getIconAtlasKey?.() || fallback.key;
+                    const frame = typeof form.getIconId === "function" ? form.getIconId(false) : fallback.frame;
+                    return { key, frame };
+                }
+            } catch {
+            }
+            return fallback;
+        }
+
+        if (c.kind === "QUEST_FORM") {
+            try {
+                const rep = this.resolveQuestRepresentativeSpeciesId(c.questUnlockData);
+                const rewardType = c.questUnlockData.rewardType as RewardType;
+                if (rep != null && rewardType != null) {
+                    const form = this.resolveSpeciesFormForRewardType(rep, rewardType);
+                    if (form) {
+                        const key = form.getIconAtlasKey?.() || fallback.key;
+                        const frame = typeof form.getIconId === "function" ? form.getIconId(false) : fallback.frame;
+                        return { key, frame };
+                    }
+                }
+            } catch {
+            }
+            return fallback;
+        }
+
+        return fallback;
+    }
+
+    private resolveFormPreview(): {
+        type1: Type;
+        type2: Type | null;
+        ability1: Abilities;
+        ability2: Abilities;
+        abilityHidden: Abilities;
+        baseTotal?: number;
+        targetTotal?: number;
+        baseStats?: number[];
+        targetStats?: number[];
+    } | null {
+        const c = this.candidate;
+
+        if (c.kind === "UNI_SMITTY") {
+            const uni = universalSmittyForms.find(f => (f?.formName || "").toLowerCase() === (c.formName || "").toLowerCase());
+            if (!uni) return null;
+            return {
+                type1: (uni.primaryType ?? Type.NORMAL) as any,
+                type2: (uni.secondaryType ?? null) as any,
+                ability1: uni.ability1,
+                ability2: uni.ability2,
+                abilityHidden: uni.abilityHidden,
+                targetTotal: uni.totalStats,
+                targetStats: [uni.hp, uni.attack, uni.defense, uni.spAttack, uni.spDefense, uni.speed]
+            };
+        }
+
+        if (c.kind === "MOD_FORM") {
+            try {
+                const species = getPokemonSpecies(c.speciesId);
+                const form = species?.forms?.find((f: any) => (f?.formName || "").toLowerCase() === (c.formName || "").toLowerCase());
+                if (!form) return null;
+                return {
+                    type1: form.type1,
+                    type2: form.type2,
+                    ability1: form.ability1,
+                    ability2: form.ability2,
+                    abilityHidden: form.abilityHidden,
+                    baseTotal: species.baseTotal,
+                    targetTotal: form.baseTotal,
+                    baseStats: species.baseStats,
+                    targetStats: form.baseStats
+                };
+            } catch {
+                return null;
+            }
+        }
+
+        if (c.kind === "QUEST_FORM") {
+            try {
+                const rep = this.resolveQuestRepresentativeSpeciesId(c.questUnlockData);
+                if (!rep) return null;
+                const species = getPokemonSpecies(rep);
+                const rewardType = c.questUnlockData.rewardType as RewardType;
+                const form: any = this.resolveSpeciesFormForRewardType(rep, rewardType);
+                if (!form) return null;
+                return {
+                    type1: form.type1,
+                    type2: form.type2,
+                    ability1: form.ability1,
+                    ability2: form.ability2,
+                    abilityHidden: form.abilityHidden,
+                    baseTotal: species.baseTotal,
+                    targetTotal: form.baseTotal,
+                    baseStats: species.baseStats,
+                    targetStats: form.baseStats
+                };
+            } catch {
+                return null;
+            }
+        }
+
+        return null;
+    }
+}
+
 type ModifierTypeGeneratorFunc = (party: Pokemon[], pregenArgs?: any[]) => ModifierType | null;
 
 export class ModifierTypeGenerator extends ModifierType {
@@ -313,7 +688,9 @@ export class ModifierTypeGenerator extends ModifierType {
         const ret = this.genTypeFunc(party, pregenArgs);
         if (ret) {
             ret.id = this.id;
-            ret.setTier(this.tier);
+            if (this.tier !== undefined) {
+                ret.setTier(this.tier);
+            }
         }
         return ret;
     }
@@ -369,8 +746,7 @@ export class AddTypeBallModifierType extends ModifierType {
     }
 
     get name(): string {
-        const typeName = Type[this.targetType];
-        const displayName = typeName.charAt(0) + typeName.slice(1).toLowerCase();
+        const displayName = i18next.t(`pokemonInfo:Type.${Type[this.targetType]}`, { defaultValue: Type[this.targetType] });
         return i18next.t("modifierType:ModifierType.AddPokeballModifierType.name", {
             "modifierCount": this.count,
             "pokeballName": i18next.t("pokeball:typeBall", { typeName: displayName }),
@@ -378,8 +754,7 @@ export class AddTypeBallModifierType extends ModifierType {
     }
 
     getDescription(scene: BattleScene): string {
-        const typeName = Type[this.targetType];
-        const displayName = typeName.charAt(0) + typeName.slice(1).toLowerCase();
+        const displayName = i18next.t(`pokemonInfo:Type.${Type[this.targetType]}`, { defaultValue: Type[this.targetType] });
         const currentCount = scene.typeBallCounts[this.targetType] || 0;
         let desc = i18next.t("modifierType:ModifierType.AddPokeballModifierType.description", {
             "modifierCount": this.count,
@@ -492,16 +867,16 @@ export class TypeSwitcherModifierType extends PokemonModifierType implements Gen
     get name(): string {
         if (this.newPrimaryType != null && this.newSecondaryType != null) {
             return i18next.t("modifierType:ModifierType.TypeSwitcherModifierType.name", {
-                type1: Type[this.newPrimaryType],
-                type2: Type[this.newSecondaryType]
+                type1: i18next.t(`pokemonInfo:Type.${Type[this.newPrimaryType]}`, { defaultValue: Type[this.newPrimaryType] }),
+                type2: i18next.t(`pokemonInfo:Type.${Type[this.newSecondaryType]}`, { defaultValue: Type[this.newSecondaryType] })
             });
         } else if (this.newPrimaryType != null) {
             return i18next.t("modifierType:ModifierType.PrimaryTypeSwitcherModifierType.name", {
-                type1: Type[this.newPrimaryType]
+                type1: i18next.t(`pokemonInfo:Type.${Type[this.newPrimaryType]}`, { defaultValue: Type[this.newPrimaryType] })
             });
         } else if (this.newSecondaryType != null) {
             return i18next.t("modifierType:ModifierType.SecondaryTypeSwitcherModifierType.name", {
-                type2: Type[this.newSecondaryType]
+                type2: i18next.t(`pokemonInfo:Type.${Type[this.newSecondaryType]}`, { defaultValue: Type[this.newSecondaryType] })
             });
         } else {
             return i18next.t("modifierType:ModifierType.TypeSwitcherModifierType.name", {
@@ -513,23 +888,23 @@ export class TypeSwitcherModifierType extends PokemonModifierType implements Gen
 
     getDescription(scene: BattleScene): string {
         if (this.newPrimaryType != null && this.newSecondaryType != null) {
-            return `${i18next.t("modifierType:ModifierType.TypeSwitcherModifierType.description", {
-                type1: Type[this.newPrimaryType],
-                type2: Type[this.newSecondaryType]
-            })} ${i18next.t("modifierType:common.glitchPieceCost")}`;
+            return i18next.t("modifierType:ModifierType.TypeSwitcherModifierType.description", {
+                type1: i18next.t(`pokemonInfo:Type.${Type[this.newPrimaryType]}`, { defaultValue: Type[this.newPrimaryType] }),
+                type2: i18next.t(`pokemonInfo:Type.${Type[this.newSecondaryType]}`, { defaultValue: Type[this.newSecondaryType] })
+            });
         } else if (this.newPrimaryType != null) {
-            return `${i18next.t("modifierType:ModifierType.PrimaryTypeSwitcherModifierType.description", {
-                type1: Type[this.newPrimaryType]
-            })} ${i18next.t("modifierType:common.glitchPieceCost")}`;
+            return i18next.t("modifierType:ModifierType.PrimaryTypeSwitcherModifierType.description", {
+                type1: i18next.t(`pokemonInfo:Type.${Type[this.newPrimaryType]}`, { defaultValue: Type[this.newPrimaryType] })
+            });
         } else if (this.newSecondaryType != null) {
-            return `${i18next.t("modifierType:ModifierType.SecondaryTypeSwitcherModifierType.description", {
-                type2: Type[this.newSecondaryType]
-            })} ${i18next.t("modifierType:common.glitchPieceCost")}`;
+            return i18next.t("modifierType:ModifierType.SecondaryTypeSwitcherModifierType.description", {
+                type2: i18next.t(`pokemonInfo:Type.${Type[this.newSecondaryType]}`, { defaultValue: Type[this.newSecondaryType] })
+            });
         } else {
-            return `${i18next.t("modifierType:ModifierType.TypeSwitcherModifierType.description", {
+            return i18next.t("modifierType:ModifierType.TypeSwitcherModifierType.description", {
                 type1: "X",
                 type2: "X"
-            })} ${i18next.t("modifierType:common.glitchPieceCost")}`;
+            });
         }
     }
 
@@ -553,7 +928,7 @@ export class AbilitySwitcherModifierType extends PokemonHeldItemModifierType {
     }
 
     getDescription(scene: BattleScene): string {
-        return `${i18next.t("modifierType:ModifierType.AbilitySwitcherModifierType.description")} ${i18next.t("modifierType:common.glitchPieceCost")}`;
+        return i18next.t("modifierType:ModifierType.AbilitySwitcherModifierType.description");
     }
 }
 
@@ -603,10 +978,10 @@ export class RandomStatSwitcherModifierType extends PokemonHeldItemModifierType 
     }
 
     getDescription(scene: BattleScene): string {
-        return `${i18next.t("modifierType:ModifierType.RandomStatSwitcherModifierType.description", {
+        return i18next.t("modifierType:ModifierType.RandomStatSwitcherModifierType.description", {
             stat1: getStatName(this.stat1),
             stat2: getStatName(this.stat2)
-        })} ${i18next.t("modifierType:common.glitchPieceCost")}` ;
+        });
     }
 }
 
@@ -620,10 +995,10 @@ export class AnyTmModifierType extends PokemonModifierType {
         let description = "";
         if (moveDetails.power > 0 || moveDetails.accuracy > 0) {
             truncatedEffect = truncatedEffect.length > 55 ? truncatedEffect.substring(0, 52) + "..." : truncatedEffect;
-            description = `[${moveDetails.power > 0 ? `POW ${moveDetails.power} ` : ""}${moveDetails.accuracy > 0 ? `ACC ${moveDetails.accuracy} ` : ""}${moveCategory}] ${truncatedEffect} ${i18next.t("modifierType:common.glitchPieceCost")}`;
+            description = `[${moveDetails.power > 0 ? `POW ${moveDetails.power} ` : ""}${moveDetails.accuracy > 0 ? `ACC ${moveDetails.accuracy} ` : ""}${moveCategory}] ${truncatedEffect}`;
         } else {
             truncatedEffect = truncatedEffect.length > 70 ? truncatedEffect.substring(0, 67) + "..." : truncatedEffect;
-            description = `[${moveCategory}] ${truncatedEffect} ${i18next.t("modifierType:common.glitchPieceCost")}`;
+            description = `[${moveCategory}] ${truncatedEffect}`;
         }
 
         super("modifierType:ModifierType.AnyTmModifierType", "glitchTm", (_type, args) => {
@@ -648,7 +1023,7 @@ export class AnyTmModifierType extends PokemonModifierType {
     }
 
     getDescription(scene: BattleScene): string {
-        return `${i18next.t(scene.enableMoveInfo ? "modifierType:ModifierType.AnyTmModifierTypeWithInfo.description" : "modifierType:ModifierType.AnyTmModifierType.description", {moveName: allMoves[this.moveId].name})} ${i18next.t("modifierType:common.glitchPieceCost")}`;
+        return i18next.t(scene.enableMoveInfo ? "modifierType:ModifierType.AnyTmModifierTypeWithInfo.description" : "modifierType:ModifierType.AnyTmModifierType.description", {moveName: allMoves[this.moveId].name});
     }
 }
 
@@ -703,6 +1078,14 @@ export const REMOVED_ABILITIES = [
     Abilities.DEFEATIST,
     Abilities.FRISK,
     Abilities.LEAF_GUARD,
+];
+
+export const PARTY_INELIGIBLE_ABILITIES = [
+    Abilities.IMPOSTER,
+    Abilities.NORMALIZE,
+    Abilities.COLOR_CHANGE,
+    Abilities.TRACE,
+    Abilities.SHIELDS_DOWN,
 ];
 const OP_ABILITIES = [
     Abilities.WONDER_GUARD,
@@ -806,9 +1189,9 @@ export class AnyAbilityModifierType extends PokemonModifierType {
     }
 
     getDescription(scene: BattleScene): string {
-        return `${i18next.t("modifierType:ModifierType.AnyAbilityModifierType.description", {
+        return i18next.t("modifierType:ModifierType.AnyAbilityModifierType.description", {
             abilityName: this.ability.name
-        })} ${i18next.t("modifierType:common.glitchPieceCost")}`;
+        });
     }
 
     getTooltipDescription(scene: BattleScene): string {
@@ -1213,7 +1596,7 @@ export class MoveUpgradeModifierTypeGenerator extends ModifierTypeGenerator {
     }
 }
 
-function createModifierTypeOption(modifierTypeFunc: ModifierTypeFunc, upgradeCount: number, cost: number = 500, scene?: BattleScene): ModifierTypeOption {
+export function createModifierTypeOption(modifierTypeFunc: ModifierTypeFunc, upgradeCount: number, cost: number = 500, scene?: BattleScene): ModifierTypeOption {
     const modifierType = modifierTypeFunc();
     if (modifierType instanceof QuestModifierTypeGenerator) {
         const GenModifierType = modifierType.generateType([], [0]);
@@ -1335,9 +1718,9 @@ export class AnyPassiveAbilityModifierType extends PokemonModifierType {
     }
 
     getDescription(scene: BattleScene): string {
-        return `${i18next.t("modifierType:ModifierType.AnyPassiveAbilityModifierType.description", {
+        return i18next.t("modifierType:ModifierType.AnyPassiveAbilityModifierType.description", {
             abilityName: this.ability.name
-        })} ${i18next.t("modifierType:common.glitchPieceCost")}`;
+        });
     }
 
     getTooltipDescription(scene: BattleScene): string {
@@ -1488,7 +1871,6 @@ export class StatSacrificeModifierType extends PokemonHeldItemModifierType {
 
     getDescription(scene: BattleScene): string {
         return i18next.t("modifierType:ModifierType.StatSacrificeModifierType.description", { stat: getStatName(this.stat) }) +
-               " " + i18next.t("modifierType:common.glitchPieceCost") +
                "\n" + i18next.t("modifierType:common.essenceAlternativeCost");
     }
 }
@@ -1508,8 +1890,7 @@ export class TypeSacrificeModifierType extends PokemonHeldItemModifierType {
     }
 
     getDescription(scene: BattleScene): string {
-        return i18next.t("modifierType:ModifierType.TypeSacrificeModifierType.description")+
-               " " + i18next.t("modifierType:common.glitchPieceCost") +
+        return i18next.t("modifierType:ModifierType.TypeSacrificeModifierType.description") +
                "\n" + i18next.t("modifierType:common.essenceAlternativeCost");
     }
 }
@@ -1552,7 +1933,6 @@ export class MoveSacrificeModifierType extends PokemonHeldItemModifierType {
 
     getDescription(scene: BattleScene): string {
         return i18next.t("modifierType:ModifierType.MoveSacrificeModifierType.description") +
-               " " + i18next.t("modifierType:common.glitchPieceCost") +
                "\n" + i18next.t("modifierType:common.essenceAlternativeCost");
     }
 }
@@ -1573,7 +1953,6 @@ export class AbilitySacrificeModifierType extends PokemonHeldItemModifierType {
 
     getDescription(scene: BattleScene): string {
         return i18next.t("modifierType:ModifierType.AbilitySacrificeModifierType.description") +
-               " " + i18next.t("modifierType:common.glitchPieceCost") +
                "\n" + i18next.t("modifierType:common.essenceAlternativeCost");
     }
 }
@@ -1600,14 +1979,11 @@ export class PassiveAbilitySacrificeModifierType extends PokemonHeldItemModifier
     }
 
     get name(): string {
-        return i18next.t("modifierType:ModifierType.AnyPassiveAbilityModifierType.name", {
-            abilityName: i18next.t("modifierType:ModifierType.AbilitySacrificeModifierType.name")
-        });
+        return i18next.t("modifierType:ModifierType.PassiveAbilitySacrificeModifierType.name");
     }
 
     getDescription(scene: BattleScene): string {
         return i18next.t("modifierType:ModifierType.PassiveAbilitySacrificeModifierType.description") +
-               " " + i18next.t("modifierType:common.glitchPieceCost") +
                "\n" + i18next.t("modifierType:common.essenceAlternativeCost");
     }
 }
@@ -1650,9 +2026,7 @@ export class AddPokemonModifierType extends ModifierType {
 
     getDescription(scene: BattleScene): string {
         const baseDescription = `Lvl ${this.newPokemon.level} ${this.newPokemon.name} ${getNatureName(this.newPokemon.nature)} ${this.newPokemon.getAbility().name} [${this.newPokemon.moveset.map(m => allMoves[m.moveId].name).join(', ')}]`;
-        return this.isDraft
-            ? `${baseDescription} ${i18next.t("modifierType:common.morePokeInfo")}`
-            : `${baseDescription} ${i18next.t("modifierType:common.morePokeInfo")} ${i18next.t("modifierType:common.glitchPieceCost")}`;
+        return `${baseDescription} ${i18next.t("modifierType:common.morePokeInfo")}`;
     }
 
     getPokemon(): Pokemon {
@@ -1666,8 +2040,16 @@ export class AddPokemonModifierTypeGenerator extends ModifierTypeGenerator {
         super((party: Pokemon[], pregenArgs?: any[]) => {
             const scene = party[0].scene;
             const legendOrCatchableCheck = Utils.randSeedInt(600) <= 1;
+            const currentWave = scene.currentBattle?.waveIndex ?? 1;
+            const duelmonBstLimit = getDuelmonBstLimitForWave(currentWave);
             const allRandomPokemon = allSpecies.filter(s => {
                 if (s.speciesId === Species.ETERNATUS) return false;
+                if (s.generation === 20) {
+                    if (!scene.duelmonsEnabledForRun) return false;
+                    if (!speciesStarters.hasOwnProperty(s.speciesId)) return false;
+                    if (s.baseTotal > duelmonBstLimit) return false;
+                    return true;
+                }
 
                 return legendOrCatchableCheck
                     ? !pokemonPrevolutions.hasOwnProperty(s.speciesId)
@@ -1711,11 +2093,11 @@ export class CollectedTypeModifierType extends PokemonHeldItemModifierType imple
 
     get name(): string {
         const scene = BattleScene.currentScene;
-        const typeName = i18next.t(`pokemonInfo:Type:${Type[this.collectedType]}`);
+        const typeName = i18next.t(`pokemonInfo:Type.${Type[this.collectedType]}`);
 
         if (scene?.ui?.getMode) {
             const mode = scene.ui.getMode();
-            if (mode === Mode.SHOP_SELECT || mode === Mode.MODIFIER_SELECT || scene.currentPhase?.constructor.name === "ModifierRewardPhase") {
+            if (mode === Mode.SHOP_SELECT || mode === Mode.MODIFIER_SELECT || mode === Mode.LOOT_REWARD_SELECT || mode === Mode.COLLECTED_TYPE_SELECT || scene.currentPhase?.constructor.name === "ModifierRewardPhase") {
                 return i18next.t("modifierType:ModifierType.CollectedTypeModifierType.shopName", { type: typeName });
             }
         }
@@ -1723,12 +2105,17 @@ export class CollectedTypeModifierType extends PokemonHeldItemModifierType imple
         return i18next.t("modifierType:ModifierType.CollectedTypeModifierType.name");
     }
 
+    getTooltipDescription(scene: BattleScene): string {
+        const typeName = i18next.t(`pokemonInfo:Type.${Type[this.collectedType]}`);
+        return i18next.t("modifierType:ModifierType.CollectedTypeModifierType.tooltipDescription", { type: typeName });
+    }
+
     getDescription(scene: BattleScene): string {
-        const typeName = i18next.t(`pokemonInfo:Type:${Type[this.collectedType]}`);
+        const typeName = i18next.t(`pokemonInfo:Type.${Type[this.collectedType]}`);
         const baseDescription = i18next.t("modifierType:ModifierType.CollectedTypeModifierType.description", { type: typeName });
 
         const mode = scene.ui.getMode();
-        if (mode === Mode.SHOP_SELECT || mode === Mode.MODIFIER_SELECT || scene.currentPhase?.constructor.name === "ModifierRewardPhase") {
+        if (mode === Mode.SHOP_SELECT || mode === Mode.MODIFIER_SELECT || mode === Mode.LOOT_REWARD_SELECT || mode === Mode.COLLECTED_TYPE_SELECT || scene.currentPhase?.constructor.name === "ModifierRewardPhase") {
             return baseDescription;
         }
 
@@ -1894,30 +2281,37 @@ export class PermaPartyAbilityModifierType extends ModifierType {
             'perma'
         );
         this.ability = allAbilities[abilityID];
+        this.setTier(ModifierTier.MASTER);
     }
 
     get name(): string {
-        return i18next.t("modifierType:ModifierType.PermaModifierType.PERMA_PARTY_ABILITY.name", { abilityName: this.ability.name })
+        return i18next.t("modifierType:ModifierType.PermaModifierType.PERMA_PARTY_ABILITY.name", { abilityName: this.ability?.name ?? "Unknown" })
     }
 
     getDescription(scene: BattleScene): string {
         return i18next.t("modifierType:ModifierType.PermaModifierType.PERMA_PARTY_ABILITY.description", {
-            abilityName: this.ability.name
+            abilityName: this.ability?.name ?? "Unknown"
         }) + i18next.t("modifierType:common.moreInfo");
     }
 
     getTooltipDescription(scene: BattleScene): string {
         return [
             i18next.t("modifierType:ModifierType.PermaModifierType.PERMA_PARTY_ABILITY.description", {
-                abilityName: this.ability.name
+                abilityName: this.ability?.name ?? "Unknown"
             }),
             "",
-            this.ability.description
+            this.ability?.description ?? ""
         ].join("\n");
     }
 
     getTooltipRarity(scene: BattleScene): SkillTreeRarity {
-        return (scene as any)?.skillTreeModifierContext === true ? SkillTreeRarity.ROGUE : SkillTreeRarity.COMMON;
+        return SkillTreeRarity.MASTER;
+    }
+
+    getTooltipLore(_scene: BattleScene): string {
+        const durationLine = i18next.t("modifierType:permaWaveTooltip", { count: 30 });
+        const removeHint = i18next.t("modifierType:permaRemoveHint");
+        return `${durationLine}\n${removeHint}`;
     }
 
     getPregenArgs(): any[] {
@@ -1955,6 +2349,7 @@ export class PermaPartyAbilityModifierTypeGenerator extends ModifierTypeGenerato
                     ability.id <= maxAbilityIndex &&
                     !REMOVED_ABILITIES.includes(ability.id) &&
                     !OP_ABILITIES.includes(ability.id) &&
+                    !PARTY_INELIGIBLE_ABILITIES.includes(ability.id) &&
                     (!PARTY_OP_ABILITIES.includes(ability.id) || scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN])
                 )
                 .map(ability => ability.id);
@@ -2001,14 +2396,30 @@ export class PermaModifierType extends ModifierType {
         "perma"
     );
     this.permaTypeKey = permaTypeKey;
+    const rank = getPermaModifierRarity(permaTypeKey);
+    if (rank <= 1) this.setTier(ModifierTier.ULTRA);
+    else if (rank === 2) this.setTier(ModifierTier.ROGUE);
+    else this.setTier(ModifierTier.LUXURY);
     }
 
     getDescription(scene: BattleScene): string {
         const durationText = this.permaDuration === PermaDuration.WAVE_BASED ? i18next.t('common:waves') : i18next.t('common:uses');
-    return `${i18next.t(`modifierType:ModifierType.PermaModifierType.${this.permaTypeKey}.description`, {
+    return i18next.t(`modifierType:ModifierType.PermaModifierType.${this.permaTypeKey}.description`, {
             count: this.count,
             duration: durationText
-        })} [${durationText}:${this.count}]`;
+        });
+    }
+
+    getTooltipDescription(scene: BattleScene): string {
+        return this.getDescription(scene);
+    }
+
+    getTooltipLore(_scene: BattleScene): string {
+        const durationLine = this.permaDuration === PermaDuration.WAVE_BASED
+            ? i18next.t("modifierType:permaWaveTooltip", { defaultValue: "Disappears after {{count}} waves \u2014 countdown starts after wave 50", count: this.count })
+            : i18next.t("modifierType:permaUseTooltip", { defaultValue: "{{count}} uses remaining \u2014 countdown starts after wave 50", count: this.count });
+        const removeHint = i18next.t("modifierType:permaRemoveHint", { defaultValue: "Press 10 times to remove" });
+        return `${durationLine}\n${removeHint}`;
     }
 
     get name(): string {
@@ -2020,7 +2431,11 @@ export class PermaModifierType extends ModifierType {
     }
 
     getTooltipRarity(scene: BattleScene): SkillTreeRarity {
-        return (scene as any)?.skillTreeModifierContext === true ? SkillTreeRarity.ROGUE : SkillTreeRarity.COMMON;
+        if ((scene as any)?.skillTreeModifierContext === true) return SkillTreeRarity.ROGUE;
+        const rank = getPermaModifierRarity(this.permaTypeKey);
+        if (rank >= 3) return SkillTreeRarity.LEGENDARY;
+        if (rank === 2) return SkillTreeRarity.ROGUE;
+        return SkillTreeRarity.ULTRA;
     }
 }
 
@@ -2660,6 +3075,33 @@ export class SkillTreeTokenRewardModifierType extends ModifierType {
     }
 }
 
+export class EssenceBundleRewardModifierType extends ModifierType {
+    public essenceType: Type;
+    public amount: integer;
+
+    constructor(localeKey: string, iconImage: string, essenceType: Type, amount: integer, group?: string) {
+        super(localeKey, iconImage,
+            (type, _args) => new Modifiers.EssenceBundleRewardModifier(type, essenceType, amount),
+            group);
+        this.essenceType = essenceType;
+        this.amount = amount;
+    }
+
+    get name(): string {
+        return i18next.t("skillTree:rewards.essenceBundle", {
+            amount: this.amount,
+            type: i18next.t(`pokemonInfo:Type.${Type[this.essenceType]}`, { defaultValue: Type[this.essenceType] })
+        });
+    }
+
+    getDescription(scene: BattleScene): string {
+        return i18next.t("skillTree:rewards.essenceBundle", {
+            amount: this.amount,
+            type: i18next.t(`pokemonInfo:Type.${Type[this.essenceType]}`, { defaultValue: Type[this.essenceType] })
+        });
+    }
+}
+
 export class PokemonMultiHitModifierType extends PokemonHeldItemModifierType {
     constructor(localeKey: string, iconImage: string) {
         super(localeKey, iconImage, (type, args) => new Modifiers.PokemonMultiHitModifier(type as PokemonMultiHitModifierType, (args[0] as Pokemon).id));
@@ -2700,6 +3142,25 @@ export class TmModifierType extends PokemonModifierType {
     getDescription(scene: BattleScene): string {
         return i18next.t(scene.enableMoveInfo ? "modifierType:ModifierType.TmModifierTypeWithInfo.description" : "modifierType:ModifierType.TmModifierType.description", {moveName: allMoves[this.moveId].name});
     }
+}
+
+export class YuTmModifierType extends TmModifierType {
+  public readonly targetPokemonId: integer;
+
+  constructor(moveId: Moves, targetPokemonId: integer) {
+    super(moveId);
+    this.targetPokemonId = targetPokemonId;
+    this.setTier(ModifierTier.LUXURY);
+    this.selectFilter = (pokemon: PlayerPokemon) => {
+      if (pokemon.id !== targetPokemonId) return PartyUiHandler.NoEffectMessage;
+      if (pokemon.getMoveset().some(m => m?.moveId === moveId)) return PartyUiHandler.NoEffectMessage;
+      return null;
+    };
+  }
+
+  get name(): string {
+    return allMoves[this.moveId].name;
+  }
 }
 
 export class EvolutionItemModifierType extends PokemonModifierType implements GeneratedPersistentModifierType {
@@ -2902,6 +3363,9 @@ export class FusePokemonModifierType extends PokemonModifierType {
                 if (pokemon.isFusion()) {
                     return PartyUiHandler.NoEffectMessage;
                 }
+                if (pokemon.isSignature) {
+                    return PartyUiHandler.NoEffectMessage;
+                }
                 return null;
             });
     }
@@ -3060,11 +3524,11 @@ class EvolutionItemModifierTypeGenerator extends ModifierTypeGenerator {
             }
 
             const evolutionItemPool = [
-                party.filter(p => pokemonEvolutions.hasOwnProperty(p.species.speciesId) && !p.pauseEvolutions).map(p => {
+                party.filter(p => pokemonEvolutions.hasOwnProperty(p.species.speciesId) && !p.pauseEvolutions && !p.isEvolutionLocked?.()).map(p => {
                     const evolutions = pokemonEvolutions[p.species.speciesId];
                     return evolutions.filter(e => e.item !== EvolutionItem.NONE && (e.evoFormKey === null || (e.preFormKey || "") === p.getFormKey()) && (!e.condition || e.condition.predicate(p)));
                 }).flat(),
-                party.filter(p => p.isFusion() && p.fusionSpecies && pokemonEvolutions.hasOwnProperty(p.fusionSpecies.speciesId) && !p.pauseEvolutions).map(p => {
+                party.filter(p => p.isFusion() && p.fusionSpecies && pokemonEvolutions.hasOwnProperty(p.fusionSpecies.speciesId) && !p.pauseEvolutions && !p.isEvolutionLocked?.()).map(p => {
                     const evolutions = pokemonEvolutions[p.fusionSpecies!.speciesId];
                     return evolutions.filter(e => e.item !== EvolutionItem.NONE && (e.evoFormKey === null || (e.preFormKey || "") === p.getFusionFormKey()) && (!e.condition || e.condition.predicate(p)));
                 }).flat()
@@ -3178,7 +3642,7 @@ class FormChangeItemModifierTypeGenerator extends ModifierTypeGenerator {
 
                         formChangeItemTriggers.forEach(fc => {
                             const itemTrigger = fc.findTrigger(SpeciesFormChangeItemTrigger) as SpeciesFormChangeItemTrigger;
-                            if (itemTrigger && itemTrigger.active) {
+                            if (itemTrigger && itemTrigger.active && !p.isEvolutionLocked?.()) {
                                 switch (itemTrigger.item) {
                                     case FormChangeItem.ULTRANECROZIUM_Z:
                                         hasULTRA_Z = true;
@@ -3210,7 +3674,12 @@ class FormChangeItemModifierTypeGenerator extends ModifierTypeGenerator {
                                 m instanceof Modifiers.PokemonFormChangeItemModifier &&
                                 m.pokemonId === p.id &&
                                 m.formChangeItem === itemTrigger.item)) {
-                                items.push(itemTrigger.item);
+                                const item = itemTrigger.item;
+                                const isSmittyItem = item >= FormChangeItem.SMITTY_AURA && item <= FormChangeItem.SMITTY_VOID;
+                                const isGlitchItem = item >= FormChangeItem.GLITCHI_GLITCHI_FRUIT && item <= FormChangeItem.GLITCH_MASTER_PARTS;
+                                if (!p.isEvolutionLocked?.() || isSmittyItem || isGlitchItem) {
+                                    items.push(item);
+                                }
                             }
 
                             if (smittyTrigger) {
@@ -3323,24 +3792,28 @@ class FormChangeItemModifierTypeGenerator extends ModifierTypeGenerator {
 }
 
 export class TerastallizeModifierType extends PokemonHeldItemModifierType implements GeneratedPersistentModifierType {
-    private teraType: Type;
+    private _teraType: Type;
 
     constructor(teraType: Type) {
         super("", `${Type[teraType].toLowerCase()}_tera_shard`, (type, args) => new Modifiers.TerastallizeModifier(type as TerastallizeModifierType, (args[0] as Pokemon).id, teraType, undefined, undefined), "tera_shard");
 
-        this.teraType = teraType;
+        this._teraType = teraType;
+    }
+
+    get teraType(): Type {
+        return this._teraType;
     }
 
     get name(): string {
-        return i18next.t("modifierType:ModifierType.TerastallizeModifierType.name", {teraType: i18next.t(`pokemonInfo:Type.${Type[this.teraType]}`)});
+        return i18next.t("modifierType:ModifierType.TerastallizeModifierType.name", {teraType: i18next.t(`pokemonInfo:Type.${Type[this._teraType]}`)});
     }
 
     getDescription(scene: BattleScene): string {
-        return i18next.t("modifierType:ModifierType.TerastallizeModifierType.description", {teraType: i18next.t(`pokemonInfo:Type.${Type[this.teraType]}`)});
+        return i18next.t("modifierType:ModifierType.TerastallizeModifierType.description", {teraType: i18next.t(`pokemonInfo:Type.${Type[this._teraType]}`)});
     }
 
     getPregenArgs(): any[] {
-        return [this.teraType];
+        return [this._teraType];
     }
 }
 
@@ -3545,7 +4018,7 @@ export class ChampionPokemonModifierTypeGenerator extends ModifierTypeGenerator 
       } else {
         const selectedSpecies = this.isSignature
           ? SkillTreeSelectors.pickSignaturePokemon(this.championData)
-          : SkillTreeSelectors.pickGeneralPokemon(this.championData);
+          : SkillTreeSelectors.pickGeneralPokemon(this.championData, scene);
         if (selectedSpecies == null) return null;
         speciesId = selectedSpecies;
       }
@@ -3580,6 +4053,28 @@ export class ChampionPokemonModifierTypeGenerator extends ModifierTypeGenerator 
             const modifierType = new PokemonAltBuildModifierType(altBuild);
             const modifier = new Modifiers.PokemonAltBuildModifier(modifierType, newPokemon.id, altBuild);
             modifier.applyAltBuildToPokemon(newPokemon);
+          }
+        }
+        const championTypes = [this.championData.type1, this.championData.type2]
+          .filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+        if (championTypes.length > 0) {
+          scene.executeWithSeedOffset(() => {
+            assignTypeThemedMoves(scene, newPokemon as any, championTypes, false);
+          }, 0, `${scene.seed}_sig_types_${newPokemon.id}`);
+          (newPokemon as any)._typeMovePreApplied = true;
+        }
+      } else {
+        const championTypes = [this.championData.type1, this.championData.type2]
+          .filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+        if (championTypes.length > 0) {
+          const pokemonTypes = [adjustedPokemonSpecies.type1, adjustedPokemonSpecies.type2]
+            .filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
+          const matchingTypes = championTypes.filter(ct => pokemonTypes.includes(ct));
+          if (matchingTypes.length > 0) {
+            scene.executeWithSeedOffset(() => {
+              assignTypeThemedMoves(scene, newPokemon as any, matchingTypes, true);
+            }, 0, `${scene.seed}_general_types_${newPokemon.id}`);
+            (newPokemon as any)._typeMovePreApplied = true;
           }
         }
       }
@@ -3624,21 +4119,21 @@ export class PokemonAltBuildModifierType extends PokemonModifierType {
     };
 
     super(localeKey, iconImage, (_type, args) =>
-        new Modifiers.PokemonAltBuildModifier(this, (args[0] as PlayerPokemon).id, { ...altBuild, rank: targetRank || altBuild.rank || 1 }), selectFilter, "pokemonAltBuild");
+        new Modifiers.PokemonAltBuildModifier(this, (args[0] as PlayerPokemon).id, { ...altBuild, rank: targetRank ?? altBuild.rank ?? 1 }), selectFilter, "pokemonAltBuild");
 
     this.altBuild = altBuild;
-    this.targetRank = targetRank || altBuild.rank || 1;
+    this.targetRank = targetRank ?? altBuild.rank ?? 1;
   }
 
   get name(): string {
-    const buildName = i18next.t(`pokemonAltBuild:${this.altBuild.id}.name`);
+    const buildName = ChampionUtils.getAltBuildDisplayName(this.altBuild.id);
     const rankSuffix = Utils.intToRoman(this.targetRank);
     return i18next.t("championModifiers:modifierType.pokemonAltBuild.name", { buildName: `${buildName} ${rankSuffix}` });
   }
 
   getDescription(scene: BattleScene): string {
-    const buildName = i18next.t(`pokemonAltBuild:${this.altBuild.id}.name`);
-    const description = i18next.t(`pokemonAltBuild:${this.altBuild.id}.description`);
+    const buildName = ChampionUtils.getAltBuildDisplayName(this.altBuild.id);
+    const description = ChampionUtils.getAltBuildDisplayDescription(this.altBuild.id, scene);
     return i18next.t("championModifiers:modifierType.pokemonAltBuild.description", {
       buildName,
       description
@@ -3700,14 +4195,14 @@ export class TeraAbilityModifierType extends ModifierType implements GeneratedPe
 
   get name(): string {
     const abilityName = allAbilities[this.abilityId].name;
-    const typeName = Utils.toReadableString(Type[this.teraType]);
+    const typeName = i18next.t(`pokemonInfo:Type.${Type[this.teraType]}`, { defaultValue: Utils.toReadableString(Type[this.teraType]) });
     return i18next.t("championModifiers:modifierType.teraAbility.name", { ability: abilityName, type: typeName });
   }
 
   getDescription(scene: BattleScene): string {
     const abilityName = allAbilities[this.abilityId].name;
     const abilityDescription = allAbilities[this.abilityId].description;
-    const typeName = Utils.toReadableString(Type[this.teraType]);
+    const typeName = i18next.t(`pokemonInfo:Type.${Type[this.teraType]}`, { defaultValue: Utils.toReadableString(Type[this.teraType]) });
 
     const matchingModifiers = scene.findModifiers(m =>
       m instanceof Modifiers.TeraAbilityModifier &&
@@ -3754,7 +4249,7 @@ export class ChampionPokemonStatBoosterModifierType extends PokemonModifierType 
   private boostPercent: number;
   private championTypes: Type[];
 
-  constructor(championId: string, stats: Stat[], boostPercent: number = 0.01, championTypes?: Type[]) {
+  constructor(championId: string, stats: Stat[], boostPercent: number = 0.03, championTypes?: Type[]) {
     const localeKey = "modifierType:championPokemonStatBooster";
     const iconImage = "protein";
 
@@ -3812,7 +4307,7 @@ export class ChampionPokemonStatBoosterModifierTypeGenerator extends ModifierTyp
     super((party: Pokemon[], pregenArgs?: any[]) => {
       if (pregenArgs && pregenArgs.length >= 2) {
         const [championId, stats, boostPercent, championTypes] = pregenArgs as [string, Stat[], number?, Type[]?];
-        return new ChampionPokemonStatBoosterModifierType(championId, stats, boostPercent ?? 0.01, championTypes);
+        return new ChampionPokemonStatBoosterModifierType(championId, stats, boostPercent ?? 0.03, championTypes);
       }
       const scene = party?.[0]?.scene as BattleScene;
       const championId = (scene as any)?.gameData?.selectedChampionId as string | undefined;
@@ -3918,6 +4413,67 @@ export const modifierTypes = {
     RARE_EVOLUTION_ITEM: () => new EvolutionItemModifierTypeGenerator(true),
     FORM_CHANGE_ITEM: () => new FormChangeItemModifierTypeGenerator(),
     SMITTY_FORM_CHANGE_ITEM: () => new FormChangeItemModifierTypeGenerator(true),
+
+    FORBIDDEN_FORM_UNLOCK: () => new ModifierTypeGenerator((party: Pokemon[]) => {
+        const scene = party[0]?.scene;
+        if (!scene) return null;
+        const gd: any = (scene as any).gameData;
+        if (!gd) return null;
+        const candidates: ForbiddenFormUnlockCandidate[] = [];
+        const seen = new Set<string>();
+        const questIds = Object.values(QuestUnlockables).filter(v => typeof v === "number");
+        for (const questId of questIds) {
+            try {
+                const questUnlockData = gd.getQuestUnlockDataFromModifierTypes(questId as any);
+                const rt = questUnlockData?.rewardType;
+                const rid = questUnlockData?.rewardId;
+                const ids = Array.isArray(rid) ? rid : [rid];
+                if (!ids.some((v: any) => typeof v === "number")) continue;
+                const candidate: ForbiddenFormUnlockCandidate = { kind: "QUEST_FORM", questUnlockData };
+                const key = `QF_${rt}_${ids[0]}`;
+                if (seen.has(key)) continue;
+                seen.add(key);
+                if (rt === RewardType.GLITCH_FORM_A || rt === RewardType.GLITCH_FORM_B ||
+                    rt === RewardType.GLITCH_FORM_C || rt === RewardType.GLITCH_FORM_D ||
+                    rt === RewardType.GLITCH_FORM_E || rt === RewardType.SMITTY_FORM ||
+                    rt === RewardType.SMITTY_FORM_B) {
+                    candidates.push(candidate);
+                }
+            } catch { continue; }
+        }
+        for (const [systemName, data] of Object.entries(modGlitchFormData || {})) {
+            const d: any = data;
+            if (!d || typeof d.speciesId !== "number" || !d.formName) continue;
+            const key = `MF_${systemName}`;
+            if (seen.has(key)) continue;
+            seen.add(key);
+            candidates.push({ kind: "MOD_FORM", systemName, speciesId: d.speciesId, formName: d.formName } as any);
+        }
+        for (const f of universalSmittyForms || []) {
+            const formName = (f as any)?.formName;
+            if (!formName) continue;
+            const key = `US_${formName}`;
+            if (seen.has(key)) continue;
+            seen.add(key);
+            candidates.push({ kind: "UNI_SMITTY", formName } as any);
+        }
+        const isUnlocked = (c: ForbiddenFormUnlockCandidate): boolean => {
+            try {
+                if (c.kind === "MOD_FORM") return gd.isModFormUnlocked((c as any).systemName);
+                if (c.kind === "UNI_SMITTY") return gd.isUniSmittyFormUnlocked((c as any).formName);
+                if (c.kind === "QUEST_FORM") {
+                    const q = (c as any).questUnlockData;
+                    const ids = Array.isArray(q?.rewardId) ? q.rewardId : [q?.rewardId];
+                    return ids.filter((v: any) => typeof v === "number").some((id: any) => gd.canUseGlitchOrSmittyForm(id, q?.rewardType));
+                }
+            } catch {}
+            return true;
+        };
+        const available = candidates.filter(c => !isUnlocked(c));
+        if (!available.length) return null;
+        const pick = available[Utils.randSeedInt(available.length)];
+        return new ForbiddenFormUnlockModifierType(pick);
+    }),
 
     MEGA_BRACELET: () => new ModifierType("modifierType:ModifierType.MEGA_BRACELET", "mega_bracelet", (type, _args) => new Modifiers.MegaEvolutionAccessModifier(type)),
     DYNAMAX_BAND: () => new ModifierType("modifierType:ModifierType.DYNAMAX_BAND", "dynamax_band", (type, _args) => new Modifiers.GigantamaxAccessModifier(type)),
@@ -4239,6 +4795,8 @@ export const modifierTypes = {
     IV_SCANNER: () => new ModifierType("modifierType:ModifierType.IV_SCANNER", "scanner", (type, _args) => new Modifiers.IvScannerModifier(type)),
 
     DNA_SPLICERS: () => new FusePokemonModifierType("modifierType:ModifierType.DNA_SPLICERS", "dna_splicers"),
+
+    TYPE_BALL_RANDOM: () => new TypeBallModifierTypeGenerator("random"),
 
     MINI_BLACK_HOLE: () => new TurnHeldItemTransferModifierType("modifierType:ModifierType.MINI_BLACK_HOLE", "mini_black_hole"),
 
@@ -5593,9 +6151,11 @@ export function getPlayerModifierTypeOptions(count: integer, party: PlayerPokemo
     return options;
 }
 export function overridePlayerModifierTypeOptions(options: ModifierTypeOption[], party: PlayerPokemon[]) {
-    const minLength = Math.min(options.length, Overrides.ITEM_REWARD_OVERRIDE.length);
-    for (let i = 0; i < minLength; i++) {
-        const override: ModifierOverride = Overrides.ITEM_REWARD_OVERRIDE[i];
+    if (!Overrides.ITEM_REWARD_OVERRIDE.length || !options.length) return;
+    const shuffled = Utils.randSeedShuffle([...Overrides.ITEM_REWARD_OVERRIDE]);
+    const pickCount = Math.min(options.length, shuffled.length);
+    for (let i = 0; i < pickCount; i++) {
+        const override: ModifierOverride = shuffled[i];
         const modifierFunc = modifierTypes[override.name];
         let modifierType: ModifierType | null = modifierFunc();
 
@@ -5611,8 +6171,10 @@ export function overridePlayerModifierTypeOptions(options: ModifierTypeOption[],
 }
 
 export function getPlayerShopModifierTypeOptionsForWave(scene: BattleScene, baseCost: integer): ModifierTypeOption[] | null {
+    if (!scene.currentBattle) return null;
     const waveIndex = scene.gameMode.isNightmare ? scene.currentBattle.waveIndex % 100 : scene.currentBattle.waveIndex;
-    if (Utils.randSeedInt(100) <= 1) {
+    const forceAll = Overrides.DEBUG_SHOP_FORCE_ALL_ITEMS;
+    if (forceAll || Utils.randSeedInt(100) <= 1) {
         baseCost = 0;
     }
 
@@ -5639,8 +6201,8 @@ export function getPlayerShopModifierTypeOptionsForWave(scene: BattleScene, base
     };
     const hasShop = scene.gameMode.hasShopCheck(scene) && (scene.gameMode.isChaosMode || waveIndex % 10 != 0);
 
-    const isStarterQuestCompleted = scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED);
-    const isNuzlightQuestCompleted = scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED);
+    const isStarterQuestCompleted = forceAll || scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED);
+    const isNuzlightQuestCompleted = forceAll || scene.gameData.checkQuestState(QuestUnlockables.NUZLIGHT_UNLOCK_QUEST, QuestState.COMPLETED);
 
     const options = [
         [
@@ -5649,32 +6211,32 @@ export function getPlayerShopModifierTypeOptionsForWave(scene: BattleScene, base
                 new ModifierTypeOption(modifierTypes.REVIVE(), 0, baseCost * 2),
             ] : []),
             new ModifierTypeOption(modifierTypes.ETHER(), 0, baseCost * 0.4),
-            ...(isNuzlightQuestCompleted && (Utils.randSeedInt(100) < 50) && (() => {
+            ...((forceAll || (isNuzlightQuestCompleted && (Utils.randSeedInt(100) < 50) && (() => {
                 const glitchModifier = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
                 return !glitchModifier || glitchModifier.getStackCount() < glitchModifier.getMaxStackCount(scene);
-            })() ? [new ModifierTypeOption(modifierTypes.GLITCH_PIECE(), 0, baseCost)] : []),
-            ...(Utils.randSeedInt(100) < 25 ? [createOptionForGenerator(modifierTypes.BERRY, 0, baseCost)] : []),
-            ...(Utils.randSeedInt(100) < 25 ? [createOptionForGenerator(modifierTypes.MINT, 0, baseCost)] : []),
-            ...(Utils.randSeedInt(100) < 10 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.TYPE_SACRIFICE, 0, baseCost)] : []),
-            ...(Utils.randSeedInt(100) <= 1 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.STAT_SACRIFICE, 0, baseCost *3)] : []),
-            ...(Utils.randSeedInt(100) < 10 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.ADD_POKEMON, 0, baseCost)] : []),
-            ...(Utils.randSeedInt(100) < 10 ? [createOptionForGenerator(modifierTypes.TYPE_SWITCHER, 0, baseCost)] : []),
-            ...(Utils.randSeedInt(100) < 10 ? [createOptionForGenerator(modifierTypes.ABILITY_SWITCHER, 0, baseCost)] : []),
-            ...(Utils.randSeedInt(100) <= 2 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.PRIMARY_TYPE_SWITCHER, 0, baseCost * 2)] : []),
-            ...(Utils.randSeedInt(100) <= 2 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.SECONDARY_TYPE_SWITCHER, 0, baseCost * 2)] : []),
-            ...(Utils.randSeedInt(100) < 5 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.ABILITY_SACRIFICE, 0, baseCost)] : []),
-            ...(Utils.randSeedInt(100) < 5 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.MOVE_UPGRADE, 0, baseCost * 5)] : []),
-            ...(Utils.randSeedInt(100) < 5 ? [createOptionForGenerator(modifierTypes.TM_GREAT, 0, baseCost * 2)] : []),
-            ...(Utils.randSeedInt(100) < 10 ? [createOptionForGenerator(modifierTypes.TM_COMMON, 0, baseCost)] : []),
-            ...(Utils.randSeedInt(100) <= 1 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.TM_ULTRA, 0, baseCost * 3)] : []),
-            ...(Utils.randSeedInt(100) < 5 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.ANYTM_GREAT, 0, baseCost * 2)] : []),
-            ...(Utils.randSeedInt(100) < 10 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.ANYTM_COMMON, 0, baseCost)] : []),
-            ...(Utils.randSeedInt(100) <= 1 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.ANYTM_ULTRA, 0, baseCost * 3)] : []),
-            ...(Utils.randSeedInt(100) <= 2 ? [createOptionForGenerator(modifierTypes.ANY_ABILITY, 0, baseCost * 3)] : []),
-            ...(Utils.randSeedInt(100) <= 5 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.COLLECTED_TYPE, 0, baseCost)] : []),
-            ...(Utils.randSeedInt(100) <= 1 && isNuzlightQuestCompleted ? [createOptionForGenerator(modifierTypes.ANY_PASSIVE_ABILITY, 0, baseCost * 3)] : []),
-            ...(Utils.randSeedInt(100) < 5 ? [new ModifierTypeOption(modifierTypes.BIG_NUGGET(), 0, 0)] : []),
-            ...(Utils.randSeedInt(100) < 3 ? [new ModifierTypeOption(modifierTypes.GLITCH_PIECE(), 0, 0)] : []),
+            })())) ? [new ModifierTypeOption(modifierTypes.GLITCH_PIECE(), 0, baseCost)] : []),
+            ...((forceAll || Utils.randSeedInt(100) < 25) ? [createOptionForGenerator(modifierTypes.BERRY, 0, baseCost)] : []),
+            ...((forceAll || Utils.randSeedInt(100) < 25) ? [createOptionForGenerator(modifierTypes.MINT, 0, baseCost)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) < 10 && isNuzlightQuestCompleted && (forceAll || scene.releaseItemsEnabledForRun))) ? [createOptionForGenerator(modifierTypes.TYPE_SACRIFICE, 0, baseCost)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) <= 1 && isNuzlightQuestCompleted && (forceAll || scene.releaseItemsEnabledForRun))) ? [createOptionForGenerator(modifierTypes.STAT_SACRIFICE, 0, baseCost *3)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) < 10 && isNuzlightQuestCompleted)) ? [createOptionForGenerator(modifierTypes.ADD_POKEMON, 0, baseCost)] : []),
+            ...((forceAll || Utils.randSeedInt(100) < 10) ? [createOptionForGenerator(modifierTypes.TYPE_SWITCHER, 0, baseCost)] : []),
+            ...((forceAll || Utils.randSeedInt(100) < 10) ? [createOptionForGenerator(modifierTypes.ABILITY_SWITCHER, 0, baseCost)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) <= 2 && isNuzlightQuestCompleted)) ? [createOptionForGenerator(modifierTypes.PRIMARY_TYPE_SWITCHER, 0, baseCost * 2)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) <= 2 && isNuzlightQuestCompleted)) ? [createOptionForGenerator(modifierTypes.SECONDARY_TYPE_SWITCHER, 0, baseCost * 2)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) < 5 && isNuzlightQuestCompleted && (forceAll || scene.releaseItemsEnabledForRun))) ? [createOptionForGenerator(modifierTypes.ABILITY_SACRIFICE, 0, baseCost)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) < 5 && isNuzlightQuestCompleted)) ? [createOptionForGenerator(modifierTypes.MOVE_UPGRADE, 0, baseCost * 5)] : []),
+            ...((forceAll || Utils.randSeedInt(100) < 5) ? [createOptionForGenerator(modifierTypes.TM_GREAT, 0, baseCost * 2)] : []),
+            ...((forceAll || Utils.randSeedInt(100) < 10) ? [createOptionForGenerator(modifierTypes.TM_COMMON, 0, baseCost)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) <= 1 && isNuzlightQuestCompleted)) ? [createOptionForGenerator(modifierTypes.TM_ULTRA, 0, baseCost * 3)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) < 5 && isNuzlightQuestCompleted)) ? [createOptionForGenerator(modifierTypes.ANYTM_GREAT, 0, baseCost * 2)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) < 10 && isNuzlightQuestCompleted)) ? [createOptionForGenerator(modifierTypes.ANYTM_COMMON, 0, baseCost)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) <= 1 && isNuzlightQuestCompleted)) ? [createOptionForGenerator(modifierTypes.ANYTM_ULTRA, 0, baseCost * 3)] : []),
+            ...((forceAll || Utils.randSeedInt(100) <= 2) ? [createOptionForGenerator(modifierTypes.ANY_ABILITY, 0, baseCost * 3)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) <= 5 && isNuzlightQuestCompleted)) ? [createOptionForGenerator(modifierTypes.COLLECTED_TYPE, 0, baseCost)] : []),
+            ...((forceAll || (Utils.randSeedInt(100) <= 1 && isNuzlightQuestCompleted)) ? [createOptionForGenerator(modifierTypes.ANY_PASSIVE_ABILITY, 0, baseCost * 3)] : []),
+            ...((forceAll || Utils.randSeedInt(100) < 5) ? [new ModifierTypeOption(modifierTypes.BIG_NUGGET(), 0, 0)] : []),
+            ...((forceAll || Utils.randSeedInt(100) < 3) ? [new ModifierTypeOption(modifierTypes.GLITCH_PIECE(), 0, 0)] : []),
         ],
         [
             ...(hasShop ? [
@@ -5683,24 +6245,24 @@ export function getPlayerShopModifierTypeOptionsForWave(scene: BattleScene, base
             new ModifierTypeOption(modifierTypes.FULL_HEAL(), 0, baseCost),
             new ModifierTypeOption(modifierTypes.ELIXIR(), 0, baseCost),
             new ModifierTypeOption(modifierTypes.MAX_ETHER(), 0, baseCost),
-            ...(Utils.randSeedInt(100) < 15 ?
+            ...((forceAll || Utils.randSeedInt(100) < 15) ?
                 (() => {
                     const option = createOptionForGenerator(modifierTypes.SMITTY_FORM_CHANGE_ITEM, 0, baseCost * 1);
                     return option ? [option] : [];
                 })()
                 : []),
-            ...(Utils.randSeedInt(100) < 20 ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_2(), 0, baseCost * 3)] : []),
-            ...(Utils.randSeedInt(500) < 5 ? [new ModifierTypeOption(modifierTypes.RELIC_GOLD(), 0, 0)] : []),
-            ...((Utils.randSeedInt(1000) < 1 && (() => {
+            ...((forceAll || Utils.randSeedInt(100) < 20) ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_2(), 0, baseCost * 3)] : []),
+            ...((forceAll || Utils.randSeedInt(500) < 5) ? [new ModifierTypeOption(modifierTypes.RELIC_GOLD(), 0, 0)] : []),
+            ...((forceAll || (Utils.randSeedInt(1000) < 1 && (() => {
                 const glitchModifier = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
                 return glitchModifier && glitchModifier.getStackCount() >= 1;
-            })()) ? [new ModifierTypeOption(modifierTypes.SKILL_POINTS(), 0, 0)] : []),
-            ...(Utils.randSeedInt(1000) < 1 && (() => {
+            })())) ? [new ModifierTypeOption(modifierTypes.SKILL_POINTS(), 0, 0)] : []),
+            ...((forceAll || (Utils.randSeedInt(1000) < 1 && (() => {
                 const glitchModifier = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
                 return glitchModifier && glitchModifier.getStackCount() >= 1;
-            })() ? [new ModifierTypeOption(modifierTypes.SKILL_TOKENS(), 0, 0)] : []),
-            ...(Utils.randSeedInt(100) <= 1 ? [new ModifierTypeOption(modifierTypes.RARER_CANDY(), 0, baseCost * 6)] : []),
-             ...(Utils.randSeedInt(100) <= 10 && isNuzlightQuestCompleted && (!scene.gameMode.hasShopCheck(scene) || scene.gameMode.isNuzlockeActive(scene)) && scene.getParty().length < 6 ? [createOptionForGenerator(modifierTypes.DRAFT_POKEMON, 0, baseCost * 3)] : []),
+            })())) ? [new ModifierTypeOption(modifierTypes.SKILL_TOKENS(), 0, 0)] : []),
+            ...((forceAll || Utils.randSeedInt(100) <= 1) ? [new ModifierTypeOption(modifierTypes.RARER_CANDY(), 0, baseCost * 6)] : []),
+             ...((forceAll || (Utils.randSeedInt(100) <= 10 && isNuzlightQuestCompleted && (!scene.gameMode.hasShopCheck(scene) || scene.gameMode.isNuzlockeActive(scene)) && scene.getParty().length < 6)) ? [createOptionForGenerator(modifierTypes.DRAFT_POKEMON, 0, baseCost * 3)] : []),
 
         ],
         [
@@ -5709,14 +6271,12 @@ export function getPlayerShopModifierTypeOptionsForWave(scene: BattleScene, base
                 new ModifierTypeOption(modifierTypes.MAX_REVIVE(), 0, baseCost * 2.75)
             ] : []),
             new ModifierTypeOption(modifierTypes.MAX_ELIXIR(), 0, baseCost * 2.5),
-            ...(isNuzlightQuestCompleted ?
-                [new ModifierTypeOption(modifierTypes.SACRIFICE_TOGGLE(), 0, baseCost * 10)] : []),
            ...(isStarterQuestCompleted ? [
-                ...(Utils.randSeedInt(250) < 3 ? [new ModifierTypeOption(modifierTypes.DYNAMAX_BAND(), 0, baseCost * 8)] : []),
-                ...(Utils.randSeedInt(250) < 3 ? [new ModifierTypeOption(modifierTypes.MEGA_BRACELET(), 0, baseCost * 8)] : []),
-                ...(Utils.randSeedInt(250) < 3 ? [new ModifierTypeOption(modifierTypes.TERA_ORB(), 0, baseCost * 8)] : [])
+                ...((forceAll || Utils.randSeedInt(250) < 3) ? [new ModifierTypeOption(modifierTypes.DYNAMAX_BAND(), 0, baseCost * 8)] : []),
+                ...((forceAll || Utils.randSeedInt(250) < 3) ? [new ModifierTypeOption(modifierTypes.MEGA_BRACELET(), 0, baseCost * 8)] : []),
+                ...((forceAll || Utils.randSeedInt(250) < 3) ? [new ModifierTypeOption(modifierTypes.TERA_ORB(), 0, baseCost * 8)] : [])
             ] : []),
-            ...(Utils.randSeedInt(100) < 15 ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_3(), 0, baseCost * 4)] : []),
+            ...((forceAll || Utils.randSeedInt(100) < 15) ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_3(), 0, baseCost * 4)] : []),
         ],
         [
             ...(hasShop ? [
@@ -5724,7 +6284,7 @@ export function getPlayerShopModifierTypeOptionsForWave(scene: BattleScene, base
                 new ModifierTypeOption(modifierTypes.FULL_RESTORE(), 0, baseCost * 2.25),
                 new ModifierTypeOption(modifierTypes.SACRED_ASH(), 0, baseCost * 10),
             ] : []),
-            ...(Utils.randSeedInt(100) < 10 ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_4(), 0, baseCost * 10)] : []),
+            ...((forceAll || Utils.randSeedInt(100) < 10) ? [new ModifierTypeOption(modifierTypes.SELECTABLE_PMONEY_4(), 0, baseCost * 10)] : []),
         ]
     ];
     return options.slice(0, Math.floor(waveIndex / 20) + 1).flat().filter(option => option !== null && option !== undefined);
@@ -6129,7 +6689,7 @@ function getNewModifierTypeOption(party: Pokemon[], poolType: ModifierPoolType, 
             ], scene);
         }
         tier += upgradeCount;
-        while (tier && (!modifierPool.hasOwnProperty(tier) || !modifierPool[tier].length)) {
+        while (tier && (!pool.hasOwnProperty(tier) || !pool[tier].length)) {
             tier--;
             if (upgradeCount) {
                 upgradeCount--;
@@ -6139,7 +6699,7 @@ function getNewModifierTypeOption(party: Pokemon[], poolType: ModifierPoolType, 
         upgradeCount = 0;
         if (tier < ModifierTier.MASTER) {
             const upgradeOdds = Math.floor(32 / ((1 + 2) / 2));
-            while (modifierPool.hasOwnProperty(tier + upgradeCount + 1) && modifierPool[tier + upgradeCount + 1].length) {
+            while (pool.hasOwnProperty(tier + upgradeCount + 1) && pool[tier + upgradeCount + 1].length) {
                 if (!Utils.randSeedInt(upgradeOdds)) {
                     upgradeCount++;
                 } else {
@@ -6336,9 +6896,34 @@ export class QuestModifierType extends ModifierType {
         this.id = id;
         this.config = config;
         this.modifierFactory = modifierFactory;
+        this.setTier(ModifierTier.LUXURY);
     }
 
     get name(): string {
+        const data = this.config?.questUnlockData;
+        if (data) {
+            const rt = data.rewardType as RewardType;
+            const speciesName = this.resolveQuestSpeciesDisplayName(data);
+            if (speciesName) {
+                if (rt === RewardType.GLITCH_FORM_A || rt === RewardType.GLITCH_FORM_B ||
+                    rt === RewardType.GLITCH_FORM_C || rt === RewardType.GLITCH_FORM_D ||
+                    rt === RewardType.GLITCH_FORM_E) {
+                    return i18next.t("modifierSelectUiHandler:questNameGlitch", { name: speciesName, defaultValue: `Glitch ${speciesName} Quest` });
+                }
+                if (rt === RewardType.SMITTY_FORM || rt === RewardType.SMITTY_FORM_B) {
+                    return i18next.t("modifierSelectUiHandler:questNameSmitty", { name: speciesName, defaultValue: `Smitty ${speciesName} Quest` });
+                }
+                if (rt === RewardType.NEW_MOVES_FOR_SPECIES) {
+                    return i18next.t("modifierSelectUiHandler:questNameUltimate", { name: speciesName, defaultValue: `Ultimate ${speciesName} Quest` });
+                }
+            }
+            if (rt === RewardType.GAME_MODE) {
+                const modeName = this.resolveQuestModeName(data);
+                if (modeName) {
+                    return i18next.t("modifierSelectUiHandler:questNameNewMode", { name: modeName, defaultValue: `New ${modeName} Quest` });
+                }
+            }
+        }
         const key = `quests:${this.id}.name`;
         if (i18next.exists(key)) return i18next.t(key) as string;
 
@@ -6346,14 +6931,29 @@ export class QuestModifierType extends ModifierType {
         return fallback || this.id;
     }
 
+    private resolveQuestSpeciesDisplayName(data: QuestUnlockData): string | null {
+        try {
+            const rid: any = data.rewardId;
+            const ids: any[] = Array.isArray(rid) ? rid : [rid];
+            const speciesId = ids.find(v => typeof v === "number");
+            if (typeof speciesId !== "number") return null;
+            const species = getPokemonSpecies(speciesId);
+            return typeof species?.getName === "function" ? species.getName() : null;
+        } catch { return null; }
+    }
+
+    private resolveQuestModeName(data: QuestUnlockData): string | null {
+        try {
+            const modeId = data.rewardId as unknown as GameModes;
+            if (typeof modeId !== "number") return null;
+            return GameMode.getModeName(modeId);
+        } catch { return null; }
+    }
+
     get task(): string | undefined {
         const key = `quests:${this.id}.task`;
         if (i18next.exists(key)) {
-            const resolved = i18next.t(key) as string;
-            if (this.config.runType === RunType.NON_CLASSIC) {
-                return `${resolved} ${i18next.t("gameMode:notClassic")}`;
-            }
-            return resolved;
+            return i18next.t(key) as string;
         }
 
         return this.config?.task;
@@ -6365,6 +6965,20 @@ export class QuestModifierType extends ModifierType {
             return task;
         }
         return this.name;
+    }
+
+    getTooltipDescription(scene: BattleScene): string {
+        const sections: string[] = [];
+        const task = this.task;
+        if (task) {
+            sections.push(task);
+        }
+        const rewardText = this.config?.questUnlockData?.rewardText;
+        if (rewardText) {
+            sections.push("");
+            sections.push(rewardText);
+        }
+        return sections.length > 0 ? sections.join("\n") : this.name;
     }
 
     getCondition(): (...args: any[]) => boolean {
@@ -6487,7 +7101,7 @@ export const questModifierTypes: QuestModifierTypes = {
 };
 export const taurosElectricHitModifier = questModifierTypes.PERMA_HIT_QUEST("TAUROS_ELECTRIC_HIT_QUEST", {
     name: i18next.t("quests:TAUROS_ELECTRIC_HIT_QUEST.name"),
-    runType: RunType.NON_CLASSIC,
+    runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         defender.species.speciesId === Species.TAUROS && move.type === Type.ELECTRIC,
@@ -6497,11 +7111,11 @@ export const taurosElectricHitModifier = questModifierTypes.PERMA_HIT_QUEST("TAU
         rewardId: Species.TAUROS,
         questId: QuestUnlockables.TAUROS_ELECTRIC_HIT_QUEST
     },
-    task: `${i18next.t("quests:TAUROS_ELECTRIC_HIT_QUEST.task")} ${i18next.t("gameMode:notClassic")}`
+    task: i18next.t("quests:TAUROS_ELECTRIC_HIT_QUEST.task")
 });
 export const kecleonColorChangeModifier = questModifierTypes.PERMA_USE_ABILITY_QUEST("KECLEON_COLOR_CHANGE_QUEST", {
     name: i18next.t("quests:KECLEON_COLOR_CHANGE_QUEST.name"),
-    runType: RunType.NON_CLASSIC,
+    runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, ability: Ability) =>
         pokemon.species.speciesId === Species.KECLEON && ability.id === Abilities.COLOR_CHANGE,
@@ -6511,7 +7125,7 @@ export const kecleonColorChangeModifier = questModifierTypes.PERMA_USE_ABILITY_Q
         rewardId: Species.KECLEON,
         questId: QuestUnlockables.KECLEON_COLOR_CHANGE_QUEST
     },
-    task: `${i18next.t("quests:KECLEON_COLOR_CHANGE_QUEST.task")} ${i18next.t("gameMode:notClassic")}`
+    task: i18next.t("quests:KECLEON_COLOR_CHANGE_QUEST.task")
 });
 export const gliscorDarkMoveKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("GLISCOR_DARK_MOVE_KNOCKOUT_QUEST", {
     name: i18next.t("quests:GLISCOR_DARK_MOVE_KNOCKOUT_QUEST.name"),
@@ -6678,7 +7292,7 @@ export const hitmonleeNormalWaveModifier = questModifierTypes.PERMA_WAVE_CHECK_Q
 });
 export const hitmonchanStatIncreaseModifier = questModifierTypes.PERMA_MOVE_QUEST("HITMONCHAN_STAT_INCREASE_QUEST", {
     name: i18next.t("quests:HITMONCHAN_STAT_INCREASE_QUEST.name"),
-    runType: RunType.NON_CLASSIC,
+    runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.HITMONCHAN && move.hasAttr(StatChangeAttr),
@@ -6688,7 +7302,7 @@ export const hitmonchanStatIncreaseModifier = questModifierTypes.PERMA_MOVE_QUES
         rewardId: Species.HITMONCHAN,
         questId: QuestUnlockables.HITMONCHAN_STAT_INCREASE_QUEST
     },
-    task: `${i18next.t("quests:HITMONCHAN_STAT_INCREASE_QUEST.task")} ${i18next.t("gameMode:notClassic")}`
+    task: i18next.t("quests:HITMONCHAN_STAT_INCREASE_QUEST.task")
 });
 export const hitmonDuoWinModifier = questModifierTypes.PERMA_WIN_QUEST("HITMON_DUO_WIN_QUEST", {
     name: i18next.t("quests:HITMON_DUO_WIN_QUEST.name"),
@@ -6899,7 +7513,7 @@ export const sudowoodoWoodHammerModifier = questModifierTypes.PERMA_MOVE_QUEST("
 });
 export const ambipomGigaImpactModifier = questModifierTypes.PERMA_MOVE_QUEST("AMBIPOM_GIGA_IMPACT_QUEST", {
     name: i18next.t("quests:AMBIPOM_GIGA_IMPACT_QUEST.name"),
-    runType: RunType.NON_CLASSIC,
+    runType: RunType.ANY,
     duration: RunDuration.SINGLE_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.AMBIPOM && move.id === Moves.GIGA_IMPACT,
@@ -6909,7 +7523,7 @@ export const ambipomGigaImpactModifier = questModifierTypes.PERMA_MOVE_QUEST("AM
         rewardId: Species.AMBIPOM,
         questId: QuestUnlockables.AMBIPOM_GIGA_IMPACT_QUEST
     },
-    task: `${i18next.t("quests:AMBIPOM_GIGA_IMPACT_QUEST.task")} ${i18next.t("gameMode:notClassic")}`
+    task: i18next.t("quests:AMBIPOM_GIGA_IMPACT_QUEST.task")
 });
 export const miltankSteelMoveKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("MILTANK_STEEL_MOVE_KNOCKOUT_QUEST", {
     name: i18next.t("quests:MILTANK_STEEL_MOVE_KNOCKOUT_QUEST.name"),
@@ -7004,7 +7618,7 @@ export const snorlaxGrassKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_QU
 });
 export const cloysterPresentModifier = questModifierTypes.PERMA_MOVE_QUEST("CLOYSTER_PRESENT_QUEST", {
     name: i18next.t("quests:CLOYSTER_PRESENT_QUEST.name"),
-    runType: RunType.NUZLOCKE,
+    runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.CLOYSTER && move.id === Moves.PRESENT,
@@ -7033,7 +7647,7 @@ export const nuzleafNosepassDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_Q
 });
 export const chandelureRestModifier = questModifierTypes.PERMA_MOVE_QUEST("CHANDELURE_REST_QUEST", {
     name: i18next.t("quests:CHANDELURE_REST_QUEST.name"),
-    runType: RunType.NON_CLASSIC,
+    runType: RunType.ANY,
     duration: RunDuration.SINGLE_RUN,
     condition: (pokemon: PlayerPokemon, move: Move) =>
         pokemon.species.speciesId === Species.CHANDELURE && move.id === Moves.REST,
@@ -7043,7 +7657,7 @@ export const chandelureRestModifier = questModifierTypes.PERMA_MOVE_QUEST("CHAND
         rewardId: Species.CHANDELURE,
         questId: QuestUnlockables.CHANDELURE_REST_QUEST
     },
-    task: `${i18next.t("quests:CHANDELURE_REST_QUEST.task")} ${i18next.t("gameMode:notClassic")}`
+    task: i18next.t("quests:CHANDELURE_REST_QUEST.task")
 });
 export const smeargleDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("SMEARGLE_DEFEAT_QUEST", {
     name: i18next.t("quests:SMEARGLE_DEFEAT_QUEST.name"),
@@ -7131,7 +7745,7 @@ export const mimikyuRegirockKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT
 });
 export const eiscueRockKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("EISCUE_ROCK_KNOCKOUT_QUEST", {
     name: i18next.t("quests:EISCUE_ROCK_KNOCKOUT_QUEST.name"),
-    runType: RunType.NON_CLASSIC,
+    runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.EISCUE && defender.isOfType(Type.ROCK),
@@ -7141,11 +7755,11 @@ export const eiscueRockKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_QUES
         rewardId: Species.EISCUE,
         questId: QuestUnlockables.EISCUE_ROCK_KNOCKOUT_QUEST
     },
-    task: `${i18next.t("quests:EISCUE_ROCK_KNOCKOUT_QUEST.task")} ${i18next.t("gameMode:notClassic")}`
+    task: i18next.t("quests:EISCUE_ROCK_KNOCKOUT_QUEST.task")
 });
 export const zangooseSeviperKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("ZANGOOSE_SEVIPER_KNOCKOUT_QUEST", {
     name: i18next.t("quests:ZANGOOSE_SEVIPER_KNOCKOUT_QUEST.name"),
-    runType: RunType.NON_CLASSIC,
+    runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.ZANGOOSE && defender.species.speciesId === Species.SEVIPER,
@@ -7155,11 +7769,11 @@ export const zangooseSeviperKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT
         rewardId: Species.ZANGOOSE,
         questId: QuestUnlockables.ZANGOOSE_SEVIPER_KNOCKOUT_QUEST
     },
-    task: `${i18next.t("quests:ZANGOOSE_SEVIPER_KNOCKOUT_QUEST.task")} ${i18next.t("gameMode:notClassic")}`
+    task: i18next.t("quests:ZANGOOSE_SEVIPER_KNOCKOUT_QUEST.task")
 });
 export const seviperZangooseKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("SEVIPER_ZANGOOSE_KNOCKOUT_QUEST", {
     name: i18next.t("quests:SEVIPER_ZANGOOSE_KNOCKOUT_QUEST.name"),
-    runType: RunType.NON_CLASSIC,
+    runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.SEVIPER && defender.species.speciesId === Species.ZANGOOSE,
@@ -7169,11 +7783,11 @@ export const seviperZangooseKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT
         rewardId: Species.SEVIPER,
         questId: QuestUnlockables.SEVIPER_ZANGOOSE_KNOCKOUT_QUEST
     },
-    task: `${i18next.t("quests:SEVIPER_ZANGOOSE_KNOCKOUT_QUEST.task")} ${i18next.t("gameMode:notClassic")}`
+    task: i18next.t("quests:SEVIPER_ZANGOOSE_KNOCKOUT_QUEST.task")
 });
 export const trubbishPoisonDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("TRUBBISH_POISON_DEFEAT_QUEST", {
     name: i18next.t("quests:TRUBBISH_POISON_DEFEAT_QUEST.name"),
-    runType: RunType.NON_CLASSIC,
+    runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.TRUBBISH && defender.isOfType(Type.POISON),
@@ -7183,7 +7797,7 @@ export const trubbishPoisonDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QU
         rewardId: Species.TRUBBISH,
         questId: QuestUnlockables.TRUBBISH_POISON_DEFEAT_QUEST
     },
-    task: `${i18next.t("quests:TRUBBISH_POISON_DEFEAT_QUEST.task")} ${i18next.t("gameMode:notClassic")}`
+    task: i18next.t("quests:TRUBBISH_POISON_DEFEAT_QUEST.task")
 });
 export const hawluchaRivalChampionDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST", {
     name: i18next.t("quests:HAWLUCHA_RIVAL_CHAMPION_DEFEAT_QUEST.name"),
@@ -7356,7 +7970,7 @@ export const spindaConfusionRecoveryModifier = questModifierTypes.PERMA_TAG_REMO
 });
 export const ninetalesStoredPowerKnockoutModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("NINETALES_STORED_POWER_KNOCKOUT_QUEST", {
     name: i18next.t("quests:NINETALES_STORED_POWER_KNOCKOUT_QUEST.name"),
-    runType: RunType.NON_CLASSIC,
+    runType: RunType.ANY,
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
         attacker.species.speciesId === Species.NINETALES && move.id === Moves.STORED_POWER,
@@ -7366,7 +7980,7 @@ export const ninetalesStoredPowerKnockoutModifier = questModifierTypes.PERMA_KNO
         rewardId: Species.NINETALES,
         questId: QuestUnlockables.NINETALES_STORED_POWER_KNOCKOUT_QUEST
     },
-    task: `${i18next.t("quests:NINETALES_STORED_POWER_KNOCKOUT_QUEST.task")} ${i18next.t("gameMode:notClassic")}`
+    task: i18next.t("quests:NINETALES_STORED_POWER_KNOCKOUT_QUEST.task")
 });
 export const shuckleDefeatModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("SHUCKLE_DEFEAT_QUEST", {
     name: i18next.t("quests:SHUCKLE_DEFEAT_QUEST.name"),
@@ -8053,7 +8667,7 @@ export const dusclopsNightmareModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST
     resetOnFail: true,
     questUnlockData: {
         rewardType: RewardType.SMITTY_FORM,
-        rewardId: Species.DUSCLOPS,
+        rewardId: Species.DUSKNOIR,
         questId: QuestUnlockables.DUSCLOPS_NIGHTMARE_QUEST
     },
     task: i18next.t("quests:DUSCLOPS_NIGHTMARE_QUEST.task")
@@ -8932,7 +9546,7 @@ export const smittyFormQuestModifiers = new Proxy({} as Record<string, ReturnTyp
 
         acc[consoleCode] = createSmittyFormQuest({
           id: `${formName.toUpperCase()}_SMITTY_QUEST`,
-          name: `${displayName} Smitty Form`,
+          name: i18next.t("modifierSelectUiHandler:questNameSmitty", { name: displayName, defaultValue: `Smitty ${displayName} Quest` }),
           formName,
           isUniversal,
           questId,
@@ -8995,4 +9609,30 @@ export function getModifierTypeByLocaleKey(localeKey: string): ModifierType | nu
 
 export function getCachedModifierType(localeKey: string): ModifierType | null {
   return getModifierTypeByLocaleKey(localeKey);
+}
+
+export function getDisabledModifierIds(scene: BattleScene): Set<string> {
+    const ids = new Set<string>();
+    if (!scene.moveUpgradesEnabledForRun) {
+        ids.add("MOVE_UPGRADE");
+        ids.add("LOW_TIER_MOVE_UPGRADE");
+    }
+    if (!scene.statSwitchersEnabledForRun) {
+        ids.add("STAT_SWITCHER");
+    }
+    if (!scene.releaseItemsEnabledForRun) {
+        ids.add("STAT_SACRIFICE");
+        ids.add("TYPE_SACRIFICE");
+        ids.add("MOVE_SACRIFICE");
+        ids.add("ABILITY_SACRIFICE");
+        ids.add("PASSIVE_ABILITY_SACRIFICE");
+        ids.add("SACRIFICE_TOGGLE");
+    }
+    if (!scene.ivScannerEnabledForRun) {
+        ids.add("IV_SCANNER");
+    }
+    if (!scene.mapEnabledForRun) {
+        ids.add("MAP");
+    }
+    return ids;
 }

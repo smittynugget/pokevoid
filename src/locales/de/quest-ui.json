@@ -105,6 +105,17 @@
       "common": {
         "any": "BELIEBIG"
       }
+    },
+    "skillTree": {
+      "modalTitle": "Fertigkeitenbaum-Kopfgeld",
+      "completion": {
+        "title": "Kopfgeld Abgeschlossen!",
+        "standardReward": "Wähle deine Belohnung!",
+        "rareReward": "MEISTERBALL-Seltenheit freigeschaltet!",
+        "veryRareRankUp": "Ein Pokémon-Rangaufstieg wartet!",
+        "veryRareMove": "Ein Duelmon-Zug wartet!",
+        "fallback": "Belohnung erhalten!"
+      }
     }
   },
   "modeRewards": {
@@ -117,4 +128,4 @@
     "accessShopInBattle": "Greife im KAMPF auf den ΩSHOP zu!",
     "accessQuestsInBattle": "Greife im KAMPF auf QUESTS zu!"
   }
-} 
+}

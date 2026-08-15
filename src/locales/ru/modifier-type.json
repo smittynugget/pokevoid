@@ -67,11 +67,11 @@
       "description": "Повышает уровень всех членов отряда на {{levels}}."
     },
     "PokemonBaseStatBoosterModifierType": {
-      "description": "Повышает базовую характеристику {{statName}} у носителя на 10%. Чем выше твои IV, тем выше лимит суммирования."
+      "description": "Повышает базовую характеристику {{statName}} у носителя на 8%. Чем выше твои IV, тем выше лимит суммирования."
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "Дешёвый",
-      "description": "Повышает базовую характеристику {{statName}} у носителя на 1%."
+      "description": "Повышает базовую характеристику {{statName}} у носителя на 3%."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Восстанавливает 100% ОЖ всем покемонам."
@@ -103,12 +103,12 @@
       "description": "Приёмы попадают на 1 удар больше, но их сила уменьшается на 60/75/82,5% за каждый стак соответственно."
     },
     "AnyTmModifierType": {
-      "name": "++XM {{moveName}}++",
+      "name": "XM {{moveName}}",
       "statLabel": "XM (любая ТМ)",
       "description": "Обучает покемона приёму {{moveName}}."
     },
     "AnyTmModifierTypeWithInfo": {
-      "name": "++XM{{moveId}} - {{moveName}}++",
+      "name": "XM{{moveId}} - {{moveName}}",
       "statLabel": "XM (любая ТМ)",
       "description": "Обучает приёму {{moveName}} ЛЮБОГО покемона\n(Удерживай C или Shift для подробностей)."
     },
@@ -442,7 +442,8 @@
       "name": "Эссенции",
       "shopName": "Эссенция {{type}}",
       "statLabel": "Эссенция",
-      "description": "Используй 4 шт. вместо выпуска покемона ради предметов выпуска, или обменяй на награды у Коллекционера."
+      "description": "Используй 4 шт. вместо выпуска покемона ради предметов выпуска, или обменяй на награды у Коллекционера.",
+      "tooltipDescription": "Даёт 1 Эссенцию {{type}} выбранному покемону.\n\nЭссенции используются для прокачки навыков Чемпиона, как альтернатива жертвоприношению (нужно 4) и для обмена у Коллекционера."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Собранные эссенции",
@@ -494,7 +495,7 @@
       "description": "Дать {{abilityName}} ЛЮБОМУ покемону\n(Удерживай C или Shift для подробностей)."
     },
     "AnyPassiveAbilityModifierType": {
-      "name": "++ПАССИВ {{abilityName}}++",
+      "name": "ПАССИВ {{abilityName}}",
       "statLabel": "Предмет: любой пассивный талант",
       "description": "Установить пассивный талант {{abilityName}} ЛЮБОМУ покемону\n(Удерживай C или Shift для подробностей)."
     },
@@ -874,6 +875,7 @@
     "NONE": "Нет",
     "ABOMASITE": "Абомасит",
     "ABSOLITE": "Абсолит",
+    "ABSOLITE_Z": "Абсолит Z",
     "AERODACTYLITE": "Аэродактилит",
     "AGGRONITE": "Аггронит",
     "ALAKAZITE": "Алаказайт",
@@ -890,6 +892,7 @@
     "DIANCITE": "Диансит",
     "GALLADITE": "Галладит",
     "GARCHOMPITE": "Гарчомпит",
+    "GARCHOMPITE_Z": "Гарчомпит Z",
     "GARDEVOIRITE": "Гардевуарит",
     "GENGARITE": "Генгарит",
     "GLALITITE": "Глалитит",
@@ -901,6 +904,7 @@
     "LATIOSITE": "Латиосит",
     "LOPUNNITE": "Лопаннит",
     "LUCARIONITE": "Лукарионит",
+    "LUCARIONITE_Z": "Лукарионит Z",
     "MANECTITE": "Манектит",
     "MAWILITE": "Мавилит",
     "MEDICHAMITE": "Медичамит",
@@ -947,6 +951,22 @@
     "DRAMPITE": "Дрампит",
     "FALINKSITE": "Фалинксит",
     "ZERAORITE": "Зераорит",
+    "RAICHUITE_X": "Райчуит X",
+    "RAICHUITE_Y": "Райчуит Y",
+    "CHIMECHOITE": "Чаймекоит",
+    "STARAPTORITE": "Старапторит",
+    "HEATRANITE": "Хитранит",
+    "DARKRAITE": "Даркраит",
+    "GOLURKITE": "Голаркит",
+    "MEOWSTITE": "Мяустикит",
+    "CRABOMINITE": "Крабаминит",
+    "GOLISOPODITE": "Голисоподит",
+    "MAGEARNITE": "Магирнит",
+    "SCOVILLAINITE": "Сковилленит",
+    "GLIMMORITE": "Глимморит",
+    "TATSUGURITE": "Тацугирит",
+    "BAXCALIBURITE": "Бакскалибурит",
+
     "BLUE_ORB": "Синяя сфера",
     "RED_ORB": "Красная сфера",
     "SHARP_METEORITE": "Острый метеорит",
@@ -1065,10 +1085,16 @@
     "uses": "исп.",
     "glitchPieceCost": "*СТОИТ 1x Кусок глитча",
     "essenceAlternativeCost": "Если у покемона 4+ эссенций, можешь использовать их вместо этого.",
+    "abilityReplaceNote": "Заменяет текущую способность покемона. Не суммируется.",
+    "passiveAbilityReplaceNote": "Заменяет текущую пассивную способность покемона. Не суммируется.",
     "permaMoney": "ΩGOLD",
     "permaItem": "ΩITEM",
     "moreInfo": "(Удерживай C / Shift для информации)",
     "morePokeInfo": "(Нажми P / Shift для информации)",
-    "upgrade": "Улучшить"
-  }
+    "upgrade": "Улучшить",
+    "partyAbilityStacksHint": "(СКЛАДЫВАЕТСЯ!)"
+  },
+  "permaWaveTooltip": "Исчезает через [color=#ffa500]{{count}}[/color] волн — отсчёт начинается после волны 50",
+  "permaUseTooltip": "[color=#ffa500]{{count}}[/color] использований осталось — отсчёт начинается после волны 50",
+  "permaRemoveHint": "Нажмите 10 раз, чтобы удалить"
 }

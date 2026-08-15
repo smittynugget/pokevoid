@@ -38,7 +38,7 @@ import { MoveUpgrade } from "../data/move-upgrade";
 export class MoveUpgradeTooltipUtils {
 
   private static tooltipContainer: Phaser.GameObjects.Container | null = null;
-  private static tooltipBg: Phaser.GameObjects.Graphics | null = null;
+  private static tooltipBg: Phaser.GameObjects.NineSlice | null = null;
   private static tooltipTitleBarBg: Phaser.GameObjects.Graphics | null = null;
   private static tooltipRarityBarBg: Phaser.GameObjects.Graphics | null = null;
   private static tooltipTitle: Phaser.GameObjects.Text | null = null;
@@ -64,32 +64,8 @@ export class MoveUpgradeTooltipUtils {
   private static keyLeftHandler: ((event: KeyboardEvent) => void) | null = null;
   private static keyRightHandler: ((event: KeyboardEvent) => void) | null = null;
   private static keyEscapeHandler: ((event: KeyboardEvent) => void) | null = null;
-  private static readonly TOOLTIP_CONSTANTS = {
-    MIN_WIDTH: 70,
-    MAX_WIDTH: 120,
-    TITLE_BAR_HEIGHT: 12,
-    TITLE_BAR_Y: 0,
-    RARITY_BAR_HEIGHT: 6,
-    RARITY_BAR_Y: 12,
-    CONTENT_Y: 23,
-    TITLE_TEXT_Y: 6,
-    RARITY_TEXT_Y: 15,
-    TITLE_FONT_SIZE: "40px",
-    BODY_FONT_SIZE: "40px",
-    RADIUS: 0,
-    BORDER_THICKNESS: 0.5,
-    BORDER_COLOR: 0xffffff,
-    BORDER_ALPHA: 0.5,
-    PADDING: 6,
-    LINE_HEIGHT: 8,
-    TITLE_BAR_COLOR: 0xFFD700,
-    TITLE_BAR_ALPHA: 0.7,
-    SUBHEADER_BAR_COLOR: 0x00BFFF,
-    SUBHEADER_BAR_ALPHA: 0.7,
-  };
 
-  private static readonly TOOLTIP_WIDTH = 550 / 6;
-  private static readonly TOOLTIP_BASE_HEIGHT = 375 / 6;
+  private static readonly TOOLTIP_WIDTH = 120;
   private static multiHitWarning: boolean = false;
   private static flinchWarning: boolean = false;
   private static secondaryEffectNote: boolean = false;
@@ -203,6 +179,11 @@ export class MoveUpgradeTooltipUtils {
       const accuracyLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:accuracy"), TextStyle.SUMMARY_GOLD, uiTheme);
       const accuracy = getBBCodeFrag(`${move.accuracy}%`, TextStyle.WINDOW, uiTheme);
       powerAccuracyParts.push(`${accuracyLabel}: ${accuracy}`);
+    }
+    if (move.pp > 0) {
+      const ppLabel = getBBCodeFrag(i18next.t("moveUpgradeAttrs:pp", { defaultValue: "PP" }), TextStyle.SUMMARY_GOLD, uiTheme);
+      const pp = getBBCodeFrag(move.pp.toString(), TextStyle.WINDOW, uiTheme);
+      powerAccuracyParts.push(`${ppLabel}: ${pp}`);
     }
     if (powerAccuracyParts.length > 0) {
       lines.push(powerAccuracyParts.join(' | '));
@@ -1328,7 +1309,7 @@ export class MoveUpgradeTooltipUtils {
     const category = this.previewCategory;
     const tier = this.currentTier;
     const maxTier = this.previewMaxTier;
-    const rarity = (tier && category) ? getUpgradeRarityFromTier(tier, maxTier) : SkillTreeRarity.LEGENDARY;
+    const rarity = (tier && category) ? getUpgradeRarityFromTier(tier, maxTier) : getUpgradeRarityFromTier(tier || 1, 1, true);
     const rarityColors = getUpgradeRarityColors(rarity);
     this.detailsActive = false;
     this.unregisterKeyboardHandlers(scene);
@@ -1356,9 +1337,10 @@ export class MoveUpgradeTooltipUtils {
 
   private static buildTooltip(scene: BattleScene, titleText: string, subtitleText: string, bodyText: string, rarityColors: { border: number; bg: number }): void {
     this.destroyTooltipContainerOnly();
-    const c = this.TOOLTIP_CONSTANTS;
     const tooltipWidth = this.TOOLTIP_WIDTH;
-    const padding = c.PADDING;
+    const padding = 6;
+    const centerX = tooltipWidth / 2 + 2;
+    const textX = padding + 2;
     const buttonRowHeight = 10;
     const enableDetails = this.previewCategory !== null && this.previewMaxTier > 1;
     const buttonRowCount = enableDetails ? (this.detailsActive ? 2 : 1) : 0;
@@ -1366,18 +1348,20 @@ export class MoveUpgradeTooltipUtils {
     this.tooltipContainer = scene.add.container(0, 0);
     this.tooltipContainer.setDepth(10000000000);
 
-    this.tooltipTitle = addTextObject(scene, tooltipWidth / 2, c.TITLE_TEXT_Y, titleText, TextStyle.SUMMARY_GOLD, {
-      fontSize: c.TITLE_FONT_SIZE, fontStyle: "bold"
+    const rarityHex = "#" + rarityColors.border.toString(16).padStart(6, "0");
+    this.tooltipTitle = addTextObject(scene, centerX, 8, titleText, TextStyle.WINDOW, {
+      fontSize: "40px"
     });
     this.tooltipTitle.setOrigin(0.5, 0.5);
+    this.tooltipTitle.setColor(rarityHex);
 
-    this.tooltipSubtitle = addTextObject(scene, tooltipWidth / 2, c.RARITY_TEXT_Y, subtitleText, TextStyle.WINDOW, {
-      fontSize: "35px"
+    this.tooltipSubtitle = addTextObject(scene, centerX, 17, subtitleText, TextStyle.WINDOW, {
+      fontSize: "30px"
     });
     this.tooltipSubtitle.setOrigin(0.5, 0.5);
     this.tooltipSubtitle.setTint(rarityColors.border);
 
-    this.tooltipBody = addBBCodeTextObject(scene, c.PADDING, c.CONTENT_Y, bodyText, TextStyle.WINDOW, { fontSize: c.BODY_FONT_SIZE });
+    this.tooltipBody = addBBCodeTextObject(scene, textX, 24, bodyText, TextStyle.WINDOW, { fontSize: "36px" });
     this.applyBbCodeWordWrap(this.tooltipBody, tooltipWidth, padding);
 
     const contentBottom = this.tooltipBody.y + this.tooltipBody.displayHeight;
@@ -1385,18 +1369,14 @@ export class MoveUpgradeTooltipUtils {
       ? contentBottom + padding + (buttonRowHeight * buttonRowCount) + padding
       : contentBottom + padding;
 
-    this.tooltipBg = scene.add.graphics();
-    this.drawTooltipGradientBackground(this.tooltipBg, 0, 0, tooltipWidth, tooltipHeight, c.RADIUS);
-    this.tooltipBg.lineStyle(c.BORDER_THICKNESS, c.BORDER_COLOR, c.BORDER_ALPHA);
-    this.tooltipBg.strokeRoundedRect(0, 0, tooltipWidth, tooltipHeight, c.RADIUS);
+    this.tooltipBg = scene.add.nineslice(0, 0, "tooltip_info", undefined, Math.round(tooltipWidth), Math.round(tooltipHeight), 12, 12, 12, 12);
+    this.tooltipBg.setOrigin(0, 0);
 
     this.tooltipTitleBarBg = scene.add.graphics();
-    this.tooltipTitleBarBg.fillStyle(rarityColors.border, c.TITLE_BAR_ALPHA);
-    this.tooltipTitleBarBg.fillRect(0, c.TITLE_BAR_Y, tooltipWidth, c.TITLE_BAR_HEIGHT);
 
     this.tooltipRarityBarBg = scene.add.graphics();
-    this.tooltipRarityBarBg.fillStyle(rarityColors.bg, c.SUBHEADER_BAR_ALPHA);
-    this.tooltipRarityBarBg.fillRect(0, c.RARITY_BAR_Y, tooltipWidth, c.RARITY_BAR_HEIGHT);
+    this.tooltipRarityBarBg.fillStyle(0x0f0f1e, 1.0);
+    this.tooltipRarityBarBg.fillRect(2, 14, tooltipWidth - 4, 6);
 
     if (enableDetails) {
       if (this.detailsActive) {
@@ -1610,66 +1590,18 @@ export class MoveUpgradeTooltipUtils {
   }
 
   private static parseComparisonText(comparisonText: string): { titleText: string; subtitleText: string; bodyText: string } {
-
     const lines = comparisonText.split('\n');
+
     const stripBBCode = (text: string): string => {
       return text.replace(/\[.*?\]/g, '').trim();
     };
 
     const titleText = lines.length > 0 ? stripBBCode(lines[0]) : '';
     const subtitleText = lines.length > 1 ? stripBBCode(lines[1]) : '';
+
     const bodyStartIndex = lines.length > 2 && lines[2].trim() === '' ? 3 : 2;
     const bodyText = lines.slice(bodyStartIndex).join('\n');
 
     return { titleText, subtitleText, bodyText };
-  }
-
-  private static drawTooltipGradientBackground(graphics: Phaser.GameObjects.Graphics, x: number, y: number, width: number, height: number, radius: number): void {
-
-    const topColor = { r: 106, g: 15, b: 58 };
-    const bottomColor = { r: 0, g: 0, b: 0 };
-    const gradientSteps = 48;
-
-    for (let step = 0; step < gradientSteps; step++) {
-      const stepY = y + (step / gradientSteps) * height;
-      const stepHeight = height / gradientSteps;
-      const rawFactor = step / (gradientSteps - 1);
-
-      const factor = Math.pow(rawFactor, 2.5);
-      const r = Math.floor(topColor.r * (1 - factor) + bottomColor.r * factor);
-      const g = Math.floor(topColor.g * (1 - factor) + bottomColor.g * factor);
-      const b = Math.floor(topColor.b * (1 - factor) + bottomColor.b * factor);
-      const color = (r << 16) | (g << 8) | b;
-
-      const remainingHeight = (y + height) - stepY;
-      if (remainingHeight <= 0) {
-        continue;
-      }
-      graphics.fillStyle(color, 1.0);
-      graphics.fillRect(x, stepY, width, Math.min(stepHeight, remainingHeight));
-    }
-  }
-
-  private static getTooltipHeight(comparisonText: string): number {
-    let additionalHeight = 0;
-    let adjustedLineCount = this.lineCount;
-
-    if (this.multiHitWarning) {
-      adjustedLineCount--;
-      additionalHeight += 100 / 6;
-    }
-    if (this.flinchWarning) {
-      adjustedLineCount--;
-      additionalHeight += 100 / 6;
-    }
-    if (this.secondaryEffectNote) {
-      adjustedLineCount -= 3;
-      additionalHeight += 180 / 6;
-    }
-    if (adjustedLineCount > 7) {
-      additionalHeight += (adjustedLineCount - 7) * (25 / 6);
-    }
-
-    return this.TOOLTIP_BASE_HEIGHT + additionalHeight;
   }
 }

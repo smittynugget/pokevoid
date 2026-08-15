@@ -34,5 +34,8 @@
   "sortByCost": "Costo",
   "sortByCandies": "Caramelle",
   "sortByIVs": "IVs",
-  "sortByName": "Nome"
+  "sortByName": "Nome",
+  "fusionsFilter": "Fusioni",
+  "hasFusions": "Fusioni - Sì",
+  "noFusions": "Fusioni - No"
 }

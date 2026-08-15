@@ -12,7 +12,8 @@ import {initBiomes} from "#app/data/biomes";
 import {initEggMoves} from "#app/data/egg-moves";
 import {initSpecies} from "#app/data/pokemon-species";
 import {initPokemonForms, initSmittyForms} from "#app/data/pokemon-forms";
-import {initMoves} from "#app/data/move";
+import {initMoves, _bindYuMoveAttrGuards, _bindCookbookRegister, initRegularMoveTags} from "#app/data/move";
+import { preloadEncounterPhaseModules } from "#app/phases/encounter-phase-cache";
 import {initMoveRegistry} from "#app/data/move-registry";
 import {initAbilities} from "#app/data/ability";
 import {initAchievements} from "#app/system/achv";
@@ -30,6 +31,8 @@ import Overrides, { DEBUG_TEST_SLIDESHOW_CUTSCENE } from "./overrides";
 import { AssetLoadProfiler } from "./system/asset-load-profiler";
 import { IntroCutsceneScene } from "./intro-cutscene-scene";
 import { loggedInUser } from "#app/account.js";
+import { playCondenseTrailTransition, CondenseTrailHandle, getEffectCount } from "./field/condense-trail-transition";
+import type BattleScene from "./battle-scene";
 
 export class LoadingScene extends SceneBase {
   public static readonly KEY = "loading";
@@ -39,6 +42,17 @@ export class LoadingScene extends SceneBase {
   private userInteracted: boolean = false;
 
   private loadingGraphics: any[] = [];
+
+  private _loadingSmitom: Phaser.GameObjects.Sprite | null = null;
+  private _loadingSmitomRoot: Phaser.GameObjects.Container | null = null;
+  private _loadingSmitomZone: Phaser.GameObjects.Zone | null = null;
+  private _loadingSmitomTimers: Phaser.Time.TimerEvent[] = [];
+  private _loadingSmitomClaimed: boolean = false;
+  private _loadingSmitomDismissing: boolean = false;
+  private _loadingSmitomCondensing: boolean = false;
+  private _currentSmitomRewardValue: number = 100;
+  private _earlySmitomDismissStarted: boolean = false;
+  private _smitomSessionDismissScheduled: boolean = false;
 
   private introVideoDone: boolean = false;
   private introCutsceneDone: boolean = false;
@@ -56,7 +70,7 @@ export class LoadingScene extends SceneBase {
 
   }
 
-  preload() {
+  async preload() {
     Utils.localPing();
     const isIOS = isIPhone();
 
@@ -67,8 +81,12 @@ export class LoadingScene extends SceneBase {
     this.loadSe("logoSmittyNugget", "voice", "intro_smitty_nugget.mp3");
     this.loadImage("loading_bg", "arenas");
     this.loadImage("logo", "");
-    this.loadImage("smittyLogo", "smitty_logos", `${Math.floor(Math.random() * 134)}.png`);
+    const logoExt = (this.game as any)?.device?.features?.webp ? "webp" : "png";
+    const logoId = Math.random() < 0.1 ? 304 : Math.floor(Math.random() * 307);
+    this.loadImage("smittyLogo", "smitty_logos", `${logoId}.${logoExt}`);
+    this.loadImage("smittyTextLogo", "", `smittynugget_textlogo.${logoExt}`);
     this.loadImage("title_bg", "");
+    this.loadImage("light_bg", "ui");
 
     this.loadAtlas("bg", "ui");
     this.loadAtlas("prompt", "ui");
@@ -203,7 +221,39 @@ export class LoadingScene extends SceneBase {
     this.loadImage("modal_bg", "ui");
     this.loadImage("bg_icon", "ui");
     this.loadImage("battle_path_blur_bg", "ui");
+
+    this.loadImage("newchampion_default_tile", "ui/newchampion", "default_tile.png");
+    this.loadImage("newchampion_focus_tile", "ui/newchampion", "focus_tile.png");
+    this.loadImage("newchampion_silver_focus_tile", "ui/newchampion", "silver_focus_tile.png");
+    this.loadImage("newchampion_silver_focus_tilex", "ui/newchampion", "silver_focus_tilex.png");
+    this.loadImage("newchampion_empty_fillX", "ui/newchampion", "empty_fillX.png");
+    this.loadImage("newchampion_surrounding_fill_bg", "ui/newchampion", "surrounding_fill_BG.png");
+    this.loadImage("tooltip_info", "ui", "tooltip-info.png");
+    this.loadImage("modifier_ui_handler_bg", "ui/rewards");
+    this.loadImage("modifier_option_focused", "ui/rewards");
+    this.loadImage("modifier_option_unfocused", "ui/rewards");
+    this.loadImage("modifier_handler_btn_option", "ui/rewards");
+    this.loadImage("level_up", "ui/rewards");
+    this.loadImage("newchampion_progress_fill", "ui/newchampion", "progress_fill.png");
+    this.loadImage("newchampion_future_unlocks_bg_bar", "ui/newchampion", "future_unlocks_bg_bar.png");
+    this.loadImage("newchampion_future_unlocks_bg_barX", "ui/newchampion", "future_unlocks_bg_barX.png");
+    this.loadImage("newchampion_unlock_button", "ui/newchampion", "unlock_button.png");
+    this.loadImage("newchampion_requirement_bg", "ui/newchampion", "requirement_bg.png");
+
     this.loadImage("tutorial_bg", "ui");
+    this.loadImage("smitom_dialogue_bg", "arenas", "loading_bg4.png");
+    this.loadImage("void_portal", "ui");
+    this.loadImage("voidex_bg", "ui");
+    const csExt = (this.game as any)?.device?.features?.webp ? "webp" : "png";
+    this.loadImage("cutscene_frame", "cutscenes", `cutscene-frame.${csExt}`);
+    this.loadImage("intro_slide_1", "cutscenes", `peace.${csExt}`);
+    this.loadImage("intro_slide_2", "cutscenes", `voidbreak.${csExt}`);
+    this.loadImage("intro_slide_3", "cutscenes", `voidbreak2.${csExt}`);
+    this.loadImage("intro_slide_4", "cutscenes", `locked.${csExt}`);
+    this.loadImage("intro_slide_5", "cutscenes", `shadows.${csExt}`);
+    this.loadImage("intro_slide_6", "cutscenes", `you.${csExt}`);
+    this.loadImage("intro_slide_7", "cutscenes", `choose.${csExt}`);
+    this.loadImage("intro_slide_8", "cutscenes", `journey.${csExt}`);
 
     this.loadImage("default_bg", "arenas");
     if (!isIOS) {
@@ -255,15 +305,18 @@ export class LoadingScene extends SceneBase {
 
     this.loadAtlas("player_m", "trainer");
     this.loadAtlas("player_f", "trainer");
+    this.loadAtlas("unknown_m", "trainer");
 
     this.loadAtlas("brock_back", "trainer");
     this.loadAtlas("misty_back", "trainer");
+    this.loadAtlas("red_back", "trainer");
     this.loadAtlas("brock", "trainer");
     this.loadAtlas("misty", "trainer");
+    this.loadAtlas("red", "trainer");
 
     if (!isIOS) {
       Utils.getEnumValues(TrainerType).map(tt => {
-        if (tt === TrainerType.BROCK || tt === TrainerType.MISTY || tt === TrainerType.DYNAMIC_RIVAL || tt === TrainerType.SMITTY) {
+        if (tt === TrainerType.BROCK || tt === TrainerType.MISTY || tt === TrainerType.RED || tt === TrainerType.DYNAMIC_RIVAL || tt === TrainerType.SMITTY) {
           return;
         }
         const config = trainerConfigs[tt];
@@ -286,6 +339,9 @@ export class LoadingScene extends SceneBase {
 
     this.loadImage("pkmn__back__sub", "pokemon/back", "sub.png");
     this.loadImage("pkmn__sub", "pokemon", "sub.png");
+    for (const id of [1, 2, 4, 7, 8, 9, 12, 16, 17]) {
+      this.loadImage(`yu_portal_${id}`, "pokemon/yu/portals", `${id}.png`);
+    }
     this.loadAtlas("battle_stats", "effects");
     this.loadAtlas("shiny", "effects");
     this.loadAtlas("shiny_2", "effects");
@@ -339,6 +395,7 @@ export class LoadingScene extends SceneBase {
     }
     this.loadAtlas(`pokemon_icons_glitch`, "");
     this.loadAtlas(`pokemon_icons_za_1`, "");
+    this.loadAtlas(`pokemon_icons_yu`, "");
     if (!isIOS) {
       this.loadAtlas(`smitty_trainers`, "smittytrainers");
     }
@@ -401,8 +458,14 @@ export class LoadingScene extends SceneBase {
     this.loadSe("PRSFX- Bestow2", "battle_anims");
     this.loadSe("PRSFX- Quiver Dance", "battle_anims");
     this.loadSe("PRSFX- Bloom Doom1", "battle_anims");
+    this.loadSe("PRSFX- Foresight2", "battle_anims");
+    this.loadSe("PRSFX- Camouflage", "battle_anims");
+    this.loadSe("PRSFX- Grudge", "battle_anims");
 
     this.loadBgm("menu");
+    this.loadBgm("laboratory");
+    this.loadBgm("wasteland");
+    this.load.audio("char_sound", this.getCachedUrl("audio/se/select.wav"));
 
     this.loadSe("hellowelcome", "voice", "hellowelcome.mp3");
     this.loadSe("champion_select", "voice", "champion_select.mp3");
@@ -450,10 +513,18 @@ export class LoadingScene extends SceneBase {
     initTrainerTypeDialogue();
     initSpecies();
     initSmittyForms();
+    const yuMod = await import("#app/data/yu-move-attrs");
+    const cookbookMod = await import("#app/data/yu-duelmon-cookbook-moves");
+    const { _bindContactStatDrop } = await import("#app/phases/move-effect-phase");
+    _bindYuMoveAttrGuards(yuMod.hasSelfHpCostOnMove, yuMod.isConditionalHitHealAttr, yuMod.isGatedHitHealAttr);
+    _bindCookbookRegister(cookbookMod.registerYuDuelmonCookbookMoves);
+    _bindContactStatDrop(yuMod.applyDefenderContactStatDropOnProtect);
     initMoves();
+    initRegularMoveTags();
     initMoveRegistry();
     initAbilities();
     initChallenges();
+    await preloadEncounterPhaseModules();
   }
 
   loadLoadingScreen() {
@@ -554,23 +625,30 @@ export class LoadingScene extends SceneBase {
     this.loadingGraphics = loadingGraphics;
     this.mainLoadingComplete = false;
 
-    const intro = this.add.video(0, 0);
+    const intro = this.add.video(0, -20);
 
-    const smittyLogo = this.add.image(midWidth, midHeight - 80, "");
-    smittyLogo.setScale(2.25);
+    const smittyLogo = this.add.image(midWidth, midHeight - 130, "");
+    smittyLogo.setScale(1.5);
     smittyLogo.setOrigin(0.5, 0.5);
     smittyLogo.setVisible(false);
 
+    const smittyText = this.add.image(midWidth, 0, "");
+    smittyText.setScale(2);
+    smittyText.setOrigin(0.5, 0);
+    smittyText.setVisible(false);
+
     let videoCheckHandler: () => void;
     let introSoundPlayed = false;
-    let introStartAtMs = 0;
+    let introStartAtMs = Date.now();
+    let logoHoldActive = false;
 
     const completeIntroVideo = () => {
       if (this.introVideoDone) {
         return;
       }
+      const totalElapsed = Date.now() - introStartAtMs;
       try {
-        this.tweens.killTweensOf([intro, smittyLogo]);
+        this.tweens.killTweensOf([intro, smittyLogo, smittyText]);
       } catch {}
       try {
         if (intro && intro.scene) {
@@ -582,20 +660,57 @@ export class LoadingScene extends SceneBase {
           smittyLogo.destroy();
         }
       } catch {}
-      if (isIPhone() && this.textures.exists('smittyLogo')) {
-        this.textures.remove('smittyLogo');
+      try {
+        if (smittyText && smittyText.scene) {
+          smittyText.destroy();
+        }
+      } catch {}
+      if (isIPhone()) {
+        if (this.textures.exists('smittyLogo')) {
+          this.textures.remove('smittyLogo');
+        }
+        if (this.textures.exists('smittyTextLogo')) {
+          this.textures.remove('smittyTextLogo');
+        }
       }
       this.events.off("update", videoCheckHandler);
       this.introVideoDone = true;
       this.launchIntroCutscene();
     };
 
+    const showSmittyLogos = () => {
+      const elapsed = Date.now() - introStartAtMs;
+      if (this.textures.exists("smittyLogo") && !smittyLogo.visible) {
+        smittyLogo.setTexture("smittyLogo");
+        smittyLogo.setVisible(true);
+      }
+      if (this.textures.exists("smittyTextLogo") && !smittyText.visible) {
+        smittyText.setPosition(midWidth, smittyLogo.y + smittyLogo.displayHeight / 2 + 50);
+        smittyText.setTexture("smittyTextLogo");
+        smittyText.setVisible(true);
+      }
+      if (!introSoundPlayed) {
+        try {
+          if (this.cache.audio.exists('voice/logoSmittyNugget')) {
+            this.sound.play('voice/logoSmittyNugget', { loop: false, mute: false, volume: .2 });
+            introSoundPlayed = true;
+          }
+        } catch (error) {
+          console.error('Failed to play logoSmittyNugget sound:', error);
+        }
+      }
+    };
+
     videoCheckHandler = () => {
       if(intro.isPlaying()) {
-        if(intro.getCurrentTime() >= 4.8 && smittyLogo.visible && !this.introFadeStarted) {
+        if(intro.getCurrentTime() >= 4.8 && !this.introFadeStarted) {
           this.introFadeStarted = true;
+          const totalElapsed = Date.now() - introStartAtMs;
+          const fadeTargets: any[] = [intro];
+          if (smittyLogo.visible) fadeTargets.push(smittyLogo);
+          if (smittyText.visible) fadeTargets.push(smittyText);
           this.tweens.add({
-            targets: [intro, smittyLogo],
+            targets: fadeTargets,
             duration: 200,
             alpha: 0,
             ease: "Sine.easeIn",
@@ -604,13 +719,10 @@ export class LoadingScene extends SceneBase {
             },
           });
         }
-        else if (intro.getCurrentTime() >= 1.5 && !smittyLogo.visible) {
-          if (this.textures.exists("smittyLogo")) {
-            smittyLogo.setTexture("smittyLogo");
-            smittyLogo.setVisible(true);
-          }
+        else if (intro.getCurrentTime() >= 0.88 && !smittyLogo.visible) {
+          showSmittyLogos();
         }
-        else if(intro.getCurrentTime() >= 1.7 && smittyLogo.visible && !introSoundPlayed) {
+        else if(intro.getCurrentTime() >= 1.2 && smittyLogo.visible && !introSoundPlayed) {
           try {
             const soundConfig = {
               loop: false,
@@ -630,10 +742,10 @@ export class LoadingScene extends SceneBase {
         }
       }
       else {
-        if (this.introVideoDone) {
+        if (this.introVideoDone || logoHoldActive) {
           return;
         }
-        const elapsed = introStartAtMs > 0 ? (this.time.now - introStartAtMs) : 0;
+        const elapsed = Date.now() - introStartAtMs;
         const t = intro.getCurrentTime();
         const v = intro.video;
         const ended = !!v?.ended;
@@ -641,6 +753,51 @@ export class LoadingScene extends SceneBase {
         const duration = typeof v?.duration === "number" ? v.duration : 0;
         const nearEnd = Number.isFinite(duration) && duration > 0 && t >= (duration - 0.1);
         if (ended || nearEnd || (t > 0 && readyState >= 2) || elapsed >= 7000) {
+          if (!smittyLogo.visible) {
+            showSmittyLogos();
+          }
+          if (smittyLogo.visible) {
+            logoHoldActive = true;
+            const elapsedSoFar = Date.now() - introStartAtMs;
+            const holdDuration = 5000;
+            try {
+              if (intro && intro.scene) {
+                intro.setVisible(false);
+              }
+            } catch {}
+            setTimeout(() => {
+              if (this.introVideoDone) return;
+              this.launchIntroCutscene();
+            }, holdDuration - 1800);
+            setTimeout(() => {
+              const fadeElapsed = Date.now() - introStartAtMs;
+              if (this.introVideoDone) return;
+              smittyLogo.setDepth(100);
+              smittyText.setDepth(100);
+              this.tweens.add({
+                targets: [smittyLogo, smittyText].filter(el => el && el.scene),
+                duration: 150,
+                alpha: 0,
+                ease: "Sine.easeIn",
+                onComplete: () => {
+                  try { this.tweens.killTweensOf([intro, smittyLogo, smittyText]); } catch {}
+                  try { if (intro && intro.scene) intro.destroy(); } catch {}
+                  try { if (smittyLogo && smittyLogo.scene) smittyLogo.destroy(); } catch {}
+                  try { if (smittyText && smittyText.scene) smittyText.destroy(); } catch {}
+                  if (isIPhone()) {
+                    if (this.textures.exists('smittyLogo')) this.textures.remove('smittyLogo');
+                    if (this.textures.exists('smittyTextLogo')) this.textures.remove('smittyTextLogo');
+                  }
+                  this.events.off("update", videoCheckHandler);
+                  this.introVideoDone = true;
+                  if (!this.introCutsceneLaunched) {
+                    this.launchIntroCutscene();
+                  }
+                },
+              });
+            }, holdDuration);
+            return;
+          }
           completeIntroVideo();
         }
       }
@@ -651,33 +808,50 @@ export class LoadingScene extends SceneBase {
     intro.setScale(3);
 
     this.load.once(this.LOAD_EVENTS.START, () => {
-      introStartAtMs = this.time.now;
+      introStartAtMs = Date.now();
       intro.loadURL("images/intro_smitty.mp4", true);
       if (mobile) {
         intro.video?.setAttribute("webkit-playsinline", "webkit-playsinline");
         intro.video?.setAttribute("playsinline", "playsinline");
       }
       intro.play();
+      intro.once('textureready', () => {
+        this.time.delayedCall(225, () => {
+          intro.setPosition(0, 45);
+        });
+      });
+      const checkDuration = () => {
+        const d = intro.video?.duration;
+        if (d && Number.isFinite(d)) {
+        } else {
+          setTimeout(checkDuration, 50);
+        }
+      };
+      setTimeout(checkDuration, 50);
     });
 
     this.load.on(this.LOAD_EVENTS.PROGRESS , (progress: number) => {
       try {
+        const displayProgress = Math.min(progress, 0.99);
         if (percentText && percentText.scene) {
-          percentText.setText(`${Math.floor(progress * 100)}%`);
+          percentText.setText(`${Math.floor(displayProgress * 100)}%`);
         }
         if (progressBar && progressBar.scene) {
           progressBar.clear();
+
           const steps = 12;
           const barX = midWidth - 320;
           const barY = 360;
-          const barWidth = 640 * progress;
+          const barWidth = 640 * displayProgress;
           const barHeight = 64;
+
           const topGold = Phaser.Display.Color.ValueToColor(0xFFD700);
           const bottomGold = Phaser.Display.Color.ValueToColor(0xB8860B);
+
           for (let step = 0; step < steps; step++) {
             const stepY = barY + (step / steps) * barHeight;
             const stepHeight = barHeight / steps;
-            const ratio = step / (steps - 1);
+
             const interpolatedColor = Phaser.Display.Color.Interpolate.ColorWithColor(
               topGold,
               bottomGold,
@@ -727,9 +901,16 @@ export class LoadingScene extends SceneBase {
           break;
         case "smittyLogo":
           if (intro && intro.isPlaying && intro.isPlaying() &&
-              intro.getCurrentTime() >= 1.5 && smittyLogo && !smittyLogo.visible) {
-            smittyLogo.setTexture("smittyLogo");
-            smittyLogo.setVisible(true);
+              intro.getCurrentTime() >= 0.88 && smittyLogo && !smittyLogo.visible) {
+            showSmittyLogos();
+          }
+          break;
+        case "smittyTextLogo":
+          if (intro && intro.isPlaying && intro.isPlaying() &&
+              intro.getCurrentTime() >= 0.88 && smittyText && !smittyText.visible && smittyLogo.visible) {
+            smittyText.setPosition(midWidth, smittyLogo.y + smittyLogo.displayHeight / 2 + 50);
+            smittyText.setTexture("smittyTextLogo");
+            smittyText.setVisible(true);
           }
           break;
       }
@@ -802,44 +983,134 @@ export class LoadingScene extends SceneBase {
         hasMods = false;
       }
 
-      if (this.loadingGraphics && this.loadingGraphics.length > 0) {
-        if (hasMods) {
-          await new Promise<void>(resolve => {
-            this.tweens.add({
-              targets: this.loadingGraphics,
-              alpha: 0,
-              duration: 500,
-              ease: 'Power2',
-              onComplete: () => {
-                this.loadingGraphics.forEach(g => {
-                  if (g && g.scene) {
-                    g.destroy();
-                  }
-                });
-                this.loadingGraphics = [];
-                resolve();
-              }
-            });
-          });
-
-          await new Promise<void>(resolve => {
-            this.loadCustomMods().then(() => {
-              resolve();
-            });
-          });
-          this.scene.start("battle");
-          this.hideModLoadingScreen();
-          } else {
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          this.scene.start("battle");
-          this.loadingGraphics.forEach(g => {
-            if (g && g.scene) {
-              g.destroy();
-            }
-          });
-          this.loadingGraphics = [];
-        }
+      if (hasMods) {
+        await new Promise<void>(resolve => {
+          this.loadCustomMods().then(() => resolve());
+        });
       }
+
+      if (hasMods) {
+        this.hideModLoadingScreen();
+      }
+
+      this.scene.launch("battle");
+      this.scene.bringToTop(LoadingScene.KEY);
+
+      const percentTextRef = this.loadingGraphics[5] as Phaser.GameObjects.Text;
+      const progressBarRef = this.loadingGraphics[2] as Phaser.GameObjects.Graphics;
+      const midW = this.cameras.main.width / 2;
+
+      let trickleVal = 0.99;
+      let trickleStopped = false;
+
+      const drawBar = (fillRatio: number) => {
+        if (!progressBarRef || !progressBarRef.scene) return;
+        progressBarRef.clear();
+        const steps = 12;
+        const bX = midW - 320;
+        const bY = 360;
+        const bW = 640 * fillRatio;
+        const bH = 64;
+        const topGold = Phaser.Display.Color.ValueToColor(0xFFD700);
+        const bottomGold = Phaser.Display.Color.ValueToColor(0xB8860B);
+        for (let step = 0; step < steps; step++) {
+          const stepY = bY + (step / steps) * bH;
+          const stepHeight = bH / steps;
+          const interpolatedColor = Phaser.Display.Color.Interpolate.ColorWithColor(
+            topGold, bottomGold, steps - 1, step
+          );
+          const color = Phaser.Display.Color.GetColor(
+            interpolatedColor.r, interpolatedColor.g, interpolatedColor.b
+          );
+          progressBarRef.fillStyle(color, 0.8);
+          progressBarRef.fillRect(bX, stepY, bW, stepHeight);
+        }
+      };
+
+      const trickleTimer = this.time.addEvent({
+        delay: 800,
+        loop: true,
+        callback: () => {
+          if (trickleStopped) return;
+          if (trickleVal < 0.99) {
+            trickleVal += 0.01;
+            if (trickleVal > 0.99) trickleVal = 0.99;
+            if (percentTextRef && percentTextRef.scene) {
+              percentTextRef.setText(`${Math.floor(trickleVal * 100)}%`);
+            }
+            drawBar(trickleVal);
+          }
+        }
+      });
+
+      let condenseStarted = false;
+      const fallbackTimer = setTimeout(() => {
+        if (condenseStarted) return;
+        condenseStarted = true;
+        trickleStopped = true;
+        trickleTimer.remove();
+
+        setTimeout(() => {
+          this._loadingSmitomCondensing = true;
+          this.dismissLoadingSmitom();
+        }, 0);
+
+        if (!this.scene.isActive("battle")) {
+          this.scene.start("battle");
+        }
+      }, 15000);
+
+      this.game.events.once("_condenseStart", () => {
+        if (condenseStarted) return;
+        condenseStarted = true;
+        clearTimeout(fallbackTimer);
+        trickleStopped = true;
+        trickleTimer.remove();
+
+        setTimeout(() => {
+          this._loadingSmitomCondensing = true;
+          this.dismissLoadingSmitom();
+        }, 0);
+
+        if (percentTextRef && percentTextRef.scene) {
+          percentTextRef.setText("100%");
+        }
+
+        const barFillCounter = { val: trickleVal };
+
+        this.tweens.add({
+          targets: barFillCounter,
+          val: 1.0,
+          duration: 250,
+          ease: "Cubic.easeOut",
+          onUpdate: () => {
+            drawBar(barFillCounter.val);
+          },
+          onComplete: () => {
+
+            const introOverlay = this.add.image(0, 0, "loading_bg");
+            introOverlay.setOrigin(0, 0);
+            introOverlay.setDisplaySize(this.game.canvas.width, this.game.canvas.height);
+            introOverlay.setDepth(9998);
+
+            if (this.loadingGraphics && this.loadingGraphics.length > 0) {
+              this.loadingGraphics.forEach(g => {
+                if (g && g.scene) g.destroy();
+              });
+              this.loadingGraphics = [];
+            }
+
+            const effectId = Math.floor(Math.random() * getEffectCount());
+            const handle: CondenseTrailHandle = playCondenseTrailTransition(this, effectId, 1400, "loading_bg");
+            this.game.registry.set("_condenseTrailHandle", handle);
+            this.game.events.emit("_condenseHandleReady");
+
+            handle.animationDone.then(() => {
+              introOverlay.destroy();
+            });
+          }
+        });
+      });
     } catch (error) {
       console.error("Error in create method:", error);
       if (!this.scene.isActive("battle")) {
@@ -858,7 +1129,33 @@ export class LoadingScene extends SceneBase {
     return voidBeaten ? 'B' : 'A';
   }
 
+  private shouldDeferIntroToTitle(): boolean {
+    try {
+      const username = loggedInUser?.username ?? "Champion";
+      const userKey = `data_${username}`;
+      const raw = localStorage.getItem(userKey);
+      if (!raw) {
+        const guestKey = "data_guest";
+        const guestRaw = localStorage.getItem(guestKey);
+        if (!guestRaw) return true;
+        const guestData = JSON.parse(guestRaw);
+        const guestStats = guestData?.gameStats;
+        if (guestStats && !guestStats.onboardingTutorialComplete && (guestStats.sessionsPlayed === 0 || guestStats.battles === 0)) {
+          return true;
+        }
+        return false;
+      }
+      const systemData = JSON.parse(raw);
+      const stats = systemData?.gameStats;
+      if (stats && !stats.onboardingTutorialComplete && (stats.sessionsPlayed === 0 || stats.battles === 0)) {
+        return true;
+      }
+    } catch {}
+    return false;
+  }
+
   private launchIntroCutscene(): void {
+    if (this.introCutsceneLaunched) return;
     this.introCutsceneLaunched = true;
 
     const showLoadingGraphics = () => {
@@ -869,6 +1166,7 @@ export class LoadingScene extends SceneBase {
           }
         });
       }
+      this.spawnLoadingSmitom();
     };
 
     let disableCutscenes = false;
@@ -880,9 +1178,21 @@ export class LoadingScene extends SceneBase {
       }
     } catch {}
 
-    if (disableCutscenes) {
-      this.introCutsceneDone = true;
-      showLoadingGraphics();
+    if (disableCutscenes || this.shouldDeferIntroToTitle()) {
+      const revealWhenReady = () => {
+        if (!this.introVideoDone) {
+          setTimeout(revealWhenReady, 50);
+          return;
+        }
+        this.introCutsceneDone = true;
+        showLoadingGraphics();
+        this.time.delayedCall(1000, () => {
+          if (!this._loadingSmitom && !this._loadingSmitomCondensing) {
+            this.spawnLoadingSmitom();
+          }
+        });
+      };
+      revealWhenReady();
       return;
     }
 
@@ -894,14 +1204,275 @@ export class LoadingScene extends SceneBase {
     this.game.events.once('introCutsceneComplete', () => {
       this.introCutsceneDone = true;
       showLoadingGraphics();
+      this.time.delayedCall(1000, () => {
+        if (!this._loadingSmitom && !this._loadingSmitomCondensing) {
+          this.spawnLoadingSmitom();
+        }
+      });
     });
 
     const variant = this.getIntroVariant();
     this.scene.launch(IntroCutsceneScene.KEY, { variant });
   }
 
+  private showLoadingSmitomRewardPopup(x: number, y: number, amount: number = 100): void {
+    const isRare = amount >= 500;
+    const popup = this.add.text(x, y - 10, `+${amount} \u03A9GOLD`, {
+      fontFamily: "emerald",
+      fontSize: isRare ? "40px" : "32px",
+      color: isRare ? "#FF6600" : "#FFD700",
+      stroke: "#000000",
+      strokeThickness: 4,
+      align: "center"
+    });
+    popup.setOrigin(0.5, 1);
+    popup.setDepth(100);
+
+    this.tweens.add({
+      targets: popup,
+      y: y - 60,
+      alpha: 0,
+      duration: 900,
+      ease: "Cubic.easeOut",
+      onComplete: () => {
+        if (popup.scene) popup.destroy();
+      }
+    });
+  }
+
+  private handleSmitomClick(
+    root: Phaser.GameObjects.Container,
+    smitom: Phaser.GameObjects.Sprite,
+    hitZone: Phaser.GameObjects.Zone
+  ): void {
+    this._loadingSmitomClaimed = true;
+    this._loadingSmitomDismissing = true;
+
+    hitZone.disableInteractive();
+    smitom.setVisible(false);
+
+    const rewardAmount = this._currentSmitomRewardValue;
+    const pending = (this.game.registry.get("_loadingSmitomRewardGold") as number) || 0;
+    this.game.registry.set("_loadingSmitomRewardGold", pending + rewardAmount);
+
+    try {
+      const battle = this.scene.get("battle") as BattleScene;
+      if (battle?.getRandomSmittySound) {
+        battle.getRandomSmittySound(undefined, true);
+      } else if (this.cache.audio.exists("ui/select")) {
+        this.sound.play("ui/select", { volume: 0.5 });
+      }
+    } catch (e) {
+      console.warn("[loading-smitom] sound failed", e);
+    }
+
+    this.showLoadingSmitomRewardPopup(root.x, root.y, rewardAmount);
+
+    this.tweens.killTweensOf(root);
+    this.tweens.killTweensOf(smitom);
+    this.tweens.add({
+      targets: smitom,
+      scaleX: 0, scaleY: 0, alpha: 0,
+      duration: 250, ease: "Sine.easeOut",
+      onComplete: () => {
+        this.teardownSmitomInstance(true);
+      }
+    });
+  }
+
+  private teardownSmitomInstance(scheduleRespawn: boolean): void {
+    if (this._loadingSmitomZone) {
+      this._loadingSmitomZone.off("pointerdown");
+      this._loadingSmitomZone.disableInteractive();
+      this._loadingSmitomZone = null;
+    }
+    if (this._loadingSmitom) {
+      this.tweens.killTweensOf(this._loadingSmitom);
+      this._loadingSmitom = null;
+    }
+    if (this._loadingSmitomRoot) {
+      this.tweens.killTweensOf(this._loadingSmitomRoot);
+      this._loadingSmitomRoot.destroy();
+      this._loadingSmitomRoot = null;
+    }
+
+    this._loadingSmitomClaimed = false;
+    this._loadingSmitomDismissing = false;
+
+    if (scheduleRespawn && !this._loadingSmitomCondensing) {
+      this.scheduleSmitomRespawn();
+    }
+  }
+
+  private scheduleSmitomSessionDismiss(): void {
+    return;
+    if (this._smitomSessionDismissScheduled || this._loadingSmitomCondensing) return;
+    this._smitomSessionDismissScheduled = true;
+    const timer = this.time.delayedCall(2500, () => {
+      if (!this._loadingSmitomCondensing) {
+        this.beginEarlySmitomFadeDismiss();
+      }
+    });
+    this._loadingSmitomTimers.push(timer);
+  }
+
+  private beginEarlySmitomFadeDismiss(): void {
+    if (this._earlySmitomDismissStarted || this._loadingSmitomCondensing) return;
+    this._earlySmitomDismissStarted = true;
+    this._loadingSmitomCondensing = true;
+
+    const smitom = this._loadingSmitom;
+    const root = this._loadingSmitomRoot;
+    if (!smitom || !root || !smitom.scene) {
+      this.dismissLoadingSmitom();
+      return;
+    }
+
+    this._loadingSmitomTimers.forEach(t => t.destroy());
+    this._loadingSmitomTimers = [];
+    this._loadingSmitomDismissing = true;
+    if (this._loadingSmitomZone) this._loadingSmitomZone.disableInteractive();
+
+    this.tweens.killTweensOf(root);
+    this.tweens.killTweensOf(smitom);
+    this.tweens.add({
+      targets: smitom,
+      alpha: 0, scaleX: 0, scaleY: 0,
+      duration: 350, ease: "Sine.easeOut",
+      onComplete: () => {
+        if (!this._loadingSmitomRoot) return;
+        this.dismissLoadingSmitom();
+      }
+    });
+  }
+
+  private dismissLoadingSmitom(): void {
+    this._loadingSmitomTimers.forEach(t => t.destroy());
+    this._loadingSmitomTimers = [];
+    this._loadingSmitomDismissing = true;
+    this.teardownSmitomInstance(false);
+  }
+
+  private spawnLoadingSmitom(): void {
+    return;
+    if (this._loadingSmitom || this._loadingSmitomRoot) return;
+    if (this._loadingSmitomCondensing) return;
+    if (!this.textures.exists("pokemon_icons_glitch")) {
+      const retryTimer = this.time.delayedCall(200, () => {
+        this.spawnLoadingSmitom();
+      });
+      this._loadingSmitomTimers.push(retryTimer);
+      return;
+    }
+
+    const w = this.cameras.main.width;
+    const h = this.cameras.main.height;
+    const centerX = w / 2;
+    const centerY = h / 2;
+    const excludeW = w * 0.25;
+    const excludeH = h * 0.25;
+
+    let x: number;
+    do {
+      x = Phaser.Math.Between(80, w - 80);
+    } while (x > centerX - excludeW && x < centerX + excludeW);
+
+    let y: number;
+    do {
+      y = Phaser.Math.Between(60, h - 60);
+    } while (y > centerY - excludeH && y < centerY + excludeH);
+
+    const root = this.add.container(x, y);
+    root.setDepth(50);
+
+    this._currentSmitomRewardValue = Phaser.Math.Between(1, 100) <= 10 ? 500 : 100;
+    const isRare = this._currentSmitomRewardValue >= 500;
+    const targetScale = isRare ? 3.5 : 3;
+
+    const smitom = this.add.sprite(0, 0, "pokemon_icons_glitch", "smitom");
+    smitom.setScale(0);
+    smitom.setAlpha(0);
+    if (isRare) {
+      smitom.setTint(0xFFD700);
+    }
+
+    const hitZone = this.add.zone(0, 0, 96, 96);
+    hitZone.setInteractive({ useHandCursor: true });
+
+    root.add([smitom, hitZone]);
+
+    this._loadingSmitomRoot = root;
+    this._loadingSmitom = smitom;
+    this._loadingSmitomZone = hitZone;
+    this._loadingSmitomClaimed = false;
+    this._loadingSmitomDismissing = false;
+
+    this.tweens.add({
+      targets: smitom,
+      scaleX: targetScale, scaleY: targetScale, alpha: 1,
+      duration: 450, ease: "Back.easeOut",
+      onComplete: () => {
+        if (!root.scene) return;
+        this.tweens.add({
+          targets: root,
+          y: root.y - 3,
+          duration: 800, ease: "Sine.easeInOut",
+          yoyo: true, repeat: -1
+        });
+        this.scheduleSmitomSessionDismiss();
+      }
+    });
+
+    hitZone.on("pointerdown", (p: Phaser.Input.Pointer) => {
+      if (p.button !== 0 || this._loadingSmitomClaimed || this._loadingSmitomDismissing) return;
+      this.handleSmitomClick(root, smitom, hitZone);
+    });
+
+    const autoHide = this.time.delayedCall(4000, () => {
+      if (this._loadingSmitomClaimed || this._loadingSmitomDismissing || !this._loadingSmitom) return;
+      this._loadingSmitomDismissing = true;
+      hitZone.disableInteractive();
+      this.tweens.killTweensOf(root);
+      this.tweens.add({
+        targets: smitom,
+        scaleX: 0, scaleY: 0, alpha: 0,
+        duration: 350, ease: "Sine.easeOut",
+        onComplete: () => {
+          this.teardownSmitomInstance(!this._loadingSmitomCondensing);
+        }
+      });
+    });
+    this._loadingSmitomTimers.push(autoHide);
+  }
+
+  private scheduleSmitomRespawn(): void {
+    return;
+    if (this._loadingSmitomCondensing) return;
+    const delay = Phaser.Math.Between(800, 1500);
+    const timer = this.time.delayedCall(delay, () => {
+      if (!this._loadingSmitomCondensing) {
+        this.spawnLoadingSmitom();
+      }
+    });
+    this._loadingSmitomTimers.push(timer);
+  }
+
   handleDestroy() {
     console.debug(`Destroying ${LoadingScene.KEY} scene`);
+    this.dismissLoadingSmitom();
+    const pendingGold = (this.game.registry.get("_loadingSmitomRewardGold") as number) || 0;
+    if (pendingGold > 0) {
+      try {
+        const battle = this.scene.get("battle") as BattleScene;
+        if (battle?.gameData?.dataLoaded) {
+          battle.gameData.updatePermaMoney(battle, pendingGold, true);
+          battle.gameData.localSaveAll(battle);
+          this.game.registry.set("_loadingSmitomRewardGold", 0);
+        }
+      } catch (e) {
+        console.error("[loading-smitom] handleDestroy flush failed", e);
+      }
+    }
     this.load.off(this.LOAD_EVENTS.PROGRESS);
     this.load.off(this.LOAD_EVENTS.FILE_COMPLETE);
     this.load.off(this.LOAD_EVENTS.COMPLETE);

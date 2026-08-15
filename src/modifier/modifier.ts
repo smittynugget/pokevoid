@@ -27,6 +27,8 @@ import {SpeciesFormKey} from "#enums/species-form-key";
 import i18next from "i18next";
 
 import {allMoves} from "#app/data/move";
+import { isYuMove } from "#enums/moves";
+import { isDuelmonSpecies } from "#app/data/duelmon-rankups";
 import {Abilities} from "#app/enums/abilities";
 import { calculateAltBuildStatsWithSwapping } from "../data/alt-build-stat-calculator";
 import {LearnMovePhase} from "#app/phases/learn-move-phase.js";
@@ -38,7 +40,7 @@ import {UnlockPhase} from "#app/phases/unlock-phase.js";
 import {RunType, RunDuration} from "#enums/quest-type-conditions";
 import Trainer from "#app/field/trainer";
 import Move from "#app/data/move";
-import {Ability, allAbilities} from "#app/data/ability";
+import {Ability, allAbilities, ClampMultiHitToThreeAbAttr} from "#app/data/ability";
 import {QuestState, QuestUnlockables, QuestUnlockData} from "#app/system/game-data";
 import {RewardType} from "#enums/reward-type";
 import {QuestUnlockPhase} from "#app/phases/quest-unlock-phase";
@@ -48,8 +50,9 @@ import {QuestStage} from "#app/modifier/modifier-quest-config";
 import {getRandomPermaModifierKey, ModifierRewardPhase} from "#app/phases/modifier-reward-phase";
 import {UnlockUniSmittyPhase} from "#app/phases/unlock-unismitty-phase";
 import {QuestManagerPhase} from "#app/phases/quest-manager-phase";
+import {BountyRewardPhase} from "#app/phases/bounty-reward-phase";
 import {Phase} from "#app/phase";
-import {Mode} from "#app/ui/ui";
+import {Mode} from "#app/ui/mode";
 import {Command} from "../ui/command-ui-handler";
 import {getPokemonSpecies} from "#app/data/pokemon-species";
 import {FormChangePhase} from "#app/phases/form-change-phase";
@@ -61,17 +64,21 @@ import { UpgradePath } from "#app/enums/upgrade-path.js";
 import { UpgradeCategory } from "#app/enums/upgrade-category.js";
 import { MoveUpgradeTooltipUtils } from "../ui/move-upgrade-tooltip";
 import { ModifierTooltipUtils } from "../ui/modifier-tooltip-utils";
-import { PathNodeContext } from "#app/phases/battle-path-phase";
-import { PokemonAltBuildDefinition, AltBuildColorPalette } from "#app/data/pokemon-alt-buid.js";
+import { PathNodeContext } from "#app/battle";
+import { PokemonAltBuildDefinition, AltBuildColorPalette, POKEMON_ALT_BUILDS } from "#app/data/pokemon-alt-buid.js";
 import { ChampionUtils } from "#app/system/champion-utils";
 import { assignTypeThemedMoves } from "../system/type-move-utils";
 export type ModifierPredicate = (modifier: Modifier) => boolean;
 
 const iconOverflowIndex = 40;
 
+const safeTypeName = (m: Modifier): string => {
+    try { return m.type?.name ?? ""; } catch { return ""; }
+};
+
 export const modifierSortFunc = (a: Modifier, b: Modifier): number => {
-    const aName = a.type?.name ?? "";
-    const bName = b.type?.name ?? "";
+    const aName = safeTypeName(a);
+    const bName = safeTypeName(b);
     const itemNameMatch = aName.localeCompare(bName);
     const typeNameMatch = (a.constructor?.name ?? "").localeCompare(b.constructor?.name ?? "");
     const aId = a instanceof PokemonHeldItemModifier && a.pokemonId ? a.pokemonId : 4294967295;
@@ -104,6 +111,10 @@ export class ModifierBar extends Phaser.GameObjects.Container {
         this.overflowHideTimeout = null;
     }
     updateModifiers(modifiers: PersistentModifier[], hideHeldItems: boolean = false) {
+        for (const child of this.getAll()) {
+          const timer = (child as any).__easterEggClickTimer;
+          if (timer != null) clearTimeout(timer);
+        }
         this.removeAll(true);
 
         const visibleIconModifiers = modifiers.filter(m => m.isIconVisible(this.scene as BattleScene));
@@ -123,6 +134,7 @@ export class ModifierBar extends Phaser.GameObjects.Container {
             this.setModifierIconPosition(icon, sortedVisibleIconModifiers.length);
             icon.setInteractive(new Phaser.Geom.Rectangle(0, 0, 32, 24), Phaser.Geom.Rectangle.Contains);
             icon.on("pointerover", () => {
+                if ((this.scene as BattleScene).uiEditModeActive) return;
                 if (thisArg.overflowHideTimeout !== null) {
                     clearTimeout(thisArg.overflowHideTimeout);
                     thisArg.overflowHideTimeout = null;
@@ -142,13 +154,15 @@ export class ModifierBar extends Phaser.GameObjects.Container {
                         this.player
                     );
                 } else {
-                    ModifierTooltipUtils.showForModifier(this.scene as BattleScene, modifier);
+                    const iconWorldMatrix = icon.getWorldTransformMatrix();
+                    ModifierTooltipUtils.showForModifier(this.scene as BattleScene, modifier, { x: iconWorldMatrix.tx, y: iconWorldMatrix.ty });
                 }
                 if (this.modifierCache && this.modifierCache.length > iconOverflowIndex) {
                     thisArg.updateModifierOverflowVisibility(true);
                 }
             });
             icon.on("pointerout", () => {
+                if ((this.scene as BattleScene).uiEditModeActive) return;
                 if (modifier instanceof MoveUpgradeModifier) {
                     MoveUpgradeTooltipUtils.hideTooltip(this.scene as BattleScene);
                 } else {
@@ -164,6 +178,31 @@ export class ModifierBar extends Phaser.GameObjects.Container {
                     }, 150);
                 }
             });
+
+            if (modifier instanceof PermaModifier && !(modifier instanceof PermaRunQuestModifier) && !(modifier instanceof PermaCollectedTypeModifier)) {
+                let clickCount = 0;
+                let clickTimer: number | null = null;
+                icon.on("pointerdown", () => {
+                    if ((this.scene as BattleScene).uiEditModeActive) return;
+                    clickCount++;
+                    if (clickTimer !== null) {
+                        clearTimeout(clickTimer);
+                    }
+                    if (clickCount >= 10) {
+                        clickCount = 0;
+                        const scene = this.scene as BattleScene;
+                        scene.gameData.permaModifiers.removeModifier(modifier as PersistentModifier);
+                        scene.gameData.saveAll(scene);
+                        scene.ui.updatePermaModifierBar(scene.gameData.permaModifiers);
+                    } else {
+                        clickTimer = window.setTimeout(() => {
+                            clickCount = 0;
+                            clickTimer = null;
+                        }, 3000);
+                        (icon as any).__easterEggClickTimer = clickTimer;
+                    }
+                });
+            }
         });
 
         for (const icon of this.getAll()) {
@@ -411,6 +450,108 @@ export class AddVoucherModifier extends ConsumableModifier {
     apply(args: any[]): boolean {
         const voucherCounts = (args[0] as BattleScene).gameData.voucherCounts;
         voucherCounts[this.voucherType] += this.count;
+
+        return true;
+    }
+}
+
+export class ForbiddenFormUnlockModifier extends ConsumableModifier {
+    private candidate: ModifierTypes.ForbiddenFormUnlockCandidate;
+
+    constructor(type: ModifierTypes.ModifierType, candidate: ModifierTypes.ForbiddenFormUnlockCandidate) {
+        super(type);
+        this.candidate = candidate;
+    }
+
+    apply(args: any[]): boolean {
+        const scene = args[0] as BattleScene;
+        const gd: any = (scene as any)?.gameData;
+        const ast: any = gd?.activeSkillTree;
+        if (!scene || !gd || !ast) {
+            return false;
+        }
+
+        try {
+            const c = this.candidate as any;
+            if (c?.kind === "QUEST_FORM") {
+                const questUnlockData = c.questUnlockData as QuestUnlockData;
+                const questId = questUnlockData?.questId as any;
+                if (!ast.sessionQuestUnlockables) {
+                    ast.sessionQuestUnlockables = {};
+                }
+                if (questId !== undefined && questId !== null) {
+                    ast.sessionQuestUnlockables[questId] = { questUnlockData };
+                }
+                const rt: any = questUnlockData?.rewardType;
+                const isGlitch =
+                    rt === RewardType.GLITCH_FORM_A ||
+                    rt === RewardType.GLITCH_FORM_B ||
+                    rt === RewardType.GLITCH_FORM_C ||
+                    rt === RewardType.GLITCH_FORM_D ||
+                    rt === RewardType.GLITCH_FORM_E;
+                if (isGlitch) {
+                    try {
+                        const rid: any = questUnlockData?.rewardId;
+                        const ids: any[] = Array.isArray(rid) ? rid : [rid];
+                        const rep = ids.find(v => typeof v === "number");
+                        if (typeof rep === "number") {
+                            const species = getPokemonSpecies(rep as any);
+                            const formName = species?.getGlitchFormName?.(true, undefined, rt)?.toLowerCase?.();
+                            if (formName) {
+                                if (!Array.isArray(ast.unlockedGlitchForms)) {
+                                    ast.unlockedGlitchForms = [];
+                                }
+                                if (!ast.unlockedGlitchForms.includes(formName)) {
+                                    ast.unlockedGlitchForms.push(formName);
+                                }
+                            }
+                        }
+                    } catch {
+                    }
+                }
+            } else if (c?.kind === "MOD_FORM") {
+                if (typeof c.systemName === "string" && c.systemName) {
+                    gd.unlockModFormForRun(c.systemName);
+                }
+            } else if (c?.kind === "UNI_SMITTY") {
+                if (typeof c.formName === "string" && c.formName) {
+                    gd.unlockUniSmittyFormForRun(c.formName);
+                }
+            }
+        } catch {
+            return false;
+        }
+        try {
+            const tooltip: any = (this as any)?.skillTreeTooltip;
+            const nodeId = tooltip?.nodeId;
+            const rewardType = tooltip?.rewardData?.type;
+            if (typeof nodeId === "string" && rewardType) {
+                const t: any = this.type as any;
+                const iconKey = t?.iconAtlasKey;
+                const iconFrame = (iconKey && typeof iconKey === "string" && iconKey.startsWith("pokemon_icons_mod_")) ? null : t?.iconFrame;
+                const recordData: any = {
+                    kind: (this.candidate as any)?.kind,
+                    iconKey,
+                    iconFrame
+                };
+
+                const c: any = this.candidate as any;
+                if (c?.kind === "QUEST_FORM") {
+                    recordData.questId = c?.questUnlockData?.questId;
+                    recordData.rewardType = c?.questUnlockData?.rewardType;
+                    recordData.rewardId = c?.questUnlockData?.rewardId;
+                } else if (c?.kind === "MOD_FORM") {
+                    recordData.systemName = c?.systemName;
+                    recordData.speciesId = c?.speciesId;
+                    recordData.formName = c?.formName;
+                } else if (c?.kind === "UNI_SMITTY") {
+                    recordData.formName = c?.formName;
+                }
+
+                scene.recordRunEndSummarySkillNodeObtained(nodeId, rewardType, recordData);
+            }
+        } catch {
+        }
 
         return true;
     }
@@ -960,13 +1101,13 @@ export class PokemonBaseStatModifier extends PokemonHeldItemModifier {
     }
 
     apply(args: any[]): boolean {
-        args[1][this.stat] = Math.min(Math.floor(args[1][this.stat] * (1 + this.getStackCount() * 0.1)), 999999);
+        args[1][this.stat] = Math.min(Math.floor(args[1][this.stat] * (1 + this.getStackCount() * 0.08)), 999999);
 
         return true;
     }
 
     getScoreMultiplier(): number {
-        return 1.1;
+        return 1.08;
     }
 
     getMaxHeldItemCount(pokemon: Pokemon): integer {
@@ -1003,13 +1144,13 @@ export class PlayerPokemonBaseStatBoosterModifier extends PokemonHeldItemModifie
     }
 
     apply(args: any[]): boolean {
-        args[1][this.stat] = Math.min(Math.floor(args[1][this.stat] * (1 + this.getStackCount() * 0.01)), 999999);
+        args[1][this.stat] = Math.min(Math.floor(args[1][this.stat] * (1 + this.getStackCount() * 0.03)), 999999);
 
         return true;
     }
 
     getScoreMultiplier(): number {
-        return 1.01;
+        return 1.03;
     }
 
     getMaxHeldItemCount(pokemon: Pokemon): integer {
@@ -1526,6 +1667,8 @@ export class BerryModifier extends PokemonHeldItemModifier {
         getBerryEffectFunc(this.berryType)(pokemon);
         if (!preserve.value) {
             this.consumed = true;
+            pokemon.turnData.berryConsumedThisTurn = true;
+            pokemon.summonData.berriesConsumed = (pokemon.summonData.berriesConsumed ?? 0) + 1;
         }
 
         return true;
@@ -2196,9 +2339,14 @@ export class PokemonMultiHitModifier extends PokemonHeldItemModifier {
     }
 
     apply(args: any[]): boolean {
-        (args[1] as Utils.IntegerHolder).value *= (this.getStackCount() + 1);
-
+        const pokemon = args[0] as Pokemon;
+        const hitCount = args[1] as Utils.IntegerHolder;
         const power = args[2] as Utils.NumberHolder;
+
+        if (!pokemon.hasAbilityWithAttr(ClampMultiHitToThreeAbAttr)) {
+            hitCount.value *= (this.getStackCount() + 1);
+        }
+
         switch (this.getStackCount()) {
             case 1:
                 power.value *= 0.4;
@@ -2271,8 +2419,10 @@ export class PokemonFormChangeItemModifier extends PokemonHeldItemModifier {
             ret = pokemon.scene.triggerPokemonFormChange(pokemon, SpeciesFormChangeItemTrigger);
         }
 
-        if(isSmittyItem || this.formChangeItem >= FormChangeItem.GLITCHI_GLITCHI_FRUIT && this.formChangeItem <= FormChangeItem.GLITCH_MASTER_PARTS) {
-            reduceGlitchPieceModifier(pokemon, 5);
+        if (!pokemon.scene.gameData.tutorialOnboardActive) {
+            if(isSmittyItem || this.formChangeItem >= FormChangeItem.GLITCHI_GLITCHI_FRUIT && this.formChangeItem <= FormChangeItem.GLITCH_MASTER_PARTS) {
+                reduceGlitchPieceModifier(pokemon, 5);
+            }
         }
 
         if (switchActive) {
@@ -3143,6 +3293,9 @@ export class AnyAbilityModifier extends PokemonHeldItemModifier {
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
         pokemon.makeSpeciesUnique();
+        if (pokemon.isFusion()) {
+            pokemon.makeFusionSpeciesUnique();
+        }
         let currentAbilityIndex = 0;
         if(pokemon.isFusion()) {
             currentAbilityIndex = pokemon.fusionAbilityIndex;
@@ -3428,11 +3581,21 @@ export class TypeSwitcherModifier extends PokemonHeldItemModifier {
             inversionFactor: 0.0,
         };
 
-        const realSpriteKey = pokemon.getSpriteKey();
-        const realTextureLoaded = pokemon.scene.textures.exists(realSpriteKey)
-            && pokemon.scene.textures.get(realSpriteKey).key !== '__MISSING';
+        const realSpriteKey = pokemon.getBattleSpriteKey(false);
+        const backSpriteKey = pokemon.getBattleSpriteKey(true);
+        const textureReady = (key: string) =>
+            pokemon.scene.textures.exists(key)
+            && pokemon.scene.textures.get(key).key !== '__MISSING';
+        const realTextureLoaded = textureReady(realSpriteKey) && textureReady(backSpriteKey);
         if (realTextureLoaded) {
             pokemon.updateAltBuildPalette(syntheticAltBuild);
+            delete (pokemon as any)._pendingTypeSwitcherPalette;
+            if (pokemon.isFusion()) {
+                pokemon.updateFusionPalette();
+                if (pokemon.summonData?.speciesForm) {
+                    pokemon.updateFusionPalette(true);
+                }
+            }
         } else {
             pokemon.altBuildBlendMode = 'grayscale_overlay';
             pokemon.altBuildInversionFactor = 0.0;
@@ -3503,7 +3666,7 @@ export class StatSacrificeModifier extends PokemonHeldItemModifier {
     apply(args: any[]): boolean {
         const pokemon = args[0] as Pokemon;
         pokemon.makeSpeciesUnique();
-        args[1][this.stat] = Math.min(Math.floor(args[1][this.stat] * (1 + this.getStackCount() * 0.1)), 999999);
+        args[1][this.stat] = Math.min(Math.floor(args[1][this.stat] * (1 + this.getStackCount() * 0.12)), 999999);
 
         if (this.pokemonSacrifice instanceof PlayerPokemon) {
             if(!reduceCollectedTypeModifiers(pokemon.scene, this.pokemonSacrifice)) {
@@ -3563,6 +3726,9 @@ export class MoveSacrificeModifier extends PokemonHeldItemModifier {
             const moves = this.pokemonSacrifice.getMoveset();
             moves.forEach((move, index) => {
                 if (move) {
+                    if (isYuMove(move.moveId) && !isDuelmonSpecies(pokemon.species.speciesId)) {
+                        return;
+                    }
                     pokemon.setMove(index, move.moveId);
                 }
             });
@@ -3856,7 +4022,7 @@ export function applySignatureTypeSwitcher(scene: BattleScene, pokemon: PlayerPo
     const modifier = modType.newModifier(pokemon) as TypeSwitcherModifier;
     scene.addModifier(modifier, false);
 
-    if (scene.gameMode?.isDraft) {
+    if (scene.gameMode?.isDraft && !(pokemon as any)._typeMovePreApplied) {
       assignTypeThemedMoves(scene, pokemon, types);
     }
   }, 0, `${scene.seed}_sig_types_${pokemon.id}`);
@@ -3882,6 +4048,15 @@ export class AddPokemonModifier extends ConsumableModifier {
         this.newPokemon.loadAssets();
         reduceGlitchPieceModifier(this.newPokemon, 3);
         applySignatureTypeSwitcher(scene, this.newPokemon);
+        if (this.newPokemon.isSignature && this.newPokemon.altBuildId) {
+            const def = POKEMON_ALT_BUILDS[this.newPokemon.altBuildId];
+            if (def) {
+                const rank = this.newPokemon.altBuildRank ?? def.rank ?? 1;
+                const modType = new ModifierTypes.PokemonAltBuildModifierType(def, rank);
+                modType.id = "POKEMON_ALT_BUILD";
+                scene.addModifier(modType.newModifier(this.newPokemon), false);
+            }
+        }
         applyGeneralPokemonTypeMoves(scene, this.newPokemon);
         return true;
     }
@@ -3889,6 +4064,7 @@ export class AddPokemonModifier extends ConsumableModifier {
 
 export function applyGeneralPokemonTypeMoves(scene: BattleScene, pokemon: PlayerPokemon): void {
   if (!pokemon || pokemon.isSignature) return;
+  if ((pokemon as any)._typeMovePreApplied) return;
 
   const championData = getActiveChampionData(scene);
   if (!championData) return;
@@ -4143,6 +4319,7 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
     public task?: string;
     public consoleCode?: string;
     private currentMode: Mode;
+    public skillTreeBounty: boolean = false;
 
     constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration, condition: (...args: any[]) => boolean, goalCount: number, questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0, resetOnFail: boolean = false, stages?: QuestStage[], currentStageIndex: number = 0, consoleCode: string = "" ) {
         super(type, condition, questUnlockData, goalCount);
@@ -4234,6 +4411,16 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
 
     private finalizeQuest(scene: BattleScene): void {
         this.handleQuestManagerPhase(scene, async () => {
+            if (this.skillTreeBounty) {
+                const isVictoryBounty = this instanceof PermaWinQuestModifier;
+                const isRivalBounty = this instanceof PermaBeatTrainerQuestModifier;
+                if (!Overrides.FORCE_BOUNTY_COMPLETION_OVERRIDE) {
+                    scene.removeModifier(this as PersistentModifier);
+                    scene.updateModifiers(true);
+                }
+                scene.unshiftPhase(new BountyRewardPhase(scene, isVictoryBounty, isRivalBounty));
+                return;
+            }
             if (!this.consoleCode) {
                 scene.gameData.setQuestState(
                     this.questUnlockData.questId,
@@ -4269,7 +4456,11 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
             }
             if (this.currentStageIndex < this.stages.length - 1) {
                 this.handleQuestManagerPhase(scene, async () => {
-                    this.handleQuestReward(scene, this.stages[this.currentStageIndex].questUnlockData);
+                    if (this.skillTreeBounty && this instanceof PermaBeatTrainerQuestModifier) {
+                        scene.unshiftPhase(new BountyRewardPhase(scene, false, true));
+                    } else {
+                        this.handleQuestReward(scene, this.stages[this.currentStageIndex].questUnlockData);
+                    }
                     let currentStage = null
                     if(assignStage) {
                         currentStage = this.updateCurrentStage(this.currentStageIndex, true);
@@ -4555,7 +4746,9 @@ private addFallbackIcon(scene: BattleScene, container: Phaser.GameObjects.Contai
 }
 
     clone(): PermaRunQuestModifier {
-        return new PermaRunQuestModifier(this.type, this.runType, this.duration, this.condition, this.goalCount, this.questUnlockData,  this.task, this.currentCount, this.resetOnFail, this.stages, this.currentStageIndex, this.consoleCode);
+        const cloned = new PermaRunQuestModifier(this.type, this.runType, this.duration, this.condition, this.goalCount, this.questUnlockData,  this.task, this.currentCount, this.resetOnFail, this.stages, this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 
     getMaxStackCount(scene: BattleScene): integer {
@@ -4581,10 +4774,12 @@ export class PermaWinQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaWinQuestModifier {
-        return new PermaWinQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaWinQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4599,10 +4794,12 @@ export class PermaLoseQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaLoseQuestModifier {
-        return new PermaLoseQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaLoseQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4617,10 +4814,12 @@ export class PermaRivalWinQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaRivalWinQuestModifier {
-        return new PermaRivalWinQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaRivalWinQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4635,10 +4834,12 @@ export class PermaEndOfBattleQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaEndOfBattleQuestModifier {
-        return new PermaEndOfBattleQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaEndOfBattleQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4653,10 +4854,12 @@ export class PermaCatchQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaCatchQuestModifier {
-        return new PermaCatchQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaCatchQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4671,10 +4874,12 @@ export class PermaMoveQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaMoveQuestModifier {
-        return new PermaMoveQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaMoveQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4689,10 +4894,12 @@ export class PermaFaintQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaFaintQuestModifier {
-        return new PermaFaintQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaFaintQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4707,10 +4914,12 @@ export class PermaKnockoutQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaKnockoutQuestModifier {
-        return new PermaKnockoutQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaKnockoutQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4728,10 +4937,12 @@ export class PermaSpecialMoveQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaSpecialMoveQuestModifier {
-        return new PermaSpecialMoveQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaSpecialMoveQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, this.conditionQuest, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4746,10 +4957,12 @@ export class PermaBeatTrainerQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaBeatTrainerQuestModifier {
-        return new PermaBeatTrainerQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaBeatTrainerQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4764,10 +4977,12 @@ export class PermaUseAbilityQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaUseAbilityQuestModifier {
-        return new PermaUseAbilityQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaUseAbilityQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4782,10 +4997,12 @@ export class PermaHitQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaHitQuestModifier {
-        return new PermaHitQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaHitQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4800,10 +5017,12 @@ export class PermaWaveCheckQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaWaveCheckQuestModifier {
-        return new PermaWaveCheckQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaWaveCheckQuestModifier(this.type, this.runType, this.duration,
             this.condition as (scene: BattleScene, waveIndex: number) => boolean,
             this.goalCount, this.questUnlockData, this.task, this.currentCount,
             this.resetOnFail, null, null, this.stages, this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4839,10 +5058,12 @@ export class PermaTagRemovalQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaTagRemovalQuestModifier {
-        return new PermaTagRemovalQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaTagRemovalQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 
@@ -4857,10 +5078,12 @@ export class PermaFormChangeQuestModifier extends PermaRunQuestModifier {
     }
 
     clone(): PermaFormChangeQuestModifier {
-        return new PermaFormChangeQuestModifier(this.type, this.runType, this.duration,
+        const cloned = new PermaFormChangeQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
     }
 }
 export class PermaModifier extends PersistentModifier {
@@ -4968,16 +5191,18 @@ export class PermaPartyAbilityModifier extends PermaModifier {
     }
 
     clone(): PermaPartyAbilityModifier {
-        return new PermaPartyAbilityModifier(this.type, this.remainingCount, this.permaDuration, this.ability.id, this.condition);
+        return new PermaPartyAbilityModifier(this.type, this.remainingCount, this.permaDuration, this.ability?.id ?? Abilities.NONE, this.condition);
     }
 
     getArgs(): any[] {
-        return [this.remainingCount, this.permaDuration, this.ability.id, this.condition];
+        return [this.remainingCount, this.permaDuration, this.ability?.id ?? Abilities.NONE, this.condition];
     }
 
     match(modifier: Modifier): boolean {
-        return modifier instanceof PermaPartyAbilityModifier &&
-            modifier.ability.id === this.ability.id;
+        return modifier instanceof PermaPartyAbilityModifier
+            && this.ability != null
+            && modifier.ability != null
+            && modifier.ability.id === this.ability.id;
     }
 
     matchType(modifier: Modifier): boolean {
@@ -5324,7 +5549,7 @@ export class PokemonAltBuildModifier extends PokemonHeldItemModifier {
   match(modifier: Modifier): boolean {
     if (modifier instanceof PokemonAltBuildModifier) {
       const sameId = modifier.pokemonId === this.pokemonId && modifier.altBuild.id === this.altBuild.id;
-      const sameRank = (modifier.altBuild.rank || 1) === (this.altBuild.rank || 1);
+      const sameRank = (modifier.altBuild.rank ?? 1) === (this.altBuild.rank ?? 1);
       return sameId && sameRank;
     }
     return false;
@@ -5459,9 +5684,9 @@ export class PokemonAltBuildModifier extends PokemonHeldItemModifier {
 
     if (!isProgressingRank) {
       const [a1, a2, ah] = this.altBuild.abilityChanges;
-      if (a1 !== undefined) currentForm.ability1 = a1;
-      if (a2 !== undefined) currentForm.ability2 = a2;
-      if (ah !== undefined) currentForm.abilityHidden = ah;
+      if (a1 != null) currentForm.ability1 = a1;
+      if (a2 != null) currentForm.ability2 = a2;
+      if (ah != null) currentForm.abilityHidden = ah;
 
       if (this.altBuild.passiveAbilityChange) {
         pokemon.altPassiveForRun = this.altBuild.passiveAbilityChange;
@@ -5470,8 +5695,8 @@ export class PokemonAltBuildModifier extends PokemonHeldItemModifier {
 
       if (this.altBuild.typeChanges) {
         const [t1, t2] = this.altBuild.typeChanges;
-        if (t1 !== undefined) currentForm.type1 = t1;
-        if (t2 !== undefined) currentForm.type2 = t2;
+        if (t1 != null) currentForm.type1 = t1;
+        if (t2 != null) currentForm.type2 = t2;
       }
     } else if (newRank === 10) {
       if (this.altBuild.finalAbilityReplacements) {
@@ -5494,16 +5719,7 @@ export class PokemonAltBuildModifier extends PokemonHeldItemModifier {
 
     const baseName = pokemon.species.getName(pokemon.formIndex);
 
-    let altBuildDisplayName = i18next.t(`pokemonAltBuild:${this.altBuild.id}.name`);
-
-    if (this.altBuild.id.includes('apollo_diana_signature')) {
-      const scene = pokemon.scene as BattleScene;
-      const championId = scene?.gameData?.selectedChampionId;
-      if (championId === 'apollo' || championId === 'diana') {
-        const championName = ChampionUtils.getChampionDisplayName(championId);
-        altBuildDisplayName = i18next.t("pokemonAltBuild:championPartner", { champion: championName });
-      }
-    }
+    const altBuildDisplayName = ChampionUtils.getAltBuildDisplayName(this.altBuild.id);
 
     const rankSuffix = Utils.intToRoman(newRank);
     const altBuildName = rankSuffix
@@ -5832,6 +6048,26 @@ export class SkillTreeTokenRewardModifier extends ConsumableModifier {
   }
 }
 
+export class EssenceBundleRewardModifier extends ConsumableModifier {
+  private essenceType: Type;
+  private amount: number;
+
+  constructor(type: ModifierTypes.ModifierType, essenceType: Type, amount: number) {
+    super(type);
+    this.essenceType = essenceType;
+    this.amount = amount;
+  }
+
+  apply(args: any[]): boolean {
+    const scene = args[0] as BattleScene;
+    if (!scene?.gameData) {
+      return false;
+    }
+    scene.gameData.addEssence(this.essenceType, this.amount);
+    return true;
+  }
+}
+
 export class ChampionPokemonStatBoosterModifier extends PokemonHeldItemModifier {
   private championId: string;
   private stats: Stat[];
@@ -5839,7 +6075,7 @@ export class ChampionPokemonStatBoosterModifier extends PokemonHeldItemModifier 
   private championTypes: Type[];
   readonly isTransferrable: boolean = false;
 
-  constructor(type: ModifierType, pokemonId: integer, championId: string, stats: Stat[], boostPercent: number = 0.01, championTypes?: Type[]) {
+  constructor(type: ModifierType, pokemonId: integer, championId: string, stats: Stat[], boostPercent: number = 0.03, championTypes?: Type[]) {
     super(type, pokemonId, 1);
     this.championId = championId;
     this.stats = stats;

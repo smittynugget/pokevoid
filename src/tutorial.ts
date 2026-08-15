@@ -53,7 +53,7 @@ const tutorialHandlers = {
   [Tutorial.Select_Item]: (scene: BattleScene) => {
     return new Promise<void>(resolve => {
       scene.ui.setModeWithoutClear(Mode.MESSAGE).then(() => {
-        scene.ui.showText(i18next.t("tutorial:selectItem"), null, () => scene.ui.showText("", null, () => scene.ui.setModeWithoutClear(Mode.MODIFIER_SELECT).then(() => resolve())), null, true);
+        scene.ui.showText(i18next.t("tutorial:selectItem"), null, () => scene.ui.showText("", null, () => scene.ui.setModeWithoutClear(scene.ui.getMode()).then(() => resolve())), null, true);
       });
     });
   },
@@ -74,29 +74,5 @@ const tutorialHandlers = {
 };
 
 export function handleTutorial(scene: BattleScene, tutorial: Tutorial): Promise<boolean> {
-  return new Promise<boolean>(resolve => {
-    if (tutorial === Tutorial.Backup_Reminder) {
-      if (!scene.gameData.shouldShowBackupReminder()) {
-        return resolve(false);
-      }
-    } else if ((tutorial === Tutorial.Intro && scene.gameData.getTutorialFlags()[tutorial]) || (tutorial !== Tutorial.Intro)) {
-      return resolve(false);
-    }
-
-    const handler = scene.ui.getHandler();
-    if (handler instanceof AwaitableUiHandler) {
-      handler.tutorialActive = true;
-    }
-    tutorialHandlers[tutorial](scene).then(() => {
-      if (tutorial === Tutorial.Backup_Reminder) {
-        scene.gameData.updateBackupReminderTime();
-      } else {
-        scene.gameData.saveTutorialFlag(tutorial, true);
-      }
-      if (handler instanceof AwaitableUiHandler) {
-        handler.tutorialActive = false;
-      }
-      resolve(true);
-    });
-  });
+  return Promise.resolve(false);
 }

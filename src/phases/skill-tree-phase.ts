@@ -1,6 +1,7 @@
 import BattleScene from "#app/battle-scene.js";
 import { Phase } from "#app/phase.js";
 import { Mode } from "#app/ui/ui.js";
+import { GameModes } from "#app/game-mode";
 import i18next from "i18next";
 import * as Utils from "#app/utils.js";
 import { ChampionManager } from "#app/system/champion-manager";
@@ -19,7 +20,8 @@ import { SkillTreeNode } from "#app/system/skill-tree-data.js";
 import { PlayerGender } from "#enums/player-gender";
 import { CHAMPION_DEFINITIONS } from "#app/system/champion-registry";
 import { Species } from "#app/enums/species.js";
-import { QuestUnlockables } from "#app/system/game-data.js";
+import { ChampionSkillVersion, QuestUnlockables } from "#app/system/game-data.js";
+import Overrides from "#app/overrides";
 import { CommandPhase } from "#app/phases/command-phase";
 import { VoucherType } from "#app/system/voucher";
 
@@ -118,7 +120,7 @@ export class SkillTreePhase extends Phase {
     }
 
     this.generateStarterSelectionNodes(activeSkillTree, championData);
-    this.scene.ui.setMode(Mode.SKILL_TREE, {
+    this.scene.ui.setModeForceTransition(Mode.SKILL_TREE, {
       mode: SkillTreeMode.POKEMON_SELECTION,
       requiredSelections: this.config.requiredSelections ?? 2,
       activeSkillTree,
@@ -137,23 +139,25 @@ export class SkillTreePhase extends Phase {
 
   private initializeInitialAccessMode(activeSkillTree: ActiveSkillTreeData, championData: any): void {
     this.generateRandomDepth1Nodes(activeSkillTree, championData);
-    this.scene.ui.setMode(Mode.SKILL_TREE, {
+    this.scene.ui.setModeForceTransition(Mode.SKILL_TREE, {
       mode: SkillTreeMode.INITIAL_ACCESS,
       activeSkillTree,
       championData,
       onClose: () => this.handleComplete(),
       onCancel: () => this.handleCancel(),
+      phaseOnComplete: this.config.onComplete,
       shouldPlayPurchaseAnimation: this.config.shouldPlayPurchaseAnimation,
     });
   }
 
   private initializeBattleAccessMode(activeSkillTree: ActiveSkillTreeData, championData: any): void {
-    this.scene.ui.setMode(Mode.SKILL_TREE, {
+    this.scene.ui.setModeForceTransition(Mode.SKILL_TREE, {
       mode: SkillTreeMode.BATTLE_ACCESS,
       activeSkillTree,
       championData,
       onClose: () => this.handleComplete(),
       onCancel: () => this.handleCancel(),
+      phaseOnComplete: this.config.onComplete,
       shouldPlayPurchaseAnimation: this.config.shouldPlayPurchaseAnimation,
     });
   }
@@ -161,12 +165,13 @@ export class SkillTreePhase extends Phase {
   private initializeEnhancedDebugMode(activeSkillTree: ActiveSkillTreeData, championData: any): void {
     activeSkillTree.maxVisibleDepth = 10;
     this.generateFullTreeEnhancedDebug(activeSkillTree);
-    this.scene.ui.setMode(Mode.SKILL_TREE, {
+    this.scene.ui.setModeForceTransition(Mode.SKILL_TREE, {
       mode: SkillTreeMode.DEBUG_ENHANCED,
       activeSkillTree,
       championData,
       onClose: () => this.handleComplete(),
       onCancel: () => this.handleCancel(),
+      phaseOnComplete: this.config.onComplete,
       shouldPlayPurchaseAnimation: this.config.shouldPlayPurchaseAnimation,
     });
   }
@@ -341,6 +346,17 @@ export class SkillTreePhase extends Phase {
         return;
       }
 
+      const gm = this.scene.gameMode;
+      const isJourneyMode = gm && [
+        GameModes.CHAOS_JOURNEY,
+        GameModes.CHAOS_JOURNEY_SHORT,
+        GameModes.CHAOS_JOURNEY_FTL,
+      ].includes(gm.modeId);
+      if (isJourneyMode) {
+        this.generateJourneySelectionNodes(activeSkillTree, championData);
+        return;
+      }
+
       this.scene.executeWithSeedOffset(() => {
         const nodes: SkillTreeNode[] = [];
         const upgrades = Math.max(0, Math.min(6, championData?.starterNodeUpgradesUnlocked ?? 0));
@@ -390,6 +406,8 @@ export class SkillTreePhase extends Phase {
         });
 
         const nodeCount = Math.max(1, signatureCount + generalCount);
+        const hasBounty = this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE;
+        const totalRingSlots = nodeCount + (hasBounty ? 2 : 1);
         const bottomSlot = Math.max(1, Math.round(nodeCount / 4));
         const mysteryIdx = signatureCount > 0 ? Math.min(signatureCount - 1, bottomSlot) : -1;
 
@@ -496,7 +514,7 @@ export class SkillTreePhase extends Phase {
         let sigPlaced = 0;
 
         for (let i = 0; i < signatureCount; i++, placed++) {
-          const angle = (placed * 2 * Math.PI) / nodeCount;
+          const angle = (placed * 2 * Math.PI) / totalRingSlots;
           const nodeId = i === mysteryIdx ? `depth1_signature_mystery_${i}` : `depth1_signature_${i}`;
 
           if (i === mysteryIdx) {
@@ -546,10 +564,11 @@ export class SkillTreePhase extends Phase {
         }
 
         for (let i = 0; i < generalCount; i++, placed++) {
-          const angle = (placed * 2 * Math.PI) / nodeCount;
-          const species = SkillTreeSelectors.pickGeneralPokemon(championData, this.scene as BattleScene) as unknown as number;
+          const angle = (placed * 2 * Math.PI) / totalRingSlots;
+          const effectiveChampion = nodeGen.resolveEffectiveChampionData(championData);
+          const species = SkillTreeSelectors.pickGeneralPokemon(effectiveChampion, this.scene as BattleScene) as unknown as number;
           const nodeId = `depth1_general_${i}`;
-          const rewardData = { type: SkillTreeRewardType.GENERAL_POKEMON, data: { species }, immediate: false };
+          const rewardData = { type: SkillTreeRewardType.GENERAL_POKEMON, data: { species, nodeTypes: nodeGen.currentNodeTypes.slice() }, immediate: false };
           const generatedDescription = nodeGen.getRewardDescription(rewardData);
           nodes.push({
             id: nodeId,
@@ -559,9 +578,43 @@ export class SkillTreePhase extends Phase {
             rarity: SkillTreeRarity.GREAT,
             state: SkillTreeNodeState.LOCKED_DETAILS,
             rewardData,
-            name: allSpecies?.[species]?.name ?? i18next.t("skillTree:descriptions.generalPokemon", { champion: ChampionUtils.getChampionDisplayName(championData.id) }),
+            name: getPokemonSpecies(species as unknown as Species)?.name ?? i18next.t("skillTree:descriptions.generalPokemon", { champion: ChampionUtils.getChampionDisplayName(championData.id) }),
             description: generatedDescription,
             cost: 1,
+            isLegendary: false,
+            unlocked: false,
+          });
+        }
+
+        const glitchAngle = (nodeCount * 2 * Math.PI) / totalRingSlots;
+        nodes.push({
+          id: "depth1_glitch_run_0",
+          depth: 1,
+          position: { x: Math.cos(glitchAngle) * radius, y: Math.sin(glitchAngle) * radius },
+          dependencies: ["root_0"],
+          rarity: SkillTreeRarity.LEGENDARY,
+          state: SkillTreeNodeState.LOCKED_HIDDEN,
+          rewardData: { type: SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN, data: { starterGlitchRunNode: true }, immediate: false },
+          name: i18next.t("skillTree:rewards.randomGlitchFormsForRun"),
+          description: i18next.t("skillTree:descriptions.randomGlitchFormsForRun"),
+          cost: 0,
+          isLegendary: false,
+          unlocked: false,
+        });
+
+        if (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) {
+          const bountyAngle = ((nodeCount + 1) * 2 * Math.PI) / totalRingSlots;
+          nodes.push({
+            id: "depth1_bounty_0",
+            depth: 1,
+            position: { x: Math.cos(bountyAngle) * radius, y: Math.sin(bountyAngle) * radius },
+            dependencies: ["root_0"],
+            rarity: SkillTreeRarity.ROGUE,
+            state: SkillTreeNodeState.LOCKED_HIDDEN,
+            rewardData: { type: SkillTreeRewardType.BOUNTY_SELECT, data: { bountyNode: true }, immediate: false },
+            name: i18next.t("skillTree:rewards.bountyNode"),
+            description: i18next.t("skillTree:rewards.bountyNodeDesc"),
+            cost: 0,
             isLegendary: false,
             unlocked: false,
           });
@@ -572,6 +625,208 @@ export class SkillTreePhase extends Phase {
     } catch (e) {
     }
   }
+
+  private generateJourneySelectionNodes(activeSkillTree: ActiveSkillTreeData, championData: any): void {
+    this.scene.executeWithSeedOffset(() => {
+      const nodes: SkillTreeNode[] = [];
+      const radius = getDepth1Radius();
+
+      const nodeGen = new SkillTreeNodeGenerator(activeSkillTree.seed, activeSkillTree.championId, this.scene as BattleScene);
+
+      let descriptionParams: any = { defaultValue: i18next.t("skillTree:rootNode.description") };
+      if (championData?.id === "apollo" || championData?.id === "diana") {
+        const type1 = championData.type1;
+        const type2 = championData.type2;
+        const type1Name = type1 !== undefined
+          ? i18next.t(`pokemonInfo:Type.${Type[type1]}`)
+          : i18next.t("pokemonInfo:Type.UNKNOWN");
+        const type2Name = type2 !== undefined
+          ? i18next.t(`pokemonInfo:Type.${Type[type2]}`)
+          : i18next.t("pokemonInfo:Type.UNKNOWN");
+        descriptionParams.type1 = `[color=#ffdd44]${type1Name}[/color]`;
+        descriptionParams.type2 = `[color=#ffdd44]${type2Name}[/color]`;
+      }
+
+      nodes.push({
+        id: "root_0",
+        depth: 0,
+        position: { x: 0, y: 0 },
+        dependencies: [],
+        rarity: SkillTreeRarity.LEGENDARY,
+        state: SkillTreeNodeState.UNLOCKED,
+        rewardData: { type: SkillTreeRewardType.SKILL_POINTS, data: { amount: 0 }, immediate: true },
+        name: i18next.t("skillTree:rootNode.champion", { champion: ChampionUtils.getChampionDisplayName(championData.id) }),
+        description: i18next.t(`skillTree:rootNode.${championData.id}`, descriptionParams),
+        cost: 0,
+        isLegendary: true,
+        unlocked: true
+      });
+
+      const isMysteryRewardEligible = (rt: SkillTreeRewardType): boolean => {
+        switch (rt) {
+          case SkillTreeRewardType.PERMA_MONEY:
+            return !!championData?.unlockedPermaMoney;
+          case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
+            return !!championData?.unlockedBallRaritySelect?.rogue;
+          case SkillTreeRewardType.MASTERBALL_RARITY_SELECT:
+            return !!championData?.unlockedBallRaritySelect?.master;
+          case SkillTreeRewardType.MASTER_BALL:
+            return !!championData?.unlockedMasterBall;
+          case SkillTreeRewardType.GOLDEN_POKEBALL:
+            return !!championData?.unlockedGoldenPokeball;
+          case SkillTreeRewardType.VOID_BALL:
+            return !!championData?.unlockedVoidBall;
+          case SkillTreeRewardType.SMITTY_ABILITY:
+            return (championData?.unlockedSmittyAbilities?.length ?? 0) > 0;
+          default:
+            return true;
+        }
+      };
+
+      const commonPool = [
+        SkillTreeRewardType.EGG_VOUCHER,
+        SkillTreeRewardType.PASSIVE_ABILITY_GRANT,
+        SkillTreeRewardType.SKILL_TREE_TOKENS,
+        SkillTreeRewardType.SKILL_POINTS,
+        SkillTreeRewardType.TRAINER_BOND_ABILITY,
+        SkillTreeRewardType.PERMA_MONEY,
+        SkillTreeRewardType.ROGUEBALL_RARITY_SELECT,
+        SkillTreeRewardType.PERMA_ITEM,
+      ].filter(isMysteryRewardEligible);
+
+      const veryRarePool = [
+        SkillTreeRewardType.MASTER_BALL,
+        SkillTreeRewardType.PARTY_ABILITY_GRANT,
+        SkillTreeRewardType.MASTERBALL_RARITY_SELECT,
+      ].filter(isMysteryRewardEligible);
+
+      const ultraRarePool = [
+        SkillTreeRewardType.SMITTY_ABILITY,
+        SkillTreeRewardType.GOLDEN_POKEBALL,
+        SkillTreeRewardType.VOID_BALL,
+      ].filter(isMysteryRewardEligible);
+
+      const pickMysteryRewardType = (): SkillTreeRewardType => {
+        const tier = rollStarterMysteryTier(Utils.randSeedInt(5000));
+        if (tier === "legendary") {
+          if (ultraRarePool.length) return Utils.randSeedItem(ultraRarePool);
+          if (veryRarePool.length) return Utils.randSeedItem(veryRarePool);
+          return Utils.randSeedItem(commonPool);
+        }
+        if (tier === "master") {
+          if (veryRarePool.length) return Utils.randSeedItem(veryRarePool);
+          if (commonPool.length) return Utils.randSeedItem(commonPool);
+          return Utils.randSeedItem(ultraRarePool);
+        }
+        if (commonPool.length) return Utils.randSeedItem(commonPool);
+        if (veryRarePool.length) return Utils.randSeedItem(veryRarePool);
+        return Utils.randSeedItem(ultraRarePool);
+      };
+
+      const generateMysteryRewardData = (rt: SkillTreeRewardType) => {
+        switch (rt) {
+          case SkillTreeRewardType.EGG_VOUCHER:
+            return { type: rt, data: { tier: Utils.randSeedItem([VoucherType.REGULAR, VoucherType.PLUS, VoucherType.PREMIUM]) }, immediate: false };
+          case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
+            return { type: rt, data: { abilityId: SkillTreeSelectors.pickPassiveAbility(championData) }, immediate: false };
+          case SkillTreeRewardType.SKILL_TREE_TOKENS:
+            return { type: rt, data: { amount: SkillTreeSelectors.pickSkillTreeTokens() }, immediate: true };
+          case SkillTreeRewardType.SKILL_POINTS:
+            return { type: rt, data: { amount: SkillTreeSelectors.pickSkillPoints() }, immediate: true };
+          case SkillTreeRewardType.TRAINER_BOND_ABILITY:
+            return { type: rt, data: { abilityId: SkillTreeSelectors.pickTrainerBondAbility(championData), activationChance: 0.05 }, immediate: false };
+          case SkillTreeRewardType.PERMA_MONEY:
+            return { type: rt, data: { amount: (Utils.randSeedInt(5) + 1) * 1000 }, immediate: true };
+          case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
+            return { type: rt, data: {}, immediate: false };
+          case SkillTreeRewardType.PERMA_ITEM:
+            return { type: rt, data: { permaType: SkillTreeSelectors.pickPermaItemType() }, immediate: false };
+          default:
+            return { type: rt, data: {}, immediate: false };
+        }
+      };
+
+      const hasBountyJ = this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE;
+      const totalRingSlots = hasBountyJ ? 6 : 5;
+      for (let i = 0; i < 3; i++) {
+        const angle = (i * 2 * Math.PI) / totalRingSlots;
+        const mysteryType = pickMysteryRewardType();
+        const mysteryRewardData = generateMysteryRewardData(mysteryType);
+        mysteryRewardData.data = { ...(mysteryRewardData.data || {}), starterMysteryNode: true };
+        const rarity = getDisplayRarityForRewardType(mysteryType);
+        nodes.push({
+          id: `depth1_journey_mystery_${i}`,
+          depth: 1,
+          position: { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius },
+          dependencies: ["root_0"],
+          rarity,
+          state: SkillTreeNodeState.LOCKED_DETAILS,
+          rewardData: mysteryRewardData,
+          name: nodeGen.getRewardName(mysteryRewardData),
+          description: nodeGen.getRewardDescription(mysteryRewardData),
+          cost: 0,
+          isLegendary: false,
+          unlocked: false,
+        });
+      }
+
+      const fourthAngle = (3 * 2 * Math.PI) / totalRingSlots;
+      const fourthType = pickMysteryRewardType();
+      const fourthRewardData = generateMysteryRewardData(fourthType);
+      fourthRewardData.data = { ...(fourthRewardData.data || {}), starterMysteryNode: true };
+      nodes.push({
+        id: "depth1_journey_mystery_3",
+        depth: 1,
+        position: { x: Math.cos(fourthAngle) * radius, y: Math.sin(fourthAngle) * radius },
+        dependencies: ["root_0"],
+        rarity: getDisplayRarityForRewardType(fourthType),
+        state: SkillTreeNodeState.LOCKED_HIDDEN,
+        rewardData: fourthRewardData,
+        name: nodeGen.getRewardName(fourthRewardData),
+        description: nodeGen.getRewardDescription(fourthRewardData),
+        cost: 0,
+        isLegendary: false,
+        unlocked: false,
+      });
+
+      const glitchAngle = (4 * 2 * Math.PI) / totalRingSlots;
+      nodes.push({
+        id: "depth1_glitch_run_0",
+        depth: 1,
+        position: { x: Math.cos(glitchAngle) * radius, y: Math.sin(glitchAngle) * radius },
+        dependencies: ["root_0"],
+        rarity: SkillTreeRarity.LEGENDARY,
+        state: SkillTreeNodeState.LOCKED_HIDDEN,
+        rewardData: { type: SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN, data: { starterGlitchRunNode: true }, immediate: false },
+        name: i18next.t("skillTree:rewards.randomGlitchFormsForRun"),
+        description: i18next.t("skillTree:descriptions.randomGlitchFormsForRun"),
+        cost: 0,
+        isLegendary: false,
+        unlocked: false,
+      });
+
+      if (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) {
+        const bountyAngle = (5 * 2 * Math.PI) / totalRingSlots;
+        nodes.push({
+          id: "depth1_bounty_0",
+          depth: 1,
+          position: { x: Math.cos(bountyAngle) * radius, y: Math.sin(bountyAngle) * radius },
+          dependencies: ["root_0"],
+          rarity: SkillTreeRarity.ROGUE,
+          state: SkillTreeNodeState.LOCKED_HIDDEN,
+          rewardData: { type: SkillTreeRewardType.BOUNTY_SELECT, data: { bountyNode: true }, immediate: false },
+          name: i18next.t("skillTree:rewards.bountyNode"),
+          description: i18next.t("skillTree:rewards.bountyNodeDesc"),
+          cost: 0,
+          isLegendary: false,
+          unlocked: false,
+        });
+      }
+
+      (this.scene.gameData as any).tempSkillTreeNodes = nodes;
+    }, 0, activeSkillTree.seed.toString());
+  }
+
   private generateRandomDepth1Nodes(activeSkillTree: ActiveSkillTreeData, championData: any): void {
     try {
       const gd = (this.scene.gameData as any);
@@ -580,6 +835,32 @@ export class SkillTreePhase extends Phase {
       }
 
       const nodes = SkillTreeUtils.generateDepth1Nodes(activeSkillTree, championData, this.scene);
+
+      if (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) {
+        const shouldAdd = Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE || Utils.randSeedInt(10000) < 185;
+        if (shouldAdd) {
+          const TIER_RADIUS = 150;
+          const NODE_SIZE = 90;
+          const radius = TIER_RADIUS + NODE_SIZE / 2;
+          const existingCount = nodes.filter(n => n.depth === 1).length;
+          const bountyAngle = (existingCount * 2 * Math.PI) / (existingCount + 1);
+          nodes.push({
+            id: "depth1_bounty_0",
+            depth: 1,
+            position: { x: Math.cos(bountyAngle) * radius, y: Math.sin(bountyAngle) * radius },
+            dependencies: ["root_0"],
+            rarity: SkillTreeRarity.ROGUE,
+            state: SkillTreeNodeState.LOCKED_DETAILS,
+            rewardData: { type: SkillTreeRewardType.BOUNTY_SELECT, data: { bountyNode: true }, immediate: false },
+            name: i18next.t("skillTree:rewards.bountyNode"),
+            description: i18next.t("skillTree:rewards.bountyNodeDesc"),
+            cost: 0,
+            isLegendary: false,
+            unlocked: false,
+          });
+        }
+      }
+
       gd.tempSkillTreeNodes = nodes;
     } catch (e) {
     }

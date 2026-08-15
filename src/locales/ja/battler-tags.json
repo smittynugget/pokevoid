@@ -60,6 +60,13 @@
   "cursedOnAdd": "{{pokemonNameWithAffix}}は　自分の　体力を　削って\n{{pokemonName}}に　のろいを　かけた!",
   "cursedLapse": "{{pokemonNameWithAffix}}は　のろわれている！",
   "stockpilingOnAdd": "{{pokemonNameWithAffix}}は　{{stockpiledCount}}つ　たくわえた!",
+  "substituteOnAdd": "{{pokemonNameWithAffix}}の　みがわりが　あらわれた！",
+  "substituteOnRemove": "{{pokemonNameWithAffix}}の　みがわりが　壊れた！",
+  "substituteOnHit": "みがわりが　{{pokemonNameWithAffix}}の　代わりに　ダメージを　受けた！",
+  "tauntOnAdd": "{{pokemonNameWithAffix}}は　ちょうはつに　のった！",
+  "tauntOnRemove": "{{pokemonNameWithAffix}}の　ちょうはつが　解けた！",
+  "tormentOnAdd": "{{pokemonNameWithAffix}}は　いちゃもんを　つけられた！",
+  "tormentOnRemove": "{{pokemonNameWithAffix}}の　いちゃもんが　解けた！",
   "trappedDesc": "捕らわれること",
   "flinchedDesc": "ひるむこと",
   "confusedDesc": "混乱",
@@ -67,5 +74,10 @@
   "seedDesc": "種を植えつくこと",
   "nightmareDesc": "あくむ",
   "ingrainDesc": "根",
-  "drowsyDesc": "ねむけ"
+  "drowsyDesc": "ねむけ",
+  "healBlockedLapse": "{{pokemonNameWithAffix}}は　かいふくふうじで　回復できない！",
+  "healBlockedOnAdd": "{{pokemonNameWithAffix}}は　回復を　封じられた！",
+  "healBlockedOnRemove": "{{pokemonNameWithAffix}}の　かいふくふうじが　解けた！",
+  "itemBlockedOnAdd": "{{pokemonNameWithAffix}}は　持ち物を　使えなくなった！",
+  "itemBlockedOnRemove": "{{pokemonNameWithAffix}}は　再び　持ち物を　使えるようになった！"
 }

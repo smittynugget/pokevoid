@@ -22,6 +22,7 @@ export enum Type {
   ALL,
   SMITTY,
   GLITCH,
+  GEN_ONE,
 }
 
 export type TypeDamageMultiplier = 0 | 0.125 | 0.25 | 0.5 | 1 | 2 | 4 | 8;
@@ -428,6 +429,8 @@ export function getTypeRgb(type: Type): [ integer, integer, integer ] {
     return [ 200, 60, 40 ];
   case Type.GLITCH:
     return [ 150, 200, 255 ];
+  case Type.GEN_ONE:
+    return [ 51, 204, 51 ];
   default:
     return [ 0, 0, 0 ];
   }

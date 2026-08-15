@@ -68,11 +68,11 @@
       "description": "Aumenta em {{levels}} o nível de todos os membros da equipe."
     },
     "PokemonBaseStatBoosterModifierType": {
-      "description": "Aumenta o atributo base de {{statName}} em 10%. Quanto maior os IVs, maior o limite de aumento."
+      "description": "Aumenta o atributo base de {{statName}} em 8%. Quanto maior os IVs, maior o limite de aumento."
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "Barato",
-      "description": "Aumenta o atributo base de {{statName}} em 1%."
+      "description": "Aumenta o atributo base de {{statName}} em 3%."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restaura totalmente os PS de todos os Pokémon."
@@ -411,7 +411,7 @@
       "statLabel": "XM (Qualquer MT)"
     },
     "AnyTmModifierTypeWithInfo": {
-      "name": "++XM{{moveId}} - {{moveName}}++",
+      "name": "XM{{moveId}} - {{moveName}}",
       "description": "Ensina {{moveName}} a QUALQUER Pokémon\n(Segure C ou Shift para mais informações).",
       "statLabel": "XM (Qualquer MT)"
     },
@@ -709,7 +709,8 @@
       "name": "Essências",
       "shopName": "Essência {{type}}",
       "description": "Use 4 em vez de liberar um Pokémon para Itens de Liberação ou troque por recompensas com o Colecionador.",
-      "statLabel": "Essência"
+      "statLabel": "Essência",
+      "tooltipDescription": "Concede 1 Essência de {{type}} ao Pokémon selecionado.\n\nEssências são usadas para evoluir habilidades do Campeão, como alternativa a sacrifícios (4 necessárias) e trocas com o Colecionador."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Essências Coletadas",
@@ -875,6 +876,7 @@
     "NONE": "None",
     "ABOMASITE": "Abomasita",
     "ABSOLITE": "Absolita",
+    "ABSOLITE_Z": "Absolita Z",
     "AERODACTYLITE": "Aerodactylita",
     "AGGRONITE": "Aggronita",
     "ALAKAZITE": "Alakazita",
@@ -891,6 +893,7 @@
     "DIANCITE": "Diancita",
     "GALLADITE": "Galladita",
     "GARCHOMPITE": "Garchompita",
+    "GARCHOMPITE_Z": "Garchompita Z",
     "GARDEVOIRITE": "Gardevoirita",
     "GENGARITE": "Gengarita",
     "GLALITITE": "Glalitita",
@@ -902,6 +905,7 @@
     "LATIOSITE": "Latiosita",
     "LOPUNNITE": "Lopunnita",
     "LUCARIONITE": "Lucarionita",
+    "LUCARIONITE_Z": "Lucarionita Z",
     "MANECTITE": "Manectita",
     "MAWILITE": "Mawilita",
     "MEDICHAMITE": "Medichamita",
@@ -922,33 +926,48 @@
     "TYRANITARITE": "Tyranitarita",
     "VENUSAURITE": "Venusaurita",
 
-    "CLEFABLITE": "Clefablite",
-    "VICTREBELITE": "Victrebelite",
-    "STARMITE": "Starmite",
-    "DRAGONITITE": "Dragonitite",
-    "MEGANIUMITE": "Meganiumite",
-    "FERALIGATRITE": "Feraligatrite",
-    "SKARMORYITE": "Skarmoryite",
-    "FROSLASSITE": "Froslassite",
-    "EMBOARITE": "Emboarite",
-    "EXCADRILLITE": "Excadrillite",
-    "SCOLIPEDITE": "Scolipedite",
-    "SCRAFTITE": "Scraftite",
-    "EELEKTROSSITE": "Eelektrossite",
-    "CHANDELURITE": "Chandelurite",
-    "CHESNAUGHTITE": "Chesnaughtite",
-    "DELPHOXITE": "Delphoxite",
-    "GRENINJITE": "Greninjite",
-    "PYROARITE": "Pyroarite",
-    "FLOETTITE": "Floettite",
-    "MALAMARITE": "Malamarite",
-    "BARBARACLITE": "Barbaraclite",
-    "DRAGALGITE": "Dragalgite",
-    "HAWLUCHITE": "Hawluchite",
-    "ZYGARDITE": "Zygardite",
-    "DRAMPITE": "Drampite",
-    "FALINKSITE": "Falinksite",
-    "ZERAORITE": "Zeraorite",
+    "CLEFABLITE": "Clefablita",
+    "VICTREBELITE": "Victrebelita",
+    "STARMITE": "Starmita",
+    "DRAGONITITE": "Dragonitita",
+    "MEGANIUMITE": "Meganiumita",
+    "FERALIGATRITE": "Feraligatrita",
+    "SKARMORYITE": "Skarmoryita",
+    "FROSLASSITE": "Froslassita",
+    "EMBOARITE": "Emboarita",
+    "EXCADRILLITE": "Excadrillita",
+    "SCOLIPEDITE": "Scolipedita",
+    "SCRAFTITE": "Scraftita",
+    "EELEKTROSSITE": "Eelektrossita",
+    "CHANDELURITE": "Chandelurita",
+    "CHESNAUGHTITE": "Chesnaughtita",
+    "DELPHOXITE": "Delphoxita",
+    "GRENINJITE": "Greninjita",
+    "PYROARITE": "Pyroarita",
+    "FLOETTITE": "Floettita",
+    "MALAMARITE": "Malamarita",
+    "BARBARACLITE": "Barbaraclita",
+    "DRAGALGITE": "Dragalgita",
+    "HAWLUCHITE": "Hawluchita",
+    "ZYGARDITE": "Zygardita",
+    "DRAMPITE": "Drampita",
+    "FALINKSITE": "Falinksita",
+    "ZERAORITE": "Zeraorita",
+    "RAICHUITE_X": "Raichuita X",
+    "RAICHUITE_Y": "Raichuita Y",
+    "CHIMECHOITE": "Chimechoita",
+    "STARAPTORITE": "Staraptorita",
+    "HEATRANITE": "Heatranita",
+    "DARKRAITE": "Darkraita",
+    "GOLURKITE": "Golurkita",
+    "MEOWSTITE": "Meowstita",
+    "CRABOMINITE": "Crabominita",
+    "GOLISOPODITE": "Golisopodita",
+    "MAGEARNITE": "Magearnita",
+    "SCOVILLAINITE": "Scovillainita",
+    "GLIMMORITE": "Glimmorita",
+    "TATSUGURITE": "Tatsugurita",
+    "BAXCALIBURITE": "Baxcaliburita",
 
     "BLUE_ORB": "Orbe Azul",
     "RED_ORB": "Orbe Vermelha",
@@ -1068,10 +1087,16 @@
     "uses": "usos",
     "glitchPieceCost": "*CUSTA 1x Peça Glitch",
     "essenceAlternativeCost": "Se o Pokémon tiver 4+ Essências, você pode usá-las em vez disso.",
+    "abilityReplaceNote": "Substitui a habilidade atual do Pokémon. Não acumula.",
+    "passiveAbilityReplaceNote": "Substitui a habilidade passiva atual do Pokémon. Não acumula.",
     "permaMoney": "ΩOURO",
     "permaItem": "ΩITEM",
     "moreInfo": "(Segure C / Shift para informações)",
     "morePokeInfo": "(Pressione P / Shift para info)",
-    "upgrade": "Melhoria"
-  }
+    "upgrade": "Melhoria",
+    "partyAbilityStacksHint": "(ACUMULA!)"
+  },
+  "permaWaveTooltip": "Desaparece após [color=#ffa500]{{count}}[/color] ondas — contagem regressiva inicia após a onda 50",
+  "permaUseTooltip": "[color=#ffa500]{{count}}[/color] usos restantes — contagem regressiva inicia após a onda 50",
+  "permaRemoveHint": "Pressione 10 vezes para remover"
 }

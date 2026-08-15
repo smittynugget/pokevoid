@@ -4,5 +4,8 @@
   "ultraBall": "Hyperball",
   "rogueBall": "Rogueball",
   "masterBall": "Meisterball",
-  "luxuryBall": "Luxusball"
+  "luxuryBall": "Luxusball",
+  "typeBall": "{{typeName}}ball",
+  "voidBall": "Voidball",
+  "voidBallCatchRate": "100% (Rote KP)"
 }

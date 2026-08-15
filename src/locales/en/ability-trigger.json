@@ -78,5 +78,6 @@
   "stoleItem": " stole\n{{defenderName}}'s {{stolenItemType}}!",
   "sillyPressure": " is exerting Silly Pressure!",
   "questionPressure": " is exerting Pressure?",
-  "allOrNothingPressure": " it's ALL or NOTHING Pressure!"
+  "allOrNothingPressure": " it's ALL or NOTHING Pressure!",
+  "windboltDiscard": "{{pokemonName}} consumed a held berry\nand dealt chip damage to {{targetName}}!"
 }

@@ -54,7 +54,6 @@ import TitleUiHandler from "#app/ui/title-ui-handler.js";
 import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
 import { getAllRivalTrainerTypes } from "#app/data/trainer-config.js";
 import { logNext30DaysLegendaryGachaSpecies } from "#app/data/egg.js";
-import PokedexUiHandler from "#app/ui/pokedex-ui-handler.js";
 import { BattlePathPhase } from "./battle-path-phase";
 import MenuUiHandler from "#app/ui/menu-ui-handler.js";
 
@@ -89,6 +88,7 @@ export class TitlePhase extends Phase {
     private static firstTimeFtlAutoStartPending: boolean = false;
     public static tutorialBattlePending: boolean = false;
     public static debugTutorialFlowActive: boolean = false;
+    public smitomTipShownThisVisit: boolean = false;
 
     constructor(scene: BattleScene, fromShop: boolean = false, skipReturnCondense: boolean = false, fromVictoryRun: boolean = false) {
         super(scene);
@@ -134,11 +134,9 @@ export class TitlePhase extends Phase {
 
         if (!this.scene.gameData.gameStats.onboardingTutorialComplete
             && this.scene.gameData.gameStats.cutsceneTitleAShown === true
-            && this.scene.gameData.isFirstTimeFtlAutoStartEligible()
+            && !TitlePhase.tutorialBattlePending
             && !this.scene._bootGateResolvers) {
-            this.scene.gameData.gameStats.cutsceneTitleAShown = false;
-            this.scene.gameData.isNewPlayer = true;
-            this.scene.gameData.saveSystem();
+            TitlePhase.tutorialBattlePending = true;
         }
 
         this.scene.ui.resetModeChain();
@@ -333,6 +331,8 @@ export class TitlePhase extends Phase {
     ): boolean {
         const flags = this.scene.gameData.smitomTutorialFlags;
         if (flags[tutorialKey]) return false;
+        if (this.smitomTipShownThisVisit) return false;
+        this.smitomTipShownThisVisit = true;
         this.scene.unshiftPhase(new SmitomTutorialPhase(
             this.scene,
             tutorialKey,
@@ -340,7 +340,9 @@ export class TitlePhase extends Phase {
             textKeys.map(k => i18next.t(k)),
             offerReplay
         ));
-        this.scene.pushPhase(new TitlePhase(this.scene, this.fromShop, true));
+        const resumePhase = new TitlePhase(this.scene, this.fromShop, true);
+        resumePhase.smitomTipShownThisVisit = true;
+        this.scene.pushPhase(resumePhase);
         this.scene.shiftPhase();
         return true;
     }
@@ -1145,6 +1147,7 @@ export class TitlePhase extends Phase {
                     this.scene.releaseItemsEnabledForRun = !this.scene.disableReleaseItems;
                     this.scene.ivScannerEnabledForRun = !this.scene.disableIvScanner;
                     this.scene.mapEnabledForRun = !this.scene.disableMap;
+                    this.scene.duelmonsEnabledForRun = !this.scene.disableDuelmons;
                     this.scene.wave35UnlockedThisRun = false;
                     this.scene.resetRunEndSummaryRunData();
                     this.end();
@@ -2251,7 +2254,7 @@ export class TitlePhase extends Phase {
                 }
 
                 const gd = this.scene.gameData;
-                if (gd.isFirstTimeFtlAutoStartEligible()) {
+                if (!gd.gameStats.onboardingTutorialComplete) {
                     TitlePhase.tutorialBattlePending = true;
                     gd.saveSystem();
                 }

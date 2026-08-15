@@ -1,11 +1,11 @@
 export function getCutsceneImageUrl(scene: any, imageKey: string): string {
   let url: string;
+  const webpSupported = !!(scene?.game as any)?.device?.features?.webp;
+  const ext = webpSupported ? "webp" : "png";
   const m = /^debug_slide_(\d+)$/.exec(imageKey);
   if (m) {
-    url = `images/smitty_logos/${m[1]}.png`;
+    url = `images/smitty_logos/${m[1]}.${ext}`;
   } else {
-    const webpSupported = !!(scene?.game as any)?.device?.features?.webp;
-    const ext = webpSupported ? "webp" : "png";
     url = `images/cutscenes/${imageKey}.${ext}`;
   }
   if (scene && typeof scene.getCachedUrl === "function") {

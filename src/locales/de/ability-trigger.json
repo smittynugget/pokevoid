@@ -78,5 +78,6 @@
   "stoleItem": " stahl\n{{defenderName}}s {{stolenItemType}}!",
   "sillyPressure": " übt alberne Erzwinger-Kraft aus!",
   "questionPressure": " übt Erzwinger-Kraft aus?",
-  "allOrNothingPressure": " übt ALLES-ODER-NICHTS Erzwinger-Kraft aus!"
+  "allOrNothingPressure": " übt ALLES-ODER-NICHTS Erzwinger-Kraft aus!",
+  "windboltDiscard": "{{pokemonName}} hat eine getragene Beere verbraucht\nund {{targetName}} Splitterschaden zugefügt!"
 }

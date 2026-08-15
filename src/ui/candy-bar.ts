@@ -56,7 +56,7 @@ export default class CandyBar extends Phaser.GameObjects.Container {
         }
       }
 
-      const colorScheme = starterColors[starterSpeciesId];
+      const colorScheme = starterColors?.[starterSpeciesId] ?? ["ffffff", "ffffff"];
 
       this.candyIcon.setTint(argbFromRgba(Utils.rgbHexToRgba(colorScheme[0])));
       this.candyOverlayIcon.setTint(argbFromRgba(Utils.rgbHexToRgba(colorScheme[1])));

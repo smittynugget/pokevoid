@@ -123,7 +123,7 @@
   "rival_flame": "腐敗した影はヴォイドへと溶けていく",
   "rival_shadowPower": "闇のエネルギーが空中で結晶化する",
   "rival_power": "腐敗を武器としてヴォイドに向けろ",
-  "rival_shadows": "一体倒した—残りXXX",
+  "rival_shadows": "一体倒した—残り???",
   "rival_final_flame": "最後の影が倒れる",
   "rival_final_shadowPower": "腐敗の最後の残滓",
   "rival_final_power": "闇を闇にぶつけろ",
@@ -160,5 +160,17 @@
   "all_smittys_peace": "世界に平和が戻る",
   "all_smittys_voidbreak": "修復不能な傷を負い—ヴォイドは眠る",
   "all_smittys_mystery": "静寂の中でも混沌は育ち、影に潜む",
-  "all_smittys_journey": "どうか抑え続けてくれ。君こそ抵抗だ！"
+  "all_smittys_journey": "どうか抑え続けてくれ。君こそ抵抗だ！",
+  "tutorial_trance_1a": "目が覚めたんだね！もうダメかと思った...",
+  "tutorial_trance_1b": "いや、いいんだ。ここにいるんだ。それが大事なんだ。",
+  "tutorial_trance_2a": "目を覚まさないトレーナーの隣に座りすぎた。誰も戻ってこない。",
+  "tutorial_trance_2b": "でも君は...君が証明したんだ。あの失われた人たちの犠牲は無駄じゃなかったって。",
+  "tutorial_trance_3a": "君には何か特別なものがある。虚空が君に何をしたとしても...",
+  "tutorial_trance_3b": "壊されなかった。もっと強くなったんだ。",
+  "tutorial_trance_4a": "この戦いは長い間負け続けてきた。",
+  "tutorial_trance_4b": "でも君が証明したんだ、虚空は倒せるって。さあ、もう一度証明しに行こう。",
+  "tutorial_trance_5a": "虚空は全てを奪った。取り返す時だ。",
+  "tutorial_trance_5b": "ここから君の物語が始まる——さあ行け、伝説になれ！",
+  "loss_whiteout": "闇がすべてを飲み込む...",
+  "loss_homebase": "安全な場所へ戻る..."
 }

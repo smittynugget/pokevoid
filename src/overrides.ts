@@ -25,21 +25,19 @@ export const DEBUG_FORCE_SKILL_TREE_ENHANCED_MODE = false;
 export const DEBUG_TEST_SLIDESHOW_CUTSCENE = false;
 export const DEBUG_TEST_RUN_END_SUMMARY = false;
 export const DEBUG_FORCE_SMITOM_TUTORIAL = false;
-export const DEBUG_YU_VISUAL_TUNING = true;
+export const DEBUG_YU_VISUAL_TUNING = false;
 export const DEBUG_SKILL_TREE_FORCE_REWARD_TYPE: SkillTreeRewardType | undefined = undefined;
 const overrides = {
-  FORCE_DUELMON_ENCOUNTERS_OVERRIDE: false,
-  STARTER_SELECT_TWEAK_TOOL_OVERRIDE: false,
-  DEBUG_EMULATE_FUSION: Species.GENGAR,
-  DEBUG_EMULATE_SHINY: true,
-  DEBUG_EMULATE_DOUBLE_SHINY: true,
-  DEBUG_EMULATE_TERA_TYPE: Type.FIRE,
-  DEBUG_EMULATE_RANK: 3,
-  DEBUG_EMULATE_GLITCH_FORM: true,
-  DEBUG_EMULATE_CAUGHT: true,
-  DEBUG_EMULATE_CHAMPION_RIBBON: true,
-  EGG_IMMEDIATE_HATCH_OVERRIDE: true,
-  OPP_ONE_POKEMON: true,
+  FORCE_DUELMON_RANK_UP_OVERRIDE: false,
+  FORCE_RANDOM_RANK_UP_OVERRIDE: false,
+  MODIFIER_SELECT_DEBUG_OVERRIDE: false,
+  DEBUG_TUTORIAL_FLOW_OVERRIDE: false,
+  DEBUG_PEGASUS_BATTLE_OVERRIDE: false,
+  DEBUG_SMITTY_BATTLE_OVERRIDE: false,
+  DEBUG_WAVE35_SMITOM_TIP_OVERRIDE: false,
+  DEBUG_WAVE100_LEVEL1_OVERRIDE: false,
+  OPP_ONE_POKEMON: false,
+  MOVESET_OVERRIDE: [],
 } satisfies Partial<InstanceType<typeof DefaultOverrides>>;
 class DefaultOverrides {
   readonly SEED_OVERRIDE: string = "";
@@ -58,10 +56,10 @@ class DefaultOverrides {
   readonly STARTING_MONEY_OVERRIDE: number = 0;
   readonly FREE_CANDY_UPGRADE_OVERRIDE: boolean = false;
   readonly BYPASS_MODIFIER_TOOLTIP_UNLOCK_OVERRIDE: boolean = false;
-  readonly FORCE_DUELMON_ENCOUNTERS_OVERRIDE: boolean = true;
-  readonly STARTER_SELECT_TWEAK_TOOL_OVERRIDE: boolean = true;
-  readonly FORCE_DUELMON_RANK_UP_OVERRIDE: boolean = true;
-  readonly FORCE_RANDOM_RANK_UP_OVERRIDE: boolean = true;
+  readonly FORCE_DUELMON_ENCOUNTERS_OVERRIDE: boolean = false;
+  readonly STARTER_SELECT_TWEAK_TOOL_OVERRIDE: boolean = false;
+  readonly FORCE_DUELMON_RANK_UP_OVERRIDE: boolean = false;
+  readonly FORCE_RANDOM_RANK_UP_OVERRIDE: boolean = false;
   readonly RANDOM_RANK_UP_CHANCE_DENOMINATOR_OVERRIDE: number = 0;
   readonly SKILL_TREE_RANDOM_GLITCH_PREREQ_REQUIRED_COUNT_OVERRIDE: number = 0;
   readonly BYPASS_RANDOM_RANK_UP_BAND_OVERRIDE: boolean = false;
@@ -74,7 +72,7 @@ class DefaultOverrides {
   pokeballs: {
     [PokeballType.POKEBALL]: 0,
     [PokeballType.GREAT_BALL]: 0,
-    [PokeballType.ULTRA_BALL]: 0,
+    [PokeballType.ULTRA_BALL]: 5,
     [PokeballType.TYPE_BALL]: 0,
     [PokeballType.ROGUE_BALL]: 0,
     [PokeballType.MASTER_BALL]: 0,
@@ -158,13 +156,15 @@ class DefaultOverrides {
   readonly FORCE_UNISMITTY_UNLOCK_ON_SMITTY_VICTORY: boolean = false;
 
   readonly DEBUG_SHOP_FORCE_ALL_ITEMS: boolean = false;
-  readonly MODIFIER_SELECT_DEBUG_OVERRIDE: boolean = true;
-  readonly DEBUG_TUTORIAL_FLOW_OVERRIDE: boolean = true;
-  readonly DEBUG_PEGASUS_BATTLE_OVERRIDE: boolean = true;
-  readonly DEBUG_SMITTY_BATTLE_OVERRIDE: boolean = true;
-  readonly DEBUG_WAVE35_SMITOM_TIP_OVERRIDE: boolean = true;
-  readonly DEBUG_WAVE100_LEVEL1_OVERRIDE: boolean = true;
+  readonly MODIFIER_SELECT_DEBUG_OVERRIDE: boolean = false;
+  readonly DEBUG_TUTORIAL_FLOW_OVERRIDE: boolean = false;
+  readonly DEBUG_PEGASUS_BATTLE_OVERRIDE: boolean = false;
+  readonly DEBUG_SMITTY_BATTLE_OVERRIDE: boolean = false;
+  readonly DEBUG_WAVE35_SMITOM_TIP_OVERRIDE: boolean = false;
+  readonly DEBUG_WAVE100_LEVEL1_OVERRIDE: boolean = false;
   readonly SKIP_TO_STARTER_SELECT_OVERRIDE: boolean = false;
+
+  readonly DEBUG_LOCALE_CYCLE_OVERRIDE: boolean = false;
 
   readonly FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE: boolean = false;
   readonly FORCE_BOUNTY_COMPLETION_OVERRIDE: boolean = false;
@@ -177,6 +177,7 @@ class DefaultOverrides {
   readonly DEBUG_EMULATE_GLITCH_FORM: boolean = false;
   readonly DEBUG_EMULATE_CAUGHT: boolean = false;
   readonly DEBUG_EMULATE_CHAMPION_RIBBON: boolean = false;
+  readonly DEBUG_EMULATE_RANDOM_PARTY_COMBOS: boolean = false;
 }
 
 export const defaultOverrides = new DefaultOverrides();

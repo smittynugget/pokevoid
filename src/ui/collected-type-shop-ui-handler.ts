@@ -1,13 +1,18 @@
 import BattleScene from "../battle-scene";
-import ModifierSelectUiHandler, { ModifierOption } from "./modifier-select-ui-handler";
+import LootRewardSelectUiHandler from "./loot-reward-select-ui-handler";
+import { ModifierOption } from "./modifier-select-ui-handler";
+import { ModifierTooltipUtils } from "./modifier-tooltip-utils";
 import { ModifierTypeOption } from "../modifier/modifier-type";
-import { CollectedTypeModifier } from "../modifier/modifier";
-import { Type } from "../data/type";
+import { getPartyCollectedTypeTotal } from "#app/utils/collected-type-totals.js";
 import { Button } from "../enums/buttons";
 import i18next from "i18next";
-import { addTextObject, TextStyle, setTextStyle, getTextColor } from "./text";
+import { addTextObject, TextStyle, getTextColor } from "./text";
+import { Mode } from "./mode";
+import { isPrimaryPointer } from "./pointer-utils";
 
-export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
+export class CollectedTypeShopUiHandler extends LootRewardSelectUiHandler {
+    protected storedUIMode: Mode = Mode.COLLECTED_TYPE_SELECT;
+
     private collectedTypeDisplay: Phaser.GameObjects.Container;
     private collectedTypeTitle: Phaser.GameObjects.Text;
     private collectedTypeIcon: Phaser.GameObjects.Sprite;
@@ -32,283 +37,231 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
             this.scene,
             0,
             -13,
-            i18next.t("pokemonInfo:Stat.Total", { defaultValue: "Total" }),
+            i18next.t("modifierSelectUiHandler:collectedTypeTotalLabel", { defaultValue: "Collected" }),
             TextStyle.WINDOW,
             { fontSize: "56px" }
         );
         this.collectedTypeTitle.setOrigin(0, 0.5);
 
-        this.collectedTypeIcon = this.scene.add.sprite(5, 0, "smitems", "modSoulCollected");
+        this.collectedTypeIcon = this.scene.add.sprite(23.5, 0, "smitems", "modSoulCollected");
         this.collectedTypeIcon.setScale(0.15);
 
         this.collectedTypeText = addTextObject(
             this.scene,
-            15,
-            0,
+            2.5,
+            -0.5,
             "0",
             TextStyle.MONEY,
             { fontSize: "64px" }
         );
         this.collectedTypeText.setOrigin(0, 0.5);
+        this.collectedTypeText.setFontFamily("pkmnems");
+        this.collectedTypeText.setShadow(0, 0, undefined);
+        this.collectedTypeText.setStroke("#424242", 14);
 
         this.collectedTypeDisplay.add([this.collectedTypeTitle, this.collectedTypeIcon, this.collectedTypeText]);
         this.modifierContainer.add(this.collectedTypeDisplay);
     }
 
     show(args: any[]): boolean {
+        if (args.length === 5) {
+            args.push({
+                title: i18next.t("modifierSelectUiHandler:collectedTypeShopTitle", { defaultValue: "SOUL EXCHANGE" }),
+                subtitle: i18next.t("modifierSelectUiHandler:collectedTypeShopSubtitle", { defaultValue: "Trade collected essences for powerful items." }),
+                hideShop: false,
+                customShopStrip: false,
+            });
+        } else if (args.length >= 6) {
+            const dc = args[5] as any;
+            if (dc && !dc.title) {
+                dc.title = i18next.t("modifierSelectUiHandler:collectedTypeShopTitle", { defaultValue: "SOUL EXCHANGE" });
+                dc.subtitle = dc.subtitle || i18next.t("modifierSelectUiHandler:collectedTypeShopSubtitle", { defaultValue: "Trade collected essences for powerful items." });
+            }
+        }
+
         const result = super.show(args);
 
         if (result) {
+            if (this.bgImage) {
+                this.bgImage.setTint(0xFF8888);
+            }
             this.setupCollectedTypeDisplay();
             this.updateCollectedTypeDisplay();
+
+            if (this.permaRerollButtonContainer) {
+                this.permaRerollButtonContainer.setVisible(false);
+                this.permaRerollButtonContainer.setAlpha(0);
+                this.permaRerollButtonContainer.removeInteractive();
+            }
+
+            this.rebindBottomButtonPointers();
+
+            for (const option of this.options) {
+                if (option instanceof CollectedTypeModifierOption) {
+                    option.updateCostText(this.getTotalCollectedTypes());
+                }
+            }
         }
 
         return result;
     }
 
     public updateCollectedTypeDisplay(): void {
+        const total = getPartyCollectedTypeTotal(this.scene);
         if (this.collectedTypeText) {
-            const total = this.getTotalCollectedTypes();
             this.collectedTypeText.setText(total.toString());
         }
 
         if (this.options) {
             for (const option of this.options) {
                 if (option instanceof CollectedTypeModifierOption) {
-                    option.updateCostText();
+                    option.updateCostText(total);
                 }
             }
         }
     }
 
     public getTotalCollectedTypes(): number {
-        return this.getTotalCollectedTypesInternal();
+        return getPartyCollectedTypeTotal(this.scene);
     }
 
-    private getTotalCollectedTypesInternal(): number {
-        const party = this.scene.getParty();
-        let total = 0;
+    protected createOptionInstance(x: number, y: number, typeOption: ModifierTypeOption): ModifierOption {
+        return new CollectedTypeModifierOption(this.scene, x, y, typeOption, true);
+    }
 
-        for (const pokemon of party) {
-            const modifiers = this.scene.findModifiers(m =>
-                m instanceof CollectedTypeModifier && m.pokemonId === pokemon.id
-            ) as CollectedTypeModifier[];
-
-            for (const modifier of modifiers) {
-                total += Object.values(modifier.collectedTypes).reduce((sum, count) => sum + count, 0);
-            }
-        }
-
-        return total;
+    protected getShowDetailsHintYOffset(): number {
+        if (this.rowCursor !== 1) return 27;
+        if (this._isMouseHoverPreview && !this._hoverOnFocusedOption) return 29;
+        return 32;
     }
 
     protected getShopTypeOptions(): ModifierTypeOption[] | null {
         return null;
     }
 
-    protected createModifierOption(typeOptions: ModifierTypeOption[], index: number, optionsYOffset: number): ModifierOption {
-        const layout = this.getShopLayout();
-        const row = Math.floor(index / layout.itemsPerRow);
-        const col = index % layout.itemsPerRow;
-
-        const itemsInRow = Math.min(layout.itemsPerRow, typeOptions.length - row * layout.itemsPerRow);
-        const sliceWidth = (this.scene.game.canvas.width / 6) / (itemsInRow + 2);
-
-        const x = sliceWidth * (col + 1) + (sliceWidth * 0.5);
-        const y = -this.scene.game.canvas.height / 12 - 60 + (row * 45);
-
-        return new CollectedTypeModifierOption(this.scene, x, y, typeOptions[index], true);
+    protected populateShopStrip(): void {
+        if (this.shopStripContainer) {
+            this.shopStripContainer.setVisible(false);
+        }
     }
 
+    protected updateLootMoneyDisplay(): void {
+        if (this.moneyText) {
+            this.moneyText.setVisible(false);
+        }
+        if (this.omegaMoneyText) {
+            this.omegaMoneyText.setVisible(false);
+        }
+    }
     protected getMainOptionsYOffset(shopTypeOptions: ModifierTypeOption[] | null): number {
-        return -44;
+        return 16.5;
     }
-
-    protected getShopLayout(): { rows: number, itemsPerRow: number } {
-        return { rows: 2, itemsPerRow: 4 };
-    }
-
-    setCursor(cursor: integer): boolean {
-        const ui = this.getUi();
-        const ret = super.setCursor(cursor);
-
-        if (!this.cursorObj) {
-            this.cursorObj = this.scene.add.image(0, 0, "cursor");
-            this.modifierContainer.add(this.cursorObj);
+    private rebindBottomButtonPointers(): void {
+        const allContainers = [
+            this.rerollButtonContainer,
+            this.transferButtonContainer,
+            this.checkButtonContainer,
+        ];
+        for (const container of allContainers) {
+            if (!container) continue;
+            const existingZone = container.getByName("btn-hit-zone");
+            if (existingZone) container.remove(existingZone, true);
+            container.removeAllListeners();
+            container.disableInteractive();
         }
 
-        if (this.rowCursor === 0) {
-            const buttonLayout = this.getButtonLayout();
-            const buttonInfo = buttonLayout[cursor];
+        const visibleContainers = allContainers.filter(c => c?.visible);
 
-            if (buttonInfo) {
-                this.cursorObj.setPosition(buttonInfo.x, buttonInfo.y);
-                this.cursorObj.setScale(1);
-                ui.showText(i18next.t(buttonInfo.descKey));
-                return ret;
+        for (let idx = 0; idx < visibleContainers.length; idx++) {
+            const container = visibleContainers[idx]!;
+            const frame = container.list?.[0] as Phaser.GameObjects.Image | undefined;
+            const textChild = container.list?.find((child: any) => child.name && child.name.startsWith("text-")) as Phaser.GameObjects.Text | undefined;
+
+            let zoneX: number, zoneY: number, zoneW: number, zoneH: number;
+            if (frame && frame.displayWidth > 0 && textChild) {
+                const pad = 2;
+                const fLeft = frame.x - frame.displayWidth * frame.originX;
+                const fTop = frame.y - frame.displayHeight * frame.originY;
+                const fRight = fLeft + frame.displayWidth;
+                const fBottom = fTop + frame.displayHeight;
+                const tLeft = textChild.x - textChild.displayWidth * textChild.originX;
+                const tTop = textChild.y - textChild.displayHeight * textChild.originY;
+                const tRight = tLeft + textChild.displayWidth;
+                const tBottom = tTop + textChild.displayHeight;
+                const uLeft = Math.min(fLeft, tLeft) - pad;
+                const uTop = Math.min(fTop, tTop) - pad;
+                const uRight = Math.max(fRight, tRight) + pad;
+                const uBottom = Math.max(fBottom, tBottom) + pad;
+                zoneX = uLeft;
+                zoneY = uTop;
+                zoneW = uRight - uLeft;
+                zoneH = uBottom - uTop;
+            } else if (frame && frame.displayWidth > 0) {
+                const pad = 2;
+                zoneX = frame.x - frame.displayWidth * frame.originX - pad;
+                zoneY = frame.y - frame.displayHeight * frame.originY - pad;
+                zoneW = frame.displayWidth + pad * 2;
+                zoneH = frame.displayHeight + pad * 2;
             } else {
-                this.cursor = Math.min(cursor, buttonLayout.length - 1);
-                return this.setCursor(this.cursor);
+                zoneX = -4;
+                zoneY = -5.5;
+                zoneW = 64;
+                zoneH = 18;
+            }
+
+            const hitZone = this.scene.add.zone(zoneX + zoneW / 2, zoneY + zoneH / 2, zoneW, zoneH);
+            hitZone.setOrigin(0.5, 0.5);
+            hitZone.setName("btn-hit-zone");
+            hitZone.setInteractive(new Phaser.Geom.Rectangle(0, 0, zoneW, zoneH), Phaser.Geom.Rectangle.Contains);
+            container.add(hitZone);
+
+            const boundIdx = idx;
+            hitZone.on("pointerover", () => {
+                this._isMouseHoverPreview = true;
+                if (this.rowCursor !== 0) this.setRowCursor(0);
+                this.setCursor(boundIdx);
+                this._isMouseHoverPreview = false;
+                (this as any).applyCursorFromConfig();
+            });
+            hitZone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+                if (!isPrimaryPointer(pointer)) return;
+                if (this.rowCursor !== 0) {
+                    this.setRowCursor(0);
+                    this.setCursor(boundIdx);
+                } else if (this.cursor !== boundIdx) {
+                    this.setCursor(boundIdx);
+                } else {
+                    this.processInput(Button.ACTION);
+                }
+            });
+            hitZone.on("pointerout", () => {
+                ModifierTooltipUtils.hide(this.scene);
+            });
+        }
+    }
+
+    protected changePage(direction: number): void {
+        super.changePage(direction);
+        for (const option of this.options) {
+            if (option instanceof CollectedTypeModifierOption) {
+                option.updateCostText(this.getTotalCollectedTypes());
             }
         }
-
-        if (this.rowCursor === 1) {
-            const options = this.options;
-
-            if (!options || options.length === 0 || cursor >= options.length) {
-                return false;
-            }
-
-            this.cursor = cursor;
-
-            const layout = this.getShopLayout();
-            const row = Math.floor(cursor / layout.itemsPerRow);
-            const col = cursor % layout.itemsPerRow;
-
-            const itemsInRow = Math.min(layout.itemsPerRow, options.length - row * layout.itemsPerRow);
-            const sliceWidth = (this.scene.game.canvas.width / 6) / (itemsInRow + 2);
-
-            const x = sliceWidth * (col + 1) + (sliceWidth * 0.5);
-            const y = -this.scene.game.canvas.height / 12 - 60 + (row * 45);
-
-            this.cursorObj.setPosition(x - 15, y);
-            this.cursorObj.setScale(2);
-
-            const option = options[cursor];
-            if (option && option.modifierTypeOption) {
-                const type = option.modifierTypeOption.type;
-                const desc = type.getDescription(this.scene);
-                ui.showText(desc);
-            }
-        }
-
-        return ret;
     }
 
     processInput(button: Button): boolean {
-        if (!this.awaitingActionInput) {
-            return false;
-        }
-
-        if (button === Button.CYCLE_ABILITY || button === Button.STATS) {
-            return super.processInput(button);
-        }
-
-        const ui = this.getUi();
-        let success = false;
-
-        if (button === Button.ACTION) {
-            success = true;
-            if (this.onActionInput) {
-                const originalOnActionInput = this.onActionInput;
-                this.awaitingActionInput = false;
-                this.onActionInput = null;
-                if (!originalOnActionInput(this.rowCursor, this.cursor)) {
-                    this.awaitingActionInput = true;
-                    this.onActionInput = originalOnActionInput;
-                } else {
-                    this.moveInfoOverlay.setVisible(false);
-                    this.moveInfoOverlay.active = false;
-                }
-            }
-        } else if (button === Button.CANCEL) {
-            if (this.player && !this.forcedDraftSelection) {
-                success = true;
-                if (this.onActionInput) {
-                    const originalOnActionInput = this.onActionInput;
-                    this.awaitingActionInput = false;
-                    this.onActionInput = null;
-                    originalOnActionInput(-1);
-                    this.moveInfoOverlay.setVisible(false);
-                    this.moveInfoOverlay.active = false;
-                }
-            }
-        } else {
-            if (this.rowCursor === 0) {
-                switch (button) {
-                    case Button.UP:
-                        success = this.setRowCursor(1);
-                        break;
-                    case Button.DOWN:
-                        if (this.lockRarityButtonContainer.visible && this.cursor === 0) {
-                            success = this.setCursor(this.getRowItems(0) - 1);
-                        }
-                        break;
-                    case Button.LEFT:
-                        if (this.cursor > 0) {
-                            success = this.setCursor(this.cursor - 1);
-                        }
-                        break;
-                    case Button.RIGHT:
-                        if (this.cursor < this.getRowItems(this.rowCursor) - 1) {
-                            success = this.setCursor(this.cursor + 1);
-                        }
-                        break;
-                }
-            } else if (this.rowCursor === 1) {
-                if (!this.options.length) {
-                    return false;
-                }
-
-                const layout = this.getShopLayout();
-                const currentRow = Math.floor(this.cursor / layout.itemsPerRow);
-                const currentCol = this.cursor % layout.itemsPerRow;
-                const totalRows = Math.ceil(this.options.length / layout.itemsPerRow);
-
-                switch (button) {
-                    case Button.UP:
-                        if (currentRow > 0) {
-                            const newRow = currentRow - 1;
-                            const itemsInNewRow = Math.min(layout.itemsPerRow, this.options.length - newRow * layout.itemsPerRow);
-                            const newCol = Math.min(currentCol, itemsInNewRow - 1);
-                            const newCursor = newRow * layout.itemsPerRow + newCol;
-                            success = this.setCursor(newCursor);
-                        } else {
-                            success = this.setRowCursor(0);
-                        }
-                        break;
-
-                    case Button.DOWN:
-                        if (currentRow < totalRows - 1) {
-                            const newRow = currentRow + 1;
-                            const itemsInNewRow = Math.min(layout.itemsPerRow, this.options.length - newRow * layout.itemsPerRow);
-                            const newCol = Math.min(currentCol, itemsInNewRow - 1);
-                            const newCursor = newRow * layout.itemsPerRow + newCol;
-                            success = this.setCursor(newCursor);
-                        } else {
-                            success = this.setRowCursor(0);
-                        }
-                        break;
-
-                    case Button.LEFT:
-                        if (currentCol > 0) {
-                            success = this.setCursor(this.cursor - 1);
-                        } else if (currentRow > 0) {
-                            const newRow = currentRow - 1;
-                            const itemsInNewRow = Math.min(layout.itemsPerRow, this.options.length - newRow * layout.itemsPerRow);
-                            const newCursor = newRow * layout.itemsPerRow + itemsInNewRow - 1;
-                            success = this.setCursor(newCursor);
-                        }
-                        break;
-
-                    case Button.RIGHT:
-                        const itemsInCurrentRow = Math.min(layout.itemsPerRow, this.options.length - currentRow * layout.itemsPerRow);
-                        if (currentCol < itemsInCurrentRow - 1) {
-                            success = this.setCursor(this.cursor + 1);
-                        } else if (currentRow < totalRows - 1) {
-                            const newCursor = (currentRow + 1) * layout.itemsPerRow;
-                            success = this.setCursor(newCursor);
-                        }
-                        break;
-                }
+        if (button === Button.ACTION && this.rowCursor === 1 && this.awaitingActionInput) {
+            const option = this.options[this.cursor];
+            if (option instanceof CollectedTypeModifierOption && !option.canAfford()) {
+                this.getUi().playError();
+                return true;
             }
         }
+        return super.processInput(button);
+    }
 
-        if (success) {
-            ui.playSelect();
-        }
-
-        return success;
+    protected meetsCondenseTrailTier(_typeOptions: any[]): boolean {
+        return false;
     }
 
     clear() {
@@ -316,12 +269,21 @@ export class CollectedTypeShopUiHandler extends ModifierSelectUiHandler {
             this.collectedTypeDisplay.destroy();
             this.collectedTypeDisplay = null;
         }
+        if (this.bgImage) {
+            this.bgImage.clearTint();
+        }
 
         super.clear();
     }
 }
 
 export class CollectedTypeModifierOption extends ModifierOption {
+    private static readonly ESSENCE_COST_Y = 49.5;
+    private static readonly ESSENCE_ICON_X = -16;
+    private static readonly ESSENCE_ICON_SCALE = 0.14;
+    private static readonly ESSENCE_TEXT_GAP = 3;
+    private static readonly ESSENCE_FONT_SIZE = "42px";
+
     private collectedIcon: Phaser.GameObjects.Sprite | null = null;
 
     constructor(scene: BattleScene, x: number, y: number, modifierTypeOption: ModifierTypeOption, showCost: boolean = true) {
@@ -330,90 +292,81 @@ export class CollectedTypeModifierOption extends ModifierOption {
     }
 
     protected getItemCostTextY(): number {
-        return 41;
+        return CollectedTypeModifierOption.ESSENCE_COST_Y;
     }
 
-    private canAfford(): boolean {
+    public canAfford(knownTotal?: number): boolean {
         const cost = this.modifierTypeOption.cost || 0;
-        if (cost === 0) return true;
-
-        const total = this.getTotalCollectedTypes();
+        if (cost === 0) {
+            return true;
+        }
+        const total = knownTotal ?? getPartyCollectedTypeTotal(this.scene as BattleScene);
         return total >= cost;
     }
 
-    private getTotalCollectedTypes(): number {
-        const scene = this.scene as BattleScene;
-        const uiHandler = scene.ui.getHandler();
-        if (uiHandler instanceof CollectedTypeShopUiHandler) {
-            return uiHandler.getTotalCollectedTypes();
+    private layoutEssenceCostRow(knownTotal?: number): void {
+        const y = this.getItemCostTextY();
+        const textX = CollectedTypeModifierOption.ESSENCE_ICON_X;
+
+        if (!this.itemCostText) {
+            return;
         }
 
-        const party = scene.getParty();
-        let total = 0;
+        const cost = this.modifierTypeOption.cost;
+        const canAfford = this.canAfford(knownTotal);
+        const textStyle = canAfford ? TextStyle.MONEY : TextStyle.PARTY_RED;
+        const battleScene = this.scene as BattleScene;
 
-        for (const pokemon of party) {
-            const modifiers = scene.findModifiers(m =>
-                m instanceof CollectedTypeModifier && m.pokemonId === pokemon.id
-            ) as CollectedTypeModifier[];
+        this.itemCostText.setText(cost.toString());
+        this.itemCostText.setFontSize(CollectedTypeModifierOption.ESSENCE_FONT_SIZE);
+        this.itemCostText.setFontFamily("pkmnems");
+        this.itemCostText.setOrigin(0, 0.5);
+        this.itemCostText.setColor(getTextColor(textStyle, false, battleScene.uiTheme));
+        this.itemCostText.setShadow(0, 0, undefined);
+        this.itemCostText.setStroke("#424242", 14);
+        this.itemCostText.setPosition(textX, y);
 
-            for (const modifier of modifiers) {
-                total += Object.values(modifier.collectedTypes).reduce((sum, count) => sum + count, 0);
-            }
+        const iconX = textX + this.itemCostText.displayWidth + 3;
+
+        if (!this.collectedIcon) {
+            this.collectedIcon = this.scene.add.sprite(iconX, y, "smitems", "modSoulCollected");
+            this.collectedIcon.setScale(CollectedTypeModifierOption.ESSENCE_ICON_SCALE * 1.6);
+            this.collectedIcon.setOrigin(0, 0.5);
+            this.collectedIcon.setAlpha(0);
+            this.add(this.collectedIcon);
+        } else {
+            this.collectedIcon.setPosition(iconX, y);
+            this.collectedIcon.setScale(CollectedTypeModifierOption.ESSENCE_ICON_SCALE * 1.6);
+            this.collectedIcon.setOrigin(0, 0.5);
         }
-
-        return total;
     }
 
     protected additionalDisplayTweens(): void {
+        const y = this.getItemCostTextY();
         if (this.collectedIcon) {
             this.scene.tweens.add({
                 targets: this.collectedIcon,
                 duration: 500,
                 alpha: 1,
-                y: 48,
+                y,
                 ease: "Cubic.easeInOut"
             });
         }
     }
 
-    updateCostText(): void {
+    public forceReveal(): void {
+        super.forceReveal();
+        const y = this.getItemCostTextY();
+        if (this.collectedIcon) {
+            this.collectedIcon.setAlpha(1);
+            this.collectedIcon.y = y;
+        }
+        this.layoutEssenceCostRow();
+    }
+
+    updateCostText(knownTotal?: number): void {
         if (this.showCost && this.modifierTypeOption.cost > 0) {
-            if (this.itemCostText) {
-                this.itemCostText.setText("");
-            }
-
-            if (!this.collectedIcon) {
-                this.collectedIcon = this.scene.add.sprite(-10, 0, "smitems", "modSoulCollected");
-                this.collectedIcon.setScale(0.185);
-                this.collectedIcon.setAlpha(0);
-                this.add(this.collectedIcon);
-            }
-
-            if (!this.itemCostText) {
-                const canAfford = this.canAfford();
-                const textStyle = canAfford ? TextStyle.MONEY : TextStyle.PARTY_RED;
-
-                this.itemCostText = addTextObject(
-                    this.scene,
-                    25,
-                    0,
-                    this.modifierTypeOption.cost.toString(),
-                    textStyle,
-                    { fontSize: "78px" }
-                );
-                this.itemCostText.setOrigin(0, 0);
-                this.add(this.itemCostText);
-            } else {
-                const canAfford = this.canAfford();
-                const textStyle = canAfford ? TextStyle.MONEY : TextStyle.PARTY_RED;
-
-                const battleScene = this.scene as BattleScene;
-                this.itemCostText.setFontSize("82px");
-                this.itemCostText.setPosition(5, 0);
-                this.itemCostText.setColor(getTextColor(textStyle, false, battleScene.uiTheme));
-                this.itemCostText.setShadow(3, 3, getTextColor(textStyle, true, battleScene.uiTheme));
-                this.itemCostText.setText(this.modifierTypeOption.cost.toString());
-            }
+            this.layoutEssenceCostRow(knownTotal);
         }
     }
 }

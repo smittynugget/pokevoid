@@ -196,17 +196,6 @@
         "2":"Dies belohnt dich mit ΩGOLD und schützt vor Datenverlust."
       }
     },
-    "bounties": {
-      "title": "Kopfgeldsystem",
-      "text": { 
-        "1":"Gib 6-Buchstaben-Codes in der Konsole ein, um Kopfgelder zu aktivieren.",
-        "2":"Kopfgelder sind QUESTS, die dir ermöglichen, ΩGOLD/ΩGEGENSTÄNDE zu verdienen, und sind nach Abschluss komplett wiederverwendbar!"
-      }
-    },
-    "dailyBounty": {
-      "title": "Tägliches Kopfgeld!",
-      "text": "Ein neues tägliches Kopfgeld ist verfügbar! Schließe es ab, um ΩGOLD/ΩGEGENSTÄNDE zu verdienen. Der Code ist bereits in der Konsole, aktiviere ihn einfach!"
-    },
     "discord": {
       "title": "Discord & Support",
       "text": "Tritt dem Smittyverse Discord bei für Diskussionen, Fehlerberichte und Community! Finde Kopfgeldcodes und verbinde dich mit anderen Spielern."
@@ -382,6 +371,13 @@
       "title": { "1": "NEUER FTL-Modus" },
       "text": { "1": "FTL (Schneller als das Licht) ist die neue schnellste Chaos-Variante! Spring direkt ins Chaos!" }
     },
+    "firstTimeFtlSkillTree": {
+      "title": { "1": "Wähle deine Pokémon", "2": "Signatur und Allgemein" },
+      "text": {
+        "1": "Deine erste Reise beginnt jetzt. Nutze den Fertigkeitenbaum, um 2 Pokémon für diesen Run auszuwählen.",
+        "2": "Knoten mit dem Draft-Symbol bieten Pokémon an. Umgekehrtes Symbol = eine Signatur-Pokémon-Option."
+      }
+    },
     "championSelectEssence": {
       "title": { "1": "Champion-Auswahl", "2": "Essenz-System", "3": "Champions aufleveln" },
       "text": {
@@ -443,6 +439,103 @@
         "5": "EIER: Hole Eier aus dem Ei-Gacha!",
         "6": "SHOP: Schnellzugriff auf den Shop!",
         "7": "KARTE: Zeige deinen aktuellen Pfad innerhalb des Chaos an!"
+      },
+      "smitomTip": {
+        "tutorialBattleType": {
+          "title": "Typ-Überschreibung!",
+          "1": "Schlechter Typ-Matchup! Nutze die Macht der Leere, um unseren Typ zu ändern — die Naturgesetze gelten hier nicht mehr."
+        },
+        "tutorialBattleHeal": {
+          "title": "Neue Leere-Fähigkeiten",
+          "1": "Setze das als unsere passive Fähigkeit — HP-Regeneration pro Runde. Am Leben bleiben ist Schritt eins zum Gewinnen. Normalerweise."
+        },
+        "tutorialBattleXM": {
+          "title": "Das verbotene Moveset",
+          "1": "Nutze schnell die Korruption der Leere zu deinem Vorteil! Umarme die verbotene Kraft, um deinem Pokémon jeden beliebigen Angriff beizubringen."
+        },
+        "tutorialBattleGlitchReward": {
+          "title": "LEERE-ALARM",
+          "1": "Das ist nicht gut! Schnapp dir schnell {{pokemonName}}s Glitch-Form aus der LEERE!"
+        },
+        "tutorialBattleEvolveGlitch": {
+          "title": "ENTWICKLUNG!",
+          "1": "ENTWICKLE {{pokemonName}} JETZT ZU SEINER NEUEN GLITCH-FORM!!"
+        },
+        "starterSelect": {
+          "title": "Unendliche Fusion ruft an...",
+          "1": "Sie wollen, dass du glaubst, es geht nur um Signaturen und Legendäre. Aber schau genauer hin. Die Fusionen. Sie sind UNENDLICH.",
+          "2": "*wirbelt metaphorisch den Finger vor dir herum, wie ein verrückter Gorilla* Verstehst du, was das bedeutet?",
+          "3": "Es bedeutet, jede mögliche Kombination existiert. JEDE. Kenney Rogers. EINE. Irgendjemand musste sie alle erschaffen. Oder... irgendetwas hat es getan..."
+        },
+        "skillTreeFirstNode": {
+          "title": "GRATIS Zufallsbonus",
+          "1": "Nachdem du deinen ersten Knoten gewählt hast, erscheinen KOSTENLOSE Knoten!",
+          "2": "KOSTENLOS — wie dieses Spiel! 3 Jahre seines Lebens. Smitty hätte in der Zeit locker ein Indie-Spiel machen können.",
+          "3": "Oh Smitty, du süßes Sommerkind, hast du nicht gesagt das dauert höchstens 6 Monate?",
+          "4": "...Smitty?",
+          "5": "Smitty blinzel zweimal wenn du Hilfe brauchst...",
+          "6": "Hat er geblinzelt...",
+          "7": "Aber ja, die Knoten sind kostenlos! yay kostenlose Knoten!"
+        },
+        "skillTreeGlitchFormNode": {
+          "title": "Versiegelte Glitch-Form",
+          "1": "Sammle genug Fähigkeiten und du schaltest den versiegelten Knoten frei — er gibt dir Zugang zu einer Glitch-Form für diesen Durchlauf!",
+          "2": "Sammle Fähigkeiten. Erhalte NEUE FORM!"
+        },
+        "wave35Shared": {
+          "title": "NEW ITEM GET!",
+          "pretext": "Wir haben ein neues Item im Void gefunden! {{featureName}}! Lass uns im Internet nachschauen, was es tut.",
+          "posttext": "Wenn du neugierig bist, probier es aus. Du kannst sie auch in den Einstellungen deaktivieren, falls sie dich nicht so kitzeln wie ich dich kitzle."
+        },
+        "wave35StatSwitchers": {
+          "featureName": "Stat-Tausch",
+          "1": "Verteile die Basiswerte eines Pokémon neu. Scyther mit Magier-level Spezialangriff. Machamp mit Geschwindigkeit wie Jolteon. Gengar mit Dicke die Snorlax übertrifft! Dein Team, deine Regeln. Das Void hat dir gerade das Admin-Panel gegeben. Ich schlage vor, du missbrauchst es. Vorzugsweise unverantwortlich. Und ja, Dicke ist ein Wort, ich hab's nachgeschlagen."
+        },
+        "wave35MoveUpgrades": {
+          "featureName": "Attacken-Upgrades",
+          "1": "Willkommen bei Move Upgrades! Mach Erdbeben zu einer speziellen Attacke. Gib Eisstrahl Priorität. Gib Donnerblitz eine Einfrierchance. Deine Moves sind nicht in Stein gemeißelt — sie sind in Void gemeißelt. Gefällt dir das? Ich hab's gestern geschrieben, 'in Void gemeißelt', weil wir im Void sind, nicht in Stein, das ist nicht Doctor Stone, Mann. Ergibt also Sinn. Ziemlich witzig, oder? Persönlich mag ich's. In Void gemeißelt klingt",
+          "2": "--- 2 STUNDEN SPÄTER ---",
+          "3": "Wahrscheinlich Shakespeare-Niveau, ehrlich gesagt. Gut, das ist raus aus meinem System."
+        },
+        "wave35ReleaseItems": {
+          "featureName": "Freigabe-Items",
+          "1": "Erinnerst du dich an den Film, wo der Roboter sagt 'Ich komme wieder'? Release Items sind so, nur dass der Roboter nicht wiederkommt. Seine Teile gehen in einen besseren Roboter. Und dieser Roboter sagt AUCH nicht 'Ich komme wieder', weil er zu beschäftigt ist, unaufhaltbar zu sein. Typen, Werte, Fähigkeiten oder Moves — können übertragen werden! Kein Sequel nötig."
+        },
+        "shinyPower": {
+          "title": "Ein seltenes Exemplar tritt hervor",
+          "1": "Beobachten wir: Das schillernde Pokémon erhält bei Runbeginn vier Pfade. Der erste bewahrt seine Originalform. Zwei bieten neue Fähigkeiten mit neu verteilten Werten. Der letzte ersetzt sein gesamtes Moveset durch typbasierte Attacken.",
+          "2": "In jeder alternativen Variante werden vier seiner Werte getauscht — eine bemerkenswerte Anpassung. Das Schillernde, das den Run betritt, ist selten dasselbe, das ihn beendet. Die Natur heilt sich. Genauer gesagt, die Leere-Version der Natur. Was wohl das Gegenteil von Heilung ist."
+        },
+        "rankUp": {
+          "title": "ANNEHMEN oder UMGESTALTEN?",
+          "1": "Mein Onkel sammelte diese kleinen Shampooflaschen aus Hotels. Ganzes Regal. Nie eine geöffnet. Hat sie nur angeschaut. Sagte, das sei Investieren. Er sitzt jetzt im Knast — hat nichts damit zu tun, wahrscheinlich — aber das Prinzip bleibt. Du läufst durch die Leere, du sammelst Zeug auf. Nicht Beute, genau genommen. Die dunkle Energie. Die Korruption. Der eklige Film, der von allem abgeht, was du besiegst. Der verschwindet nicht einfach.. Du hast ihn gesammelt. Jeder Kampf fügt eine Schicht hinzu. Wie Lasagne, nur der Käse ist böse und niemandes Oma hat sie gemacht.",
+          "2": "Wenn es auslöst, hast du zwei Optionen — Annehmen: Die Leere-Energie strömt nach innen statt zu zerstören. Selbes Pokémon, selber Typ, selbe Moves, etwas dunklere Seele. Was bereits stark war, wird stärker. Mit jedem Annehmen vertieft sich die dunkle Energie, eine Form mit Schatten der Leere entsteht, ein Look, den der Abgrund fast sein Eigen nennen würde. Umgestalten: Wo Annehmen die Form bewahrt, zerschmettert Umgestalten die Grenze zwischen Spezies. Nutze die Korruption, um die Realität zu biegen, bis dein Partner in einer neuen Hülle steht — Werte bekommen denselben Boost wie bei Annehmen, aber Typ und Fähigkeit ändern sich. Was sie gefährlich machte, überlebt die Umformung. Während normale Pokémon die Leere nur erdulden, akkumulieren Duelmons sie — Korruption sammelt sich in ihren Seelen, bis ihre einzigartige Seelenwoge ausbricht, ihre verbotene Evolution, garantiert bei bestimmten Levelbereichen. Normale Pokémon verdienen Seelenwogen zufällig bei Level-Ups oder durch Kopfgelder. Seelenwogen sind ziemlich toll, oder? Wie kleine Shampooflaschen aus Hotels — mein Onkel würde sich freuen, ganz sicher."
+        },
+        "yuMovePhase": {
+          "title": "Verfluchte Technik",
+          "1": "„Im ganzen Himmel und auf Erden bin ich allein der Geehrte.\" Das hat die Leere gesagt, als sie die Signatur-Attacken deines Duelmons im Schattenreich versiegelte. Große Worte von etwas, das vergessen hat, dass verfluchte Techniken umkehrbar sind. Besiege Feinde mit deinem Duelmon, steige auf, und MACHT DER SCHATTEN kann drei verbotene Attacken entsiegeln — zwei aus dem eigenen verfluchten Pool deines Duelmons, einen aus dem weiteren Schattenreich.",
+          "2": "Kopfgelder lösen sofort Gebietserweiterung aus — kein Level-Up nötig. Das Schattenreich ist nicht das Gefängnis, für das die Leere es hält. Die Leere hat nur versehentlich die guten Sachen dort gelagert. Hollow Purple? Eher Hollow Leere. Dein Duelmon holt sich seine Techniken zurück."
+        },
+        "altBuild": {
+          "title": "UNMÖGLICH!!!",
+          "1": "UNMÖGLICH. Dieses Powerlevel — das ist nicht — der Scouter kann nicht stimmen. Ihre BINDUNG zerschmettert jedes Limit — ihre KRAFT in zwei Werte gepumpt, Typ UMGESCHRIEBEN, Fähigkeiten GETAUSCHT, Attacken ERSETZT, eine völlig neue Form, die mein Equipment sich weigert zu klassifizieren! Karpador kann zu Drachengeborenes werden. Wasser und Drache. UM GOTTES WILLEN — DAS IST EIN KARPADOR. Und es ist nicht nur der erbärmliche Clownfisch — Sonnfel wird zu Leere-Konstellation, Lunastein wird zu Traum-Weber — DAS SIND NUR KLEINE STEINE — EINER IST NICHT MAL SO ORANGE! Ihre BINDUNG zerschmettert Grenzen, von denen ich nicht wusste, dass sie existieren. Diese Wesen folgen keiner normalen Evolution — sie haben einen anderen Evolutionspfad geschaffen. Sie ranken stattdessen auf. Kontinuierlich. Zehn Mal. Nicht möglich — nein, der Prinz aller Saiyajins wird DAS NICHT AKZEPTIEREN.",
+          "2": "Und auf Rang zehn — was IST das?! Sie SCHALTEN NEUE FÄHIGKEITEN FREI? Einer unter Millionen? Leviathans Domäne? Die dürfen nicht existieren. Die Bindung zwischen Champion und Partner überschreibt die Realität selbst — und da draußen gibt es MEHR, jede Bindung schreibt um, wofür diese Spezies geschaffen waren. ZUR HÖLLE DAMIT! WIE KANN ICH, EIN KRIEGER EINER ÜBERLEGENEN RASSE, ÜBERTROFFEN WERDEN?! KAKAROTT!!!!!"
+        },
+        "smittyEncounter": {
+          "title": "!!!ERKENNUNGSALARM!!!",
+          "1": "Alarm! Strahlungssignaturen steigen! Selbstwichtigkeitswerte auf Niveaus, die meine Instrumente zerstören! Scanne die Quelle — die Arroganzdichte allein erzeugt Interferenzen! Etwas nähert sich und jede Metrik sagt, wir sollten uns fürchten! Nur eine Art von Wesen strahlt so — die Art, die sich selbst ins eigene Spiel packen, sich ein lächerliches Team geben und es Content nennen würde.",
+          "2": "Abgleich mit Leere-Signaturen... dieses Wesen könnte die Quelle der Leere selbst sein. Oder — erneuter Scan — es könnte ein zerbrochenes Stück der Leere sein, das physische Form annahm. Seine Pokémon werden nicht gefangen oder trainiert. Sie manifestieren sich direkt aus Leere-Energie. Champion, du musst mir zuhören: Wir können hier sterben. Wirklich sterben. Bitte sei bereit."
+        },
+        "postRunWin": {
+          "title": "Danke, dass du es geschafft hast",
+          "1": "Du hast gewonnen. Ich habe alles gesehen. Jede knappe Situation, jeden klugen Wechsel, jeden Moment, der hätte schiefgehen können und nicht schiefging, weil du es verhindert hast. Die Leere ist immer noch da, aber für einen Run hast du sie besiegt.",
+          "2": "Neue Modi, Quests und Herausforderungen werden freigeschaltet. Das Spiel öffnet sich danach. Aber bevor du zum nächsten Ding hetzt — wisse, dass einen Run in der Leere zu gewinnen etwas bedeutet. Es bedeutet, dein Team war stark und deine Entscheidungen waren richtig. Ich bin beim nächsten dabei. Und beim danach. Jetzt können wir endlich Freunde sein. Was. Warum schaust du mich so an — es ist wie bei Persona, du musst 40 Stunden Nebenquests machen, bevor der Begleiter dir vertraut. Nun dann, lass uns ein paar Schatten jagen — was sagst du, Vertrauensrang 1 Bestie?"
+        },
+        "journeyQuestShop": {
+          "title": "Reisemodus wartet!",
+          "1": "Du hast die Starter-Fang-Quest freigeschaltet — dein Ticket zum Reisemodus! Geh zum OmegaShop, um sie zu aktivieren.",
+          "2": "Sobald aktiviert, fange 5 Pokémon in beliebigen Runs, um die Quest abzuschließen und den Reisemodus freizuschalten!"
+        }
       }
     }
 }

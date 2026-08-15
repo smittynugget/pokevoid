@@ -68,11 +68,11 @@
       "description": "Increases all party members' level by {{levels}}."
     },
     "PokemonBaseStatBoosterModifierType": {
-      "description": "Increases the holder's base {{statName}} by 10%. The higher your IVs, the higher the stack limit."
+      "description": "Increases the holder's base {{statName}} by 8%. The higher your IVs, the higher the stack limit."
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "Cheap",
-      "description": "Increases the holder's base {{statName}} by 1%."
+      "description": "Increases the holder's base {{statName}} by 3%."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restores 100% HP for all Pokémon."
@@ -104,12 +104,12 @@
       "description": "Attacks hit one additional time at the cost of a 60/75/82.5% power reduction per stack respectively."
     },
     "AnyTmModifierType": {
-      "name": "++XM {{moveName}}++",
+      "name": "XM {{moveName}}",
       "statLabel": "XM (Any TM)",
       "description": "Teach {{moveName}} to a Pokémon."
     },
     "AnyTmModifierTypeWithInfo": {
-      "name": "++XM{{moveId}} - {{moveName}}++",
+      "name": "XM{{moveId}} - {{moveName}}",
       "statLabel": "XM (Any TM)",
       "description": "Teach {{moveName}} to ANY Pokémon\n(Hold C or Shift for more info)."
     },
@@ -179,7 +179,7 @@
     "RandomStatSwitcherModifierType": {
       "name": "{{stat1}} X {{stat2}}",
       "statLabel": "Stat Switcher",
-      "description": "Switches the {{stat1}} and {{stat2}} stats of the Pokémon. COSTS 1x Glitch Piece"
+      "description": "Switches the {{stat1}} and {{stat2}} stats of the Pokémon."
     },
     "GlitchPieceModifierType": {
       "name": "Glitch Piece",
@@ -446,7 +446,8 @@
       "name": "Essences",
       "shopName": "{{type}} Essence",
       "statLabel": "Essence",
-      "description": "Use 4x instead of releasing a Pokémon for Release Items or exchange for rewards with the Collector."
+      "description": "Use 4x instead of releasing a Pokémon for Release Items or exchange for rewards with the Collector.",
+      "tooltipDescription": "Grants 1 {{type}} Essence to the selected Pokémon.\n\nEssences are used for Champion skill leveling, sacrifice alternatives (4 required), and Collector exchanges."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Collected Essences",
@@ -461,7 +462,7 @@
       "description": "Gain {{amount}} Skill Tree Tokens. Used to level up your Skill Tree!"
     },
     "SacrificeModifierType": {
-      "description": "Release a Pokémon to boost another pokemon's {{stat}} by 15%."
+      "description": "Release a Pokémon to boost another pokemon's {{stat}} by 12%."
     },
     "SacrificeToggleModifierType": {
       "name": "Release Item Toggle",
@@ -474,7 +475,7 @@
     "StatSacrificeModifierType": {
       "name": "Stat Release: {{stat}}",
       "statLabel": "Stat Release",
-      "description": "Release a Pokémon to boost another pokemon's {{stat}} by 15%."
+      "description": "Release a Pokémon to boost another pokemon's {{stat}} by 12%."
     },
     "TypeSacrificeModifierType": {
       "name": "Type Release",
@@ -498,7 +499,7 @@
       "description": "Give {{abilityName}} to ANY Pokémon\n(Hold C or Shift for more info)."
     },
     "AnyPassiveAbilityModifierType": {
-      "name": "++PASSIVE {{abilityName}}++",
+      "name": "PASSIVE {{abilityName}}",
       "statLabel": "Any Passive Ability Item",
       "description": "Set Passive Ability {{abilityName}} on ANY Pokémon\n(Hold C or Shift for more info)."
     },
@@ -722,6 +723,7 @@
 
     "ABOMASITE": "Abomasite",
     "ABSOLITE": "Absolite",
+    "ABSOLITE_Z": "Absolite Z",
     "AERODACTYLITE": "Aerodactylite",
     "AGGRONITE": "Aggronite",
     "ALAKAZITE": "Alakazite",
@@ -738,6 +740,7 @@
     "DIANCITE": "Diancite",
     "GALLADITE": "Galladite",
     "GARCHOMPITE": "Garchompite",
+    "GARCHOMPITE_Z": "Garchompite Z",
     "GARDEVOIRITE": "Gardevoirite",
     "GENGARITE": "Gengarite",
     "GLALITITE": "Glalitite",
@@ -749,6 +752,7 @@
     "LATIOSITE": "Latiosite",
     "LOPUNNITE": "Lopunnite",
     "LUCARIONITE": "Lucarionite",
+    "LUCARIONITE_Z": "Lucarionite Z",
     "MANECTITE": "Manectite",
     "MAWILITE": "Mawilite",
     "MEDICHAMITE": "Medichamite",
@@ -796,6 +800,21 @@
     "DRAMPITE": "Drampite",
     "FALINKSITE": "Falinksite",
     "ZERAORITE": "Zeraorite",
+    "RAICHUITE_X": "Raichuite X",
+    "RAICHUITE_Y": "Raichuite Y",
+    "CHIMECHOITE": "Chimechoite",
+    "STARAPTORITE": "Staraptorite",
+    "HEATRANITE": "Heatranite",
+    "DARKRAITE": "Darkraite",
+    "GOLURKITE": "Golurkite",
+    "MEOWSTITE": "Meowstite",
+    "CRABOMINITE": "Crabominite",
+    "GOLISOPODITE": "Golisopodite",
+    "MAGEARNITE": "Magearnite",
+    "SCOVILLAINITE": "Scovillainite",
+    "GLIMMORITE": "Glimmorite",
+    "TATSUGURITE": "Tatsugurite",
+    "BAXCALIBURITE": "Baxcaliburite",
 
     "BLUE_ORB": "Blue Orb",
     "RED_ORB": "Red Orb",
@@ -916,10 +935,16 @@
     "uses": "uses",
     "glitchPieceCost": "*COSTS 1x Glitch Piece",
     "essenceAlternativeCost": "If the Pokémon has 4+ Essences, you can use those instead.",
+    "abilityReplaceNote": "Replaces the Pokémon's current ability. Does not stack.",
+    "passiveAbilityReplaceNote": "Replaces the Pokémon's current passive ability. Does not stack.",
     "permaMoney": "ΩGOLD",
     "permaItem": "ΩITEM",
     "moreInfo": "(Hold C / Shift for info)",
     "morePokeInfo": "(Press P / Shift for info)",
-    "upgrade": "Upgrade"
-  }
+    "upgrade": "Upgrade",
+    "partyAbilityStacksHint": "(STACKS!)"
+  },
+  "permaWaveTooltip": "Disappears after [color=#ffa500]{{count}}[/color] waves — countdown starts after wave 50",
+  "permaUseTooltip": "[color=#ffa500]{{count}}[/color] uses remaining — countdown starts after wave 50",
+  "permaRemoveHint": "Press 10 times to remove"
 }

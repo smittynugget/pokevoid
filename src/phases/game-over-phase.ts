@@ -40,6 +40,8 @@ export class GameOverPhase extends BattlePhase {
 
   start() {
     super.start();
+    this.scene._inBattleTurn = false;
+
     const waveIndex = this.scene.currentBattle?.waveIndex ?? 0;
     const finalWave = this.scene.gameMode.getFinalWave();
     if (finalWave > 0 && waveIndex > finalWave && !this.scene.gameMode.isEndless && !this.scene.gameMode.isChaosMode) {
@@ -48,7 +50,8 @@ export class GameOverPhase extends BattlePhase {
 
     if (this.victory && this.scene.gameMode.isEndless) {
       this.scene.ui.showDialogue(i18next.t("PGMmiscDialogue:ending_endless"), i18next.t("PGMmiscDialogue:ending_name"), 0, () => this.handleGameOver());
-    } else {
+    }
+    else {
       this.handleGameOver();
     }
   }
@@ -90,12 +93,12 @@ export class GameOverPhase extends BattlePhase {
         const activeBattlers = this.scene.getField().filter(p => p?.isActive(true));
         activeBattlers.map(p => p.hideInfo());
         this.scene.ui.fadeOut(fadeDuration).then(() => {
-          this.scene.ui.getMessageHandler().nameBoxContainer.setVisible(false);
-          if (this.scene.currentBattle?.trainer) {
-            this.scene.currentBattle.trainer.destroy();
-          }
-          this.scene.gameData.playerRival = null;
-          activeBattlers.map(a => a.setVisible(false));
+            this.scene.ui.getMessageHandler().nameBoxContainer.setVisible(false);
+            if (this.scene.currentBattle?.trainer) {
+              this.scene.currentBattle.trainer.destroy();
+            }
+            this.scene.gameData.playerRival = null;
+            activeBattlers.map(a => a.setVisible(false));
           this.scene.setFieldScale(1, true);
           this.scene.clearPhaseQueue();
           this.scene.ui.clearText();
@@ -108,7 +111,7 @@ export class GameOverPhase extends BattlePhase {
             if (newClear) {
 
             }
-            this.scene.pushPhase(new PostGameOverPhase(this.scene, endCardPhase));
+            this.scene.pushPhase(new PostGameOverPhase(this.scene, endCardPhase, this.victory));
             this.end();
           };
 
@@ -120,7 +123,7 @@ export class GameOverPhase extends BattlePhase {
             this.scene.lossWhiteoutPreSummaryQueued = true;
             const def = STORY_CUTSCENES.loss_whiteout_homebase;
             const slides = getLossWhiteoutHomebaseSlidesRandomized();
-            this.scene.pushPhase(new PostGameOverPhase(this.scene));
+            this.scene.pushPhase(new PostGameOverPhase(this.scene, undefined, this.victory));
             this.scene.unshiftPhase(new SlideshowCutscenePhase(this.scene, {
               slides,
               bgmKey: def.bgmKey,

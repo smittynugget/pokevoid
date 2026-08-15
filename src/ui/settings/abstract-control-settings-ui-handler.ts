@@ -1,6 +1,6 @@
 import UiHandler from "../ui-handler";
 import BattleScene from "../../battle-scene";
-import {Mode} from "../ui";
+import {Mode} from "../mode";
 import {InterfaceConfig} from "../../inputs-controller";
 import {addWindow} from "../ui-theme";
 import {addTextObject, TextStyle} from "../text";
@@ -8,7 +8,9 @@ import {getIconWithSettingName} from "#app/configs/inputs/configHandler";
 import NavigationMenu, {NavigationManager} from "#app/ui/settings/navigationMenu";
 import { Device } from "#enums/devices";
 import { Button } from "#enums/buttons";
+import { isPrimaryPointer } from "../pointer-utils";
 import { attachModalBackground, ModalBackgroundHandle } from "../modal-background-utils";
+import { ModifierTooltipUtils } from "../modifier-tooltip-utils";
 import i18next from "i18next";
 
 export interface InputsIcons {
@@ -59,6 +61,8 @@ export default abstract class AbstractControlSettingsUiHandler extends UiHandler
   protected localStoragePropertyName;
   protected rowsToDisplay: number;
   protected device: Device;
+
+  private _wheelHandler: ((...args: any[]) => void) | null = null;
 
   abstract saveSettingToLocalStorage(setting, cursor): void;
   abstract setSetting(scene: BattleScene, setting, value: integer): boolean;
@@ -203,6 +207,45 @@ export default abstract class AbstractControlSettingsUiHandler extends UiHandler
           xOffset += (value as Phaser.GameObjects.Text).width / 6 + optionSpacing;
         }
       });
+
+      const rowWidth = (this.scene.game.canvas.width / 6) - 10;
+      const rowHeight = 16;
+      const rowZones: Phaser.GameObjects.Zone[] = [];
+      for (let s = 0; s < settingFiltered.length; s++) {
+        const zone = this.scene.add.zone(4, 28 + s * rowHeight, rowWidth, rowHeight);
+        zone.setOrigin(0, 0);
+        zone.setInteractive({ useHandCursor: true });
+        optionsContainer.add(zone);
+        rowZones.push(zone);
+
+        const settingIdx = s;
+        zone.on("pointerover", () => {
+          if (!this.optionValueLabels) return;
+          const isVisible = settingIdx >= this.scrollCursor && settingIdx < this.scrollCursor + this.rowsToDisplay;
+          if (!isVisible) return;
+          const targetCursor = settingIdx - this.scrollCursor;
+          if (targetCursor !== this.cursor) {
+            this.setCursor(targetCursor);
+            this.getUi().playSelect();
+          }
+        });
+
+        zone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+          if (!isPrimaryPointer(pointer)) return;
+          if (!this.optionValueLabels) return;
+          const isVisible = settingIdx >= this.scrollCursor && settingIdx < this.scrollCursor + this.rowsToDisplay;
+          if (!isVisible) return;
+          const targetCursor = settingIdx - this.scrollCursor;
+          if (this.cursor !== targetCursor) {
+            this.setCursor(targetCursor);
+            this.getUi().playSelect();
+          } else {
+            this.processInput(Button.ACTION);
+          }
+        });
+      }
+
+      this.layout[config.padType].rowZones = rowZones;
       this.layout[config.padType].optionsContainer = optionsContainer;
       this.layout[config.padType].inputsIcons = inputsIcons;
       this.layout[config.padType].settingLabels = settingLabels;
@@ -210,6 +253,7 @@ export default abstract class AbstractControlSettingsUiHandler extends UiHandler
       this.layout[config.padType].optionCursors = optionCursors;
       this.layout[config.padType].keys = specificBindingKeys;
       this.layout[config.padType].bindingSettings = bindingSettings;
+
       this.settingsContainer.add(optionsContainer);
     }
 
@@ -299,8 +343,28 @@ export default abstract class AbstractControlSettingsUiHandler extends UiHandler
     this.settingsContainer.setVisible(true);
 
     this.resetScroll();
+
+    this._wheelHandler = (_p: any, _g: any, _dx: number, dy: number) => {
+      if (!this.optionValueLabels) return;
+      const maxScroll = Math.max(0, this.optionValueLabels.length - this.rowsToDisplay);
+      if (dy > 0 && this.scrollCursor < maxScroll) {
+        this.setScrollCursor(this.scrollCursor + 1);
+      } else if (dy < 0 && this.scrollCursor > 0) {
+        this.setScrollCursor(this.scrollCursor - 1);
+      }
+    };
+    this.scene.input.on("wheel", this._wheelHandler);
     this.getUi().moveTo(this.settingsContainer, this.getUi().length - 1);
     this.getUi().hideTooltip();
+
+    ModifierTooltipUtils.hide(this.scene as BattleScene);
+    const bs = this.scene as BattleScene;
+    [bs.getModifierBar(), bs.getModifierBar(true), bs.ui.permaModifierBar].forEach(bar => {
+      bar?.getAll().forEach((icon: any) => {
+        if (typeof icon.disableInteractive === "function") icon.disableInteractive();
+      });
+    });
+
     this._controlPatterns?.nav?.redraw();
     this._controlPatterns?.options?.redraw();
     this._controlPatterns?.actions?.redraw();
@@ -480,28 +544,58 @@ export default abstract class AbstractControlSettingsUiHandler extends UiHandler
     return true;
   }
   updateSettingsScroll(): void {
-
     if (!this.optionsContainer) {
       return;
     }
-    this.optionsContainer.setY(-16 * this.scrollCursor);
-    for (let s = 0; s < this.settingLabels.length; s++) {
 
+    this.optionsContainer.setY(-16 * this.scrollCursor);
+
+    for (let s = 0; s < this.settingLabels.length; s++) {
       const visible = s >= this.scrollCursor && s < this.scrollCursor + this.rowsToDisplay;
+
       this.settingLabels[s].setVisible(visible);
       for (const option of this.optionValueLabels[s]) {
         option.setVisible(visible);
       }
     }
+
+    const activeLayout = this.layout[this.getActiveConfig()?.padType];
+    const zones = activeLayout?.rowZones as Phaser.GameObjects.Zone[] | undefined;
+    if (zones) {
+      for (let s = 0; s < zones.length; s++) {
+        const visible = s >= this.scrollCursor && s < this.scrollCursor + this.rowsToDisplay;
+        if (visible) {
+          zones[s].setInteractive({ useHandCursor: true });
+        } else {
+          zones[s].disableInteractive();
+        }
+      }
+    }
+
+    this.settingsContainer.bringToTop(this.navigationContainer);
   }
   clear(): void {
+    const bs = this.scene as BattleScene;
+    [bs.getModifierBar(), bs.getModifierBar(true), bs.ui.permaModifierBar].forEach(bar => {
+      bar?.getAll().forEach((icon: any) => {
+        if (typeof icon.setInteractive === "function") icon.setInteractive();
+      });
+    });
+
     this._controlPatterns?.nav?.clear();
     this._controlPatterns?.options?.clear();
     this._controlPatterns?.actions?.clear();
     this._controlPatterns = undefined;
 
+    if (this._wheelHandler) {
+      this.scene.input.off("wheel", this._wheelHandler);
+      this._wheelHandler = null;
+    }
+
     super.clear();
+
     this.settingsContainer.setVisible(false);
+
     this.eraseCursor();
   }
   eraseCursor(): void {

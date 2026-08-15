@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import BattleScene from "../battle-scene";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { Button } from "../enums/buttons";
 import { addWindow } from "./ui-theme";
 import { addTextObject, TextStyle } from "./text";
@@ -8,7 +8,7 @@ import * as Utils from "../utils";
 import { createSporadicPattern } from "../utils";
 import { ModalConfig, ModalUiHandler } from "./modal-ui-handler";
 import { getCurrentBattlePath, PathNodeType, getAvailablePathsFromWave, setupFixedBattlePaths, getDynamicModeLocalizedString, DynamicModes } from "../battle";
-import { PathNodeContext } from "../phases/battle-path-phase";
+import { PathNodeContext } from "#app/battle";
 import { Type } from "../data/type";
 import Overrides from "#app/overrides.js";
 import { isIPhone } from "../loading-scene";
@@ -131,26 +131,15 @@ export default class BattlePathUiHandler extends ModalUiHandler {
   private readonly CHALLENGE_DESC_TOOLTIP = {
     WIDTH: 80,
     PADDING: 6,
-    TITLE_BAR_Y: 0,
     TITLE_BAR_HEIGHT: 12,
-    TITLE_BAR_COLOR: 0xff4444,
-    TITLE_BAR_ALPHA: 0.3,
-    RARITY_BAR_Y: 12,
     RARITY_BAR_HEIGHT: 6,
-    RARITY_BAR_COLOR: 0x4d0000,
-    RARITY_BAR_ALPHA: 0.6,
-    CONTENT_Y: 20,
+    CONTENT_Y: 24,
     TITLE_FONT_SIZE: '40px',
     RARITY_FONT_SIZE: '30px',
     DESC_FONT_SIZE: '36px',
-    TITLE_TEXT_Y: 6,
-    RARITY_TEXT_Y: 15,
+    TITLE_TEXT_Y: 8,
+    RARITY_TEXT_Y: 17,
     TEXT_SPACING: 4,
-    BORDER_COLOR: 0xffffff,
-    BORDER_ALPHA: 0.5,
-    BORDER_THICKNESS: 0.5,
-    GRADIENT_TOP: { r: 106, g: 15, b: 58 },
-    GRADIENT_BOTTOM: { r: 0, g: 0, b: 0 },
   };
 
   private readonly CHALLENGE_TOOLTIP_HEADER = {
@@ -198,7 +187,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
   private challengeItemContainers: Phaser.GameObjects.Container[] = [];
   private challengeItemBgs: Phaser.GameObjects.Graphics[] = [];
   private challengeDescTooltipContainer: Phaser.GameObjects.Container | null = null;
-  private challengeDescTooltipBg: Phaser.GameObjects.Graphics | null = null;
+  private challengeDescTooltipBg: Phaser.GameObjects.NineSlice | null = null;
   private challengeDescTooltipTitleBar: Phaser.GameObjects.Graphics | null = null;
   private challengeDescTooltipRarityBar: Phaser.GameObjects.Graphics | null = null;
   private challengeDescTooltipTitle: Phaser.GameObjects.Text | null = null;
@@ -1303,23 +1292,25 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     this.challengeDescTooltipContainer = this.scene.add.container(0, 0);
     this.challengeDescTooltipContainer.setVisible(false);
 
-    this.challengeDescTooltipBg = this.scene.add.graphics();
+    this.challengeDescTooltipBg = this.scene.add.nineslice(0, 0, "tooltip_info", undefined, c.WIDTH, 60, 12, 12, 12, 12);
+    this.challengeDescTooltipBg.setOrigin(0, 0);
     this.challengeDescTooltipTitleBar = this.scene.add.graphics();
     this.challengeDescTooltipRarityBar = this.scene.add.graphics();
 
     this.challengeDescTooltipTitle = addTextObject(
       this.scene,
-      c.WIDTH / 2,
+      c.WIDTH / 2 + 2,
       c.TITLE_TEXT_Y,
       "",
       TextStyle.WINDOW,
-      { fontSize: c.TITLE_FONT_SIZE, fontStyle: "bold" }
+      { fontSize: c.TITLE_FONT_SIZE }
     );
     this.challengeDescTooltipTitle.setOrigin(0.5, 0.5);
+    this.challengeDescTooltipTitle.setColor("#ff4444");
 
     this.challengeDescTooltipRarity = addTextObject(
       this.scene,
-      c.WIDTH / 2,
+      c.WIDTH / 2 + 2,
       c.RARITY_TEXT_Y,
       i18next.t("nodeMode:challengeHeader", { defaultValue: "CHALLENGE!" }),
       TextStyle.WINDOW,
@@ -1330,8 +1321,8 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
     this.challengeDescTooltipDesc = addTextObject(
       this.scene,
-      c.PADDING,
-      c.CONTENT_Y + 2,
+      c.PADDING + 2,
+      c.CONTENT_Y,
       "",
       TextStyle.WINDOW,
       { fontSize: c.DESC_FONT_SIZE }
@@ -1348,37 +1339,6 @@ export default class BattlePathUiHandler extends ModalUiHandler {
 
     this.customTooltipContainer.add(this.challengeDescTooltipContainer);
   }
-
-  private drawChallengeTooltipGradient(
-    graphics: Phaser.GameObjects.Graphics,
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ): void {
-    const c = this.CHALLENGE_DESC_TOOLTIP;
-    const topColor = c.GRADIENT_TOP;
-    const bottomColor = c.GRADIENT_BOTTOM;
-
-    const gradientSteps = 24;
-
-    for (let step = 0; step < gradientSteps; step++) {
-      const stepY = y + (step / gradientSteps) * height;
-      const stepHeight = height / gradientSteps;
-
-      const rawFactor = step / (gradientSteps - 1);
-      const factor = Math.pow(rawFactor, 2.5);
-
-      const r = Math.floor(topColor.r * (1 - factor) + bottomColor.r * factor);
-      const g = Math.floor(topColor.g * (1 - factor) + bottomColor.g * factor);
-      const b = Math.floor(topColor.b * (1 - factor) + bottomColor.b * factor);
-      const color = (r << 16) | (g << 8) | b;
-
-      graphics.fillStyle(color, 1.0);
-      graphics.fillRect(x, stepY, width, stepHeight + (step < gradientSteps - 1 ? 1 : 0));
-    }
-  }
-
   private updateChallengeDescTooltip(): void {
     if (!this.challengeDescTooltipContainer ||
         !this.challengeDescTooltipBg ||
@@ -1405,23 +1365,13 @@ export default class BattlePathUiHandler extends ModalUiHandler {
     const contentHeight = descHeight + c.TEXT_SPACING;
     const tooltipHeight = barsHeight + contentHeight + c.PADDING * 2;
 
-    this.challengeDescTooltipBg.clear();
-    this.drawChallengeTooltipGradient(
-      this.challengeDescTooltipBg,
-      0, 0,
-      c.WIDTH,
-      tooltipHeight
-    );
-    this.challengeDescTooltipBg.lineStyle(c.BORDER_THICKNESS, c.BORDER_COLOR, c.BORDER_ALPHA);
-    this.challengeDescTooltipBg.strokeRect(0, 0, c.WIDTH, tooltipHeight);
+    this.challengeDescTooltipBg.setSize(c.WIDTH, tooltipHeight);
 
     this.challengeDescTooltipTitleBar.clear();
-    this.challengeDescTooltipTitleBar.fillStyle(c.TITLE_BAR_COLOR, c.TITLE_BAR_ALPHA);
-    this.challengeDescTooltipTitleBar.fillRect(0, c.TITLE_BAR_Y, c.WIDTH, c.TITLE_BAR_HEIGHT);
 
     this.challengeDescTooltipRarityBar.clear();
-    this.challengeDescTooltipRarityBar.fillStyle(c.RARITY_BAR_COLOR, c.RARITY_BAR_ALPHA);
-    this.challengeDescTooltipRarityBar.fillRect(0, c.RARITY_BAR_Y, c.WIDTH, c.RARITY_BAR_HEIGHT);
+    this.challengeDescTooltipRarityBar.fillStyle(0x0f0f1e, 1.0);
+    this.challengeDescTooltipRarityBar.fillRect(2, 14, c.WIDTH - 4, c.RARITY_BAR_HEIGHT);
 
     const selectedItem = this.challengeItemContainers[this.tooltipSelectedIndex];
     if (selectedItem) {
@@ -1849,7 +1799,7 @@ export default class BattlePathUiHandler extends ModalUiHandler {
   private getNodeIcon(nodeType: PathNodeType, node?: any): NodeSprite {
     switch (nodeType) {
       case PathNodeType.WILD_POKEMON: return { key: "pokemon_icons_1", frame: "25", scale: 0.35 };
-      case PathNodeType.TRAINER_BATTLE: return { key: "unknown_m", frame: "0001", scale: 0.15 };
+      case PathNodeType.TRAINER_BATTLE: return { key: "unknown_m", frame: "0001.png", scale: 0.15 };
       case PathNodeType.RIVAL_BATTLE: return { key: "smitems", frame: "permaPostBattleMoney", scale: 0.20 };
       case PathNodeType.MAJOR_BOSS_BATTLE: return { key: "items", frame: "cornerstone_mask", scale: 0.35 };
       case PathNodeType.RECOVERY_BOSS: return { key: "items", frame: "hearthflame_mask", scale: 0.35 };
@@ -2125,6 +2075,9 @@ export default class BattlePathUiHandler extends ModalUiHandler {
         return this.navigateLeft();
       case Button.RIGHT:
         return this.navigateRight();
+      case Button.MENU:
+        this.scene.ui.setOverlayMode(Mode.MENU);
+        return true;
       case Button.CANCEL:
         if (this.onNodeSelected) {
           return true;

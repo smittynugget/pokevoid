@@ -81,7 +81,31 @@ export enum PokemonAltBuildId {
 
   VOLTORB_SURGE_SIGNATURE = "voltorb_surge_signature",
   PIKACHU_SURGE_SIGNATURE = "pikachu_surge_signature",
-  ELECTABUZZ_SURGE_SIGNATURE = "electabuzz_surge_signature"
+  ELECTABUZZ_SURGE_SIGNATURE = "electabuzz_surge_signature",
+
+  PIKACHU_RED_SIGNATURE = "pikachu_red_signature",
+  SNORLAX_RED_SIGNATURE = "snorlax_red_signature",
+  LAPRAS_RED_SIGNATURE = "lapras_red_signature",
+  FARFETCHD_RED_SIGNATURE = "farfetchd_red_signature",
+  CHARMANDER_RED_SIGNATURE = "charmander_red_signature",
+  TAUROS_RED_SIGNATURE = "tauros_red_signature",
+  MAGIKARP_RED_SIGNATURE = "magikarp_red_signature",
+  BUTTERFREE_RED_SIGNATURE = "butterfree_red_signature",
+  BULBASAUR_RED_SIGNATURE = "bulbasaur_red_signature",
+  SQUIRTLE_RED_SIGNATURE = "squirtle_red_signature",
+  ESPEON_RED_SIGNATURE = "espeon_red_signature",
+
+  PIKACHU_ELECTRO_BERSERKER = "pikachu_electro_berserker",
+  SNORLAX_DREAM_COLOSSUS = "snorlax_dream_colossus",
+  LAPRAS_VOIDFROST = "lapras_voidfrost",
+  FARFETCHD_HEAVENS_EDGE = "farfetchd_heavens_edge",
+  CHARMANDER_BLACK_INFERNO = "charmander_black_inferno",
+  TAUROS_IRON_QUAKE = "tauros_iron_quake",
+  MAGIKARP_DRAGONBORN = "magikarp_dragonborn",
+  BUTTERFREE_SOUL_MOTH = "butterfree_soul_moth",
+  BULBASAUR_PLASMA_JUNGLE = "bulbasaur_plasma_jungle",
+  SQUIRTLE_ABYSS_GOLEM = "squirtle_abyss_golem",
+  ESPEON_MOON_GODDESS = "espeon_moon_goddess"
 }
 
 export interface AltBuildColorPalette {
@@ -2031,6 +2055,439 @@ export const POKEMON_ALT_BUILDS: Record<PokemonAltBuildId, PokemonAltBuildDefini
         lightnessAdjust: 0.2,
         type: 'milestone'
       }
+    }
+  },
+
+  [PokemonAltBuildId.PIKACHU_RED_SIGNATURE]: {
+    id: PokemonAltBuildId.PIKACHU_RED_SIGNATURE,
+    species: Species.PIKACHU,
+    rank: 0,
+    statFocus: [Stat.ATK, Stat.SPD],
+    abilityChanges: [undefined, undefined, undefined],
+    moveReplacements: {}
+  },
+
+  [PokemonAltBuildId.SNORLAX_RED_SIGNATURE]: {
+    id: PokemonAltBuildId.SNORLAX_RED_SIGNATURE,
+    species: Species.SNORLAX,
+    rank: 0,
+    statFocus: [Stat.HP, Stat.DEF],
+    abilityChanges: [undefined, undefined, undefined],
+    moveReplacements: {}
+  },
+
+  [PokemonAltBuildId.LAPRAS_RED_SIGNATURE]: {
+    id: PokemonAltBuildId.LAPRAS_RED_SIGNATURE,
+    species: Species.LAPRAS,
+    rank: 0,
+    statFocus: [Stat.SPATK, Stat.SPDEF],
+    abilityChanges: [undefined, undefined, undefined],
+    moveReplacements: {}
+  },
+
+  [PokemonAltBuildId.FARFETCHD_RED_SIGNATURE]: {
+    id: PokemonAltBuildId.FARFETCHD_RED_SIGNATURE,
+    species: Species.FARFETCHD,
+    rank: 0,
+    statFocus: [Stat.ATK, Stat.SPD],
+    abilityChanges: [undefined, undefined, undefined],
+    moveReplacements: {}
+  },
+
+  [PokemonAltBuildId.CHARMANDER_RED_SIGNATURE]: {
+    id: PokemonAltBuildId.CHARMANDER_RED_SIGNATURE,
+    species: Species.CHARMANDER,
+    rank: 0,
+    statFocus: [Stat.SPATK, Stat.SPD],
+    abilityChanges: [undefined, undefined, undefined],
+    moveReplacements: {},
+    preventEvolution: true
+  },
+
+  [PokemonAltBuildId.TAUROS_RED_SIGNATURE]: {
+    id: PokemonAltBuildId.TAUROS_RED_SIGNATURE,
+    species: Species.TAUROS,
+    rank: 0,
+    statFocus: [Stat.ATK, Stat.DEF],
+    abilityChanges: [undefined, undefined, undefined],
+    moveReplacements: {}
+  },
+
+  [PokemonAltBuildId.MAGIKARP_RED_SIGNATURE]: {
+    id: PokemonAltBuildId.MAGIKARP_RED_SIGNATURE,
+    species: Species.MAGIKARP,
+    rank: 0,
+    statFocus: [Stat.SPATK, Stat.SPD],
+    abilityChanges: [undefined, undefined, undefined],
+    moveReplacements: {},
+    preventEvolution: true
+  },
+
+  [PokemonAltBuildId.BUTTERFREE_RED_SIGNATURE]: {
+    id: PokemonAltBuildId.BUTTERFREE_RED_SIGNATURE,
+    species: Species.BUTTERFREE,
+    rank: 0,
+    statFocus: [Stat.SPATK, Stat.SPD],
+    abilityChanges: [undefined, undefined, undefined],
+    moveReplacements: {}
+  },
+
+  [PokemonAltBuildId.BULBASAUR_RED_SIGNATURE]: {
+    id: PokemonAltBuildId.BULBASAUR_RED_SIGNATURE,
+    species: Species.BULBASAUR,
+    rank: 0,
+    statFocus: [Stat.SPATK, Stat.SPDEF],
+    abilityChanges: [undefined, undefined, undefined],
+    moveReplacements: {},
+    preventEvolution: true
+  },
+
+  [PokemonAltBuildId.SQUIRTLE_RED_SIGNATURE]: {
+    id: PokemonAltBuildId.SQUIRTLE_RED_SIGNATURE,
+    species: Species.SQUIRTLE,
+    rank: 0,
+    statFocus: [Stat.DEF, Stat.SPATK],
+    abilityChanges: [undefined, undefined, undefined],
+    moveReplacements: {},
+    preventEvolution: true
+  },
+
+  [PokemonAltBuildId.ESPEON_RED_SIGNATURE]: {
+    id: PokemonAltBuildId.ESPEON_RED_SIGNATURE,
+    species: Species.ESPEON,
+    rank: 0,
+    statFocus: [Stat.SPATK, Stat.SPD],
+    abilityChanges: [undefined, undefined, undefined],
+    moveReplacements: {}
+  },
+
+  [PokemonAltBuildId.PIKACHU_ELECTRO_BERSERKER]: {
+    id: PokemonAltBuildId.PIKACHU_ELECTRO_BERSERKER,
+    species: Species.PIKACHU,
+    rank: 1,
+    statFocus: [Stat.ATK, Stat.SPD],
+    abilityChanges: [Abilities.CONQUEROR_HAKI, Abilities.ELECTAFIRE_ABSORB, Abilities.MOXIE],
+    passiveAbilityChange: Abilities.INTIMIDATE,
+    finalAbilityReplacements: [Abilities.MINDLESS_RAMPAGE, Abilities.WHITE_LIGHTNING, Abilities.ATTACK_BOOST],
+    finalPassive: Abilities.BLIND_RAGE,
+    moveReplacements: {
+      1: Moves.QUICK_ATTACK, 2: Moves.THUNDER_SHOCK, 3: Moves.NUZZLE,
+      5: Moves.DOUBLE_KICK, 8: Moves.THUNDER_PUNCH, 10: Moves.ROCK_SMASH,
+      13: Moves.LOW_KICK, 15: Moves.ELECTROWEB, 18: Moves.AGILITY,
+      20: Moves.KNOCK_OFF, 23: Moves.BRICK_BREAK, 25: Moves.SWORDS_DANCE,
+      28: Moves.WILD_CHARGE, 30: Moves.BULK_UP, 33: Moves.DRAIN_PUNCH,
+      35: Moves.PLASMA_FISTS, 38: Moves.IRON_TAIL, 40: Moves.VOLT_SWITCH,
+      43: Moves.FOCUS_BLAST, 45: Moves.MACH_PUNCH, 48: Moves.CLOSE_COMBAT,
+      50: Moves.THUNDER, 55: Moves.EXTREME_SPEED
+    },
+    typeChanges: [Type.ELECTRIC, Type.FIGHTING],
+    prerequisiteBuilds: [PokemonAltBuildId.PIKACHU_RED_SIGNATURE],
+    spriteColorPalette: {
+      targetPalette: ["#C9A227", "#8B0000", "#FFD700", "#3B82F6"],
+      darkPalette: ["#6B4E12", "#4A0000", "#A67C00", "#1E3A8A"],
+      blendMode: 'grayscale_overlay',
+      rankProgression: { saturationScale: 1.5, lightnessAdjust: 0.15, type: 'milestone' }
+    }
+  },
+
+  [PokemonAltBuildId.SNORLAX_DREAM_COLOSSUS]: {
+    id: PokemonAltBuildId.SNORLAX_DREAM_COLOSSUS,
+    species: Species.SNORLAX,
+    rank: 1,
+    statFocus: [Stat.HP, Stat.DEF],
+    abilityChanges: [Abilities.STAMINA, Abilities.SUMO_MASTER, Abilities.UNAWARE],
+    passiveAbilityChange: Abilities.THICC,
+    finalAbilityReplacements: [Abilities.ALL_CONSUMING, Abilities.SUPER_HUNGRY, Abilities.UNAWARE],
+    finalPassive: Abilities.THICC,
+    moveReplacements: {
+      1: Moves.TACKLE, 2: Moves.GROWL, 3: Moves.REST,
+      5: Moves.SLEEP_TALK, 8: Moves.AMNESIA, 10: Moves.PROTECT,
+      13: Moves.IRON_DEFENSE, 15: Moves.BODY_PRESS, 18: Moves.WISH,
+      20: Moves.MOONBLAST, 23: Moves.SUBSTITUTE, 25: Moves.HEAVY_SLAM,
+      28: Moves.PLAY_ROUGH, 30: Moves.TRICK_ROOM, 33: Moves.COSMIC_POWER,
+      35: Moves.CURSE, 38: Moves.GIGA_IMPACT, 40: Moves.BODY_SLAM,
+      43: Moves.YAWN, 45: Moves.CRUNCH, 48: Moves.HIGH_HORSEPOWER
+    },
+    typeChanges: [Type.NORMAL, Type.FAIRY],
+    prerequisiteBuilds: [PokemonAltBuildId.SNORLAX_RED_SIGNATURE],
+    spriteColorPalette: {
+      targetPalette: ["#FFF0F5", "#E6E6FA", "#FFE4E1", "#FDF5E6"],
+      darkPalette: ["#4B0082", "#6A0DAD", "#483D8B", "#371B58"],
+      blendMode: 'grayscale_overlay',
+      rankProgression: { saturationScale: 1.5, lightnessAdjust: 0.15, type: 'milestone' }
+    }
+  },
+
+  [PokemonAltBuildId.LAPRAS_VOIDFROST]: {
+    id: PokemonAltBuildId.LAPRAS_VOIDFROST,
+    species: Species.LAPRAS,
+    rank: 1,
+    statFocus: [Stat.SPATK, Stat.SPDEF],
+    abilityChanges: [Abilities.ENLIGHTENED, Abilities.MOODY, Abilities.REFRIGERATE],
+    passiveAbilityChange: Abilities.SNOW_WARNING,
+    finalAbilityReplacements: [Abilities.ABSOLUTE_ZERO, Abilities.CHAOS_SORCERER, Abilities.GLACIAL_PACE],
+    finalPassive: Abilities.SNOW_WARNING,
+    moveReplacements: {
+      1: Moves.POWDER_SNOW, 2: Moves.CONFUSION, 3: Moves.MIST,
+      5: Moves.HAIL, 8: Moves.ICY_WIND, 10: Moves.PSYBEAM,
+      13: Moves.AURORA_BEAM, 15: Moves.CALM_MIND, 18: Moves.ICE_BEAM,
+      20: Moves.COSMIC_POWER, 23: Moves.PSYCHIC, 25: Moves.AURORA_VEIL,
+      28: Moves.FREEZE_DRY, 30: Moves.REFLECT, 33: Moves.BLIZZARD,
+      35: Moves.TRICK_ROOM, 38: Moves.FUTURE_SIGHT, 40: Moves.RECOVER,
+      43: Moves.GLACIATE, 45: Moves.HAZE, 48: Moves.STORED_POWER,
+      50: Moves.MYSTICAL_FIRE, 53: Moves.PSYCHO_BOOST, 55: Moves.ICE_BURN,
+      60: Moves.GLACIAL_LANCE
+    },
+    typeChanges: [Type.ICE, Type.PSYCHIC],
+    prerequisiteBuilds: [PokemonAltBuildId.LAPRAS_RED_SIGNATURE],
+    spriteColorPalette: {
+      targetPalette: ["#1B3A5C", "#7EC8E3", "#6B4C9A", "#E8F4F8"],
+      darkPalette: ["#0E2035", "#4A8FA8", "#3D3268", "#A8C4D0"],
+      blendMode: 'grayscale_overlay',
+      rankProgression: { saturationScale: 1.5, lightnessAdjust: 0.15, type: 'milestone' }
+    }
+  },
+
+  [PokemonAltBuildId.FARFETCHD_HEAVENS_EDGE]: {
+    id: PokemonAltBuildId.FARFETCHD_HEAVENS_EDGE,
+    species: Species.FARFETCHD,
+    rank: 1,
+    statFocus: [Stat.ATK, Stat.SPD],
+    abilityChanges: [Abilities.CONQUEROR_HAKI, Abilities.SUPER_LUCK, Abilities.SPELLBREAKER_BLADE],
+    passiveAbilityChange: Abilities.CURSED_BLADES,
+    finalAbilityReplacements: [Abilities.STEADY_STANCE, Abilities.CURSED_BLADES, Abilities.DRAGONBANE_SWORD],
+    finalPassive: Abilities.SILENT_ASSASSIN,
+    moveReplacements: {
+      1: Moves.PECK, 2: Moves.LEER, 3: Moves.FURY_CUTTER,
+      5: Moves.METAL_CLAW, 8: Moves.AERIAL_ACE, 10: Moves.NIGHT_SLASH,
+      13: Moves.U_TURN, 15: Moves.SLASH, 18: Moves.SMART_STRIKE,
+      20: Moves.KNOCK_OFF, 23: Moves.SWORDS_DANCE, 25: Moves.DEFOG,
+      28: Moves.IRON_HEAD, 30: Moves.SACRED_SWORD, 33: Moves.AGILITY,
+      35: Moves.CLOSE_COMBAT, 38: Moves.KINGS_SHIELD, 40: Moves.CEASELESS_EDGE,
+      43: Moves.BRAVE_BIRD, 45: Moves.VICTORY_DANCE, 48: Moves.BEHEMOTH_BLADE,
+      50: Moves.FIRST_IMPRESSION, 53: Moves.TRIPLE_ARROWS, 55: Moves.AIR_SLASH,
+      60: Moves.KOWTOW_CLEAVE
+    },
+    typeChanges: [Type.STEEL, Type.FLYING],
+    prerequisiteBuilds: [PokemonAltBuildId.FARFETCHD_RED_SIGNATURE],
+    spriteColorPalette: {
+      targetPalette: ["#B8BFC6", "#3D4349", "#C41E3A", "#E8ECF0"],
+      darkPalette: ["#5A6068", "#1A1D21", "#7A1025", "#9AA3AB"],
+      blendMode: 'grayscale_overlay',
+      rankProgression: { saturationScale: 1.5, lightnessAdjust: 0.15, type: 'milestone' }
+    }
+  },
+
+  [PokemonAltBuildId.CHARMANDER_BLACK_INFERNO]: {
+    id: PokemonAltBuildId.CHARMANDER_BLACK_INFERNO,
+    species: Species.CHARMANDER,
+    rank: 1,
+    statFocus: [Stat.SPATK, Stat.SPD],
+    abilityChanges: [Abilities.ABYSSAL_FLAME, Abilities.ADAPTABILITY, Abilities.DROUGHT],
+    passiveAbilityChange: Abilities.SOLAR_POWER,
+    finalAbilityReplacements: [Abilities.ABYSSAL_FLAME, Abilities.VOLCANIC_CORE, Abilities.CHARRED_MEMORY],
+    finalPassive: Abilities.DROUGHT,
+    moveReplacements: {
+      1: Moves.INCINERATE, 2: Moves.SNARL, 3: Moves.MYSTICAL_FIRE,
+      5: Moves.WILL_O_WISP, 8: Moves.SHADOW_SNEAK, 10: Moves.SUNNY_DAY,
+      13: Moves.HEAT_WAVE, 15: Moves.DARK_PULSE, 18: Moves.TAUNT,
+      20: Moves.NASTY_PLOT, 23: Moves.FLAMETHROWER, 25: Moves.PARTING_SHOT,
+      28: Moves.SOLAR_BEAM, 30: Moves.FIRE_SPIN, 33: Moves.SHADOW_BALL,
+      35: Moves.FIRE_BLAST, 38: Moves.LAVA_PLUME, 40: Moves.OVERHEAT,
+      43: Moves.TORCH_SONG, 45: Moves.FIERY_WRATH, 48: Moves.FUSION_FLARE,
+      50: Moves.BITTER_MALICE, 53: Moves.BLUE_FLARE, 55: Moves.ERUPTION,
+      60: Moves.MAGMA_STORM
+    },
+    typeChanges: [Type.FIRE, Type.DARK],
+    preventEvolution: true,
+    prerequisiteBuilds: [PokemonAltBuildId.CHARMANDER_RED_SIGNATURE],
+    spriteColorPalette: {
+      targetPalette: ["#0A0A0A", "#8B0000", "#CC4400", "#6B238E"],
+      darkPalette: ["#050505", "#5B0000", "#993300", "#4A1868"],
+      blendMode: 'grayscale_overlay',
+      rankProgression: { saturationScale: 1.5, lightnessAdjust: 0.15, type: 'milestone' }
+    }
+  },
+
+  [PokemonAltBuildId.TAUROS_IRON_QUAKE]: {
+    id: PokemonAltBuildId.TAUROS_IRON_QUAKE,
+    species: Species.TAUROS,
+    rank: 1,
+    statFocus: [Stat.ATK, Stat.DEF],
+    abilityChanges: [Abilities.SAND_STREAM, Abilities.EARTH_SPEEDER, Abilities.STAMINA],
+    passiveAbilityChange: Abilities.QUAKER,
+    finalAbilityReplacements: [Abilities.SAND_STREAM, Abilities.EARTH_SPEEDER, Abilities.BULL_RUSH],
+    finalPassive: Abilities.QUAKER,
+    moveReplacements: {
+      1: Moves.METAL_BURST, 2: Moves.CURSE, 3: Moves.BULLDOZE,
+      5: Moves.METAL_CLAW, 8: Moves.KNOCK_OFF, 10: Moves.IRON_DEFENSE,
+      13: Moves.ROCK_SLIDE, 15: Moves.BODY_SLAM, 18: Moves.HEAVY_SLAM,
+      20: Moves.SANDSTORM, 23: Moves.IRON_HEAD, 25: Moves.HIGH_HORSEPOWER,
+      28: Moves.BODY_PRESS, 30: Moves.THOUSAND_WAVES, 33: Moves.EARTHQUAKE,
+      35: Moves.SMART_STRIKE, 38: Moves.PROTECT, 40: Moves.STEALTH_ROCK,
+      43: Moves.STOMPING_TANTRUM, 45: Moves.HEAD_SMASH, 48: Moves.DOUBLE_EDGE,
+      50: Moves.GYRO_BALL, 53: Moves.WILD_CHARGE, 55: Moves.RAGING_BULL,
+      60: Moves.STEEL_ROLLER
+    },
+    typeChanges: [Type.GROUND, Type.STEEL],
+    prerequisiteBuilds: [PokemonAltBuildId.TAUROS_RED_SIGNATURE],
+    spriteColorPalette: {
+      targetPalette: ["#536267", "#8B6914", "#8C7853", "#3D3D3D"],
+      darkPalette: ["#2C3539", "#5B4510", "#6B5840", "#1C1C1C"],
+      blendMode: 'grayscale_overlay',
+      rankProgression: { saturationScale: 1.5, lightnessAdjust: 0.15, type: 'milestone' }
+    }
+  },
+
+  [PokemonAltBuildId.MAGIKARP_DRAGONBORN]: {
+    id: PokemonAltBuildId.MAGIKARP_DRAGONBORN,
+    species: Species.MAGIKARP,
+    rank: 1,
+    statFocus: [Stat.SPATK, Stat.SPD],
+    abilityChanges: [Abilities.MULTISCALE, Abilities.DRAGONIZE, Abilities.RAIN_DISH],
+    passiveAbilityChange: Abilities.DRIZZLE,
+    finalAbilityReplacements: [Abilities.ONE_IN_A_MILLION, Abilities.APEX_PREDATOR, Abilities.GOLDEN_LUCK],
+    finalPassive: Abilities.LEVIATHANS_DOMAIN,
+    moveReplacements: {
+      1: Moves.SPLASH, 2: Moves.ENDURE, 3: Moves.FLAIL,
+      5: Moves.WATER_GUN, 8: Moves.DRAGON_BREATH, 10: Moves.FLIP_TURN,
+      13: Moves.RAIN_DANCE, 15: Moves.CALM_MIND, 18: Moves.AQUA_JET,
+      20: Moves.SCALD, 23: Moves.DRAGON_PULSE, 25: Moves.MUDDY_WATER,
+      28: Moves.DRACO_METEOR, 30: Moves.DRAGON_DANCE, 33: Moves.DESTINY_BOND,
+      35: Moves.SURF, 38: Moves.HYDRO_PUMP, 40: Moves.ORIGIN_PULSE,
+      43: Moves.CLANGING_SCALES, 45: Moves.SPACIAL_REND, 48: Moves.THUNDER,
+      50: Moves.BREAKING_SWIPE, 55: Moves.ROAR_OF_TIME
+    },
+    typeChanges: [Type.WATER, Type.DRAGON],
+    preventEvolution: true,
+    prerequisiteBuilds: [PokemonAltBuildId.MAGIKARP_RED_SIGNATURE],
+    spriteColorPalette: {
+      targetPalette: ["#FFD700", "#1B4F72", "#20B2AA", "#FFFAF0"],
+      darkPalette: ["#CCA700", "#0F2F44", "#158080", "#D8D0C8"],
+      blendMode: 'grayscale_overlay',
+      rankProgression: { saturationScale: 1.5, lightnessAdjust: 0.15, type: 'milestone' }
+    }
+  },
+
+  [PokemonAltBuildId.BUTTERFREE_SOUL_MOTH]: {
+    id: PokemonAltBuildId.BUTTERFREE_SOUL_MOTH,
+    species: Species.BUTTERFREE,
+    rank: 1,
+    statFocus: [Stat.SPATK, Stat.SPD],
+    abilityChanges: [Abilities.ECTOPLASMIC_TOUCH, Abilities.SERENE_GRACE, Abilities.GHOSTIFY],
+    passiveAbilityChange: Abilities.SOUL_COLLECTOR,
+    finalAbilityReplacements: [Abilities.THOUSAND_SOULS, Abilities.ADAPTABUGILITY, Abilities.SOUL_TAX],
+    finalPassive: Abilities.SOUL_COLLECTOR,
+    moveReplacements: {
+      1: Moves.ASTONISH, 2: Moves.STRING_SHOT, 3: Moves.SHADOW_SNEAK,
+      5: Moves.SLEEP_POWDER, 8: Moves.CONFUSE_RAY, 10: Moves.WILL_O_WISP,
+      13: Moves.STUN_SPORE, 15: Moves.U_TURN, 18: Moves.SHADOW_BALL,
+      20: Moves.HEX, 23: Moves.TRICK, 25: Moves.PSYBEAM,
+      28: Moves.SAFEGUARD, 30: Moves.POLLEN_PUFF, 33: Moves.BUG_BUZZ,
+      35: Moves.QUIVER_DANCE, 38: Moves.PHANTOM_FORCE, 40: Moves.PROTECT,
+      43: Moves.MOONGEIST_BEAM, 45: Moves.DESTINY_BOND, 48: Moves.POLTERGEIST,
+      50: Moves.STRENGTH_SAP, 53: Moves.SPECTRAL_THIEF, 55: Moves.NASTY_PLOT,
+      60: Moves.ASTRAL_BARRAGE
+    },
+    typeChanges: [Type.BUG, Type.GHOST],
+    prerequisiteBuilds: [PokemonAltBuildId.BUTTERFREE_RED_SIGNATURE],
+    spriteColorPalette: {
+      targetPalette: ["#2D1B48", "#32C9A8", "#A890D0", "#E8E4F0"],
+      darkPalette: ["#1A0F2E", "#1E8068", "#685080", "#B4B0BC"],
+      blendMode: 'grayscale_overlay',
+      rankProgression: { saturationScale: 1.5, lightnessAdjust: 0.15, type: 'milestone' }
+    }
+  },
+
+  [PokemonAltBuildId.BULBASAUR_PLASMA_JUNGLE]: {
+    id: PokemonAltBuildId.BULBASAUR_PLASMA_JUNGLE,
+    species: Species.BULBASAUR,
+    rank: 1,
+    statFocus: [Stat.SPATK, Stat.SPDEF],
+    abilityChanges: [Abilities.GALVANIZE, Abilities.CHLOROPHYLL, Abilities.TRANSISTOR],
+    passiveAbilityChange: Abilities.ELECTRIC_SURGE,
+    finalAbilityReplacements: [Abilities.VORACIOUS_VEGETATION, Abilities.FOREST_FURY, Abilities.LEAFY_LURE],
+    finalPassive: Abilities.ELECTRIC_SURGE,
+    moveReplacements: {
+      1: Moves.ABSORB, 2: Moves.THUNDER_SHOCK, 3: Moves.LEECH_SEED,
+      5: Moves.GROWTH, 8: Moves.THUNDER_WAVE, 10: Moves.MEGA_DRAIN,
+      13: Moves.CHARGE, 15: Moves.SUBSTITUTE, 18: Moves.GIGA_DRAIN,
+      20: Moves.ELECTROWEB, 23: Moves.ENERGY_BALL, 25: Moves.VOLT_SWITCH,
+      28: Moves.DISCHARGE, 30: Moves.NUZZLE, 33: Moves.SYNTHESIS,
+      35: Moves.ELECTRIC_TERRAIN, 38: Moves.RISING_VOLTAGE, 40: Moves.THUNDERBOLT,
+      43: Moves.LIGHT_SCREEN, 45: Moves.PARABOLIC_CHARGE, 48: Moves.PROTECT,
+      50: Moves.THUNDER, 53: Moves.EERIE_IMPULSE, 55: Moves.SEED_FLARE,
+      60: Moves.BOLT_STRIKE
+    },
+    typeChanges: [Type.ELECTRIC, Type.GRASS],
+    preventEvolution: true,
+    prerequisiteBuilds: [PokemonAltBuildId.BULBASAUR_RED_SIGNATURE],
+    spriteColorPalette: {
+      targetPalette: ["#CCFF00", "#228B22", "#FFD700", "#39FF14"],
+      darkPalette: ["#7A9900", "#0F5F0F", "#B8860B", "#1E9E10"],
+      blendMode: 'grayscale_overlay',
+      rankProgression: { saturationScale: 1.5, lightnessAdjust: 0.15, type: 'milestone' }
+    }
+  },
+
+  [PokemonAltBuildId.SQUIRTLE_ABYSS_GOLEM]: {
+    id: PokemonAltBuildId.SQUIRTLE_ABYSS_GOLEM,
+    species: Species.SQUIRTLE,
+    rank: 1,
+    statFocus: [Stat.DEF, Stat.SPATK],
+    abilityChanges: [Abilities.STAMINA, Abilities.MUDIATE, Abilities.ROCK_CONTROL],
+    passiveAbilityChange: Abilities.ROCK_FORTRESS,
+    finalAbilityReplacements: [Abilities.GOLEM_PLUS, Abilities.CURSED_SHELL, Abilities.SPIKED_SHELL],
+    finalPassive: Abilities.ROCK_CONTROL,
+    moveReplacements: {
+      1: Moves.MUD_SLAP, 2: Moves.WATER_GUN, 3: Moves.WITHDRAW,
+      5: Moves.RAPID_SPIN, 8: Moves.RAIN_DANCE, 10: Moves.MUD_SHOT,
+      13: Moves.IRON_DEFENSE, 15: Moves.STEALTH_ROCK, 18: Moves.PROTECT,
+      20: Moves.BODY_PRESS, 23: Moves.SPIKES, 25: Moves.SCALD,
+      28: Moves.CURSE, 30: Moves.FLIP_TURN, 33: Moves.SHELL_SMASH,
+      35: Moves.EARTH_POWER, 38: Moves.MUDDY_WATER, 40: Moves.LIQUIDATION,
+      43: Moves.EARTHQUAKE, 45: Moves.HIGH_HORSEPOWER, 48: Moves.THOUSAND_WAVES,
+      50: Moves.WAVE_CRASH, 53: Moves.SCORCHING_SANDS, 55: Moves.ORIGIN_PULSE,
+      60: Moves.STEAM_ERUPTION
+    },
+    typeChanges: [Type.WATER, Type.GROUND],
+    preventEvolution: true,
+    prerequisiteBuilds: [PokemonAltBuildId.SQUIRTLE_RED_SIGNATURE],
+    spriteColorPalette: {
+      targetPalette: ["#8B6914", "#5F9EA8", "#0E4D64", "#C87533"],
+      darkPalette: ["#5B4914", "#3F7E88", "#0A3548", "#985523"],
+      blendMode: 'grayscale_overlay',
+      rankProgression: { saturationScale: 1.5, lightnessAdjust: 0.15, type: 'milestone' }
+    }
+  },
+
+  [PokemonAltBuildId.ESPEON_MOON_GODDESS]: {
+    id: PokemonAltBuildId.ESPEON_MOON_GODDESS,
+    species: Species.ESPEON,
+    rank: 1,
+    statFocus: [Stat.SPATK, Stat.SPD],
+    abilityChanges: [Abilities.PSYCHIC_SURGE, Abilities.PIXILATE, Abilities.ADAPTABILITY],
+    passiveAbilityChange: Abilities.MAGIC_GUARD,
+    finalAbilityReplacements: [Abilities.MASTER_OF_ILLUSIONS, Abilities.INTELLY_LECT_ALLY, Abilities.FAIRY_FEAR],
+    finalPassive: Abilities.MAGIC_GUARD,
+    moveReplacements: {
+      1: Moves.CONFUSION, 2: Moves.FAIRY_WIND, 3: Moves.CHARM,
+      5: Moves.CALM_MIND, 8: Moves.STORED_POWER, 10: Moves.LIGHT_SCREEN,
+      13: Moves.PSYBEAM, 15: Moves.REFLECT, 18: Moves.DRAINING_KISS,
+      20: Moves.PSYCHIC_TERRAIN, 23: Moves.WISH, 25: Moves.EXPANDING_FORCE,
+      28: Moves.MOONBLAST, 30: Moves.BATON_PASS, 33: Moves.HEAL_BELL,
+      35: Moves.PSYCHIC, 38: Moves.PROTECT, 40: Moves.PSYSHOCK,
+      43: Moves.FUTURE_SIGHT, 45: Moves.MORNING_SUN, 48: Moves.SUBSTITUTE,
+      50: Moves.DAZZLING_GLEAM, 53: Moves.THUNDER_WAVE, 55: Moves.HEALING_WISH,
+      60: Moves.PSYCHO_BOOST
+    },
+    typeChanges: [Type.PSYCHIC, Type.FAIRY],
+    prerequisiteBuilds: [PokemonAltBuildId.ESPEON_RED_SIGNATURE],
+    spriteColorPalette: {
+      targetPalette: ["#E8D5B7", "#B794F6", "#F472B6", "#FFE566"],
+      darkPalette: ["#8A7048", "#6B46C1", "#BE185D", "#C9A227"],
+      blendMode: 'grayscale_overlay',
+      rankProgression: { saturationScale: 1.5, lightnessAdjust: 0.15, type: 'milestone' }
     }
   }
 };

@@ -167,6 +167,8 @@ export class GameStats {
   public cutsceneChampionUnlockShown: { [championId: string]: boolean };
   public cutsceneFirstSmittyBattleShown: boolean;
   public cutsceneAllSmittysCompleteVictoryShown: boolean;
+  public firstTimeFtlAutoStartComplete: boolean;
+  public onboardingTutorialComplete: boolean;
 
   constructor(source?: any) {
     this.playTime = source?.playTime || 0;
@@ -353,5 +355,7 @@ export class GameStats {
     this.cutsceneChampionUnlockShown = source?.cutsceneChampionUnlockShown || {};
     this.cutsceneFirstSmittyBattleShown = source?.cutsceneFirstSmittyBattleShown || false;
     this.cutsceneAllSmittysCompleteVictoryShown = source?.cutsceneAllSmittysCompleteVictoryShown || false;
+    this.firstTimeFtlAutoStartComplete = source?.firstTimeFtlAutoStartComplete || false;
+    this.onboardingTutorialComplete = source?.onboardingTutorialComplete || false;
   }
 }

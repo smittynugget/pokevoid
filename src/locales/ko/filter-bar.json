@@ -34,5 +34,8 @@
   "sortByCost": "코스트",
   "sortByCandies": "사탕 수",
   "sortByIVs": "개체값",
-  "sortByName": "이름"
+  "sortByName": "이름",
+  "fusionsFilter": "퓨전",
+  "hasFusions": "퓨전 보유",
+  "noFusions": "퓨전 없음"
 }

@@ -231,17 +231,6 @@
         "2":"This rewards ΩGOLD and protects against data loss."
       }
     },
-    "bounties": {
-      "title": "Bounty System",
-      "text": { 
-        "1":"Enter 6-letter codes in the console to activate Bounties.",
-        "2":"Bounties are QUESTS that let you earn ΩGOLD/ΩITEMS and are completely reusable upon completion!"
-      }
-    },
-    "dailyBounty": {
-      "title": "Daily Bounty!",
-      "text": "A new daily bounty is available! Complete it to earn ΩGOLD/ΩITEMS. The code is already in the console, just activate it!"
-    },
     "discord": {
       "title": "Discord & Support",
       "text": "Join the Smittyverse Discord for discussion, bug reports, and community! Find bounty codes and connect with other players."
@@ -387,6 +376,16 @@
         "1": "FTL (Faster Than Light) is the new fastest chaos variant! Jump straight into the chaos!"
       }
     },
+    "firstTimeFtlSkillTree": {
+      "title": {
+        "1": "Choose Your Pokémon",
+        "2": "Signature and General"
+      },
+      "text": {
+        "1": "Your first journey begins now. Use the skill tree to choose 2 Pokémon for this run.",
+        "2": "Nodes with the Draft icon offer Pokémon. Inverted icon = a Signature Pokémon option."
+      }
+    },
     "championSelectEssence": {
       "title": {
         "1": "Champion Selection",
@@ -484,6 +483,284 @@
         "6": "SHOP: Quick access to the shop!",
         "7": "MAP: View your current path within the Chaos!"
       }
+    },
+    "smitomTip": {
+      "replayPrompt": [
+        "Does that make sense? Want me to explain again?",
+        "Again? Say less.",
+        "Want me to explain that again? I have all day. Literally. I live in your game.",
+        "Missed something? I'll run it back. I've got nothing but time in here.",
+        "Need that again? I don't mind. Repetition is how I stay sane in here.",
+        "One more time? Sure. I rehearsed this in the void for centuries anyway.",
+        "Rewind. No shame. Even Alakazam forgets things.",
+        "Run it back? My favorite phrase. Second only to 'loot.'",
+        "Let me reload that. No save file needed.",
+        "You want the remix? Same content. Same delivery. New appreciation.",
+        "Instant replay. No subscription required.",
+        "Rerun? I'm basically a void TV channel. All reruns. All bangers.",
+        "Back it up. I'll wait. I've been waiting since the code compiled.",
+        "Take two. Directors do this all the time. We're making art here.",
+        "Same thing, different listening. Sometimes that's all it takes.",
+        "Repeat mode: engaged. I'm basically a very charming echo.",
+        "New game plus on this explanation. Same content, you're just wiser now.",
+        "Loading previous explanation... loaded. That was instant. You're welcome.",
+        "Ctrl+Z the forgetting. Here comes knowledge, round two.",
+        "Missed the window? I'll open another one. Infinite windows in the void.",
+        "Okay, rewinding reality slightly. Nobody will notice.",
+        "Sequel to the explanation you just heard. Same plot. Better retention.",
+        "More? I don't run out. I'm the opposite of a PP problem.",
+        "Still here. Still willing. Let's loop.",
+        "Again? I was hoping you'd ask. Makes me feel needed.",
+        "Back to the top? I never left it. Welcome back.",
+        "Re-serving the same information. It's still warm.",
+        "I'm like a move with unlimited PP. Ask again anytime.",
+        "Replay? Done. No buffering. No ads. Premium void service.",
+        "Restarting tutorial in 3... 2... 1... now. That countdown was for drama.",
+        "Here we go again. On my own. Going down the only road I've ever— wait, wrong song.",
+        "Would you like fries with that replay? I don't have fries. But the replay is ready.",
+        "Once more unto the explanation, dear friend.",
+        "Repetition: the mother of learning. And I'm the kidnapper.",
+        "Respawning the explanation. Full HP. Ready to go.",
+        "Wanna hear it again? I don't charge per listen. Void economy is different.",
+        "Like a Pokémon Center but for your memory. Free. Instant. Musical.",
+        "Like checking the Pokédex twice. No shame. That's what it's there for.",
+        "More? My dialogue has Serene Grace. Double the chance of you remembering.",
+        "Hit that like button — I mean replay button. Muscle memory.",
+        "Again? I'll be your Exp. Share. You don't even need to participate. Just absorb.",
+        "Let me Quick Attack this explanation at you. +1 priority. Goes first.",
+        "Running it again. My dialogue has Multi-Scale. Full power first time. Still strong second.",
+        "Same explanation. Different ear. Sometimes that's all the difference.",
+        "Repeat? My tutorial has Arena Trap. You can't leave until you learn. Just kidding. You can.",
+        "One more time? Sure. My schedule's about as full as a Shedinja's HP bar.",
+        "Didn't catch that? No shame. I once explained type matchups to an Abra and it teleported mid-sentence. You're already doing better.",
+        "Let me rewind. I've got this explanation saved on a mental VHS tape. Yes, VHS. I'm vintage like that.",
+        "Replay? I rehearsed this in the void so many times, even the Unown started taking notes.",
+        "Run it back? Absolutely. Think of me as the Slowpoke of explanations — always willing to repeat, just with better comedic timing.",
+        "Again? Fine by me. Teaching is basically my Nuzlocke challenge — if I stop, I die. Metaphorically. Probably.",
+        "Missed that? No worries, I'll run it back.",
+        "One more time? Sure thing, I've got nothing but time in here.",
+        "Didn't catch that? Here, let me go again.",
+        "Want me to run that back? No judgment.",
+        "Lost you, didn't I? No worries. Let me break it down a bit differently.",
+        "Need that again? I don't mind.",
+        "One more time? Sure. I've literally got nowhere else to be."
+      ],
+      "skillTree": {
+        "title": "The Skill Tree",
+        "1": "Spend Skill Points to unlock nodes. Each one gives your run a permanent edge.",
+        "2": "The deeper you go, the stronger the rewards. I put the good stuff far away because suspense builds character."
+      },
+      "skillTreeRogueMode": {
+        "title": "First Skills",
+        "1": "Draft 2 Pokémon for Rogue Mode. Signature Pokémon are available in one of those slots — they're built different.",
+        "2": "Signatures evolve through ranking up. Their rank ups appear randomly within the skilltree."
+      },
+      "skillTreeFirstNode": {
+        "title": "FREE Random Bonus",
+        "1": "After choosing your first node, FREE nodes appear!",
+        "2": "FREE — like this game! 3 years of life. Smitty could have made an indie game for sure in that time.",
+        "3": "Oh smitty, my sweet summer child, didn't you say this'll only take 6 months tops?",
+        "4": "...Smitty?",
+        "5": "Smitty blink twice if you need help...",
+        "6": "Did he blink...",
+        "7": "But yeah the nodes are free! yay free nodes!"
+      },
+      "skillTreeGlitchFormNode": {
+        "title": "Sealed Glitch Form",
+        "1": "Collect enough skills and you'll unlock the sealed node — giving you access to a Glitch Form for this run!",
+        "2": "Collect skills. Get NEW FORM!"
+      },
+      "skillTreeQuestNode": {
+        "title": "Side Quest!",
+        "1": "Quest Nodes are mini-missions that last one run. Complete them for rare drops.",
+        "2": "Every run brings new quests. Different goals, different loot."
+      },
+      "championSelect": {
+        "title": "Choose Your Champion",
+        "1": "Each Champion wields different types, Pokémon, and forbidden skills torn from the void. Who you pick changes everything.",
+        "2": "Some Champions are still sealed away by the Void. Collect Essences to break them free."
+      },
+      "championSelectSkills": {
+        "title": "Forbidden Skills",
+        "1": "Skills born from your Champion's time in the darkness. Each one appears randomly in the Skill Tree during runs.",
+        "2": "The corruption that made them suffer now fuels their growth. Collect Essences from fallen Pokémon to level up and gain new skills!"
+      },
+      "modifier": {
+        "title": "Items & Modifiers",
+        "1": "Items can be combined and upgraded!",
+        "2": "Keep an eye out for rare modifiers."
+      },
+      "starterSelect": {
+        "title": "Infinite Fusion Called...",
+        "1": "They want you to think it's just signatures and legendaries. But look closer. The fusions. They're INFINITE.",
+        "2": "*swirls their metaphorical finger at you, like a crazy gorilla* Do you understand what that means?",
+        "3": "It means every possible combination exists. EVERY. Kenney Rogers. ONE. Somebody had to make them all. Or... something did..."
+      },
+      "tutorialBattleType": {
+        "title": "Type Override!",
+        "1": "Bad type match-up! Use the void's power to change our type — the rules of nature don't apply here anymore."
+      },
+      "tutorialBattleHeal": {
+        "title": "New Void Abilities",
+        "1": "Set this as our passive — HP regeneration each turn. Staying alive is step one of winning. Usually."
+      },
+      "tutorialBattleXM": {
+        "title": "The Forbidden Moveset",
+        "1": "Quickly use the void's corruption to your advantage! Embrace the forbidden power to teach your pokemon any move."
+      },
+      "tutorialBattleGlitchReward": {
+        "title": "VOID ALERT",
+        "1": "This isn't good! Quickly take {{pokemonName}}'s glitch form from the VOID!"
+      },
+      "tutorialBattleEvolveGlitch": {
+        "title": "EVOLVE!",
+        "1": "NOW EVOLVE {{pokemonName}} to ITS NEW GLITCH FORM!!"
+      },
+      "wakeUp": {
+        "title": "???",
+        "1": "Wake up! Wake up..."
+      },
+      "accessMenu": {
+        "title": "Where the Magic Happens",
+        "1": "M or Escape opens the menu. Settings, features, and things I filed under 'miscellaneous' because naming things is hard. Without a doubt, there's an answer to at least one question you haven't asked yet."
+      },
+      "pokerogue": {
+        "title": "Shoulders On Giants Standing",
+        "1": "Without PokéRogue this wouldn't doesn't exist. That's not flattery, that's fact. PokéRogue CREATED the brilliant framework, brilliant game. PokéVoid is what happens when you give that framework to someone with too many ideas. They walked so we could run. Into the void. At full speed. Without looking. They're the foundation. We're the mansion built on top. A haunted mansion. With too many rooms. Pokerogue.net for the original. Pokevoid.com for the remix."
+      },
+      "intrashop": {
+        "title": "Five Finger Discount!?",
+        "1": "The shop restocks with every transaction. You're not just buying items, you're creating new options.",
+        "2": "Randomly free items will just appear out of nowhere! Similar to Smitty's dad when he needed money from Smitty's mom."
+      },
+      "runDetails": {
+        "title": "Think About The Children",
+        "1": "R pulls up run details faster than explaining your build out loud. Useful for you. Also useful for your future self and your future children."
+      },
+      "glitchRivals": {
+        "title": "Mutant Lizards from the Deep!",
+        "1": "Your old battles echo forward as corrupted rematches. Think of these corrupted shadows as seeds the void replanted upside down. What blooms is recognizable and wrong in interesting ways."
+      },
+      "moveUpgrades": {
+        "title": "Create Your Own Moves",
+        "1": "Nothing in your moveset is finished until you say so. Give Drain Punch +1 priority, Water Pulse +30 POW, Ice Beam 50% freeze chance, Change Body Slam to be a Ice move, or even a Special Attack!",
+        "2": "Each new upgrade further strengthens your move.",
+        "3": "Make your attacks truly yours."
+      },
+      "rivals": {
+        "title": "The Run's Boss!",
+        "1": "The world's greatest heroes are locked away deep within the void! Their corrupted shadows are your run's randomized boss encounter. Each run you'll face a different rival!",
+        "2": "Beat the run → Unlock their Glitch Quests → Get their exclusive GLITCH forms!"
+      },
+      "stats": {
+        "title": "Your Void Level",
+        "1": "Check Your Stats via the menu (M or escape key). Your wins, your earnings, your items. The summary of your entire journey so far. It tracks pretty cool stuff — fights won, money earned, items obtained, and much more. Worth peeking at."
+      },
+      "runHistory": {
+        "title": "That One Run Though",
+        "1": "Use Menu (M / Escape) -> Run History to view past runs and teams",
+        "2": "Looking back helps you look forward. Enjoy how far you've come since run number one."
+      },
+      "rivalQuests": {
+        "title": "Go GET Your NEW FORM!",
+        "1": "A rival falls. A NEW GLITCH QUEST unlocks within the Omega Shop. Complete it and get a new Glitch Form. Permanently."
+      },
+      "smitom": {
+        "title": "Main Character (Unpaid)",
+        "1": "Part guide, part ghost, part emotional support NPC. Truthfully, I auditioned for the main character role, but the discord shot me down, so I got narrator with benefits",
+        "2": "Click me when you see the ! to get rewards. Also Saving = rewards. Both trigger my sense of purpose."
+      },
+      "newForms": {
+        "title": "150 FINAL FORMS (NOT CLICKBAIT)",
+        "1": "Smitty added new evolutions the way some people add cats— gradually, then all at once, then suddenly you're living in a cat infested jungle. Meowth, amiright. There's 150+ new pokemon evolutions, Each with 3 new pokevoid abilities.",
+        "2": "With 150 new evolutions, at least one of your favorites probably has a new form",
+        "3": "Unlock them permanently by defeating rivals and completing quests.",
+        "4": "PRO TIP: The skill tree lets you steal one from the void for use during your run."
+      },
+      "unlockJourney": {
+        "title": "Strawberry, Chocolate, and Berries",
+        "1": "To UNLOCK Journey Mode just catch 5 Pokémon. That's it. Journey mode gives you immediate access to all catches, hatches, and fusions!",
+        "2": "The dream team factory opens and the factory never closes. I would know, I'm the night shift manager. No days off. Forced to dream all day long, please pity me and send me decorated baskets of fruit."
+      },
+      "discord": {
+        "title": "The Resistance",
+        "1": "Persona Social links are pretty nifty. Pretty nifty. Yep. You know what's just like social links - our discord. It's the meeting ground for void champions - the Resistance! Join us by pressing the Discord option on the title screen!"
+      },
+      "fusionPokemon": {
+        "title": "Infinite Fusions!",
+        "1": "Fusion Pokémon are like the void's shinies — RARE to find the same one twice, catch once, own forever.",
+        "2": "Fusions reward collectors who play the long con. Permanent capture. Diversifies strategy."
+      },
+      "firstVictory": {
+        "title": "The Other 90 Percent",
+        "1": "Your journey is just beginning! Unlock the new game modes to dive deeper into the abyss, and unravel the mysteries of the void!"
+      },
+      "theVoidUnlocked": {
+        "title": "Forbidden Message...",
+        "1": "The Void where it all began. The source of all corruption. The true face of the void awaits..."
+      },
+      "theVoidOvertaken": {
+        "title": "You've Overtaken The Void!",
+        "1": "You've become too powerful for the void to contain! Yet the corruption persists, don't let it spread, you're the only one who can keep it under control!"
+      },
+      "thankYou": {
+        "title": "Letter from Smitty",
+        "1": "Pokevoid has taken me roughly 3 Years of solo dev madness, it's been a truly wild ride. But it means everything - every time someone like you has a blast playing this game. If my weird ideas actually worked and you're having fun,",
+        "2": "I'm closer to my dream of becoming a full-time indie game dev. Thank you so much for playing Pokevoid! - Smitty"
+      },
+      "wave35Shared": {
+        "title": "NEW ITEM GET!",
+        "pretext": "We've found a new item in the void! {{featureName}}! Let's look up what it does on the internet.",
+        "posttext": "If you're feeling curious, try it out. You can also disable them in the settings, in case they dont tickle your fancy the way I tickle your fancy."
+      },
+      "wave35StatSwitchers": {
+        "featureName": "Stat Switchers",
+        "1": "Redistribute any Pokémon's base stats. Scyther with mage-level special attack. Machamp with speed to rival Jolteon. Gengar with thickness surpassing Snorlax! Your team, your rules. The void just handed you the admin panel. I suggest you abuse it. Preferrably irresponsibily. And yes thickness is a word, I looked it up."
+      },
+      "wave35MoveUpgrades": {
+        "featureName": "Move Upgrades",
+        "1": "Welcome to Move Upgrades! Make Earthquake a special attack. Give Ice Beam priority. Give Thunderbolt a freeze chance. Your moves aren't set in stone — they're set in void. You like that? I wrote it yesterday, \"set in void\", because we're in the void, we're not set in stone, this isn't Doctor Stone sheesh. So it makes sense. Pretty witty right. Personally I like it. Set in void sounds",
+        "2": "--- 2 HOURS LATER ---",
+        "3": "Probably Shakespeare level if I'm honest. Well got that out of my system."
+      },
+      "wave35ReleaseItems": {
+        "featureName": "Release Items",
+        "1": "Remember that movie where the robot says 'I'll be back'? Release Items are like that except the robot doesn't come back. Its parts go into a better robot. And that robot ALSO doesn't say 'I'll be back' because it's too busy being unstoppable. Types, stats, abilities, or moves — can be transferred! No sequel needed."
+      },
+      "shinyPower": {
+        "title": "A Rare Specimen Emerges",
+        "1": "Observe: the shiny Pokémon, upon entering its run, is presented with four paths. The first preserves its original form. Two offer new abilities paired with reshuffled stats. The final path replaces its entire moveset with type-themed attacks.",
+        "2": "In each alternate variant, four of its stats get swapped around — a remarkable adaptation. The shiny that enters the run is rarely the same one that finishes it. Nature is healing. Specifically, the void's version of nature. Which is arguably the opposite of healing."
+      },
+      "rankUp": {
+        "title": "EMBRACE or RESHAPE?",
+        "1": "My uncle collected those little shampoo bottles from hotels. Whole shelf. Never opened one. Just looked at them. Said it was investing. He's in prison now — unrelated, probably — but the principle holds. You walk through the void, you pick stuff up. Not loot, exactly. The dark energy. The corruption. The nasty film that comes off everything you beat. It doesn't vanish when you win.. You've been collecting it. Every fight adds another layer. Like lasagna, except the cheese is evil and nobody's grandmother made it.",
+        "2": "When it triggers, you get two choices - Embrace — the void's energy floods inward instead of breaking it apart. Same Pokémon, same typing, same moves, slightly darker soul. Whatever it was already strong at becomes stronger. With each Embrace the dark energy deepens, giving way to a form with shades of the void, a look the abyss would almost call its own. Reshape — where Embrace holds the form intact, Reshape shatters the boundary between species. Use the corruption to bend reality until your partner stands in a new shell, its stats get the same boost it would via Embrace, but typing and ability changes. What made them dangerous survives the reshaping. Where regular Pokémon merely endure the void's touch, Duelmons accumulate it - corruption pools in their souls until their unique Soul Surge erupts, their forbidden evolution, guaranteed to occur at certain level ranges. Regular pokemon earn soul surges randomly on level-up or through bounty rewards. Soul surges are pretty great, huh? Kind of like little shampoo bottles from hotels, my uncle would appreciate for sure."
+      },
+      "yuMovePhase": {
+        "title": "Cursed Technique",
+        "1": "\"Throughout Heaven and Earth, I alone am the honored one.\" The void said that when it sealed your Duelmon's signature attacks in the shadow realm. Bold words from something that forgot cursed techniques can reverse. Defeat enemies with your Duelmon, level up, and POWER OF SHADOWS may unseal three forbidden moves — two from your Duelmon's own cursed pool, one from the wider shadow realm.",
+        "2": "Bounties trigger Domain Expansion immediately — no level-up needed. The shadow realm isn't the prison the void thinks it is. The void just stored all the good stuff there by accident. Hollow Purple? More like Hollow Void. Your Duelmon's taking its techniques back."
+      },
+      "altBuild": {
+        "title": "IMPOSSIBLE!!!",
+        "1": "IMPOSSIBLE. That power level — it's not — the scouter can't be right. Their BOND shatters every limit — their POWER boosted into two stats, typing REWRITTEN, abilities SWAPPED, movepool REPLACED, an entirely new form my equipment refuses to classify! Magikarp can become Dragonborn. Water and Dragon. FOR GOD'S SAKE — THAT'S A MAGIKARP. And it's not just the pathetic clown fish — Solrock becomes Void Constellation, Lunatone becomes Dream Weaver — THEY'RE JUST LITTLE ROCKS — ONE OF THEM IS NOT EVEN THAT ORANGE! Their BOND shattering limits I didn't know existed. These beings don't follow normal evolution — they've carved a different evolutionary path. They rank up instead. Continuously. Ten times. Not possible — no the Prince of all Saiyans WILL NOT ACCEPT THIS.",
+        "2": "And at rank ten — what IS this?! They UNLOCK NEW ABILITIES? One in a Million? Leviathan's Domain? Those aren't supposed to exist. The bond between champion and partner overrides reality itself — and there are MORE out there, every bond rewriting what these species were built for. BLAST IT ALL TO HELL! HOW CAN I, A WARRIOR OF SUPERIOR RACE, be OUTCLASSED?! KAKAROT!!!!!"
+      },
+      "smittyEncounter": {
+        "title": "!!!DETECTION ALERT!!!",
+        "1": "Alert! Radiation signatures spiking! Self-importance readings at levels that are breaking my instruments! Scanning the source — the arrogance density alone is generating interference! Something is approaching and every metric I have says we should be terrified! Only one type of being radiates this — the type that would put themselves in their own game, give themselves a ridiculous team, and call it content.",
+        "2": "Cross-referencing void signatures... this being could be the source of the Void itself. Or — re-scanning — it may be a broken piece of the Void that gained physical form. Its Pokémon aren't caught or trained. They're manifested from void energy directly. Champion, I need you to hear me: we can die here. Really die. Please be ready."
+      },
+      "postRunWin": {
+        "title": "Thank You For Making It",
+        "1": "You won. I watched the whole thing. Every close call, every smart swap, every moment where it could have gone wrong and didn't because you made it not go wrong. The void is still here but for one run, you beat it.",
+        "2": "New modes, quests, and challenges are unlocking. The game opens up after this. But before you rush into the next thing — just know that winning a run in the void means something. It means your team was strong and your decisions were right. I'll be here for the next one. And the one after that. Now we can finally be friends. What. Why are you looking at me like that — it's like Persona, you have to spend 40 hours doing side quests before the companion trusts you. Now then, let's go hunt down some shadows — what do you say, confidant rank 1 bestie?"
+      },
+      "journeyQuestShop": {
+        "title": "Journey Mode Awaits!",
+        "1": "You've unlocked the Starter Catch Quest — your ticket to Journey Mode! Head to the OmegaShop to activate it.",
+        "2": "Once activated, catch 5 Pokémon across any runs to complete the quest and unlock Journey Mode!"
+      }
     }
   }
-

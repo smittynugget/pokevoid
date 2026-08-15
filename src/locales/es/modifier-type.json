@@ -67,11 +67,11 @@
       "description": "Aumenta el nivel de todos los miembros del equipo en {{levels}}."
     },
     "PokemonBaseStatBoosterModifierType": {
-      "description": "Aumenta la est. {{statName}} base del portador en un 10%.\nCuanto mayores sean tus IVs, mayor será el límite de acumulación."
+      "description": "Aumenta la est. {{statName}} base del portador en un 8%.\nCuanto mayores sean tus IVs, mayor será el límite de acumulación."
     },
     "PlayerPokemonBaseStatBoosterModifierType": {
       "name": "Barato",
-      "description": "Aumenta la est. {{statName}} base del portador en un 1%."
+      "description": "Aumenta la est. {{statName}} base del portador en un 3%."
     },
     "AllPokemonFullHpRestoreModifierType": {
       "description": "Restaura el 100% de los PS de todos los Pokémon."
@@ -410,7 +410,7 @@
       "description": "Enseña {{moveName}} a cualquier Pokémon."
     },
     "AnyTmModifierTypeWithInfo": {
-      "name": "++XM{{moveId}} - {{moveName}}++",
+      "name": "XM{{moveId}} - {{moveName}}",
       "statLabel": "XM (Cualquier MT)",
       "description": "Enseña {{moveName}} a cualquier Pokémon\n(Mantén pulsado C o Shift para más info)."
     },
@@ -710,7 +710,8 @@
       "name": "Esencias",
       "shopName": "Esencia {{type}}",
       "statLabel": "Esencia",
-      "description": "Usa 4 en lugar de liberar un Pokémon para Objetos de Liberación o intercambia por recompensas con el Coleccionista."
+      "description": "Usa 4 en lugar de liberar un Pokémon para Objetos de Liberación o intercambia por recompensas con el Coleccionista.",
+      "tooltipDescription": "Otorga 1 Esencia de {{type}} al Pokémon seleccionado.\n\nLas esencias se usan para subir habilidades de Campeón, como alternativa a los sacrificios (se necesitan 4) e intercambios con el Coleccionista."
     },
     "PermaCollectedTypeModifierType": {
       "name": "Esencias Recolectadas",
@@ -876,6 +877,7 @@
     "NONE": "Ninguno",
     "ABOMASITE": "Abomasnowita",
     "ABSOLITE": "Absolita",
+    "ABSOLITE_Z": "Absolita Z",
     "AERODACTYLITE": "Aerodactylita",
     "AGGRONITE": "Aggronita",
     "ALAKAZITE": "Alakazamita",
@@ -892,6 +894,7 @@
     "DIANCITE": "Diancita",
     "GALLADITE": "Galladita",
     "GARCHOMPITE": "Garchompita",
+    "GARCHOMPITE_Z": "Garchompita Z",
     "GARDEVOIRITE": "Gardevoirita",
     "GENGARITE": "Gengarita",
     "GLALITITE": "Glalita",
@@ -903,6 +906,7 @@
     "LATIOSITE": "Latiosita",
     "LOPUNNITE": "Lopunnita",
     "LUCARIONITE": "Lucarita",
+    "LUCARIONITE_Z": "Lucarita Z",
     "MANECTITE": "Manectricita",
     "MAWILITE": "Mawilita",
     "MEDICHAMITE": "Medichamita",
@@ -950,6 +954,21 @@
     "DRAMPITE": "Drampita",
     "FALINKSITE": "Falinksita",
     "ZERAORITE": "Zeraorita",
+    "RAICHUITE_X": "Raichuita X",
+    "RAICHUITE_Y": "Raichuita Y",
+    "CHIMECHOITE": "Chimechoita",
+    "STARAPTORITE": "Staraptorita",
+    "HEATRANITE": "Heatranita",
+    "DARKRAITE": "Darkraita",
+    "GOLURKITE": "Golurkita",
+    "MEOWSTITE": "Meowstita",
+    "CRABOMINITE": "Crabominita",
+    "GOLISOPODITE": "Golisopodita",
+    "MAGEARNITE": "Magearnita",
+    "SCOVILLAINITE": "Scovillainita",
+    "GLIMMORITE": "Glimmorita",
+    "TATSUGURITE": "Tatsugurita",
+    "BAXCALIBURITE": "Baxcaliburita",
 
     "BLUE_ORB": "Prisma azul",
     "RED_ORB": "Prisma rojo",
@@ -1069,10 +1088,16 @@
     "uses": "usos",
     "glitchPieceCost": "*CUESTA 1x Fragmento Glitch",
     "essenceAlternativeCost": "Si el Pokémon tiene 4+ Esencias, puedes usarlas en su lugar.",
+    "abilityReplaceNote": "Reemplaza la habilidad actual del Pokémon. No se acumula.",
+    "passiveAbilityReplaceNote": "Reemplaza la habilidad pasiva actual del Pokémon. No se acumula.",
     "permaMoney": "ΩORO",
     "permaItem": "ΩOBJETO",
     "moreInfo": "(Mantén pulsado C o Shift para más info).",
     "morePokeInfo": "(Presiona P / Shift para info)",
-    "upgrade": "Mejora"
-  }
+    "upgrade": "Mejora",
+    "partyAbilityStacksHint": "(¡SE ACUMULA!)"
+  },
+  "permaWaveTooltip": "Desaparece tras [color=#ffa500]{{count}}[/color] oleadas — cuenta atrás inicia en la oleada 50",
+  "permaUseTooltip": "[color=#ffa500]{{count}}[/color] usos restantes — cuenta atrás inicia en la oleada 50",
+  "permaRemoveHint": "Presiona 10 veces para eliminar"
 }

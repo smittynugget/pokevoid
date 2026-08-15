@@ -19,7 +19,7 @@ import { SpeciesFormKey } from "../enums/species-form-key";
 import { allMoves } from "../data/move";
 import { AddPokemonModifierType } from "../modifier/modifier-type";
 import UiHandler from "./ui-handler";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import ModifierSelectUiHandler from "./modifier-select-ui-handler";
 import { getPokedexMethodDescription } from "./pokedex-method-description";
 import { addBBCodeTextObject, addTextInputObject, addTextObject, TextStyle } from "./text";
@@ -2535,9 +2535,9 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       }
     }
 
-    const formKey = (form as any)?.formKey as SpeciesFormKey | undefined;
+    const smittyFormKey = (form as any)?.formKey as SpeciesFormKey | undefined;
     const formName = (form as any)?.formName as string | undefined;
-    const isSmittyForm = !!formKey && formKey.includes("smitty") && !!formName;
+    const isSmittyForm = !!smittyFormKey && smittyFormKey.includes("smitty") && !!formName;
     if (isSmittyForm) {
       view.eggLabel.setText(i18next.t("pokedex:forbiddenFormula"));
       view.eggLabel.setTint(0xb060ff);

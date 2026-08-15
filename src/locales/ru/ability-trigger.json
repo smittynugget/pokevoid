@@ -78,5 +78,6 @@
   "stoleItem": " украл(а)\n{{stolenItemType}} у {{defenderName}}!",
   "sillyPressure": " оказывает Смешное Давление!",
   "questionPressure": " оказывает Давление?",
-  "allOrNothingPressure": " оказывает ДАВЛЕНИЕ: ВСЁ ИЛИ НИЧЕГО!"
+  "allOrNothingPressure": " оказывает ДАВЛЕНИЕ: ВСЁ ИЛИ НИЧЕГО!",
+  "windboltDiscard": "{{pokemonName}} использовал(а) удерживаемую ягоду\nи нанёс(ла) побочный урон {{targetName}}!"
 }

@@ -94,6 +94,8 @@ export enum TrainerType {
     GUZMA_2,
     ROSE,
     ROSE_2,
+    PEGASUS,
+    PEGASUS_2,
 
   BROCK = 200,
   MISTY,

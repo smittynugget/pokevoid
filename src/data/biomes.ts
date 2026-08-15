@@ -7122,7 +7122,1354 @@ export function initBiomes() {
       [ Biome.FOREST, BiomePoolTier.SUPER_RARE, TimeOfDay.NIGHT ],
       [ Biome.FOREST, BiomePoolTier.BOSS_RARE, TimeOfDay.NIGHT ]
     ]
+    ],
+
+    [ Species.ALIEN_MOTHER, Type.PSYCHIC, Type.STEEL, [
+      [ Biome.RUINS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.BOSS ],
+      [ Biome.JUNGLE, BiomePoolTier.BOSS ]
     ]
+    ],
+    [ Species.ALLIGATORS_SWORD_DRAGON, Type.DRAGON, Type.FLYING, [
+      [ Biome.WASTELAND, BiomePoolTier.RARE ],
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ],
+      [ Biome.JUNGLE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ANCIENT_GEAR_BOX, Type.STEEL, Type.GROUND, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.BADLANDS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.JUNGLE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ANCIENT_TREE_OF_ENLIGHTENMENT, Type.GRASS, Type.FAIRY, [
+      [ Biome.TALL_GRASS, BiomePoolTier.RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.JUNGLE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ARCANA_FORCE_I_THE_MAGICIAN, Type.PSYCHIC, Type.FAIRY, [
+      [ Biome.TEMPLE, BiomePoolTier.RARE ],
+      [ Biome.MEADOW, BiomePoolTier.SUPER_RARE ],
+      [ Biome.JUNGLE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ALPHA_THE_MAGNET_WARRIOR, Type.ELECTRIC, Type.ROCK, [
+      [ Biome.POWER_PLANT, BiomePoolTier.RARE ],
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.JUNGLE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ANCIENT_GEAR, Type.STEEL, Type.NORMAL, [
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.COMMON ],
+      [ Biome.PLAINS, BiomePoolTier.UNCOMMON ],
+      [ Biome.JUNGLE, BiomePoolTier.UNCOMMON ],
+      [ Biome.GRASS, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.ANCIENT_GEAR_ENGINEER, Type.STEEL, Type.ELECTRIC, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.METROPOLIS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.JUNGLE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ANCIENT_GEAR_GOLEM, Type.STEEL, Type.GROUND, [
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.DESERT, BiomePoolTier.BOSS ],
+      [ Biome.JUNGLE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.ANCIENT_GEAR_KNIGHT, Type.NORMAL, -1, [
+      [ Biome.GRASS, BiomePoolTier.COMMON ],
+      [ Biome.JUNGLE, BiomePoolTier.UNCOMMON ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.ARCANA_FORCE_IV_THE_EMPEROR, Type.ELECTRIC, Type.FAIRY, [
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ],
+      [ Biome.FOREST, BiomePoolTier.BOSS ],
+      [ Biome.JUNGLE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.ARCANA_FORCE_XVIII_THE_MOON, Type.DARK, Type.FAIRY, [
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.BOSS ],
+      [ Biome.JUNGLE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.ARCANA_FORCE_VI_THE_LOVERS, Type.FIRE, Type.FAIRY, [
+      [ Biome.VOLCANO, BiomePoolTier.RARE ],
+      [ Biome.MEADOW, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ARCANA_FORCE_EX_THE_DARK_RULER, Type.DARK, Type.FAIRY, [
+      [ Biome.GRAVEYARD, BiomePoolTier.SUPER_RARE ],
+      [ Biome.FOREST, BiomePoolTier.BOSS ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.ARCANA_FORCE_0_THE_FOOL, Type.NORMAL, Type.FAIRY, [
+      [ Biome.PLAINS, BiomePoolTier.RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.SUPER_RARE ],
+      [ Biome.GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ARCHFIEND_ZOMBIE, Type.GHOST, Type.ELECTRIC, [
+      [ Biome.GRAVEYARD, BiomePoolTier.RARE ],
+      [ Biome.METROPOLIS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ARMED_DRAGON_LV3, Type.DRAGON, Type.FLYING, [
+      [ Biome.WASTELAND, BiomePoolTier.COMMON ],
+      [ Biome.MOUNTAIN, BiomePoolTier.UNCOMMON ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.ARMED_DRAGON_LV5, Type.DRAGON, Type.FIGHTING, [
+      [ Biome.WASTELAND, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ARMED_DRAGON_LV7, Type.DRAGON, Type.STEEL, [
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.BOSS ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.AVATAR_OF_THE_POT, Type.ROCK, Type.FAIRY, [
+      [ Biome.BADLANDS, BiomePoolTier.COMMON ],
+      [ Biome.MEADOW, BiomePoolTier.UNCOMMON ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.AXE_RAIDER, Type.NORMAL, Type.FIGHTING, [
+      [ Biome.GRASS, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BABY_DRAGON, Type.DRAGON, Type.FLYING, [
+      [ Biome.CAVE, BiomePoolTier.COMMON ],
+      [ Biome.PLAINS, BiomePoolTier.UNCOMMON ],
+      [ Biome.ICE_CAVE, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.BEAN_SOLDIER, Type.GRASS, Type.FIGHTING, [
+      [ Biome.TALL_GRASS, BiomePoolTier.COMMON ],
+      [ Biome.DOJO, BiomePoolTier.UNCOMMON ],
+      [ Biome.ICE_CAVE, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.BEAVER_WARRIOR, Type.WATER, Type.FIGHTING, [
+      [ Biome.SEA, BiomePoolTier.COMMON ],
+      [ Biome.BADLANDS, BiomePoolTier.UNCOMMON ],
+      [ Biome.ICE_CAVE, BiomePoolTier.UNCOMMON ],
+      [ Biome.LAKE, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.BEHEMOTH_THE_KING_OF_ALL_ANIMALS, Type.GROUND, Type.GRASS, [
+      [ Biome.DESERT, BiomePoolTier.RARE ],
+      [ Biome.TALL_GRASS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.ICE_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BEIIGE_VANGUARD_OF_DARK_WORLD, Type.DARK, Type.FIGHTING, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ],
+      [ Biome.ICE_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ABAKI, Type.FIRE, Type.DARK, [
+      [ Biome.VOLCANO, BiomePoolTier.RARE ],
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.ICE_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ABARE_USHIONI, Type.FIGHTING, Type.GROUND, [
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.RARE ],
+      [ Biome.DESERT, BiomePoolTier.SUPER_RARE ],
+      [ Biome.ICE_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.AGIDO, Type.FAIRY, Type.GROUND, [
+      [ Biome.FOREST, BiomePoolTier.RARE ],
+      [ Biome.BADLANDS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.ICE_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.AITSU, Type.FLYING, Type.FIRE, [
+      [ Biome.MOUNTAIN, BiomePoolTier.COMMON ],
+      [ Biome.VOLCANO, BiomePoolTier.UNCOMMON ],
+      [ Biome.ICE_CAVE, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.ALIEN_GREY, Type.PSYCHIC, Type.POISON, [
+      [ Biome.SPACE, BiomePoolTier.COMMON ],
+      [ Biome.SWAMP, BiomePoolTier.UNCOMMON ],
+      [ Biome.ICE_CAVE, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.ALIEN_MARS, Type.PSYCHIC, Type.ROCK, [
+      [ Biome.RUINS, BiomePoolTier.RARE ],
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.END, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BETA_THE_MAGNET_WARRIOR, Type.STEEL, Type.ELECTRIC, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ],
+      [ Biome.END, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BICKURIBOX, Type.DARK, Type.FAIRY, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.END, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BIG_JAWS, Type.WATER, Type.STEEL, [
+      [ Biome.BEACH, BiomePoolTier.COMMON ],
+      [ Biome.FACTORY, BiomePoolTier.UNCOMMON ],
+      [ Biome.END, BiomePoolTier.UNCOMMON ],
+      [ Biome.LAKE, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.BIO_PLANT, Type.GRASS, Type.POISON, [
+      [ Biome.TALL_GRASS, BiomePoolTier.RARE ],
+      [ Biome.SWAMP, BiomePoolTier.SUPER_RARE ],
+      [ Biome.END, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BLACK_DRAGONS_CHICK, Type.FIRE, Type.DRAGON, [
+      [ Biome.VOLCANO, BiomePoolTier.COMMON ],
+      [ Biome.WASTELAND, BiomePoolTier.UNCOMMON ],
+      [ Biome.END, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.BLACK_LUSTER_SOLDIER, Type.DARK, Type.FAIRY, [
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.MEADOW, BiomePoolTier.BOSS ],
+      [ Biome.END, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.BLACK_LUSTER_SOLDIER_ENVOY_OF_THE_BEGINNING, Type.FAIRY, Type.DARK, [
+      [ Biome.FOREST, BiomePoolTier.SUPER_RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.BOSS ],
+      [ Biome.END, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.BLACK_MAGICIAN_OF_CHAOS, Type.PSYCHIC, Type.DARK, [
+      [ Biome.TEMPLE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SLUM, BiomePoolTier.BOSS ],
+      [ Biome.END, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.BLACK_TYRANNO, Type.DARK, Type.ROCK, [
+      [ Biome.ABYSS, BiomePoolTier.RARE ],
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.END, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BLADE_KNIGHT, Type.FIGHTING, Type.STEEL, [
+      [ Biome.DOJO, BiomePoolTier.RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.END, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BLAZING_INPACHI, Type.FIRE, Type.GRASS, [
+      [ Biome.DESERT, BiomePoolTier.RARE ],
+      [ Biome.TALL_GRASS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.END, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BLIZZARD_DRAGON, Type.ICE, Type.DRAGON, [
+      [ Biome.ICE_CAVE, BiomePoolTier.RARE ],
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BLOWBACK_DRAGON, Type.DRAGON, Type.DARK, [
+      [ Biome.MOUNTAIN, BiomePoolTier.RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.SUPER_RARE ],
+      [ Biome.END, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BLUE_EYES_ALTERNATIVE_WHITE_DRAGON, Type.DRAGON, Type.ELECTRIC, [
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ],
+      [ Biome.METROPOLIS, BiomePoolTier.BOSS ],
+      [ Biome.END, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.BLUE_EYES_CHAOS_MAX_DRAGON, Type.DRAGON, Type.DARK, [
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SLUM, BiomePoolTier.BOSS ],
+      [ Biome.GRASS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.BLUE_EYES_TOON_DRAGON_RENDER, Type.DRAGON, Type.FAIRY, [
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.BOSS ],
+      [ Biome.GRASS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.BLUE_EYES_ULTIMATE_DRAGON, Type.DRAGON, Type.FLYING, [
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ],
+      [ Biome.PLAINS, BiomePoolTier.BOSS ],
+      [ Biome.GRASS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.BLUE_EYES_WHITE_DRAGON, Type.DRAGON, Type.ELECTRIC, [
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.BOSS ],
+      [ Biome.METROPOLIS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.BOO_KOO, Type.FAIRY, Type.PSYCHIC, [
+      [ Biome.MEADOW, BiomePoolTier.COMMON ],
+      [ Biome.SPACE, BiomePoolTier.UNCOMMON ],
+      [ Biome.GRASS, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.BREAKER_THE_MAGICAL_WARRIOR, Type.STEEL, Type.PSYCHIC, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.RUINS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SWAMP, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.BUSTER_BLADER_DESTRUCTION_SWORDMASTER, Type.FIGHTING, Type.STEEL, [
+      [ Biome.BADLANDS, BiomePoolTier.RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SWAMP, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CAIUS_THE_SHADOW_MONARCH, Type.DARK, Type.GHOST, [
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.RUINS, BiomePoolTier.BOSS ],
+      [ Biome.SWAMP, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.CARD_TROOPER, Type.ELECTRIC, Type.STEEL, [
+      [ Biome.METROPOLIS, BiomePoolTier.RARE ],
+      [ Biome.FACTORY, BiomePoolTier.SUPER_RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CASTLE_OF_DARK_ILLUSIONS, Type.FLYING, Type.GHOST, [
+      [ Biome.PLAINS, BiomePoolTier.RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SWAMP, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CELTIC_GUARDIAN, Type.FAIRY, Type.FIGHTING, [
+      [ Biome.FOREST, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SWAMP, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CHAOS_EMPEROR_DRAGON_ENVOY_OF_THE_END, Type.DARK, Type.DRAGON, [
+      [ Biome.SLUM, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CAVE, BiomePoolTier.BOSS ],
+      [ Biome.SWAMP, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.CLAW_REACHER, Type.POISON, Type.STEEL, [
+      [ Biome.SWAMP, BiomePoolTier.RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CLOUDIAN_ACID_CLOUD, Type.FLYING, Type.POISON, [
+      [ Biome.MEADOW, BiomePoolTier.RARE ],
+      [ Biome.SWAMP, BiomePoolTier.SUPER_RARE ],
+      [ Biome.PLAINS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CLOUDIAN_EYE_OF_THE_TYPHOON, Type.FLYING, Type.ELECTRIC, [
+      [ Biome.PLAINS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.BOSS ],
+      [ Biome.METROPOLIS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.CLOUDIAN_GHOST_FOG, Type.WATER, Type.GHOST, [
+      [ Biome.LAKE, BiomePoolTier.RARE ],
+      [ Biome.RUINS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SEA, BiomePoolTier.SUPER_RARE ],
+      [ Biome.BEACH, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CLOUDIAN_NIMBUSMAN, Type.FLYING, Type.WATER, [
+      [ Biome.MEADOW, BiomePoolTier.RARE ],
+      [ Biome.SEA, BiomePoolTier.SUPER_RARE ],
+      [ Biome.LAKE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.BEACH, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CLOUDIAN_SMOKE_BALL, Type.FAIRY, Type.FLYING, [
+      [ Biome.FAIRY_CAVE, BiomePoolTier.RARE ],
+      [ Biome.PLAINS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CLOUDIAN_STORM_DRAGON, Type.ELECTRIC, Type.DRAGON, [
+      [ Biome.METROPOLIS, BiomePoolTier.RARE ],
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.COLOSSAL_FIGHTER, Type.FIGHTING, Type.GROUND, [
+      [ Biome.BADLANDS, BiomePoolTier.RARE ],
+      [ Biome.DESERT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.COPYCAT, Type.PSYCHIC, Type.FAIRY, [
+      [ Biome.TEMPLE, BiomePoolTier.RARE ],
+      [ Biome.FOREST, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SPACE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CRAB_TURTLE, Type.WATER, Type.BUG, [
+      [ Biome.BEACH, BiomePoolTier.RARE ],
+      [ Biome.JUNGLE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SEA, BiomePoolTier.SUPER_RARE ],
+      [ Biome.TALL_GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CRYSTAL_BEAST_AMBER_MAMMOTH, Type.ROCK, Type.GROUND, [
+      [ Biome.BADLANDS, BiomePoolTier.RARE ],
+      [ Biome.DESERT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CRYSTAL_BEAST_EMERALD_TORTOISE, Type.ROCK, Type.WATER, [
+      [ Biome.CAVE, BiomePoolTier.RARE ],
+      [ Biome.LAKE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SEA, BiomePoolTier.SUPER_RARE ],
+      [ Biome.BEACH, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CRYSTAL_BEAST_RUBY_CARBUNCLE, Type.ROCK, Type.FAIRY, [
+      [ Biome.MOUNTAIN, BiomePoolTier.RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CRYSTAL_BEAST_TOPAZ_TIGER, Type.ROCK, Type.ELECTRIC, [
+      [ Biome.BADLANDS, BiomePoolTier.RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ],
+      [ Biome.METROPOLIS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CURSE_OF_DRAGON, Type.GHOST, Type.DRAGON, [
+      [ Biome.GRAVEYARD, BiomePoolTier.RARE ],
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CURSE_OF_DRAGONFIRE, Type.FIRE, Type.DRAGON, [
+      [ Biome.VOLCANO, BiomePoolTier.RARE ],
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CYBER_DINOSAUR, Type.STEEL, Type.DRAGON, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CYBER_END_DRAGON, Type.DRAGON, Type.STEEL, [
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.CYBER_OGRE, Type.STEEL, Type.DARK, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CYBER_SAURUS, Type.STEEL, Type.ROCK, [
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.COMMON ],
+      [ Biome.BADLANDS, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.CYBER_TECH_ALLIGATOR, Type.FLYING, Type.STEEL, [
+      [ Biome.MEADOW, BiomePoolTier.RARE ],
+      [ Biome.FACTORY, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.CYBER_TWIN_DRAGON, Type.ELECTRIC, Type.STEEL, [
+      [ Biome.METROPOLIS, BiomePoolTier.RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.D_D_CRAZY_BEAST, Type.DARK, Type.PSYCHIC, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.SPACE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.TEMPLE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.D_D_TRAINER, Type.PSYCHIC, Type.FIGHTING, [
+      [ Biome.TEMPLE, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SPACE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.D_D_WARRIOR_LADY, Type.FIGHTING, Type.PSYCHIC, [
+      [ Biome.DOJO, BiomePoolTier.RARE ],
+      [ Biome.SPACE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.TEMPLE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DANDYLION, Type.GRASS, Type.FAIRY, [
+      [ Biome.TALL_GRASS, BiomePoolTier.COMMON ],
+      [ Biome.FOREST, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.DANGER_BIGFOOT, Type.GROUND, Type.GRASS, [
+      [ Biome.DESERT, BiomePoolTier.RARE ],
+      [ Biome.TALL_GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DARK_ERADICATOR_WARLOCK, Type.FIRE, Type.PSYCHIC, [
+      [ Biome.VOLCANO, BiomePoolTier.SUPER_RARE ],
+      [ Biome.TEMPLE, BiomePoolTier.BOSS ],
+      [ Biome.SPACE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.DARK_EYES_ILLUSIONIST, Type.DARK, Type.GHOST, [
+      [ Biome.ABYSS, BiomePoolTier.COMMON ],
+      [ Biome.RUINS, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.DARK_MAGICIAN, Type.DARK, Type.PSYCHIC, [
+      [ Biome.GRAVEYARD, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SPACE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.DARK_MAGICIAN_VARIANT_2, Type.PSYCHIC, Type.DARK, [
+      [ Biome.TEMPLE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SLUM, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.DARK_MAGICIAN_GIRL_ALTERNATE, Type.PSYCHIC, Type.FAIRY, [
+      [ Biome.SPACE, BiomePoolTier.RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DARK_NECROFEAR, Type.GHOST, Type.DARK, [
+      [ Biome.RUINS, BiomePoolTier.RARE ],
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DARK_PALADIN, Type.PSYCHIC, Type.DRAGON, [
+      [ Biome.TEMPLE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.MOUNTAIN, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.DARK_RESONATOR, Type.DARK, Type.NORMAL, [
+      [ Biome.GRAVEYARD, BiomePoolTier.RARE ],
+      [ Biome.GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DARK_RABBIT, Type.FAIRY, Type.DARK, [
+      [ Biome.FOREST, BiomePoolTier.RARE ],
+      [ Biome.SLUM, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DARK_RULER_HA_DES, Type.POISON, Type.DARK, [
+      [ Biome.SWAMP, BiomePoolTier.RARE ],
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DARK_SAGE, Type.PSYCHIC, Type.DARK, [
+      [ Biome.SPACE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.DARK_WORLD_THORNS, Type.DARK, Type.GRASS, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.TALL_GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DARKFIRE_DRAGON, Type.DARK, Type.FIRE, [
+      [ Biome.ABYSS, BiomePoolTier.RARE ],
+      [ Biome.VOLCANO, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DESPAIR_FROM_THE_DARK, Type.GHOST, Type.DARK, [
+      [ Biome.RUINS, BiomePoolTier.RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DESTINY_HERO_DEFENDER, Type.DARK, Type.FIGHTING, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DESTINY_HERO_PLASMA, Type.DARK, Type.DRAGON, [
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CAVE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.DRAGON_DESTROYER_SWORDSMAN, Type.STEEL, Type.FIGHTING, [
+      [ Biome.FACTORY, BiomePoolTier.SUPER_RARE ],
+      [ Biome.DOJO, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.DRAGON_SPIRIT_OF_WHITE, Type.FLYING, Type.DRAGON, [
+      [ Biome.PLAINS, BiomePoolTier.RARE ],
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DRAGON_ZOMBIE, Type.GHOST, Type.DRAGON, [
+      [ Biome.RUINS, BiomePoolTier.RARE ],
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DRILLAGO, Type.STEEL, Type.GROUND, [
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.RARE ],
+      [ Biome.DESERT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.DUOTERION, Type.WATER, Type.FIRE, [
+      [ Biome.SEA, BiomePoolTier.RARE ],
+      [ Biome.VOLCANO, BiomePoolTier.SUPER_RARE ],
+      [ Biome.LAKE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.BEACH, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.EARTHBOUND_IMMORTAL_CHACU_CHALLHUA, Type.WATER, Type.GROUND, [
+      [ Biome.BEACH, BiomePoolTier.SUPER_RARE ],
+      [ Biome.DESERT, BiomePoolTier.BOSS ],
+      [ Biome.SEA, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.EGYPTIAN_GOD_SLIME, Type.WATER, Type.STELLAR, [
+      [ Biome.LAKE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.END, BiomePoolTier.BOSS ],
+      [ Biome.SEA, BiomePoolTier.BOSS ],
+      [ Biome.BEACH, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.ELEMENTAL_HERO_BLADEDGE, Type.STEEL, Type.FIGHTING, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.BADLANDS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ELEMENTAL_HERO_BURSTINATRIX, Type.FIRE, Type.FIGHTING, [
+      [ Biome.VOLCANO, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ELEMENTAL_HERO_CLAYMAN, Type.GROUND, Type.FIGHTING, [
+      [ Biome.DESERT, BiomePoolTier.RARE ],
+      [ Biome.BADLANDS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ELEMENTAL_HERO_FLAME_WINGMAN, Type.FIRE, Type.FLYING, [
+      [ Biome.VOLCANO, BiomePoolTier.SUPER_RARE ],
+      [ Biome.MEADOW, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.ELEMENTAL_HERO_NECROSHADE, Type.GHOST, Type.FIGHTING, [
+      [ Biome.RUINS, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ELEMENTAL_HERO_NEOS_ALT_MASTER_DUEL, Type.PSYCHIC, Type.FIGHTING, [
+      [ Biome.TEMPLE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.ELEMENTAL_HERO_NEOS_ALIUS, Type.FIGHTING, Type.PSYCHIC, [
+      [ Biome.BADLANDS, BiomePoolTier.RARE ],
+      [ Biome.SPACE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ELEMENTAL_HERO_SPARKMAN, Type.ELECTRIC, Type.FIGHTING, [
+      [ Biome.POWER_PLANT, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ],
+      [ Biome.METROPOLIS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ELEMENTAL_HERO_STRATOS, Type.FLYING, Type.FIGHTING, [
+      [ Biome.PLAINS, BiomePoolTier.RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ENRAGED_BATTLE_OX, Type.GRASS, Type.STEEL, [
+      [ Biome.TALL_GRASS, BiomePoolTier.RARE ],
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.EVILSWARM_MANDRAGORA, Type.DARK, Type.GRASS, [
+      [ Biome.GRAVEYARD, BiomePoolTier.RARE ],
+      [ Biome.FOREST, BiomePoolTier.SUPER_RARE ],
+      [ Biome.TALL_GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.EVILSWARM_SALAMANDRA, Type.DARK, Type.DRAGON, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.EXODIA_FULL_BODY, Type.DARK, Type.PSYCHIC, [
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.TEMPLE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.EXODIA_NECROSS, Type.GHOST, Type.DARK, [
+      [ Biome.RUINS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.EXODIA_THE_FORBIDDEN_EVOLUTION, Type.PSYCHIC, Type.DARK, [
+      [ Biome.SPACE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SLUM, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.EXODIUS_THE_ULTIMATE_FORBIDDEN_LORD, Type.PSYCHIC, Type.FIGHTING, [
+      [ Biome.TEMPLE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.BADLANDS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.FENRIR, Type.ICE, Type.WATER, [
+      [ Biome.SNOWY_FOREST, BiomePoolTier.RARE ],
+      [ Biome.SEA, BiomePoolTier.SUPER_RARE ],
+      [ Biome.ICE_CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.BEACH, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.FERAL_IMP, Type.DARK, Type.FAIRY, [
+      [ Biome.ABYSS, BiomePoolTier.RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.FIEND_KRAKEN, Type.WATER, Type.DARK, [
+      [ Biome.BEACH, BiomePoolTier.RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SEA, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.FIEND_SWORD, Type.DARK, Type.STEEL, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.FACTORY, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.FOSSIL_DYNA_PACHYCEPHALO, Type.ROCK, Type.DRAGON, [
+      [ Biome.CAVE, BiomePoolTier.RARE ],
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.FOSSIL_WARRIOR_SKULL_KING, Type.ROCK, Type.GHOST, [
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.RUINS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.FROST_FLAME_DRAGON, Type.ICE, Type.FIRE, [
+      [ Biome.ICE_CAVE, BiomePoolTier.RARE ],
+      [ Biome.VOLCANO, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.FROSTOSAURUS, Type.ICE, Type.ROCK, [
+      [ Biome.SNOWY_FOREST, BiomePoolTier.RARE ],
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ],
+      [ Biome.ICE_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GAGAGIGO, Type.DARK, Type.WATER, [
+      [ Biome.ABYSS, BiomePoolTier.RARE ],
+      [ Biome.LAKE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SEA, BiomePoolTier.SUPER_RARE ],
+      [ Biome.BEACH, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GAIA_THE_DRAGON_CHAMPION, Type.DRAGON, Type.FLYING, [
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ],
+      [ Biome.MEADOW, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.GAIA_THE_FIERCE_KNIGHT, Type.FIGHTING, Type.NORMAL, [
+      [ Biome.DOJO, BiomePoolTier.RARE ],
+      [ Biome.GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GAMMA_THE_MAGNET_WARRIOR, Type.STEEL, Type.ROCK, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GAZELLE_THE_KING_OF_MYTHICAL_BEASTS, Type.FAIRY, Type.NORMAL, [
+      [ Biome.FAIRY_CAVE, BiomePoolTier.RARE ],
+      [ Biome.GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GELLENDUO, Type.FAIRY, Type.FLYING, [
+      [ Biome.FOREST, BiomePoolTier.RARE ],
+      [ Biome.PLAINS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GEM_KNIGHT_CITRINE, Type.ROCK, Type.FIRE, [
+      [ Biome.MOUNTAIN, BiomePoolTier.RARE ],
+      [ Biome.DESERT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GEM_KNIGHT_MASTER_DIAMOND, Type.ROCK, Type.STELLAR, [
+      [ Biome.BADLANDS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.END, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.GENEX_ALLY_BIRDMAN, Type.ELECTRIC, Type.FLYING, [
+      [ Biome.METROPOLIS, BiomePoolTier.RARE ],
+      [ Biome.MEADOW, BiomePoolTier.SUPER_RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GHOSTRICK_GHOUL, Type.GHOST, Type.POISON, [
+      [ Biome.RUINS, BiomePoolTier.RARE ],
+      [ Biome.SWAMP, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GHOSTRICK_MUMMY, Type.GHOST, Type.GROUND, [
+      [ Biome.GRAVEYARD, BiomePoolTier.RARE ],
+      [ Biome.DESERT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GHOSTRICK_SKELETON, Type.DARK, Type.GHOST, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.RUINS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GHOSTRICK_STEIN, Type.ELECTRIC, Type.GHOST, [
+      [ Biome.POWER_PLANT, BiomePoolTier.RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.SUPER_RARE ],
+      [ Biome.METROPOLIS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GHOSTRICK_YETI, Type.ICE, Type.GHOST, [
+      [ Biome.ICE_CAVE, BiomePoolTier.RARE ],
+      [ Biome.RUINS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GIGA_GAGAGIGO, Type.STEEL, Type.DARK, [
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.RARE ],
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GATE_GUARDIAN, Type.STELLAR, -1, [
+      [ Biome.END, BiomePoolTier.SUPER_RARE ],
+      [ Biome.JUNGLE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.GIGOBYTE, Type.WATER, Type.DRAGON, [
+      [ Biome.SEA, BiomePoolTier.RARE ],
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ],
+      [ Biome.LAKE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GOGIGA_GAGAGIGO, Type.DARK, Type.DRAGON, [
+      [ Biome.SLUM, BiomePoolTier.SUPER_RARE ],
+      [ Biome.WASTELAND, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.GOLDEN_EYES_IDOL, Type.GHOST, Type.PSYCHIC, [
+      [ Biome.GRAVEYARD, BiomePoolTier.RARE ],
+      [ Biome.SPACE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GRAVEROBBER, Type.DARK, Type.GROUND, [
+      [ Biome.ABYSS, BiomePoolTier.RARE ],
+      [ Biome.DESERT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GREAT_MOTH, Type.POISON, Type.BUG, [
+      [ Biome.SWAMP, BiomePoolTier.RARE ],
+      [ Biome.JUNGLE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.TALL_GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GREAT_WHITE, Type.WATER, Type.NORMAL, [
+      [ Biome.BEACH, BiomePoolTier.RARE ],
+      [ Biome.GRASS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SEA, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GREEN_BABOON_DEFENDER_OF_THE_FOREST, Type.GRASS, Type.FIGHTING, [
+      [ Biome.TALL_GRASS, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GREEN_GADGET, Type.GRASS, Type.STEEL, [
+      [ Biome.TALL_GRASS, BiomePoolTier.RARE ],
+      [ Biome.FACTORY, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GRIFFORE, Type.GROUND, Type.FLYING, [
+      [ Biome.DESERT, BiomePoolTier.RARE ],
+      [ Biome.PLAINS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.GUARDIAN_GRARL, Type.GROUND, Type.DRAGON, [
+      [ Biome.BADLANDS, BiomePoolTier.RARE ],
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.HADE_HANE, Type.FLYING, Type.FAIRY, [
+      [ Biome.MEADOW, BiomePoolTier.RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.HANE_HANE, Type.FLYING, Type.FAIRY, [
+      [ Biome.PLAINS, BiomePoolTier.COMMON ],
+      [ Biome.FOREST, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.HARPIES_PET_DRAGON, Type.DRAGON, Type.FLYING, [
+      [ Biome.CAVE, BiomePoolTier.RARE ],
+      [ Biome.MEADOW, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.HEADLESS_KNIGHT, Type.GHOST, Type.STEEL, [
+      [ Biome.RUINS, BiomePoolTier.RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.HITOTSU_ME_GIANT, Type.NORMAL, -1, [
+      [ Biome.GRASS, BiomePoolTier.RARE ],
+      [ Biome.JUNGLE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.HUMANOID_SLIME, Type.WATER, Type.POISON, [
+      [ Biome.LAKE, BiomePoolTier.RARE ],
+      [ Biome.SWAMP, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SEA, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.HUNDRED_EYES_DRAGON, Type.GHOST, Type.DRAGON, [
+      [ Biome.GRAVEYARD, BiomePoolTier.SUPER_RARE ],
+      [ Biome.WASTELAND, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.HUNGRY_BURGER, Type.DARK, Type.GROUND, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.DESERT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.HYDROGEDDON, Type.WATER, Type.DRAGON, [
+      [ Biome.SEA, BiomePoolTier.RARE ],
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ],
+      [ Biome.LAKE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.HYOZANRYU, Type.ICE, Type.DRAGON, [
+      [ Biome.SNOWY_FOREST, BiomePoolTier.RARE ],
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.ICE_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.HYPER_HAMMERHEAD, Type.GROUND, Type.ROCK, [
+      [ Biome.BADLANDS, BiomePoolTier.RARE ],
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ILLUSIONIST_FACELESS_MAGE, Type.PSYCHIC, Type.GHOST, [
+      [ Biome.TEMPLE, BiomePoolTier.RARE ],
+      [ Biome.RUINS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.JINZO_THE_MACHINE_MENACE, Type.PSYCHIC, Type.ELECTRIC, [
+      [ Biome.SPACE, BiomePoolTier.RARE ],
+      [ Biome.METROPOLIS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.JUNK_WARRIOR, Type.STEEL, Type.FIGHTING, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.KAZEJIN, Type.FLYING, Type.STEEL, [
+      [ Biome.PLAINS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.KING_OF_THE_SKULL_SERVANTS, Type.GHOST, Type.GROUND, [
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.DESERT, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.KOITSU, Type.FLYING, Type.WATER, [
+      [ Biome.MEADOW, BiomePoolTier.COMMON ],
+      [ Biome.BEACH, BiomePoolTier.UNCOMMON ],
+      [ Biome.SEA, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.KOZAKY, Type.DARK, Type.POISON, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.SWAMP, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.KURIBOH, Type.FAIRY, Type.DARK, [
+      [ Biome.FAIRY_CAVE, BiomePoolTier.COMMON ],
+      [ Biome.ABYSS, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.LA_JINN_THE_MYSTICAL_GENIE, Type.FAIRY, Type.GHOST, [
+      [ Biome.FOREST, BiomePoolTier.RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.LAVA_GOLEM, Type.FIRE, Type.GROUND, [
+      [ Biome.VOLCANO, BiomePoolTier.RARE ],
+      [ Biome.BADLANDS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.LEGENDARY_SWORDSMAN, Type.FIGHTING, Type.NORMAL, [
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ],
+      [ Biome.GRASS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.LEVIA_DRAGON_DAEDALUS, Type.WATER, Type.DRAGON, [
+      [ Biome.LAKE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.WASTELAND, BiomePoolTier.BOSS ],
+      [ Biome.BEACH, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.LORD_OF_D, Type.DRAGON, Type.NORMAL, [
+      [ Biome.MOUNTAIN, BiomePoolTier.RARE ],
+      [ Biome.GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.MAGICIANS_ROBE, Type.PSYCHIC, Type.FAIRY, [
+      [ Biome.TEMPLE, BiomePoolTier.COMMON ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.MAGIKURIBOH, Type.PSYCHIC, Type.FAIRY, [
+      [ Biome.SPACE, BiomePoolTier.RARE ],
+      [ Biome.FOREST, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.MASKED_BEAST_DES_GARDIUS, Type.DARK, Type.GHOST, [
+      [ Biome.SLUM, BiomePoolTier.SUPER_RARE ],
+      [ Biome.RUINS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.MASTER_OF_OZ, Type.FIGHTING, Type.GROUND, [
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.RARE ],
+      [ Biome.DESERT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.METEOR_B_DRAGON, Type.ROCK, Type.FIRE, [
+      [ Biome.CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.VOLCANO, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.MILLENNIUM_SCORPION, Type.BUG, Type.FAIRY, [
+      [ Biome.JUNGLE, BiomePoolTier.RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.TALL_GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.MILLENNIUM_SHIELD, Type.ROCK, Type.PSYCHIC, [
+      [ Biome.MOUNTAIN, BiomePoolTier.RARE ],
+      [ Biome.TEMPLE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.MORPHING_JAR, Type.ROCK, Type.DARK, [
+      [ Biome.BADLANDS, BiomePoolTier.RARE ],
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.MUKA_MUKA, Type.GROUND, Type.PSYCHIC, [
+      [ Biome.DESERT, BiomePoolTier.RARE ],
+      [ Biome.SPACE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.NUMBER_22_ZOMBIESTEIN, Type.GHOST, Type.FIGHTING, [
+      [ Biome.GRAVEYARD, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.OBELISK_THE_TORMENTOR, Type.FIGHTING, Type.STELLAR, [
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.END, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.OCEAN_DRAGON_LORD_KAIRYU_SHIN, Type.WATER, Type.DRAGON, [
+      [ Biome.SEA, BiomePoolTier.SUPER_RARE ],
+      [ Biome.WASTELAND, BiomePoolTier.BOSS ],
+      [ Biome.LAKE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.OJAMA_BLACK_GREEN, Type.NORMAL, Type.FAIRY, [
+      [ Biome.GRASS, BiomePoolTier.COMMON ],
+      [ Biome.FOREST, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.OJAMA_KING, Type.FAIRY, Type.NORMAL, [
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.GRASS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.OJAMA_KNIGHT, Type.STEEL, Type.FAIRY, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.MEADOW, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.OVERTEX_QOATLUS, Type.FLYING, Type.ROCK, [
+      [ Biome.PLAINS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CAVE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.OXYGEDDON, Type.FLYING, Type.DRAGON, [
+      [ Biome.PLAINS, BiomePoolTier.RARE ],
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.PALADIN_OF_THE_CURSED_DRAGON, Type.GHOST, Type.DRAGON, [
+      [ Biome.RUINS, BiomePoolTier.RARE ],
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.PALADIN_OF_WHITE_DRAGON, Type.DRAGON, Type.ELECTRIC, [
+      [ Biome.WASTELAND, BiomePoolTier.RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ],
+      [ Biome.METROPOLIS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.PANTHER_WARRIOR, Type.DARK, Type.FIGHTING, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.DOJO, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.PANZER_DRAGON, Type.STEEL, Type.DRAGON, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.PAPA_CORN, Type.GRASS, Type.FAIRY, [
+      [ Biome.TALL_GRASS, BiomePoolTier.RARE ],
+      [ Biome.FOREST, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.PLAGUESPREADER_ZOMBIE, Type.POISON, Type.GHOST, [
+      [ Biome.SWAMP, BiomePoolTier.RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.QUICKDRAW_SYNCHRON, Type.STEEL, -1, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.JUNGLE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.RELINQUISHED, Type.DARK, Type.GHOST, [
+      [ Biome.ABYSS, BiomePoolTier.RARE ],
+      [ Biome.RUINS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.SNOWMAN_EATER, Type.ICE, Type.DARK, [
+      [ Biome.ICE_CAVE, BiomePoolTier.RARE ],
+      [ Biome.SLUM, BiomePoolTier.SUPER_RARE ],
+      [ Biome.SNOWY_FOREST, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.SOLDIER_OF_CHAOS, Type.DARK, Type.FIGHTING, [
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.SOUL_HUNTER, Type.DARK, Type.GHOST, [
+      [ Biome.GRAVEYARD, BiomePoolTier.RARE ],
+      [ Biome.RUINS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.SPEED_WARRIOR, Type.STEEL, Type.NORMAL, [
+      [ Biome.FACTORY, BiomePoolTier.RARE ],
+      [ Biome.GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.STEEL_OGRE_GROTTO_1, Type.STEEL, Type.GROUND, [
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.RARE ],
+      [ Biome.BADLANDS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.SUIJIN, Type.WATER, Type.PSYCHIC, [
+      [ Biome.BEACH, BiomePoolTier.SUPER_RARE ],
+      [ Biome.TEMPLE, BiomePoolTier.BOSS ],
+      [ Biome.LAKE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.YELLOW_GADGET, Type.ELECTRIC, Type.STEEL, [
+      [ Biome.METROPOLIS, BiomePoolTier.RARE ],
+      [ Biome.FACTORY, BiomePoolTier.SUPER_RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.SUPREME_KING_OF_ARMAGEDDON, Type.DARK, Type.STEEL, [
+      [ Biome.SLUM, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CAVE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.THE_CREATOR, Type.ELECTRIC, Type.FAIRY, [
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.BOSS ],
+      [ Biome.METROPOLIS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.THE_FABLED_CERBURREL, Type.DARK, Type.FAIRY, [
+      [ Biome.ABYSS, BiomePoolTier.RARE ],
+      [ Biome.MEADOW, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.THE_FABLED_GANASHIA, Type.ICE, Type.FAIRY, [
+      [ Biome.SNOWY_FOREST, BiomePoolTier.RARE ],
+      [ Biome.FOREST, BiomePoolTier.SUPER_RARE ],
+      [ Biome.ICE_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.THE_TRICKY, Type.PSYCHIC, Type.GHOST, [
+      [ Biome.SPACE, BiomePoolTier.RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.THE_MASKED_BEAST, Type.DARK, Type.POISON, [
+      [ Biome.SLUM, BiomePoolTier.RARE ],
+      [ Biome.SWAMP, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.THOUSAND_DRAGON, Type.DRAGON, Type.FIRE, [
+      [ Biome.WASTELAND, BiomePoolTier.RARE ],
+      [ Biome.VOLCANO, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.THOUSAND_EYES_RESTRICT, Type.DARK, Type.GHOST, [
+      [ Biome.ABYSS, BiomePoolTier.SUPER_RARE ],
+      [ Biome.RUINS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.TIME_WIZARD_OF_TOMORROW, Type.PSYCHIC, Type.FAIRY, [
+      [ Biome.TEMPLE, BiomePoolTier.RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.TOGEX, Type.STEEL, Type.GRASS, [
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.RARE ],
+      [ Biome.TALL_GRASS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.YUBEL, Type.DARK, Type.POISON, [
+      [ Biome.GRAVEYARD, BiomePoolTier.RARE ],
+      [ Biome.SWAMP, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ZOMBYRA_THE_DARK, Type.DARK, Type.FIGHTING, [
+      [ Biome.SLUM, BiomePoolTier.COMMON ],
+      [ Biome.DOJO, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.WOODLAND_SPRITE, Type.GRASS, Type.FAIRY, [
+      [ Biome.TALL_GRASS, BiomePoolTier.RARE ],
+      [ Biome.MEADOW, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.WATER_DRAGON, Type.WATER, Type.DRAGON, [
+      [ Biome.LAKE, BiomePoolTier.RARE ],
+      [ Biome.MOUNTAIN, BiomePoolTier.SUPER_RARE ],
+      [ Biome.BEACH, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.WATER_DRAGON_CLUSTER, Type.WATER, Type.DRAGON, [
+      [ Biome.SEA, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CAVE, BiomePoolTier.BOSS ],
+      [ Biome.LAKE, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.VOLCANIC_SHELL, Type.FIRE, Type.STEEL, [
+      [ Biome.VOLCANO, BiomePoolTier.RARE ],
+      [ Biome.FACTORY, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.TOON_ALLIGATOR, Type.WATER, Type.FAIRY, [
+      [ Biome.BEACH, BiomePoolTier.RARE ],
+      [ Biome.FOREST, BiomePoolTier.SUPER_RARE ],
+      [ Biome.LAKE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.TOON_ANCIENT_GEAR_GOLEM, Type.FAIRY, Type.STEEL, [
+      [ Biome.FAIRY_CAVE, BiomePoolTier.RARE ],
+      [ Biome.CONSTRUCTION_SITE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.TOON_BARREL_DRAGON, Type.DARK, Type.FAIRY, [
+      [ Biome.ABYSS, BiomePoolTier.RARE ],
+      [ Biome.MEADOW, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.TOON_BLACK_LUSTER_SOLDIER, Type.FAIRY, Type.DARK, [
+      [ Biome.FOREST, BiomePoolTier.SUPER_RARE ],
+      [ Biome.GRAVEYARD, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.TOON_DARK_MAGICIAN, Type.PSYCHIC, Type.FAIRY, [
+      [ Biome.SPACE, BiomePoolTier.RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.TOON_DARK_MAGICIAN_GIRL, Type.PSYCHIC, Type.FAIRY, [
+      [ Biome.TEMPLE, BiomePoolTier.RARE ],
+      [ Biome.MEADOW, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.TOON_MASKED_SORCERER, Type.DARK, Type.FAIRY, [
+      [ Biome.SLUM, BiomePoolTier.COMMON ],
+      [ Biome.FOREST, BiomePoolTier.UNCOMMON ]
+    ]
+    ],
+    [ Species.TOON_MERMAID, Type.WATER, Type.FAIRY, [
+      [ Biome.LAKE, BiomePoolTier.RARE ],
+      [ Biome.FAIRY_CAVE, BiomePoolTier.SUPER_RARE ],
+      [ Biome.BEACH, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.TOON_SUMMONED_SKULL, Type.ELECTRIC, Type.FAIRY, [
+      [ Biome.METROPOLIS, BiomePoolTier.RARE ],
+      [ Biome.MEADOW, BiomePoolTier.SUPER_RARE ],
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.TWIN_HEADED_KING_REX, Type.FLYING, Type.GROUND, [
+      [ Biome.PLAINS, BiomePoolTier.RARE ],
+      [ Biome.DESERT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.ULTIMATE_ANCIENT_GEAR_GOLEM, Type.STEEL, Type.GROUND, [
+      [ Biome.FACTORY, BiomePoolTier.SUPER_RARE ],
+      [ Biome.BADLANDS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.VALKYRION_THE_MAGNET_WARRIOR, Type.ELECTRIC, Type.STEEL, [
+      [ Biome.POWER_PLANT, BiomePoolTier.SUPER_RARE ],
+      [ Biome.CAVE, BiomePoolTier.BOSS ],
+      [ Biome.METROPOLIS, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.VOLCANIC_DOOMFIRE, Type.DRAGON, Type.FIRE, [
+      [ Biome.WASTELAND, BiomePoolTier.SUPER_RARE ],
+      [ Biome.VOLCANO, BiomePoolTier.BOSS ]
+    ]
+    ],
+    [ Species.VOLCANIC_ROCKET, Type.FIRE, Type.FLYING, [
+      [ Biome.VOLCANO, BiomePoolTier.RARE ],
+      [ Biome.PLAINS, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+    [ Species.VOLCANIC_HAMMERER, Type.FIRE, Type.GROUND, [
+      [ Biome.VOLCANO, BiomePoolTier.RARE ],
+      [ Biome.DESERT, BiomePoolTier.SUPER_RARE ]
+    ]
+    ],
+
   ];
 
   const trainerBiomes = [

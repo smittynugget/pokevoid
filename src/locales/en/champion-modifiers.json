@@ -12,7 +12,7 @@
     },
     "trainerBondAbility": {
       "name": "{{ability}}",
-      "description": "{{chance}}% chance per stack to activate {{ability}} for {{champion}}'s Pokemon. Stacks with same ability. {{abilityDescription}}"
+      "description": "{{chance}}% chance per stack to activate {{ability}} for {{champion}}'s Pokemon. Stacks with same ability."
     },
     "teraAbility": {
       "name": "{{type}} Tera Ability: {{ability}}",

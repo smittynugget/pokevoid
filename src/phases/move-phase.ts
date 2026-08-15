@@ -1,9 +1,9 @@
 import BattleScene from "#app/battle-scene.js";
 import { BattlerIndex } from "#app/battle.js";
-import { applyAbAttrs, RedirectMoveAbAttr, BlockRedirectAbAttr, IncreasePpAbAttr, applyPreAttackAbAttrs, PokemonTypeChangeAbAttr, applyPostMoveUsedAbAttrs, PostMoveUsedAbAttr } from "#app/data/ability.js";
+import { applyAbAttrs, RedirectMoveAbAttr, BlockRedirectAbAttr, IncreasePpAbAttr, applyPreAttackAbAttrs, PokemonTypeChangeAbAttr, applyPostMoveUsedAbAttrs, PostMoveUsedAbAttr, PostAnyMoveUsedAbAttr, PostStatusMoveUsedAbAttr } from "#app/data/ability.js";
 import { CommonAnim } from "#app/data/battle-anims.js";
 import { CenterOfAttentionTag, BattlerTagLapseType } from "#app/data/battler-tags.js";
-import { MoveFlags, BypassRedirectAttr, allMoves, CopyMoveAttr, applyMoveAttrs, BypassSleepAttr, HealStatusEffectAttr, ChargeAttr, PreMoveMessageAttr } from "#app/data/move.js";
+import { MoveFlags, MoveCategory, BypassRedirectAttr, allMoves, CopyMoveAttr, applyMoveAttrs, BypassSleepAttr, HealStatusEffectAttr, ChargeAttr, PreMoveMessageAttr } from "#app/data/move.js";
 import { SpeciesFormChangePreMoveTrigger } from "#app/data/pokemon-forms.js";
 import { getStatusEffectActivationText, getStatusEffectHealText } from "#app/data/status-effect.js";
 import { Type } from "#app/data/type.js";
@@ -25,7 +25,7 @@ import { ShowAbilityPhase } from "./show-ability-phase";
 import { IncreasePpTwoAbAttr} from "#app/data/ability.js";
 import {PlayerPokemon} from "#app/field/pokemon";
 import {PermaMoveQuestModifier, PermaSpecialMoveQuestModifier} from "#app/modifier/modifier";
-import { MoveUpgradePhase } from "./move-upgrade-phase";
+
 import { MoveUpgradeModifier } from "#app/modifier/modifier.js";
 export class MovePhase extends BattlePhase {
   public pokemon: Pokemon;
@@ -63,6 +63,10 @@ export class MovePhase extends BattlePhase {
   start() {
     super.start();
 
+    if (!this.pokemon.isPlayer() && this.pokemon.battleData && this.move?.moveId) {
+      this.pokemon.battleData.revealedMoves.add(this.move.moveId);
+    }
+
     if (!this.canMove()) {
       if (this.move.moveId && this.pokemon.summonData?.disabledMove === this.move.moveId) {
         this.scene.queueMessage(i18next.t("battle:moveDisabled", { moveName: this.move.getName() }));
@@ -74,6 +78,7 @@ export class MovePhase extends BattlePhase {
       }
       return this.end();
     }
+    this.pokemon.turnData.moveTypeCache?.clear();
 
     if (!this.followUp) {
       if (this.move.getMove(this.playerMove).checkFlag(MoveFlags.IGNORE_ABILITIES, this.pokemon, null)) {
@@ -136,6 +141,8 @@ export class MovePhase extends BattlePhase {
       if (this.pokemon instanceof PlayerPokemon) {
         this.scene.gameData.permaModifiers
             .findModifiers(m => m instanceof PermaMoveQuestModifier || m instanceof PermaSpecialMoveQuestModifier)
+            .forEach(modifier => modifier.apply([this.scene, this.pokemon, this.move.getMove(this.playerMove)]));
+        this.scene.findModifiers(m => m instanceof PermaMoveQuestModifier || m instanceof PermaSpecialMoveQuestModifier)
             .forEach(modifier => modifier.apply([this.scene, this.pokemon, this.move.getMove(this.playerMove)]));
       }
 
@@ -229,12 +236,25 @@ export class MovePhase extends BattlePhase {
       }
 
       if (resolvedMove.hasFlag(MoveFlags.DANCE_MOVE) && !this.followUp) {
-
         this.scene.getPlayerField().forEach(pokemon => {
           applyPostMoveUsedAbAttrs(PostMoveUsedAbAttr, pokemon, this.move, this.pokemon, this.targets);
         });
         this.scene.getEnemyField().forEach(pokemon => {
           applyPostMoveUsedAbAttrs(PostMoveUsedAbAttr, pokemon, this.move, this.pokemon, this.targets);
+        });
+      }
+      this.scene.getPlayerField().forEach(pokemon => {
+        applyPostMoveUsedAbAttrs(PostAnyMoveUsedAbAttr, pokemon, this.move, this.pokemon, this.targets);
+      });
+      this.scene.getEnemyField().forEach(pokemon => {
+        applyPostMoveUsedAbAttrs(PostAnyMoveUsedAbAttr, pokemon, this.move, this.pokemon, this.targets);
+      });
+      if (resolvedMove.category === MoveCategory.STATUS) {
+        this.scene.getPlayerField().forEach(pokemon => {
+          applyPostMoveUsedAbAttrs(PostStatusMoveUsedAbAttr, pokemon, this.move, this.pokemon, this.targets);
+        });
+        this.scene.getEnemyField().forEach(pokemon => {
+          applyPostMoveUsedAbAttrs(PostStatusMoveUsedAbAttr, pokemon, this.move, this.pokemon, this.targets);
         });
       }
       this.end();
@@ -250,6 +270,7 @@ export class MovePhase extends BattlePhase {
         if (!this.pokemon.randSeedInt(4)) {
           activated = true;
           this.cancelled = true;
+          this.pokemon.turnData.fullParaThisTurn = true;
         }
         break;
       case StatusEffect.SLEEP:
@@ -298,7 +319,7 @@ export class MovePhase extends BattlePhase {
       }
     }
 
-    if (this.pokemon.getTag(BattlerTagType.RECHARGING || BattlerTagType.INTERRUPTED)) {
+    if (this.pokemon.getTag(BattlerTagType.RECHARGING) || this.pokemon.getTag(BattlerTagType.INTERRUPTED)) {
       return;
     }
 

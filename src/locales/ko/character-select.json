@@ -1,0 +1,10 @@
+{
+  "title": "챔피언 선택",
+  "instruction": "챔피언을 선택하세요",
+  "locked": "잠김",
+  "essenceNeeded": "{{amount}} {{typeName}} 에센스",
+  "mysteryChampion": "???",
+  "mysterySubtitle": "공허가 결정한다?!",
+  "randomDescription": "랜덤 챔피언",
+  "tooltip.essenceRequiredDesc": "에센스를 사용하여 이 챔피언을 해금하세요. 에센스를 얻으려면 포켓몬을 쓰러뜨려 타입을 획득하세요."
+}

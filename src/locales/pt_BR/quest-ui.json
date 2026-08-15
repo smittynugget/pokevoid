@@ -105,6 +105,17 @@
       "common": {
         "any": "QUALQUER"
       }
+    },
+    "skillTree": {
+      "modalTitle": "Recompensa da Árvore de Habilidades",
+      "completion": {
+        "title": "Recompensa Concluída!",
+        "standardReward": "Escolha sua recompensa!",
+        "rareReward": "Raridade MASTER BALL desbloqueada!",
+        "veryRareRankUp": "Um aumento de rank Pokémon espera!",
+        "veryRareMove": "Um Golpe Duelmon espera!",
+        "fallback": "Recompensa concedida!"
+      }
     }
   },
   "modeRewards": {
@@ -117,4 +128,4 @@
     "accessShopInBattle": "Acesse a ΩLOJA em BATALHA!",
     "accessQuestsInBattle": "Acesse MISSÕES em BATALHA!"
   }
-} 
+}

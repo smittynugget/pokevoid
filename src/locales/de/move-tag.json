@@ -1,0 +1,14 @@
+{
+  "magnetMove": "Magnet-Attacke",
+  "gadgetMove": "Gadget-Attacke",
+  "maskMove": "Masken-Attacke",
+  "timeMove": "Zeit-Attacke",
+  "unionMove": "Union-Attacke",
+  "servantMove": "Diener-Attacke",
+  "darkMagicMove": "Dunkelmagie-Attacke",
+  "ojamaMove": "Ojama-Attacke",
+  "ghostMove": "Geist-Attacke",
+  "flyingMove": "Flug-Attacke",
+  "auraMove": "Aura-Attacke",
+  "toonMove": "Toon-Attacke"
+}

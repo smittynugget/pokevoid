@@ -1,0 +1,12 @@
+{
+  "quickSummary": "Riepilogo Rapido",
+  "itemsMoves": "Strumenti e Mosse",
+  "currentParty": "Squadra Attuale",
+  "enemyInfo": "Info Nemico",
+  "teamTitle": "Squadra",
+  "noOpponent": "Nessun avversario",
+  "notApplicable": "---",
+  "pageIndicator": "{{current}}/{{total}}",
+  "foeTag": "NEMICO",
+  "youTag": "TU"
+}

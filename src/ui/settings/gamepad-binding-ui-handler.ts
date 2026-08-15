@@ -1,6 +1,6 @@
 import BattleScene from "../../battle-scene";
 import AbstractBindingUiHandler from "./abstract-binding-ui-handler";
-import {Mode} from "../ui";
+import {Mode} from "../mode";
 import {Device} from "#enums/devices";
 import {getIconWithSettingName, getKeyWithKeycode} from "#app/configs/inputs/configHandler";
 import {addTextObject, TextStyle} from "#app/ui/text";

@@ -123,7 +123,7 @@
   "rival_flame": "腐化的影子消散于虚空",
   "rival_shadowPower": "黑暗能量在空气中结晶",
   "rival_power": "将腐化化为武器对抗虚空",
-  "rival_shadows": "倒下一个——还剩XXX个",
+  "rival_shadows": "倒下一个——还剩???个",
   "rival_final_flame": "最后的影子倒下",
   "rival_final_shadowPower": "腐化的最后残渣",
   "rival_final_power": "让黑暗自相残杀",
@@ -160,5 +160,17 @@
   "all_smittys_peace": "和平重回世界",
   "all_smittys_voidbreak": "伤至无法修复——虚空沉睡",
   "all_smittys_mystery": "即使在寂静中，混沌也在滋长，潜伏于阴影",
-  "all_smittys_journey": "请将它压制住，你就是抵抗者！"
+  "all_smittys_journey": "请将它压制住，你就是抵抗者！",
+  "tutorial_trance_1a": "你醒了！我还以为……",
+  "tutorial_trance_1b": "不，没关系。你在这里。这才是最重要的。",
+  "tutorial_trance_2a": "我在太多训练师身边坐着，等他们醒来。他们从来没有醒过。",
+  "tutorial_trance_2b": "但你……你刚才证明了那些逝去的人没有白白牺牲。",
+  "tutorial_trance_3a": "你身上有些特别的东西。无论虚空在里面对你做了什么……",
+  "tutorial_trance_3b": "都没有摧毁你。反而让你变得更强了。",
+  "tutorial_trance_4a": "我们在这场战斗中已经输了很久了。",
+  "tutorial_trance_4b": "但你刚才证明了虚空是可以被打败的。现在去再次证明吧。",
+  "tutorial_trance_5a": "虚空夺走了我们的一切。是时候夺回来了。",
+  "tutorial_trance_5b": "你的故事从这里开始——前进吧，成为传奇！",
+  "loss_whiteout": "黑暗吞噬了一切...",
+  "loss_homebase": "返回安全之地..."
 }

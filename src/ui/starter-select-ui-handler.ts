@@ -46,7 +46,7 @@ import MessageUiHandler from "./message-ui-handler";
 import PokemonIconAnimHandler, {PokemonIconAnimMode} from "./pokemon-icon-anim-handler";
 import {StatsContainer} from "./stats-container";
 import {TextStyle, addBBCodeTextObject, addTextObject} from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import {addWindow, injectWindowCorners} from "./ui-theme";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 import {Egg} from "#app/data/egg";
@@ -1874,7 +1874,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
             && starterData.valueReduction < valueReductionMax;
     }
     isSameSpeciesEggAvailable(speciesId: number): boolean {
-
+        if (!this.scene.duelmonsEnabledForRun && getPokemonSpecies(speciesId).generation === 20) return false;
         const starterData = this.scene.gameData.starterData[speciesId];
 
         return starterData.candyCount >= getSameSpeciesEggCandyCounts(speciesStarters[speciesId]);
@@ -3206,6 +3206,10 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         this.starterIcons[this.starterSpecies.length].setTexture(formSource.getIconAtlasKey(props.formIndex, props.shiny, props.variant));
         this.starterIcons[this.starterSpecies.length].setFrame(formSource.getIconId(props.female, props.formIndex, props.shiny, props.variant));
         this.checkIconId(this.starterIcons[this.starterSpecies.length], species, props.female, props.formIndex, props.shiny, props.variant);
+        const isGen20 = species.generation === 20;
+        this.starterIcons[this.starterSpecies.length].setScale(
+          isGen20 ? adjustDuelmonIconScale(0.5, 20) * 0.8 : 0.5
+        );
 
         const isSignature = this.isEffectivelySignature(species.speciesId as unknown as Species);
         if (isSignature) {
@@ -3260,6 +3264,10 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         this.starterIcons[index].setTexture(formSource.getIconAtlasKey(props.formIndex, props.shiny, props.variant));
         this.starterIcons[index].setFrame(formSource.getIconId(props.female, props.formIndex, props.shiny, props.variant));
         this.checkIconId(this.starterIcons[index], species, props.female, props.formIndex, props.shiny, props.variant);
+        const isGen20 = species.generation === 20;
+        this.starterIcons[index].setScale(
+          isGen20 ? adjustDuelmonIconScale(0.5, 20) * 0.8 : 0.5
+        );
         this.refreshPartyIconPostFX(index);
         this.updatePartyFusionOverlay(index);
     }
@@ -4265,7 +4273,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
                     if (this.isUpgradeAnimationEnabled()) {
                         this.scene.tweens.getTweensOf(icon).forEach(tween => tween.pause());
 
-                        icon.x = -2;
+                        icon.x = 7;
                         icon.y = 2;
                     }
                     this.iconAnimHandler.addOrUpdate(icon, PokemonIconAnimMode.PASSIVE);
@@ -5202,6 +5210,10 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
             this.starterIcons[s].setTexture(formSource.getIconAtlasKey(props.formIndex, props.shiny, props.variant));
             this.starterIcons[s].setFrame(formSource.getIconId(props.female, props.formIndex, props.shiny, props.variant));
             this.checkIconId(this.starterIcons[s], species, props.female, props.formIndex, props.shiny, props.variant);
+            const isGen20 = species.generation === 20;
+            this.starterIcons[s].setScale(
+              isGen20 ? adjustDuelmonIconScale(0.5, 20) * 0.8 : 0.5
+            );
 
             if (this.starterIcons[s].postFX) {
                 this.starterIcons[s].postFX.clear();
@@ -5223,6 +5235,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         this.starterCursorObjs[this.starterSpecies.length].setVisible(false);
         this.starterIcons[this.starterSpecies.length].setTexture("pokemon_icons_0");
         this.starterIcons[this.starterSpecies.length].setFrame("unknown");
+        this.starterIcons[this.starterSpecies.length].setScale(0.5);
 
         if (this.starterIcons[this.starterSpecies.length].postFX) {
             this.starterIcons[this.starterSpecies.length].postFX.clear();

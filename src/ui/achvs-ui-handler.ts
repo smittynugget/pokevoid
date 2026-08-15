@@ -5,7 +5,7 @@ import { Achv, achvs, getAchievementDescription } from "../system/achv";
 import { Voucher, getVoucherTypeIcon, getVoucherTypeName, vouchers } from "../system/voucher";
 import MessageUiHandler from "./message-ui-handler";
 import { addTextObject, TextStyle } from "./text";
-import { Mode } from "./ui";
+import { Mode } from "./mode";
 import { addWindow } from "./ui-theme";
 import { PlayerGender } from "#enums/player-gender";
 

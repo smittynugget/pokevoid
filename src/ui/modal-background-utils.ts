@@ -345,7 +345,7 @@ export function attachModalBackground(
   scene: BattleScene,
   targetContainer: Phaser.GameObjects.Container,
   getBounds: () => ModalBackgroundBounds,
-  options?: { mask?: boolean; depth?: number; alphaMultiplier?: number; gridInc?: number; getTarget?: () => Phaser.GameObjects.GameObject }
+  options?: { mask?: boolean; depth?: number; alphaMultiplier?: number; gridInc?: number; skipGrid?: boolean; getTarget?: () => Phaser.GameObjects.GameObject }
 ): ModalBackgroundHandle {
   const handle: ModalBackgroundHandle = {
     targetContainer: targetContainer,
@@ -422,11 +422,11 @@ export function attachModalBackground(
         }
       };
 
-      addLayer(drawPattern1);
-
+      if (!options?.skipGrid) {
+        addLayer(drawPattern1);
+      }
       addLayer(drawPattern4);
       addLayer(drawPattern5);
-
     }
   };
 

@@ -47,5 +47,11 @@
   "arenaOnRemove": "L'effetto di {{moveName}} è svanito.",
   "arenaOnRemovePlayer": "L'effetto di {{moveName}} è svanito\nper il tuo lato.",
   "arenaOnRemoveEnemy": "L'effetto di {{moveName}} è svanito\nper il lato avversario.",
-  "toxicSpikesActivateTrapPoison": "{{pokemonNameWithAffix}} ha assorbito {{moveName}}!"
+  "toxicSpikesActivateTrapPoison": "{{pokemonNameWithAffix}} ha assorbito {{moveName}}!",
+  "safeguardOnAdd": "L'intero campo è avvolto da un velo mistico!",
+  "safeguardOnAddPlayer": "La tua squadra si è avvolta in un velo mistico!",
+  "safeguardOnAddEnemy": "La squadra avversaria si è avvolta in un velo mistico!",
+  "safeguardOnRemove": "Il campo non è più protetto da Salvaguardia!",
+  "safeguardOnRemovePlayer": "La tua squadra non è più protetta da Salvaguardia!",
+  "safeguardOnRemoveEnemy": "La squadra avversaria non è più protetta da Salvaguardia!"
 }

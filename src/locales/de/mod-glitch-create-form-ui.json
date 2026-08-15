@@ -11,6 +11,12 @@
   "gatchaCalendar": "Gatcha-Kalender!",
   "browseGlitchForms": "Pokevoid Glitch-Formen durchsuchen",
   "wikiMods": "Wiki & Mods",
+  "downloadYourMods": "Deine Mods Herunterladen",
+  "downloadAll": "Alle Herunterladen (ZIP)",
+  "downloadSelected": "Auswahl Herunterladen",
+  "noModsToDownload": "Keine Mods zum Herunterladen.",
+  "downloadStarted": "Download gestartet.",
+  "downloadFailed": "Download fehlgeschlagen. Bitte versuche es erneut.",
   "noModsToRemove": "Keine Mods zum Entfernen.",
   "errorLoadingMods": "Fehler beim Laden der Mods. Bitte versuche es erneut.",
   "modRemoved": "{{name}} erfolgreich entfernt.",
@@ -31,8 +37,9 @@
     "stat2": "Statuswert 2 zum Steigern",
     "stat3": "Statuswert 3 zum Steigern",
     "distributionType": "Art der Statuswert-Verteilung",
-    "frontSprite": "Pokémon Vorderansicht (150-200px)",
-    "backSprite": "Pokémon Rückansicht (150-200px)",
+    "frontSprite": "Pokémon Vorderansicht",
+    "backSprite": "Pokémon Rückansicht",
+    "useFrontAsBack": "Vorderansicht als Rückansicht verwenden",
     "rivalTrainer": "Rivale",
     "orRivalTrainer": "oder Rivale"
   },
@@ -44,7 +51,12 @@
   },
   "buttons": {
     "saveAndAdd": "Speichern & Neu Laden",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "next": "Weiter",
+    "prev": "Zurück"
+  },
+  "navigation": {
+    "sectionIndicator": "{{current}} / {{total}}"
   },
   "validation": {
     "requiredField": "Dieses Feld ist erforderlich",
@@ -61,7 +73,8 @@
   },
   "sections": {
     "basicInformation": "Grundinformationen",
-    "typesAbilities": "Typen und Fähigkeiten",
+    "typesAbilities": "Typen",
+    "abilities": "Fähigkeiten",
     "stats": "Statuswerte",
     "sprites": "Sprites",
     "rivalTrainer": "Rivalen, Die Diese Form Belohnen"
