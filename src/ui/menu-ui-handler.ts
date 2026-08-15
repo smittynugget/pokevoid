@@ -371,61 +371,63 @@ export default class MenuUiHandler extends MessageUiHandler {
       },
       keepOpen: true
     });
-    manageDataOptions.push({
-      label: isDriveConnected()
-        ? i18next.t("menuUiHandler:disconnectGoogleDrive")
-        : i18next.t("menuUiHandler:connectGoogleDrive"),
-      handler: () => {
-        if (isDriveConnected()) {
-          ui.showText(i18next.t("menuUiHandler:confirmDisconnectDrive"), null, () => {
-            ui.setOverlayMode(Mode.CONFIRM, () => {
-              disconnectGoogleDrive();
-              ui.revertMode();
-              ui.showText(i18next.t("menuUiHandler:driveDisconnected"), null, () => ui.showText(""), Utils.fixedInt(1500));
-            }, () => {
-              ui.revertMode();
-              ui.showText("", null, () => {});
+    if (!Overrides.HIDE_DRIVE_SETTINGS_OVERRIDE) {
+      manageDataOptions.push({
+        label: isDriveConnected()
+          ? i18next.t("menuUiHandler:disconnectGoogleDrive")
+          : i18next.t("menuUiHandler:connectGoogleDrive"),
+        handler: () => {
+          if (isDriveConnected()) {
+            ui.showText(i18next.t("menuUiHandler:confirmDisconnectDrive"), null, () => {
+              ui.setOverlayMode(Mode.CONFIRM, () => {
+                disconnectGoogleDrive();
+                ui.revertMode();
+                ui.showText(i18next.t("menuUiHandler:driveDisconnected"), null, () => ui.showText(""), Utils.fixedInt(1500));
+              }, () => {
+                ui.revertMode();
+                ui.showText("", null, () => {});
+              });
             });
-          });
-        } else {
-          ui.showText(i18next.t("menuUiHandler:driveConnecting"), null, () => {}, 0);
-          connectGoogleDrive().then((result) => {
-            ui.revertMode();
-            if (result.success && (this.scene as BattleScene).cloudSaveEnabled) {
-              import("#app/system/drive-sync-service").then(({ driveSyncService }) => {
-                driveSyncService.restartInterval((this.scene as BattleScene).cloudSaveIntervalMs);
-              }).catch(() => {});
-            }
-            const msg = result.success ? "menuUiHandler:driveConnected" : driveConnectErrorKey(result.error);
-            ui.showText(i18next.t(msg), null, () => ui.showText(""), Utils.fixedInt(1500));
-          });
-        }
-        return true;
-      },
-      keepOpen: true
-    });
-
-    manageDataOptions.push({
-      label: i18next.t("menuUiHandler:syncNow"),
-      handler: () => {
-        if (!isDriveConnected()) {
-          ui.showText(i18next.t("menuUiHandler:driveNotConnected"), null, () => ui.showText(""), Utils.fixedInt(1500));
+          } else {
+            ui.showText(i18next.t("menuUiHandler:driveConnecting"), null, () => {}, 0);
+            connectGoogleDrive().then((result) => {
+              ui.revertMode();
+              if (result.success && (this.scene as BattleScene).cloudSaveEnabled) {
+                import("#app/system/drive-sync-service").then(({ driveSyncService }) => {
+                  driveSyncService.restartInterval((this.scene as BattleScene).cloudSaveIntervalMs);
+                }).catch(() => {});
+              }
+              const msg = result.success ? "menuUiHandler:driveConnected" : driveConnectErrorKey(result.error);
+              ui.showText(i18next.t(msg), null, () => ui.showText(""), Utils.fixedInt(1500));
+            });
+          }
           return true;
-        }
-        ui.showText(i18next.t("menuUiHandler:syncInProgress"), null, () => {}, 0);
-        driveSyncService.syncNow().then((result) => {
-          ui.revertMode();
-          const syncLabel = getLastSyncLabel();
-          const successText = syncLabel
-            ? `${i18next.t("menuUiHandler:syncSuccess")} (${syncLabel})`
-            : i18next.t("menuUiHandler:syncSuccess");
-          const msg = result.success ? successText : i18next.t(driveSyncErrorKey(result.error));
-          ui.showText(msg, null, () => ui.showText(""), Utils.fixedInt(1500));
-        });
-        return true;
-      },
-      keepOpen: true
-    });
+        },
+        keepOpen: true
+      });
+
+      manageDataOptions.push({
+        label: i18next.t("menuUiHandler:syncNow"),
+        handler: () => {
+          if (!isDriveConnected()) {
+            ui.showText(i18next.t("menuUiHandler:driveNotConnected"), null, () => ui.showText(""), Utils.fixedInt(1500));
+            return true;
+          }
+          ui.showText(i18next.t("menuUiHandler:syncInProgress"), null, () => {}, 0);
+          driveSyncService.syncNow().then((result) => {
+            ui.revertMode();
+            const syncLabel = getLastSyncLabel();
+            const successText = syncLabel
+              ? `${i18next.t("menuUiHandler:syncSuccess")} (${syncLabel})`
+              : i18next.t("menuUiHandler:syncSuccess");
+            const msg = result.success ? successText : i18next.t(driveSyncErrorKey(result.error));
+            ui.showText(msg, null, () => ui.showText(""), Utils.fixedInt(1500));
+          });
+          return true;
+        },
+        keepOpen: true
+      });
+    }
 
     manageDataOptions.push({
           label: i18next.t("menuUiHandler:cancel"),

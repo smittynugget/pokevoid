@@ -1,3 +1,4 @@
+import Overrides from "#app/overrides";
 import { Mode } from "#app/ui/ui";
 import i18next from "i18next";
 import BattleScene from "../../battle-scene";
@@ -238,7 +239,8 @@ export const Setting: Array<Setting> = [
       }
     ],
     default: 0,
-    type: SettingType.GENERAL
+    type: SettingType.GENERAL,
+    isHidden: () => Overrides.HIDE_DRIVE_SETTINGS_OVERRIDE
   },
   {
     key: SettingKeys.Cloud_Save_Interval,
@@ -262,7 +264,8 @@ export const Setting: Array<Setting> = [
       }
     ],
     default: 1,
-    type: SettingType.GENERAL
+    type: SettingType.GENERAL,
+    isHidden: () => Overrides.HIDE_DRIVE_SETTINGS_OVERRIDE
   },
   {
     key: SettingKeys.Disable_Cutscenes,

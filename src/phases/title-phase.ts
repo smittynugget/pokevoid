@@ -134,6 +134,8 @@ export class TitlePhase extends Phase {
         }
 
         if (!TitlePhase.tutorialBattleAttempted
+            && !this.fromShop
+            && !this.skipReturnCondense
             && !this.scene.gameData.gameStats.onboardingTutorialComplete
             && this.scene.gameData.gameStats.cutsceneTitleAShown === true
             && !TitlePhase.tutorialBattlePending
@@ -292,6 +294,17 @@ export class TitlePhase extends Phase {
 
     private onTitleFullyComposed(): void {
         this.scene.runDeferredBootTutorials();
+
+        if (!TitlePhase.tutorialBattleAttempted
+            && !this.fromShop
+            && !this.skipReturnCondense
+            && !this.scene.gameData.gameStats.onboardingTutorialComplete
+            && this.scene.gameData.gameStats.cutsceneTitleAShown === true
+            && !TitlePhase.tutorialBattlePending) {
+            TitlePhase.tutorialBattleAttempted = true;
+            this.beginTutorialBattleFlow();
+            return;
+        }
 
         if (TitlePhase.deferredCutsceneConsumed) return;
         if (!this.shouldShowTitleCutscene()) return;

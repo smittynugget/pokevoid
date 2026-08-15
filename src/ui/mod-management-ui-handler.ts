@@ -53,7 +53,7 @@ export default class ModManagementUiHandler extends UiHandler {
             {
                 label: i18next.t("modGlitchCreateFormUi:browseUserMods"),
                 handler: () => {
-                    window.open("https://void.scooom.xyz/gallery.html", "_blank");
+                    window.open("https://pokevoid.wiki/gallery.html", "_blank");
                     this.clear();
                     this.scene.ui.setMode(Mode.TITLE);
                     return true;
@@ -78,7 +78,7 @@ export default class ModManagementUiHandler extends UiHandler {
             {
                 label: i18next.t("modGlitchCreateFormUi:gatchaCalendar"),
                 handler: () => {
-                    window.open("https://void.scooom.xyz/gacha.html", "_blank");
+                    window.open("https://pokevoid.wiki/gacha.html", "_blank");
                     this.clear();
                     this.scene.ui.setMode(Mode.TITLE);
                     return true;
@@ -87,7 +87,7 @@ export default class ModManagementUiHandler extends UiHandler {
             {
                 label: i18next.t("modGlitchCreateFormUi:browseGlitchForms"),
                 handler: () => {
-                    window.open("https://void.scooom.xyz/galleryCore.html", "_blank");
+                    window.open("https://pokevoid.wiki/galleryCore.html", "_blank");
                     this.clear();
                     this.scene.ui.setMode(Mode.TITLE);
                     return true;

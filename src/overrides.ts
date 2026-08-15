@@ -149,6 +149,7 @@ class DefaultOverrides {
   };
   readonly DEBUG_IOS_MODE: boolean = false;
   readonly DEBUG_SAVE_TRACE: boolean = false;
+  readonly HIDE_DRIVE_SETTINGS_OVERRIDE: boolean = true;
   readonly DEBUG_GRANT_ALL_ESSENCE: boolean = false;
   readonly DEBUG_GRANT_ALL_ESSENCE_AMOUNT: number = 0;
   readonly DEBUG_ESSENCE_TOOLTIP_GEN1_AMOUNT: number = 0;

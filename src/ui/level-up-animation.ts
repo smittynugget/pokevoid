@@ -17,7 +17,6 @@ let skipInputLocked = false;
 let animationPhase: "playing" | "snapped" | "done" = "done";
 
 export function skipCurrentLevelUpAnimation(): void {
-  if (skipInputLocked) return;
   if (currentAnimationSkipCallback) {
     currentAnimationSkipCallback();
   }
@@ -528,14 +527,17 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
       emberTimers.forEach(t => { if (t) t.remove(); });
       if (bgImage) bgImage.setAlpha(1);
       for (const t of revealTexts) {
-        try { scene.tweens.killTweensOf(t); t.clearTint(); t.setAlpha(1); t.clearMask(); } catch {}
+        try { scene.tweens.killTweensOf(t); t.clearTint(); t.setAlpha(1); t.clearMask(); if ((t as any).baseScale) t.setScale((t as any).baseScale); } catch {}
       }
       if (maskGfx) { try { maskGfx.destroy(); maskGfx = null as any; } catch {} }
       for (const obj of emberVfx) {
         try { scene.tweens.killTweensOf(obj); (obj as any).setAlpha?.(1); } catch {}
       }
       try { drawVfxFrame(vfxGfx, screenW, screenH, 999, 1); } catch {}
-      skipInputLocked = false;
+      skipInputLocked = true;
+      scene.time.delayedCall(Utils.fixedInt(200) as any, () => {
+        skipInputLocked = false;
+      });
     };
 
     const cleanup = () => {
@@ -585,15 +587,11 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
         snapToEndState();
         return;
       }
+      if (skipInputLocked) return;
       cleanup();
     };
 
-    skipInputLocked = true;
-    const skipLockMs = isSkillReveal ? 5000 : 3000;
-    const skipUnlockTimer = scene.time.delayedCall(Utils.fixedInt(skipLockMs) as any, () => {
-      skipInputLocked = false;
-    });
-    timers.push(skipUnlockTimer);
+    skipInputLocked = false;
 
     const clickZone = scene.add.rectangle(0, -screenH, screenW, screenH, 0x000000, 0);
     clickZone.setOrigin(0, 0);
@@ -601,9 +599,9 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
     clickZone.setDepth(999);
     container.add(clickZone);
     clickZone.on("pointerdown", () => {
-      if (!skipInputLocked && !isCompleted) {
+      if (!isCompleted) {
         if (!isSnapped) snapToEndState();
-        else cleanup();
+        else if (!skipInputLocked) cleanup();
       }
     });
 
