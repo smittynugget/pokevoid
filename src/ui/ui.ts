@@ -185,8 +185,6 @@ export default class UI extends Phaser.GameObjects.Container {
   private _tooltipPattern?: ModalBackgroundHandle;
 
   private overlayActive: boolean;
-  private _transitionInputBlocked: boolean = false;
-  private _transitionTimer: Phaser.Time.TimerEvent | undefined;
 
   private readonly UI_CONSTANTS = {
     TOP_EDGE_OFFSET: -1,
@@ -1257,10 +1255,6 @@ export default class UI extends Phaser.GameObjects.Container {
       return false;
     }
 
-    if (this._transitionInputBlocked) {
-      return false;
-    }
-
     if (ModifierTooltipUtils.handleUiInput(this.scene as BattleScene, button)) {
       return true;
     }
@@ -1600,21 +1594,6 @@ export default class UI extends Phaser.GameObjects.Container {
     (this.scene as BattleScene).playSound("ui/error");
   }
 
-  public isTransitionBlocked(): boolean {
-    return this._transitionInputBlocked;
-  }
-
-  private startTransitionInputBlock(ms: number): void {
-    this._transitionInputBlocked = true;
-    if (this._transitionTimer) {
-      this._transitionTimer.remove(false);
-    }
-    this._transitionTimer = this.scene.time.delayedCall(Utils.fixedInt(ms), () => {
-      this._transitionInputBlocked = false;
-      this._transitionTimer = undefined;
-    });
-  }
-
   fadeOut(duration: integer): Promise<void> {
     return new Promise(resolve => {
       if (this.overlayActive) {
@@ -1666,7 +1645,6 @@ export default class UI extends Phaser.GameObjects.Container {
           if (handler) {
             handler.show(args);
           }
-          this.startTransitionInputBlock(250);
         }
         resolve();
         return;
@@ -1740,7 +1718,6 @@ export default class UI extends Phaser.GameObjects.Container {
           } else {
           }
         }
-        this.startTransitionInputBlock(250);
         resolve();
       };
 

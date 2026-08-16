@@ -6,6 +6,7 @@ import * as Utils from "../utils";
 import { BattlerIndex } from "../battle";
 import { Element } from "json-stable-stringify";
 import { Moves } from "#enums/moves";
+import { BattlerTagType } from "#enums/battler-tag-type";
 
 export enum AnimFrameTarget {
     USER,
@@ -829,7 +830,7 @@ export abstract class BattleAnim {
           if (!this.isHideTarget() && (targetSprite !== userSprite || !this.isHideUser())) {
             targetSprite.setVisible(true);
           }
-          if (user?.species?.generation === 20) {
+          if (user?.species?.generation === 20 && !user.getTag(BattlerTagType.SUBSTITUTE)) {
             user.applySpriteState();
             user.applyYuBackFlip();
             if (user.portalSprite && !user.isFainted()) {

@@ -99,14 +99,19 @@ export class UiInputs {
     this.events = this.inputsController.events;
     this.listenInputs();
 
+    let _lastClickProcessedAt: number = 0;
+
     this.scene.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
       if (this.scene.uiEditModeActive) return;
       if (!this.scene.ui) return;
       if (this.scene.disableMouseInput && !(pointer.event instanceof TouchEvent)) return;
       if (this.isTouchControlHit(pointer)) return;
+      const now = Date.now();
+      if (now - _lastClickProcessedAt < 250) return;
       if (pointer.button === 0) {
         this._leftMouseDown = true;
         if (this._rightMouseDown) {
+          _lastClickProcessedAt = now;
           this.scene.ui.processInput(Button.ACTION);
           return;
         }
@@ -116,6 +121,7 @@ export class UiInputs {
           if (currentMode === Mode.TITLE) {
             return;
           }
+          _lastClickProcessedAt = now;
           this.scene.ui.processInput(Button.ACTION);
         }
       } else if (pointer.button === 2) {
@@ -125,6 +131,7 @@ export class UiInputs {
           this.buttonMenu();
           return;
         }
+        _lastClickProcessedAt = now;
         this.scene.ui.processInput(Button.CANCEL);
       }
     });

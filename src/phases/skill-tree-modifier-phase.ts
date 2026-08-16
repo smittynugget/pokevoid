@@ -4,7 +4,9 @@ import { PokemonAltBuildModifier, PermaRunQuestModifier } from "#app/modifier/mo
 import { Mode } from "#app/ui/ui";
 import { SkillTreeRewardType, SkillTreeNodeState } from "#app/system/skill-tree-data";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
-import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, AddTypeBallModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator, TypeSwitcherModifierType, PermaMoneyModifierType, ForbiddenFormUnlockModifierType, ForbiddenFormUnlockCandidate, QUEST_CONSOLE_CODES, rivalQuestModifiers, QuestModifierTypeGenerator } from "#app/modifier/modifier-type";
+import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, AddTypeBallModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator, TypeSwitcherModifierType, PermaMoneyModifierType, ForbiddenFormUnlockModifierType, ForbiddenFormUnlockCandidate, QUEST_CONSOLE_CODES, RIVAL_CONSOLE_CODES, rivalQuestModifiers, QuestModifierTypeGenerator } from "#app/modifier/modifier-type";
+import { RivalTrainerType } from "#app/data/trainer-config";
+import { pokemonEvolutions, pokemonPrevolutions } from "#app/data/pokemon-evolutions";
 import * as Utils from "#app/utils";
 import { Abilities } from "#enums/abilities";
 import { allAbilities } from "#app/data/ability";
@@ -465,7 +467,7 @@ export class SkillTreeModifierPhase extends Phase {
       }
 
       case SkillTreeRewardType.RANDOM_GLITCH_FORMS_FOR_RUN: {
-        const opts = this.createRandomGlitchFormsForRunOptions(3);
+        const opts = this.createRandomGlitchFormsForRunOptions(4);
         if (opts.length) {
           options.push(...opts);
         } else {
@@ -573,7 +575,17 @@ export class SkillTreeModifierPhase extends Phase {
       candidates.push({ consoleCode, generator });
     }
 
+    const runRivals: RivalTrainerType[] = [];
+    if (this.scene.gameData.playerRival) runRivals.push(this.scene.gameData.playerRival);
+    if (this.scene.gameData.chaosAltRivals?.length) {
+      for (const r of this.scene.gameData.chaosAltRivals) {
+        if (!runRivals.includes(r)) runRivals.push(r);
+      }
+    }
+    const runRivalCodes = new Set(runRivals.map(r => RIVAL_CONSOLE_CODES[r]).filter(Boolean));
+
     for (const [consoleCode, generator] of Object.entries(rivalQuestModifiers)) {
+      if (!runRivalCodes.has(consoleCode)) continue;
       if (!(generator instanceof QuestModifierTypeGenerator)) continue;
       if (generator.config.duration !== RunDuration.SINGLE_RUN) continue;
       const rt = generator.config.runType;
@@ -590,8 +602,50 @@ export class SkillTreeModifierPhase extends Phase {
     if (candidates.length === 0) return [];
 
     const shuffled = Utils.randSeedShuffle([...candidates]);
-    const selected = shuffled.slice(0, Math.min(3, shuffled.length));
+    const BOUNTY_COUNT = 8;
     const party = this.scene.getParty();
+    const teamLine = this.getPartyEvolutionLineSpecies(party);
+    const selected: typeof candidates[number][] = [];
+    const usedCodes = new Set<string>();
+
+    if (Utils.randSeedInt(100) < 1) {
+      const allRunRivals: RivalTrainerType[] = [];
+      if (this.scene.gameData.playerRival) allRunRivals.push(this.scene.gameData.playerRival);
+      if (this.scene.gameData.chaosAltRivals?.length) {
+        for (const r of this.scene.gameData.chaosAltRivals) {
+          if (!allRunRivals.includes(r)) allRunRivals.push(r);
+        }
+      }
+      if (allRunRivals.length > 0) {
+        const chosenRival = Utils.randSeedItem(allRunRivals);
+        const rivalCode = RIVAL_CONSOLE_CODES[chosenRival];
+        const rivalGen = rivalQuestModifiers[rivalCode];
+        if (rivalGen && !activeConsoleCodes.has(rivalCode)) {
+          const rivalCandidate = candidates.find(c => c.consoleCode === rivalCode);
+          if (rivalCandidate) {
+            selected.push(rivalCandidate);
+            usedCodes.add(rivalCode);
+          }
+        }
+      }
+    }
+
+    for (const c of shuffled) {
+      if (selected.length >= BOUNTY_COUNT) break;
+      if (usedCodes.has(c.consoleCode)) continue;
+      const useTeamMatch = Utils.randSeedInt(100) < 30;
+      if (useTeamMatch) {
+        const questSpecies = this.getBountyQuestSpecies(c);
+        if (questSpecies !== null && teamLine.has(questSpecies)) {
+          selected.push(c);
+          usedCodes.add(c.consoleCode);
+          continue;
+        }
+      }
+      selected.push(c);
+      usedCodes.add(c.consoleCode);
+    }
+
     const options: ModifierTypeOption[] = [];
 
     for (const candidate of selected) {
@@ -731,26 +785,87 @@ export class SkillTreeModifierPhase extends Phase {
     const availableGlitch = glitch.filter(c => !this.isForbiddenFormCandidateUnlocked(c));
     const availableSmitty = smitty.filter(c => !this.isForbiddenFormCandidateUnlocked(c));
 
+    const party = this.scene.getParty();
+    const teamSpeciesSet = this.getPartyEvolutionLineSpecies(party);
+    const teamMatchedGlitch = availableGlitch.filter(c => {
+      const sid = this.getCandidateSpeciesId(c);
+      return sid !== null && teamSpeciesSet.has(sid);
+    });
+    const teamMatchedSmitty = availableSmitty.filter(c => {
+      const sid = this.getCandidateSpeciesId(c);
+      return sid !== null && teamSpeciesSet.has(sid);
+    });
+
     const selected: ForbiddenFormUnlockCandidate[] = [];
     const selectedKeys = new Set<string>();
-    const pick = (pool: ForbiddenFormUnlockCandidate[]) => {
-      for (const c of pool) {
-        const k = this.getForbiddenFormCandidateKey(c);
+    const allPool = Utils.randSeedShuffle([...availableGlitch, ...availableSmitty]);
+    const teamPool = Utils.randSeedShuffle([...teamMatchedGlitch, ...teamMatchedSmitty]);
+    for (let i = 0; i < count && (allPool.length > 0 || teamPool.length > 0); i++) {
+      const useTeam = Utils.randSeedInt(100) < 30 && teamPool.length > 0;
+      const pool = useTeam ? teamPool : allPool;
+      let picked = false;
+      for (let j = 0; j < pool.length; j++) {
+        const k = this.getForbiddenFormCandidateKey(pool[j]);
         if (selectedKeys.has(k)) continue;
         selectedKeys.add(k);
-        selected.push(c);
-        if (selected.length >= count) return;
+        selected.push(pool[j]);
+        pool.splice(j, 1);
+        picked = true;
+        break;
       }
-    };
-
-    pick(Utils.randSeedShuffle(availableGlitch));
-    if (selected.length < count) {
-      pick(Utils.randSeedShuffle(availableSmitty));
+      if (!picked && useTeam) {
+        for (let j = 0; j < allPool.length; j++) {
+          const k = this.getForbiddenFormCandidateKey(allPool[j]);
+          if (selectedKeys.has(k)) continue;
+          selectedKeys.add(k);
+          selected.push(allPool[j]);
+          allPool.splice(j, 1);
+          break;
+        }
+      }
     }
 
     if (!selected.length) return [];
 
     return selected.map(c => new ModifierTypeOption(new ForbiddenFormUnlockModifierType(c), 0, 0));
+  }
+
+  private getCandidateSpeciesId(c: ForbiddenFormUnlockCandidate): Species | null {
+    if (c.kind === "MOD_FORM") return c.speciesId ?? null;
+    if (c.kind === "QUEST_FORM") {
+      const rid: any = c.questUnlockData?.rewardId;
+      const ids: any[] = Array.isArray(rid) ? rid : [rid];
+      const first = ids.find(v => typeof v === "number");
+      return typeof first === "number" ? first as Species : null;
+    }
+    return null;
+  }
+
+  private getPartyEvolutionLineSpecies(party: PlayerPokemon[]): Set<Species> {
+    const line = new Set<Species>();
+    const walkForward = (id: Species) => {
+      if (line.has(id)) return;
+      line.add(id);
+      for (const evo of (pokemonEvolutions[id] || [])) walkForward(evo.speciesId);
+    };
+    for (const p of party) {
+      let cur = p.species.speciesId;
+      while (pokemonPrevolutions[cur] !== undefined) cur = pokemonPrevolutions[cur];
+      walkForward(cur);
+      if (p.isFusion() && p.fusionSpecies) {
+        let fCur = p.fusionSpecies.speciesId;
+        while (pokemonPrevolutions[fCur] !== undefined) fCur = pokemonPrevolutions[fCur];
+        walkForward(fCur);
+      }
+    }
+    return line;
+  }
+
+  private getBountyQuestSpecies(c: { consoleCode: string; generator: QuestModifierTypeGenerator }): Species | null {
+    const rid: any = c.generator.config?.questUnlockData?.rewardId;
+    const ids: any[] = Array.isArray(rid) ? rid : [rid];
+    const first = ids.find(v => typeof v === "number");
+    return typeof first === "number" ? first as Species : null;
   }
 
   private createTmModifierOption(): ModifierTypeOption | null {

@@ -16,7 +16,8 @@ export class ChaosEncounterPhase extends EncounterPhase {
   }
 
   doEncounter(): void {
-    this.scene.playBgm(undefined, true);
+    this.scene.clearExplicitBgmKey();
+    this.scene.playBgm(this.scene.currentBattle?.getBgmOverride(this.scene) || this.scene.arena?.bgm, true);
     this.scene.updateModifiers(false);
     this.scene.setFieldScale(1);
 

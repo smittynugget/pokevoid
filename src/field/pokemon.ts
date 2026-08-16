@@ -256,7 +256,7 @@ const ZA_NEW_MEGA_SCALE_SPECIES_IDS: Set<Species> = new Set<Species>([]);
 
 export const YU_BATTLE_FIT = 0.29;
 export const YU_PLAYER_FIT_MULT = 0.94;
-const YU_BASE_CONTAINER_SCALE = 0.45;
+export const YU_BASE_CONTAINER_SCALE = 0.45;
 const YU_GLITCH_CONTAINER_SCALE = 0.45;
 
 export function computeEnemyPortalChildScale(
@@ -1205,6 +1205,7 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
   }
 
   applyYuBackFlip(): void {
+    if (this.getTag(BattlerTagType.SUBSTITUTE)) return;
     if (this.getSpeciesForm().generation !== 20) return;
     const flipX = this.getYuSpriteFlipX();
     this.getSprite().setFlipX(flipX);
@@ -1231,6 +1232,7 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
   }
 
   applySpriteState(): void {
+    if (this.getTag(BattlerTagType.SUBSTITUTE)) return;
     if (this.getSpeciesForm().generation !== 20) return;
     const state = this.getSpriteState();
     if (!state) {
@@ -2337,6 +2339,9 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
       starterSpeciesId = pokemonPrevolutions[starterSpeciesId];
     }
     if (starterPassiveAbilities[starterSpeciesId] === undefined) {
+      if (this.altPassiveForRun != null) {
+        return true;
+      }
       return false;
     }
     if (this.battleData?.passiveAbilityOverride != null && this.battleData.passiveAbilityOverride !== Abilities.NONE) {

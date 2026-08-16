@@ -20,6 +20,7 @@ import {
     PokemonModifierType,
     PokemonMoveModifierType,
     TmModifierType,
+    AnyTmModifierType,
     RememberMoveModifierType,
     PokemonPpRestoreModifierType,
     PokemonPpUpModifierType,
@@ -200,7 +201,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
 
             if (modifierType instanceof PokemonModifierType) {
                 if (modifierType instanceof FusePokemonModifierType) {
-                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.hideTransientOverlays?.();
+                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.suspendForOverlay?.();
                     this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.SPLICE, -1, (fromSlotIndex: integer, spliceSlotIndex: integer) => {
                         if (spliceSlotIndex !== undefined && fromSlotIndex < 6 && spliceSlotIndex < 6 && fromSlotIndex !== spliceSlotIndex) {
                             this.scene.ui.setMode(this.getUIMode(), this.isPlayer()).then(() => {
@@ -220,7 +221,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                 }
 
                 else if (modifierType instanceof StatSacrificeModifierType || modifierType instanceof TypeSacrificeModifierType || modifierType instanceof AbilitySacrificeModifierType || modifierType instanceof PassiveAbilitySacrificeModifierType || modifierType instanceof MoveSacrificeModifierType) {
-                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.hideTransientOverlays?.();
+                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.suspendForOverlay?.();
                     this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.SACRIFICE, -1, (fromSlotIndex: integer, targetSlotIndex: integer) => {
                         if (targetSlotIndex !== undefined && fromSlotIndex < 6 && targetSlotIndex < 6 && fromSlotIndex !== targetSlotIndex) {
                             this.scene.ui.setMode(this.getUIMode(), this.isPlayer()).then(() => {
@@ -240,7 +241,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                 } else {
                     const pokemonModifierType = modifierType as PokemonModifierType;
                     const isMoveModifier = modifierType instanceof PokemonMoveModifierType;
-                    const isTmModifier = modifierType instanceof TmModifierType;
+                    const isTmModifier = modifierType instanceof TmModifierType || modifierType instanceof AnyTmModifierType;
                     const isRememberMoveModifier = modifierType instanceof RememberMoveModifierType;
                     const isPpRestoreModifier = (modifierType instanceof PokemonPpRestoreModifierType || modifierType instanceof PokemonPpUpModifierType);
                     const partyUiMode = isMoveModifier ? PartyUiMode.MOVE_MODIFIER
@@ -248,9 +249,9 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                             : isRememberMoveModifier ? PartyUiMode.REMEMBER_MOVE_MODIFIER
                                 : PartyUiMode.MODIFIER;
                     const tmMoveId = isTmModifier
-                        ? (modifierType as TmModifierType).moveId
+                        ? (modifierType instanceof TmModifierType ? (modifierType as TmModifierType).moveId : (modifierType as AnyTmModifierType).moveId)
                         : undefined;
-                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.hideTransientOverlays?.();
+                    (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.suspendForOverlay?.();
                     this.scene.ui.setModeWithoutClear(Mode.PARTY, partyUiMode, -1, (slotIndex: integer, option: PartyOption) => {
                         if (slotIndex < 6) {
                             this.scene.ui.setMode(this.getUIMode(), this.isPlayer()).then(() => {
@@ -279,7 +280,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
             }
 
             else if (modifierType instanceof AddPokemonModifierType) {
-                (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.hideTransientOverlays?.();
+                (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.suspendForOverlay?.();
                 if (this.scene.getParty().length == 6) {
                     const promptRelease = () => {
                         this.scene.ui.showText(i18next.t("battle:partyFull", {pokemonName: (modifierType as AddPokemonModifierType).getPokemon().name}), null, () => {
@@ -502,7 +503,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                 break;
 
             case "modifierSelectUiHandler:checkTeamDesc":
-                uiHandler.hideTransientOverlays();
+                uiHandler.suspendForOverlay();
                 this.scene.ui.setModeWithoutClear(Mode.PARTY, PartyUiMode.CHECK, -1, () => {
                     this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, this.getRerollCost(typeOptions, this.scene.lockModifierTiers), this.draftOnly);
                 });

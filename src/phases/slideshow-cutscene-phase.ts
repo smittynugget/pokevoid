@@ -186,7 +186,7 @@ export class SlideshowCutscenePhase extends Phase {
           }
 
           if (this.config.resumeBgmOnEnd && !shouldEnqueuePowerOverlaysAfterSkip) {
-            this.scene.time.delayedCall(Utils.fixedInt(250), () => this.scene.playBgm());
+            this.scene.time.delayedCall(Utils.fixedInt(250), () => this.scene.playBgm(this.scene.currentBattle?.getBgmOverride(this.scene) || this.scene.arena?.bgm));
           }
           this.config.onComplete?.();
           this.end();

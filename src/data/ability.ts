@@ -6551,24 +6551,26 @@ async function applyAbAttrsInternal<TAttr extends AbAttr>(
     { ability: pokemon?.getPassiveAbility(), passive: true, modifier: null }
   ];
   if(pokemon && pokemon instanceof PlayerPokemon) {
-    const partyAbilityModifiers = scene.gameData.getPermaModifiersByType(PermaType.PERMA_PARTY_ABILITY) as PermaPartyAbilityModifier[];
-    abilitiesToCheck.push(...partyAbilityModifiers.map(mod => ({ability: mod.ability, passive: true, modifier: mod})));
-    const trainerBondModifiers = scene.findModifiers((m: any) => m instanceof TrainerBondAbilityModifier) as TrainerBondAbilityModifier[];
-    for (const bond of trainerBondModifiers) {
-      if (bond.apply([pokemon])) {
-        const bondAbility = allAbilities[bond.ability] as any;
-        if (bondAbility) {
-          abilitiesToCheck.push({ ability: bondAbility, passive: true, modifier: bond });
+    if (!scene.gameData.tutorialOnboardActive) {
+      const partyAbilityModifiers = scene.gameData.getPermaModifiersByType(PermaType.PERMA_PARTY_ABILITY) as PermaPartyAbilityModifier[];
+      abilitiesToCheck.push(...partyAbilityModifiers.map(mod => ({ability: mod.ability, passive: true, modifier: mod})));
+      const trainerBondModifiers = scene.findModifiers((m: any) => m instanceof TrainerBondAbilityModifier) as TrainerBondAbilityModifier[];
+      for (const bond of trainerBondModifiers) {
+        if (bond.apply([pokemon])) {
+          const bondAbility = allAbilities[bond.ability] as any;
+          if (bondAbility) {
+            abilitiesToCheck.push({ ability: bondAbility, passive: true, modifier: bond });
+          }
         }
       }
-    }
 
-    const teraAbilityModifiers = scene.findModifiers((m: any) => m instanceof TeraAbilityModifier) as TeraAbilityModifier[];
-    for (const teraAbilityMod of teraAbilityModifiers) {
-      if (teraAbilityMod.apply([pokemon])) {
-        const teraAbility = allAbilities[teraAbilityMod.abilityId] as any;
-        if (teraAbility) {
-          abilitiesToCheck.push({ ability: teraAbility, passive: true, modifier: teraAbilityMod });
+      const teraAbilityModifiers = scene.findModifiers((m: any) => m instanceof TeraAbilityModifier) as TeraAbilityModifier[];
+      for (const teraAbilityMod of teraAbilityModifiers) {
+        if (teraAbilityMod.apply([pokemon])) {
+          const teraAbility = allAbilities[teraAbilityMod.abilityId] as any;
+          if (teraAbility) {
+            abilitiesToCheck.push({ ability: teraAbility, passive: true, modifier: teraAbilityMod });
+          }
         }
       }
     }

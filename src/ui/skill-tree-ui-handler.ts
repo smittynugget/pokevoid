@@ -2408,6 +2408,9 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
         const pickMysteryRewardType = (): SkillTreeRewardType => {
           const roll = Utils.randSeedInt(5000);
+          if (roll < 250 && (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE)) {
+            return SkillTreeRewardType.BOUNTY_SELECT;
+          }
           const tier = roll < 2 ? "legendary" : roll < 7 ? "master" : "common";
 
           if (tier === "legendary") {
@@ -2450,6 +2453,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
               return { type: rt, data: {}, immediate: false };
             case SkillTreeRewardType.SMITTY_ABILITY:
               return { type: rt, data: { abilityId: SkillTreeSelectors.pickSmittyAbility(championData as any) }, immediate: false };
+            case SkillTreeRewardType.BOUNTY_SELECT:
+              return { type: rt, data: { bountyNode: true }, immediate: false };
             default:
               return { type: SkillTreeRewardType.EGG_VOUCHER, data: { tier: VoucherType.REGULAR }, immediate: false };
           }
@@ -2549,7 +2554,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         } as any);
 
         if (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) {
-          const shouldAdd = Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE || Utils.randSeedInt(10000) < 185;
+          const shouldAdd = Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE || Utils.randSeedInt(10000) < 500;
           if (shouldAdd) {
             const bountyAngle = ((nodeCount + 1) * 2 * Math.PI) / totalRingSlots;
             filteredTree.push({
@@ -3991,10 +3996,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private getRandomGlitchFormsRequiredCount(ast: ActiveSkillTreeData, nodeId: string): number {
-    const effectData = (ast.skillEffects as any)?.get?.(nodeId);
-    const timesUnlocked = (effectData && typeof effectData === "object") ? (effectData.timesUnlocked || 0) : 0;
-    const baseRequired = Overrides.SKILL_TREE_RANDOM_GLITCH_PREREQ_REQUIRED_COUNT_OVERRIDE || 5;
-    return timesUnlocked === 0 ? baseRequired : 10;
+    return Overrides.SKILL_TREE_RANDOM_GLITCH_PREREQ_REQUIRED_COUNT_OVERRIDE || 4;
   }
 
   private getRandomGlitchFormsBaselineEligibleUnlockedCount(ast: ActiveSkillTreeData, nodeId: string): number | null {
@@ -5259,12 +5261,12 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       return 0;
     }
     if (node.rewardData.type === SkillTreeRewardType.POKEMON_ALT_BUILD) {
-      return 4;
+      return 2;
     }
     if (node.id === "depth1_bounty_0") {
       return 0;
     }
-    return node.cost;
+    return Math.min(node.cost, 2);
   }
 
   private areNodeDependenciesMet(node: SkillTreeNode): boolean {

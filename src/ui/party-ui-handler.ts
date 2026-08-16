@@ -780,6 +780,9 @@ export default class PartyUiHandler extends MessageUiHandler {
     } else if (this.cursor === 6) {
       this.partyCancelButton.select();
     }
+    if (this.lastCursor < 6 && this.lastCursor >= party.length) {
+      this.lastCursor = Math.max(0, party.length - 1);
+    }
 
     const battlerCount = this.scene.currentBattle.getBattlerCount();
 
@@ -874,14 +877,14 @@ export default class PartyUiHandler extends MessageUiHandler {
         this.lastCursor = this.cursor;
         this.cursor = cursor;
         if (this.lastCursor < 6) {
-          this.partySlots[this.lastCursor].deselect();
+          this.partySlots[this.lastCursor]?.deselect?.();
         } else if (this.lastCursor === 6) {
-          this.partyCancelButton.deselect();
+          this.partyCancelButton?.deselect?.();
         }
         if (cursor < 6) {
-          this.partySlots[cursor].select();
+          this.partySlots[cursor]?.select?.();
         } else if (cursor === 6) {
-          this.partyCancelButton.select();
+          this.partyCancelButton?.select?.();
         }
       }
     }
@@ -2003,6 +2006,7 @@ class PartySlot extends Phaser.GameObjects.Container {
       const statusIndicator = this.scene.add.sprite(0, 0, "statuses");
       statusIndicator.setFrame(StatusEffect[this.pokemon.status?.effect].toLowerCase());
       statusIndicator.setOrigin(0, 0);
+      statusIndicator.setScale(0.75);
       statusIndicator.setPositionRelative(slotLevelLabel, this.slotIndex >= battlerCount ? 43 : 55, 0);
 
       slotInfoContainer.add(statusIndicator);

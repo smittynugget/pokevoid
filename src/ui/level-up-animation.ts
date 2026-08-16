@@ -243,6 +243,7 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
     let revealTexts: Phaser.GameObjects.Text[] = [];
     let maskGfx: Phaser.GameObjects.Graphics | null = null;
     let baseScale = 0;
+    let fanfarePlayed = false;
     let maxMaskR = 0;
     let currentScale = 2.0;
     let currentMaskR = 0;
@@ -264,9 +265,7 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
       }
     }
 
-    const textCreationTimer = scene.time.delayedCall(Utils.fixedInt(TEXT_START) as any, () => {
-      if (isCompleted) return;
-
+    const createRevealTexts = () => {
       const fontSize = isSkillReveal ? 200 : (isUnlockText ? 220 : 280);
       const textStyle = {
         fontFamily: "emerald",
@@ -313,6 +312,12 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
       }
 
       baseScale = revealTexts[0].scaleX;
+    };
+
+    const textCreationTimer = scene.time.delayedCall(Utils.fixedInt(TEXT_START) as any, () => {
+      if (isCompleted) return;
+
+      createRevealTexts();
 
       if (isSkillReveal) {
         for (const t of revealTexts) {
@@ -507,7 +512,8 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
 
     const fanfareDelay = isSkillReveal ? TEXT_START : BG_FADE_DURATION;
     const soundDelayTimer = scene.time.delayedCall(Utils.fixedInt(fanfareDelay) as any, () => {
-      if (!isCompleted) {
+      if (!isCompleted && !fanfarePlayed) {
+        fanfarePlayed = true;
         if (isSkillReveal) {
           scene.playBgm("battle_legendary_terapagos", true);
         } else {
@@ -522,12 +528,26 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
       isSnapped = true;
       animationPhase = "snapped";
       timers.forEach(timer => { if (timer) timer.remove(); });
+
+      if (revealTexts.length === 0 && !isCompleted) {
+        createRevealTexts();
+      }
+
+      if (!fanfarePlayed) {
+        fanfarePlayed = true;
+        if (isSkillReveal) {
+          scene.playBgm("battle_legendary_terapagos", true);
+        } else {
+          scene.playSound("evolution_fanfare_rse");
+        }
+      }
+
       if (pulseTimer) pulseTimer.remove();
       tweens.forEach(tween => { if (tween) { try { (tween as any).stop(); } catch {} } });
       emberTimers.forEach(t => { if (t) t.remove(); });
       if (bgImage) bgImage.setAlpha(1);
       for (const t of revealTexts) {
-        try { scene.tweens.killTweensOf(t); t.clearTint(); t.setAlpha(1); t.clearMask(); if ((t as any).baseScale) t.setScale((t as any).baseScale); } catch {}
+        try { scene.tweens.killTweensOf(t); t.clearTint(); t.setAlpha(1); t.clearMask(); t.setScale(baseScale || 1); } catch {}
       }
       if (maskGfx) { try { maskGfx.destroy(); maskGfx = null as any; } catch {} }
       for (const obj of emberVfx) {
@@ -565,7 +585,7 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
         vfxGfx.destroy();
         if (bgImage) bgImage.destroy();
         container.destroy();
-        if (isSkillReveal) { try { scene.playBgm(preLevelUpBgmKey || undefined); } catch {} }
+        if (isSkillReveal) { try { scene.playBgm(preLevelUpBgmKey || (scene.currentBattle?.getBgmOverride(scene) || scene.arena?.bgm)); } catch {} }
         currentAnimationSkipCallback = null;
         skipInputLocked = false;
         resolve();
@@ -574,24 +594,26 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
         try { vfxGfx.destroy(); } catch {}
         try { if (bgImage) bgImage.destroy(); } catch {}
         try { container.destroy(); } catch {}
-        if (isSkillReveal) { try { scene.playBgm(preLevelUpBgmKey || undefined); } catch {} }
+        if (isSkillReveal) { try { scene.playBgm(preLevelUpBgmKey || (scene.currentBattle?.getBgmOverride(scene) || scene.arena?.bgm)); } catch {} }
         currentAnimationSkipCallback = null;
         skipInputLocked = false;
         resolve();
       }
     };
 
+    skipInputLocked = true;
+    const skipLockDuration = isSkillReveal ? 1425 : 600;
+    scene.time.delayedCall(Utils.fixedInt(skipLockDuration), () => { skipInputLocked = false; });
+
     currentAnimationSkipCallback = () => {
+      if (skipInputLocked) return;
       if (isCompleted) return;
       if (!isSnapped) {
         snapToEndState();
         return;
       }
-      if (skipInputLocked) return;
       cleanup();
     };
-
-    skipInputLocked = false;
 
     const clickZone = scene.add.rectangle(0, -screenH, screenW, screenH, 0x000000, 0);
     clickZone.setOrigin(0, 0);
@@ -599,10 +621,9 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
     clickZone.setDepth(999);
     container.add(clickZone);
     clickZone.on("pointerdown", () => {
-      if (!isCompleted) {
-        if (!isSnapped) snapToEndState();
-        else if (!skipInputLocked) cleanup();
-      }
+      if (skipInputLocked || isCompleted) return;
+      if (!isSnapped) snapToEndState();
+      else cleanup();
     });
 
     const safetyTimer = scene.time.delayedCall(Utils.fixedInt(9000) as any, () => {

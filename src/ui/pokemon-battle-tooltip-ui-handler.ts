@@ -170,7 +170,7 @@ export default class PokemonBattleTooltipUiHandler extends UiHandler {
           this.viewIndex = Math.min(this.viewIndex, this.totalViews - 1);
           this.itemPageIndex = 0;
           const partyHandler = ui.handlers[Mode.PARTY] as PartyUiHandler;
-          if (partyHandler) {
+          if (partyHandler && ui.getMode() === Mode.PARTY) {
             partyHandler.setCursor(newIdx);
           }
           const posX = newIdx === 0 ? 186 : 4;

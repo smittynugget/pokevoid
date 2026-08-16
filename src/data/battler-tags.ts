@@ -1,6 +1,6 @@
 import { ChargeAnim, CommonAnim, CommonBattleAnim, MoveChargeAnim } from "./battle-anims";
 import { getPokemonNameWithAffix } from "../messages";
-import Pokemon, { MoveResult, HitResult } from "../field/pokemon";
+import Pokemon, { MoveResult, HitResult, YU_BASE_CONTAINER_SCALE } from "../field/pokemon";
 import { Stat, getStatName } from "./pokemon-stat";
 import { StatusEffect } from "./status-effect";
 import * as Utils from "../utils";
@@ -1637,6 +1637,14 @@ export class SubstituteTag extends BattlerTag {
   }
 
   private showDollSprite(pokemon: Pokemon): void {
+    if ((pokemon as any).portalSprite) {
+      const ps = (pokemon as any).portalSprite;
+      (pokemon as any)._subPortalSnapshot = {
+        x: ps.x, y: ps.y,
+        scaleX: ps.scaleX, scaleY: ps.scaleY,
+        visible: ps.visible
+      };
+    }
     const dollKey = pokemon.isPlayer() ? "pkmn__back__sub" : "pkmn__sub";
     try {
       if (pokemon.usesCustomFieldSpriteLayout()) {
@@ -1653,6 +1661,14 @@ export class SubstituteTag extends BattlerTag {
         }
         if ((pokemon as any).portalSprite) {
           (pokemon as any).portalSprite.setVisible(false);
+        }
+        if ((pokemon as any).portalSprite && (pokemon as any)._subPortalSnapshot) {
+          const snap = (pokemon as any)._subPortalSnapshot;
+          const ps = (pokemon as any).portalSprite;
+          const scaleRatio = YU_BASE_CONTAINER_SCALE;
+          ps.setScale(snap.scaleX * scaleRatio, snap.scaleY * scaleRatio);
+          ps.setPosition(snap.x, snap.y);
+          ps.setVisible(snap.visible);
         }
       }
       const sprite = pokemon.getSprite();

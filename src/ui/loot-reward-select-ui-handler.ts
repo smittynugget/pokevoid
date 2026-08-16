@@ -1254,6 +1254,8 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
 
     const allShopOptions = this.shopOptionsRows.flat();
     if (allShopOptions.length === 0) {
+      this.shopStripRealCount = 0;
+      this.shopStripSlotCount = 0;
       this.shopStripContainer.setVisible(false);
       return;
     }
@@ -1964,10 +1966,13 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
   }
 
   public getCurrentSelectedOption(): ModifierOption | null {
-    if (this.rowCursor >= 2 && this.shopStripRealCount > 0) {
-      const absIndex = this.cursor % this.shopStripRealCount;
+    if (this.rowCursor >= 2) {
       const allShop = this.shopOptionsRows.flat();
-      return allShop[absIndex] || null;
+      const realCount = this.shopStripRealCount > 0 ? this.shopStripRealCount : allShop.length;
+      if (realCount > 0) {
+        const absIndex = this.cursor % realCount;
+        return allShop[absIndex] || null;
+      }
     }
     return super.getCurrentSelectedOption();
   }
@@ -3206,6 +3211,17 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
       }
 
       if (button === Button.ACTION && this.shopStripRealCount > 0) {
+        const absIndex = this.cursor % this.shopStripRealCount;
+        if (absIndex !== this.cursor) {
+          const savedCursor = this.cursor;
+          this.cursor = absIndex;
+          const result = super.processInput(button);
+          this.cursor = savedCursor;
+          return result;
+        }
+      }
+
+      if (button === Button.STATS && this.shopStripRealCount > 0) {
         const absIndex = this.cursor % this.shopStripRealCount;
         if (absIndex !== this.cursor) {
           const savedCursor = this.cursor;

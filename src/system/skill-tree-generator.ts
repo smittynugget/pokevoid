@@ -49,7 +49,7 @@ export class SkillTreeGenerator {
 
 	private shouldGenerateBountyNode(): boolean {
 		if (Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) return true;
-		return Utils.randSeedInt(10000) < 185;
+		return Utils.randSeedInt(10000) < 500;
 	}
 
 	private createBountyNode(rootNode: SkillTreeNode): SkillTreeNode {

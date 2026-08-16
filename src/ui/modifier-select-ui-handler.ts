@@ -86,6 +86,7 @@ import { ChargeAnim } from "../data/battle-anims";
 import PartyUiHandler, { PartyUiMode } from "./party-ui-handler";
 import { ChampionUtils } from "#app/system/champion-utils.js";
 import { getFusedSpeciesName, getPokemonSpecies, adjustDuelmonIconScale, isGlitchFormKey, isSmittyFormKey } from "#app/data/pokemon-species.js";
+import { calculateAltBuildStatsWithSwapping } from "#app/data/alt-build-stat-calculator.js";
 import { SkillTreeMode } from "#app/phases/skill-tree-phase";
 import { SkillTreeRewardType } from "#app/system/skill-tree-data.js";
 import { RewardType } from "#enums/reward-type";
@@ -177,6 +178,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
   private forbiddenFormDetailsActive: boolean = false;
   private forbiddenFormDetailsAbilityIndex: integer = 0;
+  private altBuildAbilityIndex: number = 0;
   private forbiddenFormDetailsType: ForbiddenFormUnlockModifierType | null = null;
 
   private tooltipSectionPageIndex: number = 0;
@@ -847,6 +849,15 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
             return true;
           }
         }
+        if (type instanceof PokemonAltBuildModifierType && this.scene.modifierTooltipsEnabled && PokemonBattleTooltipUtils.isActive()) {
+          const abData = this.getAltBuildTooltipData(type as PokemonAltBuildModifierType);
+          if (abData?.abilities && abData.abilities.length > 1) {
+            this.altBuildAbilityIndex = (this.altBuildAbilityIndex + 1) % abData.abilities.length;
+            this.setCursor(this.cursor);
+            ui.playSelect();
+            return true;
+          }
+        }
         this.tooltipDeferredUntilUserInput = false;
         if (this.firstFocusPending) {
           this.firstFocusPending = false;
@@ -900,6 +911,14 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           }
           this.enterForbiddenFormDetailsMode(type);
           success = true;
+        } else if (type instanceof PokemonAltBuildModifierType && this.scene.modifierTooltipsEnabled && PokemonBattleTooltipUtils.isActive()) {
+          const abData = this.getAltBuildTooltipData(type);
+          if (abData?.abilities && abData.abilities.length > 1) {
+            this.altBuildAbilityIndex = (this.altBuildAbilityIndex + 1) % abData.abilities.length;
+            this.setCursor(this.cursor);
+            ui.playSelect();
+            return true;
+          }
         } else if (type instanceof MoveUpgradeModifierType && this.upgradeTooltipContainer && this.moveUpgradePreviewCategory) {
           this.enterMoveUpgradeDetailsMode();
           success = true;
@@ -1215,6 +1234,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         return ret;
       }
 
+      if (!(type instanceof PokemonAltBuildModifierType)) {
+        this.altBuildAbilityIndex = 0;
+      }
+
       if (type instanceof TmModifierType || type instanceof AnyTmModifierType) {
         this.moveInfoOverlay.show(this.scene.getUpgradedMove(allMoves[type.moveId]));
         const rarity = this.getModifierRarity(type);
@@ -1286,6 +1309,29 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         }
         PokemonBattleTooltipUtils.showGlitchFormView(
           this.scene, ffData, focusIdx, rarity,
+          { x: posX, anchorY: selectedOpt?.y }
+        );
+      }
+      else if (type instanceof PokemonAltBuildModifierType) {
+        this.hideUpgradeTooltip();
+        const rarity = (typeof (type as any).getTooltipRarity === "function")
+          ? (type as any).getTooltipRarity(this.scene)
+          : this.getModifierRarity(type);
+        const abData = this.getAltBuildTooltipData(type);
+        const focusIdx = this.altBuildAbilityIndex;
+        const battleTooltipW = 130;
+        const modalW = this.scene.game.canvas.width / 6;
+        const halfCard = 36;
+        const selectedOpt = options[this.cursor];
+        let posX = 186;
+        if (selectedOpt) {
+          const xR = selectedOpt.x + halfCard + this.TOOLTIP_OFFSET_X;
+          const xL = selectedOpt.x - halfCard - this.TOOLTIP_OFFSET_X - battleTooltipW;
+          posX = (xR + battleTooltipW > modalW) ? xL : xR;
+          posX = Math.max(4, Math.min(modalW - battleTooltipW - 4, posX));
+        }
+        PokemonBattleTooltipUtils.showGlitchFormView(
+          this.scene, abData, focusIdx, rarity,
           { x: posX, anchorY: selectedOpt?.y }
         );
       }
@@ -1401,7 +1447,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         if (stats.length > 0) {
           const descText = type.getDescription(this.scene).replace(/\n?\(Hold C.*?\)\.?/i, "").replace(/\n?\(Press P.*?\)\.?/i, "").trim();
           const party = this.scene.getParty() as PlayerPokemon[];
-          const boostSections = this.generateStatBoostTooltipSections(descText, party, stats.length === 1 ? stats[0] : stats, boostPercent);
+          const boostSections = this.generateStatBoostTooltipSections(descText, party, stats.length === 1 ? stats[0] : stats, boostPercent, championTypes);
           this.showModifierTooltip(title, subtitle, "", rarity, false, undefined, false, boostSections, undefined, headerTypes);
         } else {
           const descText = type.getDescription(this.scene);
@@ -1675,6 +1721,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       type instanceof EvolutionItemModifierType ||
       type instanceof FormChangeItemModifierType ||
       isForbiddenFormUnlock ||
+      type instanceof PokemonAltBuildModifierType ||
       type instanceof PokemonNatureChangeModifierType ||
       type instanceof StatSacrificeModifierType ||
       type instanceof MoveSacrificeModifierType ||
@@ -6864,7 +6911,54 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     return container;
   }
 
-  private generateStatBoostTooltipSections(descText: string, party: PlayerPokemon[], stat: Stat | Stat[], multiplier: number): { label?: string; body: string; embeddedContainer?: Phaser.GameObjects.Container }[] {
+  private getAltBuildTooltipData(type: PokemonAltBuildModifierType): {
+    speciesName?: string | null;
+    formName?: string | null;
+    types?: Type[];
+    abilities?: Abilities[];
+    targetStats?: number[];
+    targetTotal?: number;
+    baseStats?: number[];
+    baseTotal?: number;
+  } | null {
+    const build = (type as any).altBuild;
+    const targetRank = (type as any).targetRank ?? 1;
+    if (!build) {
+      return null;
+    }
+    const species = build.species ? getPokemonSpecies(build.species) : null;
+    let baseStats: number[] | undefined;
+    if (species) {
+      const party = this.scene.getParty();
+      const target = party.find(p => p.species.speciesId === build.species);
+      if (target && target.formIndex > 0 && species.forms?.[target.formIndex]) {
+        baseStats = [...species.forms[target.formIndex].baseStats];
+      } else {
+        baseStats = [...species.baseStats];
+      }
+    }
+    let targetStats: number[] | undefined;
+    if (species && build.statFocus && baseStats) {
+      targetStats = calculateAltBuildStatsWithSwapping([...baseStats], build.statFocus, targetRank);
+    }
+    const abilitySource = (targetRank >= 10 && build.finalAbilityReplacements)
+      ? build.finalAbilityReplacements
+      : build.abilityChanges;
+    const abilities = (abilitySource || []).filter((a: Abilities) => a !== undefined && a !== null);
+    const changedTypes = (build.typeChanges || []).filter((t: Type) => t !== undefined && t !== null);
+    return {
+      speciesName: species?.name || null,
+      formName: ChampionUtils.getAltBuildDisplayName(build.id),
+      types: changedTypes.length ? changedTypes : (species ? species.type : undefined),
+      abilities,
+      targetStats,
+      targetTotal: targetStats ? targetStats.reduce((sum: number, s: number) => sum + s, 0) : undefined,
+      baseStats,
+      baseTotal: baseStats ? baseStats.reduce((sum: number, s: number) => sum + s, 0) : undefined,
+    };
+  }
+
+  private generateStatBoostTooltipSections(descText: string, party: PlayerPokemon[], stat: Stat | Stat[], multiplier: number, championTypes?: Type[]): { label?: string; body: string; embeddedContainer?: Phaser.GameObjects.Container }[] {
     const sections: { label?: string; body: string; embeddedContainer?: Phaser.GameObjects.Container }[] = [];
     const uiTheme = this.scene.uiTheme;
 
@@ -6880,7 +6974,17 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       const pokemon = party[page];
       const baseStats = pokemon.getModifiedBaseStats();
 
-      const statBars = this.buildStatBoostBarsContainer(baseStats, stat, multiplier, pokemon);
+      let effectiveStats = Array.isArray(stat) ? [...stat] : [stat];
+      if (championTypes && championTypes.length > 0 && effectiveStats.length > 1) {
+        if (pokemon) {
+          const hasTypeMatch = championTypes.some(ct => pokemon.isOfType(ct));
+          if (!hasTypeMatch) {
+            effectiveStats = [effectiveStats[0]];
+          }
+        }
+      }
+
+      const statBars = this.buildStatBoostBarsContainer(baseStats, effectiveStats, multiplier, pokemon);
       const headerLabel = totalPages > 1
         ? `${i18next.t("modifierSelectUiHandler:tooltipPreviewHeader", { defaultValue: "PREVIEW" })} (${page + 1}/${totalPages})`
         : i18next.t("modifierSelectUiHandler:tooltipPreviewHeader", { defaultValue: "PREVIEW" });
@@ -9675,7 +9779,7 @@ export class ModifierOption extends Phaser.GameObjects.Container {
     else if (this.modifierTypeOption.type instanceof AddPokemonModifierType) {
     }
     else if (this.modifierTypeOption.type instanceof TypeSwitcherModifierType) {
-      itemLabel = i18next.t("modifierType:ModifierType.TypeSwitcherModifierType.statLabel", { defaultValue: "Type Switcher" });
+      itemLabel = this.modifierTypeOption.type.name;
     }
     else if (this.modifierTypeOption.type instanceof RandomStatSwitcherModifierType) {
       itemLabel = i18next.t("modifierType:ModifierType.RandomStatSwitcherModifierType.statLabel", { defaultValue: "Stat Switcher" });

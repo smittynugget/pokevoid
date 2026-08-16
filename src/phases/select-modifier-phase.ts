@@ -9,6 +9,7 @@ import {
     FusePokemonModifierType,
     PokemonMoveModifierType,
     TmModifierType,
+    AnyTmModifierType,
     RememberMoveModifierType,
     PokemonPpRestoreModifierType,
     PokemonPpUpModifierType,
@@ -431,7 +432,7 @@ export class SelectModifierPhase extends BattlePhase {
                 } else {
                     const pokemonModifierType = modifierType as PokemonModifierType;
                     const isMoveModifier = modifierType instanceof PokemonMoveModifierType;
-                    const isTmModifier = modifierType instanceof TmModifierType;
+                    const isTmModifier = modifierType instanceof TmModifierType || modifierType instanceof AnyTmModifierType;
                     const isRememberMoveModifier = modifierType instanceof RememberMoveModifierType;
                     const isPpRestoreModifier = (modifierType instanceof PokemonPpRestoreModifierType || modifierType instanceof PokemonPpUpModifierType);
                     const partyUiMode = isMoveModifier ? PartyUiMode.MOVE_MODIFIER
@@ -439,7 +440,7 @@ export class SelectModifierPhase extends BattlePhase {
                             : isRememberMoveModifier ? PartyUiMode.REMEMBER_MOVE_MODIFIER
                                 : PartyUiMode.MODIFIER;
                     const tmMoveId = isTmModifier
-                        ? (modifierType as TmModifierType).moveId
+                        ? (modifierType instanceof TmModifierType ? (modifierType as TmModifierType).moveId : (modifierType as AnyTmModifierType).moveId)
                         : undefined;
                     (this.scene.ui.getHandler() as ModifierSelectUiHandler)?.suspendForOverlay?.();
                     this.scene.ui.setModeWithoutClear(Mode.PARTY, partyUiMode, -1, (slotIndex: integer, option: PartyOption) => {

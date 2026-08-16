@@ -125,9 +125,6 @@ class DefaultOverrides {
   readonly ITEM_REWARD_OVERRIDE: ModifierOverride[] = [];
 
   readonly SMITTY_FINAL_BATTLE_CHANCE_OVERRIDE: number | null = null;
-
-  readonly SKILL_TREE_DEFAULT_SKILL_POINTS_OVERRIDE: number | null = null;
-
   readonly BATTLE_PATH_BYPASS_NODE_VALIDATION_OVERRIDE: boolean = false;
   readonly BATTLE_PATH_SHOW_ALL_WAVES_OVERRIDE: boolean = false;
 
@@ -169,7 +166,7 @@ class DefaultOverrides {
 
   readonly FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE: boolean = false;
   readonly FORCE_BOUNTY_COMPLETION_OVERRIDE: boolean = false;
-
+  readonly SKILL_TREE_DEFAULT_SKILL_POINTS_OVERRIDE: number | null = null;
   readonly DEBUG_EMULATE_FUSION: Species | 0 = 0;
   readonly DEBUG_EMULATE_SHINY: boolean = false;
   readonly DEBUG_EMULATE_DOUBLE_SHINY: boolean = false;

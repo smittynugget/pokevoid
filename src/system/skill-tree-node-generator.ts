@@ -197,7 +197,7 @@ export class SkillTreeNodeGenerator {
     }
 
     if (Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE || (this.scene && this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1)) {
-      const BOUNTY_CHANCE_BPS = 50;
+      const BOUNTY_CHANCE_BPS = 500;
       if (depth >= 2 && Utils.randSeedInt(10000) < BOUNTY_CHANCE_BPS) {
         const rewardData = this.generateSpecificReward(SkillTreeRewardType.BOUNTY_SELECT, effectiveChampion);
         return {

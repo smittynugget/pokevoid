@@ -11,7 +11,8 @@ export class NextEncounterPhase extends EncounterPhase {
   }
 
   doEncounter(): void {
-    this.scene.playBgm(undefined, true);
+    this.scene.clearExplicitBgmKey();
+    this.scene.playBgm(this.scene.currentBattle?.getBgmOverride(this.scene) || this.scene.arena?.bgm, true);
 
     for (const pokemon of this.scene.getParty()) {
       if (pokemon) {

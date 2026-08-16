@@ -522,6 +522,7 @@ export default class BattleScene extends SceneBase {
 
   private bgm: AnySound;
   private bgmResumeTimer: Phaser.Time.TimerEvent | null;
+  private bgmFadeSwapTimer: Phaser.Time.TimerEvent | null = null;
   private bgmCache: Set<string> = new Set();
   private lastExplicitBgmKey: string | null = null;
   private playTimeTimer: Phaser.Time.TimerEvent;
@@ -2221,6 +2222,7 @@ export default class BattleScene extends SceneBase {
   }
 
   newBattle(waveIndex?: integer, battleType?: BattleType, trainerData?: TrainerData, double?: boolean): Battle | null {
+    this.clearExplicitBgmKey();
     const isFirstBattle = !this.currentBattle;
     const _startingWave = Overrides.STARTING_WAVE_OVERRIDE || startingWave;
     const newWaveIndex = waveIndex || ((this.currentBattle?.waveIndex || (_startingWave - 1)) + 1);
@@ -3145,6 +3147,10 @@ export default class BattleScene extends SceneBase {
     return this.bgm && this.bgm.isPlaying;
   }
 
+  clearExplicitBgmKey(): void {
+    this.lastExplicitBgmKey = null;
+  }
+
   playBgm(bgmName?: string, fadeOut?: boolean): void {
     if (bgmName === undefined) {
       const battleBgm = this.currentBattle?.getBgmOverride(this) || this.arena?.bgm;
@@ -3220,11 +3226,16 @@ export default class BattleScene extends SceneBase {
     }
     if (fadeOut) {
       const onBgmFaded = () => {
+        this.bgmFadeSwapTimer = null;
         if (loaded) {
           playNewBgm();
         }
       };
-      this.time.delayedCall(this.fadeOutBgm(500, true) ? 750 : 250, onBgmFaded);
+      if (this.bgmFadeSwapTimer) {
+        this.bgmFadeSwapTimer.remove();
+        this.bgmFadeSwapTimer = null;
+      }
+      this.bgmFadeSwapTimer = this.time.delayedCall(this.fadeOutBgm(500, true) ? 750 : 250, onBgmFaded);
     } else if (isCached) {
       playNewBgm();
     }

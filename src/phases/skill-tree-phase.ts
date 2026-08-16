@@ -837,7 +837,7 @@ export class SkillTreePhase extends Phase {
       const nodes = SkillTreeUtils.generateDepth1Nodes(activeSkillTree, championData, this.scene);
 
       if (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) {
-        const shouldAdd = Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE || Utils.randSeedInt(10000) < 185;
+        const shouldAdd = Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE || Utils.randSeedInt(10000) < 500;
         if (shouldAdd) {
           const TIER_RADIUS = 150;
           const NODE_SIZE = 90;

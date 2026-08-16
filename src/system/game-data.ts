@@ -113,7 +113,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { addCorruptedRivalOverlay, playCutsceneFaintAnim } from "#app/utils/story-cutscene-overlays.js";
 export const defaultStarterSpecies: Species[] = [];
 
-export const INTERNAL_BACKUP_VERSION = 4;
+export const INTERNAL_BACKUP_VERSION = 6;
 
 export const VERSIONS_REQUIRING_BACKUP: string[] = [
     "v2.0b [The Colossal Update]",
