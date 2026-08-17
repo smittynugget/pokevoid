@@ -1,0 +1,1 @@
+{"textures":[{"image":"pegasus.png","format":"RGBA8888","size":{"w":102,"h":150},"scale":1,"frames":[{"filename":"0001.png","rotated":false,"trimmed":false,"sourceSize":{"w":102,"h":150},"spriteSourceSize":{"x":0,"y":0,"w":102,"h":150},"frame":{"x":0,"y":0,"w":102,"h":150}}]}],"meta":{"app":"https://www.codeandweb.com/texturepacker","version":"3.0"}}
