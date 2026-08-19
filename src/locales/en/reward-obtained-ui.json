@@ -1,6 +1,11 @@
 {
   "titles": {
     "skillTreeUnlock": "SOUL LEVELING!",
+    "skillTreeUnlockVariants": {
+      "0": "UNSEALED!",
+      "1": "YOUR SOUL DEEPENS...",
+      "2": "TRANSCENDENCE!"
+    },
     "newPokemon": "New Pokemon!",
     "newFusion": "New Fusion!",
     "newItem": "New Item!",

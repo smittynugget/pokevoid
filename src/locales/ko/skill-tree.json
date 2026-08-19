@@ -35,8 +35,8 @@
   "tooltipReplaceGeneral": "현재 일반 선택 교체",
   "rankMax": "최대",
   "randomGlitchFormsForRunPromptTitle": "금단의 폼",
-  "randomGlitchFormsForRunPromptGlitch": "이번 런에서 해금할 글리치 폼 3개 중 1개를 선택하세요.",
-  "randomGlitchFormsForRunPromptSmitty": "모든 글리치 폼이 소진되었습니다. 이번 런에서 해금할 SMITTY 폼 3개 중 1개를 선택하세요.",
+  "randomGlitchFormsForRunPromptGlitch": "이번 런에서 해금할 글리치 폼 4개 중 1개를 선택하세요.",
+  "randomGlitchFormsForRunPromptSmitty": "모든 글리치 폼이 소진되었습니다. 이번 런에서 해금할 SMITTY 폼 4개 중 1개를 선택하세요.",
   "rootNode": {
     "generic": "균형의 길",
     "champion": "{{champion}}의 잠재력",
@@ -52,6 +52,13 @@
   "tmNoneCanLearn": "배울 수 있는 포켓몬이 없음",
   "rewards": {
     "skillTreeUnlocked": "스킬 트리 접속!",
+    "skillTreeUnlockedVariants": {
+      "0": "스킬 트리의 잠금이 풀린다.",
+      "1": "더 이상 과거의 너에 얽매이지 않는다.",
+      "2": "이제 성장을 막을 것은 없다.",
+      "3": "뿌리가 더 깊이 뻗는다. 그대의 것을 취하라.",
+      "4": "운명을 다시 빚어라."
+    },
     "tm": "TM: {{move}}",
     "xm": "XM: {{move}}",
     "skillPoints": "{{amount}} 스킬 포인트",
@@ -198,7 +205,7 @@
     "glitchFormFlavor_lt_surge": "순수한 힘이 [color=#e13d3d]{{champion}}[/color]의 전기적 강렬함이 현실의 한계를 부수며 공허를 관통합니다. 전압과 깨진 데이터의 폭풍 속에서, [color=#e13d3d]{{glitchFormName}}[/color]이(가) 해방됩니다—순수하고 멈출 수 없는 에너지의 힘.",
     "glitchFormFlavor_apollo_diana": "부패의 힘을 통해, 공허가 {{champion}}에게 [color=#e13d3d]{{glitchFormName}}[/color]을(를) 사용할 수 있는 권한을 부여했습니다.",
     "glitchFormFlavor_red": "[color=#e13d3d]{{champion}}[/color]의 공허와의 조우가 태고의 무언가를 깨웠습니다 — 잊혀진 시대의 데이터. [color=#e13d3d]{{glitchFormName}}[/color]이(가) 손상된 기억에서 실체화합니다, 관동 디지털 프론티어의 유물.",
-    "randomGlitchFormsForRun": "무작위 금단의 폼(Glitch / SMITTY) 3개를 표시합니다. 1개를 선택해 이번 런에서 해금합니다.",
+    "randomGlitchFormsForRun": "무작위 금단의 폼(Glitch / SMITTY) 4개를 표시합니다. 1개를 선택해 이번 런에서 해금합니다.",
     "legendaryFlavorText_brock": "공허의 부패가 [color=#e13d3d]{{champion}}[/color]을(를) 통해 부서진 돌 사이로 스며드는 물처럼 스며듭니다. 그의 대지의 결의에서 흘러나오는 것이 그 자신의 본질에서 태어난 전설로 현현합니다...",
     "legendaryFlavorText_misty": "공허의 부패가 [color=#e13d3d]{{champion}}[/color]을(를) 통해 이안류처럼 밀려옵니다. 찰나의 순간 그녀의 정신이 절정에 달해 부서지며, 그녀 자신의 격동적인 깊이에서 태어난 전설로 현현합니다...",
     "legendaryFlavorText_red": "[color=#e13d3d]{{champion}}[/color]의 흔들림 없는 침묵 앞에 공허가 떨립니다. 꼬리물 동굴 깊은 곳에서 존재가 움직입니다 — 역대 최강의 트레이너에게 끌려서...",
@@ -225,6 +232,7 @@
     "rogueBall": "로그볼 5개 획득",
     "skillTreeTokens": "{{amount}} 트리 토큰 획득. 트리 토큰은 {{champion}}의 잠재력을 높이며, 충분히 모으면 스킬 트리가 레벨 업합니다!",
     "skillTreeTokensDescription": "스킬 트리 토큰 2개를 모아 스킬 트리를 활성화하세요!",
+    "skillPointsDescription": "스킬 포인트를 써서 챔피언의 스킬 트리에서 새로운 스킬을 해금하고 잠재력을 키우세요.",
     "skillTreeTokensReward": "보유: {{owned}}. {{needed}}개 더 모으면 스킬 트리가 활성화됩니다!",
     "skillTreeTokensReady": "보유: {{owned}}. 스킬 트리 활성화 준비 완료!",
     "skillPoints": "{{champion}}의 잠재력을 끌어낼 힘을 부여합니다! 스킬 트리 내의 잠긴 스킬을 해금하는 데 사용됩니다!",

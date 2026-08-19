@@ -1,6 +1,11 @@
 {
   "titles": {
     "skillTreeUnlock": "SEELEN-AUFSTIEG!",
+    "skillTreeUnlockVariants": {
+      "0": "ENTSIEGELT!",
+      "1": "DEINE SEELE VERTIEFT SICH...",
+      "2": "TRANSZENDENZ!"
+    },
     "newPokemon": "Neues Pokemon!",
     "newFusion": "Neue Fusion!",
     "newItem": "Neues Item!",

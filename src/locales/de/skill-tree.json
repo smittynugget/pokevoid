@@ -35,8 +35,8 @@
   "tooltipReplaceGeneral": "Aktuelle reguläre Auswahl ersetzen",
   "rankMax": "MAX",
   "randomGlitchFormsForRunPromptTitle": "VERBOTENE FORMEN",
-  "randomGlitchFormsForRunPromptGlitch": "Wähle 1 von 3 Glitch-Formen, um sie für diesen Lauf freizuschalten.",
-  "randomGlitchFormsForRunPromptSmitty": "Alle Glitch-Formen sind erschöpft. Wähle 1 von 3 SMITTY-Formen, um sie für diesen Lauf freizuschalten.",
+  "randomGlitchFormsForRunPromptGlitch": "Wähle 1 von 4 Glitch-Formen, um sie für diesen Lauf freizuschalten.",
+  "randomGlitchFormsForRunPromptSmitty": "Alle Glitch-Formen sind erschöpft. Wähle 1 von 4 SMITTY-Formen, um sie für diesen Lauf freizuschalten.",
   "rootNode": {
     "generic": "Ausgewogener Pfad",
     "champion": "{{champion}}s Potenzial",
@@ -52,6 +52,13 @@
   "tmNoneCanLearn": "Keines deiner Pokémon kann lernen",
   "rewards": {
     "skillTreeUnlocked": "Fertigkeitenbaum öffnen!",
+    "skillTreeUnlockedVariants": {
+      "0": "Die Schlösser des Fertigkeitenbaums fallen ab.",
+      "1": "Du bist nicht mehr an dein früheres Ich gebunden.",
+      "2": "Nichts hält dein Wachstum mehr auf.",
+      "3": "Die Wurzeln reichen tiefer. Nimm dir, was dir gehört.",
+      "4": "Gestalte dein Schicksal neu."
+    },
     "tm": "TM: {{move}}",
     "xm": "XM: {{move}}",
     "skillPoints": "{{amount}} Fertigkeitspunkte",
@@ -198,7 +205,7 @@
     "glitchFormFlavor_lt_surge": "Rohe Kraft durchströmt die Leere, als [color=#e13d3d]{{champion}}[/color]s elektrische Intensität die Grenzen der Realität zerschmettert. In einem Sturm aus Spannung und gebrochenen Daten wird [color=#e13d3d]{{glitchFormName}}[/color] entfesselt—eine Kraft purer, unaufhaltsamer Energie.",
     "glitchFormFlavor_apollo_diana": "Durch die Kraft der Verderbnis hat die Leere {{champion}} ermächtigt, [color=#e13d3d]{{glitchFormName}}[/color] zu nutzen.",
     "glitchFormFlavor_red": "[color=#e13d3d]{{champion}}[/color]s Begegnung mit der Leere hat etwas Uraltes erweckt — Daten einer vergessenen Ära. [color=#e13d3d]{{glitchFormName}}[/color] materialisiert sich aus korruptem Speicher, ein Relikt von Kantos digitaler Grenze.",
-    "randomGlitchFormsForRun": "Zeigt 3 zufällige verbotene Formen (Glitch / SMITTY). Wähle 1, um sie für diesen Lauf freizuschalten.",
+    "randomGlitchFormsForRun": "Zeigt 4 zufällige verbotene Formen (Glitch / SMITTY). Wähle 1, um sie für diesen Lauf freizuschalten.",
     "legendaryFlavorText_brock": "Die Verderbnis der Leere sickert durch [color=#e13d3d]{{champion}}[/color] wie Wasser durch gebrochenen Stein. Was aus seiner erdigen Entschlossenheit blutet, manifestiert sich als ein Legendäres, geboren aus seiner eigenen Essenz...",
     "legendaryFlavorText_misty": "Die Verderbnis der Leere brandet durch [color=#e13d3d]{{champion}}[/color] wie eine Springflut. Für einen zerschmetternden Augenblick gipfelt und bricht ihr Geist, manifestiert sich als ein Legendäres, geboren aus ihren eigenen turbulenten Tiefen...",
     "legendaryFlavorText_apollo_diana": "Die Dunkelheit der Leere wächst in dir wie ein Neumond, der Sterne verschlingt. Was aus dieser Nacht entsteht, nimmt Gestalt an als ein Legendäres—deine Strahlkraft umgekehrt in etwas Schreckliches...",
@@ -225,6 +232,7 @@
     "rogueBall": "Gewährt 5 Schurkenbälle",
     "skillTreeTokens": "Erhalte {{amount}} Baum-Marke. Baum-Marken erhöhen {{champion}}s Potenzial, sammle genug und ihr Fertigkeitenbaum steigt auf!",
     "skillTreeTokensDescription": "Sammle 2 Fähigkeitenbaum-Token, um den Fähigkeitenbaum zu aktivieren!",
+    "skillPointsDescription": "Gib Skillpunkte aus, um neue Fähigkeiten im Skillbaum deines Champions freizuschalten und sein Potenzial zu steigern.",
     "skillTreeTokensReward": "Besitzt {{owned}}. Sammle noch {{needed}}, um den Fähigkeitenbaum zu aktivieren!",
     "skillTreeTokensReady": "Besitzt {{owned}}. Fähigkeitenbaum bereit zur Aktivierung!",
     "skillPoints": "Gewährt dir die Kraft, {{champion}}s Potenzial anzuzapfen! Wird verwendet, um gesperrte Fähigkeiten im Fertigkeitenbaum freizuschalten!",

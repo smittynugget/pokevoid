@@ -20,7 +20,7 @@ import {getPokemonSpecies} from "#app/data/pokemon-species";
 import { modStorage } from "../system/mod-storage";
 import { getModPokemonName } from "../data/mod-glitch-form-utils";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
-import { getUpgradeRarityColors, fixedInt } from "../utils";
+import { getUpgradeRarityColors, fixedInt, randSeedInt } from "../utils";
 import { SkillTreeRarity } from "../system/skill-tree-data";
 
 export enum RewardObtainedType {
@@ -97,6 +97,8 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
     private baseTitleFontSize: number | null = null;
     private baseTitleY: number | null = null;
     private _tooltipPattern: ModalBackgroundHandle | null = null;
+    private skillTreeUnlockTitleVariant: number = 0;
+    private skillTreeUnlockSubtitleVariant: number = 0;
 
     private isTooltipStyle(): boolean {
         return !RewardObtainedUiHandler.USE_LEGACY_NON_CUTSCENE_STYLE;
@@ -142,7 +144,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             case RewardObtainedType.SKILL_TREE_TOKENS:
                 return i18next.t("rewardObtainedUi:titles.skillTreeTokens");
             case RewardObtainedType.SKILL_TREE_UNLOCK:
-                return i18next.t("rewardObtainedUi:titles.skillTreeUnlock");
+                return i18next.t(`rewardObtainedUi:titles.skillTreeUnlockVariants.${this.skillTreeUnlockTitleVariant}`);
             case RewardObtainedType.LEGENDARY_CATCHABLE:
                 return i18next.t("rewardObtainedUi:titles.legendaryPower");
             default:
@@ -1114,6 +1116,11 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         if (args.length >= 2 && "buttonActions" in args[0]) {
             this.rewardConfig = args[1] as RewardConfig;
 
+            if (this.rewardConfig?.type === RewardObtainedType.SKILL_TREE_UNLOCK) {
+                this.skillTreeUnlockTitleVariant = randSeedInt(3);
+                this.skillTreeUnlockSubtitleVariant = randSeedInt(5);
+            }
+
             if (this.rewardConfig?.cutsceneStyle) {
                 this.scene.playSound("battle_anims/PRSFX- Oblivion Wing2");
             }
@@ -1311,7 +1318,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                 this.scene,
                 textPos.x,
                 textPos.y,
-                i18next.t('skillTree:rewards.skillTreeUnlocked'),
+                i18next.t(`skillTree:rewards.skillTreeUnlockedVariants.${this.skillTreeUnlockSubtitleVariant}`),
                 TextStyle.MONEY,
                 { fontSize: bodyFontSize }
             );
@@ -1631,7 +1638,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             return i18next.t("skillTree:rewards.tokens", { amount: this.rewardConfig.amount });
         }
         if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_UNLOCK) {
-            return i18next.t("skillTree:rewards.skillTreeUnlocked");
+            return i18next.t(`skillTree:rewards.skillTreeUnlockedVariants.${this.skillTreeUnlockSubtitleVariant}`);
         }
         if (this.rewardConfig.type === RewardObtainedType.FORM) {
             if (this.rewardConfig.isGlitch) {

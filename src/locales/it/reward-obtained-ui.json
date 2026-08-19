@@ -1,6 +1,11 @@
 {
   "titles": {
     "skillTreeUnlock": "ASCESA DELL'ANIMA!",
+    "skillTreeUnlockVariants": {
+      "0": "SIGILLO INFRANTO!",
+      "1": "LA TUA ANIMA SI APPROFONDISCE...",
+      "2": "TRASCENDENZA!"
+    },
     "newPokemon": "Nuovo Pokémon!",
     "newFusion": "Nuova Fusione!",
     "newItem": "Nuovo Strumento!",

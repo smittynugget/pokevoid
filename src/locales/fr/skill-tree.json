@@ -35,8 +35,8 @@
   "tooltipReplaceGeneral": "Remplacer la sélection Ordinaire actuelle",
   "rankMax": "MAX",
   "randomGlitchFormsForRunPromptTitle": "FORMES INTERDITES",
-  "randomGlitchFormsForRunPromptGlitch": "Choisissez 1 des 3 formes Glitch à débloquer pour cette partie.",
-  "randomGlitchFormsForRunPromptSmitty": "Toutes les formes Glitch sont épuisées. Choisissez 1 des 3 formes SMITTY à débloquer pour cette partie.",
+  "randomGlitchFormsForRunPromptGlitch": "Choisissez 1 des 4 formes Glitch à débloquer pour cette partie.",
+  "randomGlitchFormsForRunPromptSmitty": "Toutes les formes Glitch sont épuisées. Choisissez 1 des 4 formes SMITTY à débloquer pour cette partie.",
   "rootNode": {
     "generic": "Voie Équilibrée",
     "champion": "Potentiel de {{champion}}",
@@ -52,6 +52,13 @@
   "tmNoneCanLearn": "Aucun de vos Pokémon ne peut apprendre",
   "rewards": {
     "skillTreeUnlocked": "Accéder à l'Arbre de Compétences !",
+    "skillTreeUnlockedVariants": {
+      "0": "Les verrous de l'Arbre de Compétences tombent.",
+      "1": "Tu n'es plus lié à ce que tu étais.",
+      "2": "Plus rien ne retient ta croissance.",
+      "3": "Les racines s'enfoncent. Réclame ce qui t'appartient.",
+      "4": "Refaçonne ton destin."
+    },
     "tm": "CT : {{move}}",
     "xm": "XM : {{move}}",
     "skillPoints": "{{amount}} Points de Compétence",
@@ -198,7 +205,7 @@
     "glitchFormFlavor_lt_surge": "La puissance brute déferle à travers le néant alors que l'intensité électrique de [color=#e13d3d]{{champion}}[/color] brise les limites de la réalité. Dans une tempête de voltage et de données brisées, [color=#e13d3d]{{glitchFormName}}[/color] est libéré—une force d'énergie pure et imparable.",
     "glitchFormFlavor_apollo_diana": "Par le pouvoir de la corruption, le néant a habilité {{champion}} à utiliser [color=#e13d3d]{{glitchFormName}}[/color].",
     "glitchFormFlavor_red": "La rencontre de [color=#e13d3d]{{champion}}[/color] avec le néant a éveillé quelque chose d'ancien — des données d'une ère oubliée. [color=#e13d3d]{{glitchFormName}}[/color] se matérialise de la mémoire corrompue, une relique de la frontière numérique de Kanto.",
-    "randomGlitchFormsForRun": "Révèle 3 formes interdites aléatoires (Glitch / SMITTY). Choisissez-en 1 à débloquer pour cette partie.",
+    "randomGlitchFormsForRun": "Révèle 4 formes interdites aléatoires (Glitch / SMITTY). Choisissez-en 1 à débloquer pour cette partie.",
     "legendaryFlavorText_brock": "La corruption du Néant s'infiltre à travers [color=#e13d3d]{{champion}}[/color] comme l'eau à travers la pierre fracturée. Ce qui saigne de sa résolution terrestre se manifeste comme un légendaire né de sa propre essence...",
     "legendaryFlavorText_misty": "La corruption du néant déferle à travers [color=#e13d3d]{{champion}}[/color] comme une marée de fond. Pour un instant fracassant son esprit crête et se brise, se manifestant comme un légendaire né de ses propres profondeurs turbulentes...",
     "legendaryFlavorText_apollo_diana": "L'obscurité du néant croît en vous comme une nouvelle lune consommant les étoiles. Ce qui émerge de cette nuit prend forme comme un légendaire—votre radiance inversée en quelque chose de terrible...",
@@ -225,6 +232,7 @@
     "rogueBall": "Octroie 5 Rogue Balls",
     "skillTreeTokens": "Gagnez {{amount}} Jetons d'Arbre. Les jetons augmentent le potentiel de {{champion}}, gagnez-en assez et leur arbre monte de niveau !",
     "skillTreeTokensDescription": "Collectez 2 jetons d'arbre de compétences pour activer l'arbre de compétences !",
+    "skillPointsDescription": "Dépensez des Points de Compétence pour débloquer de nouvelles compétences dans l'Arbre de votre Champion et accroître son potentiel.",
     "skillTreeTokensReward": "Possédés : {{owned}}. Obtenez-en {{needed}} de plus pour activer l'arbre de compétences !",
     "skillTreeTokensReady": "Possédés : {{owned}}. Arbre de compétences prêt à être activé !",
     "skillPoints": "Vous donne le pouvoir de puiser dans le potentiel de {{champion}} ! Utilisé pour débloquer des compétences verrouillées dans l'arbre !",

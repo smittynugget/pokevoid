@@ -6074,9 +6074,8 @@ export class SkillTreeTokenTrackerModifier extends PersistentModifier {
     apply(_args: any[]): boolean {
         return true;
     }
-
-    isIconVisible(scene: BattleScene): boolean {
-        return !!scene.gameData?.activeSkillTree;
+    isIconVisible(_scene: BattleScene): boolean {
+        return false;
     }
 }
 

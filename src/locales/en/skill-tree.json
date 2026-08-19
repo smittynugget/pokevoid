@@ -38,8 +38,8 @@
     "tooltipReplaceGeneral": "Replace current Regular selection",
   "rankMax": "MAX",
   "randomGlitchFormsForRunPromptTitle": "FORBIDDEN FORMS",
-  "randomGlitchFormsForRunPromptGlitch": "Choose 1 of 3 Glitch Forms to unlock for this run.",
-  "randomGlitchFormsForRunPromptSmitty": "All Glitch Forms exhausted. Choose 1 of 3 SMITTY Forms to unlock for this run.",
+  "randomGlitchFormsForRunPromptGlitch": "Choose 1 of 4 Glitch Forms to unlock for this run.",
+  "randomGlitchFormsForRunPromptSmitty": "All Glitch Forms exhausted. Choose 1 of 4 SMITTY Forms to unlock for this run.",
 
     "rootNode": {
       "generic": "Balanced Path",
@@ -57,6 +57,13 @@
   "tmNoneCanLearn": "None of Your Pokemon Can Learn",
   "rewards": {
     "skillTreeUnlocked": "Access Skill Tree!",
+    "skillTreeUnlockedVariants": {
+      "0": "The Skill Tree's locks fall away.",
+      "1": "You are no longer bound by what you were.",
+      "2": "Nothing holds your growth now.",
+      "3": "The roots reach further. Claim what is yours.",
+      "4": "Reshape your fate."
+    },
     "tm": "TM: {{move}}",
     "xm": "XM: {{move}}",
     "skillPoints": "{{amount}} Skill Points",
@@ -205,7 +212,7 @@
     "glitchFormFlavor_lt_surge": "Raw power surges through the void as [color=#e13d3d]{{champion}}[/color]'s electric intensity shatters reality's limits. In a storm of voltage and broken data, [color=#e13d3d]{{glitchFormName}}[/color] is unleashed—a force of pure, unstoppable energy.",
     "glitchFormFlavor_apollo_diana": "Through the power of corruption, the void has empowered {{champion}} to use [color=#e13d3d]{{glitchFormName}}[/color].",
     "glitchFormFlavor_red": "[color=#e13d3d]{{champion}}[/color]'s encounter with the void has awakened something ancient — data from a forgotten era. [color=#e13d3d]{{glitchFormName}}[/color] materializes from corrupted memory, a relic of Kanto's digital frontier.",
-    "randomGlitchFormsForRun": "Reveals 3 random forbidden forms (Glitch / SMITTY). Choose 1 to unlock for this run.",
+    "randomGlitchFormsForRun": "Reveals 4 random forbidden forms (Glitch / SMITTY). Choose 1 to unlock for this run.",
     "legendaryFlavorText_brock": "The Void's corruption seeps through [color=#e13d3d]{{champion}}[/color] like water through fractured stone. What bleeds from his earthen resolve manifests as a legendary born from his own essence...",
     "legendaryFlavorText_misty": "The void's corruption surges through [color=#e13d3d]{{champion}}[/color] like a riptide. For one shattering instant her spirit crests and breaks, manifesting as a legendary born from her own turbulent depths...",
     "legendaryFlavorText_apollo_diana": "The void darkness waxes within you like a new moon consuming stars. What emerges from that night takes shape as a legendary—your radiance inverted into something terrible...",
@@ -233,6 +240,7 @@
     "rogueBall": "Grants 5 Rogue Balls",
     "skillTreeTokens": "Gain {{amount}} Tree Token. Tree tokens increase {{champion}}'s potential, gain enough and their skill tree levels up!",
     "skillTreeTokensDescription": "Collect 2 Skill Tree Tokens to activate the Skill Tree!",
+    "skillPointsDescription": "Spend Skill Points to unlock new skills in your Champion's Skill Tree and grow their potential.",
     "skillTreeTokensReward": "Owned {{owned}}. Get {{needed}} more to activate the skill tree!",
     "skillTreeTokensReady": "Owned {{owned}}. Skill Tree ready to activate!",
     "skillPoints": "Grants you the power to tap into {{champion}} potential! Used to unlock locked skills within the skilltree!",

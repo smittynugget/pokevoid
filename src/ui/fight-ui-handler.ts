@@ -384,7 +384,7 @@ export default class FightUiHandler extends UiHandler {
     }
 
     const moveColors = opponents
-      .map((opponent) => opponent.getMoveEffectiveness(pokemon, pokemonMove.getMove(), !opponent.battleData.abilityRevealed))
+      .map((opponent) => opponent.getMoveEffectiveness(pokemon, pokemonMove.getMove(), !opponent.battleData?.abilityRevealed))
       .sort((a, b) => b - a)
       .map((effectiveness) => getTypeDamageMultiplierColor(effectiveness ?? 0, "offense"));
 

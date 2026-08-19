@@ -55,6 +55,7 @@ export class SkillTreeProgression {
 			(tracker as Modifiers.SkillTreeTokenTrackerModifier).stackCount = activeSkillTree.tokens;
 			this.scene.updateModifiers(true);
 		}
+		this.scene.ui?.updateSkillTreeTokenDisplay?.(this.scene);
 		return true;
 	}
 	consumeTokens(): void {
@@ -68,6 +69,7 @@ export class SkillTreeProgression {
 			(tracker as Modifiers.SkillTreeTokenTrackerModifier).stackCount = 0;
 			this.scene.updateModifiers(true);
 		}
+		this.scene.ui?.updateSkillTreeTokenDisplay?.(this.scene);
 	}
 
 	awardTokens(amount: number, source: string): void {
@@ -88,6 +90,7 @@ export class SkillTreeProgression {
 		}
 		const oldPoints = activeSkillTree.skillPoints || 0;
 		activeSkillTree.skillPoints = Math.max(0, oldPoints + amount);
+		this.scene.ui?.updateSkillTreeTokenDisplay?.(this.scene);
 		this.scene.unshiftPhase(new RewardObtainDisplayPhase(this.scene, {
 			type: RewardObtainedType.SKILL_POINTS,
 			amount,

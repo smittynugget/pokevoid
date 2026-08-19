@@ -1,6 +1,6 @@
 import BattleScene from "#app/battle-scene";
 import { Phase } from "#app/phase";
-import { PokemonAltBuildModifier, PermaRunQuestModifier } from "#app/modifier/modifier";
+import { PokemonAltBuildModifier, PermaRunQuestModifier, PermaWinQuestModifier } from "#app/modifier/modifier";
 import { Mode } from "#app/ui/ui";
 import { SkillTreeRewardType, SkillTreeNodeState } from "#app/system/skill-tree-data";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
@@ -558,6 +558,7 @@ export class SkillTreeModifierPhase extends Phase {
 
     const gm = this.scene.gameMode;
     const currentWave = this.scene.currentBattle?.waveIndex ?? 0;
+    const party = this.scene.getParty();
 
     for (const [consoleCode, factory] of Object.entries(QUEST_CONSOLE_CODES)) {
       if (!factory) continue;
@@ -572,6 +573,7 @@ export class SkillTreeModifierPhase extends Phase {
       const questId = generator.config.questUnlockData?.questId;
       if (questId != null && this.scene.gameData.checkQuestState(questId, QuestState.COMPLETED)) continue;
       if (activeConsoleCodes.has(consoleCode)) continue;
+      if (this.isVictoryBountyGenerator(generator, party)) continue;
       candidates.push({ consoleCode, generator });
     }
 
@@ -603,7 +605,6 @@ export class SkillTreeModifierPhase extends Phase {
 
     const shuffled = Utils.randSeedShuffle([...candidates]);
     const BOUNTY_COUNT = 8;
-    const party = this.scene.getParty();
     const teamLine = this.getPartyEvolutionLineSpecies(party);
     const selected: typeof candidates[number][] = [];
     const usedCodes = new Set<string>();
@@ -859,6 +860,13 @@ export class SkillTreeModifierPhase extends Phase {
       }
     }
     return line;
+  }
+  private isVictoryBountyGenerator(generator: QuestModifierTypeGenerator, party: PlayerPokemon[]): boolean {
+    try {
+      return generator.generateType(party)?.newModifier(this.scene) instanceof PermaWinQuestModifier;
+    } catch {
+      return false;
+    }
   }
 
   private getBountyQuestSpecies(c: { consoleCode: string; generator: QuestModifierTypeGenerator }): Species | null {

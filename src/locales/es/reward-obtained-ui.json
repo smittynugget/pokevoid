@@ -1,6 +1,11 @@
 {
   "titles": {
     "skillTreeUnlock": "¡ASCENSO DEL ALMA!",
+    "skillTreeUnlockVariants": {
+      "0": "¡DESELLADO!",
+      "1": "TU ALMA SE AHONDA...",
+      "2": "¡TRASCENDENCIA!"
+    },
     "newPokemon": "¡Nuevo Pokémon!",
     "newFusion": "¡Nueva Fusión!",
     "newItem": "¡Nuevo Objeto!",

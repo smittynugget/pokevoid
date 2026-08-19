@@ -108,6 +108,8 @@ const ZA_MEGA_ICON_SPECIES_IDS: Set<Species> = new Set<Species>([
 
 for (const sid of ZA_MEGA_ICON_SPECIES_IDS) {
     missingCryKeys.add(`${sid}-mega`);
+    missingCryKeys.add(`${sid}-mega-x`);
+    missingCryKeys.add(`${sid}-mega-y`);
 }
 
 const shouldFallbackZaMegaVariantSprite = (speciesId: Species, formSpriteKey: string, shiny?: boolean, variant?: integer) => {
@@ -979,13 +981,14 @@ export abstract class PokemonSpeciesForm {
 
     cry(scene: BattleScene, soundConfig?: Phaser.Types.Sound.SoundConfig, ignorePlay?: boolean): AnySound {
         const cryKey = this.getCryKey(this.formIndex);
-        let cry: AnySound | null = scene.sound.get(cryKey) as AnySound;
-        if (cry?.pendingRemove) {
-            cry = null;
+        const cacheKey = `cry/${cryKey}`;
+        let existing: AnySound | null = scene.sound.get(cacheKey) as AnySound;
+        if (existing?.pendingRemove) {
+            existing = null;
         }
-        cry = scene.playSound(`cry/${(cry ?? cryKey)}`, soundConfig);
+        const cry = scene.playSound(existing ?? cacheKey, soundConfig);
         if (ignorePlay) {
-            cry.stop();
+            cry?.stop?.();
         }
         return cry;
     }

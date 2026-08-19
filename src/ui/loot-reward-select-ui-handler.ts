@@ -266,7 +266,12 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
   }
 
   private static readonly SHOP_STRIP_H = 11;
-  private static readonly SHOP_STRIP_OVERLAY_ALPHA = 0.6;
+  private static readonly SHOP_STRIP_OVERLAY_ALPHA = 0.45;
+
+  private static readonly SHOP_UNAFFORDABLE_COLOR = "#ff4444";
+  private static readonly SHOP_UNAFFORDABLE_TINT = 0xff4444;
+  private static readonly SHOP_FREE_COLOR = "#00e060";
+  private static readonly SHOP_FREE_TINT = 0x00e060;
   private _shopStripOverlayW: number | null = null;
   private _shopStripOverlayH: number | null = null;
 
@@ -1314,7 +1319,9 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
       const itemCost = opt.modifierTypeOption.cost || 0;
       const canAffordItem = itemCost === 0 || this.scene.money >= itemCost;
       if (!canAffordItem) {
-        iconSprite.setTint(0xFF4444);
+        iconSprite.setTint(LootRewardSelectUiHandler.SHOP_UNAFFORDABLE_TINT);
+      } else if (itemCost === 0) {
+        iconSprite.setTint(LootRewardSelectUiHandler.SHOP_FREE_TINT);
       }
       if (this.shopStripIconsContainer) {
         this.shopStripIconsContainer.add(iconSprite);
@@ -1349,10 +1356,10 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
           const costStr = `₽${cost}`;
           priceText.setText(costStr);
           const canAfford = this.scene.money >= cost;
-          priceText.setColor(canAfford ? getTextColor(TextStyle.MONEY) : "#ff4444");
+          priceText.setColor(canAfford ? getTextColor(TextStyle.MONEY) : LootRewardSelectUiHandler.SHOP_UNAFFORDABLE_COLOR);
         } else {
           priceText.setText(i18next.t("modifierSelectUiHandler:shopFree"));
-          priceText.setColor("#00e060");
+          priceText.setColor(LootRewardSelectUiHandler.SHOP_FREE_COLOR);
         }
       }
 
@@ -1385,6 +1392,15 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
       this.shopStripContainer.bringToTop(this.shopStripOverlay);
     }
     if (this.shopStripLabel) {
+      const costs = allShopOptions.map(o => o.modifierTypeOption?.cost ?? 0);
+      const anyFree = costs.some(cost => cost === 0);
+      const allFree = costs.every(cost => cost === 0);
+      this.shopStripLabel.setText(i18next.t(allFree
+        ? "modifierSelectUiHandler:shopFree"
+        : "modifierSelectUiHandler:shopLabel"));
+      this.shopStripLabel.setColor(anyFree
+        ? LootRewardSelectUiHandler.SHOP_FREE_COLOR
+        : getTextColor(TextStyle.PERFECT_IV, false, this.scene.uiTheme));
       this.shopStripContainer.bringToTop(this.shopStripLabel);
     }
 
@@ -2127,11 +2143,11 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
         const itemCost = opt?.modifierTypeOption?.cost || 0;
         if (itemCost === 0) {
           this.shopStripPriceTexts[i].setText(i18next.t("modifierSelectUiHandler:shopFree"));
-          this.shopStripPriceTexts[i].setColor("#00e060");
+          this.shopStripPriceTexts[i].setColor(LootRewardSelectUiHandler.SHOP_FREE_COLOR);
         } else {
           this.shopStripPriceTexts[i].setText(`₽${itemCost}`);
           const canAfford = this.scene.money >= itemCost;
-          this.shopStripPriceTexts[i].setColor(canAfford ? getTextColor(TextStyle.MONEY) : "#ff4444");
+          this.shopStripPriceTexts[i].setColor(canAfford ? getTextColor(TextStyle.MONEY) : LootRewardSelectUiHandler.SHOP_UNAFFORDABLE_COLOR);
         }
       }
     }
@@ -2147,7 +2163,9 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
       const canAfford = cost === 0 || this.scene.money >= cost;
 
       if (!canAfford) {
-        this.shopStripIcons[i].setTint(0xFF4444);
+        this.shopStripIcons[i].setTint(LootRewardSelectUiHandler.SHOP_UNAFFORDABLE_TINT);
+      } else if (cost === 0) {
+        this.shopStripIcons[i].setTint(LootRewardSelectUiHandler.SHOP_FREE_TINT);
       } else {
         this.shopStripIcons[i].clearTint();
       }

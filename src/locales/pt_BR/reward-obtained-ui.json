@@ -1,6 +1,11 @@
 {
   "titles": {
     "skillTreeUnlock": "EVOLUÇÃO DA ALMA!",
+    "skillTreeUnlockVariants": {
+      "0": "SELO ROMPIDO!",
+      "1": "SUA ALMA SE APROFUNDA...",
+      "2": "TRANSCENDÊNCIA!"
+    },
     "newPokemon": "Novo Pokémon!",
     "newFusion": "Nova Fusão!",
     "newItem": "Novo Item!",

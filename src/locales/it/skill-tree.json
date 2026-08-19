@@ -35,8 +35,8 @@
   "tooltipReplaceGeneral": "Sostituisci la selezione Normale attuale",
   "rankMax": "MAX",
   "randomGlitchFormsForRunPromptTitle": "FORME PROIBITE",
-  "randomGlitchFormsForRunPromptGlitch": "Scegli 1 delle 3 forme Glitch da sbloccare per questa run.",
-  "randomGlitchFormsForRunPromptSmitty": "Tutte le forme Glitch sono esaurite. Scegli 1 delle 3 forme SMITTY da sbloccare per questa run.",
+  "randomGlitchFormsForRunPromptGlitch": "Scegli 1 delle 4 forme Glitch da sbloccare per questa run.",
+  "randomGlitchFormsForRunPromptSmitty": "Tutte le forme Glitch sono esaurite. Scegli 1 delle 4 forme SMITTY da sbloccare per questa run.",
   "rootNode": {
     "generic": "Percorso Bilanciato",
     "champion": "Potenziale di {{champion}}",
@@ -52,6 +52,13 @@
   "tmNoneCanLearn": "Nessuno dei Tuoi Pokémon Può Imparare",
   "rewards": {
     "skillTreeUnlocked": "Accedi all'Albero delle Abilità!",
+    "skillTreeUnlockedVariants": {
+      "0": "I lucchetti dell'Albero delle Abilità cadono.",
+      "1": "Non sei più vincolato a ciò che eri.",
+      "2": "Nulla trattiene più la tua crescita.",
+      "3": "Le radici si spingono oltre. Reclama ciò che è tuo.",
+      "4": "Riscrivi il tuo destino."
+    },
     "tm": "MT: {{move}}",
     "xm": "XM: {{move}}",
     "skillPoints": "{{amount}} Punti Abilità",
@@ -199,7 +206,7 @@
     "glitchFormFlavor_lt_surge": "Potere grezzo attraversa il vuoto mentre l'intensità elettrica di [color=#e13d3d]{{champion}}[/color] frantuma i limiti della realtà. In una tempesta di voltaggio e dati corrotti, [color=#e13d3d]{{glitchFormName}}[/color] viene scatenato—una forza di pura energia inarrestabile.",
     "glitchFormFlavor_apollo_diana": "Attraverso il potere della corruzione, il vuoto ha dato a {{champion}} il potere di usare [color=#e13d3d]{{glitchFormName}}[/color].",
     "glitchFormFlavor_red": "L'incontro di [color=#e13d3d]{{champion}}[/color] con il vuoto ha risvegliato qualcosa di antico — dati di un'era dimenticata. [color=#e13d3d]{{glitchFormName}}[/color] si materializza dalla memoria corrotta, una reliquia della frontiera digitale di Kanto.",
-    "randomGlitchFormsForRun": "Rivela 3 forme proibite casuali (Glitch / SMITTY). Scegline 1 da sbloccare per questa run.",
+    "randomGlitchFormsForRun": "Rivela 4 forme proibite casuali (Glitch / SMITTY). Scegline 1 da sbloccare per questa run.",
     "legendaryFlavorText_brock": "La corruzione del Vuoto filtra attraverso [color=#e13d3d]{{champion}}[/color] come acqua attraverso pietra fratturata. Ciò che sanguina dalla sua determinazione terrena si manifesta come un leggendario nato dalla sua stessa essenza...",
     "legendaryFlavorText_misty": "La corruzione del vuoto attraversa [color=#e13d3d]{{champion}}[/color] come una risacca. Per un istante frantumante il suo spirito cresta e si rompe, manifestandosi come un leggendario nato dalle sue profondità turbolente...",
     "legendaryFlavorText_apollo_diana": "L'oscurità del vuoto cresce dentro di te come una luna nuova che consuma le stelle. Ciò che emerge da quella notte prende forma come un leggendario—il tuo splendore invertito in qualcosa di terribile...",
@@ -226,6 +233,7 @@
     "rogueBall": "Ottieni 5 Rogue Ball",
     "skillTreeTokens": "Ottieni {{amount}} Token Albero. I token albero aumentano il potenziale di {{champion}}, ottienine abbastanza e il loro albero delle abilità sale di livello!",
     "skillTreeTokensDescription": "Raccogli 2 gettoni dell'albero abilità per attivare l'albero abilità!",
+    "skillPointsDescription": "Spendi Punti Abilità per sbloccare nuove abilità nell'Albero delle Abilità del tuo Campione e accrescerne il potenziale.",
     "skillTreeTokensReward": "Posseduti: {{owned}}. Ottieni altri {{needed}} per attivare l'albero abilità!",
     "skillTreeTokensReady": "Posseduti: {{owned}}. Albero abilità pronto per l'attivazione!",
     "skillPoints": "Ti garantisce il potere di attingere al potenziale di {{champion}}! Usato per sbloccare abilità bloccate nell'albero delle abilità!",

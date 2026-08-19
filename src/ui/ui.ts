@@ -58,7 +58,7 @@ import TestDialogueUiHandler from "#app/ui/test-dialogue-ui-handler";
 import AutoCompleteUiHandler from "./autocomplete-ui-handler";
 import { GameObjects } from 'phaser';
 import {PermaModifiers} from "#app/modifier/perma-modifiers";
-import {ModifierBar, PermaCollectedTypeModifier} from "#app/modifier/modifier";
+import {ModifierBar, PermaCollectedTypeModifier, SkillTreeTokenTrackerModifier} from "#app/modifier/modifier";
 import { Type } from "#app/data/type";
 import { ModifierTooltipUtils, ModifierTooltipData } from "./modifier-tooltip-utils";
 import { SkillTreeRarity } from "#app/system/skill-tree-data";
@@ -199,6 +199,26 @@ export default class UI extends Phaser.GameObjects.Container {
     TOGGLE_ROW_HEIGHT: 10,
     BAR_X_OFFSET_ADJUSTMENT: -10,
     PERMA_COLLECTED_TYPE_SPACING: 5,
+    SKILL_TREE_ROW_Y_OFFSET: 9,
+    SKILL_TREE_BAR_SCALE: 0.3,
+    SKILL_TREE_ICON_Y: 12,
+    SKILL_TREE_SMITEM_ICON_SCALE: 0.5,
+    SKILL_TREE_STACK_TEXT_X: 10,
+    SKILL_TREE_STACK_TEXT_Y: 15,
+    SKILL_TREE_STACK_FONT_SIZE: 16,
+    SKILL_TREE_STACK_LETTER_SPACING: -0.5,
+    SKILL_TREE_STACK_CAPPED_TINT: 0xf89890,
+    SKILL_TREE_STACK_TEXT_COLOR: "#f8f8f8",
+    SKILL_TREE_STACK_TEXT_SHADOW: "#424242",
+    SKILL_TREE_STACK_TEXT_STROKE: 4.5,
+    SKILL_TREE_ROW_INDENT: 2,
+    SKILL_TREE_POINTS_GAP: 2,
+    SKILL_TREE_POINTS_TEXT_SIZE: 30,
+
+    SKILL_TREE_POINTS_ICON_SCALE: 0.27,
+
+    SKILL_TREE_POINTS_TEXT_X_OFFSET: 1,
+    SKILL_TREE_POINTS_TEXT_Y_OFFSET: 0,
   };
 
   private permaMoneyContainer: Phaser.GameObjects.Container;
@@ -238,6 +258,16 @@ export default class UI extends Phaser.GameObjects.Container {
   private permaCollectedTypeContainer: Phaser.GameObjects.Container;
   private permaCollectedTypeIcon: Phaser.GameObjects.Sprite;
   private permaCollectedTypeTooltipContainer: Phaser.GameObjects.Container | null = null;
+
+  private skillTreeTokenContainer: Phaser.GameObjects.Container;
+
+  private skillTreeTokenEntry: Phaser.GameObjects.Container;
+  private skillTreeTokenIcon: Phaser.GameObjects.Sprite;
+  private skillTreePointsIcon: Phaser.GameObjects.Sprite;
+  private skillTreePointsText: Phaser.GameObjects.Text;
+
+  private skillTreeTokenStack: Phaser.GameObjects.GameObject | null = null;
+
   private _replayHudSuppressed = false;
 
   constructor(scene: BattleScene) {
@@ -657,6 +687,38 @@ export default class UI extends Phaser.GameObjects.Container {
     this.permaCollectedTypeContainer.add([this.permaCollectedTypeIcon]);
     this.permaCollectedTypeContainer.setVisible(false);
     this.permaMoneyContainer.add(this.permaCollectedTypeContainer);
+    const barScale = this.UI_CONSTANTS.SKILL_TREE_BAR_SCALE;
+    const skillTreeRowCenterY = this.UI_CONSTANTS.SKILL_TREE_ICON_Y * barScale;
+
+    this.skillTreeTokenIcon = this.scene.add.sprite(0, this.UI_CONSTANTS.SKILL_TREE_ICON_Y, "smitems", "permaMoreRevive");
+    this.skillTreeTokenIcon.setName("skill-tree-token-icon");
+    this.skillTreeTokenIcon.setScale(this.UI_CONSTANTS.SKILL_TREE_SMITEM_ICON_SCALE);
+    this.skillTreeTokenIcon.setOrigin(0, 0.5);
+
+    this.skillTreeTokenEntry = this.scene.add.container(0, 0);
+    this.skillTreeTokenEntry.setName("skill-tree-token-entry");
+    this.skillTreeTokenEntry.setScale(barScale);
+    this.skillTreeTokenEntry.add(this.skillTreeTokenIcon);
+    this.skillTreePointsIcon = this.scene.add.sprite(0, skillTreeRowCenterY, "items", "ribbon_gen9");
+    this.skillTreePointsIcon.setName("skill-tree-points-icon");
+    this.skillTreePointsIcon.setOrigin(0, 0.5);
+    this.skillTreePointsIcon.setScale(this.UI_CONSTANTS.SKILL_TREE_POINTS_ICON_SCALE);
+
+    this.skillTreePointsText = addTextObject(this.scene, 0, skillTreeRowCenterY, "", TextStyle.PARTY, { fontSize: `${this.UI_CONSTANTS.SKILL_TREE_POINTS_TEXT_SIZE}px` });
+    this.skillTreePointsText.setName("skill-tree-points-text");
+    this.skillTreePointsText.setOrigin(0, 1);
+    this.skillTreePointsText.setColor(this.UI_CONSTANTS.SKILL_TREE_STACK_TEXT_COLOR);
+    this.skillTreePointsText.setStroke(this.UI_CONSTANTS.SKILL_TREE_STACK_TEXT_SHADOW, this.UI_CONSTANTS.SKILL_TREE_STACK_TEXT_STROKE);
+    this.skillTreePointsText.setShadow(0, 0, this.UI_CONSTANTS.SKILL_TREE_STACK_TEXT_SHADOW);
+
+    this.skillTreeTokenContainer = this.scene.add.container(0, 0);
+    this.skillTreeTokenContainer.setName("skill-tree-token-container");
+    this.skillTreeTokenContainer.add([this.skillTreeTokenEntry, this.skillTreePointsIcon, this.skillTreePointsText]);
+    this.skillTreeTokenContainer.setVisible(false);
+    this.permaMoneyContainer.add(this.skillTreeTokenContainer);
+
+    this.setupSkillTreeIconTooltip(scene as BattleScene, this.skillTreeTokenIcon, "token");
+    this.setupSkillTreeIconTooltip(scene as BattleScene, this.skillTreePointsIcon, "points");
 
     this.permaModifierBar = new ModifierBar(scene as BattleScene);
     const barXOffset = this.getBarXOffset();
@@ -878,6 +940,104 @@ export default class UI extends Phaser.GameObjects.Container {
     }
 
     this.updatePermaMoneyText(scene);
+  }
+  public updateSkillTreeTokenDisplay(scene: BattleScene): void {
+    if (!this.skillTreeTokenContainer) {
+      return;
+    }
+
+    const activeSkillTree = scene.gameData?.activeSkillTree;
+    if (!scene.skillTreeEnabledForRun || !activeSkillTree) {
+      this.skillTreeTokenContainer.setVisible(false);
+      return;
+    }
+
+    const tracker = scene.findModifier(m => m instanceof SkillTreeTokenTrackerModifier) as SkillTreeTokenTrackerModifier | undefined;
+    const maxTokens = tracker ? tracker.getMaxStackCount(scene) : 2;
+    const tokens = activeSkillTree.tokens || 0;
+    const points = activeSkillTree.skillPoints || 0;
+    this.skillTreeTokenStack?.destroy();
+    this.skillTreeTokenStack = maxTokens > 1 && maxTokens < 11
+      ? this.createSkillTreeFractionText(tokens, maxTokens)
+      : this.createSkillTreeStackText(tokens.toString(), tokens >= maxTokens);
+    this.skillTreeTokenEntry.add(this.skillTreeTokenStack);
+    const c = this.UI_CONSTANTS;
+
+    const stackWidth = (this.skillTreeTokenStack.getData("contentWidth") as number) || 0;
+    const tokenEntryRight = Math.max(this.skillTreeTokenIcon.displayWidth, c.SKILL_TREE_STACK_TEXT_X + stackWidth) * c.SKILL_TREE_BAR_SCALE;
+
+    this.skillTreePointsIcon.setX(tokenEntryRight + c.SKILL_TREE_POINTS_GAP);
+    this.skillTreePointsText.setText(`x${points}`);
+    this.skillTreePointsText.setX(
+      this.skillTreePointsIcon.x + (this.skillTreePointsIcon.displayWidth / 2) + c.SKILL_TREE_POINTS_TEXT_X_OFFSET
+    );
+    this.skillTreePointsText.setY(
+      this.skillTreePointsIcon.y + (this.skillTreePointsIcon.displayHeight / 2) + c.SKILL_TREE_POINTS_TEXT_Y_OFFSET
+    );
+
+    this.skillTreeTokenContainer.setVisible(true);
+  }
+  private createSkillTreeStackText(value: string, capped: boolean): Phaser.GameObjects.BitmapText {
+    const c = this.UI_CONSTANTS;
+    const text = this.scene.add.bitmapText(c.SKILL_TREE_STACK_TEXT_X, c.SKILL_TREE_STACK_TEXT_Y, "item-count", value, c.SKILL_TREE_STACK_FONT_SIZE);
+    text.letterSpacing = c.SKILL_TREE_STACK_LETTER_SPACING;
+    text.setOrigin(0, 0);
+    if (capped) {
+      text.setTint(c.SKILL_TREE_STACK_CAPPED_TINT);
+    }
+    text.setData("contentWidth", text.width);
+    return text;
+  }
+  private createSkillTreeFractionText(value: number, max: number): Phaser.GameObjects.Container {
+    const c = this.UI_CONSTANTS;
+    const capped = value >= max;
+    const container = this.scene.add.container(c.SKILL_TREE_STACK_TEXT_X, c.SKILL_TREE_STACK_TEXT_Y);
+
+    const left = this.scene.add.bitmapText(0, 0, "item-count", value.toString(), c.SKILL_TREE_STACK_FONT_SIZE);
+    left.letterSpacing = c.SKILL_TREE_STACK_LETTER_SPACING;
+    left.setOrigin(0, 0);
+    const slashScale = c.SKILL_TREE_STACK_FONT_SIZE / 14;
+    const slash = this.scene.add.graphics();
+    const slashColor = capped ? c.SKILL_TREE_STACK_CAPPED_TINT : 0xffffff;
+    const slashX = left.width + 1;
+    slash.lineStyle(4 * slashScale, 0x000000, 0.8);
+    slash.lineBetween(slashX, 11 * slashScale, slashX + 4 * slashScale, 1 * slashScale);
+    slash.lineStyle(2 * slashScale, slashColor, 1);
+    slash.lineBetween(slashX, 11 * slashScale, slashX + 4 * slashScale, 1 * slashScale);
+
+    const right = this.scene.add.bitmapText(slashX + 6 * slashScale, 0, "item-count", max.toString(), c.SKILL_TREE_STACK_FONT_SIZE);
+    right.letterSpacing = c.SKILL_TREE_STACK_LETTER_SPACING;
+    right.setOrigin(0, 0);
+
+    if (capped) {
+      left.setTint(c.SKILL_TREE_STACK_CAPPED_TINT);
+      right.setTint(c.SKILL_TREE_STACK_CAPPED_TINT);
+    }
+
+    container.add([left, slash, right]);
+    container.setData("contentWidth", slashX + 6 * slashScale + right.width);
+    return container;
+  }
+  private setupSkillTreeIconTooltip(scene: BattleScene, icon: Phaser.GameObjects.Sprite, kind: "token" | "points"): void {
+    icon.setInteractive({ useHandCursor: true });
+    icon.on("pointerover", () => {
+      if (scene.uiEditModeActive) {
+        return;
+      }
+      const m = icon.getWorldTransformMatrix();
+      const anchor = { x: m.tx, y: m.ty };
+      if (kind === "token") {
+        ModifierTooltipUtils.showForSkillTreeTokens(scene, anchor);
+      } else {
+        ModifierTooltipUtils.showForSkillPoints(scene, anchor);
+      }
+    });
+    icon.on("pointerout", () => {
+      if (scene.uiEditModeActive) {
+        return;
+      }
+      ModifierTooltipUtils.hideIfNotPinned(scene);
+    });
   }
 
   private showPermaCollectedTypeTooltip(scene: BattleScene): void {
@@ -2035,6 +2195,13 @@ export default class UI extends Phaser.GameObjects.Container {
         (this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SIZE * this.UI_CONSTANTS.TOGGLE_BUTTON_ICON_SCALE) + this.UI_CONSTANTS.PERMA_COLLECTED_TYPE_SPACING : 0;
 
     this.permaCollectedTypeContainer.setPosition(leftPadding, topEdge + padding);
+    const skillTreeRowOriginOffset = this.permaCollectedTypeIcon.displayWidth / 2;
+    const skillTreeIconOriginOffset = this.UI_CONSTANTS.SKILL_TREE_ICON_Y * this.UI_CONSTANTS.SKILL_TREE_BAR_SCALE;
+    this.skillTreeTokenContainer.setPosition(
+      leftPadding - skillTreeRowOriginOffset + this.UI_CONSTANTS.SKILL_TREE_ROW_INDENT,
+      topEdge + padding + this.UI_CONSTANTS.SKILL_TREE_ROW_Y_OFFSET - skillTreeIconOriginOffset + 2
+    );
+    this.updateSkillTreeTokenDisplay(scene);
 
     const toggleStartX = leftPadding + permaCollectedTypeWidth;
     this.permaBarToggleContainer.setPosition(toggleStartX, topEdge + padding);

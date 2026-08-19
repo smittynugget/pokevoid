@@ -2006,8 +2006,14 @@ class PartySlot extends Phaser.GameObjects.Container {
       const statusIndicator = this.scene.add.sprite(0, 0, "statuses");
       statusIndicator.setFrame(StatusEffect[this.pokemon.status?.effect].toLowerCase());
       statusIndicator.setOrigin(0, 0);
-      statusIndicator.setScale(0.75);
-      statusIndicator.setPositionRelative(slotLevelLabel, this.slotIndex >= battlerCount ? 43 : 55, 0);
+
+      const isLeadSlot = this.slotIndex === 0;
+      statusIndicator.setScale(isLeadSlot ? 0.75 : 0.675);
+      statusIndicator.setPositionRelative(
+        slotLevelLabel,
+        isLeadSlot ? 52 : (this.slotIndex >= battlerCount ? 37 : 49),
+        isLeadSlot ? 0 : -1
+      );
 
       slotInfoContainer.add(statusIndicator);
     }

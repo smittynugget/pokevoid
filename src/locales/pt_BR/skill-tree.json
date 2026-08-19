@@ -35,8 +35,8 @@
   "tooltipReplaceGeneral": "Substituir a seleção Normal atual",
   "rankMax": "MÁX",
   "randomGlitchFormsForRunPromptTitle": "FORMAS PROIBIDAS",
-  "randomGlitchFormsForRunPromptGlitch": "Escolha 1 de 3 Formas Glitch para desbloquear nesta run.",
-  "randomGlitchFormsForRunPromptSmitty": "Todas as Formas Glitch foram esgotadas. Escolha 1 de 3 Formas SMITTY para desbloquear nesta run.",
+  "randomGlitchFormsForRunPromptGlitch": "Escolha 1 de 4 Formas Glitch para desbloquear nesta run.",
+  "randomGlitchFormsForRunPromptSmitty": "Todas as Formas Glitch foram esgotadas. Escolha 1 de 4 Formas SMITTY para desbloquear nesta run.",
   "rootNode": {
     "generic": "Caminho Equilibrado",
     "champion": "Potencial de {{champion}}",
@@ -52,6 +52,13 @@
   "tmNoneCanLearn": "Nenhum dos Seus Pokémon Pode Aprender",
   "rewards": {
     "skillTreeUnlocked": "Acesse a Árvore de Habilidades!",
+    "skillTreeUnlockedVariants": {
+      "0": "As travas da Árvore de Habilidades se desfazem.",
+      "1": "Você não está mais preso ao que já foi.",
+      "2": "Nada mais detém seu crescimento.",
+      "3": "As raízes se aprofundam. Reivindique o que é seu.",
+      "4": "Reescreva seu destino."
+    },
     "tm": "MT: {{move}}",
     "xm": "XM: {{move}}",
     "skillPoints": "{{amount}} Pontos de Habilidade",
@@ -198,7 +205,7 @@
     "glitchFormFlavor_red": "O encontro de [color=#e13d3d]{{champion}}[/color] com o vazio despertou algo ancestral — dados de uma era esquecida. [color=#e13d3d]{{glitchFormName}}[/color] se materializa da memória corrompida, uma relíquia da fronteira digital de Kanto.",
     "glitchFormFlavor_lt_surge": "Poder bruto atravessa o vazio enquanto a intensidade elétrica de [color=#e13d3d]{{champion}}[/color] quebra os limites da realidade. Em uma tempestade de voltagem e dados corrompidos, [color=#e13d3d]{{glitchFormName}}[/color] é liberado—uma força de pura energia imparável.",
     "glitchFormFlavor_apollo_diana": "Através do poder da corrupção, o vazio deu a {{champion}} o poder de usar [color=#e13d3d]{{glitchFormName}}[/color].",
-    "randomGlitchFormsForRun": "Revela 3 formas proibidas aleatórias (Glitch / SMITTY). Escolha 1 para desbloquear nesta run.",
+    "randomGlitchFormsForRun": "Revela 4 formas proibidas aleatórias (Glitch / SMITTY). Escolha 1 para desbloquear nesta run.",
     "legendaryFlavorText_brock": "A corrupção do Vazio infiltra através de [color=#e13d3d]{{champion}}[/color] como água através de pedra fraturada. O que sangra de sua determinação terrena se manifesta como um lendário nascido de sua própria essência...",
     "legendaryFlavorText_misty": "A corrupção do vazio atravessa [color=#e13d3d]{{champion}}[/color] como uma correnteza. Por um instante destruidor seu espírito cresta e quebra, manifestando-se como um lendário nascido de suas profundezas turbulentas...",
     "legendaryFlavorText_red": "O vazio treme diante do silêncio inabalável de [color=#e13d3d]{{champion}}[/color]. Das profundezas da Caverna Cerulean, uma presença se agita — atraída pelo treinador mais forte que já viveu...",
@@ -225,6 +232,7 @@
     "rogueBall": "Concede 5 Rogue Balls",
     "skillTreeTokens": "Ganhe {{amount}} Token da Árvore. Tokens da árvore aumentam o potencial de {{champion}}, ganhe o suficiente e sua árvore de habilidades sobe de nível!",
     "skillTreeTokensDescription": "Colete 2 fichas da árvore de habilidades para ativar a árvore de habilidades!",
+    "skillPointsDescription": "Gaste Pontos de Habilidade para desbloquear novas habilidades na Árvore de Habilidades do seu Campeão e ampliar seu potencial.",
     "skillTreeTokensReward": "Possuídas: {{owned}}. Obtenha mais {{needed}} para ativar a árvore de habilidades!",
     "skillTreeTokensReady": "Possuídas: {{owned}}. Árvore de habilidades pronta para ativar!",
     "skillPoints": "Concede o poder de acessar o potencial de {{champion}}! Usado para desbloquear habilidades bloqueadas na árvore de habilidades!",

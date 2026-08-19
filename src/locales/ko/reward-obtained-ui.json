@@ -1,6 +1,11 @@
 {
   "titles": {
     "skillTreeUnlock": "소울 레벨링!",
+    "skillTreeUnlockVariants": {
+      "0": "봉인 해제!",
+      "1": "영혼이 깊어진다...",
+      "2": "초월!"
+    },
     "newPokemon": "새로운 포켓몬!",
     "newFusion": "새로운 퓨전!",
     "newItem": "새로운 아이템!",

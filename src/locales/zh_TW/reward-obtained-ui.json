@@ -1,6 +1,11 @@
 {
   "titles": {
     "skillTreeUnlock": "靈魂升級！",
+    "skillTreeUnlockVariants": {
+      "0": "封印解除！",
+      "1": "靈魂愈發深邃……",
+      "2": "超脱！"
+    },
     "newPokemon": "新寶可夢！",
     "newFusion": "新融合！",
     "newItem": "新道具！",

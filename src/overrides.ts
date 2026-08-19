@@ -31,7 +31,6 @@ export const DEBUG_YU_VISUAL_TUNING = false;
 export const DEBUG_SKILL_TREE_FORCE_REWARD_TYPE: SkillTreeRewardType | undefined = undefined;
 const overrides = {
   STARTING_WAVE_OVERRIDE: 0,
-  ITEM_REWARD_OVERRIDE: [],
   FORCE_DUELMON_RANK_UP_OVERRIDE: false,
   FORCE_RANDOM_RANK_UP_OVERRIDE: false,
   MODIFIER_SELECT_DEBUG_OVERRIDE: false,

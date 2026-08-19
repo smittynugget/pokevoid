@@ -526,6 +526,7 @@ export default class BattleScene extends SceneBase {
   private bgmResumeTimer: Phaser.Time.TimerEvent | null;
   private bgmFadeSwapTimer: Phaser.Time.TimerEvent | null = null;
   private bgmCache: Set<string> = new Set();
+  private warnedMissingSoundKeys: Set<string> = new Set();
   private lastExplicitBgmKey: string | null = null;
   private playTimeTimer: Phaser.Time.TimerEvent;
 
@@ -3411,8 +3412,12 @@ export default class BattleScene extends SceneBase {
 
       this.sound.play(key, config);
       return this.sound.get(key) as AnySound;
-    } catch {
-      return sound as AnySound;
+    } catch (err) {
+      if (!this.warnedMissingSoundKeys.has(key)) {
+        this.warnedMissingSoundKeys.add(key);
+        console.warn(`playSound failed for key "${key}"`, err);
+      }
+      return (this.sound.get(key) as AnySound) ?? null as any;
     }
   }
 

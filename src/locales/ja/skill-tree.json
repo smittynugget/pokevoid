@@ -35,8 +35,8 @@
   "tooltipReplaceGeneral": "現在の通常選択を置換",
   "rankMax": "最大",
   "randomGlitchFormsForRunPromptTitle": "禁断のフォーム",
-  "randomGlitchFormsForRunPromptGlitch": "このランで解放するグリッチフォームを3つから1つ選んでください。",
-  "randomGlitchFormsForRunPromptSmitty": "グリッチフォームはすべて尽きました。このランで解放するSMITTYフォームを3つから1つ選んでください。",
+  "randomGlitchFormsForRunPromptGlitch": "このランで解放するグリッチフォームを4つから1つ選んでください。",
+  "randomGlitchFormsForRunPromptSmitty": "グリッチフォームはすべて尽きました。このランで解放するSMITTYフォームを4つから1つ選んでください。",
   "rootNode": {
     "generic": "バランスの道",
     "champion": "{{champion}}のポテンシャル",
@@ -52,6 +52,13 @@
   "tmNoneCanLearn": "習得できるポケモンがいません",
   "rewards": {
     "skillTreeUnlocked": "スキルツリーにアクセス！",
+    "skillTreeUnlockedVariants": {
+      "0": "スキルツリーの錠が外れた。",
+      "1": "かつての自分に縛られることはない。",
+      "2": "もう成長を阻むものはない。",
+      "3": "根はさらに深く伸びる。己のものを掴め。",
+      "4": "運命を作り変えろ。"
+    },
     "tm": "わざマシン: {{move}}",
     "xm": "XM: {{move}}",
     "skillPoints": "{{amount}} スキルポイント",
@@ -198,7 +205,7 @@
     "glitchFormFlavor_lt_surge": "[color=#e13d3d]{{champion}}[/color]の電気の激しさが現実の限界を打ち砕きながらヴォイドを駆け抜ける。電圧と壊れたデータの嵐の中で、[color=#e13d3d]{{glitchFormName}}[/color]が解き放たれる—純粋で止められないエネルギーの力。",
     "glitchFormFlavor_apollo_diana": "腐敗の力を通じて、ヴォイドは{{champion}}に[color=#e13d3d]{{glitchFormName}}[/color]を使う力を与えた。",
     "glitchFormFlavor_red": "[color=#e13d3d]{{champion}}[/color]の虚空との遭遇が太古の何かを呼び覚ました — 忘れられた時代のデータ。[color=#e13d3d]{{glitchFormName}}[/color]が壊れた記憶から実体化する、カントーのデジタルフロンティアの遺物。",
-    "randomGlitchFormsForRun": "ランダムな禁断フォーム（グリッチ／SMITTY）を3つ表示します。1つ選んでこのランで解放します。",
+    "randomGlitchFormsForRun": "ランダムな禁断フォーム（グリッチ／SMITTY）を4つ表示します。1つ選んでこのランで解放します。",
     "legendaryFlavorText_brock": "ヴォイドの腐敗が[color=#e13d3d]{{champion}}[/color]を通じて、ひび割れた岩を通る水のように染み込む。彼の大地の決意から滲み出るものが、彼自身のエッセンスから生まれた伝説として顕現する...",
     "legendaryFlavorText_misty": "ヴォイドの腐敗が[color=#e13d3d]{{champion}}[/color]を通じて離岸流のように押し寄せる。一瞬、彼女の魂が頂点に達し砕け、彼女自身の荒々しい深淵から生まれた伝説として顕現する...",
     "legendaryFlavorText_apollo_diana": "ヴォイドの闘が新月が星を飲み込むようにあなたの中で満ちていく。その夜から現れるものが伝説として形を成す—あなたの輝きが恐ろしいものへと反転して...",
@@ -225,6 +232,7 @@
     "rogueBall": "ローグボール5個を獲得",
     "skillTreeTokens": "{{amount}}ツリートークンを獲得。ツリートークンは{{champion}}のポテンシャルを高め、十分集めるとスキルツリーがレベルアップ！",
     "skillTreeTokensDescription": "スキルツリートークンを2つ集めてスキルツリーを有効にしよう！",
+    "skillPointsDescription": "スキルポイントを使って、チャンピオンのスキルツリーで新しいスキルを解放し、その可能性を伸ばそう！",
     "skillTreeTokensReward": "所持: {{owned}}。あと{{needed}}つでスキルツリーが有効になります！",
     "skillTreeTokensReady": "所持: {{owned}}。スキルツリーの準備完了！",
     "skillPoints": "{{champion}}のポテンシャルを引き出す力を獲得！スキルツリー内のロックされたスキルの解放に使用！",

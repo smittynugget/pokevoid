@@ -1,6 +1,11 @@
 {
   "titles": {
     "skillTreeUnlock": "MONTÉE DE L'ÂME !",
+    "skillTreeUnlockVariants": {
+      "0": "DESCELLÉ !",
+      "1": "TON ÂME S'APPROFONDIT...",
+      "2": "TRANSCENDANCE !"
+    },
     "newPokemon": "Nouveau Pokémon !",
     "newFusion": "Nouvelle Fusion !",
     "newItem": "Nouvel Objet !",

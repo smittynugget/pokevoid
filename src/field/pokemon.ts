@@ -373,7 +373,7 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
   private summonDataPrimer: PokemonSummonData | null;
 
   public summonData: PokemonSummonData;
-  public battleData: PokemonBattleData;
+  public battleData: PokemonBattleData = new PokemonBattleData();
   public battleSummonData: PokemonBattleSummonData;
   public turnData: PokemonTurnData;
 
@@ -4081,9 +4081,12 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     }
 
     const cry = this.getSpeciesForm().cry(scene, soundConfig);
-    let duration = cry.totalDuration * 1000;
+    let duration = (cry?.totalDuration ?? 0) * 1000;
     if (this.fusionSpecies && this.getSpeciesForm() !== this.getFusionSpeciesForm()) {
       let fusionCry = this.getFusionSpeciesForm().cry(scene, soundConfig, true);
+      if (!fusionCry) {
+        return cry;
+      }
       duration = Math.min(duration, fusionCry.totalDuration * 1000);
       fusionCry.destroy();
       scene.time.delayedCall(Utils.fixedInt(Math.ceil(duration * 0.4)), () => {
@@ -4194,10 +4197,22 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     const cry = this.scene.playSound(key, { rate: rate }) as AnySound;
     const sprite = this.getSprite();
     const tintSprite = this.getTintSprite();
-    let duration = cry.totalDuration * 1000;
 
     const fusionCryKey = `cry/${this.getFusionSpeciesForm().getCryKey(this.fusionFormIndex)}`;
     let fusionCry = this.scene.playSound(fusionCryKey, { rate: rate }) as AnySound;
+    if (!cry || !fusionCry) {
+      cry?.stop?.();
+      fusionCry?.stop?.();
+      fusionCry?.destroy?.();
+      this.scene.time.delayedCall(Utils.fixedInt(500), () => {
+        if (callback) {
+          callback();
+        }
+      });
+      return;
+    }
+
+    let duration = cry.totalDuration * 1000;
     fusionCry.stop();
     duration = Math.min(duration, fusionCry.totalDuration * 1000);
     fusionCry.destroy();

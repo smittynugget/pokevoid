@@ -35,8 +35,8 @@
   "tooltipReplaceGeneral": "替換當前普通選擇",
   "rankMax": "最大",
   "randomGlitchFormsForRunPromptTitle": "禁忌形態",
-  "randomGlitchFormsForRunPromptGlitch": "從3個故障形態中選擇1個，在本次冒險中解鎖。",
-  "randomGlitchFormsForRunPromptSmitty": "所有故障形態已耗盡。從3個SMITTY形態中選擇1個，在本次冒險中解鎖。",
+  "randomGlitchFormsForRunPromptGlitch": "從4個故障形態中選擇1個，在本次冒險中解鎖。",
+  "randomGlitchFormsForRunPromptSmitty": "所有故障形態已耗盡。從4個SMITTY形態中選擇1個，在本次冒險中解鎖。",
   "rootNode": {
     "generic": "平衡之路",
     "champion": "{{champion}} 的潛力",
@@ -52,6 +52,13 @@
   "tmNoneCanLearn": "你的寶可夢都無法學習",
   "rewards": {
     "skillTreeUnlocked": "進入技能樹！",
+    "skillTreeUnlockedVariants": {
+      "0": "技能樹的鎖扣盡數崩落。",
+      "1": "你已不再受過去的束縛。",
+      "2": "再無一物能阻你成長。",
+      "3": "根鬚探向更深處。取回屬於你的一切。",
+      "4": "重塑你的命運。"
+    },
     "tm": "招式機：{{move}}",
     "xm": "特殊招式機：{{move}}",
     "skillPoints": "{{amount}} 技能點",
@@ -198,7 +205,7 @@
     "glitchFormFlavor_lt_surge": "當 [color=#e13d3d]{{champion}}[/color] 的電力強度打破現實的極限時，原始力量湧過虛空。在電壓風暴和破碎數據中，[color=#e13d3d]{{glitchFormName}}[/color] 被釋放——一股純粹、勢不可擋的能量。",
     "glitchFormFlavor_apollo_diana": "通過腐蝕之力，虛空賦予 {{champion}} 使用 [color=#e13d3d]{{glitchFormName}}[/color] 的能力。",
     "glitchFormFlavor_red": "[color=#e13d3d]{{champion}}[/color]與虛空的相遇喚醒了遠古的事物——來自被遺忘時代的數據。[color=#e13d3d]{{glitchFormName}}[/color]從損壞的記憶中具現化，是關都數位邊疆的遺物。",
-    "randomGlitchFormsForRun": "顯示3個隨機禁忌形態（故障 / SMITTY）。選擇1個，在本次冒險中解鎖。",
+    "randomGlitchFormsForRun": "顯示4個隨機禁忌形態（故障 / SMITTY）。選擇1個，在本次冒險中解鎖。",
     "legendaryFlavorText_brock": "虛空的腐蝕如水滲透裂石般滲透 [color=#e13d3d]{{champion}}[/color]。從他堅毅的決心中流出的化為一隻由他自身本質誕生的傳說寶可夢...",
     "legendaryFlavorText_misty": "虛空的腐蝕如激流般湧過 [color=#e13d3d]{{champion}}[/color]。在那破碎的瞬間，她的精神達到頂峰並崩潰，化為一隻由她自身湍急深處誕生的傳說寶可夢...",
     "legendaryFlavorText_apollo_diana": "虛空的黑暗在你體內如新月吞噬星辰般增長。從那黑夜中誕生的化為一隻傳說——你的光輝被扭曲成可怕的存在...",
@@ -225,6 +232,7 @@
     "rogueBall": "獲得5個流氓球",
     "skillTreeTokens": "獲得 {{amount}} 樹代幣。樹代幣增加 {{champion}} 的潛力，獲得足夠多時技能樹會升級！",
     "skillTreeTokensDescription": "收集2枚技能樹代幣以啟動技能樹！",
+    "skillPointsDescription": "消耗技能點，在冠軍的技能樹中解鎖新技能，提升他們的潜力！",
     "skillTreeTokensReward": "已擁有：{{owned}}。再取得{{needed}}枚即可啟動技能樹！",
     "skillTreeTokensReady": "已擁有：{{owned}}。技能樹已準備就緒！",
     "skillPoints": "賦予你開發 {{champion}} 潛力的力量！用於解鎖技能樹中鎖定的技能！",

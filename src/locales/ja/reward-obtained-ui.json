@@ -1,6 +1,11 @@
 {
   "titles": {
     "skillTreeUnlock": "ソウルレベリング！",
+    "skillTreeUnlockVariants": {
+      "0": "封印解除！",
+      "1": "魂が深まる……",
+      "2": "超越！"
+    },
     "newPokemon": "新しいポケモン！",
     "newFusion": "新しい融合！",
     "newItem": "新しいアイテム！",

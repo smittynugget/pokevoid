@@ -3055,6 +3055,9 @@ export class SkillPointRewardModifierType extends ModifierType {
     getDescription(scene: BattleScene): string {
         return i18next.t(`${this.localeKey}.description` as any, { amount: this.amount });
     }
+    getTooltipRarity(_scene: BattleScene): SkillTreeRarity {
+        return SkillTreeRarity.LEGENDARY;
+    }
 }
 
 export class SkillTreeTokenRewardModifierType extends ModifierType {
@@ -3072,6 +3075,9 @@ export class SkillTreeTokenRewardModifierType extends ModifierType {
 
     getDescription(scene: BattleScene): string {
         return i18next.t(`${this.localeKey}.description` as any, { amount: this.amount });
+    }
+    getTooltipRarity(_scene: BattleScene): SkillTreeRarity {
+        return SkillTreeRarity.LEGENDARY;
     }
 }
 
@@ -4407,7 +4413,7 @@ export const modifierTypes = {
     FORM_CHANGE_ITEM: () => new FormChangeItemModifierTypeGenerator(),
     SMITTY_FORM_CHANGE_ITEM: () => new FormChangeItemModifierTypeGenerator(true),
 
-    FORBIDDEN_FORM_UNLOCK: () => new ModifierTypeGenerator((party: Pokemon[]) => {
+    FORBIDDEN_FORM_UNLOCK: () => new ModifierTypeGenerator((party: Pokemon[], pregenArgs?: any[]) => {
         const scene = party[0]?.scene;
         if (!scene) return null;
         const gd: any = (scene as any).gameData;
@@ -4464,7 +4470,43 @@ export const modifierTypes = {
         };
         const available = candidates.filter(c => !isUnlocked(c));
         if (!available.length) return null;
-        const pick = available[Utils.randSeedInt(available.length)];
+
+        let pool = available;
+        if (pregenArgs?.[0] === true) {
+            const lineSpecies = new Set<number>();
+            const walkForward = (id: number) => {
+                if (lineSpecies.has(id)) return;
+                lineSpecies.add(id);
+                for (const evo of (pokemonEvolutions[id] || [])) walkForward(evo.speciesId);
+            };
+            for (const p of party) {
+                for (const sp of [p?.species?.speciesId, (p as any)?.fusionSpecies?.speciesId]) {
+                    if (typeof sp !== "number") continue;
+                    let cur = sp;
+                    while (pokemonPrevolutions[cur] !== undefined) cur = pokemonPrevolutions[cur];
+                    walkForward(cur);
+                }
+            }
+
+            const candidateSpeciesId = (c: ForbiddenFormUnlockCandidate): number | null => {
+                if (c.kind === "MOD_FORM") return (c as any).speciesId ?? null;
+                if (c.kind === "QUEST_FORM") {
+                    const rid: any = (c as any).questUnlockData?.rewardId;
+                    const ids: any[] = Array.isArray(rid) ? rid : [rid];
+                    const first = ids.find(v => typeof v === "number");
+                    return typeof first === "number" ? first : null;
+                }
+                return null;
+            };
+
+            const matched = available.filter(c => {
+                const sid = candidateSpeciesId(c);
+                return sid !== null && lineSpecies.has(sid);
+            });
+            if (matched.length) pool = matched;
+        }
+
+        const pick = pool[Utils.randSeedInt(pool.length)];
         return new ForbiddenFormUnlockModifierType(pick);
     }),
 
@@ -6153,15 +6195,24 @@ export function overridePlayerModifierTypeOptions(options: ModifierTypeOption[],
     for (let i = 0; i < pickCount; i++) {
         const override: ModifierOverride = shuffled[i];
         const modifierFunc = modifierTypes[override.name];
+        if (!modifierFunc) {
+            console.warn(`ITEM_REWARD_OVERRIDE: unknown modifier key "${override.name}" - skipping.`);
+            continue;
+        }
         let modifierType: ModifierType | null = modifierFunc();
 
         if (modifierType instanceof ModifierTypeGenerator) {
-            const pregenArgs = ("type" in override) && (override.type !== null) ? [override.type] : undefined;
+            let pregenArgs: any[] | undefined = ("type" in override) && (override.type !== null) ? [override.type] : undefined;
+            if (!pregenArgs && override.name === "FORBIDDEN_FORM_UNLOCK") {
+                pregenArgs = [true];
+            }
             modifierType = modifierType.generateType(party, pregenArgs);
         }
 
         if (modifierType) {
             options[i].type = modifierType.withIdFromFunc(modifierFunc).withTierFromPool();
+        } else {
+            console.warn(`ITEM_REWARD_OVERRIDE: "${override.name}" produced no modifier (nothing available to grant) - leaving the rolled item in this slot.`);
         }
     }
 }
