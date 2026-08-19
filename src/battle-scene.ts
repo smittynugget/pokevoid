@@ -519,8 +519,6 @@ export default class BattleScene extends SceneBase {
   public damageNumberHandler: DamageNumberHandler;
   private spriteSparkleHandler: PokemonSpriteSparkleHandler;
 
-  private spriteKeyRefCounts: Map<string, number> = new Map();
-
   public fieldSpritePipeline: FieldSpritePipeline;
   public spritePipeline: SpritePipeline;
 
@@ -3066,19 +3064,6 @@ export default class BattleScene extends SceneBase {
   updateScoreText(): void {
     this.scoreText.setText(`Score: ${this.score.toString()}`);
     this.scoreText.setVisible(this.gameMode.isDaily);
-  }
-
-  public retainSpriteKey(key: string): void {
-    this.spriteKeyRefCounts.set(key, (this.spriteKeyRefCounts.get(key) ?? 0) + 1);
-  }
-  public releaseSpriteKey(key: string): boolean {
-    const next = (this.spriteKeyRefCounts.get(key) ?? 0) - 1;
-    if (next > 0) {
-      this.spriteKeyRefCounts.set(key, next);
-      return false;
-    }
-    this.spriteKeyRefCounts.delete(key);
-    return true;
   }
 
   updateUIPositions(): void {
