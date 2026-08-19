@@ -414,6 +414,7 @@
       "description": "Ottieni {{amount}} Punti Abilità. Usati per sbloccare abilità nell'Albero delle Abilità."
     },
     "SKILL_TOKENS": {
+      "nameSingle": "Token Albero Abilità",
       "name": "Token Albero Abilità x{{amount}}",
       "description": "Ottieni {{amount}} Token Albero Abilità. Usati per far salire di livello il tuo Albero delle Abilità!"
     },

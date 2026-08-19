@@ -14,6 +14,7 @@ import { ShopCursorTarget } from "#app/enums/shop-cursor-target";
 import { isNormalQuestCompleted } from "#app/modifier/perma-modifier-checker";
 import {setChangeNormalTyping} from "#app/data/type";
 import { ChampionUtils } from "#app/system/champion-utils";
+import { isIPhone } from "../../loading-scene";
 
 function getTranslation(key: string): string {
   if (!getIsInitialized()) {
@@ -137,6 +138,8 @@ export const SettingKeys = {
   Disable_IV_Scanner: "DISABLE_IV_SCANNER",
   Disable_Map: "DISABLE_MAP",
   Disable_Duelmons: "DISABLE_DUELMONS",
+  Duelmon_Spawn_Rarity: "DUELMON_SPAWN_RARITY",
+  Animation_Load: "ANIMATION_LOAD",
   Disable_Cutscenes: "DISABLE_CUTSCENES",
   Disable_Shiny_Power: "DISABLE_SHINY_POWER",
   Show_Item_Text_BG: "SHOW_ITEM_TEXT_BG",
@@ -325,6 +328,29 @@ export const Setting: Array<Setting> = [
     options: OFF_ON,
     default: 0,
     type: SettingType.GENERAL
+  },
+  {
+    key: SettingKeys.Duelmon_Spawn_Rarity,
+    label: i18next.t("settings:duelmonSpawnRarity"),
+    options: [
+      { value: "Default", label: i18next.t("settings:default") },
+      { value: "Rare", label: i18next.t("settings:rare") },
+      { value: "Very Rare", label: i18next.t("settings:veryRare") }
+    ],
+    default: 0,
+    type: SettingType.GENERAL
+  },
+  {
+    key: SettingKeys.Animation_Load,
+    label: i18next.t("settings:animationLoad"),
+    options: [
+      { value: "Off", label: i18next.t("settings:off") },
+      { value: "Lite", label: i18next.t("settings:animationLite") },
+      { value: "Full", label: i18next.t("settings:animationFull") },
+    ],
+    default: 2,
+    type: SettingType.GENERAL,
+    isHidden: () => isIPhone()
   },
   {
     key: SettingKeys.HP_Bar_Speed,
@@ -858,6 +884,12 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
       break;
     case SettingKeys.Disable_Duelmons:
       scene.disableDuelmons = Setting[index].options[value].value === "On";
+      break;
+    case SettingKeys.Duelmon_Spawn_Rarity:
+      scene.duelmonSpawnRarity = value;
+      break;
+    case SettingKeys.Animation_Load:
+      scene.animationLoadMode = value;
       break;
     case SettingKeys.Disable_Cutscenes:
       scene.disableCutscenes = Setting[index].options[value].value === "On";

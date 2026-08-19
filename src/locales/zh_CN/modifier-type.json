@@ -720,6 +720,7 @@
       "description": "获得{{amount}}个技能点。用于在技能树中解锁技能。"
     },
     "SKILL_TOKENS": {
+      "nameSingle": "技能树代币",
       "name": "技能树代币×{{amount}}",
       "description": "获得{{amount}}个技能树代币。用于升级你的技能树！"
     },

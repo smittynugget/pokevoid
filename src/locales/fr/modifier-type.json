@@ -758,6 +758,7 @@
       "description": "Gagnez {{amount}} Points de Compétence. Utilisés pour débloquer des compétences dans l'Arbre de Compétences."
     },
     "SKILL_TOKENS": {
+      "nameSingle": "Jeton d'Arbre",
       "name": "Jetons d'Arbre x{{amount}}",
       "description": "Gagnez {{amount}} Jetons d'Arbre. Utilisés pour faire monter de niveau votre Arbre de Compétences !"
     },

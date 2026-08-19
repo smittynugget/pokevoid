@@ -1723,6 +1723,15 @@ export class SkillTreeModifierPhase extends Phase {
 
         const species = getPokemonSpecies(questUnlockData.rewardId as Species);
         const formName = species.getGlitchFormName(true, undefined, questUnlockData.rewardType)?.toLowerCase();
+        const ast = this.scene.gameData.activeSkillTree;
+        if (formName && ast) {
+            if (!Array.isArray(ast.unlockedGlitchForms)) {
+                ast.unlockedGlitchForms = [];
+            }
+            if (!ast.unlockedGlitchForms.includes(formName)) {
+                ast.unlockedGlitchForms.push(formName);
+            }
+        }
 
         this.scene.ui.setMode(Mode.REWARD_OBTAINED, {
             type: RewardObtainedType.FORM,

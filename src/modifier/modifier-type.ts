@@ -34,8 +34,7 @@ import {allSpecies, getPokemonSpecies, universalSmittyForms, isGlitchFormKey, sp
 import {modGlitchFormData} from "../data/mod-glitch-form-data";
 import { SpeciesFormKey } from "#enums/species-form-key";
 import BattleScene from "../battle-scene";
-import { SkillTreeNodeGenerator } from "../system/skill-tree-node-generator";
-import { SkillTreeRarity, SkillTreeRewardType } from "../system/skill-tree-data";
+import { SkillTreeRarity } from "../system/skill-tree-data";
 import {VoucherType, getVoucherTypeIcon, getVoucherTypeName} from "../system/voucher";
 import {
     SpeciesFormChangeCondition,
@@ -3067,7 +3066,8 @@ export class SkillTreeTokenRewardModifierType extends ModifierType {
     }
 
     get name(): string {
-        return i18next.t(`${this.localeKey}.name` as any, { amount: this.amount });
+        const key = this.amount === 1 ? `${this.localeKey}.nameSingle` : `${this.localeKey}.name`;
+        return i18next.t(key as any, { amount: this.amount });
     }
 
     getDescription(scene: BattleScene): string {
@@ -4141,14 +4141,7 @@ export class PokemonAltBuildModifierType extends PokemonModifierType {
   }
 
   getTooltipDescription(scene: BattleScene): string {
-    const championId = (scene.gameData as any)?.selectedChampionId || (scene.gameData as any)?.activeSkillTree?.championId || "brock";
-    const nodeGen = new SkillTreeNodeGenerator(0, championId, scene);
-    const rewardData = {
-      type: SkillTreeRewardType.POKEMON_ALT_BUILD,
-      data: { altBuildId: this.altBuild.id, species: this.altBuild.species, rank: this.targetRank },
-      immediate: false
-    } as any;
-    return nodeGen.getRewardDescription(rewardData);
+    return ChampionUtils.getAltBuildDisplayDescription(this.altBuild.id, scene);
   }
 
   getTooltipRarity(scene: BattleScene): SkillTreeRarity {
@@ -4806,6 +4799,7 @@ export const modifierTypes = {
 
     SKILL_POINTS: () => new SkillPointRewardModifierType("modifierType:ModifierType.SKILL_POINTS", "ribbon_gen9", 1),
     SKILL_TOKENS: () => new SkillTreeTokenRewardModifierType("modifierType:ModifierType.SKILL_TOKENS", "permaMoreRevive", 1, "glitch"),
+    SKILL_TREE_TOKEN_TRACKER: () => new ModifierType("modifierType:ModifierType.SKILL_TREE_TOKEN_TRACKER", "permaMoreRevive", (type, _args) => new Modifiers.SkillTreeTokenTrackerModifier(type), "glitch"),
 
     SKILL_POINTS_7: () => new SkillPointRewardModifierType("modifierType:ModifierType.SKILL_POINTS", "ribbon_gen9", 7),
 
@@ -5218,6 +5212,8 @@ const modifierPool: ModifierPool = {
         }, 1),
         new WeightedModifierType(modifierTypes.DNA_SPLICERS, (party: Pokemon[]) => !party[0].scene.gameMode.isSplicedOnly && party.filter(p => !p.fusionSpecies).length > 1 ? 1 : 0, 1),
         new WeightedModifierType(modifierTypes.SKILL_POINTS, 1),
+        new WeightedModifierType(modifierTypes.SKILL_TOKENS, (party: Pokemon[]) =>
+            party[0]?.scene?.gameData?.activeSkillTree ? 1 : 0, 1),
         new WeightedModifierType(modifierTypes.BERRY_POUCH, 2),
         new WeightedModifierType(modifierTypes.GRIP_CLAW, 2),
         new WeightedModifierType(modifierTypes.SCOPE_LENS, 3),
@@ -6211,6 +6207,7 @@ export function getPlayerShopModifierTypeOptionsForWave(scene: BattleScene, base
                 new ModifierTypeOption(modifierTypes.REVIVE(), 0, baseCost * 2),
             ] : []),
             new ModifierTypeOption(modifierTypes.ETHER(), 0, baseCost * 0.4),
+            new ModifierTypeOption(modifierTypes.FULL_HEAL(), 0, baseCost),
             ...((forceAll || (isNuzlightQuestCompleted && (Utils.randSeedInt(100) < 50) && (() => {
                 const glitchModifier = scene.findModifier(m => m instanceof Modifiers.GlitchPieceModifier) as Modifiers.GlitchPieceModifier;
                 return !glitchModifier || glitchModifier.getStackCount() < glitchModifier.getMaxStackCount(scene);
@@ -6242,7 +6239,6 @@ export function getPlayerShopModifierTypeOptionsForWave(scene: BattleScene, base
             ...(hasShop ? [
                 new ModifierTypeOption(modifierTypes.SUPER_POTION(), 0, baseCost * 0.45)
             ] : []),
-            new ModifierTypeOption(modifierTypes.FULL_HEAL(), 0, baseCost),
             new ModifierTypeOption(modifierTypes.ELIXIR(), 0, baseCost),
             new ModifierTypeOption(modifierTypes.MAX_ETHER(), 0, baseCost),
             ...((forceAll || Utils.randSeedInt(100) < 15) ?

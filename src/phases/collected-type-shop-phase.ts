@@ -142,7 +142,7 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                     return false;
             }
 
-            if (cost && !this.canAffordCost(cost)) {
+            if (cost > 0 && !this.canAffordCost(cost)) {
                 this.scene.ui.playError();
                 return false;
             }
@@ -180,10 +180,6 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                 };
 
                 this.scene.addModifier(modifier, false, playSound).then(success => {
-                    if (!success) {
-                        this.scene.ui.playError();
-                        return;
-                    }
                     if (cost) {
                         const purchased = this.handlePurchase(cost);
                         if (!purchased) {
@@ -191,10 +187,21 @@ export class CollectedTypeShopPhase extends SelectModifierPhase {
                                 this.scene.removeModifier(modifier);
                             }
                             this.scene.ui.playError();
+                            const handler = this.scene.ui.getHandler();
+                            if (handler?.active) {
+                              handler.awaitingActionInput = true;
+                              handler.onActionInput = this.getCollectedTypeShopCallback(typeOptions, party);
+                            }
                             return;
                         }
                     }
                     refreshShopAfterPurchase();
+                }).catch(() => {
+                    const handler = this.scene.ui.getHandler();
+                    if (handler?.active) {
+                      handler.awaitingActionInput = true;
+                      handler.onActionInput = this.getCollectedTypeShopCallback(typeOptions, party);
+                    }
                 });
                 return true;
             };

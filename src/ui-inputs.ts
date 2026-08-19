@@ -480,6 +480,10 @@ export class UiInputs {
         this.scene.ui.processInput(Button.STATS);
         return;
       }
+      if (uiHandler.wantsAltBuildCycleOnStats?.()) {
+        this.scene.ui.processInput(Button.STATS);
+        return;
+      }
       if (uiHandler.wantsStatsForTooltipDetails()) {
         this.scene.ui.processInput(Button.STATS);
         return;

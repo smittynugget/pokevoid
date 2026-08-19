@@ -51,5 +51,6 @@
   "disablePassive": "禁用被动",
   "locked": "已锁定",
   "disabled": "已禁用",
-  "uncaught": "未捕获"
-} 
+  "uncaught": "未捕获",
+  "signatureLabel": "签名"
+}

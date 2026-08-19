@@ -51,5 +51,6 @@
   "disablePassive": "停用被動",
   "locked": "已鎖定",
   "disabled": "已停用",
-  "uncaught": "未捕獲"
-} 
+  "uncaught": "未捕獲",
+  "signatureLabel": "簽名"
+}

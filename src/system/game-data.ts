@@ -21,6 +21,7 @@ import {BattleType, DynamicMode, FixedBattleSeeds, NightmareBattleSeeds, nightma
 import TrainerData from "./trainer-data";
 import {getAllRivalTrainerTypes, getDynamicRivalConfig, RivalTrainerType, trainerConfigs, TrainerSlot} from "../data/trainer-config";
 import {SettingKeys, resetSettings, setSetting} from "./settings/settings";
+import {isIPhone} from "../loading-scene";
 import {achvs} from "./achv";
 import EggData from "./egg-data";
 import {Egg} from "../data/egg";
@@ -55,6 +56,7 @@ import {Species} from "#enums/species";
 import {RewardType} from "#enums/reward-type";
 import {GameMechanicsID, GameMechanicsVersion} from "#enums/gameMechanicsID";
 import { ActiveSkillTreeData } from "#app/system/skill-tree-data";
+import { ensureSkillTreeTokenTracker } from "#app/system/skill-tree-progression";
 import {applyChallenges, ChallengeType} from "#app/data/challenge.js";
 import {WeatherType} from "#app/enums/weather-type.js";
 import {TerrainType} from "#app/data/terrain.js";
@@ -228,6 +230,8 @@ export interface SystemSaveData {
     settingsGamepad?: Record<string, number>;
     settingsKeyboard?: Record<string, number>;
     mappingConfigs?: Record<string, unknown>;
+    commandStripUsageCounts?: Record<number, number>;
+    commandStripRecentOrder?: number[];
 }
 
 export interface SessionSaveData {
@@ -282,6 +286,8 @@ export interface SessionSaveData {
     ivScannerEnabledForRun?: boolean;
     mapEnabledForRun?: boolean;
     skillTreeEnabledForRun?: boolean;
+    pendingSkillTreeAutoOpen?: boolean;
+    skillTreeAutoOpenConsumed?: boolean;
     wave35UnlockedThisRun?: boolean;
     trainerDualColorRecolorEnabledForRun?: boolean;
     trainerDualColorAForRun?: number[] | null;
@@ -295,6 +301,7 @@ export interface ActiveSkillTreeDataSerialized {
     runtimeType2?: number;
     treeLevel: number;
     maxVisibleDepth: number;
+    depth1BountyPresent?: boolean;
     unlockedNodes: string[];
     skillEffects: Record<string, any>;
     seed: number;
@@ -545,6 +552,8 @@ export class GameData {
     private migrationOccurred: boolean = false;
     public resumeInBattle: boolean = false;
     public activeSkillTree?: ActiveSkillTreeData;
+    public pendingSkillTreeAutoOpen: boolean = false;
+    public skillTreeAutoOpenConsumed: boolean = false;
     public tempSkillTreeConfig?: any;
 
     public currentPermaShopOptions: ModifierTypeOption[] | null = null;
@@ -592,6 +601,9 @@ export class GameData {
     } | null = null;
     public tutorialStarterSelectCallback: (() => void) | null = null;
     public moveUsageCount: Record<number, number> = {};
+    public commandStripUsageCounts: Record<number, number> = {};
+
+    public commandStripRecentOrder: number[] = [];
     public pendingMoveUpgrades: number = -1;
     public upgradedMoves: Record<string, Move> = {};
     public tempHatchedPokemon: PlayerPokemon[] = [];
@@ -1277,6 +1289,8 @@ export class GameData {
                 ? JSON.parse(this.getLocalStorageItem("settingsKeyboard")!) : undefined,
             mappingConfigs: localStorage.hasOwnProperty("mappingConfigs")
                 ? JSON.parse(this.getLocalStorageItem("mappingConfigs")!) : undefined,
+            commandStripUsageCounts: this.commandStripUsageCounts ?? {},
+            commandStripRecentOrder: this.commandStripRecentOrder ?? [],
         };
     }
 
@@ -1755,6 +1769,12 @@ export class GameData {
                 }
 
                 this.smitomTutorialFlags = systemData.smitomTutorialFlags || {};
+
+                this.commandStripUsageCounts = systemData.commandStripUsageCounts ?? {};
+                this.commandStripRecentOrder = systemData.commandStripRecentOrder
+                    ?? Object.keys(this.commandStripUsageCounts)
+                        .map(Number)
+                        .sort((a, b) => (this.commandStripUsageCounts[b] || 0) - (this.commandStripUsageCounts[a] || 0));
 
                 if (systemData.lastSaveTime) {
                     this.lastSaveTime = systemData.lastSaveTime;
@@ -2277,6 +2297,15 @@ export class GameData {
     private loadSettings(): boolean {
         resetSettings(this.scene);
 
+        if (isIPhone()) {
+            const saved = localStorage.hasOwnProperty("settings")
+                ? JSON.parse(this.getLocalStorageItem("settings")!)
+                : null;
+            if (!saved || saved[SettingKeys.Animation_Load] === undefined) {
+                setSetting(this.scene, SettingKeys.Animation_Load, 1);
+            }
+        }
+
         if (!localStorage.hasOwnProperty("settings")) {
             this.saveSetting(SettingKeys.Modifier_Tooltips, 0);
             return false;
@@ -2475,6 +2504,8 @@ export class GameData {
             ivScannerEnabledForRun: scene.ivScannerEnabledForRun,
             mapEnabledForRun: scene.mapEnabledForRun,
             skillTreeEnabledForRun: scene.skillTreeEnabledForRun,
+            pendingSkillTreeAutoOpen: this.pendingSkillTreeAutoOpen ?? false,
+            skillTreeAutoOpenConsumed: this.skillTreeAutoOpenConsumed ?? false,
             wave35UnlockedThisRun: scene.wave35UnlockedThisRun,
             trainerDualColorRecolorEnabledForRun: scene.trainerDualColorRecolorEnabledForRun,
             trainerDualColorAForRun: scene.trainerDualColorAForRun,
@@ -2495,6 +2526,7 @@ export class GameData {
             runtimeType2: this.activeSkillTree.runtimeType2,
             treeLevel: this.activeSkillTree.treeLevel,
             maxVisibleDepth: this.activeSkillTree.maxVisibleDepth,
+            depth1BountyPresent: this.activeSkillTree.depth1BountyPresent ?? false,
             unlockedNodes: Array.from(this.activeSkillTree.unlockedNodes),
             skillEffects: Object.fromEntries(this.activeSkillTree.skillEffects),
             seed: this.activeSkillTree.seed,
@@ -2526,6 +2558,7 @@ export class GameData {
             runtimeType2: isRedMigration ? undefined : data.runtimeType2,
             treeLevel: data.treeLevel,
             maxVisibleDepth: data.maxVisibleDepth,
+            depth1BountyPresent: data.depth1BountyPresent ?? false,
             unlockedNodes: new Set(data.unlockedNodes || []),
             skillEffects: new Map(Object.entries(data.skillEffects || {})),
             seed: data.seed,
@@ -2581,7 +2614,7 @@ export class GameData {
             championId,
             runtimeType1,
             runtimeType2,
-            treeLevel: 1,
+            treeLevel: 999,
             maxVisibleDepth: 2,
             unlockedNodes: new Set(["root_0"]),
             skillEffects: new Map(),
@@ -2727,6 +2760,8 @@ export class GameData {
                     this.sacrificeToggleOn = _sessionData.sacrificeToggleOn || false;
                     this.moveUsageCount = _sessionData.moveUsageCount || {};
                     this.pendingMoveUpgrades = _sessionData.pendingMoveUpgrades || -1;
+                    this.pendingSkillTreeAutoOpen = _sessionData.pendingSkillTreeAutoOpen ?? false;
+                    this.skillTreeAutoOpenConsumed = false;
                     this.preargsForShop = _sessionData.preargsForShop || {};
                     this.biomeChange = _sessionData.biomeChange || BiomeChange.NONE;
                     this.recoveryBossMode = _sessionData.recoveryBossMode || RecoveryBossMode.NONE;
@@ -2975,9 +3010,15 @@ export class GameData {
                         this.activeSkillTree = undefined;
                     }
                     this.ensureActiveSkillTreeOnLegacyLoad(scene);
+                    ensureSkillTreeTokenTracker(scene);
                     this.chaosAltRivals = _sessionData.chaosAltRivals || []
                     this.sessionQuestModifierData = _sessionData.sessionQuestModifierData || {};
                     this.activeConsoleCodeQuests = _sessionData.activeConsoleCodeQuests || [];
+
+                    if (battle?.trainer && battleType === BattleType.TRAINER) {
+                        loadPokemonAssets.push(battle.trainer.loadAssets().then(() => battle.trainer.initSprite()));
+                    }
+
                     await Promise.all(loadPokemonAssets);
                 };
                 if(this.combinedData.sessionData?.length) {
@@ -4744,6 +4785,10 @@ export class GameData {
     incrementRibbonCount(species: PokemonSpecies, forStarter: boolean = false): integer {
         const speciesIdToIncrement: Species = species.getRootSpeciesId(forStarter);
 
+        if (!this.starterData[speciesIdToIncrement]) {
+            return 0;
+        }
+
         if (!this.starterData[speciesIdToIncrement].classicWinCount) {
             this.starterData[speciesIdToIncrement].classicWinCount = 0;
         }
@@ -5542,7 +5587,25 @@ export class GameData {
     }
 
     public canUseGlitchOrSmittyForm(speciesId: Species, rewardType: RewardType = RewardType.GLITCH_FORM_A): boolean {
-        return this.getCompletedQuestForSpecies(speciesId, rewardType);
+        const result = this.getCompletedQuestForSpecies(speciesId, rewardType);
+        if (!result && import.meta.env.DEV) {
+            this.warnIfRunUnlockedFormRejected(speciesId, rewardType);
+        }
+        return result;
+    }
+    private warnIfRunUnlockedFormRejected(speciesId: Species, rewardType: RewardType): void {
+        const ast = this.activeSkillTree;
+        if (!ast) {
+            return;
+        }
+        const claimedByQuest = Object.values(ast.sessionQuestUnlockables ?? {}).some(progress => {
+            const rewardId: any = progress?.questUnlockData?.rewardId;
+            const ids = Array.isArray(rewardId) ? rewardId : [rewardId];
+            return ids.includes(speciesId);
+        });
+        if (claimedByQuest) {
+            console.warn("[SkillTree] run-unlocked glitch form rejected by gate", { speciesId, rewardType });
+        }
     }
 
     isUniSmittyFormUnlocked(formName: string): boolean {
@@ -5628,6 +5691,17 @@ export class GameData {
                         return true;
                     }
                 }
+            }
+        }
+        const runForms = this.activeSkillTree?.unlockedGlitchForms;
+        if (Array.isArray(runForms) && runForms.length) {
+            try {
+                const formName = getPokemonSpecies(speciesId)
+                    ?.getGlitchFormName?.(true, undefined, rewardType)?.toLowerCase?.();
+                if (formName && runForms.includes(formName)) {
+                    return true;
+                }
+            } catch {
             }
         }
 
@@ -5790,6 +5864,7 @@ export class GameData {
           }
 
           if (scene.disableCutscenes) {
+            console.warn("[QUEST_UNLOCKS] disableCutscenes=true — using reward fallback instead of slideshow for rival:", targetRival);
             const rivalName = i18next.t(`trainerNames:${TrainerType[targetRival].toLowerCase()}`);
             scene.unshiftPhase(new RewardObtainDisplayPhase(
               scene,

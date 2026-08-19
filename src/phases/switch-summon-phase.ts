@@ -79,7 +79,9 @@ export class SwitchSummonPhase extends SummonPhase {
           pokemonName: getPokemonNameWithAffix(pokemon)
         })
       );
-      this.scene.playSound("se/pb_rel");
+      if (pokemon.species?.generation !== 20) {
+        this.scene.playSound("se/pb_rel");
+      }
       pokemon.hideInfo();
       const switchTint = pokemon.typeBallType !== undefined
         ? Phaser.Display.Color.GetColor(...getTypeRgb(pokemon.typeBallType))

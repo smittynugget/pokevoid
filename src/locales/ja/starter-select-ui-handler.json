@@ -51,5 +51,6 @@
   "disablePassive": "パッシブを無効化",
   "locked": "ロック中",
   "disabled": "無効",
-  "uncaught": "未捕獲"
+  "uncaught": "未捕獲",
+  "signatureLabel": "シグネチャー"
 } 

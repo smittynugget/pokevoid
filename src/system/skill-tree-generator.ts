@@ -1,10 +1,8 @@
 import i18next from "#app/plugins/i18n";
 import * as Utils from "#app/utils";
 import BattleScene from "#app/battle-scene";
-import Overrides from "#app/overrides";
 import { ChampionManager } from "#app/system/champion-manager";
 import { ChampionUtils } from "#app/system/champion-utils";
-import { ChampionSkillVersion } from "#app/system/game-data";
 import { SkillTreeNode, SkillTreeNodeState, SkillTreeRarity, SkillTreeRewardType } from "#app/system/skill-tree-data";
 import { SkillTreeNodeGenerator } from "#app/system/skill-tree-node-generator";
 import { SkillTreeUtils } from "#app/system/skill-tree-utils";
@@ -34,45 +32,10 @@ export class SkillTreeGenerator {
 		const rootNode = this.createRootNode();
 		this.nodes.push(rootNode);
 
-		if (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) {
-			if (this.shouldGenerateBountyNode()) {
-				const bountyNode = this.createBountyNode(rootNode);
-				this.nodes.push(bountyNode);
-			}
-		}
-
 		this.localChaosGenerator(rootNode);
 		this.applyDepthVisibility(maxVisibleDepth);
 
 		return this.nodes;
-	}
-
-	private shouldGenerateBountyNode(): boolean {
-		if (Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) return true;
-		return Utils.randSeedInt(10000) < 500;
-	}
-
-	private createBountyNode(rootNode: SkillTreeNode): SkillTreeNode {
-		const angle = Math.PI * 1.5;
-		const radius = this.TIER_RADIUS;
-		return {
-			id: "depth1_bounty_0",
-			depth: 1,
-			position: { x: radius * Math.cos(angle), y: radius * Math.sin(angle) },
-			dependencies: [rootNode.id],
-			rarity: SkillTreeRarity.ROGUE,
-			state: SkillTreeNodeState.LOCKED_DETAILS,
-			rewardData: {
-				type: SkillTreeRewardType.BOUNTY_SELECT,
-				data: { bountyNode: true },
-				immediate: false
-			},
-			name: i18next.t("skillTree:rewards.bountyNode"),
-			description: i18next.t("skillTree:rewards.bountyNodeDesc"),
-			cost: 0,
-			isLegendary: false,
-			unlocked: false
-		};
 	}
 
 	private createRootNode(): SkillTreeNode {
@@ -119,26 +82,13 @@ export class SkillTreeGenerator {
 		const generator = new SkillTreeNodeGenerator(this.seed, this.championId, this.scene);
 		let tiers: SkillTreeNode[][] = [[rootNode]];
 
-		const hasBountyNode = this.nodes.some(n => n.id === "depth1_bounty_0");
-		const bountyAngle = Math.PI * 1.5;
-		const bountyExclusionZone = 0.35;
-
 		let tier1Nodes: SkillTreeNode[] = [];
 		const radius1 = this.TIER_RADIUS * 1;
 		const depth1Count = this.getDepth1StarterNodeCount();
 		const minAngleSep1 = (2 * Math.PI) / (depth1Count * 1.5);
 		let lastAngle1 = 0;
 		for (let i = 0; i < depth1Count; i++) {
-			let angle = lastAngle1 + minAngleSep1 + Utils.randSeedInt(minAngleSep1 * 1000) / 1000;
-			if (hasBountyNode) {
-				const normAngle = angle % (2 * Math.PI);
-				const diff = Math.abs(normAngle - bountyAngle);
-				const angularDist = Math.min(diff, 2 * Math.PI - diff);
-				if (angularDist < bountyExclusionZone) {
-					angle = bountyAngle + bountyExclusionZone;
-					if (angle >= 2 * Math.PI) angle -= 2 * Math.PI;
-				}
-			}
+			const angle = lastAngle1 + minAngleSep1 + Utils.randSeedInt(minAngleSep1 * 1000) / 1000;
 			lastAngle1 = angle;
 			const x = radius1 * Math.cos(angle);
 			const y = radius1 * Math.sin(angle);
@@ -224,7 +174,7 @@ export class SkillTreeGenerator {
 
 	private createNode(rewardData: any, x: number, y: number, dependencies: string[] = [], depth: number): SkillTreeNode {
 
-		const nodeRarity = rewardData.rarity || SkillTreeRarity.COMMON;
+		const nodeRarity = rewardData.rarity || SkillTreeRarity.GREAT;
 
 		const node: SkillTreeNode = {
 			id: `node_${this.idCounter++}`,
@@ -262,34 +212,33 @@ export class SkillTreeGenerator {
 	}
 
 	private getRandomCommonOrGreat(): SkillTreeRarity {
-		return Utils.randSeedInt(2) === 0 ? SkillTreeRarity.COMMON : SkillTreeRarity.GREAT;
+		return SkillTreeRarity.GREAT;
 	}
-
 	private calculateNodeRarity(depth: number, _tier: number): SkillTreeRarity {
 		const rarityRoll = Utils.randSeedInt(100000);
 		if (depth >= 7) {
 			if (rarityRoll < 1000) return SkillTreeRarity.LEGENDARY;
-			if (rarityRoll < 3000) return SkillTreeRarity.MASTER;
-			if (rarityRoll < 10000) return SkillTreeRarity.ROGUE;
-			if (rarityRoll < 35000) return SkillTreeRarity.ULTRA;
+			if (rarityRoll < 6000) return SkillTreeRarity.MASTER;
+			if (rarityRoll < 17000) return SkillTreeRarity.ROGUE;
+			if (rarityRoll < 34000) return SkillTreeRarity.ULTRA;
 			return this.getRandomCommonOrGreat();
 		} else if (depth >= 5) {
-			if (rarityRoll < 100) return SkillTreeRarity.LEGENDARY;
-			if (rarityRoll < 300) return SkillTreeRarity.MASTER;
-			if (rarityRoll < 5300) return SkillTreeRarity.ROGUE;
-			if (rarityRoll < 25300) return SkillTreeRarity.ULTRA;
+			if (rarityRoll < 400) return SkillTreeRarity.LEGENDARY;
+			if (rarityRoll < 4000) return SkillTreeRarity.MASTER;
+			if (rarityRoll < 12500) return SkillTreeRarity.ROGUE;
+			if (rarityRoll < 31000) return SkillTreeRarity.ULTRA;
 			return this.getRandomCommonOrGreat();
 		} else if (depth >= 3) {
-			if (rarityRoll < 10) return SkillTreeRarity.LEGENDARY;
-			if (rarityRoll < 30) return SkillTreeRarity.MASTER;
-			if (rarityRoll < 5030) return SkillTreeRarity.ROGUE;
-			if (rarityRoll < 25030) return SkillTreeRarity.ULTRA;
+			if (rarityRoll < 150) return SkillTreeRarity.LEGENDARY;
+			if (rarityRoll < 2900) return SkillTreeRarity.MASTER;
+			if (rarityRoll < 9650) return SkillTreeRarity.ROGUE;
+			if (rarityRoll < 28750) return SkillTreeRarity.ULTRA;
 			return this.getRandomCommonOrGreat();
 		} else {
-			if (rarityRoll < 2) return SkillTreeRarity.LEGENDARY;
-			if (rarityRoll < 12) return SkillTreeRarity.MASTER;
-			if (rarityRoll < 1862) return SkillTreeRarity.ROGUE;
-			if (rarityRoll < 19862) return SkillTreeRarity.ULTRA;
+			if (rarityRoll < 50) return SkillTreeRarity.LEGENDARY;
+			if (rarityRoll < 2050) return SkillTreeRarity.MASTER;
+			if (rarityRoll < 7050) return SkillTreeRarity.ROGUE;
+			if (rarityRoll < 27000) return SkillTreeRarity.ULTRA;
 			return this.getRandomCommonOrGreat();
 		}
 	}

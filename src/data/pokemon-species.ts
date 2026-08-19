@@ -670,7 +670,7 @@ export abstract class PokemonSpeciesForm {
         if (shouldFallbackZaMegaVariantSprite(this.speciesId, formSpriteKey, shiny, variant)) {
             variant = 0;
         }
-        const showGenderDiffs = this.genderDiffs && female && ![SpeciesFormKey.MEGA, SpeciesFormKey.GIGANTAMAX].find(k => formSpriteKey === k);
+        const showGenderDiffs = this.genderDiffs && female && !formSpriteKey.startsWith(SpeciesFormKey.MEGA) && !formSpriteKey.startsWith(SpeciesFormKey.GIGANTAMAX);
 
         const baseSpriteKey = `${showGenderDiffs ? "female__" : ""}${this.speciesId}${formSpriteKey ? `-${formSpriteKey}` : ""}`;
 
@@ -1127,6 +1127,7 @@ export default class PokemonSpecies extends PokemonSpeciesForm implements Locali
                 case SpeciesFormKey.ETERNAMAX:
                 case SpeciesFormKey.MEGA_X:
                 case SpeciesFormKey.MEGA_Y:
+                case SpeciesFormKey.MEGA_Z:
                     key = form.formKey;
                     break;
                 default:
@@ -1409,7 +1410,15 @@ export default class PokemonSpecies extends PokemonSpeciesForm implements Locali
         const specificForm = this.forms.find(form => form.formKey === targetFormKey);
         if (specificForm) {
             if (!getGlitchFormName && scene) {
-                return scene.gameData.canUseGlitchOrSmittyForm(this.speciesId, rewardType) ? this.name : null;
+                const types = [
+                    RewardType.GLITCH_FORM_A,
+                    RewardType.GLITCH_FORM_B,
+                    RewardType.GLITCH_FORM_C,
+                    RewardType.GLITCH_FORM_D,
+                    RewardType.GLITCH_FORM_E,
+                ];
+                const unlocked = types.some(t => scene.gameData.canUseGlitchOrSmittyForm(this.speciesId, t));
+                return unlocked ? this.name : null;
             }
             return getGlitchFormName ? specificForm.formName : this.name;
         }

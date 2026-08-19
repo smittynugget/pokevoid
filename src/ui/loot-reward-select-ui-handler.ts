@@ -39,7 +39,7 @@ import { TweakDropdownPanel } from "./tweak/tweak-dropdown-panel";
 
 import { Type } from "../data/type";
 import { getStatName, Stat } from "../data/pokemon-stat";
-import { getNatureName, getNatureStatMultiplier } from "../data/nature";
+import { getNatureName, getNatureStatMultiplier, Nature } from "../data/nature";
 import { allAbilities } from "../data/ability";
 import { allMoves } from "../data/move";
 import Overrides from "../overrides";
@@ -55,6 +55,7 @@ import { pokemonEvolutions } from "../data/pokemon-evolutions";
 import { getPokemonSpecies } from "../data/pokemon-species";
 import { ModifierTier } from "../modifier/modifier-tier";
 import { playCondenseTrailTransition, getEffectCount, CondenseTrailHandle } from "../field/condense-trail-transition";
+import { PokemonBattleTooltipUtils } from "./pokemon-battle-tooltip-utils";
 
 function ensureTintedModifierBg(scene: Phaser.Scene, tint: number): string {
   const key = `__tinted_modifier_bg_${tint.toString(16)}`;
@@ -281,7 +282,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
     this.shopStripBg = this.scene.add.graphics();
     this.shopStripContainer.add(this.shopStripBg);
 
-    this.shopStripLabel = addTextObject(this.scene, 3.5, 6, i18next.t("modifierSelectUiHandler:shopLabel"), TextStyle.PERFECT_IV, { fontSize: "36px" });
+    this.shopStripLabel = addTextObject(this.scene, 3.5, 6, i18next.t("modifierSelectUiHandler:shopLabel"), TextStyle.PERFECT_IV, { fontSize: "41px" });
     this.shopStripLabel.setOrigin(0, 0.5);
     this.shopStripLabel.setStroke("#424242", 14);
     this.shopStripLabel.setDepth(11);
@@ -316,7 +317,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
 
     if (this.shopStripBg) {
       this.shopStripBg.clear();
-      this.shopStripBg.fillStyle(0x000000, 0.7);
+      this.shopStripBg.fillStyle(0x000000, 0.0);
       this.shopStripBg.fillRect(0, 0, screenW, stripH);
     }
 
@@ -661,6 +662,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
           }));
         }
 
+        if ((this.scene as BattleScene).animationLoadMode >= 2) {
         const shimmerTailMs = LOOT_TOTAL_MS * (1 - SEQ_END);
         const shimmerStaggerMs = shimmerTailMs * 0.08;
         const shimmerSweepMs = shimmerTailMs * 0.5;
@@ -710,6 +712,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
             });
           }
         }));
+        }
 
         this._lootRevealTimers.push(this.scene.time.delayedCall(emberMs(LOOT_TOTAL_MS), () => {
           for (const opt of this.options) {
@@ -759,8 +762,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
               if (this.cursorObj) this.cursorObj.setVisible(false);
               (this.scene as BattleScene).ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
             }
-          }
-          if (this.displayConfig?.isShinyPower) {
+          } else if (this.displayConfig?.isShinyPower) {
             const flags = (this.scene as BattleScene).gameData.smitomTutorialFlags;
             if (DEBUG_FORCE_SMITOM_TUTORIAL && !LootRewardSelectUiHandler._smitomShinyPowerDebugShown) {
               LootRewardSelectUiHandler._smitomShinyPowerDebugShown = true;
@@ -785,8 +787,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
               if (this.cursorObj) this.cursorObj.setVisible(false);
               (this.scene as BattleScene).ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
             }
-          }
-          if (this.displayConfig?.isRankUp) {
+          } else if (this.displayConfig?.isRankUp) {
             const flags = (this.scene as BattleScene).gameData.smitomTutorialFlags;
             if (DEBUG_FORCE_SMITOM_TUTORIAL && !LootRewardSelectUiHandler._smitomRankUpDebugShown) {
               LootRewardSelectUiHandler._smitomRankUpDebugShown = true;
@@ -867,7 +868,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
         }));
       };
 
-      if (this.meetsCondenseTrailTier(this.allTypeOptions) && !this._condensePlayedThisSession && !(this.scene as BattleScene).reroll) {
+      if ((this.scene as BattleScene).animationLoadMode >= 2 && this.meetsCondenseTrailTier(this.allTypeOptions) && !this._condensePlayedThisSession && !(this.scene as BattleScene).reroll) {
         this._condensePlayedThisSession = true;
 
         const skipBlackTitle = this.displayConfig?.isRankUp
@@ -1280,13 +1281,13 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
       const type = opt.modifierTypeOption.type;
 
       let iconSprite: Phaser.GameObjects.Sprite;
-      let iconScale = 0.25;
+      let iconScale = 0.40;
       if (type instanceof AddPokemonModifierType) {
         try {
           const pokemon = (type as AddPokemonModifierType).getPokemon();
           iconSprite = this.scene.add.sprite(x, stripH / 2, pokemon.getIconAtlasKey());
           iconSprite.setFrame(pokemon.getIconId(false));
-          iconScale = adjustDuelmonIconScale(0.25, pokemon.species.generation, pokemon.isGlitchOrSmittyForm?.());
+          iconScale = adjustDuelmonIconScale(0.40, pokemon.species.generation, pokemon.isGlitchOrSmittyForm?.());
         } catch {
           iconSprite = this.scene.add.sprite(x, stripH / 2, "items", "pb");
         }
@@ -1360,7 +1361,19 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
       nameText.setStroke("#424242", 14);
       nameText.setShadow(0, 0, undefined);
       nameText.setVisible(false);
-      nameText.setText(opt.modifierTypeOption.type?.name || "");
+      const shopType = opt.modifierTypeOption.type;
+      let shopLabel = shopType?.name || "";
+      if (shopType instanceof PokemonNatureChangeModifierType) {
+        const delta = this.getNatureStatDelta((shopType as any).nature);
+        if (delta) {
+          shopLabel = i18next.t("modifierSelectUiHandler:shopMintStatDelta", {
+            incStat: getStatName(delta.inc, true),
+            decStat: getStatName(delta.dec, true),
+            defaultValue: `+${getStatName(delta.inc, true)}/-${getStatName(delta.dec, true)}`,
+          });
+        }
+      }
+      nameText.setText(shopLabel);
       this.shopStripContainer.add(nameText);
       this.shopStripNameTexts.push(nameText);
     }
@@ -1539,6 +1552,12 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
     if (this._suppressNextTooltip) return false;
     return super.shouldCreateTooltipOnSetCursor();
   }
+  private getNatureStatDelta(nature: Nature): { inc: Stat; dec: Stat } | null {
+    const stats = [Stat.ATK, Stat.DEF, Stat.SPATK, Stat.SPDEF, Stat.SPD];
+    const inc = stats.find(s => getNatureStatMultiplier(nature, s) > 1);
+    const dec = stats.find(s => getNatureStatMultiplier(nature, s) < 1);
+    return inc !== undefined && dec !== undefined ? { inc, dec } : null;
+  }
 
   private getSecondaryDescription(typeOption: ModifierTypeOption): string {
     const type = typeOption.type;
@@ -1606,14 +1625,12 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
     if (type instanceof PokemonNatureChangeModifierType) {
       const nature = (type as any).nature;
       if (nature !== undefined) {
-        const stats = [Stat.ATK, Stat.DEF, Stat.SPATK, Stat.SPDEF, Stat.SPD];
-        const inc = stats.find(s => getNatureStatMultiplier(nature, s) > 1);
-        const dec = stats.find(s => getNatureStatMultiplier(nature, s) < 1);
-        if (inc !== undefined && dec !== undefined) {
+        const delta = this.getNatureStatDelta(nature);
+        if (delta) {
           return i18next.t("modifierSelectUiHandler:secondaryNatureStatBoost", {
-            incStat: getStatName(inc, true),
-            decStat: getStatName(dec, true),
-            defaultValue: `+${getStatName(inc, true)} / -${getStatName(dec, true)}`,
+            incStat: getStatName(delta.inc, true),
+            decStat: getStatName(delta.dec, true),
+            defaultValue: `+${getStatName(delta.inc, true)} / -${getStatName(delta.dec, true)}`,
           });
         }
         return "";
@@ -2718,6 +2735,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
         }));
       }
 
+      if ((this.scene as BattleScene).animationLoadMode >= 2) {
       const shimmerTailMs = LOOT_TOTAL_MS * (1 - SEQ_END);
       const shimmerStaggerMs = shimmerTailMs * 0.08;
       const shimmerSweepMs = shimmerTailMs * 0.5;
@@ -2767,6 +2785,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
           });
         }
       }));
+      }
 
       this._lootRevealTimers.push(this.scene.time.delayedCall(emberMs(LOOT_TOTAL_MS), () => {
         for (const opt of this.options) {
@@ -2815,8 +2834,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
             if (this.cursorObj) this.cursorObj.setVisible(false);
             (this.scene as BattleScene).ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
           }
-        }
-        if (this.displayConfig?.isShinyPower) {
+        } else if (this.displayConfig?.isShinyPower) {
           const flags = (this.scene as BattleScene).gameData.smitomTutorialFlags;
           if (DEBUG_FORCE_SMITOM_TUTORIAL && !LootRewardSelectUiHandler._smitomShinyPowerDebugShown) {
             LootRewardSelectUiHandler._smitomShinyPowerDebugShown = true;
@@ -2841,8 +2859,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
             if (this.cursorObj) this.cursorObj.setVisible(false);
             (this.scene as BattleScene).ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
           }
-        }
-        if (this.displayConfig?.isRankUp) {
+        } else if (this.displayConfig?.isRankUp) {
           const flags = (this.scene as BattleScene).gameData.smitomTutorialFlags;
           if (DEBUG_FORCE_SMITOM_TUTORIAL && !LootRewardSelectUiHandler._smitomRankUpDebugShown) {
             LootRewardSelectUiHandler._smitomRankUpDebugShown = true;
@@ -3135,6 +3152,9 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
     }
 
     if (button === Button.CYCLE_ABILITY && this._hoverActive) {
+      if (PokemonBattleTooltipUtils.isActive()) {
+        return false;
+      }
       const option = this.getCurrentSelectedOption();
       const type = option?.modifierTypeOption?.type;
       if (type && !(type instanceof MoveUpgradeModifierType)) {

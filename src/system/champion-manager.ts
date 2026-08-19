@@ -135,7 +135,7 @@ export class ChampionManager {
       }
 
       const rarities = getRaritiesForRewardType(skillDef.rewardType);
-      const rarity = rarities[0] || SkillTreeRarity.COMMON;
+      const rarity = rarities[0] || SkillTreeRarity.GREAT;
 
       const requirements = SkillTreeUtils.calculateSkillEssenceRequirements(
         skillDef.unlockLevel,

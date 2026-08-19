@@ -51,5 +51,6 @@
   "disablePassive": "Desactivar Pasiva",
   "locked": "Bloqueado",
   "disabled": "Desactivado",
-  "uncaught": "Sin Capturar"
-} 
+  "uncaught": "Sin Capturar",
+  "signatureLabel": "Distintivo"
+}

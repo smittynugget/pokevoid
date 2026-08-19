@@ -364,6 +364,8 @@ export default class BattleScene extends SceneBase {
   public disableIvScanner: boolean = false;
   public disableMap: boolean = false;
   public disableDuelmons: boolean = false;
+  public duelmonSpawnRarity: number = 1;
+  public animationLoadMode: number = 2;
   public disableCutscenes: boolean = false;
   public disableShinyPower: boolean = false;
   public lossWhiteoutPreSummaryQueued: boolean = false;
@@ -517,6 +519,8 @@ export default class BattleScene extends SceneBase {
   public damageNumberHandler: DamageNumberHandler;
   private spriteSparkleHandler: PokemonSpriteSparkleHandler;
 
+  private spriteKeyRefCounts: Map<string, number> = new Map();
+
   public fieldSpritePipeline: FieldSpritePipeline;
   public spritePipeline: SpritePipeline;
 
@@ -642,6 +646,8 @@ export default class BattleScene extends SceneBase {
             this.releaseCondenseTrailOverlay();
             this._bootGateResolvers = null;
           });
+        } else {
+          this._bootGateResolvers = null;
         }
       });
     }
@@ -1587,6 +1593,7 @@ export default class BattleScene extends SceneBase {
         if (icon.postFX && typeof icon.postFX.addColorMatrix === 'function') {
           const colorMatrix = icon.postFX.addColorMatrix();
           colorMatrix.negative();
+          icon.setData("invertedFx", true);
         }
       } catch (error) {
         console.warn("Failed to apply inversion effect to icon:", error);
@@ -1648,6 +1655,7 @@ export default class BattleScene extends SceneBase {
           if (fusionIcon.postFX && typeof fusionIcon.postFX.addColorMatrix === 'function') {
             const colorMatrix = fusionIcon.postFX.addColorMatrix();
             colorMatrix.negative();
+            fusionIcon.setData("invertedFx", true);
           }
         } catch (error) {
           console.warn("Failed to apply inversion effect to fusion icon:", error);
@@ -1852,10 +1860,16 @@ export default class BattleScene extends SceneBase {
 
   playReturnCondense(): void {
     if (this._returnCondenseActive) return;
-    this._returnCondenseActive = true;
 
     this.game.registry.remove("_returnToTitlePending");
     this.showTitleBG();
+
+    if (this.animationLoadMode < 2) {
+      this.destroyReturnLoadingOverlay();
+      return;
+    }
+
+    this._returnCondenseActive = true;
     this.ensureReturnLoadingOverlay();
 
     const effectId = Math.floor(Math.random() * getEffectCount());
@@ -2873,14 +2887,16 @@ export default class BattleScene extends SceneBase {
   hideFieldOverlay(duration: integer): Promise<void> {
     return new Promise(resolve => {
       if (this._dialogueBgImage) {
-        if (this._dialogueBgImage.postFX && typeof this._dialogueBgImage.postFX.addPixelate === "function") {
-          const bgPixFx = this._dialogueBgImage.postFX.addPixelate(0);
-          this.tweens.add({
-            targets: bgPixFx,
-            amount: 80,
-            duration: Utils.fixedInt(duration),
-            ease: "Linear"
-          });
+        if (this.animationLoadMode >= 2) {
+          if (this._dialogueBgImage.postFX && typeof this._dialogueBgImage.postFX.addPixelate === "function") {
+            const bgPixFx = this._dialogueBgImage.postFX.addPixelate(0);
+            this.tweens.add({
+              targets: bgPixFx,
+              amount: 80,
+              duration: Utils.fixedInt(duration),
+              ease: "Linear"
+            });
+          }
         }
         this.tweens.add({
           targets: this._dialogueBgImage,
@@ -3050,6 +3066,19 @@ export default class BattleScene extends SceneBase {
   updateScoreText(): void {
     this.scoreText.setText(`Score: ${this.score.toString()}`);
     this.scoreText.setVisible(this.gameMode.isDaily);
+  }
+
+  public retainSpriteKey(key: string): void {
+    this.spriteKeyRefCounts.set(key, (this.spriteKeyRefCounts.get(key) ?? 0) + 1);
+  }
+  public releaseSpriteKey(key: string): boolean {
+    const next = (this.spriteKeyRefCounts.get(key) ?? 0) - 1;
+    if (next > 0) {
+      this.spriteKeyRefCounts.set(key, next);
+      return false;
+    }
+    this.spriteKeyRefCounts.delete(key);
+    return true;
   }
 
   updateUIPositions(): void {

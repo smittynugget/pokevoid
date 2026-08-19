@@ -109,6 +109,7 @@
   "secondaryAbilitySacrifice": "Наследует Способность",
   "secondaryPassiveSacrifice": "Наследует Способность как Пассивную",
   "secondaryNatureStatBoost": "+{{incStat}} / -{{decStat}}",
+  "shopMintStatDelta": "+{{incStat}}/-{{decStat}}",
   "secondaryMoveUpgradeCategory": "{{moveName}} · {{category}}",
   "secondaryStatNone": "—",
   "secondaryStatPercentBoost": "+{{percent}}% {{stat}}",

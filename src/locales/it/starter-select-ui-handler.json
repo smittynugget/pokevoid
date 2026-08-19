@@ -51,5 +51,6 @@
   "disablePassive": "Disattiva Passiva",
   "locked": "Bloccato",
   "disabled": "Disabilitato",
-  "uncaught": "Non Catturato"
-} 
+  "uncaught": "Non Catturato",
+  "signatureLabel": "Firma"
+}

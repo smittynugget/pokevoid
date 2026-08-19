@@ -2,6 +2,8 @@ import { Abilities } from "#enums/abilities";
 import { Biome } from "#enums/biome";
 import { EggTier } from "#enums/egg-type";
 import { Moves } from "#enums/moves";
+import { Nature } from "#enums/nature";
+import { Stat } from "#enums/stat";
 import { PokeballType } from "#enums/pokeball";
 import { Species } from "#enums/species";
 import { StatusEffect } from "#enums/status-effect";
@@ -28,6 +30,8 @@ export const DEBUG_FORCE_SMITOM_TUTORIAL = false;
 export const DEBUG_YU_VISUAL_TUNING = false;
 export const DEBUG_SKILL_TREE_FORCE_REWARD_TYPE: SkillTreeRewardType | undefined = undefined;
 const overrides = {
+  STARTING_WAVE_OVERRIDE: 0,
+  ITEM_REWARD_OVERRIDE: [],
   FORCE_DUELMON_RANK_UP_OVERRIDE: false,
   FORCE_RANDOM_RANK_UP_OVERRIDE: false,
   MODIFIER_SELECT_DEBUG_OVERRIDE: false,
@@ -36,6 +40,7 @@ const overrides = {
   DEBUG_SMITTY_BATTLE_OVERRIDE: false,
   DEBUG_WAVE35_SMITOM_TIP_OVERRIDE: false,
   DEBUG_WAVE100_LEVEL1_OVERRIDE: false,
+  OPP_LEVEL_OVERRIDE: 0,
   OPP_ONE_POKEMON: false,
   MOVESET_OVERRIDE: [],
 } satisfies Partial<InstanceType<typeof DefaultOverrides>>;

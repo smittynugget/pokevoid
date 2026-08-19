@@ -16,6 +16,7 @@ import { getReturnPhase } from "./encounter-phase-cache";
 import { ShowTrainerPhase } from "./show-trainer-phase.js";
 import BattleScene, { RecoveryBossMode } from "#app/battle-scene.js";
 import { SkillPointSources } from "../system/skill-point-sources";
+import { ensureSkillTreeTokenTracker } from "../system/skill-tree-progression";
 import Overrides from "#app/overrides.js";
 import { PokeballType } from "#enums/pokeball";
 import { getChaosEncounterPhase } from "./encounter-phase-cache";
@@ -130,6 +131,8 @@ export class BattlePathPhase extends BattlePhase {
         this.scene.updateModifiers(true, true);
       }
     }
+
+    ensureSkillTreeTokenTracker(this.scene);
 
     this.scene.pathNodeContext = PathNodeContext.BATTLE_NODE;
 

@@ -540,6 +540,8 @@ export function playCondenseTrailTransition(
     if (!overlay.scene) return;
     overlay.destroy();
     scene.textures.remove(texKey);
+    effect._ps = null;
+    effect._arcs = null;
   };
 
   const onSceneUpdate = () => {

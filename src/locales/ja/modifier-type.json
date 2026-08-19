@@ -725,6 +725,7 @@
       "description": "スキルポイントを{{amount}}獲得。スキルツリーでスキルを解放するのに使用。"
     },
     "SKILL_TOKENS": {
+      "nameSingle": "スキルツリートークン",
       "name": "スキルツリートークン×{{amount}}",
       "description": "スキルツリートークンを{{amount}}獲得。スキルツリーをレベルアップするのに使用！"
     },

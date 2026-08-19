@@ -51,5 +51,6 @@
   "disablePassive": "패시브 비활성화",
   "locked": "잠김",
   "disabled": "비활성화됨",
-  "uncaught": "미포획"
-} 
+  "uncaught": "미포획",
+  "signatureLabel": "시그니처"
+}

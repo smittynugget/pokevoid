@@ -12,6 +12,7 @@ import { Device } from "#enums/devices";
 import { ActiveSkillTreeData, SkillTreeNode, SkillTreeNodeState, SkillTreeRewardType, SkillTreeRarity } from "#app/system/skill-tree-data";
 import { SkillTreeUtils, isSkillTreeV2 } from "#app/system/skill-tree-utils";
 import { SkillTreeSelectors } from "#app/system/skill-tree-selectors";
+import { SkillTreeProgression } from "#app/system/skill-tree-progression";
 import ChampionXPManager from "#app/system/champion-xp-manager";
 import { RewardObtainedType, RewardConfig, UnlockModePokeSpriteType } from "#app/ui/reward-obtained-ui-handler";
 import { RewardObtainDisplayPhase } from "#app/phases/reward-obtain-display-phase";
@@ -44,7 +45,6 @@ import { PlayableChampionData } from "#app/system/playable-champions";
 import { SkillTreeModifierPhase } from "#app/phases/skill-tree-modifier-phase";
 import { modifierTypes, getAttackTypeBoosterItemName, AddVoucherModifierType, AddTypeBallModifierType, ModifierTypeGenerator, PermaModifierType, TrainerBondAbilityModifierType, TeraAbilityModifierType, PermaMoneyModifierType } from "#app/modifier/modifier-type";
 import type { ModifierTypeFunc } from "#app/modifier/modifier-type";
-import { playGenericLevelUpAnimation, skipCurrentLevelUpAnimation, SkillRevealConfig } from "./level-up-animation";
 import { VoucherType, getVoucherTypeIcon } from "#app/system/voucher";
 import { PermaType, PermaDuration } from "#app/modifier/perma-modifiers";
 import { POKEMON_ALT_BUILDS, PokemonAltBuildId } from "#app/data/pokemon-alt-buid";
@@ -67,43 +67,6 @@ export interface SkillTreeConfig {
   phaseOnComplete?: (selections?: any[]) => void;
 }
 
-function buildChampionSpriteRevealConfig(
-  scene: BattleScene,
-  championId: string,
-  displayText: string
-): SkillRevealConfig {
-  const gender = scene.gameData.gender;
-  const key = ChampionUtils.getChampionSpriteKey(championId, gender);
-
-  let frame = "";
-  if (scene.textures.exists(key)) {
-    const frameNames = scene.textures.get(key).getFrameNames();
-    if (frameNames.includes("0001.png")) frame = "0001.png";
-  }
-
-  const resolvedId = (championId === "apollo_diana")
-    ? (gender === 0 ? "apollo" : "diana")
-    : championId;
-  const def = CHAMPION_DEFINITIONS[resolvedId] as any;
-  const previewScale = def?.ui?.previewScale ?? 1.0;
-  const revealScale = Math.min(((previewScale * 1.1) + 0.040) * 1.35, 2.0);
-  const offsetX = def?.ui?.skillTreeRootOffsetX ?? 0;
-  const offsetY = def?.ui?.skillTreeRootOffsetY ?? 0;
-
-  return {
-    rarity: SkillTreeRarity.LEGENDARY,
-    iconConfig: {
-      key,
-      frame,
-      scale: revealScale,
-      isChampionSprite: true,
-      offsetX,
-      offsetY,
-    },
-    skillName: displayText,
-  };
-}
-
 export default class SkillTreeUiHandler extends ModalUiHandler {
   private static readonly RARITY_COLORS = {
     COMMON:   { border: 0x00ff00, bg: 0x003300 },
@@ -119,7 +82,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     HUD: {
       X: 0,
-      Y_BOTTOM_OFFSET: 29.5,
+      Y_BOTTOM_OFFSET: 19.5,
       WIDTH: 0,
       HEIGHT: 25,
       BG_ALPHA: 0.95,
@@ -220,7 +183,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     INSTRUCTIONS: {
       FONT_SIZE: "40px",
       X_RIGHT_OFFSET: 13,
-      Y_BOTTOM_OFFSET: 20,
+      Y_BOTTOM_OFFSET: 10,
       COLOR: 0xcccccc,
       ALPHA: 0.8,
       BG_COLOR: 0x000000,
@@ -230,6 +193,11 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       BORDER_COLOR: 0xffffff,
       BORDER_ALPHA: 0.1,
       BORDER_THICKNESS: 0.35,
+    },
+
+    CHAMPION_TYPING: {
+      X_OFFSET: 8,
+      Y_BOTTOM_OFFSET: 28,
     },
 
     KEY_HINTS: {
@@ -405,13 +373,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private skillPointsText!: Phaser.GameObjects.Text;
   private skillPointsLabel!: Phaser.GameObjects.Text;
   private skillPointsTab!: Phaser.GameObjects.Graphics;
-  private treeLevelText!: Phaser.GameObjects.Text;
-  private treeLevelGaugeContainer!: Phaser.GameObjects.Container;
-  private treeLevelGaugeIcon!: Phaser.GameObjects.Sprite;
-  private treeLevelGaugeBg!: Phaser.GameObjects.Graphics;
-  private treeLevelGaugeFill!: Phaser.GameObjects.Graphics;
-  private treeLevelGaugeWaveOverlay!: Phaser.GameObjects.Graphics;
-  private treeLevelGaugeText!: Phaser.GameObjects.Text;
   private instructionsText!: Phaser.GameObjects.Text;
   private instructionsTextBg!: Phaser.GameObjects.Graphics;
   private zoomLevelText!: Phaser.GameObjects.Text;
@@ -437,17 +398,10 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   private tooltipTargetNodeId: string | null = null;
 
-  private currentGaugeFillWidth: number = 0;
-
-  private waveAnimationTimer?: Phaser.Time.TimerEvent;
-  private waveAnimationTime: number = 0;
-
   private config: SkillTreeConfig | null = null;
   private nodes: SkillTreeNode[] = [];
   private selections: PokemonSelection[] = [];
 
-  private autoBatchLevelUpInProgress: boolean = false;
-  private isLevelUpAnimationActive: boolean = false;
   private debugDepthOverride: number = 0;
   private isEnhancedDebugMode: boolean = false;
   private _selectionComplete: boolean = false;
@@ -613,8 +567,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     if (this.championTypingContainer) {
       this.championTypingContainer.setPosition(
-        8,
-        this.getHeight() - 38
+        SkillTreeUiHandler.UI_CONSTANTS.CHAMPION_TYPING.X_OFFSET,
+        this.getHeight() - SkillTreeUiHandler.UI_CONSTANTS.CHAMPION_TYPING.Y_BOTTOM_OFFSET
       );
     }
 
@@ -901,59 +855,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.skillPointsLabel.setAlpha(0.8);
     this.hud.add(this.skillPointsLabel);
 
-    const gaugeCenterX = hudWidth / 2;
-    this.treeLevelGaugeContainer = this.scene.add.container(
-      gaugeCenterX,
-      hudY + c.HUD.LEVEL_GAUGE.Y_OFFSET + c.HUD.LEVEL_GAUGE.CONTAINER_Y
-    );
-    this.hud.add(this.treeLevelGaugeContainer);
-
-    this.treeLevelGaugeIcon = this.scene.add.sprite(
-      c.HUD.LEVEL_GAUGE.ICON_X_OFFSET,
-      c.HUD.LEVEL_GAUGE.ICON_Y_OFFSET,
-      "smitems", "permaMoreRevive"
-    );
-    this.treeLevelGaugeIcon.setScale(c.HUD.LEVEL_GAUGE.ICON_SCALE);
-    this.treeLevelGaugeContainer.add(this.treeLevelGaugeIcon);
-
-    this.treeLevelGaugeBg = this.scene.add.graphics();
-    this.treeLevelGaugeBg.fillGradientStyle(c.HUD.LEVEL_GAUGE.BG_COLOR, c.HUD.LEVEL_GAUGE.BG_COLOR, c.HUD.LEVEL_GAUGE.BG_COLOR, c.HUD.LEVEL_GAUGE.BG_COLOR, c.HUD.LEVEL_GAUGE.BG_ALPHA, c.HUD.LEVEL_GAUGE.BG_ALPHA, c.HUD.LEVEL_GAUGE.BG_ALPHA * 0.9, c.HUD.LEVEL_GAUGE.BG_ALPHA * 0.9);
-    const gaugeWidth = hudWidth;
-    const xpBgX = -gaugeWidth / 2;
-    const xpBgY = c.HUD.LEVEL_GAUGE.BG_Y;
-    const xpBgW = gaugeWidth;
-    const xpBgH = c.HUD.LEVEL_GAUGE.BG_HEIGHT;
-    this.treeLevelGaugeBg.fillRect(xpBgX, xpBgY, xpBgW, xpBgH);
-    this.treeLevelGaugeBg.lineStyle(c.HUD.LEVEL_GAUGE.BORDER_THICKNESS, c.HUD.LEVEL_GAUGE.BORDER_COLOR, c.HUD.LEVEL_GAUGE.BORDER_ALPHA);
-    this.treeLevelGaugeBg.strokeRect(xpBgX, xpBgY, xpBgW, xpBgH);
-    this.treeLevelGaugeContainer.add(this.treeLevelGaugeBg);
-    this.treeLevelGaugeFill = this.scene.add.graphics();
-    this.treeLevelGaugeFill.setDepth(10);
-    this.currentGaugeFillWidth = 0;
-    this.updateGaugeFillVisual(0);
-    this.treeLevelGaugeContainer.add(this.treeLevelGaugeFill);
-    this.treeLevelGaugeWaveOverlay = this.scene.add.graphics();
-    this.treeLevelGaugeWaveOverlay.setDepth(11);
-    this.treeLevelGaugeContainer.add(this.treeLevelGaugeWaveOverlay);
-    this.treeLevelGaugeText = addTextObject(this.scene, c.HUD.LEVEL_GAUGE.TEXT_X, c.HUD.LEVEL_GAUGE.TEXT_Y,
-      "0 / 0", TextStyle.WINDOW, {
-        fontSize: c.HUD.LEVEL_GAUGE.TEXT_SIZE,
-        align: "center"
-      });
-    this.treeLevelGaugeText.setOrigin(0.5);
-    this.treeLevelGaugeText.setTint(c.HUD.LEVEL_GAUGE.TEXT_COLOR);
-    this.treeLevelGaugeContainer.add(this.treeLevelGaugeText);
-    this.treeLevelText = addTextObject(this.scene,
-      -gaugeWidth / 2 + 10,
-      c.HUD.LEVEL_GAUGE.TEXT_Y,
-      "Tree Lv: 1", TextStyle.WINDOW, { fontSize: "36px", align: "left" });
-    this.treeLevelText.setOrigin(0, 0.5);
-    this.treeLevelText.setTint(c.HUD.TREE_LEVEL.COLOR);
-    this.treeLevelGaugeContainer.add(this.treeLevelText);
-    this.treeLevelGaugeContainer.bringToTop(this.treeLevelGaugeFill);
-    this.treeLevelGaugeContainer.bringToTop(this.treeLevelGaugeText);
-    this.treeLevelGaugeContainer.bringToTop(this.treeLevelGaugeIcon);
-    this.treeLevelGaugeContainer.bringToTop(this.treeLevelText);
     this.instructionsContainer = this.scene.add.container(
       this.getWidth() - c.INSTRUCTIONS.X_RIGHT_OFFSET,
       this.getHeight() - c.INSTRUCTIONS.Y_BOTTOM_OFFSET
@@ -1031,7 +932,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   }
 
   private isPointerInputAllowed(): boolean {
-    return this.active && !this.isLevelUpAnimationActive && (this.scene as BattleScene).ui.getMode() === Mode.SKILL_TREE;
+    return this.active && (this.scene as BattleScene).ui.getMode() === Mode.SKILL_TREE;
   }
 
   private setupControls(): void {
@@ -1214,8 +1115,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     this.updateHUD(isPurchaseReturn && hasPurchasedNodeId);
     this.updateInstructionsOpacity();
 
-    this.startWaveAnimation();
-
     this.setupControls();
 
     if (!this.selectedNodeId) {
@@ -1254,31 +1153,12 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         this.updateNodeVisual(purchasedNode);
         this.updateNodeStatesAndRender();
         this.updateHUD(true);
-        this.playUnlockEffect(purchasedNode, 0, async () => {
-          await this.batchAutoLevelUpIfAffordable();
-        });
+        this.playUnlockEffect(purchasedNode, 0);
       } else {
         this.updateHUD(false);
       }
 
       delete gd.tempSkillTreeTransform.purchasedNodeId;
-    }
-
-    if (gd?.tempSkillTreeTransform?.treeLeveledUp && args[0]?.shouldPlayPurchaseAnimation) {
-      this.updateNodeStatesAndRender();
-      this.updateHUD();
-      delete gd.tempSkillTreeTransform.treeLeveledUp;
-    }
-
-    if (args[0]?.shouldPlayPurchaseAnimation && !this.autoBatchLevelUpInProgress && this.config) {
-      const ast = this.config.activeSkillTree;
-      if (ast && ast.tokens >= SkillTreeUtils.getTokenCostForNextLevel(ast.treeLevel)) {
-        (this.scene as BattleScene).time.delayedCall(500, () => {
-          if (!this.autoBatchLevelUpInProgress) {
-            this.batchAutoLevelUpIfAffordable();
-          }
-        });
-      }
     }
     try {
       if (this.selectedNodeId) {
@@ -1392,7 +1272,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       };
       this.saveZoomPreference(this.transform.scale);
     } catch {}
-    this.cleanupWaveAnimation();
+
     this.clearDependencyHighlights();
 
     this.nodeSprites.forEach(c => c.destroy());
@@ -1412,13 +1292,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
   processInput(button: Button): boolean {
     this.updateInstructionsForInputMethod();
-
-    if (this.isLevelUpAnimationActive) {
-      if (button === Button.SUBMIT || button === Button.ACTION || button === Button.CANCEL) {
-        skipCurrentLevelUpAnimation();
-      }
-      return true;
-    }
 
     switch (button) {
       case Button.LEFT: return this.handleNavigation('left');
@@ -1640,7 +1513,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
   private updateNavKeyHints(): void {
     this.navHintsLayer?.removeAll(true);
     if (!this.selectedNodeId) return;
-    if (this.isLevelUpAnimationActive) return;
     if (this.scene.inputMethod === "touch") return;
     const targets = this.getNavigationTargets(this.selectedNodeId);
     const dirTargetIds = new Set<string>();
@@ -1798,7 +1670,7 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     if (this.keyHintsBarBg) {
       this.keyHintsBarBg.clear();
     }
-    if (!this.selectedNodeId || this.scene.inputMethod === "touch" || this.isLevelUpAnimationActive) {
+    if (!this.selectedNodeId || this.scene.inputMethod === "touch") {
       if (this.keyHintsContainer) this.keyHintsContainer.setVisible(false);
       if (this.keyHintsBarBg) this.keyHintsBarBg.setVisible(false);
       return;
@@ -2553,9 +2425,9 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           unlocked: false,
         } as any);
 
-        if (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) {
-          const shouldAdd = Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE || Utils.randSeedInt(10000) < 500;
-          if (shouldAdd) {
+        if (SkillTreeUtils.shouldIncludeDepth1Bounty(this.scene as BattleScene, ast)
+            && !SkillTreeUtils.isDepth1BountyConsumed(ast)) {
+          {
             const bountyAngle = ((nodeCount + 1) * 2 * Math.PI) / totalRingSlots;
             filteredTree.push({
               id: "depth1_bounty_0",
@@ -3447,9 +3319,9 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
             }
           } catch (error) {
           }
-          bg.fillStyle(0x333333);
-          bg.lineStyle(3, 0x555555);
-          icon.setTint(0x666666);
+          bg.fillStyle(0x4a4a4a);
+          bg.lineStyle(3, 0x777777);
+          icon.clearTint();
           if (node.rewardData?.type === SkillTreeRewardType.VOID_BALL) {
             applyVoidBallRecolor(this.scene as BattleScene, icon, true);
           } else if (node.rewardData?.type === SkillTreeRewardType.TYPE_BALL_FILTERED && node.rewardData?.data?.ballType !== undefined) {
@@ -3950,10 +3822,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       }
 
       const dependenciesMet = this.checkDependenciesMetV2(node, ast);
-      const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
-      const meetsLevelRequirement = (ast.treeLevel || 1) >= requiredLevel;
 
-      if (!dependenciesMet || !meetsLevelRequirement) {
+      if (!dependenciesMet) {
         node.state = SkillTreeNodeState.LOCKED_VISIBLE;
         return;
       }
@@ -4090,11 +3960,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       this.tooltipTitle.setText(i18next.t("skillTree:nodeStates.lockedPotential"));
       this.tooltipDesc.setStroke("", 0);
       const requirementsV2: string[] = [];
-      const requiredLevelV2 = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
-      const currentLevelV2 = this.config?.activeSkillTree.treeLevel || 1;
-      if (currentLevelV2 < requiredLevelV2) {
-        requirementsV2.push(i18next.t("skillTree:prereq.treeLevelRequired", { level: requiredLevelV2 }));
-      }
       const unmetDepsV2 = node.dependencies.filter(depId => !this.config?.activeSkillTree.unlockedNodes.has(depId));
       if (unmetDepsV2.length > 0) {
         const depNamesV2 = unmetDepsV2.map(depId => {
@@ -4173,11 +4038,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
           const descriptionV2 = this.getEnhancedDescription(node);
           this.tooltipDesc.setStroke("", 0);
           const requirementsV2: string[] = [];
-          const requiredLevelV2 = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
-          const currentLevelV2 = this.config?.activeSkillTree.treeLevel || 1;
-          if (currentLevelV2 < requiredLevelV2) {
-            requirementsV2.push(i18next.t("skillTree:prereq.treeLevelRequired", { level: requiredLevelV2 }));
-          }
           const unmetDepsV2 = node.dependencies.filter(depId => !this.config?.activeSkillTree.unlockedNodes.has(depId));
           if (unmetDepsV2.length > 0) {
             const depNamesV2 = unmetDepsV2.map(depId => {
@@ -4628,11 +4488,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
       if (chainSet.has(n.id)) {
         nodeContainer.setAlpha(1.0);
-        if (n.id !== anchorId) {
-          this.applyPurpleBackground(n);
-        }
       } else {
-        nodeContainer.setAlpha(0.4);
+        nodeContainer.setAlpha(0.7);
       }
     });
 
@@ -5092,13 +4949,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     const prereq = this.evaluateNodePrerequisites(node);
     if (!prereq.ok && !this.shouldUseIncompatibleFallback(node)) return false;
 
-    if (isSkillTreeV2()) {
-      const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
-      if ((ast.treeLevel || 1) < requiredLevel) {
-        return false;
-      }
-    }
-
     return true;
   }
 
@@ -5119,18 +4969,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         }
         return null;
       }
-      if (isSkillTreeV2()) {
-        const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
-        if ((ast.treeLevel || 1) < requiredLevel) {
-          return i18next.t("skillTree:prereq.treeLevelRequired", { level: requiredLevel });
-        }
-      }
       if (node.branchUnlockCost != null) {
         return [i18next.t("skillTree:prereq.header"), i18next.t("skillTree:prereq.useSkillPointsToUnlock", { cost: node.branchUnlockCost })].join(" · ");
-      }
-      const lockLevel = isSkillTreeV2() ? SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth) : null;
-      if (lockLevel) {
-        return `${i18next.t("skillTree:nodeStates.locked")} · ${i18next.t("skillTree:prereq.treeLevelRequired", { level: lockLevel })}`;
       }
       return i18next.t("skillTree:nodeStates.locked");
     }
@@ -5200,13 +5040,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
     if (node.isLevelLocked && node.branchUnlockCost != null) {
       requirements.push(i18next.t("skillTree:prereq.useSkillPointsToUnlock", { cost: node.branchUnlockCost }));
-    }
-
-    if (isSkillTreeV2()) {
-      const requiredLevel = SkillTreeUtils.getRequiredTreeLevelForDepth(node.depth);
-      if ((ast.treeLevel || 1) < requiredLevel) {
-        requirements.push(i18next.t("skillTree:prereq.treeLevelRequired", { level: requiredLevel }));
-      }
     }
 
     if (requirements.length > 0) {
@@ -5878,9 +5711,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
         break;
       }
       case SkillTreeRewardType.SKILL_TREE_TOKENS: {
-        const oldTk = ast.tokens || 0;
         const amount = node.rewardData.data?.amount || 0;
-        ast.tokens += amount;
+        new SkillTreeProgression(this.scene as BattleScene).grantTokens(amount);
         break;
       }
       case SkillTreeRewardType.ESSENCE_BUNDLE: {
@@ -6023,24 +5855,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     if (!this.config) return;
     const ast = this.config.activeSkillTree;
     this.skillPointsText.setText(`x ${ast.skillPoints}`);
-    this.treeLevelText.setText(i18next.t("skillTree:treeLevelShort", { level: ast.treeLevel, defaultValue: `Tree Lv ${ast.treeLevel}` }));
-
-    const cost = SkillTreeUtils.getTokenCostForNextLevel(ast.treeLevel);
-    const have = ast.tokens;
-    const pct = Math.max(0, Math.min(1, cost > 0 ? (have / cost) : 1));
-
-    const hudWidth = this.getWidth();
-    const gaugeWidth = hudWidth;
-    const maxFillWidth = gaugeWidth - 4;
-    const targetFillWidth = Math.floor(maxFillWidth * pct);
-
-    this.animateGaugeFill(targetFillWidth);
-
-    this.treeLevelGaugeText.setText(`${have} / ${cost}`);
-
-    if (!skipLevelUp) {
-      this.batchAutoLevelUpIfAffordable();
-    }
 
     try {
       if (this.config.mode === SkillTreeMode.POKEMON_SELECTION) {
@@ -6496,42 +6310,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     return true;
   }
 
-  private showTreeLevelUpDialog(): void {
-    if (!this.config) return;
-    const ast = this.config.activeSkillTree;
-    const cost = SkillTreeUtils.getTokenCostForNextLevel(ast.treeLevel);
-
-    this.hideTooltip();
-
-    (this.scene as BattleScene).ui.showText(
-      i18next.t("skillTree:levelUpPrompt", { cost, currentLevel: ast.treeLevel, nextLevel: ast.treeLevel + 1, defaultValue: `Spend ${cost} tokens to level up?` }),
-      null,
-      () => this.levelUpSkillTree(),
-      () => {},
-      true
-    );
-  }
-
-  private levelUpSkillTree(): void {
-    if (!this.config) return;
-    const ast = this.config.activeSkillTree;
-    const cost = SkillTreeUtils.getTokenCostForNextLevel(ast.treeLevel);
-    if (ast.tokens < cost) return;
-    ast.tokens -= cost;
-    ast.treeLevel += 1;
-    if (!isSkillTreeV2()) {
-      ast.maxVisibleDepth = SkillTreeUtils.getMaxDepthForLevel(ast.treeLevel);
-    }
-    (this.scene as BattleScene).gameData.tempSkillTreeTransform = (this.scene as BattleScene).gameData.tempSkillTreeTransform || {} as any;
-    (this.scene as BattleScene).gameData.tempSkillTreeTransform.treeLeveledUp = true;
-    const reward: RewardConfig = {
-      type: RewardObtainedType.UNLOCK,
-      name: isSkillTreeV2()
-        ? i18next.t("skillTree:treeLeveledUpV2", { level: ast.treeLevel, maxDepth: SkillTreeUtils.getMaxPurchasableDepthForLevel(ast.treeLevel), defaultValue: `Tree Level ${ast.treeLevel}! Can purchase nodes up to depth ${SkillTreeUtils.getMaxPurchasableDepthForLevel(ast.treeLevel)}.` })
-        : i18next.t("skillTree:treeLeveledUp", { level: ast.treeLevel, maxDepth: ast.maxVisibleDepth, defaultValue: `Tree leveled up!` })
-    };
-    this.executeRewardPhaseWithReturn(new RewardObtainDisplayPhase(this.scene as BattleScene, reward));
-  }
   private evaluateNodePrerequisites(node: SkillTreeNode, forDisplay: boolean = false): { ok: boolean; messages: string[] } {
     const messages: string[] = [];
     let ok = true;
@@ -6726,285 +6504,6 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
       return [Type.NORMAL];
     } catch {
       return [Type.NORMAL];
-    }
-  }
-
-  private animateGaugeFill(targetWidth: number): void {
-    if (targetWidth === this.currentGaugeFillWidth) return;
-
-    const state = { w: this.currentGaugeFillWidth };
-
-    this.scene.tweens.add({
-      targets: state,
-      w: targetWidth,
-      duration: 300,
-      ease: 'Cubic.easeOut',
-      onUpdate: () => {
-        this.updateGaugeFillVisual(Math.floor(state.w));
-      },
-      onComplete: () => {
-        this.currentGaugeFillWidth = targetWidth;
-      }
-    });
-  }
-
-  private updateGaugeFillVisual(fillWidth: number): void {
-    const c = SkillTreeUiHandler.UI_CONSTANTS.HUD;
-    const hudWidth = this.getWidth();
-    const maxFillWidth = hudWidth - 4;
-
-    this.treeLevelGaugeFill.clear();
-
-    if (fillWidth > 0) {
-      const championTypes = this.getChampionTypes();
-      const primaryType = championTypes[0] || Type.NORMAL;
-
-      this.drawGaugeBaseFill(
-        this.treeLevelGaugeFill,
-        -maxFillWidth / 2,
-        c.LEVEL_GAUGE.FILL_Y,
-        fillWidth,
-        c.LEVEL_GAUGE.FILL_HEIGHT,
-        primaryType
-      );
-    }
-  }
-
-  private updateGaugeWaveOverlay(): void {
-    const c = SkillTreeUiHandler.UI_CONSTANTS.HUD;
-    const hudWidth = this.getWidth();
-    const maxFillWidth = hudWidth - 4;
-
-    this.treeLevelGaugeWaveOverlay.clear();
-
-    if (this.currentGaugeFillWidth > 0) {
-      const championTypes = this.getChampionTypes();
-      const primaryType = championTypes[0] || Type.NORMAL;
-
-      this.drawGaugeWaveEffects(
-        this.treeLevelGaugeWaveOverlay,
-        -maxFillWidth / 2,
-        c.LEVEL_GAUGE.FILL_Y,
-        this.currentGaugeFillWidth,
-        c.LEVEL_GAUGE.FILL_HEIGHT,
-        primaryType
-      );
-    }
-  }
-
-  private drawGaugeWaveEffects(graphics: Phaser.GameObjects.Graphics, x: number, y: number, width: number, height: number, type: Type): void {
-    if (width <= 0 || height <= 0) return;
-
-    const c = SkillTreeUiHandler.UI_CONSTANTS.HUD.LEVEL_GAUGE;
-    const waveConfig = c.WAVE_ANIMATION;
-    const typeRgb = getTypeRgb(type);
-
-    const fillRatio = Math.min(1, width / 200);
-    const waveSteps = Math.max(8, Math.floor(40 * fillRatio));
-
-    const brightR = Math.min(255, Math.floor(typeRgb[0] * waveConfig.ENERGY_WAVE_BRIGHTNESS));
-    const brightG = Math.min(255, Math.floor(typeRgb[1] * waveConfig.ENERGY_WAVE_BRIGHTNESS));
-    const brightB = Math.min(255, Math.floor(typeRgb[2] * waveConfig.ENERGY_WAVE_BRIGHTNESS));
-    const brightColor = (brightR << 16) | (brightG << 8) | brightB;
-
-    const timeOffset = (x + width * 0.5) * 0.002;
-    const wavePhase = this.waveAnimationTime * waveConfig.WAVE_SPEED * waveConfig.ENERGY_WAVE_SPEED_MULTIPLIER + timeOffset;
-    const waveProgress = ((wavePhase % (Math.PI * 2)) / (Math.PI * 2));
-    const waveWidth = width * 0.5;
-    const waveCenter = x - waveWidth * 0.5 + waveProgress * (width + waveWidth);
-
-    for (let i = 0; i < waveSteps; i++) {
-      const stepX = waveCenter - waveWidth * 0.5 + (i / waveSteps) * waveWidth;
-      const stepWidth = waveWidth / waveSteps;
-
-      if (stepX < x + width && stepX + stepWidth > x) {
-        const distanceFromCenter = Math.abs(stepX + stepWidth * 0.5 - waveCenter);
-        const normalizedDistance = distanceFromCenter / (waveWidth * 0.5);
-
-        const waveAlpha = Math.cos(normalizedDistance * Math.PI * 0.5);
-        const energyAlpha = Math.max(0, waveAlpha * waveAlpha) * waveConfig.ENERGY_WAVE_ALPHA;
-
-        if (energyAlpha > 0.01) {
-          graphics.fillStyle(brightColor, energyAlpha);
-          graphics.fillRect(
-            Math.max(x, stepX),
-            y,
-            Math.min(stepWidth, x + width - Math.max(x, stepX)),
-            height
-          );
-        }
-      }
-    }
-  }
-  private drawGaugeBaseFill(graphics: Phaser.GameObjects.Graphics, x: number, y: number, width: number, height: number, type: Type): void {
-    if (width <= 0 || height <= 0) return;
-
-    const c = SkillTreeUiHandler.UI_CONSTANTS.HUD.LEVEL_GAUGE;
-    const typeRgb = getTypeRgb(type);
-
-    const baseColor = Phaser.Display.Color.GetColor(typeRgb[0], typeRgb[1], typeRgb[2]);
-    graphics.fillStyle(baseColor, c.FILL_ALPHA);
-    graphics.fillRect(x, y, width, height);
-
-    const verticalSteps = 6;
-    for (let step = 0; step < verticalSteps; step++) {
-      const stepY = y + (step / verticalSteps) * height;
-      const stepHeight = height / verticalSteps;
-
-      const gradientFactor = 1 - (step / verticalSteps) * 0.4;
-      const gradientR = Math.min(255, Math.floor(typeRgb[0] * gradientFactor));
-      const gradientG = Math.min(255, Math.floor(typeRgb[1] * gradientFactor));
-      const gradientB = Math.min(255, Math.floor(typeRgb[2] * gradientFactor));
-      const gradientColor = Phaser.Display.Color.GetColor(gradientR, gradientG, gradientB);
-
-      graphics.fillStyle(gradientColor, 0.4);
-      graphics.fillRect(x, stepY, width, stepHeight);
-    }
-  }
-
-  private startWaveAnimation(): void {
-    if (this.waveAnimationTimer) {
-      this.waveAnimationTimer.remove(false);
-      this.waveAnimationTimer = undefined;
-    }
-    this.waveAnimationTime = 0;
-    if (this.treeLevelGaugeWaveOverlay) this.treeLevelGaugeWaveOverlay.clear();
-
-    const c = SkillTreeUiHandler.UI_CONSTANTS.HUD.LEVEL_GAUGE.WAVE_ANIMATION;
-    this.waveAnimationTimer = this.scene.time.addEvent({
-      delay: 1000 / c.UPDATE_FREQUENCY,
-      loop: true,
-      callback: () => this.updateWaveAnimation()
-    });
-  }
-
-  private updateWaveAnimation(): void {
-    const c = SkillTreeUiHandler.UI_CONSTANTS.HUD.LEVEL_GAUGE.WAVE_ANIMATION;
-    this.waveAnimationTime += c.WAVE_SPEED;
-
-    const hudWidth = this.getWidth();
-    const maxFillWidth = hudWidth - 4;
-    const fillPercentage = this.currentGaugeFillWidth / maxFillWidth;
-
-    if (fillPercentage > 0.1) {
-      this.updateGaugeWaveOverlay();
-    }
-  }
-
-  private cleanupWaveAnimation(): void {
-    if (this.waveAnimationTimer) {
-      this.waveAnimationTimer.remove(false);
-      this.waveAnimationTimer = undefined;
-    }
-    this.waveAnimationTime = 0;
-
-    if (this.treeLevelGaugeFill) {
-      this.treeLevelGaugeFill.clear();
-    }
-    if (this.treeLevelGaugeWaveOverlay) {
-      this.treeLevelGaugeWaveOverlay.clear();
-    }
-  }
-
-  private computeAffordableLevelUps(ast: ActiveSkillTreeData): { levels: number; totalCost: number; finalLevel: number } {
-    let levels = 0;
-    let totalCost = 0;
-    let levelCursor = ast.treeLevel;
-    let remaining = ast.tokens;
-    while (true) {
-      const cost = SkillTreeUtils.getTokenCostForNextLevel(levelCursor);
-      if (cost <= 0) break;
-      if (remaining < cost) break;
-      remaining -= cost;
-      totalCost += cost;
-      levelCursor += 1;
-      levels += 1;
-    }
-    return { levels, totalCost, finalLevel: levelCursor };
-  }
-
-  private async batchAutoLevelUpIfAffordable(): Promise<void> {
-    if (!this.config) return;
-    if (this.autoBatchLevelUpInProgress) return;
-    const ast = this.config.activeSkillTree;
-    const plan = this.computeAffordableLevelUps(ast);
-    if (plan.levels <= 0) return;
-    this.autoBatchLevelUpInProgress = true;
-    try {
-      const label = i18next.t("championSelect:levelUp", { defaultValue: "LEVEL UP!" });
-
-      const championId = ast.championId || this.config?.championData?.id;
-      const topLine = i18next.t("skillTree:title", { defaultValue: "Skill Tree" }).toUpperCase();
-      const revealConfig = championId
-        ? buildChampionSpriteRevealConfig(this.scene as BattleScene, championId, topLine)
-        : undefined;
-
-      if (!this.isEnhancedDebugMode) {
-        const currentBgmKey = (this.scene as any).bgm?.key || null;
-        if (!isSkillTreeV2()) {
-          const previousScale = this.DEFAULT_ZOOM;
-          const previousTx = this.transform.tx;
-          const previousTy = this.transform.ty;
-          this.transform.scale = 0.05;
-          this.transform.tx = 0;
-          this.transform.ty = 0;
-          this.applyTransform();
-
-          this.isLevelUpAnimationActive = true;
-          await playGenericLevelUpAnimation(this.scene as BattleScene, label, undefined, revealConfig, false, currentBgmKey);
-          this.isLevelUpAnimationActive = false;
-
-          this.transform.scale = previousScale;
-          this.transform.tx = previousTx;
-          this.transform.ty = previousTy;
-          this.applyTransform();
-        } else {
-          this.isLevelUpAnimationActive = true;
-          await playGenericLevelUpAnimation(this.scene as BattleScene, label, undefined, revealConfig, false, currentBgmKey);
-          this.isLevelUpAnimationActive = false;
-        }
-      }
-      let levelCursor = ast.treeLevel;
-      let tokens = ast.tokens;
-      for (let i = 0; i < plan.levels; i++) {
-        const cost = SkillTreeUtils.getTokenCostForNextLevel(levelCursor);
-        if (cost <= 0 || tokens < cost) break;
-        tokens -= cost;
-        levelCursor += 1;
-      }
-      const oldMaxDepth = ast.maxVisibleDepth;
-
-      ast.tokens = tokens;
-      ast.treeLevel = levelCursor;
-      if (!isSkillTreeV2()) {
-        ast.maxVisibleDepth = SkillTreeUtils.getMaxDepthForLevel(ast.treeLevel);
-      }
-
-      if (this.config.mode === SkillTreeMode.POKEMON_SELECTION) {
-        this.debugDepthOverride = Math.max(this.debugDepthOverride, ast.maxVisibleDepth);
-        this.generateSkillTree();
-      }
-
-      let newlyVisibleNodes: SkillTreeNode[] = [];
-      if (!isSkillTreeV2()) {
-        newlyVisibleNodes = this.nodes.filter(node =>
-          node.depth <= ast.maxVisibleDepth &&
-          node.depth > oldMaxDepth
-        );
-      }
-
-      this.updateNodeStatesAndRender();
-      this.updateHUD();
-
-      this.hideTooltip();
-
-      if (newlyVisibleNodes.length > 0) {
-        this.playDepthRevealEffect(newlyVisibleNodes);
-      }
-      try { (this.scene as BattleScene).gameData.localSaveAll(this.scene as BattleScene); } catch {}
-    } finally {
-      this.autoBatchLevelUpInProgress = false;
-      this.isLevelUpAnimationActive = false;
     }
   }
 

@@ -109,6 +109,7 @@
   "secondaryAbilitySacrifice": "繼承特性",
   "secondaryPassiveSacrifice": "作為被動特性繼承",
   "secondaryNatureStatBoost": "+{{incStat}} / -{{decStat}}",
+  "shopMintStatDelta": "+{{incStat}}/-{{decStat}}",
   "secondaryMoveUpgradeCategory": "{{moveName}} · {{category}}",
   "secondaryStatNone": "—",
   "secondaryStatPercentBoost": "+{{percent}}% {{stat}}",

@@ -131,5 +131,11 @@
   "interval30min": "30分鐘",
   "interval1hr": "1小時",
   "interval2hr": "2小時",
-  "manualOnly": "僅手動"
+  "manualOnly": "僅手動",
+  "duelmonSpawnRarity": "決鬥怪獸出現稀有度",
+  "rare": "稀有",
+  "veryRare": "極稀有",
+  "animationLoad": "動畫負載",
+  "animationLite": "輕量",
+  "animationFull": "完整（高負載）"
 }

@@ -109,6 +109,7 @@
   "secondaryAbilitySacrifice": "특성 계승",
   "secondaryPassiveSacrifice": "패시브 특성으로 계승",
   "secondaryNatureStatBoost": "+{{incStat}} / -{{decStat}}",
+  "shopMintStatDelta": "+{{incStat}}/-{{decStat}}",
   "secondaryMoveUpgradeCategory": "{{moveName}} · {{category}}",
   "secondaryStatNone": "—",
   "secondaryStatPercentBoost": "+{{percent}}% {{stat}}",

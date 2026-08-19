@@ -425,16 +425,26 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
     this.nameBoxContainer.setVisible(false);
     this._smitomModeActive = true;
 
-    if (this._smitomPanelContainer.postFX) {
-      const panelPixFx = this._smitomPanelContainer.postFX.addPixelate(20);
+    if (this.scene.animationLoadMode >= 2) {
+      if (this._smitomPanelContainer.postFX) {
+        const panelPixFx = this._smitomPanelContainer.postFX.addPixelate(20);
+        this.scene.tweens.add({
+          targets: panelPixFx,
+          amount: -1,
+          duration: Utils.fixedInt(1100),
+          ease: "Linear",
+          onComplete: () => {
+            this._smitomPanelContainer?.postFX?.remove(panelPixFx);
+          }
+        });
+      }
+    } else {
+      this._smitomPanelContainer.setAlpha(0);
       this.scene.tweens.add({
-        targets: panelPixFx,
-        amount: -1,
-        duration: Utils.fixedInt(1100),
-        ease: "Linear",
-        onComplete: () => {
-          this._smitomPanelContainer?.postFX?.remove(panelPixFx);
-        }
+        targets: this._smitomPanelContainer,
+        alpha: 1,
+        duration: Utils.fixedInt(500),
+        ease: "Sine.easeOut",
       });
     }
   }
@@ -489,17 +499,21 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
       };
 
       if (this.message.postFX) {
-        const msgPixFx = this.message.postFX.addPixelate(0);
-        this.scene.tweens.add({
-          targets: msgPixFx,
-          amount: 12,
-          duration: Utils.fixedInt(duration),
-          ease: "Linear",
-          onComplete: () => {
-            this.message.postFX?.remove(msgPixFx);
-            onDone();
-          }
-        });
+        if (this.scene.animationLoadMode >= 2) {
+          const msgPixFx = this.message.postFX.addPixelate(0);
+          this.scene.tweens.add({
+            targets: msgPixFx,
+            amount: 12,
+            duration: Utils.fixedInt(duration),
+            ease: "Linear",
+            onComplete: () => {
+              this.message.postFX?.remove(msgPixFx);
+              onDone();
+            }
+          });
+        } else {
+          onDone();
+        }
         this.scene.tweens.add({
           targets: this.message,
           alpha: 0,
@@ -511,17 +525,21 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
       }
 
       if (this._smitomPanelContainer?.postFX) {
-        const panelPixFx = this._smitomPanelContainer.postFX.addPixelate(0);
-        this.scene.tweens.add({
-          targets: panelPixFx,
-          amount: 20,
-          duration: Utils.fixedInt(duration),
-          ease: "Linear",
-          onComplete: () => {
-            this._smitomPanelContainer?.postFX?.remove(panelPixFx);
-            onDone();
-          }
-        });
+        if (this.scene.animationLoadMode >= 2) {
+          const panelPixFx = this._smitomPanelContainer.postFX.addPixelate(0);
+          this.scene.tweens.add({
+            targets: panelPixFx,
+            amount: 20,
+            duration: Utils.fixedInt(duration),
+            ease: "Linear",
+            onComplete: () => {
+              this._smitomPanelContainer?.postFX?.remove(panelPixFx);
+              onDone();
+            }
+          });
+        } else {
+          onDone();
+        }
         this.scene.tweens.add({
           targets: this._smitomPanelContainer,
           alpha: 0,
@@ -606,7 +624,16 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
         pages.push(currentPage.trim());
       }
     }
-    return pages.length ? pages : [text];
+
+    const validated: string[] = [];
+    for (const page of pages) {
+      if (this.message.runWordWrap(page).split(/\n/g).length > maxLines) {
+        validated.push(...this.paginateSmitomByWordBoundary(page, maxLines));
+      } else {
+        validated.push(page);
+      }
+    }
+    return validated.length ? validated : [text];
   }
 
   private paginateSmitomByWordBoundary(text: string, maxLines: number): string[] {
@@ -652,17 +679,36 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
     }));
 
     if (this.message.postFX) {
-      this._smitomPixFx = this.message.postFX.addPixelate(12);
-      this._smitomAnimTweens.push(this.scene.tweens.add({
-        targets: this._smitomPixFx,
-        amount: -1,
-        duration: Utils.fixedInt(durationMs),
-        ease: "Linear",
-        onComplete: () => {
-          if (this._smitomPixFx && this.message.postFX) {
-            this.message.postFX.remove(this._smitomPixFx);
-            this._smitomPixFx = null;
+      if (this.scene.animationLoadMode >= 2) {
+        this._smitomPixFx = this.message.postFX.addPixelate(12);
+        this._smitomAnimTweens.push(this.scene.tweens.add({
+          targets: this._smitomPixFx,
+          amount: -1,
+          duration: Utils.fixedInt(durationMs),
+          ease: "Linear",
+          onComplete: () => {
+            if (this._smitomPixFx && this.message.postFX) {
+              this.message.postFX.remove(this._smitomPixFx);
+              this._smitomPixFx = null;
+            }
+            if (prompt) {
+              const showPromptAndWait = () => this.showSmitomPrompt(callback, callbackDelay);
+              if (promptDelay) {
+                this.scene.time.delayedCall(Utils.fixedInt(promptDelay), showPromptAndWait);
+              } else {
+                showPromptAndWait();
+              }
+            } else if (callback) {
+              if (callbackDelay) {
+                this.scene.time.delayedCall(Utils.fixedInt(callbackDelay), () => callback());
+              } else {
+                callback();
+              }
+            }
           }
+        }));
+      } else {
+        this.scene.time.delayedCall(Utils.fixedInt(durationMs), () => {
           if (prompt) {
             const showPromptAndWait = () => this.showSmitomPrompt(callback, callbackDelay);
             if (promptDelay) {
@@ -677,8 +723,8 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
               callback();
             }
           }
-        }
-      }));
+        });
+      }
     } else {
       this.scene.time.delayedCall(Utils.fixedInt(durationMs), () => {
         if (prompt) {

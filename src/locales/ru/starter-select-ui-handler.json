@@ -51,5 +51,6 @@
   "disablePassive": "Выключить пассив",
   "locked": "Заблокировано",
   "disabled": "Отключено",
-  "uncaught": "Не пойман(а)"
+  "uncaught": "Не пойман(а)",
+  "signatureLabel": "Подпись"
 }

@@ -32,6 +32,110 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
     let isSnapped = false;
     animationPhase = "playing";
 
+    const animMode = scene.animationLoadMode ?? 2;
+
+    if (animMode < 2) {
+      const screenW = scene.game.canvas.width / 6;
+      const screenH = scene.game.canvas.height / 6;
+      const cX = Math.floor(scene.game.canvas.width / 12);
+      const cY = Math.floor(-scene.game.canvas.height / 12);
+
+      const container = scene.add.container(0, 0);
+      container.setDepth(1000);
+      scene.ui.add(container);
+
+      let bgImg: Phaser.GameObjects.Image | null = null;
+      if (scene.textures.exists("level_up")) {
+        bgImg = scene.add.image(0, -screenH, "level_up");
+        bgImg.setOrigin(0, 0);
+        bgImg.setDisplaySize(screenW, screenH);
+        bgImg.setAlpha(1);
+        container.add(bgImg);
+      }
+
+      const isSkillReveal = !!skillRevealConfig;
+      const isUnlockT = isUnlock || !!(textOverride && textOverride.includes("UNLOCKED"));
+      const preBgmKey = restoreBgmKey ?? (scene as any).bgm?.key ?? null;
+
+      let cardCont: Phaser.GameObjects.Container | null = null;
+      if (skillRevealConfig) {
+        cardCont = scene.add.container(cX, cY);
+        const iconCfg = skillRevealConfig.iconConfig;
+        if (scene.textures.exists(iconCfg.key)) {
+          const ox = iconCfg.isChampionSprite ? 0 : (iconCfg.offsetX ?? 0);
+          const oy = iconCfg.isChampionSprite ? 0 : (iconCfg.offsetY ?? 0);
+          const icon = scene.add.sprite(ox, oy, iconCfg.key, iconCfg.frame);
+          const iconScale = iconCfg.isChampionSprite ? iconCfg.scale * 0.5 : (iconCfg.scale >= 2.0 ? 1.75 : 0.875);
+          icon.setScale(iconScale);
+          icon.setOrigin(0.5, 0.5);
+          if (iconCfg.inverted && icon.postFX && typeof icon.postFX.addColorMatrix === "function") {
+            icon.postFX.addColorMatrix().negative();
+          }
+          cardCont.add(icon);
+        }
+        container.add(cardCont);
+      }
+
+      const fontSize = isSkillReveal ? 200 : (isUnlockT ? 220 : 280);
+      const textStyle = { fontFamily: "emerald", fontSize: `${fontSize}px`, color: "#E0FFFF", stroke: "#4169E1", strokeThickness: Math.round(fontSize * 0.05), align: "center" as const, wordWrap: { width: wrapWidth ?? 800, useAdvancedWrap: true } };
+
+      const txts: Phaser.GameObjects.Text[] = [];
+      if (isSkillReveal && skillRevealConfig) {
+        const sn = addTextObject(scene, cX, cY - 45, skillRevealConfig.skillName, TextStyle.WINDOW, textStyle);
+        sn.setOrigin(0.5, 0.5); sn.setShadow(3, 3, "#6b5a73"); container.add(sn); txts.push(sn);
+        const obtStr = isUnlockT ? i18next.t("championSelect:unlocked", { defaultValue: "UNLOCKED!" }).toUpperCase() : (textOverride ?? i18next.t("championLevelUp:obtained", { defaultValue: "Obtained!" }));
+        const ot = addTextObject(scene, cX, cY + 45, obtStr, TextStyle.WINDOW, textStyle);
+        ot.setOrigin(0.5, 0.5); ot.setShadow(3, 3, "#6b5a73"); container.add(ot); txts.push(ot);
+      } else {
+        const txt = textOverride ?? i18next.t("championSelect:levelUp", { defaultValue: "LEVEL UP!" });
+        const t = addTextObject(scene, cX, cY, txt, TextStyle.WINDOW, textStyle);
+        t.setOrigin(0.5, 0.5); t.setShadow(3, 3, "#6b5a73"); container.add(t); txts.push(t);
+      }
+
+      if (animMode === 0) {
+        if (cardCont) cardCont.setAlpha(1);
+        for (const t of txts) { t.setAlpha(1); }
+      } else {
+        if (cardCont) cardCont.setAlpha(0);
+        for (const t of txts) { t.setAlpha(0); }
+        const fadeTargets = cardCont ? [cardCont, ...txts] : txts;
+        scene.tweens.add({ targets: fadeTargets, alpha: 1, duration: 400, ease: "Sine.easeIn" });
+      }
+
+      if (isSkillReveal) {
+        const revealSound = ModifierOption.EMBER_RARITY_SOUNDS[skillRevealConfig!.rarity] || "se/shing";
+        const soundConfig = revealSound.startsWith("battle_anims/") ? { volumeGroup: "se" } : {};
+        scene.playSound(revealSound, soundConfig);
+        scene.playBgm("battle_legendary_terapagos", true);
+      } else {
+        scene.playSound("evolution_fanfare_rse");
+      }
+
+      const clickZone = scene.add.rectangle(0, -screenH, screenW, screenH, 0x000000, 0);
+      clickZone.setOrigin(0, 0); clickZone.setInteractive(); clickZone.setDepth(999); container.add(clickZone);
+
+      let dismissed = false;
+      const dismiss = () => {
+        if (dismissed) return;
+        dismissed = true;
+        animationPhase = "done";
+        for (const t of txts) { try { t.destroy(); } catch {} }
+        if (cardCont) try { cardCont.destroy(); } catch {}
+        if (bgImg) try { bgImg.destroy(); } catch {}
+        container.destroy();
+        if (isSkillReveal) { try { scene.playBgm(preBgmKey || (scene.currentBattle?.getBgmOverride(scene) || scene.arena?.bgm)); } catch {} }
+        currentAnimationSkipCallback = null;
+        resolve();
+      };
+
+      skipInputLocked = true;
+      scene.time.delayedCall(200, () => { skipInputLocked = false; });
+      currentAnimationSkipCallback = () => { if (!skipInputLocked) dismiss(); };
+      clickZone.on("pointerdown", () => { if (!skipInputLocked) dismiss(); });
+      scene.time.delayedCall(9000, dismiss);
+      return;
+    }
+
     const tweens: Phaser.Tweens.Tween[] = [];
     const timers: Phaser.Time.TimerEvent[] = [];
     const screenW = scene.game.canvas.width / 6;
@@ -579,7 +683,7 @@ export async function playGenericLevelUpAnimation(scene: BattleScene, textOverri
           try { scene.tweens.killTweensOf(t); t.clearMask(); t.destroy(); } catch {}
         }
         for (const obj of emberVfx) {
-          try { scene.tweens.killTweensOf(obj); obj.destroy(); } catch {}
+          try { if ((obj as any).postFX) { (obj as any).postFX.clear(); } scene.tweens.killTweensOf(obj); obj.destroy(); } catch {}
         }
         if (maskGfx) { try { maskGfx.destroy(); } catch {} }
         vfxGfx.destroy();

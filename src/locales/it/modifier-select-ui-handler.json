@@ -109,6 +109,7 @@
   "secondaryAbilitySacrifice": "Eredita l'Abilità",
   "secondaryPassiveSacrifice": "Eredita l'Abilità come Passiva",
   "secondaryNatureStatBoost": "+{{incStat}} / -{{decStat}}",
+  "shopMintStatDelta": "+{{incStat}}/-{{decStat}}",
   "secondaryMoveUpgradeCategory": "{{moveName}} · {{category}}",
   "secondaryStatNone": "—",
   "secondaryStatPercentBoost": "+{{percent}}% {{stat}}",

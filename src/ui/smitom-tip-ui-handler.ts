@@ -33,10 +33,11 @@ const SMITOM_SCALE = 0.160;
 const TEXT_LEFT = 60;
 const HEADER_Y = 7;
 const BODY_Y = 19;
-const LS_BUFFER = 63;
+const LS_BUFFER = 110;
 const TEXT_WRAP_WIDTH = (PANEL_WIDTH - TEXT_LEFT - 20) * 6 - LS_BUFFER;
 
 export default class SmitomTipUiHandler extends AwaitableUiHandler {
+  private _setupGeneration: number = 0;
   private config: SmitomTipConfig | null = null;
   private currentTextIndex: number = 0;
 
@@ -106,10 +107,14 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
     const config = args[0] as SmitomTipConfig;
     if (!config || !config.texts || !config.texts.length) return false;
 
+    console.warn("[SMITOM-TIP] show() called", { key: config.tutorialKey, title: config.title, wasActive: this.active, gen: this._setupGeneration });
+
     if (this.active) {
+      console.warn("[SMITOM-TIP] show() clearing previous active tip");
       this.clear();
     }
 
+    const gen = ++this._setupGeneration;
     this.config = config;
     this.currentTextIndex = 0;
     this.bgAlphaOffset = 0;
@@ -124,9 +129,12 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
     this._isFirstShow = true;
     this._isExiting = false;
 
-    this.setupTipPanel().catch(err => {
+    console.warn("[SMITOM-TIP] show() starting setupTipPanel gen=", gen);
+
+    this.setupTipPanel(gen).catch(err => {
       console.error("[SMITOM-TIP] setupTipPanel failed:", err);
       this.active = false;
+      this.scene.ui.revertMode();
       if (this.config?.onComplete) {
         this.config.onComplete();
       }
@@ -163,10 +171,15 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
     });
   }
 
-  private async setupTipPanel(): Promise<void> {
+  private async setupTipPanel(gen: number): Promise<void> {
     const spriteKey = "pkmn__glitch__smitom";
+    console.warn("[SMITOM-TIP] setupTipPanel: awaiting texture, gen=", gen);
     await this.ensureTexture(spriteKey, "images/pokemon/glitch/smitom.png");
-    if (!this.active) return;
+    if (!this.active || gen !== this._setupGeneration) {
+      console.warn("[SMITOM-TIP] setupTipPanel: BAILED after texture", { active: this.active, gen, currentGen: this._setupGeneration });
+      return;
+    }
+    console.warn("[SMITOM-TIP] setupTipPanel: texture loaded, building UI, gen=", gen);
 
     const screenWidth = this.scene.game.canvas.width / 6;
     const panelX = (screenWidth - PANEL_WIDTH) / 2;
@@ -241,7 +254,7 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
     ui.add(this.tipContainer);
     ui.bringToTop(this.tipContainer);
 
-    if (!this.active) return;
+    if (!this.active || gen !== this._setupGeneration) return;
     this.createInputBlockerZone();
 
     this.animateEntrance();
@@ -272,6 +285,7 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
   }
 
   private animateEntrance(): void {
+    console.warn("[SMITOM-TIP] animateEntrance() called", { hasTipContainer: !!this.tipContainer, active: this.active });
     if (!this.tipContainer || !this.active) return;
 
     this.tipContainer.setAlpha(1);
@@ -286,21 +300,23 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
       this._animTweens.push(panelAlphaTween);
     }
 
-    if (this.tipContainer.postFX) {
-      this._pixelateFx = this.tipContainer.postFX.addPixelate(20);
-      const pixTween = this.scene.tweens.add({
-        targets: this._pixelateFx,
-        amount: -1,
-        duration: Utils.fixedInt(1100),
-        ease: "Linear",
-        onComplete: () => {
-          if (this.tipContainer?.postFX && this._pixelateFx) {
-            this.tipContainer.postFX.remove(this._pixelateFx);
+    if (this.scene.animationLoadMode >= 2) {
+      if (this.tipContainer.postFX) {
+        this._pixelateFx = this.tipContainer.postFX.addPixelate(20);
+        const pixTween = this.scene.tweens.add({
+          targets: this._pixelateFx,
+          amount: -1,
+          duration: Utils.fixedInt(1100),
+          ease: "Linear",
+          onComplete: () => {
+            if (this.tipContainer?.postFX && this._pixelateFx) {
+              this.tipContainer.postFX.remove(this._pixelateFx);
+            }
+            this._pixelateFx = null;
           }
-          this._pixelateFx = null;
-        }
-      });
-      this._animTweens.push(pixTween);
+        });
+        this._animTweens.push(pixTween);
+      }
     }
 
     const portalTimer = this.scene.time.delayedCall(Utils.fixedInt(320) as any, () => {
@@ -393,28 +409,32 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
       ease: "Linear"
     }));
 
-    if (textObj.postFX) {
-      const pixFx = textObj.postFX.addPixelate(12);
-      if (textObj === this.headerText) {
-        this._titlePixFx = pixFx;
-      } else {
-        this._bodyPixFx = pixFx;
-      }
-      this._animTweens.push(this.scene.tweens.add({
-        targets: pixFx,
-        amount: -1,
-        duration: Utils.fixedInt(durationMs),
-        ease: "Linear",
-        onComplete: () => {
-          textObj.postFX?.remove(pixFx);
-          if (textObj === this.headerText) {
-            this._titlePixFx = null;
-          } else {
-            this._bodyPixFx = null;
-          }
-          if (onComplete) onComplete();
+    if (this.scene.animationLoadMode >= 2) {
+      if (textObj.postFX) {
+        const pixFx = textObj.postFX.addPixelate(12);
+        if (textObj === this.headerText) {
+          this._titlePixFx = pixFx;
+        } else {
+          this._bodyPixFx = pixFx;
         }
-      }));
+        this._animTweens.push(this.scene.tweens.add({
+          targets: pixFx,
+          amount: -1,
+          duration: Utils.fixedInt(durationMs),
+          ease: "Linear",
+          onComplete: () => {
+            textObj.postFX?.remove(pixFx);
+            if (textObj === this.headerText) {
+              this._titlePixFx = null;
+            } else {
+              this._bodyPixFx = null;
+            }
+            if (onComplete) onComplete();
+          }
+        }));
+      } else if (onComplete) {
+        this.scene.time.delayedCall(Utils.fixedInt(durationMs) as any, onComplete);
+      }
     } else if (onComplete) {
       this.scene.time.delayedCall(Utils.fixedInt(durationMs) as any, onComplete);
     }
@@ -437,6 +457,7 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
   }
 
   private showTipText(index: number): void {
+    console.warn("[SMITOM-TIP] showTipText", { index, totalTexts: this.config?.texts?.length, active: this.active });
     if (!this.config) return;
 
     if (!this.originalTexts) {
@@ -530,6 +551,9 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
       if (candidateLines.length > maxLines && currentPage) {
         pages.push(currentPage.trim());
         currentPage = sentence;
+      } else if (candidateLines.length > maxLines && !currentPage) {
+        pages.push(...this.paginateByWordBoundary(sentence.trim(), maxLines));
+        currentPage = "";
       } else {
         currentPage = candidate;
       }
@@ -542,7 +566,16 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
         pages.push(currentPage.trim());
       }
     }
-    return pages;
+
+    const validated: string[] = [];
+    for (const page of pages) {
+      if (this.bodyText!.runWordWrap(page).split(/\n/g).length > maxLines) {
+        validated.push(...this.paginateByWordBoundary(page, maxLines));
+      } else {
+        validated.push(page);
+      }
+    }
+    return validated.length ? validated : [text];
   }
 
   private paginateByWordBoundary(text: string, maxLines: number): string[] {
@@ -572,6 +605,7 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
 
     if (button === Button.ACTION || button === Button.CANCEL || button === Button.SUBMIT) {
       if (this.awaitingActionInput && this.onActionInput) {
+        console.warn("[SMITOM-TIP] processInput: advancing", { button, textIndex: this.currentTextIndex, totalTexts: this.config?.texts?.length });
         this.getUi().playSelect();
         const cb = this.onActionInput;
         this.onActionInput = null;
@@ -711,6 +745,7 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
   }
 
   private completeTip(): void {
+    console.warn("[SMITOM-TIP] completeTip() called", { isExiting: this._isExiting, active: this.active });
     if (this._isExiting) return;
     this._isExiting = true;
 
@@ -757,18 +792,20 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
 
     const pixelateOut = (textObj: Phaser.GameObjects.Text | null) => {
       if (!textObj || !textObj.text) return;
-      if (textObj.postFX) {
-        const pixFx = textObj.postFX.addPixelate(0);
-        this._animTweens.push(this.scene.tweens.add({
-          targets: pixFx,
-          amount: 12,
-          duration: Utils.fixedInt(durationMs),
-          ease: "Linear",
-          onComplete: () => {
-            textObj.postFX?.remove(pixFx);
-            textObj.setAlpha(0);
-          }
-        }));
+      if (this.scene.animationLoadMode >= 2) {
+        if (textObj.postFX) {
+          const pixFx = textObj.postFX.addPixelate(0);
+          this._animTweens.push(this.scene.tweens.add({
+            targets: pixFx,
+            amount: 12,
+            duration: Utils.fixedInt(durationMs),
+            ease: "Linear",
+            onComplete: () => {
+              textObj.postFX?.remove(pixFx);
+              textObj.setAlpha(0);
+            }
+          }));
+        }
       }
       this._animTweens.push(this.scene.tweens.add({
         targets: textObj,
@@ -799,14 +836,16 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
       });
     }
 
-    if (this.tipContainer.postFX) {
-      this._pixelateFx = this.tipContainer.postFX.addPixelate(0);
-      this.scene.tweens.add({
-        targets: this._pixelateFx,
-        amount: 20,
-        duration: Utils.fixedInt(durationMs),
-        ease: "Linear"
-      });
+    if (this.scene.animationLoadMode >= 2) {
+      if (this.tipContainer.postFX) {
+        this._pixelateFx = this.tipContainer.postFX.addPixelate(0);
+        this.scene.tweens.add({
+          targets: this._pixelateFx,
+          amount: 20,
+          duration: Utils.fixedInt(durationMs),
+          ease: "Linear"
+        });
+      }
     }
 
     this.scene.tweens.add({
@@ -821,6 +860,7 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
   }
 
   private finishExit(): void {
+    console.warn("[SMITOM-TIP] finishExit() called", { active: this.active });
     if (this.tipContainer?.postFX && this._pixelateFx) {
       this.tipContainer.postFX.remove(this._pixelateFx);
       this._pixelateFx = null;
@@ -998,6 +1038,8 @@ export default class SmitomTipUiHandler extends AwaitableUiHandler {
   }
 
   clear(): void {
+    console.warn("[SMITOM-TIP] clear() called", { wasActive: this.active, gen: this._setupGeneration, stack: new Error().stack?.split("\n").slice(1, 5).join(" <- ") });
+    this._setupGeneration++;
     for (const t of this._animTimers) {
       try { t.remove(); } catch {  }
     }

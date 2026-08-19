@@ -14,6 +14,7 @@ import { Unlockables } from "#app/system/unlockables";
 import {QuestUnlockData} from "#app/system/game-data";
 import {RivalTrainerType} from "#app/data/trainer-config";
 import { trainerConfigs } from "../data/trainer-config";
+import { ChampionUtils } from "#app/system/champion-utils";
 import {GameModes} from "../game-mode";
 import {getPokemonSpecies} from "#app/data/pokemon-species";
 import { modStorage } from "../system/mod-storage";
@@ -38,6 +39,7 @@ export enum RewardObtainedType {
     SKILL_TREE_TOKENS,
     ESSENCE_BUNDLE,
     LEGENDARY_CATCHABLE,
+    SKILL_TREE_UNLOCK,
 }
 
 export enum UnlockModePokeSpriteType {
@@ -69,6 +71,7 @@ export interface RewardConfig {
     customAtlas?: string;
     isInverted?: boolean;
     skillTreeRarity?: string;
+    championId?: string;
     hideModalBackground?: boolean;
     cutsceneStyle?: boolean;
 }
@@ -80,6 +83,7 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
     protected rewardConfig: RewardConfig;
     protected rewardSprite: Phaser.GameObjects.Sprite;
     protected rewardPortalSprite: Phaser.GameObjects.Sprite | null = null;
+    protected rewardSecondarySprite: Phaser.GameObjects.Sprite | null = null;
     protected rewardBG: Phaser.GameObjects.Sprite;
     protected uiContainer: Phaser.GameObjects.Container;
     protected textureLoaded: boolean = false;
@@ -137,6 +141,8 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                 return i18next.t("rewardObtainedUi:titles.skillPoints");
             case RewardObtainedType.SKILL_TREE_TOKENS:
                 return i18next.t("rewardObtainedUi:titles.skillTreeTokens");
+            case RewardObtainedType.SKILL_TREE_UNLOCK:
+                return i18next.t("rewardObtainedUi:titles.skillTreeUnlock");
             case RewardObtainedType.LEGENDARY_CATCHABLE:
                 return i18next.t("rewardObtainedUi:titles.legendaryPower");
             default:
@@ -206,6 +212,10 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             return this.loadRivalTexture();
         }
 
+        if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_UNLOCK) {
+            return this.loadChampionTexture();
+        }
+
         if (this.rewardConfig.type === RewardObtainedType.FORM && this.rewardConfig.name) {
             return this.loadFormTexture();
         }
@@ -228,7 +238,8 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             this.rewardConfig.type === RewardObtainedType.RIVAL_TO_VOID ||
             this.rewardConfig.type === RewardObtainedType.NIGHTMARE_MODE_CHANGE ||
             this.rewardConfig.type === RewardObtainedType.SKILL_POINTS ||
-            this.rewardConfig.type === RewardObtainedType.SKILL_TREE_TOKENS);
+            this.rewardConfig.type === RewardObtainedType.SKILL_TREE_TOKENS ||
+            this.rewardConfig.type === RewardObtainedType.SKILL_TREE_UNLOCK);
     }
 
     private async loadPokemonTexture(): Promise<void> {
@@ -329,6 +340,41 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
             this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, (file: any) => {
                 reject(new Error(`Failed to load texture: ${file.key}`));
+            });
+
+            if (!this.scene.load.isLoading()) {
+                this.scene.load.start();
+            }
+        });
+    }
+    private getChampionSpriteKey(): string {
+        const championId = this.rewardConfig.championId ?? "apollo_diana";
+        const gender = (this.scene as BattleScene).gameData.gender;
+        return ChampionUtils.getChampionSpriteKey(championId, gender);
+    }
+
+    private async loadChampionTexture(): Promise<void> {
+        const spriteKey = this.getChampionSpriteKey();
+
+        if (this.scene.textures.exists(spriteKey)) {
+            this.textureLoaded = true;
+            return;
+        }
+
+        return new Promise((resolve) => {
+            this.scene.load.atlas(
+                spriteKey,
+                `images/trainer/${spriteKey}.png`,
+                `images/trainer/${spriteKey}.json`
+            );
+
+            this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
+                this.textureLoaded = true;
+                resolve();
+            });
+            this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, () => {
+                this.textureLoaded = true;
+                resolve();
             });
 
             if (!this.scene.load.isLoading()) {
@@ -617,6 +663,8 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
                 this.rewardSprite = this.scene.add.sprite(position.x, position.y, 'smitems');
                 this.rewardSprite.setFrame('permaMoreRevive');
                 this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
+            } else if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_UNLOCK) {
+                this.setupSkillTreeUnlockSprite();
             } else if (this.rewardConfig.type === RewardObtainedType.ESSENCE_BUNDLE) {
                 const position = this.getSpritePosition();
                 this.rewardSprite = this.scene.add.sprite(position.x, position.y, 'smitems');
@@ -653,9 +701,16 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             if (this.rewardPortalSprite) {
                 this.uiContainer.add(this.rewardPortalSprite);
             }
+
+            if (this.rewardSecondarySprite) {
+                this.uiContainer.add(this.rewardSecondarySprite);
+            }
             if (this.rewardSprite) {
                 this.uiContainer.add(this.rewardSprite);
-                this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
+
+                if (this.rewardConfig.type !== RewardObtainedType.SKILL_TREE_UNLOCK) {
+                    this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
+                }
             }
         } catch (error) {
             throw error;
@@ -824,6 +879,35 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         if (this.rewardConfig.isInverted) {
             this.applyInversionEffect();
         }
+    }
+    private setupSkillTreeUnlockSprite(): void {
+        const spriteKey = this.getChampionSpriteKey();
+
+        if (this.scene.textures.exists(spriteKey)) {
+            const position = this.getSpritePosition();
+            this.rewardSprite = (this.scene as BattleScene).addFieldSprite(position.x, position.y, spriteKey);
+            this.rewardSprite.setOrigin(0.5, 0.5);
+
+            this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite) * 0.8);
+            this.rewardSprite.setFlipX(true);
+
+            if (this.rewardSprite.texture.frameTotal > 1) {
+                this.rewardSprite.setFrame(0);
+            }
+
+            this.applyInversionEffect();
+
+            this.rewardSecondarySprite = this.scene.add.sprite(0, 0, 'smitems');
+            this.rewardSecondarySprite.setFrame('permaMoreRevive');
+            this.rewardSecondarySprite.setOrigin(0.5, 0.5);
+            this.rewardSecondarySprite.setScale(this.calculateSpriteScale(this.rewardSecondarySprite) * 0.60375);
+            this.rewardSecondarySprite.setPosition(position.x, position.y);
+            return;
+        }
+        const position = this.getSpritePosition();
+        this.rewardSprite = this.scene.add.sprite(position.x, position.y, 'smitems');
+        this.rewardSprite.setFrame('permaMoreRevive');
+        this.rewardSprite.setScale(this.calculateSpriteScale(this.rewardSprite));
     }
 
     private setupMoneySprite(): void {
@@ -1112,34 +1196,28 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
 
             const hideModalBackground = !!this.rewardConfig.hideModalBackground;
             const isPurple = this.rewardConfig.type === RewardObtainedType.NIGHTMARE_MODE_CHANGE;
-            const isBlack = !hideModalBackground && (priorToGameover || this.rewardConfig.type === RewardObtainedType.RIVAL_TO_VOID);
 
-            if (isBlack) {
-                this.modalBackground = this.scene.add.rectangle(bgX, bgY, w, h, 0x000000, 1.0);
-                (this.modalBackground as any).setOrigin?.(0, 0);
-            } else {
-                const bgImage = this.scene.add.image(bgX, bgY, "modal_bg");
-                bgImage.setOrigin(0, 0);
-                bgImage.setDisplaySize(w, h);
-                bgImage.setAlpha(hideModalBackground ? 0 : (0.65 * this.scene.gameData.rewardOverlayOpacity));
+            const bgImage = this.scene.add.image(bgX, bgY, "modal_bg");
+            bgImage.setOrigin(0, 0);
+            bgImage.setDisplaySize(w, h);
+            bgImage.setAlpha(hideModalBackground ? 0 : (0.65 * this.scene.gameData.rewardOverlayOpacity));
 
-                if (isPurple) {
-                    try {
-                        if (bgImage.postFX && typeof bgImage.postFX.addColorMatrix === 'function') {
-                            const colorMatrix = bgImage.postFX.addColorMatrix();
-                            colorMatrix.negative();
-                        } else {
-                            bgImage.setTint(0xFFFFFF);
-                            bgImage.setBlendMode(Phaser.BlendModes.DIFFERENCE);
-                        }
-                    } catch (error) {
-                        bgImage.setTint(0x000000);
-                        bgImage.setBlendMode(Phaser.BlendModes.SCREEN);
+            if (isPurple) {
+                try {
+                    if (bgImage.postFX && typeof bgImage.postFX.addColorMatrix === 'function') {
+                        const colorMatrix = bgImage.postFX.addColorMatrix();
+                        colorMatrix.negative();
+                    } else {
+                        bgImage.setTint(0xFFFFFF);
+                        bgImage.setBlendMode(Phaser.BlendModes.DIFFERENCE);
                     }
+                } catch (error) {
+                    bgImage.setTint(0x000000);
+                    bgImage.setBlendMode(Phaser.BlendModes.SCREEN);
                 }
-
-                this.modalBackground = bgImage as any;
             }
+
+            this.modalBackground = bgImage as any;
             this.modalContainer.addAt(this.modalBackground, 1);
 
             if (this._rewardBgPattern) {
@@ -1227,6 +1305,18 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
             );
             tkText.setOrigin(0.5);
             this.uiContainer.add(tkText);
+        } else if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_UNLOCK) {
+            const textPos = getTextPosition();
+            const unlockText = addTextObject(
+                this.scene,
+                textPos.x,
+                textPos.y,
+                i18next.t('skillTree:rewards.skillTreeUnlocked'),
+                TextStyle.MONEY,
+                { fontSize: bodyFontSize }
+            );
+            unlockText.setOrigin(0.5);
+            this.uiContainer.add(unlockText);
         } else if (this.rewardConfig.type === RewardObtainedType.FORM) {
             const textPos = getTextPosition();
             let formName;
@@ -1540,6 +1630,9 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_TOKENS && this.rewardConfig.amount) {
             return i18next.t("skillTree:rewards.tokens", { amount: this.rewardConfig.amount });
         }
+        if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_UNLOCK) {
+            return i18next.t("skillTree:rewards.skillTreeUnlocked");
+        }
         if (this.rewardConfig.type === RewardObtainedType.FORM) {
             if (this.rewardConfig.isGlitch) {
                 return i18next.t(`glitchNames:${this.rewardConfig.name.toLowerCase()}.name`);
@@ -1634,22 +1727,26 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
     }
 
     protected fadeInUI(): void {
-        this.uiContainer.setAlpha(1);
-
         const pixTarget = this.modalContainer || this.uiContainer;
-        if (pixTarget.postFX && typeof pixTarget.postFX.addPixelate === "function") {
-            const containerPixFx = pixTarget.postFX.addPixelate(20);
-            this.scene.tweens.add({
-                targets: containerPixFx,
-                amount: -1,
-                duration: fixedInt(500),
-                ease: "Linear",
-                onComplete: () => {
-                    if (pixTarget.postFX) {
-                        pixTarget.postFX.remove(containerPixFx);
+        if (this.scene.animationLoadMode >= 2) {
+            this.uiContainer.setAlpha(1);
+            if (pixTarget.postFX && typeof pixTarget.postFX.addPixelate === "function") {
+                const containerPixFx = pixTarget.postFX.addPixelate(20);
+                this.scene.tweens.add({
+                    targets: containerPixFx,
+                    amount: -1,
+                    duration: fixedInt(500),
+                    ease: "Linear",
+                    onComplete: () => {
+                        if (pixTarget.postFX) {
+                            pixTarget.postFX.remove(containerPixFx);
+                        }
                     }
-                }
-            });
+                });
+            }
+        } else {
+            this.uiContainer.setAlpha(1);
+            pixTarget.setAlpha(1);
         }
     }
 
@@ -1793,6 +1890,11 @@ export default class RewardObtainedUiHandler extends ModalUiHandler {
         if (this.rewardPortalSprite) {
             this.rewardPortalSprite.destroy();
             this.rewardPortalSprite = null;
+        }
+
+        if (this.rewardSecondarySprite) {
+            this.rewardSecondarySprite.destroy();
+            this.rewardSecondarySprite = null;
         }
 
         if (this.rewardSprite) {

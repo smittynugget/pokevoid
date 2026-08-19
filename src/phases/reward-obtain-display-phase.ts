@@ -86,7 +86,8 @@ export class RewardObtainDisplayPhase extends Phase {
         } else {
             if (this.rewardConfig.type === RewardObtainedType.SKILL_POINTS) {
                 this.scene.playSound("battle_anims/PRSFX- Bestow2", { volumeGroup: "se" });
-            } else if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_TOKENS) {
+            } else if (this.rewardConfig.type === RewardObtainedType.SKILL_TREE_TOKENS
+                || this.rewardConfig.type === RewardObtainedType.SKILL_TREE_UNLOCK) {
                 this.scene.playSound("battle_anims/PRSFX- Oblivion Wing2", { volumeGroup: "se" });
             } else {
                 this.scene.playSound("item_fanfare");

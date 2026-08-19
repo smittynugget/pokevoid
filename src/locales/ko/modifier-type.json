@@ -143,6 +143,7 @@
       "description": "스킬 포인트 {{amount}}개를 획득합니다. 스킬 트리에서 스킬을 해금하는 데 사용됩니다."
     },
     "SKILL_TOKENS": {
+      "nameSingle": "스킬 트리 토큰",
       "name": "스킬 트리 토큰 x{{amount}}",
       "description": "스킬 트리 토큰 {{amount}}개를 획득합니다. 스킬 트리를 레벨 업하는 데 사용됩니다!"
     },

@@ -131,5 +131,11 @@
   "interval30min": "30 min",
   "interval1hr": "1 hora",
   "interval2hr": "2 horas",
-  "manualOnly": "Apenas Manual"
+  "manualOnly": "Apenas Manual",
+  "duelmonSpawnRarity": "Raridade de aparição de Duelmon",
+  "rare": "Raro",
+  "veryRare": "Muito Raro",
+  "animationLoad": "Carga de animação",
+  "animationLite": "Leve",
+  "animationFull": "Completo (Exigente)"
 }

@@ -458,8 +458,13 @@
       "description": "Gain {{amount}} Skill Points. Used to unlock skills in the Skill Tree."
     },
     "SKILL_TOKENS": {
+      "nameSingle": "Skill Tree Token",
       "name": "{{amount}}x Skill Tree Tokens",
       "description": "Gain {{amount}} Skill Tree Tokens. Used to level up your Skill Tree!"
+    },
+    "SKILL_TREE_TOKEN_TRACKER": {
+      "name": "Skill Tree Tokens",
+      "description": "Collect 2 Skill Tree Tokens to activate the Skill Tree!"
     },
     "SacrificeModifierType": {
       "description": "Release a Pokémon to boost another pokemon's {{stat}} by 12%."

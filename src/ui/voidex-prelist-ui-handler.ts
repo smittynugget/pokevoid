@@ -1576,7 +1576,8 @@ export default class VoidexPrelistUiHandler extends UiHandler {
       return false;
     }
     if (formKey.includes("smitty")) {
-      return !this.scene.gameData.isUniSmittyFormUnlocked(formName);
+      return !this.scene.gameData.isUniSmittyFormUnlocked(formName)
+        && !this.scene.gameData.activeSkillTree?.sessionUniSmittyUnlocks?.includes(formName);
     }
     if (formKey.includes("glitch")) {
       if (getModPokemonName(species.speciesId, formName)) {

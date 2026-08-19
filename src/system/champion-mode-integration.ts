@@ -1,4 +1,4 @@
-import BattleScene from "../battle-scene";
+import BattleScene, { startingWave } from "../battle-scene";
 import { GameModes, GameMode, getGameMode } from "../game-mode";
 import { ChampionSelectPhase } from "../phases/champion-select-phase";
 import { CharacterSelectPhase } from "../phases/character-select-phase";
@@ -32,6 +32,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { ShinyPowerPhase } from "#app/phases/shiny-power-phase";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
 import { PathNodeTypeFilter } from "#app/modifier/modifier-type";
+import { ensureSkillTreeTokenTracker } from "./skill-tree-progression";
 
 export function setupBattleFlow(scene: BattleScene, loaded: boolean = false): void {
   if (scene.gameData.tutorialOnboardActive) {
@@ -45,7 +46,10 @@ export function setupBattleFlow(scene: BattleScene, loaded: boolean = false): vo
     scene.mapEnabledForRun = !scene.disableMap;
     scene.duelmonsEnabledForRun = !scene.disableDuelmons;
     scene.skillTreeEnabledForRun = true;
+    scene.gameData.pendingSkillTreeAutoOpen = false;
+    scene.gameData.skillTreeAutoOpenConsumed = false;
     scene.wave35UnlockedThisRun = false;
+    ensureSkillTreeTokenTracker(scene);
     scene.resetRunEndSummaryRunData();
   }
 
@@ -60,7 +64,7 @@ export function setupBattleFlow(scene: BattleScene, loaded: boolean = false): vo
     scene.gameMechanicTracking[GameMechanicsID.CHAMPION_MODE] = GameMechanicsVersion.CHAMPION_V1;
 
     scene.currentBattle = null;
-    scene.newBattle(1, BattleType.WILD);
+    scene.newBattle(startingWave, BattleType.WILD);
     scene.arena.init();
 
     scene.arenaPlayer.setPosition(300, 0);

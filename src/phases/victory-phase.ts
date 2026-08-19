@@ -190,9 +190,13 @@ export class VictoryPhase extends PokemonPhase {
       this.scene.pushPhase(new BattleEndPhase(this.scene));
       if (this.scene.currentBattle.battleType === BattleType.TRAINER) {
         if (this.scene.gameData.tutorialOnboardActive) {
-          this.scene.unshiftPhase(new TutorialBlueDefeatPhase(this.scene));
-          this.end();
-          return;
+          if (this.scene.gameMode.isWaveFinal(this.scene.currentBattle.waveIndex)) {
+            this.scene.gameData.tutorialOnboardActive = false;
+          } else {
+            this.scene.unshiftPhase(new TutorialBlueDefeatPhase(this.scene));
+            this.end();
+            return;
+          }
         }
         this.scene.unshiftPhase(new TrainerVictoryPhase(this.scene));
       }
@@ -347,6 +351,7 @@ export class VictoryPhase extends PokemonPhase {
             if (uniTotal > 0 && uniUnlocked < uniTotal) {
               this.scene.unshiftPhase(new UnlockUniSmittyPhase(this.scene));
             }
+            this.handleUnlocks();
 
             if (!this.scene.disableCutscenes) {
               const def = STORY_CUTSCENES.void_victory;
@@ -484,10 +489,13 @@ export class VictoryPhase extends PokemonPhase {
       }
 
       if (!this.scene.gameMode.isNightmare && this.scene.gameMode.isWavePreFinal(this.scene)) {
+        const waveIndex = this.scene.currentBattle.waveIndex;
         this.scene.gameData.gameStats.majorBossesDefeated++;
-        this.scene.recordRunEndSummaryMajorBossDefeat(this.scene.currentBattle.waveIndex, defeatedPokemon.species.speciesId);
-        this.scene.unshiftPhase(new SelectPermaModifierPhase(this.scene));
-    }
+        this.scene.recordRunEndSummaryMajorBossDefeat(waveIndex, defeatedPokemon.species.speciesId);
+        if (!this.scene.gameMode.isWaveFinal(waveIndex)) {
+          this.scene.unshiftPhase(new SelectPermaModifierPhase(this.scene));
+        }
+      }
 
       if (this.scene.gameMode.isNightmare) {
           const currentWave = this.scene.currentBattle.waveIndex;

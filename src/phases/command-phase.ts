@@ -28,7 +28,10 @@ import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
 import { QuestState, QuestUnlockables } from "#app/system/game-data.js";
 import { MoveUpgradePhase } from "./move-upgrade-phase.js";
 import { getDynamicModeLocalizedString } from "#app/battle.js";
-import { SkillTreePhase } from "#app/phases/skill-tree-phase";
+import { SkillTreePhase, resolveActiveChampionId } from "#app/phases/skill-tree-phase";
+import { SkillTreeProgression } from "#app/system/skill-tree-progression";
+import { RewardObtainDisplayPhase } from "#app/phases/reward-obtain-display-phase";
+import { RewardObtainedType } from "#app/ui/reward-obtained-ui-handler";
 import { Species } from "#app/enums/species.js";
 import { SmitomTutorialPhase } from "#app/phases/smitom-tutorial-phase.js";
 import { SlideshowCutscenePhase } from "#app/phases/slideshow-cutscene-phase.js";
@@ -186,6 +189,14 @@ export class CommandPhase extends FieldPhase {
 
     if (this.tryTriggerJourneyQuestShopTip()) {
       return;
+    }
+
+    if (this.scene.gameData.pendingSkillTreeAutoOpen && this.fieldIndex === 0) {
+      if (this.openSkillTreeFromCommand()) {
+        this.scene.gameData.pendingSkillTreeAutoOpen = false;
+        this.scene.gameData.skillTreeAutoOpenConsumed = true;
+        return;
+      }
     }
 
     if (moveQueue.length) {
@@ -779,17 +790,20 @@ export class CommandPhase extends FieldPhase {
   end() {
     this.scene.ui.setMode(Mode.MESSAGE).then(() => super.end());
   }
-  openSkillTreeFromCommand(): void {
+  openSkillTreeFromCommand(): boolean {
     if (!this.scene.skillTreeEnabledForRun) {
-      return;
+      return false;
     }
     const gameData: any = (this.scene as any).gameData;
     if (gameData?.tutorialOnboardActive) {
-      return;
+      return false;
     }
     if (!gameData?.activeSkillTree) {
-      return;
+      return false;
     }
+    const championId = resolveActiveChampionId(this.scene, gameData.activeSkillTree);
+    new SkillTreeProgression(this.scene).consumeTokens();
+
     const skillTreePhase = new SkillTreePhase(this.scene, {
       mode: "BATTLE_ACCESS",
       onComplete: undefined,
@@ -797,9 +811,14 @@ export class CommandPhase extends FieldPhase {
         this.scene.ui.setMode(Mode.COMMAND, this.getFieldIndex());
       }
     });
+    this.scene.unshiftPhase(new RewardObtainDisplayPhase(this.scene, {
+      type: RewardObtainedType.SKILL_TREE_UNLOCK,
+      championId
+    }));
     this.scene.unshiftPhase(skillTreePhase);
     this.scene.unshiftPhase(this);
     this.scene.shiftPhase();
+    return true;
   }
   checkPendingMoveUpgrades(): boolean {
     if (this.scene.gameData.pendingMoveUpgrades >= 0) {

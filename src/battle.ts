@@ -3002,7 +3002,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
       probabilities: {
         [PathNodeType.WILD_POKEMON]: 850,
         [PathNodeType.TRAINER_BATTLE]: 650,
-        [PathNodeType.SMITTY_BATTLE]: 1,
+        [PathNodeType.SMITTY_BATTLE]: 2,
         [PathNodeType.ITEM_BERRY]: 60,
         [PathNodeType.MONEY]: 35,
 
@@ -3055,7 +3055,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
       probabilities: {
         [PathNodeType.WILD_POKEMON]: 850,
         [PathNodeType.TRAINER_BATTLE]: 650,
-        [PathNodeType.SMITTY_BATTLE]: 5,
+        [PathNodeType.SMITTY_BATTLE]: 10,
         [PathNodeType.ITEM_BERRY]: 60,
         [PathNodeType.MONEY]: 35,
         [PathNodeType.MAJOR_BOSS_BATTLE]: 15,
@@ -3109,7 +3109,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.WILD_POKEMON]: 900,
         [PathNodeType.TRAINER_BATTLE]: 600,
         [PathNodeType.ELITE_FOUR]: 200,
-        [PathNodeType.SMITTY_BATTLE]: 5,
+        [PathNodeType.SMITTY_BATTLE]: 10,
         [PathNodeType.ITEM_BERRY]: 60,
         [PathNodeType.MONEY]: 35,
         [PathNodeType.MAJOR_BOSS_BATTLE]: 50,
@@ -3164,7 +3164,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.TRAINER_BATTLE]: 500,
         [PathNodeType.ELITE_FOUR]: 200,
         [PathNodeType.CHAMPION]: 100,
-        [PathNodeType.SMITTY_BATTLE]: 5,
+        [PathNodeType.SMITTY_BATTLE]: 10,
         [PathNodeType.ITEM_BERRY]: 60,
         [PathNodeType.MONEY]: 50,
         [PathNodeType.MAJOR_BOSS_BATTLE]: 50,
@@ -3219,7 +3219,7 @@ function getWaveRangeConfig(wave: number, dynamicMode?: DynamicMode): WaveRange 
         [PathNodeType.TRAINER_BATTLE]: 500,
         [PathNodeType.ELITE_FOUR]: 200,
         [PathNodeType.CHAMPION]: 100,
-        [PathNodeType.SMITTY_BATTLE]: 5,
+        [PathNodeType.SMITTY_BATTLE]: 10,
         [PathNodeType.ITEM_BERRY]: 60,
         [PathNodeType.MONEY]: 50,
         [PathNodeType.MAJOR_BOSS_BATTLE]: 75,
@@ -5932,7 +5932,7 @@ function constructChallengePathNodes(
     let nodeType: PathNodeType;
 
     const smittyChance = Overrides.SMITTY_FINAL_BATTLE_CHANCE_OVERRIDE;
-    const effectiveSmittyChance = smittyChance ?? 10;
+    const effectiveSmittyChance = smittyChance ?? 25;
     if (Utils.randSeedInt(100) < effectiveSmittyChance) {
       nodeType = PathNodeType.SMITTY_BATTLE;
     } else {

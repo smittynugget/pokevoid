@@ -131,5 +131,11 @@
   "interval30min": "30分",
   "interval1hr": "1時間",
   "interval2hr": "2時間",
-  "manualOnly": "手動のみ"
+  "manualOnly": "手動のみ",
+  "duelmonSpawnRarity": "デュエルモン出現レア度",
+  "rare": "レア",
+  "veryRare": "超レア",
+  "animationLoad": "アニメーション負荷",
+  "animationLite": "軽量",
+  "animationFull": "フル（高負荷）"
 }

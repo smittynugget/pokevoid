@@ -8,6 +8,7 @@ export interface ActiveSkillTreeData {
   runtimeType2?: Type;
   treeLevel: number;
   maxVisibleDepth: number;
+  depth1BountyPresent?: boolean;
   unlockedNodes: Set<string>;
   skillEffects: Map<string, any>;
   seed: number;

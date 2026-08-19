@@ -19,7 +19,7 @@ export class SkillPointSources {
 		if (Utils.randSeedInt(100) < 25) {
 			this.awardSkillPoints(Utils.randSeedInt(2) + 1, "battle_victory");
 		}
-		if (Utils.randSeedInt(100) < 20) {
+		if (Utils.randSeedInt(100) < 10) {
 			this.awardTokens(1, "battle_victory");
 		}
 	}
@@ -55,14 +55,8 @@ export class SkillPointSources {
 	checkBossVictoryReward(trainerType: TrainerType): void {
 		if (!this.scene.gameData.activeSkillTree) return;
 		switch (trainerType) {
-			case TrainerType.ELITE_FOUR:
-				this.awardTokens(1, "elite_four_victory");
-				break;
 			case TrainerType.CHAMPION:
-				this.awardTokens(3, "champion_victory");
-				break;
-			case TrainerType.RIVAL:
-				this.awardTokens(1, "rival_victory");
+				this.awardTokens(1, "champion_victory");
 				break;
 		}
 	}

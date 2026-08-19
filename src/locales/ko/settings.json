@@ -131,5 +131,11 @@
   "interval30min": "30분",
   "interval1hr": "1시간",
   "interval2hr": "2시간",
-  "manualOnly": "수동만"
+  "manualOnly": "수동만",
+  "duelmonSpawnRarity": "듀얼몬 출현 희귀도",
+  "rare": "레어",
+  "veryRare": "매우 레어",
+  "animationLoad": "애니메이션 부하",
+  "animationLite": "가벼움",
+  "animationFull": "풀 (고부하)"
 }

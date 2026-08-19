@@ -94,6 +94,42 @@ function spawnParticlesBatched(
 
 export function playPortalSummonAnim(scene: BattleScene, pokemon: Pokemon): Promise<void> {
   return new Promise((resolve) => {
+    if ((scene as any).animationLoadMode === 0) {
+      const s = pokemon.getSprite();
+      if (s) { s.setVisible(true); s.setAlpha(1); }
+      pokemon.setVisible(true);
+      resolve();
+      return;
+    }
+    if ((scene as any).animationLoadMode === 1) {
+      const tintSpriteReset = (pokemon as any).getTintSprite?.();
+      if (tintSpriteReset) {
+        scene.tweens.killTweensOf(tintSpriteReset);
+        tintSpriteReset.setVisible(false);
+        tintSpriteReset.setAlpha(0);
+        tintSpriteReset.clearTint();
+      }
+      const s = pokemon.getSprite();
+      if (s) {
+        s.setVisible(true);
+        s.setAlpha(0);
+        s.clearTint();
+        if (pokemon.altBuildSpriteColors && pokemon.altBuildTargetColors) {
+          s.pipelineData["altBuildSpriteColors"] = pokemon.altBuildSpriteColors;
+          s.pipelineData["altBuildTargetColors"] = pokemon.altBuildTargetColors;
+          s.pipelineData["altBuildBlendMode"] = pokemon.altBuildBlendMode || 'replace';
+          s.pipelineData["altBuildInversionFactor"] = pokemon.altBuildInversionFactor || 0.0;
+        }
+      }
+      pokemon.setVisible(true);
+      if (pokemon.portalSprite) {
+        pokemon.portalSprite.setVisible(true);
+        pokemon.portalSprite.setAlpha(0);
+        scene.tweens.add({ targets: pokemon.portalSprite, alpha: 1, duration: 500 });
+      }
+      scene.tweens.add({ targets: s, alpha: 1, duration: 400, onComplete: () => resolve() });
+      return;
+    }
     const pxScale = (pokemon.species?.generation === 20 || (pokemon as any).isVisualGlitchOrSmittyForm?.())
       ? pokemon.getSpriteScale()
       : 0.45;
@@ -389,6 +425,9 @@ export function playPortalSummonAnim(scene: BattleScene, pokemon: Pokemon): Prom
         if (portalSprite) {
           portalSprite.setOrigin(0.5, portalOriginalOriginY);
           portalSprite.y = portalOriginalY;
+          if (portalSprite.postFX) {
+            portalSprite.postFX.clear();
+          }
         }
         const tintSpriteCleanup = (pokemon as any).getTintSprite?.();
         if (tintSpriteCleanup) {
@@ -412,6 +451,21 @@ export function playEggPortalSummonAnim(
   pxScale: number
 ): Promise<void> {
   return new Promise((resolve) => {
+    if ((scene as any).animationLoadMode === 0) {
+      if (creatureSprite) { creatureSprite.setVisible(true); creatureSprite.setAlpha(1); }
+      resolve();
+      return;
+    }
+    if ((scene as any).animationLoadMode === 1) {
+      if (portalSprite) {
+        portalSprite.setVisible(true);
+        portalSprite.setAlpha(0);
+        scene.tweens.add({ targets: portalSprite, alpha: 1, duration: 500 });
+      }
+      if (creatureSprite) { creatureSprite.setVisible(true); creatureSprite.setAlpha(0); }
+      scene.tweens.add({ targets: creatureSprite, alpha: 1, duration: 400, onComplete: () => resolve() });
+      return;
+    }
     const allObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.Graphics)[] = [];
 
     if (!portalSprite) {
@@ -700,6 +754,25 @@ export function playEggPortalSummonAnim(
 
 export function playPortalFaintAnim(scene: BattleScene, pokemon: Pokemon): Promise<void> {
   return new Promise((resolve) => {
+    if ((scene as any).animationLoadMode === 0) {
+      const s = pokemon.getSprite();
+      if (s) s.setVisible(false);
+      pokemon.setVisible(false);
+      resolve();
+      return;
+    }
+    if ((scene as any).animationLoadMode === 1) {
+      const s = pokemon.getSprite();
+      if (pokemon.portalSprite) {
+        scene.tweens.add({
+          targets: pokemon.portalSprite, alpha: 0, duration: 400,
+          onComplete: () => { pokemon.portalSprite?.postFX?.clear(); pokemon.portalSprite?.setVisible(false); }
+        });
+      }
+      if (s) scene.tweens.add({ targets: s, alpha: 0, duration: 400, onComplete: () => { s.setVisible(false); pokemon.setVisible(false); resolve(); } });
+      else { pokemon.setVisible(false); resolve(); }
+      return;
+    }
     const pxScale = pokemon.getSpriteScale();
     const allObjects: (Phaser.GameObjects.Image | Phaser.GameObjects.Graphics)[] = [];
 
@@ -923,6 +996,25 @@ export function playPortalFaintAnim(scene: BattleScene, pokemon: Pokemon): Promi
 
 export function playTrainerPortalFaintAnim(scene: BattleScene, trainer: Trainer): Promise<void> {
   return new Promise((resolve) => {
+    if ((scene as any).animationLoadMode === 0) {
+      const sprites = trainer.getSprites();
+      sprites?.forEach(s => s.setVisible(false));
+      resolve();
+      return;
+    }
+    if ((scene as any).animationLoadMode === 1) {
+      if (trainer.portalSprite) {
+        scene.tweens.add({
+          targets: trainer.portalSprite, alpha: 0, duration: 400,
+          onComplete: () => { trainer.portalSprite?.postFX?.clear(); trainer.portalSprite?.setVisible(false); }
+        });
+      }
+      const sprites = trainer.getSprites();
+      const sprite = sprites?.[0];
+      if (sprite) scene.tweens.add({ targets: sprite, alpha: 0, duration: 400, onComplete: () => { sprites?.forEach(s => s.setVisible(false)); resolve(); } });
+      else { resolve(); }
+      return;
+    }
     const sprites = trainer.getSprites();
     const tintSprites = trainer.getTintSprites();
     const sprite = sprites?.[0];
@@ -1100,6 +1192,26 @@ export function playTrainerPortalFaintAnim(scene: BattleScene, trainer: Trainer)
 
 export function playTrainerPortalSummonAnim(scene: BattleScene, trainer: Trainer, portalSprite: Phaser.GameObjects.Sprite): Promise<void> {
   return new Promise((resolve) => {
+    if ((scene as any).animationLoadMode === 0) {
+      const sprites = trainer.getSprites();
+      sprites?.forEach(s => { s.setVisible(true); s.setAlpha(1); });
+      trainer.setVisible(true);
+      resolve();
+      return;
+    }
+    if ((scene as any).animationLoadMode === 1) {
+      const sprites = trainer.getSprites();
+      const sprite = sprites?.[0];
+      if (sprite) { sprite.setVisible(true); sprite.setAlpha(0); }
+      trainer.setVisible(true);
+      if (portalSprite) {
+        portalSprite.setVisible(true);
+        portalSprite.setAlpha(0);
+        scene.tweens.add({ targets: portalSprite, alpha: 1, duration: 500 });
+      }
+      scene.tweens.add({ targets: sprite, alpha: 1, duration: 400, onComplete: () => resolve() });
+      return;
+    }
     const sprites = trainer.getSprites();
     const sprite = sprites?.[0];
     if (!sprite) { resolve(); return; }

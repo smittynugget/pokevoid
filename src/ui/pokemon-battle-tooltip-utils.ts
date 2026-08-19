@@ -648,7 +648,7 @@ export class PokemonBattleTooltipUtils {
     const maxBarW = 20;
     const barH = 3;
     const modifiedBaseStats = pokemon.getModifiedBaseStats();
-    const canonicalBaseStats = displayOptions?.comparisonStats ?? pokemon.getCanonicalBaseStats();
+    const canonicalBaseStats = displayOptions?.comparisonStats ?? pokemon.getComparisonBaseStats();
 
     const swaps = displayOptions?.shinyStatSwaps;
     const swappedStats = new Set<number>();
@@ -992,7 +992,7 @@ export class PokemonBattleTooltipUtils {
 
       if (move.effect && (scene as BattleScene).enableMoveInfo) {
         const effectText = addTextObject(scene, textX + 2, currentY, move.effect, TextStyle.WINDOW, {
-          fontSize: "30px",
+          fontSize: "35px",
           wordWrap: { width: (tooltipWidth - padding * 2 - 4) * 6 }
         });
         effectText.setOrigin(0, 0);
@@ -1178,7 +1178,7 @@ export class PokemonBattleTooltipUtils {
         const stat = this.STAT_ORDER[sIdx];
         const sy = columnTopY + sIdx * statLineSpacing;
         const statVal = member.getModifiedBaseStats()[stat];
-        const baseVal = member.getCanonicalBaseStats()[stat];
+        const baseVal = member.getComparisonBaseStats()[stat];
         const mult = getNatureStatMultiplier(member.getNature(), stat);
 
         const lbl = addTextObject(scene, cellInfoStartX, sy + 3, teamStatNames[sIdx], TextStyle.WINDOW, { fontSize: "28px" });
@@ -1252,7 +1252,7 @@ export class PokemonBattleTooltipUtils {
       let bstBaseSum = 0;
       for (let s = 0; s < 6; s++) {
         bstSum += member.getModifiedBaseStats()[this.STAT_ORDER[s]];
-        bstBaseSum += member.getCanonicalBaseStats()[this.STAT_ORDER[s]];
+        bstBaseSum += member.getComparisonBaseStats()[this.STAT_ORDER[s]];
       }
       const bstLabel = addTextObject(scene, cellInfoStartX, bstY + 3, i18next.t("pokemonInfo:Stat.Total", { defaultValue: "Total" }), TextStyle.WINDOW, { fontSize: "24px" });
       bstLabel.setOrigin(0, 0.5);
@@ -1677,7 +1677,7 @@ export class PokemonBattleTooltipUtils {
       if (options?.showEffect !== false && move.effect) {
         const wrapWidth = (tooltipWidth - padding * 2 - 4) * 6;
         const effectText = addTextObject(scene, contentLeft, currentY + 1, move.effect, TextStyle.WINDOW, {
-          fontSize: "30px",
+          fontSize: "35px",
           wordWrap: { width: wrapWidth }
         });
         effectText.setOrigin(0, 0);
@@ -1748,7 +1748,7 @@ export class PokemonBattleTooltipUtils {
     if (options?.showEffect !== false && move.effect) {
       const wrapWidth = (tooltipWidth - padding * 2 - 4) * 6;
       const effectText = addTextObject(scene, contentLeft, currentY + 1, move.effect, TextStyle.WINDOW, {
-        fontSize: "30px",
+        fontSize: "35px",
         wordWrap: { width: wrapWidth }
       });
       effectText.setOrigin(0, 0);
@@ -1776,6 +1776,7 @@ export class PokemonBattleTooltipUtils {
     data: {
       speciesName?: string | null;
       formName?: string | null;
+      description?: string;
       types?: Type[];
       abilities?: Abilities[];
       targetStats?: number[];
@@ -1883,7 +1884,9 @@ export class PokemonBattleTooltipUtils {
     const species = data.speciesName || "";
     const form = data.formName || "";
     let descText: string;
-    if (data.isSmitty) {
+    if (data.description) {
+      descText = data.description;
+    } else if (data.isSmitty) {
       descText = i18next.t("skillTree:descriptions.smittyFormTooltipDescription");
     } else if (species && form) {
       const itemKey = typeof data.formChangeItem === "number" ? (FormChangeItem[data.formChangeItem] || "NONE") : "NONE";

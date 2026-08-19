@@ -37,11 +37,11 @@ export class CustomDialoguePhase extends Phase {
         const variant = this.options?.variant ?? "";
 
         const doOverlayAndDialogue = () => {
+            this.scene.ui.getMessageHandler().clear();
+            this.scene.ui.clearText();
             this.scene.showFieldOverlay(overlayDuration, { withDialogueBg: true, bgTextureKey: bgKey }).then(() => {
                 this.showPatternOverlay();
                 this.scene.ui.setMode(Mode.MESSAGE);
-                this.scene.ui.getMessageHandler().clear();
-                this.scene.ui.clearText();
                 this.scene.ui.getMessageHandler().applySmitomPanelStyle();
                 const ensureTexture = (): Promise<void> => {
                     if (this.scene.textures.exists(this.charKey)) return Promise.resolve();

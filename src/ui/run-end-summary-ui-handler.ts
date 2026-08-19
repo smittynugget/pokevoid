@@ -95,8 +95,14 @@ export default class RunEndSummaryUiHandler extends ModalUiHandler {
   }
 
   getModalTitle(): string { return ""; }
-  getWidth(): number { return Math.floor(this.scene.game.canvas.width / 6) + 8; }
-  getHeight(): number { return Math.floor(this.scene.game.canvas.height / 6) + 6; }
+  getWidth(): number {
+    const w = Math.floor(this.scene.game.canvas.width / 6) + 8;
+    return w;
+  }
+  getHeight(): number {
+    const h = Math.floor(this.scene.game.canvas.height / 6) + 6;
+    return h;
+  }
   getMargin(): [number, number, number, number] { return [4, 4, 4, 4]; }
   getButtonLabels(): string[] { return []; }
 

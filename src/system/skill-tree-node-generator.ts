@@ -39,35 +39,18 @@ export interface GeneratedNode {
 export function getRaritiesForRewardType(rewardType: SkillTreeRewardType): SkillTreeRarity[] {
   switch (rewardType) {
 
-    case SkillTreeRewardType.TM_FILTERED:
-    case SkillTreeRewardType.EGG_VOUCHER:
-    case SkillTreeRewardType.BERRY_ITEMS:
-    case SkillTreeRewardType.MOVE_UPGRADE:
-    case SkillTreeRewardType.TYPE_SWITCHER:
-    case SkillTreeRewardType.BATON_ITEM:
-    case SkillTreeRewardType.PP_MAX_ITEM:
-      return [SkillTreeRarity.COMMON];
-
-    case SkillTreeRewardType.GENERAL_POKEMON:
     case SkillTreeRewardType.ABILITY_GRANT:
     case SkillTreeRewardType.PASSIVE_ABILITY_GRANT:
-    case SkillTreeRewardType.TERA_TYPE:
-    case SkillTreeRewardType.ROGUE_BALL:
-    case SkillTreeRewardType.MEMORY_MUSHROOM:
     case SkillTreeRewardType.GENERAL_ITEMS:
     case SkillTreeRewardType.ABILITY_SWITCHER:
     case SkillTreeRewardType.MONEY_REWARD:
-    case SkillTreeRewardType.CATCH_RATE_BONUS:
-    case SkillTreeRewardType.SKILL_TREE_TOKENS:
+    case SkillTreeRewardType.TYPE_BALL_FILTERED:
       return [SkillTreeRarity.GREAT];
 
-    case SkillTreeRewardType.SKILL_POINTS:
     case SkillTreeRewardType.STAT_BOOST:
-    case SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC:
     case SkillTreeRewardType.TRAINER_BOND_ABILITY:
     case SkillTreeRewardType.PERMA_MONEY:
-    case SkillTreeRewardType.FUSION_SECONDARY_PRIORITY:
-    case SkillTreeRewardType.TYPE_BALL_FILTERED:
+    case SkillTreeRewardType.POKEMON_ALT_BUILD:
       return [SkillTreeRarity.ULTRA];
 
     case SkillTreeRewardType.XM_FILTERED:
@@ -76,7 +59,6 @@ export function getRaritiesForRewardType(rewardType: SkillTreeRewardType): Skill
     case SkillTreeRewardType.MEGA_STONE:
     case SkillTreeRewardType.DYNA_MUSHROOM:
     case SkillTreeRewardType.GLITCH_CHANGE:
-    case SkillTreeRewardType.POKEMON_ALT_BUILD:
     case SkillTreeRewardType.ROGUEBALL_RARITY_SELECT:
     case SkillTreeRewardType.REVIVE_BOOST:
     case SkillTreeRewardType.ESSENCE_BUNDLE:
@@ -102,11 +84,18 @@ export function getRaritiesForRewardType(rewardType: SkillTreeRewardType): Skill
       return [SkillTreeRarity.LEGENDARY];
 
     default:
-      return [SkillTreeRarity.COMMON];
+      return [SkillTreeRarity.GREAT];
   }
 }
+const DISPLAY_RARITY_OVERRIDES: Partial<Record<SkillTreeRewardType, SkillTreeRarity>> = {
+  [SkillTreeRewardType.POKEMON_ALT_BUILD]: SkillTreeRarity.ROGUE,
+};
 
 export function getDisplayRarityForRewardType(rewardType: SkillTreeRewardType): SkillTreeRarity {
+  const override = DISPLAY_RARITY_OVERRIDES[rewardType];
+  if (override) {
+    return override;
+  }
   const list = getRaritiesForRewardType(rewardType);
   return list[0];
 }
@@ -176,46 +165,14 @@ export class SkillTreeNodeGenerator {
       };
     }
 
-    const rewardPool = this.getChampionRewardPool(effectiveChampion).filter(r => r !== SkillTreeRewardType.POKEMON_ALT_BUILD);
-
-    let altBuildChanceBps = 0;
-    if (depth >= 7) altBuildChanceBps = 1300;
-    else if (depth >= 4) altBuildChanceBps = 800;
-    else if (depth >= 2) altBuildChanceBps = 500;
-    else if (depth === 1) altBuildChanceBps = 300;
-
-    if (altBuildChanceBps > 0 && this.isRewardEligibleForChampion(SkillTreeRewardType.POKEMON_ALT_BUILD, championData)) {
-      if (Utils.randSeedInt(10000) < altBuildChanceBps) {
-        const rewardData = this.generateSpecificReward(SkillTreeRewardType.POKEMON_ALT_BUILD, effectiveChampion);
-        return {
-          rarity: SkillTreeRarity.ROGUE,
-          rewardData,
-          name: this.getRewardName(rewardData),
-          description: this.getRewardDescription(rewardData)
-        };
-      }
-    }
-
-    if (Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE || (this.scene && this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1)) {
-      const BOUNTY_CHANCE_BPS = 500;
-      if (depth >= 2 && Utils.randSeedInt(10000) < BOUNTY_CHANCE_BPS) {
-        const rewardData = this.generateSpecificReward(SkillTreeRewardType.BOUNTY_SELECT, effectiveChampion);
-        return {
-          rarity: SkillTreeRarity.ROGUE,
-          rewardData,
-          name: this.getRewardName(rewardData),
-          description: this.getRewardDescription(rewardData)
-        };
-      }
-    }
+    const rewardPool = this.getChampionRewardPool(effectiveChampion);
 
     const fallbackOrder: SkillTreeRarity[] = [
       SkillTreeRarity.LEGENDARY,
       SkillTreeRarity.MASTER,
       SkillTreeRarity.ROGUE,
       SkillTreeRarity.ULTRA,
-      SkillTreeRarity.GREAT,
-      SkillTreeRarity.COMMON
+      SkillTreeRarity.GREAT
     ];
     const startIdx = Math.max(0, fallbackOrder.indexOf(rarity));
     const attempts = [rarity, ...fallbackOrder.slice(startIdx + 1)];
@@ -232,7 +189,7 @@ export class SkillTreeNodeGenerator {
         const generatedDescription = this.getRewardDescription(rewardData);
 
         return {
-          rarity: attemptRarity,
+          rarity: DISPLAY_RARITY_OVERRIDES[selectedReward] ?? attemptRarity,
           rewardData,
           name: generatedName,
           description: generatedDescription
@@ -245,25 +202,19 @@ export class SkillTreeNodeGenerator {
 
   private getChampionRewardPool(championData: PlayableChampionData): SkillTreeRewardType[] {
     const championTypes = [championData.type1, championData.type2].filter(t => t !== undefined && t !== null && t !== Type.UNKNOWN) as Type[];
-    const moveUpgradesEnabledForRun = this.scene?.moveUpgradesEnabledForRun !== false;
 
     if (championTypes.length === 0) {
       return [
-        SkillTreeRewardType.TM_FILTERED,
-        SkillTreeRewardType.GENERAL_POKEMON,
         SkillTreeRewardType.ABILITY_GRANT,
         SkillTreeRewardType.STAT_BOOST,
-        ...(moveUpgradesEnabledForRun ? [SkillTreeRewardType.MOVE_UPGRADE] : []),
-        SkillTreeRewardType.SKILL_POINTS,
-        SkillTreeRewardType.SKILL_TREE_TOKENS,
         SkillTreeRewardType.ESSENCE_BUNDLE,
-        SkillTreeRewardType.PARTY_ABILITY_GRANT
+        SkillTreeRewardType.PARTY_ABILITY_GRANT,
+        ...(this.scene?.gameData?.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1
+          ? [SkillTreeRewardType.BOUNTY_SELECT] : [])
       ];
     }
     return [
-      SkillTreeRewardType.TM_FILTERED,
       SkillTreeRewardType.SIGNATURE_POKEMON,
-      SkillTreeRewardType.GENERAL_POKEMON,
       SkillTreeRewardType.ABILITY_GRANT,
       SkillTreeRewardType.STAT_BOOST,
       SkillTreeRewardType.XM_FILTERED,
@@ -278,7 +229,6 @@ export class SkillTreeNodeGenerator {
       SkillTreeRewardType.MEGA_STONE,
       SkillTreeRewardType.DYNA_MUSHROOM,
       SkillTreeRewardType.GLITCH_CHANGE,
-      SkillTreeRewardType.TYPE_SWITCHER,
       SkillTreeRewardType.TYPE_BALL_FILTERED,
       SkillTreeRewardType.TYPE_BOOSTER_ITEM,
       SkillTreeRewardType.POKEMON_ALT_BUILD,
@@ -287,27 +237,15 @@ export class SkillTreeNodeGenerator {
       SkillTreeRewardType.MONEY_REWARD,
       SkillTreeRewardType.ESSENCE_BUNDLE,
       SkillTreeRewardType.ESSENCE_TYPE_WEIGHT,
-      SkillTreeRewardType.CATCH_RATE_BONUS,
-      SkillTreeRewardType.FUSION_SECONDARY_PRIORITY,
-      SkillTreeRewardType.TERA_TYPE,
       SkillTreeRewardType.GOLDEN_POKEBALL,
       SkillTreeRewardType.MASTER_BALL,
       SkillTreeRewardType.VOID_BALL,
-      SkillTreeRewardType.EGG_VOUCHER,
       SkillTreeRewardType.HEALING_ITEMS,
-      SkillTreeRewardType.MEMORY_MUSHROOM,
-      SkillTreeRewardType.BERRY_ITEMS,
       SkillTreeRewardType.ABILITY_SWITCHER,
       SkillTreeRewardType.GENERAL_ITEMS,
-      SkillTreeRewardType.BATON_ITEM,
-      SkillTreeRewardType.PP_MAX_ITEM,
-      SkillTreeRewardType.ROGUE_BALL,
-      SkillTreeRewardType.SKILL_POINTS,
-      SkillTreeRewardType.SKILL_TREE_TOKENS,
       SkillTreeRewardType.PARTY_ABILITY_GRANT,
-      ...(moveUpgradesEnabledForRun
-        ? [SkillTreeRewardType.MOVE_UPGRADE, SkillTreeRewardType.MOVE_UPGRADE_SPECIFIC]
-        : [])
+      ...(this.scene?.gameData?.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1
+        ? [SkillTreeRewardType.BOUNTY_SELECT] : [])
     ];
   }
   private isRewardAvailableAtRarity(rewardType: SkillTreeRewardType, rarity: SkillTreeRarity): boolean {

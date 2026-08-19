@@ -760,6 +760,7 @@
       "description": "Gana {{amount}} Puntos de Habilidad. Usados para desbloquear habilidades en el Árbol de Habilidades."
     },
     "SKILL_TOKENS": {
+      "nameSingle": "Ficha de Árbol",
       "name": "Fichas de Árbol x{{amount}}",
       "description": "Gana {{amount}} Fichas de Árbol. ¡Usadas para subir de nivel tu Árbol de Habilidades!"
     },

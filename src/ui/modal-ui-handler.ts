@@ -137,7 +137,9 @@ export abstract class ModalUiHandler extends UiHandler {
     const [ marginTop, marginRight, marginBottom, marginLeft ] = this.getMargin(config);
 
     const [ width, height ] = [ this.getWidth(config), this.getHeight(config) ];
-    this.modalContainer.setPosition((((this.scene.game.canvas.width / 6) - (width + (marginRight - marginLeft))) / 2), (((-this.scene.game.canvas.height / 6) - (height + (marginBottom - marginTop))) / 2));
+    const posX = (((this.scene.game.canvas.width / 6) - (width + (marginRight - marginLeft))) / 2);
+    const posY = (((-this.scene.game.canvas.height / 6) - (height + (marginBottom - marginTop))) / 2);
+    this.modalContainer.setPosition(posX, posY);
 
     this.modalBg.setSize(width, height);
     this.clearModalBackgrounds();

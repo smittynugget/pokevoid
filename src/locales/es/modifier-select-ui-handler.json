@@ -109,6 +109,7 @@
   "secondaryAbilitySacrifice": "Hereda Habilidad",
   "secondaryPassiveSacrifice": "Hereda Habilidad como Pasiva",
   "secondaryNatureStatBoost": "+{{incStat}} / -{{decStat}}",
+  "shopMintStatDelta": "+{{incStat}}/-{{decStat}}",
   "secondaryMoveUpgradeCategory": "{{moveName}} · {{category}}",
   "secondaryStatNone": "—",
   "secondaryStatPercentBoost": "+{{percent}}% {{stat}}",

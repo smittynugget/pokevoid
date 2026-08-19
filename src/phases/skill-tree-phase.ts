@@ -55,6 +55,16 @@ export function rollStarterMysteryTier(roll: number): StarterMysteryTier {
   if (roll < 7) return "master";
   return "common";
 }
+export function resolveActiveChampionId(scene: BattleScene, activeSkillTree?: ActiveSkillTreeData): string {
+  const selected = (scene.gameData as any).selectedChampionId;
+  if (selected && selected !== "apollo_diana") {
+    return selected;
+  }
+  if (activeSkillTree?.championId && activeSkillTree.championId !== "apollo_diana") {
+    return activeSkillTree.championId;
+  }
+  return scene.gameData.gender === PlayerGender.FEMALE ? "diana" : "apollo";
+}
 
 export class SkillTreePhase extends Phase {
   private readonly config: SkillTreePhaseConfig;
@@ -88,12 +98,7 @@ export class SkillTreePhase extends Phase {
   }
 
   private initializeSkillTreeUI(activeSkillTree: ActiveSkillTreeData): void {
-    const selected = (this.scene.gameData as any).selectedChampionId;
-    const championId: string = (selected && selected !== "apollo_diana")
-      ? selected
-      : (activeSkillTree?.championId && activeSkillTree.championId !== "apollo_diana")
-        ? activeSkillTree.championId
-        : (this.scene.gameData.gender === PlayerGender.FEMALE ? "diana" : "apollo");
+    const championId = resolveActiveChampionId(this.scene, activeSkillTree);
 
     const championData = ChampionManager.getInstance().getChampionData(championId);
 
@@ -602,7 +607,8 @@ export class SkillTreePhase extends Phase {
           unlocked: false,
         });
 
-        if (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) {
+        if (SkillTreeUtils.shouldIncludeDepth1Bounty(this.scene, activeSkillTree)
+            && !SkillTreeUtils.isDepth1BountyConsumed(activeSkillTree)) {
           const bountyAngle = ((nodeCount + 1) * 2 * Math.PI) / totalRingSlots;
           nodes.push({
             id: "depth1_bounty_0",
@@ -805,7 +811,8 @@ export class SkillTreePhase extends Phase {
         unlocked: false,
       });
 
-      if (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) {
+      if (SkillTreeUtils.shouldIncludeDepth1Bounty(this.scene, activeSkillTree)
+          && !SkillTreeUtils.isDepth1BountyConsumed(activeSkillTree)) {
         const bountyAngle = (5 * 2 * Math.PI) / totalRingSlots;
         nodes.push({
           id: "depth1_bounty_0",
@@ -836,9 +843,9 @@ export class SkillTreePhase extends Phase {
 
       const nodes = SkillTreeUtils.generateDepth1Nodes(activeSkillTree, championData, this.scene);
 
-      if (this.scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1 || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE) {
-        const shouldAdd = Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE || Utils.randSeedInt(10000) < 500;
-        if (shouldAdd) {
+      if (SkillTreeUtils.shouldIncludeDepth1Bounty(this.scene, activeSkillTree)
+          && !SkillTreeUtils.isDepth1BountyConsumed(activeSkillTree)) {
+        {
           const TIER_RADIUS = 150;
           const NODE_SIZE = 90;
           const radius = TIER_RADIUS + NODE_SIZE / 2;

@@ -152,6 +152,7 @@ export class TitlePhase extends Phase {
             this.scene.playReturnCondense();
         } else {
             this.scene.showTitleBG();
+            this.scene.destroyReturnLoadingOverlay();
         }
 
         this.scene.ui.clearText();
@@ -841,22 +842,10 @@ export class TitlePhase extends Phase {
             this.scene.gameData.tutorialService.saveTutorialFlag(EnhancedTutorial.SMITTY_FORM_UNLOCKED_1);
         }
 
-        else if(this.triggerSmitomTalks4Tip(
-            "pokerogue",
-            "tutorial:smitomTip.pokerogue.title",
-            ["tutorial:smitomTip.pokerogue.1"]
-        )) {}
-
         else if(this.scene.gameData.defeatedRivals.length > 0 && this.triggerSmitomTalks4Tip(
             "first_victory",
             "tutorial:smitomTip.firstVictory.title",
             ["tutorial:smitomTip.firstVictory.1"]
-        )) {}
-
-        else if(this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED) && this.triggerSmitomTalks4Tip(
-            "unlock_journey",
-            "tutorial:smitomTip.unlockJourney.title",
-            ["tutorial:smitomTip.unlockJourney.1", "tutorial:smitomTip.unlockJourney.2"]
         )) {}
         else if(this.scene.gameData.unlocks[Unlockables.NIGHTMARE_MODE] && this.triggerSmitomTalks4Tip(
             "the_void_unlocked",
@@ -930,6 +919,16 @@ export class TitlePhase extends Phase {
                 "discord",
                 "tutorial:smitomTip.discord.title",
                 ["tutorial:smitomTip.discord.1"]
+            )) {}
+            else if(this.triggerSmitomTalks4Tip(
+                "pokerogue",
+                "tutorial:smitomTip.pokerogue.title",
+                ["tutorial:smitomTip.pokerogue.1"]
+            )) {}
+            else if(this.scene.gameData.checkQuestState(QuestUnlockables.STARTER_CATCH_QUEST, QuestState.COMPLETED) && this.triggerSmitomTalks4Tip(
+                "unlock_journey",
+                "tutorial:smitomTip.unlockJourney.title",
+                ["tutorial:smitomTip.unlockJourney.1", "tutorial:smitomTip.unlockJourney.2"]
             )) {}
         }
 

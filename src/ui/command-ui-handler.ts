@@ -251,7 +251,7 @@ export default class CommandUiHandler extends UiHandler {
     { cursor: 4, atlas: "smitems", frame: "permaPartyAbility", scale: 0.10 },
   ];
 
-  private static readonly STRIP_VISIBLE_ORDER: number[] = [11, 10, 5, 8, 4, 6, 7, 9];
+  private static readonly STRIP_VISIBLE_ORDER: number[] = [11, 10, 8, 4, 6, 7, 9];
 
   protected fieldIndex: integer = 0;
   protected cursor2: integer = 0;
@@ -367,17 +367,32 @@ export default class CommandUiHandler extends UiHandler {
   private getVisibleStripIcons(): number[] {
     const visible: number[] = [];
     const isChaosMode = (this.scene as any).gameMode?.isChaosMode;
-    const skillTreeEnabled = (this.scene as BattleScene).skillTreeEnabledForRun;
     const isTutorial = (this.scene as BattleScene).gameData?.tutorialOnboardActive;
 
     for (const cursor of CommandUiHandler.STRIP_VISIBLE_ORDER) {
       if (cursor === 9 && !isChaosMode) continue;
-      if (cursor === 5 && !skillTreeEnabled) continue;
-      if (cursor === 5 && isTutorial) continue;
       if ((cursor === 8 || cursor === 9) && isTutorial) continue;
       visible.push(cursor);
     }
-    return visible;
+    const order = (this.scene as BattleScene).gameData?.commandStripRecentOrder ?? [];
+    const rank = (c: number) => { const i = order.indexOf(c); return i === -1 ? Number.MAX_SAFE_INTEGER : i; };
+    const pinned = visible.filter(c => c === 11 || c === 10);
+    const sortable = visible.filter(c => c !== 11 && c !== 10);
+    sortable.sort((a, b) => rank(a) - rank(b));
+    return [...pinned, ...sortable];
+  }
+
+  recordCommandStripUsage(cursor: number): void {
+    const gd = (this.scene as BattleScene).gameData;
+    if (!gd.commandStripUsageCounts) gd.commandStripUsageCounts = {};
+    gd.commandStripUsageCounts[cursor] = (gd.commandStripUsageCounts[cursor] || 0) + 1;
+    if (!gd.commandStripRecentOrder) gd.commandStripRecentOrder = [];
+    const order = gd.commandStripRecentOrder;
+    const at = order.indexOf(cursor);
+    if (at > -1) order.splice(at, 1);
+    order.unshift(cursor);
+    this._stripScrollOffset = 0;
+    this.relayoutStrip();
   }
 
   private relayoutStrip(): void {
@@ -533,17 +548,20 @@ export default class CommandUiHandler extends UiHandler {
           }
           ui.setMode(Mode.FIGHT, cp.getFieldIndex());
           success = true;
+          this.recordCommandStripUsage(cursor);
           break;
         }
         case 1:
           ui.setModeWithoutClear(Mode.BALL);
           success = true;
+          this.recordCommandStripUsage(cursor);
           break;
         case 2: {
           const cp2 = this.resolveCommandPhase();
           if (!cp2) return true;
           ui.setMode(Mode.PARTY, PartyUiMode.SWITCH, cp2.getPokemon().getFieldIndex(), null, PartyUiHandler.FilterNonFainted);
           success = true;
+          this.recordCommandStripUsage(cursor);
           break;
         }
         case 3: {
@@ -551,6 +569,7 @@ export default class CommandUiHandler extends UiHandler {
           if (!cp3) return true;
           cp3.handleCommand(Command.RUN, 0);
           success = true;
+          this.recordCommandStripUsage(cursor);
           break;
         }
         case 4: {
@@ -562,33 +581,22 @@ export default class CommandUiHandler extends UiHandler {
               ui.setOverlayMode(Mode.POKEMON_BATTLE_TOOLTIP, pokemon4, 2);
             });
             success = true;
-          }
-          break; }
-        case 5: {
-          if (!(this.scene as BattleScene).skillTreeEnabledForRun) {
-            ui.playError();
-            break;
-          }
-          if ((this.scene as BattleScene).gameData?.tutorialOnboardActive) break;
-          const cp5 = this.resolveCommandPhase();
-          if (!cp5) return true;
-          const gameData: any = (this.scene as any).gameData;
-          if (gameData?.activeSkillTree) {
-            cp5.openSkillTreeFromCommand();
-            success = true;
+            this.recordCommandStripUsage(cursor);
           }
           break; }
         case 6:
           ui.setOverlayMode(Mode.VOIDEX_PRELIST);
           success = true;
+          this.recordCommandStripUsage(cursor);
           break;
         case 7:
           ui.setOverlayMode(Mode.EGG_GACHA);
           success = true;
+          this.recordCommandStripUsage(cursor);
           break;
         case 8:
           if ((this.scene as BattleScene).gameData?.tutorialOnboardActive) break;
-          if ((this.scene as BattleScene).uiEditModeActive) { success = true; break; }
+          if ((this.scene as BattleScene).uiEditModeActive) { success = true; this.recordCommandStripUsage(cursor); break; }
           ui.setMode(Mode.MESSAGE);
           this.scene.unshiftPhase(new ShopModifierSelectPhase(this.scene));
           const currentPhase = this.scene.getCurrentPhase();
@@ -597,12 +605,14 @@ export default class CommandUiHandler extends UiHandler {
           }
           this.scene.shiftPhase();
           success = true;
+          this.recordCommandStripUsage(cursor);
           break;
         case 9:
           if ((this.scene as BattleScene).gameData?.tutorialOnboardActive) break;
           if ((this.scene as any).gameMode?.isChaosMode) {
             ui.setOverlayMode(Mode.BATTLE_PATH, { viewOnly: true });
             success = true;
+            this.recordCommandStripUsage(cursor);
           }
           break;
         case 10: {
@@ -613,6 +623,7 @@ export default class CommandUiHandler extends UiHandler {
               ui.setOverlayMode(Mode.POKEMON_BATTLE_TOOLTIP, player, 0);
             });
             success = true;
+            this.recordCommandStripUsage(cursor);
           }
           break; }
         case 11: {
@@ -623,6 +634,7 @@ export default class CommandUiHandler extends UiHandler {
               ui.setOverlayMode(Mode.POKEMON_BATTLE_TOOLTIP, foe, 0);
             });
             success = true;
+            this.recordCommandStripUsage(cursor);
           }
           break; }
         }
@@ -632,6 +644,7 @@ export default class CommandUiHandler extends UiHandler {
         if (this.fieldIndex) {
           cancelCp.cancel();
           success = true;
+          this.recordCommandStripUsage(cursor);
         }
       }
     } else {
@@ -1071,6 +1084,23 @@ export default class CommandUiHandler extends UiHandler {
 
     return changed;
   }
+  private setIconContainerAlpha(container: Phaser.GameObjects.Container, alpha: number): void {
+    container.setAlpha(1);
+    container.list.forEach(child => {
+      const sprite = child as any;
+      if (sprite.getData?.("invertedFx") && sprite.postFX?.addColorMatrix) {
+        sprite.setAlpha(1);
+        sprite.postFX.clear();
+        const cm = sprite.postFX.addColorMatrix();
+        cm.negative();
+        if (alpha < 1) {
+          cm.brightness(alpha, true);
+        }
+      } else {
+        sprite.setAlpha?.(alpha);
+      }
+    });
+  }
 
   private updateCommandTransparency(focusedCursor: integer): void {
     if (this._cmdTweak?.tweakActive) return;
@@ -1104,17 +1134,15 @@ export default class CommandUiHandler extends UiHandler {
 
     if (this.playerPokemonIcon) {
       const pFocused = focusedCursor === 10;
-      this.playerPokemonIcon.setAlpha(
-        pFocused ? CommandUiHandler.NEW_COMMAND_FOCUSED_ALPHA : CommandUiHandler.NEW_COMMAND_UNFOCUSED_ALPHA
-      );
+      this.setIconContainerAlpha(this.playerPokemonIcon,
+        pFocused ? CommandUiHandler.NEW_COMMAND_FOCUSED_ALPHA : CommandUiHandler.NEW_COMMAND_UNFOCUSED_ALPHA);
       const pBase = this.playerPokemonIcon.getData("baseScale") || 0.30;
       this.playerPokemonIcon.setScale(pFocused ? pBase + CommandUiHandler.NEW_COMMAND_FOCUSED_SCALE_DELTA : pBase);
     }
     if (this.enemyPokemonIcon) {
       const eFocused = focusedCursor === 11;
-      this.enemyPokemonIcon.setAlpha(
-        eFocused ? CommandUiHandler.NEW_COMMAND_FOCUSED_ALPHA : CommandUiHandler.NEW_COMMAND_UNFOCUSED_ALPHA
-      );
+      this.setIconContainerAlpha(this.enemyPokemonIcon,
+        eFocused ? CommandUiHandler.NEW_COMMAND_FOCUSED_ALPHA : CommandUiHandler.NEW_COMMAND_UNFOCUSED_ALPHA);
       const eBase = this.enemyPokemonIcon.getData("baseScale") || 0.30;
       this.enemyPokemonIcon.setScale(eFocused ? eBase + CommandUiHandler.NEW_COMMAND_FOCUSED_SCALE_DELTA : eBase);
     }

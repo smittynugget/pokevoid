@@ -35,11 +35,7 @@ export class HallOfFamePhase extends Phase {
 
   private openRunInfo(): void {
     this.hallOfFameContainer.destroy();
-    this.scene.ui.getMessageHandler().bg.setVisible(true);
-    this.scene.fieldUI.setVisible(true);
-    this.scene.setModifiersVisible(true);
-    this.scene.ui.getPermaMoneyContainer().setVisible(true);
-    this.scene.ui.permaModifierBar.setVisible(this.scene.showPermaBar);
+    this.scene.beginEndOfRunBattleVisualSuppression();
     const sessionData = this.scene.gameData.getSessionSaveData(this.scene);
     const victoryRunEntry = {
       entry: sessionData,

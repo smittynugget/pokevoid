@@ -9,6 +9,7 @@ import * as Utils from '#app/utils';
 import {PermaType} from "#app/modifier/perma-modifiers";
 import {ModifierTypeGenerator} from "#app/modifier/modifier-type";
 import { Type } from "#app/data/type";
+import { SkillTreeProgression } from "#app/system/skill-tree-progression";
 
 export class ModifierRewardPhase extends BattlePhase {
   protected modifierType: ModifierType;
@@ -177,26 +178,7 @@ export class ModifierRewardPhase extends BattlePhase {
   }
 
   private queueSkillTokensReward(): void {
-    const amount = 1;
-    const activeSkillTree = this.scene.gameData.activeSkillTree;
-    if (activeSkillTree) {
-      const oldTokens = activeSkillTree.tokens || 0;
-      activeSkillTree.tokens = Math.max(0, oldTokens + amount);
-    }
-    const reward: RewardConfig = {
-      type: RewardObtainedType.SKILL_TREE_TOKENS,
-      amount,
-      name: i18next.t("skillTree:rewards.tokens", { amount, source: "save_reward" })
-    };
-    this.scene.unshiftPhase(new RewardObtainDisplayPhase(
-      this.scene,
-      reward,
-      [() => {
-        if (this.onComplete) {
-          this.onComplete();
-        }
-      }]
-    ));
+    new SkillTreeProgression(this.scene).awardTokens(1, "save_reward");
   }
 
   private getRandomPermaMoneyKey(): string {

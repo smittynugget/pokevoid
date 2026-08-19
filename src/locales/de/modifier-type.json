@@ -148,6 +148,7 @@
       "description": "Erhalte {{amount}} Fertigkeitspunkte. Werden verwendet, um Fähigkeiten im Fertigkeitenbaum freizuschalten."
     },
     "SKILL_TOKENS": {
+      "nameSingle": "Fertigkeitenbaum-Marke",
       "name": "Fertigkeitenbaum-Marken x{{amount}}",
       "description": "Erhalte {{amount}} Fertigkeitenbaum-Marken. Werden verwendet, um deinen Fertigkeitenbaum aufzuleveln!"
     },

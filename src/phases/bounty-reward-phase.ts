@@ -4,7 +4,6 @@ import * as Utils from "#app/utils.js";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase.js";
 import { RandomRankUpPhase } from "#app/phases/random-rank-up-phase.js";
 import { YuMovePhase } from "#app/phases/yu-move-phase.js";
-import { MessagePhase } from "#app/phases/message-phase.js";
 import {
   PermaMoneyModifierType,
   EssenceBundleRewardModifierType,
@@ -136,7 +135,6 @@ export class BountyRewardPhase extends Phase {
       this.rerollMultiplier,
       () => BountyRewardPhase.buildStandardModifierOptionsStatic(scene, isVictory)
     ));
-    this.enqueueCompletionFanfare(BountyRewardType.STANDARD_MODIFIER_SELECT, fallback);
     this.end();
   }
 
@@ -154,7 +152,6 @@ export class BountyRewardPhase extends Phase {
       undefined,
       this.rerollMultiplier
     ));
-    this.enqueueCompletionFanfare(BountyRewardType.MASTERBALL_RARITY_SELECT);
     this.end();
   }
 
@@ -191,7 +188,6 @@ export class BountyRewardPhase extends Phase {
 
     pokemon.randomRankUpBandPending = band;
     this.scene.unshiftPhase(new RandomRankUpPhase(this.scene, pokemon, pokemon.level, band));
-    this.enqueueCompletionFanfare(BountyRewardType.RANDOM_RANK_UP);
     return true;
   }
 
@@ -215,7 +211,6 @@ export class BountyRewardPhase extends Phase {
       target.yuMoveRangeUsed = range;
       target.yuMoveRangePending = null;
     }, false));
-    this.enqueueCompletionFanfare(BountyRewardType.DUELMON_RANDOM_MOVE);
     return true;
   }
 
@@ -360,38 +355,6 @@ export class BountyRewardPhase extends Phase {
       type2: null,
       signaturePokemon: [],
     } as PlayableChampionData;
-  }
-
-  private getCompletionFanfareText(rewardType: BountyRewardType, fallback: boolean): string {
-    const title = i18next.t("questUi:bounty.skillTree.completion.title", { defaultValue: "Bounty Complete!" });
-    let key: string;
-    if (fallback) {
-      key = "fallback";
-    } else {
-      switch (rewardType) {
-        case BountyRewardType.STANDARD_MODIFIER_SELECT:
-          key = "standardReward";
-          break;
-        case BountyRewardType.MASTERBALL_RARITY_SELECT:
-          key = "rareReward";
-          break;
-        case BountyRewardType.RANDOM_RANK_UP:
-          key = "veryRareRankUp";
-          break;
-        case BountyRewardType.DUELMON_RANDOM_MOVE:
-          key = "veryRareMove";
-          break;
-        default:
-          key = "fallback";
-      }
-    }
-    const subtitle = i18next.t(`questUi:bounty.skillTree.completion.${key}`, { defaultValue: "Choose your reward!" });
-    return `${title}\n${subtitle}`;
-  }
-
-  private enqueueCompletionFanfare(rewardType: BountyRewardType, fallback: boolean = false): void {
-    const text = this.getCompletionFanfareText(rewardType, fallback);
-    this.scene.unshiftPhase(new MessagePhase(this.scene, text, null, true));
   }
 
   public static buildStandardModifierOptionsStatic(scene: BattleScene, isVictoryBounty: boolean): ModifierTypeOption[] {

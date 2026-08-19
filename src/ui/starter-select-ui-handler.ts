@@ -1271,7 +1271,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         this.signatureIconElement.setName("sprite-signature-icon-element");
         this.signatureIconElement.setScale(0.625);
         this.signatureIconElement.setOrigin(0.0, 0.0);
-        this.signatureLabel = addTextObject(this.scene, this.instructionRowX + this.instructionRowTextOffset, this.instructionRowY, ": Signature", TextStyle.PARTY, {fontSize: instructionTextSize});
+        this.signatureLabel = addTextObject(this.scene, this.instructionRowX + this.instructionRowTextOffset, this.instructionRowY, `: ${i18next.t("starterSelectUiHandler:signatureLabel")}`, TextStyle.PARTY, {fontSize: instructionTextSize});
         this.signatureLabel.setColor(this.getTextColor(TextStyle.SUMMARY_GOLD));
         this.signatureLabel.setShadowColor(this.getTextColor(TextStyle.SUMMARY_GOLD, true));
         this.signatureLabel.setName("text-signature-label");
@@ -1692,8 +1692,8 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
 		if (isSignature) {
 			const altBuildId = this.getSignatureAltBuildId(species.speciesId as unknown as Species);
 			const signatureName = altBuildId
-				? `${species.name} (${ChampionUtils.getAltBuildDisplayName(altBuildId)})`
-				: `${species.name} (Signature)`;
+				? ChampionUtils.getAltBuildDisplayName(altBuildId)
+				: i18next.t("starterSelectUiHandler:signatureLabel");
 			this.fitPokemonNameToWidth(signatureName, species);
 		} else {
 			this.fitPokemonNameToWidth(species.name, species);
@@ -4152,8 +4152,8 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
                     }
                     const altBuildId = this.getSignatureAltBuildId(species.speciesId as unknown as Species);
                     const signatureName = altBuildId
-                        ? `${species.name} (${ChampionUtils.getAltBuildDisplayName(altBuildId)})`
-                        : `${species.name} (Signature)`;
+                        ? ChampionUtils.getAltBuildDisplayName(altBuildId)
+                        : i18next.t("starterSelectUiHandler:signatureLabel");
                     this.fitPokemonNameToWidth(signatureName, species);
                 } else {
                     this.fitPokemonNameToWidth(species.name, species);
@@ -4786,10 +4786,9 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
                     this.fitPokemonNameToWidth(getFusedSpeciesName(this.pokemon.species.getName(this.pokemon.formIndex), this.pokemon.fusionSpecies!.getName(this.pokemon.fusionFormIndex)), species, shiny, formIndex);
                 } else if (this.isEffectivelySignature(species.speciesId as unknown as Species)) {
                     const altBuildId = this.getSignatureAltBuildId(species.speciesId as unknown as Species);
-                    const baseName = speciesForDetails.getName(formIndex);
                     const signatureName = altBuildId
-                        ? `${baseName} (${ChampionUtils.getAltBuildDisplayName(altBuildId)})`
-                        : `${baseName} (Signature)`;
+                        ? ChampionUtils.getAltBuildDisplayName(altBuildId)
+                        : i18next.t("starterSelectUiHandler:signatureLabel");
                     this.fitPokemonNameToWidth(signatureName, species, shiny, formIndex);
                 } else {
                     this.fitPokemonNameToWidth(speciesForDetails.getName(formIndex), species, shiny, formIndex);

@@ -1100,6 +1100,7 @@ export class LoadingScene extends SceneBase {
               this.loadingGraphics = [];
             }
 
+            if ((this.game as any).scene?.scenes?.[1]?.animationLoadMode >= 2) {
             const effectId = Math.floor(Math.random() * getEffectCount());
             const handle: CondenseTrailHandle = playCondenseTrailTransition(this, effectId, 1400, "loading_bg");
             this.game.registry.set("_condenseTrailHandle", handle);
@@ -1108,6 +1109,19 @@ export class LoadingScene extends SceneBase {
             handle.animationDone.then(() => {
               introOverlay.destroy();
             });
+            } else {
+              this.tweens.add({
+                targets: introOverlay,
+                alpha: 0,
+                duration: 500,
+                ease: "Sine.easeOut",
+                onComplete: () => {
+                  introOverlay.destroy();
+                  this.scene.stop(LoadingScene.KEY);
+                }
+              });
+              this.game.events.emit("_condenseHandleReady");
+            }
           }
         });
       });

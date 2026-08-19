@@ -35,7 +35,8 @@ import {
     QuestModifierType,
     QuestModifierTypeGenerator,
     FORBIDDEN_FORM_REWARDTYPE_TO_FORMKEY,
-    TerastallizeModifierType
+    TerastallizeModifierType,
+    SkillTreeTokenRewardModifierType
 } from "../modifier/modifier-type";
 import { TrainerType } from "#enums/trainer-type";
 import { trainerConfigs } from "../data/trainer-config";
@@ -159,7 +160,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   private partyDetailsPartyLines: string[] = [];
   private partyDetailsParty: PlayerPokemon[] = [];
   private partyDetailsRarity: SkillTreeRarity | null = null;
-  private partyDetailsContext: { kind: "STAT_SWITCHER"; stat1: Stat; stat2: Stat } | { kind: "MINT"; targetNature: Nature } | { kind: "STAT_SACRIFICE"; stat: Stat } | { kind: "MOVE_SACRIFICE" } | { kind: "FUSION" } | { kind: "BASE_STAT_BOOST"; stat: Stat; multiplier: number } | { kind: "SOUL_DEW" } | null = null;
+  private partyDetailsContext: { kind: "STAT_SWITCHER"; stat1: Stat; stat2: Stat } | { kind: "MINT"; targetNature: Nature } | { kind: "STAT_SACRIFICE"; stat: Stat } | { kind: "MOVE_SACRIFICE" } | { kind: "FUSION" } | { kind: "BASE_STAT_BOOST"; stat: Stat; multiplier: number } | { kind: "SOUL_DEW" } | { kind: "SECTION_RELAY" } | null = null;
+  private currentModifierContext: string | null = null;
+  private currentModifierSections: any[] | null = null;
   private partyDetailsMainTooltipHeight: number = 0;
   private partyDetailsButton: Phaser.GameObjects.Container | null = null;
   private partyBackButton: Phaser.GameObjects.Container | null = null;
@@ -205,6 +208,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   private partyDetailsNavContainer: Phaser.GameObjects.Container | null = null;
   private partyDetailsNavLabel: Phaser.GameObjects.Text | null = null;
   private partyDetailsFusionContent: Phaser.GameObjects.Container | null = null;
+  private partyDetailsRelayContent: Phaser.GameObjects.Container | null = null;
   private partyDetailsTypeBadges: Phaser.GameObjects.Sprite[] = [];
   private fusionTitleLeftArrow: Phaser.GameObjects.Image | null = null;
   private fusionTitleRightArrow: Phaser.GameObjects.Image | null = null;
@@ -447,9 +451,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         const row = m < shopLayout.itemsPerRow ? 0 : 1;
         const col = m < shopLayout.itemsPerRow ? m : m - shopLayout.itemsPerRow;
         const rowOptions = shopTypeOptions.slice(row ? shopLayout.itemsPerRow : 0, row ? undefined : shopLayout.itemsPerRow);
-        const sliceWidth = (this.scene.game.canvas.width / 6.5) / (rowOptions.length + 2);
+        const sliceWidth = (this.scene.game.canvas.width / 6.5) / (rowOptions.length + 1.5);
         const option = new ModifierOption(this.scene, sliceWidth * (col + 1) + (sliceWidth * 0.5) + 5, ((-this.scene.game.canvas.height / 12) - (this.scene.game.canvas.height / 32) - (40 - (28 * row - 1))), shopTypeOptions[m], true);
-        option.setScale(0.375);
+        option.setScale(0.525);
         this.scene.add.existing(option);
         this.modifierContainer.add(option);
 
@@ -756,8 +760,18 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
             this.fusionPreviewHighlightIndex = this.getFusionGridHighlightIndex();
             this.updatePartyDetails();
             ui.playSelect();
+          } else if (this.partyDetailsContext?.kind === "SECTION_RELAY") {
+            if (this.hasPageableTooltipSection() && this.getTooltipSectionPageCount() > 1) {
+              this.tooltipSectionPageIndex = (this.tooltipSectionPageIndex + 1) % this.getTooltipSectionPageCount();
+              this.regenerateCurrentModifierSections();
+              this.updatePartyDetailsTooltip();
+            }
+            ui.playSelect();
           } else {
-            this.exitPartyDetailsMode();
+            if (this.partyDetailsParty.length > 1) {
+              this.partyDetailsIndex = (this.partyDetailsIndex + 1) % this.partyDetailsParty.length;
+              this.updatePartyDetails();
+            }
             ui.playSelect();
           }
           return true;
@@ -806,6 +820,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         }
       }
     } else if (button === Button.CANCEL) {
+      this.hideUpgradeTooltip();
       if (this.player && (!this.forcedDraftSelection || this.allowSkip)) {
         try {
           const cfg = (this.scene.gameData as any).tempSkillTreeConfig;
@@ -849,15 +864,6 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
             return true;
           }
         }
-        if (type instanceof PokemonAltBuildModifierType && this.scene.modifierTooltipsEnabled && PokemonBattleTooltipUtils.isActive()) {
-          const abData = this.getAltBuildTooltipData(type as PokemonAltBuildModifierType);
-          if (abData?.abilities && abData.abilities.length > 1) {
-            this.altBuildAbilityIndex = (this.altBuildAbilityIndex + 1) % abData.abilities.length;
-            this.setCursor(this.cursor);
-            ui.playSelect();
-            return true;
-          }
-        }
         this.tooltipDeferredUntilUserInput = false;
         if (this.firstFocusPending) {
           this.firstFocusPending = false;
@@ -889,6 +895,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           this.enterPartyDetailsMode();
           ui.playSelect();
         }
+        success = true;
+      } else if (this.currentModifierContext === "SECTION_RELAY" && !this.partyDetailsActive && this.upgradeTooltipContainer) {
+        this.partyDetailsContext = { kind: "SECTION_RELAY" };
+        this.enterPartyDetailsMode();
+        ui.playSelect();
         success = true;
       } else if (this.partyDetailsContext && this.partyDetailsContext.kind !== "FUSION" && this.scene.modifierTooltipsEnabled && this.upgradeTooltipContainer) {
         this.enterPartyDetailsMode();
@@ -1601,6 +1612,13 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         const questSections = this.generateQuestTooltipSections(type);
         this.showModifierTooltip(title, subtitle, "", rarity, false, undefined, false, questSections);
       }
+      else if (type instanceof SkillTreeTokenRewardModifierType) {
+        const rarity = SkillTreeRarity.LEGENDARY;
+        const title = type.name;
+        const subtitle = this.getRarityText(rarity);
+        const tokenSections = this.generateSkillTreeTokenTooltipSections();
+        this.showModifierTooltip(title, subtitle, "", rarity, false, undefined, false, tokenSections);
+      }
       else if (type instanceof PermaModifierType) {
         const rarity = (typeof type.getTooltipRarity === "function")
             ? type.getTooltipRarity(this.scene)
@@ -1698,6 +1716,14 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     return type instanceof ForbiddenFormUnlockModifierType;
   }
 
+  wantsAltBuildCycleOnStats(): boolean {
+    if (!this.scene.modifierTooltipsEnabled) return false;
+    if (!PokemonBattleTooltipUtils.isActive()) return false;
+    const option = this.getCurrentSelectedOption();
+    const type = option?.modifierTypeOption?.type;
+    return type instanceof PokemonAltBuildModifierType;
+  }
+
   private setModifierTooltipsEnabled(enabled: boolean): void {
     this.scene.gameData.saveSetting(SettingKeys.Modifier_Tooltips, enabled ? 1 : 0);
   }
@@ -1709,6 +1735,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const isForbiddenFormUnlock = type instanceof ForbiddenFormUnlockModifierType;
     return type instanceof TmModifierType ||
       type instanceof AnyTmModifierType ||
+      type instanceof SkillTreeTokenRewardModifierType ||
       type instanceof AnyAbilityModifierType ||
       type instanceof AnyPassiveAbilityModifierType ||
       type instanceof PermaPartyAbilityModifierType ||
@@ -2077,7 +2104,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   }
 
   private enterPartyDetailsMode(): void {
-    if (!this.partyDetailsContext || !this.upgradeTooltipContainer || this.partyDetailsParty.length === 0) {
+    if (!this.partyDetailsContext || !this.upgradeTooltipContainer || (this.partyDetailsContext.kind !== "SECTION_RELAY" && this.partyDetailsParty.length === 0)) {
       return;
     }
     this.partyDetailsActive = true;
@@ -2120,6 +2147,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     if (this.partyDetailsTooltipContainer) {
       this.partyDetailsTooltipContainer.setVisible(false);
     }
+    if (this.currentModifierSections) {
+      for (const sec of this.currentModifierSections) {
+        if (sec?.embeddedContainer) sec.embeddedContainer.setVisible(false);
+      }
+    }
     this.updatePartyDetailsMainBody();
     if (this.partyDetailsContext?.kind === "FUSION") {
       this.setCursor(this.cursor);
@@ -2136,6 +2168,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       return;
     }
     if (this.partyDetailsContext.kind === "FUSION") {
+      return;
+    }
+    if (this.partyDetailsContext.kind === "SECTION_RELAY") {
       return;
     }
     const headerLines = this.partyDetailsHeaderLines;
@@ -2707,7 +2742,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
       if (fusedAbility.description) {
         const abilDesc = addTextObject(this.scene, contentLeft, currentY, fusedAbility.description, TextStyle.WINDOW, {
-          fontSize: "36px", wordWrap: { width: (tooltipWidth - padding * 2 - 4) * 6 }
+          fontSize: "41px", wordWrap: { width: (tooltipWidth - padding * 2 - 4) * 6 }
         });
         abilDesc.setOrigin(0, 0);
         abilDesc.setColor("#F0F0F0");
@@ -3056,7 +3091,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     }
 
     const pokemon = this.partyDetailsParty[this.partyDetailsIndex];
-    if (!pokemon) {
+    if (!pokemon && this.partyDetailsContext.kind !== "SECTION_RELAY") {
       this.partyDetailsTooltipContainer.setVisible(false);
       return;
     }
@@ -3064,6 +3099,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     if (this.partyDetailsContext.kind !== "FUSION" && this.partyDetailsFusionContent) {
       this.partyDetailsFusionContent.destroy();
       this.partyDetailsFusionContent = null;
+    }
+    if (this.partyDetailsContext.kind !== "SECTION_RELAY" && this.partyDetailsRelayContent) {
+      this.partyDetailsRelayContent.destroy();
+      this.partyDetailsRelayContent = null;
     }
 
     const rarity = this.partyDetailsRarity || SkillTreeRarity.COMMON;
@@ -3088,6 +3127,57 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       bodyText = this.getSoulDewBeforeAfterStatsBody(pokemon);
     } else if (this.partyDetailsContext.kind === "MOVE_SACRIFICE") {
       bodyText = this.getMoveSacrificeDetailsBody(pokemon);
+    } else if (this.partyDetailsContext.kind === "SECTION_RELAY") {
+      if (this.partyDetailsRelayContent) {
+        const embeddedRefs = new Set(
+          (this.currentModifierSections || [])
+            .map(sec => sec?.embeddedContainer)
+            .filter(Boolean)
+        );
+        const children = this.partyDetailsRelayContent.getAll();
+        for (const child of children) {
+          if (!embeddedRefs.has(child as Phaser.GameObjects.Container)) {
+            (child as Phaser.GameObjects.GameObject).destroy();
+          }
+        }
+        this.partyDetailsRelayContent.removeAll(false);
+        this.partyDetailsRelayContent.destroy();
+        this.partyDetailsRelayContent = null;
+      }
+      if (this.currentModifierSections && this.currentModifierSections.length > 0) {
+        const relayContainer = this.scene.add.container(0, 24);
+        let currentY = 0;
+        if (this.currentModifierSections) {
+          for (const sec of this.currentModifierSections) {
+            if (sec?.embeddedContainer) sec.embeddedContainer.setVisible(true);
+          }
+        }
+        for (const sec of this.currentModifierSections) {
+          if (sec.label) {
+            const hdr = this.createSectionHeaderWithLine(sec.label, currentY, this.TOOLTIP_WIDTH);
+            relayContainer.add([hdr.header, hdr.line]);
+            currentY = hdr.nextY;
+          }
+          if (sec.body) {
+            const sBody = addBBCodeTextObject(this.scene, 8, currentY, sec.body, TextStyle.WINDOW, { fontSize: "46px" });
+            sBody.setOrigin(0, 0);
+            this.applyBbCodeWordWrap(sBody, this.TOOLTIP_WIDTH, 6);
+            sBody.setColor("#ffffff");
+            relayContainer.add(sBody);
+            currentY += sBody.displayHeight + 2;
+          }
+          if (sec.embeddedContainer) {
+            sec.embeddedContainer.setPosition(4, currentY);
+            relayContainer.add(sec.embeddedContainer);
+            const h = sec.embeddedContainer.getData("renderedHeight");
+            currentY += (h && h > 0) ? h + 2 : (sec.embeddedContainer.getBounds().height / 6) + 2;
+          }
+        }
+        relayContainer.setData("renderedHeight", currentY);
+        this.partyDetailsRelayContent = relayContainer;
+        this.partyDetailsTooltipContainer!.add(relayContainer);
+        bodyText = "";
+      }
     } else if (this.partyDetailsContext.kind === "FUSION") {
       const party = this.partyDetailsParty;
       const partners = this.getFusionPartnerIndices(party, this.partyDetailsIndex);
@@ -3128,7 +3218,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     }
 
     if (this.partyDetailsContext.kind !== "FUSION") {
-      this.partyDetailsTooltipTitle.setText(pokemon.name);
+      if (this.partyDetailsContext.kind === "SECTION_RELAY") {
+        this.partyDetailsTooltipTitle.setText(this.upgradeTooltipTitle?.text ?? "DETAILS");
+      } else {
+        this.partyDetailsTooltipTitle.setText(pokemon.name);
+      }
       if (this.partyDetailsNavContainer) {
         this.partyDetailsNavContainer.setVisible(false);
       }
@@ -3142,15 +3236,17 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     this.partyDetailsTooltipBody.setText(bodyText);
     this.applyBbCodeWordWrap(this.partyDetailsTooltipBody, this.TOOLTIP_WIDTH, 6);
-    this.partyDetailsTooltipBody.setVisible(!this.partyDetailsFusionContent);
+    this.partyDetailsTooltipBody.setVisible(!this.partyDetailsFusionContent && !this.partyDetailsRelayContent);
 
     const padding = 6;
     const barsHeight = this.TOOLTIP_TITLE_BAR_HEIGHT + this.TOOLTIP_RARITY_BAR_HEIGHT;
     const tooltipWidth = this.TOOLTIP_WIDTH;
     const buttonRowHeight = 10;
-    const contentH = this.partyDetailsFusionContent
-      ? (this.partyDetailsFusionContent.getData("renderedHeight") || 80)
-      : this.partyDetailsTooltipBody.displayHeight;
+    const contentH = this.partyDetailsRelayContent
+      ? (this.partyDetailsRelayContent.getData("renderedHeight") || 80)
+      : this.partyDetailsFusionContent
+        ? (this.partyDetailsFusionContent.getData("renderedHeight") || 80)
+        : this.partyDetailsTooltipBody.displayHeight;
     const tooltipHeight = barsHeight + contentH + (padding * 2) + padding + (this.partyDetailsNavContainer && this.partyDetailsNavContainer.visible ? (buttonRowHeight + padding) : 0);
 
     this.partyDetailsTooltipBg.setSize(tooltipWidth, tooltipHeight);
@@ -3403,7 +3499,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
   private buildUpgradeTooltip(titleText: string, subtitleText: string, bodyText: string, rarityColors: { border: number; bg: number }): void {
     this.upgradeTooltipContainer = this.scene.add.container(0, 0);
-    this.upgradeTooltipContainer.setDepth(10000000000);
+
+    this.upgradeTooltipContainer.setDepth(10000000001);
     const tooltipWidth = this.TOOLTIP_WIDTH;
     const padding = 6;
     const buttonRowHeight = 10;
@@ -4005,7 +4102,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     }
     const { titleText, subtitleText, bodyText } = this.parseUpgradeComparisonText(comparisonText);
 
-    this.destroyUpgradeTooltipContainerOnly();
+    this.hideUpgradeTooltip();
     this.buildUpgradeTooltip(titleText, subtitleText, bodyText, rarityColors);
   }
 
@@ -5030,7 +5127,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   }
 
   private createColoredComparisonText(x: number, y: number, comparisonText: string): BBCodeText {
-    const textObj = addBBCodeTextObject(this.scene, x, y, comparisonText, TextStyle.WINDOW, { fontSize: "36px" });
+    const textObj = addBBCodeTextObject(this.scene, x, y, comparisonText, TextStyle.WINDOW, { fontSize: "41px" });
     return textObj;
   }
 
@@ -5080,6 +5177,13 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     this.partyDetailsParty = [];
     this.partyDetailsRarity = null;
     this.partyDetailsContext = null;
+    this.currentModifierContext = null;
+    if (this.currentModifierSections) {
+      for (const sec of this.currentModifierSections) {
+        if (sec && (sec as any).embeddedContainer) (sec as any).embeddedContainer.destroy();
+      }
+    }
+    this.currentModifierSections = null;
     this.partyDetailsMainTooltipHeight = 0;
     this.partyDetailsButton = null;
     this.partyBackButton = null;
@@ -5096,6 +5200,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     if (this.partyDetailsFusionContent) {
       this.partyDetailsFusionContent.destroy();
       this.partyDetailsFusionContent = null;
+    }
+    if (this.partyDetailsRelayContent) {
+      this.partyDetailsRelayContent.destroy();
+      this.partyDetailsRelayContent = null;
     }
 
     this.forbiddenFormDetailsTooltipContainer = null;
@@ -5181,6 +5289,61 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     return Math.ceil(count / pageSize);
   }
 
+  private regenerateCurrentModifierSections(): void {
+    const option = this.getCurrentSelectedOption();
+    if (!option?.modifierTypeOption?.type) return;
+    const type = option.modifierTypeOption.type;
+    let sections: { label?: string; body?: string; embeddedContainer?: Phaser.GameObjects.Container }[] | null = null;
+    if (type instanceof PokemonNatureChangeModifierType) {
+      sections = this.generateMintTooltipSections(type.nature);
+    } else if (type instanceof ChampionPokemonStatBoosterModifierType) {
+      const pregenArgs = type.getPregenArgs?.() as [string, Stat[], number?, Type[]?] | undefined;
+      const stats = pregenArgs?.[1] ?? [];
+      const boostPercent = pregenArgs?.[2] ?? 0.03;
+      const championTypes = (pregenArgs?.[3] as Type[] ?? []).filter((t: Type) => t !== Type.UNKNOWN);
+      if (stats.length > 0) {
+        const descText = type.getDescription(this.scene).replace(/\n?\(Hold C.*?\)\.?/i, "").replace(/\n?\(Press P.*?\)\.?/i, "").trim();
+        const party = this.scene.getParty() as PlayerPokemon[];
+        sections = this.generateStatBoostTooltipSections(descText, party, stats.length === 1 ? stats[0] : stats, boostPercent, championTypes);
+      }
+    } else if (type instanceof PokemonBaseStatBoosterModifierType || type instanceof PlayerPokemonBaseStatBoosterModifierType) {
+      const stat = ((type as any).getPregenArgs?.()[0] ?? null) as Stat | null;
+      const multiplier = type instanceof PokemonBaseStatBoosterModifierType ? 0.08 : 0.03;
+      if (stat !== null) {
+        const descText = type.getDescription(this.scene).replace(/\n?\(Hold C.*?\)\.?/i, "").replace(/\n?\(Press P.*?\)\.?/i, "").trim();
+        const party = this.scene.getParty() as PlayerPokemon[];
+        sections = this.generateStatBoostTooltipSections(descText, party, stat, multiplier);
+      }
+    } else if (type instanceof TmModifierType || type instanceof AnyTmModifierType) {
+      const isXM = type instanceof AnyTmModifierType;
+      sections = this.generateTmXmTooltipSections(type.moveId, isXM, type);
+    } else if (type instanceof AbilitySacrificeModifierType || type instanceof PassiveAbilitySacrificeModifierType) {
+      sections = this.generateSacrificeTooltipSections(type instanceof PassiveAbilitySacrificeModifierType ? "Passive" : "Ability");
+    } else if (type instanceof StatSacrificeModifierType) {
+      sections = this.generateSacrificeTooltipSections("Stat");
+    } else if (type instanceof MoveSacrificeModifierType) {
+      sections = this.generateSacrificeTooltipSections("Move");
+    } else if (type instanceof AnyAbilityModifierType || type instanceof AnyPassiveAbilityModifierType) {
+      const isPassive = type instanceof AnyPassiveAbilityModifierType;
+      sections = this.generateAbilityGrantTooltipSections((type as any).ability?.id, isPassive, type);
+    } else if (type instanceof AbilitySwitcherModifierType) {
+      sections = this.generateAbilitySwitcherTooltipSections(type);
+    } else if (type instanceof RememberMoveModifierType) {
+      sections = this.generateMemoryMushroomTooltipSections(type);
+    }
+    if (this.currentModifierSections) {
+      for (const sec of this.currentModifierSections) {
+        if (sec?.embeddedContainer) sec.embeddedContainer.destroy();
+      }
+    }
+    if (sections && sections.length > 1) {
+      this.currentModifierSections = sections.slice(1);
+      for (const sec of this.currentModifierSections) {
+        if (sec?.embeddedContainer) sec.embeddedContainer.setVisible(false);
+      }
+    }
+  }
+
   protected buildTooltipNavRow(page: number, total: number): Phaser.GameObjects.Container {
     const tooltipWidth = 120;
     const container = this.scene.add.container(0, 0);
@@ -5202,7 +5365,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     return container;
   }
 
-  private destroyUpgradeTooltipContainerOnly(): void {    if (this.upgradeTooltipContainer) {
+  private destroyUpgradeTooltipContainerOnly(): void {
+    if (this.upgradeTooltipContainer) {
+      const parent = this.upgradeTooltipContainer.parentContainer;
+      if (parent) parent.remove(this.upgradeTooltipContainer);
+      this.upgradeTooltipContainer.removeAll(true);
       this.upgradeTooltipContainer.destroy();
     }
     this.upgradeTooltipContainer = null;
@@ -5467,7 +5634,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const taskHeader = this.createSectionHeaderWithLine(taskHeaderLabel, currentY, tooltipWidth, this.upgradeTooltipContainer);
     currentY = taskHeader.nextY;
 
-    const taskBody = addBBCodeTextObject(this.scene, textX, currentY, taskBodyText, TextStyle.WINDOW, { fontSize: "36px" });
+    const taskBody = addBBCodeTextObject(this.scene, textX, currentY, taskBodyText, TextStyle.WINDOW, { fontSize: "41px" });
     taskBody.setOrigin(0, 0);
     taskBody.setColor("#ffffff");
     this.applyBbCodeWordWrap(taskBody, tooltipWidth, padding);
@@ -5476,7 +5643,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const rewardsHeader = this.createSectionHeaderWithLine(rewardsHeaderLabel, currentY, tooltipWidth, this.upgradeTooltipContainer);
     currentY = rewardsHeader.nextY;
 
-    const rewardsBody = addBBCodeTextObject(this.scene, textX, currentY, rewardsBodyText, TextStyle.WINDOW, { fontSize: "36px" });
+    const rewardsBody = addBBCodeTextObject(this.scene, textX, currentY, rewardsBodyText, TextStyle.WINDOW, { fontSize: "41px" });
     rewardsBody.setOrigin(0, 0);
     rewardsBody.setColor("#ffffff");
     this.applyBbCodeWordWrap(rewardsBody, tooltipWidth, padding);
@@ -5579,8 +5746,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     let contentHeight: number;
 
     if (sections && sections.length > 0) {
+      const renderSections = sections.length > 1 ? [sections[0]] : sections;
       let currentY = bodyY;
-      for (const section of sections) {
+      for (const section of renderSections) {
         if (section.label) {
           const isCandidates = section.label.toUpperCase().includes("CANDIDATES");
           if (isCandidates) {
@@ -5594,7 +5762,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
           }
         }
         if (section.body) {
-          const sBody = addBBCodeTextObject(this.scene, textX, currentY, section.body, TextStyle.WINDOW, { fontSize: "36px" });
+          const sBody = addBBCodeTextObject(this.scene, textX, currentY, section.body, TextStyle.WINDOW, { fontSize: "46px" });
           sBody.setOrigin(0, 0);
           this.applyBbCodeWordWrap(sBody, tooltipWidth, padding);
           sBody.setColor("#ffffff");
@@ -5630,6 +5798,17 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         contentHeight += 55;
         sectionObjects.push(embeddedStatsContainer);
       }
+    }
+
+    if (sections && sections.length > 1) {
+      this.currentModifierContext = "SECTION_RELAY";
+      this.currentModifierSections = sections.slice(1);
+      for (const sec of this.currentModifierSections) {
+        if (sec?.embeddedContainer) sec.embeddedContainer.setVisible(false);
+      }
+    } else {
+      this.currentModifierContext = null;
+      this.currentModifierSections = null;
     }
 
     const hintStripePad = 3;
@@ -5693,7 +5872,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     this.upgradeTooltipTitle!.setColor(rarityHex);
 
     const hideButton = showHideDetailsButton ? this.createHideDetailsButton(tooltipWidth, tooltipHeight, padding, buttonRowHeight) : null;
-    if (enablePartyDetails) {
+    if (enablePartyDetails || this.currentModifierContext === "SECTION_RELAY") {
       this.partyDetailsMainTooltipHeight = tooltipHeight;
       this.partyDetailsButton = this.createPartyDetailsButton(tooltipWidth, tooltipHeight, padding, buttonRowHeight);
       this.partyBackButton = this.createPartyBackButton(tooltipWidth, tooltipHeight, padding, buttonRowHeight);
@@ -5748,7 +5927,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     if (this.shinyPowerStatsContainer && !sections) {
       children.push(this.shinyPowerStatsContainer);
     }
-    if (enablePartyDetails) {
+    if (enablePartyDetails || this.currentModifierContext === "SECTION_RELAY") {
       if (this.partyDetailsButton) {
         children.push(this.partyDetailsButton);
       }
@@ -5938,7 +6117,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     }
 
     const nature = pokemon.getNature();
-    let rawBaseStats = pokemon.getSpeciesForm().baseStats.slice();
+    let rawBaseStats = pokemon.getModifiedBaseStats();
     if (pokemon.isFusion() && pokemon.fusionSpecies) {
       const fusionBaseStats = pokemon.getFusionSpeciesForm().baseStats;
       for (let i = 0; i < rawBaseStats.length; i++) {
@@ -6537,6 +6716,26 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     return sections;
   }
 
+  private generateSkillTreeTokenTooltipSections(): { label?: string; body: string; embeddedContainer?: Phaser.GameObjects.Container }[] {
+    const THRESHOLD = 2;
+    const owned = (this.scene as any).gameData?.activeSkillTree?.tokens ?? 0;
+    const needed = Math.max(0, THRESHOLD - owned);
+    const sections: { label?: string; body: string; embeddedContainer?: Phaser.GameObjects.Container }[] = [];
+    sections.push({
+      label: i18next.t("modifierSelectUiHandler:tooltipDescriptionHeader", { defaultValue: "DESCRIPTION" }),
+      body: i18next.t("skillTree:descriptions.skillTreeTokensDescription", { defaultValue: "Collect 2 Skill Tree Tokens to activate the Skill Tree!" })
+    });
+    const rewardText = needed > 0
+      ? i18next.t("skillTree:descriptions.skillTreeTokensReward", { defaultValue: "Owned {{owned}}. Get {{needed}} more to activate the skill tree!", owned, needed })
+      : i18next.t("skillTree:descriptions.skillTreeTokensReady", { defaultValue: "Owned {{owned}}. Skill Tree ready to activate!", owned });
+    sections.push({
+      label: i18next.t("modifierSelectUiHandler:tooltipRewardHeader", { defaultValue: "REWARD" }),
+      body: "",
+      embeddedContainer: this.buildQuestRewardStyledContainer(rewardText)
+    });
+    return sections;
+  }
+
   private buildQuestRewardFallback(data: QuestUnlockData): string {
     switch (data.rewardType) {
       case RewardType.GAME_MODE:
@@ -6914,6 +7113,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   private getAltBuildTooltipData(type: PokemonAltBuildModifierType): {
     speciesName?: string | null;
     formName?: string | null;
+    description?: string;
     types?: Type[];
     abilities?: Abilities[];
     targetStats?: number[];
@@ -6926,14 +7126,14 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     if (!build) {
       return null;
     }
-    const species = build.species ? getPokemonSpecies(build.species) : null;
     let baseStats: number[] | undefined;
-    if (species) {
-      const party = this.scene.getParty();
-      const target = party.find(p => p.species.speciesId === build.species);
-      if (target && target.formIndex > 0 && species.forms?.[target.formIndex]) {
-        baseStats = [...species.forms[target.formIndex].baseStats];
-      } else {
+    const party = this.scene.getParty();
+    const target = party.find(p => p.species.speciesId === build.species);
+    const species = build.species ? getPokemonSpecies(build.species) : null;
+    if (target) {
+      baseStats = target.getModifiedBaseStats();
+    } else {
+      if (species) {
         baseStats = [...species.baseStats];
       }
     }
@@ -6949,6 +7149,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     return {
       speciesName: species?.name || null,
       formName: ChampionUtils.getAltBuildDisplayName(build.id),
+      description: type.getTooltipDescription(this.scene),
       types: changedTypes.length ? changedTypes : (species ? species.type : undefined),
       abilities,
       targetStats,
@@ -7224,7 +7425,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         currentY += nameText.displayHeight + 1;
 
         if (abDesc) {
-          const descText = addTextObject(this.scene, contentLeft, currentY, abDesc, TextStyle.WINDOW, { fontSize: "36px", wordWrap: { width: wrapWidth } });
+          const descText = addTextObject(this.scene, contentLeft, currentY, abDesc, TextStyle.WINDOW, { fontSize: "41px", wordWrap: { width: wrapWidth } });
           descText.setOrigin(0, 0);
           descText.setColor("#F0F0F0");
           container.add(descText);
@@ -7290,7 +7491,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       currentY += nameText.displayHeight + 1;
 
       if (abDesc) {
-        const descText = addTextObject(this.scene, contentLeft, currentY, abDesc, TextStyle.WINDOW, { fontSize: "36px", wordWrap: { width: wrapWidth } });
+        const descText = addTextObject(this.scene, contentLeft, currentY, abDesc, TextStyle.WINDOW, { fontSize: "41px", wordWrap: { width: wrapWidth } });
         descText.setOrigin(0, 0);
         descText.setColor("#F0F0F0");
         container.add(descText);
@@ -7681,7 +7882,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
       if (abilityDesc) {
         const wrapWidth = (tooltipWidth - padding * 2 - iconZoneWidth - 4) * 6;
-        const descText = addTextObject(this.scene, contentLeft, currentY, abilityDesc, TextStyle.WINDOW, { fontSize: "36px", wordWrap: { width: wrapWidth } });
+        const descText = addTextObject(this.scene, contentLeft, currentY, abilityDesc, TextStyle.WINDOW, { fontSize: "41px", wordWrap: { width: wrapWidth } });
         descText.setOrigin(0, 0);
         descText.setColor("#F0F0F0");
         container.add(descText);
@@ -7782,7 +7983,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
       if (abilityDesc) {
         const wrapWidth = (tooltipWidth - padding * 2 - iconZoneWidth - 4) * 6;
-        const descText = addTextObject(this.scene, textX + iconZoneWidth + 2, currentY, abilityDesc, TextStyle.WINDOW, { fontSize: "36px", wordWrap: { width: wrapWidth } });
+        const descText = addTextObject(this.scene, textX + iconZoneWidth + 2, currentY, abilityDesc, TextStyle.WINDOW, { fontSize: "41px", wordWrap: { width: wrapWidth } });
         descText.setOrigin(0, 0);
         descText.setColor("#F0F0F0");
         container.add(descText);
@@ -7838,7 +8039,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       currentY += activeLabel.displayHeight + 1;
 
       if (activeDesc) {
-        const activeDescText = addTextObject(this.scene, contentLeft, currentY, activeDesc, TextStyle.WINDOW, { fontSize: "36px", wordWrap: { width: wrapWidth } });
+        const activeDescText = addTextObject(this.scene, contentLeft, currentY, activeDesc, TextStyle.WINDOW, { fontSize: "41px", wordWrap: { width: wrapWidth } });
         activeDescText.setOrigin(0, 0);
         activeDescText.setColor("#F0F0F0");
         container.add(activeDescText);
@@ -10300,6 +10501,32 @@ export class ModifierOption extends Phaser.GameObjects.Container {
 
   public showEmberMaterialize(durationMs: number = 800, cardIndex: number = 0): void {
     this.cancelEmberEffects();
+    if ((this.scene as BattleScene).animationLoadMode === 0) {
+      this.forceReveal();
+      return;
+    }
+    if ((this.scene as BattleScene).animationLoadMode === 1) {
+      if (this.pb?.active) this.pb.setAlpha(0);
+      if (this.pbTint?.active) this.pbTint.setVisible(false);
+      if (this.itemTint?.active) this.itemTint.setAlpha(0);
+      this.itemContainer.setAlpha(0);
+      this.itemContainer.setScale(this.itemContainerTargetScale);
+      if (this.itemText) this.itemText.setAlpha(0);
+      if (this.itemCostText) this.itemCostText.setAlpha(0);
+      this.scene.tweens.add({
+        targets: [this.itemContainer, this.itemText, this.itemCostText].filter(Boolean),
+        alpha: 1,
+        duration: 400,
+        ease: "Sine.easeOut",
+        onComplete: () => {
+          this.itemText.y = 22;
+          if (this.itemCostText?.active) this.itemCostText.y = this.getItemCostTextY();
+          this.redrawFocusLabelChip();
+        }
+      });
+      this.additionalDisplayTweens();
+      return;
+    }
     ModifierOption.ensureEmberTextures(this.scene);
 
     if (this.pb?.active) this.pb.setAlpha(0);

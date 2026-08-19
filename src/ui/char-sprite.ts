@@ -137,21 +137,23 @@ export default class CharSprite extends Phaser.GameObjects.Container {
 
       this.setVisible(texture.key !== Utils.MissingTextureKey);
 
-      if (this.sprite.postFX && typeof this.sprite.postFX.addPixelate === "function") {
-        this._charPixFx = this.sprite.postFX.addPixelate(20);
-        this.scene.tweens.add({
-          targets: this._charPixFx,
-          amount: -1,
-          duration: Utils.fixedInt(550),
-          delay: Utils.fixedInt(200),
-          ease: "Linear",
-          onComplete: () => {
-            if (this._charPixFx && this.sprite?.postFX) {
-              this.sprite.postFX.remove(this._charPixFx);
-              this._charPixFx = null;
+      if (this.scene.animationLoadMode >= 2) {
+        if (this.sprite.postFX && typeof this.sprite.postFX.addPixelate === "function") {
+          this._charPixFx = this.sprite.postFX.addPixelate(20);
+          this.scene.tweens.add({
+            targets: this._charPixFx,
+            amount: -1,
+            duration: Utils.fixedInt(550),
+            delay: Utils.fixedInt(200),
+            ease: "Linear",
+            onComplete: () => {
+              if (this._charPixFx && this.sprite?.postFX) {
+                this.sprite.postFX.remove(this._charPixFx);
+                this._charPixFx = null;
+              }
             }
-          }
-        });
+          });
+        }
       }
 
       this.scene.tweens.add({
@@ -242,14 +244,16 @@ export default class CharSprite extends Phaser.GameObjects.Container {
       }
 
       let pixFx: Phaser.FX.Pixelate | null = null;
-      if (this.sprite.postFX && typeof this.sprite.postFX.addPixelate === "function") {
-        pixFx = this.sprite.postFX.addPixelate(0);
-        this.scene.tweens.add({
-          targets: pixFx,
-          amount: 20,
-          duration: Utils.fixedInt(750),
-          ease: "Linear"
-        });
+      if (this.scene.animationLoadMode >= 2) {
+        if (this.sprite.postFX && typeof this.sprite.postFX.addPixelate === "function") {
+          pixFx = this.sprite.postFX.addPixelate(0);
+          this.scene.tweens.add({
+            targets: pixFx,
+            amount: 20,
+            duration: Utils.fixedInt(750),
+            ease: "Linear"
+          });
+        }
       }
 
       this.scene.tweens.add({

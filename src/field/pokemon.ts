@@ -248,7 +248,6 @@ import {ModifierType, AnyPassiveAbilityModifierTypeGenerator, modifierTypes} fro
 import { TrainerType } from "#enums/trainer-type";
 import { BattleType } from "../battle";
 import { Unlockables } from "#app/system/unlockables.ts";
-import { isIPhone } from "#app/loading-scene.js";
 import { MoveUpgradeModifier } from "#app/modifier/modifier";
 import { Command } from "#app/ui/command-ui-handler.js";
 
@@ -386,6 +385,8 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
   private shinySparkle: Phaser.GameObjects.Sprite;
   public portalSprite: Phaser.GameObjects.Sprite | null = null;
   private battleTooltipHoverBound: boolean = false;
+
+  private heldSpriteKeys: Set<string> = new Set();
   public abilityActivations: AbilityActivationResult[] = [];
 
   constructor(scene: BattleScene, x: number, y: number, species: PokemonSpecies, level: integer, abilityIndex?: integer, formIndex?: integer, gender?: Gender, shiny?: boolean, variant?: Variant, ivs?: integer[], nature?: Nature, dataSource?: Pokemon | PokemonData) {
@@ -1027,6 +1028,7 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
                     this.updateFusionPalette(true);
                   }
               }
+              this.syncSpriteKeyRefs();
               resolve();
             };
             if (this.shiny) {
@@ -2066,6 +2068,10 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     } catch {
       return [0, 0, 0, 0, 0, 0];
     }
+  }
+
+  getComparisonBaseStats(): number[] {
+    return this.getCanonicalBaseStats();
   }
 
   getNature(): Nature {
@@ -5179,17 +5185,52 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
   destroy(removeTexture: boolean = false): void {
     this.cleanupBattleTooltipHover();
     this.battleInfo?.destroy();
-    if (isIPhone() && removeTexture) {
-      const keys: string[] = [];
-      keys.push(this.getBattleSpriteKey());
-      if (this.getFusionSpeciesForm()) {
-        keys.push(this.getFusionBattleSpriteKey());
+    if (removeTexture) {
+      for (const key of [...this.heldSpriteKeys]) {
+        this.releaseSpriteKeyRef(key);
       }
-      keys.forEach(key => {
-        this.removeTextureCompletely(key);
-      });
+      this.heldSpriteKeys.clear();
     }
     super.destroy();
+  }
+  private getOwnedSpriteKeys(): string[] {
+    const keys = [this.getBattleSpriteKey()];
+    if (this.getFusionSpeciesForm()) {
+      keys.push(this.getFusionBattleSpriteKey());
+    }
+    return keys.filter(k => !!k);
+  }
+  private syncSpriteKeyRefs(): void {
+    if (!this.scene) {
+      return;
+    }
+    const next = new Set(this.getOwnedSpriteKeys());
+    for (const key of this.heldSpriteKeys) {
+      if (!next.has(key)) {
+        this.releaseSpriteKeyRef(key);
+      }
+    }
+    for (const key of next) {
+      if (!this.heldSpriteKeys.has(key)) {
+        this.scene.retainSpriteKey(key);
+      }
+    }
+    this.heldSpriteKeys = next;
+  }
+
+  private releaseSpriteKeyRef(key: string): void {
+    if (!this.scene) {
+      return;
+    }
+    if (this.scene.releaseSpriteKey(key) && !this.isSpriteKeyInUse(key)) {
+      this.removeTextureCompletely(key);
+    }
+  }
+  private isSpriteKeyInUse(key: string): boolean {
+    const live = [...this.scene.getParty(), ...(this.scene.currentBattle?.enemyParty ?? [])];
+    return live.some(p => p !== this && p.scene
+      && (p.getBattleSpriteKey() === key
+          || (!!p.getFusionSpeciesForm() && p.getFusionBattleSpriteKey() === key)));
   }
 
   private removeTextureCompletely(key: string): void {

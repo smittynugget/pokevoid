@@ -1,6 +1,7 @@
 import * as ModifierTypes from "./modifier-type";
 import BattleScene from "../battle-scene";
 import { SkillPointSources } from "../system/skill-point-sources";
+import { SkillTreeProgression } from "../system/skill-tree-progression";
 import {getLevelTotalExp} from "../data/exp";
 import {MAX_PER_TYPE_POKEBALLS, PokeballType, getActiveChampionData} from "../data/pokeball";
 import Pokemon, {PlayerPokemon} from "../field/pokemon";
@@ -3266,6 +3267,9 @@ export function overrideHeldItems(scene: BattleScene, pokemon: Pokemon, isPlayer
     })
 }
 export function reduceGlitchPieceModifier(pokemon: Pokemon, count:number = 1): void {
+    if (!pokemon?.scene?.gameMode) {
+        return;
+    }
     const reduceChance = Utils.randSeedInt(100) <= 50;
     if(pokemon && pokemon.isPlayer() && reduceChance && (!pokemon.scene.gameMode.isChaosMode || pokemon.scene?.pathNodeContext === PathNodeContext.BATTLE_NODE)) {
         const glitchModifier = pokemon.scene.findModifier(m => m instanceof GlitchPieceModifier) as GlitchPieceModifier;
@@ -3557,6 +3561,9 @@ export class TypeSwitcherModifier extends PokemonHeldItemModifier {
 
         return true;
     }
+    applyDisplayColors(pokemon: Pokemon): void {
+        this.applyTypeColorEffect(pokemon);
+    }
 
     private applyTypeColorEffect(pokemon: Pokemon): void {
         const targetType = this.newPrimaryType ?? this.newSecondaryType;
@@ -3584,7 +3591,9 @@ export class TypeSwitcherModifier extends PokemonHeldItemModifier {
         const realSpriteKey = pokemon.getBattleSpriteKey(false);
         const backSpriteKey = pokemon.getBattleSpriteKey(true);
         const textureReady = (key: string) =>
-            pokemon.scene.textures.exists(key)
+            pokemon.scene
+            && pokemon.scene.textures
+            && pokemon.scene.textures.exists(key)
             && pokemon.scene.textures.get(key).key !== '__MISSING';
         const realTextureLoaded = textureReady(realSpriteKey) && textureReady(backSpriteKey);
         if (realTextureLoaded) {
@@ -5717,14 +5726,12 @@ export class PokemonAltBuildModifier extends PokemonHeldItemModifier {
     pokemon.altBuildId = this.altBuild.id;
     pokemon.altBuildRank = newRank;
 
-    const baseName = pokemon.species.getName(pokemon.formIndex);
-
     const altBuildDisplayName = ChampionUtils.getAltBuildDisplayName(this.altBuild.id);
 
     const rankSuffix = Utils.intToRoman(newRank);
     const altBuildName = rankSuffix
-      ? `${baseName} (${altBuildDisplayName} ${rankSuffix})`
-      : `${baseName} (${altBuildDisplayName})`;
+      ? `${altBuildDisplayName} ${rankSuffix}`
+      : altBuildDisplayName;
     pokemon.nickname = btoa(unescape(encodeURIComponent(altBuildName)));
 
     if (this.altBuild.spriteColorPalette && pokemon.scene) {
@@ -6039,13 +6046,38 @@ export class SkillTreeTokenRewardModifier extends ConsumableModifier {
     if (!scene) {
       return false;
     }
-    const activeSkillTree = scene.gameData?.activeSkillTree;
-    if (!activeSkillTree) {
+    if (!scene.gameData?.activeSkillTree) {
       return false;
     }
-    activeSkillTree.tokens = (activeSkillTree.tokens || 0) + this.amount;
+    new SkillTreeProgression(scene).grantTokens(this.amount);
     return true;
   }
+}
+
+export class SkillTreeTokenTrackerModifier extends PersistentModifier {
+    constructor(type: ModifierTypes.ModifierType, stackCount?: integer) {
+        super(type, stackCount);
+    }
+
+    match(modifier: Modifier): boolean {
+        return modifier instanceof SkillTreeTokenTrackerModifier;
+    }
+
+    clone(): SkillTreeTokenTrackerModifier {
+        return new SkillTreeTokenTrackerModifier(this.type, this.stackCount);
+    }
+
+    getMaxStackCount(_scene: BattleScene): integer {
+        return 2 as integer;
+    }
+
+    apply(_args: any[]): boolean {
+        return true;
+    }
+
+    isIconVisible(scene: BattleScene): boolean {
+        return !!scene.gameData?.activeSkillTree;
+    }
 }
 
 export class EssenceBundleRewardModifier extends ConsumableModifier {

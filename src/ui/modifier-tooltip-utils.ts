@@ -6,7 +6,7 @@ import { getUpgradeRarityColors } from "#app/utils";
 import { SkillTreeRarity } from "#app/system/skill-tree-data";
 import type { ModifierType } from "#app/modifier/modifier-type";
 import type { PersistentModifier } from "#app/modifier/modifier";
-import { PermaRunQuestModifier } from "#app/modifier/modifier";
+import { PermaRunQuestModifier, SkillTreeTokenTrackerModifier } from "#app/modifier/modifier";
 import { PermaPartyAbilityModifierType, PokemonAltBuildModifierType, TeraAbilityModifierType, TrainerBondAbilityModifierType, QuestModifierType, FORBIDDEN_FORM_REWARDTYPE_TO_FORMKEY } from "#app/modifier/modifier-type";
 import { getPermaModifierRarity } from "#app/phases/modifier-reward-phase";
 import { allAbilities } from "#app/data/ability";
@@ -231,6 +231,7 @@ export class ModifierTooltipUtils {
   }
 
   static showForModifier(scene: BattleScene, modifier: PersistentModifier, _anchor?: { x: number; y: number }, opts?: { context?: string }): void {
+    console.warn("[TOOLTIP] showForModifier called for:", modifier?.constructor?.name, "type:", modifier?.type?.constructor?.name);
     const meta = (modifier as any)?.skillTreeTooltip;
     if (meta?.title && meta?.body && meta?.rarity && !(modifier instanceof PermaRunQuestModifier)) {
       const rarity = meta.rarity as SkillTreeRarity;
@@ -330,6 +331,30 @@ export class ModifierTooltipUtils {
       return;
     }
 
+    if (modifier instanceof SkillTreeTokenTrackerModifier) {
+      const THRESHOLD = 2;
+      const owned = (scene.gameData?.activeSkillTree?.tokens ?? (modifier as any).stackCount) || 0;
+      const needed = Math.max(0, THRESHOLD - owned);
+      const descText = i18next.t("skillTree:descriptions.skillTreeTokensDescription", { defaultValue: "Collect 2 Skill Tree Tokens to activate the Skill Tree!" });
+      const rewardText = needed > 0
+        ? i18next.t("skillTree:descriptions.skillTreeTokensReward", { defaultValue: "Owned {{owned}}. Get {{needed}} more to activate the skill tree!", owned, needed })
+        : i18next.t("skillTree:descriptions.skillTreeTokensReady", { defaultValue: "Owned {{owned}}. Skill Tree ready to activate!", owned });
+      const rewardContainer = this.buildQuestRewardTextContainer(scene, rewardText);
+      const sections = [
+        { label: "DESCRIPTION", body: descText },
+        { label: "REWARD", body: "", embeddedContainer: rewardContainer }
+      ];
+      this.show(scene, {
+        title: i18next.t("modifierType:ModifierType.SKILL_TREE_TOKEN_TRACKER.name", { defaultValue: "Skill Tree Tokens" }),
+        subtitle: "",
+        body: "",
+        rarity: SkillTreeRarity.LEGENDARY,
+        hasDetails: false,
+        sections,
+      }, _anchor);
+      return;
+    }
+
     this.showForModifierType(scene, modifier.type as any, _anchor, opts);
   }
 
@@ -371,7 +396,8 @@ export class ModifierTooltipUtils {
       this.container.destroy();
     }
     this.container = scene.add.container(0, 0);
-    this.container.setDepth(10000000000);
+
+    this.container.setDepth(10000000001);
 
     const rarityColors = getUpgradeRarityColors(data.rarity);
     const tooltipWidth = 120;

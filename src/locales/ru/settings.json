@@ -131,5 +131,11 @@
   "interval30min": "30 мин",
   "interval1hr": "1 час",
   "interval2hr": "2 часа",
-  "manualOnly": "Только вручную"
+  "manualOnly": "Только вручную",
+  "duelmonSpawnRarity": "Редкость появления Дуэлмонов",
+  "rare": "Редко",
+  "veryRare": "Очень Редко",
+  "animationLoad": "Нагрузка анимации",
+  "animationLite": "Лёгкая",
+  "animationFull": "Полная (Требовательно)"
 }

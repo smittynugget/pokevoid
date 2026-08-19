@@ -1,6 +1,7 @@
 import BattleScene from "../battle-scene";
 import { DUELMON_SPECIES } from "../data/duelmon-rankups";
 import { getEligibleDuelmonSpeciesForWave, getDuelmonBstLimitForWave } from "../data/duelmon-bst-utils";
+import { shouldRejectDuelmonSpecies } from "../data/duelmon-spawn-utils";
 import { BiomePoolTier, PokemonPools, BiomeTierTrainerPools, biomePokemonPools, biomeTrainerPools } from "../data/biomes";
 import { Constructor } from "#app/utils";
 import * as Utils from "../utils";
@@ -208,7 +209,9 @@ export class Arena {
     }
 
     if (!regen && ret.generation === 20) {
-      if (!this.scene.duelmonsEnabledForRun || ret.baseTotal > getDuelmonBstLimitForWave(waveIndex)) {
+      if (!this.scene.duelmonsEnabledForRun
+          || ret.baseTotal > getDuelmonBstLimitForWave(waveIndex)
+          || shouldRejectDuelmonSpecies(this.scene)) {
         regen = true;
       }
     }

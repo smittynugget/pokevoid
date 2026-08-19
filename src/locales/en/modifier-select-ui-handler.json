@@ -85,6 +85,7 @@
   "secondaryAbilitySacrifice": "Inherits Ability",
   "secondaryPassiveSacrifice": "Inherits Ability as Passive",
   "secondaryNatureStatBoost": "+{{incStat}} / -{{decStat}}",
+  "shopMintStatDelta": "+{{incStat}}/-{{decStat}}",
   "secondaryCollectedType": "{{type}} Essence",
   "secondaryTerastallizeType": "{{teraType}}",
   "secondaryMoveUpgradeCategory": "{{moveName}} · {{category}}",

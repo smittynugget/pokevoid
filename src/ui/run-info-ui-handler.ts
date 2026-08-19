@@ -715,7 +715,14 @@ export default class RunInfoUiHandler extends UiHandler {
       container.add(pokemonSprite);
       const female = pkmn.gender === 1;
       species.loadAssets(scene, female, formIndex, shiny, variant, true).then(() => {
-        pokemonSprite.play(species.getSpriteKey(female, formIndex, shiny, variant));
+        const spriteKey = species.getSpriteKey(female, formIndex, shiny, variant);
+        if (scene.anims.exists(spriteKey)) {
+          try {
+            pokemonSprite.play(spriteKey);
+          } catch (e) {
+            pokemonSprite.setFrame(0);
+          }
+        }
         pokemonSprite.setScale(spriteScale);
         pokemonSprite.setPipelineData("shiny", shiny);
         pokemonSprite.setPipelineData("variant", variant);
@@ -725,7 +732,7 @@ export default class RunInfoUiHandler extends UiHandler {
             m instanceof TypeSwitcherModifier && (m as any).pokemonId === pkmn.id
         ) as TypeSwitcherModifier | undefined;
         if (tsModifier) {
-            tsModifier.apply([pkmn]);
+            tsModifier.applyDisplayColors(pkmn);
         }
         const anyPkmn = pkmn as any;
         if (anyPkmn.altBuildSpriteColors && anyPkmn.altBuildTargetColors) {
@@ -739,6 +746,9 @@ export default class RunInfoUiHandler extends UiHandler {
           delete (pokemonSprite.pipelineData as any)["altBuildBlendMode"];
           delete (pokemonSprite.pipelineData as any)["altBuildInversionFactor"];
         }
+        if (shouldDestroy) {
+          pkmn.destroy();
+        }
       });
       if (pkmn.isFusion()) {
         const fusionIcon = scene.add.sprite(80 + 40 * i, 50 + row * 80, pkmn.getFusionIconAtlasKey());
@@ -746,9 +756,6 @@ export default class RunInfoUiHandler extends UiHandler {
         fusionIcon.setOrigin(0.5, 0);
         fusionIcon.setFrame(pkmn.getFusionIconId(true));
         container.add(fusionIcon);
-      }
-      if (shouldDestroy) {
-        pkmn.destroy();
       }
     });
     container.setVisible(visible);

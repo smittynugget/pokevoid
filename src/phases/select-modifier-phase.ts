@@ -53,6 +53,8 @@ export class SelectModifierPhase extends BattlePhase {
     protected onEndCallback: (() => void) | undefined;
     private cachedRerollCost: integer | null = null;
     private cachedPermaRerollCost: integer | null = null;
+
+    private freeRerollFromPerma: boolean = false;
     private currentTypeOptions: ModifierTypeOption[] = [];
     private bypassPoolGeneration: boolean = false;
     private preGeneratedOptions: ModifierTypeOption[] | null = null;
@@ -190,6 +192,8 @@ export class SelectModifierPhase extends BattlePhase {
                             const hasNextLoot = nextPhase instanceof SelectModifierPhase
                                 && (nextPhase as SelectModifierPhase).getUIMode() === Mode.LOOT_REWARD_SELECT;
                             if (hasNextLoot) {
+                                const handler = ui.getHandler() as any;
+                                if (handler?.hideUpgradeTooltip) handler.hideUpgradeTooltip();
                                 this.end();
                             } else {
                                 const handler = ui.getHandler();
@@ -371,6 +375,8 @@ export class SelectModifierPhase extends BattlePhase {
                         const hasNextLoot = nextPhase instanceof SelectModifierPhase
                             && (nextPhase as SelectModifierPhase).getUIMode() === Mode.LOOT_REWARD_SELECT;
                         if (hasNextLoot) {
+                            const handler2 = this.scene.ui.getHandler() as any;
+                            if (handler2?.hideUpgradeTooltip) handler2.hideUpgradeTooltip();
                             this.end();
                         } else {
                             this.scene.ui.setMode(Mode.MESSAGE);
@@ -665,7 +671,13 @@ export class SelectModifierPhase extends BattlePhase {
             baseValue *= 5;
         }
 
-        if(!isCollectedTypeShop && Utils.randSeedInt(100, 1) <= 5) {
+        const permaFreeReroll = !isCollectedTypeShop
+            && this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_FREE_REROLL)
+            && Utils.randSeedInt(100) < 30;
+        if (permaFreeReroll) {
+            this.freeRerollFromPerma = true;
+            this.cachedRerollCost = 0;
+        } else if(!isCollectedTypeShop && Utils.randSeedInt(100, 1) <= 5) {
             this.cachedRerollCost = 0;
         } else {
             let wave = this.draftOnly && this.scene.gameMode.isNightmare ? this.scene.currentBattle.waveIndex % 100 : this.scene.currentBattle.waveIndex;
@@ -855,6 +867,10 @@ export class SelectModifierPhase extends BattlePhase {
 
                      if(Utils.randSeedInt(100) <= 50) {
                         this.scene.gameData.reducePermaModifierByType([PermaType.PERMA_REROLL_COST_1, PermaType.PERMA_REROLL_COST_2, PermaType.PERMA_REROLL_COST_3], this.scene);
+                     }
+                     if (this.freeRerollFromPerma) {
+                        this.scene.gameData.reducePermaModifierByType([PermaType.PERMA_FREE_REROLL], this.scene);
+                        this.freeRerollFromPerma = false;
                      }
                     SelectModifierPhase.clearShopOptionsCache();
 

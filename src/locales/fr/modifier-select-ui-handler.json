@@ -109,6 +109,7 @@
   "secondaryAbilitySacrifice": "Hérite du Talent",
   "secondaryPassiveSacrifice": "Hérite du Talent en Passif",
   "secondaryNatureStatBoost": "+{{incStat}} / -{{decStat}}",
+  "shopMintStatDelta": "+{{incStat}}/-{{decStat}}",
   "secondaryMoveUpgradeCategory": "{{moveName}} · {{category}}",
   "secondaryStatNone": "—",
   "secondaryStatPercentBoost": "+{{percent}}% {{stat}}",

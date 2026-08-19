@@ -1,6 +1,8 @@
 import * as Utils from "#app/utils";
 import { PlayableChampionData } from "#app/system/playable-champions";
-import { SkillTreeRewardType, SkillTreeRarity, SkillTreeNodeState } from "#app/system/skill-tree-data";
+import { SkillTreeRewardType, SkillTreeRarity, SkillTreeNodeState, ActiveSkillTreeData } from "#app/system/skill-tree-data";
+import Overrides from "#app/overrides";
+import { ChampionSkillVersion } from "#app/system/game-data";
 import { SkillTreeNodeGenerator } from "#app/system/skill-tree-node-generator";
 import { Type } from "#app/data/type";
 import BattleScene from "#app/battle-scene";
@@ -42,6 +44,23 @@ export class SkillTreeUtils {
     const capTier = Math.ceil(depth / 10) * 10;
     return Math.min(baseCost, capTier);
   }
+  static shouldIncludeDepth1Bounty(scene: BattleScene, ast?: ActiveSkillTreeData): boolean {
+    const versionOk = scene.gameData.championSkillVersion >= ChampionSkillVersion.BOUNTY_NODES_V1
+      || Overrides.FORCE_SKILL_TREE_BOUNTY_NODE_OVERRIDE;
+    if (!versionOk) {
+      return false;
+    }
+    if (!ast) {
+      return true;
+    }
+    if (ast.depth1BountyPresent !== true) {
+      ast.depth1BountyPresent = true;
+    }
+    return true;
+  }
+  static isDepth1BountyConsumed(ast?: ActiveSkillTreeData): boolean {
+    return !!ast?.unlockedNodes?.has("depth1_bounty_0");
+  }
 
   static getNodeCostByRarity(rarity: SkillTreeRarity): number {
     switch (rarity) {
@@ -60,25 +79,6 @@ export class SkillTreeUtils {
       default:
         return 1;
     }
-  }
-
-  static getTokenCostForNextLevel(currentLevel: number): number {
-    return currentLevel === 1 ? 1 : Math.max(3, currentLevel);
-  }
-
-  static getMaxDepthForLevel(treeLevel: number): number {
-    if (treeLevel === 1) return 5;
-    return (treeLevel - 1) * 2 + 5;
-  }
-
-  static getRequiredTreeLevelForDepth(depth: number): number {
-    if (depth <= 5) return 1;
-    return Math.ceil((depth - 5) / 2) + 1;
-  }
-
-  static getMaxPurchasableDepthForLevel(treeLevel: number): number {
-    if (treeLevel === 1) return 5;
-    return (treeLevel - 1) * 2 + 5;
   }
 
   static getChampionXPGain(nodeDepth: number, maxVisibleDepth: number): number {
@@ -212,8 +212,7 @@ export class SkillTreeUtils {
     const NODE_SIZE = 90;
     const radius = TIER_RADIUS + NODE_SIZE / 2;
 
-    const getRandomCommonOrGreat = () =>
-      Utils.randSeedInt(2) === 0 ? SkillTreeRarity.COMMON : SkillTreeRarity.GREAT;
+    const getRandomCommonOrGreat = () => SkillTreeRarity.GREAT;
 
     const nodes: any[] = [];
     for (let i = 0; i < nodeCount; i++) {

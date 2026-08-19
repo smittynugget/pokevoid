@@ -691,6 +691,13 @@ export default class UI extends Phaser.GameObjects.Container {
   private getBarXOffset(): number {
     return this.UI_CONSTANTS.LEFT_PADDING + this.UI_CONSTANTS.TOGGLE_BUTTON_WIDTH + this.UI_CONSTANTS.BAR_X_OFFSET_ADJUSTMENT;
   }
+  private layoutModifierBars(scene: BattleScene): void {
+    const barXOffset = this.getBarXOffsetRightOfToggles(scene);
+    const barYPosition = this.getTopEdge(scene) + this.UI_CONSTANTS.TOP_PADDING - 3;
+    this.permaModifierBar?.setPosition(barXOffset, barYPosition);
+
+    scene.getModifierBar()?.setPosition(barXOffset, (scene.game.canvas.height / 6) + barYPosition);
+  }
 
   private getBarXOffsetRightOfToggles(scene: BattleScene): number {
     const leftPadding = this.UI_CONSTANTS.LEFT_PADDING;
@@ -750,13 +757,10 @@ export default class UI extends Phaser.GameObjects.Container {
     scene.showPermaBar = this.permaBarVisible;
     scene.gameData.saveSetting(SettingKeys.Show_Perma_Bar, this.permaBarVisible ? 1 : 0);
 
-    const barXOffset = this.getBarXOffsetRightOfToggles(scene);
-    const topEdge = this.getTopEdge(scene);
-    const barYPosition = topEdge + this.UI_CONSTANTS.TOP_PADDING - 3;
+    this.layoutModifierBars(scene);
 
     if (this.permaBarVisible) {
       this.playerBarVisible = false;
-      this.permaModifierBar.setPosition(barXOffset, barYPosition);
       this.permaModifierBar.setVisible(true);
       scene.getModifierBar().setVisible(false);
     } else {
@@ -772,11 +776,8 @@ export default class UI extends Phaser.GameObjects.Container {
     if (this.permaModifierBar) {
       this.permaModifierBar.setVisible(this.permaBarVisible);
     }
+    this.layoutModifierBars(scene);
     if (this.permaBarVisible && this.permaModifierBar) {
-      const barXOffset = this.getBarXOffsetRightOfToggles(scene);
-      const topEdge = this.getTopEdge(scene);
-      const barYPosition = topEdge + this.UI_CONSTANTS.TOP_PADDING - 3;
-      this.permaModifierBar.setPosition(barXOffset, barYPosition);
       scene.getModifierBar()?.setVisible(false);
       scene.getModifierBar(true)?.setVisible(false);
     }
@@ -787,14 +788,10 @@ export default class UI extends Phaser.GameObjects.Container {
     if (this._replayHudSuppressed) return;
     this.playerBarVisible = !this.playerBarVisible;
 
-    const barXOffset = this.getBarXOffsetRightOfToggles(scene);
-    const topEdge = this.getTopEdge(scene);
-    const barYPosition = topEdge + this.UI_CONSTANTS.TOP_PADDING - 3;
-    const uiContainerBarY = (scene.game.canvas.height / 6) + barYPosition;
+    this.layoutModifierBars(scene);
 
     if (this.playerBarVisible) {
       this.permaBarVisible = false;
-      scene.getModifierBar().setPosition(barXOffset, uiContainerBarY);
       scene.getModifierBar().setVisible(true);
       this.permaModifierBar.setVisible(false);
     } else {
@@ -2054,11 +2051,7 @@ export default class UI extends Phaser.GameObjects.Container {
       this.updatePermaModifierBar((this.scene as BattleScene).gameData.permaModifiers);
     }
 
-    if (this.permaBarVisible) {
-      const barXOffset = this.getBarXOffsetRightOfToggles(scene);
-      const barYPosition = topEdge + padding - 3;
-      this.permaModifierBar.setPosition(barXOffset, barYPosition);
-    }
+    this.layoutModifierBars(scene);
 
     this.permaMoneyText.setPosition(rightEdge - saveButtonWidth - voidexButtonWidth - eggGachaButtonWidth - runInfoButtonWidth - padding - permaMoneyTextXOffset, topEdge + permaMoneyTextYOffset);
     this.permaMoneyContainer.add(this.permaMoneyText);
