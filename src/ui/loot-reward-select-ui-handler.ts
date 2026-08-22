@@ -142,6 +142,8 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
   private static _smitomRankUpDebugShown = false;
   private static _smitomYuMoveDebugShown = false;
   private static _smitomAltBuildDebugShown = false;
+  private static _smitomMoveUpgradesDebugShown = false;
+  private static _smitomIntrashopDebugShown = false;
 
   protected shopStripContainer: Phaser.GameObjects.Container | null = null;
   protected shopStripBg: Phaser.GameObjects.Graphics | null = null;
@@ -861,6 +863,59 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
                 offerReplay: true,
                 onComplete: () => {
                   (this.scene as BattleScene).gameData.smitomTutorialFlags["alt_build"] = true;
+                  (this.scene as BattleScene).gameData.saveSystem();
+                  this.setCursor(this.cursor);
+                }
+              };
+              this.unfocusAllCardFrames();
+              if (this.cursorObj) this.cursorObj.setVisible(false);
+              (this.scene as BattleScene).ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
+            }
+          }
+          if (this.displayConfig?.isMoveUpgrades) {
+            const flags = (this.scene as BattleScene).gameData.smitomTutorialFlags;
+            if (DEBUG_FORCE_SMITOM_TUTORIAL && !LootRewardSelectUiHandler._smitomMoveUpgradesDebugShown) {
+              LootRewardSelectUiHandler._smitomMoveUpgradesDebugShown = true;
+              flags["move_upgrades"] = false;
+            }
+            if (!flags["move_upgrades"]) {
+              const tipConfig: SmitomTipConfig = {
+                tutorialKey: "move_upgrades",
+                title: i18next.t("tutorial:smitomTip.moveUpgrades.title"),
+                texts: [
+                  i18next.t("tutorial:smitomTip.moveUpgrades.1"),
+                  i18next.t("tutorial:smitomTip.moveUpgrades.2"),
+                  i18next.t("tutorial:smitomTip.moveUpgrades.3"),
+                ],
+                offerReplay: true,
+                onComplete: () => {
+                  (this.scene as BattleScene).gameData.smitomTutorialFlags["move_upgrades"] = true;
+                  (this.scene as BattleScene).gameData.saveSystem();
+                  this.setCursor(this.cursor);
+                }
+              };
+              this.unfocusAllCardFrames();
+              if (this.cursorObj) this.cursorObj.setVisible(false);
+              (this.scene as BattleScene).ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
+            }
+          }
+          if (this.displayConfig?.isIntrashop) {
+            const flags = (this.scene as BattleScene).gameData.smitomTutorialFlags;
+            if (DEBUG_FORCE_SMITOM_TUTORIAL && !LootRewardSelectUiHandler._smitomIntrashopDebugShown) {
+              LootRewardSelectUiHandler._smitomIntrashopDebugShown = true;
+              flags["intrashop"] = false;
+            }
+            if (!flags["intrashop"]) {
+              const tipConfig: SmitomTipConfig = {
+                tutorialKey: "intrashop",
+                title: i18next.t("tutorial:smitomTip.intrashop.title"),
+                texts: [
+                  i18next.t("tutorial:smitomTip.intrashop.1"),
+                  i18next.t("tutorial:smitomTip.intrashop.2"),
+                ],
+                offerReplay: true,
+                onComplete: () => {
+                  (this.scene as BattleScene).gameData.smitomTutorialFlags["intrashop"] = true;
                   (this.scene as BattleScene).gameData.saveSystem();
                   this.setCursor(this.cursor);
                 }
@@ -2946,6 +3001,59 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
               offerReplay: true,
               onComplete: () => {
                 (this.scene as BattleScene).gameData.smitomTutorialFlags["alt_build"] = true;
+                (this.scene as BattleScene).gameData.saveSystem();
+                this.setCursor(this.cursor);
+              }
+            };
+            this.unfocusAllCardFrames();
+            if (this.cursorObj) this.cursorObj.setVisible(false);
+            (this.scene as BattleScene).ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
+          }
+        }
+        if (this.displayConfig?.isMoveUpgrades) {
+          const flags = (this.scene as BattleScene).gameData.smitomTutorialFlags;
+          if (DEBUG_FORCE_SMITOM_TUTORIAL && !LootRewardSelectUiHandler._smitomMoveUpgradesDebugShown) {
+            LootRewardSelectUiHandler._smitomMoveUpgradesDebugShown = true;
+            flags["move_upgrades"] = false;
+          }
+          if (!flags["move_upgrades"]) {
+            const tipConfig: SmitomTipConfig = {
+              tutorialKey: "move_upgrades",
+              title: i18next.t("tutorial:smitomTip.moveUpgrades.title"),
+              texts: [
+                i18next.t("tutorial:smitomTip.moveUpgrades.1"),
+                i18next.t("tutorial:smitomTip.moveUpgrades.2"),
+                i18next.t("tutorial:smitomTip.moveUpgrades.3"),
+              ],
+              offerReplay: true,
+              onComplete: () => {
+                (this.scene as BattleScene).gameData.smitomTutorialFlags["move_upgrades"] = true;
+                (this.scene as BattleScene).gameData.saveSystem();
+                this.setCursor(this.cursor);
+              }
+            };
+            this.unfocusAllCardFrames();
+            if (this.cursorObj) this.cursorObj.setVisible(false);
+            (this.scene as BattleScene).ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
+          }
+        }
+        if (this.displayConfig?.isIntrashop) {
+          const flags = (this.scene as BattleScene).gameData.smitomTutorialFlags;
+          if (DEBUG_FORCE_SMITOM_TUTORIAL && !LootRewardSelectUiHandler._smitomIntrashopDebugShown) {
+            LootRewardSelectUiHandler._smitomIntrashopDebugShown = true;
+            flags["intrashop"] = false;
+          }
+          if (!flags["intrashop"]) {
+            const tipConfig: SmitomTipConfig = {
+              tutorialKey: "intrashop",
+              title: i18next.t("tutorial:smitomTip.intrashop.title"),
+              texts: [
+                i18next.t("tutorial:smitomTip.intrashop.1"),
+                i18next.t("tutorial:smitomTip.intrashop.2"),
+              ],
+              offerReplay: true,
+              onComplete: () => {
+                (this.scene as BattleScene).gameData.smitomTutorialFlags["intrashop"] = true;
                 (this.scene as BattleScene).gameData.saveSystem();
                 this.setCursor(this.cursor);
               }

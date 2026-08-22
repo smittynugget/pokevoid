@@ -135,9 +135,21 @@ export class Arena {
   }
 
   randomSpecies(waveIndex: integer, level: integer, attempt?: integer, luckValue?: integer): PokemonSpecies {
-    if (Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE && !this.scene.gameData?.tutorialOnboardActive) {
-      const eligible = getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, waveIndex);
-      return getPokemonSpecies(eligible[Utils.randSeedInt(eligible.length)]);
+    const debugDuelmonWild = this.scene.debugDuelmonWild;
+    if ((Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE || debugDuelmonWild) && !this.scene.gameData?.tutorialOnboardActive) {
+
+      const pool = debugDuelmonWild ? DUELMON_SPECIES : getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, waveIndex);
+      const shownEnemy = this.scene.debugGauntletShownEnemyDuelmons;
+      let effectivePool = pool;
+      if (debugDuelmonWild && shownEnemy) {
+        const unseen = pool.filter(s => !shownEnemy.has(s));
+        effectivePool = unseen.length > 0 ? unseen : pool;
+      }
+      const species = getPokemonSpecies(effectivePool[Utils.randSeedInt(effectivePool.length)]);
+      if (debugDuelmonWild && shownEnemy) {
+        shownEnemy.add(species.speciesId);
+      }
+      return species;
     }
     const overrideSpecies = this.scene.gameMode.getOverrideSpecies(this.scene);
     if (overrideSpecies) {

@@ -14,22 +14,12 @@ window.onerror = function (message, source, lineno, colno, error) {
   console.error('Global error:', error);
   const errorString = `Uncaught error: ${message}\nSource: ${source}\nLine: ${lineno}\nColumn: ${colno}\nStack: ${error?.stack}`;
   console.error(errorString);
-  return true;
 };
 
 window.addEventListener("unhandledrejection", (event) => {
   console.error('Unhandled promise rejection:', event.reason);
   const errorString = `Unhandled promise rejection: ${event.reason}\nStack: ${event.reason?.stack}`;
   console.error(errorString);
-  try {
-    const scene = game?.scene?.scenes?.find(
-      (s: Phaser.Scene): boolean => s.scene.key === 'battle'
-    ) as any;
-    if (scene?.currentBattle && scene.recoverFromPhaseFailure) {
-      console.warn('[RECOVERY] Attempting phase recovery from unhandled rejection');
-      scene.recoverFromPhaseFailure(scene.currentPhase, event.reason);
-    }
-  } catch {}
 });
 
 document.addEventListener('visibilitychange', (): void => {

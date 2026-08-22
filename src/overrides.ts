@@ -39,6 +39,8 @@ const overrides = {
   DEBUG_SMITTY_BATTLE_OVERRIDE: false,
   DEBUG_WAVE35_SMITOM_TIP_OVERRIDE: false,
   DEBUG_WAVE100_LEVEL1_OVERRIDE: false,
+  DEBUG_DUELMON_WILD_OVERRIDE: false,
+  DEBUG_FORM_EVOLUTION_OVERRIDE: false,
   OPP_LEVEL_OVERRIDE: 0,
   OPP_ONE_POKEMON: false,
   MOVESET_OVERRIDE: [],
@@ -66,11 +68,13 @@ class DefaultOverrides {
   readonly FORCE_RANDOM_RANK_UP_OVERRIDE: boolean = false;
   readonly RANDOM_RANK_UP_CHANCE_DENOMINATOR_OVERRIDE: number = 0;
   readonly SKILL_TREE_RANDOM_GLITCH_PREREQ_REQUIRED_COUNT_OVERRIDE: number = 0;
+  readonly SKILL_TREE_TOKEN_CHANCE_OVERRIDE: number | null = null;
   readonly BYPASS_RANDOM_RANK_UP_BAND_OVERRIDE: boolean = false;
   readonly FORCE_EVOLUTION_OVERRIDE: boolean = false;
   readonly FORCE_YU_MOVE_FLAG_OVERRIDE: boolean = false;
   readonly FORCE_YU_MOVE_CHECK_OVERRIDE: boolean = false;
   readonly FORCE_COLLECTOR_SHOP_OVERRIDE: boolean = false;
+  readonly COLLECTED_SHOP_WEIGHT_OVERRIDE: number | null = null;
   readonly POKEBALL_OVERRIDE: { active: boolean; pokeballs: PokeballCounts } = {
   active: false,
   pokeballs: {
@@ -164,6 +168,10 @@ class DefaultOverrides {
   readonly DEBUG_SMITTY_BATTLE_OVERRIDE: boolean = false;
   readonly DEBUG_WAVE35_SMITOM_TIP_OVERRIDE: boolean = false;
   readonly DEBUG_WAVE100_LEVEL1_OVERRIDE: boolean = false;
+
+  readonly DEBUG_DUELMON_WILD_OVERRIDE: boolean = false;
+
+  readonly DEBUG_FORM_EVOLUTION_OVERRIDE: boolean = false;
   readonly SKIP_TO_STARTER_SELECT_OVERRIDE: boolean = false;
 
   readonly DEBUG_LOCALE_CYCLE_OVERRIDE: boolean = false;

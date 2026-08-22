@@ -3330,6 +3330,9 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     return (this.isPlayer() ? this.scene.getPlayerField() : this.scene.getEnemyField())[this.getFieldIndex() ? 0 : 1];
   }
   getAlliedField(): Pokemon[] {
+    if (!this.scene) {
+      return [];
+    }
     return this instanceof PlayerPokemon ? this.scene.getPlayerField() : this.scene.getEnemyField();
   }
   getAccuracyMultiplier(target: Pokemon, sourceMove: Move): number {
@@ -4056,7 +4059,9 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
 
   changeForm(formChange: SpeciesFormChange): Promise<void> {
     return new Promise(resolve => {
-      this.formIndex = Math.max(this.species.forms.findIndex(f => f.formKey === formChange.formKey && (formChange.formKey == SpeciesFormKey.SMITTY ? f.formName === formChange.trigger.name : true)), 0);
+      if (formChange.formKey !== SpeciesFormKey.ALT_BUILD) {
+        this.formIndex = Math.max(this.species.forms.findIndex(f => f.formKey === formChange.formKey && (formChange.formKey == SpeciesFormKey.SMITTY ? f.formName === formChange.trigger.name : true)), 0);
+      }
       this.generateName();
       const abilityCount = this.getSpeciesForm().getAbilityCount();
       if (this.abilityIndex >= abilityCount) {
@@ -6154,7 +6159,9 @@ export class PlayerPokemon extends Pokemon {
   }
   changeForm(formChange: SpeciesFormChange): Promise<void> {
     return new Promise(resolve => {
-      this.formIndex = Math.max(this.species.forms.findIndex(f => f.formKey === formChange.formKey && (formChange.formKey == SpeciesFormKey.SMITTY ? f.formName === formChange.trigger.name : true)), 0);
+      if (formChange.formKey !== SpeciesFormKey.ALT_BUILD) {
+        this.formIndex = Math.max(this.species.forms.findIndex(f => f.formKey === formChange.formKey && (formChange.formKey == SpeciesFormKey.SMITTY ? f.formName === formChange.trigger.name : true)), 0);
+      }
       this.generateName();
       const abilityCount = this.getSpeciesForm().getAbilityCount();
       if (this.abilityIndex >= abilityCount) {

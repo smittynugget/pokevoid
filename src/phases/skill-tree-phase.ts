@@ -23,6 +23,7 @@ import { Species } from "#app/enums/species.js";
 import { ChampionSkillVersion, QuestUnlockables } from "#app/system/game-data.js";
 import Overrides from "#app/overrides";
 import { CommandPhase } from "#app/phases/command-phase";
+import { SkillTreeProgression } from "#app/system/skill-tree-progression";
 import { VoucherType } from "#app/system/voucher";
 
 export enum SkillTreeMode {
@@ -164,6 +165,8 @@ export class SkillTreePhase extends Phase {
       onCancel: () => this.handleCancel(),
       phaseOnComplete: this.config.onComplete,
       shouldPlayPurchaseAnimation: this.config.shouldPlayPurchaseAnimation,
+    }).then(() => {
+      new SkillTreeProgression(this.scene).consumeTokens();
     });
   }
 
@@ -432,6 +435,8 @@ export class SkillTreePhase extends Phase {
               return !!championData?.unlockedVoidBall;
             case SkillTreeRewardType.SMITTY_ABILITY:
               return (championData?.unlockedSmittyAbilities?.length ?? 0) > 0;
+            case SkillTreeRewardType.SKILL_TREE_TOKENS:
+              return false;
             default:
               return true;
           }
@@ -684,6 +689,8 @@ export class SkillTreePhase extends Phase {
             return !!championData?.unlockedVoidBall;
           case SkillTreeRewardType.SMITTY_ABILITY:
             return (championData?.unlockedSmittyAbilities?.length ?? 0) > 0;
+          case SkillTreeRewardType.SKILL_TREE_TOKENS:
+            return false;
           default:
             return true;
         }

@@ -24,7 +24,9 @@ import { ModifierTier } from "./modifier/modifier-tier";
 import { DUELMON_SPECIES } from "./data/duelmon-rankups";
 import { Gender } from "./data/gender";
 import i18next from "i18next";
-import { getPokemonSpecies } from "./data/pokemon-species";
+import { getPokemonSpecies, allSpecies, isGlitchFormKey, isSmittyFormKey } from "./data/pokemon-species";
+import type { Variant } from "./data/variant";
+import { pokemonFormChanges, applyUniversalSmittyForm, SmittyFormTrigger, SpeciesFormChange } from "./data/pokemon-forms";
 import { Species } from "#enums/species";
 import Battle, { BattleType, FixedBattleConfig, createSmittyBattle } from "./battle";
 import ChampionSelectUiHandler from "./ui/champion-select-ui-handler";
@@ -48,9 +50,9 @@ import { Biome } from "#enums/biome";
 import { EncounterPhase } from "./phases/encounter-phase";
 import { ShinyPowerPhase } from "./phases/shiny-power-phase";
 import { RankUpPhase } from "./phases/rank-up-phase";
-import type { PlayerPokemon } from "./field/pokemon";
+import type { PlayerPokemon, default as Pokemon } from "./field/pokemon";
 import { YuMovePhase } from "./phases/yu-move-phase";
-import { isDuelmonSpecies } from "./data/duelmon-rankups";
+import { isDuelmonSpecies, getDuelmonRankUpDefinition } from "./data/duelmon-rankups";
 import { pickThreeYuMovesWithFallback } from "./data/yu-move-utils";
 import { addCorruptedRivalOverlay, playCutsceneFaintAnim } from "./utils/story-cutscene-overlays";
 import { runPowerUnlockOverlays } from "./utils/story-cutscene-power-overlays";
@@ -188,7 +190,8 @@ export class UiInputs {
     }
 
     if (Overrides.MODIFIER_SELECT_DEBUG_OVERRIDE) {
-      this.scene.input.keyboard?.on("keydown-J", () => {
+      this.scene.input.keyboard?.on("keydown-J", (event: KeyboardEvent) => {
+        if (event.repeat) return;
         if (this.scene.ui?.getMode() === Mode.TITLE) {
           this.launchRankUpLootDebug();
         }
@@ -245,6 +248,32 @@ export class UiInputs {
         if (this.scene.ui?.getMode() === Mode.TITLE) {
           this.launchWave100Level1Debug();
         }
+      });
+    }
+
+    if (Overrides.DEBUG_DUELMON_WILD_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-TWO", (event: KeyboardEvent) => {
+        if (event.repeat || this.isTypingInDomField()) return;
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchDuelmonWildGauntletDebug();
+        }
+      });
+    }
+
+    if (Overrides.DEBUG_FORM_EVOLUTION_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-THREE", (event: KeyboardEvent) => {
+        if (event.repeat || this.isTypingInDomField()) return;
+
+        if (this.formEvoDebugChaining) {
+          this.stopFormEvoDebugChain();
+          return;
+        }
+
+        if (this.formEvoDebugBusy) return;
+        if (this.scene.ui?.getMode() !== Mode.TITLE) return;
+        this.formEvoDebugChaining = true;
+        this.startFormEvoDebugChain();
+        this.launchRandomFormEvolutionDebug();
       });
     }
 
@@ -1014,7 +1043,10 @@ export class UiInputs {
     scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE);
 
     const party = scene.getParty();
-    if (party.length === 0) {
+    const isRankUpCapable = (p: PlayerPokemon) =>
+      isDuelmonSpecies(p.species.speciesId) && !!getDuelmonRankUpDefinition(p.species.speciesId);
+    if (!party.some(p => isRankUpCapable(p as PlayerPokemon))) {
+      while (party.length > 0) party.pop()?.destroy();
       const pool = [...DUELMON_SPECIES];
       for (let i = pool.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -1041,7 +1073,7 @@ export class UiInputs {
     scene.updateMoneyText();
     scene.modifierTooltipsEnabled = true;
 
-    const pokemon = party[0] as PlayerPokemon;
+    const pokemon = (party.find(p => isRankUpCapable(p as PlayerPokemon)) ?? party[0]) as PlayerPokemon;
 
     const testRank = Math.floor(Math.random() * 10) + 1;
     pokemon.rankUpCount = testRank - 1;
@@ -1054,7 +1086,7 @@ export class UiInputs {
       scene.unshiftPhase(new RankUpPhase(scene, pokemon, pokemon.level - 1));
       scene.pushPhase(new TitlePhase(scene));
       scene.shiftPhase();
-    });
+    }).catch(err => console.error("[DEBUG] rank-up loot launcher failed", err));
   }
 
   private getAbilityInfoForForm(form: any, abilityIndex: number): { name: string; description: string } {
@@ -1409,6 +1441,233 @@ export class UiInputs {
       scene.shiftPhase();
     });
   }
+  private formEvoDebugBusy: boolean = false;
+
+  private formEvoDebugChaining: boolean = false;
+  private formEvoDebugChainTimer: Phaser.Time.TimerEvent | null = null;
+
+  private isTypingInDomField(): boolean {
+    const el = document.activeElement as HTMLElement | null;
+    const tag = el?.tagName;
+    return tag === "INPUT" || tag === "TEXTAREA" || !!(el as any)?.isContentEditable;
+  }
+  private launchDuelmonWildGauntletDebug(): void {
+    const scene = this.scene;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+    scene.ui.fadeIn(250);
+    scene.debugDuelmonWild = true;
+    scene.debugGauntletShownPlayerDuelmons = new Set();
+    scene.debugGauntletShownEnemyDuelmons = new Set();
+
+    scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE_FTL);
+    scene.sessionSlotId = -1;
+    scene.skillTreeEnabledForRun = false;
+    scene.moveUpgradesEnabledForRun = false;
+
+    if (scene.gameData.gender === PlayerGender.UNSET) {
+      scene.gameData.gender = PlayerGender.MALE;
+    }
+    if (typeof scene.resetRunEndSummaryRunData === "function") {
+      scene.resetRunEndSummaryRunData();
+    }
+
+    const party = scene.getParty() as any[];
+    while (party.length > 0) party.pop()?.destroy();
+
+    scene.currentBattle = null as any;
+    scene.setSeed(randomString(24));
+    scene.resetSeed();
+    scene.newArena(Biome.END);
+    scene.arena.init();
+    scene.money = 50000;
+
+    scene.newBattle(1, BattleType.WILD);
+    scene.currentBattle!.started = false;
+    scene.currentBattle!.enemyLevels = [250];
+
+    const playerLevel = 250;
+    for (let i = 0; i < 6; i++) {
+      const species = scene.randomSpecies(1, playerLevel);
+      const pokemon = scene.addPlayerPokemon(species, playerLevel);
+      pokemon.setVisible(false);
+      party.push(pokemon);
+      scene.debugGauntletShownPlayerDuelmons!.add(species.speciesId);
+    }
+
+    Promise.all(party.map(p => p.loadAssets())).then(() => {
+      scene.unshiftPhase(new EncounterPhase(scene, false));
+      scene.shiftPhase();
+    }).catch(err => console.error("[DEBUG] duelmon wild gauntlet launcher failed", err));
+  }
+  private getForbiddenFormCapableSpecies(): Species[] {
+    return Object.keys(pokemonFormChanges)
+      .map(k => parseInt(k, 10) as Species)
+      .filter(id => !isNaN(id) && id !== Species.NONE)
+      .filter(id => {
+        const species = getPokemonSpecies(id);
+        if (!species?.forms?.length) return false;
+        return (pokemonFormChanges[id] ?? []).some(fc =>
+          (isGlitchFormKey(fc.formKey) || isSmittyFormKey(fc.formKey))
+          && species.forms.some(f => f.formKey === fc.formKey));
+      });
+  }
+  private getForbiddenFormChangesFor(pokemon: Pokemon): SpeciesFormChange[] {
+    const currentKey = pokemon.getFormKey?.() ?? "";
+    const own = (pokemonFormChanges[pokemon.species.speciesId] ?? [])
+      .filter(fc => isGlitchFormKey(fc.formKey) || isSmittyFormKey(fc.formKey))
+      .filter(fc => fc.formKey !== currentKey)
+      .filter(fc => pokemon.species.forms.some(f => f.formKey === fc.formKey));
+
+    return [...new Map(own.map(fc => [fc.formKey, fc])).values()];
+  }
+  private startFormEvoDebugChain(): void {
+    this.stopFormEvoDebugChainTimer();
+    this.formEvoDebugChainTimer = this.scene.time.addEvent({
+      delay: 500,
+      loop: true,
+      callback: () => {
+        if (!this.formEvoDebugChaining) {
+          this.stopFormEvoDebugChainTimer();
+          return;
+        }
+        if (this.formEvoDebugBusy) return;
+        if (this.scene.ui?.getMode() !== Mode.TITLE) return;
+        this.launchRandomFormEvolutionDebug();
+      },
+    });
+  }
+
+  private stopFormEvoDebugChainTimer(): void {
+    if (this.formEvoDebugChainTimer) {
+      this.formEvoDebugChainTimer.remove();
+      this.formEvoDebugChainTimer = null;
+    }
+  }
+
+  private stopFormEvoDebugChain(): void {
+    this.formEvoDebugChaining = false;
+    this.stopFormEvoDebugChainTimer();
+    console.log("[DEBUG] form evolution chain stopped");
+  }
+  private launchRandomFormEvolutionDebug(): void {
+    const scene = this.scene;
+    const party = scene.getParty();
+
+    this.formEvoDebugBusy = true;
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+    scene.setSeed(randomString(24));
+    scene.resetSeed();
+    scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE);
+    if (!scene.currentBattle) {
+      scene.currentBattle = new Battle(scene.gameMode, 25, BattleType.WILD, undefined, false, scene);
+    }
+
+    while (party.length > 0) party.pop()?.destroy();
+
+    const pool = this.getForbiddenFormCapableSpecies();
+    if (!pool.length) {
+      console.error("[DEBUG] no species with a usable glitch/smitty form");
+      this.formEvoDebugBusy = false;
+      this.stopFormEvoDebugChain();
+      return;
+    }
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    for (let i = 0; i < Math.min(6, pool.length); i++) {
+      const pokemon = scene.addPlayerPokemon(getPokemonSpecies(pool[i]), 50);
+      if (pokemon.isFusion()) {
+        pokemon.clearFusionSpecies();
+      }
+      pokemon.setVisible(false);
+      party.push(pokemon);
+    }
+
+    Promise.all(party.map(p => p.loadAssets()))
+      .then(() => this.triggerRandomForbiddenFormDebug())
+      .catch(err => {
+        console.error("[DEBUG] form evolution launcher failed", err);
+        this.formEvoDebugBusy = false;
+        this.stopFormEvoDebugChain();
+      });
+  }
+  private triggerRandomForbiddenFormDebug(allowUniversal: boolean = true): void {
+    const scene = this.scene;
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+    const candidates = scene.getParty().filter(p => this.getForbiddenFormChangesFor(p).length > 0);
+    if (!candidates.length) {
+      console.error("[DEBUG] no party member has an unused glitch/smitty form");
+      this.formEvoDebugBusy = false;
+      this.stopFormEvoDebugChain();
+      return;
+    }
+    const pokemon = candidates[Math.floor(Math.random() * candidates.length)];
+    const uniqueOwn = this.getForbiddenFormChangesFor(pokemon);
+    const universal = pokemonFormChanges[Species.NONE] ?? [];
+
+    scene.ui.setMode(Mode.MESSAGE);
+    if (allowUniversal && universal.length && Math.random() < 0.3) {
+      const formChange = universal[Math.floor(Math.random() * universal.length)];
+      const trigger = formChange.findTrigger(SmittyFormTrigger) as SmittyFormTrigger;
+      if (trigger) {
+        this.applyUniversalSmittyDebug(formChange, trigger);
+        return;
+      }
+    }
+
+    scene.triggerPokemonFormChange(pokemon, uniqueOwn[Math.floor(Math.random() * uniqueOwn.length)], false, false);
+    scene.pushPhase(new TitlePhase(scene));
+    scene.shiftPhase();
+    this.formEvoDebugBusy = false;
+  }
+  private applyUniversalSmittyDebug(formChange: SpeciesFormChange, trigger: SmittyFormTrigger): void {
+    const scene = this.scene;
+    const party = scene.getParty();
+    const stale = party.find(p => p.species.speciesId === Species.PIKACHU) as PlayerPokemon | undefined;
+    if (stale) {
+      party.splice(party.indexOf(stale), 1);
+      stale.destroy();
+    }
+    if (party.length >= 6) {
+      party.pop()?.destroy();
+    }
+    const base = scene.addPlayerPokemon(getPokemonSpecies(Species.PIKACHU), 50);
+    if (base.isFusion()) {
+      base.clearFusionSpecies();
+    }
+    base.setVisible(false);
+    party.unshift(base);
+    base.loadAssets().then(() => {
+      applyUniversalSmittyForm(trigger.name, base);
+      base.generateName();
+      return base.loadAssets();
+    }).then(() => {
+      const grafted = base.species.forms[base.species.forms.length - 1];
+      const spriteKey = `pkmn__${grafted.getSpriteId(false, undefined, false, 0)}`;
+      if (!scene.textures.exists(spriteKey) || scene.textures.get(spriteKey).key === "__MISSING") {
+        console.warn(`[DEBUG] universal smitty sprite missing for ${trigger.name} (${spriteKey}); falling back to an own-species form`);
+        this.triggerRandomForbiddenFormDebug(false);
+        return;
+      }
+
+      scene.triggerPokemonFormChange(base, formChange, false, false);
+      scene.pushPhase(new TitlePhase(scene));
+      scene.shiftPhase();
+      this.formEvoDebugBusy = false;
+    }).catch(err => {
+      console.error("[DEBUG] universal smitty debug failed", err);
+      this.formEvoDebugBusy = false;
+      this.stopFormEvoDebugChain();
+    });
+  }
 
   private launchShinyPowerDebug(): void {
     const scene = this.scene;
@@ -1422,6 +1681,8 @@ export class UiInputs {
     scene.resetSeed();
     scene.money = 999999;
 
+    scene.disableShinyPower = false;
+
     const party = scene.getParty();
     while (party.length > 0) party.pop()?.destroy();
 
@@ -1430,23 +1691,26 @@ export class UiInputs {
         scene.gameMode, 25, BattleType.WILD, undefined, false, scene
       );
     }
+    const shinyPool = allSpecies.filter(s => s.isCatchable() && s.generation !== 20);
+    for (let i = 0; i < 6 && shinyPool.length; i++) {
+      const species = shinyPool[Math.floor(Math.random() * shinyPool.length)];
+      const pokemon = scene.addPlayerPokemon(
+        species, 50, undefined, undefined, undefined,
+        true, Math.floor(Math.random() * 3) as Variant
+      );
 
-    const squirtle = scene.addPlayerPokemon(
-      getPokemonSpecies(Species.SQUIRTLE),
-      50,
-      undefined,
-      undefined,
-      undefined,
-      true,
-      0
-    );
-    squirtle.setVisible(false);
-    squirtle.initShinySparkle();
-    party.push(squirtle);
-
-    scene.ui.setMode(Mode.MESSAGE);
-    scene.unshiftPhase(new ShinyPowerPhase(scene));
-    scene.shiftPhase();
+      if (pokemon.isFusion()) {
+        pokemon.clearFusionSpecies();
+      }
+      pokemon.setVisible(false);
+      party.push(pokemon);
+    }
+    Promise.all(party.map(p => p.loadAssets())).then(() => {
+      scene.ui.setMode(Mode.MESSAGE);
+      scene.unshiftPhase(new ShinyPowerPhase(scene, true));
+      scene.pushPhase(new TitlePhase(scene));
+      scene.shiftPhase();
+    }).catch(err => console.error("[DEBUG] shiny power launcher failed", err));
   }
 
   private launchYuMoveDebug(): void {

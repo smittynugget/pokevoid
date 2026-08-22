@@ -10,7 +10,7 @@ import { PlayerPartyMemberPokemonPhase } from "./player-party-member-pokemon-pha
 import { LearnMovePhase } from "./learn-move-phase";
 import {PermaType} from "#app/modifier/perma-modifiers";
 import {Moves} from "#enums/moves";
-import { getYuMoveRange, pickThreeYuMovesWithFallback } from "#app/data/yu-move-utils.js";
+import { pickThreeYuMovesWithFallback } from "#app/data/yu-move-utils.js";
 import { YuMovePhase } from "#app/phases/yu-move-phase.js";
 import { BattleStat } from "#app/data/battle-stat.ts";
 import { Unlockables } from "#app/system/unlockables";
@@ -119,22 +119,22 @@ export class LevelUpPhase extends PlayerPartyMemberPokemonPhase {
     }
 
     if (!queuedDuelmonRankUp && !queuedRandomRankUp && isDuelmonSpecies(speciesId)) {
-      const yuRange = getYuMoveRange(this.scene);
-      if (yuRange >= 0 && pokemon.yuMoveRangePending === yuRange && pokemon.yuMoveRangeUsed !== yuRange) {
+      const pendingRange = pokemon.yuMoveRangePending;
+      if (pendingRange !== null && pendingRange >= 0 && pokemon.yuMoveRangeUsed !== pendingRange) {
         let yuCheckPassed = false;
         if (Overrides.FORCE_YU_MOVE_CHECK_OVERRIDE) {
           yuCheckPassed = true;
         } else {
           this.scene.executeWithSeedOffset(() => {
             yuCheckPassed = Utils.randSeedInt(100) < 10;
-          }, ((pokemon.id << 10) ^ (yuRange << 4) ^ (this.level << 1)) as integer, this.scene.waveSeed);
+          }, ((pokemon.id << 10) ^ (pendingRange << 4) ^ (this.level << 1)) as integer, this.scene.waveSeed);
         }
 
         if (yuCheckPassed) {
           const choices = pickThreeYuMovesWithFallback(this.scene, pokemon as PlayerPokemon);
           if (choices.length >= 1) {
             this.scene.unshiftPhase(new YuMovePhase(this.scene, pokemon as PlayerPokemon, choices, () => {
-              pokemon.yuMoveRangeUsed = yuRange;
+              pokemon.yuMoveRangeUsed = pendingRange;
               pokemon.yuMoveRangePending = null;
             }));
           } else {

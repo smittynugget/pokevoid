@@ -9,6 +9,7 @@ import i18next from "i18next";
 import { EggTier } from "#enums/egg-type";
 import { Species } from "#enums/species";
 import { EggSourceType } from "#app/enums/egg-source-types.js";
+import { shouldRejectDuelmonSpecies } from "./duelmon-spawn-utils";
 
 export const EGG_SEED = 1073741824;
 const DEFAULT_SHINY_RATE = 128;
@@ -334,14 +335,20 @@ export class Egg {
 
     let species: Species;
 
-    const rand = Utils.randSeedInt(totalWeight);
-    for (let s = 0; s < speciesWeights.length; s++) {
-      if (rand < speciesWeights[s]) {
-        species = speciesPool[s];
+    for (let attempt = 0; attempt < 10; attempt++) {
+      const rand = Utils.randSeedInt(totalWeight);
+      let picked: Species | undefined;
+      for (let s = 0; s < speciesWeights.length; s++) {
+        if (rand < speciesWeights[s]) {
+          picked = speciesPool[s];
+          break;
+        }
+      }
+      species = picked!;
+      if (getPokemonSpecies(species).generation !== 20 || !shouldRejectDuelmonSpecies(scene)) {
         break;
       }
     }
-    species = species!;
 
     if (!!scene.gameData.dexData[species].caughtAttr || scene.gameData.eggs.some(e => e.species === species)) {
       scene.gameData.unlockPity[this.tier] = Math.min(scene.gameData.unlockPity[this.tier] + 1, 10);

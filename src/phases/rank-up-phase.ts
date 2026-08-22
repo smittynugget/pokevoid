@@ -7,7 +7,7 @@ import type { RankUpUiConfig } from "#app/ui/rank-up-ui-handler";
 import * as Utils from "#app/utils.js";
 import { allAbilities } from "#app/data/ability";
 import { calculateStatsToTargetBstWithSwapping } from "#app/data/alt-build-stat-calculator";
-import { DUELMON_SPECIES, getDuelmonRankUpDefinition, getEligibleDuelmonRankUpOtherPool, isDuelmonSpecies, ensureDuelmonBandRolled } from "#app/data/duelmon-rankups";
+import { getDuelmonRankUpDefinition, isDuelmonSpecies, ensureDuelmonBandRolled, pickTwoOtherDuelmonCandidatesByTagOverlap } from "#app/data/duelmon-rankups";
 import { Gender } from "#app/data/gender";
 import { getPokemonSpecies, getPokemonSpeciesForm, PokemonSpeciesForm } from "#app/data/pokemon-species";
 import { getStatName, Stat } from "#app/data/pokemon-stat";
@@ -44,12 +44,12 @@ export class RankUpPhase extends Phase {
       return;
     }
 
-    const otherSpeciesId = this.pickOtherDuelmonCandidate(currentSpeciesId);
+    const otherSpeciesIds = this.pickTwoOtherDuelmonCandidates(currentSpeciesId);
 
     const currentForm = this.pokemon.getSpeciesForm();
     const currentBaseStats = [...currentForm.baseStats];
     const currentBst = currentBaseStats.reduce((sum, s) => sum + s, 0);
-    const deltaBst = this.clampInt(75, 50, 100);
+    const deltaBst = this.clampInt(50, 50, 100);
 
     const selfFocus = this.getDefaultRankUpFocusStats(currentBaseStats);
     const selfTargetBst = currentBst + deltaBst;
@@ -58,15 +58,20 @@ export class RankUpPhase extends Phase {
     const selfDeltaStats = selfAfterBaseStats.map((v, i) => v - currentBaseStats[i]);
     const selfDeltaTotal = selfAfterBst - currentBst;
 
-    const otherForm = getPokemonSpeciesForm(otherSpeciesId, 0);
-    const otherBaseStats = [...otherForm.baseStats];
-    const otherBst = otherBaseStats.reduce((sum, s) => sum + s, 0);
-    const otherTargetBst = otherBst + deltaBst;
-    const otherFocus = this.getDefaultRankUpFocusStats(otherBaseStats);
-    const otherAfterBaseStats = calculateStatsToTargetBstWithSwapping(otherBaseStats, otherFocus, otherTargetBst);
-    const otherAfterBst = otherAfterBaseStats.reduce((sum, s) => sum + s, 0);
-    const otherDeltaStats = otherAfterBaseStats.map((v, i) => v - otherBaseStats[i]);
-    const otherDeltaTotal = otherAfterBst - otherBst;
+    const otherPlans = otherSpeciesIds.map(sid => {
+      const otherForm = getPokemonSpeciesForm(sid, 0);
+      const otherBaseStats = [...otherForm.baseStats];
+      const otherBst = otherBaseStats.reduce((sum, s) => sum + s, 0);
+      const otherTargetBst = otherBst + deltaBst;
+      const otherFocus = this.getDefaultRankUpFocusStats(otherBaseStats);
+      const otherAfterBaseStats = calculateStatsToTargetBstWithSwapping(otherBaseStats, otherFocus, otherTargetBst);
+      const otherAfterBst = otherAfterBaseStats.reduce((sum, s) => sum + s, 0);
+      return {
+        deltaStats: otherAfterBaseStats.map((v, i) => v - otherBaseStats[i]),
+        deltaTotal: otherAfterBst - otherBst,
+        afterBaseStats: otherAfterBaseStats,
+      };
+    });
 
     const config: RankUpUiConfig = {
       center: {
@@ -75,12 +80,19 @@ export class RankUpPhase extends Phase {
       },
       options: [
         this.buildSelfOptionModel(currentForm, selfDeltaStats, selfDeltaTotal),
-        this.buildOtherOptionModel(otherSpeciesId, otherDeltaStats, otherDeltaTotal),
+        this.buildOtherOptionModel(otherSpeciesIds[0], otherPlans[0].deltaStats, otherPlans[0].deltaTotal),
+        this.buildOtherOptionModel(otherSpeciesIds[1], otherPlans[1].deltaStats, otherPlans[1].deltaTotal),
       ],
       onSelect: async (choiceIdx: integer) => {
-        const idx = (choiceIdx === 1 ? 1 : 0) as 0 | 1;
+        const idx = Math.max(0, Math.min(2, Math.floor(choiceIdx))) as 0 | 1 | 2;
+        const otherIdx = idx === 0 ? null : idx - 1;
         await this.scene.ui.setMode(Mode.MESSAGE);
-        await this.applyChoice(idx, otherSpeciesId, selfAfterBaseStats, otherAfterBaseStats);
+        await this.applyChoice(
+          idx,
+          otherIdx !== null ? otherSpeciesIds[otherIdx] : this.pokemon.species.speciesId,
+          selfAfterBaseStats,
+          otherIdx !== null ? otherPlans[otherIdx].afterBaseStats : selfAfterBaseStats
+        );
         this.end();
       },
     };
@@ -114,63 +126,11 @@ export class RankUpPhase extends Phase {
     return Math.max(min, Math.min(max, Math.floor(value))) as integer;
   }
 
-  private pickOtherDuelmonCandidate(currentSpeciesId: Species): Species {
-    const pool = getEligibleDuelmonRankUpOtherPool(currentSpeciesId, this.pokemon.rankUpHistorySpeciesIds);
-    const fallbackPool = DUELMON_SPECIES.filter(sid => sid !== currentSpeciesId);
-
-    let picked: Species = (pool[0] ?? fallbackPool[0] ?? currentSpeciesId) as Species;
-
+  private pickTwoOtherDuelmonCandidates(currentSpeciesId: Species): [Species, Species] {
+    let picked: [Species, Species] = [currentSpeciesId, currentSpeciesId];
     this.scene.executeWithSeedOffset(() => {
-      const candidates = (pool.length ? pool : fallbackPool).slice();
-      if (!candidates.length) {
-        picked = currentSpeciesId;
-        return;
-      }
-
-      const def = getDuelmonRankUpDefinition(currentSpeciesId);
-      const tagsSelf = def?.tagsSelf ?? [];
-      const tagsBias = def?.tagsEvoBias ?? [];
-
-      const subsetSize = Math.min(tagsSelf.length, 3 + Utils.randSeedInt(4));
-      const tagsSelfPool = tagsSelf.slice();
-      const rolledTags: string[] = [];
-      while (rolledTags.length < subsetSize && tagsSelfPool.length) {
-        const idx = Utils.randSeedInt(tagsSelfPool.length);
-        rolledTags.push(tagsSelfPool.splice(idx, 1)[0]);
-      }
-
-      const biasCount = Math.min(tagsBias.length, Utils.randSeedInt(3));
-      for (let i = 0; i < biasCount; i++) {
-        const idx = Utils.randSeedInt(tagsBias.length);
-        rolledTags.push(tagsBias[idx]);
-      }
-
-      const rolledSet = new Set<string>(rolledTags);
-
-      let bestScore = -1;
-      let best: Species[] = [];
-      for (const sid of candidates) {
-        const cdef = getDuelmonRankUpDefinition(sid);
-        if (!cdef) continue;
-        let score = 0;
-        for (const t of cdef.tagsSelf) {
-          if (rolledSet.has(t)) score++;
-        }
-        if (score > bestScore) {
-          bestScore = score;
-          best = [sid];
-        } else if (score === bestScore) {
-          best.push(sid);
-        }
-      }
-
-      if (!best.length) {
-        picked = candidates[Utils.randSeedInt(candidates.length)] as Species;
-        return;
-      }
-      picked = best[Utils.randSeedInt(best.length)] as Species;
+      picked = pickTwoOtherDuelmonCandidatesByTagOverlap(currentSpeciesId, Utils.randSeedInt, this.pokemon.rankUpHistorySpeciesIds);
     }, ((this.pokemon.id << 8) ^ (this.pokemon.level << 1) ^ this.lastLevel) as integer, this.scene.waveSeed);
-
     return picked;
   }
 
@@ -330,7 +290,7 @@ export class RankUpPhase extends Phase {
   }
 
   private async applyChoice(
-    choiceIdx: 0 | 1,
+    choiceIdx: 0 | 1 | 2,
     otherSpeciesId: Species,
     selfAfterBaseStats: integer[],
     otherAfterBaseStats: integer[]
@@ -341,7 +301,7 @@ export class RankUpPhase extends Phase {
         this.pokemon.duelmonBandsConsumed++;
         this.pokemon.duelmonLastTriggerLevel = this.pokemon.level;
       }
-      if (choiceIdx === 1 && otherSpeciesId && otherSpeciesId !== this.pokemon.species.speciesId) {
+      if (choiceIdx !== 0 && otherSpeciesId && otherSpeciesId !== this.pokemon.species.speciesId) {
         this.scene.unshiftPhase(new RankUpTransformPhase(
           this.scene,
           this.pokemon,

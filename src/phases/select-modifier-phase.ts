@@ -37,7 +37,6 @@ import {PermaType} from "#app/modifier/perma-modifiers";
 import {SelectPermaModifierPhase} from "#app/phases/select-perma-modifier-phase";
 import { EnhancedTutorial } from "#app/ui/tutorial-registry.js";
 import { EggLapsePhase } from "./egg-lapse-phase";
-import { SmitomTutorialPhase } from "#app/phases/smitom-tutorial-phase.js";
 import { SkillTreeNode, SkillTreeRewardType } from "#app/system/skill-tree-data";
 import { PlayableChampionData } from "#app/system/playable-champions";
 import { SkillTreeModifierPhase } from "./skill-tree-modifier-phase";
@@ -542,6 +541,27 @@ export class SelectModifierPhase extends BattlePhase {
             }
             return;
         }
+        let isMoveUpgrades = false;
+        let isIntrashop = false;
+        if (!this.draftOnly) {
+            const preTutorialSet = new Set<EnhancedTutorial>([EnhancedTutorial.GLITCH_ITEMS_1]);
+            for (const option of typeOptions) {
+                if (option.type?.constructor?.name === 'AnyPassiveAbilityModifierType') {
+                    preTutorialSet.add(EnhancedTutorial.PASSIVE_ABILITIES_1);
+                }
+            }
+            if (this.scene.gameData.tutorialService.allTutorialsCompleted(Array.from(preTutorialSet))) {
+                const flags = this.scene.gameData.smitomTutorialFlags;
+                if (typeOptions.some(o => o.type?.constructor?.name === 'MoveUpgradeModifierType') && !flags["move_upgrades"]) {
+                    isMoveUpgrades = true;
+                } else if (Utils.randSeedInt(100, 1) <= 1 && !flags["intrashop"]) {
+                    isIntrashop = true;
+                }
+            }
+        }
+        if (isMoveUpgrades || isIntrashop) {
+            this.uiDisplayConfig = { ...(this.uiDisplayConfig || {}), isMoveUpgrades, isIntrashop };
+        }
         if (this.uiDisplayConfig) {
             this.scene.ui.setMode(this.getUIMode(), this.isPlayer(), typeOptions, modifierSelectCallback, costs, this.draftOnly, this.uiDisplayConfig);
         } else {
@@ -581,32 +601,8 @@ export class SelectModifierPhase extends BattlePhase {
             introTutorials = Array.from(tutorialSet);
             if(!this.scene.gameData.tutorialService.allTutorialsCompleted(introTutorials)) {
                 this.scene.gameData.tutorialService.showCombinedTutorial("", introTutorials, true, false, true);
-          }
-          else if(typeOptions.some(o => o.type?.constructor?.name === 'MoveUpgradeModifierType')) {
-            const flags = this.scene.gameData.smitomTutorialFlags;
-            if (!flags["move_upgrades"]) {
-              this.scene.unshiftPhase(new SmitomTutorialPhase(
-                this.scene,
-                "move_upgrades",
-                i18next.t("tutorial:smitomTip.moveUpgrades.title"),
-                [i18next.t("tutorial:smitomTip.moveUpgrades.1"), i18next.t("tutorial:smitomTip.moveUpgrades.2"), i18next.t("tutorial:smitomTip.moveUpgrades.3")],
-                true
-              ));
-            }
-          }
-          else if(Utils.randSeedInt(100, 1) <= 1) {
-            const flags = this.scene.gameData.smitomTutorialFlags;
-            if (!flags["intrashop"]) {
-              this.scene.unshiftPhase(new SmitomTutorialPhase(
-                this.scene,
-                "intrashop",
-                i18next.t("tutorial:smitomTip.intrashop.title"),
-                [i18next.t("tutorial:smitomTip.intrashop.1"), i18next.t("tutorial:smitomTip.intrashop.2")],
-                true
-              ));
             }
         }
-          }
     }
 
     updateSeed(): void {

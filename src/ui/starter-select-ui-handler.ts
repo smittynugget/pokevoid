@@ -3469,13 +3469,9 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         this.filterInstructionsContainer.removeAll();
         let gamepadType;
         if (this.scene.inputMethod === "gamepad") {
-            gamepadType = this.scene.inputController.getConfig(this.scene.inputController.selectedDevice[Device.GAMEPAD]).padType;
+            gamepadType = this.scene.inputController.getConfig(this.scene.inputController.selectedDevice[Device.GAMEPAD])?.padType || "keyboard";
         } else {
-            gamepadType = this.scene.inputMethod;
-        }
-
-        if (!gamepadType) {
-            return;
+            gamepadType = this.scene.inputMethod || "keyboard";
         }
 
         if (this.speciesStarterDexEntry?.caughtAttr) {
@@ -4688,6 +4684,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
             speciesForDetails = this.pokemon && this.pokemon.isFusion() ? this.pokemon.fusionSpecies! : this.lastSpecies!;
 
             if (dexEntry.caughtAttr || isEggStarterMode) {
+                this.pokemonMovesContainer.setVisible(true);
                 const ability = speciesForDetails.getAbility(abilityIndex!);
                 this.pokemonAbilityText.setText(allAbilities[ability].name);
 
@@ -4809,7 +4806,6 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
                 }
 
                 if (isEggStarterMode) {
-                    this.pokemonMovesContainer.setVisible(true);
                     this.pokemonCaughtHatchedContainer.setVisible(false);
                     this.pokemonUncaughtText.setVisible(false);
                     this.pokemonAbilityLabelText.setVisible(true);

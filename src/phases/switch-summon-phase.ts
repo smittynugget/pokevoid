@@ -27,6 +27,7 @@ export class SwitchSummonPhase extends SummonPhase {
   private releaseSwitchedOut: boolean;
   private preSwitchOutAbilityApplied: boolean = false;
   private preSwitchOutSummonSnapshot: any = null;
+  private switchAborted: boolean = false;
 
   private lastPokemon: Pokemon;
   constructor(scene: BattleScene, fieldIndex: integer, slotIndex: integer, doReturn: boolean, batonPass: boolean, player?: boolean, releaseSwitchedOut: boolean = false, preSwitchOutAlreadyApplied: boolean = false) {
@@ -40,6 +41,14 @@ export class SwitchSummonPhase extends SummonPhase {
   }
 
   start(): void {
+    if (!this.player && this.doReturn) {
+      const outgoing = this.getPokemon();
+      if (outgoing && outgoing.hp <= 0) {
+        this.switchAborted = true;
+        this.end();
+        return;
+      }
+    }
     super.start();
   }
 
@@ -230,6 +239,9 @@ export class SwitchSummonPhase extends SummonPhase {
   }
 
   onEnd(): void {
+    if (this.switchAborted) {
+      return;
+    }
     super.onEnd();
 
     const pokemon = this.getPokemon();

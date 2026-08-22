@@ -1,11 +1,11 @@
 import { getPokemonSpecies } from "./pokemon-species";
 
 export function getDuelmonBstLimitForWave(waveIndex: number): number {
-  if (waveIndex <= 10) return 500;
-  if (waveIndex < 20) return 520;
-  if (waveIndex < 30) return 530;
-  if (waveIndex < 50) return 540;
-  return 560;
+  if (waveIndex <= 10) return 383;
+  if (waveIndex < 20) return 398;
+  if (waveIndex < 30) return 406;
+  if (waveIndex < 50) return 413;
+  return 429;
 }
 
 export function isDuelmonEligibleForWave(speciesId: number, waveIndex: number): boolean {

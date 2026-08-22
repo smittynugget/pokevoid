@@ -316,6 +316,18 @@ export class AttemptCapturePhase extends PokemonPhase {
     catch() {
         const pokemon = this.getPokemon() as EnemyPokemon;
         this.scene.recordRunEndSummaryCapture(pokemon);
+
+        let captureErrorHandled = false;
+        const handleCaptureError = (err: unknown) => {
+            if (captureErrorHandled) {
+                return;
+            }
+            captureErrorHandled = true;
+            console.error("[AttemptCapturePhase] unhandled error in catch()", err);
+            this.scene.pokemonInfoContainer.hide();
+            this.removePb();
+            this.end();
+        };
         if (this.scene.currentBattle.battleType === BattleType.TRAINER) {
 
             const moneyToDeduct = this.scene.getRequiredMoneyForPokeBuy();
@@ -437,7 +449,7 @@ export class AttemptCapturePhase extends PokemonPhase {
                     }
                     uniqueRemovePokemon();
                         if (newPokemon) {
-                            newPokemon.loadAssets().then(end);
+                            newPokemon.loadAssets().then(end).catch(handleCaptureError);
                         } else {
                             end();
                         }
@@ -447,7 +459,7 @@ export class AttemptCapturePhase extends PokemonPhase {
                         if (newPokemon && this.pokeballType === PokeballType.TYPE_BALL && this.typeBallTargetType !== undefined) {
                           this.applyTypeBallEffect(newPokemon);
                         }
-                    });
+                    }).catch(handleCaptureError);
                 };
                 Promise.all([pokemon.hideInfo(), this.scene.gameData.setPokemonCaught(pokemon)]).then(() => {
                     if (this.scene.getParty().length === 6) {
@@ -484,9 +496,9 @@ export class AttemptCapturePhase extends PokemonPhase {
                     } else {
                         addToParty();
                     }
-                });
+                }).catch(handleCaptureError);
             }, 0, true);
-        });
+        }).catch(handleCaptureError);
     }
 
     private applyTypeBallEffect(pokemon: PlayerPokemon): void {

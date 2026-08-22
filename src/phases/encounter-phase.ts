@@ -736,9 +736,10 @@ export class EncounterPhase extends BattlePhase {
             };
             if (trainer.config.hasCharSprite) {
               (async () => {
-                await trainer.playAnim();
+
                 this.scene.ui.getMessageHandler().clear();
-                this.scene.ui.clearText();
+                this.scene.ui.getMessageHandler().clearText();
+                await trainer.playAnim();
                 this.scene.ui.getMessageHandler().applySmitomPanelStyle();
                 this.scene.showFieldOverlay(500, { withDialogueBg: true, bgTextureKey: "smitom_dialogue_bg" }).then(() => {
                   this.scene.charSprite.showCharacter(trainer.getKey()!, getCharVariantFromDialogue(tutorialMessage)).then(() => {
@@ -801,11 +802,11 @@ export class EncounterPhase extends BattlePhase {
                 });
               };
               (async () => {
+                this.scene.ui.getMessageHandler().clear();
+                this.scene.ui.getMessageHandler().clearText();
                 if (trainer && trainer.config.trainerType != TrainerType.SMITTY) {
                   await trainer.playAnim();
                 }
-                this.scene.ui.getMessageHandler().clear();
-                this.scene.ui.clearText();
                 this.scene.ui.getMessageHandler().applySmitomPanelStyle();
                 this.scene.showFieldOverlay(500, { withDialogueBg: true, bgTextureKey: "smitom_dialogue_bg" })
                   .then(() => {

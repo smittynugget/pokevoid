@@ -283,7 +283,7 @@ const cfg_keyboard_qwerty = {
     KEY_LEFT_BRACKET: -1,
     KEY_RIGHT_BRACKET: -1,
     KEY_SEMICOLON: -1,
-    KEY_ALT: SettingKeyboard.Button_Smitty_Console
+    KEY_ALT: -1
   },
   blacklist: [
     "KEY_ENTER",

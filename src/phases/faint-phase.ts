@@ -210,12 +210,7 @@ export class FaintPhase extends PokemonPhase {
           if (isDuelmonSpecies(duelmon.species.speciesId)) {
             const range = getYuMoveRange(this.scene);
             if (range >= 0 && duelmon.yuMoveRangeUsed !== range && duelmon.yuMoveRangePending !== range) {
-              const trainer = this.scene.currentBattle.trainer;
-              const isSpecial = !!trainer && (
-                !!(trainer as any).isDynamicRival
-                || (trainer.config && trainer.config.isBoss)
-              );
-              const chance = isSpecial ? 50 : 10;
+              const chance = 50;
 
               if (Overrides.FORCE_YU_MOVE_FLAG_OVERRIDE) {
                 duelmon.yuMoveRangePending = range;

@@ -205,20 +205,26 @@ export default class UI extends Phaser.GameObjects.Container {
     SKILL_TREE_SMITEM_ICON_SCALE: 0.5,
     SKILL_TREE_STACK_TEXT_X: 10,
     SKILL_TREE_STACK_TEXT_Y: 15,
-    SKILL_TREE_STACK_FONT_SIZE: 16,
-    SKILL_TREE_STACK_LETTER_SPACING: -0.5,
-    SKILL_TREE_STACK_CAPPED_TINT: 0xf89890,
-    SKILL_TREE_STACK_TEXT_COLOR: "#f8f8f8",
-    SKILL_TREE_STACK_TEXT_SHADOW: "#424242",
-    SKILL_TREE_STACK_TEXT_STROKE: 4.5,
+
+    SKILL_TREE_POINTS_TEXT_COLOR: "#f8f8f8",
+    SKILL_TREE_POINTS_TEXT_SHADOW: "#424242",
+    SKILL_TREE_POINTS_TEXT_STROKE: 4.5,
+
+    SKILL_TREE_TOKEN_TEXT_SIZE: "11px",
+    SKILL_TREE_TOKEN_TEXT_COLOR: "#ffd700",
+    SKILL_TREE_TOKEN_TEXT_STROKE_COLOR: "#222222",
+    SKILL_TREE_TOKEN_TEXT_STROKE: 4,
+    SKILL_TREE_TOKEN_TEXT_SCALE: 0.35,
     SKILL_TREE_ROW_INDENT: 2,
     SKILL_TREE_POINTS_GAP: 2,
-    SKILL_TREE_POINTS_TEXT_SIZE: 30,
+    SKILL_TREE_POINTS_TEXT_SIZE: 27,
 
-    SKILL_TREE_POINTS_ICON_SCALE: 0.27,
+    SKILL_TREE_POINTS_ICON_SCALE: 0.22,
 
-    SKILL_TREE_POINTS_TEXT_X_OFFSET: 1,
+    SKILL_TREE_POINTS_TEXT_X_OFFSET: 3,
     SKILL_TREE_POINTS_TEXT_Y_OFFSET: 0,
+
+    SKILL_TREE_POINTS_ENTRY_Y_OFFSET: 1,
   };
 
   private permaMoneyContainer: Phaser.GameObjects.Container;
@@ -265,8 +271,7 @@ export default class UI extends Phaser.GameObjects.Container {
   private skillTreeTokenIcon: Phaser.GameObjects.Sprite;
   private skillTreePointsIcon: Phaser.GameObjects.Sprite;
   private skillTreePointsText: Phaser.GameObjects.Text;
-
-  private skillTreeTokenStack: Phaser.GameObjects.GameObject | null = null;
+  private skillTreeTokenText: Phaser.GameObjects.Text;
 
   private _replayHudSuppressed = false;
 
@@ -699,21 +704,34 @@ export default class UI extends Phaser.GameObjects.Container {
     this.skillTreeTokenEntry.setName("skill-tree-token-entry");
     this.skillTreeTokenEntry.setScale(barScale);
     this.skillTreeTokenEntry.add(this.skillTreeTokenIcon);
-    this.skillTreePointsIcon = this.scene.add.sprite(0, skillTreeRowCenterY, "items", "ribbon_gen9");
+    this.skillTreeTokenText = addTextObject(this.scene, 0, 0, "", TextStyle.PARTY, {
+      fontSize: this.UI_CONSTANTS.SKILL_TREE_TOKEN_TEXT_SIZE,
+      color: this.UI_CONSTANTS.SKILL_TREE_TOKEN_TEXT_COLOR,
+    });
+    this.skillTreeTokenText.setName("skill-tree-token-text");
+    this.skillTreeTokenText.setShadow(0, 0, undefined);
+    this.skillTreeTokenText.setStroke(this.UI_CONSTANTS.SKILL_TREE_TOKEN_TEXT_STROKE_COLOR, this.UI_CONSTANTS.SKILL_TREE_TOKEN_TEXT_STROKE);
+    this.skillTreeTokenText.setOrigin(0, 0);
+    this.skillTreeTokenText.setScale(this.UI_CONSTANTS.SKILL_TREE_TOKEN_TEXT_SCALE);
+    this.skillTreeTokenText.setPosition(
+      this.UI_CONSTANTS.SKILL_TREE_STACK_TEXT_X * barScale,
+      this.UI_CONSTANTS.SKILL_TREE_STACK_TEXT_Y * barScale
+    );
+    this.skillTreePointsIcon = this.scene.add.sprite(0, skillTreeRowCenterY + this.UI_CONSTANTS.SKILL_TREE_POINTS_ENTRY_Y_OFFSET, "items", "ribbon_gen9");
     this.skillTreePointsIcon.setName("skill-tree-points-icon");
     this.skillTreePointsIcon.setOrigin(0, 0.5);
     this.skillTreePointsIcon.setScale(this.UI_CONSTANTS.SKILL_TREE_POINTS_ICON_SCALE);
 
-    this.skillTreePointsText = addTextObject(this.scene, 0, skillTreeRowCenterY, "", TextStyle.PARTY, { fontSize: `${this.UI_CONSTANTS.SKILL_TREE_POINTS_TEXT_SIZE}px` });
+    this.skillTreePointsText = addTextObject(this.scene, 5, skillTreeRowCenterY, "", TextStyle.PARTY, { fontSize: `${this.UI_CONSTANTS.SKILL_TREE_POINTS_TEXT_SIZE}px` });
     this.skillTreePointsText.setName("skill-tree-points-text");
     this.skillTreePointsText.setOrigin(0, 1);
-    this.skillTreePointsText.setColor(this.UI_CONSTANTS.SKILL_TREE_STACK_TEXT_COLOR);
-    this.skillTreePointsText.setStroke(this.UI_CONSTANTS.SKILL_TREE_STACK_TEXT_SHADOW, this.UI_CONSTANTS.SKILL_TREE_STACK_TEXT_STROKE);
-    this.skillTreePointsText.setShadow(0, 0, this.UI_CONSTANTS.SKILL_TREE_STACK_TEXT_SHADOW);
+    this.skillTreePointsText.setColor(this.UI_CONSTANTS.SKILL_TREE_POINTS_TEXT_COLOR);
+    this.skillTreePointsText.setStroke(this.UI_CONSTANTS.SKILL_TREE_POINTS_TEXT_SHADOW, this.UI_CONSTANTS.SKILL_TREE_POINTS_TEXT_STROKE);
+    this.skillTreePointsText.setShadow(0, 0, this.UI_CONSTANTS.SKILL_TREE_POINTS_TEXT_SHADOW);
 
     this.skillTreeTokenContainer = this.scene.add.container(0, 0);
     this.skillTreeTokenContainer.setName("skill-tree-token-container");
-    this.skillTreeTokenContainer.add([this.skillTreeTokenEntry, this.skillTreePointsIcon, this.skillTreePointsText]);
+    this.skillTreeTokenContainer.add([this.skillTreeTokenEntry, this.skillTreeTokenText, this.skillTreePointsIcon, this.skillTreePointsText]);
     this.skillTreeTokenContainer.setVisible(false);
     this.permaMoneyContainer.add(this.skillTreeTokenContainer);
 
@@ -956,15 +974,14 @@ export default class UI extends Phaser.GameObjects.Container {
     const maxTokens = tracker ? tracker.getMaxStackCount(scene) : 2;
     const tokens = activeSkillTree.tokens || 0;
     const points = activeSkillTree.skillPoints || 0;
-    this.skillTreeTokenStack?.destroy();
-    this.skillTreeTokenStack = maxTokens > 1 && maxTokens < 11
-      ? this.createSkillTreeFractionText(tokens, maxTokens)
-      : this.createSkillTreeStackText(tokens.toString(), tokens >= maxTokens);
-    this.skillTreeTokenEntry.add(this.skillTreeTokenStack);
+
     const c = this.UI_CONSTANTS;
 
-    const stackWidth = (this.skillTreeTokenStack.getData("contentWidth") as number) || 0;
-    const tokenEntryRight = Math.max(this.skillTreeTokenIcon.displayWidth, c.SKILL_TREE_STACK_TEXT_X + stackWidth) * c.SKILL_TREE_BAR_SCALE;
+    this.skillTreeTokenText.setText(`${tokens}/${maxTokens}`);
+    const tokenEntryRight = Math.max(
+      this.skillTreeTokenIcon.displayWidth * c.SKILL_TREE_BAR_SCALE,
+      this.skillTreeTokenText.x + this.skillTreeTokenText.displayWidth
+    );
 
     this.skillTreePointsIcon.setX(tokenEntryRight + c.SKILL_TREE_POINTS_GAP);
     this.skillTreePointsText.setText(`x${points}`);
@@ -976,47 +993,6 @@ export default class UI extends Phaser.GameObjects.Container {
     );
 
     this.skillTreeTokenContainer.setVisible(true);
-  }
-  private createSkillTreeStackText(value: string, capped: boolean): Phaser.GameObjects.BitmapText {
-    const c = this.UI_CONSTANTS;
-    const text = this.scene.add.bitmapText(c.SKILL_TREE_STACK_TEXT_X, c.SKILL_TREE_STACK_TEXT_Y, "item-count", value, c.SKILL_TREE_STACK_FONT_SIZE);
-    text.letterSpacing = c.SKILL_TREE_STACK_LETTER_SPACING;
-    text.setOrigin(0, 0);
-    if (capped) {
-      text.setTint(c.SKILL_TREE_STACK_CAPPED_TINT);
-    }
-    text.setData("contentWidth", text.width);
-    return text;
-  }
-  private createSkillTreeFractionText(value: number, max: number): Phaser.GameObjects.Container {
-    const c = this.UI_CONSTANTS;
-    const capped = value >= max;
-    const container = this.scene.add.container(c.SKILL_TREE_STACK_TEXT_X, c.SKILL_TREE_STACK_TEXT_Y);
-
-    const left = this.scene.add.bitmapText(0, 0, "item-count", value.toString(), c.SKILL_TREE_STACK_FONT_SIZE);
-    left.letterSpacing = c.SKILL_TREE_STACK_LETTER_SPACING;
-    left.setOrigin(0, 0);
-    const slashScale = c.SKILL_TREE_STACK_FONT_SIZE / 14;
-    const slash = this.scene.add.graphics();
-    const slashColor = capped ? c.SKILL_TREE_STACK_CAPPED_TINT : 0xffffff;
-    const slashX = left.width + 1;
-    slash.lineStyle(4 * slashScale, 0x000000, 0.8);
-    slash.lineBetween(slashX, 11 * slashScale, slashX + 4 * slashScale, 1 * slashScale);
-    slash.lineStyle(2 * slashScale, slashColor, 1);
-    slash.lineBetween(slashX, 11 * slashScale, slashX + 4 * slashScale, 1 * slashScale);
-
-    const right = this.scene.add.bitmapText(slashX + 6 * slashScale, 0, "item-count", max.toString(), c.SKILL_TREE_STACK_FONT_SIZE);
-    right.letterSpacing = c.SKILL_TREE_STACK_LETTER_SPACING;
-    right.setOrigin(0, 0);
-
-    if (capped) {
-      left.setTint(c.SKILL_TREE_STACK_CAPPED_TINT);
-      right.setTint(c.SKILL_TREE_STACK_CAPPED_TINT);
-    }
-
-    container.add([left, slash, right]);
-    container.setData("contentWidth", slashX + 6 * slashScale + right.width);
-    return container;
   }
   private setupSkillTreeIconTooltip(scene: BattleScene, icon: Phaser.GameObjects.Sprite, kind: "token" | "points"): void {
     icon.setInteractive({ useHandCursor: true });
@@ -1872,7 +1848,6 @@ export default class UI extends Phaser.GameObjects.Container {
           const newHandler = this.getHandler();
           if (newHandler) {
             newHandler.show(args);
-          } else {
           }
         }
         resolve();

@@ -98,6 +98,7 @@ export class TurnStartPhase extends FieldPhase {
     });
 
     let orderIndex = 0;
+    let runPhaseQueued = false;
 
     for (const o of moveOrder) {
 
@@ -137,6 +138,9 @@ export class TurnStartPhase extends FieldPhase {
         this.scene.unshiftPhase(new SwitchSummonPhase(this.scene, pokemon.getFieldIndex(), turnCommand.cursor!, true, turnCommand.args![0] as boolean, pokemon.isPlayer(), turnCommand.args?.[1] === true));
         break;
       case Command.RUN:
+        if (runPhaseQueued) {
+          break;
+        }
         let runningPokemon = pokemon;
         if (this.scene.currentBattle.double) {
           const playerActivePokemon = field.filter(pokemon => {
@@ -156,6 +160,7 @@ export class TurnStartPhase extends FieldPhase {
           }
         }
         this.scene.unshiftPhase(new AttemptRunPhase(this.scene, runningPokemon.getFieldIndex()));
+        runPhaseQueued = true;
         break;
       }
     }

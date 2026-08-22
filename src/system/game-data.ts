@@ -115,7 +115,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { addCorruptedRivalOverlay, playCutsceneFaintAnim } from "#app/utils/story-cutscene-overlays.js";
 export const defaultStarterSpecies: Species[] = [];
 
-export const INTERNAL_BACKUP_VERSION = 9;
+export const INTERNAL_BACKUP_VERSION = 0;
 
 export const VERSIONS_REQUIRING_BACKUP: string[] = [
     "v2.0b [The Colossal Update]",
@@ -1499,6 +1499,10 @@ export class GameData {
         return new Promise<boolean>(async (resolve) => {
             try {
                 this.dataLoaded = false;
+                const isImportBoot = this.getLocalStorageItem("justImportedSave") === "true";
+                if (isImportBoot) {
+                    this.setLocalStorageItem("justImportedSave", "");
+                }
 
                 try {
                     if (this.shouldCreateVersionBackup(systemData.gameVersion)) {
@@ -1531,9 +1535,24 @@ export class GameData {
                     this.loadGamepadSettings();
                 }
                 if (systemData.settingsKeyboard) {
+                    const consoleKeys: (keyof typeof systemData.settingsKeyboard)[] = ["BUTTON_CONSOLE", "ALT_BUTTON_CONSOLE"];
+                    for (const key of consoleKeys) {
+                        if (systemData.settingsKeyboard[key] === Phaser.Input.Keyboard.KeyCodes.ALT) {
+                            systemData.settingsKeyboard[key] = -1;
+                        }
+                    }
                     this.setLocalStorageItem("settingsKeyboard", JSON.stringify(systemData.settingsKeyboard));
                 }
                 if (systemData.mappingConfigs) {
+                    for (const layout of Object.keys(systemData.mappingConfigs)) {
+                        const custom = (systemData.mappingConfigs[layout] as any)?.custom;
+                        if (!custom) {
+                            continue;
+                        }
+                        if (custom.KEY_ALT === "BUTTON_CONSOLE" || custom.KEY_ALT === "ALT_BUTTON_CONSOLE") {
+                            custom.KEY_ALT = -1;
+                        }
+                    }
                     this.setLocalStorageItem("mappingConfigs", JSON.stringify(systemData.mappingConfigs));
                     this.loadMappingConfigs();
                 }
@@ -1892,6 +1911,27 @@ export class GameData {
                         }
                     }
                 }
+
+                if (isImportBoot) {
+                    this.gameStats.onboardingTutorialComplete = true;
+                    this.gameStats.firstTimeFtlAutoStartComplete = true;
+                    this.isNewPlayer = false;
+                    this.tutorialOnboardActive = false;
+                    this.tutorialBattleScript = null;
+                    localStorage.setItem("wave35_stat_switchers_unlocked", "1");
+                    localStorage.setItem("wave35_move_upgrades_unlocked", "1");
+                    localStorage.setItem("wave35_release_items_unlocked", "1");
+                    setSetting(this.scene, SettingKeys.Disable_Stat_Switchers, 0);
+                    setSetting(this.scene, SettingKeys.Disable_Move_Upgrades, 0);
+                    setSetting(this.scene, SettingKeys.Disable_Release_Items, 0);
+                    this.scene.disableStatSwitchers = false;
+                    this.scene.disableMoveUpgrades = false;
+                    this.scene.disableReleaseItems = false;
+                    this.smitomTutorialFlags["wave35_stat_switchers"] = true;
+                    this.smitomTutorialFlags["wave35_move_upgrades"] = true;
+                    this.smitomTutorialFlags["wave35_release_items"] = true;
+                }
+
                 this.dataLoaded = true;
 
                 if (this.migrationOccurred) {
@@ -4447,6 +4487,7 @@ export class GameData {
                                 encrypt(dataStr, bypassLogin)
                             );
                         }
+                        this.setLocalStorageItem("justImportedSave", "true");
                         window.location.reload();
                     },
                     () => {
@@ -4750,7 +4791,9 @@ export class GameData {
                 }
 
                 if (!hasPrevolution && (!pokemon.scene.gameMode.isDaily || hasNewAttr || fromEgg)) {
-                    this.addStarterCandy(species, (1 * (pokemon.isShiny() ? 5 * (1 << (pokemon.variant ?? 0)) : 1)) * (fromEgg || pokemon.isBoss() ? 2 : 1));
+                    if (speciesStarters.hasOwnProperty(species.speciesId)) {
+                        this.addStarterCandy(species, (1 * (pokemon.isShiny() ? 5 * (1 << (pokemon.variant ?? 0)) : 1)) * (fromEgg || pokemon.isBoss() ? 2 : 1));
+                    }
                 }
             }
 

@@ -20,6 +20,7 @@ import { ensureSkillTreeTokenTracker } from "../system/skill-tree-progression";
 import Overrides from "#app/overrides.js";
 import { PokeballType } from "#enums/pokeball";
 import { getChaosEncounterPhase } from "./encounter-phase-cache";
+import { CollectedTypeShopPhase } from "./collected-type-shop-phase";
 
 function extractNodePattern(nodeId: string): string | null {
   const match = nodeId.match(/^(\d+_\d+)/);
@@ -1276,17 +1277,15 @@ export class BattlePathPhase extends BattlePhase {
   private handleCollectedShopNode(node: PathNode): void {
     const scene = this.scene;
     const callback = this.createReturnToBattlePathCallback();
-    import("./collected-type-shop-phase").then(({ CollectedTypeShopPhase }) => {
-      scene.unshiftPhase(new CollectedTypeShopPhase(
-        scene,
-        0,
-        undefined,
-        false,
-        callback,
-        PathNodeTypeFilter.NONE,
-        0
-      ));
-    });
+    scene.unshiftPhase(new CollectedTypeShopPhase(
+      scene,
+      0,
+      undefined,
+      false,
+      callback,
+      PathNodeTypeFilter.NONE,
+      0
+    ));
   }
 
   end(): void {

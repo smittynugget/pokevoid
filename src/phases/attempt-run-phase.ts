@@ -10,6 +10,7 @@ import { NewBattlePhase } from "./new-battle-phase";
 import { PokemonPhase } from "./pokemon-phase";
 import {PermaType} from "#app/modifier/perma-modifiers";
 import { BattlePathPhase } from "./battle-path-phase";
+import { DebugGauntletEncounterPhase } from "./debug-gauntlet-encounter-phase";
 
 export class AttemptRunPhase extends PokemonPhase {
   constructor(scene: BattleScene, fieldIndex: integer) {
@@ -21,9 +22,12 @@ export class AttemptRunPhase extends PokemonPhase {
 
     const playerPokemon = this.getPokemon();
     const enemyField = this.scene.getEnemyField();
+    if (!enemyField.length || enemyField.some(enemyPokemon => !enemyPokemon.scene)) {
+      return this.end();
+    }
 
     let escapeChance: Utils.IntegerHolder;
-     if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_RUN_ANYTHING_1)) {
+     if (this.scene.debugDuelmonWild || this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_RUN_ANYTHING_1)) {
       escapeChance = new Utils.IntegerHolder(1000);
     } else {
     const enemySpeed = enemyField.reduce((total: integer, enemyPokemon: Pokemon) => total + enemyPokemon.getStat(Stat.SPD), 0) / enemyField.length;
@@ -37,6 +41,10 @@ export class AttemptRunPhase extends PokemonPhase {
       this.scene.queueMessage(i18next.t("battle:runAwaySuccess"), null, true, 500);
 
       this.scene.gameData.gameStats.battlesEscaped++;
+      enemyField.forEach(enemyPokemon => {
+        enemyPokemon.hp = 0;
+        enemyPokemon.trySetStatus(StatusEffect.FAINT);
+      });
 
       this.scene.tweens.add({
         targets: [this.scene.arenaEnemy, enemyField].flat(),
@@ -47,15 +55,14 @@ export class AttemptRunPhase extends PokemonPhase {
       });
 
       this.scene.clearEnemyHeldItemModifiers();
-
       enemyField.forEach(enemyPokemon => {
-        enemyPokemon.hideInfo().then(() => enemyPokemon.destroy());
-        enemyPokemon.hp = 0;
-        enemyPokemon.trySetStatus(StatusEffect.FAINT);
+        enemyPokemon.hideInfo();
       });
 
       this.scene.pushPhase(new BattleEndPhase(this.scene));
-      if(!this.scene.gameMode.isChaosMode) {
+      if (this.scene.debugDuelmonWild) {
+        this.scene.pushPhase(new DebugGauntletEncounterPhase(this.scene));
+      } else if (!this.scene.gameMode.isChaosMode) {
         this.scene.pushPhase(new NewBattlePhase(this.scene));
       } else {
         this.scene.pushPhase(new BattlePathPhase(this.scene));

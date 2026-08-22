@@ -371,6 +371,15 @@ export default class BattleMessageUiHandler extends MessageUiHandler {
 
   applySmitomPanelStyle(): void {
     const ui = this.getUi();
+    if (this.textTimer) {
+      this.textTimer.remove();
+      this.textTimer = null;
+    }
+    if (this.textCallbackTimer) {
+      this.textCallbackTimer.destroy();
+      this.textCallbackTimer = null;
+    }
+    this.clearText();
     this.bg.setVisible(false);
     if (this._messageBgPattern) {
       if ((this._messageBgPattern as any).layers) {

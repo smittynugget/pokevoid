@@ -38,7 +38,7 @@ export class CustomDialoguePhase extends Phase {
 
         const doOverlayAndDialogue = () => {
             this.scene.ui.getMessageHandler().clear();
-            this.scene.ui.clearText();
+            this.scene.ui.getMessageHandler().clearText();
             this.scene.showFieldOverlay(overlayDuration, { withDialogueBg: true, bgTextureKey: bgKey }).then(() => {
                 this.showPatternOverlay();
                 this.scene.ui.setMode(Mode.MESSAGE);

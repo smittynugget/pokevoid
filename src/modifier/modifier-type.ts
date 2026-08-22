@@ -49,6 +49,7 @@ import i18next from "i18next";
 import {getModifierTierTextTint} from "#app/ui/text";
 import Overrides from "#app/overrides";
 import { getDuelmonBstLimitForWave } from "#app/data/duelmon-bst-utils";
+import { shouldRejectDuelmonSpecies } from "#app/data/duelmon-spawn-utils";
 import {Abilities} from "#enums/abilities";
 import {BattlerTagType} from "#enums/battler-tag-type";
 import {BerryType} from "#enums/berry-type";
@@ -2024,7 +2025,10 @@ export class AddPokemonModifierType extends ModifierType {
     }
 
     getDescription(scene: BattleScene): string {
-        const baseDescription = `Lvl ${this.newPokemon.level} ${this.newPokemon.name} ${getNatureName(this.newPokemon.nature)} ${this.newPokemon.getAbility().name} [${this.newPokemon.moveset.map(m => allMoves[m.moveId].name).join(', ')}]`;
+        const moveNames = (this.newPokemon.moveset ?? [])
+            .filter(m => !!m && !!allMoves[m.moveId])
+            .map(m => allMoves[m!.moveId].name);
+        const baseDescription = `Lvl ${this.newPokemon.level} ${this.newPokemon.name} ${getNatureName(this.newPokemon.nature)} ${this.newPokemon.getAbility().name} [${moveNames.join(', ')}]`;
         return `${baseDescription} ${i18next.t("modifierType:common.morePokeInfo")}`;
     }
 
@@ -2057,7 +2061,11 @@ export class AddPokemonModifierTypeGenerator extends ModifierTypeGenerator {
             if (allRandomPokemon.length === 0) return null;
 
             const level = scene.currentBattle ? scene.currentBattle.getLvlForWave() : 5;
-            let newPokemon = scene.addPlayerPokemon(Utils.randSeedItem(allRandomPokemon), level, 0, 0);
+            let chosenSpecies = Utils.randSeedItem(allRandomPokemon);
+            for (let attempt = 0; attempt < 10 && chosenSpecies.generation === 20 && shouldRejectDuelmonSpecies(scene); attempt++) {
+                chosenSpecies = Utils.randSeedItem(allRandomPokemon);
+            }
+            let newPokemon = scene.addPlayerPokemon(chosenSpecies, level, 0, 0);
             return new AddPokemonModifierType(newPokemon, isDraft);
         });
         this.isDraft = isDraft;

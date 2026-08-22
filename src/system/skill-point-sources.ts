@@ -1,5 +1,6 @@
 import * as Utils from "#app/utils";
 import BattleScene from "#app/battle-scene";
+import Overrides from "#app/overrides";
 import { Type } from "#app/data/type";
 import { TrainerType } from "#enums/trainer-type";
 import { PathNodeType } from "#app/battle";
@@ -19,7 +20,8 @@ export class SkillPointSources {
 		if (Utils.randSeedInt(100) < 25) {
 			this.awardSkillPoints(Utils.randSeedInt(2) + 1, "battle_victory");
 		}
-		if (Utils.randSeedInt(100) < 10) {
+		const tokenChance = Overrides.SKILL_TREE_TOKEN_CHANCE_OVERRIDE ?? 10;
+		if (Utils.randSeedInt(100) < tokenChance) {
 			this.awardTokens(1, "battle_victory");
 		}
 	}

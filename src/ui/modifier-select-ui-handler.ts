@@ -144,6 +144,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
   private showDetailsHintContainer: Phaser.GameObjects.Container | null = null;
   private showDetailsHintKeySprite: Phaser.GameObjects.Sprite | null = null;
   private showDetailsHintLabel: Phaser.GameObjects.Text | null = null;
+  private hintWasVisibleBeforeTooltip: boolean = false;
 
   protected displayConfig: ModifierSelectDisplayConfig | undefined;
   protected storedUIMode: Mode = Mode.MODIFIER_SELECT;
@@ -824,7 +825,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       if (this.player && (!this.forcedDraftSelection || this.allowSkip)) {
         try {
           const cfg = (this.scene.gameData as any).tempSkillTreeConfig;
-          if (cfg && (cfg.mode === SkillTreeMode.POKEMON_SELECTION || cfg.mode === "POKEMON_SELECTION")) {
+          if (cfg && !cfg.allowLootSkip && (cfg.mode === SkillTreeMode.POKEMON_SELECTION || cfg.mode === "POKEMON_SELECTION")) {
             ui.playError();
             return true;
           }
@@ -1485,39 +1486,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
-        const uiTheme = this.scene.uiTheme;
-        const partyLabel = i18next.t("pokemonInfoContainer:party", { defaultValue: "Party" });
         const descText = type.getDescription(this.scene);
-        const headerLines = [
-          getBBCodeFrag(descText, TextStyle.WINDOW, uiTheme),
-          "",
-          getBBCodeFrag(`${partyLabel}:`, TextStyle.SUMMARY_GOLD, uiTheme)
-        ];
-        const noEffectLabel = i18next.t("partyUiHandler:anyEffect", { defaultValue: "No effect" });
-        const natureStats = [Stat.ATK, Stat.DEF, Stat.SPATK, Stat.SPDEF, Stat.SPD];
         const party = this.scene.getParty() as PlayerPokemon[];
-        const partyLines = party.map(pokemon => {
-          const nature = pokemon.getNature();
-          const incStat = natureStats.find(s => getNatureStatMultiplier(nature, s) > 1) ?? null;
-          const decStat = natureStats.find(s => getNatureStatMultiplier(nature, s) < 1) ?? null;
-          if (incStat === null || decStat === null) {
-            return `[color=#ffcc00]${pokemon.name}[/color]: [color=#888888]${noEffectLabel}[/color]`;
-          }
-          const baseStats = pokemon.getModifiedBaseStats();
-          const incName = getStatName(incStat, true);
-          const decName = getStatName(decStat, true);
-          const incPre = Math.floor(baseStats[incStat] * getNatureStatMultiplier(nature, incStat));
-          const incPost = Math.floor(baseStats[incStat] * (getNatureStatMultiplier(nature, incStat) + 0.1));
-          const decPre = Math.floor(baseStats[decStat] * getNatureStatMultiplier(nature, decStat));
-          const decPost = Math.floor(baseStats[decStat] * (getNatureStatMultiplier(nature, decStat) - 0.1));
-          return `[color=#ffcc00]${pokemon.name}[/color]: [color=#78c850]${incName}: ${incPre} -> ${incPost}[/color] | [color=#e13d3d]${decName}: ${decPre} -> ${decPost}[/color]`;
-        });
-        const firstDewPokemon = party[0];
-        let dewBarsContainer: Phaser.GameObjects.Container | undefined;
-        if (firstDewPokemon) {
-          dewBarsContainer = this.createStatBarsContainer(firstDewPokemon.getModifiedBaseStats(), undefined, true, true);
-        }
-        this.showPartyDetailsTooltip(title, subtitle, rarity, headerLines, partyLines, party, { kind: "SOUL_DEW" }, dewBarsContainer);
+        const dewSections = this.generateNatureStatTooltipSections(descText, party);
+        this.showModifierTooltip(title, subtitle, "", rarity, false, undefined, false, dewSections);
       }
       else if (type instanceof StatSacrificeModifierType) {
         const rarity = this.getModifierRarity(type);
@@ -5163,6 +5135,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
   protected hideUpgradeTooltip(): void {
     PokemonBattleTooltipUtils.hide();
+    if (this.hintWasVisibleBeforeTooltip && this.showDetailsHintContainer) {
+      this.showDetailsHintContainer.setVisible(true);
+    }
+    this.hintWasVisibleBeforeTooltip = false;
     if (this.shinyPowerStatsContainer) {
       this.shinyPowerStatsContainer.destroy();
       this.shinyPowerStatsContainer = null;
@@ -5330,6 +5306,13 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       sections = this.generateAbilitySwitcherTooltipSections(type);
     } else if (type instanceof RememberMoveModifierType) {
       sections = this.generateMemoryMushroomTooltipSections(type);
+    } else if ((type as any)?.group === "rankup") {
+      const rankData = (type as any)._rankUpTooltipData;
+      if (rankData?.kind === "self") {
+        sections = this.generateRankUpSelfTooltipSections(rankData);
+      } else if (rankData?.kind === "other") {
+        sections = this.generateRankUpOtherTooltipSections(rankData);
+      }
     }
     if (this.currentModifierSections) {
       for (const sec of this.currentModifierSections) {
@@ -5341,6 +5324,8 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       for (const sec of this.currentModifierSections) {
         if (sec?.embeddedContainer) sec.embeddedContainer.setVisible(false);
       }
+    } else {
+      this.currentModifierSections = null;
     }
   }
 
@@ -5723,6 +5708,11 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       this.hideUpgradeTooltip();
     }
 
+    if (this.showDetailsHintContainer && this.showDetailsHintContainer.visible) {
+      this.showDetailsHintContainer.setVisible(false);
+      this.hintWasVisibleBeforeTooltip = true;
+    }
+
     const rarityColors = getUpgradeRarityColors(rarity);
     this.upgradeTooltipContainer = this.scene.add.container(0, 0);
     this.upgradeTooltipContainer.setDepth(100);
@@ -5804,7 +5794,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       this.currentModifierContext = "SECTION_RELAY";
       this.currentModifierSections = sections.slice(1);
       for (const sec of this.currentModifierSections) {
-        if (sec?.embeddedContainer) sec.embeddedContainer.setVisible(false);
+        if (sec?.embeddedContainer) {
+          sec.embeddedContainer.setVisible(false);
+          sectionObjects.push(sec.embeddedContainer);
+        }
       }
     } else {
       this.currentModifierContext = null;
@@ -6942,11 +6935,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     const sections: { label?: string; body: string; embeddedContainer?: Phaser.GameObjects.Container }[] = [];
     const uiTheme = this.scene.uiTheme;
 
-    const descTypeContainer = this.buildRankUpDescTypeContainer(data);
     sections.push({
       label: i18next.t("modifierSelectUiHandler:tooltipDescriptionHeader", { defaultValue: "DESCRIPTION" }),
-      body: "",
-      embeddedContainer: descTypeContainer
+      body: getBBCodeFrag(data.description || "", TextStyle.WINDOW, uiTheme)
     });
 
     if (data.abilities?.length) {
@@ -6982,24 +6973,6 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     }
 
     return sections;
-  }
-
-  private buildRankUpDescTypeContainer(data: any): Phaser.GameObjects.Container {
-    const container = this.scene.add.container(0, 0);
-    const tooltipWidth = 108;
-
-    const descText = data.description || "";
-    const descObj = addTextObject(this.scene, 4, 0, descText, TextStyle.WINDOW, { fontSize: "31px" });
-    descObj.setOrigin(0, 0);
-    const descScaleX = descObj.scaleX || 1;
-    const descWrapWidth = Math.max(0, (tooltipWidth - 12) / descScaleX);
-    descObj.setStyle({ ...(descObj.style as any), wordWrap: { width: descWrapWidth, useAdvancedWrap: true } } as any);
-    descObj.setColor("#F0F0F0");
-    container.add(descObj);
-
-    const totalH = descObj.displayHeight + 3;
-    container.setData("renderedHeight", totalH);
-    return container;
   }
 
   private buildStatBoostBarsContainer(baseStats: number[], targetStat: Stat | Stat[], multiplier: number, pokemon?: any): Phaser.GameObjects.Container {
@@ -7292,6 +7265,172 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     for (const child of children) {
       container.add(child);
     }
+    container.setData("renderedHeight", bstY + 8);
+    return container;
+  }
+
+  private generateNatureStatTooltipSections(descText: string, party: PlayerPokemon[]): { label?: string; body: string; embeddedContainer?: Phaser.GameObjects.Container }[] {
+    const sections: { label?: string; body: string; embeddedContainer?: Phaser.GameObjects.Container }[] = [];
+    const uiTheme = this.scene.uiTheme;
+
+    sections.push({
+      label: i18next.t("modifierSelectUiHandler:tooltipDescriptionHeader", { defaultValue: "DESCRIPTION" }),
+      body: getBBCodeFrag(descText, TextStyle.WINDOW, uiTheme)
+    });
+
+    if (party.length > 0) {
+      const pageSize = 1;
+      const totalPages = Math.ceil(party.length / pageSize);
+      const page = Math.min(this.tooltipSectionPageIndex, totalPages - 1);
+      const pokemon = party[page];
+      const baseStats = pokemon.getModifiedBaseStats();
+      const nature = pokemon.getNature();
+      const natureStats = [Stat.ATK, Stat.DEF, Stat.SPATK, Stat.SPDEF, Stat.SPD];
+      const incStat = natureStats.find(s => getNatureStatMultiplier(nature, s) > 1) ?? null;
+      const decStat = natureStats.find(s => getNatureStatMultiplier(nature, s) < 1) ?? null;
+
+      const preStats = baseStats.map((val, sIdx) => Math.floor(val * getNatureStatMultiplier(nature, sIdx as Stat)));
+      const postStats = [...preStats];
+      if (incStat !== null) {
+        postStats[incStat] = Math.floor(baseStats[incStat] * (getNatureStatMultiplier(nature, incStat) + 0.1));
+      }
+      if (decStat !== null) {
+        postStats[decStat] = Math.floor(baseStats[decStat] * (getNatureStatMultiplier(nature, decStat) - 0.1));
+      }
+
+      const statBars = this.buildNatureStatBarsContainer(preStats, postStats, pokemon);
+      const headerLabel = totalPages > 1
+        ? `${i18next.t("modifierSelectUiHandler:tooltipPreviewHeader", { defaultValue: "PREVIEW" })} (${page + 1}/${totalPages})`
+        : i18next.t("modifierSelectUiHandler:tooltipPreviewHeader", { defaultValue: "PREVIEW" });
+      sections.push({ label: headerLabel, body: "", embeddedContainer: statBars });
+      if (totalPages > 1) {
+        const navRow = this.buildTooltipNavRow(page, totalPages);
+        sections.push({ body: "", embeddedContainer: navRow });
+      }
+    }
+
+    return sections;
+  }
+
+  private buildNatureStatBarsContainer(baseStats: number[], afterStats: number[], pokemon?: PlayerPokemon): Phaser.GameObjects.Container {
+    const container = this.scene.add.container(0, 0);
+    const children: Phaser.GameObjects.GameObject[] = [];
+    const tooltipWidth = 108;
+    const statBarHeight = 3;
+    const statLineSpacing = 7;
+    const statCount = 6;
+    const iconZoneWidth = pokemon ? 14 : 0;
+    const leftIndent = 4 + iconZoneWidth + (pokemon ? 2 : 0);
+    const topGap = 5;
+
+    const statNames = [
+      i18next.t("pokemonInfo:Stat.HPStat", { defaultValue: "HP" }),
+      i18next.t("pokemonInfo:Stat.ATKshortened", { defaultValue: "Atk" }),
+      i18next.t("pokemonInfo:Stat.DEFshortened", { defaultValue: "Def" }),
+      i18next.t("pokemonInfo:Stat.SPATKshortened", { defaultValue: "SpAtk" }),
+      i18next.t("pokemonInfo:Stat.SPDEFshortened", { defaultValue: "SpDef" }),
+      i18next.t("pokemonInfo:Stat.SPDshortened", { defaultValue: "Spd" }),
+    ];
+
+    const BASE_BAR_COLOR = 0x4a90e2;
+    const BOOST_BAR_COLOR = 0x00ff00;
+    const SHRINK_BAR_COLOR = 0xe13d3d;
+
+    const labelWidth = 22;
+    const barX = leftIndent + labelWidth + 3;
+    const effectiveMaxBar = tooltipWidth - barX - leftIndent - 30;
+    let bstSum = 0;
+
+    for (let sIdx = 0; sIdx < statCount; sIdx++) {
+      const sy = topGap + sIdx * statLineSpacing;
+      const baseVal = baseStats[sIdx] ?? 0;
+      const afterVal = afterStats[sIdx] ?? baseVal;
+      const delta = afterVal - baseVal;
+      bstSum += afterVal;
+
+      const lbl = addTextObject(this.scene, leftIndent, sy + 3, statNames[sIdx], TextStyle.WINDOW, { fontSize: "35px" });
+      lbl.setOrigin(0, 0.5);
+      children.push(lbl);
+
+      const baseBarWidth = Math.max(2, Math.min(effectiveMaxBar, (baseVal / 255) * effectiveMaxBar));
+      let totalBarEnd = barX + baseBarWidth;
+
+      if (delta > 0) {
+        const baseBar = this.scene.add.rectangle(barX, sy + 3, baseBarWidth, statBarHeight, BASE_BAR_COLOR);
+        baseBar.setOrigin(0, 0.5);
+        children.push(baseBar);
+
+        const boostBarWidth = Math.max(1, Math.min(effectiveMaxBar - baseBarWidth, (delta / 255) * effectiveMaxBar));
+        const boostBar = this.scene.add.rectangle(barX + baseBarWidth, sy + 3, boostBarWidth, statBarHeight, BOOST_BAR_COLOR);
+        boostBar.setOrigin(0, 0.5);
+        children.push(boostBar);
+        totalBarEnd = barX + baseBarWidth + boostBarWidth;
+      } else if (delta < 0) {
+        const afterBarWidth = Math.max(1, Math.min(baseBarWidth, (afterVal / 255) * effectiveMaxBar));
+        const lostWidth = Math.max(1, baseBarWidth - afterBarWidth);
+        const afterBar = this.scene.add.rectangle(barX, sy + 3, afterBarWidth, statBarHeight, BASE_BAR_COLOR);
+        afterBar.setOrigin(0, 0.5);
+        children.push(afterBar);
+
+        const shrinkBar = this.scene.add.rectangle(barX + afterBarWidth, sy + 3, lostWidth, statBarHeight, SHRINK_BAR_COLOR);
+        shrinkBar.setOrigin(0, 0.5);
+        children.push(shrinkBar);
+        totalBarEnd = barX + baseBarWidth;
+      } else {
+        const baseBar = this.scene.add.rectangle(barX, sy + 3, baseBarWidth, statBarHeight, BASE_BAR_COLOR);
+        baseBar.setOrigin(0, 0.5);
+        children.push(baseBar);
+      }
+
+      const valText = addTextObject(this.scene, totalBarEnd + 2, sy + 3, afterVal.toString(), TextStyle.WINDOW, { fontSize: "35px" });
+      valText.setOrigin(0, 0.5);
+      valText.setColor(delta > 0 ? "#78c850" : (delta < 0 ? "#e13d3d" : "#4a90e2"));
+      children.push(valText);
+
+      if (delta !== 0) {
+        const deltaStr = delta > 0 ? `(${baseVal}+${delta})` : `(${baseVal}${delta})`;
+        const deltaText = addTextObject(this.scene, totalBarEnd + 2 + valText.displayWidth + 2, sy + 3, deltaStr, TextStyle.WINDOW, { fontSize: "33px" });
+        deltaText.setOrigin(0, 0.5);
+        deltaText.setColor("#aaaaaa");
+        children.push(deltaText);
+      }
+    }
+
+    const beforeBstSum = baseStats.reduce((s, v) => s + (v || 0), 0);
+    const bstDelta = bstSum - beforeBstSum;
+
+    const bstY = topGap + statCount * statLineSpacing + 2;
+    const bstLabel = addTextObject(this.scene, leftIndent, bstY, i18next.t("pokemonInfo:Stat.Total", { defaultValue: "Total" }), TextStyle.WINDOW, { fontSize: "35px" });
+    bstLabel.setOrigin(0, 0.5);
+    bstLabel.setColor("#cccccc");
+    children.push(bstLabel);
+    const bstValText = addTextObject(this.scene, leftIndent + bstLabel.displayWidth + 3, bstY, bstSum.toString(), TextStyle.WINDOW, { fontSize: "35px" });
+    bstValText.setOrigin(0, 0.5);
+    bstValText.setColor(bstDelta !== 0 ? (bstDelta > 0 ? "#78c850" : "#e13d3d") : "#4a90e2");
+    children.push(bstValText);
+    if (bstDelta !== 0) {
+      const bstDeltaSign = bstDelta > 0 ? "+" : "";
+      const bstDeltaStr = `(${bstDeltaSign}${bstDelta})`;
+      const bstDeltaText = addTextObject(this.scene, bstValText.x + bstValText.displayWidth + 2, bstY, bstDeltaStr, TextStyle.WINDOW, { fontSize: "33px" });
+      bstDeltaText.setOrigin(0, 0.5);
+      bstDeltaText.setColor(bstDelta > 0 ? "#78c850" : "#e13d3d");
+      bstDeltaText.setAlpha(0.75);
+      children.push(bstDeltaText);
+    }
+
+    container.add(children);
+
+    if (pokemon) {
+      const iconScale = 0.35;
+      const iconContainer = this.scene.addPokemonIcon(pokemon, 4 + 7, 0, 0.5, 0, true);
+      const gen = pokemon.species?.generation ?? pokemon.getSpeciesForm?.()?.generation ?? 0;
+      const finalScale = adjustDuelmonIconScale(iconScale, gen, pokemon.isGlitchOrSmittyForm?.());
+      iconContainer.setScale(finalScale);
+      const iconCenterY = (topGap + bstY) / 2;
+      this.centerPartyGridIcon(iconContainer, pokemon, iconCenterY, finalScale);
+      container.add(iconContainer);
+    }
+
     container.setData("renderedHeight", bstY + 8);
     return container;
   }

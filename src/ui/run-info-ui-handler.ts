@@ -709,7 +709,7 @@ export default class RunInfoUiHandler extends UiHandler {
       const formIndex = pkmn.formIndex;
       const variant = pkmn.variant;
       const species = pkmn.getSpeciesForm();
-      const spriteScale = pkmn.getSpriteScale(false);
+      const spriteScale = pkmn.getSpriteScale(false) * (species.generation === 20 ? 0.8 : 1);
       const pokemonSprite = scene.add.sprite(60 + 40 * i, 40 + row * 80, "pkmn__sub");
       pokemonSprite.setPipeline(scene.spritePipeline, { tone: [0.0, 0.0, 0.0, 0.0], ignoreTimeTint: true });
       container.add(pokemonSprite);

@@ -263,9 +263,9 @@ export type DuelmonRankUpDefinition = {
 const DEFAULT_RANK_UP_LEVELS: integer[] = [20, 40, 60];
 
 const BAND_LEVEL_RANGES: [number, number][] = [
-  [35, 45],
-  [40, 60],
-  [50, 80],
+  [15, 30],
+  [20, 45],
+  [30, 65],
 ];
 
 const DUELMON_RANK_UP_BST_CAP = 800;

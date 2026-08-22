@@ -5342,7 +5342,9 @@ function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nod
   scene.resetSeed(seeds.baseSeed + wave * 1000 + nodeIndex * 100);
 
   const nodeOutcomes = Object.entries(probabilities).map(([nodeTypeStr, weight]) => ({
-    weight,
+    weight: (parseInt(nodeTypeStr) as PathNodeType) === PathNodeType.COLLECTED_SHOP && Overrides.COLLECTED_SHOP_WEIGHT_OVERRIDE !== null
+      ? Overrides.COLLECTED_SHOP_WEIGHT_OVERRIDE
+      : weight,
     nodeType: parseInt(nodeTypeStr) as PathNodeType
   }));
 

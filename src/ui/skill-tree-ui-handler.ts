@@ -2250,6 +2250,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
               return !!(championData as any)?.unlockedVoidBall;
             case SkillTreeRewardType.SMITTY_ABILITY:
               return ((championData as any)?.unlockedSmittyAbilities?.length ?? 0) > 0;
+            case SkillTreeRewardType.SKILL_TREE_TOKENS:
+              return false;
             default:
               return true;
           }
@@ -5142,11 +5144,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
     }
     const blockedMessage = this.getPurchaseBlockedMessage(node);
     if (blockedMessage) {
-      this.modalMessage?.showText(blockedMessage, 0);
+      this.modalMessage?.showText(blockedMessage, 0, () => this.modalMessage?.clear(), Utils.fixedInt(3000));
       (this.scene as BattleScene).ui.playError();
-      this.scene.time.delayedCall(3000, () => {
-        if (this.modalMessage) this.modalMessage.clear();
-      });
       return false;
     }
     const ast = this.config!.activeSkillTree;
@@ -5239,7 +5238,8 @@ export default class SkillTreeUiHandler extends ModalUiHandler {
 
       (this.scene.gameData as any).tempSkillTreeConfig = {
         ...this.config,
-        nodes: this.nodes
+        nodes: this.nodes,
+        allowLootSkip: true
       };
       (this.scene as BattleScene).unshiftPhase(new SkillTreeModifierPhase(this.scene as BattleScene, node as any, (this.config as any)?.championData));
       (this.scene as BattleScene).shiftPhase();

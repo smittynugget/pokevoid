@@ -57,7 +57,6 @@ const pad_procon = {
     [SettingGamepad.Button_Cycle_Ability]: Button.CYCLE_ABILITY,
     [SettingGamepad.Button_Voidex]: Button.VOIDEX,
     [SettingGamepad.Button_Cycle_Fusion]: Button.CYCLE_FUSION,
-    [SettingGamepad.Button_Smitty_Console]: Button.CONSOLE,
     [SettingGamepad.Button_Speed_Up]: Button.SPEED_UP,
     [SettingGamepad.Button_Slow_Down]: Button.SLOW_DOWN
   },

@@ -44,10 +44,10 @@ export class SkillTreeProgression {
 		if (oldTokens >= 2) return false;
 		activeSkillTree.tokens = Math.min(2, Math.max(0, oldTokens + amount));
 		const gd = this.scene.gameData;
-		if (!gd.skillTreeAutoOpenConsumed && !gd.pendingSkillTreeAutoOpen
+		if (!gd.pendingSkillTreeAutoOpen
 			&& this.scene.skillTreeEnabledForRun && gd.activeSkillTree
 			&& !gd.tutorialOnboardActive
-			&& oldTokens < 2 && gd.activeSkillTree.tokens >= 2) {
+			&& gd.activeSkillTree.tokens >= 2) {
 			gd.pendingSkillTreeAutoOpen = true;
 		}
 		const tracker = this.scene.findModifier(m => m instanceof Modifiers.SkillTreeTokenTrackerModifier);

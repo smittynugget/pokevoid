@@ -29,7 +29,6 @@ import { QuestState, QuestUnlockables } from "#app/system/game-data.js";
 import { MoveUpgradePhase } from "./move-upgrade-phase.js";
 import { getDynamicModeLocalizedString } from "#app/battle.js";
 import { SkillTreePhase, resolveActiveChampionId } from "#app/phases/skill-tree-phase";
-import { SkillTreeProgression } from "#app/system/skill-tree-progression";
 import { RewardObtainDisplayPhase } from "#app/phases/reward-obtain-display-phase";
 import { RewardObtainedType } from "#app/ui/reward-obtained-ui-handler";
 import { Species } from "#app/enums/species.js";
@@ -192,9 +191,8 @@ export class CommandPhase extends FieldPhase {
     }
 
     if (this.scene.gameData.pendingSkillTreeAutoOpen && this.fieldIndex === 0) {
+
       if (this.openSkillTreeFromCommand()) {
-        this.scene.gameData.pendingSkillTreeAutoOpen = false;
-        this.scene.gameData.skillTreeAutoOpenConsumed = true;
         return;
       }
     }
@@ -655,9 +653,9 @@ export class CommandPhase extends FieldPhase {
     case Command.POKEMON:
     case Command.RUN:
       const isSwitch = command === Command.POKEMON;
-
-      const cantRun = this.scene.gameMode.isTestMod || this.scene.gameMode.checkIfRival(this.scene) || this.scene.currentBattle.trainer?.config.trainerType == TrainerType.SMITTY || this.scene.currentBattle.battleSpec == BattleSpec.FINAL_BOSS
-      if (!isSwitch && (this.scene.arena.biomeType === Biome.END || cantRun)) {
+      const debugDuelmonWild = this.scene.debugDuelmonWild;
+      const cantRun = !debugDuelmonWild && (this.scene.gameMode.isTestMod || this.scene.gameMode.checkIfRival(this.scene) || this.scene.currentBattle.trainer?.config.trainerType == TrainerType.SMITTY || this.scene.currentBattle.battleSpec == BattleSpec.FINAL_BOSS);
+      if (!isSwitch && !debugDuelmonWild && (this.scene.arena.biomeType === Biome.END || cantRun)) {
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         this.scene.ui.setMode(Mode.MESSAGE);
         this.scene.ui.showText(i18next.t("battle:noEscapeForce"), null, () => {
@@ -665,7 +663,7 @@ export class CommandPhase extends FieldPhase {
           this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
         }, null, true);
       }
-      else if(this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_RUN_ANYTHING_1) && !cantRun) {
+      else if((debugDuelmonWild || this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_RUN_ANYTHING_1)) && !cantRun) {
           this.scene.currentBattle.turnCommands[this.fieldIndex] = { command: Command.RUN };
           success = true;
       }
@@ -802,8 +800,6 @@ export class CommandPhase extends FieldPhase {
       return false;
     }
     const championId = resolveActiveChampionId(this.scene, gameData.activeSkillTree);
-    new SkillTreeProgression(this.scene).consumeTokens();
-
     const skillTreePhase = new SkillTreePhase(this.scene, {
       mode: "BATTLE_ACCESS",
       onComplete: undefined,
@@ -811,6 +807,7 @@ export class CommandPhase extends FieldPhase {
         this.scene.ui.setMode(Mode.COMMAND, this.getFieldIndex());
       }
     });
+    this.scene.gameData.pendingSkillTreeAutoOpen = false;
     this.scene.unshiftPhase(new RewardObtainDisplayPhase(this.scene, {
       type: RewardObtainedType.SKILL_TREE_UNLOCK,
       championId

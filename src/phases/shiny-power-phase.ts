@@ -18,7 +18,7 @@ export class ShinyPowerPhase extends Phase {
   private shinyPokemon: PlayerPokemon[];
   private currentIndex: number = 0;
 
-  constructor(scene: BattleScene) {
+  constructor(scene: BattleScene, private readonly debugMode: boolean = false) {
     super(scene);
     this.shinyPokemon = scene.getParty().filter(p => p && p.isShiny());
   }
@@ -26,6 +26,7 @@ export class ShinyPowerPhase extends Phase {
   start(): void {
     super.start();
     if (this.scene.disableShinyPower || this.shinyPokemon.length === 0) {
+      console.warn(`[ShinyPower] skipped: disableShinyPower=${this.scene.disableShinyPower}, shinyPartyMembers=${this.shinyPokemon.length}`);
       this.end();
       return;
     }
@@ -54,6 +55,10 @@ export class ShinyPowerPhase extends Phase {
       original.ivs,
       original.nature
     );
+    const originalSpeciesUnique = original.species.unique;
+    clone.species.unique = false;
+    clone.makeSpeciesUnique();
+    original.species.unique = originalSpeciesUnique;
     clone.moveset = original.moveset.slice();
     clone.passive = original.passive;
     clone.altPassiveForRun = original.altPassiveForRun;
@@ -66,6 +71,9 @@ export class ShinyPowerPhase extends Phase {
       clone.fusionVariant = original.fusionVariant || 0;
       clone.fusionGender = original.fusionGender;
       clone.generateName();
+    }
+    if (this.debugMode && !original.isFusion() && clone.isFusion()) {
+      clone.clearFusionSpecies();
     }
 
     const allStats = [Stat.HP, Stat.ATK, Stat.DEF, Stat.SPATK, Stat.SPDEF, Stat.SPD];
@@ -135,6 +143,10 @@ export class ShinyPowerPhase extends Phase {
       original.ivs,
       original.nature
     );
+    const originalSpeciesUnique = original.species.unique;
+    clone.species.unique = false;
+    clone.makeSpeciesUnique();
+    original.species.unique = originalSpeciesUnique;
     clone.moveset = original.moveset.slice();
     clone.passive = original.passive;
     clone.altPassiveForRun = original.altPassiveForRun;
@@ -147,6 +159,9 @@ export class ShinyPowerPhase extends Phase {
       clone.fusionVariant = original.fusionVariant || 0;
       clone.fusionGender = original.fusionGender;
       clone.generateName();
+    }
+    if (this.debugMode && !original.isFusion() && clone.isFusion()) {
+      clone.clearFusionSpecies();
     }
 
     const allStats = [Stat.HP, Stat.ATK, Stat.DEF, Stat.SPATK, Stat.SPDEF, Stat.SPD];
@@ -176,6 +191,8 @@ export class ShinyPowerPhase extends Phase {
       assignTypeThemedMoves(this.scene, clone, [ownType, bestCoverage]);
     }
 
+    clone.moveset = clone.moveset.filter(m => !!m);
+
     (clone as any)._shinyPowerAbilityId = null;
     (clone as any)._shinyPowerMoveVariant = true;
 
@@ -187,6 +204,19 @@ export class ShinyPowerPhase extends Phase {
     const variant2 = this.generateVariant(pokemon);
     const variant3 = this.generateMoveVariant(pokemon);
 
+    if (this.debugMode) {
+      Promise.all([variant1, variant2, variant3].map(v => v.loadAssets()))
+        .then(() => this.presentVariantOptions(pokemon, variant1, variant2, variant3))
+        .catch(err => {
+          console.error("[ShinyPower] failed to load variant assets", err);
+          this.processNext();
+        });
+    } else {
+      this.presentVariantOptions(pokemon, variant1, variant2, variant3);
+    }
+  }
+
+  private presentVariantOptions(pokemon: PlayerPokemon, variant1: PlayerPokemon, variant2: PlayerPokemon, variant3: PlayerPokemon): void {
     const originalOption = new ModifierTypeOption(new AddPokemonModifierType(pokemon, true), 0);
     const variant1Option = new ModifierTypeOption(new AddPokemonModifierType(variant1, true), 0);
     const variant2Option = new ModifierTypeOption(new AddPokemonModifierType(variant2, true), 0);

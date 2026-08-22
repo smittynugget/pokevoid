@@ -368,6 +368,11 @@ export default class BattleScene extends SceneBase {
   public animationLoadMode: number = 2;
   public disableCutscenes: boolean = false;
   public disableShinyPower: boolean = false;
+
+  public debugDuelmonWild: boolean = false;
+
+  public debugGauntletShownPlayerDuelmons: Set<Species> | null = null;
+  public debugGauntletShownEnemyDuelmons: Set<Species> | null = null;
   public lossWhiteoutPreSummaryQueued: boolean = false;
   public moveUpgradesEnabledForRun: boolean = true;
   public statSwitchersEnabledForRun: boolean = true;
@@ -1509,13 +1514,14 @@ export default class BattleScene extends SceneBase {
     if (!this.gameData.tutorialOnboardActive) {
       if (Overrides.OPP_SPECIES_OVERRIDE) {
         species = getPokemonSpecies(Overrides.OPP_SPECIES_OVERRIDE);
-      } else if (Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE && species.generation !== 20) {
+      } else if ((Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE || this.debugDuelmonWild) && species.generation !== 20) {
         species = getPokemonSpecies(DUELMON_SPECIES[Utils.randSeedInt(DUELMON_SPECIES.length)]);
       }
     }
 
     const isBossTrainerSlot = trainerSlot === TrainerSlot.TRAINER && this.currentBattle?.trainer?.config?.isBoss;
-    if (!isBossTrainerSlot && species.generation === 20 && species.baseTotal > getDuelmonBstLimitForWave(this.currentBattle?.waveIndex ?? 1)) {
+
+    if (!this.debugDuelmonWild && !isBossTrainerSlot && species.generation === 20 && species.baseTotal > getDuelmonBstLimitForWave(this.currentBattle?.waveIndex ?? 1)) {
       const eligible = getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, this.currentBattle?.waveIndex ?? 1);
       species = getPokemonSpecies(eligible[Utils.randSeedInt(eligible.length)]);
     }
@@ -3119,9 +3125,10 @@ export default class BattleScene extends SceneBase {
     if (fromArenaPool) {
       return this.arena.randomSpecies(waveIndex, level, undefined, getPartyLuckValue(this.party));
     }
-    if (Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE) {
-      const eligible = getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, waveIndex);
-      return getPokemonSpecies(eligible[Utils.randSeedInt(eligible.length)]);
+    if (Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE || this.debugDuelmonWild) {
+
+      const pool = this.debugDuelmonWild ? DUELMON_SPECIES : getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, waveIndex);
+      return getPokemonSpecies(pool[Utils.randSeedInt(pool.length)]);
     }
     const filteredSpecies = speciesFilter ? [...new Set(allSpecies.filter(s => s.isCatchable()).filter(s => this.duelmonsEnabledForRun || s.generation !== 20).filter(speciesFilter).map(s => {
       if (!filterAllEvolutions) {
@@ -3783,18 +3790,10 @@ export default class BattleScene extends SceneBase {
   }
   clearAllPhaseQueues(): void {
     this._inBattleTurn = false;
-    try {
-      this.phaseQueue.splice(0, this.phaseQueue.length);
-    } catch {}
-    try {
-      this.phaseQueuePrepend.splice(0, this.phaseQueuePrepend.length);
-    } catch {}
-    try {
-      this.nextCommandPhaseQueue.splice(0, this.nextCommandPhaseQueue.length);
-    } catch {}
-    try {
-      this.conditionalQueue.splice(0, this.conditionalQueue.length);
-    } catch {}
+    this.phaseQueue.splice(0, this.phaseQueue.length);
+    this.phaseQueuePrepend.splice(0, this.phaseQueuePrepend.length);
+    this.nextCommandPhaseQueue.splice(0, this.nextCommandPhaseQueue.length);
+    this.conditionalQueue.splice(0, this.conditionalQueue.length);
     this.standbyPhase = null;
     this.clearPhaseQueueSplice();
   }
@@ -3805,8 +3804,6 @@ export default class BattleScene extends SceneBase {
     this.phaseQueuePrependSpliceIndex = -1;
   }
   shiftPhase(): void {
-    const prevPhase = this.currentPhase;
-
     if (this.standbyPhase) {
       this.currentPhase = this.standbyPhase;
       this.standbyPhase = null;
@@ -3877,33 +3874,8 @@ export default class BattleScene extends SceneBase {
     }
 
     if (this.currentPhase) {
-      try {
-        this.currentPhase.start();
-      } catch (error) {
-        console.error(`[PHASE ERROR] ${this.currentPhase?.constructor?.name}:`, error);
-        try {
-          this.gameData.localSaveSystemOnly(this);
-        } catch {}
-        this.recoverFromPhaseFailure(this.currentPhase, error);
-      }
+      this.currentPhase.start();
     }
-  }
-
-  recoverFromPhaseFailure(failedPhase: Phase, error: any): void {
-    console.warn(`[PHASE RECOVERY] Recovering from ${failedPhase?.constructor?.name}:`, error);
-    this.clearPhaseQueueSplice();
-    if (this.currentBattle) {
-      const field = this.getField(true);
-      for (const pokemon of field) {
-        if (pokemon.turnData) {
-          pokemon.turnData.acted = true;
-        }
-      }
-    }
-    try {
-      this.ui.setMode(Mode.MESSAGE);
-    } catch {}
-    this.shiftPhase();
   }
 
   overridePhase(phase: Phase): boolean {
