@@ -133,7 +133,8 @@ export class RankUpTransformPhase extends EvolutionPhase {
               delete sprite.pipelineData["altBuildBlendMode"];
               delete sprite.pipelineData["altBuildInversionFactor"];
             }
-            sprite.setScale(previewPokemon.getEffectiveVisualScale());
+            this.postTransformScale = previewPokemon.getEffectiveVisualScale();
+            sprite.setScale(this.postTransformScale);
           });
 
           this.scene.time.delayedCall(250, () => {
@@ -168,7 +169,7 @@ export class RankUpTransformPhase extends EvolutionPhase {
                       this.scene.playSound("se/beam");
                       this.doArcDownward();
                       this.scene.time.delayedCall(1000, () => {
-                        this.pokemonEvoTintSprite.setScale(0.25);
+                        this.pokemonEvoTintSprite.setScale(0.25 * this.postTransformScale);
                         this.pokemonEvoTintSprite.setVisible(true);
                         this.doCycle(1, 1).then(() => {
                           this.scene.playSound("se/sparkle");

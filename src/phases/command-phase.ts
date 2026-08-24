@@ -42,6 +42,7 @@ import { SelectModifierPhase } from "./select-modifier-phase";
 import { FormChangeItem } from "#enums/form-change-items";
 import { getResistantTypes, queueSmitomThenReward, queueSmitomThenShop } from "./tutorial-onboard-script-phase";
 import { setSetting, SettingKeys } from "#app/system/settings/settings";
+import { StatusEffect } from "#app/enums/status-effect.js";
 
 export class CommandPhase extends FieldPhase {
   protected fieldIndex: integer;
@@ -69,6 +70,16 @@ export class CommandPhase extends FieldPhase {
           battleTurn: this.scene.currentBattle?.turn
         });
       }
+    }
+
+    if (this.scene.debugGauntletAutoCycle && this.fieldIndex === 0) {
+      this.scene.debugGauntletCancelAutoCycle = () => {
+        this.scene.debugGauntletAutoCycleTimer?.destroy();
+        this.scene.debugGauntletAutoCycleTimer = null;
+        this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
+      };
+      this.scene.debugGauntletAutoCycleTimer = this.scene.time.delayedCall(1000, () => this.advanceGauntletCycle());
+      return;
     }
 
     if (this.tryTriggerReviverSeedTutorialChain()) {
@@ -234,6 +245,28 @@ export class CommandPhase extends FieldPhase {
         this.scene.gameData.tutorialService.showCombinedTutorial("", introTutorials, true, false, true);
       }
     }
+  }
+  private advanceGauntletCycle(): void {
+    const scene = this.scene;
+    scene.debugGauntletAutoCycleTimer = null;
+    scene.debugGauntletCancelAutoCycle = null;
+
+    const enemyField = scene.getEnemyField();
+    enemyField.forEach(enemyPokemon => {
+      enemyPokemon.hp = 0;
+      enemyPokemon.trySetStatus(StatusEffect.FAINT);
+      enemyPokemon.hideInfo();
+      enemyPokemon.destroy();
+    });
+    scene.clearEnemyHeldItemModifiers();
+    PokemonBattleTooltipUtils.destroyEnemyHoverZone();
+    PokemonBattleTooltipUtils.destroyPlayerHoverZone();
+
+    scene.clearPhaseQueue();
+    import("./debug-gauntlet-encounter-phase").then(({ DebugGauntletEncounterPhase }) => {
+      scene.unshiftPhase(new DebugGauntletEncounterPhase(scene));
+      scene.shiftPhase();
+    });
   }
 
   public tryTriggerVoidCaptureChain(): boolean {

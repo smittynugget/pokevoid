@@ -373,6 +373,12 @@ export default class BattleScene extends SceneBase {
 
   public debugGauntletShownPlayerDuelmons: Set<Species> | null = null;
   public debugGauntletShownEnemyDuelmons: Set<Species> | null = null;
+
+  public debugGauntletAutoCycle: boolean = false;
+
+  public debugGauntletAutoCycleTimer: Phaser.Time.TimerEvent | null = null;
+
+  public debugGauntletCancelAutoCycle: (() => void) | null = null;
   public lossWhiteoutPreSummaryQueued: boolean = false;
   public moveUpgradesEnabledForRun: boolean = true;
   public statSwitchersEnabledForRun: boolean = true;
@@ -381,9 +387,6 @@ export default class BattleScene extends SceneBase {
   public mapEnabledForRun: boolean = true;
   public duelmonsEnabledForRun: boolean = true;
   public skillTreeEnabledForRun: boolean = true;
-  public trainerDualColorRecolorEnabledForRun: boolean = false;
-  public trainerDualColorAForRun: number[] | null = null;
-  public trainerDualColorBForRun: number[] | null = null;
 
   public uiEditModeActive: boolean = false;
   refreshUiEditModeActive(): void {
@@ -1729,43 +1732,15 @@ export default class BattleScene extends SceneBase {
     this.offsetGym = this.gameMode.isClassic && this.getGeneratedOffsetGym();
 
   }
-
-  initTrainerDualColorRecolorForRun(): void {
-    const palette: number[][] = [
-      [255, 255, 255],
-      [128, 0, 128],
-      [0, 0, 0],
-      [255, 215, 0],
-    ];
-
-    this.executeWithSeedOffset(() => {
-      this.trainerDualColorRecolorEnabledForRun = Utils.randSeedInt(100) < 30;
-      if (!this.trainerDualColorRecolorEnabledForRun) {
-        this.trainerDualColorAForRun = null;
-        this.trainerDualColorBForRun = null;
-        return;
-      }
-
-      const a = Utils.randSeedInt(palette.length);
-      let b = Utils.randSeedInt(palette.length - 1);
-      if (b >= a) {
-        b++;
-      }
-
-      this.trainerDualColorAForRun = [...palette[a]];
-      this.trainerDualColorBForRun = [...palette[b]];
-    }, 0x5452, this.seed);
-  }
-
   randBattleSeedInt(range: integer, min: integer = 0): integer {
     return this.currentBattle?.randSeedInt(this, range, min);
   }
+  public titleBgActive: boolean = false;
 
   showTitleBG() {
     this.arenaBg.setTexture("title_bg");
-    this.arenaBg.setScale(1);
     this.arenaBg.setOrigin(0);
-    this.arenaBg.setSize(1920, 1080);
+    this.arenaBg.setDisplaySize(1920, 1080);
     this.arenaBg.setPosition(0, 0);
     this.arenaBg.setTint(0xFFFFFF);
     this.arenaBg.resetPipeline(true);
@@ -1783,6 +1758,8 @@ export default class BattleScene extends SceneBase {
     this.ui?.hideMessageChrome?.();
     this.ui?.getPermaMoneyContainer?.()?.setVisible?.(true);
     this.ui?.permaModifierBar?.setVisible?.(this.showPermaBar);
+
+    this.titleBgActive = true;
   }
 
   restoreBattleField(): void {
@@ -1790,16 +1767,21 @@ export default class BattleScene extends SceneBase {
     this.fieldUI.setVisible(true);
     this.arenaPlayer.setVisible(true);
     this.arenaEnemy.setVisible(true);
-    this.arenaBg.setPipeline(this.fieldSpritePipeline);
-    this.arenaBg.setScale(6);
-    this.arenaBg.setSize(320, 240);
-    this.arenaBg.setPosition(FIELD_X_OFFSET, 0);
-    this.arenaBg.setOrigin(0, 0);
+    if (this.arenaBg.texture.key !== "title_bg") {
+      this.applyBiomeBgGeometry();
+    }
     this.arenaBg.setVisible(true);
     if (this.battleVisualSuppressionDepth > 0) {
       this.battleVisualSuppressionDepth = 0;
       this.endOfRunBattleVisualSuppressionActive = false;
     }
+  }
+  applyBiomeBgGeometry(): void {
+    this.arenaBg.setPipeline(this.fieldSpritePipeline);
+    this.arenaBg.setScale(6);
+    this.arenaBg.setSize(320, 240);
+    this.arenaBg.setPosition(FIELD_X_OFFSET, 0);
+    this.arenaBg.setOrigin(0, 0);
   }
 
   releaseCondenseTrailOverlay(): void {
@@ -2095,7 +2077,6 @@ export default class BattleScene extends SceneBase {
     this.gameMode = getGameMode(GameModes.CLASSIC);
 
     this.setSeed(Overrides.SEED_OVERRIDE || Utils.randomString(24));
-    this.initTrainerDualColorRecolorForRun();
 
     this.disableMenu = false;
 
@@ -2416,7 +2397,7 @@ export default class BattleScene extends SceneBase {
     const resetArenaState = isNewBiome || this.currentBattle.battleType === BattleType.TRAINER || this.currentBattle.battleSpec === BattleSpec.FINAL_BOSS;
     lastBattle.enemyParty.forEach(enemyPokemon => enemyPokemon.destroy(true));
     if(lastBattle.trainer) {
-      lastBattle.trainer.destroy();
+      lastBattle.trainer.destroy(true);
     }
     this.trySpreadPokerus();
     if (!isNewBiome && (newWaveIndex % 10) === 5) {
@@ -2461,6 +2442,7 @@ export default class BattleScene extends SceneBase {
   }
 
   newArena(biome: Biome): Arena {
+    this.titleBgActive = false;
     this.arena = new Arena(this, biome, Biome[biome].toLowerCase());
     this.eventTarget.dispatchEvent(new NewArenaEvent());
 
@@ -2727,6 +2709,29 @@ export default class BattleScene extends SceneBase {
   public recordRunUnlockReward(reward: RewardConfig): void {
     this.runUnlockRewards.push(reward);
   }
+  private static readonly RUN_END_SUMMARY_MAX_ENTRIES = 150;
+
+  private pushCapped<T>(arr: T[], entry: T): void {
+    arr.push(entry);
+    if (isIPhone() && arr.length > BattleScene.RUN_END_SUMMARY_MAX_ENTRIES) {
+      arr.shift();
+    }
+  }
+  public trimRunEndSummaryRunData(): void {
+    if (!isIPhone()) {
+      return;
+    }
+    const rd = this.runEndSummaryRunData;
+    const max = BattleScene.RUN_END_SUMMARY_MAX_ENTRIES;
+    rd.hatched = rd.hatched.slice(-max);
+    rd.captured = rd.captured.slice(-max);
+    rd.defeated = rd.defeated.slice(-max);
+    rd.rivalsDefeated = rd.rivalsDefeated.slice(-max);
+    rd.smittyDefeatedFrames = rd.smittyDefeatedFrames.slice(-max);
+    rd.fusionsCaptured = rd.fusionsCaptured.slice(-max);
+    rd.majorBossesDefeated = rd.majorBossesDefeated.slice(-max);
+    rd.skillNodesObtained = rd.skillNodesObtained.slice(-max);
+  }
 
   public beginPowerUnlockDeferral(): void {
     this.powerUnlockDeferralDepth++;
@@ -2763,7 +2768,7 @@ export default class BattleScene extends SceneBase {
   }
 
   public recordRunEndSummaryHatch(pokemon: PlayerPokemon): void {
-    this.runEndSummaryRunData.hatched.push({
+    this.pushCapped(this.runEndSummaryRunData.hatched, {
       id: pokemon.id,
       speciesId: pokemon.species.speciesId,
       formIndex: pokemon.formIndex,
@@ -2775,7 +2780,7 @@ export default class BattleScene extends SceneBase {
 
   public recordRunEndSummaryCapture(pokemon: EnemyPokemon): void {
     const isFusion = !!pokemon.isFusion?.() || !!pokemon.fusionSpecies;
-    this.runEndSummaryRunData.captured.push({
+    this.pushCapped(this.runEndSummaryRunData.captured, {
       id: pokemon.id,
       speciesId: pokemon.species.speciesId,
       formIndex: pokemon.formIndex,
@@ -2787,7 +2792,7 @@ export default class BattleScene extends SceneBase {
       fusionFormIndex: pokemon.fusionFormIndex
     });
     if (isFusion && pokemon.fusionSpecies?.speciesId) {
-      this.runEndSummaryRunData.fusionsCaptured.push({
+      this.pushCapped(this.runEndSummaryRunData.fusionsCaptured, {
         primarySpeciesId: pokemon.species.speciesId,
         fusionSpeciesId: pokemon.fusionSpecies.speciesId
       });
@@ -2796,7 +2801,7 @@ export default class BattleScene extends SceneBase {
 
   public recordRunEndSummaryDefeat(pokemon: Pokemon): void {
     if (pokemon.isPlayer()) return;
-    this.runEndSummaryRunData.defeated.push({
+    this.pushCapped(this.runEndSummaryRunData.defeated, {
       id: pokemon.id,
       speciesId: pokemon.species.speciesId,
       formIndex: pokemon.formIndex,
@@ -2807,16 +2812,16 @@ export default class BattleScene extends SceneBase {
   }
 
   public recordRunEndSummaryRivalDefeat(trainerType: number): void {
-    this.runEndSummaryRunData.rivalsDefeated.push(trainerType);
+    this.pushCapped(this.runEndSummaryRunData.rivalsDefeated, trainerType);
   }
 
   public recordRunEndSummarySmittyDefeat(frame: string): void {
-    this.runEndSummaryRunData.smittyDefeatedFrames.push(frame);
+    this.pushCapped(this.runEndSummaryRunData.smittyDefeatedFrames, frame);
   }
 
   public recordRunEndSummaryMajorBossDefeat(waveIndex: integer, speciesId: number): void {
     if (this.runEndSummaryRunData.majorBossesDefeated.some(e => e.waveIndex === waveIndex)) return;
-    this.runEndSummaryRunData.majorBossesDefeated.push({ waveIndex, speciesId });
+    this.pushCapped(this.runEndSummaryRunData.majorBossesDefeated, { waveIndex, speciesId });
   }
 
   public recordRunEndSummaryChallengeReward(): void {
@@ -2841,7 +2846,7 @@ export default class BattleScene extends SceneBase {
       }
       return;
     }
-    this.runEndSummaryRunData.skillNodesObtained.push({ nodeId, rewardType, rewardData });
+    this.pushCapped(this.runEndSummaryRunData.skillNodesObtained, { nodeId, rewardType, rewardData });
   }
 
   addFieldSprite(x: number, y: number, texture: string | Phaser.Textures.Texture, frame?: string | number, terrainColorRatio: number = 0): Phaser.GameObjects.Sprite {
@@ -3202,6 +3207,9 @@ export default class BattleScene extends SceneBase {
       fadeOut = false;
     }
     this.bgmCache.add(bgmName);
+    if (isIPhone() && this.bgm?.key && this.bgm.key !== bgmName && this.cache.audio.exists(this.bgm.key)) {
+      this.cache.audio.remove(this.bgm.key);
+    }
     const bgmPath = BGM_PATHS[bgmName];
     this.loadBgm(bgmName, bgmPath);
     let loopPoint = 0;
@@ -3825,9 +3833,11 @@ export default class BattleScene extends SceneBase {
 
     }
 
-    console.log(`[PHASE] shiftPhase: queue=${this.phaseQueue.map(p => p.constructor.name).join(', ')}`);
-    console.log(`[PHASE] shiftPhase: currentPhase=${this.currentPhase?.constructor.name || 'None'}`);
-    console.log(`[PHASE] shiftPhase: standbyPhase=${this.standbyPhase?.constructor.name || 'None'}`);
+    if (Overrides.DEBUG_SAVE_TRACE) {
+      console.log(`[PHASE] shiftPhase: queue=${this.phaseQueue.map(p => p.constructor.name).join(', ')}`);
+      console.log(`[PHASE] shiftPhase: currentPhase=${this.currentPhase?.constructor.name || 'None'}`);
+      console.log(`[PHASE] shiftPhase: standbyPhase=${this.standbyPhase?.constructor.name || 'None'}`);
+    }
 
     if (!this.phaseQueue.length) {
       this.populatePhaseQueue();
@@ -3835,7 +3845,9 @@ export default class BattleScene extends SceneBase {
     }
 
     let nextPhase = this.phaseQueue.shift();
-    console.log(`[PHASE] shiftPhase: nextPhase=${nextPhase?.constructor.name || 'None'}`);
+    if (Overrides.DEBUG_SAVE_TRACE) {
+      console.log(`[PHASE] shiftPhase: nextPhase=${nextPhase?.constructor.name || 'None'}`);
+    }
     this.currentPhase = nextPhase ?? null;
 
     if (this.conditionalQueue?.length) {

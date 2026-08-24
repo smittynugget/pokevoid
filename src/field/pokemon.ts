@@ -6251,7 +6251,7 @@ export class PlayerPokemon extends Pokemon {
           this.scene.getParty().splice(fusedPartyMemberIndex, 1)[0];
           const newPartyMemberIndex = this.scene.getParty().indexOf(this);
           pokemon.getMoveset(true).map(m => this.scene.unshiftPhase(new LearnMovePhase(this.scene, newPartyMemberIndex, m!.getMove().id)));
-          pokemon.destroy();
+          pokemon.destroy(true);
           const fusionForm = this.getFusionSpeciesForm();
           if (fusionForm) {
             const fusionSpriteKey = fusionForm.getSpriteKey(

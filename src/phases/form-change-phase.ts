@@ -165,7 +165,8 @@ export class FormChangePhase extends EvolutionPhase {
             delete sprite.pipelineData["altBuildInversionFactor"];
           }
 
-          sprite.setScale(transformedPokemon.getEffectiveVisualScale());
+          this.postTransformScale = transformedPokemon.getEffectiveVisualScale();
+          sprite.setScale(this.postTransformScale);
         } catch (error) {
           console.error(`Error setting up sprite animation for ${transformedPokemon.getSpriteKey(true)}:`, error);
 
@@ -211,7 +212,7 @@ export class FormChangePhase extends EvolutionPhase {
                   this.scene.playSound("se/beam");
                   this.doArcDownward();
                   this.scene.time.delayedCall(1000, () => {
-                    this.pokemonEvoTintSprite.setScale(0.25);
+                    this.pokemonEvoTintSprite.setScale(0.25 * this.postTransformScale);
                     this.pokemonEvoTintSprite.setVisible(true);
                     this.doCycle(1, 1).then(_success => {
                       this.scene.playSound("se/sparkle");

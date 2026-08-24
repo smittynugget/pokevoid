@@ -9,6 +9,8 @@ import Overrides from "#app/overrides";
 export function ShowRewards(scene: BattleScene, chance: integer = 19, overrideChance: boolean = true, unshiftRatherThanPush: boolean = true, pathNodeFilter: PathNodeTypeFilter = PathNodeTypeFilter.NONE) {
     if (scene.gameData.tutorialOnboardActive) return;
 
+    if (scene.debugDuelmonWild) return;
+
     if (scene.gameMode.isTestMod) {
         for (const species of scene.gameData.testSpeciesForMod) {
             scene.unshiftPhase(new SelectModifierPhase(scene, 1, undefined, false, undefined, pathNodeFilter));

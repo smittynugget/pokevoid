@@ -1936,9 +1936,9 @@ export const trainerConfigs: TrainerConfigs = {
 
   [TrainerType.PEGASUS]: new TrainerConfig(++t).setName("Pegasus").initForEvilTeamLeader("Master of Illusions", []).setMixedBattleBgm("battle_plasma_boss").setVictoryBgm("victory_team_plasma")
       .setPartyMemberFunc(0, getRandomPartyMemberFunc([Species.TOON_MERMAID, Species.TOON_ALLIGATOR], TrainerSlot.TRAINER, true))
-      .setPartyMemberFunc(1, getRandomPartyMemberFunc([Species.DARK_RABBIT, Species.TOON_MASKED_SORCERER], TrainerSlot.TRAINER, true))
-      .setPartyMemberFunc(2, getRandomPartyMemberFunc([Species.TOON_DARK_MAGICIAN, Species.TOON_DARK_MAGICIAN_GIRL], TrainerSlot.TRAINER, true))
-      .setPartyMemberFunc(3, getRandomPartyMemberFunc([Species.GOLDEN_EYES_IDOL, Species.DARK_EYES_ILLUSIONIST, Species.ILLUSIONIST_FACELESS_MAGE], TrainerSlot.TRAINER, true))
+      .setPartyMemberFunc(1, getRandomPartyMemberFunc([Species.DARK_RABBIT, Species.TOON_MASKED_SORCERER, Species.TOON_DARK_MAGICIAN], TrainerSlot.TRAINER, true))
+      .setPartyMemberFunc(2, getRandomPartyMemberFunc([Species.BLUE_EYES_TOON_DRAGON_RENDER], TrainerSlot.TRAINER, true))
+      .setPartyMemberFunc(3, getRandomPartyMemberFunc([Species.GOLDEN_EYES_IDOL, Species.DARK_EYES_ILLUSIONIST, Species.TOON_DARK_MAGICIAN_GIRL, Species.ILLUSIONIST_FACELESS_MAGE], TrainerSlot.TRAINER, true))
       .setPartyMemberFunc(4, getRandomPartyMemberFunc([Species.TOON_SUMMONED_SKULL, Species.TOON_BARREL_DRAGON, Species.TOON_ANCIENT_GEAR_GOLEM], TrainerSlot.TRAINER, true))
       .setPartyMemberFunc(5, getRandomPartyMemberFunc([Species.RELINQUISHED], TrainerSlot.TRAINER, true, p => {
         p.setBoss(true, 2);
@@ -1949,13 +1949,13 @@ export const trainerConfigs: TrainerConfigs = {
   [TrainerType.PEGASUS_2]: new TrainerConfig(++t).setName("Pegasus").initForEvilTeamLeader("Master of Illusions", [], true).setMixedBattleBgm("battle_plasma_boss").setVictoryBgm("victory_team_plasma")
       .setPartyMemberFunc(0, getRandomPartyMemberFunc([Species.BICKURIBOX, Species.DARK_RABBIT], TrainerSlot.TRAINER, true))
       .setPartyMemberFunc(1, getRandomPartyMemberFunc([Species.TOON_DARK_MAGICIAN, Species.TOON_DARK_MAGICIAN_GIRL], TrainerSlot.TRAINER, true))
-      .setPartyMemberFunc(2, getRandomPartyMemberFunc([Species.TOON_BLACK_LUSTER_SOLDIER, Species.BLUE_EYES_TOON_DRAGON_RENDER], TrainerSlot.TRAINER, true, p => {
+      .setPartyMemberFunc(2, getRandomPartyMemberFunc([Species.TOON_BLACK_LUSTER_SOLDIER], TrainerSlot.TRAINER, true, p => {
         p.setBoss(true, 2);
         p.generateAndPopulateMoveset();
         p.pokeball = PokeballType.ULTRA_BALL;
       }))
       .setPartyMemberFunc(3, getRandomPartyMemberFunc([Species.TOON_BARREL_DRAGON, Species.TOON_ANCIENT_GEAR_GOLEM, Species.TOON_SUMMONED_SKULL], TrainerSlot.TRAINER, true))
-      .setPartyMemberFunc(4, getRandomPartyMemberFunc([Species.RELINQUISHED], TrainerSlot.TRAINER, true, p => {
+      .setPartyMemberFunc(4, getRandomPartyMemberFunc([Species.BLUE_EYES_TOON_DRAGON_RENDER], TrainerSlot.TRAINER, true, p => {
         p.setBoss(true, 2);
         p.generateAndPopulateMoveset();
         p.pokeball = PokeballType.ULTRA_BALL;

@@ -115,7 +115,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { addCorruptedRivalOverlay, playCutsceneFaintAnim } from "#app/utils/story-cutscene-overlays.js";
 export const defaultStarterSpecies: Species[] = [];
 
-export const INTERNAL_BACKUP_VERSION = 0;
+export const INTERNAL_BACKUP_VERSION = 1;
 
 export const VERSIONS_REQUIRING_BACKUP: string[] = [
     "v2.0b [The Colossal Update]",
@@ -289,9 +289,6 @@ export interface SessionSaveData {
     pendingSkillTreeAutoOpen?: boolean;
     skillTreeAutoOpenConsumed?: boolean;
     wave35UnlockedThisRun?: boolean;
-    trainerDualColorRecolorEnabledForRun?: boolean;
-    trainerDualColorAForRun?: number[] | null;
-    trainerDualColorBForRun?: number[] | null;
     runEndSummaryRunData?: RunEndSummaryRunData;
 }
 
@@ -1143,6 +1140,17 @@ export class GameData {
                 }
             }
         }
+        if (this.estimateStorageUsageBytes() > GameData.IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES) {
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+                const key = localStorage.key(i);
+                if (!key) {
+                    continue;
+                }
+                if (key.startsWith("data_backup_") && key.endsWith(`_${username}`)) {
+                    localStorage.removeItem(key);
+                }
+            }
+        }
 
         const activeSlotId = this.scene?.sessionSlotId ?? -1;
         for (let s = 0; s < 5; s++) {
@@ -1169,10 +1177,76 @@ export class GameData {
                         delete entry.battlePath;
                         delete entry.nightmareBattleSeeds;
                         delete entry.fixedBattleSeeds;
+                        delete entry.runEndSummaryRunData;
                     }
                 }
                 localStorage.setItem(runHistoryKey, JSON.stringify(runHistory));
             } catch (_) {}
+        }
+        const activeSlot = this.scene?.sessionSlotId ?? -1;
+        if (activeSlot >= 0 && this.estimateStorageUsageBytes() > GameData.IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES) {
+            const [, activeBattleKey] = this.getSessionKeys(activeSlot);
+            localStorage.removeItem(activeBattleKey);
+        }
+    }
+    public compactStoredData(): void {
+        if (this.isReplayMode() || !loggedInUser?.username) {
+            return;
+        }
+
+        this.purgeAllBackupKeys();
+        for (let s = 0; s < 5; s++) {
+            const [, battleKey] = this.getSessionKeys(s);
+            localStorage.removeItem(battleKey);
+        }
+        if (this.estimateStorageUsageBytes() <= GameData.IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES) {
+            return;
+        }
+        for (let s = 0; s < 5; s++) {
+            this.compactSessionSlot(s);
+        }
+    }
+    private compactSessionSlot(slotId: integer): void {
+        const [primaryKey] = this.getSessionKeys(slotId);
+        const existing = localStorage.getItem(primaryKey);
+        if (!existing) {
+            return;
+        }
+        try {
+            const session = JSON.parse(decrypt(existing, bypassLogin));
+            let changed = false;
+
+            for (const layer of session?.battlePath?.layers ?? []) {
+                for (const node of layer?.nodes ?? []) {
+                    if (node?.previousConnections !== undefined) {
+                        delete node.previousConnections;
+                        changed = true;
+                    }
+                }
+            }
+            const runData = session?.runEndSummaryRunData;
+            if (runData && isIPhone()) {
+                for (const key of GameData.RUN_END_SUMMARY_KEYS) {
+                    const arr = runData[key];
+                    if (Array.isArray(arr) && arr.length > GameData.RUN_END_SUMMARY_MAX_ENTRIES) {
+                        runData[key] = arr.slice(-GameData.RUN_END_SUMMARY_MAX_ENTRIES);
+                        changed = true;
+                    }
+                }
+            }
+
+            if (!changed) {
+                return;
+            }
+            const rewritten = encrypt(JSON.stringify(session), bypassLogin);
+
+            if (rewritten.length < existing.length) {
+                localStorage.setItem(primaryKey, rewritten);
+                console.log(`[STORAGE] Compacted ${primaryKey}: ${(existing.length * 2 / 1024).toFixed(0)}KB -> ${(rewritten.length * 2 / 1024).toFixed(0)}KB`);
+            }
+        } catch (e) {
+
+            console.warn(`[STORAGE] Compaction skipped for ${primaryKey}.`, e);
         }
     }
 
@@ -1229,8 +1303,14 @@ export class GameData {
             version: savedVersion,
             isCombined: true
         };
+        const serializedBackup = JSON.stringify(backupData);
+        const projectedUsage = this.estimateStorageUsageBytes() + (backupKey.length + serializedBackup.length) * 2;
+        if (projectedUsage > GameData.IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES) {
+            console.warn(`[STORAGE] Skipping combined version backup - would use ${(projectedUsage / 1024 / 1024).toFixed(2)}MB, over budget.`);
+            return;
+        }
         try {
-            localStorage.setItem(backupKey, JSON.stringify(backupData));
+            localStorage.setItem(backupKey, serializedBackup);
         } catch (e) {
             if (e instanceof DOMException && e.name === 'QuotaExceededError') {
                 console.error("Version backup failed: Storage quota exceeded.", e);
@@ -1325,8 +1405,12 @@ export class GameData {
                 this.scene.ui.savingIcon.hide();
                 resolve(true);
             } catch (error) {
-                console.error('[SAVE ERROR]', error);
-                alert('[SAVE ERROR] ' + (error as Error).message);
+                if (error instanceof DOMException && error.name === "QuotaExceededError") {
+                    this.notifyQuotaError("System save", error);
+                } else {
+                    console.error('[SAVE ERROR]', error);
+                    alert('[SAVE ERROR] ' + (error as Error).message);
+                }
                 resolve(false);
             }
         });
@@ -1503,15 +1587,6 @@ export class GameData {
                 if (isImportBoot) {
                     this.setLocalStorageItem("justImportedSave", "");
                 }
-
-                try {
-                    if (this.shouldCreateVersionBackup(systemData.gameVersion)) {
-                        const originalDataStr = this.serializeBigInt(systemData);
-                        this.createVersionBackup(originalDataStr, systemData.gameVersion);
-                    }
-                } catch (backupError) {
-                }
-
                 const maxIntAttrValue = 0x80000000;
 
                 const lsItemKey = `runHistoryData_${loggedInUser?.username}`;
@@ -1921,12 +1996,9 @@ export class GameData {
                     localStorage.setItem("wave35_stat_switchers_unlocked", "1");
                     localStorage.setItem("wave35_move_upgrades_unlocked", "1");
                     localStorage.setItem("wave35_release_items_unlocked", "1");
-                    setSetting(this.scene, SettingKeys.Disable_Stat_Switchers, 0);
-                    setSetting(this.scene, SettingKeys.Disable_Move_Upgrades, 0);
-                    setSetting(this.scene, SettingKeys.Disable_Release_Items, 0);
-                    this.scene.disableStatSwitchers = false;
-                    this.scene.disableMoveUpgrades = false;
-                    this.scene.disableReleaseItems = false;
+                    this.saveSetting(SettingKeys.Disable_Stat_Switchers, 0);
+                    this.saveSetting(SettingKeys.Disable_Move_Upgrades, 0);
+                    this.saveSetting(SettingKeys.Disable_Release_Items, 0);
                     this.smitomTutorialFlags["wave35_stat_switchers"] = true;
                     this.smitomTutorialFlags["wave35_move_upgrades"] = true;
                     this.smitomTutorialFlags["wave35_release_items"] = true;
@@ -1993,6 +2065,7 @@ export class GameData {
         delete (trimmedEntry as any).battlePath;
         delete (trimmedEntry as any).nightmareBattleSeeds;
         delete (trimmedEntry as any).fixedBattleSeeds;
+        delete (trimmedEntry as any).runEndSummaryRunData;
         runHistoryData[timestamp] = {
             entry: trimmedEntry,
             isVictory: isVictory,
@@ -2337,15 +2410,6 @@ export class GameData {
     private loadSettings(): boolean {
         resetSettings(this.scene);
 
-        if (isIPhone()) {
-            const saved = localStorage.hasOwnProperty("settings")
-                ? JSON.parse(this.getLocalStorageItem("settings")!)
-                : null;
-            if (!saved || saved[SettingKeys.Animation_Load] === undefined) {
-                setSetting(this.scene, SettingKeys.Animation_Load, 1);
-            }
-        }
-
         if (!localStorage.hasOwnProperty("settings")) {
             this.saveSetting(SettingKeys.Modifier_Tooltips, 0);
             return false;
@@ -2490,6 +2554,37 @@ export class GameData {
 
         return ret;
     }
+    private stripRegeneratedBattlePathConfigs(battlePath: any): any {
+        if (!battlePath?.layers) {
+            return battlePath;
+        }
+        const REGENERATED_NODE_TYPES = new Set<PathNodeType>([
+            PathNodeType.RIVAL_BATTLE,
+            PathNodeType.MAJOR_BOSS_BATTLE,
+            PathNodeType.RECOVERY_BOSS,
+            PathNodeType.EVIL_BOSS_BATTLE,
+            PathNodeType.ELITE_FOUR,
+            PathNodeType.CHAMPION,
+            PathNodeType.SMITTY_BATTLE,
+            PathNodeType.EVIL_GRUNT_BATTLE,
+            PathNodeType.EVIL_ADMIN_BATTLE,
+            PathNodeType.CHALLENGE_BOSS,
+            PathNodeType.CHALLENGE_RIVAL,
+            PathNodeType.CHALLENGE_EVIL_BOSS,
+            PathNodeType.CHALLENGE_CHAMPION,
+        ]);
+        return {
+            ...battlePath,
+            layers: battlePath.layers.map((layer: any) => ({
+                ...layer,
+                nodes: (layer.nodes || []).map((node: any) =>
+                    REGENERATED_NODE_TYPES.has(node.nodeType)
+                        ? { ...node, battleConfig: undefined, previousConnections: undefined }
+                        : { ...node, previousConnections: undefined }
+                ),
+            })),
+        };
+    }
 
     public getSessionSaveData(scene: BattleScene): SessionSaveData {
         return {
@@ -2529,7 +2624,7 @@ export class GameData {
             recoveryBossMode: scene.recoveryBossMode,
             pathNodeContext: scene.pathNodeContext,
             selectedNodeType: scene.selectedNodeType,
-            battlePath: this.battlePath,
+            battlePath: this.stripRegeneratedBattlePathConfigs(this.battlePath),
             selectedPath: this.selectedPath,
             battlePathWave: scene.battlePathWave,
             lastBattleNodeWave: scene.lastBattleNodeWave,
@@ -2547,9 +2642,6 @@ export class GameData {
             pendingSkillTreeAutoOpen: this.pendingSkillTreeAutoOpen ?? false,
             skillTreeAutoOpenConsumed: this.skillTreeAutoOpenConsumed ?? false,
             wave35UnlockedThisRun: scene.wave35UnlockedThisRun,
-            trainerDualColorRecolorEnabledForRun: scene.trainerDualColorRecolorEnabledForRun,
-            trainerDualColorAForRun: scene.trainerDualColorAForRun,
-            trainerDualColorBForRun: scene.trainerDualColorBForRun,
             runEndSummaryRunData: scene.runEndSummaryRunData,
         } as SessionSaveData;
     }
@@ -2775,20 +2867,10 @@ export class GameData {
                         ? _sessionData.wave35UnlockedThisRun
                         : false;
 
-                    if (_sessionData.trainerDualColorRecolorEnabledForRun === undefined) {
-                        scene.initTrainerDualColorRecolorForRun();
-                    } else {
-                        scene.trainerDualColorRecolorEnabledForRun = _sessionData.trainerDualColorRecolorEnabledForRun;
-                        scene.trainerDualColorAForRun = _sessionData.trainerDualColorAForRun ?? null;
-                        scene.trainerDualColorBForRun = _sessionData.trainerDualColorBForRun ?? null;
-                        if (scene.trainerDualColorRecolorEnabledForRun && (!scene.trainerDualColorAForRun || !scene.trainerDualColorBForRun)) {
-                            scene.initTrainerDualColorRecolorForRun();
-                        }
-                    }
-
                     scene.resetRunEndSummaryRunData();
                     if (_sessionData.runEndSummaryRunData) {
                         scene.runEndSummaryRunData = { ...scene.runEndSummaryRunData, ..._sessionData.runEndSummaryRunData };
+                        scene.trimRunEndSummaryRunData();
                     }
 
                     scene.sessionPlayTime = _sessionData.playTime || 0;
@@ -2824,6 +2906,7 @@ export class GameData {
                     } else {
                         setCurrentBattlePath(null);
                     }
+                    this.compactStoredData();
 
                     this.selectedPath = Overrides.STARTING_SELECTED_PATH_OVERRIDE || _sessionData.selectedPath || "";
                     scene.battlePathWave = Overrides.STARTING_BATTLE_PATH_WAVE_OVERRIDE || _sessionData.battlePathWave || 1;
@@ -3892,6 +3975,34 @@ export class GameData {
             throw error;
         }
     }
+
+    private estimateStorageUsageBytes(): number {
+        let total = 0;
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key) {
+                continue;
+            }
+            total += key.length + (localStorage.getItem(key)?.length ?? 0);
+        }
+        return total * 2;
+    }
+    private static readonly IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES = 4 * 1024 * 1024;
+    private static readonly RUN_END_SUMMARY_MAX_ENTRIES = 150;
+    private static readonly RUN_END_SUMMARY_KEYS = [
+        "hatched", "captured", "defeated", "rivalsDefeated",
+        "smittyDefeatedFrames", "fusionsCaptured", "majorBossesDefeated", "skillNodesObtained",
+    ];
+    public lastSaveHitQuota: boolean = false;
+    private lastStorageUsageBytes: number = 0;
+    private notifyQuotaError(context: string, e: unknown): void {
+        console.error(
+            `[STORAGE] ${context}: quota exceeded after compaction. Estimated usage ` +
+            `${(this.estimateStorageUsageBytes() / 1048576).toFixed(2)}MB. Save data was NOT written.`,
+            e
+        );
+    }
+
     saveAll(scene: BattleScene, skipVerification: boolean = false, sync: boolean = false, useCachedSession: boolean = false, useCachedSystem: boolean = false, systemOnly: boolean = false): Promise<boolean> {
         return new Promise<boolean>(async (resolve) => {
             try {
@@ -3902,6 +4013,12 @@ export class GameData {
             if (this.tutorialOnboardActive && !TitlePhase.debugTutorialFlowActive) {
                 resolve(false);
                 return;
+            }
+            this.lastSaveHitQuota = false;
+            this.lastStorageUsageBytes = this.estimateStorageUsageBytes();
+            if (isIPhone() && this.lastStorageUsageBytes > GameData.IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES) {
+                this.emergencyStorageCleanup();
+                this.lastStorageUsageBytes = this.estimateStorageUsageBytes();
             }
             await updateUserInfo();
             if (Overrides.DEBUG_SAVE_TRACE) {
@@ -4004,8 +4121,14 @@ export class GameData {
                 this.notifySaveComplete(scene, { sync, systemOnly, sessionSaved: !systemOnly });
                 resolve(true);
             } catch (error) {
-                console.error('[SAVE ERROR] saveAll failed:', error);
-                alert('[SAVE ERROR] saveAll failed: ' + (error as Error).message);
+                const isQuota = error instanceof DOMException && error.name === "QuotaExceededError";
+                if (isQuota) {
+                    this.lastSaveHitQuota = true;
+                    this.notifyQuotaError("Save", error);
+                } else {
+                    console.error('[SAVE ERROR] saveAll failed:', error);
+                    alert('[SAVE ERROR] saveAll failed: ' + (error as Error).message);
+                }
                 resolve(false);
             }
         });
@@ -4017,6 +4140,9 @@ export class GameData {
             && sessionData.party.length > 0
             && sessionData.waveIndex > 0;
         if (!shouldSave) return "none";
+        if (this.lastStorageUsageBytes > GameData.IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES) {
+            return "primary";
+        }
 
         const inActiveBattle = !!scene.encounterInitComplete && !!scene.currentBattle?.started && !!scene._inBattleTurn;
         const battleStartCheckpoint = !!scene.currentBattle && !scene.encounterInitComplete;
@@ -4488,6 +4614,12 @@ export class GameData {
                             );
                         }
                         this.setLocalStorageItem("justImportedSave", "true");
+                        localStorage.setItem("wave35_stat_switchers_unlocked", "1");
+                        localStorage.setItem("wave35_move_upgrades_unlocked", "1");
+                        localStorage.setItem("wave35_release_items_unlocked", "1");
+                        this.saveSetting(SettingKeys.Disable_Stat_Switchers, 0);
+                        this.saveSetting(SettingKeys.Disable_Move_Upgrades, 0);
+                        this.saveSetting(SettingKeys.Disable_Release_Items, 0);
                         window.location.reload();
                     },
                     () => {
@@ -6297,10 +6429,25 @@ export class GameData {
             return;
         }
         this.cleanupOldBackups();
-        if (this.shouldCreateVersionChangeBackup()) {
-            this.createVersionChangeBackup();
-        }
+        this.compactStoredData();
         this.saveSystem();
+    }
+    private purgeAllBackupKeys(): void {
+        const username = loggedInUser?.username;
+        if (!username) {
+            return;
+        }
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+            const key = localStorage.key(i);
+            if (!key) {
+                continue;
+            }
+            if (key.startsWith("data_backup_") && key.endsWith(`_${username}`)) {
+                localStorage.removeItem(key);
+            } else if (key.endsWith(`_${username}_bak`)) {
+                localStorage.removeItem(key);
+            }
+        }
     }
 
     public getAvailableBackups(): BackupInfo[] {

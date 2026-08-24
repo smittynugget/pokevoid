@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import BattleScene from "../battle-scene";
 import { QuantizerCelebi, argbFromRgba, rgbaFromArgb } from "@material/material-color-utilities";
+import * as Utils from "../utils";
 
 const TRAINER_DUALCOLOR_CLUSTER4_CACHE = new Map<string, number[][]>();
 
@@ -43,6 +44,7 @@ export function getTrainerSpriteCluster4(scene: BattleScene, sprite: Phaser.Game
 
   ctx.drawImage(sourceImage as any, frame.cutX, frame.cutY, frame.width, frame.height, 0, 0, frame.width, frame.height);
   const data = ctx.getImageData(0, 0, frame.width, frame.height).data;
+  canvas.remove();
 
   const pixelColors: number[] = [];
   for (let i = 0; i < data.length; i += 4) {
@@ -82,7 +84,25 @@ export function getTrainerSpriteCluster4(scene: BattleScene, sprite: Phaser.Game
   return rgbaClusters;
 }
 
-export function applyTrainerDualColorAltBuild(scene: BattleScene, sprite: Phaser.GameObjects.Sprite, corruptedPriority: boolean): void {
+const DUAL_COLOR_POOL: number[][] = [
+  [255, 255, 255],
+  [128, 0, 128],
+  [0, 0, 0],
+  [255, 215, 0],
+];
+export function rollTrainerDualColorPair(): { a: number[]; b: number[] } | null {
+  if (Utils.randSeedInt(100) >= 30) {
+    return null;
+  }
+  const a = Utils.randSeedInt(DUAL_COLOR_POOL.length);
+  let b = Utils.randSeedInt(DUAL_COLOR_POOL.length - 1);
+  if (b >= a) {
+    b++;
+  }
+  return { a: [...DUAL_COLOR_POOL[a]], b: [...DUAL_COLOR_POOL[b]] };
+}
+
+export function applyTrainerDualColorAltBuild(scene: BattleScene, sprite: Phaser.GameObjects.Sprite, corruptedPriority: boolean, dualColorPair: { a: number[]; b: number[] } | null): void {
   if (!sprite) return;
 
   const textureKey = sprite.texture?.key ?? "";
@@ -100,11 +120,7 @@ export function applyTrainerDualColorAltBuild(scene: BattleScene, sprite: Phaser
     return;
   }
 
-  if (
-    !scene.trainerDualColorRecolorEnabledForRun
-    || !scene.trainerDualColorAForRun
-    || !scene.trainerDualColorBForRun
-  ) {
+  if (!dualColorPair) {
     clearTrainerDualColorAltBuild(sprite);
     return;
   }
@@ -115,8 +131,7 @@ export function applyTrainerDualColorAltBuild(scene: BattleScene, sprite: Phaser
     return;
   }
 
-  const a = scene.trainerDualColorAForRun;
-  const b = scene.trainerDualColorBForRun;
+  const { a, b } = dualColorPair;
   const aRgba = [a[0], a[1], a[2], 255];
   const bRgba = [b[0], b[1], b[2], 255];
 

@@ -6112,6 +6112,14 @@ export function reconstructBattlePathFromLayers(savedBattlePath: any): BattlePat
       battlePath.waveToNodeMap.get(node.wave)!.push(node);
     }
   }
+  for (const node of battlePath.nodeMap.values()) {
+    node.previousConnections = [];
+  }
+  for (const node of battlePath.nodeMap.values()) {
+    for (const targetId of node.connections ?? []) {
+      battlePath.nodeMap.get(targetId)?.previousConnections.push(node.id);
+    }
+  }
 
   return battlePath;
 }

@@ -1,6 +1,6 @@
 import {loggedInUser} from "#app/account.js";
 import BattleScene from "#app/battle-scene.js";
-import Battle, {BattleType, setupFixedBattlePaths, setupFixedBattles, resetBattlePathGlobalState, getCurrentBattlePath, setCurrentBattlePath, reconstructBattlePathFromLayers} from "#app/battle.js";
+import Battle, {BattleType, setupFixedBattlePaths, setupFixedBattles, resetBattlePathGlobalState, getCurrentBattlePath, setCurrentBattlePath, reconstructBattlePathFromLayers, regenerateSpecialNodeProperties} from "#app/battle.js";
 import {getDailyRunStarters, fetchDailyRunSeed} from "#app/data/daily-run.js";
 import {Gender} from "#app/data/gender.js";
 import {getPokemonSpecies} from "#app/data/pokemon-species.js";
@@ -1235,6 +1235,7 @@ export class TitlePhase extends Phase {
                     setupFixedBattlePaths(this.scene, startWave);
                 } else {
                     const reconstructedPath = reconstructBattlePathFromLayers(this.scene.gameData.battlePath);
+                    regenerateSpecialNodeProperties(this.scene, reconstructedPath);
                     setCurrentBattlePath(reconstructedPath);
                     this.scene.gameData.battlePath = reconstructedPath;
                 }

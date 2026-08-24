@@ -49,7 +49,7 @@ export class RankUpPhase extends Phase {
     const currentForm = this.pokemon.getSpeciesForm();
     const currentBaseStats = [...currentForm.baseStats];
     const currentBst = currentBaseStats.reduce((sum, s) => sum + s, 0);
-    const deltaBst = this.clampInt(50, 50, 100);
+    const deltaBst = this.clampInt(75, 75, 100);
 
     const selfFocus = this.getDefaultRankUpFocusStats(currentBaseStats);
     const selfTargetBst = currentBst + deltaBst;

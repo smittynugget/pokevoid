@@ -71,6 +71,6 @@ function getDailyRunStarter(scene: BattleScene, starterSpeciesForm: PokemonSpeci
     pokerus: pokemon.pokerus,
     fusionIndex: -1
   };
-  pokemon.destroy();
+  pokemon.destroy(true);
   return starter;
 }

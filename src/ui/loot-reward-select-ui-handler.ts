@@ -465,12 +465,15 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
     if (this.displayConfig?.hideShop) {
       this.scene.modifierTooltipsEnabled = true;
     }
+    const isReshowWhileActive = this.active && args.length >= 3;
 
     if (this.isPaginationEnabled() && args[1] instanceof Array && args[1].length > this.maxPerPage) {
-      this.allTypeOptions = [...args[1]];
-      this.totalPages = Math.ceil(this.allTypeOptions.length / this.maxPerPage);
-      this.pageIndex = 0;
-      this.windowStart = 0;
+      if (!isReshowWhileActive) {
+        this.allTypeOptions = [...args[1]];
+        this.totalPages = Math.ceil(this.allTypeOptions.length / this.maxPerPage);
+        this.pageIndex = 0;
+        this.windowStart = 0;
+      }
       const originalCallback = args[2] as (rowCursor: number, cursor: number) => boolean;
       args[1] = this.getVisibleOptions(this.allTypeOptions);
       args[2] = (rowCursor: number, cursor: number) => {
@@ -480,7 +483,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
         }
         return originalCallback(rowCursor, cursor);
       };
-    } else {
+    } else if (!isReshowWhileActive) {
       this.allTypeOptions = args[1] instanceof Array ? [...args[1]] : [];
       this.totalPages = 1;
       this.pageIndex = 0;
@@ -2471,7 +2474,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
     }
 
     this.updatePaginationArrowState();
-
+    this._clickFocusedIndex = -1;
     this.setCursor(direction > 0 ? this.maxPerPage - 1 : 0);
     this.getUi().playSelect();
 

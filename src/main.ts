@@ -151,8 +151,7 @@ const boot = async (): Promise<void> => {
   }
 
   try {
-    const { initDriveAuth } = await import("./system/drive-auth");
-    await initDriveAuth();
+    import("./system/drive-auth").then(({ initDriveAuth }) => initDriveAuth()).catch(() => {});
   } catch {}
 
   try {

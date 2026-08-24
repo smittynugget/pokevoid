@@ -85,8 +85,10 @@ export class LoadingScene extends SceneBase {
     const logoId = Math.random() < 0.1 ? 304 : Math.floor(Math.random() * 307);
     this.loadImage("smittyLogo", "smitty_logos", `${logoId}.${logoExt}`);
     this.loadImage("smittyTextLogo", "", `smittynugget_textlogo.${logoExt}`);
-    this.loadImage("title_bg", "");
-    this.loadImage("light_bg", "ui");
+    const bgExt = (this.game as any)?.device?.features?.webp ? "webp" : "png";
+    const bgFile = (name: string) => isIOS ? `${name}_ios.webp` : `${name}.${bgExt}`;
+    this.loadImage("title_bg", "", bgFile("title_bg"));
+    this.loadImage("light_bg", "ui", bgFile("light_bg"));
 
     this.loadAtlas("bg", "ui");
     this.loadAtlas("prompt", "ui");
@@ -229,11 +231,11 @@ export class LoadingScene extends SceneBase {
     this.loadImage("newchampion_empty_fillX", "ui/newchampion", "empty_fillX.png");
     this.loadImage("newchampion_surrounding_fill_bg", "ui/newchampion", "surrounding_fill_BG.png");
     this.loadImage("tooltip_info", "ui", "tooltip-info.png");
-    this.loadImage("modifier_ui_handler_bg", "ui/rewards");
+    this.loadImage("modifier_ui_handler_bg", "ui/rewards", bgFile("modifier_ui_handler_bg"));
     this.loadImage("modifier_option_focused", "ui/rewards");
     this.loadImage("modifier_option_unfocused", "ui/rewards");
     this.loadImage("modifier_handler_btn_option", "ui/rewards");
-    this.loadImage("level_up", "ui/rewards");
+    this.loadImage("level_up", "ui/rewards", bgFile("level_up"));
     this.loadImage("newchampion_progress_fill", "ui/newchampion", "progress_fill.png");
     this.loadImage("newchampion_future_unlocks_bg_bar", "ui/newchampion", "future_unlocks_bg_bar.png");
     this.loadImage("newchampion_future_unlocks_bg_barX", "ui/newchampion", "future_unlocks_bg_barX.png");
@@ -243,17 +245,18 @@ export class LoadingScene extends SceneBase {
     this.loadImage("tutorial_bg", "ui");
     this.loadImage("smitom_dialogue_bg", "arenas", "loading_bg4.png");
     this.loadImage("void_portal", "ui");
-    this.loadImage("voidex_bg", "ui");
+    this.loadImage("voidex_bg", "ui", bgFile("voidex_bg"));
     const csExt = (this.game as any)?.device?.features?.webp ? "webp" : "png";
-    this.loadImage("cutscene_frame", "cutscenes", `cutscene-frame.${csExt}`);
-    this.loadImage("intro_slide_1", "cutscenes", `peace.${csExt}`);
-    this.loadImage("intro_slide_2", "cutscenes", `voidbreak.${csExt}`);
-    this.loadImage("intro_slide_3", "cutscenes", `voidbreak2.${csExt}`);
-    this.loadImage("intro_slide_4", "cutscenes", `locked.${csExt}`);
-    this.loadImage("intro_slide_5", "cutscenes", `shadows.${csExt}`);
-    this.loadImage("intro_slide_6", "cutscenes", `you.${csExt}`);
-    this.loadImage("intro_slide_7", "cutscenes", `choose.${csExt}`);
-    this.loadImage("intro_slide_8", "cutscenes", `journey.${csExt}`);
+    const csFile = (name: string) => isIOS ? `${name}_ios.webp` : `${name}.${csExt}`;
+    this.loadImage("cutscene_frame", "cutscenes", csFile("cutscene-frame"));
+    this.loadImage("intro_slide_1", "cutscenes", csFile("peace"));
+    this.loadImage("intro_slide_2", "cutscenes", csFile("voidbreak"));
+    this.loadImage("intro_slide_3", "cutscenes", csFile("voidbreak2"));
+    this.loadImage("intro_slide_4", "cutscenes", csFile("locked"));
+    this.loadImage("intro_slide_5", "cutscenes", csFile("shadows"));
+    this.loadImage("intro_slide_6", "cutscenes", csFile("you"));
+    this.loadImage("intro_slide_7", "cutscenes", csFile("choose"));
+    this.loadImage("intro_slide_8", "cutscenes", csFile("journey"));
 
     this.loadImage("default_bg", "arenas");
     if (!isIOS) {
@@ -752,7 +755,8 @@ export class LoadingScene extends SceneBase {
         const readyState = typeof v?.readyState === "number" ? v.readyState : 0;
         const duration = typeof v?.duration === "number" ? v.duration : 0;
         const nearEnd = Number.isFinite(duration) && duration > 0 && t >= (duration - 0.1);
-        if (ended || nearEnd || (t > 0 && readyState >= 2) || elapsed >= 7000) {
+        const autoplayBlocked = !!v?.paused && readyState >= 2 && elapsed >= 1200;
+        if (ended || nearEnd || autoplayBlocked || (t > 0 && readyState >= 2) || elapsed >= 7000) {
           if (!smittyLogo.visible) {
             showSmittyLogos();
           }
@@ -761,14 +765,25 @@ export class LoadingScene extends SceneBase {
             const elapsedSoFar = Date.now() - introStartAtMs;
             const holdDuration = 5000;
             try {
+              if (this.willPlayIntroCutscene()) {
+                IntroCutsceneScene.queueSlideAssets(this, this.getIntroVariant());
+                if (!this.load.isLoading()) {
+                  this.load.start();
+                }
+              }
+            } catch {}
+            try {
               if (intro && intro.scene) {
                 intro.setVisible(false);
               }
             } catch {}
-            setTimeout(() => {
-              if (this.introVideoDone) return;
-              this.launchIntroCutscene();
-            }, holdDuration - 1800);
+            try {
+              this.loadingGraphics?.forEach(g => {
+                if (g && g.scene) {
+                  g.setVisible(false);
+                }
+              });
+            } catch {}
             setTimeout(() => {
               const fadeElapsed = Date.now() - introStartAtMs;
               if (this.introVideoDone) return;
@@ -798,7 +813,9 @@ export class LoadingScene extends SceneBase {
             }, holdDuration);
             return;
           }
-          completeIntroVideo();
+          if (elapsed >= 10000) {
+            completeIntroVideo();
+          }
         }
       }
     };
@@ -1058,6 +1075,23 @@ export class LoadingScene extends SceneBase {
         if (!this.scene.isActive("battle")) {
           this.scene.start("battle");
         }
+        if (percentTextRef && percentTextRef.scene) {
+          percentTextRef.setText("100%");
+        }
+        this.tweens.add({
+          targets: this.loadingGraphics.filter(g => g && g.scene),
+          alpha: 0,
+          duration: 500,
+          ease: "Sine.easeOut",
+          onComplete: () => {
+            if (this.loadingGraphics && this.loadingGraphics.length > 0) {
+              this.loadingGraphics.forEach(g => { if (g && g.scene) g.destroy(); });
+              this.loadingGraphics = [];
+            }
+            this.scene.stop(LoadingScene.KEY);
+          }
+        });
+        this.game.events.emit("_condenseHandleReady");
       }, 15000);
 
       this.game.events.once("_condenseStart", () => {
@@ -1142,6 +1176,16 @@ export class LoadingScene extends SceneBase {
     const voidBeaten = localStorage.getItem(key) === 'true';
     return voidBeaten ? 'B' : 'A';
   }
+  private willPlayIntroCutscene(): boolean {
+    let disableCutscenes = false;
+    try {
+      const raw = localStorage.getItem("settings");
+      if (raw) {
+        disableCutscenes = JSON.parse(raw)?.["DISABLE_CUTSCENES"] === 1;
+      }
+    } catch {}
+    return !disableCutscenes && !this.shouldDeferIntroToTitle();
+  }
 
   private shouldDeferIntroToTitle(): boolean {
     try {
@@ -1183,16 +1227,7 @@ export class LoadingScene extends SceneBase {
       this.spawnLoadingSmitom();
     };
 
-    let disableCutscenes = false;
-    try {
-      const raw = localStorage.getItem("settings");
-      if (raw) {
-        const settings = JSON.parse(raw);
-        disableCutscenes = settings?.["DISABLE_CUTSCENES"] === 1;
-      }
-    } catch {}
-
-    if (disableCutscenes || this.shouldDeferIntroToTitle()) {
+    if (!this.willPlayIntroCutscene()) {
       const revealWhenReady = () => {
         if (!this.introVideoDone) {
           setTimeout(revealWhenReady, 50);

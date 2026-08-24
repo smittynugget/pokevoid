@@ -232,7 +232,7 @@ export class SlideshowController {
         "cutscene_frame"
       );
       this.frameOverlay.setOrigin(0.5, 0.5);
-      this.frameOverlay.setScale(layout.scale);
+      this.frameOverlay.setScale(layout.screenWidth / this.frameOverlay.width);
       this.container.add(this.frameOverlay);
     }
 

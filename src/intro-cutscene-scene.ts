@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { SlideshowController } from "./utils/slideshow-controller";
 import { initI18n } from "./plugins/i18n";
+import { isIPhone } from "./loading-scene";
 
 export class IntroCutsceneScene extends Phaser.Scene {
   public static readonly KEY = "intro-cutscene";
@@ -35,56 +36,26 @@ export class IntroCutsceneScene extends Phaser.Scene {
   init(data: { variant?: 'A' | 'B' }): void {
     this.variant = data?.variant || 'A';
   }
+  public static queueSlideAssets(scene: Phaser.Scene, variant: 'A' | 'B'): void {
+    const ext = (scene.game as any)?.device?.features?.webp ? "webp" : "png";
+    const csFile = (name: string) =>
+      isIPhone() ? `images/cutscenes/${name}_ios.webp` : `images/cutscenes/${name}.${ext}`;
+    const slides = variant === 'A'
+      ? ["peace", "voidbreak", "voidbreak2", "locked", "shadows", "you", "choose", "journey"]
+      : ["shadows", "shadowPower", "power", "journey", "thronemystery"];
+    slides.forEach((name, i) => {
+      const key = `intro_slide_${i + 1}`;
+      if (!scene.textures.exists(key)) {
+        scene.load.image(key, csFile(name));
+      }
+    });
+    if (!scene.textures.exists("cutscene_frame")) {
+      scene.load.image("cutscene_frame", csFile("cutscene-frame"));
+    }
+  }
 
   preload(): void {
-    this.load.setPath("images/");
-    const ext = (this.game as any)?.device?.features?.webp ? "webp" : "png";
-    if (this.variant === 'A') {
-      if (!this.textures.exists("intro_slide_1")) {
-        this.load.image("intro_slide_1", `cutscenes/peace.${ext}`);
-      }
-      if (!this.textures.exists("intro_slide_2")) {
-        this.load.image("intro_slide_2", `cutscenes/voidbreak.${ext}`);
-      }
-      if (!this.textures.exists("intro_slide_3")) {
-        this.load.image("intro_slide_3", `cutscenes/voidbreak2.${ext}`);
-      }
-      if (!this.textures.exists("intro_slide_4")) {
-        this.load.image("intro_slide_4", `cutscenes/locked.${ext}`);
-      }
-      if (!this.textures.exists("intro_slide_5")) {
-        this.load.image("intro_slide_5", `cutscenes/shadows.${ext}`);
-      }
-      if (!this.textures.exists("intro_slide_6")) {
-        this.load.image("intro_slide_6", `cutscenes/you.${ext}`);
-      }
-      if (!this.textures.exists("intro_slide_7")) {
-        this.load.image("intro_slide_7", `cutscenes/choose.${ext}`);
-      }
-      if (!this.textures.exists("intro_slide_8")) {
-        this.load.image("intro_slide_8", `cutscenes/journey.${ext}`);
-      }
-    } else {
-      if (!this.textures.exists("intro_slide_1")) {
-        this.load.image("intro_slide_1", `cutscenes/shadows.${ext}`);
-      }
-      if (!this.textures.exists("intro_slide_2")) {
-        this.load.image("intro_slide_2", `cutscenes/shadowPower.${ext}`);
-      }
-      if (!this.textures.exists("intro_slide_3")) {
-        this.load.image("intro_slide_3", `cutscenes/power.${ext}`);
-      }
-      if (!this.textures.exists("intro_slide_4")) {
-        this.load.image("intro_slide_4", `cutscenes/journey.${ext}`);
-      }
-      if (!this.textures.exists("intro_slide_5")) {
-        this.load.image("intro_slide_5", `cutscenes/thronemystery.${ext}`);
-      }
-    }
-
-    if (!this.textures.exists("cutscene_frame")) {
-      this.load.image("cutscene_frame", `cutscenes/cutscene-frame.${ext}`);
-    }
+    IntroCutsceneScene.queueSlideAssets(this, this.variant);
 
     this.load.setPath("audio/");
     this.load.audio("wasteland", "bgm/wasteland.mp3");

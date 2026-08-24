@@ -117,8 +117,11 @@ export class Arena {
     this.scene.arenaPlayerTransition.setBiome(this.biomeType);
     this.scene.arenaEnemy.setBiome(this.biomeType);
     this.scene.arenaNextEnemy.setBiome(this.biomeType);
-    this.scene.arenaBg.setTexture(`${biomeKey}_bg`);
-    this.scene.arenaBgTransition.setTexture(`${biomeKey}_bg`);
+    if (!this.scene.titleBgActive) {
+      this.scene.arenaBg.setTexture(`${biomeKey}_bg`);
+      this.scene.arenaBgTransition.setTexture(`${biomeKey}_bg`);
+      this.scene.applyBiomeBgGeometry();
+    }
 
     this.updatePoolsForTimeOfDay();
   }

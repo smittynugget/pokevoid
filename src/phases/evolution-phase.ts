@@ -37,6 +37,8 @@ export class EvolutionPhase extends Phase {
   protected pokemonTintSprite: Phaser.GameObjects.Sprite;
   protected pokemonEvoSprite: Phaser.GameObjects.Sprite;
   protected pokemonEvoTintSprite: Phaser.GameObjects.Sprite;
+  protected preTransformScale: number = 1;
+  protected postTransformScale: number = 1;
 
   constructor(scene: BattleScene, pokemon: PlayerPokemon, evolution: SpeciesFormEvolution | null, lastLevel: integer) {
     super(scene);
@@ -162,7 +164,8 @@ export class EvolutionPhase extends Phase {
         delete sprite.pipelineData["altBuildInversionFactor"];
       }
 
-      sprite.setScale(this.pokemon.getEffectiveVisualScale());
+      this.preTransformScale = this.pokemon.getEffectiveVisualScale();
+      sprite.setScale(this.preTransformScale);
       });
 
       const isAltBuildFormChange = (this as any)?.formChange?.formKey === SpeciesFormKey.ALT_BUILD;
@@ -208,8 +211,9 @@ export class EvolutionPhase extends Phase {
         delete (this.pokemon as any)._preStateAltBuildSnapshot;
       }
       this.pokemon.getPossibleEvolution(this.evolution).then(evolvedPokemon => {
-        this.pokemonEvoSprite.setScale(evolvedPokemon.getEffectiveVisualScale());
-        this.pokemonEvoTintSprite.setScale(evolvedPokemon.getEffectiveVisualScale());
+        this.postTransformScale = evolvedPokemon.getEffectiveVisualScale();
+        this.pokemonEvoSprite.setScale(this.postTransformScale);
+        this.pokemonEvoTintSprite.setScale(this.postTransformScale);
       });
 
       this.doEvolution();
@@ -283,7 +287,8 @@ export class EvolutionPhase extends Phase {
             delete sprite.pipelineData["altBuildBlendMode"];
             delete sprite.pipelineData["altBuildInversionFactor"];
           }
-          sprite.setScale(evolvedPokemon.getEffectiveVisualScale());
+          this.postTransformScale = evolvedPokemon.getEffectiveVisualScale();
+          sprite.setScale(this.postTransformScale);
         });
 
         this.scene.time.delayedCall(1000, () => {
@@ -319,14 +324,14 @@ export class EvolutionPhase extends Phase {
                     this.scene.playSound("se/beam");
                     this.doArcDownward();
                     this.scene.time.delayedCall(1500, () => {
-                      this.pokemonEvoTintSprite.setScale(0.25);
+                      this.pokemonEvoTintSprite.setScale(0.25 * this.postTransformScale);
                       this.pokemonEvoTintSprite.setVisible(true);
                       evolutionHandler.canCancel = true;
                       this.doCycle(1).then(success => {
                         if (!success) {
 
                           this.pokemonSprite.setVisible(true);
-                          this.pokemonTintSprite.setScale(1);
+                          this.pokemonTintSprite.setScale(this.preTransformScale);
                           this.scene.tweens.add({
                             targets: [ this.evolutionBg, this.pokemonTintSprite, this.pokemonEvoSprite, this.pokemonEvoTintSprite ],
                             alpha: 0,
@@ -500,14 +505,14 @@ export class EvolutionPhase extends Phase {
       const isLastCycle = l === lastCycle;
       this.scene.tweens.add({
         targets: this.pokemonTintSprite,
-        scale: 0.25,
+        scale: 0.25 * this.preTransformScale,
         ease: "Cubic.easeInOut",
         duration: 500 / l,
         yoyo: !isLastCycle
       });
       this.scene.tweens.add({
         targets: this.pokemonEvoTintSprite,
-        scale: 1,
+        scale: this.postTransformScale,
         ease: "Cubic.easeInOut",
         duration: 500 / l,
         yoyo: !isLastCycle,

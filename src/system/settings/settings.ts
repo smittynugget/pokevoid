@@ -14,7 +14,6 @@ import { ShopCursorTarget } from "#app/enums/shop-cursor-target";
 import { isNormalQuestCompleted } from "#app/modifier/perma-modifier-checker";
 import {setChangeNormalTyping} from "#app/data/type";
 import { ChampionUtils } from "#app/system/champion-utils";
-import { isIPhone } from "../../loading-scene";
 
 function getTranslation(key: string): string {
   if (!getIsInitialized()) {
@@ -349,8 +348,7 @@ export const Setting: Array<Setting> = [
       { value: "Full", label: i18next.t("settings:animationFull") },
     ],
     default: 2,
-    type: SettingType.GENERAL,
-    isHidden: () => isIPhone()
+    type: SettingType.GENERAL
   },
   {
     key: SettingKeys.HP_Bar_Speed,

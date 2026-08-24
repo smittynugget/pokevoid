@@ -480,8 +480,7 @@ export class EncounterPhase extends BattlePhase {
 
         this.scene.gameData.saveAll(this.scene, true, this.scene.lastSavePlayTime >= 300).then(success => {
           this.scene.disableMenu = false;
-
-          if (!success && !this.scene.gameData?.tutorialOnboardActive) {
+          if (!success && !this.scene.gameData?.lastSaveHitQuota && !this.scene.gameData?.tutorialOnboardActive) {
             return this.scene.reset(true);
           }
           this.doEncounter();

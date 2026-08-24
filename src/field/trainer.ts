@@ -1,4 +1,5 @@
 import BattleScene, { RecoveryBossMode } from "../battle-scene";
+import { isIPhone } from "../loading-scene";
 import {pokemonPrevolutions} from "../data/pokemon-evolutions";
 import PokemonSpecies, {getPokemonSpecies} from "../data/pokemon-species";
 import {
@@ -33,7 +34,7 @@ import Overrides from "#app/overrides";
 import { DEBUG_FORCE_TRAINER_CORRUPTED } from "#app/overrides";
 import { DUELMON_SPECIES } from "#app/data/duelmon-rankups";
 import { getEligibleDuelmonSpeciesForWave } from "#app/data/duelmon-bst-utils";
-import { applyTrainerDualColorAltBuild, getTrainerSpriteCluster4 } from "../utils/trainer-dualcolor-recolor";
+import { applyTrainerDualColorAltBuild, getTrainerSpriteCluster4, rollTrainerDualColorPair } from "../utils/trainer-dualcolor-recolor";
 
 export enum TrainerVariant {
   DEFAULT,
@@ -53,6 +54,8 @@ export default class Trainer extends Phaser.GameObjects.Container {
   public rivalStage: number;
   private nightmareTemplate: TrainerPartyTemplate | null;
   public isCorrupted: boolean;
+
+  public dualColorPair: { a: number[]; b: number[] } | null = null;
   public portalSprite: Phaser.GameObjects.Sprite | null = null;
 
   constructor(scene: BattleScene, trainerType: TrainerType, variant: TrainerVariant, partyTemplateIndex?: integer, name?: string, partnerName?: string, rivalConfig?: TrainerConfig, rivalStage?: number, isCorrupted?: boolean) {
@@ -62,6 +65,7 @@ export default class Trainer extends Phaser.GameObjects.Container {
     this.isDynamicRival = rivalStage >= 1
     this.dynamicRivalType = null;
     this.isCorrupted = (DEBUG_FORCE_TRAINER_CORRUPTED && trainerType !== TrainerType.SMITTY) || (trainerType !== TrainerType.SMITTY && (isCorrupted || (!this.scene.gameData.tutorialOnboardActive && ((!this.scene.gameMode.isNightmare && Utils.randSeedChance(5) && !this.isDynamicRival) || (this.scene.gameData.defeatedRivals?.includes(trainerType) && !this.scene.gameData.unlocks[Unlockables.THE_VOID_OVERTAKEN])))));
+    this.dualColorPair = this.isCorrupted ? null : rollTrainerDualColorPair();
 
     if (this.isDynamicRival && rivalConfig) {
       this.config = this.rivalConfig = rivalConfig;
@@ -200,7 +204,7 @@ export default class Trainer extends Phaser.GameObjects.Container {
     this.getSprites()
       .concat(this.getTintSprites())
       .filter(s => !!s)
-      .forEach(s => applyTrainerDualColorAltBuild(this.scene, s, dualColorCorruptedPriority));
+      .forEach(s => applyTrainerDualColorAltBuild(this.scene, s, dualColorCorruptedPriority, this.dualColorPair));
   }
 
   getKey(forceFemale?: boolean): string {
@@ -691,7 +695,7 @@ export default class Trainer extends Phaser.GameObjects.Container {
     this.getSprites()
       .concat(this.getTintSprites())
       .filter(s => !!s)
-      .forEach(s => applyTrainerDualColorAltBuild(this.scene, s, dualColorCorruptedPriority));
+      .forEach(s => applyTrainerDualColorAltBuild(this.scene, s, dualColorCorruptedPriority, this.dualColorPair));
   }
   tryPlaySprite(sprite: Phaser.GameObjects.Sprite, tintSprite: Phaser.GameObjects.Sprite, animConfig: Phaser.Types.Animations.PlayAnimationConfig): boolean {
     if (sprite.texture.key === "__MISSING") {
@@ -710,19 +714,14 @@ export default class Trainer extends Phaser.GameObjects.Container {
       return false;
     }
 
-    if (
-      !this.isCorrupted
-      && this.scene.trainerDualColorRecolorEnabledForRun
-      && this.scene.trainerDualColorAForRun
-      && this.scene.trainerDualColorBForRun
-    ) {
+    if (!this.isCorrupted && this.dualColorPair) {
       let lastFrameName: string | null = sprite.frame?.name ?? null;
       const onUpdate = (_anim: any, frame: any) => {
         const nextFrameName = (frame?.textureFrame ?? sprite.frame?.name) as (string | undefined);
         if (!nextFrameName || nextFrameName === lastFrameName) return;
         lastFrameName = nextFrameName;
-        applyTrainerDualColorAltBuild(this.scene, sprite, false);
-        applyTrainerDualColorAltBuild(this.scene, tintSprite, false);
+        applyTrainerDualColorAltBuild(this.scene, sprite, false, this.dualColorPair);
+        applyTrainerDualColorAltBuild(this.scene, tintSprite, false, this.dualColorPair);
       };
       let cleaned = false;
       const cleanup = () => {
@@ -735,8 +734,8 @@ export default class Trainer extends Phaser.GameObjects.Container {
       sprite.on("animationupdate", onUpdate);
       sprite.once("animationcomplete", cleanup);
       sprite.once("destroy", cleanup);
-      applyTrainerDualColorAltBuild(this.scene, sprite, false);
-      applyTrainerDualColorAltBuild(this.scene, tintSprite, false);
+      applyTrainerDualColorAltBuild(this.scene, sprite, false, this.dualColorPair);
+      applyTrainerDualColorAltBuild(this.scene, tintSprite, false, this.dualColorPair);
     }
 
     return true;
@@ -863,7 +862,32 @@ export default class Trainer extends Phaser.GameObjects.Container {
       this.portalSprite.destroy();
       this.portalSprite = null;
     }
+    if (isIPhone() && removeTextures) {
+      this.removeTextureCompletely();
+    }
     super.destroy();
+  }
+
+  private removeTextureCompletely(): void {
+    if (!this.scene) {
+      return;
+    }
+
+    const keys: string[] = [this.getKey()];
+    if (this.variant === TrainerVariant.DOUBLE) {
+      keys.push(this.getKey(true));
+    }
+    keys.forEach(key => {
+      if (this.scene.textures.exists(key)) {
+        this.scene.textures.remove(key);
+      }
+      if (this.scene.anims.exists(key)) {
+        this.scene.anims.remove(key);
+      }
+      if (this.scene.cache.json.exists(key)) {
+        this.scene.cache.json.remove(key);
+      }
+    });
   }
 }
 

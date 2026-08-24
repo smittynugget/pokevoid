@@ -258,6 +258,18 @@ export class UiInputs {
           this.launchDuelmonWildGauntletDebug();
         }
       });
+      this.scene.input.keyboard?.on("keydown", () => {
+        const scene = this.scene;
+        if (!scene.debugGauntletAutoCycle || (!scene.debugGauntletCancelAutoCycle && !scene.debugGauntletAutoCycleTimer)) {
+          return;
+        }
+        scene.debugGauntletAutoCycle = false;
+        scene.debugGauntletAutoCycleTimer?.destroy();
+        scene.debugGauntletAutoCycleTimer = null;
+        const cancel = scene.debugGauntletCancelAutoCycle;
+        scene.debugGauntletCancelAutoCycle = null;
+        cancel?.();
+      });
     }
 
     if (Overrides.DEBUG_FORM_EVOLUTION_OVERRIDE) {
@@ -1461,11 +1473,16 @@ export class UiInputs {
     scene.debugDuelmonWild = true;
     scene.debugGauntletShownPlayerDuelmons = new Set();
     scene.debugGauntletShownEnemyDuelmons = new Set();
+    scene.debugGauntletAutoCycle = true;
+    scene.debugGauntletAutoCycleTimer?.destroy();
+    scene.debugGauntletAutoCycleTimer = null;
+    scene.debugGauntletCancelAutoCycle = null;
 
     scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE_FTL);
     scene.sessionSlotId = -1;
     scene.skillTreeEnabledForRun = false;
     scene.moveUpgradesEnabledForRun = false;
+    scene.dynamicMode = { noInitialSwitch: true };
 
     if (scene.gameData.gender === PlayerGender.UNSET) {
       scene.gameData.gender = PlayerGender.MALE;
