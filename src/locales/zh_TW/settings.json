@@ -137,5 +137,7 @@
   "veryRare": "極稀有",
   "animationLoad": "動畫負載",
   "animationLite": "輕量",
-  "animationFull": "完整（高負載）"
+  "animationFull": "完整（高負載）",
+  "shopNoDuplicates": "停用商店重複",
+  "shopShowUniqueNames": "顯示商店獨特名稱"
 }

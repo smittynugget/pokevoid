@@ -221,7 +221,7 @@ export class MoveEffectPhase extends PokemonPhase {
                             user.scene.applyShuffledModifiers(this.scene, EnemyAttackStatusEffectChanceModifier, false, target);
                           }
                         })).then(() => {
-                          return applyPostAttackAbAttrs(PostAttackAbAttr, user, target, this.move.getMove(), hitResult).then(() => {
+                          return Utils.executeIf(!target.isFainted() && target.isOnField(), () => applyPostAttackAbAttrs(PostAttackAbAttr, user, target, this.move.getMove(), hitResult)).then(() => {
                             return applyFilteredMoveAttrs((attr: MoveAttr) => attr instanceof MoveEffectAttr && (attr as MoveEffectAttr).trigger === MoveEffectTrigger.POST_ATTACK
                               && (!attr.firstHitOnly || firstHit) && (!attr.lastHitOnly || lastHit) && (!attr.firstTargetOnly || firstTarget), user, target, this.move.getMove()).then(() => {
                               if (this.move.getMove() instanceof AttackMove) {

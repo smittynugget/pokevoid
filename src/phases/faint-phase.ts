@@ -237,6 +237,17 @@ export class FaintPhase extends PokemonPhase {
         }
         }
       }
+    } else if (pokemon instanceof EnemyPokemon) {
+      const proxy = this.scene.getPlayerField().filter(p => p.isOnField())[0];
+      if (proxy) {
+        this.scene.gameData.permaModifiers
+            .findModifiers(m => m instanceof PermaKnockoutQuestModifier)
+            .filter(m => !(m as any).resetOnFail)
+            .forEach(modifier => modifier.apply([this.scene, proxy, pokemon, null]));
+        this.scene.findModifiers(m => m instanceof PermaKnockoutQuestModifier)
+            .filter(m => !(m as any).resetOnFail)
+            .forEach(modifier => modifier.apply([this.scene, proxy, pokemon, null]));
+      }
     }
     if (pokemon instanceof PlayerPokemon) {
       this.scene.gameData.permaModifiers
@@ -293,7 +304,10 @@ export class FaintPhase extends PokemonPhase {
         this.scene.unshiftPhase(new ToggleDoublePositionPhase(this.scene, true));
       } else if (legalPlayerPartyPokemon.length > 0) {
 
-        this.scene.pushPhase(new SwitchPhase(this.scene, this.fieldIndex, true, false));
+        const switchPhase = new SwitchPhase(this.scene, this.fieldIndex, true, false);
+        if (!this.scene.prependToPhase(switchPhase, VictoryPhase)) {
+          this.scene.pushPhase(switchPhase);
+        }
       }
     } else {
       this.scene.unshiftPhase(new VictoryPhase(this.scene, this.battlerIndex));
@@ -316,7 +330,8 @@ export class FaintPhase extends PokemonPhase {
 
     const usePortalFaint = pokemon.species?.generation === 20 ||
       (!pokemon.isPlayer() && (this.scene.currentBattle?.trainer?.isCorrupted ||
-       this.scene.currentBattle?.trainer?.config.trainerType === TrainerType.SMITTY));
+       this.scene.currentBattle?.trainer?.config.trainerType === TrainerType.SMITTY ||
+       this.scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS));
 
     const faintSafetyTimeout = setTimeout(() => {
       if (!this.hasEnded) {
@@ -439,7 +454,9 @@ export class FaintPhase extends PokemonPhase {
       if (!this.player) {
         const enemy = this.getPokemon();
         if (enemy.is2ndStageBoss && enemy.hp === 0) {
-          this.scene.ui.showDialogue(battleSpecDialogue[BattleSpec.FINAL_BOSS].secondStageWin, enemy.species.name, null, () => this.doFaint());
+          const variantIndex = this.scene.currentBattle.finalBossDialogueVariant ?? 0;
+          const secondStageWinKey = battleSpecDialogue[BattleSpec.FINAL_BOSS].secondStageWin[variantIndex];
+          this.scene.ui.showDialogue(secondStageWinKey, enemy.species.name, null, () => this.doFaint());
         }
         else {
           this.end();

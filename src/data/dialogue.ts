@@ -3201,9 +3201,42 @@ export const doubleBattleDialogue = {
 
 export const battleSpecDialogue = {
   [BattleSpec.FINAL_BOSS]: {
-    encounter: "battleSpecDialogue:encounter",
-    firstStageWin: "battleSpecDialogue:firstStageWin",
-    secondStageWin: "battleSpecDialogue:secondStageWin",
+    encounter: [
+      "battleSpecDialogue:encounter_0",
+      "battleSpecDialogue:encounter_1",
+      "battleSpecDialogue:encounter_2",
+      "battleSpecDialogue:encounter_3",
+      "battleSpecDialogue:encounter_4",
+      "battleSpecDialogue:encounter_5",
+      "battleSpecDialogue:encounter_6",
+      "battleSpecDialogue:encounter_7",
+      "battleSpecDialogue:encounter_8",
+      "battleSpecDialogue:encounter_9",
+    ],
+    firstStageWin: [
+      "battleSpecDialogue:firstStageWin_0",
+      "battleSpecDialogue:firstStageWin_1",
+      "battleSpecDialogue:firstStageWin_2",
+      "battleSpecDialogue:firstStageWin_3",
+      "battleSpecDialogue:firstStageWin_4",
+      "battleSpecDialogue:firstStageWin_5",
+      "battleSpecDialogue:firstStageWin_6",
+      "battleSpecDialogue:firstStageWin_7",
+      "battleSpecDialogue:firstStageWin_8",
+      "battleSpecDialogue:firstStageWin_9",
+    ],
+    secondStageWin: [
+      "battleSpecDialogue:secondStageWin_0",
+      "battleSpecDialogue:secondStageWin_1",
+      "battleSpecDialogue:secondStageWin_2",
+      "battleSpecDialogue:secondStageWin_3",
+      "battleSpecDialogue:secondStageWin_4",
+      "battleSpecDialogue:secondStageWin_5",
+      "battleSpecDialogue:secondStageWin_6",
+      "battleSpecDialogue:secondStageWin_7",
+      "battleSpecDialogue:secondStageWin_8",
+      "battleSpecDialogue:secondStageWin_9",
+    ],
   }
 };
 

@@ -44,7 +44,6 @@ export function setupBattleFlow(scene: BattleScene, loaded: boolean = false): vo
     scene.releaseItemsEnabledForRun = !scene.disableReleaseItems;
     scene.ivScannerEnabledForRun = !scene.disableIvScanner;
     scene.mapEnabledForRun = !scene.disableMap;
-    scene.duelmonsEnabledForRun = !scene.disableDuelmons;
     scene.skillTreeEnabledForRun = true;
     scene.gameData.pendingSkillTreeAutoOpen = false;
     scene.gameData.skillTreeAutoOpenConsumed = false;
@@ -52,6 +51,7 @@ export function setupBattleFlow(scene: BattleScene, loaded: boolean = false): vo
     ensureSkillTreeTokenTracker(scene);
     scene.resetRunEndSummaryRunData();
   }
+  scene.duelmonsEnabledForRun = !scene.disableDuelmons;
 
   if (scene.gameMode.modeId !== GameModes.SHOP) {
     scene.newArena(scene.gameMode.getStartingBiome(scene));
@@ -335,7 +335,8 @@ export class ChampionModeIntegration {
                   let altBuildId: PokemonAltBuildId | null = null;
 
                   if (currentChampionId) {
-                    const currentChampionData = (scene.gameData as any).championData?.[currentChampionId];
+                    const _dataKey = (currentChampionId === "apollo" || currentChampionId === "diana") ? "apollo_diana" : currentChampionId;
+                    const currentChampionData = (scene.gameData as any).championData?.[_dataKey];
                     if (currentChampionData) {
                       const inBaseList = currentChampionData.signaturePokemon?.includes(starter.species.speciesId) || false;
 

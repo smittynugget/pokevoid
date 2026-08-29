@@ -23,6 +23,7 @@ export default class PokemonData {
   public formIndex: integer;
   public formKey?: string;
   public abilityIndex: integer;
+  public abilityOverrideId?: number;
   public passive: boolean;
   public shiny: boolean;
   public variant: Variant;
@@ -85,11 +86,29 @@ export default class PokemonData {
     this.species = sourcePokemon ? sourcePokemon.species.speciesId : source.species;
     this.nickname = sourcePokemon ? sourcePokemon.nickname : source.nickname;
     this.formIndex = source.formIndex;
+    if (sourcePokemon && sourcePokemon.universalSmittyForm !== undefined) {
+      const smittyIdx = sourcePokemon.species.forms.findIndex(
+        f => f.formKey === "smitty" && (f as any).formName === sourcePokemon.universalSmittyForm.formName
+      );
+      if (smittyIdx >= 0 && this.formIndex !== smittyIdx) {
+        this.formIndex = smittyIdx;
+      }
+    }
     this.formKey = sourcePokemon ? sourcePokemon.getFormKey() : source.formKey;
     if (typeof this.formKey !== "string" || this.formKey.length === 0) {
       this.formKey = undefined;
     }
     this.abilityIndex = source.abilityIndex;
+    if (sourcePokemon) {
+      const form = sourcePokemon.getSpeciesForm();
+      const defaultAbilityAtSlot = form.getAbility(sourcePokemon.abilityIndex);
+      const currentAbility = sourcePokemon.getAbility(true)?.id;
+      if (currentAbility && currentAbility !== defaultAbilityAtSlot) {
+        this.abilityOverrideId = currentAbility;
+      }
+    } else {
+      this.abilityOverrideId = source.abilityOverrideId;
+    }
     this.passive = source.passive;
     this.shiny = source.shiny;
     this.variant = source.variant;
@@ -247,7 +266,8 @@ export default class PokemonData {
     const species = getPokemonSpecies(this.species);
     const forms = species.forms && species.forms.length > 0 ? species.forms : null;
     let resolvedFormIndex = this.formIndex;
-    if (this.formKey && forms) {
+    if (this.universalSmittyForm) {
+    } else if (this.formKey && forms) {
       const idx = forms.findIndex(f => f.formKey === this.formKey);
       if (idx >= 0) {
         resolvedFormIndex = idx;
@@ -260,12 +280,16 @@ export default class PokemonData {
         resolvedFormIndex = glitchIdx >= 0 ? glitchIdx : 0;
       }
     }
-    if (forms && (resolvedFormIndex < 0 || resolvedFormIndex >= forms.length || !forms[resolvedFormIndex])) {
+    if (!this.universalSmittyForm && forms && (resolvedFormIndex < 0 || resolvedFormIndex >= forms.length || !forms[resolvedFormIndex])) {
       resolvedFormIndex = 0;
     }
     this.formIndex = resolvedFormIndex;
     const ret: Pokemon = this.player
       ? scene.addPlayerPokemon(species, this.level, this.abilityIndex, this.formIndex, this.gender, this.shiny, this.variant, this.ivs, this.nature, this, (playerPokemon) => {
+        if (this.abilityOverrideId) {
+          playerPokemon.makeSpeciesUnique();
+          playerPokemon.setAbility(this.abilityOverrideId, this.abilityIndex);
+        }
         if (this.nickname) {
           playerPokemon.nickname = this.nickname;
         }

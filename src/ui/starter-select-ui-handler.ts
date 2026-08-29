@@ -72,10 +72,11 @@ import {ScrollBar} from "./scroll-bar";
 import {DUELMON_SPECIES_IDS} from "../data/duelmon-rankups";
 import {SelectChallengePhase} from "#app/phases/select-challenge-phase.js";
 import {TitlePhase} from "#app/phases/title-phase.js";
-import Pokemon, { PlayerPokemon, YU_BATTLE_FIT, YU_PLAYER_FIT_MULT, YU_SPECIES_PORTAL_OFFSETS } from "#app/field/pokemon";
+import Pokemon, { PlayerPokemon, YU_BATTLE_FIT, YU_PLAYER_FIT_MULT, YU_SPECIES_PORTAL_OFFSETS, YU_SPECIES_PORTAL_IMAGE_OVERRIDE } from "#app/field/pokemon";
 import { PokemonBattleTooltipUtils } from "./pokemon-battle-tooltip-utils";
 import { isPrimaryPointer } from "./pointer-utils";
 import {PermaType} from "#app/modifier/perma-modifiers";
+import { isIPhone } from "#app/loading-scene";
 import type { PlayableChampionData } from "#app/system/playable-champions";
 import { ChampionUtils } from "../system/champion-utils";
 import { PokemonAltBuildId, POKEMON_ALT_BUILDS } from "../data/pokemon-alt-buid";
@@ -488,6 +489,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
     protected starterPreferences: StarterPreferences;
 
     protected blockInput: boolean = false;
+    protected _isSwapSelecting: boolean = false;
 
     constructor(scene: BattleScene, mode: Mode = Mode.STARTER_SELECT) {
         super(scene, mode);
@@ -1336,9 +1338,11 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         return;
       }
       const spriteKey = species.getSpriteKey(false);
-      const spriteState = this.scene.cache.json.exists(spriteKey)
+      const _rawSpriteState = this.scene.cache.json.exists(spriteKey)
         ? this.scene.cache.json.get(spriteKey)?.spriteState ?? null
         : null;
+      const _portalOvr = YU_SPECIES_PORTAL_IMAGE_OVERRIDE[species.speciesId];
+      const spriteState = _rawSpriteState && _portalOvr ? { ..._rawSpriteState, portal: _portalOvr } : _rawSpriteState;
       if (!spriteState?.portal) {
         this.starterPortalSprite.setVisible(false);
         return;
@@ -1657,8 +1661,8 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
 	private isSignaturePokemon(speciesId: Species): boolean {
 		const championId = this.scene.gameData.selectedChampionId;
 		if (!championId) return false;
-
-		const championData = (this.scene.gameData as any).championData?.[championId];
+		const dataKey = (championId === "apollo" || championId === "diana") ? "apollo_diana" : championId;
+		const championData = (this.scene.gameData as any).championData?.[dataKey];
 		if (!championData) return false;
 
 		const inBaseList = championData.signaturePokemon?.includes(speciesId) || false;
@@ -1673,7 +1677,8 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
 		if (!this.isSignaturePokemon(speciesId)) return null;
 
 		const championId = this.scene.gameData.selectedChampionId;
-		const championData = (this.scene.gameData as any).championData?.[championId];
+		const dataKey = (championId === "apollo" || championId === "diana") ? "apollo_diana" : championId;
+		const championData = (this.scene.gameData as any).championData?.[dataKey];
 		if (!championData) return null;
 
 		return ChampionUtils.getSignatureAltBuildId(speciesId, championData);
@@ -2465,7 +2470,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         });
         const showUseCandies = () => {
             const options: any[] = [];
-            if (!(passiveAttr & PassiveAttr.UNLOCKED)) {
+            if (!(passiveAttr & PassiveAttr.UNLOCKED) && starterPassiveAbilities[this.lastSpecies.speciesId] !== undefined) {
                 const passiveCost = getPassiveCandyCount(speciesStarters[this.lastSpecies.speciesId]);
                 options.push({
                     label: `x${passiveCost} ${i18next.t("starterSelectUiHandler:unlockPassive")} (${allAbilities[starterPassiveAbilities[this.lastSpecies.speciesId]].name})`,
@@ -4538,6 +4543,9 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
 
                 const assetLoadCancelled = new Utils.BooleanHolder(false);
                 this.assetLoadCancelled = assetLoadCancelled;
+
+                const previousSpriteKey = isIPhone() ? this.pokemonSprite.texture?.key : null;
+
                 this.lastSpecies.loadAssets(this.scene, female!, formIndex, shiny, variant, true).then(() => {
                     const loadSpeciesDetails = () => {
                         if (assetLoadCancelled.value) {
@@ -4546,6 +4554,18 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
                         this.assetLoadCancelled = null;
                         this.speciesLoaded.set(species.speciesId, true);
                         const spriteKey = this.lastSpecies.getSpriteKey(female, formIndex, shiny, variant);
+
+                        if (previousSpriteKey && previousSpriteKey !== spriteKey && previousSpriteKey !== "pkmn__sub" && previousSpriteKey !== "blank") {
+                            if (this.scene.textures.exists(previousSpriteKey)) {
+                                this.scene.textures.remove(previousSpriteKey);
+                            }
+                            if (this.scene.anims.exists(previousSpriteKey)) {
+                                this.scene.anims.remove(previousSpriteKey);
+                            }
+                            if (this.scene.cache.json.exists(previousSpriteKey)) {
+                                this.scene.cache.json.remove(previousSpriteKey);
+                            }
+                        }
 
                         const setBasicPipelineData = (sprite, shiny, variant, spriteKey) => {
                             sprite.setPipelineData("shiny", shiny);
@@ -6047,6 +6067,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
     }
 
     private showPartySlotTooltip(index: number): void {
+      if (this._isSwapSelecting) return;
       this.hidePartySlotTooltip();
       const species = this.starterSpecies[index];
       if (!species) return;

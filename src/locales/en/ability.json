@@ -617,7 +617,7 @@
   },
   "cursedPotential": {
     "name": "Cursed Potential",
-    "description": "Upon entry, the user raises all of its stats by one stage, with Attack raised by an additional two stages (three total). At the end of each turn, it randomly either lowers one to three random stats by one stage or loses 1/4 of its max HP. The user cannot switch out."
+    "description": "Upon entry, the user raises all of its stats by one stage. At the end of each turn, it randomly either lowers two to three random stats by one stage or loses 1/4 of its max HP. The user cannot switch out."
   },
   "cursedShell": {
     "name": "Cursed Shell",
@@ -1053,7 +1053,7 @@
   },
   "fatedRevival": {
     "name": "Fated Revival",
-    "description": "When the user faints, it revives random fainted Fairy-type Pokémon in its party with 50% HP."
+    "description": "When the user faints, it revives a random fainted Fairy-type Pokémon in its party (excluding same species) with 50% HP. This effect can only trigger once per battle."
   },
   "fieryDisguise": {
     "name": "Fiery Disguise",
@@ -2401,7 +2401,7 @@
   },
   "portalBeast": {
     "name": "Portal Beast",
-    "description": "Whenever an opposing Pokémon switches in, this Pokémon gains +1 to three random stats. When this Pokémon switches, it restores 25% of its maximum HP."
+    "description": "Whenever an opposing Pokémon switches in, this Pokémon gains +1 to two random stats. When this Pokémon switches, it restores 25% of its maximum HP."
   },
   "positivity": {
     "name": "Positivity",

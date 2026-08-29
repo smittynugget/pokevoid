@@ -78,7 +78,7 @@ export class CommandPhase extends FieldPhase {
         this.scene.debugGauntletAutoCycleTimer = null;
         this.scene.ui.setMode(Mode.COMMAND, this.fieldIndex);
       };
-      this.scene.debugGauntletAutoCycleTimer = this.scene.time.delayedCall(1000, () => this.advanceGauntletCycle());
+      this.scene.debugGauntletAutoCycleTimer = this.scene.time.delayedCall(5000, () => this.advanceGauntletCycle());
       return;
     }
 
@@ -87,18 +87,20 @@ export class CommandPhase extends FieldPhase {
     }
 
     if (this.fieldIndex === 0 && this.scene.currentBattle && this.scene.gameData?.dataLoaded) {
-        const now = Date.now();
-        if (!this.scene._lastCommandPhaseSaveTime || (now - this.scene._lastCommandPhaseSaveTime) > 5000) {
-            this.scene._lastCommandPhaseSaveTime = now;
-            if (Overrides.DEBUG_SAVE_TRACE) {
-              console.debug("[SAVE_TRACE] CommandPhase localSaveAll", {
-                autoSaveMode: this.scene.autoSaveMode,
-                waveIndex: this.scene.currentBattle?.waveIndex,
-                battleTurn: this.scene.currentBattle?.turn,
-                encounterInitComplete: this.scene.encounterInitComplete
-              });
+        if (this.scene.autoSaveMode !== 1) {
+            const now = Date.now();
+            if (!this.scene._lastCommandPhaseSaveTime || (now - this.scene._lastCommandPhaseSaveTime) > 5000) {
+                this.scene._lastCommandPhaseSaveTime = now;
+                if (Overrides.DEBUG_SAVE_TRACE) {
+                  console.debug("[SAVE_TRACE] CommandPhase localSaveAll", {
+                    autoSaveMode: this.scene.autoSaveMode,
+                    waveIndex: this.scene.currentBattle?.waveIndex,
+                    battleTurn: this.scene.currentBattle?.turn,
+                    encounterInitComplete: this.scene.encounterInitComplete
+                  });
+                }
+                this.scene.gameData.localSaveAll(this.scene);
             }
-            this.scene.gameData.localSaveAll(this.scene);
         }
     }
 

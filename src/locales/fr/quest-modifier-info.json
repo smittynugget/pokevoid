@@ -421,30 +421,30 @@
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Magicarpe",
-    "task": "Vaincre 100 Pokémon avec Magicarpe"
+    "task": "Vaincre 20 Pokémon avec Magicarpe"
   },
   "DITTO_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Métamorph",
-    "task": "Vaincre 100 Pokémon avec Métamorph"
+    "task": "Vaincre 20 Pokémon avec Métamorph"
   },
   "WOBBUFFET_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Qulbutoké",
-    "task": "Vaincre 100 Pokémon avec Qulbutoké"
+    "task": "Vaincre 20 Pokémon avec Qulbutoké"
   },
   "SMEARGLE_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Queulorior",
-    "task": "Vaincre 100 Pokémon avec Queulorior"
+    "task": "Vaincre 20 Pokémon avec Queulorior"
   },
   "UNOWN_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Zarbi",
-    "task": "Vaincre 100 Pokémon avec Zarbi"
+    "task": "Vaincre 20 Pokémon avec Zarbi"
   },
   "TYROGUE_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Debugant",
-    "task": "Vaincre 100 Pokémon avec Debugant"
+    "task": "Vaincre 20 Pokémon avec Debugant"
   },
   "METAPOD_NEW_MOVES_QUEST": {
     "name": "Nouvelles Attaques de Chrysacier",
-    "task": "Vaincre 100 Pokémon avec Chrysacier"
+    "task": "Vaincre 20 Pokémon avec Chrysacier"
   }
 }

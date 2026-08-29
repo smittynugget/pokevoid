@@ -1,4 +1,4 @@
-import BattleScene from "../battle-scene";
+﻿import BattleScene from "../battle-scene";
 import { EvolutionPhase } from "./evolution-phase";
 import { EndEvolutionPhase } from "./end-evolution-phase";
 import { PlayerPokemon } from "../field/pokemon";
@@ -21,18 +21,24 @@ export class RankUpTransformPhase extends EvolutionPhase {
   private targetSpeciesId: Species;
   private afterBaseStats: integer[];
   private onComplete: (() => void) | null;
+  private skipCompletionPrompt: boolean;
+  private skipEndPhase: boolean;
 
   constructor(
     scene: BattleScene,
     pokemon: PlayerPokemon,
     targetSpeciesId: Species,
     afterBaseStats: integer[],
-    onComplete?: () => void
+    onComplete?: () => void,
+    skipCompletionPrompt?: boolean,
+    skipEndPhase?: boolean
   ) {
     super(scene, pokemon, null, pokemon.level);
     this.targetSpeciesId = targetSpeciesId;
     this.afterBaseStats = afterBaseStats;
     this.onComplete = onComplete ?? null;
+    this.skipCompletionPrompt = skipCompletionPrompt ?? false;
+    this.skipEndPhase = skipEndPhase ?? false;
   }
 
   validate(): boolean {
@@ -137,7 +143,7 @@ export class RankUpTransformPhase extends EvolutionPhase {
             sprite.setScale(this.postTransformScale);
           });
 
-          this.scene.time.delayedCall(250, () => {
+          this.scene.time.delayedCall(1000, () => {
             this.scene.tweens.add({
               targets: this.evolutionBgOverlay,
               alpha: 1,
@@ -177,9 +183,11 @@ export class RankUpTransformPhase extends EvolutionPhase {
                           this.doCircleInward();
                           this.scene.time.delayedCall(900, () => {
                             this.applyRankUpSwap().then(() => {
-                              this.scene.unshiftPhase(
-                                new EndEvolutionPhase(this.scene)
-                              );
+                              if (!this.skipEndPhase) {
+                                this.scene.unshiftPhase(
+                                  new EndEvolutionPhase(this.scene)
+                                );
+                              }
 
                               this.scene.playSound("se/shine");
                               this.doSpray();
@@ -232,9 +240,9 @@ export class RankUpTransformPhase extends EvolutionPhase {
                                                     ),
                                                     null,
                                                     () => this.end(),
-                                                    null,
-                                                    true,
-                                                    Utils.fixedInt(2000)
+                                                    this.skipCompletionPrompt ? 1000 : null,
+                                                    this.skipCompletionPrompt ? null : true,
+                                                    this.skipCompletionPrompt ? null : Utils.fixedInt(2000)
                                                   );
                                                   this.scene.time.delayedCall(
                                                     Utils.fixedInt(2250),

@@ -98,6 +98,7 @@ export default class Battle {
   public waveIndex: integer;
   public battleType: BattleType;
   public battleSpec: BattleSpec;
+  public finalBossDialogueVariant: integer;
   public trainer: Trainer | null;
   public enemyLevels: integer[] | undefined;
   public enemyParty: EnemyPokemon[];
@@ -161,6 +162,7 @@ export default class Battle {
     let spec = BattleSpec.DEFAULT;
     if (this.gameMode.isWavePreFinal(this.scene, this.waveIndex)) {
       spec = BattleSpec.FINAL_BOSS;
+      this.finalBossDialogueVariant = Utils.randSeedInt(10);
     }
     this.battleSpec = spec;
   }
@@ -1394,16 +1396,16 @@ export function createSmittyBattle(scene: BattleScene, seed: number, isChaosMode
                 pokemon.generateName();
                 pokemon.toggleShadow(false);
             } else {
-
+                const specialFormNames = ["smitshade", "smitspect", "smitwraith", "smiternal"];
                 const universalFormChanges = pokemonFormChanges[Species.NONE] || [];
                 let availableUniversalForms = universalFormChanges.filter(fc => {
                     const trigger = fc.findTrigger(SmittyFormTrigger) as SmittyFormTrigger;
-                    return trigger && !usedForms.has(trigger.name);
+                    return trigger && !usedForms.has(trigger.name) && !specialFormNames.includes(trigger.name);
                 });
                 if (availableUniversalForms.length === 0) {
                     availableUniversalForms = universalFormChanges.filter(fc => {
                         const trigger = fc.findTrigger(SmittyFormTrigger) as SmittyFormTrigger;
-                        return trigger;
+                        return trigger && !specialFormNames.includes(trigger.name);
                     });
                 }
                 if (availableUniversalForms.length > 0) {
@@ -5335,6 +5337,10 @@ function createEvilBossBattle(scene: BattleScene, seedOffset: number = 35): Fixe
 }
 
 function generateWaveBasedNode(wave: number, scene: BattleScene, seeds: any, nodeIndex: number = 0, usedEliteFourTypes?: Set<number>): NodeGenerationResult {
+  if (Overrides.DEBUG_FORCE_MAJOR_BOSS_NODE_OVERRIDE) {
+    return { nodeType: PathNodeType.MAJOR_BOSS_BATTLE };
+  }
+
   const config = getWaveRangeConfig(wave);
   const probabilities = config.probabilities;
   const dynamicMode = config.dynamicMode;

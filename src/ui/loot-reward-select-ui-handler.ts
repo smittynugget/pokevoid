@@ -31,6 +31,7 @@ import {
   AbilitySacrificeModifierType,
   PassiveAbilitySacrificeModifierType,
   PlayerPokemonBaseStatBoosterModifierType,
+  BerryModifierType,
 } from "../modifier/modifier-type";
 import { addTextObject, addBBCodeTextObject, TextStyle, getTextColor } from "./text";
 import { Button } from "../enums/buttons";
@@ -50,6 +51,7 @@ import { DEBUG_FORCE_SMITOM_TUTORIAL } from "#app/overrides.js";
 import * as Utils from "../utils";
 import { adjustDuelmonIconScale } from "../data/pokemon-species";
 import { isPrimaryPointer } from "./pointer-utils";
+import { getBerryStatLabel } from "../data/berry";
 import { ChampionUtils } from "../system/champion-utils";
 import { pokemonEvolutions } from "../data/pokemon-evolutions";
 import { getPokemonSpecies } from "../data/pokemon-species";
@@ -268,7 +270,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
   }
 
   private static readonly SHOP_STRIP_H = 11;
-  private static readonly SHOP_STRIP_OVERLAY_ALPHA = 0.45;
+  private static readonly SHOP_STRIP_OVERLAY_ALPHA = 0.35;
 
   private static readonly SHOP_UNAFFORDABLE_COLOR = "#ff4444";
   private static readonly SHOP_UNAFFORDABLE_TINT = 0xff4444;
@@ -1332,19 +1334,25 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
     const maxSlots = Math.floor(usableWidth / targetSpacing);
     const realCount = allShopOptions.length;
     this.shopStripRealCount = realCount;
-    const slotCount = Math.max(realCount, maxSlots);
+    const slotCount = (this.scene as BattleScene).shopNoDuplicates ? realCount : Math.max(realCount, maxSlots);
     this.shopStripSlotCount = slotCount;
-    const spacing = usableWidth / slotCount;
+    let spacing = usableWidth / slotCount;
+    if ((this.scene as BattleScene).shopNoDuplicates && realCount <= 8) {
+      spacing *= 0.7;
+    }
+    const effectiveStartX = (this.scene as BattleScene).shopNoDuplicates
+      ? (usableWidth - (realCount * spacing)) / 2 + labelWidth
+      : iconStartX;
 
     for (let vi = 0; vi < slotCount; vi++) {
       const shopIndex = vi % realCount;
-      const isReal = vi < realCount;
+      const isReal = (this.scene as BattleScene).shopNoDuplicates ? true : (vi < realCount);
       const opt = allShopOptions[shopIndex];
-      const x = iconStartX + spacing * vi + spacing / 2;
+      const x = effectiveStartX + spacing * vi + spacing / 2;
       const type = opt.modifierTypeOption.type;
 
       let iconSprite: Phaser.GameObjects.Sprite;
-      let iconScale = 0.40;
+      let iconScale = 0.45;
       if (type instanceof AddPokemonModifierType) {
         try {
           const pokemon = (type as AddPokemonModifierType).getPokemon();
@@ -1362,7 +1370,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
           iconSprite.setFrame("pb");
         }
         if (isSmitems) {
-          iconScale = (type?.iconImage === "modSoulCollected") ? 0.125 / 1.5 : 0.125;
+          iconScale = 0.1953125;
         }
       }
       iconSprite.setScale(iconScale);
@@ -1427,6 +1435,30 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
       nameText.setShadow(0, 0, undefined);
       nameText.setVisible(false);
       const shopType = opt.modifierTypeOption.type;
+      const isDynamicType = shopType instanceof TmModifierType
+        || shopType instanceof AnyTmModifierType
+        || shopType instanceof BerryModifierType
+        || shopType instanceof AnyAbilityModifierType
+        || shopType instanceof AnyPassiveAbilityModifierType
+        || shopType instanceof TypeSwitcherModifierType
+        || shopType instanceof RandomStatSwitcherModifierType
+        || shopType instanceof PokemonNatureChangeModifierType
+        || shopType instanceof StatSacrificeModifierType
+        || shopType instanceof TypeSacrificeModifierType
+        || shopType instanceof AbilitySacrificeModifierType;
+      nameText.setData("isDynamic", isDynamicType);
+      nameText.setData("defaultX", textBaseX);
+      nameText.setData("defaultY", stripH - 3.5);
+      nameText.setData("defaultOriginX", 0);
+      nameText.setData("defaultOriginY", 1);
+      const iconCenterX = x + (this.shopStripIconsContainer?.x ?? 0);
+      nameText.setData("centeredX", iconCenterX);
+      nameText.setData("centeredY", stripH - 4);
+      if ((this.scene as BattleScene).shopShowUniqueNames && isDynamicType) {
+        nameText.setPosition(iconCenterX, stripH - 4);
+        nameText.setOrigin(0.5, 0);
+        nameText.setVisible(true);
+      }
       let shopLabel = shopType?.name || "";
       if (shopType instanceof PokemonNatureChangeModifierType) {
         const delta = this.getNatureStatDelta((shopType as any).nature);
@@ -1437,6 +1469,18 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
             defaultValue: `+${getStatName(delta.inc, true)}/-${getStatName(delta.dec, true)}`,
           });
         }
+      }
+      if (shopType instanceof BerryModifierType) {
+        shopLabel = getBerryStatLabel((shopType as any).berryType);
+      }
+      if (shopType instanceof TmModifierType) {
+        shopLabel = allMoves[(shopType as TmModifierType).moveId]?.name ?? shopLabel;
+      }
+      if (shopType instanceof AnyTmModifierType) {
+        shopLabel = allMoves[(shopType as AnyTmModifierType).moveId]?.name ?? shopLabel;
+      }
+      if (shopType instanceof AnyPassiveAbilityModifierType) {
+        shopLabel = (shopType as AnyPassiveAbilityModifierType).ability?.name ?? shopLabel;
       }
       nameText.setText(shopLabel);
       this.shopStripContainer.add(nameText);
@@ -1530,6 +1574,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
         this._hoverActive = false;
         this.hideUpgradeTooltip();
         this.moveInfoOverlay.clear();
+        (this as any).updateShowDetailsHint(null, false);
       });
     }
   }
@@ -1946,9 +1991,7 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
         if (currentOption) {
           this.applyOptionFocusState(currentOption, true);
           this._lastKeyboardFocusedIndex = this.cursor;
-          if ((this as any).showDetailsHintContainer?.visible) {
-            (this as any).updateShowDetailsHint(currentOption, true);
-          }
+          (this as any).updateShowDetailsHint(currentOption, true);
         }
       }
 
@@ -2182,8 +2225,15 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
       for (let i = 0; i < this.shopStripPriceTexts.length; i++) {
         this.shopStripPriceTexts[i].setVisible(false);
       }
+      const showUnique = (this.scene as BattleScene).shopShowUniqueNames;
       for (const name of this.shopStripNameTexts) {
-        name.setVisible(false);
+        if (showUnique && name.getData("isDynamic")) {
+          name.setPosition(name.getData("centeredX"), name.getData("centeredY"));
+          name.setOrigin(0.5, 0);
+          name.setVisible(true);
+        } else {
+          name.setVisible(false);
+        }
       }
     }
   }
@@ -2210,7 +2260,14 @@ export default class LootRewardSelectUiHandler extends ModifierSelectUiHandler {
       }
     }
     for (let i = 0; i < this.shopStripNameTexts.length; i++) {
-      this.shopStripNameTexts[i].setVisible(i === cursorIndex);
+      const nt = this.shopStripNameTexts[i];
+      if (i === cursorIndex) {
+        nt.setPosition(nt.getData("defaultX"), nt.getData("defaultY"));
+        nt.setOrigin(nt.getData("defaultOriginX"), nt.getData("defaultOriginY"));
+        nt.setVisible(true);
+      } else {
+        nt.setVisible(false);
+      }
     }
 
     for (let i = 0; i < this.shopStripIcons.length; i++) {

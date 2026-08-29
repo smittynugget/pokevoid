@@ -18,6 +18,10 @@ export function getBerryEffectDescription(berryType: BerryType): string {
   return i18next.t(`berry:${BerryType[berryType]}.effect`);
 }
 
+export function getBerryStatLabel(berryType: BerryType): string {
+  return i18next.t(`berry:${BerryType[berryType]}.statLabel`);
+}
+
 export type BerryPredicate = (pokemon: Pokemon) => boolean;
 
 export function getBerryPredicate(berryType: BerryType): BerryPredicate {

@@ -137,5 +137,7 @@
   "veryRare": "超レア",
   "animationLoad": "アニメーション負荷",
   "animationLite": "軽量",
-  "animationFull": "フル（高負荷）"
+  "animationFull": "フル（高負荷）",
+  "shopNoDuplicates": "ショップの重複を無効化",
+  "shopShowUniqueNames": "ショップ固有名を表示"
 }

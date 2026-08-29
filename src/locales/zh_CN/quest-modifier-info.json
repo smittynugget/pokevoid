@@ -421,30 +421,30 @@
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "鲤鱼王的新招式",
-    "task": "用鲤鱼王击败100只宝可梦"
+    "task": "用鲤鱼王击败20只宝可梦"
   },
   "DITTO_NEW_MOVES_QUEST": {
     "name": "百变怪的新招式",
-    "task": "用百变怪击败100只宝可梦"
+    "task": "用百变怪击败20只宝可梦"
   },
   "WOBBUFFET_NEW_MOVES_QUEST": {
     "name": "果然翁的新招式",
-    "task": "用果然翁击败100只宝可梦"
+    "task": "用果然翁击败20只宝可梦"
   },
   "SMEARGLE_NEW_MOVES_QUEST": {
     "name": "图图犬的新招式",
-    "task": "用图图犬击败100只宝可梦"
+    "task": "用图图犬击败20只宝可梦"
   },
   "UNOWN_NEW_MOVES_QUEST": {
     "name": "未知图腾的新招式",
-    "task": "用未知图腾击败100只宝可梦"
+    "task": "用未知图腾击败20只宝可梦"
   },
   "TYROGUE_NEW_MOVES_QUEST": {
     "name": "无畏小子的新招式",
-    "task": "用无畏小子击败100只宝可梦"
+    "task": "用无畏小子击败20只宝可梦"
   },
   "METAPOD_NEW_MOVES_QUEST": {
     "name": "铁甲蛹的新招式",
-    "task": "用铁甲蛹击败100只宝可梦"
+    "task": "用铁甲蛹击败20只宝可梦"
   }
 }

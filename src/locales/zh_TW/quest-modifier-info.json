@@ -421,30 +421,30 @@
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "鯉魚王的新招式",
-    "task": "使用鯉魚王擊敗100隻寶可夢"
+    "task": "使用鯉魚王擊敗20隻寶可夢"
   },
   "DITTO_NEW_MOVES_QUEST": {
     "name": "百變怪的新招式",
-    "task": "使用百變怪擊敗100隻寶可夢"
+    "task": "使用百變怪擊敗20隻寶可夢"
   },
   "WOBBUFFET_NEW_MOVES_QUEST": {
     "name": "果然翁的新招式",
-    "task": "使用果然翁擊敗100隻寶可夢"
+    "task": "使用果然翁擊敗20隻寶可夢"
   },
   "SMEARGLE_NEW_MOVES_QUEST": {
     "name": "畫家狗的新招式",
-    "task": "使用畫家狗擊敗100隻寶可夢"
+    "task": "使用畫家狗擊敗20隻寶可夢"
   },
   "UNOWN_NEW_MOVES_QUEST": {
     "name": "未知圖騰的新招式",
-    "task": "使用未知圖騰擊敗100隻寶可夢"
+    "task": "使用未知圖騰擊敗20隻寶可夢"
   },
   "TYROGUE_NEW_MOVES_QUEST": {
     "name": "巴爾郎的新招式",
-    "task": "使用巴爾郎擊敗100隻寶可夢"
+    "task": "使用巴爾郎擊敗20隻寶可夢"
   },
   "METAPOD_NEW_MOVES_QUEST": {
     "name": "鐵甲蛹的新招式",
-    "task": "使用鐵甲蛹擊敗100隻寶可夢"
+    "task": "使用鐵甲蛹擊敗20隻寶可夢"
   }
 }

@@ -10,6 +10,8 @@ type FadeOut = typeof FadeOut;
 export function initGameSpeed() {
   const thisArg = this as BattleScene;
 
+  const IS_IOS = typeof window !== 'undefined' && ((/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
+
   const transformValue = (value: number | Utils.FixedInt): number => {
     if (value instanceof Utils.FixedInt) {
       return (value as Utils.FixedInt).value;
@@ -24,6 +26,9 @@ export function initGameSpeed() {
   this.time.addEvent = function (config: Phaser.Time.TimerEvent | Phaser.Types.Time.TimerEventConfig) {
     if (!(config instanceof Phaser.Time.TimerEvent) && config.delay) {
       config.delay = transformValue(config.delay);
+    }
+    if (IS_IOS && !(config instanceof Phaser.Time.TimerEvent) && config.startAt && !(config.startAt instanceof Utils.FixedInt)) {
+      config.startAt = transformValue(config.startAt);
     }
     return originalAddEvent.apply(this, [ config ]);
   };

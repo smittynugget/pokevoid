@@ -137,5 +137,7 @@
   "veryRare": "Очень Редко",
   "animationLoad": "Нагрузка анимации",
   "animationLite": "Лёгкая",
-  "animationFull": "Полная (Требовательно)"
+  "animationFull": "Полная (Требовательно)",
+  "shopNoDuplicates": "Отключить дубликаты магазина",
+  "shopShowUniqueNames": "Показать уникальные названия магазина"
 }

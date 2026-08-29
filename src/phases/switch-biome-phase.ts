@@ -74,6 +74,7 @@ export class SwitchBiomePhase extends BattlePhase {
   }
 
   private performBiomeSwitch(): void {
+    const previousBiome = this.scene.arena?.biomeType;
     this.scene.tweens.add({
       targets: [this.scene.arenaEnemy, this.scene.lastEnemyTrainer],
       x: "+=300",
@@ -111,10 +112,27 @@ export class SwitchBiomePhase extends BattlePhase {
               this.scene.lastEnemyTrainer.destroy();
             }
 
+            if (isIPhone() && previousBiome !== undefined && previousBiome !== this.nextBiome) {
+              this.evictPreviousBiomeTextures(previousBiome);
+            }
+
             this.end();
           }
         });
       }
     });
+  }
+
+  private evictPreviousBiomeTextures(biome: Biome): void {
+    const biomeKey = getBiomeKey(biome);
+    const keys = [`${biomeKey}_bg`, `${biomeKey}_a`, `${biomeKey}_b`];
+    if (getBiomeHasProps(biome)) {
+      for (let p = 1; p <= 3; p++) keys.push(`${biomeKey}_b_${p}`);
+    }
+    for (const key of keys) {
+      if (this.scene.anims?.exists(key)) this.scene.anims.remove(key);
+      if (this.scene.textures.exists(key)) this.scene.textures.remove(key);
+      if (this.scene.cache.json.exists(key)) this.scene.cache.json.remove(key);
+    }
   }
 }

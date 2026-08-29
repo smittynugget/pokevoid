@@ -2929,7 +2929,7 @@
   },
   "cursedPotential": {
     "name": "Potenziale Maledetto",
-    "description": "All'entrata, tutte le statistiche dell'utilizzatore salgono di un livello, con Attacco che sale di due livelli aggiuntivi (tre totali). Alla fine di ogni turno, da una a tre statistiche calano casualmente di un livello o l'utilizzatore perde 1/4 dei suoi PS massimi. Non può essere ritirato."
+    "description": "All'entrata, tutte le statistiche dell'utilizzatore salgono di un livello. Alla fine di ogni turno, da due a tre statistiche calano casualmente di un livello o l'utilizzatore perde 1/4 dei suoi PS massimi. Non può essere ritirato."
   },
   "cyberneticControl": {
     "name": "Controllo Cibernetico",
@@ -3085,7 +3085,7 @@
   },
   "fatedRevival": {
     "name": "Rinascita del Destino",
-    "description": "Quando l'utilizzatore va K.O., rianima un Pokémon Folletto K.O. casuale della squadra con il 50% dei PS."
+    "description": "Quando l'utilizzatore va K.O., rianima un Pokémon Folletto K.O. casuale della squadra (esclusa stessa specie) con il 50% dei PS. Questo effetto può attivarsi solo una volta per battaglia."
   },
   "finalBlade": {
     "name": "Lama Finale",
@@ -3437,7 +3437,7 @@
   },
   "portalBeast": {
     "name": "Bestia Portale",
-    "description": "Ogni volta che un Pokémon avversario entra in campo, questo Pokémon guadagna +1 a tre statistiche casuali. Quando si ritira, recupera il 25% dei suoi PS massimi."
+    "description": "Ogni volta che un Pokémon avversario entra in campo, questo Pokémon guadagna +1 a due statistiche casuali. Quando si ritira, recupera il 25% dei suoi PS massimi."
   },
   "powderKing": {
     "name": "Re della Polvere",

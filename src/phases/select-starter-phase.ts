@@ -186,7 +186,8 @@ export class SelectStarterPhase extends Phase {
       let altBuildId: PokemonAltBuildId | null = null;
 
       if (championId) {
-        const championData = (this.scene.gameData as any).championData?.[championId];
+        const _dataKey = (championId === "apollo" || championId === "diana") ? "apollo_diana" : championId;
+        const championData = (this.scene.gameData as any).championData?.[_dataKey];
         if (championData) {
 
           ChampionUtils.syncChampionUnlocks(championData);

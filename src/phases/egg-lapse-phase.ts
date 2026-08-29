@@ -112,6 +112,9 @@ export class EggLapsePhase extends Phase {
 
         if (selectedPokemon && releasedPokemon) {
           const partyIndex = this.scene.getParty().findIndex(p => p === releasedPokemon);
+          if (partyIndex < 0) {
+            console.warn(`[EggLapsePhase] Swap failed: released pokemon not found in party (species=${releasedPokemon.species?.speciesId})`);
+          }
           if (partyIndex >= 0) {
             selectedPokemon.level = releasedPokemon.level;
             selectedPokemon.exp = getLevelTotalExp(selectedPokemon.level, selectedPokemon.species.growthRate);

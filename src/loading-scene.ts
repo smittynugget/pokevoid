@@ -392,13 +392,18 @@ export class LoadingScene extends SceneBase {
 
     for (let i = 0; i < 10; i++) {
       this.loadAtlas(`pokemon_icons_${i}`, "");
-      if (i) {
+      if (i && !isIOS) {
         this.loadAtlas(`pokemon_icons_${i}v`, "");
       }
     }
     this.loadAtlas(`pokemon_icons_glitch`, "");
     this.loadAtlas(`pokemon_icons_za_1`, "");
     this.loadAtlas(`pokemon_icons_yu`, "");
+    if (Overrides.DEBUG_IOS_MODE && isIOS) {
+      for (let i = 1; i < 10; i++) {
+        AssetLoadProfiler.getInstance().trackDeferred(`pokemon_icons_${i}v`);
+      }
+    }
     if (!isIOS) {
       this.loadAtlas(`smitty_trainers`, "smittytrainers");
     }

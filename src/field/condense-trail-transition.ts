@@ -1,7 +1,9 @@
 import i18next from "i18next";
+import { isIPhone } from "#app/loading-scene.js";
 
-const TRAIL_W = 960;
-const TRAIL_H = 540;
+const TRAIL_W = isIPhone() ? 480 : 960;
+const TRAIL_H = isIPhone() ? 270 : 540;
+const TRAIL_SCALE = isIPhone() ? 4 : 2;
 const CE = 0.7;
 
 function eI(t: number): number {
@@ -38,24 +40,25 @@ function baseCondenseTrail(
   if (logoImg) {
     const li = logoImg as HTMLImageElement;
     if (li.naturalWidth > 0) {
-      const logoCanvasScale = 0.6;
+      const scaleRatio = w / 960;
+      const logoCanvasScale = 0.6 * scaleRatio;
       const drawW = li.naturalWidth * logoCanvasScale;
       const drawH = li.naturalHeight * logoCanvasScale;
       const drawX = (w - drawW) / 2;
-      const drawY = 90;
+      const drawY = Math.round(90 * (h / 540));
       c.drawImage(logoImg, drawX, drawY, drawW, drawH);
 
       if (taglineText) {
         c.save();
-        c.font = "20px 'emerald'";
+        c.font = `${Math.round(20 * scaleRatio)}px 'emerald'`;
         c.textAlign = "center";
         c.textBaseline = "top";
         c.shadowColor = "#9b4dca";
-        c.shadowOffsetX = 2;
-        c.shadowOffsetY = 2;
+        c.shadowOffsetX = Math.round(2 * scaleRatio);
+        c.shadowOffsetY = Math.round(2 * scaleRatio);
         c.shadowBlur = 0;
         c.fillStyle = "#f8f8f8";
-        c.fillText(taglineText, w / 2, drawY + drawH + 8);
+        c.fillText(taglineText, w / 2, drawY + drawH + Math.round(8 * (h / 540)));
         c.restore();
       }
     }
@@ -477,7 +480,7 @@ export function playCondenseTrailTransition(
 
   const overlay = scene.add.image(0, 0, texKey)
     .setOrigin(0)
-    .setScale(2)
+    .setScale(TRAIL_SCALE)
     .setDepth(9999);
 
   const loadingImg = scene.textures.get(loadingTextureKey).getSourceImage() as HTMLImageElement;

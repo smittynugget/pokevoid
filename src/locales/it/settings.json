@@ -137,5 +137,7 @@
   "veryRare": "Molto Raro",
   "animationLoad": "Carico animazioni",
   "animationLite": "Leggero",
-  "animationFull": "Completo (Impegnativo)"
+  "animationFull": "Completo (Impegnativo)",
+  "shopNoDuplicates": "Disabilita duplicati del negozio",
+  "shopShowUniqueNames": "Mostra nomi unici del negozio"
 }

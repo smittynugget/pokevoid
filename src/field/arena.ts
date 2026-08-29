@@ -1,5 +1,5 @@
 import BattleScene from "../battle-scene";
-import { DUELMON_SPECIES } from "../data/duelmon-rankups";
+import { DUELMON_SPECIES, getAlphabeticalDuelmonSpecies } from "../data/duelmon-rankups";
 import { getEligibleDuelmonSpeciesForWave, getDuelmonBstLimitForWave } from "../data/duelmon-bst-utils";
 import { shouldRejectDuelmonSpecies } from "../data/duelmon-spawn-utils";
 import { BiomePoolTier, PokemonPools, BiomeTierTrainerPools, biomePokemonPools, biomeTrainerPools } from "../data/biomes";
@@ -140,7 +140,6 @@ export class Arena {
   randomSpecies(waveIndex: integer, level: integer, attempt?: integer, luckValue?: integer): PokemonSpecies {
     const debugDuelmonWild = this.scene.debugDuelmonWild;
     if ((Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE || debugDuelmonWild) && !this.scene.gameData?.tutorialOnboardActive) {
-
       const pool = debugDuelmonWild ? DUELMON_SPECIES : getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, waveIndex);
       const shownEnemy = this.scene.debugGauntletShownEnemyDuelmons;
       let effectivePool = pool;
@@ -148,7 +147,15 @@ export class Arena {
         const unseen = pool.filter(s => !shownEnemy.has(s));
         effectivePool = unseen.length > 0 ? unseen : pool;
       }
-      const species = getPokemonSpecies(effectivePool[Utils.randSeedInt(effectivePool.length)]);
+      let species: PokemonSpecies;
+      if (debugDuelmonWild) {
+        const sorted = getAlphabeticalDuelmonSpecies();
+        const idx = this.scene.debugGauntletEnemyIndex % sorted.length;
+        this.scene.debugGauntletEnemyIndex++;
+        species = getPokemonSpecies(sorted[idx]);
+      } else {
+        species = getPokemonSpecies(effectivePool[Utils.randSeedInt(effectivePool.length)]);
+      }
       if (debugDuelmonWild && shownEnemy) {
         shownEnemy.add(species.speciesId);
       }

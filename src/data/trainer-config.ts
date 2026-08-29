@@ -856,7 +856,15 @@ function getGymLeaderPartyTemplate(scene: BattleScene) {
 
 export function getRandomPartyMemberFunc(speciesPool: Species[], trainerSlot: TrainerSlot = TrainerSlot.TRAINER, ignoreEvolution: boolean = false, postProcess?: (enemyPokemon: EnemyPokemon) => void): PartyMemberFunc {
   return (scene: BattleScene, level: integer, strength: PartyMemberStrength) => {
-    let species = Utils.randSeedItem(speciesPool);
+    let filteredPool = speciesPool;
+    if (!scene.duelmonsEnabledForRun) {
+      filteredPool = speciesPool.filter(s => getPokemonSpecies(s).generation !== 20);
+      if (filteredPool.length === 0) {
+        const fallbackSpecies = scene.randomSpecies(scene.currentBattle.waveIndex, level, false);
+        return scene.addEnemyPokemon(getPokemonSpecies(fallbackSpecies), level, trainerSlot, undefined, undefined, postProcess);
+      }
+    }
+    let species = Utils.randSeedItem(filteredPool);
     if (!ignoreEvolution) {
       species = getPokemonSpecies(species).getTrainerSpeciesForLevel(level, true, strength, scene.currentBattle.waveIndex, scene.gameMode.isNightmare);
     }

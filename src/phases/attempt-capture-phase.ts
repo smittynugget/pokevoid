@@ -356,9 +356,9 @@ export class AttemptCapturePhase extends PokemonPhase {
         }
         this.scene.gameData.permaModifiers
             .findModifiers(m => m instanceof PermaCatchQuestModifier)
-            .forEach(modifier => modifier.apply([this.scene]));
+            .forEach(modifier => modifier.apply([this.scene, pokemon]));
         this.scene.findModifiers(m => m instanceof PermaCatchQuestModifier)
-            .forEach(modifier => modifier.apply([this.scene]));
+            .forEach(modifier => modifier.apply([this.scene, pokemon]));
         const speciesForm = !pokemon.fusionSpecies ? pokemon.getSpeciesForm() : pokemon.getFusionSpeciesForm();
 
         if (speciesForm.abilityHidden && (pokemon.fusionSpecies ? pokemon.fusionAbilityIndex : pokemon.abilityIndex) === speciesForm.getAbilityCount() - 1) {

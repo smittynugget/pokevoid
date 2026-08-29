@@ -11576,7 +11576,7 @@ export class PostFaintReviveAllyAbAttr extends PostFaintAbAttr {
       return false;
     }
     const party = pokemon.isPlayer() ? pokemon.scene.getParty() : pokemon.scene.getEnemyParty();
-    let candidates = party.filter(p => p !== pokemon && p.isFainted());
+    let candidates = party.filter(p => p !== pokemon && p.isFainted() && p.species.speciesId !== pokemon.species.speciesId);
     if (this.typeFilter !== null) {
       candidates = candidates.filter(p => p.getTypes().includes(this.typeFilter!));
     }
@@ -12641,7 +12641,7 @@ export class PostTurnCursedPotentialRollAbAttr extends PostTurnAbAttr {
       return true;
     }
     const pool = [BattleStat.ATK, BattleStat.DEF, BattleStat.SPATK, BattleStat.SPDEF, BattleStat.SPD];
-    const count = 1 + pokemon.randSeedInt(3);
+    const count = 2 + pokemon.randSeedInt(2);
     for (let i = 0; i < count && pool.length; i++) {
       const stat = pool.splice(pokemon.randSeedInt(pool.length), 1)[0];
       pokemon.scene.unshiftPhase(new StatChangePhase(pokemon.scene, pokemon.getBattlerIndex(), true, [stat], -1));
@@ -15418,7 +15418,6 @@ export function initAbilities() {
       new Ability(Abilities.PORTAL_BEAST, 9)
           .attr(PostFoeSummonStatChangeAbAttr, BattleStat.RAND, 1, true)
           .attr(PostFoeSummonStatChangeAbAttr, BattleStat.RAND, 1, true)
-          .attr(PostFoeSummonStatChangeAbAttr, BattleStat.RAND, 1, true)
           .attr(PreSwitchOutHealConditionAbAttr, (pokemon, opponent) => true, 0.25),
 
       new Ability(Abilities.PARALLEL_WORLD, 9)
@@ -16437,7 +16436,6 @@ export function initAbilities() {
 
       new Ability(Abilities.CURSED_POTENTIAL, 9)
           .attr(PostSummonStatBoostAbAttr, 1)
-          .attr(PostSummonStatChangeAbAttr, BattleStat.ATK, 2, true)
           .attr(PostTurnCursedPotentialRollAbAttr)
           .attr(BlockSwitchCommandAbAttr),
 

@@ -1,10 +1,11 @@
 import { BattlePhase } from "./battle-phase";
 import { BattleType } from "#app/battle";
 import { NextEncounterPhase } from "./next-encounter-phase";
-import { DUELMON_SPECIES } from "#app/data/duelmon-rankups";
+import { DUELMON_SPECIES, getAlphabeticalDuelmonSpecies } from "#app/data/duelmon-rankups";
 import { getPokemonSpecies } from "#app/data/pokemon-species";
 import * as Utils from "#app/utils";
 import { PlayerPokemon } from "#app/field/pokemon.js";
+import { Biome } from "#enums/biome";
 export class DebugGauntletEncounterPhase extends BattlePhase {
   start() {
     super.start();
@@ -12,6 +13,10 @@ export class DebugGauntletEncounterPhase extends BattlePhase {
     const lastBattle = scene.currentBattle;
     const nextWave = lastBattle.waveIndex + 1;
     lastBattle.enemyParty.length = 0;
+
+    const biomeValues = Utils.getEnumValues(Biome).filter((b: Biome) => b !== Biome.TOWN && b !== Biome.END && b < 40);
+    scene.newArena(biomeValues[Utils.randSeedInt(biomeValues.length)]);
+    scene.arena.init();
 
     scene.newBattle(nextWave, BattleType.WILD);
     scene.currentBattle.enemyLevels = [250];
@@ -42,9 +47,10 @@ export class DebugGauntletEncounterPhase extends BattlePhase {
       return null;
     }
 
-    const unseen = DUELMON_SPECIES.filter(s => !shown.has(s));
-    const pool = unseen.length > 0 ? unseen : DUELMON_SPECIES;
-    const speciesId = pool[Utils.randSeedInt(pool.length)];
+    const sorted = getAlphabeticalDuelmonSpecies();
+    const idx = scene.debugGauntletPlayerIndex % sorted.length;
+    scene.debugGauntletPlayerIndex++;
+    const speciesId = sorted[idx];
     shown.add(speciesId);
 
     const newLead = scene.addPlayerPokemon(getPokemonSpecies(speciesId), 250);

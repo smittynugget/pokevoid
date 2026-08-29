@@ -2,6 +2,7 @@ import { Species } from "#enums/species";
 import type BattleScene from "#app/battle-scene.js";
 import type { PlayerPokemon } from "#app/field/pokemon.js";
 import * as Utils from "#app/utils.js";
+import { getPokemonSpecies } from "./pokemon-species";
 
 export const DUELMON_GENERATION: integer = 20;
 
@@ -253,6 +254,135 @@ export const DUELMON_SPECIES: Species[] = [
   Species.VOLCANIC_HAMMERER,
 ];
 export const DUELMON_SPECIES_IDS: Set<Species> = new Set<Species>(DUELMON_SPECIES);
+
+let _alphabeticalCache: Species[] | null = null;
+export function getAlphabeticalDuelmonSpecies(): Species[] {
+  if (!_alphabeticalCache) {
+    const familyMap = buildDuelmonFamilyMap(DUELMON_SPECIES);
+    _alphabeticalCache = [...DUELMON_SPECIES].sort((a, b) => {
+      const keyA = familyMap.get(a) ?? Species[a].toLowerCase();
+      const keyB = familyMap.get(b) ?? Species[b].toLowerCase();
+      if (keyA !== keyB) {
+        return keyA.localeCompare(keyB, undefined, { sensitivity: "base" });
+      }
+      const statsA = getPokemonSpecies(a).baseStats;
+      const statsB = getPokemonSpecies(b).baseStats;
+      const offA = Math.max(statsA[1], statsA[3]);
+      const offB = Math.max(statsB[1], statsB[3]);
+      if (offA !== offB) return offA - offB;
+      return Species[a].localeCompare(Species[b]);
+    });
+  }
+  return _alphabeticalCache;
+}
+
+let _reshapeDebugCache: Species[] | null = null;
+export function getReshapeDebugDuelmonSpecies(): Species[] {
+  if (!_reshapeDebugCache) {
+    _reshapeDebugCache = [...DUELMON_SPECIES].sort((a, b) => {
+      const statsA = getPokemonSpecies(a).baseStats;
+      const statsB = getPokemonSpecies(b).baseStats;
+      const bandA = getDuelmonBstBand(getPokemonSpecies(a).baseTotal);
+      const bandB = getDuelmonBstBand(getPokemonSpecies(b).baseTotal);
+      if (bandA !== bandB) return bandA - bandB;
+      const offA = Math.max(statsA[1], statsA[3]);
+      const offB = Math.max(statsB[1], statsB[3]);
+      if (offA !== offB) return offA - offB;
+      return Species[a].localeCompare(Species[b], undefined, { sensitivity: "base" });
+    });
+  }
+  return _reshapeDebugCache;
+}
+
+function buildDuelmonFamilyMap(speciesList: Species[]): Map<Species, string> {
+  const result = new Map<Species, string>();
+  const names = speciesList.map(s => ({ id: s, tokens: Species[s].toLowerCase().split("_") }));
+
+  const prefixGroups = new Map<string, Species[]>();
+  const suffixGroups = new Map<string, Species[]>();
+
+  for (const { id, tokens } of names) {
+    for (let k = 1; k < tokens.length; k++) {
+      const prefixKey = tokens.slice(0, k).join("_");
+      if (!prefixGroups.has(prefixKey)) prefixGroups.set(prefixKey, []);
+      prefixGroups.get(prefixKey)!.push(id);
+      const suffixKey = tokens.slice(tokens.length - k).join("_");
+      if (!suffixGroups.has(suffixKey)) suffixGroups.set(suffixKey, []);
+      suffixGroups.get(suffixKey)!.push(id);
+    }
+  }
+
+  const GENERIC_BLOCKLIST = new Set(["the", "of", "black", "great", "green", "king",
+    "dragon", "ancient", "knight", "zombie", "white", "slime", "hane",
+    "swordsman", "beast", "golem", "soldier", "guardian"]);
+  const MIN_PREFIX_1TOKEN = 3;
+  const MAX_SINGLE_SUFFIX_MEMBERS = 6;
+  const MIN_PARENT_TO_ABSORB = 4;
+
+  const validPrefix = new Map<string, Species[]>();
+  for (const [key, members] of prefixGroups) {
+    const tc = key.split("_").length;
+    if (members.length < 2) continue;
+    if (tc === 1 && (GENERIC_BLOCKLIST.has(key) || members.length < MIN_PREFIX_1TOKEN)) continue;
+    validPrefix.set(key, members);
+  }
+  const validSuffix = new Map<string, Species[]>();
+  for (const [key, members] of suffixGroups) {
+    const tc = key.split("_").length;
+    if (members.length < 2) continue;
+    if (tc === 1 && (GENERIC_BLOCKLIST.has(key) || members.length > MAX_SINGLE_SUFFIX_MEMBERS)) continue;
+    validSuffix.set(key, members);
+  }
+
+  for (const { id, tokens } of names) {
+    const myPrefixes: [string, number][] = [];
+    for (let k = 1; k <= tokens.length; k++) {
+      const key = tokens.slice(0, k).join("_");
+      if (validPrefix.has(key)) myPrefixes.push([key, validPrefix.get(key)!.length]);
+    }
+    const mySuffixes: [string, number][] = [];
+    for (let k = 1; k < tokens.length; k++) {
+      const key = tokens.slice(tokens.length - k).join("_");
+      if (validSuffix.has(key)) mySuffixes.push([key, validSuffix.get(key)!.length]);
+    }
+    let chosen: string | null = null;
+    if (myPrefixes.length) {
+      myPrefixes.sort((a, b) => b[1] - a[1] || b[0].split("_").length - a[0].split("_").length || a[0].localeCompare(b[0]));
+      let best = myPrefixes[0];
+      for (const [pk, ps] of myPrefixes) {
+        if (ps >= MIN_PARENT_TO_ABSORB && ps > best[1]) best = [pk, ps];
+      }
+      chosen = best[0];
+    } else if (mySuffixes.length) {
+      mySuffixes.sort((a, b) => b[0].split("_").length - a[0].split("_").length || b[1] - a[1] || a[0].localeCompare(b[0]));
+      chosen = mySuffixes[0][0];
+    }
+    if (chosen) result.set(id, chosen);
+  }
+
+  for (const { id, tokens } of names) {
+    const currentKey = result.get(id);
+    const currentSize = currentKey
+      ? (validPrefix.get(currentKey)?.length ?? validSuffix.get(currentKey)?.length ?? 0)
+      : 0;
+    let bestInfixKey: string | null = null;
+    let bestInfixSize = 0;
+    for (const [fkey, fmembers] of validPrefix) {
+      const ftoks = fkey.split("_");
+      if (ftoks.length < 2 || fmembers.length <= currentSize || fmembers.length <= bestInfixSize) continue;
+      for (let s = 0; s <= tokens.length - ftoks.length; s++) {
+        if (tokens.slice(s, s + ftoks.length).join("_") === fkey) {
+          bestInfixKey = fkey;
+          bestInfixSize = fmembers.length;
+          break;
+        }
+      }
+    }
+    if (bestInfixKey) result.set(id, bestInfixKey);
+  }
+
+  return result;
+}
 
 export type DuelmonRankUpDefinition = {
   rankUpLevels: integer[];

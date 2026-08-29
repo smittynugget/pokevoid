@@ -265,8 +265,8 @@ export class Egg {
 
   private rollEggTier(): EggTier {
     const tierValueOffset = this._sourceType === EggSourceType.GACHA_LEGENDARY ? 1 : 0;
-    const tierValue = Utils.randInt(512);
-    return tierValue >= 96 + tierValueOffset ? EggTier.COMMON : tierValue >= 8 + tierValueOffset ? EggTier.GREAT : tierValue >= 1 + tierValueOffset ? EggTier.ULTRA : EggTier.MASTER;
+    const tierValue = Utils.randInt(1024);
+    return tierValue >= 192 + tierValueOffset ? EggTier.COMMON : tierValue >= 8 + tierValueOffset ? EggTier.GREAT : tierValue >= 1 + tierValueOffset ? EggTier.ULTRA : EggTier.MASTER;
   }
 
   private rollSpecies(scene: BattleScene): Species | null {

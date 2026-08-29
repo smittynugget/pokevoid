@@ -885,11 +885,18 @@ export abstract class BattleAnim {
       let r = anim.frames.length;
       let f = 0;
 
+      const effectiveSpeed = (scene._battleAnimDepth > 0 || scene._inBattleTurn) && scene.battleSpeed > 0
+        ? scene.battleSpeed : scene.gameSpeed;
+      const scaledStepMs = effectiveSpeed === 1 ? Utils.getFrameMs(3) : Math.ceil(Utils.getFrameMs(3) / effectiveSpeed);
+      const displayFrameMs = 1000 / ((scene.sys.game.loop as any).targetFps || 60);
+      const frameBatch = (scaledStepMs < displayFrameMs && scene.iosAnimFrameBatch > 1) ? scene.iosAnimFrameBatch : 1;
+
       scene.tweens.addCounter({
-        duration: Utils.getFrameMs(3),
-        repeat: anim.frames.length,
+        duration: Utils.getFrameMs(3 * frameBatch),
+        repeat: Math.ceil(anim.frames.length / frameBatch),
         onRepeat: () => {
           try {
+          for (let _batch = 0; _batch < frameBatch && f < anim.frames.length; _batch++) {
           if (!f) {
             userSprite.setVisible(false);
             targetSprite.setVisible(false);
@@ -914,7 +921,13 @@ export abstract class BattleAnim {
                 Object.keys(sourcePipelineData).forEach(k => sprite.pipelineData[k] = sourcePipelineData[k]);
                 sprite.setPipelineData("ignoreFieldPos", true);
                 sprite.setFlipX(spriteSource!.flipX);
-                spriteSource.on("animationupdate", (_anim, frame) => sprite.setFrame(frame.textureFrame));
+                const onAnimUpdate = (_anim: any, frame: any) => {
+                  if (sprite.active) sprite.setFrame(frame.textureFrame);
+                };
+                spriteSource.on("animationupdate", onAnimUpdate);
+                sprite.once("destroy", () => {
+                  if (spriteSource?.scene) spriteSource.off("animationupdate", onAnimUpdate);
+                });
                 scene.field.add(sprite);
                 sprites.push(sprite);
               }
@@ -1029,6 +1042,7 @@ export abstract class BattleAnim {
           }
           f++;
           r--;
+          }
           } catch (err) {
             console.error("[BATTLE-ANIM] onRepeat error:", err);
             cleanUpAndComplete();

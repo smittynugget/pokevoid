@@ -130,6 +130,8 @@ import { getTypeRgb } from "./data/type";
 import PokemonSpriteSparkleHandler from "./field/pokemon-sprite-sparkle-handler";
 import CharSprite from "./ui/char-sprite";
 import DamageNumberHandler from "./field/damage-number-handler";
+import { playStatChangeVisual } from "./field/stat-change-visual";
+import { StatAnimTweakUtils, isStatAnimAsset, parseStatAnimAsset } from "./field/stat-anim-layout";
 import PokemonInfoContainer from "./ui/pokemon-info-container";
 import { biomeDepths, getBiomeName } from "./data/biomes";
 import { SceneBase } from "./scene-base";
@@ -140,7 +142,7 @@ import Overrides, { DEBUG_YU_VISUAL_TUNING } from "#app/overrides";
 import { YuSpriteTweakController } from "./ui/tweak/yu-sprite-tweak-controller";
 import { PokemonBattleTooltipUtils } from "./ui/pokemon-battle-tooltip-utils";
 import { Button } from "#app/enums/buttons";
-import { DUELMON_SPECIES } from "./data/duelmon-rankups";
+import { DUELMON_SPECIES, getAlphabeticalDuelmonSpecies } from "./data/duelmon-rankups";
 import { getDuelmonBstLimitForWave, getEligibleDuelmonSpeciesForWave } from "./data/duelmon-bst-utils";
 import { InputsController } from "./inputs-controller";
 import { UiInputs } from "./ui-inputs";
@@ -207,6 +209,23 @@ const BGM_PATHS: Record<string, string> = {
   "evolution_fanfare": "bw/evolution_fanfare.mp3",
   "evolution_fanfare_rse": "rse/evolution_fanfare.mp3",
 };
+
+function resolveAudioPath(key: string): string | null {
+  if (BGM_PATHS[key]) return "audio/bgm/" + BGM_PATHS[key];
+  if (key === "char_sound") return "audio/se/select.wav";
+  if (key.startsWith("cry/")) return "audio/cry/" + key.slice(4) + ".m4a";
+  const slashIdx = key.indexOf("/");
+  if (slashIdx < 0) return key.includes(".") ? null : "audio/bgm/" + key + ".mp3";
+  const prefix = key.substring(0, slashIdx);
+  const name = key.substring(slashIdx + 1);
+  switch (prefix) {
+    case "se": return "audio/se/" + name + ".wav";
+    case "ui": return "audio/ui/" + name + ".wav";
+    case "battle_anims": return "audio/battle_anims/" + name + ".wav";
+    case "voice": return "audio/voice/" + name + ".mp3";
+    default: return null;
+  }
+}
 
 const OPP_IVS_OVERRIDE_VALIDATED : integer[] = (
   Array.isArray(Overrides.OPP_IVS_OVERRIDE) ?
@@ -311,6 +330,7 @@ export default class BattleScene extends SceneBase {
   public skipFaintCry: boolean = false;
   public gameSpeed: integer = 3;
   public battleSpeed: number = 0;
+  public iosAnimFrameBatch: integer = isIPhone() ? 2 : 1;
   public _battleAnimDepth: number = 0;
   public _inBattleTurn: boolean = false;
   public damageNumbersMode: integer = 0;
@@ -332,6 +352,8 @@ export default class BattleScene extends SceneBase {
   public enableMoveInfo: boolean = true;
   public modifierTooltipsEnabled: boolean = false;
   public showItemTextBg: boolean = true;
+  public shopNoDuplicates: boolean = false;
+  public shopShowUniqueNames: boolean = false;
   public hideIvs: boolean = false;
 
   public candyUpgradeNotification: integer = 0;
@@ -373,6 +395,8 @@ export default class BattleScene extends SceneBase {
 
   public debugGauntletShownPlayerDuelmons: Set<Species> | null = null;
   public debugGauntletShownEnemyDuelmons: Set<Species> | null = null;
+  public debugGauntletEnemyIndex: integer = 0;
+  public debugGauntletPlayerIndex: integer = 0;
 
   public debugGauntletAutoCycle: boolean = false;
 
@@ -512,7 +536,7 @@ export default class BattleScene extends SceneBase {
   private _dialogueBgImage: Phaser.GameObjects.Image | null = null;
   private shopOverlay: Phaser.GameObjects.Rectangle;
   private shopOverlayShown: boolean = false;
-  private shopOverlayOpacity: number = .8;
+  private shopOverlayOpacity: number = .6;
 
   public modifiers: PersistentModifier[];
   private enemyModifiers: PersistentModifier[];
@@ -790,7 +814,9 @@ export default class BattleScene extends SceneBase {
         this.fieldSpritePipeline = new FieldSpritePipeline(this.game);
         renderer.pipelines.add("FieldSprite", this.fieldSpritePipeline);
       }
-      this._prewarmGlowPostFX();
+      if (!isIPhone()) {
+        this._prewarmGlowPostFX();
+      }
     }
     this.eventManager = new TimedEventManager();
 
@@ -1095,7 +1121,9 @@ export default class BattleScene extends SceneBase {
         modes: ["portalScale", "creatureScale", "position", "size", "scale", "alpha", "fontSize"],
         assets: [
           "PlayerDuelmon", "PlayerPortal", "PlayerBoth", "PlayerHoverBox",
+          "PlayerStatAnimUp", "PlayerStatAnimDown",
           "EnemyDuelmon", "EnemyPortal", "EnemyBoth", "EnemyHoverBox",
+          "EnemyStatAnimUp", "EnemyStatAnimDown",
           "P_TeraIcon", "P_SplicedIcon", "P_FusionSpeciesIcon", "P_FusionBoth",
           "P_ShinyIcon", "P_FusionShinyIcon",
           "P_RankText", "P_GlitchFormText",
@@ -1131,6 +1159,19 @@ export default class BattleScene extends SceneBase {
           };
         },
         onRectAdjust: ({ assetName, modeName, button, delta }) => {
+          if (isStatAnimAsset(assetName)) {
+            const { side, direction } = parseStatAnimAsset(assetName);
+            const dirMap: Record<number, string> = {
+              [Button.LEFT]: "left", [Button.RIGHT]: "right",
+              [Button.UP]: "up", [Button.DOWN]: "down",
+            };
+            const dir = dirMap[button];
+            if (dir) {
+              StatAnimTweakUtils.applyInput(side, direction, modeName, dir, delta);
+              StatAnimTweakUtils.refreshPreview(this);
+            }
+            return;
+          }
           if (assetName.startsWith("P_") || assetName.startsWith("E_")) {
             const isPlayer = assetName.startsWith("P_");
             const iconName = assetName.substring(2);
@@ -1192,6 +1233,12 @@ export default class BattleScene extends SceneBase {
           }
         },
         onRectSnapshot: (assetName: string) => {
+          if (isStatAnimAsset(assetName)) {
+            const { side, direction } = parseStatAnimAsset(assetName);
+            const pokemon = side === "player" ? this.getPlayerPokemon() : this.getEnemyPokemon();
+            if (pokemon) StatAnimTweakUtils.snapshot(this, pokemon, side, direction);
+            return;
+          }
           PokemonBattleTooltipUtils.setActiveHoverBox(assetName.includes("Player") ? "player" : "enemy");
           PokemonBattleTooltipUtils.snapshotTweak();
         },
@@ -1205,14 +1252,26 @@ export default class BattleScene extends SceneBase {
           }
         },
         onRectReset: (assetName: string) => {
+          if (isStatAnimAsset(assetName)) {
+            const { side, direction } = parseStatAnimAsset(assetName);
+            StatAnimTweakUtils.reset(side, direction);
+            StatAnimTweakUtils.refreshPreview(this);
+            return;
+          }
           PokemonBattleTooltipUtils.setActiveHoverBox(assetName.includes("Player") ? "player" : "enemy");
           PokemonBattleTooltipUtils.resetTweakRect();
         },
         onAssetChanged: (assetName: string) => {
-          if (assetName.toLowerCase().includes("hoverbox")) {
+          if (isStatAnimAsset(assetName)) {
+            PokemonBattleTooltipUtils.hideHoverTweak();
+            const { side, direction } = parseStatAnimAsset(assetName);
+            StatAnimTweakUtils.showPreview(this, side, direction);
+          } else if (assetName.toLowerCase().includes("hoverbox")) {
+            StatAnimTweakUtils.hidePreview();
             PokemonBattleTooltipUtils.setActiveHoverBox(assetName.includes("Player") ? "player" : "enemy");
             PokemonBattleTooltipUtils.showHoverTweak(this);
           } else {
+            StatAnimTweakUtils.hidePreview();
             PokemonBattleTooltipUtils.hideHoverTweak();
           }
           if (assetName.startsWith("P_") || assetName.startsWith("E_")) {
@@ -1250,6 +1309,17 @@ export default class BattleScene extends SceneBase {
           }
         },
         getDropdownAnchor: () => ({ x: 10, y: 20 }),
+        onDeactivate: () => {
+          StatAnimTweakUtils.hidePreview();
+        },
+        onStatAnimDebug: (side, direction) => {
+          if (StatAnimTweakUtils.isPreviewActive()) {
+            StatAnimTweakUtils.showPreview(this, side, direction);
+            return;
+          }
+          const pokemon = side === "player" ? this.getPlayerPokemon() : this.getEnemyPokemon();
+          if (pokemon) playStatChangeVisual(this, pokemon, direction);
+        },
       });
     }
 
@@ -1514,17 +1584,18 @@ export default class BattleScene extends SceneBase {
   }
 
   addEnemyPokemon(species: PokemonSpecies, level: integer, trainerSlot: TrainerSlot, boss: boolean = false, dataSource?: PokemonData, postProcess?: (enemyPokemon: EnemyPokemon) => void): EnemyPokemon {
+    let oppOverrideApplied = false;
     if (!this.gameData.tutorialOnboardActive) {
-      if (Overrides.OPP_SPECIES_OVERRIDE) {
+      if (Overrides.OPP_SPECIES_OVERRIDE && !this.debugDuelmonWild) {
         species = getPokemonSpecies(Overrides.OPP_SPECIES_OVERRIDE);
+        oppOverrideApplied = true;
       } else if ((Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE || this.debugDuelmonWild) && species.generation !== 20) {
         species = getPokemonSpecies(DUELMON_SPECIES[Utils.randSeedInt(DUELMON_SPECIES.length)]);
       }
     }
 
     const isBossTrainerSlot = trainerSlot === TrainerSlot.TRAINER && this.currentBattle?.trainer?.config?.isBoss;
-
-    if (!this.debugDuelmonWild && !isBossTrainerSlot && species.generation === 20 && species.baseTotal > getDuelmonBstLimitForWave(this.currentBattle?.waveIndex ?? 1)) {
+    if (!this.debugDuelmonWild && !isBossTrainerSlot && !oppOverrideApplied && species.generation === 20 && species.baseTotal > getDuelmonBstLimitForWave(this.currentBattle?.waveIndex ?? 1)) {
       const eligible = getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, this.currentBattle?.waveIndex ?? 1);
       species = getPokemonSpecies(eligible[Utils.randSeedInt(eligible.length)]);
     }
@@ -1630,7 +1701,10 @@ export default class BattleScene extends SceneBase {
         icon.pipelineData["altBuildBlendMode"] = pokemon.altBuildBlendMode || "duelmon_cluster4";
         icon.pipelineData["altBuildInversionFactor"] = pokemon.altBuildInversionFactor ?? 0.0;
       }
-    } else if (!pokemon.isPlayer() && this.currentBattle?.trainer?.isCorrupted && pokemon.altBuildTargetColors?.length >= 4) {
+    } else if (!pokemon.isPlayer() &&
+      (this.currentBattle?.trainer?.isCorrupted ||
+       this.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS) &&
+      pokemon.altBuildTargetColors?.length >= 4) {
       const paletteInfo = getCachedIconPalette(this, icon);
       if (paletteInfo) {
         icon.clearTint();
@@ -3131,8 +3205,13 @@ export default class BattleScene extends SceneBase {
       return this.arena.randomSpecies(waveIndex, level, undefined, getPartyLuckValue(this.party));
     }
     if (Overrides.FORCE_DUELMON_ENCOUNTERS_OVERRIDE || this.debugDuelmonWild) {
-
       const pool = this.debugDuelmonWild ? DUELMON_SPECIES : getEligibleDuelmonSpeciesForWave(DUELMON_SPECIES, waveIndex);
+      if (this.debugDuelmonWild) {
+        const sorted = getAlphabeticalDuelmonSpecies();
+        const idx = this.debugGauntletEnemyIndex % sorted.length;
+        this.debugGauntletEnemyIndex++;
+        return getPokemonSpecies(sorted[idx]);
+      }
       return getPokemonSpecies(pool[Utils.randSeedInt(pool.length)]);
     }
     const filteredSpecies = speciesFilter ? [...new Set(allSpecies.filter(s => s.isCatchable()).filter(s => this.duelmonsEnabledForRun || s.generation !== 20).filter(speciesFilter).map(s => {
@@ -3207,8 +3286,12 @@ export default class BattleScene extends SceneBase {
       fadeOut = false;
     }
     this.bgmCache.add(bgmName);
-    if (isIPhone() && this.bgm?.key && this.bgm.key !== bgmName && this.cache.audio.exists(this.bgm.key)) {
-      this.cache.audio.remove(this.bgm.key);
+    if (isIPhone() && this.bgm?.key && this.bgm.key !== bgmName) {
+      this.sound.remove(this.bgm);
+      if (this.cache.audio.exists(this.bgm.key)) {
+        this.cache.audio.remove(this.bgm.key);
+      }
+      this.bgm = null as any;
     }
     const bgmPath = BGM_PATHS[bgmName];
     this.loadBgm(bgmName, bgmPath);
@@ -3423,6 +3506,20 @@ export default class BattleScene extends SceneBase {
           this.load.start();
         }
         return null as any;
+      }
+
+      if (isIPhone() && !this.cache.audio.exists(key)) {
+        const audioPath = resolveAudioPath(key);
+        if (audioPath) {
+          this.load.audio(key, this.getCachedUrl(audioPath));
+          this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+            try { this.sound.play(key, config); } catch (e) {}
+          });
+          if (!this.load.isLoading()) {
+            this.load.start();
+          }
+          return null as any;
+        }
       }
 
       this.sound.play(key, config);
@@ -4241,6 +4338,9 @@ export default class BattleScene extends SceneBase {
       if (this.currentBattle.battleSpec === BattleSpec.FINAL_BOSS) {
         return resolve();
       }
+      if (this.debugDuelmonWild) {
+        return resolve();
+      }
       const difficultyWaveIndex = this.gameMode.getWaveForDifficulty(this.currentBattle.waveIndex);
       const isFinalBoss = this.gameMode.isWaveFinal(this.currentBattle.waveIndex);
       let chances = Math.ceil(difficultyWaveIndex / 10);
@@ -4327,6 +4427,45 @@ export default class BattleScene extends SceneBase {
       this.removeModifier(m, true);
     }
     this.updateModifiers(false).then(() => this.updateUIPositions());
+  }
+
+  evictStaleAudio(): void {
+    if (!isIPhone()) return;
+    const PROTECTED_PREFIXES = ["se/", "ui/"];
+    const PROTECTED_KEYS = new Set([
+      "se/hit", "se/hit_strong", "se/hit_weak", "se/faint",
+      "se/flee", "se/exp", "se/level_up", "se/sparkle",
+      "se/potion", "se/pokeball_throw", "se/pb_catch", "se/pb_bounce_1",
+      "se/pb_rel", "se/pb_lock", "se/pb_shake", "se/pb_reward",
+      "ui/select", "ui/menu_open", "ui/error",
+      "char_sound", "heal"
+    ]);
+    const MAX_RETAINED = 80;
+    const partyKeys = new Set(
+      this.getParty().map(p => "cry/" + p.species.getCryKey(p.formIndex))
+    );
+    const currentBgmKey = this.bgm?.key;
+    const entries = Object.keys(this.cache.audio.entries);
+    const candidates: string[] = [];
+    for (const k of entries) {
+      if (PROTECTED_KEYS.has(k)) continue;
+      if (PROTECTED_PREFIXES.some(p => k.startsWith(p))) continue;
+      if (partyKeys.has(k)) continue;
+      if (k === currentBgmKey) continue;
+      if (this.bgmCache.has(k)) continue;
+      candidates.push(k);
+    }
+    const evictCount = candidates.length - MAX_RETAINED;
+    if (evictCount <= 0) return;
+    const toEvict = candidates.slice(0, evictCount);
+    const playing = new Set(this.sound.getAllPlaying().map((s: any) => s.key));
+    for (const key of toEvict) {
+      if (playing.has(key)) continue;
+      this.sound.removeByKey(key);
+      if (this.cache.audio.exists(key)) {
+        this.cache.audio.remove(key);
+      }
+    }
   }
 
   setModifiersVisible(visible: boolean) {
@@ -4696,7 +4835,9 @@ export default class BattleScene extends SceneBase {
       ).length
     ) {
       this.fadeOutBgm(Utils.fixedInt(2000), false);
-      this.ui.showDialogue(battleSpecDialogue[BattleSpec.FINAL_BOSS].firstStageWin, pokemon.species.name, undefined, () => {
+      const variantIndex = this.currentBattle.finalBossDialogueVariant ?? 0;
+      const firstStageWinKey = battleSpecDialogue[BattleSpec.FINAL_BOSS].firstStageWin[variantIndex];
+      this.ui.showDialogue(firstStageWinKey, pokemon.species.name, undefined, () => {
         const finalBossMBH = getModifierType(modifierTypes.MINI_BLACK_HOLE).newModifier(pokemon) as TurnHeldItemTransferModifier;
         finalBossMBH.setTransferrableFalse();
         this.addEnemyModifier(finalBossMBH, false, true);

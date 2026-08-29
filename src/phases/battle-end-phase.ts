@@ -101,6 +101,7 @@ export class BattleEndPhase extends BattlePhase {
     PokemonBattleTooltipUtils.destroyPlayerHoverZone();
     this.scene.clearEnemyHeldItemModifiers();
     this.scene.clearEnemyMoveUpgradeModifiers();
+    this.scene.evictStaleAudio();
 
     const lapsingModifiers = this.scene.findModifiers(m => m instanceof LapsingPersistentModifier || m instanceof LapsingPokemonHeldItemModifier) as (LapsingPersistentModifier | LapsingPokemonHeldItemModifier)[];
     for (const m of lapsingModifiers) {

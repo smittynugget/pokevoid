@@ -41,6 +41,8 @@ export interface TweakControllerConfig {
     onRectReset?: (assetName: string) => void;
     onIconSnapshot?: (assetName: string) => void;
     onAssetChanged?: (assetName: string) => void;
+    onStatAnimDebug?: (side: "player" | "enemy", direction: "up" | "down") => void;
+    onDeactivate?: () => void;
     stepPx?: number;
     stepScale?: number;
     getDropdownAnchor?: () => { x: number; y: number } | null;
@@ -67,6 +69,10 @@ export class YuSpriteTweakController {
     private _keyVHandler: (() => void) | null = null;
     private _keyRHandler: (() => void) | null = null;
     private _keyFiveHandler: (() => void) | null = null;
+    private _keySixHandler: (() => void) | null = null;
+    private _keySevenHandler: (() => void) | null = null;
+    private _keyEightHandler: (() => void) | null = null;
+    private _keyNineHandler: (() => void) | null = null;
     private _dropdownPanel: TweakDropdownPanel | null = null;
 
     get tweakActive(): boolean { return this._metaMode !== TweakMetaMode.NONE; }
@@ -84,7 +90,7 @@ export class YuSpriteTweakController {
     }
 
     private _isRectAsset(assetName: string): boolean {
-        return assetName.toLowerCase().includes("hoverbox");
+        return assetName.toLowerCase().includes("hoverbox") || /^(Player|Enemy)StatAnim(Up|Down)$/.test(assetName);
     }
 
     private _isIconAsset(assetName: string): boolean {
@@ -363,12 +369,36 @@ export class YuSpriteTweakController {
             if (!this._config.scene.uiEditModeActive) return;
             this._dropdownPanel?.toggle();
         };
+        this._keySixHandler = () => {
+            if (this._metaMode === TweakMetaMode.NONE) return;
+            if (!this._config.scene.uiEditModeActive) return;
+            if (this._config.onStatAnimDebug) this._config.onStatAnimDebug("player", "up");
+        };
+        this._keySevenHandler = () => {
+            if (this._metaMode === TweakMetaMode.NONE) return;
+            if (!this._config.scene.uiEditModeActive) return;
+            if (this._config.onStatAnimDebug) this._config.onStatAnimDebug("player", "down");
+        };
+        this._keyEightHandler = () => {
+            if (this._metaMode === TweakMetaMode.NONE) return;
+            if (!this._config.scene.uiEditModeActive) return;
+            if (this._config.onStatAnimDebug) this._config.onStatAnimDebug("enemy", "up");
+        };
+        this._keyNineHandler = () => {
+            if (this._metaMode === TweakMetaMode.NONE) return;
+            if (!this._config.scene.uiEditModeActive) return;
+            if (this._config.onStatAnimDebug) this._config.onStatAnimDebug("enemy", "down");
+        };
         this._config.scene.input.keyboard?.on("keydown-ONE", this._keyOneHandler);
         this._config.scene.input.keyboard?.on("keydown-TWO", this._keyTwoHandler);
         this._config.scene.input.keyboard?.on("keydown-THREE", this._keyThreeHandler);
         this._config.scene.input.keyboard?.on("keydown-V", this._keyVHandler);
         this._config.scene.input.keyboard?.on("keydown-R", this._keyRHandler);
         this._config.scene.input.keyboard?.on("keydown-FIVE", this._keyFiveHandler);
+        this._config.scene.input.keyboard?.on("keydown-SIX", this._keySixHandler);
+        this._config.scene.input.keyboard?.on("keydown-SEVEN", this._keySevenHandler);
+        this._config.scene.input.keyboard?.on("keydown-EIGHT", this._keyEightHandler);
+        this._config.scene.input.keyboard?.on("keydown-NINE", this._keyNineHandler);
     }
 
     cleanupKeyListeners(): void {
@@ -378,6 +408,10 @@ export class YuSpriteTweakController {
         if (this._keyVHandler) { this._config.scene.input.keyboard?.off("keydown-V", this._keyVHandler); this._keyVHandler = null; }
         if (this._keyRHandler) { this._config.scene.input.keyboard?.off("keydown-R", this._keyRHandler); this._keyRHandler = null; }
         if (this._keyFiveHandler) { this._config.scene.input.keyboard?.off("keydown-FIVE", this._keyFiveHandler); this._keyFiveHandler = null; }
+        if (this._keySixHandler) { this._config.scene.input.keyboard?.off("keydown-SIX", this._keySixHandler); this._keySixHandler = null; }
+        if (this._keySevenHandler) { this._config.scene.input.keyboard?.off("keydown-SEVEN", this._keySevenHandler); this._keySevenHandler = null; }
+        if (this._keyEightHandler) { this._config.scene.input.keyboard?.off("keydown-EIGHT", this._keyEightHandler); this._keyEightHandler = null; }
+        if (this._keyNineHandler) { this._config.scene.input.keyboard?.off("keydown-NINE", this._keyNineHandler); this._keyNineHandler = null; }
         this._dropdownPanel?.destroy();
         this._dropdownPanel = null;
     }
@@ -409,6 +443,7 @@ export class YuSpriteTweakController {
         if (this._config.hudTextObject) {
             this._config.hudTextObject.setVisible(false);
         }
+        if (this._config.onDeactivate) this._config.onDeactivate();
         if (wasActive) {
             this._config.scene.refreshUiEditModeActive();
         }

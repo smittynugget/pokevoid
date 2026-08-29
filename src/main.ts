@@ -24,10 +24,17 @@ window.addEventListener("unhandledrejection", (event) => {
 
 document.addEventListener('visibilitychange', (): void => {
   if (document.hidden) {
+    if (game?.loop) {
+      game.loop.sleep();
+    }
     if (game?.sound) {
       game.sound.pauseAll();
     }
   } else {
+    if (game?.loop) {
+      (game.loop as any).resetDelta();
+      (game.loop as any).wake(false);
+    }
     if (game?.sound) {
       game.sound.resumeAll();
     }
@@ -44,6 +51,10 @@ window.addEventListener('beforeunload', (event: BeforeUnloadEvent): void => {
   }
 });
 
+const isIOSDevice =
+  (/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: "app",
@@ -53,6 +64,19 @@ const config: Phaser.Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
+  ...(isIOSDevice ? {
+    render: {
+      powerPreference: "low-power",
+      batchSize: 2048,
+      maxTextures: 8,
+    },
+    fps: {
+      target: 30,
+      limit: 30,
+      forceSetTimeOut: false,
+      smoothStep: true,
+    },
+  } : {}),
   plugins: {
     global: [{
       key: "rexInputTextPlugin",

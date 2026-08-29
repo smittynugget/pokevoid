@@ -115,7 +115,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { addCorruptedRivalOverlay, playCutsceneFaintAnim } from "#app/utils/story-cutscene-overlays.js";
 export const defaultStarterSpecies: Species[] = [];
 
-export const INTERNAL_BACKUP_VERSION = 1;
+export const INTERNAL_BACKUP_VERSION = 5;
 
 export const VERSIONS_REQUIRING_BACKUP: string[] = [
     "v2.0b [The Colossal Update]",
@@ -1155,6 +1155,7 @@ export class GameData {
         const activeSlotId = this.scene?.sessionSlotId ?? -1;
         for (let s = 0; s < 5; s++) {
             if (s === activeSlotId) continue;
+            if (!isIPhone() && this.scene?.loadBattleFromMode === 0) continue;
             const [, battleKey] = this.getSessionKeys(s);
             if (localStorage.getItem(battleKey)) {
                 localStorage.removeItem(battleKey);
@@ -1184,7 +1185,9 @@ export class GameData {
             } catch (_) {}
         }
         const activeSlot = this.scene?.sessionSlotId ?? -1;
-        if (activeSlot >= 0 && this.estimateStorageUsageBytes() > GameData.IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES) {
+        if (activeSlot >= 0
+            && (isIPhone() || this.scene?.loadBattleFromMode !== 0)
+            && this.estimateStorageUsageBytes() > GameData.IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES) {
             const [, activeBattleKey] = this.getSessionKeys(activeSlot);
             localStorage.removeItem(activeBattleKey);
         }
@@ -1193,11 +1196,12 @@ export class GameData {
         if (this.isReplayMode() || !loggedInUser?.username) {
             return;
         }
-
         this.purgeAllBackupKeys();
-        for (let s = 0; s < 5; s++) {
-            const [, battleKey] = this.getSessionKeys(s);
-            localStorage.removeItem(battleKey);
+        if (this.scene?.loadBattleFromMode !== 0) {
+            for (let s = 0; s < 5; s++) {
+                const [, battleKey] = this.getSessionKeys(s);
+                localStorage.removeItem(battleKey);
+            }
         }
         if (this.estimateStorageUsageBytes() <= GameData.IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES) {
             return;
@@ -1738,6 +1742,27 @@ export class GameData {
                             this.applyChampionLevelUnlocks(id);
                             this.validateChampionGlitchForms(id);
                         });
+
+                        const _adRec = (this.championData as any)?.['apollo_diana'];
+                        const _apolloRec = (this.championData as any)?.['apollo'];
+                        const _dianaRec = (this.championData as any)?.['diana'];
+                        if (_adRec || _apolloRec || _dianaRec) {
+                            const _mSig = [...new Set([
+                                ...(_adRec?.unlockedSignaturePokemon || []),
+                                ...(_apolloRec?.unlockedSignaturePokemon || []),
+                                ...(_dianaRec?.unlockedSignaturePokemon || []),
+                            ])];
+                            const _mAlt = [...new Set([
+                                ...(_adRec?.unlockedAltBuilds || []),
+                                ...(_apolloRec?.unlockedAltBuilds || []),
+                                ...(_dianaRec?.unlockedAltBuilds || []),
+                            ])];
+                            for (const _id of ['apollo', 'diana', 'apollo_diana'] as const) {
+                                const _dst = ((this.championData as any)[_id] ||= {}) as any;
+                                if (_mSig.length) _dst.unlockedSignaturePokemon = [..._mSig];
+                                if (_mAlt.length) _dst.unlockedAltBuilds = [..._mAlt];
+                            }
+                        }
                     }
 
                 if (systemData.gameStats) {
@@ -4140,18 +4165,22 @@ export class GameData {
             && sessionData.party.length > 0
             && sessionData.waveIndex > 0;
         if (!shouldSave) return "none";
-        if (this.lastStorageUsageBytes > GameData.IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES) {
+        if (isIPhone() && this.lastStorageUsageBytes > GameData.IOS_PROACTIVE_CLEANUP_THRESHOLD_BYTES) {
             return "primary";
         }
 
         const inActiveBattle = !!scene.encounterInitComplete && !!scene.currentBattle?.started && !!scene._inBattleTurn;
         const battleStartCheckpoint = !!scene.currentBattle && !scene.encounterInitComplete;
+        const betweenTurns = !!scene.encounterInitComplete && !!scene.currentBattle?.started && !scene._inBattleTurn;
 
         if (inActiveBattle) {
             return scene.autoSaveMode === 0 ? "primary" : "secondary";
         }
+        if (betweenTurns) {
+            return scene.autoSaveMode === 0 ? "primary" : "none";
+        }
         if (battleStartCheckpoint) {
-            return scene.autoSaveMode === 1 ? "primary" : "both";
+            return (isIPhone() && scene.autoSaveMode === 1) ? "primary" : "both";
         }
         return "primary";
     }

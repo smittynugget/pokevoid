@@ -24,7 +24,7 @@ import { ModalConfig, ModalUiHandler } from "./modal-ui-handler";
 import { RewardType } from "../enums/reward-type";
 import { getModPokemonName } from "../data/mod-glitch-form-utils";
 import { modGlitchFormData, getModFormSystemName } from "../data/mod-glitch-form-data";
-import Pokemon, { EnemyPokemon, PlayerPokemon, YU_SPECIES_PORTAL_OFFSETS, YU_SPECIES_VISUAL_OFFSETS } from "#app/field/pokemon.js";
+import Pokemon, { EnemyPokemon, PlayerPokemon, YU_SPECIES_PORTAL_OFFSETS, YU_SPECIES_VISUAL_OFFSETS, YU_SPECIES_PORTAL_IMAGE_OVERRIDE } from "#app/field/pokemon.js";
 import {
   pokemonEvolutions,
   pokemonPrevolutions,
@@ -1851,9 +1851,11 @@ export default class PokedexModalUiHandler extends ModalUiHandler {
             this.spriteContainer.removeAll(true);
 
             if (speciesData.generation === 20) {
-              const _vSpriteState2 = this.scene.cache.json.exists(spriteKey)
+              const _rawVSS2 = this.scene.cache.json.exists(spriteKey)
                 ? this.scene.cache.json.get(spriteKey)?.spriteState ?? null
                 : null;
+              const _portalOvr2 = YU_SPECIES_PORTAL_IMAGE_OVERRIDE[this.selectedSpeciesId];
+              const _vSpriteState2 = _rawVSS2 && _portalOvr2 ? { ..._rawVSS2, portal: _portalOvr2 } : _rawVSS2;
               const portalFile = _vSpriteState2?.portal;
               if (portalFile) {
                 const stem = portalFile.replace(/\.png$/i, "");

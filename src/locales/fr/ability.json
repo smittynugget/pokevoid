@@ -2929,7 +2929,7 @@
   },
   "cursedPotential": {
     "name": "Potentiel Maudit",
-    "description": "En entrant, toutes les statistiques de l'utilisateur montent d'un niveau, l'Attaque montant de deux niveaux supplémentaires (trois au total). À la fin de chaque tour, une à trois statistiques baissent aléatoirement d'un niveau ou l'utilisateur perd 1/4 de ses PV max. L'utilisateur ne peut pas être retiré."
+    "description": "En entrant, toutes les statistiques de l'utilisateur montent d'un niveau. À la fin de chaque tour, deux à trois statistiques baissent aléatoirement d'un niveau ou l'utilisateur perd 1/4 de ses PV max. L'utilisateur ne peut pas être retiré."
   },
   "cyberneticControl": {
     "name": "Contrôle Cybernétique",
@@ -3085,7 +3085,7 @@
   },
   "fatedRevival": {
     "name": "Résurrection du Destin",
-    "description": "Lorsque l'utilisateur tombe K.O., il ressuscite un Pokémon Fée K.O. aléatoire de son équipe avec 50% de PV."
+    "description": "Lorsque l'utilisateur tombe K.O., il ressuscite un Pokémon Fée K.O. aléatoire de son équipe (sauf même espèce) avec 50% de PV. Cet effet ne peut se déclencher qu'une fois par combat."
   },
   "finalBlade": {
     "name": "Lame Finale",
@@ -3437,7 +3437,7 @@
   },
   "portalBeast": {
     "name": "Bête Portail",
-    "description": "Chaque fois qu'un Pokémon adverse entre en jeu, ce Pokémon gagne +1 à trois stats aléatoires. En se retirant, il restaure 25% de ses PV maximum."
+    "description": "Chaque fois qu'un Pokémon adverse entre en jeu, ce Pokémon gagne +1 à deux stats aléatoires. En se retirant, il restaure 25% de ses PV maximum."
   },
   "powderKing": {
     "name": "Roi de la Poudre",

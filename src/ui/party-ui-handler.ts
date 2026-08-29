@@ -28,6 +28,7 @@ import { CommandPhase } from "#app/phases/command-phase.js";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase.js";
 import { getSummonMissingPhase } from "#app/phases/encounter-phase-cache";
 import { isPrimaryPointer } from "./pointer-utils";
+import { PokemonBattleTooltipUtils } from "./pokemon-battle-tooltip-utils";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 import { DEBUG_YU_VISUAL_TUNING } from "#app/overrides";
 import { TweakMetaMode, TWEAK_META_CYCLE, cycleMetaMode, formatMetaHud, tweakCopyToClipboard } from "./tweak/tweak-meta-types";
@@ -479,26 +480,33 @@ export default class PartyUiHandler extends MessageUiHandler {
             }
             if (this.selectCallback && this.partyUiMode !== PartyUiMode.CHECK) {
               if (option === PartyOption.TRANSFER) {
-                if (this.transferCursor !== this.cursor) {
-                  if (this.transferAll) {
-                    getTransferrableItemsFromPokemon(this.scene.getParty()[this.transferCursor]).forEach((_, i) => (this.selectCallback as PartyModifierTransferSelectCallback)(this.transferCursor, i, this.transferQuantitiesMax[i], this.cursor));
+                const savedTransferCursor = this.transferCursor;
+                const savedOptionCursor = this.transferOptionCursor;
+                const savedTransferAll = this.transferAll;
+                const savedQuantities = [...this.transferQuantities];
+                const savedQuantitiesMax = [...this.transferQuantitiesMax];
+                this.clearTransfer();
+                if (savedTransferCursor !== this.cursor) {
+                  if (savedTransferAll) {
+                    getTransferrableItemsFromPokemon(this.scene.getParty()[savedTransferCursor]).forEach((_, i) => (this.selectCallback as PartyModifierTransferSelectCallback)(savedTransferCursor, i, savedQuantitiesMax[i], this.cursor));
                   } else {
-                    (this.selectCallback as PartyModifierTransferSelectCallback)(this.transferCursor, this.transferOptionCursor, this.transferQuantities[this.transferOptionCursor], this.cursor);
+                    (this.selectCallback as PartyModifierTransferSelectCallback)(savedTransferCursor, savedOptionCursor, savedQuantities[savedOptionCursor], this.cursor);
                   }
                 }
-                this.clearTransfer();
               } else if (this.partyUiMode === PartyUiMode.SPLICE) {
                 if (option === PartyOption.SPLICE) {
-                  (this.selectCallback as PartyModifierSpliceSelectCallback)(this.transferCursor, this.cursor);
+                  const savedTransferCursor = this.transferCursor;
                   this.clearTransfer();
+                  (this.selectCallback as PartyModifierSpliceSelectCallback)(savedTransferCursor, this.cursor);
                 } else {
                   this.startTransfer();
                 }
                 this.clearOptions();
               } else if (this.partyUiMode === PartyUiMode.SACRIFICE) {
                 if (option === PartyOption.SACRIFICE) {
-                  (this.selectCallback as PartyModifierSacrificeSelectCallback)(this.transferCursor, this.cursor);
+                  const savedTransferCursor = this.transferCursor;
                   this.clearTransfer();
+                  (this.selectCallback as PartyModifierSacrificeSelectCallback)(savedTransferCursor, this.cursor);
                 } else {
                   this.startTransfer();
                 }
@@ -722,6 +730,10 @@ export default class PartyUiHandler extends MessageUiHandler {
 
         return true;
       } else if (button === Button.TOGGLE_FOE_BAR) {
+        if (PokemonBattleTooltipUtils.isActive()) {
+          ui.revertMode();
+          return true;
+        }
         if (this.cursor < 6) {
           const pokemon = this.scene.getParty()[this.cursor];
           if (pokemon) {
@@ -808,6 +820,7 @@ export default class PartyUiHandler extends MessageUiHandler {
       });
       hitZone.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
         if (!isPrimaryPointer(pointer)) return;
+        if (this.getUi().getMode() === Mode.POKEMON_BATTLE_TOOLTIP) return;
         if (this.blockInput || this.optionsMode || this.pendingPrompt || this.awaitingActionInput) return;
         if (this.cursor !== slotIndex) {
           this.setCursor(slotIndex);
@@ -912,6 +925,10 @@ export default class PartyUiHandler extends MessageUiHandler {
   showOptions() {
     if (this.cursor === 6) {
       return;
+    }
+
+    if (this.cursor < 6 && this.partySlots[this.cursor]) {
+      this.partySlots[this.cursor].deselect();
     }
 
     this.optionsMode = true;
@@ -1302,7 +1319,10 @@ export default class PartyUiHandler extends MessageUiHandler {
   clearTransfer(): void {
     this.transferMode = false;
     this.transferAll = false;
-    this.partySlots[this.transferCursor].setTransfer(false);
+    const slot = this.partySlots[this.transferCursor];
+    if (slot) {
+      slot.setTransfer(false);
+    }
     for (let i = 0; i < this.partySlots.length; i++) {
       this.partySlots[i].slotDescriptionLabel.setVisible(false);
       this.partySlots[i].slotHpBar.setVisible(true);
@@ -1488,6 +1508,10 @@ export default class PartyUiHandler extends MessageUiHandler {
     this.partyMessageBox.setSize(262, 30);
     this._partyMessagePattern?.redraw();
     this.showText("", 0);
+
+    if (this.cursor < 6 && this.partySlots[this.cursor]) {
+      this.partySlots[this.cursor].select();
+    }
   }
 
   eraseOptionsCursor() {
@@ -1511,6 +1535,7 @@ export default class PartyUiHandler extends MessageUiHandler {
   }
 
   clearPartySlots() {
+    this.iconAnimHandler.removeAll();
     this._partyHitZones.forEach(z => z.destroy());
     this._partyHitZones = [];
     this.partySlots.splice(0, this.partySlots.length);

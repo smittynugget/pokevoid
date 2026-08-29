@@ -140,5 +140,7 @@
   "veryRare": "Very Rare",
   "animationLoad": "Animation Load",
   "animationLite": "Lite",
-  "animationFull": "Full (Demanding)"
+  "animationFull": "Full (Demanding)",
+  "shopNoDuplicates": "Disable Shop Duplicates",
+  "shopShowUniqueNames": "Show Shop Unique Names"
 }

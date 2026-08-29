@@ -30,6 +30,7 @@ export const DEBUG_FORCE_SMITOM_TUTORIAL = false;
 export const DEBUG_YU_VISUAL_TUNING = false;
 export const DEBUG_SKILL_TREE_FORCE_REWARD_TYPE: SkillTreeRewardType | undefined = undefined;
 const overrides = {
+  DEBUG_FORCE_MAJOR_BOSS_NODE_OVERRIDE: false,
   STARTING_WAVE_OVERRIDE: 0,
   FORCE_DUELMON_RANK_UP_OVERRIDE: false,
   FORCE_RANDOM_RANK_UP_OVERRIDE: false,
@@ -41,9 +42,13 @@ const overrides = {
   DEBUG_WAVE100_LEVEL1_OVERRIDE: false,
   DEBUG_DUELMON_WILD_OVERRIDE: false,
   DEBUG_FORM_EVOLUTION_OVERRIDE: false,
-  OPP_LEVEL_OVERRIDE: 0,
-  OPP_ONE_POKEMON: false,
-  MOVESET_OVERRIDE: [],
+  DEBUG_RESHAPE_OVERRIDE: false,
+  FREE_CANDY_UPGRADE_OVERRIDE: false,
+  EGG_IMMEDIATE_HATCH_OVERRIDE: false,
+  EGG_TIER_OVERRIDE: null,
+  EGG_FREE_GACHA_PULLS_OVERRIDE: false,
+  EGG_GACHA_PULL_COUNT_OVERRIDE: 0,
+  STARTING_EGGS_COUNT_OVERRIDE: 0,
 } satisfies Partial<InstanceType<typeof DefaultOverrides>>;
 class DefaultOverrides {
   readonly SEED_OVERRIDE: string = "";
@@ -56,6 +61,7 @@ class DefaultOverrides {
   readonly WAIVE_SHOP_FEES_OVERRIDE: boolean = false;
   readonly STARTING_BIOME_OVERRIDE: Biome = Biome.TOWN;
   readonly BOSS_WAVE_OVERRIDE: number = 0;
+  readonly DEBUG_FORCE_MAJOR_BOSS_NODE_OVERRIDE: boolean = false;
   readonly ARENA_TINT_OVERRIDE: TimeOfDay | null = null;
   readonly XP_MULTIPLIER_OVERRIDE: number | null = null;
   readonly NEVER_CRIT_OVERRIDE: boolean = false;
@@ -172,6 +178,7 @@ class DefaultOverrides {
   readonly DEBUG_DUELMON_WILD_OVERRIDE: boolean = false;
 
   readonly DEBUG_FORM_EVOLUTION_OVERRIDE: boolean = false;
+  readonly DEBUG_RESHAPE_OVERRIDE: boolean = false;
   readonly SKIP_TO_STARTER_SELECT_OVERRIDE: boolean = false;
 
   readonly DEBUG_LOCALE_CYCLE_OVERRIDE: boolean = false;

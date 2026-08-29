@@ -2929,7 +2929,7 @@
   },
   "cursedPotential": {
     "name": "Potencial Maldito",
-    "description": "Al entrar, todas las estadísticas del usuario suben un nivel, con Ataque subiendo dos niveles adicionales (tres en total). Al final de cada turno, aleatoriamente baja de una a tres estadísticas un nivel o pierde 1/4 de sus PS máximos. No puede retirarse."
+    "description": "Al entrar, todas las estadísticas del usuario suben un nivel. Al final de cada turno, aleatoriamente baja de dos a tres estadísticas un nivel o pierde 1/4 de sus PS máximos. No puede retirarse."
   },
   "cyberneticControl": {
     "name": "Control Cibernético",
@@ -3085,7 +3085,7 @@
   },
   "fatedRevival": {
     "name": "Resurgimiento Predestinado",
-    "description": "Cuando el usuario es debilitado, revive un Pokémon Hada debilitado aleatorio de su equipo con el 50% de PS."
+    "description": "Cuando el usuario es debilitado, revive un Pokémon Hada debilitado aleatorio de su equipo (excepto misma especie) con el 50% de PS. Este efecto solo puede activarse una vez por combate."
   },
   "finalBlade": {
     "name": "Hoja Final",
@@ -3437,7 +3437,7 @@
   },
   "portalBeast": {
     "name": "Bestia Portal",
-    "description": "Cada vez que un Pokémon rival entra en combate, este Pokémon gana +1 en tres estadísticas aleatorias. Al retirarse, recupera el 25% de sus PS máximos."
+    "description": "Cada vez que un Pokémon rival entra en combate, este Pokémon gana +1 en dos estadísticas aleatorias. Al retirarse, recupera el 25% de sus PS máximos."
   },
   "powderKing": {
     "name": "Rey del Polvo",

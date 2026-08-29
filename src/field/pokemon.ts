@@ -274,11 +274,11 @@ export function getDuelmonEquivalentPortalWorldScale(): number {
   return DUELMON_PORTAL_WORLD_SCALE;
 }
 
-export const YU_SPECIES_VISUAL_OFFSETS: Partial<Record<number, { creatureScaleOffset?: number; creatureYOffset?: number }>> = {
+export const YU_SPECIES_VISUAL_OFFSETS: Partial<Record<number, { creatureScaleOffset?: number; creatureYOffset?: number; creatureXOffset?: number }>> = {
     [Species.GUARDIAN_GRARL]: { creatureScaleOffset: 0.035, creatureYOffset: 20 },
     [Species.DARK_MAGICIAN_VARIANT_2]: { creatureScaleOffset: -0.10 },
     [Species.ELEMENTAL_HERO_NEOS_ALT_MASTER_DUEL]: { creatureScaleOffset: -0.05 },
-    [Species.BLUE_EYES_WHITE_DRAGON]: { creatureScaleOffset: -0.05 },
+    [Species.BLUE_EYES_WHITE_DRAGON]: { creatureScaleOffset: 0.100, creatureYOffset: 12.5, creatureXOffset: -23.5 },
 };
 
 export const YU_SPECIES_PORTAL_OFFSETS: Partial<Record<number, { portalDeltaX?: number; portalDeltaY?: number; portalScaleOffset?: number }>> = {
@@ -286,6 +286,18 @@ export const YU_SPECIES_PORTAL_OFFSETS: Partial<Record<number, { portalDeltaX?: 
     [Species.DARK_MAGICIAN_VARIANT_2]: { portalDeltaY: 14 },
     [Species.ELEMENTAL_HERO_NEOS_ALT_MASTER_DUEL]: { portalDeltaY: 6 },
     [Species.BLUE_EYES_WHITE_DRAGON]: { portalDeltaX: -82, portalDeltaY: 68, portalScaleOffset: 0.25 },
+};
+
+export const YU_SPECIES_BATTLE_PORTAL_OFFSETS: Partial<Record<number, { portalDeltaX?: number; portalDeltaY?: number; portalScaleOffset?: number }>> = {
+    [Species.BLUE_EYES_WHITE_DRAGON]: { portalDeltaX: 233.5, portalDeltaY: 204.5, portalScaleOffset: 0.935 },
+};
+
+export const YU_SPECIES_FLIP_OVERRIDE: Partial<Record<number, boolean>> = {
+    [Species.BLUE_EYES_WHITE_DRAGON]: true,
+};
+
+export const YU_SPECIES_PORTAL_IMAGE_OVERRIDE: Partial<Record<number, string>> = {
+    [Species.BLUE_EYES_WHITE_DRAGON]: "9.png",
 };
 
 interface YuSpriteState {
@@ -542,7 +554,8 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
         this.isSignature = dsSig;
       } else if (this.isPlayer()) {
         const championId = (this.scene.gameData as any).selectedChampionId as string | undefined;
-        const champData = championId ? (this.scene.gameData as any).championData?.[championId] : null;
+        const dataKey = (championId === "apollo" || championId === "diana") ? "apollo_diana" : championId;
+        const champData = dataKey ? (this.scene.gameData as any).championData?.[dataKey] : null;
         const speciesId = this.species.speciesId;
         const baseList = champData?.signaturePokemon;
         const inBaseList = Array.isArray(baseList) ? baseList.includes(speciesId) : false;
@@ -569,7 +582,10 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
       if (this.universalSmittyForm !== undefined) {
             PokemonForm.addUniversalSmittyForm(this,  this.universalSmittyForm, true);
             if(dataSource instanceof PokemonData) {
-               this.formIndex = dataSource.formIndex;
+              const smittyIdx = this.species.forms.findIndex(
+                f => f.formKey === SpeciesFormKey.SMITTY && (f as any).formName === this.universalSmittyForm.formName
+              );
+              this.formIndex = smittyIdx >= 0 ? smittyIdx : dataSource.formIndex;
             }
       }
 
@@ -618,7 +634,7 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
       this.metBiome = scene.currentBattle ? scene.arena.biomeType : -1;
       this.metSpecies = species.speciesId;
       this.pokerus = false;
-      if (level > 1) {
+      if (level > 1 && !this.scene.debugDuelmonWild) {
 
         let chance = 14;
         if (this.scene.gameData.hasPermaModifierByType(PermaType.PERMA_FUSION_INCREASE_3)) {
@@ -687,7 +703,8 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
       let trainer = this.scene.currentBattle?.trainer;
       const visualForm = this.getSpeciesForm();
       const shouldHaveShadow = !!hasShadow && !this.isVisualGlitchOrSmittyForm() && !this.isShadowlessMegaForm() && visualForm.generation !== 20;
-      const isCorrupted = (!isPlayer && trainer?.isCorrupted) || false;
+      const isCorrupted = (!isPlayer && trainer?.isCorrupted) ||
+        this.scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS || false;
       const teraColor = !isPlayer && trainer?.config.trainerType !== TrainerType.SMITTY && this.scene.gameMode.isNightmare && !isCorrupted ? Utils.randSeedItem([
           getTypeRgb(Type.POISON),
           getTypeRgb(Type.DARK),
@@ -711,7 +728,8 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
 
     const needsPortal = this.species?.generation === 20 ||
       (!this.isPlayer() && (this.scene.currentBattle?.trainer?.isCorrupted ||
-       this.scene.currentBattle?.trainer?.config.trainerType === TrainerType.SMITTY));
+       this.scene.currentBattle?.trainer?.config.trainerType === TrainerType.SMITTY ||
+       this.scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS));
 
     if (needsPortal) {
       const portalPlaceholder = this.scene.add.sprite(0, 0, "yu_portal_7");
@@ -874,7 +892,9 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
             this.getFusionSpeciesForm().loadAssets(this.scene, this.getFusionGender() === Gender.FEMALE, this.fusionFormIndex, this.fusionShiny, this.fusionVariant);
             this.scene.loadPokemonAtlas(this.getFusionBattleSpriteKey(true, ignoreOverride), this.getFusionBattleSpriteAtlasPath(true, ignoreOverride));
           }
-          const isCorruptedForLoad = (!this.isPlayer() && this.scene.currentBattle?.trainer?.isCorrupted) || false;
+          const isCorruptedForLoad = (!this.isPlayer() &&
+            (this.scene.currentBattle?.trainer?.isCorrupted ||
+             this.scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS)) || false;
           const onLoadComplete = () => {
             if (!this.scene) {
               console.warn('Scene reference lost during asset loading for Pokemon:', this.name);
@@ -1199,13 +1219,17 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
   }
 
   getYuSpriteFlipX(): boolean {
+    const overrideFlip = YU_SPECIES_FLIP_OVERRIDE[this.species.speciesId];
+    if (overrideFlip !== undefined) {
+      return this.isPlayer() ? !overrideFlip : overrideFlip;
+    }
     const state = this.getSpriteState();
     const flipped = state?.flipped ?? false;
     return this.isPlayer() ? !flipped : flipped;
   }
 
   applyYuBackFlip(): void {
-    if (this.getTag(BattlerTagType.SUBSTITUTE)) return;
+    if (this.getTag(BattlerTagType.SUBSTITUTE) && !(this as any)._subRestoreInProgress) return;
     if (this.getSpeciesForm().generation !== 20) return;
     const flipX = this.getYuSpriteFlipX();
     this.getSprite().setFlipX(flipX);
@@ -1228,11 +1252,17 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     }
     const data = this.scene.cache.json.get(key);
     const result = data?.spriteState ?? null;
+    if (result) {
+      const portalOverride = YU_SPECIES_PORTAL_IMAGE_OVERRIDE[this.species.speciesId];
+      if (portalOverride) {
+        return { ...result, portal: portalOverride };
+      }
+    }
     return result;
   }
 
   applySpriteState(): void {
-    if (this.getTag(BattlerTagType.SUBSTITUTE)) return;
+    if (this.getTag(BattlerTagType.SUBSTITUTE) && !(this as any)._subRestoreInProgress) return;
     if (this.getSpeciesForm().generation !== 20) return;
     const state = this.getSpriteState();
     if (!state) {
@@ -1295,11 +1325,11 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     const _tuning = getYuTuning();
     const _spOff = YU_SPECIES_VISUAL_OFFSETS[this.species.speciesId] ?? {};
     if (this.isPlayer()) {
-      pixelX += _tuning.creatureXOffset;
-      pixelY += _tuning.yOffset + _tuning.creatureYOffset + (_spOff.creatureYOffset ?? 0);
+      pixelX += _tuning.creatureXOffset + (_spOff.creatureXOffset ?? 0);
+      pixelY += _tuning.creatureYOffset + (_spOff.creatureYOffset ?? 0);
     } else {
-      pixelX += _tuning.enemyCreatureXOffset;
-      pixelY += _tuning.enemyYOffset + _tuning.enemyCreatureYOffset + (_spOff.creatureYOffset ?? 0);
+      pixelX += _tuning.enemyCreatureXOffset + (_spOff.creatureXOffset ?? 0);
+      pixelY += _tuning.enemyCreatureYOffset + (_spOff.creatureYOffset ?? 0);
     }
     const creatureSc = Sc + (this.isPlayer() ? _tuning.creatureScaleOffset : 0.020 + _tuning.enemyCreatureScaleOffset) + (_spOff.creatureScaleOffset ?? 0);
 
@@ -1310,6 +1340,19 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     this.shinySparkle?.setPosition(pixelX, pixelY);
     this.shinySparkle?.setScale(creatureSc);
     yuTuningLog("Battle", this.isPlayer() ? "player-sprite" : "enemy-sprite", { pixelX, pixelY, scale: creatureSc, stateScale, Sc, side: this.isPlayer() ? "player" : "enemy" });
+    if (this.species?.speciesId === Species.BLUE_EYES_WHITE_DRAGON || false) {
+      const _dbgState = this.getSpriteState();
+      console.log("[SPRITE_POS]", this.species?.name, "isPlayer:", this.isPlayer());
+      console.log("[SPRITE_POS] spriteState:", JSON.stringify(_dbgState));
+      console.log("[SPRITE_POS] frame:", frame.width, "x", frame.height, "basis:", basis);
+      console.log("[SPRITE_POS] stateScale:", stateScale, "Sc:", Sc, "creatureSc:", creatureSc);
+      console.log("[SPRITE_POS] sorterX:", sorterX, "sorterY:", sorterY);
+      console.log("[SPRITE_POS] centerOffsetSorter:", centerOffsetSorter, "feetOffsetSorter:", feetOffsetSorter);
+      console.log("[SPRITE_POS] FINAL pixelX:", pixelX, "pixelY:", pixelY);
+      console.log("[SPRITE_POS] _spOff:", JSON.stringify(_spOff));
+      console.log("[SPRITE_POS] container pos:", this.x, this.y, "container scale:", this.scale);
+      console.log("[SPRITE_POS] field scale:", this.parentContainer?.scale);
+    }
     const flipX = this.getYuSpriteFlipX();
     sprite.setFlipX(flipX);
     this.getTintSprite()?.setFlipX(flipX);
@@ -1390,7 +1433,8 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
       portalChildScale += _pTuning.enemyPortalScaleOffset;
     }
 
-    const portalOffsets = YU_SPECIES_PORTAL_OFFSETS[this.species.speciesId];
+    const portalOffsets = YU_SPECIES_BATTLE_PORTAL_OFFSETS[this.species.speciesId]
+      ?? YU_SPECIES_PORTAL_OFFSETS[this.species.speciesId];
     if (portalOffsets) {
       portalLocalX += portalOffsets.portalDeltaX ?? 0;
       portalLocalY += portalOffsets.portalDeltaY ?? 0;
@@ -1450,7 +1494,8 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
       this.applySpriteState();
     } else if (this.portalSprite && this.isOnField() &&
       (this.scene?.currentBattle?.trainer?.isCorrupted ||
-       this.scene?.currentBattle?.trainer?.config.trainerType === TrainerType.SMITTY)) {
+       this.scene?.currentBattle?.trainer?.config.trainerType === TrainerType.SMITTY ||
+       this.scene?.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS)) {
       this.applyCorruptedPortalFallback();
     }
   }
@@ -1463,7 +1508,8 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     if (!this.portalSprite || !this.isOnField()) return;
     if (this.getSpeciesForm().generation === 20) return;
     if (!this.scene?.currentBattle?.trainer?.isCorrupted &&
-        this.scene?.currentBattle?.trainer?.config.trainerType !== TrainerType.SMITTY) return;
+        this.scene?.currentBattle?.trainer?.config.trainerType !== TrainerType.SMITTY &&
+        this.scene?.currentBattle?.battleSpec !== BattleSpec.FINAL_BOSS) return;
 
     const portal = this.portalSprite;
     const portalFrame = portal.frame;
@@ -1488,7 +1534,8 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     this.applySpriteState();
     if (this.portalSprite && this.getSpeciesForm().generation !== 20 &&
       (this.scene?.currentBattle?.trainer?.isCorrupted ||
-       this.scene?.currentBattle?.trainer?.config.trainerType === TrainerType.SMITTY)) {
+       this.scene?.currentBattle?.trainer?.config.trainerType === TrainerType.SMITTY ||
+       this.scene?.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS)) {
       this.applyCorruptedPortalFallback();
     }
     this.applyYuBackFlip();
@@ -1498,7 +1545,8 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
   updateSpritePipelineData(): void {
     const isPlayer = this.isPlayer();
     let trainer = this.scene.currentBattle?.trainer;
-    const isCorrupted = (!isPlayer && trainer?.isCorrupted) || false;
+    const isCorrupted = (!isPlayer && trainer?.isCorrupted) ||
+      this.scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS || false;
     const teraColor = !isPlayer && trainer?.config.trainerType !== TrainerType.SMITTY && this.scene.gameMode.isNightmare && !isCorrupted ? Utils.randSeedItem([
         getTypeRgb(Type.POISON),
         getTypeRgb(Type.DARK),
@@ -4303,6 +4351,9 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
 
   canSetStatus(effect: StatusEffect | undefined, quiet: boolean = false, overrideStatus: boolean = false, sourcePokemon: Pokemon | null = null): boolean {
     if (effect !== StatusEffect.FAINT) {
+      if (!this.hp || (this.scene && !this.isOnField())) {
+        return false;
+      }
       if (overrideStatus ? this.status?.effect === effect : this.status) {
         return false;
       }
@@ -4563,15 +4614,10 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     if (!this.maskEnabled) {
       this.maskSprite = this.getTintSprite();
       this.maskSprite?.setVisible(true);
-      const sprite = this.getSprite();
-      const localX = sprite?.x ?? 0;
-      const localY = sprite?.y ?? 0;
-      const localScale = sprite?.scale ?? 1;
       this.maskSprite?.setPosition(
-        (this.x + localX * this.scale) * this.parentContainer.scale + this.parentContainer.x,
-        (this.y + localY * this.scale) * this.parentContainer.scale + this.parentContainer.y
-      );
-      this.maskSprite?.setScale(localScale * this.scale * this.parentContainer.scale);
+        this.x * this.parentContainer.scale + this.parentContainer.x,
+        this.y * this.parentContainer.scale + this.parentContainer.y);
+      this.maskSprite?.setScale(this.getSpriteScale() * this.parentContainer.scale);
       this.maskEnabled = true;
     }
   }
@@ -4580,7 +4626,7 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     if (this.maskEnabled) {
       this.maskSprite?.setVisible(false);
       this.maskSprite?.setPosition(0, 0);
-      this.maskSprite?.setScale(1);
+      this.maskSprite?.setScale(this.getSpriteScale());
       this.maskSprite = null;
       this.maskEnabled = false;
       this.applySpriteState();
@@ -5206,8 +5252,14 @@ export default abstract class Pokemon extends Phaser.GameObjects.Container {
     if (isIPhone() && removeTexture) {
       const keys: string[] = [];
       keys.push(this.getBattleSpriteKey());
+      if (!this.isPlayer()) {
+        keys.push(this.getBattleSpriteKey(true));
+      }
       if (this.getFusionSpeciesForm()) {
         keys.push(this.getFusionBattleSpriteKey());
+        if (!this.isPlayer()) {
+          keys.push(this.getFusionBattleSpriteKey(true));
+        }
       }
       keys.forEach(key => {
         this.removeTextureCompletely(key);
@@ -5844,7 +5896,8 @@ export class PlayerPokemon extends Pokemon {
     }
 
     const championId = (this.scene.gameData as any).selectedChampionId as string | undefined;
-    const champData = championId ? (this.scene.gameData as any).championData?.[championId] : null;
+    const dataKey = (championId === "apollo" || championId === "diana") ? "apollo_diana" : championId;
+    const champData = dataKey ? (this.scene.gameData as any).championData?.[dataKey] : null;
     const speciesId = this.species.speciesId;
 
     const baseList = champData?.signaturePokemon;

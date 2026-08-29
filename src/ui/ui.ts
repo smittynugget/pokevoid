@@ -26,6 +26,7 @@ import EggGachaUiHandler from "./egg-gacha-ui-handler";
 import {addWindow, WindowVariant} from "./ui-theme";
 import { attachModalBackground, ModalBackgroundHandle } from "./modal-background-utils";
 import { PokemonBattleTooltipUtils } from "./pokemon-battle-tooltip-utils";
+import { StatAnimTweakUtils } from "../field/stat-anim-layout";
 import BattleInfo from "./battle-info";
 import LoginFormUiHandler from "./login-form-ui-handler";
 import RegistrationFormUiHandler from "./registration-form-ui-handler";
@@ -1396,24 +1397,22 @@ export default class UI extends Phaser.GameObjects.Container {
     const currentMode = this.getMode();
     const battleModes = [Mode.COMMAND, Mode.FIGHT, Mode.BALL, Mode.TARGET_SELECT];
     if (DEBUG_YU_VISUAL_TUNING && battleScene.uiEditModeActive && battleModes.includes(currentMode)) {
-      if (currentMode === Mode.COMMAND && battleScene.commandUiTweak) {
-        if (button === Button.CYCLE_ABILITY) {
-          return battleScene.commandUiTweak.onCycleAbility();
-        }
-        if (battleScene.commandUiTweak.tweakActive) {
-          if (button === Button.CYCLE_GENDER) {
-          } else {
-            return battleScene.commandUiTweak.processInput(button);
-          }
-        }
-      }
       if (button === Button.CYCLE_ABILITY && battleScene.fieldSpriteTweak) {
+        if (battleScene.commandUiTweak?.tweakActive) {
+          battleScene.commandUiTweak.deactivate();
+        }
         return battleScene.fieldSpriteTweak.onCycleAbility();
       }
       if (battleScene.fieldSpriteTweak?.tweakActive) {
         if (button === Button.CYCLE_GENDER) {
         } else {
           return battleScene.fieldSpriteTweak.processInput(button);
+        }
+      }
+      if (currentMode === Mode.COMMAND && battleScene.commandUiTweak?.tweakActive) {
+        if (button === Button.CYCLE_GENDER) {
+        } else {
+          return battleScene.commandUiTweak.processInput(button);
         }
       }
 
@@ -1810,6 +1809,7 @@ export default class UI extends Phaser.GameObjects.Container {
               enemyBi._biDropdownPanel = null;
             }
             PokemonBattleTooltipUtils.hideHoverTweak();
+            StatAnimTweakUtils.hidePreview();
           }
           if (clear) {
             this.getHandler().clear();

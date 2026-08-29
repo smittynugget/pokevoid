@@ -1,46 +1,57 @@
 {
   "SITRUS": {
     "name": "Sitrus Berry",
-    "effect": "Restores 25% HP if HP is below 50%"
+    "effect": "Restores 25% HP if HP is below 50%",
+    "statLabel": "HP"
   },
   "LUM": {
     "name": "Lum Berry",
-    "effect": "Cures any non-volatile status condition and confusion"
+    "effect": "Cures any non-volatile status condition and confusion",
+    "statLabel": "Status"
   },
   "ENIGMA": {
     "name": "Enigma Berry",
-    "effect": "Restores 25% HP if hit by a super effective move"
+    "effect": "Restores 25% HP if hit by a super effective move",
+    "statLabel": "HP"
   },
   "LIECHI": {
     "name": "Liechi Berry",
-    "effect": "Raises Attack if HP is below 25%"
+    "effect": "Raises Attack if HP is below 25%",
+    "statLabel": "ATK"
   },
   "GANLON": {
     "name": "Ganlon Berry",
-    "effect": "Raises Defense if HP is below 25%"
+    "effect": "Raises Defense if HP is below 25%",
+    "statLabel": "DEF"
   },
   "PETAYA": {
     "name": "Petaya Berry",
-    "effect": "Raises Sp. Atk if HP is below 25%"
+    "effect": "Raises Sp. Atk if HP is below 25%",
+    "statLabel": "SP.ATK"
   },
   "APICOT": {
     "name": "Apicot Berry",
-    "effect": "Raises Sp. Def if HP is below 25%"
+    "effect": "Raises Sp. Def if HP is below 25%",
+    "statLabel": "SP.DEF"
   },
   "SALAC": {
     "name": "Salac Berry",
-    "effect": "Raises Speed if HP is below 25%"
+    "effect": "Raises Speed if HP is below 25%",
+    "statLabel": "SPD"
   },
   "LANSAT": {
     "name": "Lansat Berry",
-    "effect": "Raises critical hit ratio if HP is below 25%"
+    "effect": "Raises critical hit ratio if HP is below 25%",
+    "statLabel": "Crit"
   },
   "STARF": {
     "name": "Starf Berry",
-    "effect": "Sharply raises a random stat if HP is below 25%"
+    "effect": "Sharply raises a random stat if HP is below 25%",
+    "statLabel": "Rand"
   },
   "LEPPA": {
     "name": "Leppa Berry",
-    "effect": "Restores 10 PP to a move if its PP reaches 0"
+    "effect": "Restores 10 PP to a move if its PP reaches 0",
+    "statLabel": "PP"
   }
 }

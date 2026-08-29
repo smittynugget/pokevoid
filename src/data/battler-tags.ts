@@ -18,6 +18,7 @@ import { BattlerTagType } from "#enums/battler-tag-type";
 import { Moves } from "#enums/moves";
 import { Species } from "#enums/species";
 import i18next from "#app/plugins/i18n.js";
+import {PermaFlinchQuestModifier} from "#app/modifier/modifier";
 import { CommonAnimPhase } from "#app/phases/common-anim-phase.js";
 import { MoveEffectPhase } from "#app/phases/move-effect-phase.js";
 import { MovePhase } from "#app/phases/move-phase.js";
@@ -217,8 +218,8 @@ export class YuTrappedTag extends TrappedTag {
   }
 }
 export class FlinchedTag extends BattlerTag {
-  constructor(sourceMove: Moves) {
-    super(BattlerTagType.FLINCHED, [ BattlerTagLapseType.PRE_MOVE, BattlerTagLapseType.TURN_END ], 0, sourceMove);
+  constructor(sourceMove: Moves, sourceId?: number) {
+    super(BattlerTagType.FLINCHED, [ BattlerTagLapseType.PRE_MOVE, BattlerTagLapseType.TURN_END ], 0, sourceMove, sourceId);
   }
 
   onAdd(pokemon: Pokemon): void {
@@ -231,6 +232,14 @@ export class FlinchedTag extends BattlerTag {
       const source = pokemon.scene.getPokemonById(this.sourceId);
       if (source?.battleSummonData) {
         source.battleSummonData.causedFlinchThisTurn = true;
+      }
+      if (source?.isPlayer() && !pokemon.isPlayer()) {
+        const args = [pokemon.scene, source, pokemon];
+        pokemon.scene.gameData.permaModifiers
+          .findModifiers(m => m instanceof PermaFlinchQuestModifier)
+          .forEach(modifier => modifier.apply(args));
+        pokemon.scene.findModifiers(m => m instanceof PermaFlinchQuestModifier)
+          .forEach(modifier => modifier.apply(args));
       }
     }
     applyAbAttrs(FlinchEffectAbAttr, pokemon, null);
@@ -1667,7 +1676,7 @@ export class SubstituteTag extends BattlerTag {
           const ps = (pokemon as any).portalSprite;
           const scaleRatio = YU_BASE_CONTAINER_SCALE;
           ps.setScale(snap.scaleX * scaleRatio, snap.scaleY * scaleRatio);
-          ps.setPosition(snap.x, snap.y);
+          ps.setPosition(snap.x * scaleRatio, snap.y * scaleRatio);
           ps.setVisible(snap.visible);
         }
       }
@@ -1686,6 +1695,7 @@ export class SubstituteTag extends BattlerTag {
 
   private hideDollSprite(pokemon: Pokemon): void {
     try {
+      (pokemon as any)._subRestoreInProgress = true;
       const key = pokemon.getBattleSpriteKey();
       const sprite = pokemon.getSprite();
       sprite.setTexture(key);
@@ -1709,6 +1719,7 @@ export class SubstituteTag extends BattlerTag {
           (pokemon as any).portalSprite.setVisible(true);
         }
       }
+      (pokemon as any)._subRestoreInProgress = false;
     } catch {}
   }
 }
@@ -1838,7 +1849,7 @@ export function getBattlerTag(tagType: BattlerTagType, turnCount: number, source
   case BattlerTagType.SHELL_TRAP:
     return new ShellTrapTag();
     case BattlerTagType.FLINCHED:
-      return new FlinchedTag(sourceMove);
+      return new FlinchedTag(sourceMove, sourceId);
     case BattlerTagType.INTERRUPTED:
       return new InterruptedTag(sourceMove);
     case BattlerTagType.CONFUSED:

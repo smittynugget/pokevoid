@@ -59,6 +59,8 @@ export interface QuestModifierTypes {
     PERMA_TAG_REMOVAL_QUEST: (id: string, config: QuestModifierTypeConfig) => QuestModifierTypeGenerator;
     PERMA_COUNTDOWN_WAVE_CHECK_QUEST: (id: string, config: QuestModifierTypeConfig & { startWave: number }) => QuestModifierTypeGenerator;
     PERMA_CATCH_QUEST: (id: string, config: QuestModifierTypeConfig) => QuestModifierTypeGenerator;
+    PERMA_END_OF_BATTLE_QUEST: (id: string, config: QuestModifierTypeConfig) => QuestModifierTypeGenerator;
+    PERMA_FLINCH_QUEST: (id: string, config: QuestModifierTypeConfig) => QuestModifierTypeGenerator;
     PERMA_RIVAL_QUEST: (id: string, config: QuestModifierTypeConfig) => QuestModifierTypeGenerator;
     PERMA_FORM_CHANGE_QUEST: (id: string, config: QuestModifierTypeConfig) => QuestModifierTypeGenerator;
 

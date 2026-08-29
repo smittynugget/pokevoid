@@ -3,7 +3,7 @@ import Move, {
     AttackMove,
     allMoves,
     selfStatLowerMoves,
-    MoveCategory, StatChangeAttr, MoveFlags,
+    MoveCategory, StatChangeAttr, MoveFlags, HealAttr,
     RecoilAttr,
     MultiHitAttr,
     StatusEffectAttr,
@@ -19,7 +19,7 @@ import {
     getPokeballName,
     getActiveChampionData
 } from "../data/pokeball";
-import Pokemon, {EnemyPokemon, PlayerPokemon, PokemonMove} from "../field/pokemon";
+import Pokemon, {EnemyPokemon, PlayerPokemon, PokemonMove, HitResult} from "../field/pokemon";
 import {EvolutionItem, pokemonEvolutions, pokemonPrevolutions} from "../data/pokemon-evolutions";
 import {Stat, getStatName} from "../data/pokemon-stat";
 import {tmPoolTiers, tmSpecies} from "../data/tms";
@@ -94,6 +94,9 @@ import {GameMode, GameModes} from "#app/game-mode";
 import {PermaDuration, PermaType} from "#app/modifier/perma-modifiers";
 import {randSeedInt} from "../utils";
 import {RivalTrainerType} from "#app/data/trainer-config";
+import {TimeOfDay} from "#enums/time-of-day";
+import {WeatherType} from "../data/weather";
+import {BattleType} from "../battle";
 import {getPermaModifierRarity} from "#app/phases/modifier-reward-phase";
 import { getModPokemonName } from "../data/mod-glitch-form-utils";
 import { MoveUpgrade } from "../data/move-upgrade";
@@ -5006,7 +5009,65 @@ export const modifierTypes = {
     SUNFLORA_NIGHTMARE_QUEST: () => sunfloraNightmareModifier,
     DODRIO_NIGHTMARE_QUEST: () => dodrioNightmareModifier,
     LANTURN_NIGHTMARE_QUEST: () => lanturnNightmareModifier,
-
+    CRITICAL_HIT_BOUNTY_QUEST: () => criticalHitBountyModifier,
+    OHKO_BOUNTY_QUEST: () => ohkoBountyModifier,
+    PRIORITY_MOVE_BOUNTY_QUEST: () => priorityMoveBountyModifier,
+    HEALING_MOVE_BOUNTY_QUEST: () => healingMoveBountyModifier,
+    SOUND_MOVE_BOUNTY_QUEST: () => soundMoveBountyModifier,
+    PUNCHING_MOVE_BOUNTY_QUEST: () => punchingMoveBountyModifier,
+    NVE_HIT_BOUNTY_QUEST: () => nveHitBountyModifier,
+    WILD_BOSS_BOUNTY_QUEST: () => wildBossBountyModifier,
+    MEGA_EVOLVE_BOUNTY_QUEST: () => megaEvolveBountyModifier,
+    NO_EVOLVE_LV50_BOUNTY_QUEST: () => noEvolveLv50BountyModifier,
+    MAX_FRIENDSHIP_BOUNTY_QUEST: () => maxFriendshipBountyModifier,
+    NORMAL_TYPE_KO_BOUNTY_QUEST: () => normal_type_ko_bounty_questModifier,
+    FIGHTING_TYPE_KO_BOUNTY_QUEST: () => fighting_type_ko_bounty_questModifier,
+    FLYING_TYPE_KO_BOUNTY_QUEST: () => flying_type_ko_bounty_questModifier,
+    POISON_TYPE_KO_BOUNTY_QUEST: () => poison_type_ko_bounty_questModifier,
+    GROUND_TYPE_KO_BOUNTY_QUEST: () => ground_type_ko_bounty_questModifier,
+    ROCK_TYPE_KO_BOUNTY_QUEST: () => rock_type_ko_bounty_questModifier,
+    BUG_TYPE_KO_BOUNTY_QUEST: () => bug_type_ko_bounty_questModifier,
+    GHOST_TYPE_KO_BOUNTY_QUEST: () => ghost_type_ko_bounty_questModifier,
+    STEEL_TYPE_KO_BOUNTY_QUEST: () => steel_type_ko_bounty_questModifier,
+    FIRE_TYPE_KO_BOUNTY_QUEST: () => fire_type_ko_bounty_questModifier,
+    WATER_TYPE_KO_BOUNTY_QUEST: () => water_type_ko_bounty_questModifier,
+    GRASS_TYPE_KO_BOUNTY_QUEST: () => grass_type_ko_bounty_questModifier,
+    ELECTRIC_TYPE_KO_BOUNTY_QUEST: () => electric_type_ko_bounty_questModifier,
+    PSYCHIC_TYPE_KO_BOUNTY_QUEST: () => psychic_type_ko_bounty_questModifier,
+    ICE_TYPE_KO_BOUNTY_QUEST: () => ice_type_ko_bounty_questModifier,
+    DRAGON_TYPE_KO_BOUNTY_QUEST: () => dragon_type_ko_bounty_questModifier,
+    DARK_TYPE_KO_BOUNTY_QUEST: () => dark_type_ko_bounty_questModifier,
+    FAIRY_TYPE_KO_BOUNTY_QUEST: () => fairy_type_ko_bounty_questModifier,
+    BITING_MOVE_BOUNTY_QUEST: () => biting_move_bounty_questModifier,
+    SLICING_MOVE_BOUNTY_QUEST: () => slicing_move_bounty_questModifier,
+    PULSE_MOVE_BOUNTY_QUEST: () => pulse_move_bounty_questModifier,
+    BALLBOMB_MOVE_BOUNTY_QUEST: () => ballbomb_move_bounty_questModifier,
+    POWDER_MOVE_BOUNTY_QUEST: () => powder_move_bounty_questModifier,
+    POISON_STATUS_KO_BOUNTY_QUEST: () => poison_status_ko_bounty_questModifier,
+    TOXIC_STATUS_KO_BOUNTY_QUEST: () => toxic_status_ko_bounty_questModifier,
+    PARALYSIS_STATUS_KO_BOUNTY_QUEST: () => paralysis_status_ko_bounty_questModifier,
+    BURN_STATUS_KO_BOUNTY_QUEST: () => burn_status_ko_bounty_questModifier,
+    FREEZE_STATUS_KO_BOUNTY_QUEST: () => freeze_status_ko_bounty_questModifier,
+    DAY_TIME_WIN_BOUNTY_QUEST: () => day_time_win_bounty_questModifier,
+    DUSK_TIME_WIN_BOUNTY_QUEST: () => dusk_time_win_bounty_questModifier,
+    NIGHT_TIME_WIN_BOUNTY_QUEST: () => night_time_win_bounty_questModifier,
+    DAWN_TIME_WIN_BOUNTY_QUEST: () => dawn_time_win_bounty_questModifier,
+    SUNNY_WEATHER_WIN_BOUNTY_QUEST: () => sunny_weather_win_bounty_questModifier,
+    RAIN_WEATHER_WIN_BOUNTY_QUEST: () => rain_weather_win_bounty_questModifier,
+    SANDSTORM_WEATHER_WIN_BOUNTY_QUEST: () => sandstorm_weather_win_bounty_questModifier,
+    HAIL_WEATHER_WIN_BOUNTY_QUEST: () => hail_weather_win_bounty_questModifier,
+    SNOW_WEATHER_WIN_BOUNTY_QUEST: () => snow_weather_win_bounty_questModifier,
+    FOG_WEATHER_WIN_BOUNTY_QUEST: () => fog_weather_win_bounty_questModifier,
+    HEAVY_RAIN_WEATHER_WIN_BOUNTY_QUEST: () => heavy_rain_weather_win_bounty_questModifier,
+    HARSH_SUN_WEATHER_WIN_BOUNTY_QUEST: () => harsh_sun_weather_win_bounty_questModifier,
+    STRONG_WINDS_WEATHER_WIN_BOUNTY_QUEST: () => strong_winds_weather_win_bounty_questModifier,
+    CATCH_LEGENDARY_BOUNTY_QUEST: () => catch_legendary_bounty_questModifier,
+    CATCH_SHINY_BOUNTY_QUEST: () => catch_shiny_bounty_questModifier,
+    CATCH_MYTHICAL_BOUNTY_QUEST: () => catch_mythical_bounty_questModifier,
+    CAUSE_FLINCH_BOUNTY_QUEST: () => cause_flinch_bounty_questModifier,
+    FLAWLESS_KO_BOUNTY_QUEST: () => flawless_ko_bounty_questModifier,
+    DEFEAT_GRUNT_BOUNTY_QUEST: () => defeat_grunt_bounty_questModifier,
+    DEFEAT_CORRUPTED_BOUNTY_QUEST: () => defeat_corrupted_bounty_questModifier,
 };
 
 interface ModifierPool {
@@ -7114,6 +7175,16 @@ export const questModifierTypes: QuestModifierTypes = {
             (_type, runType, duration, condition, goalCount, questUnlockData, task?, currentCount = 0, resetOnFail = false, startWave?, conditionUnlockable?, stages = config.stages, currentStageIndex = 0, consoleCode = "") =>
                 new Modifiers.PermaWinQuestModifier(_type, runType, duration, condition, goalCount, questUnlockData, task, currentCount, resetOnFail, null, null, stages, currentStageIndex, consoleCode)),
 
+    PERMA_END_OF_BATTLE_QUEST: (id: string, config: QuestModifierTypeConfig) =>
+        new QuestModifierTypeGenerator(id, config,
+            (_type, runType, duration, condition, goalCount, questUnlockData, task?, currentCount = 0, resetOnFail = false, startWave?, conditionUnlockable?, stages = config.stages, currentStageIndex = 0, consoleCode = "") =>
+                new Modifiers.PermaEndOfBattleQuestModifier(_type, runType, duration, condition, goalCount, questUnlockData, task, currentCount, resetOnFail, null, null, stages, currentStageIndex, consoleCode)),
+
+    PERMA_FLINCH_QUEST: (id: string, config: QuestModifierTypeConfig) =>
+        new QuestModifierTypeGenerator(id, config,
+            (_type, runType, duration, condition, goalCount, questUnlockData, task?, currentCount = 0, resetOnFail = false, startWave?, conditionUnlockable?, stages = config.stages, currentStageIndex = 0, consoleCode = "") =>
+                new Modifiers.PermaFlinchQuestModifier(_type, runType, duration, condition, goalCount, questUnlockData, task, currentCount, resetOnFail, null, null, stages, currentStageIndex, consoleCode)),
+
     PERMA_RUN_QUEST: (id: string, config: QuestModifierTypeConfig) =>
         new QuestModifierTypeGenerator(id, config,
             (_type, runType, duration, condition, goalCount, questUnlockData, task?, currentCount = 0, resetOnFail = false, startWave?, conditionUnlockable?, stages = config.stages, currentStageIndex = 0, consoleCode = "") =>
@@ -8923,7 +8994,7 @@ export const magikarpNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.MAGIKARP,
-    goalCount: 50,
+    goalCount: 20,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.MAGIKARP,
@@ -8938,7 +9009,7 @@ export const dittoNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("DI
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.DITTO,
-    goalCount: 50,
+    goalCount: 20,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.DITTO,
@@ -8953,7 +9024,7 @@ export const wobbuffetNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.WOBBUFFET,
-    goalCount: 50,
+    goalCount: 20,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.WOBBUFFET,
@@ -8968,7 +9039,7 @@ export const smeargleNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.SMEARGLE,
-    goalCount: 50,
+    goalCount: 20,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.SMEARGLE,
@@ -8983,7 +9054,7 @@ export const unownNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("UN
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.UNOWN,
-    goalCount: 50,
+    goalCount: 20,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.UNOWN,
@@ -8998,7 +9069,7 @@ export const tyrogueNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.TYROGUE,
-    goalCount: 50,
+    goalCount: 20,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.TYROGUE,
@@ -9013,7 +9084,7 @@ export const metapodNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("
     duration: RunDuration.MULTI_RUN,
     condition: (attacker: Pokemon, defender: Pokemon) =>
         attacker.species.speciesId === Species.METAPOD,
-    goalCount: 50,
+    goalCount: 20,
     questUnlockData: {
         rewardType: RewardType.NEW_MOVES_FOR_SPECIES,
         rewardId: Species.METAPOD,
@@ -9022,6 +9093,1034 @@ export const metapodNewMovesModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST("
     },
     task: i18next.t("quests:METAPOD_NEW_MOVES.task")
 });
+
+export const criticalHitBountyModifier = questModifierTypes.PERMA_HIT_QUEST(
+    "CRITICAL_HIT_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:CRITICAL_HIT_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon, move: Move) => {
+            if (!attacker.isPlayer()) return false;
+            const last = defender.turnData?.attacksReceived?.[0];
+            return last?.critical === true
+                && last.sourceId === attacker.id
+                && last.move === move.id;
+        },
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.CRITICAL_HIT_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:CRITICAL_HIT_BOUNTY_QUEST.task")
+    }
+);
+
+export const ohkoBountyModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "OHKO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:OHKO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon, move: Move) =>
+            attacker.isPlayer() && defender.turnData?.attacksReceived?.[0]?.result === HitResult.ONE_HIT_KO,
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.OHKO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:OHKO_BOUNTY_QUEST.task")
+    }
+);
+
+export const priorityMoveBountyModifier = questModifierTypes.PERMA_MOVE_QUEST(
+    "PRIORITY_MOVE_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:PRIORITY_MOVE_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon, move: Move) => move.priority > 0,
+        goalCount: 20,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.PRIORITY_MOVE_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:PRIORITY_MOVE_BOUNTY_QUEST.task")
+    }
+);
+
+export const healingMoveBountyModifier = questModifierTypes.PERMA_MOVE_QUEST(
+    "HEALING_MOVE_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:HEALING_MOVE_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon, move: Move) =>
+            move.hasAttr(HealAttr) || move.hasAttr(HitHealAttr),
+        goalCount: 20,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.HEALING_MOVE_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:HEALING_MOVE_BOUNTY_QUEST.task")
+    }
+);
+
+export const soundMoveBountyModifier = questModifierTypes.PERMA_MOVE_QUEST(
+    "SOUND_MOVE_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:SOUND_MOVE_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon, move: Move) => move.hasFlag(MoveFlags.SOUND_BASED),
+        goalCount: 20,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.SOUND_MOVE_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:SOUND_MOVE_BOUNTY_QUEST.task")
+    }
+);
+
+export const punchingMoveBountyModifier = questModifierTypes.PERMA_MOVE_QUEST(
+    "PUNCHING_MOVE_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:PUNCHING_MOVE_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon, move: Move) => move.hasFlag(MoveFlags.PUNCHING_MOVE),
+        goalCount: 20,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.PUNCHING_MOVE_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:PUNCHING_MOVE_BOUNTY_QUEST.task")
+    }
+);
+
+export const nveHitBountyModifier = questModifierTypes.PERMA_HIT_QUEST(
+    "NVE_HIT_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:NVE_HIT_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon, move: Move) => {
+            if (!attacker.isPlayer()) return false;
+            const last = defender.turnData?.attacksReceived?.[0];
+            return last?.sourceId === attacker.id
+                && last?.move === move.id
+                && last?.result === HitResult.NOT_VERY_EFFECTIVE;
+        },
+        goalCount: 20,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.NVE_HIT_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:NVE_HIT_BOUNTY_QUEST.task")
+    }
+);
+
+export const wildBossBountyModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "WILD_BOSS_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:WILD_BOSS_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon, _move: Move) =>
+            attacker.isPlayer() &&
+            !defender.isPlayer() &&
+            !defender.hasTrainer() &&
+            defender.isBoss(),
+        goalCount: 5,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.WILD_BOSS_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:WILD_BOSS_BOUNTY_QUEST.task")
+    }
+);
+
+export const megaEvolveBountyModifier = questModifierTypes.PERMA_FORM_CHANGE_QUEST(
+    "MEGA_EVOLVE_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:MEGA_EVOLVE_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon) => pokemon.isMega(),
+        goalCount: 2,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.MEGA_EVOLVE_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:MEGA_EVOLVE_BOUNTY_QUEST.task")
+    }
+);
+
+export const noEvolveLv50BountyModifier = questModifierTypes.PERMA_WAVE_CHECK_QUEST(
+    "NO_EVOLVE_LV50_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:NO_EVOLVE_LV50_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) =>
+            scene.getParty().some(p =>
+                p.level >= 50 &&
+                p.getSpeciesForm(true).speciesId === p.metSpecies &&
+                p.getSpeciesForm(true).speciesId in pokemonEvolutions
+            ),
+        goalCount: 2,
+        resetOnFail: false,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.NO_EVOLVE_LV50_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:NO_EVOLVE_LV50_BOUNTY_QUEST.task")
+    }
+);
+
+export const maxFriendshipBountyModifier = questModifierTypes.PERMA_WAVE_CHECK_QUEST(
+    "MAX_FRIENDSHIP_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:MAX_FRIENDSHIP_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) =>
+            scene.getParty().some(p => p.friendship >= 255),
+        goalCount: 2,
+        resetOnFail: false,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.MAX_FRIENDSHIP_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:MAX_FRIENDSHIP_BOUNTY_QUEST.task")
+    }
+);
+export const normal_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "NORMAL_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:NORMAL_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.NORMAL),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.NORMAL_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:NORMAL_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const fighting_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "FIGHTING_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:FIGHTING_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.FIGHTING),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.FIGHTING_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:FIGHTING_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const flying_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "FLYING_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:FLYING_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.FLYING),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.FLYING_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:FLYING_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const poison_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "POISON_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:POISON_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.POISON),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.POISON_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:POISON_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const ground_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "GROUND_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:GROUND_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.GROUND),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.GROUND_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:GROUND_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const rock_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "ROCK_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:ROCK_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.ROCK),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.ROCK_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:ROCK_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const bug_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "BUG_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:BUG_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.BUG),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.BUG_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:BUG_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const ghost_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "GHOST_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:GHOST_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.GHOST),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.GHOST_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:GHOST_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const steel_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "STEEL_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:STEEL_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.STEEL),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.STEEL_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:STEEL_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const fire_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "FIRE_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:FIRE_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.FIRE),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.FIRE_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:FIRE_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const water_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "WATER_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:WATER_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.WATER),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.WATER_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:WATER_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const grass_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "GRASS_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:GRASS_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.GRASS),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.GRASS_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:GRASS_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const electric_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "ELECTRIC_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:ELECTRIC_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.ELECTRIC),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.ELECTRIC_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:ELECTRIC_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const psychic_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "PSYCHIC_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:PSYCHIC_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.PSYCHIC),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.PSYCHIC_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:PSYCHIC_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const ice_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "ICE_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:ICE_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.ICE),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.ICE_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:ICE_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const dragon_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "DRAGON_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:DRAGON_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.DRAGON),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.DRAGON_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:DRAGON_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const dark_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "DARK_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:DARK_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.DARK),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.DARK_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:DARK_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const fairy_type_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "FAIRY_TYPE_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:FAIRY_TYPE_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.isOfType(Type.FAIRY),
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.FAIRY_TYPE_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:FAIRY_TYPE_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const biting_move_bounty_questModifier = questModifierTypes.PERMA_MOVE_QUEST(
+    "BITING_MOVE_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:BITING_MOVE_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon, move: Move) => move.hasFlag(MoveFlags.BITING_MOVE),
+        goalCount: 20,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.BITING_MOVE_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:BITING_MOVE_BOUNTY_QUEST.task")
+    }
+);
+
+export const slicing_move_bounty_questModifier = questModifierTypes.PERMA_MOVE_QUEST(
+    "SLICING_MOVE_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:SLICING_MOVE_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon, move: Move) => move.hasFlag(MoveFlags.SLICING_MOVE),
+        goalCount: 20,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.SLICING_MOVE_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:SLICING_MOVE_BOUNTY_QUEST.task")
+    }
+);
+
+export const pulse_move_bounty_questModifier = questModifierTypes.PERMA_MOVE_QUEST(
+    "PULSE_MOVE_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:PULSE_MOVE_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon, move: Move) => move.hasFlag(MoveFlags.PULSE_MOVE),
+        goalCount: 20,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.PULSE_MOVE_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:PULSE_MOVE_BOUNTY_QUEST.task")
+    }
+);
+
+export const ballbomb_move_bounty_questModifier = questModifierTypes.PERMA_MOVE_QUEST(
+    "BALLBOMB_MOVE_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:BALLBOMB_MOVE_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon, move: Move) => move.hasFlag(MoveFlags.BALLBOMB_MOVE),
+        goalCount: 20,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.BALLBOMB_MOVE_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:BALLBOMB_MOVE_BOUNTY_QUEST.task")
+    }
+);
+
+export const powder_move_bounty_questModifier = questModifierTypes.PERMA_MOVE_QUEST(
+    "POWDER_MOVE_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:POWDER_MOVE_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon, move: Move) => move.hasFlag(MoveFlags.POWDER_MOVE),
+        goalCount: 20,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.POWDER_MOVE_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:POWDER_MOVE_BOUNTY_QUEST.task")
+    }
+);
+
+export const poison_status_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "POISON_STATUS_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:POISON_STATUS_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.status?.effect === StatusEffect.POISON,
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.POISON_STATUS_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:POISON_STATUS_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const toxic_status_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "TOXIC_STATUS_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:TOXIC_STATUS_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.status?.effect === StatusEffect.TOXIC,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.TOXIC_STATUS_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:TOXIC_STATUS_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const paralysis_status_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "PARALYSIS_STATUS_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:PARALYSIS_STATUS_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.status?.effect === StatusEffect.PARALYSIS,
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.PARALYSIS_STATUS_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:PARALYSIS_STATUS_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const burn_status_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "BURN_STATUS_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:BURN_STATUS_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.status?.effect === StatusEffect.BURN,
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.BURN_STATUS_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:BURN_STATUS_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const freeze_status_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "FREEZE_STATUS_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:FREEZE_STATUS_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && defender.status?.effect === StatusEffect.FREEZE,
+        goalCount: 7,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.FREEZE_STATUS_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:FREEZE_STATUS_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const day_time_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "DAY_TIME_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:DAY_TIME_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.getTimeOfDay() === TimeOfDay.DAY,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.DAY_TIME_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:DAY_TIME_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const dusk_time_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "DUSK_TIME_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:DUSK_TIME_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.getTimeOfDay() === TimeOfDay.DUSK,
+        goalCount: 5,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.DUSK_TIME_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:DUSK_TIME_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const night_time_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "NIGHT_TIME_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:NIGHT_TIME_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.getTimeOfDay() === TimeOfDay.NIGHT,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.NIGHT_TIME_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:NIGHT_TIME_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const dawn_time_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "DAWN_TIME_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:DAWN_TIME_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.getTimeOfDay() === TimeOfDay.DAWN,
+        goalCount: 5,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.DAWN_TIME_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:DAWN_TIME_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const sunny_weather_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "SUNNY_WEATHER_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:SUNNY_WEATHER_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.weather?.weatherType === WeatherType.SUNNY || scene.arena.weather?.weatherType === WeatherType.HARSH_SUN,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.SUNNY_WEATHER_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:SUNNY_WEATHER_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const rain_weather_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "RAIN_WEATHER_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:RAIN_WEATHER_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.weather?.weatherType === WeatherType.RAIN || scene.arena.weather?.weatherType === WeatherType.HEAVY_RAIN,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.RAIN_WEATHER_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:RAIN_WEATHER_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const sandstorm_weather_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "SANDSTORM_WEATHER_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:SANDSTORM_WEATHER_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.weather?.weatherType === WeatherType.SANDSTORM,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.SANDSTORM_WEATHER_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:SANDSTORM_WEATHER_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const hail_weather_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "HAIL_WEATHER_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:HAIL_WEATHER_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.weather?.weatherType === WeatherType.HAIL,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.HAIL_WEATHER_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:HAIL_WEATHER_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const snow_weather_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "SNOW_WEATHER_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:SNOW_WEATHER_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.weather?.weatherType === WeatherType.SNOW,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.SNOW_WEATHER_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:SNOW_WEATHER_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const fog_weather_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "FOG_WEATHER_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:FOG_WEATHER_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.weather?.weatherType === WeatherType.FOG,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.FOG_WEATHER_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:FOG_WEATHER_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const heavy_rain_weather_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "HEAVY_RAIN_WEATHER_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:HEAVY_RAIN_WEATHER_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.weather?.weatherType === WeatherType.HEAVY_RAIN,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.HEAVY_RAIN_WEATHER_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:HEAVY_RAIN_WEATHER_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const harsh_sun_weather_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "HARSH_SUN_WEATHER_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:HARSH_SUN_WEATHER_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.weather?.weatherType === WeatherType.HARSH_SUN,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.HARSH_SUN_WEATHER_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:HARSH_SUN_WEATHER_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const strong_winds_weather_win_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "STRONG_WINDS_WEATHER_WIN_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:STRONG_WINDS_WEATHER_WIN_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.arena.weather?.weatherType === WeatherType.STRONG_WINDS,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.STRONG_WINDS_WEATHER_WIN_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:STRONG_WINDS_WEATHER_WIN_BOUNTY_QUEST.task")
+    }
+);
+
+export const catch_legendary_bounty_questModifier = questModifierTypes.PERMA_CATCH_QUEST(
+    "CATCH_LEGENDARY_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:CATCH_LEGENDARY_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon) => pokemon.species.legendary,
+        goalCount: 2,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.CATCH_LEGENDARY_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:CATCH_LEGENDARY_BOUNTY_QUEST.task")
+    }
+);
+
+export const catch_shiny_bounty_questModifier = questModifierTypes.PERMA_CATCH_QUEST(
+    "CATCH_SHINY_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:CATCH_SHINY_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon) => pokemon.isShiny(),
+        goalCount: 3,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.CATCH_SHINY_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:CATCH_SHINY_BOUNTY_QUEST.task")
+    }
+);
+
+export const catch_mythical_bounty_questModifier = questModifierTypes.PERMA_CATCH_QUEST(
+    "CATCH_MYTHICAL_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:CATCH_MYTHICAL_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (pokemon: Pokemon) => pokemon.species.mythical,
+        goalCount: 2,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.CATCH_MYTHICAL_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:CATCH_MYTHICAL_BOUNTY_QUEST.task")
+    }
+);
+
+export const cause_flinch_bounty_questModifier = questModifierTypes.PERMA_FLINCH_QUEST(
+    "CAUSE_FLINCH_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:CAUSE_FLINCH_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => true,
+        goalCount: 15,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.CAUSE_FLINCH_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:CAUSE_FLINCH_BOUNTY_QUEST.task")
+    }
+);
+
+export const flawless_ko_bounty_questModifier = questModifierTypes.PERMA_KNOCKOUT_QUEST(
+    "FLAWLESS_KO_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:FLAWLESS_KO_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (attacker: Pokemon, defender: Pokemon) => attacker.isPlayer() && (attacker.turnData?.damageTaken ?? 0) === 0,
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.FLAWLESS_KO_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:FLAWLESS_KO_BOUNTY_QUEST.task")
+    }
+);
+
+export const defeat_grunt_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "DEFEAT_GRUNT_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:DEFEAT_GRUNT_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => { const t = scene.currentBattle.trainer; return scene.currentBattle.battleType === BattleType.TRAINER && t != null && [TrainerType.ROCKET_GRUNT, TrainerType.MAGMA_GRUNT, TrainerType.AQUA_GRUNT, TrainerType.GALACTIC_GRUNT, TrainerType.PLASMA_GRUNT, TrainerType.FLARE_GRUNT, TrainerType.AETHER_GRUNT, TrainerType.SKULL_GRUNT, TrainerType.MACRO_GRUNT].includes(t.config.trainerType); },
+        goalCount: 10,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.DEFEAT_GRUNT_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:DEFEAT_GRUNT_BOUNTY_QUEST.task")
+    }
+);
+
+export const defeat_corrupted_bounty_questModifier = questModifierTypes.PERMA_END_OF_BATTLE_QUEST(
+    "DEFEAT_CORRUPTED_BOUNTY_QUEST",
+    {
+        name: i18next.t("quests:DEFEAT_CORRUPTED_BOUNTY_QUEST.name"),
+        runType: RunType.ANY,
+        duration: RunDuration.SINGLE_RUN,
+        condition: (scene: BattleScene) => scene.currentBattle.trainer?.isCorrupted === true,
+        goalCount: 6,
+        questUnlockData: {
+            rewardType: RewardType.QUEST_UNLOCK,
+            rewardId: 0,
+            questId: QuestUnlockables.DEFEAT_CORRUPTED_BOUNTY_QUEST
+        },
+        task: i18next.t("quests:DEFEAT_CORRUPTED_BOUNTY_QUEST.task")
+    }
+);
 
 export const QUEST_CONSOLE_CODES: Partial<Record<string, keyof typeof modifierTypes>> = {
     "R7N9X4": modifierTypes.TAUROS_ELECTRIC_HIT_QUEST,
@@ -9139,6 +10238,69 @@ export const QUEST_CONSOLE_CODES: Partial<Record<string, keyof typeof modifierTy
     "A5K8P3": modifierTypes.SUNFLORA_NIGHTMARE_QUEST,
     "G2W4H7": modifierTypes.DODRIO_NIGHTMARE_QUEST,
     "C7F9B1": modifierTypes.LANTURN_NIGHTMARE_QUEST
+};
+
+export const BOUNTY_ONLY_CODES: Partial<Record<string, keyof typeof modifierTypes>> = {
+    "B3K9T2": modifierTypes.CRITICAL_HIT_BOUNTY_QUEST,
+    "F7H1W4": modifierTypes.OHKO_BOUNTY_QUEST,
+    "L2P6X8": modifierTypes.PRIORITY_MOVE_BOUNTY_QUEST,
+    "N5V3M7": modifierTypes.HEALING_MOVE_BOUNTY_QUEST,
+    "R8D4G1": modifierTypes.SOUND_MOVE_BOUNTY_QUEST,
+    "T1C9Y6": modifierTypes.PUNCHING_MOVE_BOUNTY_QUEST,
+    "W6J2Q5": modifierTypes.NVE_HIT_BOUNTY_QUEST,
+    "X4N8F3": modifierTypes.WILD_BOSS_BOUNTY_QUEST,
+    "H7K1B9": modifierTypes.MEGA_EVOLVE_BOUNTY_QUEST,
+    "M3Q5V7": modifierTypes.NO_EVOLVE_LV50_BOUNTY_QUEST,
+    "P9T2L6": modifierTypes.MAX_FRIENDSHIP_BOUNTY_QUEST,
+    "XAJI0Y": modifierTypes.NORMAL_TYPE_KO_BOUNTY_QUEST,
+    "6DPBHS": modifierTypes.FIGHTING_TYPE_KO_BOUNTY_QUEST,
+    "AHXTHV": modifierTypes.FLYING_TYPE_KO_BOUNTY_QUEST,
+    "3A3ZMF": modifierTypes.POISON_TYPE_KO_BOUNTY_QUEST,
+    "8MDD4V": modifierTypes.GROUND_TYPE_KO_BOUNTY_QUEST,
+    "30T9NT": modifierTypes.ROCK_TYPE_KO_BOUNTY_QUEST,
+    "3W5UZB": modifierTypes.BUG_TYPE_KO_BOUNTY_QUEST,
+    "IKCIDK": modifierTypes.GHOST_TYPE_KO_BOUNTY_QUEST,
+    "WNNHJ7": modifierTypes.STEEL_TYPE_KO_BOUNTY_QUEST,
+    "XVG0FN": modifierTypes.FIRE_TYPE_KO_BOUNTY_QUEST,
+    "9XUY41": modifierTypes.WATER_TYPE_KO_BOUNTY_QUEST,
+    "IBLJH7": modifierTypes.GRASS_TYPE_KO_BOUNTY_QUEST,
+    "5LXO6Q": modifierTypes.ELECTRIC_TYPE_KO_BOUNTY_QUEST,
+    "JIUJV6": modifierTypes.PSYCHIC_TYPE_KO_BOUNTY_QUEST,
+    "OH9SDB": modifierTypes.ICE_TYPE_KO_BOUNTY_QUEST,
+    "DW2PCN": modifierTypes.DRAGON_TYPE_KO_BOUNTY_QUEST,
+    "9T84AZ": modifierTypes.DARK_TYPE_KO_BOUNTY_QUEST,
+    "YTJXEP": modifierTypes.FAIRY_TYPE_KO_BOUNTY_QUEST,
+    "Q85JSG": modifierTypes.BITING_MOVE_BOUNTY_QUEST,
+    "65KXVF": modifierTypes.SLICING_MOVE_BOUNTY_QUEST,
+    "1T2TAL": modifierTypes.PULSE_MOVE_BOUNTY_QUEST,
+    "A753LC": modifierTypes.BALLBOMB_MOVE_BOUNTY_QUEST,
+    "58DRC1": modifierTypes.POWDER_MOVE_BOUNTY_QUEST,
+    "1ERTJ5": modifierTypes.POISON_STATUS_KO_BOUNTY_QUEST,
+    "PHT0HL": modifierTypes.TOXIC_STATUS_KO_BOUNTY_QUEST,
+    "9XPSEI": modifierTypes.PARALYSIS_STATUS_KO_BOUNTY_QUEST,
+    "MVIHCW": modifierTypes.BURN_STATUS_KO_BOUNTY_QUEST,
+    "I64CIY": modifierTypes.FREEZE_STATUS_KO_BOUNTY_QUEST,
+    "HE7UR2": modifierTypes.DAY_TIME_WIN_BOUNTY_QUEST,
+    "3GDPPQ": modifierTypes.DUSK_TIME_WIN_BOUNTY_QUEST,
+    "0Y9DOM": modifierTypes.NIGHT_TIME_WIN_BOUNTY_QUEST,
+    "5IGQPK": modifierTypes.DAWN_TIME_WIN_BOUNTY_QUEST,
+    "I7P5TB": modifierTypes.SUNNY_WEATHER_WIN_BOUNTY_QUEST,
+    "94874F": modifierTypes.RAIN_WEATHER_WIN_BOUNTY_QUEST,
+    "RHOCN9": modifierTypes.SANDSTORM_WEATHER_WIN_BOUNTY_QUEST,
+    "J2QP89": modifierTypes.HAIL_WEATHER_WIN_BOUNTY_QUEST,
+    "UZFK8U": modifierTypes.SNOW_WEATHER_WIN_BOUNTY_QUEST,
+    "T0CVS4": modifierTypes.FOG_WEATHER_WIN_BOUNTY_QUEST,
+    "F8CGVY": modifierTypes.HEAVY_RAIN_WEATHER_WIN_BOUNTY_QUEST,
+    "IE6IVW": modifierTypes.HARSH_SUN_WEATHER_WIN_BOUNTY_QUEST,
+    "PVS7HZ": modifierTypes.STRONG_WINDS_WEATHER_WIN_BOUNTY_QUEST,
+    "IOYKL1": modifierTypes.CATCH_LEGENDARY_BOUNTY_QUEST,
+    "CQ99CH": modifierTypes.CATCH_SHINY_BOUNTY_QUEST,
+    "J755NF": modifierTypes.CATCH_MYTHICAL_BOUNTY_QUEST,
+    "4ZW9XA": modifierTypes.CAUSE_FLINCH_BOUNTY_QUEST,
+    "3KX7EE": modifierTypes.FLAWLESS_KO_BOUNTY_QUEST,
+    "DTJVZH": modifierTypes.DEFEAT_GRUNT_BOUNTY_QUEST,
+    "WJR64D": modifierTypes.DEFEAT_CORRUPTED_BOUNTY_QUEST,
+
 };
 
 interface RivalQuestConfig {

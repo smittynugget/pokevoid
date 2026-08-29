@@ -3487,7 +3487,8 @@ export class AbilitySwitcherModifier extends PokemonHeldItemModifier {
     }
 
     clone(): AbilitySwitcherModifier {
-        return new AbilitySwitcherModifier(this.type, this.pokemonId, this.stackCount);
+        const c = new AbilitySwitcherModifier(this.type, this.pokemonId, this.assignedAbilityIndex, this.stackCount);
+        return c;
     }
 
     matchType(modifier: Modifier): boolean {
@@ -4352,7 +4353,17 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
     apply(args: any[]): boolean {
         const scene = args.shift() as BattleScene;
         this.currentMode = scene.ui.getMode();
-        if (this.checkRunTypeAndDuration(scene) && this.condition.apply(null, args)) {
+        let conditionMet = false;
+        try {
+            conditionMet = this.condition.apply(null, args);
+        } catch (e) {
+            if (e instanceof TypeError) {
+                conditionMet = false;
+            } else {
+                throw e;
+            }
+        }
+        if (this.checkRunTypeAndDuration(scene) && conditionMet) {
             this.incrementCurrentCount(scene);
             const currentCount = this.getCurrentCount(scene);
 
@@ -4747,8 +4758,7 @@ export class PermaRunQuestModifier extends PermaQuestModifier {
     }
 
 private addFallbackIcon(scene: BattleScene, container: Phaser.GameObjects.Container): void {
-    const item = scene.add.sprite(16, this.virtualStackCount ? 8 : 16, "smitems",
-        this.modifierTypeOption.type.iconImage);
+    const item = scene.add.sprite(16, this.virtualStackCount ? 8 : 16, "smitems", "quest");
     item.setScale(0.25);
     item.setOrigin(0, 0.5);
     container.add(item);
@@ -4844,6 +4854,26 @@ export class PermaEndOfBattleQuestModifier extends PermaRunQuestModifier {
 
     clone(): PermaEndOfBattleQuestModifier {
         const cloned = new PermaEndOfBattleQuestModifier(this.type, this.runType, this.duration,
+            this.condition, this.goalCount, this.questUnlockData, this.task,
+            this.currentCount, this.resetOnFail, null, null, this.stages,
+            this.currentStageIndex, this.consoleCode);
+        cloned.skillTreeBounty = this.skillTreeBounty;
+        return cloned;
+    }
+}
+
+export class PermaFlinchQuestModifier extends PermaRunQuestModifier {
+    constructor(type: ModifierTypes.ModifierType, runType: RunType, duration: RunDuration,
+                condition: (...args: any[]) => boolean, goalCount: number,
+                questUnlockData: QuestUnlockData, task?: string, currentCount: number = 0,
+                resetOnFail: boolean = false, startWave?: number, conditionUnlockable?: Unlockables,
+                stages?: QuestStage[], currentStageIndex: number = 0, consoleCode: string = "") {
+        super(type, runType, duration, condition, goalCount, questUnlockData, task,
+            currentCount, resetOnFail, stages, currentStageIndex, consoleCode);
+    }
+
+    clone(): PermaFlinchQuestModifier {
+        const cloned = new PermaFlinchQuestModifier(this.type, this.runType, this.duration,
             this.condition, this.goalCount, this.questUnlockData, this.task,
             this.currentCount, this.resetOnFail, null, null, this.stages,
             this.currentStageIndex, this.consoleCode);

@@ -225,6 +225,11 @@ export class EvolutionPhase extends Phase {
       this.modeRealignEvent.remove();
       this.modeRealignEvent = null;
     }
+    if (this.evolutionOverlay?.active) {
+      this.scene.tweens.killTweensOf(this.evolutionOverlay);
+      this.evolutionOverlay.destroy();
+      this.evolutionOverlay = null!;
+    }
     super.end();
   }
   doEvolution(): void {

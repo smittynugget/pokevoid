@@ -142,6 +142,8 @@ export const SettingKeys = {
   Disable_Cutscenes: "DISABLE_CUTSCENES",
   Disable_Shiny_Power: "DISABLE_SHINY_POWER",
   Show_Item_Text_BG: "SHOW_ITEM_TEXT_BG",
+  Shop_No_Duplicates: "SHOP_NO_DUPLICATES",
+  Shop_Show_Unique_Names: "SHOP_SHOW_UNIQUE_NAMES",
   Auto_Save: "AUTO_SAVE",
   Load_Battle_From: "LOAD_BATTLE_FROM",
   Cloud_Save: "CLOUD_SAVE",
@@ -496,6 +498,20 @@ export const Setting: Array<Setting> = [
     type: SettingType.DISPLAY
   },
   {
+    key: SettingKeys.Shop_No_Duplicates,
+    label: i18next.t("settings:shopNoDuplicates"),
+    options: OFF_ON,
+    default: 0,
+    type: SettingType.DISPLAY
+  },
+  {
+    key: SettingKeys.Shop_Show_Unique_Names,
+    label: i18next.t("settings:shopShowUniqueNames"),
+    options: OFF_ON,
+    default: 0,
+    type: SettingType.DISPLAY
+  },
+  {
     key: SettingKeys.Damage_Numbers,
     label: i18next.t("settings:damageNumbers"),
     options: [
@@ -780,7 +796,7 @@ export const Setting: Array<Setting> = [
     key: SettingKeys.Shop_Overlay_Opacity,
     label: i18next.t("settings:shopOverlayOpacity"),
     options: SHOP_OVERLAY_OPACITY_OPTIONS,
-    default: 7,
+    default: 5,
     type: SettingType.DISPLAY,
     requireReload: false
   },
@@ -882,6 +898,7 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
       break;
     case SettingKeys.Disable_Duelmons:
       scene.disableDuelmons = Setting[index].options[value].value === "On";
+      scene.duelmonsEnabledForRun = !scene.disableDuelmons;
       break;
     case SettingKeys.Duelmon_Spawn_Rarity:
       scene.duelmonSpawnRarity = value;
@@ -897,6 +914,12 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
       break;
     case SettingKeys.Show_Item_Text_BG:
       scene.showItemTextBg = Setting[index].options[value].value === "On";
+      break;
+    case SettingKeys.Shop_No_Duplicates:
+      scene.shopNoDuplicates = Setting[index].options[value].value === "On";
+      break;
+    case SettingKeys.Shop_Show_Unique_Names:
+      scene.shopShowUniqueNames = Setting[index].options[value].value === "On";
       break;
     case SettingKeys.Auto_Save:
       scene.autoSaveMode = value;

@@ -481,6 +481,10 @@ export default class Trainer extends Phaser.GameObjects.Container {
     }, this.config.hasStaticParty ? this.calculateStaticPartySeedOffset(index) : this.scene.currentBattle.waveIndex + (this.config.getDerivedType() << 10) + (((!this.config.useSameSeedForAllMembers ? index : 0) + 1) << 8));
     if (this.scene.currentBattle.waveIndex > 60 && ret.species.forms.length > 1 && Utils.randSeedInt(this.isDynamicRival ? 2 : 3, 1) == 1 && this.config.trainerType !== TrainerType.SMITTY ) {
       ret.formIndex = Utils.randSeedInt(ret.species.forms.length -1, 1);
+      const spriteId = ret.species.getSpriteId(false, ret.formIndex);
+      if (!this.scene.textures.exists(`pkmn__${spriteId}`)) {
+        ret.formIndex = 0;
+      }
       ret.generateName();
       if(ret.isGlitchOrSmittyForm()) {
         ret.toggleShadow(false);
@@ -524,7 +528,17 @@ export default class Trainer extends Phaser.GameObjects.Container {
         tier--;
       }
       const tierPool = this.config.speciesPools[tier];
-      species = getPokemonSpecies(Utils.randSeedItem(tierPool));
+      let effectiveTierPool = tierPool;
+      if (!this.scene.duelmonsEnabledForRun) {
+        effectiveTierPool = tierPool.filter((s: Species) => getPokemonSpecies(s).generation !== 20);
+        if (effectiveTierPool.length === 0) {
+          species = this.scene.randomSpecies(battle.waveIndex, level, false);
+        } else {
+          species = getPokemonSpecies(Utils.randSeedItem(effectiveTierPool));
+        }
+      } else {
+        species = getPokemonSpecies(Utils.randSeedItem(effectiveTierPool));
+      }
       console.log(this.config.trainerType);
       console.log(this.name);
       console.log(this);

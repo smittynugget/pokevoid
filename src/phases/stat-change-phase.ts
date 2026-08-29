@@ -9,6 +9,7 @@ import { PokemonResetNegativeStatStageModifier } from "#app/modifier/modifier.js
 import { handleTutorial, Tutorial } from "#app/tutorial.js";
 import i18next from "i18next";
 import * as Utils from "#app/utils.js";
+import { playStatChangeVisual } from "#app/field/stat-change-visual";
 import { PokemonPhase } from "./pokemon-phase";
 
 export type StatChangeCallback = (target: Pokemon | null, changed: BattleStat[], relativeChanges: number[]) => void;
@@ -138,54 +139,8 @@ export class StatChangePhase extends PokemonPhase {
     };
 
     if (relLevels.filter(l => l).length && this.scene.moveAnimations) {
-      pokemon.enableMask();
-      const pokemonMaskSprite = pokemon.maskSprite;
-
-      const tileX = (this.player ? 106 : 236) * pokemon.getSpriteScale() * this.scene.field.scale;
-      const tileY = ((this.player ? 148 : 84) + (levels.value >= 1 ? 160 : 0)) * pokemon.getSpriteScale() * this.scene.field.scale;
-      const tileWidth = 156 * this.scene.field.scale * pokemon.getSpriteScale();
-      const tileHeight = 316 * this.scene.field.scale * pokemon.getSpriteScale();
-
-      const spriteColor = levels.value >= 1 ? BattleStat[BattleStat.ATK].toLowerCase() : BattleStat[BattleStat.SPD].toLowerCase();
-      const statSprite = this.scene.add.tileSprite(tileX, tileY, tileWidth, tileHeight, "battle_stats", spriteColor);
-      statSprite.setPipeline(this.scene.fieldSpritePipeline);
-      statSprite.setAlpha(0);
-      statSprite.setScale(6);
-      if (pokemon.isGlitchOrSmittyForm?.()) {
-        statSprite.setOrigin(0.5, 0.5);
-      } else {
-        statSprite.setOrigin(0.5, 1);
-      }
-
-      this.scene.playSound(`se/stat_${levels.value >= 1 ? "up" : "down"}`);
-
-      statSprite.setMask(new Phaser.Display.Masks.BitmapMask(this.scene, pokemonMaskSprite ?? undefined));
-
-      this.scene.tweens.add({
-        targets: statSprite,
-        duration: 250,
-        alpha: 0.8375,
-        onComplete: () => {
-          this.scene.tweens.add({
-            targets: statSprite,
-            delay: 1000,
-            duration: 250,
-            alpha: 0
-          });
-        }
-      });
-
-      this.scene.tweens.add({
-        targets: statSprite,
-        duration: 1500,
-        y: `${levels.value >= 1 ? "-" : "+"}=${160 * 6}`
-      });
-
-      this.scene.time.delayedCall(1750, () => {
-        statSprite.destroy();
-        pokemon.disableMask();
-        end();
-      });
+      const direction = levels.value >= 1 ? "up" : "down";
+      playStatChangeVisual(this.scene, pokemon, direction, () => end());
     } else {
       end();
     }

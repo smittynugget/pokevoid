@@ -1,7 +1,7 @@
 import BattleScene, { RecoveryBossMode } from "../battle-scene.js";
 import {BATTLE_WAVES, BattlerIndex, BattleType, majorBossWaves, setupFixedBattlePaths, PathNodeType} from "../battle.js";
 import {modifierTypes, nuzlightUnlockQuestModifier, nuzlockeUnlockQuestModifier} from "../modifier/modifier-type.js";
-import { ExpShareModifier, ExpBalanceModifier, MultipleParticipantExpBonusModifier, PokemonExpBoosterModifier, PermaRivalWinQuestModifier, PermaBeatTrainerQuestModifier, PermaWinQuestModifier, PersistentModifier} from "../modifier/modifier.js";
+import { ExpShareModifier, ExpBalanceModifier, MultipleParticipantExpBonusModifier, PokemonExpBoosterModifier, PermaRivalWinQuestModifier, PermaBeatTrainerQuestModifier, PermaWinQuestModifier, PersistentModifier, PermaEndOfBattleQuestModifier} from "../modifier/modifier.js";
 import * as Utils from "../utils.js";
 import Overrides from "../overrides";
 import { BattleEndPhase } from "./battle-end-phase";
@@ -15,6 +15,7 @@ import { ModifierRewardPhase } from "./modifier-reward-phase";
 import { SelectModifierPhase } from "./select-modifier-phase";
 import { ShowRewards } from "#app/utils/show-rewards.js";
 import { ShowPartyExpBarPhase } from "./show-party-exp-bar-phase";
+import { SwitchPhase } from "./switch-phase";
 import { TrainerVictoryPhase } from "./trainer-victory-phase";
 import { TutorialBlueDefeatPhase } from "./tutorial-blue-defeat-phase";
 import {TrainerType} from "#enums/trainer-type";
@@ -84,8 +85,11 @@ export class VictoryPhase extends PokemonPhase {
       return;
     }
 
-    const unresolvedPlayerFaint = this.scene.getField(true).some(p => p && p.isPlayer() && p.hp <= 0 && !p.isFainted(true));
-    if (unresolvedPlayerFaint) {
+    const unresolvedPlayerFaint = this.scene.getPlayerField().some(
+      p => p && p.hp <= 0 && !p.isFainted(true)
+    );
+    const pendingFaintSwitch = !!this.scene.findPhase(p => p instanceof SwitchPhase);
+    if (unresolvedPlayerFaint || pendingFaintSwitch) {
       this.scene.pushPhase(new VictoryPhase(this.scene, this.battlerIndex));
       this.end();
       return;
@@ -222,6 +226,12 @@ export class VictoryPhase extends PokemonPhase {
           this.scene.pushPhase(new QuestUnlockPhase(this.scene, nuzlockeQuestData, true));
         }
       }
+
+      this.scene.gameData.permaModifiers
+        .findModifiers(m => m instanceof PermaEndOfBattleQuestModifier)
+        .forEach(modifier => modifier.apply([this.scene, this.scene]));
+      this.scene.findModifiers(m => m instanceof PermaEndOfBattleQuestModifier)
+        .forEach(modifier => modifier.apply([this.scene, this.scene]));
 
       if (this.scene.gameMode.isEndless || !this.scene.gameMode.isWaveFinal(this.scene.currentBattle.waveIndex)) {
         this.scene.pushPhase(new EggLapsePhase(this.scene));

@@ -1,46 +1,57 @@
 {
   "SITRUS": {
     "name": "Fruta Sitrus",
-    "effect": "Restaura 25% dos PS se os PS estiverem abaixo de 50%"
+    "effect": "Restaura 25% dos PS se os PS estiverem abaixo de 50%",
+    "statLabel": "PS"
   },
   "LUM": {
     "name": "Fruta Lum",
-    "effect": "Cura qualquer mudança de estado ou confusão"
+    "effect": "Cura qualquer mudança de estado ou confusão",
+    "statLabel": "Estado"
   },
   "ENIGMA": {
     "name": "Fruta Enigma",
-    "effect": "Restaura 25% dos PS se atingido por um golpe supereficaz"
+    "effect": "Restaura 25% dos PS se atingido por um golpe supereficaz",
+    "statLabel": "PS"
   },
   "LIECHI": {
     "name": "Fruta Liechi",
-    "effect": "Aumenta o Ataque se os PS estiverem abaixo de 25%"
+    "effect": "Aumenta o Ataque se os PS estiverem abaixo de 25%",
+    "statLabel": "Ata"
   },
   "GANLON": {
     "name": "Fruta Ganlon",
-    "effect": "Aumenta a Defesa se os PS estiverem abaixo de 25%"
+    "effect": "Aumenta a Defesa se os PS estiverem abaixo de 25%",
+    "statLabel": "Def"
   },
   "PETAYA": {
     "name": "Fruta Petaya",
-    "effect": "Aumenta o Ataque Especial se os PS estiverem abaixo de 25%"
+    "effect": "Aumenta o Ataque Especial se os PS estiverem abaixo de 25%",
+    "statLabel": "AtEsp"
   },
   "APICOT": {
     "name": "Fruta Apicot",
-    "effect": "Aumenta a Defesa Especial se os PS estiverem abaixo de 25%"
+    "effect": "Aumenta a Defesa Especial se os PS estiverem abaixo de 25%",
+    "statLabel": "DefEsp"
   },
   "SALAC": {
     "name": "Fruta Salac",
-    "effect": "Aumenta a Velocidade se os PS estiverem abaixo de 25%"
+    "effect": "Aumenta a Velocidade se os PS estiverem abaixo de 25%",
+    "statLabel": "Veloc."
   },
   "LANSAT": {
     "name": "Fruta Lansat",
-    "effect": "Aumenta a chance de acerto crítico se os PS estiverem abaixo de 25%"
+    "effect": "Aumenta a chance de acerto crítico se os PS estiverem abaixo de 25%",
+    "statLabel": "Crít"
   },
   "STARF": {
     "name": "Fruta Starf",
-    "effect": "Aumenta drasticamente um atributo aleatório se os PS estiverem abaixo de 25%"
+    "effect": "Aumenta drasticamente um atributo aleatório se os PS estiverem abaixo de 25%",
+    "statLabel": "Alea"
   },
   "LEPPA": {
     "name": "Fruta Leppa",
-    "effect": "Restaura 10 PP de um movimento se seus PP acabarem"
+    "effect": "Restaura 10 PP de um movimento se seus PP acabarem",
+    "statLabel": "PP"
   }
 }

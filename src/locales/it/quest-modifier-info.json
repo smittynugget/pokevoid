@@ -421,30 +421,30 @@
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "Nuove Mosse di Magikarp",
-    "task": "Sconfiggi 100 Pokemon con Magikarp"
+    "task": "Sconfiggi 20 Pokemon con Magikarp"
   },
   "DITTO_NEW_MOVES_QUEST": {
     "name": "Nuove Mosse di Ditto",
-    "task": "Sconfiggi 100 Pokemon con Ditto"
+    "task": "Sconfiggi 20 Pokemon con Ditto"
   },
   "WOBBUFFET_NEW_MOVES_QUEST": {
     "name": "Nuove Mosse di Wobbuffet",
-    "task": "Sconfiggi 100 Pokemon con Wobbuffet"
+    "task": "Sconfiggi 20 Pokemon con Wobbuffet"
   },
   "SMEARGLE_NEW_MOVES_QUEST": {
     "name": "Nuove Mosse di Smeargle",
-    "task": "Sconfiggi 100 Pokemon con Smeargle"
+    "task": "Sconfiggi 20 Pokemon con Smeargle"
   },
   "UNOWN_NEW_MOVES_QUEST": {
     "name": "Nuove Mosse di Unown",
-    "task": "Sconfiggi 100 Pokemon con Unown"
+    "task": "Sconfiggi 20 Pokemon con Unown"
   },
   "TYROGUE_NEW_MOVES_QUEST": {
     "name": "Nuove Mosse di Tyrogue",
-    "task": "Sconfiggi 100 Pokemon con Tyrogue"
+    "task": "Sconfiggi 20 Pokemon con Tyrogue"
   },
   "METAPOD_NEW_MOVES_QUEST": {
     "name": "Nuove Mosse di Metapod",
-    "task": "Sconfiggi 100 Pokemon con Metapod"
+    "task": "Sconfiggi 20 Pokemon con Metapod"
   }
 }

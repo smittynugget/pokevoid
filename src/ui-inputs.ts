@@ -13,7 +13,7 @@ import SettingsDisplayUiHandler from "./ui/settings/settings-display-ui-handler"
 import SettingsAudioUiHandler from "./ui/settings/settings-audio-ui-handler";
 import RunInfoUiHandler from "./ui/run-info-ui-handler";
 import RunHistoryUiHandler from "./ui/run-history-ui-handler";
-import { randomString, intToRoman, hashCode, randSeedInt } from "./utils";
+import { randomString, intToRoman, hashCode, randSeedInt, getEnumValues } from "./utils";
 import { GameMode, GameModes, getGameMode } from "./game-mode";
 import { ShopModifierSelectPhase } from "./phases/shop-modifier-select-phase";
 import { QuestUnlockables, QuestState } from "./system/game-data";
@@ -21,10 +21,10 @@ import { activateSmitomTalk } from "./ui/title-ui-handler";
 import ModifierSelectUiHandler from "./ui/modifier-select-ui-handler";
 import { AddPokemonModifierType, getPlayerModifierTypeOptions, regenerateModifierPoolThresholds, ModifierPoolType, PathNodeTypeFilter, ModifierType, ModifierTypeOption, CollectedTypeModifierType } from "./modifier/modifier-type";
 import { ModifierTier } from "./modifier/modifier-tier";
-import { DUELMON_SPECIES } from "./data/duelmon-rankups";
+import { DUELMON_SPECIES, getReshapeDebugDuelmonSpecies } from "./data/duelmon-rankups";
 import { Gender } from "./data/gender";
 import i18next from "i18next";
-import { getPokemonSpecies, allSpecies, isGlitchFormKey, isSmittyFormKey } from "./data/pokemon-species";
+import { getPokemonSpecies, getPokemonSpeciesForm, allSpecies, isGlitchFormKey, isSmittyFormKey } from "./data/pokemon-species";
 import type { Variant } from "./data/variant";
 import { pokemonFormChanges, applyUniversalSmittyForm, SmittyFormTrigger, SpeciesFormChange } from "./data/pokemon-forms";
 import { Species } from "#enums/species";
@@ -53,6 +53,9 @@ import { RankUpPhase } from "./phases/rank-up-phase";
 import type { PlayerPokemon, default as Pokemon } from "./field/pokemon";
 import { YuMovePhase } from "./phases/yu-move-phase";
 import { isDuelmonSpecies, getDuelmonRankUpDefinition } from "./data/duelmon-rankups";
+import { RankUpTransformPhase } from "./phases/rank-up-transform-phase";
+import { calculateStatsToTargetBstWithSwapping } from "./data/alt-build-stat-calculator";
+import { Stat } from "#enums/stat";
 import { pickThreeYuMovesWithFallback } from "./data/yu-move-utils";
 import { addCorruptedRivalOverlay, playCutsceneFaintAnim } from "./utils/story-cutscene-overlays";
 import { runPowerUnlockOverlays } from "./utils/story-cutscene-power-overlays";
@@ -286,6 +289,20 @@ export class UiInputs {
         this.formEvoDebugChaining = true;
         this.startFormEvoDebugChain();
         this.launchRandomFormEvolutionDebug();
+      });
+    }
+
+    if (Overrides.DEBUG_RESHAPE_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-FOUR", (event: KeyboardEvent) => {
+        if (event.repeat || this.isTypingInDomField()) return;
+        if (this.reshapeDebugActive) {
+          this.stopReshapeDebug();
+          return;
+        }
+        if (this.reshapeDebugBusy) return;
+        if (this.scene.ui?.getMode() !== Mode.TITLE) return;
+        this.reshapeDebugActive = true;
+        this.launchReshapeDebug();
       });
     }
 
@@ -1454,9 +1471,10 @@ export class UiInputs {
     });
   }
   private formEvoDebugBusy: boolean = false;
-
   private formEvoDebugChaining: boolean = false;
   private formEvoDebugChainTimer: Phaser.Time.TimerEvent | null = null;
+  private reshapeDebugBusy: boolean = false;
+  private reshapeDebugActive: boolean = false;
 
   private isTypingInDomField(): boolean {
     const el = document.activeElement as HTMLElement | null;
@@ -1497,7 +1515,8 @@ export class UiInputs {
     scene.currentBattle = null as any;
     scene.setSeed(randomString(24));
     scene.resetSeed();
-    scene.newArena(Biome.END);
+    const biomeValues = getEnumValues(Biome).filter((b: Biome) => b !== Biome.TOWN && b !== Biome.END && b < 40);
+    scene.newArena(biomeValues[randSeedInt(biomeValues.length)]);
     scene.arena.init();
     scene.money = 50000;
 
@@ -1505,19 +1524,156 @@ export class UiInputs {
     scene.currentBattle!.started = false;
     scene.currentBattle!.enemyLevels = [250];
 
-    const playerLevel = 250;
-    for (let i = 0; i < 6; i++) {
-      const species = scene.randomSpecies(1, playerLevel);
-      const pokemon = scene.addPlayerPokemon(species, playerLevel);
-      pokemon.setVisible(false);
-      party.push(pokemon);
-      scene.debugGauntletShownPlayerDuelmons!.add(species.speciesId);
+    scene.debugGauntletEnemyIndex = 0;
+    scene.debugGauntletPlayerIndex = 0;
+
+    scene.unshiftPhase(new EncounterPhase(scene, false));
+    scene.shiftPhase();
+  }
+
+  private launchReshapeDebug(): void {
+    const scene = this.scene;
+    this.reshapeDebugBusy = true;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+    scene.setSeed(randomString(24));
+    scene.resetSeed();
+    scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE);
+    if (!scene.currentBattle) {
+      scene.currentBattle = new Battle(scene.gameMode, 25, BattleType.WILD, undefined, false, scene);
     }
 
-    Promise.all(party.map(p => p.loadAssets())).then(() => {
-      scene.unshiftPhase(new EncounterPhase(scene, false));
+    const party = scene.getParty() as any[];
+    while (party.length > 0) party.pop()?.destroy();
+
+    const sorted = getReshapeDebugDuelmonSpecies();
+    const pool = sorted.filter(sid => !!getDuelmonRankUpDefinition(sid));
+    if (!pool.length) {
+      this.reshapeDebugBusy = false;
+      this.stopReshapeDebug();
+      return;
+    }
+
+    const LOAD_BATCH = 8;
+
+    type PendingEntry = {
+      pokemon: PlayerPokemon;
+      source: Species;
+      isLast: boolean;
+    };
+
+    const entries: PendingEntry[] = [];
+    for (let i = 0; i < pool.length; i++) {
+      const source = pool[i];
+      const pokemon = scene.addPlayerPokemon(getPokemonSpecies(source), 50);
+      if (pokemon.isFusion()) {
+        pokemon.clearFusionSpecies();
+      }
+      pokemon.setVisible(false);
+      pokemon.rankUpCount++;
+      entries.push({ pokemon, source, isLast: i === pool.length - 1 });
+    }
+
+    const loadInBatches = async (): Promise<RankUpTransformPhase[]> => {
+      const phases: RankUpTransformPhase[] = [];
+      for (let start = 0; start < entries.length; start += LOAD_BATCH) {
+        if (!this.reshapeDebugActive) return phases;
+        const chunk = entries.slice(start, start + LOAD_BATCH);
+        const results = await Promise.all(
+          chunk.map(entry => {
+            const targetSpeciesId = this.pickReshapeTargetEnhanced(entry.source);
+            const targetForm = getPokemonSpeciesForm(targetSpeciesId, 0);
+            const targetBaseStats = [...targetForm.baseStats];
+            const deltaBst = 75;
+            const afterBaseStats = calculateStatsToTargetBstWithSwapping(
+              targetBaseStats,
+              [Stat.ATK, Stat.SPATK],
+              targetBaseStats.reduce((s, v) => s + v, 0) + deltaBst
+            );
+
+            return entry.pokemon.loadAssets().then(() => {
+              return new RankUpTransformPhase(
+                scene, entry.pokemon, targetSpeciesId, afterBaseStats,
+                undefined,
+                true,
+                !entry.isLast
+              );
+            }).catch(() => null);
+          })
+        );
+        for (const r of results) {
+          if (r) phases.push(r);
+        }
+      }
+      return phases;
+    };
+
+    loadInBatches().then(valid => {
+      if (!this.reshapeDebugActive) return;
+      if (!valid.length) {
+        this.reshapeDebugBusy = false;
+        this.stopReshapeDebug();
+        return;
+      }
+      for (let i = 0; i < valid.length; i++) {
+        scene.unshiftPhase(valid[i]);
+      }
+      scene.ui.setMode(Mode.MESSAGE);
       scene.shiftPhase();
-    }).catch(err => console.error("[DEBUG] duelmon wild gauntlet launcher failed", err));
+      this.reshapeDebugBusy = false;
+    });
+  }
+
+  private stopReshapeDebug(): void {
+    this.reshapeDebugActive = false;
+    if (this.scene.ui?.getMode() !== Mode.TITLE) {
+      this.scene.clearAllPhaseQueues();
+      this.scene.pushPhase(new TitlePhase(this.scene, false, true));
+      this.scene.shiftPhase();
+    }
+  }
+
+  private pickReshapeTargetEnhanced(sourceId: Species): Species {
+    const currentDef = getDuelmonRankUpDefinition(sourceId);
+    const tagsSelf = currentDef?.tagsSelf ?? [];
+    const tagsBias = currentDef?.tagsEvoBias ?? [];
+
+    const rolledSet = new Set<string>([...tagsSelf, ...tagsBias]);
+    const sourceBiasSet = new Set<string>(tagsBias);
+
+    const score = (sid: Species): number => {
+      const def = getDuelmonRankUpDefinition(sid);
+      if (!def) return -1;
+      let s = 0;
+      const counted = new Set<string>();
+      for (const t of def.tagsSelf) {
+        if (!rolledSet.has(t)) continue;
+        s += sourceBiasSet.has(t) ? 3 : 1;
+        counted.add(t);
+      }
+      for (const t of def.tagsEvoBias) {
+        if (counted.has(t)) continue;
+        if (sourceBiasSet.has(t)) s += 2;
+      }
+      return s;
+    };
+
+    const pool = DUELMON_SPECIES.filter(sid => sid !== sourceId);
+    let bestScore = -1;
+    let best: Species[] = [];
+    for (const sid of pool) {
+      const s = score(sid);
+      if (s > bestScore) {
+        bestScore = s;
+        best = [sid];
+      } else if (s === bestScore) {
+        best.push(sid);
+      }
+    }
+    const pickPool = best.length ? best : pool;
+    return pickPool[randSeedInt(pickPool.length)];
   }
   private getForbiddenFormCapableSpecies(): Species[] {
     return Object.keys(pokemonFormChanges)

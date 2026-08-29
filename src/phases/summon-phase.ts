@@ -1,5 +1,6 @@
 import BattleScene from "#app/battle-scene.js";
 import { BattleType } from "#app/battle.js";
+import { BattleSpec } from "#enums/battle-spec";
 import { applyTypeBallRecolor, applyVoidBallRecolor, getPokeballAtlasKey, getPokeballTintColor } from "#app/data/pokeball.js";
 import { getTypeRgb } from "#app/data/type.js";
 import { PokeballType } from "#enums/pokeball";
@@ -110,7 +111,8 @@ export class SummonPhase extends PartyMemberPokemonPhase {
 
     const usePortalAnim = pokemon.species?.generation === 20 ||
       (!pokemon.isPlayer() && (this.scene.currentBattle?.trainer?.isCorrupted ||
-       this.scene.currentBattle?.trainer?.config.trainerType === TrainerType.SMITTY) && pokemon.portalSprite);
+       this.scene.currentBattle?.trainer?.config.trainerType === TrainerType.SMITTY ||
+       this.scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS) && pokemon.portalSprite);
 
     if (usePortalAnim) {
       if (this.fieldIndex === 1) {

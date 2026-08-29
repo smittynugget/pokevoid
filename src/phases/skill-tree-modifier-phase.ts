@@ -1,10 +1,10 @@
 import BattleScene from "#app/battle-scene";
 import { Phase } from "#app/phase";
-import { PokemonAltBuildModifier, PermaRunQuestModifier, PermaWinQuestModifier } from "#app/modifier/modifier";
+import { PokemonAltBuildModifier, PermaRunQuestModifier, PermaWinQuestModifier, PermaCountdownWaveCheckQuestModifier } from "#app/modifier/modifier";
 import { Mode } from "#app/ui/ui";
 import { SkillTreeRewardType, SkillTreeNodeState } from "#app/system/skill-tree-data";
 import { SelectModifierPhase } from "#app/phases/select-modifier-phase";
-import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, AddTypeBallModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator, TypeSwitcherModifierType, PermaMoneyModifierType, ForbiddenFormUnlockModifierType, ForbiddenFormUnlockCandidate, QUEST_CONSOLE_CODES, RIVAL_CONSOLE_CODES, rivalQuestModifiers, QuestModifierTypeGenerator } from "#app/modifier/modifier-type";
+import { PathNodeTypeFilter, ModifierTypeOption, modifierTypes, MoveUpgradeModifierTypeGenerator, AddPokemonModifierType, AddTypeBallModifierType, TrainerBondAbilityModifierTypeGenerator, ChampionPokemonStatBoosterModifierTypeGenerator, TeraAbilityModifierTypeGenerator, TypeSwitcherModifierType, PermaMoneyModifierType, ForbiddenFormUnlockModifierType, ForbiddenFormUnlockCandidate, QUEST_CONSOLE_CODES, BOUNTY_ONLY_CODES, RIVAL_CONSOLE_CODES, rivalQuestModifiers, QuestModifierTypeGenerator } from "#app/modifier/modifier-type";
 import { RivalTrainerType } from "#app/data/trainer-config";
 import { pokemonEvolutions, pokemonPrevolutions } from "#app/data/pokemon-evolutions";
 import * as Utils from "#app/utils";
@@ -564,7 +564,6 @@ export class SkillTreeModifierPhase extends Phase {
       if (!factory) continue;
       const generator = (factory as () => QuestModifierTypeGenerator)();
       if (!(generator instanceof QuestModifierTypeGenerator)) continue;
-      if (generator.config.duration !== RunDuration.SINGLE_RUN) continue;
       const rt = generator.config.runType;
       if (rt !== undefined && rt !== RunType.ANY) {
         const rtOk = gm.isRunType(rt) || (rt === RunType.NIGHTMARE && gm.isChaosMode && currentWave > 1000);
@@ -574,6 +573,23 @@ export class SkillTreeModifierPhase extends Phase {
       if (questId != null && this.scene.gameData.checkQuestState(questId, QuestState.COMPLETED)) continue;
       if (activeConsoleCodes.has(consoleCode)) continue;
       if (this.isVictoryBountyGenerator(generator, party)) continue;
+      if (this.isCountdownWaveBountyGenerator(generator, party)) continue;
+      candidates.push({ consoleCode, generator });
+    }
+
+    for (const [consoleCode, factory] of Object.entries(BOUNTY_ONLY_CODES)) {
+      if (!factory) continue;
+      const generator = (factory as () => QuestModifierTypeGenerator)();
+      if (!(generator instanceof QuestModifierTypeGenerator)) continue;
+      const rt = generator.config.runType;
+      if (rt !== undefined && rt !== RunType.ANY) {
+        const rtOk = gm.isRunType(rt) || (rt === RunType.NIGHTMARE && gm.isChaosMode && currentWave > 1000);
+        if (!rtOk) continue;
+      }
+      if (activeConsoleCodes.has(consoleCode)) continue;
+      if (this.isVictoryBountyGenerator(generator, party)) continue;
+      if (this.isCountdownWaveBountyGenerator(generator, party)) continue;
+      if (Utils.randSeedInt(100) >= 5) continue;
       candidates.push({ consoleCode, generator });
     }
 
@@ -589,7 +605,6 @@ export class SkillTreeModifierPhase extends Phase {
     for (const [consoleCode, generator] of Object.entries(rivalQuestModifiers)) {
       if (!runRivalCodes.has(consoleCode)) continue;
       if (!(generator instanceof QuestModifierTypeGenerator)) continue;
-      if (generator.config.duration !== RunDuration.SINGLE_RUN) continue;
       const rt = generator.config.runType;
       if (rt !== undefined && rt !== RunType.ANY) {
         const rtOk = gm.isRunType(rt) || (rt === RunType.NIGHTMARE && gm.isChaosMode && currentWave > 1000);
@@ -864,6 +879,14 @@ export class SkillTreeModifierPhase extends Phase {
   private isVictoryBountyGenerator(generator: QuestModifierTypeGenerator, party: PlayerPokemon[]): boolean {
     try {
       return generator.generateType(party)?.newModifier(this.scene) instanceof PermaWinQuestModifier;
+    } catch {
+      return false;
+    }
+  }
+
+  private isCountdownWaveBountyGenerator(generator: QuestModifierTypeGenerator, party: PlayerPokemon[]): boolean {
+    try {
+      return generator.generateType(party)?.newModifier(this.scene) instanceof PermaCountdownWaveCheckQuestModifier;
     } catch {
       return false;
     }

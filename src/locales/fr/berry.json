@@ -1,46 +1,57 @@
 {
   "SITRUS": {
     "name": "Baie Sitrus",
-    "effect": "Restaure 25% des PV s’ils sont inférieurs à 50%."
+    "effect": "Restaure 25% des PV s'ils sont inférieurs à 50%.",
+    "statLabel": "PV"
   },
   "LUM": {
     "name": "Baie Prine",
-    "effect": "Soigne tout problème de statut permanant et la confusion."
+    "effect": "Soigne tout problème de statut permanant et la confusion.",
+    "statLabel": "Statut"
   },
   "ENIGMA": {
     "name": "Baie Enigma",
-    "effect": "Restaure 25% des PV si touché par une capacité super efficace."
+    "effect": "Restaure 25% des PV si touché par une capacité super efficace.",
+    "statLabel": "PV"
   },
   "LIECHI": {
     "name": "Baie Lichii",
-    "effect": "Augmente l’Attaque si les PV sont inférieurs à 25%."
+    "effect": "Augmente l'Attaque si les PV sont inférieurs à 25%.",
+    "statLabel": "Atq"
   },
   "GANLON": {
     "name": "Baie Lingan",
-    "effect": "Augmente la Défense si les PV sont inférieurs à 25%."
+    "effect": "Augmente la Défense si les PV sont inférieurs à 25%.",
+    "statLabel": "Déf"
   },
   "PETAYA": {
     "name": "Baie Pitaye",
-    "effect": "Augmente l’Atq. Spé. si les PV sont inférieurs à 25%."
+    "effect": "Augmente l'Atq. Spé. si les PV sont inférieurs à 25%.",
+    "statLabel": "AtqSp"
   },
   "APICOT": {
     "name": "Baie Abriko",
-    "effect": "Augmente la Déf. Spé. si les PV sont inférieurs à 25%."
+    "effect": "Augmente la Déf. Spé. si les PV sont inférieurs à 25%.",
+    "statLabel": "DéfSp"
   },
   "SALAC": {
     "name": "Baie Sailak",
-    "effect": "Augmente la Vitesse si les PV sont inférieurs à 25%."
+    "effect": "Augmente la Vitesse si les PV sont inférieurs à 25%.",
+    "statLabel": "Vit"
   },
   "LANSAT": {
     "name": "Baie Lansat",
-    "effect": "Augmente le taux de coups critiques si les PV sont inférieurs à 25%."
+    "effect": "Augmente le taux de coups critiques si les PV sont inférieurs à 25%.",
+    "statLabel": "Crit"
   },
   "STARF": {
     "name": "Baie Frista",
-    "effect": "Augmente énormément une statistique au hasard si les PV sont inférieurs à 25%."
+    "effect": "Augmente énormément une statistique au hasard si les PV sont inférieurs à 25%.",
+    "statLabel": "Aléa"
   },
   "LEPPA": {
     "name": "Baie Mepo",
-    "effect": "Restaure 10 PP à une capacité dès que ses PP tombent à 0."
+    "effect": "Restaure 10 PP à une capacité dès que ses PP tombent à 0.",
+    "statLabel": "PP"
   }
 }

@@ -2929,7 +2929,7 @@
   },
   "cursedPotential": {
     "name": "Potencial Amaldiçoado",
-    "description": "Ao entrar, todos os atributos do usuário sobem um nível, com Ataque subindo dois níveis adicionais (três no total). No final de cada turno, aleatoriamente baixa de um a três atributos em um nível ou perde 1/4 de seus PS máximos. Não pode ser substituído."
+    "description": "Ao entrar, todos os atributos do usuário sobem um nível. No final de cada turno, aleatoriamente baixa de dois a três atributos em um nível ou perde 1/4 de seus PS máximos. Não pode ser substituído."
   },
   "cyberneticControl": {
     "name": "Controle Cibernético",
@@ -3085,7 +3085,7 @@
   },
   "fatedRevival": {
     "name": "Revivescência Predestinada",
-    "description": "Quando o usuário é derrotado, revive um Pokémon Fada derrotado aleatório de sua equipe com 50% de PS."
+    "description": "Quando o usuário é derrotado, revive um Pokémon Fada derrotado aleatório de sua equipe (exceto mesma espécie) com 50% de PS. Este efeito só pode ser ativado uma vez por batalha."
   },
   "finalBlade": {
     "name": "Lâmina Final",
@@ -3437,7 +3437,7 @@
   },
   "portalBeast": {
     "name": "Besta Portal",
-    "description": "Sempre que um Pokémon adversário entra em campo, este Pokémon ganha +1 em três estatísticas aleatórias. Ao se retirar, restaura 25% de seus PS máximos."
+    "description": "Sempre que um Pokémon adversário entra em campo, este Pokémon ganha +1 em duas estatísticas aleatórias. Ao se retirar, restaura 25% de seus PS máximos."
   },
   "powderKing": {
     "name": "Rei do Pó",

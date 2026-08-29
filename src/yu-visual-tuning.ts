@@ -30,7 +30,7 @@ const _state: YuTuningState = {
   enemyCreatureScaleOffset: -0.095,
   enemyYOffset: 3,
   enemyXOffset: 6,
-  enemyCreatureYOffset: 2,
+  enemyCreatureYOffset: 5,
   enemyCreatureXOffset: 6,
 };
 

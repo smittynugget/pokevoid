@@ -61,14 +61,13 @@ export class RankUpPhase extends Phase {
     const otherPlans = otherSpeciesIds.map(sid => {
       const otherForm = getPokemonSpeciesForm(sid, 0);
       const otherBaseStats = [...otherForm.baseStats];
-      const otherBst = otherBaseStats.reduce((sum, s) => sum + s, 0);
-      const otherTargetBst = otherBst + deltaBst;
+      const otherTargetBst = currentBst + deltaBst;
       const otherFocus = this.getDefaultRankUpFocusStats(otherBaseStats);
       const otherAfterBaseStats = calculateStatsToTargetBstWithSwapping(otherBaseStats, otherFocus, otherTargetBst);
       const otherAfterBst = otherAfterBaseStats.reduce((sum, s) => sum + s, 0);
       return {
-        deltaStats: otherAfterBaseStats.map((v, i) => v - otherBaseStats[i]),
-        deltaTotal: otherAfterBst - otherBst,
+        deltaStats: otherAfterBaseStats.map((v, i) => v - currentBaseStats[i]),
+        deltaTotal: otherAfterBst - currentBst,
         afterBaseStats: otherAfterBaseStats,
       };
     });
@@ -80,8 +79,8 @@ export class RankUpPhase extends Phase {
       },
       options: [
         this.buildSelfOptionModel(currentForm, selfDeltaStats, selfDeltaTotal),
-        this.buildOtherOptionModel(otherSpeciesIds[0], otherPlans[0].deltaStats, otherPlans[0].deltaTotal),
-        this.buildOtherOptionModel(otherSpeciesIds[1], otherPlans[1].deltaStats, otherPlans[1].deltaTotal),
+        this.buildOtherOptionModel(otherSpeciesIds[0], otherPlans[0].deltaStats, otherPlans[0].deltaTotal, currentBaseStats, otherPlans[0].afterBaseStats),
+        this.buildOtherOptionModel(otherSpeciesIds[1], otherPlans[1].deltaStats, otherPlans[1].deltaTotal, currentBaseStats, otherPlans[1].afterBaseStats),
       ],
       onSelect: async (choiceIdx: integer) => {
         const idx = Math.max(0, Math.min(2, Math.floor(choiceIdx))) as 0 | 1 | 2;
@@ -229,7 +228,7 @@ export class RankUpPhase extends Phase {
     };
   }
 
-  private buildOtherOptionModel(otherSpeciesId: Species, deltaStats: integer[], deltaTotal: integer) {
+  private buildOtherOptionModel(otherSpeciesId: Species, deltaStats: integer[], deltaTotal: integer, sourceBaseStats: integer[], afterBaseStats: integer[]) {
     const uiTheme = (this.scene as BattleScene).uiTheme;
     const species = getPokemonSpecies(otherSpeciesId);
     const form = (species.forms && species.forms.length > 0 ? species.forms[0] : species) as unknown as PokemonSpeciesForm;
@@ -280,8 +279,8 @@ export class RankUpPhase extends Phase {
         kind: "other" as const,
         types: form.type2 !== null ? [form.type1, form.type2] : [form.type1],
         abilities: allAbilitiesForForm,
-        baseStats: [...form.baseStats],
-        afterStats: [...form.baseStats].map((v, i) => v + (deltaStats[i] ?? 0)),
+        baseStats: [...sourceBaseStats],
+        afterStats: [...afterBaseStats],
         deltaStats: [...deltaStats],
         description: desc,
         speciesName: species.name,

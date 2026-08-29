@@ -6,7 +6,7 @@ import {
     AddPokemonModifierType,
     PermaModifierType,
     AnyTmModifierType, AnyAbilityModifierType, AnyPassiveAbilityModifierType, PermaPartyAbilityModifierType,
-    MoveUpgradeModifierType,
+    MoveUpgradeModifierType, BerryModifierType,
     PokemonAltBuildModifierType,
     TypeSwitcherModifierType,
     AbilitySwitcherModifierType,
@@ -436,6 +436,58 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     const typeOptions = args[1] as ModifierTypeOption[];
     const shopTypeOptions = this.getShopTypeOptions();
+
+    if (shopTypeOptions && shopTypeOptions.length > 2) {
+      const isDynamic = (o: ModifierTypeOption) => {
+        const t = o?.type;
+        if (!t) return false;
+        return t instanceof TmModifierType
+          || t instanceof AnyTmModifierType
+          || t instanceof BerryModifierType
+          || t instanceof AnyAbilityModifierType
+          || t instanceof AnyPassiveAbilityModifierType
+          || t instanceof TypeSwitcherModifierType
+          || t instanceof RandomStatSwitcherModifierType
+          || t instanceof PokemonNatureChangeModifierType
+          || t instanceof StatSacrificeModifierType
+          || t instanceof TypeSacrificeModifierType
+          || t instanceof AbilitySacrificeModifierType;
+      };
+      const dynamics: ModifierTypeOption[] = [];
+      const statics: ModifierTypeOption[] = [];
+      for (const o of shopTypeOptions) {
+        (isDynamic(o) ? dynamics : statics).push(o);
+      }
+      const reordered: ModifierTypeOption[] = [];
+      let di = 0, si = 0;
+      let lastWasDynamic = false;
+      while (di < dynamics.length || si < statics.length) {
+        if (lastWasDynamic && si < statics.length) {
+          reordered.push(statics[si++]);
+          lastWasDynamic = false;
+        } else if (di < dynamics.length) {
+          reordered.push(dynamics[di++]);
+          lastWasDynamic = true;
+        } else {
+          reordered.push(statics[si++]);
+          lastWasDynamic = false;
+        }
+      }
+      for (let i = 1; i < reordered.length - 1; i++) {
+        if (isDynamic(reordered[i - 1]) && isDynamic(reordered[i]) && isDynamic(reordered[i + 1])) {
+          for (let j = reordered.length - 1; j > i + 1; j--) {
+            if (!isDynamic(reordered[j])) {
+              [reordered[i], reordered[j]] = [reordered[j], reordered[i]];
+              break;
+            }
+          }
+          break;
+        }
+      }
+      shopTypeOptions.length = 0;
+      shopTypeOptions.push(...reordered);
+    }
+
     const optionsYOffset = this.getMainOptionsYOffset(shopTypeOptions);
 
     for (let m = 0; m < typeOptions.length; m++) {
@@ -457,6 +509,14 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         option.setScale(0.525);
         this.scene.add.existing(option);
         this.modifierContainer.add(option);
+
+        const shopGroup = shopTypeOptions[m]?.type?.group;
+        if (shopGroup === "glitch" || shopGroup === "perma") {
+          const shopItem = (option as any).item;
+          if (shopItem) {
+            shopItem.setScale(0.4375, 0.4375);
+          }
+        }
 
         if (this.displayConfig?.customShopStrip) {
           option.setVisible(false);
@@ -5510,9 +5570,6 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
       return false;
     }
     const questType = type as QuestModifierType;
-    if (questType.config?.duration !== RunDuration.SINGLE_RUN) {
-      return false;
-    }
     if (!(this.scene as BattleScene).skillTreeModifierContext) {
       return false;
     }
@@ -10016,10 +10073,8 @@ export class ModifierOption extends Phaser.GameObjects.Container {
             this._questIconBG.setScale(0.5);
           }
         } else {
-          item = this.scene.add.sprite(0, 0, this.useSmitemsAtlas() ? "smitems" : "items", this.modifierTypeOption.type.iconImage);
-          if (this.useSmitemsAtlas()) {
-            item.setScale(0.5);
-          }
+          item = this.scene.add.sprite(0, 0, "smitems", "quest");
+          item.setScale(0.5);
         }
       } else {
         const useItemsAtlas = !this.useSmitemsAtlas();

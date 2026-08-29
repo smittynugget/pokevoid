@@ -326,7 +326,14 @@ export class EncounterPhase extends BattlePhase {
                 formChance = waveIndex >= 60 ? 70 : 50;
               }
               if (Utils.randSeedInt(100) < formChance) {
-                enemyPokemon.formIndex = Utils.randSeedInt(enemyPokemon.species.forms.length - 1) + 1;
+                const maxForm = enemyPokemon.species.forms.length - 1;
+                if (maxForm > 0) {
+                  enemyPokemon.formIndex = Utils.randSeedInt(maxForm) + 1;
+                  const spriteId = enemyPokemon.species.getSpriteId(false, enemyPokemon.formIndex);
+                  if (!this.scene.textures.exists(`pkmn__${spriteId}`)) {
+                    enemyPokemon.formIndex = 0;
+                  }
+                }
                 enemyPokemon.generateName();
                 enemyPokemon.updateScale();
                 if (enemyPokemon.isGlitchOrSmittyForm()) {
@@ -438,7 +445,8 @@ export class EncounterPhase extends BattlePhase {
             if (playerPokemon?.visible && this.scene.field.getIndex(playerPokemon) > -1) {
               this.scene.field.moveBelow(enemyPokemon as Pokemon, playerPokemon);
             }
-            if (enemyPokemon.species?.generation === 20) {
+            if (enemyPokemon.species?.generation === 20 ||
+              battle.battleSpec === BattleSpec.FINAL_BOSS) {
               enemyPokemon.setVisible(false);
               enemyPokemon.getSprite().setVisible(false);
               if (enemyPokemon.portalSprite) {
@@ -624,7 +632,8 @@ export class EncounterPhase extends BattlePhase {
     if (this.scene.currentBattle.battleType === BattleType.WILD) {
       const portalPromises: Promise<void>[] = [];
       enemyField.forEach(enemyPokemon => {
-        if (enemyPokemon.species?.generation === 20) {
+        if (enemyPokemon.species?.generation === 20 ||
+            this.scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS) {
           enemyPokemon.finalizeSummonSpriteLayout();
           if (enemyPokemon.portalSprite) {
             enemyPokemon.portalSprite.setAlpha(0);
@@ -894,6 +903,14 @@ export class EncounterPhase extends BattlePhase {
       }
     }
 
+    if (this.scene.debugGauntletAutoCycle && !this.scene.getParty()?.length) {
+      import("./command-phase").then(({ CommandPhase }) => {
+        this.scene.pushPhase(new CommandPhase(this.scene, 0));
+        handleTutorial(this.scene, Tutorial.Access_Menu).then(() => super.end());
+      });
+      return;
+    }
+
     const availablePartyMembers = this.scene.getParty().filter(p => p.isAllowedInBattle());
 
     const isTutorialPreStarter = this.scene.gameData.tutorialOnboardActive
@@ -950,27 +967,67 @@ export class EncounterPhase extends BattlePhase {
         this.doEncounterCommon(false);
         return true;
       }
-      const enemy = this.scene.getEnemyPokemon();
-      this.scene.ui.showText(this.getEncounterMessage(), null, () => {
-        const localizationKey = "battleSpecDialogue:encounter";
-        if (this.scene.ui.shouldSkipDialogue(localizationKey)) {
-          this.doEncounterCommon(false);
-        } else {
-          const count = 821093 + this.scene.gameData.gameStats.sessionsPlayed;
 
-          const ordinalUsed = !i18next.exists(localizationKey, {fallbackLng: []}) || i18next.resolvedLanguage === "en" ? i18next.t("battleSpecDialogue:key", { count: count, ordinal: true }) : "";
-          const cycleCount = count.toLocaleString() + ordinalUsed;
-          const genderIndex = this.scene.gameData.gender ?? PlayerGender.UNSET;
-          const genderStr = PlayerGender[genderIndex].toLowerCase();
-          const encounterDialogue = i18next.t(localizationKey, { context: genderStr, cycleCount: cycleCount });
-          if (!this.scene.gameData.getSeenDialogues()[localizationKey]) {
-            this.scene.gameData.saveSeenDialogue(localizationKey);
+      this.scene.ui.setMode(Mode.MESSAGE);
+      const enemyField = this.scene.getEnemyField();
+      const portalPromises: Promise<void>[] = [];
+
+      enemyField.forEach(enemyPokemon => {
+        if (enemyPokemon.species?.generation === 20 ||
+            this.scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS) {
+          enemyPokemon.finalizeSummonSpriteLayout();
+          if (enemyPokemon.portalSprite) {
+            enemyPokemon.portalSprite.setAlpha(0);
           }
-          this.scene.ui.showDialogue(encounterDialogue, enemy?.species.name, null, () => {
-            this.doEncounterCommon(false);
+          const p = playPortalSummonAnim(this.scene, enemyPokemon).then(() => {
+            enemyPokemon.setVisible(true);
+            enemyPokemon.getSprite().setVisible(true);
+            enemyPokemon.cry();
+            enemyPokemon.showInfo();
+            if (enemyPokemon.usesCustomFieldSpriteLayout()) {
+              enemyPokemon.finalizeSummonSpriteLayout();
+            }
+            if (enemyPokemon.isShiny()) {
+              this.scene.validateAchv(achvs.SEE_SHINY);
+            }
           });
+          portalPromises.push(p);
         }
-      }, 1500, true);
+      });
+
+      this.scene.updateFieldScale();
+      this.scene.currentBattle.started = true;
+
+      const showBossDialogue = () => {
+        const enemy = this.scene.getEnemyPokemon();
+        this.scene.ui.showText(this.getEncounterMessage(), null, () => {
+          const variantIndex = this.scene.currentBattle.finalBossDialogueVariant ?? 0;
+          const localizationKey = `battleSpecDialogue:encounter_${variantIndex}`;
+          if (this.scene.ui.shouldSkipDialogue(localizationKey)) {
+            this.end();
+          } else {
+            const count = this.scene.gameData.gameStats.sessionsPlayed;
+            const ordinalUsed = !i18next.exists(localizationKey, {fallbackLng: []}) || i18next.resolvedLanguage === "en" ? i18next.t("battleSpecDialogue:key", { count: count, ordinal: true }) : "";
+            const cycleCount = count.toLocaleString() + ordinalUsed;
+            const genderIndex = this.scene.gameData.gender ?? PlayerGender.UNSET;
+            const genderStr = PlayerGender[genderIndex].toLowerCase();
+            const encounterDialogue = i18next.t(localizationKey, { context: genderStr, cycleCount: cycleCount });
+            if (!this.scene.gameData.getSeenDialogues()[localizationKey]) {
+              this.scene.gameData.saveSeenDialogue(localizationKey);
+            }
+            this.scene.ui.showDialogue(encounterDialogue, enemy?.species.name, null, () => {
+              this.end();
+            });
+          }
+        }, 1500, true);
+      };
+
+      if (portalPromises.length > 0) {
+        Promise.all(portalPromises).then(() => showBossDialogue());
+      } else {
+        showBossDialogue();
+      }
+
       return true;
     }
     return false;

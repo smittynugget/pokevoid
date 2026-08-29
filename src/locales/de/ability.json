@@ -2929,7 +2929,7 @@
   },
   "cursedPotential": {
     "name": "Verfluchtes Potential",
-    "description": "Beim Einwechseln steigen alle Werte des Nutzers um eine Stufe, Angriff um zwei zusätzliche Stufen (insgesamt drei). Am Ende jeder Runde sinken zufällig ein bis drei Werte um eine Stufe oder der Nutzer verliert 1/4 seiner max. KP. Der Nutzer kann nicht ausgewechselt werden."
+    "description": "Beim Einwechseln steigen alle Werte des Nutzers um eine Stufe. Am Ende jeder Runde sinken zufällig zwei bis drei Werte um eine Stufe oder der Nutzer verliert 1/4 seiner max. KP. Der Nutzer kann nicht ausgewechselt werden."
   },
   "cyberneticControl": {
     "name": "Kybernetische Kontrolle",
@@ -3085,7 +3085,7 @@
   },
   "fatedRevival": {
     "name": "Schicksalhafte Belebung",
-    "description": "Wenn der Nutzer besiegt wird, belebt er ein zufälliges besiegtes Feen-Pokémon im Team mit 50% KP wieder."
+    "description": "Wenn der Nutzer besiegt wird, belebt er ein zufälliges besiegtes Feen-Pokémon im Team (außer gleicher Spezies) mit 50% KP wieder. Dieser Effekt kann nur einmal pro Kampf ausgelöst werden."
   },
   "finalBlade": {
     "name": "Letzte Klinge",
@@ -3437,7 +3437,7 @@
   },
   "portalBeast": {
     "name": "Portalbestie",
-    "description": "Immer wenn ein gegnerisches Pokémon eingewechselt wird, erhält dieses Pokémon +1 auf drei zufällige Statuswerte. Beim Auswechseln stellt es 25% seiner maximalen KP wieder her."
+    "description": "Immer wenn ein gegnerisches Pokémon eingewechselt wird, erhält dieses Pokémon +1 auf zwei zufällige Statuswerte. Beim Auswechseln stellt es 25% seiner maximalen KP wieder her."
   },
   "powderKing": {
     "name": "Pulverkönig",

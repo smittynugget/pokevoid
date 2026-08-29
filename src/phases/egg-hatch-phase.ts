@@ -496,7 +496,7 @@ export class EggHatchPhase extends Phase {
               const isLastEgg = !this.scene.findPhase((p) => p instanceof EggHatchPhase && p !== this);
 
               if (isLastEgg) {
-                if (!this.scene.gameData.tempHatchedPokemon) {
+                if (this.scene.gameData.tempHatchedPokemon == null) {
                   const hatchedPokemon: PlayerPokemon[] = [this.pokemon];
 
                   const pendingPhases: Phase[] = [];
@@ -666,68 +666,6 @@ export class EggHatchPhase extends Phase {
             this.scene.recordRunEndSummaryHatch(this.pokemon);
             this.scene.gameData.setEggMoveUnlocked(this.pokemon.species, this.eggMoveIndex).then(() => {
               this.scene.ui.showText("", 0);
-
-              if (this.scene.gameData.tempHatchedPokemon) {
-                this.scene.gameData.tempHatchedPokemon.push(this.pokemon);
-              }
-
-              const isLastEgg = !this.scene.findPhase((p) => p instanceof EggHatchPhase && p !== this);
-
-              if (isLastEgg) {
-                const hatchedPokemon = this.scene.gameData.tempHatchedPokemon || [this.pokemon];
-
-                const finalize = () => {
-                  this.scene.gameData.tempHatchedPokemon = null;
-                  this.end();
-                };
-
-                if (hatchedPokemon.length > 0) {
-                  const eggStarterCallback: EggStarterSelectCallback = (selectedPokemon: PlayerPokemon | null, cancelled: boolean) => {
-                    if (selectedPokemon && !cancelled) {
-                      const party = this.scene.getParty();
-                      if (party.length < 6) {
-                        party.push(selectedPokemon);
-                        this.scene.updateModifiers(true);
-                        finalize();
-                      } else {
-                        const swapTarget = party.find(p => !p.isAllowedInBattle());
-                        if (swapTarget) {
-                          const swapIndex = party.indexOf(swapTarget);
-                          if (swapIndex > -1) {
-                            party[swapIndex] = selectedPokemon;
-                            this.scene.updateModifiers(true);
-                            finalize();
-                          } else {
-                            finalize();
-                          }
-                        } else {
-                          this.scene.ui.setOverlayMode(Mode.CONFIRM,
-                            () => {
-                              this.scene.ui.setMode(Mode.PARTY, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-                                (slotIndex: number) => {
-                                  if (slotIndex >= 0 && slotIndex < party.length) {
-                                    party[slotIndex] = selectedPokemon;
-                                    this.scene.updateModifiers(true);
-                                  }
-                                  finalize();
-                                }
-                              );
-                            },
-                            () => {
-                              finalize();
-                            }
-                          );
-                          return;
-                        }
-                      }
-                    } else {
-                      finalize();
-                    }
-                  };
-
-                  this.scene.ui.setMode(Mode.EGG_STARTER_SELECT, hatchedPokemon, eggStarterCallback);
-                }
-              }
 
               this.end();
             });

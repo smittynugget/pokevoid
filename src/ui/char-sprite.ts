@@ -1,6 +1,7 @@
 import { getTypeRgb } from "#app/data/type.ts";
 import { Type } from "#app/data/type.ts";
 import { TrainerType } from "#app/enums/trainer-type.ts";
+import { BattleSpec } from "#app/enums/battle-spec";
 import BattleScene from "../battle-scene";
 import * as Utils from "../utils";
 import { applyTrainerDualColorAltBuild, getTrainerSpriteCluster4 } from "../utils/trainer-dualcolor-recolor";
@@ -73,13 +74,15 @@ export default class CharSprite extends Phaser.GameObjects.Container {
 
       scene.fieldUI.bringToTop(this);
 
-      if ((scene.gameMode.isNightmare || scene.currentBattle?.trainer?.isCorrupted) && !key.includes('smitty_trainers') && !key.includes('smitom')) {
+      if ((scene.gameMode.isNightmare || scene.currentBattle?.trainer?.isCorrupted ||
+        scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS) && !key.includes('smitty_trainers') && !key.includes('smitom')) {
 
         this.sprite.setPipeline(scene.spritePipeline, {tone: [0.0, 0.0, 0.0, 0.0],
     hasShadow: false});
         this.sprite.setPipelineData("ignoreFieldPos", true);
 
-        const isCorrupted = !!scene.currentBattle?.trainer?.isCorrupted;
+        const isCorrupted = !!scene.currentBattle?.trainer?.isCorrupted ||
+          scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS;
         const battleTrainer = scene.currentBattle?.trainer;
         const battleSprite = battleTrainer?.getSprites?.()?.[0];
         const srcData = battleSprite?.pipelineData;
@@ -127,7 +130,9 @@ export default class CharSprite extends Phaser.GameObjects.Container {
       this.sprite.setPipeline(scene.spritePipeline, {tone: [0.0, 0.0, 0.0, 0.0], hasShadow: false});
     }
 
-    applyTrainerDualColorAltBuild(scene, this.sprite, !!scene.currentBattle?.trainer?.isCorrupted);
+    applyTrainerDualColorAltBuild(scene, this.sprite,
+      !!scene.currentBattle?.trainer?.isCorrupted ||
+      scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS);
 
     if (scene.gameMode.isNightmare && (key.includes('smitty_trainers') || scene.currentBattle?.trainer?.isCorrupted)) {
       if(Utils.randSeedInt(0, 100) < 35) {
@@ -208,7 +213,9 @@ export default class CharSprite extends Phaser.GameObjects.Container {
           this.transitionSprite.setPipelineData(baseColor ? { teraColor, baseColor } : { teraColor });
         }
       }
-      applyTrainerDualColorAltBuild(scene, this.transitionSprite, !!scene.currentBattle?.trainer?.isCorrupted);
+      applyTrainerDualColorAltBuild(scene, this.transitionSprite,
+        !!scene.currentBattle?.trainer?.isCorrupted ||
+        scene.currentBattle?.battleSpec === BattleSpec.FINAL_BOSS);
 
       this.transitionSprite.setAlpha(0);
       this.transitionSprite.setVisible(true);
@@ -223,7 +230,9 @@ export default class CharSprite extends Phaser.GameObjects.Container {
             this.sprite.setFrame(frames[frames.length - 1]);
           }
           this.sprite.setPipelineData("ignoreFieldPos", true);
-          applyTrainerDualColorAltBuild(this.scene as BattleScene, this.sprite, !!(this.scene as BattleScene).currentBattle?.trainer?.isCorrupted);
+          applyTrainerDualColorAltBuild(this.scene as BattleScene, this.sprite,
+            !!(this.scene as BattleScene).currentBattle?.trainer?.isCorrupted ||
+            (this.scene as BattleScene).currentBattle?.battleSpec === BattleSpec.FINAL_BOSS);
           this.transitionSprite.setVisible(false);
           resolve();
         }

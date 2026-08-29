@@ -176,6 +176,11 @@ export class PermaModifiers {
         questId <= QuestUnlockables.MISSINGNO_SMITTY_QUEST;
   }
 
+  public isStatBountyQuest(questId: QuestUnlockables): boolean {
+    return questId >= QuestUnlockables.CRITICAL_HIT_BOUNTY_QUEST &&
+        questId <= QuestUnlockables.DEFEAT_CORRUPTED_BOUNTY_QUEST;
+  }
+
   public isSkillTreeBountyQuest(modifier: PermaRunQuestModifier): boolean {
     return modifier.skillTreeBounty === true;
   }

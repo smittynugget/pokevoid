@@ -421,30 +421,30 @@
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "Magikarp New Moves",
-    "task": "Defeat 100 Pokemon with Magikarp"
+    "task": "Defeat 20 Pokemon with Magikarp"
   },
   "DITTO_NEW_MOVES_QUEST": {
     "name": "Ditto New Moves",
-    "task": "Defeat 100 Pokemon with Ditto"
+    "task": "Defeat 20 Pokemon with Ditto"
   },
   "WOBBUFFET_NEW_MOVES_QUEST": {
     "name": "Wobbuffet New Moves",
-    "task": "Defeat 100 Pokemon with Wobbuffet"
+    "task": "Defeat 20 Pokemon with Wobbuffet"
   },
   "SMEARGLE_NEW_MOVES_QUEST": {
     "name": "Smeargle New Moves",
-    "task": "Defeat 100 Pokemon with Smeargle"
+    "task": "Defeat 20 Pokemon with Smeargle"
   },
   "UNOWN_NEW_MOVES_QUEST": {
     "name": "Unown New Moves",
-    "task": "Defeat 100 Pokemon with Unown"
+    "task": "Defeat 20 Pokemon with Unown"
   },
   "TYROGUE_NEW_MOVES_QUEST": {
     "name": "Tyrogue New Moves",
-    "task": "Defeat 100 Pokemon with Tyrogue"
+    "task": "Defeat 20 Pokemon with Tyrogue"
   },
   "METAPOD_NEW_MOVES_QUEST": {
     "name": "Metapod New Moves",
-    "task": "Defeat 100 Pokemon with Metapod"
+    "task": "Defeat 20 Pokemon with Metapod"
   }
 }

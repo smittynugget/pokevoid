@@ -137,5 +137,7 @@
   "veryRare": "매우 레어",
   "animationLoad": "애니메이션 부하",
   "animationLite": "가벼움",
-  "animationFull": "풀 (고부하)"
+  "animationFull": "풀 (고부하)",
+  "shopNoDuplicates": "상점 중복 비활성화",
+  "shopShowUniqueNames": "상점 고유 이름 표시"
 }

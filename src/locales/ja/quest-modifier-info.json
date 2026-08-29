@@ -421,30 +421,30 @@
   },
   "MAGIKARP_NEW_MOVES_QUEST": {
     "name": "コイキングの新技",
-    "task": "コイキングで100体のポケモンを倒す"
+    "task": "コイキングで20体のポケモンを倒す"
   },
   "DITTO_NEW_MOVES_QUEST": {
     "name": "メタモンの新技",
-    "task": "メタモンで100体のポケモンを倒す"
+    "task": "メタモンで20体のポケモンを倒す"
   },
   "WOBBUFFET_NEW_MOVES_QUEST": {
     "name": "ソーナンスの新技",
-    "task": "ソーナンスで100体のポケモンを倒す"
+    "task": "ソーナンスで20体のポケモンを倒す"
   },
   "SMEARGLE_NEW_MOVES_QUEST": {
     "name": "ドーブルの新技",
-    "task": "ドーブルで100体のポケモンを倒す"
+    "task": "ドーブルで20体のポケモンを倒す"
   },
   "UNOWN_NEW_MOVES_QUEST": {
     "name": "アンノーンの新技",
-    "task": "アンノーンで100体のポケモンを倒す"
+    "task": "アンノーンで20体のポケモンを倒す"
   },
   "TYROGUE_NEW_MOVES_QUEST": {
     "name": "バルキーの新技",
-    "task": "バルキーで100体のポケモンを倒す"
+    "task": "バルキーで20体のポケモンを倒す"
   },
   "METAPOD_NEW_MOVES_QUEST": {
     "name": "トランセルの新技",
-    "task": "トランセルで100体のポケモンを倒す"
+    "task": "トランセルで20体のポケモンを倒す"
   }
 }
