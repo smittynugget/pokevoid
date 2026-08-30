@@ -1615,6 +1615,7 @@ export class MultiHitAttr extends MoveAttr {
   apply(user: Pokemon, target: Pokemon, move: Move, args: any[]): boolean {
     const hitType = new Utils.NumberHolder(this.multiHitType);
       applyMoveAttrs(ChangeMultiHitTypeAttr, user, target, move, hitType);
+      applyAbAttrs(OctoHitMinMaxAbAttr, user, null, false, hitType);
     this.multiHitType = hitType.value;
 
     (args[0] as Utils.NumberHolder).value = this.getHitCount(user, target);

@@ -536,6 +536,11 @@
         "title": "La Modalità Viaggio attende!",
         "1": "Hai sbloccato la Missione Cattura Starter — il tuo biglietto per la Modalità Viaggio! Vai all’OmegaShop per attivarla.",
         "2": "Una volta attivata, cattura 5 Pokémon in qualsiasi partita per completarla e sbloccare la Modalità Viaggio!"
+      },
+      "voidexWelcome": {
+        "title": "Colleziona il Vuoto!",
+        "1": "Tutte le forme sbloccate, tutte le info su ogni Pokémon — facilmente accessibili, proprio qui. Un segreto: quel numero in alto a destra ti dice quanto hai completato. MA INOLTRE premendo C puoi vedere subito i tuoi altri sblocchi e collezioni — GLITCH, SMITTY, FUSIONI E SHINIES! E ANCHE i tuoi progressi finora — quanti rivali devi sconfiggere o quanti Smittys hai cacciato! Tutto a portata di mano.",
+        "2": "Vorrei avere le dita. Beh, almeno ho i consigli — giusto?!"
       }
     }
   }

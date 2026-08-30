@@ -535,6 +535,11 @@
         "title": "O Modo Jornada espera!",
         "1": "Você desbloqueou a Missão de Captura Inicial — seu ingresso para o Modo Jornada! Vá à OmegaLoja para ativá-la.",
         "2": "Uma vez ativada, capture 5 Pokémon em quaisquer partidas para completá-la e desbloquear o Modo Jornada!"
+      },
+      "voidexWelcome": {
+        "title": "Colecione o Vazio!",
+        "1": "Todas as formas desbloqueadas, todas as informações de cada Pokémon — facilmente acessíveis, bem aqui. Um segredo: o número no canto superior direito mostra quanto você completou. MAS ALÉM DISSO pressionando C você pode ver imediatamente seus outros desbloqueios e coleções — GLITCH, SMITTY, FUSÕES E SHINIES! E ATÉ seu progresso até agora — quantos rivais precisa derrotar ou quantos Smittys caçou! Tudo na ponta dos dedos.",
+        "2": "Queria ter dedos. Bem, pelo menos tenho dicas — não é?!"
       }
     }
   }

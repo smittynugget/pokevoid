@@ -535,6 +535,11 @@
         "title": "¡El Modo Viaje espera!",
         "1": "¡Has desbloqueado la Misión de Captura Inicial — tu boleto al Modo Viaje! Ve a la TiendaOmega para activarla.",
         "2": "Una vez activada, captura 5 Pokémon en cualquier partida para completarla y desbloquear el Modo Viaje!"
+      },
+      "voidexWelcome": {
+        "title": "¡Colecciona el Vacío!",
+        "1": "Todas las formas desbloqueadas, toda la info de cada Pokémon — fácilmente accesible, justo aquí. Un secreto: ese número arriba a la derecha te dice cuánto has completado. ¡PERO ADEMÁS presionando C puedes ver inmediatamente tus otros desbloqueos y colecciones — GLITCH, SMITTY, FUSIONES Y SHINIES! ¡Y TAMBIÉN tu progreso hasta ahora — como cuántos rivales necesitas derrotar o cuántos Smittys has cazado! Todo al alcance de tus dedos.",
+        "2": "Ojalá tuviera dedos. Bueno, al menos tengo consejos — ¿verdad?!"
       }
     }
   }

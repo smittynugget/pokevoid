@@ -74,14 +74,14 @@ export class BountyRewardPhase extends Phase {
       ];
       return types[Utils.randSeedInt(types.length)];
     }
-    const roll = Utils.randSeedInt(1000);
-    if (roll < 5) {
+    const roll = Utils.randSeedInt(100);
+    if (roll < 23) {
       return BountyRewardType.DUELMON_RANDOM_MOVE;
     }
-    if (roll < 10) {
+    if (roll < 46) {
       return BountyRewardType.RANDOM_RANK_UP;
     }
-    if (roll < 15) {
+    if (roll < 70) {
       return BountyRewardType.MASTERBALL_RARITY_SELECT;
     }
     return BountyRewardType.STANDARD_MODIFIER_SELECT;

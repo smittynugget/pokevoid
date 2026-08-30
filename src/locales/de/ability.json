@@ -2929,7 +2929,7 @@
   },
   "cursedPotential": {
     "name": "Verfluchtes Potential",
-    "description": "Beim Einwechseln steigen alle Werte des Nutzers um eine Stufe. Am Ende jeder Runde sinken zufällig zwei bis drei Werte um eine Stufe oder der Nutzer verliert 1/4 seiner max. KP. Der Nutzer kann nicht ausgewechselt werden."
+    "description": "Beim Einwechseln steigen alle Werte des Nutzers um eine Stufe, wobei ein zufälliger Wert um eine zusätzliche Stufe steigt. Am Ende jeder Runde sinken zufällig zwei bis drei Werte um eine Stufe oder der Nutzer verliert 1/4 seiner max. KP. Der Nutzer kann nicht ausgewechselt werden."
   },
   "cyberneticControl": {
     "name": "Kybernetische Kontrolle",

@@ -333,6 +333,15 @@ export class UiInputs {
       });
     }
 
+    if (Overrides.MODIFIER_SELECT_DEBUG_OVERRIDE) {
+      this.scene.input.keyboard?.on("keydown-P", (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        if (this.scene.ui?.getMode() === Mode.TITLE) {
+          this.launchDuelmonScreenshotDebug();
+        }
+      });
+    }
+
     if (Overrides.FORCE_BOUNTY_COMPLETION_OVERRIDE) {
       this.scene.input.keyboard?.on("keydown-NINE", (event: KeyboardEvent) => {
         if (event.repeat) return;
@@ -2107,6 +2116,85 @@ export class UiInputs {
       this.scene.unshiftPhase(currentPhase);
     }
     this.scene.shiftPhase();
+  }
+
+  private screenshotGroupIndex = 0;
+
+  private launchDuelmonScreenshotDebug(): void {
+    const scene = this.scene;
+
+    scene.clearAllPhaseQueues();
+    scene.ui.resetModeChain();
+    scene.ui.clearText();
+    scene.ui.fadeIn(250);
+
+    scene.gameMode = getGameMode(GameModes.CHAOS_ROGUE_FTL);
+    scene.sessionSlotId = -1;
+
+    if (scene.gameData.gender === PlayerGender.UNSET) {
+      scene.gameData.gender = PlayerGender.MALE;
+    }
+
+    const party = scene.getParty();
+    while (party.length > 0) party.pop()?.destroy();
+
+    scene.currentBattle = null as any;
+    scene.newArena(Biome.FOREST);
+    scene.arena.init();
+    scene.money = 999999;
+    scene.duelmonsEnabledForRun = true;
+
+    const groups: Species[][] = [
+      [
+        Species.DESPAIR_FROM_THE_DARK,
+        Species.GAGAGIGO,
+        Species.JUNK_WARRIOR,
+        Species.ANCIENT_GEAR_GOLEM,
+        Species.CYBER_SAURUS,
+        Species.HYPER_HAMMERHEAD,
+      ],
+      [
+        Species.MASKED_BEAST_DES_GARDIUS,
+        Species.MAGIKURIBOH,
+        Species.EXODIA_THE_FORBIDDEN_EVOLUTION,
+        Species.GREAT_WHITE,
+        Species.LAVA_GOLEM,
+        Species.WATER_DRAGON,
+      ],
+      [
+        Species.BLACK_TYRANNO,
+        Species.OBELISK_THE_TORMENTOR,
+        Species.EXODIA_FULL_BODY,
+        Species.BLUE_EYES_WHITE_DRAGON,
+        Species.KURIBOH,
+        Species.RELINQUISHED,
+      ],
+      [
+        Species.TOON_MASKED_SORCERER,
+        Species.HEADLESS_KNIGHT,
+        Species.JINZO_THE_MACHINE_MENACE,
+        Species.BLUE_EYES_ULTIMATE_DRAGON,
+        Species.DARK_MAGICIAN,
+        Species.DARK_NECROFEAR,
+      ],
+    ];
+
+    const speciesList = groups[this.screenshotGroupIndex % groups.length];
+    this.screenshotGroupIndex = (this.screenshotGroupIndex + 1) % groups.length;
+
+    for (const speciesId of speciesList) {
+      const pokemon = scene.addPlayerPokemon(getPokemonSpecies(speciesId), 50);
+      pokemon.setVisible(false);
+      party.push(pokemon);
+    }
+
+    const randomWave = 5 + Math.floor(Math.random() * 45);
+    scene.newBattle(randomWave, BattleType.WILD);
+
+    Promise.all(party.map(p => p.loadAssets())).then(() => {
+      scene.unshiftPhase(new EncounterPhase(scene, false));
+      scene.shiftPhase();
+    });
   }
 
 }

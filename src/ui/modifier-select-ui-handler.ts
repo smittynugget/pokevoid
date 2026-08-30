@@ -1419,54 +1419,9 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         const rarity = this.getModifierRarity(type);
         const title = type.name;
         const subtitle = this.getRarityText(rarity);
-        const uiTheme = this.scene.uiTheme;
         const stat1 = (type as any).stat1 as Stat;
         const stat2 = (type as any).stat2 as Stat;
-        const stat1Name = getStatName(stat1, true);
-        const stat2Name = getStatName(stat2, true);
-        const descText = i18next.t("modifierType:ModifierType.RandomStatSwitcherModifierType.description", {
-          stat1: stat1Name,
-          stat2: stat2Name,
-          defaultValue: `Swaps ${stat1Name} and ${stat2Name}`
-        });
-        const party = this.scene.getParty() as PlayerPokemon[];
-        const statSwSections: { label?: string; body: string; embeddedContainer?: Phaser.GameObjects.Container }[] = [];
-        statSwSections.push({ label: i18next.t("modifierSelectUiHandler:tooltipDescriptionHeader", { defaultValue: "DESCRIPTION" }), body: getBBCodeFrag(descText, TextStyle.WINDOW, uiTheme) });
-
-        const recommendations = this.getStatSwitcherRecommendations(party, stat1, stat2);
-        const recommendedMap = new Map<number, string>();
-        const recommendedIndices = new Set<number>();
-        for (const r of recommendations) {
-          recommendedMap.set(r.partyIndex, r.roleLabel);
-          recommendedIndices.add(r.partyIndex);
-        }
-        for (let pi = 0; pi < party.length; pi++) {
-          if (!recommendedIndices.has(pi)) {
-            const pokemon = party[pi] as PlayerPokemon;
-            const roleLabel = this.getComprehensiveRoleLabel(pokemon, stat1, stat1, stat2);
-            recommendedMap.set(pi, roleLabel);
-          }
-        }
-
-        const pageSize = 1;
-        const totalPages = Math.ceil(party.length / pageSize);
-        const page = Math.min(this.tooltipSectionPageIndex, totalPages - 1);
-        const startIdx = page * pageSize;
-
-        const teamStatsContainer = PokemonBattleTooltipUtils.buildTeamStatsContainer(
-          this.scene,
-          party,
-          { hideMoves: true, swapStats: [stat1, stat2], tooltipWidth: 120, recommendedMap, displaySlice: [startIdx, pageSize], showBstTotal: true }
-        );
-        const headerLabel = totalPages > 1
-          ? `${i18next.t("modifierSelectUiHandler:tooltipPreviewHeader", { defaultValue: "PREVIEW" })} (${page + 1}/${totalPages})`
-          : i18next.t("modifierSelectUiHandler:tooltipPreviewHeader", { defaultValue: "PREVIEW" });
-        statSwSections.push({ label: headerLabel, body: "", embeddedContainer: teamStatsContainer });
-        if (totalPages > 1) {
-          const navRow = this.buildTooltipNavRow(page, totalPages);
-          statSwSections.push({ body: "", embeddedContainer: navRow });
-        }
-
+        const statSwSections = this.generateStatSwitcherTooltipSections(stat1, stat2);
         const statSwHint = type.group === "glitch" ? i18next.t("modifierType:common.glitchPieceCost") : undefined;
         this.showModifierTooltip(title, subtitle, "", rarity, false, undefined, false, statSwSections, statSwHint);
       }
@@ -5332,6 +5287,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
     let sections: { label?: string; body?: string; embeddedContainer?: Phaser.GameObjects.Container }[] | null = null;
     if (type instanceof PokemonNatureChangeModifierType) {
       sections = this.generateMintTooltipSections(type.nature);
+    } else if (type instanceof RandomStatSwitcherModifierType) {
+      const stat1 = (type as any).stat1 as Stat;
+      const stat2 = (type as any).stat2 as Stat;
+      sections = this.generateStatSwitcherTooltipSections(stat1, stat2);
     } else if (type instanceof ChampionPokemonStatBoosterModifierType) {
       const pregenArgs = type.getPregenArgs?.() as [string, Stat[], number?, Type[]?] | undefined;
       const stats = pregenArgs?.[1] ?? [];
@@ -9067,6 +9026,57 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         body: "",
         embeddedContainer: teamStatsContainer
       });
+      if (totalPages > 1) {
+        const navRow = this.buildTooltipNavRow(page, totalPages);
+        sections.push({ body: "", embeddedContainer: navRow });
+      }
+    }
+    return sections;
+  }
+
+  private generateStatSwitcherTooltipSections(stat1: Stat, stat2: Stat): { label?: string; body: string; embeddedContainer?: Phaser.GameObjects.Container }[] {
+    const sections: { label?: string; body: string; embeddedContainer?: Phaser.GameObjects.Container }[] = [];
+    const uiTheme = this.scene.uiTheme;
+    const stat1Name = getStatName(stat1, true);
+    const stat2Name = getStatName(stat2, true);
+    const descText = i18next.t("modifierType:ModifierType.RandomStatSwitcherModifierType.description", {
+      stat1: stat1Name,
+      stat2: stat2Name,
+      defaultValue: `Swaps ${stat1Name} and ${stat2Name}`
+    });
+    sections.push({
+      label: i18next.t("modifierSelectUiHandler:tooltipDescriptionHeader", { defaultValue: "DESCRIPTION" }),
+      body: getBBCodeFrag(descText, TextStyle.WINDOW, uiTheme)
+    });
+    const party = this.scene.getParty() as PlayerPokemon[];
+    if (party.length > 0) {
+      const recommendations = this.getStatSwitcherRecommendations(party, stat1, stat2);
+      const recommendedMap = new Map<number, string>();
+      const recommendedIndices = new Set<number>();
+      for (const r of recommendations) {
+        recommendedMap.set(r.partyIndex, r.roleLabel);
+        recommendedIndices.add(r.partyIndex);
+      }
+      for (let pi = 0; pi < party.length; pi++) {
+        if (!recommendedIndices.has(pi)) {
+          const pokemon = party[pi] as PlayerPokemon;
+          const roleLabel = this.getComprehensiveRoleLabel(pokemon, stat1, stat1, stat2);
+          recommendedMap.set(pi, roleLabel);
+        }
+      }
+      const pageSize = 1;
+      const totalPages = Math.ceil(party.length / pageSize);
+      const page = Math.min(this.tooltipSectionPageIndex, totalPages - 1);
+      const startIdx = page * pageSize;
+      const teamStatsContainer = PokemonBattleTooltipUtils.buildTeamStatsContainer(
+        this.scene,
+        party,
+        { hideMoves: true, swapStats: [stat1, stat2], tooltipWidth: 120, recommendedMap, displaySlice: [startIdx, pageSize], showBstTotal: true }
+      );
+      const headerLabel = totalPages > 1
+        ? `${i18next.t("modifierSelectUiHandler:tooltipPreviewHeader", { defaultValue: "PREVIEW" })} (${page + 1}/${totalPages})`
+        : i18next.t("modifierSelectUiHandler:tooltipPreviewHeader", { defaultValue: "PREVIEW" });
+      sections.push({ label: headerLabel, body: "", embeddedContainer: teamStatsContainer });
       if (totalPages > 1) {
         const navRow = this.buildTooltipNavRow(page, totalPages);
         sections.push({ body: "", embeddedContainer: navRow });

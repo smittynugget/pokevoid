@@ -2929,7 +2929,7 @@
   },
   "cursedPotential": {
     "name": "Potencial Maldito",
-    "description": "Al entrar, todas las estadísticas del usuario suben un nivel. Al final de cada turno, aleatoriamente baja de dos a tres estadísticas un nivel o pierde 1/4 de sus PS máximos. No puede retirarse."
+    "description": "Al entrar, todas las estadísticas del usuario suben un nivel, y una estadística aleatoria sube un nivel adicional. Al final de cada turno, aleatoriamente baja de dos a tres estadísticas un nivel o pierde 1/4 de sus PS máximos. No puede retirarse."
   },
   "cyberneticControl": {
     "name": "Control Cibernético",

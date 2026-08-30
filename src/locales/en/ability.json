@@ -617,7 +617,7 @@
   },
   "cursedPotential": {
     "name": "Cursed Potential",
-    "description": "Upon entry, the user raises all of its stats by one stage. At the end of each turn, it randomly either lowers two to three random stats by one stage or loses 1/4 of its max HP. The user cannot switch out."
+    "description": "Upon entry, the user raises all of its stats by one stage, with one random stat raised by an additional stage. At the end of each turn, it randomly either lowers two to three random stats by one stage or loses 1/4 of its max HP. The user cannot switch out."
   },
   "cursedShell": {
     "name": "Cursed Shell",

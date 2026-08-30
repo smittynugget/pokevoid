@@ -2421,7 +2421,7 @@ export class PokemonFormChangeItemModifier extends PokemonHeldItemModifier {
         }
 
         if (!pokemon.scene.gameData.tutorialOnboardActive) {
-            if(isSmittyItem || this.formChangeItem >= FormChangeItem.GLITCHI_GLITCHI_FRUIT && this.formChangeItem <= FormChangeItem.GLITCH_MASTER_PARTS) {
+            if(ret && (isSmittyItem || this.formChangeItem >= FormChangeItem.GLITCHI_GLITCHI_FRUIT && this.formChangeItem <= FormChangeItem.GLITCH_MASTER_PARTS)) {
                 reduceGlitchPieceModifier(pokemon, 5);
             }
         }

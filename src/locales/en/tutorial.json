@@ -761,6 +761,11 @@
         "title": "Journey Mode Awaits!",
         "1": "You've unlocked the Starter Catch Quest — your ticket to Journey Mode! Head to the OmegaShop to activate it.",
         "2": "Once activated, catch 5 Pokémon across any runs to complete the quest and unlock Journey Mode!"
+      },
+      "voidexWelcome": {
+        "title": "Collect the Void!",
+        "1": "All your forms unlocked, all info on every Pokémon — easily accessible, right here. Here's a secret: that number in the top right tells you how much you've completed. BUT ALSO by pressing C you can immediately see your other unlocks and collections — GLITCH, SMITTY, FUSIONS AND SHINIES! AND even your progress thus far — like how many rivals you need to defeat or even how many Smittys you've hunted thus far! It's the works, all at your fingertips.",
+        "2": "I wish I had fingers. Well, at least I have tips — amiright!"
       }
     }
   }

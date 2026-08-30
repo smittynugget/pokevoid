@@ -535,6 +535,11 @@
           "title": "Reisemodus wartet!",
           "1": "Du hast die Starter-Fang-Quest freigeschaltet — dein Ticket zum Reisemodus! Geh zum OmegaShop, um sie zu aktivieren.",
           "2": "Sobald aktiviert, fange 5 Pokémon in beliebigen Runs, um die Quest abzuschließen und den Reisemodus freizuschalten!"
+        },
+        "voidexWelcome": {
+          "title": "Sammle die Leere!",
+          "1": "Alle freigeschalteten Formen, alle Infos zu jedem Pokémon — leicht zugänglich, direkt hier. Ein Geheimnis: Die Zahl oben rechts zeigt dir, wie viel du bereits abgeschlossen hast. UND AUSSERDEM kannst du mit C sofort deine anderen Freischaltungen und Sammlungen sehen — GLITCH, SMITTY, FUSIONEN UND SHINIES! UND sogar deinen bisherigen Fortschritt — wie viele Rivalen du noch besiegen musst oder wie viele Smittys du bisher gejagt hast! Alles auf einen Blick, direkt griffbereit.",
+          "2": "Ich wünschte, ich hätte Finger. Naja, wenigstens habe ich Tipps — stimmt's?!"
         }
       }
     }

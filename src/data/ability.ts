@@ -12598,6 +12598,9 @@ export class OctoHitMinMaxAbAttr extends AbAttr {
     if(simulated) {
       return false;
     }
+    if ((args[0] as Utils.IntegerHolder).value !== MultiHitType._2_TO_5) {
+      return false;
+    }
     (args[0] as Utils.IntegerHolder).value = MultiHitType._4_TO_8;
     return true;
   }
@@ -16436,6 +16439,7 @@ export function initAbilities() {
 
       new Ability(Abilities.CURSED_POTENTIAL, 9)
           .attr(PostSummonStatBoostAbAttr, 1)
+          .attr(PostSummonStatChangeAbAttr, BattleStat.RAND, 1, true)
           .attr(PostTurnCursedPotentialRollAbAttr)
           .attr(BlockSwitchCommandAbAttr),
 

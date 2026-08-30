@@ -21,6 +21,8 @@ import { AddPokemonModifierType } from "../modifier/modifier-type";
 import UiHandler from "./ui-handler";
 import { Mode } from "./mode";
 import ModifierSelectUiHandler from "./modifier-select-ui-handler";
+import { SmitomTipConfig } from "./smitom-tip-ui-handler";
+import Overrides from "#app/overrides";
 import { getPokedexMethodDescription } from "./pokedex-method-description";
 import { addBBCodeTextObject, addTextInputObject, addTextObject, TextStyle } from "./text";
 import * as Utils from "../utils";
@@ -148,6 +150,7 @@ type RowView = {
 export default class VoidexPrelistUiHandler extends UiHandler {
   private static readonly NAME_DEFAULT_SCALE = 0.1666666667;
   private static readonly NAME_MAX_WIDTH = 44;
+  private static smitomVoidexDebugShown = false;
 
   private root: Phaser.GameObjects.Container;
   private list: Phaser.GameObjects.Container;
@@ -505,7 +508,37 @@ export default class VoidexPrelistUiHandler extends UiHandler {
     };
     this.scene.input.on("wheel", this._wheelHandler);
 
+    this.triggerSmitomVoidexTipIfNeeded();
+
     return true;
+  }
+
+  private triggerSmitomVoidexTipIfNeeded(): void {
+    const scene = this.scene as BattleScene;
+    const flags = scene.gameData.smitomTutorialFlags;
+    if (Overrides.DEBUG_FORCE_SMITOM_TUTORIAL && !VoidexPrelistUiHandler.smitomVoidexDebugShown) {
+      VoidexPrelistUiHandler.smitomVoidexDebugShown = true;
+      flags["voidex_welcome"] = false;
+    }
+    if (!flags["voidex_welcome"]) {
+      scene.time.delayedCall(350, () => {
+        if (scene.ui.getMode() !== Mode.VOIDEX_PRELIST) return;
+        const tipConfig: SmitomTipConfig = {
+          tutorialKey: "voidex_welcome",
+          title: i18next.t("tutorial:smitomTip.voidexWelcome.title"),
+          texts: [
+            i18next.t("tutorial:smitomTip.voidexWelcome.1"),
+            i18next.t("tutorial:smitomTip.voidexWelcome.2"),
+          ],
+          offerReplay: true,
+          onComplete: () => {
+            flags["voidex_welcome"] = true;
+            scene.gameData.saveSystem();
+          }
+        };
+        scene.ui.setOverlayMode(Mode.SMITOM_TIP, tipConfig);
+      });
+    }
   }
 
   private getRivalTypeForQuest(questId: QuestUnlockables): number | null {

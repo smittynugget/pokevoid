@@ -4125,6 +4125,9 @@ export default class BattleScene extends SceneBase {
             const pokemon = this.getPokemonById(modifier.pokemonId);
             if (pokemon) {
               success = modifier.apply([ pokemon, true ]) || (modifier instanceof PokemonFormChangeItemModifier && modifier.formChangeItem >= FormChangeItem.SMITTY_AURA && modifier.formChangeItem <= FormChangeItem.SMITTY_VOID);
+              if (!success && modifier instanceof PokemonFormChangeItemModifier && modifier.isGlitchOrSmittyItem()) {
+                this.removeModifier(modifier);
+              }
             } else {
               success = (modifier instanceof PokemonFormChangeItemModifier && modifier.formChangeItem >= FormChangeItem.SMITTY_AURA && modifier.formChangeItem <= FormChangeItem.SMITTY_VOID);
             }

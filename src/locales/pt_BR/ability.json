@@ -2929,7 +2929,7 @@
   },
   "cursedPotential": {
     "name": "Potencial Amaldiçoado",
-    "description": "Ao entrar, todos os atributos do usuário sobem um nível. No final de cada turno, aleatoriamente baixa de dois a três atributos em um nível ou perde 1/4 de seus PS máximos. Não pode ser substituído."
+    "description": "Ao entrar, todos os atributos do usuário sobem um nível, com um atributo aleatório subindo um nível adicional. No final de cada turno, aleatoriamente baixa de dois a três atributos em um nível ou perde 1/4 de seus PS máximos. Não pode ser substituído."
   },
   "cyberneticControl": {
     "name": "Controle Cibernético",

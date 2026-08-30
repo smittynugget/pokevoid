@@ -535,6 +535,11 @@
         "title": "Le Mode Voyage attend !",
         "1": "Vous avez débloqué la Quête de Capture des Starters — votre billet pour le Mode Voyage ! Rendez-vous au OmegaMagasin pour l’activer.",
         "2": "Une fois activée, capturez 5 Pokémon dans n’importe quelle partie pour la compléter et débloquer le Mode Voyage !"
+      },
+      "voidexWelcome": {
+        "title": "Collectionnez le Néant !",
+        "1": "Toutes tes formes débloquées, toutes les infos sur chaque Pokémon — facilement accessibles, ici même. Un secret : le chiffre en haut à droite te montre ton taux de complétion. MAIS EN PLUS en appuyant sur C tu peux voir immédiatement tes autres déverrouillages et collections — GLITCH, SMITTY, FUSIONS ET SHINIES ! ET même ta progression — combien de rivaux tu dois vaincre ou combien de Smittys tu as chassés ! Tout à portée de main.",
+        "2": "J’aurais aimé avoir des doigts. Enfin, au moins j’ai des conseils — pas vrai ?!"
       }
     }
   }

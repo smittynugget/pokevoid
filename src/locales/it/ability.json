@@ -2929,7 +2929,7 @@
   },
   "cursedPotential": {
     "name": "Potenziale Maledetto",
-    "description": "All'entrata, tutte le statistiche dell'utilizzatore salgono di un livello. Alla fine di ogni turno, da due a tre statistiche calano casualmente di un livello o l'utilizzatore perde 1/4 dei suoi PS massimi. Non può essere ritirato."
+    "description": "All'entrata, tutte le statistiche dell'utilizzatore salgono di un livello, con una statistica casuale che sale di un livello aggiuntivo. Alla fine di ogni turno, da due a tre statistiche calano casualmente di un livello o l'utilizzatore perde 1/4 dei suoi PS massimi. Non può essere ritirato."
   },
   "cyberneticControl": {
     "name": "Controllo Cibernetico",
