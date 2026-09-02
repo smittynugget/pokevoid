@@ -548,8 +548,10 @@ export class EggHatchPhase extends Phase {
                           selectedPokemon.level = releasedPokemon.level;
                           selectedPokemon.exp = getLevelTotalExp(selectedPokemon.level, selectedPokemon.species.growthRate);
                           selectedPokemon.levelExp = 0;
-                          if (selectedStarter.moveset) {
-                            selectedPokemon.tryPopulateMoveset(selectedStarter.moveset);
+                          if (selectedStarter.moveset && selectedStarter.moveset.length > 0) {
+                            if (!selectedPokemon.tryPopulateMoveset(selectedStarter.moveset)) {
+                              console.warn(`[EggHatchPhase] tryPopulateMoveset failed for species ${selectedPokemon.species.speciesId}, keeping hatch moves`);
+                            }
                           }
                           if (selectedStarter.abilityIndex !== undefined) {
                             selectedPokemon.abilityIndex = selectedStarter.abilityIndex;
@@ -587,8 +589,10 @@ export class EggHatchPhase extends Phase {
                         selectedPokemon.exp = getLevelTotalExp(selectedPokemon.level, selectedPokemon.species.growthRate);
                         selectedPokemon.levelExp = 0;
 
-                        if (selectedStarter.moveset) {
-                          selectedPokemon.tryPopulateMoveset(selectedStarter.moveset);
+                        if (selectedStarter.moveset && selectedStarter.moveset.length > 0) {
+                          if (!selectedPokemon.tryPopulateMoveset(selectedStarter.moveset)) {
+                            console.warn(`[EggHatchPhase] tryPopulateMoveset failed for species ${selectedPokemon.species.speciesId}, keeping hatch moves`);
+                          }
                         }
                         if (selectedStarter.abilityIndex !== undefined) {
                           selectedPokemon.abilityIndex = selectedStarter.abilityIndex;

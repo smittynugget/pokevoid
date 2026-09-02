@@ -363,21 +363,25 @@ export default class eggStarterUi extends StarterSelectUiHandler {
 
         const hatchedMon = this.hatchedPokemon.find(p => p.species.speciesId === selectedHatchedPokemon.speciesId);
 
+        if (!hatchedMon) {
+            console.error(`[EggStarterUi] Hatched mon not found for species ${selectedHatchedPokemon.speciesId}`);
+            ui.setMode(this.getMode());
+            this.blockInput = false;
+            return;
+        }
+
         const hatchedMoveset = (() => {
-            if (hatchedMon) {
-                const moves = hatchedMon.getMoveset().filter((m): m is PokemonMove => m != null).map(m => m.moveId).slice(0, 4) as StarterMoveset;
-                return moves.length > 0 ? moves : this.starterMoveset;
-            }
-            return this.starterMoveset;
+            const moves = hatchedMon.getMoveset().filter((m): m is PokemonMove => m != null).map(m => m.moveId).slice(0, 4) as StarterMoveset;
+            return moves.length > 0 ? moves : null;
         })();
 
         const selectedStarter: Starter = {
             species: selectedHatchedPokemon,
             dexAttr: this.getCurrentDexProps(selectedHatchedPokemon.speciesId),
-            abilityIndex: hatchedMon?.abilityIndex ?? this.abilityCursor,
-            fusionIndex: hatchedMon?.fusionFormIndex ?? this.fusionCursor,
+            abilityIndex: hatchedMon.abilityIndex,
+            fusionIndex: hatchedMon.fusionFormIndex ?? 0,
             passive: hasPassive,
-            nature: hatchedMon?.nature ?? this.natureCursor as unknown as Nature,
+            nature: hatchedMon.nature,
             moveset: hatchedMoveset,
             pokerus: hasPokerus,
             nickname: starterPrefs.nickname
@@ -490,21 +494,25 @@ export default class eggStarterUi extends StarterSelectUiHandler {
 
         const hatchedMon = this.hatchedPokemon.find(p => p.species.speciesId === selectedHatchedPokemon.speciesId);
 
+        if (!hatchedMon) {
+            console.error(`[EggStarterUi] Hatched mon not found for species ${selectedHatchedPokemon.speciesId}`);
+            ui.setMode(this.getMode());
+            this.blockInput = false;
+            return;
+        }
+
         const hatchedMoveset = (() => {
-            if (hatchedMon) {
-                const moves = hatchedMon.getMoveset().filter((m): m is PokemonMove => m != null).map(m => m.moveId).slice(0, 4) as StarterMoveset;
-                return moves.length > 0 ? moves : this.starterMoveset;
-            }
-            return this.starterMoveset;
+            const moves = hatchedMon.getMoveset().filter((m): m is PokemonMove => m != null).map(m => m.moveId).slice(0, 4) as StarterMoveset;
+            return moves.length > 0 ? moves : null;
         })();
 
         const selectedStarter: Starter = {
             species: selectedHatchedPokemon,
             dexAttr: this.getCurrentDexProps(selectedHatchedPokemon.speciesId),
-            abilityIndex: hatchedMon?.abilityIndex ?? this.abilityCursor,
-            fusionIndex: hatchedMon?.fusionFormIndex ?? this.fusionCursor,
+            abilityIndex: hatchedMon.abilityIndex,
+            fusionIndex: hatchedMon.fusionFormIndex ?? 0,
             passive: hasPassive,
-            nature: hatchedMon?.nature ?? this.natureCursor as unknown as Nature,
+            nature: hatchedMon.nature,
             moveset: hatchedMoveset,
             pokerus: hasPokerus,
             nickname: starterPrefs.nickname

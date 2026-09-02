@@ -4102,8 +4102,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
         const starterAttributes: StarterAttributes | null = species ? this.initStarterPrefs(species) : null;
         this.fusionCursor = -1;
 
-        if (starterAttributes?.nature) {
-
+        if (starterAttributes?.nature !== undefined) {
             this.natureCursor = starterAttributes.nature;
         }
         if (starterAttributes?.ability && !isNaN(starterAttributes.ability)) {
@@ -4295,7 +4294,7 @@ export default class StarterSelectUiHandler extends MessageUiHandler {
                     const defaultDexAttr = this.getCurrentDexProps(species.speciesId);
                     const defaultAbilityIndex = starterAttributes?.ability ?? this.scene.gameData.getStarterSpeciesDefaultAbilityIndex(species);
 
-                    const defaultNature = starterAttributes?.nature || this.scene.gameData.getSpeciesDefaultNature(species);
+                    const defaultNature = starterAttributes?.nature ?? this.scene.gameData.getSpeciesDefaultNature(species);
                     props = this.scene.gameData.getSpeciesDexAttrProps(species, defaultDexAttr);
                     if (starterAttributes?.variant && !isNaN(starterAttributes.variant)) {
                         if (props.shiny) {
