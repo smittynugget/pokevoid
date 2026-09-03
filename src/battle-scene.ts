@@ -352,8 +352,8 @@ export default class BattleScene extends SceneBase {
   public enableMoveInfo: boolean = true;
   public modifierTooltipsEnabled: boolean = false;
   public showItemTextBg: boolean = true;
-  public shopNoDuplicates: boolean = false;
-  public shopShowUniqueNames: boolean = false;
+  public shopNoDuplicates: boolean = true;
+  public shopShowUniqueNames: boolean = true;
   public hideIvs: boolean = false;
 
   public candyUpgradeNotification: integer = 0;

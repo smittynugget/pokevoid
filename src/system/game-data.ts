@@ -115,7 +115,7 @@ import { runPowerUnlockOverlays } from "#app/utils/story-cutscene-power-overlays
 import { addCorruptedRivalOverlay, playCutsceneFaintAnim } from "#app/utils/story-cutscene-overlays.js";
 export const defaultStarterSpecies: Species[] = [];
 
-export const INTERNAL_BACKUP_VERSION = 7;
+export const INTERNAL_BACKUP_VERSION = 8;
 
 export const VERSIONS_REQUIRING_BACKUP: string[] = [
     "v2.0b [The Colossal Update]",
@@ -2442,36 +2442,44 @@ export class GameData {
 
         const settings = JSON.parse(this.getLocalStorageItem("settings")!);
         const schemaKey = "__schemaVersion";
-        const targetSchemaVersion = 1;
+        const targetSchemaVersion = 2;
         const schemaVersion = typeof settings?.[schemaKey] === "number" ? settings[schemaKey] : 0;
 
         if (schemaVersion < targetSchemaVersion) {
-            const legacySpeedOptions = ["1x", "1.5x", "2x", "2.5x", "3x", "3.5x", "4x", "5x", "6x", "7x", "8x", "9x", "10x"];
-            const newSpeedOptions = ["1x", "3x", "6x", "10x", "12x", "15x", "20x"];
+            if (schemaVersion < 1) {
+                const legacySpeedOptions = ["1x", "1.5x", "2x", "2.5x", "3x", "3.5x", "4x", "5x", "6x", "7x", "8x", "9x", "10x"];
+                const newSpeedOptions = ["1x", "3x", "6x", "10x", "12x", "15x", "20x"];
 
-            const legacyIdx = settings?.[SettingKeys.Game_Speed];
-            if (Number.isInteger(legacyIdx) && legacyIdx >= 0 && legacyIdx < legacySpeedOptions.length) {
-                const legacyValue = legacySpeedOptions[legacyIdx];
-                let mappedIdx = newSpeedOptions.indexOf(legacyValue);
+                const legacyIdx = settings?.[SettingKeys.Game_Speed];
+                if (Number.isInteger(legacyIdx) && legacyIdx >= 0 && legacyIdx < legacySpeedOptions.length) {
+                    const legacyValue = legacySpeedOptions[legacyIdx];
+                    let mappedIdx = newSpeedOptions.indexOf(legacyValue);
 
-                if (mappedIdx < 0) {
-
-                    const legacyNum = parseFloat(legacyValue.replace("x", ""));
-                    let bestIdx = 0;
-                    let bestDiff = Number.POSITIVE_INFINITY;
-                    for (let i = 0; i < newSpeedOptions.length; i++) {
-                        const num = parseFloat(newSpeedOptions[i].replace("x", ""));
-                        const diff = Math.abs(num - legacyNum);
-                        const bestNum = parseFloat(newSpeedOptions[bestIdx].replace("x", ""));
-                        if (diff < bestDiff || (diff === bestDiff && num < bestNum)) {
-                            bestIdx = i;
-                            bestDiff = diff;
+                    if (mappedIdx < 0) {
+                        const legacyNum = parseFloat(legacyValue.replace("x", ""));
+                        let bestIdx = 0;
+                        let bestDiff = Number.POSITIVE_INFINITY;
+                        for (let i = 0; i < newSpeedOptions.length; i++) {
+                            const num = parseFloat(newSpeedOptions[i].replace("x", ""));
+                            const diff = Math.abs(num - legacyNum);
+                            const bestNum = parseFloat(newSpeedOptions[bestIdx].replace("x", ""));
+                            if (diff < bestDiff || (diff === bestDiff && num < bestNum)) {
+                                bestIdx = i;
+                                bestDiff = diff;
+                            }
                         }
+                        mappedIdx = bestIdx;
                     }
-                    mappedIdx = bestIdx;
-                }
 
-                settings[SettingKeys.Game_Speed] = mappedIdx;
+                    settings[SettingKeys.Game_Speed] = mappedIdx;
+                }
+            }
+
+            if (settings[SettingKeys.Shop_No_Duplicates] === undefined) {
+                settings[SettingKeys.Shop_No_Duplicates] = 1;
+            }
+            if (settings[SettingKeys.Shop_Show_Unique_Names] === undefined) {
+                settings[SettingKeys.Shop_Show_Unique_Names] = 1;
             }
 
             settings[schemaKey] = targetSchemaVersion;

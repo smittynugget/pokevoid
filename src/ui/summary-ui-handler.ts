@@ -1109,7 +1109,12 @@ export default class SummaryUiHandler extends UiHandler {
             }
           case Button.RIGHT: {
             this.moveSelect = false;
-            this.hideMoveSelect();
+            if (this.summaryUiMode === SummaryUiMode.LEARN_MOVE) {
+              this.hideMoveEffect();
+              this.destroyBlinkCursor();
+            } else {
+              this.hideMoveSelect();
+            }
             const pages = Utils.getEnumValues(Page);
             const nextRight = (this.cursor + 1) % pages.length;
             this.setCursor(nextRight);
@@ -1362,6 +1367,9 @@ export default class SummaryUiHandler extends UiHandler {
 
     switch (page) {
       case Page.PROFILE:
+        if (!this.pokemon) {
+          break;
+        }
         const profileContainer = this.scene.add.container(0, -pageBg.height);
         pageContainer.add(profileContainer);
 
@@ -1528,6 +1536,9 @@ export default class SummaryUiHandler extends UiHandler {
         profileContainer.add(memoText);
         break;
       case Page.STATS:
+        if (!this.pokemon) {
+          break;
+        }
         const statsContainer = this.scene.add.container(0, -pageBg.height);
         pageContainer.add(statsContainer);
 

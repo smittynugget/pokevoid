@@ -13,6 +13,7 @@ import EggHatchSceneHandler from "#app/ui/egg-hatch-scene-handler.js";
 import PokemonInfoContainer from "#app/ui/pokemon-info-container.js";
 import { EggStarterSelectCallback } from "#app/ui/egg-starter-ui-handler.js";
 import { Mode } from "#app/ui/ui.js";
+import { DexAttr } from "#app/system/game-data.js";
 import i18next from "i18next";
 import SoundFade from "phaser3-rex-plugins/plugins/soundfade";
 import * as Utils from "#app/utils.js";
@@ -522,23 +523,50 @@ export class EggHatchPhase extends Phase {
                     if (selectedStarter) {
                       const selectedPokemon = hatchedPokemon.find(p => p.species.speciesId === selectedStarter.species.speciesId);
 
-                      const applyDexAttrIfPresent = () => {
-                        if (!selectedPokemon || selectedStarter?.dexAttr === undefined) {
+                      const applyStarterEntryData = () => {
+                        if (!selectedPokemon) {
                           return;
                         }
 
-                        const props = this.scene.gameData.getSpeciesDexAttrProps(selectedPokemon.species, BigInt(selectedStarter.dexAttr));
+                        const speciesId = selectedPokemon.species.speciesId;
+                        const dexEntry = this.scene.gameData.dexData[speciesId];
+                        const starterData = this.scene.gameData.starterData[speciesId];
 
-                        const maxFormIndex = Math.max(0, selectedPokemon.species.forms.length - 1);
-                        const nextFormIndex = Math.min(props.formIndex, maxFormIndex);
-                        if (nextFormIndex !== selectedPokemon.formIndex) {
-                          selectedPokemon.formIndex = nextFormIndex;
-                          selectedPokemon.generateName();
+                        if (selectedStarter?.dexAttr !== undefined) {
+                          const props = this.scene.gameData.getSpeciesDexAttrProps(selectedPokemon.species, BigInt(selectedStarter.dexAttr));
+
+                          const maxFormIndex = Math.max(0, selectedPokemon.species.forms.length - 1);
+                          const nextFormIndex = Math.min(props.formIndex, maxFormIndex);
+                          if (nextFormIndex !== selectedPokemon.formIndex) {
+                            selectedPokemon.formIndex = nextFormIndex;
+                            selectedPokemon.generateName();
+                          }
+
+                          const mp = selectedPokemon.species.malePercent;
+                          if (mp !== null && mp > 0 && mp < 100) {
+                            selectedPokemon.gender = props.female ? Gender.FEMALE : Gender.MALE;
+                          }
                         }
 
-                        const mp = selectedPokemon.species.malePercent;
-                        if (mp !== null && mp > 0 && mp < 100) {
-                          selectedPokemon.gender = props.female ? Gender.FEMALE : Gender.MALE;
+                        if (dexEntry?.ivs) {
+                          const dexIvs = dexEntry.ivs.slice(0);
+                          for (let i = 0; i < selectedPokemon.ivs.length; i++) {
+                            selectedPokemon.ivs[i] = Math.max(selectedPokemon.ivs[i], dexIvs[i]);
+                          }
+                        }
+
+                        if (dexEntry?.caughtAttr) {
+                          selectedPokemon.luck = this.scene.gameData.getDexAttrLuck(dexEntry.caughtAttr);
+                        }
+
+                        if (selectedStarter.fusionIndex >= 0 && starterData?.obtainedFusions?.length > selectedStarter.fusionIndex) {
+                          selectedPokemon.generateFusionViaSpeciesID(starterData.obtainedFusions[selectedStarter.fusionIndex]);
+                        }
+
+                        if (selectedStarter.moveset && selectedStarter.moveset.length > 0) {
+                          if (starterData && !starterData.moveset) {
+                            starterData.moveset = selectedStarter.moveset;
+                          }
                         }
                       };
 
@@ -568,10 +596,7 @@ export class EggHatchPhase extends Phase {
                           if (selectedStarter.nickname) {
                             selectedPokemon.nickname = selectedStarter.nickname;
                           }
-                          if (selectedStarter.fusionIndex >= 0 && selectedPokemon.fusionSpecies) {
-                            selectedPokemon.fusionFormIndex = selectedStarter.fusionIndex;
-                          }
-                          applyDexAttrIfPresent();
+                          applyStarterEntryData();
                           selectedPokemon.calculateStats();
                           selectedPokemon.loadAssets().then(() => {
                             this.scene.replacePlayerPokemon(partyIndex, selectedPokemon);
@@ -609,11 +634,8 @@ export class EggHatchPhase extends Phase {
                         if (selectedStarter.nickname) {
                           selectedPokemon.nickname = selectedStarter.nickname;
                         }
-                        if (selectedStarter.fusionIndex >= 0 && selectedPokemon.fusionSpecies) {
-                          selectedPokemon.fusionFormIndex = selectedStarter.fusionIndex;
-                        }
 
-                        applyDexAttrIfPresent();
+                        applyStarterEntryData();
                         selectedPokemon.calculateStats();
 
                         selectedPokemon.loadAssets().then(() => {

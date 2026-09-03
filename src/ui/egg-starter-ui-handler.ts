@@ -13,6 +13,7 @@ import { EnhancedTutorial } from "./tutorial-registry";
 import { Button } from "#enums/buttons";
 import PokemonSpecies, { adjustDuelmonIconScale } from "../data/pokemon-species";
 import { addTextObject, TextStyle } from "./text";
+import { Passive as PassiveAttr } from "#enums/passive";
 export type EggStarterSelectCallback = (selected: Starter | null, released: Pokemon | null) => void;
 
 export default class eggStarterUi extends StarterSelectUiHandler {
@@ -358,7 +359,6 @@ export default class eggStarterUi extends StarterSelectUiHandler {
         const selectedHatchedPokemon = this._selectedHatchedSpecies || this.lastSpecies;
         const starterPrefs = this.starterPreferences[selectedHatchedPokemon.speciesId] || {};
 
-        const hasPassive = this.isPassiveAvailable(selectedHatchedPokemon.speciesId);
         const hasPokerus = this.pokerusSpecies.some(s => s.speciesId === selectedHatchedPokemon.speciesId);
 
         const hatchedMon = this.hatchedPokemon.find(p => p.species.speciesId === selectedHatchedPokemon.speciesId);
@@ -370,21 +370,19 @@ export default class eggStarterUi extends StarterSelectUiHandler {
             return;
         }
 
-        const hatchedMoveset = (() => {
-            const moves = hatchedMon.getMoveset().filter((m): m is PokemonMove => m != null).map(m => m.moveId).slice(0, 4) as StarterMoveset;
-            return moves.length > 0 ? moves : null;
-        })();
+        const sd = this.scene.gameData.starterData[selectedHatchedPokemon.speciesId];
+        const passiveEnabled = sd ? !(sd.passiveAttr ^ (PassiveAttr.ENABLED | PassiveAttr.UNLOCKED)) : false;
 
         const selectedStarter: Starter = {
             species: selectedHatchedPokemon,
-            dexAttr: this.getCurrentDexProps(selectedHatchedPokemon.speciesId),
-            abilityIndex: hatchedMon.abilityIndex,
-            fusionIndex: hatchedMon.fusionFormIndex ?? 0,
-            passive: hasPassive,
-            nature: hatchedMon.nature,
-            moveset: hatchedMoveset,
+            dexAttr: this.dexAttrCursor,
+            abilityIndex: this.abilityCursor,
+            fusionIndex: this.fusionCursor,
+            passive: passiveEnabled,
+            nature: this.natureCursor as unknown as Nature,
+            moveset: this.starterMoveset?.slice(0) as StarterMoveset,
             pokerus: hasPokerus,
-            nickname: starterPrefs.nickname
+            nickname: starterPrefs.nickname,
         };
 
         ui.setMode(this.getMode()).then(() => {
@@ -489,7 +487,6 @@ export default class eggStarterUi extends StarterSelectUiHandler {
         const selectedHatchedPokemon = this._selectedHatchedSpecies || this.lastSpecies;
         const starterPrefs = this.starterPreferences[selectedHatchedPokemon.speciesId] || {};
 
-        const hasPassive = this.isPassiveAvailable(selectedHatchedPokemon.speciesId);
         const hasPokerus = this.pokerusSpecies.some(s => s.speciesId === selectedHatchedPokemon.speciesId);
 
         const hatchedMon = this.hatchedPokemon.find(p => p.species.speciesId === selectedHatchedPokemon.speciesId);
@@ -501,21 +498,19 @@ export default class eggStarterUi extends StarterSelectUiHandler {
             return;
         }
 
-        const hatchedMoveset = (() => {
-            const moves = hatchedMon.getMoveset().filter((m): m is PokemonMove => m != null).map(m => m.moveId).slice(0, 4) as StarterMoveset;
-            return moves.length > 0 ? moves : null;
-        })();
+        const sd = this.scene.gameData.starterData[selectedHatchedPokemon.speciesId];
+        const passiveEnabled = sd ? !(sd.passiveAttr ^ (PassiveAttr.ENABLED | PassiveAttr.UNLOCKED)) : false;
 
         const selectedStarter: Starter = {
             species: selectedHatchedPokemon,
-            dexAttr: this.getCurrentDexProps(selectedHatchedPokemon.speciesId),
-            abilityIndex: hatchedMon.abilityIndex,
-            fusionIndex: hatchedMon.fusionFormIndex ?? 0,
-            passive: hasPassive,
-            nature: hatchedMon.nature,
-            moveset: hatchedMoveset,
+            dexAttr: this.dexAttrCursor,
+            abilityIndex: this.abilityCursor,
+            fusionIndex: this.fusionCursor,
+            passive: passiveEnabled,
+            nature: this.natureCursor as unknown as Nature,
+            moveset: this.starterMoveset?.slice(0) as StarterMoveset,
             pokerus: hasPokerus,
-            nickname: starterPrefs.nickname
+            nickname: starterPrefs.nickname,
         };
 
         ui.setMode(this.getMode()).then(() => {
